@@ -1,785 +1,1109 @@
-Return-Path: <linux-gpio+bounces-23861-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23862-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B3C8B138B5
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Jul 2025 12:17:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CCB3B13948
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Jul 2025 12:53:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D587E188BC41
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Jul 2025 10:17:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 730FA3B0F8F
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Jul 2025 10:53:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C06625485F;
-	Mon, 28 Jul 2025 10:17:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8508224DFF3;
+	Mon, 28 Jul 2025 10:53:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="If5Y2D0+"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MlLPVjwz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4FDF1DDF7
-	for <linux-gpio@vger.kernel.org>; Mon, 28 Jul 2025 10:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FAFC24A07A
+	for <linux-gpio@vger.kernel.org>; Mon, 28 Jul 2025 10:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753697831; cv=none; b=AADuIihxeBc+0t/R5M2Mx1UyjjuHeX3Xh8O/g9ivInHdWaNhvw8hQdWYzjm5WFW+kKVyTqtVDmu1u/QyiwtTH96RD6RfJ9o/I90N48VsTCU4Md/6bukFsvR/B2XQLdJmAVszxkAxuoC4MnZIlDOc+6ldVoN0NTAvQdmhXhKCxWo=
+	t=1753700017; cv=none; b=ZoS4YbNn4r7lW5Mra+fo4FS5x1d3bGbgnvpQkpXCq6UEKAjnrWNsSIcmEgrn/uAM9jdApjj3BwHAHqTT8LnoJEL3qnUrPpv2g4bvZjG7TWTFmMpEOaHPzER3BAOutFEOiKYdPLF1ZNjnkQ1epz87kNhIBebyPipR40W/Q3BlcEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753697831; c=relaxed/simple;
-	bh=kTYkVDLSHj6pge0v5/0ipLyfqWsyO3cAEt7+GG14SMw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kiOGbaH3PSHgM7mTvXi7aYgwut2Ytbl35moF48iKh75X3gFUz7sDcyOSXsjbMnBNK8GBRR+K1Bnkv7X29S/x2cNI8i0PKDe9BT4e25sahdeJ85EUQwziH1XZVUA9fZCA1XVYeIGoF7ZO+aUSOWAX/xD6sz/QTLX5dCFaKhwAsJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=If5Y2D0+; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3b77b8750acso1277856f8f.0
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Jul 2025 03:17:07 -0700 (PDT)
+	s=arc-20240116; t=1753700017; c=relaxed/simple;
+	bh=m8eCXO3L+8RijsrHYqj+UEAgze044qzMaTyUrpjUTcM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nZa1IvX8Bd2opgnNjr+qm2VIfMjj5wxUSn+tK17qxlvN/4P+hPPe58O/zdvUHCMyoHP2qrwBHCM+80iahSxIIyJPVepqPf+W3PMjHQgFrTWYBUs8C9260qM7MdrpjYffxGTJlRJ66pXsZKdm+I2wpQgufRUDSBWJV//LLPw67ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=MlLPVjwz; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-55a4befb8ccso4498757e87.2
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Jul 2025 03:53:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1753697826; x=1754302626; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qExrKmSAH5oN13GpZr054KnGd0xxgaKyksXvxTaP1dU=;
-        b=If5Y2D0+juJdXzbiXqqV/vLvZCnCqCRZT1kXAE0vPk41Wajfde3xyEVbYZudGe8v/G
-         GfzYMlFOCE+vOKEobV1nzVBII/dRFZq+k29v6/jpAaU+PkS9idp/YbjjbVlFaGC/kcOJ
-         i5n5ZRY8trQ7aZVNSksNAyz9YzkV9VWsfGHwUJCKY6AD3DwZJZ2F/bElVn73S0TZOyiz
-         lf4HrW2ahu11dSh+hobuu5HpIMPCGd+HrT8tRCRrFg0m00oAmQR1FGr52d+w9E9yj5gF
-         its3BQttkl8m8u2mu4LxjNz4u3SmUiXTQzO8ymNncAmd0G9UdrJEicPphFpcLhJpMD2f
-         dhxA==
+        d=chromium.org; s=google; t=1753700012; x=1754304812; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xbEcANya7x8dKqNJP5/IXrYIzyujIU66YYTF0gljpjs=;
+        b=MlLPVjwzNWE1Iy1UKYfHBo/ZGJbfMiDftiI/xLZjBr58jE6TNTX1Jcr0+pP4iQiVIQ
+         GgItA/khV/wBzIm/FY9UoRLgWIDIRR0MjxE6rL1OH0UwCTU7YzNloTIlytD8cvNP4/0a
+         QEuhDc5cJqer8d8tTvxXDtDP/LhY6mugbTUmM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753697826; x=1754302626;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qExrKmSAH5oN13GpZr054KnGd0xxgaKyksXvxTaP1dU=;
-        b=Vn8doY9xqdBxFtSQJxET//bjULilIWREwZyJzuObCjFePt/7s+KKMTetihek43j4r9
-         +Z54lRgxDwoSlc8CUqdJb/fv+m8P/RzyLcOZC1VDO4AE1AjIsxM09ZZvGyNj7Zo6a59L
-         FeP8BF23n2Y4l4keM/zdKGTDGjy3N6kp2Xdoq5p8g4OZsGfPvPi+vlyL5V/yYG4g7mEv
-         OjVAPulBcy04juPwSypj4LLf0cTmFvWd5dDr/pQ+YKKybUPvDyfms5Ct6LuU3kSQriME
-         D+gy0yoBcH9cGANIWX70bRtbFDcUgbhPKtGsN+GFF4MjooaXCTg0xiZJavLvUD09WxQ6
-         V0yw==
-X-Forwarded-Encrypted: i=1; AJvYcCVnGNClVp2Av7al0MYTpwPVfOhnAmrzdnDlKtsMwtxu0QPapoTIK3wwP9KIlf8vLCak0R47cDeTp4hy@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZmGuSLV3sLFpVnrS/xOka5t3feFXIPkjCWpGQf4U3mbYwqF13
-	y6aaB4jK2syzzMY//CfOOeG/r3007ujLJF8/cyCcsUtL3im2i8J+y5lzTTgDA891w1I=
-X-Gm-Gg: ASbGncswJC8Jr/CocEyqC2NeqAzzO6M/juXiH1Lsh8qbCAJWhyybXu9KT2UYDxo5Hv7
-	MJd8BCGIrnnWL2wnR/2C7C9hS8i6Ejyaka4VNYB1gogBPbWsVvAalu7tAIv5J5fLdh8mvfGX1wD
-	aMuKpTQlDIChkkIbNFT2XHM6qe2g+QIOcXydUKgJTh//nzgie3KbF0GigguLBiiTeH8LtTxJsz3
-	W1Qv65Ee11KDOOX+KN4qiQzMsbDFjgxljoeGFkD2T3f25XbZ2c5F710LNGZAzLbptTe+1P3G1gI
-	d46CiUAj65LolK/WguNVU3fal2sn8NhXvuIcnsSz53M19s1W4Ak7+iFZnZwyTTWy7P6Q9/MeTC5
-	hOWg/WXQEztrFJPiRyJzH6g==
-X-Google-Smtp-Source: AGHT+IGAL1dDE9FCcKlpxpT9s84157iAxR+Mk29V7J90zikm8tkhX+C9A1hAIENMI7x8ZN7syRxOGg==
-X-Received: by 2002:a05:6000:2401:b0:3b7:885d:d2ec with SMTP id ffacd0b85a97d-3b7885dd3a9mr1917823f8f.18.1753697825303;
-        Mon, 28 Jul 2025 03:17:05 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:53d4:51a:4d68:dac1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b77db8a944sm7167723f8f.52.2025.07.28.03.17.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Jul 2025 03:17:04 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio updates for v6.17-rc1
-Date: Mon, 28 Jul 2025 12:16:56 +0200
-Message-ID: <20250728101658.44311-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.48.1
+        d=1e100.net; s=20230601; t=1753700012; x=1754304812;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xbEcANya7x8dKqNJP5/IXrYIzyujIU66YYTF0gljpjs=;
+        b=NjxoPqefgiafCcLKcHIw3EV7jriIoB1npOms7MnX3+2dO8D0/uDe6QL7dVUjJFEIrh
+         irbJtN52Ltx4Cz4YyUxpPCU7Sz+cn0dAi3lJqp8plH7oDwvFZP6rF+Ae+HlyV9+e3CL0
+         QuwhUKhmVUD3vEW9gBYi17A9uZC93QZ20FrLzDw39mAPlKyDQ6yIOhkwGn/3BalSAEj4
+         XbPaszIskLjjqFtMywuuTv1wfRwdwqka0jFntmcp7giYOyPCrUAxAeooHGqdSXL4FDdW
+         DfO3Zp8y17tVyhlgzXec+4bDxlG4td9p1SivTP8WTLXu2ib1qqS+JoVFHcKScQ8DOESx
+         pXjw==
+X-Forwarded-Encrypted: i=1; AJvYcCX056ngMI8GnBqzZJFL2lG+hARjNrIDvadzCSM/5ZOKqjz9ou3MFmuirWkVxgKyM2g8LqjXwjSjCq9f@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmqOZsJru62h9t687PMXT6hFlh+MhqoxSZhD3GiMYtZl++x2EQ
+	jYoG6M2StrXsZvm/i50xxzQ9zWj0Lp1vxaJGG/TuqMOYrS/maFb3oomlGMj8Tf9O+gzSex/nFfO
+	Oo0ZdsIcsljKp4iOFA3yAfYc4c256AT77rhWx/bQz
+X-Gm-Gg: ASbGnctIj3pDQjdespSVY4bhiqcJL7SG0QPIHhTu2ZIxdcwf3aD6JypWI7DtflX9Fik
+	KIQIAEjvR6lMFJzO3seR5fzMLcMXIsO04r59zW8FWw+LocSqnOKOB67SNlp9D3XBMT2hbbgVjOb
+	Fe8ENz5ZIYw/16B116spHoC/IeR58jGcuaRV/VFX5yjwOi7zBRcHfASdf5tvPhqZAHisD5WSxI6
+	GLlH+vMlgz5mo+oUdx5+Ppo8PHqYYBTpg==
+X-Google-Smtp-Source: AGHT+IHvOy29bTUO/0MbozHnDCxAoYyhAjTOQPyV1Fm+FaW+g9GHL39FgPBY7JoQtbvS0svu4Ef0/KyvBpPsY8f8YqI=
+X-Received: by 2002:a05:6512:3daa:b0:553:2668:6f34 with SMTP id
+ 2adb3069b0e04-55b5f4aac43mr2816049e87.45.1753700012135; Mon, 28 Jul 2025
+ 03:53:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250708111806.3992-1-darren.ye@mediatek.com> <20250708111806.3992-7-darren.ye@mediatek.com>
+In-Reply-To: <20250708111806.3992-7-darren.ye@mediatek.com>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Mon, 28 Jul 2025 18:53:20 +0800
+X-Gm-Features: Ac12FXw_98P-cqzhOJhc_X0WTP1HZ0X8o93z68BX-_DzENXnnLfNmr1MN89I0kw
+Message-ID: <CAGXv+5Ht8dKb_7KSxqj=Pk+V_7h_N_2YPhTfH9Fr=7TxEqwQKQ@mail.gmail.com>
+Subject: Re: [PATCH v6 06/10] ASoC: mediatek: mt8196: support TDM in platform driver
+To: "Darren.Ye" <darren.ye@mediatek.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Jaroslav Kysela <perex@perex.cz>, 
+	Takashi Iwai <tiwai@suse.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Jul 8, 2025 at 7:34=E2=80=AFPM Darren.Ye <darren.ye@mediatek.com> w=
+rote:
+>
+> From: Darren Ye <darren.ye@mediatek.com>
+>
+> Add mt8196 TDM DAI driver support.
+>
+> Signed-off-by: Darren Ye <darren.ye@mediatek.com>
+> ---
+>  sound/soc/mediatek/mt8196/mt8196-dai-tdm.c | 836 +++++++++++++++++++++
+>  1 file changed, 836 insertions(+)
+>  create mode 100644 sound/soc/mediatek/mt8196/mt8196-dai-tdm.c
+>
+> diff --git a/sound/soc/mediatek/mt8196/mt8196-dai-tdm.c b/sound/soc/media=
+tek/mt8196/mt8196-dai-tdm.c
+> new file mode 100644
+> index 000000000000..dcbde41fb61c
+> --- /dev/null
+> +++ b/sound/soc/mediatek/mt8196/mt8196-dai-tdm.c
+> @@ -0,0 +1,836 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + *  MediaTek ALSA SoC Audio DAI TDM Control
+> + *
+> + *  Copyright (c) 2024 MediaTek Inc.
+> + *  Author: Darren Ye <darren.ye@mediatek.com>
+> + */
+> +
+> +#include <linux/regmap.h>
+> +#include <sound/pcm_params.h>
+> +#include "mt8196-afe-clk.h"
+> +#include "mt8196-afe-common.h"
+> +#include "mt8196-interconnection.h"
+> +
+> +struct mtk_afe_tdm_priv {
+> +       int bck_id;
+> +       int bck_rate;
+> +
+> +       int mclk_id;
+> +       int mclk_multiple; /* according to sample rate */
+> +       int mclk_rate;
+> +       int mclk_apll;
+> +};
+> +
+> +enum {
+> +       TDM_WLEN_16_BIT =3D 1,
+> +       TDM_WLEN_32_BIT =3D 2,
 
-Linus,
+I believe this was mentioned in another patch, but consecutive values
+do not need to be assigned. Nor does a 0 starting value. I won't mention
+this below, but please check all the enums.
 
-Here is the big pull-request for the GPIO subsystem for v6.17-rc1. There
-will be at least one more later into the merge window, I'll talk about it
-in a minute.
+> +};
+> +
+> +enum {
+> +       TDM_CHANNEL_BCK_16 =3D 0,
+> +       TDM_CHANNEL_BCK_24 =3D 1,
+> +       TDM_CHANNEL_BCK_32 =3D 2,
+> +};
+> +
+> +enum {
+> +       TDM_CHANNEL_NUM_2 =3D 0,
+> +       TDM_CHANNEL_NUM_4 =3D 1,
+> +       TDM_CHANNEL_NUM_8 =3D 2,
+> +};
+> +
+> +enum  {
+> +       TDM_CH_START_O30_O31 =3D 0,
+> +       TDM_CH_START_O32_O33,
+> +       TDM_CH_START_O34_O35,
+> +       TDM_CH_START_O36_O37,
+> +       TDM_CH_ZERO,
+> +};
+> +
+> +enum {
+> +       DPTX_CHANNEL_2,
+> +       DPTX_CHANNEL_8,
+> +};
+> +
+> +enum {
+> +       DPTX_WLEN_24_BIT,
+> +       DPTX_WLEN_16_BIT,
+> +};
+> +
+> +enum {
+> +       DPTX_CH_EN_MASK_2CH =3D 0x3,
+> +       DPTX_CH_EN_MASK_4CH =3D 0xf,
+> +       DPTX_CH_EN_MASK_6CH =3D 0x3f,
+> +       DPTX_CH_EN_MASK_8CH =3D 0xff,
+> +};
 
-There's one new driver (Apple SMC) and extensions to existing drivers for
-supporting new HW models. A lot of different impovements across drivers
-and in core GPIO code. Details on that are in the signed tag as usual.
+I'm not entirely confident, but I think normally we use macros for register
+values, and enums for internal / software state values.
 
-We managed to remove some of the legacy APIs. Arnd Bergmann started to
-work on making the legacy bits optional so that we may compile them only
-for older platforms that still really need them.
+> +
+> +static unsigned int get_tdm_wlen(snd_pcm_format_t format)
+> +{
+> +       return snd_pcm_format_physical_width(format) <=3D 16 ?
+> +              TDM_WLEN_16_BIT : TDM_WLEN_32_BIT;
 
-Rob Herring has done a lot of work to convert legacy .txt dt-bindings for
-GPIO controllers to YAML. There are only a few left now in the GPIO tree.
+Looking at the datasheet, this also supports 8 bit and 24 bit word lengths?
 
-A big part of the commits in this PR concern the conversion of GPIO
-drivers to using the new line value setter callbacks. This conversion
-is now complete treewide (unless I've missed something) and once all the
-changes from different trees land in mainline, I'll send you another PR
-containing a commit dropping the legacy callbacks from the tree.
+This could just be written as:
 
-On that note: the commit I mentioned above is already on the list[1]. I
-have a second one that also renames the new callbacks back to their
-original name[2]. This is a result of a simple sed over all source files
-and a skim over the changes to make sure everything looks ok and to
-adjust the formatting. I don't think it makes sense to send 4300+ lines
-of diff to the mailing list, Cc'ing 200+ maintainers if all it does is
-a simple treewide rename, so would you be willing to accept this commit
-too as part of my second PR in order to avoid hundreds of small renaming
-patches over the course of the next releases? FYI: it's not in next yet
-but it passed all the regular autobuilder tests in my devel branch.
+         return snd_pcm_format_physical_width(format) / 8;
 
-As the quest to pay back technical dept never really ends, we're starting
-another set of interface conversions, this time it's about moving fields
-specific to only a handful of drivers using the gpio-mmio helper out of
-the core gpio_chip structure that every controller implements and uses.
-This cycle we introduce a new set of APIs and convert a few drivers under
-drivers/gpio/, next cycle we'll convert remaining modules treewide (in
-gpio, pinctrl and mfd trees) and finally remove the old interfaces and
-move the gpio-mmio fields into their own structure wrapping gpio_chip.
+> +}
+> +
+> +static unsigned int get_tdm_channel_bck(snd_pcm_format_t format)
+> +{
+> +       return snd_pcm_format_physical_width(format) <=3D 16 ?
+> +              TDM_CHANNEL_BCK_16 : TDM_CHANNEL_BCK_32;
 
-One last change I should mention here is the rework of the sysfs
-interface. In 2016, we introduced the GPIO character device as the
-preferred alternative to the sysfs class under /sys/class/gpio. While it
-has seen a wide adoption with the help of its user-space counterpart -
-libgpiod - there are still users who prefer the simplicity of sysfs. As
-far as the GPIO subsystem is concerned, the problem is not the existince
-of the GPIO class as such but rather the fact that it exposes the global
-GPIO numbers to the user-space, stopping us from ever being able to
-remove the numberspace from the kernel. To that end, this release we
-introduced a parallel, limited sysfs interface that doesn't expose these
-numbers and only implements a subset of features that are relevant to the
-existing users. This is a result of several discussions over the course
-of last year and should allow us to remove the legacy part some time in
-the future.
+I don't think this is correct. I believe this refers to the TDM slot
+width, which is separate from how wide or how many bits are valid in
+a given sample. The TDM slot width is something set by the machine
+driver by calling snd_soc_dai_set_tdm_slot(), much like calling
+snd_soc_dai_set_sysclk().
 
-Please consider pulling.
+The TDM driver here needs to implement the .set_tdm_slot callback,
+and store the slot width and slots.
 
-Thanks,
-Bartosz
+This function here should be something like:
 
-[1] https://lore.kernel.org/all/20250725074651.14002-1-brgl@bgdev.pl/
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git/commit/?h=gpio/devel&id=d95cc7b82e0d2bf79102f0a1b4263b2e6d299e17
+    static unsigned int get_tdm_channel_bck(...)
+    {
+         return tdm_slot_width;
+    }
 
-The following changes since commit e04c78d86a9699d136910cfc0bdcf01087e3267e:
+> +}
+> +
+> +static unsigned int get_tdm_lrck_width(snd_pcm_format_t format)
+> +{
+> +       return snd_pcm_format_physical_width(format) - 1;
 
-  Linux 6.16-rc2 (2025-06-15 13:49:41 -0700)
+This needs to be multiplied by the number of channels / 2, since
+the LRCK spans the entirety of the odd or even number channels.
+Also, it should be based on the TDM slot width, not the sample width.
 
-are available in the Git repository at:
+> +}
+> +
+> +static unsigned int get_tdm_ch(unsigned int ch)
+> +{
+> +       switch (ch) {
+> +       case 1:
+> +       case 2:
+> +               return TDM_CHANNEL_NUM_2;
+> +       case 3:
+> +       case 4:
+> +               return TDM_CHANNEL_NUM_4;
+> +       case 5:
+> +       case 6:
+> +       case 7:
+> +       case 8:
+> +       default:
+> +               return TDM_CHANNEL_NUM_8;
+> +       }
+> +}
+> +
+> +static unsigned int get_dptx_ch_enable_mask(unsigned int ch)
+> +{
+> +       switch (ch) {
+> +       case 1:
+> +       case 2:
+> +               return DPTX_CH_EN_MASK_2CH;
+> +       case 3:
+> +       case 4:
+> +               return DPTX_CH_EN_MASK_4CH;
+> +       case 5:
+> +       case 6:
+> +               return DPTX_CH_EN_MASK_6CH;
+> +       case 7:
+> +       case 8:
+> +               return DPTX_CH_EN_MASK_8CH;
+> +       default:
+> +               pr_info("invalid channel num, default use 2ch\n");
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v6.17-rc1
+Please pass in |struct device *| and use the dev_printk variants.
+And maybe consider making this a warning?
 
-for you to fetch changes up to 6b94bf976f9f9e6d4a6bf3218968a506c049702e:
+Also there is some inconsistency here,
 
-  MIPS: alchemy: gpio: use new GPIO line value setter callbacks for the remaining chips (2025-07-28 08:03:08 +0200)
+> +               return DPTX_CH_EN_MASK_2CH;
+> +       }
+> +}
+> +
+> +static unsigned int get_dptx_ch(unsigned int ch)
+> +{
+> +       if (ch =3D=3D 2)
+> +               return DPTX_CHANNEL_2;
+> +       else
+> +               return DPTX_CHANNEL_8;
+> +}
+> +
+> +static unsigned int get_dptx_wlen(snd_pcm_format_t format)
+> +{
+> +       return snd_pcm_format_physical_width(format) <=3D 16 ?
+> +              DPTX_WLEN_16_BIT : DPTX_WLEN_24_BIT;
+> +}
+> +
+> +/* interconnection */
+> +enum {
+> +       HDMI_CONN_CH0 =3D 0,
+> +       HDMI_CONN_CH1,
+> +       HDMI_CONN_CH2,
+> +       HDMI_CONN_CH3,
+> +       HDMI_CONN_CH4,
+> +       HDMI_CONN_CH5,
+> +       HDMI_CONN_CH6,
+> +       HDMI_CONN_CH7,
+> +};
+> +
+> +static const char *const hdmi_conn_mux_map[] =3D {
+> +       "CH0", "CH1", "CH2", "CH3",
+> +       "CH4", "CH5", "CH6", "CH7",
 
-----------------------------------------------------------------
-gpio updates for v6.17-rc1
+Nit: This could fit in one line.
 
-GPIOLIB core:
-- introduce a parallel, limited sysfs user ABI that doesn't expose the
-  global GPIO numbers to user-space while maintaining backward
-  compatibility with the end goal of it completely replacing the existing
-  interface, allowing us to remove it
-- remove the legacy devm_gpio_request() routine which has no more users
-- start the process of allowing to compile-out the legacy parts of the
-  GPIO core for users who don't need it by introducing a new Kconfig
-  option: GPIOLIB_LEGACY
-- don't use global GPIO numbers in debugfs output from the core code
-  (drivers still do it, the work is ongoing)
-- start the process of moving the fields specific to the gpio-mmio helper
-  out of the core struct gpio_chip into their own structure that wraps
-  it: create a new header with modern interfaces and convert several
-  drivers to using it
-- remove the platform data structure associated with the gpio-mmio helper
-  from the kernel after having converted all remaining users to generic
-  device properties
-- remove legacy struct gpio definition as it has no more users
+> +};
+> +
+> +static int hdmi_conn_mux_map_value[] =3D {
+> +       HDMI_CONN_CH0,
+> +       HDMI_CONN_CH1,
+> +       HDMI_CONN_CH2,
+> +       HDMI_CONN_CH3,
+> +       HDMI_CONN_CH4,
+> +       HDMI_CONN_CH5,
+> +       HDMI_CONN_CH6,
+> +       HDMI_CONN_CH7,
 
-New drivers:
-- add the GPIO driver for the Apple System Management Controller
+Nit: You could fit four values on one line.
 
-Driver improvements:
-- add support for new models to gpio-adp5585, gpio-tps65219 and
-  gpio-pca953x
-- extend the interrupt support in gpio-loongson-64bit
-- allow to mark the simulated GPIO lines as invalid in gpio-sim
-- convert all remaining GPIO drivers to using the new GPIO value setter
-  callbacks
-- convert gpio-rcar to using simple device power management ops callbacks
-- don't check if current direction of a line is output before setting
-  the value in gpio-pisosr and ti-fpc202: the GPIO core already handles
-  that
-- also drop unneeded GPIO range checks in drivers, the core already makes
-  sure we're within bounds when calling driver callbacks
-- use dev_fwnode() where applicable across GPIO drivers
-- set line value in gpio-zynqmp-modepin and gpio-twl6040 when the user
-  wants to change direction of the pin to output even though these
-  drivers don't need to do anything else to actually set the direction,
-  otherwise a call like gpiod_direction_output(d, 1) will not result in
-  the line driver high
-- remove the reduntant call to pm_runtime_mark_last_busy() from
-  gpio-arizona
-- use lock guards in gpio-cadence and gpio-mxc
-- check the return values of regmap functions in gpio-wcd934x and
-  gpio-tps65912
-- use better regmap interfaces in gpio-wcove and gpio-pca953x
-- remove dummy GPIO chip callbacks from several drivers in cases where
-  the GPIO core can already handle their absence
-- allow building gpio-palmas as a module
+> +};
+> +
+> +static SOC_VALUE_ENUM_SINGLE_DECL(hdmi_ch0_mux_map_enum,
+> +                                 AFE_HDMI_CONN0,
+> +                                 HDMI_O_0_SFT,
+> +                                 HDMI_O_0_MASK,
+> +                                 hdmi_conn_mux_map,
+> +                                 hdmi_conn_mux_map_value);
+> +
+> +static const struct snd_kcontrol_new hdmi_ch0_mux_control =3D
+> +       SOC_DAPM_ENUM("HDMI_CH0_MUX", hdmi_ch0_mux_map_enum);
 
-Fixes:
-- use correct bit widths (according to the documentation) in gpio-virtio
+Please name the controls based on the standard ALSA control name scheme:
 
-Device-tree bindings:
-- convert several of the legacy .txt documents for many different devices
-  to YAML, improving automatic validation
-- create a "trivial" GPIO DT schema that covers a wide range of simple
-  hardware that share a set of basic GPIO properties
-- document new HW: Apple MAC SMC GPIO block and adp5589 I/O expander
-- document a new model for pca95xx
-- add and/or remove properties in YAML documents for gpio-rockchip,
-  fsl,qoriq-gpio, arm,pl061 and gpio-xilinx
+    https://docs.kernel.org/sound/designs/control-names.html
 
-Misc:
-- some minor refactoring in several places, adding/removing forward
-  declarations, moving defines to better places, constify the arguments
-  in some functions, remove duplicate includes, etc.
-- documentation updates
+This should be something like "HDMI CH0 Source Playback Route". Same
+applies to the other ones.
 
-----------------------------------------------------------------
-Aaron Kling (1):
-      gpio: palmas: Allow building as a module
+> +
+> +static SOC_VALUE_ENUM_SINGLE_DECL(hdmi_ch1_mux_map_enum,
+> +                                 AFE_HDMI_CONN0,
+> +                                 HDMI_O_1_SFT,
+> +                                 HDMI_O_1_MASK,
+> +                                 hdmi_conn_mux_map,
+> +                                 hdmi_conn_mux_map_value);
+> +
+> +static const struct snd_kcontrol_new hdmi_ch1_mux_control =3D
+> +       SOC_DAPM_ENUM("HDMI_CH1_MUX", hdmi_ch1_mux_map_enum);
+> +
+> +static SOC_VALUE_ENUM_SINGLE_DECL(hdmi_ch2_mux_map_enum,
+> +                                 AFE_HDMI_CONN0,
+> +                                 HDMI_O_2_SFT,
+> +                                 HDMI_O_2_MASK,
+> +                                 hdmi_conn_mux_map,
+> +                                 hdmi_conn_mux_map_value);
+> +
+> +static const struct snd_kcontrol_new hdmi_ch2_mux_control =3D
+> +       SOC_DAPM_ENUM("HDMI_CH2_MUX", hdmi_ch2_mux_map_enum);
+> +
+> +static SOC_VALUE_ENUM_SINGLE_DECL(hdmi_ch3_mux_map_enum,
+> +                                 AFE_HDMI_CONN0,
+> +                                 HDMI_O_3_SFT,
+> +                                 HDMI_O_3_MASK,
+> +                                 hdmi_conn_mux_map,
+> +                                 hdmi_conn_mux_map_value);
+> +
+> +static const struct snd_kcontrol_new hdmi_ch3_mux_control =3D
+> +       SOC_DAPM_ENUM("HDMI_CH3_MUX", hdmi_ch3_mux_map_enum);
+> +
+> +static SOC_VALUE_ENUM_SINGLE_DECL(hdmi_ch4_mux_map_enum,
+> +                                 AFE_HDMI_CONN0,
+> +                                 HDMI_O_4_SFT,
+> +                                 HDMI_O_4_MASK,
+> +                                 hdmi_conn_mux_map,
+> +                                 hdmi_conn_mux_map_value);
+> +
+> +static const struct snd_kcontrol_new hdmi_ch4_mux_control =3D
+> +       SOC_DAPM_ENUM("HDMI_CH4_MUX", hdmi_ch4_mux_map_enum);
+> +
+> +static SOC_VALUE_ENUM_SINGLE_DECL(hdmi_ch5_mux_map_enum,
+> +                                 AFE_HDMI_CONN0,
+> +                                 HDMI_O_5_SFT,
+> +                                 HDMI_O_5_MASK,
+> +                                 hdmi_conn_mux_map,
+> +                                 hdmi_conn_mux_map_value);
+> +
+> +static const struct snd_kcontrol_new hdmi_ch5_mux_control =3D
+> +       SOC_DAPM_ENUM("HDMI_CH5_MUX", hdmi_ch5_mux_map_enum);
+> +
+> +static SOC_VALUE_ENUM_SINGLE_DECL(hdmi_ch6_mux_map_enum,
+> +                                 AFE_HDMI_CONN0,
+> +                                 HDMI_O_6_SFT,
+> +                                 HDMI_O_6_MASK,
+> +                                 hdmi_conn_mux_map,
+> +                                 hdmi_conn_mux_map_value);
+> +
+> +static const struct snd_kcontrol_new hdmi_ch6_mux_control =3D
+> +       SOC_DAPM_ENUM("HDMI_CH6_MUX", hdmi_ch6_mux_map_enum);
+> +
+> +static SOC_VALUE_ENUM_SINGLE_DECL(hdmi_ch7_mux_map_enum,
+> +                                 AFE_HDMI_CONN0,
+> +                                 HDMI_O_7_SFT,
+> +                                 HDMI_O_7_MASK,
+> +                                 hdmi_conn_mux_map,
+> +                                 hdmi_conn_mux_map_value);
+> +
+> +static const struct snd_kcontrol_new hdmi_ch7_mux_control =3D
+> +       SOC_DAPM_ENUM("HDMI_CH7_MUX", hdmi_ch7_mux_map_enum);
+> +
+> +static const char *const tdm_out_mux_map[] =3D {
+> +       "Disconnect", "Connect",
+> +};
+> +
+> +static int tdm_out_mux_map_value[] =3D {
+> +       0, 1,
+> +};
+> +
+> +static SOC_VALUE_ENUM_SINGLE_AUTODISABLE_DECL(hdmi_out_mux_map_enum,
+> +               SND_SOC_NOPM,
+> +               0,
+> +               1,
+> +               tdm_out_mux_map,
+> +               tdm_out_mux_map_value);
 
-Andrei Lalaev (1):
-      gpiolib: of: add forward declaration for struct device_node
+Please align with the left parentheses.
 
-Andy Shevchenko (4):
-      usb: gadget: pxa25x_udc: Switch to use devm_gpio_request_one()
-      gpiolib: Remove unused devm_gpio_request()
-      gpio: Remove unused 'struct gpio' definition
-      gpiolib: Move GPIO_DYNAMIC_* constants to its only user
+> +static const struct snd_kcontrol_new hdmi_out_mux_control =3D
+> +       SOC_DAPM_ENUM("HDMI_OUT_MUX", hdmi_out_mux_map_enum);
+> +
+> +static SOC_VALUE_ENUM_SINGLE_AUTODISABLE_DECL(dptx_out_mux_map_enum,
+> +               SND_SOC_NOPM,
+> +               0,
+> +               1,
+> +               tdm_out_mux_map,
+> +               tdm_out_mux_map_value);
 
-Antonio Quartulli (1):
-      gpio: sysfs: fix use-after-free in error path
+Same here.
 
-Arnd Bergmann (2):
-      gpiolib: make legacy interfaces optional
-      gpiolib: enable CONFIG_GPIOLIB_LEGACY even for !GPIOLIB
+> +static const struct snd_kcontrol_new dptx_out_mux_control =3D
+> +       SOC_DAPM_ENUM("DPTX_OUT_MUX", dptx_out_mux_map_enum);
+> +
+> +static SOC_VALUE_ENUM_SINGLE_AUTODISABLE_DECL(dptx_virtual_out_mux_map_e=
+num,
+> +               SND_SOC_NOPM,
+> +               0,
+> +               1,
+> +               tdm_out_mux_map,
+> +               tdm_out_mux_map_value);
 
-Bartosz Golaszewski (129):
-      gpio: TODO: add a task for removing MMIO-specific fields from gpio_chip
-      gpio: mmio: use new GPIO line value setter callbacks
-      gpio: mm-lantiq: use new GPIO line value setter callbacks
-      gpio: moxtet: use new GPIO line value setter callbacks
-      gpio: mpc5200: use new GPIO line value setter callbacks
-      gpio: mpfs: use new GPIO line value setter callbacks
-      gpio: mpsse: use new GPIO line value setter callbacks
-      gpio: msc313: use new GPIO line value setter callbacks
-      gpio: nomadik: use new GPIO line value setter callbacks
-      gpio: npcm-sgpio: use new GPIO line value setter callbacks
-      gpio: octeon: use new GPIO line value setter callbacks
-      gpio: omap: use new GPIO line value setter callbacks
-      gpio: palmas: use new GPIO line value setter callbacks
-      Merge tag 'gpio-mmio-bgpiof-no-input-flag-for-v6.17' into gpio/for-next
-      gpio: npcm-sgpio: don't use legacy GPIO chip setters
-      gpio: mmio: don't use legacy GPIO chip setters
-      platform: cznic: use new GPIO line value setter callbacks
-      Documentation: gpio: undocument removed behavior
-      Documentation: gpio: document the active_low field in the sysfs ABI
-      gpio: sysfs: call mutex_destroy() in gpiod_unexport()
-      gpio: sysfs: refactor the coding style
-      gpio: sysfs: remove unneeded headers
-      gpio: sysfs: remove the mockdev pointer from struct gpio_device
-      gpio: pca9570: use new GPIO line value setter callbacks
-      gpio: pcf857x: use new GPIO line value setter callbacks
-      gpio: pch: use new GPIO line value setter callbacks
-      gpio: pl061: use new GPIO line value setter callbacks
-      gpio: pmic-eic-sprd: drop unneeded .set() callback
-      gpio: pxa: use new GPIO line value setter callbacks
-      gpio: rc5t583: use new GPIO line value setter callbacks
-      gpio: rdc321x: use new GPIO line value setter callbacks
-      gpio: rockchip: use new GPIO line value setter callbacks
-      gpio: rtd: use new GPIO line value setter callbacks
-      gpio: sa1100: use new GPIO line value setter callbacks
-      gpio: clps711x: drop unneeded platform_set_drvdata()
-      gpio: constify arguments of gpiod_is_equal()
-      gpio: make gpiod_is_equal() arguments stricter
-      gpio: pisosr: remove unneeded direction_output() callback
-      gpio: sama5d2-piobu: use new GPIO line value setter callbacks
-      gpio: sch311x: use new GPIO line value setter callbacks
-      gpio: sch: use new GPIO line value setter callbacks
-      gpio: siox: use new GPIO line value setter callbacks
-      gpio: spear-spics: remove unneeded callbacks
-      gpio: spear-spics: use new GPIO line value setter callbacks
-      gpio: sprd: use new GPIO line value setter callbacks
-      gpio: stmpe: use new GPIO line value setter callbacks
-      gpio: stp-xway: use new GPIO line value setter callbacks
-      gpio: syscon: use new GPIO line value setter callbacks
-      gpio: tangier: use new GPIO line value setter callbacks
-      gpio: tc3589x: use new GPIO line value setter callbacks
-      Merge tag 'ib-mfd-gpio-input-pwm-v6.17' of git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd into gpio/for-next
-      gpio: reg: use new GPIO line value setter callbacks
-      gpio: mmio: drop the big-endian platform device variant
-      gpio: mmio: get chip label and GPIO base from device properties
-      mfd: vexpress-sysreg: set-up software nodes for gpio-mmio
-      ARM: omap1: ams-delta: use generic device properties for gpio-mmio
-      ARM: s3c: crag6410: use generic device properties for gpio-mmio
-      gpio: mmio: remove struct bgpio_pdata
-      Merge tag 'gpio-mmio-remove-bgpio-pdata-for-v6.17-rc1' into gpio/for-next
-      gpio: generic: add new generic GPIO chip API
-      gpio: mxc: use lock guards for the generic GPIO chip lock
-      gpio: mxc: use new generic GPIO chip API
-      gpio: clps711x: use new generic GPIO chip API
-      gpio: cadence: use lock guards
-      gpio: cadence: use new generic GPIO chip API
-      gpio: 74xx-mmio: use new generic GPIO chip API
-      gpio: en7523: use new generic GPIO chip API
-      gpio: tegra186: don't call the set() callback directly
-      gpio: tegra186: use new GPIO line value setter callbacks
-      gpio: tegra: use new GPIO line value setter callbacks
-      gpio: thunderx: use new GPIO line value setter callbacks
-      gpio: timberdale: use new GPIO line value setter callbacks
-      gpio: tpic2810: remove unneeded callbacks
-      gpio: tpic2810: use new GPIO line value setter callbacks
-      gpio: tps65086: use new GPIO line value setter callbacks
-      gpio: tps65218: remove unneeded callbacks
-      gpio: tps65218: use new GPIO line value setter callbacks
-      gpio: tps65219: use new GPIO line value setter callbacks
-      gpio: tps6586x: use new GPIO line value setter callbacks
-      Merge tag 'pm-runtime-6.17-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm into gpio/for-next
-      gpio: sim: allow to mark simulated lines as invalid
-      gpiolib: don't use GPIO global numbers in debugfs output
-      gpio: tps65910: use new GPIO line value setter callbacks
-      gpio: tps65912: check the return value of regmap_update_bits()
-      gpio: tps65912: use new GPIO line value setter callbacks
-      gpio: tps68470: use new GPIO line value setter callbacks
-      gpio: tqmx86: use new GPIO line value setter callbacks
-      gpio: ts4900: use new GPIO line value setter callbacks
-      gpio: twl4030: use new GPIO line value setter callbacks
-      gpio: twl6040: use new GPIO line value setter callbacks
-      gpio: twl6040: set line value in .direction_out()
-      gpio: uniphier: use new GPIO line value setter callbacks
-      gpio: viperboard: use new GPIO line value setter callbacks
-      gpio: virtio: use new GPIO line value setter callbacks
-      gpio: vx855: use new GPIO line value setter callbacks
-      gpio: wcd934x: check the return value of regmap_update_bits()
-      gpio: wcd934x: use new GPIO line value setter callbacks
-      gpio: winbond: use new GPIO line value setter callbacks
-      gpio: wm831x: use new GPIO line value setter callbacks
-      gpio: wm8350: use new GPIO line value setter callbacks
-      gpio: wm8994: use new GPIO line value setter callbacks
-      gpio: xgene: use new GPIO line value setter callbacks
-      gpio: xilinx: use new GPIO line value setter callbacks
-      gpio: xlp: drop unneeded ngpio checks
-      gpio: xlp: use new GPIO line value setter callbacks
-      gpio: xra1403: use new GPIO line value setter callbacks
-      gpio: xtensa: remove unneeded .set() callback
-      gpio: xtensa: use new GPIO line value setter callbacks
-      gpio: zevio: use new GPIO line value setter callbacks
-      gpio: zynq: use new GPIO line value setter callbacks
-      gpio: zynqmp-modepin: use new GPIO line value setter callbacks
-      gpio: zynqmp-modepin: set line value in .direction_output()
-      gpio: wcove: use regmap_assign_bits() in .set()
-      gpio: wcove: use new GPIO line value setter callbacks
-      gpio: sysfs: use gpiod_is_equal() to compare GPIO descriptors
-      gpio: sysfs: add a parallel class device for each GPIO chip using device IDs
-      gpio: sysfs: only get the dirent reference for the value attr once
-      gpio: sysfs: pass gpiod_data directly to internal GPIO sysfs functions
-      gpio: sysfs: rename the data variable in gpiod_(un)export()
-      gpio: sysfs: don't use driver data in sysfs callbacks for line attributes
-      gpio: sysfs: don't look up exported lines as class devices
-      gpio: sysfs: export the GPIO directory locally in the gpiochip<id> directory
-      gpio: sysfs: allow disabling the legacy parts of the GPIO sysfs interface
-      gpio: TODO: remove the task for the sysfs rework
-      misc: ti-fpc202: remove unneeded direction check
-      misc: ti-fpc202: use new GPIO line value setter callbacks
-      gpio: xilinx: convert set_multiple() to the new API as well
-      Merge tag 'ib-mfd-gpio-power-soc-v6.17' of git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd into gpio/for-next
-      MIPS: alchemy: gpio: use new GPIO line value setter callbacks for the remaining chips
+Same here.
 
-Binbin Zhou (1):
-      gpio: loongson-64bit: Extend GPIO irq support
+> +
+> +static const struct snd_kcontrol_new dptx_virtual_out_mux_control =3D
+> +       SOC_DAPM_ENUM("DPTX_VIRTUAL_OUT_MUX", dptx_virtual_out_mux_map_en=
+um);
+> +
+> +enum {
+> +       SUPPLY_SEQ_APLL,
+> +       SUPPLY_SEQ_TDM_MCK_EN,
+> +       SUPPLY_SEQ_TDM_BCK_EN,
+> +       SUPPLY_SEQ_TDM_DPTX_MCK_EN,
+> +       SUPPLY_SEQ_TDM_DPTX_BCK_EN,
+> +       SUPPLY_SEQ_TDM_CG_EN,
+> +};
+> +
+> +static int get_tdm_id_by_name(const char *name)
+> +{
+> +       if (strstr(name, "DPTX"))
+> +               return MT8196_DAI_TDM_DPTX;
+> +       else
+> +               return MT8196_DAI_TDM;
+> +}
+> +
+> +static int mtk_tdm_bck_en_event(struct snd_soc_dapm_widget *w,
+> +                               struct snd_kcontrol *kcontrol,
+> +                               int event)
+> +{
+> +       struct snd_soc_component *cmpnt =3D snd_soc_dapm_to_component(w->=
+dapm);
+> +       struct mtk_base_afe *afe =3D snd_soc_component_get_drvdata(cmpnt)=
+;
+> +       struct mt8196_afe_private *afe_priv =3D afe->platform_priv;
+> +       int dai_id =3D get_tdm_id_by_name(w->name);
+> +       struct mtk_afe_tdm_priv *tdm_priv =3D afe_priv->dai_priv[dai_id];
+> +
+> +       dev_dbg(cmpnt->dev, "name %s, event 0x%x, dai_id %d\n",
+> +               w->name, event, dai_id);
+> +
+> +       switch (event) {
+> +       case SND_SOC_DAPM_PRE_PMU:
+> +               mt8196_mck_enable(afe, tdm_priv->bck_id, tdm_priv->bck_ra=
+te);
+> +               break;
+> +       case SND_SOC_DAPM_POST_PMD:
+> +               mt8196_mck_disable(afe, tdm_priv->bck_id);
+> +               break;
+> +       default:
+> +               break;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int mtk_tdm_mck_en_event(struct snd_soc_dapm_widget *w,
+> +                               struct snd_kcontrol *kcontrol,
+> +                               int event)
+> +{
+> +       struct snd_soc_component *cmpnt =3D snd_soc_dapm_to_component(w->=
+dapm);
+> +       struct mtk_base_afe *afe =3D snd_soc_component_get_drvdata(cmpnt)=
+;
+> +       struct mt8196_afe_private *afe_priv =3D afe->platform_priv;
+> +       int dai_id =3D get_tdm_id_by_name(w->name);
+> +       struct mtk_afe_tdm_priv *tdm_priv =3D afe_priv->dai_priv[dai_id];
+> +
+> +       dev_dbg(cmpnt->dev, "name %s, event 0x%x, dai_id %d\n",
+> +               w->name, event, dai_id);
+> +
+> +       switch (event) {
+> +       case SND_SOC_DAPM_PRE_PMU:
+> +               mt8196_mck_enable(afe, tdm_priv->mclk_id, tdm_priv->mclk_=
+rate);
+> +               break;
+> +       case SND_SOC_DAPM_POST_PMD:
+> +               tdm_priv->mclk_rate =3D 0;
+> +               mt8196_mck_disable(afe, tdm_priv->mclk_id);
+> +               break;
+> +       default:
+> +               break;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct snd_soc_dapm_widget mtk_dai_tdm_widgets[] =3D {
+> +       SND_SOC_DAPM_MUX("HDMI_CH0_MUX", SND_SOC_NOPM, 0, 0,
+> +                        &hdmi_ch0_mux_control),
+> +       SND_SOC_DAPM_MUX("HDMI_CH1_MUX", SND_SOC_NOPM, 0, 0,
+> +                        &hdmi_ch1_mux_control),
+> +       SND_SOC_DAPM_MUX("HDMI_CH2_MUX", SND_SOC_NOPM, 0, 0,
+> +                        &hdmi_ch2_mux_control),
+> +       SND_SOC_DAPM_MUX("HDMI_CH3_MUX", SND_SOC_NOPM, 0, 0,
+> +                        &hdmi_ch3_mux_control),
+> +       SND_SOC_DAPM_MUX("HDMI_CH4_MUX", SND_SOC_NOPM, 0, 0,
+> +                        &hdmi_ch4_mux_control),
+> +       SND_SOC_DAPM_MUX("HDMI_CH5_MUX", SND_SOC_NOPM, 0, 0,
+> +                        &hdmi_ch5_mux_control),
+> +       SND_SOC_DAPM_MUX("HDMI_CH6_MUX", SND_SOC_NOPM, 0, 0,
+> +                        &hdmi_ch6_mux_control),
+> +       SND_SOC_DAPM_MUX("HDMI_CH7_MUX", SND_SOC_NOPM, 0, 0,
+> +                        &hdmi_ch7_mux_control),
 
-Clément Le Goffic (1):
-      gpio: mmio: add BGPIOF_NO_INPUT flag for GPO gpiochip
+I don't think we really need these widgets. These select which channel
+from the input map to which channel on the output. However AFAIK DAPM
+doesn't really do multichannel tracking. Also since at least one channel
+is getting passed through, the route is always connected and there
+really isn't anything for DAPM to manage. Having simple kcontrols
+should be enough.
 
-Dan Carpenter (2):
-      gpio: viperboard: Unlock on error in vprbrd_gpiob_direction_output()
-      gpio: sysfs: Fix an end of loop test in gpiod_unexport()
+> +       SND_SOC_DAPM_MUX("HDMI_OUT_MUX", SND_SOC_NOPM, 0, 0,
 
-Daniel Sullivan (1):
-      gpio: ts5500: use new GPIO line value setter callbacks
+This should be named "HDMI_OUT Playback Route". This changes the kcontrol
+name seen in userspace. AFAICT, for muxes and demuxes the userspace kcontro=
+l
+name comes from the widget, not the underlying kcontrol definition.
 
-David Lechner (1):
-      gpio: virtuser: use gpiod_multi_set_value_cansleep()
+> +                        &hdmi_out_mux_control),
+> +       SND_SOC_DAPM_MUX("DPTX_OUT_MUX", SND_SOC_NOPM, 0, 0,
 
-Frank Li (3):
-      dt-bindings: gpio: convert gpio-pisosr.txt to yaml format
-      dt-bindings: gpio: convert gpio-74xx-mmio.txt to yaml format
-      dt-bindings: gpio: convert nxp,lpc1850-gpio.txt to yaml format
+This one "DPTX_OUT Playback Route".
 
-Geert Uytterhoeven (3):
-      gpio: rcar: Remove checks for empty bankmasks
-      gpio: rcar: Use new line value setter callbacks
-      gpio: rcar: Convert to DEFINE_SIMPLE_DEV_PM_OPS()
+> +                        &dptx_out_mux_control),
+> +
+> +       SND_SOC_DAPM_SUPPLY_S("TDM_BCK", SUPPLY_SEQ_TDM_BCK_EN,
+> +                             SND_SOC_NOPM, 0, 0,
+> +                             mtk_tdm_bck_en_event,
+> +                             SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PM=
+D),
+> +
+> +       SND_SOC_DAPM_SUPPLY_S("TDM_MCK", SUPPLY_SEQ_TDM_MCK_EN,
+> +                             SND_SOC_NOPM, 0, 0,
+> +                             mtk_tdm_mck_en_event,
+> +                             SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PM=
+D),
+> +
+> +       SND_SOC_DAPM_SUPPLY_S("TDM_DPTX_BCK", SUPPLY_SEQ_TDM_DPTX_BCK_EN,
+> +                             SND_SOC_NOPM, 0, 0,
+> +                             mtk_tdm_bck_en_event,
+> +                             SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PM=
+D),
+> +
+> +       SND_SOC_DAPM_SUPPLY_S("TDM_DPTX_MCK", SUPPLY_SEQ_TDM_DPTX_MCK_EN,
+> +                             SND_SOC_NOPM, 0, 0,
+> +                             mtk_tdm_mck_en_event,
+> +                             SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PM=
+D),
+> +
+> +       /* cg */
+> +       SND_SOC_DAPM_SUPPLY_S("TDM_CG", SUPPLY_SEQ_TDM_CG_EN,
+> +                             AUDIO_TOP_CON2, PDN_TDM_OUT_SFT, 1,
+> +                             NULL, 0),
+> +
+> +       SND_SOC_DAPM_MUX("DPTX_VIRTUAL_OUT_MUX",
+> +                        SND_SOC_NOPM, 0, 0, &dptx_virtual_out_mux_contro=
+l),
 
-Harald Mommer (1):
-      gpio: virtio: Fix config space reading.
+"DPTX_VIRTUAL_OUT Playback Route"
 
-Hector Martin (2):
-      gpio: Add new gpio-macsmc driver for Apple Macs
-      power: reset: macsmc-reboot: Add driver for rebooting via Apple SMC
+> +       SND_SOC_DAPM_OUTPUT("DPTX_VIRTUAL_OUT"),
+> +};
+> +
+> +static int mtk_afe_tdm_apll_connect(struct snd_soc_dapm_widget *source,
+> +                                   struct snd_soc_dapm_widget *sink)
+> +{
+> +       struct snd_soc_dapm_widget *w =3D sink;
+> +       struct snd_soc_component *cmpnt =3D snd_soc_dapm_to_component(w->=
+dapm);
 
-Hugo Villeneuve (1):
-      gpio: pca953x: use regmap_update_bits() to improve performance
+Just combine the two? Having the placeholder `w` doesn't help readability.
+Instead you could just slightly go over the 80 character limit here.
 
-Jiri Slaby (SUSE) (1):
-      gpio: Use dev_fwnode() where applicable across drivers
+> +       struct mtk_base_afe *afe =3D snd_soc_component_get_drvdata(cmpnt)=
+;
+> +       struct mt8196_afe_private *afe_priv =3D afe->platform_priv;
+> +       int dai_id =3D get_tdm_id_by_name(w->name);
+> +       struct mtk_afe_tdm_priv *tdm_priv =3D afe_priv->dai_priv[dai_id];
+> +       int cur_apll;
+> +
+> +       /* which apll */
+> +       cur_apll =3D mt8196_get_apll_by_name(afe, source->name);
+> +
+> +       return (tdm_priv->mclk_apll =3D=3D cur_apll) ? 1 : 0;
+> +}
+> +
+> +static const struct snd_soc_dapm_route mtk_dai_tdm_routes[] =3D {
+> +       {"HDMI_CH0_MUX", "CH0", "HDMI"},
+> +       {"HDMI_CH0_MUX", "CH1", "HDMI"},
+> +       {"HDMI_CH0_MUX", "CH2", "HDMI"},
+> +       {"HDMI_CH0_MUX", "CH3", "HDMI"},
+> +       {"HDMI_CH0_MUX", "CH4", "HDMI"},
+> +       {"HDMI_CH0_MUX", "CH5", "HDMI"},
+> +       {"HDMI_CH0_MUX", "CH6", "HDMI"},
+> +       {"HDMI_CH0_MUX", "CH7", "HDMI"},
+> +
+> +       {"HDMI_CH1_MUX", "CH0", "HDMI"},
+> +       {"HDMI_CH1_MUX", "CH1", "HDMI"},
+> +       {"HDMI_CH1_MUX", "CH2", "HDMI"},
+> +       {"HDMI_CH1_MUX", "CH3", "HDMI"},
+> +       {"HDMI_CH1_MUX", "CH4", "HDMI"},
+> +       {"HDMI_CH1_MUX", "CH5", "HDMI"},
+> +       {"HDMI_CH1_MUX", "CH6", "HDMI"},
+> +       {"HDMI_CH1_MUX", "CH7", "HDMI"},
+> +
+> +       {"HDMI_CH2_MUX", "CH0", "HDMI"},
+> +       {"HDMI_CH2_MUX", "CH1", "HDMI"},
+> +       {"HDMI_CH2_MUX", "CH2", "HDMI"},
+> +       {"HDMI_CH2_MUX", "CH3", "HDMI"},
+> +       {"HDMI_CH2_MUX", "CH4", "HDMI"},
+> +       {"HDMI_CH2_MUX", "CH5", "HDMI"},
+> +       {"HDMI_CH2_MUX", "CH6", "HDMI"},
+> +       {"HDMI_CH2_MUX", "CH7", "HDMI"},
+> +
+> +       {"HDMI_CH3_MUX", "CH0", "HDMI"},
+> +       {"HDMI_CH3_MUX", "CH1", "HDMI"},
+> +       {"HDMI_CH3_MUX", "CH2", "HDMI"},
+> +       {"HDMI_CH3_MUX", "CH3", "HDMI"},
+> +       {"HDMI_CH3_MUX", "CH4", "HDMI"},
+> +       {"HDMI_CH3_MUX", "CH5", "HDMI"},
+> +       {"HDMI_CH3_MUX", "CH6", "HDMI"},
+> +       {"HDMI_CH3_MUX", "CH7", "HDMI"},
+> +
+> +       {"HDMI_CH4_MUX", "CH0", "HDMI"},
+> +       {"HDMI_CH4_MUX", "CH1", "HDMI"},
+> +       {"HDMI_CH4_MUX", "CH2", "HDMI"},
+> +       {"HDMI_CH4_MUX", "CH3", "HDMI"},
+> +       {"HDMI_CH4_MUX", "CH4", "HDMI"},
+> +       {"HDMI_CH4_MUX", "CH5", "HDMI"},
+> +       {"HDMI_CH4_MUX", "CH6", "HDMI"},
+> +       {"HDMI_CH4_MUX", "CH7", "HDMI"},
+> +
+> +       {"HDMI_CH5_MUX", "CH0", "HDMI"},
+> +       {"HDMI_CH5_MUX", "CH1", "HDMI"},
+> +       {"HDMI_CH5_MUX", "CH2", "HDMI"},
+> +       {"HDMI_CH5_MUX", "CH3", "HDMI"},
+> +       {"HDMI_CH5_MUX", "CH4", "HDMI"},
+> +       {"HDMI_CH5_MUX", "CH5", "HDMI"},
+> +       {"HDMI_CH5_MUX", "CH6", "HDMI"},
+> +       {"HDMI_CH5_MUX", "CH7", "HDMI"},
+> +
+> +       {"HDMI_CH6_MUX", "CH0", "HDMI"},
+> +       {"HDMI_CH6_MUX", "CH1", "HDMI"},
+> +       {"HDMI_CH6_MUX", "CH2", "HDMI"},
+> +       {"HDMI_CH6_MUX", "CH3", "HDMI"},
+> +       {"HDMI_CH6_MUX", "CH4", "HDMI"},
+> +       {"HDMI_CH6_MUX", "CH5", "HDMI"},
+> +       {"HDMI_CH6_MUX", "CH6", "HDMI"},
+> +       {"HDMI_CH6_MUX", "CH7", "HDMI"},
+> +
+> +       {"HDMI_CH7_MUX", "CH0", "HDMI"},
+> +       {"HDMI_CH7_MUX", "CH1", "HDMI"},
+> +       {"HDMI_CH7_MUX", "CH2", "HDMI"},
+> +       {"HDMI_CH7_MUX", "CH3", "HDMI"},
+> +       {"HDMI_CH7_MUX", "CH4", "HDMI"},
+> +       {"HDMI_CH7_MUX", "CH5", "HDMI"},
+> +       {"HDMI_CH7_MUX", "CH6", "HDMI"},
+> +       {"HDMI_CH7_MUX", "CH7", "HDMI"},
+> +
+> +       {"HDMI_OUT_MUX", "Connect", "HDMI_CH0_MUX"},
+> +       {"HDMI_OUT_MUX", "Connect", "HDMI_CH1_MUX"},
+> +       {"HDMI_OUT_MUX", "Connect", "HDMI_CH2_MUX"},
+> +       {"HDMI_OUT_MUX", "Connect", "HDMI_CH3_MUX"},
+> +       {"HDMI_OUT_MUX", "Connect", "HDMI_CH4_MUX"},
+> +       {"HDMI_OUT_MUX", "Connect", "HDMI_CH5_MUX"},
+> +       {"HDMI_OUT_MUX", "Connect", "HDMI_CH6_MUX"},
+> +       {"HDMI_OUT_MUX", "Connect", "HDMI_CH7_MUX"},
+> +
+> +       {"DPTX_OUT_MUX", "Connect", "HDMI_CH0_MUX"},
+> +       {"DPTX_OUT_MUX", "Connect", "HDMI_CH1_MUX"},
+> +       {"DPTX_OUT_MUX", "Connect", "HDMI_CH2_MUX"},
+> +       {"DPTX_OUT_MUX", "Connect", "HDMI_CH3_MUX"},
+> +       {"DPTX_OUT_MUX", "Connect", "HDMI_CH4_MUX"},
+> +       {"DPTX_OUT_MUX", "Connect", "HDMI_CH5_MUX"},
+> +       {"DPTX_OUT_MUX", "Connect", "HDMI_CH6_MUX"},
+> +       {"DPTX_OUT_MUX", "Connect", "HDMI_CH7_MUX"},
 
-Jonas Karlman (1):
-      dt-bindings: gpio: rockchip: Allow use of a power-domain
+As mentioned above the channel mux widgets don't really do anything.
+Just use normal kcontrols and the aboue routes can be simplified to just
 
-Krzysztof Kozlowski (1):
-      gpio: sloppy-logic-analyzer: Fully open-code compatible for grepping
+          { "HDMI_OUT_MUX", "Connect", "HDMI" }
+          { "DPTX_OUT_MUX", "Connect", "HDMI" },
 
-Maria Garcia (2):
-      dt-bindings: gpio: pca95xx: add TI TCA6418
-      gpio: pca953x: Add support for TI TCA6418
+Also note that there should be one space between the braces ("{}") and
+the elements.
 
-Michal Simek (1):
-      dt-bindings: gpio: gpio-xilinx: Mark clocks as required property
+> +       {"TDM", NULL, "HDMI_OUT_MUX"},
+> +       {"TDM", NULL, "TDM_BCK"},
+> +       {"TDM", NULL, "TDM_CG"},
+> +
+> +       {"TDM_DPTX", NULL, "DPTX_OUT_MUX"},
+> +       {"TDM_DPTX", NULL, "TDM_DPTX_BCK"},
+> +       {"TDM_DPTX", NULL, "TDM_CG"},
+> +
+> +       {"TDM_BCK", NULL, "TDM_MCK"},
+> +       {"TDM_DPTX_BCK", NULL, "TDM_DPTX_MCK"},
+> +       {"TDM_MCK", NULL, APLL1_W_NAME, mtk_afe_tdm_apll_connect},
+> +       {"TDM_MCK", NULL, APLL2_W_NAME, mtk_afe_tdm_apll_connect},
+> +       {"TDM_DPTX_MCK", NULL, APLL1_W_NAME, mtk_afe_tdm_apll_connect},
+> +       {"TDM_DPTX_MCK", NULL, APLL2_W_NAME, mtk_afe_tdm_apll_connect},
+> +
+> +       {"DPTX_VIRTUAL_OUT_MUX", "Connect", "TDM_DPTX"},
+> +       {"DPTX_VIRTUAL_OUT", NULL, "DPTX_VIRTUAL_OUT_MUX"},
+> +};
+> +
+> +/* dai ops */
+> +static int mtk_dai_tdm_cal_mclk(struct mtk_base_afe *afe,
+> +                               struct mtk_afe_tdm_priv *tdm_priv,
+> +                               int freq)
+> +{
+> +       int apll;
+> +       int apll_rate;
+> +
+> +       apll =3D mt8196_get_apll_by_rate(afe, freq);
+> +       apll_rate =3D mt8196_get_apll_rate(afe, apll);
+> +
+> +       if (freq > apll_rate)
+> +               return -EINVAL;
+> +
+> +       if (apll_rate % freq !=3D 0)
+> +               return -EINVAL;
+> +
+> +       tdm_priv->mclk_rate =3D freq;
+> +       tdm_priv->mclk_apll =3D apll;
+> +
+> +       return 0;
+> +}
+> +
+> +static int mtk_dai_tdm_hw_params(struct snd_pcm_substream *substream,
+> +                                struct snd_pcm_hw_params *params,
+> +                                struct snd_soc_dai *dai)
+> +{
+> +       struct mtk_base_afe *afe =3D snd_soc_dai_get_drvdata(dai);
+> +       struct mt8196_afe_private *afe_priv =3D afe->platform_priv;
+> +       int tdm_id =3D dai->id;
+> +       struct mtk_afe_tdm_priv *tdm_priv;
+> +       unsigned int rate =3D params_rate(params);
+> +       unsigned int channels =3D params_channels(params);
+> +       snd_pcm_format_t format =3D params_format(params);
+> +       unsigned int tdm_con =3D 0;
+> +
+> +       if (tdm_id >=3D MT8196_DAI_NUM || tdm_id < 0)
+> +               return -EINVAL;
+> +
+> +       tdm_priv =3D afe_priv->dai_priv[tdm_id];
+> +
+> +       if (!tdm_priv)
+> +               return -EINVAL;
+> +
+> +       /* calculate mclk_rate, if not set explicitly */
+> +       if (!tdm_priv->mclk_rate) {
+> +               tdm_priv->mclk_rate =3D rate * tdm_priv->mclk_multiple;
+> +               mtk_dai_tdm_cal_mclk(afe,
+> +                                    tdm_priv,
+> +                                    tdm_priv->mclk_rate);
+> +       }
+> +
+> +       /* calculate bck */
+> +       tdm_priv->bck_rate =3D rate *
+> +                            channels *
+> +                            snd_pcm_format_physical_width(format);
+> +
+> +       if (tdm_priv->bck_rate > tdm_priv->mclk_rate)
+> +               return -EINVAL;
+> +
+> +       if (tdm_priv->mclk_rate % tdm_priv->bck_rate !=3D 0)
+> +               return -EINVAL;
+> +
+> +       dev_info(afe->dev, "id %d, rate %d, channels %d, format %d, mclk_=
+rate %d, bck_rate %d\n",
+> +                tdm_id, rate, channels, format,
+> +                tdm_priv->mclk_rate, tdm_priv->bck_rate);
 
-Nuno Sá (20):
-      dt-bindings: mfd: adp5585: ease on the required properties
-      mfd: adp5585: Only add devices given in FW
-      mfd: adp5585: Enable oscillator during probe
-      mfd: adp5585: Make use of MFD_CELL_NAME()
-      dt-bindings: mfd: adp5585: document adp5589 I/O expander
-      mfd: adp5585: Refactor how regmap defaults are handled
-      mfd: adp5585: Add support for adp5589
-      mfd: adp5585: Add a per chip reg struture
-      gpio: adp5585: add support for the adp5589 expander
-      pwm: adp5585: add support for adp5589
-      dt-bindings: mfd: adp5585: add properties for input events
-      mfd: adp5585: Add support for event handling
-      mfd: adp5585: Support reset and unlock events
-      mfd: adp5585: Add support for input devices
-      gpio: adp5585: support gpi events
-      Input: adp5585: Add Analog Devices ADP5585/89 support
-      Input: adp5589: remove the driver
-      mfd: adp5585: Support getting vdd regulator
-      dt-bindings: mfd: adp5585: document reset gpio
-      mfd: adp5585: Add support for a reset pin
+Please make this debug level.
 
-Rob Herring (Arm) (17):
-      dt-bindings: gpio: arm,pl061: Drop interrupt properties as required
-      dt-bindings: gpio: Convert lacie,netxbig-gpio-ext to DT schema
-      dt-bindings: gpio: Convert microchip,pic32mzda-gpio to DT schema
-      dt-bindings: gpio: Convert exar,xra1403 to DT schema
-      dt-bindings: gpio: Convert cavium,octeon-3860-gpio to DT schema
-      dt-bindings: gpio: Convert cirrus,clps711x-mctrl-gpio to DT schema
-      dt-bindings: gpio: Convert altr,pio-1.0 to DT schema
-      dt-bindings: gpio: Convert ti,keystone-dsp-gpio to DT schema
-      dt-bindings: gpio: Convert lantiq,gpio-mm-lantiq to DT schema
-      dt-bindings: gpio: Convert ti,twl4030-gpio to DT schema
-      dt-bindings: gpio: Convert apm,xgene-gpio-sb to DT schema
-      dt-bindings: gpio: Convert abilis,tb10x-gpio to DT schema
-      dt-bindings: gpio: Convert st,spear-spics-gpio to DT schema
-      dt-bindings: gpio: Create a trivial GPIO schema
-      dt-bindings: gpio: fsl,qoriq-gpio: Add missing mpc8xxx compatibles
-      dt-bindings: gpio: Convert maxim,max3191x to DT schema
-      dt-bindings: gpio: Convert qca,ar7100-gpio to DT schema
+> +
+> +       /* set tdm */
+> +       tdm_con =3D 0 << BCK_INVERSE_SFT;
+> +       tdm_con |=3D 0 << LRCK_INVERSE_SFT;
+> +       tdm_con |=3D 0 << DELAY_DATA_SFT;
+> +       tdm_con |=3D 1 << LEFT_ALIGN_SFT;
+> +       tdm_con |=3D get_tdm_wlen(format) << WLEN_SFT;
+> +       tdm_con |=3D get_tdm_ch(channels) << CHANNEL_NUM_SFT;
+> +       tdm_con |=3D get_tdm_channel_bck(format) << CHANNEL_BCK_CYCLES_SF=
+T;
+> +       tdm_con |=3D get_tdm_lrck_width(format) << LRCK_TDM_WIDTH_SFT;
+> +       regmap_write(afe->regmap, AFE_TDM_CON1, tdm_con);
+> +
+> +       /* set dptx */
+> +       if (tdm_id =3D=3D MT8196_DAI_TDM_DPTX) {
+> +               regmap_update_bits(afe->regmap, AFE_DPTX_CON,
+> +                                  DPTX_CHANNEL_ENABLE_MASK_SFT,
+> +                                  get_dptx_ch_enable_mask(channels) <<
+> +                                  DPTX_CHANNEL_ENABLE_SFT);
+> +               regmap_update_bits(afe->regmap, AFE_DPTX_CON,
+> +                                  DPTX_CHANNEL_NUMBER_MASK_SFT,
+> +                                  get_dptx_ch(channels) <<
+> +                                  DPTX_CHANNEL_NUMBER_SFT);
+> +               regmap_update_bits(afe->regmap, AFE_DPTX_CON,
+> +                                  DPTX_16BIT_MASK_SFT,
+> +                                  get_dptx_wlen(format) << DPTX_16BIT_SF=
+T);
+> +       }
 
-Russell King (Oracle) (2):
-      dt-bindings: gpio: Add Apple Mac SMC GPIO block
-      dt-bindings: mfd: Add Apple Mac System Management Controller
 
-Sakari Ailus (7):
-      PM: runtime: Document return values of suspend-related API functions
-      PM: runtime: Mark last busy stamp in pm_runtime_put_autosuspend()
-      PM: runtime: Mark last busy stamp in pm_runtime_put_sync_autosuspend()
-      PM: runtime: Mark last busy stamp in pm_runtime_autosuspend()
-      PM: runtime: Mark last busy stamp in pm_request_autosuspend()
-      Documentation: PM: *_autosuspend() functions update last busy time
-      gpio: arizona: Remove redundant pm_runtime_mark_last_busy() calls
+> +               switch (channels) {
+> +               case 1:
+> +               case 2:
+> +                       tdm_con =3D TDM_CH_START_O30_O31 << ST_CH_PAIR_SO=
+UT0_SFT;
+> +                       tdm_con |=3D TDM_CH_ZERO << ST_CH_PAIR_SOUT1_SFT;
+> +                       tdm_con |=3D TDM_CH_ZERO << ST_CH_PAIR_SOUT2_SFT;
+> +                       tdm_con |=3D TDM_CH_ZERO << ST_CH_PAIR_SOUT3_SFT;
+> +                       break;
+> +               case 3:
+> +               case 4:
+> +                       tdm_con =3D TDM_CH_START_O30_O31 << ST_CH_PAIR_SO=
+UT0_SFT;
+> +                       tdm_con |=3D TDM_CH_START_O32_O33 << ST_CH_PAIR_S=
+OUT1_SFT;
+> +                       tdm_con |=3D TDM_CH_ZERO << ST_CH_PAIR_SOUT2_SFT;
+> +                       tdm_con |=3D TDM_CH_ZERO << ST_CH_PAIR_SOUT3_SFT;
+> +                       break;
+> +               case 5:
+> +               case 6:
+> +                       tdm_con =3D TDM_CH_START_O30_O31 << ST_CH_PAIR_SO=
+UT0_SFT;
+> +                       tdm_con |=3D TDM_CH_START_O32_O33 << ST_CH_PAIR_S=
+OUT1_SFT;
+> +                       tdm_con |=3D TDM_CH_START_O34_O35 << ST_CH_PAIR_S=
+OUT2_SFT;
+> +                       tdm_con |=3D TDM_CH_ZERO << ST_CH_PAIR_SOUT3_SFT;
+> +                       break;
+> +               case 7:
+> +               case 8:
+> +                       tdm_con =3D TDM_CH_START_O30_O31 << ST_CH_PAIR_SO=
+UT0_SFT;
+> +                       tdm_con |=3D TDM_CH_START_O32_O33 << ST_CH_PAIR_S=
+OUT1_SFT;
+> +                       tdm_con |=3D TDM_CH_START_O34_O35 << ST_CH_PAIR_S=
+OUT2_SFT;
+> +                       tdm_con |=3D TDM_CH_START_O36_O37 << ST_CH_PAIR_S=
+OUT3_SFT;
+> +                       break;
+> +               default:
+> +                       tdm_con =3D 0;
+> +               }
 
-Shree Ramamoorthy (2):
-      gpio: tps65219: Update _IDX & _OFFSET macro prefix
-      gpio: tps65219: Add support for TI TPS65214 PMIC
+The indentation for this block is incorrect.
 
-Stefan Wahren (1):
-      gpio: raspberrypi-exp: use new GPIO line value setter callbacks
+> +       regmap_write(afe->regmap, AFE_TDM_CON2, tdm_con);
+> +       regmap_update_bits(afe->regmap, AFE_HDMI_OUT_CON0,
+> +                          HDMI_CH_NUM_MASK_SFT,
+> +                          channels << HDMI_CH_NUM_SFT);
+> +
+> +       return 0;
+> +}
+> +
+> +static int mtk_dai_tdm_trigger(struct snd_pcm_substream *substream,
+> +                              int cmd,
+> +                              struct snd_soc_dai *dai)
+> +{
+> +       struct mtk_base_afe *afe =3D snd_soc_dai_get_drvdata(dai);
+> +       int tdm_id =3D dai->id;
+> +
+> +       dev_dbg(afe->dev, "cmd %d, tdm_id %d\n", cmd, tdm_id);
+> +
+> +       switch (cmd) {
+> +       case SNDRV_PCM_TRIGGER_START:
+> +       case SNDRV_PCM_TRIGGER_RESUME:
+> +               /* enable Out control */
+> +               regmap_update_bits(afe->regmap, AFE_HDMI_OUT_CON0,
+> +                                  HDMI_OUT_ON_MASK_SFT,
+> +                                  0x1 << HDMI_OUT_ON_SFT);
 
-Sven Peter (3):
-      dt-bindings: power: reboot: Add Apple Mac SMC Reboot Controller
-      soc: apple: rtkit: Make shmem_destroy optional
-      mfd: Add Apple Silicon System Management Controller
+This is already controlled from the "HDMI" PCM component driver.
+The DAI driver should not touch it.
 
-Yang Li (1):
-      gpio: cadence: Remove duplicated include in gpio-cadence.c
+> +
+> +               /* enable dptx */
+> +               if (tdm_id =3D=3D MT8196_DAI_TDM_DPTX) {
+> +                       regmap_update_bits(afe->regmap, AFE_DPTX_CON,
+> +                                          DPTX_ON_MASK_SFT, 0x1 <<
+> +                                          DPTX_ON_SFT);
+> +               }
+> +
+> +               /* enable tdm */
+> +               regmap_update_bits(afe->regmap, AFE_TDM_CON1,
+> +                                  TDM_EN_MASK_SFT, 0x1 << TDM_EN_SFT);
+> +               break;
+> +       case SNDRV_PCM_TRIGGER_STOP:
+> +       case SNDRV_PCM_TRIGGER_SUSPEND:
+> +               /* disable tdm */
+> +               regmap_update_bits(afe->regmap, AFE_TDM_CON1,
+> +                                  TDM_EN_MASK_SFT, 0);
+> +
+> +               /* disable dptx */
+> +               if (tdm_id =3D=3D MT8196_DAI_TDM_DPTX) {
+> +                       regmap_update_bits(afe->regmap, AFE_DPTX_CON,
+> +                                          DPTX_ON_MASK_SFT, 0);
+> +               }
+> +
+> +               /* disable Out control */
+> +               regmap_update_bits(afe->regmap, AFE_HDMI_OUT_CON0,
+> +                                  HDMI_OUT_ON_MASK_SFT, 0);
+> +               break;
+> +       default:
+> +               return -EINVAL;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int mtk_dai_tdm_set_sysclk(struct snd_soc_dai *dai,
+> +                                 int clk_id, unsigned int freq, int dir)
+> +{
+> +       struct mtk_base_afe *afe =3D dev_get_drvdata(dai->dev);
+> +       struct mt8196_afe_private *afe_priv =3D afe->platform_priv;
+> +       struct mtk_afe_tdm_priv *tdm_priv;
+> +
+> +       if (dai->id >=3D MT8196_DAI_NUM || dai->id < 0)
+> +               return -EINVAL;
+> +
+> +       tdm_priv =3D afe_priv->dai_priv[dai->id];
+> +
+> +       if (!tdm_priv)
+> +               return -EINVAL;
+> +
+> +       if (dir !=3D SND_SOC_CLOCK_OUT)
+> +               return -EINVAL;
+> +
+> +       dev_dbg(afe->dev, "freq %d\n", freq);
+> +
+> +       return mtk_dai_tdm_cal_mclk(afe, tdm_priv, freq);
+> +}
+> +
+> +static const struct snd_soc_dai_ops mtk_dai_tdm_ops =3D {
+> +       .hw_params =3D mtk_dai_tdm_hw_params,
+> +       .trigger =3D mtk_dai_tdm_trigger,
+> +       .set_sysclk =3D mtk_dai_tdm_set_sysclk,
+> +};
+> +
+> +/* dai driver */
+> +#define MTK_TDM_RATES (SNDRV_PCM_RATE_8000_48000 |\
+> +                      SNDRV_PCM_RATE_88200 |\
+> +                      SNDRV_PCM_RATE_96000 |\
+> +                      SNDRV_PCM_RATE_176400 |\
+> +                      SNDRV_PCM_RATE_192000)
+> +
+> +#define MTK_TDM_FORMATS (SNDRV_PCM_FMTBIT_S16_LE |\
+> +                        SNDRV_PCM_FMTBIT_S24_LE |\
+> +                        SNDRV_PCM_FMTBIT_S32_LE)
+> +
+> +static struct snd_soc_dai_driver mtk_dai_tdm_driver[] =3D {
+> +       {
+> +               .name =3D "TDM",
+> +               .id =3D MT8196_DAI_TDM,
+> +               .playback =3D {
+> +                       .stream_name =3D "TDM",
+> +                       .channels_min =3D 2,
+> +                       .channels_max =3D 8,
+> +                       .rates =3D MTK_TDM_RATES,
+> +                       .formats =3D MTK_TDM_FORMATS,
+> +               },
+> +               .ops =3D &mtk_dai_tdm_ops,
+> +       },
+> +       {
+> +               .name =3D "TDM_DPTX",
+> +               .id =3D MT8196_DAI_TDM_DPTX,
+> +               .playback =3D {
+> +                       .stream_name =3D "TDM_DPTX",
+> +                       .channels_min =3D 2,
+> +                       .channels_max =3D 8,
+> +                       .rates =3D MTK_TDM_RATES,
+> +                       .formats =3D MTK_TDM_FORMATS,
+> +               },
+> +               .ops =3D &mtk_dai_tdm_ops,
+> +       },
+> +};
+> +
+> +static struct mtk_afe_tdm_priv *init_tdm_priv_data(struct mtk_base_afe *=
+afe,
+> +                                                  int id)
+> +{
+> +       struct mtk_afe_tdm_priv *tdm_priv;
+> +
+> +       tdm_priv =3D devm_kzalloc(afe->dev, sizeof(struct mtk_afe_tdm_pri=
+v),
+> +                               GFP_KERNEL);
+> +       if (!tdm_priv)
+> +               return NULL;
+> +
+> +       if (id =3D=3D MT8196_DAI_TDM_DPTX)
+> +               tdm_priv->mclk_multiple =3D 256;
+> +       else
+> +               tdm_priv->mclk_multiple =3D 128;
+> +
+> +       tdm_priv->bck_id =3D MT8196_TDMOUT_BCK;
+> +       tdm_priv->mclk_id =3D MT8196_TDMOUT_MCK;
+> +
+> +       return tdm_priv;
+> +}
+> +
+> +int mt8196_dai_tdm_register(struct mtk_base_afe *afe)
+> +{
+> +       struct mt8196_afe_private *afe_priv =3D afe->platform_priv;
+> +       struct mtk_afe_tdm_priv *tdm_priv, *tdm_dptx_priv;
+> +       struct mtk_base_afe_dai *dai;
+> +
+> +       dai =3D devm_kzalloc(afe->dev, sizeof(*dai), GFP_KERNEL);
+> +       if (!dai)
+> +               return -ENOMEM;
+> +
+> +       list_add(&dai->list, &afe->sub_dais);
 
- Documentation/ABI/obsolete/sysfs-gpio              |   12 +-
- Documentation/admin-guide/gpio/gpio-sim.rst        |    7 +-
- .../devicetree/bindings/fpga/fpga-region.yaml      |    1 +
- .../devicetree/bindings/gpio/8xxx_gpio.txt         |   72 --
- .../devicetree/bindings/gpio/abilis,tb10x-gpio.txt |   35 -
- .../bindings/gpio/abilis,tb10x-gpio.yaml           |   63 ++
- .../devicetree/bindings/gpio/altr-pio-1.0.yaml     |   75 ++
- .../bindings/gpio/apm,xgene-gpio-sb.yaml           |   94 ++
- .../devicetree/bindings/gpio/apple,smc-gpio.yaml   |   29 +
- .../bindings/gpio/cavium,octeon-3860-gpio.yaml     |   62 ++
- .../bindings/gpio/cavium-octeon-gpio.txt           |   49 -
- .../bindings/gpio/cirrus,clps711x-mctrl-gpio.txt   |   17 -
- .../bindings/gpio/cirrus,clps711x-mctrl-gpio.yaml  |   49 +
- .../devicetree/bindings/gpio/exar,xra1403.yaml     |   75 ++
- .../devicetree/bindings/gpio/fcs,fxl6408.yaml      |   59 --
- .../devicetree/bindings/gpio/fsl,qoriq-gpio.yaml   |    7 +
- .../bindings/gpio/gateworks,pld-gpio.txt           |   19 -
- .../devicetree/bindings/gpio/gpio-74xx-mmio.txt    |   30 -
- .../devicetree/bindings/gpio/gpio-altera.txt       |   44 -
- .../devicetree/bindings/gpio/gpio-ath79.txt        |   37 -
- .../devicetree/bindings/gpio/gpio-clps711x.txt     |   28 -
- .../devicetree/bindings/gpio/gpio-dsp-keystone.txt |   39 -
- .../devicetree/bindings/gpio/gpio-lp3943.txt       |   37 -
- .../devicetree/bindings/gpio/gpio-max3191x.txt     |   59 --
- .../devicetree/bindings/gpio/gpio-max77620.txt     |   25 -
- .../devicetree/bindings/gpio/gpio-mm-lantiq.txt    |   38 -
- .../devicetree/bindings/gpio/gpio-moxtet.txt       |   18 -
- .../devicetree/bindings/gpio/gpio-palmas.txt       |   27 -
- .../devicetree/bindings/gpio/gpio-pca9570.yaml     |   56 -
- .../devicetree/bindings/gpio/gpio-pca95xx.yaml     |    1 +
- .../devicetree/bindings/gpio/gpio-pisosr.txt       |   34 -
- .../devicetree/bindings/gpio/gpio-tpic2810.yaml    |   51 -
- .../devicetree/bindings/gpio/gpio-ts4800.txt       |   20 -
- .../devicetree/bindings/gpio/gpio-ts4900.txt       |   30 -
- .../devicetree/bindings/gpio/gpio-twl4030.txt      |   29 -
- .../devicetree/bindings/gpio/gpio-xgene-sb.txt     |   64 --
- .../devicetree/bindings/gpio/gpio-xgene.txt        |   22 -
- .../devicetree/bindings/gpio/gpio-xra1403.txt      |   46 -
- .../devicetree/bindings/gpio/ibm,ppc4xx-gpio.txt   |   24 -
- .../bindings/gpio/lacie,netxbig-gpio-ext.yaml      |   60 ++
- .../bindings/gpio/lantiq,gpio-mm-lantiq.yaml       |   54 +
- .../bindings/gpio/loongson,ls1x-gpio.yaml          |   49 -
- .../devicetree/bindings/gpio/maxim,max31910.yaml   |  104 ++
- .../bindings/gpio/microchip,pic32-gpio.txt         |   49 -
- .../bindings/gpio/microchip,pic32mzda-gpio.yaml    |   71 ++
- .../devicetree/bindings/gpio/netxbig-gpio-ext.txt  |   22 -
- .../bindings/gpio/nintendo,hollywood-gpio.txt      |   26 -
- .../devicetree/bindings/gpio/nxp,lpc1850-gpio.txt  |   59 --
- .../devicetree/bindings/gpio/nxp,lpc1850-gpio.yaml |   78 ++
- .../devicetree/bindings/gpio/pisosr-gpio.yaml      |   67 ++
- .../devicetree/bindings/gpio/pl061-gpio.yaml       |    3 -
- .../devicetree/bindings/gpio/qca,ar7100-gpio.yaml  |   60 ++
- .../bindings/gpio/rockchip,gpio-bank.yaml          |    3 +
- .../bindings/gpio/rockchip,rk3328-grf-gpio.yaml    |   50 -
- .../devicetree/bindings/gpio/snps,creg-gpio.txt    |   21 -
- .../devicetree/bindings/gpio/spear_spics.txt       |   49 -
- .../bindings/gpio/st,spear-spics-gpio.yaml         |   82 ++
- .../bindings/gpio/ti,keystone-dsp-gpio.yaml        |   65 ++
- .../devicetree/bindings/gpio/ti,twl4030-gpio.yaml  |   61 ++
- .../devicetree/bindings/gpio/trivial-gpio.yaml     |  110 ++
- .../devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml |    1 +
- .../devicetree/bindings/mfd/adi,adp5585.yaml       |  240 ++++-
- .../devicetree/bindings/mfd/apple,smc.yaml         |   79 ++
- Documentation/devicetree/bindings/mfd/lp3943.txt   |    2 +-
- .../bindings/power/reset/apple,smc-reboot.yaml     |   40 +
- .../devicetree/bindings/powerpc/nintendo/wii.txt   |    4 -
- .../devicetree/bindings/soc/rockchip/grf.yaml      |    8 +-
- .../devicetree/bindings/trivial-devices.yaml       |    2 -
- Documentation/driver-api/driver-model/devres.rst   |    1 -
- Documentation/power/runtime_pm.rst                 |   50 +-
- MAINTAINERS                                        |   13 +-
- arch/arm/mach-omap1/board-ams-delta.c              |   42 +-
- arch/arm/mach-s3c/mach-crag6410.c                  |   17 +-
- arch/arm/mach-sa1100/assabet.c                     |    2 +-
- arch/arm/mach-sa1100/neponset.c                    |    2 +-
- arch/mips/alchemy/common/gpiolib.c                 |   12 +-
- drivers/gpio/Kconfig                               |   24 +-
- drivers/gpio/Makefile                              |    3 +-
- drivers/gpio/TODO                                  |   19 +-
- drivers/gpio/gpio-74xx-mmio.c                      |   32 +-
- drivers/gpio/gpio-adp5585.c                        |  364 ++++++-
- drivers/gpio/gpio-arizona.c                        |    2 -
- drivers/gpio/gpio-brcmstb.c                        |    6 +-
- drivers/gpio/gpio-cadence.c                        |   59 +-
- drivers/gpio/gpio-clps711x.c                       |   28 +-
- drivers/gpio/gpio-davinci.c                        |    2 +-
- drivers/gpio/gpio-em.c                             |    3 +-
- drivers/gpio/gpio-en7523.c                         |   36 +-
- drivers/gpio/gpio-grgpio.c                         |    5 +-
- drivers/gpio/gpio-loongson-64bit.c                 |    6 +
- drivers/gpio/gpio-lpc18xx.c                        |    4 +-
- drivers/gpio/gpio-macsmc.c                         |  292 ++++++
- drivers/gpio/gpio-mm-lantiq.c                      |   12 +-
- drivers/gpio/gpio-mmio.c                           |  131 ++-
- drivers/gpio/gpio-moxtet.c                         |   16 +-
- drivers/gpio/gpio-mpc5200.c                        |   12 +-
- drivers/gpio/gpio-mpfs.c                           |   11 +-
- drivers/gpio/gpio-mpsse.c                          |   22 +-
- drivers/gpio/gpio-msc313.c                         |    6 +-
- drivers/gpio/gpio-mvebu.c                          |    4 +-
- drivers/gpio/gpio-mxc.c                            |   91 +-
- drivers/gpio/gpio-mxs.c                            |    2 +-
- drivers/gpio/gpio-nomadik.c                        |    8 +-
- drivers/gpio/gpio-npcm-sgpio.c                     |   10 +-
- drivers/gpio/gpio-octeon.c                         |    7 +-
- drivers/gpio/gpio-omap.c                           |   14 +-
- drivers/gpio/gpio-palmas.c                         |   26 +-
- drivers/gpio/gpio-pca953x.c                        |  169 +++-
- drivers/gpio/gpio-pca9570.c                        |    5 +-
- drivers/gpio/gpio-pcf857x.c                        |   17 +-
- drivers/gpio/gpio-pch.c                            |    6 +-
- drivers/gpio/gpio-pisosr.c                         |    8 -
- drivers/gpio/gpio-pl061.c                          |    6 +-
- drivers/gpio/gpio-pmic-eic-sprd.c                  |    7 -
- drivers/gpio/gpio-pxa.c                            |   11 +-
- drivers/gpio/gpio-raspberrypi-exp.c                |   10 +-
- drivers/gpio/gpio-rc5t583.c                        |   19 +-
- drivers/gpio/gpio-rcar.c                           |   35 +-
- drivers/gpio/gpio-rdc321x.c                        |    8 +-
- drivers/gpio/gpio-reg.c                            |   16 +-
- drivers/gpio/gpio-rockchip.c                       |   12 +-
- drivers/gpio/gpio-rtd.c                            |    6 +-
- drivers/gpio/gpio-sa1100.c                         |    7 +-
- drivers/gpio/gpio-sama5d2-piobu.c                  |    8 +-
- drivers/gpio/gpio-sch.c                            |    9 +-
- drivers/gpio/gpio-sch311x.c                        |    8 +-
- drivers/gpio/gpio-sim.c                            |   83 +-
- drivers/gpio/gpio-siox.c                           |   11 +-
- drivers/gpio/gpio-sloppy-logic-analyzer.c          |    2 +-
- drivers/gpio/gpio-sodaville.c                      |    4 +-
- drivers/gpio/gpio-spear-spics.c                    |   21 +-
- drivers/gpio/gpio-sprd.c                           |    8 +-
- drivers/gpio/gpio-stmpe.c                          |   15 +-
- drivers/gpio/gpio-stp-xway.c                       |   10 +-
- drivers/gpio/gpio-syscon.c                         |   33 +-
- drivers/gpio/gpio-tangier.c                        |    6 +-
- drivers/gpio/gpio-tb10x.c                          |    5 +-
- drivers/gpio/gpio-tc3589x.c                        |   11 +-
- drivers/gpio/gpio-tegra.c                          |    8 +-
- drivers/gpio/gpio-tegra186.c                       |   49 +-
- drivers/gpio/gpio-thunderx.c                       |   18 +-
- drivers/gpio/gpio-timberdale.c                     |    7 +-
- drivers/gpio/gpio-tpic2810.c                       |   27 +-
- drivers/gpio/gpio-tps65086.c                       |   16 +-
- drivers/gpio/gpio-tps65218.c                       |   31 +-
- drivers/gpio/gpio-tps65219.c                       |  124 ++-
- drivers/gpio/gpio-tps6586x.c                       |   15 +-
- drivers/gpio/gpio-tps65910.c                       |   21 +-
- drivers/gpio/gpio-tps65912.c                       |   17 +-
- drivers/gpio/gpio-tps68470.c                       |   14 +-
- drivers/gpio/gpio-tqmx86.c                         |    8 +-
- drivers/gpio/gpio-ts4900.c                         |   14 +-
- drivers/gpio/gpio-ts5500.c                         |    6 +-
- drivers/gpio/gpio-twl4030.c                        |   25 +-
- drivers/gpio/gpio-twl6040.c                        |   23 +-
- drivers/gpio/gpio-uniphier.c                       |   16 +-
- drivers/gpio/gpio-viperboard.c                     |  120 ++-
- drivers/gpio/gpio-virtio.c                         |   16 +-
- drivers/gpio/gpio-virtuser.c                       |    4 +-
- drivers/gpio/gpio-vx855.c                          |    9 +-
- drivers/gpio/gpio-wcd934x.c                        |   16 +-
- drivers/gpio/gpio-wcove.c                          |   11 +-
- drivers/gpio/gpio-winbond.c                        |   16 +-
- drivers/gpio/gpio-wm831x.c                         |   13 +-
- drivers/gpio/gpio-wm8350.c                         |   15 +-
- drivers/gpio/gpio-wm8994.c                         |    8 +-
- drivers/gpio/gpio-xgene.c                          |    6 +-
- drivers/gpio/gpio-xilinx.c                         |   14 +-
- drivers/gpio/gpio-xlp.c                            |   10 +-
- drivers/gpio/gpio-xra1403.c                        |   13 +-
- drivers/gpio/gpio-xtensa.c                         |   13 +-
- drivers/gpio/gpio-zevio.c                          |    6 +-
- drivers/gpio/gpio-zynq.c                           |    8 +-
- drivers/gpio/gpio-zynqmp-modepin.c                 |   10 +-
- drivers/gpio/gpiolib-legacy.c                      |   38 -
- drivers/gpio/gpiolib-of.h                          |    2 +-
- drivers/gpio/gpiolib-sysfs.c                       |  676 +++++++++----
- drivers/gpio/gpiolib.c                             |   47 +-
- drivers/gpio/gpiolib.h                             |    3 -
- drivers/input/keyboard/Kconfig                     |   21 +-
- drivers/input/keyboard/Makefile                    |    2 +-
- drivers/input/keyboard/adp5585-keys.c              |  371 +++++++
- drivers/input/keyboard/adp5589-keys.c              | 1066 --------------------
- drivers/mfd/Kconfig                                |   18 +
- drivers/mfd/Makefile                               |    1 +
- drivers/mfd/adp5585.c                              |  741 +++++++++++++-
- drivers/mfd/macsmc.c                               |  498 +++++++++
- drivers/mfd/vexpress-sysreg.c                      |   46 +-
- drivers/misc/ti_fpc202.c                           |   13 +-
- drivers/platform/cznic/turris-omnia-mcu-gpio.c     |   35 +-
- drivers/power/reset/Kconfig                        |    9 +
- drivers/power/reset/Makefile                       |    1 +
- drivers/power/reset/macsmc-reboot.c                |  290 ++++++
- drivers/pwm/pwm-adp5585.c                          |   78 +-
- drivers/soc/apple/rtkit.c                          |    3 +-
- drivers/usb/gadget/udc/pxa25x_udc.c                |    5 +-
- include/linux/gpio.h                               |   43 +-
- include/linux/gpio/consumer.h                      |    5 +-
- include/linux/gpio/driver.h                        |    7 +-
- include/linux/gpio/generic.h                       |  120 +++
- include/linux/mfd/adp5585.h                        |  118 ++-
- include/linux/mfd/macsmc.h                         |  279 +++++
- include/linux/pm_runtime.h                         |  187 +++-
- 203 files changed, 6685 insertions(+), 3760 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/8xxx_gpio.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/abilis,tb10x-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/abilis,tb10x-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/gpio/altr-pio-1.0.yaml
- create mode 100644 Documentation/devicetree/bindings/gpio/apm,xgene-gpio-sb.yaml
- create mode 100644 Documentation/devicetree/bindings/gpio/apple,smc-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/gpio/cavium,octeon-3860-gpio.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/cavium-octeon-gpio.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/cirrus,clps711x-mctrl-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/cirrus,clps711x-mctrl-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/gpio/exar,xra1403.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/fcs,fxl6408.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/gateworks,pld-gpio.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-74xx-mmio.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-altera.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-ath79.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-clps711x.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-dsp-keystone.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-lp3943.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-max3191x.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-max77620.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-mm-lantiq.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-moxtet.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-palmas.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-pisosr.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-ts4800.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-ts4900.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-twl4030.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-xgene.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-xra1403.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/ibm,ppc4xx-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/lacie,netxbig-gpio-ext.yaml
- create mode 100644 Documentation/devicetree/bindings/gpio/lantiq,gpio-mm-lantiq.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/loongson,ls1x-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/gpio/maxim,max31910.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/microchip,pic32mzda-gpio.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/netxbig-gpio-ext.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/nxp,lpc1850-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/nxp,lpc1850-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/gpio/pisosr-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/gpio/qca,ar7100-gpio.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/snps,creg-gpio.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/spear_spics.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/st,spear-spics-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/gpio/ti,keystone-dsp-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/gpio/ti,twl4030-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/gpio/trivial-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/mfd/apple,smc.yaml
- create mode 100644 Documentation/devicetree/bindings/power/reset/apple,smc-reboot.yaml
- create mode 100644 drivers/gpio/gpio-macsmc.c
- create mode 100644 drivers/input/keyboard/adp5585-keys.c
- delete mode 100644 drivers/input/keyboard/adp5589-keys.c
- create mode 100644 drivers/mfd/macsmc.c
- create mode 100644 drivers/power/reset/macsmc-reboot.c
- create mode 100644 include/linux/gpio/generic.h
- create mode 100644 include/linux/mfd/macsmc.h
+This should be the final step in this function, after everything has
+been initialized correctly.
+
+> +
+> +       dai->dai_drivers =3D mtk_dai_tdm_driver;
+> +       dai->num_dai_drivers =3D ARRAY_SIZE(mtk_dai_tdm_driver);
+> +
+> +       dai->dapm_widgets =3D mtk_dai_tdm_widgets;
+> +       dai->num_dapm_widgets =3D ARRAY_SIZE(mtk_dai_tdm_widgets);
+> +       dai->dapm_routes =3D mtk_dai_tdm_routes;
+> +       dai->num_dapm_routes =3D ARRAY_SIZE(mtk_dai_tdm_routes);
+> +
+> +       tdm_priv =3D init_tdm_priv_data(afe, MT8196_DAI_TDM);
+> +       if (!tdm_priv)
+> +               return -ENOMEM;
+
+Or you end up with a bad entry in the list here.
+
+> +
+> +       tdm_dptx_priv =3D init_tdm_priv_data(afe, MT8196_DAI_TDM_DPTX);
+> +       if (!tdm_dptx_priv)
+> +               return -ENOMEM;
+
+Or here.
+
+
+ChenYu
+
+> +
+> +       afe_priv->dai_priv[MT8196_DAI_TDM] =3D tdm_priv;
+> +       afe_priv->dai_priv[MT8196_DAI_TDM_DPTX] =3D tdm_dptx_priv;
+> +
+> +       return 0;
+> +}
+> +
+> --
+> 2.45.2
+>
+>
 
