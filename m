@@ -1,204 +1,183 @@
-Return-Path: <linux-gpio+bounces-23865-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23866-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B015B13AF1
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Jul 2025 15:03:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8FAEB13D9A
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Jul 2025 16:47:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D3C041742D6
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Jul 2025 13:02:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7EA147AC52B
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Jul 2025 14:45:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01FA0266573;
-	Mon, 28 Jul 2025 13:02:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C45BF24C676;
+	Mon, 28 Jul 2025 14:46:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OzfTz7oi"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="O0WBTVyV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2085.outbound.protection.outlook.com [40.107.96.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E6557261C;
-	Mon, 28 Jul 2025 13:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753707770; cv=none; b=cs9YahHlOm0b8Sa7D7hVNvdn1GqXKOEwLoEuZ0qhFhMkytHGsg4EbGuoPyqw8J7tm1TmNEk4ISxA7LQcTFm0yH6G5hfMBPg8oYkGRXqVkodmyejwhvxgMAaD8tddvmEOFyuqDXIQti6Dt/aTdpVhAhaVousvh6b6ky7uMWKuS60=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753707770; c=relaxed/simple;
-	bh=R1fGAE8YOzEwmxRKgWpof//eBo5lBECXbGbbv/3X41g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o0exUCZHZu4oq7VlpOimgDeLojY/EJilxeVKVf3il8FFdxd1kwfC9yfrnsC8cfRg2VUWWexvW8JcabVC5igQ64Pc0JdnG9H/EpPERre67WLrN1UUXnuyLYAyD7XeyoNxtILzzYU8SGP35vEsQvC9gCyX95PhwmhoUowWp76CCG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OzfTz7oi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAAFDC4CEE7;
-	Mon, 28 Jul 2025 13:02:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753707770;
-	bh=R1fGAE8YOzEwmxRKgWpof//eBo5lBECXbGbbv/3X41g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OzfTz7oiEhQ3Y0e6IV83aeWKIw6PNBAHpG7HEgH7rxrUGF2Cujl6SW8EKMtBpxUaX
-	 9XhExXPihup5v63jBsk29aYaFXAiZnBMdnf7nS/AsACE5yGQ0Pu8Qr/yuch0OobfVV
-	 ptpSQJBrePrmCLUhO/AEH5dYKEypIgq5ai2oLkpUY9t+w7iUlCgBIdZsLagdRQTMMr
-	 MLmMmFQ4tRzQUZRfB+hXQXI6j07zaKI6gwhLyIagb9YpSuUyN9+mbtJgrEBFi0cup0
-	 5uJv30H6hyMP7lEFF/s0W9qiCWqO52YNTOcNj0/uN8+CS3XUZh3UMkr6dX9Ro3I944
-	 cVTBK2VTSf1cA==
-Message-ID: <4bc486cb-9d94-4bad-ae07-e9a7aeed481a@kernel.org>
-Date: Mon, 28 Jul 2025 15:02:44 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144691C862C;
+	Mon, 28 Jul 2025 14:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753714016; cv=fail; b=sN8GkIKm9ceHUrX0ABwJjYpZnoDvoSdBvqrfll1zwZ6SsYG2MkcZIrxknVe1GwTs1QbYT1Ix0XzBwiRCuc+Q7FZEvpC0Hokrc7tpUL1O5cuvMEiKgY0ghAOQagOOYSVGs/FqqKcpm8pmkch6GKDmGu84KnAjUxMjYoO1oTleM4Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753714016; c=relaxed/simple;
+	bh=HxWej+jOJ2r6EuMI0mBRipCDEVAn6LWdcJ/exh0ynZg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=skuxEaZdutzFBktPDW34wWq1niKtPV4cXYNY5S1PXm07sk/YihdojIz6uJxSx6g8nSELbIA2SwmSnA7UKbFlafb/EFv3R6yXe6OF6PVMuPrLQZ9pZobDG6vnF31x7MkN9jVtWBwIa6uab6FGZxmNuz1+LJlTK1JycVY42LMVDJk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=O0WBTVyV; arc=fail smtp.client-ip=40.107.96.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vOkF++Ve5HLa4HR5NwE+XybI7woVaB4baigMLw6kyTAM3ROUgD5TE74XhzGzb1GY7FapO8cWO18gx9RJKss0rsOBqzUMLI5OCqvoXbak8ds6KPuzMlRnzjeF6LNY6tNSaU5+r2RThpMUziwOaznLqv6erz1WgBgQZq6yj307hxLkbDSWXX44LxuECBRC4NPTB7mgs7brdVK6Zj1BrAObAw5tw1PZ6ZD6/7X+THMkqzqBVReDoCQFCfjBAMia3PD7Yngr9mwRQ4v/A/Wmdk65sasDrKxB4MJvg2i0M7nMffQtdYmp5NjlJ6UKxMyjPZv/KcxPtXgTkClVyK6AvwbWLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8vomd38G+sOSGPBAT4H5bCJsQ7l+vIkyN94lF13lPOs=;
+ b=yNumOgnyqrr1JFsK09eOfdw+VlbsL37WciCgWpeOVnmIJ2iUaKZAHi4ASxzDZ24o34QkvKiKa7YdYM4X/yUPQVOXDWU4y5Wn8f0Lfhli/++gn23Z58eegAorb+/5i01xikEDCOkUpHPkaK97Fc0OUTg+PE7tgRXs0q8hz2oUheLnWdEKdJDBCKzaJEN37XbzpaZhoQqVkAfJv3TnfBDQJXeipM8OohGoY7CjmP3GEAN0kosvrYzXuYQmJ8QvV5QgiLU+TbV06DvJnySHykHK5fAuZbiPevCFbLuqCAA+Hmj5s5ckT5zAGKDZMySWl4gAkcbs4zEhDGoGBLVEfowd2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=linaro.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8vomd38G+sOSGPBAT4H5bCJsQ7l+vIkyN94lF13lPOs=;
+ b=O0WBTVyV/eeQgRKeExLnckG1ks0y5XBy78DsO3QTz1wUySkJRXBNSLmpOeNFNi5pYU54WseVrBZRruJtoNNEyiXl64bDFEq4e1Sd5kDENt8n5yVWCwlaJM9MhDxZIwpoaOjLFDh/M7z3KxTmU9rr9z2H8JHDPrJUnucETF2F3dB367ntxoZq4No8A1nK325RzUhw/VzZLjV2824rTF4oeesK/jH1EE5B2ROkKADGBBuqApmpLKyXIpAPoU9TAYhESPcuSo67opew8+ZCipcl6Bywmt+hr4PBu8ObZoXZtUoTlVn5MMW5a4qj3IRWTkVWT+384lbawx01nQraSe0P4Q==
+Received: from BN9PR03CA0355.namprd03.prod.outlook.com (2603:10b6:408:f6::30)
+ by CY8PR12MB8411.namprd12.prod.outlook.com (2603:10b6:930:6e::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.26; Mon, 28 Jul
+ 2025 14:46:51 +0000
+Received: from MN1PEPF0000F0E1.namprd04.prod.outlook.com
+ (2603:10b6:408:f6:cafe::54) by BN9PR03CA0355.outlook.office365.com
+ (2603:10b6:408:f6::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8964.22 via Frontend Transport; Mon,
+ 28 Jul 2025 14:46:50 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ MN1PEPF0000F0E1.mail.protection.outlook.com (10.167.242.39) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8989.10 via Frontend Transport; Mon, 28 Jul 2025 14:46:50 +0000
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 28 Jul
+ 2025 07:46:32 -0700
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail205.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 28 Jul
+ 2025 07:46:32 -0700
+Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com (10.129.68.6)
+ with Microsoft SMTP Server id 15.2.1544.14 via Frontend Transport; Mon, 28
+ Jul 2025 07:46:30 -0700
+From: David Thompson <davthompson@nvidia.com>
+To: <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <davem@davemloft.net>,
+	<asmaa@nvidia.com>
+CC: <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<stable@vger.kernel.org>, David Thompson <davthompson@nvidia.com>, "Shravan
+ Kumar Ramani" <shravankr@nvidia.com>
+Subject: [PATCH v4] gpio-mlxbf2: use platform_get_irq_optional()
+Date: Mon, 28 Jul 2025 10:46:19 -0400
+Message-ID: <20250728144619.29894-1-davthompson@nvidia.com>
+X-Mailer: git-send-email 2.30.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] ASoC: codecs: wsa883x: Add devm action to safely
- disable regulator on device removal
-To: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>,
- Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Philipp Zabel <p.zabel@pengutronix.de>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, quic_pkumpatl@quicinc.com,
- kernel@oss.qualcomm.com
-References: <20250727083117.2415725-1-mohammad.rafi.shaik@oss.qualcomm.com>
- <20250727083117.2415725-3-mohammad.rafi.shaik@oss.qualcomm.com>
- <07faf0cc-a8e6-426d-b397-dfc321a7f3df@kernel.org>
- <aae92260-5169-4af1-97b0-48f364612dca@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <aae92260-5169-4af1-97b0-48f364612dca@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN1PEPF0000F0E1:EE_|CY8PR12MB8411:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7d9ae838-3355-4538-5918-08ddcde5961e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?0qT8mMJdWJRddzpRwH0610Uo7qApM9a6yAJUAqh9Ue/P68RWT0AurKIqHt4Y?=
+ =?us-ascii?Q?+tkD8zd9IslFBNAsd8CFKOrw9kxMX4inkKhtBL52eeH3g+20OSozFlW4JorC?=
+ =?us-ascii?Q?kfQLeWW52036bizYRHoyBE3W1CDRSXl6gbcw5CZ8egBbT2ei/Qjn245lURNO?=
+ =?us-ascii?Q?W/wpXqn64RVz/9bNeNgKVxd8G3/12MpSW4z9LqAqh7UKZlZKN/z2nKGVFZdP?=
+ =?us-ascii?Q?ca5licSkoUjflcuqc0PLY/pK2qwMD0WL+ysSFHILN6ztU0qHmTVVphSIOWxu?=
+ =?us-ascii?Q?wMAu/AZHML+M6qrHBJDrud6OsF1u+WuwLBH/li+iGeCLmqS+/QS1hvDBseIl?=
+ =?us-ascii?Q?QtdPyVSMWDaC9fKaEWrMxRuySUozr+JkgrKeZaiCK2J/lqXA4P44iBIuluUW?=
+ =?us-ascii?Q?Jw/e7331vCYtC1P2dni66x1AhYIPlmKS+osaTxwJBv/LJ4ifmBVOV0eRPn6P?=
+ =?us-ascii?Q?+fDtEgxU4E8Gf0I5itMFzPyD07TaThxjVn2tGv9wCWDTlK/cbg4xuJFD1WVW?=
+ =?us-ascii?Q?hHhPzUSBGxS3l8UCNf9/laoAR2BSsTofUIF0LkRangpIasIT91IqxkMun029?=
+ =?us-ascii?Q?O+oVBPEizVXijk7RzJMkrfsW+UcqwsfxMZ1O+Hg7vfYRCCx/1xxBDPeybHE+?=
+ =?us-ascii?Q?KLXul9bO28vggAVA2hwvlJ2EBdX07OpW4hsr1Lr7EGiXvR7k6SFqtMYUNcb5?=
+ =?us-ascii?Q?REtjXQ+NCAjOzOECNFvlgfnSjvV/sWX149WPTirstsHtxuPw4RR+q4ZVGRnm?=
+ =?us-ascii?Q?ynescFRKegbMPZw/QF+fijF/7xPmSJ70kfldbdanQmiO7MCaO45USqVlbPOL?=
+ =?us-ascii?Q?6zFoekCmTsBU5Hm4E+0/fnCaPWccZECqZ0HtXNOatUhTaPioTJo7taqKG0Z8?=
+ =?us-ascii?Q?tekfWWpfO9iUTIl1oFzh2p/jEMTGhgycVfAeiIrIY5PVIKWKqB99R8xmDs7S?=
+ =?us-ascii?Q?hGI1lPQwop/M6HZF5P7sCKrzIqBcxYrohvSWP0ZAllwVjj4CXPvySh1ZhSTd?=
+ =?us-ascii?Q?IInY+y6QsUikCuYQ/7JWAMdDFZTUC78mu/IZK57l+huPxCRyUfY73ra+ob2W?=
+ =?us-ascii?Q?5gtYJCHKWjs7jgDUaWJUNKCEmKvzGfFV8nIiyYUMwE1JAsh6qFKQ+wq5izLn?=
+ =?us-ascii?Q?w7wTi38vGssqZMOYXS89M3xGp8fNkscZPrbSlQb6Xa5Rimj7uTyCUfNK7dxv?=
+ =?us-ascii?Q?y1robIEsKrDIPW5EiZTsKK6Fr0i6G8tUVxz7vAD8tI63mEZ1NbaCt+Bn7KO9?=
+ =?us-ascii?Q?Fyf12CtreAG7u6p4jWgyNDoJzQzqtqUsVWajPVYyGaUh57DVynwKBOzSaYaY?=
+ =?us-ascii?Q?tCwWdDFsMEFrLuud/SGnK4Yl1VpUfiu9B/vFMLS/72eLpKjS9lxu6E4FhHtv?=
+ =?us-ascii?Q?VwPU0JihMnfsGaJ4A7g4HQNDCiwvDfek9dCaLpHkig5sD67auumhTQJx/OoU?=
+ =?us-ascii?Q?3O0ihgOocb2oIVaxQFMo8eYTu9j42qoEhP0ffZliGWNaMXXsFNogGY/72TgH?=
+ =?us-ascii?Q?ZKUjblbr+xALf+N563l7qVEwgBSKrcWpQ07j?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2025 14:46:50.4250
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d9ae838-3355-4538-5918-08ddcde5961e
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MN1PEPF0000F0E1.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8411
 
-On 28/07/2025 14:36, Mohammad Rafi Shaik wrote:
-> 
-> 
-> On 7/27/2025 3:00 PM, Krzysztof Kozlowski wrote:
->> On 27/07/2025 10:31, Mohammad Rafi Shaik wrote:
->>> To prevent potential warnings from _regulator_put() during device
->>
->> Warning is either there or not. Either you fix real, specific issue or
->> not. The code looks correct at first glance, so please describe exactly
->> how these warnings happen or how what is the bug being fixed.
->>
-> 
-> The current wsa883x codec driver manually enables and disables 
-> regulators during probe and remove.
-> In patch v3-0003, reset functionality was added using 
-> devm_reset_control_get_optional_shared_deasserted() for shared gpios.
+The gpio-mlxbf2 driver interfaces with four GPIO controllers,
+device instances 0-3. There are two IRQ resources shared between
+the four controllers, and they are found in the ACPI table for
+instances 0 and 3. The driver should not use platform_get_irq(),
+otherwise this error is logged when probing instances 1 and 2:
+  mlxbf2_gpio MLNXBF22:01: error -ENXIO: IRQ index 0 not found
 
+Fixes: 2b725265cb08 ("gpio: mlxbf2: Introduce IRQ support")
+Cc: stable@vger.kernel.org
+Signed-off-by: David Thompson <davthompson@nvidia.com>
+Reviewed-by: Shravan Kumar Ramani <shravankr@nvidia.com>
+---
+v4: updated logic to simply use platform_get_irq_optional()
+v3: added version history
+v2: added tag "Cc: stable@vger.kernel.org"
 
-There is no such code at this point. Each patch is a separate commit and
-must stand on its own. With its own explanation. You cannot say that you
-add bugs later, so you need to fix something now.
+ drivers/gpio/gpio-mlxbf2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Describe actual problem here. If there is no problem here, describe why
-you are doing this.
+diff --git a/drivers/gpio/gpio-mlxbf2.c b/drivers/gpio/gpio-mlxbf2.c
+index 6f3dda6b635f..390f2e74a9d8 100644
+--- a/drivers/gpio/gpio-mlxbf2.c
++++ b/drivers/gpio/gpio-mlxbf2.c
+@@ -397,7 +397,7 @@ mlxbf2_gpio_probe(struct platform_device *pdev)
+ 	gc->ngpio = npins;
+ 	gc->owner = THIS_MODULE;
+ 
+-	irq = platform_get_irq(pdev, 0);
++	irq = platform_get_irq_optional(pdev, 0);
+ 	if (irq >= 0) {
+ 		girq = &gs->gc.irq;
+ 		gpio_irq_chip_set_chip(girq, &mlxbf2_gpio_irq_chip);
+-- 
+2.43.2
 
-> 
-> However, during cleanup, this led to a warning:
-> "WARNING: CPU: 2 PID: 195 at drivers/regulator/core.c:2450 
-> _regulator_put+0x50/0x58"
-> 
-> This occurs because the regulator is still enabled/released when the 
-> devm-managed cleanup path attempts to release it.
-
-So that patch was broken? You just did not properly clean up there?
-
-> 
-> To resolve this, remove the manual regulator disable logic and instead 
-> register a devm-managed cleanup action using devm_add_action_or_reset(). 
-> This ensures proper cleanup and avoids regulator misuse warnings.
-> 
-> For reference, the wsa884x codec driver already follows this approach by 
-> using devm actions for regulator management.
-> 
->>> removal, register a devm-managed cleanup action using
->>> devm_add_action_or_reset() to safely disable the regulator
->>> associated with the WSA883x codec, ensuring that the regulator
->>> is properly disabled when the device is removed, even if the
->>
->> Device cannot be removed/unloaded, AFAIK, because of suppressed bind.
->> Regulator is already disabled during error paths, so that part of above
->> sentences is just misleading.
->>
->> How can one trigger the warnings?
->>
-> 
-> The warning in _regulator_put() can be triggered by applying patch 
-> v3-0003, which introduces reset functionality using 
-> devm_reset_control_get_optional_shared_deasserted().
-
-
-There is no such code now. You say "potential warnings" are here.
-
-> 
-> Since the existing driver handles regulator enable/disable manually, the 
-> devm-managed reset cleanup path may attempt to release regulators that 
-> are still enabled, leading to the warning.
-> 
-> This issue highlights the need to replace manual regulator handling with 
-> devm_add_action_or_reset() to ensure proper cleanup and avoid such warnings.
-> 
->>
->>> probe fails or the driver is unloaded unexpectedly.
->>
->> How driver can be unloaded unexpectedly?
->>
-> 
-> "Unloaded" might not be the most accurate term here. What I meant is 
-> that the driver’s probe can fail due to an error—such as missing 
-> resources or improper regulator handling.
-
-
-Use standard Linux terms, e.g. probe failure, probe deferral etc.
-
-Best regards,
-Krzysztof
 
