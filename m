@@ -1,422 +1,177 @@
-Return-Path: <linux-gpio+bounces-23879-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23880-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B5FDB14DF0
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Jul 2025 14:52:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E67BB14E7B
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Jul 2025 15:38:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3D1354E0F4D
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Jul 2025 12:52:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8061218A062B
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Jul 2025 13:38:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DD713595E;
-	Tue, 29 Jul 2025 12:52:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC03919B5B1;
+	Tue, 29 Jul 2025 13:38:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HY/vFbI9"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="b4vPjypW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186111482F2;
-	Tue, 29 Jul 2025 12:52:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E962814C588
+	for <linux-gpio@vger.kernel.org>; Tue, 29 Jul 2025 13:38:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753793564; cv=none; b=K01b3Pbt4QpEM7Z6mbJV79jSYiWadwYGzmS6xxz4f4314I3LEtvYZvcitM02u0xIyBKQ2vrKTncinpC6/6Ypj3zXQC7tKMl/bv4Z7rtozXuR4jQTKt2OYN7q+UhhdifEHNy3v+G3nXolybpE1xEfN1DS+WRTpdjBZ3Rynm/QveM=
+	t=1753796307; cv=none; b=q/KKWyPAxAGDRVbOZ60oaPqUqfeZNvmbO2bXSby1/2Rvw4LJv3ioJ+I10hKS+WsoyaXcgvh0o8VQnkuzTHTGs2KwLINmvd5z+6KR/Yuu8DPWJTMVVKfbTkDHFPvEr/pJ8Y4Yuzi/fHHJTER5JPvjPE+Ci6HhJoE7Ab+08vXkWxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753793564; c=relaxed/simple;
-	bh=L+2CqPqgje734jG9cTAM0aBctV3Qsf3UI/4XXw3qqX4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pdzJFV/xu0g+vRN+F3IJZ7i0/HMSoLrODktjxmb5cai1VvvKyoTjClTpk+VFSyUcjkGz5yO4AUN488SwqmOjCfJUGHAlvDj7Yh/Iz0GNsNLJMURGGck1fiui8G0YCtS0kghaNmzS5w1nL/NymndF0H9R+RE7TFGc8CGy/k+mhGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HY/vFbI9; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-455fdfb5d04so30048765e9.2;
-        Tue, 29 Jul 2025 05:52:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753793560; x=1754398360; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ge53nH6bitDeZFkLEZL9rCwm7z9pJHAxRUvM4zc8acE=;
-        b=HY/vFbI9pwQ+WWC0YoxX6wvvebRKJNsZC81NaeD2ehCIuWRV/r5VsQD5Qts4kUMMaH
-         /o0IYpEXZWv5dYdFTEHyJNo4WIAfs85Oxoufq609+iUNdAm0WoBLjfez+g0jcItO0IBf
-         ptFWsuvPhD90bXfzHvturmH88vatNX0qIcjYB+EoDK82QTy/AaeNk0Xc3nefQgj5U4MZ
-         771m50aWcwWq+sBoOxg48ZL46QKZOgfLWtxVZog/8tE7mpH+HvNY8NNBy/sPMaxlKAVm
-         5NfR2xt9Y68/HA650A0T3p5L9q4onAjDqYsXLrCxUPhS0Ie5bVwHdYWp6Ao6HqPJQ7aV
-         0b4Q==
+	s=arc-20240116; t=1753796307; c=relaxed/simple;
+	bh=XRcQl2sDslI5kS3lvxmQW7gE08M2ZCXO65pFU+AsBIU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jLSLzxkGRwK0A7Jgv3UiHJL5gBgTFCatvnW0WwXEv7HRD/In8ll4KT3tWSt54d8C8ztxxWGeVjaN9kdEsdNfnT9iQAnLiMcqAqa2xML4jeFklb+JWFEevOatVUXTUwzgQ8wGlHIbrbxlBh7AWcoVAD01fDTIcPD/tyL8D/0L50A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=b4vPjypW; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56T8csnu014609
+	for <linux-gpio@vger.kernel.org>; Tue, 29 Jul 2025 13:38:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	bYu4VBFFbTuFCWo4dZT/gRUtAZuQsCf/xjeyDn34aco=; b=b4vPjypWqJTqgH4P
+	UkAzdJxmq309RE35JcxUN4f7z9UKS5AZymG4QCKK95wkKLAajLGpA4eNAkruhywF
+	M5xoDhG/RPnKQLYAfRXbFfPBaFG4wpnQVunX75ymzt9nTYjSgBgE9h7YnLfaWtX+
+	Uni3pALhrJLPgF+YdvmBXtDt6p0x4WBE4GsJwc2C4+B0QbZ0oZDReHI8SY5Azzgw
+	QjkzVuhGImbccFiB3NYcqEI/UfdCH5u04h/IxnglSBSoDykOpCFCnx4yjG1VtBki
+	KgQJJtxuZVogsI7O1YFoml87kWEOY9SkIExrR7tPlTzjbtTpMJI+ygePY+NFzAxc
+	E6aCnw==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 484q3xr79m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Tue, 29 Jul 2025 13:38:24 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7e34e28a640so38515485a.3
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Jul 2025 06:38:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753793560; x=1754398360;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ge53nH6bitDeZFkLEZL9rCwm7z9pJHAxRUvM4zc8acE=;
-        b=C1c5akNY/jeA3MzhPkoSR3vtgkHwg5p0oiKZ4v0L+J6shE+6yE9R23f2rS3SrbTLfN
-         FnvdpjnCP2QkJN+JFRNI2eEuUqCtRXTGSV+OA5iDkpH/jXghaVKNtRe6ci4inObojke2
-         2h+0Td7xZssFzm9Lbo0/5c+B9P5/+SzVj54bcF8nWPDvCIlDopVDoMmsJoTgMHgJmNtG
-         wuzHPaKbt5fo6Q9ktd1+oBcHCLqawmF/9C+lpwRtZxWT9nAacxfjJK+8z4x06qKkxrE3
-         ay2BXEBWYUbPqCmu/vFX+oQ7yFyMinaHglSxMR/hkUdCHJJv0P+12RiFOmhk8yMwue+4
-         rkyw==
-X-Forwarded-Encrypted: i=1; AJvYcCURlgGcz3TOAN4KDEE44G0jVbwL/w6rj4u8CvEpCZN4iEx8TBW9kNFncYbCpUGKIdpEsZDdAkdv2EmIeA==@vger.kernel.org, AJvYcCVdjRUx52yUWxiRbeYjN1zqNlAvH27Q46MomosYPSnuXEv8nhxY2wK3lUGJjy9TUum0ozgm2/ro3ZftUMZfvk/m7do=@vger.kernel.org, AJvYcCWmnuLXUox4Dm7aRhdzzIO/UownG7rzNV8byGPcox+rFpz/3EBdsUydzV5RIUVyimkBZRjCMd7G4rDjJvaS@vger.kernel.org, AJvYcCXPibs6MW7tMTc0acqwLzU+LbGHrauA3zN4hfzs4kpiUZEOb+2DFgDAvC6KbEtLuJRAdRbUUIVeTri2@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEHopvWFeNWQgONMCI65PdAuwPhLepW7Gt4cTkF+eDcdqHYtB4
-	LlruQ4yesuCLhEODcTypAzsLclm3trnYwIklzvmbZP7nxkN6maCMtQEjdzBGuuWqH4uxeuJGM6b
-	D0nXNLsF9He6ybUkAZmC4GZ5SAiPUsjY=
-X-Gm-Gg: ASbGnctn1C90aSIOZsSRrJzlOGFeGO695Nx6XAIpgDZNGCUBnDNARVzeo3OMO9MB9PI
-	VSxgX1OEgjePY9HYQLf2OYXQsiczylKdcmIqvXrg8q+V7m6zUk8NMwTDb8jUt0jyXaFoTz+57Vd
-	PTicmKhoCrxxYqdlVE+gxQ1Wxv4TzcuW9Ushtgc6xDV0EBn6cbNNXW45OKFIv3s2nhKwfFwf+3b
-	/czfYM3
-X-Google-Smtp-Source: AGHT+IHmEUgNsJikVSSexxqE0aywDjib3TMIMbiD91jDYyEh7mEsKxVANsUY+seER0D+k/5lZvToKu18Lu8GlkV1Vik=
-X-Received: by 2002:a05:600c:3144:b0:456:1b6b:daaa with SMTP id
- 5b1f17b1804b1-4587644b039mr111782445e9.29.1753793559984; Tue, 29 Jul 2025
- 05:52:39 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1753796304; x=1754401104;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bYu4VBFFbTuFCWo4dZT/gRUtAZuQsCf/xjeyDn34aco=;
+        b=h0QmUvSPP4zC6bPMZBreoZl9aPdKoUuZR7ErTn1xS+oiw/CWk/3pAtHtXei6rTfj3c
+         h6aIM/cFrZNSr1Il8LzlYLlj7HChUyUWJelzyT2NdNzjwbT169F63o+XEQeWwKnQH0cY
+         YbVRRKNUH+I/R6qK64SuFf8+YNDm/D6g1urqP3CiH6SPPpCFFg3pTChRMXwMeudEnC52
+         LkAa1w5pI1fiV7raIN43N0dN5jI7IM9jJ41STbpkqUoTzVejGJmqmNMhnTHk43PoefJW
+         fR/YO7/lbEqDYxiqoqAKB965rYAUusjnww8ALO93DR/WV/cOba/q4BpzKpbsHJJ4ymDw
+         HWHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQyixImmHsQOdwWckcnxGhcX+2L1gC1YYyrB7NuwgTmAE1ydwlvqTPpor7rK0me28Tt+usNMJv/IUq@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpdbBbfBK00EIt9c+oTYKMAATgBJYsgXYwma6p8Zoh8WG7cjAG
+	6aX/TSY5zgaFcYranyelfckpc9Zz7inDvFc2hrHeglOs1DAVoaOIgc3EKB1gDppt7UVpJ0TQtQt
+	Wl2PJMs8hfCq8kMIgnlwqPfvStoS/U4PGbl4GxqCyJrUKl3t+BD7kq2b8x5i3bsQ+
+X-Gm-Gg: ASbGnct1sdSDQ8/lfejF9Jym+sofHBBplcz+3N/+KADgUDFSvKW4Hxx1wIZvKQ3DIL3
+	4NQ9hP0E7zBXpNqcnrSYZBcfEUptK5zyG8NAalZJlWqR48Rs+85Ibo4AYJvThUJpAhZu8fO3AeE
+	fZ2XzsyzrY9x6ePIvKpdwwyn+h5seEsE0ncrdQ5mFUVmUfTW6Sq1fm3ravRTvAdxEBduQBWpD9F
+	M+TU6q1nh6o0snVvxoKSML7Da2ln/oaQDOiO5QxO41U5k6cISQ+kEHWn9jEKWazHVpZ+qbNP5OD
+	MbopBO1M3D5CxJ7WzaThCCzne3ipUzEc5YHB79pAuaaVpl5hKvryczkurYL8ISXq8rLnXhVBmU6
+	cLpRycYOQQjcsTeA6cw==
+X-Received: by 2002:a05:620a:c55:b0:7e6:2435:b6a4 with SMTP id af79cd13be357-7e66d755f00mr45985a.12.1753796303756;
+        Tue, 29 Jul 2025 06:38:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGKI4hIaiKAmbCU3iCvheBP2tvLlX/4n/EHL9QP1TiceX3J3baQPxmSmT4BEC5BFoqWNGF/sA==
+X-Received: by 2002:a05:620a:c55:b0:7e6:2435:b6a4 with SMTP id af79cd13be357-7e66d755f00mr44585a.12.1753796303257;
+        Tue, 29 Jul 2025 06:38:23 -0700 (PDT)
+Received: from [192.168.43.16] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af63586008dsm591768266b.16.2025.07.29.06.38.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Jul 2025 06:38:22 -0700 (PDT)
+Message-ID: <3802c3a3-9774-4bcd-8819-41e5395df18e@oss.qualcomm.com>
+Date: Tue, 29 Jul 2025 15:38:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250707141848.279528-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250707141848.279528-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250708195525.GA837365-robh@kernel.org>
-In-Reply-To: <20250708195525.GA837365-robh@kernel.org>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Tue, 29 Jul 2025 13:52:14 +0100
-X-Gm-Features: Ac12FXz5MzaASfnpCMMl_wfutARfPO-Vh4VPM0-wY1hf9tSQHkTFrMmEzgmlqUg
-Message-ID: <CA+V-a8tiNRontyNLXEZEtj+SyCm+gKe+0e1aV=pboWJHPOvDfw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: pinctrl: renesas: document RZ/T2H and
- RZ/N2H SoCs
-To: Rob Herring <robh@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] dt-bindings: pinctrl: qcom: Add Glymur pinctrl
+ bindings
+To: Pankaj Patil <pankaj.patil@oss.qualcomm.com>, andersson@kernel.org,
+        linus.walleij@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, quic_rjendra@quicinc.com
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250723103644.4058213-1-pankaj.patil@oss.qualcomm.com>
+ <20250723103644.4058213-2-pankaj.patil@oss.qualcomm.com>
+ <70277682-94e7-4905-823d-25ae76f72ee2@oss.qualcomm.com>
+ <790fd85b-fb24-4d44-bdb1-706c534d1da5@oss.qualcomm.com>
+ <d37879af-a1fc-41d4-8e31-2abba6fd6d57@oss.qualcomm.com>
+ <d31c5e0f-dc50-4e7b-bd81-256269c82ec3@oss.qualcomm.com>
+ <0aa2b07d-8c66-456d-aacd-c554bfa7664f@oss.qualcomm.com>
+ <e3d04cf8-6d9c-4514-9d8f-782e2d1505a7@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <e3d04cf8-6d9c-4514-9d8f-782e2d1505a7@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=JovxrN4C c=1 sm=1 tr=0 ts=6888ced0 cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=EUspDBNiAAAA:8 a=_xSS5P9aWiV-_plMCQ4A:9
+ a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-ORIG-GUID: eEylX6w_HHTgE1veVuU25ZnyrOZ3drLx
+X-Proofpoint-GUID: eEylX6w_HHTgE1veVuU25ZnyrOZ3drLx
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzI5MDEwNCBTYWx0ZWRfXy9tH85FP7LW3
+ 3ZbToQmKRCyEzD6G1xQYEdiAIlRoX6lBb/nWeZtgPygT4GzHYaiNEsDCj3S40FwCF2OH8Al91zs
+ HNlUAGPJogmKYrL5MUUGLxTPzBkvufJpBgYrFlhRR+9RbvYc/wTzUGFVyX6tV8crmh8j/984EAi
+ SWpuB8Ab393E3/HN2aiCaQl39fFacVQ8oQqZekDjTgh9zAd1I7UnBMbZp2X3kNHohhvKJ1Ru7e+
+ f/zjWUA18CC4f09EbiRXNK0CNmYVjLzEXgOc/ILhTQ6gQUtzUNWkp4tM9Cl0uOY65PQ98tbkvKA
+ Xg2da5HLuVHYUcavZ7E4X4g+NqPb7LwOkAqdiEoZc0KhE0fHJieYgoV6NI+ArakLHUVlZjrac85
+ POvmOnxmgJeKh1dCRblW/Oi2XzrJo9GZqrrDQeb2/09ep6EvmnTlskIrgQg+V8ZVxHgSulC3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-29_03,2025-07-28_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 clxscore=1015 priorityscore=1501 bulkscore=0 impostorscore=0
+ lowpriorityscore=0 phishscore=0 suspectscore=0 spamscore=0 mlxlogscore=916
+ mlxscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507290104
 
-Hi Rob,
+On 7/23/25 3:06 PM, Pankaj Patil wrote:
+> On 7/23/2025 6:23 PM, Konrad Dybcio wrote:
+>> On 7/23/25 2:07 PM, Pankaj Patil wrote:
+>>> On 7/23/2025 5:25 PM, Konrad Dybcio wrote:
+>>>> On 7/23/25 1:48 PM, Pankaj Patil wrote:
+>>>>> On 7/23/2025 5:10 PM, Konrad Dybcio wrote:
+>>>>>> On 7/23/25 12:36 PM, Pankaj Patil wrote:
+>>>>>>> Add DeviceTree binding for Glymur SoC TLMM block
+>>>>>>>
+>>>>>>> Signed-off-by: Pankaj Patil <pankaj.patil@oss.qualcomm.com>
+>>>>>>> ---
+>>>>>> [...]
+>>>>>>
+>>>>>>> +      function:
+>>>>>>> +        description:
+>>>>>>> +          Specify the alternative function to be configured for the specified
+>>>>>>> +          pins.
+>>>>>>> +        enum: [ gpio, RESOUT_GPIO_N, aoss_cti, asc_cci, atest_char, atest_usb,
+>>>>>> Any reason for           /\ to be uppercase?
+>>>>>>
+>>>>>> Konrad
+>>>>>>
+>>>>> glymur_functions enum members fetched from ipcat,
+>>>>> this does not exist for sm8750.
+>>>> I'll repeat my question
+>>>>
+>>>> Konrad
+>>> It's in uppercase because of the way it's in the driver,
+>>> I'll update only the bindings to lowercase and repost.
+>> No, the driver must obey to bindings. That's what they're for.
+>>
+>> This value is only used between the OS and DT, so it doesn't matter if
+>> the docs refer to it in uppercase, so long as you keep both in sync.
+>>
+>> Konrad
+> Okay,
+> Yes both driver and bindings are in sync.
 
-Thank you for the review, sorry for the late reply.
+Please make then synchronously lowercase then :)
 
-On Tue, Jul 8, 2025 at 8:55=E2=80=AFPM Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Jul 07, 2025 at 03:18:46PM +0100, Prabhakar wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Document the pin and GPIO controller IP for the Renesas RZ/T2H
-> > (R9A09G077) and RZ/N2H (R9A09G087) SoCs, and add the shared DTSI
-> > header file used by both the bindings and the driver.
-> >
-> > The RZ/T2H SoC supports 729 pins, while the RZ/N2H supports 576 pins.
-> > Both share the same controller architecture; separate compatible
-> > strings are added for each SoC to distinguish them.
-> >
-> > Co-developed-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-> > Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> > v2->v3:
-> > - Dropped refference to gpio.txt instead pointed to
-> >   in include/dt-bindings/gpio/gpio.h.
-> >
-> > v1->v2:
-> > - Added a new DT binding file
-> > ---
-> >  .../pinctrl/renesas,rzt2h-pinctrl.yaml        | 132 ++++++++++++++++++
-> >  .../pinctrl/renesas,r9a09g077-pinctrl.h       |  22 +++
-> >  2 files changed, 154 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,r=
-zt2h-pinctrl.yaml
-> >  create mode 100644 include/dt-bindings/pinctrl/renesas,r9a09g077-pinct=
-rl.h
-> >
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzt2h-pi=
-nctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzt2h-pinctr=
-l.yaml
-> > new file mode 100644
-> > index 000000000000..ead5ab7e7ebb
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzt2h-pinctrl.y=
-aml
-> > @@ -0,0 +1,132 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pinctrl/renesas,rzt2h-pinctrl.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Renesas RZ/T2H Pin and GPIO controller
-> > +
-> > +maintainers:
-> > +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > +
-> > +description:
-> > +  The Renesas RZ/T2H SoC features a combined Pin and GPIO controller.
-> > +  Pin multiplexing and GPIO configuration is performed on a per-pin ba=
-sis.
-> > +  Each port features up to 8 pins, each of them configurable for GPIO =
-function
-> > +  (port mode) or in alternate function mode.
-> > +  Up to 8 different alternate function modes exist for each single pin=
-.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - renesas,r9a09g077-pinctrl # RZ/T2H
-> > +      - renesas,r9a09g087-pinctrl # RZ/N2H
-> > +
-> > +  reg:
-> > +    minItems: 1
-> > +    items:
-> > +      - description: Non-safety I/O Port base
-> > +      - description: Safety I/O Port safety region base
-> > +      - description: Safety I/O Port Non-safety region base
-> > +
-> > +  reg-names:
-> > +    minItems: 1
-> > +    items:
-> > +      - const: nsr
-> > +      - const: srs
-> > +      - const: srn
-> > +
-> > +  gpio-controller: true
-> > +
-> > +  '#gpio-cells':
-> > +    const: 2
-> > +    description:
-> > +      The first cell contains the global GPIO port index, constructed =
-using the
-> > +      RZT2H_GPIO() helper macro from <dt-bindings/pinctrl/renesas,r9a0=
-9g077-pinctrl.h>
-> > +      (e.g. "RZT2H_GPIO(3, 0)" for P03_0). The second cell represents =
-the consumer
-> > +      flag. Use the macros defined in include/dt-bindings/gpio/gpio.h.
-> > +
-> > +  gpio-ranges:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  power-domains:
-> > +    maxItems: 1
-> > +
-> > +additionalProperties:
-> > +  anyOf:
-> > +    - type: object
-> > +      additionalProperties: false
-> > +      allOf:
-> > +        - $ref: pincfg-node.yaml#
-> > +        - $ref: pinmux-node.yaml#
-> > +
-> > +      description:
-> > +        Pin controller client devices use pin configuration subnodes (=
-children
-> > +        and grandchildren) for desired pin configuration.
-> > +        Client device subnodes use the below standard properties.
-> > +
-> > +      properties:
-> > +        pinmux:
-> > +          description:
-> > +            Values are constructed from GPIO port number, pin number, =
-and
-> > +            alternate function configuration number using the RZT2H_PO=
-RT_PINMUX()
-> > +            helper macro from <dt-bindings/pinctrl/renesas,r9a09g077-p=
-inctrl.h>.
-> > +        pins: true
-> > +        gpio-hog: true
-> > +        gpios: true
-> > +        input: true
-> > +        input-enable: true
-> > +        output-enable: true
-> > +        output-high: true
-> > +        output-low: true
-> > +        line-name: true
-> > +
-> > +    - type: object
-> > +      additionalProperties:
-> > +        $ref: "#/additionalProperties/anyOf/0"
->
-> Again, please define some common suffix or prefix for the node names.
-> Any name is for existing bindings *only*.
->
-> patternProperties:
->   '-pins$':
->      type: object
->      ...
->
->   '-state$':
->      type: object
->      additionalProperties:
->        $ref: '#/patternProperties/-pins$'
->
-> I don't care what prefixes you use here...
->
-> (Note some regex's don't work as JSON pointers and then you would have
-> to use a $defs section.)
->
-Ok, I'll switch to patter properties like below. Ive added properties
-for group/pins/hog
-
-- group pattern, will include nodes with multiple pins node
-- pins pattern, will contain single node
-- hog pattern, will contain gpio hog node
-
-
-Please let me know if the below approach is OK.
-
-patternProperties:
-  '.*-group$':
-    type: object
-    description:
-      Pin controller client devices can organize pin configuration entries =
-into
-      grouping nodes ending in "-group". These group nodes may contain mult=
-iple
-      child nodes each ending in "-pins" to configure distinct sets of pins=
-.
-    additionalProperties: false
-    patternProperties:
-      '-pins$':
-        type: object
-        description: >-
-          Pin configuration subnodes of a "-group" for desired pin settings=
-.
-        allOf:
-          - $ref: pincfg-node.yaml#
-          - $ref: pinmux-node.yaml#
-        properties:
-          pinmux: true
-          pins: true
-          gpio-hog: true
-          gpios: true
-          input: true
-          input-enable: true
-          output-enable: true
-          output-high: true
-          output-low: true
-          line-name: true
-        additionalProperties: false
-
-  '-pins$':
-    type: object
-    description:
-      Pin controller client devices use pin configuration subnodes (childre=
-n
-      and grandchildren) for desired pin configuration.
-      Client device subnodes use the below standard properties.
-    allOf:
-      - $ref: pincfg-node.yaml#
-      - $ref: pinmux-node.yaml#
-
-    properties:
-      pinmux:
-        description:
-          Values are constructed from GPIO port number, pin number, and
-          alternate function configuration number using the RZT2H_PORT_PINM=
-UX()
-          helper macro from <dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.=
-h>.
-      pins: true
-      gpio-hog: true
-      gpios: true
-      input: true
-      input-enable: true
-      output-enable: true
-      output-high: true
-      output-low: true
-      line-name: true
-
-    additionalProperties: false
-
-  '-hog$':
-    type: object
-    description: GPIO hog node
-    required:
-      - gpio-hog
-      - gpios
-    properties:
-      gpio-hog: true
-      gpios: true
-      input: true
-      input-enable: true
-      output-enable: true
-      output-high: true
-      output-low: true
-      line-name: true
-    additionalProperties: false
-
-allOf:
-  - $ref: pinctrl.yaml#
-
-required:
-  - compatible
-  - reg
-  - reg-names
-  - gpio-controller
-  - '#gpio-cells'
-  - gpio-ranges
-  - clocks
-  - power-domains
-
-unevaluatedProperties: false
-
-examples:
-  - |
-    #include <dt-bindings/clock/renesas,r9a09g077-cpg-mssr.h>
-    #include <dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h>
-
-    pinctrl@802c0000 {
-        compatible =3D "renesas,r9a09g077-pinctrl";
-        reg =3D <0x802c0000 0x2000>,
-              <0x812c0000 0x2000>,
-              <0x802b0000 0x2000>;
-        reg-names =3D "nsr", "srs", "srn";
-        clocks =3D <&cpg CPG_CORE R9A09G077_CLK_PCLKM>;
-        gpio-controller;
-        #gpio-cells =3D <2>;
-        gpio-ranges =3D <&pinctrl 0 0 288>;
-        power-domains =3D <&cpg>;
-
-        sci_pins: serial0-pins {
-            pinmux =3D <RZT2H_PORT_PINMUX(38, 0, 1)>, /* Tx */
-                     <RZT2H_PORT_PINMUX(38, 1, 1)>; /* Rx */
-        };
-
-        sd1-pwr-en-hog {
-            gpio-hog;
-            gpios =3D <RZT2H_GPIO(39, 2) 0>;
-            output-high;
-            line-name =3D "sd1_pwr_en";
-        };
-
-        i2c0_pins: i2c0-pins {
-            pins =3D "RIIC0_SDA", "RIIC0_SCL";
-            input-enable;
-        };
-
-        sdhi0_sd_pins: sd0-sd-group {
-            sd0-sd-ctrl-pins {
-                pinmux =3D <RZT2H_PORT_PINMUX(12, 0, 0x29)>, /* SD0_CLK */
-                         <RZT2H_PORT_PINMUX(12, 1, 0x29)>; /* SD0_CMD */
-            };
-
-            sd0-sd-data-pins {
-                pinmux =3D <RZT2H_PORT_PINMUX(12, 0, 0x29)>, /* SD0_CLK */
-                         <RZT2H_PORT_PINMUX(12, 1, 0x29)>; /* SD0_CMD */
-            };
-
-            sd0-sd-tmp-pins {
-                pins =3D "RIIC0_SDA", "RIIC0_SCL";
-                input-enable;
-            };
-        };
-    };
-
-Cheers,
-Prabhakar
+Konrad
 
