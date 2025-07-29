@@ -1,163 +1,160 @@
-Return-Path: <linux-gpio+bounces-23874-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23875-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8992AB14B35
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Jul 2025 11:24:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 932A6B14C94
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Jul 2025 12:53:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2FA81188CBFA
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Jul 2025 09:24:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AE3AB176675
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Jul 2025 10:53:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EF5B285C81;
-	Tue, 29 Jul 2025 09:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="fEHAybb3"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0D3428B3EB;
+	Tue, 29 Jul 2025 10:53:40 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05DE2749E0
-	for <linux-gpio@vger.kernel.org>; Tue, 29 Jul 2025 09:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EAC227EA8;
+	Tue, 29 Jul 2025 10:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753781049; cv=none; b=sCFhhRPGJh3qV0C3y6vLyGRIG6fc/0YQBMp7g+W87W64fNb5xwAW4GzGOjjI10p0RMBPaWrEKdu0Rp58VCTCx15u5q/6n75h56j9TuyjuZ/X83YOnSKf/kqQPc/VIo2kKVuZwooB/1D7Zj23WV/7YXQ6+MkN3s/+Kr9XTo8U0Kk=
+	t=1753786420; cv=none; b=Bjcf89LiPi6WNBXo5sIziLcYlyFis1dsjarrWAOtjMOSrv/v47xWSm1X4+CVUTtLb4vksjyJcGbGFvzc/89oKSf0YoZ1G6vwYwAQQaJ/t+hytf5u5PkwnfaB5sY5grFL/QFBjB1B3KQ2D4TvfHcrp56k6s8TgnAGg5ujxuFgUCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753781049; c=relaxed/simple;
-	bh=1XbJXYOtfiKvD5ix8X5FxAD5vsw1x7eclqIkLeXimps=;
+	s=arc-20240116; t=1753786420; c=relaxed/simple;
+	bh=+d1oFlygtYnY3YQHRCn/CocY7GrTw53GXvhZM4duu7E=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mW/8cS5lNWVRBYepbWxvk24Ghy0EumaR4q+jdhL0f1/mFpONWRsuPq5cnh47FJOGhbtHC6McyEQeYUjp87uZPnDQXNO8XQaTeVtwUQboBssbRN2jTPY9wCMfh1KV+D/bMZubBeDmiBWhGHxXm4BJYaedy1E5Tc9avdRkbZQ2/nI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=fEHAybb3; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-553b5165cf5so6681651e87.0
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Jul 2025 02:24:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1753781046; x=1754385846; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OvMriwwuRsxStr2YyKe5TWPbRI0lQN4j3ZQYt22kpLE=;
-        b=fEHAybb3OuY7x+gjbN/XKz8qEKAN0mQ9y4DGFfnXysVJzJwBu4iLULXuGicbjpx3D3
-         dtLhEKLl7J8VYDuc3D6tKDZw6iMkzJJpnTc+ZaATB+6uRKw/7SGeTrPwEd2pjTLLTdAB
-         igfmKdMOgFcyGEZqedATfYQOT0p2O/Ahkz/gXp6Q7OdnmD3OT7EitbbBE4oBtgTlryVM
-         gUMoQIS0sW4+bFi80TrW1fX+DN7lQwKQyzFSza/Jm+48xcga5AH2GdoWJUI2ga6zauQz
-         s7wrDKdw8RqIk9GQgQrBuyWmT9Z3xz4gZJo3u8T/aReQHNRczFczjzO2OXujQ7bZpSIK
-         X4zw==
+	 To:Cc:Content-Type; b=jFvj4UvkIKasQ4XPEtSD+if4SfR/2a+q7GiffexPXvGuEfIiPK8Ej9VV8zAPhL6+t2HaqOdArLSbdEepCZLfprv/N0Z2x7pEig2w39yXHOT6bqzNt5vlLhBTeAjJ/irc8Z75tI/4dYOLipiQKDxy5i+qBkZrAaEGjpvEfLIAf94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-42a56f2e953so2421356b6e.2;
+        Tue, 29 Jul 2025 03:53:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753781046; x=1754385846;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OvMriwwuRsxStr2YyKe5TWPbRI0lQN4j3ZQYt22kpLE=;
-        b=p0BRNdjqn5m/OYSYNoOat1j5gz/ZYEtXdIo63XJzdph3+KTmeS9la2xm1ttynf0B2J
-         HA4XWZcZnR3Rxx2fox6GVp0vHFpgnZ9J+6XIubl1uZtRIcn/Oq1HcUaTBODHPPLC15kC
-         dSLCpcwR9svqcb9IMfcNIdSy/aTmA/2kmQwWGiDDWFbN0FfrfRN0cqVJDYug/kq9SXOs
-         8KaHb0eKF43ChB5j6pMh2K4UbWBNpYrwnnFj1Cj/2HuGkxkDVU7ENNbWl01tEXzvCJlW
-         RMjhxzqoG3NsBZHZB6l3h8ydtFXYL6TM8PxcPwBdQlpFNgoqWaeKMfj6xxobC4DuZQJG
-         Vzlg==
-X-Forwarded-Encrypted: i=1; AJvYcCWAVXMUZP0XC0cpBHnijm/QsExqLa3wM8l9CbhuPnKNOXo6ESpeMssjWF7PebVlKtCjYatIlz7Z+WrX@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0+8h20S4oQWd5LFQGjjl36t7OcRSw7So4xM7nnd32JrCj28Yd
-	vH+MOwVDPA7mluF/z2xWyK0bhQPjiQUOF+IwA97DrrNs33+P64YPAZPPViycXL0ZPVo2UcREnyW
-	uuE8S7vOCrYz8uuLm3Rf2c9gBX8tkgQcp5mPG7SkpAA==
-X-Gm-Gg: ASbGncugSrEzXA1F/ofM4Sr6UCNyRyxSEKEMWZmvtW+1Ill/Hl2WPfB2FowI2aRoTdp
-	bz5wx6IyuNVnH53bQkttQxWCtwqWxHADXL3zoLqUzRyY0XrIOmMOFrejh+KIhAqIsbw16Leb65U
-	EzrFwluxrH5+I5sBdbtsDybriSk5Qv63nFJNVZ80L2aMlRqIwBOIn76wZM54xLSASd9//O3rSvB
-	cAPw/3S0LfebV0p4rcz7Cr//0BF4yZ93tdZqaZwPGUNxeV0bQ==
-X-Google-Smtp-Source: AGHT+IG4d8eX8f04SwumbDn+t8ORtzgwAVwNB5BHKdmUryIfl8eqxh2e3123W81layXfFQt1IEka9/bpWuzrKar7j3E=
-X-Received: by 2002:a05:6512:3a86:b0:553:d910:9334 with SMTP id
- 2adb3069b0e04-55b5f4df595mr4041752e87.46.1753781045533; Tue, 29 Jul 2025
- 02:24:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1753786415; x=1754391215;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=y4bZ2YSDz9PcLt/y/YxbDypRm6SdmfKZh/m8NCUvhnc=;
+        b=WeiNJzcLc1sUsuzmRNT7+H11miN6reS8q8iy5+3nMQctlvIu4OPgYRM1gIw1B+7ig+
+         jPLjgHfYCYZRIdAyP880cbpstg9sjrE8MEQhVSAAocpPHsITUVHkwMvy9XeOCr8nvdQK
+         Nyj5ZCoRZyaxQ1l0LecZghMId/zRn5nnR8idrLkgWU13Jko2ZfqnK/mYWi0e9tW0IR2V
+         DhH1xCeZbvFLGgU2/k+WCvptKtWBcZYPi1EF1xlY9K28OUVwJfR50ORkQ0ZugZdJYNJO
+         3v6pFdl0ec4kHbTw4ye6IUofO4DzjmL3yp9qumCaE1n4aIJzhV46eZ2W3HkJUCfTh7mc
+         Mnyw==
+X-Forwarded-Encrypted: i=1; AJvYcCVdp4dfGciqTm30ktB6FMybpdXQC9NcAWN3nKEwXbkn+39oAKajyrhjc0Vdjtwt69Y2EfH6zgW6tsxKKgQ4@vger.kernel.org, AJvYcCWmUyonxzlHvOIBrn81FlaOtYCS6cMYW7PAjcR/eoIZ2IScngvnQ80UEHzzhF5IrwU1U6Hi2eKN1E5R@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxt1aDZrlEaN28L8wBQsWqdvFk8dWzqbC9NQ1pGh6oopHm+h0uo
+	GPZ72RDkvFp4O60+TtQLxu0iND3Xq/Mdynup33E/sgzax4OJF7Okw7cok+1nVLx9
+X-Gm-Gg: ASbGncsWDe+gRHcGq1COe6n34XIXjFf3esz+4lY3gkE9l+wj/1ROqqELN6u053VJPZf
+	YwwP+eRzF0jYEs9SGnwySBnUSXD9YiZKQF77/TRRfsdO6hhVNaeVqEZSyXUEe8fnxJvXMoFaJZ+
+	W6FklcBlvdd8t7IujQEd3zlvg3CXdMSJJHw6fb9aKwdViHso5yKkO5WKkC8z9rbtLgmVjy9ersB
+	MC4ppoPoxZT/9bGpI3rMnFQly4RAurgFNZucGgjDy9315rdWtj2j3xBvkBusfgwL3boKTkMU7Xl
+	xWw69Sa6n6sImzdlTl325/xrcwUHQjlh0jmQjSA2HaBexdLa88MLLY48HrkWqvAzcq0WygVeUk/
+	hhN/Trnidd5+nINvAsZXxXQyNXr5YguXDHNeg7reX7nn4zo3MQ0DBcf7xarOz
+X-Google-Smtp-Source: AGHT+IHVBbqi8eag3by7f0Eu4hp+7d+6vfn4crgefLmRJZTxxglCx0m+quEyXXDLqD7+YguUo8xgkQ==
+X-Received: by 2002:a05:6808:21a1:b0:406:67b7:8b62 with SMTP id 5614622812f47-42bb9ff4a2dmr8822768b6e.38.1753786414619;
+        Tue, 29 Jul 2025 03:53:34 -0700 (PDT)
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com. [209.85.161.52])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-42c7daaa9c4sm1490033b6e.35.2025.07.29.03.53.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Jul 2025 03:53:34 -0700 (PDT)
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-615ed9a4f38so2475313eaf.0;
+        Tue, 29 Jul 2025 03:53:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW3L/AXcptint1iHw8qcewkBKnHprg7jOm63tToatQvyuyRuif0eqqRvcU8gkMjSM+zpPoCAMtgdDUAgGUI@vger.kernel.org, AJvYcCWkRRlSrKy2GK5dj/RHMKVBtK/F/hj+choWCo3zh3TF1Hvr23j7dpZmjTPC1cdkPCjk3G72UwGBISqq@vger.kernel.org
+X-Received: by 2002:a05:6102:4246:b0:4f9:69aa:60f with SMTP id
+ ada2fe7eead31-4fa3ff027ccmr6928627137.26.1753786050206; Tue, 29 Jul 2025
+ 03:47:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250724-pinctrl-gpio-pinfuncs-v3-0-af4db9302de4@linaro.org>
- <20250724-pinctrl-gpio-pinfuncs-v3-8-af4db9302de4@linaro.org> <CAHp75VdMmfV=z75K9AmB7GsWV8C1bZPLGi33duTCt+CM79spJg@mail.gmail.com>
-In-Reply-To: <CAHp75VdMmfV=z75K9AmB7GsWV8C1bZPLGi33duTCt+CM79spJg@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 29 Jul 2025 11:23:54 +0200
-X-Gm-Features: Ac12FXwkqCsphx3p10ZENgy5ARM9FowTyJPFq-nwB_5x6uw2mPSH_J_dgheu8yg
-Message-ID: <CAMRc=MeEo6p=6Tp5kORi9y5tGNJKrzh0kq7tpe_E=5TasMjgbg@mail.gmail.com>
-Subject: Re: [PATCH v3 08/15] pinctrl: keembay: use a dedicated structure for
- the pinfunction description
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Alexey Klimov <alexey.klimov@linaro.org>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
-	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, imx@lists.linux.dev, 
-	linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250726211053.2226857-1-arnd@kernel.org>
+In-Reply-To: <20250726211053.2226857-1-arnd@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 29 Jul 2025 12:47:19 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU6Akz0GC2hooAxn=C2F0WjagPkzRKcH1SJiW0CBeUOaw@mail.gmail.com>
+X-Gm-Features: Ac12FXyj-OpHRoejRi6VLyYEX-xLeBjx5FaeTUCLN5Csigg1GPqNt4MZlMB_WOQ
+Message-ID: <CAMuHMdU6Akz0GC2hooAxn=C2F0WjagPkzRKcH1SJiW0CBeUOaw@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: enable CONFIG_GPIOLIB_LEGACY even for !GPIOLIB
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
+	kernel test robot <lkp@intel.com>, Peng Fan <peng.fan@nxp.com>, 
+	Koichiro Den <koichiro.den@canonical.com>, Lee Jones <lee@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
+	Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>, 
+	Thomas Richard <thomas.richard@bootlin.com>, Yixun Lan <dlan@gentoo.org>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 24, 2025 at 1:11=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Thu, Jul 24, 2025 at 11:25=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.=
-pl> wrote:
-> >
-> > struct function_desc is a wrapper around struct pinfunction with an
-> > additional void *data pointer. We're working towards reducing the usage
-> > of struct function_desc in pinctrl drivers - they should only be create=
-d
-> > by pinmux core and accessed by drivers using
-> > pinmux_generic_get_function().
->
-> Any link to the discussion and perhaps an updated in-kernel
-> documentation and/or TODO?
->
+Hi Arnd,
 
-The discussions happened under v1 and v2 of this series. The "reducing
-the usage ..." part refers to the need to avoid memory duplication of
-struct pinfunction really but it's a prerequisite.
-
-> > This driver uses the data pointer so in
-> > order to stop using struct function_desc, we need to provide an
-> > alternative that also wraps the mux mode which is passed to pinctrl cor=
-e
-> > as user data.
+On Sat, 26 Jul 2025 at 23:11, Arnd Bergmann <arnd@kernel.org> wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 >
-> ...
+> A few drivers that use the legacy GPIOLIB interfaces can be enabled
+> even when GPIOLIB is disabled entirely. With my previous patch this
+> now causes build failures like:
 >
-> > +struct keembay_pinfunction {
-> > +       struct pinfunction func;
-> > +       u8 mux_mode;
-> > +};
+>    drivers/nfc/s3fwrn5/uart.c: In function 's3fwrn82_uart_parse_dt':
+>         drivers/nfc/s3fwrn5/uart.c:100:14: error: implicit declaration of function 'gpio_is_valid'; did you mean 'uuid_is_valid'? [-Werror=implicit-function-declaration]
 >
-> My gut's feeling that this type of construction will be in tons of the
-> drivers, perhaps better to provide an alternative like
-> struct pinfunction_with_mode {
->   ...
-
-Nah, literally only this one so far. And I bet we could rework it to
-avoid it altogether. Your proposal is too specific IMO. Let's cross
-that bridge when (if) we get there.
-
-> };
+> These did not show up in my randconfig tests because randconfig almost
+> always has GPIOLIB selected by some other driver, and I did most
+> of the testing with follow-up patches that address the failures
+> properly.
 >
-> Or even with variadic arguments... (just saying)
+> Move the symbol outside of the 'if CONFIG_GPIOLIB' block for the moment
+> to avoid the build failures. It can be moved back and turned off by
+> default once all the driver specific changes are merged.
 >
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202507261934.yIHeUuEQ-lkp@intel.com/
+> Fixes: 678bae2eaa81 ("gpiolib: make legacy interfaces optional")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Oh please no. :)
+Thanks for your patch, which is now commit a86240a37d43fc22 ("gpiolib:
+enable CONFIG_GPIOLIB_LEGACY even for !GPIOLIB") in linus/master
 
-Bartosz
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -12,11 +12,11 @@ menuconfig GPIOLIB
+>
+>           If unsure, say N.
+>
+> -if GPIOLIB
+> -
+>  config GPIOLIB_LEGACY
+>         def_bool y
+>
+> +if GPIOLIB
+> +
+>  config GPIOLIB_FASTPATH_LIMIT
+>         int "Maximum number of GPIOs for fast path"
+>         range 32 512
+
+This won't work for everything.
+While I now get CONFIG_GPIOLIB_LEGACY=y in all m68k defconfigs, and
+simple inline functions like gpio_is_valid() are now available, more
+complex functions will still fail, as drivers/gpio/gpiolib-legacy.c
+is not built.
+
+drivers/Makefile:
+
+    obj-$(CONFIG_GPIOLIB)           += gpio/
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
