@@ -1,167 +1,218 @@
-Return-Path: <linux-gpio+bounces-23881-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23882-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FF4AB14F17
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Jul 2025 16:12:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A720AB14F81
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Jul 2025 16:48:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B5DDF7AEF7A
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Jul 2025 14:11:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB7AE3BF75F
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Jul 2025 14:47:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0B0F1D5141;
-	Tue, 29 Jul 2025 14:12:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47A031E8333;
+	Tue, 29 Jul 2025 14:48:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="cqbSe+AP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CvsYWtmi"
+	dkim=pass (2048-bit key) header.d=dujemihanovic.xyz header.i=@dujemihanovic.xyz header.b="IA1tDcfx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx.olsak.net (mx.olsak.net [37.205.8.231])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356B84C6D;
-	Tue, 29 Jul 2025 14:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1492AF07;
+	Tue, 29 Jul 2025 14:48:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.8.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753798346; cv=none; b=pXuM6jq904e0/1HPIG2UZude9ZBVM8jdJ9N8XOdeq/Yf8Ep3O6n5OP1dU2H81KSrj37up8AeibghRlxTwly4hgkWd4MTBqpN+LCdB+TDd9YUHxX0GgNWsfl/KXFt8tWmN+ddp8wO4hfsx3yLKRuqwWFyFglD8r2+VGwvd/0xOiQ=
+	t=1753800494; cv=none; b=uS89Hp8J19baDEd5aNsnYyY0l6wOb7fi8EHzLhfXwE2SeHq7BOISrnAZDnWLNAHYcbDn/NSC799Mh+hPBiFLbdvhdnQG1j/hBAfot5lCmZMCEd4+4OmpAd5Djm2Nbg7qubHI9FXOS9B/HwxLCprqceQR/w3kii8jNLUzRM3Aik8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753798346; c=relaxed/simple;
-	bh=lIYDMtNMk2OTrfFA3d4aR7UcZNph1MLXV/AoeIDs2Ts=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=A8MlkuOAw8NaGBR23Qtnk+KYzFvFZFYMEnNuWNfw810shrl+3k/LCYj7bYPYZ8WyJLMPYMSlS8Y+6T7l5STnzl5tnK7lWCOKQns1eUnPg877tKJ8rPqVXkN22XtmhXTT6SXU/CMfz2Wi0Nyc4+5A5js121vebaLR8lZlBiS6Kpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=cqbSe+AP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CvsYWtmi; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 44A631400429;
-	Tue, 29 Jul 2025 10:12:23 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Tue, 29 Jul 2025 10:12:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1753798343;
-	 x=1753884743; bh=lvTM6U3OpuAsCCBQIku+DT9FmGxTEa/60sJXAhmj4Hk=; b=
-	cqbSe+API5g2rlgsERAfDu2mY8ph4aIxDTxIHAPgTo2SbCKfJ4ph1gJWNAUjV5Qm
-	xUy6rg389Y/DTWs08OvdpMBp1DJGR8ZgiifZVixtQXWCJNn9Kht1SsUaFykWRJV+
-	tkPLPfiJvJ4pGZI+K5dlnwCKFkZ+zrxE3wThogcKn0gBiFk6G8UKG8QFzG7pJPVm
-	5t1qa69C6IgJspq2GwsGaz2rn7qJ4oM64yCmBs+a5GTALP/DPWmG5NNxj6jO2oN2
-	RjD/BJxbpGHfWjcKuJq8kZbLgX7YNbdUCqVqiFHiRHWuarfK7iK8HZNoVbj6Ow1r
-	+y4Rf/ODIoASbzCFypRLEA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1753798343; x=
-	1753884743; bh=lvTM6U3OpuAsCCBQIku+DT9FmGxTEa/60sJXAhmj4Hk=; b=C
-	vsYWtmi3B3g3+mzLPNaQwOlUQei7WcWveA/9We8Z3ImiB0eGgwN5TLAtmPQLxkHl
-	Tn4D1oA7zcX13/d7OHsgEwgkLKphv87Y8n9+vHaJSuXdz7bXZxGSIie4eTGRV3rX
-	h7MbeO3QnX4D6D40M+WNOQ89icrRKFauCw4RqZx9w5UqnNf/26ed69RoYMLRTyV+
-	qps+n2wK6Lykcc6wp7397Fvr3Z52gTcyWN+ywpMsfAuhLvoruZgW+gWFqFPt/sa8
-	6lj5fw0A58HHSQDm9bupRvEN0yxolTM7Bm7nVpYwphIWbqilMZiKZa0KtWZoFgNY
-	xFhmkBTJQRciP523OuLDA==
-X-ME-Sender: <xms:xdaIaLTPcHNLB3QXpFFd-z9ZeqATv-9BHA7AobcAzMkGwQtGwnnoCg>
-    <xme:xdaIaMxDiltG0UgVCVAKgfe0M39NKL9Q0cA2uA0Vyd7N9nPK3BxwbRc6IlK1VOSti
-    U7u9mwIbQKBhawPIXU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdelhedviecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
-    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
-    hnpeefhfehteffuddvgfeigefhjeetvdekteekjeefkeekleffjeetvedvgefhhfeihfen
-    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghp
-    thhtohepudekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsrhhglhessghgug
-    gvvhdrphhlpdhrtghpthhtohepnhhikhholhgrohhsrdhprghsrghlohhukhhoshessghl
-    rghiiigvrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhrihgthhgrrhgusegsohhoth
-    hlihhnrdgtohhmpdhrtghpthhtohepkhhoihgthhhirhhordguvghnsegtrghnohhnihgt
-    rghlrdgtohhmpdhrtghpthhtohepughlrghnsehgvghnthhoohdrohhrghdprhgtphhtth
-    hopehgvggvrhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtoheprghl
-    vgigrghnuggvrhdrshhvvghrughlihhnsehgmhgrihhlrdgtohhmpdhrtghpthhtoheplh
-    hkphesihhnthgvlhdrtghomhdprhgtphhtthhopegrrhhnugeskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:xdaIaLiwD5Z-T_JjbUMhKMFhNUzADagw3kV4oUcTEFyOLxTP7ok_5w>
-    <xmx:xdaIaNitssFW8BiPoaGsNmQ9fZnFiK9q4kYs9DxguRjg7DTYFoRE7Q>
-    <xmx:xdaIaDasfvaG0hshiKJpbbYR24B7HiixMZth93V-eUD1tcMV_ZdaNQ>
-    <xmx:xdaIaGWWJvRoJsRiYVjEByxDJAmh3RedNq33vrUBYTtCyx1SEq4A3g>
-    <xmx:x9aIaNTr7MrDyvM0nA3TLVY29MRwVIe2F-S0vMzg9fpJdLqbSTCppvhP>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A5F0E700065; Tue, 29 Jul 2025 10:12:21 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1753800494; c=relaxed/simple;
+	bh=Wmhz4bmTCfiLTIDvzMgycuE08DUM8az+85WjYYNDaEU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tQAGOTnV0wVeQPyTzhWkK9+107Itz1nYRb93naIv3pi9Sgm79GH/ctVfdXBwShCjKpBN3eH2QekR3lxjqBtqToLvj7iJVTKhbjig+nvXgQImcmOKKKBjcS9HvGzkGA2s7g2Qqu2BXPfJ4oHmbrQ5+W/WECdZsI68gvU/DqCfhmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dujemihanovic.xyz; spf=pass smtp.mailfrom=dujemihanovic.xyz; dkim=pass (2048-bit key) header.d=dujemihanovic.xyz header.i=@dujemihanovic.xyz header.b=IA1tDcfx; arc=none smtp.client-ip=37.205.8.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dujemihanovic.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dujemihanovic.xyz
+DKIM-Signature: a=rsa-sha256; bh=8N2iGBpWtDT0Y82ZNtFRtYqz7gU84Rzee3g2KG3Goa0=;
+ c=relaxed/relaxed; d=dujemihanovic.xyz;
+ h=Subject:Subject:Sender:To:To:Cc:Cc:From:From:Date:Date:MIME-Version:MIME-Version:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Reply-To:In-Reply-To:In-Reply-To:Message-Id:Message-Id:References:References:Autocrypt:Openpgp;
+ i=@dujemihanovic.xyz; s=default; t=1753800479; v=1; x=1754232479;
+ b=IA1tDcfxQzQhQKvJckCZENQh5pwucNIivjvQkMTgt+LKUzfSwqGJHC0/EZW8MmmoPDSD1O8f
+ WzUmNU4aUHEonH1X6rUFcuRcvAVJcE7PVn6ABn0KVCSuHpjSeXN5FqTQMFB0vYY9hVtgQruUk/k
+ jEB9H1YdYE3kjaggjh+eLVUrrKVgpo4xcT3/jyIjNBag1bSNaB25AdXx/+tY3u/CXzyEV+gtv8y
+ Z+aFwCtSJRiRBUzVeLuuAcuLzLnagyCtKbWo5s8gm8HHmw4jvyIzw6dKvBJkWlDeEOjZBEEb7oX
+ VlfwYJSKqx1yBIxubnKcLt+zT42FMgV8hO5etlwWCjHNg==
+Received: by mx.olsak.net (envelope-sender <duje@dujemihanovic.xyz>) with
+ ESMTPS id efe1b5b4; Tue, 29 Jul 2025 16:47:59 +0200
+From: Duje =?UTF-8?B?TWloYW5vdmnEhw==?= <duje@dujemihanovic.xyz>
+To: Robert Jarzmik <robert.jarzmik@free.fr>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Peng Fan <peng.fan@nxp.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, Karel Balej <balejk@matfyz.cz>
+Subject:
+ Re: [REGRESSION] samsung,coreprimevelte oops and lockup while probing SM5504
+Date: Tue, 29 Jul 2025 16:47:58 +0200
+Message-ID: <13840884.uLZWGnKmhe@radijator>
+In-Reply-To: <3367665.aeNJFYEL58@radijator>
+References: <3367665.aeNJFYEL58@radijator>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T15b001141a5b4202
-Date: Tue, 29 Jul 2025 16:11:22 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Geert Uytterhoeven" <geert@linux-m68k.org>
-Cc: "Arnd Bergmann" <arnd@kernel.org>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Alexander Sverdlin" <alexander.sverdlin@gmail.com>,
- "kernel test robot" <lkp@intel.com>, "Peng Fan" <peng.fan@nxp.com>,
- "Koichiro Den" <koichiro.den@canonical.com>, "Lee Jones" <lee@kernel.org>,
- "Geert Uytterhoeven" <geert+renesas@glider.be>,
- =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- "Niko Pasaloukos" <nikolaos.pasaloukos@blaize.com>,
- "Thomas Richard" <thomas.richard@bootlin.com>, "Yixun Lan" <dlan@gentoo.org>,
- "Lars-Peter Clausen" <lars@metafoo.de>,
- "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <476d821e-1f8a-44e3-a976-def1f435440e@app.fastmail.com>
-In-Reply-To: 
- <CAMuHMdUSsKeY-Uj1xA4SatDk+Mb0e4LJyOU=aS52YbA3DSMLrA@mail.gmail.com>
-References: <20250726211053.2226857-1-arnd@kernel.org>
- <CAMuHMdU6Akz0GC2hooAxn=C2F0WjagPkzRKcH1SJiW0CBeUOaw@mail.gmail.com>
- <f0a2a000-381e-40d8-a9ac-4d75dba332e9@app.fastmail.com>
- <CAMuHMdUSsKeY-Uj1xA4SatDk+Mb0e4LJyOU=aS52YbA3DSMLrA@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: enable CONFIG_GPIOLIB_LEGACY even for !GPIOLIB
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, Jul 29, 2025, at 14:12, Geert Uytterhoeven wrote:
-> On Tue, 29 Jul 2025 at 13:58, Arnd Bergmann <arnd@arndb.de> wrote:
->> On Tue, Jul 29, 2025, at 12:47, Geert Uytterhoeven wrote:
->> Do you have an example config that shows this problem?
->> I've tried a couple of configurations on m68k now but are unable
->> to reproduce this, using 'defconfig' (without GPIOLIB) and
->> 'm5475evb_defconfig' (with GPIOLIB).
->>
->> The intention of this patch (in combination with the previous one)
->> was that the legacy interfaces would still behave exactly like
->> before, falling back to the stubs when GPIOLIB is disabled.
->
-> I haven't seen any actual failures.  When discovering
-> CONFIG_GPIOLIB_LEGACY=y in all m68k defconfigs, my initial worry
-> was that it would increase kernel size by needlessly including
-> gpiolib-legacy.o. When that didn't turn out to be true, I started
-> wondering how your commit would fix anything without including
-> gpiolib-legacy.o.  Looks like any users just uses the simple static
-> inlines...
-> Sorry for confusing you.
+Hello,
 
-No worries, thanks for paying attention to incoming changes!
+Friendly ping on this issue. The issue still occurs on v6.16 and is still 
+fixed by reverting commit 20117cf426b6. I have found that the root cause seems 
+to be a bad pointer in gpio_chip->gpio_device.owner, but was not able to 
+figure out why this happens nor why this only happens when the IRQ chip is 
+immutable. Is there anything else I can do to try and get this resolved?
 
-If you want to see what the actual plan is, have a look at
+Regards,
+--
+Duje
 
-https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/log/?h=config-gpio-legacy
+> Hi,
+> 
+> After rebasing my samsung,coreprimevelte patchset to v6.16-rc5 (from v6.14), 
+I
+> found that the board would not successfully boot. Through serial I managed 
+to
+> extract this oops (stack trace decoded):
+> 
+> [    1.281921] Unable to handle kernel paging request at virtual address
+> 00676e6965657246
+> [    1.281927] Mem abort info:
+> [    1.281930]   ESR = 0x0000000096000004
+> [    1.281933]   EC = 0x25: DABT (current EL), IL = 32 bits
+> [    1.281938]   SET = 0, FnV = 0
+> [    1.281941]   EA = 0, S1PTW = 0
+> [    1.281944]   FSC = 0x04: level 0 translation fault
+> [    1.281948] Data abort info:
+> [    1.281950]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+> [    1.281953]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> [    1.281957]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> [    1.281961] [00676e6965657246] address between user and kernel address
+> ranges
+> [    1.281968] Internal error: Oops: 0000000096000004 [#1]  SMP
+> [    1.281974] Modules linked in:
+> [    1.281995] Tainted: [S]=CPU_OUT_OF_SPEC
+> [    1.281998] Hardware name: Samsung Galaxy Core Prime VE LTE (DT)
+> [    1.282003] Workqueue: events_unbound deferred_probe_work_func
+> [    1.282018] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS 
+BTYPE=--)
+> [    1.282025] pc : try_module_get (kernel/module/main.c:883 (discriminator
+> 2))
+> [    1.282035] lr : gpiochip_irq_reqres (drivers/gpio/gpiolib.c:4131
+> (discriminator 1) drivers/gpio/gpiolib.c:1929 (discriminator 1))
+> [    1.282044] sp : ffff8000811d3280
+> [    1.282047] x29: ffff8000811d3280 x28: 000000000000001c x27:
+> 0000000000000002
+> [    1.282057] x26: ffff800080ce3c50 x25: ffff800080700e08 x24:
+> ffff00000341f800
+> [    1.282068] x23: ffff000002ea6c00 x22: 000000000000001c x21:
+> 0000000000000000
+> [    1.282077] x20: 0000000000000000 x19: ffff000002f03880 x18:
+> 0000000000000000
+> [    1.282087] x17: 0000000000000000 x16: 000000009e839b88 x15:
+> ffff0000025ec490
+> [    1.282097] x14: ffff800080f6ae78 x13: 0000000000000001 x12:
+> 000000004c68655d
+> [    1.282107] x11: 0000000000000180 x10: 0000000000000a70 x9 :
+> ffff8000805a6fd4
+> [    1.282116] x8 : ffff0000025eced0 x7 : ffff0000025ec400 x6 :
+> 00000000cbc1e127
+> [    1.282126] x5 : ffff000002c5b328 x4 : 0000000000000000 x3 :
+> 0000000000000000
+> [    1.282136] x2 : ffff0000025ec400 x1 : 20676e6965657246 x0 :
+> 20676e6965657246
+> [    1.282146] Call trace:
+> [    1.282150] try_module_get (kernel/module/main.c:883 (discriminator 2)) 
+(P)
+> [    1.282159] gpiochip_irq_reqres (drivers/gpio/gpiolib.c:4131
+> (discriminator 1) drivers/gpio/gpiolib.c:1929 (discriminator 1))
+> [    1.282167] __setup_irq (kernel/irq/manage.c:1341 (discriminator 1) 
+kernel/
+> irq/manage.c:1529 (discriminator 1))
+> [    1.282177] request_threaded_irq (kernel/irq/manage.c:2126)
+> [    1.282186] regmap_add_irq_chip_fwnode (drivers/base/regmap/regmap-
+> irq.c:923)
+> [    1.282197] devm_regmap_add_irq_chip_fwnode (drivers/base/regmap/regmap-
+> irq.c:1085)
+> [    1.282206] devm_regmap_add_irq_chip (drivers/base/regmap/regmap-
+> irq.c:1123)
+> [    1.282215] sm5022_muic_i2c_probe (drivers/extcon/extcon-sm5502.c:714)
+> [    1.282225] i2c_device_probe (drivers/i2c/i2c-core-base.c:591)
+> [    1.282235] really_probe (drivers/base/dd.c:579 drivers/base/dd.c:657)
+> [    1.282243] __driver_probe_device (drivers/base/dd.c:799)
+> [    1.282252] driver_probe_device (drivers/base/dd.c:829)
+> [    1.282260] __device_attach_driver (drivers/base/dd.c:958)
+> [    1.282269] bus_for_each_drv (drivers/base/bus.c:462)
+> [    1.282277] __device_attach (drivers/base/dd.c:1031)
+> [    1.282285] device_initial_probe (drivers/base/dd.c:1079)
+> [    1.282294] bus_probe_device (drivers/base/bus.c:537)
+> [    1.282301] device_add (drivers/base/core.c:3699)
+> [    1.282308] device_register (drivers/base/core.c:3775)
+> [    1.282316] i2c_new_client_device (drivers/i2c/i2c-core-base.c:1022)
+> [    1.282325] of_i2c_register_device (drivers/i2c/i2c-core-of.c:77)
+> [    1.282332] of_i2c_register_devices (drivers/i2c/i2c-core-of.c:104
+> (discriminator 1))
+> [    1.282339] i2c_register_adapter (drivers/i2c/i2c-core-base.c:1594)
+> [    1.282347] i2c_add_adapter (drivers/i2c/i2c-core-base.c:1670 drivers/
+i2c/
+> i2c-core-base.c:1650)
+> [    1.282356] i2c_add_numbered_adapter (drivers/i2c/i2c-core-base.c:1703)
+> [    1.282366] __i2c_bit_add_bus (drivers/i2c/algos/i2c-algo-bit.c:659)
+> [    1.282373] i2c_bit_add_numbered_bus (drivers/i2c/algos/i2c-algo-
+bit.c:683)
+> [    1.282380] i2c_gpio_probe (drivers/i2c/busses/i2c-gpio.c:432)
+> [    1.282387] platform_probe (drivers/base/platform.c:1405)
+> [    1.282397] really_probe (drivers/base/dd.c:579 drivers/base/dd.c:657)
+> [    1.282405] __driver_probe_device (drivers/base/dd.c:799)
+> [    1.282413] driver_probe_device (drivers/base/dd.c:829)
+> [    1.282422] __device_attach_driver (drivers/base/dd.c:958)
+> [    1.282430] bus_for_each_drv (drivers/base/bus.c:462)
+> [    1.282438] __device_attach (drivers/base/dd.c:1031)
+> [    1.282446] device_initial_probe (drivers/base/dd.c:1079)
+> [    1.282455] bus_probe_device (drivers/base/bus.c:537)
+> [    1.282462] deferred_probe_work_func (drivers/base/dd.c:124)
+> [    1.282471] process_one_work (arch/arm64/include/asm/jump_label.h:36
+> include/trace/events/workqueue.h:110 kernel/workqueue.c:3243)
+> [    1.282479] worker_thread (kernel/workqueue.c:3315 (discriminator 2)
+> kernel/workqueue.c:3402 (discriminator 2))
+> [    1.282487] kthread (kernel/kthread.c:464)
+> [    1.282494] ret_from_fork (arch/arm64/kernel/entry.S:863)
+> [ 1.282506] Code: a9bd7bfd 910003fd b4000260 aa0003e1 (b9400000)
+> (disassembly omitted since the script treated it as x86 for some reason)
+> [    1.282512] ---[ end trace 0000000000000000 ]---
+> [    1.298926] mmc0: new HS200 MMC card at address 0001
+> [    1.331699] mmc2: SDHCI controller on d4280800.mmc [d4280800.mmc] using
+> ADMA
+> [    1.333834] mmcblk0: mmc0:0001 QN1SMB 7.28 GiB
+> [    1.368613] mmc2: new high speed SDIO card at address 0001
+> [    1.373418]  mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14 p15
+> p16 p17 p18 p19
+> [    1.688785] mmcblk0boot0: mmc0:0001 QN1SMB 4.00 MiB
+> [    1.693415] mmcblk0boot1: mmc0:0001 QN1SMB 4.00 MiB
+> [    1.697474] mmcblk0rpmb: mmc0:0001 QN1SMB 512 KiB, chardev (248:0)
+> (dmesg ends here, display freezes, no further signs of life)
+> 
+> I went through recent commits to sm5502, gpiolib and finally gpio-pxa to 
+check
+> whether any of them could be causing issues. Eventually I stumbled upon
+> 20117cf426b6 ("gpio: pxa: Make irq_chip immutable") and reverted it locally,
+> after which the board started booting again.
+> 
+> #regzbot introduced: 20117cf426b6
+> 
+> Regards,
+> --
+> Duje
 
-which ends with making GPIOLIB_LEGACY actually optional.
 
-Any driver that actually uses the legacy gpiolib interfaces
-at that point is already specific to one of the few platforms
-that still have legacy gpiochips (sh, sa1100, pxa, s3c64xx,
-orion5x, mv78xx0, coldfire, alchemy, txx9, bcm47xx, bcm63xx,
-rb532, olpc, and a few x86 atom boards), or it has an explicit
-dependency on GPIOLIB_LEGACY.
 
-The arm boards are already on their way out, but the others
-could probably use some help converting to gpio descriptors.
 
-     Arnd
 
