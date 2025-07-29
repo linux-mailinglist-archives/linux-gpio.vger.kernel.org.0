@@ -1,125 +1,163 @@
-Return-Path: <linux-gpio+bounces-23873-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23874-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EED79B149B4
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Jul 2025 10:03:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8992AB14B35
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Jul 2025 11:24:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3165E542446
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Jul 2025 08:03:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2FA81188CBFA
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Jul 2025 09:24:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1895027054B;
-	Tue, 29 Jul 2025 08:03:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EF5B285C81;
+	Tue, 29 Jul 2025 09:24:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="lHg4Wcyd"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="fEHAybb3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16248221FD0
-	for <linux-gpio@vger.kernel.org>; Tue, 29 Jul 2025 08:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05DE2749E0
+	for <linux-gpio@vger.kernel.org>; Tue, 29 Jul 2025 09:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753776198; cv=none; b=e2qvw920QeA9WaObjXQc04TRPfhMYQGjdSPc/fm5r4Mc9aU6mwqubGOk8SVJHD5Bq3C11AGJ6addtzKoisWTSxBS/lPHlzNmL47CM442CFVA/SdHI9MEwqmJRe+d+P0Zt099I2EKsIx18sXmi+SOgLxD7JDh4GT08s1uSeEx1do=
+	t=1753781049; cv=none; b=sCFhhRPGJh3qV0C3y6vLyGRIG6fc/0YQBMp7g+W87W64fNb5xwAW4GzGOjjI10p0RMBPaWrEKdu0Rp58VCTCx15u5q/6n75h56j9TuyjuZ/X83YOnSKf/kqQPc/VIo2kKVuZwooB/1D7Zj23WV/7YXQ6+MkN3s/+Kr9XTo8U0Kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753776198; c=relaxed/simple;
-	bh=UflJNvI/cneK2LX3m1PgDlZbFunqpRrS1ehCqCFEDw4=;
+	s=arc-20240116; t=1753781049; c=relaxed/simple;
+	bh=1XbJXYOtfiKvD5ix8X5FxAD5vsw1x7eclqIkLeXimps=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mBTr5Nmsm411tzprQ36OTT0e/+Gz3A6ZDmIOBD+Lmb3P9W6OpMwka5st3VQaCNbUQds0k4ZYJRC34J70mffFCDbMPrVfoF/KRnJAul2knnnrmEKbtmnS1oz6pmQK5lf91XN3BH80i63me/ZgNtnt0U7+Z66J2DdvISYZhKvbfdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=lHg4Wcyd; arc=none smtp.client-ip=209.85.167.46
+	 To:Cc:Content-Type; b=mW/8cS5lNWVRBYepbWxvk24Ghy0EumaR4q+jdhL0f1/mFpONWRsuPq5cnh47FJOGhbtHC6McyEQeYUjp87uZPnDQXNO8XQaTeVtwUQboBssbRN2jTPY9wCMfh1KV+D/bMZubBeDmiBWhGHxXm4BJYaedy1E5Tc9avdRkbZQ2/nI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=fEHAybb3; arc=none smtp.client-ip=209.85.167.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-555024588b1so5762770e87.1
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Jul 2025 01:03:16 -0700 (PDT)
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-553b5165cf5so6681651e87.0
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Jul 2025 02:24:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1753776195; x=1754380995; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1753781046; x=1754385846; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UflJNvI/cneK2LX3m1PgDlZbFunqpRrS1ehCqCFEDw4=;
-        b=lHg4WcyduMyjgVQ75Wwb2TKuNLuAjYgZ4+19osY9bKFZEzrmKY4uIMEN3fBC07R6go
-         pskGLbA/N0ne2CkWctM4JDpWYRXHpfcukZqQEhqeEsS54LkKFTuuE8R2gHQZ7dHNDIzV
-         xGLXBvdxtYSSjTyADL+bLKVpv3DsON/0tKEvOi6kSLDyDLULXRAG2ooTXmm8osUX1nPP
-         eQlgc/4PzsjKTztid0tyehGU1MC7XLP8r+wa855O6Q9zN8PzYCUtiWd31uem/WT820in
-         0XQ3IPjOetIlqAYz57oHyNvYGPqfDU25en2sUfikIhDhSjCjIlz/r5YYwbKOrg5MtohH
-         0miA==
+        bh=OvMriwwuRsxStr2YyKe5TWPbRI0lQN4j3ZQYt22kpLE=;
+        b=fEHAybb3OuY7x+gjbN/XKz8qEKAN0mQ9y4DGFfnXysVJzJwBu4iLULXuGicbjpx3D3
+         dtLhEKLl7J8VYDuc3D6tKDZw6iMkzJJpnTc+ZaATB+6uRKw/7SGeTrPwEd2pjTLLTdAB
+         igfmKdMOgFcyGEZqedATfYQOT0p2O/Ahkz/gXp6Q7OdnmD3OT7EitbbBE4oBtgTlryVM
+         gUMoQIS0sW4+bFi80TrW1fX+DN7lQwKQyzFSza/Jm+48xcga5AH2GdoWJUI2ga6zauQz
+         s7wrDKdw8RqIk9GQgQrBuyWmT9Z3xz4gZJo3u8T/aReQHNRczFczjzO2OXujQ7bZpSIK
+         X4zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753776195; x=1754380995;
+        d=1e100.net; s=20230601; t=1753781046; x=1754385846;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UflJNvI/cneK2LX3m1PgDlZbFunqpRrS1ehCqCFEDw4=;
-        b=sdTX0GzktYfPqZrd28wuISM1s7MMc46Cg32NN0sr57cM53ARXoAuHtp+Uu97H0ZVX0
-         XBsi1F1aEUqfMjLvgO6uqHG8DSehdiy5Z1Kk/BiULS2+UNsunUO0+K99YvOpgitypRMq
-         F29sQwxB1fmStrNPxELPw/EG/j932klsbLscopH7UxxWyL6RxJsNfT6KIe+uvAy1KZQ0
-         uZEZl46K4ouorCKUTTmoUWMCS7oTYQxK+t7u5XQWjoTRXlisNg3mLRjML1TMdfYYZILD
-         iUTxanZ6IILvc8u+ZJLsa5DxYjNIKHIMco19Z7bW3WpP3SRqgjzcZEFTeQgChYPc/B5x
-         eqlg==
-X-Forwarded-Encrypted: i=1; AJvYcCW2nZsGIV7gO6CnpuiyUOJW+FWaz4QZZkXjmZbHlWCM2vvaa+MNejlNQAWvP8JGCMtVGea6f+D+sARR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyi9KuC/dAksDc/e+4VfVpnXsMcaYuUyDQMOf09P3ZbH03wOgby
-	J70R/Y/2NLBwNxumQYAS+udMzxPd423Yzj3euydKltNXLhhn67Mt1JMBMlrIXNnqaGXdhAyOFzP
-	106x7LpV5aVkAAHHuF+0JbtpCICM1bRwCtaCr4eGAFA==
-X-Gm-Gg: ASbGncuspSnU6SMqz8ETjid28oKhMCX3hb+6gq+2vAIBDErXrvMkmt8843v23zOg03d
-	Alw01xaH7NHX0HWW2PtLFbGyO3MSaxzzvdiTg3vBPjiOX5EbImBzCkiucYtziEkAIfYZ3VZBGr+
-	DVKyNsh1JxkGIMUnaESszvlG+bMKNDEcHC1cqTQqV3bAgZkPt2OEChRlSOjWiu80zAp1MKs9QbG
-	6zFRqHO9I6dSa+OXcTy7IDMUHvXs3ILaEu0WZeMpgoU90YCUg==
-X-Google-Smtp-Source: AGHT+IHhGTfRcwlCoTMkBpGGIbg24X8fFN+ca6FGQ7O5Z0tgMTO9PPQ8O181X8MbzMzcz0jB3+Pt3eo0mb+Vi3jG5I0=
-X-Received: by 2002:a05:6512:1082:b0:553:25f4:695c with SMTP id
- 2adb3069b0e04-55b5f4b9c66mr3802415e87.50.1753776194943; Tue, 29 Jul 2025
- 01:03:14 -0700 (PDT)
+        bh=OvMriwwuRsxStr2YyKe5TWPbRI0lQN4j3ZQYt22kpLE=;
+        b=p0BRNdjqn5m/OYSYNoOat1j5gz/ZYEtXdIo63XJzdph3+KTmeS9la2xm1ttynf0B2J
+         HA4XWZcZnR3Rxx2fox6GVp0vHFpgnZ9J+6XIubl1uZtRIcn/Oq1HcUaTBODHPPLC15kC
+         dSLCpcwR9svqcb9IMfcNIdSy/aTmA/2kmQwWGiDDWFbN0FfrfRN0cqVJDYug/kq9SXOs
+         8KaHb0eKF43ChB5j6pMh2K4UbWBNpYrwnnFj1Cj/2HuGkxkDVU7ENNbWl01tEXzvCJlW
+         RMjhxzqoG3NsBZHZB6l3h8ydtFXYL6TM8PxcPwBdQlpFNgoqWaeKMfj6xxobC4DuZQJG
+         Vzlg==
+X-Forwarded-Encrypted: i=1; AJvYcCWAVXMUZP0XC0cpBHnijm/QsExqLa3wM8l9CbhuPnKNOXo6ESpeMssjWF7PebVlKtCjYatIlz7Z+WrX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0+8h20S4oQWd5LFQGjjl36t7OcRSw7So4xM7nnd32JrCj28Yd
+	vH+MOwVDPA7mluF/z2xWyK0bhQPjiQUOF+IwA97DrrNs33+P64YPAZPPViycXL0ZPVo2UcREnyW
+	uuE8S7vOCrYz8uuLm3Rf2c9gBX8tkgQcp5mPG7SkpAA==
+X-Gm-Gg: ASbGncugSrEzXA1F/ofM4Sr6UCNyRyxSEKEMWZmvtW+1Ill/Hl2WPfB2FowI2aRoTdp
+	bz5wx6IyuNVnH53bQkttQxWCtwqWxHADXL3zoLqUzRyY0XrIOmMOFrejh+KIhAqIsbw16Leb65U
+	EzrFwluxrH5+I5sBdbtsDybriSk5Qv63nFJNVZ80L2aMlRqIwBOIn76wZM54xLSASd9//O3rSvB
+	cAPw/3S0LfebV0p4rcz7Cr//0BF4yZ93tdZqaZwPGUNxeV0bQ==
+X-Google-Smtp-Source: AGHT+IG4d8eX8f04SwumbDn+t8ORtzgwAVwNB5BHKdmUryIfl8eqxh2e3123W81layXfFQt1IEka9/bpWuzrKar7j3E=
+X-Received: by 2002:a05:6512:3a86:b0:553:d910:9334 with SMTP id
+ 2adb3069b0e04-55b5f4df595mr4041752e87.46.1753781045533; Tue, 29 Jul 2025
+ 02:24:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611-aaeon-up-board-pinctrl-support-v8-0-3693115599fe@bootlin.com>
- <CAMRc=MfS5Em65n0fwbu8JtJsc3rTgQO5cv+PymSonJtf6_zRKQ@mail.gmail.com>
- <824ec6d1-4272-44c7-b3bb-93d716ed3d43@bootlin.com> <CAMRc=McnU6TO5p7Jwy-DOg_8-=AS7rFRfaPD0yH1SERWXM8L+A@mail.gmail.com>
- <CAMRc=MeZ4HHJGkVBysLyusW5G-rM0iSQV1qqmFJUe1rsZrN2AA@mail.gmail.com> <CACRpkdbjQSns7a9EMx_5kdJ4Y2wsnocTLNsO2es7MQ=rKCBkQw@mail.gmail.com>
-In-Reply-To: <CACRpkdbjQSns7a9EMx_5kdJ4Y2wsnocTLNsO2es7MQ=rKCBkQw@mail.gmail.com>
+References: <20250724-pinctrl-gpio-pinfuncs-v3-0-af4db9302de4@linaro.org>
+ <20250724-pinctrl-gpio-pinfuncs-v3-8-af4db9302de4@linaro.org> <CAHp75VdMmfV=z75K9AmB7GsWV8C1bZPLGi33duTCt+CM79spJg@mail.gmail.com>
+In-Reply-To: <CAHp75VdMmfV=z75K9AmB7GsWV8C1bZPLGi33duTCt+CM79spJg@mail.gmail.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 29 Jul 2025 10:03:03 +0200
-X-Gm-Features: Ac12FXz22uZHpwAEpH2A-edyCZbULy4WGvtG8B3M_WQs_F93ggeN_b2SiWiW7F4
-Message-ID: <CAMRc=MdWkWvwVU66daz94NB-asxBBY-1EC3BSLtPO+6dcvyCMw@mail.gmail.com>
-Subject: Re: [PATCH v8 00/10] Add pinctrl support for the AAEON UP board FPGA
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Thomas Richard <thomas.richard@bootlin.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
-	linux-hardening@vger.kernel.org
+Date: Tue, 29 Jul 2025 11:23:54 +0200
+X-Gm-Features: Ac12FXwkqCsphx3p10ZENgy5ARM9FowTyJPFq-nwB_5x6uw2mPSH_J_dgheu8yg
+Message-ID: <CAMRc=MeEo6p=6Tp5kORi9y5tGNJKrzh0kq7tpe_E=5TasMjgbg@mail.gmail.com>
+Subject: Re: [PATCH v3 08/15] pinctrl: keembay: use a dedicated structure for
+ the pinfunction description
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Alexey Klimov <alexey.klimov@linaro.org>, 
+	Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
+	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, imx@lists.linux.dev, 
+	linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jul 26, 2025 at 4:17=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
+On Thu, Jul 24, 2025 at 1:11=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> On Wed, Jul 23, 2025 at 10:43=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.=
+> On Thu, Jul 24, 2025 at 11:25=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.=
 pl> wrote:
-> > On Tue, Jul 15, 2025 at 3:17=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev=
-.pl> wrote:
->
-> > > Well, nobody responded to my last email. This is a cross-tree series
-> > > so at least Linus must confirm he's ok.
-> > >
-> > > Bart
 > >
-> > Linus, I'm willing to queue at least the GPIO part for v6.17, does the
-> > pinctrl part look good to you?
+> > struct function_desc is a wrapper around struct pinfunction with an
+> > additional void *data pointer. We're working towards reducing the usage
+> > of struct function_desc in pinctrl drivers - they should only be create=
+d
+> > by pinmux core and accessed by drivers using
+> > pinmux_generic_get_function().
 >
-> Yes go ahead, sorry for late reply!
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->
-> I was mainly waiting for Andy's review on this, so if Andy
-> is OK, I'm OK with it.
+> Any link to the discussion and perhaps an updated in-kernel
+> documentation and/or TODO?
 >
 
-Ah, I already sent my big PR for this cycle. :( Let's pick it up early
-after rc1 and I'll prepare for you an immutable branch.
+The discussions happened under v1 and v2 of this series. The "reducing
+the usage ..." part refers to the need to avoid memory duplication of
+struct pinfunction really but it's a prerequisite.
+
+> > This driver uses the data pointer so in
+> > order to stop using struct function_desc, we need to provide an
+> > alternative that also wraps the mux mode which is passed to pinctrl cor=
+e
+> > as user data.
+>
+> ...
+>
+> > +struct keembay_pinfunction {
+> > +       struct pinfunction func;
+> > +       u8 mux_mode;
+> > +};
+>
+> My gut's feeling that this type of construction will be in tons of the
+> drivers, perhaps better to provide an alternative like
+> struct pinfunction_with_mode {
+>   ...
+
+Nah, literally only this one so far. And I bet we could rework it to
+avoid it altogether. Your proposal is too specific IMO. Let's cross
+that bridge when (if) we get there.
+
+> };
+>
+> Or even with variadic arguments... (just saying)
+>
+
+Oh please no. :)
 
 Bartosz
 
