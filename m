@@ -1,208 +1,251 @@
-Return-Path: <linux-gpio+bounces-23907-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23908-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 661C4B16707
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Jul 2025 21:43:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23C7EB167BF
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Jul 2025 22:47:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 584ED5A6ECD
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Jul 2025 19:42:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 28D083B192F
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Jul 2025 20:47:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AC23202F67;
-	Wed, 30 Jul 2025 19:43:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 466A5219301;
+	Wed, 30 Jul 2025 20:47:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UINQwgg7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DXEF/9BQ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBB11E7C19;
-	Wed, 30 Jul 2025 19:43:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92A617BD3;
+	Wed, 30 Jul 2025 20:47:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753904587; cv=none; b=u06bpficSksIws0J4SPmwzZMIuUf2wldKb4q71Dz+rLnGtMQLq3QiUA6bYxjO8qAbFzqdKI74vIzBHrrTHyX8YkhlnN+/CoG2Ay/saH22+r5pUCPCkUr2To4H8zLxNeYLf/zK3DfxgLna1i+IvYhURZpi4lVtDPthu/sfcfeF+Y=
+	t=1753908455; cv=none; b=ROWjouBRZSOMWkyRPhF/Ba8M9WRoSu2J2+VAndFyZT8sGjlSYKaviBV571LPnoXc8vfnpas2Q7LQEOZl1WkudsLMEwkt6NzfDohYQqvGnLKw9wpB+Ywg6XK3UtlHHKyA/hG66jAWh58oq6krhD+NcKp+a3PSjwgYe5iHPdmUA6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753904587; c=relaxed/simple;
-	bh=mBiqnCcZwzp9m9hdznpsjeipa38RLGVR0dI7J56QWk0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dWh4yDVVPwh8eXmJx5cWDAiWt2nU8ak4vygYCgoCVwZtEA4ouxn7zXWsJVhTxCwwP9Avoue0i4YXoSXFnf/X+/g723l6cf1XudF0/z9ExxL+eb7DO6HZMXUuo0bLcu/wpjdD2w7+fj0bbYLcnbmeJUTBFNqGa79n0XmBG43F9/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UINQwgg7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1E38C4CEE3;
-	Wed, 30 Jul 2025 19:43:04 +0000 (UTC)
+	s=arc-20240116; t=1753908455; c=relaxed/simple;
+	bh=RI0ksHF6O152eL68aDJf82KbbpvphujgM5aWcGo3uNI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rRfxUcsfxebQ0SwLb+f/H17OYF2A1eS4qgI36FFBVxD++Si5HtSIrXw8VxnPSGuR7F7n2EYAXSsA5QJKw2vrf80wm8yu4XMzPMqw3Z834zj5UM8pwy0tLr76DNcb6Lc2zaG6BOAMp1vqaVzIZfUHUNhEVSVJ8uZRHWofyvXElxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DXEF/9BQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 542FDC4CEE3;
+	Wed, 30 Jul 2025 20:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753904586;
-	bh=mBiqnCcZwzp9m9hdznpsjeipa38RLGVR0dI7J56QWk0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UINQwgg7Bb48/XtWfqnqCIwmV5O4WK+re72ovMlkeyBukCbQ364LNyPE4/bDCh6uP
-	 S+Hh6CfmIk3VU3PFPss1lwON+eQRjJss7mHmHXy14DF0cByMUpk41ecOueq3X/yj1k
-	 8IWz0CWVqyADmStOZWJRuqswMinXGDnXuDPT1vbXqgxNReVhKD1p63Uid+i2abrpDs
-	 ysrmw6MV2DeYa4wwG8KBDev17ssFqTnLIgJNX441CqqzQbBqIJRKXgXXIea1A4NMm5
-	 Tz29kbWk+fjxV1XHiPJ3CX0VvvaDZaj9qpuyvB71B4OMyoCSzmh4iG1hs+DkxY7urr
-	 ZOO1vqwstiKQg==
-Message-ID: <97f0e27f-3128-4821-bc09-2acde1ebf81a@kernel.org>
-Date: Wed, 30 Jul 2025 21:43:02 +0200
+	s=k20201202; t=1753908454;
+	bh=RI0ksHF6O152eL68aDJf82KbbpvphujgM5aWcGo3uNI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DXEF/9BQY5gJWoTcj2QRalWAgOTQjN8Q09CwQJoIAUti4iZsi1eErMTyzhqe+YudV
+	 YBmToktDl7ADhktK08376xC2qPABezs52q7r8fc6Oclbqvm8ipsxMp1SWCYaQsI+Im
+	 vN+nXsRDI2MyKQKbS4NTwvNE0G+TfERjk/s6TChnIPkYJxgaKoVHaz+1ZEXjqEOjgs
+	 WOax7F6gUmcJbEcrZpukzZf6bS8HPtgSijnRkxRTHrv24S3V1zbU7pkE17brvIgFNw
+	 wgLWdh9Y4mnA0no/AVICZKOtD29B/yGVqiKGwL1pbLZGFrv5KdSU8pUj+4Ej9dxoqZ
+	 AuT1M4OwLWfow==
+Date: Wed, 30 Jul 2025 15:47:33 -0500
+From: Rob Herring <robh@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Hoan Tran <hoan@os.amperecomputing.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Phil Edworthy <phil.edworthy@renesas.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 5/6] soc: renesas: Add support for Renesas RZ/N1 GPIO
+ Interrupt Multiplexer
+Message-ID: <20250730204733.GA1717453-robh@kernel.org>
+References: <20250725152618.32886-1-herve.codina@bootlin.com>
+ <20250725152618.32886-6-herve.codina@bootlin.com>
+ <20250729195137.GA658914-robh@kernel.org>
+ <20250730115421.770d99bf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] 6.16-rc7: lockdep failure with max77620-gpio/max77686-rtc
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>,
- Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>
-References: <aIpdVejR3Jkh9Z_I@shell.armlinux.org.uk>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <aIpdVejR3Jkh9Z_I@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250730115421.770d99bf@bootlin.com>
 
-On 30/07/2025 19:58, Russell King (Oracle) wrote:
-> Hi,
+On Wed, Jul 30, 2025 at 11:54:21AM +0200, Herve Codina wrote:
+> Hi Rob,
 > 
-> First, I'm not sure who is responsible for the max77620-gpio driver
-
-77620 is only for nvidia platforms and nvidia was upstreaming it,
-although it shares the RTC driver part with max77686. You should Cc
-nvidia SoC maintainers, maybe Thierry has someone around who could
-investigate it.
-
-> (it's not in MAINTAINERS) but this bug points towards a problem with
-> one or other of these drivers.
+> On Tue, 29 Jul 2025 14:51:37 -0500
+> Rob Herring <robh@kernel.org> wrote:
 > 
-> Here is /proc/interrupts which may help debug this:
+> > On Fri, Jul 25, 2025 at 05:26:14PM +0200, Herve Codina wrote:
+> > > On the Renesas RZ/N1 SoC, GPIOs can generate interruptions. Those
+> > > interruption lines are multiplexed by the GPIO Interrupt Multiplexer in
+> > > order to map 32 * 3 GPIO interrupt lines to 8 GIC interrupt lines.
+> > > 
+> > > The GPIO interrupt multiplexer IP does nothing but select 8 GPIO
+> > > IRQ lines out of the 96 available to wire them to the GIC input lines.
+> > > 
+> > > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> > > ---
+> > >  drivers/soc/renesas/Kconfig       |   4 +
+> > >  drivers/soc/renesas/Makefile      |   1 +
+> > >  drivers/soc/renesas/rzn1_irqmux.c | 169 ++++++++++++++++++++++++++++++
+> > >  3 files changed, 174 insertions(+)
+> > >  create mode 100644 drivers/soc/renesas/rzn1_irqmux.c
+> > > 
+> > > diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
+> > > index fbc3b69d21a7..9e8ac33052fb 100644
+> > > --- a/drivers/soc/renesas/Kconfig
+> > > +++ b/drivers/soc/renesas/Kconfig
+> > > @@ -58,6 +58,7 @@ config ARCH_RZN1
+> > >  	select PM
+> > >  	select PM_GENERIC_DOMAINS
+> > >  	select ARM_AMBA
+> > > +	select RZN1_IRQMUX
+> > >  
+> > >  if ARM && ARCH_RENESAS
+> > >  
+> > > @@ -435,6 +436,9 @@ config PWC_RZV2M
+> > >  config RST_RCAR
+> > >  	bool "Reset Controller support for R-Car" if COMPILE_TEST
+> > >  
+> > > +config RZN1_IRQMUX
+> > > +	bool "Renesas RZ/N1 GPIO IRQ multiplexer support" if COMPILE_TEST
+> > > +
+> > >  config SYSC_RZ
+> > >  	bool "System controller for RZ SoCs" if COMPILE_TEST
+> > >  
+> > > diff --git a/drivers/soc/renesas/Makefile b/drivers/soc/renesas/Makefile
+> > > index 3bdcc6a395d5..daa932c7698d 100644
+> > > --- a/drivers/soc/renesas/Makefile
+> > > +++ b/drivers/soc/renesas/Makefile
+> > > @@ -14,4 +14,5 @@ obj-$(CONFIG_SYS_R9A09G057)	+= r9a09g057-sys.o
+> > >  # Family
+> > >  obj-$(CONFIG_PWC_RZV2M)		+= pwc-rzv2m.o
+> > >  obj-$(CONFIG_RST_RCAR)		+= rcar-rst.o
+> > > +obj-$(CONFIG_RZN1_IRQMUX)		+= rzn1_irqmux.o
+> > >  obj-$(CONFIG_SYSC_RZ)		+= rz-sysc.o
+> > > diff --git a/drivers/soc/renesas/rzn1_irqmux.c b/drivers/soc/renesas/rzn1_irqmux.c
+> > > new file mode 100644
+> > > index 000000000000..37e41c2b9104
+> > > --- /dev/null
+> > > +++ b/drivers/soc/renesas/rzn1_irqmux.c
+> > > @@ -0,0 +1,169 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/*
+> > > + * RZ/N1 GPIO Interrupt Multiplexer
+> > > + *
+> > > + * Copyright 2025 Schneider Electric
+> > > + * Author: Herve Codina <herve.codina@bootlin.com>
+> > > + */
+> > > +
+> > > +#include <linux/mod_devicetable.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of.h>
+> > > +#include <linux/of_irq.h>
+> > > +#include <linux/platform_device.h>
+> > > +
+> > > +#define IRQMUX_MAX_IRQS 8
+> > > +
+> > > +static int irqmux_is_phandle_args_equal(const struct of_phandle_args *a,
+> > > +					const struct of_phandle_args *b)
+> > > +{
+> > > +	int i;
+> > > +
+> > > +	if (a->np != b->np)
+> > > +		return false;
+> > > +
+> > > +	if (a->args_count != b->args_count)
+> > > +		return false;
+> > > +
+> > > +	for (i = 0; i < a->args_count; i++) {
+> > > +		if (a->args[i] != b->args[i])
+> > > +			return false;
+> > > +	}
+> > > +
+> > > +	return true;
+> > > +}
+> > > +
+> > > +static int irqmux_find_interrupt_index(struct device *dev, struct device_node *np,
+> > > +				       const struct of_phandle_args *expected_irq)
+> > > +{
+> > > +	struct of_phandle_args out_irq;
+> > > +	bool is_equal;
+> > > +	int ret;
+> > > +	int i;
+> > > +
+> > > +	for (i = 0; i < IRQMUX_MAX_IRQS; i++) {
+> > > +		ret = of_irq_parse_one(np, i, &out_irq);  
+> > 
+> > I don't really want more users of this... More below.
+> > 
+> > > +		if (ret)
+> > > +			return ret;
+> > > +
+> > > +		is_equal = irqmux_is_phandle_args_equal(expected_irq, &out_irq);
+> > > +		of_node_put(out_irq.np);
+> > > +		if (is_equal)
+> > > +			return i;
+> > > +	}
+> > > +
+> > > +	return -ENOENT;
+> > > +}
+> > > +
+> > > +struct irqmux_cb_data {
+> > > +	struct device_node *np;
+> > > +	struct device *dev;
+> > > +	u32 __iomem *regs;
+> > > +};
+> > > +
+> > > +static int irqmux_imap_cb(void *data, const __be32 *imap,
+> > > +			  const struct of_phandle_args *parent_args)
+> > > +{
+> > > +	struct irqmux_cb_data *priv = data;
+> > > +	u32 src_hwirq;
+> > > +	int index;
+> > > +
+> > > +	/*
+> > > +	 * The child #address-cells is 0. Already checked in irqmux_setup().
+> > > +	 * The first value in imap is the src_hwirq
+> > > +	 */
+> > > +	src_hwirq = be32_to_cpu(*imap);  
+> > 
+> > The iterator should take care of the endianness conversion.
 > 
->            CPU0       CPU1       CPU2       CPU3       CPU4       CPU5
->  94:          1          0          0          0          0          0 max77620-
-> top   4 Edge      max77686-rtc
->  95:          1          0          0          0          0          0 max77686-rtc   1 Edge      rtc-alarm1
+> Ok, it will take care.
 > 
-> While running 6.16-rc7 on the Jetson Xavier NX platform, upon suspend,
-> I receive the following lockdep splat. I've added some instrumentation
-> into irq_set_irq_wake() which appears twice in the calltrace to print
-> the IRQ number and the "on" parameter to locate which interrupts are
-> involved in this splat. This splat is 100% reproducable.
+> > 
+> > > +
+> > > +	/*
+> > > +	 * Get the index in our interrupt array that matches the parent in the
+> > > +	 * interrupt-map
+> > > +	 */
+> > > +	index = irqmux_find_interrupt_index(priv->dev, priv->np, parent_args);
+> > > +	if (index < 0)
+> > > +		return dev_err_probe(priv->dev, index, "output interrupt not found\n");
+> > > +
+> > > +	dev_info(priv->dev, "interrupt %u mapped to output interrupt[%u]\n",
+> > > +		 src_hwirq, index);  
+> > 
+> > Do you even need "interrupts"? Just make the "interrupt-map" index 
+> > important and correspond to the hw index. That would greatly simplify 
+> > all this.
 > 
-> [   46.721367] irq_set_irq_wake: irq=95 on=1
-> [   46.722067] irq_set_irq_wake: irq=94 on=1
-> [   46.722181] ============================================
-> [   46.722578] WARNING: possible recursive locking detected
-> [   46.722852] 6.16.0-rc7-net-next+ #432 Not tainted
-> [   46.722965] --------------------------------------------
-> [   46.723127] rtcwake/3984 is trying to acquire lock:
-> [   46.723235] ffff0000813b2c68 (&d->lock){+.+.}-{4:4}, at: regmap_irq_lock+0x18/0x24
-> [   46.723452]
->                but task is already holding lock:
-> [   46.723556] ffff00008504dc68 (&d->lock){+.+.}-{4:4}, at: regmap_irq_lock+0x18/0x24
-> [   46.723780]
->                other info that might help us debug this:
-> [   46.723903]  Possible unsafe locking scenario:
+> I would like to avoid to be based on the interrupt-map index.
 > 
-> [   46.724015]        CPU0
-> [   46.724067]        ----
-> [   46.724119]   lock(&d->lock);
-> [   46.724212]   lock(&d->lock);
-> [   46.724282]
->                 *** DEADLOCK ***
-> 
-> [   46.724348]  May be due to missing lock nesting notation
-> 
-> [   46.724492] 6 locks held by rtcwake/3984:
-> [   46.724576]  #0: ffff0000825693f8 (sb_writers#3){.+.+}-{0:0}, at: vfs_write+0x184/0x350
-> [   46.724902]  #1: ffff00008fd7fa88 (&of->mutex#2){+.+.}-{4:4}, at: kernfs_fop_write_iter+0x104/0x1c8
-> [   46.725258]  #2: ffff000080a64588 (kn->active#87){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x10c/0x1c8
-> [   46.725609]  #3: ffff8000815d4fb8 (system_transition_mutex){+.+.}-{4:4}, at: pm_suspend+0x220/0x300
-> [   46.725897]  #4: ffff00008500a8f8 (&dev->mutex){....}-{4:4}, at: device_suspend+0x1d8/0x630
-> [   46.726173]  #5: ffff00008504dc68 (&d->lock){+.+.}-{4:4}, at: regmap_irq_lock+0x18/0x24
+> Indeed, IMHO, it is less robust. I don't thing that we can enforce the
+> interrupt-map items order. Based on interrupt-map index, we need to ensure
+> that the first item is related to GIC 103, the second one to GIC 104 and so
+> on.
 
+How exactly are you enforcing that order for "interrupts"? You can't. 
 
-max77686 only disables/enables interrupts in suspend path, but max77620
-is doing also I2C transfers, but above is regmap_irq_lock, not regmap
-lock. Maybe this is not really max77620/77686 related at all? None of
-these do anything weird (or different than last 5 years), so missing
-nesting could be result of changes in other parts...
+Aren't you just duplicating the information in "interrupts" in the 
+interrupt-map.
 
-
-> [   46.732435]
->                stack backtrace:
-> [   46.734019] CPU: 3 UID: 0 PID: 3984 Comm: rtcwake Not tainted 6.16.0-rc7-net-next+ #432 PREEMPT
-> [   46.734029] Hardware name: NVIDIA NVIDIA Jetson Xavier NX Developer Kit/Jetson, BIOS 6.0-37391689 08/28/2024
-> [   46.734033] Call trace:
-> [   46.734036]  show_stack+0x18/0x24 (C)
-> [   46.734070]  dump_stack_lvl+0x90/0xd0
-> [   46.734080]  dump_stack+0x18/0x24
-> [   46.734107]  print_deadlock_bug+0x260/0x350
-> [   46.734114]  __lock_acquire+0xf28/0x2088
-> [   46.734120]  lock_acquire+0x19c/0x33c
-> [   46.734126]  __mutex_lock+0x84/0x530
-> [   46.734135]  mutex_lock_nested+0x24/0x30
-> [   46.734155]  regmap_irq_lock+0x18/0x24
-> [   46.734161]  __irq_get_desc_lock+0x8c/0x9c
-> [   46.734170]  irq_set_irq_wake+0x5c/0x1ac	<== I guess IRQ 94
-
-...like changes in irqchip.
-
-> [   46.734176]  regmap_irq_sync_unlock+0x314/0x4f4
-> [   46.734182]  __irq_put_desc_unlock+0x48/0x4c
-> [   46.734190]  irq_set_irq_wake+0x88/0x1ac	<== I guess IRQ 95
-> [   46.734195]  max77686_rtc_suspend+0x34/0x74
-
-
-Because really above part is virtually unchanged since 10 years, except
-my commit d8f090dbeafdcc3d30761aa0062f19d1adf9ef08 (you can try
-reverting it... but it still could be correct/needed and just irqchip
-changed something around locking).
-
-Best regards,
-Krzysztof
+Rob
 
