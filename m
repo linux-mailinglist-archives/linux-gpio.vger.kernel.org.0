@@ -1,251 +1,221 @@
-Return-Path: <linux-gpio+bounces-23908-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23909-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23C7EB167BF
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Jul 2025 22:47:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BBBCB1693B
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Jul 2025 01:12:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 28D083B192F
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Jul 2025 20:47:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6CB3C3B2813
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Jul 2025 23:11:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 466A5219301;
-	Wed, 30 Jul 2025 20:47:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DC2322FF2D;
+	Wed, 30 Jul 2025 23:12:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DXEF/9BQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pyt0gz+j"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92A617BD3;
-	Wed, 30 Jul 2025 20:47:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C6B921B9E5
+	for <linux-gpio@vger.kernel.org>; Wed, 30 Jul 2025 23:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753908455; cv=none; b=ROWjouBRZSOMWkyRPhF/Ba8M9WRoSu2J2+VAndFyZT8sGjlSYKaviBV571LPnoXc8vfnpas2Q7LQEOZl1WkudsLMEwkt6NzfDohYQqvGnLKw9wpB+Ywg6XK3UtlHHKyA/hG66jAWh58oq6krhD+NcKp+a3PSjwgYe5iHPdmUA6s=
+	t=1753917133; cv=none; b=Mg8m+xQMy0EURFRpFKCQCPrv4YiMOjHf6xl8nX4ZWnN9j3lDqdqCfndGnkn/hsBqLvDiSVuEwbH13+W+sHlo8M1zBYgT+Fg6E4GUU5fVQJI/9QlAIAs5hfm/RU2yAegF9nqdDAqjMgRvBrNYqnj0UfMFqBp/nHwgecz9bkGR0ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753908455; c=relaxed/simple;
-	bh=RI0ksHF6O152eL68aDJf82KbbpvphujgM5aWcGo3uNI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rRfxUcsfxebQ0SwLb+f/H17OYF2A1eS4qgI36FFBVxD++Si5HtSIrXw8VxnPSGuR7F7n2EYAXSsA5QJKw2vrf80wm8yu4XMzPMqw3Z834zj5UM8pwy0tLr76DNcb6Lc2zaG6BOAMp1vqaVzIZfUHUNhEVSVJ8uZRHWofyvXElxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DXEF/9BQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 542FDC4CEE3;
-	Wed, 30 Jul 2025 20:47:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753908454;
-	bh=RI0ksHF6O152eL68aDJf82KbbpvphujgM5aWcGo3uNI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DXEF/9BQY5gJWoTcj2QRalWAgOTQjN8Q09CwQJoIAUti4iZsi1eErMTyzhqe+YudV
-	 YBmToktDl7ADhktK08376xC2qPABezs52q7r8fc6Oclbqvm8ipsxMp1SWCYaQsI+Im
-	 vN+nXsRDI2MyKQKbS4NTwvNE0G+TfERjk/s6TChnIPkYJxgaKoVHaz+1ZEXjqEOjgs
-	 WOax7F6gUmcJbEcrZpukzZf6bS8HPtgSijnRkxRTHrv24S3V1zbU7pkE17brvIgFNw
-	 wgLWdh9Y4mnA0no/AVICZKOtD29B/yGVqiKGwL1pbLZGFrv5KdSU8pUj+4Ej9dxoqZ
-	 AuT1M4OwLWfow==
-Date: Wed, 30 Jul 2025 15:47:33 -0500
-From: Rob Herring <robh@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Hoan Tran <hoan@os.amperecomputing.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Phil Edworthy <phil.edworthy@renesas.com>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 5/6] soc: renesas: Add support for Renesas RZ/N1 GPIO
- Interrupt Multiplexer
-Message-ID: <20250730204733.GA1717453-robh@kernel.org>
-References: <20250725152618.32886-1-herve.codina@bootlin.com>
- <20250725152618.32886-6-herve.codina@bootlin.com>
- <20250729195137.GA658914-robh@kernel.org>
- <20250730115421.770d99bf@bootlin.com>
+	s=arc-20240116; t=1753917133; c=relaxed/simple;
+	bh=ffIbtBp/PotwykraGD+hF6sJHIeeQLbYCEx7S5syk7E=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=XFFvvrRxMSx2NynxRYEen/w8MXwgqI9waifdQw0KpOhyDDSlLndPRYubRByzgtCfoYC2Hd29P9oZBYKdDQr1GOqAroiGcFgnXazFMYENfjmR4AtMHELXHhPGjQtbuWBzuNvy0fiwPh7wiY9Pr1TzZ+YXVhcQxNZslReRhGOuoPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pyt0gz+j; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753917131; x=1785453131;
+  h=date:from:to:cc:subject:message-id;
+  bh=ffIbtBp/PotwykraGD+hF6sJHIeeQLbYCEx7S5syk7E=;
+  b=Pyt0gz+jDqWA4PWRZ8fJM9g8Bt8HgRtjBr9nxA215Y3IX1fbl8+BE6ln
+   M4JLbtOcFSEzWLyFNvZjZLdHsLCNehnBcj9yBgypxnsxs3ElCqzMbYwW2
+   y9hpldpg5H+Bc8WYjrYj5/dMnF2ZU1q8ZHNwpUkBiWUqllIhHhsTHskIX
+   5RZi/YIjBsIoBzVD4j8RIAEXvyjlMVg3r8wYuof4VF8m4kB5YNJ9UBdLj
+   bLvVHOGXK7XN/Ym5rZn+zDC0W5fRjPSeuCQ81fnA1+RYsIZipBrmsTHKs
+   uU7DaHmiGfPN+VlDBkEaCDnRRADyIIsIGggGTXvOfioIW8UE+nMDIOHch
+   g==;
+X-CSE-ConnectionGUID: PerIjJNiSh+y+I/ka4061w==
+X-CSE-MsgGUID: i/HKR0ryT/m1/AJ989KoAA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11507"; a="78785247"
+X-IronPort-AV: E=Sophos;i="6.16,353,1744095600"; 
+   d="scan'208";a="78785247"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2025 16:11:28 -0700
+X-CSE-ConnectionGUID: ZW/OnJt6SXSigeZQpEAtmA==
+X-CSE-MsgGUID: U/Dka+9bS2eyKTffQ23MrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,353,1744095600"; 
+   d="scan'208";a="163896717"
+Received: from lkp-server01.sh.intel.com (HELO 160750d4a34c) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 30 Jul 2025 16:11:26 -0700
+Received: from kbuild by 160750d4a34c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uhFxD-0003E8-0T;
+	Wed, 30 Jul 2025 23:11:23 +0000
+Date: Thu, 31 Jul 2025 07:11:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/devel] BUILD SUCCESS
+ b7c2911a087071237a192247054ee454cb1ebefc
+Message-ID: <202507310712.4lUfKI5J-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250730115421.770d99bf@bootlin.com>
 
-On Wed, Jul 30, 2025 at 11:54:21AM +0200, Herve Codina wrote:
-> Hi Rob,
-> 
-> On Tue, 29 Jul 2025 14:51:37 -0500
-> Rob Herring <robh@kernel.org> wrote:
-> 
-> > On Fri, Jul 25, 2025 at 05:26:14PM +0200, Herve Codina wrote:
-> > > On the Renesas RZ/N1 SoC, GPIOs can generate interruptions. Those
-> > > interruption lines are multiplexed by the GPIO Interrupt Multiplexer in
-> > > order to map 32 * 3 GPIO interrupt lines to 8 GIC interrupt lines.
-> > > 
-> > > The GPIO interrupt multiplexer IP does nothing but select 8 GPIO
-> > > IRQ lines out of the 96 available to wire them to the GIC input lines.
-> > > 
-> > > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> > > ---
-> > >  drivers/soc/renesas/Kconfig       |   4 +
-> > >  drivers/soc/renesas/Makefile      |   1 +
-> > >  drivers/soc/renesas/rzn1_irqmux.c | 169 ++++++++++++++++++++++++++++++
-> > >  3 files changed, 174 insertions(+)
-> > >  create mode 100644 drivers/soc/renesas/rzn1_irqmux.c
-> > > 
-> > > diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
-> > > index fbc3b69d21a7..9e8ac33052fb 100644
-> > > --- a/drivers/soc/renesas/Kconfig
-> > > +++ b/drivers/soc/renesas/Kconfig
-> > > @@ -58,6 +58,7 @@ config ARCH_RZN1
-> > >  	select PM
-> > >  	select PM_GENERIC_DOMAINS
-> > >  	select ARM_AMBA
-> > > +	select RZN1_IRQMUX
-> > >  
-> > >  if ARM && ARCH_RENESAS
-> > >  
-> > > @@ -435,6 +436,9 @@ config PWC_RZV2M
-> > >  config RST_RCAR
-> > >  	bool "Reset Controller support for R-Car" if COMPILE_TEST
-> > >  
-> > > +config RZN1_IRQMUX
-> > > +	bool "Renesas RZ/N1 GPIO IRQ multiplexer support" if COMPILE_TEST
-> > > +
-> > >  config SYSC_RZ
-> > >  	bool "System controller for RZ SoCs" if COMPILE_TEST
-> > >  
-> > > diff --git a/drivers/soc/renesas/Makefile b/drivers/soc/renesas/Makefile
-> > > index 3bdcc6a395d5..daa932c7698d 100644
-> > > --- a/drivers/soc/renesas/Makefile
-> > > +++ b/drivers/soc/renesas/Makefile
-> > > @@ -14,4 +14,5 @@ obj-$(CONFIG_SYS_R9A09G057)	+= r9a09g057-sys.o
-> > >  # Family
-> > >  obj-$(CONFIG_PWC_RZV2M)		+= pwc-rzv2m.o
-> > >  obj-$(CONFIG_RST_RCAR)		+= rcar-rst.o
-> > > +obj-$(CONFIG_RZN1_IRQMUX)		+= rzn1_irqmux.o
-> > >  obj-$(CONFIG_SYSC_RZ)		+= rz-sysc.o
-> > > diff --git a/drivers/soc/renesas/rzn1_irqmux.c b/drivers/soc/renesas/rzn1_irqmux.c
-> > > new file mode 100644
-> > > index 000000000000..37e41c2b9104
-> > > --- /dev/null
-> > > +++ b/drivers/soc/renesas/rzn1_irqmux.c
-> > > @@ -0,0 +1,169 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > +/*
-> > > + * RZ/N1 GPIO Interrupt Multiplexer
-> > > + *
-> > > + * Copyright 2025 Schneider Electric
-> > > + * Author: Herve Codina <herve.codina@bootlin.com>
-> > > + */
-> > > +
-> > > +#include <linux/mod_devicetable.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/of.h>
-> > > +#include <linux/of_irq.h>
-> > > +#include <linux/platform_device.h>
-> > > +
-> > > +#define IRQMUX_MAX_IRQS 8
-> > > +
-> > > +static int irqmux_is_phandle_args_equal(const struct of_phandle_args *a,
-> > > +					const struct of_phandle_args *b)
-> > > +{
-> > > +	int i;
-> > > +
-> > > +	if (a->np != b->np)
-> > > +		return false;
-> > > +
-> > > +	if (a->args_count != b->args_count)
-> > > +		return false;
-> > > +
-> > > +	for (i = 0; i < a->args_count; i++) {
-> > > +		if (a->args[i] != b->args[i])
-> > > +			return false;
-> > > +	}
-> > > +
-> > > +	return true;
-> > > +}
-> > > +
-> > > +static int irqmux_find_interrupt_index(struct device *dev, struct device_node *np,
-> > > +				       const struct of_phandle_args *expected_irq)
-> > > +{
-> > > +	struct of_phandle_args out_irq;
-> > > +	bool is_equal;
-> > > +	int ret;
-> > > +	int i;
-> > > +
-> > > +	for (i = 0; i < IRQMUX_MAX_IRQS; i++) {
-> > > +		ret = of_irq_parse_one(np, i, &out_irq);  
-> > 
-> > I don't really want more users of this... More below.
-> > 
-> > > +		if (ret)
-> > > +			return ret;
-> > > +
-> > > +		is_equal = irqmux_is_phandle_args_equal(expected_irq, &out_irq);
-> > > +		of_node_put(out_irq.np);
-> > > +		if (is_equal)
-> > > +			return i;
-> > > +	}
-> > > +
-> > > +	return -ENOENT;
-> > > +}
-> > > +
-> > > +struct irqmux_cb_data {
-> > > +	struct device_node *np;
-> > > +	struct device *dev;
-> > > +	u32 __iomem *regs;
-> > > +};
-> > > +
-> > > +static int irqmux_imap_cb(void *data, const __be32 *imap,
-> > > +			  const struct of_phandle_args *parent_args)
-> > > +{
-> > > +	struct irqmux_cb_data *priv = data;
-> > > +	u32 src_hwirq;
-> > > +	int index;
-> > > +
-> > > +	/*
-> > > +	 * The child #address-cells is 0. Already checked in irqmux_setup().
-> > > +	 * The first value in imap is the src_hwirq
-> > > +	 */
-> > > +	src_hwirq = be32_to_cpu(*imap);  
-> > 
-> > The iterator should take care of the endianness conversion.
-> 
-> Ok, it will take care.
-> 
-> > 
-> > > +
-> > > +	/*
-> > > +	 * Get the index in our interrupt array that matches the parent in the
-> > > +	 * interrupt-map
-> > > +	 */
-> > > +	index = irqmux_find_interrupt_index(priv->dev, priv->np, parent_args);
-> > > +	if (index < 0)
-> > > +		return dev_err_probe(priv->dev, index, "output interrupt not found\n");
-> > > +
-> > > +	dev_info(priv->dev, "interrupt %u mapped to output interrupt[%u]\n",
-> > > +		 src_hwirq, index);  
-> > 
-> > Do you even need "interrupts"? Just make the "interrupt-map" index 
-> > important and correspond to the hw index. That would greatly simplify 
-> > all this.
-> 
-> I would like to avoid to be based on the interrupt-map index.
-> 
-> Indeed, IMHO, it is less robust. I don't thing that we can enforce the
-> interrupt-map items order. Based on interrupt-map index, we need to ensure
-> that the first item is related to GIC 103, the second one to GIC 104 and so
-> on.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/devel
+branch HEAD: b7c2911a087071237a192247054ee454cb1ebefc  treewide: rename GPIO set callbacks back to their original names
 
-How exactly are you enforcing that order for "interrupts"? You can't. 
+elapsed time: 865m
 
-Aren't you just duplicating the information in "interrupts" in the 
-interrupt-map.
+configs tested: 128
+configs skipped: 3
 
-Rob
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                   randconfig-001-20250730    gcc-8.5.0
+arc                   randconfig-002-20250730    gcc-14.3.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-22
+arm                              allyesconfig    gcc-15.1.0
+arm                          pxa168_defconfig    clang-19
+arm                   randconfig-001-20250730    clang-22
+arm                   randconfig-002-20250730    clang-20
+arm                   randconfig-003-20250730    gcc-8.5.0
+arm                   randconfig-004-20250730    gcc-14.3.0
+arm                        spear3xx_defconfig    clang-17
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250730    clang-22
+arm64                 randconfig-002-20250730    clang-20
+arm64                 randconfig-003-20250730    clang-17
+arm64                 randconfig-004-20250730    clang-22
+csky                              allnoconfig    gcc-15.1.0
+csky                  randconfig-001-20250730    gcc-14.3.0
+csky                  randconfig-002-20250730    gcc-12.5.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-22
+hexagon                          allyesconfig    clang-22
+hexagon               randconfig-001-20250730    clang-20
+hexagon               randconfig-002-20250730    clang-22
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250730    clang-20
+i386        buildonly-randconfig-002-20250730    clang-20
+i386        buildonly-randconfig-003-20250730    gcc-12
+i386        buildonly-randconfig-004-20250730    gcc-12
+i386        buildonly-randconfig-005-20250730    clang-20
+i386        buildonly-randconfig-006-20250730    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-22
+loongarch             randconfig-001-20250730    clang-22
+loongarch             randconfig-002-20250730    clang-20
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                          multi_defconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20250730    gcc-11.5.0
+nios2                 randconfig-002-20250730    gcc-9.5.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250730    gcc-14.3.0
+parisc                randconfig-002-20250730    gcc-8.5.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                    adder875_defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-22
+powerpc                      bamboo_defconfig    clang-22
+powerpc                        cell_defconfig    gcc-15.1.0
+powerpc                   motionpro_defconfig    clang-22
+powerpc               randconfig-001-20250730    gcc-8.5.0
+powerpc               randconfig-002-20250730    gcc-8.5.0
+powerpc               randconfig-003-20250730    clang-22
+powerpc64             randconfig-001-20250730    clang-22
+powerpc64             randconfig-002-20250730    clang-22
+powerpc64             randconfig-003-20250730    gcc-10.5.0
+riscv                            allmodconfig    clang-22
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-22
+riscv                 randconfig-001-20250730    gcc-10.5.0
+riscv                 randconfig-002-20250730    gcc-8.5.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-22
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    clang-22
+s390                  randconfig-001-20250730    clang-20
+s390                  randconfig-002-20250730    gcc-15.1.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sh                         ecovec24_defconfig    gcc-15.1.0
+sh                    randconfig-001-20250730    gcc-12.5.0
+sh                    randconfig-002-20250730    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250730    gcc-14.3.0
+sparc                 randconfig-002-20250730    gcc-14.3.0
+sparc64                             defconfig    clang-20
+sparc64               randconfig-001-20250730    clang-22
+sparc64               randconfig-002-20250730    clang-20
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-22
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-22
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250730    gcc-11
+um                    randconfig-002-20250730    clang-22
+um                           x86_64_defconfig    clang-22
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250730    gcc-12
+x86_64      buildonly-randconfig-002-20250730    clang-20
+x86_64      buildonly-randconfig-003-20250730    clang-20
+x86_64      buildonly-randconfig-004-20250730    clang-20
+x86_64      buildonly-randconfig-005-20250730    clang-20
+x86_64      buildonly-randconfig-006-20250730    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250730    gcc-11.5.0
+xtensa                randconfig-002-20250730    gcc-12.5.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
