@@ -1,190 +1,164 @@
-Return-Path: <linux-gpio+bounces-23899-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23900-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 333ACB160D8
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Jul 2025 14:59:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3AC6AB1618C
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Jul 2025 15:30:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 49BBC547541
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Jul 2025 12:59:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6D01217A3B7
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Jul 2025 13:30:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 091972989BF;
-	Wed, 30 Jul 2025 12:58:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B22F2D3A86;
+	Wed, 30 Jul 2025 13:30:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="CJqtUTJV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XXGIxDbQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27CB525D535
-	for <linux-gpio@vger.kernel.org>; Wed, 30 Jul 2025 12:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0F72D3730;
+	Wed, 30 Jul 2025 13:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753880330; cv=none; b=BkJfeNFCMiHmutyLeHpv1eGtO0H87/vsXhgI8dKQ61CxUmz0SxU0T9pt+MJHkg7ozQLN6ujwhd97VlGbm+rd+w8eWEtThih0auRAWSbUhJg85bSmvzqIDQAFUtyS4HxjNyk/oJ2q/521b8H6q3t5DIhLkwiGBXJ+CCHqM9qVpfM=
+	t=1753882246; cv=none; b=YG3yCi9FYmyW8weN+EsEm1HuNv/R5qPgCMxOB2XJE1lkIzVubD4OEcn4AqpqHMfHFMMjt077VU1gGP6PFUTSOz7sFWjrgW5pJQo5FwizJLvHJIwnpSkQNvzdGWoptl8DEEVLIyBM0J9h60dmUMX9of82MrVaQ/wozMwhzDnK+fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753880330; c=relaxed/simple;
-	bh=qdoR/T1j974HV75S4tJQPO6oa6KOE5TIDMG6swHUT34=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B0dk2Tn2r9+nyO8ywzwx/ZE0YZrJ5Z2N9L3oivPRfehQYaduy5BOfAjDv+YerHI+byZE492Wfkv6nBitde9gZ99yVnY2vYT0/iAOoVLH0qygPnZZrjTV5DT4pGqk4TOMVFT2Gl2nAv1QhIBGK0RTa5LkUovMFY5vyHYFGGmj50w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=CJqtUTJV; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56UCbBsU001384
-	for <linux-gpio@vger.kernel.org>; Wed, 30 Jul 2025 12:58:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	REl7hvnxlp9SuuNQcg8K3JJn1OMshdLROkXEqPTt0hw=; b=CJqtUTJVteGV3fk3
-	UDHOk/lJylpmzDnVz73C8EOi2ZxnN8Yu1s8Aqdl7Z6Buch7wHd3l357Hg7gQ4tlg
-	cTk5KsaWtiOowqWEGBb40+85BsWguXPpPef12JVGn6zMzw4pfCzvU8vTUPMJf6pi
-	FCkkD9ARE+ggBj+T5DzPr0y5cZ9g+c76aIfqP8UTgMARP6z3W1XhfKv6dYCWp/eu
-	HEk8MaH0eMcTMt8t+sndkbk6D4eqmb+qx7ron7c8KBBxMu+BmccryFfjMjdZQ68o
-	jOlStstUnEpaE0bWou9w3BhNYUokxWSflslyoswqj9+NJyjfftLE18VqtzxmVU5p
-	cIjjdA==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 484q863yn8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Wed, 30 Jul 2025 12:58:47 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-7073674bc2aso3393116d6.3
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Jul 2025 05:58:47 -0700 (PDT)
+	s=arc-20240116; t=1753882246; c=relaxed/simple;
+	bh=8ONcE8oQ6Ovxim91GXFYg9iUHoLisltD7bWCaIaZE7o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VTQGcgyRn4WmWkqP64GtskoXvTsZcexZhvPOUFWU5qz3r2xOG006FMDagfOFNqmxxi+clPItbJMuKjYVhW59yWq22NrdKhgMZXYD4kkXOeTiAWGVNg8nK47AMWvorFnHcz8z701ZAuPaRpY31V44LS7H4uxICp6BMafsXKftvVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XXGIxDbQ; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-af66f444488so494854366b.0;
+        Wed, 30 Jul 2025 06:30:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753882243; x=1754487043; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qi9l6TBdgjaQnQAqpjO6D0pjlwGQDGt3b3+CN6Y3/yI=;
+        b=XXGIxDbQgUFtyfBsiUhmmtuDMRBamLuWISnO9xdTQF/YAQ8WANE9CZvOqvJxvQftjo
+         veUyXpuqERLCF1u+hgKEmk1YBCxNHtuNYWFbfXaqrmhqRZ7P5l3ZU+FBvyRcvLoS+IDg
+         24uU4nabWjNkcyYdk5KN5pntSEfseKkrsGCmhhJcwkzKGl7VyI8oo/m+7ldXcdyi+pP/
+         aPff05j7XsXRmSPfEZHJ0dFYnx6W4rUMe6b6ccFga3Odbb7aLvlxN+Kl+UJLXs1SbGT/
+         rzOf67HGCELMZeaBHd0czDvOGHEGlGWQSpanulTHNQViqXTfTopHRhOM86mBmgnKz8oI
+         sEoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753880326; x=1754485126;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=REl7hvnxlp9SuuNQcg8K3JJn1OMshdLROkXEqPTt0hw=;
-        b=s4xfdQ+YSNru4CD3KVvwkx4qPik3G43xG/mGVuMO0AyReVT9igo9Lu8vZJ9v+xRsEs
-         slvRu6/MloqGhCJp7rOqIlmvvpU8lkXUCIBYBUjiZohO3BVbly0ce1Fd4sUkF5bcxTAr
-         hqfNLbpP+I7uJvor4nXTaiRG+RLiQ0UA13Nje8gOmC+7L1NUnJUdM4AQEOD2gDjE1s73
-         HrEFirR7J83yUYlci2APauCnE5/lZIbzdGZ+hgLQD6J1d7JZyQ+uiV5cFJOFDC4j2PjP
-         ODck6YBt7CIQ3m2ik8PZNoNGEw+3fFdlZHqxD29J/IUHqUVXZDTtlOZqUXv5rA0RFebL
-         /udQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX7i6bJg8u/NuSBA550TPsmBEp8ylkOMYSQJqSTZViqLbmvq7t5Tg6918zhaXCMLLYV6RR3gHXz8Uft@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSiKRjo4aESMfiiFbjFwZgg/JjnqjWad94nZ2yCRsxs/mCjkPG
-	XjgxbOfsUhG/Ru24gPrR2e/o+pCn+J1H5pZ7RgaH3n9oDzLO17KWzh+Bwmn0t+asrtfjt7RoBAT
-	fcH7Bdcy/IFbkuS5uNnwyGCIfVGSR7U3lKbTLned8DcBSe90c4y+5P7Qs4/baB9yW
-X-Gm-Gg: ASbGncudWdgveJAig//ZCu42XWS63RSjfP1gCRmFyd/d2sNvN4s0GNWIe9me6+CuTHs
-	UchMZAzAVgiO3qJeBYTbmOU/F+zeFjk3OlInLSG8LTXq6dvsuPWDCtOpau/FTKaCJcYzbcena5L
-	6X744dP7eR194DustqmQqLPeuoHnWD3ybI+BBJTZ8wZjXCj6EPSo6mvrUx74TetZ8qmCydudqPY
-	X/1XwOd1LGSN+ub6Cc2sjm1ewFVfFzmSpUeoEtviPNs7YahUc8ipaAYRWQuLpF952gU0SEaarVY
-	CzC76f3FbEiW97SSBRV2mhRRrv5kqrUQkLpjC70mGxIaA0PSEx8OCh2uBwPKCM893fJNaazbTzn
-	71dXbaarrHAhngnhQDg==
-X-Received: by 2002:a05:620a:2546:b0:7e6:3c48:408e with SMTP id af79cd13be357-7e66eec65e9mr236933785a.0.1753880326008;
-        Wed, 30 Jul 2025 05:58:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFvVN/RcoYodTnfrZL516pu8LNotIBvCtHLo8vMi2gcHequN79TtT5m4Nb7CMoeTdOjan/dqw==
-X-Received: by 2002:a05:620a:2546:b0:7e6:3c48:408e with SMTP id af79cd13be357-7e66eec65e9mr236931885a.0.1753880325583;
-        Wed, 30 Jul 2025 05:58:45 -0700 (PDT)
-Received: from [192.168.43.16] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6154cf801fbsm3305166a12.31.2025.07.30.05.58.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Jul 2025 05:58:45 -0700 (PDT)
-Message-ID: <7217ab5f-680a-41f1-9b90-3d68d4ce5e96@oss.qualcomm.com>
-Date: Wed, 30 Jul 2025 14:58:42 +0200
+        d=1e100.net; s=20230601; t=1753882243; x=1754487043;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qi9l6TBdgjaQnQAqpjO6D0pjlwGQDGt3b3+CN6Y3/yI=;
+        b=phAso52mGoBHFyZkp0DlaBkyB9T4jn9hZkhp0di5/folX5q/ce/Egp7CzVpS/v20aI
+         O2Fpgmpa8cbw+DG6mDCTkVRLWXhz4VipX0nA7vOuH7JWUvz/cyLCN05ldMMfNwgPWmXB
+         KxeJqsr0XAsbgX8cB7NhsOBWJMLN5E+zKN4Q/PZLvEPG4g/7cvKGJAfWCDqt1zEUu4dS
+         AvWJmccr88XO5DE514guSZ5f6eT2Tcmk/aUaq0xcaU5mviBcP53SY+LkK0RvzZPc8PB7
+         JvycNsG+XnKqXpzhwjOgMgAevbiwywlNsxTDS8BoUMpUJDiZgR8TIYrRRQcJ8tFY9wN/
+         0UKA==
+X-Forwarded-Encrypted: i=1; AJvYcCUghB4NKzq1UKJ6JtGBF0T3HfYkkLaqx5TehD994Gc5yJz1YZ43CkFRP1w8C4qudvFfnGUQ0QZfbUGpPA==@vger.kernel.org, AJvYcCVWOjxdQ8yRBaL3EMd0bTZGIcPsEVBmoS109dHedLroHhx6ZK+xOcaSkAgkGTltSNgE3iCzI8u43+lyiw==@vger.kernel.org, AJvYcCVmEOJfEeQTPHUeIquLEkeBV1I/TOzkMnwdLql9BruT5Bl0HWiG1SD5Uk52oSe4Tuq6LGvKjNewFYpu/nK4z5Vt/Tg=@vger.kernel.org, AJvYcCW7TdmarISvfHFMqh6Vz04SgPNH7a4i0QSyTpeqxa+N3oVsHkjtxtP1IHJGTciG5KxZ9G2trz6MiachTrtbvje/@vger.kernel.org, AJvYcCWRR6QRIzCpZPxb2O4RjOKzcALg/XmGmk4JMzhOBcNSDjuVz5fV9xCTJBvlN1If/FiDnaTfqJHo0F1kWjiz@vger.kernel.org, AJvYcCX/x2cAhZeGKc5Hlem2la7wocuSCT+m1TS/dmPwrfX7YSOuSDOMZbo9sSzuMElcqwmw8xGElmurwXgXCiTI@vger.kernel.org, AJvYcCXk2paaTIFp057xMFhZBUX4ne0MP/ArqGhRSoB/lYvPvIc+lZaW2i+klLxZlcqipT8z4BFlX5ABFxn7KQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnTnHTzzY+UpszFobwBpkFac2Dw3G7WijzArDjDD4fv8VXnlKn
+	ueoErsC3TXnGtBFUyakO6zL50PfvSO05lqKvDm4rndc3EQ6w6EuG61WIVTwh84BPa0Sf5xKLu+o
+	FE/MhvLKBy76T2uXpYBgZV0cgGJnptII=
+X-Gm-Gg: ASbGnctjCOoHz2FKEAKZ60ryb1/XGNJ/tXr8uDufUsHONcXrEpyI+txILJXl9+q92St
+	o/ilXlISXAiDHbgl3d8rje3/ZUVrCx3Y3PAMIJFg8Bs/EIVs4ck6oOqN3QmhCV39dYvgZva/5mR
+	8KOcsI8md2xqeauvTZMEnvZVIhHxwbG68OL/c7RGOxApbi+0TQY6qdgTy+RKVnBm0rme6NmxPIF
+	VS9Bmaa+OE8IT3JL9uR
+X-Google-Smtp-Source: AGHT+IE7FH6m4Dj0jSn6Xv2SOxyVdUI56jx+oEPv/YLtr96ycR8jtmVTuCl5DRsdQyIzWn8vHcnXCm+w9rLeyqQEmTc=
+X-Received: by 2002:a17:907:dab:b0:ae3:60fb:1b3b with SMTP id
+ a640c23a62f3a-af8fda93d6emr386293566b.58.1753882242487; Wed, 30 Jul 2025
+ 06:30:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 6/9] arm64: dts: qcom: qcs6490-rb3gen2: Add WSA8830
- speakers amplifier
-To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Srinivas Kandagatla <srini@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
-        kernel@oss.qualcomm.com,
-        Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
-References: <20250720173215.3075576-1-quic_pkumpatl@quicinc.com>
- <20250720173215.3075576-7-quic_pkumpatl@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250720173215.3075576-7-quic_pkumpatl@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzMwMDA5MiBTYWx0ZWRfX1hRFXCqvJ4es
- 0IwB3kfj5T37+wP4lcl/oZE1ZfVGhSpE73/BYrYij+EIvFeVhTox9synn7ERsyayFqcZR96XrQX
- F9WqEDCHDaiHTZoj81ELB2u4OYtQeZg7kWCiQf2LYCeA83HzKOfWKefzJtbp6bRcDBeGgr5ZTHk
- JHRjRpOcGjjPHLuUkqFRR0DqIeEk9MDwzV+123mDXElQez7aCNACUqDaofbqz3iOXV380x2pFpH
- RaUk2FzZJ07ISdAEwYwlBD3z8B9k7g9Ii5seXk1TGTVHD9dAtyN3mvsbW6hQsJ9vWGZUjb52bOI
- tGDz5/Qw5UAHzvKCO8giCGUsWEId55HIs7S0Ktaxa0dN1h15oRAVT+FjsM+mH7YSkaEB6MOFFDH
- a4G2a45BTgfVC16NF3wrr7e721xFwY0tETRFXi40CBQqJPcG3ST3xuDZSGNigRyH+xG0bNtL
-X-Authority-Analysis: v=2.4 cv=TqLmhCXh c=1 sm=1 tr=0 ts=688a1707 cx=c_pps
- a=UgVkIMxJMSkC9lv97toC5g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8
- a=_z6rx1Am3YmXwjxqEOgA:9 a=QEXdDO2ut3YA:10 a=1HOtulTD9v-eNWfpl4qZ:22
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: rE_BMwxJhw3ffqoPMwfUCjBFvA2OeHea
-X-Proofpoint-GUID: rE_BMwxJhw3ffqoPMwfUCjBFvA2OeHea
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-07-30_04,2025-07-30_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 phishscore=0 bulkscore=0 lowpriorityscore=0 suspectscore=0
- malwarescore=0 adultscore=0 spamscore=0 priorityscore=1501 clxscore=1015
- impostorscore=0 mlxlogscore=697 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507300092
+References: <20250724-pinctrl-gpio-pinfuncs-v3-0-af4db9302de4@linaro.org>
+ <20250724-pinctrl-gpio-pinfuncs-v3-12-af4db9302de4@linaro.org>
+ <CAHp75Vc4vsJh_-GbP+YO50veoGoGtfAPL4tjcF+73uophfmnGw@mail.gmail.com>
+ <CAMRc=Mc1ophkofB6MmtD4adBAi69C3JyovM-S9YD_y7UA3V1qA@mail.gmail.com>
+ <CAHp75VcV=K-DfOGs0z64==nO+wQNoEB2Ngd2vc+dLYr3WLChjg@mail.gmail.com> <CAMRc=MeVOEFkdqf+SwQ-a=7ZPvpoerb4G_kn-aZgNLR3aTTUog@mail.gmail.com>
+In-Reply-To: <CAMRc=MeVOEFkdqf+SwQ-a=7ZPvpoerb4G_kn-aZgNLR3aTTUog@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 30 Jul 2025 15:30:04 +0200
+X-Gm-Features: Ac12FXyFKinLiyKOfaCHk8Jvp-MCK0UJT4pw-WeZSCiJVFAceB4TVkbq9UOtwlo
+Message-ID: <CAHp75Vd_5HVwzuiV17XKkzpEvzd8dzPDRRx5w-VqZnjuCz6m6A@mail.gmail.com>
+Subject: Re: [PATCH v3 12/15] pinctrl: allow to mark pin functions as
+ requestable GPIOs
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Alexey Klimov <alexey.klimov@linaro.org>, 
+	Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
+	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, imx@lists.linux.dev, 
+	linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 7/20/25 7:32 PM, Prasad Kumpatla wrote:
-> From: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
-> 
-> Add nodes for WSA8830 speakers amplifier on qcs6490-rb3gen2 board.
-> 
-> Enable lpass_wsa and lpass_va macros along with pinctrl settings
-> for audio.
-> 
-> Signed-off-by: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
-> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-> ---
+On Wed, Jul 30, 2025 at 2:53=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+> On Wed, Jul 30, 2025 at 2:50=E2=80=AFPM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Wed, Jul 30, 2025 at 11:54=E2=80=AFAM Bartosz Golaszewski <brgl@bgde=
+v.pl> wrote:
+> > > On Thu, Jul 24, 2025 at 2:22=E2=80=AFPM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
+> > > >
+> > > > >  struct pinfunction {
+> > > > >         const char *name;
+> > > > >         const char * const *groups;
+> > > > >         size_t ngroups;
+> > > > > +       unsigned long flags;
+> > > >
+> > > > Not sure we need this. If the function is GPIO, pin control already
+> > > > knows about this. The pin muxing has gpio request / release callbac=
+ks
+> > > > that change the state. Why do we need an additional flag(s)?
+> > >
+> > > I'm not following, how does the pin controller know that the function
+> > > is GPIO exactly, other than by the bit set in this field?
+> >
+> > AFAICS the gpio_owner !=3D NULL means that. No need to have a duplicate
+> > of this information.
+>
+> No, that's not at all what this series does... gpio_owner is the
+> consumer label of a pin used by the GPIOLIB framework. The flag I'm
+> introducing it telling the pinctrl core - before GPIOLIB is ever
+> involved - that *this pin can be requested as a GPIO by GPIOLIB*.
 
-[...]
+The certain pin control driver may even not know about this. But even
+though the proposed change is an overkill. If it indeed needs to be
+done, the solution of valid_mask approach sounds to me much better. It
+will be a single bitmask per pin control to tell this.
 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> index ff5b3568c39d..fff92fd836ab 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> @@ -2872,21 +2872,27 @@ lpass_tlmm: pinctrl@33c0000 {
->  			lpass_dmic01_clk: dmic01-clk-state {
->  				pins = "gpio6";
->  				function = "dmic1_clk";
-> +				drive-strength = <8>;
-> +				bias-disable;
->  			};
->  
->  			lpass_dmic01_data: dmic01-data-state {
->  				pins = "gpio7";
->  				function = "dmic1_data";
-> +				bias-pull-down;
->  			};
->  
->  			lpass_dmic23_clk: dmic23-clk-state {
->  				pins = "gpio8";
->  				function = "dmic2_clk";
-> +				drive-strength = <8>;
-> +				bias-disable;
->  			};
->  
->  			lpass_dmic23_data: dmic23-data-state {
->  				pins = "gpio9";
->  				function = "dmic2_data";
-> +				bias-pull-down;
+> It's
+> the other way around - without knowing this, for strict pinmuxers,
+> GPIOLIB would never be able to request this pin if it was muxed to a
+> function (even if the function is called "GPIO").
 
-If you're adding drive-strength to one, please add it to all of
-the configs
+I need to read the series again, but I truly believe we don't need
+this new field in the struct pinfunction.
 
-Konrad
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
