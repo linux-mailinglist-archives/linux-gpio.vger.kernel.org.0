@@ -1,49 +1,61 @@
-Return-Path: <linux-gpio+bounces-23924-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23925-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF280B174CD
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Jul 2025 18:16:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4505BB174EC
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Jul 2025 18:29:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 65FD0545F6E
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Jul 2025 16:16:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B702B1C24F4A
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Jul 2025 16:29:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EC1E23A563;
-	Thu, 31 Jul 2025 16:16:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B057423B63A;
+	Thu, 31 Jul 2025 16:28:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P3splCKJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="HK+zaTKR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262912222D4;
-	Thu, 31 Jul 2025 16:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0BFE1DD88F;
+	Thu, 31 Jul 2025 16:28:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753978580; cv=none; b=XiZZ5MbAlWg1KdvF2jSRW6gnUHcTZDFotMWvVEVRMX2dRxC1uEbY5/sLweEyak3hfDhQE5xUQEQPRscLHSiiPhVu/PvADNwYEMBs+Mpr7LBCFdbX8TEWf7MqjPIdTI2fCJyMwnkKqnPPo018NtiCTAZxwVo3zFOZUAExP8//REI=
+	t=1753979333; cv=none; b=Xu4SZhtW2dibyepR+uqNGLA5Nhfvma3e6yb8VXE74COCHBI+JSXeL472yYfN1OCR9QE1hoqkkuJrj8VXGVxluh5StJFjMGXn5lcRmHEIXSCeakrbepquIRqdZLqDEYc+U6D68RD+8yHsLHKviVN8ivCKM7PIttC9Wigg+KKOIBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753978580; c=relaxed/simple;
-	bh=p3cf8J6rM1P3RGVhPv6cLXHP0636yx/YFTRRf6vxbys=;
+	s=arc-20240116; t=1753979333; c=relaxed/simple;
+	bh=EZq1onKeGbOCYgztz4cXy6ukiKrLEvoFTODQY8N+SQ4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dz4G06xWwsFYs5vz19OAN4Lu1dVP4xhUG1PXUzJ3jPQ/eGc8dgGyyhQPywyDzOtbS8s9SxjvfF9EA9DQz8DNY6HaswyUfThPXDDpBQP44lOkPDnJjacVFfP8Km75Wb7HBgcOUhi/DXH0kqbCJQCUqod5/ZFKiIMqd9RsH8vTbaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P3splCKJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FC63C4CEEF;
-	Thu, 31 Jul 2025 16:16:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753978578;
-	bh=p3cf8J6rM1P3RGVhPv6cLXHP0636yx/YFTRRf6vxbys=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P3splCKJekZSpimcCF4ACgG+B2qwzpMFvRMBvxiN7RcyN5P5uCvuSs/w2QrXgZ8m4
-	 TpsHRSsXk5oBCzH2+S7JFAyR42yO7sv8sK+Eg4XyhdNsb5Ru1/et15ztBbIblOFZ1e
-	 v/DPnp3jljjlMlrwRaD4H9sZChI5ckLYtdkZBvdGUPdY4whB80usg+U2pDDGqUxXCy
-	 OYe0+lNoQNa9uA51E9vnE4TlUsr87Z+l6Xvffdj9XonZ8C86wyo3gBYfR2Lye9MTVc
-	 6wJou9hrW8BJLZXg8x3Nq77v+GgRaY9BGR2qdamAkFsTDsajGz4Tl3V9qvHvUrCu9R
-	 i+8uXoDw093BA==
-Date: Thu, 31 Jul 2025 17:16:13 +0100
-From: Mark Brown <broonie@kernel.org>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+	 Content-Type:Content-Disposition:In-Reply-To; b=gTjMD+BSV2DrG5whdk2Cqhb5CoR7WNoCRVam1/jWphp8N4nIyeN8p1kzq3VQfpmByzO19GBE6fCDDuhFb4X3+kUHV21CP01nWxkAxhCiSGrYAxs+IjNkPI7Ygp1TNuYGxPK02eruuYq3RlvQkRMAme8tJ1AcFrNCQHwMkVnpS3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=HK+zaTKR; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=YWwp4TE/YPh29hTFAA70aDsjbLV0IDUmerqb9zc6zYg=; b=HK+zaTKR3ZRMhUuu8sKrxTzaXg
+	TNwjQ0hByJDkHtLX8JJKeUhFZPssrtEo+crCkgN3Usm7kVT+e/4j24f3fMVWxf3gIj9BOw1VnrBI0
+	UYTASiUFQWgGTWPHSi+GiAPdpTGT3D1gl3tyG24sN2qoD1I68+m5PwlFlSTKtA7RxuYyWTNlCgjQZ
+	5sEcQCgmD4+fRi5G/c3JK7lCMuevi0IcTAqGKVq1mt0ZMJfJm39VlmnD6oR4stteeRkRv3iKIdwG9
+	VH8BYm0+fvuup7HzFTGzF/jD3tm8zNKiHpYQwaCpc2e00pyjwnbvNmansnI4QfRLQ7UHaHC66W/PJ
+	2J2u4mzw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:39196)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uhW94-0005G5-2G;
+	Thu, 31 Jul 2025 17:28:42 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uhW92-0001Ar-0C;
+	Thu, 31 Jul 2025 17:28:40 +0100
+Date: Thu, 31 Jul 2025 17:28:39 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Mark Brown <broonie@kernel.org>
 Cc: Krzysztof Kozlowski <krzk@kernel.org>,
 	Chanwoo Choi <cw00.choi@samsung.com>,
 	Alexandre Belloni <alexandre.belloni@bootlin.com>,
@@ -52,7 +64,7 @@ Cc: Krzysztof Kozlowski <krzk@kernel.org>,
 	linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Thierry Reding <treding@nvidia.com>
 Subject: Re: [BUG] 6.16-rc7: lockdep failure with max77620-gpio/max77686-rtc
-Message-ID: <14c68c29-68d8-4119-8f70-616c07397dc4@sirena.org.uk>
+Message-ID: <aIuZt3asLeiYncH1@shell.armlinux.org.uk>
 References: <aIpdVejR3Jkh9Z_I@shell.armlinux.org.uk>
  <97f0e27f-3128-4821-bc09-2acde1ebf81a@kernel.org>
  <aItfC4AjjH-IdBfy@shell.armlinux.org.uk>
@@ -60,61 +72,48 @@ References: <aIpdVejR3Jkh9Z_I@shell.armlinux.org.uk>
  <aItk4vWPnFk6lYjn@shell.armlinux.org.uk>
  <4f80be02-0bbe-4c10-a3d2-324916ea2ca4@sirena.org.uk>
  <aIuSdnV8sWnUqLOq@shell.armlinux.org.uk>
+ <14c68c29-68d8-4119-8f70-616c07397dc4@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="/VQROS4r+R15ZpR1"
-Content-Disposition: inline
-In-Reply-To: <aIuSdnV8sWnUqLOq@shell.armlinux.org.uk>
-X-Cookie: Gloffing is a state of mine.
-
-
---/VQROS4r+R15ZpR1
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <14c68c29-68d8-4119-8f70-616c07397dc4@sirena.org.uk>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Thu, Jul 31, 2025 at 04:57:42PM +0100, Russell King (Oracle) wrote:
-> On Thu, Jul 31, 2025 at 02:18:24PM +0100, Mark Brown wrote:
+On Thu, Jul 31, 2025 at 05:16:13PM +0100, Mark Brown wrote:
+> On Thu, Jul 31, 2025 at 04:57:42PM +0100, Russell King (Oracle) wrote:
+> > On Thu, Jul 31, 2025 at 02:18:24PM +0100, Mark Brown wrote:
+> 
+> > > I *think* mutex_lock_nested() is what we're looking for here, with the
+> > > depth information from the irq_desc but I'm also not super familiar with
+> > > this stuff.
+> 
+> > I'm not sure about that, because the irq_desc locks don't nest:
+> 
+> >         raw_spin_lock_init(&desc->lock);
+> >         lockdep_set_class(&desc->lock, &irq_desc_lock_class);
+> 
+> > What saves irq_desc lock nesting in this case is that
+> > __irq_put_desc_unlock() unlocks desc->lock calling the
+> > irq_bus_sync_unlock() method. So, I don't think we have anything at
+> > the irq_desc level which deals with lock-nesting.
+> 
+> Yeah, and that's all internals which we're not super encouraged to peer
+> at.  There should be something that'll give us a nesting level
+> somewhere...  
+> 
+> Lockdep's handling of nesting is generally fun.
 
-> > I *think* mutex_lock_nested() is what we're looking for here, with the
-> > depth information from the irq_desc but I'm also not super familiar with
-> > this stuff.
+As I said, I'm just going to disable lockdep to shut up the warning and
+not pursue any further time on this. If someone else cares about it
+(which I doubt) they can try to come up with a solution. I suspect
+nested regmap-irq is extremely rare.
 
-> I'm not sure about that, because the irq_desc locks don't nest:
-
->         raw_spin_lock_init(&desc->lock);
->         lockdep_set_class(&desc->lock, &irq_desc_lock_class);
-
-> What saves irq_desc lock nesting in this case is that
-> __irq_put_desc_unlock() unlocks desc->lock calling the
-> irq_bus_sync_unlock() method. So, I don't think we have anything at
-> the irq_desc level which deals with lock-nesting.
-
-Yeah, and that's all internals which we're not super encouraged to peer
-at.  There should be something that'll give us a nesting level
-somewhere... =20
-
-Lockdep's handling of nesting is generally fun.
-
---/VQROS4r+R15ZpR1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmiLls0ACgkQJNaLcl1U
-h9A+SAf7B7jos8DzkR+u2AIRqqoHJKtQ4mIjywbYG/mQPFXjMNGRVYv5ZvZHzKxu
-GXuwMMVkvpw/nSf6ZI5CBbGU1CkJ68PBsx0h3cc1jkuKXbLy3dw42Pvg/UGyVLEz
-wZT9ZsKldfqiHpLFB4dyini5bbMOJ/ru0QuwojjfC3QO5shccp3eKbVynCNULY2R
-3goXYu7yRUK7GJt/BIuftvSVrok0Fb4ugs53WsoLNKTQmYq5bZBZMjzW4At7PQc3
-Jpv2DpgTVNK7SCSP/Ing7K74/ibC3PT2/AIfSK1VCAlaDDzYg3dmrlX2lm9H5fJw
-UmAnrqTWjYYCYA9Qrf+uhIKFZVmIMA==
-=+qIz
------END PGP SIGNATURE-----
-
---/VQROS4r+R15ZpR1--
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
 
