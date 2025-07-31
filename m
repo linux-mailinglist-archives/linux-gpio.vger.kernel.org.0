@@ -1,109 +1,240 @@
-Return-Path: <linux-gpio+bounces-23918-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23919-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D3D9B16F48
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Jul 2025 12:14:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47D17B170F7
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Jul 2025 14:18:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 51D0B5843DD
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Jul 2025 10:14:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 862847B0ACE
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Jul 2025 12:17:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 294722BDC03;
-	Thu, 31 Jul 2025 10:14:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 842D62367A3;
+	Thu, 31 Jul 2025 12:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="b3EZfFre"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFEF4224225
-	for <linux-gpio@vger.kernel.org>; Thu, 31 Jul 2025 10:14:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCA621FF4E;
+	Thu, 31 Jul 2025 12:18:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753956892; cv=none; b=urt1HRMcWFW0BxYiyvUiHNzHkHLbki12H+qtCL+xg/tdd9uceJ0PPEkwulUQfJA8EDUmVu3m6OFKNvpFR9uf6yvTEpJ2iasUvtIxflCL4Uh5yX975DZ/ZP3E59Gi70LWpwbk0eFYoD62X6VcXeCcTuyJ9YxX3LeJgSclVzdUiDk=
+	t=1753964315; cv=none; b=TUHR3s5iakInXjpauIHlKCgyldpkleH6w8fVqkrqZDioapgdOqa49Epuvx5OcguDSnQIEp3v4m1zkurdI24OmygOzOGb3GPftrBUXue7Q7QDLTMTrcKxoihRuZJXtUNYP3L9tsJnKSSd+NTf4+8FMnduP+cvhJqMGfIAacnpx5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753956892; c=relaxed/simple;
-	bh=pPcU9eoa7oUdr7uoyCQR6ySC0it/DhfOpKcK4wYwvJ0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rH/xGWOdwYxOkdjn8m9ep1viCMXe6g4834JidxVHREXxFu1ydMhufGNwcYKz/LKdSAEDqstyeeeMUmT8ok5Ql8b1fNZdXWgLqGEOMIMz73488PIGCVRWvJpm/vcqkNDzEv1MWDeGNRxTOM1IbUlMiNQ4P+JdA4FftMPP87d6VDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-87f74a28a86so529377241.2
-        for <linux-gpio@vger.kernel.org>; Thu, 31 Jul 2025 03:14:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753956888; x=1754561688;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xBujHxL2i59uv48FbX7kqYu5U4JxIZPwN2tHCs9TWhc=;
-        b=a0A3NNlZru3EYOHK934nwE8A1fjGfgFgznUypzWGnf8MEvvEB1q8xH2RwoGJwSlOcP
-         OZnyFBPyislwtCMr7PsuCuXHTSAfndWbMKcPk7mXhmTWq0Ef2BAQshc6EplXCljM6Bnc
-         cWn8gJ/yizmtdc+wJrTbxIKleBa1ft69tmRcpxcKKJr7wVPnEZqTfLK8IYqtvhPpC1Cb
-         wt1XEBM+EoAfkc2gEudTlYU0krg/+fgxDh5X0VuD9cqA3joh5WV58Ef/K48CNxuDLK91
-         cNZHme38KPT8BP+HmCIqUaiKGKNJTzH/56n5fvSeHgyr9+Gt7mShvinH0LBW6bPTojyU
-         TuLg==
-X-Forwarded-Encrypted: i=1; AJvYcCXwNrBvk5k7MmgVghBTw3KZiidSy1X7pzB3Nv95KcfDsM81Y2FSBRt7wfRSpYKGo6tsfBjWFzIuIDDB@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgPz8PZUmDkWwSdPCp5fhlSMUZL+40eh5sltCmTL+WTatNWdwd
-	6J7qaJLNin8on2/jPsZG8eKXHQTVom+z4hMoiE4WRccGTAFB4lH/ArrnlvA9BFDn
-X-Gm-Gg: ASbGncs8R3PzIASlPEoZE+izatTxhmL6JRjJEBFwYuL1KWmES33uFl0UxGl3F8elMA7
-	pbMXH0T3aCrxFG3s5ifYIPciNKeqQsD7UE0ObUPQM7AakkqRQ8Lh47nuUg9PqomIyiB7LezsQh1
-	mZyhcv307m32zocwYoKfE/5Bdx2gBCHAhZJnlWeUUr5b8kUqMOjU5cxANLqNfYfySb8dK4IH1BS
-	6TJZT8tUDkb69JYEiFCxljSenZ2FR8+JrGNtCT4scgH+NqX7FAumjClqBL82wtElvibrEZ7azgD
-	Y+qK56i4IS4bOqEx1ZsjIEDeOM+H/9ERn1zJ+LPeHTTR5eKpaCJ1VxbDHR0btB8TnuQdQWX5EKJ
-	rNQJA+r++Gsn+3BQ6fAj+77FHiX3xz2Qhaqsbzk/52oPlWCgCqZGDDPrrYiy0nQaZ
-X-Google-Smtp-Source: AGHT+IFo3Iz37BrM2bgYBc+VRh55FgUxA0F+qOyemu6y1D31sVfsKhZ1EIsxkXTlWc67tNOEoE3v3w==
-X-Received: by 2002:a05:6102:f10:b0:4e7:be09:deef with SMTP id ada2fe7eead31-4fbe7f339bamr3998460137.7.1753956888555;
-        Thu, 31 Jul 2025 03:14:48 -0700 (PDT)
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com. [209.85.221.169])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4fc0d42bba7sm244671137.11.2025.07.31.03.14.47
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 31 Jul 2025 03:14:48 -0700 (PDT)
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-5390ccb30bfso573798e0c.2
-        for <linux-gpio@vger.kernel.org>; Thu, 31 Jul 2025 03:14:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWX2hHmj6dHUXM3ZG9EI44CRdikG9AHTNHpO9mV/AC2Z7FXHWol9Vv05etD4/bJQAwo2WWFpGQZBfnG@vger.kernel.org
-X-Received: by 2002:a05:6122:3545:b0:539:3403:7353 with SMTP id
- 71dfb90a1353d-539340375f6mr1500203e0c.10.1753956887656; Thu, 31 Jul 2025
- 03:14:47 -0700 (PDT)
+	s=arc-20240116; t=1753964315; c=relaxed/simple;
+	bh=/CX/2RUDCbJNymubyca94X8VkSeBMIkHqttQZcMwmrk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lHWgiyJgSQvvckNwgYs0/WFSjev+lxvpV0OIJlgplEqKKqG9xCqgBD90amTqnVnlRl5W59ZLJBeb3S1uvNlSad5k7hFl9vjsDesfMyvT7h1594ZrjcZmkYcRzn/KNtgl7C3oSDwWOH7m8vHdU/OsESjgJWSmQKlaF11DnhiIxTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=b3EZfFre; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=g9Y7U/7ppk8ar0axssLp7z8gd0mGPsu1bQlpBfW6e04=; b=b3EZfFretx430nxnoplfKCSoWp
+	AqS0ZtdWaIL4Heo98IdCVrm8qeBUzMxo3HPsClly57SSYN8aEBuUvmWriY2yVTHbJpaAenhmMmzrm
+	yYqvsQsZm/hd7oxALeo87ZlbnVi8w+4A/65LMV7LSuvuq97vwxk1taBFAEnCnpUNGx8jFp8LWvT4T
+	rc86qdViT9kQk3+NzI+DlAB73QKVFNjglSlhNHoKyNfCvHW061tHoXmQTal2yA6IGpzNBv/n29WsA
+	B6YRGEDU8SHrkneTS+/PH/cjchjb07rCo4LoCOwgML3TpFcRtryWonaYYmIp58yzw/t2L1Y1xMy20
+	BKbkNLLw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52096)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uhSEo-0004wD-0f;
+	Thu, 31 Jul 2025 13:18:22 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uhSEl-00011Y-1g;
+	Thu, 31 Jul 2025 13:18:19 +0100
+Date: Thu, 31 Jul 2025 13:18:19 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Thierry Reding <treding@nvidia.com>
+Subject: Re: [BUG] 6.16-rc7: lockdep failure with max77620-gpio/max77686-rtc
+Message-ID: <aItfC4AjjH-IdBfy@shell.armlinux.org.uk>
+References: <aIpdVejR3Jkh9Z_I@shell.armlinux.org.uk>
+ <97f0e27f-3128-4821-bc09-2acde1ebf81a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250731091637.595136-1-lijun01@kylinos.cn>
-In-Reply-To: <20250731091637.595136-1-lijun01@kylinos.cn>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 31 Jul 2025 12:14:36 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXFk+f5oxfeh2MePwpBGE2gqZXLePHzZputc6j8HwumUg@mail.gmail.com>
-X-Gm-Features: Ac12FXzXvU3ZyUdg8ZJb01XbXv83Zfo2rYJzGmyd0O7JxNr0Dzx-IpCV_0rgm20
-Message-ID: <CAMuHMdXFk+f5oxfeh2MePwpBGE2gqZXLePHzZputc6j8HwumUg@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio: aggregator: fix macros coding style error
-To: Li Jun <lijun01@kylinos.cn>
-Cc: geert+renesas@glider.be, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <97f0e27f-3128-4821-bc09-2acde1ebf81a@kernel.org>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Thu, 31 Jul 2025 at 11:16, Li Jun <lijun01@kylinos.cn> wrote:
-> These changes just fix Linux Kernel Coding Style, no functional
-> improve.
->
-> -Macros with complex values should be enclosed in parentheses
->
-> Signed-off-by: Li Jun <lijun01@kylinos.cn>
+On Wed, Jul 30, 2025 at 09:43:02PM +0200, Krzysztof Kozlowski wrote:
+> On 30/07/2025 19:58, Russell King (Oracle) wrote:
+> > Hi,
+> > 
+> > First, I'm not sure who is responsible for the max77620-gpio driver
+> 
+> 77620 is only for nvidia platforms and nvidia was upstreaming it,
+> although it shares the RTC driver part with max77686. You should Cc
+> nvidia SoC maintainers, maybe Thierry has someone around who could
+> investigate it.
+> 
+> > (it's not in MAINTAINERS) but this bug points towards a problem with
+> > one or other of these drivers.
+> > 
+> > Here is /proc/interrupts which may help debug this:
+> > 
+> >            CPU0       CPU1       CPU2       CPU3       CPU4       CPU5
+> >  94:          1          0          0          0          0          0 max77620-
+> > top   4 Edge      max77686-rtc
+> >  95:          1          0          0          0          0          0 max77686-rtc   1 Edge      rtc-alarm1
+> > 
+> > While running 6.16-rc7 on the Jetson Xavier NX platform, upon suspend,
+> > I receive the following lockdep splat. I've added some instrumentation
+> > into irq_set_irq_wake() which appears twice in the calltrace to print
+> > the IRQ number and the "on" parameter to locate which interrupts are
+> > involved in this splat. This splat is 100% reproducable.
+> > 
+> > [   46.721367] irq_set_irq_wake: irq=95 on=1
+> > [   46.722067] irq_set_irq_wake: irq=94 on=1
+> > [   46.722181] ============================================
+> > [   46.722578] WARNING: possible recursive locking detected
+> > [   46.722852] 6.16.0-rc7-net-next+ #432 Not tainted
+> > [   46.722965] --------------------------------------------
+> > [   46.723127] rtcwake/3984 is trying to acquire lock:
+> > [   46.723235] ffff0000813b2c68 (&d->lock){+.+.}-{4:4}, at: regmap_irq_lock+0x18/0x24
+> > [   46.723452]
+> >                but task is already holding lock:
+> > [   46.723556] ffff00008504dc68 (&d->lock){+.+.}-{4:4}, at: regmap_irq_lock+0x18/0x24
+> > [   46.723780]
+> >                other info that might help us debug this:
+> > [   46.723903]  Possible unsafe locking scenario:
+> > 
+> > [   46.724015]        CPU0
+> > [   46.724067]        ----
+> > [   46.724119]   lock(&d->lock);
+> > [   46.724212]   lock(&d->lock);
+> > [   46.724282]
+> >                 *** DEADLOCK ***
+> > 
+> > [   46.724348]  May be due to missing lock nesting notation
+> > 
+> > [   46.724492] 6 locks held by rtcwake/3984:
+> > [   46.724576]  #0: ffff0000825693f8 (sb_writers#3){.+.+}-{0:0}, at: vfs_write+0x184/0x350
+> > [   46.724902]  #1: ffff00008fd7fa88 (&of->mutex#2){+.+.}-{4:4}, at: kernfs_fop_write_iter+0x104/0x1c8
+> > [   46.725258]  #2: ffff000080a64588 (kn->active#87){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x10c/0x1c8
+> > [   46.725609]  #3: ffff8000815d4fb8 (system_transition_mutex){+.+.}-{4:4}, at: pm_suspend+0x220/0x300
+> > [   46.725897]  #4: ffff00008500a8f8 (&dev->mutex){....}-{4:4}, at: device_suspend+0x1d8/0x630
+> > [   46.726173]  #5: ffff00008504dc68 (&d->lock){+.+.}-{4:4}, at: regmap_irq_lock+0x18/0x24
+> 
+> 
+> max77686 only disables/enables interrupts in suspend path, but max77620
+> is doing also I2C transfers, but above is regmap_irq_lock, not regmap
+> lock. Maybe this is not really max77620/77686 related at all? None of
+> these do anything weird (or different than last 5 years), so missing
+> nesting could be result of changes in other parts...
+> 
+> 
+> > [   46.732435]
+> >                stack backtrace:
+> > [   46.734019] CPU: 3 UID: 0 PID: 3984 Comm: rtcwake Not tainted 6.16.0-rc7-net-next+ #432 PREEMPT
+> > [   46.734029] Hardware name: NVIDIA NVIDIA Jetson Xavier NX Developer Kit/Jetson, BIOS 6.0-37391689 08/28/2024
+> > [   46.734033] Call trace:
+> > [   46.734036]  show_stack+0x18/0x24 (C)
+> > [   46.734070]  dump_stack_lvl+0x90/0xd0
+> > [   46.734080]  dump_stack+0x18/0x24
+> > [   46.734107]  print_deadlock_bug+0x260/0x350
+> > [   46.734114]  __lock_acquire+0xf28/0x2088
+> > [   46.734120]  lock_acquire+0x19c/0x33c
+> > [   46.734126]  __mutex_lock+0x84/0x530
+> > [   46.734135]  mutex_lock_nested+0x24/0x30
+> > [   46.734155]  regmap_irq_lock+0x18/0x24
+> > [   46.734161]  __irq_get_desc_lock+0x8c/0x9c
+> > [   46.734170]  irq_set_irq_wake+0x5c/0x1ac	<== I guess IRQ 94
+> 
+> ...like changes in irqchip.
+> 
+> > [   46.734176]  regmap_irq_sync_unlock+0x314/0x4f4
+> > [   46.734182]  __irq_put_desc_unlock+0x48/0x4c
+> > [   46.734190]  irq_set_irq_wake+0x88/0x1ac	<== I guess IRQ 95
+> > [   46.734195]  max77686_rtc_suspend+0x34/0x74
+> 
+> 
+> Because really above part is virtually unchanged since 10 years, except
+> my commit d8f090dbeafdcc3d30761aa0062f19d1adf9ef08 (you can try
+> reverting it... but it still could be correct/needed and just irqchip
+> changed something around locking).
 
-Please add tags given on earlier versions.
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Thanks. I can say that reverting this has no effect on lockdep's splat,
+so your change is in the clear.
 
-Gr{oetje,eeting}s,
+However, there's also regmap-irq stuff to consider in the backtrace,
+and looking at this today, I can't see how regmap-irq can be nested.
 
-                        Geert
+drivers/rtc/rtc-max77686.c makes use of regmap-irq since commit
+f3937549a975 ("rtc: max77686: move initialisation of rtc regmap, irq
+chip locally") in 2016.
+
+drivers/mfd/max77620.c also makes use of regmap-irq since commit
+327156c59360 ("mfd: max77620: Add core driver for MAX77620/MAX20024")
+also in 2016.
+
+Looking at the regmap-irq code, not much has changed in
+regmap_irq_lock() and regmap_irq_sync_unlock(). The same seems true of
+the ordering in irq_set_irq_wake(). So, I don't think this is a
+regression as such, but a latent bug that either no one has bothered
+to report, or no one bothers to test with lockdep enabled anymore.
+
+I think the sequence here is:
+
+irq_set_irq_wake() for IRQ 95 (rtc-alarm1) is called.
+ + regmap_irq_lock() is called, which takes d->lock for IRQ 95
+ + ... irq_set_irq_wake() does stuff
+ ` regmap_irq_sync_unlock() is then called
+   + this synchronises the wake state with the parent by calling
+   | disable_irq_wake() or enable_irq_wake() as appropriate.
+   | This calls irq_set_irq_wake(), causing recursion but on a
+   | different IRQ, which also uses regmap-irq.
+   | + regmap_irq_lock() is called, which takes d->lock for IRQ 94
+   | |    * SPLAT *
+   | + ...
+   ` d->lock is released
+
+This highlights the problem with "d->lock" - using "d" for a variable
+name, while short, doesn't actually tell us what lock it is - is it
+the irqdesc lock in kernel/irq ? Is it the regmap_irq_chip_data mutex
+called "lock" in regmap_irq? It looks to me like it's the mutex.
+
+So, I'd like to start a campaign against single-letter variables,
+especially when it comes to code that takes locks! We should have
+something in the kernel coding style which prevents single-letter
+variable names when locks are taken!
+
+I can't see that anything has changed in the code with regards to the
+locking, so I think this is a bug that's been present ever since these
+drivers were introduced, and regmap-irq is deficient in that it causes
+the same lockdep lock class to be taken recursively when the IRQ wake
+state changes.
+
+From what I can see, irq wake support for regmap-irq was added in
+commit a43fd50dc99a5 ("regmap: Implement support for wake IRQs") and
+this is the only operation that is propagated to the parent
+interupt(s). Thus, the above splat is unlikely to occur unless one
+makes use of wake support on a regmap-irq based interrupt whose
+parent is also regmap-irq based.
+
+So, adding Mark Brown.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
 
