@@ -1,156 +1,176 @@
-Return-Path: <linux-gpio+bounces-23931-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23932-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8420B17F15
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Aug 2025 11:18:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63BB9B17F6E
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Aug 2025 11:36:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2301A18852CC
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Aug 2025 09:18:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 870DC1777DC
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Aug 2025 09:36:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A61BC21D3DB;
-	Fri,  1 Aug 2025 09:18:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B929322A7E6;
+	Fri,  1 Aug 2025 09:36:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AWEHDj9K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KZggZVA9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3E93C38;
-	Fri,  1 Aug 2025 09:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF419228C9D;
+	Fri,  1 Aug 2025 09:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754039886; cv=none; b=Io4x5bNt9l9xub4/tomzDPRhyyJ8PXuA0Un7klhGS7ugZDSbstqWYg/a0YKQXzS/Hla60A4F6i08kwQF1jXoFipWunJhwBosEMC8dBaRpZbLzyI9mvzmjF7qz2bSuQ1qD+FRe4hCPj/OTcNjPFLPoZvqjvAG1Vx2SdyfDuawFW8=
+	t=1754040960; cv=none; b=Fo78SpnzzmCNv9FGPsi7pyX9BaOgLU7Otjy4ODW0kmu2NtaE+JySpmLr4MA9EVCv8XSwdA92Ep0QnHhN0vzUI4oGzd2odu9l+G9Oiaq6I1igFUlFx8Y4jh2u7urJMhch5WtBq2xkVrgMYoy8Up3xUb7xvNB04qBxpAxihvnQbnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754039886; c=relaxed/simple;
-	bh=J1eEF10rhJAnQ13Hw21v83TTHqtVdgLTWvjL928gjzo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qf1KwjUyfNMG/KraVEBzSFgSwMjqpIfUPoU4Mj+vbjpVS4I3F0/2Uw4sH9QsTm3JJJGd8B/qm1nV7bn9Uur2rr2wXABpTbR9tJgiAkRpkyYk/NC7lj1HfBY6ONBNLLyjNaderRPoXQf+5Ipaux8++6QWLAOnBgtQpVSBG+lYEMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=AWEHDj9K; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8AF3F4326F;
-	Fri,  1 Aug 2025 09:17:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1754039875;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FewFLMj+fQDz2hp2M+gKHcBCf6X6YGYBd1gKSrxKs0g=;
-	b=AWEHDj9KJ+miPFgXXzlgaTyOIImVkGkzHbYP+aHwKGM9PjqgcnK3TtRDL4sPb6dQdcllf9
-	kzeaw4DAF+Pcqay33L32HSvOkSGUHV98InrB8pscontn/77hbMvkPzozxjlZ4qpwII0ccX
-	PLlac8wupo/0rYU4la04VssrvOk85kMT6nsyLBByEdfj+d8ZmjHryIVd8OnOtgy2FNWrS5
-	QpTGBNCvedMkC2MWXiakTryK8gUdU6NJ+FzEdei2niHajG3GEDBgzE8e+iKgK5u8X7pwqf
-	Q7rfExdxNq/iOFXWReIq45iYfwWecaKuaWaPs/oiJHXmdAXqXaQmNPUg0AUywg==
-Date: Fri, 1 Aug 2025 11:17:53 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Hoan Tran <hoan@os.amperecomputing.com>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Geert
- Uytterhoeven <geert+renesas@glider.be>, Magnus Damm
- <magnus.damm@gmail.com>, Saravana Kannan <saravanak@google.com>, Serge
- Semin <fancer.lancer@gmail.com>, Phil Edworthy <phil.edworthy@renesas.com>,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Miquel
- Raynal <miquel.raynal@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 5/6] soc: renesas: Add support for Renesas RZ/N1 GPIO
- Interrupt Multiplexer
-Message-ID: <20250801111753.382f52ac@bootlin.com>
-In-Reply-To: <20250730204733.GA1717453-robh@kernel.org>
-References: <20250725152618.32886-1-herve.codina@bootlin.com>
-	<20250725152618.32886-6-herve.codina@bootlin.com>
-	<20250729195137.GA658914-robh@kernel.org>
-	<20250730115421.770d99bf@bootlin.com>
-	<20250730204733.GA1717453-robh@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1754040960; c=relaxed/simple;
+	bh=63+Ixi4ckuMma+HuIR/Djmfai08XglpZMQ9ULfkEgmA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vAg8F/PhT5biiLvA4MewcQTUkhqO9atKv61EWKnLUxf2hOv2FHacM4LPf1PlzRzq7EQfcdf4QQ5vY0qUGHeg5wRE8YWbEAIp6phIcIim+bs/PDzKVrMZuZ6F9eu5W5Gm4D2UrDHcuoLIcqL4/SPBYVdto4LnON+qV9cxQWIEyWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KZggZVA9; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3b77673fd78so849832f8f.0;
+        Fri, 01 Aug 2025 02:35:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754040957; x=1754645757; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=63+Ixi4ckuMma+HuIR/Djmfai08XglpZMQ9ULfkEgmA=;
+        b=KZggZVA92ZI2nanL3n8kLEJvTzkIgcHHLy4vaNzCbBRBTp5oM3c0BNZyqhQXFsp1f5
+         jE7BWZkYZChWziD1Tvbwf2GWyBZR62ZgeYQ6uUV0Dv+oqKWiH9+u560aIzeJrDC56H3m
+         RjHg8jjiGfyINbemWfD7FOvt+YZpBSrK3spY3J4D8jC2E+4PxRj0lOpfAYLMQI7GyBX4
+         G7r51VPTUgNAE4dx3/U5HQ7J2C/pvaxzjaa2XomZnpsGP62gh8PQ3ralhuJ8CTbuX5eR
+         i8IHg2WjBAaD08Dz94LxXbyYvvER32vkES6WSQW87EzgAdOwCjdnoPZGHIiZ19Ux2Lw3
+         EMJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754040957; x=1754645757;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=63+Ixi4ckuMma+HuIR/Djmfai08XglpZMQ9ULfkEgmA=;
+        b=ExJ7lmy4kOQ4s6tpg6cQQd8n29Ye3ZGzO2NtgSo217PH+P7kG2R4dcia/1TV8ZjJw3
+         XNkzhWh6UwBX78J1vLHOMIfFm+O5BTUxpGYuLQdFY7+x+YWJIUk4a+EGr24yceS5bfUP
+         F6s+akImlkz2O2anOtfFL2cE/6q8oLkDvwa9pMQrqAICMNN9KFHaGvFsE9P4kFoib49e
+         nO1DihcjGfw9QcDqfSMdhDm7RN38uiqwRPsbkCOKBD1hEC0xKo/cwy6IoVEFH+uslYCX
+         cGVWJcq75+meys6RZQV0bySEPmIkcvoZS/BIQ8INL4rT6IEpRthiR7S3R07dbZcA3FtU
+         zG3w==
+X-Forwarded-Encrypted: i=1; AJvYcCUHcDPIY5wc2TYXzKM8aXjeD02P3SFUqH8FPC/QIYu7gyOfuHX7f9UjizbCkQZVaYaaf4/Kplbpaf/7c1w=@vger.kernel.org, AJvYcCUqBw648sUdqa7olubm4WPiePZKAUxwBObl7vR4HBLoFg7823DrUe8OgttrolHWVlah2SSjcBi+AMpebIaV@vger.kernel.org, AJvYcCVEWd+8KUD6OeqgzumcKu463A3sMQ9WVvzno5LxW9aRqI8RMjTmEk6E1Q1TCwU1BkIchJJROmleYWjr@vger.kernel.org, AJvYcCVGBQ1gbt+z4AP7EPgk/JlFomTN19wUHeFL+DzxgBaM4RwAxjGuabCLgqfLcZkrWzqHs0Eh93bkXEOVkA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfrwKrCrkUUOcfBbRxFIy5bE3NgJR+iGBVa7woTjL8urt2nfw6
+	Nq0X39ZV7ko49/m2avFCDmKP9fhCaaRAyl2dq2DmCa//SXdH/Stq4D+4
+X-Gm-Gg: ASbGncs9XJAZ5w3qb/OeBlZQonjjjRBUTLSZKvt0GO0kxSQWHkKVasAXJpxdawD8q38
+	MYqqzQY5BmcpzROFFb7V3yz/G+JaKe5/tEO+xKYweA2+m1OD2lCokCT0OsrVvxsln82xjhIq9iM
+	/2lSZs9jlDgElWOLl3hTIpVe48P0RIXdyEweE8b+HMfzgZuZ6qikI+Pm4/5VPqOcBINv2ZLmSTS
+	741p9771HxwHEzZQJGp4j7fNkkJLW8OwptilDxGlQuUhlCNMn/jQZ+aE79C4DMUuBhEruA060rM
+	SNG4yjyc4h+znSoNikqbfLWdC2fq4mTrfSWC9qjOrvTmrzqctdC1Ni2Kg7Z+UspLBnmW03iiZRO
+	lTyqynNBcZQVD+yvhdojdfqcHeri1zMCWZXvNfJZhUUtAbAh1UgIQ7fqdCeejw7/SVyikYjJFR8
+	qERom5Mgh22xdVxrHf2vI=
+X-Google-Smtp-Source: AGHT+IEzT4QuTnS+opylwWwJ8ZFtEhpWVGV493HDhdtwWSkvwRk079L725rbuM+nKLoxjSQ7k7xhGg==
+X-Received: by 2002:a05:6000:220d:b0:3a5:8a09:70b7 with SMTP id ffacd0b85a97d-3b8d348e65amr1831729f8f.38.1754040956756;
+        Fri, 01 Aug 2025 02:35:56 -0700 (PDT)
+Received: from orome (p200300e41f4e9b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f4e:9b00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c47c516sm5284172f8f.62.2025.08.01.02.35.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Aug 2025 02:35:55 -0700 (PDT)
+Date: Fri, 1 Aug 2025 11:35:53 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Aaron Kling <webgeek1234@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] pinctrl: tegra: Add Tegra186 pinmux driver
+Message-ID: <ofym7vi5wudw2agh4ydgvxvw5vlptncouz57dm4c5ervixc5rj@bq5afsmhzpuz>
+References: <20250608-tegra186-pinctrl-v2-0-502d41f3eedd@gmail.com>
+ <20250608-tegra186-pinctrl-v2-2-502d41f3eedd@gmail.com>
+ <yw2uglyxxx22d3lwyezy34wdniouu32zppfgwqs5omny3ge5zd@iuqo4qmi55a2>
+ <CACRpkdZha_ucjWvP_NQ+z2vbD65Y3u7Q0U57NYbJ=vqQ6uPGGA@mail.gmail.com>
+ <yslfabklduaybg255d3ulaxmzpghyj54zdfeqkx3oxgisxf6fo@2wecuqpvvefc>
+ <CALHNRZ8jq++KVKxKP2-GwMA6CauP=cM2_wt==MRAV4mOzK2kxw@mail.gmail.com>
+ <xc72g7j7png443pjxu2wpsuqofgrpxvn43emkt3rv5qrjzf7vt@qzvsiy3eakub>
+ <CALHNRZ928+=85FbvfKt1c4VX7RudU7ehuOa6wwLj8JJNz+=W-A@mail.gmail.com>
+ <CACRpkdbLzAJS=iqgOEzE9kD-fM9tx22JTDPgQeLwbTFKiStrtw@mail.gmail.com>
+ <CALHNRZ_1_WeUrfqUiOTsy3cEkwm2k7nj+4hA-7xZFgoA+DZKjg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddutdeffeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedujedprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhhorghnsehoshdrrghmphgvrhgvtghomhhpuhhtihhnghdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdou
- ghtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtohepmhgrghhnuhhsrdgurghmmhesghhmrghilhdrtghomh
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="o43wulfghexnnu4w"
+Content-Disposition: inline
+In-Reply-To: <CALHNRZ_1_WeUrfqUiOTsy3cEkwm2k7nj+4hA-7xZFgoA+DZKjg@mail.gmail.com>
 
-Hi Rob,
 
-On Wed, 30 Jul 2025 15:47:33 -0500
-Rob Herring <robh@kernel.org> wrote:
+--o43wulfghexnnu4w
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 2/3] pinctrl: tegra: Add Tegra186 pinmux driver
+MIME-Version: 1.0
 
-...
-> > > > +
-> > > > +static int irqmux_imap_cb(void *data, const __be32 *imap,
-> > > > +			  const struct of_phandle_args *parent_args)
-> > > > +{
-> > > > +	struct irqmux_cb_data *priv = data;
-> > > > +	u32 src_hwirq;
-> > > > +	int index;
-> > > > +
-> > > > +	/*
-> > > > +	 * The child #address-cells is 0. Already checked in irqmux_setup().
-> > > > +	 * The first value in imap is the src_hwirq
-> > > > +	 */
-> > > > +	src_hwirq = be32_to_cpu(*imap);    
-> > > 
-> > > The iterator should take care of the endianness conversion.  
-> > 
-> > Ok, it will take care.
-> >   
-> > >   
-> > > > +
-> > > > +	/*
-> > > > +	 * Get the index in our interrupt array that matches the parent in the
-> > > > +	 * interrupt-map
-> > > > +	 */
-> > > > +	index = irqmux_find_interrupt_index(priv->dev, priv->np, parent_args);
-> > > > +	if (index < 0)
-> > > > +		return dev_err_probe(priv->dev, index, "output interrupt not found\n");
-> > > > +
-> > > > +	dev_info(priv->dev, "interrupt %u mapped to output interrupt[%u]\n",
-> > > > +		 src_hwirq, index);    
-> > > 
-> > > Do you even need "interrupts"? Just make the "interrupt-map" index 
-> > > important and correspond to the hw index. That would greatly simplify 
-> > > all this.  
-> > 
-> > I would like to avoid to be based on the interrupt-map index.
-> > 
-> > Indeed, IMHO, it is less robust. I don't thing that we can enforce the
-> > interrupt-map items order. Based on interrupt-map index, we need to ensure
-> > that the first item is related to GIC 103, the second one to GIC 104 and so
-> > on.  
-> 
-> How exactly are you enforcing that order for "interrupts"? You can't.
+On Fri, Aug 01, 2025 at 01:33:10AM -0500, Aaron Kling wrote:
+> On Wed, Jul 23, 2025 at 6:08=E2=80=AFAM Linus Walleij <linus.walleij@lina=
+ro.org> wrote:
+> >
+> > On Mon, Jul 14, 2025 at 7:45=E2=80=AFAM Aaron Kling <webgeek1234@gmail.=
+com> wrote:
+> >
+> > > I started looking at the pinmux scripts a few days ago, but updating
+> > > the pinmux driver import/export for the t194 style spiderwebbed out of
+> > > control quickly. I expected it to be hairy, but that was an
+> > > underestimation. Doesn't help that I'm not the most proficient at
+> > > python either. I'll continue the effort later, but if someone with
+> > > more familiarity wants to try, it might be quicker.
+> >
+> > If this means people with 186 dev boards cannot use mainline
+> > Linux and they would if this driver was applied, maybe we need
+> > to apply it anyways?
+>=20
+> I wouldn't call t186 unusable without it. The devkits work fine
+> without kernel pinmuxing as the bootloader configures everything to a
+> reasonable default. It's only if something non-standard (for example,
+> an audio codec) is plugged into one of the expansion headers that
+> runtime configuration could be needed. However, I do agree that it
+> would be worthwhile to move this forward for merging. Since it is
+> unlikely I will get the generation script to a usable state soon. If
+> Thierry or one of the other tegra maintainers agrees, I can start
+> addressing the review comments and send a new revision.
 
-I can impose interrupt-names property in the binding and at least, those
-names are to be in order (checked by dtbs_check).
+Alright then. Looks like we can't find anybody willing to work on those
+scripts and it sounds like I'm one of very few that thinks there's still
+some worth to them in this day.
 
-Based on that if a mismatch is present between interrupt-names and
-interrupts it is an issue in the dts used.
+Can you make a pass over the driver and make sure we have sufficient
+spacing (last time I looked the various tables in this driver were all
+very clustered together, so a few blank lines here and there would go a
+long way to make things more readable), consistent indentation and such?
 
-With interrupt-map, nothing can be imposed and so nothing can be checked.
+Thanks,
+Thierry
 
-> 
-> Aren't you just duplicating the information in "interrupts" in the 
-> interrupt-map.
-> 
+--o43wulfghexnnu4w
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I will remove 'interrupts' in the next iteration and use only 'interrupt-map'.
+-----BEGIN PGP SIGNATURE-----
 
-I will add some information related to the order of the interrup-map item in the
-binding (description of the interrupt-map property).
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmiMinkACgkQ3SOs138+
+s6GkFxAAjngJguKpmN35lTqVwxregbkYYA5/xmvpDzqsIaNYfbZIvLUI5OivXlBL
+m2JwklBPSyhP8ziXUGJcwim2xVWxordoaAn1fHAvVEJ3WAtt2/NkuCtDzF4dr63i
+VVnQWLmwfbmuWBAyJCNCgfKUXqp7er3SUaqNV9fujQcCJKJkKbZWr+11PCciF2Sg
+A6uMLXsjLhdqV+1m0xhqQWgskogW/wAwHWUS1WeVfdVEaWnF0LD8Xs68RW3iivcv
+DVMV90ZSQaQaYIEK2okTenqh4OCIHMAyUjwhx5tvIwIZ6USwulDLHZoJ56ZrCDoY
+MuXqqZMTEy9U3ONaXo2FU9WRAVxT5zqN4ViaRyJ9dRoED0lNCY/JqFe4sf11QVFU
+lMbimTJgVBsQALz9F8mr6Afaw1SnO8AHtl6ZVlr3zzpbPyo9XaDcapquXZcsGzMM
+LftAGY83vrATV5mX8wEeanDTVUr3OuVCATdBJx1n7A0Ls239JRzHjU5moN47qTLW
+rrvDt4gpHKiBX90ZwERuYxR8qRpDjP8exQ7tUVujATQLFPwkGSS29qi8FK8t7h1f
+DWUJ1JNZkToGW/Vy8gQIEGpY+aRoLK2UlsMpOjnQpawC16W/onAyg6sSp0YF8apg
+Qq6vlggy0GEvO11GELaeIjQ9CnQiUdvXnLEWceMDoy6UFEudY78=
+=mx0Q
+-----END PGP SIGNATURE-----
 
-Best regards,
-Hervé
+--o43wulfghexnnu4w--
 
