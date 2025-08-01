@@ -1,98 +1,88 @@
-Return-Path: <linux-gpio+bounces-23932-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23933-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63BB9B17F6E
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Aug 2025 11:36:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 093D7B17FBC
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Aug 2025 11:58:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 870DC1777DC
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Aug 2025 09:36:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B886D3AB4EA
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Aug 2025 09:58:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B929322A7E6;
-	Fri,  1 Aug 2025 09:36:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3229920F087;
+	Fri,  1 Aug 2025 09:58:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KZggZVA9"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="C9OFPXEQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF419228C9D;
-	Fri,  1 Aug 2025 09:35:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5CC22F74E
+	for <linux-gpio@vger.kernel.org>; Fri,  1 Aug 2025 09:58:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754040960; cv=none; b=Fo78SpnzzmCNv9FGPsi7pyX9BaOgLU7Otjy4ODW0kmu2NtaE+JySpmLr4MA9EVCv8XSwdA92Ep0QnHhN0vzUI4oGzd2odu9l+G9Oiaq6I1igFUlFx8Y4jh2u7urJMhch5WtBq2xkVrgMYoy8Up3xUb7xvNB04qBxpAxihvnQbnc=
+	t=1754042319; cv=none; b=o7tcew8/QArbTXLYt8hsH7vnH3dAVql6Vs3YJdCKTHd1Ow0FF+7u+THgDZZaXQB2xvor65JC4wW0m0GEtVdsswP9MMW7KVx8vvNLyRcXufAYD5D8r6G6T4lMivwlizlHaFws0qZpVOQ3NyNFsCLjaEWZ98yjDvEXKnkFssr1e7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754040960; c=relaxed/simple;
-	bh=63+Ixi4ckuMma+HuIR/Djmfai08XglpZMQ9ULfkEgmA=;
+	s=arc-20240116; t=1754042319; c=relaxed/simple;
+	bh=67HM9GltOCKjRrdMu3scBfndanIb46dCLTQ9vJk9rQM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vAg8F/PhT5biiLvA4MewcQTUkhqO9atKv61EWKnLUxf2hOv2FHacM4LPf1PlzRzq7EQfcdf4QQ5vY0qUGHeg5wRE8YWbEAIp6phIcIim+bs/PDzKVrMZuZ6F9eu5W5Gm4D2UrDHcuoLIcqL4/SPBYVdto4LnON+qV9cxQWIEyWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KZggZVA9; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3b77673fd78so849832f8f.0;
-        Fri, 01 Aug 2025 02:35:58 -0700 (PDT)
+	 Content-Type:Content-Disposition:In-Reply-To; b=A61LDWwW2UVIxQ4sDg+9+KwtC+fb4VHxQ6hyM6gpqKgbg/lMoo+txuWl+22YmapYBnE3MVwsdO1iloAGTudVs3siuvsZ5Coi7S4T42YY1Kj8LyA9Nr1DVJxDSf1FB/B2zmowU3TFPSoqHFzfAoZ97x5+X2ZiX1InRuMKghq3m3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=C9OFPXEQ; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4561ed868b5so10873015e9.0
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Aug 2025 02:58:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754040957; x=1754645757; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1754042313; x=1754647113; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=63+Ixi4ckuMma+HuIR/Djmfai08XglpZMQ9ULfkEgmA=;
-        b=KZggZVA92ZI2nanL3n8kLEJvTzkIgcHHLy4vaNzCbBRBTp5oM3c0BNZyqhQXFsp1f5
-         jE7BWZkYZChWziD1Tvbwf2GWyBZR62ZgeYQ6uUV0Dv+oqKWiH9+u560aIzeJrDC56H3m
-         RjHg8jjiGfyINbemWfD7FOvt+YZpBSrK3spY3J4D8jC2E+4PxRj0lOpfAYLMQI7GyBX4
-         G7r51VPTUgNAE4dx3/U5HQ7J2C/pvaxzjaa2XomZnpsGP62gh8PQ3ralhuJ8CTbuX5eR
-         i8IHg2WjBAaD08Dz94LxXbyYvvER32vkES6WSQW87EzgAdOwCjdnoPZGHIiZ19Ux2Lw3
-         EMJA==
+        bh=67HM9GltOCKjRrdMu3scBfndanIb46dCLTQ9vJk9rQM=;
+        b=C9OFPXEQ/EB8UwM5HSWxqS6W2cWCxuuAbPc+deEgqiuk3PEqBH6ct+1ulNQQSCP0Ln
+         naJVtPCQzepwg0WxtoPgPvBtyHlWXOjxAW3xF9DehsYqUk7XMK5uxm96c3qAJCSE42Ch
+         PfjpowtQ4pN38golUbQaaTpav1e27BC4u7+6z9oFxXOhlgh6s+a9Ma7A+VSOD9IE0ihh
+         49b7r7FZSonIbbZoIARE0hmwXehGwK+kuAdZO8yWjjnNo0Sd9+O6xumElTIJ6GCCaEjl
+         MmJclOU36QnMLVvlTCHerHv5r8HgFHYeqKT9cKKshULe6F1+8tRrwh2r+5pK7ZJnnSkn
+         nUAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754040957; x=1754645757;
+        d=1e100.net; s=20230601; t=1754042313; x=1754647113;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=63+Ixi4ckuMma+HuIR/Djmfai08XglpZMQ9ULfkEgmA=;
-        b=ExJ7lmy4kOQ4s6tpg6cQQd8n29Ye3ZGzO2NtgSo217PH+P7kG2R4dcia/1TV8ZjJw3
-         XNkzhWh6UwBX78J1vLHOMIfFm+O5BTUxpGYuLQdFY7+x+YWJIUk4a+EGr24yceS5bfUP
-         F6s+akImlkz2O2anOtfFL2cE/6q8oLkDvwa9pMQrqAICMNN9KFHaGvFsE9P4kFoib49e
-         nO1DihcjGfw9QcDqfSMdhDm7RN38uiqwRPsbkCOKBD1hEC0xKo/cwy6IoVEFH+uslYCX
-         cGVWJcq75+meys6RZQV0bySEPmIkcvoZS/BIQ8INL4rT6IEpRthiR7S3R07dbZcA3FtU
-         zG3w==
-X-Forwarded-Encrypted: i=1; AJvYcCUHcDPIY5wc2TYXzKM8aXjeD02P3SFUqH8FPC/QIYu7gyOfuHX7f9UjizbCkQZVaYaaf4/Kplbpaf/7c1w=@vger.kernel.org, AJvYcCUqBw648sUdqa7olubm4WPiePZKAUxwBObl7vR4HBLoFg7823DrUe8OgttrolHWVlah2SSjcBi+AMpebIaV@vger.kernel.org, AJvYcCVEWd+8KUD6OeqgzumcKu463A3sMQ9WVvzno5LxW9aRqI8RMjTmEk6E1Q1TCwU1BkIchJJROmleYWjr@vger.kernel.org, AJvYcCVGBQ1gbt+z4AP7EPgk/JlFomTN19wUHeFL+DzxgBaM4RwAxjGuabCLgqfLcZkrWzqHs0Eh93bkXEOVkA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfrwKrCrkUUOcfBbRxFIy5bE3NgJR+iGBVa7woTjL8urt2nfw6
-	Nq0X39ZV7ko49/m2avFCDmKP9fhCaaRAyl2dq2DmCa//SXdH/Stq4D+4
-X-Gm-Gg: ASbGncs9XJAZ5w3qb/OeBlZQonjjjRBUTLSZKvt0GO0kxSQWHkKVasAXJpxdawD8q38
-	MYqqzQY5BmcpzROFFb7V3yz/G+JaKe5/tEO+xKYweA2+m1OD2lCokCT0OsrVvxsln82xjhIq9iM
-	/2lSZs9jlDgElWOLl3hTIpVe48P0RIXdyEweE8b+HMfzgZuZ6qikI+Pm4/5VPqOcBINv2ZLmSTS
-	741p9771HxwHEzZQJGp4j7fNkkJLW8OwptilDxGlQuUhlCNMn/jQZ+aE79C4DMUuBhEruA060rM
-	SNG4yjyc4h+znSoNikqbfLWdC2fq4mTrfSWC9qjOrvTmrzqctdC1Ni2Kg7Z+UspLBnmW03iiZRO
-	lTyqynNBcZQVD+yvhdojdfqcHeri1zMCWZXvNfJZhUUtAbAh1UgIQ7fqdCeejw7/SVyikYjJFR8
-	qERom5Mgh22xdVxrHf2vI=
-X-Google-Smtp-Source: AGHT+IEzT4QuTnS+opylwWwJ8ZFtEhpWVGV493HDhdtwWSkvwRk079L725rbuM+nKLoxjSQ7k7xhGg==
-X-Received: by 2002:a05:6000:220d:b0:3a5:8a09:70b7 with SMTP id ffacd0b85a97d-3b8d348e65amr1831729f8f.38.1754040956756;
-        Fri, 01 Aug 2025 02:35:56 -0700 (PDT)
-Received: from orome (p200300e41f4e9b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f4e:9b00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c47c516sm5284172f8f.62.2025.08.01.02.35.55
+        bh=67HM9GltOCKjRrdMu3scBfndanIb46dCLTQ9vJk9rQM=;
+        b=uUSmZp8lktGl7eX43mc5iB16C7ZIFx5sayHhFS/m0JwFGLDAzFmoPQWdk8CRgz2siI
+         aLMSRtCYBvUGZE0IfbrYtYTP+9DOxlwcKO7EN59Z0CztDqEtPIwA5omZVrIQwGLPsXiD
+         pEB4c8E2ZAtwQusUfmtqSVcKukaZ7jSNL9DqUrkfdekGnPGQrP1AYn7wPSgxNRUwP+sk
+         jGoFcEQK7PmObi4sPRg7bsMSBUZLACYi2/AI5Fm2uPR5KV6FdsgdCKnH2QGtV67Cf94M
+         XcbZd8J02pesaxJopFs/D7AZAgwUQnrj65iRwvlvsF3XIeaYkzshBtbvfxSsQj+UUaKM
+         5lWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVcY3J5MeZWnalaSm0HfFHVT6KBl+RTt1oyRe9ggDoSNrKbomPaBY2qQAmtiI77BawPAj+A6CZ4V0Or@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjkOxHbDXDOqmFqX/uCJAccnazN1/o61jyKm8gnAsObd3ga1rl
+	HwCibiwa+uo0VOaGzXeZ9GOas/cRAKKcQ8pKrilc8rePBDeX8rDLBCJQ0mhPeFbcduZz7JaLCv5
+	ZgGyw
+X-Gm-Gg: ASbGncsjVYbKj48OWpkC2UWdgZ0Qg7pCZqXSZJWqVZhVAu4TfluNY1FN1kR0PD4Pvq4
+	mt9cZ75a77OKuUMSttIx4MA93Jgyy59Uqeig3DffGW7QyczHaeIEWKtSkI0SjBHysac/vOtVIu5
+	4i03OIt4ZO6r1Ys3+UQIK2U9KWwCWpR10z67wgxI9RO2Cj+7Dedqg3zaJWqn7Iw5Dvlc7mdxM8R
+	mwXT6z17MzHinhojb++6CA8fshdF/VBPgtGWjd75/Zmbl6EKl5xbR04s7ZMQtqgAEBsIe5s95bM
+	5EvYZOaDrUPmutTQqZrKYaAyit1LSc2OEPhoQvem3SJfQooazIedcAgz6pxolRCCxcqnmUo0SWh
+	P6YXjB7xqNvaVec+MAaDKITHncN0Ic849pqUA7jJrazXvi4HOZtqUC6EhbuvHJgjIcc1ybBoVic
+	8=
+X-Google-Smtp-Source: AGHT+IFt3YhHuk534hYe+cy6BYJZHyFop+ZIhZ/4RMb68y0cPReseidwj44kBmLaO8MkyzE0zgF/PQ==
+X-Received: by 2002:a05:600c:154c:b0:456:76c:84f2 with SMTP id 5b1f17b1804b1-458aa463272mr20488285e9.30.1754042312675;
+        Fri, 01 Aug 2025 02:58:32 -0700 (PDT)
+Received: from localhost (p200300f65f06ab0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f06:ab04::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3b79c470102sm5302291f8f.53.2025.08.01.02.58.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Aug 2025 02:35:55 -0700 (PDT)
-Date: Fri, 1 Aug 2025 11:35:53 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Aaron Kling <webgeek1234@gmail.com>
+        Fri, 01 Aug 2025 02:58:31 -0700 (PDT)
+Date: Fri, 1 Aug 2025 11:58:30 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org
 Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] pinctrl: tegra: Add Tegra186 pinmux driver
-Message-ID: <ofym7vi5wudw2agh4ydgvxvw5vlptncouz57dm4c5ervixc5rj@bq5afsmhzpuz>
-References: <20250608-tegra186-pinctrl-v2-0-502d41f3eedd@gmail.com>
- <20250608-tegra186-pinctrl-v2-2-502d41f3eedd@gmail.com>
- <yw2uglyxxx22d3lwyezy34wdniouu32zppfgwqs5omny3ge5zd@iuqo4qmi55a2>
- <CACRpkdZha_ucjWvP_NQ+z2vbD65Y3u7Q0U57NYbJ=vqQ6uPGGA@mail.gmail.com>
- <yslfabklduaybg255d3ulaxmzpghyj54zdfeqkx3oxgisxf6fo@2wecuqpvvefc>
- <CALHNRZ8jq++KVKxKP2-GwMA6CauP=cM2_wt==MRAV4mOzK2kxw@mail.gmail.com>
- <xc72g7j7png443pjxu2wpsuqofgrpxvn43emkt3rv5qrjzf7vt@qzvsiy3eakub>
- <CALHNRZ928+=85FbvfKt1c4VX7RudU7ehuOa6wwLj8JJNz+=W-A@mail.gmail.com>
- <CACRpkdbLzAJS=iqgOEzE9kD-fM9tx22JTDPgQeLwbTFKiStrtw@mail.gmail.com>
- <CALHNRZ_1_WeUrfqUiOTsy3cEkwm2k7nj+4hA-7xZFgoA+DZKjg@mail.gmail.com>
+	Bartosz Golaszewski <brgl@bgdev.pl>, Clemens Gruber <clemens.gruber@pqgruber.com>, 
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] pwm: Provide a gpio device for waveform drivers
+Message-ID: <yr7eydif5mguqpflydthhigpsenfum3agqie4wufbf3624tvjb@3kog3guxiwin>
+References: <20250717073859.1777226-2-u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -100,77 +90,56 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="o43wulfghexnnu4w"
+	protocol="application/pgp-signature"; boundary="zlsoaii7lwlvyrik"
 Content-Disposition: inline
-In-Reply-To: <CALHNRZ_1_WeUrfqUiOTsy3cEkwm2k7nj+4hA-7xZFgoA+DZKjg@mail.gmail.com>
+In-Reply-To: <20250717073859.1777226-2-u.kleine-koenig@baylibre.com>
 
 
---o43wulfghexnnu4w
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
+--zlsoaii7lwlvyrik
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 2/3] pinctrl: tegra: Add Tegra186 pinmux driver
+Subject: Re: [PATCH] pwm: Provide a gpio device for waveform drivers
 MIME-Version: 1.0
 
-On Fri, Aug 01, 2025 at 01:33:10AM -0500, Aaron Kling wrote:
-> On Wed, Jul 23, 2025 at 6:08=E2=80=AFAM Linus Walleij <linus.walleij@lina=
-ro.org> wrote:
-> >
-> > On Mon, Jul 14, 2025 at 7:45=E2=80=AFAM Aaron Kling <webgeek1234@gmail.=
-com> wrote:
-> >
-> > > I started looking at the pinmux scripts a few days ago, but updating
-> > > the pinmux driver import/export for the t194 style spiderwebbed out of
-> > > control quickly. I expected it to be hairy, but that was an
-> > > underestimation. Doesn't help that I'm not the most proficient at
-> > > python either. I'll continue the effort later, but if someone with
-> > > more familiarity wants to try, it might be quicker.
-> >
-> > If this means people with 186 dev boards cannot use mainline
-> > Linux and they would if this driver was applied, maybe we need
-> > to apply it anyways?
+Hello,
+
+On Thu, Jul 17, 2025 at 09:38:59AM +0200, Uwe Kleine-K=F6nig wrote:
+> A PWM is a more general concept than an output-only GPIO. When using
+> duty_length =3D period_length the PWM looks like an active GPIO, with
+> duty_length =3D 0 like an inactive GPIO. With the waveform abstraction
+> there is enough control over the configuration to ensure that PWMs that
+> cannot generate a constant signal at both levels error out.
 >=20
-> I wouldn't call t186 unusable without it. The devkits work fine
-> without kernel pinmuxing as the bootloader configures everything to a
-> reasonable default. It's only if something non-standard (for example,
-> an audio codec) is plugged into one of the expansion headers that
-> runtime configuration could be needed. However, I do agree that it
-> would be worthwhile to move this forward for merging. Since it is
-> unlikely I will get the generation script to a usable state soon. If
-> Thierry or one of the other tegra maintainers agrees, I can start
-> addressing the review comments and send a new revision.
+> The pwm-pca9685 driver already provides a gpio chip. When this driver is
+> converted to the waveform callbacks, the gpio part can just be dropped.
+>=20
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
 
-Alright then. Looks like we can't find anybody willing to work on those
-scripts and it sounds like I'm one of very few that thinks there's still
-some worth to them in this day.
+Applied to
 
-Can you make a pass over the driver and make sure we have sufficient
-spacing (last time I looked the various tables in this driver were all
-very clustered together, so a few blank lines here and there would go a
-long way to make things more readable), consistent indentation and such?
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
+nexxt
 
-Thanks,
-Thierry
+as 6.18-rc1 material.
 
---o43wulfghexnnu4w
+Best regards
+Uwe
+
+--zlsoaii7lwlvyrik
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmiMinkACgkQ3SOs138+
-s6GkFxAAjngJguKpmN35lTqVwxregbkYYA5/xmvpDzqsIaNYfbZIvLUI5OivXlBL
-m2JwklBPSyhP8ziXUGJcwim2xVWxordoaAn1fHAvVEJ3WAtt2/NkuCtDzF4dr63i
-VVnQWLmwfbmuWBAyJCNCgfKUXqp7er3SUaqNV9fujQcCJKJkKbZWr+11PCciF2Sg
-A6uMLXsjLhdqV+1m0xhqQWgskogW/wAwHWUS1WeVfdVEaWnF0LD8Xs68RW3iivcv
-DVMV90ZSQaQaYIEK2okTenqh4OCIHMAyUjwhx5tvIwIZ6USwulDLHZoJ56ZrCDoY
-MuXqqZMTEy9U3ONaXo2FU9WRAVxT5zqN4ViaRyJ9dRoED0lNCY/JqFe4sf11QVFU
-lMbimTJgVBsQALz9F8mr6Afaw1SnO8AHtl6ZVlr3zzpbPyo9XaDcapquXZcsGzMM
-LftAGY83vrATV5mX8wEeanDTVUr3OuVCATdBJx1n7A0Ls239JRzHjU5moN47qTLW
-rrvDt4gpHKiBX90ZwERuYxR8qRpDjP8exQ7tUVujATQLFPwkGSS29qi8FK8t7h1f
-DWUJ1JNZkToGW/Vy8gQIEGpY+aRoLK2UlsMpOjnQpawC16W/onAyg6sSp0YF8apg
-Qq6vlggy0GEvO11GELaeIjQ9CnQiUdvXnLEWceMDoy6UFEudY78=
-=mx0Q
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmiMj8MACgkQj4D7WH0S
+/k69Dwf/W4XRoRGYdSrSav3aZhqvA+sdmXVwgGvnbkSNY2j9RyupFfYQLdNBnlLF
+CYlxtQBNQFwcqKWkZcllStointVVjO8WlYeQjY2rbs/iCm8+EL4CMXGvjrRUM5Pa
+mszLSooueNPnAZ1+uLDxDkwhlkSrERJ6vYuYeIlz7ZgiQQniG4rr0+ggxq7AhrpP
+d0o1Z2PWL5LrRvNcIIGg3MDikC63kb+lATkg4A7p6ctvwt8ShSB9NNGNSdQ5c9vo
+dVg57WiaP0PuWBblWeoFRxsAsei3aMCVKYdvYlSap3r+g6kh26eJ9thMUvzG3qs+
+ZXohWbpv+8GvFW2dpvgnXNcvy5T0WQ==
+=0UvM
 -----END PGP SIGNATURE-----
 
---o43wulfghexnnu4w--
+--zlsoaii7lwlvyrik--
 
