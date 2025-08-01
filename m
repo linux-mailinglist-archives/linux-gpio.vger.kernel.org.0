@@ -1,122 +1,82 @@
-Return-Path: <linux-gpio+bounces-23955-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23956-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99DAAB181E2
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Aug 2025 14:35:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C71E2B18221
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Aug 2025 15:05:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8CEF25A0282
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Aug 2025 12:35:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 41FD3189DB8B
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Aug 2025 13:05:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2816248166;
-	Fri,  1 Aug 2025 12:35:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15EA7251792;
+	Fri,  1 Aug 2025 13:04:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="h2OM8FoK"
+	dkim=pass (2048-bit key) header.d=dujemihanovic.xyz header.i=@dujemihanovic.xyz header.b="leL8Prvo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx.olsak.net (mx.olsak.net [37.205.8.231])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B23231832;
-	Fri,  1 Aug 2025 12:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4FC23B611;
+	Fri,  1 Aug 2025 13:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.8.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754051733; cv=none; b=MCGfhcebboKi5M4x94FWGQ4gB0ejjxo5uzFKPk0yJPES7gyO21IuRel/YbPszoJ8+5UIiF1NRSW/YMy2TcgcdwNh6Hf2i/NKFt4pWpp8CNsMr88c44zpqHYut6Q7wQAWOzwGw9QnMxt40MLZvbQRChRr7Z25XwkEkt3ZUiPPObc=
+	t=1754053471; cv=none; b=fthHkoxdsEu6CYAfmnp5L/Ih8VmSazK4yB3cWiHUjWUJyIlBh275p+Mj/T0SEhvPqqO7JSoDnrjsStP2viWNSktfLyX4nZXWE+cuQJS1ZgH3/zqjdNDLoEPvwu8g/Ps2SbfAHO7yNh1cmX+Lz+5hcl9bATrPqMIYR00ajwH3rV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754051733; c=relaxed/simple;
-	bh=C8FmHEvnmbzUP4vtQLOTlZM8bMrMzhs7Se6Hmqknmxg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FyCfiPM3s1hpt5qtV0MotwKudeT7ZtyiOwPYZF71y/2bpwhwJGovbrba5rezJsBdZBZVpwwPvxT4mu7P3MHLybrR4IlKvRkQmdYAdXuLWRmp41WaFqDP/N3UrsII2Cqu317bHGVZ4yPZCawhAxSoCiQvj9yUY+c2XQVxVBzsFbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=h2OM8FoK; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1754051729;
-	bh=C8FmHEvnmbzUP4vtQLOTlZM8bMrMzhs7Se6Hmqknmxg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=h2OM8FoKBU/uigF8dHwvR14102JwdYaEyHsLlmXalyFOExzw3bpBEIAuSFEqf8MhJ
-	 vlOPl3sUFrPh+a0wv8VALo7NmRalG6TbVpJxZ9Hc2cWDP9EKHGCUpBsHwG0SYpSOMp
-	 /mCa0hJ2Lg8iSAZSEhgcGogoohvqKcUfAbLyBVJuN++hM0673cCkhclGkpvmKQZO4i
-	 rauQBq2pVMO6KLT9bU8bJSlvWmi2g7mizAbHruUUX1v05KZg0aKRQ3K0V5UWDGX8OC
-	 0oEm5yz5RVRijShKZPiMwZQ5devf13niFalwG9kyJK7AxYm3xje5VwT3rW5x8osYFD
-	 bZvaHnzLi7Hdg==
-Received: from 2a01cb0892f2d600c8f85cf092d4af51.ipv6.abo.wanadoo.fr (2a01cb0892f2d600c8f85cf092d4af51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: jmassot)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 48D9117E0DD7;
-	Fri,  1 Aug 2025 14:35:28 +0200 (CEST)
-Message-ID: <5a12d6adc1ffcdfca7ad2d77dc7a080839f5a375.camel@collabora.com>
-Subject: Re: [PATCH v6 06/24] dt-bindings: media: i2c: max96717: add support
- for MAX96793
-From: Julien Massot <julien.massot@collabora.com>
-To: Cosmin Tanislav <demonsingur@gmail.com>, Cosmin Tanislav	
- <cosmin.tanislav@analog.com>, Tomi Valkeinen	
- <tomi.valkeinen+renesas@ideasonboard.com>, Mauro Carvalho Chehab	
- <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Niklas
- =?ISO-8859-1?Q?S=F6derlund?=	 <niklas.soderlund@ragnatech.se>, Sakari Ailus
- <sakari.ailus@linux.intel.com>,  Laurent Pinchart
- <laurent.pinchart@ideasonboard.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org
-Date: Fri, 01 Aug 2025 14:35:27 +0200
-In-Reply-To: <20250716193111.942217-7-demonsingur@gmail.com>
-References: <20250716193111.942217-1-demonsingur@gmail.com>
-	 <20250716193111.942217-7-demonsingur@gmail.com>
-Organization: Collabora Ltd.
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	s=arc-20240116; t=1754053471; c=relaxed/simple;
+	bh=0ofQnYkYP1zm9pb/GPwWwKnVLvTK+tBM+9AqSedKsCw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ictewXkqkS0PACH9g2lFMyo1LzbM60crrPNepM54paOZn3WED8RdG/9IexmHkmSryr51hQQ4Qg/tVbZYL2yj4ppugmrz5FGKjQ3Mp2TsJ7EzSkjJN+gZ9fSvaN10cayJHZywvJ+RENGXm0ikdXwhYclFaSv2rdx+AwogkWzmrVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dujemihanovic.xyz; spf=pass smtp.mailfrom=dujemihanovic.xyz; dkim=pass (2048-bit key) header.d=dujemihanovic.xyz header.i=@dujemihanovic.xyz header.b=leL8Prvo; arc=none smtp.client-ip=37.205.8.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dujemihanovic.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dujemihanovic.xyz
+DKIM-Signature: a=rsa-sha256; bh=0ofQnYkYP1zm9pb/GPwWwKnVLvTK+tBM+9AqSedKsCw=;
+ c=relaxed/relaxed; d=dujemihanovic.xyz;
+ h=Subject:Subject:Sender:To:To:Cc:Cc:From:From:Date:Date:MIME-Version:MIME-Version:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Reply-To:In-Reply-To:In-Reply-To:Message-Id:Message-Id:References:References:Autocrypt:Openpgp;
+ i=@dujemihanovic.xyz; s=default; t=1754053454; v=1; x=1754485454;
+ b=leL8Prvox8goe7kSsHPdB3r5gKN6jipe+BC9yjECFUNnB76ctnWjQGG80JDSlzG4ddVxFe+7
+ VufFj8WgHlUIZYLqD3NHSS7MFTLiDt0trElyvo24SmYfTaoE9aUzaRAQiN2PU414yAUy2Vp/ak/
+ Yq9wTlJwQAOSDQMEoPoUpXdAe1EblAMJ4xW+olySYeF4qsspg7SVhhVYvpkaARx0XHNRo0CMi1S
+ k2g/pfYFMHG9asAt3sFhTs98MoUwNNphwOSQwDh7dVWbWll3vYnC1ScYfbC2LL8l901Pu3502QS
+ 5hpQPzzr5LfNys7FRx9tH4iSgTgIgmziIniX4sjBEBewA==
+Received: by mx.olsak.net (envelope-sender <duje@dujemihanovic.xyz>) with
+ ESMTPS id 50e07a10; Fri, 01 Aug 2025 15:04:14 +0200
+From: Duje =?UTF-8?B?TWloYW5vdmnEhw==?= <duje@dujemihanovic.xyz>
+To: Robert Jarzmik <robert.jarzmik@free.fr>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] Revert "gpio: pxa: Make irq_chip immutable"
+Date: Fri, 01 Aug 2025 15:04:13 +0200
+Message-ID: <5030606.31r3eYUQgx@radijator>
+In-Reply-To: <20250801071858.7554-1-brgl@bgdev.pl>
+References: <20250801071858.7554-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, 2025-07-16 at 22:30 +0300, Cosmin Tanislav wrote:
-> MAX96793 is a newer variant of the MAX96717 which also supports GMSL3
-> links.
+On Friday, 1 August 2025 09:18:58 Central European Summer Time Bartosz=20
+Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >=20
-> Document this compatibility.
+> This reverts commit 20117cf426b6 ("gpio: pxa: Make irq_chip immutableas")
+> as it caused a regression on samsung coreprimevelte and we've not been
+> able to fix it so far.
 >=20
-> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
-> =C2=A0.../devicetree/bindings/media/i2c/maxim,max96717.yaml=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 3 +++
-> =C2=A01 file changed, 3 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.y=
-aml
-> b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-> index 78ecbab8205a5..02a44db982852 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-> +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-> @@ -30,6 +30,8 @@ description:
-> =C2=A0
-> =C2=A0=C2=A0 MAX9295A only supports pixel mode.
-> =C2=A0
-> +=C2=A0 MAX96793 also supports GMSL3 mode.
-> +
-> =C2=A0properties:
-> =C2=A0=C2=A0 compatible:
-> =C2=A0=C2=A0=C2=A0=C2=A0 oneOf:
-> @@ -39,6 +41,7 @@ properties:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - items:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - enum:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 - maxim,max96717
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 - maxim,max96793
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - const: max=
-im,max96717f
-> =C2=A0
-> =C2=A0=C2=A0 '#gpio-cells':
 
-Reviewed-by: Julien Massot <julien.massot@collabora.com>
+Tested-by: Duje Mihanovi=C4=87 <duje@dujemihanovic.xyz>
+
+Could the fix be backported to v6.16.y?
+
+Regards,
+=2D-
+Duje
+
+
 
