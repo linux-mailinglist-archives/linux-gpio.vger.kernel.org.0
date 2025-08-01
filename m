@@ -1,205 +1,129 @@
-Return-Path: <linux-gpio+bounces-23947-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23948-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27C26B180F1
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Aug 2025 13:20:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29993B18185
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Aug 2025 14:17:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D2B58A84FF6
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Aug 2025 11:20:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A5A271C8189E
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Aug 2025 12:17:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C996326C383;
-	Fri,  1 Aug 2025 11:18:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60A0D239E91;
+	Fri,  1 Aug 2025 12:17:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="YM21j3ie"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="jm6lQfiz"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C480F263F5F;
-	Fri,  1 Aug 2025 11:18:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C7E61F78E6;
+	Fri,  1 Aug 2025 12:17:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754047100; cv=none; b=qXELisj7ZyGNJJUcPDA/+4aXigym50g1uj3SYjKjuNuCg3l/HLCA+iYG9EZWdxbeEvgEIWnPbijWIfWDGROjwbbtuLLooF3HOvf5p8iyev0XFvyT/RbGqKvTi106iDm797PBX3uNyOJjGC94n89pslEI+HLUcmxrG7P/1Qh7scs=
+	t=1754050637; cv=none; b=sBPPX9YOx0013I3SuV5Ib+JZIq9LlpaNQzYBzfhfbydGMOPUr6Ljl/9ZNGoTdkRP/+/xKBv+qCaC6ck04a0mdQ6duFOfw+FmW2IRoU+0YQskIADLcU3d8tPfnPXiNQ2Pzp/uzoaLtrVVCg1joZO0irzXJFuONMDazxDwNK6Hm/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754047100; c=relaxed/simple;
-	bh=1E5qWJ532EaXeuFQ5rmK4d9Nv2RoVjlXwP4/9o5x3c4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mrG0y06CQWX0mzgED/tfna//XyvxyyISIjOybwAPUebmJEcs3kIlYjNA3OyWdG7MlHp9fvoSfgtP7Q1AwuiE3bYaMAjPeC6QoddBbejysR2UjoDqxrtUxUjxz0rYvsZRsxCAEDZvDow02uYcQJm3/7CILREF9jMNqX9dCShfCEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=YM21j3ie; arc=none smtp.client-ip=148.251.105.195
+	s=arc-20240116; t=1754050637; c=relaxed/simple;
+	bh=iqWJ70y9buvA8nkZlc67QtTGQA3nl96+0Hhd7pFajYs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Owyr0Md3s0XYzQTWjfReBO+sRNoPfhfbWtud5mXkywttnukIMThL9VTjop4buGiJqbYRqKHXvURayn1sfJDgRVjAUTs0pah6+s0bA3MSRs7LNJJyZWHsk/VJGO1iI0j9FMNLsB827mCqsjM33aydsWbuKtC6sXsT+aH/uVAmSvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=jm6lQfiz; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1754047097;
-	bh=1E5qWJ532EaXeuFQ5rmK4d9Nv2RoVjlXwP4/9o5x3c4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=YM21j3ie9AsDcLq0kEisIM0xFmGFEs/XFDgSPJIrVNEAmC0ABjM8k5jDDRw4lL9zI
-	 5ll84Kz0y8GbQfylA9Fqj2d7hwkPC2rdXRuuvhtBR+eUfjHx+QDpD3dq1804voJdCY
-	 +eJg6KF1rt+ESaj4dbfp8N91Vbb94XsRpc1Es6hYCxmAW10uFOoai8II4/nllzoQks
-	 Yc/K/dgwZsvUrRvgiFdDJ1ldD4+LefbJBVakW9OTaYqX/D501IIe2/p6j3yVEiqh9J
-	 IHDn96uwytBt5pxg8kjSLyCD5shjthi50/iJ7GJEr4xp39B3vT40X35uvMRHkGM8YI
-	 4OWirEq74DZlg==
-Received: from 2a01cb0892f2d600c8f85cf092d4af51.ipv6.abo.wanadoo.fr (2a01cb0892f2d600c8f85cF092d4af51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
+	s=mail; t=1754050633;
+	bh=iqWJ70y9buvA8nkZlc67QtTGQA3nl96+0Hhd7pFajYs=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=jm6lQfizSsqJcUBefLSOsUCpwkP4p4z7b52sE+/dPAVQ1hkpBEC16xy7KV5DWiqld
+	 91WqMEiPfOi70qjgsNEYG6hIGMJx+8gamdhu+wgTwND8hTTUtRWzatTaeIz9LYW9nY
+	 MvOoAAIDNP8c9kmnqWIWqSHQ+t5e+dQrwsN+tNZ9rBBMKWkaTndoSOsFIlkJZAVRet
+	 03yilDAdCIAO8EwEyk09foPNuHQbNlmz8i8yJXROUFKQkVNZkEh1x07oTEBSD4Tr7o
+	 XOiTxKoeUA3zSBNHV9FHKRHmTTiTt6umyTO/9AvlWm+POtimM/XEMm6bL7SKS7BxaV
+	 Qe7+4T+ujMs2A==
+Received: from 2a01cb0892f2d600c8f85cf092d4af51.ipv6.abo.wanadoo.fr (2a01cb0892F2d600c8f85cF092D4aF51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: jmassot)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3E45717E0F3C;
-	Fri,  1 Aug 2025 13:18:16 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9C88117E0DD7;
+	Fri,  1 Aug 2025 14:17:12 +0200 (CEST)
+Message-ID: <b8d48519e607698ada70ec1f87ee6e222e14940e.camel@collabora.com>
+Subject: Re: [PATCH v6 02/24] dt-bindings: media: i2c: max96717: add myself
+ as maintainer
 From: Julien Massot <julien.massot@collabora.com>
-Date: Fri, 01 Aug 2025 13:18:11 +0200
-Subject: [PATCH 9/9] arm64: dts: mediatek: mt8183-pumkin: Fix
- pull-down/up-adv values
+To: Cosmin Tanislav <demonsingur@gmail.com>, Cosmin Tanislav	
+ <cosmin.tanislav@analog.com>, Tomi Valkeinen	
+ <tomi.valkeinen+renesas@ideasonboard.com>, Mauro Carvalho Chehab	
+ <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Niklas
+ =?ISO-8859-1?Q?S=F6derlund?=	 <niklas.soderlund@ragnatech.se>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>,  Laurent Pinchart
+ <laurent.pinchart@ideasonboard.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org
+Date: Fri, 01 Aug 2025 14:17:11 +0200
+In-Reply-To: <20250716193111.942217-3-demonsingur@gmail.com>
+References: <20250716193111.942217-1-demonsingur@gmail.com>
+	 <20250716193111.942217-3-demonsingur@gmail.com>
+Organization: Collabora Ltd.
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250801-mtk-dtb-warnings-v1-9-6ba4e432427b@collabora.com>
-References: <20250801-mtk-dtb-warnings-v1-0-6ba4e432427b@collabora.com>
-In-Reply-To: <20250801-mtk-dtb-warnings-v1-0-6ba4e432427b@collabora.com>
-To: kernel@collabora.com, Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Ikjoon Jang <ikjn@chromium.org>, 
- Enric Balletbo i Serra <eballetbo@kernel.org>, 
- Chen-Yu Tsai <wenst@chromium.org>, Weiyi Lu <weiyi.lu@mediatek.com>, 
- Eugen Hristev <eugen.hristev@linaro.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Julien Massot <jmassot@collabora.com>, Sean Wang <sean.wang@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, linux-sound@vger.kernel.org, 
- linux-gpio@vger.kernel.org, Julien Massot <julien.massot@collabora.com>
-X-Mailer: b4 0.14.2
 
-The properties `mediatek,pull-up-adv` and `mediatek,pull-down-adv`
-were using incorrect values like `<10>` and `<01>`. These values
-are parsed as decimal (10 and 1 respectively), not binary.
+Hi Cosmin,
 
-However, the driver interprets these as bitfields:
-  - BIT(0): R0
-  - BIT(1): R1
+On Wed, 2025-07-16 at 22:30 +0300, Cosmin Tanislav wrote:
+> Analog Devices is taking responsability for the maintenance of the Maxim
+> GMSL2/3 devices.
+> Add myself to the maintainers list and to the device tree bindings.
+>=20
+> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+> Acked-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+> =C2=A0Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml | 1=
+ +
+> =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 1 +
+> =C2=A02 files changed, 2 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.y=
+aml
+> b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
+> index d1e8ba6e368ec..15ab37702a927 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
+> +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
+> @@ -9,6 +9,7 @@ title: MAX96717 CSI-2 to GMSL2 Serializer
+> =C2=A0
+> =C2=A0maintainers:
+> =C2=A0=C2=A0 - Julien Massot <julien.massot@collabora.com>
+> +=C2=A0 - Cosmin Tanislav <cosmin.tanislav@analog.com>
+> =C2=A0
+> =C2=A0description:
+> =C2=A0=C2=A0 The MAX96717 serializer converts MIPI CSI-2 D-PHY formatted =
+input
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 24c557ee091d7..e973b0a985815 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14761,6 +14761,7 @@ F:	drivers/media/i2c/max96714.c
+> =C2=A0
+> =C2=A0MAX96717 GMSL2 SERIALIZER DRIVER
+> =C2=A0M:	Julien Massot <julien.massot@collabora.com>
+> +M:	Cosmin Tanislav <cosmin.tanislav@analog.com>
+> =C2=A0L:	linux-media@vger.kernel.org
+> =C2=A0S:	Maintained
+> =C2=A0F:	Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
 
-So valid values are:
-  - 0 => no pull
-  - 1 => enable R0
-  - 2 => enable R1
-  - 3 => enable R0 + R1
-
-Using `<10>` is invalid as it exceeds the accepted range.
-It was likely intended as binary `0b10` (i.e., `2`),
-to enable R1 only.
-
-This patch replaces incorrect values with the correct ones
-and removes the leading zero from `<01>` to avoid confusion
-with bitfield notation.
-
-Signed-off-by: Julien Massot <julien.massot@collabora.com>
----
- arch/arm64/boot/dts/mediatek/mt8183-pumpkin.dts | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-pumpkin.dts b/arch/arm64/boot/dts/mediatek/mt8183-pumpkin.dts
-index dbdee604edab4318c1ba87b9594ce52282b0c405..bbed369db986f3f24aea470a9ad63a7c1e2cb3c9 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-pumpkin.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-pumpkin.dts
-@@ -318,19 +318,19 @@ pins_cmd_dat {
- 				 <PINMUX_GPIO122__FUNC_MSDC0_CMD>;
- 			input-enable;
- 			drive-strength = <MTK_DRIVE_14mA>;
--			mediatek,pull-up-adv = <01>;
-+			mediatek,pull-up-adv = <1>;
- 		};
- 
- 		pins_clk {
- 			pinmux = <PINMUX_GPIO124__FUNC_MSDC0_CLK>;
- 			drive-strength = <MTK_DRIVE_14mA>;
--			mediatek,pull-down-adv = <10>;
-+			mediatek,pull-down-adv = <2>;
- 		};
- 
- 		pins_rst {
- 			pinmux = <PINMUX_GPIO133__FUNC_MSDC0_RSTB>;
- 			drive-strength = <MTK_DRIVE_14mA>;
--			mediatek,pull-down-adv = <01>;
-+			mediatek,pull-down-adv = <1>;
- 		};
- 	};
- 
-@@ -347,25 +347,25 @@ pins_cmd_dat {
- 				 <PINMUX_GPIO122__FUNC_MSDC0_CMD>;
- 			input-enable;
- 			drive-strength = <MTK_DRIVE_14mA>;
--			mediatek,pull-up-adv = <01>;
-+			mediatek,pull-up-adv = <1>;
- 		};
- 
- 		pins_clk {
- 			pinmux = <PINMUX_GPIO124__FUNC_MSDC0_CLK>;
- 			drive-strength = <MTK_DRIVE_14mA>;
--			mediatek,pull-down-adv = <10>;
-+			mediatek,pull-down-adv = <2>;
- 		};
- 
- 		pins_ds {
- 			pinmux = <PINMUX_GPIO131__FUNC_MSDC0_DSL>;
- 			drive-strength = <MTK_DRIVE_14mA>;
--			mediatek,pull-down-adv = <10>;
-+			mediatek,pull-down-adv = <2>;
- 		};
- 
- 		pins_rst {
- 			pinmux = <PINMUX_GPIO133__FUNC_MSDC0_RSTB>;
- 			drive-strength = <MTK_DRIVE_14mA>;
--			mediatek,pull-up-adv = <01>;
-+			mediatek,pull-up-adv = <1>;
- 		};
- 	};
- 
-@@ -377,13 +377,13 @@ pins_cmd_dat {
- 				 <PINMUX_GPIO33__FUNC_MSDC1_DAT2>,
- 				 <PINMUX_GPIO30__FUNC_MSDC1_DAT3>;
- 			input-enable;
--			mediatek,pull-up-adv = <10>;
-+			mediatek,pull-up-adv = <2>;
- 		};
- 
- 		pins_clk {
- 			pinmux = <PINMUX_GPIO29__FUNC_MSDC1_CLK>;
- 			input-enable;
--			mediatek,pull-down-adv = <10>;
-+			mediatek,pull-down-adv = <2>;
- 		};
- 
- 		pins_pmu {
-@@ -401,13 +401,13 @@ pins_cmd_dat {
- 				 <PINMUX_GPIO30__FUNC_MSDC1_DAT3>;
- 			drive-strength = <6>;
- 			input-enable;
--			mediatek,pull-up-adv = <10>;
-+			mediatek,pull-up-adv = <2>;
- 		};
- 
- 		pins_clk {
- 			pinmux = <PINMUX_GPIO29__FUNC_MSDC1_CLK>;
- 			drive-strength = <8>;
--			mediatek,pull-down-adv = <10>;
-+			mediatek,pull-down-adv = <2>;
- 			input-enable;
- 		};
- 	};
-
--- 
-2.50.1
-
+Reviewed-by: Julien Massot <julien.massot@collabora.com>
 
