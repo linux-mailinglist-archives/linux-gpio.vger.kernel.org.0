@@ -1,150 +1,244 @@
-Return-Path: <linux-gpio+bounces-24010-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24011-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A6F8B19E7A
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 11:08:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A2A73B19F02
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 11:49:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CF894189ACA2
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 09:08:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5DF9A3BD31C
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 09:49:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13F6424502C;
-	Mon,  4 Aug 2025 09:08:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 408A0244673;
+	Mon,  4 Aug 2025 09:49:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="PlBHTgSi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YbbD10nc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2DD717D346;
-	Mon,  4 Aug 2025 09:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7971D242D6B
+	for <linux-gpio@vger.kernel.org>; Mon,  4 Aug 2025 09:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754298497; cv=none; b=NzcrZvRu8zWa84BDlUIZ6aSzzUJxCxPqwHlos9QJpxri65dssXzbuza1CrMqYvRsrPYVqAE7hl5xSrgancRQL4qN+QqCQyMUR6/ClX+y0/SRxEiHpk+BNs011FtYTWYEQVv2H889rkHARaJyQAgr1lRwJe6jdXVLhgRYLFxnqsg=
+	t=1754300993; cv=none; b=JsiADxsKw8PEVyxz5e0IPw4dYim13HAGZQ2nycxHK76hpUitHCCTmuJl9t8fcVzsx/bFVkhjgyh8DQufy1BzMj3cGbUMTiwbvB7qb9sRdYcCHNdxJGCcRokESMFhB3m2Uo23h5oljCr4aYAQROcytKH0qhHAE8WAt5UyEnx05Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754298497; c=relaxed/simple;
-	bh=dNCb1GbU+zMwwHGSEs5J88EmPe3I2aoFVC/o3+7U2F0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VpwI6sIm3VrC/wTpD52DuM12A5WwRuCC3AwIv9XXqvEpHmcghZOoNhGXgQAw9koHWUpNwYd23UVWQDWqsYdvqkuWQnLRK0e6cSRP9c0bTJJb9C/71twyM9x3WWhC1JtslLR7+FKPhryVUPhjpMuYgV1MdKdgHn7wM7OVN5Od+5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=PlBHTgSi; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1754298493;
-	bh=dNCb1GbU+zMwwHGSEs5J88EmPe3I2aoFVC/o3+7U2F0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PlBHTgSi+7JUOYuxMn8femLuLfq3RszCQHshgoXnZkewKPTRWb22SaKzxCGHhf840
-	 FQTF+WkJpIePV9vztC7CZg4vYnqlyZRMQG56aEoIjG7KFvVRT+Kj4scAov60j7U5ec
-	 Fzz8Ec1QZUc8YC4G13q8/RbRYSKruZQQxe1PirBbachk/U30E0fnliOldzBjunQON/
-	 +dvTmo6jULLhF59a8odkYh/Q+tot5DtamutSrYLrrNMH9Bvnh+GB6u9hPnunLJtliO
-	 0tmK/DIrbt53tW3dHiFdNBmZ5ChqnnxHdFu1OtU3dZyHCGWHzIoP9IUvu9EYfsEQhh
-	 u/iH0Tx98hw7Q==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9849017E0593;
-	Mon,  4 Aug 2025 11:08:11 +0200 (CEST)
-Message-ID: <fe135942-3040-4858-b2e4-a8e4507b89e9@collabora.com>
-Date: Mon, 4 Aug 2025 11:08:11 +0200
+	s=arc-20240116; t=1754300993; c=relaxed/simple;
+	bh=TVBxECvTEIkCA2gxcE0Qlnu12iMIiq/9qmPch8vOaaY=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=dz0zavlNEvMc3PojjxBtomDxqOTWKPBKngxZ3E8g/6vKIg95gsj72Gab2iaPFHY2jam9+EodgyHbd7Ax7ZNTkSdOIZYRk/llWWBDTpykJFq3D8h1R8X4CpfkB3j0lbeUFhIiwjHStssJkjitWoKPhhfKpTtOnn8Hj93nnQI8L+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YbbD10nc; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754300991; x=1785836991;
+  h=date:from:to:cc:subject:message-id;
+  bh=TVBxECvTEIkCA2gxcE0Qlnu12iMIiq/9qmPch8vOaaY=;
+  b=YbbD10ncMgf2O0bFWfke0bOlWOUfTBc/xFo/NnBlEfNLIiiAKPmqH7se
+   T5FT/4MzkBbnT8+8lGSI0hVGeWEoXv8s6BBWH6DpwXtW84IRPpTIw6DvI
+   8E8ZD0E0YqyYeFx5f2nQsiVT+WZb9aGHxt545iQenRdIAIWztcfNh8ucq
+   DJpFn7RDrEwURw+zJgbLBeaLQjCOeVzHQfTJkXCDwxLfWhkXtGeAB0ZAV
+   suZSaI3pH5eqBlH4aGR5GTMqf0Aqw+84DW57ZnYjSKTHSeGq8206snHR8
+   2UNSaP2S3470UfVg42Ogwhwvcf84yX1JOXmOhtGDGbkgmgvM8uINg89TR
+   A==;
+X-CSE-ConnectionGUID: o9QdTtAGQH2smBmu/TyE6A==
+X-CSE-MsgGUID: yMKrqbgZSEysEqzWNzBH+Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11511"; a="56638781"
+X-IronPort-AV: E=Sophos;i="6.17,258,1747724400"; 
+   d="scan'208";a="56638781"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 02:49:50 -0700
+X-CSE-ConnectionGUID: GgnXw60wTn6K1OthjV3etQ==
+X-CSE-MsgGUID: zG5m3NYQR8Krlxq67ALw4g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,258,1747724400"; 
+   d="scan'208";a="168566502"
+Received: from lkp-server01.sh.intel.com (HELO 160750d4a34c) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 04 Aug 2025 02:49:50 -0700
+Received: from kbuild by 160750d4a34c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uirpD-0006wO-0q;
+	Mon, 04 Aug 2025 09:49:47 +0000
+Date: Mon, 04 Aug 2025 17:49:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ 63c7bc53a35e785accdc2ceab8f72d94501931ab
+Message-ID: <202508041719.7hWkbgpA-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/38] ASoC: dt-bindings: mt8192-afe-pcm: Fix clocks and
- clock-names
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- linux-mediatek@lists.infradead.org, robh@kernel.org
-Cc: herbert@gondor.apana.org.au, davem@davemloft.net, krzk+dt@kernel.org,
- conor+dt@kernel.org, chunkuang.hu@kernel.org, p.zabel@pengutronix.de,
- airlied@gmail.com, simona@ffwll.ch, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, jassisinghbrar@gmail.com,
- mchehab@kernel.org, matthias.bgg@gmail.com, chunfeng.yun@mediatek.com,
- vkoul@kernel.org, kishon@kernel.org, sean.wang@kernel.org,
- linus.walleij@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
- andersson@kernel.org, mathieu.poirier@linaro.org, daniel.lezcano@linaro.org,
- tglx@linutronix.de, atenart@kernel.org, jitao.shi@mediatek.com,
- ck.hu@mediatek.com, houlong.wei@mediatek.com,
- kyrie.wu@mediatek.corp-partner.google.com, andy.teng@mediatek.com,
- tinghan.shen@mediatek.com, jiaxin.yu@mediatek.com, shane.chien@mediatek.com,
- olivia.wen@mediatek.com, granquet@baylibre.com, eugen.hristev@linaro.org,
- arnd@arndb.de, sam.shih@mediatek.com, jieyy.yang@mediatek.com,
- frank-w@public-files.de, mwalle@kernel.org, fparent@baylibre.com,
- linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
- linux-remoteproc@vger.kernel.org, linux-sound@vger.kernel.org
-References: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com>
- <20250724083914.61351-5-angelogioacchino.delregno@collabora.com>
- <b7c9f6b8-4f29-4e38-9c93-e22cfed7229d@kernel.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <b7c9f6b8-4f29-4e38-9c93-e22cfed7229d@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-Il 24/07/25 11:12, Krzysztof Kozlowski ha scritto:
-> On 24/07/2025 10:38, AngeloGioacchino Del Regno wrote:
->>   
->>     clock-names:
->>       items:
->>         - const: aud_afe_clk
->>         - const: aud_dac_clk
->>         - const: aud_dac_predis_clk
->> +      - const: aud_adc_clk
->> +      - const: aud_adda6_adc_clk
->> +      - const: aud_apll22m_clk
->> +      - const: aud_apll24m_clk
->> +      - const: aud_apll1_tuner_clk
->> +      - const: aud_apll2_tuner_clk
->> +      - const: aud_tdm_clk
->> +      - const: aud_tml_clk
->> +      - const: aud_nle
->> +      - const: aud_dac_hires_clk
->> +      - const: aud_adc_hires_clk
->> +      - const: aud_adc_hires_tml
->> +      - const: aud_adda6_adc_hires_clk
->> +      - const: aud_3rd_dac_clk
->> +      - const: aud_3rd_dac_predis_clk
->> +      - const: aud_3rd_dac_tml
->> +      - const: aud_3rd_dac_hires_clk
->>         - const: aud_infra_clk
->>         - const: aud_infra_26m_clk
-> 
-> 
-> You can only add to the end of lists, not in the middle.
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: 63c7bc53a35e785accdc2ceab8f72d94501931ab  gpio: mlxbf2: use platform_get_irq_optional()
 
-The devicetree follows exactly what I've done here, and if I add to the
-end of the list (which was wrong from the beginning), I'd have to reorder
-all of the clocks in the devicetree node as well.
+Unverified Warning (likely false positive, kindly check if interested):
 
-I know that I'm not supposed to add those there, but this is not about adding
-new clocks, it's about adding ones that were missing in the middle.
+    arch/arm/boot/dts/cirrus/ep7211-edb7211.dtb: gpio@80000000 (cirrus,ep7209-gpio): reg: [[2147483648, 1], [2147483712, 1]] is too long
 
-> Also, please drop all _clk suffixes and aud/top prefixes. These are
-> supposed to be clock inputs, so you name them based on this device. Not
-> based on the provider's name.
+Warning ids grouped by kconfigs:
 
-That breaks everything: the driver uses the _clk suffixes and aud/top prefixes
-to get clocks by name - I know that "driver" and "binding" are not two words
-that go together in that sense, but *otherwise* we'd need to perform way bigger
-changes to get this situation resolved.
+recent_errors
+|-- arm-randconfig-051-20250804
+|   `-- arch-arm-boot-dts-cirrus-ep7211-edb7211.dtb:gpio-(cirrus-ep7209-gpio):reg:is-too-long
+|-- arm-randconfig-052-20250804
+|   `-- arch-arm-boot-dts-cirrus-ep7211-edb7211.dtb:gpio-(cirrus-ep7209-gpio):reg:is-too-long
+|-- arm-randconfig-053-20250804
+|   `-- arch-arm-boot-dts-cirrus-ep7211-edb7211.dtb:gpio-(cirrus-ep7209-gpio):reg:is-too-long
+|-- arm-randconfig-054-20250804
+|   `-- arch-arm-boot-dts-cirrus-ep7211-edb7211.dtb:gpio-(cirrus-ep7209-gpio):reg:is-too-long
+`-- arm-randconfig-055-20250804
+    `-- arch-arm-boot-dts-cirrus-ep7211-edb7211.dtb:gpio-(cirrus-ep7209-gpio):reg:is-too-long
 
-Those "way bigger changes" would also add bloat to the kernel as we'd need to
-parse clocks with old and new names.
+elapsed time: 835m
 
-Can we please avoid this on SoCs from years ago, which are only getting maintenance
-and no new feat/dev?
+configs tested: 133
+configs skipped: 6
 
-Thanks,
-Angelo
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+tested configs:
+alpha                            alldefconfig    gcc-15.1.0
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                                 defconfig    gcc-15.1.0
+arc                   randconfig-001-20250804    gcc-8.5.0
+arc                   randconfig-002-20250804    gcc-13.4.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-22
+arm                              allyesconfig    gcc-15.1.0
+arm                        clps711x_defconfig    clang-22
+arm                                 defconfig    clang-22
+arm                   randconfig-001-20250804    clang-22
+arm                   randconfig-002-20250804    clang-22
+arm                   randconfig-003-20250804    clang-22
+arm                   randconfig-004-20250804    gcc-15.1.0
+arm                       versatile_defconfig    gcc-15.1.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                               defconfig    gcc-15.1.0
+arm64                 randconfig-001-20250804    clang-22
+arm64                 randconfig-002-20250804    clang-19
+arm64                 randconfig-003-20250804    clang-22
+arm64                 randconfig-004-20250804    clang-22
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20250804    gcc-12.5.0
+csky                  randconfig-002-20250804    gcc-11.5.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-22
+hexagon                          allyesconfig    clang-22
+hexagon                             defconfig    clang-22
+hexagon               randconfig-001-20250804    clang-22
+hexagon               randconfig-002-20250804    clang-22
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250804    clang-20
+i386        buildonly-randconfig-002-20250804    gcc-12
+i386        buildonly-randconfig-003-20250804    clang-20
+i386        buildonly-randconfig-004-20250804    gcc-12
+i386        buildonly-randconfig-005-20250804    gcc-12
+i386        buildonly-randconfig-006-20250804    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-22
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20250804    gcc-15.1.0
+loongarch             randconfig-002-20250804    clang-22
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                                defconfig    gcc-15.1.0
+m68k                           virt_defconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20250804    gcc-10.5.0
+nios2                 randconfig-002-20250804    gcc-10.5.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250804    gcc-12.5.0
+parisc                randconfig-002-20250804    gcc-14.3.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-22
+powerpc                 mpc834x_itx_defconfig    clang-16
+powerpc               randconfig-001-20250804    gcc-8.5.0
+powerpc               randconfig-002-20250804    gcc-13.4.0
+powerpc               randconfig-003-20250804    clang-22
+powerpc                     tqm5200_defconfig    gcc-15.1.0
+powerpc64             randconfig-001-20250804    clang-22
+powerpc64             randconfig-002-20250804    clang-19
+powerpc64             randconfig-003-20250804    clang-16
+riscv                            allmodconfig    clang-22
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-22
+riscv                 randconfig-001-20250804    gcc-8.5.0
+riscv                 randconfig-002-20250804    gcc-13.4.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-22
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    clang-22
+s390                  randconfig-001-20250804    clang-22
+s390                  randconfig-002-20250804    gcc-8.5.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sh                    randconfig-001-20250804    gcc-14.3.0
+sh                    randconfig-002-20250804    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250804    gcc-8.5.0
+sparc                 randconfig-002-20250804    gcc-13.4.0
+sparc64                             defconfig    clang-20
+sparc64               randconfig-001-20250804    gcc-10.5.0
+sparc64               randconfig-002-20250804    gcc-8.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-22
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-22
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250804    clang-22
+um                    randconfig-002-20250804    gcc-12
+um                           x86_64_defconfig    clang-22
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250804    clang-20
+x86_64      buildonly-randconfig-002-20250804    gcc-12
+x86_64      buildonly-randconfig-003-20250804    gcc-12
+x86_64      buildonly-randconfig-004-20250804    gcc-12
+x86_64      buildonly-randconfig-005-20250804    clang-20
+x86_64      buildonly-randconfig-006-20250804    gcc-12
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250804    gcc-11.5.0
+xtensa                randconfig-002-20250804    gcc-13.4.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
