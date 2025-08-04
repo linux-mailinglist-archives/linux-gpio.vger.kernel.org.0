@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-23992-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23993-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF58DB1999C
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 02:44:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7450B19991
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 02:43:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 03FAC3A3CB3
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 00:41:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7CF611779D1
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 00:43:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30B3C2040A8;
-	Mon,  4 Aug 2025 00:41:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75CC01D5CFB;
+	Mon,  4 Aug 2025 00:42:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gOgtgVZQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FO0Vtbjr"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06247260B;
-	Mon,  4 Aug 2025 00:41:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EEBD19066D;
+	Mon,  4 Aug 2025 00:42:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754268077; cv=none; b=UPxnMu5fKkk60OzfsFpc2EgW+wOEhq/JkrPoZKxS73NOsne8sppnJop8peqoynPf07xBQJNm2Z6QqhqRhMmKtvVBk92EjoZLKgDzCz0x8bh4SZ52VilUpB5JenoMKj+KffNfDMOcTLuKeIb2ts5mx/Czwn9zXrYH42u96GAIrOs=
+	t=1754268172; cv=none; b=KMsKEm5lwObJ/yeuqQfwpr9iWhl15pCRXqMampSGsalq6MSVs9b96loDwNDXuTW5iLrFFAAno65qBo7CoUeuQ8IBeuYhl5nHf88mN8wOFNOWgN6EDBPxgafbDza8I2UtahgO/TKdMYhxn7PMhU1Qw8wTuX1oOQF4uE7bwWcLpZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754268077; c=relaxed/simple;
-	bh=lYduTF4pSIUPaV2uu9hbm1hGqg4vwD/RG6aGOFxXluQ=;
+	s=arc-20240116; t=1754268172; c=relaxed/simple;
+	bh=d/z1/Nq4g5V6FzR9pVKO0mFRp/KNkQfoYYw6jFxQYOU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=snNvs+MDIQ4tlC9U/4CNlC8P219+M/84g4bin7RSqF2fYdAHOyxkQdQ5YNTSo/Gg4I/QEGO/5hEG/0YHE9afNM58gon48h7z9jURIRttQiY9kEa6yp04em2N+B3pbE7a042Ef7c8ntA3LU4Vsw/cg2R8iLUkllwvt4z59D6iObA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gOgtgVZQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F638C4CEF8;
-	Mon,  4 Aug 2025 00:41:15 +0000 (UTC)
+	 MIME-Version; b=XdLq8wdL0pG6Z3mZbulgPy0UZ2h2QSatyeL7Ti9uEwOhmrpfsQHrNfwZnftWpUCgFgeLv5mn6vEpDRmqrXRrrU3Q3UaDhgZPI+1PbE9nG/co05HtfWX1Nm7JRIHjC3Aj5wsLQZnmDkruvXYWLQOc1A9HLUaQnmegBJbEq2GzZ74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FO0Vtbjr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF404C4CEEB;
+	Mon,  4 Aug 2025 00:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754268076;
-	bh=lYduTF4pSIUPaV2uu9hbm1hGqg4vwD/RG6aGOFxXluQ=;
+	s=k20201202; t=1754268172;
+	bh=d/z1/Nq4g5V6FzR9pVKO0mFRp/KNkQfoYYw6jFxQYOU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gOgtgVZQWIfqj0T62JJIrqqvAAR2rs9MpLLMmjRjKMmOD2o2nw2nNWm+IqQSuxLgp
-	 diVydQ6q+zJ1EUg3Ia5e8pPJ6aUJsd5SKQdm4shq7iOa1EP5P7WgYcwsvJtEjXokp7
-	 Rho8EmxRivOnZ+xgdfECZTtshLx//OskvdLheyPIC+w5dpdJ+bJOdPZ8JBxp4un5fD
-	 Rctm3ZHISnK3wAJsRaDVqIud9Inm+hp9MY/P7Y51W5cQGxl0LHGmIsBGkQGIhdrir7
-	 rsmMBxAT9HCCs5YncCxS8cUxo0GJ18uHWGeOpyPWkRSlidvrKCXumEHnDxK7zgfQVx
-	 ooWAhKlfI+BvQ==
+	b=FO0VtbjrNZfP9HcJcm9q/zS0VDPmBGwjhnrxYbuWB2UzneJZ5bGLMSJVnXMTk1KbG
+	 hPiUl7eWV5DOSq2IWaNz6VhJFaVe+Nvdqv9nhSerte95hSkDZ0qsDdyzzkXGyPpRTV
+	 ow7W8LIK+CkuiLM8YMAqYa8gs1p0MiqtKCkTFuMfxM9Q6pQzBP3NR82DpwTFNUoBqG
+	 QU22skqq4GT6E71N+qfURKPBjRsGuOzxwJE4/8zBauSHrBC9u5NVsL6P5dHaVrRYSO
+	 sXS75OtX2KexdRsvWRf/HQgy/HzEMEFuDBiqh5DlyDKG6Cl43vdM7DqLwkYY39I20T
+	 v7BdzmljytTTA==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -49,12 +49,12 @@ Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	linus.walleij@linaro.org,
 	brgl@bgdev.pl,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 14/39] gpio: tps65912: check the return value of regmap_update_bits()
-Date: Sun,  3 Aug 2025 20:40:16 -0400
-Message-Id: <20250804004041.3628812-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 11/28] gpio: tps65912: check the return value of regmap_update_bits()
+Date: Sun,  3 Aug 2025 20:42:10 -0400
+Message-Id: <20250804004227.3630243-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250804004041.3628812-1-sashal@kernel.org>
-References: <20250804004041.3628812-1-sashal@kernel.org>
+In-Reply-To: <20250804004227.3630243-1-sashal@kernel.org>
+References: <20250804004227.3630243-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -63,7 +63,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.240
+X-stable-base: Linux 5.4.296
 Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
@@ -132,7 +132,7 @@ regression.
  1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/gpio/gpio-tps65912.c b/drivers/gpio/gpio-tps65912.c
-index 510d9ed9fd2a..a8a2ad13e09e 100644
+index 3ad68bd78282..736af805e54a 100644
 --- a/drivers/gpio/gpio-tps65912.c
 +++ b/drivers/gpio/gpio-tps65912.c
 @@ -49,10 +49,13 @@ static int tps65912_gpio_direction_output(struct gpio_chip *gc,
