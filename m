@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-23998-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23999-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CFEC5B19C6E
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 09:27:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63193B19CBF
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 09:37:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B50D3AD332
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 07:27:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8001A177B4D
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 07:37:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58F6D2376F7;
-	Mon,  4 Aug 2025 07:27:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE79123AB95;
+	Mon,  4 Aug 2025 07:37:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OjPij6bW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rFQpk1K0"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0842D22A4FE;
-	Mon,  4 Aug 2025 07:27:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930AC2E3705;
+	Mon,  4 Aug 2025 07:37:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754292425; cv=none; b=VhYHl6M+x5lDPHIy28yukQgmXngoQH/7I6BGt3vYIeIbxlgfdQcVi4WYuchdRSioTYnJ1NixxnccRiIAiM4l6J03i5hsyw5QO2OHGVmDxOkx+XpWORCuHt+fE5rYiiJSvGFSgmaPicsErPsxkGeKnEHZoKMK6Moh4l4EGgnx22o=
+	t=1754293059; cv=none; b=boWGemAYGP4D7vd4LMEgmaeTO04hCnyeiVIX4IhMKGEggztrU1t30HIADGTx1swussj7LTl0xdvL0bHxvilvv+jqKY4HY+cpNLU9XmGesEjKKIBvJWHO8F3eVMyndnA9sHkYYWnVDaBmReEeV0UNbHmaZtQWC5PJRySTL8EWjK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754292425; c=relaxed/simple;
-	bh=fbeMNsknj1jfMdMlUI3wgsG87na3shk5ZcyK+AxPEUQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TVbl57gk3sFA3gk/Ohb3nUGP6SkIrfomdvPJGE0jIbQWSGvOMjuMVqU1YWl9EtYz2AIc2vbWPg0Vta6OHQ9hnYLEmjnPhhZu9+wZizuLxdyayJIHh/wynh1N7KdfI4lb0qX+fY3BMdQL3BG0coV1WRUyg64ju2xN7uVupfjzn2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OjPij6bW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B49DFC4CEE7;
-	Mon,  4 Aug 2025 07:26:57 +0000 (UTC)
+	s=arc-20240116; t=1754293059; c=relaxed/simple;
+	bh=vRsliMlm1RJCfGUkrLHzVOsYr/4zcMccaUxXarqteYo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=LySgoDBOwUDdmxEeRw3SN8IJ1ukIFwXTGouUNAI4hcL4mcj4T3EXtGLmjddaCDvWsEC24E8+CatYSoa9HEEk7YEBSTAKzJcDchAKbH/BKmSMOf5j9mjg8sVTMSwCkXNEaWQdcYsN2ILfYOL9SpqE1x9i1o/YLw9c9raGP4o0In4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rFQpk1K0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84DF6C4CEE7;
+	Mon,  4 Aug 2025 07:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754292424;
-	bh=fbeMNsknj1jfMdMlUI3wgsG87na3shk5ZcyK+AxPEUQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OjPij6bWmzP0LitMnDkrFzaaGn/cbOohwvU/4ZlF0cQ+i3b/jKxiDDRR4NHr/muzx
-	 a/7CnvlsggRtq1eBFysjnqUpBK6V+rCeyvFsT4xCC7bRwo0E4HvIcKWSbUFAxE/LQV
-	 5O4yt7bk7CyEpDSi3hvwoF0zyTT1312B3C/JFWuukVB4rbvQH2BlPdXSuIa/4ctFDB
-	 Eq+p4YDB9x+E6vYpQMj+eFXDpgvfHdWORFQBnras3qxGRYrYWAuDBuqzmpWIMPaTpH
-	 Kq/FjynfBBGvv2g5uGlaGH3IaCu9j0v+nlTl8cNP/YU70fNIDt/YuTUKhxS10NorlU
-	 DQm9AzjxdTSVg==
-Message-ID: <b5775270-5306-4eb7-9fe5-44b087b20c40@kernel.org>
-Date: Mon, 4 Aug 2025 09:26:55 +0200
+	s=k20201202; t=1754293059;
+	bh=vRsliMlm1RJCfGUkrLHzVOsYr/4zcMccaUxXarqteYo=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=rFQpk1K0vadskyFHFhVl6tNeCs5+/KarvhfQI7wQgODvtfjDiWL1hFWaEVQWfC/Sn
+	 cPIIAeBySh2b5HDcR4Fa+sIFHycWthApdXfNjZAzvGcm6w5hQPsijISP3Xf9LXC5ix
+	 J/vJG3LbcRwi+4DoR8PaDWGhiVlzO4gJQQ1Ao7y0u+M4grHC6GFg3OjAwAPhutPf1j
+	 U72j+fafpqf34YNyUKao8755qKTMdhPVmzbe9Q4AGZNMmc3nmE08ylUuYlumsJAyJI
+	 3CbwA9nHbDpLXcs88xAj2v0SNlW9x3Ast6zUHRHErWgJtUWynW5IZIwa4zLjZWqmur
+	 zg0qK0sPt81wQ==
+Message-ID: <c868c9b0-0f4c-4cc0-af6b-7f97aa822bfe@kernel.org>
+Date: Mon, 4 Aug 2025 09:37:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,35 +50,13 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 10/12] nvmem: s32g2_siul2: add NVMEM driver for SoC
- information
-To: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>,
- Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- krzk+dt@kernel.org, Conor Dooley <conor+dt@kernel.org>,
- Chester Lin <chester62515@gmail.com>, Matthias Brugger <mbrugger@suse.com>,
- Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>,
- Larisa Grigore <larisa.grigore@nxp.com>, Lee Jones <lee@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, aisheng.dong@nxp.com,
- Jacky Bai <ping.bai@nxp.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Srinivas Kandagatla <srini@kernel.org>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, NXP S32 Linux Team <s32@nxp.com>,
- Christophe Lizzi <clizzi@redhat.com>, Alberto Ruiz <aruizrui@redhat.com>,
- Enric Balletbo <eballetb@redhat.com>, echanude@redhat.com,
- Pengutronix Kernel Team <kernel@pengutronix.de>, imx@lists.linux.dev,
- Vincent Guittot <vincent.guittot@linaro.org>
-References: <20250710142038.1986052-1-andrei.stefanescu@oss.nxp.com>
- <20250710142038.1986052-11-andrei.stefanescu@oss.nxp.com>
- <9d004ea4-0bb2-4a21-8501-82ecf3482c3e@app.fastmail.com>
- <fa24772b-0038-4f51-87c6-15b810d8d454@oss.nxp.com>
- <53bc13b9-365e-4212-84f9-85e67c23e067@oss.nxp.com>
- <ed072356-6881-4466-a0c2-0f55b72f92c8@kernel.org>
- <7902bac4-9f52-443c-995f-a15189102478@kernel.org>
- <0973e6d1-2823-4bfb-be73-b532c6f86784@oss.nxp.com>
+Subject: Re: [PATCH 1/2] dt-bindings: gpio: Add Tegra256 support
+To: Prathamesh Shete <pshete@nvidia.com>, linus.walleij@linaro.org,
+ brgl@bgdev.pl, thierry.reding@gmail.com, jonathanh@nvidia.com,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250804041657.27688-1-pshete@nvidia.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -124,40 +102,52 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <0973e6d1-2823-4bfb-be73-b532c6f86784@oss.nxp.com>
+In-Reply-To: <20250804041657.27688-1-pshete@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 04/08/2025 09:12, Andrei Stefanescu wrote:
-> Hi Krzysztof,
-> 
-> Thank you for the quick response!
-> On 02/08/2025 11:32, Krzysztof Kozlowski wrote:
->> On 02/08/2025 10:28, Krzysztof Kozlowski wrote:
->>> On 01/08/2025 16:36, Andrei Stefanescu wrote:
->>>> Apart from the proposed NVMEM driver, there is also an option of exporting
->>>> a syscon regmap for the registers which provide information about the SoC.
->>>>
->>>> I have seen that typically NVMEM drivers export information read from fuses
->>>> but I think having a NVMEM driver is nicer way to access the information
->>>> instead of using a syscon regmap and manually extracting the needed bits. 
->>>
->>>
->>> nvmem is not a syscon. Mixing these two means device is something
->>> completely else.
-> 
-> Yes, I don't want to mix them. The driver will either be a NVMEM driver or
-> a syscon. These registers are read-only. I suggested NVMEM because it's a
+On 04/08/2025 06:16, Prathamesh Shete wrote:
+>      then:
+>        properties:
+>          interrupts:
+> diff --git a/include/dt-bindings/gpio/tegra256-gpio.h b/include/dt-bindings/gpio/tegra256-gpio.h
+> new file mode 100644
+> index 000000000000..36485b4bf47d
+> --- /dev/null
+> +++ b/include/dt-bindings/gpio/tegra256-gpio.h
+> @@ -0,0 +1,28 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/* Copyright (c) 2025, NVIDIA CORPORATION. All rights reserved. */
+> +
+> +/*
+> + ** This header provides constants for binding nvidia,tegra256-gpio*.
 
-We do not talk about drivers here, but hardware.
+Use Linux style comments. See Coding style.
 
-> an abstraction layer which makes it easier for drivers which want to use
-> that information without knowing where to actually read it i.e. reg address,
-> bit mask.
 
-Sorry, but no. You design it for drivers, that's not the way. Describe
-properly the hardware.
-
+> + **
+> + ** The first cell in Tegra's GPIO specifier is the GPIO ID. The macros below
+> + ** provide names for this.
+> + **
+> + ** The second cell contains standard flag values specified in gpio.h.
+> + **/
+> +
+> +#ifndef _DT_BINDINGS_GPIO_TEGRA256_GPIO_H
+> +#define _DT_BINDINGS_GPIO_TEGRA256_GPIO_H
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/* GPIOs implemented by main GPIO controller */
+> +#define TEGRA256_MAIN_GPIO_PORT_A 0
+> +#define TEGRA256_MAIN_GPIO_PORT_B 1
+> +#define TEGRA256_MAIN_GPIO_PORT_C 2
+> +#define TEGRA256_MAIN_GPIO_PORT_D 3
+> +
+> +#define TEGRA256_MAIN_GPIO(port, offset) \
+> +		((TEGRA256_MAIN_GPIO_PORT_##port * 8) + (offset))
+I don't see this macro being used in the drivers. I guess you need it
+for embedding hardware constant (so not really bindings)? You have
+entire commit msg to explain that...
 
 Best regards,
 Krzysztof
