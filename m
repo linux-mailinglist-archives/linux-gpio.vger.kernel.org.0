@@ -1,157 +1,107 @@
-Return-Path: <linux-gpio+bounces-23993-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23994-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7450B19991
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 02:43:39 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D23CB199C2
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 03:07:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7CF611779D1
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 00:43:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1024F7A78EE
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 01:06:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75CC01D5CFB;
-	Mon,  4 Aug 2025 00:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FO0Vtbjr"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFC7D1A08A4;
+	Mon,  4 Aug 2025 01:07:28 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EEBD19066D;
-	Mon,  4 Aug 2025 00:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B71A927
+	for <linux-gpio@vger.kernel.org>; Mon,  4 Aug 2025 01:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754268172; cv=none; b=KMsKEm5lwObJ/yeuqQfwpr9iWhl15pCRXqMampSGsalq6MSVs9b96loDwNDXuTW5iLrFFAAno65qBo7CoUeuQ8IBeuYhl5nHf88mN8wOFNOWgN6EDBPxgafbDza8I2UtahgO/TKdMYhxn7PMhU1Qw8wTuX1oOQF4uE7bwWcLpZ4=
+	t=1754269648; cv=none; b=AQkYnwoeZHR6AxYFNusU+41TKMwp3vlTZMM14hzXYJyb/MxsjpINLur80i+eO8+I/bhqqbvKu7tCXDmbFTU91ujQdipgSIg8SsleRKjc/oWWG5Lr/cVfVAWztji+j6m0wFWgpQHJ2qKQLAnS0bQV6T/jwRydJLLY6n4T4TUXDcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754268172; c=relaxed/simple;
-	bh=d/z1/Nq4g5V6FzR9pVKO0mFRp/KNkQfoYYw6jFxQYOU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XdLq8wdL0pG6Z3mZbulgPy0UZ2h2QSatyeL7Ti9uEwOhmrpfsQHrNfwZnftWpUCgFgeLv5mn6vEpDRmqrXRrrU3Q3UaDhgZPI+1PbE9nG/co05HtfWX1Nm7JRIHjC3Aj5wsLQZnmDkruvXYWLQOc1A9HLUaQnmegBJbEq2GzZ74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FO0Vtbjr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF404C4CEEB;
-	Mon,  4 Aug 2025 00:42:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754268172;
-	bh=d/z1/Nq4g5V6FzR9pVKO0mFRp/KNkQfoYYw6jFxQYOU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FO0VtbjrNZfP9HcJcm9q/zS0VDPmBGwjhnrxYbuWB2UzneJZ5bGLMSJVnXMTk1KbG
-	 hPiUl7eWV5DOSq2IWaNz6VhJFaVe+Nvdqv9nhSerte95hSkDZ0qsDdyzzkXGyPpRTV
-	 ow7W8LIK+CkuiLM8YMAqYa8gs1p0MiqtKCkTFuMfxM9Q6pQzBP3NR82DpwTFNUoBqG
-	 QU22skqq4GT6E71N+qfURKPBjRsGuOzxwJE4/8zBauSHrBC9u5NVsL6P5dHaVrRYSO
-	 sXS75OtX2KexdRsvWRf/HQgy/HzEMEFuDBiqh5DlyDKG6Cl43vdM7DqLwkYY39I20T
-	 v7BdzmljytTTA==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Sasha Levin <sashal@kernel.org>,
+	s=arc-20240116; t=1754269648; c=relaxed/simple;
+	bh=6cbn6Wu7LpFfawFkfX81dqvhsHHyAE1ccK3U2EJqy4U=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=fb0mf/pst/W1dGZX0MI9gx1UK4sxlIX9DKA9tVZaKbU9X/+If/1M16u/GeuipJg63mWef/IkO5Ine1JPUx546Z1D1v0l5L6aR6v+iGR6Ynps8fP5ZxpffaTb1MVXlFQSKs2+xrqCNvgfOtw9zeRLwyzpUv6drQm1/FcsmzbWxM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 585d258e70cf11f0b29709d653e92f7d-20250804
+X-CTIC-Tags:
+	HR_CTE_8B, HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE
+	HR_FROM_DIGIT_LEN, HR_FROM_NAME, HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN
+	HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS
+	HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED
+	DN_TRUSTED, SA_TRUSTED, SA_EXISTED, SN_TRUSTED, SN_EXISTED
+	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF
+	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD
+	AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:dd06f271-6704-4778-bff8-cf4869d8816b,IP:10,
+	URL:0,TC:0,Content:-5,EDM:25,RT:0,SF:-40,FILE:0,BULK:0,RULE:Release_Ham,AC
+	TION:release,TS:-10
+X-CID-INFO: VERSION:1.1.45,REQID:dd06f271-6704-4778-bff8-cf4869d8816b,IP:10,UR
+	L:0,TC:0,Content:-5,EDM:25,RT:0,SF:-40,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-10
+X-CID-META: VersionHash:6493067,CLOUDID:d8ae665269239c54b116cfa857e23723,BulkI
+	D:2508040907101FB0SD9U,BulkQuantity:0,Recheck:0,SF:10|24|38|44|66|78|102,T
+	C:nil,Content:0|50,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:n
+	il,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSI
+X-UUID: 585d258e70cf11f0b29709d653e92f7d-20250804
+X-User: lijun01@kylinos.cn
+Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <lijun01@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1724248187; Mon, 04 Aug 2025 09:07:09 +0800
+From: Li Jun <lijun01@kylinos.cn>
+To: lijun01@kylinos.cn,
+	geert+renesas@glider.be,
 	linus.walleij@linaro.org,
 	brgl@bgdev.pl,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 11/28] gpio: tps65912: check the return value of regmap_update_bits()
-Date: Sun,  3 Aug 2025 20:42:10 -0400
-Message-Id: <20250804004227.3630243-11-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250804004227.3630243-1-sashal@kernel.org>
-References: <20250804004227.3630243-1-sashal@kernel.org>
+Subject: [PATCH v2] gpio: aggregator: fix macros coding style error
+Date: Mon,  4 Aug 2025 09:07:04 +0800
+Message-Id: <20250804010704.12648-1-lijun01@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.296
 Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+These changes just fix Linux Kernel Coding Style, no functional
+improve.
 
-[ Upstream commit a0b2a6bbff8c26aafdecd320f38f52c341d5cafa ]
+-Macros with complex values should be enclosed in parentheses
 
-regmap_update_bits() can fail, check its return value like we do
-elsewhere in the driver.
-
-Link: https://lore.kernel.org/r/20250707-gpiochip-set-rv-gpio-round4-v1-2-35668aaaf6d2@linaro.org
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Li Jun <lijun01@kylinos.cn>
 ---
+ drivers/gpio/gpio-aggregator.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-LLM Generated explanations, may be completely bogus:
-
-**Backport Status: YES**
-
-This commit should be backported to stable kernel trees for the
-following reasons:
-
-1. **Bug Fix with Real Impact**: The commit fixes a bug where the return
-   value of `regmap_update_bits()` in `tps65912_gpio_direction_output()`
-   is not checked (line 54-55 in the original code). This could lead to
-   silent failures where the GPIO initial value is not set correctly,
-   but the function continues to configure the direction, potentially
-   leaving the GPIO in an inconsistent state.
-
-2. **Consistency with Driver Pattern**: The driver already checks return
-   values of `regmap_update_bits()` in other functions:
-   - `tps65912_gpio_direction_input()` (line 44) properly returns the
-     result
-   - The second `regmap_update_bits()` call in
-     `tps65912_gpio_direction_output()` (line 57) also returns the
-     result
-   - `tps65912_gpio_get_direction()` checks the return value of
-     `regmap_read()`
-
-3. **Small and Contained Fix**: The patch is minimal - it only adds:
-   - An `int ret` variable declaration
-   - Captures the return value of the first `regmap_update_bits()` call
-   - Adds an error check that returns early if the operation failed
-
-4. **No Side Effects**: This change doesn't introduce any new
-   functionality or alter the existing behavior when operations succeed.
-   It only adds proper error handling that was missing.
-
-5. **Hardware Communication Reliability**: The TPS65912 is a PMIC (Power
-   Management IC) that communicates over I2C/SPI. Hardware communication
-   can fail due to various reasons (bus errors, device issues), and not
-   checking return values can lead to incorrect GPIO states which could
-   affect system stability or connected peripherals.
-
-6. **Follows Kernel Best Practices**: The kernel coding standards
-   require checking return values of functions that can fail, especially
-   for hardware operations. This fix brings the code in line with those
-   standards.
-
-The commit message clearly indicates this is a bug fix
-("regmap_update_bits() can fail, check its return value like we do
-elsewhere in the driver"), making it a perfect candidate for stable
-backporting as it improves driver reliability without any risk of
-regression.
-
- drivers/gpio/gpio-tps65912.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpio/gpio-tps65912.c b/drivers/gpio/gpio-tps65912.c
-index 3ad68bd78282..736af805e54a 100644
---- a/drivers/gpio/gpio-tps65912.c
-+++ b/drivers/gpio/gpio-tps65912.c
-@@ -49,10 +49,13 @@ static int tps65912_gpio_direction_output(struct gpio_chip *gc,
- 					  unsigned offset, int value)
- {
- 	struct tps65912_gpio *gpio = gpiochip_get_data(gc);
-+	int ret;
+diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
+index 6f941db02c04..16c1ddc66013 100644
+--- a/drivers/gpio/gpio-aggregator.c
++++ b/drivers/gpio/gpio-aggregator.c
+@@ -247,8 +247,8 @@ struct gpiochip_fwd {
+ 	unsigned long tmp[];		/* values and descs for multiple ops */
+ };
  
- 	/* Set the initial value */
--	regmap_update_bits(gpio->tps->regmap, TPS65912_GPIO1 + offset,
--			   GPIO_SET_MASK, value ? GPIO_SET_MASK : 0);
-+	ret = regmap_update_bits(gpio->tps->regmap, TPS65912_GPIO1 + offset,
-+				 GPIO_SET_MASK, value ? GPIO_SET_MASK : 0);
-+	if (ret)
-+		return ret;
+-#define fwd_tmp_values(fwd)	&(fwd)->tmp[0]
+-#define fwd_tmp_descs(fwd)	(void *)&(fwd)->tmp[BITS_TO_LONGS((fwd)->chip.ngpio)]
++#define fwd_tmp_values(fwd)	(&(fwd)->tmp[0])
++#define fwd_tmp_descs(fwd)	((void *)&(fwd)->tmp[BITS_TO_LONGS((fwd)->chip.ngpio)])
  
- 	return regmap_update_bits(gpio->tps->regmap, TPS65912_GPIO1 + offset,
- 				  GPIO_CFG_MASK, GPIO_CFG_MASK);
+ #define fwd_tmp_size(ngpios)	(BITS_TO_LONGS((ngpios)) + (ngpios))
+ 
 -- 
-2.39.5
+2.25.1
 
 
