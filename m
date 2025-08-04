@@ -1,119 +1,199 @@
-Return-Path: <linux-gpio+bounces-23976-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23977-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57F19B194D5
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Aug 2025 21:05:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 85AA6B19710
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 02:25:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F0C417185B
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Aug 2025 19:05:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A7701173D30
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 00:25:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A84B1E47AD;
-	Sun,  3 Aug 2025 19:05:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBE361991BF;
+	Mon,  4 Aug 2025 00:24:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Q1P2gAsy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iS0xP6W1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1451A23A0
-	for <linux-gpio@vger.kernel.org>; Sun,  3 Aug 2025 19:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A911F19307F;
+	Mon,  4 Aug 2025 00:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754247936; cv=none; b=nrEB9ke+9BGmyerVaAJ2frFpijaCZrEevXLopaZAnS5VJtco9ALxkiuV1uv7Wg4OK9naARzS7s7NnAb9Y3HyHjF+DgafI54E3lWu/2Dm7JsLs6Xx3RUJ8aNy35mkaD3/wcMs9OuIjBGPnRstKi2GRhL3NajQUJ6nvsl66JCO/5g=
+	t=1754267081; cv=none; b=LKZsBzKxI4KGGu4kGAFmzHnEmON50YQ1k2/JtNJrpmShg6ciOUQH53+nhOS6FeiMo3SKlWe9rFSUsGtdM3wJjiC4fkCvy2hVvlMoLji8jo5NSwqxDoag3Vydk3UtpPJsOfcItw7IN9UaTtM7oD7xoww8KWNoyNipEaGwQxsU6SA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754247936; c=relaxed/simple;
-	bh=PMyIylZMNl7hOmJVaTu9fUoxGlBy9SQAK3UVNLWLrls=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NN/vyJhycdajwkVM4DvT0kgE9M8VnbIvZxELr7eco/9C1vIov0mBsV4mdCaL8y7gfYkkYXc+SjRBuoljaRoAPMXJaEeeEnifJOQyg/iT3ikNinaZRW1tUyUgH4g3XZ3CKY0TqxPrEM3bF6QTeY4b7q7N4tvUdiBny9lc+/84AT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Q1P2gAsy; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-459d7726ee6so2759445e9.2
-        for <linux-gpio@vger.kernel.org>; Sun, 03 Aug 2025 12:05:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1754247933; x=1754852733; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ue6yILCiUSW0isjVw7pYnke0QhJ7+S+qitF1Pphk5Z4=;
-        b=Q1P2gAsy7L8Z5AZ36R7leLaTYaOfvPuLe0IxqKBoCRfPpeDv47zTqHcFLFwEPG/B2Y
-         J5FElgUY42ClHZ4bCZcCUfqg1je0JvT65ZuVUSFMO8Du+qdRTFlfubTGO+wLbVh3EYuh
-         7TjoavOWf0NBe6DOsyGh6ATmD2AOgSMi/F94EZEvjbxV/WbjaAqy+nC65AZ/Q0YSOUgj
-         6x0A8Qs6ErpDFH48ec6MwLprh1P1AVICMzIo71ccsp8qRJWySNEc4Wf+XSB9rrI6cAhQ
-         S7/a6gx77YjW6sAXUsmFfWli83NsQbHIcHtxvo7MouOU9UikVE80q2eprAlN93tuLsTx
-         mhPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754247933; x=1754852733;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ue6yILCiUSW0isjVw7pYnke0QhJ7+S+qitF1Pphk5Z4=;
-        b=hUx9BeOtFdk7tPGVSlUNeWrDaMlLpeeDFTrXOhwSqhKW44EanuUNP1iRy3H9ynW/FQ
-         H6O9MtINiTTwa4MCq7Brh3atlft2yjDRi5W7MhchZbZ9wduWqb+fzhA1dNF1qdffzBRX
-         bRJi0YEf2ovDjwPlaIttlXrlAuOlqiIR+Qd/1JWzUXT7wugdk9H6kjXSgS49fTN5wNwo
-         DIVRVR3vCc8SSMH4fFk5dmSiaxVr0UJD4q0vQLVzGLVTB+xbiSdeW77ffublsyUI5Z9B
-         nT1s6Lho6NVDA6c/LUUDD0D8d0wwf9GRrw3EMmAmu9Pexj0Wx2RwsNQH1krlse46icz4
-         i/ag==
-X-Forwarded-Encrypted: i=1; AJvYcCUN3pIf7gZ/LHlPwqRme1E2F/QKYKk6Fj8eSZmD9/M8/EfaonyVJCLXQKED+DmQ2U9rP99z9G2FemKi@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzMYHNdJUCDu4gOuUSF2nJ/qpvBDWrsxxApGkRgNQ4v183lqX4
-	2vHB1hIH/TPmfiyqsMnGJLmqBnGUePsUV5JcUUqFYjVkF3sa8pzBihUvaxz9NduzQG3A2lYoObm
-	F9C9D
-X-Gm-Gg: ASbGnctl7m8wRw4FRNq8VYs0CJrmDEAqcTxAV//d5ED+DjWc5EweRK6ov7lhH1O+ZLY
-	x7yL8rR/ayRaW0Fqcm/ylT6pvWNmJf1nJqh2IZJ6QP7ZxA12JVKE0/n5ENUcmd7nU/aEWrpD8t6
-	gD2aX0x8K208BY2SXWlbuLWJ+gujxmtsleHoqOFhpgtGE+LRhVX2u6MUL32iKsklt7JOpxu7ach
-	39cDFOD796dl7mUp8PyGnv8gQV9YmkLVwAIGvCcAxOKHKpZ8+edUS20VIjG+xwYEQ384iBZjTTG
-	nVZFhTgtT57NHT5wik1d8/tUTV1Ja48/6Zir6Hf5b24Asa1SbesA0eBCw+rFHwANsuIGI148Lx/
-	w5ni8O+y0Nx8LTV+3YMMxoMNPpLL+0IjuTAIKdmY/M5Llj4EL8yYHZL95jSKxc1AgwGGwImsQQy
-	2vBrNjYQ==
-X-Google-Smtp-Source: AGHT+IFIHB5mM0/8HsYQwqU57U0GSbxPiC90f1GhhyqIwsvDX5hPAvaS1dkEc5zopKvLYYmIQx2Jkg==
-X-Received: by 2002:a05:600c:a43:b0:456:173c:8a53 with SMTP id 5b1f17b1804b1-458b69c8300mr56997445e9.2.1754247932932;
-        Sun, 03 Aug 2025 12:05:32 -0700 (PDT)
-Received: from brgl-pocket.. (2a02-8440-f501-a968-a175-e139-72e5-a366.rev.sfr.net. [2a02:8440:f501:a968:a175:e139:72e5:a366])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c4534b3sm12948486f8f.47.2025.08.03.12.05.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Aug 2025 12:05:32 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Robert Jarzmik <robert.jarzmik@free.fr>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Duje=20Mihanovi=C4=87?= <duje@dujemihanovic.xyz>
-Subject: Re: [PATCH] Revert "gpio: pxa: Make irq_chip immutable"
-Date: Sun,  3 Aug 2025 21:05:25 +0200
-Message-ID: <175424788064.7115.2655491563046401147.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250801071858.7554-1-brgl@bgdev.pl>
-References: <20250801071858.7554-1-brgl@bgdev.pl>
+	s=arc-20240116; t=1754267081; c=relaxed/simple;
+	bh=5+VGatyAyn0VYzmKC+9QVp6Me0hrtlbLXliosSpLPOI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ovGQgonh9DhmSDrS1zqVZwZ+ZgiUqH/Y549hc/Dd0iK3bistexqykDUtTuGNf4CwmKs3xlQ8x6XJi42AmvKxDhsCgUTpofFMfvvgXp+t0Fpa0HH5Plr0zYvVyD2UdCcI1SM/gSsk9cIs3wZxO6jriWsAqCALg4c1vGoGOVYtxn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iS0xP6W1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73949C4CEEB;
+	Mon,  4 Aug 2025 00:24:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754267081;
+	bh=5+VGatyAyn0VYzmKC+9QVp6Me0hrtlbLXliosSpLPOI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=iS0xP6W1g43KXUf14c3WvFumDmPiTua0xZeqqO+RkwLcZWasJ2FLk78sOK5FLBkmy
+	 Z4in6VYxfzz3mt4j6cV9PrQvqEOFMSVoIBBMFwxo1dmdMsbIS8dHRcr8hzvmh4t1ez
+	 L9TwAlFUtrr/OMH6TXBhVdv5i1PgoQd6nwYi5HKgsa3Wtqm53jttoj0jF/gHIL8tWQ
+	 e/DT76G0Q82Bq/cny2OciUNbIkNnQAaZFPRVqwoyYyZUzEVd7psD9CN2w+XXmdwQaI
+	 H2+iwjjREGDaJZ/QWFlupNxug6MaOdBuek/w+P6xIlW/JQ8ToxvgZVd3IpUS5TnFoN
+	 93HxSqLidEwCw==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Xi Ruoyao <xry111@xry111.site>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Sasha Levin <sashal@kernel.org>,
+	zhuyinbo@loongson.cn,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.16 19/85] gpio: loongson-64bit: Extend GPIO irq support
+Date: Sun,  3 Aug 2025 20:22:28 -0400
+Message-Id: <20250804002335.3613254-19-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250804002335.3613254-1-sashal@kernel.org>
+References: <20250804002335.3613254-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.16
 Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+From: Binbin Zhou <zhoubinbin@loongson.cn>
 
+[ Upstream commit 27cb8f702eb789f97f7a8bd5a91d76c65a937b2f ]
 
-On Fri, 01 Aug 2025 09:18:58 +0200, Bartosz Golaszewski wrote:
-> This reverts commit 20117cf426b6 ("gpio: pxa: Make irq_chip immutableas")
-> as it caused a regression on samsung coreprimevelte and we've not been
-> able to fix it so far.
-> 
-> 
+Add the interrupt enable register offset (inten_offset) so that GPIO
+interrupts can be enabled normally on more models.
 
-Applied, thanks!
+According to the latest interface specifications, the definition of GPIO
+interrupts in ACPI is similar to that in FDT. The GPIO interrupts are
+listed one by one according to the GPIO number, and the corresponding
+interrupt number can be obtained directly through the GPIO number
+specified by the consumer.
 
-[1/1] Revert "gpio: pxa: Make irq_chip immutable"
-      https://git.kernel.org/brgl/linux/c/b644c640923b625340c603cdb8d8f456406eb4de
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+Link: https://lore.kernel.org/r/20250714064542.2276247-1-zhoubinbin@loongson.cn
+[Bartosz: tweaked the commit message]
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
 
-Best regards,
+LLM Generated explanations, may be completely bogus:
+
+**Backport Status: YES**
+
+This commit is suitable for backporting to stable kernel trees for the
+following reasons:
+
+1. **Fixes a bug affecting users**: The commit addresses a functional
+   issue where GPIO interrupts cannot be enabled properly on several
+   Loongson models (ls2k2000, ls3a5000, ls7a, ls7a2000). Looking at the
+   code in `loongson_gpio_to_irq()` (lines 120-136), the function relies
+   on `chip_data->inten_offset` being set to properly enable interrupts.
+   Without this offset, the conditional check at line 167 (`if
+   (lgpio->chip_data->inten_offset)`) prevents the `to_irq` callback
+   from being registered, effectively breaking GPIO interrupt
+   functionality.
+
+2. **Small and contained fix**: The changes are minimal - only adding
+   the missing `inten_offset` values to existing chip data structures.
+   The patch adds 4 lines:
+   - Line 225: `.inten_offset = 0x14,` for ls2k2000_data0
+   - Line 233: `.inten_offset = 0x30,` for ls2k2000_data1
+   - Line 249: `.inten_offset = 0x14,` for ls3a5000_data
+   - Line 257: `.inten_offset = 0xb00,` for ls7a_data
+   - Line 266: `.inten_offset = 0xb00,` for ls7a2000_data0
+   - Line 284: `.inten_offset = 0x14,` for ls3a6000_data
+
+3. **No architectural changes**: This is a simple data fix that adds
+   missing hardware register offsets. It doesn't change any logic, APIs,
+   or introduce new features.
+
+4. **Low regression risk**: The change only affects the specific
+   Loongson models mentioned and only enables functionality that was
+   previously broken. It cannot break existing working configurations
+   since it only adds missing data.
+
+5. **Hardware enablement fix**: This is essentially a hardware
+   enablement bug fix that allows proper interrupt handling on affected
+   Loongson platforms. Without this fix, GPIO interrupts are completely
+   non-functional on these chips.
+
+The commit follows stable tree rules by being a clear bug fix with
+minimal changes and low risk. The fact that other similar chip data
+structures already had `inten_offset` defined (like ls2k_data,
+ls2k0500_data0/1) shows this was an oversight that needed correction.
+
+ drivers/gpio/gpio-loongson-64bit.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loongson-64bit.c
+index 70a01c5b8ad1..add09971d26a 100644
+--- a/drivers/gpio/gpio-loongson-64bit.c
++++ b/drivers/gpio/gpio-loongson-64bit.c
+@@ -222,6 +222,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data0 = {
+ 	.conf_offset = 0x0,
+ 	.in_offset = 0xc,
+ 	.out_offset = 0x8,
++	.inten_offset = 0x14,
+ };
+ 
+ static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data1 = {
+@@ -230,6 +231,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data1 = {
+ 	.conf_offset = 0x0,
+ 	.in_offset = 0x20,
+ 	.out_offset = 0x10,
++	.inten_offset = 0x30,
+ };
+ 
+ static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data2 = {
+@@ -246,6 +248,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls3a5000_data = {
+ 	.conf_offset = 0x0,
+ 	.in_offset = 0xc,
+ 	.out_offset = 0x8,
++	.inten_offset = 0x14,
+ };
+ 
+ static const struct loongson_gpio_chip_data loongson_gpio_ls7a_data = {
+@@ -254,6 +257,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls7a_data = {
+ 	.conf_offset = 0x800,
+ 	.in_offset = 0xa00,
+ 	.out_offset = 0x900,
++	.inten_offset = 0xb00,
+ };
+ 
+ /* LS7A2000 chipset GPIO */
+@@ -263,6 +267,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls7a2000_data0 = {
+ 	.conf_offset = 0x800,
+ 	.in_offset = 0xa00,
+ 	.out_offset = 0x900,
++	.inten_offset = 0xb00,
+ };
+ 
+ /* LS7A2000 ACPI GPIO */
+@@ -281,6 +286,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls3a6000_data = {
+ 	.conf_offset = 0x0,
+ 	.in_offset = 0xc,
+ 	.out_offset = 0x8,
++	.inten_offset = 0x14,
+ };
+ 
+ static const struct of_device_id loongson_gpio_of_match[] = {
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.39.5
+
 
