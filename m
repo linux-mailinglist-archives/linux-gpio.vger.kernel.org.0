@@ -1,61 +1,57 @@
-Return-Path: <linux-gpio+bounces-23980-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-23981-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D295B197A1
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 02:29:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE769B19790
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 02:29:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 082773AFAD7
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 00:29:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1FA82174F52
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 00:29:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB5631CEAA3;
-	Mon,  4 Aug 2025 00:28:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B74D1B4F09;
+	Mon,  4 Aug 2025 00:28:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YaGuOsZT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F9WrawEP"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C331C84DC;
-	Mon,  4 Aug 2025 00:28:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC51929A2;
+	Mon,  4 Aug 2025 00:28:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754267322; cv=none; b=ZkB1HBld2hpH0Op1qJnzhrK0e7Su6hFSKP2Eeufuj3Z8g9rzDAPfm0LSMfB+eLuNOkZpTA4M2h//vrjh+LnZkrQ1G1n9X4/PJ/e2H6akAzzZRkkWZ3TBvMqQXVHH8lzjswqqOw44WuUYdIHcFHDWkLt9+Nm2EDtgQUS/aWQ0iJk=
+	t=1754267333; cv=none; b=CuGP0tXxU1TLHakA3pLvSKPO1BMq6hmgxr0gO1CpTSObZXTK2e08di57O88G9I2masO/KRTbMrf2i8xopdrEQ+2Hc/5smKQL/s1xTxr/nQlyR4YWyfRZ8SlcU5PJsCtF667IymUHrkpiptuJX4n7b04iFZ7AFcgxZHxF7unq+AY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754267322; c=relaxed/simple;
-	bh=7EJg3bg9n5DVKr0bsLvdBBTCfmWZ9fbgpLBrM8HOSIg=;
+	s=arc-20240116; t=1754267333; c=relaxed/simple;
+	bh=Z9Q/IX48zM4LaR3KBMe4N/HBMaW0O4skYQf3C9G+5Sw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=b3ufBnHrVYen6ywMsmIJlmaq/MXyIUnMfL5Pxx/PExiMAWL5YmjWq/5tRyZxGguzl5RE/Jx27FsTkPcb2K/qKaS6DQKGOHh6RQQ5O/j9lqUM8pyNfy2VXKqbdL8vGX5giljtMXcFe/s+z5QBHEyH8vL+gzEUDc1NPpaA1BE6XBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YaGuOsZT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6096FC4CEF8;
-	Mon,  4 Aug 2025 00:28:40 +0000 (UTC)
+	 MIME-Version; b=ERqLCccNzl6UTMhv3G7CavyizXXx1josi/hR/ZBPlfrpuBcXUZC2aypMD6Xo7Tq1O3C+6yFkkw0xTx9ttuymG5mTBvX8TSx89TRLPXTL/0CrAkOGNOdNmcgNaewUzFWn0WY2TIh4l+FVkX21N8QioSMNMP28ynujiBSSNp7ezYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F9WrawEP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 386AAC4CEF0;
+	Mon,  4 Aug 2025 00:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754267322;
-	bh=7EJg3bg9n5DVKr0bsLvdBBTCfmWZ9fbgpLBrM8HOSIg=;
+	s=k20201202; t=1754267332;
+	bh=Z9Q/IX48zM4LaR3KBMe4N/HBMaW0O4skYQf3C9G+5Sw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YaGuOsZTW9AU6WlK6DVBplLOYtw42OpHtnPNRQKfpv77GZtL0rtji6E9JO3RGPu5u
-	 28pVc4vrCynz2RsSoqbarDl7qlkVh0cSCXMtaK/uxEjkhu2kKitwxEn1eIF2YXAKpD
-	 4sfB2o9aJfJ4EWLnXyraRHEajz887yzmkNMgFvtHZfwNtmj0YuKsDwEYpfdbFr7oSr
-	 TahaBszUzlvHea0MF0mXFzT4MJmZuUq34DviDeevVVa4tewE+jeSx3QBlDxxNvaFvq
-	 2brOh0iBSOwpHKURLG3qpKtczvhiI2SP4DkmgksHiKRNY6pLcz6IBA/vTNfITpfd83
-	 qHcC6lIE5PuBw==
+	b=F9WrawEPAkmfMUnLrtJyOP1zijaeWsatqGlJk2NWBjs61qlECgtL6k/yE6U5kAXb4
+	 E7AjzZL6a3ld6LN1FseTUPmYxqjM2hS+6BjL8UwPimPrx+AtNLlfshwQwyuT/vgEfK
+	 u7Dogx3jArz1HTCL/PGHgW/EotQuEVragxvbXhD3mjip9Tj/E2Ytwk5xk40vK1CgAv
+	 7KlDKZ6w1cFiYoD8vw1DTT1aWskKaWvyMSKgZD+DIgQiqvY+XKAyktJfcix2iiFDY2
+	 VKJFHOy2gTtqAav3+kpq/sizfJ4f1No8rRggKOE2gHJ0sqCT1JoicElbESPPSB7Gw8
+	 RvohgyczOsGiQ==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Xi Ruoyao <xry111@xry111.site>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
-	zhuyinbo@loongson.cn,
 	linus.walleij@linaro.org,
 	brgl@bgdev.pl,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.15 18/80] gpio: loongson-64bit: Extend GPIO irq support
-Date: Sun,  3 Aug 2025 20:26:45 -0400
-Message-Id: <20250804002747.3617039-18-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.15 22/80] gpio: wcd934x: check the return value of regmap_update_bits()
+Date: Sun,  3 Aug 2025 20:26:49 -0400
+Message-Id: <20250804002747.3617039-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250804002747.3617039-1-sashal@kernel.org>
 References: <20250804002747.3617039-1-sashal@kernel.org>
@@ -70,129 +66,92 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.15.9
 Content-Transfer-Encoding: 8bit
 
-From: Binbin Zhou <zhoubinbin@loongson.cn>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-[ Upstream commit 27cb8f702eb789f97f7a8bd5a91d76c65a937b2f ]
+[ Upstream commit ff0f0d7c6587e38c308be9905e36f86e98fb9c1f ]
 
-Add the interrupt enable register offset (inten_offset) so that GPIO
-interrupts can be enabled normally on more models.
+regmap_update_bits() can fail so check its return value in
+wcd_gpio_direction_output() for consistency with the rest of the code
+and propagate any errors.
 
-According to the latest interface specifications, the definition of GPIO
-interrupts in ACPI is similar to that in FDT. The GPIO interrupts are
-listed one by one according to the GPIO number, and the corresponding
-interrupt number can be obtained directly through the GPIO number
-specified by the consumer.
-
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-Link: https://lore.kernel.org/r/20250714064542.2276247-1-zhoubinbin@loongson.cn
-[Bartosz: tweaked the commit message]
+Link: https://lore.kernel.org/r/20250709-gpiochip-set-rv-gpio-remaining-v1-2-b8950f69618d@linaro.org
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
 LLM Generated explanations, may be completely bogus:
 
-**Backport Status: YES**
+Based on my analysis, here's my determination:
 
-This commit is suitable for backporting to stable kernel trees for the
+**YES**
+
+This commit should be backported to stable kernel trees for the
 following reasons:
 
-1. **Fixes a bug affecting users**: The commit addresses a functional
-   issue where GPIO interrupts cannot be enabled properly on several
-   Loongson models (ls2k2000, ls3a5000, ls7a, ls7a2000). Looking at the
-   code in `loongson_gpio_to_irq()` (lines 120-136), the function relies
-   on `chip_data->inten_offset` being set to properly enable interrupts.
-   Without this offset, the conditional check at line 167 (`if
-   (lgpio->chip_data->inten_offset)`) prevents the `to_irq` callback
-   from being registered, effectively breaking GPIO interrupt
-   functionality.
+1. **It fixes a real bug**: The `wcd_gpio_direction_output()` function
+   in drivers/gpio/gpio-wcd934x.c was not checking the return value of
+   the first `regmap_update_bits()` call (lines 50-51 in the original
+   code). This could lead to silent failures where the GPIO direction
+   register update fails, but the function continues to update the value
+   register, potentially leaving the GPIO in an inconsistent state.
 
-2. **Small and contained fix**: The changes are minimal - only adding
-   the missing `inten_offset` values to existing chip data structures.
-   The patch adds 4 lines:
-   - Line 225: `.inten_offset = 0x14,` for ls2k2000_data0
-   - Line 233: `.inten_offset = 0x30,` for ls2k2000_data1
-   - Line 249: `.inten_offset = 0x14,` for ls3a5000_data
-   - Line 257: `.inten_offset = 0xb00,` for ls7a_data
-   - Line 266: `.inten_offset = 0xb00,` for ls7a2000_data0
-   - Line 284: `.inten_offset = 0x14,` for ls3a6000_data
+2. **The fix is minimal and contained**: The change is very small - it
+   only adds 4 lines of code to check the return value and propagate the
+   error. This minimizes the risk of introducing regressions.
 
-3. **No architectural changes**: This is a simple data fix that adds
-   missing hardware register offsets. It doesn't change any logic, APIs,
-   or introduce new features.
+3. **Consistency with the rest of the driver**: Looking at the code,
+   other functions in the same driver already properly check regmap
+   operation return values:
+   - `wcd_gpio_get_direction()` checks the return value of
+     `regmap_read()` at line 27-29
+   - `wcd_gpio_direction_input()` already returns the result of
+     `regmap_update_bits()` directly
 
-4. **Low regression risk**: The change only affects the specific
-   Loongson models mentioned and only enables functionality that was
-   previously broken. It cannot break existing working configurations
-   since it only adds missing data.
+4. **Consistency with other GPIO drivers**: My examination of other GPIO
+   drivers (gpio-lp87565.c, gpio-lp873x.c, gpio-tps65912.c, gpio-
+   adp5585.c) shows that properly checking return values from regmap
+   operations in `direction_output` functions is the standard practice.
 
-5. **Hardware enablement fix**: This is essentially a hardware
-   enablement bug fix that allows proper interrupt handling on affected
-   Loongson platforms. Without this fix, GPIO interrupts are completely
-   non-functional on these chips.
+5. **Potential for real-world impact**: The WCD934x is an audio codec
+   used in Qualcomm SoCs like SDM845. A failure to properly set GPIO
+   direction could cause issues with audio functionality or other
+   peripherals connected through these GPIOs. The bug could manifest as
+   intermittent failures that are hard to debug.
 
-The commit follows stable tree rules by being a clear bug fix with
-minimal changes and low risk. The fact that other similar chip data
-structures already had `inten_offset` defined (like ls2k_data,
-ls2k0500_data0/1) shows this was an oversight that needed correction.
+6. **No architectural changes**: The commit doesn't introduce new
+   features or change any APIs. It's purely a bug fix that adds proper
+   error handling.
 
- drivers/gpio/gpio-loongson-64bit.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+7. **Clear bug pattern**: The pattern of not checking the first regmap
+   operation but checking (returning) the second one suggests this was
+   an oversight rather than intentional behavior.
 
-diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loongson-64bit.c
-index 286a3876ed0c..fd8686d8583a 100644
---- a/drivers/gpio/gpio-loongson-64bit.c
-+++ b/drivers/gpio/gpio-loongson-64bit.c
-@@ -220,6 +220,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data0 = {
- 	.conf_offset = 0x0,
- 	.in_offset = 0xc,
- 	.out_offset = 0x8,
-+	.inten_offset = 0x14,
- };
+The commit follows stable kernel rules by being a clear bug fix that
+addresses a potential reliability issue without introducing new
+functionality or making architectural changes.
+
+ drivers/gpio/gpio-wcd934x.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpio/gpio-wcd934x.c b/drivers/gpio/gpio-wcd934x.c
+index 2bba27b13947..cfa7b0a50c8e 100644
+--- a/drivers/gpio/gpio-wcd934x.c
++++ b/drivers/gpio/gpio-wcd934x.c
+@@ -46,9 +46,12 @@ static int wcd_gpio_direction_output(struct gpio_chip *chip, unsigned int pin,
+ 				     int val)
+ {
+ 	struct wcd_gpio_data *data = gpiochip_get_data(chip);
++	int ret;
  
- static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data1 = {
-@@ -228,6 +229,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data1 = {
- 	.conf_offset = 0x0,
- 	.in_offset = 0x20,
- 	.out_offset = 0x10,
-+	.inten_offset = 0x30,
- };
+-	regmap_update_bits(data->map, WCD_REG_DIR_CTL_OFFSET,
+-			   WCD_PIN_MASK(pin), WCD_PIN_MASK(pin));
++	ret = regmap_update_bits(data->map, WCD_REG_DIR_CTL_OFFSET,
++				 WCD_PIN_MASK(pin), WCD_PIN_MASK(pin));
++	if (ret)
++		return ret;
  
- static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data2 = {
-@@ -244,6 +246,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls3a5000_data = {
- 	.conf_offset = 0x0,
- 	.in_offset = 0xc,
- 	.out_offset = 0x8,
-+	.inten_offset = 0x14,
- };
- 
- static const struct loongson_gpio_chip_data loongson_gpio_ls7a_data = {
-@@ -252,6 +255,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls7a_data = {
- 	.conf_offset = 0x800,
- 	.in_offset = 0xa00,
- 	.out_offset = 0x900,
-+	.inten_offset = 0xb00,
- };
- 
- /* LS7A2000 chipset GPIO */
-@@ -261,6 +265,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls7a2000_data0 = {
- 	.conf_offset = 0x800,
- 	.in_offset = 0xa00,
- 	.out_offset = 0x900,
-+	.inten_offset = 0xb00,
- };
- 
- /* LS7A2000 ACPI GPIO */
-@@ -279,6 +284,7 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls3a6000_data = {
- 	.conf_offset = 0x0,
- 	.in_offset = 0xc,
- 	.out_offset = 0x8,
-+	.inten_offset = 0x14,
- };
- 
- static const struct of_device_id loongson_gpio_of_match[] = {
+ 	return regmap_update_bits(data->map, WCD_REG_VAL_CTL_OFFSET,
+ 				  WCD_PIN_MASK(pin),
 -- 
 2.39.5
 
