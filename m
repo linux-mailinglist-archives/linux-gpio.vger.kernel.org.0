@@ -1,55 +1,55 @@
-Return-Path: <linux-gpio+bounces-24007-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24008-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86A8CB19D24
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 10:00:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89706B19D27
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 10:01:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 15A8C18933EC
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 08:01:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7B26F1899634
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Aug 2025 08:01:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54B30244673;
-	Mon,  4 Aug 2025 07:59:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAF5C2451F3;
+	Mon,  4 Aug 2025 07:59:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="EFrS3RMc"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Ltw4DBWg"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B6423C8AE;
-	Mon,  4 Aug 2025 07:59:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F4D24468A;
+	Mon,  4 Aug 2025 07:59:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754294382; cv=none; b=R6Ly6WMSFtSdPtP/KnnebXtKSH86GTuqvBW/TVhIxP6b28dXe+6+45TFhnBwtqGkGziwO81bGCz3mYdQg9zchNSjzPs2cTq7P3np0/rUaDnp304Zd5hwl0yKOhtFnvlR/XpzVEDkzAF76C64nXUX5St5uAbBi8eOAb0N6rc8/yY=
+	t=1754294384; cv=none; b=ka2u7o67lonbYKO9ixN9SMpYOLwrMzJesN48xc4LiXw+1Ro945Kiw8TwNyIqY3K5HbLbacYee52S9Pr6I8BQAYlKYr+3vt9os432dz6o1GTychwsPEjPR7r/5oIjCsprq1dvhVxL1LG8kpDN9lsqL8k3PPu1eVTqIghkwr9XWbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754294382; c=relaxed/simple;
-	bh=qKi0eXDo0OTD7u8dxVvtJEkp/wS/GQKLGnSmOfqNspM=;
+	s=arc-20240116; t=1754294384; c=relaxed/simple;
+	bh=IBXZ7nSQOKi0kqZYEQGLEV58gS4Z53xGfxUWv08M4f8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PyZPLXG+N7HSdy4a5RTEEUOtfnmwyWTE32WGd3OOrQ+xvYYj5Ixgpdt2GBs1eABhAtr8ZqIYZKIEmdHmCr1njlmvkqJthY4ca9USU32s5i6o8G3lzX5trLjbEEfiEmS8rvTZStLu8gL9Npkizq3GbEXTbF0LbVqXSh0pjp443K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=EFrS3RMc; arc=none smtp.client-ip=148.251.105.195
+	 In-Reply-To:Content-Type; b=uI4LqyXSP+JalThJxpSsCzkSbkH2goUtV04zaOsN6wm0x7xpWVnfUbasoLT/608NTkfPLJ0XsDCOEx8Y/3NmYuWVLS0ecOCyIgapVM0bdXVL0XBtsJ8bl9PhqzFYHq82oQs410t1Wy6nGLqID04AxedWiXeYu2Bh5RlNnnhePUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Ltw4DBWg; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1754294378;
-	bh=qKi0eXDo0OTD7u8dxVvtJEkp/wS/GQKLGnSmOfqNspM=;
+	s=mail; t=1754294381;
+	bh=IBXZ7nSQOKi0kqZYEQGLEV58gS4Z53xGfxUWv08M4f8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EFrS3RMc58FRonFJy7TsjmETlRNBbZEBME9CIkLnprbTk12RIUIyCwDGo/ncIyos/
-	 swC6vWL868wuIAX6eFUzsQTvqDoam8Pvg6sapx+Rv5DM5eGKlYaM7B9pBny+29j1Ku
-	 DSr8nOco/T+L9lUa3OG0TlYUMbNWB8Qd7htQ6Ds/HYkHQTtHUVJI3G6JQsRDSPILfX
-	 UTHfROGPVTS3Ys2EuTDd6zLseSM0vGWsWFOfiaVDOCLCVM0NqOnsfLHRjnTXcEfUKF
-	 GuzbBHnW0nCdiLa6BtiqoiBJzZyxO+LecxryY46q4fBLcf5k3q8yx8BP2WD7QKaLlM
-	 9J+jFZtgPc7PA==
+	b=Ltw4DBWglDgA5GAc6JaQwwgXfzFmD0Ngc/7DTsm/ftT4OLSHJg+9t+fB2+eEAOp/G
+	 xp+aEw/HrAL2sTNdcXPUiePzn99rqHR3k6pLb2VZYwPH7YNbCBg2AJMrCnfcLz8RPk
+	 KF4qq4/BN3c9VnNtXCNNd5xGD6LQ8depQpJQdDE/xHgMDu7wM5Rn9koqEGs9/tsFDw
+	 9j+pn9SP2d/9O95CZa8fsAtz/TF4LHQJbwtVm7MmUT4fIpLSEMqBcSz3OcsUZklYhF
+	 pHMoeA7SJb1Clk5+sVZVN/WpyQeEhL1RkcYvUCFTkyd4ekJRVcTxYAUaRnp7N38Rj/
+	 V+GJHXPhHnUjA==
 Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id A86B317E046C;
-	Mon,  4 Aug 2025 09:59:37 +0200 (CEST)
-Message-ID: <7c0433be-1008-4d6e-9672-b1908383e162@collabora.com>
-Date: Mon, 4 Aug 2025 09:59:37 +0200
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1135E17E04DA;
+	Mon,  4 Aug 2025 09:59:40 +0200 (CEST)
+Message-ID: <ab97489a-9493-4005-9a1a-9f88ad970b05@collabora.com>
+Date: Mon, 4 Aug 2025 09:59:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -57,8 +57,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/9] dt-bindings: arm: mediatek: Support mt8183-audiosys
- binding variant
+Subject: Re: [PATCH 1/9] dt-bindings: clock: mediatek: Add power-domains
+ property
 To: Julien Massot <julien.massot@collabora.com>, kernel@collabora.com,
  Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
  <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -76,82 +76,66 @@ Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
  linux-mediatek@lists.infradead.org, linux-sound@vger.kernel.org,
  linux-gpio@vger.kernel.org
 References: <20250801-mtk-dtb-warnings-v1-0-6ba4e432427b@collabora.com>
- <20250801-mtk-dtb-warnings-v1-2-6ba4e432427b@collabora.com>
+ <20250801-mtk-dtb-warnings-v1-1-6ba4e432427b@collabora.com>
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Content-Language: en-US
-In-Reply-To: <20250801-mtk-dtb-warnings-v1-2-6ba4e432427b@collabora.com>
+In-Reply-To: <20250801-mtk-dtb-warnings-v1-1-6ba4e432427b@collabora.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 Il 01/08/25 13:18, Julien Massot ha scritto:
-> Update the mediatek,audsys binding to support the mt8183-audiosys
-> compatible, which uses a different audio controller binding
-> (mt8183-afe-pcm.yaml) compared to the legacy mt2701-audio controller.
+> The mt8183-mfgcfg node uses a power domain in its device tree node.
+> To prevent schema validation warnings, add the optional `power-domains`
+> property to the binding schema for mediatek syscon clocks.
 > 
+> Fixes: 1781f2c46180 ("arm64: dts: mediatek: mt8183: Add power-domains property to mfgcfg")
 > Signed-off-by: Julien Massot <julien.massot@collabora.com>
-> ---
->   .../bindings/arm/mediatek/mediatek,audsys.yaml          | 17 ++++++++++++++++-
->   1 file changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.yaml b/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.yaml
-> index 45d4a6620041b11cf6e943de49a42f3fcd91e1b9..5d9d91f9c5802240ac7d411c5632ae6663d15f29 100644
-> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.yaml
-> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.yaml
-> @@ -23,6 +23,7 @@ properties:
->                 - mediatek,mt7622-audsys
->                 - mediatek,mt8167-audsys
->                 - mediatek,mt8173-audsys
-> +              - mediatek,mt8183-audiosys
->                 - mediatek,mt8183-audsys
->                 - mediatek,mt8186-audsys
->                 - mediatek,mt8192-audsys
-> @@ -41,7 +42,6 @@ properties:
->       const: 1
->   
->     audio-controller:
-> -    $ref: /schemas/sound/mediatek,mt2701-audio.yaml#
->       type: object
->   
->   required:
-> @@ -50,6 +50,21 @@ required:
->   
->   additionalProperties: false
->   
-> +allOf:
 
-I think you can do it without the allOf here as well.
+Is MT8183 the only one?
 
 if:
    properties:
      compatible:
-       contains...
-then:
-   properties
-     ...
-else:
-  ... etc
+       contains:
+         - const: mediatek,mt8183-mfgcfg
+         ^^^^^^^(if it's not just mt8183, this should be an enum)
 
-after which
+then:
+   properties:
+     power-domains: true
+else:
+   properties:
+     power-domains: false
+
+(check if the above is correct, don't blindly trust what I wrote! :P)
+
+after which:
 
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: mediatek,mt8183-audiosys
-> +    then:
-> +      properties:
-> +        audio-controller:
-> +          $ref: /schemas/sound/mt8183-afe-pcm.yaml#
-> +    else:
-> +      properties:
-> +        audio-controller:
-> +          $ref: /schemas/sound/mediatek,mt2701-audio.yaml#
+(if it's not only mt8183, keep the R-b on this commit regardless)
+
+Cheers,
+Angelo
+
+> ---
+>   Documentation/devicetree/bindings/clock/mediatek,syscon.yaml | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/mediatek,syscon.yaml b/Documentation/devicetree/bindings/clock/mediatek,syscon.yaml
+> index a86a64893c675ac134af609b3a49242565db6ad8..1011bc46cfcb97b90b86019e95a7e4bc8a819342 100644
+> --- a/Documentation/devicetree/bindings/clock/mediatek,syscon.yaml
+> +++ b/Documentation/devicetree/bindings/clock/mediatek,syscon.yaml
+> @@ -76,6 +76,9 @@ properties:
+>             - const: mediatek,mt2701-vdecsys
+>             - const: syscon
+>   
+> +  power-domains:
+> +    maxItems: 1
 > +
->   examples:
->     - |
->       #include <dt-bindings/interrupt-controller/arm-gic.h>
+>     reg:
+>       maxItems: 1
+>   
 > 
 
 
