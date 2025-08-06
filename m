@@ -1,79 +1,79 @@
-Return-Path: <linux-gpio+bounces-24052-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24053-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17448B1CCBA
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Aug 2025 21:57:03 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 079FBB1CCBD
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Aug 2025 21:57:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CA5DA18C3398
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Aug 2025 19:57:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E59D07B1605
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Aug 2025 19:55:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 231442BDC14;
-	Wed,  6 Aug 2025 19:56:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77CFA2BEFFA;
+	Wed,  6 Aug 2025 19:56:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gggNnIKx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YZHKeLU7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9C72BD5A8;
-	Wed,  6 Aug 2025 19:56:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342EE2BEC2E;
+	Wed,  6 Aug 2025 19:56:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754510170; cv=none; b=R0ZQ2JsJJ9/4xmoqFgIChY8bYp3dt5Cd+H9QtLWQQz/6SRZqYEQBuPMNNTsXLbw5icVwa+o2OB24iQc48QUF1ZS3YC5636prnQvjwilJkzvjiXXPBZ89beW703dl5Dql2EeKAoM/s7beeEjt7LuU74OLWs22OFizEeJzYZRLSq8=
+	t=1754510172; cv=none; b=Ivr36NPP7UStJufn3Ksuy5NQtPGpVvpbBcBfvsLvxlEXmG/rs+P5IaqVr/5lM8gD5k72vsJHju0N+dgHqSwlgtDiqkHw6GvFAxLfCEG/EHeFMPNCtZqfiiAHwjERC1gvXleIHSgvKs5pDUWsFFvD8EDRCjOo7ciLhPEPe9en0r8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754510170; c=relaxed/simple;
-	bh=mwRvI5NcIVs7A/paUov8QRYH5K5yKqlt4OPk8LqvNKM=;
+	s=arc-20240116; t=1754510172; c=relaxed/simple;
+	bh=E6LzYY3ygK54KwVC++QfV19r46lyuNQCVJQjXDuj9wQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IXkenpiwjVzQGDxI+R4azTuyVlHl5JQIIpkNuvq6JEgsA+QGbus0+j8bPgFbbu3UhG4vZu4YspwMiYuFeY9PA9wX8Gh8VVGK+J+cCQg4Svdm/KLpLGAmmSP7MMroBsfbuRfdpPr2uBYJZgi1rovhQbAbfwmE3FAOdq11Wi0wj5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gggNnIKx; arc=none smtp.client-ip=209.85.128.45
+	 MIME-Version; b=WyAtBsCfOwKtWrwzS5c7T6I81DXuuhdxW459WqMewwegwEAy4Cmxgow5jZY74DhufQBC9TZBXxUR41oZo/ALKFYtTqCE+ffLFFUfsIBUi+CD/kE7xe28d5IxHDENF6TLvYBj+2ykHGC34zESxLyTQ6UAWBUyV7cB9d7/pHSKY2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YZHKeLU7; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-458b2d9dba5so2082705e9.1;
-        Wed, 06 Aug 2025 12:56:08 -0700 (PDT)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4563cfac2d2so2580875e9.3;
+        Wed, 06 Aug 2025 12:56:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754510167; x=1755114967; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1754510168; x=1755114968; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tSI9A41xeCvyr0TWuLEKI69GRigmnPYBsDmDAY5+8nA=;
-        b=gggNnIKx7YppYkxaEidpl5tmpTgvnvujM0hc3FhVWGFpE4kNWAogCmCJm0/6oYR5TB
-         Xz3bqJDZhJHSMFyDycfRGfyAFV50UKKI5uDPiA2omGFjGYdZsCfYTvEB13YYYGpKCMMJ
-         1BE6psXbVCnoxT++kKyH65nEEsJr7gDsWsOu9v6ur+yceFuG4077kJaio14l3u89LwPK
-         XjfUfXyONGJ9LV7uIUthT2zLo63kOUZ8YLypLu1DIKOO2lkp9Q3HiIWaNBtLV7b2Cn3h
-         /lkow5J1tbhyohp3Kv21YjnU7TSBxGRsbyxcy/eK3cGdHQZpJ5Y0eOcyMXwHnF2u7/NU
-         eElw==
+        bh=4y1gg5On8YmscNymu6i/JyMxnSP9TwiXD9O0veSpR4E=;
+        b=YZHKeLU7DS9V3hYWCaL0Q+QSMm9LzPcbRi2v5WrgCRzYLxMYQEtZrPQPILtb6xZSKq
+         e6WMWzi6v15mv6+SDNuhLn/Rg1YXmMSGoRHPy996Qhbd08Gv8alOwY9FaNk+U+Q5WQHT
+         4cELcsDcsKGHLlie9OHhfhn1w6oZDtLPsLztzazbRloLGLzeUN/666EAWzPQu2/u8yMb
+         gLZz3hdmnGbth7llvKldJPHaBZ54RX0k3P88RInquUc2VhX86/M2h3E1ucGY9smizEz1
+         aQB7eV63yDNgAxlVEYb2T10hjX4PAmM/l3Wo97RblRfAFCAb0uGzUiHlhYwD2b3LUa9I
+         e9GQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754510167; x=1755114967;
+        d=1e100.net; s=20230601; t=1754510168; x=1755114968;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tSI9A41xeCvyr0TWuLEKI69GRigmnPYBsDmDAY5+8nA=;
-        b=BvHNfr9rYjPL8RtTYEvVlG64cpSyF5U6I/642GJGDgYEGWi+vnl6Wdzc52TzJ1yYXH
-         nCl57XUIKGB4ddndM1YeVwFu/L99eOUQCFW/OysLy+ctSy/ojHGph7EBnTAIUcCPxmZ1
-         kRkyBkU3uFaYT/dxeyOKQejNTIB8EVaep8v9Y/EMw1dIbpl2xSqgktF5E+NQjChidHNU
-         VbQ9SuaN/XDrnQDYtq9CsBA+ANvn36fzw3fXO/0lpsl1+5/KPn+QNHLVU1voz/ZED/hu
-         i4SOV0/E7GnuIoCswEFHrYSPb13kEoARuBvzOTe5Si5JG32EhsjjMrLrDw5H7tSTohFH
-         lDfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPWcdFCbrRhcu5rMOlHnii0k4hYNgVluMOdRpJN+kB9+NX8SbtjKJ7axPk74LQyP5DEAedgufzzq7zqPYh@vger.kernel.org, AJvYcCUmbsaJpCgMWmUgmrPd7JKeCPbWOifKL8HmXNTy1FWBwKa6s25KGwLQKCDQhl1H/M2DlETrgNwXJ8R8@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9ihoK5lw1XhHTywa2FuoKblSFWrdWvvf99FMS2YMe8NH+fStj
-	DPYV27vMLgVc84dzfZC9lVpzuithbCK2mvL4CS2FuPLit+j2HaVjSvw5
-X-Gm-Gg: ASbGncv3lCC82QNmQAWdPQQqLM+vaiunf5FYRVRNb1CzfuGA/L4ylXkJwuq52VPOsiO
-	wlMJFB4tg3f8Sg+n7CwfIzzRib9ofDHzkhgJ8+T9OGMK+OmfudvJgi2E1cTIr0wo9p4aPt8GEEQ
-	5kdRuETg2MypCX5Y0lTsb5nqksGE015nCKQLfGCqIqwbSHKw36z4Yp/y3qtZk4p9Dh3Y9AJrGlk
-	BnUPmLZDgbiE7Nx2VIn127znu1qGJAxJ7o5Toe0scrJn4OeAk9eTKfejDSqk1mRLJflEPUnyHg8
-	SKebSn2m7tO54vgSa1WW5gl/wXf2EEMOY4pzOWySRJx27ziSkiVV/yxfsyElCO+cIz+k67paYU9
-	J+1ZzHs/kFAxrhYa/qWI+RmkJOCFv5FcLMEFB50HoctJvJfpngDM1hgxRtL+5PB6YfqVMvkyidF
-	Z5E1z5pWs5
-X-Google-Smtp-Source: AGHT+IEIfx3VNkFYtBpgpX3sCdU7n5wNtLk6bNrV1KuRFFBLH6fLxnkHu1Wax2iauMMij7CakQEuEQ==
-X-Received: by 2002:a05:600c:3b8c:b0:442:e9eb:1b48 with SMTP id 5b1f17b1804b1-459edd9bcd4mr7289935e9.24.1754510167031;
-        Wed, 06 Aug 2025 12:56:07 -0700 (PDT)
+        bh=4y1gg5On8YmscNymu6i/JyMxnSP9TwiXD9O0veSpR4E=;
+        b=fnrUzGycZhE3IxpsPgUeGqGkA304T4xIdAGAMv3ENMIWl4k5+xZTiVuR6aNTb8RgJN
+         X/BzYk3tPIGfavmolKy8WXvcJ9trBW/slVEc7RqJ19AVWaSQTdnmLZNzS7kRwtnv1I7d
+         yEXNf/1ogl7OGz3q2teMhqExgafn1msB8uzwO/lX8YpknlGzm6Dm+va2VH4pY7ZTthUe
+         l6YdkOvvm2xEiQGWdyiYY+JNIxfyObGToQ3nnui5QbVoK2vhOVv4DmW64E8Q25cHPUIb
+         7ZCROTdmn7u/MY02GfgpFvq9kU9VeZWAf2Uf7D1mMSTda4oj+owGFtoNnWc2FRUaN2T1
+         g/fQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVf7RQeMBF/EiNWqrZuZe7aC+dzNSgWf9F7BHWPwcDypUgrc872ptJGJmhwuC8EM2rMfMRmTZrXoK2XHxfF@vger.kernel.org, AJvYcCWn9wJ2T8I+aejwFHpKcYhaJ5CDA/L/38t0o4jee7CB+WrPPhOa1f+AB0r5T5Mguf7APyIcJjWQElCI@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIn48aCczE7ORyrNtux4lN4JKUF8FsbFz/EPBM9gsJAP3K8PC/
+	t4uJ21wcOfgxtwrG9HF5tsXzHkMfyPBX8uiZcCNgD2uzdtqktVLuvBFY
+X-Gm-Gg: ASbGncsB2WKbsSKl8/X9ELHKhZQC+RDhcLDXQt4E/BmNPFohreZvDXv1lLJj02HoM7n
+	2XsTRD+rfQhwRx+9eJhFld0Ed7VrdIwxH3AopJyiowp/NjyTZVTaX9/Aa+JNQ272y+uPUUzdUaA
+	l59cna/MmkO2RHBRgL4f03H8Xqg4t6bkQZ+CSnDY/e0vhapWwKqHMt2JCefAiXme4RiqAP/CEh3
+	qhHd7zgfq1LNd+dxt/e5WmZRmOWdG270dlnHljfxCfTJAsNL0X2rrKm/nhVr5d0Bvea7cesc7J+
+	srUHps5zI6YPDy/EGnmM4IeebaLD9G9wMGgo/rFCqITPuaYof0Z+ImjGPK0CksMwq/jjFy3f9tp
+	D/cO92U7Wnojm8g9fnNTj07WICofRYtu53v1pbpBmoz0HcgD12UCp4tG2HhjVGa7+FmhoiKQazA
+	==
+X-Google-Smtp-Source: AGHT+IFxLjlmcuAuXFSiL+h2g/JjpSHnBvJ1R9/E/B2Mmf1/hu8K/JCTR16AaiGLwBmPdJxI3g9l4w==
+X-Received: by 2002:a05:600c:4e8e:b0:459:d9a2:e952 with SMTP id 5b1f17b1804b1-459e7440a1amr29822005e9.1.1754510168155;
+        Wed, 06 Aug 2025 12:56:08 -0700 (PDT)
 Received: from iku.Home (97e54365.skybroadband.com. [151.229.67.101])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c3bf93dsm24137782f8f.27.2025.08.06.12.56.06
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c3bf93dsm24137782f8f.27.2025.08.06.12.56.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Aug 2025 12:56:06 -0700 (PDT)
+        Wed, 06 Aug 2025 12:56:07 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -85,9 +85,9 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v3 5/7] pinctrl: renesas: rzg2l: Unify OEN handling across RZ/{G2L,V2H,V2N}
-Date: Wed,  6 Aug 2025 20:55:53 +0100
-Message-ID: <20250806195555.1372317-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v3 6/7] pinctrl: renesas: rzg2l: Add PFC_OEN support for RZ/G3E SoC
+Date: Wed,  6 Aug 2025 20:55:54 +0100
+Message-ID: <20250806195555.1372317-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250806195555.1372317-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20250806195555.1372317-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -101,189 +101,155 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Unify the OEN handling on RZ/V2H(P) and RZ/V2N SoCs by reusing the existing
-rzg2l_read_oen and rzg2l_write_oen functions from RZ/G2L. Add a
-pin_to_oen_bit callback in rzg2l_pinctrl_data to look up per-pin OEN bit
-positions, and introduce an oen_pwpr_lock flag in the hwcfg to manage PWPR
-locking on SoCs that require it (RZ/V2H(P) family). Remove the hardcoded
-PFC_OEN define and obsolete per-SoC OEN helpers.
+Add support for configuring the PFC_OEN register on the RZ/G3E SoC to
+enable output-enable control for specific pins. On this SoC, certain
+pins such as TXC_TXCLK need to support switching between input and
+output modes depending on the PHY interface mode (e.g., MII vs RGMII).
+This functionality maps to the 'output-enable' property in the device
+tree and requires explicit control via the PFC_OEN register.
 
-Also drop redundant checks for the OEN offset in the suspend/resume paths,
-as all supported SoCs now provide a valid offset through the `regs.oen`
-field.
+This change updates the r9a09g047_variable_pin_cfg array to mark PB1, PE1,
+PL0, PL1, PL2, and PL4 with the PIN_CFG_OEN flag to indicate output-enable
+support. A new helper, rzg3e_pin_to_oen_bit(), is introduced to map these
+pin names to their respective OEN bit positions, and the corresponding
+callbacks are wired into the RZ/G3E SoC configuration using the generic
+rzg2l_read_oen() and rzg2l_write_oen() accessors. Additionally, the GPIO
+configuration for the PB, PE, and PL ports is updated to use the variable
+port pack macro, enabling per-pin configuration necessary for OEN handling.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v2->v3:
-- Grouped oen_pwpr_lock flag with other bools
-- Dropped redundant checks for OEN offset in suspend/resume paths
-- Updated the commit message to reflect the changes
 - Added Reviewed-by tag from Geert.
 
 v1->v2:
-- New patch
+- Adapted the code to use the new unified OEN handling
 ---
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 68 ++++++++-----------------
- 1 file changed, 22 insertions(+), 46 deletions(-)
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 61 +++++++++++++++++++++----
+ 1 file changed, 52 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 491cf5582b6c..d5eea8ae4cdc 100644
+index d5eea8ae4cdc..9fb9e6d2c6d5 100644
 --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
 +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -146,7 +146,6 @@
- #define SD_CH(off, ch)		((off) + (ch) * 4)
- #define ETH_POC(off, ch)	((off) + (ch) * 4)
- #define QSPI			(0x3008)
--#define PFC_OEN			(0x3C40) /* known on RZ/V2H(P) only */
+@@ -397,6 +397,14 @@ static const u64 r9a09g047_variable_pin_cfg[] = {
+ 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PA, 5, RZV2H_MPXED_PIN_FUNCS),
+ 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PA, 6, RZV2H_MPXED_PIN_FUNCS),
+ 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PA, 7, RZV2H_MPXED_PIN_FUNCS),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PB, 0, RZV2H_MPXED_PIN_FUNCS),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PB, 1, RZV2H_MPXED_PIN_FUNCS | PIN_CFG_OEN),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PB, 2, RZV2H_MPXED_PIN_FUNCS),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PB, 3, RZV2H_MPXED_PIN_FUNCS),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PB, 4, RZV2H_MPXED_PIN_FUNCS),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PB, 5, RZV2H_MPXED_PIN_FUNCS),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PB, 6, RZV2H_MPXED_PIN_FUNCS),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PB, 7, RZV2H_MPXED_PIN_FUNCS),
+ 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PD, 0, RZV2H_MPXED_PIN_FUNCS | PIN_CFG_IEN),
+ 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PD, 1, RZV2H_MPXED_PIN_FUNCS),
+ 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PD, 2, RZV2H_MPXED_PIN_FUNCS),
+@@ -405,6 +413,14 @@ static const u64 r9a09g047_variable_pin_cfg[] = {
+ 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PD, 5, RZV2H_MPXED_PIN_FUNCS),
+ 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PD, 6, RZV2H_MPXED_PIN_FUNCS),
+ 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PD, 7, RZV2H_MPXED_PIN_FUNCS),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PE, 0, RZV2H_MPXED_PIN_FUNCS),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PE, 1, RZV2H_MPXED_PIN_FUNCS | PIN_CFG_OEN),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PE, 2, RZV2H_MPXED_PIN_FUNCS),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PE, 3, RZV2H_MPXED_PIN_FUNCS),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PE, 4, RZV2H_MPXED_PIN_FUNCS),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PE, 5, RZV2H_MPXED_PIN_FUNCS),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PE, 6, RZV2H_MPXED_PIN_FUNCS),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PE, 7, RZV2H_MPXED_PIN_FUNCS),
+ 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PG, 0, RZV2H_MPXED_PIN_FUNCS),
+ 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PG, 1, RZV2H_MPXED_PIN_FUNCS | PIN_CFG_IEN),
+ 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PG, 2, RZV2H_MPXED_PIN_FUNCS | PIN_CFG_IEN),
+@@ -424,6 +440,14 @@ static const u64 r9a09g047_variable_pin_cfg[] = {
+ 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PJ, 2, RZV2H_MPXED_PIN_FUNCS),
+ 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PJ, 3, RZV2H_MPXED_PIN_FUNCS),
+ 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PJ, 4, RZV2H_MPXED_PIN_FUNCS),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PL, 0, RZV2H_MPXED_PIN_FUNCS | PIN_CFG_OEN),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PL, 1, RZV2H_MPXED_PIN_FUNCS | PIN_CFG_OEN),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PL, 2, RZV2H_MPXED_PIN_FUNCS | PIN_CFG_OEN),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PL, 3, RZV2H_MPXED_PIN_FUNCS),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PL, 4, RZV2H_MPXED_PIN_FUNCS | PIN_CFG_OEN),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PL, 5, RZV2H_MPXED_PIN_FUNCS),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PL, 6, RZV2H_MPXED_PIN_FUNCS),
++	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3E_PL, 7, RZV2H_MPXED_PIN_FUNCS),
+ };
  
- #define PVDD_2500		2	/* I/O domain voltage 2.5V */
- #define PVDD_1800		1	/* I/O domain voltage <= 1.8V */
-@@ -255,6 +254,7 @@ enum rzg2l_iolh_index {
-  * @iolh_groupb_oi: IOLH group B output impedance specific values
-  * @tint_start_index: the start index for the TINT interrupts
-  * @drive_strength_ua: drive strength in uA is supported (otherwise mA is supported)
-+ * @oen_pwpr_lock: flag indicating if the OEN register is locked by PWPR
-  * @func_base: base number for port function (see register PFC)
-  * @oen_max_pin: the maximum pin number supporting output enable
-  * @oen_max_port: the maximum port number supporting output enable
-@@ -267,6 +267,7 @@ struct rzg2l_hwcfg {
- 	u16 iolh_groupb_oi[4];
- 	u16 tint_start_index;
- 	bool drive_strength_ua;
-+	bool oen_pwpr_lock;
- 	u8 func_base;
- 	u8 oen_max_pin;
- 	u8 oen_max_port;
-@@ -1083,10 +1084,11 @@ static u32 rzg2l_read_oen(struct rzg2l_pinctrl *pctrl, unsigned int _pin)
- 
- static int rzg2l_write_oen(struct rzg2l_pinctrl *pctrl, unsigned int _pin, u8 oen)
- {
-+	const struct rzg2l_register_offsets *regs = &pctrl->data->hwcfg->regs;
- 	u16 oen_offset = pctrl->data->hwcfg->regs.oen;
- 	unsigned long flags;
-+	u8 val, pwpr;
- 	int bit;
--	u8 val;
- 
- 	if (!pctrl->data->pin_to_oen_bit)
- 		return -EINVAL;
-@@ -1101,7 +1103,13 @@ static int rzg2l_write_oen(struct rzg2l_pinctrl *pctrl, unsigned int _pin, u8 oe
- 		val &= ~BIT(bit);
- 	else
- 		val |= BIT(bit);
-+	if (pctrl->data->hwcfg->oen_pwpr_lock) {
-+		pwpr = readb(pctrl->base + regs->pwpr);
-+		writeb(pwpr | PWPR_REGWE_B, pctrl->base + regs->pwpr);
-+	}
- 	writeb(val, pctrl->base + oen_offset);
-+	if (pctrl->data->hwcfg->oen_pwpr_lock)
-+		writeb(pwpr & ~PWPR_REGWE_B, pctrl->base + regs->pwpr);
- 	spin_unlock_irqrestore(&pctrl->lock, flags);
- 
- 	return 0;
-@@ -1192,7 +1200,7 @@ static int rzv2h_bias_param_to_hw(enum pin_config_param param)
+ static const u64 r9a09g057_variable_pin_cfg[] = {
+@@ -1200,23 +1224,39 @@ static int rzv2h_bias_param_to_hw(enum pin_config_param param)
  	return -EINVAL;
  }
  
--static u8 rzv2h_pin_to_oen_bit(struct rzg2l_pinctrl *pctrl, unsigned int _pin)
-+static int rzv2h_pin_to_oen_bit(struct rzg2l_pinctrl *pctrl, unsigned int _pin)
+-static int rzv2h_pin_to_oen_bit(struct rzg2l_pinctrl *pctrl, unsigned int _pin)
++static int rzg2l_pin_names_to_oen_bit(struct rzg2l_pinctrl *pctrl, unsigned int _pin,
++				      const char * const pin_names[], unsigned int count)
  {
- 	static const char * const pin_names[] = { "ET0_TXC_TXCLK", "ET1_TXC_TXCLK",
- 						  "XSPI0_RESET0N", "XSPI0_CS0N",
-@@ -1206,41 +1214,7 @@ static u8 rzv2h_pin_to_oen_bit(struct rzg2l_pinctrl *pctrl, unsigned int _pin)
+-	static const char * const pin_names[] = { "ET0_TXC_TXCLK", "ET1_TXC_TXCLK",
+-						  "XSPI0_RESET0N", "XSPI0_CS0N",
+-						  "XSPI0_CKN", "XSPI0_CKP" };
+ 	const struct pinctrl_pin_desc *pin_desc = &pctrl->desc.pins[_pin];
+ 	unsigned int i;
+ 
+-	for (i = 0; i < ARRAY_SIZE(pin_names); i++) {
++	for (i = 0; i < count; i++) {
+ 		if (!strcmp(pin_desc->name, pin_names[i]))
+ 			return i;
  	}
  
- 	/* Should not happen. */
--	return 0;
--}
--
--static u32 rzv2h_oen_read(struct rzg2l_pinctrl *pctrl, unsigned int _pin)
--{
--	u8 bit;
--
--	bit = rzv2h_pin_to_oen_bit(pctrl, _pin);
--
--	return !(readb(pctrl->base + PFC_OEN) & BIT(bit));
--}
--
--static int rzv2h_oen_write(struct rzg2l_pinctrl *pctrl, unsigned int _pin, u8 oen)
--{
--	const struct rzg2l_hwcfg *hwcfg = pctrl->data->hwcfg;
--	const struct rzg2l_register_offsets *regs = &hwcfg->regs;
--	unsigned long flags;
--	u8 val, bit;
--	u8 pwpr;
--
--	bit = rzv2h_pin_to_oen_bit(pctrl, _pin);
--	spin_lock_irqsave(&pctrl->lock, flags);
--	val = readb(pctrl->base + PFC_OEN);
--	if (oen)
--		val &= ~BIT(bit);
--	else
--		val |= BIT(bit);
--
--	pwpr = readb(pctrl->base + regs->pwpr);
--	writeb(pwpr | PWPR_REGWE_B, pctrl->base + regs->pwpr);
--	writeb(val, pctrl->base + PFC_OEN);
--	writeb(pwpr & ~PWPR_REGWE_B, pctrl->base + regs->pwpr);
--	spin_unlock_irqrestore(&pctrl->lock, flags);
--
--	return 0;
-+	return -EINVAL;
+-	/* Should not happen. */
+ 	return -EINVAL;
  }
  
++static int rzv2h_pin_to_oen_bit(struct rzg2l_pinctrl *pctrl, unsigned int _pin)
++{
++	static const char * const pin_names[] = {
++		"ET0_TXC_TXCLK", "ET1_TXC_TXCLK", "XSPI0_RESET0N",
++		"XSPI0_CS0N", "XSPI0_CKN", "XSPI0_CKP"
++	};
++
++	return rzg2l_pin_names_to_oen_bit(pctrl, _pin, pin_names, ARRAY_SIZE(pin_names));
++}
++
++static int rzg3e_pin_to_oen_bit(struct rzg2l_pinctrl *pctrl, unsigned int _pin)
++{
++	static const char * const pin_names[] = {
++		"PB1", "PE1", "PL4", "PL1", "PL2", "PL0"
++	};
++
++	return rzg2l_pin_names_to_oen_bit(pctrl, _pin, pin_names, ARRAY_SIZE(pin_names));
++}
++
  static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
-@@ -3140,8 +3114,7 @@ static int rzg2l_pinctrl_suspend_noirq(struct device *dev)
- 	}
- 
- 	cache->qspi = readb(pctrl->base + QSPI);
--	if (pctrl->data->hwcfg->regs.oen)
--		cache->oen = readb(pctrl->base + pctrl->data->hwcfg->regs.oen);
-+	cache->oen = readb(pctrl->base + pctrl->data->hwcfg->regs.oen);
- 
- 	if (!atomic_read(&pctrl->wakeup_path))
- 		clk_disable_unprepare(pctrl->clk);
-@@ -3166,8 +3139,7 @@ static int rzg2l_pinctrl_resume_noirq(struct device *dev)
- 	}
- 
- 	writeb(cache->qspi, pctrl->base + QSPI);
--	if (pctrl->data->hwcfg->regs.oen)
--		writeb(cache->oen, pctrl->base + pctrl->data->hwcfg->regs.oen);
-+	writeb(cache->oen, pctrl->base + pctrl->data->hwcfg->regs.oen);
- 	for (u8 i = 0; i < 2; i++) {
- 		if (regs->sd_ch)
- 			writeb(cache->sd_ch[i], pctrl->base + SD_CH(regs->sd_ch, i));
-@@ -3267,8 +3239,10 @@ static const struct rzg2l_hwcfg rzg3s_hwcfg = {
- static const struct rzg2l_hwcfg rzv2h_hwcfg = {
- 	.regs = {
- 		.pwpr = 0x3c04,
-+		.oen = 0x3c40,
- 	},
- 	.tint_start_index = 17,
-+	.oen_pwpr_lock = true,
- };
- 
- static struct rzg2l_pinctrl_data r9a07g043_data = {
-@@ -3365,8 +3339,9 @@ static struct rzg2l_pinctrl_data r9a09g056_data = {
+ 				     unsigned int _pin,
+ 				     unsigned long *config)
+@@ -2008,17 +2048,17 @@ static const u64 r9a09g047_gpio_configs[] = {
+ 	RZG2L_GPIO_PORT_PACK(6, 0x28, RZV2H_MPXED_PIN_FUNCS),	/* P8 */
+ 	0x0,
+ 	RZG2L_GPIO_PORT_PACK_VARIABLE(8, 0x2a),			/* PA */
+-	RZG2L_GPIO_PORT_PACK(8, 0x2b, RZV2H_MPXED_PIN_FUNCS),	/* PB */
++	RZG2L_GPIO_PORT_PACK_VARIABLE(8, 0x2b),			/* PB */
+ 	RZG2L_GPIO_PORT_PACK(3, 0x2c, RZV2H_MPXED_PIN_FUNCS),	/* PC */
+ 	RZG2L_GPIO_PORT_PACK_VARIABLE(8, 0x2d),			/* PD */
+-	RZG2L_GPIO_PORT_PACK(8, 0x2e, RZV2H_MPXED_PIN_FUNCS),	/* PE */
++	RZG2L_GPIO_PORT_PACK_VARIABLE(8, 0x2e),			/* PE */
+ 	RZG2L_GPIO_PORT_PACK(3, 0x2f, RZV2H_MPXED_PIN_FUNCS),	/* PF */
+ 	RZG2L_GPIO_PORT_PACK_VARIABLE(8, 0x30),			/* PG */
+ 	RZG2L_GPIO_PORT_PACK_VARIABLE(6, 0x31),			/* PH */
+ 	0x0,
+ 	RZG2L_GPIO_PORT_PACK_VARIABLE(5, 0x33),			/* PJ */
+ 	RZG2L_GPIO_PORT_PACK(4, 0x34, RZV2H_MPXED_PIN_FUNCS),	/* PK */
+-	RZG2L_GPIO_PORT_PACK(8, 0x35, RZV2H_MPXED_PIN_FUNCS),	/* PL */
++	RZG2L_GPIO_PORT_PACK_VARIABLE(8, 0x35),			/* PL */
+ 	RZG2L_GPIO_PORT_PACK(8, 0x36, RZV2H_MPXED_PIN_FUNCS),	/* PM */
+ 	0x0,
+ 	0x0,
+@@ -3318,6 +3358,9 @@ static struct rzg2l_pinctrl_data r9a09g047_data = {
  #endif
  	.pwpr_pfc_lock_unlock = &rzv2h_pwpr_pfc_lock_unlock,
  	.pmc_writeb = &rzv2h_pmc_writeb,
--	.oen_read = &rzv2h_oen_read,
--	.oen_write = &rzv2h_oen_write,
-+	.pin_to_oen_bit = &rzv2h_pin_to_oen_bit,
-+	.oen_read = &rzg2l_read_oen,
-+	.oen_write = &rzg2l_write_oen,
- 	.hw_to_bias_param = &rzv2h_hw_to_bias_param,
- 	.bias_param_to_hw = &rzv2h_bias_param_to_hw,
- };
-@@ -3389,8 +3364,9 @@ static struct rzg2l_pinctrl_data r9a09g057_data = {
- #endif
- 	.pwpr_pfc_lock_unlock = &rzv2h_pwpr_pfc_lock_unlock,
- 	.pmc_writeb = &rzv2h_pmc_writeb,
--	.oen_read = &rzv2h_oen_read,
--	.oen_write = &rzv2h_oen_write,
-+	.pin_to_oen_bit = &rzv2h_pin_to_oen_bit,
++	.pin_to_oen_bit = &rzg3e_pin_to_oen_bit,
 +	.oen_read = &rzg2l_read_oen,
 +	.oen_write = &rzg2l_write_oen,
  	.hw_to_bias_param = &rzv2h_hw_to_bias_param,
