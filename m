@@ -1,119 +1,190 @@
-Return-Path: <linux-gpio+bounces-24033-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24034-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B659B1C690
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Aug 2025 15:02:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8402B1C73C
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Aug 2025 16:03:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0C67D3A820D
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Aug 2025 13:02:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0D6D8163C88
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Aug 2025 14:03:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CD9C23B638;
-	Wed,  6 Aug 2025 13:02:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AB5A28C2A0;
+	Wed,  6 Aug 2025 14:02:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nk0w+Mq+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05CAE1E4AB;
-	Wed,  6 Aug 2025 13:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B86E45038;
+	Wed,  6 Aug 2025 14:02:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754485370; cv=none; b=M9yZ6LsxqBl14R6ssii5PXPaVgMlQ7U2t1QApP5L+MjYjywABUuB0L5eSTbz4q5lA3W2fcQdDDRm7ZypB7cWK/gkzbE5dQ3YDLe6WN7UONRyxEFfgGF6PwhRxm1sRTD7QhRVw+sd5F/bkw2FiPo0V/hDgvQ2PszqXFK8eroG/Ko=
+	t=1754488978; cv=none; b=sHKwfsrTmFRfjemzTQXDJ6YDyl6lkgLwsDDxijekSYtQsLLllNd5JcoMWctA76zHmOqgvbkoOKje2pmNotpO9iUdlPC50WfZtbnAJjld3u+hMs9N5rm/nYWIep69gjiRJ4W1oDY3vH1m9DIyzvBp7fIFaDgrpspnquWSfnCr3Ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754485370; c=relaxed/simple;
-	bh=gf94OiMkm3S/JLJrkkvV5+xjnSn/omegnQjLVx5FPCk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=of4llOJvTet9Qc1vOED6GaxsvStLnJ66uKrfDoqi4NTzSAQj1aQ+CLCGqxxHbPOM/keXNMvy8C18dCx0KH6KZWzZY9MufZciJerzmkyMBqIUCC65bOozpaDFTD/FtTWLL7aKIO1ovwmTw6eL4triDHsKPz3+q1IcuslDUJT/ACQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-539425e3719so669476e0c.0;
-        Wed, 06 Aug 2025 06:02:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754485368; x=1755090168;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=42mfrRH+zgUmkjXnbnSk1JPPaXIKn/Wu7/y2XQ/8EoM=;
-        b=NviiABYVDRU1Td8keiXCcs+AK4oj8q3V4uTobP0qL3i15uhJT1lsnsu+mONhKMJT4g
-         pZZWwyREa2XFJXV0kkBG/1Qf0XAHfMeAwOhmdRaN9R1eHTaUJzZ3VOxPmImEnNKFXXsN
-         /3E4JRdG/pIBHEVD+VimCsbG/3meS/43/JBSnbHutyYhYd+bGmL0UanuaqhrE0r6MHln
-         fdWYm7HvIZI4BEA+tPdx6DbP/kGxb9qRrVD6uvtYsDKfY2Pxeyar/Vf5VvoyNovbSi5o
-         iGmv6et7+dxdIyfssqnGPVvG/MaawEPypwtqWjDjcm6HUXgIjePY0d3gumEjG0oKzLdS
-         guww==
-X-Forwarded-Encrypted: i=1; AJvYcCUmI94l5A5a1DuBEea0CwcVaCW+TZPJbNzyQ3tWnBok+euKCO0ffNuU8sOpHgUHFD2OGrTKnBHezMSos8vk@vger.kernel.org, AJvYcCVhCCXrAiO+Gf1XJkCVIc65MQY+NxJw7aHyDQDGfC46i3/ITJoTt5CzTHd55BbnILKVkraHLP7MYhsL@vger.kernel.org, AJvYcCWct0HQ/0S2bkT6uuGNw1Whm2/CGXy3YcX1Q3NO6cil1G8KbQxRfhUtXWKHp5N4eN6JEaqtjPapiCQacfGQLvlArD0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNi0H+Y59Fs0zStvWPcXzlMHnRuaclNNkOQVebEGj6iOApK+ad
-	xLvyMGQpj4G4NvVH5pPYl1j7Cbg7heK/dOjCz1+i0ropsCDZFB37vZED6yJQc/Lsv8w=
-X-Gm-Gg: ASbGncvel2hHoe8xIZmwKrxQuB97zmfnx2Zl9Ajn4n3314EKyczCnHRqBTUsV9f2sOG
-	glUcuwm05pPrwUHGpHFBVteCGvPp+mgqqF8ai2jrSxVX7A902AnZDr8RpiHahDWP7F01IipzaO2
-	tcEMNexOdDxaYjeNbaeVae7/PX1a8s3uMj8FWIFlLeaF8F4sUuFwsjDXqobu5iIzgsE4eU2+Hit
-	fdexgsa+dyo6q5cU8l7IWAellPb2bC2PqhORGxAxVlo4RgL0QmG88n5KvsoyJ+uhkznDMarZiJw
-	6UCj61cMtbSxs5SAUYfXSgQ67gnZ+uCx0WR9zPucMlrFw/Qedd+XICw2HzxWHrlXa2v66hSvbjv
-	4ydt6GlJEkiCD4H71botXNlDIMgrEMpIvYd29U/YO8KFFvxCvFyztoLERfcWp
-X-Google-Smtp-Source: AGHT+IGI18P3OOBvZe/7L+2Zms+/TssYEOTY0dDIqLN6fh06hBqlvdRyEN9duoM0fqHonQZWuCBUdQ==
-X-Received: by 2002:a05:6122:8193:b0:537:8017:b9d4 with SMTP id 71dfb90a1353d-539a04b3b9amr1001943e0c.3.1754485367331;
-        Wed, 06 Aug 2025 06:02:47 -0700 (PDT)
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53936b15ea5sm4164023e0c.5.2025.08.06.06.02.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Aug 2025 06:02:47 -0700 (PDT)
-Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4febcc4c93dso812027137.0;
-        Wed, 06 Aug 2025 06:02:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUIknj3/ugWxJ913TfJJsYRzB4w7TQGNB8O87ey4+6hBk1UxLxiMesLL24Z9p84FJbLg/kOFGbenjIW@vger.kernel.org, AJvYcCVZtK0N//8/RLZRnRHFwJEwpCgZqm5orW67aNEzTaodgj0PT8YomrNTzmkUfFmRc8fVgBIkS/F///9s7OX3Mz5L6aY=@vger.kernel.org, AJvYcCWam5AO+4HI4ALy7NTJqwUTf2SL6UAwxJMC9+eXGprna1yghl3MM7HKDS/XIEBFpCI+YdnXd8FfQLEIcQPS@vger.kernel.org
-X-Received: by 2002:a05:6102:6cf:b0:4e9:963f:286a with SMTP id
- ada2fe7eead31-503682a6f7bmr1121903137.5.1754485306273; Wed, 06 Aug 2025
- 06:01:46 -0700 (PDT)
+	s=arc-20240116; t=1754488978; c=relaxed/simple;
+	bh=Ld10HX6wcdjfxV5yipYWv01NFSUYgG22JBf72BAdDas=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LK1JBU8F0ck50GabG5hz4ggq3wEcjVCutTsTfhfYxLN/B2shy0qN8uA/Vaxb8EUx+nO0LTGJNdpAp9+r6ro888uWd4OA0P4Ff0JB2Oc80MXgrJKB3LOTcPIgU7gX31d6KouTkDIAWqRl8cMYljQH8nZ+lWfLrNdBlovJx6pGrDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nk0w+Mq+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27CE5C4CEE7;
+	Wed,  6 Aug 2025 14:02:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754488977;
+	bh=Ld10HX6wcdjfxV5yipYWv01NFSUYgG22JBf72BAdDas=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nk0w+Mq+QoCcYJy7kSTNbI/5ViGQHX3jC7m7Y899CwwtidK440N++gOQZJUH4PXnB
+	 LIr91wt8hGhocNtVqVzuRKzuBwNKp0TcMb7QcfvzKSbNYvCJYO+QQC2D3MaXaRuDV+
+	 O/OzGb0jOId5i7b8Qzr36wcy8bdzBHjdBI05Ov2Bg1+6/yPeLGZn6ivaa6fR46f35X
+	 p2689VS7/YeiL46YGee6KZkoEnElNCIz/BEgkdhoSSWGcP32BIkFyordMa/RIjWbEM
+	 LhN+xnuxLOkao2PobEYAn1N5lA6M/Nm7vsqxymbf40qHNDpk4sgAt4yWTiz+7pTskC
+	 oNUlY3nLrU3Xg==
+Date: Wed, 6 Aug 2025 16:02:54 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	andriy.shevchenko@intel.com, =?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v12 04/10] pwm: max7360: Add MAX7360 PWM support
+Message-ID: <praujgmc3c63j6brecp5kwn7tbdd7rcxmrxn67kxhxcr7rpyhw@pfbsgycx4aop>
+References: <20250722-mdb-max7360-support-v12-0-3747721a8d02@bootlin.com>
+ <20250722-mdb-max7360-support-v12-4-3747721a8d02@bootlin.com>
+ <2msg7e7q42ocjewv35rytdtxwrfqrndpm2y5ustqeaeodencsd@nfdufgtevxte>
+ <DBVBZ48R7DNR.850O5X7MLMEF@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250709160819.306875-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250709160819.306875-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250709160819.306875-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 6 Aug 2025 15:01:33 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXisBDff0nrJOZN__oBTv=m6C-2sAJjHa2m=5gLSwQ4sw@mail.gmail.com>
-X-Gm-Features: Ac12FXwvQsjxrCrYX5rf1GblZeCx8K0jaZte6gPMdI18lRbf_LKRTU8-7HjX_2s
-Message-ID: <CAMuHMdXisBDff0nrJOZN__oBTv=m6C-2sAJjHa2m=5gLSwQ4sw@mail.gmail.com>
-Subject: Re: [PATCH v2 7/7] pinctrl: renesas: rzg2l: Drop oen_read and
- oen_write callbacks
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	John Madieu <john.madieu.xa@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zq2dttqccfhukbbe"
+Content-Disposition: inline
+In-Reply-To: <DBVBZ48R7DNR.850O5X7MLMEF@bootlin.com>
 
-On Wed, 9 Jul 2025 at 18:08, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Remove oen_read and oen_write callbacks from rzg2l_pinctrl_data as
-> all SoCs now use the same rzg2l_read_oen() and rzg2l_write_oen()
-> functions directly.
->
-> Change rzg2l_read_oen() return type to int for proper error reporting
-> and update callers to handle errors consistently.
->
-> This simplifies the code by removing redundant callbacks and ensures
-> uniform OEN handling across all supported SoCs.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+--zq2dttqccfhukbbe
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v12 04/10] pwm: max7360: Add MAX7360 PWM support
+MIME-Version: 1.0
 
-Gr{oetje,eeting}s,
+On Wed, Aug 06, 2025 at 02:07:15PM +0200, Mathieu Dubois-Briand wrote:
+> On Fri Aug 1, 2025 at 12:11 PM CEST, Uwe Kleine-K=F6nig wrote:
+> > On Tue, Jul 22, 2025 at 06:23:48PM +0200, Mathieu Dubois-Briand wrote:
+> >> +static int max7360_pwm_round_waveform_tohw(struct pwm_chip *chip,
+> >> +					   struct pwm_device *pwm,
+> >> +					   const struct pwm_waveform *wf,
+> >> +					   void *_wfhw)
+> >> +{
+> >> +	struct max7360_pwm_waveform *wfhw =3D _wfhw;
+> >> +	u64 duty_steps;
+> >> +
+> >> +	/*
+> >> +	 * Ignore user provided values for period_length_ns and duty_offset_=
+ns:
+> >> +	 * we only support fixed period of MAX7360_PWM_PERIOD_NS and offset =
+of 0.
+> >> +	 * Values from 0 to 254 as duty_steps will provide duty cycles of 0/=
+256
+> >> +	 * to 254/256, while value 255 will provide a duty cycle of 100%.
+> >> +	 */
+> >> +	if (wf->duty_length_ns >=3D MAX7360_PWM_PERIOD_NS) {
+> >> +		duty_steps =3D MAX7360_PWM_MAX;
+> >> +	} else {
+> >> +		duty_steps =3D (u32)wf->duty_length_ns * MAX7360_PWM_STEPS / MAX736=
+0_PWM_PERIOD_NS;
+> >> +		if (duty_steps =3D=3D MAX7360_PWM_MAX)
+> >> +			duty_steps =3D MAX7360_PWM_MAX - 1;
+> >> +	}
+> >> +
+> >> +	wfhw->duty_steps =3D min(MAX7360_PWM_MAX, duty_steps);
+> >> +	wfhw->enabled =3D !!wf->period_length_ns;
+> >> +
+> >> +	return 0;
+> >
+> > The unconditional return 0 is wrong and testing with PWM_DEBUG enabled
+> > should tell you that.
+> >
+>=20
+> When you say should, does that mean the current version of PWM core will
+> tell me that with PWM_DEBUG enabled, or does that mean we should modify
+> the code so it does show a warning? As I did not see any warning when
+> specifying a wf->period_length_ns > MAX7360_PWM_PERIOD_NS, even with
+> PWM_DEBUG enabled.
+>=20
+> On the other hand, if I specify a wf->period_length_ns value below
+> MAX7360_PWM_PERIOD_NS, I indeed get an error:
+> pwm pwmchip0: Wrong rounding: requested 1000000/1000000 [+0], result 1000=
+000/2000000 [+0]
 
-                        Geert
+Yes, that's how I expect it.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> > I think the right thing to do here is:
+> >
+> > 	if (wf->period_length_ns > MAX7360_PWM_PERIOD_NS)
+> > 		return 1;
+> > 	else
+> > 		return 0;
+>=20
+> I can definitely do that, but now I'm a bit confused by the meaning of
+> this return value: is it 0 on success, 1 if some rounding was made,
+> -errno on error? So I believe I should only return 0 if
+> wf->period_length_ns =3D=3D MAX7360_PWM_PERIOD_NS, no?
+>=20
+> Or reading this comment on pwm_round_waveform_might_sleep(), maybe we
+> only have to return 1 if some value is rounded UP. So I believe the test
+> should be (wf->period_length_ns < MAX7360_PWM_PERIOD_NS).
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Right,
+
+	if (wf->period_length_ns < MAX7360_PWM_PERIOD_NS)
+		return 1;
+	else
+		return 0;
+
+So 0 =3D request could be matched by only rounding down, 1 =3D request could
+be matched but rounding up was needed, negative value =3D error.
+
+> >  * Returns: 0 on success, 1 if at least one value had to be rounded up =
+or a
+> >  * negative errno.
+>=20
+> This is kinda confirmed by this other comment, in the code checking the
+> above returned value in __pwm_apply(), even its just typical examples:
+
+pwm_apply() has different rules. (.apply() fails when .period is too
+small. This has the downside that finding a valid period is hard. For
+that reason the waveform callbacks round up and signal that by returning
+1.)
+
+Best regards
+Uwe
+
+--zq2dttqccfhukbbe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmiTYIQACgkQj4D7WH0S
+/k727wf8Cn26RaEXwkMI8JYfUk9FVhUwgJHCUzDgN2ENtdhCyWse7bHI3dIHY0w1
+/c4hyw9YGVbZVv3jKebuHDdbRA8z7XMIYc6ZpqwGiOhzwUTXh91zZBzgcqKrt0yq
+xIHJsLT/8YxFMb8g5cGnoX145K22M9ciuwCbaHCXj8NB7plu7zsYvbkJxxRErxAC
+F0AihAj6BDXOSFUKy8ZsPDo5joj3PTxwpff+oNXRHokuPnmdKlkb0nB0mWKVDwkC
+jKU9+qRLp1uda+EtDEydpASkY5tbuO4JMSTcSxcaxwWS8YY0+i/dJYBxRaK1vZ/u
+02o36rGywRxJMVpXb+KOVrz/fr+OnA==
+=4kNb
+-----END PGP SIGNATURE-----
+
+--zq2dttqccfhukbbe--
 
