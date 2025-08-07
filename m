@@ -1,252 +1,258 @@
-Return-Path: <linux-gpio+bounces-24054-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24055-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5061BB1CCC2
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Aug 2025 21:57:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3459B1D2BD
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Aug 2025 08:57:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 77A73174ECA
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Aug 2025 19:57:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0EF193A2E90
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Aug 2025 06:56:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43B622BDC24;
-	Wed,  6 Aug 2025 19:56:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CB4E22577E;
+	Thu,  7 Aug 2025 06:56:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OkkYbou1"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YIPPEn/6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E322BEC3F;
-	Wed,  6 Aug 2025 19:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292161C862D
+	for <linux-gpio@vger.kernel.org>; Thu,  7 Aug 2025 06:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754510173; cv=none; b=am54M0zc6WLimqUejoWmCsqPa81poHX3LC5Av42VVH/YneMU305GkZnmaMhbPjUHQLCLflFViG6W0hy1+ui4chjEOr90whnWtpuEybs1WZRzszR9j2J7m+1bpYA/etTB7VcN/BYkgGFZrdGGXtsS5NH7faXOqg75+ujD17HcMjI=
+	t=1754549811; cv=none; b=mT3DgjavfwgUJkoFKEURyMeVVQ7lmfMRa4mS3YEfr6EIc1pi4HNvd58wOTJn1oFvz82PfQa4VM3dzMSnBDjhKxMpfu85w0Iwqqv7n8Am3u8Axt26zv1tuPsvnMnKp3SMHQAJR881zIAwlhPR8HUVzSR9guokj9GOXUrrOiewlV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754510173; c=relaxed/simple;
-	bh=u+wgEpA11a0WizPMgrYnN2F8G9FZUmr59dDLFbxv79s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IA3W6fv6crD7YodpJPGK1Enug0Y5JBizijuHs2uGmJhKKL3rU3AlMumTdthF9ILIdk6LHTi7AkeDHTBLN+WujGq5FikwNMxckac38brxm+pEgsJCS7a5STEyhxdnI0XlKzMDMBSFmtNcvTLzH/ANG5/DK5opBwYJaS/cSjCh4io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OkkYbou1; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-451d3f72391so2571445e9.3;
-        Wed, 06 Aug 2025 12:56:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754510169; x=1755114969; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PbkN4BhrUNR9E4GJEQthARrz+nfO86VQLi/BD9FfAa0=;
-        b=OkkYbou1jIRnlVNOIWIxsNgepGv3fg3Vbi6V6G7bTiB1JRqSwaPSYv3leiGK6i3hxG
-         P+LmwBd4jFk3icrdE4u0YIsvhw0j3/B/pVTHqg/PrHP9lNvtolah+WA4fOiG8JhYAMzM
-         Y8sK1cldv/Tk5ommGqDh5f5XlcItQ2+hqnMRidaJZIauL3kPfmLxMbqUUyl+OtfBl4E3
-         TL9omX97LSGOz1O7GL+f+pwDg2aU9Wg1WdCxsf7xx1gGAz5vFpD0L6SWeFZRccPq8Li4
-         t2y2ZXZdbVZYFto3IiEsZVVuWmZbYT8APnTvGLOz8vZ9C/ccaSCKuITuQ4c9oRYyeX87
-         a6tQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754510169; x=1755114969;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PbkN4BhrUNR9E4GJEQthARrz+nfO86VQLi/BD9FfAa0=;
-        b=Rk1cr+1GJCiGpnb2kxxNs1ptACmSQmJt2Ur/Wh3nVAHMwvq4XbzWooViVmhdFK6K94
-         J/TGTjdPI/cfJgqEXBE27v9gnoCZOWDj2fpsrxqY1OMHfpqjzF/0khbhCKgLsRUBaD9v
-         kqlHLVhhsI7wfrIOYpxCEwdA8MK3n4Li/dKtQtXLO7XfAVRkEPQXcvvUQ0WIXq/NCyoi
-         tjcs9pVOOHrKjEckUKJLqpy9/0n2duh4IZGwArxO7BcIrlu81V/djDaunUKKsKZJuSXF
-         LLSXYpP2hLk/mhO0bAbD+/tN3f9vs6JPUiNPxdEsWFxb6ODZZ7ti3zOlDQoS1ke1DzeQ
-         zFCg==
-X-Forwarded-Encrypted: i=1; AJvYcCWUyRTz1nG2+Aktth35OhZT67YBHId1Cd9bCt1N3yD8AXI4iV95eTuWJMKRxMI5za1M/P36FTVQ17+94WM7@vger.kernel.org, AJvYcCXtqqP/FjNKAKj0gHeUHbRyyOlZMmNTxyoJ9e3MlozxqlxVh5zA/FihjjfDZTKH7++VdXcpDr0aF7Q4@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMFx6e6pQO+Zgb2meS4L0LSBgrc4Z9O4kOweD066eaeo/eQiON
-	Vv/vNnVQ+NHK3fH9PJekgwwCJ+TnrQoSHZf0opG2QUUDAFLcDRa84qtQ
-X-Gm-Gg: ASbGncsPSdlMxHlPBiEHSQqWWnQiDraxW+DoB7TI3/JZRpOxnA7wgGkEV+iJ6ah1gyR
-	JZ6rD0MKlZvuhg241HFUwsrSPOVr1KFtOjigl/odwZxg7GNP/ylS8Xb8Z7iT9wgBb1wOPlt+6Bx
-	+WBv8BYhH/lmz3pUKm3S0RwTwHqQ7nVpYuWyqT0ULZ4hV1N0m6UnhvpPwOZN6GLSt06N2q47a8V
-	b1z0GUQSiu5qEVqOcJQe9YCAIA0wwJsjTzEml7XSgvkbTp6lvU+OTMH7FCYP6rrSHhFFSYBE7Ns
-	KfDCSt5btZgrVyOFvoJxWs6iH2v7pNRC2yLmGrAxHhBtPTTHz0yzdBtoRIxgbSZeUKIa4H/yBZA
-	zBoQmpOcOsux4lTTiGE96SR6NvvpDYdRrCptWK6W6y2VyZIbaA3VCsCO1xv31/goxwL4BMEdcGQ
-	==
-X-Google-Smtp-Source: AGHT+IGay4WEXtWFUqoVl9hyQQCW+KtZRQ7roM1fcWrmvyC+gSHOQw7TeJKDk81uIMMDZvg0RF4ZTg==
-X-Received: by 2002:a05:600c:524e:b0:458:bfe1:4a91 with SMTP id 5b1f17b1804b1-459e70d8261mr33201325e9.20.1754510169038;
-        Wed, 06 Aug 2025 12:56:09 -0700 (PDT)
-Received: from iku.Home (97e54365.skybroadband.com. [151.229.67.101])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c3bf93dsm24137782f8f.27.2025.08.06.12.56.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Aug 2025 12:56:08 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v3 7/7] pinctrl: renesas: rzg2l: Drop oen_read and oen_write callbacks
-Date: Wed,  6 Aug 2025 20:55:55 +0100
-Message-ID: <20250806195555.1372317-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250806195555.1372317-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250806195555.1372317-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	s=arc-20240116; t=1754549811; c=relaxed/simple;
+	bh=0tHwYlbjNv+IOAqOwfpjCekQ4CCu0rh6z3eMye582FE=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=BnFyY1O5C3uvmcYJZT81rxRbaS9RKJsJmaDAejTczpBiK3sreaQYnHQX+Rb7SQb6nmvauGf/wpR/YjQFj64vuWLOqsSMe7Ca0ZCvhQE0B8BwaAFLppYElW27fj2L/Mg0ubgNoSDGx1i/JkS+Ptf3574R10AbqJWA3VfxDaqyQh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=YIPPEn/6; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250807065647epoutp0429dd43d016165a53a63eb07b80681494~ZacDpjDvn3157631576epoutp04j
+	for <linux-gpio@vger.kernel.org>; Thu,  7 Aug 2025 06:56:47 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250807065647epoutp0429dd43d016165a53a63eb07b80681494~ZacDpjDvn3157631576epoutp04j
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1754549807;
+	bh=0tHwYlbjNv+IOAqOwfpjCekQ4CCu0rh6z3eMye582FE=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=YIPPEn/6tzYnoC0dr0ncPgF6DHzVE5UwPkucWuTHP+PvLngOhnXKfFpvzOJNvsTEc
+	 2EtCMCs9m59R9uGm9EagqckaCdcjNv08McNBsfcd1YANyyn8nVMZXu9/xvhWxLqXNt
+	 BSpxbf7A8MKBigow3FVNEoa1e8aVZaRPHmYas3CU=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
+	20250807065646epcas5p17687f208b8b43806346e6bc2c9967e99~ZacCrN9OP0038200382epcas5p1W;
+	Thu,  7 Aug 2025 06:56:46 +0000 (GMT)
+Received: from epcas5p3.samsung.com (unknown [182.195.38.92]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4byHyP0GMqz6B9m5; Thu,  7 Aug
+	2025 06:56:45 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250807065644epcas5p125fc65c6d04e995d92f2afd90b7b1ade~ZacA7TA-d2200722007epcas5p1A;
+	Thu,  7 Aug 2025 06:56:44 +0000 (GMT)
+Received: from INBRO001561 (unknown [107.122.12.6]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250807065638epsmtip203f2ebd5a413ef0d6985fa5abfd83190~Zab8DqqO-1646416464epsmtip2T;
+	Thu,  7 Aug 2025 06:56:38 +0000 (GMT)
+From: "Pankaj Dubey" <pankaj.dubey@samsung.com>
+To: "'Krzysztof Kozlowski'" <krzk@kernel.org>, "'SeonGu Kang'"
+	<ksk4725@coasia.com>, "'Jesper Nilsson'" <jesper.nilsson@axis.com>,
+	"'Michael	Turquette'" <mturquette@baylibre.com>, "'Stephen Boyd'"
+	<sboyd@kernel.org>, "'Rob Herring'" <robh@kernel.org>, "'Krzysztof
+ Kozlowski'" <krzk+dt@kernel.org>, "'Conor Dooley'" <conor+dt@kernel.org>,
+	"'Sylwester Nawrocki'" <s.nawrocki@samsung.com>, "'Chanwoo Choi'"
+	<cw00.choi@samsung.com>, "'Alim	Akhtar'" <alim.akhtar@samsung.com>, "'Linus
+ Walleij'" <linus.walleij@linaro.org>, "'Tomasz Figa'"
+	<tomasz.figa@gmail.com>, "'Catalin	Marinas'" <catalin.marinas@arm.com>,
+	"'Will Deacon'" <will@kernel.org>, "'Arnd	Bergmann'" <arnd@arndb.de>
+Cc: "'kenkim'" <kenkim@coasia.com>, "'Jongshin Park'" <pjsin865@coasia.com>,
+	"'GunWoo Kim'" <gwk1013@coasia.com>, "'HaGyeong Kim'" <hgkim05@coasia.com>,
+	"'GyoungBo Min'" <mingyoungbo@coasia.com>, "'SungMin Park'"
+	<smn1196@coasia.com>, "'Shradha Todi'" <shradha.t@samsung.com>, "'Ravi
+ Patel'" <ravi.patel@samsung.com>, "'Inbaraj E'" <inbaraj.e@samsung.com>,
+	"'Swathi K S'" <swathi.ks@samsung.com>, "'Hrishikesh'"
+	<hrishikesh.d@samsung.com>, "'Dongjin	Yang'" <dj76.yang@samsung.com>, "'Sang
+ Min Kim'" <hypmean.kim@samsung.com>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
+	<linux-arm-kernel@axis.com>, <linux-clk@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+	<soc@lists.linux.dev>
+In-Reply-To: <ef3b8e12-0677-4e49-bf2c-b8136c9a6908@kernel.org>
+Subject: RE: [PATCH 00/16] Add support for the Axis ARTPEC-8 SoC
+Date: Thu, 7 Aug 2025 12:26:27 +0530
+Message-ID: <013301dc0768$6f58dc40$4e0a94c0$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQGJY/8wx4BImu0YLFPVfwpfqUmFNgKXZrJuAgeQag4A83Fv2QHBXkcOAZGX7yoCWvFQXwHgUMUuAOJp+3+0i+6vkA==
+Content-Language: en-us
+X-CMS-MailID: 20250807065644epcas5p125fc65c6d04e995d92f2afd90b7b1ade
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-541,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250721064006epcas5p4617b0450e69f72c94d2b3ae7b1d200e7
+References: <20250710002047.1573841-1-ksk4725@coasia.com>
+	<847e908b-1073-46ea-93f3-1f36cc93d8b8@kernel.org>
+	<bfdc2eddde554e1d1808dd8399bc6a693f681c9b.camel@coasia.com>
+	<CGME20250721064006epcas5p4617b0450e69f72c94d2b3ae7b1d200e7@epcas5p4.samsung.com>
+	<99977f38-f055-46ed-8eb0-4b757da2bcdd@kernel.org>
+	<000501dc06ab$37f09440$a7d1bcc0$@samsung.com>
+	<e334f106-d9f3-4a21-8cdd-e9d23dd2755d@kernel.org>
+	<002001dc06b1$540dc980$fc295c80$@samsung.com>
+	<ef3b8e12-0677-4e49-bf2c-b8136c9a6908@kernel.org>
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Subject: Re: =5BPATCH 00/16=5D Add support for the Axis ARTPEC-8 SoC
+>=20
+> On 06/08/2025 11:05, Pankaj Dubey wrote:
+> >
+> >> Also SAME strict DT compliance profile will be applied. (see more on
+> >> that below)
+> >>
+> >>>
+> >>> Given that ARTPEC-8 is a distinct SoC with its own set of IPs, we bel=
+ieve
+> it's
+> >> reasonable
+> >>> to create a separate directory for it, similar to FSD.
+> >>
+> >> No. It was a mistake for FSD to keep it separate why? Because there is
+> >> no single non-Samsung stuff there. I am afraid exactly the same will
+> >> happen there.
+> >>
+> >
+> > I am not sure, why you are saying this as a mistake, in case next versi=
+on of
+> FSD
+>=20
+>=20
+> My mistake that I agreed on that, based on promise that =22there will be
+> non Samsung stuff=22 and that =22non Samsung stuff=22 never happened.
+>=20
 
-Remove oen_read and oen_write callbacks from rzg2l_pinctrl_data as
-all SoCs now use the same rzg2l_read_oen() and rzg2l_write_oen()
-functions directly.
+I am not authorized to comment on FSD's non Samsung stuff at this moment.
+But I got your point.
 
-Change rzg2l_read_oen() return type to int for proper error reporting
-and update callers to handle errors consistently.
+> > or ARTPEC is manufactured (ODM) by another vendor in that case, won't i=
+t
+> > create problems?
+>=20
+>=20
+> No problems here. Non-Samsung Artpec/Axis soc will not go there. It will
+> go the top-level axis directory, just like artpec-6
+>=20
 
-This simplifies the code by removing redundant callbacks and ensures
-uniform OEN handling across all supported SoCs.
+Okay, understood. I assume Axis team will be fine with this approach.
+Let me align with them internally and address all the review comments in v2=
+.=20
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2->v3:
-- Added Reviewed-by tag from Geert.
+>=20
+> >
+> > For example ARTPEC-6/7 (ARM based) have their own directories as
+> =22arch/arm/boot/dts/axis/=22
+> > These were not Samsung (ODM) manufactures SoCs.
+> >
+> > But ARTPEC-8/9 (ARM64) based SoCs are samsung manufactured. What if
+> the next version say
+> > ARTPEC-10 is not samsung manufactured, so different version of products
+> (SoCs) from
+> > same vendor (OEM), in this case Axis, will have code in separate direct=
+ories
+> and with different maintainers?
+>=20
+> It will be the same with Google Pixel for whatever they decide in the
+> future. dts/exynos/google/ + dts/google/.
+>=20
+> I know that this is not ideal, but for me grouping samsung stuff
+> together is far more important, because there is much, much more to
+> share between two SoCs designed by Samsung, than Axis-9 and future
+> non-Samsung Axis-10. And I have =60git grep=60 as argument:
+> git grep compatible -- arch/arm64/boot/dts/tesla/
+>=20
+> and point me to any Tesla IP. Zero results.
+>=20
+>=20
+> >
+> >> Based on above list of blocks this should be done like Google is done,
+> >> so it goes as subdirectory of samsung (exynos). Can be called axis or
+> >> artpec-8.
+> >
+> > I will suggest to keep axis, knowing the fact that sooner after artpec-=
+8
+> patches gets approved and merged
+> > we have plan to upstream artpec-9 (ARM64, Samsung manufactured) as
+> well.
+> >
+> >>
+> >> To clarify: Only this SoC, not others which are not Samsung.
+> >>
+> >>>
+> >>> We will remove Samsung and Coasia teams from the maintainers list in
+> v2
+> >> and only
+> >>> Axis team will be maintainer.
+> >>
+> >> A bit unexpected or rather: just use names of people who WILL be
+> >> maintaining it. If this is Jesper and Lars, great. Just don't add
+> >> entries just because they are managers.
+> >
+> > AFAIK, Jesper will be taking care.
+> >
+> >>
+> >>>
+> >>> Maintainer list for previous generation of Axis chips (ARM based) is
+> already
+> >> present,
+> >>> so this will be merged into that.
+> >>
+> >> Existing Artpec entry does not have tree mentioned, so if you choose
+> >> above, you must not add the tree, since the tree is provided by Samsun=
+g
+> SoC.
+> >>
+> >
+> > OK
+> >
+> >> OTOH, how are you going to add there strict DT compliance? Existing ax=
+is
+> >> is not following this, but artpec-8, as a Samsung derivative, MUST
+> >> FOLLOW strict DT compliance. And this should be clearly marked in
+> >> maintainer entry, just like everywhere else.
+> >>
+> >
+> > As I said this is tricky situation, though artpec-8 is derivative of sa=
+msung, we
+> can't confirm
+> > if future versions (> 9) will be samsung derivative.
+> >
+> > But this would be case for all such custom ASIC manufactured by samsung=
+,
+> so I would like to
+> > understand how this will be handled?
+>=20
+>=20
+> I suggest to do the same as Google and when I say Google in this email,
+> I mean Pixel/GS101. Google was easier because there was no prior entry
+> and Axis has, so you will have two Axis entries. But I don't see how we
+> can add clean-dts profiles to the existing Axis entry, if you decide to
+> include Artpec-8 in that one.
+>=20
 
-v1->v2:
-- New patch
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 35 +++++++------------------
- 1 file changed, 9 insertions(+), 26 deletions(-)
+Okay we will have separate dts profile aligned with Exynos DT compliance fo=
+r
+ARM64 based Axis SoCs which are manufactured by Samsung at this moment.=20
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 9fb9e6d2c6d5..5eebe12c4595 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -298,8 +298,6 @@ struct rzg2l_pinctrl_data {
- 	void (*pwpr_pfc_lock_unlock)(struct rzg2l_pinctrl *pctrl, bool lock);
- 	void (*pmc_writeb)(struct rzg2l_pinctrl *pctrl, u8 val, u16 offset);
- 	int (*pin_to_oen_bit)(struct rzg2l_pinctrl *pctrl, unsigned int _pin);
--	u32 (*oen_read)(struct rzg2l_pinctrl *pctrl, unsigned int _pin);
--	int (*oen_write)(struct rzg2l_pinctrl *pctrl, unsigned int _pin, u8 oen);
- 	int (*hw_to_bias_param)(unsigned int val);
- 	int (*bias_param_to_hw)(enum pin_config_param param);
- };
-@@ -1092,16 +1090,16 @@ static int rzg2l_pin_to_oen_bit(struct rzg2l_pinctrl *pctrl, unsigned int _pin)
- 	return -EINVAL;
- }
- 
--static u32 rzg2l_read_oen(struct rzg2l_pinctrl *pctrl, unsigned int _pin)
-+static int rzg2l_read_oen(struct rzg2l_pinctrl *pctrl, unsigned int _pin)
- {
- 	int bit;
- 
- 	if (!pctrl->data->pin_to_oen_bit)
--		return 0;
-+		return -EOPNOTSUPP;
- 
- 	bit = pctrl->data->pin_to_oen_bit(pctrl, _pin);
- 	if (bit < 0)
--		return 0;
-+		return -EINVAL;
- 
- 	return !(readb(pctrl->base + pctrl->data->hwcfg->regs.oen) & BIT(bit));
- }
-@@ -1115,7 +1113,7 @@ static int rzg2l_write_oen(struct rzg2l_pinctrl *pctrl, unsigned int _pin, u8 oe
- 	int bit;
- 
- 	if (!pctrl->data->pin_to_oen_bit)
--		return -EINVAL;
-+		return -EOPNOTSUPP;
- 
- 	bit = pctrl->data->pin_to_oen_bit(pctrl, _pin);
- 	if (bit < 0)
-@@ -1298,11 +1296,10 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
- 	case PIN_CONFIG_OUTPUT_ENABLE:
- 		if (!(cfg & PIN_CFG_OEN))
- 			return -EINVAL;
--		if (!pctrl->data->oen_read)
--			return -EOPNOTSUPP;
--		arg = pctrl->data->oen_read(pctrl, _pin);
--		if (!arg)
--			return -EINVAL;
-+		ret = rzg2l_read_oen(pctrl, _pin);
-+		if (ret < 0)
-+			return ret;
-+		arg = ret;
- 		break;
- 
- 	case PIN_CONFIG_POWER_SOURCE:
-@@ -1461,9 +1458,7 @@ static int rzg2l_pinctrl_pinconf_set(struct pinctrl_dev *pctldev,
- 		case PIN_CONFIG_OUTPUT_ENABLE:
- 			if (!(cfg & PIN_CFG_OEN))
- 				return -EINVAL;
--			if (!pctrl->data->oen_write)
--				return -EOPNOTSUPP;
--			ret = pctrl->data->oen_write(pctrl, _pin, !!arg);
-+			ret = rzg2l_write_oen(pctrl, _pin, !!arg);
- 			if (ret)
- 				return ret;
- 			break;
-@@ -3300,8 +3295,6 @@ static struct rzg2l_pinctrl_data r9a07g043_data = {
- 	.pwpr_pfc_lock_unlock = &rzg2l_pwpr_pfc_lock_unlock,
- 	.pmc_writeb = &rzg2l_pmc_writeb,
- 	.pin_to_oen_bit = &rzg2l_pin_to_oen_bit,
--	.oen_read = &rzg2l_read_oen,
--	.oen_write = &rzg2l_write_oen,
- 	.hw_to_bias_param = &rzg2l_hw_to_bias_param,
- 	.bias_param_to_hw = &rzg2l_bias_param_to_hw,
- };
-@@ -3318,8 +3311,6 @@ static struct rzg2l_pinctrl_data r9a07g044_data = {
- 	.pwpr_pfc_lock_unlock = &rzg2l_pwpr_pfc_lock_unlock,
- 	.pmc_writeb = &rzg2l_pmc_writeb,
- 	.pin_to_oen_bit = &rzg2l_pin_to_oen_bit,
--	.oen_read = &rzg2l_read_oen,
--	.oen_write = &rzg2l_write_oen,
- 	.hw_to_bias_param = &rzg2l_hw_to_bias_param,
- 	.bias_param_to_hw = &rzg2l_bias_param_to_hw,
- };
-@@ -3335,8 +3326,6 @@ static struct rzg2l_pinctrl_data r9a08g045_data = {
- 	.pwpr_pfc_lock_unlock = &rzg2l_pwpr_pfc_lock_unlock,
- 	.pmc_writeb = &rzg2l_pmc_writeb,
- 	.pin_to_oen_bit = &rzg3s_pin_to_oen_bit,
--	.oen_read = &rzg2l_read_oen,
--	.oen_write = &rzg2l_write_oen,
- 	.hw_to_bias_param = &rzg2l_hw_to_bias_param,
- 	.bias_param_to_hw = &rzg2l_bias_param_to_hw,
- };
-@@ -3359,8 +3348,6 @@ static struct rzg2l_pinctrl_data r9a09g047_data = {
- 	.pwpr_pfc_lock_unlock = &rzv2h_pwpr_pfc_lock_unlock,
- 	.pmc_writeb = &rzv2h_pmc_writeb,
- 	.pin_to_oen_bit = &rzg3e_pin_to_oen_bit,
--	.oen_read = &rzg2l_read_oen,
--	.oen_write = &rzg2l_write_oen,
- 	.hw_to_bias_param = &rzv2h_hw_to_bias_param,
- 	.bias_param_to_hw = &rzv2h_bias_param_to_hw,
- };
-@@ -3383,8 +3370,6 @@ static struct rzg2l_pinctrl_data r9a09g056_data = {
- 	.pwpr_pfc_lock_unlock = &rzv2h_pwpr_pfc_lock_unlock,
- 	.pmc_writeb = &rzv2h_pmc_writeb,
- 	.pin_to_oen_bit = &rzv2h_pin_to_oen_bit,
--	.oen_read = &rzg2l_read_oen,
--	.oen_write = &rzg2l_write_oen,
- 	.hw_to_bias_param = &rzv2h_hw_to_bias_param,
- 	.bias_param_to_hw = &rzv2h_bias_param_to_hw,
- };
-@@ -3408,8 +3393,6 @@ static struct rzg2l_pinctrl_data r9a09g057_data = {
- 	.pwpr_pfc_lock_unlock = &rzv2h_pwpr_pfc_lock_unlock,
- 	.pmc_writeb = &rzv2h_pmc_writeb,
- 	.pin_to_oen_bit = &rzv2h_pin_to_oen_bit,
--	.oen_read = &rzg2l_read_oen,
--	.oen_write = &rzg2l_write_oen,
- 	.hw_to_bias_param = &rzv2h_hw_to_bias_param,
- 	.bias_param_to_hw = &rzv2h_bias_param_to_hw,
- };
--- 
-2.50.1
+>=20
+> Best regards,
+> Krzysztof
 
 
