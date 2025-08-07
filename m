@@ -1,115 +1,195 @@
-Return-Path: <linux-gpio+bounces-24064-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24065-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2197EB1D3C7
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Aug 2025 09:57:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E0F5B1D9CD
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Aug 2025 16:18:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4DA19163FFF
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Aug 2025 07:57:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 643D256352D
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Aug 2025 14:18:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 845F5244684;
-	Thu,  7 Aug 2025 07:57:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84436195811;
+	Thu,  7 Aug 2025 14:18:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="jgCUl2bT"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="jcNwdx4n"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A2A231C8D
-	for <linux-gpio@vger.kernel.org>; Thu,  7 Aug 2025 07:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795712B2DA;
+	Thu,  7 Aug 2025 14:17:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754553443; cv=none; b=bzBEqqfmA2UWyXv30/nWDnZwRKT5sXJDdaG5IPPGAeSDocu3Hgo+LUNHqXJvVEJhiPDXlWvQTve/Ldg46hxK56A9xD1Z7673IlM5AGKgEevPS6bAfg2OCC0LRERQZpxqboJsvAKEHycy+qf+OF/7gkdneGnepQTajgCOzOFOxeM=
+	t=1754576280; cv=none; b=pq2nUWA6JMfrs4T0qiC1MqQ0oc1jseAjTpAAVkTckfNst4tl8yJi5oCvRZ6M1O1raF1EYCkafGEHZcaaut6S9+t8MTKUKnnv1rPb+xfcpYosAj+8RrRWIQCgUOKHcE9uVVsRmoyvREdV5nhz2W7fWNTBxeuZNquEOGhwiduwXXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754553443; c=relaxed/simple;
-	bh=vgkfpdwJ4jw4QPMZ8xrlzKyL8qOR5t7DvsVO97Z8Mvg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a5bQPTnZOe+3ioQ94jKem6Ew5j2msllWIwWdu1cUmYkNLcqvdlUk0c67L5fOBDZDLA4wgmN/7XAoXQ3bH3wOUv82KoukoXk3dkyrsv7DtfTsRcmdnDJlacce0mfsnOaEvc1Bl7VF1hDedtkuL8HwAedhPKsmNK/o8uXXgtrfsNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=jgCUl2bT; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3b78bca0890so299012f8f.3
-        for <linux-gpio@vger.kernel.org>; Thu, 07 Aug 2025 00:57:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1754553438; x=1755158238; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SfU3+JLlOgj4XUuWyXL62GCcWpurAz54I0DEQzkcox8=;
-        b=jgCUl2bTHVqAh44Tw/v0vqLOj6ZvfLpVWe++u4kHN/wF8M9CHlYx9PTSNZnwTgHkuY
-         fT8mmYaf8LjlNIibY1c+e8ZOtS5s6nLagfypzrwclt4HRXH2F8+veBIWAeXlY0ZXDjmq
-         oxkztSASvC0gI7FWh+WPT197Xnuh9kTf2/enBfDPbwYjh54N/SVs5oRrFEoeclQ7vkuo
-         LR0Ag1c3jG1jmWXpvEkoLJfdAsWlmzD57zDwspoVYcW0wW2VYL8b3vU1Ku/MuaFQWvb9
-         yCd19Mdmt7z+SBGqeSNJfxFKWc91bP2LaSYVSzld6Nh0gVzqu3VN3IFHGHVMWrir7RSk
-         8FFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754553438; x=1755158238;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SfU3+JLlOgj4XUuWyXL62GCcWpurAz54I0DEQzkcox8=;
-        b=Ig6hQrzXFwgdOCtWVJcFBqtDGdjSAqwT2MZ3Zcr2pLrGauOtxIGiRtNghNmzJMvMva
-         n5X4rgyVGaBKv4FlcMCWD5PXRf3Q9JBkcJd/Cu2zbLHq5Mx7M6V+R/e6ot5c9OX/NirM
-         GZ5m+6eQieb7UI8kb0V6Wdqbpfn2oQPJJw2mH98vwJ52K+cHkXmJxWEPKBS79zmlocOp
-         0PIY6sF1BB7hgrLDzKzCoA578IBLevoTU+ZlyXjqgS4ZRoCxo1/txi7uUbAK4FhbRe7M
-         ZYtZHdHMQrU4nOfUJzRITzEspUqSN8l5Ov1eTgOW4pnpj2yog7TZxxZ/u38arGBGzBgB
-         Bkwg==
-X-Forwarded-Encrypted: i=1; AJvYcCXtg3b66vxfmy5C/6XL33jYQHuHXp5bv70hbsB4LXBNIBpKOWb0wwJYCQdN2B1HCs7SfIPFYenoo4AD@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIaPlktI2S69bO0jBcpmhbx47MOzAnwaM12deggxn30KYyj/50
-	ibyDB/p5kv2ToNzQHh0isg7JDtHifVs+PqcCxpPgt5oMgbBYZww+m+ZimDFRL+fM6MI=
-X-Gm-Gg: ASbGncsxJgn9k/OjTcxA5QXTmIracN0JOQUCKsGqLGkIyeEaPxm5AH6FNmdbIvXKYlH
-	aIVO6is0ZmohIQ+1TBQi1R+l8RvTO5cEkcs8YAWPcVyoZR75vzPHKigsN1MpTQBs5unLFcHte23
-	U6VEIgLUl1Ti/F0XPisY5xp8NBL8AZFbgRs1eyQajsAuM00eK/z+gQw+FeUsw7dRF44jn2UNCNP
-	V8cQhIQqjzRSEBFx9SPa8H5m/hUaIX9POJXTc5wRm1c2QNA30GLaIpLw/GTOuRhwG+BqzIWh1q3
-	f4s/o+YP91km+blr7l1QUN0xxnpiKN79GP1vZs35ytG1zWwd9IFz/0x6994UTRTeSUoABvbyBNL
-	6KdPuDmfPe0od1LDYwNLIjfzFc65PxlNK7RC0W1Sp0xwMgpcpMiXCenldMng+T/hf0bokv/L5XI
-	E2oeV0ymQ=
-X-Google-Smtp-Source: AGHT+IG1Zkw/5s891kaO2uBzPkSnBXo2w2+ZGLhV+2clBzLljqoEFUKEehl54k7C+1ej3DQSWerCIg==
-X-Received: by 2002:adf:eb83:0:b0:3b8:f8e7:7fea with SMTP id ffacd0b85a97d-3b8f8e7802dmr1563703f8f.7.1754553437672;
-        Thu, 07 Aug 2025 00:57:17 -0700 (PDT)
-Received: from brgl-pocket.. (2a02-8440-f501-4c26-fc12-1c8e-3b9e-e794.rev.sfr.net. [2a02:8440:f501:4c26:fc12:1c8e:3b9e:e794])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c3ac093sm27069447f8f.9.2025.08.07.00.57.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Aug 2025 00:57:17 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: remove legacy GPIO line value setter callbacks
-Date: Thu,  7 Aug 2025 09:57:15 +0200
-Message-ID: <175455343159.5538.10394058883390003007.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250725074651.14002-1-brgl@bgdev.pl>
-References: <20250725074651.14002-1-brgl@bgdev.pl>
+	s=arc-20240116; t=1754576280; c=relaxed/simple;
+	bh=f7NEbGJwIqidNvMi1hJ+xhJqRZbVKqypzrXyMG7AQeY=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=JkPPU3MDFXDJXDjJfEImFGv+KZ2SLmH2hW6pxN3b0IbiGZZNpoejn3hHAA3gjQz7nDyw5/YDrmPjeGyh97pg4qSR3Rr9W3M9AtS8pip/4K3bPiNmnSVHX33NPJo4idTZpKAq6pBk9LC7dDwMi1d5SOwf1OrP1uixd0vQAiYgMTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=jcNwdx4n; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 577DQaY4023128;
+	Thu, 7 Aug 2025 16:17:42 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	0rKaft9+XU83BazRufG1bMpf0DcHNm09LrzRYaslGhI=; b=jcNwdx4nFkb1smh5
+	h5I16w88LgIWv9EFwVomPh41WuDDm3tU7puXrvrzQiVSR1tvJRm7DCk5cFWC7Eom
+	Qwg1OwWGqvZUyjm07/BYReQSQo79lSF1dhIf9oKjstVoB9bWPfvACu2Oc8xw+84f
+	Zlhh5p0bqDLXFK4VJlhOPKdkrUwW/7pfYQgC0sTAs4EcR8+RFeBT/dMkUzmzxZM+
+	uFyOQ0dhCccbAYgg8w3+HpWrxjhMOq43zPfM/MXN8fF5kXMtitJph28y9NgOhd5d
+	G6m1tRUZsRJ5bc4Nm4yfONACvLJTSu0R4A7uIAQ+f/XpTOuDer4E7FPtzm2ZfWkL
+	L9UTIw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 48bpx083p2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Aug 2025 16:17:41 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 0A04840046;
+	Thu,  7 Aug 2025 16:16:34 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5DA2371582F;
+	Thu,  7 Aug 2025 16:15:42 +0200 (CEST)
+Received: from [10.130.77.120] (10.130.77.120) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 7 Aug
+ 2025 16:15:41 +0200
+Message-ID: <cb76e0da-f4c9-4aaf-8e0b-4666738d238e@foss.st.com>
+Date: Thu, 7 Aug 2025 16:15:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH 0/2] Add pinctrl_pm_select_init_state helper
+ function
+From: Christian Bruel <christian.bruel@foss.st.com>
+To: Bjorn Helgaas <helgaas@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>
+CC: <lpieralisi@kernel.org>, <kwilczynski@kernel.org>, <mani@kernel.org>,
+        <robh@kernel.org>, <bhelgaas@google.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@foss.st.com>, <linux-pci@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>
+References: <20250723210753.GA2911683@bhelgaas>
+ <99737d4f-488d-4208-91aa-83ce52957147@foss.st.com>
+Content-Language: en-US
+In-Reply-To: <99737d4f-488d-4208-91aa-83ce52957147@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-07_03,2025-08-06_01,2025-03-28_01
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Gentle ping,
 
+Maybe the best for Linus is to apply only 1/2 on his pinctrl tree.
 
-On Fri, 25 Jul 2025 09:46:50 +0200, Bartosz Golaszewski wrote:
-> With no more users of the legacy GPIO line value setters - .set() and
-> .set_multiple() - we can now remove them from the kernel.
+I'll rebase 2/2 stm32 PCIe part after the merge to mainline and respin 
+for the PCI tree
+
+Best Regards
+
+Christian
+
+On 7/24/25 15:36, Christian Bruel wrote:
 > 
 > 
+> On 7/23/25 23:07, Bjorn Helgaas wrote:
+>> On Wed, Jul 23, 2025 at 01:32:52PM +0200, Linus Walleij wrote:
+>>> On Thu, Jul 17, 2025 at 8:33 AM Christian Bruel
+>>> <christian.bruel@foss.st.com> wrote:
+>>>
+>>>> We have the helper functions pinctrl_pm_select_default_state and
+>>>> pinctrl_pm_select_sleep_state.
+>>>> This patch adds the missing pinctrl_pm_select_init_state function.
+>>>>
+>>>> The STM32MP2 needs to set the pinctrl to an initial state during
+>>>> pm_resume, just like in probe. To achieve this, the function
+>>>> pinctrl_pm_select_init_state is added.
+>>>>
+>>>> This allows a driver to balance pinctrl_pm_select_sleep_state()
+>>>> with pinctrl_pm_select_default_state() and
+>>>> pinctrl_pm_select_init_state() in pm_runtime_suspend and 
+>>>> pm_runtime_resume.
+>>>>
+>>>> Christian Bruel (2):
+>>>>    pinctrl: Add pinctrl_pm_select_init_state helper function
+>>>>    PCI: stm32: use pinctrl_pm_select_init_state() in
+>>>>      stm32_pcie_resume_noirq()
+>>>
+>>> If Bjorn Helgaas is OK with it I can apply this to the pinctrl tree.
+>>>
+>>> Otherwise I can also just apply patch 1/2, but that doesn't solve
+>>> any problem.
+>>
+>> The stm32 driver has been posted and is on this branch of the PCI
+>> tree:
+>>
+>>    https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/? 
+>> h=controller/dwc-stm32&id=5a972a01e24b
+>>
+>> but it's not in mainline (or even in pci/next) yet, so you would only
+>> be able to apply patch 2/2 if you took the whole driver, which is
+>> probably more than you would want to do.
+>>
+>> I haven't put it in pci/next yet because it doesn't build when
+>> CONFIG_PINCTRL is not defined:
+>>
+>>    https://lore.kernel.org/r/20250716192418.GA2550861@bhelgaas
+>>
+>> I don't know enough about pinctrl to know why stm32 needs this when
+>> nobody else seems to.  I doubt it's really unique, so maybe it's just
+>> not doing the right thing here.
+> 
+> The STM32MP2 is unique because the core clock is gated on CLKREQ#. 
+> Consequently, it is not possible to access the core registers from DBI 
+> when no card is attached, causing the board to freeze. I don't know 
+> another platform with this limitation
+> 
+> To fix this, we use a GPIO to de-assert CLKREQ# during probe and restore 
+> the pin to its default AF mode afterward. This works perfectly for 
+> probe, but we lack functionality for PM resume unless we explicitly 
+> select the state with pinctrl_pm_select_XXX_state().
+> 
+> For reference, the init_state functionality was introduced in
+> https://lkml.org/lkml/2015/10/21/1
+> 
+> If we prefer not to extend the pinctrl API in patch 1/2, I can fix the 
+> case in patch 2/2 only with something like:
+> 
+> in stm32_pcie_probe()
+>       pinctrl = devm_pinctrl_get(dev);
+> 
+>       if(pinctrl!= -ENODEV) // PINCTRL is defined
+>            pinctrl_init = pinctrl_lookup_state(stm32_pcie>pinctrl, 
+> PINCTRL_STATE_IN
+> 
+> in stm32_pcie_resume_noirq()
+>     if (pinctrl) {
+>            ret = pinctrl_select_state(stm32_pcie->pinctrl, stm32_pcie- 
+>  >pinctrl_init);
+> 
+> What do you advise ?
+> 
+> thank you
+> 
+> Christian
+> 
+> 
+> 
+>>
+>> Bjorn
+> 
 
-Applied, thanks!
-
-[1/1] gpio: remove legacy GPIO line value setter callbacks
-      https://git.kernel.org/brgl/linux/c/397a46c9aa3343e8efe6847bdaa124945bab1de4
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
