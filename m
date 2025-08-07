@@ -1,85 +1,84 @@
-Return-Path: <linux-gpio+bounces-24058-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24059-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 127ABB1D2D5
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Aug 2025 09:00:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 807D5B1D2DA
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Aug 2025 09:01:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2BF345839C0
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Aug 2025 07:00:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4653B1654C7
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Aug 2025 07:01:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18E1022A813;
-	Thu,  7 Aug 2025 07:00:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B239B227BA4;
+	Thu,  7 Aug 2025 07:01:19 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2552F227BA4;
-	Thu,  7 Aug 2025 07:00:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F63622577E;
+	Thu,  7 Aug 2025 07:01:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754550041; cv=none; b=rlUUifVH6HsV0c56U3p12APD3abaC2AwDLVY5M+PWhvY/fbdNPbBDq9na9LExv/D+V77Gd+93tGAsBu5+Zy/af1PQcTyyKwOLibUob0Itwmy+ynaLiZp4otcXdI8dirTdaVor/psYRI3sXvOav4zctpvLzn8ESlkQr5+cn2FjyI=
+	t=1754550079; cv=none; b=E0gtTmX7S9gEoM/JmXq5JsNUmtzdiuSPDt3P5qERUPz8hBF7QDSd2cE15nF0hrp164oas/5+QeJ6Baws01vOcU+dn4dY0hxW4Sm2ByVjGhnJ0mV+XEecuERsWw5a65IcuGIUiUZnDAe+QtGsRmFNKuZ9zGUn4lU9sQRx2uxjCNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754550041; c=relaxed/simple;
-	bh=y0pbEmAucXyzYHwN+AvxMZLJhfnG6Tw24S4jNDx0MSs=;
+	s=arc-20240116; t=1754550079; c=relaxed/simple;
+	bh=SjxN2evX37YM7OvJQ9bheaqvBfJBGQjbQ1/ppd5gBWU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LWqxBOdFUbTuI2b4qgL/tghY8GTXa+S2hfr4Om/2Mv5zWRDh1VuKz3behj/Y7lQLW9zTKsEmOooqz1ScsO7ez7IZD+9Q2FF5dSwdORZwBKpbSXO2fyg1PuyfSExNeQDxqhSziQzQxdLlJ9cOKfNQhrB1qiWvQDT5Tsl+ELqeDNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.54
+	 To:Cc:Content-Type; b=XSxKCLQhqWfJ4lHwMD9rodV9KRFEkRSJjJnyqOJ3J7G59NhcbZzDLuQRdZBFxp+QE3ug3KamCsFYHfR7TfLDSANJkeTiBjrSPNORpNhmO4vyqQeKZhnGEVa77f/It5ELhqIf0to25UsjVHDaKCqFu8DuiY+/RanN9mN+YJI1Y2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-504dd872585so177483137.3;
-        Thu, 07 Aug 2025 00:00:39 -0700 (PDT)
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-88dbc90853cso185675241.2;
+        Thu, 07 Aug 2025 00:01:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754550038; x=1755154838;
+        d=1e100.net; s=20230601; t=1754550072; x=1755154872;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=DXhKXdZ45N1Qi/RxA8tMd1Sxq2dLMp5kIMy6a3nLPy4=;
-        b=TRpLSojsem4S15YLsczIkcIjahIah0hvh0XUh70gkAchvB1cDEK4Ybk0r/Yd/iWtWZ
-         Q0Jjh7cr37cMTfGIlYDdkiVy9zbj00+4hmJkjWP3Z8oSZ9NMHS20morQJTgIhVWdtgFz
-         DGdCL97w1ldIDCKl/5/FnHsnwiyuM9jUCSlWchCdvjSV2Y2uAktQ+Rid1uNNP01IKsAz
-         Uc5TyYu7adkH8FYkoiv3bpbWQ7IH1urbmNNHPeUUq86MG8x4LL1s8W6ug3yjL0rE6avJ
-         roWPSmdPPmI0vlctlXW9VZt0rqwtMZAfgW6A5Fk90ykxm6u482bxFYOOrDHTtfJgQ1vy
-         Vd2w==
-X-Forwarded-Encrypted: i=1; AJvYcCUrGEjUrsGB68zdQtM/5jDyQ6YnM1jkRyaY4mpCsKJ7MOa5CvISaveb1+T/qfZK4IL+Bbcboh00G3o1HKe4@vger.kernel.org, AJvYcCV3L1MaEpEBpRM3rCvah7URd2ykcLCPmoEhIRX/oTGAzelIbeQlsKYUJBM/3LEbu5mq04dHMBczc2Ff@vger.kernel.org, AJvYcCXqG6gHyh4xxgSsBqZ9zjrJwMatZAYoPpX5CsHgruqR1zDpg3pKVzwM47zI2UU7GhSSLwTD6R/ylb/JAc1fD1Tsgjc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7ODT+ddSVIFtt7ZclrxCKYqgNOj9EHGs8L3HxthJXINlmmj3J
-	Lx9/z+CC+cZ/n5bPk5qwWb9rvhlfw8hJOGBaG3RBjkoXPCbIX+OcHz/9Vrv9hzNs7jc=
-X-Gm-Gg: ASbGncsdz1XKvd4ofhcXtOOtfzpkJO9+RS8W35N97uIRqezKgeHzBvtDgCxdgmdkxDL
-	Px5a0n/xXcDdOyfuoOzpS3jxM4klCq03qEnhX708fL7+s2NXF6X+DdS3lC5s0xLx0E8mqLfyahP
-	gxVCwhyNWASyLaeiJAmA3PuSNG4bqVwEuwejnTSrwTz+i+iXO60qjT7QDzMvU3YszwfkIkHrsXV
-	zNyjusAUerL1+YS/uoFpahaGhwPSPuo1z6P4MEIExFOKbPpcNOIHvGhoHtH+QQh6/b9+IohNv33
-	DmcGfa69P62Ne4vkMyEpp9buifFa6UcW9jZK8LGclzM5GlYYKPvyxM+ZgEAN4KQgnLXJd7+/ukp
-	zZCvtHpb7SaBvDFeCDp21BNMkfPuMco2t5xF/Hp2SQOKLdk3OSkVhspIv2YEgLG/Y7sxaguM=
-X-Google-Smtp-Source: AGHT+IGHldsc2cnVr27KnuvLk0q5/WecqZP93GHUCQCQNjHIeOYShOvUtGBdpAEJkXD9dR9A4iNx8w==
-X-Received: by 2002:a05:6102:3747:b0:4de:81a:7d42 with SMTP id ada2fe7eead31-503710c9afbmr2775394137.1.1754550038482;
-        Thu, 07 Aug 2025 00:00:38 -0700 (PDT)
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com. [209.85.217.45])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4fca3aea9fesm3503144137.21.2025.08.07.00.00.38
+        bh=BnyTR0nkf0Tccc8/njW3Dtowh1tPI1W3Sd/j82o91l4=;
+        b=qaSaNX8hEtUjcEcfRzFC5A6bYzsa/UPLuhSkI1Bc7ljDBug7pOL6ahhqJQaKkkjWKD
+         zfLUrhN0Cpvp1HUSHz4Pd6LrCT7UTjvJwdPoLY5EGdhG+CVYIAYJV730FiL0r6FONU2a
+         8aDDSH7in73IULZ+cTduEhySqmgvdkEg0dHdmNA+rziDciXwylAPiMP5i46unzzztNjf
+         57p5UqZ5VXzVMASyBREzKGTlkKoHDxtQ+LZnT2yZrB2wqXbm/QywfQE2R759B5jK7Yki
+         HFJdNsaxfk+oGwfs7NMvshjkr+X6dY0KxIu/gKz6r2nfsyZETmCSCQCQb5WLZZRRQYCj
+         PWhw==
+X-Forwarded-Encrypted: i=1; AJvYcCUPJwVCnEVUnRXi86NmJWQbHYdFpDYI/AnL+IVaiY8v6Lwmm4RwfAvQPzjSYcHCEyJNaCAlP1JHB5iU7aCp@vger.kernel.org, AJvYcCUneOWH1OqgYYWe8na5Bpxu6MVbwircZMUgYWvTTTUunhCMD597M+KFlyP4jEYwmtyEO+biKv5GnFJF@vger.kernel.org, AJvYcCXnUy2Ns9WJQkZUJfl1EvdMbYE1vBwclIClk1JJZSVt68Looj/fdR+jW7hBHzPWgdbzUFQIW4Xd4IeHQrTVtv7Pmos=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz379RjuT7jwLLHEodrb5XXZU4rKtUqWnfaNViAF0iavPYRlTUs
+	TAsziTpUhLd7AzXdP3NZQp9j9Pinx23in8k0lgP6bIbNLbvCG1XyOBzhM7uomRkj3jU=
+X-Gm-Gg: ASbGncvWOoef6Y4tuG9MuntWy6fiWUSMNKq1qbjrrkGDUByHxnUxWXxXhJkfgbqcOZp
+	406j5Mc1mkyTes1G+T22njszgc3fu49P5tpg5vO2R0791UNS4LhLHDqkg4CmzI5+N6swt8oSS8/
+	VslJ1jdKK6Sq2JzWfllbzkDpN7M2ei6Ja1xLuwZmgQ3ypxJy4l2ofbE8XoU7HJW13SkjCg6weKd
+	cljg3sdmNMwZBxTsWptjUOp5MgFBAHbwF8hEXeT4uWiSTyej5khCa5dl8lqzMGuLFxZxVoJ0Q6H
+	/kkQlo2x/yVHCzfQxB9jNi/mBNIkqyJc69dklOc/Re93kaYUiAs286ZAs+1IrFyssd0+fsPL59r
+	K+OwtepqEo/OzJj5EwivyYL/wdNTv7adeEdKXYIg81Mw7unQzGu5sjx9g4kOR
+X-Google-Smtp-Source: AGHT+IGMcLOT+rHjEpkH817J6Qst+Y8J+NV08wNUSRyvTinTZ6FZcc7oPoEtH0ugdFyrowC95GcaIA==
+X-Received: by 2002:a05:6102:4423:b0:4fc:f5a:490a with SMTP id ada2fe7eead31-50374a2a2aamr2918118137.20.1754550072398;
+        Thu, 07 Aug 2025 00:01:12 -0700 (PDT)
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4fc0d42ba5esm3883826137.15.2025.08.07.00.01.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Aug 2025 00:00:38 -0700 (PDT)
-Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-504dd872585so177475137.3;
-        Thu, 07 Aug 2025 00:00:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCURJucShEVDFiDXG60+tZz6l1wpNInIzpIT3LZlV22ICIiQ3BJzTQyK6hDTSIxEp8wa775XT+UoXFomvqsD@vger.kernel.org, AJvYcCUjvg+z1q2Fj9g2tvL5luv5U8mpnx9W1Q0Fi0JqkPq1kKlXEYOuUv7+Ci11GwCR0q63MuPhK6s24LSyVqIvfCvckEo=@vger.kernel.org, AJvYcCVdOewOiHc43dJ22kXKrDAKmDbVi7Q1CSt+5CE+ynkIqLItVhJKVe0rsKqGxT+cKVT4LRxEKswI3US7@vger.kernel.org
-X-Received: by 2002:a05:6102:418d:b0:4fb:f31a:98ce with SMTP id
- ada2fe7eead31-503710c9209mr2680177137.6.1754550037770; Thu, 07 Aug 2025
- 00:00:37 -0700 (PDT)
+        Thu, 07 Aug 2025 00:01:12 -0700 (PDT)
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-88bacb82a6dso129973241.3;
+        Thu, 07 Aug 2025 00:01:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUAHTlrGDrImrb1uQmx+p5NyNagg7b9e8w1stmpNx070q8QCflNa7uXPrkmqG4oV76759S1BQycSqrG@vger.kernel.org, AJvYcCVNV53NSUL99GlCFi6V7afP5FTo0VQQS+peX3MQB+Tmpk0lOz1zIl5itKkSOgslFkCVRqOVXIjGJJ2oGh6TXSYJIlg=@vger.kernel.org, AJvYcCX5yoFHQ/7zzhz32ag/oVKEpC6xR/bGUKHKv6/Gk1vi5ge92aUSzon0iHxa6uudiiPC5RheQp1u0lfqYs5t@vger.kernel.org
+X-Received: by 2002:a05:6102:2926:b0:4e5:9cf0:4eb6 with SMTP id
+ ada2fe7eead31-503722a3e57mr2742696137.5.1754550071694; Thu, 07 Aug 2025
+ 00:01:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250806195555.1372317-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250806195555.1372317-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250806195555.1372317-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250806195555.1372317-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250806195555.1372317-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250806195555.1372317-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 7 Aug 2025 09:00:26 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXeL+bm_R+HD986FwC5AhokwX4219rcJpJveL+xP1F8Yw@mail.gmail.com>
-X-Gm-Features: Ac12FXxAFYKHCV9J0KTwJrHpXh76t2zegs4nqbXiBgxRvlJbGZ5KGb0bPPNjP10
-Message-ID: <CAMuHMdXeL+bm_R+HD986FwC5AhokwX4219rcJpJveL+xP1F8Yw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/7] pinctrl: renesas: rzg2l: Unify OEN access by
- making pin-to-bit mapping configurable
+Date: Thu, 7 Aug 2025 09:01:00 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdW-A0-a3Kvc+4o4yr+bGMd_4zV=4RMQhvzujM0q8_e8pA@mail.gmail.com>
+X-Gm-Features: Ac12FXy3V3LpsC0HrNM0hhMYL7PGUKcppqSgA_32ii9dd939ZuPrMqgtlGe1YRg
+Message-ID: <CAMuHMdW-A0-a3Kvc+4o4yr+bGMd_4zV=4RMQhvzujM0q8_e8pA@mail.gmail.com>
+Subject: Re: [PATCH v3 4/7] pinctrl: renesas: rzg2l: Remove OEN ops for RZ/G3E
 To: Prabhakar <prabhakar.csengg@gmail.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
 	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -91,27 +90,18 @@ Content-Type: text/plain; charset="UTF-8"
 On Wed, 6 Aug 2025 at 21:56, Prabhakar <prabhakar.csengg@gmail.com> wrote:
 > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> Refactor the RZG2L pinctrl driver to support reuse of the common
-> rzg2l_read_oen() and rzg2l_write_oen() helpers across SoCs with
-> different output-enable (OEN) bit mappings.
+> The RZ/G3E pin controller does not advertise PIN_CFG_OEN capability, so
+> there is no valid mapping for output-enable bits on this SoC. Remove the
+> oen_read and oen_write callbacks from the RZ/G3E driver data to defer
+> OEN support until PIN_CFG_OEN support is added.
 >
-> Introduce a new `pin_to_oen_bit` callback in `struct rzg2l_pinctrl_data`
-> to allow SoCs to provide custom logic for mapping a pin to its OEN bit.
-> Update the generic OEN read/write paths to use this callback when present.
->
-> With this change, SoCs like RZ/G3S can reuse the common OEN handling
-> code by simply supplying their own `pin_to_oen_bit` implementation.
-> The previously duplicated `rzg3s_oen_read()` and `rzg3s_oen_write()`
-> functions are now removed.
->
-> This improves maintainability and prepares the driver for supporting
-> future SoCs with minimal duplication.
+> This is a preparatory change for future unification of OEN handling across
+> the driver.
 >
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
 > v2->v3:
-> - Added blank line after if condition in rzg2l_read_oen() and rzg2l_write_oen()
 > - Added Reviewed-by tag from Geert.
 
 Thanks, will queue in renesas-pinctrl for v6.18.
