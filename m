@@ -1,67 +1,66 @@
-Return-Path: <linux-gpio+bounces-24088-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24089-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 220A2B1EBB0
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Aug 2025 17:23:44 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12301B1EBB5
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Aug 2025 17:24:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0A23E4E4981
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Aug 2025 15:23:43 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 12B8E4E49C2
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Aug 2025 15:24:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EE3C283FC8;
-	Fri,  8 Aug 2025 15:22:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 933C7285073;
+	Fri,  8 Aug 2025 15:22:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gs8U69l6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rlmv0my5"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19FFE2836AF;
-	Fri,  8 Aug 2025 15:22:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2EC285063;
+	Fri,  8 Aug 2025 15:22:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754666530; cv=none; b=V39h8uFPolKtJXpgMPXrjXjjMAZJoIs7IzZVe0bMwBWMM2xKXT++q7DdwPVxOCBP4w+CE+5/P7saYjxQxYWOw7O7Kow+J5cCRMiZZzIgC7GkMbDWRI/4eLwPjwR675OKcWMId+sG+sca6evJYJQ46cBgjgSiiHq+0dgwqjsBCj8=
+	t=1754666542; cv=none; b=mGSQmI7KzOmc1k2wzOBOHwTvfpR4AbWX44qGGgZXxxyolpRbppt1+vEbiYvaaOqYpy8iF68YffGsrDnIiG5pfexMj1Ote6w4YDtjMHO7ut40NerkAuWDvfOMog4Gz2rMEhMtjC/E4sSWbPnKluCwpwtd3JdGvPhUC7Uwy1FoUHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754666530; c=relaxed/simple;
-	bh=NWPfkLvSzYXpOS3JkL5/KajBbmF4O88cmr615YX9oHI=;
+	s=arc-20240116; t=1754666542; c=relaxed/simple;
+	bh=Rsa80nsfI+kc8HXUdwAuqZOmhTLHnOi2TSgx9oPYmQA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XKn9Jt1HhbTNxl2BFWl2ASijj/VFEqfUImgaKzpiN5DPIdpPn2VK8l7NWm1AtCsaXcgRd+DhRDcgRPf2i/MG+ZFwoa4w22pCdAuBlZU+qgPLnMY0Ilm4w8rANrfhz8V1dWCpolDRVFjefZZexgBzDCnh7XM4DvdVA1Xo/+F6Tf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gs8U69l6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D141C4CEED;
-	Fri,  8 Aug 2025 15:22:06 +0000 (UTC)
+	 MIME-Version; b=m+c47gtYppYdiSHSltJlOcZri0DoNCwBZm7CzjX4W+yHpuL+qhARn/sPf/ZQrzq69e9PpNdGloGDo5Nn7sAeWYHpQ7z+3hS4fsrLhVhXJas5CUIDTFnZfU1pVj3WIDyh0edrK0fDMYZgVCBl6ZQp19Z63y+ElRi0Zn/QcD9eVj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rlmv0my5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C554BC4CEF7;
+	Fri,  8 Aug 2025 15:22:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754666529;
-	bh=NWPfkLvSzYXpOS3JkL5/KajBbmF4O88cmr615YX9oHI=;
+	s=k20201202; t=1754666541;
+	bh=Rsa80nsfI+kc8HXUdwAuqZOmhTLHnOi2TSgx9oPYmQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gs8U69l6pTkBtbfrmTTcI1PVHkTpEocW8j7r53jtN+EIn8TwLb8RplwrfHIeFYG7V
-	 apMn0EbVyq9TKwD5X6kEwlsDRmB86149cDLTAjAF6rVZlZDjLTldLe+YgZ3rUlr0EW
-	 fbKNlG9g8VRyzbtDJHykKlhy4euYr48FsGOZfanSbBOmblz8XNedNjByLSnjyeiuJi
-	 7KB0797CXA0MtwqJfOQ9+2rTVWSAMMZ4bxoQ8WckZt/TPGadYtnm5OuiDqQZWx/blk
-	 8OL0ACb+7vkR7GJkzuSi8CNqMB5zsGVYAeDQ7TqMVZR1tUHLM6WzvJb6R5j5SSFT8O
-	 C6eEOZPvCJrwg==
+	b=Rlmv0my5qzqgX2Dt8yivi4jZu/nHvszgWyaeVbBRGBTr0eqIA5nuoLeSuRdZlN5Zf
+	 WZu/1ajnwGxRqV/Aa2bQqsw+SFC+okyPb1kICwr3izRgLSJxOTPO9n+ra1xRbWN9+R
+	 a1DM99RimFyRZpecAXbLPY2VD+6az4zJ+O56mgmBsHTDDvAkKKYBc6zQV9+KBu7jjX
+	 +8jIwwmwXmnGsu38qAvishI8usebT6AOtnhtd4thmFPTw1sSMYwpX5oQYOBGkw3IK4
+	 4z9z8czhyZk+Tyi0Q9cWPMnp6dzispnTyvsF2y3Tt6LhUsSo3ZgL0L/F/5azbsa3xg
+	 zjfTJxeEeYsgA==
 From: Arnd Bergmann <arnd@kernel.org>
 To: Bartosz Golaszewski <brgl@bgdev.pl>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	linux-gpio@vger.kernel.org,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Lee Jones <lee@kernel.org>
+	Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	Gatien Chevallier <gatien.chevallier@foss.st.com>,
-	Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-input@vger.kernel.org,
+	Kees Cook <kees@kernel.org>,
+	Anish Kumar <yesanishhere@gmail.com>,
+	Mukesh Ojha <quic_mojha@quicinc.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Dmitry Rokosov <ddrokosov@salutedevices.com>,
+	linux-leds@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 09/21] input: gpio-keys: make legacy gpiolib optional
-Date: Fri,  8 Aug 2025 17:17:53 +0200
-Message-Id: <20250808151822.536879-10-arnd@kernel.org>
+Subject: [PATCH 10/21] leds: gpio: make legacy gpiolib interface optional
+Date: Fri,  8 Aug 2025 17:17:54 +0200
+Message-Id: <20250808151822.536879-11-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250808151822.536879-1-arnd@kernel.org>
 References: <20250808151822.536879-1-arnd@kernel.org>
@@ -75,114 +74,74 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-Most users of gpio-keys and gpio-keys-polled use modern gpiolib
-interfaces, but there are still number of ancient sh, arm32 and x86
-machines that have never been converted.
+There are still a handful of ancient mips/armv5/sh boards that use the
+gpio_led:gpio member to pass an old-style gpio number, but all modern
+users have been converted to gpio descriptors.
 
-Add an #ifdef block for the parts of the driver that are only
-used on those legacy machines.
+Make the code that deals with this optional so the legacy interfaces
+can be left out for all normal builds.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/input/keyboard/gpio_keys.c        | 5 +++--
- drivers/input/keyboard/gpio_keys_polled.c | 2 ++
- drivers/mfd/rohm-bd71828.c                | 2 ++
- drivers/mfd/rohm-bd718x7.c                | 2 ++
- include/linux/gpio_keys.h                 | 2 ++
- 5 files changed, 11 insertions(+), 2 deletions(-)
+ drivers/leds/leds-gpio.c | 8 ++++++--
+ include/linux/leds.h     | 2 ++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-index f9db86da0818..984b20f773ed 100644
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -528,6 +528,7 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
- 			 */
- 			bdata->gpiod = NULL;
- 		}
+diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
+index a3428b22de3a..e43accfa78e9 100644
+--- a/drivers/leds/leds-gpio.c
++++ b/drivers/leds/leds-gpio.c
+@@ -212,7 +212,9 @@ static struct gpio_desc *gpio_led_get_gpiod(struct device *dev, int idx,
+ 					    const struct gpio_led *template)
+ {
+ 	struct gpio_desc *gpiod;
 +#ifdef CONFIG_GPIOLIB_LEGACY
- 	} else if (gpio_is_valid(button->gpio)) {
- 		/*
- 		 * Legacy GPIO number, so request the GPIO here and
-@@ -546,6 +547,7 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
- 
- 		if (button->active_low ^ gpiod_is_active_low(bdata->gpiod))
- 			gpiod_toggle_active_low(bdata->gpiod);
+ 	int ret;
 +#endif
+ 
+ 	/*
+ 	 * This means the LED does not come from the device tree
+@@ -228,6 +230,7 @@ static struct gpio_desc *gpio_led_get_gpiod(struct device *dev, int idx,
+ 		return gpiod;
  	}
  
- 	if (bdata->gpiod) {
-@@ -583,8 +585,7 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
- 			if (irq < 0) {
- 				error = irq;
- 				dev_err_probe(dev, error,
--					      "Unable to get irq number for GPIO %d\n",
--					      button->gpio);
-+					      "Unable to get irq number for GPIO\n");
- 				return error;
++#ifdef CONFIG_GPIOLIB_LEGACY
+ 	/*
+ 	 * This is the legacy code path for platform code that
+ 	 * still uses GPIO numbers. Ultimately we would like to get
+@@ -244,6 +247,7 @@ static struct gpio_desc *gpio_led_get_gpiod(struct device *dev, int idx,
+ 		return ERR_PTR(ret);
+ 
+ 	gpiod = gpio_to_desc(template->gpio);
++#endif
+ 	if (!gpiod)
+ 		return ERR_PTR(-EINVAL);
+ 
+@@ -276,8 +280,8 @@ static int gpio_led_probe(struct platform_device *pdev)
+ 				led_dat->gpiod =
+ 					gpio_led_get_gpiod(dev, i, template);
+ 			if (IS_ERR(led_dat->gpiod)) {
+-				dev_info(dev, "Skipping unavailable LED gpio %d (%s)\n",
+-					 template->gpio, template->name);
++				dev_info(dev, "Skipping unavailable LED gpio %s\n",
++					 template->name);
+ 				continue;
  			}
- 			bdata->irq = irq;
-diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
-index e6707d72210e..0ae0e53910ea 100644
---- a/drivers/input/keyboard/gpio_keys_polled.c
-+++ b/drivers/input/keyboard/gpio_keys_polled.c
-@@ -301,6 +301,7 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
- 				return dev_err_probe(dev, PTR_ERR(bdata->gpiod),
- 						     "failed to get gpio\n");
- 			}
+ 
+diff --git a/include/linux/leds.h b/include/linux/leds.h
+index b16b803cc1ac..034643f40152 100644
+--- a/include/linux/leds.h
++++ b/include/linux/leds.h
+@@ -676,7 +676,9 @@ typedef int (*gpio_blink_set_t)(struct gpio_desc *desc, int state,
+ struct gpio_led {
+ 	const char *name;
+ 	const char *default_trigger;
 +#ifdef CONFIG_GPIOLIB_LEGACY
- 		} else if (gpio_is_valid(button->gpio)) {
- 			/*
- 			 * Legacy GPIO number so request the GPIO here and
-@@ -323,6 +324,7 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
- 
- 			if (button->active_low ^ gpiod_is_active_low(bdata->gpiod))
- 				gpiod_toggle_active_low(bdata->gpiod);
+ 	unsigned 	gpio;
 +#endif
- 		}
- 
- 		bdata->last_state = -1;
-diff --git a/drivers/mfd/rohm-bd71828.c b/drivers/mfd/rohm-bd71828.c
-index a14b7aa69c3c..fb68694fadca 100644
---- a/drivers/mfd/rohm-bd71828.c
-+++ b/drivers/mfd/rohm-bd71828.c
-@@ -21,7 +21,9 @@
- 
- static struct gpio_keys_button button = {
- 	.code = KEY_POWER,
-+#ifdef CONFIG_GPIOLIB_LEGACY
- 	.gpio = -1,
-+#endif
- 	.type = EV_KEY,
- };
- 
-diff --git a/drivers/mfd/rohm-bd718x7.c b/drivers/mfd/rohm-bd718x7.c
-index 25e494a93d48..6c99ab62e31b 100644
---- a/drivers/mfd/rohm-bd718x7.c
-+++ b/drivers/mfd/rohm-bd718x7.c
-@@ -20,7 +20,9 @@
- 
- static struct gpio_keys_button button = {
- 	.code = KEY_POWER,
-+#ifdef CONFIG_GPIOLIB_LEGACY
- 	.gpio = -1,
-+#endif
- 	.type = EV_KEY,
- };
- 
-diff --git a/include/linux/gpio_keys.h b/include/linux/gpio_keys.h
-index 80fa930b04c6..e8d6dc290efb 100644
---- a/include/linux/gpio_keys.h
-+++ b/include/linux/gpio_keys.h
-@@ -25,7 +25,9 @@ struct device;
-  */
- struct gpio_keys_button {
- 	unsigned int code;
-+#ifdef CONFIG_GPIOLIB_LEGACY
- 	int gpio;
-+#endif
- 	int active_low;
- 	const char *desc;
- 	unsigned int type;
+ 	unsigned	active_low : 1;
+ 	unsigned	retain_state_suspended : 1;
+ 	unsigned	panic_indicator : 1;
 -- 
 2.39.5
 
