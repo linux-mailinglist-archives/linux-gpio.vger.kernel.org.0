@@ -1,427 +1,444 @@
-Return-Path: <linux-gpio+bounces-24071-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24072-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F4A2B1E6D9
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Aug 2025 12:54:53 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25C7FB1E6F5
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Aug 2025 13:07:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 21996566032
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Aug 2025 10:54:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CC07A7AF9EF
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Aug 2025 11:05:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D719256C6F;
-	Fri,  8 Aug 2025 10:54:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63A83231855;
+	Fri,  8 Aug 2025 11:07:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="jaTsuWve"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fQdxHtxB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A85246BD3
-	for <linux-gpio@vger.kernel.org>; Fri,  8 Aug 2025 10:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C9B1FBE9B;
+	Fri,  8 Aug 2025 11:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754650490; cv=none; b=ln8e6knDbwbRgYOQpxsE9r59eCRU1exdRxPpKr5J8SanikEIcGsyccUmbBB1rEwYaL31ED49BmNGgcRamQXIyXzUH5f/MUoLHBN3GiEzLq/M9tYhG34s+QRqCn6RJsLL/NVZ/l2M2P/URfJqKFBwPRgsbfSO0TOSvlDg2gyJtM8=
+	t=1754651244; cv=none; b=FXfyxYd3a1WlkpK6EIWfWE0ZCXBT9foK1h+nEXQl5NdsEfxk/CYi0tATY7G864XC0HXmcwU+UZ+ff34yn2EzfPrxhl1HFuAn+XpbzKnK30fBFB7j1Uf6o4X2LipEbb1RuwFsHjXJy90vxvTvy1Co391rEzWIG165icINdv/BKIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754650490; c=relaxed/simple;
-	bh=EV3g5k5zyxsKK5CBzB9Qk0ayiK4C5buxD+vlITadXMk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=InX3g9BQoPr5+8KLkLjAZ62RN0a22lJppqfLONqzb5lYiT4dUtsIpN93mvnyeA035pxS8TomfYmtdSVnCZ2BrwAsYdAaYiGk052z+zDYeQNGg2IEBxv8zrtXVX5OvzorXsYtDml4/qeTpcYvNibH32rnJXJuA8PRIFblj6jmAAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=jaTsuWve; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3b7834f2e72so997862f8f.2
-        for <linux-gpio@vger.kernel.org>; Fri, 08 Aug 2025 03:54:46 -0700 (PDT)
+	s=arc-20240116; t=1754651244; c=relaxed/simple;
+	bh=0wcnvJdBzRXHRBfFbTBXzEb6Off2jCZrooo1uDvoghs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rZTDRHU6KHqWRUrjVU6GVNW1tJmd/TmS5kn8Vl7U7pirh3fh38kEm0x2LwmPKSm93n0Sq7mO74iz8ONBnOw1BqLO71dhMpEishQWuhHp7YlIW2hKC3PFHwnyikaZW6vZSW8PWovwWXTYxYE3GVZShsXhzcvhYkusJQvS71AFdFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fQdxHtxB; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3b78310b296so978833f8f.2;
+        Fri, 08 Aug 2025 04:07:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1754650485; x=1755255285; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZFbJ7DGUr43TNrU2K/61XZxe2nHYhi0+LrpKBxoo42E=;
-        b=jaTsuWveH320USeZYnSZ5X+ilo2Sc/mIrVfrmhz///iMmwrTLJ44T/vV5CvdD995Y0
-         hS3vWRZIhOkfGNmmQjm9GHSRIaGTL/hb1vaHM9am2lWpVo+ZPyQn6WUdTmYdxcZ6Tews
-         CaYXuP7rvYg3Q2ChtF2eQnUAOoy3QJr3nYbTco67m86ZRl+rG9qZ9eRQFijfT/Ma5Dma
-         xNNSzv+Lkriea+fvUiJbx8WJ9TMgBhXVgnBVcJUWFOvdM/NiDL/6plg6sNeKM1rO5Gdr
-         8ZMgNpHyjpjYXyd+4enC2gWpwPlOY0kurZQyctMa4UxXxnIku4Ztz0jJtunRDDaJgfmk
-         PmiQ==
+        d=gmail.com; s=20230601; t=1754651240; x=1755256040; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Cpk6F//e5HnFlH/LYppdciud82iEdk8diNe7dGvpzB8=;
+        b=fQdxHtxB30Yaz1NbSuHvjStavFkvCAifZX1HuFUfouaYxFh/lprMwsfpjJ0hzEK/z8
+         nNZ2tgw6zPhu20tjYhnshtULA/vAP3mWFvHXJSiiBhxdlgeO5Hy37+lW9DqIr6vI8+mh
+         BnxiGuDJCF1PKQ2gv5h9zZAQ/KrbGQKR2t/p7gPyCX9B7QSPT0mCMjWuPW0YqHKGNFk/
+         4Xgfd48u3olCqO/UCohzMYDGwdHHt8bynaEIx4LzGs/y0a4oh3iIZmMbD3VjCyAa8vYs
+         3MNMDL87PAcVuvD1aXuazetrhzO6yn1H/xAmVQgOhbkns9QHeTwOAW6I8L2S6ThJMTKZ
+         TjYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754650485; x=1755255285;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZFbJ7DGUr43TNrU2K/61XZxe2nHYhi0+LrpKBxoo42E=;
-        b=S/+nDSAkvz35nXJtgiW8ytN5DcEsvk+JxACLd1aM5xs6o2TrpvD7khe8ZTkgz4Ax3Y
-         2FyhdNGkXuqVEDdgy16vkqb6ZmZuxKoo6oVKZmUtO3BS8wJNg03pEGCjAXK7H2ckQZNn
-         Gp+1xfBcWMHfQX5S4uBssF0Kc19uM0Lpo44QCmOW6cygG4Kqxdl6wy5EuqELpG4qRGdN
-         sdOz+BrlQbnY0J/gECv9FskpHN3R85kt/lU/Ku7aSVEYTZcy7ibvkbJyCxqKgfM78IIe
-         rHMVaJU5x3+MzHDDiIe07QhmnueCnn4g2XZbcEhIQ07Q1vz0RfVu+vMD9mNIk1sjAeL0
-         sKvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWaTLU3s9XYukMxsfa7Biz/ttVVTPiZ1bsH7UWDzO25bNS/wWoStLfxFXL/TK/rG1X0/IsNMa8SQHaB@vger.kernel.org
-X-Gm-Message-State: AOJu0Yys6PCKIm95dp5cTZh5LpcNkdXXr72gFwOJkn1md/yRyoeeJ1tS
-	6YBoAtklwqbFAEjWGB8mbJnQWKwd4a12s5ys/Hk5JPpvs7dJ4pdO3r/VV9n55u+/KUc=
-X-Gm-Gg: ASbGnctHfr5vgtOfm6nCegBNhZyB5NBSJyPYPK8nrrp5+ujjYLS97naeRMs6inKtE8g
-	GRLlmtPw80QKb6c3H9WK3Gx3Frckbj5VtFSloW/5CkyM0xicI1AFqyBcWbz5QNp9Tspso7bzgax
-	bKUbOPhiB5VvGnjJAIGZHTy8fxAHg+uP8kOlMECrDM4k0b8olQ3NvpLzVClcaJ2aExQ4KrGnFPJ
-	bwTdzQW7Q2cAd5KQX4t1mt34qw/ymukTHBN1u1+rpJ0znRjkIctw9BpuNgMQ7lIaFNcoTiC/WgN
-	N2QpU4GaLGRabtaNVNKeGGpMHaCcKSGsn9CbsuvwhGQxARbtsELw1M0G3Cl4HjGviDlRTNsusAY
-	SaM8nX6hUMefbZmHmeMRN7nJvHBU75Cc5l9a+GrY98XF/fhxulddPe8iy1tiiQQEzYRawSiJdHr
-	vjb6FuCCflyxK1MVi5
-X-Google-Smtp-Source: AGHT+IHKS+oeeNKj/EFlrmrofpMOFfPx1KyywWr1hRI8tAdaxlhC/+6F4BOCfjFok9c0Kftk9FX8Jw==
-X-Received: by 2002:a05:6000:2011:b0:3a5:1cc5:aa6f with SMTP id ffacd0b85a97d-3b900b4dbdemr1960149f8f.34.1754650485269;
-        Fri, 08 Aug 2025 03:54:45 -0700 (PDT)
-Received: from brgl-pocket.. (2a02-8440-f50a-1439-dbd6-857c-37ea-be16.rev.sfr.net. [2a02:8440:f50a:1439:dbd6:857c:37ea:be16])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c4532c4sm29723646f8f.36.2025.08.08.03.54.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Aug 2025 03:54:44 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio updates for v6.17-rc1 - part 2
-Date: Fri,  8 Aug 2025 12:54:36 +0200
-Message-ID: <20250808105436.6021-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.48.1
+        d=1e100.net; s=20230601; t=1754651240; x=1755256040;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Cpk6F//e5HnFlH/LYppdciud82iEdk8diNe7dGvpzB8=;
+        b=WrBuHWdw/ZUiPZ4evp8RSr9eq8GwctvJ71bnz0gRgwXt3Gb6+nQB10NerP/t3db/Q9
+         rLWqJwvGPAWFLFLBd8yNgF8l4MYPiwoLRlCuFuenBmrzVvtgB19D5JG/MyCR+/enhJmD
+         61+mq9Oe8kYWR61/eNUBIV7fL9c4VfNT/83jDtESJ8235snytdi5OY6YZCHiWBcgbKcn
+         ufmcJtEZ0WPrpsYkBHoO5Dxq5VquYS23UYxjtnvZRkvKDW/t59rEOjnx0td2QWEL1Cvb
+         f8TCA5GCWQ9w2YkYNlwkoCWAGJr+FqxsOG4Mhj51FBAIovMNFm6zajvZuGs5m8C/bqd7
+         wQYg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0wVXI6s4umHPQCHNCJA9rI4CEvpxDrNN/xvxuYPw1Pi9DWSmN6guIFZ1b3U8wdNt9JX7RpGyYYiEfZA==@vger.kernel.org, AJvYcCU6J9MXr7Nk6aOIsCvIiJMSqNWMA40ra5kvGCFHbGqH0GnvxOeKdZPCiDSkzulsG8nLwfy10WkCPUqwpX6+@vger.kernel.org, AJvYcCV7QDIvq/qxcuO8khkFWbdwUwziERo1Slj8rmw/1CkJ54QkMjiYSRRxfNfm4C0apvfvmO740jkp/8zHInL8vAizh8M=@vger.kernel.org, AJvYcCXcqtaoIynSzKBLm7chAJ5QWvu8NMj57OYj6FT+Q1nIlKJi71Vlzhq1yrMHXRz8fX4Dt+ayr5OOjxl3@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBer09RP6Cd2IvWb91TiGw2WT/M3sSBgXUqNYF68p4Q0dHvuDK
+	XGFkwJQfi2gWyOBBZPHvDS0BA6c8GWW06ILF03ExGmFj2Z3pGDKtjPlG8jFgiwbvyEfrjGTwKZa
+	QJqPLXa4reKMvktSFl7c0gDCjpOUT74w=
+X-Gm-Gg: ASbGncsehzh+bSDiL6MrtCPg/lq9hKtctxUVfPjM30Y0Ysze4+hVggKQOmC7p3ASRB1
+	VjWgTXwhmx6bY9ChZHgsK4YeNGJKp2ViwbPqc02Pw+GRjgmkxHDh3Sl/HroZ6BHpXsFbjXM7xgu
+	S3vIkMyjXXiqSDAaFSEiiGIkUIkFCS076jls/PhHTC1be/H51vjcWRAW5GPiwJv9VcLQ2EzwkA6
+	qHS4Q==
+X-Google-Smtp-Source: AGHT+IGMIVVF3VMxa0toFXStD+1Fni9aH/a2WoTovgwS4uo3mnLYJqoFve3Z6x7lD6nACewr/LTAhGvoozgN8bH5mO0=
+X-Received: by 2002:a5d:5d88:0:b0:3a6:d95e:f38c with SMTP id
+ ffacd0b85a97d-3b900b4d414mr2352572f8f.33.1754651240271; Fri, 08 Aug 2025
+ 04:07:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250801154550.3898494-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250801154550.3898494-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVhxxJprKSr3-QmO-8+ue+guqErW5e1tj3yEHRMZhdeiQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdVhxxJprKSr3-QmO-8+ue+guqErW5e1tj3yEHRMZhdeiQ@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Fri, 8 Aug 2025 12:06:53 +0100
+X-Gm-Features: Ac12FXy8n6U2JBYK0locMxmJWM3bxYij6RxqYH7bHzdjOlfFwKXTVwLNfjPbrUs
+Message-ID: <CA+V-a8vo2F1yFMZErg6GPwcWS+ENoafg8-AfnHHq=SMaxn4ZBw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] pinctrl: renesas: Add support for RZ/T2H
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Thierry Bultel <thierry.bultel.yh@bp.renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi Geert,
 
-Linus,
+Thank you for the review.
 
-With all dependencies now in mainline, here's the second GPIO pull request
-for v6.17-rc1. As discussed: there's a small commit that removes the
-legacy GPIO line value setter callbacks as they're no longer used and
-a big, treewide commit that renames the new ones to the old names across
-all GPIO drivers at once.
+On Wed, Aug 6, 2025 at 3:48=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68k=
+.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Fri, 1 Aug 2025 at 17:46, Prabhakar <prabhakar.csengg@gmail.com> wrote=
+:
+> > From: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> >
+> > Add the pinctrl and gpio driver for RZ/T2H
+> >
+> > Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> > Co-developed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com=
+>
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> > v3->v4:
+> > - No changes
+> >
+> > v2->v3:
+> > - Fixed Kconfig dependency.
+> > - Added dependency for 64bit to avoid build errors on 32bit systems.
+> > - Included bitfield.h
+>
+> Thanks for the update!
+>
+> Seems like several of my review comments on v1 were missed.
+>
+Sorry for the oversight. I'll go through and fix it in the next version.
 
-There's a small conflict with the SoC fixes tree in a seldom used board
-file. You can just prioritise my tree as with it, the other change is no
-longer needed.
+> > --- /dev/null
+> > +++ b/drivers/pinctrl/renesas/pinctrl-rzt2h.c
+>
+> > +#define PM_MASK                        GENMASK(1, 0)
+> > +#define PM_PIN_MASK(pin)       (PM_MASK << ((pin) * 2))
+>
+> Please move PM_INPUT and PM_OUTPUT here, and insert a blank line
+> between the PM_* and PFC_* definitions.
+>
+OK.
 
-While at it: there are also two fixes that I picked up over the course of
-the merge window. Details are in the signed tag.
+> > +#define PFC_MASK               GENMASK_ULL(5, 0)
+> > +#define PFC_PIN_MASK(pin)      (PFC_MASK << ((pin) * 8))
+> > +
+> > +#define PM_INPUT       0x01
+>
+> BIT(0)
+>
+> > +#define PM_OUTPUT      0x02
+>
+> BIT(1)
+>
+OK, I'll make use of BIT macros.
 
-Please pull,
-Bartosz Golaszewski
+> > +struct rzt2h_pinctrl_data {
+> > +       const char * const *port_pins;
+>
+> Do you need this? It always points rzt2h_gpio_names[].
+>
+Agreed, this can be dropped and we can make use of rzt2h_gpio_names directl=
+y.
 
-The following changes since commit 6e64f4580381e32c06ee146ca807c555b8f73e24:
+> > +       unsigned int n_port_pins;
+> > +       const u8 *port_pin_configs;
+> > +       unsigned int n_ports;
+> > +};
+> > +
+> > +struct rzt2h_pinctrl {
+> > +       struct pinctrl_dev              *pctl;
+> > +       struct pinctrl_desc             desc;
+> > +       struct pinctrl_pin_desc         *pins;
+> > +       const struct rzt2h_pinctrl_data *data;
+> > +       void __iomem                    *base0, *base1;
+> > +       struct device                   *dev;
+> > +       struct gpio_chip                gpio_chip;
+> > +       struct pinctrl_gpio_range       gpio_range;
+> > +       spinlock_t                      lock;
+> > +       struct mutex                    mutex;
+>
+> Please add comments to these two locks, to clarify what they are
+> protecting against.
+>
+Ok, I will add comments for clarification.
 
-  Merge tag 'input-for-v6.17-rc0' of git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input (2025-08-07 07:40:01 +0300)
+spinlock_t lock; /* lock read/write registers */
+struct mutex mutex; /* serialize adding groups and functions */
 
-are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v6.17-rc1-part2
+> > +       bool                            safety_port_enabled;
+> > +};
+> > +
+> > +#define RZT2H_PINCTRL_REG_ACCESS(size, type) \
+> > +static inline void rzt2h_pinctrl_write##size(struct rzt2h_pinctrl *pct=
+rl, u8 port, \
+> > +                                            type val, u16 offset) \
+>
+> unsigned int offset?
+>
+Agreed.
 
-for you to fetch changes up to d9d87d90cc0b10cd56ae353f50b11417e7d21712:
+> > +{ \
+> > +       if (port > RZT2H_MAX_SAFETY_PORTS) \
+> > +               write##size(val, pctrl->base0 + offset); \
+> > +       else \
+> > +               write##size(val, pctrl->base1 + offset); \
+> > +} \
+> > +\
+> > +static inline type rzt2h_pinctrl_read##size(struct rzt2h_pinctrl *pctr=
+l, u8 port, u16 offset) \
+>
+> Likewise
+>
+OK.
 
-  treewide: rename GPIO set callbacks back to their original names (2025-08-07 10:07:06 +0200)
+> > +{ \
+> > +       if (port > RZT2H_MAX_SAFETY_PORTS) \
+> > +               return read##size(pctrl->base0 + offset); \
+> > +       else \
+> > +               return read##size(pctrl->base1 + offset); \
+> > +}
+>
+> > +static int rzt2h_validate_pin(struct rzt2h_pinctrl *pctrl, unsigned in=
+t offset)
+> > +{
+> > +       u8 port =3D RZT2H_PIN_ID_TO_PORT(offset);
+> > +       u8 pin =3D RZT2H_PIN_ID_TO_PIN(offset);
+> > +       u8 pincfg;
+> > +
+> > +       if (offset >=3D pctrl->data->n_port_pins || port >=3D pctrl->da=
+ta->n_ports)
+> > +               return -EINVAL;
+> > +
+> > +       if (!pctrl->safety_port_enabled && port <=3D RZT2H_MAX_SAFETY_P=
+ORTS)
+> > +               return -EINVAL;
+> > +
+> > +       pincfg =3D pctrl->data->port_pin_configs[port];
+> > +       return (pincfg & (1 << pin)) ? 0 : -EINVAL;
+>
+> BIT(pin)
+>
+Agreed, I will rewrite as `return (pincfg & BIT(pin)) ? 0 : -EINVAL;`
 
-----------------------------------------------------------------
-gpio updates for v6.17-rc1
+> > +}
+> > +
+>
+> > +static int rzt2h_pinctrl_set_mux(struct pinctrl_dev *pctldev,
+> > +                                unsigned int func_selector,
+> > +                                unsigned int group_selector)
+> > +{
+> > +       struct rzt2h_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctldev=
+);
+> > +       struct function_desc *func;
+> > +       struct group_desc *group;
+> > +       const unsigned int *pins;
+> > +       unsigned int i;
+> > +       u8 *psel_val;
+> > +       int ret;
+> > +
+> > +       func =3D pinmux_generic_get_function(pctldev, func_selector);
+> > +       if (!func)
+> > +               return -EINVAL;
+> > +       group =3D pinctrl_generic_get_group(pctldev, group_selector);
+> > +       if (!group)
+> > +               return -EINVAL;
+> > +
+> > +       psel_val =3D func->data;
+> > +       pins =3D group->grp.pins;
+> > +
+> > +       for (i =3D 0; i < group->grp.npins; i++) {
+> > +               dev_dbg(pctrl->dev, "port:%u pin: %u PSEL:%u\n",
+>
+> Please use consistent spacing around colons.
+>
+OK.
 
-- remove unused, legacy GPIO line value setters from struct gpio_chip
-- rename the new set callbacks back to the original names treewide
-- fix interrupt handling in gpio-mlxbf2
-- revert a buggy immutable irqchip conversion
+> > +                       RZT2H_PIN_ID_TO_PORT(pins[i]), RZT2H_PIN_ID_TO_=
+PIN(pins[i]),
+> > +                       psel_val[i]);
+> > +               ret =3D rzt2h_validate_pin(pctrl, pins[i]);
+> > +               if (ret)
+> > +                       return ret;
+>
+> Please insert a blank line.
+>
+OK.
 
-----------------------------------------------------------------
-Bartosz Golaszewski (4):
-      Revert "gpio: pxa: Make irq_chip immutable"
-      Merge commit '6e64f4580381e32c06ee146ca807c555b8f73e24' of git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux into gpio/for-next
-      gpio: remove legacy GPIO line value setter callbacks
-      treewide: rename GPIO set callbacks back to their original names
+> > +               rzt2h_pinctrl_set_pfc_mode(pctrl, RZT2H_PIN_ID_TO_PORT(=
+pins[i]),
+> > +                                          RZT2H_PIN_ID_TO_PIN(pins[i])=
+, psel_val[i]);
+> > +       }
+> > +
+> > +       return 0;
+> > +};
+>
+> > +static int rzt2h_gpio_get_direction(struct gpio_chip *chip, unsigned i=
+nt offset)
+> > +{
+> > +       struct rzt2h_pinctrl *pctrl =3D gpiochip_get_data(chip);
+> > +       u8 port =3D RZT2H_PIN_ID_TO_PORT(offset);
+> > +       u8 bit =3D RZT2H_PIN_ID_TO_PIN(offset);
+> > +       int ret;
+> > +
+> > +       ret =3D rzt2h_validate_pin(pctrl, offset);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       if (!(rzt2h_pinctrl_readb(pctrl, port, PMC(port)) & BIT(bit))) =
+{
+>
+> Invert the logic and return early, to reduce indentation?
+>
+Agreed, I will invert the logic.
 
-David Thompson (1):
-      gpio: mlxbf2: use platform_get_irq_optional()
+> > +               u16 reg;
+> > +
+> > +               reg =3D rzt2h_pinctrl_readw(pctrl, port, PM(port));
+> > +               reg =3D (reg >> (bit * 2)) & PM_MASK;
+> > +               if (reg =3D=3D PM_OUTPUT)
+>
+> The hardware supports enabling both input and output, so I think you
+> better check for "reg & PM_OUTPUT".
+>
+OK, I'll  check for "reg & PM_OUTPUT"/"reg & PM_INPUT"
 
- arch/arm/common/sa1111.c                           |  4 +--
- arch/arm/common/scoop.c                            |  2 +-
- arch/arm/mach-s3c/gpio-samsung.c                   |  2 +-
- arch/arm/mach-sa1100/assabet.c                     |  2 +-
- arch/arm/mach-sa1100/neponset.c                    |  2 +-
- arch/arm/plat-orion/gpio.c                         |  2 +-
- arch/m68k/coldfire/gpio.c                          |  2 +-
- arch/mips/alchemy/common/gpiolib.c                 |  6 ++---
- arch/mips/bcm63xx/gpio.c                           |  2 +-
- arch/mips/kernel/gpio_txx9.c                       |  2 +-
- arch/mips/rb532/gpio.c                             |  2 +-
- arch/mips/txx9/generic/setup.c                     |  2 +-
- arch/powerpc/platforms/44x/gpio.c                  |  2 +-
- arch/powerpc/platforms/52xx/mpc52xx_gpt.c          |  2 +-
- arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c     |  2 +-
- arch/powerpc/platforms/8xx/cpm1.c                  |  4 +--
- arch/powerpc/sysdev/cpm_common.c                   |  2 +-
- drivers/bcma/driver_gpio.c                         |  2 +-
- drivers/gpio/gpio-74x164.c                         |  4 +--
- drivers/gpio/gpio-adnp.c                           |  2 +-
- drivers/gpio/gpio-adp5520.c                        |  2 +-
- drivers/gpio/gpio-adp5585.c                        |  2 +-
- drivers/gpio/gpio-aggregator.c                     |  4 +--
- drivers/gpio/gpio-altera-a10sr.c                   |  2 +-
- drivers/gpio/gpio-altera.c                         |  2 +-
- drivers/gpio/gpio-amd-fch.c                        |  2 +-
- drivers/gpio/gpio-amd8111.c                        |  2 +-
- drivers/gpio/gpio-arizona.c                        |  2 +-
- drivers/gpio/gpio-aspeed-sgpio.c                   |  2 +-
- drivers/gpio/gpio-aspeed.c                         |  2 +-
- drivers/gpio/gpio-bcm-kona.c                       |  2 +-
- drivers/gpio/gpio-bd71815.c                        |  2 +-
- drivers/gpio/gpio-bd71828.c                        |  2 +-
- drivers/gpio/gpio-bd9571mwv.c                      |  2 +-
- drivers/gpio/gpio-bt8xx.c                          |  2 +-
- drivers/gpio/gpio-cgbc.c                           |  2 +-
- drivers/gpio/gpio-creg-snps.c                      |  2 +-
- drivers/gpio/gpio-cros-ec.c                        |  2 +-
- drivers/gpio/gpio-crystalcove.c                    |  2 +-
- drivers/gpio/gpio-cs5535.c                         |  2 +-
- drivers/gpio/gpio-da9052.c                         |  2 +-
- drivers/gpio/gpio-da9055.c                         |  2 +-
- drivers/gpio/gpio-davinci.c                        |  2 +-
- drivers/gpio/gpio-dln2.c                           |  2 +-
- drivers/gpio/gpio-eic-sprd.c                       |  2 +-
- drivers/gpio/gpio-em.c                             |  2 +-
- drivers/gpio/gpio-exar.c                           |  2 +-
- drivers/gpio/gpio-f7188x.c                         |  2 +-
- drivers/gpio/gpio-graniterapids.c                  |  2 +-
- drivers/gpio/gpio-gw-pld.c                         |  2 +-
- drivers/gpio/gpio-htc-egpio.c                      |  2 +-
- drivers/gpio/gpio-ich.c                            |  2 +-
- drivers/gpio/gpio-imx-scu.c                        |  2 +-
- drivers/gpio/gpio-it87.c                           |  2 +-
- drivers/gpio/gpio-janz-ttl.c                       |  2 +-
- drivers/gpio/gpio-kempld.c                         |  2 +-
- drivers/gpio/gpio-latch.c                          |  4 +--
- drivers/gpio/gpio-ljca.c                           |  2 +-
- drivers/gpio/gpio-logicvc.c                        |  2 +-
- drivers/gpio/gpio-loongson-64bit.c                 |  2 +-
- drivers/gpio/gpio-loongson.c                       |  2 +-
- drivers/gpio/gpio-lp3943.c                         |  2 +-
- drivers/gpio/gpio-lp873x.c                         |  2 +-
- drivers/gpio/gpio-lp87565.c                        |  2 +-
- drivers/gpio/gpio-lpc18xx.c                        |  2 +-
- drivers/gpio/gpio-lpc32xx.c                        | 10 +++----
- drivers/gpio/gpio-macsmc.c                         |  2 +-
- drivers/gpio/gpio-madera.c                         |  2 +-
- drivers/gpio/gpio-max730x.c                        |  2 +-
- drivers/gpio/gpio-max732x.c                        |  4 +--
- drivers/gpio/gpio-max77620.c                       |  2 +-
- drivers/gpio/gpio-max77650.c                       |  2 +-
- drivers/gpio/gpio-max77759.c                       |  2 +-
- drivers/gpio/gpio-mb86s7x.c                        |  2 +-
- drivers/gpio/gpio-mc33880.c                        |  2 +-
- drivers/gpio/gpio-ml-ioh.c                         |  2 +-
- drivers/gpio/gpio-mlxbf2.c                         |  2 +-
- drivers/gpio/gpio-mm-lantiq.c                      |  2 +-
- drivers/gpio/gpio-mmio.c                           | 24 ++++++++---------
- drivers/gpio/gpio-mockup.c                         |  4 +--
- drivers/gpio/gpio-moxtet.c                         |  2 +-
- drivers/gpio/gpio-mpc5200.c                        |  4 +--
- drivers/gpio/gpio-mpfs.c                           |  2 +-
- drivers/gpio/gpio-mpsse.c                          |  4 +--
- drivers/gpio/gpio-msc313.c                         |  2 +-
- drivers/gpio/gpio-mvebu.c                          |  2 +-
- drivers/gpio/gpio-nomadik.c                        |  2 +-
- drivers/gpio/gpio-npcm-sgpio.c                     |  4 +--
- drivers/gpio/gpio-octeon.c                         |  2 +-
- drivers/gpio/gpio-omap.c                           |  4 +--
- drivers/gpio/gpio-palmas.c                         |  2 +-
- drivers/gpio/gpio-pca953x.c                        |  4 +--
- drivers/gpio/gpio-pca9570.c                        |  2 +-
- drivers/gpio/gpio-pcf857x.c                        |  4 +--
- drivers/gpio/gpio-pch.c                            |  2 +-
- drivers/gpio/gpio-pl061.c                          |  2 +-
- drivers/gpio/gpio-pxa.c                            | 10 ++-----
- drivers/gpio/gpio-raspberrypi-exp.c                |  2 +-
- drivers/gpio/gpio-rc5t583.c                        |  2 +-
- drivers/gpio/gpio-rcar.c                           |  4 +--
- drivers/gpio/gpio-rdc321x.c                        |  2 +-
- drivers/gpio/gpio-reg.c                            |  6 ++---
- drivers/gpio/gpio-regmap.c                         |  4 +--
- drivers/gpio/gpio-rockchip.c                       |  2 +-
- drivers/gpio/gpio-rtd.c                            |  2 +-
- drivers/gpio/gpio-sa1100.c                         |  2 +-
- drivers/gpio/gpio-sama5d2-piobu.c                  |  2 +-
- drivers/gpio/gpio-sch.c                            |  2 +-
- drivers/gpio/gpio-sch311x.c                        |  2 +-
- drivers/gpio/gpio-sim.c                            |  4 +--
- drivers/gpio/gpio-siox.c                           |  2 +-
- drivers/gpio/gpio-spear-spics.c                    |  2 +-
- drivers/gpio/gpio-sprd.c                           |  2 +-
- drivers/gpio/gpio-stmpe.c                          |  2 +-
- drivers/gpio/gpio-stp-xway.c                       |  2 +-
- drivers/gpio/gpio-syscon.c                         |  4 +--
- drivers/gpio/gpio-tangier.c                        |  2 +-
- drivers/gpio/gpio-tc3589x.c                        |  2 +-
- drivers/gpio/gpio-tegra.c                          |  2 +-
- drivers/gpio/gpio-tegra186.c                       |  2 +-
- drivers/gpio/gpio-thunderx.c                       |  4 +--
- drivers/gpio/gpio-timberdale.c                     |  2 +-
- drivers/gpio/gpio-tpic2810.c                       |  4 +--
- drivers/gpio/gpio-tps65086.c                       |  2 +-
- drivers/gpio/gpio-tps65218.c                       |  2 +-
- drivers/gpio/gpio-tps65219.c                       |  4 +--
- drivers/gpio/gpio-tps6586x.c                       |  2 +-
- drivers/gpio/gpio-tps65910.c                       |  2 +-
- drivers/gpio/gpio-tps65912.c                       |  2 +-
- drivers/gpio/gpio-tps68470.c                       |  2 +-
- drivers/gpio/gpio-tqmx86.c                         |  2 +-
- drivers/gpio/gpio-ts4900.c                         |  2 +-
- drivers/gpio/gpio-ts5500.c                         |  2 +-
- drivers/gpio/gpio-twl4030.c                        |  2 +-
- drivers/gpio/gpio-twl6040.c                        |  2 +-
- drivers/gpio/gpio-uniphier.c                       |  4 +--
- drivers/gpio/gpio-viperboard.c                     |  4 +--
- drivers/gpio/gpio-virtio.c                         |  2 +-
- drivers/gpio/gpio-vx855.c                          |  2 +-
- drivers/gpio/gpio-wcd934x.c                        |  2 +-
- drivers/gpio/gpio-wcove.c                          |  2 +-
- drivers/gpio/gpio-winbond.c                        |  2 +-
- drivers/gpio/gpio-wm831x.c                         |  2 +-
- drivers/gpio/gpio-wm8350.c                         |  2 +-
- drivers/gpio/gpio-wm8994.c                         |  2 +-
- drivers/gpio/gpio-xgene.c                          |  2 +-
- drivers/gpio/gpio-xilinx.c                         |  4 +--
- drivers/gpio/gpio-xlp.c                            |  2 +-
- drivers/gpio/gpio-xra1403.c                        |  2 +-
- drivers/gpio/gpio-xtensa.c                         |  2 +-
- drivers/gpio/gpio-zevio.c                          |  2 +-
- drivers/gpio/gpio-zynq.c                           |  2 +-
- drivers/gpio/gpio-zynqmp-modepin.c                 |  2 +-
- drivers/gpio/gpiolib.c                             | 31 ++++++----------------
- drivers/gpu/drm/bridge/ti-sn65dsi86.c              |  2 +-
- drivers/hid/hid-cp2112.c                           |  2 +-
- drivers/hid/hid-mcp2200.c                          |  4 +--
- drivers/hid/hid-mcp2221.c                          |  2 +-
- drivers/hwmon/ltc2992.c                            |  4 +--
- drivers/hwmon/pmbus/ucd9000.c                      |  2 +-
- drivers/i2c/muxes/i2c-mux-ltc4306.c                |  2 +-
- drivers/iio/adc/ad4130.c                           |  2 +-
- drivers/iio/adc/ad4170-4.c                         |  2 +-
- drivers/iio/adc/ad7768-1.c                         |  2 +-
- drivers/iio/adc/rohm-bd79124.c                     |  4 +--
- drivers/iio/adc/ti-ads7950.c                       |  2 +-
- drivers/iio/addac/ad74115.c                        |  2 +-
- drivers/iio/addac/ad74413r.c                       |  4 +--
- drivers/iio/dac/ad5592r-base.c                     |  2 +-
- drivers/input/keyboard/adp5588-keys.c              |  2 +-
- drivers/input/touchscreen/ad7879.c                 |  2 +-
- drivers/leds/blink/leds-lgm-sso.c                  |  2 +-
- drivers/leds/leds-pca9532.c                        |  2 +-
- drivers/leds/leds-pca955x.c                        |  2 +-
- drivers/leds/leds-tca6507.c                        |  2 +-
- drivers/media/dvb-frontends/cxd2820r_core.c        |  2 +-
- drivers/media/i2c/ds90ub913.c                      |  2 +-
- drivers/media/i2c/ds90ub953.c                      |  2 +-
- drivers/media/i2c/max9286.c                        |  2 +-
- drivers/media/i2c/max96717.c                       |  2 +-
- drivers/media/pci/solo6x10/solo6x10-gpio.c         |  2 +-
- drivers/mfd/sm501.c                                |  2 +-
- drivers/mfd/tps65010.c                             |  2 +-
- drivers/mfd/ucb1x00-core.c                         |  2 +-
- drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c    |  2 +-
- drivers/misc/ti_fpc202.c                           |  2 +-
- drivers/net/can/spi/mcp251x.c                      |  4 +--
- drivers/net/dsa/mt7530.c                           |  2 +-
- drivers/net/dsa/vitesse-vsc73xx-core.c             |  2 +-
- drivers/net/phy/qcom/qca807x.c                     |  2 +-
- drivers/pinctrl/actions/pinctrl-owl.c              |  2 +-
- drivers/pinctrl/bcm/pinctrl-bcm2835.c              |  4 +--
- drivers/pinctrl/bcm/pinctrl-iproc-gpio.c           |  2 +-
- drivers/pinctrl/bcm/pinctrl-nsp-gpio.c             |  2 +-
- drivers/pinctrl/cirrus/pinctrl-cs42l43.c           |  2 +-
- drivers/pinctrl/cirrus/pinctrl-lochnagar.c         |  2 +-
- drivers/pinctrl/intel/pinctrl-baytrail.c           |  2 +-
- drivers/pinctrl/intel/pinctrl-cherryview.c         |  2 +-
- drivers/pinctrl/intel/pinctrl-intel.c              |  2 +-
- drivers/pinctrl/intel/pinctrl-lynxpoint.c          |  2 +-
- drivers/pinctrl/mediatek/pinctrl-airoha.c          |  2 +-
- drivers/pinctrl/mediatek/pinctrl-moore.c           |  2 +-
- drivers/pinctrl/mediatek/pinctrl-mtk-common.c      |  2 +-
- drivers/pinctrl/mediatek/pinctrl-paris.c           |  2 +-
- drivers/pinctrl/meson/pinctrl-amlogic-a4.c         |  2 +-
- drivers/pinctrl/meson/pinctrl-meson.c              |  2 +-
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c        |  2 +-
- drivers/pinctrl/nomadik/pinctrl-abx500.c           |  2 +-
- drivers/pinctrl/nuvoton/pinctrl-ma35.c             |  2 +-
- drivers/pinctrl/pinctrl-amd.c                      |  2 +-
- drivers/pinctrl/pinctrl-amdisp.c                   |  2 +-
- drivers/pinctrl/pinctrl-apple-gpio.c               |  2 +-
- drivers/pinctrl/pinctrl-as3722.c                   |  2 +-
- drivers/pinctrl/pinctrl-at91-pio4.c                |  4 +--
- drivers/pinctrl/pinctrl-at91.c                     |  4 +--
- drivers/pinctrl/pinctrl-aw9523.c                   |  4 +--
- drivers/pinctrl/pinctrl-axp209.c                   |  4 +--
- drivers/pinctrl/pinctrl-cy8c95x0.c                 |  4 +--
- drivers/pinctrl/pinctrl-da9062.c                   |  2 +-
- drivers/pinctrl/pinctrl-digicolor.c                |  2 +-
- drivers/pinctrl/pinctrl-ingenic.c                  |  2 +-
- drivers/pinctrl/pinctrl-keembay.c                  |  2 +-
- drivers/pinctrl/pinctrl-mcp23s08.c                 |  4 +--
- drivers/pinctrl/pinctrl-microchip-sgpio.c          |  2 +-
- drivers/pinctrl/pinctrl-ocelot.c                   |  2 +-
- drivers/pinctrl/pinctrl-pic32.c                    |  2 +-
- drivers/pinctrl/pinctrl-pistachio.c                |  2 +-
- drivers/pinctrl/pinctrl-rk805.c                    |  2 +-
- drivers/pinctrl/pinctrl-rp1.c                      |  2 +-
- drivers/pinctrl/pinctrl-st.c                       |  2 +-
- drivers/pinctrl/pinctrl-stmfx.c                    |  2 +-
- drivers/pinctrl/pinctrl-sx150x.c                   |  4 +--
- drivers/pinctrl/pinctrl-xway.c                     |  2 +-
- drivers/pinctrl/qcom/pinctrl-lpass-lpi.c           |  2 +-
- drivers/pinctrl/qcom/pinctrl-msm.c                 |  2 +-
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |  2 +-
- drivers/pinctrl/qcom/pinctrl-spmi-mpp.c            |  2 +-
- drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c           |  2 +-
- drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c            |  2 +-
- drivers/pinctrl/renesas/gpio.c                     |  2 +-
- drivers/pinctrl/renesas/pinctrl-rza1.c             |  2 +-
- drivers/pinctrl/renesas/pinctrl-rza2.c             |  2 +-
- drivers/pinctrl/renesas/pinctrl-rzg2l.c            |  2 +-
- drivers/pinctrl/renesas/pinctrl-rzv2m.c            |  2 +-
- drivers/pinctrl/samsung/pinctrl-samsung.c          |  2 +-
- drivers/pinctrl/spear/pinctrl-plgpio.c             |  2 +-
- drivers/pinctrl/starfive/pinctrl-starfive-jh7100.c |  2 +-
- drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c |  2 +-
- drivers/pinctrl/stm32/pinctrl-stm32.c              |  2 +-
- drivers/pinctrl/sunplus/sppctl.c                   |  2 +-
- drivers/pinctrl/sunxi/pinctrl-sunxi.c              |  2 +-
- drivers/pinctrl/vt8500/pinctrl-wmt.c               |  2 +-
- drivers/platform/cznic/turris-omnia-mcu-gpio.c     |  4 +--
- drivers/platform/x86/barco-p50-gpio.c              |  2 +-
- drivers/platform/x86/intel/int0002_vgpio.c         |  2 +-
- drivers/platform/x86/portwell-ec.c                 |  4 +--
- drivers/platform/x86/silicom-platform.c            |  2 +-
- drivers/pwm/pwm-pca9685.c                          |  2 +-
- drivers/regulator/rpi-panel-attiny-regulator.c     |  2 +-
- drivers/soc/fsl/qe/gpio.c                          |  4 +--
- drivers/soc/renesas/pwc-rzv2m.c                    |  2 +-
- drivers/spi/spi-xcomm.c                            |  2 +-
- drivers/ssb/driver_gpio.c                          |  4 +--
- drivers/staging/greybus/gpio.c                     |  2 +-
- drivers/tty/serial/max310x.c                       |  2 +-
- drivers/tty/serial/sc16is7xx.c                     |  2 +-
- drivers/usb/serial/cp210x.c                        |  2 +-
- drivers/usb/serial/ftdi_sio.c                      |  4 +--
- drivers/video/fbdev/via/via-gpio.c                 |  2 +-
- include/linux/gpio/driver.h                        | 22 +++++----------
- include/linux/gpio/generic.h                       |  4 +--
- sound/hda/codecs/side-codecs/cirrus_scodec_test.c  |  2 +-
- sound/soc/codecs/idt821034.c                       |  2 +-
- sound/soc/codecs/peb2466.c                         |  2 +-
- sound/soc/codecs/rt5677.c                          |  2 +-
- sound/soc/codecs/tlv320adc3xxx.c                   |  2 +-
- sound/soc/codecs/wm5100.c                          |  2 +-
- sound/soc/codecs/wm8903.c                          |  2 +-
- sound/soc/codecs/wm8962.c                          |  2 +-
- sound/soc/codecs/wm8996.c                          |  2 +-
- sound/soc/codecs/zl38060.c                         |  2 +-
- sound/soc/soc-ac97.c                               |  2 +-
- sound/soc/ti/davinci-mcasp.c                       |  2 +-
- 283 files changed, 358 insertions(+), 387 deletions(-)
+> > +                       return GPIO_LINE_DIRECTION_OUT;
+> > +               if (reg =3D=3D PM_INPUT)
+> > +                       return GPIO_LINE_DIRECTION_IN;
+> > +       }
+> > +
+> > +       return -EINVAL;
+> > +}
+>
+> > +static int rzt2h_gpio_get(struct gpio_chip *chip, unsigned int offset)
+> > +{
+> > +       struct rzt2h_pinctrl *pctrl =3D gpiochip_get_data(chip);
+> > +       u8 port =3D RZT2H_PIN_ID_TO_PORT(offset);
+> > +       u8 bit =3D RZT2H_PIN_ID_TO_PIN(offset);
+> > +       u16 reg;
+> > +
+> > +       reg =3D rzt2h_pinctrl_readw(pctrl, port, PM(port));
+> > +       reg =3D (reg >> (bit * 2)) & PM_MASK;
+> > +
+> > +       if (reg =3D=3D PM_INPUT)
+>
+> "if (reg & PM_INPUT)", to handle both PM_INPUT and PM_OUTPUT set?
+>
+ditto.
+
+> > +               return !!(rzt2h_pinctrl_readb(pctrl, port, PIN(port)) &=
+ BIT(bit));
+> > +       if (reg =3D=3D PM_OUTPUT)
+> > +               return !!(rzt2h_pinctrl_readb(pctrl, port, P(port)) & B=
+IT(bit));
+> > +       return -EINVAL;
+> > +}
+>
+> > +static int rzt2h_pinctrl_register(struct rzt2h_pinctrl *pctrl)
+> > +{
+> > +       struct pinctrl_desc *desc =3D &pctrl->desc;
+> > +       struct device *dev =3D pctrl->dev;
+> > +       struct pinctrl_pin_desc *pins;
+> > +       unsigned int i, j;
+> > +       u8 *pin_data;
+> > +       int ret;
+> > +
+> > +       desc->name =3D DRV_NAME;
+> > +       desc->npins =3D pctrl->data->n_port_pins;
+> > +       desc->pctlops =3D &rzt2h_pinctrl_pctlops;
+> > +       desc->pmxops =3D &rzt2h_pinctrl_pmxops;
+> > +       desc->owner =3D THIS_MODULE;
+> > +
+> > +       pins =3D devm_kcalloc(dev, desc->npins, sizeof(*pins), GFP_KERN=
+EL);
+> > +       if (!pins)
+> > +               return -ENOMEM;
+> > +
+> > +       pin_data =3D devm_kcalloc(dev, desc->npins,
+> > +                               sizeof(*pin_data), GFP_KERNEL);
+>
+> Fits on a single line.
+>
+Agreed.
+
+> > +       if (!pin_data)
+> > +               return -ENOMEM;
+> > +
+> > +       pctrl->pins =3D pins;
+> > +       desc->pins =3D pins;
+> > +
+> > +       for (i =3D 0, j =3D 0; i < pctrl->data->n_port_pins; i++) {
+> > +               pins[i].number =3D i;
+> > +               pins[i].name =3D pctrl->data->port_pins[i];
+> > +               if (i && !(i % RZT2H_PINS_PER_PORT))
+> > +                       j++;
+> > +               pin_data[i] =3D pctrl->data->port_pin_configs[j];
+> > +               pins[i].drv_data =3D &pin_data[i];
+>
+> Where is this used?
+>
+Good point, this isn't required.
+
+> > +       }
+> > +
+> > +       ret =3D devm_pinctrl_register_and_init(dev, desc, pctrl, &pctrl=
+->pctl);
+> > +       if (ret)
+> > +               return dev_err_probe(dev, ret, "pinctrl registration fa=
+iled\n");
+> > +
+> > +       ret =3D pinctrl_enable(pctrl->pctl);
+> > +       if (ret)
+> > +               return dev_err_probe(dev, ret, "pinctrl enable failed\n=
+");
+> > +
+> > +       return rzt2h_gpio_register(pctrl);
+> > +}
+> > +
+> > +static int rzt2h_pinctrl_cfg_regions(struct platform_device *pdev,
+> > +                                    struct rzt2h_pinctrl *pctrl)
+> > +{
+> > +       pctrl->base0 =3D devm_platform_ioremap_resource_byname(pdev, "n=
+sr");
+> > +       if (IS_ERR(pctrl->base0))
+> > +               return PTR_ERR(pctrl->base0);
+> > +
+> > +       pctrl->base1 =3D devm_platform_ioremap_resource_byname(pdev, "s=
+rs");
+>
+> When the optional "srs" region is missing, it is ignored by the
+> code below, but __devm_ioremap_resource() will still have printed
+> an error message.  So you either have to open-code this using
+> platform_get_resource_byname() and devm_ioremap_resource() here, or
+> create a static devm_platform_ioremap_resource_byname_optional()
+> helper that does the same, or go for a public helper directly.
+>
+Ahh right, I'll open code this for now (as there several patches
+depending on the pinctrl driver)
+
+Cheers,
+Prabhakar
 
