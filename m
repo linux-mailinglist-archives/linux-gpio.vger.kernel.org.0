@@ -1,93 +1,93 @@
-Return-Path: <linux-gpio+bounces-24118-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24119-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72430B1F610
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Aug 2025 21:48:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CEE41B1F63C
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 Aug 2025 22:55:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7EA5C17F4F6
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Aug 2025 19:48:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E0B7C189D800
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 Aug 2025 20:56:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 449F526D4CE;
-	Sat,  9 Aug 2025 19:48:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16CEF275B1C;
+	Sat,  9 Aug 2025 20:55:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="FPjqUn1h";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eKkPziaj"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Jg9iK4zs";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ntVW/R5D"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
+Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6437E12E1CD;
-	Sat,  9 Aug 2025 19:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318E9282FA;
+	Sat,  9 Aug 2025 20:55:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754768885; cv=none; b=Ox5AjPJ+grBNS1s0/WsVhwzIpHlsauyx3FDVIrvvB7Dq3CVQgSHNbstL9GkeE+VIY78yyPgcEa7hcO5RwSy0k4QAYrXUy059q92hG4WikvAz0SCg5R+rAbHDQNsP+c/MOyVWywH7xZhK0mWwE6xnWsarj93aL2uB2wQO+dBX1JQ=
+	t=1754772951; cv=none; b=HKULOEg+lzRUtcuSrgMgX/+Q33R7Q2JTTnKJGTsopJD0pDb6WiyiOZPqoSw7oHjcSpYmYPOXEYbJhUbRxFKMrXOzFLQQ/0alBbY67PD6hJc7JJQi8NcgC/VN4PUwweHkfAryos/Q//LNyElaIHrvxotr9Tuio3xEIaJTol8Kc18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754768885; c=relaxed/simple;
-	bh=ATqPh2dSeetHEr4AMA79KW/e8xMzs6w7YrGH9/c34XQ=;
+	s=arc-20240116; t=1754772951; c=relaxed/simple;
+	bh=XsAY+I0V7t/bRiWxTGrMkkPV2nHwxaPbF8aYmtcLFvk=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=q456FcmdtzddFc4G6/e+F7JBYDc7WP6yB46ROCLH+vaQX5pp2pZJ1w7wLpfyOegZbfi9sSraaKG8cM4FgF1HcSOhi6yCcaR9HFg9sXqnbyjUEnI0SDZ5F5RDtqzfNmwsZDhtwKfNFsYM/tdIAJiJKoqSN36wJmRR0GU66bNHnvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=FPjqUn1h; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eKkPziaj; arc=none smtp.client-ip=103.168.172.153
+	 Subject:Content-Type; b=lKduQFtfALkZQGl5LG30heQN9vQi+QSSzBzripOiPw0aojfgabq0IEMw6dpBHMEAdvPxNzfeOdn9cJImUrEY4IcONHzZb4d44bouDFrdidziB9BCRbEYm/kVw+tGxQmz4ul6qeg3KfZx82o4B5cIwmDOPennUjWX2U+plXODm2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Jg9iK4zs; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ntVW/R5D; arc=none smtp.client-ip=103.168.172.146
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 75CDA14000A9;
-	Sat,  9 Aug 2025 15:48:02 -0400 (EDT)
+	by mailfout.phl.internal (Postfix) with ESMTP id 23975EC1B60;
+	Sat,  9 Aug 2025 16:55:48 -0400 (EDT)
 Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Sat, 09 Aug 2025 15:48:02 -0400
+  by phl-compute-05.internal (MEProxy); Sat, 09 Aug 2025 16:55:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1754768882;
-	 x=1754855282; bh=WKr2MJBq8olqh9D8tHXchCabQhGaSNKZjhY9rwmDxhc=; b=
-	FPjqUn1hz3rUmrl2IJT39E+kqwKhDmrb2QtRsdWP1j7ZbpmIIyrMHht5M0u+n0s5
-	Xy18rjbDoZWSnv5Jd/Rm177so+M8oBknOyVl7T0jKP/nvM11DWe+Ze4M2M/A7TCa
-	X9Z+uN+DUjxqdpfEaQ3kWwIBmUW0SewI7+BKTpFWcb/IWvZ+S8upZ5v4qAi5d5vM
-	G8sYXHzUchepyfxCwGtApPzNenPtbyiw7BGgupuKjPx38NgiQTeLlizPDTW3Vt9u
-	BIcbJC/2AwLNW+jiDOlYl9BIb2s7PP9JiFJHWLCWFzXsHzHPgorOabsSH4fTLzSu
-	Jl0JjZGE3Ohm8opAoxvXCw==
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1754772948;
+	 x=1754859348; bh=00YVrUoOFUKa6IxONMxJUOwOGEtIYHYtjitPZW1x3IE=; b=
+	Jg9iK4zsVrcSNzL7z+rrq84jWqLk1zRD1iqIsk+Mu9dCH9RTmeB1aQKDQr1o8uTF
+	y/23h/KPABlNR4yM/1pxj081Jdxr+vxVe806APntun8g5l/dwW6aESTn6kghyyjl
+	cdciLqQzn2OCbH4PJENs1D9+mfSeS6gKgvEtpQ7loNtxd+zMdlsrv9vjU8KRmk0h
+	KLj+I0ROjcT5Y1oeh8mtDVPKc5gqm9RyYOJh80Q44UQD+ph0k4yiRAb/I1zoH26a
+	jf4kOQVrSfS+dBTsVlCDL1K+KVq2mxVkGV3G8y+53/MvineuC/eoAtWZvgCdxZfb
+	kz4xAPxMmPUaDxD53rzxhQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1754768882; x=
-	1754855282; bh=WKr2MJBq8olqh9D8tHXchCabQhGaSNKZjhY9rwmDxhc=; b=e
-	KkPziaj1n0PWrNDHC5DNKD4vXmcyb7EdvDCHwvDY/tVbk9AwgC9J9Zf1ScKiBn7E
-	UIdsu45xdTxkm6oEkeYnBeDJMchRVAfPgES2+ObMQngifp16f2fzqDzrriLfPjbq
-	hhmEF6NfR10yksTCgUr4u8GJRCB9BstMPk5F0CNLQ1uvg1KbTCaCXLr65TUfUIST
-	qCCnAUtRuHtL0uK/51F1bElcRFid6LCRmJ1hTAZo2sG1j9KIig5nyy0wXTE6RJHj
-	iOTckmlyWcwlITNJJR+87yyAY5OGKc5LyE5Z03je2+65r/KBwfu3khlWhIIEqov0
-	XPIR1Jsh4cwrvnKbK/XKA==
-X-ME-Sender: <xms:8qWXaGS-3l9L3rfK-M7Dgego2FkO8q0XwBX7uy6bbq15BZqBn2Y9dA>
-    <xme:8qWXaLwEC3WZYzZi-JCW5t7VsJV2MOtSBdNZbjv_y1QAVZKLhH3HFCpqu0ByYPiBM
-    IIdrNTNebulc6IC51A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduvdejheejucetufdoteggodetrf
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1754772948; x=
+	1754859348; bh=00YVrUoOFUKa6IxONMxJUOwOGEtIYHYtjitPZW1x3IE=; b=n
+	tVW/R5DgLVbkRloe9XDClBFnyi4JDvhoBL20PPTR9S1Hj21jpDl1k0GrDz49tugI
+	O7xaWP6ZoCMin5uXJcmgtfsxOIRPoNkBVTQzP50Ya9IcD07Hw2Inaw8uSxWaVnwy
+	RsweeH/DJje84I5FlAZim04Vo427aUdcmzYSw5LggV79rQG6Tw1c+78Z1XnQB1PO
+	M7xCqGfyXXbHwGk4XlwPGfetDaz73s8jGCeGo+Z0bFM4kfH/3yEMvtTFBxdLiLlw
+	lYkMdDe8YCXqVDsvnGadkoh/3X64ULktwWaxJDqcHOSpntLJyHNn9dXIq74cZB+5
+	N+Mk2WyKckEzK3XREk3/A==
+X-ME-Sender: <xms:07WXaHgYftGCsEsXKay4RpEZnBmoFOYUoD3AhSOOXeJ2pYBfNI2Bqw>
+    <xme:07WXaEBXQmNuveUsEAH3XJS8yslcvkNxyERzgsoOgqmCDRXjzjhqsImc3ChtMmDID
+    CrClTIqgHhrIxQEL-k>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduvdejjeduucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
+    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedftehrnhgu
     uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
-    necuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
-    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepuddtpdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepkhhoihgthh
-    hirhhordguvghnsegtrghnohhnihgtrghlrdgtohhmpdhrtghpthhtohepghgvvghrthdo
-    rhgvnhgvshgrshesghhlihguvghrrdgsvgdprhgtphhtthhopegrrhhnugeskhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtoheprghnughrvgdrughrrghsiihikheslhhinhgrrhhordho
-    rhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpd
-    hrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgv
-    lhdrtghomhdprhgtphhtthhopehpvghnghdrfhgrnhesnhigphdrtghomhdprhgtphhtth
-    hopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:8qWXaG_aftMSWvaYoFE2Zng8N4wSSnNFoVa3y44hQrsXjuHvE0aehQ>
-    <xmx:8qWXaGZ9ES8pwKkdWOmNZEkf10UcLNdw_sCWiAZZ3QNWW1_2YiRu-w>
-    <xmx:8qWXaHqOnDH4EJhur9slXpUjAtR5yx7qL3tMPcTeMXaMsi2Y0GL-zw>
-    <xmx:8qWXaKSJcONRJGK4owYejkl3fD_RseR2KGdD84-2_jVcaWZNUP8MVQ>
-    <xmx:8qWXaDQSK-048mrRE-j2bkH0zppFuf1NcL9Sht-RrULvzUpLfNSBaHBj>
+    hrnhepvdfhvdekueduveffffetgfdvveefvdelhedvvdegjedvfeehtdeggeevheefleej
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
+    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepudejpdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopehrmhhkodhkvghrnhgvlhesrghrmhhlihhnuhigrdhorhhgrdhukh
+    dprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepfhhlohhrihgr
+    nhdrfhgrihhnvghllhhisegsrhhorggutghomhdrtghomhdprhgtphhtthhopegurghvvg
+    hmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepjhhonhgrshdrghhorhhskhhi
+    sehgmhgrihhlrdgtohhmpdhrtghpthhtohepkhihlhgvhhgvnhgurhihuggvvhesghhmrg
+    hilhdrtghomhdprhgtphhtthhopehnohhlthgrrhhisehgmhgrihhlrdgtohhmpdhrtghp
+    thhtohepohhlthgvrghnvhesghhmrghilhdrtghomhdprhgtphhtthhopegvughumhgrii
+    gvthesghhoohhglhgvrdgtohhm
+X-ME-Proxy: <xmx:07WXaL1-ogyBNb0r8R7_iZpGWcknUJAj5KtzXICrWGLyDeWOQiaIcQ>
+    <xmx:07WXaEyd7z1-FDOlp4f73uKovhiLJ6fQIxVU-_dA5vebEo5lTNfAXw>
+    <xmx:07WXaCj0J53nf21ROP5Ne1zI1JoTUrXKGGbEfJ9r8A1jHZdmEpsf3A>
+    <xmx:07WXaLyAZzGALNGV7e71uIfNxQERLUOMvBuBHo9cxoB5UtpHMXFsBw>
+    <xmx:1LWXaKUe3IoRcX5CNiy-Nrf3lbh75lvGrvd8afyoO2aEdDjxH9kkL2_s>
 Feedback-ID: i56a14606:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 1C1A8700065; Sat,  9 Aug 2025 15:48:02 -0400 (EDT)
+	id 22BAD700068; Sat,  9 Aug 2025 16:55:47 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -95,50 +95,45 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T61f8b4fdd2b1374b
-Date: Sat, 09 Aug 2025 21:47:31 +0200
+X-ThreadId: Tfbba8c937fccaf1f
+Date: Sat, 09 Aug 2025 22:55:26 +0200
 From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
- "Arnd Bergmann" <arnd@kernel.org>
+To: "Jonas Gorski" <jonas.gorski@gmail.com>, "Arnd Bergmann" <arnd@kernel.org>
 Cc: "Bartosz Golaszewski" <brgl@bgdev.pl>,
  "Linus Walleij" <linus.walleij@linaro.org>,
  "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- "Peng Fan" <peng.fan@nxp.com>,
- "Geert Uytterhoeven" <geert+renesas@glider.be>,
- "Koichiro Den" <koichiro.den@canonical.com>,
- =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ "Florian Fainelli" <florian.fainelli@broadcom.com>,
+ "Andrew Lunn" <andrew@lunn.ch>, "Vladimir Oltean" <olteanv@gmail.com>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>,
+ =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
+ "Kyle Hendry" <kylehendrydev@gmail.com>,
+ "Russell King" <rmk+kernel@armlinux.org.uk>, Netdev <netdev@vger.kernel.org>,
  linux-kernel@vger.kernel.org
-Message-Id: <c7d66744-29c9-4f70-905f-7ef133a22422@app.fastmail.com>
-In-Reply-To: <aJcgZLWgMy01re08@smile.fi.intel.com>
+Message-Id: <ba75ec03-f790-41e9-916d-a14eb52aadd2@app.fastmail.com>
+In-Reply-To: 
+ <CAOiHx=mW8B2vQ7UhauPJpJ9KmtxTZ2-1MC3Vf2uNF9RaJ4WQ5A@mail.gmail.com>
 References: <20250808151822.536879-1-arnd@kernel.org>
- <20250808151822.536879-22-arnd@kernel.org>
- <aJcgZLWgMy01re08@smile.fi.intel.com>
-Subject: Re: [PATCH 21/21] gpiolib: turn off legacy interface by default
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+ <20250808151822.536879-16-arnd@kernel.org>
+ <CAOiHx=mW8B2vQ7UhauPJpJ9KmtxTZ2-1MC3Vf2uNF9RaJ4WQ5A@mail.gmail.com>
+Subject: Re: [PATCH 15/21] dsa: b53: hide legacy gpiolib usage on non-mips
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Aug 9, 2025, at 12:18, Andy Shevchenko wrote:
-> On Fri, Aug 08, 2025 at 05:18:06PM +0200, Arnd Bergmann wrote:
+On Sat, Aug 9, 2025, at 12:01, Jonas Gorski wrote:
+> On Fri, Aug 8, 2025 at 5:23=E2=80=AFPM Arnd Bergmann <arnd@kernel.org>=
+ wrote:
 >
->> All users of the legacy interface now select CONFIG_GPIOLIB_LEGACY,
->> so it can be turned off by default.
->> 
->> Allow turning it on manually for compile testing, in order to keep
->> the build coverage of the legacy drivers.
+> Can't really test this (no matching hardware), but with the code issue=
+s fixed
 >
->>  config GPIOLIB_LEGACY
->> -	def_bool y
->> +	bool "Legacy GPIO interfaces" if COMPILE_TEST
->
-> Maybe I'm missing something, but how does it supposed to be compiled for old
-> platforms? (No, COMPILE_TEST is not a correct option for that)
-> Perhaps you meant EXPERT ?
+> Reviewed-by: Jonas Gorski <jonas.gorski@gmail.com>
 
-The COMPILE_TEST is really just meant for enabling some drivers
-that would otherwise be skipped in allmodconfig builds.
+Thanks! I've added the fixes you suggested and made sure it
+actually builds on mips. I had done lots of randconfig tested
+on arm and x86, but since that code block is only built on
+mips, I missed my mistakes.
 
-All the old platforms that use one of the GPIOLIB_LEGACY drivers
-select that symbol once the first six patches are merged.
-
-    Arnd
+     Arnd
 
