@@ -1,93 +1,93 @@
-Return-Path: <linux-gpio+bounces-24117-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24118-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42B44B1F60E
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Aug 2025 21:45:33 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72430B1F610
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 Aug 2025 21:48:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5728B1799F2
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Aug 2025 19:45:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7EA5C17F4F6
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 Aug 2025 19:48:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7024B279DA0;
-	Sat,  9 Aug 2025 19:45:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 449F526D4CE;
+	Sat,  9 Aug 2025 19:48:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="RcoN990w";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jAiQOAmN"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="FPjqUn1h";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eKkPziaj"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D382236E5;
-	Sat,  9 Aug 2025 19:45:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6437E12E1CD;
+	Sat,  9 Aug 2025 19:48:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754768726; cv=none; b=hFw7qdZjKEL0j5sRSX7bUZp+4iGKg1AUW6UvWWxMPQjm4PFY8Jlp9gjWRje68aasyQYnELlGSh7q5h/yoVdKQiQm6w6zRaJXW/294zYW2BvAtQwiqm6r1HXfv8MJdrDCuv6cd5cAyXJqOmkVQhAq1wDi5tOnobw8IlJVtGSHXvg=
+	t=1754768885; cv=none; b=Ox5AjPJ+grBNS1s0/WsVhwzIpHlsauyx3FDVIrvvB7Dq3CVQgSHNbstL9GkeE+VIY78yyPgcEa7hcO5RwSy0k4QAYrXUy059q92hG4WikvAz0SCg5R+rAbHDQNsP+c/MOyVWywH7xZhK0mWwE6xnWsarj93aL2uB2wQO+dBX1JQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754768726; c=relaxed/simple;
-	bh=0Pi8gqKn5uLblv1LOtv/ySLVYSXSmZaFBoX3kFZNzsE=;
+	s=arc-20240116; t=1754768885; c=relaxed/simple;
+	bh=ATqPh2dSeetHEr4AMA79KW/e8xMzs6w7YrGH9/c34XQ=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Wr4OJ0LQPkgCtPkMDPfEBojC5dmpiHMamwOu5njN+NrO9YlqMnGT9/WUcPch1XdJP3fc/KuoGs+m0KOaeCNl9QV52RIyn+3FpAKAGend17xs0ehlsXgAlVwIl0OrqtuHyi4UMC73kDb3d3cx8SjMAqa2bsqxVmhA+rNCOhwM0Kw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=RcoN990w; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jAiQOAmN; arc=none smtp.client-ip=103.168.172.153
+	 Subject:Content-Type; b=q456FcmdtzddFc4G6/e+F7JBYDc7WP6yB46ROCLH+vaQX5pp2pZJ1w7wLpfyOegZbfi9sSraaKG8cM4FgF1HcSOhi6yCcaR9HFg9sXqnbyjUEnI0SDZ5F5RDtqzfNmwsZDhtwKfNFsYM/tdIAJiJKoqSN36wJmRR0GU66bNHnvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=FPjqUn1h; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eKkPziaj; arc=none smtp.client-ip=103.168.172.153
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 3B9F61400085;
-	Sat,  9 Aug 2025 15:45:22 -0400 (EDT)
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 75CDA14000A9;
+	Sat,  9 Aug 2025 15:48:02 -0400 (EDT)
 Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Sat, 09 Aug 2025 15:45:22 -0400
+  by phl-compute-05.internal (MEProxy); Sat, 09 Aug 2025 15:48:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1754768722;
-	 x=1754855122; bh=xpFQtBM9BDyQogemW90Hly2XFx2AJszWu0cAmbodO6g=; b=
-	RcoN990wicCgluRfYNAZETIZCGrgi9gKVu/8Lk70Q8JkIYIYHQ1ksKxSnt8SXgzh
-	DwC/8jDkEq7IU84cOoH2e3gOzdyACEp+usybGBka1z8bNQ5KSootvpx09eHRwYS1
-	dlM1MPIoaZhyb2diao+18LgzmAvOegdd2E8F6e7vph3pufIFIwCstghf1XeMEqqp
-	tXJKJUdD/Jn5xgK3I/ac+68ioEuXXaFNH1x29t6Z3KgyQxjKCN9Nbn4qFpYIKjGi
-	GZo5XsC7q1DzHtzVL5rX779U8qoTfzjiwk6ACBidL8Mq8aZg+wJrYqpH4Xl2+MTP
-	XF1qST4UOAqD2CP4C4u4gQ==
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1754768882;
+	 x=1754855282; bh=WKr2MJBq8olqh9D8tHXchCabQhGaSNKZjhY9rwmDxhc=; b=
+	FPjqUn1hz3rUmrl2IJT39E+kqwKhDmrb2QtRsdWP1j7ZbpmIIyrMHht5M0u+n0s5
+	Xy18rjbDoZWSnv5Jd/Rm177so+M8oBknOyVl7T0jKP/nvM11DWe+Ze4M2M/A7TCa
+	X9Z+uN+DUjxqdpfEaQ3kWwIBmUW0SewI7+BKTpFWcb/IWvZ+S8upZ5v4qAi5d5vM
+	G8sYXHzUchepyfxCwGtApPzNenPtbyiw7BGgupuKjPx38NgiQTeLlizPDTW3Vt9u
+	BIcbJC/2AwLNW+jiDOlYl9BIb2s7PP9JiFJHWLCWFzXsHzHPgorOabsSH4fTLzSu
+	Jl0JjZGE3Ohm8opAoxvXCw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1754768722; x=
-	1754855122; bh=xpFQtBM9BDyQogemW90Hly2XFx2AJszWu0cAmbodO6g=; b=j
-	AiQOAmNsuVywpJKAplwz/7NrpriJrtUzSzU9oQRVc/REsWuils9MSexf5g0Mgkbs
-	J/V85S34gDdLOMDKhQ2XEjv6EKSB0BfMDi/K71Ee0LVJ0B1kMeFMXiuhHT1iseIY
-	GngK+6WDAU+lfVm14zZd/cPGIFB4tc8mhH0JqDNQUJVKdk/NzitRpboX1vZK+Nqr
-	ROV+UNfJBra4uqzAyqK/649tN/+y8TGAufWBogpl3GJo6O07V6TIEyrASyoB4X4R
-	JbNu95zRk2ceyqrJs6tb3XmMMrsvytX1Ueu3v3enGyp43fA3Z5mMlOYosIcCioli
-	aDA6R2zKFn0endArSHpAg==
-X-ME-Sender: <xms:UKWXaE9mSjrxiASFXi__vKGs8R3i9JUwmzfKpSnS029MulKG71qvfA>
-    <xme:UKWXaMulYsQt2Byw2JHrl1eJRfKRlP5LqU7k5FAyf9xNV0YfAMf8ovF6OcNgHbUxf
-    lkXi7-Imh_CSsiZZhI>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1754768882; x=
+	1754855282; bh=WKr2MJBq8olqh9D8tHXchCabQhGaSNKZjhY9rwmDxhc=; b=e
+	KkPziaj1n0PWrNDHC5DNKD4vXmcyb7EdvDCHwvDY/tVbk9AwgC9J9Zf1ScKiBn7E
+	UIdsu45xdTxkm6oEkeYnBeDJMchRVAfPgES2+ObMQngifp16f2fzqDzrriLfPjbq
+	hhmEF6NfR10yksTCgUr4u8GJRCB9BstMPk5F0CNLQ1uvg1KbTCaCXLr65TUfUIST
+	qCCnAUtRuHtL0uK/51F1bElcRFid6LCRmJ1hTAZo2sG1j9KIig5nyy0wXTE6RJHj
+	iOTckmlyWcwlITNJJR+87yyAY5OGKc5LyE5Z03je2+65r/KBwfu3khlWhIIEqov0
+	XPIR1Jsh4cwrvnKbK/XKA==
+X-ME-Sender: <xms:8qWXaGS-3l9L3rfK-M7Dgego2FkO8q0XwBX7uy6bbq15BZqBn2Y9dA>
+    <xme:8qWXaLwEC3WZYzZi-JCW5t7VsJV2MOtSBdNZbjv_y1QAVZKLhH3HFCpqu0ByYPiBM
+    IIdrNTNebulc6IC51A>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduvdejheejucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
     gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
     uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
     hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
-    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepudejpdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepughmihhtrh
-    ihrdhtohhrohhkhhhovhesghhmrghilhdrtghomhdprhgtphhtthhopegushgrnhhkohhu
-    shhkihesghhmrghilhdrtghomhdprhgtphhtthhopegrrhhnugeskhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtohephhgrnhhsgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhgv
-    vgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslh
-    hinhgrrhhordhorhhgpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkohes
-    lhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvg
-    hnsehlihhnuhigrdhinhhtvghlrdgtohhm
-X-ME-Proxy: <xmx:UKWXaEMDu5ZkDAowu8cl0LLJc-ZmNiIr89XGjTrCN7KCnlYKFGmXag>
-    <xmx:UKWXaAe18ZjmLCKaNBeW_cQSwWb_OV_qGDWbNXO8e1nnxKeNTyG3_A>
-    <xmx:UKWXaDn1HJ7DouedjmU3l-oP-LfMF2w1scxQ1usrJvRbpXbgxHEjnQ>
-    <xmx:UKWXaKxe6HDDgJunmWzTY6R7uoCG2889UKPcP7Y_d-48Azepw6GYrg>
-    <xmx:UqWXaMFdDk6lzsOQaTmmDm6Rfh9L7AzeD-GmVIu0L0zs7EzkZ4oLtI5D>
+    necuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
+    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepuddtpdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepkhhoihgthh
+    hirhhordguvghnsegtrghnohhnihgtrghlrdgtohhmpdhrtghpthhtohepghgvvghrthdo
+    rhgvnhgvshgrshesghhlihguvghrrdgsvgdprhgtphhtthhopegrrhhnugeskhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtoheprghnughrvgdrughrrghsiihikheslhhinhgrrhhordho
+    rhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpd
+    hrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgv
+    lhdrtghomhdprhgtphhtthhopehpvghnghdrfhgrnhesnhigphdrtghomhdprhgtphhtth
+    hopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:8qWXaG_aftMSWvaYoFE2Zng8N4wSSnNFoVa3y44hQrsXjuHvE0aehQ>
+    <xmx:8qWXaGZ9ES8pwKkdWOmNZEkf10UcLNdw_sCWiAZZ3QNWW1_2YiRu-w>
+    <xmx:8qWXaHqOnDH4EJhur9slXpUjAtR5yx7qL3tMPcTeMXaMsi2Y0GL-zw>
+    <xmx:8qWXaKSJcONRJGK4owYejkl3fD_RseR2KGdD84-2_jVcaWZNUP8MVQ>
+    <xmx:8qWXaDQSK-048mrRE-j2bkH0zppFuf1NcL9Sht-RrULvzUpLfNSBaHBj>
 Feedback-ID: i56a14606:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id CD856700065; Sat,  9 Aug 2025 15:45:20 -0400 (EDT)
+	id 1C1A8700065; Sat,  9 Aug 2025 15:48:02 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -95,73 +95,50 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T6ddc270fb212d79d
-Date: Sat, 09 Aug 2025 21:44:50 +0200
+X-ThreadId: T61f8b4fdd2b1374b
+Date: Sat, 09 Aug 2025 21:47:31 +0200
 From: "Arnd Bergmann" <arnd@arndb.de>
 To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
  "Arnd Bergmann" <arnd@kernel.org>
 Cc: "Bartosz Golaszewski" <brgl@bgdev.pl>,
  "Linus Walleij" <linus.walleij@linaro.org>,
  "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Lee Jones" <lee@kernel.org>, "Dzmitry Sankouski" <dsankouski@gmail.com>,
- =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, linux <linux@treblig.org>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
- "Guenter Roeck" <linux@roeck-us.net>, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Message-Id: <3190334c-538d-4e2d-80a4-6e24b255e844@app.fastmail.com>
-In-Reply-To: <aJccS7fdcx0INYTA@smile.fi.intel.com>
+ "Peng Fan" <peng.fan@nxp.com>,
+ "Geert Uytterhoeven" <geert+renesas@glider.be>,
+ "Koichiro Den" <koichiro.den@canonical.com>,
+ =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ linux-kernel@vger.kernel.org
+Message-Id: <c7d66744-29c9-4f70-905f-7ef133a22422@app.fastmail.com>
+In-Reply-To: <aJcgZLWgMy01re08@smile.fi.intel.com>
 References: <20250808151822.536879-1-arnd@kernel.org>
- <20250808151822.536879-6-arnd@kernel.org>
- <aJccS7fdcx0INYTA@smile.fi.intel.com>
-Subject: Re: [PATCH 05/21] x86/platform: select legacy gpiolib interfaces where used
+ <20250808151822.536879-22-arnd@kernel.org>
+ <aJcgZLWgMy01re08@smile.fi.intel.com>
+Subject: Re: [PATCH 21/21] gpiolib: turn off legacy interface by default
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-On Sat, Aug 9, 2025, at 12:00, Andy Shevchenko wrote:
-> On Fri, Aug 08, 2025 at 05:17:49PM +0200, Arnd Bergmann wrote:
->> From: Arnd Bergmann <arnd@arndb.de>
+On Sat, Aug 9, 2025, at 12:18, Andy Shevchenko wrote:
+> On Fri, Aug 08, 2025 at 05:18:06PM +0200, Arnd Bergmann wrote:
+>
+>> All users of the legacy interface now select CONFIG_GPIOLIB_LEGACY,
+>> so it can be turned off by default.
 >> 
->> A few old machines have not been converted away from the old-style
->> gpiolib interfaces. Make these select the new CONFIG_GPIOLIB_LEGACY
->> symbol so the code still works where it is needed but can be left
->> out otherwise.
+>> Allow turning it on manually for compile testing, in order to keep
+>> the build coverage of the legacy drivers.
 >
->> --- a/drivers/platform/x86/x86-android-tablets/Kconfig
->> +++ b/drivers/platform/x86/x86-android-tablets/Kconfig
->> @@ -8,6 +8,7 @@ config X86_ANDROID_TABLETS
->>  	depends on I2C && SPI && SERIAL_DEV_BUS
->>  	depends on GPIOLIB && PMIC_OPREGION
->>  	depends on ACPI && EFI && PCI
->> +	select GPIOLIB_LEGACY
->>  	select NEW_LEDS
->>  	select LEDS_CLASS
->>  	select POWER_SUPPLY
+>>  config GPIOLIB_LEGACY
+>> -	def_bool y
+>> +	bool "Legacy GPIO interfaces" if COMPILE_TEST
 >
-> Hmm... This is a surprising change. But I leave it to Hans.
+> Maybe I'm missing something, but how does it supposed to be compiled for old
+> platforms? (No, COMPILE_TEST is not a correct option for that)
+> Perhaps you meant EXPERT ?
 
-I think the only function that still needs it is
-x86_android_tablet_probe() doing
+The COMPILE_TEST is really just meant for enabling some drivers
+that would otherwise be skipped in allmodconfig builds.
 
-static struct gpio_keys_button *buttons;
+All the old platforms that use one of the GPIOLIB_LEGACY drivers
+select that symbol once the first six patches are merged.
 
-                for (i = 0; i < dev_info->gpio_button_count; i++) {
-                        ret = x86_android_tablet_get_gpiod(dev_info->gpio_button[i].chip,
-                                                           dev_info->gpio_button[i].pin,
-                                                           dev_info->gpio_button[i].button.desc,
-                                                           false, GPIOD_IN, &gpiod);
-
-                        buttons[i] = dev_info->gpio_button[i].button;
-                        buttons[i].gpio = desc_to_gpio(gpiod);
-                        /* Release GPIO descriptor so that gpio-keys can request it */
-                        devm_gpiod_put(&x86_android_tablet_device->dev, gpiod);
-                }
-
-So the driver itself uses gpio descriptors, but it passes
-some of them into another driver by number. There is probably
-an easy workaround that I did not see.
-
-      Arnd
+    Arnd
 
