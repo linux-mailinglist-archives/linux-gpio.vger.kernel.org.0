@@ -1,139 +1,146 @@
-Return-Path: <linux-gpio+bounces-24119-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24120-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CEE41B1F63C
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Aug 2025 22:55:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 867CEB1F755
+	for <lists+linux-gpio@lfdr.de>; Sun, 10 Aug 2025 02:20:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E0B7C189D800
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Aug 2025 20:56:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1CE93189A05B
+	for <lists+linux-gpio@lfdr.de>; Sun, 10 Aug 2025 00:20:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16CEF275B1C;
-	Sat,  9 Aug 2025 20:55:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E62184C7F;
+	Sun, 10 Aug 2025 00:20:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Jg9iK4zs";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ntVW/R5D"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RNyukv4B"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318E9282FA;
-	Sat,  9 Aug 2025 20:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165DF10785;
+	Sun, 10 Aug 2025 00:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754772951; cv=none; b=HKULOEg+lzRUtcuSrgMgX/+Q33R7Q2JTTnKJGTsopJD0pDb6WiyiOZPqoSw7oHjcSpYmYPOXEYbJhUbRxFKMrXOzFLQQ/0alBbY67PD6hJc7JJQi8NcgC/VN4PUwweHkfAryos/Q//LNyElaIHrvxotr9Tuio3xEIaJTol8Kc18=
+	t=1754785221; cv=none; b=CMqTxeFVNOw8TfUn/mggnfCxjFSd4bgJ/Oc452RJQ5hHnhibs4gZjMlK03UqTxsEU9oQJldCQcRo18PAs5ial3W/bamn5PQk2yaQRh5Y+nSePvkd6gJ8rXVCGWrUaqTR0eSihlFkndA1Bw66OyYNAsy/mRXxh3KyJyGQJk5FIu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754772951; c=relaxed/simple;
-	bh=XsAY+I0V7t/bRiWxTGrMkkPV2nHwxaPbF8aYmtcLFvk=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=lKduQFtfALkZQGl5LG30heQN9vQi+QSSzBzripOiPw0aojfgabq0IEMw6dpBHMEAdvPxNzfeOdn9cJImUrEY4IcONHzZb4d44bouDFrdidziB9BCRbEYm/kVw+tGxQmz4ul6qeg3KfZx82o4B5cIwmDOPennUjWX2U+plXODm2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Jg9iK4zs; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ntVW/R5D; arc=none smtp.client-ip=103.168.172.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id 23975EC1B60;
-	Sat,  9 Aug 2025 16:55:48 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Sat, 09 Aug 2025 16:55:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1754772948;
-	 x=1754859348; bh=00YVrUoOFUKa6IxONMxJUOwOGEtIYHYtjitPZW1x3IE=; b=
-	Jg9iK4zsVrcSNzL7z+rrq84jWqLk1zRD1iqIsk+Mu9dCH9RTmeB1aQKDQr1o8uTF
-	y/23h/KPABlNR4yM/1pxj081Jdxr+vxVe806APntun8g5l/dwW6aESTn6kghyyjl
-	cdciLqQzn2OCbH4PJENs1D9+mfSeS6gKgvEtpQ7loNtxd+zMdlsrv9vjU8KRmk0h
-	KLj+I0ROjcT5Y1oeh8mtDVPKc5gqm9RyYOJh80Q44UQD+ph0k4yiRAb/I1zoH26a
-	jf4kOQVrSfS+dBTsVlCDL1K+KVq2mxVkGV3G8y+53/MvineuC/eoAtWZvgCdxZfb
-	kz4xAPxMmPUaDxD53rzxhQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1754772948; x=
-	1754859348; bh=00YVrUoOFUKa6IxONMxJUOwOGEtIYHYtjitPZW1x3IE=; b=n
-	tVW/R5DgLVbkRloe9XDClBFnyi4JDvhoBL20PPTR9S1Hj21jpDl1k0GrDz49tugI
-	O7xaWP6ZoCMin5uXJcmgtfsxOIRPoNkBVTQzP50Ya9IcD07Hw2Inaw8uSxWaVnwy
-	RsweeH/DJje84I5FlAZim04Vo427aUdcmzYSw5LggV79rQG6Tw1c+78Z1XnQB1PO
-	M7xCqGfyXXbHwGk4XlwPGfetDaz73s8jGCeGo+Z0bFM4kfH/3yEMvtTFBxdLiLlw
-	lYkMdDe8YCXqVDsvnGadkoh/3X64ULktwWaxJDqcHOSpntLJyHNn9dXIq74cZB+5
-	N+Mk2WyKckEzK3XREk3/A==
-X-ME-Sender: <xms:07WXaHgYftGCsEsXKay4RpEZnBmoFOYUoD3AhSOOXeJ2pYBfNI2Bqw>
-    <xme:07WXaEBXQmNuveUsEAH3XJS8yslcvkNxyERzgsoOgqmCDRXjzjhqsImc3ChtMmDID
-    CrClTIqgHhrIxQEL-k>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduvdejjeduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnhepvdfhvdekueduveffffetgfdvveefvdelhedvvdegjedvfeehtdeggeevheefleej
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
-    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepudejpdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopehrmhhkodhkvghrnhgvlhesrghrmhhlihhnuhigrdhorhhgrdhukh
-    dprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepfhhlohhrihgr
-    nhdrfhgrihhnvghllhhisegsrhhorggutghomhdrtghomhdprhgtphhtthhopegurghvvg
-    hmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepjhhonhgrshdrghhorhhskhhi
-    sehgmhgrihhlrdgtohhmpdhrtghpthhtohepkhihlhgvhhgvnhgurhihuggvvhesghhmrg
-    hilhdrtghomhdprhgtphhtthhopehnohhlthgrrhhisehgmhgrihhlrdgtohhmpdhrtghp
-    thhtohepohhlthgvrghnvhesghhmrghilhdrtghomhdprhgtphhtthhopegvughumhgrii
-    gvthesghhoohhglhgvrdgtohhm
-X-ME-Proxy: <xmx:07WXaL1-ogyBNb0r8R7_iZpGWcknUJAj5KtzXICrWGLyDeWOQiaIcQ>
-    <xmx:07WXaEyd7z1-FDOlp4f73uKovhiLJ6fQIxVU-_dA5vebEo5lTNfAXw>
-    <xmx:07WXaCj0J53nf21ROP5Ne1zI1JoTUrXKGGbEfJ9r8A1jHZdmEpsf3A>
-    <xmx:07WXaLyAZzGALNGV7e71uIfNxQERLUOMvBuBHo9cxoB5UtpHMXFsBw>
-    <xmx:1LWXaKUe3IoRcX5CNiy-Nrf3lbh75lvGrvd8afyoO2aEdDjxH9kkL2_s>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 22BAD700068; Sat,  9 Aug 2025 16:55:47 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1754785221; c=relaxed/simple;
+	bh=Yu3/TIsfaw8eta+0x7toQmHRIySyi8f8Rt+H3p/7MpA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C3psOksUudmk6Al9t56kDPzS8YTLvzSDbPCd1DeCoxw2KR75NhaJRLczj+VqqUyucvtiMfl/Xb7GVWFweQGcZadXakTyXqwG8PDOSO8wJct5AKpz7VxzqVT5OGPGY5hVDfAsiP0P8uCWsAxZ/kwEPRsItq6MzkDjoU69TGB+4zQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RNyukv4B; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754785219; x=1786321219;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Yu3/TIsfaw8eta+0x7toQmHRIySyi8f8Rt+H3p/7MpA=;
+  b=RNyukv4Bet06qt713UicZCKNLrQffZudG2hcGBr8kY6g1Vdnp66vva6/
+   hBTw0AZ0B1FtqR7oMBD8SFoBIRg+AV4Zq/JMcK4dQbjcdVwvhzBH5GGh3
+   rdarW6ZYOyY8KC033YsPMWQFwaA/LnG89fouDRtP0uvWhOQ9IGxzEMiWA
+   T6eDyFrQC/UB489P0y6CVQ5BXwdjswW8PK9CeLT4JMFgwy+lhjt5spgeT
+   kADp8+/niE18WlBIJpSXosKtY/moDrFTvxiFVQBvzfG2HUdejZZ+wQUkp
+   5zfLiqDiiponTl54ssScPlZMxZA4thtVFMKoPGr+lMe3CU7QCQ9zkfIS7
+   g==;
+X-CSE-ConnectionGUID: y5Zah+LuTeaqW81Fff4Dqw==
+X-CSE-MsgGUID: w9fWuXq8QLySyTnB5I9RjA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11516"; a="68457231"
+X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
+   d="scan'208";a="68457231"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2025 17:20:18 -0700
+X-CSE-ConnectionGUID: /zRJEk8/SnC8qdNqk4z4TA==
+X-CSE-MsgGUID: uYBqjVq/T3WvtPihRBdrDw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
+   d="scan'208";a="165501820"
+Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
+  by fmviesa006.fm.intel.com with ESMTP; 09 Aug 2025 17:20:15 -0700
+Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uktmy-00056K-2w;
+	Sun, 10 Aug 2025 00:19:58 +0000
+Date: Sun, 10 Aug 2025 08:19:48 +0800
+From: kernel test robot <lkp@intel.com>
+To: Hans de Goede <hansg@kernel.org>,
+	Israel Cepeda <israel.a.cepeda.lopez@intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa-dev@sang-engineering.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: oe-kbuild-all@lists.linux.dev, Hans de Goede <hansg@kernel.org>,
+	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
+	Richard Hughes <rhughes@redhat.com>, linux-i2c@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 1/3] usb: misc: Add Intel USBIO bridge driver
+Message-ID: <202508100706.TBcpUB9u-lkp@intel.com>
+References: <20250809102326.6032-2-hansg@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tfbba8c937fccaf1f
-Date: Sat, 09 Aug 2025 22:55:26 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Jonas Gorski" <jonas.gorski@gmail.com>, "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- "Florian Fainelli" <florian.fainelli@broadcom.com>,
- "Andrew Lunn" <andrew@lunn.ch>, "Vladimir Oltean" <olteanv@gmail.com>,
- "David S . Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>,
- =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
- "Kyle Hendry" <kylehendrydev@gmail.com>,
- "Russell King" <rmk+kernel@armlinux.org.uk>, Netdev <netdev@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <ba75ec03-f790-41e9-916d-a14eb52aadd2@app.fastmail.com>
-In-Reply-To: 
- <CAOiHx=mW8B2vQ7UhauPJpJ9KmtxTZ2-1MC3Vf2uNF9RaJ4WQ5A@mail.gmail.com>
-References: <20250808151822.536879-1-arnd@kernel.org>
- <20250808151822.536879-16-arnd@kernel.org>
- <CAOiHx=mW8B2vQ7UhauPJpJ9KmtxTZ2-1MC3Vf2uNF9RaJ4WQ5A@mail.gmail.com>
-Subject: Re: [PATCH 15/21] dsa: b53: hide legacy gpiolib usage on non-mips
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250809102326.6032-2-hansg@kernel.org>
 
-On Sat, Aug 9, 2025, at 12:01, Jonas Gorski wrote:
-> On Fri, Aug 8, 2025 at 5:23=E2=80=AFPM Arnd Bergmann <arnd@kernel.org>=
- wrote:
->
-> Can't really test this (no matching hardware), but with the code issue=
-s fixed
->
-> Reviewed-by: Jonas Gorski <jonas.gorski@gmail.com>
+Hi Hans,
 
-Thanks! I've added the fixes you suggested and made sure it
-actually builds on mips. I had done lots of randconfig tested
-on arm and x86, but since that code block is only built on
-mips, I missed my mistakes.
+kernel test robot noticed the following build warnings:
 
-     Arnd
+[auto build test WARNING on usb/usb-testing]
+[also build test WARNING on usb/usb-next usb/usb-linus brgl/gpio/for-next andi-shyti/i2c/i2c-host linus/master v6.16 next-20250808]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Hans-de-Goede/usb-misc-Add-Intel-USBIO-bridge-driver/20250809-182506
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+patch link:    https://lore.kernel.org/r/20250809102326.6032-2-hansg%40kernel.org
+patch subject: [PATCH 1/3] usb: misc: Add Intel USBIO bridge driver
+config: loongarch-randconfig-r052-20250810 (https://download.01.org/0day-ci/archive/20250810/202508100706.TBcpUB9u-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202508100706.TBcpUB9u-lkp@intel.com/
+
+cocci warnings: (new ones prefixed by >>)
+>> drivers/usb/misc/usbio.c:661:19-21: WARNING !A || A && B is equivalent to !A || B
+
+vim +661 drivers/usb/misc/usbio.c
+
+   647	
+   648	static int usbio_match_device_ids(struct acpi_device *adev, void *data)
+   649	{
+   650		struct usbio_match_ids_walk_data *wd = data;
+   651		unsigned int id = 0;
+   652		char *uid;
+   653	
+   654		if (!acpi_match_device_ids(adev, wd->hids)) {
+   655			uid = acpi_device_uid(adev);
+   656			if (uid)
+   657				for (int i = 0; i < strlen(uid); i++)
+   658					if (!kstrtouint(&uid[i], 10, &id))
+   659						break;
+   660	
+ > 661			if (!uid || (uid && wd->id == (u8)id)) {
+   662				wd->adev = adev;
+   663				return 1;
+   664			}
+   665		}
+   666	
+   667		return 0;
+   668	}
+   669	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
