@@ -1,76 +1,79 @@
-Return-Path: <linux-gpio+bounces-24198-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24199-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 181FFB20D60
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 17:18:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79584B20D6E
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 17:19:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 04F6D624780
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 15:18:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4E179624C87
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 15:18:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16C8D2E06EC;
-	Mon, 11 Aug 2025 15:18:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1E082E091E;
+	Mon, 11 Aug 2025 15:18:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="PTz32NZK"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="gPErYFnw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f67.google.com (mail-ej1-f67.google.com [209.85.218.67])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC7C27450
-	for <linux-gpio@vger.kernel.org>; Mon, 11 Aug 2025 15:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2472E03FE
+	for <linux-gpio@vger.kernel.org>; Mon, 11 Aug 2025 15:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754925487; cv=none; b=DJuAqKoOdhzjuLcRuq4MI5RmI8ecC/PMwMujvk54fzeyU1VtOeogOz/nwtP1y0KK2dZSK41rFRDrXpJXQOD8GJyQNVEnMdWPkwdrVZZ6geH5EwBDOlDV4PRmizEmFQs5tcVlBF+S03ogn6Ye+D4YOeIb1h1oQwY7N70wJO0wFz0=
+	t=1754925489; cv=none; b=tNHoKoqDFl0ZN30EDP6QYgE9zZrccRjtECCKnjEupVwyJ+itoyEPb/xn8q6lPdFgBv7izTK80a9CKiOzgeevRRP4klZt03FMjelnkjsH2hV5T3BCBVfUduGGu6e9jHgQIS7GbwCDuu3hT/wnhRYh/ghCIh6/9l8B+8LE+kIVMeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754925487; c=relaxed/simple;
-	bh=6a2jpr8RqbOo+9g1f65WPhHWahy1fmVBwuuQHvaAios=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Tp3jktmhdWevN/5prDFYeVeDKAc3WJj8NdvgHtLPMHw5xR+nHvVBdUNZdvq1WpnwNbnlz46dyZgr12y67J0Gg/H1+GExKo5CSmA2SKT17NmhhKZlS9TMnGx5vw7zM0Zerayo/NCjzaebPaz+dkp1E0y2NE68HSgIRAy4Kjdnx88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=PTz32NZK; arc=none smtp.client-ip=209.85.218.67
+	s=arc-20240116; t=1754925489; c=relaxed/simple;
+	bh=cplGFDqmgtSpbjmRX3cAoVtjixMSRofZ7eAFWsu8/iY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DjTEKiFVaQWKqcvvEqqAYEYYOa15rN1k12x2T2UP51RWxkOQDqFkSw2YdBvuxfKQoXJwzZ7wOhwNL4QdSG7nH4KfvmSd50ah0urK5EmCkCHcdMvcGA6BE/PDSmPngep+vlCWJ7SytouJa7t0Z8eVkED6tAReV+nJtrbAWIHr+BI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=gPErYFnw; arc=none smtp.client-ip=209.85.208.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f67.google.com with SMTP id a640c23a62f3a-af9618282a5so865605366b.2
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Aug 2025 08:18:05 -0700 (PDT)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6180b9e4e74so4153025a12.2
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Aug 2025 08:18:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1754925484; x=1755530284; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ihP/wnPXyZhWgHPlteto2ft6qT692i4bL35PGC7Kwgs=;
-        b=PTz32NZKUVFpakySMNj8LpNGl769jNxKtf2Wy2ymGDpQ1rdL34X1N0i6Iw8o+o2MM/
-         YgToy6bi3CvB09Thb9NkMbRZgGzIPfjFqW8Tym+y3F2q/UqbFF+c9n1Gce2zRoHdbyqA
-         if5T7ME6CpfQHdBtTWcFmjSFbhz48aK87tXccE6m0GR3KIsthGXl+b+Gma3jOJETjc6i
-         p+y04GYSnB6IuQUMzz0DePBr8f6NK4PzxfEfBOQJ9IXVwqA5p3fBB4uP/CKQkKhRZAt6
-         8yFUS+C1VkvuYKAu9T3zmnUcwVJbSvFpuout3mjbyjYwA3bwoPafqymJZP7KrTEOWrGQ
-         ayYQ==
+        d=suse.com; s=google; t=1754925485; x=1755530285; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Gr8F9oLlUMXE4zHvyjlznjcTWEkXwUVRTFmLoor2DC4=;
+        b=gPErYFnwb5l1lGHPEc+T7tH2DFgqS/lFV/3TftgpW1vnjPPazJnyGfVnE7vGJxtq2F
+         0ZQ3FwD4fIu3w/FZyj36xFptt98ZC1PHWGfhyTn0X7PGjKU2h8OjHSdwocanla0MkbvW
+         f8C6ifU5L7i3eBY+bysaWbj76c+0EfsSZ5G3DaNGVxP1WOszPZdgLnale9Pqqc60YKiz
+         G37ZSEKVFYuYRN0Fal2v838SbFLiuouB2W8yL515BQSsxrLTxWtbntJPpV+8UHTuvXHF
+         POFShPmhH7B9oOCUgZ+wlVn5g7oXxsNnI2QdGsBtiG6aJ0PAlUbqEUDEfbCGqahKSPP3
+         NoPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754925484; x=1755530284;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ihP/wnPXyZhWgHPlteto2ft6qT692i4bL35PGC7Kwgs=;
-        b=rRCPV9HrVyfxp1YGPESzZvx4ofczUJTPlZvwU/fEbNzGVbtyT9OMuc8Rj8/TAXhCBg
-         +J0z2g1yhLDmYlkZssv4f0M1V/v4NC0R4fudWmk+R1karwm2LEO70dDmAL8pvDJdkCrz
-         FRcrjxGuZG+zmuVoKsjMn8lkVh6XXObXOAaVuYosGLvZ3SKQndnIdPYZt58EEyuGAjEv
-         ixwkM6fGuYGKW8z3sHXCtbiYlw3fgeZRFjZwFi7O0NIYGjYrcl2N5jPbiC0YSp0YVg0B
-         bl+jP7kXNatHZby3OzZFrx6H/tuiWY/jtCZyGNotElkNo0QceuE9Ie8QxC2p4LYbwvKG
-         2IAw==
-X-Forwarded-Encrypted: i=1; AJvYcCVrPThV3LlwkD4D5sJTdmnvqKeU9QcMqb75BAiTF4Vrr949/091qzs6W0EoOWXcpLCBxNgHMq5/b+Fq@vger.kernel.org
-X-Gm-Message-State: AOJu0YxG0j7+YZk5Qe+ZWXb82BUjK17Ck2fg5a+alSzYS4opEarZEq1R
-	Fa+/KOdUsQsUT5+NwvwrFxLRytd4o2LjEhwo1jFhehPgM2CXEiRcbxKiaGVhHHtsJv8=
-X-Gm-Gg: ASbGnctXDMAhCHcuNEzNwA/gqENXOzqZhM2xtFLKOYmbb308YAAd7/SoQbQQlhXGo77
-	eAH2aC5DQGFIAQHVyRqetB1cgeZqIJ/TlWjiLYHJVJPg9x9Q6sr6wTRthJfnbyH7cB8jcf+YMwW
-	2+lA+7FzvUAkucrSOIGpN6qVRLvUDM3USVOLjS+hraMq35bhR72sSB+ChcrQ4jhd3E1v2ulfyoL
-	HWcCeXaIds5uo94G1DB4hNllUDJyGPOXIG6GFr+xFQvrMT0ZHDb3tBkbLKxJWIBPAUYQtXn4yuD
-	Ljz23SxTY9qjHdHcWn1rWFtL51RX1+ukHNL4gQhWoFyfvX1wYPnd9cA/lvAlQGg3BFOxsh/iBv5
-	HsGM5ffC5e0h1+SiI7XsPxz2E4vnSbqIz3H1F/Y4RXbQe7ZrHcC6tMOqDt+5jN3wa9A==
-X-Google-Smtp-Source: AGHT+IGvJ3ayAmkrGkViVLnbNoPZ1sMap6TBv2tr1d6iu6pDDVV5j4fRLfmHXE5vLfntRBsHIUMHNQ==
-X-Received: by 2002:a17:907:608b:b0:af9:5b1f:b87a with SMTP id a640c23a62f3a-af9c64791a2mr1210151866b.20.1754925484035;
-        Mon, 11 Aug 2025 08:18:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1754925485; x=1755530285;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Gr8F9oLlUMXE4zHvyjlznjcTWEkXwUVRTFmLoor2DC4=;
+        b=vWjY4OFE1Sp0nJBhR9Tk0O33bm/LB9sEJ01I401cGZTbui3mb19+d33k8hGrpM+un7
+         UYaOUmtQNfDilog3EVneTnRh3Opsl2YTsfm2VrddHv37CfkchTh6jS/34QTWjIZhymg9
+         CcAzPIKtuZ9SXKWMFFez5str9Pk5UYcojTpvQK9iPvI5ALw/fybT/ui2IapZqwCizrlU
+         vFm6Uacx5L+Xf9sFnDt82H0D5ypAs2sm5PqTLHPFWMsEPS5El1YgAUxz7Xln+Piv56XJ
+         LLrcJDJEHAzfMyJHhmfOw2R4r9mK427xghymIHJPx7YosvlVF7SIy6i46IRwg9Mc0Xby
+         +6lA==
+X-Forwarded-Encrypted: i=1; AJvYcCXMewT/vVOpA1MSHRtaXcw5RQHbWAca0/1t6pGpr7+OXXh4jyXzhA4jXnPSHTzFwXdR2Pz7pyEA34wQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjWKbjKKCxWNY+IJbhcc0ZejbtLnlmvyuSRR3f8J7LZLfd0jZ2
+	FHrYNoJgcFmzLjTk1Nx0ZKUSJoPG7pNn4Kl0cBca32cYPiPvS9W22KnIp1J0ZpXmVdg=
+X-Gm-Gg: ASbGnct3YCEK0gFyAdWJmKdOuSWu7MXdEjfK7L9/6TuND6ykncBmhgQIKUzzBlOf6vH
+	jfYzHSonoxdt3/bDrSm4TCpdB4U6v9ST9KThGGcCZHE4f6lxyhLDSg+NHdQ0lRtJnLVDtWASu7Z
+	s/xFRSVB7DsiPVH1jqLXD0HVn1cB9Ly//fHhYU+1BESTBlWvV3xOPPsQeqDLDDzTcIUMzkh0FPG
+	A6fERc/9g+41BAHH8qaYx8gu9E4Zto9byAh4z4X1D0wonmOjgMz1BODiMlgTYO2cNG54Yq6zZuE
+	QaEiotqA5GDJxA+qqu/prHHlYcdBD8N8lWuy02oqA8on1Mppa9HIern2awM6TCkhyTHpMguP34f
+	bmPGZfAU2eURQ/R8SmA69GmGIazpq6dI6A1RKp0mQ+mWX0f0cmDxQId95IW4H3Dvsr8AniECkF/
+	Ve
+X-Google-Smtp-Source: AGHT+IHY6hHjl0ohw0BhRb2M7W6IV/iJBLaLg4s2DYOzsYCD7hIoPswY0Mvw0fvinMbPKLlE+Q0fyQ==
+X-Received: by 2002:a05:6402:2810:b0:615:a62a:feca with SMTP id 4fb4d7f45d1cf-617e2e9deb2mr11476569a12.31.1754925485240;
+        Mon, 11 Aug 2025 08:18:05 -0700 (PDT)
 Received: from localhost (host-79-44-170-80.retail.telecomitalia.it. [79.44.170.80])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af91a21c081sm2014946666b.97.2025.08.11.08.18.03
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-615a9113e40sm18638282a12.57.2025.08.11.08.18.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 08:18:03 -0700 (PDT)
+        Mon, 11 Aug 2025 08:18:04 -0700 (PDT)
 From: Andrea della Porta <andrea.porta@suse.com>
 To: linus.walleij@linaro.org,
 	robh@kernel.org,
@@ -95,10 +98,12 @@ To: linus.walleij@linaro.org,
 	Jiri Slaby <jirislaby@kernel.org>,
 	linux-serial@vger.kernel.org
 Cc: Andrea della Porta <andrea.porta@suse.com>
-Subject: [PATCH 0/6] Add peripheral nodes to RaspberryPi 5 DT
-Date: Mon, 11 Aug 2025 17:19:44 +0200
-Message-ID: <cover.1754924348.git.andrea.porta@suse.com>
+Subject: [PATCH 1/6] dt-bindings: mmc: Add support for capabilities to Broadcom SDHCI controller
+Date: Mon, 11 Aug 2025 17:19:45 +0200
+Message-ID: <57dd103c430f1a064b6c55809e4d2be54fad0e11.1754924348.git.andrea.porta@suse.com>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <cover.1754924348.git.andrea.porta@suse.com>
+References: <cover.1754924348.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -107,81 +112,31 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+The Broadcom BRCMSTB SDHCI Controller device supports Common
+properties in terms of Capabilities.
 
-The following patches add a few peripheral DT nodes and related pin/gpio
-nodes for Raspberry Pi 5.
+Reference sdhci-common schema instead of mmc-controller in order
+for capabilities to be specified in DT nodes avoiding warnings
+from the DT compiler.
 
-This brand new patchset (hence it's a V1) is the second part of the split-up
-of the patchset [1]. It tooks patches 3 to 6 from there and adds a couple
-of new patches that amend the DT bindings.
-As a result, patchset [2] is a prerequisite for this patchset.
+Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+---
+ Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-- Patch 1 and 2: Amend the bindings to avoid DT compiler warnings.
-
-- Patch 3: Adds core pinctrl nodes and defines SD pins as a first appliance
-  for the pinctrl.  
-
-- Patch 4: Wires the gpio-key for power button and related gpio controller.
-
-- Patch 5: Adds DT node for WiFi.
-
-- Patch 6: Adds Bluetooth DT node.
-
-All comments and suggestions are welcome!
-
-Happy hacking!
-Ivan and Andrea
-
-Links:
-[1] - https://lore.kernel.org/all/cover.1752584387.git.andrea.porta@suse.com/
-[2] - https://lore.kernel.org/all/cover.1754922935.git.andrea.porta@suse.com/
-
-
-CHANGES since [1]:
-
---- PATCHES ---
-
-- Add two new patches (1 and 2) that amend the DT bindings.
-
-
---- DTS ---
-
-- bcm2712.dtsi: Added 'interrupt-names' and dropped 'reg-shift' and
-  'reg-io-width' properties in uarta DT node. The latter two are
-  just overridden by driver code so setting them in DT is useless.
-
-- bcm2712-rpi-5-b-ovl-rp1.dts: dropped 'auto-flow-control' property
-  since it's not parsed in driver code.
-
-
---- DT BINDINGS ---
-
-- brcm,sdhci-brcmstb.yaml: added SDHCI capabilities by including
-  sdhci-common.yaml.
-
-- serial/brcm,bcm7271-uart.yaml: let clock-frequency be an alternative way
-  to specify the clock speed instead of clocks/clock-names.
-
-
-Andrea della Porta (2):
-  dt-bindings: mmc: Add support for capabilities to Broadcom SDHCI
-    controller
-  dt-bindings: serial: Add clock-frequency property as an alternative to
-    clocks
-
-Ivan T. Ivanov (4):
-  arm64: dts: broadcom: bcm2712: Add pin controller nodes
-  arm64: dts: broadcom: bcm2712: Add one more GPIO node
-  arm64: dts: broadcom: bcm2712: Add second SDHCI controller node
-  arm64: dts: broadcom: bcm2712: Add UARTA controller node
-
- .../bindings/mmc/brcm,sdhci-brcmstb.yaml      |   2 +-
- .../bindings/serial/brcm,bcm7271-uart.yaml    |  19 ++-
- .../dts/broadcom/bcm2712-rpi-5-b-ovl-rp1.dts  | 133 ++++++++++++++++++
- arch/arm64/boot/dts/broadcom/bcm2712.dtsi     |  47 +++++++
- 4 files changed, 198 insertions(+), 3 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml b/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml
+index eee6be7a7867..493655a38b37 100644
+--- a/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml
++++ b/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml
+@@ -61,7 +61,7 @@ properties:
+     description: Specifies that controller should use auto CMD12
+ 
+ allOf:
+-  - $ref: mmc-controller.yaml#
++  - $ref: sdhci-common.yaml#
+   - if:
+       properties:
+         clock-names:
 -- 
 2.35.3
 
