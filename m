@@ -1,48 +1,81 @@
-Return-Path: <linux-gpio+bounces-24146-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24147-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCDD9B20457
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 11:50:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 03BE0B205A6
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 12:36:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 93A741892E24
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 09:51:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 586AB18A2A5B
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 10:36:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D30EE241C89;
-	Mon, 11 Aug 2025 09:49:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6217D2356CB;
+	Mon, 11 Aug 2025 10:34:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="prAZfONv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LQtUuk4A"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854B21F4C8C;
-	Mon, 11 Aug 2025 09:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A332253E9;
+	Mon, 11 Aug 2025 10:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754905773; cv=none; b=WEO8rrvvym59lQ+EwsrQuBDnAx9QQ0EOhqeky+0tEhQFyM7JFMSyKR+XWQUU/492RQ5HDdDr462AcPfHX4+7z5dbWEq1lMCkvK6FPcBBfpAtnJ4COhex7ubqxOPuVKlkeZAB+sTlM49fYbsXe6HAWzqZQZYHnZ2d5+3wvTJqrgc=
+	t=1754908490; cv=none; b=Yo89QJ5hPKsImS7R4wstvNXpySbXBg1PHHOmaTjepE91uHSpndYjK9B1vwtGp4Sj3WLdVcJxRaGRl5UjIw6tgSSs9ZU/SCWvlUSUnNA6d0ygUwqdGXtQoeEGdTZp6ttqXyuvNs2BFSGyjKqG6I5BTUKtbxWOtEHRsnNoEdG9W2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754905773; c=relaxed/simple;
-	bh=XuvUmiHujUXpabtI4iDksy2ux5JYNkm/NLiN2Jw60/o=;
+	s=arc-20240116; t=1754908490; c=relaxed/simple;
+	bh=1vlHv6Px1eYLtdGgu2Ty/fXv2MFPBY2XO+bhllMxoks=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lLaeIGxMCbfQOoUK0z89pfwUWGyVe7lAGFwsDOEHNy8Toz0E5iXoqmSH6n/nFCstWL8RSibXBeS0Mo1/lYVz213c7U5sHiQ9vbiFhSHx2+5tDIijZ+3hsPAHxItuSJB4XDjr7iC+oORc6WQMGFJOqLdcZ64cCiuPe8mZwbOI8oE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=prAZfONv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD5A2C4CEED;
-	Mon, 11 Aug 2025 09:49:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754905773;
-	bh=XuvUmiHujUXpabtI4iDksy2ux5JYNkm/NLiN2Jw60/o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=prAZfONv0+wux22uiujN+WrvLsKV6MHRUVQsIuK4tSg47pURyGRD9hR0UPc8pHQQo
-	 Z19QBHUcGk8kOzmT0BZDg/iPutxufscciYNccjfU05r7W+yMTxmK5iIXYkMYq0OMZM
-	 EUfrbh0MSDZAAgrXwz/hbBp0TIcfYrfpH3/QlQN+/dQxxtHb/+umWPzYpPyO0mUTif
-	 IG8dQID3aPKlwNVS0ia3Uqe+3doUwxnHoaPsGC5efpEje43deyyrVmVVqGj0P9YCWO
-	 rY6LUC84djnKfMI+gktysGYHMHXcbhRlKqtN5Rla00SzIizIwZYEpCIqQhujpP4gaV
-	 ++JQeOkC1jlrQ==
-Message-ID: <7321f79e-6004-4bca-85bb-a10f0636deb5@kernel.org>
-Date: Mon, 11 Aug 2025 11:49:29 +0200
+	 In-Reply-To:Content-Type; b=Nw+HCkgdzK/AtWrDUYIcqr/w3nfBGHfY7AWm6B0bV25819YCvBzAs6pWIU380MbRDeW2jKJnKHnz8JCVEJqhCkpcIZPRjAZbCjKroYID2MmNLz/2d7o1FPT379LaoZGCV7wtcd+YqlXpyCLwLMrE7U5xovexxKK/nD53ztTKbxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LQtUuk4A; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-556fd896c99so3606839e87.3;
+        Mon, 11 Aug 2025 03:34:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754908486; x=1755513286; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xVkeBhGZWokh7cmfvwm/viK0uMUshY/NRCF71JVFH+o=;
+        b=LQtUuk4ASV7qxG96nkJ4MyHWPBVWArTNQ4L/JS2w6tD70xLmG/feZZdmAFhNKNusnr
+         Jiq+OfaR5izUcifmRxf7eO6szwADzxaEsGxWtc4CbLvDyvLQSC+I1qk5UhSYcV+cP0z/
+         BKwSHveMmPyeSXT66tGkMIO9IdVIQjxAIhWx3t9V3+x5P7HfjUX2RcqPk7pwI+s9w0be
+         Ij2ECeF1c9j1+97NFZUgK9Ykbal0vmy6gm70YEiVFxf4tjf766CtNTnETFKkTuVM638m
+         hZ3n2QR9wXz1aVHSq7q8A2vfbk7MVqxDNrWRNi7QQCO+BdwU8bk40xK88f98WMBWRwOE
+         Xwdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754908486; x=1755513286;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xVkeBhGZWokh7cmfvwm/viK0uMUshY/NRCF71JVFH+o=;
+        b=MjTJUBkbg37Gr9jYXOOLBktiI7oYWb8j/8WLQD6fNoMeOjKJw0ivN4L/TUsPO9aOA8
+         frTGK1Fd0GvRAAEEbbdPHas8Bhdu1P5drdLpZmjQudacoNXRaqguy/2aNRgGBx2iHqg+
+         zzh8HHukQbeablBphp9SG9E5DfRYtaWhA1TdH/UFIJ2pznFHIDgbB0+3DoFxZ0Jtbgks
+         zC7BboKzrWO7WST4smUM8pOskH+jbkd/oZ1h4AxlHGuWqBfOtwW9HF79RCtA8Dkv34mM
+         Qn6yV/m70SlE6m5lK55bYJhyo+urY6apEwCjhQUNoX3W3Va/1h8OTVBCwF129ZyPbUR9
+         ZCxg==
+X-Forwarded-Encrypted: i=1; AJvYcCVWbowag0p/R4YXuoLZufezcRfIaSQ+gT1FbRLcaIf94kvMDGAU+RoBGgIPXpxsQ/X4tTjuTG5rz3Sn@vger.kernel.org, AJvYcCWJb+J58C9jspBagVdDq3m+ojzAmGS3dpumgcx11G6DzFpdmcOkpQNKJvixS4WDPKLVhs883nTk6ITUk0tB@vger.kernel.org, AJvYcCWzAjJkyaEuTWZYrgNmcR657ElQTA0lUumQyhcg1NJJIKgI5BY/kBbqUOgGQLjTj8ZWvT8UA18PTPL7ZWA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxj4mIXMlE039h6o1xo5uhFb0vwt+DwOcN9p3WpjS7di9TR7p+7
+	KQ3oPoiCt3Wejx2iWLKU9FR9V0j5TyzEYjf3WWkrdhORMpTYMZuBa5e3
+X-Gm-Gg: ASbGnctusntBsd12bgnctRuF/cuDUNv8sWN1RRZ+dwbUGu3jP8Q5OGwC/GuWy6je7I5
+	kBGjQx8elLgEJjAm0uWsUVez/lIMCkqibpYmbUi6ICiF9zzHRZXQMtMJYE5qUDW9yD/9f6rrQoO
+	WkrUDZi68xHzem01YjlJDml2VFKu2JWfWvoQjhNOoxjrSl+u3LpRHenEQQjvoqdWsmtHabRaXWo
+	mw17aaqfL9d7SYEof4erctMbPwVjnROuVBmZfrCvPDn1X/sJi32J1HTfTIc4T3bbH0o2qkCfOeL
+	bdtEBuDxlHcmb8PRwPhIavds8ReQ4u64jLiHsDm78r42BIK6xqgUZETt5iWjfKzEpwCXmpfJAoG
+	GnZpzXuHW0E6odypvKT0LjKIG1LBIsZ6I9SWmK8T6crCTSb/2HVzwJZv2Cwj4uvGJLwKMHe5fM8
+	90WRs=
+X-Google-Smtp-Source: AGHT+IETaLJYFx+bsfg4cBqsGAjrcijmy8/Ov+YfnKtp2jsr35IKM/ta5BmKJDpDCoMgIaYs24JBIQ==
+X-Received: by 2002:a05:6512:3f02:b0:55c:bfe7:f045 with SMTP id 2adb3069b0e04-55cc0112fbemr2937187e87.40.1754908485923;
+        Mon, 11 Aug 2025 03:34:45 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55cd1000bf3sm665504e87.6.2025.08.11.03.34.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Aug 2025 03:34:45 -0700 (PDT)
+Message-ID: <b7e97aa3-8f2d-4a59-8a38-577717404865@gmail.com>
+Date: Mon, 11 Aug 2025 13:34:43 +0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,95 +83,177 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] i2c: Add Intel USBIO I2C driver
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Israel Cepeda <israel.a.cepeda.lopez@intel.com>,
- Wolfram Sang <wsa@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij
- <linus.walleij@linaro.org>,
- Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
- Richard Hughes <rhughes@redhat.com>, linux-i2c@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20250809102326.6032-1-hansg@kernel.org>
- <20250809102326.6032-4-hansg@kernel.org>
- <aJmY42ugarABq0Ew@kekkonen.localdomain>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <aJmY42ugarABq0Ew@kekkonen.localdomain>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH 09/21] input: gpio-keys: make legacy gpiolib optional
+To: Arnd Bergmann <arnd@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+ Gatien Chevallier <gatien.chevallier@foss.st.com>,
+ Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Charles Keepax <ckeepax@opensource.cirrus.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250808151822.536879-1-arnd@kernel.org>
+ <20250808151822.536879-10-arnd@kernel.org>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20250808151822.536879-10-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi Sakari,
+Hi dee Ho peeps,
 
-Thank you for your review, note this
-is not a full reply.
-
-On 11-Aug-25 9:16 AM, Sakari Ailus wrote:
-
-<snip>
-
->> +static int usbio_i2c_probe(struct auxiliary_device *adev,
->> +		const struct auxiliary_device_id *adev_id)
->> +{
->> +	struct usbio_i2c_bus_desc *i2c_desc;
->> +	struct device *dev = &adev->dev;
->> +	u8 dummy_read_buf;
->> +	struct i2c_msg dummy_read = {
->> +		.addr = 0x08,
->> +		.flags = I2C_M_RD,
->> +		.len = 1,
->> +		.buf = &dummy_read_buf,
->> +	};
->> +	struct usbio_i2c *i2c;
->> +	u32 max_speed;
->> +	int ret;
->> +
->> +	i2c_desc = dev_get_platdata(dev);
->> +	if (!i2c_desc)
->> +		return -EINVAL;
->> +
->> +	/* Some USBIO chips have caps set to 0, but all chips can do 400KHz */
->> +	if (!i2c_desc->caps)
->> +		max_speed = I2C_MAX_FAST_MODE_FREQ;
->> +	else
->> +		max_speed = usbio_i2c_speeds[i2c_desc->caps & USBIO_I2C_BUS_MODE_CAP_MASK];
->> +
->> +	i2c = devm_kzalloc(dev, sizeof(*i2c), GFP_KERNEL);
->> +	if (!i2c)
->> +		return -ENOMEM;
+On 08/08/2025 18:17, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> Same comment on devm memory allocation than on the GPIO driver: I think you
-> need to use the release callback of struct device here.
+> Most users of gpio-keys and gpio-keys-polled use modern gpiolib
+> interfaces, but there are still number of ancient sh, arm32 and x86
+> machines that have never been converted.
+> 
+> Add an #ifdef block for the parts of the driver that are only
+> used on those legacy machines.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>   drivers/input/keyboard/gpio_keys.c        | 5 +++--
+>   drivers/input/keyboard/gpio_keys_polled.c | 2 ++
+>   drivers/mfd/rohm-bd71828.c                | 2 ++
+>   drivers/mfd/rohm-bd718x7.c                | 2 ++
+>   include/linux/gpio_keys.h                 | 2 ++
+>   5 files changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
+> index f9db86da0818..984b20f773ed 100644
+> --- a/drivers/input/keyboard/gpio_keys.c
+> +++ b/drivers/input/keyboard/gpio_keys.c
+> @@ -528,6 +528,7 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
+>   			 */
+>   			bdata->gpiod = NULL;
+>   		}
+> +#ifdef CONFIG_GPIOLIB_LEGACY
+>   	} else if (gpio_is_valid(button->gpio)) {
+>   		/*
+>   		 * Legacy GPIO number, so request the GPIO here and
+> @@ -546,6 +547,7 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
+>   
+>   		if (button->active_low ^ gpiod_is_active_low(bdata->gpiod))
+>   			gpiod_toggle_active_low(bdata->gpiod);
+> +#endif
+>   	}
+>   
+>   	if (bdata->gpiod) {
+> @@ -583,8 +585,7 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
+>   			if (irq < 0) {
+>   				error = irq;
+>   				dev_err_probe(dev, error,
+> -					      "Unable to get irq number for GPIO %d\n",
+> -					      button->gpio);
+> +					      "Unable to get irq number for GPIO\n");
+>   				return error;
+>   			}
+>   			bdata->irq = irq;
+> diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
+> index e6707d72210e..0ae0e53910ea 100644
+> --- a/drivers/input/keyboard/gpio_keys_polled.c
+> +++ b/drivers/input/keyboard/gpio_keys_polled.c
+> @@ -301,6 +301,7 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
+>   				return dev_err_probe(dev, PTR_ERR(bdata->gpiod),
+>   						     "failed to get gpio\n");
+>   			}
+> +#ifdef CONFIG_GPIOLIB_LEGACY
+>   		} else if (gpio_is_valid(button->gpio)) {
+>   			/*
+>   			 * Legacy GPIO number so request the GPIO here and
+> @@ -323,6 +324,7 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
+>   
+>   			if (button->active_low ^ gpiod_is_active_low(bdata->gpiod))
+>   				gpiod_toggle_active_low(bdata->gpiod);
+> +#endif
+>   		}
+>   
+>   		bdata->last_state = -1;
+> diff --git a/drivers/mfd/rohm-bd71828.c b/drivers/mfd/rohm-bd71828.c
+> index a14b7aa69c3c..fb68694fadca 100644
+> --- a/drivers/mfd/rohm-bd71828.c
+> +++ b/drivers/mfd/rohm-bd71828.c
+> @@ -21,7 +21,9 @@
+>   
+>   static struct gpio_keys_button button = {
+>   	.code = KEY_POWER,
+> +#ifdef CONFIG_GPIOLIB_LEGACY
+>   	.gpio = -1,
+> +#endif
+>   	.type = EV_KEY,
+>   };
+>   
+> diff --git a/drivers/mfd/rohm-bd718x7.c b/drivers/mfd/rohm-bd718x7.c
+> index 25e494a93d48..6c99ab62e31b 100644
+> --- a/drivers/mfd/rohm-bd718x7.c
+> +++ b/drivers/mfd/rohm-bd718x7.c
+> @@ -20,7 +20,9 @@
+>   
+>   static struct gpio_keys_button button = {
+>   	.code = KEY_POWER,
+> +#ifdef CONFIG_GPIOLIB_LEGACY
+>   	.gpio = -1,
+> +#endif
+>   	.type = EV_KEY,
+>   };
+>   
+> diff --git a/include/linux/gpio_keys.h b/include/linux/gpio_keys.h
+> index 80fa930b04c6..e8d6dc290efb 100644
+> --- a/include/linux/gpio_keys.h
+> +++ b/include/linux/gpio_keys.h
+> @@ -25,7 +25,9 @@ struct device;
+>    */
+>   struct gpio_keys_button {
+>   	unsigned int code;
+> +#ifdef CONFIG_GPIOLIB_LEGACY
+>   	int gpio;
+> +#endif
+>   	int active_low;
+>   	const char *desc;
+>   	unsigned int type;
 
-And more or less the same reply, i2c_del_adapter() ensures
-all i2c_clients on the adapters bus are unregistered so
-it guarantees that after i2c_del_adapter() none of the adapter
-functions will get called.
+AFAIR, these ROHM PMICs (bd718[15, 27, 28, 37, 47, 50, 78, 85]) all 
+provide a 'button IRQ', from a power button. (Or, couple of IRQs but 
+let's skip the details) The gpio-keys is used to send the KEY_POWER 
+event when IRQ is detected.
 
-So freeing the struct containing the adapter after remove()
-has run is fine.
+The IRQ comes from the PMIC, and the regmap_irq chip provided by the MFD 
+provides it. This IRQ information is delivered to the gpio-keys from the 
+MFD driver via platform data. That's basically what these "button" 
+structs are here for. No GPIO line information (only the IRQ number) is 
+needed to be delivered to the gpio-keys. This problematic assignment:
 
-I know that the media subsystem does not handle v4l2-subdevs
-(which the i2c-clients are) going away very well.
+ > +#ifdef CONFIG_GPIOLIB_LEGACY
+ >   	.gpio = -1,
+ > +#endif
 
-Richard mentioned that after a fw-update the usbio chip will
-not come back until a reboot. And I've noticed that after crashing
-the usbio fw it will not come back until a full power-cycle.
+is only needed to invalidate the gpio information so that the gpio-keys 
+wont use it, only the IRQ.
 
-So we do not need to worry about somehow slotting new i2c-clients
-into the media-controller graph after a disconnect + reconnect
-since the reconnect will never happen during the current boot.
+As such, this patch seems Ok to me, you can treat this as an ack :) 
+This, however made me ponder following - is this the tight way to handle 
+the power-button IRQ? I don't see any other MFD devices doing this in 
+same way, although I am pretty sure there are other PMICs with similar 
+power-button IRQ...
 
-We do need to somehow make sure that trying to access the v4l2-subdev
-after disconnect does not cause oopses or worse.
+I see for example the "drivers/mfd/rt5120.c" to invoke 
+"drivers/input/misc/rt5120-pwrkey.c" instead of using the gpio-keys. 
+This, however, feels like code duplication to me. I'd rather kept using 
+the gpio-keys, but seeing:
 
-We will likely need to somehow keep the memory for the v4l2-subdev
-around and add something like a disconnected / dead flag to it.
+git grep KEY_POWER drivers/mfd/
+drivers/mfd/rohm-bd71828.c:     .code = KEY_POWER,
+drivers/mfd/rohm-bd718x7.c:     .code = KEY_POWER,
 
-Regards,
+makes me wonder if there is more widely used (better) way?
 
-Hans
-
-
+Yours,
+	-- Matti
 
