@@ -1,75 +1,78 @@
-Return-Path: <linux-gpio+bounces-24185-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24186-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F29BB20B69
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 16:15:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C2C87B20B6F
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 16:15:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 598AE3A4C06
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 14:12:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 003973A24F3
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 14:12:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B45C120F098;
-	Mon, 11 Aug 2025 14:10:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82E4D220680;
+	Mon, 11 Aug 2025 14:10:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="RPomDGHs"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="c9siHFSz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E691DF252
-	for <linux-gpio@vger.kernel.org>; Mon, 11 Aug 2025 14:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EADFF211A15
+	for <linux-gpio@vger.kernel.org>; Mon, 11 Aug 2025 14:10:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754921452; cv=none; b=GjZmOKdOQ3m+eeHuM4InVNhxYZj2OJ+htSHApzr+6jKCCfP3N486L0T21LT+0ctpLMdxyIVl9z15jd541W8sO7wIsAHV/XyElB5x/Cq6Os2NXYw1SQVmEdeCLGZdFp6XEDmL5qqvDDzazDduK1b84piit8qg8RIZ2p9nvDCxEWI=
+	t=1754921454; cv=none; b=S+ZNBz8hxeUpFcHgf4xk+a/k31keh1Bqyu64pJnUOIyTPGUaMY/DgMJHkLiSsmvNmgEwXZJ1lWnCNkDWS+EJPQeKTGBRsgJRQjb3az1Amy6BXKcMaTOOT4XbNg42zBVhpu72AQikE+sM7z3LWcMuhFG+2KsS6WFY1pQ37okQW4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754921452; c=relaxed/simple;
-	bh=H6l53B4wZkFz+nYR8PTiIJtmbUzH50h27nGG3cRI8Sc=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=WdE9W4UQSZHNiytZkUrd2+i9o4shDISXww/tuvz2N8jg/3mQ+aGJI3qqizRQR/KGGr73AmTzgitGE1Vu98BeVpR7wPMa2dG5tbeQGG1vEOCGpJqqpFq6Hd2u4WcuFSBP9172Zy+9CCrknIfKMYW/0ChMb83OPd9qTFb3F23OFKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=RPomDGHs; arc=none smtp.client-ip=209.85.218.42
+	s=arc-20240116; t=1754921454; c=relaxed/simple;
+	bh=4QCFtRW/MxF9J/+GsGpUTijni3ULMWgMsH+JZsz8La4=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GlDC1e4iA0yhdSwtKCT2YqkE02p2CBnTS7cXY/NQQNvkuSxwqR8BKC9Shku5r7tzq0wto++X3EMjEz90I1WEgM2YCQfmMRCoT6yTpyQ6C1TbPDFQLhT5GFP6tNLvE3hKv4Gc1IZPOI55KrJ8LsOAU5mo1PbQq3F9TqO4HjZTt8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=c9siHFSz; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-af96fba3b37so824963266b.3
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Aug 2025 07:10:50 -0700 (PDT)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-af958127df5so663436566b.2
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Aug 2025 07:10:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1754921448; x=1755526248; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ohexk0G5qQQ/U7tEXowxhsg85cDA9yyayQBpZFpm+6I=;
-        b=RPomDGHspqrOA99cpDwb5F73hsjuzh3Ibdr+JNVUwjiWOgn+kJGmAMEzJQc41jXwyP
-         rD68hgO+XCuL7INKK+L6bWexxcHiNE1zQwtKyJiLEprc4I9taRgh3HKlUpBnS8Bj5qmM
-         kjiJ5B4gpBJ14eJPSuyYF6jIpnOaSL5w/0mW37PKRWdfBrNKu441QnK40cr5AMU0siXK
-         xSq0X1FoWiX1lF8+xzi8vrGMuZFOuq54WNWifxwDpf0My0xIt7CzPkbmS8EBcRjrxSDz
-         MGXfLVBBliWkYw8dQxVyZPV5rUBv1ZYkdWXj0mi7BVlSSBl3Pv893cMtn/VldPtWQliT
-         DO/g==
+        d=suse.com; s=google; t=1754921450; x=1755526250; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=63J39CyFqSLdGcoY+lFnsbjnjETWfUjBwWRQVTsQ3ZA=;
+        b=c9siHFSzeTYLdZdarn6XHrmrahFZ+2fzoQ5GVM1QNqaNmqvdVbbpLyOvSlbvSorGCl
+         aeQU2wkMqyK3cDjKcuoFDAnDNEYS3w7KO8v62suzc54O6PvAdDfvl/izbWndowEMp5yH
+         pHGDltoRLF9yEjG3PPbAy7+dJUXImyls+lzkuESrClSFH5dhuU6ABG7j+FnPcjEf3U3D
+         WcyKJM0DEjTU7l2QWihBzKmStm0WqsEQ+Co1pB70MEynRtzTNX9Ia5VjKXeMucQ/Yh8X
+         aYEOUMXxEOKbXA/4Ep/afb9PFxIvVvuW8+YNzXPoHq3gB/X5yDCuKFUJfKB9O5ZMkusi
+         NB4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754921448; x=1755526248;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ohexk0G5qQQ/U7tEXowxhsg85cDA9yyayQBpZFpm+6I=;
-        b=GI14mHm1CQiiddqQaztkhhP9LPPGM3aXF8cCwt0s0ylbxvarweeVvZi9mmkDfqG213
-         eT8sjWe/VOeJj+yIDnrA1PCzUUJoDqON/xSFtY4vEn8ZqsiUcioaNlYdsWz2RZUoJaJJ
-         j+aloj1M8ICoXW9AClS+pI5RxWohKjADzoIsc8C4YS826/b3QjxI75wJfzP0RTCzHYkY
-         Pb2tIIueO2g9oGvMEScclN6KCUZQmu+0GrKCaCqbtfhzQXmXklbIZMN209JQ4lvuPI7C
-         2rSJmI9HhRpQiVxP6qt1wqf1Wvgpj2paPRtOofdigDOyMeZZrzNo51EmSGZtPy/cAPJB
-         zx0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXMt3gGTWmK3K0VvjEAz6K5CM7/Nmy0vbtiFnhgrybDeG2UU8ejH7LcbXZTgbylF81yxw+g5vGJZXQe@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKne2wUvpEqzrkHbcImKw4pyFp03aAcugbdCArWzDVNlNGnyNM
-	mA6UiB8aZPByVi6MwN1NXJ9INHXqYgyFRPZ/ll74804wa7O3g3fDZQcCUKVb+wM4nPM=
-X-Gm-Gg: ASbGncvFb/qauT0jbyQ3L6iRYzfc2KXItl6GU57U1D7/CwQhZ+NldvxTExCiM9lEEtz
-	An0iFRU47B36vdEpbucfPBt2eh5wreRM5bY/cEfEaYxr5fYv8Llm2NMHjh1qoJluPj7TTUnPGfG
-	iDIPmeGeh0egopL/GtI8rxzsKw6/b7ARsrmx97WOxfJpLtgXSjtepFQzhei4D/xrhohavydwoYj
-	57vM+hNkpIUiccgDxZRuKcF5e4JKq3gCjacnKvTOF3mbxf+yJ1Vp7tdYp7qFYFspZnZI4408UzU
-	hG6Mh61p7bzTfINUcjpAmt9KIvx6MzUEw6yDsAhppYU0GTuEogSR++DOqVChFaSFSewtsNVEaFV
-	K5fnmvlTSH5vZGU6f49mzJL6jNJyZF2KpUujLm5bh0LiJYapU5jwCiFs4nTh77vx2LQ==
-X-Google-Smtp-Source: AGHT+IHdBKFk8Hdz0O5Qrkqv+q1AVcT+ToZrNVbbDng2NMf7Xf+fMHPhcyvkBGiKagZpBw13o0Tyeg==
-X-Received: by 2002:a17:907:c1c:b0:af9:71c2:9c3 with SMTP id a640c23a62f3a-af9c647bce8mr1317574966b.35.1754921448512;
-        Mon, 11 Aug 2025 07:10:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1754921450; x=1755526250;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=63J39CyFqSLdGcoY+lFnsbjnjETWfUjBwWRQVTsQ3ZA=;
+        b=S8UpC6WessklayOekN1uN+fHOrWoIoj4cFhWDDtX9hMa4EQJXzOwijXDO35+XwUkv9
+         AL3zpF3ia2ettzMJAoH22ZbTAkNUvnSxjwN8ms8Dp+Kx4PJB6TvKr6jo6Sv443ZYLqAT
+         ryybB4NRfrhifpDQriUUQWH++NYqXpxZ3fpl2okh0PRZfik2AY2B3IA7XkNknOcy+Zjn
+         OAcLPaRlGIwcXcbmXAtwqyp+Qn9OfZXB/KUeS/afiGevGjWMYnoqeGVRL5mWUjw5ffEf
+         oKEzZH0bqhGUnm+8N3BEEYo/yJK+KlsY7wy1eO3GNy6PePkA6eg0eGy6oPFwHVo/twWX
+         mu+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWf0dhAu75/co6kpyoyIzX9L3yZ8Wk9cmrUZkbfaBTlq/lrryHg0M2UIVQAsiNUZVsJ1o3vK1nS6znC@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVkTpAOnM6SFkhPj+76Q6QCWdzj/ZXWv/WytHvBHQRePzR5DxZ
+	ghIHut59HPonKgTlQtOvADXrLaz8TDX1IH1NQw7Y3mJqwtrSvDKJgBIaSbQ7G5Eew4A=
+X-Gm-Gg: ASbGncshATKLbKJhJ/BoNMfuk/YpmpkuxXjOxzRfVxE0PvbaL+hxkj/12wLWEh7oxni
+	7OcT2pqDazR8zb3OKsmbiJPOqI0dNDdpOd26t9oSexoYYUjYwlYENZpmbKNLtoYBs0tWrJbIFSp
+	pEWnW1S8bRXvdpaR+bGGKFNz/Aw1U0RacAdWFdOsJQy5RFCps1Ve03PriSUkJBe+w0bwf0MZyIl
+	fKjzSxlIbrowzGeclA8NFYIx2WEV+3l42N5xW0G97vIXy+Y6U/B8F80TCXXkWu4dumpxX+MCHAB
+	dHBpP4YnZZDtx+eMrpVq2NsTbawQuMO7Kpp3aBAkA8x/MLdv9RLVfKfX3NLVaRWe3/zPRDs+GJV
+	CjI8XP32/cn9mVADHAkd/tuLNcsBNOzH3VbAlN1nciX9qaxWAilT0nl/PIU9+cO5rmA==
+X-Google-Smtp-Source: AGHT+IG/M8+ibyfZa1rZEJRPdNDgrfy4rJ6HCiKO3wMUuimZDr1wETFmlPT6yaYQrOBYlXmZ2auvCQ==
+X-Received: by 2002:a17:907:3f1b:b0:ae0:a597:2959 with SMTP id a640c23a62f3a-af9c6516d10mr1108890066b.32.1754921450120;
+        Mon, 11 Aug 2025 07:10:50 -0700 (PDT)
 Received: from localhost (host-79-44-170-80.retail.telecomitalia.it. [79.44.170.80])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af91a23bedcsm2030552266b.120.2025.08.11.07.10.47
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af9383590desm1818429466b.76.2025.08.11.07.10.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 07:10:48 -0700 (PDT)
+        Mon, 11 Aug 2025 07:10:49 -0700 (PDT)
 From: Andrea della Porta <andrea.porta@suse.com>
 To: Andrea della Porta <andrea.porta@suse.com>,
 	Michael Turquette <mturquette@baylibre.com>,
@@ -109,10 +112,12 @@ To: Andrea della Porta <andrea.porta@suse.com>,
 	Matthias Brugger <mbrugger@suse.com>,
 	iivanov@suse.de,
 	svarbanov@suse.de
-Subject: [PATCH 0/2] Establish the roles of board DTSes for Raspberry Pi5
-Date: Mon, 11 Aug 2025 16:12:33 +0200
-Message-ID: <cover.1754914766.git.andrea.porta@suse.com>
+Subject: [PATCH 1/2] arm64: dts: broadcom: delete redundant pcie enablement nodes
+Date: Mon, 11 Aug 2025 16:12:34 +0200
+Message-ID: <2865b787d893fd1dcf816e1c96856711754d612d.1754914766.git.andrea.porta@suse.com>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <cover.1754914766.git.andrea.porta@suse.com>
+References: <cover.1754914766.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -121,27 +126,33 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+The pcie1 and pcie2 override nodes to enable the respective peripherals are
+declared both in bcm2712-rpi-5-b.dts and bcm2712-rpi-5-b-ovl-rp1.dts, which
+makes those declared in the former file redundant.
 
-this patchset is composed of the following:
+Drop those redundant nodes from the board devicetree.
 
-- patch 1: just a cleanup to get rid of duplicated declarations in the
-  board DTS for BCM2712.
+Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+---
+ arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts | 8 --------
+ 1 file changed, 8 deletions(-)
 
-- patch 2: explicitly states what BCM2712 board DTS will host the
-  customized nodes that refer to RP1 internal peripherals. This is
-  important so that followup patches add the nodes to the correct
-  DTS file. For more information about why it has to be done, please
-  take a look to the patch comment.
-
-Andrea della Porta (2):
-  arm64: dts: broadcom: delete redundant pcie enablement nodes
-  arm64: dts: broadcom: amend the comment about the role of BCM2712
-    board DTS
-
- .../boot/dts/broadcom/bcm2712-rpi-5-b.dts      | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
+index a70a9b158df3..adad85e68f1b 100644
+--- a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
++++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
+@@ -15,11 +15,3 @@
+ &pcie2 {
+ 	#include "rp1-nexus.dtsi"
+ };
+-
+-&pcie1 {
+-	status = "okay";
+-};
+-
+-&pcie2 {
+-	status = "okay";
+-};
 -- 
 2.35.3
 
