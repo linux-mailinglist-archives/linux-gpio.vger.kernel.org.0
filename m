@@ -1,71 +1,59 @@
-Return-Path: <linux-gpio+bounces-24208-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24209-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B21CFB2127E
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 18:47:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95678B21283
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 18:48:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 855334621DB
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 16:39:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 408CF1641DC
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 16:44:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64FFD29BD8A;
-	Mon, 11 Aug 2025 16:39:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE7DA29BD81;
+	Mon, 11 Aug 2025 16:44:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="dF/VohVw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qXpxlSif"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7FF1296BBB;
-	Mon, 11 Aug 2025 16:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969EE149C51;
+	Mon, 11 Aug 2025 16:44:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754930376; cv=none; b=RQD7kbZmaNAEGpHZOB7Alq9OVrf82OYhbycm0w86pE1JSVL58C9xSOdN3W0MnKvizWRun3F78vaLbfR7a/RYMlB7LOJEvKHUUIJcMsVpVgWQGdhQhNqath3JI2MJ/bBGYvyKiSPJW03metbgsf7nkAkSEuHIdFvIuwsTZaaWHvQ=
+	t=1754930644; cv=none; b=ePMxtMiZ9auqLVT2hqOECVYITGdH7lUfKJ4+jJC7dt/DLGfxyTE+3URQwux9ghqM2eOE0Hjf+e3WrYCIyXkc0g8NjEpfey3rP22ichosWuF7mTzjuxZgUf6wcmPHjnz1K1NVpz5xfl7v7Hf9l45SzlVOwKXuaW8/x6jaZtUh0Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754930376; c=relaxed/simple;
-	bh=CImX2ZC8/O9nTsmiCTmo3jTXIWUuTcllD4/cgqtt4O4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cr2TLyn2rAW5gJWdABrQPrj+cFBfwUByOxzXXOkMO27p/bvf02BdS0n64BUojaFsBL6XC2mRKswTAkFprBTbNns10V3obFVGei0fncllYmunXViJKcpCXRjz7l/OmCRJeve43JwDeEm13dGAOOMcsx59SBV4IWYokBEz0SakRdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=dF/VohVw; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 3570725D17;
-	Mon, 11 Aug 2025 18:39:33 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id n-X6d5Lyl1oP; Mon, 11 Aug 2025 18:39:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1754930372; bh=CImX2ZC8/O9nTsmiCTmo3jTXIWUuTcllD4/cgqtt4O4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=dF/VohVwEOAaJpnwJCQGUkpI32kKHPEXLvENEaO66IUsFCiirmwoBOD1Gx8hU8vOK
-	 RKI70kZ7QX8kA+TTPdEMQ4YOot113K9edUgmAaztQfxQ+T1hleTVex8C0MChv4uVBA
-	 F01kdFjxaSPqUoI30qDUj/PGT75HjEvsIcy6g49gExXweiR8c46V0qccrAA/9FGfID
-	 kqFOgE7U+mcGbRn/41QrQiWR4fhdNRVg+k1DTRLr7VCqmZkdWUPLaXUw43B9u4wbch
-	 jmmnaHtF1T5ZbY3U2kSzfXiPxoXVTJaaNJzwtHW9VFpBFGhwMWgvwayrjwJ/CwcXke
-	 u401OEmB+DZRQ==
-From: Yao Zi <ziyao@disroot.org>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>,
-	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH 3/3] LoongArch: dts: Add pinctrl configuration for Loongson 2K0300
-Date: Mon, 11 Aug 2025 16:37:50 +0000
-Message-ID: <20250811163749.47028-5-ziyao@disroot.org>
-In-Reply-To: <20250811163749.47028-2-ziyao@disroot.org>
-References: <20250811163749.47028-2-ziyao@disroot.org>
+	s=arc-20240116; t=1754930644; c=relaxed/simple;
+	bh=3sXWJihKNVBypgFDATYECBKDVC9786a2MikM5Ss4168=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oH/b65/KhzfpJoH76nEo3DKaJ6sbR39Kdvlu6giqeh5xqhEIuK1o0pZpNqUZBNKd3vOEiL4KhyUmFc3SwsPSRf6jwUI9PIE8AKYZBtbfzYCI1LSoFh22YfShtuxbRZTsTbl0OXeSF5ulZhoP27iu1jSpkzZvE4vspDzM6XguKUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qXpxlSif; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ACE7C4CEED;
+	Mon, 11 Aug 2025 16:44:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754930644;
+	bh=3sXWJihKNVBypgFDATYECBKDVC9786a2MikM5Ss4168=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qXpxlSifAbFbou+u3ZGrldWcQT1/zlF4WxNOKZA5CVlRFbBnMaV3V8kI5DNawSrxZ
+	 6swFvYeYR2L8tu0QEXoJHod4hgISbwSEjgtZiHRpAQCclBpAvDwjZvo/HvhBN7iz39
+	 fXaRoVvUEwk7rxptvy4JDoobv8aRWf8BbLQhHqNhwRe+s0luMz3yOH96OizPuhNL5g
+	 2zYSyUQyP3U8o2jhQFT2cxP/tBzl107qojUJJ6czBUIjrhtG9HETqr2q7uwHQkfVEE
+	 t/Ax5KjjjgRmktlYmY7XbBsY4yzXjXOehC8rQSnZr/+mS7rC5RVEhS5Q8Mu16DCPef
+	 BiwTQBy9CwWtA==
+From: "Mario Limonciello (AMD)" <superm1@kernel.org>
+To: Hans de Goede <hansg@kernel.org>,
+	Mika Westerberg <westeri@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org (open list:GPIO ACPI SUPPORT),
+	linux-acpi@vger.kernel.org (open list:GPIO ACPI SUPPORT),
+	linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)...),
+	Mario Limonciello <superm1@kernel.org>
+Subject: [PATCH v3] gpiolib: acpi: Program debounce when finding GPIO
+Date: Mon, 11 Aug 2025 11:43:56 -0500
+Message-ID: <20250811164356.613840-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -74,100 +62,95 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Describe the pin controller for Loongson 2K0300 SoC. As default settings
-for the existing UARTs, pinctrls are added and multiplexed to pins taken
-corresponding UART as main functionaility.
+When soc-button-array looks up the GPIO to use it calls acpi_find_gpio()
+which will parse _CRS.
 
-Signed-off-by: Yao Zi <ziyao@disroot.org>
+acpi_find_gpio.cold (drivers/gpio/gpiolib-acpi-core.c:953)
+gpiod_find_and_request (drivers/gpio/gpiolib.c:4598 drivers/gpio/gpiolib.c:4625)
+gpiod_get_index (drivers/gpio/gpiolib.c:4877)
+
+The GPIO is setup basically, but the debounce information is discarded.
+The platform will assert what debounce should be in _CRS, so program it
+at the time it's available.
+
+As this is considered non fatal if it fails, introduce a helper for
+programming debounce and show a warning when failing to program.
+
+Reviewed-by: Hans de Goede <hansg@kernel.org>
+Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
 ---
- arch/loongarch/boot/dts/loongson-2k0300.dtsi | 39 ++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+v3:
+ * squash patches 1 and 2 together and drop the extra fatal hunk
+v2:
+ * https://lore.kernel.org/all/20250625181342.3175969-1-superm1@kernel.org/
+---
+ drivers/gpio/gpiolib-acpi-core.c | 25 ++++++++++++++-----------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
 
-diff --git a/arch/loongarch/boot/dts/loongson-2k0300.dtsi b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
-index d909a4eca312..a8ad8bd43f5d 100644
---- a/arch/loongarch/boot/dts/loongson-2k0300.dtsi
-+++ b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
-@@ -9,6 +9,8 @@
- #include <dt-bindings/clock/loongson,ls2k0300-clk.h>
- #include <dt-bindings/interrupt-controller/irq.h>
+diff --git a/drivers/gpio/gpiolib-acpi-core.c b/drivers/gpio/gpiolib-acpi-core.c
+index 12b24a717e43..15222bfc25bb 100644
+--- a/drivers/gpio/gpiolib-acpi-core.c
++++ b/drivers/gpio/gpiolib-acpi-core.c
+@@ -291,6 +291,17 @@ acpi_gpio_to_gpiod_flags(const struct acpi_resource_gpio *agpio, int polarity)
+ 	return GPIOD_ASIS;
+ }
  
-+#define PINMUX(pin, func)	(((pin) << 8) | func)
++static void acpi_set_debounce_timeout(struct gpio_desc *desc, unsigned int timeout)
++{
++	int ret;
 +
- / {
- 	compatible = "loongson,ls2k0300";
- 	#address-cells = <2>;
-@@ -55,6 +57,35 @@ clk: clock-controller@16000400 {
- 			#clock-cells = <1>;
- 		};
++	/* ACPI uses hundredths of milliseconds units */
++	ret = gpio_set_debounce_timeout(desc, timeout * 10);
++	if (ret)
++		dev_warn(&desc->gdev->dev,
++			 "Failed to set debounce-timeout: %d\n", ret);
++}
++
+ static struct gpio_desc *acpi_request_own_gpiod(struct gpio_chip *chip,
+ 						struct acpi_resource_gpio *agpio,
+ 						unsigned int index,
+@@ -300,18 +311,12 @@ static struct gpio_desc *acpi_request_own_gpiod(struct gpio_chip *chip,
+ 	enum gpiod_flags flags = acpi_gpio_to_gpiod_flags(agpio, polarity);
+ 	unsigned int pin = agpio->pin_table[index];
+ 	struct gpio_desc *desc;
+-	int ret;
  
-+		pinctrl: pinctrl@16000490 {
-+			compatible = "loongson,ls2k0300-pinctrl";
-+			reg = <0x0 0x16000490 0x0 0x20>,
-+			      <0x0 0x16000110 0x0 0x4>;
-+			reg-names = "mux", "drive";
-+
-+			func-uart {
-+				uart0_pins: uart0-pins {
-+					pinmux = <PINMUX(40, 0x3)>,
-+						 <PINMUX(41, 0x3)>;
-+				};
-+
-+				uart1_pins: uart1-pins {
-+					pinmux = <PINMUX(42, 0x3)>,
-+						 <PINMUX(43, 0x3)>;
-+				};
-+
-+				uart2_pins: uart2-pins {
-+					pinmux = <PINMUX(44, 0x3)>,
-+						 <PINMUX(45, 0x3)>;
-+				};
-+
-+				uart3_pins: uart3-pins {
-+					pinmux = <PINMUX(46, 0x3)>,
-+						 <PINMUX(47, 0x3)>;
-+				};
-+			};
-+		};
-+
- 		liointc0: interrupt-controller@16001400 {
- 			compatible = "loongson,liointc-2.0";
- 			reg = <0x0 0x16001400 0x0 0x40>,
-@@ -100,6 +131,8 @@ uart0: serial@16100000 {
- 			interrupt-parent = <&liointc0>;
- 			interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
- 			no-loopback-test;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart0_pins>;
- 			status = "disabled";
- 		};
+ 	desc = gpiochip_request_own_desc(chip, pin, label, polarity, flags);
+ 	if (IS_ERR(desc))
+ 		return desc;
  
-@@ -109,6 +142,8 @@ uart1: serial@16100400 {
- 			interrupt-parent = <&liointc0>;
- 			interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
- 			no-loopback-test;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart1_pins>;
- 			status = "disabled";
- 		};
+-	/* ACPI uses hundredths of milliseconds units */
+-	ret = gpio_set_debounce_timeout(desc, agpio->debounce_timeout * 10);
+-	if (ret)
+-		dev_warn(chip->parent,
+-			 "Failed to set debounce-timeout for pin 0x%04X, err %d\n",
+-			 pin, ret);
++	acpi_set_debounce_timeout(desc, agpio->debounce_timeout);
  
-@@ -118,6 +153,8 @@ uart2: serial@16100800 {
- 			interrupt-parent = <&liointc0>;
- 			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
- 			no-loopback-test;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart2_pins>;
- 			status = "disabled";
- 		};
+ 	return desc;
+ }
+@@ -957,6 +962,7 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
  
-@@ -127,6 +164,8 @@ uart3: serial@16100c00 {
- 			interrupt-parent = <&liointc0>;
- 			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
- 			no-loopback-test;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart3_pins>;
- 			status = "disabled";
- 		};
+ 	acpi_gpio_update_gpiod_flags(dflags, &info);
+ 	acpi_gpio_update_gpiod_lookup_flags(lookupflags, &info);
++	acpi_set_debounce_timeout(desc, info.debounce);
+ 	return desc;
+ }
  
+@@ -1025,10 +1031,7 @@ int acpi_dev_gpio_irq_wake_get_by(struct acpi_device *adev, const char *con_id,
+ 			if (ret < 0)
+ 				return ret;
+ 
+-			/* ACPI uses hundredths of milliseconds units */
+-			ret = gpio_set_debounce_timeout(desc, info.debounce * 10);
+-			if (ret)
+-				return ret;
++			acpi_set_debounce_timeout(desc, info.debounce);
+ 
+ 			irq_flags = acpi_dev_get_irq_type(info.triggering,
+ 							  info.polarity);
+
+base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
 -- 
 2.50.1
 
