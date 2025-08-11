@@ -1,162 +1,117 @@
-Return-Path: <linux-gpio+bounces-24129-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24130-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07862B20094
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 09:46:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6088DB2009A
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 09:47:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 135751895A85
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 07:46:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 92DC91896388
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 07:47:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59E0C1F4E4F;
-	Mon, 11 Aug 2025 07:46:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 168661FCCF8;
+	Mon, 11 Aug 2025 07:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="z5eyhWlY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480FD376;
-	Mon, 11 Aug 2025 07:46:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1817120102C
+	for <linux-gpio@vger.kernel.org>; Mon, 11 Aug 2025 07:47:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754898384; cv=none; b=qDHslWRQqaXLfyJ921I9QWQVqo2L9jG7aINj9tuSAx1N7W74NQTmEL90qPmZmnTDLCWYyZSxspod2izKorNfB/p6J16iuuE3aCOeu0fboL7IYSlBzBibU6xLoCuVuOlkh3jeUWyapm28VABpq5p+xgBOS4OylzLGByC0hrwzQ9I=
+	t=1754898448; cv=none; b=KjQ4fyt73TNgorcoGiDWGIuPK/ejIVXRzRCDSrJrpsqVQhKZ9U7aGN8pQ2QtXq+pBkhUM6IrQv2ZXOfaEzU8a6HHiQAELwc1GWJ3pP3ivogzjnAHEWDeFtowXVFRrCiwamSJnkEF79DX4roB1Lkvn0zPcoPlFtTDkBB6yyNDQPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754898384; c=relaxed/simple;
-	bh=U3XP+gWmQ4OsMcgVLWaufhUMd13owEe8+q+dUfgqSaY=;
+	s=arc-20240116; t=1754898448; c=relaxed/simple;
+	bh=vLH1gqawWVrkH8DQwd8bbA3uokxzUYBljc36Sbl1pxs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sPk0OFwLyr3xBf/H3Q/3qdbdNWodCPKiC1RD46f2dx21FYRa3Wd2cztq4SH/X9w6HfYt0eenIqI5rOGofwrrlnT+6Jx9lDNVsYTMvsCYPpPwxXV3YOpkwlL4IBhd2nt3DF6NwGYsAtVn/W1ZasWQAXGq43JYlgTZlkDIM8PjP3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-5392c221192so1464076e0c.2;
-        Mon, 11 Aug 2025 00:46:21 -0700 (PDT)
+	 To:Cc:Content-Type; b=Dw8FDXgdR5YNvVR84gZclUQecwLLIHbElqlIaRE4UJnRq4FM2DSGiWyTTpYreEuP6+kHZaphRiF2XnjgnCErjSGh867vesYhwMChiIyfrDSqwMeM0AyYrZ4G19EPiush6eGXJmwQJfCrqx//vAo50617z5Rx6pfoxSbsyEK7rcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=z5eyhWlY; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-55b93104888so5177262e87.1
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Aug 2025 00:47:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1754898445; x=1755503245; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vLH1gqawWVrkH8DQwd8bbA3uokxzUYBljc36Sbl1pxs=;
+        b=z5eyhWlYcC0ekP85q1fTl01IJd+PFVXl1S2aQH52S41A8RpG8v8twrEOSK0UnBxdN4
+         M40OBtJJrIDi4Jw+PK+gPRSdTIe9ND9lIQ0p8LS7zPF9FmCVXV1HshR699TxyUKr1XbV
+         +TARM74PvIhx7INnDGvy4Lvhfcn4CP+KpfI77739EVBv/rTo6ANgztL2JGRCMUKFuro1
+         ui0T7s5s4BUwpDsTV0HMNBpzjohVAw582YfpBsX9K1ru65u5tjBR0EmyzX7mWqRrsujA
+         mZBV/vmxiK5KG13I1BQ/yF6okLkbBc40icYqcBptvjMCwI2hKChTzn6RXX1+wPahjW0i
+         CXDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754898381; x=1755503181;
+        d=1e100.net; s=20230601; t=1754898445; x=1755503245;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NjgDqZvIS5PvzVHeByAV8E8Bt3AJXI52a13+Zdbj6iI=;
-        b=wBZgwWPHP1dgGHrn42mtAb6Hc9af0DuYdUGAxMtmUCsXx74wIEuYqtgE7FfTCsjVE3
-         2G9SNjS5ozv3ko1CMFKguc0HqLM5bRgBS4gJPKgOjaxgeUMWwXfr05wQ0/HcA5dOlBIy
-         iOhl4gsRtJ26j1bzjqL3LTg4E4/9+nCLrOHr2o2tX5yTjzzZmyKyzyx3EaoCNu/KnLjf
-         5KiDw/IEuTYUDrgZBylsJe3h8gUBLMyfSYJCx3LYrl9PbqQkJt+cJ5IIRAQree2hse9P
-         k0wwQRk3AKMzMx01Fsef8CV1EpYfMf3Sks7DgzVJqPtFBRpNxlostNNgWOFn2oqyfszI
-         YY5w==
-X-Forwarded-Encrypted: i=1; AJvYcCUCBm/E8ON02ERv4euteGK5DsjhmyosMePhxO2PYudlcJ3zz8zscU2niBej+caypOibqSmzvdhia5PvmQ==@vger.kernel.org, AJvYcCUXhAijVzD1xUQ5mLclxZdERVHG8f0MaAnjBshP/MkFwIty982mK2uVikyx/ljGOSpZBnlitHCp2his@vger.kernel.org, AJvYcCV5qts4lbEM6NdLXa893QHiiHEzTpSF1SVL5FQgHbxu57V1RJfL8CczqhAboYVYrPS3rbYoU+S+1pUoOE2P@vger.kernel.org, AJvYcCXmpv1ctiGw0D+oPGZIHOmRS2TyppvnZY07mL7yiT5kswijujDPhUY09AsrxCUvFgF4mKoutyDWWg5vjzjVHwuZ600=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy20hAfrMmCKTshpazrb/jFjRJJl0TeKS8e/Lgi9ZYqVavj6WdK
-	lQsxYFDqmTBSisb5UaPcDNdLZ8rrp0kYccuETB1vCo9rhn7XTxT0OlniMRCFkJi8
-X-Gm-Gg: ASbGnctF6mEe4ELNuwx+/DDH9QWMYnleKdSGgjGibGP9J24rQl2xM3XPOXWBKf5pSpZ
-	ppBvS+l0659CjT5hWll9lfzgpjx8jtHZxKjJjvgFD7EEWEhREjHsA9K8w6idikQiUfKmIkvolID
-	UiCBgEfA2Zmif3k3f19KimD+pyHf6UlHGk6le54uLUuSb/GbGMI+EeqgfnJQo69LxBTkecU1Fnv
-	VQ/MWyNsHat6+Y8rK8mmfa3a4zPFBc5y4OHdPd2Mo1CEsN29E5yngVJ6PzLcY3FbIWQzL8LobEt
-	reLeAj6TLsnRlj+S5eHKbcBATwP9SSEpyr+nrbIZ4gyYEo9mSufiNopc046191TVUUbqVN0LaYn
-	C2FqGYmix/vLWm0UoReWOeeMl0eSIYbo0QkOJwakkOlhd/VqQwveaaVsjo0kv
-X-Google-Smtp-Source: AGHT+IGANYthSXjwFZfMDX6lWVomhANCeW4hGsIRG7TOEh6VzLJsTXOqY/ikliCxDcHX1Z3vDD0K0g==
-X-Received: by 2002:a05:6122:a13:b0:518:6286:87a4 with SMTP id 71dfb90a1353d-53a52d6878cmr3886838e0c.4.1754898380807;
-        Mon, 11 Aug 2025 00:46:20 -0700 (PDT)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-539b018941bsm2565638e0c.1.2025.08.11.00.46.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Aug 2025 00:46:20 -0700 (PDT)
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4fec0d6fe30so608772137.0;
-        Mon, 11 Aug 2025 00:46:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUR8hT2acdXy8br60BlCvzz48eBKKg/Ssx1D6ojOahOIlgvL6lnlGW0Ar/VOu3bQNQHObQGYHf4idsIWQ==@vger.kernel.org, AJvYcCVo7RjkxNg66IIEgxZTFBy54mPn7mBirLveS3NBewMjiCaWs6P1QL52tMhD5WjZihQNt+/Nwuycuz/vWKwM@vger.kernel.org, AJvYcCVtH/3IGzgdbVpxhczjohrvOzZ6O3z1SBU0LZpnkH5+XRf18UK9AoqwaRda4QDGsGcx1B7wUnPqaH38@vger.kernel.org, AJvYcCX7AT9kM8ZMnR1yAtVQBNyaK1EOPrzcYqkA//dqT7eqRwLV+IYMUAwDK3a4R9flBDDvmiXDsl3ENAz2Q2yxhLpouto=@vger.kernel.org
-X-Received: by 2002:a05:6102:304e:b0:4fd:35ca:6df5 with SMTP id
- ada2fe7eead31-5060d1a07abmr3979002137.7.1754898379820; Mon, 11 Aug 2025
- 00:46:19 -0700 (PDT)
+        bh=vLH1gqawWVrkH8DQwd8bbA3uokxzUYBljc36Sbl1pxs=;
+        b=TPFku+Ka6IlQ6bzOtQBi42srS4/16nQHL/Ho6wlyipwdEOxRxvezNnT2kgDCJWbKOu
+         D/bwKVLmKF60vW3LYFid2m0jl8RZRnqY/nAeKI1uQwuu2/ATkihCsV2Ge09jQc3txNR5
+         SQderNzqP/pPtzJcEsugzj+bp0OdwVj+UCrcSMXKFbVUCToFOkmWkB5c1IQuWO1X+Ma9
+         Km9MpNTFMqSR7fNZdHZgJ2pZ9p4OvNtf2fyejKj6wDIZLqrNxq66/mbjO5KcMYUyu9RD
+         81lIaTlbnZs0cD0HGoV2sFZh2WkUqkU6Jj6dGqRrecTrLRm2gZyaM2LMhjwtTsJJfTPI
+         Sd+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWC/xn+ln0gGEMv+9m6Z8pkB/VNvwK7VaFc4a8Qy+YInZrS094o1YfS2vTMcT+NeuHKB6YsS94YiTly@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1ReNmyYn4jHMv6rJGyWgERSgYvuVsTaCWhKZzgMz9KfjUwtSD
+	PFW0UX3zwOx8TaNDyakrMCqDUR2srV/3W6FH7ArgUGRJTvE8/ZLZ4q9kqWysgYnTmqjLsGQlnxw
+	4D4W6V0mQP8BaYW3wcWu5lwSxwYGDhD4QjMKWnVXqUw==
+X-Gm-Gg: ASbGncuiNh+DimJ88/oCUUl/fYrqubD+uNf0PEzs51UVsIqhCnTJRb44ws71zIENC5d
+	qR1KhbeLEYVMqXQQekKTrxu2yiEIKrgHMZsaSRclOOz12cCcoUewBoAWSmCONZUyisPWwCqsZ7Q
+	Bv3U9h/2jKTpSLt/NoEgFfCgu1x28T4VLs68B2T8jvTYRp8EatYFf6NTFOjEUkSLp/B/O0THa5Z
+	v4LpNU=
+X-Google-Smtp-Source: AGHT+IGrFAG3iXdJPs/ctpG63OOV25kZZFsNWCDuoZ2UqRMQ7MyguVt1VFp02LLWZKTkikVtnSijWjDPt0HkNcVhTyk=
+X-Received: by 2002:a05:6512:3d09:b0:55b:57e8:16c4 with SMTP id
+ 2adb3069b0e04-55cc012c003mr3193177e87.30.1754898444992; Mon, 11 Aug 2025
+ 00:47:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250801154550.3898494-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250801154550.3898494-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdWApWhAzjJ9K9-SFvZYtPArZ9aFQJvMdMyW=ke+1sj5CA@mail.gmail.com> <CA+V-a8u0GkeFS+t_GDj1ku9rqjH_oGhJ19=EkNGP0m-vzAD=fg@mail.gmail.com>
-In-Reply-To: <CA+V-a8u0GkeFS+t_GDj1ku9rqjH_oGhJ19=EkNGP0m-vzAD=fg@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 11 Aug 2025 09:46:08 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX_w6aOAnTqZg+=OqKAk_xVPLHFZU9+VAVsh04y186ArA@mail.gmail.com>
-X-Gm-Features: Ac12FXxY8Dbu7XYUfweftTgqyaBZbqhqhu1O3UqM1JFLjNAHHGFB0HOvqn6Eo5M
-Message-ID: <CAMuHMdX_w6aOAnTqZg+=OqKAk_xVPLHFZU9+VAVsh04y186ArA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: pinctrl: renesas: document RZ/T2H and
- RZ/N2H SoCs
-To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+References: <aJd2Zho5QRUTAEzm@bhairav-test.ee.iitb.ac.in>
+In-Reply-To: <aJd2Zho5QRUTAEzm@bhairav-test.ee.iitb.ac.in>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 11 Aug 2025 09:47:13 +0200
+X-Gm-Features: Ac12FXwMS3WB5EsQUQKu2BBekh_xFvZvqabL6It5COncLghaTwCpsk8JkuP-0Lc
+Message-ID: <CAMRc=MczvR7w28Zw6Yn51W7wrkSHjitE3pimHBMgbL_zS8wYhQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: virtuser: remove debugfs_create_dir() error checks
+To: Akhilesh Patil <akhilesh@ee.iitb.ac.in>
+Cc: linus.walleij@linaro.org, dianders@chromium.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	akhileshpatilvnit@gmail.com, skhan@linuxfoundation.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Prabhakar,
-
-On Fri, 8 Aug 2025 at 23:13, Lad, Prabhakar <prabhakar.csengg@gmail.com> wr=
-ote:
-> On Fri, Aug 8, 2025 at 8:51=E2=80=AFPM Geert Uytterhoeven <geert@linux-m6=
-8k.org> wrote:
-> > On Fri, 1 Aug 2025 at 17:46, Prabhakar <prabhakar.csengg@gmail.com> wro=
-te:
-> > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > >
-> > > Document the pin and GPIO controller IP for the Renesas RZ/T2H
-> > > (R9A09G077) and RZ/N2H (R9A09G087) SoCs, and add the shared DTSI
-> > > header file used by both the bindings and the driver.
-> > >
-> > > The RZ/T2H SoC supports 729 pins, while the RZ/N2H supports 576 pins.
-> > > Both share the same controller architecture; separate compatible
-> > > strings are added for each SoC to distinguish them.
-> > >
-> > > Co-developed-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-> > > Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com=
+On Sat, Aug 9, 2025 at 6:25=E2=80=AFPM Akhilesh Patil <akhilesh@ee.iitb.ac.=
+in> wrote:
 >
-> > > ---
-> > > v3->v4:
-> > > - Used patternProperties for pin configuration nodes
-> > > - Expanded example nodes
-
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzt2h-pinctrl=
-.yaml
-
-> > > +                pinmux =3D <RZT2H_PORT_PINMUX(12, 0, 0x29)>, /* SD0_=
-CLK */
-> > > +                         <RZT2H_PORT_PINMUX(12, 1, 0x29)>; /* SD0_CM=
-D */
-> > > +            };
-> > > +
-> > > +            sd0-sd-tmp-pins {
-> > > +                pins =3D "RIIC0_SDA", "RIIC0_SCL";
-> > > +                input-enable;
-> > > +            };
-> >
-> > Please drop this subnode? It totally confuses me ;-)
-> >
-> I did drop this in the v5 series [0].
+> Remove return value checks for debugfs_create_dir() wherever
+> appropriate. Follow guidelines mentioned in [1] that callers
+> should ignore errors returned as other debugfs functions handle them
+> appropriately.
+> Refer commit 8bcbde2bb1374 ("debugfs: Document that debugfs_create
+> functions need not be error checked") to clean up unnecessary error check=
+s
+> without impacting the functionality.
 >
-> https://lore.kernel.org/all/20250808133017.2053637-2-prabhakar.mahadev-la=
-d.rj@bp.renesas.com/
+> Fixes: 91581c4b3f29e ("gpio: virtuser: new virtual testing driver for the=
+ GPIO API")
+> Link: https://lore.kernel.org/all/20220222154555.1.I26d364db7a007f8995e8f=
+0dac978673bc8e9f5e2@changeid/ [1]
+> Signed-off-by: Akhilesh Patil <akhilesh@ee.iitb.ac.in>
+> ---
 
-My bad; I had reviewed v4, but forgot to send them.
-When I discovered my old draft, I just sent it out...
+The commit you linked says: "In many cases (...)". This is not one of
+these cases as this driver is completely useless without functional
+debugfs entries so it very much makes sense to check the relevant
+calls.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Bart
 
