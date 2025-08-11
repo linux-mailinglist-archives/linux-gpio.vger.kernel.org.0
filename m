@@ -1,308 +1,198 @@
-Return-Path: <linux-gpio+bounces-24161-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24162-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CD87B20789
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 13:24:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38A60B20923
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 14:47:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 24B9B2A3086
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 11:24:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 98D9C3A9E35
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 12:47:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FE4F2D12F7;
-	Mon, 11 Aug 2025 11:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ku4G02qJ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C64DD20F07C;
+	Mon, 11 Aug 2025 12:47:24 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA77B2D12ED
-	for <linux-gpio@vger.kernel.org>; Mon, 11 Aug 2025 11:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D8E134CB;
+	Mon, 11 Aug 2025 12:47:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754911457; cv=none; b=BUui+QIxTcnqQGRCvK4X6gKaKifmvvtDQVs3/iLCJSljijIYstAfndTHc4vl8smeiS7bYG7ryJmlBPT4Jv+2Na39i7/tSrantzTfG86e8YSbtgOORziVxFLmI2/nTspnLetJP6Ec4dzhoa2Hpv7CGJjj4go5GaHUy0w4H1hhgjM=
+	t=1754916444; cv=none; b=R21+35lyqPDUP6cJaAakWgqgPawgh8XP2V9FMlD3VXfl+NmFUoP0np+++eb1CJtBpP4wa0i6CcoJaYEXlPlq25R+48X57pd8Hobsuubjj2o1UfRZic+oe/l6PchhUsdrq5kTuGFXCEMxP5rTeJ6QhJ8B7nzeIXGp5cYN5Q01Pt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754911457; c=relaxed/simple;
-	bh=PHwsYqPMe5lmjxOn4zXFfhjopKhCTRNe5UyB8PxQlJ8=;
+	s=arc-20240116; t=1754916444; c=relaxed/simple;
+	bh=mJZcymr0DoHOyUMqMHXVnkKtMVmpnri15Ov8Ipo2DZU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=axSvyA6Paz8tch3m0Eayv69yedW/CYD0lZrQeU4gM2GaH+n2L25/v3DuMSng7OsxMg+zrVBWRiPqAQoNuxd6VFaJV/LLY3iJ7Ecs4jR0D9uNEsCfFLI7lSrNfdH9GHCYQq5qWEs0CeFpKohPaC2pN2G4t+hCnNJMDiS5VaQTXxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ku4G02qJ; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-55b85d01b79so4398993e87.3
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Aug 2025 04:24:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1754911453; x=1755516253; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L5GmgDRwLzjGy8dLnCeLiuAfeTbFgGKNWM+nzJ45dpA=;
-        b=Ku4G02qJvE0Yng5xsA1avFYKHXf/CtLhSrKSNXm7sbF+SmM9oFUhrNGkkV8kT+8nKR
-         zJ8IKy2Hsl35Zuq1Jw9uDF/sjuowewFqtVQ7gd5JJoobTA8NhN3btBHlZb2rMWYB8AFw
-         HErTyGmkmv61xrx/ufVqYkXhA5UwiVN2LbKzU=
+	 To:Cc:Content-Type; b=ae13AIARYUpwSlDc1nPa7LZowbBcZSgYPiTHCfTJl+Ow3zRKGMbNIiZ6eXONVER//yrCmrIfe8loKGFyd5XNEbRjq6wHlEgOLEVyfNGNT6GufbEyVbQSXX8NjJue76KvDkaPAPh1gpO0RoUrQqALjtXLoJjwQwPf2w1qnN9snZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-5047bfa77fdso1743824137.1;
+        Mon, 11 Aug 2025 05:47:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754911453; x=1755516253;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L5GmgDRwLzjGy8dLnCeLiuAfeTbFgGKNWM+nzJ45dpA=;
-        b=An+ccYypMI9PMxECJod8GQmIyctJ+V020yy09TtEg2R2SSzaT38RxwYNhj7ANP7tIV
-         FmpL4Yra34YD5of23EZ1f76L2iVa+UMrST123JdvNykqkrtgX52v4pM9efOYeT875zuJ
-         PBtLtkz3YnZIP4RuG83MgnQ3UDv4Pz3eKKAeh2/sTzxevNjSJWVbFbsFt5j3SO4R6LU4
-         iW1gb2aSt0xVk+qS2gOvE5ZkATpJ6aNx3Y6ghYNZj8mPRaxqL8k/rizYh59AxUwiqKOn
-         Qp87XRfVfVzPdLZppbP89f5SdN5FF6pwDFXu8uLEsw+Z3IvrRQErw4N0rN7BxD2k5k+J
-         lVCA==
-X-Forwarded-Encrypted: i=1; AJvYcCX4Yrgm8wyqwIukz1m31QMJzuc3+EIN4IU3kqlnWmmgd5T0YiOHQqqPXeXlBYGBbzNMB6MI1VhF9B18@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrcKPUmy36Vf3OanZE1rv9w4WM5XhvdwstmvaUWjmYO759i0iS
-	9WNzgkWa1rTFK+S0LT5mUdw8iPgB911XLFOrilChrzfXi4ZwPCwfUiLcyhueCCw1SNHPETUPJFN
-	9C/1uMKSEcKEDhNDWw2s0mGATz6FuuVd0vJdQv3Qc
-X-Gm-Gg: ASbGnct+kpAv4tDYKTAp7AD3p39RjJ8veZk8mIyaRyVyzUPj7wnJ+6X4HomBi1arrv5
-	mNX6lXsnPFSCgnMGpjVFZB/SQMxfWh34ef2SoQKsMlPgHMgalEHQjsAdJP3gKOBQKDvmpMOmsHS
-	lUL5VJA5d1aEgwzEba6wnctuH7WPPUrt/VgoaikpBALtjbGFE+tBr4b49KztsNhiu2CMwkktS+S
-	H0iuSwqcz3xvOd2Ir8gAVYCilpc4JUFUCU=
-X-Google-Smtp-Source: AGHT+IFH1xwZU4h8r7iEY3jgrVBtJGh2oYXazOzDlq78D9uq3Av2ACb1cuu5hjNFbP0gck6r2pgb1pAL9b77iA9N8VY=
-X-Received: by 2002:a05:6512:3b27:b0:55b:7cc9:41ee with SMTP id
- 2adb3069b0e04-55cc0102717mr3789564e87.38.1754911452958; Mon, 11 Aug 2025
- 04:24:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1754916441; x=1755521241;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Xe+CCBQJrxuVCY6WW9MnNCbhinxHYUJgdHlSe87J7VM=;
+        b=i4AaHyCLwWPggwmERXvoZrZ2Cusclt7Fjx96xxjuftzXJ7lAkKRw3myFuWsI4icKIu
+         v6lCDztX6RvNw/d3bJH1e1QX9ufFlzYspNzaRfYddUPHU2yifLODpn5aD87ELaSLceXI
+         gJUR1spKggdFGZkEUpr3wXjgbnLfuzI8a/l95PIHd/k1lRIvozu3bVX2rYkHXhwzaxQv
+         1uWe93f/zeQvVjdkiJXxpqeSxH0geKyOobuLaeCwHgRmYJmTybjoRC5QjHcQ1xd84iFQ
+         6s7zzLoP0+k9WK9hkqSWDMxy28CTGQGntp0KAHb3CsTtEP0mcYLEtsH4P4u4vl9pDqmW
+         3hRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUhtPZy6FevJJzlsGQK5rXiuKnicp2woiZT/G2gIrLM7y9ioviHqnf7NlxPKhrIlTIS98Hh7JHMMTHtFA==@vger.kernel.org, AJvYcCV4N3MSAAFkLsxCUmFSA9bVqYe/VG2NbCcQ7g5UEcgTeTVNKuEFjNwTVawCNpIAhrrHiMwuowBZj8l9@vger.kernel.org, AJvYcCWOZhxKdeKP3BfCZtRt353+YiDhHYcTydyTn7aeXJ5BdeShWQvEN65GSbVzLoZ5L06KjQpE7lDacP6/cws2@vger.kernel.org, AJvYcCXWPjTcUHn+wU79aECExH1r/kGFhs5j07SmG1fKayuqRmfyqL02ec5mniliOLU/pI2cKfLf4a3us8nwnOgKOmNGCAA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsjrwHF+lJ3ykE/nUIB2vEW1muh6qH7F/F7Zv0cwMWflsneG62
+	mrblnH4a6whInsXGgB+NA0mQcQI9g3YcjQhqMznhN8QK8GUkih3nSD2RFE1r+OIF
+X-Gm-Gg: ASbGnct9fnPsf23iGTJclDkHMqx8CR9ECFRY28gUVPArKnTEByC0T8mTSVXSVsduzLH
+	0etaya4aIx4Qxiwq7na6LPXFvoVcdgAudMHl9VCoYP0qX56I1B8fdM/i6z79o1SNCa+5VTOaKZS
+	+fj87DapmZe2mwnX7bM1DFLDW71HiL8qn7z3aTBHOQ/vdTf7faZrujCs13AqtV7GqdBFx6DXvBt
+	s+zIv5GA81shS/+GKm2c/2YETgCdnPJ3yAaeiWJG0edUxs255oRPc6rr1+Lx3HRz1fFmw650G0z
+	M0sAJ1VXv+qQ10m83UNqDChFVlkiY4DYqxjqQZZu8I/dMxB28M5mfCs+8l8g+TmB/WkQzoXDIDq
+	RsEgRetJp7hl9eivKcouWD06kcjX0RtEtgHjU2T78xi8Om8JNIclGTggMwBqPpvjh
+X-Google-Smtp-Source: AGHT+IFcsgHpkbcoygeA9czKJT0RqobY6h5fkRAStVHKRC6DnFeGdLEzrQHkOdd8sfcgNXdg0bVYmg==
+X-Received: by 2002:a05:6102:800c:b0:4e2:a235:24d1 with SMTP id ada2fe7eead31-50623a02adamr5260363137.4.1754916440935;
+        Mon, 11 Aug 2025 05:47:20 -0700 (PDT)
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com. [209.85.221.181])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-50629bde2aesm1712339137.9.2025.08.11.05.47.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Aug 2025 05:47:20 -0700 (PDT)
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-539525ec047so4128339e0c.1;
+        Mon, 11 Aug 2025 05:47:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUI4Z6/owSkgHZ8MGv/4qRGjoXlqK1uMIkdUayySBmlm3XT31ETuyaa6QG+tqx9m5YJlthecph75fCDA3Z6HuL1I+M=@vger.kernel.org, AJvYcCUT1NA0CJfVj3yIYNAl6h0y5K/FOtOJ4P+56gasmAiusIxbD8oObpbwnBgcdInGVeBXF3qKUODcEwzZ@vger.kernel.org, AJvYcCUXVmjheAUQKDZoUznyNEcTBoE3ZB3sBmyKE9mf2jImQPRceXKAHkVL09Jn8Aax//RvKO5zmNsZMjqUh30+@vger.kernel.org, AJvYcCXMJZ0yQgwgQYaxNFwP3xxoN18v8mDNMoWSJdews/jGz9pNB6E1ou5BKswlofyyJ2I7lxax75jlQ5TyVg==@vger.kernel.org
+X-Received: by 2002:a05:6122:494a:b0:53a:d808:1ff2 with SMTP id
+ 71dfb90a1353d-53ad8082595mr1775407e0c.1.1754916440508; Mon, 11 Aug 2025
+ 05:47:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250708111806.3992-1-darren.ye@mediatek.com> <20250708111806.3992-6-darren.ye@mediatek.com>
-In-Reply-To: <20250708111806.3992-6-darren.ye@mediatek.com>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Mon, 11 Aug 2025 19:24:02 +0800
-X-Gm-Features: Ac12FXxeNaT3MP9n4wih87uuXFKen5GCnd1-R8Ou24yHeRKyjqsVqSE_BwKFLpA
-Message-ID: <CAGXv+5HW1-GByx6BEd46J_n50FxcHNukUWwREpoDne=CdAnSVQ@mail.gmail.com>
-Subject: Re: [PATCH v6 05/10] ASoC: mediatek: mt8196: support I2S in platform driver
-To: "Darren.Ye" <darren.ye@mediatek.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Jaroslav Kysela <perex@perex.cz>, 
-	Takashi Iwai <tiwai@suse.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
+References: <20250808133017.2053637-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250808133017.2053637-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250808133017.2053637-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 11 Aug 2025 14:47:09 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVexDsBVqgF2Gn4hJAZbyv3wcsa=X=6E_52ufOWmvZd9Q@mail.gmail.com>
+X-Gm-Features: Ac12FXxc4r6WofxL30YmYJi0899llC4OSBPFc5s5IhIOIO_rkqmWozcPyHPqNvs
+Message-ID: <CAMuHMdVexDsBVqgF2Gn4hJAZbyv3wcsa=X=6E_52ufOWmvZd9Q@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] dt-bindings: pinctrl: renesas: document RZ/T2H and
+ RZ/N2H SoCs
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Sorry for another reply, but I lost some of the context I wanted to reply t=
-o.
+Hi Prabhakar,
 
-On Tue, Jul 8, 2025 at 7:34=E2=80=AFPM Darren.Ye <darren.ye@mediatek.com> w=
-rote:
+On Fri, 8 Aug 2025 at 15:30, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> From: Darren Ye <darren.ye@mediatek.com>
+> Document the pin and GPIO controller IP for the Renesas RZ/T2H
+> (R9A09G077) and RZ/N2H (R9A09G087) SoCs, and add the shared DTSI
+> header file used by both the bindings and the driver.
 >
-> Add mt8196 I2S DAI driver support.
+> The RZ/T2H SoC supports 729 pins, while the RZ/N2H supports 576 pins.
+> Both share the same controller architecture; separate compatible
+> strings are added for each SoC to distinguish them.
 >
-> Signed-off-by: Darren Ye <darren.ye@mediatek.com>
+> Co-developed-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 > ---
->  sound/soc/mediatek/mt8196/mt8196-dai-i2s.c | 3944 ++++++++++++++++++++
->  1 file changed, 3944 insertions(+)
->  create mode 100644 sound/soc/mediatek/mt8196/mt8196-dai-i2s.c
->
-> diff --git a/sound/soc/mediatek/mt8196/mt8196-dai-i2s.c b/sound/soc/media=
-tek/mt8196/mt8196-dai-i2s.c
-> new file mode 100644
-> index 000000000000..59f66ab8fa9f
+> v3->v4:
+> - Renamed DT binding file from renesas,rzt2h-pinctrl.yaml to
+>   renesas,r9a09g077-pinctrl.yaml
+> - Updated the title and description to include RZ/N2H SoC
+> - Updated description, fixing the information about mux functions
+> - Dropped sd0-sd-tmp-pins sub node from sdhi0_sd_pins in the example node
+> - Added reviewed-by tag from Rob
+
+Thanks for the update!
+
 > --- /dev/null
-> +++ b/sound/soc/mediatek/mt8196/mt8196-dai-i2s.c
-> @@ -0,0 +1,3944 @@
+> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g077-pinctrl.yaml
 
-[...]
-
-> +static int mtk_afe_i2s_share_connect(struct snd_soc_dapm_widget *source,
-> +                                    struct snd_soc_dapm_widget *sink)
-> +{
-> +       struct snd_soc_dapm_widget *w =3D sink;
-> +       struct snd_soc_component *cmpnt =3D snd_soc_dapm_to_component(w->=
-dapm);
-> +       struct mtk_base_afe *afe =3D snd_soc_component_get_drvdata(cmpnt)=
-;
-> +       struct mtk_afe_i2s_priv *i2s_priv;
-> +       int ret =3D 0;
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/renesas,r9a09g077-cpg-mssr.h>
+> +    #include <dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h>
 > +
-> +       i2s_priv =3D get_i2s_priv_by_name(afe, sink->name);
+> +    pinctrl@802c0000 {
+> +        compatible = "renesas,r9a09g077-pinctrl";
+> +        reg = <0x802c0000 0x2000>,
+> +              <0x812c0000 0x2000>,
+> +              <0x802b0000 0x2000>;
+> +        reg-names = "nsr", "srs", "srn";
+> +        clocks = <&cpg CPG_CORE R9A09G077_CLK_PCLKM>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        gpio-ranges = <&pinctrl 0 0 288>;
+> +        power-domains = <&cpg>;
 > +
-
-Drop empty line between assignment and check.
-
-> +       if (!i2s_priv)
-> +               return 0;
+> +        serial0-pins {
+> +            pinmux = <RZT2H_PORT_PINMUX(38, 0, 1)>, /* Tx */
+> +                     <RZT2H_PORT_PINMUX(38, 1, 1)>; /* Rx */
+> +        };
 > +
-> +       if (i2s_priv->share_i2s_id < 0)
-> +               return 0;
+> +        sd1-pwr-en-hog {
+> +            gpio-hog;
+> +            gpios = <RZT2H_GPIO(39, 2) 0>;
+> +            output-high;
+> +            line-name = "sd1_pwr_en";
+> +        };
 > +
-> +       ret =3D (i2s_priv->share_i2s_id =3D=3D get_i2s_id_by_name(afe, so=
-urce->name)) ? 1 : 0;
+> +        i2c0-pins {
+> +            pins = "RIIC0_SDA", "RIIC0_SCL";
+> +            input-enable;
+> +        };
 > +
-> +       return ret;
+> +        sdhi0_sd_pins: sd0-sd-group {
 
-          return i2s_priv->share_i2s_id =3D=3D get_i2s_id_by_name(afe,
-source->name);
+As per my belated comments on v4, I will drop the sdhi0_sd_pins label...
 
-bool casts to int implicitly in the same way you wrote explicitly.
-
-> +}
+> +            sd0-sd-ctrl-pins {
+> +                pinmux = <RZT2H_PORT_PINMUX(12, 0, 0x29)>, /* SD0_CLK */
+> +                         <RZT2H_PORT_PINMUX(12, 1, 0x29)>; /* SD0_CMD */
+> +            };
 > +
-> +static int mtk_afe_i2s_hd_connect(struct snd_soc_dapm_widget *source,
-> +                                 struct snd_soc_dapm_widget *sink)
-> +{
-> +       struct snd_soc_dapm_widget *w =3D sink;
-> +       struct snd_soc_component *cmpnt =3D snd_soc_dapm_to_component(w->=
-dapm);
-> +       struct mtk_base_afe *afe =3D snd_soc_component_get_drvdata(cmpnt)=
-;
-> +       struct mtk_afe_i2s_priv *i2s_priv;
-> +       int i2s_num;
+> +            sd0-sd-data-pins {
 
-Rename to "src_i2s_num" to be explicit.
+... and the "sd0-sd-" prefixes.
 
-> +
-> +       i2s_priv =3D get_i2s_priv_by_name(afe, sink->name);
-> +
+> +                pinmux = <RZT2H_PORT_PINMUX(12, 0, 0x29)>, /* SD0_CLK */
+> +                         <RZT2H_PORT_PINMUX(12, 1, 0x29)>; /* SD0_CMD */
+> +            };
+> +        };
+> +    };
 
-Drop empty line between assignment and check.
+> --- /dev/null
+> +++ b/include/dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h
 
-> +       if (!i2s_priv)
-> +               return 0;
-> +
-> +       i2s_num =3D get_i2s_id_by_name(afe, source->name);
-> +       if (get_i2s_id_by_name(afe, sink->name) =3D=3D i2s_num)
+> +#endif /* __DT_BINDINGS_PINCTRL_RENESAS_R9A09G057_PINCTRL_H__ */
 
-Use i2s_priv->id?
+G077
 
-> +               return !mtk_is_i2s_low_power(i2s_num) ||
-> +                      i2s_priv->low_jitter_en;
-> +
-> +       /* check if share i2s need hd en */
-> +       if (i2s_priv->share_i2s_id < 0)
-> +               return 0;
-> +
-> +       if (i2s_priv->share_i2s_id =3D=3D i2s_num)
-> +               return !mtk_is_i2s_low_power(i2s_num) ||
-> +                      i2s_priv->low_jitter_en;
-> +
-> +       return 0;
-> +}
-> +
-> +static int mtk_afe_i2s_apll_connect(struct snd_soc_dapm_widget *source,
-> +                                   struct snd_soc_dapm_widget *sink)
-> +{
-> +       struct snd_soc_dapm_widget *w =3D sink;
-> +       struct snd_soc_component *cmpnt =3D snd_soc_dapm_to_component(w->=
-dapm);
-> +       struct mtk_base_afe *afe =3D snd_soc_component_get_drvdata(cmpnt)=
-;
-> +       struct mtk_afe_i2s_priv *i2s_priv;
-> +       int cur_apll;
-> +       int i2s_need_apll;
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-pinctrl for v6.18.
 
-Rename to needed_apll or desired_apll.
+Gr{oetje,eeting}s,
 
-> +
-> +       i2s_priv =3D get_i2s_priv_by_name(afe, w->name);
-> +
+                        Geert
 
-Drop empty line between assignment and check.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> +       if (!i2s_priv)
-> +               return 0;
-> +
-> +       /* which apll */
-> +       cur_apll =3D mt8196_get_apll_by_name(afe, source->name);
-> +
-> +       /* choose APLL from i2s rate */
-> +       i2s_need_apll =3D mt8196_get_apll_by_rate(afe, i2s_priv->rate);
-> +
-> +       return (i2s_need_apll =3D=3D cur_apll) ? 1 : 0;
-
-          return i2s_need_apll =3D=3D cur_apll;
-
-> +}
-> +
-> +static int mtk_afe_i2s_mclk_connect(struct snd_soc_dapm_widget *source,
-> +                                   struct snd_soc_dapm_widget *sink)
-> +{
-> +       struct snd_soc_dapm_widget *w =3D sink;
-> +       struct snd_soc_component *cmpnt =3D snd_soc_dapm_to_component(w->=
-dapm);
-> +       struct mtk_base_afe *afe =3D snd_soc_component_get_drvdata(cmpnt)=
-;
-> +       struct mtk_afe_i2s_priv *i2s_priv;
-> +
-> +       i2s_priv =3D get_i2s_priv_by_name(afe, sink->name);
-> +
-
-Drop empty line between assignment and check.
-
-> +       if (!i2s_priv)
-> +               return 0;
-> +
-> +       if (get_i2s_id_by_name(afe, sink->name) =3D=3D
-
-              i2s_priv->id =3D=3D ...
-
-> +           get_i2s_id_by_name(afe, source->name))
-
-Keep a copy of the result ...
-
-> +               return (i2s_priv->mclk_rate > 0) ? 1 : 0;
-
-                  return i2s_priv->mclk_rate > 0;
-
-> +
-> +       /* check if share i2s need mclk */
-> +       if (i2s_priv->share_i2s_id < 0)
-> +               return 0;
-> +
-> +       if (i2s_priv->share_i2s_id =3D=3D get_i2s_id_by_name(afe, source-=
->name))
-
-and use it here, like in mtk_afe_i2s_hd_connect().
-
-> +               return (i2s_priv->mclk_rate > 0) ? 1 : 0;
-
-                  return i2s_priv->mclk_rate > 0;
-
-> +       return 0;
-> +}
-> +
-> +static int mtk_afe_mclk_apll_connect(struct snd_soc_dapm_widget *source,
-> +                                    struct snd_soc_dapm_widget *sink)
-> +{
-> +       struct snd_soc_dapm_widget *w =3D sink;
-> +       struct snd_soc_component *cmpnt =3D snd_soc_dapm_to_component(w->=
-dapm);
-> +       struct mtk_base_afe *afe =3D snd_soc_component_get_drvdata(cmpnt)=
-;
-> +       struct mtk_afe_i2s_priv *i2s_priv;
-> +       int cur_apll;
-> +
-> +       i2s_priv =3D get_i2s_priv_by_name(afe, w->name);
-> +
-
-Drop empty line between assignment and check.
-
-> +       if (!i2s_priv)
-> +               return 0;
-> +
-> +       /* which apll */
-> +       cur_apll =3D mt8196_get_apll_by_name(afe, source->name);
-> +
-> +       return (i2s_priv->mclk_apll =3D=3D cur_apll) ? 1 : 0;
-
-          return i2s_priv->mclk_apll =3D=3D cur_apll;
-
-> +}
-
-[...]
-
-ChenYu
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
