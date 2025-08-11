@@ -1,117 +1,112 @@
-Return-Path: <linux-gpio+bounces-24130-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24131-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6088DB2009A
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 09:47:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6E99B200C2
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 09:50:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 92DC91896388
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 07:47:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A1C68189E0AD
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 07:50:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 168661FCCF8;
-	Mon, 11 Aug 2025 07:47:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99B282D9EFA;
+	Mon, 11 Aug 2025 07:49:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="z5eyhWlY"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="qWd8sVoy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1817120102C
-	for <linux-gpio@vger.kernel.org>; Mon, 11 Aug 2025 07:47:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D202D94AE
+	for <linux-gpio@vger.kernel.org>; Mon, 11 Aug 2025 07:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754898448; cv=none; b=KjQ4fyt73TNgorcoGiDWGIuPK/ejIVXRzRCDSrJrpsqVQhKZ9U7aGN8pQ2QtXq+pBkhUM6IrQv2ZXOfaEzU8a6HHiQAELwc1GWJ3pP3ivogzjnAHEWDeFtowXVFRrCiwamSJnkEF79DX4roB1Lkvn0zPcoPlFtTDkBB6yyNDQPs=
+	t=1754898595; cv=none; b=Zt1+x8XVaFyZ0cDH0jojAhiKuio9PrBnTxyx0jTIsn7DWN+nfaEwy0jQxVAD0b2mD7Sbz7fnv+k+DchKF/AL5HY/0IincQkqfp25oivdg88Iel88Sa+yEnaDatw6mDOqlu3i3qmX344wrrome/8pqq8/Abf91MJxFo4UkAKAgwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754898448; c=relaxed/simple;
-	bh=vLH1gqawWVrkH8DQwd8bbA3uokxzUYBljc36Sbl1pxs=;
+	s=arc-20240116; t=1754898595; c=relaxed/simple;
+	bh=yqjyOKd6429hO6MonfOfKptAd85Vob6P0aiaBpcrRho=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dw8FDXgdR5YNvVR84gZclUQecwLLIHbElqlIaRE4UJnRq4FM2DSGiWyTTpYreEuP6+kHZaphRiF2XnjgnCErjSGh867vesYhwMChiIyfrDSqwMeM0AyYrZ4G19EPiush6eGXJmwQJfCrqx//vAo50617z5Rx6pfoxSbsyEK7rcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=z5eyhWlY; arc=none smtp.client-ip=209.85.167.42
+	 To:Cc:Content-Type; b=VLO+3sL9UBR3jK6587X/jsl09ufxrjzpc57k3xw4bmJ7zlxSsGBwMRaX+n/pzbstc1ukV5BzxsSOGcTWuXIOnJ7oENHyfREoTl8KSEIJAs/HoxpT8/lcT7kzzvvnb3PBBKnnWKA+QDuThP1ywA4c/r/PkLHsxJ6XgJIBMfxoxV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=qWd8sVoy; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-55b93104888so5177262e87.1
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Aug 2025 00:47:26 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-33230f1347fso33039461fa.3
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Aug 2025 00:49:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1754898445; x=1755503245; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1754898592; x=1755503392; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vLH1gqawWVrkH8DQwd8bbA3uokxzUYBljc36Sbl1pxs=;
-        b=z5eyhWlYcC0ekP85q1fTl01IJd+PFVXl1S2aQH52S41A8RpG8v8twrEOSK0UnBxdN4
-         M40OBtJJrIDi4Jw+PK+gPRSdTIe9ND9lIQ0p8LS7zPF9FmCVXV1HshR699TxyUKr1XbV
-         +TARM74PvIhx7INnDGvy4Lvhfcn4CP+KpfI77739EVBv/rTo6ANgztL2JGRCMUKFuro1
-         ui0T7s5s4BUwpDsTV0HMNBpzjohVAw582YfpBsX9K1ru65u5tjBR0EmyzX7mWqRrsujA
-         mZBV/vmxiK5KG13I1BQ/yF6okLkbBc40icYqcBptvjMCwI2hKChTzn6RXX1+wPahjW0i
-         CXDg==
+        bh=yqjyOKd6429hO6MonfOfKptAd85Vob6P0aiaBpcrRho=;
+        b=qWd8sVoyQ6tgF8+EMPkESFCWnM6qUhILvTC4Rav5DwEHJVSDIiMNONZ0USg6ZCDjnR
+         ZeWk+5LJe0+lcHY/6m2lsTNKkIKcOTsGE6p/xDIBsX1256msemrwZlFYk41KN7KXZ620
+         wu+jhZyWG5+IO3a35EukFezDFrH0xU/XX4OxCYduJ48AuW/aMFBLeNrM8v4RUA9hvT0s
+         QC8NJzq+AzoXs+SlEHKOQtntSxE0ppv2VLaXwEAsixgEjC9ZvbBmlPPTdX0SLs69ygaO
+         55kzl9la1lZAcYFO9StdDu3063CXQ36/Wcgj6KopEhSc18NGqzCA1mOy3uLd7s/dLqQw
+         BjAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754898445; x=1755503245;
+        d=1e100.net; s=20230601; t=1754898592; x=1755503392;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vLH1gqawWVrkH8DQwd8bbA3uokxzUYBljc36Sbl1pxs=;
-        b=TPFku+Ka6IlQ6bzOtQBi42srS4/16nQHL/Ho6wlyipwdEOxRxvezNnT2kgDCJWbKOu
-         D/bwKVLmKF60vW3LYFid2m0jl8RZRnqY/nAeKI1uQwuu2/ATkihCsV2Ge09jQc3txNR5
-         SQderNzqP/pPtzJcEsugzj+bp0OdwVj+UCrcSMXKFbVUCToFOkmWkB5c1IQuWO1X+Ma9
-         Km9MpNTFMqSR7fNZdHZgJ2pZ9p4OvNtf2fyejKj6wDIZLqrNxq66/mbjO5KcMYUyu9RD
-         81lIaTlbnZs0cD0HGoV2sFZh2WkUqkU6Jj6dGqRrecTrLRm2gZyaM2LMhjwtTsJJfTPI
-         Sd+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWC/xn+ln0gGEMv+9m6Z8pkB/VNvwK7VaFc4a8Qy+YInZrS094o1YfS2vTMcT+NeuHKB6YsS94YiTly@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1ReNmyYn4jHMv6rJGyWgERSgYvuVsTaCWhKZzgMz9KfjUwtSD
-	PFW0UX3zwOx8TaNDyakrMCqDUR2srV/3W6FH7ArgUGRJTvE8/ZLZ4q9kqWysgYnTmqjLsGQlnxw
-	4D4W6V0mQP8BaYW3wcWu5lwSxwYGDhD4QjMKWnVXqUw==
-X-Gm-Gg: ASbGncuiNh+DimJ88/oCUUl/fYrqubD+uNf0PEzs51UVsIqhCnTJRb44ws71zIENC5d
-	qR1KhbeLEYVMqXQQekKTrxu2yiEIKrgHMZsaSRclOOz12cCcoUewBoAWSmCONZUyisPWwCqsZ7Q
-	Bv3U9h/2jKTpSLt/NoEgFfCgu1x28T4VLs68B2T8jvTYRp8EatYFf6NTFOjEUkSLp/B/O0THa5Z
-	v4LpNU=
-X-Google-Smtp-Source: AGHT+IGrFAG3iXdJPs/ctpG63OOV25kZZFsNWCDuoZ2UqRMQ7MyguVt1VFp02LLWZKTkikVtnSijWjDPt0HkNcVhTyk=
-X-Received: by 2002:a05:6512:3d09:b0:55b:57e8:16c4 with SMTP id
- 2adb3069b0e04-55cc012c003mr3193177e87.30.1754898444992; Mon, 11 Aug 2025
- 00:47:24 -0700 (PDT)
+        bh=yqjyOKd6429hO6MonfOfKptAd85Vob6P0aiaBpcrRho=;
+        b=s/rLoBMkukpMdB9AErTIf6RBTkHdYm/iubOL90oTnnEEqHjuzdGI5/VvnQI4lsLsFX
+         BqkDm/5qt3m1VOataj1alBT6IEI3YVYkAqb/R/7Ft+JNWoAt1K/ZwtR1dfIM89K/ZyrU
+         zP1OCOS0UVo++OThTlKpBjTQvn2i+NfrryBM/vpY9fbm2ZxCgmbkGfxCL558SFt4dujo
+         x7gTCrlBCk6lhHRITso5aY+pqQL4yNJPfuSsRx/jmAFHRMpB+aY772dhvIRvu2Jz4RWb
+         yDKP+skRMfgNPAktYGAp1iMQo4KIDQfS7J3AOjMrEkrR4ivYBIOosRhsKZ2rXWWaU5Fq
+         24TA==
+X-Forwarded-Encrypted: i=1; AJvYcCV+gBz/E7wL8WMfK1DE9pVyyMlFZN9o2j8tzFM2swO2LRM8859W8bGRSvAKq78/uIdjl8q0FvcvMoT9@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyc3i+Yw8l9CN2w7CXwv7Wa/J9No8UXFCLIt8rkKUtj1LVn2NrA
+	MtbUSFPErhhkEj2rdoV+RsTFJzxjCfynuUs4bGHYxh9bO08VJz0evKk0/1NphW0dZ13XqlfiIcw
+	VyJll5vqODOMPAIqQ8ACY00FqHFcb9jDUuxflnXWm0A==
+X-Gm-Gg: ASbGncu6UZX8AlxxpEYeUBAX0Rf17FTtjZGhKKXWH6PeRQ0AqZJLwMLOeFiJGK/5GW7
+	Z2RXvv2NmdgRPzIDuW1Hytb2/ryuiRswxl+uNtoYV1ZEGPg6XuaxfvFVmMJ6NpUGVRU8etDTwzU
+	Me/RZj0G+Sem6A+vyrux210Ps40W0ThpJ+ryxqTiYqB6h1LmTXauYgTmHV3dL6Yc2hpaIaRGO5l
+	8jLsvc=
+X-Google-Smtp-Source: AGHT+IHdOgrBI2nlxGCIpTQoHYX8dfA650k3ilE4vjuKz9r49GGUkVvbCc0aDx5dNyq0ns9FZtEo9GSVsT+5ZIVLURo=
+X-Received: by 2002:a05:651c:19a7:b0:32e:1052:5437 with SMTP id
+ 38308e7fff4ca-333a22ee2b8mr31470241fa.22.1754898591879; Mon, 11 Aug 2025
+ 00:49:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aJd2Zho5QRUTAEzm@bhairav-test.ee.iitb.ac.in>
-In-Reply-To: <aJd2Zho5QRUTAEzm@bhairav-test.ee.iitb.ac.in>
+References: <20250808151822.536879-1-arnd@kernel.org> <20250808151822.536879-18-arnd@kernel.org>
+In-Reply-To: <20250808151822.536879-18-arnd@kernel.org>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 11 Aug 2025 09:47:13 +0200
-X-Gm-Features: Ac12FXwMS3WB5EsQUQKu2BBekh_xFvZvqabL6It5COncLghaTwCpsk8JkuP-0Lc
-Message-ID: <CAMRc=MczvR7w28Zw6Yn51W7wrkSHjitE3pimHBMgbL_zS8wYhQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: virtuser: remove debugfs_create_dir() error checks
-To: Akhilesh Patil <akhilesh@ee.iitb.ac.in>
-Cc: linus.walleij@linaro.org, dianders@chromium.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	akhileshpatilvnit@gmail.com, skhan@linuxfoundation.org
+Date: Mon, 11 Aug 2025 09:49:40 +0200
+X-Gm-Features: Ac12FXwizJhPa95k0G5kFLrgvIhDZ9cr20VXPTgVVNAz7S9edqHQ4xOcKRuNguc
+Message-ID: <CAMRc=MexS0+qHuwpipPMkKgK6f++mrsGbxY-SAxFxehSWAxAFw@mail.gmail.com>
+Subject: Re: [PATCH 17/21] nfc: marvell: convert to gpio descriptors
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Jakub Kicinski <kuba@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Aug 9, 2025 at 6:25=E2=80=AFPM Akhilesh Patil <akhilesh@ee.iitb.ac.=
-in> wrote:
+On Fri, Aug 8, 2025 at 5:24=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wrot=
+e:
 >
-> Remove return value checks for debugfs_create_dir() wherever
-> appropriate. Follow guidelines mentioned in [1] that callers
-> should ignore errors returned as other debugfs functions handle them
-> appropriately.
-> Refer commit 8bcbde2bb1374 ("debugfs: Document that debugfs_create
-> functions need not be error checked") to clean up unnecessary error check=
-s
-> without impacting the functionality.
+> From: Arnd Bergmann <arnd@arndb.de>
 >
-> Fixes: 91581c4b3f29e ("gpio: virtuser: new virtual testing driver for the=
- GPIO API")
-> Link: https://lore.kernel.org/all/20220222154555.1.I26d364db7a007f8995e8f=
-0dac978673bc8e9f5e2@changeid/ [1]
-> Signed-off-by: Akhilesh Patil <akhilesh@ee.iitb.ac.in>
+> The only reason this driver seems to still use the legacy gpio
+> numbers is for the module parameter that lets users pass a different
+> reset gpio.
+>
+> Since the fixed numbers are on their way out, and none of the platforms
+> this driver is used on would have them any more, remove the module
+> parameter and instead just use the reset information from firmware.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
 
-The commit you linked says: "In many cases (...)". This is not one of
-these cases as this driver is completely useless without functional
-debugfs entries so it very much makes sense to check the relevant
-calls.
+Yes, please!
 
-Bart
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
