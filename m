@@ -1,91 +1,77 @@
-Return-Path: <linux-gpio+bounces-24214-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24215-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 356F1B2163C
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 22:11:39 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52601B2168D
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 22:35:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 933321A2433E
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 20:10:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6AE287AB8AA
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 20:33:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E79792D9EEA;
-	Mon, 11 Aug 2025 20:10:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 642B22DAFBE;
+	Mon, 11 Aug 2025 20:35:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n1Z02SCr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mG0dpCkO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD711FAC34;
-	Mon, 11 Aug 2025 20:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45542D9EDA;
+	Mon, 11 Aug 2025 20:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754943004; cv=none; b=BOHhkU0TuU9yUVgR4bcf+80aX6FdKh6M9YvcCEsMbQgX1M0W/+hHiCY8737qgnv7bZHcNnGKRxsde9e0u9L3Ln0L5n0IKS/E3ySFjsEzKHFRynL+E7d5Jp7vi4Pv0DLZlY+2YsnEhL3ScAS8HGizMUV5Chs7KR6qK0+Z5xrM2mw=
+	t=1754944517; cv=none; b=QFc2eswY8KBXwg0qWuYyaTP2HxLib2qfyJnw43Xi00PsyMInt9k6uR3ymGX7uABIkMMHDZswigKDbP7ELf5DLgC/ntjbDMK2bOQ4DmGfqS074YWi34/lR6QG10bS+40vggWJp9YuAc/VTema3N64ZOA8w7NeAHGzn1X/KOOx8uY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754943004; c=relaxed/simple;
-	bh=JFuwCjEA2XffvzEG1pozhniBvW9lRwHxQYEK7PJwjTM=;
+	s=arc-20240116; t=1754944517; c=relaxed/simple;
+	bh=sFtLHLGOijEOOAsFWANpfblMzQIDntPSvojGAi5k3r4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mfwtvJs6rwTgCcX+MN8+jHPCYQ+FDV4cRVWuVpj+SBp3Bh6qWTrezTa85c1AsrNp7b7AONox2au3236Egci7Q2hRO/VXHbWLluL2PKHCXSgRmqi3m2TkJS/pgLYiGEJe2MrtrKG2MGIAf7cS3bvUwSgu91Z0kytgylAR0aMybig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n1Z02SCr; arc=none smtp.client-ip=192.198.163.19
+	 Content-Type:Content-Disposition:In-Reply-To; b=RZ+0oZ972alweJ3A1fgCcQPlbGLALxJlpMAa8K18H04csM1E7xwLFU1TmDYgB48VFIMvC6bF9z9/FnyUlnpNxnAozecuNQw5sbmpYqKlF6RQ7oR9CHpNLebzAhBuo62vMIt7DOW9H87OK1/qXkuM2v2GR2tyC8SFRWDKFYXXX6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mG0dpCkO; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754943003; x=1786479003;
+  t=1754944516; x=1786480516;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=JFuwCjEA2XffvzEG1pozhniBvW9lRwHxQYEK7PJwjTM=;
-  b=n1Z02SCrtwKiVVYPO00SJZSaiBUnMCvafAXh0Wm4TJbyooZ04s8+i9UF
-   YiRKmwe7bD5ZgGDivXDvmFbeg6XvAjZv8jTO3oiEJWOnJI7GasSRCAm1n
-   PitiwN4PRsem+XwJKSTgmRr9tHR4xIES8iT8+j8sDTqu9uYb3MzaVkJXu
-   tez+BpMCqR4UXbit7UqASSapBDYMH382wRwm8rt81/Mw0ITjkBK7CKCR0
-   4XDrzqasD3+AMb50djRa7LYHyP//iUIx65b13pxrltw2yEb/RctWQFhf0
-   ax4dDYHC6P2q4duBI2sTUi1B/qgIMznpngnXjSLMUYlfA0u/XaiVC7fDw
-   w==;
-X-CSE-ConnectionGUID: PrcwZCAKSvaSzpHJC9IadA==
-X-CSE-MsgGUID: XbUnO7JxSVy/27liiE9SYQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="56233448"
+  bh=sFtLHLGOijEOOAsFWANpfblMzQIDntPSvojGAi5k3r4=;
+  b=mG0dpCkOpFvwL2NuXdjAVOXPkU7XHp7KM7WzXXUvwSaHYcC0nXE8AO3P
+   KDzTiTtlXayiTdJPdVqlkHOq3DY58akkI9i6fng2ZKg7Xs7Tkpqd1392K
+   BW4kM9IJOMTeM24rFGlQCBocyw8FdxBVPqu5/DZYO8iLaO5xHxgtu87RG
+   ZrOJ0syl2NqagYAN5sXSWTGbrba4esX/nXLNa5dZjcPB0e8PhfwSDpe4i
+   4mSWhE4vSzpL5t5uMmY5GXJLKI5SBdm84faWZnfFS9+Mk5GfZbmDkly2Z
+   twSOrjRHwqSEgKT/h+UlElZogq7mgrDeQ20Y49gyO2iNvN9dkB6Y40JbK
+   g==;
+X-CSE-ConnectionGUID: YRpLtdwGSsCbcrzps3rP1A==
+X-CSE-MsgGUID: VO/1AZY+RxC1ob3bCJgelA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="57289046"
 X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
-   d="scan'208";a="56233448"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 13:10:02 -0700
-X-CSE-ConnectionGUID: RK1gevKTSDGiU2DE77ZMfg==
-X-CSE-MsgGUID: 8cDgNFJVThq1RLGhgEg5wg==
+   d="scan'208";a="57289046"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 13:35:16 -0700
+X-CSE-ConnectionGUID: x+zD3fb4RbaIsLj1Pyr8NA==
+X-CSE-MsgGUID: SJ0hAw7CRt2zRuDHN1fJ8g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
-   d="scan'208";a="165629458"
+   d="scan'208";a="165209244"
 Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 13:09:59 -0700
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 13:35:14 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1ulYqA-000000056Uk-3HZa;
-	Mon, 11 Aug 2025 23:09:54 +0300
-Date: Mon, 11 Aug 2025 23:09:54 +0300
+	id 1ulZEc-000000056iv-3S6t;
+	Mon, 11 Aug 2025 23:35:10 +0300
+Date: Mon, 11 Aug 2025 23:35:10 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Arnd Bergmann <arnd@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, Lee Jones <lee@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Gatien Chevallier <gatien.chevallier@foss.st.com>,
-	Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/21] input: gpio-keys: make legacy gpiolib optional
-Message-ID: <aJpOEq_5jqGTUr4x@smile.fi.intel.com>
-References: <20250808151822.536879-1-arnd@kernel.org>
- <20250808151822.536879-10-arnd@kernel.org>
- <b7e97aa3-8f2d-4a59-8a38-577717404865@gmail.com>
- <aJnng9z9pUTFI49x@smile.fi.intel.com>
- <mrqxggv7vhclnranoc3uacfyzccod6dmc54kip4f7wjdpngjzz@falnsjwnfcjc>
+To: David Thompson <davthompson@nvidia.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl,
+	mika.westerberg@linux.intel.com, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] gpio: mlxbf3: use platform_get_irq_optional()
+Message-ID: <aJpT_nS5bDNRVn9a@smile.fi.intel.com>
+References: <cover.1754928650.git.davthompson@nvidia.com>
+ <ce70b98a201ce82b9df9aa80ac7a5eeaa2268e52.1754928650.git.davthompson@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -94,45 +80,19 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <mrqxggv7vhclnranoc3uacfyzccod6dmc54kip4f7wjdpngjzz@falnsjwnfcjc>
+In-Reply-To: <ce70b98a201ce82b9df9aa80ac7a5eeaa2268e52.1754928650.git.davthompson@nvidia.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
  krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon, Aug 11, 2025 at 12:21:51PM -0700, Dmitry Torokhov wrote:
-> On Mon, Aug 11, 2025 at 03:52:19PM +0300, Andy Shevchenko wrote:
-> > On Mon, Aug 11, 2025 at 01:34:43PM +0300, Matti Vaittinen wrote:
-> > > On 08/08/2025 18:17, Arnd Bergmann wrote:
+On Mon, Aug 11, 2025 at 01:50:45PM -0400, David Thompson wrote:
+> The gpio-mlxbf3 driver interfaces with two GPIO controllers,
+> device instance 0 and 1. There is a single IRQ resource shared
+> between the two controllers, and it is found in the ACPI table for
+> device instance 0. The driver should not use platform_get_irq(),
+> otherwise this error is logged when probing instance 1:
+>     mlxbf3_gpio MLNXBF33:01: error -ENXIO: IRQ index 0 not found
 
-...
-
-> > > As such, this patch seems Ok to me, you can treat this as an ack :) This,
-> > > however made me ponder following - is this the tight way to handle the
-> > > power-button IRQ? I don't see any other MFD devices doing this in same way,
-> > > although I am pretty sure there are other PMICs with similar power-button
-> > > IRQ...
-> > > 
-> > > I see for example the "drivers/mfd/rt5120.c" to invoke
-> > > "drivers/input/misc/rt5120-pwrkey.c" instead of using the gpio-keys. This,
-> > > however, feels like code duplication to me. I'd rather kept using the
-> > > gpio-keys, but seeing:
-> > > 
-> > > git grep KEY_POWER drivers/mfd/
-> > > drivers/mfd/rohm-bd71828.c:     .code = KEY_POWER,
-> > > drivers/mfd/rohm-bd718x7.c:     .code = KEY_POWER,
-> > > 
-> > > makes me wonder if there is more widely used (better) way?
-> > 
-> > FWIW, on Intel platforms that use power button by PMIC we add a special driver
-> > for each of such cases.
-> 
-> If we can make gpio-keys work for various power buttons that would be
-> great IMO. The MFD drivers in question already are using device tree,
-> but they do not define/expect nodes for the power buttons. If the nodes
-> were there then I think gpio-keys would work out of the box?
-
-Looking at the, e.g., https://elixir.bootlin.com/linux/v6.16/source/drivers/platform/x86/intel/mrfld_pwrbtn.c,
-I am not sure it's as simply as it sounds. Basically it's an IRQ, which
-requires IRQ handling and proper acking/masking/etc.
+Missed Cc to stable@.
 
 -- 
 With Best Regards,
