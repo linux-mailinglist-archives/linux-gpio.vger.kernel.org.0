@@ -1,140 +1,174 @@
-Return-Path: <linux-gpio+bounces-24132-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24133-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C477B200F7
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 09:57:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4825DB201DB
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 10:31:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2107416B584
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 07:57:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DEB003B39CC
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 08:31:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D53DA2D9EF8;
-	Mon, 11 Aug 2025 07:57:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 070132853EF;
+	Mon, 11 Aug 2025 08:31:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="YZ55BwUH"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LCC2Dtly"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD9C2D9EFB
-	for <linux-gpio@vger.kernel.org>; Mon, 11 Aug 2025 07:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43941684AC;
+	Mon, 11 Aug 2025 08:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754899025; cv=none; b=MCZ+buuQtN/b6XhggEKwCOqq3LwZtyWTz0Yk0t21aFkX0ws+E7JQWaudXkXJQjX4RCKGpRf5eq1DneX5AW5lHk298cGCdCFIKsi69cZ1hFM9X0UVEe58yFcPtF5ZwGG4HS7rPJ3Td28nd11TyYahtU0AW2SBLex7cGcOlJ2Leog=
+	t=1754901086; cv=none; b=HJ7mWulCC+pow7h+rD+eqqjFE8d44uL6CYAskwz3dXN0f0WRNj4W3VXPS5Q5WFKF8w9q+rpg4TLgAoOkRiL0b9DEO5fsYqIGF52GOdv0vzIc71j/YEfeDeU3xuLSrmDTjJmNnUWZcBrezE93HC6NAIajaeH94Ec9TjXtAOJ1YoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754899025; c=relaxed/simple;
-	bh=CJFtm8aT05kS0Usnv5/NsR4DQOUjZUTFcSM8jpLribs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tIeIiIn3swS3jZPV4hGcpyB6GAE5hklS4w+cqXEmi8j/X5ABfHclp/wzGL05WLxF5tOZC+dDgOVmzpU8MavcHO4AGV/zn9gYUt1K9TCcFOxrrlSu1NOIvQC+LhP4ZQA14eiiEJcJo+n3kCWCWO9hHf9iaVwRJNlrV9Gk7mSbJjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=YZ55BwUH; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-55502821bd2so4214228e87.2
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Aug 2025 00:57:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1754899022; x=1755503822; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KjTF7RqO10ef3txtnjHxWOV2j8hirOXEUm2/myrJmDs=;
-        b=YZ55BwUH0Cqn/mp0E7yMgcQluURItIs3lId/s7O4dFI75EvDfH+6HS/PNA6PPasxYC
-         eXBZ33Bzcz08b3SZgFXXMa0sjTCDo6TIKDe+QHK6uXCVXB/4+dPN5vFiZZJb9BhTn+GQ
-         cWCcGohjzgS+wp8VNtu+M8dZtplIgbVqkz8MK+iq1HIZMn1SqK/zJbCRUdghecKwcxjx
-         pG8by+bvHkWqN32R1WHMoJ5TIdbVKVZYbPHm9z0TOH+0/13G7Ik1gf4+VqDAXTLGnWtC
-         EPSMv31OLp6g+WH5eT49haL56SRPJWh0cV9ywMutp1WMG1n+EJry9vFUEoWkfy+hSZV3
-         DP4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754899022; x=1755503822;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KjTF7RqO10ef3txtnjHxWOV2j8hirOXEUm2/myrJmDs=;
-        b=KEpUMKmvYoQ58hDF/tptkPArluyWtq840w7M4DAXh7wGMa6QhInW7zwH951HmAn9Ey
-         Bow//PxgJzHHadtSmUEVYBJyYhfRa7dWycNmxKCEAUyb8gRop3cdPJz+Af6YEDJU73Wy
-         uat55q/lilGCiZmeXOWLWfvIai4JVa2YdF/A8ZuR4TxcDTEoGlTB0Xoab0PKmWX7avLI
-         xtasRFktP12OD9P97qrzLRUuIJ6a3Bcoq5AzzELZEXnbNmiSLhk6e1VtzfvE5vFZQ1rI
-         oyRx4+OHqOg01cRpIUFFsuUI1NHh0UgufYBOLx4iRzx/bJcReYXLFeBlb5pYrioxAkU/
-         ZcgA==
-X-Forwarded-Encrypted: i=1; AJvYcCW9iRDVXbOzMMFpSbDPRR7JSdD9lZRa59JpDCSqgagBdW+552Aonwf0ohznpbmfKf6KqgqTVM4t0U37@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4JWnlmw8jWv49BCla4hPnbT1i2EXdqsj0RPCtsdS3iQMCROgI
-	pYADEgyuQcYOFrAkI4iD3dO9YunEvGJPXzENeSHGs8fmakSknWC2VUv2gs7SYUSvAV1Fo8559l6
-	DXA3fwcYpwHJkRLG9zQFSbNjm8W7Wk49blWCIxmL/AQ==
-X-Gm-Gg: ASbGnctHy0exVlfQwV5TQdKVGh6RAPQ6sry4cQR3ZQCgXiTTdp//bHL8K3ySQbi4TuL
-	CWEHGCTZSO6hc3YpOueI6AW1dQlP6oggnmgAhTs4n2VwJbFG1zKVzkgBrDxK7HIzi5Ge9dg3LkI
-	/vZ6w7gsLy664JqMJa3MlsPpWvMZZAI7MUF/4gGVGcI9KJL23ZAL6Eo+tl+n2h8xEShiKR4FD8l
-	U0BJnENDCxJWvOhpw==
-X-Google-Smtp-Source: AGHT+IGQH2i8Y/9oCUDP0jds1CiD8zyBoHENbFwp82iz6bSSxifol1LS2z2CYkeffycyRoSzVvzsx1jWGXTt8a00rMA=
-X-Received: by 2002:a05:6512:3b8b:b0:55a:4e55:cb94 with SMTP id
- 2adb3069b0e04-55cc008396fmr2749117e87.8.1754899022032; Mon, 11 Aug 2025
- 00:57:02 -0700 (PDT)
+	s=arc-20240116; t=1754901086; c=relaxed/simple;
+	bh=PB4zZJ/YnS3AMxJMXuTo7WLuLuImZf5hC8F6sXCA0Wg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T4Npb8AAY9X0yJx/2RpsKem5l3e2f0OMoWie6hREwSv6LPDAo7J4zNiZD4HhsUkMrhxEZKLAe10EBr6YkRPFe9cF04+uubJ3kXCjB+zO2iYxLgaCCFatbT8OAx0yygPrwAwg2H6BW3y9h+7+4kuSjN6q6rZqdxu38AMN7miuAhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LCC2Dtly; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B45CFC4CEED;
+	Mon, 11 Aug 2025 08:31:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1754901086;
+	bh=PB4zZJ/YnS3AMxJMXuTo7WLuLuImZf5hC8F6sXCA0Wg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LCC2DtlyqjoIiouffiphm51uPRqqI1+SFn0yh+l4B2+um3AIwBLl7MNyYwanpfNs5
+	 oTAXoIUsQS2rIVDAPbLvPEn7zKqAOnD0FUD6LFkSWT9im8jCCNU75g/dHNjtdlqeQ3
+	 UBbBy0GuKfGNVM8Eew6attsTzWa0uHM8tutAO7YQ=
+Date: Mon, 11 Aug 2025 10:31:22 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>,
+	Israel Cepeda <israel.a.cepeda.lopez@intel.com>,
+	Wolfram Sang <wsa@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
+	Richard Hughes <rhughes@redhat.com>, linux-i2c@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 1/3] usb: misc: Add Intel USBIO bridge driver
+Message-ID: <2025081128-ecard-ecosphere-8170@gregkh>
+References: <20250809102326.6032-1-hansg@kernel.org>
+ <20250809102326.6032-2-hansg@kernel.org>
+ <aJmS15MlcHz__S0p@kekkonen.localdomain>
+ <2025081106-could-hazily-3e58@gregkh>
+ <aJmb4ZoUrnNTpM2W@kekkonen.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250806091531.109861-1-stefano.manni@gmail.com>
-In-Reply-To: <20250806091531.109861-1-stefano.manni@gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 11 Aug 2025 09:56:51 +0200
-X-Gm-Features: Ac12FXz3kEkcMo77ykPrhjTh-nDYN-A0dNNICBO0nUM7JygFn2C7N1TD3Y2NU9k
-Message-ID: <CAMRc=MdfjuSSsD=LWDpUroyf+fxC7jQrJDtZJtmj_YiQYQjAuw@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: pisosr: read ngpios as U32
-To: Stefano Manni <stefano.manni@gmail.com>
-Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aJmb4ZoUrnNTpM2W@kekkonen.localdomain>
 
-On Wed, Aug 6, 2025 at 9:17=E2=80=AFAM Stefano Manni <stefano.manni@gmail.c=
-om> wrote:
->
-> If of_property_read_u16() is used instead the value read
-> is always zero.
->
+On Mon, Aug 11, 2025 at 07:29:37AM +0000, Sakari Ailus wrote:
+> Hi Greg,
+> 
+> On Mon, Aug 11, 2025 at 09:12:36AM +0200, Greg Kroah-Hartman wrote:
+> > On Mon, Aug 11, 2025 at 06:51:03AM +0000, Sakari Ailus wrote:
+> > > > +/**
+> > > > + * struct usbio_client - represents a usbio client
+> > > > + *
+> > > > + * @adev: auxiliary device object
+> > > > + * @bridge: usbio bridge who service the client
+> > > > + * @link: usbio bridge clients list member
+> > > > + */
+> > > > +struct usbio_client {
+> > > > +	struct auxiliary_device adev;
+> > > > +	struct usbio_device *bridge;
+> > > > +	struct list_head link;
+> > > > +};
+> > > > +
+> > > > +#define adev_to_client(adev) container_of(adev, struct usbio_client, adev)
+> > > 
+> > > Please use a different name than "adev" for the argument, which is also the
+> > > struct field of interest.
+> > 
+> > Why?  That's a very common way of doing this.  My only complaint is that
+> > it really should be "container_of_const()" instead of just
+> > "container_of()"
+> 
+> Because the struct field has the same name. The macro isn't intended for
+> obtaining the container struct based on any field in the struct, only the
+> field called "adev".
 
-Please state more clearly what the problem is. This sentence is quite garbl=
-ed,
+And that's fine, the macro works like this, so all should be ok.
 
-> Signed-off-by: Stefano Manni <stefano.manni@gmail.com>
-> ---
->  drivers/gpio/gpio-pisosr.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-pisosr.c b/drivers/gpio/gpio-pisosr.c
-> index a69b74866a13..2dc1b1e021d2 100644
-> --- a/drivers/gpio/gpio-pisosr.c
-> +++ b/drivers/gpio/gpio-pisosr.c
-> @@ -117,6 +117,7 @@ static int pisosr_gpio_probe(struct spi_device *spi)
->  {
->         struct device *dev =3D &spi->dev;
->         struct pisosr_gpio *gpio;
-> +       unsigned int ngpio;
->         int ret;
->
->         gpio =3D devm_kzalloc(dev, sizeof(*gpio), GFP_KERNEL);
-> @@ -125,8 +126,11 @@ static int pisosr_gpio_probe(struct spi_device *spi)
->
->         gpio->chip =3D template_chip;
->         gpio->chip.parent =3D dev;
-> -       of_property_read_u16(dev->of_node, "ngpios", &gpio->chip.ngpio);
->
-> +       if (of_property_read_u32(dev->of_node, "ngpios", &ngpio))
-> +               ngpio =3D DEFAULT_NGPIO;
-> +
+> I'll post a patch to add the container_of() check to checkpatch.pl.
 
-If you're touching this, can you switch to using generic device
-properties instead?
+Patch to add it to do what?
 
-Bart
+> > > > +static int usbio_ctrl_msg(struct usbio_device *usbio, u8 type, u8 cmd,
+> > > > +			  const void *obuf, u16 obuf_len, void *ibuf, u16 ibuf_len)
+> > > > +{
+> > > > +	u8 request = USB_TYPE_VENDOR | USB_RECIP_DEVICE;
+> > > > +	struct usbio_ctrl_packet *cpkt;
+> > > > +	unsigned int pipe;
+> > > > +	u16 cpkt_len;
+> > > > +	int ret;
+> > > > +
+> > > > +	lockdep_assert_held(&usbio->mutex);
+> > > > +
+> > > > +	if ((obuf_len > (usbio->ctrlbuf_len - sizeof(*cpkt))) ||
+> > > > +	    (ibuf_len > (usbio->ctrlbuf_len - sizeof(*cpkt))))
+> > > 
+> > > You can (and should) remove all parentheses except the outer ones here.
+> > 
+> > No, don't do that.  If you do that you will have to manually go and try
+> > to remember the order of operations every time you read this code.
+> 
+> I presume kernel developers in general do.
+> 
+> But if in doubt: <URL:https://users.ece.utexas.edu/~adnan/c-refcard.pdf>.
 
-> +       gpio->chip.ngpio =3D ngpio;
->         gpio->spi =3D spi;
->
->         gpio->buffer_size =3D DIV_ROUND_UP(gpio->chip.ngpio, 8);
-> --
-> 2.48.1
->
+Don't force me to look it up all the time, use () to make it obvious
+please.  That's the biggest thing I hate about that checkpatch "rule",
+please do not follow it for any code that I am a maintainer for.
+
+> > > > +static void usbio_disconnect(struct usb_interface *intf)
+> > > > +{
+> > > > +	struct usbio_device *usbio = usb_get_intfdata(intf);
+> > > > +	struct usbio_client *client, *prev;
+> > > > +
+> > > > +	list_for_each_entry_safe_reverse(client, prev, &usbio->cli_list, link) {
+> > > > +		auxiliary_device_delete(&client->adev);
+> > > > +		list_del_init(&client->link);
+> > > > +		auxiliary_device_uninit(&client->adev);
+> > > > +	}
+> > > > +
+> > > > +	usb_kill_urb(usbio->urb);
+> > > > +	usb_free_urb(usbio->urb);
+> > > 
+> > > What will happen on client drivers if they're working with the bridge while
+> > > disconnect happens?
+> > > 
+> > > One easy solution to this could be to use an rw_semaphore where client
+> > > acquire it for readingin conjunction (in a helper that also checks the
+> > > interface status) and disconnect callback for writing.
+> > 
+> > How is that going to change anything?  And how can a disconnect happen?
+> > Isn't this an onboard device?
+> 
+> It is, but the device firmware is known to crash occasionally.
+
+Then fix the firmware :)
+
+> The documantation says you can't access USB interfaces once disconnect has
+> returned. I'm not sure if there are checks to safeguard against ongoing or
+> additional accesses in the USB stack but on many other buses this may
+> simply lead to a system crash.
+
+How can you access the USB interface after disconnect has returned on
+these codepaths?  The child devices should all be cleaned up properly
+after disconnect happens so there should not be a pointer to even use
+anymore.
+
+thanks,
+
+greg k-h
 
