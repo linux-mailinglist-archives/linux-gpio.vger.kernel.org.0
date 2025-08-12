@@ -1,177 +1,195 @@
-Return-Path: <linux-gpio+bounces-24284-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24285-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD0DFB22663
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 14:11:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8CB90B2266D
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 14:13:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 76FD23A6A61
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 12:11:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE48C3AFD99
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 12:12:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D47BE2EF66D;
-	Tue, 12 Aug 2025 12:10:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D47F72EFDA5;
+	Tue, 12 Aug 2025 12:12:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="WtaxatBD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NxiTIAI1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED642EF66B
-	for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 12:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D83A2EFD9A;
+	Tue, 12 Aug 2025 12:12:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755000658; cv=none; b=OXDu9zdSklrHkY3J76P/TDsGSPSezpnht0keVwACrvathzU9mMDVN2dEGhMPThvwNLDlSixU/oq1kI4WbileoG5BxdKeDRCib5Ghe64drp85rQiFTMhtF64Zi/zYPYYv1Kt6Alj+BdOBca2JMfua9Kr72FFPfA5xuR9KSBB6QTo=
+	t=1755000734; cv=none; b=YLBdu+HTBuvgAmMZvam6oyDf/6Mf/oA6rrndLWEdX0Bz5iq765iRJxeP0ZjYSIfEI8szze2KL/0RjMrB6dkVxrcz4Q+bEoGcvTuAHuQbI5VoQEYsDLD6jfPVHbNt+ZyVtHR0FV82YEbz7Z2FCAvYoeOIS1tjoSkHIx/jBQjbLo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755000658; c=relaxed/simple;
-	bh=PJzAp/SRjqMQHwHI7LyUs9+Li4OCvHukoXtJUnM7BzQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=m1Yh7G0CTwPEk1nBzkQ8huSnDUQIBBK+sDFOq4xvziI72oHNoWk2HoXrGYBEQie1UAYx4mfOhuDa8Z1wKRIVSXjqg6VaelXPYXchXEXOY3ctQbUwP7kPtehtQGTMKEBNbO3NmvWVfmD3397h2cL+UKlL/Em/aOTdaDBP4UtQJ2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=WtaxatBD; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3b783ea502eso3688106f8f.1
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 05:10:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1755000655; x=1755605455; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SYqkcL2uTC/8AAmP4JDFhCAoGg3Y+LgNen1LWu4einw=;
-        b=WtaxatBD94hcMdYCEgJzxZm0lH85ORNg/UVylWR6X2oKA1/RT0mBe1eP4x4B1VnU3y
-         qu4DWAqiDVeDolZOqGPkOq2rEYWr0YyhT7ZYrwL2y0nl0kmKnow7hEPst0z2lHv9aGkM
-         16iCHWr81RsjP7xN2jctJilsF0r7kBsYO3csOohA5AojAj6vhKlGS+CMM7bhSekjvJZe
-         FDFZQu4gDizZ76h/O6KHXDRNPGkhhj8ljkzwHEGCHvwiXqou3vS9LTsCyuSDjNfI9VWu
-         iaeY4gkxfJlrFAfL38jErp+jYwWRc2oieoyqDPlt4D1M/OuRWIsI6qwocNV5InnJBcOV
-         46Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755000655; x=1755605455;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SYqkcL2uTC/8AAmP4JDFhCAoGg3Y+LgNen1LWu4einw=;
-        b=C27NNXsVZGpy+sonoH8PM4YfokPoH4PXOJ6xoOf5mg53HxEV7JEaIFnfOZcv6f2pxl
-         ELWMVlGIXrme3H4HIagxzR/YEbAhk+7N4HdxMyDdUuI5/+z/ped60mWpLe3k1wlCfMEK
-         e3L+DW7/kn07i9LyunSz2vCtps8Vej2SFSaDpJEi9PO2EoBxM3mM3IE3OQirXrzjf8nl
-         v5l0TR0JdFckZeWRB9iRYY6NCIYlc7Iype9pIR6PROZAOUf4qsYYTFhFQhQpZPDpuAUH
-         jO23mGsF9VK6A6HjIKhaNm1YRvc4IuVbZQr7G6e4hWIWw/NT6z31i2iMEYNVcPeEAtee
-         R3XQ==
-X-Gm-Message-State: AOJu0YzNu/zJMsp5Pmkafl0Uy6cbD7HaFjjF7Q0rrGckQCCwi1vB1lX8
-	eBXLY+5OTYeJaUiooE2z0z5sucVN1XoMUYoYQTdy+CVUO1Disx59NYFq/O9tDT2WJ3c=
-X-Gm-Gg: ASbGncuVWF09pWj5rq3Z2wEdmJRCChEBHINqeGwPz2fvT4ger8uQXNpf7rn/GF7hrtX
-	lBsb/0r/U/jARF+I5+ObJ04+O78rmZ/57Rvc6u1ocxNBauOmmeBAGDSPeVIj1vIgCB6lXqM8IMn
-	x9zhid4tzcu8h1V383qSPDafcqwtDjyZAfhPiEcWlNvrSMDgDX1qDU1YdcCs+wnMMTnH4BS69My
-	ClND5A6DUB+lT3sT8v3grJf2q3Si02V+a9KaDptNOc6E6MPeZyQ16W4KIwRETjsZLuGI5Jnwy3B
-	eoa7DfbeQAY72K6EWqZvnFCGpRtQN5O/dWRlO2fIWfEy2fx2JqRekuwY/df158IZc3nr76eb7RQ
-	KyLeDWUk9MHhnF6U=
-X-Google-Smtp-Source: AGHT+IFa17g8YZ7A3J78JUuXbNM+56Knja680Rzy/X6UIUX9PRfZjnXXBtmPCYFw4V636m0Rumg26g==
-X-Received: by 2002:a05:6000:26c8:b0:3b7:9d87:9808 with SMTP id ffacd0b85a97d-3b9111c5d5cmr2634289f8f.15.1755000655510;
-        Tue, 12 Aug 2025 05:10:55 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:16c8:50:27fe:4d94])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b8e1cb7deesm34268788f8f.2.2025.08.12.05.10.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Aug 2025 05:10:55 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 12 Aug 2025 14:10:40 +0200
-Subject: [PATCH libgpiod 10/10] bindings: rust: update crate versions to
- v1.0.0
+	s=arc-20240116; t=1755000734; c=relaxed/simple;
+	bh=F0jl31lJlrxf9bEufJTtyVHDr4swwK0MIuhlvBZ02rI=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=on3Zj3vYFOjaoZYtYR7TXPeH1zbL20ORWkSsEbkGRl5J1juAgW1FK9NJ6Jy3ijbTBafcJhIzjXLdYdm+6Gus4WuyKDt7r+cU664eeGS97LwApsT8d4srP0U9ueuvYIwnjAjUVyuzuqSFESydrbzwIHT/sejayfcwzQ2i/5Tq7ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NxiTIAI1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7E86C4CEF0;
+	Tue, 12 Aug 2025 12:12:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755000734;
+	bh=F0jl31lJlrxf9bEufJTtyVHDr4swwK0MIuhlvBZ02rI=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=NxiTIAI1ZsZXXFMENyUYwQ71XKs/s3vuE6fp+I1hYPgB6PXVv15ewjRQUqM4Umlx+
+	 0jQWgC15JhMbNemnEMb0QmnEDXlqCRm1uzFY6hV+WXAqAlcm/SPhnj9UiDqLv3cxQ8
+	 GmxH1xpVpqnr5oD83WeZPoPnJCpK1v4IQUZCc3lvwQkNxDz16Ozeis9EcG5/6YrBZH
+	 mPUtqQMPvVubq6awHo4z7K4fzHL6D3G9LRrwowAnxf/hiM/eNl3zbRFjb7lHLElLae
+	 EJfHX08hmRv7ohiz7GPtf/CQF4ctBHvjt57rDpFYdU96BVJBArwwAch0XQgHviEjq6
+	 idPVAE4mb51yg==
+Date: Tue, 12 Aug 2025 07:12:11 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250812-rust-1-0-0-release-v1-10-372d698f23e8@linaro.org>
-References: <20250812-rust-1-0-0-release-v1-0-372d698f23e8@linaro.org>
-In-Reply-To: <20250812-rust-1-0-0-release-v1-0-372d698f23e8@linaro.org>
-To: Viresh Kumar <viresh.kumar@linaro.org>, 
- Linus Walleij <linus.walleij@linaro.org>, Erik Wierich <erik@riscstar.com>
-Cc: linux-gpio@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2255;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=1k86NhuYcIcyhR+ZYNl2L3gcs4zC5Zpna0vWK4Bhh6M=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBomy9DVv0o7CSmCP2qrastwhD20iQB18utEVzA0
- c8nBpgHv4GJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaJsvQwAKCRARpy6gFHHX
- ciYlD/4zVTvZK3Sv6EliJe4ffNXsQzubrAdtGr/zBxh6YOxlG8qQ3NGuA7+taUJbb5c0C6mdCYz
- ao2nqYMYwak3ZYce7s/KNmscwVGASJh4hj2vzELSr453htsLBwB22jA3EYHffb1ntVuv5bjKsN8
- Xjy/JbdwvOBj7blvNo8ZF534UT8OLdfoeL/gKxQyHiM7vvnlu5kqJkWbO1+BkRRHR5P+QIpVpQK
- a9f7Fz7fpKnE2hZKtBTbQe1gWX+XrG27in1XUzSoyOG5YscwcwNRtq3kBGXMWqEw7hgz57aGVdL
- 923uHkYjlt4smOXiQFX2MfUpBc7EH1nM7+PHk1ch7+MiSB5mnpldjwcgvbQ2qicYcEE1HsQbxDZ
- Ib4GXbXeVqtyQnJK02Pz4nAvXCfF3/vFzWydoRM+AWIb+yjCJTcpEMFfGAevrUPU8ZxdKQ+CM7i
- 6fl2ws66iYl4BxP/hUf1/KyftlWa5exQxY/FmndBEvtUo0nje68eGLEIeHERhUs9xk+fn8+CF1k
- reR1uIQHhpUVT9CAt5lYZ78qlFtlNl2ic+0cuiZGnxFoc6iaEEeWf5ZSZwUcOu+AMUU35Yk3dPh
- LU3SkPxBZDzsSDoHeps9CCiPy/wVGZrnbH86uqlMqUHOvpkvkRRIUfaWmNsHf1hLhbQGyEkS4Hn
- PNzW7OzB1tK07Uw==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: iivanov@suse.de, florian.fainelli@broadcom.com, 
+ Catalin Marinas <catalin.marinas@arm.com>, linux-mmc@vger.kernel.org, 
+ Ulf Hansson <ulf.hansson@linaro.org>, linus.walleij@linaro.org, 
+ Jonathan Bell <jonathan@raspberrypi.com>, linux-serial@vger.kernel.org, 
+ conor+dt@kernel.org, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ devicetree@vger.kernel.org, krzk+dt@kernel.org, 
+ linux-arm-kernel@lists.infradead.org, svarbanov@suse.de, 
+ Phil Elwell <phil@raspberrypi.com>, Jiri Slaby <jirislaby@kernel.org>, 
+ Will Deacon <will@kernel.org>, linux-gpio@vger.kernel.org, 
+ mbrugger@suse.com, wahrenst@gmx.net, Al Cooper <alcooperx@gmail.com>
+To: Andrea della Porta <andrea.porta@suse.com>
+In-Reply-To: <cover.1754924348.git.andrea.porta@suse.com>
+References: <cover.1754924348.git.andrea.porta@suse.com>
+Message-Id: <175500063439.2957253.9707220864929081392.robh@kernel.org>
+Subject: Re: [PATCH 0/6] Add peripheral nodes to RaspberryPi 5 DT
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Ahead of the first stable release, update versions for all libgpiod
-crates to v1.0.0.
+On Mon, 11 Aug 2025 17:19:44 +0200, Andrea della Porta wrote:
+> Hi,
+> 
+> The following patches add a few peripheral DT nodes and related pin/gpio
+> nodes for Raspberry Pi 5.
+> 
+> This brand new patchset (hence it's a V1) is the second part of the split-up
+> of the patchset [1]. It tooks patches 3 to 6 from there and adds a couple
+> of new patches that amend the DT bindings.
+> As a result, patchset [2] is a prerequisite for this patchset.
+> 
+> - Patch 1 and 2: Amend the bindings to avoid DT compiler warnings.
+> 
+> - Patch 3: Adds core pinctrl nodes and defines SD pins as a first appliance
+>   for the pinctrl.
+> 
+> - Patch 4: Wires the gpio-key for power button and related gpio controller.
+> 
+> - Patch 5: Adds DT node for WiFi.
+> 
+> - Patch 6: Adds Bluetooth DT node.
+> 
+> All comments and suggestions are welcome!
+> 
+> Happy hacking!
+> Ivan and Andrea
+> 
+> Links:
+> [1] - https://lore.kernel.org/all/cover.1752584387.git.andrea.porta@suse.com/
+> [2] - https://lore.kernel.org/all/cover.1754922935.git.andrea.porta@suse.com/
+> 
+> 
+> CHANGES since [1]:
+> 
+> --- PATCHES ---
+> 
+> - Add two new patches (1 and 2) that amend the DT bindings.
+> 
+> 
+> --- DTS ---
+> 
+> - bcm2712.dtsi: Added 'interrupt-names' and dropped 'reg-shift' and
+>   'reg-io-width' properties in uarta DT node. The latter two are
+>   just overridden by driver code so setting them in DT is useless.
+> 
+> - bcm2712-rpi-5-b-ovl-rp1.dts: dropped 'auto-flow-control' property
+>   since it's not parsed in driver code.
+> 
+> 
+> --- DT BINDINGS ---
+> 
+> - brcm,sdhci-brcmstb.yaml: added SDHCI capabilities by including
+>   sdhci-common.yaml.
+> 
+> - serial/brcm,bcm7271-uart.yaml: let clock-frequency be an alternative way
+>   to specify the clock speed instead of clocks/clock-names.
+> 
+> 
+> Andrea della Porta (2):
+>   dt-bindings: mmc: Add support for capabilities to Broadcom SDHCI
+>     controller
+>   dt-bindings: serial: Add clock-frequency property as an alternative to
+>     clocks
+> 
+> Ivan T. Ivanov (4):
+>   arm64: dts: broadcom: bcm2712: Add pin controller nodes
+>   arm64: dts: broadcom: bcm2712: Add one more GPIO node
+>   arm64: dts: broadcom: bcm2712: Add second SDHCI controller node
+>   arm64: dts: broadcom: bcm2712: Add UARTA controller node
+> 
+>  .../bindings/mmc/brcm,sdhci-brcmstb.yaml      |   2 +-
+>  .../bindings/serial/brcm,bcm7271-uart.yaml    |  19 ++-
+>  .../dts/broadcom/bcm2712-rpi-5-b-ovl-rp1.dts  | 133 ++++++++++++++++++
+>  arch/arm64/boot/dts/broadcom/bcm2712.dtsi     |  47 +++++++
+>  4 files changed, 198 insertions(+), 3 deletions(-)
+> 
+> --
+> 2.35.3
+> 
+> 
+> 
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- bindings/rust/gpiosim-sys/Cargo.toml  | 2 +-
- bindings/rust/libgpiod-sys/Cargo.toml | 2 +-
- bindings/rust/libgpiod/Cargo.toml     | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/bindings/rust/gpiosim-sys/Cargo.toml b/bindings/rust/gpiosim-sys/Cargo.toml
-index 7c092db1a4ff30f28a55bd35573cb9cc11393661..1e642f3d4be21f648317ea2d36dfacd191dfe32c 100644
---- a/bindings/rust/gpiosim-sys/Cargo.toml
-+++ b/bindings/rust/gpiosim-sys/Cargo.toml
-@@ -4,7 +4,7 @@
- 
- [package]
- name = "gpiosim-sys"
--version = "0.1.0"
-+version = "1.0.0"
- authors = ["Viresh Kumar <viresh.kumar@linaro.org>"]
- description = "gpiosim header bindings"
- repository = "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git"
-diff --git a/bindings/rust/libgpiod-sys/Cargo.toml b/bindings/rust/libgpiod-sys/Cargo.toml
-index ab86ff8ecf871bfc3f931f8ea08490c4eb40eee6..dea834a13ad619abb507e073c3e15ff3f668f909 100644
---- a/bindings/rust/libgpiod-sys/Cargo.toml
-+++ b/bindings/rust/libgpiod-sys/Cargo.toml
-@@ -4,7 +4,7 @@
- 
- [package]
- name = "libgpiod-sys"
--version = "0.1.1"
-+version = "1.0.0"
- authors = ["Viresh Kumar <viresh.kumar@linaro.org>"]
- description = "libgpiod public header bindings"
- repository = "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git"
-diff --git a/bindings/rust/libgpiod/Cargo.toml b/bindings/rust/libgpiod/Cargo.toml
-index c81680de1bdea76986c4a2fbb421bc452f92ff3c..bbe974f5d8652ca6e1db4b6285d4b651a1bf6799 100644
---- a/bindings/rust/libgpiod/Cargo.toml
-+++ b/bindings/rust/libgpiod/Cargo.toml
-@@ -4,7 +4,7 @@
- 
- [package]
- name = "libgpiod"
--version = "0.2.2"
-+version = "1.0.0"
- authors = ["Viresh Kumar <viresh.kumar@linaro.org>"]
- description = "libgpiod wrappers"
- repository = "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git"
-@@ -26,7 +26,7 @@ vnext = ["v2_1"]
- errno = "0.3.13"
- intmap = "3.1.2"
- libc = "0.2.39"
--libgpiod-sys = { version = "0.1", path = "../libgpiod-sys" }
-+libgpiod-sys = { version = "1.0", path = "../libgpiod-sys" }
- thiserror = "2.0"
- 
- [dev-dependencies]
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
--- 
-2.48.1
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+This patch series was applied (using b4) to base:
+ Base: attempting to guess base-commit...
+ Base: tags/next-20250808 (exact match)
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/broadcom/' for cover.1754924348.git.andrea.porta@suse.com:
+
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-ovl-rp1.dtb: /soc@107c000000/pinctrl@7d504100: failed to match any schema with compatible: ['brcm,bcm2712c0-pinctrl']
+arch/arm64/boot/dts/broadcom/bcm2712-d-rpi-5-b.dtb: /soc@107c000000/pinctrl@7d504100: failed to match any schema with compatible: ['brcm,bcm2712c0-pinctrl']
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: /soc@107c000000/pinctrl@7d504100: failed to match any schema with compatible: ['brcm,bcm2712c0-pinctrl']
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-ovl-rp1.dtb: /soc@107c000000/pinctrl@7d510700: failed to match any schema with compatible: ['brcm,bcm2712c0-aon-pinctrl']
+arch/arm64/boot/dts/broadcom/bcm2712-d-rpi-5-b.dtb: /soc@107c000000/pinctrl@7d510700: failed to match any schema with compatible: ['brcm,bcm2712c0-aon-pinctrl']
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: /soc@107c000000/pinctrl@7d510700: failed to match any schema with compatible: ['brcm,bcm2712c0-aon-pinctrl']
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-ovl-rp1.dtb: hvs@107c580000 (brcm,bcm2712-hvs): clocks: [[27, 4], [27, 16]] is too long
+	from schema $id: http://devicetree.org/schemas/display/brcm,bcm2835-hvs.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-d-rpi-5-b.dtb: hvs@107c580000 (brcm,bcm2712-hvs): clocks: [[27, 4], [27, 16]] is too long
+	from schema $id: http://devicetree.org/schemas/display/brcm,bcm2835-hvs.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: hvs@107c580000 (brcm,bcm2712-hvs): clocks: [[27, 4], [27, 16]] is too long
+	from schema $id: http://devicetree.org/schemas/display/brcm,bcm2835-hvs.yaml#
+
+
+
+
 
 
