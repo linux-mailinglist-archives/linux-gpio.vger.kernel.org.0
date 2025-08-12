@@ -1,80 +1,81 @@
-Return-Path: <linux-gpio+bounces-24234-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24235-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98411B220EA
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 10:30:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D815B220EB
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 10:30:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 342612A0DA0
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 08:27:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F2E6E2A54EC
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 08:27:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F208F2E2640;
-	Tue, 12 Aug 2025 08:27:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 721822E36E9;
+	Tue, 12 Aug 2025 08:27:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="QgPZfl2s"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xsK5dXwp"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8C02E2651
-	for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 08:27:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921272E283B
+	for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 08:27:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754987234; cv=none; b=h0c17mHe3ixufbJ9pzy+ynpaIAqJrlr2ue2gKIi0iVXj6O5WO6GloM6zvIgznCz0I6Bdd/MNrMcpssWZxr2z3+PrQ6ngjp2p2PoQQaKqj6Jrq3sAnO/Fr6St95rnWMLVzV8IHisWaPLKdvuq24uCfwYtzNCLTanQ7delq4R7hZo=
+	t=1754987236; cv=none; b=KV7ZhtCUupZz5PFmG4k1xCz26tnjVgRDJsrSfV2AtTO1PehF1o1zDxjzxFOJdwOws6O64rXNBImTLAtwjfCMFPRsLfQTbLxRzJWWlG98ZzipThis45ctiaN2Y0uzmeEj40iY1SK3q40QeGgss94h5gqyAK/zg9IN5kNpNfCNEK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754987234; c=relaxed/simple;
-	bh=bNsQPb9AwqRnxouMDlFzcHJphF1Do/Kcrq8+ZqSjYVs=;
+	s=arc-20240116; t=1754987236; c=relaxed/simple;
+	bh=WIEQvxtdRthB6856r4HUV03c0VDMli/mjsj8od8S8wU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XQkqEExfRv+hWqpVnliEtf9y/55AuWIM54oZUK6EAvSVaKwsrvsocGjAp1ln+Gnw3C8+p9md4IkFxSTLZ08+aulkBEmruM/bd3eZYdlMQXRRRG5IuPhuQYjtRBioKbwDHNdhnRDtNlEMNzAId58q8pPsIDo1psVlUgmtZBfJfnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=QgPZfl2s; arc=none smtp.client-ip=209.85.128.52
+	 In-Reply-To:To:Cc; b=qlmxixrnmQAH2j/Oyeum2m+yc0mb2auby7TWp1Zwz4LcCHCDSoLRPpzy/R7AoWWT2H/HU8wGulIQfv9Ru7ld3iwm5ikm0KCv/i/z8cqem4e2ShxS9i4ydyN5IKWxHrB/F2WHKq85Q+mpI/WyXwMnU3paEyOeZsyUfDWF9W/1NSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xsK5dXwp; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-459d7726ee6so26487375e9.2
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 01:27:11 -0700 (PDT)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-458bece40fcso26490465e9.3
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 01:27:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1754987230; x=1755592030; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1754987232; x=1755592032; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HTgIYPzRiaE3tZSZCUJbaKi97GRLZz5syZCli9/nEr0=;
-        b=QgPZfl2sW4dc5ZBASFbhZ6LnAguM1EhnVEsiEpBlgk2e53Ql3v0+xUdhMCxvCvsL/w
-         4ckDfrU4Z1I32aiQQL7T9Eu7AHSovvqEjhr1scutbyj9zhy0uikLnnRprs+ddWBOCDCy
-         d6vDPwoFM4srssi/ZZjgTbhbC7pG4gtdvqGF/Ltzl1lz/+E1yA4nCHnTNil+oBPWbOlv
-         LKEtc/cpUeea5HzHG2dOOXAM3xbjA3V/LA2nJAm0Q+dz6FVJ+EZWJFWiVbLLju/3VpIO
-         gXeoSF0GGODKC/KFVY3ByxZ9noEKBHT+THdCT9zld/Nyh8wZCqeI6xoy+o9mW80Zkke0
-         rg3Q==
+        bh=PTEYsyiptWWjSso4TZTiEeMehJGAEz0s92KPugL0Mwk=;
+        b=xsK5dXwpGdKE5x1tNpA2IyddGcJKqR6rOdnzloAkGUOCIK9PsR5G/YvThglpOkpEBz
+         PIVaCivYtH9MlT6y95cIFI4KmNBZvPdkJ11uHyFKZBVyadk+QYYhgVRSIMcBFBcJukdw
+         twxaOIMj1WsjRvog1AatfmLaLIhPqyXwEJkdtGfUIvl5sLKukiHGxFPcgy+kkUeb4t2I
+         fCbrVLwpG2mGgPdkaIm/ezQAXGTH/BoLQJZK1q9amtsbZyOv21O1sj5In4eLaVkkMX2b
+         +UhHDnxsrxAiaukq9XkrLBRwGPSKkRyiWN/0cOI4udxQ0znZjo0ec3rmj5E7i2EFQngS
+         nPPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754987230; x=1755592030;
+        d=1e100.net; s=20230601; t=1754987232; x=1755592032;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HTgIYPzRiaE3tZSZCUJbaKi97GRLZz5syZCli9/nEr0=;
-        b=Gv5ZisMDV9jTEfR8t4naz899mSRbVVRLnNgTEIeUJrPcnhxVeNfxdgh3loAQvPJ4K9
-         0nGxpzf0vQTGPeEoXhWs7O0qZ2a8nTyjtkNdEkmk33hcYFR338tJvLxEY1NQtbvEwqaL
-         K4ZE4oKl4gVbVsUt8ajkiKwj+sMY4lhCvMCc+hc5WYpTsUucZAj4rQ6wwfqrVRNUI/w7
-         17iKxze+G5zB7vsIL5gS6FNf4tfZ/Mow0ldcDfSdEZKcRn4azLcAVoIjhgOWIj2uzLny
-         BMgYZ4gwlIAazVUWfiWRgSYbNwzGRNDvwB5pid8V25mK20HHK7tG8yECpQTt/Co0wnue
-         GmVw==
-X-Gm-Message-State: AOJu0Yw41SypW1bLmCsFoGCcU8ewvCkAkHsE9htX1nZ8jwRqg8NtlF1G
-	0uC8u4cOU3i0rE+WQFjyjsIzIOvO2OttMBAGHG/tGJ7BWAe/4rOTDdT0a+vxE0uvw0E=
-X-Gm-Gg: ASbGncvuBzsTtZxD9Ep4nmvA1bju6SIVOspFZ/E3Tyly0hIbJS5j4OM9VB3oPUFO8FM
-	YhACCglZ39H21/W/WzZXkhwhzMlge2YhzCZAQLq++Mx6h5Tqnbq8M7LevZODT9NmvUTilgwZrKm
-	0+wQ7XEKZTZeYOH9L38deM9bztCCuEqxKzEijxTwQoGyJK5nihn3dTH5GNZ4vPuDn4ROWNOfcJ8
-	VeeukpGCfXC9XDB9KbWkmW2ZO/M+5cLXVdTWrZpEb77Skvb9McwgnROL8F0AajthayPwAJgKq1K
-	XW/iKmSE4Tb+MZaEGz4jsG72d8IBlABrj153oWAH3Npaol+Tt7X8eHZw+GbCc3UutRcHzgJquHA
-	gPEuxk6jLUov1mRk=
-X-Google-Smtp-Source: AGHT+IH2gcGBdQpuT3RXzrIq10+dePuK4J44tZFpcWvxuc+mjI/75XhCe1aSLOq9Ow+V0+SkeWNRig==
-X-Received: by 2002:a05:600c:1f0d:b0:459:df07:6da4 with SMTP id 5b1f17b1804b1-45a10b9b16cmr23623335e9.5.1754987229745;
-        Tue, 12 Aug 2025 01:27:09 -0700 (PDT)
+        bh=PTEYsyiptWWjSso4TZTiEeMehJGAEz0s92KPugL0Mwk=;
+        b=QaJhS8ZjUF+ekiWCI1Gn9sh9oCXRCaesYrBpJUHGMX7mSXBTYvYhBDlXiipVRgSud2
+         5lKy825XOzzKnGlY3V9YA+V1BKeQo+UG/uf4NMbg+GjWUnG3I8PC5dOFvRh7pJr1V319
+         ff9kUg/yNJeZ8SvK8sSLfFZeDt+7qAhwLL7ACBHKqNqHsNq5BzCPX3wyFo2iQ2jgFLOa
+         94/dIU2tJem0CvxTnEjzgWrSfM9hWZeyMiOUqiqzTYKFlt9p1gOYCTWIkQcaiXRk8KD6
+         LxA4biPG/5wOcOh7LMYT65J9C+RRjQSXvYpzd6hQwvobaIhaMMDsZN/Ai/64hDEFEoOc
+         La2A==
+X-Gm-Message-State: AOJu0YzcjZgr2RMFQoNIlmzs7D/GbNQnfIDCpjeykAai4sOQp1eRh29s
+	AciDUOlU6tHtvZMZ8NcwYo+g6GyiLdl3qdAt6F4qfMSqcQ5GHMSognA7+dzhmdRDJRI=
+X-Gm-Gg: ASbGnctx9lv0rqPV/ShQrg/oRUo1vzmbAM3+vPEtEel+vQ1ngLsUrnsAOidagb/Zd95
+	DsbsJJKthW1j4y7enfOQyVAaE5wshMF0iwqdiyZYEhkf+zoQWeHDyTwG+XepHRYauAvcCTnzTm7
+	TqHigYgdOoK/JQXV+ILAr6e72QcnwdfHFs2P54C7G+RMRUHV5nb+AnZKF3Nrp9KV6XVSLm6XOsy
+	Dym4b+uxNG2oviHP6TDy/OiCVoV0XxnEjAWOGzfVk4NylDwmXWPzyxGDAAeTUXMBBlkK4D5+SPJ
+	8ACcdLCEbEQLmJnZ3Dqm0Kn5yIvtmhOeexpKIaU28JGN9RLpt8bh1COP8g0eEaa7NbissY92yT4
+	CgWTIZQCJQfa6Jww=
+X-Google-Smtp-Source: AGHT+IG9LeN0OGOpXGyWbmm1lDOX65hlsrf90WSgSnAgOs0kyHwhrmmIpnE1O9UZJd/SZOy1ZHJldQ==
+X-Received: by 2002:a05:600c:3547:b0:453:78f:fa9f with SMTP id 5b1f17b1804b1-45a10ba7e5cmr21860695e9.11.1754987231433;
+        Tue, 12 Aug 2025 01:27:11 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:16c8:50:27fe:4d94])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c3b9386sm43549423f8f.18.2025.08.12.01.27.08
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c3b9386sm43549423f8f.18.2025.08.12.01.27.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Aug 2025 01:27:09 -0700 (PDT)
+        Tue, 12 Aug 2025 01:27:11 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 12 Aug 2025 10:27:00 +0200
-Subject: [PATCH v4 01/15] devres: provide devm_kmemdup_const()
+Date: Tue, 12 Aug 2025 10:27:01 +0200
+Subject: [PATCH v4 02/15] pinctrl: ingenic: use struct pinfunction instead
+ of struct function_desc
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,7 +84,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250812-pinctrl-gpio-pinfuncs-v4-1-bb3906c55e64@linaro.org>
+Message-Id: <20250812-pinctrl-gpio-pinfuncs-v4-2-bb3906c55e64@linaro.org>
 References: <20250812-pinctrl-gpio-pinfuncs-v4-0-bb3906c55e64@linaro.org>
 In-Reply-To: <20250812-pinctrl-gpio-pinfuncs-v4-0-bb3906c55e64@linaro.org>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -117,80 +118,216 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2063;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8989;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=Igk+yDN8BP1JkTjLlRhKQ7SRJ5My7JH94ZAwq+/yocg=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBomvrWHo270jKNT7TR30vMTLvJtquAQ8DkFhjQc
- ewt3zLD8DaJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaJr61gAKCRARpy6gFHHX
- cjXuEADPonktCGWYlKywp9d3HO63lp5DL98Fa5df96en6tECd7hEXtS99i9LAByEf9gB+XIzpYT
- bn7HKsMznjan6cqY/js2/PmDrnfrTaS8GMTWnnVOxndSGotuSFmQ3zk2ssQIvblDxvtxEK/VfWs
- Xorx6opZLXirGk7awxEDwydn2R24ZBfAv4HNzCaPxdZDR5jPuBK3Y2Sz9Z7zxOLkgCA/dFSI/VC
- EiaB0QwENlBXLbDTWm+FBJKFkgyLBaaelM7rRmgWagtEkB6QDH4aDB2BeQn46Fwrx5thDVEjHzS
- fyE7pWZD/eVoSgnClKMYjtwFSECf860vmV3a0SYw2OQWjdtR6GDu3H9s05ASNdUyHuSY4YiLG9n
- JVpnETaTHpb9lSDi3vb0asDKaLIcBMaBkG4dWOWsNqs5Z91/qSP1KRMVbnpNI91WMeQ2as7u3Cd
- m8zJYNga6cC9JfwhC+54Q4ijTmVTGa6tqyxkNqWlsEm7M5jjCpIRR07fAODaqKv3MIgXA//89QS
- iCwpz0h208VuntqHpkRusRFTEDihMX9aqBRpvGkYLphyCcDXTK5bT1bOhByWDi4UnlmkZGRK8C5
- Ciga46g5hgKGVQM1Nkkit1mjBI1xoc0CaHoC4+KXTbzTIormwWsZBSPMKWcYUwOzlpENKo0Z34/
- nBWlmLjGY27IFaA==
+ bh=ngwvMKiL7WjeArNFSdBs/AB2ylnC/fm8iV0Ni8uhrlY=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBomvrXKwBoZmvE6IqRK/h3ZfdqdJFQZiTnlv70d
+ 0TzN5CgzNGJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaJr61wAKCRARpy6gFHHX
+ coBFD/4wcnUgTwHXpY/uuZYNyiUo9QpRYkwTT4+3smLqrIAfe1q/XXvhhAoQ+/aQw+BwPHC1Pqe
+ URolaN2+0ZqnzObnyMNpniI2IC7VUPkk5J11eX3f/S6mok7czKVmR/i1jreEGRdVkM1yUf/yDt/
+ I6Z7CQQa6xH+FdNkk64zWxkgSoAnEYO19mpzTsgmUHqLdEG0ut8b6vBARWjxewlFBF4GnnRx4RY
+ mhR0eA8lvQwMEuBZqJDoKgZzAStqpzxWMGfn0e05earrNGZfsqHNhH60bvz+F8vaic4acPFlecE
+ 4228aQB6xOgjKHtnVdTlKwPqLHFT3+cfo3+TDOCcuyEGcxyAn8z70GU45gECugeUHjgrHp/O+8H
+ p9EWkHp3hAuVIrF1hVIgr0QErgg95xVrK1q4GUTSYVfKYXlfsTHd8S02gKZukIoQpExm3vIeQ50
+ Al04mUPYQXZBQYHJBkblS18qmlIYbPq6/jrN7A5v1Ggs68G5Qi0oN5oRUf6uQJ0x1z//D2mqpGc
+ WYFyPYKktKiMPzV+5AXpocoXbab16ifpTUFPIHL4xf0b8ALn/+2C0lSO529yQXpQvEuRwUH85i1
+ y45Arf0XetU0vF5mGd2ZIK0Gvqy94EI2JkmCXh0hBxf7NQSuohuFh8zkJpLykAW66Xt9MNem4kn
+ 6qeKfVolA8iijvw==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Provide a function similar to devm_strdup_const() but for copying blocks
-of memory that are likely to be placed in .rodata.
+struct function_desc is a wrapper around struct pinfunction with an
+additional void *data pointer. This driver doesn't use the data pointer.
+We're also working towards reducing the usage of struct function_desc in
+pinctrl drivers - they should only be created by pinmux core and
+accessed by drivers using pinmux_generic_get_function(). Replace the
+struct function_desc objects in this driver with smaller struct
+pinfunction instances.
 
+Acked-by: Paul Cercueil <paul@crapouillou.net>
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/base/devres.c         | 21 +++++++++++++++++++++
- include/linux/device/devres.h |  2 ++
- 2 files changed, 23 insertions(+)
+ drivers/pinctrl/pinctrl-ingenic.c | 45 +++++++++++++++++----------------------
+ 1 file changed, 20 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/base/devres.c b/drivers/base/devres.c
-index ff55e1bcfa30057849a352c577bd32f1aa196532..c948c88d395607ff511ffa6eb0a75b7847ab9239 100644
---- a/drivers/base/devres.c
-+++ b/drivers/base/devres.c
-@@ -1117,6 +1117,27 @@ void *devm_kmemdup(struct device *dev, const void *src, size_t len, gfp_t gfp)
- }
- EXPORT_SYMBOL_GPL(devm_kmemdup);
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index 2900513467fa4e2e9374946fc9c7a30d48aef9eb..af9d2f3081859bc4b22f6820f3b3753eba36f959 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -96,11 +96,8 @@
+ 		.data = (void *)func,							\
+ 	}
  
-+/**
-+ * devm_kmemdup_const - conditionally duplicate and manage a region of memory
-+ *
-+ * @dev: Device this memory belongs to
-+ * @src: memory region to duplicate
-+ * @len: memory region length,
-+ * @gfp: GFP mask to use
-+ *
-+ * Return: source address if it is in .rodata or the return value of kmemdup()
-+ * to which the function falls back otherwise.
-+ */
-+const void *
-+devm_kmemdup_const(struct device *dev, const void *src, size_t len, gfp_t gfp)
-+{
-+	if (is_kernel_rodata((unsigned long)src))
-+		return src;
-+
-+	return devm_kmemdup(dev, src, len, gfp);
-+}
-+EXPORT_SYMBOL_GPL(devm_kmemdup_const);
-+
- struct pages_devres {
- 	unsigned long addr;
- 	unsigned int order;
-diff --git a/include/linux/device/devres.h b/include/linux/device/devres.h
-index ae696d10faff4468a41f37b5d5fd679d4ff11997..8c5f57e0d613492fd0b2ec97dd384181608192fc 100644
---- a/include/linux/device/devres.h
-+++ b/include/linux/device/devres.h
-@@ -80,6 +80,8 @@ void devm_kfree(struct device *dev, const void *p);
+-#define INGENIC_PIN_FUNCTION(_name_, id)							\
+-	{											\
+-		.func = PINCTRL_PINFUNCTION(_name_, id##_groups, ARRAY_SIZE(id##_groups)),	\
+-		.data = NULL,									\
+-	}
++#define INGENIC_PIN_FUNCTION(_name_, id)						\
++	PINCTRL_PINFUNCTION(_name_, id##_groups, ARRAY_SIZE(id##_groups))
  
- void * __realloc_size(3)
- devm_kmemdup(struct device *dev, const void *src, size_t len, gfp_t gfp);
-+const void *
-+devm_kmemdup_const(struct device *dev, const void *src, size_t len, gfp_t gfp);
- static inline void *devm_kmemdup_array(struct device *dev, const void *src,
- 				       size_t n, size_t size, gfp_t flags)
- {
+ enum jz_version {
+ 	ID_JZ4730,
+@@ -128,7 +125,7 @@ struct ingenic_chip_info {
+ 	const struct group_desc *groups;
+ 	unsigned int num_groups;
+ 
+-	const struct function_desc *functions;
++	const struct pinfunction *functions;
+ 	unsigned int num_functions;
+ 
+ 	const u32 *pull_ups, *pull_downs;
+@@ -263,7 +260,7 @@ static const char *jz4730_pwm1_groups[] = { "pwm1", };
+ static const char *jz4730_mii_groups[] = { "mii", };
+ static const char *jz4730_i2s_groups[] = { "i2s-data", "i2s-master", "i2s-slave", };
+ 
+-static const struct function_desc jz4730_functions[] = {
++static const struct pinfunction jz4730_functions[] = {
+ 	INGENIC_PIN_FUNCTION("mmc", jz4730_mmc),
+ 	INGENIC_PIN_FUNCTION("uart0", jz4730_uart0),
+ 	INGENIC_PIN_FUNCTION("uart1", jz4730_uart1),
+@@ -370,7 +367,7 @@ static const char *jz4740_pwm5_groups[] = { "pwm5", };
+ static const char *jz4740_pwm6_groups[] = { "pwm6", };
+ static const char *jz4740_pwm7_groups[] = { "pwm7", };
+ 
+-static const struct function_desc jz4740_functions[] = {
++static const struct pinfunction jz4740_functions[] = {
+ 	INGENIC_PIN_FUNCTION("mmc", jz4740_mmc),
+ 	INGENIC_PIN_FUNCTION("uart0", jz4740_uart0),
+ 	INGENIC_PIN_FUNCTION("uart1", jz4740_uart1),
+@@ -474,7 +471,7 @@ static const char *jz4725b_pwm3_groups[] = { "pwm3", };
+ static const char *jz4725b_pwm4_groups[] = { "pwm4", };
+ static const char *jz4725b_pwm5_groups[] = { "pwm5", };
+ 
+-static const struct function_desc jz4725b_functions[] = {
++static const struct pinfunction jz4725b_functions[] = {
+ 	INGENIC_PIN_FUNCTION("mmc0", jz4725b_mmc0),
+ 	INGENIC_PIN_FUNCTION("mmc1", jz4725b_mmc1),
+ 	INGENIC_PIN_FUNCTION("uart", jz4725b_uart),
+@@ -606,7 +603,7 @@ static const char *jz4750_pwm3_groups[] = { "pwm3", };
+ static const char *jz4750_pwm4_groups[] = { "pwm4", };
+ static const char *jz4750_pwm5_groups[] = { "pwm5", };
+ 
+-static const struct function_desc jz4750_functions[] = {
++static const struct pinfunction jz4750_functions[] = {
+ 	INGENIC_PIN_FUNCTION("uart0", jz4750_uart0),
+ 	INGENIC_PIN_FUNCTION("uart1", jz4750_uart1),
+ 	INGENIC_PIN_FUNCTION("uart2", jz4750_uart2),
+@@ -771,7 +768,7 @@ static const char *jz4755_pwm3_groups[] = { "pwm3", };
+ static const char *jz4755_pwm4_groups[] = { "pwm4", };
+ static const char *jz4755_pwm5_groups[] = { "pwm5", };
+ 
+-static const struct function_desc jz4755_functions[] = {
++static const struct pinfunction jz4755_functions[] = {
+ 	INGENIC_PIN_FUNCTION("uart0", jz4755_uart0),
+ 	INGENIC_PIN_FUNCTION("uart1", jz4755_uart1),
+ 	INGENIC_PIN_FUNCTION("uart2", jz4755_uart2),
+@@ -1106,7 +1103,7 @@ static const char *jz4760_pwm6_groups[] = { "pwm6", };
+ static const char *jz4760_pwm7_groups[] = { "pwm7", };
+ static const char *jz4760_otg_groups[] = { "otg-vbus", };
+ 
+-static const struct function_desc jz4760_functions[] = {
++static const struct pinfunction jz4760_functions[] = {
+ 	INGENIC_PIN_FUNCTION("uart0", jz4760_uart0),
+ 	INGENIC_PIN_FUNCTION("uart1", jz4760_uart1),
+ 	INGENIC_PIN_FUNCTION("uart2", jz4760_uart2),
+@@ -1444,7 +1441,7 @@ static const char *jz4770_pwm6_groups[] = { "pwm6", };
+ static const char *jz4770_pwm7_groups[] = { "pwm7", };
+ static const char *jz4770_mac_groups[] = { "mac-rmii", "mac-mii", };
+ 
+-static const struct function_desc jz4770_functions[] = {
++static const struct pinfunction jz4770_functions[] = {
+ 	INGENIC_PIN_FUNCTION("uart0", jz4770_uart0),
+ 	INGENIC_PIN_FUNCTION("uart1", jz4770_uart1),
+ 	INGENIC_PIN_FUNCTION("uart2", jz4770_uart2),
+@@ -1723,7 +1720,7 @@ static const char *jz4775_mac_groups[] = {
+ };
+ static const char *jz4775_otg_groups[] = { "otg-vbus", };
+ 
+-static const struct function_desc jz4775_functions[] = {
++static const struct pinfunction jz4775_functions[] = {
+ 	INGENIC_PIN_FUNCTION("uart0", jz4775_uart0),
+ 	INGENIC_PIN_FUNCTION("uart1", jz4775_uart1),
+ 	INGENIC_PIN_FUNCTION("uart2", jz4775_uart2),
+@@ -1976,7 +1973,7 @@ static const char *jz4780_dmic_groups[] = { "dmic", };
+ static const char *jz4780_cim_groups[] = { "cim-data", };
+ static const char *jz4780_hdmi_ddc_groups[] = { "hdmi-ddc", };
+ 
+-static const struct function_desc jz4780_functions[] = {
++static const struct pinfunction jz4780_functions[] = {
+ 	INGENIC_PIN_FUNCTION("uart0", jz4770_uart0),
+ 	INGENIC_PIN_FUNCTION("uart1", jz4770_uart1),
+ 	INGENIC_PIN_FUNCTION("uart2", jz4780_uart2),
+@@ -2211,7 +2208,7 @@ static const char *x1000_pwm3_groups[] = { "pwm3", };
+ static const char *x1000_pwm4_groups[] = { "pwm4", };
+ static const char *x1000_mac_groups[] = { "mac", };
+ 
+-static const struct function_desc x1000_functions[] = {
++static const struct pinfunction x1000_functions[] = {
+ 	INGENIC_PIN_FUNCTION("uart0", x1000_uart0),
+ 	INGENIC_PIN_FUNCTION("uart1", x1000_uart1),
+ 	INGENIC_PIN_FUNCTION("uart2", x1000_uart2),
+@@ -2341,7 +2338,7 @@ static const char *x1500_pwm2_groups[] = { "pwm2", };
+ static const char *x1500_pwm3_groups[] = { "pwm3", };
+ static const char *x1500_pwm4_groups[] = { "pwm4", };
+ 
+-static const struct function_desc x1500_functions[] = {
++static const struct pinfunction x1500_functions[] = {
+ 	INGENIC_PIN_FUNCTION("uart0", x1500_uart0),
+ 	INGENIC_PIN_FUNCTION("uart1", x1500_uart1),
+ 	INGENIC_PIN_FUNCTION("uart2", x1500_uart2),
+@@ -2562,7 +2559,7 @@ static const char * const x1600_pwm7_groups[] = { "pwm7-b10", "pwm7-b21", };
+ 
+ static const char * const x1600_mac_groups[] = { "mac", };
+ 
+-static const struct function_desc x1600_functions[] = {
++static const struct pinfunction x1600_functions[] = {
+ 	INGENIC_PIN_FUNCTION("uart0", x1600_uart0),
+ 	INGENIC_PIN_FUNCTION("uart1", x1600_uart1),
+ 	INGENIC_PIN_FUNCTION("uart2", x1600_uart2),
+@@ -2779,7 +2776,7 @@ static const char *x1830_pwm6_groups[] = { "pwm6-c-17", "pwm6-c-27", };
+ static const char *x1830_pwm7_groups[] = { "pwm7-c-18", "pwm7-c-28", };
+ static const char *x1830_mac_groups[] = { "mac", };
+ 
+-static const struct function_desc x1830_functions[] = {
++static const struct pinfunction x1830_functions[] = {
+ 	INGENIC_PIN_FUNCTION("uart0", x1830_uart0),
+ 	INGENIC_PIN_FUNCTION("uart1", x1830_uart1),
+ 	INGENIC_PIN_FUNCTION("sfc", x1830_sfc),
+@@ -3225,7 +3222,7 @@ static const char *x2000_mac0_groups[] = { "mac0-rmii", "mac0-rgmii", };
+ static const char *x2000_mac1_groups[] = { "mac1-rmii", "mac1-rgmii", };
+ static const char *x2000_otg_groups[] = { "otg-vbus", };
+ 
+-static const struct function_desc x2000_functions[] = {
++static const struct pinfunction x2000_functions[] = {
+ 	INGENIC_PIN_FUNCTION("uart0", x2000_uart0),
+ 	INGENIC_PIN_FUNCTION("uart1", x2000_uart1),
+ 	INGENIC_PIN_FUNCTION("uart2", x2000_uart2),
+@@ -3449,7 +3446,7 @@ static const struct group_desc x2100_groups[] = {
+ 
+ static const char *x2100_mac_groups[] = { "mac", };
+ 
+-static const struct function_desc x2100_functions[] = {
++static const struct pinfunction x2100_functions[] = {
+ 	INGENIC_PIN_FUNCTION("uart0", x2000_uart0),
+ 	INGENIC_PIN_FUNCTION("uart1", x2000_uart1),
+ 	INGENIC_PIN_FUNCTION("uart2", x2000_uart2),
+@@ -4571,11 +4568,9 @@ static int __init ingenic_pinctrl_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	for (i = 0; i < chip_info->num_functions; i++) {
+-		const struct function_desc *function = &chip_info->functions[i];
+-		const struct pinfunction *func = &function->func;
++		const struct pinfunction *func = &chip_info->functions[i];
+ 
+-		err = pinmux_generic_add_pinfunction(jzpc->pctl, func,
+-						     function->data);
++		err = pinmux_generic_add_pinfunction(jzpc->pctl, func, NULL);
+ 		if (err < 0) {
+ 			dev_err(dev, "Failed to register function %s\n", func->name);
+ 			return err;
 
 -- 
 2.48.1
