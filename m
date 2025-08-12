@@ -1,146 +1,150 @@
-Return-Path: <linux-gpio+bounces-24318-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24319-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 426B2B22E80
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 19:04:28 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 001AAB22EC6
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 19:16:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E00BC188A51E
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 17:02:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ED8D67B0C91
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 17:15:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECC352FAC11;
-	Tue, 12 Aug 2025 17:02:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B9F42FDC2A;
+	Tue, 12 Aug 2025 17:16:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="V4Ztrk78"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rrx7ONev"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4AE92F28F1;
-	Tue, 12 Aug 2025 17:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433802FDC22;
+	Tue, 12 Aug 2025 17:16:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755018147; cv=none; b=oGcxxkedWuWkhhF1lk+FDDjl7+uGuq35TuaCI4pEGEbiwyk9l7nub62SOC+Waew48B6co6bnWcOp8Pw1YRko/qBevTnB7fdRTgDWIQS7F1ck2PtKvHW69LboLjLNHlyyEENc+cD56LI1bOMK6G59f6XuVStY6ZHP39PIGkDe12Y=
+	t=1755018981; cv=none; b=CP7rVoGAELN/lMJ3DXpqRkOvURCoI9DnClLu4dqdG15LlaiEWmWcZvWQYJGtIwZp+yioW77dl/w+mz9sYSMbooTyLSyRJLpF6xsJAPYWzpz2+vb7k5USpWjzfs3tYWmPD5rlv+OmcGSZ84nUo0STtQgEUH44wUhUpmdFVKpaKAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755018147; c=relaxed/simple;
-	bh=ORKtKIjOObFOnyi6C0JkWlQVdNqqRyj7TK7gyYhelaU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BhQESv9PH47Z8jWVgQlShW2ZAQdKCuztu0GWLQD3F6AzDuAF1ter7BeXOulNcBhnXuHcbg8RFH6cNMnYo1XaiADBHL+HN567zVJF9TD1wLp9HACTvLuRMBTudJxcX0fyR8z1CyltxBGv9Tbb+bIAZYaNygsQoOAwRwbj2TFhXyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=V4Ztrk78; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id DF11C40E0289;
-	Tue, 12 Aug 2025 17:02:21 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id P7u1MG-buWMw; Tue, 12 Aug 2025 17:02:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1755018137; bh=OWNkdg7JeQ94GyRKo+H1ESi2roT5ujbMOOMUZMYSPNs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V4Ztrk78ZD9ZO1cN+IU8PlhFnSufi2ol4yIMkFmKmAi2Ff6EsUTgRCJP8bpFNx+du
-	 oYxZUcld7KVS4iNtwFiXgX5aFJb3wVc5yxigMpoiyDP96xkFMK/PpJfCuky9Eq0HQB
-	 6sGbIHgMtI5H4B6YYjVu/suxDs+BJQoUgechdcyta4Pqtt74lWfUx2Bt2Ar5CS3oOJ
-	 lyGQCb5uxqeVZsHS7BXWPP09ZgBgb0Pl2U1zolc5KckeMOjicCAAWNNDXAC+VkovGY
-	 sRbokEAEob9MEgQs8AoVJNqaCPawoEfwNRqFAYruFZxlq3VYJ8ohFHx0+Yz7lmEB2h
-	 eVTX8F0v1Gq77qplp7oNJV4bct48vimUphQVRMH09c194pGsvaEWC/7/L1NVgYaj6B
-	 lw3z2w8yFqHfqnCJe7cxkHooAmXnHobias4KT7ey//TgnvxwZVs3l4kkNWYco2IJ9i
-	 vRD0T5jtoXE+vfrEvL58ccka+GVoAC9kXVfGowJ3tuIp29+ZEQxLw1bdDp9FaIWuuH
-	 zFPNfidoEwYRIv6NmYM6GOxNZe/K/6TgwgdCK79rMPrIGH80/Ck1JyLIW+qsCHDjc2
-	 mFquqUVIA4IRlf1dnGa6WngNdMajuVIV1MLEh4tn7cZ7JzafuuhGzUYp9HuDrEi7Ky
-	 SpqFTdOmaP+uRX/2LOWmj6vo=
-Received: from zn.tnic (pd953092e.dip0.t-ipconnect.de [217.83.9.46])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EACF540E00DD;
-	Tue, 12 Aug 2025 17:02:00 +0000 (UTC)
-Date: Tue, 12 Aug 2025 19:01:55 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Arnd Bergmann <arnd@arndb.de>, "H. Peter Anvin" <hpa@zytor.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mateusz =?utf-8?Q?Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
-	linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH 06/21] x86/olpc: select GPIOLIB_LEGACY
-Message-ID: <20250812170155.GEaJtzg6ud45lDHwEf@fat_crate.local>
-References: <20250808151822.536879-1-arnd@kernel.org>
- <20250808151822.536879-7-arnd@kernel.org>
+	s=arc-20240116; t=1755018981; c=relaxed/simple;
+	bh=hiKx5h6WgJ1kRSlNqANQXTbZ/qufuAsjkmYJWLdzY/A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ck0C9EfIyaAZn6nRNte/iPdPCjH1XmIkr0spdv5AJ3iBO+V2NkWGQg1kA3wOOi5E7i7E0VGhX2X+P3liZb6AVXLMv8xK0tWg7l793vkKloF01ssxPsxvV33Ng6XD0Pi/wl82QwzciPGK7GBwybDKVjlo/l5PxL35zRyf3jFG4jE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rrx7ONev; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 085B8C4CEF9;
+	Tue, 12 Aug 2025 17:16:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755018981;
+	bh=hiKx5h6WgJ1kRSlNqANQXTbZ/qufuAsjkmYJWLdzY/A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=rrx7ONevt651nfLg0mqbamZT+I9vsT7FOdqYPWXahJLbdCSR9mxCrDH69WVkjOJFJ
+	 sQrSPjjyETzpVgPm/FHFSlCO56TxP9G1ojEVjiQONhbWjmHp/jN3AGYxeDXB4e9tl1
+	 glmCD6QGhW2LROTweKFIBVLIf3b2wlfF0JZzidE0Sv/duoSwFiK67XXeW0tyfVD0p1
+	 qFw12ZcpeprdH93mFyOicmwAeeVdeemJK2Apu8OvKbP5yYC2TKznK1bubWNGb9egnq
+	 3Gt1V6Wv6p+XqgkHEaM4Xh6Q+NAEFXFo+NMzcls9CuGdnwu7g9utWKlCFpqWlmxiMv
+	 j2QJ2LTmx0ywA==
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-af96d097df5so1043620266b.3;
+        Tue, 12 Aug 2025 10:16:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUcx18mKhV4JI1t8hY+1EK/pYbtlbJacs9/dGMXcGP0F1tJo/fx7oiK4/ad23FMCzYNHKd3Bz6pJnDDKmeU@vger.kernel.org, AJvYcCV5F5izSu4RvsSDC5t2G/xgKiJiI8SvnYlgJUudNcjZBq1CDRiVHATAbynHblTLczX9PqVP1B4W1lZT2g==@vger.kernel.org, AJvYcCXk58MGqzwg1JHt7AjAyuf/nBCfTSz1NZDx73pBH7+q+Ws6OEPxScLcVq0oBHnvUQuPenmiE4h4DCdx@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlQynzZXfaQXB2ICxMvHTVDXVj+d/JIGtI8eiRfwqjOnYcSZl0
+	Lg7qqEeP6JCEEeb9BX19Q36209UgT8fzA5KiJIs7aFqi+qid5JpWDA/0IBp+29W3ry1jzpjdVP9
+	1C88lpomgDISsl+uJiAzNZ5Ff4gANrA==
+X-Google-Smtp-Source: AGHT+IEBE2ikhAU2DNl85LpL+NhY5CizUSURSGTC9MFOW45Us0P1xe9kfUVQc4IbWaS2z6b1ZX94B9hdIEwvFsOIwvk=
+X-Received: by 2002:a17:906:c145:b0:ae3:4f80:ac4c with SMTP id
+ a640c23a62f3a-afca4cca31fmr10795866b.12.1755018979494; Tue, 12 Aug 2025
+ 10:16:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250808151822.536879-7-arnd@kernel.org>
+References: <cover.1754996033.git.christophe.leroy@csgroup.eu>
+ <0b56ef403a7c8d0f8305e847d68959a1037d365e.1754996033.git.christophe.leroy@csgroup.eu>
+ <0fd6fefc-9fad-4ea6-a619-e9f480747ac0@kernel.org>
+In-Reply-To: <0fd6fefc-9fad-4ea6-a619-e9f480747ac0@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 12 Aug 2025 12:16:08 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+1Aw5AyBeW+BhTuyWZ8BN8BJUq047oJCDKVQPZWxWYCA@mail.gmail.com>
+X-Gm-Features: Ac12FXw2MCpi_Gef6Ss--eZgTnXi88_EsAQqYxE-YlC_gadE4Co6lYS79wZ_vkE
+Message-ID: <CAL_Jsq+1Aw5AyBeW+BhTuyWZ8BN8BJUq047oJCDKVQPZWxWYCA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] dt-bindings: soc: fsl: qe: Add an interrupt
+ controller for QUICC Engine Ports
+To: Krzysztof Kozlowski <krzk@kernel.org>, Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Qiang Zhao <qiang.zhao@nxp.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 08, 2025 at 05:17:50PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> The OLPC GPIO controller sets up a fixed number space that is used
-> by at least two drivers:
-> 
-> arch/x86/platform/olpc/olpc-xo1-sci.c: In function 'setup_ec_sci':
-> arch/x86/platform/olpc/olpc-xo1-sci.c:358:13: error: implicit declaration of function 'gpio_request' [-Wimplicit-function-declaration]
->   358 |         r = gpio_request(OLPC_GPIO_ECSCI, "OLPC-ECSCI");
->       |             ^~~~~~~~~~~~
-> sound/pci/cs5535audio/cs5535audio_olpc.c: In function 'olpc_analog_input':
-> sound/pci/cs5535audio/cs5535audio_olpc.c:41:9: error: implicit declaration of function 'gpio_set_value'; did you mean 'gpiod_set_value'? [-Wimplicit-function-declaration]
->    41 |         gpio_set_value(OLPC_GPIO_MIC_AC, on);
-> 
-> Select CONFIG_GPIOLIB_LEGACY for this platform and make sure the
-> sound driver portion cannot be compiled without this.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/x86/Kconfig  | 1 +
->  sound/pci/Kconfig | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 58d890fe2100..3fd5e378a9f1 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -3006,6 +3006,7 @@ config OLPC
->  	bool "One Laptop Per Child support"
->  	depends on !X86_PAE
->  	select GPIOLIB
-> +	select GPIOLIB_LEGACY
->  	select OF
->  	select OF_PROMTREE
->  	select IRQ_DOMAIN
-> diff --git a/sound/pci/Kconfig b/sound/pci/Kconfig
-> index e0996a9d90b0..6366f72b3667 100644
-> --- a/sound/pci/Kconfig
-> +++ b/sound/pci/Kconfig
-> @@ -300,6 +300,7 @@ config SND_CS5535AUDIO
->  	tristate "CS5535/CS5536 Audio"
->  	depends on X86_32 || MIPS || COMPILE_TEST
->  	depends on HAS_IOPORT
-> +	depends on GPIOLIB_LEGACY || !OLPC
->  	select SND_PCM
->  	select SND_AC97_CODEC
->  	help
-> -- 
+On Tue, Aug 12, 2025 at 10:23=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.o=
+rg> wrote:
+>
+> On 12/08/2025 13:02, Christophe Leroy wrote:
+> > The QUICC Engine provides interrupts for a few I/O ports. This is
+> > handled via a separate interrupt ID and managed via a triplet of
+> > dedicated registers hosted by the SoC.
+> >
+> > Implement an interrupt driver for it for that those IRQs can then
+> > be linked to the related GPIOs.
+> >
+> > Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> > ---
+> >  .../soc/fsl/cpm_qe/fsl,qe-ports-ic.yaml       | 63 +++++++++++++++++++
+> >  1 file changed, 63 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/soc/fsl/cpm_qe/fs=
+l,qe-ports-ic.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,qe-po=
+rts-ic.yaml b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,qe-ports=
+-ic.yaml
+> > new file mode 100644
+> > index 0000000000000..7c98706d03dd1
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,qe-ports-ic.=
+yaml
+> > @@ -0,0 +1,63 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +
+> > +title: Freescale QUICC Engine I/O Ports Interrupt Controller
+> > +
+> > +maintainers:
+> > +  - name: Christophe Leroy
+> > +    email: christophe.leroy@csgroup.eu
+>
+> Oh no...
+>
+> > +
+> > +description: |
+> > +  Interrupt controller for the QUICC Engine I/O ports found on some
+> > +  Freescale/NXP PowerQUICC and QorIQ SoCs.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - fsl,mpc8323-qe-ports-ic
+> > +      - fsl,mpc8360-qe-ports-ic
+> > +      - fsl,mpc8568-qe-ports-ic
+> > +
+> > +  reg:
+> > +    description: Base address and size of the QE I/O Ports Interrupt C=
+ontroller registers.
+> > +    minItems: 1
+> > +    maxItems: 1
+>
+> This was never tested but more important this and everything further
+> looks like generated by AI. Please don't do that or at least mark it
+> clearly, so I will prioritize accordingly (hint: AI generates poor code
+> and burden to decipher AI slop should not be on open source reviewers
+> but on users of AI, but as one of maintainers probably you already know
+> that, so sorry for lecturing).
 
-Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
+If anyone needs some AI (chatgpt) converted bindings, my "dt-convert"
+branch has ~800 of them. Feeding the warnings back to AI to fix was
+somewhat effective. The result is not the worst I've seen submitted.
+It saves some of the boilerplate, but can't fix things that are just
+wrong or unclear in .txt bindings. Despite my 'prompt engineering'
+attempts, it still tends to get the same things wrong over and over.
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Rob
 
