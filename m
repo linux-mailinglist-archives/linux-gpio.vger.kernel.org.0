@@ -1,211 +1,179 @@
-Return-Path: <linux-gpio+bounces-24228-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24229-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 653A3B21EAC
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 09:00:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01A9BB2200C
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 09:58:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0D21D3BA5D5
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 07:00:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6823A1A259B9
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 07:55:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08EA72D3EDF;
-	Tue, 12 Aug 2025 07:00:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8BC82E03EA;
+	Tue, 12 Aug 2025 07:54:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gehealthcare.com header.i=@gehealthcare.com header.b="KMWvf/Qf"
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="mRV72NiK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2042.outbound.protection.outlook.com [40.107.220.42])
+Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11012035.outbound.protection.outlook.com [40.107.75.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5331A9FA5;
-	Tue, 12 Aug 2025 07:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212B92DFA2F;
+	Tue, 12 Aug 2025 07:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.35
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754982052; cv=fail; b=DBJat0dZWhhs+TOy+Uywe1mRb1j3BwtdZOgQw1j5VxDZrIakU0fLrZhBvMV1Crs5rNtBKOTHMJipMmWEAyYEvqQsRrqN8cgCoLIn19BZf+lpygItfnaaJCmmqtGlC2wJ0FYUQp7a8Ko+zcXf/fGCSn/hq0zJLFvNVKnCYJ94ung=
+	t=1754985299; cv=fail; b=HLGvxhzCnDDhfQn6xYOPGWlwL4NuernOMPmedHrOQXwpVeFktKwqaIzGhLCUFFYnXgHFR9JklfC4byueyYdWnKdx7zPbSB5EC7iuMfnhiWrACsN/JuRSTJr3lvoLc6JXn2qOB7OCkqAaNaOtpdDBwQtmB+iFtrNL/87Nr1NQIeM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754982052; c=relaxed/simple;
-	bh=A+UBvLYY8fUTdbXr/ZY6NCSbhcBPEYyO+GFVNerf838=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tNw3PgfjDmu6YVmnqxzTPPnRKexULbbJaVqogKGZQh2HzSe3/I+gHwtWO94wpZ4s2MeKDtAXp/6ChapeOZuWGh17cwAETSZpuV2Ha4eaFAynVFgy9lDCq2Np/RwSE2h2u1U9Vney431cNyo/8vnifZ0/fjQov6u6QcHgNPzgJ60=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gehealthcare.com; spf=pass smtp.mailfrom=gehealthcare.com; dkim=pass (2048-bit key) header.d=gehealthcare.com header.i=@gehealthcare.com header.b=KMWvf/Qf; arc=fail smtp.client-ip=40.107.220.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gehealthcare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gehealthcare.com
+	s=arc-20240116; t=1754985299; c=relaxed/simple;
+	bh=XsiOp5Z5D/mxAuADscuX4hK3Yk1NiPWmKY2NhRVOaIs=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=ggItKVPhTlPOPaCGCmqHqH6Z44gTGG8h6HendPK4Im1/VOYbgqjjsZFAoJKW8ZHR7B4gHVEodiuM7sN+vl8k8Z+kpFuhRHuXBrwmTB9qXYmsmTXa7b6hNHNmZAItBmS2iXtWt7Jr6ddoQNS0z/szHgkZuJAuAcqeqPP4uwL4cmk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=mRV72NiK; arc=fail smtp.client-ip=40.107.75.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QgGnPyH/U3NVzY8OJNzsLXGs4NKY1PTZE1qg/3S2sGQELGl1d76ToqQ4tPtQb2oMjMKGE0Nu7uEVAI6ggGQqul3gmgBu7zNRpH+7YwnJz+ojs3m/IcBqatSseaZCGiV4vrXEP0//bLBDf9nyHCDB67oIb9J2hQVwOvmloENYG8aIVadR2UhMtWspeFAp4+dB9TcZf416VlLgf1ZfF4hlXWBxA3XAEyZaiz1UX394xyzoyd+rfNFSJYK3SWLjZ6Ftv8/5Rvjjqe17NFcH6FLaXNJIjpnrJAFfjiiWNfHDlsRi3/fadC/i0rsTFSzw5kbDlROZ9C+TVwozA07YunITpw==
+ b=h+y5CMbf4PS0RMrdft9gp6aKgyUSkzhMLH8I7Liq3CncfsqVisBR6nVTUmkcsS026jafq10EaxMBzJPIgsEclVO+cdXHFs0Y7GL3pAOphubFOHgKuJ3ZG+q1I7qIDQzjpLKK1fzh5/IdtIfUVdX5kXNcfKqSV67aE590OKC0aI756etfzoao0gcFdmF0gOKcgTluiF04duQwU33fEfaDdxhsXha+mizyUECIcPUSggkN+VAu5IAzA3xVcjuQyMiQYILsiIXEQ0/I8lpGIx3nGXaXz7yO9GGeVRJCAS+VvV17ute2OhwRvvv6HW4igXySbY7O5eafE8RSFEnaH6hr8Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=q2Y/RehJZMbloJY/L6tKYdYKXSaNWQdT7udx7wjKL3I=;
- b=ORUf6oX5BhfHuMeuyht7cWZsxyaq+laq0K6BTV5tXdTxGgSIn3IEbSNxhg3qkILXOYtWNfxfZptWIBdUSHeLTK9ga/ArsiKBah91J35E4x3SYsLpBenNJ42uJD25Ed2tEe4JyAANDO6QVNffbvsUwwcq9hxF1HRieo8x6J/03LhIMhfis7vgI6DpobxiYGdsBI8JN0DQba5lnSbsaFeuYEvv+TyPCU6GmgU/j1lBYK2it4PGDynvAHVL6wVTGLTc9DLCqUNsOzAoTHZo83+09E7tryxp7SopgXQjT/Cbr7u8jCei3uG+fu56Ewb+2gdbveCyjtZJRX/LZJGNG98GlA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 165.85.157.49) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=gehealthcare.com; dmarc=fail (p=quarantine sp=quarantine
- pct=100) action=quarantine header.from=gehealthcare.com; dkim=none (message
- not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gehealthcare.com;
- s=selector1;
+ bh=AGVKkSJ9UgUDhfoUmPFvfv6z7FnbLf9xMosbGqJn3es=;
+ b=rGX8RN4uHjfWjcn1kntyGkY6bdJDYAnOSaJldRiiNLUD/+ZnfDLmkWUmD8wr8SKuazVhrn4r1u71UhXgn2RTtIKdp7qMeSZPdOiPDkSnHS8IVDBGKcWw7pZ3y9lXiEKVXX+rFu8Mgo+2bJP7ab3+z5LALAi+NoXi23SO1HrVQmJ+2uXxTAXMQ3JtOiD+Ooqkxp5eKGxwNM1OScSpKx9/6x3S70BMMBty9uGas/pdnpv/shKnvQOQlsQChZtWZVIUrUkXwpwGgS39YxORU219Mxukh9m/1//c36wROjaCS6nJJQZPAs479TVaxSCrw89vk7xsFPpFxwxACaudQnhHlg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q2Y/RehJZMbloJY/L6tKYdYKXSaNWQdT7udx7wjKL3I=;
- b=KMWvf/Qf2u5JvZcPpSY8Mtd0cR3AIpkoCA6VpJ8A3paYq1kDhQrkDSiTPFOOxXxn/+pFXLtsEeELtFJ6v013oaInckPstEytZtwFiM5OWnIeM4kPWxONFgG3PxcVJLxnV3rL6faWW9ky88z/AY2Hl7B+R4rPpJETph3SHrsJWeGP5ZxLdZGqO8YHMJPYDBOBxmglXC4CydDlYbqVrxoSQ7dN0ZWsN6R1AFHgO4/juyftX0FjWoV3ZdlgZLTb9gxOLCSRAsMwwiL2+5SYPdpzCp3I6AdcvC+N3Kb2pdULTKtbqTO7as3S+6oHcNCRFOP6fsBRf2RpIVBqq9W0NBVHuQ==
-Received: from BY3PR05CA0037.namprd05.prod.outlook.com (2603:10b6:a03:39b::12)
- by IA0PPF855F4BF3C.namprd22.prod.outlook.com (2603:10b6:20f:fc04::d35) with
+ bh=AGVKkSJ9UgUDhfoUmPFvfv6z7FnbLf9xMosbGqJn3es=;
+ b=mRV72NiKBbFvqMgn0ljUVb+0rRPz9iadZB9XqDHRln/nXIQ6u05Szxl626QqCcnxCWNA8q9wDRWql5t9vHxZlovU05r69weBB0bFsucwhH9s2MaOMM7xnNMSzEmej894HifyOfSYVwyKNNZD4yUJUpyq2xwCgxntCcdwpwVAzPFmDyCUXFVXMea3IpL5Zju3nTEbiT7sQpKykRIzeZbRCcVdNhPBOWJa7VfvPeePI4NKggmt9Xe7BfgFA9icno8rL5l2hoyuU/7BSiaY5AchOFEO4jpbxwnttdCJ0q9sBU6oojqSq8QC0H01ZSSeXKoFgGxkOrvrQbd2RoPZBSvZKg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SEZPR06MB5576.apcprd06.prod.outlook.com (2603:1096:101:c9::14)
+ by SEZPR06MB7263.apcprd06.prod.outlook.com (2603:1096:101:22b::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9009.22; Tue, 12 Aug
- 2025 07:00:49 +0000
-Received: from SJ1PEPF00001CE9.namprd03.prod.outlook.com
- (2603:10b6:a03:39b:cafe::c3) by BY3PR05CA0037.outlook.office365.com
- (2603:10b6:a03:39b::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9031.13 via Frontend Transport; Tue,
- 12 Aug 2025 07:00:48 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 165.85.157.49)
- smtp.mailfrom=gehealthcare.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=gehealthcare.com;
-Received-SPF: Fail (protection.outlook.com: domain of gehealthcare.com does
- not designate 165.85.157.49 as permitted sender)
- receiver=protection.outlook.com; client-ip=165.85.157.49;
- helo=atlrelay1.compute.ge-healthcare.net;
-Received: from atlrelay1.compute.ge-healthcare.net (165.85.157.49) by
- SJ1PEPF00001CE9.mail.protection.outlook.com (10.167.242.25) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9031.11 via Frontend Transport; Tue, 12 Aug 2025 07:00:48 +0000
-Received: from cd065bf83d0d (zoo13.fihel.lab.ge-healthcare.net [10.168.174.111])
-	by builder1.fihel.lab.ge-healthcare.net (Postfix) with SMTP id 2CB25D04AE;
-	Tue, 12 Aug 2025 10:00:46 +0300 (EEST)
-Date: Tue, 12 Aug 2025 10:00:45 +0300
-From: Ian Ray <ian.ray@gehealthcare.com>
-To: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nandor.han@gehealthcare.com
-Subject: Re: [PATCH] MAINTAINERS: remove bouncing address for Nandor Han
-Message-ID: <aJrmncETAf5EKyEJ@cd065bf83d0d>
-References: <20250709071825.16212-1-brgl@bgdev.pl>
- <se5ok3bzlej4gecaep3albatkigcczsj4ailmulqebd737qe7a@ly3vlkqhgm3q>
- <5offogdzedixircmncso7wzswgh3ancblpydnelbbqw3pjxdpw@qcgnpip4g4xd>
+ 2025 07:54:54 +0000
+Received: from SEZPR06MB5576.apcprd06.prod.outlook.com
+ ([fe80::5c0a:2748:6a72:99b6]) by SEZPR06MB5576.apcprd06.prod.outlook.com
+ ([fe80::5c0a:2748:6a72:99b6%5]) with mapi id 15.20.9009.021; Tue, 12 Aug 2025
+ 07:54:54 +0000
+From: Liao Yuanhong <liaoyuanhong@vivo.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+	linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Liao Yuanhong <liaoyuanhong@vivo.com>
+Subject: [PATCH] pinctrl: equilibrium: Remove redundant semicolons
+Date: Tue, 12 Aug 2025 15:54:44 +0800
+Message-Id: <20250812075444.8310-1-liaoyuanhong@vivo.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYBP286CA0014.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:404:ce::26) To SEZPR06MB5576.apcprd06.prod.outlook.com
+ (2603:1096:101:c9::14)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5offogdzedixircmncso7wzswgh3ancblpydnelbbqw3pjxdpw@qcgnpip4g4xd>
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE9:EE_|IA0PPF855F4BF3C:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5db66a59-c21a-4715-bd07-08ddd96df7cb
+X-MS-TrafficTypeDiagnostic: SEZPR06MB5576:EE_|SEZPR06MB7263:EE_
+X-MS-Office365-Filtering-Correlation-Id: e6c3601f-4497-42e3-a5c4-08ddd975864d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024|7053199007;
+	BCL:0;ARA:13230040|52116014|376014|366016|1800799024|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?iCzs5OlWnl+LArjvFptJ5vBVOfDtT1/0I6DGBmNOOHcJuWKnIdgbP/TqbnDB?=
- =?us-ascii?Q?/d3iSJxF1wr1lt8Y27UZg0f8ywQS5tCC+RASgtxxv5xG7iKahanN8lpiQftt?=
- =?us-ascii?Q?QCZtO3kOTGdOZyfQ8ED0zxJuGj0vJ8G+vJZZLZarXkr5eqnSzg+3zZBR60cR?=
- =?us-ascii?Q?mUU58tIvgW49V0xWMuaYz3NUZYRczKQSdFjo1XDKWHqftZ+tK6ZFMAhHc9LZ?=
- =?us-ascii?Q?W6Y7x9ExANR4N/3ta6LUFq6KgufOGcAhMT3SmkD8oYsmambEeEMzvtDCM6GH?=
- =?us-ascii?Q?GfB/RREi2qcxFiv0pqIw8ZrAinn8+IiatqF08yYWXV/5wwJ8XdBumFLq1QJ6?=
- =?us-ascii?Q?wcX7qN+BvHbwuf/F4QwjHtFqjbGaTm6JHCs1+B8ygjj5lTVEYJscMtKwvGo5?=
- =?us-ascii?Q?ouQxhXMFEvZszJ2KPYJ/pD+SxyYRBiHj+8i5x2lRq+gqSECMXX4FtafV46PB?=
- =?us-ascii?Q?KyHaVghQPOPoIw/XxZAuSU0K9qwE4sa+hZQA3vUFnIVuRaBi33BEFwYFnB0I?=
- =?us-ascii?Q?Kb1usjNbQXyoLOXXWCv7moDXf5MhAYwSnffUfSj4Mzb7Tb13mYXPQ1xXt/jU?=
- =?us-ascii?Q?zvBjACcZOxfzFjesqTDSiKO5aCJDdgNxj/50vg7LmlpULAj+wco2mqwR7lIO?=
- =?us-ascii?Q?kyzJJ8QNfPL7okxqLdc+Hr1FllLJtXB9tPr02aVq3vGXBCQ+erBqesLM/gWr?=
- =?us-ascii?Q?iSLJqOlWMRHuIjfGYqqb2baMV+bCtNvTLdFhmeOt8hw+bgML594FixdHuIQR?=
- =?us-ascii?Q?aLo1NInBWhxopQ9MlPCu3AmLnRdUQTWd5xYbX8Cq5Say/XQSXkrm+JpolH/S?=
- =?us-ascii?Q?FuljGXoJ6Fkh3rSZG5jV50VGYb1bP3dDGXSAWqIHsqh1S5Z4QoL7iQnfRZm2?=
- =?us-ascii?Q?k+N6UeNh/NBMUN4eDxnrf+cX5TriWbfeKvHE6QIW3+a0C/wfspRBAuJKM+gw?=
- =?us-ascii?Q?F5+ZE5PhQ+UBj2ojvH7UqcPXx04mUibkiMHl9w6SCVoxe1ysY9dAjAPiHGBM?=
- =?us-ascii?Q?7tpWewYlAbUBsRL1yrL3wwhPcU8ee86PN1XLkgHZ5IeFIpDSmecd3VzyF+Kk?=
- =?us-ascii?Q?MCgDx1JqXDObkM70R7YmWreYiiTArrmABMCEylpEztMKWyc112Iv0F1itR6C?=
- =?us-ascii?Q?fr00TcQzXbZ6c/thzM14zdDveCGZ7GHGgzVcwsBWQqWh3viHmTmOSY0v0HAt?=
- =?us-ascii?Q?D6bH8B7Zh/rOO1wQ+VfPbS/BCNOMmiEppijNV1V4HhLfX6cDBiCUWHfhbQmL?=
- =?us-ascii?Q?QhL6C5xL4Qwzuw06O8o3kLPJWnrJ9Ejv+pvXY5fL8G5hKCPTLqTkegncEWBu?=
- =?us-ascii?Q?4bpQmGjrX7uSXWlGR/QFNOi4uTafDG4r0YOV+1Mm5/bRdhNIKsrj5Tey/YxM?=
- =?us-ascii?Q?WwI/a0X3vJ9ewf5IJgvFByADYMFCpK5Sj63Tmw16/tuu+W079SfLmIwIu9vr?=
- =?us-ascii?Q?dYDwOAzsvn63niyPNgJlB+M0bd3VTAggXf6yA6qmFuWTxGBViU1tiA=3D=3D?=
+	=?us-ascii?Q?ZajPnSfb0K59JjWcFP388LBsVaIbSZuk+aaNCyQM+WiY4MHfpEfTVDg2Fwnm?=
+ =?us-ascii?Q?D9CqCVhHClRPbjKmoideujsFQgxWcNT6AM3Nv5A0wRHFn3E+uiv4tSXfGCZj?=
+ =?us-ascii?Q?lrXzq8ds7mqVHlUmJZF2flAmI8HnFqVmI7D483ir0p/ipBgcMPIZ5bIHFQYw?=
+ =?us-ascii?Q?V5lvw+bYK5Zf3qxzHv1dv4ZusiMZov+bG6hnVBcvsjR/yVUfnVTJFGCgYxt3?=
+ =?us-ascii?Q?4PCvW+JOEz+zeV4KLSUqWmf4lujVwTIa+e+lSQnva3Slb70ehf0nDgK9o74V?=
+ =?us-ascii?Q?2crH9e3gc33vA/OPZQlY7ppIYoa+n9yTB7dWz58PmSlu2VnexBQCLvZy+wNp?=
+ =?us-ascii?Q?IBalBZe+NrwA5t+dYmGLDpk6rgRhhtY32zL4pKsn36GW9tkwn/YsTNJhikZg?=
+ =?us-ascii?Q?TdiMnxxv38QvJ+PH+aZ2ef1oBCCZohS4DUegDtrCf+sWfCESYIr/WzgF0we6?=
+ =?us-ascii?Q?ZOjbsPo0Na0WUKndU7W9L/KNCAyUXsGqJyH0SKU9Nac6y86m+fFFVJ4cWmoD?=
+ =?us-ascii?Q?jfxULABaflirQOjipFvdjvQ+Pfpv6b2RPTGZRyNodSOtz5JkbITTKN0taopp?=
+ =?us-ascii?Q?geV8/595Gl51oQPMN6fS+tCDzDwhIyFK3rXrn053svVlAN/YwYkGCQuCIGyv?=
+ =?us-ascii?Q?IOi0pxLXKAgCiaTgmlSoO5VmP7ZMDQN2g1KyUZvHNbsERMQpGSlWdftDfHJ2?=
+ =?us-ascii?Q?Ny+X4Y6o3CKopzSH4rhIJet3jefxF+dFJsh6hIN43SNBBB/a0uL0nwP99IG1?=
+ =?us-ascii?Q?987DgJDjJyEiDHacX2Hsgnq11aVOUiroagllEKWY0cIZOMlWnETtPv3rzT6Q?=
+ =?us-ascii?Q?4wCUKiBMoUhiE65ljABGA47BYu1q7HdrqugOWR3PcftCpYtAd5IVAPXClUVT?=
+ =?us-ascii?Q?+r7NYuL22bLzbQCCm7GYH+/DK5mF2FB+uQKh1EoHEzDR5ySSqM2p5VDJn0Vy?=
+ =?us-ascii?Q?jy7Yn2ZXeiyXmZAwnVwew65VZlGMOftHk5cCiwWP5zKNkoRllDDxzLQis8hk?=
+ =?us-ascii?Q?KrnCaI22mEw6XN3xQsj/Wdy0K01ukbfDnMVTmUeuHJMIEHKM9A9qLtxu29ea?=
+ =?us-ascii?Q?xKUvcyhRTxiHEgfOF7VuRg1DrNPHgMnJQSLQgBaWxvp1xrsF9aRHatre9xHk?=
+ =?us-ascii?Q?ByP2aQgs1Wy0GCatv8tl2y+5UyHad2sEz3DNF85eZY0rUfvOB8UT1Q6kKQ8u?=
+ =?us-ascii?Q?TR+LGJtkTWAzMYXuC9QZX3USD8y+kIOtJxz+BFp1mNdZdGophDg2i2BKL1f0?=
+ =?us-ascii?Q?7rHsRq05PHKU+dZPq3hutxgl8iTxbiow2NPIuVMu+tVsj3Em0DcK8/0PTet+?=
+ =?us-ascii?Q?vQTHvpiAnOQpJIpkN1m9StnwEfgvzxLMBDLTUolnZ8G53mKrJBrA4MW6sSsd?=
+ =?us-ascii?Q?t+dbFuuilUa5DY6WVqkJKPMR4to81nBxPN1Q11+SXqxv+biVRbjSZq5eqHmU?=
+ =?us-ascii?Q?yHRmq4tpkiTcuDWlvproou4Fp6/Q7fmIdX2cdIqJfAh1v5avvMtKBQ=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.85.157.49;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:atlrelay1.compute.ge-healthcare.net;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: gehealthcare.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2025 07:00:48.4851
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5db66a59-c21a-4715-bd07-08ddd96df7cb
-X-MS-Exchange-CrossTenant-Id: 9a309606-d6ec-4188-a28a-298812b4bbbf
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=9a309606-d6ec-4188-a28a-298812b4bbbf;Ip=[165.85.157.49];Helo=[atlrelay1.compute.ge-healthcare.net]
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5576.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?CJlHidWP9Hfm7fdE3HJ6j5b+1S7xPASHO0FrTyIQOBm2biP0AXi55i0E8nlP?=
+ =?us-ascii?Q?bJ7gYyxqab5pSKQWiyAl5vs7ebOU7V0/UqSbHbyHf64R/elfEq/Yx4PB48lE?=
+ =?us-ascii?Q?ovwcu+jkpJFx9ULvct1aOkUxqAKr3QYmdUjeVYBRXDOTLTMqa0ohV6iM8p8J?=
+ =?us-ascii?Q?DS7CIlwuUQOS2KNy4FBSoqBbXtlHCoqNZaW9aqJZSvfuYvcib4Sh3MTpeiZP?=
+ =?us-ascii?Q?LAoTjdjjomEGc2j4vLui5770IhrxlIdd+jFjdfFSMdImLXkr8m/WRSTw7vmN?=
+ =?us-ascii?Q?TAfxhFK5HTivTAn2hsMUecd/n/4+udC16FQXX6bmp4CwusgJ/MSf2HmxtZSO?=
+ =?us-ascii?Q?xfTQb4rOZfSM8UTrcYCiddGltJDnAuLguiXJqzyIfPFhj4JY5H9kJflQazcN?=
+ =?us-ascii?Q?cejh2TgBaQbaxOLb2sCsVi7KvfTZa8FmBWPTtxpA1mOotwL/H8f6Vy2ggJEc?=
+ =?us-ascii?Q?UXNCNy9kgtbm6O4J6SM8Qejdee57RfLqBt9GUZxzxwUZGM/sQc553AobQ4fh?=
+ =?us-ascii?Q?QBkPZ7fOK/7wybZN2RDrFaFMMmVmihMl1E7V3bXgk4RYPUKmo4i5aclEJPhg?=
+ =?us-ascii?Q?Gu5cZMaKL2i/TQ/YmmgODQC8fuTwEXeVIOv+nR9ZZkR8SLCPG2ihXrcjU5xd?=
+ =?us-ascii?Q?L0vmtvFUwTzmjCDV62m/l1jF268Il7hzxHV7olDbPkUG6/9GJVGnzmTb29St?=
+ =?us-ascii?Q?g2ieoPLhjGMPI5cam3iQ7ZRrbGHZSfmxKXTIGz4liEuzf+odTEB4k6NKX/+p?=
+ =?us-ascii?Q?r0ot38Bp9RUWVAKS72EVHc5LKgCTTEGwnZu/Zc0pWI6x0lxj7rR16J4XC5Vr?=
+ =?us-ascii?Q?UkHSwfM/LG/+Gp27PjDg5jJxU7Owj/7DH1h2+qfbKSO4j00kSqgsYU/TL+j/?=
+ =?us-ascii?Q?rOVf9kIN62vbC0Za5fRnNi7nPbgRRhte/duRvWTkvprWHVImLz+NfBc+/CUB?=
+ =?us-ascii?Q?rEthJABAFMaIH63mEeEQ4tbYpdkPBgct+MgL5T06eU8fM/0G7BlCIFk/r8hW?=
+ =?us-ascii?Q?t9hZpI1N3AORasQ+Cic9RFNfglbUGSrWnmnW4W/JDOenjD9UR6J2tncyPvWx?=
+ =?us-ascii?Q?N1tevOCqIEK0J7sj7vn34YFDCJv+AYKtL86ryzPTs3B0Vs3lp7fohcdZ1ldd?=
+ =?us-ascii?Q?rU5ZZqIxpEe8+CBh9mCNY/J5hnwk+mIdmFx9cnMrWjIMv7E3nk914wj4QAOA?=
+ =?us-ascii?Q?BDgWGLfSmunQXWqARldqffnIDCnSIo8HKHF4MKczx2CkV57D48F5qBmsPt/+?=
+ =?us-ascii?Q?X0qbXYovJFqcaWoDckJTmusYzFrFO31+BK/sRGDhSp1TiiMyX7jfDmJOyJz0?=
+ =?us-ascii?Q?Qsa8cT5f31/5zTbj5xT+YEtVFsW4GAo4pqQIc4z5pTtZQO0bDiJ8ykgo2Ptb?=
+ =?us-ascii?Q?4zsNO8dpDNuaUeZAMjWwc0m0wpztj7MW3yLusvNsvjPIYUzmVfPiHPkim8u7?=
+ =?us-ascii?Q?+IxpzEEu0ntCIbxqKLXIp+yPXxMY8KtwhtyIM2zEw7IglpKWThZqmWRGAtKN?=
+ =?us-ascii?Q?LomlCCy5M92vQo4MIJ6TS9l0JZFs5Bv5RxIJNw9Nv4JbL9+oEy2aPDfj/9V0?=
+ =?us-ascii?Q?bprylKgkidsyfoLeQWysyGmvRtldbClmuArXroFw?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e6c3601f-4497-42e3-a5c4-08ddd975864d
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5576.apcprd06.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-SJ1PEPF00001CE9.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPF855F4BF3C
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2025 07:54:54.6421
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1Qy6qnl10otTezTDWrNgE4rqK3nVWAIZf4/I2g0ySSN2W1zw7MayVrJsBWtFqC4IQCXcQ2rN4KT5FLO9tZ6Vmw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB7263
 
-On Sat, Jul 12, 2025 at 11:15:06PM +0200, Sebastian Reichel wrote:
-> Hi,
-> 
-> On Sat, Jul 12, 2025 at 10:28:26PM +0200, Sebastian Reichel wrote:
-> > On Wed, Jul 09, 2025 at 09:18:24AM +0200, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > Nandor's address has been bouncing for some time now. Remove it from
-> > > MAINTAINERS.
-> >
-> > +Cc: Ian Ray, just in case somebody from GEHC wants to be notified
-> > for this.
-> 
-> Apparently his entry in MAINTAINERS is also wrong and it needs to
-> be @gehealthcare.com now (at least that is what U-Boot switched to
-> [0]). Let's try again :)
-> 
-> Ian, you should update your linux MAINTAINERS entry in MEGACHIPS
-> STDPXXXX-GE-B850V3-FW LVDS/DP++ BRIDGES [1].
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/MAINTAINERS#n15490
-> [0] https://lore.kernel.org/all/20241211083136.66-1-ian.ray@gehealthcare.com/
-> 
+Remove unnecessary semicolons.
 
-Hi Sebastian your link [0] is actually a LKML submission (December 2024).
+Fixes: 1948d5c51dba4 ("pinctrl: Add pinmux & GPIO controller driver for a new SoC")
+Signed-off-by: Liao Yuanhong <liaoyuanhong@vivo.com>
+---
+ drivers/pinctrl/pinctrl-equilibrium.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-I also sent a V2 [2] (April 2025), but there has been no feedback.
+diff --git a/drivers/pinctrl/pinctrl-equilibrium.c b/drivers/pinctrl/pinctrl-equilibrium.c
+index fce804d42e7d..f449576488d9 100644
+--- a/drivers/pinctrl/pinctrl-equilibrium.c
++++ b/drivers/pinctrl/pinctrl-equilibrium.c
+@@ -439,7 +439,6 @@ static int eqbr_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin,
+ 	}
+ 	raw_spin_unlock_irqrestore(&pctl->lock, flags);
+ 	*config = pinconf_to_config_packed(param, val);
+-;
+ 	return 0;
+ }
+ 
+-- 
+2.34.1
 
-[2] https://lore.kernel.org/all/20250426083220.110-1-ian.ray@gehealthcare.com/
-
-Blue skies,
-Ian
-
-
-> Greetings,
-> 
-> -- Sebastian
-> 
-> >
-> > Greetings,
-> >
-> > -- Sebastian
-> >
-> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > ---
-> > >  MAINTAINERS | 7 -------
-> > >  1 file changed, 7 deletions(-)
-> > >
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index efba8922744a3..c780cbd11ffb9 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -27466,13 +27466,6 @@ S: Supported
-> > >  W: http://www.marvell.com/
-> > >  F: drivers/i2c/busses/i2c-xlp9xx.c
-> > >
-> > > -XRA1403 GPIO EXPANDER
-> > > -M: Nandor Han <nandor.han@ge.com>
-> > > -L: linux-gpio@vger.kernel.org
-> > > -S: Maintained
-> > > -F: Documentation/devicetree/bindings/gpio/gpio-xra1403.txt
-> > > -F: drivers/gpio/gpio-xra1403.c
-> > > -
-> > >  XTENSA XTFPGA PLATFORM SUPPORT
-> > >  M: Max Filippov <jcmvbkbc@gmail.com>
-> > >  S: Maintained
-> > > --
-> > > 2.48.1
-> > >
-> > >
 
