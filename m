@@ -1,212 +1,151 @@
-Return-Path: <linux-gpio+bounces-24273-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24274-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35F13B22646
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 14:02:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A57CB2265A
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 14:10:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CBDB62A800E
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 12:02:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9D37E1B62448
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 12:11:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA8F92E06EF;
-	Tue, 12 Aug 2025 12:02:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B98C2EE289;
+	Tue, 12 Aug 2025 12:10:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IdvDQnbW"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="UrCTOq63"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE441F4CA0;
-	Tue, 12 Aug 2025 12:02:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ABBC1E5B64
+	for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 12:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755000138; cv=none; b=CPYnJPGId8+V3OAyWwkav8PLUG76eXV6D/fEgNRLt8o5s5yzB/rJTnSL7RnKe6a2hHzSCjkzAvLX3mu8FTLGFHmDTFqz3sYVmAHmnS0hstV2lK1LY8BTu8CYLJKx4XPSbiXY4ZH9bGUKwD1mNXpQn5QFet6fnKC8jYMiCpU2Vrw=
+	t=1755000649; cv=none; b=YbJg0wSXAeJPRZvXYrEnxBMLXnRi8O8/Qi4iYU4lrE7SfsN/MC6IvaKz30iyK32/3CnvTQ+IgGk1ZqmO0zeSVI2NbbQlT0i1Fl3LlNwYuuwL6IoNyvAwyDZNj3FZW4QUChKwY7X11lM5lakHwGL5Au/Z4DzQwaw7Z6YpGtON7Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755000138; c=relaxed/simple;
-	bh=zM7gP/7OYppk6RZVuF/mgz7lz8DWar/tc9UDFpxArDs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=INTalhm90iTkKN2XJeP72eisj5H97xB2sv+oOf9l0OHqHhCumwGEmbq1y7GGFkdMhwIp7LaAooP6lyXy5n+MoL1U99jMAOswzt/9jIuzqiJ+RMY81pL3iSTwRqveh8HouIABoMzr6on4CRyIG+iKC8C/wSul1Hj/lvhq7laBsfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IdvDQnbW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D679BC4CEF0;
-	Tue, 12 Aug 2025 12:02:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755000138;
-	bh=zM7gP/7OYppk6RZVuF/mgz7lz8DWar/tc9UDFpxArDs=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=IdvDQnbWrw58pIPTxTdrL0lt5dchPftAtfNyCZV9JbUf2seXz2mAICuLxcCnTzUF0
-	 PIWPRYA9KgmPtpUyYXHw5/FjnUEKyXvduzBBFCe/uowhhK71zjD4silr7FYREvQAH3
-	 cuHFaabf1pnUFlik85pTxwFcxXYfVtfTjCwb9jlaqRf8moExRmiCFD4k3jHtlAzWZ/
-	 7m5iB0GGtWn83kn2IgjzM47F8A0QuXZp+sGoZP1cBUGVZgzCHiURSx3bBQwWGRje9a
-	 vIMHXRpRD5wvNK5ineQjXlYSTciE6ArbjOVD2qSfKG9MHCzKqa3+15E3psywDB65nQ
-	 tzE3rASn8XzUg==
-Message-ID: <d02626bc-a00e-486a-854e-b4555c11ee85@kernel.org>
-Date: Tue, 12 Aug 2025 14:02:11 +0200
+	s=arc-20240116; t=1755000649; c=relaxed/simple;
+	bh=+uZnII69G7exfF0EkgUg788HCmYZwnIjwbogADyfu2A=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=PE1NeA0VCu54ZgVJmNCBhhpfNZ+VeZxXxAqXm7n188Si8Z2+Z1td1l2iM6i375vVMRsnST7xK/k7cUQgQH10cXJ1E5HaROCG+o6rPHSbuiuL7eylHQYmbDYJOsqsEXgZY8G8hgXpoHsuDXI90KzQUi6FguJfDPaK+yYhLlg9/2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=UrCTOq63; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3b79bdc9a7dso3273168f8f.1
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 05:10:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1755000644; x=1755605444; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YwQiBqpf9JoZt+fgILn0+SP0zsZZwzib60rG+OcAdlY=;
+        b=UrCTOq63sn4+VyElxGf7bPPkqTea50K+ptYeHqM3Uiszw838uNkPrRe79TCW4E1BMb
+         jHdhC06iByjGs/TaF7L8v2qIP2hjgOgtz6U7s5rkhMpfAfbd5DIEaMUTOYdX4LI0GTkr
+         0heF8JsBc3mMr8SOiDLxmR6D7EIEdtGEZsvjterA9P0zvoasIk1mgxIzcTQfpZPTClau
+         br+mbcljhNDWRK/AGArhmQ0afR9JliTz6weW6/iMudJ+XdZGXJ2i5rt+IbQ24ixouJQB
+         dcBtt94CP9zVB8aG3tUMF60QfHeJEg3S4noVhpvMEg8pdifwfY0QmllQ3zIws+js1lG6
+         0cwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755000644; x=1755605444;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YwQiBqpf9JoZt+fgILn0+SP0zsZZwzib60rG+OcAdlY=;
+        b=EwCVg6/niFlqTd4d7ApWezEW46xbdxHX0+jc/2IFnxsgNeOmliD2OepnAulxm4QwmV
+         qxdfbjpT/Mwh0NbuvK7oSfzzvmAu+PaNQkjJfwIQ5uVhPiibNoW/14SOt9tGsyfeBZRF
+         EzkIVV1Pa2kKYVABu3bUK3csU6uaCjeXVKx+yP8+ndkHcXNHy6X6gqE+6g1TH+oGfV5U
+         wv08dFRKjGLg3qrFEtDEBPsoq0s8qt+InFEMc+iSllzrhD6SO0wOH31LazKJvMFb0r6U
+         lmaKg3n7iLC9lqC/1j9MHQFXhEMGbwgId9ammZIduAVziGlF2dkJe0lrsHHsn3aBrHA+
+         cw4g==
+X-Gm-Message-State: AOJu0YzGfW5KsEaGN1cC+zqkt/izSoW4oSkIjfnorcDb8Rc0eqCEhplY
+	Do7rOdy93TMm8R54Ue4gZylMxdCXbfhrawwRxdNnlmoWRfmxpeJobXQNH52TkhzfGUg=
+X-Gm-Gg: ASbGncsQNEki1e7Q1p09/llT/JNG4bWLuU7N84lTSJjbMPhY7UdldAb5g8U3vVXuN+M
+	pUw/2F8qhS0GVH4AUdkKjf0GnhoFaOo10012RscGPpwiE9ripeTs6YHhB2YMqr9r+O82fEO/hSt
+	OxM4x/c4hNSfvfUt80r6OAHPTv7r8yIGyXaXiBTW5xiZqFSoCq3CQlWdTs+xu+fpiKlDxai/fLH
+	1sCBQfN14BAwVHwvpczALzqYdjghbbMLQaYWcw5YRqJdVnV/apIvet4dBVo9e4L30PTaEFlusu9
+	B8HWNWQC6ulyYQrWzmxmorljvnr3rgT+i10LpIyfmL+ppgX1bZy2p+2p+dZYoN2zrgdAYs2wCGe
+	IVgT+xmFyHyi9FVjuZSEyHWQFnw==
+X-Google-Smtp-Source: AGHT+IGJC50rN4jfkVFSrPT/RqCdsK+ZR34XzrWUSMnoX/0FBBZartYIvscSbG1Mc4Fsr2G3aOcyvQ==
+X-Received: by 2002:a5d:5f4d:0:b0:3b7:9546:a0e8 with SMTP id ffacd0b85a97d-3b900b7aecbmr13909506f8f.41.1755000644427;
+        Tue, 12 Aug 2025 05:10:44 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:16c8:50:27fe:4d94])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b8e1cb7deesm34268788f8f.2.2025.08.12.05.10.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Aug 2025 05:10:44 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH libgpiod 00/10] bindings: rust: prepare v1.0.0 release
+Date: Tue, 12 Aug 2025 14:10:30 +0200
+Message-Id: <20250812-rust-1-0-0-release-v1-0-372d698f23e8@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] dt-bindings: serial: Add clock-frequency property as
- an alternative to clocks
-To: Andrea della Porta <andrea.porta@suse.com>, linus.walleij@linaro.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- florian.fainelli@broadcom.com, wahrenst@gmx.net, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- iivanov@suse.de, svarbanov@suse.de, mbrugger@suse.com,
- Jonathan Bell <jonathan@raspberrypi.com>, Phil Elwell
- <phil@raspberrypi.com>, Ulf Hansson <ulf.hansson@linaro.org>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Al Cooper <alcooperx@gmail.com>,
- linux-mmc@vger.kernel.org, Jiri Slaby <jirislaby@kernel.org>,
- linux-serial@vger.kernel.org
-References: <cover.1754924348.git.andrea.porta@suse.com>
- <419658ce1a1009c6f8b7af22a02b278cd695dab0.1754924348.git.andrea.porta@suse.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <419658ce1a1009c6f8b7af22a02b278cd695dab0.1754924348.git.andrea.porta@suse.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADYvm2gC/x2MSwqDQBAFryK9TkPP+Il4lZCFnxfTICrdRgTx7
+ g6hVrWoOslhCqcmO8mwq+syJwmPjPpvO49gHZJTlFhKHQLbzzcOLAnDhNbBVZkXsZKnFAJK4Wr
+ 46PGfvmjSblx1Geh9XTf7fy3LbgAAAA==
+X-Change-ID: 20250811-rust-1-0-0-release-65342607040e
+To: Viresh Kumar <viresh.kumar@linaro.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Erik Wierich <erik@riscstar.com>
+Cc: linux-gpio@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1789;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=+uZnII69G7exfF0EkgUg788HCmYZwnIjwbogADyfu2A=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBomy890zgLUfQlQ/8TWfzJFsS+ytrSW5xY51eKE
+ 8yoCanaRnyJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaJsvPQAKCRARpy6gFHHX
+ ch/oD/9EXwWscxtTaLV95XVOY4akOoHMS6nClfY2YZFw3eDJ7WJfM1887t3//cC2Eac2qdczlxQ
+ 8vb7BwQOCKdMYoEQ/tC0Ozx2jgdRpEPAKLzrqe5MshaZEsqUPoMPVGYPiSnAMpIusCqJeaKzrrg
+ NnYXjtw/N5I/IE7/muvqleBOiWSC/6UuRwipnpwj10QcQzB3oGYbYyZMlbLdGWd3uGPxUbCLH49
+ qCvT4yQnpPjoOa0JzRu3liEIraRsMBZQZxOtNJ+rVvUwD85h89Xm2MCdQnAA4Pdp2lHySAQOKGw
+ OQuKdy9EkkO5CYN/9yEfwWbFHqnDf8+2CrbGwUeOeh0nPf0oFJMmdiYZg5q8Og8AV+YFlmP+Hf/
+ qS/NtCF0O8IpKbRsC5KTua7vF3ErxfpCdt6AhfNIjQVMyV1YJkp438I1aF/kgbGvFTN5vEf+Q0B
+ /Cdyebc56nJejEGuWhxO5qdWfaPeK47Lm6p73nGk5R18L0/Kn3D+D5LCGbqDq3001dOhajfdYCf
+ cagZRNu0yHClo2RuaFAA56wMFzCeVuio7UMAz15gqtc9580tjjQJmsW7JbxV/IcfgOPCalItquT
+ l7c1Uvfd8oj8TCLdvqGjf8slkigz6Bq/paRu2U92mxmP0yhBrmcsUDzdDIw+HIysiXTLWNht+nr
+ ZCPmb7rzFhVGo7g==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On 11/08/2025 17:19, Andrea della Porta wrote:
-> The UARTA controller on BCM2712 connected to Bluetooth chip does not
+The libgpiod rust bindings interface has stayed quite stable over the
+last months so it's time for it to stop being a v0.x release and become
+officially carved in stone. Bump dependencies and rust version to the
+most recent versions available, fix some issues and then bump versions
+of the crates ahead of the official release.
 
-Bluetooth chip does not ask...
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (10):
+      bindings: rust: make Buffer::read_edge_events() lifetimes more explicit
+      bindings: rust: add missing unsafe block ahead of rust version bump
+      bindings: rust: update bindgen dependency
+      bindings: rust: update errno dependency
+      bindings: rust: update cc dependency
+      bindings: rust: update system-deps dependency
+      bindings: rust: update thiserror dependency
+      bindings: rust: update intmap dependency
+      bindings: rust: update rust version
+      bindings: rust: update crate versions to v1.0.0
 
-> mandiatorily ask for a clock connected to the high speed baud generator.
-> This is, in fact, an optional clock in the driver.
-
-... or driver does not ask?
-
-Please describe here hardware.
-
-
-> 
-> As an alternative, the call to uart_read_port_properties() ensures that
-> just a simple 'clock-frequency' property can be specified for the clock
-> value.
-
-Don't describe drivers. Describe hardware.
-
-> 
-> Amend the bindings to allow to either specify clocks or clock-frequency.
-> 
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> ---
->  .../bindings/serial/brcm,bcm7271-uart.yaml    | 19 +++++++++++++++++--
-
-Please use subject prefixes matching the subsystem. You can get them for
-example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
-your patch is touching. For bindings, the preferred subjects are
-explained here:
-https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
-
-
->  1 file changed, 17 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/brcm,bcm7271-uart.yaml b/Documentation/devicetree/bindings/serial/brcm,bcm7271-uart.yaml
-> index 89c462653e2d..96697b1428bd 100644
-> --- a/Documentation/devicetree/bindings/serial/brcm,bcm7271-uart.yaml
-> +++ b/Documentation/devicetree/bindings/serial/brcm,bcm7271-uart.yaml
-> @@ -40,7 +40,15 @@ properties:
->            - const: dma_tx
->            - const: dma_intr2
->  
-> +  clock-frequency:
-> +    description:
-> +      The input clock frequency for the UART, Either this or clocks must be
-> +      specified.
-
-Anyway, don't open-code schema in free form text.
-
-That's legacy property. You need clear explanation why.
-
-> +
->    clocks:
-> +    description:
-> +      High speed baud rate clock. Either this or clock-frequency must be
-> +      specified.
-
-Drop last sentence, Anyway, don't open-code schema in free form text.
-First sentence seems redundant anyway.
-
-
->      minItems: 1
-
-I'll fix this.
-
->  
->    clock-names:
-> @@ -61,11 +69,18 @@ required:
->    - compatible
->    - reg
->    - reg-names
-> -  - clocks
-> -  - clock-names
->    - interrupts
->    - interrupt-names
->  
-> +oneOf:
-> +  - allOf:
-> +      - required:
-> +          - clocks
-> +      - required:
-> +          - clock-names
-> +  - required:
-> +      - clock-frequency
-> +
->  unevaluatedProperties: false
->  
->  examples:
-
+ bindings/rust/gpiosim-sys/Cargo.toml       |  8 ++++----
+ bindings/rust/gpiosim-sys/build.rs         |  2 +-
+ bindings/rust/libgpiod-sys/Cargo.toml      | 10 +++++-----
+ bindings/rust/libgpiod-sys/build.rs        |  6 +++---
+ bindings/rust/libgpiod/Cargo.toml          | 14 +++++++-------
+ bindings/rust/libgpiod/src/event_buffer.rs |  2 +-
+ bindings/rust/libgpiod/src/lib.rs          |  4 ++--
+ bindings/rust/libgpiod/src/line_config.rs  |  2 +-
+ bindings/rust/libgpiod/src/line_info.rs    |  2 +-
+ bindings/rust/libgpiod/src/line_request.rs |  4 ++--
+ 10 files changed, 27 insertions(+), 27 deletions(-)
+---
+base-commit: cd32f27dd550753488bff4918aef4e230ce01512
+change-id: 20250811-rust-1-0-0-release-65342607040e
 
 Best regards,
-Krzysztof
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
 
