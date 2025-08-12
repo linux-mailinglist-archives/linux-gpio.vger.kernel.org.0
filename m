@@ -1,169 +1,172 @@
-Return-Path: <linux-gpio+bounces-24248-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24249-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C975B22138
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 10:34:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FF81B221BE
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 10:50:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 73BB86E3B00
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 08:30:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9EDAB724AD4
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 08:45:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08E4B2E8E17;
-	Tue, 12 Aug 2025 08:27:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 628C32E264F;
+	Tue, 12 Aug 2025 08:44:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="eMTt1x/n"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fwMMmEsi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1CC2E2DDE
-	for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 08:27:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9D12D6E7B
+	for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 08:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754987259; cv=none; b=FwQKGZ+vschlIbSTRezQNpcBEHV/Dq/DeZ2SZsfxum4Sflal2wD+j6cbu/mjmnTcOfiMfGdgI4lM06k9cxF497OBtt8YtdqIWFB6OrXiy5EfRb30qkKGP3NiJ3NNIf1C8hOZIsQnlM9QDGBo1Z7+l/UK+tLSc0IACStqTN1ZPy4=
+	t=1754988298; cv=none; b=guNNarasDdRbfmN3MUdblU6QxbSgOpwukG/EyeaEaBpbA1aBvMN2uDERwGe3eKRHS7Fes7S/B/H+l5Q4UERHcAMC4GxVDqWZvc0cdSJNNLG2e3HYm9avuRh7y63gLvQER4nlJipktkIyu7oi/X6Qn6vE28mqj9anUiJxxMcDpXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754987259; c=relaxed/simple;
-	bh=RFujl0Cr/YaORxwURfe0zTKDzCwOsKiOevFTrddSrvg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YWbhii9uBGhopmZ1GduLijpS691UxvNCingbMjPhxfjWTEAKuOl70QTxvMqdLjp/xZBXU3WTyN7mym2FKfnSpL/3HS5BjimbCM2LETRtTnaGcx1yuE19E9V+oGPytvIQ+56gwoJ5vTG4PYgkoA+/NtgRFCswWpRchQuJjkcaIwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=eMTt1x/n; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3b7910123a0so4800337f8f.1
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 01:27:35 -0700 (PDT)
+	s=arc-20240116; t=1754988298; c=relaxed/simple;
+	bh=yUEBG3s2Iox5Z1YnWor/+RVWc+Tlit/BIkynfNjn8u0=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=cJFxckfL81JU0tfhj9tfPk1CQL3sebgzXy3wks64lOTwi92qvPKP7RPx51XtVTWfRNCFu8DPnAcd7Rzr3VGSt/dJtsbc3PIGd2xviJXZfkT9pOtvHTjRE5ypsV7f0ZwZmRLRw5Dgo0G3HZyb2juoGv9FW4Bw8bLEIbkeNijnu2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fwMMmEsi; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6157b5d0cc2so7468280a12.1
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 01:44:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1754987254; x=1755592054; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jAO2WeXDFkbtwkjKyd1xrqU98u0EGyjojmTyXcAuE7w=;
-        b=eMTt1x/n1qgzpLXyHDo6MeIY4+ABzJ1/h6XwcjcSjBY8i4oEErGGJvm96NP7ZKL1ZE
-         RXo41IishSEJjQGnZyqdFwr2Ely5coNK7Sonl7CW/iQjuQJwWPA/5ulSPkzbJREn3Tgn
-         ItP1zxFMSppYm2uvC74UwX0VSbNhStsWMwGqI7rgRjSrpeluaqVqufJtLf6aNyqWqN6T
-         +qESXRX5qhzM/4BacuWQuWpoAjMVhEcDFmg2Gk4bCOlb2H2m4b+QE5pXYY/IrHUeBDCZ
-         gzVgkNBfVDNYUpv+pU165as8TndN+xeoIb5EPhLXMkb38ad31ptnJ4kIw7c14EqsKkmJ
-         8n2Q==
+        d=suse.com; s=google; t=1754988294; x=1755593094; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UIMOvue31dwc/J4aquxw833RlbJuhQchriCV8fOzVLE=;
+        b=fwMMmEsiVc+pLmQmqeEk98Y6Bpb8sbp7eqUEA5l3qqW+nsDnCJZKbXskaAs5/Gb8+E
+         mCQnO7LKfyzy9w3nTl355jSCdt8YgrTUivBHa6YRLNYn8qwTslua/Oxf4v3bCTjFsdgM
+         hXQV+O/JyWkylrjYLgYp/706HrGhvYx8ICmSEiPHdg85A6Pa8zn3rMe8W5M/nKNe2hWl
+         IoVIHhUn9u9EtCPwfkXrfXgf4tB7U276Dvv86fDq1mhyn99wsMDgi99+dpNoOOHcLDnn
+         j46gIsVBp9TyEjpU2itO8FSnxZpu7oeCUcQcBOxsqDWuG9g6Y8p866mX4+NMKLl3WD2j
+         k/Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754987254; x=1755592054;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jAO2WeXDFkbtwkjKyd1xrqU98u0EGyjojmTyXcAuE7w=;
-        b=ExSacuOEXw60L1h4UpiHF+EZqlslaitc6Eg9THgMNSpLeISXchrbNjCildiipfoEdZ
-         e/L96E1SD0+KnmD+9Xa9ivmftcm+8tC+rlT69agKIrTlK6c9VKtjd1aRO4FOr016SBp6
-         GNRUAxosbyaF1CZROtMdozRPp2XEl/y4QckDO3tV7YdiuQOmKbR2KQ3PrOypshEjYLCO
-         vP02cLyIjjEQfwkMwGSzSOYSh/vQVhW0l/wFcoDwIg8qscSsGtAwy4jDjG7kbUPb/CYi
-         Diusv2TDg1ntzH/i80BQsf/cfX4q65D0qjn/T6bfJYg0LjYXXoITNOhEKpXnc0nShi48
-         oMHA==
-X-Gm-Message-State: AOJu0YyroopyYwoY84T4IFO9mYF8JvrR6LSURCbD6cuGaC+n2fU4KwGy
-	HcYMBNtMBkWFwGRXSK6CJAkyqKF50EkVjumRLQSdqPGMdlLvssRlFQFzAyw6fdlkE3A=
-X-Gm-Gg: ASbGnctZd7rEViQINIsxPZRSEyAwjC8Uqkh7tGmRsxXF6y0QMvT/rIf9hGj7XAjhnoa
-	6JlUqmNc0RKW8ea222r+aoBAppmtGEDPBiVWKQvZprKgyo4jzPPk2fFGt6blJdP1DTPm0CcDbyi
-	AruCQ+M7skV3H7TNGJyDB8/PgUb5ESD2w2dqXq63/9BsLwSqPDICT7n6SM64Vfi/s8Sp2DvC9M+
-	FKtRN5z3XNwF9BNCERTVaG0udCa02kId5B9Keh49W9VnzHSafbrxpJJXC+WElyy8T7Dg3nCo0Tx
-	uirm3Zh370Ks68Ar6KzIIx2XUdQROpp5T3ua+3HmXJitgE9XICZVGYe48bmtx/SQ9RjTyTpTesD
-	ZzsWqZCI/57Lom+Y=
-X-Google-Smtp-Source: AGHT+IEIkGK210eX4oaAWTvIndQdBKgODaVv89WdHuLZ5yZCYfAUy5DwGLKFKR8W9EpKo9YtXUOSDA==
-X-Received: by 2002:a05:6000:2501:b0:3b7:7904:58e1 with SMTP id ffacd0b85a97d-3b910fd9b5bmr1926776f8f.18.1754987253948;
-        Tue, 12 Aug 2025 01:27:33 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:16c8:50:27fe:4d94])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c3b9386sm43549423f8f.18.2025.08.12.01.27.32
+        d=1e100.net; s=20230601; t=1754988294; x=1755593094;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UIMOvue31dwc/J4aquxw833RlbJuhQchriCV8fOzVLE=;
+        b=PLUnafVtk9uiGwi51mw4cQtnIUDetS3LTEXmldj3FtqkOnv1ehzXYRX0ZbUtKd0j0A
+         FFzlBcUp5boNoe3UIHb2+KWqEP+V+b/tKz8cGfr3qvRipsOKaFUhZLZWwVQMbl+zOkIZ
+         0y+0jwNMZltURrzpqFOUMr7EzvxWe5XF/NXRUfWtwvFHi4DcLaxOEFTYOSQTeKKHhPjG
+         UNMx/Lyace/qSrh9iBX0sAXR3+JkMsNYb2DYOUI0g0AKpFuzzrBqrEhFHn2HD6SYd05L
+         lyz7Ipw+pJlxx9Xx/Hs5Un0BgEL+fwlaSXgH7rndpeWtFFZLp3x238K5PMQamK3/AqFe
+         C6FQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdUnLGLSvJa6fbc7LWBVDx9VS6on4F8gQFY1gBPRaobhqLyleGaMRveX7XNxIZQUea/Md2tRTWHqAp@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJ4E4/FzRH6Wad48ww9zK0I3/PkRvcKzlZVZaOP4GfgGmQFMXB
+	lucwS5LjeLFvFFjzgNsIjd3821nTwiaLUS1p9a250R3AkRvtZT2N0tB9GxEO/yzXeuM=
+X-Gm-Gg: ASbGncvoLhbOIa6S/cSA7FPPfnJtvp3u/F8QG7TgWtKECIoGbYeW4jvnr1AvveZu1eU
+	3ZEWK1oE4EPybPXOJ/To19jSGT2RIFWRP/1XKjwwyPhKU/WIAx5p7t0m1PLKQA0l5YfaQAaFMBH
+	NBmbtfG5z5ABddykhgaT+HQKsNPezw32xvUHSnBfZe6oS1TQtxmIsRGH6buCnrTnHhjS4qhWCW4
+	4dqiRqx/mhZec9IbWXVSlkdvLsIf+TOY3/6d9PccoVWDhWleZgufkqm+fov5dB7TY8TKJiW2A1e
+	Z/YxUw8jR5hn+pA8RZGRYk+zkQB1w5NivLHJycnRHs7SBRpmXeKHvdpZI3HcDn65qYhxJPBr8n8
+	CAUczfKxv25Y8vhyLUd4mUhxcBM+k64dMA2HSyvi/qCJzwNloFQ6NUqK1BgRmRX7bpQ==
+X-Google-Smtp-Source: AGHT+IHGS28WyNhkMEqCYl++k5tXKsI+SYF4vISQjhRE5gJkG3IUVoDSvuT7pIyGxqFMWkpcex+/TQ==
+X-Received: by 2002:a17:907:3f94:b0:af9:14cf:d808 with SMTP id a640c23a62f3a-af9c654272amr1559960166b.55.1754988293947;
+        Tue, 12 Aug 2025 01:44:53 -0700 (PDT)
+Received: from localhost (host-79-44-170-80.retail.telecomitalia.it. [79.44.170.80])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af91a078afbsm2158282666b.4.2025.08.12.01.44.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Aug 2025 01:27:33 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 12 Aug 2025 10:27:14 +0200
-Subject: [PATCH v4 15/15] pinctrl: qcom: make the pinmuxing strict
+        Tue, 12 Aug 2025 01:44:53 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	andrea.porta@suse.com,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	iivanov@suse.de,
+	svarbanov@suse.de,
+	mbrugger@suse.com,
+	Jonathan Bell <jonathan@raspberrypi.com>,
+	Phil Elwell <phil@raspberrypi.com>
+Subject: [PATCH] dt-bindings: pinctrl: rp1: Describe groups for RP1 pin controller
+Date: Tue, 12 Aug 2025 10:46:39 +0200
+Message-ID: <20250812084639.13442-1-andrea.porta@suse.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250812-pinctrl-gpio-pinfuncs-v4-15-bb3906c55e64@linaro.org>
-References: <20250812-pinctrl-gpio-pinfuncs-v4-0-bb3906c55e64@linaro.org>
-In-Reply-To: <20250812-pinctrl-gpio-pinfuncs-v4-0-bb3906c55e64@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Alexey Klimov <alexey.klimov@linaro.org>, 
- Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
- Andy Shevchenko <andy@kernel.org>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- David Hildenbrand <david@redhat.com>, 
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
- Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
- Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- NXP S32 Linux Team <s32@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Tony Lindgren <tony@atomide.com>, 
- Haojian Zhuang <haojian.zhuang@linaro.org>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
- linux-hardening@vger.kernel.org, linux-mm@kvack.org, imx@lists.linux.dev, 
- linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1142;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=M6AAfE1ZYIqFZsBoDZ4O1bJllvK/6bMXFJ6Zryc+i/E=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBomvrZaBmeISpiHCVh1NKR4JJvKfvoR7+4TGM34
- qACMSZiq0aJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaJr62QAKCRARpy6gFHHX
- ci+8EACxohGvZiGTBr0Y9QxyJzsEN0JDEuMPPP2/XSq+kOTHcKkmHErEtvBcohO7KLJzJuDM92q
- Iw3+IzM052WTxd4daM2zpMgweo/2dwzZfR5YEUer3WEroEGm+Bj1fVPmMiit7p1Urk63XsoIjrL
- iIqOXmtlteGyRTKCzz3k/xmfTyEyU7VBHczMECuT5uEu155Bu8nJCumD+wzbe8mmIlfgHaOMDUI
- EhNzoSXVeYCY0FHD/wqktUBCPUxVj3EGM965wJpVDJiroVIyzBPsjcH9gW4ZMI3gsrpLkKSn7/b
- B1DQKX5Md99KuFnktDMJfMeRA9VTUveqdFKrzKWO4O1PCOiNZYTlwh/00gXu8zMpM4AK1/xeHy6
- xv2CMDqxOQQE9pNYsgFWdMK5+GZYlQTAYrjZncSo6RYTzLN9weKlo0cKuhBe3wUVAZQntaTYy8i
- k/Zxwl8sT/axdwTsi8ewRtM0DJYHR7QWCXofS6dAiEDIgSKdzkZJ4mIec2cmwKInyd1Ja38qeyo
- BaUmY5FfX7ADJQDEVQD8b/C/oeUP+bk/MkxTefH5hvrw5RZW6Rm5jF7NwkotqyJwbEKJFZVea+T
- cJiJ5bAYHdIENT0OWfDZvACcGaK8OCdLW3UJoLXH1IZbWn2imkJ1JInadg5ZknF41i/olNLfmrS
- vdUH6mCryqoAAIg==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+The DT binding for RP1 pin controller currently lacks the group
+definitions.
 
-The strict flag in struct pinmux_ops disallows the usage of the same pin
-as a GPIO and for another function. Without it, a rouge user-space
-process with enough privileges (or even a buggy driver) can request a
-used pin as GPIO and drive it, potentially confusing devices or even
-crashing the system. Set it globally for all pinctrl-msm users.
+Add groups enumeration to the schema.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 ---
- drivers/pinctrl/qcom/pinctrl-msm.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../pinctrl/raspberrypi,rp1-gpio.yaml         | 35 ++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index a5f69464827119dfe2a7781b558094b283fca215..1751d838ce95d6138c824b90098f74891dec7656 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -268,6 +268,7 @@ static const struct pinmux_ops msm_pinmux_ops = {
- 	.function_is_gpio	= pinmux_generic_function_is_gpio,
- 	.gpio_request_enable	= msm_pinmux_request_gpio,
- 	.set_mux		= msm_pinmux_set_mux,
-+	.strict			= true,
- };
+diff --git a/Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml b/Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
+index eec9a9b58542..af6fbbd4feea 100644
+--- a/Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
+@@ -72,10 +72,36 @@ $defs:
+       pins:
+         description:
+           List of gpio pins affected by the properties specified in this
+-          subnode.
++          subnode (either this or "groups" must be specified).
+         items:
+           pattern: '^gpio([0-9]|[1-4][0-9]|5[0-3])$'
  
- static int msm_config_reg(struct msm_pinctrl *pctrl,
-
++      groups:
++        description:
++          List of groups affected by the properties specified in this
++          subnode (either this or "pins" must be specified).
++        items:
++          anyOf:
++            - pattern: '^gpio([0-9]|[1-4][0-9]|5[0-3])$'
++            - enum: [ uart0, uart0_ctrl, uart1, uart1_ctrl, uart2, uart2_ctrl,
++                      uart3, uart3_ctrl, uart4, uart4_ctrl, uart5_0,
++                      uart5_0_ctrl, uart5_1, uart5_1_ctrl, uart5_2,
++                      uart5_2_ctrl, uart5_3,
++                      sd0, sd1,
++                      i2s0, i2s0_dual, i2s0_quad, i2s1, i2s1_dual, i2s1_quad,
++                      i2s2_0, i2s2_0_dual, i2s2_1, i2s2_1_dual,
++                      i2c4_0, i2c4_1, i2c4_2, i2c4_3, i2c6_0, i2c6_1, i2c5_0,
++                      i2c5_1, i2c5_2, i2c5_3, i2c0_0, i2c0_1, i2c1_0, i2c1_1,
++                      i2c2_0, i2c2_1, i2c3_0, i2c3_1, i2c3_2,
++                      dpi_16bit, dpi_16bit_cpadhi, dpi_16bit_pad666,
++                      dpi_18bit, dpi_18bit_cpadhi, dpi_24bit,
++                      spi0, spi0_quad, spi1, spi2, spi3, spi4, spi5, spi6_0,
++                      spi6_1, spi7_0, spi7_1, spi8_0, spi8_1,
++                      aaud_0, aaud_1, aaud_2, aaud_3, aaud_4,
++                      vbus0_0, vbus0_1, vbus1, vbus2, vbus3,
++                      mic_0, mic_1, mic_2, mic_3,
++                      ir ]
++
+       function:
+         enum: [ alt0, alt1, alt2, alt3, alt4, gpio, alt6, alt7, alt8, none,
+                 aaud, dcd0, dpi, dsi0_te_ext, dsi1_te_ext, dsr0, dtr0, gpclk0,
+@@ -103,6 +129,13 @@ $defs:
+       drive-strength:
+         enum: [ 2, 4, 8, 12 ]
+ 
++    required:
++      - function
++
++    oneOf:
++      - required: [ groups ]
++      - required: [ pins ]
++
+     additionalProperties: false
+ 
+ allOf:
 -- 
-2.48.1
+2.35.3
 
 
