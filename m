@@ -1,124 +1,239 @@
-Return-Path: <linux-gpio+bounces-24250-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24251-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1502B222DA
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 11:22:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BEB70B2231C
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 11:28:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 57D8C2A0A9D
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 09:19:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A4787167C0B
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 09:24:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 754E42E8E10;
-	Tue, 12 Aug 2025 09:17:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3382B2E88B7;
+	Tue, 12 Aug 2025 09:24:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kcSf6R+w"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="GtwTgxXQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B872E8897;
-	Tue, 12 Aug 2025 09:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B07A92E8DEF
+	for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 09:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754990236; cv=none; b=i8a2CH8GmgKgDKOPLvJpedGCrT6PDknonn6slcC9eadekjRJjEXh/zqv4c4I/phczTibevzfxX2jQTjkScU9ajaMgAHhSnM/RGZEquiq5t+WoZPYfbAUhZtfkZOcS8lY9sV/aEWI4ujsAGfOD8PL5dkfpwtPBqnanwGhi5gZ/A8=
+	t=1754990681; cv=none; b=X7FC+Ts1x3iZFAxrTfzRK4jAZwA3X4OznkI/BQoCyAkJ5N4tswSw+3m9FwDTCEWcFrJKrCoXl/Nk1q6IP7qGDvJBgXS5hnInV7xsHwFvinYRaur/fwkpg3+zp0BYIRBCybsdcL4gdtNxUQAbndrxghnES/nWrn/X2f3w+JjaVnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754990236; c=relaxed/simple;
-	bh=FH40Q72Hlv1Q+FKRAVO0gIDPDVp0pGWeafDOUhL/q28=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UiARrn1HorsHcddKcrOLn9DhHYRkXgokB/+G3eHwZvHJQpJekBVbF1grxH+RnSN7QQlrTXRIfMCtGSESLbHG+ZuG6HSX/e3KuGMcVxRpVEI62ubLTWWmu3Or9BuTU1JEENUN0iJGnm7TdTEOx0xbbh284tYrzNPzWIr7WuxNE1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kcSf6R+w; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-33230f1347fso42418441fa.3;
-        Tue, 12 Aug 2025 02:17:14 -0700 (PDT)
+	s=arc-20240116; t=1754990681; c=relaxed/simple;
+	bh=Q6SiaUMUBwADMLT46ML/ci6aY1rgmloSnDAqLBs4qCw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lp1d+uZuAOsPCiIEnSrAeGcYVhu9b2Prp/LbG/l7SduvcxIR1i+1VhB2L/BMbYQJEArW7HjxKOGIROrJzyIkyC1wpHysRTafSGPVV53aNtxne3C27vN5OrVM3Ug7oNT9QG7PJa/wNrd4MoYj38uYLI5hjQaph2Rwru2sCI5LjeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=GtwTgxXQ; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6157b5d0cc2so7515163a12.1
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 02:24:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754990232; x=1755595032; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FH40Q72Hlv1Q+FKRAVO0gIDPDVp0pGWeafDOUhL/q28=;
-        b=kcSf6R+we9AS2Or4FMhZnYfGl5SAmg4yv5cv54zNHuZ/XDKpbghtGKy/qxlAJbj0ad
-         llU19nmlx1JFRxnhgSSHMrKPclzR+Z5y7LUBxNfO7iXThFpIM0nIYXmYKh5PnsFRY1gy
-         8ln9ppW4Cq1EkgT//vala6A20tPSS5xmoL8m0WJIZqUqqrpROEMxRBi6n3VvCiUv96i1
-         GcqlygFYY13oK46k9NQbOMppAxJtEzJKz+A/g24oYEnBTJgMAf0DhnK9vLfUjEzEYt3j
-         SUGom2JuPeYxaeEmQqE6MLdoRIx7dZh+fOg1odcBBwuFGJYC3aQiZsCfA/PMk7kRoGPs
-         cQ+g==
+        d=suse.com; s=google; t=1754990677; x=1755595477; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/ik89ZT962vx6SU8Qf4vXzKTiJike3fWaSdDlAHYYf0=;
+        b=GtwTgxXQnsELrIuvNxlBOHfQZMWA0tpqS8kvcCE0JoAFU9UlcQn2wgqGK8uWLrV9KI
+         XR38OOjiqII5xvAxwLEMDzPFonYB/Qt2MI986zuvENCj668DEgqp1jm/ZuePUxunea6g
+         dxteVRu/1LPDcgMzogFOb3LN7AtQhdoqrdBftU6SaU4T0Bu6RiLDAztuYWr/jZAUDBGi
+         nzcytjyuZitml4WFo/OsM//lNokKmxi79mj0lTWiUp1rfR5niH8wGLFjVNK75MRhtPJO
+         rRtKpo9SfNwaxhixTuJHBkW0rO8sC8i4xupbDax+flekpprC3SboK2O9IVkGyanNilvs
+         n4JQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754990232; x=1755595032;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FH40Q72Hlv1Q+FKRAVO0gIDPDVp0pGWeafDOUhL/q28=;
-        b=DENyzFt7IAdKHu31p9boMgibQV8NbJE/LIIGZm2NJklC3+qsSTGpz5Rj07PxHsDZG2
-         +7Xp60rSiwGwc9ZJLssMf6DCY0ZzSWBvoUWe+34npXTL7QgnW18/+jW4apPiJCe2Ufed
-         VLpVNLW1HjXw8zdNvr+oMzzPc4rk9ZTOMuxeqqSymvFAb7wo279FevM8CuIbGB2YR8LW
-         Wgi8OcUsilukSg+SynCCcM3i69c+bnr0Bl3bTozR9PiBZITxcdo+hRtBLvS/Eqyqkv2n
-         FzGWi7UcZFcUyi0gr5VfOV7XGVc0Zd+ZynWKnU2G+ExPLijZvbBWw3CXTcWtXFaNk/4x
-         PUeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVLgeXATv+47uxuGlgRS5OodWs2vWfQvA0CMu6co9xxS7qVMtc9m314A59BwwWfQjtfq+UglPdyZqPwJA==@vger.kernel.org, AJvYcCViDGWF0d+PSnxY+LOPrA47WusknAk+ukTlVKKnbKxWN0nvAyVaCxDdcwmjne1WE468UVJbeFmimwHvD5Ew@vger.kernel.org, AJvYcCVmL7tD1bEuBQQEkTb7Amko3TkvakzMsbXo2n/Q2mzgGtdh4M79VzZt7GqsZ5Bjjdy8kWek9RB6iy6lLaXT5M4ykMs=@vger.kernel.org, AJvYcCVt+4oAuF06thvVJpUEnjdBA82klKDVwA8gsvTx+cIFCon2A50a8XUpRzqproYm7KV0T2rCXzu2o8aK6Q==@vger.kernel.org, AJvYcCW1aaVPxG8+KVpnYuamEUhRomET5xHBAUgMjaotRBmwCsjbhdIj+OhQkU87q9eBQm/z8UY/u8w4BtIL7Q==@vger.kernel.org, AJvYcCWB//6ONzkpsvZPJcw3PQHMYwvE/Z53bLKHtiLirxBE411Bj+GHVbhdUowTdRVjc+MEzM7f82+wWxYnX7zAlidW@vger.kernel.org, AJvYcCWEytDOvrhAtHGaRmGaRGFIHzxg0G0ubtMU4bQ/hODUESeGbIZd2maRk/ywUUXjaGwM/0+EVWZkagvyBnMm@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2xMa85W1X53xWf9OfXdUvAQlv2VLZIh8av2VZd5V0sqnRymt8
-	bcUOBNxDoo8MpkoxwGBopBcOUTLY7D+qXa4lfgDJRiCeBJAbNxOjM48kEaa3MDdc8dwBZVva+61
-	UgZdjHyBRfb5RBesbfmlYt3rnRKBt6Ok=
-X-Gm-Gg: ASbGncvMQohodooEszWnCMi6m1h+XYtU6RvYooLyd23JmjRkjzAQb9+KIK/G93TKb84
-	xdclUFoTqN8v79TvhIdU+K9JmZrHT1n8FU+dilLpCFQAbxki74HVqXOIWdPhtt6Cr01PSHH6uqP
-	jDc6yreI4XN0nzrAWJaplS7hgZu5IpOC4TPXe4iLV27RatXV058tH2gaVFJkOrGxw/5BejEB/k2
-	jMoc95gNw==
-X-Google-Smtp-Source: AGHT+IEhcflI5Ydaa1GuiuNmpjFNx5ppiNgejnDAuoNiBIEGufTrSOsbJvRUoZYThN0W3IOGq2XThl67s2szsla47bM=
-X-Received: by 2002:a2e:a7c1:0:b0:32b:59d1:7ef3 with SMTP id
- 38308e7fff4ca-333d7d29e55mr7575061fa.35.1754990232270; Tue, 12 Aug 2025
- 02:17:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1754990677; x=1755595477;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/ik89ZT962vx6SU8Qf4vXzKTiJike3fWaSdDlAHYYf0=;
+        b=N9y74fl5ZlG9YZr33wArcqLrLgL+ymhr4gsXG27m0N38s7exhZznRdgBqeigljbZct
+         LzvcQumwHV64ugi8LqwFbwI6SKO7Xnpyuv8T0HRADa3mSlwgrngoq0RVgCp84OigvGzk
+         GycmuJJxvhFv6EfYugv5QJRqHUG1LJ5hsnhzv+hdPF+cKAJmfFfACW5jTuuhB7hZJFxh
+         PyuPC7u2wCkxxzJoDUpGVoFLXIQf5TNO3QAEU3lqc99xGRHjAcm7kOsXpNU13A0sMAxU
+         JH9MUaolm1oD8PbWzoNGTCmJSr2S6kf6OXW9czTipXstEOZoStkimoV5jo9w5q5kIQSS
+         vM8g==
+X-Forwarded-Encrypted: i=1; AJvYcCW7Z4FCj47PnVrfr0w8aI+H2/YIFUDdy1zkcN+l3Fph5eK8pDCdHab5nCGKlp9v6b5lWuDDUinzKSnP@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOCJ/aSuPB9B65+ESmDlMSQSgKpupiTTjRGYv1rqdsWLCFyrL2
+	kKFehAFFaxu/+YrfdZ66r5Esr22Wm5/DYt/zd1gLS/1diupdQyBqeMRwVWMeAQuTMRw=
+X-Gm-Gg: ASbGnctbWJlFSkTXPTeUyNMSyPHtaxkIO5XxovJ+wtBNVVWDElCZFbsW4AE5QBllPNW
+	5TYgrackD6XtqKBsulTmC+DFQUYnQvLUvCdFfcAP2x3IM29grl/H/3mBkKNp+xP1quSwW9Mvxpx
+	PzQzSRjwoz5poUlF290XrAEX6n2jXmKE76RC4P/Xk3bbpaFgHbpPVbx/TmQD79Q/7oJoYqq6+be
+	d5shk0bMMfKfHDTLjbfgBflm2d7zSkUCkyBvm3JGYVEJ2KemF3d0a21Pw77cEHkI1uCOhC+hAED
+	X86iQDeA1FgrKYTBlDwhDIZbbAB6EShxmlDbpwT61LFZExvCxsUPPYN/szvLc5y5n6/4ZouO6dr
+	y4sgerN5YnExSFvgi4oHSGax+fh+AbFhM5u/5sJ2w9w4vK8X0E5Y3h9BPT88eAoMW4X97GYRNhp
+	v/
+X-Google-Smtp-Source: AGHT+IF0y/ejWJ54lbTQXObqXK6yYP3pFrZAFOlbINbsKGuqFolmXDycq6lrJK1l59TCnacyLDHgFw==
+X-Received: by 2002:a17:907:a893:b0:af4:148:e51f with SMTP id a640c23a62f3a-af9c6375c30mr1421293766b.2.1754990676889;
+        Tue, 12 Aug 2025 02:24:36 -0700 (PDT)
+Received: from localhost (host-79-44-170-80.retail.telecomitalia.it. [79.44.170.80])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af91a075a74sm2202606466b.17.2025.08.12.02.24.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Aug 2025 02:24:36 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Phil Elwell <phil@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	kernel-list@raspberrypi.com,
+	Matthias Brugger <mbrugger@suse.com>,
+	iivanov@suse.de,
+	svarbanov@suse.de
+Cc: Andrea della Porta <andrea.porta@suse.com>
+Subject: [PATCH] pinctrl: rp1: Add regmap ranges to RP1 gpio controller
+Date: Tue, 12 Aug 2025 11:26:18 +0200
+Message-ID: <20250812092618.14270-1-andrea.porta@suse.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250812-pinctrl-gpio-pinfuncs-v4-0-bb3906c55e64@linaro.org> <20250812-pinctrl-gpio-pinfuncs-v4-1-bb3906c55e64@linaro.org>
-In-Reply-To: <20250812-pinctrl-gpio-pinfuncs-v4-1-bb3906c55e64@linaro.org>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 12 Aug 2025 11:16:35 +0200
-X-Gm-Features: Ac12FXxOADkY0Kt68GjCLZnzoIn9ZUx9AbefjcCXbQIHx05RgPhrrqXj4qTh3Ik
-Message-ID: <CAHp75VecVi9XZ25_qY3vX97xbDndPT+O8z=+V=Jocv_8yOQ=4A@mail.gmail.com>
-Subject: Re: [PATCH v4 01/15] devres: provide devm_kmemdup_const()
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Alexey Klimov <alexey.klimov@linaro.org>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
-	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, imx@lists.linux.dev, 
-	linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Aug 12, 2025 at 10:27=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
->
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Provide a function similar to devm_strdup_const() but for copying blocks
-> of memory that are likely to be placed in .rodata.
+The current gpio driver for RP1 shows only the very first register
+from sysfs, e.g.:
 
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+$ cat /sys/kernel/debug/regmap/1f000d0000.gpio-rp1-pinctrl/registers
+0: 0abe0000
 
---=20
-With Best Regards,
-Andy Shevchenko
+Add the correct ranges to the regmap configuration.
+
+Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+---
+ drivers/pinctrl/pinctrl-rp1.c | 95 +++++++++++++++++++++++++++++++++--
+ 1 file changed, 90 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pinctrl/pinctrl-rp1.c b/drivers/pinctrl/pinctrl-rp1.c
+index dadafc935dbb..b231efc62ff3 100644
+--- a/drivers/pinctrl/pinctrl-rp1.c
++++ b/drivers/pinctrl/pinctrl-rp1.c
+@@ -1623,12 +1623,97 @@ MODULE_DEVICE_TABLE(of, rp1_pinctrl_match);
+ 
+ static struct rp1_pinctrl rp1_pinctrl_data = {};
+ 
+-static const struct regmap_config rp1_pinctrl_regmap_cfg = {
++static const struct regmap_range rp1_gpio_reg_ranges[] = {
++	/* BANK 0 */
++	regmap_reg_range(0x2004, 0x20dc),
++	regmap_reg_range(0x3004, 0x30dc),
++	regmap_reg_range(0x0004, 0x00dc),
++	regmap_reg_range(0x0124, 0x0124),
++	regmap_reg_range(0x211c, 0x211c),
++	regmap_reg_range(0x311c, 0x311c),
++	/* BANK 1 */
++	regmap_reg_range(0x6004, 0x602c),
++	regmap_reg_range(0x7004, 0x702c),
++	regmap_reg_range(0x4004, 0x402c),
++	regmap_reg_range(0x4124, 0x4124),
++	regmap_reg_range(0x611c, 0x611c),
++	regmap_reg_range(0x711c, 0x711c),
++	/* BANK 2 */
++	regmap_reg_range(0xa004, 0xa09c),
++	regmap_reg_range(0xb004, 0xb09c),
++	regmap_reg_range(0x8004, 0x809c),
++	regmap_reg_range(0x8124, 0x8124),
++	regmap_reg_range(0xa11c, 0xa11c),
++	regmap_reg_range(0xb11c, 0xb11c),
++};
++
++static const struct regmap_range rp1_rio_reg_ranges[] = {
++	/* BANK 0 */
++	regmap_reg_range(0x2000, 0x2004),
++	regmap_reg_range(0x3000, 0x3004),
++	regmap_reg_range(0x0004, 0x0008),
++	/* BANK 1 */
++	regmap_reg_range(0x6000, 0x6004),
++	regmap_reg_range(0x7000, 0x7004),
++	regmap_reg_range(0x4004, 0x4008),
++	/* BANK 2 */
++	regmap_reg_range(0xa000, 0xa004),
++	regmap_reg_range(0xb000, 0xb004),
++	regmap_reg_range(0x8004, 0x8008),
++};
++
++static const struct regmap_range rp1_pads_reg_ranges[] = {
++	/* BANK 0 */
++	regmap_reg_range(0x0004, 0x0070),
++	/* BANK 1 */
++	regmap_reg_range(0x4004, 0x4018),
++	/* BANK 2 */
++	regmap_reg_range(0x8004, 0x8050),
++};
++
++static const struct regmap_access_table rp1_gpio_reg_table = {
++	.yes_ranges = rp1_gpio_reg_ranges,
++	.n_yes_ranges = ARRAY_SIZE(rp1_gpio_reg_ranges),
++};
++
++static const struct regmap_access_table rp1_rio_reg_table = {
++	.yes_ranges = rp1_rio_reg_ranges,
++	.n_yes_ranges = ARRAY_SIZE(rp1_rio_reg_ranges),
++};
++
++static const struct regmap_access_table rp1_pads_reg_table = {
++	.yes_ranges = rp1_pads_reg_ranges,
++	.n_yes_ranges = ARRAY_SIZE(rp1_pads_reg_ranges),
++};
++
++static const struct regmap_config rp1_pinctrl_gpio_regmap_cfg = {
++	.reg_bits = 32,
++	.val_bits = 32,
++	.reg_stride = 4,
++	.fast_io = true,
++	.rd_table = &rp1_gpio_reg_table,
++	.name = "rp1-gpio",
++	.max_register = 0xb11c,
++};
++
++static const struct regmap_config rp1_pinctrl_rio_regmap_cfg = {
++	.reg_bits = 32,
++	.val_bits = 32,
++	.reg_stride = 4,
++	.fast_io = true,
++	.rd_table = &rp1_rio_reg_table,
++	.name = "rp1-rio",
++	.max_register = 0xb004,
++};
++
++static const struct regmap_config rp1_pinctrl_pads_regmap_cfg = {
+ 	.reg_bits = 32,
+ 	.val_bits = 32,
+ 	.reg_stride = 4,
+ 	.fast_io = true,
+-	.name = "rp1-pinctrl",
++	.rd_table = &rp1_pads_reg_table,
++	.name = "rp1-pads",
++	.max_register = 0x8050,
+ };
+ 
+ static int rp1_gen_regfield(struct device *dev,
+@@ -1685,17 +1770,17 @@ static int rp1_pinctrl_probe(struct platform_device *pdev)
+ 		return dev_err_probe(dev, PTR_ERR(pc->pads_base), "could not get PADS IO memory\n");
+ 
+ 	gpio_regmap = devm_regmap_init_mmio(dev, pc->gpio_base,
+-					    &rp1_pinctrl_regmap_cfg);
++					    &rp1_pinctrl_gpio_regmap_cfg);
+ 	if (IS_ERR(gpio_regmap))
+ 		return dev_err_probe(dev, PTR_ERR(gpio_regmap), "could not init GPIO regmap\n");
+ 
+ 	rio_regmap = devm_regmap_init_mmio(dev, pc->rio_base,
+-					   &rp1_pinctrl_regmap_cfg);
++					   &rp1_pinctrl_rio_regmap_cfg);
+ 	if (IS_ERR(rio_regmap))
+ 		return dev_err_probe(dev, PTR_ERR(rio_regmap), "could not init RIO regmap\n");
+ 
+ 	pads_regmap = devm_regmap_init_mmio(dev, pc->pads_base,
+-					    &rp1_pinctrl_regmap_cfg);
++					    &rp1_pinctrl_pads_regmap_cfg);
+ 	if (IS_ERR(pads_regmap))
+ 		return dev_err_probe(dev, PTR_ERR(pads_regmap), "could not init PADS regmap\n");
+ 
+-- 
+2.35.3
+
 
