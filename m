@@ -1,342 +1,519 @@
-Return-Path: <linux-gpio+bounces-24223-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24224-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06918B21886
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 00:41:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 16388B219E4
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 02:46:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 177EB1900F42
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Aug 2025 22:41:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2101B1A23DEC
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 00:46:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D774B2D878A;
-	Mon, 11 Aug 2025 22:41:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CFA528D8D8;
+	Tue, 12 Aug 2025 00:46:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tgi76vRO"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JtDx5CLC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0A721CFF6;
-	Mon, 11 Aug 2025 22:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51ADB1E4BE;
+	Tue, 12 Aug 2025 00:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754952093; cv=none; b=Hz0T1RjnLPvl/DqszQUxYjQ4hwl/7HJR19z+OP9I9jzV0T6ogWNeXJRwp7sArbUJ6PKX3hP71tXK8WIPDJkuKppWAkvJnLWYBCPvgmZnULPg/Bi0AgKRzGodaMsj6HkzSoJ9YaFVN6Dtf55DOMnZGwZVB0LO4Pv515fdCrugeB0=
+	t=1754959567; cv=none; b=TveaL8/zY9k5NnPQJ72on0xc/epIHS94GqX6N94Vw/ORl1iBU/ZGCC/2+HtywfCiMl5aiTcQhgU7CoLmNTnaDPBSMNVy6rkxjEr4gnzH20sbwxsBXVxinnKqBvhQ3ncO940DR4wqWfzNVQyJN8Acgg7y0MWw7bcK8+Qepo740AI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754952093; c=relaxed/simple;
-	bh=xqPJ/VTtLX9Cuigf+Ig3YwMvQkrcP37tZGWCCGyEH5U=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=b6BmlE0BKF7c7QUbZPGB4n5GbO1OXpjqpvi+Fnr14/Dh9QA/o1BtNv5WV8PpCdmt8/T04+GyylXxNlv/1AYA+x2zgdcAlwLJryNpPYrtNEugnFXo7ZmQOBpyZYc78fJgPPqA2pSEiZrxhCzg+3xKKOkMlcUP4iVEk1zFNIlTB/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tgi76vRO; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b3226307787so3893917a12.1;
-        Mon, 11 Aug 2025 15:41:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754952091; x=1755556891; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+n3I1BPAT6MGT096v+1ws6JTJrXEWDdfc2ydYDb0qS0=;
-        b=Tgi76vROur7pc6b0kLmQaP0Nyw8nqs6x+mzwGmdrQiK3olD2u0UB9xknFYuX0DDuRV
-         Mmhq3k/0PPfLYhdZljSJeNG4OQgB/00xrR/YP5ei6AN1xN/WgJudS7YhfD7ItCy79aZl
-         t+H+/P6yH1hZqGPwtIAkN86IsBEhY9nYI0+mBCwLrr6Fl4I4o+AIUOS/YBs5uZpk5sI7
-         2RD/u+iuqB6qfxXmAYJOiwdDRHKg8/mOdzu9Yi9mtU7MQYx74jtIvVdRWya85bPCamJy
-         dAAtxAbuGwUGEB95umT2h2/ozwp94mgme8LxAuezqxzEh1z8pRdIq1ZIlVmJEV9vweHD
-         2COw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754952091; x=1755556891;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+n3I1BPAT6MGT096v+1ws6JTJrXEWDdfc2ydYDb0qS0=;
-        b=JQsrr+qhDAfBil6aBTE8805f8rUAi6N4a/wlTLCipEiig5Sf2Xg8FvwubTrqoSolUI
-         MAP5IOc7C3uudW5l2OyjNdtQdWuqr4MDbitugGN2MqbmprQjH+Ih2mcK8bUTAnXs6vJI
-         PwVAs7OgmcYYnDnc7DxfjegIdsnhG3/8epHFYEtNjyjhinutv5BsNPq3+oOdgQ5TjIrp
-         xLxVlyNL01dupYr6KpAkXorOyu1v0HkS52Zd+owcdoXuwQojI8YAR56lAoiq/eO8vUtv
-         sHz19Q+XY70I8BzBBvAQrSrt3b+HjCtQGM3wbX0Zy9BsmVPzlW1ivk+Nm4EMH9r95L0s
-         x+jA==
-X-Forwarded-Encrypted: i=1; AJvYcCVvb8J8BhkGWgp1kcCvsMvR/fQxv9T1iNhvRGJNz21bx86DtcnLC0TvR9DIgqDzgxVxjQjODgI7YRrj@vger.kernel.org, AJvYcCW9dYsBCi/AS5vhi6Yq/LrJp4YrRZjKAFvtAplqYKlI+urcA4QqJrV86wBdRb40e0QFJg5HgdEQjrj2skge@vger.kernel.org, AJvYcCXftqPsC6S8OldiR9tKF0Z1YwYdPnA1CVexoO1gBpmSVooo5juA1JWHRZsQaBS98ONSW+PAG4ahk7927A==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2SzEoq2z6b5ZhMi08QwFxGAJ+kssnkIgkjWaSKObpfhSsSa+g
-	aoBSv/K6a0w5oivn/Osd9/+jL6J4GK/M9swPgTJfBh+0XBu6icUZzWbt
-X-Gm-Gg: ASbGnctrIWPHTTJEE8RKHRY0kIzkYsQo4+p6iAYFhpy+P9IXHSsvOLNwvlsQr0zFq0w
-	eZ0PvMQqqL04qL9RWz8Vgu2C1/R0nzQGKIR5TYV0KGkzttDRBlQ5O9sevKuPcg0kTy87ikY06BT
-	tQbRh3HaxEtlSJ2VqS/c6wACifS5IMC+xf2PzfRzFB9B5Km6oT/0h+KpjSXnxAmyLVDQN5v7xHf
-	EongtYyzEUk+QaxI8srWkoQOIfqdsCLhzzoxSjrmO/oO4KfqdCstTE7Pwg5GVQsFbZCCWAJzx76
-	Dxd7bJSAJhUutYLsNCO1vwSm3Fk/5ZQ4IGZxCTLLsHixXM1dXUGZRLu7VwblalKjchGk4Tqnx9T
-	Gg0WU3pO8cLfiCytIw+DyDGRNCri6+oW3tw==
-X-Google-Smtp-Source: AGHT+IEdW2CPHcM2VOBzTnmRYYsEF4NSG7B7RUD3YiYsLp5VPGW27+jPm08vBlgwORSKB7DWAQ2BnQ==
-X-Received: by 2002:a17:902:ea11:b0:240:3239:21c7 with SMTP id d9443c01a7336-242c21dcd0bmr211487085ad.37.1754952091138;
-        Mon, 11 Aug 2025 15:41:31 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:7933:7499:67d8:279a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241d1ef8204sm282973375ad.34.2025.08.11.15.41.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 15:41:30 -0700 (PDT)
-Date: Mon, 11 Aug 2025 15:41:28 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Subject: [PATCH] MIPS: alchemy: mtx1: switch to static device properties
-Message-ID: <retzurthfjwc6fqtkta6uhd2xje42vyugryj36yynesvxwygnv@wwmcx2yh4orm>
+	s=arc-20240116; t=1754959567; c=relaxed/simple;
+	bh=HTvWHrbEgTwV6dOXbyxHGqJLFD1JoLZNgz6ZCTyt5AE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XcvNumO31bDHGfORqtbRMnQDjno5O3h+bHYkpWnSkockU5MM8xaTcAKuwds/2biJkmDMABM5xJInp0sUXxi5LIc/xA2RQ9uC+vhEkx5VtrplrZAJAH1uUiuZo9nQ01XBy4vHzZBe343kWbKvpKDKFrMe/ZufxJ8DMJpTIqtl0iI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JtDx5CLC; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=7xEGavM38EexJs6+R3NP60uuzbfpXor25lCw94ANNOs=; b=JtDx5CLCTLXAtES4F1cItMgI8f
+	TdwkUaS+3aktVQBl0AarUavpFW8Px3V3Ov09UA7pnbOQoeciPtN7l67fv8RMRkFBPTb2d/hnkk/b1
+	hKl+VoC769Mpj9+XLbWCwVOT7xdNdHMq9GtKCqcmrTQLYd67LnT93E223XlTu9lgMgSOpKucKwsX4
+	15ftrDNuCeSXByVg0U22onhzt7AVw88f8w+3Ai93UtxZ/unznt+RIZNV7cSOM0pPfRZYpi5Jl9XBF
+	zxt0R9xFhHmUBKeIRBufYIQdJRTBTyeXsAC4iW1MKIsXk/EJ7qnoUl2ofHhDRgld6YA76KJIr6ytN
+	sBM8Q7xQ==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uld9P-00000009TGQ-1sqU;
+	Tue, 12 Aug 2025 00:46:03 +0000
+Message-ID: <5cd1c94c-e122-45e6-8333-9eff3ae6303e@infradead.org>
+Date: Mon, 11 Aug 2025 17:46:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Documentation: gpio: add documentation about using
+ software nodes
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Jonathan Corbet <corbet@lwn.net>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Arnd Bergmann <arnd@kernel.org>, Hans de Goede <hansg@kernel.org>,
+ linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <b52lpk2vqr4asp5iaqwcvcac3b6gen52rbu4cwy5kcnxszc3fj@6i77jr53kzje>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <b52lpk2vqr4asp5iaqwcvcac3b6gen52rbu4cwy5kcnxszc3fj@6i77jr53kzje>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Convert GPIO-connected buttons and LEDs on MTX1 board to software
-nodes/properties, so that support for platform data can be removed
-from gpio-keys driver (which will rely purely on generic device
-properties for configuration).
+Hi,
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
+On 8/11/25 2:30 PM, Dmitry Torokhov wrote:
+> Introduce documentation regarding use of software nodes to describe
+> GPIOs on legacy boards that have not been converted to device tree.
+> 
 
-This compiles but I have not tried it on real hardware.
+Thanks for the additional documentation.
 
- arch/mips/alchemy/board-mtx1.c | 181 ++++++++++++++++++++++-----------
- 1 file changed, 124 insertions(+), 57 deletions(-)
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>  Documentation/driver-api/gpio/board.rst       |  64 ++++
+>  Documentation/driver-api/gpio/index.rst       |   1 +
+>  .../driver-api/gpio/legacy-boards.rst         | 298 ++++++++++++++++++
+>  3 files changed, 363 insertions(+)
+> 
+> diff --git a/Documentation/driver-api/gpio/board.rst b/Documentation/driver-api/gpio/board.rst
+> index 4fd1cbd8296e..0cf64e1f2623 100644
+> --- a/Documentation/driver-api/gpio/board.rst
+> +++ b/Documentation/driver-api/gpio/board.rst
+> @@ -94,6 +94,70 @@ with the help of _DSD (Device Specific Data), introduced in ACPI 5.1::
+>  For more information about the ACPI GPIO bindings see
+>  Documentation/firmware-guide/acpi/gpio-properties.rst.
+>  
+> +Software Nodes
+> +--------------
+> +Software nodes allows to construct an in-memory, device-tree-like structure
 
-diff --git a/arch/mips/alchemy/board-mtx1.c b/arch/mips/alchemy/board-mtx1.c
-index 68ea57511629..cb6be58808a0 100644
---- a/arch/mips/alchemy/board-mtx1.c
-+++ b/arch/mips/alchemy/board-mtx1.c
-@@ -9,10 +9,8 @@
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/platform_device.h>
--#include <linux/leds.h>
--#include <linux/gpio.h>
- #include <linux/gpio/machine.h>
--#include <linux/gpio_keys.h>
-+#include <linux/gpio/property.h>
- #include <linux/input.h>
- #include <linux/mtd/partitions.h>
- #include <linux/mtd/physmap.h>
-@@ -80,64 +78,134 @@ void __init board_setup(void)
- 
- /******************************************************************************/
- 
--static struct gpio_keys_button mtx1_gpio_button[] = {
--	{
--		.gpio = 207,
--		.code = BTN_0,
--		.desc = "System button",
--	}
-+static const struct software_node mtx1_gpiochip_node = {
-+	.name = "alchemy-gpio2",
- };
- 
--static struct gpio_keys_platform_data mtx1_buttons_data = {
--	.buttons = mtx1_gpio_button,
--	.nbuttons = ARRAY_SIZE(mtx1_gpio_button),
-+static const struct software_node mtx1_gpio_keys_node = {
-+	.name = "mtx1-gpio-keys",
- };
- 
--static struct platform_device mtx1_button = {
--	.name = "gpio-keys",
--	.id = -1,
--	.dev = {
--		.platform_data = &mtx1_buttons_data,
--	}
-+static const struct property_entry mtx1_button_props[] = {
-+	PROPERTY_ENTRY_U32("linux,code", BTN_0),
-+	PROPERTY_ENTRY_GPIO("gpios", &mtx1_gpiochip_node, 7, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_STRING("label", "System button"),
-+	{ }
- };
- 
--static struct gpiod_lookup_table mtx1_wdt_gpio_table = {
--	.dev_id = "mtx1-wdt.0",
--	.table = {
--		/* Global number 215 is offset 15 on Alchemy GPIO 2 */
--		GPIO_LOOKUP("alchemy-gpio2", 15, NULL, GPIO_ACTIVE_HIGH),
--		{ },
--	},
-+static const struct software_node mtx1_button_node = {
-+	.parent = &mtx1_gpio_keys_node,
-+	.properties = mtx1_button_props,
-+};
-+
-+static const struct software_node *mtx1_gpio_keys_swnodes[] __initconst = {
-+	&mtx1_gpio_keys_node,
-+	&mtx1_button_node,
-+	NULL
- };
- 
--static struct platform_device mtx1_wdt = {
-+static void __init mtx1_keys_init(void)
-+{
-+	struct platform_device_info keys_info = {
-+		.name	= "gpio-keys",
-+		.id	= PLATFORM_DEVID_NONE,
-+	};
-+	struct platform_device *pd;
-+	int err;
-+
-+	err = software_node_register_node_group(mtx1_gpio_keys_swnodes);
-+	if (err) {
-+		pr_err("failed to register gpio-keys software nodes: %d\n", err);
-+		return;
-+	}
-+
-+	keys_info.fwnode = software_node_fwnode(&mtx1_gpio_keys_node);
-+
-+	pd = platform_device_register_full(&keys_info);
-+	err = PTR_ERR_OR_ZERO(pd);
-+	if (err)
-+		pr_err("failed to create gpio-keys device: %d\n", err);
-+}
-+
-+/* Global number 215 is offset 15 on Alchemy GPIO 2 */
-+static const struct property_entry mtx1_wdt_props[] = {
-+	PROPERTY_ENTRY_GPIO("gpios", &mtx1_gpiochip_node, 15, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static struct platform_device_info mtx1_wdt_info __initconst = {
- 	.name = "mtx1-wdt",
- 	.id = 0,
-+	.properties = mtx1_wdt_props,
- };
- 
--static const struct gpio_led default_leds[] = {
--	{
--		.name	= "mtx1:green",
--		.gpio = 211,
--	}, {
--		.name = "mtx1:red",
--		.gpio = 212,
--	},
-+static void __init mtx1_wdt_init(void)
-+{
-+	struct platform_device *pd;
-+	int err;
-+
-+	pd = platform_device_register_full(&mtx1_wdt_info);
-+	err = PTR_ERR_OR_ZERO(pd);
-+	if (err)
-+		pr_err("failed to create gpio-keys device: %d\n", err);
-+}
-+
-+static const struct software_node mtx1_gpio_leds_node = {
-+	.name = "mtx1-leds",
- };
- 
--static struct gpio_led_platform_data mtx1_led_data = {
--	.num_leds = ARRAY_SIZE(default_leds),
--	.leds = default_leds,
-+static const struct property_entry mtx1_green_led_props[] = {
-+	PROPERTY_ENTRY_GPIO("gpios", &mtx1_gpiochip_node, 11, GPIO_ACTIVE_HIGH),
-+	{ }
- };
- 
--static struct platform_device mtx1_gpio_leds = {
--	.name = "leds-gpio",
--	.id = -1,
--	.dev = {
--		.platform_data = &mtx1_led_data,
--	}
-+static const struct software_node mtx1_green_led_node = {
-+	.name = "mtx1:green",
-+	.parent = &mtx1_gpio_leds_node,
-+	.properties = mtx1_green_led_props,
- };
- 
-+static const struct property_entry mtx1_red_led_props[] = {
-+	PROPERTY_ENTRY_GPIO("gpios", &mtx1_gpiochip_node, 12, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct software_node mtx1_red_led_node = {
-+	.name = "mtx1:red",
-+	.parent = &mtx1_gpio_leds_node,
-+	.properties = mtx1_red_led_props,
-+};
-+
-+static const struct software_node *mtx1_gpio_leds_swnodes[] = {
-+	&mtx1_gpio_leds_node,
-+	&mtx1_green_led_node,
-+	&mtx1_red_led_node,
-+	NULL
-+};
-+
-+static void __init mtx1_leds_init(void)
-+{
-+	struct platform_device_info led_info = {
-+		.name	= "leds-gpio",
-+		.id	= PLATFORM_DEVID_NONE,
-+	};
-+	struct platform_device *led_dev;
-+	int err;
-+
-+	err = software_node_register_node_group(mtx1_gpio_leds_swnodes);
-+	if (err) {
-+		pr_err("failed to register LED software nodes: %d\n", err);
-+		return;
-+	}
-+
-+	led_info.fwnode = software_node_fwnode(&mtx1_gpio_leds_node);
-+
-+	led_dev = platform_device_register_full(&led_info);
-+	err = PTR_ERR_OR_ZERO(led_dev);
-+	if (err)
-+		pr_err("failed to create LED device: %d\n", err);
-+}
-+
- static struct mtd_partition mtx1_mtd_partitions[] = {
- 	{
- 		.name	= "filesystem",
-@@ -247,9 +315,6 @@ static struct platform_device mtx1_pci_host = {
- 
- static struct platform_device *mtx1_devs[] __initdata = {
- 	&mtx1_pci_host,
--	&mtx1_gpio_leds,
--	&mtx1_wdt,
--	&mtx1_button,
- 	&mtx1_mtd,
- };
- 
-@@ -270,16 +335,18 @@ static int __init mtx1_register_devices(void)
- 
- 	au1xxx_override_eth_cfg(0, &mtx1_au1000_eth0_pdata);
- 
--	rc = gpio_request(mtx1_gpio_button[0].gpio,
--					mtx1_gpio_button[0].desc);
--	if (rc < 0) {
--		printk(KERN_INFO "mtx1: failed to request %d\n",
--					mtx1_gpio_button[0].gpio);
--		goto out;
--	}
--	gpio_direction_input(mtx1_gpio_button[0].gpio);
--out:
--	gpiod_add_lookup_table(&mtx1_wdt_gpio_table);
--	return platform_add_devices(mtx1_devs, ARRAY_SIZE(mtx1_devs));
-+	rc = software_node_register(&mtx1_gpiochip_node);
-+	if (rc)
-+		return rc;
-+
-+	rc = platform_add_devices(mtx1_devs, ARRAY_SIZE(mtx1_devs));
-+	if (rc)
-+		return rc;
-+
-+	mtx1_leds_init();
-+	mtx1_wdt_init();
-+	mtx1_keys_init();
-+
-+	return 0;
- }
- arch_initcall(mtx1_register_devices);
+                  allow { drivers | modules | software | us}
+
+although "software" seems redundant.
+
+> +using ``struct software_node`` and ``struct property_entry``. This structure
+
+Quoting Jon (for a different struct):
+  Better to just say "struct list_head", and the automarkup logic should
+  take care of the rest.
+
+@Jon: ISTM that we need something in Documentation/doc-guide/sphinx.rst (?) about which
+keywords are handled by automarkup logic. AFAIK, they are struct, union, enum,
+and typedef (keywords) and function() as indicated by the "()".
+
+
+
+> +can then be associated with a platform device, allowing drivers to use the
+> +standard device properties API to query configuration, just as they would on an
+> +ACPI or device tree systems.
+
+                       system.
+
+> +
+> +Software-node-backed GPIOs are described using ``PROPERTY_ENTRY_GPIO()``
+> +macro, which ties a sotfware node representing GPIO controller with consumer
+
+                       software
+
+> +device. It allows consumers to use regular gpiolib APIs, such as ``gpiod_get()``,
+> +``gpiod_get_optional()``.
+> +
+> +The software node representing GPIO controller need not be attached to the
+> +GPIO controller device. The only requirement that the node must be registered
+
+                                    requirement is that
+
+> +and its name much match the GPIO controller's label.
+
+                must
+
+> +
+> +For example, here is how to describe a single GPIO-connected LED. This is an
+> +alternative to using platform_data on legacy systems.
+> +
+> +.. code-block:: c
+> +
+> +	#include <linux/property.h>
+> +	#include <linux/gpio/machine.h>
+> +	#include <linux/gpio/property.h>
+> +
+> +	/*
+> +	 * 1. Define a node for the GPIO controller. Its .name must match the
+> +	 *    controller's label.
+> +	 */
+> +	static const struct software_node gpio_controller_node = {
+> +		.name = "gpio-foo",
+> +	};
+> +
+> +	/* 2. Define the properties for the LED device. */
+> +	static const struct property_entry led_device_props[] = {
+> +		PROPERTY_ENTRY_STRING("label", "myboard:green:status"),
+> +		PROPERTY_ENTRY_STRING("linux,default-trigger", "heartbeat"),
+> +		PROPERTY_ENTRY_GPIO("gpios", &gpio_controller_node, 42, GPIO_ACTIVE_HIGH),
+> +		{ }
+> +	};
+> +
+> +	/* 3. Define the software node for the LED device. */
+> +	static const struct software_node led_device_swnode = {
+> +		.name = "status-led",
+> +		.properties = led_device_props,
+> +	};
+> +
+> +	/*
+> +	 * 4. Register the software nodes and the platform device.
+> +	 */
+> +	const struct software_node *swnodes[] = {
+> +		&gpio_controller_node,
+> +		&led_device_swnode,
+> +		NULL
+> +	};
+> +	software_node_register_node_group(swnodes);
+> +
+> +	// Then register a platform_device for "leds-gpio" and associate
+> +	// it with &led_device_swnode via .fwnode.
+> +
+> +For a complete guide on converting board files to use software nodes, see
+> +Documentation/driver-api/gpio/legacy-boards.rst.
+> +
+>  Platform Data
+>  -------------
+>  Finally, GPIOs can be bound to devices and functions using platform data. Board
+
+
+
+> diff --git a/Documentation/driver-api/gpio/legacy-boards.rst b/Documentation/driver-api/gpio/legacy-boards.rst
+> new file mode 100644
+> index 000000000000..6700a2549220
+> --- /dev/null
+> +++ b/Documentation/driver-api/gpio/legacy-boards.rst
+> @@ -0,0 +1,298 @@
+> +Supporting Legacy Boards
+> +========================
+> +
+> +Many drivers in the kernel, such as ``leds-gpio`` and ``gpio-keys``, are
+> +migrating away from using board-specific ``platform_data`` to a unified device
+> +properties interface. This interface allows drivers to be simpler and more
+> +generic, as they can query properties in a standardized way.
+> +
+> +On modern systems, these properties are provided via device tree. However, some
+> +older platforms have not been converted to device tree and instead rely on
+> +board files to describe their hardware configuration. To bridge this gap and
+> +allow these legacy boards to work with modern, generic drivers, the kernel
+> +provides a mechanism called **software nodes**.
+> +
+> +This document provides a guide on how to convert a legacy board file from using
+> +``platform_data`` and ``gpiod_lookup_table`` to the modern software node
+> +approach for describing GPIO-connected devices.
+> +
+> +The Core Idea: Software Nodes
+> +-----------------------------
+> +
+> +Software nodes allows to construct an in-memory, device-tree-like structure
+
+                  allow {some object of the verb, as suggested above}
+
+> +using ``struct software_node`` and ``struct property_entry``. This structure
+
+Please drop the "``" markups. They aren't needed.
+
+> +can then be associated with a platform device, allowing drivers to use the
+> +standard device properties API (e.g., ``device_property_read_u32()``,
+> +``device_property_read_string()``) to query configuration, just as they would
+> +on an ACPI or device tree systems.
+
+                             system.
+
+> +
+> +The gpiolib code has support for handling software nodes, so that if GPIO is
+> +described properly, as detailed in the section below, then regular gpiolib APIs,
+> +such as ``gpiod_get()``, ``gpiod_get_optional()`` and others will work.
+> +
+> +Requirements for GPIO Properties
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +When using software nodes to describe GPIO connections, the following
+> +requirements must be met for the GPIO core to correctly resolve the reference:
+> +
+> +1.  **The GPIO controller's software node ``name`` must match the controller's
+> +    ``label``.** The gpiolib core uses this name to find the corresponding
+> +    ``struct gpio_chip`` at runtime.
+
+"``" not needed.
+
+> +    This software node has to be registered, but need not be attached to the
+> +    device representing GPIO controller that is providing GPIO in question.
+> +    It may be left as a "free floating" node.
+> +
+> +2.  **The GPIO property must be a reference.** The ``PROPERTY_ENTRY_GPIO()``
+> +    macro handles this as it is an alias for ``PROPERTY_ENTRY_REF()``.
+> +
+> +3.  **The reference must have exactly two arguments:**
+> +
+> +    - The first argument is the GPIO offset within the controller.
+> +    - The second argument is the flags for the GPIO line (e.g.,
+> +      ``GPIO_ACTIVE_HIGH``, ``GPIO_ACTIVE_LOW``).
+> +
+> +The ``PROPERTY_ENTRY_GPIO()`` macro is the preferred way of defining GPIO
+> +properties in software nodes.
+> +
+> +Conversion Example
+> +------------------
+> +
+> +Let's walk through an example of converting a board file that defines a GPIO-
+> +connected LED and a button.
+> +
+> +Before: Using Platform Data
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +A typical legacy board file might look like this:
+> +
+> +.. code-block:: c
+> +
+> +  #include <linux/platform_device.h>
+> +  #include <linux/leds.h>
+> +  #include <linux/gpio_keys.h>
+> +  #include <linux/gpio/machine.h>
+> +
+> +  #define MYBOARD_GPIO_CONTROLLER "gpio-foo"
+> +
+> +  /* LED setup */
+> +  static const struct gpio_led myboard_leds[] = {
+> +  	{
+> +  		.name = "myboard:green:status",
+> +  		.default_trigger = "heartbeat",
+> +  	},
+> +  };
+> +
+> +  static const struct gpio_led_platform_data myboard_leds_pdata = {
+> +  	.num_leds = ARRAY_SIZE(myboard_leds),
+> +  	.leds = myboard_leds,
+> +  };
+> +
+> +  static struct gpiod_lookup_table myboard_leds_gpios = {
+> +  	.dev_id = "leds-gpio",
+> +  	.table = {
+> +  		GPIO_LOOKUP_IDX(MYBOARD_GPIO_CONTROLLER, 42, NULL, 0, GPIO_ACTIVE_HIGH),
+> +  		{ },
+> +  	},
+> +  };
+> +
+> +  /* Button setup */
+> +  static struct gpio_keys_button myboard_buttons[] = {
+> +  	{
+> +  		.code = KEY_WPS_BUTTON,
+> +  		.desc = "WPS Button",
+> +  		.active_low = 1,
+> +  	},
+> +  };
+> +
+> +  static const struct gpio_keys_platform_data myboard_buttons_pdata = {
+> +  	.buttons = myboard_buttons,
+> +  	.nbuttons = ARRAY_SIZE(myboard_buttons),
+> +  };
+> +
+> +  static struct gpiod_lookup_table myboard_buttons_gpios = {
+> +  	.dev_id = "gpio-keys",
+> +  	.table = {
+> +  		GPIO_LOOKUP_IDX(MYBOARD_GPIO_CONTROLLER, 15, NULL, 0, GPIO_ACTIVE_LOW),
+> +  		{ },
+> +  	},
+> +  };
+> +
+> +  /* Device registration */
+> +  static int __init myboard_init(void)
+> +  {
+> +  	gpiod_add_lookup_table(&myboard_leds_gpios);
+> +  	gpiod_add_lookup_table(&myboard_buttons_gpios);
+> +
+> +  	platform_device_register_data(NULL, "leds-gpio", -1,
+> +  				      &myboard_leds_pdata, sizeof(myboard_leds_pdata));
+> +  	platform_device_register_data(NULL, "gpio-keys", -1,
+> +  				      &myboard_buttons_pdata, sizeof(myboard_buttons_pdata));
+> +
+> +  	return 0;
+> +  }
+> +
+> +After: Using Software Nodes
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +Here is how the same configuration can be expressed using software nodes.
+> +
+> +Step 1: Define the GPIO Controller Node
+> +***************************************
+> +
+> +First, define a software node that represents the GPIO controller that the
+> +LEDs and buttons are connected to. The ``name`` of this node must match the
+> +name of the driver for the GPIO controller (e.g., "gpio-foo").
+> +
+> +.. code-block:: c
+> +
+> +  #include <linux/property.h>
+> +  #include <linux/gpio/property.h>
+> +
+> +  #define MYBOARD_GPIO_CONTROLLER "gpio-foo"
+> +
+> +  static const struct software_node myboard_gpio_controller_node = {
+> +  	.name = MYBOARD_GPIO_CONTROLLER,
+> +  };
+> +
+> +Step 2: Define Consumer Device Nodes and Properties
+> +***************************************************
+> +
+> +Next, define the software nodes for the consumer devices (the LEDs and buttons).
+> +This involves creating a parent node for each device type and child nodes for
+> +each individual LED or button.
+> +
+> +.. code-block:: c
+> +
+> +  /* LED setup */
+> +  static const struct software_node myboard_leds_node = {
+> +  	.name = "myboard-leds",
+> +  };
+> +
+> +  static const struct property_entry myboard_status_led_props[] = {
+> +  	PROPERTY_ENTRY_STRING("label", "myboard:green:status"),
+> +  	PROPERTY_ENTRY_STRING("linux,default-trigger", "heartbeat"),
+> +  	PROPERTY_ENTRY_GPIO("gpios", &myboard_gpio_controller_node, 42, GPIO_ACTIVE_HIGH),
+> +  	{ }
+> +  };
+> +
+> +  static const struct software_node myboard_status_led_swnode = {
+> +  	.name = "status-led",
+> +  	.parent = &myboard_leds_node,
+> +  	.properties = myboard_status_led_props,
+> +  };
+> +
+> +  /* Button setup */
+> +  static const struct software_node myboard_keys_node = {
+> +  	.name = "myboard-keys",
+> +  };
+> +
+> +  static const struct property_entry myboard_wps_button_props[] = {
+> +  	PROPERTY_ENTRY_STRING("label", "WPS Button"),
+> +  	PROPERTY_ENTRY_U32("linux,code", KEY_WPS_BUTTON),
+> +  	PROPERTY_ENTRY_GPIO("gpios", &myboard_gpio_controller_node, 15, GPIO_ACTIVE_LOW),
+> +  	{ }
+> +  };
+> +
+> +  static const struct software_node myboard_wps_button_swnode = {
+> +  	.name = "wps-button",
+> +  	.parent = &myboard_keys_node,
+> +  	.properties = myboard_wps_button_props,
+> +  };
+> +
+> +
+> +
+> +Step 3: Group and Register the Nodes
+> +************************************
+> +
+> +For maintainability, it is often beneficial to group all software nodes into a
+> +single array and register them with one call.
+> +
+> +.. code-block:: c
+> +
+> +  static const struct software_node * const myboard_swnodes[] __initconst = {
+> +  	&myboard_gpio_controller_node,
+> +  	&myboard_leds_node,
+> +  	&myboard_status_led_swnode,
+> +  	&myboard_keys_node,
+> +  	&myboard_wps_button_swnode,
+> +  	NULL
+> +  };
+> +
+> +  static int __init myboard_init(void)
+> +  {
+> +  	int error;
+> +
+> +  	error = software_node_register_node_group(myboard_swnodes);
+> +  	if (error) {
+> +  		pr_err("Failed to register software nodes: %d\n", error);
+> +  		return error;
+> +  	}
+> +
+> +  	// ... platform device registration follows
+> +  }
+> +
+> +.. note::
+> +  When splitting registration of nodes by devices that they represent, it is
+> +  essential that the software node representing the GPIO controller itself
+> +  is registered first, before any of the nodes that reference it.
+> +
+> +Step 4: Register Platform Devices with Software Nodes
+> +*****************************************************
+> +
+> +Finally, register the platform devices and associate them with their respective
+> +software nodes using the ``fwnode`` field in ``struct platform_device_info``.
+
+Drop the "``" on struct platform_device_info.
+
+> +
+> +.. code-block:: c
+> +
+> +  static struct platform_device *leds_pdev;
+> +  static struct platform_device *keys_pdev;
+> +
+> +  static int __init myboard_init(void)
+> +  {
+> +  	struct platform_device_info pdev_info;
+> +  	int error;
+> +
+> +  	error = software_node_register_node_group(myboard_swnodes);
+> +  	if (error)
+> +  		return error;
+> +
+> +  	memset(&pdev_info, 0, sizeof(pdev_info));
+> +  	pdev_info.name = "leds-gpio";
+> +  	pdev_info.id = PLATFORM_DEVID_NONE;
+> +  	pdev_info.fwnode = software_node_fwnode(&myboard_leds_node);
+> +  	leds_pdev = platform_device_register_full(&pdev_info);
+> +  	if (IS_ERR(leds_pdev)) {
+> +  		error = PTR_ERR(leds_pdev);
+> +  		goto err_unregister_nodes;
+> +  	}
+> +
+> +  	memset(&pdev_info, 0, sizeof(pdev_info));
+> +  	pdev_info.name = "gpio-keys";
+> +  	pdev_info.id = PLATFORM_DEVID_NONE;
+> +  	pdev_info.fwnode = software_node_fwnode(&myboard_keys_node);
+> +  	keys_pdev = platform_device_register_full(&pdev_info);
+> +  	if (IS_ERR(keys_pdev)) {
+> +  		error = PTR_ERR(keys_pdev);
+> +  		platform_device_unregister(leds_pdev);
+> +  		goto err_unregister_nodes;
+> +  	}
+> +
+> +  	return 0;
+> +
+> +  err_unregister_nodes:
+> +  	software_node_unregister_node_group(myboard_swnodes);
+> +  	return error;
+> +  }
+> +
+> +  static void __exit myboard_exit(void)
+> +  {
+> +  	platform_device_unregister(keys_pdev);
+> +  	platform_device_unregister(leds_pdev);
+> +  	software_node_unregister_node_group(myboard_swnodes);
+> +  }
+> +
+> +With these changes, the generic ``leds-gpio`` and ``gpio-keys`` drivers will
+> +be able to probe successfully and get their configuration from the properties
+> +defined in the software nodes, removing the need for board-specific platform
+> +data.
+.
+
 -- 
-2.51.0.rc0.155.g4a0f42376b-goog
+~Randy
 
-
--- 
-Dmitry
 
