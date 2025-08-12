@@ -1,89 +1,89 @@
-Return-Path: <linux-gpio+bounces-24310-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24311-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD481B22A9C
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 16:33:56 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id B6BBDB22A20
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 16:21:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EAFED1AA0A60
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 14:21:39 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9E78E4E4550
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 14:21:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC0482EA484;
-	Tue, 12 Aug 2025 14:20:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E13F2D5412;
+	Tue, 12 Aug 2025 14:21:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="VbB2Av/i"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ACrYPi1G"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBFD2E62CD
-	for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 14:20:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45002288CA5
+	for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 14:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755008420; cv=none; b=Xn9eMbarhga5hXj8XN58h+M9f0HpiNRoqlfhksMegf/6pRGKX+e6eckYslRmsPjSeZ8KNHXcjGognGuV6iKnk7JRL6/wn1eG3t1CS6vz190rRJIX3w7LsTkVIOKhEjw9CDkadYbzqnEOzELGr0uHf6sZy1OZlT8Z7WqxSqqrB8A=
+	t=1755008480; cv=none; b=aAVLPKyLOJjSQ2Fh3WT0jBFM3pMLzilSIeRtAvIiqwNysXSFzD+jf8NgrNB1osmumP97kzGbojshKwgr3tfr+E0Qq65o0lBZq0kqumV/FcjOSdNwUzXQSirjmhsyNGK7zK8vJRry+g7sDQKpyqhyjIFAhg4eeSW7K4Wbna9aZhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755008420; c=relaxed/simple;
-	bh=r/g7cxm9Na/CcdAsWOeh8hMTNl83bUK5G5JindICPdA=;
+	s=arc-20240116; t=1755008480; c=relaxed/simple;
+	bh=gTExID4wuITaEjsxhkhg6JC6w2mdmko+dxNU8h1RJ6c=;
 	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GGPH7/6xSJ9omzbxb+5o6eLviPJqDsenFQ0DM5ZvYxf8bkiNbXik6E3nVDCT1VBJmD94pYGpv2coipggzcm31pIH9OWxNZasZjT8bIDWzkr2LzSIXmSR3OJBlSwjjQEuGgTgOGCSc//UzgASVoQh0PptATRcnbY7SxRwy6kFQLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=VbB2Av/i; arc=none smtp.client-ip=209.85.167.50
+	 To:Cc:Content-Type; b=EHnikBJKfyGIq6eRCkwhRqwel7HmuWnIJA4XyTPbEbfLtqIY1Gka6R1V8U4VZ4NhFYoVVjoJ4BfOkcZL+c1yBwpmUFYOtiutwPoOeJgAGHDoX7Pw48H8Mg7injrdpSYv7EIGdNvconGlC+Z4lfPgUgNm0qGVFI6xaqbhGruWA6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ACrYPi1G; arc=none smtp.client-ip=209.85.167.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-55cd6a56af5so1669689e87.3
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 07:20:16 -0700 (PDT)
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-55ba26abd62so6153895e87.1
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 07:21:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1755008415; x=1755613215; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1755008477; x=1755613277; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zMY/csa2U5fal/bu+jvHfhppLjeOUw06LSvQ98vCN+Y=;
-        b=VbB2Av/ilyFpfSAy7GSw5jAA2dcwGrFIjhwLIZLgsPne7uhPCPNnzTq75Z7woz4Wzl
-         1UqV7H/VtZ3RCbcNzZ2tGZEUCT885M+F0G1cljgS9ZjfKsYpuAwrJJYQdvIbiB46m/XZ
-         myEsXrf1cKaTjGoAkDBa27MdEseueIVThlvy0XklSfXw+QuXqPcSsXy5SrU/ZBXqmx8h
-         j232RdLXJt+yX7YvcRjQk6ifwnvbdM+Ffd7EiZSGZ/AVQjdBWJKNGVTiv/nWWWtg99Or
-         bbKAB/fTgvVbdlbOY/mMjHFmnQ53YNG16PB1EYxMLGab2s1PtrNvAZPZZmGV48am4RXV
-         1giQ==
+        bh=1pIv9AKRbkc8MISxXeVoPZny7F4ALH4S067Y82mAaRs=;
+        b=ACrYPi1GWO59qPSOkIhmIWcq1VJSTrEKZ/zNL5gErUIwR6VfK8wmsymhXedbkB8v5S
+         jVPVLOIOw9KXTnb1twvIGYDoc+w2fnS7FG5LJz6l90o7H3eXLWV7qP0+bd7NUeNL2hYa
+         Jh7grhwBJ0O3F6C7KfZdJcw0Ut9ZOtig5FaPcw3McVG2jXJfv8VC4P/enQHemq0dEA7f
+         5U3ai5sMompD4kcVgDaWsxV/+czotpEAfwpnoY2OXxnV8/sSBK0YT9Bljtng4WoFiGIo
+         wofCXRQnFedu4ASIBbzxUW+SBMDwlKmSmFH+VoQE5tQSplSOZxtsmT/ao01F5cQHaSBw
+         tikw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755008415; x=1755613215;
+        d=1e100.net; s=20230601; t=1755008477; x=1755613277;
         h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zMY/csa2U5fal/bu+jvHfhppLjeOUw06LSvQ98vCN+Y=;
-        b=b2lL0USVnBQEGN1WuZOq1hqTGDbx6+IuzoPQWpPZ5ByFFrz3nymW60mEJ4yNFBhyFu
-         uluRkmJtQS7QmDSHwEWLJcSB8v1pmXP86WL0jDazPSP0nu5dGLzsYUmAC8xgjHN3B2EA
-         ut2f7g856k5lrUS7BLmzTRDy8LtgngrdhSv82LByBkab54wwofH1XtMBQLlqTLzhTWIr
-         QfzqHNHAENNFM7d3dTy03jvKMJ112W5Z0RoJFGYnmdzDJxzz0B4QcMt+FQ8FPaj0Dw95
-         5ueDucs5bKPUmgH8tPW2LRNluiWuCYL0YrGZwNUGvaNIwLj5zIoFcrY1Wmu8KUehW1wP
-         dthA==
-X-Forwarded-Encrypted: i=1; AJvYcCX0ZqS9YCBuxDXP59r2xtlVRTBQsIRpZu7dvSXOQnGFGW3s4DjzH/AgenC1bRa+RZhAYc/ci8Gr16qd@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+laXvRMJ+Z5S+raXVRZFWrkchjCcFkaoYvji/VDu5lsYjRqGd
-	jUei+09JOGAxqickamaCm0yriFvtzUXcJxQVVCaayCkcyIye883B93bVGmAR5fhHr6cKuW6/AVA
-	9WThYC+S2Tr6X03O85z1PtxaX98DM+vOpnoKB5F90zg==
-X-Gm-Gg: ASbGnctmXbWLZho1iQ6obsFg5WpKkHjhOnfETm4WeENqCklzr14/N7+dPANXQT1jAoC
-	+Tem8kZy1Tu/ceB9t8s/p85Xjn12zsux6u6uUsyX4WW4cBHQGNJkg5+4W0iy+6oQb4kKwXlDt1U
-	TH0uVPe5KrsQlnp2AbSE6oLcF2IqfwUb1sCZd8vqlnc5ddcys+0F8hnEHfgLsM2sxHTIbQ0Nl02
-	GNnfEFTuDUNcBzMcXlmfNIvO/+U7PlNqZxJ
-X-Google-Smtp-Source: AGHT+IHuu5wvW4QtT3XRKQhSqRyAl4ltkuZNueZbz0L47TOdCOtZKGDL/QaBXRZMyQYhkVVn0ozd5KBBIXmm6CR5nec=
-X-Received: by 2002:a05:6512:1193:b0:55b:84b9:9a32 with SMTP id
- 2adb3069b0e04-55cd7602a4dmr1190170e87.30.1755008414804; Tue, 12 Aug 2025
- 07:20:14 -0700 (PDT)
+        bh=1pIv9AKRbkc8MISxXeVoPZny7F4ALH4S067Y82mAaRs=;
+        b=IUcnfQP9P4bRCRpypzTFouzvnPlZsXeCFhRVQfG0/5r4PP3xPZuV57j1TCUIHeO+RJ
+         IX/99qSwhj73z5kyfpyMUCeMWc3b/8lQjxiQakZvfDnQPWZVRBCiGHu4HUv4rC3dgL9w
+         QCF5MniHJV9zZhpjCNzanfBA/2XA7at3/UONBcfrnaqNhPokXV9jWFA+uTNUtvbWLGaA
+         oqKiw9HhzBzLfgAFouwcC4w9Eg654UkfTk/gN60WP6oBt2wQQn7bilTxUKkTXM8eGXaS
+         hemtNBgCPG+9ur6tNh2K8ZxGDlVUnPJBCAVIfyVLGJtg9XA+FXubqwXwdHOh8sUlIQpZ
+         fsLA==
+X-Forwarded-Encrypted: i=1; AJvYcCXtjq4MfAUezRJZkFO3KEuO7c9PT4FSyv9XxTTVv1/IUfStWQjup9u58bdfoqQc/HF2Z+fdeJrU2vrh@vger.kernel.org
+X-Gm-Message-State: AOJu0YydNZ7hTWC5u3AxGW5u+JqZJmLgPv7QeHcAaKw3diT/GkJzPbXJ
+	3Y04agSDb1EgXyZUgKM0oolhl0M1z9Es+f+kU66AB8P3tLEEK+Fg7Va0OQ2MG4EIvL5zRgFZMvB
+	Fww9RyNi2lPpoYwsqWJeFnV9gk2S9WRTg6PBTEzo5cA==
+X-Gm-Gg: ASbGncu0eugdP4YK2fiqL1YDU7foL7LVcuxcwJ5ZEGyky1nl8USWCxw2T60bZs0iPvH
+	8JBTZCOqOuchRpwQGS5abOwv4BolEFFZPfYVvGetN+EZ9Vac9sSrMyo24Lx2AaCJNTHaUOwoK8u
+	e0T8mz4dg8XDnQ1L9qI5wPPf14h4c//QdDs+XfghmYHqWc0tbu+I2J9B4dw6K155LnNpf0Ufcre
+	Z943HeD3j6Imtfe+Axx2YjfF0Nm8V760Y9uliOXSp544B8=
+X-Google-Smtp-Source: AGHT+IFpF97gii6lher4rE+Sc7yp8gRIDiPYexKTadETndnmLkjhegMyhbbEFCVjEnmVLwNTmnfVhhtavmnpc1sTYHY=
+X-Received: by 2002:a05:6512:15a7:b0:55c:bfe7:f056 with SMTP id
+ 2adb3069b0e04-55cd759716emr1203480e87.18.1755008477463; Tue, 12 Aug 2025
+ 07:21:17 -0700 (PDT)
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 12 Aug 2025 10:20:14 -0400
+ HTTPREST; Tue, 12 Aug 2025 10:21:16 -0400
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 12 Aug 2025 10:20:14 -0400
+ HTTPREST; Tue, 12 Aug 2025 10:21:16 -0400
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-In-Reply-To: <f4d04d0c9d72d089af7490c6ce91bb4c455fbffd.1754996033.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <22b3847fd0011024c10aff48f1e5223894ce718a.1754996033.git.christophe.leroy@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1754996033.git.christophe.leroy@csgroup.eu> <f4d04d0c9d72d089af7490c6ce91bb4c455fbffd.1754996033.git.christophe.leroy@csgroup.eu>
-Date: Tue, 12 Aug 2025 10:20:14 -0400
-X-Gm-Features: Ac12FXxJwAJyIiJkerY_ZMj0NVdYlnI0XD6BtSNaGx0TIql8RITghXtjTU4PQzQ
-Message-ID: <CAMRc=MfkaY5AgYrOE7eVSMbkPjWj6+5XLSrFoaSDjzUWX4Dn0Q@mail.gmail.com>
-Subject: Re: [PATCH 2/4] soc: fsl: qe: Change GPIO driver to a proper platform driver
+References: <cover.1754996033.git.christophe.leroy@csgroup.eu> <22b3847fd0011024c10aff48f1e5223894ce718a.1754996033.git.christophe.leroy@csgroup.eu>
+Date: Tue, 12 Aug 2025 10:21:16 -0400
+X-Gm-Features: Ac12FXwYayzSV7JbaH60c8JY_pypspfPypyhh9tZpmA_WhfNTdKcELAccenZyWo
+Message-ID: <CAMRc=Mce3LHtCUd-oO3uZjVAS-fywn86Zn+qmehZPJTKLzk6Sg@mail.gmail.com>
+Subject: Re: [PATCH 3/4] soc: fsl: qe: Add support of IRQ in QE GPIO
 To: Christophe Leroy <christophe.leroy@csgroup.eu>
 Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
 	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
@@ -92,137 +92,107 @@ Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 12 Aug 2025 13:02:52 +0200, Christophe Leroy
+On Tue, 12 Aug 2025 13:02:53 +0200, Christophe Leroy
 <christophe.leroy@csgroup.eu> said:
-> In order to be able to add interrupts to the GPIOs, first change the
-> QE GPIO driver to the proper platform driver in order to allow
-> initialisation to be done in the right order, otherwise the GPIOs
-> get added before the interrupts are registered.
+> In the QE, a few GPIOs are IRQ capable. Similarly to
+> commit 726bd223105c ("powerpc/8xx: Adding support of IRQ in MPC8xx
+> GPIO"), add IRQ support to QE GPIO.
+>
+> Add property 'fsl,qe-gpio-irq-mask' similar to
+> 'fsl,cpm1-gpio-irq-mask' that define which of the GPIOs have IRQs.
+>
+> Here is an exemple for port B of mpc8323 which has IRQs for
+> GPIOs PB7, PB9, PB25 and PB27.
+>
+> 	qe_pio_b: gpio-controller@1418 {
+> 		#gpio-cells = <2>;
+> 		compatible = "fsl,mpc8323-qe-pario-bank";
+> 		reg = <0x1418 0x18>;
+> 		interrupts = <4 5 6 7>;
+> 		fsl,qe-gpio-irq-mask = <0x01400050>;
+> 		interrupt-parent = <&qepic>;
+> 		gpio-controller;
+> 	};
 >
 > Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 > ---
->  drivers/soc/fsl/qe/gpio.c | 88 +++++++++++++++++++++++----------------
->  1 file changed, 53 insertions(+), 35 deletions(-)
+>  drivers/soc/fsl/qe/gpio.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 >
 > diff --git a/drivers/soc/fsl/qe/gpio.c b/drivers/soc/fsl/qe/gpio.c
-> index 8df1e8fa86a5f..b502377193192 100644
+> index b502377193192..59145652ad850 100644
 > --- a/drivers/soc/fsl/qe/gpio.c
 > +++ b/drivers/soc/fsl/qe/gpio.c
-> @@ -19,6 +19,7 @@
->  #include <linux/slab.h>
->  #include <linux/export.h>
->  #include <linux/property.h>
-> +#include <linux/platform_device.h>
+> @@ -13,6 +13,7 @@
+>  #include <linux/err.h>
+>  #include <linux/io.h>
+>  #include <linux/of.h>
+> +#include <linux/of_irq.h>
+>  #include <linux/gpio/legacy-of-mm-gpiochip.h>
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/gpio/driver.h>
+> @@ -32,6 +33,8 @@ struct qe_gpio_chip {
 >
->  #include <soc/fsl/qe/qe.h>
+>  	/* saved_regs used to restore dedicated functions */
+>  	struct qe_pio_regs saved_regs;
+> +
+> +	int irq[32];
+>  };
 >
-> @@ -295,45 +296,62 @@ void qe_pin_set_gpio(struct qe_pin *qe_pin)
+>  static void qe_gpio_save_regs(struct of_mm_gpio_chip *mm_gc)
+> @@ -141,6 +144,13 @@ static int qe_gpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
+>  	return 0;
 >  }
->  EXPORT_SYMBOL(qe_pin_set_gpio);
 >
-> -static int __init qe_add_gpiochips(void)
-> +static int qe_gpio_probe(struct platform_device *ofdev)
->  {
-> -	struct device_node *np;
-> -
-> -	for_each_compatible_node(np, NULL, "fsl,mpc8323-qe-pario-bank") {
-> -		int ret;
-> -		struct qe_gpio_chip *qe_gc;
-> -		struct of_mm_gpio_chip *mm_gc;
-> -		struct gpio_chip *gc;
-> -
-> -		qe_gc = kzalloc(sizeof(*qe_gc), GFP_KERNEL);
-> -		if (!qe_gc) {
-> -			ret = -ENOMEM;
-> -			goto err;
-> -		}
-> +	struct device *dev = &ofdev->dev;
-> +	struct device_node *np = dev->of_node;
-> +	int ret;
-> +	struct qe_gpio_chip *qe_gc;
-> +	struct of_mm_gpio_chip *mm_gc;
-> +	struct gpio_chip *gc;
+> +static int qe_gpio_to_irq(struct gpio_chip *gc, unsigned int gpio)
+> +{
+> +	struct qe_gpio_chip *qe_gc = gpiochip_get_data(gc);
 > +
-> +	qe_gc = kzalloc(sizeof(*qe_gc), GFP_KERNEL);
-> +	if (!qe_gc) {
-> +		ret = -ENOMEM;
-> +		goto err;
-> +	}
->
-> -		spin_lock_init(&qe_gc->lock);
-> +	spin_lock_init(&qe_gc->lock);
->
-> -		mm_gc = &qe_gc->mm_gc;
-> -		gc = &mm_gc->gc;
-> +	mm_gc = &qe_gc->mm_gc;
-> +	gc = &mm_gc->gc;
->
-> -		mm_gc->save_regs = qe_gpio_save_regs;
-> -		gc->ngpio = QE_PIO_PINS;
-> -		gc->direction_input = qe_gpio_dir_in;
-> -		gc->direction_output = qe_gpio_dir_out;
-> -		gc->get = qe_gpio_get;
-> -		gc->set = qe_gpio_set;
-> -		gc->set_multiple = qe_gpio_set_multiple;
-> +	mm_gc->save_regs = qe_gpio_save_regs;
-> +	gc->ngpio = QE_PIO_PINS;
-> +	gc->direction_input = qe_gpio_dir_in;
-> +	gc->direction_output = qe_gpio_dir_out;
-> +	gc->get = qe_gpio_get;
-> +	gc->set = qe_gpio_set;
-> +	gc->set_multiple = qe_gpio_set_multiple;
->
-> -		ret = of_mm_gpiochip_add_data(np, mm_gc, qe_gc);
-> -		if (ret)
-> -			goto err;
-> -		continue;
-> +	ret = of_mm_gpiochip_add_data(np, mm_gc, qe_gc);
-
-Actually scratch my R-b, on second glance - this should now be
-replaced with devm_gpiochip_add_data(). I don't see anything that
-would be in the way now that it's an actuall platform device.
-
-Bartosz
-
-> +	if (!ret)
-> +		return 0;
->  err:
-> -		pr_err("%pOF: registration failed with status %d\n",
-> -		       np, ret);
-> -		kfree(qe_gc);
-> -		/* try others anyway */
-> -	}
-> -	return 0;
-> +	dev_err(dev, "registration failed with status %d\n", ret);
-> +	kfree(qe_gc);
-> +
-> +	return ret;
+> +	return qe_gc->irq[gpio] ? : -ENXIO;
 > +}
 > +
-> +static const struct of_device_id qe_gpio_match[] = {
-> +	{
-> +		.compatible = "fsl,mpc8323-qe-pario-bank",
-> +	},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, qe_gpio_match);
+>  struct qe_pin {
+>  	/*
+>  	 * The qe_gpio_chip name is unfortunate, we should change that to
+> @@ -304,6 +314,7 @@ static int qe_gpio_probe(struct platform_device *ofdev)
+>  	struct qe_gpio_chip *qe_gc;
+>  	struct of_mm_gpio_chip *mm_gc;
+>  	struct gpio_chip *gc;
+> +	u32 mask;
+>
+>  	qe_gc = kzalloc(sizeof(*qe_gc), GFP_KERNEL);
+>  	if (!qe_gc) {
+> @@ -313,6 +324,14 @@ static int qe_gpio_probe(struct platform_device *ofdev)
+>
+>  	spin_lock_init(&qe_gc->lock);
+>
+> +	if (!of_property_read_u32(np, "fsl,qe-gpio-irq-mask", &mask)) {
+
+AFAICT: you can drop the of.h include and just use
+device_property_present() here.
+
+> +		int i, j;
 > +
-> +static struct platform_driver qe_gpio_driver = {
-> +	.probe		= qe_gpio_probe,
-> +	.driver		= {
-> +		.name	= "qe-gpio",
-> +		.of_match_table	= qe_gpio_match,
-> +	},
-> +};
+> +		for (i = 0, j = 0; i < 32; i++)
+> +			if (mask & (1 << (31 - i)))
+> +				qe_gc->irq[i] = irq_of_parse_and_map(np, j++);
+> +	}
 > +
-> +static int __init qe_gpio_init(void)
-> +{
-> +	return platform_driver_register(&qe_gpio_driver);
->  }
-> -arch_initcall(qe_add_gpiochips);
-> +arch_initcall(qe_gpio_init);
+>  	mm_gc = &qe_gc->mm_gc;
+>  	gc = &mm_gc->gc;
+>
+> @@ -323,6 +342,7 @@ static int qe_gpio_probe(struct platform_device *ofdev)
+>  	gc->get = qe_gpio_get;
+>  	gc->set = qe_gpio_set;
+>  	gc->set_multiple = qe_gpio_set_multiple;
+> +	gc->to_irq = qe_gpio_to_irq;
+>
+>  	ret = of_mm_gpiochip_add_data(np, mm_gc, qe_gc);
+>  	if (!ret)
 > --
 > 2.49.0
 >
 >
+
+Bart
 
