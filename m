@@ -1,81 +1,81 @@
-Return-Path: <linux-gpio+bounces-24282-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24283-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98696B22662
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 14:11:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD06BB22664
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 14:11:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9D1381B62839
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 12:11:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 78CCA1B62B48
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Aug 2025 12:11:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DF732EF660;
-	Tue, 12 Aug 2025 12:10:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 698642EF662;
+	Tue, 12 Aug 2025 12:10:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="MGFLe6Vb"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="f1uJ04Hy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550A32EF64C
-	for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 12:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA622EF65C
+	for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 12:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755000657; cv=none; b=Z6H6gHgRf+GgXRModPXsLjjM/av5i1X6hzfNepBDBT72+LikJSJJ1ve+uNSb8X7geWYrD55DxDyZtUMCDlEz7hJo2E+OnojsbSMM1bWgCcgkFStOaAgGlLjPVStLK9icSBS9h2LN3AVEZbtibszbytj5F6AX6gqUuXwIwb+FKV8=
+	t=1755000658; cv=none; b=bpMGY3LBIcJiFr4UX39uA7KYi83ldn9pPpVMwcXvSy5ypVFGPg6zHWyXrALTiFXUTi1s273M03jNXlQYY93Jfuts5dPNk7MYspJrWGaAm4Po/WiL1r7HfVa6t8eSjwGjReIqRJUzi3eqqi6DAtlhQuJYzlIuyA12rChNcDdME3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755000657; c=relaxed/simple;
-	bh=thh079rHaz4Opon43L8KgpAxZqcRYj9LeT+JNRwG1C0=;
+	s=arc-20240116; t=1755000658; c=relaxed/simple;
+	bh=vL3pf6x2REjhJG8vkq8ETL0iim7u1FymkLYpyGpMFb8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iIJQqul+DLsOS8Zi00jgN010JGrmaW1dIcOBGDXAzfGQg/AySLC92tdIkHFGigyrS4Uw76gJeclJW3/jazfmh5ITfoUWCuK865t61L44qpasoiLgKKoNVj5X2RsOea/YIrtlqUjtniNDNkE7jA/gvpG2G9a+KE1/u919Qw/oR7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=MGFLe6Vb; arc=none smtp.client-ip=209.85.128.48
+	 In-Reply-To:To:Cc; b=Gis4rrsvvD3hEgjn3XEyyTpqciDG57jQNJvuBToqyDU+QpXIUbB6WNiA8mzi2gg9wifidIMnhMZXND2GC/HFOm5+VL4cD66g40Zx0AmVBEj+jxcQPQNZqK49ZEFtb7wgS9YwRYXcivJN6Ws0XQNVKbqy5N6Nchd482zNhwjV3DA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=f1uJ04Hy; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-459e20ec1d9so52934465e9.3
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 05:10:55 -0700 (PDT)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-458bf6d69e4so49288755e9.2
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 05:10:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1755000654; x=1755605454; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1755000655; x=1755605455; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=koC+0/v9/LcbM4WWFoON0dSwyF7a3Du4788vBL1KsIU=;
-        b=MGFLe6VbhPc19gl/d4vd2sOp0kaFFbYdggD3IWssyjZBdzTqhrcLi3xDB+BmxKBgkY
-         QGbls4D5fq4PV8lWZj0AqWR7Hb2lQEOJt3mTWDgSO97UI+dUWOCGs4ULI+BrskbLVdWu
-         CxbElung7Dp9kYBSb223XPtlolT+Zk1+tWNKqqwjIV4m5Daf8QsSSHdm0X/vaqWBQ4GN
-         h3Ltni/JPjV+FcBZ531vdOWQULb5ajYEwS9GQN17iq4zjiGUPlUHHUVDnfThx7OodXV5
-         1jRShnThlzIjfO6xkTddAIs8gRQCwfF+7FlPqrg8QdOflKPGUjquB2Pnx8e0R9kmsJNW
-         dyPQ==
+        bh=nGVxHrF59oaywwwMet1YWBSrEkuVq7/tQFEXLvw77VY=;
+        b=f1uJ04HyiM3tNabca6nUOZ5hMH4CV2CCy5+Nub4ckTBGAwhPOf74APdeKo3Nsk0VLF
+         zLgoVjS1+ddUzvbB7SGlkGohGTkreIVWW31/ucCVuqCjTfqfpyF1peK9YwAMTTC68FpL
+         3Zfl6PL8qs6p2RkB3cCigH62nBElXrYzSgOr3NEPYSd0JrI/6Ed6ocI+ggUI6Q1UYIyq
+         0IdPt/hcMRjKhmycGVLgMFsSbqDSIHmrn+vuXTxSrbIs+FJby5B2MhiKSpagg0hRqAOP
+         qdKYd0FF60JgUOwuYkgxzvAThy+HC4HAlnqAFgGqN7l5wSvh8HfdFzTKDsWI4soGiun7
+         dRjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755000654; x=1755605454;
+        d=1e100.net; s=20230601; t=1755000655; x=1755605455;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=koC+0/v9/LcbM4WWFoON0dSwyF7a3Du4788vBL1KsIU=;
-        b=f2DilEuR+I/ILRhdl8iiv1Oo8Lvdd8Mt53Txk1W26Nhkie24XxjdyU4EWYdRiQPayz
-         Gwqm6j8PCFH7OcSoNOYYtkyPx79JSBJn5NHxxFoL6YqTWwfWK+9vk7vLcwjUMP/pysFy
-         vXE85k2Ym78EJJ9fqgepZItXYFFNMjSO+ePg5m9H+f/WQf1+51YvUj7q+CFLdZ+yNwUT
-         /B7hTHuzxoNrnSUQMPC2A23pXjzpudO+6RC3RDuYYS48vCQKAwppRKgj/+ZkK7TMMdOt
-         hUi42ImS9X3KqzbJ4QHFZcI8dgz6qIgPDPr9BP3+abnWe51vV5R6+3RG4+heQZpesSAV
-         6FNg==
-X-Gm-Message-State: AOJu0Yxu3JNN4OJuc0NiWMuJbHScrTaS4NiEP2zVB/q99mZythLxxoMm
-	1z6M/zl6Rmhypm5QOQOC5er/qrA548s5bcYwmV2hwATxLLpBnFw/jkAXqzG9erFsWJzEnTRuMBJ
-	jSZAU
-X-Gm-Gg: ASbGncudcJ+08hlh4Nqq+fX5o5qS8RH0ttnoAJycqmYhBPmyYnJglxu/dEvX/Vo+8vL
-	SpH2IP6NWW3GhKzqpoxMTn6QI8cZovaoSjD0O0d/VDOFJU6sh8uBQ9l00ECywMP9G7qB/V3bWyU
-	nY/AW+Xqd/YrM+Wki3+E39/YvIMOfNXp89yaziEI1BnEFFUWbNv3o8xbLjngdJHFHE3Zw700Y1o
-	ozhkSZhXa0Uw/h+iEt0Pknj9ZMZHz2PRfPNVt11/meRVBZJ68HSqmLOm4ZwkmCtfMVL/NForTKI
-	t2c1ts9bcCoYkO5K9VMJPHu9a8QWFQxADRLbPBIzPRutQ1KA7NEvBZ3As0Y2AfZlIYouHdLuV1Q
-	bb8YIFPH7W86Lar8=
-X-Google-Smtp-Source: AGHT+IEc6hPV55cDQfS8oVtFC+azs1VA7ynGM95vGu4Of652jphseAIeZLtJCK8szOHORJJEFKNgrA==
-X-Received: by 2002:a05:600c:19d2:b0:459:ddad:a3bd with SMTP id 5b1f17b1804b1-45a114c20e9mr29065265e9.15.1755000653585;
-        Tue, 12 Aug 2025 05:10:53 -0700 (PDT)
+        bh=nGVxHrF59oaywwwMet1YWBSrEkuVq7/tQFEXLvw77VY=;
+        b=OJb/5sFunPZErEjMJAq0AWNkMhWzkSWtfa+kCOTwDQGwSIr38Nnq8IKGGL+dbE+T+x
+         5p0Noe0xo0qtiSUDFUN4UyHt+MMIef/X6JUuPoTwTqCSpS8rsbe9Rn6Y+26gc0TzXpfY
+         /922xzINPBeaOlHgh7oW0+QSXP/c01eoY5ptb3Ds8BQhE+W+PlGOg1o83mBHBNa1n2HI
+         VEEu+WuCCxozofCxVRSNlD4tA0ZbiKxaC3HGH2hiHr2POlaRFw/7PZ1GJ7AxPvK0OZpX
+         vE8LI6xbrrIrgoIhwH/vHopIeM4Gr+TIj9b1GBZpSI5yVz+IUy1+n+B2I5wg3dGJnV+h
+         H35w==
+X-Gm-Message-State: AOJu0YyUa8iJUwWyWnAmS2+GW2S2Vb4ohsp1cPIDRVBT3n02YN82swRF
+	DuP9QczwpvLF+AhSCX8wTsld/WfsR5CH8fazUZ6NoLkXNSLxpqtCN2ocZCRU3Kb7T6WXMxGekMM
+	AW6Rr
+X-Gm-Gg: ASbGncv+LE+7CvWGv7a+ml+SdPY4s6Qm7uaxoCS6XgEnkPHq3MEvhcThE8qZOeVyjuU
+	YgS3k59uwMkv0K+DoMgOXKqWRXPAQfb3pQpQzIL5kZwsPvJddaXumE+EtSZ6ZilNTkBslS2XV5b
+	ktSCD98QbOHcYGw3Z++Adjj9N9H+/ZN6kmwSqvMfvCUG20pdxzcoVrXhtdHd72LJhBnBt3mgHHb
+	/oPJs98SQUzhKiI84BreikmYSIdDRMWELWkjJRub+CldhIs1cEZt1ISoovpbsTstL9QHsfe9VRe
+	alNVt24ftOLAe8fKJMoF1XmIiOPGx9nWYj3KD+inZm3Mq7g+8M+9bnhqX5ZTEroak/zspNv66eS
+	YQiZAHIaMb++MPxQ=
+X-Google-Smtp-Source: AGHT+IEZ3Q9e5Pg8ZPn3vMPB5IplmXoVH1WGUoFM4U+9XAJdBBdd9IPdv2u8/VrqKX5MOK+w8x6olA==
+X-Received: by 2002:a05:600c:b93:b0:43c:fcbc:9680 with SMTP id 5b1f17b1804b1-459f4fac9e1mr139932665e9.25.1755000654807;
+        Tue, 12 Aug 2025 05:10:54 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:16c8:50:27fe:4d94])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b8e1cb7deesm34268788f8f.2.2025.08.12.05.10.52
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b8e1cb7deesm34268788f8f.2.2025.08.12.05.10.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 12 Aug 2025 05:10:53 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 12 Aug 2025 14:10:38 +0200
-Subject: [PATCH libgpiod 08/10] bindings: rust: update intmap dependency
+Date: Tue, 12 Aug 2025 14:10:39 +0200
+Subject: [PATCH libgpiod 09/10] bindings: rust: update rust version
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -84,7 +84,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250812-rust-1-0-0-release-v1-8-372d698f23e8@linaro.org>
+Message-Id: <20250812-rust-1-0-0-release-v1-9-372d698f23e8@linaro.org>
 References: <20250812-rust-1-0-0-release-v1-0-372d698f23e8@linaro.org>
 In-Reply-To: <20250812-rust-1-0-0-release-v1-0-372d698f23e8@linaro.org>
 To: Viresh Kumar <viresh.kumar@linaro.org>, 
@@ -92,103 +92,69 @@ To: Viresh Kumar <viresh.kumar@linaro.org>,
 Cc: linux-gpio@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3153;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1812;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=RHhdkIo2AFfSmDM7h2NjHZ2lbaO8izvR2MzgAQlC7HM=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBomy9DaC0uq70r/9WpHhd6nmdT1CqGKE34FM3/J
- DLgEFJDXhGJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaJsvQwAKCRARpy6gFHHX
- cmZBD/9HFDSLazXS4S+3R8t0cfCMKwppovXYllJgxHOrsLyT5JZFhr88mikwHbM96Rp4EP2QmpG
- Zlg8ZQC1Y0aKUGZPjmyojhluNUcb8f8IOUAZBX9M3AXiwCILvYp+6ML6009++tH+jyZi+I6tVvw
- 4mpSRQ2SS+CSKjbOnfrDfZOq6pMOtreeqdbxr0PWTIq9RJeYJ9+5kTWD66H3XRMoHVSZ9pKhBnf
- Bf8X49qZOa4P0BuvKV2Q+9K3pH2E17Np7z7KFn1IhgKqucWSx0hbujUKaR97lamguc3lLEhIseJ
- 2JcgptisCCimRtExO5MpGWu7yORCBAIzjukz14/dZEx0HA3rVhNiG1/io7ukyvsHK9btFUE+vaW
- uXQXQS0+T17amxBzSkXvPJk6zbRTzd8xpFZklJh72RlQRsmgH+NYzcApnWLzHshwrCGIs1NNsXY
- QvWqAnjFaw0DeQAVx00v8uGd0Zg8Esq/qkg5M2bPK47rULl9NJPKezd63ctWHwAYTf/LpzKIEMe
- C1XT/HUJ+25B/LVi2lKgytekV1veg1AO9UFS4RWySMLNgdNmrFdKOCD8KSRXInmZv05MuCJMKPI
- OXmQd5YNFfEBQLPUziInG8Rc2QED94erGv4+RQHjozMNMlRkd3mpFuV2HYKuiPjM4Nt71d6Teyf
- ilVGrBsmFWInmTg==
+ bh=SXDLjGUHYzday81LtLLE1PJ29A84uEF6CJ5XoWE4TNc=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBomy9DFiNQvFsq4++aSCfWKiU5ucPrbgrgI8jX8
+ sgjsnSQ0G2JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaJsvQwAKCRARpy6gFHHX
+ chJiD/9ngHIRl/b8WRqTeqsysBBPDOU9m5tKIJJLZHRvRx8ysgaXzwTD0ThqfzBGc/8Aehf+Ej7
+ L0wHrKWbzHjPaH9ZwUhNUur18x6hp2oKS0YEx3elFCfyDxUtaT8/p6+xWqS3TZ+wEoDUwbS+wC1
+ KpLVrgrMuED7zieW2f+RYZYgLCk5RDexGMoQaXH9Z2DCyNFPfVkxwa+YvGMUs1qoIJugZTf3SLj
+ u/JaMwN8cMip5gcD9W3mLJJ7e0jTVtAuXui7cCjccleViUvU8VY3D+/18YDiQnnbOrYAON4D7Sp
+ x6FmqsXg80P16pZryv7evE/fgnS2dUFsUBUqfZNiWCOtcsayQ+34beNq/eJrKubn6/ZRS/FoSQL
+ rJ9zS6qZkGsz0hcMvD6vsbsSXmcAQ2gUlIeer1i6Pd/K3wDcvqusCM4TBtaWjRrbnbi7F7L8lRA
+ SQPFHIQvyxoKKQL8ZWjh2s4RYPDaTaUY5NBlxjNEKudyYLzRgsTOCB2L6CIK9UBCLmyGZoZtY50
+ oEqJeK/yrt+3c0BHnw5v1fyPhxc8sVNOUkWBpNIX06s2T545HE/5d75aHnuZdN4edNhjzsOG2BI
+ CyUt3SQXRw+jdVJVoNs0WViLhYJziWky8O4zk5paYScCRlc879dlZzhD+n32NC/uiJFAJ9bd3+f
+ DfsPQPUGoNKLyOQ==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Bump the intmap dependency for libgpiod to the most recent version. The
-IntMap type now takes two explicit type arguments for the key and value
-so adjust the code accordingly.
+With all previous fixes to rust bindings, we can now update the rust
+version and required edition to 2024.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- bindings/rust/libgpiod/Cargo.toml          | 2 +-
- bindings/rust/libgpiod/src/lib.rs          | 4 ++--
- bindings/rust/libgpiod/src/line_config.rs  | 2 +-
- bindings/rust/libgpiod/src/line_request.rs | 4 ++--
- 4 files changed, 6 insertions(+), 6 deletions(-)
+ bindings/rust/libgpiod-sys/Cargo.toml | 4 ++--
+ bindings/rust/libgpiod/Cargo.toml     | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/bindings/rust/libgpiod-sys/Cargo.toml b/bindings/rust/libgpiod-sys/Cargo.toml
+index 7fb5c174ec8186b6ef8cd64e1e6f25a13bd0dcd3..ab86ff8ecf871bfc3f931f8ea08490c4eb40eee6 100644
+--- a/bindings/rust/libgpiod-sys/Cargo.toml
++++ b/bindings/rust/libgpiod-sys/Cargo.toml
+@@ -9,10 +9,10 @@ authors = ["Viresh Kumar <viresh.kumar@linaro.org>"]
+ description = "libgpiod public header bindings"
+ repository = "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git"
+ categories = ["external-ffi-bindings", "os::linux-apis"]
+-rust-version = "1.60"
++rust-version = "1.86"
+ keywords = ["libgpiod", "gpio"]
+ license = "Apache-2.0 OR BSD-3-Clause"
+-edition = "2021"
++edition = "2024"
+ 
+ exclude = [
+     "Makefile.am",
 diff --git a/bindings/rust/libgpiod/Cargo.toml b/bindings/rust/libgpiod/Cargo.toml
-index 8b719b7647910269ca2c91fee685da7fcc67feb7..d7fbe7b3669750880b815832a2e5d7c975ed4d7e 100644
+index d7fbe7b3669750880b815832a2e5d7c975ed4d7e..c81680de1bdea76986c4a2fbb421bc452f92ff3c 100644
 --- a/bindings/rust/libgpiod/Cargo.toml
 +++ b/bindings/rust/libgpiod/Cargo.toml
-@@ -24,7 +24,7 @@ vnext = ["v2_1"]
+@@ -9,10 +9,10 @@ authors = ["Viresh Kumar <viresh.kumar@linaro.org>"]
+ description = "libgpiod wrappers"
+ repository = "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git"
+ categories = ["api-bindings", "hardware-support", "embedded", "os::linux-apis"]
+-rust-version = "1.60"
++rust-version = "1.86"
+ keywords = ["libgpiod", "gpio"]
+ license = "Apache-2.0 OR BSD-3-Clause"
+-edition = "2021"
++edition = "2024"
  
- [dependencies]
- errno = "0.3.13"
--intmap = "2.0.0"
-+intmap = "3.1.2"
- libc = "0.2.39"
- libgpiod-sys = { version = "0.1", path = "../libgpiod-sys" }
- thiserror = "2.0"
-diff --git a/bindings/rust/libgpiod/src/lib.rs b/bindings/rust/libgpiod/src/lib.rs
-index f4e511d535b70fbc01f91fa059921545b405656a..76a2c1b76f3cf365866797742011b780ee5795d8 100644
---- a/bindings/rust/libgpiod/src/lib.rs
-+++ b/bindings/rust/libgpiod/src/lib.rs
-@@ -178,10 +178,10 @@ pub mod line {
-     }
- 
-     /// Maps offset to Value.
--    pub type ValueMap = IntMap<Value>;
-+    pub type ValueMap = IntMap<Offset, Value>;
- 
-     /// Maps offsets to Settings
--    pub type SettingsMap = IntMap<Settings>;
-+    pub type SettingsMap = IntMap<Offset, Settings>;
- 
-     impl Value {
-         pub fn new(val: gpiod::gpiod_line_value) -> Result<Self> {
-diff --git a/bindings/rust/libgpiod/src/line_config.rs b/bindings/rust/libgpiod/src/line_config.rs
-index 34b6c227b0c8e156ea1bac396cc19ea4f182012c..5850b9da3cba0d75f475246592796c2c52570e8e 100644
---- a/bindings/rust/libgpiod/src/line_config.rs
-+++ b/bindings/rust/libgpiod/src/line_config.rs
-@@ -139,7 +139,7 @@ impl Config {
-             // We no longer use the pointer for any other purpose.
-             let settings = unsafe { Settings::from_raw(settings) };
- 
--            map.insert(*offset as u64, settings);
-+            map.insert(*offset as Offset, settings);
-         }
- 
-         Ok(map)
-diff --git a/bindings/rust/libgpiod/src/line_request.rs b/bindings/rust/libgpiod/src/line_request.rs
-index 49fe56542ab876bd2360b5e846e18ced0de51fbd..48d8d1a3a6fb5110ef295971cf44bcc70ff68c58 100644
---- a/bindings/rust/libgpiod/src/line_request.rs
-+++ b/bindings/rust/libgpiod/src/line_request.rs
-@@ -110,7 +110,7 @@ impl Request {
-             let mut map = ValueMap::new();
- 
-             for (i, val) in values.iter().enumerate() {
--                map.insert(offsets[i].into(), Value::new(*val)?);
-+                map.insert(offsets[i], Value::new(*val)?);
-             }
- 
-             Ok(map)
-@@ -144,7 +144,7 @@ impl Request {
-         let mut values = Vec::new();
- 
-         for (offset, value) in map {
--            offsets.push(offset as u32);
-+            offsets.push(offset);
-             values.push(value.value());
-         }
- 
+ exclude = [
+     "Makefile.am",
 
 -- 
 2.48.1
