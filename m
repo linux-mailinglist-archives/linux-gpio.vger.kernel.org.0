@@ -1,127 +1,157 @@
-Return-Path: <linux-gpio+bounces-24330-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24331-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62087B241E3
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 08:51:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E0CD8B241FB
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 08:55:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8492B168BE2
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 06:51:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D769C177164
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 06:55:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0F982D373A;
-	Wed, 13 Aug 2025 06:50:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB9282D3721;
+	Wed, 13 Aug 2025 06:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GxQbe5gb"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82CCE2D0617;
-	Wed, 13 Aug 2025 06:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E835C2737E6
+	for <linux-gpio@vger.kernel.org>; Wed, 13 Aug 2025 06:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755067858; cv=none; b=LE3zezq6vPPISmZ8IdZ7dclCdzl46usfanlHiE/TXxUEFgCcygHL0VWZcMLunhyqTNaAgMjpKso4usY1cl6SwOj5NHWIOuOJ7bpo4UJ+ORTPbi3lYo+FOWm1g1J0nQ8HZHb+NwF4kW8wuJGtz4o+WapqkrJ+AAufxM4YmgKsJ84=
+	t=1755068144; cv=none; b=V7k4j1X0Tf9lefXQHBTkMAzbXcfJYQjc4b900BtE7up9yJnQuWUxTZnQmax5G43GBfdTV8smeXqk/3XIzMl1MM5mEphBVtau1k5HoGh1K3iDUfvIODFQkuR6ilKQfWBud1gs8Zow/uiF3X+9RtWermsS5otfbxkHO5aRUn1TdDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755067858; c=relaxed/simple;
-	bh=xy7Cf6sce/SJOZuFqk8gE9CKdCJEm4kCAmDrzn9gaoE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k2Qvsepga7Vuzuo+bnW8rtC49WihyUTxgau4505MsOvQUBrM5LGZFEhRfgj9u9/IpcazeK4/2MqUZawXUv5TWRbuFZjM4yJvhYM2Ittc1FBXRucYxdWYfy0urvduOe1YdVt2Zf6+F1pRD8Jn5iKn4A1nXXM3YxDvEQkFI234DJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-88e373c07f8so908466241.1;
-        Tue, 12 Aug 2025 23:50:56 -0700 (PDT)
+	s=arc-20240116; t=1755068144; c=relaxed/simple;
+	bh=NT3OXZ+6VFZb8CMe4L1nzdruLP5ekCY4F22ZMO9+lwc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DNQyRq+Nay3HB7joVsT8bIMMVzIEBxlM3AYea+W5qB2Ef23BrTBLB8iZ4d4jBKZZ4y7kLyYQnEnu7WAfkDhX1Me92NhZtRPBdqduaAlJWts8SjxRGuKsmSle+yT0/GfkZd89uTFxd2uOfKQbdAesya8aLXJPnI0Up9ExFuIEngM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GxQbe5gb; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57D6mOYE008774
+	for <linux-gpio@vger.kernel.org>; Wed, 13 Aug 2025 06:55:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=v89RUCwFdyomRq93Seq/cCar3eyic7DgZed
+	XTAI4uzg=; b=GxQbe5gbpLOK9bhiBmB5lyEEGQEQ7ItuzcZg167xiPgvg67eGwy
+	1O+dSkpAak+F8DwahEiDpb/Qybc4Db8uRnWUcAvuQrcMZ/2OZKPvUhH42BT6sSRT
+	6qCTP0N2KjJAHJskku51iFXTp9S+WA7H0hKwCaS2jw6TcPen6AU1T//u0Jq3riSi
+	AIVQj21tsOLWyxxGd4e8Da3etLVjEnGw0t1WHbcKzk5pCPKWEjUYA+B3fnv2E4X2
+	d7r4QQJPCbP43xdCAykfowvXRW/TUuHNLxqOb6yjMSVdGh71TjGTKyYRKfPu+dn5
+	xy0D4psnMDm6VXneJsaIjXn5fTUXgfPnChg==
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48fem4es6m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Wed, 13 Aug 2025 06:55:41 +0000 (GMT)
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-3132c1942a1so13219001a91.2
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Aug 2025 23:55:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755067855; x=1755672655;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1755068141; x=1755672941;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=8T63UKJO4oXLnVMeu5S8Bqcc+Hsdmb7ulwo/FczsGM0=;
-        b=X9WN+Vt8QQRaZMrY+8h544EId450/g69rnqeZrWiDpQ73380kSPcSziXLysdJip3kz
-         z3WtdIBSbcUp8ErialbPhAe1Ry8dKEg0QqyvrgRUwkF+uvpR7DCfOYb4xEN0Hhumeom7
-         F4BMr4n+5LfOHLnBJtQemuM/6V607mdv03kxQgnjLcLsxVfjRsUsfEn0sS4NMj2s2lw/
-         OJTeDDbaq+1/ojK0hsFn/lCZScfQLMzfO+7f1Hc2OiK/W+DdNCoSUmfcwrNG/597P+AU
-         nQjsgtsymm4pfRY5zJ3xPcYk5BYwuA6ZUIEDP/RRfmJdz7dAvvEYucR/KjLM5EFlBXY+
-         GKjA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMEk5smuPK0vPtoqMYSUzm14llMl303YcwpTxR7SKDM8sKEOjTNfvEtBnri/M92TxT1QTrZi8rMJwUDg==@vger.kernel.org, AJvYcCW6hVfdIS0UM0p3IVPmz+IwJSmFwL4aPQGVKoBpbvWoMuhdzf9AkNhPBEbKnMo49y7y12o5O3y904UoseFs@vger.kernel.org, AJvYcCX9FURPUZhyZ3IC3u30ZUX9UmGAGpXJb76N37xJ/bU6aKuEVIxN0Z3S3Bz9jzpxdqdQGhLBu/R6apqf4sC49wc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwT1hgjRFYDHI0VApoF67ybp2Da8QATTR2tQ/GKRnxJBSPdKwVG
-	TjCt0e+ybxogafblGe7I/Ew+U3TZWFIvaRtfmkeXaoNhZYCKocsexoYPL7p+EchF
-X-Gm-Gg: ASbGncsDQ2TmKYhXWwaJJ0JSbYfRselCxEpYeF6i+lAfKPKSA2obKmTolGM6/xlhRIf
-	zn9y8ZSH3IQrFecH9zfJUqx2G3JIEDMYl6vPO5/lKC2mfQfHPDauo4wdkd7xenDsp0e0+SFoW0X
-	qK3WdrqkQMzsaPkxix3emRAQ2/ohtcw9FAgrx1iOraD1dqiCAzZK3mmu0Sr1Lo+/WPQ4IWsYLIi
-	WUKB+PXPkhfYFXvWyacgYKgjXk6a4oHYr7oNWQPH907kumAqeBf3ZlpgEU/LJtU1ZFapEZ++WqL
-	rpz5Z7xJNXvSJCFFWNAFw4PkR3h/8aTOhJD1I/GZu5RiCIz6A1SEWqIm3ear8cV5AfhS54bjOAa
-	26jF3MPLr+BS+HzFEWgI+20SvnXfLWKhHKWc7SknXTjbwwTLy9Rr9zvdwcxAx
-X-Google-Smtp-Source: AGHT+IHw60PAj2clYFmI3u3fUoDc87dr7r2E7yd7BB0F8Jh567VLYd4IIE36LNZCqAWZtbg0LZldzQ==
-X-Received: by 2002:a05:6102:418f:b0:4e7:b728:e34b with SMTP id ada2fe7eead31-50e4ebbabbdmr702969137.3.1755067855065;
-        Tue, 12 Aug 2025 23:50:55 -0700 (PDT)
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-88e0293141asm2721136241.17.2025.08.12.23.50.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Aug 2025 23:50:54 -0700 (PDT)
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-88c61c2843aso2381933241.2;
-        Tue, 12 Aug 2025 23:50:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUBmGUJX9tLwXxqDCTR9fxF9ts/JHUGnkG+ELCCUHegFAjoXDLvSnPsuflTbB5rIJ5sdwFkwUsUOLYZ6Jrz@vger.kernel.org, AJvYcCUDz5x03/Pp+hy+NGqipavIoF81wrUusqJTdDf4K3/cnK4l8H/b5S5ipmWw7BQ+5rL34/3G3EzfVlP+zg==@vger.kernel.org, AJvYcCWKGS5ZEjn6TDtE3Wa/TY8bIyYr99lHTRerHgm8uEnX7tTCTKkDZmqpTTCPoiob+jr1Yln/sx3K5oIjz7Pp9K0=@vger.kernel.org
-X-Received: by 2002:a05:6102:f84:b0:4fb:372d:6d70 with SMTP id
- ada2fe7eead31-50e518c6a92mr655168137.26.1755067854201; Tue, 12 Aug 2025
- 23:50:54 -0700 (PDT)
+        bh=v89RUCwFdyomRq93Seq/cCar3eyic7DgZedXTAI4uzg=;
+        b=U6A0K8ocdmgHVPXFtfWvCZFPHz+9VJEi0rqzoxGYwjZe4WWhndASP8vXE1suzfmUlN
+         LXxyfVNZVC1/JoF0fs6brvrdnZW/L//YcvHZtUXADzue6yRa2UOnhTvmEtlrUPhZ4+pn
+         6rlmXB5ldEQk9dFcAqkO7/fdUDsRP70zvEgU0sTkOc7yrGeuHVAh7Si754GHSLZ41pzR
+         8PO06XFw12ixVK4CE9XQEx57H/Vqe/GJQWaSJyp9LUfRn7di7FeRdrADrWsJ4blOScd/
+         iBkNMm8IPTvRkMpn/pbBHcFubBmgC+qBm3V4wyJ+khIkCDlNdtQhPi7RFXUgpc8XG+vJ
+         gMqw==
+X-Forwarded-Encrypted: i=1; AJvYcCWQ+mOFNYwqJm+A6VW6HPebvBp47alTVmhgFkWm7xMSGuFAfVyQp2YvatsXfQbBhLu0VvSR/WaA5spI@vger.kernel.org
+X-Gm-Message-State: AOJu0YyV8GHU1iWwyzxBHCZiFioJHxpZuwvBhuunddb3g8fbrigFuTUY
+	zsNRjqYRpfatOzWtVSHfGQ0auJXU34o4gkfX9qLXZG8ccSAfVEk/cGQO/8Eg3yzntoV7WbvkXHZ
+	Pqs7oD2EGCIUr0L9T13x+czV1HMO5c0k3g3vpwJp6zdAUYd5txcAC/iDALFOOs3EI
+X-Gm-Gg: ASbGnct4SxgkEb3DQsF/LVi8atmM8NjwdA8Ms0+qbuH+OwjrM7pGRHYCMfAqzF8NGjy
+	ZyN+Rn9wyLHzu4osoB0+pgCQU7n64RroNUlmxuDkL8tsYamVXDdWXHxy+AjVjC/MerbZ3/8j9YL
+	R+BJ10uWJ/Ochp785bgGI17EtOWxobXhyPu3be4aT9Qb2jpS014ViP6FQVewaRVPxckDFLLjOz4
+	94jc0mGP6Bq0M5XCvI+QElMiV59qNxXlVPNI/zOo8v2lO1ISeovhGhStqLlgLqeNK12rNMhTEf/
+	FfVspqrhcvcKugEV9m/7lWFL+N9vEnqneJ+8ETbzmnCIHlGf0IBzVbGp0Fwmca3U5ytWG79b33J
+	LLfcfBHiEJywJ+D7BQjnY1Y0hCiIoN9zwdaX77dz2rU7r6Lbf/yJ/WdmWITLW
+X-Received: by 2002:a17:903:b8d:b0:242:9bbc:c773 with SMTP id d9443c01a7336-2430d21de4cmr30253805ad.54.1755068140576;
+        Tue, 12 Aug 2025 23:55:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHjoz7s/dXHcA7mFMizX3dudhJwmJQlObOlwhL9SP3pNoUbNrgFVCMigCH22Xet8aYtZ6XYew==
+X-Received: by 2002:a17:903:b8d:b0:242:9bbc:c773 with SMTP id d9443c01a7336-2430d21de4cmr30253325ad.54.1755068140008;
+        Tue, 12 Aug 2025 23:55:40 -0700 (PDT)
+Received: from hu-pankpati-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241e899aa1asm315958875ad.122.2025.08.12.23.55.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Aug 2025 23:55:39 -0700 (PDT)
+From: Pankaj Patil <pankaj.patil@oss.qualcomm.com>
+To: andersson@kernel.org, linus.walleij@linaro.org, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org,
+        rajendra.nayak@oss.qualcomm.com
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/2] pinctrl: qcom: Introduce Pinctrl for Glymur
+Date: Wed, 13 Aug 2025 12:25:31 +0530
+Message-Id: <20250813065533.3959018-1-pankaj.patil@oss.qualcomm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aJwk0yBSCccGCjX3@stanley.mountain>
-In-Reply-To: <aJwk0yBSCccGCjX3@stanley.mountain>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 13 Aug 2025 08:50:43 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX+uYLDzQB9QerXApi+ZqT-a4L_moCdphpCbK7wdhHkUQ@mail.gmail.com>
-X-Gm-Features: Ac12FXwwCiuvrq-uf9ENAk-IGjGOG7sjLGw_73QRhJq_3fPRx8yM1fm2JI7wL2Y
-Message-ID: <CAMuHMdX+uYLDzQB9QerXApi+ZqT-a4L_moCdphpCbK7wdhHkUQ@mail.gmail.com>
-Subject: Re: [PATCH next] gpio: aggregator: Fix off by one in gpiochip_fwd_desc_add()
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Thomas Richard <thomas.richard@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: voX5UXUGTk_gP7PBAHsXVi603zwX4PAg
+X-Proofpoint-ORIG-GUID: voX5UXUGTk_gP7PBAHsXVi603zwX4PAg
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODExMDA2OCBTYWx0ZWRfX6LghR4ZUfRCF
+ 1AUrkUaIGKf/9RZRflS3PPyIAkThcqDo09AtqKvWvqWvTro6C+WGlRwmLJFmFTvZHLdb6pPUUe6
+ 3AwoMpiIfsyTxyfnDhDdFsCfksdcyVH94xVvA/4DZQ/OEtHn4HC9xoyDXCXFCginy/x58A2NlEb
+ ZpNqt1z4h1tO+cotalLo0FI0h4WBBEcuxsg7kygBtRTigv6FvYlppKxN8q7tpOQ+AdJq6qDrLNa
+ UK6wSkirPbfARDV8jH9xhyDUhVFlG6Oq2YReHpoyd2AMHCzbYUeibzzYKJPKOBN+/vxBjo+C7YB
+ laAo4rfkHSvfVpklZxf60S37Xy0rp24fj8/XcXCPaGiI3e/2Zyi5aKgTfG1QigUL6XscUt359NS
+ YZISMfQA
+X-Authority-Analysis: v=2.4 cv=YMafyQGx c=1 sm=1 tr=0 ts=689c36ed cx=c_pps
+ a=vVfyC5vLCtgYJKYeQD43oA==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=2OwXVqhp2XgA:10 a=ne6LWfaJPpk26Hbpmm8A:9 a=rl5im9kqc5Lf4LNbBjHf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-12_08,2025-08-11_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 clxscore=1015 priorityscore=1501 spamscore=0 suspectscore=0
+ adultscore=0 impostorscore=0 malwarescore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508110068
 
-On Wed, 13 Aug 2025 at 07:38, Dan Carpenter <dan.carpenter@linaro.org> wrote:
-> The "> chip->ngpio" comparison here needs to be ">= chip->ngpio",
-> otherwise it leads to an out of bounds access.  The fwd->valid_mask
-> bitmap only has chip->ngpio bits and the fwd->descs[] array has that
-> same number of elements.  These values are set in
-> devm_gpiochip_fwd_alloc().
->
-> Fixes: c44ce91b8ada ("gpio: aggregator: refactor the code to add GPIO desc in the forwarder")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Introduce Top Level Mode Multiplexer dt-binding and driver for
+Qualcomm's next gen compute SoC - Glymur.
+Device tree changes aren't part of this series and will be posted separately after the official announcement of the Glymur SoC
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Changes in v5:
+Rebased on top of v6.17-rc1
+RESOUT_GPIO_N changed to lowercase in bindings and driver
 
-> --- a/drivers/gpio/gpio-aggregator.c
-> +++ b/drivers/gpio/gpio-aggregator.c
-> @@ -744,7 +744,7 @@ int gpiochip_fwd_desc_add(struct gpiochip_fwd *fwd, struct gpio_desc *desc,
->  {
->         struct gpio_chip *chip = &fwd->chip;
->
-> -       if (offset > chip->ngpio)
-> +       if (offset >= chip->ngpio)
->                 return -EINVAL;
->
->         if (test_and_set_bit(offset, fwd->valid_mask))
+Changes in v4:
+Updated bindings to column length of 80 char
 
-Looks like my similar comment in
-https://lore.kernel.org/all/CAMuHMdVLo2w609eFOKRkYAfEMb8XOTNB-XzzZn_89VM-YV_-kA@mail.gmail.com/
-was lost in the noise. I'll try to remember to make ">=" stand out more
-among all quoted code.
+Changes in v3:
+Fixed indentation for example tlmm node in bindings file
+Fixed s-o-b and review comments in the driver
 
-Gr{oetje,eeting}s,
+Changes in v2:
+Fixed dt-bindings error from example node's reg propery
+Fixed gpio-line-name maxItems
+Driver UFS_RESET macro updated
+Removed obsolete comment for pingroups
+Updated ngpio to include ufs_reset pin
 
-                        Geert
+Pankaj Patil (2):
+  dt-bindings: pinctrl: qcom: Add Glymur pinctrl bindings
+  pinctrl: qcom: Add glymur pinctrl driver
+
+ .../bindings/pinctrl/qcom,glymur-tlmm.yaml    |  133 ++
+ drivers/pinctrl/qcom/Kconfig.msm              |   10 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-glymur.c         | 1777 +++++++++++++++++
+ 4 files changed, 1921 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,glymur-tlmm.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-glymur.c
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.34.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 
