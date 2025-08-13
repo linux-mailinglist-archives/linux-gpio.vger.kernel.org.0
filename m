@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-24341-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24342-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 645E4B242CD
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 09:34:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73505B2431A
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 09:49:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1FEE01B60B7C
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 07:32:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 957DA721B93
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 07:49:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D24942D979B;
-	Wed, 13 Aug 2025 07:31:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EEA22E1C63;
+	Wed, 13 Aug 2025 07:49:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M4qp8j40"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nU9JfRKf"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B812BDC26;
-	Wed, 13 Aug 2025 07:31:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317042D4B57;
+	Wed, 13 Aug 2025 07:49:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755070296; cv=none; b=k/r6v4BbIxWudFAAfny1hBk7URtt3QQFhehgRijGdhoSifhY5OFSqIJV5hdYJ9JGMMsOyTMQmiaKef6n+x2EImohPnkM852Uv3j0+XsCzSnfrhri3GT2UsX56WQ89IiNMi6KJBlUNBgG8QOxXZUy075ywtJrm1I/5ZTllfv5yOo=
+	t=1755071341; cv=none; b=d/V1cyxJlkF6a5lQZjvTgFLPfih4MEt9LHn7iRrVg/EfToR60bW7432XJ6T2T8eTfVR3dBUrxwLbj21AEuro2mdXv7SyISu4VhjIEpcegEGzBXkhqaur81gNJmCjc/Hf0xJCNw6CvVeWiRczybDOY3U/YqYIJNMXYA3sFmeFXho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755070296; c=relaxed/simple;
-	bh=OdSR0i8Mi33zK1F01A5u8CnaWsyAunhbK9iCNvR7S1A=;
+	s=arc-20240116; t=1755071341; c=relaxed/simple;
+	bh=fEMmMELa9QtFEDbmmYhjc1JrFmw7HuJblDULJIeCymA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EGzFfMRxfK/xAcLsouCxREkHTDPHffyZwsqFNCzoFcTkb3t9Y1akX5aT7Lc57IS2lJeopJcbcjCwno5gmVS2GNefDJYymb/WOxfEWwZ6tRvhoJJkpA6Lkn/qa4D6Z+SZU8YBlaI57rC5wx70i/oqeu17ELuIn7MkQQplCPCEYn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M4qp8j40; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52253C4CEED;
-	Wed, 13 Aug 2025 07:31:32 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=WNPD5qb1iqHyJQvB/TsBdDYDvNCZBrvUD12wbjRUxnn162pg2gVReuXLM4hGUTnUFaqbSfa+RH0GhmL8JAqdAeJ4iJj5X0cnJCAtynUdx91E9WJnlo8y7fSbjx4jl5MrQoADpT7+uSiNgO+wnmcEZTo1WxQyZLhcmNWj8YwShC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nU9JfRKf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34852C4CEEB;
+	Wed, 13 Aug 2025 07:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755070295;
-	bh=OdSR0i8Mi33zK1F01A5u8CnaWsyAunhbK9iCNvR7S1A=;
+	s=k20201202; t=1755071340;
+	bh=fEMmMELa9QtFEDbmmYhjc1JrFmw7HuJblDULJIeCymA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=M4qp8j40sUo7KdPoQ26wAhG97vwHMqBdoAhtNrXnFuoYWtjIUpyfkjwxOdOOGohUf
-	 +zDGbSPhhD+bZEDKG5HU310ghOqbtsMxdZpxA637xDJUdOMWyzCEFRgO72Keypn2Nl
-	 27fPl6X9YDTW8hcsbSKz7hnQkzCsmakujpT1E2xq5FttYGf6zTApcWMdIiso5xa3br
-	 ZLRUJzkEWmIiZxmExt2r4t07maEhdgNzq3bS/Je8I1Pn4I9QNGJmxXiRaSC4JC285g
-	 3oE7EbIEDktwj8TfV0Wht9avzEo5HepmF500kpJR3/rHKaeVV/B0cssjZfWZ3/sgFO
-	 /Oy5ry8W4HzpA==
-Message-ID: <17b90fbc-ccce-4eb1-b334-5fdef82c094c@kernel.org>
-Date: Wed, 13 Aug 2025 09:31:30 +0200
+	b=nU9JfRKfa94ggfkcOt6wRzey5l02pHi6SoBCCX+O7Od1y0eFO1T/tode7eiAFpGr2
+	 nRjJIZkaXYBaBFWt86jJcW6NTjrjq80fXS8Jvu0YxfWiRzcDbHYQ2L9J4gkKFdYyHD
+	 7tAs/OuMQwHTcvkjUTGFRjcjc5SU0/e9ulYKbnLZZLHf6aZ+Hj9cboRc5Ia7bMsbFi
+	 Nf8vbSbQ4mjp+BW5x5lubwgEiCK6Y6F+lf9YHDbAP8J7uENGsqDuraaZc5w3/rYt/O
+	 Eo7tzzs17V2I2reN0vz2uEawp0cjKBFLCcqv49zylBm3lZMdDHt3dgnFS3rfDNBxJk
+	 dYDmra7fL6Geg==
+Message-ID: <ec6fc483-d5a1-493e-954a-3525e38a6ed8@kernel.org>
+Date: Wed, 13 Aug 2025 09:48:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,13 +50,14 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/2] pinctrl: qcom: Introduce Pinctrl for Glymur
-To: Pankaj Patil <pankaj.patil@oss.qualcomm.com>, andersson@kernel.org,
- linus.walleij@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, rajendra.nayak@oss.qualcomm.com
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250813065533.3959018-1-pankaj.patil@oss.qualcomm.com>
+Subject: Re: [PATCH 17/21] nfc: marvell: convert to gpio descriptors
+To: Arnd Bergmann <arnd@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Jakub Kicinski <kuba@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250808151822.536879-1-arnd@kernel.org>
+ <20250808151822.536879-18-arnd@kernel.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -102,34 +103,32 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250813065533.3959018-1-pankaj.patil@oss.qualcomm.com>
+In-Reply-To: <20250808151822.536879-18-arnd@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 13/08/2025 08:55, Pankaj Patil wrote:
-> Introduce Top Level Mode Multiplexer dt-binding and driver for
-> Qualcomm's next gen compute SoC - Glymur.
-> Device tree changes aren't part of this series and will be posted separately after the official announcement of the Glymur SoC
+On 08/08/2025 17:18, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> Changes in v5:
-> Rebased on top of v6.17-rc1
-> RESOUT_GPIO_N changed to lowercase in bindings and driver
+> The only reason this driver seems to still use the legacy gpio
+> numbers is for the module parameter that lets users pass a different
+> reset gpio.
 > 
-> Changes in v4:
-> Updated bindings to column length of 80 char
+> Since the fixed numbers are on their way out, and none of the platforms
+> this driver is used on would have them any more, remove the module
+> parameter and instead just use the reset information from firmware.
 > 
-> Changes in v3:
-> Fixed indentation for example tlmm node in bindings file
-> Fixed s-o-b and review comments in the driver
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/nfc/nfcmrvl/main.c    | 47 +++++++++++------------------------
+>  drivers/nfc/nfcmrvl/nfcmrvl.h |  5 ++--
+>  drivers/nfc/nfcmrvl/uart.c    |  5 ----
+>  drivers/nfc/nfcmrvl/usb.c     |  1 -
+>  4 files changed, 18 insertions(+), 40 deletions(-)
 > 
-> Changes in v2:
-> Fixed dt-bindings error from example node's reg propery
-> Fixed gpio-line-name maxItems
-> Driver UFS_RESET macro updated
-> Removed obsolete comment for pingroups
-> Updated ngpio to include ufs_reset pin
 
-Where are lore links? Why aren't you using b4?
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
