@@ -1,64 +1,59 @@
-Return-Path: <linux-gpio+bounces-24365-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24366-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8CF1B24F8C
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 18:25:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F72DB24FC0
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 18:30:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 158F21C26CC7
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 16:17:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 820845C5D8A
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 16:19:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C983288511;
-	Wed, 13 Aug 2025 16:16:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DBC1298CCF;
+	Wed, 13 Aug 2025 16:16:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="UkbA0gMv"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="MYaZunoB"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39BD0287510
-	for <linux-gpio@vger.kernel.org>; Wed, 13 Aug 2025 16:16:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC1428643E
+	for <linux-gpio@vger.kernel.org>; Wed, 13 Aug 2025 16:16:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755101782; cv=none; b=lTaqyATfHeivTJ0fCXGxA8RJiGEnPyYEtPhLOAA4x6P5laZoWzvTs/Uf1odDBKVOES3Ljudo0b7NvGdgOUpXWIiOT2ipa7OLTeNZnX+6WrxxZD8k6yJr6qPLAU+cHDBjCd5EKZjVLC37NRc9sh5QrYvc+/mPPCgGKFwVgB62OaE=
+	t=1755101795; cv=none; b=kJUpjiWEkaMKsTCHzX65Iwh/tUSkcFV2rvJlg4v01eAqftIyv1/q471H/Vli751riHr6TLFNjRcu4eAnurHg/hQV9SsalNn2IdmQy1PQo6KadWAtLdxYHskf+D+7KTLyxn5IQmYFE5mD7pvrnd8tjZAdRR+b0EC2bYU5UaTeIjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755101782; c=relaxed/simple;
-	bh=XwnqVWfA9gTSiTDvlp61VOAW4mkFRjUkZq3Jme4Q8AE=;
+	s=arc-20240116; t=1755101795; c=relaxed/simple;
+	bh=bAwuCStthKps7T2itHm+n0AuswFf928YP3Khh4V5u7M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BVaRK0/+pyZ0Fncd+j/5CujPHcVqaQME7IQp8TBb4C4mdAuIjlkFqjtbLM95506fmfj87mUtYEXcihNR7Kf0KdflBKF8XS2p++6ZPpw3YxVgolliZmnuw6dc8RLpvOOieQ1XHGsyYFyklm2UYMX7gtigBLbOCK1ERGE0kCAfC9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=UkbA0gMv; arc=none smtp.client-ip=194.117.254.33
+	 MIME-Version; b=SouEqgZp0y7SuVoSOl9A7ON/R1MbZ7czx96payyJb7WYqWS1Gz4ac3es//D2ngyL3dKVfeUBOsMEydTNARtQpypeJBwduYImD8NW28FfV6lWbPDY82PILdlZy+vDeHdhsfBfbIvCBiwnFUWkPX9N3nhBDzb7RZq8Kd5zilJTbqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=MYaZunoB; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
 	:in-reply-to:references:mime-version:content-transfer-encoding;
-	 s=k1; bh=n7haPBNNPZKbfEGBBu257LnsLaghb2tV2gNrhiHCuVc=; b=UkbA0g
-	Mvf03QX4hgcVBPlTjgVR9x3M2VX+A4xm+M/cT5ld0qw+Ue827U5OWtUZ8xmLm3n5
-	txpVhgOrfGTZzG3i3aCNdwgp9bUYhmffD/hc1mJimCZ0wN+XfUuLckfhfI5UlBsC
-	nC8Sl8b1EyAHFSEjnFwPDa2rzE1cNXjnNPJKERidPLqvkSFclrelb/vFrizi8qXV
-	BmXx/adHg5c7geyGDFXDtJ40kHfYd1bezGak0BEdfLwvBe/4NccggXlIaqDyMDZc
-	Vz7BLV5DpIgXuGsemEDHS2wmELCbmm/MtR5xZvr8AL6P3Y2HS33nrlqPPy9J8vbM
-	4Bi0o3kNvb48OS8w==
-Received: (qmail 694641 invoked from network); 13 Aug 2025 18:16:01 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 Aug 2025 18:16:01 +0200
-X-UD-Smtp-Session: l3s3148p1@lTcFeUE8IJVtKLKq
+	 s=k1; bh=+xDwDmsRX+gP2fiU/WhvnawyPXMFLcOwOSTBzoWba6I=; b=MYaZun
+	oBF/dWAgwv37nH0Q82ZUv9A4ZZ1PF4SUKcsZssw1JzmeYMyktcdL0ijV881BtWyH
+	OjCNkmhGrlVy8dH5S91pBsN5nFi7e46a6EZ+5HXv4IOrln2VypxZJieRzajw71bf
+	Mwd32a7EtjIFPTHnva+WmV1d2sNsqLEdriXL9Z7qUpFUcusgWcsuh8uBdt+ckQ2I
+	iyiWbbkL0CFq0hRHZvq3k4vNNrcbD1teJYZ5+H4uc18GmWlM79dRLa3hBFEVM7/1
+	FaPaynqFiFTyKGS34iukvaZR2X4lmjA1CtGz6EMJv8WIxUhe8IEr164PUgXJ4nHV
+	7mGyunONxQmMIOKQ==
+Received: (qmail 695309 invoked from network); 13 Aug 2025 18:16:20 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 Aug 2025 18:16:20 +0200
+X-UD-Smtp-Session: l3s3148p1@2DIjekE8rJFtKLKq
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-kernel@vger.kernel.org
 Cc: Mark Brown <broonie@kernel.org>,
 	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Andrea della Porta <andrea.porta@suse.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	linux-pwm@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: [PATCH 03/21] gpio: remove unneeded 'fast_io' parameter in regmap_config
-Date: Wed, 13 Aug 2025 18:14:49 +0200
-Message-ID: <20250813161517.4746-4-wsa+renesas@sang-engineering.com>
+	linux-gpio@vger.kernel.org
+Subject: [PATCH 13/21] pinctrl: remove unneeded 'fast_io' parameter in regmap_config
+Date: Wed, 13 Aug 2025 18:14:59 +0200
+Message-ID: <20250813161517.4746-14-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250813161517.4746-1-wsa+renesas@sang-engineering.com>
 References: <20250813161517.4746-1-wsa+renesas@sang-engineering.com>
@@ -78,32 +73,19 @@ Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 No dependencies, can be applied directly to the subsystem tree. Buildbot is
 happy, too.
 
- drivers/gpio/gpio-mvebu.c  | 1 -
- drivers/gpio/gpio-sifive.c | 1 -
- 2 files changed, 2 deletions(-)
+ drivers/pinctrl/pinctrl-rp1.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-index 5e3f54cb8bc4..261ffd0c614b 100644
---- a/drivers/gpio/gpio-mvebu.c
-+++ b/drivers/gpio/gpio-mvebu.c
-@@ -602,7 +602,6 @@ static const struct regmap_config mvebu_gpio_regmap_config = {
+diff --git a/drivers/pinctrl/pinctrl-rp1.c b/drivers/pinctrl/pinctrl-rp1.c
+index dadafc935dbb..6699b36349d0 100644
+--- a/drivers/pinctrl/pinctrl-rp1.c
++++ b/drivers/pinctrl/pinctrl-rp1.c
+@@ -1627,7 +1627,6 @@ static const struct regmap_config rp1_pinctrl_regmap_cfg = {
  	.reg_bits = 32,
- 	.reg_stride = 4,
  	.val_bits = 32,
--	.fast_io = true,
- };
- 
- /*
-diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
-index 067c8edb62e2..98ef975c44d9 100644
---- a/drivers/gpio/gpio-sifive.c
-+++ b/drivers/gpio/gpio-sifive.c
-@@ -174,7 +174,6 @@ static const struct regmap_config sifive_gpio_regmap_config = {
- 	.reg_bits = 32,
  	.reg_stride = 4,
- 	.val_bits = 32,
 -	.fast_io = true,
- 	.disable_locking = true,
+ 	.name = "rp1-pinctrl",
  };
  
 -- 
