@@ -1,123 +1,136 @@
-Return-Path: <linux-gpio+bounces-24340-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24341-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89740B242A0
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 09:27:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 645E4B242CD
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 09:34:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE7433A66AE
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 07:24:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1FEE01B60B7C
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 07:32:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98E322D5C8E;
-	Wed, 13 Aug 2025 07:23:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D24942D979B;
+	Wed, 13 Aug 2025 07:31:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="K3RbWvwU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M4qp8j40"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30A52C1798
-	for <linux-gpio@vger.kernel.org>; Wed, 13 Aug 2025 07:23:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B812BDC26;
+	Wed, 13 Aug 2025 07:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755069827; cv=none; b=U0oyw6k4uF6fjUdPxYt8ZA+tQ9rUQOxJCtPKmXhR6ngcMwoYzjzfaxrtEK8EgBy8KNrjiKCAB795xwyPWqB0p2IW50nE4Vbb/j0OEIHP5HXxpI/AkjI5/fprJoFfjqsSisvrHUaHheK6CTcTHY8KzHnZzozGsrvn3mi2OtDxukw=
+	t=1755070296; cv=none; b=k/r6v4BbIxWudFAAfny1hBk7URtt3QQFhehgRijGdhoSifhY5OFSqIJV5hdYJ9JGMMsOyTMQmiaKef6n+x2EImohPnkM852Uv3j0+XsCzSnfrhri3GT2UsX56WQ89IiNMi6KJBlUNBgG8QOxXZUy075ywtJrm1I/5ZTllfv5yOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755069827; c=relaxed/simple;
-	bh=bv6DYqjwN2D0DlDYGPWLKAAmU2xcLODMCxxOZH6IMlo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=I8iusFrJO2apU7LpdlM2TB7k6ekdZaI4wJTIcit86lhHXvl/GsUqKK+aEL//mESIe05484fbO4+7figKcx8YJxbe6ru5C+Dk4XKiIq+d5pfNWLlDvepRjL43reRNlvA1gwcfUL9fEr3io1HWjiQXUB1nnwW8Cp6kU9CJtuKrZK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=K3RbWvwU; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3b7910123a0so5565993f8f.1
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Aug 2025 00:23:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1755069824; x=1755674624; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0WATivFrievb3I0TcPTJrTrvyez6QlhkHAEe8TBXKLU=;
-        b=K3RbWvwUUe8d3b1jowxjvceKbI9g+dzxeqo1pC7qbUpHA6qKtbV4FW7akwL18hmOM2
-         37jgdCdruRysdghvmPBKViC6uPdiCGzXWEj+msMcodur8LpKGr4oUOjadb0tLzU7Ma/B
-         ur8mbLxBsb+mkmmaI00J6xTZrIFXQTEOpDKkP64A+lrsJs3fYwgWeIN5r11LhnASP4vn
-         LePMpDryDPHs4XR+hFAJ0gDVlyMxB7NA/yrTzAeJbuS0ZC/jkJ3AgoyNxE9tXg/5vZkN
-         z7GkkdQDv8MljgGPAQrv47nVOQly3HSl9oS4+FC1CqE0vDzh/ozDoHRQJIVtw4LhG07f
-         ESAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755069824; x=1755674624;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0WATivFrievb3I0TcPTJrTrvyez6QlhkHAEe8TBXKLU=;
-        b=jVu43EXFiDAq4jtV2XXrE4MAO/CX+3iwg+FaAxdRRr3SiZ3kqiYKVmVQ0+RJ4ZLFHU
-         e6MvGpNs0QoG+suWS9aQihSwOF0JfsZ0WVdCbRj1+yBUnH/AUJB0imV2DqkUUU9mQHAS
-         9FriD14fB3neHNpq3L5XuSMrg2slL5Yxuudkr4DIbzXmd8WCeMkpEoqUivemVyxkamN5
-         g2hsLyLiXUhnVA5GW0lT7pvH8C0m91q6O0SINYs92XlTTHSzlq17Rdrb18bOEYPXF4Zq
-         ttTDV/TfYT2Pxtm6ppEWjp3d+ixRVRjsov45faw9p1PZ5qv4PondZGJqGsjeHY8pDch6
-         lqsA==
-X-Forwarded-Encrypted: i=1; AJvYcCVbb91wmUgf1XiLhyPjBt/PIydy9iTN5eUsEDGyFaJBokGCRpjpNF6B9DACN0B/zTGKbn7k2cjqh+3y@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgmCw/wS6bEiI1mN/hFAAQhf8gNYVYP2cvpJ0iNADSWG6C9KOG
-	A4fPHVHydL8DzharEwzHzbxQqcDw/ptRNu5G4qFCs6h5NcfjC75KxzT5QEFppwDmCnk=
-X-Gm-Gg: ASbGnctrs344NpZxTEmHOGrhQpOWEiBSC6MXtkLPXCexH5Ih7TwxZhXDFr9c5tw96Up
-	EV5dj1J/mhLpjarRfc1FCPq+41g2Uj1TiIKliwNaz46Zr7lTyOTjwUr0ViwqCoGsJRh3BHzpr4I
-	yYXRZURTFo4jgk0pNEDO7bq6An+MEvrCT+L8h9b34AyPeliP87mts9eAWfhds2fKIkhNbLp7jcM
-	1Lu44zix2tuHDALSJejfdW7iJz5MKF3V0rTeudcZ+F8DzyWDBqMtNbVN9kGNTdD1pciQCSlfdNo
-	O4qfRpqr30xAUqxUb9WFJC2u5CqlYqZBICTZ578l/gCrF7fdtT5BA24RYFr3UvAlPvzAX6RA6jj
-	5bSyIft2mRBJBR+LxmdTzhBPy
-X-Google-Smtp-Source: AGHT+IF1MjcUvwgYnjulLvHKgyfmZ4E6I3kIjMN9y8mrIIK3WlP8h9WdbRGmZ0ZNF9dbobExy36HTA==
-X-Received: by 2002:a05:6000:238a:b0:3b7:76e8:ba1e with SMTP id ffacd0b85a97d-3b917d29ae3mr1458813f8f.11.1755069824008;
-        Wed, 13 Aug 2025 00:23:44 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:74d7:9082:2b54:5348])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c3ac51asm47740936f8f.1.2025.08.13.00.23.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Aug 2025 00:23:43 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Thomas Richard <thomas.richard@bootlin.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH next] gpio: aggregator: Fix off by one in gpiochip_fwd_desc_add()
-Date: Wed, 13 Aug 2025 09:23:42 +0200
-Message-ID: <175506979055.8476.10658684000717777329.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <aJwk0yBSCccGCjX3@stanley.mountain>
-References: <aJwk0yBSCccGCjX3@stanley.mountain>
+	s=arc-20240116; t=1755070296; c=relaxed/simple;
+	bh=OdSR0i8Mi33zK1F01A5u8CnaWsyAunhbK9iCNvR7S1A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EGzFfMRxfK/xAcLsouCxREkHTDPHffyZwsqFNCzoFcTkb3t9Y1akX5aT7Lc57IS2lJeopJcbcjCwno5gmVS2GNefDJYymb/WOxfEWwZ6tRvhoJJkpA6Lkn/qa4D6Z+SZU8YBlaI57rC5wx70i/oqeu17ELuIn7MkQQplCPCEYn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M4qp8j40; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52253C4CEED;
+	Wed, 13 Aug 2025 07:31:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755070295;
+	bh=OdSR0i8Mi33zK1F01A5u8CnaWsyAunhbK9iCNvR7S1A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=M4qp8j40sUo7KdPoQ26wAhG97vwHMqBdoAhtNrXnFuoYWtjIUpyfkjwxOdOOGohUf
+	 +zDGbSPhhD+bZEDKG5HU310ghOqbtsMxdZpxA637xDJUdOMWyzCEFRgO72Keypn2Nl
+	 27fPl6X9YDTW8hcsbSKz7hnQkzCsmakujpT1E2xq5FttYGf6zTApcWMdIiso5xa3br
+	 ZLRUJzkEWmIiZxmExt2r4t07maEhdgNzq3bS/Je8I1Pn4I9QNGJmxXiRaSC4JC285g
+	 3oE7EbIEDktwj8TfV0Wht9avzEo5HepmF500kpJR3/rHKaeVV/B0cssjZfWZ3/sgFO
+	 /Oy5ry8W4HzpA==
+Message-ID: <17b90fbc-ccce-4eb1-b334-5fdef82c094c@kernel.org>
+Date: Wed, 13 Aug 2025 09:31:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/2] pinctrl: qcom: Introduce Pinctrl for Glymur
+To: Pankaj Patil <pankaj.patil@oss.qualcomm.com>, andersson@kernel.org,
+ linus.walleij@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, rajendra.nayak@oss.qualcomm.com
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250813065533.3959018-1-pankaj.patil@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250813065533.3959018-1-pankaj.patil@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-
-On Wed, 13 Aug 2025 08:38:27 +0300, Dan Carpenter wrote:
-> The "> chip->ngpio" comparison here needs to be ">= chip->ngpio",
-> otherwise it leads to an out of bounds access.  The fwd->valid_mask
-> bitmap only has chip->ngpio bits and the fwd->descs[] array has that
-> same number of elements.  These values are set in
-> devm_gpiochip_fwd_alloc().
+On 13/08/2025 08:55, Pankaj Patil wrote:
+> Introduce Top Level Mode Multiplexer dt-binding and driver for
+> Qualcomm's next gen compute SoC - Glymur.
+> Device tree changes aren't part of this series and will be posted separately after the official announcement of the Glymur SoC
 > 
+> Changes in v5:
+> Rebased on top of v6.17-rc1
+> RESOUT_GPIO_N changed to lowercase in bindings and driver
 > 
-> [...]
+> Changes in v4:
+> Updated bindings to column length of 80 char
+> 
+> Changes in v3:
+> Fixed indentation for example tlmm node in bindings file
+> Fixed s-o-b and review comments in the driver
+> 
+> Changes in v2:
+> Fixed dt-bindings error from example node's reg propery
+> Fixed gpio-line-name maxItems
+> Driver UFS_RESET macro updated
+> Removed obsolete comment for pingroups
+> Updated ngpio to include ufs_reset pin
 
-Applied, thanks!
-
-[1/1] gpio: aggregator: Fix off by one in gpiochip_fwd_desc_add()
-      https://git.kernel.org/brgl/linux/c/148547000cfc1ba8cec02857268333d08724b9cc
+Where are lore links? Why aren't you using b4?
 
 Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Krzysztof
 
