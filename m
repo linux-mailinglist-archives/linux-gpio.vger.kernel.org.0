@@ -1,160 +1,138 @@
-Return-Path: <linux-gpio+bounces-24367-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24368-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55B2AB25090
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 19:01:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 377EAB2539C
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 21:06:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A9232585AF2
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 16:58:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E16488883E1
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 19:06:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33D4828FFD2;
-	Wed, 13 Aug 2025 16:57:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1F022E11CB;
+	Wed, 13 Aug 2025 19:06:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ApNM+ubm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OBlNzSvR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1F928B415;
-	Wed, 13 Aug 2025 16:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990822BD5BC;
+	Wed, 13 Aug 2025 19:06:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755104261; cv=none; b=eTuihXQIcKFuVt3/mFotCMkKZ1K4BJXr1Qq5hwxLNYEWWfMBez0nMON0/wo2Jwp7z99tQP7hZL2onc2eMI6ohS8zm4zrNPkINnDseg/z/SSoun1voObkkaZryu5F4fbOeJIDbwSvxOtC0kh5Ik11E9ho4/pwo3jVpHSTiYM20w4=
+	t=1755111996; cv=none; b=gV3O81n51+GfEt92K3DXswcE/xAXB2qim4w7zQqMP+25J1Uvbr0tf4OcuAOnQGGFwlsgDDs6XOQWcv5cg9EGOfUvmWvEtgWQPQwXVRXTlk1REOzPXdWBozSFpdiyCvRsSlGfJcOKcogS03nkKAdoAbm6Do8jMLHGdjyYjGRcwRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755104261; c=relaxed/simple;
-	bh=d5wzBkVFNX6qAoxoJebtm0HqVmOo3GmOYnWMCd8weXs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qi7ob+ZtrLVVySobUDDg7RDy0YgNl4yjYXjUtu9NCusKQloBhCWf+nYso14zVeaCPblexC3+OBHOYu9EjjPw02zQ+IIZsD4rvutPGeScvDuv5s3Dm/ILCK05PvLJuH88H5Y+vcen+ug+RSF8NSVTZitUV3gdQgeOZPpPIlFZJVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ApNM+ubm; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-afcb7a3b3a9so6984466b.2;
-        Wed, 13 Aug 2025 09:57:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755104258; x=1755709058; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a2gxI4yFXWVOtLhM/0polO/7seLsXtV2FXKtzlfxTr8=;
-        b=ApNM+ubmRwM7RSC40DNjE+ofpXjCz0yVpOG/2xfbZi7qscg3jPcd0V1xK83tfflzLO
-         xQQlfAD4bgsOZcSMc67YABOsyEF6BXTj5BH2upqRzKtS2Altdfq6vhhhP/7xyuZTRLw+
-         69ny3NIaMzt0MQQEQAutWV+QfX93MxlGgyAykiy+GLYt8EvrisfyCpZTFn1GwdzCRzkJ
-         MH3O+wRG8+n3jEaEctWMEIsjWc4iXIV5pxnkR1WZkgZJDJ6GapcKHjw5Tbsfar7c12Bg
-         xdB1OvsDYRk7kSQOc2nI21dgx6rKom352XD0xuHGhr1P29M7Evm+IOllImUPOVV/gWwS
-         6FGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755104258; x=1755709058;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a2gxI4yFXWVOtLhM/0polO/7seLsXtV2FXKtzlfxTr8=;
-        b=ROBFyP7FXRAoMOQA9puH7RV1e+pK4tlgzizwsHAxkc2T2KFurKXxf18jnEp/Xk74kH
-         3Xe/1a2phHMo8hH/xB8y8bieWK1bS7lOhHGCWs7tJWiu4AmAnkE3tjwUjBXYuug9ieEd
-         jJG+nRkfjlhaCKWyuySRxZ8TjPVW3gsMsDHZDaXUBWPl0VZg/ye44uBE6Zi8+X1jEUAZ
-         aB+j2cK/gplAjEdjLsj/UA3QNAk91uKpOrSL80SNOCCecy0TKW2DNHm/rP4vaGcFOO8E
-         33rx/bVxXIfhzD4k9dZFKXg3vLx03ZFCYXRztnnA4USq550yiBg4xMc47MXDWG+DGLly
-         zTEw==
-X-Forwarded-Encrypted: i=1; AJvYcCUFb/n2JjPOu+zVN0OpJD5bZwH6eGBLsD5d7DAv6L9YHIdMD3b+KbEm+cfQLNAOHDBtQCyMXptz+YjslA==@vger.kernel.org, AJvYcCUP8BuxXXlOY9TMnZ/VD5tK6sjv0S13p63uOvvr90XZptPa5RoHXfYjgJvqf7atW4bXyOC3m748YAZ/Dg==@vger.kernel.org, AJvYcCV1bSdJq0Z/LPIvpipkgXlLXQnN2nZl87MGMArkAeMtDq1Jy12bwMXvUxbLlpXPwwhlva6T/vKs2UNV2gouSkCB@vger.kernel.org, AJvYcCVrwpaCIGrNeuijpvLKerhBzw4o4uOurA6c9XrYjP2f9ZpjvqNzd7TxepUNKxKSNl33unVrk4TAWaniHN6s@vger.kernel.org, AJvYcCWUknLfk/wYmVAYugSHt3TnD5PEmZGk1zXkLIWb3c6uFNWeqpLUUniVc8hcY07/7aKV4fmOJ3pG4GxhwQ==@vger.kernel.org, AJvYcCWb/Ndlo8q3BUH80OzxEitcaS/f7JIvCRPkowjJosNxWLWYQGrzt6ZQvLL6MYcI4iejGZvwHXTHi+cnybW5@vger.kernel.org, AJvYcCWdigR4/hLNteSLuUQHxSzRd5A428Xy0WdFVH//gJaUTiGeWqQR+jl6xqxND6EfYC5iHDryYD1s8R33VPwuW9fIHcg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhyqgZclVJHPondCKLNK8BuomvBV97MPaE9FWZH2oHA3ugNqaa
-	agiFpvx2BaCWd5PChZmqZ2yrMT+dtIGgJXeJNA77Ui/c22Fu2SM4FRTw9xDSwH7JiL07kUyyiC3
-	vuI/S2qSjAbBCFdjvzx/wOcAF634KxoE=
-X-Gm-Gg: ASbGncsIOMOGI6ZYGV8RcPe4fZAMDUblFDMD9hUgtTSdwG8wix5q5Nsi3YMegNgeaBX
-	nQPXHn2AZKzqwieFJp2k1jEOnJrqDh4vPeLhd75yDNt2YwnWEXtK6fMsAMvgh49amTV4wL7BNwu
-	0s/vT0Yz74ymLMzbQtMfq1jwPltmI6gfLaEzkz40xcyhg4KriywShqk1yhhV/oj14Itz5zF82dE
-	4QDzlAu/w==
-X-Google-Smtp-Source: AGHT+IHbk44OEj1r3kasIcTcyEDngMuhrBuyXGAMgY2npDrtdlj0x5dJHeL/vjl9xwrgnQvrGKpG6wybKFGCryjWMzw=
-X-Received: by 2002:a17:907:3f0b:b0:af9:116c:61c4 with SMTP id
- a640c23a62f3a-afca4e44cd7mr358157166b.48.1755104257569; Wed, 13 Aug 2025
- 09:57:37 -0700 (PDT)
+	s=arc-20240116; t=1755111996; c=relaxed/simple;
+	bh=wBSCYvD6eI/0TlyZhgU8cG9wLNrFJkRgE09i4a9qP58=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=kHgpb/5ePaFm0E1Xzjf3WzG7gyQ9XEL1vft0mU3RQRPnaEdPgZikILFsVmvbKSHoyeBbT6nLnCQsMkAY1p/2k1VAF6e2rfMLtHu7UKUh2Wl/pVLqBfIDQyV1ugWebdB7NxTRLJ2ntGHUrCmdVO9ZAd2vGEQtQkEY5Spvtnk6XaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OBlNzSvR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBF5FC4CEEB;
+	Wed, 13 Aug 2025 19:06:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755111995;
+	bh=wBSCYvD6eI/0TlyZhgU8cG9wLNrFJkRgE09i4a9qP58=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=OBlNzSvRjYqb41fYPkb3XtEcTVzUOCIp4pAPjdUcdNq5BEF6bkAtQusOWZ8qpO1rh
+	 dECUANL8UKjbFMWY19cFtNLzPNbTB70lFZeDmR4GG9SXmuKvsKGka9J9bOXBE9CmUI
+	 xI8Sun32XfDsGo1XAwxxItZ/b+3r+cZ1S6/tl8VXVgPt4NOugGilQkaYmyRrNtUcCe
+	 8Bb81m1ZPt/nngE+7NgXcWBZZFQh857JxRS0+0Zl32NvbnBXl901oGQFPQwccwT9bE
+	 j/huJWTJgU7/LqTKJuLWIm0LCCXuC7+S/NVFmHOaTmwI5BIkBJlKY+AJjamr5py9Rr
+	 QQet0O7smwECw==
+Date: Wed, 13 Aug 2025 14:06:33 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Christian Bruel <christian.bruel@foss.st.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	robh@kernel.org, bhelgaas@google.com, mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com, linus.walleij@linaro.org,
+	linux-pci@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v1] PCI: stm32: use pinctrl_pm_select_init_state() in
+ stm32_pcie_resume_noirq()
+Message-ID: <20250813190633.GA284987@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250812-pinctrl-gpio-pinfuncs-v4-0-bb3906c55e64@linaro.org> <20250812-pinctrl-gpio-pinfuncs-v4-3-bb3906c55e64@linaro.org>
-In-Reply-To: <20250812-pinctrl-gpio-pinfuncs-v4-3-bb3906c55e64@linaro.org>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 13 Aug 2025 18:57:00 +0200
-X-Gm-Features: Ac12FXzRwEdbOG7WcfkJrIX52h7RVyVAx5HnOB8PpoXFNYyQXL2enxp09SWUXag
-Message-ID: <CAHp75VeSA=AYDKOV5XQ5nnz7EZRmnhbbVyJrcBUcMO2LrRMTmQ@mail.gmail.com>
-Subject: Re: [PATCH v4 03/15] pinctrl: airoha: replace struct function_desc
- with struct pinfunction
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Alexey Klimov <alexey.klimov@linaro.org>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
-	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, imx@lists.linux.dev, 
-	linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250813115319.212721-1-christian.bruel@foss.st.com>
 
-On Tue, Aug 12, 2025 at 10:27=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
->
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> struct function_desc is a wrapper around struct pinfunction with an
-> additional void *data pointer. This driver doesn't use the data pointer.
-> We're also working towards reducing the usage of struct function_desc in
-> pinctrl drivers - they should only be created by pinmux core and
-> accessed by drivers using pinmux_generic_get_function(). Replace the
-> struct function_desc objects in this driver with smaller struct
-> pinfunction instances.
+On Wed, Aug 13, 2025 at 01:53:19PM +0200, Christian Bruel wrote:
+> Replace direct access to dev->pins->init_state with the new helper
+> pinctrl_pm_select_init_state() to select the init pinctrl state.
+> This fixes build issues when CONFIG_PINCTRL is not defined.
+> 
+> Depends-on: <20250813081139.93201-3-christian.bruel@foss.st.com>
+> Reported-by: Bjorn Helgaas <bhelgaas@google.com>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202506260920.bmQ9hQ9s-lkp@intel.com/
+> Fixes: 633f42f48af5 ("PCI: stm32: Add PCIe host support for STM32MP25")
+> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
 
-...
+I can't merge 633f42f48af5 as-is because of the build issue.
 
->  #define PINCTRL_FUNC_DESC(id)                                          \
->         {                                                               \
->                 .desc =3D {                                              =
- \
-> -                       .func =3D {                                      =
- \
-> -                               .name =3D #id,                           =
- \
-> -                               .groups =3D id##_groups,                 =
- \
-> -                               .ngroups =3D ARRAY_SIZE(id##_groups),    =
- \
-> -                       }                                               \
-> +                       .name =3D #id,                                   =
- \
-> +                       .groups =3D id##_groups,                         =
- \
-> +                       .ngroups =3D ARRAY_SIZE(id##_groups),            =
- \
+Pinctrl provides stubs for the non-CONFIG_PINCTRL case; the issue is
+that 633f42f48af5 uses dev->pins, which only exists when
+CONFIG_PINCTRL is enabled.  
 
-Can this use PINCTRL_PINFUNCITON() ?
+The possibilities I see are:
 
->                 },                                                      \
->                 .groups =3D id##_func_group,                             =
- \
->                 .group_size =3D ARRAY_SIZE(id##_func_group),             =
- \
+  1) Merge initial stm32 without suspend/resume support via PCI, merge
+     pinctrl_pm_select_init_state() via pinctrl, then add stm32
+     suspend/resume support.  pinctrl_pm_select_init_state() and stm32
+     (without suspend/resume) would appear in v6.18, and stm32
+     suspend/resume would be added in v6.19.
 
->  };
+  2) Temporarily #ifdef the dev->pins use.  pinctrl_pm_select_init_state()
+     and stm32 (with #ifdef) would appear in v6.18, follow-on patch to
+     replace #ifdef with pinctrl_pm_select_init_state() would appear
+     in v6.19.
 
---=20
-With Best Regards,
-Andy Shevchenko
+  3) Merge your [1] to add pinctrl_pm_select_init_state() via PCI with
+     Linus's ack, followed by the stm32 series with the change below
+     squashed in.  Everything would appear in v6.18.
+
+I'm OK with any of these.
+
+[1] https://lore.kernel.org/r/20250813081139.93201-1-christian.bruel@foss.st.com
+
+> ---
+> Changes in v1:
+>  - pinctrl_pm_select_init_state() return 0 if the state is not defined.
+>    No need to test as pinctrl_pm_select_default_state() is called.
+> ---
+>  drivers/pci/controller/dwc/pcie-stm32.c | 10 +++-------
+>  1 file changed, 3 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-stm32.c b/drivers/pci/controller/dwc/pcie-stm32.c
+> index 50fae5f5ced2..8501b9ed0633 100644
+> --- a/drivers/pci/controller/dwc/pcie-stm32.c
+> +++ b/drivers/pci/controller/dwc/pcie-stm32.c
+> @@ -90,14 +90,10 @@ static int stm32_pcie_resume_noirq(struct device *dev)
+>  
+>  	/*
+>  	 * The core clock is gated with CLKREQ# from the COMBOPHY REFCLK,
+> -	 * thus if no device is present, must force it low with an init pinmux
+> -	 * to be able to access the DBI registers.
+> +	 * thus if no device is present, must deassert it with a GPIO from
+> +	 * pinctrl pinmux before accessing the DBI registers.
+>  	 */
+> -	if (!IS_ERR(dev->pins->init_state))
+> -		ret = pinctrl_select_state(dev->pins->p, dev->pins->init_state);
+> -	else
+> -		ret = pinctrl_pm_select_default_state(dev);
+> -
+> +	ret = pinctrl_pm_select_init_state(dev);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to activate pinctrl pm state: %d\n", ret);
+>  		return ret;
+> -- 
+> 2.34.1
+> 
 
