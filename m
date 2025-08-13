@@ -1,163 +1,113 @@
-Return-Path: <linux-gpio+bounces-24343-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24345-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5FEAB24335
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 09:52:18 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED580B243E3
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 10:14:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9930D56514F
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 07:50:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 35E98720E99
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Aug 2025 08:14:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4516C2E285E;
-	Wed, 13 Aug 2025 07:50:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D87B22ED178;
+	Wed, 13 Aug 2025 08:14:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cyfbHPyw"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="IaILgi3y"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF132E1C56;
-	Wed, 13 Aug 2025 07:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35972ECEB1;
+	Wed, 13 Aug 2025 08:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755071449; cv=none; b=iWSXTkcRc+uOZxpvlTXeQBMCCW9JYBNQnyT2BXyj8CvF2usCXEvn+GjQwvoWiJNh4YK9XForIn0/msGmv3kC3hOR+vlstqN8XhzGUZqQ/PjPs14XV7JXk/jk5b4V5VVpgKe/BiEgTolZQ+e5h5dEG7Ylp9+xuVl6YUaxKKJN/6c=
+	t=1755072840; cv=none; b=D6rhnWJOasCRnkDvy45eTuAsXPot38/zACFc3uZS1gFwunF9yRwSlo6dP+zf+QvN00agvypKiwQLCmXTccttLWFFnPEGG+fNjL1czcnb3VvLopTO6smF/l96C2x8/iIT7ENLHxoIUrdEEAXtC5JVd6J4vqHuWo0Tnfs8isRFb1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755071449; c=relaxed/simple;
-	bh=GCkcSwQXaPB+Reeu4y3cV78hJ9D/iB5yjlZx4Qatnh8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N5MXmep7trLLN3AjY/N0vSTO5xTPMICpE8fDWcWfvMsTC9OMfLiGXcqnrFmysusnh7Q+Nb/GYg+jfvyhCaOXw8ppGJjLLT297UpetP1fS8Gg2a1DhQBYWwkL8vVdMu47Y/6xXeRQzUiQlcJjRy5xnVbNezBQ7ocN5AbQe2lRYcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cyfbHPyw; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755071448; x=1786607448;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GCkcSwQXaPB+Reeu4y3cV78hJ9D/iB5yjlZx4Qatnh8=;
-  b=cyfbHPyw6dei7t7zFb4YPjhUHu+fJZU/uGB5dfzCpSxaBLu/aqPH0dG6
-   4JnAANLSy5V6xBqPAiBGtdqv2M+qg7Neyi1oBo8PM/CpOrBO21lhDHSFE
-   NmLnumhRHBrnGzPnUuTyocjJ85N3kNlO95K2A8XkrnDSw5ZlzzNfigX+Z
-   e4LJtXVpcW9XGRn3DVxHijx3WclsFCxuvHryrcfFVsbvU3tf1fBoq/fOO
-   cP3WApRAL4o3NtEnrYPx1s3r69ZJpzaWqozrzLW3BSIIBe3TNSA9au10M
-   7yrP9fNU1IosDo1Im1ez0x/qR/vpAsgqoxEZ6GRUFpIknCNJlWtKFzi/m
-   Q==;
-X-CSE-ConnectionGUID: let9IegKTXSRoNAaLC1rTw==
-X-CSE-MsgGUID: lpB42WgwQjiwvfaVUdiCpw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11520"; a="57260476"
-X-IronPort-AV: E=Sophos;i="6.17,285,1747724400"; 
-   d="scan'208";a="57260476"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2025 00:50:48 -0700
-X-CSE-ConnectionGUID: UFpW3ZHJRgG7Yrcfgk7aGw==
-X-CSE-MsgGUID: hr6+tZAJTK62MvVvrPVRZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,285,1747724400"; 
-   d="scan'208";a="165625222"
-Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by orviesa010.jf.intel.com with ESMTP; 13 Aug 2025 00:50:44 -0700
-Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1um6Fc-0009gS-1J;
-	Wed, 13 Aug 2025 07:50:29 +0000
-Date: Wed, 13 Aug 2025 15:49:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Qiang Zhao <qiang.zhao@nxp.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/4] soc: fsl: qe: Add an interrupt controller for QUICC
- Engine Ports
-Message-ID: <202508131517.P1Nfz0RF-lkp@intel.com>
-References: <1dcc9528e97d228ea7889caa00cc254ef0375ed4.1754996033.git.christophe.leroy@csgroup.eu>
+	s=arc-20240116; t=1755072840; c=relaxed/simple;
+	bh=kjnGFuyZ7406nq65KGuuYkIeois9eWj0YgJtbikgOzk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=V6AfbzcJohjnt8+39th34OykobnyzA9WqcNPa7NEe/v2l+RRlDRVA5HSHp7nYkDYIsvNIkZuISYMv8Szll9nJhcwDUiVfeb8KdadeA3tkkCSXSeEPmq8yi+xYVwWRhM9iXxMBUisyuFvYAqFOwqfu5tNtM6nWXVbuVjCzYNpa0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=IaILgi3y; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57D7SjKP013213;
+	Wed, 13 Aug 2025 10:13:38 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=Pf/cTBFOi74ovHiVIVGUm6
+	YyAVK93Xyk0jSowmSz0vM=; b=IaILgi3yIqcO6TShPG8n7MCq9/4vKZNdS34OD/
+	AhDLa9/Iez1Wr6feMN6jKTkQeNO9wxAVb609Vq4dNnmy9VwOHSRO7AWu6OepYYrN
+	IUS31L7GcNCdAP22S3aEzsHMzevjFrWferkUUKPjya5gF6H4zHyOGPYn00f5LNou
+	0aC3dYC8r60EzmdqGK8hPt1SXWoxWnvcWbkeIq483eIu0lGtVHnSY2byfBIoCi4v
+	T+oCZ8a8v5TmdHd7JErd8xN7qHu7wZje0JQSUUKBzgHnC+CJhVvSm3qI6hULoHzf
+	xH7kXmdjKkqqUmTngo5TzT3smfhMpUEcs4wxmnLO0zYGPp2g==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 48dw7gdmve-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Aug 2025 10:13:38 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 3C16740048;
+	Wed, 13 Aug 2025 10:12:33 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1A23A71FDB7;
+	Wed, 13 Aug 2025 10:11:56 +0200 (CEST)
+Received: from localhost (10.130.77.120) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 13 Aug
+ 2025 10:11:55 +0200
+From: Christian Bruel <christian.bruel@foss.st.com>
+To: <linus.walleij@linaro.org>, <corbet@lwn.net>, <bhelgaas@google.com>,
+        <mani@kernel.org>
+CC: <linux-gpio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Christian Bruel <christian.bruel@foss.st.com>
+Subject: [PATCH v1 0/2] Add pinctrl_pm_select_init_state helper function
+Date: Wed, 13 Aug 2025 10:11:37 +0200
+Message-ID: <20250813081139.93201-1-christian.bruel@foss.st.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1dcc9528e97d228ea7889caa00cc254ef0375ed4.1754996033.git.christophe.leroy@csgroup.eu>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-12_08,2025-08-11_01,2025-03-28_01
 
-Hi Christophe,
+Some platforms need to set the pinctrl to an initial state during
+pm_resume, just like during probe. To achieve this, the missing function
+pinctrl_pm_select_init_state() is added to the list of already existing
+pinctrl PM helper functions.
 
-kernel test robot noticed the following build warnings:
+This allows a driver to use the pinctrl init and default states in the
+pm_runtime platform resume handlers, just as in probe.
 
-[auto build test WARNING on robh/for-next]
-[also build test WARNING on linus/master v6.17-rc1 next-20250813]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Additionally the missing documentation describing these pinctrl standard
+states used during probe has been added.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Christophe-Leroy/soc-fsl-qe-Add-an-interrupt-controller-for-QUICC-Engine-Ports/20250812-195423
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/1dcc9528e97d228ea7889caa00cc254ef0375ed4.1754996033.git.christophe.leroy%40csgroup.eu
-patch subject: [PATCH 1/4] soc: fsl: qe: Add an interrupt controller for QUICC Engine Ports
-config: powerpc64-randconfig-002-20250813 (https://download.01.org/0day-ci/archive/20250813/202508131517.P1Nfz0RF-lkp@intel.com/config)
-compiler: powerpc64-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250813/202508131517.P1Nfz0RF-lkp@intel.com/reproduce)
+This fixes a build issue for the STM32MP25 PCIe staged in the pcie tree,
+id 5a972a01e24b
+ 
+Changes in v1:
+   - Add missing information about PM helper functions.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202508131517.P1Nfz0RF-lkp@intel.com/
+Christian Bruel (2):
+  Documentation: pinctrl: Describe PM helper functions for standard
+    states.
+  pinctrl: Add pinctrl_pm_select_init_state helper function
 
-All warnings (new ones prefixed by >>):
-
-   drivers/soc/fsl/qe/qe_ports_ic.c: In function 'qepic_probe':
->> drivers/soc/fsl/qe/qe_ports_ic.c:102:7: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-     nb = (int)of_device_get_match_data(dev);
-          ^
-
-
-vim +102 drivers/soc/fsl/qe/qe_ports_ic.c
-
-    94	
-    95	static int qepic_probe(struct platform_device *pdev)
-    96	{
-    97		struct device *dev = &pdev->dev;
-    98		struct qepic_data *data;
-    99		int irq;
-   100		int nb;
-   101	
- > 102		nb = (int)of_device_get_match_data(dev);
-   103		if (nb < 1 || nb > 32)
-   104			return -EINVAL;
-   105	
-   106		data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-   107		if (!data)
-   108			return -ENOMEM;
-   109	
-   110		data->reg = devm_platform_ioremap_resource(pdev, 0);
-   111		if (IS_ERR(data->reg))
-   112			return PTR_ERR(data->reg);
-   113	
-   114		irq = platform_get_irq(pdev, 0);
-   115		if (irq < 0)
-   116			return irq;
-   117	
-   118		data->host = irq_domain_add_linear(dev->of_node, nb, &qepic_host_ops, data);
-   119		if (!data->host)
-   120			return -ENODEV;
-   121	
-   122		irq_set_handler_data(irq, data);
-   123		irq_set_chained_handler(irq, qepic_cascade);
-   124	
-   125		return 0;
-   126	}
-   127	
+ Documentation/driver-api/pin-control.rst | 58 ++++++++++++++++++++++--
+ drivers/pinctrl/core.c                   | 13 ++++++
+ include/linux/pinctrl/consumer.h         | 10 ++++
+ 3 files changed, 78 insertions(+), 3 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
 
