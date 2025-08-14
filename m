@@ -1,52 +1,52 @@
-Return-Path: <linux-gpio+bounces-24385-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24386-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87438B26393
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Aug 2025 12:58:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70210B2636E
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Aug 2025 12:55:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E051CA22C1F
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Aug 2025 10:53:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 879EC1CC5255
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Aug 2025 10:54:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B8C23019CB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82C423019D5;
 	Thu, 14 Aug 2025 10:52:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DYYTFTce"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YTuyRrM2"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0836A2FCC04;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175A52FD1A9;
 	Thu, 14 Aug 2025 10:52:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755168734; cv=none; b=BEw4O13D8QmYy63jbdyRa3pKgo6UJ61zTaOg1ND3Rd/J4P3Be56pPNiRz37sWI+zygXWoBGyzoZda4dCvoTr3gPhxVNGD/bDz6XJdLjs1rogk3T1MrYvbiBmQ9YORYWpx5tNDj7e1YwjBiPYBSPU/9iYKg98x6cx3E3HKfsnxe0=
+	t=1755168734; cv=none; b=EJo4SxHuRBUl+/I3tGKeaLUX966x2EnRfK3uYE83VTrwBOP2dOEgzgo+q7FAtjQLaitLM5/PglLqWBVtHuvOA7xq7RYYyoQLMn/QjD9ZbqToOpTckAoC8Jnah1JlSufK747djSAZv5bbrof+FkUofEm5AwUTNyphMOzE2HE92/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1755168734; c=relaxed/simple;
-	bh=2jFiYxsc1WNyJnCv5lLuEcDugJS6KmrHs3sFZz6rVfE=;
+	bh=cCEgYLnJf+5grhqhoUEvF8DCQ1F3ij1AI1rFPHd0Smw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oOgh+eI7l0hVRhHCd5JQ2qbBArsiDtK2tzD7GZRepQr7ARd0OWtYSa43hi3C3iLbB//RKxvQCkp4KIL0sFHDQWERrgd+Qi+H/es863tWTNGlZoFlA+8CLte4VxABXMXEoMLG4hI09M0N14Ort9i5ROCNx1lBWjpi9tlammmWDpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DYYTFTce; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A6088C4CEF1;
+	 In-Reply-To:To:Cc; b=IJZ/Msndjjga2YfGq6A2w6oEaC/Qjl0ZCFmTe7HEQVkPi7Fh0IHY8g20K3W8M/3N+5i+SZGmN4MLYHCynjxxmjUz2Fnjji9LTz5H1oSfpsgDyntT3/QpTDZ4rDNS5bpuMUjhb5j5uPjUyaki3w3mxmvnbco/U0hJwghpkoqs6fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YTuyRrM2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B1723C4CEEF;
 	Thu, 14 Aug 2025 10:52:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1755168733;
-	bh=2jFiYxsc1WNyJnCv5lLuEcDugJS6KmrHs3sFZz6rVfE=;
+	bh=cCEgYLnJf+5grhqhoUEvF8DCQ1F3ij1AI1rFPHd0Smw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=DYYTFTceJjguCMyW+98E7fR+ugsPYgZyNN55gxpIR8IMn965+MXlfyXG0z966TLkj
-	 k2xL2q1nAkIKWEXnZp8Nf4NJ6qOXN3idVjdSZEifVYPFzXui42cYj1qDSv1P9Q6f/M
-	 zwI+REKg9AttYpJu/v9+j663Vvsz4S2eKY9f7yJZcnZ62QYwVnOvkSpyADVLus0C+D
-	 PZgrdr3KPIm2gt+clOaiNqtiHoIlPpp7WpibKsAOOLWHgGdkCnsZBG7LLqRE7IvFBc
-	 hnOKMNcfuCkbSsohnTonqWRyaJ5UgJtPEl2g9POQqBgzEQCy1ry46sW8eVVKgHg1/R
-	 DU45GSiGKrBug==
+	b=YTuyRrM2AJbmp+987JBvu/I4lRFyBopz/rHTXPOcqz+j/02nE2Y4XGH/VKick5eV1
+	 tyylKzd36Deg0waMzw5JbF2DgG+zTjtuwFclZDC/5ckAcUOjnkpZwsOrOv4QlCIr/U
+	 WWXTt6xj/Wy+ldcve3b/CxwKFyMuAtOY1ARq5ImPpDnPSMIOaDD5GpEwEyoLg56TqG
+	 Jia9ARGGM9RgzkWwigT7CSy0du2SRyzURsfqk/gXJYh4ODiP5kaEBTVK35ugLwyq6N
+	 1/wC8PahfGLWuw3irOMKUqopE4RpL3Bw6X9K32xYICDF4glNIE1Ww3NOufB54g64mz
+	 Nw+H2UWRuwzMg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E42CA0EDC;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AC8CA0EE6;
 	Thu, 14 Aug 2025 10:52:13 +0000 (UTC)
 From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
-Date: Thu, 14 Aug 2025 11:52:23 +0100
-Subject: [PATCH 1/6] dt-binbings: mfd: Add bindings for the LTC4283 Swap
+Date: Thu, 14 Aug 2025 11:52:24 +0100
+Subject: [PATCH 2/6] mfd: ltc4283: Add support for the LTC4283 Swap
  Controller
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250814-ltc4283-support-v1-1-88b2cef773f2@analog.com>
+Message-Id: <20250814-ltc4283-support-v1-2-88b2cef773f2@analog.com>
 References: <20250814-ltc4283-support-v1-0-88b2cef773f2@analog.com>
 In-Reply-To: <20250814-ltc4283-support-v1-0-88b2cef773f2@analog.com>
 To: linux-hwmon@vger.kernel.org, linux-gpio@vger.kernel.org, 
@@ -69,11 +69,11 @@ Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
  Linus Walleij <linus.walleij@linaro.org>, 
  Bartosz Golaszewski <brgl@bgdev.pl>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1755168752; l=3762;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1755168752; l=7869;
  i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=jZczKELD9tr25sgoyyPTOyUqiGRTqVv0NPtNl4m1Aps=;
- b=x3h8XfOKIQ6nRfIb0Dexb7UHnFFxW4fEypnSf0LYhdxBmnaR8xSL/pbeFnelzNOpzH7C3BAX2
- GOt4VD2POJQDt2PWoijtrlPD0qnZ7eMuRYmcXo+PoImyoe4kLVbPXCQ
+ bh=YJEiTHe9kb+DC8FT96u8vbrt9euhbvLgsuaavOLJvd0=;
+ b=tNjM9wTGeiBzHFn7funqVFxJYEEVNZPoI1tUkvZkprAg+plh0sz0LBZQlK5MJ7vjcFs3+I0VC
+ 6AbVLXGzHEbCL4PQXQ2qz3GfaV3ev+GdoXiqRvVB3MhlrL17E4cglFh
 X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
  pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
 X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
@@ -89,123 +89,249 @@ removed from a live backplane.
 
 Main usage is as an Hardware Monitoring device. However, it has up to 8
 pins that can be configured and used as GPIOs and hence, the device can
-also be a GPIO controller.
+also be a GPIO controller (and so being added as MFD device).
 
 Signed-off-by: Nuno Sá <nuno.sa@analog.com>
 ---
- .../devicetree/bindings/mfd/adi,ltc4283.yaml       | 85 ++++++++++++++++++++++
- MAINTAINERS                                        |  7 ++
- 2 files changed, 92 insertions(+)
+ MAINTAINERS                 |   2 +
+ drivers/mfd/Kconfig         |  11 ++++
+ drivers/mfd/Makefile        |   1 +
+ drivers/mfd/ltc4283.c       | 140 ++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/ltc4283.h |  33 +++++++++++
+ 5 files changed, 187 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/adi,ltc4283.yaml b/Documentation/devicetree/bindings/mfd/adi,ltc4283.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..c5e8aec887d9cfad9052a7c28783396efd6804a9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/adi,ltc4283.yaml
-@@ -0,0 +1,85 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/adi,ltc4283.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: LTC4283 I2C Negative Voltage Hot Swap Controller
-+
-+maintainers:
-+  - Nuno Sá <nuno.sa@analog.com>
-+
-+description: |
-+  The LTC4283 negative voltage hot swap controller drives an external N-channel
-+  MOSFET to allow a board to be safely inserted and removed from a live
-+  backplane.
-+
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ltc4283.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,ltc4283
-+
-+  reg:
-+    maxItems: 1
-+
-+  gpio:
-+    $ref: /schemas/gpio/adi,ltc4283.yaml
-+  hwmon:
-+    $ref: /schemas/hwmon/adi,ltc4283.yaml
-+
-+  adi,gpio-pins:
-+    description:
-+      The pins to use as GPIOs. The device has 4 ADIO and 4 PGIO
-+      pins than can be used as GPIOs. The ADIO pins are numbered from 0 to 3
-+      and the PGIO pins are numbered from 4 to 7.
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    minItems: 1
-+    maxItems: 8
-+    items:
-+      minimum: 0
-+      maximum: 7
-+
-+dependencies:
-+  gpio:
-+    - adi,gpio-pins
-+
-+required:
-+  - compatible
-+  - reg
-+  - hwmon
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        swap-controller@15 {
-+            compatible = "adi,ltc4283";
-+            reg = <0x15>;
-+
-+            /* pgio1 to pgio4 as gpios */
-+            adi,gpio-pins = <0 1 2 3>;
-+
-+            gpio {
-+                compatible = "adi,ltc4283-gpio";
-+                gpio-controller;
-+                #gpio-cells = <2>;
-+            };
-+
-+            hwmon {
-+                compatible = "adi,ltc4283-hwmon";
-+
-+                adi,rsense-nano-ohms = <500>;
-+                adi,current-limit-sense-microvolt = <25000>;
-+                adi,current-limit-foldback-factor = <10>;
-+                adi,cooling-delay-ms = <8190>;
-+                adi,fet-bad-timer-delay-ms = <512>;
-+            };
-+        };
-+    };
-+...
 diff --git a/MAINTAINERS b/MAINTAINERS
-index e90710a9b40d7b32c151472a9ac3b02efd95f346..413bb77d5eebe2b51aa9c3af86e7cfd5ab142044 100644
+index 413bb77d5eebe2b51aa9c3af86e7cfd5ab142044..b5f4f1c41c64b738d57c1fb5552a60b4c6b9985c 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -14500,6 +14500,13 @@ F:	Documentation/devicetree/bindings/hwmon/adi,ltc4282.yaml
- F:	Documentation/hwmon/ltc4282.rst
- F:	drivers/hwmon/ltc4282.c
+@@ -14506,6 +14506,8 @@ L:	linux-hwmon@vger.kernel.org
+ L:	linux-gpio@vger.kernel.org
+ S:	Supported
+ F:	Documentation/devicetree/bindings/mfd/adi,ltc4283.yaml
++F:	drivers/mfd/ltc4283.c
++F:	include/linux/mfd/ltc4283.h
  
-+lTC4283 HARDWARE MONITOR AND GPIO DRIVER
-+M:	Nuno Sá <nuno.sa@analog.com>
-+L:	linux-hwmon@vger.kernel.org
-+L:	linux-gpio@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/mfd/adi,ltc4283.yaml
-+
  LTC4286 HARDWARE MONITOR DRIVER
  M:	Delphine CC Chiu <Delphine_CC_Chiu@Wiwynn.com>
- L:	linux-hwmon@vger.kernel.org
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 425c5fba6cb1e7848dcea05bd77c729a71d48e2c..ec3e02d40fd17a0bba29e3157723055feedebd11 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -900,6 +900,17 @@ config MFD_MAX14577
+ 	  additional drivers must be enabled in order to use the functionality
+ 	  of the device.
+ 
++config MFD_LTC4283
++	tristate "LTC4283 Hot Swap Controller"
++	depends on I2C
++	select MFD_CORE
++	select REGMAP_I2C
++	help
++	  This enables support for the LTC4283 Negative Voltage Hot Swap
++	  Controller. This driver provides common support for accessing the
++	  device; additional drivers must be enabled in order to use the
++	  functionality of the device.
++
+ config MFD_MAX77541
+ 	tristate "Analog Devices MAX77541/77540 PMIC Support"
+ 	depends on I2C=y
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index f7bdedd5a66d16bf8ccee0da1236a441e6f085b0..4a3bcd30ab7e12aed4bc5e48294500c77cb61aa7 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -23,6 +23,7 @@ obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
+ obj-$(CONFIG_MFD_GATEWORKS_GSC)	+= gateworks-gsc.o
+ obj-$(CONFIG_MFD_MACSMC)	+= macsmc.o
+ 
++obj-$(CONFIG_MFD_LTC4283)	+= ltc4283.o
+ obj-$(CONFIG_MFD_TI_LP873X)	+= lp873x.o
+ obj-$(CONFIG_MFD_TI_LP87565)	+= lp87565.o
+ obj-$(CONFIG_MFD_TI_AM335X_TSCADC)	+= ti_am335x_tscadc.o
+diff --git a/drivers/mfd/ltc4283.c b/drivers/mfd/ltc4283.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..a45c01278f884630984790c922c057c4f2db9c82
+--- /dev/null
++++ b/drivers/mfd/ltc4283.c
+@@ -0,0 +1,140 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Analog Devices LTC4283 I2C Negative Voltage Hot Swap Controller
++ *
++ * Copyright 2025 Analog Devices Inc.
++ */
++#include <linux/bitmap.h>
++#include <linux/bitops.h>
++#include <linux/device.h>
++#include <linux/i2c.h>
++#include <linux/mfd/core.h>
++#include <linux/module.h>
++#include <linux/mod_devicetable.h>
++#include <linux/regmap.h>
++#include <linux/property.h>
++
++#include <linux/mfd/ltc4283.h>
++
++static const struct mfd_cell ltc4283_cells[] = {
++	MFD_CELL_OF("ltc4283-hwmon", NULL, NULL, 0, 0, "adi,ltc4283-hwmon"),
++	MFD_CELL_OF("ltc4283-gpio", NULL, NULL, 0, 0, "adi,ltc4283-gpio"),
++};
++
++static bool ltc4283_writable_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case 0x00 ... 0x03:
++		return false;
++	case 0x3c:
++		return false;
++	case 0x86 ... 0x8f:
++		return false;
++	case 0x91 ... 0xa1:
++		return false;
++	case 0xa3:
++		return false;
++	case 0xac:
++		return false;
++	case 0xf1 ... 0xff:
++		return false;
++	default:
++		return true;
++	}
++}
++
++static const struct regmap_config ltc4283_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.max_register = 0xff,
++	.writeable_reg = ltc4283_writable_reg,
++};
++
++static int ltc4283_get_gpio_pins(struct i2c_client *client, u32 *n_cells)
++{
++	struct device *dev = &client->dev;
++	u32 pins[LTC4283_GPIO_MAX], pin;
++	unsigned long *gpio_mask;
++	int n_pins, ret;
++
++	/*
++	 * The device has up to 8 pins that can be configured either as GPIOS or
++	 * for monitoring purposes. Both gpio and hwmon devices need to have
++	 * this information in order to do proper validations and
++	 * configurations. Hence, this property needs to be in the top level
++	 * device.
++	 */
++	n_pins = device_property_count_u32(dev, "adi,gpio-pins");
++	if (n_pins < 0)
++		return 0;
++	if (n_pins >= LTC4283_GPIO_MAX)
++		return dev_err_probe(dev, -EINVAL, "Too many GPIO pins specified (%d), max is %d\n",
++				     n_pins, LTC4283_GPIO_MAX);
++
++	ret = device_property_read_u32_array(dev, "adi,gpio-pins", pins, n_pins);
++	if (ret)
++		return dev_err_probe(dev, ret, "Failed to read GPIO pins\n");
++
++	gpio_mask = devm_bitmap_zalloc(dev, LTC4283_GPIO_MAX, GFP_KERNEL);
++	if (!gpio_mask)
++		return -ENOMEM;
++
++	for (pin = 0; pin < n_pins; pin++) {
++		if (pins[pin] >= LTC4283_GPIO_MAX)
++			return dev_err_probe(dev, -EINVAL,
++					     "Invalid GPIO pin specified (%u), max is %d\n",
++					     pins[pin], LTC4283_GPIO_MAX);
++
++		__set_bit(pins[pin], gpio_mask);
++	}
++
++	/* Add the GPIO cell */
++	*n_cells += 1;
++	i2c_set_clientdata(client, gpio_mask);
++
++	return 0;
++}
++
++static int ltc4283_probe(struct i2c_client *client)
++{
++	u32 n_cells = ARRAY_SIZE(ltc4283_cells) - 1;
++	struct regmap *regmap;
++	int ret;
++
++	regmap = devm_regmap_init_i2c(client, &ltc4283_regmap_config);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	ret = ltc4283_get_gpio_pins(client, &n_cells);
++	if (ret)
++		return ret;
++
++	return devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_AUTO,
++				    ltc4283_cells, n_cells, NULL, 0, NULL);
++}
++
++static const struct of_device_id ltc4283_of_match[] = {
++	{ .compatible = "adi,ltc4283" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ltc4283_of_match);
++
++static const struct i2c_device_id ltc4283_i2c_id[] = {
++	{ "ltc4283" },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, ltc4283_i2c_id);
++
++static struct i2c_driver ltc4283_driver = {
++	.driver = {
++		.name = "ltc4283",
++		.of_match_table = ltc4283_of_match,
++	},
++	.probe = ltc4283_probe,
++	.id_table = ltc4283_i2c_id,
++};
++module_i2c_driver(ltc4283_driver);
++
++MODULE_AUTHOR("Nuno Sá <nuno.sa@analog.com>");
++MODULE_DESCRIPTION("LTC4283 MFD I2C driver");
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/mfd/ltc4283.h b/include/linux/mfd/ltc4283.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..153594009c07b296ce5743e5e817e96464d81cb3
+--- /dev/null
++++ b/include/linux/mfd/ltc4283.h
+@@ -0,0 +1,33 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Analog Devices LTC4283 I2C Negative Voltage Hot Swap Controller
++ *
++ * Copyright 2025 Analog Devices Inc.
++ */
++
++#ifndef __MFD_LTC4283_H_
++#define __MFD_LTC4283_H_
++
++#include <linux/bitops.h>
++#include <linux/bits.h>
++
++/*
++ * We can have up to 8 gpios. 4 PGIOs and 4 ADIOs. PGIOs start at index 4 in the
++ * gpios mask.
++ */
++#define LTC4283_PGIOX_START_NR	4
++
++#define LTC4283_PGIO_CONFIG		0x10
++#define   LTC4283_PGIO_CFG_MASK(pin) \
++	GENMASK(((pin) - LTC4283_PGIOX_START_NR) * 2 + 1, (((pin) - LTC4283_PGIOX_START_NR) * 2))
++#define LTC4283_PGIO_CONFIG_2		0x11
++#define   LTC4283_ADC_MASK		GENMASK(2, 0)
++#define   LTC4283_PGIO_OUT_MASK(pin)	BIT(4 + (pin))
++
++#define LTC4283_GPIO_MAX	8
++
++/* Non-constant mask variant of FIELD_GET() and FIELD_PREP() */
++#define field_get(_mask, _reg)	(((_reg) & (_mask)) >> (ffs(_mask) - 1))
++#define field_prep(_mask, _val)	(((_val) << (ffs(_mask) - 1)) & (_mask))
++
++#endif
 
 -- 
 2.50.1
