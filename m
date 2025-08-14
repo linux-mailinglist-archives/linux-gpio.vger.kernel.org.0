@@ -1,172 +1,121 @@
-Return-Path: <linux-gpio+bounces-24394-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24395-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 877C4B2695A
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Aug 2025 16:31:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D16CB269F4
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Aug 2025 16:49:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C2AC1CE59CA
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Aug 2025 14:20:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 131671795BB
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Aug 2025 14:41:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B63AB20C00E;
-	Thu, 14 Aug 2025 14:18:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48F0D1F0E32;
+	Thu, 14 Aug 2025 14:40:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EqgU/EDu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LAvEDr+U"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3933E15B0EC;
-	Thu, 14 Aug 2025 14:18:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75DF1DE3DC;
+	Thu, 14 Aug 2025 14:40:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755181118; cv=none; b=GuJ60s1sw2PuD2Hm2Oy1NK/2lwYRnyLIr5JPHAOBdKVKFni/s03wMw3l9KeQwvFhpPJI8HY4EWdzK/OdvrVbeeLFBntPnnQLCgmEJuWe/KlJjyXNYVHIzWmwPLzilxwUNv2owq0fW8X9hnggJJFxIZNNI8EH/ROjsEKtmVWSsxE=
+	t=1755182454; cv=none; b=IqaOI41y7I1qXkQM67D+Ln+OZCUxoCR+xx8DIe17vuDpOWcwl64klksrI/lT7KgdbYjYf0V2US+TGuynWQrf0q4JKGTm2PPZIIchVFZe2X5uftKM6WtcqTuEKuDNWz5WIUbouuAOm1ikFy4qiTsSPQsb63qOC+mQ/bCUY+Xs7DY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755181118; c=relaxed/simple;
-	bh=aIOvB7Z2yTByNAFttZWfPG8POEc6396jSKH09BJ+/Lw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=kxK8yANVQDT4+6zKzNWO9ULNnCSB10yROVDfE0eGUDsaC5McpGAXdBYmzSybesQb8g6KEcUCTcl1Dkzo4Eu1qjLYZeyMjSHDkTKOXVG3Ov5WwU1RurfL52iwkC3ha1qPXUHPx92JX66qPE/l0whPWXvD1oOof3GzK7wq5D4+X6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EqgU/EDu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 140DFC4CEEF;
-	Thu, 14 Aug 2025 14:18:14 +0000 (UTC)
+	s=arc-20240116; t=1755182454; c=relaxed/simple;
+	bh=PU8UA+I5WgTOlBY9VPUqNqmWYyXfIpJmXJCYLjXok58=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=fUYUO6UNa3LMSwTIO2fwODoRfjeyFX83yiEB+3cL7m/ceRbEEqkdzjiEgHCkbyOSHV/qLHOVvOrThwx51Q+TbwWU6aeNQwHvkR0uylwMntVljdR2eazcO66X3K41ib886fLIZvSLAttWNIEk4j/QK4rEB60BYwjmGQyJ3JCSSqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LAvEDr+U; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55734C4CEED;
+	Thu, 14 Aug 2025 14:40:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755181116;
-	bh=aIOvB7Z2yTByNAFttZWfPG8POEc6396jSKH09BJ+/Lw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=EqgU/EDu3oDCYRt1Si13BRghMkcwK5LqN9GkAcGcfcrhFTazE34zUUq8Od+e5oGUJ
-	 GNx5ulPcFgtO5ZyiSpwIBr8FUNyAthpqEJ1HFf9GnjWHY+qIpiLzwl5jpRBrlolPn2
-	 z6xjKGXo4jawDOcpqGnCDN73BGfqRqAyieck88qD94UdpBJX7zr50+UVyAUEIFPEy1
-	 8iZ5/OdecI+vpH1tXXE5PIrAiCENDSW7wdju78QYNBO7tccEMhyLT5/PeO3ORXivtj
-	 sVMKdqgvEftfF5s9YxpUhwR00ND4s4PmT0wxP/dvrTnBxT6CdvlYHRM7ommRoJA5zP
-	 uiUsOyuYlg5Jw==
-From: Mark Brown <broonie@kernel.org>
-To: linux-kernel@vger.kernel.org, 
- Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Alim Akhtar <alim.akhtar@samsung.com>, 
- Andrea della Porta <andrea.porta@suse.com>, 
- =?utf-8?q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
- Andrzej Hajda <andrzej.hajda@intel.com>, Andy Shevchenko <andy@kernel.org>, 
- Andy Yan <andy.yan@rock-chips.com>, Avi Fishman <avifishman70@gmail.com>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Benjamin Fair <benjaminfair@google.com>, 
- Bjorn Andersson <andersson@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, 
- David Airlie <airlied@gmail.com>, David Lechner <dlechner@baylibre.com>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- Drew Fustini <fustini@kernel.org>, dri-devel@lists.freedesktop.org, 
- Fabio Estevam <festevam@gmail.com>, 
- Fabrice Gasnier <fabrice.gasnier@foss.st.com>, Fu Wei <wefu@redhat.com>, 
- Guo Ren <guoren@kernel.org>, Hans Verkuil <hverkuil@kernel.org>, 
- =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, imx@lists.linux.dev, 
- Iwona Winiarska <iwona.winiarska@intel.com>, 
- Jaroslav Kysela <perex@perex.cz>, Jassi Brar <jassisinghbrar@gmail.com>, 
- Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Jerome Brunet <jbrunet@baylibre.com>, Jonas Karlman <jonas@kwiboo.se>, 
- Jonathan Cameron <jic23@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
- Linus Walleij <linus.walleij@linaro.org>, linux-actions@lists.infradead.org, 
- linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org, 
- linux-input@vger.kernel.org, linux-media@vger.kernel.org, 
- linux-mmc@vger.kernel.org, linux-phy@lists.infradead.org, 
- linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
- linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-rtc@vger.kernel.org, 
- linux-samsung-soc@vger.kernel.org, linux-sound@vger.kernel.org, 
- linux-spi@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- linux-sunxi@lists.linux.dev, Liu Ying <victor.liu@nxp.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Manivannan Sadhasivam <mani@kernel.org>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Maxime Ripard <mripard@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, Nancy Yuen <yuenn@google.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Nicolin Chen <nicoleotsuka@gmail.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, openbmc@lists.ozlabs.org, 
- Patrick Venture <venture@google.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Robert Foss <rfoss@kernel.org>, 
- Samuel Holland <samuel.holland@sifive.com>, 
- Samuel Holland <samuel@sholland.org>, Sandy Huang <hjc@rock-chips.com>, 
- Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
- Shengjiu Wang <shengjiu.wang@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Stephen Boyd <sboyd@kernel.org>, Takashi Iwai <tiwai@suse.com>, 
- Tali Perry <tali.perry1@gmail.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Tomer Maimon <tmaimon77@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Vasily Khoruzhick <anarsoul@gmail.com>, Vinod Koul <vkoul@kernel.org>, 
- Vladimir Zapolskiy <vz@mleia.com>, Xiubo Li <Xiubo.Lee@gmail.com>, 
- Yangtao Li <tiny.windzz@gmail.com>, Zhang Rui <rui.zhang@intel.com>
-In-Reply-To: <20250813161517.4746-1-wsa+renesas@sang-engineering.com>
-References: <20250813161517.4746-1-wsa+renesas@sang-engineering.com>
-Subject: Re: (subset) [PATCH 00/21] treewide: remove unneeded 'fast_io'
- parameter in regmap_config
-Message-Id: <175518109481.47921.1666131365484481268.b4-ty@kernel.org>
-Date: Thu, 14 Aug 2025 15:18:14 +0100
+	s=k20201202; t=1755182453;
+	bh=PU8UA+I5WgTOlBY9VPUqNqmWYyXfIpJmXJCYLjXok58=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=LAvEDr+U95m00kjZmTrLNp8VuVL+XYtIEG2s0CzSAfyG9ZJ7nIPN34wZGDGtK7k+R
+	 rymKq3ypcPqobxYczNFF7TiI4nzADaGo8befS8+Vnd8uotBkVf5F3gfR/KIsBnzx+s
+	 1or3x87vwQHkyc/eRPjwCZPos+v8Vswv0yBhcf44DBw3YBACU+wnqy9/g3JrwpRd0N
+	 5oK5uXI+oTEjCveSwi2bB8cIOBQVT9eHULzCnyiHcPr70ncbNRSYTe1tu9J/DRHXAR
+	 3AjyaVGKzi7iNQBylr0cTJp3E0/oCD4T5SL4uob8XCHn7uMfIEQz3p/Q6NHUXjGQLJ
+	 2/mXpjoGPZ14Q==
+Date: Thu, 14 Aug 2025 09:40:52 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-cff91
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>, 
+ Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Jonathan Corbet <corbet@lwn.net>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+ linux-hwmon@vger.kernel.org
+To: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
+In-Reply-To: <20250814-ltc4283-support-v1-1-88b2cef773f2@analog.com>
+References: <20250814-ltc4283-support-v1-0-88b2cef773f2@analog.com>
+ <20250814-ltc4283-support-v1-1-88b2cef773f2@analog.com>
+Message-Id: <175518245252.2989785.16386519641633311403.robh@kernel.org>
+Subject: Re: [PATCH 1/6] dt-binbings: mfd: Add bindings for the LTC4283
+ Swap Controller
 
-On Wed, 13 Aug 2025 18:14:46 +0200, Wolfram Sang wrote:
-> While working on a driver using regmap with MMIO, I wondered if I need
-> to set 'fast_io' in the config. Turned out I don't need to, so I added
-> documentation for it with commit ffc72771ff6e ("regmap: Annotate that
-> MMIO implies fast IO").
+
+On Thu, 14 Aug 2025 11:52:23 +0100, Nuno Sá wrote:
+> The LTC4283 is a negative voltage hot swap controller that drives an
+> external N-channel MOSFET to allow a board to be safely inserted and
+> removed from a live backplane.
 > 
-> This series fixes the existing users in the tree which needlessly set
-> the flag. They have been found using this coccinelle script:
+> Main usage is as an Hardware Monitoring device. However, it has up to 8
+> pins that can be configured and used as GPIOs and hence, the device can
+> also be a GPIO controller.
 > 
-> [...]
+> Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+> ---
+>  .../devicetree/bindings/mfd/adi,ltc4283.yaml       | 85 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  7 ++
+>  2 files changed, 92 insertions(+)
+> 
 
-Applied to
+My bot found errors running 'make dt_binding_check' on your patch:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+yamllint warnings/errors:
 
-Thanks!
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/adi,ltc4283.yaml:
+	Error in referenced schema matching $id: http://devicetree.org/schemas/gpio/adi,ltc4283.yaml
+	Tried these paths (check schema $id if path is wrong):
+	/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/gpio/adi,ltc4283.yaml
+	/usr/local/lib/python3.13/dist-packages/dtschema/schemas/gpio/adi,ltc4283.yaml
 
-[21/21] ASoC: remove unneeded 'fast_io' parameter in regmap_config
-        commit: d578faf7096affc036fd16333f1bfbe4991a22f7
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/adi,ltc4283.example.dtb: swap-controller@15 (adi,ltc4283): gpio: {'compatible': ['adi,ltc4283-gpio'], 'gpio-controller': True, '#gpio-cells': 2} should not be valid under {'description': "Can't find referenced schema: http://devicetree.org/schemas/gpio/adi,ltc4283.yaml#"}
+	from schema $id: http://devicetree.org/schemas/mfd/adi,ltc4283.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/adi,ltc4283.example.dtb: swap-controller@15 (adi,ltc4283): hwmon: {'compatible': ['adi,ltc4283-hwmon'], 'adi,rsense-nano-ohms': [500], 'adi,current-limit-sense-microvolt': [[25000]], 'adi,current-limit-foldback-factor': [10], 'adi,cooling-delay-ms': [8190], 'adi,fet-bad-timer-delay-ms': [512]} should not be valid under {'description': "Can't find referenced schema: http://devicetree.org/schemas/hwmon/adi,ltc4283.yaml#"}
+	from schema $id: http://devicetree.org/schemas/mfd/adi,ltc4283.yaml#
+Documentation/devicetree/bindings/mfd/adi,ltc4283.example.dtb: /example-0/i2c/swap-controller@15/gpio: failed to match any schema with compatible: ['adi,ltc4283-gpio']
+Documentation/devicetree/bindings/mfd/adi,ltc4283.example.dtb: /example-0/i2c/swap-controller@15/hwmon: failed to match any schema with compatible: ['adi,ltc4283-hwmon']
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+doc reference errors (make refcheckdocs):
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250814-ltc4283-support-v1-1-88b2cef773f2@analog.com
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-Thanks,
-Mark
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
 
