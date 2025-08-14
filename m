@@ -1,121 +1,149 @@
-Return-Path: <linux-gpio+bounces-24395-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24396-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D16CB269F4
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Aug 2025 16:49:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C51B5B26EA6
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Aug 2025 20:12:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 131671795BB
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Aug 2025 14:41:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 08F7C7BB58E
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Aug 2025 18:11:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48F0D1F0E32;
-	Thu, 14 Aug 2025 14:40:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7120431986F;
+	Thu, 14 Aug 2025 18:12:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LAvEDr+U"
+	dkim=pass (2048-bit key) header.d=libre.computer header.i=@libre.computer header.b="NwSUjG8y"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75DF1DE3DC;
-	Thu, 14 Aug 2025 14:40:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A131C319847
+	for <linux-gpio@vger.kernel.org>; Thu, 14 Aug 2025 18:12:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755182454; cv=none; b=IqaOI41y7I1qXkQM67D+Ln+OZCUxoCR+xx8DIe17vuDpOWcwl64klksrI/lT7KgdbYjYf0V2US+TGuynWQrf0q4JKGTm2PPZIIchVFZe2X5uftKM6WtcqTuEKuDNWz5WIUbouuAOm1ikFy4qiTsSPQsb63qOC+mQ/bCUY+Xs7DY=
+	t=1755195167; cv=none; b=H7nH/1am+zK7uv3M2eYF6WDLNwqiFYibtGiCM8qoDgdwwYe2rVLaUE40uyDLxt5FkUmy5+QFUytT+eSLvhFFbveooXJ5JQyzRhmru+lh21jzzhfkqVv2DxG76v/MeUXNF4+F1nc+p8vHdJ/+QoczyiDVvnaCGKv/lGPy5xWGVo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755182454; c=relaxed/simple;
-	bh=PU8UA+I5WgTOlBY9VPUqNqmWYyXfIpJmXJCYLjXok58=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=fUYUO6UNa3LMSwTIO2fwODoRfjeyFX83yiEB+3cL7m/ceRbEEqkdzjiEgHCkbyOSHV/qLHOVvOrThwx51Q+TbwWU6aeNQwHvkR0uylwMntVljdR2eazcO66X3K41ib886fLIZvSLAttWNIEk4j/QK4rEB60BYwjmGQyJ3JCSSqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LAvEDr+U; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55734C4CEED;
-	Thu, 14 Aug 2025 14:40:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755182453;
-	bh=PU8UA+I5WgTOlBY9VPUqNqmWYyXfIpJmXJCYLjXok58=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=LAvEDr+U95m00kjZmTrLNp8VuVL+XYtIEG2s0CzSAfyG9ZJ7nIPN34wZGDGtK7k+R
-	 rymKq3ypcPqobxYczNFF7TiI4nzADaGo8befS8+Vnd8uotBkVf5F3gfR/KIsBnzx+s
-	 1or3x87vwQHkyc/eRPjwCZPos+v8Vswv0yBhcf44DBw3YBACU+wnqy9/g3JrwpRd0N
-	 5oK5uXI+oTEjCveSwi2bB8cIOBQVT9eHULzCnyiHcPr70ncbNRSYTe1tu9J/DRHXAR
-	 3AjyaVGKzi7iNQBylr0cTJp3E0/oCD4T5SL4uob8XCHn7uMfIEQz3p/Q6NHUXjGQLJ
-	 2/mXpjoGPZ14Q==
-Date: Thu, 14 Aug 2025 09:40:52 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1755195167; c=relaxed/simple;
+	bh=ixFsJ3RPHuU/BU5W6UO6O467skwYcxEo8e5gerlA/Tc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QBwh9/JdlGLSKurDs3CZgYcyWzbKXnngfjpyRHUv1Pxvwf/e0Sak//BBCtUrSYVc2ND8wXEwBNaqdGPgjWDk+weMizq7DP1gRbOWZqIjgdRfJ/3y+HHVfCO3IxmlsXCW6wWO4DUQ5L+pcCQ85w7TsG0N6AxFtcQZGpnFx5r6zF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libre.computer; spf=none smtp.mailfrom=libretech.co; dkim=pass (2048-bit key) header.d=libre.computer header.i=@libre.computer header.b=NwSUjG8y; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libre.computer
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=libretech.co
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7e87030df79so123648885a.0
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Aug 2025 11:12:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=libre.computer; s=google; t=1755195163; x=1755799963; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4/dZvvhdpeV5T70CXzzhIM2ftvucviNjA+HOyZU3hVU=;
+        b=NwSUjG8y5m02ew1jaWglQPvBmFJzJ9KZcTQUsPdCdmiMyXw1LdvDkT2Ey+DO+oj18R
+         KLGaHh1pTZecpNBsYl3xi9WT0ibZ5ovLKlMRJfPstzT4TrD01fQk1ZXUVZrCWExzWDwT
+         7/Q1r1Ftf67AEJP1qM4Qlrl5rQfcax9/cd5Oa48OqhY4YUk8B8qTx7cg/dTuZN27TgQp
+         tK7AdSV8bwQJPrnCmWBxp44PsxIGiRtf8W7AxYS3odPLdtAlixHWLEh4J4FuZ4PlnZFe
+         neRgauxt+CJvc+jA+WVV7pm/IcMGopnTpeRQprLv4M6Q27IM6Dlk/HFoqA/AgOS+uv9Q
+         8iRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755195163; x=1755799963;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4/dZvvhdpeV5T70CXzzhIM2ftvucviNjA+HOyZU3hVU=;
+        b=ArCt7RVWKcJ0dkjShXCke5sEYc7TUhwfjhm66thNfS3N+eb7WzeMh6/lug005t7CHl
+         +Qh78B7onD+36GDQmLFOYVUoroieqMXJ9J9tmfCsjJ6fkceSNSejtMyxabvOReA7jzHA
+         sjFig0dUn3A5wJtMCt76ARb66kzhJkWWITy4o6FWCux2zBxb5yy9O7MQU2eyeW82Kf6i
+         C2zpSlEt7ckT9AsrWaNA2WjYOmCXz78Bbgmxoj5NFXq5H/SXjoK1gQOjtwimbbjsy1N8
+         ceyheocSZGvh/Z8D1SGtAEkxt1rhHSsynUTBCCjFZRfA7p6uHQyvPIkoyDBB5h8lPBV5
+         io1A==
+X-Forwarded-Encrypted: i=1; AJvYcCVuQ/HuO1tjtDimmVjuhLFZgF9Lm1k3v9f3mtKOp+mNLKusWsxSCwGCtV50munKTFpAzYdNi2xmHleP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8j8KXq5EKXlkjC1KpaYDsnPtD5d2BjOTygz3SLbs/N53Zyv8X
+	XIIDg9mHKnrYhBfU7/597b9fXIQsZEsD2Hb5R2DpGtpMa5SMcxzUAnhgc/i6h19Pgg==
+X-Gm-Gg: ASbGncuxolgFxi9baaDKcgCbe5HOq7nhOn9hI6k5GJvW+okDeN5Q7JdGkLuch3L9ymG
+	4iwliAmS0eep4GJlL01oNGtTRqk1orL4Ajf3fV3HhLejK5LfVYJNb26zNnRZZmFK1PxESNRmnmK
+	KGHe0jjY1DENmD2aKScSAd/mS2yfZi707h40fHyUzlpDjt7kzIzqyfXUHY1XVztc3tyvbckA8WB
+	/YJr0D+96/bi4zN2Cs8AjNcTTRdoloRWI8ViHQVfzun0C0Lh6DwZBL5yc8HCN9ryPYTJalzZ8ck
+	xnAi2XRq14GAGvEuyEBUfW8ad6yrv5HzGW9jGCDODdRfIyyitXb37KIfjT7lvYnMFuondJ5+fE3
+	zLNvwMaAxDUIOlyD7cr5z4j6dFxM=
+X-Google-Smtp-Source: AGHT+IHZet1Jvv8jg99HpAw6hDsF8fx3/AYC1SN8lGZ35gs0uFt1zck15oaDyeVmE3ge8wvu7oeH4w==
+X-Received: by 2002:a05:620a:4055:b0:7e8:2989:1149 with SMTP id af79cd13be357-7e8705b5fa2mr627043385a.49.1755195163315;
+        Thu, 14 Aug 2025 11:12:43 -0700 (PDT)
+Received: from localhost ([172.56.29.94])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-70af5c43392sm16269836d6.84.2025.08.14.11.12.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Aug 2025 11:12:42 -0700 (PDT)
+From: Da Xue <da@libre.computer>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Da Xue <da@libre.computer>,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: meson-g12a: add GPIOC_7 pcie_clkreqn pinmux
+Date: Thu, 14 Aug 2025 14:12:36 -0400
+Message-ID: <20250814181236.1956731-1-da@libre.computer>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org, 
- devicetree@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>, 
- Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, Jonathan Corbet <corbet@lwn.net>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
- linux-hwmon@vger.kernel.org
-To: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
-In-Reply-To: <20250814-ltc4283-support-v1-1-88b2cef773f2@analog.com>
-References: <20250814-ltc4283-support-v1-0-88b2cef773f2@analog.com>
- <20250814-ltc4283-support-v1-1-88b2cef773f2@analog.com>
-Message-Id: <175518245252.2989785.16386519641633311403.robh@kernel.org>
-Subject: Re: [PATCH 1/6] dt-binbings: mfd: Add bindings for the LTC4283
- Swap Controller
+Content-Transfer-Encoding: 8bit
 
+Amlogic G12 exposes PCIe clock request signal on GPIOC_7 pinmux func 1
 
-On Thu, 14 Aug 2025 11:52:23 +0100, Nuno Sá wrote:
-> The LTC4283 is a negative voltage hot swap controller that drives an
-> external N-channel MOSFET to allow a board to be safely inserted and
-> removed from a live backplane.
-> 
-> Main usage is as an Hardware Monitoring device. However, it has up to 8
-> pins that can be configured and used as GPIOs and hence, the device can
-> also be a GPIO controller.
-> 
-> Signed-off-by: Nuno Sá <nuno.sa@analog.com>
-> ---
->  .../devicetree/bindings/mfd/adi,ltc4283.yaml       | 85 ++++++++++++++++++++++
->  MAINTAINERS                                        |  7 ++
->  2 files changed, 92 insertions(+)
-> 
+Add the relevant pinmux and pin groups
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Signed-off-by: Da Xue <da@libre.computer>
+---
+ drivers/pinctrl/meson/pinctrl-meson-g12a.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/adi,ltc4283.yaml:
-	Error in referenced schema matching $id: http://devicetree.org/schemas/gpio/adi,ltc4283.yaml
-	Tried these paths (check schema $id if path is wrong):
-	/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/gpio/adi,ltc4283.yaml
-	/usr/local/lib/python3.13/dist-packages/dtschema/schemas/gpio/adi,ltc4283.yaml
-
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/adi,ltc4283.example.dtb: swap-controller@15 (adi,ltc4283): gpio: {'compatible': ['adi,ltc4283-gpio'], 'gpio-controller': True, '#gpio-cells': 2} should not be valid under {'description': "Can't find referenced schema: http://devicetree.org/schemas/gpio/adi,ltc4283.yaml#"}
-	from schema $id: http://devicetree.org/schemas/mfd/adi,ltc4283.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/adi,ltc4283.example.dtb: swap-controller@15 (adi,ltc4283): hwmon: {'compatible': ['adi,ltc4283-hwmon'], 'adi,rsense-nano-ohms': [500], 'adi,current-limit-sense-microvolt': [[25000]], 'adi,current-limit-foldback-factor': [10], 'adi,cooling-delay-ms': [8190], 'adi,fet-bad-timer-delay-ms': [512]} should not be valid under {'description': "Can't find referenced schema: http://devicetree.org/schemas/hwmon/adi,ltc4283.yaml#"}
-	from schema $id: http://devicetree.org/schemas/mfd/adi,ltc4283.yaml#
-Documentation/devicetree/bindings/mfd/adi,ltc4283.example.dtb: /example-0/i2c/swap-controller@15/gpio: failed to match any schema with compatible: ['adi,ltc4283-gpio']
-Documentation/devicetree/bindings/mfd/adi,ltc4283.example.dtb: /example-0/i2c/swap-controller@15/hwmon: failed to match any schema with compatible: ['adi,ltc4283-hwmon']
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250814-ltc4283-support-v1-1-88b2cef773f2@analog.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-g12a.c b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
+index 8b9130c6e170..117e72b4ffcb 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-g12a.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
+@@ -442,6 +442,8 @@ static const unsigned int tdm_c_dout1_z_pins[]		= { GPIOZ_3 };
+ static const unsigned int tdm_c_dout2_z_pins[]		= { GPIOZ_4 };
+ static const unsigned int tdm_c_dout3_z_pins[]		= { GPIOZ_5 };
+ 
++static const unsigned int pcie_clkreqn_pins[]		= { GPIOC_7 };
++
+ static const struct meson_pmx_group meson_g12a_periphs_groups[] = {
+ 	GPIO_GROUP(GPIOZ_0),
+ 	GPIO_GROUP(GPIOZ_1),
+@@ -721,6 +723,7 @@ static const struct meson_pmx_group meson_g12a_periphs_groups[] = {
+ 	GROUP(pdm_din2_c,		4),
+ 	GROUP(pdm_din3_c,		4),
+ 	GROUP(pdm_dclk_c,		4),
++	GROUP(pcie_clkreqn,		1),
+ 
+ 	/* bank GPIOH */
+ 	GROUP(spi1_mosi,		3),
+@@ -1183,6 +1186,10 @@ static const char * const tdm_c_groups[] = {
+ 	"tdm_c_dout2_z", "tdm_c_dout3_z",
+ };
+ 
++static const char * const pcie_clkreqn_groups[] = {
++	"pcie_clkreqn"
++};
++
+ static const char * const gpio_aobus_groups[] = {
+ 	"GPIOAO_0", "GPIOAO_1", "GPIOAO_2", "GPIOAO_3", "GPIOAO_4",
+ 	"GPIOAO_5", "GPIOAO_6", "GPIOAO_7", "GPIOAO_8", "GPIOAO_9",
+@@ -1309,6 +1316,7 @@ static const struct meson_pmx_func meson_g12a_periphs_functions[] = {
+ 	FUNCTION(tdm_a),
+ 	FUNCTION(tdm_b),
+ 	FUNCTION(tdm_c),
++	FUNCTION(pcie_clkreqn),
+ };
+ 
+ static const struct meson_pmx_func meson_g12a_aobus_functions[] = {
+-- 
+2.47.2
 
 
