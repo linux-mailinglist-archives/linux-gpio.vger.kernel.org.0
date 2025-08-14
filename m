@@ -1,179 +1,140 @@
-Return-Path: <linux-gpio+bounces-24382-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24384-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2B64B261DD
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Aug 2025 12:08:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E5A74B26381
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Aug 2025 12:57:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 09EDF162257
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Aug 2025 10:06:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 57F865E5999
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Aug 2025 10:53:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CFF02F60D8;
-	Thu, 14 Aug 2025 10:06:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69AF23019C8;
+	Thu, 14 Aug 2025 10:52:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="fd8xE1P3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FXv5wkyK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aJ1g/ViX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A03279784;
-	Thu, 14 Aug 2025 10:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 082A42FC89B;
+	Thu, 14 Aug 2025 10:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755166007; cv=none; b=rvHRrjFykP0lbKmWkyMJprmbIKTzZh5Quzzr6vnATVVBMnIeKGvKellXEYED0q0OZxKik+I7Hsp82i0zJl3LVga4Ck1s2ScASIxEIg0BiJv7MFLUWIWOrsdVpYhL/yxjYT8YXZMjV8GDZUqI5ekpusTG13btRw4SorDisjUm5jY=
+	t=1755168734; cv=none; b=jFiFkz6N1y0MWX+m+GZf1Kp7Mg7JgWMP7MCDpBVhih1ZwS1RhrYDuwkfmtk2dIQKs1XsfeS9qATtAnO6wG3SWT57MRGsI333mzlRATIIfIyOkBOjcwAtAW8JOcWG6mOSKVAcxoYu5Ln7vEnZYHWB0CZNhAtbZs5ZODd3AfcwGaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755166007; c=relaxed/simple;
-	bh=pjA1Ka2oWY97YGnAX3DCceJhO8IsETdHhyuyUc5PTF8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DfZlLtOmPGE5P8LGouoSisr5/jgr3Gg/Y+d71VHMq3/FoMHNmJo3AL6WHbMRYfa1RzeudtOvWHDi9BvxlqO3DbbFMgaSI9Rs7GMl6Pc2fJBO9JHzZivupv/DwYV6kkXI3Zdv9GSPEls36H6ivdx39uTiavFDSSMUnAe1pPl+f60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=fd8xE1P3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FXv5wkyK; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 5A69114000B6;
-	Thu, 14 Aug 2025 06:06:43 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Thu, 14 Aug 2025 06:06:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1755166003;
-	 x=1755252403; bh=JsAxzXgjzHRP9fzvgrE35OsqNZuMVG8ONOw7NsIFeyk=; b=
-	fd8xE1P3L2QeBPxLJVYmAh6XY56rFGyLgqK4ZGRmSQa+BVoVmrmNjeYK1aqccqqa
-	ORAbph4UjuUsxZPPxTI4gGTN0lV2SZuIxwOtTHIyiqC8k0oi1XPYrhiWmdYShn+B
-	Yg0oc7XJLyc+vqU/TUd85+dH6B526jkgu2oUrZrar2dWUAUyKBKqTeFMXCElTCMy
-	YwKC66QUe3scpODzKvUTJeAP1U6oHdR2tnbUfn0uNWjKRV2SpSHdPV6DGZ0IRAY0
-	EWCsVFbwcQy1lhzaQGtUTe14gbHf1b1wC/T8Lac6brxetDVeiQvonliHrXLIEJVf
-	3w2jWGo/OTn0krkHXNt9Ig==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1755166003; x=
-	1755252403; bh=JsAxzXgjzHRP9fzvgrE35OsqNZuMVG8ONOw7NsIFeyk=; b=F
-	Xv5wkyKvuwerPh76xTFQOwCkunA4A/fSotTHZitILk5DcqaQU/IGq04s1YvhulKs
-	aoNAQzjBxluEcjtKbHz9P9+ngZKysnCEa/o+AGY0XTReebCNhn2pLDpZV6Ec8Inu
-	zuT6bDzIc0MD6v4B6cPBrWShzH6x5j4KCjJbnmQZQrnYdOASZVT2RaVHOxOHqbwn
-	NljAQyP0f8CeunVDjU/ouOml3BrZlxb9mIH65oAxfzX+b2IZTW90RQzlNJdioycn
-	hOaFDNUP//KYyyxxacpXcbAlfDGlLloB7Z3W+9zG9QW+6qaCzZEshMuckb30Zfqd
-	KdlnYt8dVlRb8ATYuAhqg==
-X-ME-Sender: <xms:MrWdaAw8v7w6a9jrt8-G4QUzVR-B97XJQsC8fnXbcne1Y3DwiKETow>
-    <xme:MrWdaBYWhSW54znxsDHtiiMNIgXaCFZfan8f-e2con7bfMlXft2HqycPnP1RXOy3J
-    KfKcmaNvqdOMtcY9E0>
-X-ME-Received: <xmr:MrWdaBWFxv_D3jM-qSzisRwsMn1SHSXX62bJ6261ue5TDwoeyWW9s1Cq_gWj5DbGWIJm-UNSnwWCZQgJ8tAtUVvVAh5FbSXXWQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddugedtkedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpefpihhklhgr
-    shcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrshhouggvrhhluhhnugesrhgrghhnrg
-    htvggthhdrshgvqeenucggtffrrghtthgvrhhnpefftdegfeevfefguedtveevlefgleek
-    uedvfeeggfefheefieejhedulefhjeekgfenucffohhmrghinhepkhgvrhhnvghlrdhorh
-    hgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhhi
-    khhlrghsrdhsohguvghrlhhunhgusehrrghgnhgrthgvtghhrdhsvgdpnhgspghrtghpth
-    htohephedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepghgvvghrthdorhgvnhgv
-    shgrshesghhlihguvghrrdgsvgdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjse
-    hlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghp
-    thhtoheplhhinhhugidqrhgvnhgvshgrshdqshhotgesvhhgvghrrdhkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhr
-    gh
-X-ME-Proxy: <xmx:MrWdaPjPrH5e4gJxe03MJ5cPW_mv5fds-zHtzjK8aW3S3OnTXsLI6g>
-    <xmx:M7WdaPudfvLDf3Q7kCz01cldyWRvZcucNRwPpyB7Xu8mO7ag3hhkqg>
-    <xmx:M7WdaI4gAJi-khNx2a_4mi-jjityqa5UWTQxPeVkzUNSzD9GkgHN9g>
-    <xmx:M7WdaDPgIuC5meITyGRQttDrnex0HGtc1OR2H4KYGR7hthI1Kdth8A>
-    <xmx:M7WdaOHkhz1-HcL7m-JlseELkGa7TSh-Wjtwr-TAAc1zFWqSlLf7G3j9>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 14 Aug 2025 06:06:42 -0400 (EDT)
-Date: Thu, 14 Aug 2025 12:06:40 +0200
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: renesas: rza1: Make mux_conf const in
- rza1_pin_mux_single()
-Message-ID: <20250814100640.GA2197757@ragnatech.se>
-References: <470389b1411074f0da2cef8c6c3531f16aba6589.1755164114.git.geert+renesas@glider.be>
+	s=arc-20240116; t=1755168734; c=relaxed/simple;
+	bh=LS7UVXZq5BcWKHTjEz4xF0C5gnYu/PomYCrf0wF8d4E=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HHQxU+p2QlZgcqCe9fgqIL86Siww5dqVk+4FiEwdaXbJN8PYRLnUSeUb9cdK1TtGKw15Bp1DaLL7Gxpv8fO13r6Yvf4WvSOv1rJx0DpAvkyr1NuS6+P+MFnASwFJs/rDhUd+B/8jyFj8OHDC+0bthzGlYqp2Gc3ykgZinNrMZC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aJ1g/ViX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9614AC4CEED;
+	Thu, 14 Aug 2025 10:52:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755168733;
+	bh=LS7UVXZq5BcWKHTjEz4xF0C5gnYu/PomYCrf0wF8d4E=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=aJ1g/ViXBXs2iruF7oQkCtU1HxWGhnC09lXi6kvjc8adbYelCRMgpNgXZkAG9tu9B
+	 Vg7oVvPl23Bog5EbB+q2Xtslou7c6shQ5gMp5jxpRQYWYrRF8IAnWLhVJKz+gLL11B
+	 jqI0eRLIaF/gWgLPoHmMV46tSvE2HYHJ7v0MSb48VcgppRV6HVDabGWy+5kYi9XlZ4
+	 88oGmOSH1iCeLP0yEtvaNpvRRSJbKN1xkPytNZMLeEAXnm2S1R/HzcbZvEozuQcmG9
+	 pFe/uQMc9HQmsfikV//L7AZ9+5pPuSc/0N7i7+NZPn7IvBcUlBQ6zSHGsYmY/NHltb
+	 koVaLhMkaRcCA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85884CA0EE4;
+	Thu, 14 Aug 2025 10:52:13 +0000 (UTC)
+From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
+Subject: [PATCH 0/6] mfd: Add support for the LTC4283 Hot Swap Controller
+Date: Thu, 14 Aug 2025 11:52:22 +0100
+Message-Id: <20250814-ltc4283-support-v1-0-88b2cef773f2@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <470389b1411074f0da2cef8c6c3531f16aba6589.1755164114.git.geert+renesas@glider.be>
+X-B4-Tracking: v=1; b=H4sIAOe/nWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDC0Mj3ZySZBMjC2Pd4tKCgvyiEl0j82SLZJNUM8tksyQloK6CotS0zAq
+ widGxtbUAb10EdGEAAAA=
+X-Change-ID: 20250812-ltc4283-support-27c8c4e69c6b
+To: linux-hwmon@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, 
+ Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1755168752; l=2545;
+ i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
+ bh=LS7UVXZq5BcWKHTjEz4xF0C5gnYu/PomYCrf0wF8d4E=;
+ b=MYo3wIvH+i4xncYor+OvLaAiEb1eJDXKd170JjyFYsTrHb/1XGEBmjy7wA+RsfpOVF9yBBaDf
+ xLciOBqry6+CDhImzd4dU9U25eN8kmw/N78xJAXiS+eJWxTHiAId65b
+X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
+ pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
+X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
+ auth_id=100
+X-Original-From: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
+Reply-To: nuno.sa@analog.com
 
-Hi Geert,
+The LTC4283 device features programmable current limit with foldback and
+independently adjustable inrush current to optimize the MOSFET safe
+operating area (SOA). The SOA timer limits MOSFET temperature rise for
+reliable protection against overstresses.
 
-Thanks for your work.
+An I2C interface and onboard ADC allow monitoring of board current, voltage,
+power, energy, and fault status.
 
-On 2025-08-14 11:50:55 +0200, Geert Uytterhoeven wrote:
-> The rza1_mux_conf object pointed to by the mux_conf parameter of
-> rza1_pin_mux_single() is never modified.  Make it const.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+It also features 8 pins that can be configured as GPIO devices. But since
+the main usage for this device is monitoring, the GPIO part is optional
+while the HWMON is being made as required.
 
-I like improvements like this!
+Also to note that the device has some similarities with the already
+supported ltc4282 hwmon driver but it is different enough to be in it's own
+driver (apart from being added as MFD). The register map is also fairly
+different.
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Last time (for the ltc4282) I tried to add the gpio bits directly in the
+hwmon driver but Guenter did not really liked it and so this time I'm doing
+it as MFD.
+ 
 
-> ---
-> This has a small conflict with "[PATCH v4 09/15] pinctrl: constify
-> pinmux_generic_get_function()"[1], which I have already acked.
-> Perhaps the best solution is for Bartosz to include this in his series?
-> Or I can resend an updated version for LinusW to apply after Bartosz
-> series has handled?
-> 
-> Thanks!
-> 
-> [1] https://lore.kernel.org/all/20250812-pinctrl-gpio-pinfuncs-v4-9-bb3906c55e64@linaro.org/
-> 
->  drivers/pinctrl/renesas/pinctrl-rza1.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/renesas/pinctrl-rza1.c b/drivers/pinctrl/renesas/pinctrl-rza1.c
-> index 23812116ef42682d..4613d2c8cccc1dab 100644
-> --- a/drivers/pinctrl/renesas/pinctrl-rza1.c
-> +++ b/drivers/pinctrl/renesas/pinctrl-rza1.c
-> @@ -669,7 +669,7 @@ static inline int rza1_pin_get(struct rza1_port *port, unsigned int pin)
->   * @mux_conf: pin multiplexing descriptor
->   */
->  static int rza1_pin_mux_single(struct rza1_pinctrl *rza1_pctl,
-> -			       struct rza1_mux_conf *mux_conf)
-> +			       const struct rza1_mux_conf *mux_conf)
->  {
->  	struct rza1_port *port = &rza1_pctl->ports[mux_conf->port];
->  	unsigned int pin = mux_conf->pin;
-> @@ -1119,7 +1119,7 @@ static int rza1_set_mux(struct pinctrl_dev *pctldev, unsigned int selector,
->  			   unsigned int group)
->  {
->  	struct rza1_pinctrl *rza1_pctl = pinctrl_dev_get_drvdata(pctldev);
-> -	struct rza1_mux_conf *mux_confs;
-> +	const struct rza1_mux_conf *mux_confs;
->  	struct function_desc *func;
->  	struct group_desc *grp;
->  	int i;
-> @@ -1132,7 +1132,7 @@ static int rza1_set_mux(struct pinctrl_dev *pctldev, unsigned int selector,
->  	if (!func)
->  		return -EINVAL;
->  
-> -	mux_confs = (struct rza1_mux_conf *)func->data;
-> +	mux_confs = (const struct rza1_mux_conf *)func->data;
->  	for (i = 0; i < grp->grp.npins; ++i) {
->  		int ret;
->  
-> -- 
-> 2.43.0
-> 
-> 
+---
+Nuno Sá (6):
+      dt-binbings: mfd: Add bindings for the LTC4283 Swap Controller
+      mfd: ltc4283: Add support for the LTC4283 Swap Controller
+      dt-binbings: hwmon: Add bindings for the LTC4283 Swap Controller
+      hwmon: ltc4283-hwmon: Add support for the LTC4283 Swap Controller
+      dt-binbings: gpio: Add bindings for the LTC4283 Swap Controller
+      gpio: gpio-ltc4283: Add support for the LTC4283 Swap Controller
 
--- 
-Kind Regards,
-Niklas Söderlund
+ .../devicetree/bindings/gpio/adi,ltc4283.yaml      |   33 +
+ .../devicetree/bindings/hwmon/adi,ltc4283.yaml     |  159 ++
+ .../devicetree/bindings/mfd/adi,ltc4283.yaml       |   85 +
+ Documentation/hwmon/ltc4283.rst                    |  266 ++++
+ MAINTAINERS                                        |   13 +
+ drivers/gpio/Kconfig                               |   10 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-ltc4283.c                        |  233 +++
+ drivers/hwmon/Kconfig                              |   10 +
+ drivers/hwmon/Makefile                             |    1 +
+ drivers/hwmon/ltc4283-hwmon.c                      | 1658 ++++++++++++++++++++
+ drivers/mfd/Kconfig                                |   11 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/ltc4283.c                              |  140 ++
+ include/linux/mfd/ltc4283.h                        |   33 +
+ 15 files changed, 2654 insertions(+)
+---
+base-commit: 9703c672af8dd3573c76ce509dfff26bf6c4768d
+change-id: 20250812-ltc4283-support-27c8c4e69c6b
+--
+
+Thanks!
+- Nuno Sá
+
+
 
