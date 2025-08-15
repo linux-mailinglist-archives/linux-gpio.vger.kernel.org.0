@@ -1,188 +1,172 @@
-Return-Path: <linux-gpio+bounces-24436-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24437-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B80FB28245
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Aug 2025 16:44:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8197EB28262
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Aug 2025 16:49:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EAD431BC5613
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Aug 2025 14:42:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0AA935E53DA
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Aug 2025 14:48:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA76F233723;
-	Fri, 15 Aug 2025 14:42:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37A69283695;
+	Fri, 15 Aug 2025 14:47:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QGhHpuiS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="byPPES1U"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32DDD1DD9AC;
-	Fri, 15 Aug 2025 14:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E27F2264AA;
+	Fri, 15 Aug 2025 14:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755268932; cv=none; b=SNhpiggnkyeE9A40sTIS95MDv1GE+NrbqcxwEUJI6oJej7AM2cdvzeCFScha1rZK+f/f/Z3Vto/lRpVbPEEb0uvlbXjXrtna2B3INUDpqC6zffP78GwWZK+tg8NEm3lZorToO1CTgrz2utfyFe82d9NHJiBDnmdFLOYya1vf9As=
+	t=1755269275; cv=none; b=A7YcMY1mZBtVquZeKHmYj5AhNFOTQrD/9DykTHerrYwpEz4rSCH+JPMsXrQ2x/80YHDbr7/Iwg/tFrhfu4Kh/+IEHHCP46S5c6V1U7n20oXJlKX9ji60eI3X8sHE6HsQn3U7dPjChJsLzDs/gVEF8+4dRd7ugnIMTXmnlcyQhzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755268932; c=relaxed/simple;
-	bh=3eUf4UXirGpUX0gw3VvalDgnQQxUYuzOa7d+Bn86Fb0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uoFmnoQUiiydNZvBSIwjw1eFMinxeq2dGKl6YT05B4duAUcyXIcx+CZ7jQuJ5taxR7mj7ziRg1uLszZAQ4/r/WbMrgUwP7rVOSMDZcEBij0JMWC0f41d7cXPPdoszmT7Q+eNY2Dl1gb2xUtotHKAg+E5n1JbABVeQWDAIsFn52o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QGhHpuiS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3B35C4CEEB;
-	Fri, 15 Aug 2025 14:42:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755268931;
-	bh=3eUf4UXirGpUX0gw3VvalDgnQQxUYuzOa7d+Bn86Fb0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QGhHpuiSTtGAbt/6dlTCnnoTA4ZplxFC8Tro0GJAdbAh12tMNEUSLu07z11OvQBvk
-	 oHTf5TJS/YKStrrrPHeWRzwJ0jGE6j5AZ1tbRvaZy3dDmEE9KCuVb15MPpzSH6J/gw
-	 2nlRciQR5ILTUmZcjfPb8Wftcr9/dguuRdUZKw9cWJDeaG76YAPPH1GvTVv9P/kSEx
-	 wLYcS3eJZ7unChNgWOYh7wQNPjdRjal2zeZDCWKyPnLkisSlJQ+WGVCBgVhn2LIrAt
-	 +qG7XHhqCY/zS15DuM72YtrsT2tpKSGGxqzGtUU2p/oH3AF5g3+H8o04kc5YGhgMBJ
-	 knwp+/59e078g==
-From: Bjorn Andersson <andersson@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Mark Brown <broonie@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	=?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Avi Fishman <avifishman70@gmail.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Benjamin Fair <benjaminfair@google.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	David Airlie <airlied@gmail.com>,
-	David Lechner <dlechner@baylibre.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Drew Fustini <fustini@kernel.org>,
-	dri-devel@lists.freedesktop.org,
-	Fabio Estevam <festevam@gmail.com>,
-	Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-	Fu Wei <wefu@redhat.com>,
-	Guo Ren <guoren@kernel.org>,
-	Hans Verkuil <hverkuil@kernel.org>,
-	=?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-	imx@lists.linux.dev,
-	Iwona Winiarska <iwona.winiarska@intel.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Lee Jones <lee@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-actions@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-clk@vger.kernel.org,
+	s=arc-20240116; t=1755269275; c=relaxed/simple;
+	bh=AZ9XEafPLDiedO+Dvx8dRa/6SA5wWq6AiEq/bCNCg5o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QcQpv13hNVb8UrlG/ShI8wLmCIyNUJk5QX8Xptzn/iNrm5oypNzDIAN2+zV6tL/8oH1+z+K10IY2vUIfxcPEUQJmCLQO5nKYSvZ/jcG+duZjzh5JD6VzOn5ByAU9RZmoyuznGzwxjpBiBnpxmnHLsUOhvOccmAvgnrdjrSR9f20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=byPPES1U; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-45a1b00f187so8828335e9.0;
+        Fri, 15 Aug 2025 07:47:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755269271; x=1755874071; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kcDCIEnfFESSkYdRV2Z3z2fXfhMyaNpAlNNZ8v/jx9A=;
+        b=byPPES1Uhoz5r36F4vwswM8ZJ46JI3UM4rFwb27vhOyDZzpPSoKF4+kvLLoqQaETal
+         uPXYlcAF2DUywIcd5oYdw7qRop3nxnh7UfxX0BsZV4djvOArE/x12fjH4hIhRyYFWVgp
+         4OkBxJ98heSBtxQP5+8cdKEYBs0jc+RCOw78Pw4RryUBE9aILxBCP3Gn02S85wYD/c1j
+         oCQmXEEgjJLsYL/ALWzPwMENXuApyXwSL8gXAbyiu8PckfCLYBXsBpGHbz3hkTsRT7qg
+         JP1GHt4e8dnW+Eghy8Wd1+zmkErjazjtMv0WWcXaOWyHaUyWmzdCdjxuzQFF8El4ueEQ
+         hw2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755269271; x=1755874071;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kcDCIEnfFESSkYdRV2Z3z2fXfhMyaNpAlNNZ8v/jx9A=;
+        b=oTA7rz+IxETprsH7b2S1zqIduPXMSK0413bi8gN14+x03vnsn38JUxMTYMXgRNT55l
+         pHdNYkGsDs2QJHBerHA+JBQX1lfpyHtLGepGw8P4GnuJ4oHgest3oJZV3ynvOYFoUFdj
+         Fr3u7jb3uBeMUiNKyoV+lZftSMnJQ2kOdKl9tIAa9sYnFNtdMo3esvqj0mpkpvfFS9Y2
+         9zEmauE8084QHMkRd9BxRRwDmwlZoqfmh5+66A1EvJl5cDK7hOC5hxufqqBi3obVuqtt
+         kE2m2CLB28a3kO3LqpAC/TjXYy5qdmzm5L303eiyBeWEtmrSAo9pPkPu2Z7Zy0wyatj8
+         9WAw==
+X-Forwarded-Encrypted: i=1; AJvYcCUb34CCtAJ4/a2z/wEJFI6P5xIBM8VVOfI2IOZ2dxSP2jINNfnx3QhcxP2blgg57yy3vAXYOYOsNnGB@vger.kernel.org, AJvYcCVA9J7Cl69ern8L0w6k6VHXh4fybQLO2T5aFJL7QW70nBqgfFilHvmhGG2HJPrM/xducHp+4ceyHmCe14w/@vger.kernel.org, AJvYcCWy1/SEvNrB/ordP1MiWiKHOLyVvaRC+IOreKpSRoYrCkIXwy7yI2bRRvAjkFFJP5n34TpvjgWJ1jCRKJDWvmN0Qas=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdNqhmI3HyVKg7vXwaSvpF+KZGeK4ap/fI/I+SlcfTjmQbYjdA
+	Wh3KVhXgovtCkNSPS8tv4O9bEKbnWGNEw97ZcQP1VtkrFyNjJx5N26sD5AUPSHIl
+X-Gm-Gg: ASbGncsoFGcEoWJjUnqWXyIOJUW4YF4ObqWqK1DPKnTCPQ3+wuf3hC0wLxxvL3RRSkY
+	SJajCJ2N62rVGPFK8LeRsNovJorCVJqYtyPkG2Z9RsCPjK00oxsmHC4OSDxLeQLPktD4JcngGd5
+	e2EGM/Sz/azVQhS1tUMvHtct8zgeRV4ulVn6oV+hxMQCOkby8ndK9sHorOj0rv+eC9OQ7ydo4nY
+	cWgcOAecBDTK/CcWs2G4MFzcYQMXUUYImEIlT6/0jicNaQROwUZMpxXObpU0OAygeVQEDjBrHui
+	7tjYpB31Z04gYYKupffqBefkk2B7VrU4Fs/NMYipPU/ZlDzU11xlRz7N0X3i/K2+eCIGMzAl+NZ
+	JlKfmayZShodi/9SAWQsD+JI2wNT0fUT0lS/Cjq83XkIwioKsd0msEs8uXyT+zY9JqY7SYwa3ZQ
+	==
+X-Google-Smtp-Source: AGHT+IHVAecPzWjOypy2BlI6xI0agsl8rGBJLaWb51RtQf4qazCUwAexT9foeLeJX79s+OAlVsBsIA==
+X-Received: by 2002:a05:600c:4710:b0:458:bb0e:4181 with SMTP id 5b1f17b1804b1-45a217f5054mr25842225e9.10.1755269270956;
+        Fri, 15 Aug 2025 07:47:50 -0700 (PDT)
+Received: from biju.lan (host31-53-6-191.range31-53.btcentralplus.com. [31.53.6.191])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45a1c6c324fsm59523755e9.1.2025.08.15.07.47.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Aug 2025 07:47:50 -0700 (PDT)
+From: Biju <biju.das.au@gmail.com>
+X-Google-Original-From: Biju <biju.das.jz@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	linux-renesas-soc@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-mmc@vger.kernel.org,
-	linux-phy@lists.infradead.org,
-	linux-pm@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-pwm@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-rtc@vger.kernel.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-sunxi@lists.linux.dev,
-	Liu Ying <victor.liu@nxp.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Nancy Yuen <yuenn@google.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Nicolin Chen <nicoleotsuka@gmail.com>,
-	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-	openbmc@lists.ozlabs.org,
-	Patrick Venture <venture@google.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Sandy Huang <hjc@rock-chips.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Shengjiu Wang <shengjiu.wang@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Takashi Iwai <tiwai@suse.com>,
-	Tali Perry <tali.perry1@gmail.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Tomer Maimon <tmaimon77@gmail.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Vasily Khoruzhick <anarsoul@gmail.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Xiubo Li <Xiubo.Lee@gmail.com>,
-	Yangtao Li <tiny.windzz@gmail.com>,
-	Zhang Rui <rui.zhang@intel.com>
-Subject: Re: (subset) [PATCH 00/21] treewide: remove unneeded 'fast_io' parameter in regmap_config
-Date: Fri, 15 Aug 2025 09:42:02 -0500
-Message-ID: <175526892008.370600.8859545110801188375.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250813161517.4746-1-wsa+renesas@sang-engineering.com>
-References: <20250813161517.4746-1-wsa+renesas@sang-engineering.com>
+	linux-kernel@vger.kernel.org,
+	Biju Das <biju.das.au@gmail.com>
+Subject: [PATCH 0/2] RZ/G2L pinctrl improvements
+Date: Fri, 15 Aug 2025 15:47:43 +0100
+Message-ID: <20250815144749.143832-1-biju.das.jz@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
+From: Biju Das <biju.das.jz@bp.renesas.com>
 
-On Wed, 13 Aug 2025 18:14:46 +0200, Wolfram Sang wrote:
-> While working on a driver using regmap with MMIO, I wondered if I need
-> to set 'fast_io' in the config. Turned out I don't need to, so I added
-> documentation for it with commit ffc72771ff6e ("regmap: Annotate that
-> MMIO implies fast IO").
-> 
-> This series fixes the existing users in the tree which needlessly set
-> the flag. They have been found using this coccinelle script:
-> 
-> [...]
+The write to PFC_OEN register is controlled by the write protect register
+(PWPR). Currently we are setting OEN register in resume() without enabling
+the write access in PWPR leading to incorrect operation.
 
-Applied, thanks!
+Also don't reconfigure the pin if the pin's configuration values are same
+as reset values during resume() to avoid spurious IRQ.
 
-[18/21] soc: remove unneeded 'fast_io' parameter in regmap_config
-        commit: 5d8a9c8401648d338d072a488d455ed4611c5d4b
+Logs:
+root@smarc-rzg3e:~# cat /proc/interrupts | grep SLEEP
+127:          0          0          0          0 rzv2h-icu   0 Edge      SLEEP
+root@smarc-rzg3e:~# [   68.710624] PM: suspend entry (deep)
+[   68.714523] Filesystems sync: 0.000 seconds
+[   68.720402] Freezing user space processes
+[   68.726527] Freezing user space processes completed (elapsed 0.001 seconds)
+[   68.733563] OOM killer disabled.
+[   68.736839] Freezing remaining freezable tasks
+[   68.742749] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+[   68.750233] printk: Suspending console(s) (use no_console_suspend to debug)
+NOTICE:  BL2: v2.10.5(release):2.10.5/rz_soc_dev-169-g1410189b0
+NOTICE:  BL2: Built : 12:53:12, Jul 15 2025
+NOTICE:  BL2: SYS_LSI_MODE: 0x13e06
+NOTICE:  BL2: SYS_LSI_DEVID: 0x8679447
+NOTICE:  BL2: SYS_LSI_PRR: 0x0
+NOTICE:  BL2: Booting BL31
+[   68.800343] renesas-gbeth 15c30000.ethernet end0: Link is Down
+[   68.812953] Disabling non-boot CPUs ...
+[   68.817380] psci: CPU3 killed (polled 0 ms)
+[   68.823030] psci: CPU2 killed (polled 4 ms)
+[   68.829144] psci: CPU1 killed (polled 0 ms)
+[   68.833581] Enabling non-boot CPUs ...
+[   68.833789] Detected VIPT I-cache on CPU1
+[   68.833836] GICv3: CPU1: found redistributor 100 region 0:0x0000000014960000
+[   68.833875] CPU1: Booted secondary processor 0x0000000100 [0x412fd050]
+[   68.834651] CPU1 is up
+[   68.834748] Detected VIPT I-cache on CPU2
+[   68.834770] GICv3: CPU2: found redistributor 200 region 0:0x0000000014980000
+[   68.834790] CPU2: Booted secondary processor 0x0000000200 [0x412fd050]
+[   68.835438] CPU2 is up
+[   68.835533] Detected VIPT I-cache on CPU3
+[   68.835555] GICv3: CPU3: found redistributor 300 region 0:0x00000000149a0000
+[   68.835576] CPU3: Booted secondary processor 0x0000000300 [0x412fd050]
+[   68.836210] CPU3 is up
+[   68.862815] dwmac4: Master AXI performs fixed burst length
+[   68.863715] renesas-gbeth 15c30000.ethernet end0: No Safety Features support found
+[   68.863736] renesas-gbeth 15c30000.ethernet end0: IEEE 1588-2008 Advanced Timestamp supported
+[   68.867251] renesas-gbeth 15c30000.ethernet end0: configuring for phy/rgmii-id link mode
+[   68.882826] dwmac4: Master AXI performs fixed burst length
+[   68.883716] renesas-gbeth 15c40000.ethernet end1: No Safety Features support found
+[   68.883731] renesas-gbeth 15c40000.ethernet end1: IEEE 1588-2008 Advanced Timestamp supported
+[   68.887264] renesas-gbeth 15c40000.ethernet end1: configuring for phy/rgmii-id link mode
+[   69.083883] OOM killer enabled.
+[   69.087021] Restarting tasks: Starting
+[   69.091764] Restarting tasks: Done
+[   69.095229] random: crng reseeded on system resumption
+[   69.100457] PM: suspend exit
+[   71.436765] renesas-gbeth 15c30000.ethernet end0: Link is Up - 1Gbps/Full - flow control rx/tx
+[   72.868712] Process accounting resumed
 
-Best regards,
+root@smarc-rzg3e:~# cat /proc/interrupts | grep SLEEP
+127:          1          0          0          0 rzv2h-icu   0 Edge      SLEEP
+root@smarc-rzg3e:~#
+
+Biju Das (2):
+  pinctrl: renesas: rzg2l: Fix OEN resume
+  pinctrl: renesas: rzg2l: Don't reconfigure the pin if it is same as
+    reset values
+
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 44 +++++++++++++++++--------
+ 1 file changed, 31 insertions(+), 13 deletions(-)
+
 -- 
-Bjorn Andersson <andersson@kernel.org>
+2.43.0
+
 
