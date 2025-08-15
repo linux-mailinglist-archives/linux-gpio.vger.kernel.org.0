@@ -1,80 +1,81 @@
-Return-Path: <linux-gpio+bounces-24412-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24413-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D66DB27C33
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Aug 2025 11:08:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA29EB27C28
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Aug 2025 11:07:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 51E8CA01792
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Aug 2025 09:02:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 147FC1BC47E3
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Aug 2025 09:02:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8C432D3726;
-	Fri, 15 Aug 2025 08:58:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B55712D3A6B;
+	Fri, 15 Aug 2025 08:58:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="QTHxc78+"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="mkm1FBYx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33732D372F
-	for <linux-gpio@vger.kernel.org>; Fri, 15 Aug 2025 08:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85D225A2BC
+	for <linux-gpio@vger.kernel.org>; Fri, 15 Aug 2025 08:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755248285; cv=none; b=PEn80HWMB4bFtxvz7QZnFpMkwpECDhwUsYnh+kN9nY6baxQ27vvfkQeCAx2oVX7vcYLxYdIfysmY3inuakPytyOhQOM9rcCzcmLpa1aaJXkxK3xlzgG0jrOr2Pl1d5NBmVbT/hnGEO9dGmNPOkRx+JhOH4o+K+IQkiFn5swTeIE=
+	t=1755248286; cv=none; b=qg4/3+uUCF6hcqn32JUyU9nKgz+ldEJgyV1DpfT4tBSJKNhfApULsat10sFY5Yk1k5tVypg2uH1C3zV7cWKbuPjFxksji/WSvWSZwGYC3C9pLFJN6XZQ3zcUoONuH8ksdU11zM5pDP8Thcd57bHFWIf7wlWwNYXZwG9/9OTTyyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755248285; c=relaxed/simple;
-	bh=HcZzenWpfBJlRzQo/mLeEU4SKNPxtaHZpH5R/Jolr3A=;
+	s=arc-20240116; t=1755248286; c=relaxed/simple;
+	bh=Qb7YheZffAUVeitp0xjDHj2mKQXwfvZHS6qct5CA0WU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=p2wJtMUG+8ocVT26b0uPA/9R0t9ookGyhK6i7TdIdVdCEV7opzK24e/jkYi+Paw8ERASS7VUovSHpCvBiOrmEs4wzSMjpENtOcx0NXt1Ei7HbGyDrBKDm5fg4MJhX1N5Fta7hBP92oU8XCtP8B8Pr8iq8xJEfUCNst/j28XLazY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=QTHxc78+; arc=none smtp.client-ip=209.85.221.44
+	 In-Reply-To:To:Cc; b=FolPrvk0+uWT38Mnz9iTl2P5/e5kLgD0nDXsh+rBE3XsTo7ZjjZPv6tPo3HXXmIn8M9S0h1YxsXlvFlXUN3GRd0/+zXyHwjxeuzO3kPfkWMIFz9sHVti62lrXiK0NS53bIsFWATmpOvstZJCJ4FLycN3xUq1V2TGGLR/sKlX380=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=mkm1FBYx; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3b9d41cd38dso1194814f8f.0
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Aug 2025 01:58:03 -0700 (PDT)
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3b9d41bea3cso1552708f8f.0
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Aug 2025 01:58:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1755248282; x=1755853082; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1755248283; x=1755853083; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=lKVEe5hG39LoC+ejz4MzzXkcMYdQxd2ItsU2BPvvxzU=;
-        b=QTHxc78+DQsyeCYQPooZH7jXNMDJiB9c/s1q9h+2LNYkRRoRmPAgy2CaD6IWZVJ85q
-         XFI3jiSzry77q5EmRgytPwGdeqk/ADhshaE7kBHhVpLD+PIIxCyw9UbRFZva60vxty4D
-         InBFhnnWpfo7wRbkdZlhVK1I5ps/djGS0Eba+e6old5bv+rHKWYgSNCeuHq9tuehv3aE
-         3uWgpzjwzd0UKxL+7ALHWww03ym5MZeIVmNfOCTL0ftZXD5LdIk/KHPJXgk86n1zTgpL
-         MkmInl8qM9ssiLKsAk69htdmARmq+pgqUHK9FoGUbL5ftYWFxnN10G06jBPC/dwaoSJ+
-         SkvA==
+        bh=APhu76feC3eVxDk0yPXL5S0pgcIKNjYVcZgNJk+cNFw=;
+        b=mkm1FBYxdyq+lT0tqiZbHzYbgxzABlVDeD0y1Zyq751rc/bPx8zZqitDVmN3ywh1Bp
+         ebvrLpksutdb+O4A4vwG4jEaQPVL/6IsLzzlCU+ZSJ7EM7jElpOYM7DM3NrGVKJtF+fD
+         aUwOJUvhhUejPTff0PUdovsMn1Ld9SXX5qSlsdBBwMReu3ydnib/A+ZfSUNZTQNj73SQ
+         YF2SPkRFm6cMQLV3Ei15Bo1Qpvhj6QW84AGStddFMRtEgEjvgrRoTFOa6WRFr3KrGuqf
+         qXTbnjAPQmq+WmWAusy4XYumGsWvSLhvlkxpPo5S/bNSR8tHI7G3LbcGSCcoPJ8QOWF6
+         1EVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755248282; x=1755853082;
+        d=1e100.net; s=20230601; t=1755248283; x=1755853083;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lKVEe5hG39LoC+ejz4MzzXkcMYdQxd2ItsU2BPvvxzU=;
-        b=nDvZ1HLeBzH+L8mPVxMI859WFgjhkDyAPnOqj9XuFJqBeOlvpX5ULW5p6T2vQOv7AV
-         01h1AGtYShwQkVJ+XkF0xUICe7VasqKuz29x9Yj23GqeKP5T8hhVGKe3AN4phovXTKC+
-         +fNqUzM/iHbdG5TG8P1FJ18X/WSFBDVfU7CdT45CeE+0zz/vXSuS83g4kpOlOeBOyenI
-         xCoXJ5QO8XmG3V1g0Dp3BkmgRdkdIXPgr+t4dGeq7ifqdyfzQe6QrMnIJzLsEwypFSOb
-         QLduL7yeml+i28iQ83a4fcecMRuh3lsV5iVp+oEmIUDY0Ndlb/e2dJJbzlD/L0+yCnF+
-         T/wg==
-X-Gm-Message-State: AOJu0Yxu+MjW8SwIoSHARAnUeyVSJqmXFXHclZ7EAVy1cJC5vOkHoH84
-	bI0M+P3qdUKJBrRKlEwJVoKdeCaua2CQrThJNYVIGEsR2F5UTp+rtWm03KFP2eyZ0/Y=
-X-Gm-Gg: ASbGncthA7oSyIuc9IXZQ0uNqBCuGwMVMAxRcF5+BOvMTUqeH1nFgmduy5kB8TpWJi7
-	PNWuoME/KGLMAHeUOvr1DU8CxAN7MRVNCqU1BjUIz7FV3UQnAtLb0Pw2G84yx9QZcMUgOefukz2
-	PLAdongIkglS9kwd9Qmp10GMp+nE8whL38MN+fKcQVbWzVr/T58h6II9xSHr+uU2jBVfwIpzB+n
-	kL8oxPMYwDxTrM0sCGxf4exUJbvRHFBlq5err1/0Z2RSZy8gfs/icYMkVoYcSAmthS+bN0OJ5bx
-	I0SK0eVqsMDcYhgsxIoU3QPTLuE8pE//eMa5qxRCAmJEEOZcpiaVp9TCLd5E2jYmBHKQsiXhZlt
-	3muvqz7PQxbSQ0PUJ+g==
-X-Google-Smtp-Source: AGHT+IEixslCFJeOPXZXmtTOb7MW2v7hEIDVz9ot9hBcHFqBelHbfPv8WcTcnLT7LPl8u81TeoK+UA==
-X-Received: by 2002:a05:6000:2409:b0:3a4:ee3f:8e1e with SMTP id ffacd0b85a97d-3bb68b0cb14mr868685f8f.39.1755248282173;
-        Fri, 15 Aug 2025 01:58:02 -0700 (PDT)
+        bh=APhu76feC3eVxDk0yPXL5S0pgcIKNjYVcZgNJk+cNFw=;
+        b=SsS9rpceZOlFI5Y+CD+LKPEA7ydGdIntxKJ7EmAgKVyzNFqgdzUzpgoX0GqIiOAoGt
+         xnA6v9DboeBbqgec9iycyKXs/nQTI3dQmX+6iuTznsS3UsbGrClEBkOnnuOdKZXu8Fim
+         KhtX9XTOtVvoqszPh/ghUBFsBNsbfM4gAY+1IjsZG+FQPFZxTO8yi7Ax8Gw6JtgewPvv
+         udGUVm3KRmcujYAFCfQ5L8uGkmHbeam7+3uOnuOBbm08jndCCrP4T+2yRm3x3We0qwKN
+         4Skqj4219OzHVw5+0JDM6qEbxxcxE1AE7TQhP/jrsyKOrnCgqYRD+1OMW7XGwU25mJVM
+         wt3Q==
+X-Gm-Message-State: AOJu0Yxz0G82xm/lw7sKXmxhjRt49obok/MG2tph4VBVShXbGSPOhGKn
+	whH8zV3Cu2zYToTNzXBn4She4kw+Y32okMktVK8yetufAXKHSncpvXVaW6MAdHD2VH+zwiYMODQ
+	tJxrJ
+X-Gm-Gg: ASbGncsPCcNIpblUPDFJgy89ThCnCkX4dfG/D7Atfhm586xTyDPeEX/EZ1R2OJrOOkC
+	MobHxx4DeDo8FDv/f3x5bAKpGgD0Db8yuWEfg9sRklbJYamqjWns79tFgWfd4FN0ASjbIOUaqwu
+	ha/2j6Iv3fxmTgXIjANaAXeAbTwp17wg7A28o8yN6KXZIYBLmGnqfo/aYOlw0XGgxCeNrmmlCpq
+	m/fmCPdHD8KYc9itwNRNXbjYjo73YvR4V8t2vaHPtvW3Rj3JA4I7hi0Y6u6s09KFazdkyy+/Tv0
+	2ibnq407OoWkIsuZ09Wqj+a8RnVKxyXq6M8TJyIT0NBlU5L6eL2UJFaiSBhq5zAKxUmOeJfHVOj
+	yEiKVvoDAOp45HZJDkw==
+X-Google-Smtp-Source: AGHT+IGjGyeerj72xkjNGQ3qHhFmEciRabvJi1QjME1NBHBv/1VcMwIlxa+lkmwXZOIPjQ5DghnBSw==
+X-Received: by 2002:a05:6000:2204:b0:3b8:d893:5234 with SMTP id ffacd0b85a97d-3bb6969b243mr1060141f8f.47.1755248283231;
+        Fri, 15 Aug 2025 01:58:03 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:a125:bd3e:6904:c9f9])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3bb64758d1csm1193355f8f.8.2025.08.15.01.58.01
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3bb64758d1csm1193355f8f.8.2025.08.15.01.58.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Aug 2025 01:58:01 -0700 (PDT)
+        Fri, 15 Aug 2025 01:58:02 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 15 Aug 2025 10:57:52 +0200
-Subject: [PATCH libgpiod v2 4/9] bindings: rust: update errno dependency
+Date: Fri, 15 Aug 2025 10:57:53 +0200
+Subject: [PATCH libgpiod v2 5/9] bindings: rust: update cc dependency
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,7 +84,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250815-rust-1-0-0-release-v2-4-b1794cb4b9be@linaro.org>
+Message-Id: <20250815-rust-1-0-0-release-v2-5-b1794cb4b9be@linaro.org>
 References: <20250815-rust-1-0-0-release-v2-0-b1794cb4b9be@linaro.org>
 In-Reply-To: <20250815-rust-1-0-0-release-v2-0-b1794cb4b9be@linaro.org>
 To: Viresh Kumar <viresh.kumar@linaro.org>, 
@@ -91,66 +92,47 @@ To: Viresh Kumar <viresh.kumar@linaro.org>,
 Cc: linux-gpio@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1660;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=888;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=Wqg509ISDfRgdvSuA0I25VuTslqiHSqv5RS3UemT0Jk=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBonvaUb0ke5YNlAiYfq8YbBW3XuviBQ6OK6bdno
- LP5kq7o/EGJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaJ72lAAKCRARpy6gFHHX
- cudZD/4jhoxaFKmGefds5AEQRg9ZHOSHB2B1Hm/GfwMX1EZltGV5JAHiIb6z1uiSbipjbufFGET
- H+LyMWYQ2laNn4iJQe2FDNHenXWignJ1FOlnMJcmIcIWay6/PdsC3Y3i9KHdjF72G9OZTCQE5mW
- xmidHR6ITLWoNpQi+5rr64Erntwmm8XoGDFwz/KXH+64exl/yg+trTdVkgg/tguDObmofxchiLw
- R9lYiEjwswTVe3Sj7ATwSlNNT8Zay3wAHLlWpjJgVAMriuN5EuuyN7ZM/0hvYtaZw7U3+MGrTPE
- qh4FKu9dMqpLHannp6XqC7j37dVtgsh9ArCT4ctzR5A0wt4AVfPTcPvPiHH2LlifmRRk1AWRdpX
- o+irNFiXvlE//fWTUFup6tHXHFF8JjrTi73hdBtEZcROv1xV68rYSd7ABJgL/tYB8V5tIlZR0T6
- v8LHg2GCqSgyyCiqfadXrrySCxLUEf8A2xbxHbo7hPiKkszKfg+6xojrG4C+KuvqWQ37ld3n0lr
- /OsjRK0XR0b7Dx7duj3jvk0D4IJpjIsv8/NN1DdscVTTMSjK2bvX+bMcDZMpD5PRxGA43ghx4mh
- bLz2Udvwt5nsb73nVSLTpkgDSgiqZO4s8qWglQ32YTz4MDFi9LgQUYSIduhnkg817L2V5ao6FJh
- izmkNMD7/t3bZ7A==
+ bh=HwoLK4zY+THHSDS/1oig8Gd91wHrt/YeK/EJQbSZxAg=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBonvaU2dg9Pz9TnvJjbZS0YNkVpYazt8M/rAIgn
+ nYeHj+Cqf2JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaJ72lAAKCRARpy6gFHHX
+ cptwEAC2sgugGDsre7yKb5uCB/Ii/1i9SpOUo6QCsZUqkDmWnxRb/MmM0KmGSjQmPzOhYC7C4bZ
+ opzfTHj/3iZkmasCmYEIn/BlT5phzi6CaKXS9W41PysLMDcQjNRSAP22iKAdgw90U4KOfafT7mo
+ poBxJv56pkw54ykdQcsIu8dM7BJLDtWC6OAN2JvNEbVMtr5AgnBCtKFwxrFCpsJ/3wAllgiUiS4
+ JBMdh4LJs8TUN7b4OOa/LdqC8+6IJblSiVkB85zwIDEVAQj3vRgrgtEtlTbk7QvDAxjJXtl/ItC
+ eT3OSur8YDLmUfawmjyJT+74QH8RD1OYmRcE2w/8rOJ0qTeMoC8dHlOiTCVQMidj9DNjE80LJC4
+ C5s/RN9IbBgU1v26hOtZQMAYHJEMvMf3pNvtWMsMpVfDww8JjcaBJjVlOqHTpM28jKZGNzkd/ON
+ N3DFMh8wlRCHx6u8HEqrHbAUvJPBvOdvdaLBp+P4GSXf3r1pT6xnvtmVLsMOUDjFOPjthRKFfYz
+ PY8t78OwStN0Z2dtLFSBG5loDV06KMf++bxIrjhALB00C0myBYIjwcB2gEZ5poRrAr1t7OIan6X
+ IN0gU0g8mtlzJAAvQQI2NfkTpGlaPaLqO6h0yldw6HNJ5A+eqKdHqerrv1EETwirBnVGOpe2chT
+ o6yeJWC9mTXYZrg==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Bump the errno dependency for gpiosim-sys and libgpiod crates to the
-most recent version which is a minor update from the one we have now.
-However: let cargo select it automatically by not specifying the bugfix
-version. We need to be stricter than just selecting the major version
-alone because crates with major versions starting with 0 can introduce
-breaking changes in minor releases. No code changes required.
+Bump the cc dependency for gpiosim-sys to the most recent version which
+happens to be a minor upgrade from the one we have currently. However:
+let cargo select it automatically by no longer specifying the minor
+number. No code changes required.
 
 Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
  bindings/rust/gpiosim-sys/Cargo.toml | 2 +-
- bindings/rust/libgpiod/Cargo.toml    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/bindings/rust/gpiosim-sys/Cargo.toml b/bindings/rust/gpiosim-sys/Cargo.toml
-index 7099abe41226236b9cba70a36643b921021952ee..c5e044acdfe94f8ab32d288c90db1233dd223bf9 100644
+index c5e044acdfe94f8ab32d288c90db1233dd223bf9..86324b3e192d8ac4ecb45cc900c75537d2df794e 100644
 --- a/bindings/rust/gpiosim-sys/Cargo.toml
 +++ b/bindings/rust/gpiosim-sys/Cargo.toml
-@@ -15,7 +15,7 @@ license = "Apache-2.0 OR BSD-3-Clause"
- edition = "2021"
- 
- [dependencies]
--errno = "0.2.8"
-+errno = "0.3"
- libgpiod = { path = "../libgpiod" }
+@@ -20,4 +20,4 @@ libgpiod = { path = "../libgpiod" }
  
  [build-dependencies]
-diff --git a/bindings/rust/libgpiod/Cargo.toml b/bindings/rust/libgpiod/Cargo.toml
-index 23c34799715339be02f769a6b4b7de8ae5c1639f..81478209f6746ff0e8d9d311614e8fb218ed6a3e 100644
---- a/bindings/rust/libgpiod/Cargo.toml
-+++ b/bindings/rust/libgpiod/Cargo.toml
-@@ -23,7 +23,7 @@ v2_1 = ["libgpiod-sys/v2_1"]
- vnext = ["v2_1"]
- 
- [dependencies]
--errno = "0.2.8"
-+errno = "0.3"
- intmap = "2.0.0"
- libc = "0.2.39"
- libgpiod-sys = { version = "0.1", path = "../libgpiod-sys" }
+ bindgen = "0.72"
+-cc = "1.0.46"
++cc = "1"
 
 -- 
 2.48.1
