@@ -1,116 +1,166 @@
-Return-Path: <linux-gpio+bounces-24459-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24460-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50B65B28DA4
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Aug 2025 14:26:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4B3FB28E6E
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Aug 2025 16:19:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6A0C91B60DC4
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Aug 2025 12:26:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4A16DAE75EC
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Aug 2025 14:19:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 254372D0C74;
-	Sat, 16 Aug 2025 12:25:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AE5A2E5D38;
+	Sat, 16 Aug 2025 14:19:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EW8PHnpg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIZHRSS3"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DB9218AD4;
-	Sat, 16 Aug 2025 12:25:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50DB413FD86;
+	Sat, 16 Aug 2025 14:19:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755347140; cv=none; b=EEYhHDOutMNo+fOH5MiCG3CKZiaDBTsSQwUXPsOYTZP1nrZcO+JuxCaOZmSw2c9FW78zwW0IvWRw/YShUJymn2E3OwtVbMkOV8tOWbB3gms0wOLdwUKpnjHTjVev5tUxify0uAG+m/OQxw37xD0rsfJakCELz1VtlcZcx1iS9f8=
+	t=1755353951; cv=none; b=XOtKO0SChAkWVwHoRrKc/EIjhThcEdcufh8bkyUNxV8AJCihM2GxxMUOQPaakXo4ZcTbP40rNB14NfXuo18lusb4iDX9E38fuqNLzQU8Jazeta2SHL1lhj7zDDwhU8Teu3mVDO4eBvqsu0KPv8/gU2w8OC4j+5HKVv3/gTMBLdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755347140; c=relaxed/simple;
-	bh=oY+B/69Adbi0UwVW0u+fwOZzOEl8NwITqag5KhSbxfY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OaSmsGoO/VmYtqFDIpyhB6BhwplGBMUZ0YRpq5sAXAJbGpsFo+ilibN30ojQ6Cx7uE86F0g4kflzv9Tv9xjvGUsGGke6lTC4FSzFc7bK4JKzRl0IU3yyTn4VqxDy7688E8sD51KlnZpP+fQxR1OWg+uTXPOEIbW4C/weD+8GV8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EW8PHnpg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C147FC4CEEF;
-	Sat, 16 Aug 2025 12:25:33 +0000 (UTC)
+	s=arc-20240116; t=1755353951; c=relaxed/simple;
+	bh=YcFIevqPRmnHsCDkXNhTN5eFLd3vOH8VP/okgY0uJXY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KaSv21ix7qyKgGHTrFlPBq69gyz4Z6hJNLI52iLTsu6VyFihX6wQTDSLgc7P5lmqWRztngO4rkSSieofG51optMyprSld3rzsmgprBu3JwS2kgC10aZuF82uHIiAi4RW5viYZcD57YWS9lrCGeebviRPBPwUJ+TBb+x3yvhXjfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XIZHRSS3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C19F9C4CEF5;
+	Sat, 16 Aug 2025 14:19:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755347140;
-	bh=oY+B/69Adbi0UwVW0u+fwOZzOEl8NwITqag5KhSbxfY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=EW8PHnpg2h2sn4euvj3mYUdJzPuA6sEy5cAqQLa2eDtTahTGPTAmfRzGjci/fcUCJ
-	 r02u4iVTitqa8gBM+C2YTh3JkPRN3qFLAc0spYERVOXakyjk20lJXfjr1b9Obnv8kF
-	 hDHfD3uCEClcrm9wt8+ioLBAI3a93OAanoPrRqE7g4fs7LoAKo2GeY9NLG1UKpl0vx
-	 GNXddeU4gZHWTC8Xah7JMwcy7i2+SgWsnZZ9U1MgCaxa5Ky6LacuRagJQqC36MD2X7
-	 sbnuFZ3tDh0uS6H7YTTcJq8OS+/nQvqOH6J9s7D8WRF0YYW0njYvQbStCZ6qCATw3h
-	 er1Q2m9ogyTrw==
-Date: Sat, 16 Aug 2025 13:25:28 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko
- <andy.shevchenko@gmail.com>, Matti Vaittinen <mazziesaccount@gmail.com>,
- David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Marcelo Schmitt
- <marcelo.schmitt@analog.com>, Javier Carrasco
- <javier.carrasco.cruz@gmail.com>, Tobias Sperling
- <tobias.sperling@softing.com>, Antoniu Miclaus
- <antoniu.miclaus@analog.com>, Trevor Gamblin <tgamblin@baylibre.com>,
- Esteban Blanc <eblanc@baylibre.com>, Linus Walleij
- <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Matti Vaittinen
- <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [PATCH] iio: adc: bd79124: Add GPIOLIB dependency
-Message-ID: <20250816132528.29180c38@jic23-huawei>
-In-Reply-To: <aJyEzsbYrwwzCdcL@smile.fi.intel.com>
-References: <6837249bddf358924e67566293944506206d2d62.1755076369.git.mazziesaccount@gmail.com>
-	<CAMRc=Mf75cangdeg7T4E0nAhJs_BTdLyCu6GcrCL8vJzzAkFWg@mail.gmail.com>
-	<CAHp75VcY9JWGH3+HmmJQQtLLTLPvaZ1RJzmPZ1wFBM+gqRiTHw@mail.gmail.com>
-	<CAMRc=McL04Sk9YRmimKAALyuDJc75vSJJuZQGWOP87Jv=o7cyw@mail.gmail.com>
-	<aJyEzsbYrwwzCdcL@smile.fi.intel.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
+	s=k20201202; t=1755353950;
+	bh=YcFIevqPRmnHsCDkXNhTN5eFLd3vOH8VP/okgY0uJXY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=XIZHRSS3T/81UV43SIi6itPdlSWPZRBCHS0Zs/JjSZrtw7ic3MIPMfzc+CKQ0VJlr
+	 qHVI7fiSXDUFRaFwsgPRPoXCw923tDI5NAuL+QCY0DU3LnUrIHxuuQFvfO+SDqJzWH
+	 yXWgoNsSNPL57xIqD/cHcKBM8RBVirUWvVTQwa1K3KpcWF9s7ggApBK78dYd675/zF
+	 uDNvTsC4WWHdrZ1BkT7CY6v28HGklNsy4zOPyysmCCpox+MBqi0SxVnvrEkjX20EQG
+	 QD2aKIqbxrcn0wRPH+iqY5cIZWkwr3Z2ioMP+bLTPZ8jc7gInq2mz89KAMprcDQ1e9
+	 hbEfb6Zbo5VRw==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6188b70abdfso3990011a12.2;
+        Sat, 16 Aug 2025 07:19:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVF/amdUQRwguQV0lQTLA2e382n0kxZ9XFfJUGN49cXOF+baHr6F2oT+3aKPxKXUCG1AqGVQJl6E/Gs9XQ6@vger.kernel.org, AJvYcCX5zS0b0rmQR28tuBM3VDAZMQyhABxBFT6pQ7WysIkXAnLsIaYAclK/PpF8osBfEheyAxPlZnDYPRSHlw==@vger.kernel.org, AJvYcCXzA2/w4hwGEC5nlcgHuPTTmecrgROIADXIgdKLD6NO/soaS5HJd8gKJNsBfu/7U1DzE9qLm+8jVwzo@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGAtkDnWAZ4692waSaYMIscl8behXil8SYwhXrX3S51VsaWJbz
+	OUJxgVrebjT/nxdTCf0aJf1lyQSbCZ3ex5frqKaiYO+Mbvavugo3aRBxpM0PLH1Ag6/GQy8u2he
+	2T+e8LB6kEBCkP5L3OzWky66hFK5jMQM=
+X-Google-Smtp-Source: AGHT+IEUkDFwlk9UhU8t342L0FCVGyMnVyPMWk30oqfsuvVTNwMtk4q2cTnYOAkS6eUbn+3TgBvlePgr0B/LX2tiyFU=
+X-Received: by 2002:a05:6402:2708:b0:618:adff:66e5 with SMTP id
+ 4fb4d7f45d1cf-618b054dbd5mr4317218a12.17.1755353949346; Sat, 16 Aug 2025
+ 07:19:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20250816035027.11727-2-ziyao@disroot.org> <20250816035027.11727-3-ziyao@disroot.org>
+In-Reply-To: <20250816035027.11727-3-ziyao@disroot.org>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 16 Aug 2025 22:18:57 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5ZQQpHS_b9UL8UNgX9MH8-i4DV8bid00vEDzg76rgebw@mail.gmail.com>
+X-Gm-Features: Ac12FXwCN0XtFPhP6PgPuh0T8gncotsiBAGxXqlAdAXBDWQBMIikImgkiykBIWA
+Message-ID: <CAAhV-H5ZQQpHS_b9UL8UNgX9MH8-i4DV8bid00vEDzg76rgebw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: gpio: loongson: Document GPIO controller
+ of 2K0300 SoC
+To: Yao Zi <ziyao@disroot.org>
+Cc: Yinbo Zhu <zhuyinbo@loongson.cn>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Philipp Zabel <p.zabel@pengutronix.de>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>, 
+	Kexy Biscuit <kexybiscuit@aosc.io>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 13 Aug 2025 15:27:58 +0300
-Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
+On Sat, Aug 16, 2025 at 11:51=E2=80=AFAM Yao Zi <ziyao@disroot.org> wrote:
+>
+> Loongson 2K0300 ships a GPIO controller whose input/output control logic
+> is similar to previous generation of SoCs. Additionally, it acts as an
+> interrupt-controller supporting both level and edge interrupts and has a
+> distinct reset signal.
+>
+> Describe its compatible in devicetree. We enlarge the maximum value of
+> ngpios to 128, since the controller technically supports at most 128
+> pins, although only 106 are routed out of the package. Properties for
+> interrupt-controllers and resets are introduced and limited as 2K0300
+> only.
+>
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> ---
+>  .../bindings/gpio/loongson,ls-gpio.yaml       | 28 ++++++++++++++++++-
+>  1 file changed, 27 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml=
+ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+> index b68159600e2b..69852444df23 100644
+> --- a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+> @@ -14,6 +14,7 @@ properties:
+>      oneOf:
+>        - enum:
+>            - loongson,ls2k-gpio
+> +          - loongson,ls2k0300-gpio
+>            - loongson,ls2k0500-gpio0
+>            - loongson,ls2k0500-gpio1
+>            - loongson,ls2k2000-gpio0
+> @@ -36,7 +37,7 @@ properties:
+>
+>    ngpios:
+>      minimum: 1
+> -    maximum: 64
+> +    maximum: 128
+>
+>    "#gpio-cells":
+>      const: 2
+> @@ -49,6 +50,14 @@ properties:
+>      minItems: 1
+>      maxItems: 64
+>
+> +  "#interrupt-cells":
+> +    const: 2
+> +
+> +  interrupt-controller: true
+ls2k300 supports interrupt-controller while others don't?
 
-> On Wed, Aug 13, 2025 at 02:17:44PM +0200, Bartosz Golaszewski wrote:
-> > On Wed, Aug 13, 2025 at 12:07=E2=80=AFPM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote: =20
-> > > On Wed, Aug 13, 2025 at 11:40=E2=80=AFAM Bartosz Golaszewski <brgl@bg=
-dev.pl> wrote: =20
-> > > > On Wed, 13 Aug 2025 11:16:06 +0200, Matti Vaittinen
-> > > > <mazziesaccount@gmail.com> said: =20
->=20
-> ...
->=20
-> > > > As for the former: it seems it's
-> > > > a common pattern for the headers containing the "provider" part of =
-the
-> > > > subystem API, you'd get the same issue with regulators or pinctrl.
-> > > >
-> > > > I don't have a good answer, I'd just apply this as it's not a commo=
-n issue
-> > > > from what I can tell. =20
-> > >
-> > > If the GPIO functionality is optional (not the main one), the user
-> > > should be able to compile it conditionally, in such a case it's either
-> > > an ifdeffery in the code, or separate module with its own stubs. =20
-> >=20
-> > Honestly, it makes much more sense to factor out that optional
-> > functionality into its own compilation unit that can be left out
-> > completely for !CONFIG_GPIOLIB with a single internal registration
-> > function being stubbed within the driver. =20
->=20
-> That's what I suggested under "separate module with its own stubs" above.
->=20
+Huacai
 
-I agree that's the long term ideal. For now I'm going to queue this fix
-up and mark it for stable.  We can tidy up and make it optional again
-as a follow up.
-
-Jonathan
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -58,6 +67,23 @@ required:
+>    - gpio-ranges
+>    - interrupts
+>
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: loongson,ls2k0300-gpio
+> +    then:
+> +      required:
+> +        - "#interrupt-cells"
+> +        - interrupt-controller
+> +        - resets
+> +    else:
+> +      properties:
+> +        "#interrupts-cells": false
+> +        interrupt-controller: false
+> +        resets: false
+> +
+>  additionalProperties: false
+>
+>  examples:
+> --
+> 2.50.1
+>
 
