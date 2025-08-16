@@ -1,52 +1,52 @@
-Return-Path: <linux-gpio+bounces-24463-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24464-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C9CEB290DD
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Aug 2025 00:22:03 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B111BB290F0
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Aug 2025 01:18:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B06665A70A2
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Aug 2025 22:21:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 595993BE7C8
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Aug 2025 23:17:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4707A22FF35;
-	Sat, 16 Aug 2025 22:21:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 545A1235BEE;
+	Sat, 16 Aug 2025 23:17:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jX2O/3Yd"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oNmJehO7"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC941F37D3;
-	Sat, 16 Aug 2025 22:21:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C8E3176E9;
+	Sat, 16 Aug 2025 23:17:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755382909; cv=none; b=Ucpus5TGLJPmPeY+qWu1+zwsVpNr/QYDjnFebpoWZaq0M6FIvUyIsJcwFHPAV8OotL7R0MCcZPemJXxQmI3KPTyBTJqw7GH1TmC4pPXLdAmrzrUEQ1re43pRTeSGSoFrRKt1p+XCZr25/Lrto+F8rxOHjGinK6LQaipm/mOkmgY=
+	t=1755386256; cv=none; b=SRXtQWkxNY6CCHeeJ5YcF3jBTBfMOzLXhVIhL9bca0vXVKhpRFVCaX5RruAyflHwJE9owMc7DICCKMINERV1+HA2fvIumKS3DIulZ1AILI1eO7k+GABRJ6Dfew7VGB1yXxjjbWSJ2oUiUw3W8jPp8laELTKBHjkPP2D3pRIybjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755382909; c=relaxed/simple;
-	bh=POZiiRoW0Q95mTqicGqW7rCGIZPQgbxHRe6//YklMyI=;
+	s=arc-20240116; t=1755386256; c=relaxed/simple;
+	bh=vrPXcmK+Ra08RobKOAqFOKjPp3JC1U5aS7aurWKvChk=;
 	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=pznMfA9EfgPltPFX57ucj7Ed+r33WTRN0EmWkEgw5MQopSMpKyXeaoaMA1kv5f4p7h3ktZcoY7g498PAjT0fx6cFF2MJZUPvHvwkrvzE9lS6suv+ry5t5CpOVi/B84rtKuDfaFuJuCWNATn8Y171hcrCncxon1zelrujDKJz8NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jX2O/3Yd; arc=none smtp.client-ip=198.137.202.133
+	 In-Reply-To:Content-Type; b=GFWQkXKqp6LqAfZbdr3PWFquFkcfizVlhm4dzwFhAdSz55ngewDdkZVHUCeOeiDI8Qc6JyCeJP+EforHUgoqzYRplZ0mOGKzeikobzudC8Pp71Kfiz6ThZBahOX2NVZ6JoFQiCPmxGF2x2Z7h7OlbEMWmzO8M1t6FkRLLCioCUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oNmJehO7; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
 	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=a3h+69WsCBuWOsitu6hH7djSGpiTv/oInvE97Mi8riA=; b=jX2O/3YdRSnE4idaXPusOKGsO9
-	mPoGLxzHBGGgrZ/c7xEA5AO7K0bCg6YZxLCYi0ij+PVbvITKJwureKzp7M0CUKkrck9vRP08Pf+Jm
-	ltoblZV1+mDLTdc1YaPl4AdTQVI/LCeE1fBUyWZfcG7aukPoKi/oH9V6wPqVYcDWcwoHWsOZod+Ir
-	NLxcCZAhjl/hoonev6kFIsBJr61lgLkip6j0XjRIIgGz4E4iVKS9wW6ftSL8+2cR3FdbhduT1rAoQ
-	Ft+AyJBvBYUKU9652ZnEPh3Cm+U07r/jLECxJjspydQdEeM930TpYwf0IKA42ecAB2FFZIpiT2idw
-	P6hSxFcQ==;
+	bh=hvNsaXUHLp5w6bIeON9XakFAzxRfvKyhOfepozVZjXQ=; b=oNmJehO7CxUuYKh0wjQhgxcRQu
+	yvFKrcRddekGuSskFbYOA9574Uf1857mLHC4CaTTpN1oboVdoMUjZmXuTGrICWXw0GGZOnAjEUloA
+	6HbOaq61+7BjzoyRuLSZsmGvdW5AzRRenPhlhkIFAZfxWJZRa7vVLNRWkYCXdn7xXPQGt17S22cVs
+	2YGydC7hPQ0FN/rbBT+9QKT4al+atIU1dmSiGdLdkSArCTR0rxHJzE9U3wV0iwf3jF/en+RfO28wA
+	ZJGvUk6FdpuCNB7wcea2Aac7FdVMWKgL4TMw7vCfV34+c9G2BA+uyeRpJe4loIHwkzao/UFFw99pv
+	O2hN/jzg==;
 Received: from [50.53.25.54] (helo=[192.168.254.17])
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1unPHV-00000005CAZ-0q6V;
-	Sat, 16 Aug 2025 22:21:46 +0000
-Message-ID: <f93c26c6-c390-46d4-bdd1-4d2f0e03e63d@infradead.org>
-Date: Sat, 16 Aug 2025 15:21:44 -0700
+	id 1unQ9V-00000005DPF-2PtZ;
+	Sat, 16 Aug 2025 23:17:33 +0000
+Message-ID: <b69d92aa-2d41-4b79-ad15-75b73897e263@infradead.org>
+Date: Sat, 16 Aug 2025 16:17:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -66,43 +66,47 @@ Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
  linux-kernel@vger.kernel.org
 References: <ce4pjordujfvaujjgxruszba7ivoywex32rfwzeiil2zcdlgl5@lt4vvv4yalzm>
  <8bdf668d-c120-4ed5-a0f4-fe8c0876c8d2@infradead.org>
+ <f93c26c6-c390-46d4-bdd1-4d2f0e03e63d@infradead.org>
 Content-Language: en-US
-In-Reply-To: <8bdf668d-c120-4ed5-a0f4-fe8c0876c8d2@infradead.org>
+In-Reply-To: <f93c26c6-c390-46d4-bdd1-4d2f0e03e63d@infradead.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 8/16/25 3:08 PM, Randy Dunlap wrote:
-> Hi,
-> 
-> I have a few more nits...
+On 8/16/25 3:21 PM, Randy Dunlap wrote:
 > 
 > 
-> On 8/15/25 10:30 AM, Dmitry Torokhov wrote:
->> Introduce documentation regarding use of software nodes to describe
->> GPIOs on legacy boards that have not been converted to device tree.
+> On 8/16/25 3:08 PM, Randy Dunlap wrote:
+>> Hi,
 >>
->> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->> ---
->>
->> v2: Addressed Randy's comments.
->>
->>  Documentation/driver-api/gpio/board.rst       |  65 ++++
->>  Documentation/driver-api/gpio/index.rst       |   1 +
->>  .../driver-api/gpio/legacy-boards.rst         | 298 ++++++++++++++++++
->>  3 files changed, 364 insertions(+)
->>
+>> On 8/15/25 10:30 AM, Dmitry Torokhov wrote:
+>>> Introduce documentation regarding use of software nodes to describe
+>>> GPIOs on legacy boards that have not been converted to device tree.
+>>>
+>>> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>>> ---
+>>>
+>>> v2: Addressed Randy's comments.
+>>>
+>>>  Documentation/driver-api/gpio/board.rst       |  65 ++++
+>>>  Documentation/driver-api/gpio/index.rst       |   1 +
+>>>  .../driver-api/gpio/legacy-boards.rst         | 298 ++++++++++++++++++
+>>>  3 files changed, 364 insertions(+)
 
+Hi Dmitry,
 
-> Overall, this looks good. Thanks.
-> 
-> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+There are a few build errors with the example code. It's OK to leave that
+as an exercise for the reader. :)
 
-I also tested the docs build and it looks good.
+There are a few missing header files, but the biggest build warning/error
+is a Section mismatch:
+WARNING: modpost: gpio-swnodes: section mismatch in reference: myboard_exit+0x1f (section: .exit.text) -> myboard_swnodes (section: .init.rodata)
 
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
+so myboard_swnodes should not be marked as __initconst.
 
+cheers.
 -- 
 ~Randy
+
 
