@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-24457-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24458-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1439B28BDF
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Aug 2025 10:29:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1391B28C94
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Aug 2025 11:49:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B52104E05B4
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Aug 2025 08:29:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 423161C85FB5
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Aug 2025 09:50:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 928612376F2;
-	Sat, 16 Aug 2025 08:29:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E70C28A3FA;
+	Sat, 16 Aug 2025 09:49:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i7r19cKb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ehuGdz9z"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34FAB22DA06;
-	Sat, 16 Aug 2025 08:29:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B871AA1D9;
+	Sat, 16 Aug 2025 09:49:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755332945; cv=none; b=VerSMVNugq6LqPUdsJGfKB3uiOnkNHPqER0JGGpp0hbohSOpbybvb9bCkVVd2gTJdfiu2yOhyUIjEYGT4ZwYLe9omiUBNuVtf4FAHQWY4ZBZcVG18ZhkPWIJfcjgj42iVXkP41Y2hu9mZGce5lWs6F7ASlppebXtwl855UreI3Y=
+	t=1755337791; cv=none; b=agtdKiHabxFSNbjg6mnUnKdt+x4hDRZIqu3xpcMArWJKQCRpe6EFe7m8QfdpgeX32PxcEsHwUOPFT1A+XgeR3LiZ/+gJmjpu73Bu1heuaEK4nQCWThuxrgmDGm/WALkBnFzdioyMKlh0kNxJScpkMxVwTFNZbmU5oNunNEbWoDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755332945; c=relaxed/simple;
-	bh=A8xxdPa5/JUVr8ScJmZ4Y9ktbdrnVbk09I0nvPpS8f4=;
+	s=arc-20240116; t=1755337791; c=relaxed/simple;
+	bh=leJ+kLeCoibTebWAlijl6gV/kTK3C57W2w0vK32dMLk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tzIeH4ulhXira9rIbA1sWG718+j2ROdmqzs27kU7mvjxGsdS6j9ecFodkujZTmDboLWdRVA2TJ7rfku/Aotqmy6u+LA6sW2Gj6jE9BxyVPSDrEn2JOdQwht9L9WmgouJ+h923RDE8M2COkZtICiIXKQZVDjEeXh+fZFeUxxuyeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i7r19cKb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 432E2C4CEEF;
-	Sat, 16 Aug 2025 08:29:00 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=th8pxfbhknDfUAR0/flHWucw5sDfhZePIM82tiZKEnVc0b5gfCh0JtIs/gKDVy1F+B9qACJUQM5l4OTeaZmtXiAZooxIJP5p/7wo7TqnyAQAiy+NPETf4plv9CmWjAoQt/LlIuxCWPI4RiSplyj/i/JMq6XPMiVpEYKNxbI0gF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ehuGdz9z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEAE9C4CEEF;
+	Sat, 16 Aug 2025 09:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755332944;
-	bh=A8xxdPa5/JUVr8ScJmZ4Y9ktbdrnVbk09I0nvPpS8f4=;
+	s=k20201202; t=1755337791;
+	bh=leJ+kLeCoibTebWAlijl6gV/kTK3C57W2w0vK32dMLk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=i7r19cKbR/od3lzZpjnRNNMZVwbbaD18fZiSQGGMZW6ZBMORU40IgbxmGTG66c99x
-	 5N18PZtX57SqB648uhJml7wZv86QLuvQGDOR9iV78aQ5yx4f2tpGUVgBpiw/OKqS+y
-	 YD6rt/YRsChlAAzXUMKu7BO9kOs1qtlAn2Q5M1Bgg3ogLC1t2S+DwUiJI4VBppeMtb
-	 Twb8oGOmPRkE6+cePeeY1hsEhRuljwXP7N38HAUkPSx7hUb5XuCUTtHYmPt7/rw01f
-	 TAk3Wlmf6Y9AIR+qrCoQCO2cCj8SCSlcRLreVC7iE8F5cT+6G0fqcE8L4ndnN6qOCp
-	 RBXKR6eE4w5hw==
-Message-ID: <fb1a7290-721e-4bde-aab3-d1edd0630862@kernel.org>
-Date: Sat, 16 Aug 2025 10:28:58 +0200
+	b=ehuGdz9zmRfK+sP1ZrB0lH3OwjJ8Glal5nS+iqAKHyhDyxxW3zgppOyA4ayGnZSM+
+	 7MDZEmGGzVPkf+Sn7Wvd72O2j97aRD4xOV44B0DFooDDGYPjV1HTRMT1Ks1AMo7hco
+	 ItJ6MjrLvqogYhB7qtuF0hmKQaGVwU1BIfLFnp83iqckDE+LyWFUv37ZA3ofgKE+I2
+	 TTmlIyh+EwqrGGfGkjpCGo3TcbSf1liF5MBIAGrgXHtvo3h+M26CQyA3mzipEUjrQO
+	 YBclxKSTpEGGVqiOon+keYvSE59HwhCKkxm+BXy+81G+4f3Z37G6ELqly/5+fcq8Yp
+	 T8cwUyRQYpHtQ==
+Message-ID: <601338fe-8db8-455b-978f-02200523a123@kernel.org>
+Date: Sat, 16 Aug 2025 11:49:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,21 +50,19 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/2] ASoC: codecs: wsa883x: Handle shared reset GPIO
- for WSA883x speakers
-To: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>,
- Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+Subject: Re: [PATCH 1/3] dt-bindings: gpio: loongson: Document GPIO controller
+ of 2K0300 SoC
+To: Yao Zi <ziyao@disroot.org>, Yinbo Zhu <zhuyinbo@loongson.cn>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Philipp Zabel <p.zabel@pengutronix.de>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, kernel@oss.qualcomm.com,
- Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-References: <20250815172353.2430981-1-mohammad.rafi.shaik@oss.qualcomm.com>
- <20250815172353.2430981-3-mohammad.rafi.shaik@oss.qualcomm.com>
+ <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
+References: <20250816035027.11727-2-ziyao@disroot.org>
+ <20250816035027.11727-3-ziyao@disroot.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -110,21 +108,22 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250815172353.2430981-3-mohammad.rafi.shaik@oss.qualcomm.com>
+In-Reply-To: <20250816035027.11727-3-ziyao@disroot.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 15/08/2025 19:23, Mohammad Rafi Shaik wrote:
-> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-> 
-> On some Qualcomm platforms such as QCS6490-RB3Gen2, the multiple
-> WSA8830/WSA8835 speaker amplifiers share a common reset (shutdown) GPIO.
-> 
-> To handle such scenario, use the reset controller framework and its
-> "reset-gpio" driver to handle such case. This allows proper handling
-> of all WSA883x speaker amplifiers on QCS6490-RB3Gen2 board.
-> 
-> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+On 16/08/2025 05:50, Yao Zi wrote:
+>  
+> +  "#interrupt-cells":
+> +    const: 2
+> +
+> +  interrupt-controller: true
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+You should have probably separate binding if you need three new properties.
+
 
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
