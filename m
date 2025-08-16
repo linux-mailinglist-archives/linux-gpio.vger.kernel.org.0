@@ -1,222 +1,258 @@
-Return-Path: <linux-gpio+bounces-24461-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24462-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B57D7B28F53
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Aug 2025 18:08:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34628B290D5
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Aug 2025 00:08:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 131B01CC398C
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Aug 2025 16:08:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 689DDAC3372
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Aug 2025 22:08:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4AC628D85D;
-	Sat, 16 Aug 2025 16:08:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2FFE2135CE;
+	Sat, 16 Aug 2025 22:08:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="IELA6aiB"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t6PoffLE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3FFB5464D;
-	Sat, 16 Aug 2025 16:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753551E489;
+	Sat, 16 Aug 2025 22:08:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755360496; cv=none; b=ST4sozP6MGxYBl6MpSdk90t1VchmGxAzk4V2ijHa47ny2iYQympwOCbqaR8etizmGCXqNU2m06MCQkytY+ntDeydSGQVO6qDEpRiOGJS6bDXaI7o2Vm0IjUx14z87U3OkoCHFv2k1BRCZBNZW6lMo5qq8H4HvXNg6un9uwqMnto=
+	t=1755382130; cv=none; b=XPkXpOFrW9HT75nAWOyAPQfRU7nBRojimk/APKReml5aigZtA0spIQqtN0udrzXgpDnObnQfuLNvpkyVCB4EeZXpAlP/ixbyZPbPP5n4t+7dkieNsWgAXSH8qTOnSRM330pN86AM0WdM/bCbV2bfFEGsGLdAudsTK9Q7AemXeR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755360496; c=relaxed/simple;
-	bh=oSXu/5bEZ9WlhAtEdxk5ZZ6vNoMPX9phFwiUWWadqvc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SuEO3i1KTPxsyJKb5YzBVkH1Pops08+xJs/pjmJ/66VRkRxpW3Cph2XipEWknM4AOpUamCy8REoJ3Cq05MIUFP4zCimbGidQ6INqk9uJkrOg6DbnlvGz8nfekBPDaim6ujTrSdOupWZoDk86471GXrrWq1jJYL/y4lbRQE8AlNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=IELA6aiB; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id C1B8222B44;
-	Sat, 16 Aug 2025 18:08:12 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 5vBCi2Do4UOV; Sat, 16 Aug 2025 18:08:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1755360492; bh=oSXu/5bEZ9WlhAtEdxk5ZZ6vNoMPX9phFwiUWWadqvc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=IELA6aiBcm3HMTEUydHZCrrPcJ5NtlDuORsKQvVPYYeJjH5ERsS3B9sWzjEst/oGs
-	 1f7rjUNwvmmBAcmdGlRABwGCfndD6JWwoDCeQLfpdFWULZU/nplHbkOKtHnnGQLNTC
-	 P27gDeRs0VjlultmUXco9VyHHM8NIe0tBVQwBgx6EeWk9jJFoKOrQdv+J5oZtQ5Xmx
-	 HTf0BtDZ1Zj6LHB/TxzRV4exQTFZ3TisVihCgOVV4rcHaiahs9XfsyFajcSJfxt7Mz
-	 Vh4l9Anys9IYCR+CR/eKm8trWct8WGU4WHp50ZOWmC8QtfPq9XhWzVJSmmyUVw94ge
-	 EyEmtR/hAYOqA==
-Date: Sat, 16 Aug 2025 16:07:54 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH 1/3] dt-bindings: gpio: loongson: Document GPIO
- controller of 2K0300 SoC
-Message-ID: <aKCs2jUcYxYHWIB2@pie>
-References: <20250816035027.11727-2-ziyao@disroot.org>
- <20250816035027.11727-3-ziyao@disroot.org>
- <CAAhV-H5ZQQpHS_b9UL8UNgX9MH8-i4DV8bid00vEDzg76rgebw@mail.gmail.com>
+	s=arc-20240116; t=1755382130; c=relaxed/simple;
+	bh=OYPXltTxOZatL8me6emnn9BLtSg+cy+e/iB9ifPSD1Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MWc3cxFpehq9MCpwwMCJRFWntb3Huw3GL0Z5i5+5hwf+/l+yEHObaijkxa62GCPYBsDPX1X7ZQ6/EsjJNaEB4NSlFmTygjS0y/5e+6QoCUyH5pBUPeDueqdTPan3uZC2d8j9NaaU2KIdwi6qKE2UMfbyoRpe9aNzDtg5MPfM25Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=t6PoffLE; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=rFkWGWdQRzztsmRM3Sy7XqlLqyMpY+WbTNHgy3h7xFA=; b=t6PoffLEve7V8Igt9hion6HKix
+	yADZASELNy9Hm1cLp+jpqzpYu9XBQJDQrROd1Caeuruibku6YVDWUxtbCxQbFBhLPPnSOPZIn0wAh
+	pyL9zbjUdxfc23wQWjXYW2eCJYWP2lE1IBP11SRB8+sZFZutkq61nwRPP5Rg3g3xGorofBQAJgV53
+	wXetuLwq8j5YWo6iqJuDB+GEUuOpSBErULPDXGi/6c7hlXGd3rXyxVFERMUhGSfo4FJEgnXjSmnOA
+	XaBdgf3dGaRp7nFL2J8KSI1O1g/dimyynGlg9DJDU2y/UJ331aWfQZZErKFW8Dp0zkiPPBZUofQVV
+	pXiMTzyw==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1unP4v-00000005Bto-3Igw;
+	Sat, 16 Aug 2025 22:08:45 +0000
+Message-ID: <8bdf668d-c120-4ed5-a0f4-fe8c0876c8d2@infradead.org>
+Date: Sat, 16 Aug 2025 15:08:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H5ZQQpHS_b9UL8UNgX9MH8-i4DV8bid00vEDzg76rgebw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] Documentation: gpio: add documentation about using
+ software nodes
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Jonathan Corbet <corbet@lwn.net>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Arnd Bergmann <arnd@kernel.org>, Hans de Goede <hansg@kernel.org>,
+ linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <ce4pjordujfvaujjgxruszba7ivoywex32rfwzeiil2zcdlgl5@lt4vvv4yalzm>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <ce4pjordujfvaujjgxruszba7ivoywex32rfwzeiil2zcdlgl5@lt4vvv4yalzm>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Aug 16, 2025 at 10:18:57PM +0800, Huacai Chen wrote:
-> On Sat, Aug 16, 2025 at 11:51 AM Yao Zi <ziyao@disroot.org> wrote:
-> >
-> > Loongson 2K0300 ships a GPIO controller whose input/output control logic
-> > is similar to previous generation of SoCs. Additionally, it acts as an
-> > interrupt-controller supporting both level and edge interrupts and has a
-> > distinct reset signal.
-> >
-> > Describe its compatible in devicetree. We enlarge the maximum value of
-> > ngpios to 128, since the controller technically supports at most 128
-> > pins, although only 106 are routed out of the package. Properties for
-> > interrupt-controllers and resets are introduced and limited as 2K0300
-> > only.
-> >
-> > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > ---
-> >  .../bindings/gpio/loongson,ls-gpio.yaml       | 28 ++++++++++++++++++-
-> >  1 file changed, 27 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
-> > index b68159600e2b..69852444df23 100644
-> > --- a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
-> > +++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
-> > @@ -14,6 +14,7 @@ properties:
-> >      oneOf:
-> >        - enum:
-> >            - loongson,ls2k-gpio
-> > +          - loongson,ls2k0300-gpio
-> >            - loongson,ls2k0500-gpio0
-> >            - loongson,ls2k0500-gpio1
-> >            - loongson,ls2k2000-gpio0
-> > @@ -36,7 +37,7 @@ properties:
-> >
-> >    ngpios:
-> >      minimum: 1
-> > -    maximum: 64
-> > +    maximum: 128
-> >
-> >    "#gpio-cells":
-> >      const: 2
-> > @@ -49,6 +50,14 @@ properties:
-> >      minItems: 1
-> >      maxItems: 64
-> >
-> > +  "#interrupt-cells":
-> > +    const: 2
-> > +
-> > +  interrupt-controller: true
-> ls2k300 supports interrupt-controller while others don't?
+Hi,
 
-For these SoCs' GPIO controllers (I didn't carefully check 3A{5,6}00 and
-7A{1,2}00), there're three different cases,
+I have a few more nits...
 
-1. Controller of 2K0500, 2K1000:
 
-   These controllers have only interrupt enable bits for each GPIO.
-   Interrupts are routed directly to the parent interrupt controller and
-   there're multiple pins share the same interrupt in the parent, e.g.,
-   GPIO 0-31 share interrupt 26 of the second liointc on 2K0500.
+On 8/15/25 10:30 AM, Dmitry Torokhov wrote:
+> Introduce documentation regarding use of software nodes to describe
+> GPIOs on legacy boards that have not been converted to device tree.
+> 
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+> 
+> v2: Addressed Randy's comments.
+> 
+>  Documentation/driver-api/gpio/board.rst       |  65 ++++
+>  Documentation/driver-api/gpio/index.rst       |   1 +
+>  .../driver-api/gpio/legacy-boards.rst         | 298 ++++++++++++++++++
+>  3 files changed, 364 insertions(+)
+> 
+> diff --git a/Documentation/driver-api/gpio/board.rst b/Documentation/driver-api/gpio/board.rst
+> index 4fd1cbd8296e..b802b4eef2cd 100644
+> --- a/Documentation/driver-api/gpio/board.rst
+> +++ b/Documentation/driver-api/gpio/board.rst
+> @@ -94,6 +94,71 @@ with the help of _DSD (Device Specific Data), introduced in ACPI 5.1::
+>  For more information about the ACPI GPIO bindings see
+>  Documentation/firmware-guide/acpi/gpio-properties.rst.
+>  
+> +Software Nodes
+> +--------------
+> +
+> +Software nodes allow board specific code to construct an in-memory,
 
-   Since we have neither an interrupt status register nor interrupt ack
-   bits, it's hard to tell which GPIO line is triggering the interrupt.
-   And we even cannot configure the polarity/edge for triggering
-   interrupts, thus I don't think these GPIO controller should be
-   described as interrupt controllers.
+                        board-specific
 
-   For these controllers, gpio-loongson-64bit.c implements GPIO
-   controller's .to_irq() method which translates GPIO descriptor to
-   corresponding IRQ number. This should work as long as there's at most
-   one interrupt consumer for each group of GPIOs that share the same
-   parent interrupt line.
+> +device-tree-like structure using struct software_node and struct
+> +property_entry. This structure can then be associated with a platform device,
+> +allowing drivers to use the standard device properties API to query
+> +configuration, just as they would on an ACPI or device tree system.
+> +
+> +Software-node-backed GPIOs are described using ``PROPERTY_ENTRY_GPIO()`` macro,
 
-2. Node controller of 2K1500 and 2K2000:
+                                            using the ...
 
-   These SoCs have GPIO controllers directly attached to the "node" (I
-   think it means the CPU core, but am not sure). These controllers are
-   similar to the first class, but they have an additional feature that
-   the polarity for triggering interrupts could be configured.
+> +which ties a software node representing GPIO controller with consumer device.
 
-   Still we couldn't precisely tell which GPIO line is triggering the
-   interrupt, thus it's hard to implement it as a fully-functional
-   irqchip, either. But if we don't do so, I cannot come up with a way
-   to describe the polarity settings. I'm unsure whether these
-   controllers should be implemented as interrupt controllers.
+                              representing {a | the} GPIO controller ...
 
-3. South-bridge controller of 2K1500 and 2K2000, and 2K0300's
-   controller:
+> +It allows consumers to use regular gpiolib APIs, such as gpiod_get(),
+> +gpiod_get_optional().
+> +
+> +The software node representing GPIO controller need not be attached to the GPIO
 
-   Reading through the public TRM, I'm sure these're all fully
-   functional interrupt controllers, and should be implemented as
-   interrupt controllers.
+                     representing a GPIO ...
 
-   However, this also means the current binding for 2K1500/2K2000's
-   south-bridge controller is WRONG, and a fix it seems to bring in ABI
-   breakages (interrupt-controller/interrupt-cells are a must). But
-   since I don't have these devices on hand, and they are at least not
-   related to the situation of 2K0300, I decided to keep them as-is.
+> +controller device. The only requirement is that the node must be registered and
+> +its name must match the GPIO controller's label.
+> +
+> +For example, here is how to describe a single GPIO-connected LED. This is an
+> +alternative to using platform_data on legacy systems.
+> +
+> +.. code-block:: c
+> +
+> +	#include <linux/property.h>
+> +	#include <linux/gpio/machine.h>
+> +	#include <linux/gpio/property.h>
+> +
+> +	/*
+> +	 * 1. Define a node for the GPIO controller. Its .name must match the
+> +	 *    controller's label.
+> +	 */
+> +	static const struct software_node gpio_controller_node = {
+> +		.name = "gpio-foo",
+> +	};
+> +
+> +	/* 2. Define the properties for the LED device. */
+> +	static const struct property_entry led_device_props[] = {
+> +		PROPERTY_ENTRY_STRING("label", "myboard:green:status"),
+> +		PROPERTY_ENTRY_STRING("linux,default-trigger", "heartbeat"),
+> +		PROPERTY_ENTRY_GPIO("gpios", &gpio_controller_node, 42, GPIO_ACTIVE_HIGH),
+> +		{ }
+> +	};
+> +
+> +	/* 3. Define the software node for the LED device. */
+> +	static const struct software_node led_device_swnode = {
+> +		.name = "status-led",
+> +		.properties = led_device_props,
+> +	};
+> +
+> +	/*
+> +	 * 4. Register the software nodes and the platform device.
+> +	 */
+> +	const struct software_node *swnodes[] = {
+> +		&gpio_controller_node,
+> +		&led_device_swnode,
+> +		NULL
+> +	};
+> +	software_node_register_node_group(swnodes);
+> +
+> +	// Then register a platform_device for "leds-gpio" and associate
+> +	// it with &led_device_swnode via .fwnode.
+> +
+> +For a complete guide on converting board files to use software nodes, see
+> +Documentation/driver-api/gpio/legacy-boards.rst.
+> +
+>  Platform Data
+>  -------------
+>  Finally, GPIOs can be bound to devices and functions using platform data. Board
+> diff --git a/Documentation/driver-api/gpio/index.rst b/Documentation/driver-api/gpio/index.rst
+> index 43f6a3afe10b..87929840e85a 100644
+> --- a/Documentation/driver-api/gpio/index.rst
+> +++ b/Documentation/driver-api/gpio/index.rst
+> @@ -12,6 +12,7 @@ Contents:
+>     driver
+>     consumer
+>     board
+> +   legacy-boards
+>     drivers-on-gpio
+>     bt8xxgpio
+>  
+> diff --git a/Documentation/driver-api/gpio/legacy-boards.rst b/Documentation/driver-api/gpio/legacy-boards.rst
+> new file mode 100644
+> index 000000000000..deef5c5cf417
+> --- /dev/null
+> +++ b/Documentation/driver-api/gpio/legacy-boards.rst
+> @@ -0,0 +1,298 @@
+> +Supporting Legacy Boards
+> +========================
+> +
+> +Many drivers in the kernel, such as ``leds-gpio`` and ``gpio-keys``, are
+> +migrating away from using board-specific ``platform_data`` to a unified device
+> +properties interface. This interface allows drivers to be simpler and more
+> +generic, as they can query properties in a standardized way.
+> +
+> +On modern systems, these properties are provided via device tree. However, some
+> +older platforms have not been converted to device tree and instead rely on
+> +board files to describe their hardware configuration. To bridge this gap and
+> +allow these legacy boards to work with modern, generic drivers, the kernel
+> +provides a mechanism called **software nodes**.
+> +
+> +This document provides a guide on how to convert a legacy board file from using
+> +``platform_data`` and ``gpiod_lookup_table`` to the modern software node
+> +approach for describing GPIO-connected devices.
+> +
+> +The Core Idea: Software Nodes
+> +-----------------------------
+> +
+> +Software nodes allow board specific code to construct an in-memory,
 
-So the answer to the original question is, no, at least 2K1500/2K2000's
-south-bridge GPIO controllers are also interrupt controllers according
-to their public documentation. But I cannot test my GPIO changes against
-them since I don't have such boards, and fixing the binding up may break
-the ABI, thus I leave them as-is in this "support for 2K0300" series.
+                        board-specific
 
-> Huacai
+> +device-tree-like structure using struct software_node and struct
+> +property_entry. This structure can then be associated with a platform device,
+> +allowing drivers to use the standard device properties API (e.g.,
+> +device_property_read_u32(), device_property_read_string()) to query
+> +configuration, just as they would on an ACPI or device tree system.
+> +
+> +The gpiolib code has support for handling software nodes, so that if GPIO is
+> +described properly, as detailed in the section below, then regular gpiolib APIs,
+> +such as gpiod_get(), gpiod_get_optional(), and others will work.
+> +
+> +Requirements for GPIO Properties
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +When using software nodes to describe GPIO connections, the following
+> +requirements must be met for the GPIO core to correctly resolve the reference:
+> +
+> +1.  **The GPIO controller's software node "name" must match the controller's
+> +    "label".** The gpiolib core uses this name to find the corresponding
+> +    struct gpio_chip at runtime.
+> +    This software node has to be registered, but need not be attached to the
+> +    device representing GPIO controller that is providing GPIO in question.
 
-Best regards,
-Yao Zi
+              representing the GPIO controller that is providing the GPIO in question.
 
-> > +
-> > +  resets:
-> > +    maxItems: 1
-> > +
-> >  required:
-> >    - compatible
-> >    - reg
-> > @@ -58,6 +67,23 @@ required:
-> >    - gpio-ranges
-> >    - interrupts
-> >
-> > +allOf:
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            const: loongson,ls2k0300-gpio
-> > +    then:
-> > +      required:
-> > +        - "#interrupt-cells"
-> > +        - interrupt-controller
-> > +        - resets
-> > +    else:
-> > +      properties:
-> > +        "#interrupts-cells": false
-> > +        interrupt-controller: false
-> > +        resets: false
-> > +
-> >  additionalProperties: false
-> >
-> >  examples:
-> > --
-> > 2.50.1
-> >
+
+> +    It may be left as a "free floating" node.
+> +
+
+
+Overall, this looks good. Thanks.
+
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+
+-- 
+~Randy
 
