@@ -1,75 +1,77 @@
-Return-Path: <linux-gpio+bounces-24466-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24467-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C65EB29374
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Aug 2025 16:30:33 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01871B29376
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Aug 2025 16:30:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 288D52A2649
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Aug 2025 14:30:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EB6F52A25F5
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Aug 2025 14:30:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64C0D29E103;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEC4829B21C;
 	Sun, 17 Aug 2025 14:30:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DlQ65HXr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YuKyj/8T"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6793A17A30F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E401229E0FA;
 	Sun, 17 Aug 2025 14:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755441030; cv=none; b=gz/4CLu7HcUVLB8X0lMiffaHQF2GKLccn6tw2Q8RHzV17NxlXvedlU6UAk/GC5HgXR+yDSn/lU2pfWzOJej51SihFEIsylxW6IUUcS58oEbuenqiUMybr6jhLn1W5+HfmCP855+kKplV/0Xzad2HpwN2u/r8pQKI/CoxUOlkhMc=
+	t=1755441030; cv=none; b=FEwX+c5dpCAwry1hEN3IHNiXgFFuP9buJcrH9JBmm8e0grOQpLo6lmhg5BHfvmPsI5t2qTs/Tq8nHg93qGtdsBGW+9rwm9Idk/kprey0YZsBxvmi5SduaAlUXbK1fK7Ec7svOghC5mj7JVlrO10guvCEPhnpGCFNILswjtkaoZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1755441030; c=relaxed/simple;
-	bh=yyL+H0dsloXKazlsaVm9/CD3K1VYBupg7Oo7jh9Jkz8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rcv8rf8kSMJE/7qxYJZ6zCB4cd2eTfTHQI4jL/eOshSYqB/gB40ha1AxSkL0P2WG3/qCYuxQMRbMsiGu5wpywzr/leNsWY2iLs9/Ga/IlioO06NT4TvDnHIV2OFHxp011Cjx4mrDv/rKhMRilmspGKXnAzxJJn+iBMfEYL8Xa/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DlQ65HXr; arc=none smtp.client-ip=209.85.128.41
+	bh=9eLkhdjlCji7E+jkylN1lgFEoIP1qDqRl6O59VCoVSU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aGcNlC1jHX1MQnnuSsxt0Sq+eBfmrzOHQf4HN87w94mME40wUP5GM7pj1juBbSMt9aVeMmMxUYAc07EuR36oSuxKvhvEANi0MiIcWtqvcqY837Zsu4xganpsLS2eUaHLEhPxV/+1l70FNqNCcOP6xjLS5fWIP8AZM85hRKkZmGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YuKyj/8T; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-45a1b0b2d21so14524065e9.2;
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-45a1b0cbbbaso22112445e9.3;
         Sun, 17 Aug 2025 07:30:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1755441027; x=1756045827; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bWZAyJ0poja9NuGESj2BVQie59PBMjBq9MMyHHpd5cg=;
-        b=DlQ65HXr4dMW0L4M0CJA6Vir55TeskF51kMVmYfW+9+bdBF4DLy2fvS6sQoM+jU9Eh
-         oESZZfVV/X1TI/BPZwQnladsYU58FWwK0kZPqWUwglqSzJBX1ZRAzCiPrVkFmzvrar4k
-         sQtbvB2rcsryYyPTbQ3fXjPTEb7FwI29f/4e+1SaRcAkkSV/4ngMx0uM7DM/ZrXjD4yf
-         udZwG7/lAdFEtlyUUHE36Po73pDfvvI+177xpMY2++d/XunwfuZ1e1jmvRsWdcf8y3/c
-         2womgRttkPNbsDsZXNEu9TB78IdPCODaB02onssXzVZmiZxeZGvEUdMGPmf6Qm063u1h
-         qfCg==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5R8Hi/9JGtLxZzRD7M5EzGy0MS0wjSSCmammDop0GV4=;
+        b=YuKyj/8THC3jufsCNt1pNHtGEi28Sz1qbQJuFJ0+5xmmPPcJSkZO6z0VHZxAnGhogw
+         8tVEVem1t3plMysOKfnjMyhCDKgB8qEg29dDbqK3p9lComZAOn70kUJnMW7IapI12bt5
+         uUqb0MbEfTVNUmf3S1gy/8w6utq//62hJ4Lf1rANlXe71bzJcKRR27CyJdd8s2YI6IBm
+         d89LQUPyNVb7qL4v9HbAA6lJ3jwgOQIX4Jjm0lRcc0CHtP8SImTH/x1WMy2zeyNLnUsm
+         OatyjtNpJp24PcZ2CfixEzbvLPeYE9VpP1SqFRaX5iPWeP1B5wqqgSrFanwx5D7umEtS
+         jHig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1755441027; x=1756045827;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bWZAyJ0poja9NuGESj2BVQie59PBMjBq9MMyHHpd5cg=;
-        b=N4k/7h0JvqHBX/ZVneY8RKGxd4oiE1NivpQEmR0qRva/yaN82RNcIm+ngUbB+E0Bdi
-         YPRqeLF/PtvpfSVw3QF2E5rtL9aLYPNa8MvPwqZkxUXRLMCwRTOtNYhyg64mWXdyUT8m
-         FU9xnoqm2zgotZQhe/sCfDJSLOXTxodd+ZPNUfA61CQnoX3lbNGJYelypB59HOryTrlZ
-         YOi5veY0uz3T3TAYhRZY46ALN6wu+5p03tH/V+ypjZvteH0C4t5n25EA+AUtOWvf9B1m
-         kdtqNXznzNG6hLrlWTs29bU0y4pOFVELYH++xyVdd/tMLiP5MZnxxi5hPPbN6F5rUaR5
-         niDA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMtDaoR3vLY8NjYHZTTBeAj0OMhV5gCuV6QnQqiO2RucZ7kaYQxHFT+nbmjK3d7X4fHhAn92ab9BZK@vger.kernel.org, AJvYcCW/hw3Qkkma0GdxH7RWWXKiQ5yJG65fkCm5gQ0J4Wv/e0StY+VaWCVU6H2FWW3lmyP1sYER+i09bV9y3L7RLAYnuJU=@vger.kernel.org, AJvYcCXlIproCeOUi8EqxujsGvPgIUGT4TmGQWDOtuEJisWYN4fYCYy5Gs6GErMMarpTmG1T21TtT+ir6FHZy0jW@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjuxKPhwEsw0bwt+OTtPhpAKxXW2xn3R6+T4Cpbc/rQrO2MntV
-	BQZpD4mil5KtG84aiuX6rP+hnuedvdQdtI9WoABHMgD5DSZHWDocNZwf
-X-Gm-Gg: ASbGnctUlphSZRRf/rI+rX2NUOyrvlGbS068O0ZpslLHO+yaBYKb47C0XqKBv2Bb7ME
-	dDscv6cknRAEfYUr2oHy+JWQKzPQ+wT1F6gVSVnKJEAQ36JK5+hYhatblF/ZFJBfuXzqnJq5EVU
-	gN9C1NWSiYmK2D+T1fI7lfHwjb6SWzUPuyUi+jDr/4p73FQHi34P8iQb/+Zz1QiiTQYmWYM727r
-	vxcJAB3zkgvvNJWMQ9pmw8ePU3Tsjcgp84TV+sab69HxpxroETVxWuqqKBfKFO7R149IGR67cvr
-	0UYS+Rjn4Fus6IBh27nKQmwVhCcr4Sc5B2Egx/7+ttRtHzgWWZcPp0zksIXMjg/GEC6EutNXf3W
-	BpycAeg9VkWl0LNqx2Zzv78hEIuPNDLiwReXVQZcUj8olJcyVh2ZE3g+WPu3SnHMXXCADXQaeVA
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5R8Hi/9JGtLxZzRD7M5EzGy0MS0wjSSCmammDop0GV4=;
+        b=rP9EfkQAjlNq81CzaTd8zS7mtfBj6xHonh2dGyWqZHZK7Pdid3VRnv8zVZlqD6w/OA
+         BBYE/4C3PuPa6buSE4CgrzOsxSj2IuC4OM6AGF7Ogv7KwqhiMPPmpt3dSZZYhUlVRnS1
+         rM4D8F7wlU43oX4GBotjriz6CPtYGD6shoHIvqAnqpa+7GEptkKi0ITYIePiz60PF0Io
+         3F0ZZfoI6E0vJ7gKIRzheZdJU8k+s0oreNMw+tDVsvhAAgT9xc/8WKw1UKaAPdXYY+5l
+         Jg1Os7tTkFHu8zpEU2gdN6/ZyILUYUBQuwO3XZdMcbKcr44SICrw8AO2DvUrb7tSmPEu
+         a8LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGm56Spzfo6vdPn8ji5RwJWjk9xnS87MsBdgcacyA+8BmcsdZUB89Fg/nJXJc9l3pzm1dx+YZHFzpitP0b8G3CtnY=@vger.kernel.org, AJvYcCWFmJMFp/Hj/CZXHxEz3jCYPKLpHEZbCQp5Y4m/78txM3Nwjb9B/AxKtqgifObSj+cEXlYJt6Jq7s0N@vger.kernel.org, AJvYcCXNrOGJv1oZ1ZRAd7g8wo3WT+xFDbJ51PxmYPi7mEMwNREdcT3+C53xxS26Y46bs6RGD7tqS0AYueQIJh1O@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsvuUPO3lBuDzLVpRcPPT6nQ1Jix30ErL2na17uDfG0SERYu4W
+	PUroMwyUlJhpKa4SF528/Mg8EW8q48WCt7jI0qRuP5V1AZ4P5eFereeU
+X-Gm-Gg: ASbGnctRd05ivzBsHBLs2CdKVJ23gC/uQtoNiNyLN8K02BtPFdMcq1ZiqFEvjA0+jY2
+	xfIeWoUs5mRXaYt3eq3IvpslSlCsYWrdTWcdvGRsmAcGg6Bl13X+cQzN63u90Mby7uiAWllhGPK
+	ZmYw2eoAux5UYFhmsUZgKxqnyMceJYbgT2MAQMz09h6SiTZjW2ShqlAy5Xh9GKthC0wsIw28/cN
+	259/x+lStVzzkb0ozejVysE8NK2Gk29fRWTKedKxq+F+GYiSE+Pu8QLLFYKjATgfouEOF/YOpkr
+	uO82MDKOeucF38yziD76yGc68M7Zw3UTWNKLDUKH8uPD1HA+7ITCr9S5p9dRI0ZAjL46RqkK5HU
+	6VLSC2PRi9bxiw+EjrtkXz3EhxCHUwTaqaxuA/xUd6EdNx+qDnwGvV74qcJ1AmxTf3irex9V70w
 	==
-X-Google-Smtp-Source: AGHT+IEqvwzuCOtPLfr9txiXXR3uHX74MKd3lv1nqPy5iqhko0tUuyafF6VNtZuysYeBJOlFtd+wbw==
-X-Received: by 2002:a05:600c:154d:b0:458:b7d1:99f9 with SMTP id 5b1f17b1804b1-45a217fd4e8mr70777275e9.11.1755441026392;
+X-Google-Smtp-Source: AGHT+IG5HdTIUFKCtQt3n2tGpuVl8oxuFQsDBWJbM02vhdze33sL+HuPuvnsqNwJuyHggrTgs3yNmQ==
+X-Received: by 2002:a05:600c:1c9d:b0:459:da76:d7aa with SMTP id 5b1f17b1804b1-45a2185d715mr59132355e9.25.1755441026874;
         Sun, 17 Aug 2025 07:30:26 -0700 (PDT)
 Received: from biju.lan (host31-53-6-191.range31-53.btcentralplus.com. [31.53.6.191])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45a1c6cfed5sm129938485e9.7.2025.08.17.07.30.25
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45a1c6cfed5sm129938485e9.7.2025.08.17.07.30.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Sun, 17 Aug 2025 07:30:26 -0700 (PDT)
 From: Biju <biju.das.au@gmail.com>
@@ -82,10 +84,12 @@ Cc: Biju Das <biju.das.jz@bp.renesas.com>,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Biju Das <biju.das.au@gmail.com>
-Subject: [PATCH v2 0/2] RZ/G2L pinctrl improvements
-Date: Sun, 17 Aug 2025 15:30:18 +0100
-Message-ID: <20250817143024.165471-1-biju.das.jz@bp.renesas.com>
+Subject: [PATCH v2 1/2] pinctrl: renesas: rzg2l: Fix OEN resume
+Date: Sun, 17 Aug 2025 15:30:19 +0100
+Message-ID: <20250817143024.165471-2-biju.das.jz@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250817143024.165471-1-biju.das.jz@bp.renesas.com>
+References: <20250817143024.165471-1-biju.das.jz@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -97,82 +101,47 @@ Content-Transfer-Encoding: 8bit
 From: Biju Das <biju.das.jz@bp.renesas.com>
 
 The write to PFC_OEN register is controlled by the write protect register
-(PWPR). Currently we are setting OEN register in resume() without enabling
+(PWPR). Currently OEN register write in resume() is done without enabling
 the write access in PWPR leading to incorrect operation.
 
-Also drop unnecessary configuration of the pin function if the pin's
-configuration values are same as reset values.
-
+Fixes: cd39805be85b ("pinctrl: renesas: rzg2l: Unify OEN handling across RZ/{G2L,V2H,V2N}")
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+---
 v1->v2:
- * Updated cover letter description.
- * Updated commit description for patch#1 and #2.
- * Updated commit header for patch#2.
- * Added check in rzg2l_pinctrl_set_pfc_mode() to avoid unnecessary
-   configuration
- * Updated rzg2l_pinctrl_pm_setup_pfc() to make changes minimal.
+ * Updated commit description.
+---
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Logs:
-root@smarc-rzg3e:~# cat /proc/interrupts | grep SLEEP
-127:          0          0          0          0 rzv2h-icu   0 Edge      SLEEP
-root@smarc-rzg3e:~# [   68.710624] PM: suspend entry (deep)
-[   68.714523] Filesystems sync: 0.000 seconds
-[   68.720402] Freezing user space processes
-[   68.726527] Freezing user space processes completed (elapsed 0.001 seconds)
-[   68.733563] OOM killer disabled.
-[   68.736839] Freezing remaining freezable tasks
-[   68.742749] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
-[   68.750233] printk: Suspending console(s) (use no_console_suspend to debug)
-NOTICE:  BL2: v2.10.5(release):2.10.5/rz_soc_dev-169-g1410189b0
-NOTICE:  BL2: Built : 12:53:12, Jul 15 2025
-NOTICE:  BL2: SYS_LSI_MODE: 0x13e06
-NOTICE:  BL2: SYS_LSI_DEVID: 0x8679447
-NOTICE:  BL2: SYS_LSI_PRR: 0x0
-NOTICE:  BL2: Booting BL31
-[   68.800343] renesas-gbeth 15c30000.ethernet end0: Link is Down
-[   68.812953] Disabling non-boot CPUs ...
-[   68.817380] psci: CPU3 killed (polled 0 ms)
-[   68.823030] psci: CPU2 killed (polled 4 ms)
-[   68.829144] psci: CPU1 killed (polled 0 ms)
-[   68.833581] Enabling non-boot CPUs ...
-[   68.833789] Detected VIPT I-cache on CPU1
-[   68.833836] GICv3: CPU1: found redistributor 100 region 0:0x0000000014960000
-[   68.833875] CPU1: Booted secondary processor 0x0000000100 [0x412fd050]
-[   68.834651] CPU1 is up
-[   68.834748] Detected VIPT I-cache on CPU2
-[   68.834770] GICv3: CPU2: found redistributor 200 region 0:0x0000000014980000
-[   68.834790] CPU2: Booted secondary processor 0x0000000200 [0x412fd050]
-[   68.835438] CPU2 is up
-[   68.835533] Detected VIPT I-cache on CPU3
-[   68.835555] GICv3: CPU3: found redistributor 300 region 0:0x00000000149a0000
-[   68.835576] CPU3: Booted secondary processor 0x0000000300 [0x412fd050]
-[   68.836210] CPU3 is up
-[   68.862815] dwmac4: Master AXI performs fixed burst length
-[   68.863715] renesas-gbeth 15c30000.ethernet end0: No Safety Features support found
-[   68.863736] renesas-gbeth 15c30000.ethernet end0: IEEE 1588-2008 Advanced Timestamp supported
-[   68.867251] renesas-gbeth 15c30000.ethernet end0: configuring for phy/rgmii-id link mode
-[   68.882826] dwmac4: Master AXI performs fixed burst length
-[   68.883716] renesas-gbeth 15c40000.ethernet end1: No Safety Features support found
-[   68.883731] renesas-gbeth 15c40000.ethernet end1: IEEE 1588-2008 Advanced Timestamp supported
-[   68.887264] renesas-gbeth 15c40000.ethernet end1: configuring for phy/rgmii-id link mode
-[   69.083883] OOM killer enabled.
-[   69.087021] Restarting tasks: Starting
-[   69.091764] Restarting tasks: Done
-[   69.095229] random: crng reseeded on system resumption
-[   69.100457] PM: suspend exit
-[   71.436765] renesas-gbeth 15c30000.ethernet end0: Link is Up - 1Gbps/Full - flow control rx/tx
-[   72.868712] Process accounting resumed
-
-root@smarc-rzg3e:~# cat /proc/interrupts | grep SLEEP
-127:          1          0          0          0 rzv2h-icu   0 Edge      SLEEP
-root@smarc-rzg3e:~#
-
-Biju Das (2):
-  pinctrl: renesas: rzg2l: Fix OEN resume
-  pinctrl: renesas: rzg2l: Drop the unnecessary pin configurations
-
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 32 ++++++++++++++++++++-----
- 1 file changed, 26 insertions(+), 6 deletions(-)
-
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+index b182b3b8a542..2b5d16594bb7 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+@@ -3165,6 +3165,8 @@ static int rzg2l_pinctrl_resume_noirq(struct device *dev)
+ 	const struct rzg2l_hwcfg *hwcfg = pctrl->data->hwcfg;
+ 	const struct rzg2l_register_offsets *regs = &hwcfg->regs;
+ 	struct rzg2l_pinctrl_reg_cache *cache = pctrl->cache;
++	unsigned long flags;
++	u8 pwpr;
+ 	int ret;
+ 
+ 	if (!atomic_read(&pctrl->wakeup_path)) {
+@@ -3174,7 +3176,15 @@ static int rzg2l_pinctrl_resume_noirq(struct device *dev)
+ 	}
+ 
+ 	writeb(cache->qspi, pctrl->base + QSPI);
++	spin_lock_irqsave(&pctrl->lock, flags);
++	if (pctrl->data->hwcfg->oen_pwpr_lock) {
++		pwpr = readb(pctrl->base + regs->pwpr);
++		writeb(pwpr | PWPR_REGWE_B, pctrl->base + regs->pwpr);
++	}
+ 	writeb(cache->oen, pctrl->base + pctrl->data->hwcfg->regs.oen);
++	if (pctrl->data->hwcfg->oen_pwpr_lock)
++		writeb(pwpr & ~PWPR_REGWE_B, pctrl->base + regs->pwpr);
++	spin_unlock_irqrestore(&pctrl->lock, flags);
+ 	for (u8 i = 0; i < 2; i++) {
+ 		if (regs->sd_ch)
+ 			writeb(cache->sd_ch[i], pctrl->base + SD_CH(regs->sd_ch, i));
 -- 
 2.43.0
 
