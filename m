@@ -1,134 +1,117 @@
-Return-Path: <linux-gpio+bounces-24499-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24500-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CE87B2AAFE
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 16:40:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4FC8B2AC7F
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 17:20:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 951355C3527
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 14:32:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 58434188A201
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 15:16:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 364BB35A28B;
-	Mon, 18 Aug 2025 14:24:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6383124E4C6;
+	Mon, 18 Aug 2025 15:16:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QoMj9hyO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DRWiZ4Hh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBDE35A283
-	for <linux-gpio@vger.kernel.org>; Mon, 18 Aug 2025 14:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91020233727
+	for <linux-gpio@vger.kernel.org>; Mon, 18 Aug 2025 15:16:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755527054; cv=none; b=LdcwSL9tXds9tfzQcK5ProrPYcFomc4HtZsRAQHYCNodwMmSh4j9VGX4/gcu+at1oujZWJTNdXhT/epQNR5Opv/j6n0U7PMtXN02qFmq5cdrrBx19L9uW0GJJYvkqe/5OrCW4rADlexCGWedMKv1xmcbkReaqh7NPb8DOglTi1g=
+	t=1755530187; cv=none; b=ei65w1N/yXb3rsVbvJ4v5ZplPV1xB455abdtmIsbPQ5b/vCzr0zLkc93/b0flpBOwbwvKeATLqLWeefqq8XXruU24uw9OjFytAyaDQPlmCe04U6R2s2anJtFjkOmhrF8f9G1xK/10ogb1UTfpE96p0/l8uz2AEUNq1uAd4CmuXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755527054; c=relaxed/simple;
-	bh=GQ5ftdYWjc1ggmTXk0Nbj6QK5jviPLomx0fpZtjccPw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SU2livJgnzROPLUE+OF2xT6V57865Vci0pRZiXQV+n4nycK27B7PvZgRcqffT3MQEiXKQfyc7eODl5rLlcqltvnJWZQinfEcLZWCW0I2ZbMIQE9boA/uzDbAT1rG+1uns2W329ElJBdkmK5gXnf50cJhrsGlh+EjXRUh0cKANF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QoMj9hyO; arc=none smtp.client-ip=209.85.218.43
+	s=arc-20240116; t=1755530187; c=relaxed/simple;
+	bh=5l8fao5tyyCXjqpBW/epFwUkG6rVSrLdqtcUPVUunrE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L8vbUyQvs4Qgxm4gbN8lpU+maW5pXW9Eop9mVKpUGH1RWB4mAlL7Ggewf+rqiXPrc3zEt3IPD+OzgmgKpoeyukx16SXxoHIcCg6CUCojSm/qM5eR427ZZXk2GfydX3uLxdDcCngADa5sFGRoWbZJT2oa4injx/TB7UWgFpxuSK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DRWiZ4Hh; arc=none smtp.client-ip=209.85.208.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-afcb72b3a1bso76640266b.0
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Aug 2025 07:24:11 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-333f8f5ca72so30402271fa.1
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Aug 2025 08:16:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1755527050; x=1756131850; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QamokhfM1GcyheOMdy3Zz4jkOrdWtl4wsYSaEK3Ivkw=;
-        b=QoMj9hyOnlsba5x1RCnXKx7newWyshWX1ot+tb/73K9KyLlL4HdalFoO9PuiuRlmod
-         LPeiT52VoRnLknov3b4xxSG+8mMZEpYeTsA1VVP+zPPVNLfMi65+nJB7uocPk8t5gbvd
-         0oWPBH6CRIfbIGHlYpC4wnP4yVFZCU8ftgPXY9dthYoq2wXCmFvkhB6l3ODsfdPynaIK
-         +Tyk+TY3X8I0gOKvoSjDNUnX+rO3nYP7AF/BxEcCmowLRm1gEl2q0ijlu6gACXjVxvCN
-         3sXr0E7KOTXM8yV2hICwVXWkxaPmEkMGYRkyBIVvyGMgXkWivwQsflJj7njwful35Su+
-         4bDQ==
+        d=linaro.org; s=google; t=1755530184; x=1756134984; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5l8fao5tyyCXjqpBW/epFwUkG6rVSrLdqtcUPVUunrE=;
+        b=DRWiZ4HhajMQipwt5VgmjcjbAgFaTzu5dOHCeOm8wgz+TuTymCz3Xvd/uvYowflnks
+         lrPUb9WpvXqwR2eiUgXD5DaILJHL4ll0yk6n9E51imjvtNfsB6+jHcm9+7OZtJAtZgPY
+         v2WS/ZTXfyu44y6w6+91J7nIHXoSwE9AIFXhyiUDxpghkjtNSil9+/471Z2jN+wHjS4W
+         ZgRcyuG63jZ5CdapfpZhecMM7MLaqO3g1pupwEtO520OXuyVXOiKUTgTROGD/9Qmmr4Z
+         bSfSz6+4OiGUSVq2oSXg2mgsM2DKZa0W0ImYEG/fiVKnJFiZ00+eOT6IC10/IYlEpyrA
+         s+Vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755527050; x=1756131850;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QamokhfM1GcyheOMdy3Zz4jkOrdWtl4wsYSaEK3Ivkw=;
-        b=kfaObhndpcaacnUEdeeCxwZivDQmbhthAwJso3/RhCUiAuh8xgOQlmFoLOOvFjzFDe
-         fs+u0oeVYP2iMdp8RoIpeejEeObfDzEmikYfbH1S6P8zs2q3r1QPZIuE24mvClkU25BT
-         vRRtaz0VGwsgPQc6jH7iS/TLtvZUN9apgXxRRdl115ydoHV3e3t516RjL7ffZEX7yi3z
-         Wjw4mvzZ3Bmi/iBDxj2/n6eRGPyc/WMBLfCdmnLhB8NFk4f+klvxk8CWFElCYAwdknHP
-         FLIzI2u+pu3MnQdYMRi/8wcKsxKGApd24Aiixs1dyYCiGn2C0wUzL9PdYK2texkt8yCT
-         fphA==
-X-Forwarded-Encrypted: i=1; AJvYcCWJlOWKLrTYipzPqXjpmU8zhcsJGr/fl36TzSgSpGfDbkyu/Mr1Hvzy6Xadk4on+3jZusr8dvMEeHbg@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoD2t5XtFCBq0MUzsvlRL77U2Dns+tsDKKwUJck1JBIc9ywMFE
-	lfOJr311FTtBbHGwL3pXP/poyQw7WPi+BDEsmQjxWjGsx5g/iCWQTMDmBSXHB/E5l7M=
-X-Gm-Gg: ASbGncsZeJh9BnB8ODJp2uZxSvjVgvK3cAn26F/NqnsGRbEl9YIn5Kual0bEO/CAvF6
-	qwLF2JJyij2DRS6pB4X4qdMz727NtPa3/aJzTnANh6Qlvv2EHMk7XmdZMX2FXC9WWYxGn/b+o0y
-	rGXKYseyyZKJd5BfUEGVL8U4QpGV735d3MO531QEJGA4H/4raeMtyLmW/MM6R2SG7Lbmt5po7BL
-	Ey9bd9n30w9hGkB331XkIsNtobcGbQ4H9WgiBws5lnvU6tJ884EOhAIHfp0PRdTRs3GgZkSBrr6
-	08vGPlISHWUufDWsGx0FSneoXq9iT0OqrtAOC4g7yH9ANNx8lgMlLlWpu1QpBCnBJDeQXSAtcb6
-	z6a9ne6ZJ4p6O/CpBE6lRDibMWr1+A52sJA==
-X-Google-Smtp-Source: AGHT+IF0eQL4ER7n043LGZ/uWkPZXG/pygEg35URndrpoalaoUz4uPyviRVbuOk3OWfAjWq8XjlDiA==
-X-Received: by 2002:a17:907:7fa7:b0:af9:566c:4cd2 with SMTP id a640c23a62f3a-afcdc2367a4mr462998666b.10.1755527049798;
-        Mon, 18 Aug 2025 07:24:09 -0700 (PDT)
-Received: from kuoka.. ([178.197.219.123])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afcdce53dd5sm803192366b.5.2025.08.18.07.24.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Aug 2025 07:24:09 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: =?UTF-8?q?Cl=C3=A9ment=20Le=20Goffic?= <legoffic.clement@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-gpio@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] pinctrl: stm32: Constify static 'pinctrl_desc'
-Date: Mon, 18 Aug 2025 16:24:03 +0200
-Message-ID: <20250818142402.132008-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.48.1
+        d=1e100.net; s=20230601; t=1755530184; x=1756134984;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5l8fao5tyyCXjqpBW/epFwUkG6rVSrLdqtcUPVUunrE=;
+        b=uihtUCfwNbnJMRkoqvoEaNTJhdK+CKhwbXElnLaOoC4aHNbFi/t8751qAO7TSpZiPo
+         n2ljT18Ojc8N9MuQh/elBMZibZ/QZGeheoiWyMaBmtY36il7dUvI8hYU+niZfPl5Sa1M
+         CPNlmoQlPOwoZIpLZlExHC3muF/NOMTk4jZ4b+QkzWZ2BUZ3Sr0aah+y7XTGl7UsWeoK
+         zg8Jox2yscCweNIqE/Kyqx72+SZuVXC6KT/qqChP+GmdKUutTyrDRuiuYHDV/3yd0iYY
+         dM3qTPnYK+ticPmSgO6mHpt94agyEZ8DTKWEwyAMFafX1WqaZO9HG3ss4U0+o7rcDAYS
+         QU5A==
+X-Forwarded-Encrypted: i=1; AJvYcCXNAN7HHa2AzV+ML4ioq2JWEja1ufv5K96zfMLxMmEahpr60Op9eI8YM7dUgJ8R/qHoFW+4U6vfXfwP@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHRU+UOTdXhWyNbpN8Da2B0WIYY0YmzltJxmhizZcBrsIOrDda
+	OJrse9gphmcPcEExX0Ye+PrX5/KWPf1/8PfplBNlCX6cUeqObR5fo21w6JYIX1sf27mvsQNd6d1
+	rT7EfA5pBjJISou4RcPdHFgLo+5hFcruCTjENRwHypA==
+X-Gm-Gg: ASbGncsNycYvSJUrDgCseWvnJTLjEdvrKG2Ca5lrm4WqQ6WO+O5OHtu14IzKzGVI+mt
+	UXS1pbf+xK+70RkYRVaNk9bTvaacUmE/O8VT2/lwOHD+tE6hrFQOwOhUhdaN4U3uheAqbb1KfBp
+	CvMB/mXaf1z3LTD0vdMc9Fl6bskD4Gd/wGRDICCt2KwGAphwFDIOoc6Fu+U1w5L8EWbSquKvFbb
+	lcRuvk=
+X-Google-Smtp-Source: AGHT+IGzqxCnqLVvPxKCko2DlB85KniY6TF5HHlMzLUiXgvNhvXoucfmnrbgjKUH/ALtayc9hnqKx6ybbX/dLc1uNDE=
+X-Received: by 2002:a05:651c:198d:b0:332:4528:c0e0 with SMTP id
+ 38308e7fff4ca-3340996011cmr37441011fa.32.1755530183649; Mon, 18 Aug 2025
+ 08:16:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=840; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=GQ5ftdYWjc1ggmTXk0Nbj6QK5jviPLomx0fpZtjccPw=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoozeCHbXUKSjJp2DSxgX9G/1zAJfSI1ztiFFmO
- GadvdBbwOOJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaKM3ggAKCRDBN2bmhouD
- 1yoED/4kiZrB9q1OBGXP/IDolXlLyozFqO4AV9Emhx7w6pECE6srTXNW0Io7CnrMi0NzZMG58Ok
- fm+15O1C8b/juIQEqd21izzXzrGo27C3MZyD0BRrXqiwig7D2md0Om36cPq5qhacQ/zDmTpqwre
- RB3kZssnYEetCx0yNNlo+4FilIdI73HUOLBe7NjhjdgYyinQ1CUFjyQBrIkfunSZqcBZezmsQ++
- D0K40lIyY0h5nBjRIKpz+x6o7wDitTdHR41tBju6dC/iGlvLJy+EEOpTTi8OuybUdMZTjyXH+AW
- v3l7+uSupThYNKmIPHmI+dgJTg6wYmF+RRwgTwlKOIVSkrjSK0qlmYJxDubNzMVhPGQtLju+zZf
- yrapLhuKFH6b2QE3QQigfWAWcilF9rdt7gD/mr8FljvXYBKtQVazVxlky4pZWXtJnk0acqX4+bu
- JRmGZ08gufYi08WEAQ4Fbq4ef0x1HR4/6epHh6Kyf033ep138BhgWHGz5jinmmwQmCTJPowT+Iu
- ZRAS5U1JPvwEAQHEQsFTMttnyATQyBPYpJ7NZiTc+QJMTnYhxHhQBnpIrcUZuQ8gjf9Aw+NoO5s
- cCDK8474FZvZaoSSTtwZPWx9SuZLQQmpjUT5Yjad3ZHNO4LYiv5uT/wfKA8WZczUAJ1ziod5OIU fbYKk48w9jEUxLw==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
-Content-Transfer-Encoding: 8bit
+References: <20250801-mtk-dtb-warnings-v1-0-6ba4e432427b@collabora.com> <20250801-mtk-dtb-warnings-v1-7-6ba4e432427b@collabora.com>
+In-Reply-To: <20250801-mtk-dtb-warnings-v1-7-6ba4e432427b@collabora.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 18 Aug 2025 17:16:12 +0200
+X-Gm-Features: Ac12FXxjGtIqn77Wg-HXxURZEtSYdu71ByUfcWhpILl9XIWrUY16-cZaSQJoAaQ
+Message-ID: <CACRpkdZpUhPERPFvNTwormrqz-H-5VUDaOrRQQ2ap+Oe6YN2Qg@mail.gmail.com>
+Subject: Re: [PATCH 7/9] dt-bindings: pinctrl: mediatek: mt8183: Allow gpio-line-names
+To: Julien Massot <julien.massot@collabora.com>
+Cc: kernel@collabora.com, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Ikjoon Jang <ikjn@chromium.org>, 
+	Enric Balletbo i Serra <eballetbo@kernel.org>, Chen-Yu Tsai <wenst@chromium.org>, 
+	Weiyi Lu <weiyi.lu@mediatek.com>, Eugen Hristev <eugen.hristev@linaro.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Julien Massot <jmassot@collabora.com>, Sean Wang <sean.wang@kernel.org>, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The local static 'struct pinctrl_desc' is not modified, so can be made
-const for code safety.
+On Fri, Aug 1, 2025 at 1:18=E2=80=AFPM Julien Massot
+<julien.massot@collabora.com> wrote:
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/pinctrl/stm32/pinctrl-stm32-hdp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Add support for the 'gpio-line-names' property in the MT8183 pinctrl
+> binding.
+> This allows naming the GPIOs, which is already done in several
+> device trees (e.g. mt8183-kukui-jacuzzi.dtsi, mt8183-kukui-kakadu.dtsi,
+> mt8183-kukui-krane.dtsi), but was previously generating DT schema
+> warnings.
+>
+> Signed-off-by: Julien Massot <julien.massot@collabora.com>
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32-hdp.c b/drivers/pinctrl/stm32/pinctrl-stm32-hdp.c
-index e91442eb566b..0cd41f3f7a52 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32-hdp.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32-hdp.c
-@@ -575,7 +575,7 @@ static const struct pinmux_ops stm32_hdp_pinmux_ops = {
- 	.gpio_set_direction  = NULL,
- };
- 
--static struct pinctrl_desc stm32_hdp_pdesc = {
-+static const struct pinctrl_desc stm32_hdp_pdesc = {
- 	.name	 = DRIVER_NAME,
- 	.pins	 = stm32_hdp_pins,
- 	.npins	 = ARRAY_SIZE(stm32_hdp_pins),
--- 
-2.48.1
+This patch 7/9 applied to the pinctrl tree.
 
+Yours,
+Linus Walleij
 
