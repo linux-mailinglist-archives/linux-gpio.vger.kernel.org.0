@@ -1,161 +1,108 @@
-Return-Path: <linux-gpio+bounces-24490-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24485-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 613F0B29D85
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 11:21:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 605C9B29D16
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 11:05:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E7685167027
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 09:21:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2BC1B2A376A
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 09:04:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68D1730DEB6;
-	Mon, 18 Aug 2025 09:20:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B02DB30C358;
+	Mon, 18 Aug 2025 09:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pElY1WMd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5E372D7D42;
-	Mon, 18 Aug 2025 09:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17053019B5
+	for <linux-gpio@vger.kernel.org>; Mon, 18 Aug 2025 09:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755508847; cv=none; b=TOqprEdY7ZJOxt12EVKmpZspLSSCzlYO7/IWNyKnPK+IQV98KuaWpwCzIs/oIgquQ/FczJaTIYGJQmoQYqffMny3aabYNwqwfljPiD9Q40aCy5ne7DWlXCRhvNHr4SeNkbOkNsEL2KbHMqyBYunD4pf6ubGb1CCGtFCBtKAxDAo=
+	t=1755507839; cv=none; b=u5H8s0xwsrHIHPyrDVF3Na2OzFOD3hdZ8xnwgZhErSUgOaaoY+DUOQpxSKAqlVGb3DSqM3umHwBo7tSt1FjZdAlBNCVkgWftl/M9RDFpqHseyQW1/ExRdXMsh4jJV6BVoaonhbcfq98Y8JyxYSGuv1W6Wq0q7NCpMkJ+fcXBFlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755508847; c=relaxed/simple;
-	bh=FsJjFzo97CaIj8ecmEYrlheS4JZRtCwCquhmLdyFc7U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XqkU5ePIkXtFKyOwIEFPyMXmJb5ykZRPnfMoGJHEMFLQaSFTtonEkMFwINQCoVMdownpSzatzBBua7JkJA9mLBengS4GzCwv8mrZ3rprMVtsxcCemkaVHUzAtJwy7Q3x0zxmywO7K3TQt/n+OKTgaY2Wa3SLgMAUN1fKJHbpkzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4c55sf33SKz9sX4;
-	Mon, 18 Aug 2025 10:46:14 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id rx4zHsvHPdak; Mon, 18 Aug 2025 10:46:14 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4c55sZ1ZzKz9sWh;
-	Mon, 18 Aug 2025 10:46:10 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 217968B763;
-	Mon, 18 Aug 2025 10:46:10 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id giALWGHkvImb; Mon, 18 Aug 2025 10:46:10 +0200 (CEST)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [10.25.207.160])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id EDCBB8B764;
-	Mon, 18 Aug 2025 10:46:09 +0200 (CEST)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Qiang Zhao <qiang.zhao@nxp.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v2 5/5] dt-bindings: soc: fsl: qe: Add an interrupt controller for QUICC Engine Ports
-Date: Mon, 18 Aug 2025 10:45:58 +0200
-Message-ID: <be8952a26d7a8d55ff96e4547f6c107094988220.1755506608.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1755506608.git.christophe.leroy@csgroup.eu>
-References: <cover.1755506608.git.christophe.leroy@csgroup.eu>
+	s=arc-20240116; t=1755507839; c=relaxed/simple;
+	bh=m7oOCkrHmV3m6RPZPr4H1kZpkhVJDtpouU7lgw2AWTc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TY1CjP1kBpdRInja2PQwcao6NsL/5I8TbwEvheEfl22UFPkcnSXfoKsDnTYWt6BFPcTRP3mH6JHDgn5UBddSThTvC0E1lY+JsMIfWR3SN4E5myiHxXSKdmT7yugT8SjC7GWwTPXc4l+AoBTKN6kl/OZNQKFpAPJvYk5hIEe7uIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pElY1WMd; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-333f9145edaso28758111fa.2
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Aug 2025 02:03:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1755507836; x=1756112636; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MUwutcLP2TU0uZmoKGbkLCKDIFQshb+hzWxBL6xH0Wo=;
+        b=pElY1WMdiB++dh7NcmzagwkoI7mcFzY1I5dMWBqyA74scurUnPnVCBpWlge9xN7r2Y
+         GbCmLLf59Qbq9KYtbJfDwfURG2UQtdmlnKRNDPiLyQm2aB4lwdkga2Y7ZxWfgWZbkq0D
+         jYrmFaHxLjC0U+4S8za1xhieRKgwsMsUhucn5UO8YTLH0eNGt1JokHvnwirDp4FQ1+BA
+         PVUywFNWm1iL538hLXH1fH7CceBAWlZLYTOAKCQ/0NtjSFzZ7qOGIqS/2UDgHXzDspqU
+         itPJPX47k8tgj061buRoHYP8QejjKWsTUsix4cqmen9M7CiC7NOfm6hjzE7r2teVT7eo
+         YAFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755507836; x=1756112636;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MUwutcLP2TU0uZmoKGbkLCKDIFQshb+hzWxBL6xH0Wo=;
+        b=kWsFJBP+/WS/hOTJ6I4zuUSpPE4QE8WxnZfOMNPWFRzxE/aubKjbxY10LKeGsbHBqC
+         Zm2LOI+09xK90gBmzCUlAzzFLOLv6eU0fQ2F5QUcFqYSCXCSX3sJz8GMcTrZPHzHIPMj
+         IRW6YF4nDZ6UP0tFPUxRum6ts5sZz8m7g74LT3qVrkc6claP17UpQIHZDq16nU+cy0QQ
+         akUqA3b3x59DhLMUUwiZ4v9iD3OJaYPt561bF6P9Ft0PuXZOiRdDG5wqc2fCyNs5qi5A
+         ycdFyblP9V8ha4rqkNvF7x5RaVszl1ymexZhsa+u3WVUXq1srcEDZ6fkQSCBB8bjDOWV
+         VHSw==
+X-Forwarded-Encrypted: i=1; AJvYcCXOmWpNE4aRKAcZyPLvtEqB/tL6ls7QsjmCdLTqD1XPXJyUopIh2aiMgdiRHVND9Dp8qHnyS5zIHdYD@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhQiSi33f+CoZVGFO6nwmsBYYJ0AC/ElaPhn0ew5wAT8H0z/tV
+	uvBHNxlV55wSfEOTmV9c8F5QyBs8lEjVe9Gg70MO1FA7ZfB+g1nnOv0lvRBTRI1PTCL0FqYM0sU
+	yoqLaM4MoQPbRB1sWwt/+8mjGYSN7oW89p04xJATnvw==
+X-Gm-Gg: ASbGncuGa8Z+yYwqfM8IqbonnEv8T2b9byIg107iz9zvQV9XDTFZB7ewuEWI7uY9pI6
+	W8GOeNDLWWiU6W4Dt6nYJrttYKmAOCjl6QjNfAYTobKL/1EJ4WC5WDrQChZbzTDH9F6nOBr4esE
+	vFRfXlS+2VvV1aTh2YXMgHN8D2iILKa/sV/Z2R+xXVE/efJPxSdGTuG9IHoAWxHbS3E8j++jsK5
+	HJ7j/W3PzlCcDAEdw==
+X-Google-Smtp-Source: AGHT+IE9kamzF6h6Mj0Uthfqb51rMDCl6ApaA6r9yCxNefG5kg1EpxapoTSKZbjphVliY5NG5jt71S1DTJFc+QzXeWM=
+X-Received: by 2002:a2e:be21:0:b0:333:bf9e:d75a with SMTP id
+ 38308e7fff4ca-33409809840mr30484411fa.6.1755507835692; Mon, 18 Aug 2025
+ 02:03:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1755506759; l=2392; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=FsJjFzo97CaIj8ecmEYrlheS4JZRtCwCquhmLdyFc7U=; b=hFHnrqREIMbLuXYAIGjkJ3D28meiD7b8MHSCYawlfY+LlUHthVv1wORv0SDpFEM2Ka+xgcy44 ih8BI2ai0K2Dpx8Wvzs9qmU5X2t5EZKhQym3hoV6sJGw8lmJpxLC2XS
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+References: <cover.1753039612.git.dan.carpenter@linaro.org>
+In-Reply-To: <cover.1753039612.git.dan.carpenter@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 18 Aug 2025 11:03:43 +0200
+X-Gm-Features: Ac12FXwmdSMJ2XrjVzm-k9jfEa6zy3nIx6AoVfYXMCJMow6Cz5Q3z1FJ4deDBS0
+Message-ID: <CACRpkdapzTTJhAvY1BL8GnUpCc_iHESbY9bFsNTE4Z6FjusiJw@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 0/7] pinctrl-scmi: Add GPIO support
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Michal Simek <michal.simek@amd.com>, 
+	arm-scmi@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Cristian Marussi <cristian.marussi@arm.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The QUICC Engine provides interrupts for a few I/O ports. This is
-handled via a separate interrupt ID and managed via a triplet of
-dedicated registers hosted by the SoC.
+On Sun, Jul 20, 2025 at 9:38=E2=80=AFPM Dan Carpenter <dan.carpenter@linaro=
+.org> wrote:
 
-Implement an interrupt driver for it for that those IRQs can then
-be linked to the related GPIOs.
+> This is version 2 of the RFC.  The main reason I'm sending this is becaus=
+e
+> there was a bug in the first version where it didn't calculate the offset
+> correctly so pins and groups weren't linked correctly.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
-v2: Fixed problems reported by 'make dt_binding_check'
----
- .../soc/fsl/cpm_qe/fsl,qe-ports-ic.yaml       | 58 +++++++++++++++++++
- 1 file changed, 58 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,qe-ports-ic.yaml
+I'm thinking of applying patches 4, 5 and 7 of this patch set to get
+some movement in the code upstream and make less work for you
+to rebase the thing, would this be OK?
 
-diff --git a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,qe-ports-ic.yaml b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,qe-ports-ic.yaml
-new file mode 100644
-index 000000000000..b7c74c66347c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,qe-ports-ic.yaml
-@@ -0,0 +1,58 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/soc/fsl/cpm_qe/fsl,qe-ports-ic.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale QUICC Engine I/O Ports Interrupt Controller
-+
-+maintainers:
-+  - Christophe Leroy <christophe.leroy@csgroup.eu>
-+
-+description:
-+  Interrupt controller for the QUICC Engine I/O ports found on some Freescale/NXP PowerQUICC and QorIQ SoCs.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,mpc8323-qe-ports-ic
-+      - fsl,mpc8360-qe-ports-ic
-+      - fsl,mpc8568-qe-ports-ic
-+
-+  reg:
-+    maxItems: 1
-+    description: Base address and size of the QE I/O Ports Interrupt Controller registers.
-+
-+  interrupt-controller: true
-+
-+  '#address-cells':
-+    const: 0
-+
-+  '#interrupt-cells':
-+    const: 1
-+
-+  interrupts:
-+    maxItems: 1
-+    description: Interrupt line to which the QE I/O Ports controller is connected.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupt-controller
-+  - '#address-cells'
-+  - '#interrupt-cells'
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    interrupt-controller@c00 {
-+      interrupt-controller;
-+      compatible = "fsl,mpc8323-qe-ports-ic";
-+      #address-cells = <0>;
-+      #interrupt-cells = <1>;
-+      reg = <0xc00 0x18>;
-+      interrupts = <74 0x8>;
-+      interrupt-parent = <&ipic>;
-+    };
--- 
-2.49.0
-
+Yours,
+Linus Walleij
 
