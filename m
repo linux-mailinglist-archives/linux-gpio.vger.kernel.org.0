@@ -1,122 +1,133 @@
-Return-Path: <linux-gpio+bounces-24501-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24502-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0982B2AC8A
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 17:21:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F9C5B2ACB2
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 17:26:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B9E1320154C
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 15:18:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A212418A5454
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 15:22:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66C4F254AE1;
-	Mon, 18 Aug 2025 15:18:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D6EA256C6D;
+	Mon, 18 Aug 2025 15:22:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WtUF3//N"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u06rAZbl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51D8024E4BD
-	for <linux-gpio@vger.kernel.org>; Mon, 18 Aug 2025 15:18:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F721255F5E
+	for <linux-gpio@vger.kernel.org>; Mon, 18 Aug 2025 15:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755530284; cv=none; b=Ws4euq303+dBqNvYZITPmOzo/lMKUzpjhCIcsG3NGoxj4nzFg3gwvF9X07N97m6rfZWQnd/Yd9OC8b4VVLYkXraNbxCiVmNNjgws/SLWH6VOQy5OsRF9xZ4FH7oV4gLtjCszA9HUv0ljjEgKlVkJEFva8PTKPgtA9FvOL8VqjmY=
+	t=1755530541; cv=none; b=APVQNYr2fOgrZX53XVVWocdNi8/8dxlyO3Pe9p74tLgRAhgfm5zpJdv9Ij+JqTZwB5nGlhgdxFGeMg69rD8KwZfsZAJVy80O/w0VD/hwHBUYcjC6qmQQwI0EAhHrAuWEoL1AcTb03WaquBvmHsxH7W06hu9eMnmHGVNBCLFJHbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755530284; c=relaxed/simple;
-	bh=ZMr9xoaIvvzsvVDKBkZPG6cWCCooP8ZucmJRQKxCeD0=;
+	s=arc-20240116; t=1755530541; c=relaxed/simple;
+	bh=TZB6OzqRHkfT0at7DfysjFW1dYU/QwDxNcArpH9FPJQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nVL71MOSuB+9UU4mDZ9BKUy+DYKN3F7zTaY7WL8fPfn9QD6CjNfOriA5lV4nH9P1iJCfBgnjALE6xU9bbAuVuEZrrltDpnYtxDBvo+n5yg2p5/U2sh02C1Cp8Y2giigUU7SSQF3RWqddnMoX9f0F5/eT3tITATeUvQoTo2VekWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WtUF3//N; arc=none smtp.client-ip=209.85.208.180
+	 To:Cc:Content-Type; b=kDKcb3B06CGqell5fXN9Ah3Lc3OQg35SgMiOZuXfd/kAjb7gVofiDYmcqHD5h+Dl63Fi2EmmQq0pfNd8RFLUChVUFpBgBjmHuDNczXPyelboCwxwXX7TK/vGquKfheXek2ok8KFk0bghICWFhPnl3S4bdPz+gkNQlSyzthZi4d8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u06rAZbl; arc=none smtp.client-ip=209.85.208.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-333f8f02afaso34975821fa.1
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Aug 2025 08:18:01 -0700 (PDT)
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-333f918d71eso30173151fa.3
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Aug 2025 08:22:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1755530279; x=1756135079; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1755530538; x=1756135338; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZMr9xoaIvvzsvVDKBkZPG6cWCCooP8ZucmJRQKxCeD0=;
-        b=WtUF3//NLZ7/6hLzLU3o++OolJELwmdrByUWCDGxI2WRn5OV/sXuEIqm79PpAd7/Zq
-         CpJybuE4DU+X0K8r+iOaLiNmhnzULnDMdWiRovRmiZIKjJOv0nDKhMS+V1iO9qa1NK9N
-         yhgyCSVBbZwYmpZH28VS+XwSqPiouUpkftA6XtF23HbWZBYdrb3KA2DnK3yVmD8STS4v
-         +EK3lQHJhpjW+0jPv925s2tu1LOR5vKWxpMNcwgUxG6rsgbReLg77KlIzc5ni/aJ9ExS
-         YNSOXpiqy+OHQPVyDHTeIGjufPfPTBLg9SXDPuNutPWCUkoFpB1dPPUFZryZWy3tkq1T
-         jEfQ==
+        bh=yVZcBNGwpkq+v3DR0vvpafxBkSL/1KeRhlI8oyXPu5U=;
+        b=u06rAZbl2IKE5aHqI29nVAjfqYPmxsWvrYsyHBlAY+SwekxsfWfAGIC8oAlGGBhBOD
+         wugb5qxb3xnEuUyB8rXIbkTNNY8fdDdsbNTIc/Au5PBccylFzxKaJosRKuhoo0fJHZJG
+         NIlWCQ7Vtd4B2yhHdr2A7aOtM7LnoqyPru8SHYjAZVk3u/K2WTVWF8VUTAAeS3t1rto5
+         zyiy9gXs4sZ/3SLQ2tBq64TO64PUhPUC8CWNb1kHMFwD9sihRygUxt6BIyA3SaaULwfg
+         2RvGGxV6djsdbbsQBJg7tWrbdJYxzxk8lNdguUDp6rMxHPJtwI2sf18JqKPZYLGnlP7g
+         kuvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755530279; x=1756135079;
+        d=1e100.net; s=20230601; t=1755530538; x=1756135338;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZMr9xoaIvvzsvVDKBkZPG6cWCCooP8ZucmJRQKxCeD0=;
-        b=unLF46eRauvLW1Dpnz+pUccryDeHZZfmDyQDHvEc4S3PBM1tNaAgrtWKpQiLNbNomW
-         VH6lAUlYLlWwjED53nCOOayrMlSGM0yl4HsR4qfaEYpzaCI8XaH4P2tcXnVP7k/T5bZT
-         S7ZxpeF30PvQjsrWU5YsJWIgjCjrOf+y6Bu9L7U8ya6ih3E/X3Lt7CFr0+ThLLGiPAIX
-         r9ttiq6VyPGaftGi+gQDGU1J061drx1b0MVhsUDrP6jdawvmOn9OBKB9EiPf4xozTT5u
-         vo3Q0ZffSgRYqSf2RFXbH2PYSD6oim3gahEY/1xeDXSQdwWmZ5+nNgjRJO5esvzr4mi3
-         Xjow==
-X-Forwarded-Encrypted: i=1; AJvYcCVy6IMvWRvGYIM7k5s/OPtHzgx79E3jd0fiAesVstlMKxOFHHmyH+1k8DowHdJXeuwoOU7sYFOpIaZo@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRk3Ers5Kbp64c9HcdsTlFztz4VJfqdM9w0xzdi6aun4ochuqc
-	4q198Xx/gYCLUp6mUi6N6CKTgZc3zK8AZ1BlYN07KRW/8ckMpefXpp9IML8BHZHn+sbAFC+GtaM
-	F6GCayk0ds5fQubuvdGNQrlTgZ+bVR4Z02+goa//Wdg==
-X-Gm-Gg: ASbGncu8bNBN03W0ZgHDPe1UZjKtTd9NkdLLBOjetxuy+QlXCFJ5zBLqm5aOSIlsRIf
-	cwk6LACR3TtqyBT+6P7l91imo2Kxd9kfQQm79BbI8WBpilLdFJSV0t9wjuMiEYgb6jY2jS+AJ7A
-	ClrffRrZ2fYBt9yH1KPPjG5J2tJjlllyDMQ1AZlKKU9kqBmA8pSWG9qviRQ7sTwZ/30BgIQjvMb
-	RzwKAQ=
-X-Google-Smtp-Source: AGHT+IHpEkQH4zE8nZNumut6IyOKwzxXwXZPLXikec1wNlOm0bT1vQJ2AuF2DGHtOC/up+K5+uVQHVhxHrEqbksxztM=
-X-Received: by 2002:a2e:be83:0:b0:333:7e57:67f0 with SMTP id
- 38308e7fff4ca-3340996a3d6mr37277621fa.28.1755530279380; Mon, 18 Aug 2025
- 08:17:59 -0700 (PDT)
+        bh=yVZcBNGwpkq+v3DR0vvpafxBkSL/1KeRhlI8oyXPu5U=;
+        b=wKV2Tt7w8hbM6LAtW05aBiKeSwPs9FcfVSACEHHbSIKyZNoP7Eq21Mytwzu6kTyU28
+         LG4ts65Ooanp/bxxNpd4JEiNNDFIBhGFveBkc0fuMPZchyuJR6/MOnlNEPEmh/bIj48e
+         DMxMiSDvidglkj6XbtYazrx9Sggjg4gMaXYhrjj7HPJV8AYMI2PrQtVQF1tXtNhsx6SR
+         KBrXWMxWJOLzOZwu+79fL6n0tGXhIxoevsnKkUVPMBlvXnAi9SiCAzgiL8F3dp2Gclr8
+         f08WFNHVYS3UqtdbVGgXKe5jXoL4ojcFawGFVXnJzNehcwwfNXgufVV+ayPnsKdzyAr7
+         jARw==
+X-Forwarded-Encrypted: i=1; AJvYcCXp8hxi8FC/i2ekJF6UEZXbIZtEHkvdWhAiIbDriSiksy4Xa1XK9KZaQrd/SmOcvuRpFfhyZHVHJgUc@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWamw6MBuSRTyyG1PEDel1x+XkchKKfD8UUZurItxfa8bvwEsv
+	GuEBXaeGNQic9sow/SeMU8nz9X6gJ3qjXSpMcl3uoGJOJjC0P7XtckSiVFkifVdui4km/fYIhr7
+	UmjKfFXOulTAQF/dVpYxLumzDjkHJnlYLwtopRhrv5Q==
+X-Gm-Gg: ASbGncuxNvLJPOR3u9GhVv6Q+UzllGOt/DHBrlFxAE4kEKsSIHaV+Tm4bZGQxfl0iov
+	h+tCD+w2/tZaM2H3hiGIgSC+lMlmPsvS4XBuJypHspfkGo/CuOMzk6hnVdPwU1+SISoDk9yjdLV
+	PMlqqfe0tO2L3Ew5UvzO42/+yukLuwK/wa4WSBca0yp7Bw5/wh/VVaj3n2tz40nBnHqizh5y+qU
+	vmTyI0TKsET
+X-Google-Smtp-Source: AGHT+IEuIn7Pd5TPUO8L66bFb+S5ecBGsVI6khVLYk/8B6wK0KvSrOChhN5fjVMUxuyUcCqgOaWvaaAbYkhBGXf3lsc=
+X-Received: by 2002:a2e:bc1b:0:b0:333:ad65:c4bd with SMTP id
+ 38308e7fff4ca-3340990b5cbmr39999151fa.23.1755530537596; Mon, 18 Aug 2025
+ 08:22:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250805150701.129113-1-hendrik.hamerlinck@hammernet.be>
-In-Reply-To: <20250805150701.129113-1-hendrik.hamerlinck@hammernet.be>
+References: <20250801-mtk-dtb-warnings-v1-0-6ba4e432427b@collabora.com>
+ <20250801-mtk-dtb-warnings-v1-8-6ba4e432427b@collabora.com> <CAGXv+5EHk=f62+KiLo-aWMcd0-q+_59kno+uOW5rdYaq5q+5tQ@mail.gmail.com>
+In-Reply-To: <CAGXv+5EHk=f62+KiLo-aWMcd0-q+_59kno+uOW5rdYaq5q+5tQ@mail.gmail.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 18 Aug 2025 17:17:47 +0200
-X-Gm-Features: Ac12FXwu4f8Ac5IEmqGAiQiNmOLkl0amKoCINQhS7HVe6tsTOs7Qh5vl8eGuhWc
-Message-ID: <CACRpkdYK5-Ga+TpwKSroZN_Tku7R7gwA6LrV52W8ydYOqmLk+w@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: spacemit: remove extra line in debug output
-To: Hendrik Hamerlinck <hendrik.hamerlinck@hammernet.be>
-Cc: dlan@gentoo.org, skhan@linuxfoundation.org, 
-	linux-kernel-mentees@lists.linux.dev, linux-gpio@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+Date: Mon, 18 Aug 2025 17:22:05 +0200
+X-Gm-Features: Ac12FXwpejZ0ETsmnb_X42vgeTPsfQZWI7EY17l_sz1-eYnLo5UFkub2X4VrxBw
+Message-ID: <CACRpkdbWctNH0XJfcHfVJM9Etp0WCXpdyhhyaQemH-Xc0LDr0A@mail.gmail.com>
+Subject: Re: [PATCH 8/9] arm64: dts: mediatek: mt8183-kukui: Fix
+ pull-down/up-adv values
+To: Chen-Yu Tsai <wenst@chromium.org>
+Cc: Julien Massot <julien.massot@collabora.com>, kernel@collabora.com, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Ikjoon Jang <ikjn@chromium.org>, 
+	Enric Balletbo i Serra <eballetbo@kernel.org>, Weiyi Lu <weiyi.lu@mediatek.com>, 
+	Eugen Hristev <eugen.hristev@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Julien Massot <jmassot@collabora.com>, 
+	Sean Wang <sean.wang@kernel.org>, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 5, 2025 at 5:08=E2=80=AFPM Hendrik Hamerlinck
-<hendrik.hamerlinck@hammernet.be> wrote:
+On Wed, Aug 6, 2025 at 8:38=E2=80=AFAM Chen-Yu Tsai <wenst@chromium.org> wr=
+ote:
+> On Fri, Aug 1, 2025 at 7:18=E2=80=AFPM Julien Massot wrote
 
-> The debug output for spacemit_pinconf_dbg_show() prints an extra newline
-> at the end. This is redundant as pinconf_pins_show() in pinconf.c already
-> adds a newline in its for loop.
+> >                 pins-clk {
+> >                         pinmux =3D <PINMUX_GPIO124__FUNC_MSDC0_CLK>;
+> >                         drive-strength =3D <MTK_DRIVE_14mA>;
+> > -                       mediatek,pull-down-adv =3D <10>;
+> > +                       mediatek,pull-down-adv =3D <2>;
 >
-> Remove the newline to avoid the extra line in the output.
+>         bias-pull-down =3D <MTK_PUPD_SET_R1R0_10>;
 >
-> Example current output:
-> $ cat /sys/kernel/debug/pinctrl/d401e000.pinctrl/pinconf-pins
-> Pin config settings per pin
-> Format: pin (name): configs
-> pin 0 (GPIO_00): , bias pull disabled, io type (Fixed/1V8), drive strengt=
-h (32 mA), register (0x1041)
+> and so on.
 >
-> pin 1 (GPIO_01): slew rate (0x0), bias pull disabled, io type (Fixed/1V8)=
-, drive strength (32 mA), register (0x1041)
->
-> pin 2 (GPIO_02): slew rate (0x0), bias pull disabled, io type (Fixed/1V8)=
-, drive strength (32 mA), register (0x1041)
->
-> ...
->
-> Signed-off-by: Hendrik Hamerlinck <hendrik.hamerlinck@hammernet.be>
+> ChenYu
 
-Patch applied!
+I agree with ChenYu, the more standardized properties are the better it is.
+
+All the custom properties makes sense for an engineer working with just
+that one SoC (like the SoC vendor...) but for field engineers who have
+to use different SoCs every day this is just a big mess for the mind.
+
+The standard properties are clear, concise and tell you exactly what
+they are about.
+
+The argument should be in Ohms though, according to the standard
+bindings, but maybe the value of MTK_PUPD_SET_R1R0_10 is
+something like that?
 
 Yours,
 Linus Walleij
