@@ -1,215 +1,139 @@
-Return-Path: <linux-gpio+bounces-24513-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24514-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1F66B2AFD7
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 19:58:57 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FCC8B2AFEA
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 20:04:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5010F564149
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 17:58:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DA7717AE84D
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 18:02:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D72F232C309;
-	Mon, 18 Aug 2025 17:58:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ECF825D533;
+	Mon, 18 Aug 2025 18:03:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ph7VQEYP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tzwHpqku"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A182D24B0;
-	Mon, 18 Aug 2025 17:58:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49BB225394B;
+	Mon, 18 Aug 2025 18:03:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755539908; cv=none; b=WIrqGw7bVYNw2SwmxiTW1Z9fh774+tWqX0Ota5uuYyO4DDwQW4g+S8HTWydB73k8QroQCl+sIMqErmBQoKhJiVAOJDIBJElBdiLedSlO2SoK7TX6x2bkvwW8qWoCCQZBIDP28RMl51WnO2dQv1iocWVLbPvIDbVi+ksPbEZsRk4=
+	t=1755540230; cv=none; b=tslvAffFWAFp7Fufo2vWoBYekq8JOAmFGi0a9Eqw4/3eunEoHDlwFhMDjZmKqrnOK2IN432lPJJcgm5A51FPUQDgoyDM0/zh2yE16dyHAnpT5r0I/ElT1qXRJtoE3Tg3Tv+U3KdjQgykO3hMMHkJUI8tAJkoV0oy2TIDiK6PMeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755539908; c=relaxed/simple;
-	bh=ulZLbUkKKsVBIPbfqGa1aUvDJTveq02TSZlicwCIS60=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=InmIxrzX0eAeO5IuJysl1DhII3sTtLRsQ1Ol1n6S3vatgl8PD2SOLO6kaZxMbMXonbUctj6zV5KuZ26idKDMCCT6E8N0bUD4ATjFPsAnPSAA9czc6qxHEUyqWDLjNG2qbIQxEkpTib6LwRIV75+gLKcXfb1lo0hAVnge4tSj0fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ph7VQEYP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D36A7C4CEEB;
-	Mon, 18 Aug 2025 17:58:27 +0000 (UTC)
+	s=arc-20240116; t=1755540230; c=relaxed/simple;
+	bh=RaifyCQZpnzEq7EU2wCA2MNVN2r9uqWOvMcgjy+wcDU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kdWCK1nGMjrfv9mZxoR+B9c9447XPr3sUfaez5wsg2y+j3tE2Gq6gN/MNfCsd+QuKGTKYWuGo+X44FGTC4BZA2wpoPJ4WMruuK2chQgoAritJT33huXeKVA06FnNF4lIj8Sc+sHWMvy3piA6k0tmVhSYDwVSwZdFV9uXtH28MtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tzwHpqku; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40A12C4CEEB;
+	Mon, 18 Aug 2025 18:03:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755539908;
-	bh=ulZLbUkKKsVBIPbfqGa1aUvDJTveq02TSZlicwCIS60=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ph7VQEYPaaGLHX1CxSttvwluawSFjJ3RhwRQ9sc+uLROmePoNX8S92BodjURNxi2u
-	 21Xkf9TnFa6S+lJ8PRefXN7/sK3AKhIaup4wJlKHmP4QLrGOcw3E101A8LCaNXf26G
-	 ira2dKOY0WOzYlvHIZiemDObNHQQQbAp1V2dP5sHjIf9INn0omUMjJuaYEFxL+oOTP
-	 so2CpM/Dz74nw3MwHJ1l+OKqMaQLubHKLXpVP/y72aDcAM1kIH/wnBd8WNXcaabEbz
-	 WFYuX8hGs114fJDBLaDFNt4+jVQIBMGI69iSa2gt0xa1cfn+Bdfa+JjASll7obpXa8
-	 SLObNXlw2ffWQ==
-Date: Mon, 18 Aug 2025 12:58:27 -0500
-From: Rob Herring <robh@kernel.org>
-To: Yao Zi <ziyao@disroot.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH 1/3] dt-binding: pinctrl: Document Loongson 2K0300 pin
- controller
-Message-ID: <20250818175827.GA1507697-robh@kernel.org>
-References: <20250811163749.47028-2-ziyao@disroot.org>
- <20250811163749.47028-3-ziyao@disroot.org>
+	s=k20201202; t=1755540229;
+	bh=RaifyCQZpnzEq7EU2wCA2MNVN2r9uqWOvMcgjy+wcDU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tzwHpqku9YLK8zxrqus3OwkhNBtSaBRU/Hb1+WxGFpoPEHayUkzjBqVfLcXzxXrxT
+	 9ah55lc99qT0MQkbvz9LtgRU8KI+lMINLnw8Tu2g9/yjEe3b3rI+NwuSxcMFpoPnP+
+	 lsTNWOdllDS/5jy6O/Ck2jE0Snf0VNht3O89cAHVJxxT44m50iRYn4JpljQFChzQiv
+	 aygrOID+wHOJwoc7okLev9oRmD3nonup9mMwnuwNYLUtDzhnLUeux9DjMHxCB7vZFM
+	 QNqMIHZvmY0jIbFup3IJdcOD7odTD9+NZVMus290qkCWi2z+6XSgtRLegCgpjrAdsf
+	 ZsZgrkRQmC3iA==
+Message-ID: <08dd199e-0e7d-44b8-b980-5fde226cd636@kernel.org>
+Date: Mon, 18 Aug 2025 13:03:48 -0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250811163749.47028-3-ziyao@disroot.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] gpiolib: acpi: Program debounce when finding GPIO
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: mario.limonciello@amd.com, westeri@kernel.org,
+ andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org, brgl@bgdev.pl,
+ linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+References: <20250818015219.3604648-1-superm1@kernel.org>
+ <20250818045538.GH476609@black.igk.intel.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20250818045538.GH476609@black.igk.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Aug 11, 2025 at 04:37:48PM +0000, Yao Zi wrote:
-> The pincontroller integarted in Loongson 2K0300 is able to configure
-> function multiplexing for all the pins. It could also configure drive
-> strength on basis of functions, which means all pins set to the same
-> function share drive-strength setting. Drive-strength configuration
-> isn't available for all functions, either.
+On 8/17/25 11:55 PM, Mika Westerberg wrote:
+> Hi,
 > 
-> This binding utilizes two levels of subnodes, where the outer represents
-> function and the inner represents groups. Drive-strength is allowed in
-> the outer since it's shared among all groups configured to the function.
+> On Sun, Aug 17, 2025 at 08:52:07PM -0500, Mario Limonciello (AMD) wrote:
+>> When soc-button-array looks up the GPIO to use it calls acpi_find_gpio()
+>> which will parse _CRS.
+>>
+>> acpi_find_gpio.cold (drivers/gpio/gpiolib-acpi-core.c:953)
+>> gpiod_find_and_request (drivers/gpio/gpiolib.c:4598 drivers/gpio/gpiolib.c:4625)
+>> gpiod_get_index (drivers/gpio/gpiolib.c:4877)
+>>
+>> The GPIO is setup basically, but the debounce information is discarded.
+>> The platform will assert what debounce should be in _CRS, so program it
+>> at the time it's available.
 > 
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
-> ---
->  .../pinctrl/loongson,ls2k0300-pinctrl.yaml    | 92 +++++++++++++++++++
->  MAINTAINERS                                   |  6 ++
->  2 files changed, 98 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pinctrl.yaml
+> The spec says for GpioInt():
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..cbd74cb45342
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pinctrl.yaml
-> @@ -0,0 +1,92 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/loongson,ls2k0300-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Loongson-2K0300 SoC Pinctrl Controller
-> +
-> +maintainers:
-> +  - Yao Zi <ziyao@disroot.org>
-> +
-> +allOf:
-> +  - $ref: pinctrl.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: loongson,ls2k0300-pinctrl
-> +
-> +  reg:
-> +    items:
-> +      - description: Pin function-multiplexing configuration registers
-> +      - description: Pin drive-strength configuration registers
-> +
-> +  reg-names:
-> +    items:
-> +      - const: mux
-> +      - const: drive
-> +
-> +patternProperties:
-> +  '^func-':
-> +    type: object
-> +
-> +    $ref: pincfg-node.yaml#
-> +
-> +    properties:
-> +      drive-strength:
-> +        description:
-> +          Maximum sink or source current as defined in pincfg-node.yaml. Note
-> +          that drive strength could only be configured on function basis, i.e.,
-> +          all pins multiplexed to the same function share the same
-> +          configuration.
-> +
-> +          This could only be configured for several functions, including jtag,
-> +          dvo, uart, gmac, sdio, spi, i2s, timer, usb and emmc.
-> +        enum: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-
-How do you know what pin this drive strength corresponds to without any 
-other properties? Node names generally aren't important, so you 
-shouldn't be using that. 
-
-> +
-> +    additionalProperties: false
-> +
-> +    patternProperties:
-> +      '-pins$':
-> +        type: object
-> +        $ref: pinmux-node.yaml#
-
-Generally the pin config and muxing are in 1 node if you can control 
-both.
-
-> +
-> +        properties:
-> +          pinmux:
-> +            description:
-> +              Integer array, represents GPIO pin number and multiplexing
-> +              setting. Configuration for each pin takes one cell. The pin
-> +              number locates at the high 24 bits, and the setting locates at
-> +              the low 8 bits.
-> +
-> +        additionalProperties: false
-> +
-> +        required:
-> +          - pinmux
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    pinctrl@1fe00420 {
-> +        compatible = "loongson,ls2k0300-pinctrl";
-> +        reg = <0x16000490 0x20>, <0x16000110 0x4>;
-> +        reg-names = "mux", "drive";
-> +
-> +        func-uart {
-> +            drive-strength = <2>;
-> +
-> +            uart0-pins {
-> +                pinmux = <((40 << 8) | 0x3)>, <((41 << 8) | 0x3)>;
-> +            };
-> +
-> +            uart1_pins: uart1-pins {
-> +                pinmux = <((42 << 8) | 0x3)>, <((43 << 8) | 0x3)>;
-> +            };
-> +        };
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 7960e65d7dfc..dd50571b4072 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14414,6 +14414,12 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
->  F:	drivers/thermal/loongson2_thermal.c
->  
-> +LOONGSON-2K0300 SOC PINCTRL DRIVER
-> +M:	Yao Zi <ziyao@disroot.org>
-> +L:	linux-gpio@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pinctrl.yaml
-> +
->  LOONGSON EDAC DRIVER
->  M:	Zhao Qunqin <zhaoqunqin@loongson.cn>
->  L:	linux-edac@vger.kernel.org
-> -- 
-> 2.50.1
+>    DebounceTimeout is an optional argument specifying the debounce wait
+>    time, in hundredths of milliseconds. The bit field name _DBT is
+>    automatically created to refer to this portion of the resource
+>    descriptor.
 > 
+> I was not sure but wanted to check that if it is left out, does ACPICA fill
+> it with 0? If yes (I would expect so) then this is fine.
+
+Yeah AFAICT you're right.  The ACPI resource is zero'ed out, so if the 
+field was empty it should default to zero.
+
+> 
+>> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
+>> ---
+>> v4:
+> 
+> You missed "v4" in the $subject.
+
+Whoops, thanks.  If there ends up being a reason to spin I'll send the 
+next one as a v5.
+
+> 
+>>   * Just add a direct call instead
+>>   * drop tag
+>>   * update commit message
+>> ---
+>>   drivers/gpio/gpiolib-acpi-core.c | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>
+>> diff --git a/drivers/gpio/gpiolib-acpi-core.c b/drivers/gpio/gpiolib-acpi-core.c
+>> index 12b24a717e43f..6388e8e363dee 100644
+>> --- a/drivers/gpio/gpiolib-acpi-core.c
+>> +++ b/drivers/gpio/gpiolib-acpi-core.c
+>> @@ -944,6 +944,7 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
+>>   	bool can_fallback = acpi_can_fallback_to_crs(adev, con_id);
+>>   	struct acpi_gpio_info info;
+>>   	struct gpio_desc *desc;
+>> +	int ret;
+>>   
+>>   	desc = __acpi_find_gpio(fwnode, con_id, idx, can_fallback, &info);
+>>   	if (IS_ERR(desc))
+>> @@ -957,6 +958,11 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
+>>   
+>>   	acpi_gpio_update_gpiod_flags(dflags, &info);
+>>   	acpi_gpio_update_gpiod_lookup_flags(lookupflags, &info);
+>> +	/* ACPI uses hundredths of milliseconds units */
+>> +	ret = gpio_set_debounce_timeout(desc, info.debounce * 10);
+>> +	if (ret)
+>> +		return ERR_PTR(ret);
+>> +
+>>   	return desc;
+>>   }
+>>   
+>> -- 
+>> 2.43.0
+
 
