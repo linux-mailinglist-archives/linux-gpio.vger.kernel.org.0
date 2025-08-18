@@ -1,139 +1,88 @@
-Return-Path: <linux-gpio+bounces-24514-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24515-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5FCC8B2AFEA
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 20:04:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DB18B2B44E
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 01:07:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DA7717AE84D
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 18:02:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 118252A0C19
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 23:07:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ECF825D533;
-	Mon, 18 Aug 2025 18:03:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6B6526FA6F;
+	Mon, 18 Aug 2025 23:07:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tzwHpqku"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HyenZzZr"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49BB225394B;
-	Mon, 18 Aug 2025 18:03:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8372821FF3F;
+	Mon, 18 Aug 2025 23:07:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755540230; cv=none; b=tslvAffFWAFp7Fufo2vWoBYekq8JOAmFGi0a9Eqw4/3eunEoHDlwFhMDjZmKqrnOK2IN432lPJJcgm5A51FPUQDgoyDM0/zh2yE16dyHAnpT5r0I/ElT1qXRJtoE3Tg3Tv+U3KdjQgykO3hMMHkJUI8tAJkoV0oy2TIDiK6PMeI=
+	t=1755558422; cv=none; b=fXCmQba2azNequYQva/N4iwD7164UfEZ5m+tsCh2e/MMB9QxB/OoJgjrXxhilaqLYvgl+StOh/5JOpKxdQ+uG0yimvvo1Jn1oqHTYfLPC865mvEbD3AX+3i9K+TvtzUgXLmIVaLyzQ3EKk8SCvN3ibEuJnfU0y3JHkHOm24NNII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755540230; c=relaxed/simple;
-	bh=RaifyCQZpnzEq7EU2wCA2MNVN2r9uqWOvMcgjy+wcDU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kdWCK1nGMjrfv9mZxoR+B9c9447XPr3sUfaez5wsg2y+j3tE2Gq6gN/MNfCsd+QuKGTKYWuGo+X44FGTC4BZA2wpoPJ4WMruuK2chQgoAritJT33huXeKVA06FnNF4lIj8Sc+sHWMvy3piA6k0tmVhSYDwVSwZdFV9uXtH28MtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tzwHpqku; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40A12C4CEEB;
-	Mon, 18 Aug 2025 18:03:49 +0000 (UTC)
+	s=arc-20240116; t=1755558422; c=relaxed/simple;
+	bh=bIrUDiP/86+DTmKlcbYBKHUD+iBOkrl7tWlWebsrONk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=oBHMz0B9Xh4ydfXUGpHOKB4VdB88N2GFQz8y/Hwrg65GnJ9ZPaFfjTJ/mx17F8K2VJJT3Hi6ZOcx/6Tw2Tk8taqKpOdRiTesl7ltcFQ1jNVbPEbuJLPbks0aE/7oiAd8ISOG1AlUAGvdd3wVcSU9d1AincvySlwJ+uVHSjjSrA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HyenZzZr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9FFDC4CEEB;
+	Mon, 18 Aug 2025 23:07:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755540229;
-	bh=RaifyCQZpnzEq7EU2wCA2MNVN2r9uqWOvMcgjy+wcDU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tzwHpqku9YLK8zxrqus3OwkhNBtSaBRU/Hb1+WxGFpoPEHayUkzjBqVfLcXzxXrxT
-	 9ah55lc99qT0MQkbvz9LtgRU8KI+lMINLnw8Tu2g9/yjEe3b3rI+NwuSxcMFpoPnP+
-	 lsTNWOdllDS/5jy6O/Ck2jE0Snf0VNht3O89cAHVJxxT44m50iRYn4JpljQFChzQiv
-	 aygrOID+wHOJwoc7okLev9oRmD3nonup9mMwnuwNYLUtDzhnLUeux9DjMHxCB7vZFM
-	 QNqMIHZvmY0jIbFup3IJdcOD7odTD9+NZVMus290qkCWi2z+6XSgtRLegCgpjrAdsf
-	 ZsZgrkRQmC3iA==
-Message-ID: <08dd199e-0e7d-44b8-b980-5fde226cd636@kernel.org>
-Date: Mon, 18 Aug 2025 13:03:48 -0500
+	s=k20201202; t=1755558421;
+	bh=bIrUDiP/86+DTmKlcbYBKHUD+iBOkrl7tWlWebsrONk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=HyenZzZraU25GLPXdcpXfHpsQKfL0KuH2VzDTa0W0+BNQD29CkDvDoCNddU+PA7GE
+	 KPRfBQDKtfbx+uqJQidU9QDVg9bZxU/n/90YH8C/3RZKxJqEzC4Yek16e6r9vKXrbc
+	 SOm6e1vsDuJRIhNl/CFPwcsV9J8kVHMnavErgqrS9yY6aA7/bs5HVP2DPkZd0WPdhS
+	 Ww8FUjh7TbgDmpIi72GeP5Kh52wM3WED1fFvaMSgP6VFVQ+t3sEeCI6jBDyr7q9kgT
+	 jzfwB4gyuaeWwkA9OBoCeMDGVEWcPN4Hx6qHYFOdzS9O8zclqPsGIJ1xs9dgOj/uqT
+	 SWlopoVjN7HtA==
+Date: Mon, 18 Aug 2025 18:06:59 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Christian Bruel <christian.bruel@foss.st.com>, corbet@lwn.net,
+	bhelgaas@google.com, mani@kernel.org, linux-gpio@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/2] Add pinctrl_pm_select_init_state helper function
+Message-ID: <20250818230659.GA561724@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gpiolib: acpi: Program debounce when finding GPIO
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: mario.limonciello@amd.com, westeri@kernel.org,
- andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org, brgl@bgdev.pl,
- linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-References: <20250818015219.3604648-1-superm1@kernel.org>
- <20250818045538.GH476609@black.igk.intel.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20250818045538.GH476609@black.igk.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdZGaMf1m9UK7ai3KLJBSJtWJagzMMa6icMxEL04w7fkMA@mail.gmail.com>
 
-On 8/17/25 11:55 PM, Mika Westerberg wrote:
-> Hi,
+On Mon, Aug 18, 2025 at 05:32:14PM +0200, Linus Walleij wrote:
+> On Wed, Aug 13, 2025 at 10:13 AM Christian Bruel
+> <christian.bruel@foss.st.com> wrote:
 > 
-> On Sun, Aug 17, 2025 at 08:52:07PM -0500, Mario Limonciello (AMD) wrote:
->> When soc-button-array looks up the GPIO to use it calls acpi_find_gpio()
->> which will parse _CRS.
->>
->> acpi_find_gpio.cold (drivers/gpio/gpiolib-acpi-core.c:953)
->> gpiod_find_and_request (drivers/gpio/gpiolib.c:4598 drivers/gpio/gpiolib.c:4625)
->> gpiod_get_index (drivers/gpio/gpiolib.c:4877)
->>
->> The GPIO is setup basically, but the debounce information is discarded.
->> The platform will assert what debounce should be in _CRS, so program it
->> at the time it's available.
+> > Some platforms need to set the pinctrl to an initial state during
+> > pm_resume, just like during probe. To achieve this, the missing function
+> > pinctrl_pm_select_init_state() is added to the list of already existing
+> > pinctrl PM helper functions.
+> >
+> > This allows a driver to use the pinctrl init and default states in the
+> > pm_runtime platform resume handlers, just as in probe.
+> >
+> > Additionally the missing documentation describing these pinctrl standard
+> > states used during probe has been added.
+> >
+> > This fixes a build issue for the STM32MP25 PCIe staged in the pcie tree,
+> > id 5a972a01e24b
 > 
-> The spec says for GpioInt():
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 > 
->    DebounceTimeout is an optional argument specifying the debounce wait
->    time, in hundredths of milliseconds. The bit field name _DBT is
->    automatically created to refer to this portion of the resource
->    descriptor.
-> 
-> I was not sure but wanted to check that if it is left out, does ACPICA fill
-> it with 0? If yes (I would expect so) then this is fine.
+> Björn: Just apply this to the PCI tree.
 
-Yeah AFAICT you're right.  The ACPI resource is zero'ed out, so if the 
-field was empty it should default to zero.
+Thanks, Linus, will do!
 
-> 
->> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
->> ---
->> v4:
-> 
-> You missed "v4" in the $subject.
-
-Whoops, thanks.  If there ends up being a reason to spin I'll send the 
-next one as a v5.
-
-> 
->>   * Just add a direct call instead
->>   * drop tag
->>   * update commit message
->> ---
->>   drivers/gpio/gpiolib-acpi-core.c | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/drivers/gpio/gpiolib-acpi-core.c b/drivers/gpio/gpiolib-acpi-core.c
->> index 12b24a717e43f..6388e8e363dee 100644
->> --- a/drivers/gpio/gpiolib-acpi-core.c
->> +++ b/drivers/gpio/gpiolib-acpi-core.c
->> @@ -944,6 +944,7 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
->>   	bool can_fallback = acpi_can_fallback_to_crs(adev, con_id);
->>   	struct acpi_gpio_info info;
->>   	struct gpio_desc *desc;
->> +	int ret;
->>   
->>   	desc = __acpi_find_gpio(fwnode, con_id, idx, can_fallback, &info);
->>   	if (IS_ERR(desc))
->> @@ -957,6 +958,11 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
->>   
->>   	acpi_gpio_update_gpiod_flags(dflags, &info);
->>   	acpi_gpio_update_gpiod_lookup_flags(lookupflags, &info);
->> +	/* ACPI uses hundredths of milliseconds units */
->> +	ret = gpio_set_debounce_timeout(desc, info.debounce * 10);
->> +	if (ret)
->> +		return ERR_PTR(ret);
->> +
->>   	return desc;
->>   }
->>   
->> -- 
->> 2.43.0
-
+Bjorn
 
