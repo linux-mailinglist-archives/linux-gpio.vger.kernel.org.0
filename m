@@ -1,213 +1,177 @@
-Return-Path: <linux-gpio+bounces-24498-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24494-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 813E5B2A281
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 14:58:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 33828B2A185
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 14:29:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A78F31783D5
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 12:51:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E941F16D1FF
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 12:21:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B544A31B102;
-	Mon, 18 Aug 2025 12:50:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19D2C31AF24;
+	Mon, 18 Aug 2025 12:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="imPR8A/O"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F41B30E83F;
-	Mon, 18 Aug 2025 12:50:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A13326D40;
+	Mon, 18 Aug 2025 12:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755521452; cv=none; b=c6WCqaO4wMMeznN2kA2XU9jiz6mp4T4gdChvNeRIcKssG2kSiMeooLNCfxtD/nGyFmk01dC2DeqcSXGTNHFxZgDt6qfn0J30StsaimC4+8hflqH89CnR6BFXpMqBktgsFn6+NNweu1wOukk6Tt0cxg/qGDgtDx8KHOu3SV08rwc=
+	t=1755519663; cv=none; b=rsoBXKRRarTlO+upW1SDvXFavmmvLdnJAzDrYhWvxZf2Zh2IXl74PY4toPgpwSrntLe+1iiR5JEvMIUZz8GbH61v6pDva1KBhblXmRXHcjDDx5Xvo2AlNgGSE5w/WBrgt2LsdX0gYjzAoKoigJByBoCrDOzjYiwy+5/cNL0iI1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755521452; c=relaxed/simple;
-	bh=PLM/65JvqNc3NilFjJ1vKDYuZPfhd7TFnkWsRNB/R5A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R7dSiGGcsiMJUyfMnHfgt5L/M/SJAcflalplAKk7n5uKnSFw2kS+nP0UFs78loYhSUKK0kCtd9VbdlhUK/FIL/Dgnk21uC63jj+mkpPwbFqH2KEayxjiwN8BJVMecVayYLp82DPxf5KkwFS7NiomwXqtBOxhSOR+NNJX1XoVpVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4c5BYd0rhsz9sV3;
-	Mon, 18 Aug 2025 14:17:41 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id LUzjzR3pCnxq; Mon, 18 Aug 2025 14:17:41 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4c5BYc0gBfz9sV0;
-	Mon, 18 Aug 2025 14:17:40 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id F2A748B763;
-	Mon, 18 Aug 2025 14:17:39 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id Ump101Aa9xV9; Mon, 18 Aug 2025 14:17:39 +0200 (CEST)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [10.25.207.160])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id C3BEB8B764;
-	Mon, 18 Aug 2025 14:17:39 +0200 (CEST)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-gpio@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 2/2] powerpc/44x: Drop legacy-of-mm-gpiochip.h header
-Date: Mon, 18 Aug 2025 14:17:35 +0200
-Message-ID: <2f8f16eac72b9ec202b6e593939b44308891a661.1755519343.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <29d89aa43536714b193d9710301341f838fcb5b7.1755519343.git.christophe.leroy@csgroup.eu>
-References: <29d89aa43536714b193d9710301341f838fcb5b7.1755519343.git.christophe.leroy@csgroup.eu>
+	s=arc-20240116; t=1755519663; c=relaxed/simple;
+	bh=A8+8JTo1sCsIaH/3O1BVh4htmK/8hEKoBF4heRWvXIs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Kxj0acXXFTcryWSBr1PmOy6uHzwtZL/sbphbvU+fZU+5pJXsM72uOPlG6JwDpX1lrXJzZtUZEmxppWD3pp6bsBkpeioR3tp56wyOoWxpmymPJFJmVb/9aOC/thDuJWdEEa40YVlkN6Mus0uUPzMvT/QaFsTpx4N5wMzV/uT9Ab8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=imPR8A/O; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57IBGdPu032348;
+	Mon, 18 Aug 2025 14:20:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	lAMmpDtYCfkoYrqxpq6XktgA+w7f+7+MRuTH/F71Yto=; b=imPR8A/OMbS0hMQf
+	3WwZBJsZBgZ7gHblZoXzYvnYc7X/T6iczc5d+LtY0DqtQ6GASKg7Ycm0Ci6buwad
+	2BAf1kBb8ziVigu8YOjExHerj0oUQht0bmp7q+OkDCZ+z3UtTBKkhv5Ap8wOZPTp
+	p+5XhS3AHJB76arlVmnvKb6TYg0K2zoAfD/YGbEjK9dRDBInLD4zUP9aBrgFlJtu
+	82kMLF/enXswDX7n+i2gDcCNQbhorwNagtOn84ECes7jx1pkHDUxYBhcDpR9bDYL
+	FywPUFxngMRZGH2ih+3tLC+oIa46mYjzSqqdELl/4Etu40VrjIpSIGThaujVu2+6
+	iM2/8w==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 48jfdk6pkq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 18 Aug 2025 14:20:45 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id BA1D54004A;
+	Mon, 18 Aug 2025 14:19:39 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EE2BE723768;
+	Mon, 18 Aug 2025 14:18:47 +0200 (CEST)
+Received: from [10.130.77.120] (10.130.77.120) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 18 Aug
+ 2025 14:18:47 +0200
+Message-ID: <c8076e56-4b5a-466c-8702-0a7a596f987e@foss.st.com>
+Date: Mon, 18 Aug 2025 14:18:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1755519455; l=4820; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=PLM/65JvqNc3NilFjJ1vKDYuZPfhd7TFnkWsRNB/R5A=; b=Zjq/6FK9sXzyA80Ffb9ZnhDUHevV7VYAjbbUcFcnIkEAr3H0LvJ9wrxocZC5UcGLVp3Oh7hrV 3XC/VOwClHACT50kbShSMq0VXZqNlEjXjdKEW/gab6AUUSk0gOtmVyK
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] PCI: stm32: use pinctrl_pm_select_init_state() in
+ stm32_pcie_resume_noirq()
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: <lpieralisi@kernel.org>, <kwilczynski@kernel.org>, <mani@kernel.org>,
+        <robh@kernel.org>, <bhelgaas@google.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@foss.st.com>, <linus.walleij@linaro.org>,
+        <linux-pci@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, kernel test robot <lkp@intel.com>
+References: <20250813190633.GA284987@bhelgaas>
+From: Christian Bruel <christian.bruel@foss.st.com>
+Content-Language: en-US
+In-Reply-To: <20250813190633.GA284987@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-18_05,2025-08-14_01,2025-03-28_01
 
-Remove legacy-of-mm-gpiochip.h header file. The above mentioned
-file provides an OF API that's deprecated. There is no agnostic
-alternatives to it and we have to open code the logic which was
-hidden behind of_mm_gpiochip_add_data(). Note, most of the GPIO
-drivers are using their own labeling schemas and resource retrieval
-that only a few may gain of the code deduplication, so whenever
-alternative is appear we can move drivers again to use that one.
 
-As a side effect this change fixes a potential memory leak on
-an error path, if of_mm_gpiochip_add_data() fails.
 
-[Text copied from commit 34064c8267a6 ("powerpc/8xx: Drop
-legacy-of-mm-gpiochip.h header")]
+On 8/13/25 21:06, Bjorn Helgaas wrote:
+> On Wed, Aug 13, 2025 at 01:53:19PM +0200, Christian Bruel wrote:
+>> Replace direct access to dev->pins->init_state with the new helper
+>> pinctrl_pm_select_init_state() to select the init pinctrl state.
+>> This fixes build issues when CONFIG_PINCTRL is not defined.
+>>
+>> Depends-on: <20250813081139.93201-3-christian.bruel@foss.st.com>
+>> Reported-by: Bjorn Helgaas <bhelgaas@google.com>
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> Closes: https://lore.kernel.org/oe-kbuild-all/202506260920.bmQ9hQ9s-lkp@intel.com/
+>> Fixes: 633f42f48af5 ("PCI: stm32: Add PCIe host support for STM32MP25")
+>> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
+> 
+> I can't merge 633f42f48af5 as-is because of the build issue.
+> 
+> Pinctrl provides stubs for the non-CONFIG_PINCTRL case; the issue is
+> that 633f42f48af5 uses dev->pins, which only exists when
+> CONFIG_PINCTRL is enabled.
+> 
+> The possibilities I see are:
+> 
+>    1) Merge initial stm32 without suspend/resume support via PCI, merge
+>       pinctrl_pm_select_init_state() via pinctrl, then add stm32
+>       suspend/resume support.  pinctrl_pm_select_init_state() and stm32
+>       (without suspend/resume) would appear in v6.18, and stm32
+>       suspend/resume would be added in v6.19.
+> 
+>    2) Temporarily #ifdef the dev->pins use.  pinctrl_pm_select_init_state()
+>       and stm32 (with #ifdef) would appear in v6.18, follow-on patch to
+>       replace #ifdef with pinctrl_pm_select_init_state() would appear
+>       in v6.19.
+>    3) Merge your [1] to add pinctrl_pm_select_init_state() via PCI with
+>       Linus's ack, followed by the stm32 series with the change below
+>       squashed in.  Everything would appear in v6.18.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/platforms/44x/Kconfig |  1 -
- arch/powerpc/platforms/44x/gpio.c  | 33 +++++++++++++++++-------------
- 2 files changed, 19 insertions(+), 15 deletions(-)
+or 4) Linus applies it in his PINCTRL branch and Mani cherry-pick it in 
+PCI. But that will be a conflict to solve when both comes to mainline.
 
-diff --git a/arch/powerpc/platforms/44x/Kconfig b/arch/powerpc/platforms/44x/Kconfig
-index 35a1f4b9f827..fc79f8466933 100644
---- a/arch/powerpc/platforms/44x/Kconfig
-+++ b/arch/powerpc/platforms/44x/Kconfig
-@@ -231,7 +231,6 @@ config PPC4xx_GPIO
- 	bool "PPC4xx GPIO support"
- 	depends on 44x
- 	select GPIOLIB
--	select OF_GPIO_MM_GPIOCHIP
- 	help
- 	  Enable gpiolib support for ppc440 based boards
- 
-diff --git a/arch/powerpc/platforms/44x/gpio.c b/arch/powerpc/platforms/44x/gpio.c
-index a025b3248342..aea0d913b59d 100644
---- a/arch/powerpc/platforms/44x/gpio.c
-+++ b/arch/powerpc/platforms/44x/gpio.c
-@@ -14,7 +14,6 @@
- #include <linux/spinlock.h>
- #include <linux/io.h>
- #include <linux/of.h>
--#include <linux/gpio/legacy-of-mm-gpiochip.h>
- #include <linux/gpio/driver.h>
- #include <linux/types.h>
- #include <linux/slab.h>
-@@ -46,7 +45,8 @@ struct ppc4xx_gpio {
- };
- 
- struct ppc4xx_gpio_chip {
--	struct of_mm_gpio_chip mm_gc;
-+	struct gpio_chip gc;
-+	void __iomem *regs;
- 	spinlock_t lock;
- };
- 
-@@ -58,8 +58,8 @@ struct ppc4xx_gpio_chip {
- 
- static int ppc4xx_gpio_get(struct gpio_chip *gc, unsigned int gpio)
- {
--	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
--	struct ppc4xx_gpio __iomem *regs = mm_gc->regs;
-+	struct ppc4xx_gpio_chip *chip = gpiochip_get_data(gc);
-+	struct ppc4xx_gpio __iomem *regs = chip->regs;
- 
- 	return !!(in_be32(&regs->ir) & GPIO_MASK(gpio));
- }
-@@ -67,8 +67,8 @@ static int ppc4xx_gpio_get(struct gpio_chip *gc, unsigned int gpio)
- static inline void
- __ppc4xx_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
- {
--	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
--	struct ppc4xx_gpio __iomem *regs = mm_gc->regs;
-+	struct ppc4xx_gpio_chip *chip = gpiochip_get_data(gc);
-+	struct ppc4xx_gpio __iomem *regs = chip->regs;
- 
- 	if (val)
- 		setbits32(&regs->or, GPIO_MASK(gpio));
-@@ -94,9 +94,8 @@ static int ppc4xx_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
- 
- static int ppc4xx_gpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
- {
--	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
- 	struct ppc4xx_gpio_chip *chip = gpiochip_get_data(gc);
--	struct ppc4xx_gpio __iomem *regs = mm_gc->regs;
-+	struct ppc4xx_gpio __iomem *regs = chip->regs;
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&chip->lock, flags);
-@@ -124,9 +123,8 @@ static int ppc4xx_gpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
- static int
- ppc4xx_gpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
- {
--	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
- 	struct ppc4xx_gpio_chip *chip = gpiochip_get_data(gc);
--	struct ppc4xx_gpio __iomem *regs = mm_gc->regs;
-+	struct ppc4xx_gpio __iomem *regs = chip->regs;
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&chip->lock, flags);
-@@ -161,7 +159,6 @@ static int ppc4xx_gpio_probe(struct platform_device *ofdev)
- 	struct device *dev = &ofdev->dev;
- 	struct device_node *np = dev->of_node;
- 	struct ppc4xx_gpio_chip *chip;
--	struct of_mm_gpio_chip *mm_gc;
- 	struct gpio_chip *gc;
- 
- 	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
-@@ -170,16 +167,24 @@ static int ppc4xx_gpio_probe(struct platform_device *ofdev)
- 
- 	spin_lock_init(&chip->lock);
- 
--	mm_gc = &chip->mm_gc;
--	gc = &mm_gc->gc;
-+	gc = &chip->gc;
- 
-+	gc->base = -1;
- 	gc->ngpio = 32;
- 	gc->direction_input = ppc4xx_gpio_dir_in;
- 	gc->direction_output = ppc4xx_gpio_dir_out;
- 	gc->get = ppc4xx_gpio_get;
- 	gc->set = ppc4xx_gpio_set;
- 
--	return of_mm_gpiochip_add_data(np, mm_gc, chip);
-+	gc->label = devm_kasprintf(dev, GFP_KERNEL, "%pOF", np);
-+	if (!gc->label)
-+		return -ENOMEM;
-+
-+	chip->regs = devm_of_iomap(dev, np, 0, NULL);
-+	if (IS_ERR(chip->regs))
-+		return PTR_ERR(chip->regs);
-+
-+	return devm_gpiochip_add_data(dev, gc, chip);
- }
- 
- static const struct of_device_id ppc4xx_gpio_match[] = {
--- 
-2.49.0
+Personally I prefer 3) if Linus Acks, to break the dependency
+
+Thank you
+
+Christian
+
+> 
+> I'm OK with any of these.
+> 
+> [1] https://lore.kernel.org/r/20250813081139.93201-1-christian.bruel@foss.st.com
+> 
+>> ---
+>> Changes in v1:
+>>   - pinctrl_pm_select_init_state() return 0 if the state is not defined.
+>>     No need to test as pinctrl_pm_select_default_state() is called.
+>> ---
+>>   drivers/pci/controller/dwc/pcie-stm32.c | 10 +++-------
+>>   1 file changed, 3 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-stm32.c b/drivers/pci/controller/dwc/pcie-stm32.c
+>> index 50fae5f5ced2..8501b9ed0633 100644
+>> --- a/drivers/pci/controller/dwc/pcie-stm32.c
+>> +++ b/drivers/pci/controller/dwc/pcie-stm32.c
+>> @@ -90,14 +90,10 @@ static int stm32_pcie_resume_noirq(struct device *dev)
+>>   
+>>   	/*
+>>   	 * The core clock is gated with CLKREQ# from the COMBOPHY REFCLK,
+>> -	 * thus if no device is present, must force it low with an init pinmux
+>> -	 * to be able to access the DBI registers.
+>> +	 * thus if no device is present, must deassert it with a GPIO from
+>> +	 * pinctrl pinmux before accessing the DBI registers.
+>>   	 */
+>> -	if (!IS_ERR(dev->pins->init_state))
+>> -		ret = pinctrl_select_state(dev->pins->p, dev->pins->init_state);
+>> -	else
+>> -		ret = pinctrl_pm_select_default_state(dev);
+>> -
+>> +	ret = pinctrl_pm_select_init_state(dev);
+>>   	if (ret) {
+>>   		dev_err(dev, "Failed to activate pinctrl pm state: %d\n", ret);
+>>   		return ret;
+>> -- 
+>> 2.34.1
+>>
 
 
