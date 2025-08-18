@@ -1,156 +1,174 @@
-Return-Path: <linux-gpio+bounces-24478-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24479-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4D4BB29A8F
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 09:12:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 450D8B29AC0
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 09:26:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B99643AD67F
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 07:12:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A917718A01FA
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Aug 2025 07:26:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B11BA1A8412;
-	Mon, 18 Aug 2025 07:12:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41867279358;
+	Mon, 18 Aug 2025 07:26:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HlF2kawC"
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="GjSJmBL2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1760425DAFF
-	for <linux-gpio@vger.kernel.org>; Mon, 18 Aug 2025 07:12:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07EB95FDA7
+	for <linux-gpio@vger.kernel.org>; Mon, 18 Aug 2025 07:26:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755501143; cv=none; b=RvhaN/Wk0PxFPFienXyqG+1Cq7Zqnn1IMpRShLpxmk1n3aM4mxNTyqq8qDAn4VMzCijdnFyfFUYOIVbglR+GCvYvtEhdzzVrbOkXaqNAe93rtwBis1r8RXHfYxm8IdkDHQEqLy6ZnWnU3Caty3odv8/Wv88v4jxmP9kgP0Hlp+0=
+	t=1755501967; cv=none; b=ubWpsnu6ft8w+Cra+Fikrc5DZcYbmcjAw+nCfuhKgPDCNXKB12yiJuMFqoOavToBbpcfPvmQF9MOXjnmTwO8PytUHQsQpsgnAxG9HFATBQsdYpBIvzJ2Vs97TIIWTFvMs7tq4tBrIWnTd7WX7hTVdWVa3Ps2tiqWqtSdUjWTw5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755501143; c=relaxed/simple;
-	bh=0171qvNEwhctc8IfFKLfbfF7b9YjDUBrifuNLF1OewA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oY6P3hqbRndR/f8k//KGu7OObNrN7KCeGCj1jX65IZb5mzw0CmrobRgmkLG13hgNbRKyA6wg3mbmky0OFdAiV5RCRcYfKgTWlZQXxieabxMD04axc2Hk0lb7TNIKuxHn36NLJl8HVTbfS6BnnV0hbzjHm3c0pmAedqZPCqK0LKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HlF2kawC; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57HJUH4I007855
-	for <linux-gpio@vger.kernel.org>; Mon, 18 Aug 2025 07:12:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	CljCLWxC3VuOUrt1/JUd1oMX4O4FgjwPAOwwS6aA++M=; b=HlF2kawC+j703on/
-	tH5fytuhbAfUDjBtj0KO0CikZ2/NCfa+q9or3wRHbgqp13aUjx+Ud6kQCPRUpzBO
-	9IveNJ1Y3to6RGWVghPNpGt8tPAeuuq59leOkbMqbcgUSoizMqyGpSdN/m2+N4Cc
-	PfIYK65uQFyrOFX7EK9R0juooZhyIWJfz/c2Qm1U//3dps9ujo+qxbg4ZVaIstRe
-	5nEB1W2xB5Mz8iCUczH85RGtwmdNHb92adpboptyWY+xlpZxse6U4KTAuL3F+odZ
-	v+oWNt/Pj1bxVUQyWXrVykC64EWHpok9icoe4hgh1WpptpVuht+EK1gcxEEJrUoY
-	Zq9xAA==
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48jfbnbxsb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Mon, 18 Aug 2025 07:12:16 +0000 (GMT)
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-24457fe8844so43608725ad.0
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Aug 2025 00:12:15 -0700 (PDT)
+	s=arc-20240116; t=1755501967; c=relaxed/simple;
+	bh=4QIZUnpAhdSUmkmRUGZcXYAa0Xw8iFJPcfyA/Jt+yfs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
+	 References:In-Reply-To; b=hoGw6xu30gujzsA/0htU+05iR10iT3UslvocJO7In7v7+7DFbiOBJc7ckh/2dPDEJOIQYhSm//MENaWefv1B8X5XOdbvZ9k98wx5utUDpp/wEtMFMcndmwKyZFg1S4f8hM2FzyhZgiot2odsuCs5oJfp2W2AoJiZqKueJm+JENM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=GjSJmBL2; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-61a1663be10so2410287a12.1
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Aug 2025 00:26:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1755501960; x=1756106760; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:from:to:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0whMy+RNOYsmB6s2chJGQg9NA2cDMYmdgxkhAv7n+SM=;
+        b=GjSJmBL2SlLu3R87Ees84vAe6tnJwSWoubve0bb2STKHWN5bqI3rPkLU0nHdTLEOyw
+         /1oikL8sxUJ1jYlaSUkWv9N52Eiz0qBCssWpL1Rne/RIZRHa9JMcoYXUedAc/IMA9H1b
+         MU8W16hZwCHOriM2m8xXpgpYbSDIZlKfCstdCJ6PyuM1UXMR07OGeKWa2mX0viWQoTXr
+         ERA+LtwEmF55nmhd2FByqbgbs0nGFOwZ2m3NKWo4284u5qzZQ446w4SQXpezApZjulo+
+         nXUzRem4GlG0P9LNuJdjEZgAZnzYEJ/LFyE7HI+6BgsAE0vpmkI2hJCcrVThwzYJHTvN
+         W0eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755501054; x=1756105854;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CljCLWxC3VuOUrt1/JUd1oMX4O4FgjwPAOwwS6aA++M=;
-        b=Zc+kHd94DdcOnvpv6QGELlrelh/gQFV1OSPGAr4WZQWAdqiiob1sFsAJt23uH9L2be
-         NJAirMzg/QoRsvJI5KKeIriNo3jh38JOaXOuK+HDpG0LsMHkmXqlkN1/WjvYbJRuxifq
-         D42tUNvphl9+DtWtZmkglbAM8oGd5ATzyn5qoRqbBTwcA7wqgYrTzM51bnZO2pkQ2D9J
-         nYy5krf7o417V8ZrrweDdqcfS8PfzGIRgO6hcfpevNq6YqMxhddUjN4hiAxk/oZJJiyD
-         NVDN5HLRH4+rgvdYWpXbwrBJddAgcIeDTYjBjhTfCXwk5HlFOIisPmbH2ETPj7s5qPe8
-         WGjA==
-X-Gm-Message-State: AOJu0YzRmAy4t40vxTYdoqwXT06sJj3e24QvbB7r8xEtQoLPBVdIOwdd
-	dlT/+l+q2IjedPmaRWLwYe1Wtaajz0jbIBscDsdcW+3g330SDjR1acOUZPdQWLR9wUI6Ngniq+Q
-	kuLJGmM+MaOgx3+Vm/PHuYhhD6GKt23vIHS6CUqYOTzpmYVVMFr0xfiNVcZb+hlC8
-X-Gm-Gg: ASbGncvnVyYHtyI7PN54ldVZO30eMLfvDXPTx1IrMzsApUafyVa2YHy02wA9YKUmdMu
-	o2bEQ8JY80XsQ4y8qiiSrAXGezZwR5tfX94nTpw/fD4rxi5h6BhYS3p4mrCHj0vqBFdU2kJfsEb
-	uMvuDpxCH5G5Le0KYOmQCoOfSQoK/MVALyU2KWCX6/Iqr+qpcIsWdyyR5kO6/s6RiDPhJ86Uptm
-	0OqoC0Enhbg0OypviW5HVpllnj5jseKrXbvWchStzRPM3pO/958J1YXkKIVUqXtnA/Xi88vNoIN
-	vaU31OZ4ajkbzfaGvPT75V6z833lDuxy04uYlQNWYIldhjq/UGp/hfDUrSCoTjWPSw==
-X-Received: by 2002:a17:903:b8e:b0:240:9dd8:219b with SMTP id d9443c01a7336-24478fd2a8emr122795135ad.49.1755501054563;
-        Mon, 18 Aug 2025 00:10:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGm7LsS8pR5b68tpo9G2VcNmUMBXY1NQ7esD+UdwLtswNRa5j63VuLnVBb7Rr2C4YZHwcX2Nw==
-X-Received: by 2002:a17:903:b8e:b0:240:9dd8:219b with SMTP id d9443c01a7336-24478fd2a8emr122794915ad.49.1755501054124;
-        Mon, 18 Aug 2025 00:10:54 -0700 (PDT)
-Received: from [10.64.16.151] ([114.94.8.21])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2446d54f8b9sm72276985ad.130.2025.08.18.00.10.50
+        d=1e100.net; s=20230601; t=1755501960; x=1756106760;
+        h=in-reply-to:references:subject:from:to:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=0whMy+RNOYsmB6s2chJGQg9NA2cDMYmdgxkhAv7n+SM=;
+        b=YTPLB4uzGq+UScubfyeNvDriSTwlgV6AXBI/IIRUzTTl/Sc5Sws7HMT4i4/XadqHBX
+         Ob9cxbNX8G4V+oROZ62ATNfT/C4UqGbMl7ivlN/WZfHwGy2fEEmJQ59luTqsFxKPXLNe
+         vO5EYfvWWHB5P+lcLNtrobpqtweCi/NuY0TAeBAiKJ0kTCQuDcjUWeBQTskXIRG8Mfef
+         yyJqskALDXbAlXxTnXI4Qa4JF/L9cj1rBP3Q2pEwS0W2uGVySeThSXo9EhXq2tPNPYlv
+         T8Mtod2e9d5r98wTOeghu366aAeE4E0jgBVLS6uBUpQeKWdvhUmDjw8ZwOZh5QylMj8g
+         +IUg==
+X-Gm-Message-State: AOJu0Yxv24QwUtYqhIG3tY3BncxQbvmo8Qpqa18dI3PqbJWnbP5SJaZ9
+	5b++KLkiq882pkTCCWzMVdEy7Y8Ihpq7Io2U6eW0S7uNPzJZ6Qu5+ocEQVO08TMSyWYvID+aNa/
+	B3xfd
+X-Gm-Gg: ASbGncsmHjv3WDjt0QLa23+YjPR5mRqUzr2RcnapfXqLTMBz/rNLt2lt1fnjMn0bLHX
+	n6luQ6VtUFkInz9x8h0SHmQ4TfnLLBw3oU6jdWSZjxg6ERzBgCarycgUayBuHUaimPr+m+09VI8
+	iF6eu97GrfRb/o4FD7r3wRqRPcdeO/Qq5Ktwi4IxUjUeloXiCYBnMnctJ5mCAMXPvB9qVB/TcaW
+	9P0iiWhj9tPiyH1832iB3gsGpCFCSWNbFwy+9cDcRCGDEZ+9IQFKjduV+GxuBmsfaikXap/f6SV
+	8hzWzUmNiuxTdpyV22qHIM+p3DSphggkmzBC3FkRujNOuWLwO4ygtpGbLV1p8uywFkiQZVdP4Jg
+	=
+X-Google-Smtp-Source: AGHT+IGFsAEgEqVgRgVB+0dsb624p7fdDMQO3QpTRLo8QhH2rc2qqtL6FrGeG5YJK4EfH6oBSP8PZg==
+X-Received: by 2002:a05:6402:26cf:b0:618:229d:707a with SMTP id 4fb4d7f45d1cf-618b050c363mr8725159a12.6.1755501960085;
+        Mon, 18 Aug 2025 00:26:00 -0700 (PDT)
+Received: from localhost ([2001:9e8:d5a0:7e00::35e])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-61a166452a2sm4405764a12.51.2025.08.18.00.25.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Aug 2025 00:10:53 -0700 (PDT)
-Message-ID: <77067ec1-4f1f-45d1-8027-4c7a6f66ecff@oss.qualcomm.com>
-Date: Mon, 18 Aug 2025 15:10:47 +0800
+        Mon, 18 Aug 2025 00:25:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: defconfig: Modularize SX150X GPIO expander
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dmitry.baryshkov@oss.qualcomm.com, tingwei.zhang@oss.qualcomm.com,
-        xiangxu.yin@oss.qualcomm.com
-References: <20250818-modularize-sx150x-gpio-expander-v1-0-c2a027200fed@oss.qualcomm.com>
- <20250818-modularize-sx150x-gpio-expander-v1-2-c2a027200fed@oss.qualcomm.com>
- <43e2a824-d7a3-4142-9b59-416df0c0c2c9@kernel.org>
-Content-Language: en-US
-From: Fange Zhang <fange.zhang@oss.qualcomm.com>
-In-Reply-To: <43e2a824-d7a3-4142-9b59-416df0c0c2c9@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODE2MDAwMSBTYWx0ZWRfX4HO0sJ1AErdB
- N9MwVAky67ZVSzKsRvDg9ZiCgZHO4IpOkBXRSRtPyYh2dlipetAkkAK1hepMTs0KLANyxgkWm6u
- 5yJSvOgjFH73SO6i6JZjmRBX8fmFWSUUQqjfvSqasp5T3Sw7H9yfFD/TRnSn/VELrYuOXc/4lmz
- RgHYJICa8UXLqnu3SXq0OofeBR3Bnp5zOlVG4QGdc18932kca5RTk3kRUwX51ibWPb4CxEAAI3H
- MfOsbtSocdcTQj0cfp8YJe2W1FLd3EX2oD0wgFSrv0+L6ILGqK8HBahLRFcSCRQckwCfcCgnpxl
- 7WiZXqVBjnDLIJjF06OtbVx1+FFxDDYfHkASFSOwy105G0KdFctuHNPyMgSF8nXlgcVepFUZ2bM
- rfRLBQAA
-X-Authority-Analysis: v=2.4 cv=A+1sP7WG c=1 sm=1 tr=0 ts=68a2d250 cx=c_pps
- a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=Uz3yg00KUFJ2y2WijEJ4bw==:17
- a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=qthNqDW-ekIAEVpD3OwA:9
- a=QEXdDO2ut3YA:10 a=GvdueXVYPmCkWapjIL-Q:22
-X-Proofpoint-GUID: GQ54hlMj4wHZEaORyqjbePSuxszyEMME
-X-Proofpoint-ORIG-GUID: GQ54hlMj4wHZEaORyqjbePSuxszyEMME
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-18_03,2025-08-14_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 priorityscore=1501 suspectscore=0 phishscore=0 malwarescore=0
- adultscore=0 spamscore=0 impostorscore=0 bulkscore=0 classifier=typeunknown
- authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2507300000 definitions=main-2508160001
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 18 Aug 2025 09:25:58 +0200
+Message-Id: <DC5DIAHI710X.1S8GSFCJJKWHS@riscstar.com>
+Cc: <linux-gpio@vger.kernel.org>, "Bartosz Golaszewski"
+ <bartosz.golaszewski@linaro.org>
+To: "Bartosz Golaszewski" <brgl@bgdev.pl>, "Viresh Kumar"
+ <viresh.kumar@linaro.org>, "Linus Walleij" <linus.walleij@linaro.org>
+From: "Erik Schilling" <erik@riscstar.com>
+Subject: Re: [PATCH libgpiod v2 0/9] bindings: rust: prepare v1.0.0 release
+X-Mailer: aerc 0.20.1
+References: <20250815-rust-1-0-0-release-v2-0-b1794cb4b9be@linaro.org>
+In-Reply-To: <20250815-rust-1-0-0-release-v2-0-b1794cb4b9be@linaro.org>
 
-
-
-On 8/18/2025 2:33 PM, Krzysztof Kozlowski wrote:
-> On 18/08/2025 06:41, Fange Zhang wrote:
->> Modularize the SX150X GPIO expander which is equipped on the QCS615 Ride
-> 
-> Qualcomm QCS615 Ride
-> 
-> You are changing defconfig for all platforms, it's not your personal or
-> company defconfig.
-
-Thank you for the feedback. Yes, The change is intended to support the 
-Qualcomm QCS615 Ride platform, which is now upstream-ready and actively 
-maintained.
-I believe enabling it as a module ensures it's available without 
-impacting other platforms. While it's not currently used directly in the 
-kernel, having it built as a module allows flexibility for platforms 
-like QCS615 that may require it in future use cases.
-
-> 
->>
-> 
-> 
+On Fri Aug 15, 2025 at 10:57 AM CEST, Bartosz Golaszewski wrote:
+> The libgpiod rust bindings interface has stayed quite stable over the
+> last months so it's time for it to stop being a v0.x release and become
+> officially carved in stone. Bump dependencies to the most recent versions
+> available, fix some issues and then bump versions of the crates ahead of
+> the official release.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+> Changes in v2:
+> - drop the patch bumping the minimum required rust version
+> - loosen the requirements on the dependency versions: specify only the
+>   major number for stable crates and the major.minor for unstable ones
+> - Link to v1: https://lore.kernel.org/r/20250812-rust-1-0-0-release-v1-0-=
+372d698f23e8@linaro.org
+>
+> ---
+> Bartosz Golaszewski (9):
+>       bindings: rust: make Buffer::read_edge_events() lifetimes more expl=
+icit
+>       bindings: rust: add missing unsafe block ahead of rust version bump
+>       bindings: rust: update bindgen dependency
+>       bindings: rust: update errno dependency
+>       bindings: rust: update cc dependency
+>       bindings: rust: update system-deps dependency
+>       bindings: rust: update thiserror dependency
+>       bindings: rust: update intmap dependency
+>       bindings: rust: update crate versions to v1.0.0
+>
+>  bindings/rust/gpiosim-sys/Cargo.toml       |  8 ++++----
+>  bindings/rust/gpiosim-sys/build.rs         |  2 +-
+>  bindings/rust/libgpiod-sys/Cargo.toml      |  6 +++---
+>  bindings/rust/libgpiod-sys/build.rs        |  6 +++---
+>  bindings/rust/libgpiod/Cargo.toml          | 10 +++++-----
+>  bindings/rust/libgpiod/src/event_buffer.rs |  2 +-
+>  bindings/rust/libgpiod/src/lib.rs          |  4 ++--
+>  bindings/rust/libgpiod/src/line_config.rs  |  2 +-
+>  bindings/rust/libgpiod/src/line_info.rs    |  2 +-
+>  bindings/rust/libgpiod/src/line_request.rs |  4 ++--
+>  10 files changed, 23 insertions(+), 23 deletions(-)
+> ---
+> base-commit: cd32f27dd550753488bff4918aef4e230ce01512
+> change-id: 20250811-rust-1-0-0-release-65342607040e
+>
 > Best regards,
-> Krzysztof
+> --=20
+> Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+Trying to build with the 1.60 that we claim as lower floor gives me:
+
+    > cargo +1.60 build
+    [...]
+    error: package `bindgen v0.72.0` cannot be built because it requires ru=
+stc 1.70.0 or newer, while the currently active rustc version is 1.60.0
+
+With 1.70 I get:
+
+    ~/projects/libgpiod/bindings/rust (master)> cargo +1.70 build
+    [...]
+    error: package `system-deps v7.0.5` cannot be built because it requires=
+ rustc 1.78.0 or newer, while the currently active rustc version is 1.70.0
+
+
+1.78 builds fine (when having cfg-expr pinned to a pre-2024-edition
+version).
+
+So we will need to bump the MSRV to at least 1.78. The critical path
+seems to be cfg-expr -> system-deps where cfg-expr seems to be extremely
+aggressive with updating it's MSRV...
+
+1.78 with a release in May 2024 looks reasonable to me.
+
+Otherwise this looks good to me!
+
+- Erik
+
+
 
 
