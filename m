@@ -1,161 +1,170 @@
-Return-Path: <linux-gpio+bounces-24518-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24519-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B32BB2B94C
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 08:18:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C972BB2BAA6
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 09:25:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EBF8D7A27FB
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 06:16:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7A1183B63A2
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 07:25:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D834E22FE02;
-	Tue, 19 Aug 2025 06:18:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90DCD233D7B;
+	Tue, 19 Aug 2025 07:25:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ao/TUpzo"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0NaHGUm+";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BD4zrxKo";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0NaHGUm+";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BD4zrxKo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9A138B;
-	Tue, 19 Aug 2025 06:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8BCE204C1A
+	for <linux-gpio@vger.kernel.org>; Tue, 19 Aug 2025 07:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755584305; cv=none; b=KfOQgPlivi6USLvAV1Cs+MJ7lj6EYGJW5XhWs5rkZCLYG4t15+x82h7DWxADxlyMDMtvj7IzPDul+kFv5Q548zYxQA4xcupMX1JMdoNKk+OBtgjNp96g82amNRbnEFqEnQUJtcINmE51JP/BCWav1rnehPZbq/DrSpoXP0fY86s=
+	t=1755588311; cv=none; b=WZDRQCDMQUWUMQHpMA2ZQ6NIZ7dzktVG4LQOQ0QMahCq0bYfShOeI+EVwIifkLiBXH3jabvejqnGDNYg4EbC2tP8KRHx3FGLEEgEF2alMKJAzIhLsVctSsujhEUD9AU4q1Q+SGzHHdu7XpXVrKHVjKafWry8E+cAFfoXoRdYNT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755584305; c=relaxed/simple;
-	bh=csN9gHgo3L9lRWJe0nMxew2Yzmsh9jwnHiRF0xA4jCc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i7etEPt6Gvl/FHtN9g1UZ4JUW2ZQt/wYKTHuwV6j1/0JZxIhAySgpt47LbpLPRriTTAvwMN1/Y+HrSx2wE1Iasu2rC6dTxAiCUetV259Q6mcUrJiNRiN52Uz3AuCGkK8xyFWaPdj/cKRi3Kp01j7NNSq6KFsGNhuHBoTbLlnlPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ao/TUpzo; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755584304; x=1787120304;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=csN9gHgo3L9lRWJe0nMxew2Yzmsh9jwnHiRF0xA4jCc=;
-  b=Ao/TUpzomJGE8epFk4Iz1faiBpf3H9+qGHq6FhJCPyS4UkeSjlvTGU50
-   78ON5DXwlhs8R8Cl1hfmxBfg47S7f/5LEpE5EqAvv9xlcY3xCXJlqQqrO
-   oPqoeSd3i36dO2aqR4IIZMupD943V6iG6Ifs93wCTsD/y11MGHz9YLTjz
-   sazX20zYjimsMhFU1D8rejMlGuXF7JWnAAcqdjMKNIFF0JrwX+EGd9upe
-   h5aHRy29BEj0TzVt13OEyPOAjfHojqZmvoT+HO2bgIxRlXs42bpMithf+
-   56utq8KdWwwyGVbzGml6P17eHhDXehmmjpG/EMIqF76HY2Q2AmkoluGj8
-   A==;
-X-CSE-ConnectionGUID: Mb4NyWvcRX2pS4QOyHIJ4Q==
-X-CSE-MsgGUID: Zk6RNbq4RKqrfvjq+9VKqQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11526"; a="69269370"
-X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
-   d="scan'208";a="69269370"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2025 23:18:17 -0700
-X-CSE-ConnectionGUID: hANu7aKkT32cGu5lWMasrQ==
-X-CSE-MsgGUID: A6xUup3sQIaFVavzb7OEnQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
-   d="scan'208";a="198787477"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by orviesa002.jf.intel.com with ESMTP; 18 Aug 2025 23:18:15 -0700
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id 6C12B93; Tue, 19 Aug 2025 08:18:13 +0200 (CEST)
-Date: Tue, 19 Aug 2025 08:18:13 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: mario.limonciello@amd.com, westeri@kernel.org,
-	andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org,
-	brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: acpi: Program debounce when finding GPIO
-Message-ID: <20250819061813.GJ476609@black.igk.intel.com>
-References: <20250818015219.3604648-1-superm1@kernel.org>
- <20250818045538.GH476609@black.igk.intel.com>
- <08dd199e-0e7d-44b8-b980-5fde226cd636@kernel.org>
+	s=arc-20240116; t=1755588311; c=relaxed/simple;
+	bh=lbxwgBR9pXBSWE1is/mCGz62LtoDCDU/FlWuZl1Sr2U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=q0grfvxX6G2turBxsI5Rvni3ZsNawB725k9q5cH7yHqV7J6EADabOyLIaUtxfLEuHpWsaTOX2B3Zn8c7vewQWUpZxxSQkRRTt0uvJuyEq19B9YS5N9Kv2IhnoOpSMshV/mMS8lh17Lrcoeh/3L/r3E+nzJF76yE/FBWQfkY7AgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0NaHGUm+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BD4zrxKo; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0NaHGUm+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BD4zrxKo; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C0EDB2124E;
+	Tue, 19 Aug 2025 07:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1755588307; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qQIx6z7xh3Yq0HiZOhdiTPsATX7x+0559MUoedCSqqI=;
+	b=0NaHGUm+oxjnwt/66qrSimxzYJ74uTFlseVYKCnDGsq6Q0e8gyBf/aEt/9bVPYiHD8+J1v
+	HYCBGiTXpGwTOrdtfr7kG67dNLdOwQy0NHSbnZNBnD/JkhP5QZGZO+yBoZrOkpORBAiVTT
+	/ya3cIuAlzqQrmZ+VwX5dV9QtSaxS8A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1755588307;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qQIx6z7xh3Yq0HiZOhdiTPsATX7x+0559MUoedCSqqI=;
+	b=BD4zrxKozufVijkbzGxxx8nFStT+BAz/NNIP5KaRrwlyOLHHskEQlPfWLqKAfZ/iF2cF88
+	adphDBPj8x2QMzCA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1755588307; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qQIx6z7xh3Yq0HiZOhdiTPsATX7x+0559MUoedCSqqI=;
+	b=0NaHGUm+oxjnwt/66qrSimxzYJ74uTFlseVYKCnDGsq6Q0e8gyBf/aEt/9bVPYiHD8+J1v
+	HYCBGiTXpGwTOrdtfr7kG67dNLdOwQy0NHSbnZNBnD/JkhP5QZGZO+yBoZrOkpORBAiVTT
+	/ya3cIuAlzqQrmZ+VwX5dV9QtSaxS8A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1755588307;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qQIx6z7xh3Yq0HiZOhdiTPsATX7x+0559MUoedCSqqI=;
+	b=BD4zrxKozufVijkbzGxxx8nFStT+BAz/NNIP5KaRrwlyOLHHskEQlPfWLqKAfZ/iF2cF88
+	adphDBPj8x2QMzCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0147F13686;
+	Tue, 19 Aug 2025 07:25:06 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Ph36ONImpGiaIAAAD6G6ig
+	(envelope-from <svarbanov@suse.de>); Tue, 19 Aug 2025 07:25:06 +0000
+Message-ID: <570088fa-2861-487a-a2db-2d1d87d700f6@suse.de>
+Date: Tue, 19 Aug 2025 10:25:02 +0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <08dd199e-0e7d-44b8-b980-5fde226cd636@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] arm64: defconfig: Enable BCM2712 on-chip pin
+ controller driver
+To: Andrea della Porta <andrea.porta@suse.com>, linus.walleij@linaro.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ florian.fainelli@broadcom.com, wahrenst@gmx.net, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ iivanov@suse.de, svarbanov@suse.de, mbrugger@suse.com,
+ Jonathan Bell <jonathan@raspberrypi.com>, Phil Elwell <phil@raspberrypi.com>
+References: <cover.1754922935.git.andrea.porta@suse.com>
+ <04c67a8fc50f2688fd3a6616bc03b3ac4d4977fb.1754922935.git.andrea.porta@suse.com>
+Content-Language: en-US
+From: Stanimir Varbanov <svarbanov@suse.de>
+In-Reply-To: <04c67a8fc50f2688fd3a6616bc03b3ac4d4977fb.1754922935.git.andrea.porta@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[dt];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_TO(0.00)[suse.com,linaro.org,kernel.org,broadcom.com,gmx.net,vger.kernel.org,lists.infradead.org,arm.com,suse.de,raspberrypi.com];
+	FREEMAIL_ENVRCPT(0.00)[gmx.net];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid]
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
 
-On Mon, Aug 18, 2025 at 01:03:48PM -0500, Mario Limonciello wrote:
-> On 8/17/25 11:55 PM, Mika Westerberg wrote:
-> > Hi,
-> > 
-> > On Sun, Aug 17, 2025 at 08:52:07PM -0500, Mario Limonciello (AMD) wrote:
-> > > When soc-button-array looks up the GPIO to use it calls acpi_find_gpio()
-> > > which will parse _CRS.
-> > > 
-> > > acpi_find_gpio.cold (drivers/gpio/gpiolib-acpi-core.c:953)
-> > > gpiod_find_and_request (drivers/gpio/gpiolib.c:4598 drivers/gpio/gpiolib.c:4625)
-> > > gpiod_get_index (drivers/gpio/gpiolib.c:4877)
-> > > 
-> > > The GPIO is setup basically, but the debounce information is discarded.
-> > > The platform will assert what debounce should be in _CRS, so program it
-> > > at the time it's available.
-> > 
-> > The spec says for GpioInt():
-> > 
-> >    DebounceTimeout is an optional argument specifying the debounce wait
-> >    time, in hundredths of milliseconds. The bit field name _DBT is
-> >    automatically created to refer to this portion of the resource
-> >    descriptor.
-> > 
-> > I was not sure but wanted to check that if it is left out, does ACPICA fill
-> > it with 0? If yes (I would expect so) then this is fine.
+Hi Andrea,
+
+On 8/11/25 5:46 PM, Andrea della Porta wrote:
+> Select the on-chip pin controller driver for BCM2712 SoC.
 > 
-> Yeah AFAICT you're right.  The ACPI resource is zero'ed out, so if the field
-> was empty it should default to zero.
-
-Okay good.
-
-Then from my perspective,
-
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-
-> > 
-> > > Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
-> > > ---
-> > > v4:
-> > 
-> > You missed "v4" in the $subject.
+> On RapsberryPi 5 devices it is primarily needed to operate the
+> bluetooth and WiFi devices, to configure the uSD interface
+> and the power button.
 > 
-> Whoops, thanks.  If there ends up being a reason to spin I'll send the next
-> one as a v5.
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> ---
+>  arch/arm64/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> > 
-> > >   * Just add a direct call instead
-> > >   * drop tag
-> > >   * update commit message
-> > > ---
-> > >   drivers/gpio/gpiolib-acpi-core.c | 6 ++++++
-> > >   1 file changed, 6 insertions(+)
-> > > 
-> > > diff --git a/drivers/gpio/gpiolib-acpi-core.c b/drivers/gpio/gpiolib-acpi-core.c
-> > > index 12b24a717e43f..6388e8e363dee 100644
-> > > --- a/drivers/gpio/gpiolib-acpi-core.c
-> > > +++ b/drivers/gpio/gpiolib-acpi-core.c
-> > > @@ -944,6 +944,7 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
-> > >   	bool can_fallback = acpi_can_fallback_to_crs(adev, con_id);
-> > >   	struct acpi_gpio_info info;
-> > >   	struct gpio_desc *desc;
-> > > +	int ret;
-> > >   	desc = __acpi_find_gpio(fwnode, con_id, idx, can_fallback, &info);
-> > >   	if (IS_ERR(desc))
-> > > @@ -957,6 +958,11 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
-> > >   	acpi_gpio_update_gpiod_flags(dflags, &info);
-> > >   	acpi_gpio_update_gpiod_lookup_flags(lookupflags, &info);
-> > > +	/* ACPI uses hundredths of milliseconds units */
-> > > +	ret = gpio_set_debounce_timeout(desc, info.debounce * 10);
-> > > +	if (ret)
-> > > +		return ERR_PTR(ret);
-> > > +
-> > >   	return desc;
-> > >   }
-> > > -- 
-> > > 2.43.0
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 58f87d09366c..fafcd7851eb2 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -592,6 +592,7 @@ CONFIG_SPI_TEGRA114=m
+>  CONFIG_SPI_SPIDEV=m
+>  CONFIG_SPMI=y
+>  CONFIG_SPMI_MTK_PMIF=m
+> +CONFIG_PINCTRL_BRCMSTB=y
+
+Have you tried as module and part of initramfs?
+
+~Stan
 
