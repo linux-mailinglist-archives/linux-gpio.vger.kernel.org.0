@@ -1,123 +1,113 @@
-Return-Path: <linux-gpio+bounces-24548-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24549-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26D71B2C2D7
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 14:14:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30BCCB2C2E6
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 14:16:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D1CD6866DF
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 12:13:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 99E521B6043D
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 12:17:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18A4C33470D;
-	Tue, 19 Aug 2025 12:13:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFB6D3375DB;
+	Tue, 19 Aug 2025 12:16:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mHCNJYK9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qEBOwid6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E5C3375A7
-	for <linux-gpio@vger.kernel.org>; Tue, 19 Aug 2025 12:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E2B322A32
+	for <linux-gpio@vger.kernel.org>; Tue, 19 Aug 2025 12:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755605586; cv=none; b=aboZMNzJiNAmpZ6tDZDDSaudnJs3Sl4r7aEFNBlzmBCJYmdHmWAeGTKE+/bGXDYlh97yPi5BugMGREZhxkKe4Bn7gS3B8LpvZwM32ZRz9MqVl8Mk34oijYaIjOM8vIol4ZqWGVddHwPTV2BC9cYPezTn91oFri47Kut+gJZoH/g=
+	t=1755605802; cv=none; b=t/1pcaM+zaxtNREWJ4hga5ScUvDeXzLLjUY+dpORDJnK5JeibD6BMU5HoibBeBw0ylAZAQ/+QdUUovJUN/QL17s5nc+/8tr/iwpWTxcY9ImJtm3NBn5T8sCuDouICyaBN2/99uYXC2+jpJ12H4BXT9Eu9trYbEXHZQ8SE37txFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755605586; c=relaxed/simple;
-	bh=pT7J7NlbzDj0BcguaBhEfkoD9p8GgWTOtMzLwvbVkTg=;
+	s=arc-20240116; t=1755605802; c=relaxed/simple;
+	bh=AZ7o1pFXuy79shNbYRISLiW+dg67/yXKYIew3DntoxE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ioyRyhRJXCsN+3xYhWIH9LXcS3wTLcNSw7Wlnvu+izXi9nhJuWPMQtKoDXQsrC55OPuRa1cLBmbrIB1EkDDTCwXtDWvj113tz4SwTAReVH3GB7J1/k654PTNKhyjGtdH89DPhe2WJLco4tddUUhY4GG6M4Kfw0Bnod/14214OnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mHCNJYK9; arc=none smtp.client-ip=209.85.208.169
+	 To:Cc:Content-Type; b=NewAcsPi31qz7QzneUVcWRWQB2CF/9d9rNOtREIhRLYwT2FzNb+o8bSu1X1YSWhZwF9xkkQK2VnPplAv6LZiyWYVG/DsBnNaCXZWATP34IodwZye2PCdhjSLAjRViKOVF2quUIt4ErNatB/tbV7h52fVTfuSHCKK6BfpoQJhS+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qEBOwid6; arc=none smtp.client-ip=209.85.167.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-3352212fefdso13090211fa.3
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Aug 2025 05:13:04 -0700 (PDT)
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-55ce521f77bso5275459e87.1
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Aug 2025 05:16:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1755605583; x=1756210383; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1755605799; x=1756210599; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pT7J7NlbzDj0BcguaBhEfkoD9p8GgWTOtMzLwvbVkTg=;
-        b=mHCNJYK9mo3J7JRL7LLBKUB3sm+8n3Q3l8jiZz0sUCZjmNqgbzNaoPsvT95gz2usZG
-         JIfDa9o6DJFez5SH8sGgAmLxZrczNj5p3AVY8CoYQ7Nkgv7wns6D0Im2lRp4SyrJoEqr
-         /4MxH2lYVm+c7fBP+30ozGd8P+tsXRBG9sp3W99zB34rxxsZFdgVFQtgMmz6t4r9Gd55
-         UjhuykSbX356y2He2eLaZR5aaY5CiChZn3IC09yPMo4DRli8aZ1HFyQGOycCk1Rpshd2
-         GEZsSdsLtvYYEgKoserNhWOwVTjmiuQ7ej0l3Wak0CoXCZIH0irMRX3iHLppmvpcvvLh
-         f78A==
+        bh=Mch0lPw3yHrhu7n4ZdwY7/Px5OZohbQnsGNaNJBBPW4=;
+        b=qEBOwid60nPDCNFZzmN7fKGDe0pNupuDkmcYgvLrgoWJnrqD6eg+CHg4GVXxdB6gfM
+         K/09Kjpb9TKUg7M4DFecmpcA3ywNZm4XCuW3u66nzi7G6QuDT36eHUBDOaNj98BsMz9w
+         /W/cWZ2t0OBlTjtjLoKqMJvUWPTUTH3shvpd4jGe7tcpVmti7i7vKbp1PK3uO9WASHgL
+         RSGAAE8njAEc2jXwj/0TxTO5q4Dt2qKCZdKzzDyr1JRLiT3Z4NoTFNUHLu328Ii5c7/i
+         gL8rnOrbWQil/7lUB0uhuGMUgOHIc319Dhc6Fq51nDQnyS1c2TMNKrSD4vU2MR3PJ46m
+         8j4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755605583; x=1756210383;
+        d=1e100.net; s=20230601; t=1755605799; x=1756210599;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pT7J7NlbzDj0BcguaBhEfkoD9p8GgWTOtMzLwvbVkTg=;
-        b=q1qzFofcxzOczB+9kDn85me+/w9PgjM6FGwqQ/LwoK4UVgSYcd6hx2/OqN/BkRZRBf
-         PX2aNllLrFG3dl5R2i4dMHoIeUd1IwFqR8QdaJo2ymYbUWMZJJJp8BvtA4zQmx7rJ82P
-         vnHs48TOAc0GxTGJ+g/0/hvJIt0RQrjETXVaTMYuVswsSxT0P/Y2AvFxmLZBCklub/XF
-         JgyOsPEhRb8EnZe0hq67ohGYybFHM3Y+t2NX4eieuxzVLHnE76rVQd+AIMvWyMGWMp/X
-         O3/7qcWToucnzvT4HGgtzGAq+ul4/jxALYRQaVBCLZs7e5LxTJVISLP19F3glmedbteQ
-         l7EQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXL0CbB3R0+9wFXcCJA+XeKQLmZAjw7Ud5+xKjmg0rbtMQ6/PJ5j9uyEt665fCkE1w64dClWzDff0dr@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAxjFlAzpq3ftFDoXoxmVEXZ7GUmmfppbhziNWZlwiP5nypUWx
-	ZlOU10o9i9coZB7EGqIeWtbIvaVc1q0TgWDLMnDwV4QfHFZzJeIQMHNNM6uTVwn6hCMvYDyAEPS
-	cDfw3aMWK99hPJm5nNwgO0hZxZtn0rFgv++b/n8ssDQ==
-X-Gm-Gg: ASbGncs+uNK7fS6CJqENZJwvsUcVbYMtWmHByjUL8TE7Cz5VbxxAGu1vwwN9CfDulHF
-	lA0TzUPWM6GMA4HKOZQ3lbmI5zIgMUhCK0eI90ma7Vjgi04Hla8tsvdW8uyTzcBEqDM0JTrQ6RY
-	huklCfZDfbdcdWn3DQC8bCprCqTIiKL8PRGOJUQgmmcrUd3QynmkL1XkpTA3QRIWQogU0QkHx0h
-	4j/MqU=
-X-Google-Smtp-Source: AGHT+IH+aPrIJY+DH1gxYk549l1vaPXfQI5WHK+rOHEK+EYvi2ju0qkAP63ibB4HjpirzJmCyfMVeLvlEsTbS+CROto=
-X-Received: by 2002:a05:651c:3041:b0:32b:a961:803a with SMTP id
- 38308e7fff4ca-335304ce141mr6002291fa.3.1755605583129; Tue, 19 Aug 2025
- 05:13:03 -0700 (PDT)
+        bh=Mch0lPw3yHrhu7n4ZdwY7/Px5OZohbQnsGNaNJBBPW4=;
+        b=wTDGhfN2/6Ap+SnB5cmJYjtFFiGr4HkMOXi4IJGsp1w/gfwxCiAUh7YAVKfK1VTSCC
+         BQ7/P8PKaAsfksl9D1jD6PDOC7pVbYm9dgnsZsiiP4e3UVNz5qUD1f/f+n3DeEUpjfDR
+         xKDRafovtR2WOkkPlVq2xTndgx/zLyXLSJsdtlTFHPHaGrv3ef1bO0vLL/B+HZDGdiZM
+         JsBiWehRXDHDfqhIyebNcHgLcbFV8iyncI31qEDWHMitLMFeVJH7DHQWRiQ7bnb5DZ0P
+         VLQw3Hb2zTpx3A32me33JZJSs9/bsTnTJbLY90B9XfhZaB9PxoYyU5wBoA48WKWtE4I2
+         ZE/w==
+X-Forwarded-Encrypted: i=1; AJvYcCV3XpfPTlzMH5TuEcyXBQVuXoS/QiCZWaD+/rpu5xr07vFS/AZk8okq4mm9ZMfm9kp+VJwcoU5/vuyf@vger.kernel.org
+X-Gm-Message-State: AOJu0YyB4WkOqIn4saNp6/WCneniJONo5DpMbWJLiVbRtOnbNzx9MFHf
+	HCfMPmFDYDpV/pQTGvitnKt4WH5ou42wiR2eI5q7DpsrL4UDPNlMElsbg7L0Jg84lBuMfiBKSft
+	qnEsU5kwOw/ChLsVdFoSv8+7wdTwZaWm5nS9VeYFD31TDjwRWpGzMxPA=
+X-Gm-Gg: ASbGnct82gw83U4QfCOKcWR3GhtoyyHUMtM+bvPGlf3gv3igjXBjMKnP8v89fVyL1hP
+	/pNsOOhuIPKdVq1eL5/sz5sDIPohFi5tB88WYULGjSMeCm8YIv5Nkem7Fe2xywjv0UpUIxo0cGU
+	JIlnwLqj18Wlg39xDnHUQJmiudZfbtwfs/uXWQTyrg9y6Lt3486zh64+sLDGcChQM6uoyj6bFPS
+	NHsFb7yf7XJ
+X-Google-Smtp-Source: AGHT+IHlQkTdSypEYCk5jHMFsG5gMHOSPP8bqRunKFnkCNT6Avg3FbiQixBffVyonHcFrK3FhreXz91XErM75OILoyc=
+X-Received: by 2002:a05:6512:6318:b0:55b:81c4:5f22 with SMTP id
+ 2adb3069b0e04-55e00852edamr615410e87.47.1755605799241; Tue, 19 Aug 2025
+ 05:16:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250814-ltc4283-support-v1-0-88b2cef773f2@analog.com> <20250814-ltc4283-support-v1-6-88b2cef773f2@analog.com>
-In-Reply-To: <20250814-ltc4283-support-v1-6-88b2cef773f2@analog.com>
+References: <20250814183430.3887973-1-superm1@kernel.org>
+In-Reply-To: <20250814183430.3887973-1-superm1@kernel.org>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 19 Aug 2025 14:12:51 +0200
-X-Gm-Features: Ac12FXx9DbzpmXtIaYcl4GeGqmQxe243v3rohATjse3LJ-Oaq4DA-z_79QbXSd0
-Message-ID: <CACRpkdax9THwKRZmaAHVcKbnBdi1LxjgvibAFOUVnVQJBhBiwA@mail.gmail.com>
-Subject: Re: [PATCH 6/6] gpio: gpio-ltc4283: Add support for the LTC4283 Swap Controller
-To: nuno.sa@analog.com
-Cc: linux-hwmon@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 19 Aug 2025 14:16:28 +0200
+X-Gm-Features: Ac12FXwnxcG8BcLpMnqVg15St2VyjeE-JDolWogpEgsUqurEowSU0zWbTKxm_ls
+Message-ID: <CACRpkdba9c9FdJoAufRVEKxXRP-kk5QZusiqxmWoY6D-gK9tYA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpiolib: acpi: Add quirk for ASUS ProArt PX13
+To: "Mario Limonciello (AMD)" <superm1@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Mika Westerberg <westeri@kernel.org>, 
+	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>, 
+	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>, 
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, Amit Chaudhari <amitchaudhari@mac.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Nuno,
+On Thu, Aug 14, 2025 at 8:34=E2=80=AFPM Mario Limonciello (AMD)
+<superm1@kernel.org> wrote:
 
-thanks for your patch!
-
-On Thu, Aug 14, 2025 at 12:52=E2=80=AFPM Nuno S=C3=A1 via B4 Relay
-<devnull+nuno.sa.analog.com@kernel.org> wrote:
-
-> From: Nuno S=C3=A1 <nuno.sa@analog.com>
+> The ASUS ProArt PX13 has a spurious wakeup event from the touchpad
+> a few moments after entering hardware sleep.  This can be avoided
+> by preventing the touchpad from being a wake source.
 >
-> The LTC4283 device has up to 8 pins that can be configured as GPIOs.
+> Add to the wakeup ignore list.
 >
-> Note that PGIO pins are not set as GPIOs by default so if they are
-> configured to be used as GPIOs we need to make sure to initialize them
-> to a sane default. They are set as inputs by default.
->
-> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-(...)
+> Reported-by: Amit Chaudhari <amitchaudhari@mac.com>
+> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4482
+> Tested-by: Amit Chaudhari <amitchaudhari@mac.com>
+> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
 
-Can you check if you can use gpio-regmap.c helper?
-
-select GPIO_REGMAP
-
-git grep devm_gpio_regmap_register
-for example drivers using this.
-
-I think it can further cut down the code to very little.
+Bartosz is on vacation and this patch series is half-pinctrl so I applied t=
+his
+and patch 2/2 for pin control fixes.
 
 Yours,
 Linus Walleij
