@@ -1,153 +1,178 @@
-Return-Path: <linux-gpio+bounces-24576-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24577-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6D50B2CDE2
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 22:32:51 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4516CB2CE24
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 22:37:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7617B5820E1
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 20:32:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 257277B9066
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 20:34:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34159248873;
-	Tue, 19 Aug 2025 20:32:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1BF2342C85;
+	Tue, 19 Aug 2025 20:33:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b="BrDRvXpZ"
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="2t0nH+rw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout3.mo534.mail-out.ovh.net (smtpout3.mo534.mail-out.ovh.net [51.210.94.142])
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE7C246BB3;
-	Tue, 19 Aug 2025 20:32:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.210.94.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832E233EB02;
+	Tue, 19 Aug 2025 20:33:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755635566; cv=none; b=FFOqr9rshuTy6R1IV6MZBNspNzM7f3UyJFVjKe6KhdsyJMokFsJTAtLKpvmpsIjoKRvERQdDppQRsJCDP1D7gQZWgOE2YgFaLRQVwXaK9VIY3aoTQLOTTwyn2ezUUOgx6dgTo1YaCZ6HYhfWGvqmzU76yPNVkNGHU/sJWmYjW7c=
+	t=1755635617; cv=none; b=KmbvrB8oQCLQJ30Zx4mpDSj2aYILb/Sl17YIxb2OlOpn2ortmN0he8V3QWqFbkymAcTUw9M8vdUzBB15wGQvTpP9l2mCw+rqqEE9KXbz4yDFUriJvM6+khxfW8omcXhgTa0T6YRhyW5fCZw6IlPngCTWdYBel6FQMtYo6oOx1T4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755635566; c=relaxed/simple;
-	bh=d9z9KPgWc/RebMQ/NN6LPYWSBcq8hxVBEnz1IjAr8MY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mCi7hrUEURhsYskLYrW8IGW2Oq1KpwtmiR+NCXnleyw69igRmWRXxsde/raSLJFNmfjo/u2nC9wlnbF/iKv6jVU+GeyXz8b5fC46vLhd4WbUfb3qseNNlvKIwb/eI0P+T2FlndRW4aMG1FgTKk1urTLmpR4zzvF9czDW7pn5Ho0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b=BrDRvXpZ; arc=none smtp.client-ip=51.210.94.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orca.pet
-Received: from director1.derp.mail-out.ovh.net (director1.derp.mail-out.ovh.net [51.68.80.175])
-	by mo534.mail-out.ovh.net (Postfix) with ESMTPS id 4c618V0t2Dz6QPH;
-	Tue, 19 Aug 2025 20:17:14 +0000 (UTC)
-Received: from director1.derp.mail-out.ovh.net (director1.derp.mail-out.ovh.net. [127.0.0.1])
-        by director1.derp.mail-out.ovh.net (inspect_sender_mail_agent) with SMTP
-        for <brgl@bgdev.pl>; Tue, 19 Aug 2025 20:17:13 +0000 (UTC)
-Received: from mta7.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.109.231.30])
-	by director1.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4c618T5HwXz5wGd;
-	Tue, 19 Aug 2025 20:17:13 +0000 (UTC)
-Received: from orca.pet (unknown [10.1.6.5])
-	by mta7.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTPSA id B4A10B832B5;
-	Tue, 19 Aug 2025 20:17:12 +0000 (UTC)
-Authentication-Results:garm.ovh; auth=pass (GARM-110S004bc066b2d-e836-4dd3-aaaa-7501c6da0428,
-                    AA15BFB272E6A7B741EAAF10D6CC71057D8BF2C0) smtp.auth=marcos@orca.pet
-X-OVh-ClientIp:79.117.22.109
-Message-ID: <a36a853d-5f32-409e-8add-c60b7f5d2fa9@orca.pet>
-Date: Tue, 19 Aug 2025 22:17:14 +0200
+	s=arc-20240116; t=1755635617; c=relaxed/simple;
+	bh=u0jHy+96xQQc8Rsq14s4xOxOiOUOUoyteYoE2V6u/cs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=keESg/ZanVvBfLjES84GrfeI+YIOghKKARACJ7eGrtK3czKpvIaYtPXujFJMTCXzOpwxpcbs4UTK1qLS0mQYf38aBjhur/pt+GuGv1rKIUp6fCX+HWuB55veivIBgWQb0EZb93Shxv6qsywn7SNCygIag0gKxs7/GV7p1iFXnLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=2t0nH+rw; arc=none smtp.client-ip=178.238.236.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=References:In-Reply-To:Cc:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=1/eUspNCUXyY5YlWldBkBwRS3SFcnhUn4WjHQtP/9wc=; b=2t0nH+rw7E8V78kWenP4au6K+4
+	exEwfVKJi8b0tPVduqB/o8rbtRCeUrCKje/ykiFOZopI3RhEtqZdqmYdm7DBGNefeRThMQJBt195Y
+	ADh1TgtWB7gNOx0iXJr67Cd9r/Ru148qKSOr2Ur3tE2CNtKuPFpxtpeWEqTlzh5VC3bft21T59xs4
+	3W/lkEzBbkczajoZIHzdhxFvbTaNAMXk1aNkAmSOAzyml43d0lDOd5EeHWpkyPExCBw03X66X2jmo
+	qIcEJJZbRla6DLBwkNeNn7lmyaF6Spxrn3gymHy0JHTIWpmhFX7vDrM8+SQdSS+IwK0GWYxC6IZ1E
+	5V3lht2A==;
+Date: Tue, 19 Aug 2025 22:31:57 +0200
+From: Andreas Kemnade <andreas@kemnade.info>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Jihed Chaibi <jihed.chaibi.dev@gmail.com>, linux-kernel@vger.kernel.org,
+ peter.ujfalusi@gmail.com, dmitry.torokhov@gmail.com, robh@kernel.org,
+ krzk+dt@kernel.org, lgirdwood@gmail.com, tiwai@suse.com,
+ conor+dt@kernel.org, lee@kernel.org, ukleinek@kernel.org,
+ broonie@kernel.org, gregkh@linuxfoundation.org, linus.walleij@linaro.org,
+ brgl@bgdev.pl, aaro.koskinen@iki.fi, khilman@baylibre.com,
+ rogerq@kernel.org, tony@atomide.com, linux-gpio@vger.kernel.org,
+ linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-pwm@vger.kernel.org, linux-sound@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, shuah@kernel.org
+Subject: Re: [PATCH v3 1/6] dt-bindings: mfd: twl: Add missing sub-nodes for
+ TWL4030 & TWL603x
+Message-ID: <20250819223157.0b271c74@akair>
+In-Reply-To: <20250819-humongous-muscular-curassow-5accd5@kuoka>
+References: <20250816021523.167049-1-jihed.chaibi.dev@gmail.com>
+	<20250816021523.167049-2-jihed.chaibi.dev@gmail.com>
+	<20250819-humongous-muscular-curassow-5accd5@kuoka>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] gpio: vortex: add new GPIO device driver
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: William Breathitt Gray <wbg@kernel.org>, linux-kernel@vger.kernel.org,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
-References: <20250709091542.968968-1-marcos@orca.pet>
- <aHD40TD8MLug0C6b@black.fi.intel.com>
- <99b67e0f-783a-4ac0-971f-07cf1544a651@orca.pet>
- <aHElavFTptu0q4Kj@smile.fi.intel.com>
-Content-Language: es-ES
-From: Marcos Del Sol Vives <marcos@orca.pet>
-In-Reply-To: <aHElavFTptu0q4Kj@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 15837189567057254107
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduheeigedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeforghrtghoshcuffgvlhcuufholhcugghivhgvshcuoehmrghrtghoshesohhrtggrrdhpvghtqeenucggtffrrghtthgvrhhnpeejvdfggfdujeekgfdvtddulefgtedutedvheegteffkeevveekvefgleehjefhudenucffohhmrghinhepghhithhhuhgsrdgtohhmnecukfhppeduvdejrddtrddtrddupdejledruddujedrvddvrddutdelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehmrghrtghoshesohhrtggrrdhpvghtpdhnsggprhgtphhtthhopeeipdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtohepfigsgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrh
- hnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehfeegmgdpmhhouggvpehsmhhtphhouhht
-DKIM-Signature: a=rsa-sha256; bh=jR4BO9CuWigXCVC/KmXkfiep9EZS605uICVWzBc1qQU=;
- c=relaxed/relaxed; d=orca.pet; h=From; s=ovhmo-selector-1; t=1755634634;
- v=1;
- b=BrDRvXpZpGl76V+XoBDwALFMQpJ7wUa3eepn0YZOL36rW3BaEs8HMJQrH6ECN0sYNBCR9uwp
- 8g/9nI2MdTi59wNU6XvpZPf7I29U9rx93lF92NruFQJiUnZkvSp8/7dpE0Zf1BBhXOxnUfpEcUd
- j/uHhYWKOLAU4SMFfMQUGTPNlz0af+c+OPOStbMY9hlyNdUQ/i4+WFdiRNNSg/Zf8xyzgEXB9wh
- gIPUXQtJarTjup5oAOItA+jpTdWnOLZlrMCMOWo1vH7izAPeEHW1euDX7PrF0dV6JRt7hhrlFrm
- srp+rYy+zI20SngolX8bYyM+OwdOev6YdJEWL1+HAtWww==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-El 11/07/2025 a las 16:53, Andy Shevchenko escribió:
->> Again, I am not an expert on the Linux kernel, but I did not see any code
->> or examples using neither gpio-mmio nor gpio-regmap for I/O-mapped registers.
+Am Tue, 19 Aug 2025 10:13:39 +0200
+schrieb Krzysztof Kozlowski <krzk@kernel.org>:
+
+> On Sat, Aug 16, 2025 at 04:15:18AM +0200, Jihed Chaibi wrote:
+> > Update the TI TWL family Device Tree binding to include additional
+> > subnodes for TWL4030, TWL6030, and TWL6032 devices.
+> > 
+> > The simple power and PWM bindings (ti,twl4030-power, ti,twl-pwm, and
+> > ti,twl-pwmled) are now defined directly within this binding.
+> > 
+> > Other child node definitions (audio, gpio, keypad, usb, etc.) are also
+> > added to the schema. These additions fix 'unevaluated properties'
+> > errors found during dtbs_check for boards like the omap3-beagle
+> > and improve the binding's overall completeness.
+> > 
+> > Signed-off-by: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+> > 
+> > ---
+> > Changes in v3:
+> >  - New patch to consolidate simple bindings (power, pwm) and add
+> >    definitions for all child nodes to fix dtbs_check validation
+> >    errors found in v2.
+> > ---
+> >  .../devicetree/bindings/mfd/ti,twl.yaml       | 191 ++++++++++++++++++
+> >  .../devicetree/bindings/mfd/twl4030-power.txt |  48 -----
+> >  .../devicetree/bindings/pwm/ti,twl-pwm.txt    |  17 --
+> >  .../devicetree/bindings/pwm/ti,twl-pwmled.txt |  17 --
+> >  4 files changed, 191 insertions(+), 82 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/mfd/twl4030-power.txt
+> >  delete mode 100644 Documentation/devicetree/bindings/pwm/ti,twl-pwm.txt
+> >  delete mode 100644 Documentation/devicetree/bindings/pwm/ti,twl-pwmled.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/ti,twl.yaml b/Documentation/devicetree/bindings/mfd/ti,twl.yaml
+> > index f162ab60c..b0f1cb7b5 100644
+> > --- a/Documentation/devicetree/bindings/mfd/ti,twl.yaml
+> > +++ b/Documentation/devicetree/bindings/mfd/ti,twl.yaml
+> > @@ -76,6 +76,98 @@ allOf:
+> >            properties:
+> >              compatible:
+> >                const: ti,twl4030-wdt
+> > +
+> > +        audio:
+> > +          type: object
+> > +          $ref: /schemas/sound/ti,twl4030-audio.yaml#
+> > +          unevaluatedProperties: false
+> > +
+> > +        keypad:
+> > +          type: object
+> > +          $ref: /schemas/input/ti,twl4030-keypad.yaml#
+> > +          unevaluatedProperties: false
+> > +
+> > +        pwm:
+> > +          type: object
+> > +          $ref: /schemas/pwm/pwm.yaml#
+> > +          unevaluatedProperties: false
+> > +          description: |
+> > +            TWL4030 series: PWMA and PWMB (connected to LEDA and LEDB terminals)
+> > +          properties:
+> > +            compatible:
+> > +              enum:
+> > +                - ti,twl4030-pwm
+> > +            '#pwm-cells':
+> > +              const: 2
+> > +          required:
+> > +            - compatible
+> > +            - '#pwm-cells'
+> > +
+> > +        pwmled:
+> > +          type: object
+> > +          $ref: /schemas/pwm/pwm.yaml#
+> > +          unevaluatedProperties: false
+> > +          description: |
+> > +            TWL4030 series: PWMA and PWMB (connected to LEDA and LEDB terminals)
+> > +          properties:
+> > +            compatible:
+> > +              enum:
+> > +                - ti,twl4030-pwmled
+> > +            '#pwm-cells':
+> > +              const: 2
+> > +          required:
+> > +            - compatible
+> > +            - '#pwm-cells'
+> > +
+> > +        'twl4030-usb':  
 > 
-> $ git grep -lw '\.io_port[[:space:]]\+= true,'
-> drivers/counter/104-quad-8.c
-> drivers/gpio/gpio-104-dio-48e.c
-> drivers/gpio/gpio-104-idi-48.c
-> drivers/gpio/gpio-104-idio-16.c
-> drivers/gpio/gpio-exar.c
-> drivers/gpio/gpio-gpio-mm.c
-> drivers/gpio/gpio-pci-idio-16.c
-> drivers/gpio/gpio-pcie-idio-24.c
-> drivers/gpio/gpio-ws16c48.c
-> drivers/iio/addac/stx104.c
-> drivers/iio/dac/cio-dac.c
+> No need for quotes.
 > 
-> Take a look.
+> > +          type: object
+> > +          $ref: /schemas/usb/ti,twlxxxx-usb.yaml#  
+> 
+> Are you sure your patchset is bsiectable? Apply this patch and test. You
+> will see errors and you must fix these. Even after fixing you have
+> strict dependencies so your cover letter must explain these (or merging
+> constraints)...
+> 
+what are the rules here regarding bisectability? non-existing files
+in $ref are probably bad. Are then unveiled errors in dts also a
+problem? I would not expect too much fixing effort needed here. I have
+not run dtbs_check yet.
 
-I've already made a third version of the patch, using gpio-regmap this time.
-This time I'm also using a Southbridge driver that pulls it as a platform
-device, much like the rdc321x-southbridge.c does. It's not yet ready for
-merging, but it's available for now at
-https://github.com/socram8888/linux/tree/vortex-gpio
+I have expected this would all go via Lee's usual immutable branches. 
 
-I have found a small issue though regarding gpio-regmap, and before making
-a third version of the patch, I'd prefer to know the way to approach it.
-
-The Vortex86 SoCs require the direction of the GPIO pin to be set before
-writing the pin's value. Otherwise, writes to the data ports are ignored.
-
-Currently gpio-regmap does it in the opposite order:
-
-> static int gpio_regmap_direction_output(struct gpio_chip *chip,
-> 					unsigned int offset, int value)
-> {
->	gpio_regmap_set(chip, offset, value);
->
-> 	return gpio_regmap_set_direction(chip, offset, true);
-> }
-
-(I have also noticed that it does not properly check the return value of
-gpio_regmap_set, but that's another thing)
-
-So there are IMO three different approaches:
-
-1. Add a boolean flag that allows changing the behaviour. If set, invert
-the order of operations. Else do as before.
-2. Same, but with a "flags" bitfield, in case more flags need to be added
-in the future.
-3. Do an additional "gpio_regmap_set" after setting the direction. This
-means no new fields need to be added to the structures but causes an extra
-write that may not be needed on other drivers.
-
->> IRQ is only available for the first two ports out of the five available.
-> Would  it be a problem to support them?
-
-I cannot test that on my platform: as mentioned before, only ports 0 and 1
-have IRQs, and in my mini PC I only have two pins available, and they're
-both on port 4. 
-
-Any code I'd write would be completely untested and IMHO sounds like a
-terrible idea to have such code merged.
-
-Thanks,
-Marcos
-
+Regards,
+Andreas
 
