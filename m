@@ -1,155 +1,161 @@
-Return-Path: <linux-gpio+bounces-24517-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24518-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB58AB2B8A9
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 07:30:25 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B32BB2B94C
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 08:18:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 98966189F930
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 05:30:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EBF8D7A27FB
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 06:16:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4153630FF31;
-	Tue, 19 Aug 2025 05:29:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D834E22FE02;
+	Tue, 19 Aug 2025 06:18:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QCNFgav8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ao/TUpzo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E4230F81D
-	for <linux-gpio@vger.kernel.org>; Tue, 19 Aug 2025 05:29:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9A138B;
+	Tue, 19 Aug 2025 06:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755581399; cv=none; b=Na6uywXKS5ZpgSRpB70jcelQabzEJOj0NYBykredvxSFAYGDK3FLG3nDLqrSiA35lUzKqAw2XuXzrlGsU6+Y2kFGIbq2ioZccURvxD9/1PYF90A6Nw45g1BO+H4//M3bWVWGgxjU+WerjpmnU90ir+dpY3Q/0Q68BFrpgqguUmA=
+	t=1755584305; cv=none; b=KfOQgPlivi6USLvAV1Cs+MJ7lj6EYGJW5XhWs5rkZCLYG4t15+x82h7DWxADxlyMDMtvj7IzPDul+kFv5Q548zYxQA4xcupMX1JMdoNKk+OBtgjNp96g82amNRbnEFqEnQUJtcINmE51JP/BCWav1rnehPZbq/DrSpoXP0fY86s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755581399; c=relaxed/simple;
-	bh=Hiaw+1vru5Gp5FXyAQ8mi6lZwyqhH7knrQYR8u+n6YY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H2fiZekCWNvqj1neHmJFPBLpyaWimj8lJKw+DbvX7fODdKRooDjTWNaoaNrpKBlPDETC3e5QbIMqsOu8LCho/PODwQ5D2Z8G2V5kDV4GIPDdASQmnyscvra0sd9wAhePCjA3PLS8HtFp4XRT4DrrtvthVN90SaEaJ0T7kDQZRfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QCNFgav8; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-55ce526627dso4970667e87.3
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Aug 2025 22:29:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1755581395; x=1756186195; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AY416xR1xycZgMaHjJKQxeOxL60iUIwXBSq8Px9VqF4=;
-        b=QCNFgav8kfxSctfpXma/aYgM0IhSUJKWUSJwEbya9vLyXC183syObGesgfv/JxAjH/
-         /rhSTHh8E3nsBWeitN1hDAOLSW7POKYGwmalJNrBk9w+ddCUUHFbuABTcDAkGxLjHbYL
-         UQjxjvTNaohIoY7C6QTvSnXRHXEi2BXTPg0sY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755581395; x=1756186195;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AY416xR1xycZgMaHjJKQxeOxL60iUIwXBSq8Px9VqF4=;
-        b=D+HzbdxBHoMWtvldhj2ngzciExLRqEMd0VZBMe/yQf6p/X0EgKyyF2a/LGn32WKFgO
-         Oq/Wqre7MIqUBTQVYpRAsWdJbLwcTLEOIuotxNSW463aylP1NmOMBoQysteNlIE4D4F4
-         ijIoiiDoZeW+k9WCS+mnD8Z+usmDSfZItCKyClzNGtOWpDrV35q1xvgRv1fv9qCzjGDG
-         hPRbBrwbbiguN+0G7H1IN61c4cLNsYb261w7pgccVswUOk5jTkTSPBdD3lJqHVWKOo7O
-         O3vBdn29Lz7tYJltg1UtmCgVywct8EGDIpErG7KtPufSOUmqJtbXNlr/CK5/PoUQV8cA
-         +rxA==
-X-Forwarded-Encrypted: i=1; AJvYcCXxvTQXu0g5MXkj1ot9zmsSpcVGzmiJzRMQm2/pxiKy5bup/ROzLJCeKZCYaUaUoBYXuNHgM27H8Y8G@vger.kernel.org
-X-Gm-Message-State: AOJu0YzugikzP1MkxwKHxkeum9UWtUkLA32SBLIwBW+b84XeQcUXCXU8
-	ZsbWmVabK8EfProG+Q8HmiLRQHR+fU5hwQvupA2OhKPeApas9XhddtlLB4XSR+lo7F7Lylos0KG
-	gcntlAY82n2u7HjlbM4pi8sCIcLC1N4N3xFrJA12C
-X-Gm-Gg: ASbGncuHway2F5DxhrzGGpIojH4ImZ+hZ725c5w2qc4AoT8iK390KFnq6wOs7hBWaE1
-	LCnl4unNk8p8SD5P7Kwpimvtm42pWP6Hf/57aGxjyvCpgp9jXMQgh4r0hbbwFE70W78PLV166bI
-	Q+ZiaCrcY0qyWoCllxJFfbxjUKBUqV1Rp7HBtUq7FTBMnGKxNG015CDvJfkn1dMm/QkO/jyWocZ
-	Oi2H7kK1ufzmUPONXu+ktcBqR2clYtLR+M=
-X-Google-Smtp-Source: AGHT+IFc+cNqQJD94yOsJXvxKRjOpffc7Ia22z42Fq9ZyFSlD4taXbrHvujNSr7HuBf9iSSI7SrVxD3w4KS0qImpweY=
-X-Received: by 2002:a05:6512:3f14:b0:55c:cc6a:a212 with SMTP id
- 2adb3069b0e04-55e008451ebmr402983e87.39.1755581395466; Mon, 18 Aug 2025
- 22:29:55 -0700 (PDT)
+	s=arc-20240116; t=1755584305; c=relaxed/simple;
+	bh=csN9gHgo3L9lRWJe0nMxew2Yzmsh9jwnHiRF0xA4jCc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i7etEPt6Gvl/FHtN9g1UZ4JUW2ZQt/wYKTHuwV6j1/0JZxIhAySgpt47LbpLPRriTTAvwMN1/Y+HrSx2wE1Iasu2rC6dTxAiCUetV259Q6mcUrJiNRiN52Uz3AuCGkK8xyFWaPdj/cKRi3Kp01j7NNSq6KFsGNhuHBoTbLlnlPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ao/TUpzo; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755584304; x=1787120304;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=csN9gHgo3L9lRWJe0nMxew2Yzmsh9jwnHiRF0xA4jCc=;
+  b=Ao/TUpzomJGE8epFk4Iz1faiBpf3H9+qGHq6FhJCPyS4UkeSjlvTGU50
+   78ON5DXwlhs8R8Cl1hfmxBfg47S7f/5LEpE5EqAvv9xlcY3xCXJlqQqrO
+   oPqoeSd3i36dO2aqR4IIZMupD943V6iG6Ifs93wCTsD/y11MGHz9YLTjz
+   sazX20zYjimsMhFU1D8rejMlGuXF7JWnAAcqdjMKNIFF0JrwX+EGd9upe
+   h5aHRy29BEj0TzVt13OEyPOAjfHojqZmvoT+HO2bgIxRlXs42bpMithf+
+   56utq8KdWwwyGVbzGml6P17eHhDXehmmjpG/EMIqF76HY2Q2AmkoluGj8
+   A==;
+X-CSE-ConnectionGUID: Mb4NyWvcRX2pS4QOyHIJ4Q==
+X-CSE-MsgGUID: Zk6RNbq4RKqrfvjq+9VKqQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11526"; a="69269370"
+X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
+   d="scan'208";a="69269370"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2025 23:18:17 -0700
+X-CSE-ConnectionGUID: hANu7aKkT32cGu5lWMasrQ==
+X-CSE-MsgGUID: A6xUup3sQIaFVavzb7OEnQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
+   d="scan'208";a="198787477"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa002.jf.intel.com with ESMTP; 18 Aug 2025 23:18:15 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id 6C12B93; Tue, 19 Aug 2025 08:18:13 +0200 (CEST)
+Date: Tue, 19 Aug 2025 08:18:13 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: mario.limonciello@amd.com, westeri@kernel.org,
+	andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org,
+	brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: acpi: Program debounce when finding GPIO
+Message-ID: <20250819061813.GJ476609@black.igk.intel.com>
+References: <20250818015219.3604648-1-superm1@kernel.org>
+ <20250818045538.GH476609@black.igk.intel.com>
+ <08dd199e-0e7d-44b8-b980-5fde226cd636@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250801-mtk-dtb-warnings-v1-0-6ba4e432427b@collabora.com>
- <20250801-mtk-dtb-warnings-v1-8-6ba4e432427b@collabora.com>
- <CAGXv+5EHk=f62+KiLo-aWMcd0-q+_59kno+uOW5rdYaq5q+5tQ@mail.gmail.com>
- <CACRpkdbWctNH0XJfcHfVJM9Etp0WCXpdyhhyaQemH-Xc0LDr0A@mail.gmail.com> <CAGXv+5ECsP7_wbdcaAkWuD=RyJiJpPe4r60bhD5U8xUvEBzmXw@mail.gmail.com>
-In-Reply-To: <CAGXv+5ECsP7_wbdcaAkWuD=RyJiJpPe4r60bhD5U8xUvEBzmXw@mail.gmail.com>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Tue, 19 Aug 2025 13:29:44 +0800
-X-Gm-Features: Ac12FXx-vk1JhaQ3rCWpmDReEnhaHNW7M5aboaWtjp9aXHyjGH_2VPoF2xHclbY
-Message-ID: <CAGXv+5FXZ_byK8Ftb9LjfQMkgtLd7mTmWgz_Nsvcv8=jy53T=g@mail.gmail.com>
-Subject: Re: [PATCH 8/9] arm64: dts: mediatek: mt8183-kukui: Fix
- pull-down/up-adv values
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Julien Massot <julien.massot@collabora.com>, kernel@collabora.com, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Ikjoon Jang <ikjn@chromium.org>, 
-	Enric Balletbo i Serra <eballetbo@kernel.org>, Weiyi Lu <weiyi.lu@mediatek.com>, 
-	Eugen Hristev <eugen.hristev@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, Julien Massot <jmassot@collabora.com>, 
-	Sean Wang <sean.wang@kernel.org>, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <08dd199e-0e7d-44b8-b980-5fde226cd636@kernel.org>
 
-On Tue, Aug 19, 2025 at 1:27=E2=80=AFPM Chen-Yu Tsai <wenst@chromium.org> w=
-rote:
->
-> On Mon, Aug 18, 2025 at 11:22=E2=80=AFPM Linus Walleij <linus.walleij@lin=
-aro.org> wrote:
-> >
-> > On Wed, Aug 6, 2025 at 8:38=E2=80=AFAM Chen-Yu Tsai <wenst@chromium.org=
-> wrote:
-> > > On Fri, Aug 1, 2025 at 7:18=E2=80=AFPM Julien Massot wrote
-> >
-> > > >                 pins-clk {
-> > > >                         pinmux =3D <PINMUX_GPIO124__FUNC_MSDC0_CLK>=
-;
-> > > >                         drive-strength =3D <MTK_DRIVE_14mA>;
-> > > > -                       mediatek,pull-down-adv =3D <10>;
-> > > > +                       mediatek,pull-down-adv =3D <2>;
-> > >
-> > >         bias-pull-down =3D <MTK_PUPD_SET_R1R0_10>;
-> > >
-> > > and so on.
-> > >
-> > > ChenYu
-> >
-> > I agree with ChenYu, the more standardized properties are the better it=
- is.
-> >
-> > All the custom properties makes sense for an engineer working with just
-> > that one SoC (like the SoC vendor...) but for field engineers who have
-> > to use different SoCs every day this is just a big mess for the mind.
-> >
-> > The standard properties are clear, concise and tell you exactly what
-> > they are about.
-> >
-> > The argument should be in Ohms though, according to the standard
-> > bindings, but maybe the value of MTK_PUPD_SET_R1R0_10 is
-> > something like that?
->
-> For reasons I can't recall clearly these are just placeholder values
-> that the driver then maps to the R1 and R0 settings. But at least they
-> use the standard properties.
->
-> The reason was either one of the following or both:
->
->   a. not every group of pins had the same resistance values for R1 & R0
->   b. there are no known precise values; the values depend on the process
->      and batch
+On Mon, Aug 18, 2025 at 01:03:48PM -0500, Mario Limonciello wrote:
+> On 8/17/25 11:55 PM, Mika Westerberg wrote:
+> > Hi,
+> > 
+> > On Sun, Aug 17, 2025 at 08:52:07PM -0500, Mario Limonciello (AMD) wrote:
+> > > When soc-button-array looks up the GPIO to use it calls acpi_find_gpio()
+> > > which will parse _CRS.
+> > > 
+> > > acpi_find_gpio.cold (drivers/gpio/gpiolib-acpi-core.c:953)
+> > > gpiod_find_and_request (drivers/gpio/gpiolib.c:4598 drivers/gpio/gpiolib.c:4625)
+> > > gpiod_get_index (drivers/gpio/gpiolib.c:4877)
+> > > 
+> > > The GPIO is setup basically, but the debounce information is discarded.
+> > > The platform will assert what debounce should be in _CRS, so program it
+> > > at the time it's available.
+> > 
+> > The spec says for GpioInt():
+> > 
+> >    DebounceTimeout is an optional argument specifying the debounce wait
+> >    time, in hundredths of milliseconds. The bit field name _DBT is
+> >    automatically created to refer to this portion of the resource
+> >    descriptor.
+> > 
+> > I was not sure but wanted to check that if it is left out, does ACPICA fill
+> > it with 0? If yes (I would expect so) then this is fine.
+> 
+> Yeah AFAICT you're right.  The ACPI resource is zero'ed out, so if the field
+> was empty it should default to zero.
 
-Also, their customers seemed more accustomed to dealing with toggling
-R1 & R0 vs setting some actual value. I presume that comes with the
-uncertainty of the actual hardware value, and they just try which
-combination works better.
+Okay good.
 
-ChenYu
+Then from my perspective,
+
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+
+> > 
+> > > Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
+> > > ---
+> > > v4:
+> > 
+> > You missed "v4" in the $subject.
+> 
+> Whoops, thanks.  If there ends up being a reason to spin I'll send the next
+> one as a v5.
+> 
+> > 
+> > >   * Just add a direct call instead
+> > >   * drop tag
+> > >   * update commit message
+> > > ---
+> > >   drivers/gpio/gpiolib-acpi-core.c | 6 ++++++
+> > >   1 file changed, 6 insertions(+)
+> > > 
+> > > diff --git a/drivers/gpio/gpiolib-acpi-core.c b/drivers/gpio/gpiolib-acpi-core.c
+> > > index 12b24a717e43f..6388e8e363dee 100644
+> > > --- a/drivers/gpio/gpiolib-acpi-core.c
+> > > +++ b/drivers/gpio/gpiolib-acpi-core.c
+> > > @@ -944,6 +944,7 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
+> > >   	bool can_fallback = acpi_can_fallback_to_crs(adev, con_id);
+> > >   	struct acpi_gpio_info info;
+> > >   	struct gpio_desc *desc;
+> > > +	int ret;
+> > >   	desc = __acpi_find_gpio(fwnode, con_id, idx, can_fallback, &info);
+> > >   	if (IS_ERR(desc))
+> > > @@ -957,6 +958,11 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
+> > >   	acpi_gpio_update_gpiod_flags(dflags, &info);
+> > >   	acpi_gpio_update_gpiod_lookup_flags(lookupflags, &info);
+> > > +	/* ACPI uses hundredths of milliseconds units */
+> > > +	ret = gpio_set_debounce_timeout(desc, info.debounce * 10);
+> > > +	if (ret)
+> > > +		return ERR_PTR(ret);
+> > > +
+> > >   	return desc;
+> > >   }
+> > > -- 
+> > > 2.43.0
 
