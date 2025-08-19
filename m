@@ -1,151 +1,115 @@
-Return-Path: <linux-gpio+bounces-24558-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24559-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D89FBB2C457
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 14:56:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F34E4B2C468
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 14:59:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8B75B6229CB
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 12:53:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 01D423BAF69
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 12:56:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B6C533CE8B;
-	Tue, 19 Aug 2025 12:53:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 463E0338F29;
+	Tue, 19 Aug 2025 12:56:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="spVV9/Af"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mngec7y8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05EAE322DCF;
-	Tue, 19 Aug 2025 12:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4985B1DF75C
+	for <linux-gpio@vger.kernel.org>; Tue, 19 Aug 2025 12:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755607990; cv=none; b=nMSD8pIYTjvGWw3eRlIAXsFOQ9MfzvN2/necniu1kVsxW4bhnmmemCBXMr5Fpj7UkY+BgfDHvP6y3/oTgEvXmb2NhvK2fZiFn0JW/THHUWedot0UfyS+R/HugCmaPBkWr4ZXbpYk3y70dRlIAF+jCot/r1A8oWCmHgEO59GE6jE=
+	t=1755608176; cv=none; b=DGVwDg1uP/zlzxyIyzppa6qz9KWDIXhNUkEualGi11iHNYi0n92v/Gu9ckOS41rwQfDzw+jXhFjH613LbOK1JaYyE4Dzmj5wzAXPrdPOyLrz9JlxBprmoRJpl86RhlUs0ea7cXl1x44d+/cLqXBzEB1cVbD8mWYMIlZhM9CpAoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755607990; c=relaxed/simple;
-	bh=13a7n6Pb3jFNNT/Scy0A653um0mNmwq9IdUUvB5tTjQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H+J3BTg3lHNBpgxDP5HGd+Y6dDXJDkpv5cAGVr3fK8AayR0VdPYIDdvVvuWFt6OWU3UnXtXoxhUza5IRSaf2xt2WIqyP7bKFO2Ap3R/6fGYKEXOvfe2beTppwQtWSBzCS1wMR9GzLifeV5/qR6uDHP8bA/QdWmFu5VCv1krfY+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=spVV9/Af; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FBAFC4CEF1;
-	Tue, 19 Aug 2025 12:53:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755607989;
-	bh=13a7n6Pb3jFNNT/Scy0A653um0mNmwq9IdUUvB5tTjQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=spVV9/Af14lsdKsEZzbIRCmuw1himyJY4e7hGmujx6tF/7/m5++G9iGLOygy4mLKK
-	 S3J0KyX5OveutjN6wX9q+olCFVfEW+RtiFd90uA2fBALfHpIoO2gvh1X7xJmn11zPS
-	 cHbkb3kVoE7YsPG9I3nHOXmYlSNgyHu8ps6sjLOxTwTiS2vLuVvDIPR9x/OmYT7UZj
-	 Ie+zJQHk1Cuu7QYMDBH4Q5bGdHH0Hl3nILAiihBXXc6LghGbcjKtDV9MF5jWrfGU3y
-	 WEpk42jqv8EdikF6bgDuKfqpBwvz+8UyHAlvKxs+Cb41i9692F/9qkZJGnwJ1yq5Qf
-	 u8aKBTIzufhmQ==
-Date: Tue, 19 Aug 2025 13:53:02 +0100
-From: Lee Jones <lee@kernel.org>
-To: a0282524688@gmail.com
-Cc: tmyu0@nuvoton.com, linus.walleij@linaro.org, brgl@bgdev.pl,
-	andi.shyti@kernel.org, mkl@pengutronix.de,
-	mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net,
-	jdelvare@suse.com, alexandre.belloni@bootlin.com,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
-	netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org,
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH v14 0/7] Add Nuvoton NCT6694 MFD drivers
-Message-ID: <20250819125302.GE7508@google.com>
-References: <20250715025626.968466-1-a0282524688@gmail.com>
- <20250723095856.GT11056@google.com>
+	s=arc-20240116; t=1755608176; c=relaxed/simple;
+	bh=jz0QOg/akzSjE/H2JWtFn2TjUHHbmNYxDvqdiKH5wjY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jTlxAzS2Tb553kJ1OK0zVwxcxeUWA7hCzc7hsuiIX30CUAccnJw+IjqRBA6OJt9qEpF/O7j6Dg6zYev0wCPw5r93WySzcUsjhScC8jxo5WxvbyZiVczH28hoBjp7MT9XOwiAaSG7iy6Ar4zwgT6QbNJPWrbAfm5b1BwUMH+5UQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Mngec7y8; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-333f901b229so41241501fa.2
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Aug 2025 05:56:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1755608172; x=1756212972; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jz0QOg/akzSjE/H2JWtFn2TjUHHbmNYxDvqdiKH5wjY=;
+        b=Mngec7y8BQP4xvfWALWD6RzLqBvh4Iyw6amqXKQYGZMT6S8DehFMRaxmgFHr3sEpOo
+         Oaj3FO/6Cq3d310OXbGrVHVXKLk/ZoK3LJxVumQ7OPlLrvXV6clsfB2Xxh9M8JqwCkj5
+         LMBuTi+h2oCslNZciU0Hd5pIG0iiCjUbfTrdPXLYKU2Alz3HN6mWgQopJQrwNpZS5icZ
+         BiN+0AmmUf2QAMuYMD7otAFYl+JUOUJLfd/NHY17YAHcddMVLmgRWUm+ifZFBaC3HMNb
+         g9Cy4bu3BjMjJXTqJWY7La/fCehusSFhFQVdjsh5v84+4EmTbY6TjKpxZ0NJgLIRmjar
+         +4AQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755608172; x=1756212972;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jz0QOg/akzSjE/H2JWtFn2TjUHHbmNYxDvqdiKH5wjY=;
+        b=LmEwYDyY536MQ/GYbg4wx4sme4C3NoWc9JBLfAZTDv314BL0slnPccBfkw/zV1fJtD
+         AC3o/U4GAQe7hqyPtN38MxEdvmgolqNRo9M11LhvwrILcX/wbRrrZ3LdUS+acyJNJX2r
+         h3cOz/LPbJ5fLauNFUrlHnucT4gHhEWCNOJ3LAcMTVUBVylWCTbLIhFAyhd5iMgJZOHT
+         7nuUo1Y2tAjBHVOITDnMIwou46ZaU0nyUBeOW7B62LSgMmu2qzq1fd3vXpjHoNBT2ut9
+         5YphGA2R+j0dw86tZfIVpeOv5cUCeNoEls0p9glVWQoyS+ldlEJO8mPIf7T//j9iuMWE
+         FHzw==
+X-Forwarded-Encrypted: i=1; AJvYcCVKqnIpSzNq6lLpOo81Dclx3mlfdSpv5cSvGSKXSLV3caT509ZEmNwPyJdf+UF8hgoTKLDh/P33YTk6@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmgHjtGOlO0+homUrFOOF7CXMdH3vTddgRX3iOnyHwgy/aUw28
+	web1+pkWtROQeC8pV4aJmG3GTsc0ofpVg9L+XoYYZGhAszf79rx90YqxFgJV0ybkYtAr/2/AR+D
+	sQzHV0VTcpA0ckb/K5/9qxnQ0msS2v4+ywnXSS4gdn+kd5S7vYOU2J4dZAQ==
+X-Gm-Gg: ASbGnctB3XLGNkeskrUKKC6vG6FiOUHrljRIaqMUqxSU4YYwsJJ8VgHgZw62h6dDJmN
+	2AfrZCb1Lgv+fPxefPTfE38s/x31d6SZIV2+BvvyycbWTMk9IKTzvwGQL4jbTlft/XIt4Xylt5o
+	PnJe5x8d/yEqFchc4GPjhux2j6Mmc5Hh8gVia++DDi/PmO7h7QOWX5L64IJfQMiHplTasUUECzY
+	xnQPFzYaMrpaqSpcA==
+X-Google-Smtp-Source: AGHT+IFUdE20zyrUEk40f2kUzg2iU7WpPNLkuJOKXQXp3DLrjB3ncJifjSzbF9DsaL3zu7uLvfHfbMV3X1spc0EVxok=
+X-Received: by 2002:a2e:a594:0:b0:333:7e5b:15c0 with SMTP id
+ 38308e7fff4ca-3353050e1e0mr6448301fa.13.1755608172324; Tue, 19 Aug 2025
+ 05:56:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250723095856.GT11056@google.com>
+References: <20250818-modularize-sx150x-gpio-expander-v1-0-c2a027200fed@oss.qualcomm.com>
+ <20250818-modularize-sx150x-gpio-expander-v1-1-c2a027200fed@oss.qualcomm.com>
+In-Reply-To: <20250818-modularize-sx150x-gpio-expander-v1-1-c2a027200fed@oss.qualcomm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 19 Aug 2025 14:55:59 +0200
+X-Gm-Features: Ac12FXxA0aTHF_AbE4XLBFhBLRwXcBfdoeDod62FVE4dAtkrcQvpYv97-QS9ik4
+Message-ID: <CACRpkdaeAqD=mpG4y16CPKwJ=pjATY9TxeRnXR9abziCOQb-0Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: sx150x: Make the driver tristate
+To: Fange Zhang <fange.zhang@oss.qualcomm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	dmitry.baryshkov@oss.qualcomm.com, tingwei.zhang@oss.qualcomm.com, 
+	xiangxu.yin@oss.qualcomm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 23 Jul 2025, Lee Jones wrote:
+On Mon, Aug 18, 2025 at 6:41=E2=80=AFAM Fange Zhang
+<fange.zhang@oss.qualcomm.com> wrote:
 
-> On Tue, 15 Jul 2025, a0282524688@gmail.com wrote:
-> 
-> > From: Ming Yu <a0282524688@gmail.com>
-> > 
-> > This patch series introduces support for Nuvoton NCT6694, a peripheral
-> > expander based on USB interface. It models the chip as an MFD driver
-> > (1/7), GPIO driver(2/7), I2C Adapter driver(3/7), CANfd driver(4/7),
-> > WDT driver(5/7), HWMON driver(6/7), and RTC driver(7/7).
-> > 
-> > The MFD driver implements USB device functionality to issue
-> > custom-define USB bulk pipe packets for NCT6694. Each child device can
-> > use the USB functions nct6694_read_msg() and nct6694_write_msg() to issue
-> > a command. They can also request interrupt that will be called when the
-> > USB device receives its interrupt pipe.
-> > 
-> > The following introduces the custom-define USB transactions:
-> > 	nct6694_read_msg - Send bulk-out pipe to write request packet
-> > 			   Receive bulk-in pipe to read response packet
-> > 			   Receive bulk-in pipe to read data packet
-> > 
-> > 	nct6694_write_msg - Send bulk-out pipe to write request packet
-> > 			    Send bulk-out pipe to write data packet
-> > 			    Receive bulk-in pipe to read response packet
-> 
-> [...]
-> 
-> > Ming Yu (7):
-> >   mfd: Add core driver for Nuvoton NCT6694
-> >   gpio: Add Nuvoton NCT6694 GPIO support
-> >   i2c: Add Nuvoton NCT6694 I2C support
-> >   can: Add Nuvoton NCT6694 CANFD support
-> >   watchdog: Add Nuvoton NCT6694 WDT support
-> >   hwmon: Add Nuvoton NCT6694 HWMON support
-> >   rtc: Add Nuvoton NCT6694 RTC support
-> > 
-> >  MAINTAINERS                         |  12 +
-> >  drivers/gpio/Kconfig                |  12 +
-> >  drivers/gpio/Makefile               |   1 +
-> >  drivers/gpio/gpio-nct6694.c         | 499 +++++++++++++++
-> >  drivers/hwmon/Kconfig               |  10 +
-> >  drivers/hwmon/Makefile              |   1 +
-> >  drivers/hwmon/nct6694-hwmon.c       | 949 ++++++++++++++++++++++++++++
-> >  drivers/i2c/busses/Kconfig          |  10 +
-> >  drivers/i2c/busses/Makefile         |   1 +
-> >  drivers/i2c/busses/i2c-nct6694.c    | 196 ++++++
-> >  drivers/mfd/Kconfig                 |  15 +
-> >  drivers/mfd/Makefile                |   2 +
-> >  drivers/mfd/nct6694.c               | 388 ++++++++++++
-> >  drivers/net/can/usb/Kconfig         |  11 +
-> >  drivers/net/can/usb/Makefile        |   1 +
-> >  drivers/net/can/usb/nct6694_canfd.c | 832 ++++++++++++++++++++++++
-> >  drivers/rtc/Kconfig                 |  10 +
-> >  drivers/rtc/Makefile                |   1 +
-> >  drivers/rtc/rtc-nct6694.c           | 297 +++++++++
-> >  drivers/watchdog/Kconfig            |  11 +
-> >  drivers/watchdog/Makefile           |   1 +
-> >  drivers/watchdog/nct6694_wdt.c      | 307 +++++++++
-> >  include/linux/mfd/nct6694.h         | 102 +++
-> >  23 files changed, 3669 insertions(+)
-> >  create mode 100644 drivers/gpio/gpio-nct6694.c
-> >  create mode 100644 drivers/hwmon/nct6694-hwmon.c
-> >  create mode 100644 drivers/i2c/busses/i2c-nct6694.c
-> >  create mode 100644 drivers/mfd/nct6694.c
-> >  create mode 100644 drivers/net/can/usb/nct6694_canfd.c
-> >  create mode 100644 drivers/rtc/rtc-nct6694.c
-> >  create mode 100644 drivers/watchdog/nct6694_wdt.c
-> >  create mode 100644 include/linux/mfd/nct6694.h
-> 
-> I will apply this the other side of the pending merge-window.
+> Set PINCTRL_SX150X config option as a tristate and add
+> MODULE_DEVICE_TABLE()/MODULE_LICENSE() to export appropriate information.
+>
+> Signed-off-by: Fange Zhang <fange.zhang@oss.qualcomm.com>
 
-Doesn't apply.  Please rebase on top of v6.17-rc1.
+Fair enough!
 
-When you resubmit do so as a [RESEND].
+This patch 1/2 applied to the pinctrl tree.
 
--- 
-Lee Jones [李琼斯]
+Please funnel patch 2/2 through the SoC tree.
+
+> subsys_initcall(sx150x_init
+
+I seriously wonder about this. It feels like this driver should
+be a pure module_init() device. But other users may disagree.
+
+Yours,
+Linus Walleij
 
