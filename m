@@ -1,173 +1,171 @@
-Return-Path: <linux-gpio+bounces-24527-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24526-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17FFDB2BC08
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 10:40:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE2B5B2BC06
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 10:39:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C57CF5E46A9
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 08:40:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D30425E3684
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 08:39:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 443B43115A9;
-	Tue, 19 Aug 2025 08:40:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CB5026E6E4;
+	Tue, 19 Aug 2025 08:39:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OjVwMI/M"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="YeMFEOjJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-ej1-f68.google.com (mail-ej1-f68.google.com [209.85.218.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68286221FD4;
-	Tue, 19 Aug 2025 08:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE05521ABBB
+	for <linux-gpio@vger.kernel.org>; Tue, 19 Aug 2025 08:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755592828; cv=none; b=ifQlEa6kixvY5k6EBq5pDQmN58zziteqHnQqj3eyIEuvj0RyixUwEgtdgBgbxvKCtE1bo/4V0WULl/ifDmwWCLeBIk1i0fMfI8hLKVp9u/Hbo11Zb6iF73asIup2V3Dk9UwY3SyD7iIFfLwddjBKfL9SGct4RgPOhBpa8OqD7AI=
+	t=1755592741; cv=none; b=Qqz5W+g4KzDpYnOeAiylPrQjJkplKBH59fJqf49RcrbfxXoQd3JWEXiT+agYFxZJZaIb4JVivQDFV+60RE98vf2w5gou7QLa8i8lJ6wdjiFfEPGjLn6QyQynNxsPeqbffub8crFSgNPeBVXekjh25uQod7SXGqoWqO3iqrmtU4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755592828; c=relaxed/simple;
-	bh=empdr60v+2Uql+3EL8V6FDzYMeaEXq4MpvGqceYYH84=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lpHU/7jXzkuw/lhg6SD4yrGFf9u7wZO2oSvEfAXuVIHXryLkwAQuvkiJfqlNPeXZeqcssWL1Wo41fu+X8iF7oaSd3JfxkTaF2dqp4oa4e3PLTN55NDWy9Eye2iLPeQILshU53CDFr4syk0Q8yqYwJNgUws/dS7ynn1idYKt/OL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OjVwMI/M; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-45a286135c8so12141105e9.0;
-        Tue, 19 Aug 2025 01:40:26 -0700 (PDT)
+	s=arc-20240116; t=1755592741; c=relaxed/simple;
+	bh=3F4UrOhZZTYKHnFTlZsPxTLZ7XhoY/GR8gZkd6VKDcI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xmm7qBHhulRpn6NN9vM2JVPFNX8EkYz9E//0Om2hDeUmTY7FX8q0F/IV/UEuzpla/+QJHWYuB421h8+FrAsyctWglttuVlQ4Wdk6b1Pus0Kq/6UWT7RzBT0SYi5FroRagjymAJA97gG9oy5suN6q864AxxwX9PDO8TpvfzqDFiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=YeMFEOjJ; arc=none smtp.client-ip=209.85.218.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f68.google.com with SMTP id a640c23a62f3a-afcb7a7bad8so669871166b.3
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Aug 2025 01:38:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755592825; x=1756197625; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pJpA359eG0b9Ks8j3opG1XWCGaxB+D6I1gp5oSK+e6E=;
-        b=OjVwMI/MTbfkRdnHektMm8hTyJ+cbTMZ/sZ74XXAU6QY1kE4ebCAnI7JOKyBtF+nS7
-         JHSQzi3edEaav0qC1iTbb+GKTxsIjMAT1ThUaoQPG+qb+Ct3tT62QHglCnh2yVr3yJFC
-         3I7F2xFRzbeMny2+CRy/7NHWYvhnVvbuH7GDfN97SlAn5loIwvgxFKjI/civX1JtBqHz
-         0BpzlJeGLKA/lLI0zSO6lhgbHr/uBHALkrH7xOTDXnBNnG+jJHiKkvKWzZaf36oXSEwG
-         TW7wSdOVUkTj2D3zN+PONCfgEWCVFzc+hJC/JMvzs6uG5yztuLeC/tJ0bUt/ekkOXkqC
-         lYxw==
+        d=suse.com; s=google; t=1755592737; x=1756197537; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=awT1Pc5QFdF5D/Wxu+LjKDgk6d6Ud6beDyAqqEU7AUY=;
+        b=YeMFEOjJcH2ldPA6DfSAWX7sOZQHG4JxrBn89K3zGXwTWDpK2s4712fDm9la4Tjcue
+         SzjZJ/tGOOGaGQVSOPda2rvvSPkYy6NTeaTEAgpN8KnW7E7QxNAqyjlewb1kZyVDSdWn
+         J656yg+L3Y1xU94hWR6DWM25z9mSHQYRSRkaoT82kG50yPErNS+tB2aA0Ky7IpvKIKj9
+         2twU6dheyWpc4Do/+pp1o5uGlPQRum1JWKWVypCyV6g+88Uzfy1HAOQSi6bYkY+YtElt
+         K+v/85eQijEaYudInTnFALFQg9N3RbLdD6UA5oSSdvzKWsgITTzIbIOEyQZxj0roDrHi
+         Z4yQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755592825; x=1756197625;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pJpA359eG0b9Ks8j3opG1XWCGaxB+D6I1gp5oSK+e6E=;
-        b=NdwE3Q1J8s8AaIzxFZKhL4M9eEMermg3Ctb7+l+ru2C2TdIgQtNUenrUK+yVPmfH6X
-         nuDP3prQWi1jZ3MSD0s7GJ8NVuBzGVU/epmJjFr8yewjua7XX4dc33z7KdkPZa2Z0o1B
-         vV2dKfwx4kZs0NtybM9X3gX41hcZzpUXBEkk/R/nAbbYlCkxZ/7dJcLw6zNmAOsal1Mk
-         e4cw4V7/CM1SOGsmd6AMPRgJDPDmAVCnAqloJyLN71BJGg8+THqxKogadzrdyV4OwySy
-         +bLveMX3PldID0/taMteQhPDJ92e6nB7PEUE1sh7K+alnRuqV/8SYbo70iBjC/OiClSb
-         4HWA==
-X-Forwarded-Encrypted: i=1; AJvYcCUgZXXuVSvGz3p/6rtiKc7zIAcvHAie+J7vzez/osg7rGnjGo9oxnikzSuzW6OSKXzzCHYU5G1SAUWFkfuK@vger.kernel.org, AJvYcCWiNhOa0vZiuYSoNTnE/EAF0sjPhiaLzvbpXad4Xz1q7nZ97ugAKVIP3Vxz/7T3dSrF8ZJiBs2U0e/c@vger.kernel.org, AJvYcCXpmYxBnQldAaSeDBxPMNEo6q3/0atzhA51dY3x24AUpL5IPVBf7qtN/+5nR0YCEO5AYbcFRR7irlYXO2ihxtdZEYI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyk0NmZ06GxcOSInAuAO7zhszzQ6VwFSdXe48gDynR5z7IvoZio
-	dW2dTS//OvLhmAAr3gA5oWpzULvbbc5sAKn/cKWOJCTAABNqBgxyWvZ8
-X-Gm-Gg: ASbGnctgQRIugZ4560Z+o1wiperrS2rrT2bZiBcN5aJA+tLGS8RVn68tEKc51k1IL92
-	PVv7Cs/z/50PeNVUpEqcWHd3vrqmr5TeKG5LGE8U2nJwW5/Ko6jwyIM01IRZBJS9Zxs5iV5WHs5
-	bGY7mWC+66bvXBSvFtQCf75xke+DQXfWwk/EYZkSDUDq1gg+AZCKADWw+96IlL0v+dcFoGf3Mmn
-	870/f+ut/AP8mh0B/HmbNElvUiPoil9wEzWd9TkcEFRD1zjiJP1urNCuWjXF6mWXWPzAGBICL2h
-	m0xgvKqJ8C5uvcOWC/UtlP23482ScKryolPWNs4/Lq0nwTddbhlldg/4zGPy8uLzFAtwM34/aRt
-	yNLKj75fGgrj7bWLkT8fFeCkXQzPessSVP7LJLv43V33PdogkwndZ/WM3xBM42Sqeqe27Y2xK9u
-	L89eDuFVZF
-X-Google-Smtp-Source: AGHT+IEGy3sdqE03Pv2GZCwYc38JDfpKrn5DxztIAZ2aHStWAim31GPjOqX/WqFWMKVlJUhBglzggg==
-X-Received: by 2002:a05:600c:1ca2:b0:456:ed3:a488 with SMTP id 5b1f17b1804b1-45b43f61f49mr11950505e9.1.1755592824682;
-        Tue, 19 Aug 2025 01:40:24 -0700 (PDT)
-Received: from biju.lan (host31-53-6-191.range31-53.btcentralplus.com. [31.53.6.191])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45a1c61a66esm203895015e9.0.2025.08.19.01.40.24
+        d=1e100.net; s=20230601; t=1755592737; x=1756197537;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=awT1Pc5QFdF5D/Wxu+LjKDgk6d6Ud6beDyAqqEU7AUY=;
+        b=fzGUbL3vOy1P7T+3whFH0wox+EkrzR0kOOTXLe7KAX7Zd7DDp+6weiKyNKMoKK9V6h
+         Ud2qPOkxeF8N28WNKj+kpClKQl2TBN3JXkkDvZw2t9iTpHY86AJVn0tIZj2TtG3zu6BL
+         R2d5VIpSsBDSfKQONG8wNCjz6Q4CqLMatiQ7+OMoUQU+oo+R7/np2pCmIBXU+7W9W8fE
+         ZRrGCnToU2DjOn1keuXT6bXx2InY52kClQvMOdyuEHmUnYEuS27QHgDjOjO7+iAQHRBr
+         vpMCN8Z/i/Pt7fm0OlsPQ9RNkAAj/88C9ikZ0lMta5F7SQ4N9CBOcGQ7T0mT7MlvRLmB
+         /qJw==
+X-Forwarded-Encrypted: i=1; AJvYcCVta0qc8BMW746h9GyEYNuXk1QDKhixWtCsqX1vPzSHNbcrTB/bEyHNcrDwCaTgSJtsKzYtIi4MwQzp@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRUWMgZCr7YM/yLujAfK6vknOKtZxa/rsg2VR1B/WtvDb4iBp4
+	NYSipvsP12biXlFfpu2mqQTPBbo90KLSsclgBAB8SU34p4uV649KRZIbPfDaXqtv16E=
+X-Gm-Gg: ASbGncuI98Q2K8xdFmynkoDqu4vazguS32DeC/YLkeVUn7OzFs20/r6SpcdlgPXijgV
+	rCKhsKPJSf85rM3bA1WfGXWLH+OBRtPCaYiRyzbaTxHz8almj0iYQMnruFH+kez6GJhyzI5DxQd
+	DsENaonhfERZhN+LSiQBjgGP61ytinvLZBqeOBFg1SFojNs9XydV8te4ou12evj3Rs21bT8DGZp
+	PnLNdVSSU0ulHxV/+24LpxlM5YL+7mZxChQGuGG6SXTvB2wagtzIuPnqy7o4Y2SUgfmsOCQLFjz
+	tfInVG9dFibwQm7kXjAHkg1VaUTg6o3O1xmu+3LdyD2cWY3F/FSqooBP4+8ju7t9c9T2Sac/K5O
+	jCD322uj9cxLQrFQUIAc/M3YU77svcbdpcL7fg7vgAYFvXAmmpcGeQ0NKx4er
+X-Google-Smtp-Source: AGHT+IHonInmdTYMCRZte9li+YjdpP7iMaUqqny3PYj+jU1US9Z78L5CzsZFHXynIpZWrj7rqyAw1g==
+X-Received: by 2002:a17:906:730d:b0:af3:7645:43e1 with SMTP id a640c23a62f3a-afddcb7f393mr178888166b.17.1755592737043;
+        Tue, 19 Aug 2025 01:38:57 -0700 (PDT)
+Received: from localhost (host-79-36-0-44.retail.telecomitalia.it. [79.36.0.44])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afcdcea0ebdsm967968366b.56.2025.08.19.01.38.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Aug 2025 01:40:24 -0700 (PDT)
-From: Biju <biju.das.au@gmail.com>
-X-Google-Original-From: Biju <biju.das.jz@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>,
-	linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Biju Das <biju.das.au@gmail.com>
-Subject: [PATCH] pinctrl: renesas: rzg2l: Add suspend/resume support for Schmitt control registers
-Date: Tue, 19 Aug 2025 09:40:20 +0100
-Message-ID: <20250819084022.20512-1-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
+        Tue, 19 Aug 2025 01:38:56 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Tue, 19 Aug 2025 10:40:48 +0200
+To: Stanimir Varbanov <svarbanov@suse.de>
+Cc: Andrea della Porta <andrea.porta@suse.com>, linus.walleij@linaro.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	florian.fainelli@broadcom.com, wahrenst@gmx.net,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, iivanov@suse.de, mbrugger@suse.com,
+	Jonathan Bell <jonathan@raspberrypi.com>,
+	Phil Elwell <phil@raspberrypi.com>
+Subject: Re: [PATCH v3 2/3] pinctrl: bcm: Add STB family pin controller driver
+Message-ID: <aKQ4kBZtyr-g5JfV@apocalypse>
+References: <cover.1754922935.git.andrea.porta@suse.com>
+ <bb746d2fd50ecbb9963438fae8601c2e4901a126.1754922935.git.andrea.porta@suse.com>
+ <f7892abc-1063-4b12-8d47-c80714aeb8fe@suse.de>
+ <aKQyViTbXAsFEuT7@apocalypse>
+ <9af1eb5b-7eb1-4686-869d-eda597145819@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9af1eb5b-7eb1-4686-869d-eda597145819@suse.de>
 
-From: Biju Das <biju.das.jz@bp.renesas.com>
+Hi Stanmir,
 
-The Renesas RZ/G3E supports a power-saving mode where power to most of
-the SoC components is lost, including the PIN controller.  Save and
-restore the Schmitt control register contents to ensure the
-functionality is preserved after a suspend/resume cycle.
+On 11:19 Tue 19 Aug     , Stanimir Varbanov wrote:
+> 
+> 
+> On 8/19/25 11:14 AM, Andrea della Porta wrote:
+> > Hi Stanimir,
+> > 
+> > On 10:40 Tue 19 Aug     , Stanimir Varbanov wrote:
+> >> Hi Andrea,
+> >>
+> >> On 8/11/25 5:46 PM, Andrea della Porta wrote:
+> >>> From: "Ivan T. Ivanov" <iivanov@suse.de>
+> >>>
+> >>> This driver provide pin muxing and configuration functionality
+> >>> for BCM2712 SoC used by RPi5. According to [1] this chip is an
+> >>> instance of the one used in Broadcom STB  product line.
+> >>>
+> >>> [1] https://lore.kernel.org/lkml/f6601f73-cb22-4ba3-88c5-241be8421fc3@broadcom.com/
+> >>>
+> >>> Cc: Jonathan Bell <jonathan@raspberrypi.com>
+> >>> Cc: Phil Elwell <phil@raspberrypi.com>
+> >>> Signed-off-by: Ivan T. Ivanov <iivanov@suse.de>
+> >>> Reviewed-by: Phil Elwell <phil@raspberrypi.com>
+> >>> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> >>> ---
+> >>>  drivers/pinctrl/bcm/Kconfig           |   13 +
+> >>>  drivers/pinctrl/bcm/Makefile          |    1 +
+> >>>  drivers/pinctrl/bcm/pinctrl-brcmstb.c | 1197 +++++++++++++++++++++++++
+> >>>  3 files changed, 1211 insertions(+)
+> >>>  create mode 100644 drivers/pinctrl/bcm/pinctrl-brcmstb.c
+> >>>
+> >>
+> >> <snip>
+> >>
+> >>> +static int brcmstb_pinctrl_probe(struct platform_device *pdev)
+> >>> +{
+> >>> +	struct device *dev = &pdev->dev;
+> >>> +	struct device_node *np = dev->of_node;
+> >>> +	const struct brcmstb_pdata *pdata;
+> >>> +	const struct of_device_id *match;
+> >>> +	struct brcmstb_pinctrl *pc;
+> >>> +	const char **names;
+> >>> +	int num_pins, i;
+> >>> +
+> >>> +	match = of_match_node(brcmstb_pinctrl_match, np);
+> >>
+> >> The 'match' variable is needless, you can drop it.
+> > 
+> > you mean something like this?
+> > 
+> > pdata = of_match_node(brcmstb_pinctrl_match, np)->data;
+> > 
+> 
+> No, I meant:
+> 
+> pdata = of_device_get_match_data(dev)
+> 
+> Also as a bonus you could move brcmstb_pinctrl_match[] array after .probe.a
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-This patch is on top of [1]
-[1] https://lore.kernel.org/all/20250817143024.165471-1-biju.das.jz@bp.renesas.com/
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+Right. Thanks!
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 8422a5429ca3..8ba6d82f335f 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -321,6 +321,7 @@ struct rzg2l_pinctrl_pin_settings {
-  * @iolh: IOLH registers cache
-  * @pupd: PUPD registers cache
-  * @ien: IEN registers cache
-+ * @smt: SMT registers cache
-  * @sd_ch: SD_CH registers cache
-  * @eth_poc: ET_POC registers cache
-  * @oen: Output Enable register cache
-@@ -334,6 +335,7 @@ struct rzg2l_pinctrl_reg_cache {
- 	u32	*iolh[2];
- 	u32	*ien[2];
- 	u32	*pupd[2];
-+	u32	*smt;
- 	u8	sd_ch[2];
- 	u8	eth_poc[2];
- 	u8	oen;
-@@ -2707,6 +2709,10 @@ static int rzg2l_pinctrl_reg_cache_alloc(struct rzg2l_pinctrl *pctrl)
- 	if (!cache->pfc)
- 		return -ENOMEM;
- 
-+	cache->smt = devm_kcalloc(pctrl->dev, nports, sizeof(*cache->smt), GFP_KERNEL);
-+	if (!cache->smt)
-+		return -ENOMEM;
-+
- 	for (u8 i = 0; i < 2; i++) {
- 		u32 n_dedicated_pins = pctrl->data->n_dedicated_pins;
- 
-@@ -2968,7 +2974,7 @@ static void rzg2l_pinctrl_pm_setup_regs(struct rzg2l_pinctrl *pctrl, bool suspen
- 	struct rzg2l_pinctrl_reg_cache *cache = pctrl->cache;
- 
- 	for (u32 port = 0; port < nports; port++) {
--		bool has_iolh, has_ien, has_pupd;
-+		bool has_iolh, has_ien, has_pupd, has_smt;
- 		u32 off, caps;
- 		u8 pincnt;
- 		u64 cfg;
-@@ -2981,6 +2987,7 @@ static void rzg2l_pinctrl_pm_setup_regs(struct rzg2l_pinctrl *pctrl, bool suspen
- 		has_iolh = !!(caps & (PIN_CFG_IOLH_A | PIN_CFG_IOLH_B | PIN_CFG_IOLH_C));
- 		has_ien = !!(caps & PIN_CFG_IEN);
- 		has_pupd = !!(caps & PIN_CFG_PUPD);
-+		has_smt = !!(caps & PIN_CFG_SMT);
- 
- 		if (suspend)
- 			RZG2L_PCTRL_REG_ACCESS32(suspend, pctrl->base + PFC(off), cache->pfc[port]);
-@@ -3019,6 +3026,9 @@ static void rzg2l_pinctrl_pm_setup_regs(struct rzg2l_pinctrl *pctrl, bool suspen
- 							 cache->ien[1][port]);
- 			}
- 		}
-+
-+		if (has_smt)
-+			RZG2L_PCTRL_REG_ACCESS32(suspend, pctrl->base + SMT(off), cache->smt[port]);
- 	}
- }
- 
--- 
-2.43.0
+Andrea
 
+> 
+> ~Stan
 
