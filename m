@@ -1,134 +1,111 @@
-Return-Path: <linux-gpio+bounces-24681-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24682-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5038EB2E56D
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 21:05:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDBEEB2E601
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 22:04:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F188EA23E50
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 19:05:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EEB555E0C14
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 20:04:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36FAC280CFA;
-	Wed, 20 Aug 2025 19:05:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 798EF2701CE;
+	Wed, 20 Aug 2025 20:03:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eL7rr3br"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GeHJaS6B"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671F3275AEB;
-	Wed, 20 Aug 2025 19:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E2A24A054;
+	Wed, 20 Aug 2025 20:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755716720; cv=none; b=Y/Hw96SqmvP64ndzIBg9WJSTtigYPeyWzP9Lon3jgcLTsD8qktculJTI7piXyWgkYmdCejhWOMpfWWxXX35xw/rowZSM0IrCC08jq9XivHR0TPG7ocO0bDW19OQDjCSaO5BXJkV4SP/sENGl0E8EU7FW0dtruFLepZ1G72SbHWc=
+	t=1755720236; cv=none; b=JgDa9WSsQTU0nfuj6tuK/xmUYrnQbdQJEZGnf46biPHI9074YuoK4sgo+5cAvmrYHhD6j1T5Iz4oVydUEwZnjw/ICqJ0gqLWPIQdEpk1qgFoYn1UpgWErl6JQZ4i/MaV1x33oLxGj60IcIcTwSbf00jHF6QNKyAt2U5Y2GRBuyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755716720; c=relaxed/simple;
-	bh=dqORxA01ddfu04i5AUCIuKJMwCymPmwnJNmkHBTnk70=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vamy5UGiToO/JhHVVprOzvQznSRMTvBZivAPEIK1NUMBYh5lvaEOXahpxvY81oPvV4bmtXca5Wj6b8DiruIU4ONzek6FlLuckB07iGXdYQ1Bv1zMxqwjMM8Rdel8wcsKLq+W7xxes/0dp9PVIh2pLKnoKIiEaadi7B3CcN9svls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eL7rr3br; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-61aa702c9ebso514433a12.3;
-        Wed, 20 Aug 2025 12:05:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755716717; x=1756321517; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dqORxA01ddfu04i5AUCIuKJMwCymPmwnJNmkHBTnk70=;
-        b=eL7rr3brxLEjsRY7DSOGpOHudpVZk+mxO+bQ0fcryc7sDEEnfQequlf1qNWDLoR12S
-         dHJHrRC5u/eSYWHAP0xbHnnczRWKES0QH/SsdkBZp9Kyvvdg9zFkdRJ6OGVflOq0f0jH
-         70GSVhbjLC8Fa6w3nh1kf526wq0C7XOPBIBU0uxsydynUe39Z7cNsvUJ/auz1ZAUKXiT
-         xPjCw48bSkwJ8kXf3XvOhLKXqP1162tUmZapSiHANq7oPObt17ZKfmxw8aGMujGye31V
-         ZITDqVjA4x9gODUHpaXHUGIS0JOXWjCvPcJPdqY1aWZj8HEcB+NuqHI2YjAITUN/xbVA
-         zhZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755716717; x=1756321517;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dqORxA01ddfu04i5AUCIuKJMwCymPmwnJNmkHBTnk70=;
-        b=psXH69mOMzngV8W619fRwDgDDr6IJ8C3ch6H+SmvPJBPtNVE1lOTz6vyqlDFiwi6mR
-         BzapoLcSwCVD3UnQ7QWBzdjv8kmBUpwI3WU/moLCzgn5HER/78R5pou2N7YnB9va6C6k
-         EUEanhe1rMIB/VBOoK2xMRjp/di4nyLLqakKQ2TwVKaPZY0FNEt2XGhgH+KI2wTN4eSp
-         64TXsgREdWOYsVHVFihTlEgvU6zHOrANGMIiJ2yt4Ni6T5kR7kO8S0wZ644FWQBB8c7s
-         Ad+n7/zrx0d9I59WuQdWegjImQC8q6AdCvjIWonsx6GjeK1qP0UlFfkuaCgscKngjGqF
-         OaOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVEOTQ/rBLiL3D0HxyhN/pfNpDyUv13D+dLzeF0QAshfS3LW/z7Wk9Y5VhnVYLs0btKjzY/jkigZdVfaRBc@vger.kernel.org, AJvYcCWhLdEdB/Jco43Y72rZuIjROW66lx8XezXSbrjVEsAGdvCHudQQxk+6s67G5d2dQ2lbxTQpkxRv40TF@vger.kernel.org, AJvYcCXvJ8d3XbFjc6MpqiAGM1eufDSu8Dd6DzcTjAkZ/ifg4z2uiN56jIxEZ4L31m4hhvx8v2W0vjLztH8VEg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYt+z6XALMpuZzmecQf95Z27iF6rmj1JGrCrzQcFmh9M/L2Vn0
-	hBb8e0Y5xy5FD3iiFFIuKz7KmZmK6waZfUbshPgG3aZcal1BswdOnJZ/DvDGm2By7mmgV5+TqCR
-	b4QKBa0bgnltkwiCEtyGi7Zx1L53Q0bM=
-X-Gm-Gg: ASbGncucWhc13uAYkDE4s381toW3Asu0g+elL4Ql7SI1NFb/tf1DNrtTlb3Hy+sfEM7
-	2KsgUZqgLutJybkyIjjYirfGgmurrM8pNQ3GGC9vc68F/Vyf16AD6iETAQzC1DhN9dyKzuZDwdi
-	b4cECR0WgwDGlr6V1sSsfXmJbDKmDpUIMRHu2B4f5+J2Q2ZzXeYY9UUc7eG/9rkTGvjHCsQqVjw
-	iPWPxbzTaz8gOCM0g==
-X-Google-Smtp-Source: AGHT+IHJiPRx0SngC7bjC2w4GtEgXQh9A32wKEsxcZ0CVXXlaP6DEiOwl/6IKq6V3wKbKch1kJfDHW692elgTcsQBhY=
-X-Received: by 2002:a17:907:94c3:b0:ae9:8dcb:4dac with SMTP id
- a640c23a62f3a-afdf00a8cf1mr325925166b.14.1755716716491; Wed, 20 Aug 2025
- 12:05:16 -0700 (PDT)
+	s=arc-20240116; t=1755720236; c=relaxed/simple;
+	bh=anNhsvCEDdZAFrVHuAW6Yq14ZRmsgEq59nDp1oTYxZ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s7uXyoQZqmrNEIgJt5nolvE62cqG+WmW8+JYgvZLyqqlvJBdj6ZtxyqSYzK//8TW3fbH10MMvMOmXGbzBDaRMEqd3XbP1zR20HTERiounp/IDi6rkuBT9Ry8d8ux8mVMW03Hgb2KJn3IRFa4un3TLHbtYhILBjc7LWLyF2J14s0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GeHJaS6B; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07889C4CEE7;
+	Wed, 20 Aug 2025 20:03:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755720235;
+	bh=anNhsvCEDdZAFrVHuAW6Yq14ZRmsgEq59nDp1oTYxZ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GeHJaS6B8aM9Udh1FibxBFg3+IsWGhQ5XurO6jabKMivoDhVotrmQPElYvdfiUnRX
+	 y50h/H3ETrqUKhsSB7ipAOr8XJDPlcB5VXzl/QAVJESTe4+OUh1yTMQONS0d0lhS4O
+	 FfSeEtEh0cI18x9kpZkpuGWBxQwqgvgqj4f16DSkyhzeiUTzzk5Hk8K0j6Rz1f6SMz
+	 Bj0gzFyyqGDrFWgKRGtLJ9P1YpqNwB2cyokm+8YF26QOVw0KA9jgP+9jpkgUcRbLHT
+	 Nb7lRBcXe+Y42ezBDMzF7S44Le8bE1CoFX5R+jbW+Fi4wRsDWQJ+ey89iYQb0lMT7G
+	 seJ+tPSW9SU1Q==
+Date: Wed, 20 Aug 2025 15:03:54 -0500
+From: Rob Herring <robh@kernel.org>
+To: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, nuno.sa@analog.com,
+	linux-hwmon@vger.kernel.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, Lee Jones <lee@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH 0/6] mfd: Add support for the LTC4283 Hot Swap Controller
+Message-ID: <20250820200354.GA602656-robh@kernel.org>
+References: <20250814-ltc4283-support-v1-0-88b2cef773f2@analog.com>
+ <5713bb5b-3301-46bc-b30a-d2e4c58d1036@roeck-us.net>
+ <2svr42ee7akwxwj5nizwe4a4hqdk4rslv7ivxraqg3jy6m3mxz@lfpn2nx4jdmm>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250820154037.22228-1-jszhang@kernel.org> <20250820154037.22228-2-jszhang@kernel.org>
- <CAHp75VfxSBPzvohrW4tywd4VS0r1_mp8WLvdKcN_yn=zNS49HQ@mail.gmail.com> <20250820191039.4f8af41e@barney>
-In-Reply-To: <20250820191039.4f8af41e@barney>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 20 Aug 2025 22:04:39 +0300
-X-Gm-Features: Ac12FXzx226wSucqjOB8xNIk2YZERgxrOlmASf3USK3y_yzf_ctFUIqwnOa-1u8
-Message-ID: <CAHp75Vdpgf3DUMQw0mYqhG=9UrYG8KWrobbd387QZapBor_LHg@mail.gmail.com>
-Subject: Re: [PATCH 01/16] gpio: dwapb: Use modern PM macros
-To: =?UTF-8?Q?Michael_B=C3=BCsch?= <mb@bues.ch>
-Cc: Jisheng Zhang <jszhang@kernel.org>, Doug Berger <opendmb@gmail.com>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Michael Buesch <m@bues.ch>, Hoan Tran <hoan@os.amperecomputing.com>, 
-	Andy Shevchenko <andy@kernel.org>, Daniel Palmer <daniel@thingy.jp>, 
-	Romain Perier <romain.perier@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, 
-	Santosh Shilimkar <ssantosh@kernel.org>, Kevin Hilman <khilman@kernel.org>, 
-	Robert Jarzmik <robert.jarzmik@free.fr>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>, 
-	Srinivas Neeli <srinivas.neeli@amd.com>, Michal Simek <michal.simek@amd.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-omap@vger.kernel.org, linux@ew.tq-group.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2svr42ee7akwxwj5nizwe4a4hqdk4rslv7ivxraqg3jy6m3mxz@lfpn2nx4jdmm>
 
-On Wed, Aug 20, 2025 at 8:11=E2=80=AFPM Michael B=C3=BCsch <mb@bues.ch> wro=
-te:
->
-> On Wed, 20 Aug 2025 19:54:44 +0300
-> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
->
-> > > The dwapb_context structure is always embedded into struct
-> > > dwapb_gpio_port to simplify code. Sure this brings a tiny 36 bytes
-> > > data overhead for !CONFIG_PM_SLEP.
-> >
-> > I don't think it's a good approach to add a lot of data for peanuts in
-> > case of PM_SLEEP=3Dn.
->
-> It wastes 36 bytes in case of PM=3Dn.
+On Thu, Aug 14, 2025 at 03:15:29PM +0100, Nuno Sá wrote:
+> On Thu, Aug 14, 2025 at 05:54:26AM -0700, Guenter Roeck wrote:
+> > On 8/14/25 03:52, Nuno Sá via B4 Relay wrote:
+> > > The LTC4283 device features programmable current limit with foldback and
+> > > independently adjustable inrush current to optimize the MOSFET safe
+> > > operating area (SOA). The SOA timer limits MOSFET temperature rise for
+> > > reliable protection against overstresses.
+> > > 
+> > > An I2C interface and onboard ADC allow monitoring of board current, voltage,
+> > > power, energy, and fault status.
+> > > 
+> > > It also features 8 pins that can be configured as GPIO devices. But since
+> > > the main usage for this device is monitoring, the GPIO part is optional
+> > > while the HWMON is being made as required.
+> > > 
+> > > Also to note that the device has some similarities with the already
+> > > supported ltc4282 hwmon driver but it is different enough to be in it's own
+> > > driver (apart from being added as MFD). The register map is also fairly
+> > > different.
+> > > 
+> > > Last time (for the ltc4282) I tried to add the gpio bits directly in the
+> > > hwmon driver but Guenter did not really liked it and so this time I'm doing
+> > > it as MFD.
+> > > 
+> > Nowadays I suggest that people use auxiliary drivers in such situations.
+> 
+> I see. But do you have any issue with it being MFD?
 
-...per port.
+I do...
 
-> The driver currently allocates the struct with kzalloc and stores a point=
-er to it
-> in case of PM=3Dy.
-> So this probably has an overhead in the same order of magnitude (pointer =
-+
-> malloc overhead/alignment/fragmentation) in case of PM=3Dy now.
+> I'm anyways tempted to the auxiliary device idea. The main usage for
+> this device is HWMON and I dunno anyone would use it only as a GPIO
+> controller. With the auxiliary device we would only need one bindings file
+> and slightly better bindings for the pins functionality.
 
-...per driver.
+For this reason. The driver structure influencing the binding design is 
+a problem, but I think MFD is more to blame on that.
 
-So, I can't say it's equal, but I leave this to maintainers to decide,
-
-
---=20
-With Best Regards,
-Andy Shevchenko
+Rob
 
