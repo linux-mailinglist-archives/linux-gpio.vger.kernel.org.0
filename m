@@ -1,120 +1,116 @@
-Return-Path: <linux-gpio+bounces-24635-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24636-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3891BB2DF36
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 16:27:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C010AB2E0D5
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 17:25:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3370D1C85030
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 14:22:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0BE36AA0574
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 15:16:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01983276050;
-	Wed, 20 Aug 2025 14:21:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 602603375AF;
+	Wed, 20 Aug 2025 15:04:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ov7P0L6i"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gstSzdnx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9957126F45A;
-	Wed, 20 Aug 2025 14:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985C63375A7;
+	Wed, 20 Aug 2025 15:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755699707; cv=none; b=no7QXKx/CDoBRkOQhLmDWDms3FWKzDx+c/AM4hudDUoOIeASq8MgRqJ7Pc6MFN2p09E4K2mPmkGrNNLHNJNBP0qVAK6hEWBmaQsu6suOF+O+q82oH2FAoGEN06xJT+aNGUBS0GXn3Q5v4N3c3B2CyyKaBZl2YqYFiwjPMCFpKPY=
+	t=1755702285; cv=none; b=rHfHGih5j4neuWTJE1jkLhzvrXtKAxhKtdenl02jMLOqUMX1+SBADkEJgkzsfImud/iX28kRK8WXEEqv6qUVoqRs6cWsWCn4TOrU/t7hpNwuZ1p/3vt9yzjVgKpOA+PhhG+KPMweGOOw/HCI47Hx1RE88y29/rO2+HNlbridoi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755699707; c=relaxed/simple;
-	bh=oqNZJj++AlZ8Ps0cc+9Vt/kMxVfjlJ3sjFH2mz3NPjA=;
+	s=arc-20240116; t=1755702285; c=relaxed/simple;
+	bh=knRhTo5mE+LaEmMJM/79tvsjADnOoyT04yFSvVno0Ho=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NVt4TrgbHtoTQb/5qNprLoTms8VHe6+/JtUgqUEX6NTAweswGrhNGeaN+iu4boJhT5xu/ba4tspYEaCPYdtO0dAES5j4YLXCRzPnXDS90uH9du1JZtRbNmV3dC7k7gcofXKyQeSS79Yjl+nK3jvnhSqfxT6wnqTVhlGHhAYMgdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ov7P0L6i; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 904EDC4CEEB;
-	Wed, 20 Aug 2025 14:21:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755699706;
-	bh=oqNZJj++AlZ8Ps0cc+9Vt/kMxVfjlJ3sjFH2mz3NPjA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ov7P0L6iXmWRO1R7kJepvTyesG5pqkN/+U63hvE3aS06vs/+MuKlOGUSKbiUytdEX
-	 1St/UwrhmbGX0wW3k5WkXrBYONCPcPb8cMrq/0AsVTrn1GWopIH+BwKzcECfA94kp1
-	 Y3vHSAIguM5zfjUCNu8AsQnOhVt35+lXf0gbS4CxX4JbNxZSAjb5voiJ0+PJ1sbUGO
-	 lzqgwG5wURY5QhOynMMyZ4COgYjmwsGZmY8la+DF/OnNzbcU+XXsDaJe3jmXrFae+r
-	 h8n4Fc+S+I6IyCUTiX/GUzRMn/nbY4JsCLM5UMZ4zlJ6oEoopeV2P8EUjBxpejyKJl
-	 tJjudSu++++4Q==
-Date: Wed, 20 Aug 2025 15:21:38 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Julien Massot <julien.massot@collabora.com>
-Cc: kernel@collabora.com, Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Ikjoon Jang <ikjn@chromium.org>,
-	Enric Balletbo i Serra <eballetbo@kernel.org>,
-	Chen-Yu Tsai <wenst@chromium.org>, Weiyi Lu <weiyi.lu@mediatek.com>,
-	Eugen Hristev <eugen.hristev@linaro.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Julien Massot <jmassot@collabora.com>,
-	Sean Wang <sean.wang@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-sound@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 0/6] MediaTek devicetree/bindings warnings
- sanitization second round
-Message-ID: <d02d2a5f-b8d7-4fdb-b3c5-6e6d21127733@sirena.org.uk>
-References: <20250820-mtk-dtb-warnings-v2-0-cf4721e58f4e@collabora.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=LjOKnLIz1ToLQf3aIbv7GVRtXt1tjG1Q5t6UuXkFN6cz7W5FiI2NLlHfHG3q2Shw8xOlMzcIDGw+0LhaAYzpm5KOcmFE4JwwgYZky0TnJcY1ospGEDaxCZ/pFCbFbDB+5hDfggZLE6c6WeaYqCXdVDTlC8NSLqeILtabZLCxVV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gstSzdnx; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755702283; x=1787238283;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=knRhTo5mE+LaEmMJM/79tvsjADnOoyT04yFSvVno0Ho=;
+  b=gstSzdnxajbzJVg+URdzqlCH9ER5uNJ/d5aknkdsgyv3Rywd82h3rlVk
+   +VqGgmQeA3BcMl7vZ9Ye8RUeoTDrmodjaxK297SAagLvlAl2AyFig1bLf
+   6hTQ73/uqsS4guhn//L4v6cYqER9WOGoxYAdKjEc21Wf9moVmSz1FXRmk
+   xFQzkbmCztmmaxmVltgXTzKCtElBNnxIHwfq7ZDQkhCJlwAY28tGhX0bj
+   8ECztEFchkmDpsyTEMTJOZgwMrsRIwKTjmKQwt6OR+5ksYaYqDBe3SBSX
+   BZO3x5+W8EqdZ57fYhxW4H7BAaBPGKamkstosz5K6pocmXRGofYyDYgdx
+   A==;
+X-CSE-ConnectionGUID: FDVL4MvhQcaUKgdFBVld3g==
+X-CSE-MsgGUID: VkN1ivthQpC/x+5S9/s3oA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11527"; a="57830366"
+X-IronPort-AV: E=Sophos;i="6.17,302,1747724400"; 
+   d="scan'208";a="57830366"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2025 08:04:25 -0700
+X-CSE-ConnectionGUID: QMkvW5Y3Tme3MW/UFsLy9g==
+X-CSE-MsgGUID: QP3ybo4gREiJ+KdiB1TpIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,302,1747724400"; 
+   d="scan'208";a="205309732"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2025 08:04:23 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uokMO-00000006xyi-04dV;
+	Wed, 20 Aug 2025 18:04:20 +0300
+Date: Wed, 20 Aug 2025 18:04:19 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Mario Limonciello <superm1@kernel.org>, mario.limonciello@amd.com,
+	westeri@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl,
+	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: acpi: Program debounce when finding GPIO
+Message-ID: <aKXj8wSbVlIeXSwg@smile.fi.intel.com>
+References: <20250818015219.3604648-1-superm1@kernel.org>
+ <20250818045538.GH476609@black.igk.intel.com>
+ <08dd199e-0e7d-44b8-b980-5fde226cd636@kernel.org>
+ <20250819061813.GJ476609@black.igk.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="nGxggd7EixyA+X3k"
-Content-Disposition: inline
-In-Reply-To: <20250820-mtk-dtb-warnings-v2-0-cf4721e58f4e@collabora.com>
-X-Cookie: Semper Fi, dude.
-
-
---nGxggd7EixyA+X3k
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250819061813.GJ476609@black.igk.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Wed, Aug 20, 2025 at 03:44:51PM +0200, Julien Massot wrote:
-> This patch series continues the effort to address Device Tree validation =
-warnings for MediaTek platforms, with a focus on MT8183. It follows the ini=
-tial cleanup series by Angelo (https://www.spinics.net/lists/kernel/msg5780=
-177.html)
->=20
-> The patches in this set eliminate several of the remaining warnings by im=
-proving or converting DT bindings to YAML, adding missing properties, and u=
-pdating device tree files accordingly.
+On Tue, Aug 19, 2025 at 08:18:13AM +0200, Mika Westerberg wrote:
+> On Mon, Aug 18, 2025 at 01:03:48PM -0500, Mario Limonciello wrote:
+> > On 8/17/25 11:55 PM, Mika Westerberg wrote:
+> > > On Sun, Aug 17, 2025 at 08:52:07PM -0500, Mario Limonciello (AMD) wrote:
 
-What's the story with interdepenencies between the patches in this
-series?
+...
 
-Please fix your mail client to word wrap within paragraphs at something
-substantially less than 80 columns.  Doing this makes your messages much
-easier to read and reply to.
+> > > I was not sure but wanted to check that if it is left out, does ACPICA fill
+> > > it with 0? If yes (I would expect so) then this is fine.
+> > 
+> > Yeah AFAICT you're right.  The ACPI resource is zero'ed out, so if the field
+> > was empty it should default to zero.
+> 
+> Okay good.
+> 
+> Then from my perspective,
+> 
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
---nGxggd7EixyA+X3k
-Content-Type: application/pgp-signature; name="signature.asc"
+Seems I came from vacation just in time :-)
+Please, send v5 with all nits and tags and I will apply it.
 
------BEGIN PGP SIGNATURE-----
+-- 
+With Best Regards,
+Andy Shevchenko
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmil2fIACgkQJNaLcl1U
-h9AT6Qf+O4+Z7uHUog/4pJNkvJdaQakvVyleGl1rZZhFeiygjeRj7kGarSjQtJjP
-/qh5Is7DkgUy+DiROexGk5Z+t9r0yFCkFK+qyvWWteOqiZjna3YsA7NGmssLswTN
-DY6uF15lOVUK7f6cKAEzKoXlct2HK/wZ/l8/AFiIpRxuXxzXB5jyuK7P4dV2UtK4
-bZKuj/3VVOuTrbIkfIJwvlewKhQ4OCswcJHO+8ltNCo1omKcdWZOfS2+4PzVhZju
-XU68yXOWzxgbTWgjcXZQ4Ia/u7uzMOV7JZhSjPByMFRZVVcIfkPkW4D3lbctaggG
-OsL5Gyzt77XUGtoCDX9CXoft9b5PiQ==
-=S34d
------END PGP SIGNATURE-----
 
---nGxggd7EixyA+X3k--
 
