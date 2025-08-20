@@ -1,127 +1,188 @@
-Return-Path: <linux-gpio+bounces-24675-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24659-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93627B2E3D8
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 19:29:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1A21B2E337
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 19:17:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 445473ADDF4
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 17:25:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7473C5E471F
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 17:15:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8286833CE97;
-	Wed, 20 Aug 2025 17:20:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 571C4335BB4;
+	Wed, 20 Aug 2025 17:14:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bues.ch header.i=@bues.ch header.b="mrPkyzU6"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b="iXdiIBjc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.bues.ch (bues.ch [116.203.120.240])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0C833A004;
-	Wed, 20 Aug 2025 17:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.120.240
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755710400; cv=none; b=dcMnNUdeqYrGOSj0WQE1jEfSggAhWZEh7avYs/DDR/aLZTI6aArouxcPQYNcv+e37hvFhTzM8sYn3iIq8c8fkJZsL3AOsfEfJ5HzrLqv16qjMAPYP/neO5IPM4XW8Qxsrq6nmoGDpEN6LHdMlvkZ5EAlaImWoStHFeIp0ul3FUo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755710400; c=relaxed/simple;
-	bh=p174+Eh9XAmNMgbrKhEkVjmTUSlXzZKuRgobxcqkPrM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YB8xy9muhMMyhguOsa9WPbrpz8GxkLbUEqfYGaegQKTlagcW/QeaR3EK55cNq2g9w9MkOlxfgFGbytI0I1lVFoZ/wQDhSWz87hr9WQFAmEZZMLzd5cCDIzzrnTu3TIlG00+G1kFsZ8fyOgOgvD1qRm7r+1oFxX/PYVHQk0kakRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bues.ch; spf=pass smtp.mailfrom=bues.ch; dkim=pass (2048-bit key) header.d=bues.ch header.i=@bues.ch header.b=mrPkyzU6; arc=none smtp.client-ip=116.203.120.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bues.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bues.ch
-Date: Wed, 20 Aug 2025 19:10:39 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bues.ch; s=main;
-	t=1755709872;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=p174+Eh9XAmNMgbrKhEkVjmTUSlXzZKuRgobxcqkPrM=;
-	b=mrPkyzU62ByK8uGx1mNmesSR4xO/mcSPHp+Ec1VriviCTHS/wznJ/a/bV11/qGjRXBQuOU
-	oOnH9rvX3kWmtZ6BNdyzUGy3egwRmAusoVZAVXi08/ozv69KG6awsERlmG3FT1w79mRNxL
-	Uz7KHmrxvBWopIYFA3nXKp6MR5PnTG70ZBxxs6kCGRBk0kKBCMjQdmofo84DHWv2aSuk/g
-	PmqzrvxzEEq92c2qNpr3vAHDjcaLs5nhyqONUIDbvTf/YttA2LDKWrmsuHpj/G23EUxvqG
-	KngrJ0cICVWqvjyDjhYHZH7iYAaWmHycHAcRnZxkdF0JKrDAi8nu4XMBwjiA0w==
-From: Michael =?UTF-8?B?QsO8c2No?= <mb@bues.ch>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jisheng Zhang <jszhang@kernel.org>, Doug Berger <opendmb@gmail.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Michael
- Buesch <m@bues.ch>, Hoan Tran <hoan@os.amperecomputing.com>, Andy
- Shevchenko <andy@kernel.org>, Daniel Palmer <daniel@thingy.jp>, Romain
- Perier <romain.perier@gmail.com>, Grygorii Strashko
- <grygorii.strashko@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kevin
- Hilman <khilman@kernel.org>, Robert Jarzmik <robert.jarzmik@free.fr>,
- Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
- Srinivas Neeli <srinivas.neeli@amd.com>, Michal Simek
- <michal.simek@amd.com>, Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-omap@vger.kernel.org, linux@ew.tq-group.com
-Subject: Re: [PATCH 01/16] gpio: dwapb: Use modern PM macros
-Message-ID: <20250820191039.4f8af41e@barney>
-In-Reply-To: <CAHp75VfxSBPzvohrW4tywd4VS0r1_mp8WLvdKcN_yn=zNS49HQ@mail.gmail.com>
-References: <20250820154037.22228-1-jszhang@kernel.org>
- <20250820154037.22228-2-jszhang@kernel.org>
- <CAHp75VfxSBPzvohrW4tywd4VS0r1_mp8WLvdKcN_yn=zNS49HQ@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.50; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59CC321447;
+	Wed, 20 Aug 2025 17:14:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755710099; cv=pass; b=o1rfIMjzfadph5ExeuHI9ZPdidbD53FDeKG7v9P8DXGXl7d35oe1A0Y0Zt2Ieh1vBCWyrXt7h+Cnhen2rPqBKW25i6GRW8x0l6rX4aKnzq5gRwI3NIhuSOWDlF9yf3GL+GtFyioO98F41XNpkOlsoovdMYAnQMbe0lopUvQ08mg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755710099; c=relaxed/simple;
+	bh=sV4kV/mfpkuY2wa8iKDdxtO5llhW9IcZK2g3plBieoY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gZR5TxkYcQgjUGvd43QUMtqcDgNWQc4RYVFsrJFwsflk7sde8eqSlsEv4NFA3RNjKsmA0ri1SEcP8o5BhsYCS2WBcpjoNbncWT8AaDKQN+bdUEHNDdlWgG1nh0eWcRHZnVkTEXSIlnIwmqQT7NKj+fXxJbRIgkcbvuqJnz6jlCs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b=iXdiIBjc; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1755710040; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Tim5F0HvYU373WHcbS+AW8itdXClm69OGGAsV1A46kh652ncp3eSt6GC0leBhqQH405N+NPRTuGFjKQEUvPvcrXmcjPYge5C/9fszUGPrpZ5XGJoWwPlyg6Izx+fS2Si8WlHPNLOTPyqgUchpe4WQwKCX0+b+lLw//3TM164iRw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1755710040; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=DaMNOnKm2AnfZhbaigAUu68c7YdBR4a87CV7XaTyqjQ=; 
+	b=NO+n+dEsIpuIEW/n/h9GYA9kEKtT860Sym3jjxLtnbWPN+LQVmltK9yAjn4BT/NP9BeIqZ29j6cMMWzQ8cVuRxHQsn+gkG6m06E2i3FvJET1GwFmdYbpD/1QAJ/EvgPsXeR8DaWuwm6GggX8aaDWOJ1UsDCWYze9LFtBPVar8h4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=ariel.dalessandro@collabora.com;
+	dmarc=pass header.from=<ariel.dalessandro@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1755710040;
+	s=zohomail; d=collabora.com; i=ariel.dalessandro@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=DaMNOnKm2AnfZhbaigAUu68c7YdBR4a87CV7XaTyqjQ=;
+	b=iXdiIBjcdK3P7kvXuElLIVC112o9r1eEOb6UZAwC74zp+49vHMbc2ihpozoDyC7T
+	X+KKEt/amBhjUN4d6/KrsnmQM8X6JXL/Fxoc1teeoq21qpT+5zcDfZ1qpXkTHyX+0Oa
+	tsnKB3Yni2Qt7wENZUUvI7IQ/xdgh6kf7HnAjcUQ=
+Received: by mx.zohomail.com with SMTPS id 1755710039628806.7841478498982;
+	Wed, 20 Aug 2025 10:13:59 -0700 (PDT)
+From: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+To: airlied@gmail.com,
+	amergnat@baylibre.com,
+	andrew+netdev@lunn.ch,
+	andrew-ct.chen@mediatek.com,
+	angelogioacchino.delregno@collabora.com,
+	ariel.dalessandro@collabora.com,
+	broonie@kernel.org,
+	chunkuang.hu@kernel.org,
+	ck.hu@mediatek.com,
+	conor+dt@kernel.org,
+	davem@davemloft.net,
+	dmitry.torokhov@gmail.com,
+	edumazet@google.com,
+	flora.fu@mediatek.com,
+	houlong.wei@mediatek.com,
+	jeesw@melfas.com,
+	jmassot@collabora.com,
+	kernel@collabora.com,
+	krzk+dt@kernel.org,
+	kuba@kernel.org,
+	kyrie.wu@mediatek.corp-partner.google.com,
+	lgirdwood@gmail.com,
+	linus.walleij@linaro.org,
+	louisalexis.eyraud@collabora.com,
+	maarten.lankhorst@linux.intel.com,
+	matthias.bgg@gmail.com,
+	mchehab@kernel.org,
+	minghsiu.tsai@mediatek.com,
+	mripard@kernel.org,
+	p.zabel@pengutronix.de,
+	pabeni@redhat.com,
+	robh@kernel.org,
+	sean.wang@kernel.org,
+	simona@ffwll.ch,
+	support.opensource@diasemi.com,
+	tiffany.lin@mediatek.com,
+	tzimmermann@suse.de,
+	yunfei.dong@mediatek.com
+Cc: devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-clk@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-sound@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH v1 00/14] MediaTek dt-bindings sanitization (MT8173)
+Date: Wed, 20 Aug 2025 14:12:48 -0300
+Message-ID: <20250820171302.324142-1-ariel.dalessandro@collabora.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/pS1KmHMT0VTPklKxJ+M/HG5";
- protocol="application/pgp-signature"; micalg=pgp-sha512
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
---Sig_/pS1KmHMT0VTPklKxJ+M/HG5
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+This patch series continues the effort to address Device Tree validation
+warnings for MediaTek platforms, with a focus on MT8173. It follows the initial
+cleanup series by Angelo (https://www.spinics.net/lists/kernel/msg5780177.html)
 
-On Wed, 20 Aug 2025 19:54:44 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+Similarly to the ongoing MT8183 work done by Julien Massot, this patchset
+eliminates several of the remaining warnings by improving or converting DT
+bindings to YAML, adding missing properties, and updating device tree files
+accordingly.
 
-> > The dwapb_context structure is always embedded into struct
-> > dwapb_gpio_port to simplify code. Sure this brings a tiny 36 bytes
-> > data overhead for !CONFIG_PM_SLEP. =20
->=20
-> I don't think it's a good approach to add a lot of data for peanuts in
-> case of PM_SLEEP=3Dn.
+Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
 
-It wastes 36 bytes in case of PM=3Dn.
+Ariel D'Alessandro (14):
+  media: dt-bindings: Convert MediaTek mt8173-mdp bindings to YAML
+  media: dt-bindings: Convert MediaTek mt8173-vpu bindings to YAML
+  dt-bindings: arm: mediatek: mmsys: Add assigned-clocks/rates
+    properties
+  net: dt-bindings: Convert Marvell 8897/8997 bindings to YAML
+  sound: dt-bindings: Convert MediaTek RT5650 codecs bindings to YAML
+  dt-bindings: display: mediatek,od: Add mediatek,gce-client-reg
+    property
+  dt-bindings: display: mediatek,ufoe: Add mediatek,gce-client-reg
+    property
+  arm64: dts: mediatek: mt8173: Fix mt8173-pinctrl node names
+  dt-bindings: pinctrl: mediatek,mt65xx-pinctrl: Allow gpio-line-names
+  regulator: dt-bindings: Convert Dialog Semiconductor DA9211 Regulators
+    to YAML
+  arm64: dts: mediatek: mt8173-elm: Drop unused bank supply
+  dt-bindings: soc: mediatek: pwrap: Add power-domains property
+  dt-bindings: input/touchscreen: Convert MELFAS MIP4 Touchscreen to
+    YAML
+  dt-bindings: media: mediatek,jpeg: Fix jpeg encoder/decoder ranges
 
-The driver currently allocates the struct with kzalloc and stores a pointer=
- to it
-in case of PM=3Dy.
-So this probably has an overhead in the same order of magnitude (pointer +
-malloc overhead/alignment/fragmentation) in case of PM=3Dy now.
+ .../bindings/arm/mediatek/mediatek,mmsys.yaml |   9 +
+ .../display/mediatek/mediatek,od.yaml         |  10 +
+ .../display/mediatek/mediatek,ufoe.yaml       |  11 +
+ .../input/touchscreen/melfas,mip4_ts.yaml     |  55 +++++
+ .../input/touchscreen/melfas_mip4.txt         |  20 --
+ .../bindings/media/mediatek,mt8173-mdp.yaml   | 174 +++++++++++++++
+ .../bindings/media/mediatek,mt8173-vpu.yaml   |  76 +++++++
+ .../media/mediatek,mt8195-jpegdec.yaml        |  31 +--
+ .../media/mediatek,mt8195-jpegenc.yaml        |  15 +-
+ .../bindings/media/mediatek-mdp.txt           |  95 --------
+ .../bindings/media/mediatek-vpu.txt           |  31 ---
+ .../bindings/net/marvell,sd8897-bt.yaml       |  91 ++++++++
+ .../bindings/net/marvell-bt-8xxx.txt          |  83 -------
+ .../pinctrl/mediatek,mt65xx-pinctrl.yaml      |   2 +
+ .../devicetree/bindings/regulator/da9211.txt  | 205 ------------------
+ .../bindings/regulator/dlg,da9211.yaml        | 104 +++++++++
+ .../bindings/soc/mediatek/mediatek,pwrap.yaml |  15 ++
+ .../sound/mediatek,mt8173-rt5650.yaml         |  73 +++++++
+ .../bindings/sound/mt8173-rt5650.txt          |  31 ---
+ .../boot/dts/mediatek/mt8173-elm-hana.dtsi    |   2 +-
+ arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi  |  31 ++-
+ arch/arm64/boot/dts/mediatek/mt8173-evb.dts   |  14 +-
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi      |  14 +-
+ 23 files changed, 672 insertions(+), 520 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/melfas,mip4_ts.yaml
+ delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/melfas_mip4.txt
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8173-mdp.yaml
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8173-vpu.yaml
+ delete mode 100644 Documentation/devicetree/bindings/media/mediatek-mdp.txt
+ delete mode 100644 Documentation/devicetree/bindings/media/mediatek-vpu.txt
+ create mode 100644 Documentation/devicetree/bindings/net/marvell,sd8897-bt.yaml
+ delete mode 100644 Documentation/devicetree/bindings/net/marvell-bt-8xxx.txt
+ delete mode 100644 Documentation/devicetree/bindings/regulator/da9211.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/dlg,da9211.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/mediatek,mt8173-rt5650.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/mt8173-rt5650.txt
 
---=20
-Michael B=C3=BCsch
-https://bues.ch/
+-- 
+2.50.1
 
---Sig_/pS1KmHMT0VTPklKxJ+M/HG5
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEihRzkKVZOnT2ipsS9TK+HZCNiw4FAmimAY8ACgkQ9TK+HZCN
-iw5cNA/+NLyRCzoK1ETToeOTHdwwyQkiTbuBe6ELJDz1Fuk4Ao88nbQmFeISRwE5
-M4E1ojqTn1YTeerWFS0t/IPH/6bJk23TeOMNYmweblgBCiLVQ96UmN6iw0PaRnj7
-dJtLy/5/gKIHC6n5dw+Qo5cWsr+CvLJ3gwZF001XjGyEPBTjSLTQJmFgeJTb8mmg
-M96uB22AtpG727LqVenvf5VgeSIL+E9Pau0TdBA/xhxwTEDZZQpIYVL8blqYTUxQ
-FKcUOHINC2sPFIXTklyj/lkKMoveTjYXBMur3RSSm4k03jND2tQYBVGPFFFsi9A2
-jSw8fEkkY0OMvLJesxiJWWvzrowG0IGR09Ii0vzTFSyRru5kYoXbKDFUzfn1ii4E
-s6dd8RE/PrDEnI/vX8LrdxW3EzjcbBfu+6JrevevbI4ixLOQHA+usaUm15mQfDtH
-V3iPr1DsMwR0dbryYcjn9AUlxLDuWZEm8d2z92OrPLZG/Ta+ypGRo2GC71hlpUGk
-rxxsncdj+3drXfuVyX5n0WUVUMAY5qSr/qP8qHQPEdUwibkaOInrXIYf9SMvxdvD
-zIT0fPrtfuqynuWHyWW+peELaoj9Y+dimLZUmVv5DXOrfNnYCCbIGpxGNfHVtZqn
-oijZv6EsPyAZbHcR90Z2g9TxbrMT/lrn4JR5CZbBgZLQI+25TsA=
-=Dkpw
------END PGP SIGNATURE-----
-
---Sig_/pS1KmHMT0VTPklKxJ+M/HG5--
 
