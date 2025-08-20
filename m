@@ -1,512 +1,169 @@
-Return-Path: <linux-gpio+bounces-24583-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24586-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E44ECB2D045
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 01:41:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B1AE7B2D219
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 04:56:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4FA0D1888DA6
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Aug 2025 23:40:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9ADD51C21F98
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 02:56:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C25F9277CB0;
-	Tue, 19 Aug 2025 23:39:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 815CD24A067;
+	Wed, 20 Aug 2025 02:55:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="b0cs13c1";
-	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="I7+3JK5O"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nvNMWxUn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA2F277CA1;
-	Tue, 19 Aug 2025 23:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90DA220F38
+	for <linux-gpio@vger.kernel.org>; Wed, 20 Aug 2025 02:55:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755646767; cv=none; b=bdPq88p/DSDWQgjrjYttti9oCGJTnJS4CsR/a+RpHDW+RUoqd90DD14xo+cNlJ5WIlclC4Q35xW3GIKByoo5BwuTLGgUK/1R8QTOdSzavKnsUtUPQu4lIOfrnbkDF/T4qjFJB1163lRhAeFVt4h4eQORaSfvl40zUHoomeYwkqU=
+	t=1755658548; cv=none; b=Uh6CQQk4zfpCZWdJQu3kmBiEDwyV8a3E/U11H3nLG/rpMeuxSzlDIOOjQjowksvPIVczo7FwTKHC00uGFo2KzwFZ4rgDvIcTyAQmxqOEcG63UW0RbSoWop5+Ny+9WtEg0kV9Ein1by/qkS1w2fXUo5Yc5iBdhr+o3dH5hsCGtpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755646767; c=relaxed/simple;
-	bh=9Vv95yl5Cq7Vj9aiXKDQhEVooPZQCfQv7fqnC4LmqW4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ohxDHzP8Z9kfvaCCtXD9kvpTI2m+KdFhrIpB3fNARCQfXewKibfVwSYo3igxG5+XBt5kkJLmZnOu9yM9aVrZv4CddfkpH6Bm4+/aC+0LyQv/Jth5G0jvlU1a5D0RZ3ZCsmgZM6cfh++xlz1PMR2Ow7ucO26buEG9u/OB4dwP/hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=b0cs13c1; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=I7+3JK5O; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
-DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
-	h=To:Message-Id:Subject:Date:From; t=1755646728; bh=1yqgbg5M/CiR3ypNBGFrMHO
-	ULbYh8l1VuDTVtmaBwuk=; b=b0cs13c1KhsZCYuYn15s57WB5zkwJyvVCvjFd2uJplhg0P06TY
-	sryNostxqD/mq53IHED/SNPyS0DjeMZrZSUlbRBg5sPz9lst4Kd/m4q/Y99r4qHOF6gPQRMng2G
-	OBAk8hug/tET4kd+TxB5QJn2NaN0czRdxalDB3EuprUyBvs8F4y9iYvxD6S6eN1uB6lghDog5bN
-	z8q6KnENyxVuhUajKJbITLBWsbcK9q+YP74rG+Pdx5N5XKMKUwfwad4aeek89gPcdn/Rakg68eK
-	le+HJV7GKIj+9Yaym3GRd5dKisRfx7rii8/cbvZS2Zlw1XN4e7zY88bGIUUcATy7M0A==;
-DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
-	h=To:Message-Id:Subject:Date:From; t=1755646728; bh=1yqgbg5M/CiR3ypNBGFrMHO
-	ULbYh8l1VuDTVtmaBwuk=; b=I7+3JK5OyLtU4u1Sn5d+MlYbJRS+GLQYHszetLcGssPlMdUekX
-	MaJ5SYzA/O4pLMxQOR6JkMIaNhgnm9LXe8AQ==;
-From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
-Date: Wed, 20 Aug 2025 01:37:50 +0200
-Subject: [PATCH v6 6/6] arm64: dts: qcom: Add Xiaomi Redmi 3S
+	s=arc-20240116; t=1755658548; c=relaxed/simple;
+	bh=xU/2aA2D1MSytR7qACtCUwX9lfnjaVK8VsLwR69D1T8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XgOFo9e25b1se+U0AaBwMKoA9DakXqW3K+w2jtSbD6f7eMwpqlSumicdVXbv5NAZ4+UTtLrIvYnYgzk7GRLDmQRrKSOsFQ2NL5geM+Pt+bUNpdW5j9EE3eaefnW4VnjHHGME9BjYSi6AbyieOR5UHAYn+zikEiL56oSS6L8frP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nvNMWxUn; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57K1onBx005777
+	for <linux-gpio@vger.kernel.org>; Wed, 20 Aug 2025 02:55:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	cDjR+QnaSGppNI8qcVMUT2dKaPtQ/kTLxQK50E6D+fw=; b=nvNMWxUnlvBXLmiu
+	5T41vztnuyL6NBCpJ5MYhcDnR2gorbOWJ3jHboMctCHqggEChYhBLVjjv3vSBkRl
+	wbnj7CueIRrjm4XVz682M2k3KFJEtHxx9CKBk9Pz9bRHQFCTks3d/5ewXH0f4tah
+	ePyZx1/FYmwuzum5tnGeoy0ScGSoewAY+l1KKcQu5M0Tq6IcKW4P3MvKFRCpMmlR
+	OODD6IpnOSdjXiWv7v9M1mKV10CCh2MzWxL0LGyUD/vrT7OcfWignkUET24dFDZ7
+	hiqS8hoNK4K+vSxHiMQWkcjknH8F8oJJL1EFfesfaRuAzAc9RnC4tkzZa9/aMnT0
+	r6EqBg==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48n52cg4jv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Wed, 20 Aug 2025 02:55:45 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-244581953b8so72964455ad.2
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Aug 2025 19:55:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755658545; x=1756263345;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cDjR+QnaSGppNI8qcVMUT2dKaPtQ/kTLxQK50E6D+fw=;
+        b=pFl/cc+XkTScATgiHIe5Rh545s4O7BogjA3gh7FsIQjW1zNGhDDz6RF8nQz5X0Alkc
+         IkczzPksk7ZbGov6CSQ4DO2iYTGV4t0c2CdbhBc+67prwOcg939H4OVOJdZSLAgL+3u+
+         cgxdTkM+9FqVEaBgm31xOhx0IyBjXVlaWneTivtZNAsQ1eBgiIc5jfvFZwBqU9r0y/cr
+         nFCYPpDYuH/Lnok7Ipd7JEoTdjzLB1ilEuulcxHLFog/RzIh2BAL0txQ4cXFbRBcC/Gw
+         rvczG2DNev3rynhXNiwSmrRtsGeBzhXxhDZTwatn0PUw0g3fj1ymo2lDe5M0zAZOmKPv
+         wuXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWvXciuPDroiWEZTWY+WznCofyJHuqghY2m4ZyGgk+Vaaysx/9l9ptPgAmvh9bvqleIb3YE28H2nkFt@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywzl4813jA9C2bNl+I2vn2l/lpHycmTz1TVp7anadDFyu52ohLk
+	BIkOVwmy5ws83EyxFZHAvGtIv3P4Iqyq3EwZZHU3A0+zsKsAdCZjzNWrGqUgh9yEWTS1WjNlZPV
+	M/+0nQOBNWpdMQmQp20AdwrU0f0ufCbgtYI49iPh7qkm97CzWJJ9cyc6ex0FdFKsk
+X-Gm-Gg: ASbGncuRSXQ43zqXP6DSdY/BqSOzNbUcUSssPtdBDACGoCQy9WV8uiMP1KuEDywBWeT
+	nGO7+sm5p+8ThX/ZrwvCmS9Lrr3KiSMcw4nLRmZF+B6GkLpQIyGwU24YjhtLLOd2zSckZwuDTjf
+	OwviR0CbtDcO9gW0j/8GFNkodyXYuQPW3KWhLm4cISbzxiMDUsoFw6XBv+wN8UmbcY8T6rGLGL3
+	lq00w/XtMRstw5DhOrfk4sFjOeqkOfJuDoXDPbcWYmrjDk3M4yEGeoZxPJ1SPs6TQNBS9JSqjrK
+	jNtT0QG1qL/r/+XOjZxWY3BZNavjruTl0YD7a38TBcTc82fpMhUwULKdoELyGPPj3pgu9z/Q4U7
+	UITOejz6te+aGDSnY0Q+n3Ki2gK7AKKiTi9w=
+X-Received: by 2002:a17:902:e743:b0:242:9bc4:f1ca with SMTP id d9443c01a7336-245ef2a827emr12434365ad.57.1755658545036;
+        Tue, 19 Aug 2025 19:55:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFYWiwV5y8RHJF84lWSVJjKu3Owq0+l/8s5e+spsF//U1keVzXap3hJwWNCadNua0rlA41efg==
+X-Received: by 2002:a17:902:e743:b0:242:9bc4:f1ca with SMTP id d9443c01a7336-245ef2a827emr12434095ad.57.1755658544591;
+        Tue, 19 Aug 2025 19:55:44 -0700 (PDT)
+Received: from [10.249.23.102] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-245ed4f7b77sm11170125ad.117.2025.08.19.19.55.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Aug 2025 19:55:44 -0700 (PDT)
+Message-ID: <aae972ca-5b8f-4329-ab32-12da1522e01b@oss.qualcomm.com>
+Date: Wed, 20 Aug 2025 10:55:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] pinctrl: sx150x: Make the driver tristate
+To: Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dmitry.baryshkov@oss.qualcomm.com, tingwei.zhang@oss.qualcomm.com,
+        xiangxu.yin@oss.qualcomm.com, kernel@oss.qualcomm.com
+References: <20250818-modularize-sx150x-gpio-expander-v1-0-c2a027200fed@oss.qualcomm.com>
+ <20250818-modularize-sx150x-gpio-expander-v1-1-c2a027200fed@oss.qualcomm.com>
+ <CACRpkdaeAqD=mpG4y16CPKwJ=pjATY9TxeRnXR9abziCOQb-0Q@mail.gmail.com>
+Content-Language: en-US
+From: Fange Zhang <fange.zhang@oss.qualcomm.com>
+In-Reply-To: <CACRpkdaeAqD=mpG4y16CPKwJ=pjATY9TxeRnXR9abziCOQb-0Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250820-msm8937-v6-6-b090b2acb67e@mainlining.org>
-References: <20250820-msm8937-v6-0-b090b2acb67e@mainlining.org>
-In-Reply-To: <20250820-msm8937-v6-0-b090b2acb67e@mainlining.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Stephan Gerhold <stephan@gerhold.net>, 
- =?utf-8?q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, 
- Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, 
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
- Robin Murphy <robin.murphy@arm.com>, Konrad Dybcio <konradybcio@kernel.org>, 
- Sean Paul <sean@poorly.run>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Dmitry Baryshkov <lumag@kernel.org>, 
- Adam Skladowski <a_skl39@protonmail.com>, 
- Sireesh Kodali <sireeshkodali@protonmail.com>, 
- Rob Clark <robin.clark@oss.qualcomm.com>, 
- Abhinav Kumar <abhinav.kumar@linux.dev>, 
- Jessica Zhang <jessica.zhang@oss.qualcomm.com>, 
- Srinivas Kandagatla <srini@kernel.org>, 
- Rob Clark <robin.clark@oss.qualcomm.com>, 
- Dmitry Baryshkov <lumag@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, iommu@lists.linux.dev, 
- dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
- phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
- linux@mainlining.org, 
- =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1755646705; l=9618;
- i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
- bh=9Vv95yl5Cq7Vj9aiXKDQhEVooPZQCfQv7fqnC4LmqW4=;
- b=wq2XAkXkAyonz+OdfQGTPk9cKmAYiXCnwzgBpKvuwL+Q6MtUeWSTTM211v49WyMTSXiokwM91
- I6sztSQUuhhA82zI2IvIO77Bq3vdOkBYEypKfCGi42EJhaqi5vlM0Sm
-X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
- pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
+X-Proofpoint-GUID: YeUnYPZTMwCStzdnyJvtswVZ-CqyTnFc
+X-Proofpoint-ORIG-GUID: YeUnYPZTMwCStzdnyJvtswVZ-CqyTnFc
+X-Authority-Analysis: v=2.4 cv=Xpij+VF9 c=1 sm=1 tr=0 ts=68a53932 cx=c_pps
+ a=cmESyDAEBpBGqyK7t0alAg==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=EUspDBNiAAAA:8 a=UVvxqbSGffHEz0aJwqgA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=1OuFwYUASf3TG4hYMiVC:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODIwMDAxMyBTYWx0ZWRfXwBTZeHepXNvZ
+ u3pGQ/ALwAVj0IYWvFHJ9zonKLhe+RRY+qlwhqN8BDkOP/NN/mPI64irSOzeE4+XNHyDi1S+XNg
+ tTHixbnsQCUdeQrOgu9X0sKIT+PonKADmSqu5EULItRzmN4mUd0bo2XVy627T54YRbw94fTkATf
+ TNJIyI/ICGCcac68v6SWMBxGhTdgnsAZITe0vZm53znGjkT2otlGmnhvrF4Qh1aEfjj7QiOmck6
+ OIVZCEjFWPDUrwOQDgFrcJkrLtK6z17CnanXBeoEKUdUaBvPYF8A0vE4i+PIUwWXLVUKLkE26DF
+ 0M6cmy2sobq2iqBRVdD5P/Gq1sWRyUkA5XyP7DWs+0fHNBVo/6ZzSvPU45FkV5KZmaPNtZet5f0
+ 195rrYO0gPTGBJMgRMLJyjS6r0laNg==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-20_01,2025-08-14_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 clxscore=1015 lowpriorityscore=0 bulkscore=0 impostorscore=0
+ adultscore=0 spamscore=0 phishscore=0 malwarescore=0 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2508110000 definitions=main-2508200013
 
-Add initial support for Xiaomi Redmi 3S (land).
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
----
- arch/arm64/boot/dts/qcom/Makefile                |   1 +
- arch/arm64/boot/dts/qcom/msm8937-xiaomi-land.dts | 381 +++++++++++++++++++++++
- 2 files changed, 382 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 94a84770b0802a9dc0c56ce6c59eea20967a5d89..0476a87636584216ba359714ab46a6f085620286 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -66,6 +66,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-wingtech-wt88047.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-yiming-uz801v3.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8917-xiaomi-riva.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8929-wingtech-wt82918hd.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= msm8937-xiaomi-land.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-huawei-kiwi.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-longcheer-l9100.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-samsung-a7.dtb
-diff --git a/arch/arm64/boot/dts/qcom/msm8937-xiaomi-land.dts b/arch/arm64/boot/dts/qcom/msm8937-xiaomi-land.dts
-new file mode 100644
-index 0000000000000000000000000000000000000000..91837ff940f1b6b13a9ef519519f471a7a4cdac0
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/msm8937-xiaomi-land.dts
-@@ -0,0 +1,381 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2024, Barnabas Czeman
-+ */
-+/dts-v1/;
-+
-+#include <dt-bindings/arm/qcom,ids.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/leds/common.h>
-+
-+#include "msm8937.dtsi"
-+#include "pm8937.dtsi"
-+#include "pmi8950.dtsi"
-+
-+/delete-node/ &qseecom_mem;
-+
-+/ {
-+	model = "Xiaomi Redmi 3S (land)";
-+	compatible = "xiaomi,land", "qcom,msm8937";
-+	chassis-type = "handset";
-+
-+	qcom,msm-id = <QCOM_ID_MSM8937 0x0>;
-+	qcom,board-id = <0x1000b 1>, <0x2000b 1>;
-+
-+	aliases {
-+		mmc0 = &sdhc_1;
-+		mmc1 = &sdhc_2;
-+	};
-+
-+	battery: battery {
-+		compatible = "simple-battery";
-+
-+		charge-full-design-microamp-hours = <4100000>;
-+		constant-charge-current-max-microamp = <1000000>;
-+		voltage-min-design-microvolt = <3400000>;
-+		voltage-max-design-microvolt = <4400000>;
-+	};
-+
-+	chosen {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		stdout-path = "framebuffer0";
-+
-+		framebuffer0: framebuffer@8dd01000 {
-+			compatible = "simple-framebuffer";
-+			reg = <0x0 0x8dd01000 0x0 (720 * 1280 * 3)>;
-+			width = <720>;
-+			height = <1280>;
-+			stride = <(720 * 3)>;
-+			format = "r8g8b8";
-+
-+			clocks = <&gcc GCC_MDSS_AHB_CLK>,
-+				 <&gcc GCC_MDSS_AXI_CLK>,
-+				 <&gcc GCC_MDSS_VSYNC_CLK>,
-+				 <&gcc GCC_MDSS_MDP_CLK>,
-+				 <&gcc GCC_MDSS_BYTE0_CLK>,
-+				 <&gcc GCC_MDSS_PCLK0_CLK>,
-+				 <&gcc GCC_MDSS_ESC0_CLK>;
-+			power-domains = <&gcc MDSS_GDSC>;
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-0 = <&gpio_keys_default>;
-+		pinctrl-names = "default";
-+
-+		key-volup {
-+			label = "Volume Up";
-+			linux,code = <KEY_VOLUMEUP>;
-+			gpios = <&tlmm 91 GPIO_ACTIVE_LOW>;
-+			debounce-interval = <15>;
-+		};
-+	};
-+
-+	irled {
-+		compatible = "gpio-ir-tx";
-+		gpios = <&tlmm 45 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	reserved-memory {
-+		reserved@84a00000 {
-+			reg = <0x0 0x84a00000 0x0 0x1900000>;
-+			no-map;
-+		};
-+
-+		framebuffer: memory@8dd01000 {
-+			reg = <0x0 0x8dd01000 0x0 (720 * 1280 * 3)>;
-+			no-map;
-+		};
-+	};
-+
-+	vph_pwr: vph-pwr-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vph_pwr";
-+		regulator-min-microvolt = <3700000>;
-+		regulator-max-microvolt = <3700000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&blsp1_i2c2 {
-+	status = "okay";
-+
-+	led-controller@45 {
-+		compatible = "awinic,aw2013";
-+		reg = <0x45>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		vcc-supply = <&pm8937_l10>;
-+		vio-supply = <&pm8937_l5>;
-+
-+		led@0 {
-+			reg = <0>;
-+			function = LED_FUNCTION_STATUS;
-+			led-max-microamp = <5000>;
-+			color = <LED_COLOR_ID_RED>;
-+		};
-+
-+		led@1 {
-+			reg = <1>;
-+			function = LED_FUNCTION_STATUS;
-+			led-max-microamp = <5000>;
-+			color = <LED_COLOR_ID_GREEN>;
-+		};
-+
-+		led@2 {
-+			reg = <2>;
-+			function = LED_FUNCTION_STATUS;
-+			led-max-microamp = <5000>;
-+			color = <LED_COLOR_ID_BLUE>;
-+		};
-+	};
-+};
-+
-+&blsp1_i2c3 {
-+	status = "okay";
-+
-+	touchscreen@3e {
-+		compatible = "edt,edt-ft5306";
-+		reg = <0x3e>;
-+
-+		interrupts-extended = <&tlmm 65 IRQ_TYPE_LEVEL_LOW>;
-+		reset-gpios = <&tlmm 64 GPIO_ACTIVE_LOW>;
-+		vcc-supply = <&pm8937_l10>;
-+		iovcc-supply = <&pm8937_l5>;
-+
-+		pinctrl-0 = <&tsp_int_rst_default>;
-+		pinctrl-names = "default";
-+
-+		touchscreen-size-x = <720>;
-+		touchscreen-size-y = <1280>;
-+	};
-+};
-+
-+&pm8937_resin {
-+	linux,code = <KEY_VOLUMEDOWN>;
-+
-+	status = "okay";
-+};
-+
-+&pm8937_spmi_regulators {
-+	/* APC */
-+	pm8937_s5: s5 {
-+		regulator-min-microvolt = <1050000>;
-+		regulator-max-microvolt = <1350000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&pmi8950_wled {
-+	qcom,num-strings = <2>;
-+	qcom,external-pfet;
-+	qcom,current-limit-microamp = <20000>;
-+	qcom,ovp-millivolt = <29600>;
-+
-+	status = "okay";
-+};
-+
-+&rpm_requests {
-+	regulators-0 {
-+		compatible = "qcom,rpm-pm8937-regulators";
-+
-+		vdd_s1-supply = <&vph_pwr>;
-+		vdd_s2-supply = <&vph_pwr>;
-+		vdd_s3-supply = <&vph_pwr>;
-+		vdd_s4-supply = <&vph_pwr>;
-+
-+		vdd_l1_l19-supply = <&pm8937_s3>;
-+		vdd_l2_l23-supply = <&pm8937_s3>;
-+		vdd_l3-supply = <&pm8937_s3>;
-+		vdd_l4_l5_l6_l7_l16-supply = <&pm8937_s4>;
-+		vdd_l8_l11_l12_l17_l22-supply = <&vph_pwr>;
-+		vdd_l9_l10_l13_l14_l15_l18-supply = <&vph_pwr>;
-+
-+		pm8937_s1: s1 {
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1225000>;
-+		};
-+
-+		pm8937_s3: s3 {
-+			regulator-min-microvolt = <1300000>;
-+			regulator-max-microvolt = <1300000>;
-+		};
-+
-+		pm8937_s4: s4 {
-+			regulator-min-microvolt = <2050000>;
-+			regulator-max-microvolt = <2050000>;
-+		};
-+
-+		pm8937_l2: l2 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+		};
-+
-+		pm8937_l5: l5 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8937_l6: l6 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8937_l7: l7 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8937_l8: l8 {
-+			regulator-min-microvolt = <2850000>;
-+			regulator-max-microvolt = <2900000>;
-+		};
-+
-+		pm8937_l9: l9 {
-+			regulator-min-microvolt = <3000000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+
-+		pm8937_l10: l10 {
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <3000000>;
-+		};
-+
-+		pm8937_l11: l11 {
-+			regulator-min-microvolt = <2950000>;
-+			regulator-max-microvolt = <2950000>;
-+			regulator-allow-set-load;
-+			regulator-system-load = <200000>;
-+		};
-+
-+		pm8937_l12: l12 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2950000>;
-+		};
-+
-+		pm8937_l13: l13 {
-+			regulator-min-microvolt = <3075000>;
-+			regulator-max-microvolt = <3075000>;
-+		};
-+
-+		pm8937_l14: l14 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+
-+		pm8937_l15: l15 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+
-+		pm8937_l16: l16 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8937_l17: l17 {
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2900000>;
-+		};
-+
-+		pm8937_l19: l19 {
-+			regulator-min-microvolt = <1225000>;
-+			regulator-max-microvolt = <1350000>;
-+		};
-+
-+		pm8937_l22: l22 {
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2800000>;
-+		};
-+
-+		pm8937_l23: l23 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+		};
-+	};
-+};
-+
-+&sdc2_cmd_default {
-+	drive-strength = <12>;
-+};
-+
-+&sdc2_data_default {
-+	drive-strength = <12>;
-+};
-+
-+&sdhc_1 {
-+	vmmc-supply = <&pm8937_l8>;
-+	vqmmc-supply = <&pm8937_l5>;
-+
-+	status = "okay";
-+};
-+
-+&sdhc_2 {
-+	cd-gpios = <&tlmm 67 GPIO_ACTIVE_LOW>;
-+	vmmc-supply = <&pm8937_l11>;
-+	vqmmc-supply = <&pm8937_l12>;
-+	pinctrl-0 = <&sdc2_default &sdc2_cd_default>;
-+	pinctrl-1 = <&sdc2_sleep &sdc2_cd_default>;
-+	pinctrl-names = "default", "sleep";
-+
-+	status = "okay";
-+};
-+
-+&sleep_clk {
-+	clock-frequency = <32768>;
-+};
-+
-+&tlmm {
-+	gpio-reserved-ranges = <0 4>, <20 4>;
-+
-+	gpio_keys_default: gpio-keys-default-state {
-+		pins = "gpio91";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-pull-up;
-+	};
-+
-+	sdc2_cd_default: sdc2-cd-default-state {
-+		pins = "gpio67";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
-+	tsp_int_rst_default: tsp-int-rst-default-state {
-+		pins = "gpio64", "gpio65";
-+		function = "gpio";
-+		drive-strength = <8>;
-+		bias-pull-up;
-+	};
-+};
-+
-+&wcnss {
-+	vddpx-supply = <&pm8937_l5>;
-+
-+	status = "okay";
-+};
-+
-+&wcnss_iris {
-+	compatible = "qcom,wcn3620";
-+	vddxo-supply = <&pm8937_l7>;
-+	vddrfa-supply = <&pm8937_l19>;
-+	vddpa-supply = <&pm8937_l9>;
-+	vdddig-supply = <&pm8937_l5>;
-+};
-+
-+&wcnss_mem {
-+	status = "okay";
-+};
-+
-+&xo_board {
-+	clock-frequency = <19200000>;
-+};
+On 8/19/2025 8:55 PM, Linus Walleij wrote:
+> On Mon, Aug 18, 2025 at 6:41 AM Fange Zhang
+> <fange.zhang@oss.qualcomm.com> wrote:
+> 
+>> Set PINCTRL_SX150X config option as a tristate and add
+>> MODULE_DEVICE_TABLE()/MODULE_LICENSE() to export appropriate information.
+>>
+>> Signed-off-by: Fange Zhang <fange.zhang@oss.qualcomm.com>
+> 
+> Fair enough!
+> 
+> This patch 1/2 applied to the pinctrl tree.
 
--- 
-2.50.1
+Thanks
+
+> 
+> Please funnel patch 2/2 through the SoC tree.
+
+Hi Bjorn, Konrad,
+
+Would it be acceptable to include this defconfig change, or is there a 
+preferred process I should follow to get it reviewed and accepted?
+
+Thanks,
+Fange Zhang
+
+> 
+>> subsys_initcall(sx150x_init
+> 
+> I seriously wonder about this. It feels like this driver should
+> be a pure module_init() device. But other users may disagree.
+> 
+> Yours,
+> Linus Walleij
 
 
