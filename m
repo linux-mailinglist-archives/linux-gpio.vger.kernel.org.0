@@ -1,195 +1,110 @@
-Return-Path: <linux-gpio+bounces-24632-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24633-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15617B2DE3D
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 15:48:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6541AB2DE64
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 15:53:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B7659A003AD
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 13:46:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F28F81C8215E
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 13:48:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F6CA1E5B71;
-	Wed, 20 Aug 2025 13:45:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E78C212F89;
+	Wed, 20 Aug 2025 13:45:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="V+ACyZEe"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gxZRn8eh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187631A83F7;
-	Wed, 20 Aug 2025 13:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7073A1F3FE9;
+	Wed, 20 Aug 2025 13:45:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755697512; cv=none; b=sR29z3xj+FiS7mZlIq3rKOgOEppF7GCEwFYvRVT29Vy7XxSPNzAK9ie5MFPevTNjS+vWAPfw/aoZKR3j3/dpVtlYW2bzc/NcIVxt9dHDtPzQ+KCPjHuvja76t0f03qnA7oIyQj2tcRyr/mSmVmHqLk2c0UlK5lC2GiTA1QBK/5s=
+	t=1755697548; cv=none; b=KJPOe20bTS0R2sT1frOeO8q6lSupJ6lDgwfOtDuFMC3CsWvs0qoRS488AvBNOFk4Ikt9vFo8daN68lEVwMESJ+ocbsypP7IPP2OMZMU4GqsDB4k/sQ1UNttAjSZ3u9cFla+kntnZ2DWR5eT/f04XMkixcBL8pYSKqzUz8zdY2wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755697512; c=relaxed/simple;
-	bh=USQrAZZJj10MR5a19PgXs2S92DCFQyDjwkKul1A2/QU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oonssYmBqNhmJuRm0+V+k7p+6FTKZ0QpH5MqDxvBEQ3GTCJUdBoO0QOGND9eBXXCSIm33itxGKZfIfHmkyJWE7az7ztISk1bIvyRJCoySM4eRKkwkGBGUNy3C/pYctkEk7uDbnFJXxVpqruLqwD0uTMs6Az2zrM0r1MAz3VgXKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=V+ACyZEe; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1755697508;
-	bh=USQrAZZJj10MR5a19PgXs2S92DCFQyDjwkKul1A2/QU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=V+ACyZEeuzaNAus8J+TTuv3/kSXjuUTRWqt2YJhX28Fu/ocqChkEESUuwNvexKYvu
-	 uFTfvMwN5FX12IBFr+W/iGQZ6KVG9lJMbu8pq7KmVaEK9MkQNqF+il2DUWwXnuNTVz
-	 fbJdNJWeI0JiQxFuQ9PZwwJkrNLOP2WXd0D8ryHB5HB76nIWIn8+jKpCBofN2ZHk6d
-	 MfwHTkX1F2D/CAuBtShAvxpjkNYsCsWdEYBVZZ8X8XQkBRq9hZDxwjsal+e9HmzUnp
-	 Vh9pOrZbiHSQ9vrTU9H4fW95oS9qZHzBqHjAX+m3ui9FCiIL9/0CWdz0f3r8VLg7Ju
-	 QCY69rb1HpHTQ==
-Received: from localhost-live.home (2a01cb0892F2D600C8f85CF092d4AF51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: jmassot)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 2905F17E0483;
-	Wed, 20 Aug 2025 15:45:07 +0200 (CEST)
-From: Julien Massot <julien.massot@collabora.com>
-Date: Wed, 20 Aug 2025 15:44:57 +0200
-Subject: [PATCH v2 6/6] ASoC: dt-binding: Convert MediaTek mt8183-mt6358
- bindings to YAML
+	s=arc-20240116; t=1755697548; c=relaxed/simple;
+	bh=KB389P5zGZixe5hfLj+DpXfe0Qy5zYKDG0TlJN07gjg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J6JjPCnexBz91MeKBfQXqlsFg30DU48EYRLGXJI33gC+fBP5WSkxR+VHEslx2+uc9tK4BR8hNd9/K439rxzlXQjyqfLjuaydvK0NUFrXQklIUvRzGUWma5Iljv4SRbiiMn+q9fcbyZ82urjJIzOTBP+B7qQzl3uUX3U8tigbjIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gxZRn8eh; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755697547; x=1787233547;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KB389P5zGZixe5hfLj+DpXfe0Qy5zYKDG0TlJN07gjg=;
+  b=gxZRn8ehVUW8r4heRLrlBfTHp4MMPmI8mTXf2ikC2Cf+l+tZjRN4rFky
+   D63ytA3fOgmIgQDF6TcxZ/OHt0tf0DQGeaB1+A7i38pg5aYlXzC5vaej9
+   2edRZJ7Rz2DXl6Vvyz+/NSizGQHvLmxYgfyu+UsUymFjXyn91ESyB0Pfm
+   micwD8EDXRr2zy6OjmU/tGFsjIRVvoN5/dUbdElVB53vNZKD87E+NoPBH
+   ckIKIlNv8wJ/r+yGjMBuspDmBd+Emxv7dcBW1AnYtoIbl5OY9XdCKDpwm
+   QIdfvqlxxEkuKPViG+OpB9ItF1nKq5xHx1WO0N0vUNHQ2E9TLGD87WXlk
+   w==;
+X-CSE-ConnectionGUID: /yL9mUFXQ76yube3BTZsfw==
+X-CSE-MsgGUID: d3pBlengQHCph4ynG4RdEg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11527"; a="68669822"
+X-IronPort-AV: E=Sophos;i="6.17,302,1747724400"; 
+   d="scan'208";a="68669822"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2025 06:45:47 -0700
+X-CSE-ConnectionGUID: K3jXF4fcSJON5mGJl9S7lg==
+X-CSE-MsgGUID: /Y6YfdDNSmGHZ7moZsE4iA==
+X-ExtLoop1: 1
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2025 06:45:45 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uoj8I-00000006wnv-2dxz;
+	Wed, 20 Aug 2025 16:45:42 +0300
+Date: Wed, 20 Aug 2025 16:45:42 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Mario Limonciello (AMD)" <superm1@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Mika Westerberg <westeri@kernel.org>,
+	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>
+Subject: Re: [PATCH 2/2] pinctrl: amd: Add PM debugging message for turning
+ on/off wakes
+Message-ID: <aKXRhvJK1NoETu_L@smile.fi.intel.com>
+References: <20250814183430.3887973-1-superm1@kernel.org>
+ <20250814183430.3887973-2-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250820-mtk-dtb-warnings-v2-6-cf4721e58f4e@collabora.com>
-References: <20250820-mtk-dtb-warnings-v2-0-cf4721e58f4e@collabora.com>
-In-Reply-To: <20250820-mtk-dtb-warnings-v2-0-cf4721e58f4e@collabora.com>
-To: kernel@collabora.com, Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Ikjoon Jang <ikjn@chromium.org>, 
- Enric Balletbo i Serra <eballetbo@kernel.org>, 
- Chen-Yu Tsai <wenst@chromium.org>, Weiyi Lu <weiyi.lu@mediatek.com>, 
- Eugen Hristev <eugen.hristev@linaro.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Julien Massot <jmassot@collabora.com>, Sean Wang <sean.wang@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, linux-sound@vger.kernel.org, 
- linux-gpio@vger.kernel.org, Julien Massot <julien.massot@collabora.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250814183430.3887973-2-superm1@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Convert the existing text-based DT binding for MT8183 sound cards using
-MT6358 and various other codecs to a YAML schema.
+On Thu, Aug 14, 2025 at 01:34:30PM -0500, Mario Limonciello (AMD) wrote:
+> The GPIOs for devices not in _AEI/_EVT such as touchpad or touchscreen
+> won't have wakeup turned on until the suspend sequence starts.
+> 
+> Due to code in amd_gpio_suspend_hibernate_common() masking the interrupt
+> can make this difficult to follow what's going on.  Add an explicit
+> debugging message to tell when that was turned on/off.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Julien Massot <julien.massot@collabora.com>
----
- .../sound/mediatek,mt8183_mt6358_ts3a227.yaml      | 59 ++++++++++++++++++++++
- .../sound/mt8183-mt6358-ts3a227-max98357.txt       | 25 ---------
- 2 files changed, 59 insertions(+), 25 deletions(-)
+...
 
-diff --git a/Documentation/devicetree/bindings/sound/mediatek,mt8183_mt6358_ts3a227.yaml b/Documentation/devicetree/bindings/sound/mediatek,mt8183_mt6358_ts3a227.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..048fe62715d67d44daa08e75a63c782238815689
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/mediatek,mt8183_mt6358_ts3a227.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/mediatek,mt8183_mt6358_ts3a227.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MediaTek MT8183 sound card with MT6358, TS3A227, and MAX98357/RT1015 codecs
-+
-+maintainers:
-+  - Julien Massot <julien.massot@collabora.com>
-+
-+description:
-+  Binding for MediaTek MT8183 SoC-based sound cards using the MT6358 codec,
-+  with optional TS3A227 headset codec, EC codec (via Chrome EC), and HDMI audio.
-+  Speaker amplifier can be one of MAX98357A/B, RT1015, or RT1015P.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - mediatek,mt8183_mt6358_ts3a227_max98357
-+      - mediatek,mt8183_mt6358_ts3a227_max98357b
-+      - mediatek,mt8183_mt6358_ts3a227_rt1015
-+      - mediatek,mt8183_mt6358_ts3a227_rt1015p
-+
-+  mediatek,platform:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: Phandle to the MT8183 ASoC platform node (e.g., AFE).
-+
-+  mediatek,headset-codec:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: Phandle to the TS3A227 headset codec.
-+
-+  mediatek,ec-codec:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: |
-+      Optional phandle to a ChromeOS EC codec node.
-+      See bindings in google,cros-ec-codec.yaml.
-+
-+  mediatek,hdmi-codec:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: Optional phandle to an HDMI audio codec node.
-+
-+required:
-+  - compatible
-+  - mediatek,platform
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    sound {
-+        compatible = "mediatek,mt8183_mt6358_ts3a227_max98357";
-+        mediatek,headset-codec = <&ts3a227>;
-+        mediatek,ec-codec = <&ec_codec>;
-+        mediatek,hdmi-codec = <&it6505dptx>;
-+        mediatek,platform = <&afe>;
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt b/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt
-deleted file mode 100644
-index ecd46ed8eb98b99d0f2cc9eeca5f6d0aef6a5ada..0000000000000000000000000000000000000000
---- a/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt
-+++ /dev/null
-@@ -1,25 +0,0 @@
--MT8183 with MT6358, TS3A227, MAX98357, and RT1015 CODECS
--
--Required properties:
--- compatible : "mediatek,mt8183_mt6358_ts3a227_max98357" for MAX98357A codec
--               "mediatek,mt8183_mt6358_ts3a227_max98357b" for MAX98357B codec
--               "mediatek,mt8183_mt6358_ts3a227_rt1015" for RT1015 codec
--               "mediatek,mt8183_mt6358_ts3a227_rt1015p" for RT1015P codec
--- mediatek,platform: the phandle of MT8183 ASoC platform
--
--Optional properties:
--- mediatek,headset-codec: the phandles of ts3a227 codecs
--- mediatek,ec-codec: the phandle of EC codecs.
--                     See google,cros-ec-codec.txt for more details.
--- mediatek,hdmi-codec: the phandles of HDMI codec
--
--Example:
--
--	sound {
--		compatible = "mediatek,mt8183_mt6358_ts3a227_max98357";
--		mediatek,headset-codec = <&ts3a227>;
--		mediatek,ec-codec = <&ec_codec>;
--		mediatek,hdmi-codec = <&it6505dptx>;
--		mediatek,platform = <&afe>;
--	};
--
+> +	pm_pr_dbg("Setting wake for GPIO %lu to %s\n",
+> +		   d->hwirq, str_enable_disable(on));
+
+Can you send a follow up to move from dereference to an API for hwirq?
+
 
 -- 
-2.50.1
+With Best Regards,
+Andy Shevchenko
+
 
 
