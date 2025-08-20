@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-24648-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24649-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3701B2E1CA
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 18:05:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8147EB2E1D4
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 18:06:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A8C251C81C30
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 16:01:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 750EB5E5FA0
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 16:00:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD787322DBE;
-	Wed, 20 Aug 2025 15:59:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDC2E3277A1;
+	Wed, 20 Aug 2025 15:59:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dhnIqRFb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YJB7FAyJ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B75322766;
-	Wed, 20 Aug 2025 15:59:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87DD0322766;
+	Wed, 20 Aug 2025 15:59:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755705569; cv=none; b=AZp3VhpTiLfamYsKq+70/EOgLib5JyRFx6ZdPkY7bdinL6nziXJWML6bUl5N4I7Ed9tUSXscENZheecL5Y5thI5CHlcvX4IEkMWMAhhUxBU/cig3U3FJoF3ad7yX5OhZW7I474P7NdJ0Q78DQgkRISNHTF55V+XyOt6f2iuEBf4=
+	t=1755705577; cv=none; b=UmK9hrIwPVshJhp9MaB1a21F12MW3ueRtNEDJlcNECbFOK2dNOZcY2hqghA5N/pUsnSwZRo1XgBtLG8TB85jp+XAdmwHqcDs7wsSFQrYnKoJbnB4yYPYKCR7v6OrjJPH3ENohvo0oWc8ai1pGOwMTsD5/RyIY+czUsmNTw4cLCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755705569; c=relaxed/simple;
-	bh=Y36HuswNodbrKyVb7di2itIAsIENlff5yeL0ohIKL+c=;
+	s=arc-20240116; t=1755705577; c=relaxed/simple;
+	bh=Umn5vwhGD2cJbBze7Y+K5YYl5ku0sduec7+7WcHtJDE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nRK8++pMnvCR+oUXQJfjSYgYYSJGu6U6/+Y94Hl+QIaYo8rL2ZSBSLGUhyORX6FhPLhYvJ0SKtI6AESVx3U/aebVk0sFMbC0wk5sdBzEsQ6NrbESo69MFLxPRg6vnBf5v55fkweKZRy9sZWBb9+hFL2HtdvwTaOOazCmpa6wr6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dhnIqRFb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C13C7C4CEEB;
-	Wed, 20 Aug 2025 15:59:21 +0000 (UTC)
+	 MIME-Version; b=kP2gEPr8iGwjG0DXPpzZcOG7N9PMeoefC5uXmJemGc3NMF5FVw5wV/9V338BpaNg74J9fLAyb5VzkBYcWUtr6SM1WBoKZAk8GEmY6pmTUHCDHK0kGY6lhOw3KQIwTBUEnNlH+DIUuum6luMa5ji02+krH+Gidz5DErMsVJZKCd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YJB7FAyJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D717AC116C6;
+	Wed, 20 Aug 2025 15:59:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755705569;
-	bh=Y36HuswNodbrKyVb7di2itIAsIENlff5yeL0ohIKL+c=;
+	s=k20201202; t=1755705576;
+	bh=Umn5vwhGD2cJbBze7Y+K5YYl5ku0sduec7+7WcHtJDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dhnIqRFbolFKv669g/NhMWBFRHr/HWpQODcjF/txYp2sHqjmyPE+idjqIBAmjca28
-	 g8JbQObc+iVBY4jupekGiywCUR6Jsa7Kr4b8rzbcsUWiMkuK8dHObBKor1ThgtfsZo
-	 ZPbooLJ6ONssJHGvDUC1BJxKjvYjjVCZcvFeUFKaZ9JfgfJ82Iyg/dUO+DcoRuq526
-	 62TCon+/GRMSRZWRGCCTmFi1bHBY+1soNPeSq9t/3aohhWz8+58o7ce9xumqlRUMm+
-	 659LoLVxp+YgMM15sJbMO1BS7EIiJKHCKhFXSHa0LeLpBk3StrPq3kLScaHxkM10w7
-	 c4pDUY86uymLg==
+	b=YJB7FAyJmFIy/7bU6Y6i71u2o8MXfowgFrIDXqIk6YPIU/lj6nyoRUOXhv3daXST0
+	 1WRNZLp8D+8M12Ww6v0xaiKqbZ63Ay2gkgmI4XLJImrTQ58j1Ktr1AV/0XU7MPpyWO
+	 bIUUL54nRyeY4an1pQCOq2T+0U2v+YdeUlvRUC0gRRY5tcz7O9RNA83vs1smq6pTtb
+	 A2BvVA9odZs4EQO3oT9BnUBbeydgFtP9ND05ez31VZ7aI67jCIPD03JgP/shTTLQcv
+	 BODBh4bhLBUxCtWuwnlTENxKEq9nErah3SNyaWQaaC5wifuk5ZY5pBZ1a9928FT/RG
+	 MVIS2LTeazW6w==
 From: Jisheng Zhang <jszhang@kernel.org>
 To: Doug Berger <opendmb@gmail.com>,
 	Florian Fainelli <florian.fainelli@broadcom.com>,
@@ -66,9 +66,9 @@ Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
 	linux-kernel@vger.kernel.org,
 	linux-omap@vger.kernel.org,
 	linux@ew.tq-group.com
-Subject: [PATCH 11/16] gpio: pch: Use modern PM macros
-Date: Wed, 20 Aug 2025 23:40:32 +0800
-Message-ID: <20250820154037.22228-12-jszhang@kernel.org>
+Subject: [PATCH 12/16] gpio: tqmx86: Use modern PM macros
+Date: Wed, 20 Aug 2025 23:40:33 +0800
+Message-ID: <20250820154037.22228-13-jszhang@kernel.org>
 X-Mailer: git-send-email 2.50.0
 In-Reply-To: <20250820154037.22228-1-jszhang@kernel.org>
 References: <20250820154037.22228-1-jszhang@kernel.org>
@@ -86,67 +86,45 @@ CONFIG_PM_SLEEP are disabled, without having to use __maybe_unused
 
 Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
 ---
- drivers/gpio/gpio-pch.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/gpio/gpio-tqmx86.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpio/gpio-pch.c b/drivers/gpio/gpio-pch.c
-index 9925687e05fb..4ffa0955a9e3 100644
---- a/drivers/gpio/gpio-pch.c
-+++ b/drivers/gpio/gpio-pch.c
-@@ -171,7 +171,7 @@ static int pch_gpio_direction_input(struct gpio_chip *gpio, unsigned int nr)
- /*
-  * Save register configuration and disable interrupts.
-  */
--static void __maybe_unused pch_gpio_save_reg_conf(struct pch_gpio *chip)
-+static void pch_gpio_save_reg_conf(struct pch_gpio *chip)
- {
- 	chip->pch_gpio_reg.ien_reg = ioread32(&chip->reg->ien);
- 	chip->pch_gpio_reg.imask_reg = ioread32(&chip->reg->imask);
-@@ -187,7 +187,7 @@ static void __maybe_unused pch_gpio_save_reg_conf(struct pch_gpio *chip)
- /*
-  * This function restores the register configuration of the GPIO device.
-  */
--static void __maybe_unused pch_gpio_restore_reg_conf(struct pch_gpio *chip)
-+static void pch_gpio_restore_reg_conf(struct pch_gpio *chip)
- {
- 	iowrite32(chip->pch_gpio_reg.ien_reg, &chip->reg->ien);
- 	iowrite32(chip->pch_gpio_reg.imask_reg, &chip->reg->imask);
-@@ -402,7 +402,7 @@ static int pch_gpio_probe(struct pci_dev *pdev,
- 	return pch_gpio_alloc_generic_chip(chip, irq_base, gpio_pins[chip->ioh]);
+diff --git a/drivers/gpio/gpio-tqmx86.c b/drivers/gpio/gpio-tqmx86.c
+index 27dd09273292..d79f515137a5 100644
+--- a/drivers/gpio/gpio-tqmx86.c
++++ b/drivers/gpio/gpio-tqmx86.c
+@@ -279,19 +279,18 @@ static void tqmx86_gpio_irq_handler(struct irq_desc *desc)
  }
  
--static int __maybe_unused pch_gpio_suspend(struct device *dev)
-+static int pch_gpio_suspend(struct device *dev)
+ /* Minimal runtime PM is needed by the IRQ subsystem */
+-static int __maybe_unused tqmx86_gpio_runtime_suspend(struct device *dev)
++static int tqmx86_gpio_runtime_suspend(struct device *dev)
  {
- 	struct pch_gpio *chip = dev_get_drvdata(dev);
- 	unsigned long flags;
-@@ -414,7 +414,7 @@ static int __maybe_unused pch_gpio_suspend(struct device *dev)
  	return 0;
  }
  
--static int __maybe_unused pch_gpio_resume(struct device *dev)
-+static int pch_gpio_resume(struct device *dev)
+-static int __maybe_unused tqmx86_gpio_runtime_resume(struct device *dev)
++static int tqmx86_gpio_runtime_resume(struct device *dev)
  {
- 	struct pch_gpio *chip = dev_get_drvdata(dev);
- 	unsigned long flags;
-@@ -428,7 +428,7 @@ static int __maybe_unused pch_gpio_resume(struct device *dev)
  	return 0;
  }
  
--static SIMPLE_DEV_PM_OPS(pch_gpio_pm_ops, pch_gpio_suspend, pch_gpio_resume);
-+static DEFINE_SIMPLE_DEV_PM_OPS(pch_gpio_pm_ops, pch_gpio_suspend, pch_gpio_resume);
- 
- static const struct pci_device_id pch_gpio_pcidev_id[] = {
- 	{ PCI_DEVICE_DATA(INTEL, EG20T_PCH, INTEL_EG20T_PCH) },
-@@ -444,7 +444,7 @@ static struct pci_driver pch_gpio_driver = {
- 	.id_table = pch_gpio_pcidev_id,
- 	.probe = pch_gpio_probe,
- 	.driver = {
--		.pm = &pch_gpio_pm_ops,
-+		.pm = pm_sleep_ptr(&pch_gpio_pm_ops),
- 	},
+ static const struct dev_pm_ops tqmx86_gpio_dev_pm_ops = {
+-	SET_RUNTIME_PM_OPS(tqmx86_gpio_runtime_suspend,
+-			   tqmx86_gpio_runtime_resume, NULL)
++	RUNTIME_PM_OPS(tqmx86_gpio_runtime_suspend, tqmx86_gpio_runtime_resume, NULL)
  };
  
+ static void tqmx86_init_irq_valid_mask(struct gpio_chip *chip,
+@@ -425,7 +424,7 @@ static int tqmx86_gpio_probe(struct platform_device *pdev)
+ static struct platform_driver tqmx86_gpio_driver = {
+ 	.driver = {
+ 		.name = "tqmx86-gpio",
+-		.pm = &tqmx86_gpio_dev_pm_ops,
++		.pm = pm_sleep_ptr(&tqmx86_gpio_dev_pm_ops),
+ 	},
+ 	.probe		= tqmx86_gpio_probe,
+ };
 -- 
 2.50.1
 
