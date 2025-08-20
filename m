@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-24650-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24651-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 382DDB2E1D0
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 18:06:50 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F460B2E1A7
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 18:01:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE5DFA20680
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 16:01:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A5FC97A1D53
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 15:59:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE818326D45;
-	Wed, 20 Aug 2025 15:59:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03DEB3314DF;
+	Wed, 20 Aug 2025 15:59:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FZfBAqZm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lnwdob8u"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D6F322769;
-	Wed, 20 Aug 2025 15:59:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1C7322A30;
+	Wed, 20 Aug 2025 15:59:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755705584; cv=none; b=PJvmvHEHz0G0wD+HFVZcvBaPRODEgZQAn76VfxYIOX4z+/lVbw7DlWm9Zfc8g+/+dCMiK6Q6eIt80Z3gB86sWg1a5A+jtMs6r8kpRHUbauYUTSGvgmSdFM1mGeViY10aFd/KYz6FTSa/tcZs4Vybx8ms1bROBW8D7Uu02MN3Opk=
+	t=1755705590; cv=none; b=YekFcj9lrR6ZoYwZNTrN9AJgNQyxjBspXJ33CQwG/6GR7LJ/USgrnkb+SDLXA9IPwTzjVyf06AUH7oqRmlUm14r+xS1/El3twfS5IFsI1tbd8O48UP6uZRUR07nuVrgRNslhX5Q39mXd4jqGORMcfW46K+L60Se57IkTvjtyyV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755705584; c=relaxed/simple;
-	bh=fUBvkDoKUMnEXdyxqRdGgiK6Oe8z9HAnOskAEd9VzaI=;
+	s=arc-20240116; t=1755705590; c=relaxed/simple;
+	bh=Vtm9o+lfZgJz6qZfo2+Y/aRAO42PD5GrpWRB3GXupms=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h75jsQThYTg+agnq1xg0uLN31XRi9RBt/tA4EIOd0HxDedqsn1OBKMXnk2Ja0leE/kAuLNzWPT/Y6C+UCjwnILGmXwPh9TKDtxjkJ4wugE6VS+uoOYOoBPzy08m250lOfToLD7FDFj9vHjFiR+uDRBn4VJfiimsKzClhpGU4lGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FZfBAqZm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C6A1C4CEEB;
-	Wed, 20 Aug 2025 15:59:36 +0000 (UTC)
+	 MIME-Version; b=KYq+/xc7VAujNhEo1Mx47F87bB45bDVBU1xf51/mqYfWShB7WVDfKqsZqK5RKmDkJMtMtEPngSXt+deDZTK8lxWHeScs6Aa5irSX946w2k54XeO6d3ZQ3IJidoYuNKdDn1qRxbAdn9Yy/9HpnxC5Wa9tJpjSNEHStrreuYalU3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lnwdob8u; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80B94C4CEE7;
+	Wed, 20 Aug 2025 15:59:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755705584;
-	bh=fUBvkDoKUMnEXdyxqRdGgiK6Oe8z9HAnOskAEd9VzaI=;
+	s=k20201202; t=1755705590;
+	bh=Vtm9o+lfZgJz6qZfo2+Y/aRAO42PD5GrpWRB3GXupms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FZfBAqZmnAwyBbNiE+SqetenHZ5sUFd97H2/FDMlumLzSMvbRqWlBnuL0CrSepOK5
-	 6O1ytuAIBK9CRmm6QXXx+Y8gCd9RjymlHLkdxe5ZQHcKwxkQ87SGLJ3qu47fP85Xyg
-	 MXuvZ1P+DngqxQSER5BC8Tt6VDl/iPZ/TjNoE5bxGQb6flAc6Xt6BHuQ4G2OoHByTP
-	 kvfKPf7i0xIxk3wR26V3zTAhbBZ/WV+WVHJieJCZ27NJunAiD9WzAkHSsBSFsFON9J
-	 I1IjlxobIGpgU8PV4fwN0lPy1nqS5Ydoo50mC3sn0NHsvn+T7N8AbL4gGf5xH6pHAD
-	 Fruq0nsVVs6Zg==
+	b=lnwdob8u7vTynCCY08iaw4u+A4csAK/+9v91WXwx5pSJS8RKa0s+gVtJFFqJoV8nG
+	 ecYTWvN2zxAoRrBS/8BbfeXhlTLj9MspmzIISHJR7TcpJL1eEIFI7IvKnaIqBQ8o7d
+	 hbtWG08gwGGYa/3wyniAqDLfJwt65LifrNeDftfn+f/qnFyyw8ZZbSAlGQJc3ZhFA2
+	 BMOlcJXpD5fy6el5tb/e+AJMspA32ZnIifuz9EcfPc4oK/UvmRzBgiXE4fsEmLtDk1
+	 YpDpsC7MmWrUYU8Lt1rzJLdNJOMpqZV6CQ24lsFProTU8+aFDTnZ1sfm0F5TjDIm2k
+	 mDtth6r6t+rMQ==
 From: Jisheng Zhang <jszhang@kernel.org>
 To: Doug Berger <opendmb@gmail.com>,
 	Florian Fainelli <florian.fainelli@broadcom.com>,
@@ -66,9 +66,9 @@ Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
 	linux-kernel@vger.kernel.org,
 	linux-omap@vger.kernel.org,
 	linux@ew.tq-group.com
-Subject: [PATCH 13/16] gpio: uniphier: Use modern PM macros
-Date: Wed, 20 Aug 2025 23:40:34 +0800
-Message-ID: <20250820154037.22228-14-jszhang@kernel.org>
+Subject: [PATCH 14/16] gpio: xgene: Use modern PM macros
+Date: Wed, 20 Aug 2025 23:40:35 +0800
+Message-ID: <20250820154037.22228-15-jszhang@kernel.org>
 X-Mailer: git-send-email 2.50.0
 In-Reply-To: <20250820154037.22228-1-jszhang@kernel.org>
 References: <20250820154037.22228-1-jszhang@kernel.org>
@@ -86,50 +86,49 @@ CONFIG_PM_SLEEP are disabled, without having to use __maybe_unused
 
 Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
 ---
- drivers/gpio/gpio-uniphier.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/gpio/gpio-xgene.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpio/gpio-uniphier.c b/drivers/gpio/gpio-uniphier.c
-index 197bb1d22b3c..0574dde5b5bb 100644
---- a/drivers/gpio/gpio-uniphier.c
-+++ b/drivers/gpio/gpio-uniphier.c
-@@ -426,7 +426,7 @@ static void uniphier_gpio_remove(struct platform_device *pdev)
- 	irq_domain_remove(priv->domain);
- }
- 
--static int __maybe_unused uniphier_gpio_suspend(struct device *dev)
-+static int uniphier_gpio_suspend(struct device *dev)
- {
- 	struct uniphier_gpio_priv *priv = dev_get_drvdata(dev);
- 	unsigned int nbanks = uniphier_gpio_get_nbanks(priv->chip.ngpio);
-@@ -448,7 +448,7 @@ static int __maybe_unused uniphier_gpio_suspend(struct device *dev)
+diff --git a/drivers/gpio/gpio-xgene.c b/drivers/gpio/gpio-xgene.c
+index 4f627de3f56c..809668449dbe 100644
+--- a/drivers/gpio/gpio-xgene.c
++++ b/drivers/gpio/gpio-xgene.c
+@@ -130,7 +130,7 @@ static int xgene_gpio_dir_out(struct gpio_chip *gc,
  	return 0;
  }
  
--static int __maybe_unused uniphier_gpio_resume(struct device *dev)
-+static int uniphier_gpio_resume(struct device *dev)
+-static __maybe_unused int xgene_gpio_suspend(struct device *dev)
++static int xgene_gpio_suspend(struct device *dev)
  {
- 	struct uniphier_gpio_priv *priv = dev_get_drvdata(dev);
- 	unsigned int nbanks = uniphier_gpio_get_nbanks(priv->chip.ngpio);
-@@ -473,8 +473,7 @@ static int __maybe_unused uniphier_gpio_resume(struct device *dev)
+ 	struct xgene_gpio *gpio = dev_get_drvdata(dev);
+ 	unsigned long bank_offset;
+@@ -143,7 +143,7 @@ static __maybe_unused int xgene_gpio_suspend(struct device *dev)
+ 	return 0;
  }
  
- static const struct dev_pm_ops uniphier_gpio_pm_ops = {
--	SET_LATE_SYSTEM_SLEEP_PM_OPS(uniphier_gpio_suspend,
--				     uniphier_gpio_resume)
-+	LATE_SYSTEM_SLEEP_PM_OPS(uniphier_gpio_suspend, uniphier_gpio_resume)
- };
+-static __maybe_unused int xgene_gpio_resume(struct device *dev)
++static int xgene_gpio_resume(struct device *dev)
+ {
+ 	struct xgene_gpio *gpio = dev_get_drvdata(dev);
+ 	unsigned long bank_offset;
+@@ -156,7 +156,7 @@ static __maybe_unused int xgene_gpio_resume(struct device *dev)
+ 	return 0;
+ }
  
- static const struct of_device_id uniphier_gpio_match[] = {
-@@ -489,7 +488,7 @@ static struct platform_driver uniphier_gpio_driver = {
- 	.driver = {
- 		.name = "uniphier-gpio",
- 		.of_match_table = uniphier_gpio_match,
--		.pm = &uniphier_gpio_pm_ops,
-+		.pm = pm_sleep_ptr(&uniphier_gpio_pm_ops),
+-static SIMPLE_DEV_PM_OPS(xgene_gpio_pm, xgene_gpio_suspend, xgene_gpio_resume);
++static DEFINE_SIMPLE_DEV_PM_OPS(xgene_gpio_pm, xgene_gpio_suspend, xgene_gpio_resume);
+ 
+ static int xgene_gpio_probe(struct platform_device *pdev)
+ {
+@@ -204,7 +204,7 @@ static struct platform_driver xgene_gpio_driver = {
+ 		.name = "xgene-gpio",
+ 		.of_match_table = xgene_gpio_of_match,
+ 		.acpi_match_table = ACPI_PTR(xgene_gpio_acpi_match),
+-		.pm     = &xgene_gpio_pm,
++		.pm     = pm_sleep_ptr(&xgene_gpio_pm),
  	},
+ 	.probe = xgene_gpio_probe,
  };
- module_platform_driver(uniphier_gpio_driver);
 -- 
 2.50.1
 
