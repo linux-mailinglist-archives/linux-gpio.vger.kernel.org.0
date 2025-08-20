@@ -1,82 +1,155 @@
-Return-Path: <linux-gpio+bounces-24613-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24614-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3504B2DBED
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 14:01:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1A70B2DBEF
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 14:01:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6EFA6723556
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 12:01:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 81AB97235EB
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 12:01:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A4A0183CC3;
-	Wed, 20 Aug 2025 12:01:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D773221D96;
+	Wed, 20 Aug 2025 12:01:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pNND3jzz"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="dOLdqIGP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="j1Nb4xRx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FD9A945;
-	Wed, 20 Aug 2025 12:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2864936124;
+	Wed, 20 Aug 2025 12:01:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755691278; cv=none; b=rF5STc1RLWLQ12zBg7miac1Hvg0pQjrXR/X+ng/Gkqy+AojbxWwaCoZoq7NAVXRExeYHU1i1VAc0TMn/8Sa1HJt+GT2b7oKm+B22ZH2d3LK7xI4uuDMnRXIA+PbXzjYhDK/PrGSpaLaMNszDQuKbAPC1LjDc7BuE/LLw+sjLTKU=
+	t=1755691306; cv=none; b=RZauxJIWP1BRa+vZBPSM6KbyrWOffDjmZLRzTsnGtYbS0bl3l8I+YTAfWzRBl/d5sZFzPRr9QvolXr+CFPsKO1JWJYCUD224TghdFZ9EX/olr8HRfPyyvZOzfWdGZWNbX2LqTaF4JxRq4quL3oFWZvmvPcxBlxF2TOw89XJRJIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755691278; c=relaxed/simple;
-	bh=rlHdLNhaV4hbV/T+d/Q/8F+as9rxAdsAsMzgSCD2LTk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oIRapkeERe3ISBITN+fEI9IedWrx9nQJy0D4hT1/2JHW/81h7PO1lkmVkuH8JCyXNSulS6AjW3E+gc0beA7ndYaBP1lOw4rpdey7xk4X9lJLZojEgp4os75YQGUP0lBOZXx+zIAKqMDW+hkNbADyuXGGDLXqdY10RpW12vj8Yb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pNND3jzz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4414EC4CEEB;
-	Wed, 20 Aug 2025 12:01:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755691277;
-	bh=rlHdLNhaV4hbV/T+d/Q/8F+as9rxAdsAsMzgSCD2LTk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pNND3jzzHf0fboXkkioRDMhiKmMqX1c0T6aGiiPxXLaKouUvCLd7rlLlG2glv2X60
-	 djw1rTRavrCo+XjQyM3KXaFrp4oWtUu9KCCHKWPV9Pbx+s99xK26cMkVKskoUyJr9P
-	 zQNTUhQBylIavtPPeLxMCkpHtCZLBhRLAjdeqnTS7D8Gyec2eeab911U2FpNUEjZ8F
-	 bQjD974Eo3Rb+xLlGEdwYmu6MAuwa8zL/3/4BY+R0sFmLs6V6pg47dAqmi+fdFQvKU
-	 PKiWTHp2hiyn2J3de2NND+qm1te7fQ2WhfRp4WuBdp3X2QwQHqzU1IbNO5q6Ch2cH/
-	 3JMbn+yKOgkkA==
-From: William Breathitt Gray <wbg@kernel.org>
-To: Marcos Del Sol Vives <marcos@orca.pet>
-Cc: William Breathitt Gray <wbg@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2] gpio: vortex: add new GPIO device driver
-Date: Wed, 20 Aug 2025 21:00:48 +0900
-Message-ID: <20250820120101.254206-1-wbg@kernel.org>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <aHD40TD8MLug0C6b@black.fi.intel.com>
-References: 
+	s=arc-20240116; t=1755691306; c=relaxed/simple;
+	bh=quoUxmTd+wIYaTcdTYZiwMlD2ipn1Yd11rXs4F9lVK0=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=fdWXr5MEGH4rJOTepgVlm+WQxbagOzKLaeJ5RjGTJCz0OXWjMydO+JWnpIwIolu+gbu+hF0mKTsan+rSz67Ng9ZUluXcAlAC5Y4LgcqDa+f4AjJ4fkHMlSazRaEUGwasCaSpoYHawUMfDoVxthHKL0q0Z68IzatILe5EORyiBnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=dOLdqIGP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=j1Nb4xRx; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 28461EC0C3B;
+	Wed, 20 Aug 2025 08:01:42 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Wed, 20 Aug 2025 08:01:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1755691302;
+	 x=1755777702; bh=J9FfUkmbFexfH55SqDcJNlLFwG8EstJIvFxlzLcoWrw=; b=
+	dOLdqIGPK0mi7AX99S/CO6YGJDkhlZn3q2iadfSB1AObzfYkjVAkBl1+h54NiBIU
+	Ee0ygF5EFT+VmDFUl6ZIPvu0431d6oer7S1HVFdRB6Clw2NJMxC/ZPmUX+ZFHEI+
+	WqW+UN7kuBkzLJ45fDtJBTeGVdZ6i16+y7QO5jM55XNbBhZVYfALaOd+riazhlTA
+	TCItk1m7CED0ChkCoI6dcqsYxGXWWV6lSAU1o62MzdNqZ5+uDQfL2WeAiSKTD2LE
+	iHyBUcfMLntlxJdNcnIE2n7NY4UMXhj5bS6WNbwr603ZDkVyp0HMkXaiFmc5EPS4
+	h4t7MVGGjgUo6KByMIS+EA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1755691302; x=
+	1755777702; bh=J9FfUkmbFexfH55SqDcJNlLFwG8EstJIvFxlzLcoWrw=; b=j
+	1Nb4xRx6qCD65RDDOW0hPnMvnPnRlMAQH+P5uP1y2lXssDzVMTQE+/jVEWyd67zT
+	A3OPsQvDJFr2EubXkf7HQjU2xeYxUsYS4CjOzahnd6aIXqtelW39gcKGWW8sAJjM
+	P237FSDs2+PD9YzHKk1pNPhKJO9DMkh2RXHq6FZILuJs940MxCqxfhx7lMOCoBiC
+	Bc+tBBgRRLXEuQDgErTwwfEjncR3OXv/09664T3sAVqcHk0TfRZ6Ya96ntwtPqSM
+	703dhilexwEA53cLgcuc6oIs1SV9iYIRW6BvrnglY1h/2Glt8yVd6+pX+juC2HOm
+	ZQuIz9GEpT7Z0Q4oZD9vQ==
+X-ME-Sender: <xms:JbmlaL_pDTvxuVK3xsr1cQt3dqvlaO-cnBVRuV9GPfnktLbNM5haTQ>
+    <xme:JbmlaHs8-AoY5JknIQ_luvu3T2Z8NxFTKPgTfviFM3xxMUnC8egVaNhI5OlAC9ox8
+    6dINsFqGf90rUfesiM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduheekfeduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
+    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
+    hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
+    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepudeipdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepjhgrvhhivg
+    hrrdgtrghrrhgrshgtohdrtghruhiisehgmhgrihhlrdgtohhmpdhrtghpthhtohephigv
+    shgrnhhishhhhhgvrhgvsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghrnhgusehkvg
+    hrnhgvlhdrohhrghdprhgtphhtthhopehguhhsthgrvhhorghrsheskhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvg
+    gvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprghvvghlsehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrgh
+X-ME-Proxy: <xmx:JbmlaH39ejBCf9iJnRYHO9SVv_ueA3UYcSUiydhMnwQKUQCYmqgrmA>
+    <xmx:JbmlaBR6VwnVjDT4VKhJN8eKKlGztnLJ1yCP45acSJsBnLrjb8U7QA>
+    <xmx:JbmlaLtwlbAZWI-XEwP5nRAjkI2QJ5np7LAyvRIgUEwGiWnrDZ8zgA>
+    <xmx:JbmlaHIH-mcGBRjCOK126WLcDSBIgdFCYGfDsJpBOK9mP0nl0xwrBg>
+    <xmx:JrmlaJgk2rEsoDGWuHjswhP8I5Q9bHlGf9Yw-d2Y6SwFsn2IJvNlCJie>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 50C6B700065; Wed, 20 Aug 2025 08:01:41 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=598; i=wbg@kernel.org; h=from:subject; bh=rlHdLNhaV4hbV/T+d/Q/8F+as9rxAdsAsMzgSCD2LTk=; b=owGbwMvMwCW21SPs1D4hZW3G02pJDBlLd1wtvqR+Pzwyey1/srp5mIrIjFT9dnnL5PUflNZt5 Yk49Juho5SFQYyLQVZMkaXX/OzdB5dUNX68mL8NZg4rE8gQBi5OAZhIsT3DX7kyhYi2HXVp0749 kqzU72qo1Pl5woLR/twZbbeFHsk7FjL8M5B/WrvxyuVv15JzOHqED9RP8q1sEAmxTur2v+CwJp2 dAwA=
-X-Developer-Key: i=wbg@kernel.org; a=openpgp; fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
-Content-Transfer-Encoding: 8bit
+X-ThreadId: AXipOkXRca9w
+Date: Wed, 20 Aug 2025 14:00:56 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Lee Jones" <lee@kernel.org>
+Cc: "Arnd Bergmann" <arnd@kernel.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Linus Walleij" <linus.walleij@linaro.org>,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ "Pavel Machek" <pavel@kernel.org>,
+ "Javier Carrasco" <javier.carrasco.cruz@gmail.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+ "Kees Cook" <kees@kernel.org>, "Anish Kumar" <yesanishhere@gmail.com>,
+ "Mukesh Ojha" <quic_mojha@quicinc.com>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>,
+ "Dmitry Rokosov" <ddrokosov@salutedevices.com>, linux-leds@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <9fb37e55-0c86-4ac6-acd3-b8c1bc722b3f@app.fastmail.com>
+In-Reply-To: <20250820071656.GJ7508@google.com>
+References: <20250808151822.536879-1-arnd@kernel.org>
+ <20250808151822.536879-11-arnd@kernel.org> <20250819121907.GA7508@google.com>
+ <e9252384-a55c-4a91-9c61-06e05a0b2ce4@app.fastmail.com>
+ <20250820071656.GJ7508@google.com>
+Subject: Re: [PATCH 10/21] leds: gpio: make legacy gpiolib interface optional
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 11, 2025 at 02:43:13PM +0300, Andy Shevchenko wrote:
-> +Cc: William,
-> who is an expert in embedded industrial x86 platforms and might help with this.
+On Wed, Aug 20, 2025, at 09:16, Lee Jones wrote:
+> On Tue, 19 Aug 2025, Arnd Bergmann wrote:
+>
+> Sounds like we're between a rock and a hard place with this.
 
-Hi Marcos,
+I don't think either variant is that bad to be honest, as it
+gets us a long way towards removing the legacy interface from
+default builds without having to update or remove the holdouts
+immediately. It's mainly led-gpio and gpio-keys that need
+a change like this.
 
-Just a heads-up that this is on my radar and I do have some general
-comments about ISA drivers (in particular, this reminds me of the
-gpio-ws16c48 driver which you may use as a rough guide). I'm currently
-catching up on a backlog of emails so I should have a response for you
-some time this weekend; but if you already have a v3 feel free to submit
-it and I'll reply to that instead.
+Splitting out the entire gpio_led_platform_data handling
+into a single #ifdef function block would be a little cleaner,
+but that would in turn require changing over a couple of
+files that got converted from legacy gpio numbers to passing
+gpio descriptors or lookup tables (ppc44x/warp, x86/sel3350,
+arm/omap1), making them use device properties instead.
 
-William Breathitt Gray
+> Will the legacy parts be removed at some point or do you foresee us
+> supporting this forever?
+
+It's hard to predict an timeline here, there is certainly a lot of
+interest in minimizing the legacy users as much as possible and
+patches are getting written for x86 and arm, but I don't see much
+movement on the mips and sh platforms. These are also the ones
+that have been holdouts for CONFIG_LEGACY_CLK for years, and I
+hope we can eventually drop support for those boards.
+
+That said, I first need to get my own act together and refresh
+my patches to drop the old arm board files so we can merge that.
+
+      Arnd
 
