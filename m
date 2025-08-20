@@ -1,138 +1,134 @@
-Return-Path: <linux-gpio+bounces-24619-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24620-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B33DB2DD98
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 15:19:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3845B2DDBA
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 15:28:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4D83C5C024B
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 13:18:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B6CE3AA579
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 13:27:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3785227EFEF;
-	Wed, 20 Aug 2025 13:17:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A19D31E0E4;
+	Wed, 20 Aug 2025 13:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BPhghfmM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 951FB27BF99;
-	Wed, 20 Aug 2025 13:17:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A8823741;
+	Wed, 20 Aug 2025 13:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755695877; cv=none; b=jxcTvaOHlcUNPPpHfOlYGU56rTqGWLxsAOLQWjjSD3+COhkMKo1C6VbdM5tUE3WvP5w/OsHGqedmVYLq2Q67cpM/KsUN0y7SyC0GOZowJAw3m1kKrJZNNoDdOHWMoX3e/A2kGmrt8yYXV605xnZcsvBqb6qO+ugcdxRNfGwYtNE=
+	t=1755696447; cv=none; b=LEuEoyA/w/R84FwFCGzZmdigIPJcZnBaLWx04QSb91yuQn+hsAuVfAFmj4Mc1XYUsgIRwqNsxc+sy8PFyx4TUIDhZMaFBmMEhoztU0O1zhozAv2cAgaiOyWmZfDtX0ansNEg3eL0T7YY7bRH60dbNoiJMH91qvIrxPJDoYWnCMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755695877; c=relaxed/simple;
-	bh=amp618qAhEw+37IrUCKwJ0eJSOkm4YK6dbemdWIFD08=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PwuPKK+bgRQqcJl+FLUiQG6U06mvXB+gchaZQ0NIU7yjH4E1hSbR37FyhCXdL963SGvfv2sY2Wnqv3d084CK2Ga8fd6vjLhed0kw5A6Yd8MFc82Pq5Fj4im7V1w09Zzw2RdP6oHOM05mZ7l5lAhrKW9WE4qbWSVGJJiJJWXxCtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-55ce5243f6dso7162636e87.2;
-        Wed, 20 Aug 2025 06:17:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755695871; x=1756300671;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pPixgx/r2pzG9SYlVyxWbRJbcFdefcug1MJMB9A4a4U=;
-        b=SrfhTudY3GI9EdOtZaDhJyH2vr2EeNrsweq4bFs/v6zvbFY5UA/pDk+0Lc04IqOU1w
-         W5HH+LizKnWIKxHW4sw5eKwNCaeUuVwFYn3k+cMG4moU07wC7sVowmu8HLk0KcfCPWUg
-         z0V2QurA1oiGZ0ZCk0yyHBwdhrQ2SbU22lH3BY6oDWTRB+e9b49X+hXZ3COMByFFT7B4
-         oAfylRdv8IfLux030b/UnoDLfTMq2pIazONPVUbcI3irJO7vgc0wSi3/suD2jOlKZya8
-         V+h6j2EVnsTu4uXy3XG4RZ8OiKMB3xubBjmGA82AfBfuA8pVCKKicuF2XwPG9yp4RTPx
-         M/+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUcuP7pncMy92SARQv2xZOC+WcEFXKNfDKRwK3z+xlwZEHs4ruxhS0MpFU15WE5dFAkG6aRW8ROhm5zFsR4@vger.kernel.org, AJvYcCXXel60aYJewwYGDiH0GnEvmI9PGGoFeWfAKI6yydI54+uXA1Vs84vZGm8L4ijU7qpX1rSnLV1ludDt@vger.kernel.org
-X-Gm-Message-State: AOJu0YwozeCP4wG3lq+HDJ73XwVmv38I0pMcTizySFEsJSMfMAnG4IVg
-	6EKYjoxFLq6kd2GCNBd5P44KgYlZqiqFQVK2pJ5yL8F+SuZasnJefRS+HTPJK0qx
-X-Gm-Gg: ASbGncsjyWoxrA+fekjWBaX5OahWv15VJv0XPApp2pbhsdBiJAwX5gyvtMgK7DbZeaQ
-	FS+DkCjxzW7fjoLI4VWygT/7zYKzUZEMHr2tfYvY/CMH7ItA/xdZlv8rObiiClnFlar0vwVOj9e
-	Q8anfIkcm4b9DxLOj7P+pSYsyC+5NER5orIvfuxgyw9oau2YfpoZ8Bj7HoAlNmjGLUetnclXBuf
-	cV/7gsnkMuenmuF/FEu3FxdgqbVodRsuW/F8vXnnhhb97EzKaIA/S/hMK9q116IW0ugVi+rXaSf
-	h9l9Iq6dPOQXtTYBkb6goT3nYNhABL2wy4DNaflRZesAmjBiUaGzT52kIfi0eK+wdqIcNCFvfWe
-	vfeZhFB0RrWpQi8e3A8qkhS1jxvgYTt6dVqw4NCZTNCQqQt9N15UqQr8=
-X-Google-Smtp-Source: AGHT+IEMzRG1ZWmgOTdQFfZAUZ5oVcCbTmOSO72Wz9WNZMeJJ8rKvxsP3LN8oleg18ZsJqctUDmEMQ==
-X-Received: by 2002:a19:6a13:0:b0:55b:96e5:195f with SMTP id 2adb3069b0e04-55e06b2c4c2mr668000e87.11.1755695870726;
-        Wed, 20 Aug 2025 06:17:50 -0700 (PDT)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55cef3ccafcsm2670423e87.83.2025.08.20.06.17.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Aug 2025 06:17:47 -0700 (PDT)
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-333f9160c21so47353311fa.2;
-        Wed, 20 Aug 2025 06:17:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV+upC8h8ZdXBnJyiHCOJCEewnL0MnjZgzu5nXhD4gOZcq7fTA7c9nsyA8xL2+1HptqjuOckutUiG9t@vger.kernel.org, AJvYcCW8sCOqWIxyEaxkVq6juhhoCj2keiK72xF6o5/lwv6GEwEvTfysy6UDl9Mq03f9osOa8l7hkUZYHThHEQ5L@vger.kernel.org
-X-Received: by 2002:a05:651c:4102:b0:333:b656:a69d with SMTP id
- 38308e7fff4ca-3353bcd77efmr4582191fa.7.1755695867435; Wed, 20 Aug 2025
- 06:17:47 -0700 (PDT)
+	s=arc-20240116; t=1755696447; c=relaxed/simple;
+	bh=Iroe3MCa2ZZaRY9jKe2399kPLRw8TL6vb7UDOEeV6xo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=sJZGCF8Z+z48Yzd/Q0PxlAAd55/Cg8jiONMuvjMZQHzHExaiFbeemYux6EkqzoU9GKg4YA0vRrXC7acUjRGj8dgeX3OF4jVExiAI0D62IGkwT5HYXwmm6dgN9Th49nyjoJY/mofr0pG7Js1lthzh9j5eFslR6dGZMRBkKck/kUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BPhghfmM; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1755696443;
+	bh=Iroe3MCa2ZZaRY9jKe2399kPLRw8TL6vb7UDOEeV6xo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=BPhghfmM17dTR9tU6w/x7QCksTcLIMZmJe9nr6IPzIGw7KNbMFlwN7Vy7Ks4TWEdt
+	 +dIh+4Rx64/VObgOsVABZr2GyQDDUTspGLOi7NkBPilc3dQxEETLl89DMf+h2l6v5O
+	 iUpiW5Mm/T1gZtNkKllA9wBB+gAuH62JEyCpqmvebiHanOXdSoqw84/RxoPhMIg9nv
+	 uIiJhWmnNENJCXvDzCPPw+kJDZz7w3VJoo92oHfL4/AisZfUB6tzoouFMo9wK0m+FL
+	 OR6rdIAdm1MFOn6jbjmF/kE6YGuhwXO2+lDjzbqxer5YqNL9MhikIrkrnIH5PkJb0A
+	 xaCNRtP8+0pcw==
+Received: from localhost-live.home (2a01cb0892f2d600C8f85Cf092d4AF51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: jmassot)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0D12717E01F5;
+	Wed, 20 Aug 2025 15:27:22 +0200 (CEST)
+Message-ID: <124e3fbe79660eac9d529b127d888ce6942ba346.camel@collabora.com>
+Subject: Re: [PATCH 1/9] dt-bindings: clock: mediatek: Add power-domains
+ property
+From: Julien Massot <julien.massot@collabora.com>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	kernel@collabora.com, Michael Turquette <mturquette@baylibre.com>, Stephen
+ Boyd	 <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Matthias Brugger	 <matthias.bgg@gmail.com>, Ikjoon Jang
+ <ikjn@chromium.org>, Enric Balletbo i Serra <eballetbo@kernel.org>, Chen-Yu
+ Tsai <wenst@chromium.org>, Weiyi Lu	 <weiyi.lu@mediatek.com>, Eugen Hristev
+ <eugen.hristev@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
+ <broonie@kernel.org>, Julien Massot <jmassot@collabora.com>,  Sean Wang
+ <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, linux-sound@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
+Date: Wed, 20 Aug 2025 15:27:21 +0200
+In-Reply-To: <ab97489a-9493-4005-9a1a-9f88ad970b05@collabora.com>
+References: <20250801-mtk-dtb-warnings-v1-0-6ba4e432427b@collabora.com>
+	 <20250801-mtk-dtb-warnings-v1-1-6ba4e432427b@collabora.com>
+	 <ab97489a-9493-4005-9a1a-9f88ad970b05@collabora.com>
+Organization: Collabora Ltd.
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250819143935.372084-1-rongqianfeng@vivo.com> <20250819143935.372084-5-rongqianfeng@vivo.com>
-In-Reply-To: <20250819143935.372084-5-rongqianfeng@vivo.com>
-Reply-To: wens@csie.org
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Wed, 20 Aug 2025 21:17:33 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67aScycSHQr+cToshGz=u6vOCcdamZmqBaDbpgD3zg0_Q@mail.gmail.com>
-X-Gm-Features: Ac12FXxY1RMn12OMP_6ZvaC7ig2Ko0gOCjNM_-u3K-s-PXBOydhAFgSyE2Itvsw
-Message-ID: <CAGb2v67aScycSHQr+cToshGz=u6vOCcdamZmqBaDbpgD3zg0_Q@mail.gmail.com>
-Subject: Re: [PATCH 4/4] pinctrl: sunxi: use kcalloc() instead of kzalloc()
-To: Qianfeng Rong <rongqianfeng@vivo.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Samuel Holland <samuel@sholland.org>, 
-	"open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
-	"moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>, 
-	"open list:ARM/Allwinner sunXi SoC support" <linux-sunxi@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 19, 2025 at 10:40=E2=80=AFPM Qianfeng Rong <rongqianfeng@vivo.c=
-om> wrote:
->
-> Use devm_kcalloc() in init_pins_table() and prepare_function_table() to
-> gain built-in overflow protection, making memory allocation safer when
-> calculating allocation size compared to explicit multiplication.
->
-> Signed-off-by: Qianfeng Rong <rongqianfeng@vivo.com>
+Hi Angelo,
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+On Mon, 2025-08-04 at 09:59 +0200, AngeloGioacchino Del Regno wrote:
+> Il 01/08/25 13:18, Julien Massot ha scritto:
+> > The mt8183-mfgcfg node uses a power domain in its device tree node.
+> > To prevent schema validation warnings, add the optional `power-domains`
+> > property to the binding schema for mediatek syscon clocks.
+> >=20
+> > Fixes: 1781f2c46180 ("arm64: dts: mediatek: mt8183: Add power-domains p=
+roperty to mfgcfg")
+> > Signed-off-by: Julien Massot <julien.massot@collabora.com>
+>=20
+> Is MT8183 the only one?
+>=20
+> if:
+> =C2=A0=C2=A0 properties:
+> =C2=A0=C2=A0=C2=A0=C2=A0 compatible:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 contains:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - const: mediatek,mt8183=
+-mfgcfg
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^^^^^^^(if it's not just=
+ mt8183, this should be an enum)
+>=20
+> then:
+> =C2=A0=C2=A0 properties:
+> =C2=A0=C2=A0=C2=A0=C2=A0 power-domains: true
+> else:
+> =C2=A0=C2=A0 properties:
+> =C2=A0=C2=A0=C2=A0=C2=A0 power-domains: false
+>=20
+> (check if the above is correct, don't blindly trust what I wrote! :P)
+>=20
+>=20
+Verified on my side 'mediatek,mt8183-mfgcfg' is the only one with a power-d=
+omain
+property.
+I will add the if/else and disable the power-domains property for other com=
+patible
+as suggested.
 
-> ---
->  drivers/pinctrl/sunxi/pinctrl-sunxi-dt.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi-dt.c b/drivers/pinctrl/s=
-unxi/pinctrl-sunxi-dt.c
-> index 4e34b0cd3b73..5f13315ebff3 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi-dt.c
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi-dt.c
-> @@ -103,7 +103,7 @@ static struct sunxi_desc_pin *init_pins_table(struct =
-device *dev,
->                 return ERR_PTR(-EINVAL);
->         }
->
-> -       pins =3D devm_kzalloc(dev, desc->npins * sizeof(*pins), GFP_KERNE=
-L);
-> +       pins =3D devm_kcalloc(dev, desc->npins, sizeof(*pins), GFP_KERNEL=
-);
->         if (!pins)
->                 return ERR_PTR(-ENOMEM);
->
-> @@ -199,7 +199,7 @@ static int prepare_function_table(struct device *dev,=
- struct device_node *pnode,
->          * Allocate the memory needed for the functions in one table.
->          * We later use pointers into this table to mark each pin.
->          */
-> -       func =3D devm_kzalloc(dev, num_funcs * sizeof(*func), GFP_KERNEL)=
-;
-> +       func =3D devm_kcalloc(dev, num_funcs, sizeof(*func), GFP_KERNEL);
->         if (!func)
->                 return -ENOMEM;
->
-> --
-> 2.34.1
->
+>=20
+> after which:
+>=20
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
+ora.com>
+> (if it's not only mt8183, keep the R-b on this commit regardless)
+Thanks,
+
+Julien
 
