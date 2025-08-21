@@ -1,122 +1,182 @@
-Return-Path: <linux-gpio+bounces-24768-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24769-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B55DB300C9
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 19:14:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E1FAB300E6
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 19:21:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C7ABE1C87AF9
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 17:14:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CED6318937E5
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 17:20:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EA8F2FB63C;
-	Thu, 21 Aug 2025 17:14:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B84F73054C2;
+	Thu, 21 Aug 2025 17:19:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b="cIX1aJ8R"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qZ/s+UCx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout4.mo534.mail-out.ovh.net (smtpout4.mo534.mail-out.ovh.net [188.165.54.92])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 608DD2E7649
-	for <linux-gpio@vger.kernel.org>; Thu, 21 Aug 2025 17:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.54.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65AC71F3B8A;
+	Thu, 21 Aug 2025 17:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755796466; cv=none; b=tNvWTHdO/rmSzl8uKLD+EoxDgShByWuApnjxnAnES7lVDTUivMzgH2uR1gtB53YqwoN25fXbKrx3+LG8E/bRjCzisG7yhREUzSB/wJdSihEQd8YSNlAqvwMUHikvFWLP+531+GtP3Vwj8nrtF6q5iEEeNjq94+NkuZC3QlXY/qs=
+	t=1755796785; cv=none; b=OLznfaSzQryqTE6sQGDuRHw8b5ZKvmZWXKx1DXMMr44M6byZkDJA314Fvaeqy9UaEnoxWl2yaOk3GbT/6AjU920sA4jCrxjbDtsoGGn2ozF8zPE3kJO+lIJg4zw3qd/t5cUYDg9MNPwvvmTGZC9SUn6lBjb+kgoHZNs59mcGwRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755796466; c=relaxed/simple;
-	bh=4s2SgBDIfhuiX/36eQkP9IdC8nSh5GIVHNKeKDZPuTY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BBp2Jc7/iMdxY+ya9biZBdSXCPOInRY1m6kwWyfQ3eni8ujdIBLfSycYfo5GhikFZJ9CWNYa/8utOEtLWhXogUz7M8lsuSlp+5dHwt2Ntn79ThPOFkIWL0lFn+zlj4ZO6T8F7yP7QxLG9JAs0q/uaR9GSwV3Qq6akIZ43VtB7u8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b=cIX1aJ8R; arc=none smtp.client-ip=188.165.54.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orca.pet
-Received: from director3.derp.mail-out.ovh.net (director3.derp.mail-out.ovh.net [152.228.215.222])
-	by mo534.mail-out.ovh.net (Postfix) with ESMTPS id 4c790Z2Sy3z6GJ0;
-	Thu, 21 Aug 2025 17:14:22 +0000 (UTC)
-Received: from director3.derp.mail-out.ovh.net (director3.derp.mail-out.ovh.net. [127.0.0.1])
-        by director3.derp.mail-out.ovh.net (inspect_sender_mail_agent) with SMTP
-        for <brgl@bgdev.pl>; Thu, 21 Aug 2025 17:14:22 +0000 (UTC)
-Received: from mta11.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.110.54.94])
-	by director3.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4c790Z0rWTz5wDd;
-	Thu, 21 Aug 2025 17:14:22 +0000 (UTC)
-Received: from orca.pet (unknown [10.1.6.4])
-	by mta11.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTPSA id 99F9C9A32E2;
-	Thu, 21 Aug 2025 17:14:20 +0000 (UTC)
-Authentication-Results:garm.ovh; auth=pass (GARM-105G00640d7eefc-a407-4406-bc8f-45b6a2a3f3a6,
-                    684E78C7C579463DAB27E2CA1F9C4E28A39E1181) smtp.auth=marcos@orca.pet
-X-OVh-ClientIp:79.117.22.109
-Message-ID: <b11fe036-ff94-4226-a5c7-067a195196aa@orca.pet>
-Date: Thu, 21 Aug 2025 19:14:21 +0200
+	s=arc-20240116; t=1755796785; c=relaxed/simple;
+	bh=IHK0B0vbjFIm7tiUW5zNchHrSbYpWhq6dFSoqlxbP+E=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=W93W6qL09PzGEu2aa77/JOndTRwXj6iOJm+MOqEHJeOUuEIIMsf3nRQSXtlmhBJeIxQuZ4AdlRx5SSgHK2Wwm2kvTzslCnMZDSfUGrTFjEL0M2vzPlgeApoZkwFj/PDUutQA5/vTCJJJKhjinU14S5sNG/SSU/7oqfHwTSbVkBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qZ/s+UCx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5177C4CEEB;
+	Thu, 21 Aug 2025 17:19:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755796785;
+	bh=IHK0B0vbjFIm7tiUW5zNchHrSbYpWhq6dFSoqlxbP+E=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=qZ/s+UCx9zJ7A6OILHKr08EaK+Kqn0vd34RzrnT+C2XPIVpzlGGCAHIdg3LTC7glu
+	 hXHfQEBAslXaywDV7aVUSS8a8e2T4E7Td2VON9C8I8ZPeXtKyfyRzm8736MXLocYN9
+	 U2p+s4GUInwmuHNP+wAHqU3QNHIojNw3TnGnaMmD8k+2Hr89XvNWHa1vTJI7gKmeoG
+	 hFd0MdKk1P6QhJ1E+NACKAR66V8si2F60z+bIpYqusaV+KLrXKpOtrquXayG8Ji3S5
+	 6W0NYoglLQegO+BnuGolIFcNfp2s5FqeGFsRxQHsEXmwbM+WNzxH5xGya2/Ef9xEvN
+	 uIh0i/bhYRtOw==
+Date: Thu, 21 Aug 2025 12:19:43 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] gpio: gpio-regmap: add flags to control some
- behaviour
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Michael Walle <mwalle@kernel.org>,
- Lee Jones <lee@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-gpio@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20250821143220.GA672670@bhelgaas>
-Content-Language: es-ES
-From: Marcos Del Sol Vives <marcos@orca.pet>
-In-Reply-To: <20250821143220.GA672670@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 6047771352983492198
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduiedukeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeforghrtghoshcuffgvlhcuufholhcugghivhgvshcuoehmrghrtghoshesohhrtggrrdhpvghtqeenucggtffrrghtthgvrhhnpedtgedugfeiudfgkeduhfelgfejgfeuvdejffeiveegteejvddviefhiedujedvheenucfkphepuddvjedrtddrtddruddpjeelrdduudejrddvvddruddtleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepmhgrrhgtohhssehorhgtrgdrphgvthdpnhgspghrtghpthhtohepledprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehhvghlghgrrghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmfigrlhhlvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrh
- hnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-DKIM-Signature: a=rsa-sha256; bh=BBIMNKbgu0l71xtJeZDmDYq3dcY9gm17qcm0ICLyhI0=;
- c=relaxed/relaxed; d=orca.pet; h=From; s=ovhmo-selector-1; t=1755796462;
- v=1;
- b=cIX1aJ8RDgxXLQp6xwSGz6JSEQdBXA/ZjesSGA1AbTHwJIdSXQd4yvvb8/vBfVQM0UkcvepE
- Wg26iAD3aMQEzQhEyFg9AIg/kvdSHpr7/ew9SXDthdRLguvkZTnQ5jiWPPzuutCJq7JryCJq0pC
- l9BMaP3oc7w3DXSYPgz6rEEIcWmIUiKKqIkmtNUqz8CiHt3JMs09WBNhHlQl+QPEKNfgzhAvNK4
- Q5t9x/01kAD0VSnwFdjz4Ve+46XvF8mC58vm614e9Uz+gm3bKIuOqa9ROW+g+t9+puBJUyELGGX
- zfiBNtEWLQqQmhwkOVdHGPvN4qoHRtGW1GFY27E8IevlA==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Srinivas Kandagatla <srini@kernel.org>, devicetree@vger.kernel.org, 
+ Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>, 
+ linux-sound@vger.kernel.org, Konrad Dybcio <konradybcio@kernel.org>, 
+ linux-arm-msm@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>, 
+ cros-qcom-dts-watchers@chromium.org, linux-gpio@vger.kernel.org, 
+ Liam Girdwood <lgirdwood@gmail.com>, kernel@oss.qualcomm.com, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+In-Reply-To: <20250821044914.710044-1-quic_pkumpatl@quicinc.com>
+References: <20250821044914.710044-1-quic_pkumpatl@quicinc.com>
+Message-Id: <175579643373.37269.13580204801598375110.robh@kernel.org>
+Subject: Re: [PATCH v8 0/9] Enable audio on qcs6490-RB3Gen2 and qcm6490-idp
+ boards
 
-El 21/08/2025 a las 16:32, Bjorn Helgaas escribió:
-> Not my area, but consider making the subject more specific, e.g.,
-> "add flag to set direction before value"
+
+On Thu, 21 Aug 2025 10:19:05 +0530, Prasad Kumpatla wrote:
+> From: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
 > 
-> On Thu, Aug 21, 2025 at 12:18:57PM +0200, Marcos Del Sol Vives wrote:
->> The Vortex86 family of SoCs need the direction set before the value, else
->> writes to the DATA ports are ignored.
->>
->> This commit adds a new "flags" field plus a flag to change the default
->> behaviour, which is to set first the direction and then the value.
+> Audio support is now enabled on the qcs6490-RB3Gen2 and qcm6490-idp boards.
+> The updates include adding the necessary audio device tree support and the required
+> dependencies.
 > 
-> This sounds like the default behavior is to set direction, then value.
-> But from the patch, it looks like:
+> Both the qcs6490-RB3Gen2 and qcm6490-idp boards are derived from the same SoC
+> platform. Therefore, the audio support changes are included in a single patch
+> set for consistency and ease of maintenance.
 > 
->   - default: set value, then direction
+> changes in [v8]:
+> 	- Added drive strength for all lpass_dmic pinctrl nodes reported by Konrad Dybcio.
+> 	- Rebased changes on top of the latest kernel tree.
+> 	- Link to V7: https://lore.kernel.org/all/20250720173215.3075576-1-quic_pkumpatl@quicinc.com/
 > 
->   - with GPIO_REGMAP_DIR_BEFORE_SET: set direction, then value
+> changes in [v7]:
+> 	- Addressed the review commnets in dt-binding patches from Krzysztof Kozlowski
+> 	- Rebased changes on top of dependent patches
+> 	- Link to V6: https://lore.kernel.org/linux-sound/20250715180050.3920019-1-quic_pkumpatl@quicinc.com/
+> 
+> changes in [v6]:
+> 	- Addressed the review commnets in dt-binding patches from Krzysztof Kozlowski
+> 	- Link to V5: https://lore.kernel.org/linux-arm-msm/20250625082927.31038-1-quic_pkumpatl@quicinc.com/
+> 
+> changes in [v5]:
+> 	- Added separate patch for QCS6490 pinctrl bindings.
+> 	- Updated commit message with more description.
+> 	- Addressed the review commnets.
+> 	- Link to V4: https://lore.kernel.org/linux-arm-msm/20250527111227.2318021-1-quic_pkumpatl@quicinc.com/
+> 
+> Changes in [v4]:
+> 	- Fix DT binding errors by adding dt-binding clock changes for ADSP base platform.
+> 	- Link to V3 : https://lore.kernel.org/linux-arm-msm/20250520062618.2765109-1-quic_pkumpatl@quicinc.com/
+> 
+> Changes in [v3]:
+> 	- Added protection-domain in gpr services.
+> 	- Addressed the review commnets from Konrad Dybcio.
+> 	- Fix DT binding errors reported by Rob Herring.
+> 	- Link to V2 : https://lore.kernel.org/linux-arm-msm/20250429092430.21477-1-quic_pkumpatl@quicinc.com/
+> 
+> Changes in [v2]:
+> 	- Created dtsi file to handle common audio nodes to support Audioreach.
+> 	- Addressed the review comments.
+> 	- Link to V1 : https://lore.kernel.org/linux-arm-msm/20250317054151.6095-2-quic_pkumpatl@quicinc.com/
+> 
+> Mohammad Rafi Shaik (9):
+>   arm64: dts: qcom: qcs6490-audioreach: Add gpr node
+>   dt-bindings: pinctrl: qcom,sc7280-lpass-lpi-pinctrl: Document the
+>     clock property
+>   ASoC: dt-bindings: qcom,lpass-va-macro: Update bindings for clocks to
+>     support ADSP
+>   arm64: dts: qcom: sc7280: Add WSA SoundWire and LPASS support
+>   arm64: dts: qcom: qcs6490-audioreach: Modify LPASS macros clock
+>     settings for audioreach
+>   arm64: dts: qcom: qcs6490-rb3gen2: Add WSA8830 speakers amplifier
+>   arm64: dts: qcom: qcs6490-rb3gen2: Add sound card
+>   arm64: dts: qcom: qcm6490-idp: Add WSA8830 speakers and WCD9370
+>     headset codec
+>   arm64: dts: qcom: qcm6490-idp: Add sound card
+> 
+>  .../qcom,sc7280-lpass-lpi-pinctrl.yaml        |  16 ++
+>  .../bindings/sound/qcom,lpass-va-macro.yaml   |  23 +-
+>  arch/arm64/boot/dts/qcom/qcm6490-idp.dts      | 207 ++++++++++++++++++
+>  .../boot/dts/qcom/qcs6490-audioreach.dtsi     | 121 ++++++++++
+>  arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts  |  80 +++++++
+>  arch/arm64/boot/dts/qcom/sc7280.dtsi          |  99 ++++++++-
+>  6 files changed, 540 insertions(+), 6 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
+> 
+> 
+> base-commit: 5303936d609e09665deda94eaedf26a0e5c3a087
+> --
+> 2.34.1
+> 
+> 
 > 
 
-Noted, thanks for the feedback! I've amended the commit and now it reads:
 
-> gpio: gpio-regmap: add flag to set direction before value
->
-> When configuring a pin as an output, the gpio-regmap driver by default
-> writes first to the the value register, and then configures the direction.
->
-> The Vortex86 family of SoCs, however, need the direction set before the
-> value, else writes to the data ports are ignored.
->
-> This commit adds a new "flags" field plus a flag to reverse that order,
-> allowing the direction to be set before the value.
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-Hope that looks more clear!
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
 
-Thanks,
-Marcos
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+This patch series was applied (using b4) to base:
+ Base: using specified base-commit 5303936d609e09665deda94eaedf26a0e5c3a087
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250821044914.710044-1-quic_pkumpatl@quicinc.com:
+
+arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dtb: pmic@2 (qcom,pm8350c): pwm:nvmem: [[366, 367]] is too short
+	from schema $id: http://devicetree.org/schemas/mfd/qcom,spmi-pmic.yaml#
+arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dtb: pwm (qcom,pm8350c-pwm): nvmem: [[366, 367]] is too short
+	from schema $id: http://devicetree.org/schemas/leds/leds-qcom-lpg.yaml#
+
+
+
+
 
 
