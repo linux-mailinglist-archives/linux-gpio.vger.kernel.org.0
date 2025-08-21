@@ -1,245 +1,122 @@
-Return-Path: <linux-gpio+bounces-24732-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24733-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5287EB2F555
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 12:29:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A953B2F6A5
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 13:30:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C9889AA74D6
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 10:26:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C0D955A0742
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 11:27:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 968702FABE8;
-	Thu, 21 Aug 2025 10:26:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0345930EF6B;
+	Thu, 21 Aug 2025 11:27:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b="Xaev/zgv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ACKT920q"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout3.mo533.mail-out.ovh.net (3.mo533.mail-out.ovh.net [46.105.35.92])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6382FA0E5
-	for <linux-gpio@vger.kernel.org>; Thu, 21 Aug 2025 10:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.35.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BCD03054E0
+	for <linux-gpio@vger.kernel.org>; Thu, 21 Aug 2025 11:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755772000; cv=none; b=Y3Gf7XPQfpzT0MQy4CJYgzxgXBlJi9XNk5+1GbBlx3URXzCmwvt5oxf+yb8huaE5hVdx+AAO6uLVs+sY7WqUMNpbRdYxskERbEFYQ74Os34vQCoSnY7JZfF7bUkPKrC2E+3Y53wNaS5g4my1W7Sx2AYpL/NomrLV8WNAFXAFdTw=
+	t=1755775638; cv=none; b=HU6aFsZ0HfbCuKYItC3fzPe7iz1+pEiY9pKaE5x91/i8tgri+2+MFgOWqRfL2p5f+/lDtkP7Fcz5lB7NDcufmMuKi8+kKBZ4HoeJuKsyrDDXAL9U13VfgP2dAEvV8jS+5jLX/q0evydcpUiU2M/CN/NAVhQPIkNgy+Ge2C8Ke70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755772000; c=relaxed/simple;
-	bh=QE6s/0lAW6AiPaa0sSBUwamHMoawMGEWdM9hqsudp50=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IXdoZIFDgTpetWSY/N3HF/kRhBvTfaUhMv7onOBFad2aUmVHHU4h0dYOSLWoYEKuoWDumeqAMT9ljfYpRX4GhBvklZhbphwt/yKjgKWRvw5LgFV2j6UkAc3ZahMVhARZZCqxoX0TlUDKJ0WesxpHG6Vajd0ia822rLeOcQ6LkZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b=Xaev/zgv; arc=none smtp.client-ip=46.105.35.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orca.pet
-Received: from director2.derp.mail-out.ovh.net (director2.derp.mail-out.ovh.net [79.137.60.36])
-	by mo533.mail-out.ovh.net (Postfix) with ESMTPS id 4c6zpG2kb8z5x0H;
-	Thu, 21 Aug 2025 10:19:50 +0000 (UTC)
-Received: from director2.derp.mail-out.ovh.net (director2.derp.mail-out.ovh.net. [127.0.0.1])
-        by director2.derp.mail-out.ovh.net (inspect_sender_mail_agent) with SMTP
-        for <brgl@bgdev.pl>; Thu, 21 Aug 2025 10:19:50 +0000 (UTC)
-Received: from mta7.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.109.254.198])
-	by director2.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4c6zpG1Z2nz1xnd;
-	Thu, 21 Aug 2025 10:19:50 +0000 (UTC)
-Received: from orca.pet (unknown [10.1.6.9])
-	by mta7.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTPSA id 23DE0B832BF;
-	Thu, 21 Aug 2025 10:19:49 +0000 (UTC)
-Authentication-Results:garm.ovh; auth=pass (GARM-97G0025494fe06-fc45-4a28-81e9-f834ace860e6,
-                    684E78C7C579463DAB27E2CA1F9C4E28A39E1181) smtp.auth=marcos@orca.pet
-X-OVh-ClientIp:147.156.42.5
-From: Marcos Del Sol Vives <marcos@orca.pet>
-To: linux-kernel@vger.kernel.org
-Cc: Marcos Del Sol Vives <marcos@orca.pet>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Michael Walle <mwalle@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-gpio@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH v3 3/3] mfd: vortex: implement new driver for Vortex southbridges
-Date: Thu, 21 Aug 2025 12:18:59 +0200
-Message-Id: <20250821101902.626329-4-marcos@orca.pet>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250821101902.626329-1-marcos@orca.pet>
-References: <20250821101902.626329-1-marcos@orca.pet>
+	s=arc-20240116; t=1755775638; c=relaxed/simple;
+	bh=2iuhQehcGJ/STLL1wVwziWidGXccPhxvPLuOUY7+u3Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rBFq+GxtyaD5j3GPfqHxCzHtLTzqboDA17h9Pm0xvdp73lRiZgf/zB4KfJ9pxpHNMr/4+QTXOBmf1VKOZoJUqDrFvg1UQqsbYqSL1dVrL5NcoiORmKJQqh9pp94PBZdiRokfw2e+LkfFIRUarlqgpY85pn2FNOw7uLvrfgc25Y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ACKT920q; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-55ce510e769so839650e87.1
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Aug 2025 04:27:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1755775635; x=1756380435; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2iuhQehcGJ/STLL1wVwziWidGXccPhxvPLuOUY7+u3Q=;
+        b=ACKT920qQiAd6VgrDZoeSP9T5ju8bLYhTZQVbegXxugi68H7x9K3HNxnB5qfatoho4
+         9Uc9HqfLTeBngZRWRYZNufcm3st5bEqU/cHCxcCzzPq5L6DtN6mJQzFgIkZhwgWXso6/
+         Qfg1ovAePCbYdYQZaZF3P0qV/OJRad1WDvDvW3RyPRMn/hp2t99np+dyIuNTFvhqE5+v
+         yXijG82JAdK03KNicdw9RJ81ebZZISm9FJHBX/bwifACDlANFkqL14TDECxWHzClSek3
+         8Avha6w1N5awtfvIb/pU39z1/rxaqrC2ROkbTiv8rojq7XbM0u5lqxAGPEy1DU4B1CUZ
+         foxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755775635; x=1756380435;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2iuhQehcGJ/STLL1wVwziWidGXccPhxvPLuOUY7+u3Q=;
+        b=paoJKGYbnl+hMjUsmrgfv/QgPJovx2GXhL7wQwQR+x/gLT7t3Cz0UW0I5mpLvRJZhp
+         EbrSkfxFR5IkIwGqsx5yHVYnYfBFRS51aDfIAXBduN6Fp9pGm6DsaNp1+GoLQdF7XtM4
+         xwinC4ESVDMzP6QluyrIYy/aBTB8Vu8mky1/4qo+wDcEZHPnCP86oKZ5LwzJ10y+qf+s
+         6DRFAPbQqmlgyZV8Rge7bTzZLE5cJPO/4vbNFT3QQ4lgcFh8ogqE3aT/QS30S6C3qsMv
+         2bGJFMX0BPrCYF46XVgeaNkSjCPdJaVmnQJ3puwtqWjSsGRGkkZEntzooDx0ADRYTDph
+         7S0w==
+X-Forwarded-Encrypted: i=1; AJvYcCVaqNQ6Yrq4sN9DNWd3W//08Yj/MjjpMGfWfFTfaY34/g5PRNWUMIM6vYcw08ywyMWnD1nNlodjt35p@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNMbc8dJI9IqGtXpkfpciuRhH2lFGhgxfSaZZlsMCJa890JQ3z
+	ebAOEY1A+gfpxalUuHh8pmHLGIsq/XIkuIhpFVR9Wsbe9J+XAojAiWyJfE7kPsuDF7uH819Gxxl
+	gYwJwwpYbv0MqfdE++y99O2iDGcxMm5pPc+tTZw9Z4g==
+X-Gm-Gg: ASbGncv2P8jzL3QdeEBvvZvbn8pNu8zlU0HUdiNxsxsYfGKGh4VZc+LtIq118F9OsGz
+	TD5xqOsU8+Q5ca2Cs/KWG+fBxfKmytKOuOJloBQWp1MGQU8Q+8zAJ0mDO4MH62lyEWPKXhWtMVJ
+	BLhxghm+2eXqypZ59g1PhfIt7GJCHaWRAFEg8U5UWB6IyDrUABN0a7qYYXqXtVGlXlO/P0LndVM
+	xJvLH8=
+X-Google-Smtp-Source: AGHT+IHfxoqcChsLfygBUpUWn2PCNNKaUpVfkw0VSrAeJy75AQZfqbB6MGhf72lV5Y0Gxx16LXjumAnruYNQwdN8gFk=
+X-Received: by 2002:a05:6512:2284:b0:553:d702:960c with SMTP id
+ 2adb3069b0e04-55e0d5c59f0mr805985e87.56.1755775635103; Thu, 21 Aug 2025
+ 04:27:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 17493669805666293350
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduiedtleekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrrhgtohhsucffvghlucfuohhlucggihhvvghsuceomhgrrhgtohhssehorhgtrgdrphgvtheqnecuggftrfgrthhtvghrnhepudffudeutdejudeffeeugeehveevgfefiefgueejueejheevtefgtdffvddukeelnecukfhppeduvdejrddtrddtrddupddugeejrdduheeirdegvddrheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepmhgrrhgtohhssehorhgtrgdrphgvthdpnhgspghrtghpthhtohepledprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmfigrlhhlvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepmhgrrhgtohhssehorhgtrgdrphgvthdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdroh
- hrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhg
-DKIM-Signature: a=rsa-sha256; bh=X/42sBBdS5U7O2cvVD41aAwhluwIH1nuwQLgzreoPFM=;
- c=relaxed/relaxed; d=orca.pet; h=From; s=ovhmo-selector-1; t=1755771590;
- v=1;
- b=Xaev/zgvZj+ULtrtrlK/R/tTC2D6mgvOYWpZjKg5b5JK6xFzDWKLG7oR3Rd1GNcubedOEan7
- HHVCVqJDniLBJwdte3hq66CsyHSvmFz1LKUfA3c0VKfhrhhIWUEZjFT+XiobJof9VtH4GhbVYnM
- 0gJGfB/K9NtSQD3DriVbiMfQy1rV4cnxgiHoZPW1/jo2kwcF7fhuZj0A4I+6otH+m/WQSu36Cie
- qAJmT5jjy/JVEh3Yf5doDe5BLx+oQSWzC92g4CnjYqubROTgyw9CVQADkf5YpC5RAIJcb68ufI4
- ypLjuExxIYxw+Rkpgfdbd/vfJhjbmTDHHtfYOq1PHAT5Q==
+References: <20250811163749.47028-2-ziyao@disroot.org> <20250811163749.47028-4-ziyao@disroot.org>
+ <CACRpkdZp8FLrxgkeZ=xzSPgny51iDZ3KRCrxpoSdgF8_=df=KQ@mail.gmail.com> <aKRw1pEUUwd4cQoW@pie>
+In-Reply-To: <aKRw1pEUUwd4cQoW@pie>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 21 Aug 2025 13:27:03 +0200
+X-Gm-Features: Ac12FXx9O5o9dI7NgdWBP_7YslWNrW827bj2s6nLtLSzojwBRCZi2QrMsWTrODw
+Message-ID: <CACRpkdZCs6u6Tyos_ufBoeZ9V+51btEQ2wbPv1GRp5RNGZcUyA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] pinctrl: ls2k0300: Support Loongson 2K0300 SoC
+To: Yao Zi <ziyao@disroot.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This new driver loads resources related to southbridges available in DM&P
-Vortex devices, currently only the GPIO pins.
+On Tue, Aug 19, 2025 at 2:41=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrote:
 
-Signed-off-by: Marcos Del Sol Vives <marcos@orca.pet>
----
- MAINTAINERS             |  1 +
- drivers/mfd/Kconfig     |  9 +++++
- drivers/mfd/Makefile    |  1 +
- drivers/mfd/vortex-sb.c | 81 +++++++++++++++++++++++++++++++++++++++++
- include/linux/pci_ids.h |  1 +
- 5 files changed, 93 insertions(+)
- create mode 100644 drivers/mfd/vortex-sb.c
+> > Which is fine if the pins actually cannot be used for GPIO, but if they
+> > can, and this is just implicit for unconfigured pins ... then add
+> > functions and groups for GPIO.
+>
+> For 2K0300, we want these pins to be able to multiplexed as GPIOs, but
+> since this pinctrl driver could configure nothing for GPIO mode pins, I
+> think it's enough to implement only the gpio_request_enable() callback
+> and do the multiplexing work here, is this correct?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8c3098a39411..bc0c541309dd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -26957,6 +26957,7 @@ VORTEX HARDWARE SUPPORT
- R:	Marcos Del Sol Vives <marcos@orca.pet>
- S:	Maintained
- F:	drivers/gpio/gpio-vortex.c
-+F:	drivers/mfd/vortex-sb.c
- 
- VRF
- M:	David Ahern <dsahern@kernel.org>
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 425c5fba6cb1..fe54bb22687d 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -2008,6 +2008,15 @@ config MFD_VX855
- 	  VIA VX855/VX875 south bridge. You will need to enable the vx855_spi
- 	  and/or vx855_gpio drivers for this to do anything useful.
- 
-+config MFD_VORTEX_SB
-+	tristate "Vortex southbridge"
-+	select MFD_CORE
-+	depends on PCI
-+	help
-+	  Say yes here if you want to have support for the southbridge
-+	  present on Vortex SoCs. You will need to enable the vortex-gpio
-+	  driver for this to do anything useful.
-+
- config MFD_ARIZONA
- 	select REGMAP
- 	select REGMAP_IRQ
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index f7bdedd5a66d..2504ba311f1a 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -202,6 +202,7 @@ obj-$(CONFIG_MFD_JANZ_CMODIO)	+= janz-cmodio.o
- obj-$(CONFIG_MFD_TPS6586X)	+= tps6586x.o
- obj-$(CONFIG_MFD_VX855)		+= vx855.o
- obj-$(CONFIG_MFD_WL1273_CORE)	+= wl1273-core.o
-+obj-$(CONFIG_MFD_VORTEX_SB)	+= vortex-sb.o
- 
- si476x-core-y := si476x-cmd.o si476x-prop.o si476x-i2c.o
- obj-$(CONFIG_MFD_SI476X_CORE)	+= si476x-core.o
-diff --git a/drivers/mfd/vortex-sb.c b/drivers/mfd/vortex-sb.c
-new file mode 100644
-index 000000000000..ef9bbe2d3870
---- /dev/null
-+++ b/drivers/mfd/vortex-sb.c
-@@ -0,0 +1,81 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ *  MFD southbridge driver for Vortex SoCs
-+ *
-+ *  Author: Marcos Del Sol Vives <marcos@orca.pet>
-+ *
-+ *  Based on the RDC321x MFD driver by Florian Fainelli and Bernhard Loos
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/pci.h>
-+#include <linux/mfd/core.h>
-+
-+static const struct resource vortex_gpio_resources[] = {
-+	{
-+		.name	= "dat",
-+		.start	= 0x78,
-+		.end	= 0x7C,
-+		.flags	= IORESOURCE_IO,
-+	}, {
-+		.name	= "dir",
-+		.start	= 0x98,
-+		.end	= 0x9C,
-+		.flags	= IORESOURCE_IO,
-+	}
-+};
-+
-+static const struct mfd_cell vortex_sb_cells[] = {
-+	{
-+		.name		= "vortex-gpio",
-+		.resources	= vortex_gpio_resources,
-+		.num_resources	= ARRAY_SIZE(vortex_gpio_resources),
-+	},
-+};
-+
-+static int vortex_sb_probe(struct pci_dev *pdev,
-+					const struct pci_device_id *ent)
-+{
-+	int err;
-+
-+	/*
-+	 * In the Vortex86DX3, the southbridge appears twice (on both 00:07.0
-+	 * and 00:07.1). Register only once for .0.
-+	 *
-+	 * Other Vortex boards (eg Vortex86MX+) have the southbridge exposed
-+	 * only once, also at 00:07.0.
-+	 */
-+	if (PCI_FUNC(pdev->devfn) != 0)
-+		return -ENODEV;
-+
-+	err = pci_enable_device(pdev);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to enable device\n");
-+		return err;
-+	}
-+
-+	return devm_mfd_add_devices(&pdev->dev, -1,
-+				    vortex_sb_cells,
-+				    ARRAY_SIZE(vortex_sb_cells),
-+				    NULL, 0, NULL);
-+}
-+
-+static const struct pci_device_id vortex_sb_table[] = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_RDC, PCI_DEVICE_ID_RDC_R6035) },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(pci, vortex_sb_table);
-+
-+static struct pci_driver vortex_sb_driver = {
-+	.name		= "vortex-sb",
-+	.id_table	= vortex_sb_table,
-+	.probe		= vortex_sb_probe,
-+};
-+
-+module_pci_driver(vortex_sb_driver);
-+
-+MODULE_AUTHOR("Marcos Del Sol Vives <marcos@orca.pet>");
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("Vortex MFD southbridge driver");
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 92ffc4373f6d..2ff8a593ef72 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2412,6 +2412,7 @@
- #define PCI_VENDOR_ID_RDC		0x17f3
- #define PCI_DEVICE_ID_RDC_R6020		0x6020
- #define PCI_DEVICE_ID_RDC_R6030		0x6030
-+#define PCI_DEVICE_ID_RDC_R6035		0x6035
- #define PCI_DEVICE_ID_RDC_R6040		0x6040
- #define PCI_DEVICE_ID_RDC_R6060		0x6060
- #define PCI_DEVICE_ID_RDC_R6061		0x6061
--- 
-2.34.1
+Yes that is the quick and elegant solution.
 
+> I originally thought it's okay to multiplex pins as GPIO with an usual
+> pinctrl configuration, and didn't realize that it causes conflicts on
+> strict controllers since the pin will be claimed by both pincontroller
+> and GPIO controller. Thanks for the reminder.
+
+This is true as well, some drivers use an explicit "gpio" function
+and for these the the new .function_is_gpio() callback is especially
+helpful.
+
+I think it is helpful if you're using the callbacks too (we can
+determine if we're already in GPIO mode) but it's not necessary.
+
+Yours,
+Linus Walleij
 
