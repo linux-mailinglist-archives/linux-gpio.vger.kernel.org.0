@@ -1,38 +1,38 @@
-Return-Path: <linux-gpio+bounces-24686-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24687-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 336EDB2E991
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 02:45:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C57BB2E999
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 02:46:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 194D95C6B72
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 00:45:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0955C684A9C
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 00:45:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEC371DE8AE;
-	Thu, 21 Aug 2025 00:45:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3ECE21EBFE0;
+	Thu, 21 Aug 2025 00:45:48 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B60941DC994;
-	Thu, 21 Aug 2025 00:45:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE57F1B423B;
+	Thu, 21 Aug 2025 00:45:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755737145; cv=none; b=A2PBi3TGUPBSG/wpd2qjv/eEXvQJvSg+bewCl1QBMMpM+w39RKX+dTLdJ63bX+K7GkWgPGqkYk4rasVynWEGdu1iu1M7wyp65AkN8aDQoaoWSHxTWEXSUSAgs5Df4YuBIDSl2kEyfhzphoPq0bJwDDpp7SdxvxqXkrBGc4yEFag=
+	t=1755737148; cv=none; b=KDDk5uRiByVQANn1sAzSUatrrZh91cWqBw5Cw6r2kO9sikH74rJNcGSJHgd+X+KHsSbgPQNsdT0fMBAN9AMgXQdSodSYsdaSgfdZHZZboI3c1i5SoQ5noP8dCpsXeF5UeWajGGkuw42k/+DPCjaCBpclNUaG/ergLrg8lvYaEXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755737145; c=relaxed/simple;
-	bh=RWJbcsaeOZX5+LDa+6pKeYlpDQCedi13K2STgXejWDI=;
+	s=arc-20240116; t=1755737148; c=relaxed/simple;
+	bh=wxF/6Rkpb3pvDeo7XWheFsiK5l3eVk5Hji6O6zRbCCc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KOkohAh/wzsGmDJe6Wd2H3sCykoC3uJaeBYo7CgLTxAcmQ09AUcDqD9nE8Y7oHeb/sbWPKBE+IdRg7HvhWpGUs9RlfEZMUCdk/zDt7PCK72OoDO8GLJccCucNQ0nhhArgKfwsErng/iWbP3Yx+qGZfHdmi6Z6Qn6XmOSjsAq5bI=
+	 MIME-Version; b=EZ/K7aQAaqWMtQdjUqNpbW0Mb3fvYPtiGcuFaDOkHRKbaw8g+wJGV+nl15d1ry152Qpb0dTqP9WnGqAdn/XIGvu9VsQHQJS2eTirYJkq1XFEJq0Ax+I4x9Kwh+3dV/eGx6kkRmPYSvcQktPzib2val+6kQCiPTUUBFl28z15UnA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DFC8C1F37;
-	Wed, 20 Aug 2025 17:45:34 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 282002437;
+	Wed, 20 Aug 2025 17:45:37 -0700 (PDT)
 Received: from localhost.localdomain (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2996A3F63F;
-	Wed, 20 Aug 2025 17:45:41 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 681993F63F;
+	Wed, 20 Aug 2025 17:45:43 -0700 (PDT)
 From: Andre Przywara <andre.przywara@arm.com>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Chen-Yu Tsai <wens@csie.org>,
@@ -46,9 +46,9 @@ Cc: Rob Herring <robh@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-sunxi@lists.linux.dev
-Subject: [RFC PATCH 1/9] pinctrl: sunxi: rename SUNXI_PINCTRL_NEW_REG_LAYOUT
-Date: Thu, 21 Aug 2025 01:42:24 +0100
-Message-ID: <20250821004232.8134-2-andre.przywara@arm.com>
+Subject: [RFC PATCH 2/9] pinctrl: sunxi: pass down flags to pinctrl routines
+Date: Thu, 21 Aug 2025 01:42:25 +0100
+Message-ID: <20250821004232.8134-3-andre.przywara@arm.com>
 X-Mailer: git-send-email 2.46.3
 In-Reply-To: <20250821004232.8134-1-andre.przywara@arm.com>
 References: <20250821004232.8134-1-andre.przywara@arm.com>
@@ -60,92 +60,132 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-After keeping the pinctrl IP mostly register compatible for almost a
-decade, in 2021 Allwinner introduced some changes to the register
-layout, which made us use a flag called SUNXI_PINCTRL_NEW_REG_LAYOUT.
-Now with their latest SoC (A733), Allwinner changed the pinctrl IP
-again, so "NEW" isn't really a fitting name anymore.
+Recent changes in the Allwinner pinctrl/GPIO IP made us add some quirks,
+which the new SoCs (A523 family) need to use. We now have a comfortable
+"flags" field on the per-SoC setup side, to tag those quirks we need, but
+were translating those flag bits into specific fields for runtime use, in
+the init routine.
+Now the newest Allwinner GPIO IP adds even more quirks and exceptions,
+some of a boolean nature.
+To avoid inventing various new boolean flags for the runtime struct
+sunxi_pinctrl, let's just directly pass on the flags variable used by the
+setup code, so runtime can check for those various quirk bits directly.
 
-Rename the symbol to SUNXI_PINCTRL_NCAT2_REG_LAYOUT, with "NCAT2" being
-a name often used in vendor source code to signify this "new" generation
-of SoCs.
+Rename the "variant" member to "flags", and directly copy the value from
+the setup code into there. Move the variant masking from the init
+routine to the functions which actually use the "variant" value.
 
-Just a rename of the symbol, no actual code changes.
+This mostly paves the way for the new A733 IP generation, which needs
+more quirks to be checked at runtime.
 
 Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 ---
- drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c     | 2 +-
- drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c | 2 +-
- drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c   | 2 +-
- drivers/pinctrl/sunxi/pinctrl-sunxi.c         | 2 +-
- drivers/pinctrl/sunxi/pinctrl-sunxi.h         | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c | 19 +++++++++++--------
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h |  2 +-
+ 2 files changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c b/drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c
-index 8efe35b77af4d..37a60e5d1163b 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c
-@@ -821,7 +821,7 @@ static const struct sunxi_pinctrl_desc d1_pinctrl_data = {
- static int d1_pinctrl_probe(struct platform_device *pdev)
- {
- 	return sunxi_pinctrl_init_with_flags(pdev, &d1_pinctrl_data,
--					     SUNXI_PINCTRL_NEW_REG_LAYOUT);
-+					     SUNXI_PINCTRL_NCAT2_REG_LAYOUT);
- }
- 
- static const struct of_device_id d1_pinctrl_match[] = {
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c b/drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c
-index 69cd2b4ebd7d7..86a12bce0e335 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c
-@@ -36,7 +36,7 @@ static int a523_r_pinctrl_probe(struct platform_device *pdev)
- 	return sunxi_pinctrl_dt_table_init(pdev, a523_r_nr_bank_pins,
- 					   a523_r_irq_bank_muxes,
- 					   &a523_r_pinctrl_data,
--					   SUNXI_PINCTRL_NEW_REG_LAYOUT);
-+					   SUNXI_PINCTRL_NCAT2_REG_LAYOUT);
- }
- 
- static const struct of_device_id a523_r_pinctrl_match[] = {
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c b/drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c
-index 7d2308c37d29e..0f703cacfe5e3 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c
-@@ -35,7 +35,7 @@ static int a523_pinctrl_probe(struct platform_device *pdev)
- 	return sunxi_pinctrl_dt_table_init(pdev, a523_nr_bank_pins,
- 					   a523_irq_bank_muxes,
- 					   &a523_pinctrl_data,
--					   SUNXI_PINCTRL_NEW_REG_LAYOUT |
-+					   SUNXI_PINCTRL_NCAT2_REG_LAYOUT |
- 					   SUNXI_PINCTRL_ELEVEN_BANKS);
- }
- 
 diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index 0fb057a07dccb..0a5acbd978da9 100644
+index 0a5acbd978da9..a5e390c7ba0ba 100644
 --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
 +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -1521,7 +1521,7 @@ int sunxi_pinctrl_init_with_flags(struct platform_device *pdev,
+@@ -157,6 +157,7 @@ sunxi_pinctrl_desc_find_function_by_name(struct sunxi_pinctrl *pctl,
+ 					 const char *pin_name,
+ 					 const char *func_name)
+ {
++	unsigned long variant = pctl->flags & SUNXI_PINCTRL_VARIANT_MASK;
+ 	int i;
+ 
+ 	for (i = 0; i < pctl->desc->npins; i++) {
+@@ -168,7 +169,7 @@ sunxi_pinctrl_desc_find_function_by_name(struct sunxi_pinctrl *pctl,
+ 			while (func->name) {
+ 				if (!strcmp(func->name, func_name) &&
+ 					(!func->variant ||
+-					func->variant & pctl->variant))
++					func->variant & variant))
+ 					return func;
+ 
+ 				func++;
+@@ -1288,6 +1289,7 @@ static int sunxi_pinctrl_add_function(struct sunxi_pinctrl *pctl,
+ static int sunxi_pinctrl_build_state(struct platform_device *pdev)
+ {
+ 	struct sunxi_pinctrl *pctl = platform_get_drvdata(pdev);
++	unsigned long variant = pctl->flags & SUNXI_PINCTRL_VARIANT_MASK;
+ 	void *ptr;
+ 	int i;
+ 
+@@ -1312,7 +1314,7 @@ static int sunxi_pinctrl_build_state(struct platform_device *pdev)
+ 		const struct sunxi_desc_pin *pin = pctl->desc->pins + i;
+ 		struct sunxi_pinctrl_group *group = pctl->groups + pctl->ngroups;
+ 
+-		if (pin->variant && !(pctl->variant & pin->variant))
++		if (pin->variant && !(variant & pin->variant))
+ 			continue;
+ 
+ 		group->name = pin->pin.name;
+@@ -1339,11 +1341,11 @@ static int sunxi_pinctrl_build_state(struct platform_device *pdev)
+ 		const struct sunxi_desc_pin *pin = pctl->desc->pins + i;
+ 		struct sunxi_desc_function *func;
+ 
+-		if (pin->variant && !(pctl->variant & pin->variant))
++		if (pin->variant && !(variant & pin->variant))
+ 			continue;
+ 
+ 		for (func = pin->functions; func->name; func++) {
+-			if (func->variant && !(pctl->variant & func->variant))
++			if (func->variant && !(variant & func->variant))
+ 				continue;
+ 
+ 			/* Create interrupt mapping while we're at it */
+@@ -1371,14 +1373,14 @@ static int sunxi_pinctrl_build_state(struct platform_device *pdev)
+ 		const struct sunxi_desc_pin *pin = pctl->desc->pins + i;
+ 		struct sunxi_desc_function *func;
+ 
+-		if (pin->variant && !(pctl->variant & pin->variant))
++		if (pin->variant && !(variant & pin->variant))
+ 			continue;
+ 
+ 		for (func = pin->functions; func->name; func++) {
+ 			struct sunxi_pinctrl_function *func_item;
+ 			const char **func_grp;
+ 
+-			if (func->variant && !(pctl->variant & func->variant))
++			if (func->variant && !(variant & func->variant))
+ 				continue;
+ 
+ 			func_item = sunxi_pinctrl_find_function_by_name(pctl,
+@@ -1520,7 +1522,7 @@ int sunxi_pinctrl_init_with_flags(struct platform_device *pdev,
+ 
  	pctl->dev = &pdev->dev;
  	pctl->desc = desc;
- 	pctl->variant = flags & SUNXI_PINCTRL_VARIANT_MASK;
--	if (flags & SUNXI_PINCTRL_NEW_REG_LAYOUT) {
-+	if (flags & SUNXI_PINCTRL_NCAT2_REG_LAYOUT) {
+-	pctl->variant = flags & SUNXI_PINCTRL_VARIANT_MASK;
++	pctl->flags = flags;
+ 	if (flags & SUNXI_PINCTRL_NCAT2_REG_LAYOUT) {
  		pctl->bank_mem_size = D1_BANK_MEM_SIZE;
  		pctl->pull_regs_offset = D1_PULL_REGS_OFFSET;
- 		pctl->dlevel_field_width = D1_DLEVEL_FIELD_WIDTH;
+@@ -1556,8 +1558,9 @@ int sunxi_pinctrl_init_with_flags(struct platform_device *pdev,
+ 
+ 	for (i = 0, pin_idx = 0; i < pctl->desc->npins; i++) {
+ 		const struct sunxi_desc_pin *pin = pctl->desc->pins + i;
++		unsigned long variant = pctl->flags & SUNXI_PINCTRL_VARIANT_MASK;
+ 
+-		if (pin->variant && !(pctl->variant & pin->variant))
++		if (pin->variant && !(variant & pin->variant))
+ 			continue;
+ 
+ 		pins[pin_idx++] = pin->pin;
 diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-index ad26e4de16a85..fb17fae2dab69 100644
+index fb17fae2dab69..77a08ccde095a 100644
 --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
 +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-@@ -88,7 +88,7 @@
- #define SUN4I_FUNC_IRQ		6
- 
- #define SUNXI_PINCTRL_VARIANT_MASK	GENMASK(7, 0)
--#define SUNXI_PINCTRL_NEW_REG_LAYOUT	BIT(8)
-+#define SUNXI_PINCTRL_NCAT2_REG_LAYOUT	BIT(8)
- #define SUNXI_PINCTRL_PORTF_SWITCH	BIT(9)
- #define SUNXI_PINCTRL_ELEVEN_BANKS	BIT(10)
- 
+@@ -174,7 +174,7 @@ struct sunxi_pinctrl {
+ 	unsigned			*irq_array;
+ 	raw_spinlock_t			lock;
+ 	struct pinctrl_dev		*pctl_dev;
+-	unsigned long			variant;
++	unsigned long			flags;
+ 	u32				bank_mem_size;
+ 	u32				pull_regs_offset;
+ 	u32				dlevel_field_width;
 -- 
 2.46.3
 
