@@ -1,138 +1,119 @@
-Return-Path: <linux-gpio+bounces-24763-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24766-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6607B30057
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 18:45:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52B71B300AF
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 19:03:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B57E6058D0
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 16:40:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 24C7E3B3698
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 17:02:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAD0E2E0B55;
-	Thu, 21 Aug 2025 16:40:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 707312FB600;
+	Thu, 21 Aug 2025 17:02:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SfZORVhp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OL94fan1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383352652A4
-	for <linux-gpio@vger.kernel.org>; Thu, 21 Aug 2025 16:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242AE1E8333;
+	Thu, 21 Aug 2025 17:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755794419; cv=none; b=IYma8FSrNdMfFY8SlCa01euf159tKCHksN6wZm/PimsCra2Jro8PKpB1Zfkkbxd738+FZnHAlJnaoCsXENv269t0zx6lg0VgxamkqB7eA2d9I1sfXZWD/4w9gH6+eOLB3WXUAYM4L3994imZJB8+cJgWLNVbSI04JuoYJFS8A3A=
+	t=1755795733; cv=none; b=MbeFUDXWRrgBoLmPHHU162CWKcLk7qs9yWWMGQ9Nx89pRF5XnH69Eodqxg6IUI4rcW18iffJNiAiPP+WVsH+vD8Dw4nAwo+M0Klar1Gmhparpw1w0rvga9vm8DlaUvIBOm5hYktcoqA9+n7KRcGZqUbfGcavQ+d1hbT4X5VBctg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755794419; c=relaxed/simple;
-	bh=bWToChmulvqXhXQ3tZmq2PQ/BsSS4AKAT1CG+kjy9kg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V99bQTLU5/2bs2WrMa9zcozc4zO57wqMwD2IwTdHzodkuKS4HA9XFu0E0iO+bt7NCf43l+fqt/3V9qZOIL9xmtV/4DmmOEVW9qOWB5+9eCKeW9GbAEiEioFiMKeqrMCvblzm9nITzlaYW82QQlEuy+ciPxL4JaXNcRj3Zc0sXFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SfZORVhp; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-333f92f1911so8980371fa.3
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Aug 2025 09:40:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1755794415; x=1756399215; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yx1YB+H5vIBLE5Fa31BDROcSz+EhcXywiHr57dkWwUg=;
-        b=SfZORVhpkjTW4oS8FKOVi2MZKA350JKg/njDau6dy7FMm+HXGas+4T6SSK42j3Dn/S
-         DtJSmsB1TotEuJep4BE73zcvcAiW1uWb+CE9uOO9Nl3mOChDam0m8NsXSsdZUAKAwRP2
-         yFto/p7JMNpBfAqa09uGAKKt15c2mgD6APHTsQbVYHkdTh+OT9CdETf7sKyWYbWGtjD6
-         MLpzzSlB3zXQzwgcoWvB69AOgdAhSZxUHeV6Q8Gbp2OgKOiN8nhOrTA2jU07YVk/ppOm
-         URBMpAQkizCEk63kY0b/ajbx0DzTmysLzxYMQZhwB7GzuZxikijOsgx61uqzmTWiOrT4
-         zNmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755794415; x=1756399215;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yx1YB+H5vIBLE5Fa31BDROcSz+EhcXywiHr57dkWwUg=;
-        b=DVAB+cHEPW/kb2yL9fzgbIPXcwOd/dw3HnrFUTW63ASioybXa8TB/U0UrRSkHvUlC3
-         UV/dtVkdqL6isjzvu9/+kvUDt7HxYM9Y1e+R4CtLHDaAJuh/zoG+NPgRaNW8qusO+DLe
-         +hYvFGfQ3TymLYrXOeNMC0PF6lPRLomsKIM7DgfkK6EbL4YZUGKA9IMqxxElKr6XmSp1
-         lZzUkK3Xv4vkIyea5qFP1u7doqwuWNJZQm7jKrEvF6KijwQiQq2hbaybxNdD2oI6r8r2
-         H/P9UW/i2TC6nq4m9O2KIuYEzBel+uHtzO+lpMz3kt81wygAaS38P1Hk2I2mO/Pw8uRh
-         H3Mw==
-X-Forwarded-Encrypted: i=1; AJvYcCXaAfSEb/bsKAoc83PJFYvbYLLRsYsyaKOWNEWAtNhPQDU//KyefEyvqprgG58Re3lkDCgyfAlYeybu@vger.kernel.org
-X-Gm-Message-State: AOJu0YztBg4Ilkwvmd87LS5Tw6BaCOIhiLmiacHId7TuiT4RoKnEm+WG
-	wJD3FypgvKXEHZBsbSHSLw8nwWVh8XCiuwtdK+J2X3lfkBKTJvDj7N0g7x4qHJ5sfkSUyjLuByH
-	psgTcd4xxkK/iY5P9dGCDA/ZXO7tTNbVpeEm7vqlf6A==
-X-Gm-Gg: ASbGncs917LB355qOhYsbaiH3qmkx0qAoAHmD6+EwmSC+UrZ120Tl0d2yeDLyuIie2e
-	6qt8dFJoywxmU7daRG+rr022e5Lumm0rCpgVwsrfIen5gMTqdvvdCUFin368j4/VJ6NR5itQSWd
-	Z7/oFDatdsUrhIVv63IJRgwnl1/ZTfIYx8bNNOJo647lT34siu9zmos5lel5Leq8XuipbKcizKy
-	WVNPP8=
-X-Google-Smtp-Source: AGHT+IGaa75dN6Rx278wUEX3vwaOHBSmC/o+BxgTE6DohI8t+fuAqLankM4CZ/lh4NJ65YBKsYCdp0dxIlotQyWrgII=
-X-Received: by 2002:a05:651c:410a:b0:332:3691:a50b with SMTP id
- 38308e7fff4ca-33549fadb22mr8983421fa.33.1755794415305; Thu, 21 Aug 2025
- 09:40:15 -0700 (PDT)
+	s=arc-20240116; t=1755795733; c=relaxed/simple;
+	bh=QlyP+EybHdG/BjvDs4e1GOTfEiPxKwv1SmW3xs+WcNU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PMNqmwDKNSiMv1wsR6lcHVsV1XMQfG9w2zwmX/hl833HI8oChYm7Pk5CNy/+pYeS8Czb1Cd1jmdXfWC3bpSSeJAyqDcky2CU2mzpYSalmezhwrIGFrhOyBi4R/4i/3k/DJHvnon1nOyAcwTVhs5/XAMGrwKNE9zmJHAO6hJ2U9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OL94fan1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77F21C4CEEB;
+	Thu, 21 Aug 2025 17:02:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755795732;
+	bh=QlyP+EybHdG/BjvDs4e1GOTfEiPxKwv1SmW3xs+WcNU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OL94fan15xuckPr35axKla7h8MZtGA8yIcVd+buWXzAQSG05oIGUBiqEBb53XRhle
+	 JmeFYsuGXJGOunPKsS1Lbfbr70a40ig3+CNUml+LCM4CLjRStOkv9+PzortwXBztYv
+	 RkypUQ7qLmOuK0P5rdvLNOi1hBU/5yZ+GdWob8NfDtHKYfXYdCVz9UH0/XTolmBFCh
+	 kZoIzbEGtG9kun8xTlL20/iCNyBFn13AtJsXb/uF+eLHMoMU+MHvFu8nOb9qMCU/zR
+	 RqEipU7pPALnBOKvCOhPuQVSUaCq7k2Miy1P5EUFNH+taITrJVdEsun71ru50sR1kH
+	 9W8Udw2mBmj2A==
+Date: Fri, 22 Aug 2025 00:44:54 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Michael =?utf-8?B?QsO8c2No?= <mb@bues.ch>,
+	Doug Berger <opendmb@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Michael Buesch <m@bues.ch>,
+	Hoan Tran <hoan@os.amperecomputing.com>,
+	Andy Shevchenko <andy@kernel.org>, Daniel Palmer <daniel@thingy.jp>,
+	Romain Perier <romain.perier@gmail.com>,
+	Grygorii Strashko <grygorii.strashko@ti.com>,
+	Santosh Shilimkar <ssantosh@kernel.org>,
+	Kevin Hilman <khilman@kernel.org>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+	Srinivas Neeli <srinivas.neeli@amd.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux@ew.tq-group.com
+Subject: Re: [PATCH 01/16] gpio: dwapb: Use modern PM macros
+Message-ID: <aKdNBhpNofchexgb@xhacker>
+References: <20250820154037.22228-1-jszhang@kernel.org>
+ <20250820154037.22228-2-jszhang@kernel.org>
+ <CAHp75VfxSBPzvohrW4tywd4VS0r1_mp8WLvdKcN_yn=zNS49HQ@mail.gmail.com>
+ <20250820191039.4f8af41e@barney>
+ <CAHp75Vdpgf3DUMQw0mYqhG=9UrYG8KWrobbd387QZapBor_LHg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250821101902.626329-1-marcos@orca.pet> <20250821101902.626329-2-marcos@orca.pet>
-In-Reply-To: <20250821101902.626329-2-marcos@orca.pet>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 21 Aug 2025 18:40:03 +0200
-X-Gm-Features: Ac12FXyyFo6xbQBksJuTPyJgFgZWaXcr1Hbr8p5teIetyrGwo-JJG1vB3Q4YNjc
-Message-ID: <CACRpkdb7PZTx8WPQP8Jrj_sR8X2ejK3OgA+9v2PUaOcTM4NnrQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] gpio: gpio-regmap: add flags to control some behaviour
-To: Marcos Del Sol Vives <marcos@orca.pet>
-Cc: linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Michael Walle <mwalle@kernel.org>, Lee Jones <lee@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	linux-gpio@vger.kernel.org, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75Vdpgf3DUMQw0mYqhG=9UrYG8KWrobbd387QZapBor_LHg@mail.gmail.com>
 
-On Thu, Aug 21, 2025 at 12:19=E2=80=AFPM Marcos Del Sol Vives <marcos@orca.=
-pet> wrote:
+On Wed, Aug 20, 2025 at 10:04:39PM +0300, Andy Shevchenko wrote:
+> On Wed, Aug 20, 2025 at 8:11 PM Michael Büsch <mb@bues.ch> wrote:
+> >
+> > On Wed, 20 Aug 2025 19:54:44 +0300
+> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> >
+> > > > The dwapb_context structure is always embedded into struct
+> > > > dwapb_gpio_port to simplify code. Sure this brings a tiny 36 bytes
+> > > > data overhead for !CONFIG_PM_SLEP.
+> > >
+> > > I don't think it's a good approach to add a lot of data for peanuts in
+> > > case of PM_SLEEP=n.
+> >
+> > It wastes 36 bytes in case of PM=n.
+> 
+> ...per port.
+> 
+> > The driver currently allocates the struct with kzalloc and stores a pointer to it
+> > in case of PM=y.
+> > So this probably has an overhead in the same order of magnitude (pointer +
+> > malloc overhead/alignment/fragmentation) in case of PM=y now.
+> 
+> ...per driver.
 
->  static int gpio_regmap_direction_output(struct gpio_chip *chip,
->                                         unsigned int offset, int value)
->  {
-> -       gpio_regmap_set(chip, offset, value);
-> +       struct gpio_regmap *gpio =3D gpiochip_get_data(chip);
-> +       int ret;
-> +
-> +       if (gpio->flags & GPIO_REGMAP_DIR_BEFORE_SET) {
-> +               ret =3D gpio_regmap_set_direction(chip, offset, true);
-> +               if (ret)
-> +                       return ret;
-> +
-> +               return gpio_regmap_set(chip, offset, value);
-> +       }
-> +
-> +       ret =3D gpio_regmap_set(chip, offset, value);
-> +       if (ret)
-> +               return ret;
->
->         return gpio_regmap_set_direction(chip, offset, true);
+Before the patch, struct dwapb_context *ctx is also per port.
 
-I guess this looks like this because it is just copied from
-gpio-mmio.c:
+> 
+> So, I can't say it's equal, but I leave this to maintainers to decide,
 
-static int bgpio_simple_dir_out(struct gpio_chip *gc, unsigned int gpio,
-                                int val)
-{
-        gc->set(gc, gpio, val);
-
-        return bgpio_dir_return(gc, gpio, true);
-}
-
-It's hard to know which semantic to employ here, it's one
-way or the other.
-
-I like the new flag.
-
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-You can merge this with the rest of the series.
-
-Yours,
-Linus Walleij
+What in my mind now: this is linux rather than RTOS. After greping the
+the arm/arm64/riscv dts dir, the max port number is 6, the berlin2q
+soc families, so this means current we have wasted 216 bytes memory which
+is trivial compared to the system memory.
 
