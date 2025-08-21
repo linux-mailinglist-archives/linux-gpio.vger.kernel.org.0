@@ -1,62 +1,62 @@
-Return-Path: <linux-gpio+bounces-24741-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24742-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9F9EB2F839
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 14:40:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6974B2F83A
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 14:40:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D3717170817
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 12:40:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4C47EAC30CD
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 12:40:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E999530E0E1;
-	Thu, 21 Aug 2025 12:40:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15A64311966;
+	Thu, 21 Aug 2025 12:40:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="a3KCQnSx"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ReG0FIKt"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56F22E22B8
-	for <linux-gpio@vger.kernel.org>; Thu, 21 Aug 2025 12:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70F8311584
+	for <linux-gpio@vger.kernel.org>; Thu, 21 Aug 2025 12:40:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755780022; cv=none; b=Jp3zmdWmnhoygk9GVj1Qzslzi9cVKDS4+4cTtwaQ5lUTPuJxtMzs07+mzhsS6+I/+DcJ02ki104e7JAUNeSl2uyWkeQ+csTzsbn8TpJnPv4YWH27vfWLwK3jPL8reWi4g2cvMoIx/XdjdFzovd/+KsZ35vck+mj3YxAepIM+qPw=
+	t=1755780025; cv=none; b=SNvworUsg119HwISzbtYYJoWBZEiqH6KDYBUzZuq07Af+3BqskDhQfzWniOviYwYS8PkEf6hVij/aEOCAyzU9jmq94bqdrAYTXGlcnb+mE3yzsK8OPcuWXGJeSwV+3WPSdKWGenSW/kip38qFpbCQcS5MuTPfPEPYvpWwJdI6Q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755780022; c=relaxed/simple;
-	bh=82DYYFSD3CqYTDlbWjJBZXlaFDd1dthPCW2ILUPcqOU=;
+	s=arc-20240116; t=1755780025; c=relaxed/simple;
+	bh=QSaLFUsxqnV4zSWBhlNRmd527uiDU9OMiyDdcj9Hmuo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=YNueJ8yJrAvKQu3CE6h+SVxD5RCjCXBwsm63d7cCLUdyBrnQelE2/frx734+N24BeUeszjxs+qE2OEGqJo18Za9ayOHiateGYQY1ojSH5uaWavScgQ88y5dlMN2Q10ZIkAK8b9POzkLDeztaTqCcteXPJjOSnNMc6EljMHGv3O4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=a3KCQnSx; arc=none smtp.client-ip=203.254.224.24
+	 Content-Type:References; b=Mj9oLEg6teTSWiLPuHbBjWS0NWLq3lQQxcmcUMGkKjZClNJwajOZniw7eCg2iIp2hZ0zLXG5HBCwDsQL0Vo50U/SIkV1UEfDCuTMUV5mWfXjjHiuW9sPpCxnd9a2xyYLvJaLKsflLfKERIlY91XxBqUedwweFlxjGkt4SrbSHFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ReG0FIKt; arc=none smtp.client-ip=203.254.224.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250821124017epoutp01b0c5b4d70e0d895ba8b14a0bdfff6778~dyJ_rkq9y2072220722epoutp01g
-	for <linux-gpio@vger.kernel.org>; Thu, 21 Aug 2025 12:40:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250821124017epoutp01b0c5b4d70e0d895ba8b14a0bdfff6778~dyJ_rkq9y2072220722epoutp01g
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250821124021epoutp029991ee2bdaf021c6a748034a5d5602ea~dyKCXTr680055400554epoutp02U
+	for <linux-gpio@vger.kernel.org>; Thu, 21 Aug 2025 12:40:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250821124021epoutp029991ee2bdaf021c6a748034a5d5602ea~dyKCXTr680055400554epoutp02U
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1755780017;
-	bh=rjvs5YIYigeX5S8OtQBGKC14I/wskjTtDwVHz/NFJLk=;
+	s=mail20170921; t=1755780021;
+	bh=8QWBtSUaDiwZd81zpIOZEM79soPzuEsycWDFA5K456I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=a3KCQnSxdRLGwIqtF64kFn9hVo9I+a/JNFyuc1rixVGBUjhYhxNCeYZ9CZ3RHWOkA
-	 dpojnUBbhdtFYhT9EQMMykrksUMailRz4vlQknWEqnGzjtqB0o/pPZzekBVVyogr50
-	 fJJsxP35vsP8V7te4MAgs/tOhswRER8oTWRBZd2E=
+	b=ReG0FIKt0XhgH0KoHsE91qUcFamJVmFypfGXDs/J02QgeEtLieVNWsmSBbBs5ToG0
+	 8Ja1mgbjuZ0Pu/7SK8RV2PmtblpInc+gskCYxDXs4K+jGib3nyne3FdGT4NZS1u5Dw
+	 jyhQWSfNdYmz75AwQubUTW0bSlzTC5dsKfb3/24c=
 Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250821124016epcas5p1dbce6fcdb5debccef4b219cc53e1cb71~dyJ9kbk0i0508905089epcas5p1e;
-	Thu, 21 Aug 2025 12:40:16 +0000 (GMT)
-Received: from epcas5p4.samsung.com (unknown [182.195.38.92]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4c72wH4xvgz6B9m6; Thu, 21 Aug
-	2025 12:40:15 +0000 (GMT)
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250821124020epcas5p223901bc70cc0897522099fccb67ef463~dyKBgjKhj1511415114epcas5p2q;
+	Thu, 21 Aug 2025 12:40:20 +0000 (GMT)
+Received: from epcas5p1.samsung.com (unknown [182.195.38.87]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4c72wM6bkDz6B9m5; Thu, 21 Aug
+	2025 12:40:19 +0000 (GMT)
 Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250821124014epcas5p12bacab10aac378f8d011fe7d2e04c8fa~dyJ7RtKgX2595625956epcas5p1E;
-	Thu, 21 Aug 2025 12:40:14 +0000 (GMT)
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250821124019epcas5p42ac6e6abe1d3c8c9d69331596e51ad48~dyJ-3g80a1534115341epcas5p4K;
+	Thu, 21 Aug 2025 12:40:19 +0000 (GMT)
 Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
 	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250821124009epsmtip274fefd0605f3013be9921b57f147c42f~dyJ2gSu4O2624826248epsmtip2I;
-	Thu, 21 Aug 2025 12:40:08 +0000 (GMT)
+	20250821124014epsmtip28780a3930fc55af8420cab2eaa3068b8~dyJ7T5f0c2602126021epsmtip2e;
+	Thu, 21 Aug 2025 12:40:14 +0000 (GMT)
 From: Ravi Patel <ravi.patel@samsung.com>
 To: jesper.nilsson@axis.com, mturquette@baylibre.com, sboyd@kernel.org,
 	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, krzk@kernel.org,
@@ -72,11 +72,11 @@ Cc: ksk4725@coasia.com, kenkim@coasia.com, pjsin865@coasia.com,
 	linux-samsung-soc@vger.kernel.org, linux-arm-kernel@axis.com,
 	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-gpio@vger.kernel.org, soc@lists.linux.dev
-Subject: [PATCH v2 00/10] Add support for the Axis ARTPEC-8 SoC
-Date: Thu, 21 Aug 2025 18:02:44 +0530
-Message-ID: <20250821123310.94089-1-ravi.patel@samsung.com>
+Subject: [PATCH v2 01/10] dt-bindings: clock: Add ARTPEC-8 clock controller
+Date: Thu, 21 Aug 2025 18:02:45 +0530
+Message-ID: <20250821123310.94089-2-ravi.patel@samsung.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250710002047.1573841-1-ksk4725@coasia.com>
+In-Reply-To: <20250821123310.94089-1-ravi.patel@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -84,130 +84,437 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250821124014epcas5p12bacab10aac378f8d011fe7d2e04c8fa
+X-CMS-MailID: 20250821124019epcas5p42ac6e6abe1d3c8c9d69331596e51ad48
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 CMS-TYPE: 105P
 cpgsPolicy: CPGSC10-541,Y
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250821124014epcas5p12bacab10aac378f8d011fe7d2e04c8fa
+X-CMS-RootMailID: 20250821124019epcas5p42ac6e6abe1d3c8c9d69331596e51ad48
 References: <20250710002047.1573841-1-ksk4725@coasia.com>
-	<CGME20250821124014epcas5p12bacab10aac378f8d011fe7d2e04c8fa@epcas5p1.samsung.com>
+	<20250821123310.94089-1-ravi.patel@samsung.com>
+	<CGME20250821124019epcas5p42ac6e6abe1d3c8c9d69331596e51ad48@epcas5p4.samsung.com>
 
-Add basic support for the Axis ARTPEC-8 SoC which contains
-quad-core Cortex-A53 CPU and other several IPs. This SoC is an
-Axis-designed chipset used in surveillance camera products such as
-the AXIS Q1656-LE and AXIS Q3538-LVE.
+From: Hakyeong Kim <hgkim05@coasia.com>
 
-This ARTPEC-8 SoC has a variety of Samsung-specific IP blocks and
-Axis-specific IP blocks and SoC is manufactured by Samsung Foundry.
+Add dt-schema for Axis ARTPEC-8 SoC clock controller.
 
-List of Samsung-provided IPs:
-- UART
-- Ethernet (Vendor: Synopsys)
-- SDIO
-- SPI
-- HSI2C
-- I2S
-- CMU (Clock Management Unit)
-- Pinctrl (GPIO)
-- PCIe (Vendor: Synopsys)
-- USB (Vendor: Synopsys)
+The Clock Management Unit (CMU) has a top-level block CMU_CMU
+which generates clocks for other blocks.
 
-List of Axis-provided IPs:
-- VIP (Image Sensor Processing IP)
-- VPP (Video Post Processing)
-- GPU
-- CDC (Video Encoder)
+Add device-tree binding definitions for following CMU blocks:
+- CMU_CMU
+- CMU_BUS
+- CMU_CORE
+- CMU_CPUCL
+- CMU_FSYS
+- CMU_IMEM
+- CMU_PERI
 
-This patch series includes below changes:
-- CMU (Clock Management Unit) driver and its bindings
-- GPIO pinctrl configuration and its bindings
-- Basic Device Tree for ARTPEC-8 SoC and boards
-
-The patch series has been tested on the ARTPEC-8 EVB with
-Linux v6.15-rc5 and intended to be merged via the `arm-soc` tree.
-
+Signed-off-by: Hakyeong Kim <hgkim05@coasia.com>
+Signed-off-by: SeonGu Kang <ksk4725@coasia.com>
+Signed-off-by: Ravi Patel <ravi.patel@samsung.com>
 ---
-Changes in v2:
-- Update SoB sections in all patches
-- Update the copyright year to 2025
-- Add CMU abbreviation description
-- Merge dt-bindings patch 01 and 02 into single patch
-- Modify yaml file to fit coding style in CMU
-- Modify clock-names
-- Reorder config macros to fit coding style
-- Remove the unused macro in clock driver code
-- Squash all clock driver patches (4 to 10) into single patch
-- Split yaml conversion patch translation and add ARTPEC-8 SoC
-- Remove "clock-frequency" property from cpu node in dtsi
-- Remove the "status" property in dts and dtsi
-- Reorder the DTS and pin nodes to follow the alphabetical and DTS coding style
-- Change items property in axis.yaml
-- Move dts files to exynos folder
-- Removed ARCH_ARTPEC8 from platform Kconfig
-- Add pattern in MAINTAINER file
-- Merge dtsi and pinctrl dtsi file
-- Split board dts file
-
-Link to v1: https://lore.kernel.org/all/20250710002047.1573841-1-ksk4725@coasia.com/
-NOTE: The first version has been sent by Coasia.
-      After that, it has been agreed between Coasia and Samsung that Samsung will take
-      ownership of upstreaming ARTPEC-8 and ARTPEC-9 platforms.
----
-
-Hakyeong Kim (3):
-  dt-bindings: clock: Add ARTPEC-8 clock controller
-  clk: samsung: Add clock PLL support for ARTPEC-8 SoC
-  clk: samsung: artpec-8: Add initial clock support for ARTPEC-8 SoC
-
-Ravi Patel (1):
-  dt-bindings: arm: Convert Axis board/soc bindings to json-schema
-
-SeonGu Kang (3):
-  dt-bindings: pinctrl: samsung: Add compatible for ARTPEC-8 SoC
-  pinctrl: samsung: Add ARTPEC-8 SoC specific configuration
-  arm64: dts: axis: Add ARTPEC-8 Grizzly dts support
-
-SungMin Park (3):
-  dt-bindings: arm: axis: Add ARTPEC-8 grizzly board
-  arm64: dts: exynos: axis: Add initial ARTPEC-8 SoC support
-  arm64: defconfig: Enable Axis ARTPEC SoC
-
- .../devicetree/bindings/arm/axis.txt          |   13 -
- .../devicetree/bindings/arm/axis.yaml         |   36 +
- .../bindings/clock/axis,artpec8-clock.yaml    |  213 ++++
- .../bindings/pinctrl/samsung,pinctrl.yaml     |    1 +
- MAINTAINERS                                   |   12 +
- arch/arm64/Kconfig.platforms                  |    7 +
- arch/arm64/boot/dts/exynos/Makefile           |    1 +
- arch/arm64/boot/dts/exynos/axis/Makefile      |    4 +
- .../boot/dts/exynos/axis/artpec-pinctrl.h     |   36 +
- .../boot/dts/exynos/axis/artpec8-grizzly.dts  |   35 +
- .../boot/dts/exynos/axis/artpec8-pinctrl.dtsi |  120 ++
- arch/arm64/boot/dts/exynos/axis/artpec8.dtsi  |  244 ++++
- arch/arm64/configs/defconfig                  |    1 +
- drivers/clk/samsung/Makefile                  |    1 +
- drivers/clk/samsung/clk-artpec8.c             | 1044 +++++++++++++++++
- drivers/clk/samsung/clk-pll.c                 |  128 +-
- drivers/clk/samsung/clk-pll.h                 |    2 +
- .../pinctrl/samsung/pinctrl-exynos-arm64.c    |   50 +
- drivers/pinctrl/samsung/pinctrl-exynos.h      |   10 +
- drivers/pinctrl/samsung/pinctrl-samsung.c     |    2 +
- drivers/pinctrl/samsung/pinctrl-samsung.h     |    1 +
- include/dt-bindings/clock/axis,artpec8-clk.h  |  169 +++
- 22 files changed, 2116 insertions(+), 14 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/axis.txt
- create mode 100644 Documentation/devicetree/bindings/arm/axis.yaml
+ .../bindings/clock/axis,artpec8-clock.yaml    | 213 ++++++++++++++++++
+ include/dt-bindings/clock/axis,artpec8-clk.h  | 169 ++++++++++++++
+ 2 files changed, 382 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/clock/axis,artpec8-clock.yaml
- create mode 100644 arch/arm64/boot/dts/exynos/axis/Makefile
- create mode 100644 arch/arm64/boot/dts/exynos/axis/artpec-pinctrl.h
- create mode 100644 arch/arm64/boot/dts/exynos/axis/artpec8-grizzly.dts
- create mode 100644 arch/arm64/boot/dts/exynos/axis/artpec8-pinctrl.dtsi
- create mode 100644 arch/arm64/boot/dts/exynos/axis/artpec8.dtsi
- create mode 100644 drivers/clk/samsung/clk-artpec8.c
  create mode 100644 include/dt-bindings/clock/axis,artpec8-clk.h
 
+diff --git a/Documentation/devicetree/bindings/clock/axis,artpec8-clock.yaml b/Documentation/devicetree/bindings/clock/axis,artpec8-clock.yaml
+new file mode 100644
+index 000000000000..de923afb8dfe
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/axis,artpec8-clock.yaml
+@@ -0,0 +1,213 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/axis,artpec8-clock.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Axis ARTPEC-8 SoC clock controller
++
++maintainers:
++  - Jesper Nilsson <jesper.nilsson@axis.com>
++
++description: |
++  ARTPEC-8 clock controller is comprised of several CMU (Clock Management Unit)
++  units, generating clocks for different domains. Those CMU units are modeled
++  as separate device tree nodes, and might depend on each other.
++  The root clock in that root tree is an external clock: OSCCLK (25 MHz).
++  This external clock must be defined as a fixed-rate clock in dts.
++
++  CMU_CMU is a top-level CMU, where all base clocks are prepared using PLLs and
++  dividers; all other clocks of function blocks (other CMUs) are usually
++  derived from CMU_CMU.
++
++  Each clock is assigned an identifier and client nodes can use this identifier
++  to specify the clock which they consume. All clocks available for usage
++  in clock consumer nodes are defined as preprocessor macros in
++  'include/dt-bindings/clock/axis,artpec8-clk.h' header.
++
++properties:
++  compatible:
++    enum:
++      - axis,artpec8-cmu-cmu
++      - axis,artpec8-cmu-bus
++      - axis,artpec8-cmu-core
++      - axis,artpec8-cmu-cpucl
++      - axis,artpec8-cmu-fsys
++      - axis,artpec8-cmu-imem
++      - axis,artpec8-cmu-peri
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    maxItems: 5
++
++  clock-names:
++    minItems: 1
++    maxItems: 5
++
++  "#clock-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - "#clock-cells"
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          const: axis,artpec8-cmu-cmu
++
++    then:
++      properties:
++        clocks:
++          items:
++            - description: External reference clock (25 MHz)
++
++        clock-names:
++          items:
++            - const: fin_pll
++
++  - if:
++      properties:
++        compatible:
++          const: axis,artpec8-cmu-bus
++
++    then:
++      properties:
++        clocks:
++          items:
++            - description: External reference clock (25 MHz)
++            - description: CMU_BUS BUS clock (from CMU_CMU)
++            - description: CMU_BUS DLP clock (from CMU_CMU)
++
++        clock-names:
++          items:
++            - const: fin_pll
++            - const: bus
++            - const: dlp
++
++  - if:
++      properties:
++        compatible:
++          const: axis,artpec8-cmu-core
++
++    then:
++      properties:
++        clocks:
++          items:
++            - description: External reference clock (25 MHz)
++            - description: CMU_CORE main clock (from CMU_CMU)
++            - description: CMU_CORE DLP clock (from CMU_CMU)
++
++        clock-names:
++          items:
++            - const: fin_pll
++            - const: main
++            - const: dlp
++
++  - if:
++      properties:
++        compatible:
++          const: axis,artpec8-cmu-cpucl
++
++    then:
++      properties:
++        clocks:
++          items:
++            - description: External reference clock (25 MHz)
++            - description: CMU_CPUCL switch clock (from CMU_CMU)
++
++        clock-names:
++          items:
++            - const: fin_pll
++            - const: switch
++
++  - if:
++      properties:
++        compatible:
++          const: axis,artpec8-cmu-fsys
++
++    then:
++      properties:
++        clocks:
++          items:
++            - description: External reference clock (25 MHz)
++            - description: CMU_FSYS SCAN0 clock (from CMU_CMU)
++            - description: CMU_FSYS SCAN1 clock (from CMU_CMU)
++            - description: CMU_FSYS BUS clock (from CMU_CMU)
++            - description: CMU_FSYS IP clock (from CMU_CMU)
++
++        clock-names:
++          items:
++            - const: fin_pll
++            - const: scan0
++            - const: scan1
++            - const: bus
++            - const: ip
++
++  - if:
++      properties:
++        compatible:
++          const: axis,artpec8-cmu-imem
++
++    then:
++      properties:
++        clocks:
++          items:
++            - description: External reference clock (25 MHz)
++            - description: CMU_IMEM ACLK clock (from CMU_CMU)
++            - description: CMU_IMEM JPEG clock (from CMU_CMU)
++
++        clock-names:
++          items:
++            - const: fin_pll
++            - const: aclk
++            - const: jpeg
++
++  - if:
++      properties:
++        compatible:
++          const: axis,artpec8-cmu-peri
++
++    then:
++      properties:
++        clocks:
++          items:
++            - description: External reference clock (25 MHz)
++            - description: CMU_PERI IP clock (from CMU_CMU)
++            - description: CMU_PERI AUDIO clock (from CMU_CMU)
++            - description: CMU_PERI DISP clock (from CMU_CMU)
++
++        clock-names:
++          items:
++            - const: fin_pll
++            - const: ip
++            - const: audio
++            - const: disp
++
++additionalProperties: false
++
++examples:
++  # Clock controller node for CMU_FSYS
++  - |
++    #include <dt-bindings/clock/axis,artpec8-clk.h>
++
++    cmu_fsys: clock-controller@16c10000 {
++        compatible = "axis,artpec8-cmu-fsys";
++        reg = <0x16c10000 0x4000>;
++        #clock-cells = <1>;
++        clocks = <&fin_pll>,
++                 <&cmu_cmu CLK_DOUT_CMU_FSYS_SCAN0>,
++                 <&cmu_cmu CLK_DOUT_CMU_FSYS_SCAN1>,
++                 <&cmu_cmu CLK_DOUT_CMU_FSYS_BUS>,
++                 <&cmu_cmu CLK_DOUT_CMU_FSYS_IP>;
++        clock-names = "fin_pll", "scan0", "scan1", "bus", "ip";
++    };
++
++...
+diff --git a/include/dt-bindings/clock/axis,artpec8-clk.h b/include/dt-bindings/clock/axis,artpec8-clk.h
+new file mode 100644
+index 000000000000..1e6e1409dd94
+--- /dev/null
++++ b/include/dt-bindings/clock/axis,artpec8-clk.h
+@@ -0,0 +1,169 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * Copyright (c) 2025 Samsung Electronics Co., Ltd.
++ *             https://www.samsung.com
++ * Copyright (c) 2025 Axis Communications AB.
++ *             https://www.axis.com
++ *
++ * Device Tree binding constants for ARTPEC-8 clock controller.
++ */
++
++#ifndef _DT_BINDINGS_CLOCK_ARTPEC8_H
++#define _DT_BINDINGS_CLOCK_ARTPEC8_H
++
++/* CMU_CMU */
++#define CLK_FOUT_SHARED0_PLL					1
++#define CLK_DOUT_SHARED0_DIV2					2
++#define CLK_DOUT_SHARED0_DIV3					3
++#define CLK_DOUT_SHARED0_DIV4					4
++#define CLK_FOUT_SHARED1_PLL					5
++#define CLK_DOUT_SHARED1_DIV2					6
++#define CLK_DOUT_SHARED1_DIV3					7
++#define CLK_DOUT_SHARED1_DIV4					8
++#define CLK_FOUT_AUDIO_PLL					9
++#define CLK_DOUT_CMU_BUS					10
++#define CLK_DOUT_CMU_BUS_DLP					11
++#define CLK_DOUT_CMU_CDC_CORE					12
++#define CLK_DOUT_CMU_OTP					13
++#define CLK_DOUT_CMU_CORE_MAIN					14
++#define CLK_DOUT_CMU_CORE_DLP					15
++#define CLK_DOUT_CMU_CPUCL_SWITCH				16
++#define CLK_DOUT_CMU_DLP_CORE					17
++#define CLK_DOUT_CMU_FSYS_BUS					18
++#define CLK_DOUT_CMU_FSYS_IP					19
++#define CLK_DOUT_CMU_FSYS_SCAN0					20
++#define CLK_DOUT_CMU_FSYS_SCAN1					21
++#define CLK_DOUT_CMU_GPU_3D					22
++#define CLK_DOUT_CMU_GPU_2D					23
++#define CLK_DOUT_CMU_IMEM_ACLK					24
++#define CLK_DOUT_CMU_IMEM_JPEG					25
++#define CLK_DOUT_CMU_MIF_SWITCH					26
++#define CLK_DOUT_CMU_MIF_BUSP					27
++#define CLK_DOUT_CMU_PERI_DISP					28
++#define CLK_DOUT_CMU_PERI_IP					29
++#define CLK_DOUT_CMU_PERI_AUDIO					30
++#define CLK_DOUT_CMU_RSP_CORE					31
++#define CLK_DOUT_CMU_TRFM_CORE					32
++#define CLK_DOUT_CMU_VCA_ACE					33
++#define CLK_DOUT_CMU_VCA_OD					34
++#define CLK_DOUT_CMU_VIO_CORE					35
++#define CLK_DOUT_CMU_VIO_AUDIO					36
++#define CLK_DOUT_CMU_VIP0_CORE					37
++#define CLK_DOUT_CMU_VIP1_CORE					38
++#define CLK_DOUT_CMU_VPP_CORE					39
++
++/* CMU_BUS */
++#define CLK_MOUT_BUS_ACLK_USER					1
++#define CLK_MOUT_BUS_DLP_USER					2
++#define CLK_DOUT_BUS_PCLK					3
++
++/* CMU_CORE */
++#define CLK_MOUT_CORE_ACLK_USER					1
++#define CLK_MOUT_CORE_DLP_USER					2
++#define CLK_DOUT_CORE_PCLK					3
++
++/* CMU_CPUCL */
++#define CLK_FOUT_CPUCL_PLL					1
++#define CLK_MOUT_CPUCL_PLL					2
++#define CLK_MOUT_CPUCL_SWITCH_USER				3
++#define CLK_DOUT_CPUCL_CPU					4
++#define CLK_DOUT_CPUCL_CLUSTER_ACLK				5
++#define CLK_DOUT_CPUCL_CLUSTER_PCLKDBG				6
++#define CLK_DOUT_CPUCL_CLUSTER_CNTCLK				7
++#define CLK_DOUT_CPUCL_CLUSTER_ATCLK				8
++#define CLK_DOUT_CPUCL_PCLK					9
++#define CLK_DOUT_CPUCL_CMUREF					10
++#define CLK_DOUT_CPUCL_DBG					11
++#define CLK_DOUT_CPUCL_PCLKDBG					12
++#define CLK_GOUT_CPUCL_CLUSTER_CPU				13
++#define CLK_GOUT_CPUCL_SHORTSTOP				14
++#define CLK_GOUT_CPUCL_CSSYS_IPCLKPORT_PCLKDBG			15
++#define CLK_GOUT_CPUCL_CSSYS_IPCLKPORT_ATCLK			16
++
++/* CMU_FSYS */
++#define CLK_FOUT_FSYS_PLL					1
++#define CLK_MOUT_FSYS_SCAN0_USER				2
++#define CLK_MOUT_FSYS_SCAN1_USER				3
++#define CLK_MOUT_FSYS_BUS_USER					4
++#define CLK_MOUT_FSYS_MMC_USER					5
++#define CLK_DOUT_FSYS_PCIE_PIPE					6
++#define CLK_DOUT_FSYS_ADC					7
++#define CLK_DOUT_FSYS_PCIE_PHY_REFCLK_SYSPLL			8
++#define CLK_DOUT_FSYS_EQOS_INT125				9
++#define CLK_DOUT_FSYS_OTP_MEM					10
++#define CLK_DOUT_FSYS_SCLK_UART					11
++#define CLK_DOUT_FSYS_EQOS_25					12
++#define CLK_DOUT_FSYS_EQOS_2p5					13
++#define CLK_DOUT_FSYS_BUS300					14
++#define CLK_DOUT_FSYS_BUS_QSPI					15
++#define CLK_DOUT_FSYS_MMC_CARD0					16
++#define CLK_DOUT_FSYS_MMC_CARD1					17
++#define CLK_DOUT_SCAN_CLK_FSYS_125				18
++#define CLK_DOUT_FSYS_QSPI					19
++#define CLK_DOUT_FSYS_SFMC_NAND					20
++#define CLK_DOUT_FSYS_SCAN_CLK_MMC				21
++#define CLK_GOUT_FSYS_USB20DRD_IPCLKPORT_ACLK_PHYCTRL_20	22
++#define CLK_GOUT_FSYS_USB20DRD_IPCLKPORT_BUS_CLK_EARLY		23
++#define CLK_GOUT_FSYS_XHB_USB_IPCLKPORT_CLK			24
++#define CLK_GOUT_FSYS_XHB_AHBBR_IPCLKPORT_CLK			25
++#define CLK_GOUT_FSYS_I2C0_IPCLKPORT_I_PCLK			26
++#define CLK_GOUT_FSYS_I2C1_IPCLKPORT_I_PCLK			27
++#define CLK_GOUT_FSYS_PWM_IPCLKPORT_I_PCLK_S0			28
++#define CLK_GOUT_FSYS_DWC_PCIE_CTL_INST_0_MSTR_ACLK_UG		29
++#define CLK_GOUT_FSYS_DWC_PCIE_CTL_INXT_0_SLV_ACLK_UG		30
++#define CLK_GOUT_FSYS_DWC_PCIE_CTL_INST_0_DBI_ACLK_UG		31
++#define CLK_GOUT_FSYS_PIPE_PAL_INST_0_I_APB_PCLK		32
++#define CLK_GOUT_FSYS_EQOS_TOP_IPCLKPORT_ACLK_I			33
++#define CLK_GOUT_FSYS_EQOS_TOP_IPCLKPORT_CLK_CSR_I		34
++#define CLK_GOUT_FSYS_EQOS_TOP_IPCLKPORT_I_RGMII_TXCLK_2P5	35
++#define CLK_GOUT_FSYS_SFMC_IPCLKPORT_I_ACLK_NAND		36
++#define CLK_GOUT_FSYS_MMC0_IPCLKPORT_SDCLKIN			37
++#define CLK_GOUT_FSYS_MMC0_IPCLKPORT_I_ACLK			38
++#define CLK_GOUT_FSYS_MMC1_IPCLKPORT_SDCLKIN			39
++#define CLK_GOUT_FSYS_MMC1_IPCLKPORT_I_ACLK			40
++#define CLK_GOUT_FSYS_PCIE_PHY_REFCLK_IN			41
++#define CLK_GOUT_FSYS_UART0_PCLK				42
++#define CLK_GOUT_FSYS_UART0_SCLK_UART				43
++#define CLK_GOUT_FSYS_BUS_QSPI					44
++#define CLK_GOUT_FSYS_QSPI_IPCLKPORT_HCLK			45
++#define CLK_GOUT_FSYS_QSPI_IPCLKPORT_SSI_CLK			46
++
++/* CMU_IMEM */
++#define CLK_MOUT_IMEM_ACLK_USER					1
++#define CLK_MOUT_IMEM_GIC_CA53					2
++#define CLK_MOUT_IMEM_GIC_CA5					3
++#define CLK_MOUT_IMEM_JPEG_USER					4
++#define CLK_GOUT_IMEM_MCT_PCLK					5
++#define CLK_GOUT_IMEM_PCLK_TMU0_APBIF				6
++
++/* CMU_PERI */
++#define CLK_MOUT_PERI_IP_USER					1
++#define CLK_MOUT_PERI_AUDIO_USER				2
++#define CLK_MOUT_PERI_I2S0					3
++#define CLK_MOUT_PERI_I2S1					4
++#define CLK_MOUT_PERI_DISP_USER					5
++#define CLK_DOUT_PERI_SPI					6
++#define CLK_DOUT_PERI_UART1					7
++#define CLK_DOUT_PERI_UART2					8
++#define CLK_DOUT_PERI_PCLK					9
++#define CLK_DOUT_PERI_I2S0					10
++#define CLK_DOUT_PERI_I2S1					11
++#define CLK_DOUT_PERI_DSIM					12
++#define CLK_GOUT_PERI_UART1_PCLK				13
++#define CLK_GOUT_PERI_UART1_SCLK_UART				14
++#define CLK_GOUT_PERI_UART2_PCLK				15
++#define CLK_GOUT_PERI_UART2_SCLK_UART				16
++#define CLK_GOUT_PERI_I2C2_IPCLKPORT_I_PCLK			17
++#define CLK_GOUT_PERI_I2C3_IPCLKPORT_I_PCLK			18
++#define CLK_GOUT_PERI_SPI0_PCLK					19
++#define CLK_GOUT_PERI_SPI0_SCLK_SPI				20
++#define CLK_GOUT_PERI_APB_ASYNC_DSIM_IPCLKPORT_PCLKS		21
++#define CLK_GOUT_PERI_I2SSC0_IPCLKPORT_CLK_HST			22
++#define CLK_GOUT_PERI_I2SSC1_IPCLKPORT_CLK_HST			23
++#define CLK_GOUT_PERI_AUDIO_OUT_IPCLKPORT_CLK			24
++#define CLK_GOUT_PERI_I2SSC0_IPCLKPORT_CLK			25
++#define CLK_GOUT_PERI_I2SSC1_IPCLKPORT_CLK			26
++#define CLK_GOUT_PERI_DMA4DSIM_IPCLKPORT_CLK_APB_CLK		27
++#define CLK_GOUT_PERI_DMA4DSIM_IPCLKPORT_CLK_AXI_CLK		28
++
++#endif /* _DT_BINDINGS_CLOCK_ARTPEC8_H */
 --
 2.49.0
 
