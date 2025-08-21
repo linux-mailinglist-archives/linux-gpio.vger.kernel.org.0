@@ -1,121 +1,110 @@
-Return-Path: <linux-gpio+bounces-24765-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24767-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E923B3008E
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 18:55:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8BD6B300B9
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 19:05:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6106B1888D55
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 16:51:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D7D95C0555
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 17:05:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 024C62E54A7;
-	Thu, 21 Aug 2025 16:50:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DD112FB627;
+	Thu, 21 Aug 2025 17:05:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wkWlqK7d"
+	dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b="gT47ww/W"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 10.mo534.mail-out.ovh.net (10.mo534.mail-out.ovh.net [46.105.32.219])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3C42E282D
-	for <linux-gpio@vger.kernel.org>; Thu, 21 Aug 2025 16:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80402253A1
+	for <linux-gpio@vger.kernel.org>; Thu, 21 Aug 2025 17:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.32.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755795053; cv=none; b=RnDNSL/uHWuC6gRTrQBWDWIHMj6b++HXQJdEUC3U7wu5bRD3IfxzwFq3klfcP4n+qCTMu+Moews2E0HUPXE11emfJVgqpr92TKLA+32VHOcLrkIHXFQORWtKfqwdktxUtAavuuFTT/o7iWjUBQd6+NF5yo5pdyK22csLC0pP0kU=
+	t=1755795923; cv=none; b=Wr11uD6vNFvw1KSmfZJC3e/pcdAoxWBqmlTOyN/7AE6yuXmEqO+wD9vOYiPPXnzDsiCkjyKg22LLy3SlMO7fFM3ueW/WWd/rov0GLN2i6TBKWFizZDHgYbDEEhFOCioHL7ueoHbJdOTzo3ESRPvfXvVdVfYoVKvtLmcKORru8OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755795053; c=relaxed/simple;
-	bh=MA5CoRznscTD/9JPv2I1fgD+UFpMWzRT7Bcr37nG6ws=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lQXUqU+8wbPVRbi0ZNgvdivnhrbbjAzCcBi2SOlBcHL5C+4uYV+8TEIELb+FwgHIQDNdjeiVCBeUKqNxpRk1UzFeYxnrT2n/GQyRsMPHzkadSlCPYbPEcO0mgdQvbmOBSkpTR4PtlAnV3pQ7Z8+zDEglizAEMKsJLj+Bh6Y86/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wkWlqK7d; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-33541f0ea9dso10212321fa.0
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Aug 2025 09:50:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1755795049; x=1756399849; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MA5CoRznscTD/9JPv2I1fgD+UFpMWzRT7Bcr37nG6ws=;
-        b=wkWlqK7dAOZ1y+MgUubgf3rcCYYAXyFlwlaf6n4BDE1E8OdI9GvbbFHWXkFl/JUFpg
-         QKfV51wUQLLQmaYPN84dofbifww2acVr069Lix2t8jO531wrxko2uFTV43AqOPGFcPC2
-         WI2CIbzgrmnkREqIIFNuu2TPj9+XqcicbgOur3++CAajgcp1uC8YwLk5Fwy7lmsjwGok
-         75qkS0ue+edCqf8SETxtdazBQpUu9ZXtTajUIpPtPT6xsd1EBJvuWNjHjaa7OPUO71m5
-         bNJnhuWZ4pei0ddwxz9G8ZSvM8adFkmUF72vyFqcPzooTr27LGesDsqJ0Z61m+Om3WsQ
-         McEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755795049; x=1756399849;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MA5CoRznscTD/9JPv2I1fgD+UFpMWzRT7Bcr37nG6ws=;
-        b=ELbbX2CyEn77YnPRUxBcquaWxtk/t+X1TMUxkl7o31+9kIJF+tA5MplJ1dMJdXWdSr
-         rcSM/mjNC42qPiUpZ4JSS9qxeOZFy70j2DSnK6qyj0MK60ae5DnTzErwbZYKbgC0h7V6
-         ioytw78WU3BSXlHYKpX4jTqTICShPrBx+qRH6BjE2n/H6MJ12cI/DlqYvsizkG6J+aaj
-         0ksqNhHBVzwTEWpYMFvFL6M2z6iwuLA1YWmaodvZ3qMbDbFM5gAAD9XNe3wRxV0DHVHA
-         MM8jnUX1/IzPfk5hb3V4PaQgP7Tj0T0mmy4iE7Q5wz8WAn3HX8XvhL8ga38pSh/aXF/B
-         3TvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUiJFEhvqGPfhamkad6FKgozKOmrgVXgamGfb82LK544o+y5HrpntES5l4sfSfkZOr8uoKTqy++6bBD@vger.kernel.org
-X-Gm-Message-State: AOJu0YybRCRn2FSks5pjIMdWRLTFcUPAkul4fpWEVvmth/ThTEqA8FXI
-	7OWfg1lycRXura2zO6kgHnlpAFVfs9TKPJS7fkAzMR79NchShbWC6m5wfH/AEVHNlwwiBNo05O6
-	dfg54LqVBW8Ao36MEVb5p6//DwnBKXmN6zPkHic/tSw==
-X-Gm-Gg: ASbGncu7B5XGJ0YEx/oAQcX4craOroRMLZcCIkRk2f5LZvdic+hzyKDpzbKxeOtL2T9
-	TeTM2RNesbrsCvprqg2D1wPXEDlX5fQ7FdELE68Sb75OWxNiw7rE93UdJsNjesp6JxaR1WemIE+
-	VQQFOWtihQJrck2qxM9A2HbaV8AnA3A5HHkLTo39dKEWncap+KYbyd2fNXf8sJsB42P5UcldjJg
-	jOunVilPkxBhvTOmQ==
-X-Google-Smtp-Source: AGHT+IHXxJmnZpxwlzV39CihpI1fip8jHsQ3wqrQIPStR8+WqibfCJ2j76EEt47pzZKFul7hhblBfkLJ4pGoe6B1jMM=
-X-Received: by 2002:a05:651c:23c8:20b0:32a:78f7:9bef with SMTP id
- 38308e7fff4ca-33549e3ad61mr6524161fa.8.1755795049223; Thu, 21 Aug 2025
- 09:50:49 -0700 (PDT)
+	s=arc-20240116; t=1755795923; c=relaxed/simple;
+	bh=QgU9tu/W2io/RCY4ppncl3O2EgTk2wEYw1UC+4Z8TSk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NJM0VZST3d6KyBlUu/9+Jj8K7Swa6vi+/9O1aulSkw70oOxTo3TZIMwYXbookvD4aDhNOb8hDcUHzhvjij7pvgGvyFo16CkWeoBTxzQruxHS6/3YmMDqceSk3Q3TFuRXaYo3IR1FfNVyaa4ALvrHKC5ElqjaY1EDnPdC3dd7tgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b=gT47ww/W; arc=none smtp.client-ip=46.105.32.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orca.pet
+Received: from director4.derp.mail-out.ovh.net (director4.derp.mail-out.ovh.net [79.137.60.37])
+	by mo534.mail-out.ovh.net (Postfix) with ESMTPS id 4c78p55kQpz6Fxs;
+	Thu, 21 Aug 2025 17:05:17 +0000 (UTC)
+Received: from director4.derp.mail-out.ovh.net (director4.derp.mail-out.ovh.net. [127.0.0.1])
+        by director4.derp.mail-out.ovh.net (inspect_sender_mail_agent) with SMTP
+        for <brgl@bgdev.pl>; Thu, 21 Aug 2025 17:05:17 +0000 (UTC)
+Received: from mta11.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.110.0.156])
+	by director4.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4c78p53dvWz1xq5;
+	Thu, 21 Aug 2025 17:05:17 +0000 (UTC)
+Received: from orca.pet (unknown [10.1.6.7])
+	by mta11.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTPSA id 23CD09A32E5;
+	Thu, 21 Aug 2025 17:05:15 +0000 (UTC)
+Authentication-Results:garm.ovh; auth=pass (GARM-96R0019a5e68ea-a039-46b1-a0f6-7359794a6edd,
+                    684E78C7C579463DAB27E2CA1F9C4E28A39E1181) smtp.auth=marcos@orca.pet
+X-OVh-ClientIp:79.117.22.109
+Message-ID: <87f12a9e-df99-4308-9d4b-6dd28911bd00@orca.pet>
+Date: Thu, 21 Aug 2025 19:05:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250710002047.1573841-1-ksk4725@coasia.com> <CGME20250821124039epcas5p34b77813c9936b8b70c801e0e1b67891a@epcas5p3.samsung.com>
- <20250821123310.94089-1-ravi.patel@samsung.com> <20250821123310.94089-6-ravi.patel@samsung.com>
-In-Reply-To: <20250821123310.94089-6-ravi.patel@samsung.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 21 Aug 2025 18:50:38 +0200
-X-Gm-Features: Ac12FXwqIo6zLlw0fIpSEAb-CCiAQ7nCYe-8wPk85-SMsx3heqK_K_zSrsS4110
-Message-ID: <CACRpkdbdpcPBC8mwazoXHy+HE+hH-XWDkfHV4Uz38YhZU7UH7w@mail.gmail.com>
-Subject: Re: [PATCH v2 05/10] pinctrl: samsung: Add ARTPEC-8 SoC specific configuration
-To: Ravi Patel <ravi.patel@samsung.com>
-Cc: jesper.nilsson@axis.com, mturquette@baylibre.com, sboyd@kernel.org, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, krzk@kernel.org, 
-	s.nawrocki@samsung.com, cw00.choi@samsung.com, alim.akhtar@samsung.com, 
-	tomasz.figa@gmail.com, catalin.marinas@arm.com, will@kernel.org, 
-	arnd@arndb.de, ksk4725@coasia.com, kenkim@coasia.com, pjsin865@coasia.com, 
-	gwk1013@coasia.com, hgkim05@coasia.com, mingyoungbo@coasia.com, 
-	smn1196@coasia.com, pankaj.dubey@samsung.com, shradha.t@samsung.com, 
-	inbaraj.e@samsung.com, swathi.ks@samsung.com, hrishikesh.d@samsung.com, 
-	dj76.yang@samsung.com, hypmean.kim@samsung.com, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
-	linux-arm-kernel@axis.com, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, soc@lists.linux.dev, 
-	Priyadarsini G <priya.ganesh@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] gpio: vortex: add new GPIO device driver
+To: linux-kernel@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Michael Walle <mwalle@kernel.org>,
+ Lee Jones <lee@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-gpio@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20250821101902.626329-1-marcos@orca.pet>
+ <20250821101902.626329-3-marcos@orca.pet>
+Content-Language: es-ES
+From: Marcos Del Sol Vives <marcos@orca.pet>
+In-Reply-To: <20250821101902.626329-3-marcos@orca.pet>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 5894367491258930790
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduiedujeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeforghrtghoshcuffgvlhcuufholhcugghivhgvshcuoehmrghrtghoshesohhrtggrrdhpvghtqeenucggtffrrghtthgvrhhnpedtgedugfeiudfgkeduhfelgfejgfeuvdejffeiveegteejvddviefhiedujedvheenucfkphepuddvjedrtddrtddruddpjeelrdduudejrddvvddruddtleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepmhgrrhgtohhssehorhgtrgdrphgvthdpnhgspghrtghpthhtohepkedprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmfigrlhhlvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvg
+ hlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheefgegmpdhmohguvgepshhmthhpohhuth
+DKIM-Signature: a=rsa-sha256; bh=QgU9tu/W2io/RCY4ppncl3O2EgTk2wEYw1UC+4Z8TSk=;
+ c=relaxed/relaxed; d=orca.pet; h=From; s=ovhmo-selector-1; t=1755795918;
+ v=1;
+ b=gT47ww/WK/fMjYX2DlJdT3n7yhOSJ9EFYWvYDemT+pQ2ZhuTRnb1mTISXHLkkK7TOsucCgjA
+ 07BK+CbDCs3rfE3AUX8wUMKMNysv9qAmaYEs8G2EQHRBunofa8qApqbjOgt1mb5arLh24QkeAVM
+ 4rTVzYvJZO/31DDD3IUZtEWW1naZQ39trZ6F6dTYN2LPoHwD5ebpgVgZ8DciaQYe+hCO94YYInj
+ CAqrDVfMqXRnf/0QKk6FO9TqBEWFJTEJHRqeop0nvDoDPFfjCpdEFlQthA7656xraUxR6KrIVxI
+ x1h2vbunQ4M+wsUb5qvUWRGd5WROetqtwnbOqEdZ7JBJg==
 
-On Thu, Aug 21, 2025 at 2:40=E2=80=AFPM Ravi Patel <ravi.patel@samsung.com>=
- wrote:
+El 21/08/2025 a las 12:18, Marcos Del Sol Vives escribió:
+> +#include <linux/types.h>
+> +#include <linux/errno.h>
+> +#include <linux/module.h>
+> +#include <linux/ioport.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/gpio/regmap.h>
+> +#include <linux/regmap.h>
+> +#include <linux/ioport.h>
+> +#include <linux/types.h>
+> +#include <linux/platform_device.h>
 
-> From: SeonGu Kang <ksk4725@coasia.com>
->
-> Add Axis ARTPEC-8 SoC specific configuration data to enable pinctrl.
->
-> Signed-off-by: SeonGu Kang <ksk4725@coasia.com>
-> Signed-off-by: Priyadarsini G <priya.ganesh@samsung.com>
-> Signed-off-by: Ravi Patel <ravi.patel@samsung.com>
+I realized now that, despite checking over and over the patches before
+sending to the mailing list, I forgot to clean up leftover includes from
+previous versions of the driver.
 
-Looks good to me.
+I am fairly new to this procedure of merging patches. Should I later, after
+a send a sensible amount of time has passed to let everyone voice their
+opinion, send a new v4 version of the patch to fix these (and also clarify
+the commit message on the regmap-gpio, as requested in another email),
+or if accepted would maybe the person merging it sort this out?
 
-I expect that Krzysztof will queue this and send
-to me with a pull request once he's happy with it.
-
-Yours,
-Linus Walleij
+Sorry for the mess,
+Marcos
 
