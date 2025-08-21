@@ -1,129 +1,108 @@
-Return-Path: <linux-gpio+bounces-24753-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24754-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 066E1B2FA5C
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 15:29:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 149EBB2FAF7
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 15:47:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6D08017FFBB
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 13:25:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 68F88AA0485
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 13:40:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59A8E33471F;
-	Thu, 21 Aug 2025 13:24:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D559233A002;
+	Thu, 21 Aug 2025 13:34:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RnBgB5CT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QBkuTnPA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8777334378;
-	Thu, 21 Aug 2025 13:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE0B338F41
+	for <linux-gpio@vger.kernel.org>; Thu, 21 Aug 2025 13:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755782694; cv=none; b=QcWGiPyoep64c5GzbAYJ7EDqwNZSqe22YndGKhiDFnrAMBXdKnWCUhm9YAhKLHN8MFLc2nEjdE6DT0yV+D2K5vMPUy9cuE3onDTLg6AkLpCtR/2bYjmDLhN38ecbpCdSE+5YGiId4uT7rLuYBEYdV3ZbhJVW0MWkMjxfutxjuQo=
+	t=1755783296; cv=none; b=J0IkIZBluaClKt/9s2oWGVhQACn0wJppaw27XvDjEUUXZBbroQ7dxTOL8QYuz4laMj8ER7fXsmGKhyvFcWD9DZl7fh0PprNR600j7oCNiqc3SDqVUVAxd8EcKjRqcvm8LkSjv2LfswPWJgglXrVFqtgCbCSEvtgAsx+4/Eh6sBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755782694; c=relaxed/simple;
-	bh=76ReIJtXJzBwzWrjJa65Ko+8l//Yi0hjkZIdqxBBBC4=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=RmhO+oB7Llr+QsStDx+ilgypEj+cP/uDdKKac/A3bHaqoBuW25k3HVUzDO3MKwZtIXxHoTbmXtiEN24ctUyJvTMRewg2x+zgcVw9LT8ldX2ozSwK5lGgSbyoMf3h6FUx0lRVOYtT94saNgenVQo179P4RGFGm2oUmLaz8AmEPE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RnBgB5CT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DFE2C4CEEB;
-	Thu, 21 Aug 2025 13:24:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755782693;
-	bh=76ReIJtXJzBwzWrjJa65Ko+8l//Yi0hjkZIdqxBBBC4=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=RnBgB5CTZ17kmiwkBbDAExo7pQlNQ7peebeeq092niVb2vM+IwmJxsaCAvlOS3f1A
-	 1KXPgaHqN2qA+FxKYuTun7TaAYGIOyMoiJwznaRPhIPEf4jTowAINPvQa5U5Y/q2cm
-	 31QZA8P9XHmdskehrqJbo59m7Mlp3EwsKBWt55rxDk06koyNoMi+dS8TV3XLfBuySg
-	 BUN7JtkuVLrS9PAtC2+onlSRb59amhYyTZUBKjLNryTjslMPmnQOlFeQij1/xLGXTP
-	 g87wdPfMA2peIEu6ojeGdw+oPlXqMg0JJ2c5MCSOLr2n2eQ+fqaYHiBWU7p3uiloB5
-	 8ovoQJMVlfSvA==
-Date: Thu, 21 Aug 2025 08:24:52 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1755783296; c=relaxed/simple;
+	bh=kv6n6GOVWTADV8kGP5+6GEG5ThL+6nnGm9DljXi3Qxg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=chG+qxJof20N/Hql0YxP2nNkEfmj0Mz5yzaLQTiMCv3faH7LlcEwBFnClzv8JRAPEF7DeZsqHQTZ2haJmZBOVBK77IWg7wzys6evQDNf7T0Y5a6vdhC/5B9ZnFDSKvsXrIayijKwpJD17CrX/g3d5efNxEg47RupoxZv9PFK5Mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QBkuTnPA; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-333f918d71eso6914291fa.3
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Aug 2025 06:34:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1755783293; x=1756388093; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dnk1CgahWWI41MJxVYInV4yTmBrTqgMN7PmBauKY3jg=;
+        b=QBkuTnPANj3BZINlJazP7frVb5LANa77kiv1wlh6sdJ1Rocs65TYZFopzIXJ7Gpo4E
+         bt6XHcKCfPzrwWd26qjSGCGOD0OjzXiZTJ0uj5i1lBkPsIxheHzsRJnDnkKWTasUnh98
+         w+xweOAbIQHvTKl0Y6B2wJsyMZ7sqxz6Ec85xNOUBKF60rZ2gc3Wc4/5Y/+p8uZtQJUc
+         mv1JfcJ0DfZ122AHny8DVZSch22ZlQUos0ZzKopjrYJNr9+PM0BWvZgEet6VbEOQD8sM
+         ELG1MnACc3LwbBnbAAYJv8VRmXmQ1e9pB8tUINj6oYmnnxhzxpG9Lr0zW4A9M93/d+y2
+         QLPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755783293; x=1756388093;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dnk1CgahWWI41MJxVYInV4yTmBrTqgMN7PmBauKY3jg=;
+        b=H3OkSOj25o+m75H4epmwPQ6oOhsdts55NWse4VRI6nLfSaq3OIVfnt+lBgdc/mCi01
+         AZX7ppb7+J3Qm9+Duq91g0Mg69y/gLQFbuOj2KuIbzs9qufnkAROqtYpwANLkLAnnqSy
+         CYmhpADFwmddiqJ6gVjMllFf6kARBWUAFuBP8rFLEvb02JYvqo9y8popsDmjBzp+sR+J
+         8B2g1VvlWzer8Qlj5bHah6BD6yloitTqYs9pYveiS4eY2KDuxhbp0UnmrwjDip3xxV8P
+         evNCqgMAUsCkfdnmZprwfcr2R2/QT+GXXXluhTMHRFREINFqA8EonMlJDsHvSpr0lPQx
+         RtWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVwrFm9t9Ff0ncYgjX00CzPOIkOaVOiF6wkMhm+X3tSubgJNIYuSXZhLAbJlwEGsaIeYuu8toNrOnLQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvOU3BKeavitGLU1UDw0rIeuevW6AZ7/ycS6wJsCrKo9pPcChH
+	AddrKQ2GZJzToiCkJJqTOle+fy8yl9KUiE5nuP3ns/QFCa9GsVyp1fNbYzCa8hrHluk2rRm9BHh
+	KmA6wJ0BOCUia+FiAxle/IeGIlqq4xWokBnw5TlWteA==
+X-Gm-Gg: ASbGncuWJbA0a/OV//3gdzLo3In6RMfWJIdl0rfRuXrtb4dsacBf7HYmIWmKYlDDTNw
+	MMllP6pBlTrTaety1qT/wWLNtAn6DU8OYyAVXAXFF7INxGxPdsh13jcwHkB4iBmtzsIOM5mlSHJ
+	3bnJ/hiMtd5QhFun7k+kAczZHrKxo7Et4vF3Ef/hceVBMdv3hBuT0jMF9RGO0D5bu80kK1arJq7
+	N+/4MY=
+X-Google-Smtp-Source: AGHT+IGKufYc8VS+JVO/RTN7GptvxunMWcIXqzHM88cXAswfPy/+XrvyTDd4OoGPmr6RyZIf76Xo3OAHmqvX/1JjcQo=
+X-Received: by 2002:a05:651c:2112:b0:32e:aaa0:b06a with SMTP id
+ 38308e7fff4ca-33549e41fd1mr7866791fa.8.1755783292895; Thu, 21 Aug 2025
+ 06:34:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: flora.fu@mediatek.com, chunkuang.hu@kernel.org, broonie@kernel.org, 
- linux-gpio@vger.kernel.org, mripard@kernel.org, 
- louisalexis.eyraud@collabora.com, mchehab@kernel.org, 
- kyrie.wu@mediatek.corp-partner.google.com, lgirdwood@gmail.com, 
- linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com, 
- conor+dt@kernel.org, kernel@collabora.com, 
- linux-arm-kernel@lists.infradead.org, amergnat@baylibre.com, 
- netdev@vger.kernel.org, tiffany.lin@mediatek.com, 
- linux-input@vger.kernel.org, airlied@gmail.com, linux-clk@vger.kernel.org, 
- jeesw@melfas.com, yunfei.dong@mediatek.com, linus.walleij@linaro.org, 
- sean.wang@kernel.org, linux-media@vger.kernel.org, 
- linux-sound@vger.kernel.org, tzimmermann@suse.de, 
- andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, simona@ffwll.ch, 
- kuba@kernel.org, jmassot@collabora.com, devicetree@vger.kernel.org, 
- linux-mediatek@lists.infradead.org, houlong.wei@mediatek.com, 
- angelogioacchino.delregno@collabora.com, andrew+netdev@lunn.ch, 
- support.opensource@diasemi.com, maarten.lankhorst@linux.intel.com, 
- ck.hu@mediatek.com, matthias.bgg@gmail.com, pabeni@redhat.com, 
- p.zabel@pengutronix.de, edumazet@google.com, krzk+dt@kernel.org, 
- davem@davemloft.net, dri-devel@lists.freedesktop.org
-To: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
-In-Reply-To: <20250820171302.324142-5-ariel.dalessandro@collabora.com>
-References: <20250820171302.324142-1-ariel.dalessandro@collabora.com>
- <20250820171302.324142-5-ariel.dalessandro@collabora.com>
-Message-Id: <175578240744.3438740.13033328475024605529.robh@kernel.org>
-Subject: Re: [PATCH v1 04/14] net: dt-bindings: Convert Marvell 8897/8997
- bindings to YAML
+References: <20250821044914.710044-1-quic_pkumpatl@quicinc.com>
+In-Reply-To: <20250821044914.710044-1-quic_pkumpatl@quicinc.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 21 Aug 2025 15:34:41 +0200
+X-Gm-Features: Ac12FXzZfdEuIXlDJunjHifIf2iPhc7L3Fxydb1EWGcglhWvXkLWa6PHYXSvLu0
+Message-ID: <CACRpkdYEzbM33HBAhHEmAg9f4Zpi=2WvqPdZ35=M2eVCqcTTFg@mail.gmail.com>
+Subject: Re: [PATCH v8 0/9] Enable audio on qcs6490-RB3Gen2 and qcm6490-idp boards
+To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-sound@vger.kernel.org, kernel@oss.qualcomm.com, 
+	Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Aug 21, 2025 at 6:49=E2=80=AFAM Prasad Kumpatla
+<quic_pkumpatl@quicinc.com> wrote:
 
-On Wed, 20 Aug 2025 14:12:52 -0300, Ariel D'Alessandro wrote:
-> Convert the existing text-based DT bindings for Marvell 8897/8997
-> (sd8897/sd8997) bluetooth devices controller to a YAML schema.
-> 
-> While here, bindings for "usb1286,204e" (USB interface) are dropped from
-> the YAML definition as these are currently documented in file:
-> 
-> - Documentation/devicetree/bindings/net/btusb.txt
-> 
-> Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
-> ---
->  .../bindings/net/marvell,sd8897-bt.yaml       | 91 +++++++++++++++++++
->  .../bindings/net/marvell-bt-8xxx.txt          | 83 -----------------
->  2 files changed, 91 insertions(+), 83 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/marvell,sd8897-bt.yaml
->  delete mode 100644 Documentation/devicetree/bindings/net/marvell-bt-8xxx.txt
-> 
+> Mohammad Rafi Shaik (9):
+>   dt-bindings: pinctrl: qcom,sc7280-lpass-lpi-pinctrl: Document the
+>     clock property
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Can I just apply this one patch to the pinctrl tree?
 
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/marvell,sd8897-bt.yaml: marvell,wakeup-gap-ms: missing type definition
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/marvell,sd8897-bt.example.dtb: bluetooth@2 (marvell,sd8897-bt): marvell,wakeup-gap-ms: b'\x00d' is not of type 'object', 'integer', 'array', 'boolean', 'null'
-	from schema $id: http://devicetree.org/schemas/dt-core.yaml#
-
-doc reference errors (make refcheckdocs):
-Warning: Documentation/devicetree/bindings/net/btusb.txt references a file that doesn't exist: Documentation/devicetree/bindings/net/marvell-bt-8xxx.txt
-Documentation/devicetree/bindings/net/btusb.txt: Documentation/devicetree/bindings/net/marvell-bt-8xxx.txt
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250820171302.324142-5-ariel.dalessandro@collabora.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Yours,
+Linus Walleij
 
