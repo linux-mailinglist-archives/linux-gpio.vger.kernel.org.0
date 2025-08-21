@@ -1,59 +1,54 @@
-Return-Path: <linux-gpio+bounces-24684-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24685-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A04EB2E8B1
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 01:34:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B667B2E996
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 02:46:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 334DE6859F1
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Aug 2025 23:33:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C329B683F6B
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 00:45:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 422A12E0406;
-	Wed, 20 Aug 2025 23:33:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ojKQZf6T"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CC2F1E3DDE;
+	Thu, 21 Aug 2025 00:45:45 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F262D1DDC2A;
-	Wed, 20 Aug 2025 23:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95F561B4F0E;
+	Thu, 21 Aug 2025 00:45:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755732803; cv=none; b=s8Er6GcaSA05dTAdtV8S2FULs4lSGpWhYn+gqFOacyT8yucu0SOfsYfbjNMsW1A5hrbGW18wqsR7LnqztvBW8aoe1TF+71UIIXZUmprVjkcPuw2Rwrxv9PY3wBwBSPjTopafSjdUNoBcKtwPeewx/+tUrNMDMW54ewYrpHsQY8k=
+	t=1755737144; cv=none; b=aj8Oao9yQUiq6xHa8GNRwdenNzhVIoz+0UkSOYcFIqtKWhcK74Lepn7UUtmGv3G/jLLPWhvEnuYvlcKsq/gnBU/1b8JanBKzHFQXHWXzsUgNUZ9nt+pqq9+S5mvaZtvZJlsZchf69+XCdVvnLnhxrXeCW9+NL3e9efu8w0P2KjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755732803; c=relaxed/simple;
-	bh=Gr/ztQWBjAac+jqz97r6qaLSkv4YAlZJB/6NqCYiY0A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gyD208wTcHkofBgjK8MNBIBzWGjZK3TlnTTV2l5syKjwHeOllLhLm5bBMhgF5fbw/ldd04M3x5pCLpbgqeLgJ40ZinLFIhI03jXxg1DRtuwMoKm0hlmeWktriKLRFzNMUUz3hEiLrel/p1u9GJtIT/3KH/dI621k1lrD+0vCW1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ojKQZf6T; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6831C4CEE7;
-	Wed, 20 Aug 2025 23:33:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755732802;
-	bh=Gr/ztQWBjAac+jqz97r6qaLSkv4YAlZJB/6NqCYiY0A=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ojKQZf6TDuiH6EGPKcPmDsypuQU00HarHMlQ9T8LpYhsduvUK8KUCoYVKVQV5N3Ah
-	 Bx4QrfL/winJ5bMCarJgfSKnY3DgoSCN6ANzlmcF/rQKV906mfDV8WFW62EisMEuHL
-	 8HY34JmUAyoNxs8YLZXtZiE9R9/R3pNk+RfKbJVEzMGF4AMVLBG4gindHIbZaXzCON
-	 v7n9P/LGoA9vQN4S15J8yXtss6/IjbhywojMqHxux0GS1fNipvuY51waANvXY8uWcJ
-	 bWQTVTi3edIXN3aqHUoxZcYozZVZ0a0QGRzQoCtIqnz+jiH7MEg8u4j+crU5dH3u1m
-	 O1xm6K0X/TKCA==
-From: "Mario Limonciello (AMD)" <superm1@kernel.org>
-To: mario.limonciello@amd.com,
-	westeri@kernel.org,
-	andriy.shevchenko@linux.intel.com,
-	linus.walleij@linaro.org,
-	brgl@bgdev.pl
-Cc: "Mario Limonciello (AMD)" <superm1@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	s=arc-20240116; t=1755737144; c=relaxed/simple;
+	bh=AFXvlAwoLU5z3YJfxR7cTbix0/9LPU19KpOFnjR4sNw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ne5cic/Gf01rj36r7FtWuxCEqz6+YU/0jfOf/CNRS6b4ubRbY/PrEwGVs3Z7uEyipFccOI1bdogBnF+HfOVQoEnFD7gh1cDL7L/ZyHAY/mOMcNk37a2uI8h+WgMBiUgRaSp3wz0f12t1POpWEkEeWwgnexWwKyblkwee8yNBR6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A454212FC;
+	Wed, 20 Aug 2025 17:45:32 -0700 (PDT)
+Received: from localhost.localdomain (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DEA5B3F63F;
+	Wed, 20 Aug 2025 17:45:38 -0700 (PDT)
+From: Andre Przywara <andre.przywara@arm.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Samuel Holland <samuel@sholland.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Yixun Lan <dlan@gentoo.org>,
 	linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Subject: [PATCH v5] gpiolib: acpi: Program debounce when finding GPIO
-Date: Wed, 20 Aug 2025 18:33:11 -0500
-Message-ID: <20250820233316.1433141-1-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev
+Subject: [RFC PATCH 0/9] pinctrl: sunxi: Allwinner A733 support
+Date: Thu, 21 Aug 2025 01:42:23 +0100
+Message-ID: <20250821004232.8134-1-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.46.3
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -62,51 +57,76 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When soc-button-array looks up the GPIO to use it calls acpi_find_gpio()
-which will parse _CRS.
+This series adds support for the pinctrl and GPIO IP in the new
+Allwinner A733 SoC.
+With all our abstractions and data structure driven code, life could
+have been so easy, but Allwinner decided to change the layout of the
+MMIO register frame, which requires all kinds of special handling and
+code changes here and there. Hopefully this new layout (which admittedly
+looks more future proof) will stay around for a while, but I am not
+holding my breath on this.
 
-acpi_find_gpio.cold (drivers/gpio/gpiolib-acpi-core.c:953)
-gpiod_find_and_request (drivers/gpio/gpiolib.c:4598 drivers/gpio/gpiolib.c:4625)
-gpiod_get_index (drivers/gpio/gpiolib.c:4877)
+In summary, the changes are:
+- Each GPIO bank now occupies 128 bytes instead of just 36 or 48.
+- PortA (not implemented on the A733) starts at offset 0x80, not at 0.
+- The non-bank specific registers are moved into this gap at the
+  beginning.
+- There are two new registers per bank, to set or clear bits in the GPIO
+  data register, to allow for single-write, lockless GPIO settings.
+- The drive level register is moved (to make room for the set/clr regs).
+- The IRQ registers are moved into the now bigger respective bank control
+  registers part, instead of being grouped separately, as before.
 
-The GPIO is setup basically, but the debounce information is discarded.
-The platform will assert what debounce should be in _CRS, so program it
-at the time it's available.
+The series follows the usual pattern of refactoring first, to prepare
+for the new MMIO frame layout (patches 1-4), then using the changed code
+to enable support for this new generation, in patch 5/9.
+Patch 6/9 adds support for the one new feature of this SoC's pinctrl IP,
+the lockless GPIO settings feature.
+Patch 7/9 adds the new DT bindings, patch 8/9 enables the secondary
+controller, which curiously is not using the new layout, but looks very
+similar to the secondary A523 pin controller.
+The final patch 9/9 then adds the driver stub file, which just describes
+the GPIO bank configuration and lists the two quirk bits that engage the
+code changes added for the new layout.
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
----
-v5:
- * pick up tag
----
- drivers/gpio/gpiolib-acpi-core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Based on v6.17-rc1.
 
-diff --git a/drivers/gpio/gpiolib-acpi-core.c b/drivers/gpio/gpiolib-acpi-core.c
-index 12b24a717e43f..6388e8e363dee 100644
---- a/drivers/gpio/gpiolib-acpi-core.c
-+++ b/drivers/gpio/gpiolib-acpi-core.c
-@@ -944,6 +944,7 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
- 	bool can_fallback = acpi_can_fallback_to_crs(adev, con_id);
- 	struct acpi_gpio_info info;
- 	struct gpio_desc *desc;
-+	int ret;
- 
- 	desc = __acpi_find_gpio(fwnode, con_id, idx, can_fallback, &info);
- 	if (IS_ERR(desc))
-@@ -957,6 +958,11 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
- 
- 	acpi_gpio_update_gpiod_flags(dflags, &info);
- 	acpi_gpio_update_gpiod_lookup_flags(lookupflags, &info);
-+	/* ACPI uses hundredths of milliseconds units */
-+	ret = gpio_set_debounce_timeout(desc, info.debounce * 10);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
- 	return desc;
- }
- 
+I am marking this as RFC, as I don't have suitable hardware for testing.
+Also I am not 100% convinced the IRQ number to pin mapping, as needed by
+the new IRQ register location, works correctly.
+Please have a look, check whether the changes look sane, and test it if
+you have access to hardware.
+
+A branch (together with the AXP318W PMIC code) is available at:
+https://github.com/apritzel/linux/commits/a733-rfc
+
+Cheers,
+Andre
+
+Andre Przywara (9):
+  pinctrl: sunxi: rename SUNXI_PINCTRL_NEW_REG_LAYOUT
+  pinctrl: sunxi: pass down flags to pinctrl routines
+  pinctrl: sunxi: only use PortK special handling on A523
+  pinctrl: sunxi: refactor IRQ register accessors
+  pinctrl: sunxi: support A733 generation MMIO register layout
+  pinctrl: sunxi: add support for set/clear regs
+  dt-bindings: pinctrl: add compatible for Allwinner A733
+  pinctrl: sunxi: a523-r: add a733-r compatible string
+  pinctrl: sunxi: Add support for the Allwinner A733
+
+ .../allwinner,sun55i-a523-pinctrl.yaml        |  6 +-
+ drivers/pinctrl/sunxi/Kconfig                 |  5 ++
+ drivers/pinctrl/sunxi/Makefile                |  1 +
+ drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c     |  2 +-
+ drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c |  3 +-
+ drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c   |  2 +-
+ drivers/pinctrl/sunxi/pinctrl-sun60i-a733.c   | 51 +++++++++++
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c         | 85 +++++++++++--------
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h         | 76 +++++++++++------
+ 9 files changed, 169 insertions(+), 62 deletions(-)
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun60i-a733.c
+
 -- 
-2.43.0
+2.46.3
 
 
