@@ -1,47 +1,47 @@
-Return-Path: <linux-gpio+bounces-24709-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24710-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6BA3B2EEBF
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 08:53:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2590DB2EECC
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 08:55:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 57399189BE03
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 06:50:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 904833B4061
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Aug 2025 06:53:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 600E02E7BCB;
-	Thu, 21 Aug 2025 06:50:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57CD12E88B3;
+	Thu, 21 Aug 2025 06:53:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rWtcNuVz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qs7XcmMv"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B9136CE1E;
-	Thu, 21 Aug 2025 06:50:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31732E62B1;
+	Thu, 21 Aug 2025 06:53:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755759009; cv=none; b=W0qk5TA7tmOI9OnjjGHV+QIC3osW+qcVhH8oqs4AhtjcLY/0BPj7zCBBHzC0b50p+erSNm50PZqZgu64zvvmbu7bEeOJgEDhq+fWnypfOAvG0YJujH9Rpuiqj9oTKmTnbj/Epw3Z6tAu/fvhKdkXZ5RQ/UjOaZAhhU41LH1oAFQ=
+	t=1755759190; cv=none; b=RVLHIKuHMmHPAWhZ8as+c4ONAX7MO2DLGcSqjuQKBXejK+amWSgxkiScQqQqOs3fAeGksvirw1QjBySJbvSFg3sEPOmBP4u8QHj/x8vksHK35Cw12Re/8W1dE30filN/UfkMWuAmYMndc2JwC90F2S35tYRsLYFvE1OloKEtVH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755759009; c=relaxed/simple;
-	bh=u+lsxovfQh47JM2+/dnFIH86HtbVMZEaPA79GiUi060=;
+	s=arc-20240116; t=1755759190; c=relaxed/simple;
+	bh=Bq9tP1dBXwQ3sRC4YKUxmHUFPSXpyXHLlJKSZ1attcQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cf0IBqE+1N7DH/tT4CqmqSMGeW3DAy+71+HEK5gpSUrHXrWLH5D5Iu+eA19ViiGa/gmejOVXItgVXMT1EsdUcacW6b2xv8aWI0Z4/yvU++4nWQknYbRv1kovVPpNYsM/tKTsBSt/8L3Uv4y+hVNmfy0q7ePY4GIG0ob5RgKOAfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rWtcNuVz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3939C4CEED;
-	Thu, 21 Aug 2025 06:50:07 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=n78rQaSabD/ScKUnpdTllO9ZlOg/hDxdCc+ldpAowt6f4umkVt5TxhZ8AArkxFRzJinaYlanbIJQWKe0+FhGCd+kGDQAQhPK9H/U8b72NoTMSW3CS4wOv092aogUcb+K2vG42wz4oKsRxYZrpbO/St1YuZzDs5k89jvumpkF2SI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qs7XcmMv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22860C4CEED;
+	Thu, 21 Aug 2025 06:53:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755759008;
-	bh=u+lsxovfQh47JM2+/dnFIH86HtbVMZEaPA79GiUi060=;
+	s=k20201202; t=1755759189;
+	bh=Bq9tP1dBXwQ3sRC4YKUxmHUFPSXpyXHLlJKSZ1attcQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rWtcNuVzxcYsC34AHmhjHBgxMf2ouycBh5sbTI6IqDcMDOs4NOiAHwDiinq/rRFcp
-	 Zgxpz9CoVE/6w1hlonzqs0taKH8bD0I8vlzYiEt0rlghWXCLkBz2/+nKPXojDrxuwI
-	 NvUDXL8TsapMRtBVOYosrNgG2uUt6SsgcjjGQLyBXlIESLxLYwakv0ozJOyxoC7ZxP
-	 292JeFide5WNt2qdhGCgu7c9WFuVYhx+jp++UHpQXyr1Q2DfXXvb0zrWJ8fzlizFG3
-	 T2t4mnu9y1ueNesgpAAJrCut//SNpr/e7hd8Ru35/r+G3fPuwK+ByZsWf3r01mj1Vf
-	 MJolRnW5Wm8EQ==
-Date: Thu, 21 Aug 2025 08:50:06 +0200
+	b=Qs7XcmMvSsV7ZlsJpkSxU/mY6+27bCRXN2nW1JYMEkIZbbbxqeCb++SHayuZouPBe
+	 pXLdV6i4y+uV93jaiaeZXB1iriW3zE/bbKi69plgG3xa5OIs0Qi76qhRmK7VU1E6ss
+	 LtnBtwtwFnfX6J44cs071lPZ9x5vD+8uwLd7zPounkMciOpdxkDvBvqh8jlNUP8dii
+	 u2f72i1+0PrrVy50oULnOBet9AcjJiPjRXovxGrycQLyhLCkK3Ylvj06fa/HZTKOhm
+	 8BZFUH4yFIxuQlwwigXeCGWanttsE4WFa/g75aoSrNq3PTsRHEf2r+EsWQcMVJMPEe
+	 J0JNPZ+l1tSHA==
+Date: Thu, 21 Aug 2025 08:53:07 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
 Cc: airlied@gmail.com, amergnat@baylibre.com, andrew+netdev@lunn.ch, 
@@ -59,11 +59,11 @@ Cc: airlied@gmail.com, amergnat@baylibre.com, andrew+netdev@lunn.ch,
 	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
 	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
 	linux-mediatek@lists.infradead.org, linux-sound@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v1 07/14] dt-bindings: display: mediatek,ufoe: Add
- mediatek,gce-client-reg property
-Message-ID: <20250821-wandering-vermilion-pigeon-b8c9f0@kuoka>
+Subject: Re: [PATCH v1 10/14] regulator: dt-bindings: Convert Dialog
+ Semiconductor DA9211 Regulators to YAML
+Message-ID: <20250821-practical-coyote-of-hail-d2fddb@kuoka>
 References: <20250820171302.324142-1-ariel.dalessandro@collabora.com>
- <20250820171302.324142-8-ariel.dalessandro@collabora.com>
+ <20250820171302.324142-11-ariel.dalessandro@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -72,36 +72,127 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250820171302.324142-8-ariel.dalessandro@collabora.com>
+In-Reply-To: <20250820171302.324142-11-ariel.dalessandro@collabora.com>
 
-On Wed, Aug 20, 2025 at 02:12:55PM -0300, Ariel D'Alessandro wrote:
-> Current, the DT bindings for Mediatek UFOe (Unified Frame Optimization
-> engine) is missing the mediatek,gce-client-reg property. Add it and
+On Wed, Aug 20, 2025 at 02:12:58PM -0300, Ariel D'Alessandro wrote:
+> Convert the existing text-based DT bindings for Dialog Semiconductor DA9211
+> Voltage Regulators family to a YAML schema. Examples are simplified, as
+> these are all equal.
 
-Why is it missing? If the binding is complete, it cannot be missing...
+Also not wrapped... fix your editor to recognize how commits are
+written.
 
-> update the example as well.
 > 
 > Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
 > ---
->  .../bindings/display/mediatek/mediatek,ufoe.yaml      | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,ufoe.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,ufoe.yaml
-> index 61a5e22effbf2..ecb4c0359fec3 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,ufoe.yaml
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,ufoe.yaml
-> @@ -64,6 +64,14 @@ properties:
->        - port@0
->        - port@1
->  
-> +  mediatek,gce-client-reg:
-> +    description: The register of client driver can be configured by gce with
-> +      4 arguments defined in this property, such as phandle of gce, subsys id,
-> +      register offset and size. Each GCE subsys id is mapping to a client
 
-Don't explain what DT syntax is. We all know, so that's completely
-redundant description. Explain the purpose. Explain Arguments with sechema - items.
+...
+
+> +---
+> +$id: http://devicetree.org/schemas/regulator/dlg,da9211.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: |
+
+Drop |
+
+> +  Dialog Semiconductor DA9211/DA9212/DA9213/DA9223/DA9214/DA9224/DA9215/DA9225
+> +  Voltage Regulator
+> +
+> +maintainers:
+> +  - Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - "dlg,da9211"
+> +      - "dlg,da9212"
+> +      - "dlg,da9213"
+> +      - "dlg,da9223"
+> +      - "dlg,da9214"
+> +      - "dlg,da9224"
+> +      - "dlg,da9215"
+> +      - "dlg,da9225"
+
+No quotes. I don't think this was ever tested.
+
+Also, keep it properly ordered
+
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  regulators:
+> +    type: object
+> +    additionalProperties: false
+> +    description: |
+
+Drop |
+
+> +      List of regulators provided by the device
+> +
+> +    patternProperties:
+> +      "^BUCK([A-B])$":
+
+[AB]
+
+> +        type: object
+> +        $ref: regulator.yaml#
+> +        description: |
+> +          Properties for a single BUCK regulator
+> +
+> +        properties:
+> +          regulator-initial-mode:
+> +            items:
+> +              enum: [ 1, 2, 3 ]
+> +            description: Defined in include/dt-bindings/regulator/dlg,da9211-regulator.h
+> +
+> +          regulator-allowed-modes:
+> +            items:
+> +              enum: [ 1, 2, 3 ]
+> +            description: Defined in include/dt-bindings/regulator/dlg,da9211-regulator.h
+> +
+> +          enable-gpios:
+> +            maxItems: 1
+> +            description: Specify a valid GPIO for platform control of the regulator
+
+Drop description, obvious.
+
+> +
+> +        unevaluatedProperties: false
+
+For nested blocks this goes after $ref: regulator.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - regulators
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/regulator/dlg,da9211-regulator.h>
+> +
+> +    i2c1 {
+
+i2c
+
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        da9212: da9212@68 {
+
+Node names should be generic. See also an explanation and list of
+examples (not exhaustive) in DT specification:
+https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+
 
 Best regards,
 Krzysztof
