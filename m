@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-24778-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24779-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69C8CB30EE7
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 08:27:26 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10675B30EFC
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 08:32:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 02D5F5E8856
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 06:26:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BE2C1B6158D
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 06:31:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E7222E541E;
-	Fri, 22 Aug 2025 06:26:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C65FA2E541E;
+	Fri, 22 Aug 2025 06:32:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DYOcsqd7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CZqdjzG6"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A6F1E4AB;
-	Fri, 22 Aug 2025 06:26:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E96226E15D;
+	Fri, 22 Aug 2025 06:32:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755843998; cv=none; b=RQ2ggiMq6smkQuIw3XZo+VDAfKCGEgYtA3RNubz1Pj899oey6zeGFzMEoyiUYB4iR6R5B0ppem1lwD22k17+OiyTVBGWqkNHz6O3rxX3lpFf5MqrYtzEb0HpVD1I+iTiaEv0nd8UkSco0y+KLWqTdYlH6FBnsefpKsTa0CqJkmE=
+	t=1755844353; cv=none; b=d3yec2gGL5oO/lrJOePN8ujpythpkqaDL96tlrLuwTYUNF2kdHD5mSBe/qwO+uzLUtmDaKrY/2G1UEVPd1iB6CV481xX1GT4Go9ifyXID/Lkng8y+Wgg5989WQj/vfohCAIytfYQLBdRUdy80/SAuA4deb6EFY/KqnlqEhG9A5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755843998; c=relaxed/simple;
-	bh=+CZdwfNyEfkKUF083jCWK7dcVEES5NOSdYHEBqM8tqQ=;
+	s=arc-20240116; t=1755844353; c=relaxed/simple;
+	bh=4VZ/xm7n5imPTrLX4hKthO212IbvmQSFDDZvXHzPBLc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=syUg9cMdfQwjIVKE+EIAeqAPm1mfvmexiOwz1vULvo6QJV6oNyyISKkiwPuIjVl5Uyl3q1vFv3k3vyACNfoCIspfs9kwzc9CazR/KhfMf4eq0YJ+r1e+wqYDNbTfPlMgYOR0gogw5pgp/eBtjy1wuVDIfSJFm9BaiznJb4DcdHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DYOcsqd7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A39CAC4CEF1;
-	Fri, 22 Aug 2025 06:26:30 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=mSpZxER+FnqC185A0tpyJoU6sk/Qnx30l2dTSQjH27KMbriQ1FYLW7xgiKhCL47rk31Fzf8QU065bSV6cQheRgoM43LVwN9Xu7aS4t5p2+1EIztxSUaepkVjSrrXxMtyJu1KPOtKe5ukEAsiy7YLql9yceE1SffPNRnouw5H740=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CZqdjzG6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D09DC4CEF1;
+	Fri, 22 Aug 2025 06:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755843998;
-	bh=+CZdwfNyEfkKUF083jCWK7dcVEES5NOSdYHEBqM8tqQ=;
+	s=k20201202; t=1755844353;
+	bh=4VZ/xm7n5imPTrLX4hKthO212IbvmQSFDDZvXHzPBLc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DYOcsqd7LVjWDHnSQWLStDeK3nH6zXTbWDyvLpE41nhaOeDkzkJrxMg8jpVFWAu84
-	 SNhRGUPw5YlZv+9YsxOuD3loDyzoj5YyyejCzOx9cVFtFOACVLZqfKEQWvhwdEUZRN
-	 q/kMgIZjM4zNnx07XKP6FlUS/3OswaBn3gS8lumDA+twoMX334B3Oy85ZfiGE3D31u
-	 jFxFTbjS1Kkfz/8szrAYTL8+rKMA+d9tdWC7pah1bgMvTUoW3wCQHMjbDngul3pptu
-	 xAqNztpnznFyjuxNTFB3GFgWgb5a8vCYAV61s7m4RbDEsmCYMazjKi734PeZ7Zk9bB
-	 Gp8dkffpnwUNg==
-Message-ID: <1096f050-f617-4e86-8948-1fc8c3936b04@kernel.org>
-Date: Fri, 22 Aug 2025 08:26:28 +0200
+	b=CZqdjzG6cBuQUCYzRxG/ebFTI0DWcBnMYG8RT+kg+o71dARQqTxk0dDpIcQWhraUJ
+	 AENPf0UwPlSdLjpfd0bHhSGfPUa/LnJ3WrKlLD99Qv9tiNeZK+OpVbANOC4vmtvZeU
+	 mJTGjLBVzohgAlhNRy2ZaMjqKQXgvnR3XSccK+Swt4NYiY2kDlPavFBlwIMwFu+Pqo
+	 aa6zqe1e6QBDybNcK1U0MFnjm5vzEYPJwZSZbcCb9Qr8uIaMjhNWTYaFcA0XaS8gE+
+	 ldV2FV5Eg3FrJPz5LwxjBHDr8kEFjH5lykaGK9ABVAtDvUSqKGwWXyQZTHWrJAmOur
+	 36cuORYcNCFrA==
+Message-ID: <ceb20624-7405-40c5-9c29-1a7339e0cca4@kernel.org>
+Date: Fri, 22 Aug 2025 08:32:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/10] Add support for the Axis ARTPEC-8 SoC
+Subject: Re: [PATCH v2 02/10] clk: samsung: Add clock PLL support for ARTPEC-8
+ SoC
 To: Ravi Patel <ravi.patel@samsung.com>, jesper.nilsson@axis.com,
  mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
  krzk+dt@kernel.org, conor+dt@kernel.org, s.nawrocki@samsung.com,
@@ -67,8 +68,9 @@ Cc: ksk4725@coasia.com, kenkim@coasia.com, pjsin865@coasia.com,
  linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
  linux-gpio@vger.kernel.org, soc@lists.linux.dev
 References: <20250710002047.1573841-1-ksk4725@coasia.com>
- <CGME20250821124014epcas5p12bacab10aac378f8d011fe7d2e04c8fa@epcas5p1.samsung.com>
  <20250821123310.94089-1-ravi.patel@samsung.com>
+ <CGME20250821124024epcas5p349dda3c9e0523cc07acf2889476beeb1@epcas5p3.samsung.com>
+ <20250821123310.94089-3-ravi.patel@samsung.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -114,20 +116,19 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250821123310.94089-1-ravi.patel@samsung.com>
+In-Reply-To: <20250821123310.94089-3-ravi.patel@samsung.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 21/08/2025 14:32, Ravi Patel wrote:
-> 
-> Link to v1: https://lore.kernel.org/all/20250710002047.1573841-1-ksk4725@coasia.com/
-> NOTE: The first version has been sent by Coasia.
->       After that, it has been agreed between Coasia and Samsung that Samsung will take
->       ownership of upstreaming ARTPEC-8 and ARTPEC-9 platforms.
+> +
+> +static const struct clk_ops samsung_pll1031x_clk_ops = {
+> +	.recalc_rate = samsung_pll1031x_recalc_rate,
+> +	.round_rate = samsung_pll_round_rate,
 
-Do not attach (thread) your patchsets to some other threads (unrelated
-or older versions). This buries them deep in the mailbox and might
-interfere with applying entire sets.
+
+This will conflict with round_rate drop, so might need rebasing. Please
+follow up discussion or decisions in the round rate patchset.
 
 Best regards,
 Krzysztof
