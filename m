@@ -1,137 +1,101 @@
-Return-Path: <linux-gpio+bounces-24787-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24788-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82F81B312DA
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 11:23:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4D0FB31613
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 13:05:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D70441CE87C7
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 09:23:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EAB5F1D030C5
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 11:05:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 381A32E3B00;
-	Fri, 22 Aug 2025 09:23:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F9802F617B;
+	Fri, 22 Aug 2025 11:04:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yramlMjx"
+	dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b="S0vKdSSv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout4.mo534.mail-out.ovh.net (smtpout4.mo534.mail-out.ovh.net [188.165.54.92])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE00D2E3B03
-	for <linux-gpio@vger.kernel.org>; Fri, 22 Aug 2025 09:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C932EA473
+	for <linux-gpio@vger.kernel.org>; Fri, 22 Aug 2025 11:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.54.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755854585; cv=none; b=aSAjljW/aOXW3y+5suvi8MOAdA7TiEKP/+qWP6AF+YtodEfQuJEOWGAJWsIp0/Wq7o8z9htLz4xzn0H+R7LQ/6Octa9V8BsNY+we0zJ9wXAYFav21W2nfU5FMgvQQpmw0SaZrPv2aiwiKu4xgdDyy/JaS7s7fS2CS405zrJlXIc=
+	t=1755860683; cv=none; b=ceIK0Iglvo6Ty2FkvjihOB3vQeYhSNUVhG0FO92neB6DhI+vCYl1IEdmya8doaTaUc7Pl1mv9c3WBdF5x9R/kapjMDkXfHQxET+SOL/yXrXhY6refwFNGuiu5+9h+9HVIEHwd+9zDZMpiI1tbK2Xnw19pxiqC6CutFb96rY7m7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755854585; c=relaxed/simple;
-	bh=A81kBoegl40q6quwOX0WX4yiOUHqnmUUvR3iJOA0a2w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UHK5+zhb2F66AoY4AlN7gY2yk3crM/uT/KdTDgVKJ9vc0aFUPqTts3sgedndAd+5SUtz0VR0xDESZgl9eOCvMpDFvNIiLphHAd5I3/G+G7Q2ZQcx5C/7Uw3eemjieupIc+P03HPQYkncSGDpdNQYOY6v+XC0rifrGqopD6Ldlf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yramlMjx; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-333f92cb94eso16493131fa.3
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Aug 2025 02:23:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1755854581; x=1756459381; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8rvb5BTFOBJCsAqheRi5OrrkHsnM2r6jQ+WuONy16iw=;
-        b=yramlMjxo2HVLHr77caITJqmao78DQi+W03uRRGABVDoijpNsUeuSCdK1TmpiJ0hXi
-         GdZ4vJX75/t4Q+Q9Da1aUSKfT/UUVQNzpkZVqBZd7/uWx4WotQs1xPHzUoD63hJlWajX
-         VAj/Pdcsg4mCr3WWO+WVte+c9XTUg0bzLml3DfEek7dleo4tySjsDb9Wpf0pDxppHiIX
-         cqiFdOvgyAqqOqrmV9U0qKwyk7iEiojvSM0EvAc8MvwykNTPCwxI3uYvlKRc6SgiCz4s
-         AnguQxajQDLQ1IS+mXISkUlGcJXvmR9W+RpSLjxoi6fb6rmdb9bnmctZozyEhIt65U28
-         HiGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755854581; x=1756459381;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8rvb5BTFOBJCsAqheRi5OrrkHsnM2r6jQ+WuONy16iw=;
-        b=EpcKxaXlwT2PspHauyugpUQS08G36V57KQ0RlUSKN0YZL3f8S6imXKSc1EwZgpK/7F
-         FZ+mFRfydkZ4xviY8fjC1eqXM7/NHM7e56llzkE6XqmGIiQZyMc6flft7g4T6fT0B9VO
-         jV+0R3FebgG9ZcNFmK4TsOQ6LfSGuN1tXZzUj3O0DpIyMO1mruCbex3vkW6j0a+CjzCZ
-         bDPiXajJApho0+0xV9+tXRcb4wput69hiQQSyeHQ2taBk2zozCoEnByYiou2cXILZLmg
-         zC7M9fL8yVCCE9GzP1+T3LOCpTaJv5TD70xAxDEit07m5so4USt70RbKvU9IHsKXWnFK
-         RZqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUvXn6Kzip55CVcqL2UikJCuWM3X1B0tzB94Nhd2mTI3Q9iKqkNJ1ZnEONa/wWCDkb5WPX6FMTl9vFu@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTQ6GEjxUb8FTkKjBPQxC+UGcwoemFtn7ewaWH78qPusOcSCfR
-	WkncszsiccDCfkN4dUL1uMg3rb2stf1NdsCORMHBXb3p/qQ8Qa5sE48Dv1iH/HHu1kQM9GKMLz9
-	lHo8eWynYScIRtemfJjb7Et9iYe4OBMMhcyB6pbjemg==
-X-Gm-Gg: ASbGncsUFvtUBhWyeKuv40jCbsNRjih/DftC2IZWyGdhG2jZy/dLge5M/1UTFwwSGpk
-	PSPnThOx/vjQTnRkU0M4o0XUZzjE+A3lJcVyoVjneLUA3vcW7Z67zayAw77oNYpEBQiJuFf5HHc
-	MlmJtrky4Jy2Qk/t7voS+82a+IDwrqiuZ4gPA+QbLDsIMkWLFRbHtLySKunUhZgp0XyEXt8a917
-	dlJWlk/7eVmnfuatw==
-X-Google-Smtp-Source: AGHT+IGmS+5jZRiY3M87jYqtd1N1nFCNBKn5R2TEdrmd3+xxfd4PG/kXNNSVVgmhRVuloDKPRDouFdqjsq+r/vvoIgA=
-X-Received: by 2002:a2e:8a86:0:b0:32b:5272:38eb with SMTP id
- 38308e7fff4ca-33651002d61mr7071001fa.40.1755854580887; Fri, 22 Aug 2025
- 02:23:00 -0700 (PDT)
+	s=arc-20240116; t=1755860683; c=relaxed/simple;
+	bh=4POstXQug6/tm324a/uxWTpYPZm2WzR82ZBrp7W+wwE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F6yxFPbGwclR6lbc0WK3ANCfQILZTNyfz9gGYpCS41+qu9WF/PLsvm+VMZ+Fy0rVdAmwtVj9KosniDRURGTi4oyS5lV3HLb5pN/ZSotelg7u6OpVv+4r3OE1cIqo2U7kX73S+3xM3QcNjkgAZsFEpyJ4yT7MSAtDCALY4LNcwU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b=S0vKdSSv; arc=none smtp.client-ip=188.165.54.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orca.pet
+Received: from director4.derp.mail-out.ovh.net (director4.derp.mail-out.ovh.net [79.137.60.37])
+	by mo534.mail-out.ovh.net (Postfix) with ESMTPS id 4c7clP0r5yz6FhZ;
+	Fri, 22 Aug 2025 11:04:33 +0000 (UTC)
+Received: from director4.derp.mail-out.ovh.net (director4.derp.mail-out.ovh.net. [127.0.0.1])
+        by director4.derp.mail-out.ovh.net (inspect_sender_mail_agent) with SMTP
+        for <brgl@bgdev.pl>; Fri, 22 Aug 2025 11:04:32 +0000 (UTC)
+Received: from mta3.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.110.0.128])
+	by director4.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4c7clN5r1Vz1xpF;
+	Fri, 22 Aug 2025 11:04:32 +0000 (UTC)
+Received: from orca.pet (unknown [10.1.6.10])
+	by mta3.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTPSA id 954BB9432CD;
+	Fri, 22 Aug 2025 11:04:31 +0000 (UTC)
+Authentication-Results:garm.ovh; auth=pass (GARM-114S0082ef14080-d45a-44d5-83ba-a09211dd5816,
+                    ADC0680FE15BB91110492B9A34CE42AA242C155A) smtp.auth=marcos@orca.pet
+X-OVh-ClientIp:79.117.22.109
+Message-ID: <9ee82305-6f46-461b-ad0d-441425727be3@orca.pet>
+Date: Fri, 22 Aug 2025 13:04:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250822075712.27314-2-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20250822075712.27314-2-krzysztof.kozlowski@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 22 Aug 2025 11:22:49 +0200
-X-Gm-Features: Ac12FXwu_A2fq6cbJB5U4ofkj6w0TKETQ4RpzZE3LHHotvIJu8LJQDJ8_-1dTpA
-Message-ID: <CACRpkdbLKXx7GEOPemFGSTFy8oDG99TUFwC7sH7xkaoqe-cY8A@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: mfd: Move embedded controllers to own directory
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Benson Leung <bleung@chromium.org>, 
-	Guenter Roeck <groeck@chromium.org>, Tim Harvey <tharvey@gateworks.com>, 
-	Michael Walle <mwalle@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Jean Delvare <jdelvare@suse.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Lee Jones <lee@kernel.org>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Cheng-Yi Chiang <cychiang@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Wim Van Sebroeck <wim@linux-watchdog.org>, Thierry Reding <thierry.reding@gmail.com>, 
-	Tinghan Shen <tinghan.shen@mediatek.com>, devicetree@vger.kernel.org, 
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	linux-sound@vger.kernel.org, linux-watchdog@vger.kernel.org, 
-	Mathew McBride <matt@traverse.com.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] gpio: gpio-regmap: add flags to control some
+ behaviour
+To: Michael Walle <mwalle@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Lee Jones <lee@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-gpio@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20250821101902.626329-1-marcos@orca.pet>
+ <20250821101902.626329-2-marcos@orca.pet>
+ <CACRpkdb7PZTx8WPQP8Jrj_sR8X2ejK3OgA+9v2PUaOcTM4NnrQ@mail.gmail.com>
+ <DC8RMCPRX0UZ.3RP6IGY2KJ96@kernel.org>
+Content-Language: es-ES
+From: Marcos Del Sol Vives <marcos@orca.pet>
+In-Reply-To: <DC8RMCPRX0UZ.3RP6IGY2KJ96@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 5674535533833246310
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduieefheelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeforghrtghoshcuffgvlhcuufholhcugghivhgvshcuoehmrghrtghoshesohhrtggrrdhpvghtqeenucggtffrrghtthgvrhhnpedtgedugfeiudfgkeduhfelgfejgfeuvdejffeiveegteejvddviefhiedujedvheenucfkphepuddvjedrtddrtddruddpjeelrdduudejrddvvddruddtleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepmhgrrhgtohhssehorhgtrgdrphgvthdpnhgspghrtghpthhtohepkedprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmfigrlhhlvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvg
+ hlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheefgegmpdhmohguvgepshhmthhpohhuth
+DKIM-Signature: a=rsa-sha256; bh=cwbNrb23A+8SUEIo2+pV65nYKzVzqJSprND2O24vDUY=;
+ c=relaxed/relaxed; d=orca.pet; h=From; s=ovhmo-selector-1; t=1755860673;
+ v=1;
+ b=S0vKdSSvQfX3N/6oFSTGs2J5T6GgUc0m5ftAJnnkxcEwDKt9pPkI4m3pYDYeN2YaI3t4McKj
+ zzvh2hP8yfNAvUyDorSzy9p5VTdNi87VJp0wYLROn8ZS7+CZEGv6K8oiVHJeQvUu0hbgw1bYA59
+ AZho88FKBRbNQK9KM39/4XE5TlTlfECHJhvmyvFAmuNurQSqlWL3LJ3th+5VUNYR6xb7ZNdMZQF
+ BRgdyDLAtlxr5TsHFb8FYsGP2YnSQRsgo4+OzX+6R6Agqe0f8RgOcZPRUBb+xcmSdQYDO+kgwUY
+ F5hK6etT7RUbOV7s65bcFDqtfqfJOABQJQMnJa1BQxtIw==
 
-On Fri, Aug 22, 2025 at 9:57=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+El 22/08/2025 a las 9:07, Michael Walle escribió:
+>>> +       ret = gpio_regmap_set(chip, offset, value);
+>>> +       if (ret)
+>>> +               return ret;
+> 
+> Could you add a short paragraph to the commit message that you've
+> added error checking? Something like:
+> 
+>   While at it, add the missing error check in
+>   gpio_regmap_direction_output().
+> 
 
-> Move ChromeOS Embedded Controller, Gateworks System Controller and
-> Kontron sl28cpld Board Management Controller to new subdirectory
-> "embedded-controller" matching their purpose.  MFD is coming from Linux
-> and does not really fit the actual purpose of this hardware.
->
-> Rename Gateworks GSC filename to match compatible, as preferred for
-> bindings.
-
-Maybe add some definition of what we mean with "embedded controller"?
-
-Something like:
-
-"An embedded controller is a discrete component that contains a
-microcontroller (i.e. a small CPU running a small firmware without
-operating system) mounted into a larger computer system running
-a fully fledged operating system that needs to utilize the embedded
-controller as part of its operation."
-
-> Acked-by: Michael Walle <mwalle@kernel.org> # for sl28cpld
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Overall this looks reasonable:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+Added! Thanks for the feedback!
 
