@@ -1,122 +1,159 @@
-Return-Path: <linux-gpio+bounces-24793-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24794-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73982B3174F
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 14:14:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F59EB3184B
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 14:50:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 58CDF16F1C8
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 12:14:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8A4E3AC816C
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 12:50:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D26D62E336F;
-	Fri, 22 Aug 2025 12:14:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E06E42FDC3C;
+	Fri, 22 Aug 2025 12:49:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lpjOwmDG"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SDESnmyJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9013D199BC
-	for <linux-gpio@vger.kernel.org>; Fri, 22 Aug 2025 12:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE65F2FD1C0;
+	Fri, 22 Aug 2025 12:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755864873; cv=none; b=Wjyh5gG9k4cTnTM0Vv+lSzIaRgdx2fKfX4AzjxtO6Fhb4Sk1kr13ifIXvjjwR2bDee9lGMYDUeGv2u9bVEX8Iq5pp8K0AV+xQ8YobDATqr9yqI5mCew1Q5C+p/d37bT0RwVyzjoHgC2lmNQ51cQmqrA9p+5/VQZgvHAkBxErKG8=
+	t=1755866971; cv=none; b=pzgYlaxmPv2qaI5EsoZ+sLYYeg5RhdFTTGp2BK/LQf1dvAGI1XeiHGtGl1sSOV//uF+3npzep10YHfd2TvGVhhqYC3//v6q7RLxOzUtEOpK2C9dbdkD8o6B6IkxepJ4OnDqb3RXdchI9LlSVQgpWqfZx+bSVODZzORIhpSQvemQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755864873; c=relaxed/simple;
-	bh=Ha0X5JrI+INUGhOxL0Mkekxtn+SdZocQ6T0kCcGVwaE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YqiCPQiLIGt3xM70yWRDXa2xvL4BfopfDu/xSUBYlTMydK3eUpxJl9+Bvj0OQ9TxzcaOxUJZAcqkaP9/lB13jsuQ2c3M7vGJAX5xcsBQuV8nYEcId/4mO9VS3FXD8c2bS2j9LUHGXrSfxgysTrBn4So4YK5Cq7mpp5qG7SzdTPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lpjOwmDG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAE97C116B1;
-	Fri, 22 Aug 2025 12:14:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755864873;
-	bh=Ha0X5JrI+INUGhOxL0Mkekxtn+SdZocQ6T0kCcGVwaE=;
-	h=From:Date:Subject:To:Cc:From;
-	b=lpjOwmDGkhdxh7T2QrHk8h/Ifwv/94PsOCsCJIbaPAs5xuMJv0vIgjy8eAGQEbdjO
-	 0CZefA3+jzBWGGPgKtTXcRP71BkKKtrrTTZPmeiFfjJKM4plOEZQxg1duCbvD0xCTw
-	 wsUU/nG6oSJjUYWiZiJCtTn1TXPte7Rd5CNKcDh94DvzOLGf76bE4ujuSxwfobKqeb
-	 uOEflFmCaJrVfgjaTIHTNaUDZRezaZJjPAU6iL9otddIs1Dweyac+urCETdgo0QiDE
-	 EFfmDCgzwcCEsgITu5Q/UwjYYUy6NXzw36AvnZi+hHJUJRC5gZbjqNdI6/S56//CLt
-	 xtJgPpGyHEdDg==
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-Date: Fri, 22 Aug 2025 14:14:18 +0200
-Subject: [PATCH] pinctrl: airoha: Fix return value in pinconf callbacks
+	s=arc-20240116; t=1755866971; c=relaxed/simple;
+	bh=hqPSW8gjRuHQDQ+i6kbMnBBBnlr60fdu7FJ683wtg9E=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=EdzVhyfLOVGIusZdccc1mmyqc4UkkvTgCeh3InmdCoaO66JUzFYzkbjUd01QgTby4P9krZGgqKxsQyQjaNSqPDWR+vwKjbi30ND3cRIk8cLeYh3+IAkgTDYNjqx3q5cC2AdO7BYL6KoLm6KJ81wMRvhSo8gtAoPgTGaMYwhDPl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=SDESnmyJ; arc=none smtp.client-ip=185.246.84.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 774161A0D48;
+	Fri, 22 Aug 2025 12:49:22 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 45D03604AD;
+	Fri, 22 Aug 2025 12:49:22 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 58D961C22DAC7;
+	Fri, 22 Aug 2025 14:49:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1755866961; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=Ua42caSIreMTSgZq76zsnJuAIzw5ug7AfcH2QBcncRU=;
+	b=SDESnmyJ/kgcZDMS117RQSYG6rtBD/JCv3cYBZOa9cHLPlLtCFuEa5ocMI/hx9RFSDNbG7
+	L2Sewj3/uIebW3MjKm87ZtSWD0uuJ9wy8pyVSDDdmKN2ZOGdHqmEk6CVZbYXeqqGvOXaz3
+	VU2ejhHOYZUxXIj2xWhYJOt9atBG7jK/AgR0LKXDK+s1YqGhLKGbb1MojYTW3wmMzNpvGD
+	U3I9ZAbTNFdzR6nu9DKlol+72VaLaT5Q5yrJN8plgt7jpNOrZd9DtH4QtId4+zMdz630LJ
+	yL3mgzLzGsLAhOKUkLYGGxNtx89sBeu+Mho/QbCpLdG0PBEA/zUVHgA9DRP/xg==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250822-airoha-pinconf-err-val-fix-v1-1-87b4f264ced2@kernel.org>
-X-B4-Tracking: v=1; b=H4sIABlfqGgC/x3MQQqAIBBA0avErBsopZSuEi3ExhoIlREiCO+et
- Hx/8V8oJEwFlu4FoZsLp9gw9h3408WDkPdmUIOaBqsUOpZ0OswcfYoBSQRvd2HgB7UNMxk7aes
- NtEEWavmfr1utHyGI9/lsAAAA
-X-Change-ID: 20250822-airoha-pinconf-err-val-fix-38f6e78538c7
-To: Sean Wang <sean.wang@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Benjamin Larsson <benjamin.larsson@genexis.eu>
-Cc: linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, Lorenzo Bianconi <lorenzo@kernel.org>
-X-Mailer: b4 0.14.2
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 22 Aug 2025 14:49:10 +0200
+Message-Id: <DC8YVXKCZAE4.5QJM9MP4HJZ5@bootlin.com>
+Subject: Re: [PATCH v13 04/10] pwm: max7360: Add MAX7360 PWM support
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>, "Michael Walle"
+ <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>, "Andy Shevchenko"
+ <andriy.shevchenko@linux.intel.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250811-mdb-max7360-support-v13-0-e79fcabff386@bootlin.com>
+ <20250811-mdb-max7360-support-v13-4-e79fcabff386@bootlin.com>
+ <l5crrk3ugpo2ggjtykcy5eretclgntebyq52xuouekoimbrsvh@u4koyu5z2wwi>
+In-Reply-To: <l5crrk3ugpo2ggjtykcy5eretclgntebyq52xuouekoimbrsvh@u4koyu5z2wwi>
+X-Last-TLS-Session-Version: TLSv1.3
 
-Pinctrl stack requires ENOTSUPP error code if the parameter is not
-supported by the pinctrl driver. Fix the returned error code in pinconf
-callbacks if the operation is not supported.
+On Mon Aug 18, 2025 at 11:05 AM CEST, Uwe Kleine-K=C3=B6nig wrote:
+> Hello,
+>
+> On Mon, Aug 11, 2025 at 12:46:22PM +0200, Mathieu Dubois-Briand wrote:
+>> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+>>=20
+>> Add driver for Maxim Integrated MAX7360 PWM controller, supporting up to
+>> 8 independent PWM outputs.
+>>=20
+>> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+>> Co-developed-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.co=
+m>
+>> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+>> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>> ---
+>> ...
+>> +static int max7360_pwm_round_waveform_tohw(struct pwm_chip *chip,
+>> +					   struct pwm_device *pwm,
+>> +					   const struct pwm_waveform *wf,
+>> +					   void *_wfhw)
+>> +{
+>> +	struct max7360_pwm_waveform *wfhw =3D _wfhw;
+>> +	u64 duty_steps;
+>> +
+>> +	/*
+>> +	 * Ignore user provided values for period_length_ns and duty_offset_ns=
+:
+>> +	 * we only support fixed period of MAX7360_PWM_PERIOD_NS and offset of=
+ 0.
+>> +	 * Values from 0 to 254 as duty_steps will provide duty cycles of 0/25=
+6
+>> +	 * to 254/256, while value 255 will provide a duty cycle of 100%.
+>> +	 */
+>> +	if (wf->duty_length_ns >=3D MAX7360_PWM_PERIOD_NS) {
+>> +		duty_steps =3D MAX7360_PWM_MAX;
+>> +	} else {
+>> +		duty_steps =3D (u32)wf->duty_length_ns * MAX7360_PWM_STEPS / MAX7360_=
+PWM_PERIOD_NS;
+>> +		if (duty_steps =3D=3D MAX7360_PWM_MAX)
+>> +			duty_steps =3D MAX7360_PWM_MAX - 1;
+>> +	}
+>> +
+>> +	wfhw->duty_steps =3D min(MAX7360_PWM_MAX, duty_steps);
+>> +	wfhw->enabled =3D !!wf->period_length_ns;
+>> +
+>> +	if (wf->period_length_ns < MAX7360_PWM_PERIOD_NS)
+>
+> I know this code was suggested as is by me, but I think we need:
+>
+> 	if (wf->period_length_ns && wf->period_length_ns < MAX7360_PWM_PERIOD_NS=
+)
+>
+> here to prevent to trigger a PWM_DEBUG warning. Sorry to spot this only
+> now.
+>
 
-Fixes: 1c8ace2d0725 ("pinctrl: airoha: Add support for EN7581 SoC")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
----
- drivers/pinctrl/mediatek/pinctrl-airoha.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Right, this does make sense. I will send a new version shortly.
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-airoha.c b/drivers/pinctrl/mediatek/pinctrl-airoha.c
-index 5f1ec9e0de213d587b68f41d3458cf504ee1b21f..1b2f132d76f0aff78768ed846e8d5980e5b46770 100644
---- a/drivers/pinctrl/mediatek/pinctrl-airoha.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-airoha.c
-@@ -2696,7 +2696,7 @@ static int airoha_pinconf_get(struct pinctrl_dev *pctrl_dev,
- 		arg = 1;
- 		break;
- 	default:
--		return -EOPNOTSUPP;
-+		return -ENOTSUPP;
- 	}
- 
- 	*config = pinconf_to_config_packed(param, arg);
-@@ -2788,7 +2788,7 @@ static int airoha_pinconf_set(struct pinctrl_dev *pctrl_dev,
- 			break;
- 		}
- 		default:
--			return -EOPNOTSUPP;
-+			return -ENOTSUPP;
- 		}
- 	}
- 
-@@ -2805,10 +2805,10 @@ static int airoha_pinconf_group_get(struct pinctrl_dev *pctrl_dev,
- 		if (airoha_pinconf_get(pctrl_dev,
- 				       airoha_pinctrl_groups[group].pins[i],
- 				       config))
--			return -EOPNOTSUPP;
-+			return -ENOTSUPP;
- 
- 		if (i && cur_config != *config)
--			return -EOPNOTSUPP;
-+			return -ENOTSUPP;
- 
- 		cur_config = *config;
- 	}
-
----
-base-commit: 0ae621d78880a406f164a719150dfc66a69b7148
-change-id: 20250822-airoha-pinconf-err-val-fix-38f6e78538c7
+>> +		return 1;
+>> +	else
+>> +		return 0;
+>> +}
+>
+> Best regards
+> Uwe
 
 Best regards,
--- 
-Lorenzo Bianconi <lorenzo@kernel.org>
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
