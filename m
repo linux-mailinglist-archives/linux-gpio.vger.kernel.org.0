@@ -1,151 +1,128 @@
-Return-Path: <linux-gpio+bounces-24822-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24824-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CAF7B31F5F
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 17:48:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D938B31FC4
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 17:57:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6B0A71D0711D
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 15:44:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B82281D2578E
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 15:51:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D908C34A331;
-	Fri, 22 Aug 2025 15:36:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86E20274B26;
+	Fri, 22 Aug 2025 15:46:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gkm3JskI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jAqiwaKn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BBE34A324;
-	Fri, 22 Aug 2025 15:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4628C153BED
+	for <linux-gpio@vger.kernel.org>; Fri, 22 Aug 2025 15:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755876974; cv=none; b=UMHp4GOJPQ8BVIGbVrQd0Ikmu4W7wR9MYh4B8BydHzS79yEVrxT0RaYPu+YR0asVHXuYvAaMfYxwCVNVQuns3RkAg9TXyTyy1tNtukscrUKmz3xBpNBITa+MfXgfY8Yjx7s1/ZfQEuRjFNAPwyrleM8EodLwcds7gZjHbDUqYZ4=
+	t=1755877601; cv=none; b=cHQtl2e62LW4LN2xLEIfl8LeqOdZGo+yI0gdJ5mXajNmNJybBrqf3tzByRwcZvlLh2mpYZ7Pf41Y1VVNVOICG0wjSDuPGiC6plj4hZOLI90iCxr1p8t4gefVoSisjQVs1AiSQKlnPbzCNLpxAWpkjixmMD4dCJeFPXXjISVllkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755876974; c=relaxed/simple;
-	bh=M4axMQs8H13c09qWo6K3CitPMFiulFvZkPJOaBof5qk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=o2Ob5mdBgrZP5JoFZ9w4FbA3nXtRT7li1NESUsEiRpmSurZwg3LvDRpGYgvtNqnornkg1a4jr/rjHCd8U8m49J+ipi1YwhAmaiSnUzCz0xPuKtClA8KC9FjzriW2draMdgy6D2nMc0Np7FBFt4ZoUphkAfOceDBe5AELfsxQMcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gkm3JskI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9AE6C4CEED;
-	Fri, 22 Aug 2025 15:36:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755876974;
-	bh=M4axMQs8H13c09qWo6K3CitPMFiulFvZkPJOaBof5qk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Gkm3JskIl9AEISSDTxGOPEQ5Ekw+yO/AvQdomznGVF8QhL2AKSjB9ug0fr1l8cDAC
-	 R5sn0gLRNWsiAEXDV/8IqKrKhmFhfaIV0eZ2Ifeh4tLF63tK6IWjZnREefRXi/M03D
-	 sonYkEFxAHk5WnTO9vZYeGm/kLZ++fqGgDYfTihFHvZFAojKUxRz39rTZqvajG+zmS
-	 C5cdC9xRurIk0OtWquWGUHHvSsQMbdCi9wn8LX+sUhjGWTlzoGERhtdVdDoJXui0e5
-	 RMD+nlwye1ZCE/pFkHY1ti7fjopPKBrl36OGkQOSbkQ95P59TCZ58RYnkJ70Qa5E+H
-	 M8+0Xh8w08Hdg==
-Date: Fri, 22 Aug 2025 10:36:11 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
-	"mani@kernel.org" <mani@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"joel@jms.id.au" <joel@jms.id.au>,
-	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
-	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-	BMC-SW <BMC-SW@aspeedtech.com>
-Subject: Re: =?utf-8?B?5Zue6KaG?= =?utf-8?Q?=3A?= [PATCH v2 09/10] PCI:
- aspeed: Add ASPEED PCIe RC driver
-Message-ID: <20250822153611.GA684739@bhelgaas>
+	s=arc-20240116; t=1755877601; c=relaxed/simple;
+	bh=b9+nY0hCJ58Vi4rp0ic+HGnFWZ5w0z8S08lgMLJAn5A=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Jh0mkCELY4W87AGgoFCqsrsazKpkLrWXYisiD/KUoaYACPhMHvOcG6LEonTcp8vH6tIQdX78yvSLbsrN3JdT0Kz5k4jooyu7TgCJxwpXpIAxdnbEVeEnVGA/+6/AQiQViMLtueJdMekyED3frZWiSVz2ZL9WOz0YkWGHYz36qeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jAqiwaKn; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-333f92f1911so16774851fa.3
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Aug 2025 08:46:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1755877595; x=1756482395; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LMODva4Wx+u5k/n8I9hDvFpyxaAAOgTPse/Q7Fgk72Q=;
+        b=jAqiwaKnMoqMGesUXRNHQmuc/R62xotdlacos/XWw3bGmnB/TnWjOZSRDyO2Wr46gw
+         AcOpce3GTt1tUtD/2MGg9KqQoeB91Wi5XfkzS8YNEXT5QYNjGenuENwrlFQOZbdJCiC9
+         J7bYmLWaVaF+mTgsqBVMvoitz1UHeBfGhfwDgV7kCpCTDA1YL/mBISACM/AyWKfpEREk
+         QllzR5IQnwSbxMiFOqJbS6m4Tuj17clgE7EjWjcoWccyXhYkUJa5gLEklDNORw53RpKR
+         TYw/pH28RMHqAKmrBn8HEIPYbmtiK3vrsG53k91SOT49MdmsvcYMHjJRv/wnYm7bZSdn
+         otXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755877595; x=1756482395;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LMODva4Wx+u5k/n8I9hDvFpyxaAAOgTPse/Q7Fgk72Q=;
+        b=XnXer3YIh1LeXMSrBofo89jqJGq5Vtazymg6H8/y0liTdMJnUQaHowodBEtw1HtLa9
+         zNA286G1AUKMDu7dU0Va2Ph4hDarN6uwOqgzk/lh7FSfhr/xBrqhoeGRxhQ5Hfo7380v
+         epWll2KTqOTHGXag9KIxZh5CTleYcwBb50mgu14WScXsG8QWNwYuaHT0X5E9GqrRIlcO
+         78VbYucsZYpH6x+kTTvyZfa1gh7Vb3juNoB8lOqT+ykvkfAUz8hLbDC6zYLWFjmWGOVn
+         USDBRYgjLs++XbfXhJ3pg1ZtAxFIAxQtU1WqD1IE5n3hp7nwE3S2ufwNCfM8HxsBGpUr
+         U0QA==
+X-Gm-Message-State: AOJu0YwNwiP0KvewszjCDI7yuUrZEqSclRxW6quxRj1siJmFEsoqF6VA
+	ZmR+Zi7AxwDjekGkV3p3N5wsSffuuVP7iffp+yvKEcoLa8wlWJAeb8Z9DkJG6t0+TviNLTjxGtL
+	1w4PqbM4=
+X-Gm-Gg: ASbGncvT/AIrtCfMs2XsX0qmIYCjOZoowisDqdu8xvC8T3Xe58aqeKqQgS8GUDfDy0+
+	Z3wBA+YHhCx1QhF9Gk7vbHhRNCiByef8I0JQaFdGPPMt24D9wZFsoyAHZ//iZp6rLP2aXJr25fu
+	sy+SJau2xCqOijKPCIaObaXvbxNW91GjWH1Fgmwnua+pK7R7LOwzcy6Jt6aPg9Jm2rW7sC6FL33
+	ty9qYBsjVyFtdzFj3Y01hU4t95DKrdbpR/m5QnkwrrDHKDb0c0SwaIZuRgqCJ4V4bQU0dlYhTSs
+	yPzil2WFnfCy08nqospQJKzmzQ22nsyQlypdj/f0hlB5J/db4sHjgeWTO09vJ540lZ4Qu5ldQlT
+	BVckjNxu+t7m2xt7ilEVlTKhS8XlVVm7P
+X-Google-Smtp-Source: AGHT+IFAupKvz9O/wuCtnXnXxMRJHbKl812eWEqI8f0zVIY0iSlRar4cC703T0t3jY9HyrPP2Y3ZzA==
+X-Received: by 2002:a05:651c:2352:20b0:332:74a1:2a29 with SMTP id 38308e7fff4ca-33650deeb79mr5680611fa.15.1755877594226;
+        Fri, 22 Aug 2025 08:46:34 -0700 (PDT)
+Received: from [192.168.1.140] ([85.235.12.238])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3365e5d1a6fsm56541fa.49.2025.08.22.08.46.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Aug 2025 08:46:33 -0700 (PDT)
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v2 0/3] gpio: mmio: Support IXP4xx expansion bus MMIO GPIO
+Date: Fri, 22 Aug 2025 17:46:25 +0200
+Message-Id: <20250822-ixp4xx-eb-mmio-gpio-v2-0-bd2edd4a9c74@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SEYPR06MB5134692DCCFD55F5ABD812F39D3DA@SEYPR06MB5134.apcprd06.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANGQqGgC/32NQQrCMBBFr1Jm7UgSaxtdeQ/pIsZpO2CTkEiJl
+ Nzd2AO4+fA+/Pc3SBSZElybDSKtnNi7CurQgJ2Nmwj5WRmUUGehlUDOoc0Z6YHLwh6nUEMLrdu
+ x643peqjLEGnkvFvvQ+WZ09vHz36yyl/737dKFChIdv3poq029vZiZ6I/+jjBUEr5AhOkclK3A
+ AAA
+X-Change-ID: 20250820-ixp4xx-eb-mmio-gpio-80884f67aa67
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linusw@kernel.org>, 
+ Imre Kaloz <kaloz@openwrt.org>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ Linus Walleij <linus.walleij@linaro.org>
+X-Mailer: b4 0.14.2
 
-On Fri, Aug 22, 2025 at 07:00:25AM +0000, Jacky Chou wrote:
-> > v1 posting was
-> > https://lore.kernel.org/r/20250613033001.3153637-1-jacky_chou@aspeedtech
-> > .com
-> > Links to previous postings are helpful in the cover letter.
-> > 
-> > On Tue, Jul 15, 2025 at 11:43:19AM +0800, Jacky Chou wrote:
-> > > Introduce PCIe Root Complex driver for ASPEED SoCs. Support RC
-> > > initialization, reset, clock, IRQ domain, and MSI domain setup.
-> > > Implement platform-specific setup and register configuration for
-> > > ASPEED. And provide PCI config space read/write and INTx/MSI interrupt
-> > > handling.
+After Florian reminded me to do things properly, here are
+fixups and additions to the MMIO GPIO bindings and a
+tie-in to the IXP4xx expansion bus memory controller.
 
-> > > +#define MAX_MSI_HOST_IRQS	64
-> > > +#define PCIE_RESET_CONFIG_DEVICE_WAIT_MS	500
-> > 
-> > Where does this value come from?  Is there a generic value from
-> > drivers/pci/pci.h you can use?
-> 
-> We check the PCIe specification to find these contents.
->
-> "With a Downstream Port that supports Link speeds greater than 5.0
-> GT/s, software must wait a minimum of 100 ms after Link training
-> completes before sending a Configuration Request to the device
-> immediately below that Port."
->
-> So, we think delay 500ms to let kernel issue the first configuration
-> command is enough after deassert PERST.
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+Changes in v2:
+- Drop the bank-width binding, this was based on a misunderstanding.
+- Drop the bank-width from the example as well.
+- Collect ACKs.
+- Link to v1: https://lore.kernel.org/r/20250820-ixp4xx-eb-mmio-gpio-v1-0-0e167398c8ac@linaro.org
 
-Isn't this PCIE_RESET_CONFIG_WAIT_MS?
+---
+Linus Walleij (3):
+      dt-bindings: gpio-mmio: Support hogs
+      dt-bindings: gpio-mmio: Add MMIO for IXP4xx expansion bus
+      gpio: mmio: Add compatible for the ixp4xx eb MMIO
 
-I prefer to use #defines from the PCI core whenever possible because
-it makes it easier to ensure that all drivers include the required
-delays.
+ .../devicetree/bindings/gpio/gpio-mmio.yaml        | 36 +++++++++++++++++++++-
+ drivers/gpio/gpio-mmio.c                           |  1 +
+ 2 files changed, 36 insertions(+), 1 deletion(-)
+---
+base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
+change-id: 20250820-ixp4xx-eb-mmio-gpio-80884f67aa67
 
-> > > +#define PCIE_RESET_CONFIG_RC_WAIT_MS		10
-> > 
-> > Ditto.  If it's an Aspeed-specific value, can you point to the
-> > source in the Aspeed datasheet?
-> 
-> This delay is set to ensure that the RC internal settings are
-> completely reset.  We do not put its usage in our datasheet.
+Best regards,
+-- 
+Linus Walleij <linus.walleij@linaro.org>
 
-The "PCIE_" prefix suggests something required by the PCIe base spec.
-If this is an Aspeed-specific value, perhaps remove the "PCIE_"
-prefix?
-
-> > > +static int aspeed_ast2700_child_config(struct pci_bus *bus, unsigned int
-> > devfn,
-> > > +				       int where, int size, u32 *val,
-> > > +				       bool write)
-> > > +{
-> > > +	struct aspeed_pcie *pcie = bus->sysdata;
-> > > +	u32 bdf_offset, status, cfg_val;
-> > > +	int ret;
-> > > +
-> > > +	bdf_offset = aspeed_pcie_get_bdf_offset(bus, devfn, where);
-> > > +
-> > > +	cfg_val = CRG_PAYLOAD_SIZE;
-> > > +	if (write)
-> > > +		cfg_val |= (bus->number == 1) ? CRG0_WRITE_FMTTYPE :
-> > CRG1_WRITE_FMTTYPE;
-> > > +	else
-> > > +		cfg_val |= (bus->number == 1) ? CRG0_READ_FMTTYPE :
-> > > +CRG1_READ_FMTTYPE;
-> > 
-> > I don't think you should assume that bus 0 is the root bus.  The root bus
-> > number should come from the DT bus-range.
-
-Just making sure you saw this part since you didn't mention it.
-
-Bjorn
 
