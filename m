@@ -1,96 +1,99 @@
-Return-Path: <linux-gpio+bounces-24828-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24829-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B38B1B31FC9
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 17:58:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF0D6B31FD7
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 18:00:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F23961CC05B2
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 15:51:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A960E6661BD
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 15:51:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A17AF25A35A;
-	Fri, 22 Aug 2025 15:49:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFD5423D7E5;
+	Fri, 22 Aug 2025 15:50:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FiThWL99"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NLkvEcDi"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5641C258ED5;
-	Fri, 22 Aug 2025 15:49:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE1F2206AF;
+	Fri, 22 Aug 2025 15:50:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755877746; cv=none; b=X6KttMrys29eAaIhkgTrUljOBygVPdxOzVIo+5FEqMz3t7uOupSANGHSMbCSQePq0cPR8LjjV/1JSjxnLxFoMdamqAxcWRVnDYrJtOhqPh7iupPiHOfUzWGJTmIt+WHNXLTIEW9/0IjgbR5TfdPtv68JRI6zSvqOosbEuiWs3aM=
+	t=1755877844; cv=none; b=Yzq2lBJ/UVwrI/ZobCaz7qfVXVxWzoXr4hpgzPTuJqvFlFBn16ntMKsCx6NdCcVRFLrk+4tHkYQRD0u5sGh+gELIvTdkTx2CWiBiwhMJkiDAEgD22WCchUzxkSN+/cxDhRAu6GZD/KEYRURLkoL5GTcWtlj1BpYUAdeAZdc6Zds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755877746; c=relaxed/simple;
-	bh=yuxymuE1CpcsqC2aHIQQ3HS4dI9volr5U+I0T5CKNIw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ak2HZhBDdQhgUDbPj/uFNNFyFkyYFPEgUTl46LGdRTWEqwg/JE+fRk+22CQoxPI2RqrG66rZGq7yDrRvZrBjlMig/4wHvrzGEFRG8eo0FIs9rHkm+RSua4bsdCkJsWwn48uZb4FWxI9Z8UyJ6aAhmjdGbO2Q57E1D6k9Vl8QITE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FiThWL99; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92A25C4CEF4;
-	Fri, 22 Aug 2025 15:49:05 +0000 (UTC)
+	s=arc-20240116; t=1755877844; c=relaxed/simple;
+	bh=PRjr1oyN1prDBOKUZ34iupM5Ee2Kn6LvfPBZpedTizo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SpfLAFT+/6liDRh8alUoNZrdd0PzRhA2I1IwO7NpHbZ15t2vR/4qbIoDZiqqJRmddB1owjO+2q3aK1whcbq/gFk6v1zYWbnWsHUiydAI50zHBlWlzjNIZBEejv7r4PgB0R7rer+xjmeaTX3P60YWt55mpb8E1TLmi2qCXJlofXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NLkvEcDi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13BF9C4CEED;
+	Fri, 22 Aug 2025 15:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755877745;
-	bh=yuxymuE1CpcsqC2aHIQQ3HS4dI9volr5U+I0T5CKNIw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=FiThWL99EkSv54dHRwvX8V81cKrxpo7ylEndvX8neUCv2wMCQyP4HJt1zDIegyOKx
-	 gxwTitvuN6DjhNeLIFs8j95VQRHC+CUpwlMdmAPMLGXm9Roo/l7bzfx9hATS1Gq6Ml
-	 nw0gzvr25MXrDIECKcnNOyPK8mJ8sJ1ATWjnFqpZmhiw4oME6yCRgxEYjy4eqXk2aY
-	 0dMGXH6viNnoJ1V1FUN5U5ePv2JCgyTlqPaK4JK3zmfZP4XrPhR4T1YVPvQCcoY3gt
-	 85tz19w6bW4AdWRi8KEoBVLnqePhcnDStzS1/FuqZ2XCXJUGvz7kt85EpdpSreQBce
-	 AlHe3zPkTCvvg==
-Date: Fri, 22 Aug 2025 10:49:03 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Marcos Del Sol Vives <marcos@orca.pet>
-Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Michael Walle <mwalle@kernel.org>, Lee Jones <lee@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] gpio: vortex: add new GPIO device driver
-Message-ID: <20250822154903.GA685390@bhelgaas>
+	s=k20201202; t=1755877844;
+	bh=PRjr1oyN1prDBOKUZ34iupM5Ee2Kn6LvfPBZpedTizo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NLkvEcDi7va6d8wofQYB7lrrIzy/EqQpNAQJUXQsL0j3e4syTR+r96SoHaJ3jAtJR
+	 7ZckKnr3dczWN36y3PWZAxXyGK69AGZvU7vIBerBELyyjgoLDbNNAcCkA8nodPxDjG
+	 o1EdFfnjI81c9N6hD5URN/3efElktMnJn31DHEJ4tSXKO/4iuxY9Zquzh9Lsue3hJv
+	 Q28Oexi2b1PJzAUXESiyT7HeH2V0N8GEeoQZVSqffF15OnUhUTMiLeyN1JcqQQOYJK
+	 1CcJOJM3mQhb74Hc88k0wxqQw9O3jxOtLRx8iGcXvDWmSZ17ssaR/zBJ0ECkedrAtH
+	 kWisP7d7d+0oQ==
+Date: Fri, 22 Aug 2025 10:50:42 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, mripard@kernel.org, mchehab@kernel.org,
+	airlied@gmail.com, amergnat@baylibre.com,
+	linux-sound@vger.kernel.org, p.zabel@pengutronix.de,
+	linux-gpio@vger.kernel.org, matthias.bgg@gmail.com,
+	kyrie.wu@mediatek.corp-partner.google.com,
+	linux-input@vger.kernel.org, kuba@kernel.org, conor+dt@kernel.org,
+	linux-mediatek@lists.infradead.org, yunfei.dong@mediatek.com,
+	kernel@collabora.com, lgirdwood@gmail.com,
+	minghsiu.tsai@mediatek.com, edumazet@google.com,
+	jmassot@collabora.com, simona@ffwll.ch,
+	louisalexis.eyraud@collabora.com, support.opensource@diasemi.com,
+	chunkuang.hu@kernel.org, andrew-ct.chen@mediatek.com,
+	dmitry.torokhov@gmail.com, andrew+netdev@lunn.ch,
+	tzimmermann@suse.de, maarten.lankhorst@linux.intel.com,
+	jeesw@melfas.com, broonie@kernel.org, davem@davemloft.net,
+	houlong.wei@mediatek.com, flora.fu@mediatek.com, pabeni@redhat.com,
+	linux-clk@vger.kernel.org, netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	dri-devel@lists.freedesktop.org,
+	angelogioacchino.delregno@collabora.com, sean.wang@kernel.org,
+	tiffany.lin@mediatek.com, ck.hu@mediatek.com, krzk+dt@kernel.org,
+	linus.walleij@linaro.org
+Subject: Re: [PATCH v1 12/14] dt-bindings: soc: mediatek: pwrap: Add
+ power-domains property
+Message-ID: <175587784167.3865517.1055280782148729337.robh@kernel.org>
+References: <20250820171302.324142-1-ariel.dalessandro@collabora.com>
+ <20250820171302.324142-13-ariel.dalessandro@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250822154718.GA685150@bhelgaas>
+In-Reply-To: <20250820171302.324142-13-ariel.dalessandro@collabora.com>
 
-On Fri, Aug 22, 2025 at 10:47:20AM -0500, Bjorn Helgaas wrote:
-> On Thu, Aug 21, 2025 at 07:05:16PM +0200, Marcos Del Sol Vives wrote:
-> > El 21/08/2025 a las 12:18, Marcos Del Sol Vives escribió:
-> > > +#include <linux/types.h>
-> > > +#include <linux/errno.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/ioport.h>
-> > > +#include <linux/spinlock.h>
-> > > +#include <linux/gpio/driver.h>
-> > > +#include <linux/gpio/regmap.h>
-> > > +#include <linux/regmap.h>
-> > > +#include <linux/ioport.h>
-> > > +#include <linux/types.h>
-> > > +#include <linux/platform_device.h>
-> > 
-> > I realized now that, despite checking over and over the patches before
-> > sending to the mailing list, I forgot to clean up leftover includes from
-> > previous versions of the driver.
-> > 
-> > I am fairly new to this procedure of merging patches. Should I later, after
-> > a send a sensible amount of time has passed to let everyone voice their
-> > opinion, send a new v4 version of the patch to fix these (and also clarify
-> > the commit message on the regmap-gpio, as requested in another email),
-> > or if accepted would maybe the person merging it sort this out?
+
+On Wed, 20 Aug 2025 14:13:00 -0300, Ariel D'Alessandro wrote:
+> Currently, the DT bindings for Mediatek PMIC Wrapper is missing the
+> power-domains property, which is used in the MT8173 E1 evaluation board
+> as it needs USB power domain.
 > 
-> I'm not the person to merge this, but my advice is to wait a few days
-> and post a v4 that cleans up the includes and updates the commit
-> messages.  It makes the process cleaner if the patch you post is the
-> same as the one that gets merged.
+> Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+> ---
+>  .../bindings/soc/mediatek/mediatek,pwrap.yaml     | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
 
-Sorry for the noise, should have read farther through my email :)
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+
 
