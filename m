@@ -1,137 +1,166 @@
-Return-Path: <linux-gpio+bounces-24789-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24790-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60CCAB31624
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 13:11:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94062B316AB
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 13:48:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE8EFA24B4D
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 11:11:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6D3285A4568
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Aug 2025 11:48:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 921862E5406;
-	Fri, 22 Aug 2025 11:11:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C5FF2EA73E;
+	Fri, 22 Aug 2025 11:48:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b="dAUXjV4n"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="d74udDNd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout3.mo533.mail-out.ovh.net (3.mo533.mail-out.ovh.net [46.105.35.92])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308BD2DFA4A
-	for <linux-gpio@vger.kernel.org>; Fri, 22 Aug 2025 11:11:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.35.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE6F2DCF47
+	for <linux-gpio@vger.kernel.org>; Fri, 22 Aug 2025 11:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755861088; cv=none; b=lBTd0nCQmxG2Zd46Jd8aHl1xqybNNMZ8lqpktcBqm9+XphAQeBdxGuT2n8GphuRZUMvB3h495rLsITeMe6zPy1WLqw+eQBg9xw0tuk2CKg1rHgH6U9WIR0pr7Sxrbk4Fl4PT1R9iTeLqHJvvNf2ncJhxRSpz19if52XgfrQRz0w=
+	t=1755863311; cv=none; b=jPyHgkpRsewfJTny9qrdKjdAN9R498uPZSNVoUGsT2sHjPaI71Cld8LaOyv23pu37Fi+UC2K5ESNNEblq76TMvuyrEA5tkZw1evamL1WluItpnbXz19K4NW7qC+qrLZG9kN7J7QfvyyGBRsjvOfnzK+qPCglq9LUbhL4oY5xO/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755861088; c=relaxed/simple;
-	bh=Ryaxrw4eT3nAdUGPXwQzb7ucMxWAqtq5xPrHy63u2ec=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eafXfweYQ+uNVixhtH7QDZQUs2bMGptV+AOgZaCVFGs2J0meAE+gnC73dIn57bpVbAVaC3wuLJ7Rssit4FSJgwYT4ECdEMW6+Rfo2xS++e7ifuv4JSfNiYJUQ++oBr7muyqAq+knnazikAhkcaZxYBZBCcY/PaywoPqwtbLex1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b=dAUXjV4n; arc=none smtp.client-ip=46.105.35.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orca.pet
-Received: from director4.derp.mail-out.ovh.net (director4.derp.mail-out.ovh.net [79.137.60.37])
-	by mo533.mail-out.ovh.net (Postfix) with ESMTPS id 4c7cvB1LFjz5vst;
-	Fri, 22 Aug 2025 11:11:18 +0000 (UTC)
-Received: from director4.derp.mail-out.ovh.net (director4.derp.mail-out.ovh.net. [127.0.0.1])
-        by director4.derp.mail-out.ovh.net (inspect_sender_mail_agent) with SMTP
-        for <brgl@bgdev.pl>; Fri, 22 Aug 2025 11:11:18 +0000 (UTC)
-Received: from mta11.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.110.37.33])
-	by director4.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4c7cv971Cdz1xpF;
-	Fri, 22 Aug 2025 11:11:17 +0000 (UTC)
-Received: from orca.pet (unknown [10.1.6.10])
-	by mta11.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTPSA id 2C90F9A32F1;
-	Fri, 22 Aug 2025 11:11:16 +0000 (UTC)
-Authentication-Results:garm.ovh; auth=pass (GARM-109S00348983bfb-2252-412c-9c76-f625bcf17fb6,
-                    ADC0680FE15BB91110492B9A34CE42AA242C155A) smtp.auth=marcos@orca.pet
-X-OVh-ClientIp:79.117.22.109
-Message-ID: <26b90664-ac3d-4eac-b082-4ddb6297dd00@orca.pet>
-Date: Fri, 22 Aug 2025 13:11:16 +0200
+	s=arc-20240116; t=1755863311; c=relaxed/simple;
+	bh=JsmbBh9zOMLHqHK84o+JX7ZaGFFwKJOvdPNpFTm5Ock=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=XjGcjjUJPY3VAoM2+0OtKxspi6yTK7BsnSAymFzMwxP9bpgweaJovqj/72238bUYrC9fr+E8Mqv6F56kQDC/pU0V+jhUhoaTTKk0IMnvXM4qlOJsM2BhZWqys9YPNA9vQe4kqvS3ymxBEKgkwhesrjsT3zcr6+jdKkiuVPurK54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=d74udDNd; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250822114827epoutp016f47554bb1038d8bb2a22f9d983613ce~eFGAaQFpM1168711687epoutp01a
+	for <linux-gpio@vger.kernel.org>; Fri, 22 Aug 2025 11:48:27 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250822114827epoutp016f47554bb1038d8bb2a22f9d983613ce~eFGAaQFpM1168711687epoutp01a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1755863307;
+	bh=ujFd4Giejy/I8yLtIBnVKvcKVCgcw/eNDX6Exvhq7UA=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=d74udDNdRLlEbqqumXK4rJgpifPriLPXzz9b0W+Aas1YiC5aN5I3DGXbT8IjmiMzL
+	 qHLFdlv5mr9p9wCaIkmTO7YvYUH5KI9gWiGQltIY3HJSofgO3gWufJC200A20nG460
+	 shvObn4sAShELbef1IenGujP9Pf+zN1+8DEdG5Qk=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250822114826epcas5p3a9642723b496f7b1b96daf8adfdf6de2~eFF-roZFA0540505405epcas5p3v;
+	Fri, 22 Aug 2025 11:48:26 +0000 (GMT)
+Received: from epcas5p1.samsung.com (unknown [182.195.38.95]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4c7dk12S6Mz2SSKX; Fri, 22 Aug
+	2025 11:48:25 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250822114824epcas5p2aa289a9a1e75e075c3ccc31f4f2ccb12~eFF9IW-Rj0864208642epcas5p2Q;
+	Fri, 22 Aug 2025 11:48:24 +0000 (GMT)
+Received: from FDSFTE411 (unknown [107.122.81.184]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250822114819epsmtip1c9b4c65341b860acb88b9ac5f2783f81~eFF4r4n5q2807728077epsmtip1l;
+	Fri, 22 Aug 2025 11:48:19 +0000 (GMT)
+From: "Ravi Patel" <ravi.patel@samsung.com>
+To: "'Krzysztof Kozlowski'" <krzk@kernel.org>, <jesper.nilsson@axis.com>,
+	<mturquette@baylibre.com>, <sboyd@kernel.org>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <s.nawrocki@samsung.com>,
+	<cw00.choi@samsung.com>, <alim.akhtar@samsung.com>,
+	<linus.walleij@linaro.org>, <tomasz.figa@gmail.com>,
+	<catalin.marinas@arm.com>, <will@kernel.org>, <arnd@arndb.de>
+Cc: <ksk4725@coasia.com>, <kenkim@coasia.com>, <pjsin865@coasia.com>,
+	<gwk1013@coasia.com>, <hgkim05@coasia.com>, <mingyoungbo@coasia.com>,
+	<smn1196@coasia.com>, <pankaj.dubey@samsung.com>, <shradha.t@samsung.com>,
+	<inbaraj.e@samsung.com>, <swathi.ks@samsung.com>,
+	<hrishikesh.d@samsung.com>, <dj76.yang@samsung.com>,
+	<hypmean.kim@samsung.com>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
+	<linux-arm-kernel@axis.com>, <linux-clk@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+	<soc@lists.linux.dev>
+In-Reply-To: <3a936b3b-0599-4b0a-83a8-52b899c24125@kernel.org>
+Subject: RE: [PATCH v2 08/10] arm64: dts: exynos: axis: Add initial ARTPEC-8
+ SoC support
+Date: Fri, 22 Aug 2025 17:18:18 +0530
+Message-ID: <000001dc135a$aa6b10c0$ff413240$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] gpio: gpio-regmap: add flags to control some
- behaviour
-To: kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Michael Walle <mwalle@kernel.org>,
- Lee Jones <lee@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
- linux-gpio@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20250821101902.626329-2-marcos@orca.pet>
- <202508221142.ETxcEpjA-lkp@intel.com>
-Content-Language: es-ES
-From: Marcos Del Sol Vives <marcos@orca.pet>
-In-Reply-To: <202508221142.ETxcEpjA-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 5788814372848948838
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduieefiedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeforghrtghoshcuffgvlhcuufholhcugghivhgvshcuoehmrghrtghoshesohhrtggrrdhpvghtqeenucggtffrrghtthgvrhhnpeetieeiteffgfffffeuudfgueeugfdtffeuueehtefhhfehhffffeeukeeivdeffeenucffohhmrghinhepghhithdqshgtmhdrtghomhdpghhithhhuhgsrdgtohhmpdhkvghrnhgvlhdrohhrghdptddurdhorhhgnecukfhppeduvdejrddtrddtrddupdejledruddujedrvddvrddutdelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehmrghrtghoshesohhrtggrrdhpvghtpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtoheplhhkphesihhnthgvlhdrtghomhdprhgtphhtthhopehhvghlghgrrghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmfigrlhhlvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfi
- grlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhlvhhmsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohepohgvqdhksghuihhlugdqrghllheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-DKIM-Signature: a=rsa-sha256; bh=ooMiXhCtrpCJThxBkirXE/4Y5yuLSDN6OaDBZRlDF4E=;
- c=relaxed/relaxed; d=orca.pet; h=From; s=ovhmo-selector-1; t=1755861078;
- v=1;
- b=dAUXjV4nXWjdCZe1KhXGKwDw8WbdNMlQabWe+tKmIGab50WLwSitojB1+6BLEQQmKZZvOknP
- FlukwtYeAgZYIXauIhtXOYCBvouGGbgf8/MZTLr83Y/3hw1D42HwMiBOZA0IbW9xpZLvudS2CZX
- HZ5/gCqUNd44sutWfMsprs0nCVkazjNG7T2Wd5CDD8oSP5MNGSgIMGh3XtSS60AUSyAU/KLdfyR
- Eg5bgSmB0Tiu8rhyzdoacOB0m8jnq4w3TYHIXxfJReI1tIU8/ZgiC9ZVeR/WUsYXL1y/NMmPznQ
- 2mPwpfSTnxZAQ9LFlN7+p9HkI1y1Z6/6Ob97EwcQzKZZA==
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQGJY/8wx4BImu0YLFPVfwpfqUmFNgKGrjAaAh8NcQIA49H5zwGbeAXBtNq/wGA=
+Content-Language: en-in
+X-CMS-MailID: 20250822114824epcas5p2aa289a9a1e75e075c3ccc31f4f2ccb12
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-541,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250821124055epcas5p4d1072e9b4ef29587e0fd8606bc1abc4f
+References: <20250710002047.1573841-1-ksk4725@coasia.com>
+	<20250821123310.94089-1-ravi.patel@samsung.com>
+	<CGME20250821124055epcas5p4d1072e9b4ef29587e0fd8606bc1abc4f@epcas5p4.samsung.com>
+	<20250821123310.94089-9-ravi.patel@samsung.com>
+	<3a936b3b-0599-4b0a-83a8-52b899c24125@kernel.org>
 
-El 22/08/2025 a las 5:27, kernel test robot escribió:
-> Hi Marcos,
+
+
+> -----Original Message-----
+> From: Krzysztof Kozlowski <krzk@kernel.org>
+> Sent: 22 August 2025 12:09
+> To: Ravi Patel <ravi.patel@samsung.com>; jesper.nilsson@axis.com; mturquette@baylibre.com; sboyd@kernel.org;
+> robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org; s.nawrocki@samsung.com; cw00.choi@samsung.com;
+> alim.akhtar@samsung.com; linus.walleij@linaro.org; tomasz.figa@gmail.com; catalin.marinas@arm.com; will@kernel.org;
+> arnd@arndb.de
+> Cc: ksk4725@coasia.com; kenkim@coasia.com; pjsin865@coasia.com; gwk1013@coasia.com; hgkim05@coasia.com;
+> mingyoungbo@coasia.com; smn1196@coasia.com; pankaj.dubey@samsung.com; shradha.t@samsung.com;
+> inbaraj.e@samsung.com; swathi.ks@samsung.com; hrishikesh.d@samsung.com; dj76.yang@samsung.com;
+> hypmean.kim@samsung.com; linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-samsung-
+> soc@vger.kernel.org; linux-arm-kernel@axis.com; linux-clk@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> gpio@vger.kernel.org; soc@lists.linux.dev
+> Subject: Re: [PATCH v2 08/10] arm64: dts: exynos: axis: Add initial ARTPEC-8 SoC support
 > 
-> kernel test robot noticed the following build errors:
+> On 21/08/2025 14:32, Ravi Patel wrote:
+> > From: SungMin Park <smn1196@coasia.com>
+> >
+> > Add initial device tree support for Axis ARTPEC-8 SoC.
+> >
+> > This SoC contains 4 Cortex-A53 CPUs and several other peripheral IPs.
+> >
+> > Signed-off-by: SungMin Park <smn1196@coasia.com>
+> > Signed-off-by: SeonGu Kang <ksk4725@coasia.com>
+> > Signed-off-by: Ravi Patel <ravi.patel@samsung.com>
+> ...
 > 
-> [auto build test ERROR on brgl/gpio/for-next]
-> [also build test ERROR on lee-mfd/for-mfd-next lee-mfd/for-mfd-fixes pci/next pci/for-linus linus/master v6.17-rc2 next-20250821]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > +
+> > +	timer {
+> > +		compatible = "arm,armv8-timer";
+> > +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
 > 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Marcos-Del-Sol-Vives/gpio-gpio-regmap-add-flags-to-control-some-behaviour/20250821-182416
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-> patch link:    https://lore.kernel.org/r/20250821101902.626329-2-marcos%40orca.pet
-> patch subject: [PATCH v3 1/3] gpio: gpio-regmap: add flags to control some behaviour
-> config: x86_64-buildonly-randconfig-001-20250822 (https://download.01.org/0day-ci/archive/20250822/202508221142.ETxcEpjA-lkp@intel.com/config)
-> compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250822/202508221142.ETxcEpjA-lkp@intel.com/reproduce)
+> No CPU mask?
+
+Thanks for review and pointing out.
+
+Yes. You are right.
+I will add GIC_CPU_MASK_SIMPLE(4) in next version as this uses GICv2 (gic-400) not GICv3.
+
+This may be carried out from other exynos/fsd platforms
+
+I found below 2 related links.
+https://lkml.org/lkml/2025/6/13/1073
+https://lkml.org/lkml/2023/11/28/403
+
+Thanks,
+Ravi
+
 > 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202508221142.ETxcEpjA-lkp@intel.com/
+> > +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
+> > +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
+> > +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+> > +	};
+> > +};
 > 
-> All errors (new ones prefixed by >>):
 > 
->    In file included from drivers/gpio/gpio-fxl6408.c:11:
->>> include/linux/gpio/regmap.h:26:31: error: call to undeclared function 'BIT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
->       26 |         GPIO_REGMAP_DIR_BEFORE_SET      = BIT(0),
->          |                                           ^
->>> include/linux/gpio/regmap.h:26:31: error: expression is not an integer constant expression
->       26 |         GPIO_REGMAP_DIR_BEFORE_SET      = BIT(0),
->          |                                           ^~~~~~
->    In file included from drivers/gpio/gpio-fxl6408.c:12:
->    In file included from include/linux/i2c.h:13:
->    In file included from include/linux/acpi.h:14:
->    In file included from include/linux/device.h:32:
->    In file included from include/linux/device/driver.h:21:
->    In file included from include/linux/module.h:20:
->    In file included from include/linux/elf.h:6:
->    In file included from arch/x86/include/asm/elf.h:10:
->    In file included from arch/x86/include/asm/ia32.h:7:
->    In file included from include/linux/compat.h:17:
->    In file included from include/linux/fs.h:34:
->    In file included from include/linux/percpu-rwsem.h:7:
->    In file included from include/linux/rcuwait.h:6:
->    In file included from include/linux/sched/signal.h:6:
->    include/linux/signal.h:98:11: warning: array index 3 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-This is correct, thanks. I added a missing "#include <linux/bits.h>" to
-fix it. Will be in a v4 of the patch set.
+> Best regards,
+> Krzysztof
+
 
