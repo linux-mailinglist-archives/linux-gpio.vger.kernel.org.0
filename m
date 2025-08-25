@@ -1,528 +1,328 @@
-Return-Path: <linux-gpio+bounces-24897-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24898-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 814F8B33B0A
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 11:27:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61B1AB33B3C
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 11:37:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 825ED20419E
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 09:27:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3B6B61B2344E
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 09:38:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4103B2C3263;
-	Mon, 25 Aug 2025 09:24:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EA0F2BEC43;
+	Mon, 25 Aug 2025 09:37:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EPKzr0QQ"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="cdKi27DV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF9E2D5C83;
-	Mon, 25 Aug 2025 09:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344A2285CBC
+	for <linux-gpio@vger.kernel.org>; Mon, 25 Aug 2025 09:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756113889; cv=none; b=mFcj4f1SuWwUU7lbjIu552lWobcUwrwBrTyh2M0Bmvsv9yngdXgUbm/Z541HFvu44sulC4KL2ssJQ0j92TlMMdMxjjljuoLsDNBxw8hVnSt6hZ5+6jMcRKxU+msQ6QNFmBxqVNLlWMuIQvbtsEk9XyIALuDu4iyJAltdLVyLjYU=
+	t=1756114667; cv=none; b=LnzHQ1wkwxNuyMQ/B4hniiQozuirLZG0ZqD9qDHh5uh5WXedGkKUGAsriGo0c8R8gbxH7W8wo3Sh1/8A420bG0PFs/H2hzM2UA/MEcH8L0ZLsBlf/5iMSs/vNF1CW1zQmdppNOKxb+IJao4zWj/XWt2mh2ce0B0MLfUdXwngj+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756113889; c=relaxed/simple;
-	bh=HBv1KgP0Vd0KcWEoh0UfygcjP7f3T2S9yGCvHObrHa4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HnriUF1Ix/03wUX/BfnegHjsz7pVJPU+cLyN+ZuP04G3Lv0+PHVDaZJLODTMt2v6WkeWYM6cd+ZWWybOWdhNnKE0Qn5kK3MlA/DHFXsJgVxozETz755/C5XJeupe73LDJnRci41Vf5B1tajUhkTASx7bqnPQAiH8BRbdo1Yd3ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EPKzr0QQ; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-32519b32b6cso2034621a91.0;
-        Mon, 25 Aug 2025 02:24:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756113886; x=1756718686; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b+DpNvLfZgXJbSyo/1KPV0nPQcd/neSkyFRkxB2AOkE=;
-        b=EPKzr0QQMUTVKl0KPnVBuaHeIQnsBkhrCpF6Mn0OzE1kFbGd7MVoXwX1iv2zfmUjnD
-         78SDkFHdmSgDASnYB2XC7gmOgbxpVKCzqzg+SN2JqveTRe3iSnmRLWPJqn9lnNKIqtQU
-         y8CoC5JruZiK+FVRuR4/Iw5oSFIFIJBu6hlRhV7EzWuXUrxoGLktTN1qUB+OZgnKlMkd
-         33JWRrqWNgJT2xDS9PdLIZVBinlyI/p7jBG6uRAsw2eH2rEfXl2oxt/5mX32DKNj+OwK
-         UZSsjRs90hyGZ1xbouDi2R30p2qorZ9hkN/G1bMgrjsZM5BF/Qqb1XgU2r+UERBQxF6L
-         rkZQ==
+	s=arc-20240116; t=1756114667; c=relaxed/simple;
+	bh=7y1BO9AhXV8hr34u6FNmEbRZ/P4jQT/IKoxQ1jN2O6I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CoKaQSBR9t5WztA97FKbdDRVYGAJbuHAieJjZvl8LLjCiKpl5EXhATihZVHHbB1DR/SGC5BnYfHgOwNMP84sPmU8y+XTiZMjTfrENMWXvnoffEmUdT/UOP4NDVEdGsTeC+s5ogpJyyiqr6jahNjQTsEREnle88oncGiubPzROU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=cdKi27DV; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57P91Ebe020343
+	for <linux-gpio@vger.kernel.org>; Mon, 25 Aug 2025 09:37:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=zIBbZjwc5/X8f7RRr9JDmD6i
+	nraVHRNhohmmINHC3h0=; b=cdKi27DVw8bF7GwFVg0QatQDLLNbP6KuZ4cgsijN
+	lZFNX5kJZ+/SQaLmzhsd2ikjkRMeyC6AqPFfKsr9bS/M5ffrrK3eBbbZ3iRzFD7N
+	4L9fpQacbqKLUomgXm32XDN2mrg9z216xBJTMeVtD2h0v00Nfu30QGZEQ00dFX9c
+	9RkjdJv+noV+uh3e3y8S8SpGbBxpmndYPsF408ZaMK5VLTs7+eyLUlGn6a5sFNnl
+	C5KoTszn3oGDOx8UkXftQTdi5/UUPF1LpGLKF4VqZV+j6UKcmMTXJJ7QwQPOrbTU
+	1YprJOSa8XnBpnieBR7zb2O0DZj+xe0OmOIU4L9o86l+Ww==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48q6thvja1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Mon, 25 Aug 2025 09:37:43 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4b10993f679so114851151cf.0
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Aug 2025 02:37:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756113886; x=1756718686;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b+DpNvLfZgXJbSyo/1KPV0nPQcd/neSkyFRkxB2AOkE=;
-        b=izE3WU5RSfdWZAwibQo9OHOfOn3I6DdrmxbkZZvt1chBFONJms8ux3BYRytTyMoqWI
-         pUuDa+Q6bTOi4KvkHC8RtrDX6SenM/8JJzk9hwVwvCxR2DFow8ztKr3lYsxlg/WbAeET
-         MfoOPx4bozcoJGdC9CP5+aAZWArUlz/P0w/GN1gkHGYs4NG6AASGBlQ30og2XjjetW6K
-         OisAhas8Ib1pCvBOse55lBH4LO/tOMQ7VGVF4rHNOWYdZtnG3DFU6TAV30d+ERofGPsX
-         SzOd8a7NxLms+ayA5Ngtk6LfEt+T1ZxZgMuTWzaGxsmS7d8PyGoKn3sE6BmlvY/XD151
-         pm0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUsuV2Zgg8TzJKtNRISItNoYh3kXesb2CJ6Lvyb02UpXsYTi70MsnHYciZ/8IIUND1aMC/6aIMJ@vger.kernel.org, AJvYcCUxzNrwK/jnhnIwbXodWuyKy2IIlsUuSdqxD3AnUSxg5kX1ONlD5rUGqmDn+dOqu1vBE2qxxy67VV4oBQ==@vger.kernel.org, AJvYcCVFsms9SbDsFc4lF4gFWKzMHTUr2wpxtnG2YU+MftVbzzFg8oEqVKJLBahskRcFZrw2Rqqg86LhseFSEYkgV8k=@vger.kernel.org, AJvYcCVuPaN8oSGbfyyh+kczFrZjz2OqK65YwL6TgsrBBbTF9Sum3hojqgZBDo0Zbs7KFQq1oJJ3WDrX7Xo=@vger.kernel.org, AJvYcCWYyTvvOkLjQZLpaU3QPBj5B1g+bsPaU9uzQE47iEz+wWcvVCQlfz11arg+3qAyLyJ4ArfZ9qLQDeWAbGs=@vger.kernel.org, AJvYcCX+rPolIFii2leV5OB1PGsUMG6q1uk3Sx6KQnQikzrRhuJR4Guaw9m31dpSWH+eeqShXtXT0wKGhR2E@vger.kernel.org, AJvYcCX/fAz3ij0B2Hb2ADDif+YJ+ek5OVtWwXm7bxcmvxQFTaaNhSy1xIe7V1VEpIBfEMxRbpfH66cij3P7@vger.kernel.org, AJvYcCXN9PcBqOuo7DXSL7W2fXKjzRb4HQcEOAntUWZ81sXRVwY6MUVgd6JFRZf6445u0/7/W16VIfKMVW9/@vger.kernel.org
-X-Gm-Message-State: AOJu0YygtnZZsxN1r1th0wEW5TZg5sDElHNKse1tislYYsOBoqamLBI2
-	cGuuBlImD38p7fmF3GGmCC17f8e89hzIbZqwwoayDsCPWxMKgCL7nbIJ
-X-Gm-Gg: ASbGncsGDlCu6vrBAomlROci8/Hj0u3ipl7u5Cw598jtBnVOLA+faRE3dSozYrcqWZb
-	gNCrCohQ1j2bnGAd5u13EpTOlL+Uvv1CC98sxNcUGx1KSXWxNx9PTtQ7QWVsr4v0nZotDIT/2kL
-	8wesnOQaoN7lnSDSZ1KCBi/EPSm3wx4y+o/+9BpFqBivMogISqaYuPTR4/b99eMaJfp/mPsVroe
-	02VQMAftuY/4Q6We562QlzKbmeuyGyHsG5f6W0mAyF00rYihw6AxP46vo+yy4XUg2jvwCKqwSgZ
-	Z9JoRj06v9NmttS+c8hBcQpIbmjxqJWCnXU1OS2UnYEQ/ZSV5pRmXzXCgLd5OD8oNzhD09CPY8h
-	M/IdcwZMLsEPOvhHreLC95eDUgyzxjtYSrpedgUMJ/zKdGYA6hVX/86nK35aDpOkm5NJLp5y9Qq
-	WX
-X-Google-Smtp-Source: AGHT+IHk1120RSlwVhFb9lSmXk3YFfH5Uc6wjDFFQ5B7eX3Ftp7khdUZ0NZYE01xgxpR+ybZFXSLkw==
-X-Received: by 2002:a17:90b:1b11:b0:325:42f8:d73f with SMTP id 98e67ed59e1d1-32542f8d954mr12219298a91.17.1756113885959;
-        Mon, 25 Aug 2025 02:24:45 -0700 (PDT)
-Received: from hcdev-d520mt2.. (60-250-196-139.hinet-ip.hinet.net. [60.250.196.139])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3254ae8a2d9sm6552747a91.8.2025.08.25.02.24.42
+        d=1e100.net; s=20230601; t=1756114662; x=1756719462;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zIBbZjwc5/X8f7RRr9JDmD6inraVHRNhohmmINHC3h0=;
+        b=OFFIaxE4rmaeJF+3W/GX73EoNaOxGHDtCqQMNNM+c5CeFDy3d7tlJ5b3WdAMaj9dtj
+         uUsj4RKuJ1wmUe9DGRey1mu+9/igTtoL4vO+94mLwjjFd3dLi7Brx7cfukUQes631mwD
+         975SRMc4yjaT04KA7VV4DqA6NY5v+MiV00OtL5FjrxfVGBLli/6ZHRjRLHwKfCNH3+7F
+         oNzeXW6M7ILN36/lhW1gLaQDqXrGjkzpn+/CoitG/spz1f9QBJQkrJiJnipPNJJeFY+3
+         jE7iS+no5BASkSUZtsoNgscIJw7K0+Z17TCoS4jDA90PJrRu+Apj/gGL2luFjXcz2fky
+         7+zA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtcM4f+CctVv0XttIQqGpEecsfvqV7w+8c0xURT3+M2kDAmm7ChC97cuFYDDYWHOq3TJCSKrtVx5Tt@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVV21/EayapBxsy/q5y+C3Zp/VjqXTfo7+q3Z590thJIvL0Obf
+	mYUQ14x7HLnu+XTjXxfRIY/fJcwxJlapIo1SOBgWdn2+FLEEauYxnkuxCtQnTCagi5+kkyTbQ+O
+	6qVh2jCJfPSJNjkr7qu+NWQFELyWLuhAPW0fPzW+OKWxhDp+nq/pnI4x+1eqG9ddt
+X-Gm-Gg: ASbGncu/6HUtrZZVX+95xqfi61e5w9eZXBNguLgmdcZpmArkGTZm2Vp+8N0DZAC8Ukk
+	AAlfB/ZS0y9svuHs0OLmPUGMTMrmmyiuZgmQNJ7xwgeMeklN5QJdY4fu/qX5SnhFQQcPzrse7WI
+	tfpujmgIhIgPf2ubRMSBauLmvwMfSV6ZHDDZLjZpbjylAU33PXqqm3uslmP8eBHDQnfE8QR8fcd
+	PtFfvhwJCS7Lsz4606eZJ2q1rdsRbIuGA19B1prZxsb+f6NnoNR+/uZA7/0qtQlc475g4qnXbfT
+	Ql2UC3ffpzbD+/6OtPuYwPG7OEKwwyYOqY8flep5zlbrLglwcY2KURCYs6toXDFKd7qrpYd5fR4
+	YbjUJ2nYKH00O7sdOEddDOHNkMHAgIflHtvl1Fgo269vdT5dX2Ec8
+X-Received: by 2002:a05:622a:5c16:b0:4b0:61bf:c2b with SMTP id d75a77b69052e-4b2aaad078amr132004851cf.42.1756114661561;
+        Mon, 25 Aug 2025 02:37:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGHdClOSUsKatBDRUINUwEqqsovj1AzaAsztG5CFwMzAvS+RycwCCcpWVqvant5tt3s/Jpqbg==
+X-Received: by 2002:a05:622a:5c16:b0:4b0:61bf:c2b with SMTP id d75a77b69052e-4b2aaad078amr132004511cf.42.1756114660745;
+        Mon, 25 Aug 2025 02:37:40 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55f35bfcb09sm1542036e87.23.2025.08.25.02.37.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Aug 2025 02:24:45 -0700 (PDT)
-From: a0282524688@gmail.com
-To: tmyu0@nuvoton.com,
-	lee@kernel.org,
-	linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	andi.shyti@kernel.org,
-	mkl@pengutronix.de,
-	mailhol.vincent@wanadoo.fr,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	wim@linux-watchdog.org,
-	linux@roeck-us.net,
-	jdelvare@suse.com,
-	alexandre.belloni@bootlin.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-can@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-watchdog@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-rtc@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	Ming Yu <a0282524688@gmail.com>
-Subject: [PATCH RESEND v14 7/7] rtc: Add Nuvoton NCT6694 RTC support
-Date: Mon, 25 Aug 2025 17:24:03 +0800
-Message-Id: <20250825092403.3301266-8-a0282524688@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250825092403.3301266-1-a0282524688@gmail.com>
-References: <20250825092403.3301266-1-a0282524688@gmail.com>
+        Mon, 25 Aug 2025 02:37:39 -0700 (PDT)
+Date: Mon, 25 Aug 2025 12:37:38 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Nickolay Goppen <setotau@yandex.ru>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 1/3] pinctrl: qcom: lpass-lpi: Introduce pin_offset
+ callback
+Message-ID: <dgqpxhbq4qvr6gk7ykbu4i4c75ujtxhybvwyib23tlkijbes24@4neoy7quosxr>
+References: <20250824-sdm660-lpass-lpi-v1-0-003d5cc28234@yandex.ru>
+ <20250824-sdm660-lpass-lpi-v1-1-003d5cc28234@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250824-sdm660-lpass-lpi-v1-1-003d5cc28234@yandex.ru>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODIzMDA0MyBTYWx0ZWRfX1nzy1PCV30Vn
+ NpkEn9E5ahBJknm+7P2RQ+vGKpZ7aom3J9bc+/+8ZQITZNA3WFi+8VuWPXaeTQJt55cSgDWPnU6
+ E9+rPGvY+/2EgTd30sDKIqf3+EJCMnbUusnxF6QE+p3JdqtKvoDlfIM7Jvu4D0/gceGrBe8B2Ug
+ 8CGZhveq+LAs0hz0zK7WWOdhPck26meIz+QuoYvUtfNczvcoM/+gd21ApHYxLv6xMiMCOE+dA4/
+ JyB8idt+qj/Q1BxBQXQWekd+jSZaFuVhHd4FwRIGYIvPzS3PDtkjM4zDYsfntJ9XYwScEvLZWgQ
+ 5fnKxFTDYgLEGS7V85uvzdoRrI3yuQhO7ierlyLidZM+6UZrPjpLtxq2lEZZ86fOuGxC+A+BO4u
+ q52X/SbW
+X-Proofpoint-ORIG-GUID: qM4NShClcNr0zHs_JMz8VKhZySpPhi8r
+X-Proofpoint-GUID: qM4NShClcNr0zHs_JMz8VKhZySpPhi8r
+X-Authority-Analysis: v=2.4 cv=W544VQWk c=1 sm=1 tr=0 ts=68ac2ee7 cx=c_pps
+ a=WeENfcodrlLV9YRTxbY/uA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=2OwXVqhp2XgA:10 a=qC_FGOx9AAAA:8 a=vaJtXVxTAAAA:8 a=pD-U3s6xA6z8GlFm_6oA:9
+ a=CjuIK1q_8ugA:10 a=kacYvNCVWA4VmyqE58fU:22 a=fsdK_YakeE02zTmptMdW:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-25_04,2025-08-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 spamscore=0 clxscore=1015 suspectscore=0 phishscore=0
+ bulkscore=0 impostorscore=0 adultscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508230043
 
-From: Ming Yu <a0282524688@gmail.com>
+On Sun, Aug 24, 2025 at 11:42:23PM +0300, Nickolay Goppen wrote:
+> By default pin_offset is calculated by formula:
+> LPI_TLMM_REG_OFFSET * pin_id. However not all platforms are using this
+> pin_offset formula (e.g. SDM660 LPASS LPI uses a predefined array of
+> offsets [1]), so add a callback to the default pin_offset function to
+> add an ability for some platforms to use their own quirky pin_offset
+> functions and add callbacks to pin_offset_default function for other
+> platforms.
+> 
+> [1] https://git.codelinaro.org/clo/la/kernel/msm-4.4/-/blob/LA.UM.7.2.c27-07400-sdm660.0/drivers/pinctrl/qcom/pinctrl-lpi.c#L107
+> 
+> Signed-off-by: Nickolay Goppen <setotau@yandex.ru>
+> ---
+>  drivers/pinctrl/qcom/pinctrl-lpass-lpi.c          | 13 +++++++++++--
+>  drivers/pinctrl/qcom/pinctrl-lpass-lpi.h          |  2 ++
+>  drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c   |  1 +
+>  drivers/pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.c |  1 +
+>  drivers/pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c   |  1 +
+>  drivers/pinctrl/qcom/pinctrl-sm6115-lpass-lpi.c   |  1 +
+>  drivers/pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c   |  1 +
+>  drivers/pinctrl/qcom/pinctrl-sm8350-lpass-lpi.c   |  1 +
+>  drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c   |  1 +
+>  drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c   |  1 +
+>  drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c   |  1 +
+>  11 files changed, 22 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+> index 57fefeb603f0e2502fccd14ba3982ae3cb591978..8ba0ebf12d8113cdc501e9fe97311ec0764fbef5 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+> @@ -38,16 +38,25 @@ struct lpi_pinctrl {
+>  	const struct lpi_pinctrl_variant_data *data;
+>  };
+>  
+> +u32 pin_offset_default(int pin_id)
 
-This driver supports RTC functionality for NCT6694 MFD device
-based on USB interface.
+Please use the prefix that matches the rest of the functions in the
+file: lpi_pinctlr_.
 
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Ming Yu <a0282524688@gmail.com>
----
-Changes since version 13:
+> +{
+> +	return LPI_TLMM_REG_OFFSET * pin_id;
+> +}
 
-Changes since version 12:
-- Use same email address in the signature
+Missing EXPORT_MODULE_GPL here. However it might be better to convert
+this to a macro or static inline in the header and call it directly it
+the driver doesn't define the callback.
 
-Changes since version 11:
+> +
+>  static int lpi_gpio_read(struct lpi_pinctrl *state, unsigned int pin,
+>  			 unsigned int addr)
+>  {
+> -	return ioread32(state->tlmm_base + LPI_TLMM_REG_OFFSET * pin + addr);
+> +	const u32 pin_offset = state->data->pin_offset(pin);
+> +
+> +	return ioread32(state->tlmm_base + pin_offset + addr);
+>  }
+>  
+>  static int lpi_gpio_write(struct lpi_pinctrl *state, unsigned int pin,
+>  			  unsigned int addr, unsigned int val)
+>  {
+> -	iowrite32(val, state->tlmm_base + LPI_TLMM_REG_OFFSET * pin + addr);
+> +	const u32 pin_offset = state->data->pin_offset(pin);
+> +
+> +	iowrite32(val, state->tlmm_base + pin_offset + addr);
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+> index a9b2f65c1ebe0f8fb5d7814f8ef8b723c617c85b..3a2969ac85410e9fb796ec792d1349822257b3a0 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+> +++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+> @@ -85,9 +85,11 @@ struct lpi_pinctrl_variant_data {
+>  	const struct lpi_function *functions;
+>  	int nfunctions;
+>  	unsigned int flags;
+> +	u32 (*pin_offset)(int pin_id);
+>  };
+>  
+>  int lpi_pinctrl_probe(struct platform_device *pdev);
+>  void lpi_pinctrl_remove(struct platform_device *pdev);
+> +u32 pin_offset_default(int pin_id);
+>  
+>  #endif /*__PINCTRL_LPASS_LPI_H__*/
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
+> index 1161f0a91a002aaa9b1ba2f9ca13e94b2f145ec8..ed0c57fb1ed4770cce4afe7b1f3ec51aa3d44cf3 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
+> @@ -125,6 +125,7 @@ static const struct lpi_pinctrl_variant_data sc7280_lpi_data = {
+>  	.ngroups = ARRAY_SIZE(sc7280_groups),
+>  	.functions = sc7280_functions,
+>  	.nfunctions = ARRAY_SIZE(sc7280_functions),
+> +	.pin_offset = pin_offset_default,
+>  };
+>  
+>  static const struct of_device_id lpi_pinctrl_of_match[] = {
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.c
+> index 0e839b6aaaf4bd88f078cf36091faa9c2c885518..40834242a7699352c63ad2ddc82ca3663a39275f 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.c
+> @@ -162,6 +162,7 @@ static const struct lpi_pinctrl_variant_data sc8280xp_lpi_data = {
+>  	.ngroups = ARRAY_SIZE(sc8280xp_groups),
+>  	.functions = sc8280xp_functions,
+>  	.nfunctions = ARRAY_SIZE(sc8280xp_functions),
+> +	.pin_offset = pin_offset_default,
+>  };
+>  
+>  static const struct of_device_id lpi_pinctrl_of_match[] = {
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c
+> index c0e178be9cfc3ea8578a39d8998033058f40dabf..69074c80744663268fc034019ca5523a18ce7f22 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c
+> @@ -213,6 +213,7 @@ static const struct lpi_pinctrl_variant_data sm4250_lpi_data = {
+>  	.ngroups = ARRAY_SIZE(sm4250_groups),
+>  	.functions = sm4250_functions,
+>  	.nfunctions = ARRAY_SIZE(sm4250_functions),
+> +	.pin_offset = pin_offset_default,
+>  };
+>  
+>  static const struct of_device_id lpi_pinctrl_of_match[] = {
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sm6115-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm6115-lpass-lpi.c
+> index b7d9186861a2ffa9f3c00a660bde00858fff9462..651e52f4c886821ebb8207af3783da87758f1a30 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sm6115-lpass-lpi.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sm6115-lpass-lpi.c
+> @@ -133,6 +133,7 @@ static const struct lpi_pinctrl_variant_data sm6115_lpi_data = {
+>  	.ngroups = ARRAY_SIZE(sm6115_groups),
+>  	.functions = sm6115_functions,
+>  	.nfunctions = ARRAY_SIZE(sm6115_functions),
+> +	.pin_offset = pin_offset_default,
+>  };
+>  
+>  static const struct of_device_id lpi_pinctrl_of_match[] = {
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c
+> index 64494a86490e2f5d3e00184622f68097bbcdfff0..a693df05c4fdb40750f449a58817e2371e564dea 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c
+> @@ -123,6 +123,7 @@ static const struct lpi_pinctrl_variant_data sm8250_lpi_data = {
+>  	.ngroups = ARRAY_SIZE(sm8250_groups),
+>  	.functions = sm8250_functions,
+>  	.nfunctions = ARRAY_SIZE(sm8250_functions),
+> +	.pin_offset = pin_offset_default,
+>  };
+>  
+>  static const struct of_device_id lpi_pinctrl_of_match[] = {
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sm8350-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm8350-lpass-lpi.c
+> index 7b146b4acfdf42e7dd69f1f022c0041b3e45b174..15d453482d68b8b9ae2d572f7538e05f83425a12 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sm8350-lpass-lpi.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sm8350-lpass-lpi.c
+> @@ -125,6 +125,7 @@ static const struct lpi_pinctrl_variant_data sm8350_lpi_data = {
+>  	.ngroups = ARRAY_SIZE(sm8350_groups),
+>  	.functions = sm8350_functions,
+>  	.nfunctions = ARRAY_SIZE(sm8350_functions),
+> +	.pin_offset = pin_offset_default,
+>  };
+>  
+>  static const struct of_device_id lpi_pinctrl_of_match[] = {
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c
+> index 439f6541622e924a2a77db7a8b15ccb709e7a53d..629a110963d610fe7b9667ea1abab66338711bf1 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c
+> @@ -191,6 +191,7 @@ static const struct lpi_pinctrl_variant_data sm8450_lpi_data = {
+>  	.ngroups = ARRAY_SIZE(sm8450_groups),
+>  	.functions = sm8450_functions,
+>  	.nfunctions = ARRAY_SIZE(sm8450_functions),
+> +	.pin_offset = pin_offset_default,
+>  };
+>  
+>  static const struct of_device_id lpi_pinctrl_of_match[] = {
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c
+> index 73065919c8c2654670b07372bd2dd5839baf2979..1ebc93a61e965f8c0d29348586905cb0e38ae074 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c
+> @@ -199,6 +199,7 @@ static const struct lpi_pinctrl_variant_data sm8550_lpi_data = {
+>  	.ngroups = ARRAY_SIZE(sm8550_groups),
+>  	.functions = sm8550_functions,
+>  	.nfunctions = ARRAY_SIZE(sm8550_functions),
+> +	.pin_offset = pin_offset_default,
+>  };
+>  
+>  static const struct of_device_id lpi_pinctrl_of_match[] = {
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c
+> index f9fcedf5a65d7115e605c54229ba0096b9081636..a6dfeef0f6fa0860f44808a4bb8e5db57d10d116 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c
+> @@ -206,6 +206,7 @@ static const struct lpi_pinctrl_variant_data sm8650_lpi_data = {
+>  	.functions = sm8650_functions,
+>  	.nfunctions = ARRAY_SIZE(sm8650_functions),
+>  	.flags = LPI_FLAG_SLEW_RATE_SAME_REG,
+> +	.pin_offset = pin_offset_default,
+>  };
+>  
+>  static const struct of_device_id lpi_pinctrl_of_match[] = {
+> 
+> -- 
+> 2.51.0
+> 
 
-Changes since version 10:
-
-Changes since version 9:
-- Add devm_add_action_or_reset() to dispose irq mapping
-
-Changes since version 8:
-- Modify the signed-off-by with my work address
-- Add irq_dispose_mapping() in the error handling path and in the remove
-  function
-
-Changes since version 7:
-
-Changes since version 6:
-
-Changes since version 5:
-- Modify the module name and the driver name consistently
-
-Changes since version 4:
-- Modify arguments in read/write function to a pointer to cmd_header
-- Modify all callers that call the read/write function
-
-Changes since version 3:
-- Modify array buffer to structure
-- Fix defines and comments
-- Drop private mutex and use rtc core lock
-- Modify device_set_wakeup_capable() to device_init_wakeup()
-
-Changes since version 2:
-- Add MODULE_ALIAS()
-
-Changes since version 1:
-- Add each driver's command structure
-- Fix platform driver registration
-- Drop unnecessary logs
-- Fix overwrite error return values
-- Modify to use dev_err_probe API
-
- MAINTAINERS               |   1 +
- drivers/rtc/Kconfig       |  10 ++
- drivers/rtc/Makefile      |   1 +
- drivers/rtc/rtc-nct6694.c | 297 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 309 insertions(+)
- create mode 100644 drivers/rtc/rtc-nct6694.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1bb97ee6a11b..e5edd911a28e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17823,6 +17823,7 @@ F:	drivers/hwmon/nct6694-hwmon.c
- F:	drivers/i2c/busses/i2c-nct6694.c
- F:	drivers/mfd/nct6694.c
- F:	drivers/net/can/usb/nct6694_canfd.c
-+F:	drivers/rtc/rtc-nct6694.c
- F:	drivers/watchdog/nct6694_wdt.c
- F:	include/linux/mfd/nct6694.h
- 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 9aec922613ce..7fd2439436c1 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -416,6 +416,16 @@ config RTC_DRV_NCT3018Y
- 	   This driver can also be built as a module, if so, the module will be
- 	   called "rtc-nct3018y".
- 
-+config RTC_DRV_NCT6694
-+	tristate "Nuvoton NCT6694 RTC support"
-+	depends on MFD_NCT6694
-+	help
-+	  If you say yes to this option, support will be included for Nuvoton
-+	  NCT6694, a USB device to RTC.
-+
-+	  This driver can also be built as a module. If so, the module will
-+	  be called rtc-nct6694.
-+
- config RTC_DRV_RK808
- 	tristate "Rockchip RK805/RK808/RK809/RK817/RK818 RTC"
- 	depends on MFD_RK8XX
-diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-index 4619aa2ac469..f564f9a9fa5e 100644
---- a/drivers/rtc/Makefile
-+++ b/drivers/rtc/Makefile
-@@ -119,6 +119,7 @@ obj-$(CONFIG_RTC_DRV_MXC)	+= rtc-mxc.o
- obj-$(CONFIG_RTC_DRV_MXC_V2)	+= rtc-mxc_v2.o
- obj-$(CONFIG_RTC_DRV_GAMECUBE)	+= rtc-gamecube.o
- obj-$(CONFIG_RTC_DRV_NCT3018Y)	+= rtc-nct3018y.o
-+obj-$(CONFIG_RTC_DRV_NCT6694)	+= rtc-nct6694.o
- obj-$(CONFIG_RTC_DRV_NTXEC)	+= rtc-ntxec.o
- obj-$(CONFIG_RTC_DRV_OMAP)	+= rtc-omap.o
- obj-$(CONFIG_RTC_DRV_OPAL)	+= rtc-opal.o
-diff --git a/drivers/rtc/rtc-nct6694.c b/drivers/rtc/rtc-nct6694.c
-new file mode 100644
-index 000000000000..35401a0d9cf5
---- /dev/null
-+++ b/drivers/rtc/rtc-nct6694.c
-@@ -0,0 +1,297 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Nuvoton NCT6694 RTC driver based on USB interface.
-+ *
-+ * Copyright (C) 2025 Nuvoton Technology Corp.
-+ */
-+
-+#include <linux/bcd.h>
-+#include <linux/irqdomain.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/nct6694.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/rtc.h>
-+#include <linux/slab.h>
-+
-+/*
-+ * USB command module type for NCT6694 RTC controller.
-+ * This defines the module type used for communication with the NCT6694
-+ * RTC controller over the USB interface.
-+ */
-+#define NCT6694_RTC_MOD		0x08
-+
-+/* Command 00h - RTC Time */
-+#define NCT6694_RTC_TIME	0x0000
-+#define NCT6694_RTC_TIME_SEL	0x00
-+
-+/* Command 01h - RTC Alarm */
-+#define NCT6694_RTC_ALARM	0x01
-+#define NCT6694_RTC_ALARM_SEL	0x00
-+
-+/* Command 02h - RTC Status */
-+#define NCT6694_RTC_STATUS	0x02
-+#define NCT6694_RTC_STATUS_SEL	0x00
-+
-+#define NCT6694_RTC_IRQ_INT_EN	BIT(0)	/* Transmit a USB INT-in when RTC alarm */
-+#define NCT6694_RTC_IRQ_GPO_EN	BIT(5)	/* Trigger a GPO Low Pulse when RTC alarm */
-+
-+#define NCT6694_RTC_IRQ_EN	(NCT6694_RTC_IRQ_INT_EN | NCT6694_RTC_IRQ_GPO_EN)
-+#define NCT6694_RTC_IRQ_STS	BIT(0)	/* Write 1 clear IRQ status */
-+
-+struct __packed nct6694_rtc_time {
-+	u8 sec;
-+	u8 min;
-+	u8 hour;
-+	u8 week;
-+	u8 day;
-+	u8 month;
-+	u8 year;
-+};
-+
-+struct __packed nct6694_rtc_alarm {
-+	u8 sec;
-+	u8 min;
-+	u8 hour;
-+	u8 alarm_en;
-+	u8 alarm_pend;
-+};
-+
-+struct __packed nct6694_rtc_status {
-+	u8 irq_en;
-+	u8 irq_pend;
-+};
-+
-+union __packed nct6694_rtc_msg {
-+	struct nct6694_rtc_time time;
-+	struct nct6694_rtc_alarm alarm;
-+	struct nct6694_rtc_status sts;
-+};
-+
-+struct nct6694_rtc_data {
-+	struct nct6694 *nct6694;
-+	struct rtc_device *rtc;
-+	union nct6694_rtc_msg *msg;
-+	int irq;
-+};
-+
-+static int nct6694_rtc_read_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct nct6694_rtc_data *data = dev_get_drvdata(dev);
-+	struct nct6694_rtc_time *time = &data->msg->time;
-+	static const struct nct6694_cmd_header cmd_hd = {
-+		.mod = NCT6694_RTC_MOD,
-+		.cmd = NCT6694_RTC_TIME,
-+		.sel = NCT6694_RTC_TIME_SEL,
-+		.len = cpu_to_le16(sizeof(*time))
-+	};
-+	int ret;
-+
-+	ret = nct6694_read_msg(data->nct6694, &cmd_hd, time);
-+	if (ret)
-+		return ret;
-+
-+	tm->tm_sec = bcd2bin(time->sec);		/* tm_sec expect 0 ~ 59 */
-+	tm->tm_min = bcd2bin(time->min);		/* tm_min expect 0 ~ 59 */
-+	tm->tm_hour = bcd2bin(time->hour);		/* tm_hour expect 0 ~ 23 */
-+	tm->tm_wday = bcd2bin(time->week) - 1;		/* tm_wday expect 0 ~ 6 */
-+	tm->tm_mday = bcd2bin(time->day);		/* tm_mday expect 1 ~ 31 */
-+	tm->tm_mon = bcd2bin(time->month) - 1;		/* tm_month expect 0 ~ 11 */
-+	tm->tm_year = bcd2bin(time->year) + 100;	/* tm_year expect since 1900 */
-+
-+	return ret;
-+}
-+
-+static int nct6694_rtc_set_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct nct6694_rtc_data *data = dev_get_drvdata(dev);
-+	struct nct6694_rtc_time *time = &data->msg->time;
-+	static const struct nct6694_cmd_header cmd_hd = {
-+		.mod = NCT6694_RTC_MOD,
-+		.cmd = NCT6694_RTC_TIME,
-+		.sel = NCT6694_RTC_TIME_SEL,
-+		.len = cpu_to_le16(sizeof(*time))
-+	};
-+
-+	time->sec = bin2bcd(tm->tm_sec);
-+	time->min = bin2bcd(tm->tm_min);
-+	time->hour = bin2bcd(tm->tm_hour);
-+	time->week = bin2bcd(tm->tm_wday + 1);
-+	time->day = bin2bcd(tm->tm_mday);
-+	time->month = bin2bcd(tm->tm_mon + 1);
-+	time->year = bin2bcd(tm->tm_year - 100);
-+
-+	return nct6694_write_msg(data->nct6694, &cmd_hd, time);
-+}
-+
-+static int nct6694_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-+{
-+	struct nct6694_rtc_data *data = dev_get_drvdata(dev);
-+	struct nct6694_rtc_alarm *alarm = &data->msg->alarm;
-+	static const struct nct6694_cmd_header cmd_hd = {
-+		.mod = NCT6694_RTC_MOD,
-+		.cmd = NCT6694_RTC_ALARM,
-+		.sel = NCT6694_RTC_ALARM_SEL,
-+		.len = cpu_to_le16(sizeof(*alarm))
-+	};
-+	int ret;
-+
-+	ret = nct6694_read_msg(data->nct6694, &cmd_hd, alarm);
-+	if (ret)
-+		return ret;
-+
-+	alrm->time.tm_sec = bcd2bin(alarm->sec);
-+	alrm->time.tm_min = bcd2bin(alarm->min);
-+	alrm->time.tm_hour = bcd2bin(alarm->hour);
-+	alrm->enabled = alarm->alarm_en;
-+	alrm->pending = alarm->alarm_pend;
-+
-+	return ret;
-+}
-+
-+static int nct6694_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-+{
-+	struct nct6694_rtc_data *data = dev_get_drvdata(dev);
-+	struct nct6694_rtc_alarm *alarm = &data->msg->alarm;
-+	static const struct nct6694_cmd_header cmd_hd = {
-+		.mod = NCT6694_RTC_MOD,
-+		.cmd = NCT6694_RTC_ALARM,
-+		.sel = NCT6694_RTC_ALARM_SEL,
-+		.len = cpu_to_le16(sizeof(*alarm))
-+	};
-+
-+	alarm->sec = bin2bcd(alrm->time.tm_sec);
-+	alarm->min = bin2bcd(alrm->time.tm_min);
-+	alarm->hour = bin2bcd(alrm->time.tm_hour);
-+	alarm->alarm_en = alrm->enabled ? NCT6694_RTC_IRQ_EN : 0;
-+	alarm->alarm_pend = 0;
-+
-+	return nct6694_write_msg(data->nct6694, &cmd_hd, alarm);
-+}
-+
-+static int nct6694_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
-+{
-+	struct nct6694_rtc_data *data = dev_get_drvdata(dev);
-+	struct nct6694_rtc_status *sts = &data->msg->sts;
-+	static const struct nct6694_cmd_header cmd_hd = {
-+		.mod = NCT6694_RTC_MOD,
-+		.cmd = NCT6694_RTC_STATUS,
-+		.sel = NCT6694_RTC_STATUS_SEL,
-+		.len = cpu_to_le16(sizeof(*sts))
-+	};
-+
-+	if (enabled)
-+		sts->irq_en |= NCT6694_RTC_IRQ_EN;
-+	else
-+		sts->irq_en &= ~NCT6694_RTC_IRQ_EN;
-+
-+	sts->irq_pend = 0;
-+
-+	return nct6694_write_msg(data->nct6694, &cmd_hd, sts);
-+}
-+
-+static const struct rtc_class_ops nct6694_rtc_ops = {
-+	.read_time = nct6694_rtc_read_time,
-+	.set_time = nct6694_rtc_set_time,
-+	.read_alarm = nct6694_rtc_read_alarm,
-+	.set_alarm = nct6694_rtc_set_alarm,
-+	.alarm_irq_enable = nct6694_rtc_alarm_irq_enable,
-+};
-+
-+static irqreturn_t nct6694_irq(int irq, void *dev_id)
-+{
-+	struct nct6694_rtc_data *data = dev_id;
-+	struct nct6694_rtc_status *sts = &data->msg->sts;
-+	static const struct nct6694_cmd_header cmd_hd = {
-+		.mod = NCT6694_RTC_MOD,
-+		.cmd = NCT6694_RTC_STATUS,
-+		.sel = NCT6694_RTC_STATUS_SEL,
-+		.len = cpu_to_le16(sizeof(*sts))
-+	};
-+	int ret;
-+
-+	rtc_lock(data->rtc);
-+
-+	sts->irq_en = NCT6694_RTC_IRQ_EN;
-+	sts->irq_pend = NCT6694_RTC_IRQ_STS;
-+	ret = nct6694_write_msg(data->nct6694, &cmd_hd, sts);
-+	if (ret) {
-+		rtc_unlock(data->rtc);
-+		return IRQ_NONE;
-+	}
-+
-+	rtc_update_irq(data->rtc, 1, RTC_IRQF | RTC_AF);
-+
-+	rtc_unlock(data->rtc);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void nct6694_irq_dispose_mapping(void *d)
-+{
-+	struct nct6694_rtc_data *data = d;
-+
-+	irq_dispose_mapping(data->irq);
-+}
-+
-+static int nct6694_rtc_probe(struct platform_device *pdev)
-+{
-+	struct nct6694_rtc_data *data;
-+	struct nct6694 *nct6694 = dev_get_drvdata(pdev->dev.parent);
-+	int ret;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->msg = devm_kzalloc(&pdev->dev, sizeof(union nct6694_rtc_msg),
-+				 GFP_KERNEL);
-+	if (!data->msg)
-+		return -ENOMEM;
-+
-+	data->irq = irq_create_mapping(nct6694->domain, NCT6694_IRQ_RTC);
-+	if (!data->irq)
-+		return -EINVAL;
-+
-+	ret = devm_add_action_or_reset(&pdev->dev, nct6694_irq_dispose_mapping,
-+				       data);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_device_init_wakeup(&pdev->dev);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret, "Failed to init wakeup\n");
-+
-+	data->rtc = devm_rtc_allocate_device(&pdev->dev);
-+	if (IS_ERR(data->rtc))
-+		return PTR_ERR(data->rtc);
-+
-+	data->nct6694 = nct6694;
-+	data->rtc->ops = &nct6694_rtc_ops;
-+	data->rtc->range_min = RTC_TIMESTAMP_BEGIN_2000;
-+	data->rtc->range_max = RTC_TIMESTAMP_END_2099;
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	ret = devm_request_threaded_irq(&pdev->dev, data->irq, NULL,
-+					nct6694_irq, IRQF_ONESHOT,
-+					"rtc-nct6694", data);
-+	if (ret < 0)
-+		return dev_err_probe(&pdev->dev, ret, "Failed to request irq\n");
-+
-+	return devm_rtc_register_device(data->rtc);
-+}
-+
-+static struct platform_driver nct6694_rtc_driver = {
-+	.driver = {
-+		.name	= "nct6694-rtc",
-+	},
-+	.probe		= nct6694_rtc_probe,
-+};
-+
-+module_platform_driver(nct6694_rtc_driver);
-+
-+MODULE_DESCRIPTION("USB-RTC driver for NCT6694");
-+MODULE_AUTHOR("Ming Yu <tmyu0@nuvoton.com>");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:nct6694-rtc");
 -- 
-2.34.1
-
+With best wishes
+Dmitry
 
