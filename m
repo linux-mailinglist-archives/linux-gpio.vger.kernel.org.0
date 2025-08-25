@@ -1,107 +1,116 @@
-Return-Path: <linux-gpio+bounces-24886-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24883-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2268B33A42
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 11:13:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97176B33A30
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 11:10:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 005B718981A1
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 09:13:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4E2403BE8FC
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 09:10:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 148CC2C08CD;
-	Mon, 25 Aug 2025 09:13:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 093A72C08D4;
+	Mon, 25 Aug 2025 09:10:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CAeMfNQS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NqwNVgAU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6F8282EB;
-	Mon, 25 Aug 2025 09:12:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFF729D283
+	for <linux-gpio@vger.kernel.org>; Mon, 25 Aug 2025 09:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756113181; cv=none; b=kXtwu5cJ2nvsqSRZWtLDy2zxaXmvIIYEevfe12cSsxi2x5vtFB9DDO7OlTr95uAgg8TCOk35U2ihemvqzik5h4XjEdaApmpRkEtx/A5dVDIVV4dvdPv7zX/JmISwJ4+rpQVNCnsR4sZj4fBfjTID0qiBKFYxKIEWzlLkSSG2Rvo=
+	t=1756113030; cv=none; b=p2Rp+vPyD9EMEiXv9SEQhWGLEY9QQjQLu7jmFoZ4nrhJSP1VDxnZI3L1EbRZ8t2FGd4Z0sMxc5jeetMq1CdgmNeeoANQEt19N82CNAzv/HWe9XpwOxoWfKHI3CD+ly70U8zKKSCvYFRO2C68y97bPhhqrQ/bIEXkfcyLN3nA7IY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756113181; c=relaxed/simple;
-	bh=QGG3NNlk9OGBVg03phJ4sNiqWVIhxi8fTuW6G22kXqo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ikg8goonPxDl2YT088y1rsE/vpt9CxelZ7mVnQp22G3XZFQBCua9z66kfh2gj9RGE7JWCEQ7Sts/cGJbul+lo8EPNb+yLai29OGCXb/Ak4VDWIr1/RZjtYzLF+G22Z4+kbyFiHv/kiZt0JnO9txSJOluCRr5l9BBAkdnY1vzYts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CAeMfNQS; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756113180; x=1787649180;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=QGG3NNlk9OGBVg03phJ4sNiqWVIhxi8fTuW6G22kXqo=;
-  b=CAeMfNQSa9+W7Jb5T9GLpC2A3HM6ZIHNBO6QkhTgWLruC/BtN7JghYcV
-   9fjtqgvgb1prMXPsd8R69Tm4dsskpz0gA+AML9uD+YZK4AMUnBG8LfOVY
-   nncW156z11XdfOmYqc8ZXt3FqWGp49iNRxFzZCmdNBDs4wPAQOieq89TJ
-   IqEJkrAMXHF8HoIrCFa2ZU34MmTOZpM9jscaBaLffvx3YcBjS4DhrZ+40
-   v9RwPW/sh9Hcm+ep8YhE+gvLL/e0xfKF2ESAZr68aSuB8J6aIKzzn3LPy
-   SVuD50px8oL5uj2stRXVCqSXXlDpkYXMM0/mphXoNQi6woi03X5dr8Koq
-   g==;
-X-CSE-ConnectionGUID: kYQ7Zi/9RyeUssB9QDub8g==
-X-CSE-MsgGUID: pzFbCii7SsShJ0676J82qg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11532"; a="58466036"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="58466036"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2025 02:12:59 -0700
-X-CSE-ConnectionGUID: 9YGFqjHoSzKUXwjuOv1mFw==
-X-CSE-MsgGUID: bddS08ZcRGq2Jk6rQJbzUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="170071189"
-Received: from junjie-nuc.bj.intel.com ([10.238.156.181])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2025 02:12:57 -0700
-From: Junjie Cao <junjie.cao@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Junjie Cao <junjie.cao@intel.com>
-Subject: [PATCH] gpio: timberdale: fix off-by-one in IRQ type boundary check
-Date: Mon, 25 Aug 2025 17:08:50 +0800
-Message-ID: <20250825090850.127163-1-junjie.cao@intel.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1756113030; c=relaxed/simple;
+	bh=K6PyU0GsbatkF2Dnw0veoFSf+BGczxcVhhUScrXAiLc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pm+Kpub2qG9wpOD4ej2KIJc7jpS2ntuVJBTlXvRQU7DngG6uPs0dtMsUGyjVNLaDiXLCAwzGTx8swCvCO37LdMQWQMtknk76u+VMq8tpASF65PSBTKXQLjCmBP/IqGOr0pt4pHILn30i4m2cjBxTqdsd5/u5M/h/oRx0NN8APCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NqwNVgAU; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-3367f35d129so1693911fa.1
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Aug 2025 02:10:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1756113027; x=1756717827; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S9+ip/B1cOdz45Ch9sh9CoC/HT80R58+cTC3VtE9YsY=;
+        b=NqwNVgAUAs6RxU/7KvsowSaqE8na0dasiBxgEKRdgRogMWjbM8sWcYUj1su99UZQCK
+         ZTqD/H8PzI0E/g49Z7O3qRqXXfjk0EpIQ7sqF2m5uzKQoXrEl0vKqjgh/gxpXTC3hG1t
+         4reeeyxng4ZwvSnrJ4BwaP/m08LvLotWD4xLpqs4WvQmqxPGcbdMEa6oMUElMmeKl/7o
+         VjruiJqUQwSa8IQta3UVnFAX5JOIDQreuskXdWkJHR6WQ0X9yshI1DZ2OGScgu/EUHHr
+         2y4tn7KoUqIeQxXhpd6djpkQz1v3Zru+63hdfKtFovj6QXrBFqDSKtndwkjrhZjXi09Q
+         jVvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756113027; x=1756717827;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S9+ip/B1cOdz45Ch9sh9CoC/HT80R58+cTC3VtE9YsY=;
+        b=Di/RcWZFCV6wy1IcoLlCLTaEk1Q7DaqQPU1zoKmqgPy/1H9hLQeWZjHNSa8syIcLR5
+         j0vEoxGr0Y6WRhN6zCj5YIhBUYl5yPdkIBzOx9g68s7NzvX1Lsicl3sDgdOQzl6l3SSA
+         8nQuE25weW8V730btBs3ZBAUCGw/Jxsfoai8RFkHndaoLXYAHUOCAYYhtZkVn6KVX+J5
+         LGEiv4yY2wTzS8CYtew2UhvqxSbxxon0ejhtGJZajKBRXkYlWjtikx0qjJRWzsw2YbIa
+         W9tDGf7N+r7y/m1emJIMrDGN2E647w1L3LMfB/TbTjusb93TNitkf0UEE7v4uSWgwrOf
+         oKmA==
+X-Forwarded-Encrypted: i=1; AJvYcCXQaYXezajOpIsS1/UQyv7iq6RbblrOp6JA5e+4tg6X8rPqSNuIQbyJXYLSszEqk0TraarJmI955QfW@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZRb7Y6rnISkX36mCS3LMtN5PazTAg973Vo+XEBddJj86sqKyF
+	6VprcCq3JEuQ/kYO95bX/Rnx1X1f6JCqCWS8t3cn5uM728tIu4HmmiBC40P/5sdCQCUDaQ/xraH
+	mvbcsl2isEXpHdf9ew0aHr8AO8vecibe1vcHyNIWU/g==
+X-Gm-Gg: ASbGncslekyLnlYlFAUSryXzD2ysbiL95wbigQom65kUfnSUrZGeR/e4iBmQgz698Vz
+	lFBMjO6vlt3BLcia969cFzUeOAOU79f8KmAF6VQYLAQq+lc02YTaFQB1hJ2nsXS9VZsZih+4Jv/
+	vnQB4rUmx11/qRi1OU9VT8AR8vLpFrQ/kWl+KUlZU1y6n5QumoR36lC/k1lVk8fZTBv6VqQ7VQJ
+	kweBz8=
+X-Google-Smtp-Source: AGHT+IHDpAZbDBO+P1KWHMFH2puuWSDWYfqPFdD8RvYPD2rHyprBhEUNN62NBhXGRZs8RUFrVFKwGRZe7oYI+GC3DWY=
+X-Received: by 2002:a05:651c:31d5:b0:32c:ab57:b03 with SMTP id
+ 38308e7fff4ca-33650de911dmr32208511fa.3.1756113027149; Mon, 25 Aug 2025
+ 02:10:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250821044914.710044-1-quic_pkumpatl@quicinc.com>
+ <CACRpkdYEzbM33HBAhHEmAg9f4Zpi=2WvqPdZ35=M2eVCqcTTFg@mail.gmail.com> <c81019f3-3570-4437-a10a-d49cabc4952d@quicinc.com>
+In-Reply-To: <c81019f3-3570-4437-a10a-d49cabc4952d@quicinc.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 25 Aug 2025 11:10:15 +0200
+X-Gm-Features: Ac12FXyjszIfUK2JZwcA6e7nLVD1sdGnLR4S34aGz88q5xxgv2NTEWTCwRbER78
+Message-ID: <CACRpkdY0tva_Ss+GhAA99g8tMWhbFVJh0fbYakMh4AZG1K=c1A@mail.gmail.com>
+Subject: Re: [PATCH v8 0/9] Enable audio on qcs6490-RB3Gen2 and qcm6490-idp boards
+To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-sound@vger.kernel.org, kernel@oss.qualcomm.com, 
+	Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-timbgpio_irq_type() currently accepts offset == ngpio, violating
-gpiolib's [0..ngpio-1] contract. This can lead to undefined behavior
-when computing '1 << offset', and it is also inconsistent with users
-that iterate with for_each_set_bit(..., ngpio).
+On Fri, Aug 22, 2025 at 7:33=E2=80=AFPM Prasad Kumpatla
+<quic_pkumpatl@quicinc.com> wrote:
+> On 8/21/2025 7:04 PM, Linus Walleij wrote:
+> > On Thu, Aug 21, 2025 at 6:49=E2=80=AFAM Prasad Kumpatla
+> > <quic_pkumpatl@quicinc.com> wrote:
+> >
+> >> Mohammad Rafi Shaik (9):
+> >>    dt-bindings: pinctrl: qcom,sc7280-lpass-lpi-pinctrl: Document the
+> >>      clock property
+> >
+> > Can I just apply this one patch to the pinctrl tree?
+>
+> yes, please go ahead.
 
-Tighten the upper bound to reject offset == ngpio. No functional change
-for in-range offsets.
+Patch 2 applied!
 
-Signed-off-by: Junjie Cao <junjie.cao@intel.com>
----
- drivers/gpio/gpio-timberdale.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-timberdale.c b/drivers/gpio/gpio-timberdale.c
-index 679e27f00ff6..f488939dd00a 100644
---- a/drivers/gpio/gpio-timberdale.c
-+++ b/drivers/gpio/gpio-timberdale.c
-@@ -137,7 +137,7 @@ static int timbgpio_irq_type(struct irq_data *d, unsigned trigger)
- 	u32 ver;
- 	int ret = 0;
- 
--	if (offset < 0 || offset > tgpio->gpio.ngpio)
-+	if (offset < 0 || offset >= tgpio->gpio.ngpio)
- 		return -EINVAL;
- 
- 	ver = ioread32(tgpio->membase + TGPIO_VER);
--- 
-2.43.0
-
+Yours,
+Linus Walleij
 
