@@ -1,120 +1,126 @@
-Return-Path: <linux-gpio+bounces-24927-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24928-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96CA6B33EF0
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 14:10:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D3C5B33F79
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 14:32:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5693C48716B
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 12:10:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7247F1A827D9
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 12:33:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F66B2F363E;
-	Mon, 25 Aug 2025 12:07:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0B0B15624B;
+	Mon, 25 Aug 2025 12:32:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="r4cGUTpo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XUKo+ODF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36D42EC562
-	for <linux-gpio@vger.kernel.org>; Mon, 25 Aug 2025 12:07:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D282C18A;
+	Mon, 25 Aug 2025 12:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756123674; cv=none; b=Bqh1aypHkkUwD/hM+O3DW+5KWFV1QUavsH1w4T4nNC7ggac+jpY+tNHKttQVHg0P2757qfY2a6DN/v+z8VktEObwLTOe2ImlZYICKJz4AECaQMD6+bTLXOSAb0CQX8bKqrZi97YfWmsaGvmLMSPwbFxesfJcEGZK2UChPom5ymw=
+	t=1756125162; cv=none; b=eCDVVSBOry2RBgvQ3loWHNGP7Ihn8pJlvL3uCpNTlqNODdi+kEpjhTYRrI+XlBkzgqaQ9mNg0XSqW/4nwqH63cIJ4updO8+hpyh6hy76BDzCz0hty+sQaKZA1D0PyYPwx17xwYRIX3HbTutlYVGTGHa7d97oweu5ycnAc03rb/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756123674; c=relaxed/simple;
-	bh=m9oTjZ7C8dnATQroPNEjk8bOwR1sXKUbfmI6z8BGwFs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:Content-Type:
-	 References; b=UUoYwqo5j22ChDc/zi+Ceblw5j1IQab54ZSjceeRtbvKyu7nVpMLWNVtCEDxkN1oc5mlbUbk+4dO7lRGIRpvqxLkQizaKl7M7fQK1AiskdwjXCMXbIe7gZMkwPY/CyTmsOUigiq+vWuQfHMmvgdiTqAIGHPaqjBoIRqGjukIE5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=r4cGUTpo; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250825120749epoutp015d7c6d9b1353b026837f3d9df5ce800a~fASw5uq-P0140901409epoutp017
-	for <linux-gpio@vger.kernel.org>; Mon, 25 Aug 2025 12:07:49 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250825120749epoutp015d7c6d9b1353b026837f3d9df5ce800a~fASw5uq-P0140901409epoutp017
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1756123669;
-	bh=AnmAPrcDCYbR1J1LfBH1PHR8aqxWFYZaUH5QmVjWvUc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=r4cGUTpoApKczt3GjXArsmCp4QaqUun1y7MmKSl/EybKKfiE0ZD8ec3wIvDMagerK
-	 8aZk7cuX+LkLBO5R37+TS0vXI9Dn+n3ObPBcOiiKeM44XemlQjxvOreQQxpRbiX4pC
-	 lWhdJIKZcBTPSt17Yssp3hb0ApBLVtG7oRwjY/zs=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20250825120747epcas5p483e7f344784066315a172cdcf464e69b~fASvrZITq1478414784epcas5p4u;
-	Mon, 25 Aug 2025 12:07:47 +0000 (GMT)
-Received: from epcas5p1.samsung.com (unknown [182.195.38.94]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4c9V0y6HNgz6B9m6; Mon, 25 Aug
-	2025 12:07:46 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250825120746epcas5p42d5fdba608b004e1f2c1c45eda5cac5f~fASuCju4O1478414784epcas5p4t;
-	Mon, 25 Aug 2025 12:07:46 +0000 (GMT)
-Received: from Jaguar.samsungds.net (unknown [107.109.115.6]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250825120741epsmtip24d882255f849d5c4b7962bcc0ff37751~fASphoe9a0172101721epsmtip28;
-	Mon, 25 Aug 2025 12:07:41 +0000 (GMT)
-From: Ravi Patel <ravi.patel@samsung.com>
-To: jesper.nilsson@axis.com, mturquette@baylibre.com, sboyd@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, krzk@kernel.org,
-	s.nawrocki@samsung.com, cw00.choi@samsung.com, alim.akhtar@samsung.com,
-	linus.walleij@linaro.org, tomasz.figa@gmail.com, catalin.marinas@arm.com,
-	will@kernel.org, arnd@arndb.de
-Cc: ksk4725@coasia.com, kenkim@coasia.com, pjsin865@coasia.com,
-	gwk1013@coasia.com, hgkim05@coasia.com, mingyoungbo@coasia.com,
-	smn1196@coasia.com, pankaj.dubey@samsung.com, shradha.t@samsung.com,
-	ravi.patel@samsung.com, inbaraj.e@samsung.com, swathi.ks@samsung.com,
-	hrishikesh.d@samsung.com, dj76.yang@samsung.com, hypmean.kim@samsung.com,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, linux-arm-kernel@axis.com,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org, soc@lists.linux.dev
-Subject: [PATCH v3 10/10] arm64: defconfig: Enable Axis ARTPEC SoC
-Date: Mon, 25 Aug 2025 17:14:36 +0530
-Message-Id: <20250825114436.46882-11-ravi.patel@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250825114436.46882-1-ravi.patel@samsung.com>
-X-CMS-MailID: 20250825120746epcas5p42d5fdba608b004e1f2c1c45eda5cac5f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-541,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250825120746epcas5p42d5fdba608b004e1f2c1c45eda5cac5f
-References: <20250825114436.46882-1-ravi.patel@samsung.com>
-	<CGME20250825120746epcas5p42d5fdba608b004e1f2c1c45eda5cac5f@epcas5p4.samsung.com>
+	s=arc-20240116; t=1756125162; c=relaxed/simple;
+	bh=zlQZif1/IWQ4cdmTyd6FCBlbHrEmXVxxNYu54P+m/DQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eWC8Rfw3TMaeInO4qGUWA3E5AEYBNjZyY2Jaj+nMWbhiGmbwlt8TXbL9ffT5VtB96hHUZut1BgNEkDLW6GWyFFQdMkG06nzybSFAYt2DucQXNNvpYPTmMjRCL7d4IvMuVlqFZCQJNf3kUAxWRu0QwGubmZHIf11AH+ScOQdkubA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XUKo+ODF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EA86EC4CEED;
+	Mon, 25 Aug 2025 12:32:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756125162;
+	bh=zlQZif1/IWQ4cdmTyd6FCBlbHrEmXVxxNYu54P+m/DQ=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=XUKo+ODFhCQi2kSqGRC+WcRTMbP8e7Pj6IQkXeNWZCYnH9giZsX3N+ZQYbpr5YUFb
+	 lydeCkkOF8eXKBY1mBnI+HGrVWsoihirLo7rdtYSq+zXgPNvDU3Jga12HoZNdmgFgz
+	 +9cct4r+fQpJfFrGHZSM7z/LZKWc0m3VWWop6cUuMi5qmWKzHXHL6DZse52QgvNTYo
+	 mV9ELqYdirFhte8HMm4v5vT1qsseKvuUm4yV4c2Tp2M6upo3eCPqLsNSIUaoXlcIq3
+	 02pDgQEFHXV2uElcueUXwiELRLjzvEiafvXmihR5RjOXAJ2IgkRV1uPlrRO3ChDmHP
+	 +SWFc/pvwrvDA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA95CA0EED;
+	Mon, 25 Aug 2025 12:32:41 +0000 (UTC)
+From: Nickolay Goppen via B4 Relay <devnull+setotau.yandex.ru@kernel.org>
+Subject: [PATCH v3 0/3] Add SDM660 LPASS LPI TLMM
+Date: Mon, 25 Aug 2025 15:32:27 +0300
+Message-Id: <20250825-sdm660-lpass-lpi-v3-0-65d4a4db298e@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANtXrGgC/33NwQ6CMAyA4VchOzszOgbTk+9hPMxtSBMFsuoCI
+ Xt3BycOxkuTv0m/Lox8QE/sXCws+IiEQ59DHgpmO9M/PEeXm4EAJTRUnNyrrgV/joYoT+RG3wU
+ YkLouDctnY/AtTht5veXukN5DmLcPsVy3f7BYcsGFkE5ZCxpkdZlN7/x0DB+2YhH2gPoBQAZM2
+ zTy1CoLjd8DKaUvs8ZqCvEAAAA=
+X-Change-ID: 20250824-sdm660-lpass-lpi-a8b02a23861a
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ ~postmarketos/upstreaming@lists.sr.ht, Nickolay Goppen <setotau@yandex.ru>, 
+ Richard Acayan <mailingradian@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1756125160; l=1677;
+ i=setotau@yandex.ru; s=20250815; h=from:subject:message-id;
+ bh=zlQZif1/IWQ4cdmTyd6FCBlbHrEmXVxxNYu54P+m/DQ=;
+ b=TxXsTAvL1VvuaQM3xl6MFmTEDgy+eVHZL6TUsnuGEO+O8HCOLAByMO8I5Ae1sch+FBnsr6fmL
+ XUkbKds8X2cBHvmLmgW9DubxhriA14nMXR1ixMgvBfvzSXJ+RIQr8+y
+X-Developer-Key: i=setotau@yandex.ru; a=ed25519;
+ pk=Og7YO6LfW+M2QfcJfjaUaXc8oOr5zoK8+4AtX5ICr4o=
+X-Endpoint-Received: by B4 Relay for setotau@yandex.ru/20250815 with
+ auth_id=492
+X-Original-From: Nickolay Goppen <setotau@yandex.ru>
+Reply-To: setotau@yandex.ru
 
-From: SungMin Park <smn1196@coasia.com>
+This patch series adds SDM660 LPASS LPI TLMM pinctrl driver and
+introduces pin_offset callback for LPI pinctrl drivers to support
+SDM660's quirky pin_offset function which uses an array with 
+predefined offsets [1].
 
-Enable the Axis ARTPEC-8 SoC in arm64 defconfig.
+[1] https://git.codelinaro.org/clo/la/kernel/msm-4.4/-/blob/LA.UM.7.2.c27-07400-sdm660.0/drivers/pinctrl/qcom/pinctrl-lpi.c#L107
 
-Signed-off-by: SungMin Park <smn1196@coasia.com>
-Signed-off-by: Ravi Patel <ravi.patel@samsung.com>
+Signed-off-by: Nickolay Goppen <setotau@yandex.ru>
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Changes in v3:
+- Fixed compilation of LPI drivers as modules by changing pin_offset function determination logic 
+- Link to v2: https://lore.kernel.org/r/20250825-sdm660-lpass-lpi-v2-0-af7739f5c27e@yandex.ru
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 58f87d09366c..6660d3ee6f99 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -38,6 +38,7 @@ CONFIG_ARCH_AIROHA=y
- CONFIG_ARCH_SUNXI=y
- CONFIG_ARCH_ALPINE=y
- CONFIG_ARCH_APPLE=y
-+CONFIG_ARCH_ARTPEC=y
- CONFIG_ARCH_AXIADO=y
- CONFIG_ARCH_BCM=y
- CONFIG_ARCH_BCM2835=y
+Changes in v2:
+- Extended description of "pinctrl: qcom: Add SDM660 LPASS LPI TLMM" patch
+- Resent using b4 relay
+- Link to v1: https://lore.kernel.org/r/20250824-sdm660-lpass-lpi-v1-0-003d5cc28234@yandex.ru
+
+---
+Nickolay Goppen (2):
+      pinctrl: qcom: lpass-lpi: Introduce pin_offset callback
+      dt-bindings: pinctrl: qcom: Add SDM660 LPI pinctrl
+
+Richard Acayan (1):
+      pinctrl: qcom: Add SDM660 LPASS LPI TLMM
+
+ .../pinctrl/qcom,sdm660-lpass-lpi-pinctrl.yaml     |  74 ++++++++
+ drivers/pinctrl/qcom/Kconfig                       |  10 ++
+ drivers/pinctrl/qcom/Makefile                      |   1 +
+ drivers/pinctrl/qcom/pinctrl-lpass-lpi.c           |  18 +-
+ drivers/pinctrl/qcom/pinctrl-lpass-lpi.h           |   7 +
+ drivers/pinctrl/qcom/pinctrl-sdm660-lpass-lpi.c    | 196 +++++++++++++++++++++
+ 6 files changed, 304 insertions(+), 2 deletions(-)
+---
+base-commit: d2798d0f96755807da0222cfc9793f2b1f38a2f1
+change-id: 20250824-sdm660-lpass-lpi-a8b02a23861a
+
+Best regards,
 -- 
-2.49.0
+Nickolay Goppen <setotau@yandex.ru>
+
 
 
