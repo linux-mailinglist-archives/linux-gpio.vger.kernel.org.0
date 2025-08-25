@@ -1,116 +1,204 @@
-Return-Path: <linux-gpio+bounces-24883-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24885-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97176B33A30
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 11:10:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3C8DB33A3A
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 11:12:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4E2403BE8FC
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 09:10:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7EC6C3BDF4D
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 09:12:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 093A72C08D4;
-	Mon, 25 Aug 2025 09:10:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04E322C08DC;
+	Mon, 25 Aug 2025 09:12:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NqwNVgAU"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="YflggP6f"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFF729D283
-	for <linux-gpio@vger.kernel.org>; Mon, 25 Aug 2025 09:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756113030; cv=none; b=p2Rp+vPyD9EMEiXv9SEQhWGLEY9QQjQLu7jmFoZ4nrhJSP1VDxnZI3L1EbRZ8t2FGd4Z0sMxc5jeetMq1CdgmNeeoANQEt19N82CNAzv/HWe9XpwOxoWfKHI3CD+ly70U8zKKSCvYFRO2C68y97bPhhqrQ/bIEXkfcyLN3nA7IY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756113030; c=relaxed/simple;
-	bh=K6PyU0GsbatkF2Dnw0veoFSf+BGczxcVhhUScrXAiLc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pm+Kpub2qG9wpOD4ej2KIJc7jpS2ntuVJBTlXvRQU7DngG6uPs0dtMsUGyjVNLaDiXLCAwzGTx8swCvCO37LdMQWQMtknk76u+VMq8tpASF65PSBTKXQLjCmBP/IqGOr0pt4pHILn30i4m2cjBxTqdsd5/u5M/h/oRx0NN8APCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NqwNVgAU; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-3367f35d129so1693911fa.1
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Aug 2025 02:10:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1756113027; x=1756717827; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S9+ip/B1cOdz45Ch9sh9CoC/HT80R58+cTC3VtE9YsY=;
-        b=NqwNVgAUAs6RxU/7KvsowSaqE8na0dasiBxgEKRdgRogMWjbM8sWcYUj1su99UZQCK
-         ZTqD/H8PzI0E/g49Z7O3qRqXXfjk0EpIQ7sqF2m5uzKQoXrEl0vKqjgh/gxpXTC3hG1t
-         4reeeyxng4ZwvSnrJ4BwaP/m08LvLotWD4xLpqs4WvQmqxPGcbdMEa6oMUElMmeKl/7o
-         VjruiJqUQwSa8IQta3UVnFAX5JOIDQreuskXdWkJHR6WQ0X9yshI1DZ2OGScgu/EUHHr
-         2y4tn7KoUqIeQxXhpd6djpkQz1v3Zru+63hdfKtFovj6QXrBFqDSKtndwkjrhZjXi09Q
-         jVvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756113027; x=1756717827;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S9+ip/B1cOdz45Ch9sh9CoC/HT80R58+cTC3VtE9YsY=;
-        b=Di/RcWZFCV6wy1IcoLlCLTaEk1Q7DaqQPU1zoKmqgPy/1H9hLQeWZjHNSa8syIcLR5
-         j0vEoxGr0Y6WRhN6zCj5YIhBUYl5yPdkIBzOx9g68s7NzvX1Lsicl3sDgdOQzl6l3SSA
-         8nQuE25weW8V730btBs3ZBAUCGw/Jxsfoai8RFkHndaoLXYAHUOCAYYhtZkVn6KVX+J5
-         LGEiv4yY2wTzS8CYtew2UhvqxSbxxon0ejhtGJZajKBRXkYlWjtikx0qjJRWzsw2YbIa
-         W9tDGf7N+r7y/m1emJIMrDGN2E647w1L3LMfB/TbTjusb93TNitkf0UEE7v4uSWgwrOf
-         oKmA==
-X-Forwarded-Encrypted: i=1; AJvYcCXQaYXezajOpIsS1/UQyv7iq6RbblrOp6JA5e+4tg6X8rPqSNuIQbyJXYLSszEqk0TraarJmI955QfW@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZRb7Y6rnISkX36mCS3LMtN5PazTAg973Vo+XEBddJj86sqKyF
-	6VprcCq3JEuQ/kYO95bX/Rnx1X1f6JCqCWS8t3cn5uM728tIu4HmmiBC40P/5sdCQCUDaQ/xraH
-	mvbcsl2isEXpHdf9ew0aHr8AO8vecibe1vcHyNIWU/g==
-X-Gm-Gg: ASbGncslekyLnlYlFAUSryXzD2ysbiL95wbigQom65kUfnSUrZGeR/e4iBmQgz698Vz
-	lFBMjO6vlt3BLcia969cFzUeOAOU79f8KmAF6VQYLAQq+lc02YTaFQB1hJ2nsXS9VZsZih+4Jv/
-	vnQB4rUmx11/qRi1OU9VT8AR8vLpFrQ/kWl+KUlZU1y6n5QumoR36lC/k1lVk8fZTBv6VqQ7VQJ
-	kweBz8=
-X-Google-Smtp-Source: AGHT+IHDpAZbDBO+P1KWHMFH2puuWSDWYfqPFdD8RvYPD2rHyprBhEUNN62NBhXGRZs8RUFrVFKwGRZe7oYI+GC3DWY=
-X-Received: by 2002:a05:651c:31d5:b0:32c:ab57:b03 with SMTP id
- 38308e7fff4ca-33650de911dmr32208511fa.3.1756113027149; Mon, 25 Aug 2025
- 02:10:27 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B85E29D283;
+	Mon, 25 Aug 2025 09:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756113137; cv=pass; b=Ys22pExr0wTjhKtjViKFZtYMBVH7YVm2jwAr+Q0df2YH47+dO2ppW4pqBXqwjcGngApw+jcctJJvB4YREsSiJ2wCxK4E5Me41L4JLSTfyFdcXfyFG5dFezz/Wky4PWRlVEaN6S1RYs7ApZojtIQDnOSCdUA+omUZS/eT4lJLrpk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756113137; c=relaxed/simple;
+	bh=UN7tZ7Mi8e7wrHnMuWaGhmTuxgnsZLQrHzqrSQdh1q0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=N/n1eAwDWGv9V5E5MymhLceDk/YYwV3c0YJ27qdjJz34rCPHI4HibZB1OAdBmCco9RUHPjj1BNPB9yywxfUM4Zx0wOwQcPfK+ZPsoRXgb+vu0GULE4f3kVh7kUm6uFkDFIMePPmSo6GS34rCXts7ZckhihZivkI29ayu5IQUtMo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=YflggP6f; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1756113100; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ec8cyEUwiNI3LFhu8Bjr6TA4Ifd4X3t9gH9QHQqcOXK5FOOElNUvv5JYceocSXO76UZHo3rRHHjwd8h/U5yHjJBua+x0EpRi6KWh2jNzCa7gDYs0/H5b0mcM+Lb3wmWa2Cc8pkXK40RQOBqFpFx9Icyhna1Cyl/tPt8Ti/1Wv6E=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1756113100; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=4zV5r8kLElpBRlahVoUG9dL32SfwaAS/peHVJEeTGgE=; 
+	b=lOKX1ACuePfLg2c3+K7V6XewlAr9NPK6aQIa+PiyZGEZu+FbNLcKFi49vlmzKNn78T9vJzkaNQ6Nm61ps1chz7JbJgTAhN+iLpkv6iLkvQIOMHxC0fPWt+WhrOs7hWB9QSniAL/bpVkzE+g797gn47L0KLEsZ7dWLBMEzIk/Qc8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1756113100;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=4zV5r8kLElpBRlahVoUG9dL32SfwaAS/peHVJEeTGgE=;
+	b=YflggP6f4+3KqQMd0IzfGOdaBd89fbchQZvRAVp0mLKhEIKs53GprABEnKxJPcDh
+	wiokus9kcYMAMiiIHJ+ek6m1oeuUL0XkEHZwa85lcOdVJxbNHO7Eq3Nodlmj2fHWWzH
+	AZq4MRi5Ef45b3RLoZtGziyTi0o7e4d8t47xZDg0=
+Received: by mx.zohomail.com with SMTPS id 1756113097823724.7840177435801;
+	Mon, 25 Aug 2025 02:11:37 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: William Breathitt Gray <wbg@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Kever Yang <kever.yang@rock-chips.com>, Yury Norov <yury.norov@gmail.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Leon Romanovsky <leon@kernel.org>, Lee Jones <lee@kernel.org>,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-iio@vger.kernel.org, kernel@collabora.com,
+ Jonas Karlman <jonas@kwiboo.se>,
+ Detlev Casanova <detlev.casanova@collabora.com>
+Subject: Re: [PATCH v2 6/7] counter: Add rockchip-pwm-capture driver
+Date: Mon, 25 Aug 2025 11:11:31 +0200
+Message-ID: <3367507.aeNJFYEL58@workhorse>
+In-Reply-To: <20250720002024.696040-1-wbg@kernel.org>
+References: <20250720002024.696040-1-wbg@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250821044914.710044-1-quic_pkumpatl@quicinc.com>
- <CACRpkdYEzbM33HBAhHEmAg9f4Zpi=2WvqPdZ35=M2eVCqcTTFg@mail.gmail.com> <c81019f3-3570-4437-a10a-d49cabc4952d@quicinc.com>
-In-Reply-To: <c81019f3-3570-4437-a10a-d49cabc4952d@quicinc.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 25 Aug 2025 11:10:15 +0200
-X-Gm-Features: Ac12FXyjszIfUK2JZwcA6e7nLVD1sdGnLR4S34aGz88q5xxgv2NTEWTCwRbER78
-Message-ID: <CACRpkdY0tva_Ss+GhAA99g8tMWhbFVJh0fbYakMh4AZG1K=c1A@mail.gmail.com>
-Subject: Re: [PATCH v8 0/9] Enable audio on qcs6490-RB3Gen2 and qcm6490-idp boards
-To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-sound@vger.kernel.org, kernel@oss.qualcomm.com, 
-	Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, Aug 22, 2025 at 7:33=E2=80=AFPM Prasad Kumpatla
-<quic_pkumpatl@quicinc.com> wrote:
-> On 8/21/2025 7:04 PM, Linus Walleij wrote:
-> > On Thu, Aug 21, 2025 at 6:49=E2=80=AFAM Prasad Kumpatla
-> > <quic_pkumpatl@quicinc.com> wrote:
-> >
-> >> Mohammad Rafi Shaik (9):
-> >>    dt-bindings: pinctrl: qcom,sc7280-lpass-lpi-pinctrl: Document the
-> >>      clock property
-> >
-> > Can I just apply this one patch to the pinctrl tree?
->
-> yes, please go ahead.
+On Sunday, 20 July 2025 02:20:15 Central European Summer Time William Breathitt Gray wrote:
+> On Mon, Jun 02, 2025 at 06:19:17PM +0200, Nicolas Frattaroli wrote:
+> > Among many other things, Rockchip's new PWMv4 IP in the RK3576 supports
+> > PWM capture functionality.
+> > 
+> > Add a basic driver for this that works to capture period and duty cycle
+> > values and return them as nanoseconds to the user. It's quite basic, but
+> > works well enough to demonstrate the device function exclusion stuff
+> > that mfpwm does, in order to eventually support all the functions of
+> > this device in drivers within their appropriate subsystems, without them
+> > interfering with each other.
+> > 
+> > Once enabled, the counter driver waits for enough high-to-low and
+> > low-to-high interrupt signals to arrive, and then writes the cycle count
+> > register values into some atomic members of the driver instance's state
+> > struct. The read callback can then do the conversion from cycle count to
+> > the more useful period and duty cycle nanosecond values, which require
+> > knowledge of the clock rate, which requires a call that the interrupt
+> > handler cannot make itself because said call may sleep.
+> > 
+> > To detect the condition of a PWM signal disappearing, i.e. turning off,
+> > we modify the delay value of a delayed worker whose job it is to simply
+> > set those atomic members to zero. Should the "timeout" so to speak be
+> > reached, we assume the PWM signal is off. This isn't perfect; it
+> > obviously introduces a latency between it being off and the counter
+> > reporting it as such. Because there isn't a way to reset the internal
+> > double-buffered cycle count in the hardware, we filter out unreliable
+> > periods above the timeout value in the counter read callback.
+> > 
+> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> 
+> Hi Nicolas,
 
-Patch 2 applied!
+Hi William,
 
-Yours,
-Linus Walleij
+> 
+> Would you help me understand the computations in this driver?
+> 
+> If I understand the purpose of this driver correctly, it's meant to
+> compute the period and duty cycle of a PWM signal. What do LPC and HPC
+> represent? I'm guessing they are the low period count (LPC) and the high
+> period count (HPC). So then you calculate the total period by adding
+> LPC and HPC, whereas the duty cycle derives from HPC.
+> 
+> Am I understanding the algorithm correctly? What are the units of HPC
+> and LPC; are they ticks from the core clock? Are PWMV4_INT_LPC and
+> PWM4_INT_HPC the change-of-state interrupts for LPC and HPC
+> respectively?
+
+HPC = High Polarity Cycles, LPC = Low Polarity Cycles. They are counted
+based on the pwm clock that the hardware runs at. PWMV4_INT_LPC and
+PWMV4_INT_HPC are one-bit flags that are raised in the interrupt register
+of this hardware when the interrupt is fired, to signal that LPC or HPC
+changed state.
+
+Your understanding of the algorithm appears to be correct, from my memory
+of when I wrote the code. The 4 captures left logic is because the
+hardware needs 4 level transitions before it can provide a useful
+number for those two counts; thinking about it more now, I'm surprised it
+can't do it in 3, so I'll need to double-check that next time I work on
+this.
+
+As an aside note, Rockchip has recently published the RK3506 Technical
+Reference Manual, and the RK3506 SoC uses the same PWM IP as the RK3576
+for which this driver is for. You can find it here in Chapter 31:
+
+https://opensource.rock-chips.com/images/3/36/Rockchip_RK3506_TRM_Part_1_V1.2-20250811.pdf
+
+This driver specifically implements "31.3.1 Capture Mode", later down
+the line I may want to add "31.3.4 Clock Counter", "31.3.5 Clock
+Frequency Meter" and "31.3.6 Biphasic Counter" but I lack a proper
+signal generator so didn't want to bite off more than I could test.
+
+> 
+> The Counter subsystem can be used to derive the period and duty cycle of
+> a signal, but I believe there's a more idiomatic way to implement this.
+> Existing counter drivers such as microchip-tcb-capture achieve this by
+> leveraging Counter events exposed via the Counter chrdev interface.
+> 
+> The basic idea would be:
+>     * Expose LPC and HPC as count0 and count1;
+>     * Push the PWMV4_INT_LPC and PWMV4_INT_HPC interrupts as
+>       COUNTER_EVENT_CHANGE_OF_STATE events on channel 0 and channel 1
+>       respectively;
+>     * Register Counter watches in userspace to capture LPC and HPC on
+>       each interrupt;
+> 
+> The Counter chrdev interface records a timestamp in nanoseconds with
+> each event capture. So to compute period and duty cycle, you would
+> subtract the difference between two HPC/LPC captures; the difference in
+> the timestamps gives you the elapsed time between the two captures in
+> nanoseconds.
+> 
+> Would that design work for your use case?
+
+Basically, any design would work for me. I've only implemented the
+counter driver to make sure the PWM reading part of the hardware works,
+and Uwe advised me that new PWM drivers should use the counter
+subsystem as opposed to implementing the PWM capture operation.
+
+So I think your design makes more sense; any user of this driver would
+likely want it to work like the other counter drivers, and exposing
+LPC and HPC directly would also let me get rid of the quirky "is the
+PWM actually off now" logic.
+
+I'll do this when I get the chance to work on this patch series again,
+as it needs a rewrite anyway to plug it into the MFD subsystem.
+
+> 
+> William Breathitt Gray
+> 
+
+Thank you for your review and suggestions!
+
+Kind regards,
+Nicolas Frattaroli
+
+
 
