@@ -1,204 +1,264 @@
-Return-Path: <linux-gpio+bounces-24885-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24884-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3C8DB33A3A
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 11:12:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05B73B33A36
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 11:11:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7EC6C3BDF4D
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 09:12:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D7C171897C36
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 09:12:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04E322C08DC;
-	Mon, 25 Aug 2025 09:12:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3C0D2C08D1;
+	Mon, 25 Aug 2025 09:11:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="YflggP6f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRjriIhU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B85E29D283;
-	Mon, 25 Aug 2025 09:12:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756113137; cv=pass; b=Ys22pExr0wTjhKtjViKFZtYMBVH7YVm2jwAr+Q0df2YH47+dO2ppW4pqBXqwjcGngApw+jcctJJvB4YREsSiJ2wCxK4E5Me41L4JLSTfyFdcXfyFG5dFezz/Wky4PWRlVEaN6S1RYs7ApZojtIQDnOSCdUA+omUZS/eT4lJLrpk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756113137; c=relaxed/simple;
-	bh=UN7tZ7Mi8e7wrHnMuWaGhmTuxgnsZLQrHzqrSQdh1q0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N/n1eAwDWGv9V5E5MymhLceDk/YYwV3c0YJ27qdjJz34rCPHI4HibZB1OAdBmCco9RUHPjj1BNPB9yywxfUM4Zx0wOwQcPfK+ZPsoRXgb+vu0GULE4f3kVh7kUm6uFkDFIMePPmSo6GS34rCXts7ZckhihZivkI29ayu5IQUtMo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=YflggP6f; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1756113100; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ec8cyEUwiNI3LFhu8Bjr6TA4Ifd4X3t9gH9QHQqcOXK5FOOElNUvv5JYceocSXO76UZHo3rRHHjwd8h/U5yHjJBua+x0EpRi6KWh2jNzCa7gDYs0/H5b0mcM+Lb3wmWa2Cc8pkXK40RQOBqFpFx9Icyhna1Cyl/tPt8Ti/1Wv6E=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1756113100; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=4zV5r8kLElpBRlahVoUG9dL32SfwaAS/peHVJEeTGgE=; 
-	b=lOKX1ACuePfLg2c3+K7V6XewlAr9NPK6aQIa+PiyZGEZu+FbNLcKFi49vlmzKNn78T9vJzkaNQ6Nm61ps1chz7JbJgTAhN+iLpkv6iLkvQIOMHxC0fPWt+WhrOs7hWB9QSniAL/bpVkzE+g797gn47L0KLEsZ7dWLBMEzIk/Qc8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1756113100;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=4zV5r8kLElpBRlahVoUG9dL32SfwaAS/peHVJEeTGgE=;
-	b=YflggP6f4+3KqQMd0IzfGOdaBd89fbchQZvRAVp0mLKhEIKs53GprABEnKxJPcDh
-	wiokus9kcYMAMiiIHJ+ek6m1oeuUL0XkEHZwa85lcOdVJxbNHO7Eq3Nodlmj2fHWWzH
-	AZq4MRi5Ef45b3RLoZtGziyTi0o7e4d8t47xZDg0=
-Received: by mx.zohomail.com with SMTPS id 1756113097823724.7840177435801;
-	Mon, 25 Aug 2025 02:11:37 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-To: William Breathitt Gray <wbg@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Kever Yang <kever.yang@rock-chips.com>, Yury Norov <yury.norov@gmail.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Leon Romanovsky <leon@kernel.org>, Lee Jones <lee@kernel.org>,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-iio@vger.kernel.org, kernel@collabora.com,
- Jonas Karlman <jonas@kwiboo.se>,
- Detlev Casanova <detlev.casanova@collabora.com>
-Subject: Re: [PATCH v2 6/7] counter: Add rockchip-pwm-capture driver
-Date: Mon, 25 Aug 2025 11:11:31 +0200
-Message-ID: <3367507.aeNJFYEL58@workhorse>
-In-Reply-To: <20250720002024.696040-1-wbg@kernel.org>
-References: <20250720002024.696040-1-wbg@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0B31F4198;
+	Mon, 25 Aug 2025 09:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756113102; cv=none; b=f3BsxnzzsvGAB20KLaGXdwXZ7fhj5RWqEfM3ZwHwdmkA1FRdknL8drM0wud36Y7P56gr74HhGjgjnEAHg4kFw6o7bqvWm2z+0LDlYmVybZEJSpXc3+l+aHe1YJSKF56b7rUw0lZUAwKxlW3VIHEwDQ0XKH4m7oTOcqQdU5lI5SY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756113102; c=relaxed/simple;
+	bh=x+c6BrjmQrqMl/8bNmYcOMK/G4hGL0dIcPdibI66gWI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GjZ9xNZHkg/6RXxqRylbgDBui1oh6c9oD2mvFHMomTfahqT6Ea+4glh0Kb6xqjf786yS+jrWCjQharhakYQM0VvWOe6l5JXUOFyNSHWjGxHgKKxEMVBmygLhCu/UZuyVO+iDFW0GKIHyyZmDntY/pCZAaU4zqTu10xtl9z6Pz+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lRjriIhU; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-45b60fd5a1dso5245435e9.2;
+        Mon, 25 Aug 2025 02:11:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756113099; x=1756717899; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=DCuOFYwxz4o6YK+ZyP6M6oLOXp3nZBia4u3KkuMHyYo=;
+        b=lRjriIhUejfow7vd2lm3XJSxp/ww0ck9jtYJgT+zLtPuD83aqSgpV4EDZhOOVmqRa2
+         02SWLV3i0pgPwoM3An3clqrSP7hxcNroSon7NBq3/Zq2rrHztiHjUKB4R36aK/kKaZbn
+         Rg0smFe6OFmgJhSqT/T0ZWMQFpe/ECaaMi6QOMI7iRVKlwfy1jXsIY2MzPcWSq1OTcC5
+         dYX6zQ1C0NzuOlOZPBjmsMuHxyHAsi0iNh1934KYw7aLzdqfl7cU1BUMRJspmnLcDPeM
+         rrvTmDrqRUHn6NmMzK4mMI2vz44lTVurbeIFGXlWfgooaIfLfYJe/CdueUk5rIWocVZy
+         VVeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756113099; x=1756717899;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DCuOFYwxz4o6YK+ZyP6M6oLOXp3nZBia4u3KkuMHyYo=;
+        b=OTS9qhc1bNJW9LQ1EnbmIl7MpJGWzj2qICeEQr4pUvMKNBQ+X6sDNG7lmwbCJXOOtN
+         Rd9E5TUGhPHTdDlg4uFngpPQ39RSqbkic5dYaR4cC1GQlMz7YJny1DoQUwdtUCQDSQ3T
+         +x0NecfSLxUpvVoaC53ymg5DnMMLwZeYrlsD/f2daWgoKJLpNhdeZli77UKkDfSxmFcN
+         KwcM73RvUYum/HxIi1jMInoNJBF5rNkTwuHhgigI3vogjzFi8LND2lRA63SiZaA/EhlK
+         x95KgS8aY1QvGsS5vCY2cfIdUgePlt/mTPbs3RzWOThcytLtRYDa4nDOt32LCyh3mnp0
+         T/vg==
+X-Forwarded-Encrypted: i=1; AJvYcCU8De3++7HLU2KWIQCVJ8DfNBbN7DZEzozU0dcbf0xKiPqSi++1ahQITNrzipz2964BKKk8NB1xw6EH5to=@vger.kernel.org, AJvYcCUfjG8Dc4KcQmvUdGRqMeh6L6jAIfETmhbAu0DKOuDDEMRqqDvHiQR+mY1sM0NKonsMKkeI+A/BcOwKGBEr@vger.kernel.org, AJvYcCUje5EcEDYdHR6QPAdVi4HPvWWvTxJAi6yTT5JfLKryl9zhsrgmi/jJFBlIvObte6tc7QuAVNaNnxSy@vger.kernel.org, AJvYcCVIKF5tDN55OrGVasKlVp/y1dh+FuxHd9PVpYDa7Zf7JYiRBr0aY5DH55iU7dLuYZm1uMAscfRDZwW/lA==@vger.kernel.org, AJvYcCWbTacmIbv29wBsOfpHHXrDetLlqHuHHyhGg7dTpdwbyP4Glubr405YqmQ912aKWvcHNTyokijexSP1@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpWvnZ5e3xjHEUbUuyKnuuQ8pzsGiRDE/1eNV9MXd9SI2F1z4n
+	aCnOeZ9vgMbL1v/tA29j7qmokVXGw/oIL81ts+LjTnHbOceUZyiJNxUc
+X-Gm-Gg: ASbGncttGlrB9mwqNo0+/+kPgNZFtqPc3C+yXh8PaOVwbpza4ochB+JzWfwwqJ0Vuen
+	coGHsWgHwdUf3NbMTsiMMU0Wgsuy379ptPO1mMdAnNi9xKAWSxWH8mz/jbFRS82EOMNEfruSdPY
+	dV+lkZJna2ZTtU3+bN/cGnhJNeU9bJLgT8wbIQ3T5OSyWxky5MriKP/1MHTPu3sH2xI1Z6uBJXP
+	9RPl6E4LJvVSuJx5a2AzknhKf7+KAfM5RC4hN+Hlf9Pa0REspoK5bsIJXrBGBLW3XnzY1Q8DSjP
+	pXXKGLmYRkg44id3cs3PiWhEKEFWrM7knOxC17ywHZRnYxfbu+w+wWtVfO7x29LBSgiOXMU7zTb
+	GBNh+GCphMqKNJv+v+prERFMq
+X-Google-Smtp-Source: AGHT+IEhx0xp5HZzCjChvt+iGvjSrB3+Rzugq2SXKx8CoWISlw5f6kVeMj6cta5LseKPpxtKIfPj/Q==
+X-Received: by 2002:a05:600c:4511:b0:456:1156:e5f5 with SMTP id 5b1f17b1804b1-45b517d27f6mr112084995e9.31.1756113098783;
+        Mon, 25 Aug 2025 02:11:38 -0700 (PDT)
+Received: from nsa ([161.230.67.253])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b57498d9csm99824125e9.22.2025.08.25.02.11.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Aug 2025 02:11:38 -0700 (PDT)
+Date: Mon, 25 Aug 2025 10:11:59 +0100
+From: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	linux-hwmon@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Lee Jones <lee@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+	Jonathan Corbet <corbet@lwn.net>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH 1/6] dt-binbings: mfd: Add bindings for the LTC4283 Swap
+ Controller
+Message-ID: <tpqebtepsnp5slukdiwn3rrcrrxj7cl22vrblrldo4x73e42py@yslhryqvsacb>
+References: <20250814-ltc4283-support-v1-0-88b2cef773f2@analog.com>
+ <20250814-ltc4283-support-v1-1-88b2cef773f2@analog.com>
+ <20250814215724.GA3975144-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250814215724.GA3975144-robh@kernel.org>
 
-On Sunday, 20 July 2025 02:20:15 Central European Summer Time William Breathitt Gray wrote:
-> On Mon, Jun 02, 2025 at 06:19:17PM +0200, Nicolas Frattaroli wrote:
-> > Among many other things, Rockchip's new PWMv4 IP in the RK3576 supports
-> > PWM capture functionality.
+On Thu, Aug 14, 2025 at 04:57:24PM -0500, Rob Herring wrote:
+> On Thu, Aug 14, 2025 at 11:52:23AM +0100, Nuno Sá wrote:
+> > The LTC4283 is a negative voltage hot swap controller that drives an
+> > external N-channel MOSFET to allow a board to be safely inserted and
+> > removed from a live backplane.
+> 
+> What's a binbing?
+> 
+> When you fix that, don't say 'bindings' twice in the subject. Subject 
+> space is precious.
+
+oh, sure...
+
+> 
 > > 
-> > Add a basic driver for this that works to capture period and duty cycle
-> > values and return them as nanoseconds to the user. It's quite basic, but
-> > works well enough to demonstrate the device function exclusion stuff
-> > that mfpwm does, in order to eventually support all the functions of
-> > this device in drivers within their appropriate subsystems, without them
-> > interfering with each other.
+> > Main usage is as an Hardware Monitoring device. However, it has up to 8
+> > pins that can be configured and used as GPIOs and hence, the device can
+> > also be a GPIO controller.
 > > 
-> > Once enabled, the counter driver waits for enough high-to-low and
-> > low-to-high interrupt signals to arrive, and then writes the cycle count
-> > register values into some atomic members of the driver instance's state
-> > struct. The read callback can then do the conversion from cycle count to
-> > the more useful period and duty cycle nanosecond values, which require
-> > knowledge of the clock rate, which requires a call that the interrupt
-> > handler cannot make itself because said call may sleep.
+> > Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+> > ---
+> >  .../devicetree/bindings/mfd/adi,ltc4283.yaml       | 85 ++++++++++++++++++++++
+> >  MAINTAINERS                                        |  7 ++
+> >  2 files changed, 92 insertions(+)
 > > 
-> > To detect the condition of a PWM signal disappearing, i.e. turning off,
-> > we modify the delay value of a delayed worker whose job it is to simply
-> > set those atomic members to zero. Should the "timeout" so to speak be
-> > reached, we assume the PWM signal is off. This isn't perfect; it
-> > obviously introduces a latency between it being off and the counter
-> > reporting it as such. Because there isn't a way to reset the internal
-> > double-buffered cycle count in the hardware, we filter out unreliable
-> > periods above the timeout value in the counter read callback.
+> > diff --git a/Documentation/devicetree/bindings/mfd/adi,ltc4283.yaml b/Documentation/devicetree/bindings/mfd/adi,ltc4283.yaml
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..c5e8aec887d9cfad9052a7c28783396efd6804a9
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/adi,ltc4283.yaml
+> > @@ -0,0 +1,85 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/mfd/adi,ltc4283.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: LTC4283 I2C Negative Voltage Hot Swap Controller
+> > +
+> > +maintainers:
+> > +  - Nuno Sá <nuno.sa@analog.com>
+> > +
+> > +description: |
+> > +  The LTC4283 negative voltage hot swap controller drives an external N-channel
+> > +  MOSFET to allow a board to be safely inserted and removed from a live
+> > +  backplane.
+> > +
+> > +  https://www.analog.com/media/en/technical-documentation/data-sheets/ltc4283.pdf
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - adi,ltc4283
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  gpio:
+> > +    $ref: /schemas/gpio/adi,ltc4283.yaml
+> > +  hwmon:
+> > +    $ref: /schemas/hwmon/adi,ltc4283.yaml
+> 
+> This patch has to come after these are added. However...
+>
+
+Yeah, I realized that when I got your bot build failure email.
+
+> > +
+> > +  adi,gpio-pins:
+> > +    description:
+> > +      The pins to use as GPIOs. The device has 4 ADIO and 4 PGIO
+> > +      pins than can be used as GPIOs. The ADIO pins are numbered from 0 to 3
+> > +      and the PGIO pins are numbered from 4 to 7.
+> > +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> > +    minItems: 1
+> > +    maxItems: 8
+> > +    items:
+> > +      minimum: 0
+> > +      maximum: 7
+> > +
+> > +dependencies:
+> > +  gpio:
+> > +    - adi,gpio-pins
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - hwmon
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    i2c {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        swap-controller@15 {
+> > +            compatible = "adi,ltc4283";
+> > +            reg = <0x15>;
+> > +
+> > +            /* pgio1 to pgio4 as gpios */
+> > +            adi,gpio-pins = <0 1 2 3>;
+> > +
+> > +            gpio {
+> > +                compatible = "adi,ltc4283-gpio";
+> > +                gpio-controller;
+> > +                #gpio-cells = <2>;
+> > +            };
+> > +
+> > +            hwmon {
+> > +                compatible = "adi,ltc4283-hwmon";
+> > +
+> > +                adi,rsense-nano-ohms = <500>;
+> 
+> Seems like a current sense resistor might be a common thing.
+>
+
+At least ltc4282 has the same property so I can add a common property if
+you want me too.
+
+> > +                adi,current-limit-sense-microvolt = <25000>;
+> > +                adi,current-limit-foldback-factor = <10>;
+> > +                adi,cooling-delay-ms = <8190>;
+> > +                adi,fet-bad-timer-delay-ms = <512>;
+> 
+> All these child node properties can be moved to the parent node.
+>
+
+Hmm, if I move to the auxiliary device, this will "fix" itself but just
+out of curiosity, why should it be on the parent node? These properties
+only make sense for the hwmon device.
+
+- Nuno Sá
+
+> > +            };
+> > +        };
+> > +    };
+> > +...
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index e90710a9b40d7b32c151472a9ac3b02efd95f346..413bb77d5eebe2b51aa9c3af86e7cfd5ab142044 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -14500,6 +14500,13 @@ F:	Documentation/devicetree/bindings/hwmon/adi,ltc4282.yaml
+> >  F:	Documentation/hwmon/ltc4282.rst
+> >  F:	drivers/hwmon/ltc4282.c
+> >  
+> > +lTC4283 HARDWARE MONITOR AND GPIO DRIVER
+> > +M:	Nuno Sá <nuno.sa@analog.com>
+> > +L:	linux-hwmon@vger.kernel.org
+> > +L:	linux-gpio@vger.kernel.org
+> > +S:	Supported
+> > +F:	Documentation/devicetree/bindings/mfd/adi,ltc4283.yaml
+> > +
+> >  LTC4286 HARDWARE MONITOR DRIVER
+> >  M:	Delphine CC Chiu <Delphine_CC_Chiu@Wiwynn.com>
+> >  L:	linux-hwmon@vger.kernel.org
 > > 
-> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> 
-> Hi Nicolas,
-
-Hi William,
-
-> 
-> Would you help me understand the computations in this driver?
-> 
-> If I understand the purpose of this driver correctly, it's meant to
-> compute the period and duty cycle of a PWM signal. What do LPC and HPC
-> represent? I'm guessing they are the low period count (LPC) and the high
-> period count (HPC). So then you calculate the total period by adding
-> LPC and HPC, whereas the duty cycle derives from HPC.
-> 
-> Am I understanding the algorithm correctly? What are the units of HPC
-> and LPC; are they ticks from the core clock? Are PWMV4_INT_LPC and
-> PWM4_INT_HPC the change-of-state interrupts for LPC and HPC
-> respectively?
-
-HPC = High Polarity Cycles, LPC = Low Polarity Cycles. They are counted
-based on the pwm clock that the hardware runs at. PWMV4_INT_LPC and
-PWMV4_INT_HPC are one-bit flags that are raised in the interrupt register
-of this hardware when the interrupt is fired, to signal that LPC or HPC
-changed state.
-
-Your understanding of the algorithm appears to be correct, from my memory
-of when I wrote the code. The 4 captures left logic is because the
-hardware needs 4 level transitions before it can provide a useful
-number for those two counts; thinking about it more now, I'm surprised it
-can't do it in 3, so I'll need to double-check that next time I work on
-this.
-
-As an aside note, Rockchip has recently published the RK3506 Technical
-Reference Manual, and the RK3506 SoC uses the same PWM IP as the RK3576
-for which this driver is for. You can find it here in Chapter 31:
-
-https://opensource.rock-chips.com/images/3/36/Rockchip_RK3506_TRM_Part_1_V1.2-20250811.pdf
-
-This driver specifically implements "31.3.1 Capture Mode", later down
-the line I may want to add "31.3.4 Clock Counter", "31.3.5 Clock
-Frequency Meter" and "31.3.6 Biphasic Counter" but I lack a proper
-signal generator so didn't want to bite off more than I could test.
-
-> 
-> The Counter subsystem can be used to derive the period and duty cycle of
-> a signal, but I believe there's a more idiomatic way to implement this.
-> Existing counter drivers such as microchip-tcb-capture achieve this by
-> leveraging Counter events exposed via the Counter chrdev interface.
-> 
-> The basic idea would be:
->     * Expose LPC and HPC as count0 and count1;
->     * Push the PWMV4_INT_LPC and PWMV4_INT_HPC interrupts as
->       COUNTER_EVENT_CHANGE_OF_STATE events on channel 0 and channel 1
->       respectively;
->     * Register Counter watches in userspace to capture LPC and HPC on
->       each interrupt;
-> 
-> The Counter chrdev interface records a timestamp in nanoseconds with
-> each event capture. So to compute period and duty cycle, you would
-> subtract the difference between two HPC/LPC captures; the difference in
-> the timestamps gives you the elapsed time between the two captures in
-> nanoseconds.
-> 
-> Would that design work for your use case?
-
-Basically, any design would work for me. I've only implemented the
-counter driver to make sure the PWM reading part of the hardware works,
-and Uwe advised me that new PWM drivers should use the counter
-subsystem as opposed to implementing the PWM capture operation.
-
-So I think your design makes more sense; any user of this driver would
-likely want it to work like the other counter drivers, and exposing
-LPC and HPC directly would also let me get rid of the quirky "is the
-PWM actually off now" logic.
-
-I'll do this when I get the chance to work on this patch series again,
-as it needs a rewrite anyway to plug it into the MFD subsystem.
-
-> 
-> William Breathitt Gray
-> 
-
-Thank you for your review and suggestions!
-
-Kind regards,
-Nicolas Frattaroli
-
-
+> > -- 
+> > 2.50.1
+> > 
 
