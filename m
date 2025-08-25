@@ -1,123 +1,122 @@
-Return-Path: <linux-gpio+bounces-24871-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24874-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 226AFB33347
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 01:27:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C78EBB337A2
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 09:20:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B068B7AEFA7
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Aug 2025 23:25:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A036617D242
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 07:20:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89EA42580F2;
-	Sun, 24 Aug 2025 23:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HA7cGAIU"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1801128BA81;
+	Mon, 25 Aug 2025 07:20:37 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2458219319;
-	Sun, 24 Aug 2025 23:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B55128724B;
+	Mon, 25 Aug 2025 07:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756078030; cv=none; b=GzaR1xOJTG+tqPDGiZyjXQspyWffdSQtmPQKZkWGf04K5EXD1/SfbY5R9rWM86bPJCyS8Zk7wvAGQH9JJSObsTHPkxpQwSy7hSeMV/e9YY89DoszcjBVxtDb+VJW0gq4Pj8t1jhKRvLffC2lAuTvJg7ARC+k9Z/HtiPB0zzlZ6M=
+	t=1756106436; cv=none; b=IFfnTZDuEP8nJX0CtUePKq/sKg61yv2qrN/nZFFfD+6BN1wA6y5SqoYCveNIOvRK70AltDADBFEmWI+4aJhdnz9laeOYl078ZLagmHrGLgCkX/Ivzcy4L1mCumh8Q1fiOegn9UwIPcjS3E/orzWWyKo/xK+lJcV1IpM38KXGdgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756078030; c=relaxed/simple;
-	bh=uZycFtq4HWobblKsAM7DWXlaK0GqW7YFhmxQIB8PTr0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E4isrCf5YlQj/neEl0GaZtjXN1LE4OlUWvJsXctdL300ZTxdF+kc5Ulq8Xmd3ad1dmd+Hudu1HwCRU620f6cxig+NCuvH5zdi7kQobktIVgfQMhE6qrWvq4n19n7YUaBI2Uy9Yuk2Kjggy3tN2wOr2O5bjJBOM+L79ChKTbgLcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HA7cGAIU; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756078029; x=1787614029;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uZycFtq4HWobblKsAM7DWXlaK0GqW7YFhmxQIB8PTr0=;
-  b=HA7cGAIUGDbhfO2WwAzVH4zK6tSO7D2HQI6sW/vTNTlZNR+skAf5f1jf
-   vBVCIFG7NraeZFKvyGM2CbTiA5x2KAjNao4zKftCd7CMIRueSQYC7H3OT
-   Pz+NR9xETzq6HPINSApwxYgpeVMmpEr7+qYTwgkqc1HcugNrLdakAkLgZ
-   5Z6tBk9R1KoFBWeyYf0xylSDjLjIrOa5HmEbQwKx0+qHrmf0YIAHHvnFP
-   kf2PPvzKdGsUTP+HKDqYGkhaG6PmE/ah46Oi9b/cgNDLL26QtDartjtNu
-   sAc7nj3nN0xHVSlU3R4N3Pqnfp/igvJJTqSTJ+0rDjk+TzCs4UegEspZD
-   g==;
-X-CSE-ConnectionGUID: MgUyVngUS02vEHPfxIw3jg==
-X-CSE-MsgGUID: Zt5tB7MOQz6F84eaiXNdpA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="80881771"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="80881771"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2025 16:27:08 -0700
-X-CSE-ConnectionGUID: WgxCIVdaS7KSshHTn4/VUw==
-X-CSE-MsgGUID: eAkxHeOyTPeiOqumhjXJ8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="169334994"
-Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by orviesa008.jf.intel.com with ESMTP; 24 Aug 2025 16:27:05 -0700
-Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uqK68-000NFz-2K;
-	Sun, 24 Aug 2025 23:26:26 +0000
-Date: Mon, 25 Aug 2025 07:24:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Nickolay Goppen <setotau@yandex.ru>,
-	Bjorn Andersson <andersson@kernel.org>,
+	s=arc-20240116; t=1756106436; c=relaxed/simple;
+	bh=9gU8poKsNJSgCMj5IC193x1flh8SKIRE7FBDWszpiWY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bKpAFURKlqF/IA1FLCJk1jN0j4pi/KWssW10KOq34lbSOMCWBbVhThzBzzmDa/oZSbcN0zlUse5Ndj7yOgwT8mvxiKGb2m0q+ZG+KA/C9d+FNNPPhkBs2odfJIdzVwxfMMp+1879QsxhlojB7qiPWcLKox7GT1D4xyhWn6HGxLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4c9M286c6Jz9sSL;
+	Mon, 25 Aug 2025 08:53:20 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id jxLSvRcp4PtP; Mon, 25 Aug 2025 08:53:20 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4c9M285rFVz9sSH;
+	Mon, 25 Aug 2025 08:53:20 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id B144F8B769;
+	Mon, 25 Aug 2025 08:53:20 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id 79Duc9-z2n-g; Mon, 25 Aug 2025 08:53:20 +0200 (CEST)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [10.25.207.160])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 8845D8B765;
+	Mon, 25 Aug 2025 08:53:20 +0200 (CEST)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Qiang Zhao <qiang.zhao@nxp.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
 	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-	Nickolay Goppen <setotau@yandex.ru>
-Subject: Re: [PATCH 1/3] pinctrl: qcom: lpass-lpi: Introduce pin_offset
- callback
-Message-ID: <202508250651.QMqSAkyR-lkp@intel.com>
-References: <20250824-sdm660-lpass-lpi-v1-1-003d5cc28234@yandex.ru>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v3 0/6] Add support of IRQs to QUICC ENGINE GPIOs
+Date: Mon, 25 Aug 2025 08:53:15 +0200
+Message-ID: <cover.1756104334.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250824-sdm660-lpass-lpi-v1-1-003d5cc28234@yandex.ru>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1756104796; l=1967; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=9gU8poKsNJSgCMj5IC193x1flh8SKIRE7FBDWszpiWY=; b=s6s0Zoi/uoWVoB6Dpqtqh36eyBdZYPiQX7Lsm4T3peSJPKqTrsYBsGx5vTJQ1PXR5nzJtkHfw rRSUesOi+piCK4lY6+crj0YPYpBjOJvpltbn2OeKjzVgBzPFYDj69GD
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
 
-Hi Nickolay,
+The QUICC Engine provides interrupts for a few I/O ports. This is
+handled via a separate interrupt ID and managed via a triplet of
+dedicated registers hosted by the SoC.
 
-kernel test robot noticed the following build errors:
+Implement an interrupt driver for those IRQs then add IRQs capability to
+the QUICC ENGINE GPIOs.
 
-[auto build test ERROR on 038d61fd642278bab63ee8ef722c50d10ab01e8f]
+The number of GPIOs for which interrupts are supported depends on
+the microcontroller:
+- mpc8323 has 10 GPIOS supporting interrupts
+- mpc8360 has 28 GPIOS supporting interrupts
+- mpc8568 has 18 GPIOS supporting interrupts
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Nickolay-Goppen/pinctrl-qcom-lpass-lpi-Introduce-pin_offset-callback/20250825-045348
-base:   038d61fd642278bab63ee8ef722c50d10ab01e8f
-patch link:    https://lore.kernel.org/r/20250824-sdm660-lpass-lpi-v1-1-003d5cc28234%40yandex.ru
-patch subject: [PATCH 1/3] pinctrl: qcom: lpass-lpi: Introduce pin_offset callback
-config: sh-randconfig-002-20250825 (https://download.01.org/0day-ci/archive/20250825/202508250651.QMqSAkyR-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 13.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250825/202508250651.QMqSAkyR-lkp@intel.com/reproduce)
+Changes in v3:
+- Splited dt-bindings update out of patch "soc: fsl: qe: Add support of IRQ in QE GPIO"
+- Reordered DTS node exemples iaw dts-coding-style.rst
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202508250651.QMqSAkyR-lkp@intel.com/
+Changes in v2:
+- Fixed warning on PPC64 build (Patch 1)
+- Using devm_kzalloc() instead of kzalloc (Patch 2)
+- Stop using of-mm-gpiochip (New patch 3)
+- Added fsl,qe-gpio-irq-mask propertie in DT binding doc (Patch 4)
+- Fixed problems reported by 'make dt_binding_check' (Patch 5)
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
+Christophe Leroy (6):
+  soc: fsl: qe: Add an interrupt controller for QUICC Engine Ports
+  soc: fsl: qe: Change GPIO driver to a proper platform driver
+  soc: fsl: qe: Drop legacy-of-mm-gpiochip.h header from GPIO driver
+  soc: fsl: qe: Add support of IRQ in QE GPIO
+  dt-bindings: soc: fsl: qe: Add support of IRQ in QE GPIO
+  dt-bindings: soc: fsl: qe: Add an interrupt controller for QUICC
+    Engine Ports
 
->> ERROR: modpost: "pin_offset_default" [drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.ko] undefined!
->> ERROR: modpost: "pin_offset_default" [drivers/pinctrl/qcom/pinctrl-sm4250-lpass-lpi.ko] undefined!
->> ERROR: modpost: "pin_offset_default" [drivers/pinctrl/qcom/pinctrl-sm8350-lpass-lpi.ko] undefined!
->> ERROR: modpost: "pin_offset_default" [drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.ko] undefined!
->> ERROR: modpost: "pin_offset_default" [drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.ko] undefined!
->> ERROR: modpost: "pin_offset_default" [drivers/pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.ko] undefined!
-ERROR: modpost: "devm_clk_hw_register" [drivers/media/i2c/tc358746.ko] undefined!
+ .../soc/fsl/cpm_qe/fsl,qe-ports-ic.yaml       |  58 +++++++
+ .../bindings/soc/fsl/cpm_qe/qe/par_io.txt     |  19 +++
+ arch/powerpc/platforms/Kconfig                |   1 -
+ drivers/soc/fsl/qe/Makefile                   |   2 +-
+ drivers/soc/fsl/qe/gpio.c                     | 145 +++++++++-------
+ drivers/soc/fsl/qe/qe_ports_ic.c              | 156 ++++++++++++++++++
+ 6 files changed, 322 insertions(+), 59 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,qe-ports-ic.yaml
+ create mode 100644 drivers/soc/fsl/qe/qe_ports_ic.c
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.49.0
+
 
