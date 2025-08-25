@@ -1,163 +1,141 @@
-Return-Path: <linux-gpio+bounces-24933-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24934-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBAA3B3402B
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 14:57:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5B07B34034
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 14:58:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7DA1C3AE5DD
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 12:56:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8457A206BC2
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 12:58:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 656342609FC;
-	Mon, 25 Aug 2025 12:56:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8406B265CB3;
+	Mon, 25 Aug 2025 12:58:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="b6hHUyVz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nfRP95SR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71FB81E6DC5
-	for <linux-gpio@vger.kernel.org>; Mon, 25 Aug 2025 12:56:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5BB1E6DC5
+	for <linux-gpio@vger.kernel.org>; Mon, 25 Aug 2025 12:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756126614; cv=none; b=SfhYogbCg8jGuuGS16KZSupF+Y4FEXWxyqo7ALJuGsAKj8WRKUrVry9gBfShjsYFGApZasSsoBhuB0adD8UbPowEsrrwPj3eL5X9gdk8sqYW4s/15AATB8si0SnQTryqsEP278rNJgCsF9wJTkXCl9XAIt8CvYH7Ai2pURLFFpw=
+	t=1756126719; cv=none; b=LrIdp7RhKp+TvynGKlSl801VdpzReRPoSGBksbw5etF8FYylOGM92ek5FvZmPYsXBG9laqcfCBG9WI+0HN4BQqTip8wp/bEgXH5b+dQeEaYDGo+3b1fYYxmNy8NtGjCX/rImYQP4N58m3XusEXUpLIgTgqdzNin49Z9Iry/PA+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756126614; c=relaxed/simple;
-	bh=AiRdSUneN/IHEMxz/2390+MMo6RGIcoLqIA6r4/MmWg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xdd6BF8oRPqq5JpLNnietoWHRwP2pF/1xXEP34bleknyIAzxfmOFwv8iGo0u17XGOYAuXDp5/LpReoUt6FnAM0JtNZqZgZqmd4USGDEEunvRbGp4H9mkzXLM4s5hakuUbvnIjhOIw1BDuFrWdjXEX54+TN3eRBCfFHx0+NVIhuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=b6hHUyVz; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-336674f95e7so11998511fa.1
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Aug 2025 05:56:52 -0700 (PDT)
+	s=arc-20240116; t=1756126719; c=relaxed/simple;
+	bh=IM9iJO7UIYdkAwSAqbmV9tDKxFnqhLDvSUZ9NJuIE90=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=kpEWBwfrdgcvX1DUvUrtOJRZOggl9fMs3GenmrSdQg516Pi2rtipYxbGEmEmYrlun2eGbmtI9GJzdQRVBqQiImS3SfibiF/eFaNqitjt6r84VFepFpJxt6LXsPKKzPNM3Y9XZ7VZdurs8UzCxK5YgEsvYJzQbsNW9QWMuZEPFhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nfRP95SR; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-336630769a6so14433481fa.3
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Aug 2025 05:58:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756126610; x=1756731410; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qnMFRUI7OrpeFHOHQnTbYDUskSBfz/K49TJPo7jgp3o=;
-        b=b6hHUyVzMJlduq3zU7G/7jfkvA+1tI33ljc7jbxBddnIN18QwkILh7NfmU/hTEX54G
-         LV+Yh1e9/uAcSwlxO+sdw7BBzzVD3I+hpU5dKwaB7U0x8BYdSFQUduEPaJwJElAGtNP6
-         nVvPVjTnEP0wCTbJIWrB6UtBVKuL9wWnZbiDv8k0k4fRZ/wYnKUL8MiLS7+Vj92iP2Ah
-         WA+0ezRfXgoEKKaoERSTlrr36WxK5t6tJLZQh+JHhQNvVDmejudMT7RMPrf2tr7ve54m
-         FB6jRxvByMSkJeQBDb6FZXCcNBxeH1jA+0Wt01V3A2C/iY2Q+RqsLTRqvY7S6+Il6stu
-         2ovQ==
+        d=linaro.org; s=google; t=1756126716; x=1756731516; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=h2y2NsC9oaR3662j4IuBMxoGBjdUhWRZWEFVHsbKjJU=;
+        b=nfRP95SRLvhAd5TPDrjslwETAD9ZKQQqLmBdd6UpXO8ooLOv5Q1u+JI2CgzQrTw8eq
+         UDgu0PTmIeGdU56Tzaj8MCDJSSu4D/7FHSAZae5vAb66A+HIPMlfffoLxn8Y9jFoTep+
+         sE95cTCS4LoUQVTbswymS8APynZ5hhz65kCqMSbnmaPXOKZjdO17v/ehS2KJSBWZfSdY
+         VQmOWOHKr5GQ71dnUCxf3+qMg2LKGPqs37ToHX7hk+zMA0yhwOcsH6iBYbakEclvrcS5
+         MAn/zI/K2mR62bv8l8z/Mr5ThawFe09JC2icLZPYKyw6nc4cIx/1/2Sfm6/kHEfAunYZ
+         ZO4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756126610; x=1756731410;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qnMFRUI7OrpeFHOHQnTbYDUskSBfz/K49TJPo7jgp3o=;
-        b=wz7R5ojpj1Mej4m5zUB8/NeQQXUyu85WGKZFXCJmOmGBZFRAJPIA+CmNX8jtXmamlV
-         28enX1wmK6cWB+QoI5Z1Sv9EiS7mKy3K/tfSTgrEjp9OwSelbyilPhPb4nNUsYq2Tqw1
-         63ntMTpKcHsbL0eVMnk8kqUW3S5Icmhw/rULSJSwcVTH+Mz55yogpC+rpY3gPlNw3Hxs
-         2JyDGSBQXUkEM6KGgzIs3O2Pic/cSOzw69AB7eZTeOiTs6DaFUqd4yX6tbKVVX48pzwG
-         3r+GCZLLDecN2pE+CIQ7zZqWfL8JpSTzDNp9QcyZiWH7GamL6oWP1VG7o91uBgGKWbeg
-         qaVA==
-X-Forwarded-Encrypted: i=1; AJvYcCUpxubjbj2w9mNG7QSgFuGUAIdRRaIzq108XU0yvPIzjEXl/KO4aPMOV+UkXrFe43ziLQw4xJn4466v@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywv0AJ9supNs3pJ2PFQ5Oedx44JgQy7ug6ZuUvK1wcPIcfLN6OR
-	dooSI6BtGhX4fU9pN3ffn+sB89v/FRc2QHrDhI8C6DN/iEDjrqozeyZ19w8DuN3DFNigpp1SJPf
-	ePpP2EixNY/wYdjDFsptEm/Mtak1fmREO8ZDUYx/b6w==
-X-Gm-Gg: ASbGncuUMK1XHhqTFE7DLdoNUwL8jJ3iBBZ0IeEA4w5oQsHZ05KTLprDHT37g01UZhw
-	LxUdKVy3/7y5f0frzlR/bGb5n7e4hR3U0V+42uSZG/q69F+oAmNfwIC8gJNs6XDZKsPcnSSens1
-	aVJeACSLx/9LM6oPjzc6c9b5QarJNZmk7JNELeCZ7bsWP2uli+spy2RCQSok52oPnciyXD4v90y
-	LhND2wDCZ3fQYAlvij+i/NTLZv7sTw5ynNxyxU=
-X-Google-Smtp-Source: AGHT+IEKuRSYDRBEFcUoSaQJpuUMdlcesI/FHii7hOjk4oxM01a0EqmTFPiCYNu0z4GmlScnxLvw71vWU7C0gmCrYWM=
-X-Received: by 2002:a05:651c:e0a:b0:333:faea:760e with SMTP id
- 38308e7fff4ca-33650e28035mr29572141fa.4.1756126610386; Mon, 25 Aug 2025
- 05:56:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1756126716; x=1756731516;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=h2y2NsC9oaR3662j4IuBMxoGBjdUhWRZWEFVHsbKjJU=;
+        b=tA6N7j+1ffElPo+afrxE/zSplf/bgFO2CfKtA1dgJXKBNKrWT3AtiI+ie1U5ECLq2d
+         6wsd1KyG1goQKkpXEZZFHiJ7O9GQ5E/yai4gguTHOodQAqNlIYviAm7X4wheB/3P6aiR
+         M9tG/xcEgDF+isMebqLwxCnDVScvWfrIe8zXxpJ9LNM6q2xAL6SWWW0IiXqrLGOAU8ED
+         Mt9cyuD8t2rqj9rVXHpnoYzbpbVQuYVy2qCtHATdsGlK3JTME0OUfX1oMx5c8DIvAOLx
+         PyADkbxLV7MbrSHlQy9V0uC8iP6E6GjD7EL+bJY4CEdCUqFpEVzW3YnsTOa9Vex14wUx
+         PGdg==
+X-Forwarded-Encrypted: i=1; AJvYcCVTALjs6kRMxfrQNgQ3pN8TNXWlG52Rjp4y7VxoLTZ0xTd3tzsCbF/esWBojMFPJMOBFzMTthySCog3@vger.kernel.org
+X-Gm-Message-State: AOJu0YymWnrE+Xnpt+EBFxsgrlAaXcuDAxbVgjUJT7JKxlnCRUyZgYJu
+	0kH+PWLjiZH59uT0aW5GZQk2NCCVWnMivxRqIPkS7YQtdxreoD0ptT3hkIX/ZJBdh3jDBhxE4F8
+	mGBN+tKkhNPDA9uJxgEp5KVNJWB2bxwc8g//0Wc3TIG7fuoOGrliirIdfxg==
+X-Gm-Gg: ASbGnctcOHMsIRT9J7/4Y6B3AvrUVu88HPp4i0t3sM8fFL0YG9XpVd32N1iqLapCXU1
+	T9CPQg2fDVESn/AXTrBiiIQIGuPHuLiGaRYf4vSkixqWFjKPUiNNOJ4ZtcnpX6vwZe+/cruO7JB
+	wPY2ZNWnplcXlFLZUjFR+ZiqsyAa01y85XrPYTaJyAa1Ok5gnS3EKNCkIEb0iC1WoRYxURnM+3y
+	B90FjI=
+X-Google-Smtp-Source: AGHT+IEM8Ta/aMlYhdX2kyS2KdDJN8sJsB7fP7RconVSabr+2MrjSO9P2xauUdSFKN0AK/LYT3T5QmMf3jjBlZqu/Rs=
+X-Received: by 2002:a05:651c:31c5:b0:334:390:d92e with SMTP id
+ 38308e7fff4ca-33650e3ae24mr35592811fa.7.1756126715536; Mon, 25 Aug 2025
+ 05:58:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1756104334.git.christophe.leroy@csgroup.eu> <e05a0959d794016bde79e48e25ff71253cf51aae.1756104334.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <e05a0959d794016bde79e48e25ff71253cf51aae.1756104334.git.christophe.leroy@csgroup.eu>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 25 Aug 2025 14:56:39 +0200
-X-Gm-Features: Ac12FXyribtDrV6nGrkt8B-SxFaigB01Pq-K7rMjlp_S8j2j5Cn5-EuT5Gchlm4
-Message-ID: <CAMRc=MfPTtdFtE63UKfbuK3h1mLEk2aUGazBsbRS-OLZzm7e9g@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] soc: fsl: qe: Change GPIO driver to a proper
- platform driver
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Qiang Zhao <qiang.zhao@nxp.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 25 Aug 2025 14:58:24 +0200
+X-Gm-Features: Ac12FXwpYrX8dlNs7pqV067CILDapuc-jiI-uPN-PFTU4ngTPdYVQHt2d9IqhBE
+Message-ID: <CACRpkdbMXvpwgniKeyJ47-t0X+ekkJ1r8RpDFJRsd+g9id+ruQ@mail.gmail.com>
+Subject: [GIT PULL] pin control fixes for v6.17
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 25, 2025 at 8:53=E2=80=AFAM Christophe Leroy
-<christophe.leroy@csgroup.eu> wrote:
->
-> In order to be able to add interrupts to the GPIOs, first change the
-> QE GPIO driver to the proper platform driver in order to allow
-> initialisation to be done in the right order, otherwise the GPIOs
-> get added before the interrupts are registered.
->
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi Linus,
 
-Hi! I retracted my review tag under v1 because...
+here are some quick pin control fixes.
 
-[snip]
+Nothing special, just driver fixes.
 
-> -       return 0;
-> +       qe_gc =3D devm_kzalloc(dev, sizeof(*qe_gc), GFP_KERNEL);
-> +       if (!qe_gc)
-> +               return -ENOMEM;
-> +
-> +       spin_lock_init(&qe_gc->lock);
-> +
-> +       mm_gc =3D &qe_gc->mm_gc;
-> +       gc =3D &mm_gc->gc;
-> +
-> +       mm_gc->save_regs =3D qe_gpio_save_regs;
-> +       gc->ngpio =3D QE_PIO_PINS;
-> +       gc->direction_input =3D qe_gpio_dir_in;
-> +       gc->direction_output =3D qe_gpio_dir_out;
-> +       gc->get =3D qe_gpio_get;
-> +       gc->set =3D qe_gpio_set;
-> +       gc->set_multiple =3D qe_gpio_set_multiple;
-> +
-> +       return of_mm_gpiochip_add_data(np, mm_gc, qe_gc);
+Please pull them in!
 
-... I believe this can be dropped now and replaced with
-devm_gpiochip_add_data().
+Yours,
+Linus Walleij
 
-Bart
+The following changes since commit 8f5ae30d69d7543eee0d70083daf4de8fe15d585:
 
-> +}
-> +
-> +static const struct of_device_id qe_gpio_match[] =3D {
-> +       {
-> +               .compatible =3D "fsl,mpc8323-qe-pario-bank",
-> +       },
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(of, qe_gpio_match);
-> +
-> +static struct platform_driver qe_gpio_driver =3D {
-> +       .probe          =3D qe_gpio_probe,
-> +       .driver         =3D {
-> +               .name   =3D "qe-gpio",
-> +               .of_match_table =3D qe_gpio_match,
-> +       },
-> +};
-> +
-> +static int __init qe_gpio_init(void)
-> +{
-> +       return platform_driver_register(&qe_gpio_driver);
->  }
-> -arch_initcall(qe_add_gpiochips);
-> +arch_initcall(qe_gpio_init);
-> --
-> 2.49.0
->
+  Linux 6.17-rc1 (2025-08-10 19:41:16 +0300)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v6.17-2
+
+for you to fetch changes up to 563fcd6475931c5c8c652a4dd548256314cc87ed:
+
+  pinctrl: airoha: Fix return value in pinconf callbacks (2025-08-22
+15:08:58 +0200)
+
+----------------------------------------------------------------
+Pin control fixes for the v6.17 series:
+
+- Module macro parameter fix for the meson driver so that
+  it actually modprobes.
+
+- ACPI quirk for the ASUS ProArt PX13
+
+- Build dependency for the STMFX driver.
+
+- Proper return value for the pinconf callbacks in the
+  Airhoa driver.
+
+----------------------------------------------------------------
+Alexey Gladkov (1):
+      pinctrl: meson: Fix typo in device table macro
+
+Lorenzo Bianconi (1):
+      pinctrl: airoha: Fix return value in pinconf callbacks
+
+Mario Limonciello (AMD) (1):
+      gpiolib: acpi: Add quirk for ASUS ProArt PX13
+
+Randy Dunlap (1):
+      pinctrl: STMFX: add missing HAS_IOMEM dependency
+
+ drivers/gpio/gpiolib-acpi-quirks.c         | 14 ++++++++++++++
+ drivers/pinctrl/Kconfig                    |  1 +
+ drivers/pinctrl/mediatek/pinctrl-airoha.c  |  8 ++++----
+ drivers/pinctrl/meson/pinctrl-amlogic-a4.c |  2 +-
+ 4 files changed, 20 insertions(+), 5 deletions(-)
 
