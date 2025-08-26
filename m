@@ -1,114 +1,144 @@
-Return-Path: <linux-gpio+bounces-24948-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24949-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58811B34AAE
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 20:56:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54C44B351DC
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Aug 2025 04:47:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2A6B02A2913
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Aug 2025 18:56:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 667D91B6173B
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Aug 2025 02:48:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B5E827D77B;
-	Mon, 25 Aug 2025 18:55:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 750B2279335;
+	Tue, 26 Aug 2025 02:47:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="oBmUIleK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D98vDBHd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026DE27A917
-	for <linux-gpio@vger.kernel.org>; Mon, 25 Aug 2025 18:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBEBB1C8610;
+	Tue, 26 Aug 2025 02:47:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756148158; cv=none; b=McFEsDsKs+2qS6haWk8WnHIATsujZLfL/jV1/8USVDQcCuMfXH11MATrVxJwI0GqcKlNhQWM0qC/w1OU9hjKkNnIrL1L5mSCi+1j5Whpjo5s4njtxdF+u9yw3kYoYWUHy9oIE4tYkpHJWs5r4vODZ8DUjoxg6xwqSVX0qabBDRs=
+	t=1756176460; cv=none; b=TBtE9eIEtEnuwUaee1MOlejJ8yzVK9mJsqsEGjEhBmwjDf2LP+G+sLjUAWZGwf6w/g7m2c37DZy7oK/+EsEQWf6Q72PbzHbD5sn+1TDxh0L3+iTgWMrTdqDNnD1oCBsPzNFcklw9eXmfKV1ZMRBlU5vHA3ev0sFTjPjtgFJCcLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756148158; c=relaxed/simple;
-	bh=YmDbGVYBJ+9vMA9e2dBcq+2FxY2Q/1XKrFd+tq0bRVo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZA6zBZdFDJXT5v4Khd2VyqnbT6u+ZoHH2bOmEH772CvyEShlaBVAbYsHBvDVghUdoSc+FoRSXwNJNMI6znGCVXSJ8HE1Tf1QGNivomUhYbqThpQLjb/QzDL0nR7YJ0s0zRYVPO2XswnAkwX6M2zKm7pMej+kaEdeBnXR9qZwncU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=oBmUIleK; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3c46686d1e6so2964562f8f.3
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Aug 2025 11:55:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756148155; x=1756752955; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DOcjuqp2a+AQWa/4BjFDLaLGrGNoZlGDy0Dboe/tYr4=;
-        b=oBmUIleKGXP6y9Q6IvAwolFCJ38mcwx3OxWJPCDs4xCZkHJ6j5Gu8NIAzT8hwpAMg6
-         PLE/wHDgMic2ocCZZEohsrntC/mBPZcjnLclWYtNQzCJeb8OgoAnEu+vQlQvDcQyh48u
-         4mr/4tReGaOHk4Qub9SHzD5kKZ+tWrK9ed7YC6Q2Tz4xgahAmZVn+gTEO/4r26MX+Jg0
-         EGxm/UpKUgQzeY0joTnyvUeEsXvGVL3bXlH+6CPz0upCRCPBOEv1MoMC6G8ph+i3Xma0
-         dx09uu92A7tV/+zSOWvxWpXNmKcsgm+rXWBU78vVJ6/+C2kTkFtVlOgJlU9bTBZgx2Yv
-         Bs1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756148155; x=1756752955;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DOcjuqp2a+AQWa/4BjFDLaLGrGNoZlGDy0Dboe/tYr4=;
-        b=rbDs+Q4XQqfLUvbthe/mQCZhdGSyTo9WdUQ58xfuZMqIs3tjKm/nOEeBfg22ZayELp
-         +xqFEuJ3HcnPbvTDZWLm8rOliNOqlqzbZfbkZ3fHMrykoBMplXUs+IIcJXrAf0gm1gT9
-         UMtP+lH9+PU20oT6M5qb/1M+tEH67dG5DOpSWrA6MVuu0+DZlWGGwyWoHo8rr4hwuUIi
-         qi7tn3Fo288pzyHmGcO1VZrKYodMEH9HMn7+g8CfwNsY0eMiPNfVq4czqTYKRJJ1xafY
-         cIeQFKhTeZLiQQn03tK0VVnMuh+Y5KWorsuVRxaWDc3lSUy0q8drZVdBgI6B4dsSjyB1
-         mZwA==
-X-Forwarded-Encrypted: i=1; AJvYcCXJEeBol+gmG++UTRKk0NA1W1n2V32nlNF92vPA4QpNJO8RGK0zlBzYPhqahOl4WZE7R2Of1wMOCAqW@vger.kernel.org
-X-Gm-Message-State: AOJu0YznwnWAO/HDOCw7kIP7wRg8YHpWyyE69qaY5h1jJcTF9ZDU/rR5
-	2UN8bvSdP6lrUiQtHC2lFBRuPupLnvZlQq3w1erHUGJiCrDf92Ce865W8mKiCqBI+1Y=
-X-Gm-Gg: ASbGncuCHuQv1dI+A833AzZLZnPgz1WM9qG0AzgKvh/r99SlGsZaJJUHXJkTporfeMG
-	O5a9Uhs96lBV16ISBmnORmC5nx2oFfP1D8f/8kMiSEDd1AcqtIiPosnik7TGy7fpGmGlF2K5ZHR
-	vuKIjS8mtqsNiN+l7IWAVNphvFJZd6eY+5VsX9mpZMCgzQWZ7RYTPUMkL2QRnemX+FILBkcRw14
-	IrCb2u2jwq1MFyDLNk27HoLX0bVAGGa/rohC/bDuBJy25BspfZHK/LlwOO1RhPcUz2pXk+UdaYh
-	osmGrUW/A5F4IikIXcNhnBCcYCS5DECHr9fNWqwjDc23pOwsDMN/6HfdvW6ZjjaAK3u+HtmfOng
-	t67yd1m2QJymv0LpvmmzQJniVErwdlTP9uhWTSkUNksU=
-X-Google-Smtp-Source: AGHT+IETHkwhkd+96DAgFu+2AKKBRYcWYpFOYdvJs3gDUctCwBERpoYuxxiBj5OEWAsSDDqWzul0fg==
-X-Received: by 2002:a5d:64e3:0:b0:3c9:c3dd:769f with SMTP id ffacd0b85a97d-3c9c3dd7954mr3831038f8f.2.1756148155199;
-        Mon, 25 Aug 2025 11:55:55 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:490:f8af:73b:7a00])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3c711d9f389sm12665109f8f.60.2025.08.25.11.55.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Aug 2025 11:55:54 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
+	s=arc-20240116; t=1756176460; c=relaxed/simple;
+	bh=Wm/2S21Pg6Nmoyskp843r48HknqB72yRjYDtSbAC9eI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OFGNIuHr5E+0ekOUOIx7m3EEkLhT7MZULYkQp3ymQA3w/xz/6wYVaKhVsmZPs8J07Yc1wiJDlMEd/ubuF+qUp3WrZVaNuiDkzyjC5WWfZaiN14OcDyqRG9AvdsQ48tP3aN4ZJdBPmj0Wz1RX3DrJy/1HFvOe6kd9yGgb9l8KdVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D98vDBHd; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756176458; x=1787712458;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Wm/2S21Pg6Nmoyskp843r48HknqB72yRjYDtSbAC9eI=;
+  b=D98vDBHdVQiSsAWdYqa8G9n9+g2+p+qrSIAMoIQR+MDNj8uREv5nzUri
+   wi6qtgINiynikjMY638u2U1uz76pJY8qMHiSZ4jzVN7/m0sKaMpivEd1w
+   Dv9c7yeA9IsvU4Bi8gZ8kARpN8l3/CFPbuNvedc9gh01wgtc38ukSiwG/
+   dx2+q6GYT69tst8fAOBV3nWOB/O4wCdfPcTv+1qKGsgA59O2tXqa7oILo
+   MfeK5VxxaOLNKobEn+6BmCEr0yOsma4vTd92HLAtXbChTEH7AVWsaK10F
+   mlqU2RgC3Us3MPJvI8kneNOygajSo7frSLAdZnO7yRUozKG/oAm3Kgnxj
+   g==;
+X-CSE-ConnectionGUID: VrOeYicPSWm+O9I8dpiacA==
+X-CSE-MsgGUID: 0HV8kHJQTvielMcDZqsvcA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11533"; a="58467741"
+X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
+   d="scan'208";a="58467741"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2025 19:47:37 -0700
+X-CSE-ConnectionGUID: olyZ81apQuaoegO1K0ddNw==
+X-CSE-MsgGUID: gZmNKNo5SPmhtImu+Ik1wg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
+   d="scan'208";a="173760513"
+Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
+  by fmviesa005.fm.intel.com with ESMTP; 25 Aug 2025 19:47:32 -0700
+Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uqjic-000OB9-1g;
+	Tue, 26 Aug 2025 02:47:30 +0000
+Date: Tue, 26 Aug 2025 10:47:09 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Darren.Ye" <darren.ye@mediatek.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: sim: don't use GPIO base in debugfs output
-Date: Mon, 25 Aug 2025 20:55:53 +0200
-Message-ID: <175614815075.9139.9315465514348100034.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250815111733.79283-1-brgl@bgdev.pl>
-References: <20250815111733.79283-1-brgl@bgdev.pl>
+Cc: oe-kbuild-all@lists.linux.dev, linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	Darren Ye <darren.ye@mediatek.com>
+Subject: Re: [PATCH v7 09/10] ASoC: mediatek: mt8196: add machine driver with
+ nau8825
+Message-ID: <202508261004.7adPXk4m-lkp@intel.com>
+References: <20250822125301.12333-10-darren.ye@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250822125301.12333-10-darren.ye@mediatek.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi Darren.Ye,
 
+kernel test robot noticed the following build warnings:
 
-On Fri, 15 Aug 2025 13:17:33 +0200, Bartosz Golaszewski wrote:
-> We're in the process of removing unneeded references to the global GPIO
-> base number treewide. Use the HW offset instead of the base number.
-> 
-> 
+[auto build test WARNING on broonie-sound/for-next]
+[also build test WARNING on broonie-spi/for-next robh/for-next linus/master v6.17-rc3 next-20250825]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Applied, thanks!
+url:    https://github.com/intel-lab-lkp/linux/commits/Darren-Ye/ASoC-mediatek-common-modify-mtk-afe-platform-driver-for-mt8196/20250822-210108
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+patch link:    https://lore.kernel.org/r/20250822125301.12333-10-darren.ye%40mediatek.com
+patch subject: [PATCH v7 09/10] ASoC: mediatek: mt8196: add machine driver with nau8825
+config: arm64-randconfig-r131-20250826 (https://download.01.org/0day-ci/archive/20250826/202508261004.7adPXk4m-lkp@intel.com/config)
+compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project d26ea02060b1c9db751d188b2edb0059a9eb273d)
+reproduce: (https://download.01.org/0day-ci/archive/20250826/202508261004.7adPXk4m-lkp@intel.com/reproduce)
 
-[1/1] gpio: sim: don't use GPIO base in debugfs output
-      https://git.kernel.org/brgl/linux/c/a16a3cb07140a094ffd918290cef76135876b532
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202508261004.7adPXk4m-lkp@intel.com/
 
-Best regards,
+sparse warnings: (new ones prefixed by >>)
+>> sound/soc/mediatek/mt8196/mt8196-nau8825.c:183:33: sparse: sparse: incorrect type in argument 3 (different base types) @@     expected unsigned int to @@     got restricted snd_pcm_format_t [usertype] @@
+   sound/soc/mediatek/mt8196/mt8196-nau8825.c:183:33: sparse:     expected unsigned int to
+   sound/soc/mediatek/mt8196/mt8196-nau8825.c:183:33: sparse:     got restricted snd_pcm_format_t [usertype]
+
+vim +183 sound/soc/mediatek/mt8196/mt8196-nau8825.c
+
+   175	
+   176	static int mt8196_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
+   177					  struct snd_pcm_hw_params *params)
+   178	{
+   179		dev_info(rtd->dev, "fix format to 32bit\n");
+   180	
+   181		/* fix BE i2s format to 32bit, clean param mask first */
+   182		snd_mask_reset_range(hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT),
+ > 183				     0, SNDRV_PCM_FORMAT_LAST);
+   184	
+   185		params_set_format(params, SNDRV_PCM_FORMAT_S32_LE);
+   186		return 0;
+   187	}
+   188	
+
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
