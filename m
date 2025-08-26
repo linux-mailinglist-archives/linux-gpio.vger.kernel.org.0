@@ -1,107 +1,165 @@
-Return-Path: <linux-gpio+bounces-24996-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24998-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11317B3737F
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Aug 2025 21:57:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8349EB37485
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Aug 2025 23:47:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C170F3ADA06
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Aug 2025 19:57:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AA4337C42A3
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Aug 2025 21:47:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B92363680B9;
-	Tue, 26 Aug 2025 19:57:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2FB52882AA;
+	Tue, 26 Aug 2025 21:47:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="haM0ExZY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iut+CaEi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615D030CD8E;
-	Tue, 26 Aug 2025 19:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20CB51C5D4B;
+	Tue, 26 Aug 2025 21:47:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756238260; cv=none; b=ga2gkjD0pt5HTpOlYL7QWaaPQCUVJ75SOabP8SaN6fZo1axwnUk3S431ia98oGtZsHzcJIngg7QVDH41i7wv5eFyNKqhQkkm8jDIjRyuvHjJr02WymrLddNtnzYWkgfY0RMQoh107XAh5rQR/rni56/7nqRZ4SfXX8+R4nHqPhA=
+	t=1756244844; cv=none; b=KE5X4+vcdagD1nAv8pTXJb9SRlYmNwwt6h3+z8tLk6y5qZUe7iLJHVOPiGUSOR1aAlavN0Ss/2cCnTiUF91lIfGktm29mFFETinhOX3E7KO/ax/IrQ8jVZC2oxqAwxj6pjRp9cUHZKuCHfbPizqpgwwy6NAljzELll+2MCg6XaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756238260; c=relaxed/simple;
-	bh=PfGpNnSfzrRB5yk7v6MA0cOlYzyufLWVDl3AitbdL+U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ou27IfgSGdpdQN7PqALkmczMvni3/L3V7dKuprgI8I0dYULRHs5BuFTwMmMDGe3LJ4ZVbCK2M3+TW7hNbYRN3F+Y90xWfMgkpdwnrOf6nsZiXhIIl03r1zKbRVWrFohUubO6vopnlm14lftdlf7NRPU/tDTNEdT/pIHYRZGWIYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=haM0ExZY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 893E8C4CEF1;
-	Tue, 26 Aug 2025 19:57:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756238259;
-	bh=PfGpNnSfzrRB5yk7v6MA0cOlYzyufLWVDl3AitbdL+U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=haM0ExZYVTBYYmBTE971s991OEWhOJlPyK/JTrK9+nRHHQ056CNNfeMX7p8bsAvWU
-	 Ww5A+PmsDPZpNN+9wmmN5sxOMr3WbF9KLsdexP4FNYNYtAbPe40kehVKiRwIXkRjAq
-	 pKUG/VsyWevXj7d9ZeZlPyBaOJe5cjzPrTVSHe+qEXpNVVseel+eyqqZE3CEkj7gxF
-	 AIOtoZbS523TGZmA+vvNSWMIGhohdBbygU3ZsM9uVK4qSHBWf1CU65V+5hKmbzpLNI
-	 O6OPZ1cf1yW8KG55Onq1xBhdzQcwrIn9/wCOhvwHtn52QNv0lvGcte8Vz4GzoxBZfh
-	 PuhFlfSzscjLw==
-Date: Tue, 26 Aug 2025 14:57:38 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Julien Massot <julien.massot@collabora.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Eugen Hristev <eugen.hristev@linaro.org>,
-	Michael Turquette <mturquette@baylibre.com>, kernel@collabora.com,
-	Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Julien Massot <jmassot@collabora.com>, linux-gpio@vger.kernel.org,
-	Enric Balletbo i Serra <eballetbo@kernel.org>,
-	Ikjoon Jang <ikjn@chromium.org>, Chen-Yu Tsai <wenst@chromium.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-kernel@vger.kernel.org, Sean Wang <sean.wang@kernel.org>,
-	linux-sound@vger.kernel.org,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-mediatek@lists.infradead.org,
-	Weiyi Lu <weiyi.lu@mediatek.com>
-Subject: Re: [PATCH v3 1/6] dt-bindings: clock: mediatek: Add power-domains
- property
-Message-ID: <175623822456.370694.11801087152503772115.robh@kernel.org>
-References: <20250826-mtk-dtb-warnings-v3-0-20e89886a20e@collabora.com>
- <20250826-mtk-dtb-warnings-v3-1-20e89886a20e@collabora.com>
+	s=arc-20240116; t=1756244844; c=relaxed/simple;
+	bh=7rZc4H6brtLrd8ymrzGf1cMDZcvIgN8NA8yiwzAbcNI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ko+kY4GKtZ1yPJgxk9AwvqG7QhEUFpGMrQfV9659AyqJ2Sx5cYJmeMksMrZpA3I6cIBVMNn/WoBXU21gz0qbfEr5FBARRgERCw7VmPnjIVDNfiBIqJzW9RWaqMUw7A+nb4iTcxTkZF7E4egv99e0smtOb4b+qbJ8MMT+Bk9p1sY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Iut+CaEi; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4b2b859ab0dso36081231cf.1;
+        Tue, 26 Aug 2025 14:47:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756244842; x=1756849642; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XkXCtZkNS4sQ1PyXjfM/RdJFG7EoG62SuYsDVUj0IR4=;
+        b=Iut+CaEi7BgMy8MceXxv9/6HZgjXxspQj/CyB3K+aXubF8hW/Vb8xJe+fhzLspb9cO
+         hzz/QI2R/twwqCjqHXxrdqqPJfVqSKIEd8iM+7weJVQ2B9BGpJ7GS/sT2dtbXfjYbnjs
+         dfiQo1OCJ37zATLZcDWPAb6YJICpUHNyWvok8/yd1R+U39dd3soJ+7SwNlK6PUwc96Pn
+         58pC6Tc01IV1Ivrkklqtc2TIWm/A42qPS5cH+79AWG22dyYkEUqsmXG3yfgVEjD/cQlO
+         Xtf3kvek01R0Y7iKpmNGOP0JxIqf70Riz2FOk7iySzchrbDcsycbfeshOLKn5k8a+n7y
+         AUag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756244842; x=1756849642;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XkXCtZkNS4sQ1PyXjfM/RdJFG7EoG62SuYsDVUj0IR4=;
+        b=j1bP80lTvUyWUwYsujvJy2mEONMHzs7sBdID98rQZhKbkXtJrwrBK+pmmYcHEaNWI8
+         xxy5zhLdoXCFIDk9yQmwNX8KfzTpMIXdAysJno/uoFR/GR/X6xqt5teTwAVYCG+G0R1/
+         u3TDYSpPKYBioeh5KIucLRAu9XC+oxtmrZ8Ik2qCLfZZ9odUPDnze5RIQ6x62KxibesE
+         97HtS55SpWUmFBk/8KL4SRMD+LbGVPyNQSvSfsZ/RBOSxwwsVfuSPXcnsx+5o0R9RyE2
+         KPNV86DLG95r9Ii22cuVr785iPbpOnCms8JoEW+wp1M6Qw87tV26vCD6JbaZgYN4cLO6
+         fyOA==
+X-Forwarded-Encrypted: i=1; AJvYcCUN6/D1HYy12CZll6jtp3P+DBL8a5IgVoZK37yNwszNWGq4h0pWueZfpYb+QC+U3vO29UH2z2ymvvIOoA==@vger.kernel.org, AJvYcCVv9P5HJ3hwEgd+k4TEPgtsBSQXEbvnBl4PQxgXH/9NJe4XH0U/pFHibmo0IUz30JJWwIXYN7QPTR3W@vger.kernel.org, AJvYcCW9XV2J/Omp8xrTQDkBtU3AWvCU/tmQxPmgLi6YALiANnLYvviTCsgMO4KMba7lYELXMQhasFDCZlSetWTw@vger.kernel.org
+X-Gm-Message-State: AOJu0YywFZ2CLev+VsuXNkCCEml2kvNn6ep5W1aMRzUb25OiLAkEuG5t
+	6X17UJtFW5qFTsysFTqO+Sjg9OFHfxKEzFduxK5j9tZYndusgWBFIHh4
+X-Gm-Gg: ASbGncuae3wmgWBHY15G88UM4Zvm1qTTab4Fc8WJUvgVGKUcjC+NwB/ottjZHpcMJvK
+	tHyP58BsJYeyGf+4uRBaEOzNBGXOfG1478/QorbDdfTSSPlLIF7/z1qIqycNRvRDiBIby/7l7Xh
+	NXglyG1a4V8NBmMQcJV0KBeLClKCJFnC53G5z04CWE/UAKroJAksfdohxg7wPGQi6vBj2JLtbSN
+	+uPPC6XwJmC63cfcgRLzgnpX3sKJt/DUsWbJkfPzyMGawmHxorXlYcmUGaAu5taepf+Ga2//TQ2
+	xU6Ff9qA3dAxGZsve3YrLmdVOg/G0ls/VMTwfhzm8/24P0fnicareXEiBdv6zCOWRjI+PbBc8oB
+	hO2bH4yASmuqwR+SGejYhb7AdTHoAn6rULiNNl06N+xPnOKrA
+X-Google-Smtp-Source: AGHT+IH/4BueP1i9uTaGBcioRqKWdWlLPnxhgjhYg/TT045qxzwvPNCGSAOghSI6A+lqXYcoj0Z8VQ==
+X-Received: by 2002:ac8:5f4d:0:b0:4b1:dd3:e397 with SMTP id d75a77b69052e-4b2aab56bacmr177029521cf.62.1756244841768;
+        Tue, 26 Aug 2025 14:47:21 -0700 (PDT)
+Received: from [10.69.40.168] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4b2b8de5d37sm77448621cf.34.2025.08.26.14.47.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Aug 2025 14:47:21 -0700 (PDT)
+Message-ID: <e9aa8a07-4ed7-4a7f-a69a-ce496ede48cc@gmail.com>
+Date: Tue, 26 Aug 2025 14:47:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250826-mtk-dtb-warnings-v3-1-20e89886a20e@collabora.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/16] gpio: brcmstb: Use modern PM macros
+To: Jisheng Zhang <jszhang@kernel.org>,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Michael Buesch <m@bues.ch>,
+ Hoan Tran <hoan@os.amperecomputing.com>, Andy Shevchenko <andy@kernel.org>,
+ Daniel Palmer <daniel@thingy.jp>, Romain Perier <romain.perier@gmail.com>,
+ Grygorii Strashko <grygorii.strashko@ti.com>,
+ Santosh Shilimkar <ssantosh@kernel.org>, Kevin Hilman <khilman@kernel.org>,
+ Robert Jarzmik <robert.jarzmik@free.fr>,
+ Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+ Srinivas Neeli <srinivas.neeli@amd.com>, Michal Simek <michal.simek@amd.com>
+Cc: Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, linux-gpio@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-omap@vger.kernel.org, linux@ew.tq-group.com
+References: <20250820154037.22228-1-jszhang@kernel.org>
+ <20250820154037.22228-3-jszhang@kernel.org>
+Content-Language: en-US
+From: Doug Berger <opendmb@gmail.com>
+In-Reply-To: <20250820154037.22228-3-jszhang@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
-On Tue, 26 Aug 2025 09:39:34 +0200, Julien Massot wrote:
-> The mt8183-mfgcfg node uses a power domain in its device tree node.
-> To prevent schema validation warnings, add the optional `power-domains`
-> property to the binding schema for mediatek syscon clocks.
+On 8/20/2025 8:40 AM, Jisheng Zhang wrote:
+> Use the modern PM macros for the suspend and resume functions to be
+> automatically dropped by the compiler when CONFIG_PM or
+> CONFIG_PM_SLEEP are disabled, without having to use #ifdef guards.
 > 
-> Fixes: 1781f2c46180 ("arm64: dts: mediatek: mt8183: Add power-domains properity to mfgcfg")
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> Signed-off-by: Julien Massot <julien.massot@collabora.com>
+> This has the advantage of always compiling these functions in,
+> independently of any Kconfig option. Thanks to that, bugs and other
+> regressions are subsequently easier to catch.
+> 
+> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
 > ---
->  .../devicetree/bindings/clock/mediatek,syscon.yaml        | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+>   drivers/gpio/gpio-brcmstb.c | 12 +++---------
+>   1 file changed, 3 insertions(+), 9 deletions(-)
 > 
+> diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
+> index e29a9589b3cc..0ca3e0d8aa46 100644
+> --- a/drivers/gpio/gpio-brcmstb.c
+> +++ b/drivers/gpio/gpio-brcmstb.c
+> @@ -534,7 +534,6 @@ static void brcmstb_gpio_shutdown(struct platform_device *pdev)
+>   	brcmstb_gpio_quiesce(&pdev->dev, false);
+>   }
+>   
+> -#ifdef CONFIG_PM_SLEEP
+>   static void brcmstb_gpio_bank_restore(struct brcmstb_gpio_priv *priv,
+>   				      struct brcmstb_gpio_bank *bank)
+>   {
+> @@ -573,14 +572,9 @@ static int brcmstb_gpio_resume(struct device *dev)
+>   	return 0;
+>   }
+>   
+> -#else
+> -#define brcmstb_gpio_suspend	NULL
+> -#define brcmstb_gpio_resume	NULL
+> -#endif /* CONFIG_PM_SLEEP */
+> -
+>   static const struct dev_pm_ops brcmstb_gpio_pm_ops = {
+> -	.suspend_noirq	= brcmstb_gpio_suspend,
+> -	.resume_noirq = brcmstb_gpio_resume,
+> +	.suspend_noirq = pm_sleep_ptr(brcmstb_gpio_suspend),
+> +	.resume_noirq = pm_sleep_ptr(brcmstb_gpio_resume),
+>   };
+>   
+>   static int brcmstb_gpio_probe(struct platform_device *pdev)
+> @@ -747,7 +741,7 @@ static struct platform_driver brcmstb_gpio_driver = {
+>   	.driver = {
+>   		.name = "brcmstb-gpio",
+>   		.of_match_table = brcmstb_gpio_of_match,
+> -		.pm = &brcmstb_gpio_pm_ops,
+> +		.pm = pm_sleep_ptr(&brcmstb_gpio_pm_ops),
+>   	},
+>   	.probe = brcmstb_gpio_probe,
+>   	.remove = brcmstb_gpio_remove,
 
-
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
-
-Missing tags:
-
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
-
-
-
+Acked-by: Doug Berger <opendmb@gmail.com>
 
