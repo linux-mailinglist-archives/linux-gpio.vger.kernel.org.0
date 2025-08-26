@@ -1,196 +1,209 @@
-Return-Path: <linux-gpio+bounces-24960-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24962-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED2F4B355DC
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Aug 2025 09:41:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9777CB3579D
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Aug 2025 10:51:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 347A07AE742
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Aug 2025 07:39:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5E93217C0AF
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Aug 2025 08:51:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 062502FB98F;
-	Tue, 26 Aug 2025 07:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MP+XJbgO"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB06D2FF17A;
+	Tue, 26 Aug 2025 08:50:41 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A73972F99B5;
-	Tue, 26 Aug 2025 07:39:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C85863D984;
+	Tue, 26 Aug 2025 08:50:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756193988; cv=none; b=icabEo4aFzO0VnRkR9IE34MmWwW2p+YiN2WfunmVIoEzgFLSYz5RMSuIzE0WrtRT9j+niPQlt+Q1XisInMJz3qqucM5Z+q4X2ZPpqACGDFg7k/fjBnCfaCwhMXb0zMY73Rqz2iVwLMdf9PbZPwkR6qIKwZN7ODvo8q302nKYrNE=
+	t=1756198241; cv=none; b=Oahg9/wf7lNuYa7Vg/Vmw/8NpVQ25pp3i5n9yfhy6sZ2l1PS+3VO9YfrlJY1RETsnt0LmckLLf3qtfZZt/X4HJjgCUtHSM7LsdZdYtofxFkMuP8tewCn/GFQr1sx9sSfuE2qkpQIgq6ElN2ADbewvlUHE2vqN9mzrZchu2t2koo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756193988; c=relaxed/simple;
-	bh=IdixZxrNWPt50GtxxtAuJjgTZCVnyk5QruEPtZQ+mLM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eoS4duXdxIc0CtuSvyg2G+Th7M+0TUSoS31kF1zg2A3o8A2JVRkdIBCVKgjIMOz3dXKtgG/dwQem1mrmnUKzwnd8ib3Hc2hY/o4Ocli8IP81JS2Xesqr0mYacSHXRmQ62rkFQ9HCega4NxMr4MyfCcMs5IDDkLson3szL/uyoEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MP+XJbgO; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1756193985;
-	bh=IdixZxrNWPt50GtxxtAuJjgTZCVnyk5QruEPtZQ+mLM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=MP+XJbgO1nW7kVD4o0fcUHF2K3/HHFxGUV7olYVe6eoJ81/o1gnMrjy8VH5DBxUlw
-	 15Abd820pWIh1ermhivPxPm85a/xUnHvyOzGcHT9PKcGQkkmCqDO2PClmBEYTL8C3C
-	 72wp4T4qR4TV3qDAeFDwVfiE7r2QqctEHGDAyS7YWE9v7wM/dRyim0cwAZOkZ1y0hm
-	 T8x4tf4kg4QGrHtUNIcKsP3YxFEdc9eJL40oxhs+RkRPTyTLjORMWCzL4BTX+2E+xw
-	 VK+OAhcLdQ6CRMAOmFn0fGysv2CffMyLPc6IcEt5GQ0Kc/KWksWjntaXbFRvSAPIp4
-	 Y7HxCemACRALA==
-Received: from 2a01cb0892f2d600c8f85cf092d4af51.ipv6.abo.wanadoo.fr (2a01cb0892F2D600C8F85cF092d4AF51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: jmassot)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 2AE3517E0A28;
-	Tue, 26 Aug 2025 09:39:44 +0200 (CEST)
-From: Julien Massot <julien.massot@collabora.com>
-Date: Tue, 26 Aug 2025 09:39:39 +0200
-Subject: [PATCH v3 6/6] ASoC: dt-binding: Convert MediaTek mt8183-mt6358 to
- DT schema
+	s=arc-20240116; t=1756198241; c=relaxed/simple;
+	bh=5s3yYeYRZ3QkohcSQgNTeYUyQ5TvPkMMh0AM/N4girU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pcF4aA3a+A9wDkQLtaOH9xbYtxE5C1GXI0yA8PELjRNzy7h6zxx5YGgm8MYtDqiEt6UmjpFFaywivpmOgjKpOQHoi68q3GZ+OorTIW6IVV1Wunba1vPQlSRg/8JCNmdDrpdJ3CE5UgnXHWN9o1IkkTMlxCOpnkSEFX98PFcgUtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4cB1N06r90z9sSZ;
+	Tue, 26 Aug 2025 10:41:04 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 95Os1xD7Erc8; Tue, 26 Aug 2025 10:41:04 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4cB1N05t26z9sSY;
+	Tue, 26 Aug 2025 10:41:04 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id B24528B764;
+	Tue, 26 Aug 2025 10:41:04 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id 5Sr4FVgPNX2m; Tue, 26 Aug 2025 10:41:04 +0200 (CEST)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 1576D8B763;
+	Tue, 26 Aug 2025 10:41:04 +0200 (CEST)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Qiang Zhao <qiang.zhao@nxp.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v4] soc: fsl: qe: Change GPIO driver to a proper platform driver
+Date: Tue, 26 Aug 2025 10:40:33 +0200
+Message-ID: <2df36ab4e1ec2af1d383281ed5005a09d28f40e2.1756197491.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <e05a0959d794016bde79e48e25ff71253cf51aae.1756104334.git.christophe.leroy@csgroup.eu>
+References: <e05a0959d794016bde79e48e25ff71253cf51aae.1756104334.git.christophe.leroy@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250826-mtk-dtb-warnings-v3-6-20e89886a20e@collabora.com>
-References: <20250826-mtk-dtb-warnings-v3-0-20e89886a20e@collabora.com>
-In-Reply-To: <20250826-mtk-dtb-warnings-v3-0-20e89886a20e@collabora.com>
-To: kernel@collabora.com, Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Ikjoon Jang <ikjn@chromium.org>, 
- Enric Balletbo i Serra <eballetbo@kernel.org>, 
- Chen-Yu Tsai <wenst@chromium.org>, Weiyi Lu <weiyi.lu@mediatek.com>, 
- Eugen Hristev <eugen.hristev@linaro.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Julien Massot <jmassot@collabora.com>, Sean Wang <sean.wang@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, linux-sound@vger.kernel.org, 
- linux-gpio@vger.kernel.org, Julien Massot <julien.massot@collabora.com>
-X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1756197653; l=3483; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=5s3yYeYRZ3QkohcSQgNTeYUyQ5TvPkMMh0AM/N4girU=; b=I/hgGETiK8FWJI3XxVV6HRRuu9Mq+Y4KxbL8S7c07bgSnbYBq9ioSj3ZZS9Z+O/kSPSSY1Pci nxWqwwiIed3BLFJhGbGLoSuUgPAxoRcWC4vibP61MV8LRTnJhqLSaxk
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
 
-Convert the existing text-based DT binding for MT8183 sound cards using
-MT6358 and various other codecs to a DT schema.
+In order to be able to add interrupts to the GPIOs, first change the
+QE GPIO driver to the proper platform driver in order to allow
+initialisation to be done in the right order, otherwise the GPIOs
+get added before the interrupts are registered.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-Signed-off-by: Julien Massot <julien.massot@collabora.com>
+Removing linux/of.h and linux/property.h which are unused.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- .../sound/mediatek,mt8183_mt6358_ts3a227.yaml      | 59 ++++++++++++++++++++++
- .../sound/mt8183-mt6358-ts3a227-max98357.txt       | 25 ---------
- 2 files changed, 59 insertions(+), 25 deletions(-)
+v4: Removed unused headers
+---
+ drivers/soc/fsl/qe/gpio.c | 88 +++++++++++++++++++++------------------
+ 1 file changed, 47 insertions(+), 41 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/mediatek,mt8183_mt6358_ts3a227.yaml b/Documentation/devicetree/bindings/sound/mediatek,mt8183_mt6358_ts3a227.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..43a6f9d40644c2fc1e61ebf58fcd62eaf3ee43f0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/mediatek,mt8183_mt6358_ts3a227.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/mediatek,mt8183_mt6358_ts3a227.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MediaTek MT8183 sound card with MT6358, TS3A227, and MAX98357/RT1015 codecs
-+
-+maintainers:
-+  - Julien Massot <julien.massot@collabora.com>
-+
-+description:
-+  MediaTek MT8183 SoC-based sound cards using the MT6358 codec,
-+  with optional TS3A227 headset codec, EC codec (via Chrome EC), and HDMI audio.
-+  Speaker amplifier can be one of MAX98357A/B, RT1015, or RT1015P.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - mediatek,mt8183_mt6358_ts3a227_max98357
-+      - mediatek,mt8183_mt6358_ts3a227_max98357b
-+      - mediatek,mt8183_mt6358_ts3a227_rt1015
-+      - mediatek,mt8183_mt6358_ts3a227_rt1015p
-+
-+  mediatek,platform:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: Phandle to the MT8183 ASoC platform node (e.g., AFE).
-+
-+  mediatek,headset-codec:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: Phandle to the TS3A227 headset codec.
-+
-+  mediatek,ec-codec:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: |
-+      Optional phandle to a ChromeOS EC codec node.
-+      See bindings in google,cros-ec-codec.yaml.
-+
-+  mediatek,hdmi-codec:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: Optional phandle to an HDMI audio codec node.
-+
-+required:
-+  - compatible
-+  - mediatek,platform
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    sound {
-+        compatible = "mediatek,mt8183_mt6358_ts3a227_max98357";
-+        mediatek,headset-codec = <&ts3a227>;
-+        mediatek,ec-codec = <&ec_codec>;
-+        mediatek,hdmi-codec = <&it6505dptx>;
-+        mediatek,platform = <&afe>;
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt b/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt
-deleted file mode 100644
-index ecd46ed8eb98b99d0f2cc9eeca5f6d0aef6a5ada..0000000000000000000000000000000000000000
---- a/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt
-+++ /dev/null
-@@ -1,25 +0,0 @@
--MT8183 with MT6358, TS3A227, MAX98357, and RT1015 CODECS
+diff --git a/drivers/soc/fsl/qe/gpio.c b/drivers/soc/fsl/qe/gpio.c
+index 8df1e8fa86a5..fece644ce914 100644
+--- a/drivers/soc/fsl/qe/gpio.c
++++ b/drivers/soc/fsl/qe/gpio.c
+@@ -12,13 +12,12 @@
+ #include <linux/spinlock.h>
+ #include <linux/err.h>
+ #include <linux/io.h>
+-#include <linux/of.h>
+ #include <linux/gpio/legacy-of-mm-gpiochip.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/slab.h>
+ #include <linux/export.h>
+-#include <linux/property.h>
++#include <linux/platform_device.h>
+ 
+ #include <soc/fsl/qe/qe.h>
+ 
+@@ -295,45 +294,52 @@ void qe_pin_set_gpio(struct qe_pin *qe_pin)
+ }
+ EXPORT_SYMBOL(qe_pin_set_gpio);
+ 
+-static int __init qe_add_gpiochips(void)
++static int qe_gpio_probe(struct platform_device *ofdev)
+ {
+-	struct device_node *np;
 -
--Required properties:
--- compatible : "mediatek,mt8183_mt6358_ts3a227_max98357" for MAX98357A codec
--               "mediatek,mt8183_mt6358_ts3a227_max98357b" for MAX98357B codec
--               "mediatek,mt8183_mt6358_ts3a227_rt1015" for RT1015 codec
--               "mediatek,mt8183_mt6358_ts3a227_rt1015p" for RT1015P codec
--- mediatek,platform: the phandle of MT8183 ASoC platform
+-	for_each_compatible_node(np, NULL, "fsl,mpc8323-qe-pario-bank") {
+-		int ret;
+-		struct qe_gpio_chip *qe_gc;
+-		struct of_mm_gpio_chip *mm_gc;
+-		struct gpio_chip *gc;
 -
--Optional properties:
--- mediatek,headset-codec: the phandles of ts3a227 codecs
--- mediatek,ec-codec: the phandle of EC codecs.
--                     See google,cros-ec-codec.txt for more details.
--- mediatek,hdmi-codec: the phandles of HDMI codec
+-		qe_gc = kzalloc(sizeof(*qe_gc), GFP_KERNEL);
+-		if (!qe_gc) {
+-			ret = -ENOMEM;
+-			goto err;
+-		}
++	struct device *dev = &ofdev->dev;
++	struct device_node *np = dev->of_node;
++	struct qe_gpio_chip *qe_gc;
++	struct of_mm_gpio_chip *mm_gc;
++	struct gpio_chip *gc;
+ 
+-		spin_lock_init(&qe_gc->lock);
 -
--Example:
+-		mm_gc = &qe_gc->mm_gc;
+-		gc = &mm_gc->gc;
 -
--	sound {
--		compatible = "mediatek,mt8183_mt6358_ts3a227_max98357";
--		mediatek,headset-codec = <&ts3a227>;
--		mediatek,ec-codec = <&ec_codec>;
--		mediatek,hdmi-codec = <&it6505dptx>;
--		mediatek,platform = <&afe>;
--	};
+-		mm_gc->save_regs = qe_gpio_save_regs;
+-		gc->ngpio = QE_PIO_PINS;
+-		gc->direction_input = qe_gpio_dir_in;
+-		gc->direction_output = qe_gpio_dir_out;
+-		gc->get = qe_gpio_get;
+-		gc->set = qe_gpio_set;
+-		gc->set_multiple = qe_gpio_set_multiple;
 -
-
+-		ret = of_mm_gpiochip_add_data(np, mm_gc, qe_gc);
+-		if (ret)
+-			goto err;
+-		continue;
+-err:
+-		pr_err("%pOF: registration failed with status %d\n",
+-		       np, ret);
+-		kfree(qe_gc);
+-		/* try others anyway */
+-	}
+-	return 0;
++	qe_gc = devm_kzalloc(dev, sizeof(*qe_gc), GFP_KERNEL);
++	if (!qe_gc)
++		return -ENOMEM;
++
++	spin_lock_init(&qe_gc->lock);
++
++	mm_gc = &qe_gc->mm_gc;
++	gc = &mm_gc->gc;
++
++	mm_gc->save_regs = qe_gpio_save_regs;
++	gc->ngpio = QE_PIO_PINS;
++	gc->direction_input = qe_gpio_dir_in;
++	gc->direction_output = qe_gpio_dir_out;
++	gc->get = qe_gpio_get;
++	gc->set = qe_gpio_set;
++	gc->set_multiple = qe_gpio_set_multiple;
++
++	return of_mm_gpiochip_add_data(np, mm_gc, qe_gc);
++}
++
++static const struct of_device_id qe_gpio_match[] = {
++	{
++		.compatible = "fsl,mpc8323-qe-pario-bank",
++	},
++	{},
++};
++MODULE_DEVICE_TABLE(of, qe_gpio_match);
++
++static struct platform_driver qe_gpio_driver = {
++	.probe		= qe_gpio_probe,
++	.driver		= {
++		.name	= "qe-gpio",
++		.of_match_table	= qe_gpio_match,
++	},
++};
++
++static int __init qe_gpio_init(void)
++{
++	return platform_driver_register(&qe_gpio_driver);
+ }
+-arch_initcall(qe_add_gpiochips);
++arch_initcall(qe_gpio_init);
 -- 
-2.50.1
+2.49.0
 
 
