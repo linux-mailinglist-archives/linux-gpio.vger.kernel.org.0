@@ -1,122 +1,132 @@
-Return-Path: <linux-gpio+bounces-24983-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24984-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52AC1B359A5
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Aug 2025 11:58:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CFA4B359AC
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Aug 2025 11:59:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0675C7C2862
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Aug 2025 09:58:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 005267C2ADA
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Aug 2025 09:59:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B81F31AF20;
-	Tue, 26 Aug 2025 09:58:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ED1E31CA45;
+	Tue, 26 Aug 2025 09:59:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Pu8tE7UN"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xUaOVQju"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E782FC87E
-	for <linux-gpio@vger.kernel.org>; Tue, 26 Aug 2025 09:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89252F3C1E
+	for <linux-gpio@vger.kernel.org>; Tue, 26 Aug 2025 09:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756202282; cv=none; b=mv6AUes0koCny2BYq10wbgnScs6LgtkBcPeXze+tDATx0mGDNXb4keXah5IhYP1+MvuwfsCGPNrKkvZrcYdo7VrwXLU64FdBUuVtQtIg/1drbA3K+pz96rSx/PA4y66DdJW/bVyYnpmYtPZA4ZQfcRFvlhhazhm/RI37nCWc440=
+	t=1756202351; cv=none; b=YCfHMB9s0DHoYa7hWyCIWdoaV04a1YnuS6Dsdbl+OIJFketcZxAF2OcjBtVnANX9GyGGpHm47kfaHYQwWtHfawLqdxOU8CQVuFVmalzOPOPTFwaFTPY8IeHufH0hQv1K2ID5PXCfpruQtFBrycGUAroo9REsRiPGXv46SDgpLxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756202282; c=relaxed/simple;
-	bh=Rt1wBuOibWYMf11azApMmPxWPuGaXVXsAWpTctmwPog=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LHhaEGsHRHihDrw+OeQEK0xflOPjAXc3ck5A2QiqxcGAV2iW1Bhc67qDV/97mYx0oPjcWCQlwDpSfYeI8HWakNZxS6lPFWA8CKZF4eWE8atQusbydIdXVlvNETdqE8IRmgWIbBeNQFbont0PePTP6uh/duWCiGp5QAXU1povKCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Pu8tE7UN; arc=none smtp.client-ip=209.85.167.51
+	s=arc-20240116; t=1756202351; c=relaxed/simple;
+	bh=TLQe8HKqVprzOWSS+QrcEEJ6qsTop6HAIBHPmWLduOw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Vjb4LZiD6KDLR+tMkhqZ8VNJiyw4PRVZn2sSmsCwo5WRDEvgr/KgZERrtOl1GqTvpIVGk2mUPuYDvNcgRyPaaOASz9eUzDhwnFrkDHtMFiBgo242+oOS480rjOFfToxXUmLfKDgKcbR4ggSk/ujyMbtFg/HnEvz0LYNck27anGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xUaOVQju; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-55f49f96f42so1629307e87.2
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Aug 2025 02:58:01 -0700 (PDT)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-45a1b0bde14so28962885e9.2
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Aug 2025 02:59:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756202279; x=1756807079; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756202348; x=1756807148; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uOUXkb1uF8zQdB/sKiLIuRwWdep4Dp9YFQhPpYg7e7o=;
-        b=Pu8tE7UNSPb/mSu8D8XVNJ1m+w/gr9winhNLMNf5oNNhDIbwDbeoNasGh3h562/Z8G
-         mCXFe1I8ZZxoJtKns/bQCKXoSXmIVoJtI5E19heex3sjrcGxaQU2kfr9wHdob98rL0Jn
-         ly8fbX+5vAcNPWrQMMpcRo7UtVYluLIUCe3bwgfEp8uui5ohvG8u/Pe8Aq4aY9/+AuDM
-         iVaw2BMpWe7M6WpsyOqJyY10Mo9VshFCDvsccyDqpIXKA43ZTVsStftFBfiRih1ZaMsw
-         jGaf0yyIbgu+iiiE0pxmkgHTqTXZmDOFZ98vubSvsTAtcZf13nFmFU/HgXzYBVwJEear
-         JFPQ==
+        bh=l+Y0JVb+zyxoD2ZTloOvpkOul6QpmpNVbYqGaduRqGk=;
+        b=xUaOVQjuS0XGQY+NggXHewaAIjKOx14olU/RNXG73mRF4WSM03fmRopl4J2XuYuOh3
+         +mEgXvZUSMz50uVGVAfB35hfs1tzJdZYdN4aPGPacB+r4D79aNjpJTxxB1U6nRNurJ1t
+         7e+fXNu1B/NR4T8X+I0wXChKM4Ztm1LwqSURefHJnnzAkS2uPeg+jh7xdYRuLOArv/l1
+         S8CNeGEy5I5Jvhf3m4bFomHwnQzYZj4L538SZ0j35MSnnOj1AKKXpNv6Y38b61aW30PG
+         2nVcsrjNdKxb8Vf/u43oj0UhnYc+49tgAx087kOPn817ho/77+5Di5i2wvORoYfPimQ3
+         CzBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756202279; x=1756807079;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1756202348; x=1756807148;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uOUXkb1uF8zQdB/sKiLIuRwWdep4Dp9YFQhPpYg7e7o=;
-        b=tfnIVimSa7fGLmaMboLr3QHZWm/NR7wERaYW1WlL68o2h720coIRQASG+rXzTIjVyW
-         I6q/aUZU8w4lHLvaSQS5F1I8GNYlqHic3zM+ETIvtUMupEv9gh5BuZLGsN3WtfdLLEHW
-         R684sTsSL8jPxps+UpxB5lyn0sb88Uwfqvc/1CrDb+IkLq7HOrd122lfRUxItmIs76e1
-         hLymEsKa8Ol4Kp03QivJlrhwU6gwoGbAI1cViir3WR4zG/lZveanHm1+pgWzzCSf2UpP
-         oN/kK7v64Bi7EuzTUQ2p0PTetD2QQpMtjq9XKGBiiyugPnaNQJyiCcXGvzBPVLH76z3W
-         dutA==
-X-Forwarded-Encrypted: i=1; AJvYcCWtq55+ciZJT8w/2gz43m3D51nFSDAy12PWjIrOIa35ikaurivHbBm1g5xbwKFddZcRUC0GkvQcm4Ev@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+h+83ARM+9z7IOGrlIRLhX2JftcTKBSj/c8iWhKR+L9Psjbfb
-	lMqiVts1SeKXQuWM78woCGpbBLiJjeF+Agm++7HPVDCmXsfBGLnYv50k51TuTApWHcQ+gzUMNTx
-	b7m5KS0XREwwa7MGZwBwgDMXPs2BQMAQIrhmXq9/vJQ==
-X-Gm-Gg: ASbGncuYJ5CBYAJPX25+Y2aHQXU/Qjaf2l6RmaFtQxI1Yewzj1GdGi/BrBAeaUNkRiA
-	jT7GHH6P8ADBcDIlVIU30kfea75R9sV6/dlz2oCJpczSG8YzRBUToqo4EzAUWl40IPoHQ7087XF
-	ugYEyya271E6uQOv5rThlmMnKICzknfYAMW8fZvz1ncy9hm1f2BGChMVIXGpdeooHOSMdmDr1ju
-	5TKM6aND4uV16hb8nbQPOHelAgjoH2XvphGohunB4jY8CF4tw==
-X-Google-Smtp-Source: AGHT+IHZlig7uTIvb1Hm0+VQCqd18Uy1yI/ilX78XfwZSj12J+ieVVBnbFx5cn43CrziQFS1Bp5XyB1Kt9NlfkCCxzM=
-X-Received: by 2002:a05:6512:440e:b0:55f:42ca:cc03 with SMTP id
- 2adb3069b0e04-55f42cacd56mr3019395e87.56.1756202279297; Tue, 26 Aug 2025
- 02:57:59 -0700 (PDT)
+        bh=l+Y0JVb+zyxoD2ZTloOvpkOul6QpmpNVbYqGaduRqGk=;
+        b=MCbKqt16ZWAtMhGmCLh2c+K/svhaDXaDAUUEtAup2WcNzOIbyzzcDhBxzf3m11LXXD
+         Y1VTjCOJEB1nnAHOuwBZsWtqe48qv6cgBYXwLLwLJ3dgUp4+hDgC23FzBDFms8R2yV/j
+         dlpH8sHCgZpIOuW4C+qTlEDHwml1hG8frSXfxvWy2RQxvbR+6SudUGjgq76+xO2NofJn
+         qRDJ8xnLKgTp18R/gP60rjMpXI9IiAiXlCDQmMGSq2FHuk4gcNdwlwfgYxHQ7rpTtcGR
+         915fL9X3kEHCro6f8WpeMqM3ABogQUjuf8KgHyQ/NQogdiH35utYpfJyfl797RtZbGao
+         LrQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU4uK9OrnR2sl24jO9T6+V/DZjFEndscDCIpqRZq8EHMrHC32/LYcx69I2b6qIY2+do4JYziY8ED9zn@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0p6TSzbnAIjMxg9pI3gJz7HYqeQbaK3K3f1pr9PFXV4SI91CP
+	vRTg8ksZfYI+wxReyXeddY7e9wyb6bTMvUyHf125bO74GPG8+Tv+7Wr6V13+/+PosTI=
+X-Gm-Gg: ASbGnctvjmDApZj9GjD0hZac3kin5QaIpQgF+K+jDeoRp4KV6yAfqaBNUmYiwDtcKdz
+	k+EImBzGF4ALlnX3qkWh3eVkw3BgNFvjjzduGlE8hK3Klffi3Ey/f3baE0xZHgdXPKQ0DCAvP0b
+	qhRbGjapJWw0ddrG3TwdD7ApXbaNXwu6L7waP/Fg6SOc6N/4K9WL3dVpBIkc1IwkThf7YIIsW2k
+	Lf2y2JQH9DEfSYHGFVqjoDmZqnt1yb9J4F2FiBxohfGU8JibviV1MnmTBnixx7wkPBl3lhrWZJD
+	dTjA1P17k+lRjBz92tOU02lc7SdSReMMGsZk3JBbudYyPOMO7kO/ZNj7mmICIopWpSES0yW7lGG
+	Mbj/En/dUHMFoIb+Pn+pqM9fVO7BP/pG2mYDj+KjXpSqS/g==
+X-Google-Smtp-Source: AGHT+IHBhKg7IjKrhhcVMyL/r57y1ugEvw4mEz2iVwUNncB45EjnSI4PTdqiXHRrUmtm1gPJ4N/MCQ==
+X-Received: by 2002:a05:600c:1548:b0:459:d709:e5b0 with SMTP id 5b1f17b1804b1-45b5178e893mr140193745e9.5.1756202348058;
+        Tue, 26 Aug 2025 02:59:08 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:fed4:79fc:9440:6629])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b6300da81sm60418635e9.23.2025.08.26.02.59.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Aug 2025 02:59:07 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Dong Aisheng <aisheng.dong@nxp.com>,
+	Jacky Bai <ping.bai@nxp.com>,
+	NXP S32 Linux Team <s32@nxp.com>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Frank Li <Frank.Li@nxp.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2 1/1] dt-bindings: gpio: Move fsl,mxs-pinctrl.txt into gpio-mxs.yaml
+Date: Tue, 26 Aug 2025 11:59:05 +0200
+Message-ID: <175620234226.21143.1718612785479357856.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250820164946.3782702-1-Frank.Li@nxp.com>
+References: <20250820164946.3782702-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <372550a2633586d2f98b077d3f520f3262ca0e2a.1756104334.git.christophe.leroy@csgroup.eu>
- <ac7c79b3491cb48ef7c193420b9a9e4614b88436.1756197502.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <ac7c79b3491cb48ef7c193420b9a9e4614b88436.1756197502.git.christophe.leroy@csgroup.eu>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 26 Aug 2025 11:57:47 +0200
-X-Gm-Features: Ac12FXy4Ibm7fbO9KiNfYE73-dyWntHoWbLgchN6hbkj2Va2bGEIGeT9v8x9Fxc
-Message-ID: <CAMRc=MchS5d3RHjtpc-fAVzKyhMchdUhvZCgTNsJ94u5Cc5FWw@mail.gmail.com>
-Subject: Re: [PATCH v4] soc: fsl: qe: Add support of IRQ in QE GPIO
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Qiang Zhao <qiang.zhao@nxp.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Aug 26, 2025 at 10:41=E2=80=AFAM Christophe Leroy
-<christophe.leroy@csgroup.eu> wrote:
->
-> In the QE, a few GPIOs are IRQ capable. Similarly to
-> commit 726bd223105c ("powerpc/8xx: Adding support of IRQ in MPC8xx
-> GPIO"), add IRQ support to QE GPIO.
->
-> Add property 'fsl,qe-gpio-irq-mask' similar to
-> 'fsl,cpm1-gpio-irq-mask' that define which of the GPIOs have IRQs.
->
-> Here is an exemple for port B of mpc8323 which has IRQs for
-> GPIOs PB7, PB9, PB25 and PB27.
->
->         qe_pio_b: gpio-controller@1418 {
->                 compatible =3D "fsl,mpc8323-qe-pario-bank";
->                 reg =3D <0x1418 0x18>;
->                 interrupts =3D <4 5 6 7>;
->                 interrupt-parent =3D <&qepic>;
->                 gpio-controller;
->                 #gpio-cells =3D <2>;
->                 fsl,qe-gpio-irq-mask =3D <0x01400050>;
->         };
->
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> ---
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+On Wed, 20 Aug 2025 12:49:45 -0400, Frank Li wrote:
+> Move mxs-pinctrl part into gpio-mxs.yaml and add pinctrl examples to fix
+> below CHECK_DTB warning:
+> 
+> arch/arm/boot/dts/nxp/mxs/imx28-xea.dtb: pinctrl@80018000 (fsl,imx28-pinctrl):
+>    'auart0-2pins@0', 'auart0@0',  ... 'usb1@1' do not match any of the regexes: 'gpio@[0-9]+$', 'pinctrl-[0-9]+'
+> 
+> 
+> [...]
+
+Applied, thanks!
+
+[1/1] dt-bindings: gpio: Move fsl,mxs-pinctrl.txt into gpio-mxs.yaml
+      https://git.kernel.org/brgl/linux/c/66edbb1e32eede16b261a90014451d67119fc875
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
