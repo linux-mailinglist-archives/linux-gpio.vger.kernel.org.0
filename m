@@ -1,181 +1,159 @@
-Return-Path: <linux-gpio+bounces-24961-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-24963-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBFC8B3579A
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Aug 2025 10:50:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 10218B3590E
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Aug 2025 11:35:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 830F016C765
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Aug 2025 08:50:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C2F41170001
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Aug 2025 09:35:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C53012FD7D5;
-	Tue, 26 Aug 2025 08:50:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD891319843;
+	Tue, 26 Aug 2025 09:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="B6FlBUV/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6CDC3D984;
-	Tue, 26 Aug 2025 08:50:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1815393DCA
+	for <linux-gpio@vger.kernel.org>; Tue, 26 Aug 2025 09:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756198237; cv=none; b=U+f1fUM5rMm7vnrevd8lk0y4Bw92r3N4M5qOcciTPkaezo5N/LOo3MnPlRrIO8CKNwr0t8RGo6r5bQMwrHuJbbBvYKlEySezvykAwBVp1aL64oNvqQoflJyMR7usYG6/xNUUCyiwoUgDD9pCTWOREEHN9GTWMn1DgvPEa5vwzcE=
+	t=1756200916; cv=none; b=hMM9oIQB/IETm2ztka1m90KVyztFKi8lvig6UvTgMELsHEwdMyxX/P7JkaKpgnqRlmujTa4opc/O+vpquRYw4fsNdiE6gMh+oOOE9du9jma5a6T2NQCOU7PGxG+3EPYiafdQKjtXb6fCfykBxhmtgFeuM4mjpoCJMqONQvIMyKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756198237; c=relaxed/simple;
-	bh=pJ0dqW2GCGa4yWArNPjCeHoPWJICNpv8ipt0j7ASM1Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FOHEP5UyfJzA0HO5ZVkwWZGSLv7spbBzm91KTHiHSw99rkAMvBAs4JtAl+tNN/XoSDP/Y+Rd5h9hRVCbXCK1/4IjB20si0PxXdVoO5e/amiVpj2+lIpy274VnpDHMGBiVm24AwRtX16XdzfKMTp/YkvPapY6DR+PBjEj3NCv5KI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4cB1Np0NmHz9sSd;
-	Tue, 26 Aug 2025 10:41:46 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id voHHKrBq8-UN; Tue, 26 Aug 2025 10:41:45 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4cB1Nn6L1xz9sSc;
-	Tue, 26 Aug 2025 10:41:45 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id C0CCD8B764;
-	Tue, 26 Aug 2025 10:41:40 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id j9M1S24KLE1q; Tue, 26 Aug 2025 10:41:40 +0200 (CEST)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 2D0548B763;
-	Tue, 26 Aug 2025 10:41:40 +0200 (CEST)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Qiang Zhao <qiang.zhao@nxp.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v4] soc: fsl: qe: Add support of IRQ in QE GPIO
-Date: Tue, 26 Aug 2025 10:41:29 +0200
-Message-ID: <ac7c79b3491cb48ef7c193420b9a9e4614b88436.1756197502.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <372550a2633586d2f98b077d3f520f3262ca0e2a.1756104334.git.christophe.leroy@csgroup.eu>
-References: <372550a2633586d2f98b077d3f520f3262ca0e2a.1756104334.git.christophe.leroy@csgroup.eu>
+	s=arc-20240116; t=1756200916; c=relaxed/simple;
+	bh=Q4ut4up6GX/HdckreW0R8OaX0WDAeyY5hviNTW/p74Y=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=p5EhRl70XWCxu6IgNMWYa1NpJzUKaOq5t1FfOEBkD6wwkgQ6OetP9R2bHBIKw0a9WWbwIIZChLXnWHpZxsy/NPMoCOzpvxVUp3efyKYsc2XYYy7rfMmFjaKTxzupPB4DnxFxG4SVvzUvj5RrMY7j6BRocIDbSh/HrxRF1yxW62Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=B6FlBUV/; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-45b49f7aaf5so32079545e9.2
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Aug 2025 02:35:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756200912; x=1756805712; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hkJG+WUZSpEwjO7HzoCtPjyyNbjxdrmMzotvlEggg7g=;
+        b=B6FlBUV/9v0CVEYfAfwF86r4mvRoXMjxtNRqwwGqFtZ7frTaU+jKwqWAcz8RZEFjUM
+         UUo1Ao9tZixW007NvfqsiiT3q5LqR8CkW7/1wbKWMo82Ftk1ad3noF2zQ5eGwxmBzVPF
+         b5JOTQx66ZMlLJUD4r1+qp8c9/B4IT7YintfeAt6uBSuIN3qg1fKLPUYqFpt4obU4Meg
+         IcSsLx6ixNhVzqX61EK+43k29mrH8chxUvWLySTvRMmiSh1zTPQmzYAT1bQY4c/Coes0
+         vXTGIXNhjE16QQCnm3DRP9kWqVmBxpr9k9erQIyOiRoxXBW8/aw3+QM3ntFKiTqi+t4m
+         DkpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756200912; x=1756805712;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hkJG+WUZSpEwjO7HzoCtPjyyNbjxdrmMzotvlEggg7g=;
+        b=GaSbifZXr5d6HTHjQWTGmFoFuUEHB1ypTq0sC15DhxfQNtxmaRQD6rmKySSmRtOsLL
+         dvhN90x2vOUiEhVt/rgD9apHafkiPiAQcTIHH9WRs8B/K6iX6/rTsDcLjvi4kxrKTnb+
+         14sW1GTnyBHIVCyL1Nci5ijXR3c7okb/0oTpyZsBZgJnH3NhPbqB0rdGA+UPGtTpmaKO
+         Jk14Pn1x8EoC1kg4+LkoTDDIx5PetVXSz1yMDLP8hV8Dq+n8dcngCeqthmnLo09nUOP5
+         rmZ0UHSNBKWQzXa0uRdjVJTvuvDLCnpav3CrHqP6netgFT/WDyhCwUAqOcUFlEFQQJrx
+         oD8Q==
+X-Gm-Message-State: AOJu0Yyo0SAsCzHp8VGEEO40//z0/f9+hYHpBc7WZH+ikhWYyCmMhRZ5
+	zb8SB6/JhqkDCTV7AcQn19kvW35zCSHl8bKS2MaVDOayrElbhzQEgjwxAMITE7aHO0NQbijKFpu
+	W9yKAD4Q=
+X-Gm-Gg: ASbGnctm0uQaVFPdz7/YArkSTNLVOdCVFSyLXt5J4rI5wMrKT2KhwUeAbJhUAMXp9/p
+	ndgov0kySl78NQfHdHT0CLGMHaBJlkdCbHW2x7uBsvKwAhgQcoBtB6+Xs8eSJhzj6AtrxfhbaXH
+	8hiC7G2916qty/kWMGD3pstrUjb8rwX+ioS1vBRlIbXrola8sNyTSXma5dFeVMFfUBTgjzSF8vs
+	9abjTSFrlFEwYnAfkJcBC+3mcypoc+hbBnQ+oql9WjfkG/inwSYn1A7i8HJsY6IemwXHbSozETk
+	bR2vLOMtFXZUAzlhjKt64ZytUvfeTARYsmq8UeuvxCwB1w/InX8ly5U0obDKG9frnPgEb+pVzgj
+	Os62KiVQO87HKxl8gsuIo6X+Z/DY=
+X-Google-Smtp-Source: AGHT+IH2xF7cWf9zPiJpCZDblnQIkHuRl4owRmxgCh3l1f0u4tvEtpqb3bPUkqR7KcRXy8joxsDAmg==
+X-Received: by 2002:a05:600c:3b15:b0:458:c059:7db1 with SMTP id 5b1f17b1804b1-45b517d4580mr149020165e9.30.1756200911704;
+        Tue, 26 Aug 2025 02:35:11 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:fed4:79fc:9440:6629])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3c7117d5b10sm15308255f8f.47.2025.08.26.02.35.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Aug 2025 02:35:11 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 00/12] gpio: replace legacy bgpio_init() with its
+ modernized alternative - part 2
+Date: Tue, 26 Aug 2025 11:35:01 +0200
+Message-Id: <20250826-gpio-mmio-gpio-conv-part2-v1-0-f67603e4b27e@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1756197697; l=2931; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=pJ0dqW2GCGa4yWArNPjCeHoPWJICNpv8ipt0j7ASM1Y=; b=qXBDjnSeeKD6zixq9hi51WNrEhQvT+wzLU+IvEBZpjXb3EHCSVzw/98Sy6Ghh9g5fyNRHzWIE JBWupobYaCsCVFuqPZds6FTJG7GVp+fHpUTHxKDVXYEvdxzDll2r4CZ
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMV/rWgC/x2MQQqAIBBFryKzbkClSLpKtLCcahapaEgg3T1p8
+ /hv8V+FTIkpwyQqJCqcOfgmqhOwndYfhOyag5Z6kEZpPCIHvK6Gf23BF4w23RqlXQ31ZlSud9D
+ +MdHOz9+el/f9ALS1ILVrAAAA
+X-Change-ID: 20250812-gpio-mmio-gpio-conv-part2-0ab8e4871d4d
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Ray Jui <rjui@broadcom.com>, 
+ Scott Branden <sbranden@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Yang Shen <shenyang39@huawei.com>, 
+ Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1645;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=Q4ut4up6GX/HdckreW0R8OaX0WDAeyY5hviNTW/p74Y=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBorX/IsQ61XrGh+TV0cTJdfuJwQ0IU2AzJI6U6B
+ xODhnvRaf2JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaK1/yAAKCRARpy6gFHHX
+ cmJuD/4s6vLLL4IJvlMcBRWt+fL3p/MdEMPyIgv+IS4S1jqjqxW26UsphEQIOFT4zd+2Ei6Qx4E
+ bYgNLNqataNIqWb6AtcX8wjj3CWWIqrMTZD2ZXpw7rLb951R5Dotmo1R6kM58oDlTaNJFZjbg9n
+ ChkAEyNlA5GRhB6foaz3+Do5OJTbItx/BFm0lH2dyCt0s/6WsRMwal4Iv66YCXtvOGUGiQtRnEP
+ Jl0NjctXUHuT0bmeBEDxXiB9np1PybcUOTk1AhTTyvajEThwU8fCt+oaavXD+6mn4QIBRfnqyTl
+ jYArmBFJBtDETk2cAIcyPpsRLaXJQfHPIXK+35E53tBd1AVBBWm9wpL/18OzvnFdcVibRnfb+dz
+ DpPzPGdSpxkREQGdv1S4HNICQdTQ/FtrRdk0CEJluBKeMXcPSEI0yuhZMEORT20nSri9kTKJgAL
+ BMa8VJSwoEoUkx2+GBgUcJYRyPlZ5d4vMM3eFjuiezT9WnyRp4/QLxWBVFxrBIdwvb30HB3FZ24
+ WMbajv8vTcO7A4A+txRMVD1IoNqnjKQ5ZR0KDXSRml9ykbYzC8TKlOXRAEJte+Z96Yt5BWlfzIc
+ 5oHMXijNS4BrvrtEiPsnVbf7kA8XquJdZMs1dq7KwCkiXlLtRlhonbsjN9GGfNZBkyhVrchsZNd
+ QX+14T53A7wjY2A==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-In the QE, a few GPIOs are IRQ capable. Similarly to
-commit 726bd223105c ("powerpc/8xx: Adding support of IRQ in MPC8xx
-GPIO"), add IRQ support to QE GPIO.
+Here's another round of patches converting GPIO drivers to the
+modernized generic GPIO chip API.
 
-Add property 'fsl,qe-gpio-irq-mask' similar to
-'fsl,cpm1-gpio-irq-mask' that define which of the GPIOs have IRQs.
-
-Here is an exemple for port B of mpc8323 which has IRQs for
-GPIOs PB7, PB9, PB25 and PB27.
-
-	qe_pio_b: gpio-controller@1418 {
-		compatible = "fsl,mpc8323-qe-pario-bank";
-		reg = <0x1418 0x18>;
-		interrupts = <4 5 6 7>;
-		interrupt-parent = <&qepic>;
-		gpio-controller;
-		#gpio-cells = <2>;
-		fsl,qe-gpio-irq-mask = <0x01400050>;
-	};
-
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
-v4: Using device_property_read_u32() instead of of_property_read_u32()
----
- drivers/soc/fsl/qe/gpio.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Bartosz Golaszewski (12):
+      gpio: xgene-sb: use new generic GPIO chip API
+      gpio: mxs: order includes alphabetically
+      gpio: mxs: use new generic GPIO chip API
+      gpio: mlxbf2: use dev_err_probe() where applicable
+      gpio: mlxbf2: use new generic GPIO chip API
+      gpio: xgs-iproc: use new generic GPIO chip API
+      gpio: ftgpio010: order includes alphabetically
+      gpio: ftgpio010: use new generic GPIO chip API
+      gpio: realtek-otto: use new generic GPIO chip API
+      gpio: hisi: use new generic GPIO chip API
+      gpio: vf610: use new generic GPIO chip API
+      gpio: visconti: use new generic GPIO chip API
 
-diff --git a/drivers/soc/fsl/qe/gpio.c b/drivers/soc/fsl/qe/gpio.c
-index 5bf073bbaac8..68bcd6048b1c 100644
---- a/drivers/soc/fsl/qe/gpio.c
-+++ b/drivers/soc/fsl/qe/gpio.c
-@@ -12,11 +12,13 @@
- #include <linux/spinlock.h>
- #include <linux/err.h>
- #include <linux/io.h>
-+#include <linux/of_irq.h>
- #include <linux/gpio/consumer.h>
- #include <linux/gpio/driver.h>
- #include <linux/slab.h>
- #include <linux/export.h>
- #include <linux/platform_device.h>
-+#include <linux/property.h>
- 
- #include <soc/fsl/qe/qe.h>
- 
-@@ -30,6 +32,8 @@ struct qe_gpio_chip {
- 
- 	/* saved_regs used to restore dedicated functions */
- 	struct qe_pio_regs saved_regs;
-+
-+	int irq[32];
- };
- 
- static void qe_gpio_save_regs(struct qe_gpio_chip *qe_gc)
-@@ -133,6 +137,13 @@ static int qe_gpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
- 	return 0;
- }
- 
-+static int qe_gpio_to_irq(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	struct qe_gpio_chip *qe_gc = gpiochip_get_data(gc);
-+
-+	return qe_gc->irq[gpio] ? : -ENXIO;
-+}
-+
- struct qe_pin {
- 	/*
- 	 * The qe_gpio_chip name is unfortunate, we should change that to
-@@ -293,6 +304,7 @@ static int qe_gpio_probe(struct platform_device *ofdev)
- 	struct device_node *np = dev->of_node;
- 	struct qe_gpio_chip *qe_gc;
- 	struct gpio_chip *gc;
-+	u32 mask;
- 
- 	qe_gc = devm_kzalloc(dev, sizeof(*qe_gc), GFP_KERNEL);
- 	if (!qe_gc)
-@@ -300,6 +312,14 @@ static int qe_gpio_probe(struct platform_device *ofdev)
- 
- 	spin_lock_init(&qe_gc->lock);
- 
-+	if (!device_property_read_u32(dev, "fsl,qe-gpio-irq-mask", &mask)) {
-+		int i, j;
-+
-+		for (i = 0, j = 0; i < ARRAY_SIZE(qe_gc->irq); i++)
-+			if (mask & (1 << (31 - i)))
-+				qe_gc->irq[i] = irq_of_parse_and_map(np, j++);
-+	}
-+
- 	gc = &qe_gc->gc;
- 
- 	gc->base = -1;
-@@ -309,6 +329,7 @@ static int qe_gpio_probe(struct platform_device *ofdev)
- 	gc->get = qe_gpio_get;
- 	gc->set = qe_gpio_set;
- 	gc->set_multiple = qe_gpio_set_multiple;
-+	gc->to_irq = qe_gpio_to_irq;
- 	gc->parent = dev;
- 	gc->owner = THIS_MODULE;
- 
+ drivers/gpio/gpio-ftgpio010.c    | 48 +++++++++++++-----------
+ drivers/gpio/gpio-hisi.c         | 46 +++++++++++++----------
+ drivers/gpio/gpio-mlxbf2.c       | 81 ++++++++++++++++++----------------------
+ drivers/gpio/gpio-mxs.c          | 31 +++++++++------
+ drivers/gpio/gpio-realtek-otto.c | 41 +++++++++++---------
+ drivers/gpio/gpio-vf610.c        | 27 +++++++++-----
+ drivers/gpio/gpio-visconti.c     | 25 ++++++++-----
+ drivers/gpio/gpio-xgene-sb.c     | 53 ++++++++++++++------------
+ drivers/gpio/gpio-xgs-iproc.c    | 34 +++++++++--------
+ 9 files changed, 215 insertions(+), 171 deletions(-)
+---
+base-commit: d0630b758e593506126e8eda6c3d56097d1847c5
+change-id: 20250812-gpio-mmio-gpio-conv-part2-0ab8e4871d4d
+
+Best regards,
 -- 
-2.49.0
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
