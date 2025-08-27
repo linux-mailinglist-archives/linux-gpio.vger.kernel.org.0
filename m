@@ -1,142 +1,121 @@
-Return-Path: <linux-gpio+bounces-25033-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25034-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B413B387FA
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 18:46:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DA7AB38930
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 20:01:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B965C3B8EB4
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 16:46:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4838D46448A
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 18:01:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B2B8227BA4;
-	Wed, 27 Aug 2025 16:46:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B29F927814F;
+	Wed, 27 Aug 2025 18:00:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Y2tS2rwK"
+	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="MVpLRtR4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay10.grserver.gr (relay10.grserver.gr [37.27.248.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2078F171CD
-	for <linux-gpio@vger.kernel.org>; Wed, 27 Aug 2025 16:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD58113E41A;
+	Wed, 27 Aug 2025 18:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.27.248.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756313204; cv=none; b=mcr/vEPV2NFPMnKe/D2vpgjIY1XQGYV3c0JP1eOoqJkH72PLNygPo9L5GB5ao+8bVqdcb9cBj15SQ1152uWNG8OqjkuKvOdgkKnBJh8VJFb7xVZEWGB8xVFWeVJ6GHuAKsgCQJNWKFBOFDt2+1qxObqU1hFh1SqC2/c4LiyankY=
+	t=1756317659; cv=none; b=siv+OCGCbwIOG9wTbXkpKtkzwJS1jAiny53Di7LWiOagMz6D64YAWRsRNjxY6TNXzQSx7wsj/rTQTvAn5PiWEe9I4n3TvRjemHkm7BSvhVeRFXNh8+hP1Bc+1Oo9Ix2zIOJYevt6v9qoJ36NAc4GEt/QfjbxqCNK6zMIe4mxqDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756313204; c=relaxed/simple;
-	bh=/Oe8mL8TjjkGnR2jG5Rxs9VLauseuU6oqwYerqQXRro=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nKEBLR6ndlxa4o0P4CWIPNyNSgF9c/L1S3AR9muwDUYhYj9KSq8PTw+fFYXwe5dPv/JPdC4DXUSRA9RbvR32Tb4bLqK8mEsJ6EyODAT9wH9T0JexZHzeCi5E47F2m/JB+h+pZHHDwHjhMYklH1MkiBW6I1SaP47kdvxwQcm4lLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Y2tS2rwK; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-55f4345cfd3so58333e87.1
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Aug 2025 09:46:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756313200; x=1756918000; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/Oe8mL8TjjkGnR2jG5Rxs9VLauseuU6oqwYerqQXRro=;
-        b=Y2tS2rwKaOZMyZh9ka58faXvzXrL50njDDYSugjXepp16GhbLbrRDic1EMKDEsQu7A
-         Jo8yPVvxwUMzfjzBwV2r9dxBxeTg8sgMMKdtJapvfsRogNaVdSQnnGdOH4To/VCgFtyC
-         CUbfx+Y3/frlByut4tTXIzvdnS1NQ/u3KJM1Vskoxza1szm03/bmnwdDzpkH5RArG2My
-         2gh4gwuP36bc8X5O0lejMIEvU5eBN5SnnfgCUXUpwA1NBXYKXNpIyGPt8sbzR72Jml1z
-         UlSgYZSxDKJluIOqB94vh/N4j9nleZMEJMlr/u6VmGxhfKuC3Q0WKTQtytRdteJ+0JV5
-         cE1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756313200; x=1756918000;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/Oe8mL8TjjkGnR2jG5Rxs9VLauseuU6oqwYerqQXRro=;
-        b=AzadEK8qGS069HuVFq0AWoSHfFS4Lx5t8bk25e9Xlp9uoalTNOOVNlg4F2WCnb++N3
-         ndbdHUqJ3FnI3jSx2Fjs0Y68FMtJH5cUlqYKxxXF1qI5iTL+2pslDCzE8sailECIV/fo
-         14Uz5rS+aEO4SSRKgPUhrtj9ffEbgnlAVJJ/8hVEdPge6tNdAPrBdwUBdNzWeEl4sV/4
-         UUdkDLC/CtJuxVzPTLXaymJrpPN7fHP7nCU50PLBV3f0hL4dEjQUqmjCAi9tg6P4zUOY
-         bxD87MsjEzdnd7ujxttUvm2dFt2biqP9XXEtP6fdUClUPkRGCHIdeWBpw/Yro0TPPhOi
-         22dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXibc1MEct7m7aHku8OaekQcHs9l06kdbVR9eN569BTpm+8T+Nnt6pIWsSKcYLr6Rkvt/mZvErbfrHP@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFPIiHFz80wIEdt0DHVYAOsy2vWg9EbZs6Uvj7oMxUaK6Gu0D7
-	CT9MK4m1nqdc1aJwMHGaXJObP2odXdlGJhN/+2/IwiK9/4ffSp4a4Z0mlc3nG8nepobBmjCLH65
-	uIIySJaM54xh2XI4tXCF15y42rQGkp+nxFiNbP2h2pA==
-X-Gm-Gg: ASbGnctxYVekZMYJmUU99oXeqL0E1cl5SrKNBJxKQKw2IESEwZRGxT8lHgs16VK4/3i
-	fIxhq8DYe3jqf7LS3b2C33VUZjFwjq72D60y1cxmYW6DTIgHPu4/D8DZkzS8XPkT+VnkOgErP+r
-	i/aqE2ZpDXkHpOd8gKG0yZt4xtV330nJOg4Y++GT3nUa/SbKRl8LejuxKcDnOxSYeoqGrheCCPg
-	IoBRUg1etL2mwxvm0CIJdzvdTdX2y8QuVBF1XqSYJ2mfCdvTg==
-X-Google-Smtp-Source: AGHT+IH2vScJrK3ld667OkWoypLYcKly6TqnbjFjPvpTB4KCLVEthUMwQrvNGz6iiIbdkdd5rCAEnq3AM7MI6KeEyo4=
-X-Received: by 2002:a05:6512:138c:b0:553:2969:1d6d with SMTP id
- 2adb3069b0e04-55f4f4c6a98mr2026962e87.13.1756313200214; Wed, 27 Aug 2025
- 09:46:40 -0700 (PDT)
+	s=arc-20240116; t=1756317659; c=relaxed/simple;
+	bh=sWCGTZe2jXvPtA8z2lu570Aoie8t2QFzT5hY5nOrwfA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A1Ri5rs5kQJ5W+V7Gao9KvhJHzyz5G8T1PUPQ9FkWTvIEaOIHKIs4tOtF3QCG1DbM1bI8qX8urg2RskNor88orptXzNpHeElZX183VpSWnIIv/oa6pea3p5r/HDYFC6j3h+aFW5LCOCTV5hZqO3ThxU6K4dorW4m3u4vXJegZNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=MVpLRtR4; arc=none smtp.client-ip=37.27.248.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+Received: from relay10 (localhost.localdomain [127.0.0.1])
+	by relay10.grserver.gr (Proxmox) with ESMTP id BA9CD4935F;
+	Wed, 27 Aug 2025 21:00:55 +0300 (EEST)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay10.grserver.gr (Proxmox) with ESMTPS id D1F18491B2;
+	Wed, 27 Aug 2025 21:00:54 +0300 (EEST)
+Received: from antheas-z13 (x5996a855.customers.hiper-net.dk [89.150.168.85])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 46B711FF6EE;
+	Wed, 27 Aug 2025 21:00:53 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1756317654;
+	bh=mAfJYfiIgzNvgbEcVv2Z96v/vZoKteB0l8ih2gQ1320=; h=From:To:Subject;
+	b=MVpLRtR4iwD1M9ubl2FuzG299pfztxD02lRHoDZxEZzC1+SjyevrgNNmC6HXDHu0u
+	 M2Ycbdk9otUWK4sUL9L/ETL3QEUB/K2l17lITN3NLx2fDUZLTT/qA6ON0d/inHOvTd
+	 715zFxn+qarC+XTPIHU0VicAVQZnRU7Jw5dc6KLwvSsHheqgMHW70wgWgCbPnwiDjR
+	 t039h6jzC/Q4mNR3p2Wt+OMuj4vdrx9aXmomqOiChLCugjVKJJP6EeIr8KbgMqvjqr
+	 qw0bo38hNPNhH5CtVO70958YBKSV/nM61UfxhBhkEljWLaL0YyCMAZ6yftciozJfH4
+	 kRkCkNF4lGciw==
+Authentication-Results: linux3247.grserver.gr;
+	spf=pass (sender IP is 89.150.168.85) smtp.mailfrom=lkml@antheas.dev smtp.helo=antheas-z13
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: linux-gpio@vger.kernel.org
+Cc: linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mika Westerberg <westeri@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [PATCH v1] gpiolib: acpi: Ignore touchpad wakeup on GPD G1619-05
+Date: Wed, 27 Aug 2025 19:58:42 +0200
+Message-ID: <20250827175842.3697418-1-lkml@antheas.dev>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250815-pinctrl-gpio-pinfuncs-v5-0-955de9fd91db@linaro.org>
- <CACRpkdaDGmdhaik+1saRv7Ts4myQ+tg1aQqGU3xQyT7ma8dJFw@mail.gmail.com>
- <CAHp75VephepLq61HrVy=PX2oKUQd5NK2qS-vOC5h_NR65td3Uw@mail.gmail.com>
- <CACRpkda4soRCLF5=W=6R4wnwT3pjk743j022XfJxjTTQzuarAA@mail.gmail.com>
- <534ad082-08fa-42c0-9c24-f0c11af7d5b2@sirena.org.uk> <CAMRc=Mdn0_yPXyYq4sbvH4P9-h71vEc4arLPBfSk1PiEFaB7jQ@mail.gmail.com>
- <1804d9dc-8814-47d4-af88-c819c3f17bc0@sirena.org.uk>
-In-Reply-To: <1804d9dc-8814-47d4-af88-c819c3f17bc0@sirena.org.uk>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 27 Aug 2025 18:46:28 +0200
-X-Gm-Features: Ac12FXzUBjVjZcm1OFCa8B8Pt22rGMmSNEEFj8GwunzU7aycJyqw28vaNlWwNSA
-Message-ID: <CAMRc=MdKgqa+vjhHvD2+Tjw5NwBtFv-0aUivi5UuEQd+n4KxmA@mail.gmail.com>
-Subject: Re: [PATCH v5 00/15] pinctrl: introduce the concept of a GPIO pin
- function category
-To: Mark Brown <broonie@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Alexey Klimov <alexey.klimov@linaro.org>, Lorenzo Bianconi <lorenzo@kernel.org>, 
-	Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
-	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, imx@lists.linux.dev, 
-	linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Chen-Yu Tsai <wenst@chromium.org>, 
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <175631765413.1413749.7209228509442678446@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-On Wed, Aug 27, 2025 at 12:22=E2=80=AFPM Mark Brown <broonie@kernel.org> wr=
-ote:
->
-> On Tue, Aug 26, 2025 at 08:19:37PM +0200, Bartosz Golaszewski wrote:
-> > On Wed, Aug 20, 2025 at 8:41=E2=80=AFPM Mark Brown <broonie@kernel.org>=
- wrote:
-> > > On Wed, Aug 20, 2025 at 09:12:49AM +0200, Linus Walleij wrote:
->
-> > > > The qualcomm 32bit platforms fail in next anyway so I dropped the p=
-atches
-> > > > for now.
->
-> > > FWIW the i.MX8MP also seems to have been broken by this:
->
-> > I can't test it unfortunately - would you mind sharing some info on
-> > what's failing exactly?
->
-> I've just got the log I linked above.
+Same issue as G1619-04 in commit 805c74eac8cb ("gpiolib: acpi: Ignore
+touchpad wakeup on GPD G1619-04"), Strix Point lineup uses 05.
 
-So, I've been looking at this bisect email and clicking the links to
-LAVA jobs and I can't find anything. Does it fail to build? Fail at
-run-time? I'm not sure how to read this.
+Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+---
+ drivers/gpio/gpiolib-acpi-quirks.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Bart
+diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-acpi-quirks.c
+index c13545dce349..bb63138c4b5b 100644
+--- a/drivers/gpio/gpiolib-acpi-quirks.c
++++ b/drivers/gpio/gpiolib-acpi-quirks.c
+@@ -317,6 +317,18 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
+ 			.ignore_wake = "PNP0C50:00@8",
+ 		},
+ 	},
++	{
++		/*
++		 * Same as G1619-04. New model.
++		 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "G1619-05"),
++		},
++		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
++			.ignore_wake = "PNP0C50:00@8",
++		},
++	},
+ 	{
+ 		/*
+ 		 * Spurious wakeups from GPIO 11
+
+base-commit: 1b237f190eb3d36f52dffe07a40b5eb210280e00
+-- 
+2.51.0
+
+
 
