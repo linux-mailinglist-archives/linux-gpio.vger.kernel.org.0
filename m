@@ -1,272 +1,155 @@
-Return-Path: <linux-gpio+bounces-25001-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25002-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1448AB376D6
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 03:22:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B66DEB3775A
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 03:46:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0CEA81B66FF9
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 01:23:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8170B2A8520
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 01:46:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4FA7199931;
-	Wed, 27 Aug 2025 01:22:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B2F81D63DF;
+	Wed, 27 Aug 2025 01:46:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="dE7pT2M0"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kCN82tVp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023099.outbound.protection.outlook.com [40.107.44.99])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D329735966;
-	Wed, 27 Aug 2025 01:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.99
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756257767; cv=fail; b=oQcx71RMd2l5TJoD/L1FuyI+Aw+ZjCJPJGugxSXt1gB+A4o1A3L85QImPy9O5zfShHixhC7yXY+lZFMbCNMseB0/wsC78YLCfIh/82B00DkQl3OqwJM0MCHKSGzwi9JJPNTUDI3Dz/TcWrec39kveQ0vyDZ8VpunKTGx83qbD+k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756257767; c=relaxed/simple;
-	bh=c8+BHcE7Lhs8J7dU6lVEOsxTfogUa+9LRlP5MBLCGuk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Jwmfxc5JP6Hc/+eTDN8T3JMccbp+lLNFbveUaqISsSBqFfLR50OTZyT9NFERzbcXdCRfcq138IwdIXnH8esI37zbCeVaZCsLYpx49bTBUTCgm8AtvDcxYtRk98JHOaG762QvaUHjXvjKfOVArOjaZAoLOqygXovmQxYg5HHuNMU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=dE7pT2M0; arc=fail smtp.client-ip=40.107.44.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ae1/vOBZ5L9mVjSpbkewm4wbL4kKLKPAU9vN+MocI9qpIqECBRbYnMVFczC4zEPZybjHCMohyx1hh/PaqjZFvn0hWjJi8wBilsKp0LO+8MMcidfutFEL6jgTEzIQRWDqzFF89tT0ec/yx1UjI2S6ybIpS+oyuXfuBSVej3tUk7DrgN6PyotQEPe/MkvU4MTo3tOcLV6GLzhCsTOuDPpa4weU3kZv0dOiny53VJZLWQYyxROGrEWJTPWCP7Ach5vfqT3MjYU6Q7eMNiSozwkAJnNrt17jT3fRDLBzOUjfBR8LZtZKv2PmcX3ygIw9h4hIDvPqO+8RhoZk9pbqYIXp4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SYF3ghQFwfRDuHiZg+nKEcvCy+TrJQJAEedDokrfp9g=;
- b=dt6wImzeoQyuM1ZMzeTPDq4T7PBPLMYAz3/QC09Rm0fE/jXwDKAtMCZKE8lcUSIKhAY4R88ZZtcXIEzQt0F5oz2KoPYzfOexjDXelD+Kx/yL6sqpCUUbX+tmy9INCQx96uyj4aUGEQUuHCx+Y3y0hVlZ7AxN9hEUMXQXmgS3loGhlTOV2TzKBsipPAPfwXSih2/YnS7fB4L/d+s2toBQV4A2Tn3wYi+SYUfl0MzEZcmRwrGSTFVD3GIvCI/ioumEtGz3TYgZxr2GPkcBrD1VNyG5g2eGWjTtrSPdqDIrW8xj8QXhdfsZxzcCDPhjcrbCjfUiPipR6R74J8wSZbEgrg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SYF3ghQFwfRDuHiZg+nKEcvCy+TrJQJAEedDokrfp9g=;
- b=dE7pT2M0l3wuApSCY7iUbdj3xl1u5idBEOPzufS5HZFNo+uyjmktVsWumryYi9ao6Rp19CwB/zraeDO3jSDLTUHbCcJ9eqxT8wpjmc0fDjZ0A3Uln9brW4EvZd1QhvUF3zNUrRs532rIV3ahaZPxidba0gg7+EckEdrOyMKObQgX24IEHPYjSHGa3Sr3zh24ZLJrG6CgRV8L8mOUxT+DYYMB2CcGHUgfBDS+NpzCxv12VkCdrAAfmmtH3xtv8XeYgC1Reg+yxmSZ1e9N8aCdYuloBTevx55erkqsqNm3XMpjyJNzQp7dU6NeTs4XuTbMQUlPSWN8hnlGcrLCtKJsRw==
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com (2603:1096:101:5a::12)
- by KUZPR06MB7988.apcprd06.prod.outlook.com (2603:1096:d10:21::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.14; Wed, 27 Aug
- 2025 01:22:41 +0000
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28]) by SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28%7]) with mapi id 15.20.9052.019; Wed, 27 Aug 2025
- 01:22:41 +0000
-From: Jacky Chou <jacky_chou@aspeedtech.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: "bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
-	<lpieralisi@kernel.org>, "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
-	"mani@kernel.org" <mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
-	<conor+dt@kernel.org>, "joel@jms.id.au" <joel@jms.id.au>,
-	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
-	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "openbmc@lists.ozlabs.org"
-	<openbmc@lists.ozlabs.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>, "linus.walleij@linaro.org"
-	<linus.walleij@linaro.org>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>
-Subject: [PATCH v2 08/10] PCI: Add FMT and TYPE definition for TLP header
-Thread-Topic: [PATCH v2 08/10] PCI: Add FMT and TYPE definition for TLP header
-Thread-Index: AQHb9TqlDxkoR0jv8kmBHlDJRq4OoLQzU3qAgEKjMzA=
-Date: Wed, 27 Aug 2025 01:22:41 +0000
-Message-ID:
- <SEYPR06MB5134C908801B3F1DB51FB7BE9D38A@SEYPR06MB5134.apcprd06.prod.outlook.com>
-References: <20250715034320.2553837-9-jacky_chou@aspeedtech.com>
- <20250715154145.GA2461632@bhelgaas>
-In-Reply-To: <20250715154145.GA2461632@bhelgaas>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=aspeedtech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SEYPR06MB5134:EE_|KUZPR06MB7988:EE_
-x-ms-office365-filtering-correlation-id: 74c2daae-557d-4103-62c5-08dde5083794
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?wSrxZEtcQerJxT08nYuY4E2RS4uZdnBDROS/Bl4nwCPeGIdCiPf4CI9Y/ggC?=
- =?us-ascii?Q?PUKYo6AEdgDnilcsEmsPL5Jldd/8EDrU+hU+XLA2tM1eVXDOBsjFAqfOdwss?=
- =?us-ascii?Q?IrhA/vKhba/ka9K4Sb0BBaXVk9A251g9iwTu0t0IAVPzdleQYSvQqwGS4YfD?=
- =?us-ascii?Q?XcKgg3thaugX2dvuGzMWvqgt+unrs0exLEzSwyHVr+DzHNkOc7M9B6rqwjUn?=
- =?us-ascii?Q?Uv2GJ7QA+2pDPID/QjfisMFyap/LMYI42Hofs9bxMuvc6Zbdcn7iT0rW0Ihw?=
- =?us-ascii?Q?ZqrhHQnU+XYyBeszNPi5SqOHqbYg+exVWvt5cDgdqFlnNjQgkDiMxqz4lOgw?=
- =?us-ascii?Q?+gi//rbY83RjixtZnbCfDbW4um1GSspN/uGe+Da8dQPbOqzSV4cKobOyzUh0?=
- =?us-ascii?Q?AxiQJneRpBDsXNj4ZK61HlFEjCDR3GqrwxWT2fXvdQjfb5xE36IGdhuiWzqc?=
- =?us-ascii?Q?Z6NWS2oYtpgu4dx/8488MiC1FV0B9anJvT0qKgR9c4wpkTt1TMA4TqMUKZw7?=
- =?us-ascii?Q?dwyb0GYz8OnNKUIJeCWRxddji8tzr47yD0YgRxngbP1HqrOwFbt17bkaKl3K?=
- =?us-ascii?Q?jxYp4iliuUYtrbx4VqRlshLmskpYomMjQyDtVNdCc7H2DF5qjz/z9fZ4sLQM?=
- =?us-ascii?Q?D35M8dhdy80NwB+Bwt1aA5yVYnTdEGiJqqsnT1SLT7QGvzUzT/Y3JCLygCAJ?=
- =?us-ascii?Q?fKBXKvleqZwBPownt+eZ+szf7ljKNT+J8TWEnXRagEEudjlCKsRw/JqoSPOm?=
- =?us-ascii?Q?uIALZqhsRUmBa1j2wVq3S18hkDuWmWUeC142XRUKZG9s1JCnM0HbkE6mOxLe?=
- =?us-ascii?Q?ngL9kmxjkpTxjRoI+DOsH445aWKYOgQUEqbKfnN4OWMX7wdlUMQbVz0Bo4kX?=
- =?us-ascii?Q?nxxPs2XnS6B6zY3fu+2yGy3Aa2u5ciCF3bpk3puIGFhPJN++Upxj64dALctx?=
- =?us-ascii?Q?kXMXxJaD+iwhVOz/V0QdoE5dDKxZDX3DBzA9OOptNvC4rHsOnjHtLBP7bwSz?=
- =?us-ascii?Q?PMBED3lClm1N8ko0A4zdQfoFQcBvUUK+5h2eIaTMlj8I5SsMHzmxZDFz4HzJ?=
- =?us-ascii?Q?JwFX7GZhJzZZMDx1X9YC8jih1jIFTOzzB3z+cIQGBCco7DoNVgFvIsnJ5IXM?=
- =?us-ascii?Q?SaN6BaZNQ5xN9J6MzVS5zBk4TtNoaizCZY2Hq/t6J2EVvYFMSRPh420VKiQO?=
- =?us-ascii?Q?F4kFgairNKKoiCgsD8ardXdiT+u/Re0yF0Oy9WCxKdOq6AgbEpv2iQXK7R2d?=
- =?us-ascii?Q?g+9uuVMktw7HRgKmSgyzej0Kp9E8JRmG+pEzA3iCUrqcFmTGtQyKiW2T7faK?=
- =?us-ascii?Q?FL6AExcimor1JZCz/08tArhB1OrRJg2EuO2WwBpIWcDD36nJMH6RNTYO4LvG?=
- =?us-ascii?Q?FLHC48B5MTMp7tENKiBsJvDWuZQavHXcOcqD+yYDTGO1Dy7aAMJ7Hk//qzeR?=
- =?us-ascii?Q?+Frob1118IpzxFaTEiRsCabZSTWB1347z7uhyllJk/FfWIN+OtFp8Q=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB5134.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?fuBHjCpOVVbFvyWJCP16C+vvVi4c7550E7dFu5YTxJT+ZZWPULf6T3vj8HNv?=
- =?us-ascii?Q?pmVQ6nf4VYIniVwOJ/Nwak1dF86YMNatLgyRyWEMy11K/KrMHMaMD4xtQBai?=
- =?us-ascii?Q?T0H033XOP0ooQSTqkFCANTPDHP5gubdrMO7f+DiKRwNrfSyHGYJD7e4s6A9V?=
- =?us-ascii?Q?zgQqksEh2vUulgi7D1+glkfvr4gdGFNRURWQxiUNFI8FxHgSgHhVo6Ay8aiy?=
- =?us-ascii?Q?LRIaHv8gZYJGfPInEbU9mtPvrzSSDH4Aw9kAFRj3m4hskbeZ6/L8fKzeL+p4?=
- =?us-ascii?Q?EcUG25XqpPy9gCV8DONRgPMTZI0zd7hDZn+QU4eYsp+mXZ2CWBaAiQvPnnkZ?=
- =?us-ascii?Q?ogd6poObfehJ3+VTjIpswA79ghTDFnJ2hGh1GOw6Lq/ChE2Lk+7pnYWAZK3N?=
- =?us-ascii?Q?bE5fsv2csjWOufRJ1TDhpaRiL5fE1Y+iR24mx3Aya4YeKtY+GePvy/i9p6wM?=
- =?us-ascii?Q?F4VKdPnQcf3OVhJ4qCaQRgqKrWz0wLAFSJVAzHCIM6rLudzY/QlAJLqx9DWV?=
- =?us-ascii?Q?BWjvgsMAvTAtW4EX0mxbPCUnsYzn5XzsvSDlAA3vW1t/CWtliKIl31v8PHvd?=
- =?us-ascii?Q?4K7j9VKMU5YaUUKbvZdkBfKWpmfEmAH233r/awKuyDS2gssxyN+zPGkwa0Pt?=
- =?us-ascii?Q?sisPDMQyQwMtMbndWGTh7caUC+rHESpsyl/R8UXIVUWVfi6l0ri5lTW8v1uK?=
- =?us-ascii?Q?2Cl+ncKrmzw2OHkH2dzrzYXUun19Gm85JaxqRsklmyLBxlAuBYIkJfIFTr49?=
- =?us-ascii?Q?Xj+vLY8DYK+rWJLJMPx3o7AQHyeifh94QkIYyf68aBBYgDjDt+Xy2wKepoKJ?=
- =?us-ascii?Q?K2X+CGleGrehMUK9akzZCbUMF6hHOfNexu23x0UFuCmpa+LN6B/2yFLLuDpc?=
- =?us-ascii?Q?2cjiI2YqRmFnI9GToNLxFawKeLBqwyL76iIuLD+PRbEGn6rZRfJYN4+j4+kA?=
- =?us-ascii?Q?5V7hRA+eghVzJ8ILN/bPaC71ImFxq8rS2VitnThFl0wwzRO4XVqSpuAl1YQI?=
- =?us-ascii?Q?9xCyDx0XxWsHRkJE3EaIX+oxhTYTNHWydBOl/KumofWFWMBqVcqWPQLrO4lJ?=
- =?us-ascii?Q?3Ijqz4w6t9p2Y60foB8SriJWM4KCQZHiu4dxLFYY/YEBsATbx7QQq0okOIkf?=
- =?us-ascii?Q?incsnidKBCVJUFpZ9Y7kggvqiHx4uqIwD4ubTdcCUTxezthrqmGZePOOUMaR?=
- =?us-ascii?Q?UjVpjZpB/BAVzPidMaSs5jRt6Ij5aZTxpJuqBFJ/xFPJJ6bKF6925qb4w8Rk?=
- =?us-ascii?Q?EfqoWGHg+pObIPKPjPwJwRPXMsRTzDQSgXq6OYEThW15LFYpi4p6EB9l7v61?=
- =?us-ascii?Q?4QWj8tbgmBH3QqluyVEwrTcx0f9wFlrUhsCUT8e0ImIUvUxxH0zO2LwIeQ4l?=
- =?us-ascii?Q?AW56cNHUc9ARX0ZV2/8RAxrkUsS8a05cOgNXL1yRwyuuomSWukDfkug0YjL3?=
- =?us-ascii?Q?ijXnxoFF0PUTl33JQhJ+b0Or2+cQeNsw6IH0CqhfRvqbZi0wCccHsChb5q6k?=
- =?us-ascii?Q?BoZXKXffGJV+lIG4Kddqg0+6y6aQENEQrFX60byBwAZLsDSn56Yw/jqq6ZyN?=
- =?us-ascii?Q?SIn+QbDMS1kVJnYUJs+aySi4L3CK9ita6jK5fXpx?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C96165F16
+	for <linux-gpio@vger.kernel.org>; Wed, 27 Aug 2025 01:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756259183; cv=none; b=bcpqO3khRvOdVw3TaFjtt0khgLTA3klNy1sGMIrXhCK1gWtoPxjkPWL+uK+CMfvbM6K35t+JBUBxsKlaXlwT2X7qIjXT+NwrfysPQ/fWI3cfLgXwSTB2bjw1HX8M65aOiqmnZf4IC/PcsQagjC5qluPGiAASvsWfiHEXZPNLZMY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756259183; c=relaxed/simple;
+	bh=uHzyck+siLD+tOu/TdoRD1xQ1q3Iueco2prBlfJYitU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZF+0KlAXqBXv/l4MS87V+V7blr+jmqd30gOvkXMUvOSgzhZGZYOAjEYy/Xelluf/tPx2Axrqx3ess8tT2x84wthPRpepa8e4bfO0sZsjjcPcQJWR8GJ4LIUBQNCv4NAknIwAuv+EKeX+uYuhSF084jk/uznmPRDw3C4YjLttc8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kCN82tVp; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57QFs2m4019674
+	for <linux-gpio@vger.kernel.org>; Wed, 27 Aug 2025 01:46:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=Oz3En/JYTYFCxC2EmpZCft1U
+	VWMM+pon7GAYlfebkqQ=; b=kCN82tVpnjlVlG+5GA8hsW14OHO79lBv+sxnNDcK
+	8hTYBY6cdapB8qYp5TbEjSPS8Y13xllvVGp5st+bYKxEMf3tFQT4EuYLbPwm/Eat
+	RLTvV6HGesV/WEc76RCg/jl2IRDvCS4AkTUDxuvXQ5dSoWCtflXcQdVvnSfMAGMj
+	jujoIx8y/+3JMMSmYXj6KGH8na3rTbK8poD4vtiYVeR8fSHtbyYccmezELC9086X
+	Q9jcX0IO+8+oLfgbo6pnNK0aIN7taEiZ36xoKXKpuHW24XgKOMa8kdTKoZYWkKv3
+	61Cpe+ACYsqKLu4KLTw0PMp1n8AmH9y1xuVvBd4wmGbu8Q==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48q5y5jssk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Wed, 27 Aug 2025 01:46:20 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4b109ad4998so237231651cf.1
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Aug 2025 18:46:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756259180; x=1756863980;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Oz3En/JYTYFCxC2EmpZCft1UVWMM+pon7GAYlfebkqQ=;
+        b=HnJNkz42goZRCbf/HUpjrRSEhuyvzJw+IZl1m6UALieUCWh3g3d38dZpB9ZNhEkHuI
+         6i+hEXPYXxjtmqZMV0KiMtSQT0/hC4NfHpjoh6Uv1IHmIU20r1WUpz7p20mPryCJzgxk
+         eHleVk0CMuNVe9RQwQeTovieStF9VeT4bJoWE09KbSArB1nPNbNnnMBT0bjqH/86ulTx
+         bfpKAmAwQpGVGfFKLbfDoq3zr1Zz3IoSNDV3K1+wlkwSoDLkR4CITGSTyic6PAojLdsb
+         VNjXOxCMiFhzIApF7cKERsxQ6t+XvM3ZDWdih1ROfzNVEiHsYUQ3Hc2r1qumybYo51gK
+         csuA==
+X-Forwarded-Encrypted: i=1; AJvYcCVEBvzynw18+iwOL4k4+IkgRpHUnDeLqRlN6B2mUfUMtEWFK57i1eh6rrRPKhI4oIog35Qb9kjmQp8T@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjSFN34BUdJ94gTqGDQ6u+WOrKC2r42i6PyB2zUjdTSb4qIZbv
+	8a4anOo+lWfDGRuHyAxOfxaNH0TfA0uBRVXs2zUMNALcA876GpaSgbL3fzZPtiApAPyGOu2IR6+
+	564OFrgmYJWlPDMj7cwlGm4cE+2aMNMUC5tx6pcDZrGhHsRMetAJTrVPdlOonjcLw
+X-Gm-Gg: ASbGncvtfERS6py0kN2BuJCyKPdpfJTboz900LFKNleuJgQTdDtlPHzqqHXD+gRboiv
+	hvN95enXeJrHOP5KY+wMUTmntHT4rCirObebknSvdo/60CYc3GZqewCuMTShj5XOs4Q9/fa/I83
+	VTEuSI6UExYAT0Wu9jKYYMzd5Se7Pov5oCYWXmbQ8XZLcCDvJ7BfGg0lJ1f8YqT98LpJ4bmYL5M
+	F7O7nO7vCs/CUTclqbvnC7ev99P9vQQhu7RcpX6v8kb+TEYNyznX9fyYQKWlDXp3s+/VOa9JOB1
+	uBAKGSJDRRTiVzY3ifKrkgyhoSoVvdXkLLdAguVRfxzkHCjc8Ujytsw8gWMebfWol+JvuKb034D
+	eOEsLwU2pnh5VKVCKZmjQ/pgChDTntpFmbQPJrEP7sFRDM6ejuc7a
+X-Received: by 2002:a05:622a:11c8:b0:4b2:8ac5:27c0 with SMTP id d75a77b69052e-4b2aab513cdmr197290041cf.75.1756259179950;
+        Tue, 26 Aug 2025 18:46:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE1nVQaEjGAMalegWCB9er9TFUBVM0KcU+1uQdurKxeqheISmPpprI81hhufUBXLp81Ki2Q8Q==
+X-Received: by 2002:a05:622a:11c8:b0:4b2:8ac5:27c0 with SMTP id d75a77b69052e-4b2aab513cdmr197289811cf.75.1756259179417;
+        Tue, 26 Aug 2025 18:46:19 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3365e5d1e5fsm26038931fa.52.2025.08.26.18.46.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Aug 2025 18:46:18 -0700 (PDT)
+Date: Wed, 27 Aug 2025 04:46:16 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: setotau@yandex.ru
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH v3 1/3] pinctrl: qcom: lpass-lpi: Introduce pin_offset
+ callback
+Message-ID: <o2vsj7rfovoo6adwx7nhhi5g6vwowquux72m7do75g6sw3fkwf@jw5hxi4v6e3o>
+References: <20250825-sdm660-lpass-lpi-v3-0-65d4a4db298e@yandex.ru>
+ <20250825-sdm660-lpass-lpi-v3-1-65d4a4db298e@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB5134.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 74c2daae-557d-4103-62c5-08dde5083794
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2025 01:22:41.0840
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6LT+HwLvv0Ee6Y5lF8KEQnIb7yoQUB65MSRLACsF8fbZjsxaLuE8mQBUXndON9WHEaGYf78Cg9LdyCBtDiFbaeldd5vDxdkG6Yyl1M0jBv8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KUZPR06MB7988
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250825-sdm660-lpass-lpi-v3-1-65d4a4db298e@yandex.ru>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODIzMDAzMyBTYWx0ZWRfX0xYdseuh/FSf
+ r+WHeG0iunKBqtV5yRlGzuR2T2fxGIiZBkdQHKmD1uqpf3RdiHF6POh5AGNulQ/syW8SQrb17ep
+ xIqzAfBab9b30n11OOvcz+WGRMwYwZ+NEq5tnBvLh0t7s8/n2r0YLk2LnVc5r5iRFRJb06tKWZs
+ etXF9SHSYLZhRJjzTnwZCceAXCAk6eOKNLOYja0TfRD1hhc5MZHAC7AbOoqTRxjolbK+Baj5xOy
+ pmO9+sWcEjW6TmteM6nBs85eJXZFdcxzcTbB7RyIDoYStzDW6vE6bfHn8SE1E+xSzaYnP76jvS3
+ kJ9v5m1vT6s54VJG+kK8uCDFfBLVW03gXTdQoYfmxSUMwwaTkiHYZZWQArQklV5hvcv6UOuzHWS
+ lsUTprPO
+X-Authority-Analysis: v=2.4 cv=Lco86ifi c=1 sm=1 tr=0 ts=68ae636c cx=c_pps
+ a=WeENfcodrlLV9YRTxbY/uA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=2OwXVqhp2XgA:10 a=qC_FGOx9AAAA:8 a=vaJtXVxTAAAA:8 a=EUspDBNiAAAA:8
+ a=Hv2uq9k-kH7IJJ9oAfsA:9 a=CjuIK1q_8ugA:10 a=kacYvNCVWA4VmyqE58fU:22
+ a=fsdK_YakeE02zTmptMdW:22
+X-Proofpoint-GUID: U2WRQIHVJH0kTy4jBig9MgOVDoF5fAJW
+X-Proofpoint-ORIG-GUID: U2WRQIHVJH0kTy4jBig9MgOVDoF5fAJW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-26_02,2025-08-26_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 adultscore=0 clxscore=1015 malwarescore=0 spamscore=0
+ suspectscore=0 phishscore=0 priorityscore=1501 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508230033
 
-Hi Bjorn,
+On Mon, Aug 25, 2025 at 03:32:28PM +0300, Nickolay Goppen via B4 Relay wrote:
+> From: Nickolay Goppen <setotau@yandex.ru>
+> 
+> By default pin_offset is calculated by formula: LPI_TLMM_REG_OFFSET * pin_id.
+> However not all platforms are using this pin_offset formula (e.g. SDM660 LPASS
+> LPI uses a predefined array of offsets [1]), so add a callback to the default
+> pin_offset function to add an ability for some platforms to use their own quirky
+> pin_offset functions and add callbacks to pin_offset_default function for other
+> platforms.
+> 
+> [1] https://git.codelinaro.org/clo/la/kernel/msm-4.4/-/blob/LA.UM.7.2.c27-07400-sdm660.0/drivers/pinctrl/qcom/pinctrl-lpi.c#L107
+> 
+> Signed-off-by: Nickolay Goppen <setotau@yandex.ru>
+> ---
+>  drivers/pinctrl/qcom/pinctrl-lpass-lpi.c | 18 ++++++++++++++++--
+>  drivers/pinctrl/qcom/pinctrl-lpass-lpi.h |  7 +++++++
+>  2 files changed, 23 insertions(+), 2 deletions(-)
+> 
 
-Thank you for your reply.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-> >  include/uapi/linux/pci_regs.h | 32 ++++++++++++++++++++++++++++++++
-> >  1 file changed, 32 insertions(+)
->=20
-> I don't think these definitions are relevant to uapi users, so they could=
- go in
-> drivers/pci/pci.h, similar to the existing PCIE_MSG_* definitions.
 
-Agreed.
-I will move them to drivers/pci/pci.h and rename them in next version.
-
->=20
-> Please follow the style of PCIE_MSG_*, including the brief spec citations=
- and
-> /* */ comments.
->=20
-> Not sure we need *all* of these; it looks like you only use:
->=20
->   PCI_TLP_TYPE_CFG0_RD
->   PCI_TLP_TYPE_CFG0_WR
->   PCI_TLP_TYPE_CFG1_RD
->   PCI_TLP_TYPE_CFG1_WR
->   PCI_TLP_FMT_3DW_NO_DATA
->   PCI_TLP_FMT_3DW_DATA
->
-
-Yes, I just use these in our PCIe RC driver.
-I will delete the others that are not used in next version.
-
-> > diff --git a/include/uapi/linux/pci_regs.h
-> > b/include/uapi/linux/pci_regs.h index a3a3e942dedf..700b915e00f5
-> > 100644
-> > --- a/include/uapi/linux/pci_regs.h
-> > +++ b/include/uapi/linux/pci_regs.h
-> > @@ -1230,4 +1230,36 @@
-> >  #define PCI_DVSEC_CXL_PORT_CTL				0x0c
-> >  #define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
-> >
-> > +/* Fmt[2:0] encoding for TLP Header */
-> > +#define PCI_TLP_FMT_3DW_NO_DATA		0x0  // 3DW header, no data
-> > +#define PCI_TLP_FMT_4DW_NO_DATA		0x1  // 4DW header, no data
-> > +#define PCI_TLP_FMT_3DW_DATA		0x2  // 3DW header, with data
-> > +#define PCI_TLP_FMT_4DW_DATA		0x3  // 4DW header, with data
-> > +#define PCI_TLP_FMT_PREFIX		0x4  // Prefix header
-> > +
-> > +/* Type[4:0] encoding for TLP Header */
-> > +#define PCI_TLP_TYPE_MEM_RD		0x00 // Memory Read Request
-> > +#define PCI_TLP_TYPE_MEM_RDLK		0x01 // Memory Read Lock
-> Request
-> > +#define PCI_TLP_TYPE_MEM_WR		0x00 // Memory Write Request
-> (Fmt must be with data)
-> > +#define PCI_TLP_TYPE_IO_RD		0x02 // IO Read Request
-> > +#define PCI_TLP_TYPE_IO_WR		0x02 // IO Write Request (Fmt must be
-> with data)
-> > +#define PCI_TLP_TYPE_CFG0_RD		0x04 // Config Type 0 Read
-> Request
-> > +#define PCI_TLP_TYPE_CFG0_WR		0x04 // Config Type 0 Write
-> Request (Fmt must be with data)
-> > +#define PCI_TLP_TYPE_CFG1_RD		0x05 // Config Type 1 Read
-> Request
-> > +#define PCI_TLP_TYPE_CFG1_WR		0x05 // Config Type 1 Write
-> Request (Fmt must be with data)
-> > +#define PCI_TLP_TYPE_MSG		0x10 // Message Request (see routing
-> field)
-> > +#define PCI_TLP_TYPE_MSGD		0x11 // Message Request with Data
-> (see routing field)
-> > +#define PCI_TLP_TYPE_CPL		0x0A // Completion without Data
-> > +#define PCI_TLP_TYPE_CPLD		0x0A // Completion with Data (Fmt
-> must be with data)
-> > +#define PCI_TLP_TYPE_CPLLCK		0x0B // Completion Locked
-> > +#define PCI_TLP_TYPE_CPLDLCK		0x0B // Completion with Data
-> Locked (Fmt must be with data)
-> > +#define PCI_TLP_TYPE_FETCH_ADD		0x0C // Fetch and Add AtomicOp
-> Request
-> > +#define PCI_TLP_TYPE_SWAP		0x0D // Unconditional Swap AtomicOp
-> Request
-> > +#define PCI_TLP_TYPE_CMP_SWAP		0x0E // Compare and Swap
-> AtomicOp Request
-> > +#define PCI_TLP_TYPE_LOCAL_PREFIX	0x00 // Local TLP Prefix (Fmt =3D
-> 0x4)
-> > +#define PCI_TLP_TYPE_E2E_PREFIX		0x10 // End-to-End TLP Prefix (Fmt
-> =3D 0x4)
-> > +
-> > +/* Macro to combine Fmt and Type into the 8-bit field */
-> > +#define PCIE_TLP_FMT_TYPE(fmt, type)   (((fmt) << 5) | ((type) & 0x1F)=
-)
->=20
-> This looks like it might be controller-specific and could go in pcie-aspe=
-ed.c.
-
-Agreed.
-
-Thanks,
-Jacky
-
+-- 
+With best wishes
+Dmitry
 
