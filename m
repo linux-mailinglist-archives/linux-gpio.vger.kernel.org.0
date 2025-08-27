@@ -1,121 +1,122 @@
-Return-Path: <linux-gpio+bounces-25034-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25035-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DA7AB38930
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 20:01:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E0BAB389F9
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 20:58:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4838D46448A
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 18:01:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BBCE27C5426
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 18:58:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B29F927814F;
-	Wed, 27 Aug 2025 18:00:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63FCB2E7BDA;
+	Wed, 27 Aug 2025 18:58:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="MVpLRtR4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p/A4hCuX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay10.grserver.gr (relay10.grserver.gr [37.27.248.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD58113E41A;
-	Wed, 27 Aug 2025 18:00:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.27.248.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A0C23C4F1;
+	Wed, 27 Aug 2025 18:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756317659; cv=none; b=siv+OCGCbwIOG9wTbXkpKtkzwJS1jAiny53Di7LWiOagMz6D64YAWRsRNjxY6TNXzQSx7wsj/rTQTvAn5PiWEe9I4n3TvRjemHkm7BSvhVeRFXNh8+hP1Bc+1Oo9Ix2zIOJYevt6v9qoJ36NAc4GEt/QfjbxqCNK6zMIe4mxqDQ=
+	t=1756321107; cv=none; b=AExw2Bnq7+ceWs8nMS5sAyYuwAZV3KuNdLv2kR2c2ZNdHFC+/WUl3M+jwjL9nfyzbYK4RMWpK+/Z0xo7jBz3PRt+hztNJwxqqt4YMSeaE1OvZ7zSP8mn6NBABNjispAfnT//Xhqk9W4UaU2CrrcUUKlLOqvJ3yQl3A+1OsMNioI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756317659; c=relaxed/simple;
-	bh=sWCGTZe2jXvPtA8z2lu570Aoie8t2QFzT5hY5nOrwfA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A1Ri5rs5kQJ5W+V7Gao9KvhJHzyz5G8T1PUPQ9FkWTvIEaOIHKIs4tOtF3QCG1DbM1bI8qX8urg2RskNor88orptXzNpHeElZX183VpSWnIIv/oa6pea3p5r/HDYFC6j3h+aFW5LCOCTV5hZqO3ThxU6K4dorW4m3u4vXJegZNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=temperror (0-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=MVpLRtR4; arc=none smtp.client-ip=37.27.248.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
-Received: from relay10 (localhost.localdomain [127.0.0.1])
-	by relay10.grserver.gr (Proxmox) with ESMTP id BA9CD4935F;
-	Wed, 27 Aug 2025 21:00:55 +0300 (EEST)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay10.grserver.gr (Proxmox) with ESMTPS id D1F18491B2;
-	Wed, 27 Aug 2025 21:00:54 +0300 (EEST)
-Received: from antheas-z13 (x5996a855.customers.hiper-net.dk [89.150.168.85])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 46B711FF6EE;
-	Wed, 27 Aug 2025 21:00:53 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1756317654;
-	bh=mAfJYfiIgzNvgbEcVv2Z96v/vZoKteB0l8ih2gQ1320=; h=From:To:Subject;
-	b=MVpLRtR4iwD1M9ubl2FuzG299pfztxD02lRHoDZxEZzC1+SjyevrgNNmC6HXDHu0u
-	 M2Ycbdk9otUWK4sUL9L/ETL3QEUB/K2l17lITN3NLx2fDUZLTT/qA6ON0d/inHOvTd
-	 715zFxn+qarC+XTPIHU0VicAVQZnRU7Jw5dc6KLwvSsHheqgMHW70wgWgCbPnwiDjR
-	 t039h6jzC/Q4mNR3p2Wt+OMuj4vdrx9aXmomqOiChLCugjVKJJP6EeIr8KbgMqvjqr
-	 qw0bo38hNPNhH5CtVO70958YBKSV/nM61UfxhBhkEljWLaL0YyCMAZ6yftciozJfH4
-	 kRkCkNF4lGciw==
-Authentication-Results: linux3247.grserver.gr;
-	spf=pass (sender IP is 89.150.168.85) smtp.mailfrom=lkml@antheas.dev smtp.helo=antheas-z13
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-From: Antheas Kapenekakis <lkml@antheas.dev>
-To: linux-gpio@vger.kernel.org
-Cc: linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mika Westerberg <westeri@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH v1] gpiolib: acpi: Ignore touchpad wakeup on GPD G1619-05
-Date: Wed, 27 Aug 2025 19:58:42 +0200
-Message-ID: <20250827175842.3697418-1-lkml@antheas.dev>
-X-Mailer: git-send-email 2.51.0
+	s=arc-20240116; t=1756321107; c=relaxed/simple;
+	bh=k/tPNcfJ/qdnWRcsE6nXClRCEZmBAkB4S98CVmbWffE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=JtGnJck9IV9bpJSrfzKsLhLYq6Xcgqhi7XgSBCF4SHBYdlJ3PuI7oWUmyhIwcxXVkuBo9KZ5SFprjPPJolLqvb8zfJhs+wz0QTsN9bIdCzxJ6+K4LY+nahUcTyh6YXkKQrQ3WK5OpgITag/5/RESRuJ17/VqeujeidZQYbo889A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p/A4hCuX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8403C4CEEB;
+	Wed, 27 Aug 2025 18:58:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756321106;
+	bh=k/tPNcfJ/qdnWRcsE6nXClRCEZmBAkB4S98CVmbWffE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=p/A4hCuXnw78K2/C7/7U2ep3c3mB0WH5FKsFfvMkA9XgZ3H7LOX8UCUSWJNoafOwu
+	 VJwzEpoV0FLpzBZU2Gw77yR4FhTSim9ud/WuydhPXNXtF/rGRXGfd+YK3F5on9j3m1
+	 BS5UCJTAZLWfEiDJLhUiXABrbbSP1hTFOC4xOKq0sIZR+fCLsoqZpQlzLmgFotwXwP
+	 JttlA+091dVHUkpQgd8HOqDX2sV3jjLpIwqXnPEyTY1NeHt8YuYy8Rg6HWDtPSKuuJ
+	 jW3ADEJW9Z1TzPtmOWkaj5LY0S4P5ZnFSbOb2JCD/SeOL3yUWwPQSTKjtiQSTch1dj
+	 WebNWWgPMD0CA==
+Date: Wed, 27 Aug 2025 13:58:25 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Christian Bruel <christian.bruel@foss.st.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
+	conor+dt@kernel.org, mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com, linus.walleij@linaro.org,
+	corbet@lwn.net, p.zabel@pengutronix.de, shradha.t@samsung.com,
+	mayank.rana@oss.qualcomm.com, namcao@linutronix.de,
+	qiang.yu@oss.qualcomm.com, thippeswamy.havalige@amd.com,
+	inochiama@gmail.com, quic_schintav@quicinc.com,
+	johan+linaro@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v13 06/11] PCI: stm32: Add PCIe Endpoint support for
+ STM32MP25
+Message-ID: <20250827185825.GA894342@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <175631765413.1413749.7209228509442678446@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250820075411.1178729-7-christian.bruel@foss.st.com>
 
-Same issue as G1619-04 in commit 805c74eac8cb ("gpiolib: acpi: Ignore
-touchpad wakeup on GPD G1619-04"), Strix Point lineup uses 05.
+On Wed, Aug 20, 2025 at 09:54:06AM +0200, Christian Bruel wrote:
+> Add driver to configure the STM32MP25 SoC PCIe Gen1 2.5GT/s or Gen2 5GT/s
+> controller based on the DesignWare PCIe core in endpoint mode.
 
-Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
----
- drivers/gpio/gpiolib-acpi-quirks.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+> +static void stm32_pcie_perst_deassert(struct dw_pcie *pci)
+> +{
+> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
+> +	struct device *dev = pci->dev;
+> +	struct dw_pcie_ep *ep = &pci->ep;
+> +	int ret;
+> +
+> +	dev_dbg(dev, "PERST de-asserted by host\n");
+> +
+> +	ret = pm_runtime_resume_and_get(dev);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to resume runtime PM: %d\n", ret);
+> +		return;
+> +	}
+> +
+> +	ret = stm32_pcie_enable_resources(stm32_pcie);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to enable resources: %d\n", ret);
+> +		goto err_pm_put_sync;
+> +	}
+> +
+> +	/*
+> +	 * Need to reprogram the configuration space registers here because the
+> +	 * DBI registers were incorrectly reset by the PHY RCC during phy_init().
 
-diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-acpi-quirks.c
-index c13545dce349..bb63138c4b5b 100644
---- a/drivers/gpio/gpiolib-acpi-quirks.c
-+++ b/drivers/gpio/gpiolib-acpi-quirks.c
-@@ -317,6 +317,18 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
- 			.ignore_wake = "PNP0C50:00@8",
- 		},
- 	},
-+	{
-+		/*
-+		 * Same as G1619-04. New model.
-+		 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "G1619-05"),
-+		},
-+		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
-+			.ignore_wake = "PNP0C50:00@8",
-+		},
-+	},
- 	{
- 		/*
- 		 * Spurious wakeups from GPIO 11
+Is this incorrect reset of DBI registers a software issue or some kind
+of hardware erratum that might be fixed someday?  Or maybe it's just a
+characteristic of the hardware and thus not really "incorrect"?
 
-base-commit: 1b237f190eb3d36f52dffe07a40b5eb210280e00
--- 
-2.51.0
+I do see that qcom_pcie_perst_deassert() in pcie-qcom-ep.c also calls
+dw_pcie_ep_init_registers() in the qcom_pcie_ep_perst_irq_thread()
+path.
 
+So does pex_ep_event_pex_rst_deassert() (pcie-tegra194.c) in the
+tegra_pcie_ep_pex_rst_irq() path.
 
+But as far as I can tell, none of the other dwc drivers need this, so
+maybe it's something to do with the glue around the DWC core?
+
+> +	 */
+> +	ret = dw_pcie_ep_init_registers(ep);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to complete initialization: %d\n", ret);
+> +		goto err_disable_resources;
+> +	}
 
