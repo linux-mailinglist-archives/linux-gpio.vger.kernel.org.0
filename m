@@ -1,160 +1,272 @@
-Return-Path: <linux-gpio+bounces-24999-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25001-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87518B375AC
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 01:50:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1448AB376D6
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 03:22:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5088D2A0AE4
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Aug 2025 23:50:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0CEA81B66FF9
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 01:23:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23C7A3090EC;
-	Tue, 26 Aug 2025 23:50:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4FA7199931;
+	Wed, 27 Aug 2025 01:22:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ku2eS2aL"
+	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="dE7pT2M0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023099.outbound.protection.outlook.com [40.107.44.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B025826D4DD;
-	Tue, 26 Aug 2025 23:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756252245; cv=none; b=Q7CW4RzwrX91TF9kjJq8eEbkStdgcxrxMjfv3fjVf50SYC4A9D/+D3t6zKwhjtrtlnxp2cN9fU6Zn1EqSzIj+uPtb/8EsvbVKL/2OtYP4+6BwCk4JASUr53pFpxEcBB6UOsGOyYACTNwGzu7+tGq71DMUV0/ZnLflq4u5co0uyc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756252245; c=relaxed/simple;
-	bh=07Ku4luLp6tCckZKvoGpBvBDQ0Ywwcemo2l4BS/xWs0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OJaeeNxkprsmccTyyeJIBp56PiKBH6On4kyqx08MY6TqZFwpiv05fpaIs1AyEb19Qzr1lg0nEVI4oCTpMKM87lBoHdWjK3Nvdj+2MwqkaKsB86WhRIZz41T/IZYpY5DRAkV84REITSw9Epsvl7S/GwcAbYDQq5Bch4k/a5kkuQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ku2eS2aL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D91F3C4CEF1;
-	Tue, 26 Aug 2025 23:50:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756252245;
-	bh=07Ku4luLp6tCckZKvoGpBvBDQ0Ywwcemo2l4BS/xWs0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ku2eS2aLuk2BO85gltgp9fViBt3A7nXYGIzz3ko+3i02BU56tWHBUt7SqU2nURtEN
-	 XBBLjuym5594eRddN8//2A0hIq9YGE3uJyHGblP1kjOj68phQ1DzZczKcjxA+BYH7m
-	 beuxjpqZ1t3NkKzgfPTOjhOisGGViCwrEjzxf5/EchC01qkp/d/r0yRVVVq5e9D4ra
-	 9iyKZSacjOMQZjnsjMUDUS7FZcVzPkmSyZlv8uUTxMLQ55Ro7lB9BFk8KSd1dsWumX
-	 ZZ+S+nCkt7tGurJCOCifKfd1hsdFyeaBfVGIOUwIwszL5KLRmkt2m3Rz7ePoD+ElMf
-	 wfPZvM216LTww==
-Date: Tue, 26 Aug 2025 18:50:43 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-watchdog@vger.kernel.org,
-	Mathew McBride <matt@traverse.com.au>,
-	linux-arm-kernel@lists.infradead.org,
-	Michael Walle <mwalle@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Nikita Travkin <nikita@trvn.ru>,
-	Guenter Roeck <groeck@chromium.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-mediatek@lists.infradead.org,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Jean Delvare <jdelvare@suse.com>,
-	Tim Harvey <tharvey@gateworks.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Mark Brown <broonie@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	linux-sound@vger.kernel.org,
-	Cheng-Yi Chiang <cychiang@chromium.org>,
-	linux-hwmon@vger.kernel.org, Tzung-Bi Shih <tzungbi@kernel.org>,
-	Pengyu Luo <mitltlatltl@gmail.com>, linux-gpio@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org,
-	Benson Leung <bleung@chromium.org>, Lee Jones <lee@kernel.org>,
-	linux-pwm@vger.kernel.org, Konrad Dybcio <konradybcio@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	chrome-platform@lists.linux.dev, devicetree@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>,
-	Tinghan Shen <tinghan.shen@mediatek.com>
-Subject: Re: [PATCH v3] dt-bindings: mfd: Move embedded controllers to own
- directory
-Message-ID: <175625224288.764159.13881647192010727208.robh@kernel.org>
-References: <20250825081201.9775-2-krzysztof.kozlowski@linaro.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D329735966;
+	Wed, 27 Aug 2025 01:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.99
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756257767; cv=fail; b=oQcx71RMd2l5TJoD/L1FuyI+Aw+ZjCJPJGugxSXt1gB+A4o1A3L85QImPy9O5zfShHixhC7yXY+lZFMbCNMseB0/wsC78YLCfIh/82B00DkQl3OqwJM0MCHKSGzwi9JJPNTUDI3Dz/TcWrec39kveQ0vyDZ8VpunKTGx83qbD+k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756257767; c=relaxed/simple;
+	bh=c8+BHcE7Lhs8J7dU6lVEOsxTfogUa+9LRlP5MBLCGuk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Jwmfxc5JP6Hc/+eTDN8T3JMccbp+lLNFbveUaqISsSBqFfLR50OTZyT9NFERzbcXdCRfcq138IwdIXnH8esI37zbCeVaZCsLYpx49bTBUTCgm8AtvDcxYtRk98JHOaG762QvaUHjXvjKfOVArOjaZAoLOqygXovmQxYg5HHuNMU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=dE7pT2M0; arc=fail smtp.client-ip=40.107.44.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ae1/vOBZ5L9mVjSpbkewm4wbL4kKLKPAU9vN+MocI9qpIqECBRbYnMVFczC4zEPZybjHCMohyx1hh/PaqjZFvn0hWjJi8wBilsKp0LO+8MMcidfutFEL6jgTEzIQRWDqzFF89tT0ec/yx1UjI2S6ybIpS+oyuXfuBSVej3tUk7DrgN6PyotQEPe/MkvU4MTo3tOcLV6GLzhCsTOuDPpa4weU3kZv0dOiny53VJZLWQYyxROGrEWJTPWCP7Ach5vfqT3MjYU6Q7eMNiSozwkAJnNrt17jT3fRDLBzOUjfBR8LZtZKv2PmcX3ygIw9h4hIDvPqO+8RhoZk9pbqYIXp4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SYF3ghQFwfRDuHiZg+nKEcvCy+TrJQJAEedDokrfp9g=;
+ b=dt6wImzeoQyuM1ZMzeTPDq4T7PBPLMYAz3/QC09Rm0fE/jXwDKAtMCZKE8lcUSIKhAY4R88ZZtcXIEzQt0F5oz2KoPYzfOexjDXelD+Kx/yL6sqpCUUbX+tmy9INCQx96uyj4aUGEQUuHCx+Y3y0hVlZ7AxN9hEUMXQXmgS3loGhlTOV2TzKBsipPAPfwXSih2/YnS7fB4L/d+s2toBQV4A2Tn3wYi+SYUfl0MzEZcmRwrGSTFVD3GIvCI/ioumEtGz3TYgZxr2GPkcBrD1VNyG5g2eGWjTtrSPdqDIrW8xj8QXhdfsZxzcCDPhjcrbCjfUiPipR6R74J8wSZbEgrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
+ header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SYF3ghQFwfRDuHiZg+nKEcvCy+TrJQJAEedDokrfp9g=;
+ b=dE7pT2M0l3wuApSCY7iUbdj3xl1u5idBEOPzufS5HZFNo+uyjmktVsWumryYi9ao6Rp19CwB/zraeDO3jSDLTUHbCcJ9eqxT8wpjmc0fDjZ0A3Uln9brW4EvZd1QhvUF3zNUrRs532rIV3ahaZPxidba0gg7+EckEdrOyMKObQgX24IEHPYjSHGa3Sr3zh24ZLJrG6CgRV8L8mOUxT+DYYMB2CcGHUgfBDS+NpzCxv12VkCdrAAfmmtH3xtv8XeYgC1Reg+yxmSZ1e9N8aCdYuloBTevx55erkqsqNm3XMpjyJNzQp7dU6NeTs4XuTbMQUlPSWN8hnlGcrLCtKJsRw==
+Received: from SEYPR06MB5134.apcprd06.prod.outlook.com (2603:1096:101:5a::12)
+ by KUZPR06MB7988.apcprd06.prod.outlook.com (2603:1096:d10:21::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.14; Wed, 27 Aug
+ 2025 01:22:41 +0000
+Received: from SEYPR06MB5134.apcprd06.prod.outlook.com
+ ([fe80::6b58:6014:be6e:2f28]) by SEYPR06MB5134.apcprd06.prod.outlook.com
+ ([fe80::6b58:6014:be6e:2f28%7]) with mapi id 15.20.9052.019; Wed, 27 Aug 2025
+ 01:22:41 +0000
+From: Jacky Chou <jacky_chou@aspeedtech.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: "bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
+	<lpieralisi@kernel.org>, "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+	"mani@kernel.org" <mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "joel@jms.id.au" <joel@jms.id.au>,
+	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
+	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "openbmc@lists.ozlabs.org"
+	<openbmc@lists.ozlabs.org>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>, "linus.walleij@linaro.org"
+	<linus.walleij@linaro.org>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>
+Subject: [PATCH v2 08/10] PCI: Add FMT and TYPE definition for TLP header
+Thread-Topic: [PATCH v2 08/10] PCI: Add FMT and TYPE definition for TLP header
+Thread-Index: AQHb9TqlDxkoR0jv8kmBHlDJRq4OoLQzU3qAgEKjMzA=
+Date: Wed, 27 Aug 2025 01:22:41 +0000
+Message-ID:
+ <SEYPR06MB5134C908801B3F1DB51FB7BE9D38A@SEYPR06MB5134.apcprd06.prod.outlook.com>
+References: <20250715034320.2553837-9-jacky_chou@aspeedtech.com>
+ <20250715154145.GA2461632@bhelgaas>
+In-Reply-To: <20250715154145.GA2461632@bhelgaas>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=aspeedtech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SEYPR06MB5134:EE_|KUZPR06MB7988:EE_
+x-ms-office365-filtering-correlation-id: 74c2daae-557d-4103-62c5-08dde5083794
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?wSrxZEtcQerJxT08nYuY4E2RS4uZdnBDROS/Bl4nwCPeGIdCiPf4CI9Y/ggC?=
+ =?us-ascii?Q?PUKYo6AEdgDnilcsEmsPL5Jldd/8EDrU+hU+XLA2tM1eVXDOBsjFAqfOdwss?=
+ =?us-ascii?Q?IrhA/vKhba/ka9K4Sb0BBaXVk9A251g9iwTu0t0IAVPzdleQYSvQqwGS4YfD?=
+ =?us-ascii?Q?XcKgg3thaugX2dvuGzMWvqgt+unrs0exLEzSwyHVr+DzHNkOc7M9B6rqwjUn?=
+ =?us-ascii?Q?Uv2GJ7QA+2pDPID/QjfisMFyap/LMYI42Hofs9bxMuvc6Zbdcn7iT0rW0Ihw?=
+ =?us-ascii?Q?ZqrhHQnU+XYyBeszNPi5SqOHqbYg+exVWvt5cDgdqFlnNjQgkDiMxqz4lOgw?=
+ =?us-ascii?Q?+gi//rbY83RjixtZnbCfDbW4um1GSspN/uGe+Da8dQPbOqzSV4cKobOyzUh0?=
+ =?us-ascii?Q?AxiQJneRpBDsXNj4ZK61HlFEjCDR3GqrwxWT2fXvdQjfb5xE36IGdhuiWzqc?=
+ =?us-ascii?Q?Z6NWS2oYtpgu4dx/8488MiC1FV0B9anJvT0qKgR9c4wpkTt1TMA4TqMUKZw7?=
+ =?us-ascii?Q?dwyb0GYz8OnNKUIJeCWRxddji8tzr47yD0YgRxngbP1HqrOwFbt17bkaKl3K?=
+ =?us-ascii?Q?jxYp4iliuUYtrbx4VqRlshLmskpYomMjQyDtVNdCc7H2DF5qjz/z9fZ4sLQM?=
+ =?us-ascii?Q?D35M8dhdy80NwB+Bwt1aA5yVYnTdEGiJqqsnT1SLT7QGvzUzT/Y3JCLygCAJ?=
+ =?us-ascii?Q?fKBXKvleqZwBPownt+eZ+szf7ljKNT+J8TWEnXRagEEudjlCKsRw/JqoSPOm?=
+ =?us-ascii?Q?uIALZqhsRUmBa1j2wVq3S18hkDuWmWUeC142XRUKZG9s1JCnM0HbkE6mOxLe?=
+ =?us-ascii?Q?ngL9kmxjkpTxjRoI+DOsH445aWKYOgQUEqbKfnN4OWMX7wdlUMQbVz0Bo4kX?=
+ =?us-ascii?Q?nxxPs2XnS6B6zY3fu+2yGy3Aa2u5ciCF3bpk3puIGFhPJN++Upxj64dALctx?=
+ =?us-ascii?Q?kXMXxJaD+iwhVOz/V0QdoE5dDKxZDX3DBzA9OOptNvC4rHsOnjHtLBP7bwSz?=
+ =?us-ascii?Q?PMBED3lClm1N8ko0A4zdQfoFQcBvUUK+5h2eIaTMlj8I5SsMHzmxZDFz4HzJ?=
+ =?us-ascii?Q?JwFX7GZhJzZZMDx1X9YC8jih1jIFTOzzB3z+cIQGBCco7DoNVgFvIsnJ5IXM?=
+ =?us-ascii?Q?SaN6BaZNQ5xN9J6MzVS5zBk4TtNoaizCZY2Hq/t6J2EVvYFMSRPh420VKiQO?=
+ =?us-ascii?Q?F4kFgairNKKoiCgsD8ardXdiT+u/Re0yF0Oy9WCxKdOq6AgbEpv2iQXK7R2d?=
+ =?us-ascii?Q?g+9uuVMktw7HRgKmSgyzej0Kp9E8JRmG+pEzA3iCUrqcFmTGtQyKiW2T7faK?=
+ =?us-ascii?Q?FL6AExcimor1JZCz/08tArhB1OrRJg2EuO2WwBpIWcDD36nJMH6RNTYO4LvG?=
+ =?us-ascii?Q?FLHC48B5MTMp7tENKiBsJvDWuZQavHXcOcqD+yYDTGO1Dy7aAMJ7Hk//qzeR?=
+ =?us-ascii?Q?+Frob1118IpzxFaTEiRsCabZSTWB1347z7uhyllJk/FfWIN+OtFp8Q=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB5134.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?fuBHjCpOVVbFvyWJCP16C+vvVi4c7550E7dFu5YTxJT+ZZWPULf6T3vj8HNv?=
+ =?us-ascii?Q?pmVQ6nf4VYIniVwOJ/Nwak1dF86YMNatLgyRyWEMy11K/KrMHMaMD4xtQBai?=
+ =?us-ascii?Q?T0H033XOP0ooQSTqkFCANTPDHP5gubdrMO7f+DiKRwNrfSyHGYJD7e4s6A9V?=
+ =?us-ascii?Q?zgQqksEh2vUulgi7D1+glkfvr4gdGFNRURWQxiUNFI8FxHgSgHhVo6Ay8aiy?=
+ =?us-ascii?Q?LRIaHv8gZYJGfPInEbU9mtPvrzSSDH4Aw9kAFRj3m4hskbeZ6/L8fKzeL+p4?=
+ =?us-ascii?Q?EcUG25XqpPy9gCV8DONRgPMTZI0zd7hDZn+QU4eYsp+mXZ2CWBaAiQvPnnkZ?=
+ =?us-ascii?Q?ogd6poObfehJ3+VTjIpswA79ghTDFnJ2hGh1GOw6Lq/ChE2Lk+7pnYWAZK3N?=
+ =?us-ascii?Q?bE5fsv2csjWOufRJ1TDhpaRiL5fE1Y+iR24mx3Aya4YeKtY+GePvy/i9p6wM?=
+ =?us-ascii?Q?F4VKdPnQcf3OVhJ4qCaQRgqKrWz0wLAFSJVAzHCIM6rLudzY/QlAJLqx9DWV?=
+ =?us-ascii?Q?BWjvgsMAvTAtW4EX0mxbPCUnsYzn5XzsvSDlAA3vW1t/CWtliKIl31v8PHvd?=
+ =?us-ascii?Q?4K7j9VKMU5YaUUKbvZdkBfKWpmfEmAH233r/awKuyDS2gssxyN+zPGkwa0Pt?=
+ =?us-ascii?Q?sisPDMQyQwMtMbndWGTh7caUC+rHESpsyl/R8UXIVUWVfi6l0ri5lTW8v1uK?=
+ =?us-ascii?Q?2Cl+ncKrmzw2OHkH2dzrzYXUun19Gm85JaxqRsklmyLBxlAuBYIkJfIFTr49?=
+ =?us-ascii?Q?Xj+vLY8DYK+rWJLJMPx3o7AQHyeifh94QkIYyf68aBBYgDjDt+Xy2wKepoKJ?=
+ =?us-ascii?Q?K2X+CGleGrehMUK9akzZCbUMF6hHOfNexu23x0UFuCmpa+LN6B/2yFLLuDpc?=
+ =?us-ascii?Q?2cjiI2YqRmFnI9GToNLxFawKeLBqwyL76iIuLD+PRbEGn6rZRfJYN4+j4+kA?=
+ =?us-ascii?Q?5V7hRA+eghVzJ8ILN/bPaC71ImFxq8rS2VitnThFl0wwzRO4XVqSpuAl1YQI?=
+ =?us-ascii?Q?9xCyDx0XxWsHRkJE3EaIX+oxhTYTNHWydBOl/KumofWFWMBqVcqWPQLrO4lJ?=
+ =?us-ascii?Q?3Ijqz4w6t9p2Y60foB8SriJWM4KCQZHiu4dxLFYY/YEBsATbx7QQq0okOIkf?=
+ =?us-ascii?Q?incsnidKBCVJUFpZ9Y7kggvqiHx4uqIwD4ubTdcCUTxezthrqmGZePOOUMaR?=
+ =?us-ascii?Q?UjVpjZpB/BAVzPidMaSs5jRt6Ij5aZTxpJuqBFJ/xFPJJ6bKF6925qb4w8Rk?=
+ =?us-ascii?Q?EfqoWGHg+pObIPKPjPwJwRPXMsRTzDQSgXq6OYEThW15LFYpi4p6EB9l7v61?=
+ =?us-ascii?Q?4QWj8tbgmBH3QqluyVEwrTcx0f9wFlrUhsCUT8e0ImIUvUxxH0zO2LwIeQ4l?=
+ =?us-ascii?Q?AW56cNHUc9ARX0ZV2/8RAxrkUsS8a05cOgNXL1yRwyuuomSWukDfkug0YjL3?=
+ =?us-ascii?Q?ijXnxoFF0PUTl33JQhJ+b0Or2+cQeNsw6IH0CqhfRvqbZi0wCccHsChb5q6k?=
+ =?us-ascii?Q?BoZXKXffGJV+lIG4Kddqg0+6y6aQENEQrFX60byBwAZLsDSn56Yw/jqq6ZyN?=
+ =?us-ascii?Q?SIn+QbDMS1kVJnYUJs+aySi4L3CK9ita6jK5fXpx?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250825081201.9775-2-krzysztof.kozlowski@linaro.org>
+X-OriginatorOrg: aspeedtech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB5134.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 74c2daae-557d-4103-62c5-08dde5083794
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2025 01:22:41.0840
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6LT+HwLvv0Ee6Y5lF8KEQnIb7yoQUB65MSRLACsF8fbZjsxaLuE8mQBUXndON9WHEaGYf78Cg9LdyCBtDiFbaeldd5vDxdkG6Yyl1M0jBv8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KUZPR06MB7988
 
+Hi Bjorn,
 
-On Mon, 25 Aug 2025 10:12:02 +0200, Krzysztof Kozlowski wrote:
-> Move several embedded controller bindings (like ChromeOS EC, Gateworks
-> System Controller and Kontron sl28cpld Board Management) to new
-> subdirectory "embedded-controller" matching their purpose.
-> 
-> An embedded controller (EC) is a discrete component that contains a
-> microcontroller (i.e. a small CPU running a small firmware without
-> operating system) mounted into a larger computer system running
-> a fully fledged operating system that needs to utilize the embedded
-> controller as part of its operation.
-> 
-> So far the EC bindings were split between "mfd" and "platform"
-> directory.  MFD name comes from Linux, not hardware, and "platform" is a
-> bit too generic.
-> 
-> Rename Gateworks GSC and Huawei Gaokun filenames to match compatible, as
-> preferred for bindings.
-> 
-> Acked-by: Michael Walle <mwalle@kernel.org> # for sl28cpld
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
-> 
-> Lee,
-> Can you take it via MFD?
-> There is a patch on the lists touching kontron,sl28cpld.
-> 
-> Changes in v3:
-> 1. Move more files from "platform" directory.
-> 2. Grow commit msg, based on feedback from Linus.
-> 3. Add Rb (patch changed, though).
-> 
-> Changes in v2:
-> 1. Correct remaining paths in other schemas ($ref and descriptions).
-> 2. Add Ack.
-> 
-> Cc: Mathew McBride <matt@traverse.com.au>
-> ---
->  .../{platform => embedded-controller}/acer,aspire1-ec.yaml  | 2 +-
->  .../{mfd => embedded-controller}/google,cros-ec.yaml        | 2 +-
->  .../gateworks-gsc.yaml => embedded-controller/gw,gsc.yaml}  | 2 +-
->  .../huawei,gaokun3-ec.yaml}                                 | 2 +-
->  .../{mfd => embedded-controller}/kontron,sl28cpld.yaml      | 2 +-
->  .../lenovo,yoga-c630-ec.yaml                                | 2 +-
->  .../microsoft,surface-sam.yaml                              | 2 +-
->  .../devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml     | 2 +-
->  .../devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml   | 2 +-
->  .../interrupt-controller/kontron,sl28cpld-intc.yaml         | 2 +-
->  .../devicetree/bindings/pwm/google,cros-ec-pwm.yaml         | 2 +-
->  .../devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml       | 2 +-
->  Documentation/devicetree/bindings/remoteproc/mtk,scp.yaml   | 4 ++--
->  .../devicetree/bindings/sound/google,cros-ec-codec.yaml     | 2 +-
->  .../devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml  | 2 +-
->  MAINTAINERS                                                 | 6 +++---
->  16 files changed, 19 insertions(+), 19 deletions(-)
->  rename Documentation/devicetree/bindings/{platform => embedded-controller}/acer,aspire1-ec.yaml (94%)
->  rename Documentation/devicetree/bindings/{mfd => embedded-controller}/google,cros-ec.yaml (99%)
->  rename Documentation/devicetree/bindings/{mfd/gateworks-gsc.yaml => embedded-controller/gw,gsc.yaml} (98%)
->  rename Documentation/devicetree/bindings/{platform/huawei,gaokun-ec.yaml => embedded-controller/huawei,gaokun3-ec.yaml} (97%)
->  rename Documentation/devicetree/bindings/{mfd => embedded-controller}/kontron,sl28cpld.yaml (97%)
->  rename Documentation/devicetree/bindings/{platform => embedded-controller}/lenovo,yoga-c630-ec.yaml (95%)
->  rename Documentation/devicetree/bindings/{platform => embedded-controller}/microsoft,surface-sam.yaml (92%)
-> 
+Thank you for your reply.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> >  include/uapi/linux/pci_regs.h | 32 ++++++++++++++++++++++++++++++++
+> >  1 file changed, 32 insertions(+)
+>=20
+> I don't think these definitions are relevant to uapi users, so they could=
+ go in
+> drivers/pci/pci.h, similar to the existing PCIE_MSG_* definitions.
+
+Agreed.
+I will move them to drivers/pci/pci.h and rename them in next version.
+
+>=20
+> Please follow the style of PCIE_MSG_*, including the brief spec citations=
+ and
+> /* */ comments.
+>=20
+> Not sure we need *all* of these; it looks like you only use:
+>=20
+>   PCI_TLP_TYPE_CFG0_RD
+>   PCI_TLP_TYPE_CFG0_WR
+>   PCI_TLP_TYPE_CFG1_RD
+>   PCI_TLP_TYPE_CFG1_WR
+>   PCI_TLP_FMT_3DW_NO_DATA
+>   PCI_TLP_FMT_3DW_DATA
+>
+
+Yes, I just use these in our PCIe RC driver.
+I will delete the others that are not used in next version.
+
+> > diff --git a/include/uapi/linux/pci_regs.h
+> > b/include/uapi/linux/pci_regs.h index a3a3e942dedf..700b915e00f5
+> > 100644
+> > --- a/include/uapi/linux/pci_regs.h
+> > +++ b/include/uapi/linux/pci_regs.h
+> > @@ -1230,4 +1230,36 @@
+> >  #define PCI_DVSEC_CXL_PORT_CTL				0x0c
+> >  #define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
+> >
+> > +/* Fmt[2:0] encoding for TLP Header */
+> > +#define PCI_TLP_FMT_3DW_NO_DATA		0x0  // 3DW header, no data
+> > +#define PCI_TLP_FMT_4DW_NO_DATA		0x1  // 4DW header, no data
+> > +#define PCI_TLP_FMT_3DW_DATA		0x2  // 3DW header, with data
+> > +#define PCI_TLP_FMT_4DW_DATA		0x3  // 4DW header, with data
+> > +#define PCI_TLP_FMT_PREFIX		0x4  // Prefix header
+> > +
+> > +/* Type[4:0] encoding for TLP Header */
+> > +#define PCI_TLP_TYPE_MEM_RD		0x00 // Memory Read Request
+> > +#define PCI_TLP_TYPE_MEM_RDLK		0x01 // Memory Read Lock
+> Request
+> > +#define PCI_TLP_TYPE_MEM_WR		0x00 // Memory Write Request
+> (Fmt must be with data)
+> > +#define PCI_TLP_TYPE_IO_RD		0x02 // IO Read Request
+> > +#define PCI_TLP_TYPE_IO_WR		0x02 // IO Write Request (Fmt must be
+> with data)
+> > +#define PCI_TLP_TYPE_CFG0_RD		0x04 // Config Type 0 Read
+> Request
+> > +#define PCI_TLP_TYPE_CFG0_WR		0x04 // Config Type 0 Write
+> Request (Fmt must be with data)
+> > +#define PCI_TLP_TYPE_CFG1_RD		0x05 // Config Type 1 Read
+> Request
+> > +#define PCI_TLP_TYPE_CFG1_WR		0x05 // Config Type 1 Write
+> Request (Fmt must be with data)
+> > +#define PCI_TLP_TYPE_MSG		0x10 // Message Request (see routing
+> field)
+> > +#define PCI_TLP_TYPE_MSGD		0x11 // Message Request with Data
+> (see routing field)
+> > +#define PCI_TLP_TYPE_CPL		0x0A // Completion without Data
+> > +#define PCI_TLP_TYPE_CPLD		0x0A // Completion with Data (Fmt
+> must be with data)
+> > +#define PCI_TLP_TYPE_CPLLCK		0x0B // Completion Locked
+> > +#define PCI_TLP_TYPE_CPLDLCK		0x0B // Completion with Data
+> Locked (Fmt must be with data)
+> > +#define PCI_TLP_TYPE_FETCH_ADD		0x0C // Fetch and Add AtomicOp
+> Request
+> > +#define PCI_TLP_TYPE_SWAP		0x0D // Unconditional Swap AtomicOp
+> Request
+> > +#define PCI_TLP_TYPE_CMP_SWAP		0x0E // Compare and Swap
+> AtomicOp Request
+> > +#define PCI_TLP_TYPE_LOCAL_PREFIX	0x00 // Local TLP Prefix (Fmt =3D
+> 0x4)
+> > +#define PCI_TLP_TYPE_E2E_PREFIX		0x10 // End-to-End TLP Prefix (Fmt
+> =3D 0x4)
+> > +
+> > +/* Macro to combine Fmt and Type into the 8-bit field */
+> > +#define PCIE_TLP_FMT_TYPE(fmt, type)   (((fmt) << 5) | ((type) & 0x1F)=
+)
+>=20
+> This looks like it might be controller-specific and could go in pcie-aspe=
+ed.c.
+
+Agreed.
+
+Thanks,
+Jacky
 
 
