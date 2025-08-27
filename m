@@ -1,299 +1,181 @@
-Return-Path: <linux-gpio+bounces-25030-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25031-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DAC26B3843A
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 15:59:10 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52314B387C5
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 18:31:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 91C2E365590
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 13:59:10 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 06B224E177C
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 16:31:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D7EE3570A9;
-	Wed, 27 Aug 2025 13:59:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 009232741A6;
+	Wed, 27 Aug 2025 16:31:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="FRU2aUbN"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="cqZIwIO7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-yw1-f225.google.com (mail-yw1-f225.google.com [209.85.128.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CC6356902
-	for <linux-gpio@vger.kernel.org>; Wed, 27 Aug 2025 13:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D964A926
+	for <linux-gpio@vger.kernel.org>; Wed, 27 Aug 2025 16:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756303141; cv=none; b=sjMtVAmTyL3mO+LToPk2/xyGpe9fXRMSvxmCLfex9+nkMf8PHPzMdGGDPmQYYdcG7ydjokHbp0YIHfbqQT7rjd1yd5WgbS9jajg/qDGvfLkRQ6yGfNjsW8wDpcHVNVvu8Vcu5jJpkw61iRufmXYkh7CL8sJyhYW1/pvRpDpcNqY=
+	t=1756312309; cv=none; b=DONuauof+Y1nEmDf1HQrbqTHHAxiCv2g0vs44VCxiD7XDhLUskmQoa112tUXW0Fx6cynl2w/6PCt0mACRMEmPmalsiYBOq0SUf6+9J1tWidATzhRoRl7HK4M4sMseCkAQkqRYM19D8L9m81fPU3ZXU7VjH4IZtgH0fJ2FbFM8vU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756303141; c=relaxed/simple;
-	bh=qxcTYmKJHv4ByCyIFFgFbatmeR6cwgdb5Z68rlcGFxc=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tqc30XSur/iMfLZUfAz65y8RLf7xOU9AU/qEAsJZyHOOJHyITdRF/UNp98uI3qDyIQkdG/BVFCdCSjPBUBFeyHTW2eyEoOgRcvETM7AxySTPbQ6ro5bAFvdD9ok3EPtSu/NuIXildP5JC/im6prT2S9/QJ+kgrlDQeHTZG4go6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=FRU2aUbN; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-61c4f73cf20so7712410a12.0
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Aug 2025 06:58:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1756303137; x=1756907937; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9CWSteu4ueuV0aIApfiAJbNQgjn5Egg3v9K0wNLPvCE=;
-        b=FRU2aUbNAUF9jCdDsGbFP2xk6aemEDWaz4mN7cgG/eA88msOFwOomMxaRI+dmB4HoV
-         p8pDi/ufcDMtUqPxlDYmI9aYe4JEIdT1r+Mj4f8NWdyCCReQenODwOGrawEckQTxfVde
-         vkuyFUvnJWEwqBGFxpWhV/DliFZEWWt3eWxAuiIpqFA9z2RdSXaSGrB8A4m/8DPtVv3h
-         RFSI5lDvSwWXp7uoSoIBTB0347cm/ZUDWR507UG0LyVEmb87WZkaCsTL+6R28yUdh3yS
-         s3qxmD3x+LrkCiDNQdgF7LYL+SeeWhMi7e49Bw2EMTRXH90fO3vclhngr93ybTwl7W3r
-         R7EA==
+	s=arc-20240116; t=1756312309; c=relaxed/simple;
+	bh=WNplDj6444cvFfgkdx5yb1hLFDsGklovtizp+wstmrM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=IF5bUw292NL14XZMzu3zKlfZiK1OWRjtL3armufjQjI2wdT2xsYsM97sxeicXZsNnYp3ndVS92Ge7x0IZLKT8mgia80ViuMXPsGyCRTrfLiqTUo31gcsYuEOQaaf1QZ5qaepUck3+FL7ge/J23j7qiU6R5sp84cZNhGqXAMijBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=cqZIwIO7; arc=none smtp.client-ip=209.85.128.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-yw1-f225.google.com with SMTP id 00721157ae682-71d603acc23so54638107b3.1
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Aug 2025 09:31:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756303137; x=1756907937;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9CWSteu4ueuV0aIApfiAJbNQgjn5Egg3v9K0wNLPvCE=;
-        b=gc0hwaOmLFCS/kLQVSW1caTW9GMx2RzVdDZslfQ+v783SKjAbatQdshLzjJGCKDFgD
-         qkVfvPInk+xKgZMipmAYtiGWLsrcqqPm8a6wACo9az3X1qJfdM2Z8qFCpFhoJgPXqAx4
-         s5uQ/Y9IsiyT0dbvlGy5itpoPjtmfXw0Mqj3FTJgSGJ7kx0AKHwzUhU/40cfESbVCoGZ
-         QDaX6xtTA0WfAROUJ3Dln3hnrDOMqYY7itHpnixnuBD9+usCe1uWZNzJ/cbWRT7SmbS4
-         rbHPEpgvjGfA6Smq1u2W/Pq5i2tdAjMcvWk3gnAJyoI9/7r1RIqP4rHHA/FN2M3CgK3Q
-         jRqA==
-X-Forwarded-Encrypted: i=1; AJvYcCUdPdG6XVy2bSoT9EquHAXAULOOc8ey8ISxE7dukn7pqcD7Wu6RydAena8KBczuIRsf/DJQMSIWjvLV@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzZDfUPD0mVkSN3Cz5DOEOFJRvUvOokSvixNQqZoUoxH8zfPQP
-	69+0YbQnxzF3jJvfmpnVmSY2mkzSH0o1NtDMF14+S/g9qdkIBl0l45PqypF4EkpYFbw=
-X-Gm-Gg: ASbGnctlYYbzAw0XGth3gdrLYlGvdXFboLzOglJ/62lzZUjlwI3S+KPaPhwJy+bIpII
-	GsY1MFHY6b03ZNZB6UthvaMOdRHy4qUrxbhG5M7WzsB/SSeJ5Xd8J7lubP0FSKxWmK4l6unYwWh
-	49UCzwXPLH3EIaR+Z0XYLnZuOHjv8Ix5oH0XqR5n/6mMvGHg6CZXW/PYrO1oIToLL18yO9oMB44
-	BQW5nvbVwHi4IvAxMnGDSULPR1RCQe1gRV1tQ2SKYpa4tGWvI84rVDezRrTfTKqfP++q9FtCjAU
-	dx6aoZbbsTxj+UeLfN2aHRa4FCJjLgnuQkurxc8xce2j952sR2GvwVcvPGESbQeGsH/baoHacYl
-	3cqtaRTpK1vGUAikoK4ghF7sJ1HnfU2OaYkKU4QWXmEo7P6HhEamjMGEWr2sthsLAQg1X5aFrzf
-	KkZFd9Lt7SRqnZSg+P
-X-Google-Smtp-Source: AGHT+IGGtd6YYOMCijKCql/Dy2HeWOPmF4F9YoTLQ2VQc4J0uyvBHN+XraLb2sKAIVxVgCjlHyK+TQ==
-X-Received: by 2002:a05:6402:4312:b0:61c:7a9b:21d4 with SMTP id 4fb4d7f45d1cf-61c7aaa67e8mr6702103a12.18.1756303137280;
-        Wed, 27 Aug 2025 06:58:57 -0700 (PDT)
-Received: from localhost (host-79-36-0-44.retail.telecomitalia.it. [79.36.0.44])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-61caae5fc3fsm2016468a12.51.2025.08.27.06.58.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Aug 2025 06:58:56 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Wed, 27 Aug 2025 16:00:50 +0200
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: Andrea della Porta <andrea.porta@suse.com>, linus.walleij@linaro.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	florian.fainelli@broadcom.com, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, iivanov@suse.de, svarbanov@suse.de,
-	mbrugger@suse.com, Jonathan Bell <jonathan@raspberrypi.com>,
-	Phil Elwell <phil@raspberrypi.com>
-Subject: Re: [PATCH v3 2/3] pinctrl: bcm: Add STB family pin controller driver
-Message-ID: <aK8PkgiU0yRO-c6f@apocalypse>
-References: <cover.1754922935.git.andrea.porta@suse.com>
- <bb746d2fd50ecbb9963438fae8601c2e4901a126.1754922935.git.andrea.porta@suse.com>
- <83d0f449-be3a-44ca-9722-d747969d96c9@gmx.net>
+        d=1e100.net; s=20230601; t=1756312307; x=1756917107;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:dkim-signature:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rcmoYrSO6K0i6WXr8sztyfu6DTAP/aOG70ic5dYuN3s=;
+        b=LRIkokoIvcButf8noWD69txU26ucp0nrYEB0Bjz9keiQZM1pf2Y3CJ3dpuVbQHVXTi
+         qm8WPZJDeXzMVsrnXOuCCsuIxm6H5kfoiHE8N/C/r3dq3iSNdkAFQs4AQBihBPfC5M9D
+         JWqI9d1dL7LkkatfqkeuA0ESG0F848GNaLzFNMJJ+TiD+xhU9/I5QL/j+9SD334/8dYs
+         J3iAmu7CKDRWamluvVKZPpbhS4uMNRs+eMRV8942NugF9wjAGpjRQqnsQC6RljZ0rYk+
+         rKHnqmYpo/z+soRN7iO5x91wK+vBgBIUds0ougnK8HcjfRcCcy6xGLOHYGS3la6aPLWc
+         t5WA==
+X-Forwarded-Encrypted: i=1; AJvYcCU4tXAHJ7V55G2uLzHL5qAye1g3Lmg+r1hCfEzcwwSP5ij5+KNaC8tytLH3WZHQTbrSQBuIk2ktWyTw@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBrFSfITSKWQm8jGHnIinwEs97kDC/QAYxohPBKRV9Om2TF8Ey
+	8ulSWPOjK/PMPkuTjhQtNZhA1u3fNo0egX/JTd/DYwZCj0LJ9Qsru8/TZOZ8fzk/3YUgGx/zP3N
+	VKXN8tq/wZnUZ4LOaWArSnE8f9keoNRNklXg/4M9K3URascZXfnC/RSHcZMO4tg7Uj+eiBp18pP
+	KoRgZudYfSm/0K7ZtrD+dXD2Pf9NwwmIMZJhGzqIoXPmP72AME5jg5BzzmyO1DbaLWcYjghT2c7
+	/yfPoVsXZfydT/sBiOHZw==
+X-Gm-Gg: ASbGncuwW24y2q8tbFQD8+q/nYxMSdiIHfzz/DiN36evzBMdXLbidP53hIRHavtKuQ+
+	WCtfO8WGeSSI3/oF9hrj232WszBQCWWfxh9ZDeYUXnRGvGww6AodmKl5/P5G/DGbhTi2mIBjtcV
+	0HrU1y4t2PVGKBi0y2LoyZ0C4waGo1ZNYm32lLKqqLnY6GSdOMjfTj9DQNU/96g8W2SWREexbtk
+	j3NLZR5RiOh+rNDi4Y12UujNnoaQ/UIWblSRYA7YKd4i3UTsGc/5k4ELcjCQ89m14AqlVj2paQg
+	mYZlRSrK30oMfz5Q1eXalG5hHQWW5KGdDeA7zn0ZzgQwd6I2OIm2grC2LC+6Owsm+97nFgMme4Q
+	41ct9oN7Io/1I4AEUEfO9QfD96RtIqJ3rdCnglCbRvk7IxqNNIY42iB4qe9+urT0PbKYEmd7SMY
+	KbYBC8zw0=
+X-Google-Smtp-Source: AGHT+IHVOZzl3ngkl6Xa78YXMKdx332jVgxoEGbnxxXrkilTQbVAa3JbsvkojNq21y9FWu2Mwm0LhUzmvA4G
+X-Received: by 2002:a05:690c:6803:b0:71f:b944:1033 with SMTP id 00721157ae682-71fdc43970emr241833157b3.48.1756312307220;
+        Wed, 27 Aug 2025 09:31:47 -0700 (PDT)
+Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-117.dlp.protect.broadcom.com. [144.49.247.117])
+        by smtp-relay.gmail.com with ESMTPS id 00721157ae682-71ff188d745sm7152827b3.41.2025.08.27.09.31.47
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 Aug 2025 09:31:47 -0700 (PDT)
+X-Relaying-Domain: broadcom.com
+X-CFilter-Loop: Reflected
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4b109ad4998so642251cf.1
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Aug 2025 09:31:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1756312306; x=1756917106; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=rcmoYrSO6K0i6WXr8sztyfu6DTAP/aOG70ic5dYuN3s=;
+        b=cqZIwIO7l4awV+5sm03RwWIxbEoRNdPc8aiswK6f1/5o4z29D7FNYWTYAw0PhSazR3
+         Fo8Fr4G5JkC9YWT0twUq5yBN7bnGx4C3RO41ny3pektpBY/Hmbc3WOFjU6CktbAgYF5J
+         IvTtAm7nRfdZ8hgzq75wl9T6Io5/CeT+J2ygA=
+X-Forwarded-Encrypted: i=1; AJvYcCX4quy9Ne1DxiKgjZw58ViSAU/EsrdOGEhSILZIvwt0h3Q/NybcOY8riwrRnM8b4m54EQCBZyWccQx2@vger.kernel.org
+X-Received: by 2002:ac8:5786:0:b0:4b2:fd79:9ea3 with SMTP id d75a77b69052e-4b2fd79a035mr516751cf.52.1756312305678;
+        Wed, 27 Aug 2025 09:31:45 -0700 (PDT)
+X-Received: by 2002:ac8:5786:0:b0:4b2:fd79:9ea3 with SMTP id d75a77b69052e-4b2fd79a035mr516161cf.52.1756312304895;
+        Wed, 27 Aug 2025 09:31:44 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4b2b8b0312asm96801691cf.0.2025.08.27.09.31.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Aug 2025 09:31:43 -0700 (PDT)
+Message-ID: <3c3beeed-a545-4dfb-8199-b57066d3eff7@broadcom.com>
+Date: Wed, 27 Aug 2025 09:31:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <83d0f449-be3a-44ca-9722-d747969d96c9@gmx.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] pinctrl: bcm: Add STB family pin controller driver
+To: Stefan Wahren <wahrenst@gmx.net>,
+ Andrea della Porta <andrea.porta@suse.com>, linus.walleij@linaro.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ iivanov@suse.de, svarbanov@suse.de, mbrugger@suse.com,
+ Jonathan Bell <jonathan@raspberrypi.com>, Phil Elwell <phil@raspberrypi.com>
+References: <cover.1754922935.git.andrea.porta@suse.com>
+ <bb746d2fd50ecbb9963438fae8601c2e4901a126.1754922935.git.andrea.porta@suse.com>
+ <6d812c08-341f-4f7f-a9ed-4545217cb8a8@gmx.net>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <6d812c08-341f-4f7f-a9ed-4545217cb8a8@gmx.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
 
-Hi Stefan,
-
-On 11:57 Sun 24 Aug     , Stefan Wahren wrote:
+On 8/19/25 02:18, Stefan Wahren wrote:
 > Hi Andrea,
 > 
 > Am 11.08.25 um 16:46 schrieb Andrea della Porta:
-> > From: "Ivan T. Ivanov" <iivanov@suse.de>
-> > 
-> > This driver provide pin muxing and configuration functionality
-> > for BCM2712 SoC used by RPi5. According to [1] this chip is an
-> > instance of the one used in Broadcom STB  product line.
+>> From: "Ivan T. Ivanov" <iivanov@suse.de>
+>>
+>> This driver provide pin muxing and configuration functionality
+>> for BCM2712 SoC used by RPi5. According to [1] this chip is an
+>> instance of the one used in Broadcom STB  product line.
+> i'm not sure about the whole driver naming. The cover letter describe it 
+> as "pin control driver for BCM2712 SoC", but this patch is described as 
+> "STB family pin controller driver". So as a reviewer, I'm a little bit 
+> confused of the domain of this driver. Is it for a single SoC or really 
+> for a whole family of many SoCs?
 
-[...]
-
-> > +#define AGPIO_PIN(n)		PINCTRL_PIN(n, "aon_gpio" #n)
-> > +#define SGPIO_PIN(n)		PINCTRL_PIN((n) + 32, "aon_sgpio" #n)
-> It would be great, if there is comment explaining the difference between a
-> AGPIO_PIN and a SGPIO_PIN?
-> 
-> In case AGPIO_PIN stands for AON_GPIO_PIN, i would prefer the latter.
-
-I need to dig more on the SGPIO type, more on that as soon as I'll
-find some more details. No problem in using more explanatory label,
-of_course.
-
-> > +
-> > +struct pin_regs {
-> > +	u16 mux_bit;
-> > +	u16 pad_bit;
-> > +};
-> > +
-
-[...]
-
-> > +enum brcmstb_funcs {
-> > +	func_gpio,
-> > +	func_alt1,
-> > +	func_alt2,
-> > +	func_alt3,
-> > +	func_alt4,
-> > +	func_alt5,
-> > +	func_alt6,
-> > +	func_alt7,
-> > +	func_alt8,
-> > +	func_aon_cpu_standbyb,
-> > +	func_aon_fp_4sec_resetb,
-> > +	func_aon_gpclk,
-> > +	func_aon_pwm,
-> > +	func_arm_jtag,
-> > +	func_aud_fs_clk0,
-> > +	func_avs_pmu_bsc,
-> > +	func_bsc_m0,
-> > +	func_bsc_m1,
-> > +	func_bsc_m2,
-> > +	func_bsc_m3,
-> > +	func_clk_observe,
-> > +	func_ctl_hdmi_5v,
-> > +	func_enet0,
-> > +	func_enet0_mii,
-> > +	func_enet0_rgmii,
-> > +	func_ext_sc_clk,
-> > +	func_fl0,
-> > +	func_fl1,
-> > +	func_gpclk0,
-> > +	func_gpclk1,
-> > +	func_gpclk2,
-> > +	func_hdmi_tx0_auto_i2c,
-> > +	func_hdmi_tx0_bsc,
-> > +	func_hdmi_tx1_auto_i2c,
-> > +	func_hdmi_tx1_bsc,
-> > +	func_i2s_in,
-> > +	func_i2s_out,
-> > +	func_ir_in,
-> > +	func_mtsif,
-> > +	func_mtsif_alt,
-> > +	func_mtsif_alt1,
-> > +	func_pdm,
-> > +	func_pkt,
-> > +	func_pm_led_out,
-> > +	func_sc0,
-> > +	func_sd0,
-> > +	func_sd2,
-> > +	func_sd_card_a,
-> > +	func_sd_card_b,
-> > +	func_sd_card_c,
-> > +	func_sd_card_d,
-> > +	func_sd_card_e,
-> > +	func_sd_card_f,
-> > +	func_sd_card_g,
-> > +	func_spdif_out,
-> > +	func_spi_m,
-> > +	func_spi_s,
-> > +	func_sr_edm_sense,
-> > +	func_te0,
-> > +	func_te1,
-> > +	func_tsio,
-> > +	func_uart0,
-> > +	func_uart1,
-> > +	func_uart2,
-> > +	func_usb_pwr,
-> > +	func_usb_vbus,
-> > +	func_uui,
-> > +	func_vc_i2c0,
-> > +	func_vc_i2c3,
-> > +	func_vc_i2c4,
-> > +	func_vc_i2c5,
-> > +	func_vc_i2csl,
-> > +	func_vc_pcm,
-> > +	func_vc_pwm0,
-> > +	func_vc_pwm1,
-> > +	func_vc_spi0,
-> > +	func_vc_spi3,
-> > +	func_vc_spi4,
-> > +	func_vc_spi5,
-> > +	func_vc_uart0,
-> > +	func_vc_uart2,
-> > +	func_vc_uart3,
-> > +	func_vc_uart4,
-> > +	func__,
-> > +	func_count = func__
-> > +};
-> I'm very sceptical that this enum is generic. I would tend use to
-> bcm2712_funcs here.
-
-Ack.
-
-> > +
-> > +static const struct pin_regs bcm2712_c0_gpio_pin_regs[] = {
-> > +	GPIO_REGS(0, 0, 0, 7, 7),
-> > +	GPIO_REGS(1, 0, 1, 7, 8),
-> > +	GPIO_REGS(2, 0, 2, 7, 9),
-
-[...]
-
-> > +static const struct brcmstb_pin_funcs bcm2712_c0_aon_gpio_pin_funcs[] = {
-> > +	PIN(0, ir_in, vc_spi0, vc_uart3, vc_i2c3, te0, vc_i2c0, _, _),
-> > +	PIN(1, vc_pwm0, vc_spi0, vc_uart3, vc_i2c3, te1, aon_pwm, vc_i2c0, vc_pwm1),
-> > +	PIN(2, vc_pwm0, vc_spi0, vc_uart3, ctl_hdmi_5v, fl0, aon_pwm, ir_in, vc_pwm1),
-> > +	PIN(3, ir_in, vc_spi0, vc_uart3, aon_fp_4sec_resetb, fl1, sd_card_g, aon_gpclk, _),
-> > +	PIN(4, gpclk0, vc_spi0, vc_i2csl, aon_gpclk, pm_led_out, aon_pwm, sd_card_g, vc_pwm0),
-> > +	PIN(5, gpclk1, ir_in, vc_i2csl, clk_observe, aon_pwm, sd_card_g, vc_pwm0, _),
-> > +	PIN(6, uart1, vc_uart4, gpclk2, ctl_hdmi_5v, vc_uart0, vc_spi3, _, _),
-> > +	PIN(7, uart1, vc_uart4, gpclk0, aon_pwm, vc_uart0, vc_spi3, _, _),
-> > +	PIN(8, uart1, vc_uart4, vc_i2csl, ctl_hdmi_5v, vc_uart0, vc_spi3, _, _),
-> > +	PIN(9, uart1, vc_uart4, vc_i2csl, aon_pwm, vc_uart0, vc_spi3, _, _),
-> > +	PIN(10, tsio, ctl_hdmi_5v, sc0, spdif_out, vc_spi5, usb_pwr, aon_gpclk, sd_card_f),
-> > +	PIN(11, tsio, uart0, sc0, aud_fs_clk0, vc_spi5, usb_vbus, vc_uart2, sd_card_f),
-> > +	PIN(12, tsio, uart0, vc_uart0, tsio, vc_spi5, usb_pwr, vc_uart2, sd_card_f),
-> > +	PIN(13, bsc_m1, uart0, vc_uart0, uui, vc_spi5, arm_jtag, vc_uart2, vc_i2c3),
-> > +	PIN(14, bsc_m1, uart0, vc_uart0, uui, vc_spi5, arm_jtag, vc_uart2, vc_i2c3),
-> > +	PIN(15, ir_in, aon_fp_4sec_resetb, vc_uart0, pm_led_out, ctl_hdmi_5v, aon_pwm, aon_gpclk,
-> > +	    _),
-> > +	PIN(16, aon_cpu_standbyb, gpclk0, pm_led_out, ctl_hdmi_5v, vc_pwm0, usb_pwr, aud_fs_clk0,
-> > +	    _),
-> I think it's okay to violate the 80 char limit in these both cases to
-> improve readability.
-
-Ack.
-
-> > +};
-> > +
-> ...
-> > +
-> > +static int brcmstb_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin,
-> > +			       unsigned long *config)
-> > +{
-> > +	struct brcmstb_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-> > +	enum pin_config_param param = pinconf_to_config_param(*config);
-> > +	u32 arg;
-> > +
-> > +	switch (param) {
-> > +	case PIN_CONFIG_BIAS_DISABLE:
-> > +		arg = (brcmstb_pull_config_get(pc, pin) == BRCMSTB_PULL_NONE);
-> > +		break;
-> > +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> > +		arg = (brcmstb_pull_config_get(pc, pin) == BRCMSTB_PULL_DOWN);
-> > +		break;
-> > +	case PIN_CONFIG_BIAS_PULL_UP:
-> > +		arg = (brcmstb_pull_config_get(pc, pin) == BRCMSTB_PULL_UP);
-> I'm not sure this is correct. I would expect that "arg" contains the
-> resistance in Ohm for PULL_DOWN & PULL_UP.
-
-In this case I don't have insight about the current impedance value. Since
-this is easily something that changes between different implementations, I
-would leave it as it is as it's more general, i.e. 0 for disabled and 1 for
-pull up/down enabled (which seems to be the most common behaviour for pinconf
-drivers anyway).
-
-Once we know more details about the Ohm values or a new STB implementation
-arises, we can quickly add the relevant data in the specific driver code.
-
-Many thanks,
-Andrea
+The structure of the driver is applicable to the entire Broadcom STB SoC 
+family, of which 2712/7712 is one instance.
 
 > 
-> Best regards
+> I'm asking because all the other BCM pinctrl drivers are mostly SoC 
+> specific and not really general for a product line.
+> 
+> In the former case, I would expect a driver name like pinctrl-bcm2712 to 
+> make it more clear.
+
+pinctrl-brcmstb.c for the main part which is agnostic to the 
+chip-specific functions is adequate.
+-- 
+Florian
 
