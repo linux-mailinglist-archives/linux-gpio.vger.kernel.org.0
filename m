@@ -1,314 +1,144 @@
-Return-Path: <linux-gpio+bounces-25025-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25026-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38F2EB37F66
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 11:56:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49D28B37FC8
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 12:22:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 69D8616D2DC
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 09:56:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3ACC55E3B7E
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 10:22:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B7A71E231E;
-	Wed, 27 Aug 2025 09:56:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E33934DCC0;
+	Wed, 27 Aug 2025 10:22:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bKIRxevy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CMY73pat"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f65.google.com (mail-ej1-f65.google.com [209.85.218.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A333B27B337
-	for <linux-gpio@vger.kernel.org>; Wed, 27 Aug 2025 09:56:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48E8341ABD;
+	Wed, 27 Aug 2025 10:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756288570; cv=none; b=mjxiLskBlviVF+NC5kx+wEa07WNaB7N1EigzsqGmIJ8KbzGA67t2U7WN/neyMe3pIgs/KtsjIafrYUfQrW3iHBhY5zCX8WRfc5p+RyjWqMGIM6P4C/13PwLYt5FpzCHihoVAIfZhN/CjM7FheuR6I/sFWaxArRF6LySYlhB+5mo=
+	t=1756290125; cv=none; b=iZdXwCjERHlVpibncqnnOf843I/nSxCAiB3VTBur0DwnTj6H1TzctZlOqOlm9WlX6eS/5Yp9tw/S8YXKYxV7HdpvzShpTuPgi+6UWDW1DCyHjy7orCsJfmn6zzf7Iz0xe554ocWHbdP4yH6hAu91al3UehKU6xZdyOXATYy9Bkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756288570; c=relaxed/simple;
-	bh=9nDh+fqGnYUlCCWYz5C/DpXB/E2ySKrV13GaiWpwiPE=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qAnr1LdKkQhhl2YAfXzInFrSTTmB7Y8lre3ZhMG5EMwwqeF1BmZCQvZtJhV9HyJF50w7dF0yZGSwOVgnnTbaFTDrj6WRN4iBIG37l+Wh4v8B6YS4a2IMLfUDOeBMcu+6KLaRfHJ6o/VKwfxlpeGVP4pHAyiJmb0P1s0xn3gpRi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bKIRxevy; arc=none smtp.client-ip=209.85.218.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f65.google.com with SMTP id a640c23a62f3a-afcb6856dfbso152982966b.1
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Aug 2025 02:56:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1756288567; x=1756893367; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sjkSzRyl1g9cs5mTFMFSZLWz4lR/ELoXhIHKRJbEmxI=;
-        b=bKIRxevyu0Kwrh0qwlIBq60IhpVnr33ZQM+0ksA1L193LXukCZco5nu5UPVOkXv1ZB
-         G29Ldxmv5fxZbCNnIt0vDE7isocyIbCgRJQU0xM3Fc8mYu60ZBTYJrqZvD+N7NUoYdON
-         I3fFPS0jufOHj2O6r+ZYQR9SNsJSnywUDubZx3g4PdyxhiIX8MDgLd4c3FIM9jruZbx9
-         tXbKdKWOAz2vaG6jVaSdAsdLdx3q8MG/MrOKwuQ3A3s5zCY9YDTfSCgDtAU7PYEL7MxL
-         j7Gy8/kXCxR5ZIAhlcnBxMALyIPCGSRHUR/vgJhsDuCEhRcPZBQIrVgI1H510ZgajtMB
-         GFRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756288567; x=1756893367;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sjkSzRyl1g9cs5mTFMFSZLWz4lR/ELoXhIHKRJbEmxI=;
-        b=N+JihfK6tSnlMtCEme/D5x4zmfA3ilN0yLa+JrCCePH93MhUlEXrJ5KtsxBpm6zrnE
-         KJY2k7i/54jvvJXa0vQSqYKzHg8iLDDYQq6YOSiZ7jE1iQylQhs0wIfOVmp+cDwqg7NH
-         2Q39+GRoSamxK/rFA+bl+SLFtoW5xot+SE8fB6acJ12fHzXgUNYJVX7pJdvel3XatICX
-         GkEiJfaHyHuCtEArfGQi4F+5qhhDQIXODBPZgcTexK3BE2o6L4/ay0qtFSUhTdY1gbAt
-         gN3B9GhYtRusu8z4slPLFB7SlRrWjGATK5RomesV+rK5sXxrzJp0ep8J+XxZ43LmqZu/
-         KMPw==
-X-Forwarded-Encrypted: i=1; AJvYcCVXLyvraCEnwCLxCnDwGbJbhcjXlrKY+zP3BRxBpIuEpz+yBgcQHI+BmqejQ/jQmDQGFaUpa2JULG7t@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3hFOwepkT/s/m28OSePeYDqVap6naeCzVNaErBkl1+7jfwSF1
-	hhZgeml6g1TqUgja6fTN63HNtp6mOjhNXsDYSyCWST8IoWjpcE4msqn3lgaBV54C+hw=
-X-Gm-Gg: ASbGnctLBScdf0Je8Gn22+5gyIkf0NbZmyEs+x6EAhlxWENyUZaxa9WjqUsins5FhEw
-	mHk2xGunuRgOCjUg9I/GzkJa/NHAJJE7OsycunMWLo1ceQ+u3sfJ5KuEQR5VEXcXAiq8PtiWGgE
-	u3NOVh8OfZ0bGW0IuFGwdkVIueMh0keKmjPpHIoOuweLr8rxqvZRYQup6lYcfiIgFUeNWSslLzy
-	WH/VvfxJcsFwt9bhfxxp0wASMFPp2y6UdAiV0sNX8DMs2AmN4AvcITNqDfw9hpNb41SXacrjtv7
-	6iLpV0e//KyGUyFURBdAwq5UxnqBIRI4ORxhQ0ZSN2S7H655MAVM/afNNzHy84HKQt0CWmumr7i
-	xvxdkr8GfE9btI44v0BuuJhpyQNAlx7nIZRf46xjqybVHrPB/TVrz+nzE187PRwobK3F6Cov9fG
-	qbe3KzKwWUH8BkJ4p8
-X-Google-Smtp-Source: AGHT+IH2BAIHZjtkFkG74TGOjFzT/IYNS5G2LQt+C3kivswZI0B2A0fV9PMQ7gyzkhXRRDI2psHzvg==
-X-Received: by 2002:a17:907:3d12:b0:afe:94cd:111a with SMTP id a640c23a62f3a-afeafec9ccemr423517966b.7.1756288566993;
-        Wed, 27 Aug 2025 02:56:06 -0700 (PDT)
-Received: from localhost (host-79-36-0-44.retail.telecomitalia.it. [79.36.0.44])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afe89bd7acesm555423866b.73.2025.08.27.02.56.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Aug 2025 02:56:06 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Wed, 27 Aug 2025 11:58:00 +0200
-To: Rob Herring <robh@kernel.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>, linus.walleij@linaro.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org,
-	florian.fainelli@broadcom.com, wahrenst@gmx.net,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, iivanov@suse.de, svarbanov@suse.de,
-	mbrugger@suse.com, Jonathan Bell <jonathan@raspberrypi.com>,
-	Phil Elwell <phil@raspberrypi.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: pinctrl: Add support for Broadcom
- STB pin controller
-Message-ID: <aK7WqA7OP1h-rpJ6@apocalypse>
-References: <cover.1754922935.git.andrea.porta@suse.com>
- <6fdbaf2bd0b72badbb5384e43b97bebcda4cc2f0.1754922935.git.andrea.porta@suse.com>
- <20250818172040.GA1483013-robh@kernel.org>
+	s=arc-20240116; t=1756290125; c=relaxed/simple;
+	bh=feIeFoFe/NIkaHWsBJ6sykJyPk/bFO1DqGerlF+Pkfg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TIAF5vVVEpcw/dcgOai/QgLmA7KqcHHwbV/aID8rfPenPu/4J9JKfHNONQdj93JqiyG4j3xkB7Lp98k9POlH00UCKA33fFFIzjOgQmWe1Xwy3yYxafVPx3IaZcZOcGg1qjDcZZ5+4Q88wxAtBszET+R+Nd3qz5sM+3mUF/wesE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CMY73pat; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1E6FC4CEEB;
+	Wed, 27 Aug 2025 10:21:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756290123;
+	bh=feIeFoFe/NIkaHWsBJ6sykJyPk/bFO1DqGerlF+Pkfg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CMY73patfhFBm1cWrO0GjSOUppBTmRm9w9tK3Op5eYvw95EorabzAemE8TKMQjBN0
+	 AFJLkvpc/07xvzw49PtfcXgo1jyfgqSIyA3tv8EQho2HxgcPu5RJ7YIj6+5ZO0Jjfj
+	 ejeS0GRY1n7Mq9lcoiSrFgud7UC1CHzgBEAzXF9wgw4H35uLjqwGgcAgwRdWTSnps4
+	 uVbcQD9zxttmWF0K8GiZTPHDS7eDEZN1k6CLQV5sYnoFYmqneHGPBxowx91U05F03k
+	 g5jrxQjovkqZ6CO/JHFUeS2pHASrfBK5fwYnJi/a4eamilP7bDZYeUuhHoJFoX+o0y
+	 IaB8i4S88yEdA==
+Date: Wed, 27 Aug 2025 11:21:46 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Alexey Klimov <alexey.klimov@linaro.org>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Dong Aisheng <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	NXP S32 Linux Team <s32@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Tony Lindgren <tony@atomide.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	imx@lists.linux.dev, linux-omap@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Chen-Yu Tsai <wenst@chromium.org>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v5 00/15] pinctrl: introduce the concept of a GPIO pin
+ function category
+Message-ID: <1804d9dc-8814-47d4-af88-c819c3f17bc0@sirena.org.uk>
+References: <20250815-pinctrl-gpio-pinfuncs-v5-0-955de9fd91db@linaro.org>
+ <CACRpkdaDGmdhaik+1saRv7Ts4myQ+tg1aQqGU3xQyT7ma8dJFw@mail.gmail.com>
+ <CAHp75VephepLq61HrVy=PX2oKUQd5NK2qS-vOC5h_NR65td3Uw@mail.gmail.com>
+ <CACRpkda4soRCLF5=W=6R4wnwT3pjk743j022XfJxjTTQzuarAA@mail.gmail.com>
+ <534ad082-08fa-42c0-9c24-f0c11af7d5b2@sirena.org.uk>
+ <CAMRc=Mdn0_yPXyYq4sbvH4P9-h71vEc4arLPBfSk1PiEFaB7jQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2cfgNcmAX2xoMgwh"
 Content-Disposition: inline
-In-Reply-To: <20250818172040.GA1483013-robh@kernel.org>
+In-Reply-To: <CAMRc=Mdn0_yPXyYq4sbvH4P9-h71vEc4arLPBfSk1PiEFaB7jQ@mail.gmail.com>
+X-Cookie: Most people prefer certainty to truth.
 
-Hi Rob,
 
-On 12:20 Mon 18 Aug     , Rob Herring wrote:
-> On Mon, Aug 11, 2025 at 04:46:51PM +0200, Andrea della Porta wrote:
-> > From: "Ivan T. Ivanov" <iivanov@suse.de>
-> > 
-> > The STB pin controller represents a family whose silicon instances
-> > are found e.g. on BCM2712 SoC.
-> > 
-> > In particular, on RaspberryPi 5, there are two separate instantiations
-> > of the same IP block which differ in the number of pins that are
-> > associated and the pinmux functions for each of those pins. The
-> > -aon- variant stands for 'Always On'.
-> > 
-> > Depending on the revision of the BCM2712 (CO or D0), the pin
-> > controller instance has slight differences in the register layout.
-> > 
-> > Signed-off-by: Ivan T. Ivanov <iivanov@suse.de>
-> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> > ---
-> >  .../pinctrl/brcm,bcm2712c0-pinctrl.yaml       | 135 ++++++++++++++++++
-> >  1 file changed, 135 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm2712c0-pinctrl.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2712c0-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2712c0-pinctrl.yaml
-> > new file mode 100644
-> > index 000000000000..28d66336aa2e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2712c0-pinctrl.yaml
-> > @@ -0,0 +1,135 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pinctrl/brcm,bcm2712c0-pinctrl.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Broadcom STB family pin controller
-> > +
-> > +maintainers:
-> > +  - Ivan T. Ivanov <iivanov@suse.de>
-> > +  - A. della Porta <andrea.porta@suse.com>
-> 
-> Why is your first name abbrievated here?
+--2cfgNcmAX2xoMgwh
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The heuristic inside get_maintainer.pl does not correctly recognize names like
-"Andrea della Porta", reporting something like:
+On Tue, Aug 26, 2025 at 08:19:37PM +0200, Bartosz Golaszewski wrote:
+> On Wed, Aug 20, 2025 at 8:41=E2=80=AFPM Mark Brown <broonie@kernel.org> w=
+rote:
+> > On Wed, Aug 20, 2025 at 09:12:49AM +0200, Linus Walleij wrote:
 
-della Porta <andrea.porta@suse.com>
+> > > The qualcomm 32bit platforms fail in next anyway so I dropped the pat=
+ches
+> > > for now.
 
-and missing both the first name and the double quotes surrounding the
-name/surname pair.
-Something like "Andrea d. Porta" would be reported correctly but it's not an
-option in my case since 'della' is not a middle name that can abbreviated,
-it's just integral part of the surname.
-The easy workaround I've found (the hard one being fixing get_maintainer.pl
-script, of course, but I'm not a Perl guru) is to just let the name be
-abbreviated.
+> > FWIW the i.MX8MP also seems to have been broken by this:
 
-> 
-> > +
-> > +description:
-> > +  Broadcom's STB family of memory-mapped pin controllers.
-> > +  This includes the pin controllers inside the BCM2712 SoC which
-> > +  are instances of the STB family and has two silicon variants,
-> > +  C0 and D0, which differs slightly in terms of registers layout.
-> > +  The -aon- (Always On) variant is the same IP block but differs
-> > +  in the number of pins that are associated and the pinmux functions
-> > +  for each of those pins.
-> 
-> Wrap lines at 80. If there are paragraphs, then blank line in between 
-> and use the '>' modifier.
+> I can't test it unfortunately - would you mind sharing some info on
+> what's failing exactly?
 
-I'm not seeing any lines exceeding 80 chars here. Ack for the
-blank lines between paragraphs plus >.
+I've just got the log I linked above.
 
-> 
-> > +
-> > +allOf:
-> > +  - $ref: pinctrl.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - brcm,bcm2712c0-pinctrl
-> > +      - brcm,bcm2712c0-aon-pinctrl
-> > +      - brcm,bcm2712d0-pinctrl
-> > +      - brcm,bcm2712d0-aon-pinctrl
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +patternProperties:
-> > +  '-state$':
-> > +    oneOf:
-> > +      - $ref: '#/$defs/brcmstb-pinctrl-state'
-> > +      - patternProperties:
-> > +          '-pins$':
-> > +            $ref: '#/$defs/brcmstb-pinctrl-state'
-> > +        additionalProperties: false
-> > +
-> > +$defs:
-> > +  brcmstb-pinctrl-state:
-> > +    allOf:
-> > +      - $ref: pincfg-node.yaml#
-> > +      - $ref: pinmux-node.yaml#
-> > +
-> > +    description:
-> > +      Pin controller client devices use pin configuration subnodes (children
-> > +      and grandchildren) for desired pin configuration.
-> > +      Client device subnodes use below standard properties.
-> 
-> Paragraphs here?
+--2cfgNcmAX2xoMgwh
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Ack.
+-----BEGIN PGP SIGNATURE-----
 
-> 
-> > +
-> > +    properties:
-> > +      pins:
-> > +        description:
-> > +          List of gpio pins affected by the properties specified in this
-> > +          subnode (either this or "groups" must be specified).
-> > +        items:
-> > +          pattern: '^((aon_)?s?gpio[0-6]?[0-9])|(emmc_(clk|cmd|dat[0-7]|ds))$'
-> > +
-> > +      function:
-> > +        enum: [ gpio, alt1, alt2, alt3, alt4, alt5, alt6, alt7, alt8,
-> > +                aon_cpu_standbyb, aon_fp_4sec_resetb, aon_gpclk, aon_pwm,
-> > +                arm_jtag, aud_fs_clk0, avs_pmu_bsc, bsc_m0, bsc_m1, bsc_m2,
-> > +                bsc_m3, clk_observe, ctl_hdmi_5v, enet0, enet0_mii, enet0_rgmii,
-> > +                ext_sc_clk, fl0, fl1, gpclk0, gpclk1, gpclk2, hdmi_tx0_auto_i2c,
-> > +                hdmi_tx0_bsc, hdmi_tx1_auto_i2c, hdmi_tx1_bsc, i2s_in, i2s_out,
-> > +                ir_in, mtsif, mtsif_alt, mtsif_alt1, pdm, pkt, pm_led_out, sc0,
-> > +                sd0, sd2, sd_card_a, sd_card_b, sd_card_c, sd_card_d, sd_card_e,
-> > +                sd_card_f, sd_card_g, spdif_out, spi_m, spi_s, sr_edm_sense, te0,
-> > +                te1, tsio, uart0, uart1, uart2, usb_pwr, usb_vbus, uui, vc_i2c0,
-> > +                vc_i2c3, vc_i2c4, vc_i2c5, vc_i2csl, vc_pcm, vc_pwm0, vc_pwm1,
-> > +                vc_spi0, vc_spi3, vc_spi4, vc_spi5, vc_uart0, vc_uart2, vc_uart3,
-> > +                vc_uart4 ]
-> > +
-> > +        description:
-> > +          Specify the alternative function to be configured for the specified
-> > +          pins.
-> 
-> Be consistent with putting 'description' first or last.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmiu2/8ACgkQJNaLcl1U
+h9AN7gf9EwrkCMDKQJ3+l64opijlSNrt1Fb1YRWh9KvdN/1+7aQ7T/xu5C8tCq/f
+8Egc7c8xmS27/9OO0NDM90NRmoDvRBfCYsrX0yqXzJ/SMQ27wrw9H/OnNqrrq9V1
+OU0NsJVeKrt5FELD7Zd1UbdrMmQXQlJeWx80plpgQDCxBzBliPEFiSg3OkTc+mqd
+Ef9KfjLAlIwsCVBOC1uwPq3Z0vsIDMzbxXq/e9R6nmwhHZMI3puSNp8ZmUBXBSeq
+D8k41vgIAo2YLmAdLfeiepGWT3CcfFlmbEHdeRIRVUS4zoUK0u0/OIedQnCwXknI
+ucg20UGLpA7K1JhJlA678HGIBlpJcg==
+=VNoC
+-----END PGP SIGNATURE-----
 
-Ack.
-
-Many thanks,
-Andrea
-
-> 
-> > +
-> > +      bias-disable: true
-> > +      bias-pull-down: true
-> > +      bias-pull-up: true
-> > +
-> > +    required:
-> > +      - pins
-> > +
-> > +    if:
-> > +      properties:
-> > +        pins:
-> > +          not:
-> > +            contains:
-> > +              pattern: "^emmc_(clk|cmd|dat[0-7]|ds)$"
-> > +    then:
-> > +      required:
-> > +        - function
-> > +    else:
-> > +      properties:
-> > +        function: false
-> > +
-> > +    additionalProperties: false
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    brcm_pinctrl: pinctrl@7d504100 {
-> > +        compatible = "brcm,bcm2712c0-pinctrl";
-> > +        reg = <0x7d504100 0x30>;
-> > +
-> > +        bt-shutdown-default-state {
-> > +           function = "gpio";
-> > +           pins = "gpio29";
-> > +        };
-> > +
-> > +        uarta-default-state {
-> > +            rts-tx-pins {
-> > +                function = "uart0";
-> > +                pins = "gpio24", "gpio26";
-> > +                bias-disable;
-> > +            };
-> > +
-> > +            cts-rx-pins {
-> > +                function = "uart0";
-> > +                pins = "gpio25", "gpio27";
-> > +                bias-pull-up;
-> > +            };
-> > +        };
-> > +    };
-> > -- 
-> > 2.35.3
-> > 
+--2cfgNcmAX2xoMgwh--
 
