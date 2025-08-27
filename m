@@ -1,208 +1,322 @@
-Return-Path: <linux-gpio+bounces-25017-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25018-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F267B37A7E
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 08:36:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8ED6B37ABC
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 08:48:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 67BB01B26EDA
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 06:37:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 79F34177192
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 06:47:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56D15253355;
-	Wed, 27 Aug 2025 06:36:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66F3E1DEFF5;
+	Wed, 27 Aug 2025 06:46:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="dt0GQrpt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GuFU6pbu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F333D18FDDB
-	for <linux-gpio@vger.kernel.org>; Wed, 27 Aug 2025 06:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D1229CB48
+	for <linux-gpio@vger.kernel.org>; Wed, 27 Aug 2025 06:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756276603; cv=none; b=Dteg+w0KxVgG/Vcmgm5DgaNJ8XcrezIzK8pVDh8mHcL8PdJIC+D6tPFsv6Yoo5DA0QiS4V8H1rZsak5Nc+lKXm83aVe3D4zA+fxqBo43cCbHD83VSU7pqJDIcwQgGEtXSCTSgy1oF47/RphX8zt8tLQuvAt1oYDPfus0RFQ0NA4=
+	t=1756277195; cv=none; b=Ue0EwRrlNDB0GxyRM9lKkFxxm73enYZIwiPXjpFNCOEqOvmkGBmKiIlPXsLIcVPEyqTVDca3KdkexEpUOcyij9veqgHVsRDlglfmblP/drvEOc1XKjUAku7Tj4g6QEm7A187s+mgeMzI7xEQj+9GfzMUBc9PZtWvYkycZypnnp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756276603; c=relaxed/simple;
-	bh=vC842GtdPoh6DoMKJQUAtCboUXyHfcqUaogFER3dXsc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=lrE1ryxxspsYBpBFyON+SPwA4c/qB33myPIdUXIfq3TtiUPk72cxflGjBtME08b7tTjs2Givh0sLLWdwjhWNirVsOf5rwiOpQ7G8KOEKF/rBJ0jXwL8OtF0XsUiJ61MyLbkotka+w02SR2PFgkTtYH/H9iebneXX0JVmvGbV/sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=dt0GQrpt; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-771facea122so883537b3a.1
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Aug 2025 23:36:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1756276599; x=1756881399; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FO367BGm3Xno2BrZv26cBNWvw9LvOzhxGRxgaEfYsWg=;
-        b=dt0GQrpto0g9+w4uINI129vP5yxF/CXja5B1cHLLP2MCPAiT8AmnZE2AXxxjBEgIX9
-         +7VEKwvjQCODLnfZ/z86vbT+jYUZcGNze8/Qpswsw+UZiyTpUN+EVbuvcGh/08dfMnEk
-         hm+RAnkYUVm46NBl4zrDTaCMS1YOp8TbGWEQpKuvPJx2Etn4EZgmFSZV5HU/Jzv4029O
-         CLVmH7xZhsC+8s+JuaSZ97ECc44hMmgIyejo01MdgffEBoudzzaXaF2cv2VI07g4Q+mq
-         PWN6SJF7Q8PbkqA/Y1lSlvGscGfMo/yt2jQ+fEBGjUfqnGUb5rWtIRDPZgzGdJW4cdRg
-         mPCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756276599; x=1756881399;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=FO367BGm3Xno2BrZv26cBNWvw9LvOzhxGRxgaEfYsWg=;
-        b=efwpa6hnm150Q6CNyjaYCcvhQzV0Sw605IMuhyN0I5Syg9b3Q6HgX07sE12Di6Rxi/
-         7ht1+xyNNnFnKcmixHf7aSNwR6p8CznwqBSp73Tp47nD1o1r27fwsxyTkIHYVwJw07B+
-         z6obkiAlgRnlEkZwBQMlprxeqM8l24lX4bOkclJuIfk7SYjOCtIgCNxpgOrRk0WPY380
-         SM12hiHFbCmdr1u9bpooz73exAzmKXofTOxRYgmCFQ19v+PmhYppaIhsqPm2CxQGUkiz
-         FykwGYwr42aYH4coDNu5//imsXkCxkVDOx5RykH4mSA+nl1ugp2EOEStzt20zrBAS5iw
-         kfgg==
-X-Forwarded-Encrypted: i=1; AJvYcCV/DuCrO20BG9Ei3f0QQgLViIQSjyofw/k35jfP8b14ieDls4d2Q1EZ4Y/lpPR5S0vHCZgMUAFSCqhz@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz41NiCGVTF8mS25E4ewDkvygklmk3fB/B9x4tX49s20EtVzEqr
-	1zT0UpnEPfReFALBItXzkX4ooxtYTfk9vf56mh3+Iv9RHDa8qjTtUXivEhs0DE9nKoM=
-X-Gm-Gg: ASbGncsI9Xbj+OQwcuG2t2kPYHa0Ys+4uJ+pgrriwX2Lmd90+bZUXEqAe6OTBsfLCAZ
-	9EONiJ34+SyOtotxUInKqMlNZRD/RFJCw4XXWQNyovGLGSvG9RE11RR8/8ossCr8Fm9CxEn8sJQ
-	ZFISXgxmlqPsPrQsKOG3hdUtXjJFJkp2GaJ93aj4bNcXwZgLjxC9VL55OBa8YDcJvTaHfQ+JL4j
-	mmys6/CVdn5Qouz0bIvgrHgIvH4FX/Uow6/atVLzLd4wq9zT/elhB8D0cR1eiqWKn09LWbYmiw4
-	HpUFF6akao7kAB7LubFfVqf8A60GTn7yMtwt0PcVUFMny6txiqTS6kSHA1FUYwWLOOA1TINL1SI
-	=
-X-Google-Smtp-Source: AGHT+IGJn8Cajk+chlKQx7oTxhgLZx7Aa4VyWR6ocu1rk+obd12xXR68uYduZy1uBAHEStlu3MzdXA==
-X-Received: by 2002:a05:6a00:400a:b0:771:e908:b573 with SMTP id d2e1a72fcca58-771e908b67cmr10903713b3a.31.1756276599193;
-        Tue, 26 Aug 2025 23:36:39 -0700 (PDT)
-Received: from localhost ([2001:9e8:d5a6:1000::35e])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7704821293asm11075817b3a.15.2025.08.26.23.36.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Aug 2025 23:36:38 -0700 (PDT)
+	s=arc-20240116; t=1756277195; c=relaxed/simple;
+	bh=pnwiLspbQMnMMWzM8b0z0K8IDIWWRXR+HUJrruhqtZ0=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=ba25ckS2AvWSOfhPW7c+zib+xL0asKyhrixfOQg1lg2gHL+KJyJox+KOhEKZdwO72ShI14qhiVwzo7H6mqpVeObsjvAjtM99PUla7n+rREjyDmbll7X5vvGanKAO76m+rqfLLT4dDURHDFLNadJSEzsjL2D1i3M4yi4ZtK/+WVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GuFU6pbu; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756277193; x=1787813193;
+  h=date:from:to:cc:subject:message-id;
+  bh=pnwiLspbQMnMMWzM8b0z0K8IDIWWRXR+HUJrruhqtZ0=;
+  b=GuFU6pbue8Yqh/i6pU5n4Bu/4y0WUeGt8hNrI7kCuR1qvwk+Is2G6l5E
+   ihuqxeeD4ihbeOW+yonpuBngAr3tChCdsIH5HXXfvqJLkCMrWshRTpmNi
+   gvuL8ur+YBRTIUp5UODF6hXwsquiHSaFbzlURI4URlPGOEyL8ClFmnqj9
+   10jE++UZUl0/ehCIPqvQBR58m2G1g/8MuzWw3Pe0giQ8WgHzvdb5/86l9
+   Hl9JpS6pj2wANLo8uM7hRvEFYmnhlCtFwTFObspUwXbl/IEXmRB0o5RNR
+   ZSuyB2B7xQG8EYkSVRUBm/PiZKko9eZU66zIRrz0DPYw3E6oss0BaWvdE
+   A==;
+X-CSE-ConnectionGUID: wwwyPRgQRwOACzBR97KrDA==
+X-CSE-MsgGUID: oTo1yfoQT2O8IjsgcwISPg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11534"; a="58380393"
+X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
+   d="scan'208";a="58380393"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2025 23:46:32 -0700
+X-CSE-ConnectionGUID: zYo+Lo/XS6SkYmmscI3kMg==
+X-CSE-MsgGUID: tvBpgyR6RtCYy3Vb6OsRRw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
+   d="scan'208";a="200659304"
+Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
+  by fmviesa001.fm.intel.com with ESMTP; 26 Aug 2025 23:46:30 -0700
+Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ur9vK-000SkN-1M;
+	Wed, 27 Aug 2025 06:46:24 +0000
+Date: Wed, 27 Aug 2025 14:45:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-current] BUILD SUCCESS
+ 6fe31c8b53003134e5573cfb89aea85f96a43afd
+Message-ID: <202508271409.0hqS04Oh-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 27 Aug 2025 08:36:36 +0200
-Message-Id: <DCD03E16WQCF.3GNFYSET3B9QU@riscstar.com>
-Subject: Re: [PATCH libgpiod v2 0/9] bindings: rust: prepare v1.0.0 release
-Cc: "Viresh Kumar" <viresh.kumar@linaro.org>, "Linus Walleij"
- <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>, "Bartosz
- Golaszewski" <bartosz.golaszewski@linaro.org>
-To: "Bartosz Golaszewski" <brgl@bgdev.pl>
-From: "Erik Schilling" <erik@riscstar.com>
-X-Mailer: aerc 0.20.1
-References: <20250815-rust-1-0-0-release-v2-0-b1794cb4b9be@linaro.org>
- <DC5DIAHI710X.1S8GSFCJJKWHS@riscstar.com>
- <CAMRc=Md1z4-bOccz1hQHZpGZQw0+cQ6zK8aOPUkbot+vCiKb9Q@mail.gmail.com>
-In-Reply-To: <CAMRc=Md1z4-bOccz1hQHZpGZQw0+cQ6zK8aOPUkbot+vCiKb9Q@mail.gmail.com>
 
-On Tue Aug 26, 2025 at 8:07 PM CEST, Bartosz Golaszewski wrote:
-> On Mon, Aug 18, 2025 at 9:26=E2=80=AFAM Erik Schilling <erik@riscstar.com=
-> wrote:
->>
->> On Fri Aug 15, 2025 at 10:57 AM CEST, Bartosz Golaszewski wrote:
->> > The libgpiod rust bindings interface has stayed quite stable over the
->> > last months so it's time for it to stop being a v0.x release and becom=
-e
->> > officially carved in stone. Bump dependencies to the most recent versi=
-ons
->> > available, fix some issues and then bump versions of the crates ahead =
-of
->> > the official release.
->> >
->> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->> > ---
->> > Changes in v2:
->> > - drop the patch bumping the minimum required rust version
->> > - loosen the requirements on the dependency versions: specify only the
->> >   major number for stable crates and the major.minor for unstable ones
->> > - Link to v1: https://lore.kernel.org/r/20250812-rust-1-0-0-release-v1=
--0-372d698f23e8@linaro.org
->> >
->> > ---
->> > Bartosz Golaszewski (9):
->> >       bindings: rust: make Buffer::read_edge_events() lifetimes more e=
-xplicit
->> >       bindings: rust: add missing unsafe block ahead of rust version b=
-ump
->> >       bindings: rust: update bindgen dependency
->> >       bindings: rust: update errno dependency
->> >       bindings: rust: update cc dependency
->> >       bindings: rust: update system-deps dependency
->> >       bindings: rust: update thiserror dependency
->> >       bindings: rust: update intmap dependency
->> >       bindings: rust: update crate versions to v1.0.0
->> >
->> >  bindings/rust/gpiosim-sys/Cargo.toml       |  8 ++++----
->> >  bindings/rust/gpiosim-sys/build.rs         |  2 +-
->> >  bindings/rust/libgpiod-sys/Cargo.toml      |  6 +++---
->> >  bindings/rust/libgpiod-sys/build.rs        |  6 +++---
->> >  bindings/rust/libgpiod/Cargo.toml          | 10 +++++-----
->> >  bindings/rust/libgpiod/src/event_buffer.rs |  2 +-
->> >  bindings/rust/libgpiod/src/lib.rs          |  4 ++--
->> >  bindings/rust/libgpiod/src/line_config.rs  |  2 +-
->> >  bindings/rust/libgpiod/src/line_info.rs    |  2 +-
->> >  bindings/rust/libgpiod/src/line_request.rs |  4 ++--
->> >  10 files changed, 23 insertions(+), 23 deletions(-)
->> > ---
->> > base-commit: cd32f27dd550753488bff4918aef4e230ce01512
->> > change-id: 20250811-rust-1-0-0-release-65342607040e
->> >
->> > Best regards,
->> > --
->> > Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>
->> Trying to build with the 1.60 that we claim as lower floor gives me:
->>
->>     > cargo +1.60 build
->>     [...]
->>     error: package `bindgen v0.72.0` cannot be built because it requires=
- rustc 1.70.0 or newer, while the currently active rustc version is 1.60.0
->>
->> With 1.70 I get:
->>
->>     ~/projects/libgpiod/bindings/rust (master)> cargo +1.70 build
->>     [...]
->>     error: package `system-deps v7.0.5` cannot be built because it requi=
-res rustc 1.78.0 or newer, while the currently active rustc version is 1.70=
-.0
->>
->>
->> 1.78 builds fine (when having cfg-expr pinned to a pre-2024-edition
->> version).
->>
->> So we will need to bump the MSRV to at least 1.78. The critical path
->> seems to be cfg-expr -> system-deps where cfg-expr seems to be extremely
->> aggressive with updating it's MSRV...
->>
->> 1.78 with a release in May 2024 looks reasonable to me.
->>
->> Otherwise this looks good to me!
->>
->> - Erik
->>
->
-> Am I getting this right, should I bump min rust version to 1.78 but
-> leave the edition at 2021?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
+branch HEAD: 6fe31c8b53003134e5573cfb89aea85f96a43afd  MAINTAINERS: Change Altera-PIO driver maintainer
 
-Yes. The 2024 edition came with 1.85. So neither our libs nor we
-ourselves require that yet. But we _do_ require 1.78 with these changes
-now.
+elapsed time: 1173m
 
-> And what does "pinned to a pre 2024-edition" even mean?
+configs tested: 229
+configs skipped: 3
 
-The latest cfg-expr version sets edition =3D "2024". It looks like that
-fails the Cargo.toml parse and the rust-version in the .toml does not
-work to restrict the automatic update. To fix that I had to set the
-version in the Cargo.lock file manually:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-    cargo +1.78 update -p cfg-expr --precise 0.18.0
+tested configs:
+alpha                             allnoconfig    clang-22
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    clang-19
+arc                              allmodconfig    clang-19
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    clang-22
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    clang-19
+arc                              allyesconfig    gcc-15.1.0
+arc                                 defconfig    clang-19
+arc                   randconfig-001-20250826    gcc-11.5.0
+arc                   randconfig-001-20250827    gcc-8.5.0
+arc                   randconfig-002-20250826    gcc-8.5.0
+arc                   randconfig-002-20250827    gcc-8.5.0
+arm                              allmodconfig    clang-19
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-22
+arm                              allyesconfig    clang-19
+arm                              allyesconfig    gcc-15.1.0
+arm                                 defconfig    clang-19
+arm                   randconfig-001-20250826    gcc-12.5.0
+arm                   randconfig-001-20250827    gcc-8.5.0
+arm                   randconfig-002-20250826    gcc-13.4.0
+arm                   randconfig-002-20250827    gcc-8.5.0
+arm                   randconfig-003-20250826    gcc-8.5.0
+arm                   randconfig-003-20250827    gcc-8.5.0
+arm                   randconfig-004-20250826    gcc-10.5.0
+arm                   randconfig-004-20250827    gcc-8.5.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    clang-22
+arm64                             allnoconfig    gcc-15.1.0
+arm64                               defconfig    clang-19
+arm64                 randconfig-001-20250826    clang-22
+arm64                 randconfig-001-20250827    gcc-8.5.0
+arm64                 randconfig-002-20250826    gcc-8.5.0
+arm64                 randconfig-002-20250827    gcc-8.5.0
+arm64                 randconfig-003-20250826    clang-22
+arm64                 randconfig-003-20250827    gcc-8.5.0
+arm64                 randconfig-004-20250826    gcc-8.5.0
+arm64                 randconfig-004-20250827    gcc-8.5.0
+csky                              allnoconfig    clang-22
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    clang-19
+csky                  randconfig-001-20250826    gcc-15.1.0
+csky                  randconfig-001-20250827    gcc-15.1.0
+csky                  randconfig-002-20250826    gcc-11.5.0
+csky                  randconfig-002-20250827    gcc-15.1.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-22
+hexagon                          allyesconfig    clang-22
+hexagon                             defconfig    clang-19
+hexagon               randconfig-001-20250826    clang-19
+hexagon               randconfig-001-20250827    gcc-15.1.0
+hexagon               randconfig-002-20250826    clang-22
+hexagon               randconfig-002-20250827    gcc-15.1.0
+i386                             allmodconfig    clang-20
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    clang-20
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    clang-20
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250826    gcc-12
+i386        buildonly-randconfig-002-20250826    gcc-12
+i386        buildonly-randconfig-003-20250826    clang-20
+i386        buildonly-randconfig-004-20250826    gcc-12
+i386        buildonly-randconfig-005-20250826    clang-20
+i386        buildonly-randconfig-006-20250826    gcc-12
+i386                                defconfig    clang-20
+i386                  randconfig-001-20250827    clang-20
+i386                  randconfig-002-20250827    clang-20
+i386                  randconfig-003-20250827    clang-20
+i386                  randconfig-004-20250827    clang-20
+i386                  randconfig-005-20250827    clang-20
+i386                  randconfig-006-20250827    clang-20
+i386                  randconfig-007-20250827    clang-20
+i386                  randconfig-011-20250827    clang-20
+i386                  randconfig-012-20250827    clang-20
+i386                  randconfig-013-20250827    clang-20
+i386                  randconfig-014-20250827    clang-20
+i386                  randconfig-015-20250827    clang-20
+i386                  randconfig-016-20250827    clang-20
+i386                  randconfig-017-20250827    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-22
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20250826    gcc-14.3.0
+loongarch             randconfig-001-20250827    gcc-15.1.0
+loongarch             randconfig-002-20250826    gcc-14.3.0
+loongarch             randconfig-002-20250827    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                                defconfig    clang-19
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                           ip22_defconfig    clang-22
+mips                           ip27_defconfig    clang-22
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20250826    gcc-8.5.0
+nios2                 randconfig-001-20250827    gcc-15.1.0
+nios2                 randconfig-002-20250826    gcc-10.5.0
+nios2                 randconfig-002-20250827    gcc-15.1.0
+openrisc                          allnoconfig    clang-22
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-12
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    clang-22
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250826    gcc-8.5.0
+parisc                randconfig-001-20250827    gcc-15.1.0
+parisc                randconfig-002-20250826    gcc-15.1.0
+parisc                randconfig-002-20250827    gcc-15.1.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    clang-22
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-22
+powerpc                 canyonlands_defconfig    clang-22
+powerpc                    ge_imp3a_defconfig    clang-22
+powerpc                   lite5200b_defconfig    clang-22
+powerpc                      pasemi_defconfig    clang-22
+powerpc               randconfig-001-20250826    gcc-8.5.0
+powerpc               randconfig-001-20250827    gcc-15.1.0
+powerpc               randconfig-002-20250826    clang-22
+powerpc               randconfig-002-20250827    gcc-15.1.0
+powerpc               randconfig-003-20250826    gcc-13.4.0
+powerpc               randconfig-003-20250827    gcc-15.1.0
+powerpc64             randconfig-001-20250826    gcc-10.5.0
+powerpc64             randconfig-001-20250827    gcc-15.1.0
+powerpc64             randconfig-002-20250826    gcc-11.5.0
+powerpc64             randconfig-002-20250827    gcc-15.1.0
+powerpc64             randconfig-003-20250826    gcc-14.3.0
+powerpc64             randconfig-003-20250827    gcc-15.1.0
+riscv                            allmodconfig    clang-22
+riscv                             allnoconfig    clang-22
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    gcc-12
+riscv                 randconfig-001-20250826    gcc-8.5.0
+riscv                 randconfig-001-20250827    gcc-11.5.0
+riscv                 randconfig-002-20250826    gcc-11.5.0
+riscv                 randconfig-002-20250827    gcc-11.5.0
+s390                             allmodconfig    clang-18
+s390                             allmodconfig    gcc-15.1.0
+s390                              allnoconfig    clang-22
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    gcc-12
+s390                  randconfig-001-20250826    clang-22
+s390                  randconfig-001-20250827    gcc-11.5.0
+s390                  randconfig-002-20250826    clang-18
+s390                  randconfig-002-20250827    gcc-11.5.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-12
+sh                    randconfig-001-20250826    gcc-11.5.0
+sh                    randconfig-001-20250827    gcc-11.5.0
+sh                    randconfig-002-20250826    gcc-9.5.0
+sh                    randconfig-002-20250827    gcc-11.5.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250826    gcc-13.4.0
+sparc                 randconfig-001-20250827    gcc-11.5.0
+sparc                 randconfig-002-20250826    gcc-8.5.0
+sparc                 randconfig-002-20250827    gcc-11.5.0
+sparc64                             defconfig    gcc-12
+sparc64               randconfig-001-20250826    gcc-8.5.0
+sparc64               randconfig-001-20250827    gcc-11.5.0
+sparc64               randconfig-002-20250826    clang-22
+sparc64               randconfig-002-20250827    gcc-11.5.0
+um                               alldefconfig    clang-22
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-22
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    clang-22
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250826    gcc-12
+um                    randconfig-001-20250827    gcc-11.5.0
+um                    randconfig-002-20250826    clang-17
+um                    randconfig-002-20250827    gcc-11.5.0
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250826    clang-20
+x86_64      buildonly-randconfig-001-20250827    clang-20
+x86_64      buildonly-randconfig-002-20250826    clang-20
+x86_64      buildonly-randconfig-002-20250827    clang-20
+x86_64      buildonly-randconfig-003-20250826    gcc-12
+x86_64      buildonly-randconfig-003-20250827    clang-20
+x86_64      buildonly-randconfig-004-20250826    clang-20
+x86_64      buildonly-randconfig-004-20250827    clang-20
+x86_64      buildonly-randconfig-005-20250826    gcc-12
+x86_64      buildonly-randconfig-005-20250827    clang-20
+x86_64      buildonly-randconfig-006-20250826    gcc-12
+x86_64      buildonly-randconfig-006-20250827    clang-20
+x86_64                              defconfig    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                randconfig-001-20250827    clang-20
+x86_64                randconfig-002-20250827    clang-20
+x86_64                randconfig-003-20250827    clang-20
+x86_64                randconfig-004-20250827    clang-20
+x86_64                randconfig-005-20250827    clang-20
+x86_64                randconfig-006-20250827    clang-20
+x86_64                randconfig-007-20250827    clang-20
+x86_64                randconfig-008-20250827    clang-20
+x86_64                randconfig-071-20250827    clang-20
+x86_64                randconfig-072-20250827    clang-20
+x86_64                randconfig-073-20250827    clang-20
+x86_64                randconfig-074-20250827    clang-20
+x86_64                randconfig-075-20250827    clang-20
+x86_64                randconfig-076-20250827    clang-20
+x86_64                randconfig-077-20250827    clang-20
+x86_64                randconfig-078-20250827    clang-20
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250826    gcc-11.5.0
+xtensa                randconfig-001-20250827    gcc-11.5.0
+xtensa                randconfig-002-20250826    gcc-8.5.0
+xtensa                randconfig-002-20250827    gcc-11.5.0
 
-This was the last version before the bump to 2024 edition and 1.85 MSRV.
-
-We - as a library - do not have a .lock file. So cargo will try to use
-the latest and greatest. But a consumer of libgpiod will have such a
-.lock file and is still able to build libgpiod with these changes under
-1.78.
-
-- Erik
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
