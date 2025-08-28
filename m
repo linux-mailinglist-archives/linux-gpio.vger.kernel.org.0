@@ -1,81 +1,82 @@
-Return-Path: <linux-gpio+bounces-25137-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25138-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 008B1B3A881
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 19:43:22 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB622B3A886
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 19:43:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B445F7C06B9
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 17:43:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AFD657B355E
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 17:41:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85B9F33A035;
-	Thu, 28 Aug 2025 17:43:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7719033CE9F;
+	Thu, 28 Aug 2025 17:43:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="EEPaCBCK"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="27GcH7uz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E10322543
-	for <linux-gpio@vger.kernel.org>; Thu, 28 Aug 2025 17:43:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A179C338F36
+	for <linux-gpio@vger.kernel.org>; Thu, 28 Aug 2025 17:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756402996; cv=none; b=GEUmnwaPrtC4q8pprPJSbNchPhvkSVjzoE25InW3OhkqSs37IZuUwag1TuNF7K4p6dsrQa/MiAkVKssBSVsUttzKzVGOeYXDOXUGR7pvaZy8UCGxYbZ2puNNLIvktHRs8DraR5ELnrIK1hysebZpTPVYiB2BtTQl6IXLm9min4s=
+	t=1756402997; cv=none; b=r78r7VMqzzkvKTbMg7wFVFH9xF/Pbxdr7Vh4MNVKryj9ctOae97XGFBCNR18fy66eDwOxI+ImrO9slsCwKdowWNzexpkLYLFpkSjwyEXTQjDkxjMraB9YY3j66fKWxVpXNtDsBDkCidryBjwvm6i++vQxZGRNu0t+1nL2baek+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756402996; c=relaxed/simple;
-	bh=th6Mue+Jlx0Y4akANJrIZztW6E4HgxYxOP2aIh0tIac=;
+	s=arc-20240116; t=1756402997; c=relaxed/simple;
+	bh=3MJC0U8q6H/qC22qtcUTKwNIkaioP9mQFkU00tHCjO4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oAAylheA4navWvD7qCQhOh3yIRTE6NNTUMLbMDYBN2/y4mwNS6/OH7CeOlot0zETT8wEaKChz+XXbnHu0riHgvCTDpf0kdN9yJmYm/WqunboI1+irXKB/VdQPhEP3w5eDXBFUDK056RZwOwmS6HXRVqyLx5rq9kNKL2N9R6HX04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=EEPaCBCK; arc=none smtp.client-ip=209.85.128.42
+	 In-Reply-To:To:Cc; b=t2tFIAi21i0U1SR/FPACE4vZwZO/JcL4Kch+0gFDE6Ia4ksTow/juWCPQkvDvWJk5IJfc1C1CmSW4O0QKSp3rsU3CILCj4z95EUnyZcDYo8XLuUZBvJlocDk1prh0gNZxNa7OdaflhDq2ahXQARHe0Q+TLiv817ZTDPeHfvUSmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=27GcH7uz; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-45b7d87b90fso3900435e9.0
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Aug 2025 10:43:14 -0700 (PDT)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-45a1b05fe23so7953285e9.1
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Aug 2025 10:43:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756402993; x=1757007793; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756402994; x=1757007794; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=WaWSeJO3ztNKJX/kgI5xbPZqqI6FcbuatLTwZobM21c=;
-        b=EEPaCBCKykdgLjmiMi0jgQYGsRFXIQTAq5tJJECSYLNJWbHfL/+AJFPV3GaPIWo/Xv
-         KRtrCGAMdue76Kidy+5iCbtJH2QX5lKHLMVceilZnEbkJ0ZOS3BIYO4M5jbDAnGMWh+O
-         TwTqOtDYbY2XYN/+nBACH4gFXtAfFSIOH6RkZml7qEgvDGrEI5hSuq6syctoXYHBivRL
-         +iDy5xzcvGphjrIwyXHsel8/sQp56E4F4s4zAumVxKpcHGSoqg5G1gfcU3Ge8p/Fz7l+
-         lBHSxadQ5m2lfyOJ+zAl1BmnpAyIx6nop6SRCes/9YU1xacX/H3Wuz/sye9jnSJ3+kra
-         y8vQ==
+        bh=zr5bxuVU3No6k+Me+tg6LQvvRXHITQoUkcrFzLhL2/U=;
+        b=27GcH7uzgmd6z10TFHv45a0K9YWjNyoRzHTBu/DlPikfFK8EQQAMKxyayHlI8O9n/p
+         cUwhpNpBa/FaMc5/6pmt4TBGjoA0UxAsBhuwZxQDtg8cr04V77iFC7I7X7pOpLevo2t9
+         CCs+1I1dbbgZ2OI4rQ47u2mDwGVLPJc0zT1vw7ZhjeDtEF5h3FdppXGVUpVr3XrHQ2gi
+         gOhg5SQfTX3SG1YheFSIb6w2Z9EwvrrXvCLNCp4ovcLP1WJ5bd9xONoEhcay34gIKKL5
+         NoMzyC9vFUNK5hZh3XZ4ZrLvsFyNBU4CB5xlAaHPrD0s7ZR2hQVoEbLEDi14XZ/5TFYd
+         VauA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756402993; x=1757007793;
+        d=1e100.net; s=20230601; t=1756402994; x=1757007794;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WaWSeJO3ztNKJX/kgI5xbPZqqI6FcbuatLTwZobM21c=;
-        b=GfSy6ZP/6kYrzyRG+0fi82cMBh4A9ylbcBNBzyRkUjz6pj1avyBuUwseC7Xjs5i5rm
-         weSupGauB/Gi50LSEUyPrGIWATxd6Ki5iqK1j0bsIo4Ix4S0WpGPI0Zy7J8uBDkBPn1E
-         o7GNYzqEvK+u35q/Y+QTageITPDcKsf/FNgbS8OEiqZSo24dA+IXRpmqOomFMFltJ+Iz
-         0987GsUD5xU6s/AmLN6LUR1dgos8x2XNipt7Qd0rjzNm5+i6MSUQa4FiQSnoZLsFqJve
-         kOTVLhqyf111TyDV75HHe5tND8AWeLQFGbSQF0jMZKCBJDwLNEYb3qvr4/VNATkQMktR
-         +s/w==
-X-Gm-Message-State: AOJu0YxOKr2ftJnEqpnPEVaw5JnXQrl+Qxd25cN06kL+jCncOYwnSxEq
-	fWz96Am5PICheHTYAfu6Hl3qx5kSE+H8xp2GHzyURJ2ZagYGBSxdkqa6Lcsg3NWgpJU=
-X-Gm-Gg: ASbGncvpXiU5Qua7pFjqsb4E76AFF+H/2gxbheo2zFgZFV2XoN+/E5wWg55q8r7Xauh
-	1r2eXQwzF3hrvJ9aqd4bJkVxIDVUt00VfRDPyuINzuazAjN/BdtCTfssPnR2jYifdCAJKKNzNXJ
-	Nn0Yj9iMVSAfnqdyEFqlol1R4IQ/POTdimj4rzqnqRYmGlyKNR8R4vhUZ9i9j5Qx4fRZnG7GNGF
-	ZvF0kI/XS0+84yPPJtsO99X6PrsXfuXFxv0fIvRLQt0JDzO35X0sEJiuitqRyjSn/acFxfATOGO
-	CKo4quWXFDn0oU+lTCOXF4WswdkNZs/WgXnEZYAx9FkE6UijnVvl44ucPeG6hWQDKs86KRfeFCE
-	BZeBkMsYVGrTmR1yv8w==
-X-Google-Smtp-Source: AGHT+IEcrkMBX1HMee5DPSAcVOkz6/rkL5dN6iNy359nkqVJ45QiyPfVt20K1JGTO2ejJDUu2iL+uA==
-X-Received: by 2002:a05:600c:c493:b0:45b:7bba:c79f with SMTP id 5b1f17b1804b1-45b7bbaca16mr22679125e9.13.1756402992932;
-        Thu, 28 Aug 2025 10:43:12 -0700 (PDT)
+        bh=zr5bxuVU3No6k+Me+tg6LQvvRXHITQoUkcrFzLhL2/U=;
+        b=BcfJAfT2k9z5O2BsIL96Np4puSeis52UBqSQpMU/nt74ivmVDRne/dmqs6lqBBJMIw
+         b1kVrelpFy3FuDULuHx/hBPC4VXeE1+0byGhU/1wIyMS6MCYGSnJakag3+uJwHVM5hqy
+         8qF7o3/pJANRKX1GDC/Kd/ypCPvzb7up/uqfGsFzl+A1SGbLr0GH4hkjnnejFH0Xw6nv
+         O2QoIA1A5Jk5dARS2QraT+YLByJkezk0GeIEuMlmD7LfEgewfibg2NHwRilbTUEORu+X
+         3ZYW/IP8wLOXcBU5RxIoLsttKN0qQ+J5PZqy6G3Zcrga9As9C6oC9h2zCrr+OIkO3LUM
+         AYAQ==
+X-Gm-Message-State: AOJu0YytRBEu05va0oW62ec3RSiRNXy6ILrEk6sAfoPysQl4DNIC6MJq
+	Lg1/wRiSIKaU3drDBLLcWME7wAAw9SNUmRCldwDi7n7tbyAMDkJ3JwoyJujoOrhlpOHjgGb+hUC
+	cfSxm1LA=
+X-Gm-Gg: ASbGnctBJj6W1Ebt2Fkgg754wwgxBlzPQhYKbPN9Uwa8pkouAaFCIZsE72llpo+z0Ul
+	5nn9OUq1894km+3FUuNgWTwNZaoFM+qlWFnP2lZRfqho/wIbhEKkX0C+ai44+LGb8e5fVnwsDMV
+	y5WZ66wFlgvLr1W5VktQWjb5R8c7lPmWm4REuHoskZliU+C73omazxJI4FZPIz3QZrf8aXWFEaQ
+	N2gFFLPSPIzXNpIR6SviiRqTo9Q5sKEZp11mUbQMKWwbVRR5Q3jfIxY2oWi39W1D72u17+7PvPS
+	toZdwI8ZDgp3qCmyt6M7DLfEZQbr9J9GDQsL+BZ28PaUFNUsYjet4tag76iuugQnVvFHEKW5e0Y
+	6zDAupTElh16iLjV7yQJ4qVXfxEUxm/Vv/knkBEI=
+X-Google-Smtp-Source: AGHT+IHacEgwKWDt5FlcD+nCLDe0Q3cj2Do168TTu/ocS0UYL//L+FwQHX6w6WCgI3gDlElRzi7fpg==
+X-Received: by 2002:a05:600c:6304:b0:445:1984:247d with SMTP id 5b1f17b1804b1-45b5b8c69cfmr150912805e9.7.1756402993975;
+        Thu, 28 Aug 2025 10:43:13 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:4933:4d7c:cf69:9502])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b7e7d2393sm3812075e9.3.2025.08.28.10.43.11
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b7e7d2393sm3812075e9.3.2025.08.28.10.43.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Aug 2025 10:43:12 -0700 (PDT)
+        Thu, 28 Aug 2025 10:43:13 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 28 Aug 2025 19:43:04 +0200
-Subject: [PATCH libgpiod v3 02/10] bindings: rust: add missing unsafe block
- ahead of rust version bump
+Date: Thu, 28 Aug 2025 19:43:05 +0200
+Subject: [PATCH libgpiod v3 03/10] bindings: rust: bump the minimum
+ required rustc version
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -84,7 +85,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250828-rust-1-0-0-release-v3-2-0f9c6c1c4808@linaro.org>
+Message-Id: <20250828-rust-1-0-0-release-v3-3-0f9c6c1c4808@linaro.org>
 References: <20250828-rust-1-0-0-release-v3-0-0f9c6c1c4808@linaro.org>
 In-Reply-To: <20250828-rust-1-0-0-release-v3-0-0f9c6c1c4808@linaro.org>
 To: Viresh Kumar <viresh.kumar@linaro.org>, 
@@ -92,52 +93,76 @@ To: Viresh Kumar <viresh.kumar@linaro.org>,
 Cc: linux-gpio@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1292;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2493;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=/8yx2RhpPwP71KkYQKmEHcN483C0e+kgp8yhtwq9YZk=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBosJUsOts9grEPTLPYTeSX1PWzAPAhC+PnfIDwf
- dukoxe0jtSJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaLCVLAAKCRARpy6gFHHX
- cszDD/0fkwKwcSlTIXO8pZXSC+TFxmmcksZMMsUzk5CDD/2oAUB9aT4jC+RK3BL8VKeOgmiy1SV
- wutSGa5ey18Df4YMNKieUBcDyd/SJkydOiGMNUOBGFDlgtBo92G4jDaeV3iOv0JLOdqBSfQfnzq
- 6kIq2hVIubjC6sAWueg6zYCmste61ESpm765cxhj2HCL7t0nMZ6QAkBQazLVcHw8Ria977ASUJA
- L/cvgk5ffspp5mTXpwdRRcpbELoWako9sNu337NL72Adovlk583RchdsGAsfnncOzFCLYtHD46Y
- vcwbTTq0K65bkMqJOzaP5k/CvvM7OFMQmd2Hm4CStasXaDMy7ZA7GsQU/jmsbSHxmD62yHcXGnh
- qW7bfp32YwAEeqnGYecaEyVxF5aJo7S7nqp91CRQHO4iD36a/hWDV+yKaNe4qkMIEAuxPDrVveA
- NWNKKYejoo+Xl4qzBDueHQqusgf6ug/IKKGvZzD1ms9WKwITAhqRmd7nkTD4vEXRF036RK2Ri4r
- t0zea37ViUXzvuUi1554dEtyrsLasfYGPhaUPik9PlWJQllKZFCm1O+6/3bGJ7JP7ZQMS1D43qx
- 1j2Kj1Cj/n1E79ZW07UPEqp/h64gvoLTcYhxRclOxl63nxPFYT1iFoLX+XffmfYvD72v15kdCah
- V2+MBu3TQL4GHTQ==
+ bh=ph5VjZ7aGUUkUtoyxD8lZC9Yj3vAp8vHjXtOmyAN9go=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBosJUshFzoBCfHJoPAq9fe7D+UCR3AoLwHKs5Hw
+ T/Y15Gx8TqJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaLCVLAAKCRARpy6gFHHX
+ cg3nD/9ELMKh+DEQlzK6l312B1V1JMCkoq3k7knDc+TK0qDaZnB9BHcOvkRdET8mLEUC/5vuoCo
+ N2WoBmNT9q1tU2iN9lAYZFTGxQVPdXp4DxgBJz87R/Vy7K6qGTgmt9teKs+9ldr195RKf/cpJrV
+ Q1PuAA5iP1xdehiBAta+xNwjRDACMZ7WoyuYmb3Cuxn5ZTVkjqpcTqLSM8pFNCRVeY5M3g6wE+7
+ OyJnK1OEMY0Z7ewjwIdyqwF5kqWQnnE892qJyAGGX/z9aIY2vCHRYyf71okpn9AP0L4QiNz3BFp
+ 8T0aR4nlpacyn170+ULldPTwUnv0JQuDbzG+6qHPu10thwZY9WamrXXZpvMhskoBx4aLQr4NZlB
+ 7amJSgHcJOnF9ugqcgIECLgE8WmMREZTr10rxUJ+Zhi7y78p4SZd8P3UNGWzqAWTUwu5zPlnRHr
+ PHSD84Y6AEjzCY2nB7BWtJacc3IbozAAxkITm0zkP84I0z6UUcFY4Cm+52eE24vmoZw30WTtLFp
+ CD6q/EiJEgGhp1uqt9WncnDGsKTJPMXl8/2Ggb7UWaTVYoKIN/2MEtx7/2FTXBpd2qZOpBmsyqJ
+ 5XkcLdBoADDk6IMXZiSlYBwE1spRtPk5HrOa6hUXol9tSBPgOSssfI3CFxP7loSLGxa6ZDEzXhN
+ NfkNDT44LvrTaqg==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Rust edition 2024 changed the semantics of the unsafe keyword used as
-function modifier[1]. Unsafe operations inside unsafe functions must
-still be wrapped in an unsafe {} block. Update the code in case we want
-to bump the rust version or check it with clippy --edition 2024.
-
-[1] https://rust-lang.github.io/rfcs/2585-unsafe-block-in-unsafe-fn.html
+In order to satisfy the requirements of more recent versions of bindgen
+and system-deps, bump the minimum required rustc version to v1.78.
 
 Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- bindings/rust/libgpiod/src/line_info.rs | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bindings/rust/gpiosim-sys/Cargo.toml  | 2 +-
+ bindings/rust/libgpiod-sys/Cargo.toml | 2 +-
+ bindings/rust/libgpiod/Cargo.toml     | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/bindings/rust/libgpiod/src/line_info.rs b/bindings/rust/libgpiod/src/line_info.rs
-index bd290f6e1369a3968a39178c5bcfb9f6aaf26239..8def1ab4e52962fffa6911976e64204c3d02df6f 100644
---- a/bindings/rust/libgpiod/src/line_info.rs
-+++ b/bindings/rust/libgpiod/src/line_info.rs
-@@ -51,7 +51,7 @@ impl InfoRef {
-     /// owned by the thread invoking this method. The owning object may not be
-     /// moved to another thread for the entire lifetime 'a.
-     pub(crate) unsafe fn from_raw<'a>(info: *mut gpiod::gpiod_line_info) -> &'a InfoRef {
--        &*(info as *mut _)
-+        unsafe { &*(info as *mut _) }
-     }
- 
-     fn as_raw_ptr(&self) -> *mut gpiod::gpiod_line_info {
+diff --git a/bindings/rust/gpiosim-sys/Cargo.toml b/bindings/rust/gpiosim-sys/Cargo.toml
+index 1f44a312563f21181b4b3ff79f1fa3b70ededc5d..47b74cda2f391eb5a15f8aa2be3ccbeed0c92604 100644
+--- a/bindings/rust/gpiosim-sys/Cargo.toml
++++ b/bindings/rust/gpiosim-sys/Cargo.toml
+@@ -9,7 +9,7 @@ authors = ["Viresh Kumar <viresh.kumar@linaro.org>"]
+ description = "gpiosim header bindings"
+ repository = "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git"
+ categories = ["external-ffi-bindings", "os::linux-apis"]
+-rust-version = "1.60"
++rust-version = "1.78"
+ keywords = ["libgpiod", "gpio", "gpiosim"]
+ license = "Apache-2.0 OR BSD-3-Clause"
+ edition = "2021"
+diff --git a/bindings/rust/libgpiod-sys/Cargo.toml b/bindings/rust/libgpiod-sys/Cargo.toml
+index eb600a9ee087638e1a3ea5013dec6ccbbaa29d1e..e789a874cade99d6fc792136079d6ddb6988dfee 100644
+--- a/bindings/rust/libgpiod-sys/Cargo.toml
++++ b/bindings/rust/libgpiod-sys/Cargo.toml
+@@ -9,7 +9,7 @@ authors = ["Viresh Kumar <viresh.kumar@linaro.org>"]
+ description = "libgpiod public header bindings"
+ repository = "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git"
+ categories = ["external-ffi-bindings", "os::linux-apis"]
+-rust-version = "1.60"
++rust-version = "1.78"
+ keywords = ["libgpiod", "gpio"]
+ license = "Apache-2.0 OR BSD-3-Clause"
+ edition = "2021"
+diff --git a/bindings/rust/libgpiod/Cargo.toml b/bindings/rust/libgpiod/Cargo.toml
+index 23c34799715339be02f769a6b4b7de8ae5c1639f..82ea2f32a0fc9a18eca406f5c0fa6c3f1aa2c57e 100644
+--- a/bindings/rust/libgpiod/Cargo.toml
++++ b/bindings/rust/libgpiod/Cargo.toml
+@@ -9,7 +9,7 @@ authors = ["Viresh Kumar <viresh.kumar@linaro.org>"]
+ description = "libgpiod wrappers"
+ repository = "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git"
+ categories = ["api-bindings", "hardware-support", "embedded", "os::linux-apis"]
+-rust-version = "1.60"
++rust-version = "1.78"
+ keywords = ["libgpiod", "gpio"]
+ license = "Apache-2.0 OR BSD-3-Clause"
+ edition = "2021"
 
 -- 
 2.48.1
