@@ -1,106 +1,140 @@
-Return-Path: <linux-gpio+bounces-25167-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25168-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86F19B3AC75
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 23:07:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8260AB3AC9B
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 23:15:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3664B17BA84
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 21:07:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C16D6207E5A
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 21:15:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DCF021B9D9;
-	Thu, 28 Aug 2025 21:06:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC80329A322;
+	Thu, 28 Aug 2025 21:14:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cyq+MfqN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZOPAAATb"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FAB91A8F84
-	for <linux-gpio@vger.kernel.org>; Thu, 28 Aug 2025 21:06:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B60C2877D6
+	for <linux-gpio@vger.kernel.org>; Thu, 28 Aug 2025 21:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756415200; cv=none; b=EZh3eBPbjV3P8BTitFMSthHwlPOxXIuv8rjP3t5APjH0qxHbnNmwGBEUzXls9bx3SWCU4N7v4oGOMqEJfJVPv+QEvgkZqgkPClEFkzKXkrT5KyNDXPX/44GUJ9W3JtJ6wcBkJhVRgmwYzedBN/k4Lu5jb0JnNEuzs4JXfCclXsU=
+	t=1756415690; cv=none; b=p5QFTYo1KS+Vpy0AmRUr232XpzKoH7NSeCrbyAJSaFe3xOG0lbIrMTU4RxX0Siw/Py4Atwh/slnKc3NImdwMWrFufc75FbsK62R/at0R/AwRjGGgzboDmHI2HoEg6T1nUPoLJj5jygF/J2X+oUeabKtgvUrGNOlqLLHEfAvrOPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756415200; c=relaxed/simple;
-	bh=7m+Z48htqbSeqaszf53BBB8XMcsMLgtn18U/+YXKB3U=;
+	s=arc-20240116; t=1756415690; c=relaxed/simple;
+	bh=OaBhTrkd6PegQRmhrQH9eXqW0rbCz4bUZXirlKFf4h4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d/65mk5X2v7a3bswpDMk045A8u3Mp6+dT8G7estnSiZxQ0ooO6w45jzYD1i+O0iJJ8PgpwANEouSNi/Z1ejSnzi8dJkSj7biPm51xFJHYhlZ01Tivr2rbSWnjUNVH5YYdbZFpJJngIsJxy0GajIOY1YqRYOTqWawlhIg8ZNBsbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Cyq+MfqN; arc=none smtp.client-ip=209.85.167.50
+	 To:Cc:Content-Type; b=PgZM5HqL3cBmVGPXhg+Otkgat1wjP65HEI0NlJ9Zf6DHqFaE/WY4GUa9ws2Es/x2S7Ub+DUjrAAW0j3x3fgg2+eAn8Rd3FEzYe4xc8MbSzqVCG2fcC6RZnFUrIbcAWYVhFuMRBCYRxRj7CpqzBta/eKbSST/Q0foMBFf+iJndSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZOPAAATb; arc=none smtp.client-ip=209.85.167.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-55f3e4dfcf6so1494819e87.2
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Aug 2025 14:06:38 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-55f5cd36347so1425468e87.2
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Aug 2025 14:14:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1756415197; x=1757019997; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1756415687; x=1757020487; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7m+Z48htqbSeqaszf53BBB8XMcsMLgtn18U/+YXKB3U=;
-        b=Cyq+MfqNRcRe/faS0/tIKOI0CgfcsXCbvqF8eAwjwZoRvKVVI4BKC8rvv3VjnYLEng
-         VHGKk5iMfptjtvPPSPto+ZYqD5IXds0PtYzBk/5iGedPuwjQfbWVhGh5AuwezYY//7j9
-         +Xfbo287y3XVAerUMMSAf069lWVM97jfxC25liWEvioCYb3c5FQBuEePbzzELI1IDM2n
-         TqCOgPywqHrgtTdmcAv4HfB/Q7QCdapGG0ZbJWKSM+0BHGYQ9L3vVe1YKyXkRcWg6X7/
-         SPI7BYkIlF8nan8kHEZhgOyzCuYrfMePE4yo4Xeu6Eh/U2CahORkVJ7aTSNmnQG2ZaFK
-         N4uA==
+        bh=6XEIlIk/bq6b/zmhQ7TTZFJvpGHTSwiqbqeiQPXe6GA=;
+        b=ZOPAAATb81DyQN+PY3UHeWICXR/cXGLX5t3NY6QHiCc442MQHTrlTU1odEqVr/MlEC
+         Jxn+lZnT1iaDFcVFo6TevbxmCP6AmnQ5XfQ6R/PXYp7mn9ij6FaxsOXNcqfaLTaHGvsb
+         B5IfeIhzmSwrCE1jaZHWfsSDMqjC844PxBKWdg1Tz1PjEV2JPZiWXLUOYmt1EAjoQLJV
+         6OJeaNcWBSSpiFS4UaKNcRSrwgXdtNvuc8dHp4wtreC1VlydhGRz68tSXinhkxUfC5ei
+         nfgjzXFOsSaBIRImw7LNExV4+h2MjtYmvanej27G5pzactpoDOWMY01hX7A+8MgIUYCU
+         A/SQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756415197; x=1757019997;
+        d=1e100.net; s=20230601; t=1756415687; x=1757020487;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7m+Z48htqbSeqaszf53BBB8XMcsMLgtn18U/+YXKB3U=;
-        b=b+tN53cPNijQKUXXopIaJUAhjSaMY68fSndf2NzulkK50ajVGlgbum1fEmcCbxpZvo
-         zIOZv0cx16CVta2JWxeWp7tpbwLy1N+ef/aeq70oBe4RaC2E3orEzOqA6EUPpA690KZQ
-         MGeXiyuEV6zBSP5lde9ZGDtjT9Ahps8GcNeRGoIyt8U+TtPiWuMy6X+3llhgfv2nG8xI
-         9Li3b+G1GmNpp7r2lQ2SZXcT9UxR3th/fHfp3bUAkk8Dd4ICZmrr5RS1JQ0p81ZI4emH
-         ahw1I8Pc9znTj/Y9dcZCFsja5jQwm/ShCmft502Xj504XglORqKHXQespTjBITfP0k89
-         PoGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXTJOTUOzWC1lkdP685m70EOEqzZ11VXIokVpgc7k6qQUIXCDsc1VqXcaYnNC3SFLIC0o7ONk1Gm90v@vger.kernel.org
-X-Gm-Message-State: AOJu0YxArPDwscviKXGgo+ShRkoOB0P9m97ch9CR3OjLTLG/CZw7GhNu
-	lWnQi1nsmdls/r1lggkzcLzQXmREUftmkZa+rdrJH9otgwEA0RGlK7z0YzwerrjWn7pkqieuPPa
-	wxY+YhDYmXfmh8oI1BFXhuInx0wWfmvs3vZ8rOGciCg==
-X-Gm-Gg: ASbGncuJ7T2fchVu+kUg2OwDdxZbMT/aMAg/f1/sd7u7nYsuLVr8h3Z+FdTEeksPzSB
-	rIGTTjXk1oyQ1WvIYmOV8J9G7KRjAp6FhIMqFIoUGe+1DjHxmPD8fnOs2J+76rvEShN4m3ouodE
-	Zos8YMvJXM7+mz5+kraOTIN3xZHN5VOh2mJQ1QynMLKjVzmzhsxRgUTrV51RPWXYDqXia9yUwwP
-	JRMq4AKz5AtgMEZdA==
-X-Google-Smtp-Source: AGHT+IE8AFltVgez4j91MqcXLZUWY1SjsHiyvDbOchLsj0qPF+cSQKWQwUdlDcjOa51JtKhpYUq7h1LMip4AqNUm6Pk=
-X-Received: by 2002:a05:6512:1356:b0:55f:3b94:2119 with SMTP id
- 2adb3069b0e04-55f5f08b2aemr1135534e87.45.1756415197186; Thu, 28 Aug 2025
- 14:06:37 -0700 (PDT)
+        bh=6XEIlIk/bq6b/zmhQ7TTZFJvpGHTSwiqbqeiQPXe6GA=;
+        b=Y+sfICpLwZkOgFGoXI8CxwiReo0l55UxbT4kuGvaL808qtUqvU9h/FZYK9mnViW1gX
+         JGn7PNQ/SydSbyzjkgcyLfJ3U5W4HzZ6I5xO7GAovFycLpgVLCdm2AXnVe/Dk2JK1Tr1
+         D74wKpDHrJOS/s6QX9np55ql2CXynb3DQwTLCI2zt1Sk9NrbncR47t53VBqx4VvzKcwJ
+         UJ2YkWjKBxko6FewNTb886ruRVtj46+zC5kvQTxX+AKHnfKXKj0i2pbkUKmmcXPcjaMY
+         cDoUiQ+zbwC9u+yC9V5dBT8KVK9Gs+qEFJeOO4KXljKhJV3NawNhFzfQ+Kdttd9cKWP2
+         tbvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVKx+IPFC4gbO1+woGRo9fRixUnVUc0Vqgy8Wwv+jINcF1Gf3qM3NvVV8ux4r1Bvq+LoXJoOn7BDASm@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCIURM0d0eDSdtzYqx3EuoZZ07iu6+2k5oFSUWMiyRq1fmk4r0
+	BQVotgX8bidGvVjK0CVE6lf5OPVPrMvfVMQWhKl56NM90cmVpHixqWnJXzDA/HeFRoa3n95qh1O
+	7govDPcONRri7aeoRGngUuHavu7W5rRYt5XFpb0UpGw==
+X-Gm-Gg: ASbGncunMxbdecJYB7Y/BtBJE6wbipszHibrsgTdabpj5KpO0WZT0/vT9CUjS4pVVGR
+	YaJXtRACHd3O7dCDo4vGTmJx8A+mWl6eTQgZpSBUaSo7A3EeAnboLOc/uBNaOt7U3m8DKdBKlU6
+	sdX770lyjEev239rIkejz7jDeBL7sMDwLQfBoShIev2peZ+KJewxHa+z2AOunrIger6MFL24jzI
+	rgtB5U=
+X-Google-Smtp-Source: AGHT+IHnq5j9y/e9zgOn/W95LXDrsMaMJHjfFJrVjLLZ4xyDUaX1ZKKyMsyBeP8R0VmL3N5ZRmoTyZaiETxJgA8aygo=
+X-Received: by 2002:a05:6512:1409:b0:55b:8aa7:4c1e with SMTP id
+ 2adb3069b0e04-55f64e2a401mr574939e87.53.1756415686593; Thu, 28 Aug 2025
+ 14:14:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250821233335.1707559-1-da@libre.computer>
-In-Reply-To: <20250821233335.1707559-1-da@libre.computer>
+References: <cover.1756372805.git.andrea.porta@suse.com> <bee7c98a96c7000db32495b94ebae2ea06fe0e77.1756372805.git.andrea.porta@suse.com>
+In-Reply-To: <bee7c98a96c7000db32495b94ebae2ea06fe0e77.1756372805.git.andrea.porta@suse.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 28 Aug 2025 23:06:25 +0200
-X-Gm-Features: Ac12FXxq8e0j1LLbbJOtWrnp5TZSIUBHLi0lcAdK8TiCnwMxmLVQkeLVBf3QIC8
-Message-ID: <CACRpkdYMdF43s_hcAvzHJ+wmRGyLoHtiTaG03ULoL24WwdQCMg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: meson-gxl: add missing i2c_d pinmux
-To: Da Xue <da@libre.computer>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
-	Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Rob Herring <robh@kernel.org>, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Date: Thu, 28 Aug 2025 23:14:35 +0200
+X-Gm-Features: Ac12FXx3Zu25fmAofOtWqFPELRy7r2mWX-Zguu16p7nw27EDWZqR7HdQtxpXOKE
+Message-ID: <CACRpkdYdzsVTtwsw813k0gbD-H7ue8iCNXOdWD8feJCSWZnSdg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] pinctrl: bcm: Add STB family pin controller driver
+To: Andrea della Porta <andrea.porta@suse.com>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	florian.fainelli@broadcom.com, wahrenst@gmx.net, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, iivanov@suse.de, 
+	svarbanov@suse.de, mbrugger@suse.com, 
+	Jonathan Bell <jonathan@raspberrypi.com>, Phil Elwell <phil@raspberrypi.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 22, 2025 at 1:33=E2=80=AFAM Da Xue <da@libre.computer> wrote:
+On Thu, Aug 28, 2025 at 2:45=E2=80=AFPM Andrea della Porta
+<andrea.porta@suse.com> wrote:
 
-> Amlogic GXL has 4 I2C attached to gpio-periphs. I2C_D is on GPIOX_10/11.
+> From: "Ivan T. Ivanov" <iivanov@suse.de>
 >
-> Add the relevant func 3 pinmux per the datasheet for S805X/S905X/S905D.
+> This driver provide pin muxing and configuration functionality
+> for BCM2712 SoC used by RPi5. According to [1] this chip is an
+> instance of the one used in Broadcom STB  product line.
 >
-> Fixes: 0f15f500ff2c ("pinctrl: meson: Add GXL pinctrl definitions")
-> Signed-off-by: Da Xue <da@libre.computer>
+> [1] https://lore.kernel.org/lkml/f6601f73-cb22-4ba3-88c5-241be8421fc3@bro=
+adcom.com/
+>
+> Cc: Jonathan Bell <jonathan@raspberrypi.com>
+> Cc: Phil Elwell <phil@raspberrypi.com>
+> Signed-off-by: Ivan T. Ivanov <iivanov@suse.de>
+> Reviewed-by: Phil Elwell <phil@raspberrypi.com>
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 
-Patch applied.
+(...)
+> +static bool brcmstb_pmx_function_is_gpio(struct pinctrl_dev *pctldev,
+> +                                        unsigned int selector)
+> +{
+> +       struct brcmstb_pinctrl *pc =3D pinctrl_dev_get_drvdata(pctldev);
+> +
+> +       return pc->func_gpio =3D=3D selector;
+> +}
+> +
+> +static const struct pinmux_ops brcmstb_pmx_ops =3D {
+> +       .free =3D brcmstb_pmx_free,
+> +       .get_functions_count =3D brcmstb_pmx_get_functions_count,
+> +       .get_function_name =3D brcmstb_pmx_get_function_name,
+> +       .get_function_groups =3D brcmstb_pmx_get_function_groups,
+> +       .set_mux =3D brcmstb_pmx_set,
+> +       .gpio_request_enable =3D brcmstb_pmx_gpio_request_enable,
+> +       .gpio_disable_free =3D brcmstb_pmx_gpio_disable_free,
+> +       .function_is_gpio =3D brcmstb_pmx_function_is_gpio,
+> +       .strict =3D true,
+
+Oh! It's now using .function_is_gpio() and can be charmingly
+strict!
+
+Better let Bartosz have a look at this and ACK it, I will merge
+his GPIO function awareness patches first.
 
 Yours,
 Linus Walleij
