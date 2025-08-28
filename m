@@ -1,122 +1,92 @@
-Return-Path: <linux-gpio+bounces-25035-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25036-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E0BAB389F9
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 20:58:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 469D1B392C7
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 07:10:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BBCE27C5426
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Aug 2025 18:58:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EA37C685270
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 05:10:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63FCB2E7BDA;
-	Wed, 27 Aug 2025 18:58:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3119C25C81E;
+	Thu, 28 Aug 2025 05:10:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p/A4hCuX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RmsSA2p3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A0C23C4F1;
-	Wed, 27 Aug 2025 18:58:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BFF4AD4B;
+	Thu, 28 Aug 2025 05:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756321107; cv=none; b=AExw2Bnq7+ceWs8nMS5sAyYuwAZV3KuNdLv2kR2c2ZNdHFC+/WUl3M+jwjL9nfyzbYK4RMWpK+/Z0xo7jBz3PRt+hztNJwxqqt4YMSeaE1OvZ7zSP8mn6NBABNjispAfnT//Xhqk9W4UaU2CrrcUUKlLOqvJ3yQl3A+1OsMNioI=
+	t=1756357844; cv=none; b=TZ1dYbXyPKePU+dXIQBMTSZEyRDpb6EYQ/OYvigPCsVNDT1R8pAQkeE8JCyLvnu2n2Ga20puMagh1x9tsj+gXc6jlawfJcB76+b4isgwmoFwvtpiYJleRzysv58D7prnBRx6ceIPKFoBW0hkYIgUWwCpW8tYwa7HbH5WFMn2gXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756321107; c=relaxed/simple;
-	bh=k/tPNcfJ/qdnWRcsE6nXClRCEZmBAkB4S98CVmbWffE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=JtGnJck9IV9bpJSrfzKsLhLYq6Xcgqhi7XgSBCF4SHBYdlJ3PuI7oWUmyhIwcxXVkuBo9KZ5SFprjPPJolLqvb8zfJhs+wz0QTsN9bIdCzxJ6+K4LY+nahUcTyh6YXkKQrQ3WK5OpgITag/5/RESRuJ17/VqeujeidZQYbo889A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p/A4hCuX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8403C4CEEB;
-	Wed, 27 Aug 2025 18:58:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756321106;
-	bh=k/tPNcfJ/qdnWRcsE6nXClRCEZmBAkB4S98CVmbWffE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=p/A4hCuXnw78K2/C7/7U2ep3c3mB0WH5FKsFfvMkA9XgZ3H7LOX8UCUSWJNoafOwu
-	 VJwzEpoV0FLpzBZU2Gw77yR4FhTSim9ud/WuydhPXNXtF/rGRXGfd+YK3F5on9j3m1
-	 BS5UCJTAZLWfEiDJLhUiXABrbbSP1hTFOC4xOKq0sIZR+fCLsoqZpQlzLmgFotwXwP
-	 JttlA+091dVHUkpQgd8HOqDX2sV3jjLpIwqXnPEyTY1NeHt8YuYy8Rg6HWDtPSKuuJ
-	 jW3ADEJW9Z1TzPtmOWkaj5LY0S4P5ZnFSbOb2JCD/SeOL3yUWwPQSTKjtiQSTch1dj
-	 WebNWWgPMD0CA==
-Date: Wed, 27 Aug 2025 13:58:25 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Christian Bruel <christian.bruel@foss.st.com>
-Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
-	robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
-	conor+dt@kernel.org, mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com, linus.walleij@linaro.org,
-	corbet@lwn.net, p.zabel@pengutronix.de, shradha.t@samsung.com,
-	mayank.rana@oss.qualcomm.com, namcao@linutronix.de,
-	qiang.yu@oss.qualcomm.com, thippeswamy.havalige@amd.com,
-	inochiama@gmail.com, quic_schintav@quicinc.com,
-	johan+linaro@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v13 06/11] PCI: stm32: Add PCIe Endpoint support for
- STM32MP25
-Message-ID: <20250827185825.GA894342@bhelgaas>
+	s=arc-20240116; t=1756357844; c=relaxed/simple;
+	bh=hYuzW/b5tw73H+pYWRUvLnELjNQzmmtpnxTVoViYqGY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gt1YKBKa7H9ulNYIPXD/b4FLKD5Xbw6tvE4XMqrykBbhv+Y7QnOIRQ6udHD6+NN71gAugG9VZGBV439P0W3dLe0rnE/k/xGwj5bUkHAY8+g4NRcw+nlUw5kOo4Mtu/nCUzVrYSb8VWGulOfHoPnY2Gx7pYucnd8Qnpo2qzd2VVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RmsSA2p3; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756357844; x=1787893844;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hYuzW/b5tw73H+pYWRUvLnELjNQzmmtpnxTVoViYqGY=;
+  b=RmsSA2p3Rd7MuTixHpO1/QKp6R9P7oEP/h54iykcjW0c/HE+eEFM18mR
+   lDFB5k6tnSNiGfvxDtcldpifx1297V2v0faZKxX8MSG6lnJyevYWM+P8V
+   oM91fDhcWh1cPs/7YqHYfHxpM/IwvBPRtgGvCK3/0jEGM/LnUTKiS2G+z
+   oKCz00ZpPggqV7Crs5ZqkV57Daz7q/0E+IQdDPEoi7Oy65KEEfgxjWLoc
+   3qWjRv9QB/cfuBkrJFyYlSd9aUGO6esTEzd1jgOs1Qvlmnc5mfkbKmbB7
+   KMV486NggUvRl0li2BzjRJ0RyKPXd7WSwODRjdQV7p8AaLY69Pq06Ty4W
+   g==;
+X-CSE-ConnectionGUID: Fr5eodzbSte1mmyPXZDJEw==
+X-CSE-MsgGUID: 5e1SkLOSQGmlw+PGLorVUA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11535"; a="69210915"
+X-IronPort-AV: E=Sophos;i="6.18,217,1751266800"; 
+   d="scan'208";a="69210915"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2025 22:10:42 -0700
+X-CSE-ConnectionGUID: zWmwx2OuTp2zyrHSWeuh3Q==
+X-CSE-MsgGUID: rk/YRmOgSfqMJ8bwB3HAhg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,217,1751266800"; 
+   d="scan'208";a="169920528"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa007.jf.intel.com with ESMTP; 27 Aug 2025 22:10:40 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id 2CF0194; Thu, 28 Aug 2025 07:10:38 +0200 (CEST)
+Date: Thu, 28 Aug 2025 07:10:38 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Antheas Kapenekakis <lkml@antheas.dev>
+Cc: linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Mika Westerberg <westeri@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v1] gpiolib: acpi: Ignore touchpad wakeup on GPD G1619-05
+Message-ID: <20250828051038.GT476609@black.igk.intel.com>
+References: <20250827175842.3697418-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250820075411.1178729-7-christian.bruel@foss.st.com>
+In-Reply-To: <20250827175842.3697418-1-lkml@antheas.dev>
 
-On Wed, Aug 20, 2025 at 09:54:06AM +0200, Christian Bruel wrote:
-> Add driver to configure the STM32MP25 SoC PCIe Gen1 2.5GT/s or Gen2 5GT/s
-> controller based on the DesignWare PCIe core in endpoint mode.
+On Wed, Aug 27, 2025 at 07:58:42PM +0200, Antheas Kapenekakis wrote:
+> Same issue as G1619-04 in commit 805c74eac8cb ("gpiolib: acpi: Ignore
+> touchpad wakeup on GPD G1619-04"), Strix Point lineup uses 05.
+> 
+> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 
-> +static void stm32_pcie_perst_deassert(struct dw_pcie *pci)
-> +{
-> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
-> +	struct device *dev = pci->dev;
-> +	struct dw_pcie_ep *ep = &pci->ep;
-> +	int ret;
-> +
-> +	dev_dbg(dev, "PERST de-asserted by host\n");
-> +
-> +	ret = pm_runtime_resume_and_get(dev);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to resume runtime PM: %d\n", ret);
-> +		return;
-> +	}
-> +
-> +	ret = stm32_pcie_enable_resources(stm32_pcie);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to enable resources: %d\n", ret);
-> +		goto err_pm_put_sync;
-> +	}
-> +
-> +	/*
-> +	 * Need to reprogram the configuration space registers here because the
-> +	 * DBI registers were incorrectly reset by the PHY RCC during phy_init().
-
-Is this incorrect reset of DBI registers a software issue or some kind
-of hardware erratum that might be fixed someday?  Or maybe it's just a
-characteristic of the hardware and thus not really "incorrect"?
-
-I do see that qcom_pcie_perst_deassert() in pcie-qcom-ep.c also calls
-dw_pcie_ep_init_registers() in the qcom_pcie_ep_perst_irq_thread()
-path.
-
-So does pex_ep_event_pex_rst_deassert() (pcie-tegra194.c) in the
-tegra_pcie_ep_pex_rst_irq() path.
-
-But as far as I can tell, none of the other dwc drivers need this, so
-maybe it's something to do with the glue around the DWC core?
-
-> +	 */
-> +	ret = dw_pcie_ep_init_registers(ep);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to complete initialization: %d\n", ret);
-> +		goto err_disable_resources;
-> +	}
+Reviewed-by: Mika Westerberg <westeri@kernel.org>
 
