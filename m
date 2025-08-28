@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-25147-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25148-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A782B3A930
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 20:00:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A7FDB3A96C
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 20:03:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E29A1B27A99
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 18:00:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 014B7A02611
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 18:03:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3239A242935;
-	Thu, 28 Aug 2025 18:00:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43BC527056E;
+	Thu, 28 Aug 2025 18:02:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VtFDpFF4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ho5N+PNB"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB79319D093;
-	Thu, 28 Aug 2025 18:00:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED185270552;
+	Thu, 28 Aug 2025 18:02:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756404026; cv=none; b=FN7nv6JKDYLyx73qIgW8/Ex78qo5c/B2D37h7uiqG8OOd63jCvXBXoH/o5LOPswnGP3B+L6ADm/9NYS1dKcFgskedSnpbob+5vlgjIjaXy1duF1ScBBRekLD/P772Ti/xai1hyAI9slJ4MWkxCHI7thLd188g41daUlmQn6URwY=
+	t=1756404156; cv=none; b=JMLTLP0M33q/1DEuxGOvgw3JZQkTc/I5hYuEixxUkg4/pSiUTwiyawXi3pROsVLCkvFIX7y78tbCfPzmgdWoByXhGhfOWDwxPcSdnD+P0cQXlmzaqvH8r2OfwGBLehqo1qvgSMPLEVXcrmgPx3UKe57notbrsBLBAPZcYLc/F68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756404026; c=relaxed/simple;
-	bh=eNEsMH6bYigB2vS9OrE5CQQJysmMLnkahp+V60FINcY=;
+	s=arc-20240116; t=1756404156; c=relaxed/simple;
+	bh=pG9/FbDbrj9tE6UmRGcNSlvTz0TPuSETudqBwaA4mAw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NIZUMp33oL9MV0rAGjJu/L56eoxfyYc4QLGZjnOJ2s1JGL4lKb2CQ1bDl575VvduyB+m/wgmCUsPmuPcD7y+n2bKPcLWHtKwwSX6F9ZGpTQUOT0yNzNmQ6CTGSko4z9vONMot4j5X378mseAxkRwl0EQEGtPEUM/VCocFRub5a4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VtFDpFF4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F32E4C4CEEB;
-	Thu, 28 Aug 2025 18:00:22 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=OaGf3utWvn5Mxb6jWKMGVDBslTz2uKPJqMIAkC39AQPkKK9GqVkG2nxfLooo5ILJ4CjHvlAd0HM/niaY4E7tG/HVevI8T5uHnDcyFaxy+3E6fegP8yH58x9zgiAecD0BG7lSWPVm/ejO571AGP1nSLQM7Vj/e8dH+fnBdTdOk2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ho5N+PNB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 140A3C4CEEB;
+	Thu, 28 Aug 2025 18:02:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756404025;
-	bh=eNEsMH6bYigB2vS9OrE5CQQJysmMLnkahp+V60FINcY=;
+	s=k20201202; t=1756404155;
+	bh=pG9/FbDbrj9tE6UmRGcNSlvTz0TPuSETudqBwaA4mAw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VtFDpFF4MH9lU6YZpRvI+WNWxhwlKBjh93JxBGw0KIpmTMr3UbZQtN2jwWOupqqYJ
-	 QtIA2qAkcxiesPYnj8N4Dc1mc3W2XxP5MZxdZJ0+iLAZmaLkS7wzXa8da6Uds1jLei
-	 184IsDOZOvArLAMoMlQHlea8u4p7WIG/4M83RBl2aMEkPT2+ZlHOzN8WdsRL7htiCm
-	 UpI0eZyPDI/QUcyrD1gA+YmCovfclWMgDUQ6PY6qb8+NarCk2HQtyVCVJV+fT/hIyY
-	 3tZQ6cRREpkVoERSxses1VjIzKRDnOb+B8Q26SqoM8YWo15u9kG3H+8ysFUL+lL6Nh
-	 EuAHIu8iVuRnw==
-Message-ID: <f54d43ca-87cc-40bb-a56b-e49ee6a0a441@kernel.org>
-Date: Thu, 28 Aug 2025 20:00:20 +0200
+	b=Ho5N+PNBSUrp8JQvF4YnSTTl+JED0/zXNYQ3CqFXQQf4x7m0LiTHcs+9YBcz+8RuM
+	 bRWPlDrjHU+MzF7hHhzZCRpeRj4AK8rl8J3lo5FB3RPChSBwgVxMmtG/AcLhOvgWop
+	 m03TUKTepSt3yDnO6+l5E8qo8tKIPqXnHHMl994xzGoYalJobsi24v2QfqYX6jMkZL
+	 +Vh+vSHtIXLiQeFbmpRlMvQ4OEDfDj7+YIYkip1n5zeZVNYwTXRgEhn6/TXX4Ha+P9
+	 xTNzcz7XecGHzbkzxsmcSxDInxUX6YlRixrUdu8iPLfdiIIO/MBuF4MJLsi8NOcJaE
+	 ex34BGTGMPU3Q==
+Message-ID: <67e58bda-3cac-4689-831a-4e4116a0e19b@kernel.org>
+Date: Thu, 28 Aug 2025 20:02:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,22 +50,15 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: =?UTF-8?B?UmU6IOWbnuWkjTog5Zue5aSNOiBbUEFUQ0ggMS8zXSBwaW5jdHJsOiBj?=
- =?UTF-8?Q?ix=3A_Add_pin-controller_support_for_sky1?=
-To: Gary Yang <gary.yang@cixtech.com>,
- "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
- "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
- <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- cix-kernel-upstream <cix-kernel-upstream@cixtech.com>
+Subject: Re: [PATCH 1/3] pinctrl: cix: Add pin-controller support for sky1
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Gary Yang <gary.yang@cixtech.com>, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com
 References: <20250827024222.588082-1-gary.yang@cixtech.com>
  <20250827024222.588082-2-gary.yang@cixtech.com>
  <d5c85ba7-77ec-47f4-8ba1-39199e96da11@kernel.org>
- <PUZPR06MB5887BFF27AAD64ACA625126BEF3BA@PUZPR06MB5887.apcprd06.prod.outlook.com>
- <5d8aa064-6dcf-40ce-9e73-feaebca06965@kernel.org>
- <PUZPR06MB5887436E03C17498E80E43C7EF3BA@PUZPR06MB5887.apcprd06.prod.outlook.com>
+ <CACRpkdYXy9ZgbAZKUdquxdp0X0m5AHT82K74Ex-ZAyEx=Uwi1w@mail.gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -111,41 +104,53 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <PUZPR06MB5887436E03C17498E80E43C7EF3BA@PUZPR06MB5887.apcprd06.prod.outlook.com>
+In-Reply-To: <CACRpkdYXy9ZgbAZKUdquxdp0X0m5AHT82K74Ex-ZAyEx=Uwi1w@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 28/08/2025 10:32, Gary Yang wrote:
-> Hi Krzysztof,
+On 28/08/2025 19:51, Linus Walleij wrote:
+> On Wed, Aug 27, 2025 at 11:07 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>> On 27/08/2025 04:42, Gary Yang wrote:
 > 
+>>> +     pinctrl_provide_dummies();
+>>> +     dev_info(&pdev->dev, "initialized SKY1 pinctrl driver\n");
 >>
->> On 28/08/2025 08:44, Gary Yang wrote:
->>>>
->>>>> +     if (ret) {
->>>>> +             dev_err(&pdev->dev, "fail to probe dt properties\n");
->>>>
->>>> You are printing same error twice. Drop this and just handle error
->>>> printing in sky1_pinctrl_probe_dt().
->>>> Especially that you now print errors on ENOMEM.
->>>>
->>>
->>> Sorry, this print message is only once, not twice, please give more
->>> information
 >>
->> Trigger the error and check how many error messages you see. I see two.
->> You should know your code better than me...
->>
+>> No, please drop. Drivers should be silent on success.
 > 
-> There are two pin-controller on sky1. They share the same driver. The probe is called twice. 
+> I usually think this is a matter of taste.
+
+It's actually coding style:
+https://elixir.bootlin.com/linux/v6.15-rc1/source/Documentation/process/coding-style.rst#L913
+
+https://elixir.bootlin.com/linux/v6.15-rc1/source/Documentation/process/debugging/driver_development_debugging_guide.rst#L79
+
+https://lore.kernel.org/all/20191210143706.3928480-6-gregkh@linuxfoundation.org/
+
 > 
-> So we see the print message twice.
+> I suppose the reason why a lot of drivers have some "hello world" message
+> is that missing probe calls is sometimes an issue.
+> 
+> If you mistakenly disable the driver in Kconfig (or due to other Kconfig
+> changes that just happen ...), how do you know from the dmesg
+> what error you made, when comparing it to a successful boot. There
+> are no *error* messages from the driver either, just the same silence as
+> when it's enabled. With pinctrl, random completely unrelated stuff just
+> stops working.
+> 
+> If you see that the "hello world" from that driver is missing, you know it
+> isn't probing, instead of finding it out after combing through the .config
+> for the third time.
 
+Any tests for driver success should be checking in sysfs, not in dmesg.
+Most of platforms have smaller or bigger tests for that.
 
-No, you don't really understand how this works. Test your code and its
-error paths and you will see FOR ONE BIND more than one error message.
-Plus my second comment which you completely ignored.
-
-I am sorry, but this is basic C.
+> 
+> But I know a lot of people are dmesg minimalists, because it's just too
+> much information and they just want errors there. It makes sense in a
+> way too.
+> 
+> So as subsystem maintainer I have no hard opinion on it.
 
 Best regards,
 Krzysztof
