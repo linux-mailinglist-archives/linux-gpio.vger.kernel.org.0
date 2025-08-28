@@ -1,166 +1,235 @@
-Return-Path: <linux-gpio+bounces-25048-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25050-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13D1AB39CF2
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 14:20:45 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4928EB39DA3
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 14:46:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8B1855640EA
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 12:19:15 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6A0707A83EC
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 12:44:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8643530E0CB;
-	Thu, 28 Aug 2025 12:16:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6BC1260575;
+	Thu, 28 Aug 2025 12:45:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="gyABa5UR"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ajosi878"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f68.google.com (mail-ej1-f68.google.com [209.85.218.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A8C30F958;
-	Thu, 28 Aug 2025 12:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547721A76B1
+	for <linux-gpio@vger.kernel.org>; Thu, 28 Aug 2025 12:45:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756383416; cv=none; b=vCUUO3SPnnZkwwsvGK9lu2k+PN7rVTUd8OqOGMhaOe3+J4qWbFTG/g9P1NGptbr6lMkGczqprInYObL/8aVd8v0c8q5UfiBe0dD0S4wk3Wnr24LlbwGdomBtjgDUFK8XBrccZR7pAOEOJuFC/BNS6G2sS83PbS32bc0NGnRutYs=
+	t=1756385154; cv=none; b=D8l333fExPRPm3HMz/ArthJMDN9WdQKY782MyEdaCebxHUv0uzR1nDWMO53r3ByeJnauF3RqaALiwq7O5GLHJ3DRK8YdPrt7LrUV0PZjeOXoWbQ5tBBpOYAnYYMUH0Z8clTH8K1FkQwmA2E+lTLUKpbU0rliWobCUA25i6ERV0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756383416; c=relaxed/simple;
-	bh=aaV4x6280/CXvf8fKdJfOOVcKa+/PlLXRGgpk5EAZg0=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=WmdKYjC3aMAubJ+0fIYe2i9K9RuZSMMiGOqyAu74nw89ofTBFRcFgKcjCB+h+Y6nt689b9XLw41Dq2tIklzHaGvlFUVL0ipoCqvDmUfINoVPxHXZC0XXuMYDXW+FVDeX0ksqNn98De8CMJwblDU0Ivp28leB6DFmp1CWy9/nJlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=gyABa5UR; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57SAJbT7003220;
-	Thu, 28 Aug 2025 14:15:55 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	H2VjxPIys7d1tJoSW05HXWGO8B1PQC1RoUMeQHH1la8=; b=gyABa5URoIdL0qys
-	8nCirTWeTflyOsuJyYXpsDDVA3hHboNWQpco+hkmcJZ4hpecA3kRy3o+RGR41538
-	YlgI7saSguc+YAAM6UsqKjzRb6l582ilE/u6LaPff8muKBs9qp2hDkdvdObtHIb6
-	Em6ELCC29h/Noubjyln1OLyPnAdp+HSOnO0de509FCkMiDJOkxL07lFkQ7nznvMy
-	ydQWuw7sEn3myU8qdzK2+gQ/Lyq41sz8ocCROVnTgiZv4TyRCADCeSh2/9bMTu6B
-	Wfv6BdSRNqc2ek/eZ9iJrCR1z9VRjVYabdE3vl9g3DLzWIDMGQV13qQd1y00iFFL
-	sZ5Jbw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 48q5tt5139-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 28 Aug 2025 14:15:55 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id EA37D40048;
-	Thu, 28 Aug 2025 14:14:08 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2A75372766C;
-	Thu, 28 Aug 2025 14:13:02 +0200 (CEST)
-Received: from [10.130.77.120] (10.130.77.120) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 28 Aug
- 2025 14:13:00 +0200
-Message-ID: <9133348a-f6a4-4425-98e2-a784a7620b3a@foss.st.com>
-Date: Thu, 28 Aug 2025 14:12:57 +0200
+	s=arc-20240116; t=1756385154; c=relaxed/simple;
+	bh=2GNSxNfcFF7LK0ox4GPGZqKZYRWo1k0QgVliQpVQrUQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qyoTnHoozNnQnWV5NshrJ6GNTgJWwGFrxlg23bNW317E1h8ByYF9cx61oykus0qLUXcD4mre2M9J9DPZX8CGnX5uGstkPf2Uz6JrQVWHby2JVMFkTvvp6TWAvMQy0EYIRnAmMVSu75vtTLrEtkoOFKR/8Ujr8Am+JHdJrjws8dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ajosi878; arc=none smtp.client-ip=209.85.218.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f68.google.com with SMTP id a640c23a62f3a-afcb731caaaso127880866b.0
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Aug 2025 05:45:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1756385150; x=1756989950; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zxMgUQNGs+/LED5NKHdUH6VeR0hnjbGDh/r6ylHR0gU=;
+        b=ajosi878R78c+vDMmyz+X01ACPgJmBWnziU1JIvh3CwSli1a31UiYpNRp+xvgJgZfJ
+         +yt5ZkPF8INV7FOkJHtcfKbRBxY4igeoK2z/7e/Q2ZEH8RjUy2Cd3FA96LM4MCUsFMFw
+         ig19E3dOftvOjygA2uZ+XWmtiGTPXWRaU/ZbD4gUlEhyjjAoV37WFUMzvElaAqkKDwA7
+         Ijp2Wq2sO88UNR+iLpq5P5r76zC+9F7S7GO3PScbVPIaIPcZClUlMYwnZjH1QNpoMY67
+         YTN84HqnpAl9EEq1oec1i+bDVnF04+FcD0MUpziDkwNy5gZP52bD/Dx+YRK4jaBku9xh
+         0b4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756385150; x=1756989950;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zxMgUQNGs+/LED5NKHdUH6VeR0hnjbGDh/r6ylHR0gU=;
+        b=wRpwuEz1sDQa3ASdmRNz6NKTBXWtxF2bhCyOYypJUNfBny3BXOPKTmUf9JHM+ZLnta
+         AKhcKU/3nbRB9vzJ/Y78nnd2ztWdS6w7DEpQBQWsq+FhU5ueT5EzWbhMOtQj0EkYq3bn
+         MxiMQRls1yhRXjONFoNZuzG+3fT7k4ei/4CsCZSUUlt4IPtNrxYD2UkEQQDMuDUNFNKj
+         cQXMEoB76Sp4U9n6U1iGXWy9ofSfh7WLxe+R3mV/8COJxpULFQRXq4fGrGV6vjyIoAWb
+         pR5aKEV9JPgS1grQTSShxshUS81wCzYBAjW6MBqUqP9Fu9CZYhd+cBnwjTCcNNypD5JA
+         thjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU6FO+2WFYH9ByisHFaUrGUbsTCcvvKfvKgemnaVOeTDo7EIo4WYtzkaeUFzE1U3cdkjSQNwulWaW1d@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2o/tUiKl+YaDMSGhQhdp4AiAtVSoeHVcartIM8ZvmSNaRjVLI
+	R7LJbtLN/EDebQiEQ2tlHRlaoqrixFZJva7/7OpWGYtiM04h1xuN083HxoEJsbYXWOo=
+X-Gm-Gg: ASbGncuzr/tbLFlgjVb0f55j3+vuyXRZsb9zPTn8vxUBFyC6G8kJLQeOjTv0wqmEMjj
+	TkEBLYvomza7gKLrI86hDDEYxuFKbopkmy8i4nHTypVeDvZytPR/QeAIjWRREfnUUC3qJhPH56g
+	aOW96AwZ29qWG4iNJhUuOlNPzreV27GmiBELOla6e2QfnrB/jlky15Q5hEvsYuzP/R4cCXkvMWN
+	oZqIanuaQS7fSko5RyJ6yw8jNwd0yTq5E0RdHX6MRuh+wOrEMh0IdgINTe+dYNvm2LJ9RQ0OpCv
+	1NYuJXAf32rW9IxW5MEyBCwCZvMy6q8DvXECLjvtWkIXC29I49Lx9B88N4Cr8OrX2QHEDaa1Yuo
+	tr+89Tgp9c5Rs2CrIv5ZKNDMoNEhrj9z2JW+itETLkyMu8htURVXvzE5TJRV/RGB6gJwG3WV3Nt
+	dcbw8wXQ2g9QhMouv7s/xyH4svBSw=
+X-Google-Smtp-Source: AGHT+IFNXCBJMNU1/4HwvWWNwfSpQcVmgREcwXGBCSgjS6mOZ411UNk3uqdbyTb5lvmvsiIGiXV3HA==
+X-Received: by 2002:a17:907:94c1:b0:af9:38ed:5b49 with SMTP id a640c23a62f3a-afe28f75e24mr2013120566b.5.1756385148815;
+        Thu, 28 Aug 2025 05:45:48 -0700 (PDT)
+Received: from localhost (host-79-36-0-44.retail.telecomitalia.it. [79.36.0.44])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afe8f8129f0sm731229266b.41.2025.08.28.05.45.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Aug 2025 05:45:48 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+To: linus.walleij@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	florian.fainelli@broadcom.com,
+	wahrenst@gmx.net,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	iivanov@suse.de,
+	svarbanov@suse.de,
+	mbrugger@suse.com,
+	Jonathan Bell <jonathan@raspberrypi.com>,
+	Phil Elwell <phil@raspberrypi.com>
+Cc: Andrea della Porta <andrea.porta@suse.com>
+Subject: [PATCH v4 0/3] Add pin control driver for BCM2712 SoC
+Date: Thu, 28 Aug 2025 14:47:37 +0200
+Message-ID: <cover.1756372805.git.andrea.porta@suse.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Christian Bruel <christian.bruel@foss.st.com>
-Subject: Re: [PATCH v13 06/11] PCI: stm32: Add PCIe Endpoint support for
- STM32MP25
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <lpieralisi@kernel.org>, <kwilczynski@kernel.org>, <mani@kernel.org>,
-        <robh@kernel.org>, <bhelgaas@google.com>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@foss.st.com>, <linus.walleij@linaro.org>,
-        <corbet@lwn.net>, <p.zabel@pengutronix.de>, <shradha.t@samsung.com>,
-        <mayank.rana@oss.qualcomm.com>, <namcao@linutronix.de>,
-        <qiang.yu@oss.qualcomm.com>, <thippeswamy.havalige@amd.com>,
-        <inochiama@gmail.com>, <quic_schintav@quicinc.com>,
-        <johan+linaro@kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-doc@vger.kernel.org>
-References: <20250827185825.GA894342@bhelgaas>
-Content-Language: en-US
-In-Reply-To: <20250827185825.GA894342@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-28_03,2025-08-28_01,2025-03-28_01
+Content-Transfer-Encoding: 8bit
+
+Hi,
+
+The following patches add a pin control driver for the BCM2712 SoC.
+
+Device driver is follow up version on what Andrea posted in April [1].
+
+It is based on sources from here [2]. Since its first inception, this
+patchset has undergone heavy rework in order to split the driver in a
+generic core API useful for several STB pin controller and a specific
+implementation for BCM2712 SoC found on RaspberryPi 5.
+
+A separate patchset will add peripheral nodes that rely on the SoC pin
+controller to setup and config the pins.
+
+All this have been tested as kernel was directly booted RPi5 via
+kernel= config.txt option and cmdline.txt file with following content
+(Note I am using Tumbleweed RPi raw images)
+
+$ cat /boot/efi/cmdline.txt
+root=/dev/mmcblk0p3 rootwait rw systemd.show_status=1 console=tty ignore_loglevel earlycon console=ttyAMA10,115200
+
+With all these patches Bluetooth and Wifi are working fine (tm) with
+firmware files provided by openSUSE Tumbleweed.
+
+All comments and suggestions are welcome!
+
+Happy hacking!
+Ivan and Andrea
+
+[1] https://lore.kernel.org/lkml/f6601f73-cb22-4ba3-88c5-241be8421fc3@broadcom.com/
+[2] https://github.com/raspberrypi/linux/blob/rpi-6.6.y/drivers/pinctrl/bcm/pinctrl-bcm2712.c
+[3] https://lore.kernel.org/lkml/20240605120712.3523290-1-florian.fainelli@broadcom.com/#t
+[4] https://lore.kernel.org/all/bfc60a7e-54d2-48a6-a288-4fe76d66507a@gmx.net/
+
+
+CHANGES in V4:
+
+--- DT BINDINGS ---
+
+- brcm,bcm2712c0-pinctrl.yaml: added blank lines between paragraphs in
+  descriptions.
+
+- brcm,bcm2712c0-pinctrl.yaml: descriptions are now layout in the same
+  order everywhere.
+
+
+--- DRIVER ---
+
+- pinctrl-brcmstb.c: this is now the core driver that will manage the
+  generic functions of any STB pin controller. The new pinctrl-brcmstb.h
+  header contains the APIs that can be leveraged by specific implementations.
+  I've applied quite a conservative approach in determining what is generic
+  and what is not. It's easier to specialize some generic code when we
+  need it that the other way around.
+
+- pinctrl-brcmstb.h: new file! Header contains the APIs that can be leveraged
+  by specific implementations.
+
+- pinctrl-brcmstb-bcm2712.c: new file! The custom implementation for BCM2712
+  SoC. It specifies the pinsi/functions for this chipset and calls the probe
+  function from the core driver. Some values are now set from this file
+  since they are considered chip-specific, e.g. func_mask, func_gpio and
+  func_names.
+
+- PIN macro renamed to BRCMSTB_PIN.
+
+- enum brcmstb_funcs renamed to bcm2712_funcs.
+
+- avoid wrapping some lines above 80 char containing GPIO declarations for
+  the sake of readability.
+
+- renamed the chipset specific structs from brcmst_* to bcm2712_*.
+
+- AGPIO_* renamed to AON_GPIO_* and SGPIO_* to AON_SGPIO_*.
+
+- FUNC macro renamed to BRCMSTB_FUNC.
+
+- brcmstb_reg_rd() and brcmstb_reg_wr() have been inlined, substituted by
+  their inner implementation based on readl/writel.
+
+- spin_lock_* replaced by guards. Asa a result, the flags var definition
+  is dropped.
+
+- implemented .function_is_gpio() in pinmux_ops. As a result, this driver
+  is marked as strict.
+
+- used of_device_get_match_data() directly in place of retrieving it through
+  of_match_node()->data;
+
+- added a comment to better specify the differences between AGPIO and SGPIO.
+
+
+--- KBUILD ---
+
+- Kconfig.stb: new file! to be included by top level Kconfig to enable
+  the Broadcom STB specific drivers (e.g. BCM2712 pin controller). Enabled
+  only if PINCTRL_BRCMSTB is enabled from top level.
+
+- Kconfig: amended to enable the generic support for Broadcom STB pin
+  controller family. Includes Kconfig.stb.
+
+- Makefile: added pinctrl-brcmstb-bcm2712.o
 
 
 
-On 8/27/25 20:58, Bjorn Helgaas wrote:
-> On Wed, Aug 20, 2025 at 09:54:06AM +0200, Christian Bruel wrote:
->> Add driver to configure the STM32MP25 SoC PCIe Gen1 2.5GT/s or Gen2 5GT/s
->> controller based on the DesignWare PCIe core in endpoint mode.
-> 
->> +static void stm32_pcie_perst_deassert(struct dw_pcie *pci)
->> +{
->> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
->> +	struct device *dev = pci->dev;
->> +	struct dw_pcie_ep *ep = &pci->ep;
->> +	int ret;
->> +
->> +	dev_dbg(dev, "PERST de-asserted by host\n");
->> +
->> +	ret = pm_runtime_resume_and_get(dev);
->> +	if (ret < 0) {
->> +		dev_err(dev, "Failed to resume runtime PM: %d\n", ret);
->> +		return;
->> +	}
->> +
->> +	ret = stm32_pcie_enable_resources(stm32_pcie);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to enable resources: %d\n", ret);
->> +		goto err_pm_put_sync;
->> +	}
->> +
->> +	/*
->> +	 * Need to reprogram the configuration space registers here because the
->> +	 * DBI registers were incorrectly reset by the PHY RCC during phy_init().
-> 
-> Is this incorrect reset of DBI registers a software issue or some kind
-> of hardware erratum that might be fixed someday?  Or maybe it's just a
-> characteristic of the hardware and thus not really "incorrect"?
-> 
-> I do see that qcom_pcie_perst_deassert() in pcie-qcom-ep.c also calls
-> dw_pcie_ep_init_registers() in the qcom_pcie_ep_perst_irq_thread()
-> path.
-> 
-> So does pex_ep_event_pex_rst_deassert() (pcie-tegra194.c) in the
-> tegra_pcie_ep_pex_rst_irq() path.
-> 
-> But as far as I can tell, none of the other dwc drivers need this, so
-> maybe it's something to do with the glue around the DWC core?
+Andrea della Porta (1):
+  arm64: defconfig: Enable BCM2712 on-chip pin controller driver
 
-The RCC PHY reset is connected to the Synopsys cold reset logic, which 
-explains why the registers need to be restored. This point has been 
-addressed in the reference manual.
+Ivan T. Ivanov (2):
+  dt-bindings: pinctrl: Add support for Broadcom STB pin controller
+  pinctrl: bcm: Add STB family pin controller driver
 
-I am not sure if the tegra194 and qcom drivers restore the registers for 
-the same reason. But refactoring this into the DWC core would require a 
-runtime condition to test for persistent registers or support for warm 
-reset.
+ .../pinctrl/brcm,bcm2712c0-pinctrl.yaml       | 137 ++++
+ arch/arm64/configs/defconfig                  |   2 +
+ drivers/pinctrl/bcm/Kconfig                   |  12 +
+ drivers/pinctrl/bcm/Kconfig.stb               |  10 +
+ drivers/pinctrl/bcm/Makefile                  |   2 +
+ drivers/pinctrl/bcm/pinctrl-brcmstb-bcm2712.c | 747 ++++++++++++++++++
+ drivers/pinctrl/bcm/pinctrl-brcmstb.c         | 442 +++++++++++
+ drivers/pinctrl/bcm/pinctrl-brcmstb.h         |  93 +++
+ 8 files changed, 1445 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm2712c0-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/bcm/Kconfig.stb
+ create mode 100644 drivers/pinctrl/bcm/pinctrl-brcmstb-bcm2712.c
+ create mode 100644 drivers/pinctrl/bcm/pinctrl-brcmstb.c
+ create mode 100644 drivers/pinctrl/bcm/pinctrl-brcmstb.h
 
-Best Regards
-
-Christian
-
-
-> 
->> +	 */
->> +	ret = dw_pcie_ep_init_registers(ep);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to complete initialization: %d\n", ret);
->> +		goto err_disable_resources;
->> +	}
+-- 
+2.35.3
 
 
