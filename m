@@ -1,157 +1,194 @@
-Return-Path: <linux-gpio+bounces-25149-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25150-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86821B3A98F
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 20:06:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D37C4B3A9C1
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 20:19:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 75B18580D4F
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 18:05:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9315D17E580
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 18:19:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 679F8270569;
-	Thu, 28 Aug 2025 18:04:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CD8526FA6F;
+	Thu, 28 Aug 2025 18:19:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VPtitIKJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sV3S9goY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FEBA25B301;
-	Thu, 28 Aug 2025 18:04:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6852236F3
+	for <linux-gpio@vger.kernel.org>; Thu, 28 Aug 2025 18:19:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756404290; cv=none; b=YH1eec01VzzjApbs0PwpZDiNS8g9o12E+uos4PFdIy20FhDciBWVyrwKoOz0/mMsHgOUIxu1Va/X1za9b3eOvhBi71UQka9ZfsDU09nHMdoIM71/qMIC1TRBkdDxwEPGptl45pnPD8VmGeP9hJ70OllvPIuPqch/1UiRE0vH/OY=
+	t=1756405162; cv=none; b=dzZyMeXEVPcv8QQ17lAIwICsAF9/re6SaqhoMFmoxJo8EiNR7PWtZ1z/cunGDO0cRts93UwqkpG95NtrLKD+mWFmmpYZHuVlVLJRuzoeC2QQgHytL6+KliJ1kUJgfSEM3/r86Pgq5ukZqvaiOyQWioIMKksbdCQI17HqnujAZXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756404290; c=relaxed/simple;
-	bh=wm0QM/ER6rBX0GaLT2/O/KTAx4lHtdMOd+sSIROzF+k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RM4r42huAAKDvMAKQGkMq0fgm87bHn27ksk6GT7ucRgEqX0a/k9J9Hs3wib/a4kibttk8xuyqj6Z+5qzTgwoZigLiBVL4k9GXjJZO08soo7qgi2wlFvZTsWHIUswets2YzgkGImMzk7ksfUQMVRPgYp17iVOR9vmERkMiNZZiA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VPtitIKJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59870C4CEEB;
-	Thu, 28 Aug 2025 18:04:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756404289;
-	bh=wm0QM/ER6rBX0GaLT2/O/KTAx4lHtdMOd+sSIROzF+k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VPtitIKJmYwcyYXnzpgE6HjnpnIxhW507kM9IK0pRWvDok3Bl07Lr1TDBnVGzJ9HS
-	 Cs3U5JW8BkNeh86z2eTE+Hczgz1yFb26GtrrvBMdDA45orjpiSd1yPkEjJKUW73D5O
-	 qBX9RbZPK63Gf4KDXyaugHIgilr/c+yiDkhFEkHUz3XW/0CTAkjbeEpS1aoG71tW7Z
-	 i9/Kjkk1wqh7v7aETfnj02FwpE7LbhJa1NLib6425SvpAL7VsTySUBBC5v2rB9MqB9
-	 TNDb/aHaldA0/exhhi65UYsm1dlRxqWffqp5hZoIEfSuvBMGWZgnrvjA2hlHu45Bmx
-	 A/jbdWLDvrhNQ==
-Message-ID: <7b0ae610-c8fd-413f-9e44-166a8206b463@kernel.org>
-Date: Thu, 28 Aug 2025 20:04:45 +0200
+	s=arc-20240116; t=1756405162; c=relaxed/simple;
+	bh=jSRAPGlaacLCN8IweNZh4ovq/ER2fHwcytIyHUy6LpI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o0vqWbbg5u9CNQ0LLm/Vz8+chVLI4PeCnk308C3mnUSVNS9R+dR01MqdlOKW8FZUlrAphUNxa7JZ3PxnTr/Sg4bChZxVkklr3CoFPUeKLuzQo1AuKDUwyHigSMMEbnGZoINd9Vxr/vMdB5MCAmFPi+Hxnv/Fon9RVcfELnzaqrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sV3S9goY; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-336af63565dso4545331fa.1
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Aug 2025 11:19:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1756405158; x=1757009958; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z8WCzP5XruJZcY+aCROX20DDrThlC8LXbUjIf1UiM2s=;
+        b=sV3S9goY3NPAf5ctpK7jz0PvMJ5CZF+mdIgh/lZbNZTdmuxyIjxQWmKkd6mH2z48bh
+         8t4LlF2hKGblupZPWyhKD5ZB00sDHXHWvLkt5kT1IODEB4wBC4mOThflyKB0SRQhjquQ
+         JO9iwRWImL7WdLxae73B+vTYVVz2HI0rN7L7tVyuzQXCgDy1mOGhrBkaXHlJBMPrLrVn
+         zTHuY3nnSfUfIPPSMTkJxNnVXwgt8PhwihTeoGwNd70zJJjWoE4E3B/o4cLNuoj8pCJw
+         8EZgp4ZoioWvjcwmIkEpPXW9mTFSC49IJO5QVSX80wVn8dva9fAVBGV6GD0f6nPX7XXL
+         eCSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756405158; x=1757009958;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z8WCzP5XruJZcY+aCROX20DDrThlC8LXbUjIf1UiM2s=;
+        b=WzSiT3UDA9JuZn2GjxdshGpHErxqigAmz6qQftVXRKxaVtRD5ABlsejSr41qK3QlNF
+         FzG8VbzcXuHkBCfj11q+l1+YSXV8SlQGzjZrG2JRllsuV6x872wh4z3kmi1YlIsPOfzW
+         XVynuv6OUJB1rsTcx4kAbPtxrvB78k/MjB4oc5Ax+hhnk7TatuvkgZu/w4suSee9ucNN
+         IEnsPXT6B9mACb+GzgVVtbQaPdHFLdG/+MQvO7hQWuSpF2vpzjVXIhOcBcs4tZjGkJw4
+         Qq3mvYxxPJVBsKV+5wUYqluaXKzIXSTkW0FOMXMkG5OUCRix2+3HhF+vwjld++qX9h7Y
+         kyeA==
+X-Forwarded-Encrypted: i=1; AJvYcCVKWpvWvRTgGG7eaLu4BrU9XWIO/vRCeRfSxFq0u7ChzrPe8Z2J2xsVf7YsTh1xPd7X9ngGIYtqrhTq@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCqXeXnGdy2m4c91tuzyCzWePcAo6BLwo+2T42rlepQyrzq/6h
+	TBrqrETRdpoZF5BY5wT2AdKkQvKNjCTLgPNXXqfPF3rw7uNcABlQeES/3mTk9NK5beDFg4d4KsR
+	i9iXWEkdf7Cat1wfpwaGaB92bkcjRUGTgrJ5JLqEeOQ==
+X-Gm-Gg: ASbGncsNeKUWIhiraQllC++h3iSvVADysq7IFE1Nt3hEl5pNUwSsYfaOTbMQWoayUkw
+	Iv6C0/GJLJI5PZ84+2a7dv1eOyqV53luRswx9KSbyMMpzCM5I6BBM5a9GqPVXxGi6z2EjIxdYgh
+	f6OEBC52VhS6Na7Vw+nGIA1WK//kLtNE2Q7cj3qwZGZlBtYnMz0jia3OTt4eidor6X2W4MkbwtO
+	qSB/qE=
+X-Google-Smtp-Source: AGHT+IH1DSJZGXknSzW6wH3w+Axy81DzZxfZ0orRS3bzF7NdL/MqGTEERDxVjp0WltcO4vKqnpq+IlyPKB7YEvEtM8Q=
+X-Received: by 2002:a05:651c:f04:b0:332:4528:c0e0 with SMTP id
+ 38308e7fff4ca-33650f40230mr73400651fa.32.1756405158218; Thu, 28 Aug 2025
+ 11:19:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: =?UTF-8?B?UmU6IOWbnuWkjTog5Zue5aSNOiBbUEFUQ0ggMi8zXSBkdC1iaW5kaW5n?=
- =?UTF-8?Q?s=3A_pinctrl=3A_Add_cix=2Csky1-pinctrl?=
-To: Gary Yang <gary.yang@cixtech.com>,
- "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
- "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
- <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- cix-kernel-upstream <cix-kernel-upstream@cixtech.com>
 References: <20250827024222.588082-1-gary.yang@cixtech.com>
- <20250827024222.588082-3-gary.yang@cixtech.com>
- <0fa7e2cb-fa0b-4f9e-84d6-a4b2b3d8a4cf@kernel.org>
+ <20250827024222.588082-3-gary.yang@cixtech.com> <0fa7e2cb-fa0b-4f9e-84d6-a4b2b3d8a4cf@kernel.org>
  <PUZPR06MB5887D9A879D16DC6A8C8ED58EF3BA@PUZPR06MB5887.apcprd06.prod.outlook.com>
- <25283b66-4cbb-4db9-9b1e-7a4e6e3db2a1@kernel.org>
- <PUZPR06MB5887887C93BFF42BC8417D96EF3BA@PUZPR06MB5887.apcprd06.prod.outlook.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
+ <25283b66-4cbb-4db9-9b1e-7a4e6e3db2a1@kernel.org> <PUZPR06MB5887887C93BFF42BC8417D96EF3BA@PUZPR06MB5887.apcprd06.prod.outlook.com>
 In-Reply-To: <PUZPR06MB5887887C93BFF42BC8417D96EF3BA@PUZPR06MB5887.apcprd06.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 28 Aug 2025 20:19:07 +0200
+X-Gm-Features: Ac12FXwRlxWLxClpU7dqWEVAoO6fz9nruFt5m8l0uHGvpyxmXFRxpd6jlKHnWxY
+Message-ID: <CACRpkdYC-3qybKW7VH5MVfBc3oqSrOa2RTt1Q=p=HHsi5drGOQ@mail.gmail.com>
+Subject: =?UTF-8?B?UmU6IOWbnuWkjTogW1BBVENIIDIvM10gZHQtYmluZGluZ3M6IHBpbmN0cmw6IEFkZCBjaQ==?=
+	=?UTF-8?B?eCxza3kxLXBpbmN0cmw=?=
+To: Gary Yang <gary.yang@cixtech.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, "robh@kernel.org" <robh@kernel.org>, 
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	cix-kernel-upstream <cix-kernel-upstream@cixtech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 28/08/2025 10:58, Gary Yang wrote:
->>>
->>>>> @@ -0,0 +1,592 @@
->>>>> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
->>>>> +/*
->>>>> + * Copyright 2024-2025 Cix Technology Group Co., Ltd.
->>>>> + */
->>>>> +
->>>>> +#ifndef __SKY1_PADS_H
->>>>> +#define __SKY1_PADS_H
->>>>> +
->>>>> +#define CIX_PAD_GPIO001_OFFSET                       0x0
->>>>> +#define CIX_PAD_GPIO002_OFFSET                       0x4
->>>>
->>>> Not bindings. Drop all this.
->>>>
->>>
->>> Do you mean those macros not used need to delete?
->>
->> Really, what is unlcear in "drop all this"? Drop means to remove.
->>
->> You ask for confirmation for some really obvious comments.
->>
->> BTW, if you disagree provide arguments (in terms of bindings) why these are
->> bindings.
-> 
-> Sorry, make you misunderstand again. I know drop means remove. I want to know whether "all this" mean all macros in the file or not.
+Hi Gary,
 
-All of these defines are not suitable for bindings, because they do not
-represent any ABI for Linux.
+thanks for your patch!
 
-> These macros will be used by client in the dtsi and dts file. If remove them, maybe add them again when they are used in the further.
-> It looks like the file which locate include/dt-bindings/pinctrl/pads-imx8qm.h
+On Thu, Aug 28, 2025 at 10:58=E2=80=AFAM Gary Yang <gary.yang@cixtech.com> =
+wrote:
+> > On 28/08/2025 07:37, Gary Yang wrote:
 
-Please take the newest contributions as example, not something 10 year old.
+> > >> Whats the difference between? You have entire description field to
+> > >> explain this but instead you said something obvious there.
+> > >>
+> > > Cix sky1 has three power states. S0 means work state. S3 means STR st=
+ate.
+> > S5 means SD state.
+> > >
+> > > The pin-controller on sky1 has two power states. They are S0 and S5.
+> >
+> >
+> > State !=3D device. Please create bindings for devices, not states.
+> >
+>
+> Sorry, maybe I didn't explain it correctly before, and then make you misu=
+nderstand
+>
+> There are two pin-controller on sky1. One is used under s0 state, other i=
+s used under s5 state.
+>
+> They are two devices
 
+Just explain this in the description: and everyone will understand what
+is going on. Since "S0" and "S5" can be easy to confuse for "states"
+it is extra helpful with some extended descriptions.
 
-Best regards,
-Krzysztof
+> > >>> +    properties:
+> > >>> +      cix,pins:
+> > >>
+> > >> No, use generic properties from pinmux schema.
+> > >>
+> > >> You should also reference it.
+> > >
+> > > Did you suggest us to refer to
+> > Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml?
+> > >
+> > > Make us support drive-strength, bias-pull-down properties?
+> >
+> > and pinmux. There is a standard pins property.
+>
+> Ok, I see, try our best to support standard
+
+Unfortunately many pin controllers have forged ahead
+with custom foo,pins =3D <....>; settings where they set up
+mux and electrical config by OR:in together different bits,
+and then they just poke this into some registers.
+
+This isn't very helpful for users.
+
+I initially wanted all functions and groups to be strings
+and then to associate groups with functions using
+strings in the device tree.
+
+But I have realized (though much pain) that many developers
+don't like this. They want a magic number to write to
+a register to configure a pin, because their hardware
+has one (or several) register for each pin.
+
+So nowadays the most common is to use a compromise.
+
+A magic number in the pinmux property to set up the muxing.
+
+For example:
+
+arch/arm/boot/dts/mediatek/mt7623.dtsi:
+pinmux =3D <MT7623_PIN_75_SDA0_FUNC_SDA0>,
+               <MT7623_PIN_76_SCL0_FUNC_SCL0>;
+
+Then the electric properties like bias-pull-down; to set
+these on the state:
+
+        i2c0_pins_a: i2c0-default {
+                pins-i2c0 {
+                        pinmux =3D <MT7623_PIN_75_SDA0_FUNC_SDA0>,
+                                 <MT7623_PIN_76_SCL0_FUNC_SCL0>;
+                        bias-disable;
+                };
+        };
+
+This is a good compromis becaus it looks similar on all
+SoCs and you see immediately what is going on: we enable
+SDA0 And SCL0 and disable bias, so there must be external
+pull-up resistors on this bus since I2C is open drain. Very
+easy for an electronics engineer to grasp, they don't need
+to be computer engineers or device tree experts.
+
+Yours,
+Linus Walleij
 
