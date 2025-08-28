@@ -1,117 +1,106 @@
-Return-Path: <linux-gpio+bounces-25166-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25167-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A443DB3AC72
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 23:06:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86F19B3AC75
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 23:07:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DF10AA0440D
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 21:06:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3664B17BA84
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 21:07:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E4B22C2369;
-	Thu, 28 Aug 2025 21:03:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DCF021B9D9;
+	Thu, 28 Aug 2025 21:06:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qDx38l6W"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cyq+MfqN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3427F2BE7D7
-	for <linux-gpio@vger.kernel.org>; Thu, 28 Aug 2025 21:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FAB91A8F84
+	for <linux-gpio@vger.kernel.org>; Thu, 28 Aug 2025 21:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756415022; cv=none; b=dOnN7Cu1M1SZ5rE3KtWhO+XvNKrX0XJ5a9wK31RDT0MDoUdJTVCS9y8pa0d7hGtD0XeMcbRjqYlflI0K3T89EUfPWNUE21FTki3p4YSiP3ax2Sb9x28lwFkZkWGx5gZPBFNMZxeAaKGXOrIPDfJ8A4EeAR2/dfpaMv0D7wtqUoY=
+	t=1756415200; cv=none; b=EZh3eBPbjV3P8BTitFMSthHwlPOxXIuv8rjP3t5APjH0qxHbnNmwGBEUzXls9bx3SWCU4N7v4oGOMqEJfJVPv+QEvgkZqgkPClEFkzKXkrT5KyNDXPX/44GUJ9W3JtJ6wcBkJhVRgmwYzedBN/k4Lu5jb0JnNEuzs4JXfCclXsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756415022; c=relaxed/simple;
-	bh=JpqemiYOa4qZgBu4emt/PYSqWqeke/6L1n6Biqi6C3E=;
+	s=arc-20240116; t=1756415200; c=relaxed/simple;
+	bh=7m+Z48htqbSeqaszf53BBB8XMcsMLgtn18U/+YXKB3U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VoEhynSvKFVIbxp4Ut/05iRmfRS1j+5HBJ5Oh4g+LlR8s3/jQJXvoxBR3OPP/DZBKvI8avn/LNfdGGJJJxVzrXhgCBu5ChY8nFZ4tWnO8owPRspjqYX62Xpfu8+h5tgHa4fGM/G3yBAtTBS0zoMO0ZMt7TNjZMVPBVlxyyfdPiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qDx38l6W; arc=none smtp.client-ip=209.85.167.54
+	 To:Cc:Content-Type; b=d/65mk5X2v7a3bswpDMk045A8u3Mp6+dT8G7estnSiZxQ0ooO6w45jzYD1i+O0iJJ8PgpwANEouSNi/Z1ejSnzi8dJkSj7biPm51xFJHYhlZ01Tivr2rbSWnjUNVH5YYdbZFpJJngIsJxy0GajIOY1YqRYOTqWawlhIg8ZNBsbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Cyq+MfqN; arc=none smtp.client-ip=209.85.167.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-55f5cacecffso1639366e87.0
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Aug 2025 14:03:39 -0700 (PDT)
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-55f3e4dfcf6so1494819e87.2
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Aug 2025 14:06:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1756415018; x=1757019818; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1756415197; x=1757019997; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JpqemiYOa4qZgBu4emt/PYSqWqeke/6L1n6Biqi6C3E=;
-        b=qDx38l6WdYgqxoFkRbvHMZmaBo0wsUZvg1lzXTBD81YUIeKxB9VRgpoPveh4Jus9T5
-         QlvXf0oPQhy0WodEb1wYlt03dSeV/kTK0L3y6AXRBqU4xZ8cxj8iNbtBoJwe/b/tt2GY
-         03Zn6WRhN/MS2xJ7Lb8VPns2VzzdQ+gRa9Rd1o2vEzpFoZpHbZTI+6UM8HyEcsJB/4Jo
-         xqhP7su99DofEiGTMcLtEbgH2SFkRpvUeiVWCp3k8WRQ/hY4b0IxeR/kbaxzgkrSWuEk
-         l3EE0a/B5cu4cW94B4EQVbq6Sw1zq96CjOLNDDmjNOWyUScrM49qW0FSTtboaDw7kYNG
-         leDA==
+        bh=7m+Z48htqbSeqaszf53BBB8XMcsMLgtn18U/+YXKB3U=;
+        b=Cyq+MfqNRcRe/faS0/tIKOI0CgfcsXCbvqF8eAwjwZoRvKVVI4BKC8rvv3VjnYLEng
+         VHGKk5iMfptjtvPPSPto+ZYqD5IXds0PtYzBk/5iGedPuwjQfbWVhGh5AuwezYY//7j9
+         +Xfbo287y3XVAerUMMSAf069lWVM97jfxC25liWEvioCYb3c5FQBuEePbzzELI1IDM2n
+         TqCOgPywqHrgtTdmcAv4HfB/Q7QCdapGG0ZbJWKSM+0BHGYQ9L3vVe1YKyXkRcWg6X7/
+         SPI7BYkIlF8nan8kHEZhgOyzCuYrfMePE4yo4Xeu6Eh/U2CahORkVJ7aTSNmnQG2ZaFK
+         N4uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756415018; x=1757019818;
+        d=1e100.net; s=20230601; t=1756415197; x=1757019997;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JpqemiYOa4qZgBu4emt/PYSqWqeke/6L1n6Biqi6C3E=;
-        b=GyI6NbYAzUXZWFjSSbyT5+BNcRofaY0GzckRePq+/TuD9rlJvG4+tzMSIJiMlDMQ7s
-         rrQXQLkhC5PR97/ibGAubZfGKHHp+SL48iAmdLGSxtwhXfeLHRmeT8LJ7LG0hc50VLlg
-         k39v3xBVDzsaMB9BXuTWUV5cDiJgOYWCw1VLebNHrHySaiqzakmGYAKxAigmURFSykK6
-         1SINEKw9lS9VpIZlz3F0eQhYA5Ly5RCEMCXeKP0jrJMgLQtGoJzWVnEEd2NHFi8pUhjy
-         ZBkZt2qmYNVmC5ufyw+kT7iOz/fAF+9vstcBXk+yFbiNMcCx7Ysh4KUuNT5Z81pjrrzH
-         kmlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUarlpIKxh2GyLH2HUkFAyAn5q9om9AeHlRrCMxTG7OpldzXO2ufTU8DPt0wbEhlFUaqcwGqPFtzQ/q@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCOeLsDD4F6CvyAw0oJTp/8TrvtrA8m8xJl+FS65w2NdDhY3T9
-	WDktCSBARW3I2wrLH8pt/U/ZUGcGVJyBySNxdHjPSc02+CyqcJpYlx/MtH8rWP748iXHluWwKSp
-	0bS0NmWkgXbHMdupTczztslzQSZX5F6I9J9afSEKSOg==
-X-Gm-Gg: ASbGncucUWkOKDwO6TIuOaLCNXaXXwf1mnWmqkLkSpF4feYJADV3dYPZBvLuklRlB/x
-	P7UgY8g6U+YVljy7wVMXKAtkUEjL30KqK2D41q5R+UMQwAs+nPzMEGBJXPgd51bdHXTsf2+72Ot
-	Xzuj+fpSxMMvh69iBvun7ss34guN9EcAnMNv67aJ/IbPeTDIBmEIDp53tyvTCPcbBTL498GRr8Y
-	qSmoT8=
-X-Google-Smtp-Source: AGHT+IEBjFJWFLGkbXGuhHAtRjCVWrmXlPYLpQwfq1rarphkzkuwgBTA1g4AurEUs7Vb+ka2DgQY9BMQPqm+5bNSxi8=
-X-Received: by 2002:ac2:568b:0:b0:55f:64b9:3ab4 with SMTP id
- 2adb3069b0e04-55f64b946eemr717027e87.23.1756415018205; Thu, 28 Aug 2025
- 14:03:38 -0700 (PDT)
+        bh=7m+Z48htqbSeqaszf53BBB8XMcsMLgtn18U/+YXKB3U=;
+        b=b+tN53cPNijQKUXXopIaJUAhjSaMY68fSndf2NzulkK50ajVGlgbum1fEmcCbxpZvo
+         zIOZv0cx16CVta2JWxeWp7tpbwLy1N+ef/aeq70oBe4RaC2E3orEzOqA6EUPpA690KZQ
+         MGeXiyuEV6zBSP5lde9ZGDtjT9Ahps8GcNeRGoIyt8U+TtPiWuMy6X+3llhgfv2nG8xI
+         9Li3b+G1GmNpp7r2lQ2SZXcT9UxR3th/fHfp3bUAkk8Dd4ICZmrr5RS1JQ0p81ZI4emH
+         ahw1I8Pc9znTj/Y9dcZCFsja5jQwm/ShCmft502Xj504XglORqKHXQespTjBITfP0k89
+         PoGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXTJOTUOzWC1lkdP685m70EOEqzZ11VXIokVpgc7k6qQUIXCDsc1VqXcaYnNC3SFLIC0o7ONk1Gm90v@vger.kernel.org
+X-Gm-Message-State: AOJu0YxArPDwscviKXGgo+ShRkoOB0P9m97ch9CR3OjLTLG/CZw7GhNu
+	lWnQi1nsmdls/r1lggkzcLzQXmREUftmkZa+rdrJH9otgwEA0RGlK7z0YzwerrjWn7pkqieuPPa
+	wxY+YhDYmXfmh8oI1BFXhuInx0wWfmvs3vZ8rOGciCg==
+X-Gm-Gg: ASbGncuJ7T2fchVu+kUg2OwDdxZbMT/aMAg/f1/sd7u7nYsuLVr8h3Z+FdTEeksPzSB
+	rIGTTjXk1oyQ1WvIYmOV8J9G7KRjAp6FhIMqFIoUGe+1DjHxmPD8fnOs2J+76rvEShN4m3ouodE
+	Zos8YMvJXM7+mz5+kraOTIN3xZHN5VOh2mJQ1QynMLKjVzmzhsxRgUTrV51RPWXYDqXia9yUwwP
+	JRMq4AKz5AtgMEZdA==
+X-Google-Smtp-Source: AGHT+IE8AFltVgez4j91MqcXLZUWY1SjsHiyvDbOchLsj0qPF+cSQKWQwUdlDcjOa51JtKhpYUq7h1LMip4AqNUm6Pk=
+X-Received: by 2002:a05:6512:1356:b0:55f:3b94:2119 with SMTP id
+ 2adb3069b0e04-55f5f08b2aemr1135534e87.45.1756415197186; Thu, 28 Aug 2025
+ 14:06:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250827024222.588082-1-gary.yang@cixtech.com>
- <20250827024222.588082-2-gary.yang@cixtech.com> <d5c85ba7-77ec-47f4-8ba1-39199e96da11@kernel.org>
- <CACRpkdYXy9ZgbAZKUdquxdp0X0m5AHT82K74Ex-ZAyEx=Uwi1w@mail.gmail.com> <67e58bda-3cac-4689-831a-4e4116a0e19b@kernel.org>
-In-Reply-To: <67e58bda-3cac-4689-831a-4e4116a0e19b@kernel.org>
+References: <20250821233335.1707559-1-da@libre.computer>
+In-Reply-To: <20250821233335.1707559-1-da@libre.computer>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 28 Aug 2025 23:03:26 +0200
-X-Gm-Features: Ac12FXxBf9FMZVXj6RcmihJXxBREGp-5LZAybPVE_Wl0j-njgxfgbqyikM_ygFc
-Message-ID: <CACRpkda+iUfHKFnnsTGmXrvxpPSy7WTQRKaAu=YgXtcrsjXthA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] pinctrl: cix: Add pin-controller support for sky1
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Gary Yang <gary.yang@cixtech.com>, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com
+Date: Thu, 28 Aug 2025 23:06:25 +0200
+X-Gm-Features: Ac12FXxq8e0j1LLbbJOtWrnp5TZSIUBHLi0lcAdK8TiCnwMxmLVQkeLVBf3QIC8
+Message-ID: <CACRpkdYMdF43s_hcAvzHJ+wmRGyLoHtiTaG03ULoL24WwdQCMg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: meson-gxl: add missing i2c_d pinmux
+To: Da Xue <da@libre.computer>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
+	Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Rob Herring <robh@kernel.org>, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 28, 2025 at 8:02=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
+On Fri, Aug 22, 2025 at 1:33=E2=80=AFAM Da Xue <da@libre.computer> wrote:
 
-> > If you see that the "hello world" from that driver is missing, you know=
- it
-> > isn't probing, instead of finding it out after combing through the .con=
-fig
-> > for the third time.
+> Amlogic GXL has 4 I2C attached to gpio-periphs. I2C_D is on GPIOX_10/11.
 >
-> Any tests for driver success should be checking in sysfs, not in dmesg.
-> Most of platforms have smaller or bigger tests for that.
+> Add the relevant func 3 pinmux per the datasheet for S805X/S905X/S905D.
+>
+> Fixes: 0f15f500ff2c ("pinctrl: meson: Add GXL pinctrl definitions")
+> Signed-off-by: Da Xue <da@libre.computer>
 
-Yeah I understand the thinking.
-
-The typical symptom of a non-probed pin control driver is however
-eg that the system does not mount root because some pins
-connected to the eMMC are not muxed right.
-
-People find the problem sooner or later anyway, it's just that the
-print makes it sooner. And the mistake is pretty common (or
-at least for me, but I'm not the best developer...)
+Patch applied.
 
 Yours,
 Linus Walleij
