@@ -1,193 +1,130 @@
-Return-Path: <linux-gpio+bounces-25150-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25151-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D37C4B3A9C1
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 20:19:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 878B1B3AA02
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 20:27:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9315D17E580
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 18:19:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C2E551C845F9
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Aug 2025 18:28:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CD8526FA6F;
-	Thu, 28 Aug 2025 18:19:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD9B127466C;
+	Thu, 28 Aug 2025 18:27:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sV3S9goY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u5ao/qRq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6852236F3
-	for <linux-gpio@vger.kernel.org>; Thu, 28 Aug 2025 18:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 146FF18E377
+	for <linux-gpio@vger.kernel.org>; Thu, 28 Aug 2025 18:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756405162; cv=none; b=dzZyMeXEVPcv8QQ17lAIwICsAF9/re6SaqhoMFmoxJo8EiNR7PWtZ1z/cunGDO0cRts93UwqkpG95NtrLKD+mWFmmpYZHuVlVLJRuzoeC2QQgHytL6+KliJ1kUJgfSEM3/r86Pgq5ukZqvaiOyQWioIMKksbdCQI17HqnujAZXs=
+	t=1756405658; cv=none; b=loil/eYDZElXjboIA19t1jas9uEHLFZPvHfOcehxpsl25KOIZE3WbSde+eGvVnWshTlCdMAnR5kdD4e8UBX7278ICMnwpyH1IRHznMNjYBv4GdYBMGlriiT6YRsAF7UgOKQgXrWve6m5QWT1LXw3j6cIuLrFfGiR7UjhfqJeLBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756405162; c=relaxed/simple;
-	bh=jSRAPGlaacLCN8IweNZh4ovq/ER2fHwcytIyHUy6LpI=;
+	s=arc-20240116; t=1756405658; c=relaxed/simple;
+	bh=yUudGldIdimJfnVV7F3jVvnrtrGzbpei61zCHqvYDRw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o0vqWbbg5u9CNQ0LLm/Vz8+chVLI4PeCnk308C3mnUSVNS9R+dR01MqdlOKW8FZUlrAphUNxa7JZ3PxnTr/Sg4bChZxVkklr3CoFPUeKLuzQo1AuKDUwyHigSMMEbnGZoINd9Vxr/vMdB5MCAmFPi+Hxnv/Fon9RVcfELnzaqrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sV3S9goY; arc=none smtp.client-ip=209.85.208.174
+	 To:Cc:Content-Type; b=SI3NP+cXZdlyW/hp35KTmHhoUeJs7Y/yURdxutvzLb9/8Wxms9drNCnx5Gd4CXWlQXgsY150cVCsVGPynzZr8aXDo4krk85OWHEwtG3HYjx2621EWWKMkJTFA0vzqJCugXszztVU2hjBq0lodYlufPXydB/BfMeH81hlroTkRDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u5ao/qRq; arc=none smtp.client-ip=209.85.167.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-336af63565dso4545331fa.1
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Aug 2025 11:19:20 -0700 (PDT)
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-55f39c0a22dso1453771e87.1
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Aug 2025 11:27:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1756405158; x=1757009958; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1756405654; x=1757010454; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Z8WCzP5XruJZcY+aCROX20DDrThlC8LXbUjIf1UiM2s=;
-        b=sV3S9goY3NPAf5ctpK7jz0PvMJ5CZF+mdIgh/lZbNZTdmuxyIjxQWmKkd6mH2z48bh
-         8t4LlF2hKGblupZPWyhKD5ZB00sDHXHWvLkt5kT1IODEB4wBC4mOThflyKB0SRQhjquQ
-         JO9iwRWImL7WdLxae73B+vTYVVz2HI0rN7L7tVyuzQXCgDy1mOGhrBkaXHlJBMPrLrVn
-         zTHuY3nnSfUfIPPSMTkJxNnVXwgt8PhwihTeoGwNd70zJJjWoE4E3B/o4cLNuoj8pCJw
-         8EZgp4ZoioWvjcwmIkEpPXW9mTFSC49IJO5QVSX80wVn8dva9fAVBGV6GD0f6nPX7XXL
-         eCSQ==
+        bh=pqwyb/SnnH1TinOPkVGbJlqbh2FEY+oG9aGa26NkltQ=;
+        b=u5ao/qRqEbZVbijEzO5hnSNcEZreJOpjR7t2KS384DjiPdKGM1+vJ+KClsy1z5Hn5y
+         IOpO6Ik3amodLIvfe3o2oZrbO3QZa7eKG2goNKGl2M1BjMJo/u/yA2sCVlW4gsdoCwXW
+         lkImRj0oda5bKS7aaBuRqQNBOW3XTdaDNXaL0obDsU0qlIXLJHxH7ooWgqKuycqXzyLy
+         c7/h5XXcin866TcI9GQdG8PR/pNIWbVJAVYep0nPIyfnMooJchfAs5Ih8IBNFFZE3Ioi
+         IFDZbCU/lWLg9c4iL3UafcG+9RqGdLQz6QDe/x3QmwImdO0xKEcNXj0GQ8kFw7j49uhq
+         20qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756405158; x=1757009958;
+        d=1e100.net; s=20230601; t=1756405654; x=1757010454;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Z8WCzP5XruJZcY+aCROX20DDrThlC8LXbUjIf1UiM2s=;
-        b=WzSiT3UDA9JuZn2GjxdshGpHErxqigAmz6qQftVXRKxaVtRD5ABlsejSr41qK3QlNF
-         FzG8VbzcXuHkBCfj11q+l1+YSXV8SlQGzjZrG2JRllsuV6x872wh4z3kmi1YlIsPOfzW
-         XVynuv6OUJB1rsTcx4kAbPtxrvB78k/MjB4oc5Ax+hhnk7TatuvkgZu/w4suSee9ucNN
-         IEnsPXT6B9mACb+GzgVVtbQaPdHFLdG/+MQvO7hQWuSpF2vpzjVXIhOcBcs4tZjGkJw4
-         Qq3mvYxxPJVBsKV+5wUYqluaXKzIXSTkW0FOMXMkG5OUCRix2+3HhF+vwjld++qX9h7Y
-         kyeA==
-X-Forwarded-Encrypted: i=1; AJvYcCVKWpvWvRTgGG7eaLu4BrU9XWIO/vRCeRfSxFq0u7ChzrPe8Z2J2xsVf7YsTh1xPd7X9ngGIYtqrhTq@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCqXeXnGdy2m4c91tuzyCzWePcAo6BLwo+2T42rlepQyrzq/6h
-	TBrqrETRdpoZF5BY5wT2AdKkQvKNjCTLgPNXXqfPF3rw7uNcABlQeES/3mTk9NK5beDFg4d4KsR
-	i9iXWEkdf7Cat1wfpwaGaB92bkcjRUGTgrJ5JLqEeOQ==
-X-Gm-Gg: ASbGncsNeKUWIhiraQllC++h3iSvVADysq7IFE1Nt3hEl5pNUwSsYfaOTbMQWoayUkw
-	Iv6C0/GJLJI5PZ84+2a7dv1eOyqV53luRswx9KSbyMMpzCM5I6BBM5a9GqPVXxGi6z2EjIxdYgh
-	f6OEBC52VhS6Na7Vw+nGIA1WK//kLtNE2Q7cj3qwZGZlBtYnMz0jia3OTt4eidor6X2W4MkbwtO
-	qSB/qE=
-X-Google-Smtp-Source: AGHT+IH1DSJZGXknSzW6wH3w+Axy81DzZxfZ0orRS3bzF7NdL/MqGTEERDxVjp0WltcO4vKqnpq+IlyPKB7YEvEtM8Q=
-X-Received: by 2002:a05:651c:f04:b0:332:4528:c0e0 with SMTP id
- 38308e7fff4ca-33650f40230mr73400651fa.32.1756405158218; Thu, 28 Aug 2025
- 11:19:18 -0700 (PDT)
+        bh=pqwyb/SnnH1TinOPkVGbJlqbh2FEY+oG9aGa26NkltQ=;
+        b=S3cZDXuirfuO28IIY4t/k87RKf9sTZJ8MG9G+9ODs26NcweBV8R+elmiDK3FBHv8iC
+         mo0rbtiLGSNZccqO8qULJAFuLFR6012jAOpFQGq7iVIFKvRiD6UBC0U9ew59dlMq4XFd
+         9/N4iyMWDTUX1XcTak0YL6e8S1ZKpel6vGiy+/vyU2ttny2Caq3KzTsVKuEIoHzd1PZS
+         7+Swj0XkXu6pHxifvzi2uxOoge97hf2DPlYv/BYwCY5lHoxi/LBsZgvtz5ouJNsft+sF
+         54JqLH876CnCwfV4VH0w4eTF7aFJegwb75qZ8fvwAAmumMSOFJUM075ZZB61NA9vS2dw
+         HwPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUv3B15YGIK1Q5Pq3ekM1zJHANk627gom/DCBG9UXnbD1ytQG4tSv4JJBpFW3GMdnbS5d5D4IHMVXm6@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKurpfhaHZcDL0BcETf9G2HtXD6Bz156cL4lOsnBPClgUsGW5f
+	U1JDhhk4qlSmf7nVC6+lGNgAdS4+vrMYCvcUt3HpqiMoV3nEpzolWpDxJhs88f3HBv1iwtDPGOU
+	ztIdpAkvDkJ1k/BDGiGyVzAufrdmulsbO1H4Seoo5YA==
+X-Gm-Gg: ASbGncvW9nW633YuX8RD2HlnahcbbHqYsDhl3f2UKJdtLP2n6WAjebDexEUyCJQjPTr
+	Ns260v+VAXO7wHEme/snwrCtCjiLcMpZQnA/tq2WVYYsSVYTbqun3aosLOv2CDbu2oSWdRq5cBA
+	tQdWOP7Q5uRyysMyKciB8grpMdRzT/O5QHxCdohPsKmFN3+7LMgCTj9st/BWBw2Qg2uB4wnF1/B
+	wUK6qCzK0025G2Czw==
+X-Google-Smtp-Source: AGHT+IHjNr9ZC6xmrExTBjeycVEVqrH7imCeC/o/rJDawlJYvFFJ3EnVgmrnFIfcqveGRJTNAgtfNbpETKNQsRbUIjU=
+X-Received: by 2002:a05:6512:6412:b0:55f:4c9c:27e5 with SMTP id
+ 2adb3069b0e04-55f4c9c2a0amr3876653e87.23.1756405654172; Thu, 28 Aug 2025
+ 11:27:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250827024222.588082-1-gary.yang@cixtech.com>
- <20250827024222.588082-3-gary.yang@cixtech.com> <0fa7e2cb-fa0b-4f9e-84d6-a4b2b3d8a4cf@kernel.org>
- <PUZPR06MB5887D9A879D16DC6A8C8ED58EF3BA@PUZPR06MB5887.apcprd06.prod.outlook.com>
- <25283b66-4cbb-4db9-9b1e-7a4e6e3db2a1@kernel.org> <PUZPR06MB5887887C93BFF42BC8417D96EF3BA@PUZPR06MB5887.apcprd06.prod.outlook.com>
-In-Reply-To: <PUZPR06MB5887887C93BFF42BC8417D96EF3BA@PUZPR06MB5887.apcprd06.prod.outlook.com>
+References: <20250827024222.588082-1-gary.yang@cixtech.com> <20250827024222.588082-3-gary.yang@cixtech.com>
+In-Reply-To: <20250827024222.588082-3-gary.yang@cixtech.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 28 Aug 2025 20:19:07 +0200
-X-Gm-Features: Ac12FXwRlxWLxClpU7dqWEVAoO6fz9nruFt5m8l0uHGvpyxmXFRxpd6jlKHnWxY
-Message-ID: <CACRpkdYC-3qybKW7VH5MVfBc3oqSrOa2RTt1Q=p=HHsi5drGOQ@mail.gmail.com>
-Subject: =?UTF-8?B?UmU6IOWbnuWkjTogW1BBVENIIDIvM10gZHQtYmluZGluZ3M6IHBpbmN0cmw6IEFkZCBjaQ==?=
-	=?UTF-8?B?eCxza3kxLXBpbmN0cmw=?=
+Date: Thu, 28 Aug 2025 20:27:22 +0200
+X-Gm-Features: Ac12FXxAt5VeCD-YOlaMkQli9qerZ055DqxwpMYFqqyUfOtx4GPyUpzPDPyGmoI
+Message-ID: <CACRpkdaX2VPAb+vihZ5BEAsGy+jNUdQ8q+3c3Q78uWmqZYeu=g@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: pinctrl: Add cix,sky1-pinctrl
 To: Gary Yang <gary.yang@cixtech.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, "robh@kernel.org" <robh@kernel.org>, 
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	cix-kernel-upstream <cix-kernel-upstream@cixtech.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Gary,
+On Wed, Aug 27, 2025 at 4:42=E2=80=AFAM Gary Yang <gary.yang@cixtech.com> w=
+rote:
 
-thanks for your patch!
-
-On Thu, Aug 28, 2025 at 10:58=E2=80=AFAM Gary Yang <gary.yang@cixtech.com> =
-wrote:
-> > On 28/08/2025 07:37, Gary Yang wrote:
-
-> > >> Whats the difference between? You have entire description field to
-> > >> explain this but instead you said something obvious there.
-> > >>
-> > > Cix sky1 has three power states. S0 means work state. S3 means STR st=
-ate.
-> > S5 means SD state.
-> > >
-> > > The pin-controller on sky1 has two power states. They are S0 and S5.
-> >
-> >
-> > State !=3D device. Please create bindings for devices, not states.
-> >
+> Add dt-bindings docs
 >
-> Sorry, maybe I didn't explain it correctly before, and then make you misu=
-nderstand
->
-> There are two pin-controller on sky1. One is used under s0 state, other i=
-s used under s5 state.
->
-> They are two devices
+> Signed-off-by: Gary Yang <gary.yang@cixtech.com>
 
-Just explain this in the description: and everyone will understand what
-is going on. Since "S0" and "S5" can be easy to confuse for "states"
-it is extra helpful with some extended descriptions.
+I saw Krzysztof reacted to this:
 
-> > >>> +    properties:
-> > >>> +      cix,pins:
-> > >>
-> > >> No, use generic properties from pinmux schema.
-> > >>
-> > >> You should also reference it.
-> > >
-> > > Did you suggest us to refer to
-> > Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml?
-> > >
-> > > Make us support drive-strength, bias-pull-down properties?
-> >
-> > and pinmux. There is a standard pins property.
->
-> Ok, I see, try our best to support standard
+> +++ b/include/dt-bindings/pinctrl/pads-sky1.h
+(...)
+> +#define CIX_PAD_GPIO001_OFFSET                 0x0
+> +#define CIX_PAD_GPIO002_OFFSET                 0x4
+(...)
+> +#define CIX_PAD_GPIO001_FUNC_GPIO001                              0x0
+> +#define CIX_PAD_GPIO002_FUNC_GPIO002                              0x0
+(...)
+> +#define PULL_UP                (1 << 6)
+> +#define PULL_DOWN      (1 << 5)
+> +#define ST             (1 << 4)
+> +#define DS_LEVEL1      0x1
+> +#define DS_LEVEL2      0x2
+(...)
 
-Unfortunately many pin controllers have forged ahead
-with custom foo,pins =3D <....>; settings where they set up
-mux and electrical config by OR:in together different bits,
-and then they just poke this into some registers.
+As stated, this isn't part of bindings so it should not be
+include/dt-bindings/pinctrl/*.
 
-This isn't very helpful for users.
+If you are using the pinmux =3D <...>: property, what you can
+do however is to put the same defines into
+arch/arm64/boot/dts/cix/sky1-pinmux-props.dtsi
+and use it the same way.
 
-I initially wanted all functions and groups to be strings
-and then to associate groups with functions using
-strings in the device tree.
+Then it is not bindings, just some DT data.
 
-But I have realized (though much pain) that many developers
-don't like this. They want a magic number to write to
-a register to configure a pin, because their hardware
-has one (or several) register for each pin.
-
-So nowadays the most common is to use a compromise.
-
-A magic number in the pinmux property to set up the muxing.
-
-For example:
-
-arch/arm/boot/dts/mediatek/mt7623.dtsi:
-pinmux =3D <MT7623_PIN_75_SDA0_FUNC_SDA0>,
-               <MT7623_PIN_76_SCL0_FUNC_SCL0>;
-
-Then the electric properties like bias-pull-down; to set
-these on the state:
-
-        i2c0_pins_a: i2c0-default {
-                pins-i2c0 {
-                        pinmux =3D <MT7623_PIN_75_SDA0_FUNC_SDA0>,
-                                 <MT7623_PIN_76_SCL0_FUNC_SCL0>;
-                        bias-disable;
-                };
-        };
-
-This is a good compromis becaus it looks similar on all
-SoCs and you see immediately what is going on: we enable
-SDA0 And SCL0 and disable bias, so there must be external
-pull-up resistors on this bus since I2C is open drain. Very
-easy for an electronics engineer to grasp, they don't need
-to be computer engineers or device tree experts.
+Sometimes this distinction isn't clear, and the kernel contain
+many offenders to this rule.
 
 Yours,
 Linus Walleij
