@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-25173-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25174-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30864B3B2F9
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 08:07:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0BF84B3B346
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 08:21:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 760291C2303E
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 06:08:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B26D7169BCE
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 06:21:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E03E1221F15;
-	Fri, 29 Aug 2025 06:07:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2978A2264CA;
+	Fri, 29 Aug 2025 06:21:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iQ4/Pjs1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FGlrlaZy"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9043B207A20;
-	Fri, 29 Aug 2025 06:07:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD8E30CD9F;
+	Fri, 29 Aug 2025 06:21:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756447660; cv=none; b=C/GYkOZLDzwC6c/R/YxlOUWTUdIq08wP6dcH5t5XHIesEnJOz0GUHg0Zusw7aOMU4bAuqGmi6I4cXzocflAZZwZIpv6YiN0kZwOh3yDi392/1HoXGzBDD305IYSGsMs1VLpgvH8LEn7SQpMWlrT7NzHjwbRDMzTk4phw8un/COw=
+	t=1756448490; cv=none; b=ScEoj55X8jTfrLD41n6yIsfJ8CRgOtzaqfopq3AA9ZZiycAgQPltGtvwspWur+AKw7+XwHVzEXYZyuzFMeJaWi98dn/1HzhWcCnaRS+DTAjKBQ/jkZY/GDvpvk7efdIhp2SkZwbCHP31b3BL4HF5DB6LesgktNSkRcpwCYaoJFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756447660; c=relaxed/simple;
-	bh=bNPJL1ko4F0rvgQSBPm+EwIcNe+DLd83LxTZHBNx+vw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=XcUTO6bMJRoTMTnbhvYFKO85otTXQ1n7QpRbTvZ0m6EHcVVvVX4D10d5ttt02eLKpoZ+w6cdJlURxCMmqbpbCx6wrmD/muzQCHrwG+nMS+oMowVs+h2bFGFCbQ9YWra6wf/7EKoJ39S7FrC03KPLz9kCEi3r1/71l4ubGOFL6Vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iQ4/Pjs1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C30DC4CEF0;
-	Fri, 29 Aug 2025 06:07:36 +0000 (UTC)
+	s=arc-20240116; t=1756448490; c=relaxed/simple;
+	bh=xFsvfzrgNoRpMr9Z15ppUi0wkOKIZR9k1HX8ANNHk1g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lOLkeJuL4cAlqn0Kg2O/IImzFMk81mGqLfh3utVqEanP6fZKu2SElIUIcnGNCFL5lOWQn7OcWsPOzY274/OISFfGe8qCK8RwAa9K+Yw/eFqbhDaXDaWTYgBrq/QiE+DlAHMvDr7YF3WzZ4fw5ruPWzXztl3omSbzoZ1T1QkXUcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FGlrlaZy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E09DBC4CEF0;
+	Fri, 29 Aug 2025 06:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756447660;
-	bh=bNPJL1ko4F0rvgQSBPm+EwIcNe+DLd83LxTZHBNx+vw=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=iQ4/Pjs1D46J56drVIpNPY0jAbsPfhlvv9n6GEYvB+17KB3QySTlxOo7DdNy49wNe
-	 t2XIgBFLysgBDp0TfxURTPRwbz8tVgBPPNzH4BM9HfaiKdr6BD0xX2dfOw60juFO3c
-	 sAi3zIp7rlDCoiMNhAtMkhVBVWPDTLCwOn4IMSmnzTHa3EnmgR8b6pTjO0bD942nfX
-	 M55ubFK5HXTj0yj/xcRMcjMycVAUaSz43Zyz9SDyCHRu2v7ifJp/As3j476o4FdgbM
-	 YgYfuEdMkZHwtcQMTw0mGqIUXN/nPzf162sCak/0L7YmcrXFytwbaLGlfV8QCU2kXX
-	 Vsc9k4XKh2OFQ==
-Message-ID: <4420d5fe-a847-4def-9ad0-ba39ad6f6b5d@kernel.org>
-Date: Fri, 29 Aug 2025 08:07:34 +0200
+	s=k20201202; t=1756448490;
+	bh=xFsvfzrgNoRpMr9Z15ppUi0wkOKIZR9k1HX8ANNHk1g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FGlrlaZyBp0AcQze/fXNotB6j8FspsiYVJnEM4FviOuWNewI3t+6AIwR5LMbt6mTQ
+	 Ira1Cj2302QBzQZjWuJuTzjYBVUnJs7vRV874SNIzhuau8HoFt78kLdVjpl4tjFdsk
+	 sje7Ospx+n0DDHgceS1dUAsAUTSLO6sR9CQwbNlgt+s9MwIFkChdKwN8vbIM37qJCA
+	 2m637kqPEtpU9zeHgkXvk8WXapstQmouN/1mJkA5SPvA2Z4Uuo4RBw+1i7RK8kYTEl
+	 QSD6ljYKvf21RtcLf6F9gTikmEPOJ9dVCOISHOw460G4oWCiQdCC1pnu+swHOsSckR
+	 MFmz/svkC2+wQ==
+Message-ID: <3e0fb880-ef2a-482d-b008-9afcb46f9fec@kernel.org>
+Date: Fri, 29 Aug 2025 08:21:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,18 +50,25 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/3] dt-bindings: pinctrl: qcom: Add SDM660 LPI pinctrl
+Subject: =?UTF-8?B?UmU6IOWbnuWkjTog5Zue5aSNOiDlm57lpI06IFtQQVRDSCAxLzNdIHBp?=
+ =?UTF-8?Q?nctrl=3A_cix=3A_Add_pin-controller_support_for_sky1?=
+To: Gary Yang <gary.yang@cixtech.com>,
+ "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ cix-kernel-upstream <cix-kernel-upstream@cixtech.com>
+References: <20250827024222.588082-1-gary.yang@cixtech.com>
+ <20250827024222.588082-2-gary.yang@cixtech.com>
+ <d5c85ba7-77ec-47f4-8ba1-39199e96da11@kernel.org>
+ <PUZPR06MB5887BFF27AAD64ACA625126BEF3BA@PUZPR06MB5887.apcprd06.prod.outlook.com>
+ <5d8aa064-6dcf-40ce-9e73-feaebca06965@kernel.org>
+ <PUZPR06MB5887436E03C17498E80E43C7EF3BA@PUZPR06MB5887.apcprd06.prod.outlook.com>
+ <f54d43ca-87cc-40bb-a56b-e49ee6a0a441@kernel.org>
+ <PUZPR06MB58879645FFBD2B7D2B7E9BE4EF3AA@PUZPR06MB5887.apcprd06.prod.outlook.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
-To: setotau@yandex.ru, Bjorn Andersson <andersson@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- ~postmarketos/upstreaming@lists.sr.ht,
- Richard Acayan <mailingradian@gmail.com>
-References: <20250828-sdm660-lpass-lpi-v4-0-af4afdd52965@yandex.ru>
- <20250828-sdm660-lpass-lpi-v4-2-af4afdd52965@yandex.ru>
- <fcd25026-97f0-472a-a274-af342b1dce9c@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -106,24 +113,115 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <fcd25026-97f0-472a-a274-af342b1dce9c@kernel.org>
+In-Reply-To: <PUZPR06MB58879645FFBD2B7D2B7E9BE4EF3AA@PUZPR06MB5887.apcprd06.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 29/08/2025 08:06, Krzysztof Kozlowski wrote:
-> On 28/08/2025 21:23, Nickolay Goppen via B4 Relay wrote:
->> From: Nickolay Goppen <setotau@yandex.ru>
+On 29/08/2025 06:33, Gary Yang wrote:
+> Hi Krzysztof,
 >>
->> Add bindings for pin controller in SDM660 Low Power Audio SubSystem
->> LPASS).
+>> On 28/08/2025 10:32, Gary Yang wrote:
+>>> Hi Krzysztof,
+>>>
+>>>>
+>>>> On 28/08/2025 08:44, Gary Yang wrote:
+>>>>>>
+>>>>>>> +     if (ret) {
+>>>>>>> +             dev_err(&pdev->dev, "fail to probe dt
+>>>>>>> + properties\n");
+>>>>>>
+>>>>>> You are printing same error twice. Drop this and just handle error
+>>>>>> printing in sky1_pinctrl_probe_dt().
+>>>>>> Especially that you now print errors on ENOMEM.
+>>>>>>
+>>>>>
+>>>>> Sorry, this print message is only once, not twice, please give more
+>>>>> information
+>>>>
+>>>> Trigger the error and check how many error messages you see. I see two.
+>>>> You should know your code better than me...
+>>>>
+>>>
+>>> There are two pin-controller on sky1. They share the same driver. The probe
+>> is called twice.
+>>>
+>>> So we see the print message twice.
 >>
->> Co-developed-by: Richard Acayan <mailingradian@gmail.com>
->> Signed-off-by: Richard Acayan <mailingradian@gmail.com>
->> Signed-off-by: Nickolay Goppen <setotau@yandex.ru>
+>>
+>> No, you don't really understand how this works. Test your code and its error
+>> paths and you will see FOR ONE BIND more than one error message.
+>> Plus my second comment which you completely ignored.
+>>
+>> I am sorry, but this is basic C.
+>>
 > 
-> Completely reversed/messed chain.
+> In order to trigger a error, we add a sentence in sky1_pinctrl_probe_dt() as follow:
+> 
+> static int sky1_pinctrl_probe_dt(struct platform_device *pdev,
+>                                  struct sky1_pinctrl *spctl)
+> {
+> 
+> +         return -ENODEV;
+>           .......
+> }
+> 
+> dmesg shows as following:
+> 
+> [    0.812780] /soc@0/pinctrl@4170000: Fixed dependency cycle(s) with /soc@0/pinctrl@4170000/hog-pins
+> [    0.821920] sky1-pinctrl 4170000.pinctrl: fail to probe dt properties
+> [    0.828503] /soc@0/pinctrl@16007000: Fixed dependency cycle(s) with /soc@0/pinctrl@16007000/hog-s5-pins
+> [    0.838058] sky1-pinctrl 16007000.pinctrl: fail to probe dt properties
+> 
+> I don't see the error message twice per one. There are two pin-controller. One is /soc@0/pinctrl@4170000. Other is /soc@0/pinctrl@16007000.
 
-Ah no, sorry, it's ok. I missed who is the sender here.
+And the next error case from sky1_pinctrl_probe_dt? ... and then the
+next one? And another one?
+
+Really, either you didn't read your own code or you just push the same
+poor code, regardless of review, because you want it to get merged?
+
+This will lead you nowhere.
+
+You have:
+
++static int sky1_pinctrl_probe_dt(struct platform_device *pdev,
++				struct sky1_pinctrl *spctl)
+...
++		if (!function)
++			return -ENOMEM;
+...
++	if (ret) {
++		dev_err(&pdev->dev, "fail to probe dt properties\n");
++		return ret;
++	}
+
+That's a clear NAK.
+
+Then you have:
+
++		if (nfuncs == 0) {
++			dev_err(&pdev->dev, "no functions defined\n");
++			return -EINVAL;
+...
++	if (ret) {
++		dev_err(&pdev->dev, "fail to probe dt properties\n");
++		return ret;
++	}
+
+that's useless duplicated message. TWICE.
+
+You could easily spot it yourself instead of keep bugging the reviewer
+for such trivial stuff.
+
+NAK, please remember to never waste reviewers time.
+
+> 
+> So you see the twice, once per one pin-controller. BTW as you suggested before, we will print the value of ret in the error message.
+> 
+> If I miss any information, please kindly remind me. Thanks
+
+You still ignored my second comment.
+
 
 Best regards,
 Krzysztof
