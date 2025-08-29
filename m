@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-25180-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25181-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7684B3B4A7
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 09:48:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EB14B3B4AB
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 09:48:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 535BB7B6AE0
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 07:46:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3EF6B988039
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 07:48:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D3E72853F1;
-	Fri, 29 Aug 2025 07:47:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC840284B4C;
+	Fri, 29 Aug 2025 07:48:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UoKFCMZl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQqO4OtE"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FED23ABBD;
-	Fri, 29 Aug 2025 07:47:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665FE23ABBD;
+	Fri, 29 Aug 2025 07:48:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756453674; cv=none; b=NsXW928k0JEwQC2L/Cym8hhLE5f8kILukpaL5GPIebmdxQBRIlvaEopNaWPFpXGJTVqS2PRLcwGhvJrGRoNs6CNvgjO4iqDwvnbDSgFFsr6c8MXS0XmxD3ejFltQ80cFwgfMVoWDhVdvCg0C/gZasmwHBAPH1q4CPgkODEeOkQI=
+	t=1756453722; cv=none; b=sukxrMaK6P10xReuZ/oJrzKEQx5pMCTd8sQv/XSCkYSfX3IynsBc41qv3Cqy3/6zyzTO5pO53vSxzOlDHTyiMJUxWJXiluW6/P5EWKkbFRxsBvRbplJBImDrBYgsI5iQHPCPe5tc2h5kGkeCVykjuvctoe/ZKj8jZCgxtLJ5iwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756453674; c=relaxed/simple;
-	bh=gCbRk9xzyu+2hoWKBy3FsZe0DLlpKUqrn8XkcEjrLfU=;
+	s=arc-20240116; t=1756453722; c=relaxed/simple;
+	bh=0A4rOapR7uxRXHkEuZV4upawq7r3HH5Hovvx4aG4VPg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mt6FEOvKR8LNSFrMNIwZifS/uEWXzlzfeJRnuw3EjH1JarXCKCyVeStRbCMYPOFM9kzPp4bf7Y4/J6F7p0eOpv7czaO+tmTqdfidg8o4VIuY3g4mL7FUGpRaCoX3tYK4BmBJm/WlBHVVVCTz8sxc8cCYTTFrTjhDES179ww4aEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UoKFCMZl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94D2DC4CEF0;
-	Fri, 29 Aug 2025 07:47:50 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=USGvjwo5MqHGWW+ve+/T5hmGbeuq1aYObxtcphx9M3Y1K4IODPXMhvhLiHtlmipzV2r+SMy4WSJK0Xr82wBUb+glIL3nezv/a5mzoYQU8skaMSJhLXoojkOkJOm7Vs6tHBArzq/F8jzbxisMBSgALCEStGlROtYfTFkZrWUYWVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SQqO4OtE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAAC0C4CEF0;
+	Fri, 29 Aug 2025 07:48:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756453673;
-	bh=gCbRk9xzyu+2hoWKBy3FsZe0DLlpKUqrn8XkcEjrLfU=;
+	s=k20201202; t=1756453721;
+	bh=0A4rOapR7uxRXHkEuZV4upawq7r3HH5Hovvx4aG4VPg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UoKFCMZlFXgKPPQihwSAddcP+lF6qPigHrYFhBWK22xq9W9PaY3RubjMJCb+++QU6
-	 YKu6PKhP7t2kxr2PuaUI3oWS3RnoPLUmJevRckZQWuEyW4LgNIFcjJ4RZINARPsX6R
-	 liqlZgIwO+SR33v7jYpPIKFjQFSwXVhvMKheq7l+mp91pPT/shcQcbLeIUfVuvgQB7
-	 RXJZdqKjcj3VGRInxQWprCSxe5vwShCXvpS/z+lWmOhpBu2LExrZo636qUVpTnUDpY
-	 dXwSj79YkjaKQMQgOV6Rdc8CL/iOR9DrmhxyDh23aQ/N4CSPlAR8L2ajcBSud3pRbP
-	 eoUbBM5pBQJEA==
-Message-ID: <0f716362-07f4-4c79-bb0a-e71d2630a797@kernel.org>
-Date: Fri, 29 Aug 2025 09:47:48 +0200
+	b=SQqO4OtE8f4SwGiAZn3jS8yZB90ojBHpKfK/SF/ZQejldqv91+Goeee04F854Ze3O
+	 e9akjtP+6gRKmRBhdD3NYYruWaMIW71XZD3ppS62yXLm0+ZTsAa/2J+ZTH7d2y9cM6
+	 AMt+XTjOPSEZ0NEgbk/gE7CB3Ny9MJQOg1LAhRzjwwiYPosU/S4KbMlGaOd1mwFYRS
+	 CIKq21gO1vrzkJfBHraSk2lxIs60Qt3hzPvbL719+8k9DdP4sMNwHZPuklmyauJtse
+	 o635uN88q6b/qoUzVfCeevMH+tIUZ/swjlDNcaXLUwsKikG99TMhOyxc/v7aVDUZkw
+	 yoYBTBH//YVJg==
+Message-ID: <45eec9b1-d4cd-470b-abcc-03a823f397b2@kernel.org>
+Date: Fri, 29 Aug 2025 09:48:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -53,17 +53,14 @@ User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v3 5/6] dt-bindings: soc: fsl: qe: Add support of IRQ in
  QE GPIO
 To: Christophe Leroy <christophe.leroy@csgroup.eu>,
- Rob Herring <robh@kernel.org>
-Cc: Qiang Zhao <qiang.zhao@nxp.com>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+ Qiang Zhao <qiang.zhao@nxp.com>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org
 References: <cover.1756104334.git.christophe.leroy@csgroup.eu>
  <17636607f2beac3b64c87b3bec035fa27ce8d195.1756104334.git.christophe.leroy@csgroup.eu>
- <CAL_JsqKFvVQTVXV8mWX0z1=hd3nLDzLXq-0G_0bshMCvQ5kVvA@mail.gmail.com>
- <f21e27da-de26-4835-9660-b39e99695281@csgroup.eu>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -109,65 +106,46 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <f21e27da-de26-4835-9660-b39e99695281@csgroup.eu>
+In-Reply-To: <17636607f2beac3b64c87b3bec035fa27ce8d195.1756104334.git.christophe.leroy@csgroup.eu>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 28/08/2025 16:12, Christophe Leroy wrote:
+On 25/08/2025 08:53, Christophe Leroy wrote:
+> In the QE, a few GPIOs are IRQ capable. Similarly to
+> commit 726bd223105c ("powerpc/8xx: Adding support of IRQ in MPC8xx
+> GPIO"), add IRQ support to QE GPIO.
 > 
+> Add property 'fsl,qe-gpio-irq-mask' similar to
+> 'fsl,cpm1-gpio-irq-mask' that define which of the GPIOs have IRQs.
 > 
-> Le 28/08/2025 à 15:28, Rob Herring a écrit :
->> On Mon, Aug 25, 2025 at 2:20 AM Christophe Leroy
->> <christophe.leroy@csgroup.eu> wrote:
->>>
->>> In the QE, a few GPIOs are IRQ capable. Similarly to
->>> commit 726bd223105c ("powerpc/8xx: Adding support of IRQ in MPC8xx
->>> GPIO"), add IRQ support to QE GPIO.
->>>
->>> Add property 'fsl,qe-gpio-irq-mask' similar to
->>> 'fsl,cpm1-gpio-irq-mask' that define which of the GPIOs have IRQs.
->>
->> Why do you need to know this? The ones that have interrupts will be
->> referenced by an 'interrupts' property somewhere.
+> Here is an exemple for port B of mpc8323 which has IRQs for
+> GPIOs PB7, PB9, PB25 and PB27.
 > 
-> I don't follow you. The ones that have interrupts need to be reported by 
-> gc->qe_gpio_to_irq[] so that gpiod_to_irq() return the IRQ number, for 
-> instance to gpio_sysfs_request_irq() so that it can install an irq 
-> handler. I can't see where they would be referenced by an "interrupts" 
-> property.
+> 	qe_pio_b: gpio-controller@1418 {
+> 		compatible = "fsl,mpc8323-qe-pario-bank";
+> 		reg = <0x1418 0x18>;
+> 		interrupts = <4 5 6 7>;
+> 		interrupt-parent = <&qepic>;
+> 		gpio-controller;
+> 		#gpio-cells = <2>;
+> 		fsl,qe-gpio-irq-mask = <0x01400050>;
 
-They would be referenced by every consumer of these interrupts. IOW,
-this property is completely redundant, because DT holds this information
-already in other place.
+We see this from the patch. No need to repeat the patch contents in the
+commit msg.
 
-> 
->>
->>> Here is an exemple for port B of mpc8323 which has IRQs for
->>
->> typo
->>
->>> GPIOs PB7, PB9, PB25 and PB27.
->>>
->>>          qe_pio_b: gpio-controller@1418 {
->>>                  compatible = "fsl,mpc8323-qe-pario-bank";
->>>                  reg = <0x1418 0x18>;
->>>                  interrupts = <4 5 6 7>;
->>>                  interrupt-parent = <&qepic>;
->>>                  gpio-controller;
->>>                  #gpio-cells = <2>;
->>>                  fsl,qe-gpio-irq-mask = <0x01400050>;
->>>          };
->>
->> You are missing #interrupt-cells and interrupt-controller properties.
-> 
-> The gpio controller is not an interrupt controller. The GPIO controller 
-> is brought by patch 1/6 and documented in patch 6/6.
 
-Then the IRQ mask property is not right here. If you say "this GPIOs
-have IRQs" it means this is an interrupt controller.
+>  Example:
+>  	qe_pio_a: gpio-controller@1400 {
+> @@ -42,6 +51,16 @@ Example:
+>  		gpio-controller;
+>  	  };
+>  
+> +	qe_pio_b: gpio-controller@1418 {
+> +		#gpio-cells = <2>;
+> +		compatible = "fsl,mpc8323-qe-pario-bank";
 
-If you say this is not an interrupt controller, then you cannot have
-here interrupts per some GPIOs, obviously.
+Please follow DTS coding style.
+
 
 
 Best regards,
