@@ -1,107 +1,264 @@
-Return-Path: <linux-gpio+bounces-25193-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25194-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3318FB3B8FC
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 12:37:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 200E2B3B93A
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 12:51:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 02559364D67
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 10:37:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C9C766803D1
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 10:51:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71B423093D2;
-	Fri, 29 Aug 2025 10:37:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BA8430F941;
+	Fri, 29 Aug 2025 10:51:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="EZhcrnJM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LQwVDWIH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22AF51DF256
-	for <linux-gpio@vger.kernel.org>; Fri, 29 Aug 2025 10:37:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D19274B2E;
+	Fri, 29 Aug 2025 10:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756463826; cv=none; b=cr7z7ABY4zOLXj6KQvERyA7iJ843sxm5UsqzGEr/n2ZKITtXAdxXLWTehAteqycVjmjX3LVRB83ZqCsc2lKRkhwkWEqfdlbCypA2frvuKAE1mjQP+i0ltGxKfd5P72QisSyErISP4Jn2sHUeZTJViLAoSasdYbhPNDUgOGv5StM=
+	t=1756464678; cv=none; b=D9dU1LNJghbdBsTyFdtiAostprUkxWN7uc2QF8zVz0xCbzHBM/t3vF/UmLoXpKO1YooTk7wWU3gt+wxXlOByv/R8NygHVw4qKpFB48svMynSc2chlOxVvKjly0meD5usRwCQepXZTIeX4do3bviREd+oAg/6xP+W7h37Ze0PAKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756463826; c=relaxed/simple;
-	bh=ht6WBgAyA95EiKx1XQ4SunluUCT71doNEKHyo7TqvdM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=eSGSYpkQRpMZq4dFNgOGxlszcS1nrif3ZgrmMtt+dBQxVACwM1gkgPnlM1V2P4j6RuS5/dRCjF15rOzusxZesugSkiDt0Qe5BaRn31lHjlfq+OMGPC+k7lsfPB5jhPtP6Q2JHF71ecxnri2xEJC5vIIFWP1QPgpe8XQUz1ccNVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=EZhcrnJM; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-afcb78f5df4so328855266b.1
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Aug 2025 03:37:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1756463822; x=1757068622; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ht6WBgAyA95EiKx1XQ4SunluUCT71doNEKHyo7TqvdM=;
-        b=EZhcrnJMPtjazKT1WNyRdMe0gIKYoH4pgR1uUPsMrQR0NBn0URI8jGDSa12b9SPpT9
-         mzA59I7wH5VFcU22JZ6VpavlqORvB6nhOVyFaz160XxaZGHuCARxOktc/utaiobf3hQj
-         7hdeNt664QeYcjEEt1dm0SOHoW9B9HcO9WbooTETW7HFmdlrcClEnVmhW1m6VQJOVHwW
-         R1tXRP92lFcZ2qJvZc++Jna7kCKpmVJiPyXZqSj0sAU8Xj5kfh+q3DY2XOZBeAwOJsBi
-         4yeRwPCRReYZ5cV+5OItvWqfqP/jMfPLm/OqjVj90RaoDdXc6HhUJ/H/RiE6ELYFvpaI
-         AC6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756463822; x=1757068622;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ht6WBgAyA95EiKx1XQ4SunluUCT71doNEKHyo7TqvdM=;
-        b=KsUnKxPqZv0QBwmrHNAud/sNGTg5R0kuIXXrlV+YJgPG6MwvmgEU3SHbtEK9GY4JeV
-         lc+uIQZ7fQLJR/guyE8PkaVXNJlSuEyD4YlVDutQe2b3FZG1bhgJ5WtFOPPH063rKCvZ
-         SuXPq9BCxL0TOKqS1vRX51JdlEZ5xL72X7mXPY1nfWbcRl5wXJD7Goqhsg8aTEcNprCX
-         IFI7bkBVLXJ9lVXGz05loKOX+6ybaDKJNfwat53X9TYvZqt8sM53Q2Red0TvAgVKIa3Z
-         9wbZ4S9n3Yn+OM79kdzj6QRuPMZ+JGcSG4FFxgIKnSTbUE/mMeJ3bkuOcImcB3+HtdBJ
-         lcAg==
-X-Gm-Message-State: AOJu0YzHqF1fUR/kB9HS6NTwrLgWyTrlEjZ1ZUdWm9O4CN73IW0uXQ0v
-	UjMNnOZgNeb19N/YKIrQ2UeFZFWkOanNGkcndL1ISyQ56EikC0lqUaoLrcLonOkNFccxPYnap5S
-	sKcyIfHE2WV64fRvnW3ihvh0ZlFXuSvCXjOS8JkgHBg==
-X-Gm-Gg: ASbGncsndzREWhGwvb8kuuyQmmyxN7CJXOlIES2CgvRc7+LcHNmv83c8CLc+XvMsCkR
-	zAWNcxDLVOhQQupQETCaWFRk0S1gNx3OGvkageg/YkUqVrMugxz3cClKFfKQkRhyaB+Fctv1rlr
-	Ft9wo7FsjsQpklHSFuKQXAJ/wHSQSp3KREPlkD++sNXkNsoNny3UvsgjjHYeAV9P6KAGsSy+0+p
-	hJj30QpE8E72PIqwakXwbwmAMJE0h7qmNu4+heLpWnxQfrayA==
-X-Google-Smtp-Source: AGHT+IFJ+Jql9GTRMLxlWZHn7QjRxggZgajkeOxoiMobrLO8cg89kqcVxj2q/e0SSzk+iXh7lkPI7os/QvbDscIIFvM=
-X-Received: by 2002:a17:906:6a1f:b0:ae6:f087:953 with SMTP id
- a640c23a62f3a-afe28f8581cmr2645873166b.12.1756463822326; Fri, 29 Aug 2025
- 03:37:02 -0700 (PDT)
+	s=arc-20240116; t=1756464678; c=relaxed/simple;
+	bh=+QsysON+6yRXfht3SSQ9NdAWxzxbXXdbaMGso6HoALs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dYBDpXMmCUhpw40FHlsiTXTX9txETVmxQmNZ9tKN3ReYOYuHxxW/GMNKRcgYTEXM7mX2pY8qGAVMZqUHjncy392kwTFVT1Me4s7tHwDh7QsnBsGLPZ/vXUpltYLFcZ3tU4fip8LTlEFwJuc6CcsUaWjYBAae1Sn+TiwMJkB/vNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LQwVDWIH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 806D2C4CEF0;
+	Fri, 29 Aug 2025 10:51:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756464677;
+	bh=+QsysON+6yRXfht3SSQ9NdAWxzxbXXdbaMGso6HoALs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LQwVDWIH+/Qu6JVgq6u/kmBGTQ0szc2u6O1Y980dbmif03eUdGf9Ffa+hQYghUTym
+	 9Lz+S0+sroN2vzaMxk4zIiev2rCF7ZbPHbJ5fS+V2sTdX2Cvl5+yN2GByDhGPzlWqM
+	 gqfnX/gpIRPHi0LFF4WE/qzaDYW5U6LBzk2pf36nhHC6QEVALjV2AeV2hVKvEDUaAY
+	 p2K7Ls6F16mtaJ1lhY4+SSi4gTu6P4Llo3blGpDTR8r3zwkV0vFn6qFIpuOZmmkn1r
+	 qa5LsZGWqXtDT0HdY5O54iKmYQbRWHPVt8B/k0a6HflOcsSdn/b7lyg47/Qd/LHzAI
+	 F5FXz8bmRP8RA==
+Message-ID: <3a2475f8-6373-4dd1-b605-b58c74a97fee@kernel.org>
+Date: Fri, 29 Aug 2025 12:51:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Phil Elwell <phil@raspberrypi.com>
-Date: Fri, 29 Aug 2025 11:36:49 +0100
-X-Gm-Features: Ac12FXxDx_q65zV0RpYvhwxDqgb7j9X7N2Dd3p_rpz4w55Ux_u5snovoEr7Jb38
-Message-ID: <CAMEGJJ06_3bgiWfPjQy3JRgtzq5vcr4FgR9JrzTFrGKOxTe52A@mail.gmail.com>
-Subject: pinctrl, probe order, and CONFIG_MODULES
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>
-Cc: linux-gpio@vger.kernel.org, 
-	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/6] dt-bindings: soc: fsl: qe: Add support of IRQ in
+ QE GPIO
+To: Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Rob Herring <robh@kernel.org>
+Cc: Qiang Zhao <qiang.zhao@nxp.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+References: <cover.1756104334.git.christophe.leroy@csgroup.eu>
+ <17636607f2beac3b64c87b3bec035fa27ce8d195.1756104334.git.christophe.leroy@csgroup.eu>
+ <CAL_JsqKFvVQTVXV8mWX0z1=hd3nLDzLXq-0G_0bshMCvQ5kVvA@mail.gmail.com>
+ <f21e27da-de26-4835-9660-b39e99695281@csgroup.eu>
+ <0f716362-07f4-4c79-bb0a-e71d2630a797@kernel.org>
+ <1ba37df7-2d4a-4258-8220-58ee7d609264@csgroup.eu>
+ <c314b7c6-f5b7-4f3e-8d67-e3c92ff8ff37@kernel.org>
+ <bf5444e4-8f3f-4a56-be67-29857726b119@csgroup.eu>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <bf5444e4-8f3f-4a56-be67-29857726b119@csgroup.eu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 29/08/2025 11:41, Christophe Leroy wrote:
+>>>
+>>> That's more or less the same here with my series, patch 1 implements an
+>>> interrupt controller (documented in patch 6) and then the GPIO
+>>> controllers consume the interrupts, for instance in gpiolib functions
+>>> gpio_sysfs_request_irq() [drivers/gpio/gpiolib-sysfs.c] or
+>>> edge_detector_setup() or debounce_setup() [drivers/gpio/gpiolib-cdev.c]
+>>>
+>>> External drivers also use interrupts indirectly. For example driver
+>>> sound/soc/soc-jack.c, it doesn't have any direct reference to an
+>>> interrupt. The driver is given an array of GPIOs and then installs an
+>>> IRQ in function snd_soc_jack_add_gpios() by doing
+>>>
+>>> 	request_any_context_irq(gpiod_to_irq(gpios[i].desc),
+>>> 					      gpio_handler,
+>>> 					      IRQF_SHARED |
+>>> 					      IRQF_TRIGGER_RISING |
+>>> 					      IRQF_TRIGGER_FALLING,
+>>> 					      gpios[i].name,
+>>> 					      &gpios[i]);
+>>
+>>
+>> External drivers do not matter then. Your GPIO controller receives
+>> specific interrupts (that's the interrupt property) and knows exactly
+>> how each GPIO maps to it.
+>>
+> 
+> Do you mean then that the GPIO driver should already know which line has 
 
-A Raspberry Pi user recently asked us why I2C wasn't working in their
-custom kernel build. The primary change they had made was to trim the
-number of enabled drivers, make them all built-in, and to remove
-CONFIG_MODULES=y. The end result of this is that the pin muxing
-required for I2C to work was not being applied, leaving the interface
-talking to thin air.
+The SoC knows, that's fixed information, so shall GPIO driver know as well.
 
-I eventually traced the failure back to this change:
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/pinctrl/devicetree.c?h=next-20250829&id=d19c5e79d46efdf89306be99f3c8824cf58e35f6
-It introduces a requirement for CONFIG_MODULES to be enabled in order
-to get an EPROBE_DEFER in the event that the pinctrl driver has not
-yet been probed. Without CONFIG_MODULES, the pinctrl requirements are
-waived. Removing the IS_ENABLED(CONFIG_MODULES) clause allows the
-probing of the I2C driver to be deferred, fixing the user's problem.
+> an interrupt and which one doesn't ?
+> 
+> The interrupts are fixed per soc, but today the GPIO driver is generic 
+> and used on different SOCs that don't have interrupts on the same lines. 
 
-Is this requirement for supporting modules reasonable? If so, how is
-one supposed to get the pinctrl to probe before the I2C driver?
+How you write drivers is one thing, but that's never a reason alone to
+add properties to the DT.
 
-Thanks,
+> And even on the given SOCs, not all ports have interrupts on the same 
 
-Phil Elwell
+That's pretty standard between all GPIO/pinctrl drivers. I would
+generalize that's pretty standard for all SoCs - they have differences
+within devices, some pins do that, some do different things.
+
+> lines. Should all possibilities be hard-coded inside the driver for each 
+> possible compatible ? The property 'fsl,qe-gpio-irq-mask' is there to 
+
+There are many ways how to do it in the driver, that feels like one of
+them, so yes, it should.
+
+> avoid that and keep the GPIO driver as generic as possible with a single 
+
+Sorry, that approach, which leads to moving such stuff to DT, was many
+times on mailing list rejected. You use the same argument as that "one
+clock, one device node" TI approach. It got it way to kernel long time
+ago but since then was pretty discouraged (rejected for new SoCs). It
+re-appeared again few months ago in a form of "I have two registers, so
+I have two device nodes in DT", so it seems poor code keeps re-appearing.
+
+> compatible 'fsl,mpc8323-qe-pario-bank' that is found in the DTS of 8323 
+> but also in DTS of 8360, in DTS of 8569, etc... :
+> 
+> arch/powerpc/boot/dts/fsl/mpc8569mds.dts: 
+>              "fsl,mpc8323-qe-pario-bank";
+> arch/powerpc/boot/dts/fsl/mpc8569mds.dts: 
+>              "fsl,mpc8323-qe-pario-bank";
+> arch/powerpc/boot/dts/kmeter1.dts: 
+>      "fsl,mpc8323-qe-pario-bank";
+> arch/powerpc/boot/dts/mpc832x_rdb.dts: 
+> compatible = "fsl,mpc8323-qe-pario-bank";
+> arch/powerpc/boot/dts/mpc836x_rdk.dts: 
+> "fsl,mpc8323-qe-pario-bank";
+> arch/powerpc/boot/dts/mpc836x_rdk.dts: 
+> "fsl,mpc8323-qe-pario-bank";
+> 
+> Do you mean we should define one compatible for each of the ports of 
+> each soc, and encode the mask of interrupts that define which line of 
+> the port has interrupts in the data field ?
+
+I don't know that good your hardware to tell.
+
+> 
+> Something like:
+> 
+> static const struct of_device_id qe_gpio_match[] = {
+> 	{
+> 		.compatible = "fsl,mpc8323-qe-pario-bank-a",
+> 		.data = (void *)0x00a00028,
+
+There is no DTS in your patchset, so I cannot help really. I just don't
+have time to imagine such DTS and try to figure out how it can be
+written. Posting complete picture usually helps.
+
+I don't follow what is the bank.
+
+You have a device, yes?
+It has some grouped GPIOs (banks?) and some within group/bank can handle
+interrupts?
+Are these fixed per SoC? Yes. Well, that's standard and every other
+vendor has the same. They solve it in the drivers differently, though.
+
+> 	},
+> 	{
+> 		.compatible = "fsl,mpc8323-qe-pario-bank-b",
+> 		.data = (void *)0x01400050,
+> 	},
+> 	{
+> 		.compatible = "fsl,mpc8323-qe-pario-bank-c",
+> 		.data = (void *)0x00000084,
+> 	},
+> 	{
+> 		.compatible = "fsl,mpc8323-qe-pario-bank-d",
+> 		.data = (void *)0,
+> 	},
+> 	{
+> 		.compatible = "fsl,mpc8360-qe-pario-bank-a",
+> 		.data = (void *)0xXXXXXXXX,
+> 	},
+> 	{
+> 		.compatible = "fsl,mpc8360-qe-pario-bank-b",
+> 		.data = (void *)0xXXXXXXXX,
+> 	},
+> ....
+> 	{},
+> };
+> MODULE_DEVICE_TABLE(of, qe_gpio_match);
+> 
+> That would be feasible but would mean updating the driver each time a 
+> new SOC is added.
+
+BTW, like every other platform.
+
+> 
+> Do you mean it should be done that way ?
+> 
+> Isn't the purpose of the device tree to keep drivers as generic as 
+> possible ?
+
+Not at all, sorry. The purpose of DT is not to keep drivers generic.
+
+
+Best regards,
+Krzysztof
 
