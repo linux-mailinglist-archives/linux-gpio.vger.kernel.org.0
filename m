@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-25191-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25192-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12CCBB3B8B6
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 12:29:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1261DB3B8F7
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 12:36:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D59A9566C13
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 10:29:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BEDD7188D669
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 10:36:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C512F3081D4;
-	Fri, 29 Aug 2025 10:29:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E3FB3093A5;
+	Fri, 29 Aug 2025 10:35:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oXZriuDk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hv9/nEKw"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71DA72BEFF6;
-	Fri, 29 Aug 2025 10:29:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8F7265CA7;
+	Fri, 29 Aug 2025 10:35:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756463349; cv=none; b=WtlTeykeNQFNiw7slbfcRDecbOIk6HwirwRNNtSuq/fnwCwJOIXND4uAS4aCwa7FjdbeBS5BNiGWy7Sj6nwmF4hSFrcEWJFvG1GF5/bjqffTTnanmEPir2svNsSg5KnnT6Uoz7FFwjmCHDTrxdzvU0lCtFv2f8GbFVlljaLK+2U=
+	t=1756463755; cv=none; b=ijufumvuOP+kxd/9t0lI+IzI0N4ZIHgxnz4M3F5RKjoVSbvLeqbHU7mPxkDPTW9aAwyc9N5acRjk6SZQA5TmMlUzAiPD+6U5ndnZgA+ZmKhohXF5j73DNrU1xmD788HFwWecrZnJ9G6bwiQHBCSXKl1pSZbIwqFsQ6we0RHlrzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756463349; c=relaxed/simple;
-	bh=rK4qkpQLHD4YV+ZOv6+7UA3F3GsCJ78MecmyuokwNhA=;
+	s=arc-20240116; t=1756463755; c=relaxed/simple;
+	bh=WNtxN+vSd6AgAJVmdxK4WPJLQNBldWjNEf0ks7X0Kuc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PATegCY43OUlNEY0hbHyc28z8kCUYN1bHafnmxWmeCgbpiqcrRIi3zcqmbMI5ZMyaj62P3UDdM3fiDYQSbos9BSq99KOa0s6D7KcxR4CZnNev4ZeHMDXvYM/Gzv5NMzlGOw+lC9Trk+F9RJbIX8NGmFVr/xUh3p6aNYaaWY0TLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oXZriuDk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAE17C4CEF0;
-	Fri, 29 Aug 2025 10:28:59 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=UZ+5o+mn9M2jWT6m7N19riq6EyqllzViVyFGXL6aCbBS8l2GK0MnOmMARImCdDinZX/vN0Yki5EqYT2lpJbPRELVv+aNLL3YfLrMm27npoMwjsqT/mL+KToMWzxW/TKTfP0EMeacFN1lJRrXBdUlSPJ3a+EouIp0FtDtv4VBgkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hv9/nEKw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CD4DC4CEF0;
+	Fri, 29 Aug 2025 10:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756463349;
-	bh=rK4qkpQLHD4YV+ZOv6+7UA3F3GsCJ78MecmyuokwNhA=;
+	s=k20201202; t=1756463754;
+	bh=WNtxN+vSd6AgAJVmdxK4WPJLQNBldWjNEf0ks7X0Kuc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oXZriuDkwQAQm9ce6gw+R5rqIDEB/OI+h2EsdRTbbciLZPFIKjLWfZfByzZNRVA0/
-	 4kwLvxPLFMjjcU7FhE23E4Nb788MSU9ScxDDFIqS1smxYrFHr4wvR75K9+EfvLht2v
-	 gAbbRULk70G1qnvHBT5yGLzNPic1WyvHUlehmuoL1pcVv3mfbOmpZ5gURvCtFC1bdX
-	 X6PkDrK7o2KywWgHhuJ1040CwOh+EOM2n02isZCWgSfyVnYcD+2j07j3km+PklsRab
-	 0qkA+5nZqsZREwAS9LYlPX2+0CiFCSATA9bC5niYDb7zTwA8+LOTQtrnrVtpcO6gmi
-	 ZHvq9jYIv/Qpg==
-Message-ID: <32dedafd-df52-48fe-a9b2-be96127bb9b7@kernel.org>
-Date: Fri, 29 Aug 2025 12:28:57 +0200
+	b=Hv9/nEKw5jRPkK8FdmgRC04pppaWOyAUGc6FHrQNvL6qmEFeUfJc6/iuya8/v1VfU
+	 RTjEcQkqof9jdvOUx2rkwpcJJzZGn7fPsIH1CNEbutmLQZOZ+UTa9Xf62KHEGRQtYk
+	 WgIUajqUbPoYCMj0GB8L4p37dku1HwpScfN3jbV/l3clAxsZ9HyvvuPmwXEwfZkBA1
+	 0RDOM/nxscg2O78i860iwdRjPWOl6MVW8HIaIZ5tLpPB+QSY/aO8Fl9Wl+LDwWK72W
+	 MHA38NaxT2UgF+RBAhMVJ8pdd1N/n0GsJV0/AA238DVSp2H/fURKPvn7Q7+jr+qw4t
+	 78JxP19lhFOXQ==
+Message-ID: <4879398b-a24c-4ec6-8bb0-90d2c1db2dc8@kernel.org>
+Date: Fri, 29 Aug 2025 12:35:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,28 +50,26 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 05/10] pinctrl: samsung: Add ARTPEC-8 SoC specific
- configuration
-To: Linus Walleij <linus.walleij@linaro.org>,
- Ravi Patel <ravi.patel@samsung.com>
-Cc: jesper.nilsson@axis.com, mturquette@baylibre.com, sboyd@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- s.nawrocki@samsung.com, cw00.choi@samsung.com, alim.akhtar@samsung.com,
- tomasz.figa@gmail.com, catalin.marinas@arm.com, will@kernel.org,
- arnd@arndb.de, ksk4725@coasia.com, kenkim@coasia.com, pjsin865@coasia.com,
- gwk1013@coasia.com, hgkim05@coasia.com, mingyoungbo@coasia.com,
- smn1196@coasia.com, pankaj.dubey@samsung.com, shradha.t@samsung.com,
- inbaraj.e@samsung.com, swathi.ks@samsung.com, hrishikesh.d@samsung.com,
- dj76.yang@samsung.com, hypmean.kim@samsung.com,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linux-arm-kernel@axis.com,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org, soc@lists.linux.dev,
- Priyadarsini G <priya.ganesh@samsung.com>
-References: <CGME20250825120720epcas5p491e16bbfbdbcd751acbb0c0e55f9e2a2@epcas5p4.samsung.com>
- <20250825114436.46882-1-ravi.patel@samsung.com>
- <20250825114436.46882-6-ravi.patel@samsung.com>
- <CACRpkdZwz8C=MRgo1tQrkQzNtKMLV+P-LK8XyRA3eSFW-cbFCg@mail.gmail.com>
+Subject: =?UTF-8?B?UmU6IOWbnuWkjTog5Zue5aSNOiDlm57lpI06IOWbnuWkjTogW1BBVENI?=
+ =?UTF-8?Q?_1/3=5D_pinctrl=3A_cix=3A_Add_pin-controller_support_for_sky1?=
+To: Gary Yang <gary.yang@cixtech.com>,
+ "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ cix-kernel-upstream <cix-kernel-upstream@cixtech.com>
+References: <20250827024222.588082-1-gary.yang@cixtech.com>
+ <20250827024222.588082-2-gary.yang@cixtech.com>
+ <d5c85ba7-77ec-47f4-8ba1-39199e96da11@kernel.org>
+ <PUZPR06MB5887BFF27AAD64ACA625126BEF3BA@PUZPR06MB5887.apcprd06.prod.outlook.com>
+ <5d8aa064-6dcf-40ce-9e73-feaebca06965@kernel.org>
+ <PUZPR06MB5887436E03C17498E80E43C7EF3BA@PUZPR06MB5887.apcprd06.prod.outlook.com>
+ <f54d43ca-87cc-40bb-a56b-e49ee6a0a441@kernel.org>
+ <PUZPR06MB58879645FFBD2B7D2B7E9BE4EF3AA@PUZPR06MB5887.apcprd06.prod.outlook.com>
+ <3e0fb880-ef2a-482d-b008-9afcb46f9fec@kernel.org>
+ <PUZPR06MB588786D49A7C1964E4A39851EF3AA@PUZPR06MB5887.apcprd06.prod.outlook.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -117,39 +115,31 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <CACRpkdZwz8C=MRgo1tQrkQzNtKMLV+P-LK8XyRA3eSFW-cbFCg@mail.gmail.com>
+In-Reply-To: <PUZPR06MB588786D49A7C1964E4A39851EF3AA@PUZPR06MB5887.apcprd06.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 29/08/2025 12:11, Linus Walleij wrote:
-> Hi Ravi / SeonGu,
-> 
-> thanks for your patch!
-> 
-> On Mon, Aug 25, 2025 at 2:07 PM Ravi Patel <ravi.patel@samsung.com> wrote:
-> 
->> From: SeonGu Kang <ksk4725@coasia.com>
+On 29/08/2025 12:18, Gary Yang wrote:
+>>>
+>>> So you see the twice, once per one pin-controller. BTW as you suggested
+>> before, we will print the value of ret in the error message.
+>>>
+>>> If I miss any information, please kindly remind me. Thanks
 >>
->> Add Axis ARTPEC-8 SoC specific configuration data to enable pinctrl.
+>> You still ignored my second comment.
+
+^^^ That was second time here I reminded about ENOMEM comment.
+
 >>
->> Signed-off-by: SeonGu Kang <ksk4725@coasia.com>
->> Signed-off-by: Priyadarsini G <priya.ganesh@samsung.com>
->> Signed-off-by: Ravi Patel <ravi.patel@samsung.com>
 > 
-> Please avoid CC to soc@kernel.org on these patches, they end up in the
-> patchwork for immediate merging for SoC:
-> https://patchwork.kernel.org/project/linux-soc/patch/20250825114436.46882-6-ravi.patel@samsung.com/
-
-Yeah, that's odd - most likely old CC-list. This could happen if using
-b4 but there is no b4 being used here, so why Cc-ing according to some
-old files?
-
+> First you wrote " You are printing same error twice ", please pay attention to the "same error" strings, it makes me confuse, I misunderstand your thinking 
+> until you took the example above. So the discussion is needed, not waste our time.
 > 
-> I think this is not you intention, the pinctrl portions will be merged by
-> Krzysztof who sends it to me once that part is finished reviewing.
-Version for review should not be merged via soc@, so that's wrong
-process in any case. But you are right that I will be taking everything,
-thus soc@ is not involved at all.
+> Second the return value of sky1_pinctrl_probe_dt() is not only ENOMEM, it can also return ENODEV and EINVAL. Although I don't think this is a bug, take our
+
+The problem is that you ignored the ENOMEM comment and it clearly should
+direct you to the problem and solution ("If I cannot have error on
+ENOMEM, I will move my error msgs to the called function").
 
 Best regards,
 Krzysztof
