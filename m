@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-25172-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25173-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D29CDB3B2F2
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 08:06:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30864B3B2F9
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 08:07:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 85CAA3A7222
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 06:06:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 760291C2303E
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 06:08:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC9BF221F15;
-	Fri, 29 Aug 2025 06:06:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E03E1221F15;
+	Fri, 29 Aug 2025 06:07:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="osBQeOrg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iQ4/Pjs1"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC041B0413;
-	Fri, 29 Aug 2025 06:06:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9043B207A20;
+	Fri, 29 Aug 2025 06:07:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756447591; cv=none; b=SkfpmseCIOL1ApoaZcE+mX1K2SUgMiFiu+AJpJlNdtST8vSklPyFdFKrO/RMvlbOrI6hKqaDygs45+zCfNO/qLaA/7+9swV3fHxsaIV6FqFhhxC1GUilfXq2dU2Pc2CDIAwzKEiW0cQa5hXU/cO2crGSUZ5GlT82dMGNgSmu+d4=
+	t=1756447660; cv=none; b=C/GYkOZLDzwC6c/R/YxlOUWTUdIq08wP6dcH5t5XHIesEnJOz0GUHg0Zusw7aOMU4bAuqGmi6I4cXzocflAZZwZIpv6YiN0kZwOh3yDi392/1HoXGzBDD305IYSGsMs1VLpgvH8LEn7SQpMWlrT7NzHjwbRDMzTk4phw8un/COw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756447591; c=relaxed/simple;
-	bh=IpF23KV7LHfoSOAeBXs3NCoxLCzvqrR7cEFGz8kHY/c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JP/Sxenv33QTlz1OgpsCt9vuvwTCdDB9x96Cip5Y8UtgzKnE6/NgdSUFUN0Ikq+9UfcBLr1C2JAWwweX8UF9h9BXVVRG4J8vyd+eEnWrKVtZJar6eecTEs3XPQhXnSRhxhz93qE4qn7RgoyzObl1AS5rYrn9oK9iyrG7pzcR3Oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=osBQeOrg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0848EC4CEF0;
-	Fri, 29 Aug 2025 06:06:27 +0000 (UTC)
+	s=arc-20240116; t=1756447660; c=relaxed/simple;
+	bh=bNPJL1ko4F0rvgQSBPm+EwIcNe+DLd83LxTZHBNx+vw=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=XcUTO6bMJRoTMTnbhvYFKO85otTXQ1n7QpRbTvZ0m6EHcVVvVX4D10d5ttt02eLKpoZ+w6cdJlURxCMmqbpbCx6wrmD/muzQCHrwG+nMS+oMowVs+h2bFGFCbQ9YWra6wf/7EKoJ39S7FrC03KPLz9kCEi3r1/71l4ubGOFL6Vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iQ4/Pjs1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C30DC4CEF0;
+	Fri, 29 Aug 2025 06:07:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756447591;
-	bh=IpF23KV7LHfoSOAeBXs3NCoxLCzvqrR7cEFGz8kHY/c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=osBQeOrgoTP1hMzyO858/L7YxgGpk1yCnBx3EQa9O+hH4qeA+1hNWSKtAQPmC/DTR
-	 BwznMLCGFCHL9r5AmK+Eed4mS8ejlAnoIz/Gqcy1hegQE0L44z+ag0EYnkD1iBH3ez
-	 hQT54RqGqisdCC7k3cpKFgndVpYHmixZYXwjvWgn5C6SYpMaN8LUVvxQcXn5uRuIfB
-	 TbNM9ipAIT+vRMdU9/p7l0+uhQqhdfH+/V9oxNT21dPRxtUgfJB1j2/5SHeDmJYCnq
-	 78S2BACdrb6JKJQQPJHAGF5NKYRVu1qE/BYmIFVjxwlofPRXw/GXuCJaVMw/ZNxK76
-	 tqUdifZ9iox3w==
-Message-ID: <fcd25026-97f0-472a-a274-af342b1dce9c@kernel.org>
-Date: Fri, 29 Aug 2025 08:06:26 +0200
+	s=k20201202; t=1756447660;
+	bh=bNPJL1ko4F0rvgQSBPm+EwIcNe+DLd83LxTZHBNx+vw=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=iQ4/Pjs1D46J56drVIpNPY0jAbsPfhlvv9n6GEYvB+17KB3QySTlxOo7DdNy49wNe
+	 t2XIgBFLysgBDp0TfxURTPRwbz8tVgBPPNzH4BM9HfaiKdr6BD0xX2dfOw60juFO3c
+	 sAi3zIp7rlDCoiMNhAtMkhVBVWPDTLCwOn4IMSmnzTHa3EnmgR8b6pTjO0bD942nfX
+	 M55ubFK5HXTj0yj/xcRMcjMycVAUaSz43Zyz9SDyCHRu2v7ifJp/As3j476o4FdgbM
+	 YgYfuEdMkZHwtcQMTw0mGqIUXN/nPzf162sCak/0L7YmcrXFytwbaLGlfV8QCU2kXX
+	 Vsc9k4XKh2OFQ==
+Message-ID: <4420d5fe-a847-4def-9ad0-ba39ad6f6b5d@kernel.org>
+Date: Fri, 29 Aug 2025 08:07:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -51,6 +51,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v4 2/3] dt-bindings: pinctrl: qcom: Add SDM660 LPI pinctrl
+From: Krzysztof Kozlowski <krzk@kernel.org>
 To: setotau@yandex.ru, Bjorn Andersson <andersson@kernel.org>,
  Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
@@ -60,7 +61,7 @@ Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
  Richard Acayan <mailingradian@gmail.com>
 References: <20250828-sdm660-lpass-lpi-v4-0-af4afdd52965@yandex.ru>
  <20250828-sdm660-lpass-lpi-v4-2-af4afdd52965@yandex.ru>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <fcd25026-97f0-472a-a274-af342b1dce9c@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -105,95 +106,24 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250828-sdm660-lpass-lpi-v4-2-af4afdd52965@yandex.ru>
+In-Reply-To: <fcd25026-97f0-472a-a274-af342b1dce9c@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 28/08/2025 21:23, Nickolay Goppen via B4 Relay wrote:
-> From: Nickolay Goppen <setotau@yandex.ru>
+On 29/08/2025 08:06, Krzysztof Kozlowski wrote:
+> On 28/08/2025 21:23, Nickolay Goppen via B4 Relay wrote:
+>> From: Nickolay Goppen <setotau@yandex.ru>
+>>
+>> Add bindings for pin controller in SDM660 Low Power Audio SubSystem
+>> LPASS).
+>>
+>> Co-developed-by: Richard Acayan <mailingradian@gmail.com>
+>> Signed-off-by: Richard Acayan <mailingradian@gmail.com>
+>> Signed-off-by: Nickolay Goppen <setotau@yandex.ru>
 > 
-> Add bindings for pin controller in SDM660 Low Power Audio SubSystem
-> LPASS).
-> 
-> Co-developed-by: Richard Acayan <mailingradian@gmail.com>
-> Signed-off-by: Richard Acayan <mailingradian@gmail.com>
-> Signed-off-by: Nickolay Goppen <setotau@yandex.ru>
+> Completely reversed/messed chain.
 
-Completely reversed/messed chain.
-
-...
-
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,sdm660-lpass-lpi-pinctrl
-> +
-> +  reg:
-> +    items:
-> +      - description: LPASS LPI TLMM Control and Status registers
-
-
-Clocks missing, maybe some other properties as well.
-
-
-> +
-> +patternProperties:
-> +  "-state$":
-> +    oneOf:
-> +      - $ref: "#/$defs/qcom-sdm660-lpass-state"
-> +      - patternProperties:
-> +          "-pins$":
-> +            $ref: "#/$defs/qcom-sdm660-lpass-state"
-> +        additionalProperties: false
-> +
-> +$defs:
-> +  qcom-sdm660-lpass-state:
-> +    type: object
-> +    description:
-> +      Pinctrl node's client devices use subnodes for desired pin configuration.
-> +      Client device subnodes use below standard properties.
-> +    $ref: qcom,lpass-lpi-common.yaml#/$defs/qcom-tlmm-state
-> +    unevaluatedProperties: false
-> +
-> +    properties:
-> +      pins:
-> +        description:
-> +          List of gpio pins affected by the properties specified in this
-> +          subnode.
-> +        items:
-> +          pattern: "^gpio([0-9]|[1-2][0-9]|3[0-1])$"
-> +
-> +      function:
-> +        enum: [ gpio, comp_rx, dmic12, dmic34, mclk0, pdm_2_gpios,
-> +                pdm_clk, pdm_rx, pdm_sync ]
-> +        description:
-> +          Specify the alternative function to be configured for the specified
-> +          pins.
-> +
-> +allOf:
-> +  - $ref: qcom,lpass-lpi-common.yaml#
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    lpi_tlmm: pinctrl@15070000 {
-> +        compatible = "qcom,sdm660-lpass-lpi-pinctrl";
-> +        reg = <0x15070000 0x20000>;
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +        gpio-ranges = <&lpi_tlmm 0 0 32>;
-
-That's quite incomplete example. Missing at least one pinmux node. See
-other files.
-
-> +    };
-> 
-
+Ah no, sorry, it's ok. I missed who is the sender here.
 
 Best regards,
 Krzysztof
