@@ -1,146 +1,107 @@
-Return-Path: <linux-gpio+bounces-25192-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25193-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1261DB3B8F7
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 12:36:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3318FB3B8FC
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 12:37:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BEDD7188D669
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 10:36:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 02559364D67
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 10:37:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E3FB3093A5;
-	Fri, 29 Aug 2025 10:35:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71B423093D2;
+	Fri, 29 Aug 2025 10:37:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hv9/nEKw"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="EZhcrnJM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8F7265CA7;
-	Fri, 29 Aug 2025 10:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22AF51DF256
+	for <linux-gpio@vger.kernel.org>; Fri, 29 Aug 2025 10:37:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756463755; cv=none; b=ijufumvuOP+kxd/9t0lI+IzI0N4ZIHgxnz4M3F5RKjoVSbvLeqbHU7mPxkDPTW9aAwyc9N5acRjk6SZQA5TmMlUzAiPD+6U5ndnZgA+ZmKhohXF5j73DNrU1xmD788HFwWecrZnJ9G6bwiQHBCSXKl1pSZbIwqFsQ6we0RHlrzQ=
+	t=1756463826; cv=none; b=cr7z7ABY4zOLXj6KQvERyA7iJ843sxm5UsqzGEr/n2ZKITtXAdxXLWTehAteqycVjmjX3LVRB83ZqCsc2lKRkhwkWEqfdlbCypA2frvuKAE1mjQP+i0ltGxKfd5P72QisSyErISP4Jn2sHUeZTJViLAoSasdYbhPNDUgOGv5StM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756463755; c=relaxed/simple;
-	bh=WNtxN+vSd6AgAJVmdxK4WPJLQNBldWjNEf0ks7X0Kuc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UZ+5o+mn9M2jWT6m7N19riq6EyqllzViVyFGXL6aCbBS8l2GK0MnOmMARImCdDinZX/vN0Yki5EqYT2lpJbPRELVv+aNLL3YfLrMm27npoMwjsqT/mL+KToMWzxW/TKTfP0EMeacFN1lJRrXBdUlSPJ3a+EouIp0FtDtv4VBgkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hv9/nEKw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CD4DC4CEF0;
-	Fri, 29 Aug 2025 10:35:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756463754;
-	bh=WNtxN+vSd6AgAJVmdxK4WPJLQNBldWjNEf0ks7X0Kuc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Hv9/nEKw5jRPkK8FdmgRC04pppaWOyAUGc6FHrQNvL6qmEFeUfJc6/iuya8/v1VfU
-	 RTjEcQkqof9jdvOUx2rkwpcJJzZGn7fPsIH1CNEbutmLQZOZ+UTa9Xf62KHEGRQtYk
-	 WgIUajqUbPoYCMj0GB8L4p37dku1HwpScfN3jbV/l3clAxsZ9HyvvuPmwXEwfZkBA1
-	 0RDOM/nxscg2O78i860iwdRjPWOl6MVW8HIaIZ5tLpPB+QSY/aO8Fl9Wl+LDwWK72W
-	 MHA38NaxT2UgF+RBAhMVJ8pdd1N/n0GsJV0/AA238DVSp2H/fURKPvn7Q7+jr+qw4t
-	 78JxP19lhFOXQ==
-Message-ID: <4879398b-a24c-4ec6-8bb0-90d2c1db2dc8@kernel.org>
-Date: Fri, 29 Aug 2025 12:35:50 +0200
+	s=arc-20240116; t=1756463826; c=relaxed/simple;
+	bh=ht6WBgAyA95EiKx1XQ4SunluUCT71doNEKHyo7TqvdM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=eSGSYpkQRpMZq4dFNgOGxlszcS1nrif3ZgrmMtt+dBQxVACwM1gkgPnlM1V2P4j6RuS5/dRCjF15rOzusxZesugSkiDt0Qe5BaRn31lHjlfq+OMGPC+k7lsfPB5jhPtP6Q2JHF71ecxnri2xEJC5vIIFWP1QPgpe8XQUz1ccNVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=EZhcrnJM; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-afcb78f5df4so328855266b.1
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Aug 2025 03:37:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google; t=1756463822; x=1757068622; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ht6WBgAyA95EiKx1XQ4SunluUCT71doNEKHyo7TqvdM=;
+        b=EZhcrnJMPtjazKT1WNyRdMe0gIKYoH4pgR1uUPsMrQR0NBn0URI8jGDSa12b9SPpT9
+         mzA59I7wH5VFcU22JZ6VpavlqORvB6nhOVyFaz160XxaZGHuCARxOktc/utaiobf3hQj
+         7hdeNt664QeYcjEEt1dm0SOHoW9B9HcO9WbooTETW7HFmdlrcClEnVmhW1m6VQJOVHwW
+         R1tXRP92lFcZ2qJvZc++Jna7kCKpmVJiPyXZqSj0sAU8Xj5kfh+q3DY2XOZBeAwOJsBi
+         4yeRwPCRReYZ5cV+5OItvWqfqP/jMfPLm/OqjVj90RaoDdXc6HhUJ/H/RiE6ELYFvpaI
+         AC6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756463822; x=1757068622;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ht6WBgAyA95EiKx1XQ4SunluUCT71doNEKHyo7TqvdM=;
+        b=KsUnKxPqZv0QBwmrHNAud/sNGTg5R0kuIXXrlV+YJgPG6MwvmgEU3SHbtEK9GY4JeV
+         lc+uIQZ7fQLJR/guyE8PkaVXNJlSuEyD4YlVDutQe2b3FZG1bhgJ5WtFOPPH063rKCvZ
+         SuXPq9BCxL0TOKqS1vRX51JdlEZ5xL72X7mXPY1nfWbcRl5wXJD7Goqhsg8aTEcNprCX
+         IFI7bkBVLXJ9lVXGz05loKOX+6ybaDKJNfwat53X9TYvZqt8sM53Q2Red0TvAgVKIa3Z
+         9wbZ4S9n3Yn+OM79kdzj6QRuPMZ+JGcSG4FFxgIKnSTbUE/mMeJ3bkuOcImcB3+HtdBJ
+         lcAg==
+X-Gm-Message-State: AOJu0YzHqF1fUR/kB9HS6NTwrLgWyTrlEjZ1ZUdWm9O4CN73IW0uXQ0v
+	UjMNnOZgNeb19N/YKIrQ2UeFZFWkOanNGkcndL1ISyQ56EikC0lqUaoLrcLonOkNFccxPYnap5S
+	sKcyIfHE2WV64fRvnW3ihvh0ZlFXuSvCXjOS8JkgHBg==
+X-Gm-Gg: ASbGncsndzREWhGwvb8kuuyQmmyxN7CJXOlIES2CgvRc7+LcHNmv83c8CLc+XvMsCkR
+	zAWNcxDLVOhQQupQETCaWFRk0S1gNx3OGvkageg/YkUqVrMugxz3cClKFfKQkRhyaB+Fctv1rlr
+	Ft9wo7FsjsQpklHSFuKQXAJ/wHSQSp3KREPlkD++sNXkNsoNny3UvsgjjHYeAV9P6KAGsSy+0+p
+	hJj30QpE8E72PIqwakXwbwmAMJE0h7qmNu4+heLpWnxQfrayA==
+X-Google-Smtp-Source: AGHT+IFJ+Jql9GTRMLxlWZHn7QjRxggZgajkeOxoiMobrLO8cg89kqcVxj2q/e0SSzk+iXh7lkPI7os/QvbDscIIFvM=
+X-Received: by 2002:a17:906:6a1f:b0:ae6:f087:953 with SMTP id
+ a640c23a62f3a-afe28f8581cmr2645873166b.12.1756463822326; Fri, 29 Aug 2025
+ 03:37:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: =?UTF-8?B?UmU6IOWbnuWkjTog5Zue5aSNOiDlm57lpI06IOWbnuWkjTogW1BBVENI?=
- =?UTF-8?Q?_1/3=5D_pinctrl=3A_cix=3A_Add_pin-controller_support_for_sky1?=
-To: Gary Yang <gary.yang@cixtech.com>,
- "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
- "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
- <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- cix-kernel-upstream <cix-kernel-upstream@cixtech.com>
-References: <20250827024222.588082-1-gary.yang@cixtech.com>
- <20250827024222.588082-2-gary.yang@cixtech.com>
- <d5c85ba7-77ec-47f4-8ba1-39199e96da11@kernel.org>
- <PUZPR06MB5887BFF27AAD64ACA625126BEF3BA@PUZPR06MB5887.apcprd06.prod.outlook.com>
- <5d8aa064-6dcf-40ce-9e73-feaebca06965@kernel.org>
- <PUZPR06MB5887436E03C17498E80E43C7EF3BA@PUZPR06MB5887.apcprd06.prod.outlook.com>
- <f54d43ca-87cc-40bb-a56b-e49ee6a0a441@kernel.org>
- <PUZPR06MB58879645FFBD2B7D2B7E9BE4EF3AA@PUZPR06MB5887.apcprd06.prod.outlook.com>
- <3e0fb880-ef2a-482d-b008-9afcb46f9fec@kernel.org>
- <PUZPR06MB588786D49A7C1964E4A39851EF3AA@PUZPR06MB5887.apcprd06.prod.outlook.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <PUZPR06MB588786D49A7C1964E4A39851EF3AA@PUZPR06MB5887.apcprd06.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Phil Elwell <phil@raspberrypi.com>
+Date: Fri, 29 Aug 2025 11:36:49 +0100
+X-Gm-Features: Ac12FXxDx_q65zV0RpYvhwxDqgb7j9X7N2Dd3p_rpz4w55Ux_u5snovoEr7Jb38
+Message-ID: <CAMEGJJ06_3bgiWfPjQy3JRgtzq5vcr4FgR9JrzTFrGKOxTe52A@mail.gmail.com>
+Subject: pinctrl, probe order, and CONFIG_MODULES
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>
+Cc: linux-gpio@vger.kernel.org, 
+	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 29/08/2025 12:18, Gary Yang wrote:
->>>
->>> So you see the twice, once per one pin-controller. BTW as you suggested
->> before, we will print the value of ret in the error message.
->>>
->>> If I miss any information, please kindly remind me. Thanks
->>
->> You still ignored my second comment.
+Hi,
 
-^^^ That was second time here I reminded about ENOMEM comment.
+A Raspberry Pi user recently asked us why I2C wasn't working in their
+custom kernel build. The primary change they had made was to trim the
+number of enabled drivers, make them all built-in, and to remove
+CONFIG_MODULES=y. The end result of this is that the pin muxing
+required for I2C to work was not being applied, leaving the interface
+talking to thin air.
 
->>
-> 
-> First you wrote " You are printing same error twice ", please pay attention to the "same error" strings, it makes me confuse, I misunderstand your thinking 
-> until you took the example above. So the discussion is needed, not waste our time.
-> 
-> Second the return value of sky1_pinctrl_probe_dt() is not only ENOMEM, it can also return ENODEV and EINVAL. Although I don't think this is a bug, take our
+I eventually traced the failure back to this change:
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/pinctrl/devicetree.c?h=next-20250829&id=d19c5e79d46efdf89306be99f3c8824cf58e35f6
+It introduces a requirement for CONFIG_MODULES to be enabled in order
+to get an EPROBE_DEFER in the event that the pinctrl driver has not
+yet been probed. Without CONFIG_MODULES, the pinctrl requirements are
+waived. Removing the IS_ENABLED(CONFIG_MODULES) clause allows the
+probing of the I2C driver to be deferred, fixing the user's problem.
 
-The problem is that you ignored the ENOMEM comment and it clearly should
-direct you to the problem and solution ("If I cannot have error on
-ENOMEM, I will move my error msgs to the called function").
+Is this requirement for supporting modules reasonable? If so, how is
+one supposed to get the pinctrl to probe before the I2C driver?
 
-Best regards,
-Krzysztof
+Thanks,
+
+Phil Elwell
 
