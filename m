@@ -1,153 +1,147 @@
-Return-Path: <linux-gpio+bounces-25181-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25182-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EB14B3B4AB
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 09:48:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4B97B3B524
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 10:00:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3EF6B988039
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 07:48:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ACDB87BC010
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 07:58:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC840284B4C;
-	Fri, 29 Aug 2025 07:48:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5460028C00C;
+	Fri, 29 Aug 2025 07:56:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQqO4OtE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ThUpyuCE"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665FE23ABBD;
-	Fri, 29 Aug 2025 07:48:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35A12857CB;
+	Fri, 29 Aug 2025 07:56:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756453722; cv=none; b=sukxrMaK6P10xReuZ/oJrzKEQx5pMCTd8sQv/XSCkYSfX3IynsBc41qv3Cqy3/6zyzTO5pO53vSxzOlDHTyiMJUxWJXiluW6/P5EWKkbFRxsBvRbplJBImDrBYgsI5iQHPCPe5tc2h5kGkeCVykjuvctoe/ZKj8jZCgxtLJ5iwg=
+	t=1756454170; cv=none; b=AYy9rFT6FwA+DSGDNpxzhtkTyexNz6Ye/MTuFXA7SZ9KRGuAS80Ob3AXCdJ0WDBRNMjGFkS+dh1lXtqbkNrFjfm+ZmyJnhu9rbbL6PR72bQ+GHuTCNXA91f37AiySPFTabbdqMwXXwmXM83L9acgc7KPJWl+I0az6XRmQxdQmAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756453722; c=relaxed/simple;
-	bh=0A4rOapR7uxRXHkEuZV4upawq7r3HH5Hovvx4aG4VPg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=USGvjwo5MqHGWW+ve+/T5hmGbeuq1aYObxtcphx9M3Y1K4IODPXMhvhLiHtlmipzV2r+SMy4WSJK0Xr82wBUb+glIL3nezv/a5mzoYQU8skaMSJhLXoojkOkJOm7Vs6tHBArzq/F8jzbxisMBSgALCEStGlROtYfTFkZrWUYWVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SQqO4OtE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAAC0C4CEF0;
-	Fri, 29 Aug 2025 07:48:38 +0000 (UTC)
+	s=arc-20240116; t=1756454170; c=relaxed/simple;
+	bh=gEVY2TEOLXWuc/PylIHeYa0ayOzElTCYmrn2BP+q/ow=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aPnnwgkBHgPfoaAf24C5C2OcBp8ylnMLSv6wANo0mBtUMCHMDITHUnZjlqZwiqA69yM+56U6439vLcyEDHkE5Z8rKLsGap08lCA4kt+ig23fqszudhD9flifUb5ySgV+SASPfJ7nuAeANGKLaxDfu4zChR8MIyuieD9m6G01ILE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ThUpyuCE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA52BC4CEF0;
+	Fri, 29 Aug 2025 07:56:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756453721;
-	bh=0A4rOapR7uxRXHkEuZV4upawq7r3HH5Hovvx4aG4VPg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SQqO4OtE8f4SwGiAZn3jS8yZB90ojBHpKfK/SF/ZQejldqv91+Goeee04F854Ze3O
-	 e9akjtP+6gRKmRBhdD3NYYruWaMIW71XZD3ppS62yXLm0+ZTsAa/2J+ZTH7d2y9cM6
-	 AMt+XTjOPSEZ0NEgbk/gE7CB3Ny9MJQOg1LAhRzjwwiYPosU/S4KbMlGaOd1mwFYRS
-	 CIKq21gO1vrzkJfBHraSk2lxIs60Qt3hzPvbL719+8k9DdP4sMNwHZPuklmyauJtse
-	 o635uN88q6b/qoUzVfCeevMH+tIUZ/swjlDNcaXLUwsKikG99TMhOyxc/v7aVDUZkw
-	 yoYBTBH//YVJg==
-Message-ID: <45eec9b1-d4cd-470b-abcc-03a823f397b2@kernel.org>
-Date: Fri, 29 Aug 2025 09:48:37 +0200
+	s=k20201202; t=1756454169;
+	bh=gEVY2TEOLXWuc/PylIHeYa0ayOzElTCYmrn2BP+q/ow=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ThUpyuCEt+rHjGchX/jdas1nJIAeIqJ6AnMYOF9cySZOYAnrJZYC/QcNcxw2bHsMR
+	 f1bS5mUqF9syMOLObU9aoV97mJjLf4lbHaYNHo2UrzxWImgkd3rV7YWUeRrqiu5ujd
+	 zdBpWZrXThODYKC6Yay5tyTon+RB67NHLqQYKCalVyKw98bTZgRb927gWS14SJwVS+
+	 v+iAlJSdNA69eV935f/yCfNPpnUtlbxGk7DaTpnRylJJJwdhvVh3EJOOo2IRZXw7Va
+	 UCO8AhPWZTjqDZXc2LWD7ROB8k2Gtf9BrFLnJNtLT9l+JJEt8BTHB1UXGdssEAkXzj
+	 mRAxskbk1f3YA==
+Date: Fri, 29 Aug 2025 09:56:06 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Ravi Patel <ravi.patel@samsung.com>
+Cc: jesper.nilsson@axis.com, mturquette@baylibre.com, sboyd@kernel.org, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, s.nawrocki@samsung.com, 
+	cw00.choi@samsung.com, alim.akhtar@samsung.com, linus.walleij@linaro.org, 
+	tomasz.figa@gmail.com, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, 
+	ksk4725@coasia.com, kenkim@coasia.com, pjsin865@coasia.com, gwk1013@coasia.com, 
+	hgkim05@coasia.com, mingyoungbo@coasia.com, smn1196@coasia.com, 
+	pankaj.dubey@samsung.com, shradha.t@samsung.com, inbaraj.e@samsung.com, 
+	swathi.ks@samsung.com, hrishikesh.d@samsung.com, dj76.yang@samsung.com, 
+	hypmean.kim@samsung.com, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@axis.com, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	soc@lists.linux.dev
+Subject: Re: [PATCH v3 08/10] arm64: dts: exynos: axis: Add initial ARTPEC-8
+ SoC support
+Message-ID: <20250829-attentive-watchful-guan-b79ccc@kuoka>
+References: <20250825114436.46882-1-ravi.patel@samsung.com>
+ <CGME20250825120735epcas5p3c86b9db5f17c0938f1d53ef6014ab342@epcas5p3.samsung.com>
+ <20250825114436.46882-9-ravi.patel@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/6] dt-bindings: soc: fsl: qe: Add support of IRQ in
- QE GPIO
-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
- Qiang Zhao <qiang.zhao@nxp.com>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <cover.1756104334.git.christophe.leroy@csgroup.eu>
- <17636607f2beac3b64c87b3bec035fa27ce8d195.1756104334.git.christophe.leroy@csgroup.eu>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <17636607f2beac3b64c87b3bec035fa27ce8d195.1756104334.git.christophe.leroy@csgroup.eu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250825114436.46882-9-ravi.patel@samsung.com>
 
-On 25/08/2025 08:53, Christophe Leroy wrote:
-> In the QE, a few GPIOs are IRQ capable. Similarly to
-> commit 726bd223105c ("powerpc/8xx: Adding support of IRQ in MPC8xx
-> GPIO"), add IRQ support to QE GPIO.
-> 
-> Add property 'fsl,qe-gpio-irq-mask' similar to
-> 'fsl,cpm1-gpio-irq-mask' that define which of the GPIOs have IRQs.
-> 
-> Here is an exemple for port B of mpc8323 which has IRQs for
-> GPIOs PB7, PB9, PB25 and PB27.
-> 
-> 	qe_pio_b: gpio-controller@1418 {
-> 		compatible = "fsl,mpc8323-qe-pario-bank";
-> 		reg = <0x1418 0x18>;
-> 		interrupts = <4 5 6 7>;
-> 		interrupt-parent = <&qepic>;
-> 		gpio-controller;
-> 		#gpio-cells = <2>;
-> 		fsl,qe-gpio-irq-mask = <0x01400050>;
-
-We see this from the patch. No need to repeat the patch contents in the
-commit msg.
-
-
->  Example:
->  	qe_pio_a: gpio-controller@1400 {
-> @@ -42,6 +51,16 @@ Example:
->  		gpio-controller;
->  	  };
+On Mon, Aug 25, 2025 at 05:14:34PM +0530, Ravi Patel wrote:
+>  config ARCH_AXIADO
+>  	bool "Axiado SoC Family"
+>  	select GPIOLIB
+> diff --git a/arch/arm64/boot/dts/exynos/Makefile b/arch/arm64/boot/dts/exynos/Makefile
+> index bdb9e9813e50..bcca63136557 100644
+> --- a/arch/arm64/boot/dts/exynos/Makefile
+> +++ b/arch/arm64/boot/dts/exynos/Makefile
+> @@ -1,4 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> +subdir-y += axis
+>  subdir-y += google
 >  
-> +	qe_pio_b: gpio-controller@1418 {
-> +		#gpio-cells = <2>;
-> +		compatible = "fsl,mpc8323-qe-pario-bank";
+>  dtb-$(CONFIG_ARCH_EXYNOS) += \
+> diff --git a/arch/arm64/boot/dts/exynos/axis/artpec-pinctrl.h b/arch/arm64/boot/dts/exynos/axis/artpec-pinctrl.h
+> new file mode 100644
+> index 000000000000..70bd1dcac85e
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/exynos/axis/artpec-pinctrl.h
+> @@ -0,0 +1,36 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
 
-Please follow DTS coding style.
+Does not match rest of licenses.
 
+> +/*
+> + * Axis ARTPEC-8 SoC device tree pinctrl constants
+> + *
+> + * Copyright (c) 2025 Samsung Electronics Co., Ltd.
+> + *             https://www.samsung.com
+> + * Copyright (c) 2025  Axis Communications AB.
+> + *             https://www.axis.com
+> + */
+> +
+> +#ifndef __DTS_ARM64_SAMSUNG_EXYNOS_AXIS_ARTPEC_PINCTRL_H__
+> +#define __DTS_ARM64_SAMSUNG_EXYNOS_AXIS_ARTPEC_PINCTRL_H__
+> +
+> +#define ARTPEC_PIN_PULL_NONE		0
+> +#define ARTPEC_PIN_PULL_DOWN		1
+> +#define ARTPEC_PIN_PULL_UP		3
+> +
+> +#define ARTPEC_PIN_FUNC_INPUT		0
+> +#define ARTPEC_PIN_FUNC_OUTPUT		1
+> +#define ARTPEC_PIN_FUNC_2		2
+> +#define ARTPEC_PIN_FUNC_3		3
+> +#define ARTPEC_PIN_FUNC_4		4
+> +#define ARTPEC_PIN_FUNC_5		5
+> +#define ARTPEC_PIN_FUNC_6		6
+> +#define ARTPEC_PIN_FUNC_EINT		0xf
+> +#define ARTPEC_PIN_FUNC_F		ARTPEC_PIN_FUNC_EINT
+> +
+> +/* Drive strength for ARTPEC */
+> +#define ARTPEC_PIN_DRV_SR1		0x8
+> +#define ARTPEC_PIN_DRV_SR2		0x9
+> +#define ARTPEC_PIN_DRV_SR3		0xa
+> +#define ARTPEC_PIN_DRV_SR4		0xb
+> +#define ARTPEC_PIN_DRV_SR5		0xc
+> +#define ARTPEC_PIN_DRV_SR6		0xd
+> +
+> +#endif /* __DTS_ARM64_SAMSUNG_EXYNOS_AXIS_ARTPEC_PINCTRL_H__ */
+> diff --git a/arch/arm64/boot/dts/exynos/axis/artpec8-pinctrl.dtsi b/arch/arm64/boot/dts/exynos/axis/artpec8-pinctrl.dtsi
+> new file mode 100644
+> index 000000000000..8d239a70f1b4
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/exynos/axis/artpec8-pinctrl.dtsi
+> @@ -0,0 +1,120 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
 
+This is Dual license, so why pincltr header is not?
 
 Best regards,
 Krzysztof
+
 
