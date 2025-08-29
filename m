@@ -1,93 +1,115 @@
-Return-Path: <linux-gpio+bounces-25211-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25212-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E52E2B3C45A
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 23:50:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C169CB3C4DB
+	for <lists+linux-gpio@lfdr.de>; Sat, 30 Aug 2025 00:31:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 19DFD1887922
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 21:50:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7BCF2A2600E
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 22:31:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 826D727054B;
-	Fri, 29 Aug 2025 21:50:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAEFE26FDBB;
+	Fri, 29 Aug 2025 22:31:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="LPxPzA7K"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YdIgCpPX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893431A314F;
-	Fri, 29 Aug 2025 21:50:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D002BE03E
+	for <linux-gpio@vger.kernel.org>; Fri, 29 Aug 2025 22:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756504229; cv=none; b=ECgDr/I6imwIsBC80jmkmZNZbxrr5i2k8cIMMYUQMG2RB+qMoxjBX60+uYW5fd9IkW4d+S7mozsfp3BGbs76DzxljOgXk2jJ3SJxptLBZw3DOGABHuVx/95Rzgen0StTGDBO3PwHuc1Za0SWO9uQ48ZbCWwBjp9nTVgdLsaod00=
+	t=1756506686; cv=none; b=piLaN82NZtSjkiaQMxm+HLJPVntqndCtlH7pGPE0dNemkV6V2NE/OSB+NyQvLq87kcSABotLrY1Am34KzKfGteYk0dXyN8xcrudw9wqccLMxQWK7ehsjm28MwTQ3x8H2IurAcV1UM1dLzOJKuUH1q2aCIYfhY0GtQmtWehRNnCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756504229; c=relaxed/simple;
-	bh=QFcV05pxlisVUWvQ8RM8qkjfzRvIZ2bLrLGIRANs+Zc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=cfdnM7+4IWEyO3zAFTbmjtl20cartijW5jcXHEwmxxihcwD0nG2vmWe4eD45xJUnMg3r6GDshXZq0eTAnxiA1p9SLI7A59emVSE7d5BLzUwbV4RVbi2VjYS0ivWU2cPSFGITzIaHHCR7RKY+ZWabsByQ8Tin1Bo8d7XSc3SQ+vU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=LPxPzA7K; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net A8DEF40AE2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1756504220; bh=fSBqc3e78aFfjbu0f9KoHXppGsKhkHo5tW/1FzhC+VI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=LPxPzA7KBaIDwBpSb0PBd6MjS8vrPpdq41vnFipLMfW0kKuAvXBgsuQtJdmgakPNO
-	 ujRu1o5CjdMGzriG1xnih2SdE5iaxwKOQy3ukBv8w1PWj0rc04uwBWSyvUNuEb7yZc
-	 MT7AMpY83PkcbEvaJ9MyqawFYDFgZAsYYQZYx70mggCu+st89kmgPemxHRLb7SVygn
-	 LUa5X5fhjJUTz5pFiw7K4MtGLsQUejhauDp9xcoPBq2Vjp+Yu+K6l2a2pRK7XRb9tD
-	 hQ7I4ywoxVTNqInQnZLeSjVnsCBzTM7fpgSG7cX/qu1DLCLSgcsPPb6mNxnhfWd7D8
-	 D85JjUovny7eQ==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id A8DEF40AE2;
-	Fri, 29 Aug 2025 21:50:20 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Alex Tran <alex.t.tran@gmail.com>, linus.walleij@linaro.org
-Cc: linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Alex Tran <alex.t.tran@gmail.com>
-Subject: Re: [PATCH v2] docs: driver-api pinctrl cleanup
-In-Reply-To: <20250827074525.685863-1-alex.t.tran@gmail.com>
-References: <20250827074525.685863-1-alex.t.tran@gmail.com>
-Date: Fri, 29 Aug 2025 15:50:19 -0600
-Message-ID: <87ldn14x2c.fsf@trenco.lwn.net>
+	s=arc-20240116; t=1756506686; c=relaxed/simple;
+	bh=ABTnhbbS7L5HkpCGOSZTEM0Im5AWWxZ2DgMSTWPYRFc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=a1l/k1nIpJgHPaNJ5tn4K/ZLnhQlQyg4vcfyp33EZyPhxy4vjuXkOXieJTPY8cSrbT2Gv9D++g1WfT+bP2NgocqINVKmly0vi9ic7nA/GSV006nh7nVyvMSaYCy5DFRga7C02hKkFFqfPzXW9oj8bYl4GtyiJXPq71krXs86RaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YdIgCpPX; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-55f3fc15e09so2647888e87.3
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Aug 2025 15:31:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1756506683; x=1757111483; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ABTnhbbS7L5HkpCGOSZTEM0Im5AWWxZ2DgMSTWPYRFc=;
+        b=YdIgCpPXRFsuA8bZTTf50yN23f5FqtX1UBg6HaM5KywgC4l2o3LlCpUjp6uDQNpkDJ
+         iOyDjpVnh7ssSE08Hsu125AVnJO+74c0Yru20zIT2jVc9HnjXRZqqChzw41Qp6YTRaRi
+         CtjysG7/JmN+QF7bVapac2z8VpRtU3+SNRyvDrBzGjNg+IP64Pukmbbfp5mAd4wZLUCt
+         nDmqrV8mHRsGVGYOsd1Ra31KLfMw5/dTOtPESfvuXUgGmDOQzg5Qq/Jfke+E1WFl/TII
+         c+MV98i9LTvo6bz84MLw90ZEVxEKlLZcUNR8q83Hk/RDP4qf+X8XTjM4edg+LN9TO+fB
+         g5uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756506683; x=1757111483;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ABTnhbbS7L5HkpCGOSZTEM0Im5AWWxZ2DgMSTWPYRFc=;
+        b=ge49RW1cpQyCB/EyI9CL3OYOehWBVGH+IxISyTPoDwalutnP/4xF395JxijyPHh5Tz
+         fnmda/gtbKLA0iEUvk61OM3XSPenyzqK3Q0s0G8liFM5Rr46iIMT+W+OKgIaH4p0Vn8t
+         zAtcopmeNK+sIeTByZwoSdsrvN02D6ZzPreNT+ZQBvxv/KShHJeQmFVKs4uPfbiaPKEy
+         6HNHbvlnx5yZG1O2jTkRQNluJsIiciyb9Z3m6Fv4jXUvM9MFzVcou/6JSz6xztlM69oP
+         3O6Wa4mUAVQEv3G3VUDw68vmQqFSamfq9k/ThPab1EMHwYwclSUSUhWS4kYsJq4N5Pew
+         SIlA==
+X-Forwarded-Encrypted: i=1; AJvYcCVuf6vwWKjTFnbFzTlZ+LPPmh2A0xZIkSiODDdbQHobQZyYGwNv72NEl8X5C3YVNOJsZwMsDQJpQykf@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbMpPq87Zquf1VVOJlusiV/kcXhegSES6pFyjJdpjo2NZFot0/
+	xGzqYQGuBT+6fPnORlX2Ky2P0z32lhqNxhkzAwLPEeNVtffHc3qdOQaWwnMlWddZIrLmqW5Xtzq
+	wW5/wMGg/O3ro0+ltmjk19ge/Mktg0yQMrgbcnP209g==
+X-Gm-Gg: ASbGncvn8D3JtH3cWHeO0B1KfnN8bAoz3LLHonzDiG/BjTn8luOAr6dz3GbnFzesn2x
+	eOW0qLHsC3OpjjxePu9RyL5wJy2d1O41BrlJJfWYFA9m5aP8aPotOPi6Ez/r6d+0tYuNp7Olo+k
+	4W+k02ZTo1isRuCALZBIFdaizIitKt68MY+mwTaLq6f3R6LhaFVaf+vvTKdcHqtI5BF2fEgBkvc
+	LknFpo=
+X-Google-Smtp-Source: AGHT+IGEsnYhsV7tsgFN84KPDIRoOPf0/B8DKbI7M0URReevQxuA0Bzr4lMQoYrnOIFpony13QSt3vd1Z/GbWsefU8c=
+X-Received: by 2002:a05:6512:b06:b0:55f:34e8:b1a6 with SMTP id
+ 2adb3069b0e04-55f70a05aa1mr46987e87.57.1756506682752; Fri, 29 Aug 2025
+ 15:31:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250812203337.731648-1-robh@kernel.org>
+In-Reply-To: <20250812203337.731648-1-robh@kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sat, 30 Aug 2025 00:31:11 +0200
+X-Gm-Features: Ac12FXyB7pgkBvR7Aj25d5oehVpWxFIRJ4xjMg8x9Wn3iT-JlQETgMnYYiDN10o
+Message-ID: <CACRpkdb9NKKeDT_b40aEHW7qZPsKA6omzw_OFp37zf9pF8dptw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: Convert brcm,bcm2835-gpio to DT schema
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Florian Fainelli <f.fainelli@gmail.com>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Alex Tran <alex.t.tran@gmail.com> writes:
+On Tue, Aug 12, 2025 at 10:33=E2=80=AFPM Rob Herring (Arm) <robh@kernel.org=
+> wrote:
 
-> changelog:
-> v2
-
-It's best to keep this kind of stuff out of changelogs so the maintainer
-doesn't have to edit it out when applying the patch.  I've taken care of
-it this time.
-
-> Replace FIXME comments in the pinctrl documentation example with
-> proper cleanup code:
-> - Add devm_pinctrl_put() calls in error paths 
->   (pinctrl_lookup_state, pinctrl_select_state) 
->   after successful devm_pinctrl_get()
-> - Set foo->p to NULL when devm_pinctrl_get() fails
-> - Add ret variable for cleaner error handling
-> - provides proper example of pinctrl resource management on failure
+> Convert the Broadcom BCM2835 GPIO (and pinmux) controller binding to DT
+> schema format.
 >
-> Signed-off-by: Alex Tran <alex.t.tran@gmail.com>
-> ---
->  Documentation/driver-api/pin-control.rst | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+> The structure of the child nodes wasn't well defined. The schema is
+> based on the .dts users. The legacy binding is a single level of child
+> nodes while the standard binding is 2 levels of child nodes.
+>
+> The "all banks" interrupt is treated as optional following actual users.
+>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-Applied, thanks.
+Patch applied. Why didn't I do this to begin with, I think I was
+confused by the gpio in the title and some stress :/
 
-jon
+Yours,
+Linus Walleij
 
