@@ -1,217 +1,155 @@
-Return-Path: <linux-gpio+bounces-25185-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25184-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA713B3B675
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 10:53:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F07CB3B633
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 10:47:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 42950463024
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 08:52:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 30D3217CFAE
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Aug 2025 08:47:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DACB72C11FD;
-	Fri, 29 Aug 2025 08:50:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1D3228724E;
+	Fri, 29 Aug 2025 08:47:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Wy+QxUxO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3A39481B1;
-	Fri, 29 Aug 2025 08:50:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from mail-ej1-f68.google.com (mail-ej1-f68.google.com [209.85.218.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC3B264A9E
+	for <linux-gpio@vger.kernel.org>; Fri, 29 Aug 2025 08:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756457436; cv=none; b=ulvfOHzx1eJ6pQ4SzUbxrt0aFGDCWYcgBdaNBrx9S5SQAjzZEKcYGZP1Mpef9rLJVujkmou9N8OmkvzN7VSESnPmCj+zQz7GmfzdgwBp9A/VGHME4rzsqC20UkkUAxkBv74IMb40iR2B3jYqsbt/Pbs8lC+aJZYWuhBjk5e3fvA=
+	t=1756457228; cv=none; b=PV4T2X7mpRWVuP3D0FTWEO/IvHk3XBcWMrVB4lwu7ceGSK20GexEUfBQELCpnw+QFdSojTRfZXB71F3HDnZNMyX+jKrTmBIyJTkC+eqUGhmEdsaBoQuI9rCeOCHHrpVDs5Ssoc4BPJTyx1HmqdazuqE74z0tv7ezWAuTEeaeybU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756457436; c=relaxed/simple;
-	bh=dTg7CoqjKnU1/MdFeozbFQDmTonqmWUzWZM3kYznqMc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uoViG8om83Hkj8yDwf39OtQrgDa1bOpmFONNTA/OpN+UvHzRPNVRk4Bz0t+uBQJU8sZIiaGyIePB3eC0sGSsogCj7M88zE3E3r5Q+bil3jwXBeFOfMgQNEi2RhJZgsa+rPZ2pBMBWyLZM13xrDo3EwbEDgauOdfwUSjekgDAdUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4cCs6D1Vmbz9sT1;
-	Fri, 29 Aug 2025 10:35:32 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id w9NDmBDpyOOx; Fri, 29 Aug 2025 10:35:32 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4cCs6D0Xh0z9sSr;
-	Fri, 29 Aug 2025 10:35:32 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id F40178B778;
-	Fri, 29 Aug 2025 10:35:31 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id uQqX3YFuqtHI; Fri, 29 Aug 2025 10:35:31 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 53B0A8B776;
-	Fri, 29 Aug 2025 10:35:31 +0200 (CEST)
-Message-ID: <1ba37df7-2d4a-4258-8220-58ee7d609264@csgroup.eu>
-Date: Fri, 29 Aug 2025 10:35:31 +0200
+	s=arc-20240116; t=1756457228; c=relaxed/simple;
+	bh=y6q3l4fgdVSc7SEGga7Me2Va/ZtJeJU7aqSufeeUSl0=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GVJIIwYcXqiKQBW32lrRgAohzT8RivYXhsIFH4Mw4NPIAy9PrlQoocLKIEWyxqClCuEhg6X4FjUuxLaHY4qEOQ4uIAJkjYT4fT2P9g+Ma62K3SHHgdW7A2rRV0j4Jh4nBwyUKpBju9O8x53/G0kQDIlnrMtYv2VwS8qAR2fHVz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Wy+QxUxO; arc=none smtp.client-ip=209.85.218.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f68.google.com with SMTP id a640c23a62f3a-afcb731caaaso270428266b.0
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Aug 2025 01:47:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1756457225; x=1757062025; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CIjbWzkQfbiZQvRqxwaD0JjNVVTzZG1OAG6bEKJV6mo=;
+        b=Wy+QxUxOG4pjANuQNwU4s7c+WQVYjvw/8VjGCcSu5ncXuT120Jlom1Sv5V4VgeooZI
+         y+DdlhehtVZr0gllR06G+1TahTqswQuq9t8fM7uu0bcftue6QQjUIdd43IKayi5KNtCS
+         3SlPi91yBFyctbJmL3dqJWaau+BOGXkOZBQcloRNEtBzZ7Zl/bsGx1qpyAMCW8wwlfTH
+         S+aQ4lZpNVX5LKgAtRg5ODgBcOcYDhBZF1hPxzU2RComZI2apNW7Gl+VKrVdL6vT2gdq
+         WizK6DH6wKdCCGpIA1zjSnP4q7cn9uizbMilaZYTYuOk1Y8SyD4UVU5PdtBfo7ad5Giz
+         caMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756457225; x=1757062025;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CIjbWzkQfbiZQvRqxwaD0JjNVVTzZG1OAG6bEKJV6mo=;
+        b=AUjPBLFkFpWnQESc/JTTgqkAID2MNUgj8xXQagxTar0v9jpi4EKDAcZNqvne1Q1dAe
+         G4ynLSfOayb+HR9DXzXYBXTPJcIe8f+uyvBuzcOIws76/GYkvCNUQ/dtqRDHsRLh6W7m
+         924cQIC2bNooCNnkhp7BySkjZkhVAotx8miFlcsmeUsQX7iCTHAiyQ4GJ6I+RVV03GsA
+         Pszx64Z3hmUl+ZhGlo1GZZ4s+ihrln6zJ8Uamb6okbJvciPz+kLUfwprXae5jodWXD3A
+         YwK67mHw8DzqBt71+De96RLk0UjidLT+JWjlbo+6pdlYrrF2yMxcQaEFBdqWayG103kv
+         +MQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJQQuUKSDABpAUFs9GXF7OWJZl7XLmo+hcOK6mijIuNE0L+BqOT0AnsvHH5bhC9YvNCsCEhy0TkgQG@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/H1fBmOxzEz6aq+9pqzkBJOnU63LilfW24+Dyp2s2WUTWZzeo
+	qzEDsHErqz0+guaP9pjK+887+OEFSQ905/xvojjftj+PJ7a3AE3aHOGFhRIUvre+IHI=
+X-Gm-Gg: ASbGncs0mqB5lTs7LJxIAHXjEPiffzBI3CgQJLp0EmtnRfqbdrkMypNhjRHnIevT56g
+	DolXyFbLGzXd9wcvQnjg9K83A3utVit1zwr3n47F09OxmToR7bcD6+bTL913u+/v0GXQzr5Whr3
+	LHim3XZZjunVHCmOHLyQfIRvGWrQw3zb8jWJmBtK69jn/dOWE4KNl3MYCykhBfIYP9gm0yTklPN
+	kw7q/+s4cKB8OCiaaNgOBfR/hhmehgP2WgXtbf3MxEMaVogvs3X+ql0NAtPjjm+Y6kd7YgKeLN1
+	Svl/ireKfAYQdMoGyZ5+7H/iRCJlsigF8dapENb3E+X0lmrAO2t8V8kJiJQ4YwENwv+5UVLnMRd
+	8FH5gU9VIDrsZqAIOM0maSIFfhXvpYOALku+WskjWj9tUmEge04JAHJhkq1RDpWZDfNqTs5oeFL
+	T3HNeGx1GGWhAK24tu
+X-Google-Smtp-Source: AGHT+IErTYPB0ZCtNXtBGMM05Ddun8cHbo2OACk+cXvTX6zjrrSwmnOgjIMwSDpKlFVkBbllKUdVtA==
+X-Received: by 2002:a17:907:2d10:b0:afe:c1e4:5554 with SMTP id a640c23a62f3a-afec1e457b6mr893166266b.38.1756457224579;
+        Fri, 29 Aug 2025 01:47:04 -0700 (PDT)
+Received: from localhost (host-79-36-0-44.retail.telecomitalia.it. [79.36.0.44])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afefcc695cesm149130766b.97.2025.08.29.01.47.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Aug 2025 01:47:04 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Fri, 29 Aug 2025 10:48:58 +0200
+To: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Andrea della Porta <andrea.porta@suse.com>, linus.walleij@linaro.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	wahrenst@gmx.net, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, iivanov@suse.de, svarbanov@suse.de,
+	mbrugger@suse.com, Jonathan Bell <jonathan@raspberrypi.com>,
+	Phil Elwell <phil@raspberrypi.com>
+Subject: Re: [PATCH v4 3/3] arm64: defconfig: Enable BCM2712 on-chip pin
+ controller driver
+Message-ID: <aLFpeuwoh1g2IKYI@apocalypse>
+References: <cover.1756372805.git.andrea.porta@suse.com>
+ <38704a5ab6913845bbf9178170e83004ab3e8fcf.1756372805.git.andrea.porta@suse.com>
+ <fac53dd3-9774-4a14-9557-19c2a2532a0d@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/6] dt-bindings: soc: fsl: qe: Add support of IRQ in
- QE GPIO
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: Qiang Zhao <qiang.zhao@nxp.com>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-References: <cover.1756104334.git.christophe.leroy@csgroup.eu>
- <17636607f2beac3b64c87b3bec035fa27ce8d195.1756104334.git.christophe.leroy@csgroup.eu>
- <CAL_JsqKFvVQTVXV8mWX0z1=hd3nLDzLXq-0G_0bshMCvQ5kVvA@mail.gmail.com>
- <f21e27da-de26-4835-9660-b39e99695281@csgroup.eu>
- <0f716362-07f4-4c79-bb0a-e71d2630a797@kernel.org>
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-Content-Language: fr-FR
-In-Reply-To: <0f716362-07f4-4c79-bb0a-e71d2630a797@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fac53dd3-9774-4a14-9557-19c2a2532a0d@broadcom.com>
 
+Hi Florian,
 
-
-Le 29/08/2025 à 09:47, Krzysztof Kozlowski a écrit :
-> On 28/08/2025 16:12, Christophe Leroy wrote:
->>
->>
->> Le 28/08/2025 à 15:28, Rob Herring a écrit :
->>> On Mon, Aug 25, 2025 at 2:20 AM Christophe Leroy
->>> <christophe.leroy@csgroup.eu> wrote:
->>>>
->>>> In the QE, a few GPIOs are IRQ capable. Similarly to
->>>> commit 726bd223105c ("powerpc/8xx: Adding support of IRQ in MPC8xx
->>>> GPIO"), add IRQ support to QE GPIO.
->>>>
->>>> Add property 'fsl,qe-gpio-irq-mask' similar to
->>>> 'fsl,cpm1-gpio-irq-mask' that define which of the GPIOs have IRQs.
->>>
->>> Why do you need to know this? The ones that have interrupts will be
->>> referenced by an 'interrupts' property somewhere.
->>
->> I don't follow you. The ones that have interrupts need to be reported by
->> gc->qe_gpio_to_irq[] so that gpiod_to_irq() return the IRQ number, for
->> instance to gpio_sysfs_request_irq() so that it can install an irq
->> handler. I can't see where they would be referenced by an "interrupts"
->> property.
+On 10:19 Thu 28 Aug     , Florian Fainelli wrote:
+> On 8/28/25 05:47, Andrea della Porta wrote:
+> > Select the on-chip pin controller driver for BCM2712 SoC.
+> > 
+> > On RapsberryPi 5 devices it is primarily needed to operate the
+> > bluetooth and WiFi devices, to configure the uSD interface
+> > and the power button.
+> > 
+> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > ---
+> >   arch/arm64/configs/defconfig | 2 ++
+> >   1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > index 58f87d09366c..d4c3853d885d 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -592,6 +592,8 @@ CONFIG_SPI_TEGRA114=m
+> >   CONFIG_SPI_SPIDEV=m
+> >   CONFIG_SPMI=y
+> >   CONFIG_SPMI_MTK_PMIF=m
+> > +CONFIG_PINCTRL_BRCMSTB=y
+> > +CONFIG_PINCTRL_BCM2712=y
 > 
-> They would be referenced by every consumer of these interrupts. IOW,
-> this property is completely redundant, because DT holds this information
-> already in other place.
+> Do those need to be built-in or does it work good enough if you have them as
+> loadable modules?
 
-But the gpio controller _is_ the consumer of these interrupts, it it 
-_not_ the provider.
+They do work reasonably well as modules too, but you need to add
+them to initrd, the reason being that this patch [1] is referencing
+the pinctrl driver from the SD card node so you need them early or
+you won't be able to boot from SD.
 
-The interrupts are provided by a separate interrupt controller. Let's 
-take the exemple of powerpc 8xx. Here is the list of interrupts handled 
-by the CPM interrupt controller on the 8xx:
+Also, since many other nodes will reference the SoC pin controller,
+I would expect some minor latency due to deferred probe, so keeping
+them as built-in could bring some performance benefit.
 
-1 - GPIO Port C Line 4 interrupt
-2 - GPIO Port C Line 5 interrupt
-3 - SMC2 Serial controller interrupt
-4 - SMC1 Serial controller interrupt
-5 - SPI controller interrupt
-6 - GPIO Port C Line 6 interrupt
-7 - Timer 4 interrupt
-8 - SCCd Serial controller interrupt
-9 - GPIO Port C Line 7 interrupt
-10 - GPIO Port C Line 8 interrupt
-11 - GPIO Port C Line 9 interrupt
-12 - Timer 3 interrupt
-13 - SCCc Serial controller interrupt
-14 - GPIO Port C Line 10 interrupt
-15 - GPIO Port C Line 11 interrupt
-16 - I2C Controller interrupt
-17 - RISC timer table interrupt
-18 - Timer 2 interrupt
-19 - SCCb Serial controller interrupt
-20 - IDMA2 interrupt
-21 - IDMA1 interrupt
-22 - SDMA channel bus error interrupt
-23 - GPIO Port C Line 12 interrupt
-24 - GPIO Port C Line 13 interrupt
-25 - Timer 1 interrupt
-26 - GPIO Port C Line 14 interrupt
-27 - SCCd Serial controller interrupt
-28 - SCCc Serial controller interrupt
-29 - SCCb Serial controller interrupt
-30 - SCCa Serial controller interrupt
-31 - GPIO Port C Line 15 interrupt
+A minor note: skimming through defconfig it seems that most pinctrl
+drivers are built-ins, so I would stick to that too.
 
-As you can see in the list, the GPIO line interrupts are nested with 
-other types of interrupts so GPIO controller and Interrupt controller 
-are to be keept independant.
+Many thanks,
+Andrea
 
-That's more or less the same here with my series, patch 1 implements an 
-interrupt controller (documented in patch 6) and then the GPIO 
-controllers consume the interrupts, for instance in gpiolib functions 
-gpio_sysfs_request_irq() [drivers/gpio/gpiolib-sysfs.c] or 
-edge_detector_setup() or debounce_setup() [drivers/gpio/gpiolib-cdev.c]
 
-External drivers also use interrupts indirectly. For example driver 
-sound/soc/soc-jack.c, it doesn't have any direct reference to an 
-interrupt. The driver is given an array of GPIOs and then installs an 
-IRQ in function snd_soc_jack_add_gpios() by doing
+Links
 
-	request_any_context_irq(gpiod_to_irq(gpios[i].desc),
-					      gpio_handler,
-					      IRQF_SHARED |
-					      IRQF_TRIGGER_RISING |
-					      IRQF_TRIGGER_FALLING,
-					      gpios[i].name,
-					      &gpios[i]);
-
-> 
->>
->>>
->>>> Here is an exemple for port B of mpc8323 which has IRQs for
->>>
->>> typo
->>>
->>>> GPIOs PB7, PB9, PB25 and PB27.
->>>>
->>>>           qe_pio_b: gpio-controller@1418 {
->>>>                   compatible = "fsl,mpc8323-qe-pario-bank";
->>>>                   reg = <0x1418 0x18>;
->>>>                   interrupts = <4 5 6 7>;
->>>>                   interrupt-parent = <&qepic>;
->>>>                   gpio-controller;
->>>>                   #gpio-cells = <2>;
->>>>                   fsl,qe-gpio-irq-mask = <0x01400050>;
->>>>           };
->>>
->>> You are missing #interrupt-cells and interrupt-controller properties.
->>
->> The gpio controller is not an interrupt controller. The GPIO controller
->> is brought by patch 1/6 and documented in patch 6/6.
-> 
-> Then the IRQ mask property is not right here. If you say "this GPIOs
-> have IRQs" it means this is an interrupt controller.
-
-The mask tells to the GPIO controller which GPIO line has an interrupt 
-(so it can install the edge detector) and which doesn't have an 
-interrupt. The "interrupts" property gives a flat list of interrupts, 
-the mask in the above example tells: interrupt 4 is for line 7, 
-interrupt 5 is for line 9, interrupt 6 is for line 25, interrupt 7 is 
-for line 27. Other lines don't have interrupts.
-
-> 
-> If you say this is not an interrupt controller, then you cannot have
-> here interrupts per some GPIOs, obviously.
-
-It has been working that way on powerpc 8xx for 8 years, since commit 
-726bd223105c ("powerpc/8xx: Adding support of IRQ in MPC8xx GPIO")
-
-I don't understand why you say you cannot have
-here interrupts per some GPIOs. What am I missing ?
-
-Thanks
-Christophe
+1 - https://lore.kernel.org/all/5ceba8558e0007a9685f19b51d681d0ce79e7634.1756386531.git.andrea.porta@suse.com/
+ 
+> -- 
+> Florian
 
