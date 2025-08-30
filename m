@@ -1,51 +1,52 @@
-Return-Path: <linux-gpio+bounces-25230-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25227-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 522ABB3D006
-	for <lists+linux-gpio@lfdr.de>; Sun, 31 Aug 2025 00:47:03 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61CE4B3CFED
+	for <lists+linux-gpio@lfdr.de>; Sun, 31 Aug 2025 00:40:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 475E77AC568
-	for <lists+linux-gpio@lfdr.de>; Sat, 30 Aug 2025 22:45:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CE59B7AA4E7
+	for <lists+linux-gpio@lfdr.de>; Sat, 30 Aug 2025 22:38:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E128253B59;
-	Sat, 30 Aug 2025 22:46:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE6A925CC74;
+	Sat, 30 Aug 2025 22:40:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="V525SsJG";
-	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="ObrS52SG"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="We2pdkut";
+	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="vRSfIWUQ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BBBA6F53E;
-	Sat, 30 Aug 2025 22:46:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEEE11F91C8;
+	Sat, 30 Aug 2025 22:40:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756594014; cv=none; b=lMTbhpbU72+Y2MIwHa8dmxCLYnq8M0xHkyWhuTxKtUwmFXkBbbzbspvpYLG76C1guqrFiOK8JRCEhLhlqvibXMkWdNY9f+NylS/sTgMWwaOCrYASGFylEt2wSNRlAdVHD4fYR+BBL/ah5f3+PRLjghmxg6r0/3Q9duentz4P+KQ=
+	t=1756593624; cv=none; b=ezrUDXqgwg8U1BZp66MXEB5Vzez8XJ0JwFVGizTZjK8g9ZyzlfC8OovwvRbxow+BFf8bPDEVFlHHZnEIlIlpEsYG0YE+DeLJVYvW8b9KgK1YihRmSc99t6v5ruB+ByWoLbta8abcMGWlcxMvWoEpgvnShg8fvt/kPJQe+wRr+xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756594014; c=relaxed/simple;
-	bh=IuNo5LYqCPvx/bmG5bVEJ7GNfYLU2l5PW8pqqLvr0FA=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZclEtDvTyL/Xu1e8UJWTBVVHt9z/bi7pyPthvBdXpvt2ZXGXjBgzJYRmrfygs0aWjcdDbNcHKDJFrfFW/kpIv2jnSi6HgTeUL1Y2ePv0U2dYUvpyUcWALF3kw2UrLbTMtsrEOyYnzjrrBbbESHNXNHKLGVPbydkQDPAc+qK14gQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=V525SsJG; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=ObrS52SG; arc=none smtp.client-ip=5.75.144.95
+	s=arc-20240116; t=1756593624; c=relaxed/simple;
+	bh=wtKe9H6U+LhS2f603AlELwNS+homIUhNUwT6Z3ZM8hU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=IijS5l/vzVq8uRpvFfx26Om9jX/od7S+6IdQhbccQdYFCHym7vCIxUDqhOaNTZXKJReBUs/PR37ExpbAqRH802oIqgtB4w9O4nOieNEYucR2g7dpNA5Jt6Li2800/GAGle12/mXJW4fb9RkI/E8z1hpIjwHXrQSTbmYmJEXvaBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=We2pdkut; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=vRSfIWUQ; arc=none smtp.client-ip=5.75.144.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
-	h=To:Message-Id:Date:Subject:From; t=1756593500; bh=sJBbh12ISrJRahnF37YRfUd
-	ntH2Zj/Dof0WzSnco3wM=; b=V525SsJGaAnwPq+t9xAPlVv0j9F8sS1QAB0b6Ow9//Lg/DesHT
-	sYjew1Mk7b2Am7dSbJ3pkhoJ1WRcjwv/maOUH3JZymZBTscAcw30NZnter5ZBrhMMthnXLQgKDO
-	Qf5zuNVQ00/i5EQu8+5reQ0H5nsmLUSN0+d6U51QuzGd2j/f0BtRrynWDe13V+dYRb0XS5JakTf
-	H4MvG0o2ddn9dRMLLHVtcSD06skEknXSIbW2SICQFKc+iZT64zgQV0/mis9pvsSXGLWMRGRyXsh
-	YocEgIkTL/U2ggT30iQdudiSl96iRz8RjfIjr5oHXdBUzej1ThpZ/QBFE7XSxNv0wlQ==;
+	h=To:Message-Id:Subject:Date:From; t=1756593502; bh=75jbWC6rzZi0qzMwWHXrcn6
+	GuZQp+Mi+3zTPjxiaEug=; b=We2pdkutSDpgFO7ThJOWkr3Xh14gRYQXsBK0m1jvmWS9dwQ/1Q
+	5ZakAQoratAmfIYsjadVJ4RTLt9onK0FMmzWV2yVCAss9bYLseeEg1IvtBZVJJ4pjCDZnkwp7Ry
+	fz3oKuQSPtepCSY2UuEQ20Ib+Vox5gSnrFvRoUesfTMHWfcZqyLREjYttozsXknjTfwPRlNP9gw
+	R1R31qmsx74qmFXkR1/mkonqm1xRyaEA7Ly59HLAI3mSt+7SQlcC2HeYC8ODYNPprx6i2+agdFA
+	Dv/U2xoiChdoaxVqhq8wmunHVhg7VxnVI0qDJnEHlh1PeGRVCBduF8BMwANf4qcYWXg==;
 DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
-	h=To:Message-Id:Date:Subject:From; t=1756593500; bh=sJBbh12ISrJRahnF37YRfUd
-	ntH2Zj/Dof0WzSnco3wM=; b=ObrS52SGDuDkUG7OYrYEfVVSl5WFuyGMCQBb2cR8mQZyipBfif
-	jq1RZwNg/9vBaWPOaMAnnsz3nN54i1HMGqAg==;
+	h=To:Message-Id:Subject:Date:From; t=1756593502; bh=75jbWC6rzZi0qzMwWHXrcn6
+	GuZQp+Mi+3zTPjxiaEug=; b=vRSfIWUQfdh4cTR5f/jxKink47sa7Uyi8W49AjGwzAoy8aqGO2
+	3INo66qUtCJKVjqCAPjYpQ+VqmxCg6ApFOCg==;
 From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
-Subject: [PATCH v7 0/6] Initial support of MSM8937 and Xiaomi Redmi 3S
-Date: Sun, 31 Aug 2025 00:38:12 +0200
-Message-Id: <20250831-msm8937-v7-0-232a9fb19ab7@mainlining.org>
+Date: Sun, 31 Aug 2025 00:38:13 +0200
+Subject: [PATCH v7 1/6] dt-bindings: clock: qcom: Add MSM8937 Global Clock
+ Controller
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -54,12 +55,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAFR9s2gC/23QwWrEIBAG4FdZPNeio3G0p75H6SHRMSs0yWKKt
- Cx595qF1kBz/Ae/n3HubKWcaGUvlzvLVNKalrkGfLowf+3nkXgKNTMQ0AmQgk/rZJ1CDmApiuA
- Vecfq61ummL4eTW/vNV/T+rnk70dxkfv0t0P+dRTJBccASMFgRGFfpz7NH2lO8/i85JHtRQUOG
- FTDUPHgHNahURTUKVZHrBtWFYc+oJcWvPfDKdYNK9k1rCuWUSogi6LX7hR3DWs4/Lnb147OoqM
- odTjHpmEL7ejF7Fg4MUDvB4P0D2/b9gPKPdAX1AEAAA==
-X-Change-ID: 20250210-msm8937-228ef0dc3ec9
+Message-Id: <20250831-msm8937-v7-1-232a9fb19ab7@mainlining.org>
+References: <20250831-msm8937-v7-0-232a9fb19ab7@mainlining.org>
+In-Reply-To: <20250831-msm8937-v7-0-232a9fb19ab7@mainlining.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
  Michael Turquette <mturquette@baylibre.com>, 
  Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -90,117 +88,93 @@ Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
  phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
  linux@mainlining.org, 
  =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Daniil Titov <daniilt971@gmail.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
- Dang Huynh <danct12@riseup.net>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1756593498; l=3677;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1756593498; l=3026;
  i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
- bh=IuNo5LYqCPvx/bmG5bVEJ7GNfYLU2l5PW8pqqLvr0FA=;
- b=JmEkgEoQFTvoyzCT4SGtdSTtC7G04pIOn1TLJGFJbeQ8s6TOaK2UASahhtHzNkP6Sa0MkCDCg
- eufnpkXrgzzAPg26B3aFppdfWenkSFLpvWJWKWwm9JbzQQlfQJecky2
+ bh=wtKe9H6U+LhS2f603AlELwNS+homIUhNUwT6Z3ZM8hU=;
+ b=MtLbUHknAvcy+vFuA6otWwb8o7X459E/zexNKP9F1CpXCqjsXcP7H3YKb2xpJPPv6Aq+6rMFS
+ 9gWqqueSuejCiusUz0FBHkAivQa2txPUkZiP0DZG2aCHu9AoIopaU2s
 X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
  pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
 
-This patch series add initial support for MSM8937 SoC
-and Xiaomi Redmi 3S (land).
+Add device tree bindings for the global clock controller on Qualcomm
+MSM8937 platform.
 
-The series is extending the MSM8917 gcc and pinctrl drivers
-because they are sibling SoCs.
-MSM8937 have 4 more A53 cores and have one more dsi port then
-MSM8917.
-It implements little-big architecture and uses Adreno 505.
-
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
 ---
-Changes in v7:
-- gpu.yaml: update adreno 505 pattern
-- Link to v6: https://lore.kernel.org/r/20250820-msm8937-v6-0-b090b2acb67e@mainlining.org
+ .../devicetree/bindings/clock/qcom,gcc-msm8953.yaml   | 11 ++++++++---
+ include/dt-bindings/clock/qcom,gcc-msm8917.h          | 19 +++++++++++++++++++
+ 2 files changed, 27 insertions(+), 3 deletions(-)
 
-Changes in v6:
-- msm8937:
-  - Fix nodes ordering.
-  - Format clocks, reg, dmas and -names properties.
-  - Add gpu_speedbin.
-- Describe A505 clocks.
-- Link to v5: https://lore.kernel.org/r/20250421-msm8937-v5-0-bf9879ef14d9@mainlining.org
+diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc-msm8953.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc-msm8953.yaml
+index fe1f5f3ed992453a347062a556b1ddb2a011db6f..f2e37f439d28b3ec066f407927955b3b82b5c10a 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,gcc-msm8953.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,gcc-msm8953.yaml
+@@ -9,16 +9,21 @@ title: Qualcomm Global Clock & Reset Controller on MSM8953
+ maintainers:
+   - Adam Skladowski <a_skl39@protonmail.com>
+   - Sireesh Kodali <sireeshkodali@protonmail.com>
++  - Barnabas Czeman <barnabas.czeman@mainlining.org>
+ 
+ description: |
+   Qualcomm global clock control module provides the clocks, resets and power
+-  domains on MSM8953.
++  domains on MSM8937 or MSM8953.
+ 
+-  See also: include/dt-bindings/clock/qcom,gcc-msm8953.h
++  See also::
++    include/dt-bindings/clock/qcom,gcc-msm8917.h
++    include/dt-bindings/clock/qcom,gcc-msm8953.h
+ 
+ properties:
+   compatible:
+-    const: qcom,gcc-msm8953
++    enum:
++      - qcom,gcc-msm8937
++      - qcom,gcc-msm8953
+ 
+   clocks:
+     items:
+diff --git a/include/dt-bindings/clock/qcom,gcc-msm8917.h b/include/dt-bindings/clock/qcom,gcc-msm8917.h
+index 4b421e7414b50bef2e2400f868ae5b7212a427bb..4e3897b3669d9149b61a6feec31ca35e2058dcb9 100644
+--- a/include/dt-bindings/clock/qcom,gcc-msm8917.h
++++ b/include/dt-bindings/clock/qcom,gcc-msm8917.h
+@@ -170,6 +170,23 @@
+ #define VFE1_CLK_SRC				163
+ #define VSYNC_CLK_SRC				164
+ #define GPLL0_SLEEP_CLK_SRC			165
++/* Addtional MSM8937-specific clocks */
++#define MSM8937_BLSP1_QUP1_I2C_APPS_CLK_SRC		166
++#define MSM8937_BLSP1_QUP1_SPI_APPS_CLK_SRC		167
++#define MSM8937_BLSP2_QUP4_I2C_APPS_CLK_SRC		168
++#define MSM8937_BLSP2_QUP4_SPI_APPS_CLK_SRC		169
++#define MSM8937_BYTE1_CLK_SRC				170
++#define MSM8937_ESC1_CLK_SRC				171
++#define MSM8937_PCLK1_CLK_SRC				172
++#define MSM8937_GCC_BLSP1_QUP1_I2C_APPS_CLK		173
++#define MSM8937_GCC_BLSP1_QUP1_SPI_APPS_CLK		174
++#define MSM8937_GCC_BLSP2_QUP4_I2C_APPS_CLK		175
++#define MSM8937_GCC_BLSP2_QUP4_SPI_APPS_CLK		176
++#define MSM8937_GCC_MDSS_BYTE1_CLK			177
++#define MSM8937_GCC_MDSS_ESC1_CLK			178
++#define MSM8937_GCC_MDSS_PCLK1_CLK			179
++#define MSM8937_GCC_OXILI_AON_CLK			180
++#define MSM8937_GCC_OXILI_TIMER_CLK			181
+ 
+ /* GCC block resets */
+ #define GCC_CAMSS_MICRO_BCR			0
+@@ -187,5 +204,7 @@
+ #define VENUS_GDSC				5
+ #define VFE0_GDSC				6
+ #define VFE1_GDSC				7
++/* Additional MSM8937-specific GDSCs */
++#define MSM8937_OXILI_CX_GDSC				8
+ 
+ #endif
 
-Changes in v5:
-- msm8937:
-  - Remove wrongly defined idle-states.
-  - Fix thermal zones.
-  - Use the header with DSI phy clock IDs.
-  - Fix the nodes order.
-  - Fix the pinctrls style.
-  - Follow gcc header changes.
-- msm8937-xiaomi-land:
-  - Remove headphone switch and speaker amplifier bindings.
-  - Unify status property style.
-- gcc bindings:
-  - Expand MSM8953 gcc schema with MSM8937.
-  - Add MSM8937 prefix for MSM8937 specific clocks.
-- gcc:
-  - Follow the bindings changes.
-- Drop alwayson clock documentation it will be handled in another
-  patchset.
-- Link to v4: https://lore.kernel.org/r/20250315-msm8937-v4-0-1f132e870a49@mainlining.org
-
-Changes in v4:
-- Add missing rpmcc include for qcom,gcc-msm8937 dtbinding exmaple.
-- msm8937: add missing space after s9-p1@230
-- msm8937-xiaomi-land: replace LED_FUNCTION_INDICATOR to LED_FUNCTION_STATUS
-- Remove applied patches
-- Link to v3: https://lore.kernel.org/r/20250224-msm8937-v3-0-dad7c182cccb@mainlining.org
-
-Changes in v3:
-- Fix qcom,gcc-msm8937 dtbinding example 
-- Link to v2: https://lore.kernel.org/r/20250223-msm8937-v2-0-b99722363ed3@mainlining.org
-
-Changes in v2:
-- drop applied patches
-- drop gcc schema commits infavor of a new schema for gcc-msm8937
-- document always on clock for adreno 505/506/510
-- msm8937:
-  - set cache size
-  - rename cpu labels
-  - fix style issues addressed by review
-- msm8937-xiaom-land:
-  - remove unused serial0 alias
-  - remove regulator-always-on from pm8937_l6
-  - add blue indicator led for aw2013
-- Link to v1: https://lore.kernel.org/r/20250211-msm8937-v1-0-7d27ed67f708@mainlining.org
-
----
-Barnabás Czémán (4):
-      dt-bindings: clock: qcom: Add MSM8937 Global Clock Controller
-      dt-bindings: display/msm/gpu: describe A505 clocks
-      dt-bindings: arm: qcom: Add Xiaomi Redmi 3S
-      arm64: dts: qcom: Add Xiaomi Redmi 3S
-
-Dang Huynh (1):
-      arm64: dts: qcom: Add initial support for MSM8937
-
-Daniil Titov (1):
-      clk: qcom: gcc: Add support for Global Clock controller found on MSM8937
-
- Documentation/devicetree/bindings/arm/qcom.yaml    |    6 +
- .../bindings/clock/qcom,gcc-msm8953.yaml           |   11 +-
- .../devicetree/bindings/display/msm/gpu.yaml       |    2 +-
- arch/arm64/boot/dts/qcom/Makefile                  |    1 +
- arch/arm64/boot/dts/qcom/msm8937-xiaomi-land.dts   |  381 ++++
- arch/arm64/boot/dts/qcom/msm8937.dtsi              | 2134 ++++++++++++++++++++
- drivers/clk/qcom/Kconfig                           |    6 +-
- drivers/clk/qcom/gcc-msm8917.c                     |  617 +++++-
- include/dt-bindings/clock/qcom,gcc-msm8917.h       |   19 +
- 9 files changed, 3166 insertions(+), 11 deletions(-)
----
-base-commit: 3cace99d63192a7250461b058279a42d91075d0c
-change-id: 20250210-msm8937-228ef0dc3ec9
-
-Best regards,
 -- 
-Barnabás Czémán <barnabas.czeman@mainlining.org>
+2.51.0
 
 
