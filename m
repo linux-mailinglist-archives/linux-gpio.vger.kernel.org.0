@@ -1,76 +1,78 @@
-Return-Path: <linux-gpio+bounces-25221-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25222-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21D18B3CA7C
-	for <lists+linux-gpio@lfdr.de>; Sat, 30 Aug 2025 13:17:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 481CBB3CA7F
+	for <lists+linux-gpio@lfdr.de>; Sat, 30 Aug 2025 13:17:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D345E5804AE
-	for <lists+linux-gpio@lfdr.de>; Sat, 30 Aug 2025 11:17:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 10FC75804F2
+	for <lists+linux-gpio@lfdr.de>; Sat, 30 Aug 2025 11:17:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 180EF26F445;
-	Sat, 30 Aug 2025 11:17:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EABD275B03;
+	Sat, 30 Aug 2025 11:17:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aI1QjPud"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e/giByel"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23011E47A3
-	for <linux-gpio@vger.kernel.org>; Sat, 30 Aug 2025 11:17:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F03220F49
+	for <linux-gpio@vger.kernel.org>; Sat, 30 Aug 2025 11:17:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756552626; cv=none; b=kPqs/zddwYTA7Bcg32rFkW2sqeSEeAibZXXdFxZ4rjtGIc75dkN4voUdPLN7ru88y+DXhIQayjl/+vkMJxgm1NKaGalvpZeauxDM6vgJo4Zd9HfhuVfgjoeeyZKJpAH3hK35gKBRwEYPe5l3jMHWM2wqTMf37A4uJhirm7CO2M4=
+	t=1756552628; cv=none; b=kENJztrqGeIf3USJWBJJnoYC2UHv6wknCA3wjP9w/BgmeIxW5krebCaU/1ibgPMEiCX1DMepENapC76n+svHhf6/HoNLCy3bz5G4Lba4KWnM9FjDlXiGiHULqnMHq81lgGzIp78SmOqvLicyYPYII/2DRAR9fCKSq+lQ2KcnXIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756552626; c=relaxed/simple;
-	bh=E0gq6DxSh3Mfd2fh/IwMmACtaozlVHjrWxf6F/SWbtI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dlDQgds3fgpa2guZkkTVjAo/PS0m0eQL2fQaUzObJ8SBtsVW5HNT2C8KtPESlC1GvuKZFogSTU7wX+hZ9fei41hlkn+RwV26bM2WXPhECUHHA+JW7b1dZlL8dFUIOi28BBVADUfMQkHYjCA7HxKfm3aHE4n+OTYEYjQx/sArLKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aI1QjPud; arc=none smtp.client-ip=209.85.208.43
+	s=arc-20240116; t=1756552628; c=relaxed/simple;
+	bh=BRm9jhP8w8rU/kwHuy64JB8q87TYx9kSQxPNxxu95xA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aUL/93qlztKpwMYlgOIJlZ5w+BfWg7QxqyG2D4mUg6R4zvbpF9bvoxYTRe3tNlutxfzwseVJf/T9eiQZT1FmJ2p59qjJX4GkIb7GTYGx9tUBcnJ/rItoLxdCjwO5PTGJrWv2U27zLO++06bn1PGvimw5mHJRxlK8lF36NzDkHZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e/giByel; arc=none smtp.client-ip=209.85.208.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-61cad8d2a3eso402011a12.1
-        for <linux-gpio@vger.kernel.org>; Sat, 30 Aug 2025 04:17:04 -0700 (PDT)
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-61cad8d2a3eso402015a12.1
+        for <linux-gpio@vger.kernel.org>; Sat, 30 Aug 2025 04:17:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1756552623; x=1757157423; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HrtE3Q82QK6+GBZEOdbY1kXklQMDVX/x3b7hwZm2YeA=;
-        b=aI1QjPudCyTq/xp8gEd7LybOkLQdjMZLCtxKRkFu9OdIrvN3HPg6YuapnlTkY/JFcl
-         b2gdu48tNSSSoc9vnKEfnGla+Xw3c2R75c+XV3q5oAK9WFP8gzb6u5aoZ0h9wxP99XVj
-         Z5v9mARDEe9aNdV9wk7tg7Kwu3O1sE0A5QE/kz82IIB6WmNxmyotCtIj9075zK3k7o8F
-         iI1XveOLoMjeoGvDFSi1jVnnNyZPVhCMFL9lkShc5rsUtZC/0zPvws+rGBw5N2DEO4k8
-         GwJ0WRWOtf1koZB0WXvpDERsDdD23E/JHvoakWhnzMUUS4gqOMJ+gQ7EEXddNmEjp1ZD
-         Wn2Q==
+        d=linaro.org; s=google; t=1756552625; x=1757157425; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=60upd+BKvn0xz+C5I56bG/z3TpNZllLyLlel/0JDTmo=;
+        b=e/giByelnyKYzs33k+NsKjTfX51Hp54AMtrxaeE8xXHuu5r1q+ffhEONkG7jjpOYk2
+         tJHtEpPB4ILsDukKIWW2yreKXl91mzC6DE3IIt+9Ggq6MLdh3oXc4rQ+oD2PgLe5Vf8V
+         9a1AUe2L8YVE3N2GYmRls2IJPOeFVeb7MmA4AhQGY4DNBs2Vr4lbKgl206gr1Be2LMuB
+         I7umnyLjbshnuEpBFRqZf2SNLUdXtxG0YpWGvZQaSGPfbB8haOn0vCaL62vuS39Mn+xL
+         tODzUplMYVrulgQRWfUrHDXMGvyjOsKPT0t5ZRwjcs2dPbIkjUwlwY0nRV457q3QrsnM
+         OSMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756552623; x=1757157423;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HrtE3Q82QK6+GBZEOdbY1kXklQMDVX/x3b7hwZm2YeA=;
-        b=Pr3mIt5gd7YbMA3sYwwqk30ijh+rU+MRFQ3jBkamNWBlFcDcnBYekRy+MvhccIoMxc
-         311KGcIHm2eNuxgAProSfGSY5lQvSH/+2/lbm+gVySl19QTLAWEdZV6h1STBXZfDwUqA
-         2D+FNH36MdRm2KX8Xel2ah8q0IblrCeSK4BYMrVc6XzaIH+cZ1pPzefRsZ3E0Vvnf3++
-         wj8LCLGRF4yw1IX8bVYTfqOIHlEvLGJPY4yV6AlH/YPT/1Hlky/Skcms0YG7Xhk0PcCy
-         TKjVFDgy+AiPKoHzE4PGCgZYIf+fq4gmZ4GAcmTu3dy3Kpu+l8weka9D6tMA5/VzhoQO
-         pmvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVbcbRDavNrVHaX2HC3T5egJcDFf+E7kOwzkry3O7Boz0mmY4R5GY3KPKo2xeXsUnOzE0eT0KSkOJZU@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIJZD9rPNcsZzxdIaGWMFAXvK7wU64MrHJE/1RvcoFomVIPFLE
-	joHSbHu8RJhhojAFYepDC3863RVJ4toFtlpVsFewY6jkoz1JLki2h/EVsShBQ4U4bJ0=
-X-Gm-Gg: ASbGnctscLiogLacsC7hy5IQYiZfv/5DaxCxUc8dtDryjD3rex+QjvsfBlL7iZiBdqE
-	x3NV09F1rAVzDCq5EW5TyZ3q07NAe4rnZkUbkCj5kx9YngrCyVm4HwWdRuK5T3riHrORPluAYSH
-	r3+C3nqzB8zsFUm7AgoTLCpZASzeJREXlpnNrQ7hZ7icmWt6Qe/YtDXTFclm3SquEgyGgNLT3Uf
-	/5Q3FBZFGoUYmz+09vt1oz81S8B0fTvOva6jOiReuH3H22Ee4+JZ/tOsPM9/u25zss+qbUdAcGv
-	oyA7PlwLLf/VDV7TUt9DMXRjp1TGdBtp0aZXAdHdl3c9oUGRdld/dEPaz3F+dbIs1NB5CoIrVKv
-	jQh73fd5gbcgDlEF59ADO907EVno7mY9n5nHtuweUS7cUm0velQMlvXg=
-X-Google-Smtp-Source: AGHT+IFmornV4ZdIWfTm9SgoE8/HBXaeK1TDUM0EwCR7nq5XRu9/CMvRo+RGrgPCIIEx2ABNZ1/nTQ==
-X-Received: by 2002:a17:907:60d4:b0:ae4:1093:d41d with SMTP id a640c23a62f3a-aff0377c96emr287174666b.0.1756552623239;
-        Sat, 30 Aug 2025 04:17:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1756552625; x=1757157425;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=60upd+BKvn0xz+C5I56bG/z3TpNZllLyLlel/0JDTmo=;
+        b=Q57mo8d+USdYM0LVXAZa3r7KDb5FvChBy/2hFdR5bpgqLgA4VcREQxdu9q1o5U/D/x
+         r428XCLiJcXZs0bwp+Pdh+0FZ+fAIotw5rv8muWTdd9yXgCnxffMwCIx2DFo9byGRKBp
+         fcoMx/VkCuUqolCHLJXvaTq6BLFeM2K5aQN4USxW53rXD9w1q6XnTXjtyfWkKCvTwcqa
+         BKFykz8ohAfo8sD2bx3fqqHWM0Now8u9/hN9+0yotB0Rmutlj+4zREB3oGJ0QJBwdZvf
+         W/+iaXo33416rVuIKoTCdi1jDGjjUG8H6LgJc6uu6cL7w7LUwQiRXHexn+CEH7J7oVyI
+         sDSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVwYnVbBxC7HyxaTotHISopQO5J53CFD8vSrtjniyebxhs2O4CTP/KiXRlQPvRhbUj4+w5roJYbZclO@vger.kernel.org
+X-Gm-Message-State: AOJu0YznXxqlAoih/FTvWkX0VE+5K37MUOmn/dosb/tfR4uaCyD2pAmm
+	8HquGeSUf3zY8zE1t9kg3bQ9oCCPZer5jEk8+B48JCNWikomgiEvI5Wx9ejf7yo6Gmg=
+X-Gm-Gg: ASbGncuVgWULerKAJcSs0dYfBmcSFfaT6jqxWtoiSUt9RIYwo5akiH3l/a5kdH56if/
+	m0DF0PSLxkbdWpOSHfUCWVUM1QmnLLZl6Py3EgsRKIkqWaGq5nSN5z3kY9eKoDE1BoECHbZve2M
+	RlwNZaiBIiYEHkblMLA8E9ZCjS+CnsGs/9HHmzu5ivd9jzuuyDcHEoPinGEPlW5wqRmn9e0dZHY
+	LF81zpMiSMHMqPpG6dTZHVgT9xcFITih7XM3jeV7R5AteaHZbkJ/JPpnOyHPqKy/sMMGxcW0Lym
+	GNeU8TviMs0tMVtcom4wyjgm6Wjh60A9XH8ShdTodz3uezPhmtp/1t+xdBgINlKAE+2p8aFO4gi
+	tFKlOa23qwDzBnvD64czhgOYI4KYC1sjPMA==
+X-Google-Smtp-Source: AGHT+IESzw14SfBx5ze5UZKu76aylPC6/8IATI5aiR9tuQyDgPAZqo4yCWAwk6R7aQI2r6EYS73T+w==
+X-Received: by 2002:a17:907:d17:b0:af9:8748:2bb0 with SMTP id a640c23a62f3a-aff045d17ebmr294201866b.10.1756552624846;
+        Sat, 30 Aug 2025 04:17:04 -0700 (PDT)
 Received: from kuoka.. ([178.197.219.123])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b0236d310casm117780166b.44.2025.08.30.04.17.01
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b0236d310casm117780166b.44.2025.08.30.04.17.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 Aug 2025 04:17:02 -0700 (PDT)
+        Sat, 30 Aug 2025 04:17:04 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To: Krzysztof Kozlowski <krzk@kernel.org>,
 	Sylwester Nawrocki <s.nawrocki@samsung.com>,
@@ -88,59 +90,102 @@ To: Krzysztof Kozlowski <krzk@kernel.org>,
 	linux-gpio@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	stable@vger.kernel.org
-Subject: [PATCH 1/2] pinctrl: samsung: Drop unused S3C24xx driver data
-Date: Sat, 30 Aug 2025 13:16:58 +0200
-Message-ID: <20250830111657.126190-3-krzysztof.kozlowski@linaro.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 2/2] dt-bindings: pinctrl: samsung: Drop S3C2410
+Date: Sat, 30 Aug 2025 13:16:59 +0200
+Message-ID: <20250830111657.126190-4-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250830111657.126190-3-krzysztof.kozlowski@linaro.org>
+References: <20250830111657.126190-3-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1320; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=E0gq6DxSh3Mfd2fh/IwMmACtaozlVHjrWxf6F/SWbtI=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBost2pee9d1wG5IpSYQufkayn0uDTUfoHK4Aojm
- OXjHWzf67CJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaLLdqQAKCRDBN2bmhouD
- 17DuD/sHmEpQOmJ+f3J11DHtrw0RH+Din6o+TGdXSZkDpyWNmfyR3Xbulz29+2OQ9GyJ5fnIEGH
- OLRyAgwoUVLWTc07Fjl+bEhfalWAR2p8AhxQF0SRmS3m2ufITSQ5KdAwimM/8W6Bw5PGfLvrhL2
- KC4E83y8qrf7Krj6osG0+HAEW8S1TqGswumOelaNzFH/sWoBWgovhA3ypaBGd867OQy9UnrCtkG
- 8pTI4zK8UteCTyGOw7Gfgdtr4jGfMQEMoaXg8GDKHwvtJNgRd4EyLrW6vTtHi5gbTY5/5fsOH2A
- wUUAFzC5Ao8fwf62Rkk2NDtC/DObwKKj0hWv0LIfjNx6dgoJ2hvW4Y9puHX20m4FMHiLI8tU/AT
- 6V5/uEJ6ZNJKoU0IG2kh0AU+rjLyxKGrJZr0YQEFdr61FXzNau5KyvXFyrfjPn3Z9YxEg1hrpq4
- 9nHiBgQknrqncCa9akOgrJtcvM74QO5ypeMcZY2vw5YFmbsBjHPTk1TLEk1cnsM1UHziIBaH9O8
- scmcmclkkmZGx9YwJqpsq7HDUGXYxBXnyiDrRQUh/oa6QMOkCSdjOYyRUQHKWg23Zwtxzyww0Oo
- KOnEucRZFZvUrDPek+tDpT5WPFVH6xlgcf4RC6f2XkkGTQK9v7N7OsY/IyEBYjtGbt+utUqtSnO owzZc9hxRnRPe3A==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2422; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=BRm9jhP8w8rU/kwHuy64JB8q87TYx9kSQxPNxxu95xA=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBost2qIP+/+3cfZa+euI3pngE+iT+a+WHylVNyo
+ UKZDkyDRr2JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaLLdqgAKCRDBN2bmhouD
+ 15g7D/4uTfN6vaakcLmeYTWcMPINmB+4QHznc3DmRIsvt/HwJlEfzF3cf9vWU0kan2QhXIVns+q
+ osqNMKWIneBJC3JaHTi9sTGnUGW9cj/SIuOKolDRvHS70gxzN+l7IQoJDVO0N01F1GgTFSolDIF
+ Oq1RMQw1uwSgG0gGI5xTlLeTmcnCIe8NQ881Gh9TTzL/e26qUKQUWm+O+ITpje5wIUYCfxGP3BC
+ xfLKdAEI6PFqAj97TaWtOt7uOsK2IUjvnahfTgaI3wiSrqfQH19tx+DTd2eSQP83hiQZtZqXqtE
+ bBUZrdiYpIaZ/jaSNkt397mWi5QqHvw58QqUu6FpoPA7NkZ2F0Ak2rZ03ff7+jcLdIy6W2cGRTN
+ O1ladZxpP8BIsUM3aPCFmLFf/Bo8LnYD+CMsCFRHuBTH0BTRMS1PJRDPeLNVdadIuY7VQOcEtrs
+ FhiOv0agVPkld1UV8kwakqAwNSWWDIriYUZu0TdxjoUCXfuTRqyFg+ieR8znv6hxfW5Rw3AyO5p
+ 2SQjgT+PKM4cT9wSIN0y/EFqdTiupaB6keiPPwxdVxJFkDQYxv3Lxmv3aIccKPFUWSqY+IqcVWD
+ WmN/pvjTj707/EFVbyzRxJyKHFWhL+sNh36dTmJTv9E58DdWMDhTFppTm5Bp/7k7XQ52MIWyj41 rCOtHz+e2oSiWQQ==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 Content-Transfer-Encoding: 8bit
 
-Drop unused declarations after S3C24xx SoC family removal in the commit
-61b7f8920b17 ("ARM: s3c: remove all s3c24xx support").
+Samsung S3C24xx family of SoCs was removed the Linux kernel in the
+commit 61b7f8920b17 ("ARM: s3c: remove all s3c24xx support"), in January
+2023.  There are no in-kernel users of remaining S3C24xx compatibles.
 
-Fixes: 1ea35b355722 ("ARM: s3c: remove s3c24xx specific hacks")
-Cc: <stable@vger.kernel.org>
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- drivers/pinctrl/samsung/pinctrl-samsung.h | 4 ----
- 1 file changed, 4 deletions(-)
+ .../samsung,pinctrl-wakeup-interrupt.yaml     | 19 +------------------
+ .../bindings/pinctrl/samsung,pinctrl.yaml     |  4 ----
+ 2 files changed, 1 insertion(+), 22 deletions(-)
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h b/drivers/pinctrl/samsung/pinctrl-samsung.h
-index 1cabcbe1401a..a51aee8c5f89 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.h
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
-@@ -402,10 +402,6 @@ extern const struct samsung_pinctrl_of_match_data exynosautov920_of_data;
- extern const struct samsung_pinctrl_of_match_data fsd_of_data;
- extern const struct samsung_pinctrl_of_match_data gs101_of_data;
- extern const struct samsung_pinctrl_of_match_data s3c64xx_of_data;
--extern const struct samsung_pinctrl_of_match_data s3c2412_of_data;
--extern const struct samsung_pinctrl_of_match_data s3c2416_of_data;
--extern const struct samsung_pinctrl_of_match_data s3c2440_of_data;
--extern const struct samsung_pinctrl_of_match_data s3c2450_of_data;
- extern const struct samsung_pinctrl_of_match_data s5pv210_of_data;
+diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
+index 0da6d69f5991..dd11c73a55da 100644
+--- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
+@@ -30,8 +30,6 @@ properties:
+   compatible:
+     oneOf:
+       - enum:
+-          - samsung,s3c2410-wakeup-eint
+-          - samsung,s3c2412-wakeup-eint
+           - samsung,s3c64xx-wakeup-eint
+           - samsung,s5pv210-wakeup-eint
+           - samsung,exynos4210-wakeup-eint
+@@ -59,27 +57,12 @@ properties:
+     description:
+       Interrupt used by multiplexed external wake-up interrupts.
+     minItems: 1
+-    maxItems: 6
++    maxItems: 4
  
- #endif /* __PINCTRL_SAMSUNG_H */
+ required:
+   - compatible
+ 
+ allOf:
+-  - if:
+-      properties:
+-        compatible:
+-          contains:
+-            enum:
+-              - samsung,s3c2410-wakeup-eint
+-              - samsung,s3c2412-wakeup-eint
+-    then:
+-      properties:
+-        interrupts:
+-          minItems: 6
+-          maxItems: 6
+-      required:
+-        - interrupts
+-
+   - if:
+       properties:
+         compatible:
+diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+index de8460856141..e48c4f467a28 100644
+--- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+@@ -36,10 +36,6 @@ properties:
+   compatible:
+     enum:
+       - google,gs101-pinctrl
+-      - samsung,s3c2412-pinctrl
+-      - samsung,s3c2416-pinctrl
+-      - samsung,s3c2440-pinctrl
+-      - samsung,s3c2450-pinctrl
+       - samsung,s3c64xx-pinctrl
+       - samsung,s5pv210-pinctrl
+       - samsung,exynos2200-pinctrl
 -- 
 2.48.1
 
