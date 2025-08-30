@@ -1,230 +1,126 @@
-Return-Path: <linux-gpio+bounces-25218-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25219-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95FC2B3C8AC
-	for <lists+linux-gpio@lfdr.de>; Sat, 30 Aug 2025 09:16:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15D80B3C904
+	for <lists+linux-gpio@lfdr.de>; Sat, 30 Aug 2025 10:05:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1C40E1C24DA9
-	for <lists+linux-gpio@lfdr.de>; Sat, 30 Aug 2025 07:17:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BC642207E47
+	for <lists+linux-gpio@lfdr.de>; Sat, 30 Aug 2025 08:05:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2737279DDC;
-	Sat, 30 Aug 2025 07:16:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9F0C285C82;
+	Sat, 30 Aug 2025 08:05:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="bGPRiKj+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="A28P82GL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OWCttz1i"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from flow-a8-smtp.messagingengine.com (flow-a8-smtp.messagingengine.com [103.168.172.143])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403365BAF0;
-	Sat, 30 Aug 2025 07:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.143
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA02F21B185;
+	Sat, 30 Aug 2025 08:05:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756538189; cv=none; b=BnZXf3FyY14Q14ztdY7cKgzPh+uUy8+6jbStQ6iIUOGo/WoJtjvw6qjODgYl2iy1kJQDqmoCSipMwQU4N4YqS6TW6X77mSC6dcBitk6khk6Ee0eU9UktyHv1v23z+M2ktP8MkkStNpxJrQRhRaSCVsdvacobpeWnRyWUdXev0Fw=
+	t=1756541117; cv=none; b=beMi2nv1wxvcZ/XkMcgbSqa1YM7ExmFzUlpbBPh4cB8dIRDk+ICDW2jMQUueJBXOjwH0F5B8W7kwXpROJCqpXINA38FySSt5zYkhWUAth7pjNV5kQtX7rRo3nPMSvt3t5+h+24A41n7f19SxCklDgGSicObV2UihcPCGPqE7iUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756538189; c=relaxed/simple;
-	bh=Xgq//bPMcuLhTUcoKQVvIGaVUwN6Y8zHe3tfndbRoBE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=APLNP1pWpFXMSnM07ztj/na3FmyYYxNzNXea5BBUTac2XBmSxO7Vu/CDXiE4g9yjwqEMZCIcEEc/NmoDbdy3yWmTPnGr6ljnrTZlpve87ZHYFEYVvFd0NLDftigScHSQICZIujS5w2outiM1ZJezKY2WDJmMuTrn75UX5QF7OFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=bGPRiKj+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=A28P82GL; arc=none smtp.client-ip=103.168.172.143
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailflow.phl.internal (Postfix) with ESMTP id 50B9C13803E1;
-	Sat, 30 Aug 2025 03:16:26 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Sat, 30 Aug 2025 03:16:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1756538186; x=1756545386; bh=rH5wSPSqP8
-	tNxz48V8nyDtHP/PfH/+QarsY2hPsLNiY=; b=bGPRiKj+zJAsCUQyrJp0/StHT3
-	Z0CEFhLQjV5xm7Yvbyg5RazYCfPbyTHWSm2ZpCegTbXOy6qhuD/CjdcFxuViszyu
-	G3+fcGeOv7HdCyn7AzxAqSFmzLO2erX/Vdp5eEeZaLTZRFRspFMiQ+busfvUv9xK
-	P1Qxg+vqomILq0dDixCVgYHw5VQEBClB9I6+/uTShTR//VYQFOWuKhVaLsvC6l/b
-	E1N/tfeehqrMQEp4i3wWoOJxGypUi7brZoL9qGPmQKmmMa93tVd1AY5Gro+BAjS3
-	WpUTogmTRpIeiSKPcsYZ3mE0og2OG5NvvD5b/WVFxeoMPFsjnwskajCq3uyw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1756538186; x=1756545386; bh=rH5wSPSqP8tNxz48V8nyDtHP/PfH/+QarsY
-	2hPsLNiY=; b=A28P82GLhQ+gU+qNvkSXEMIHHGhWHgGPB6W2BqfuM8nVdICuM2A
-	NcqEdXjnRC5GOtPhl8vytw2JOVW6a632Lth7tFVqpN0jcVrs5FIWi0nJ5dbfpPbz
-	93UWghe/7/x4NXeA4FN4wHq2l0R/6xrVdl4M6x+X4EqZcsuk7fUrrkX7z2aqNGXe
-	GRh9v13JNwBHa0GWMNd0IJAZ/VLuVZRHMzmIP6KgEOrMibcUtTOr/XOmSC3N9SR2
-	+4h7cZHX5hYQElJlZ9AcSZWpik6DY6Yif1Q+6msGHxqUXYJZ/hDnKBXbWh3Xvalq
-	Rf1Hz1zKH3Te14Zyu+F/tIsbTPiaescl/sQ==
-X-ME-Sender: <xms:R6WyaEoVPmMMjSTFVHUliXOdv-32qkUK5pBFUekwj0BEfXYXKXHMdg>
-    <xme:R6WyaOxfi2Sr_p908cLZZq0WtOWmPygKs_jKndyVj8rKDpXX8ikKi1OeywN_Gtza-
-    FiH-hDxXuUZTl36M64>
-X-ME-Received: <xmr:R6WyaEyfRmAxZWCNsVqvVaXCqEN1juICIShBdAflOgf0gNEE_E5nocVl8uCdcH2Ux_v_VJ8rmIGy5LrSoEu2QIiMu_-QOznOlpk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddukeehjeejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepfffhvfevuffkfhggtggujgesthdtredttddtjeenucfhrhhomheplfgrnhhnvgcu
-    ifhruhhnrghuuceojhesjhgrnhhnrghurdhnvghtqeenucggtffrrghtthgvrhhnpefgvd
-    ffveelgedujeeffeehheekheelheefgfejffeftedugeethfeuudefheefteenucevlhhu
-    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjsehjrghnnhgruh
-    drnhgvthdpnhgspghrtghpthhtohepieefpdhmohguvgepshhmthhpohhuthdprhgtphht
-    thhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhvvghnsehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopegrlhihshhsrgesrhhoshgvnhiifigvihhgrdhiohdp
-    rhgtphhtthhopehnvggrlhesghhomhhprgdruggvvhdprhgtphhtthhopehkrhiikhdoug
-    htsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtohepmhgrrhgtrghnsehmrghrtggrnhdrshhtpdhrtghpthhtoh
-    eprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehvihhrvghshhdrkhhu
-    mhgrrheslhhinhgrrhhordhorhhg
-X-ME-Proxy: <xmx:R6WyaOKeRrX_rKVtlS-_HS0UcyN9w8mWfjCwNfiQ70_pAa29FRblZA>
-    <xmx:R6WyaBhJsS4AgbvUvcN_o6uHp3h_R8NH2iRFaJDZJdGCW4iQPaQfCw>
-    <xmx:R6WyaMkzXbMbopG8scAkzx_CFhYUQNKGJXW5k3t17XIk3bIEeUpTWQ>
-    <xmx:R6WyaOgrns0dbGzbmla7f4E8nyVhRwKAcFG-qkHg9ORUTbTcZhmzrg>
-    <xmx:SqWyaJIOEg53pkAeV7MbeJTeynbZUjxSAdTQb-JDXFYqQHxsi0m95a1W>
-Feedback-ID: i47b949f6:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 30 Aug 2025 03:16:22 -0400 (EDT)
-Date: Sat, 30 Aug 2025 09:16:20 +0200
-From: Janne Grunau <j@jannau.net>
-To: Rob Herring <robh@kernel.org>
-Cc: Sven Peter <sven@kernel.org>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Neal Gompa <neal@gompa.dev>,	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,	Hector Martin <marcan@marcan.st>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,	Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>,	Robin Murphy <robin.murphy@arm.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Mark Kettenis <kettenis@openbsd.org>,	Andi Shyti <andi.shyti@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Sasha Finkelstein <fnkl.kernel@gmail.com>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	van Spriel <arend@broadcom.com>, Lee Jones <lee@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>,
-	Vinod Koul <vkoul@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,	Keith Busch <kbusch@kernel.org>,
- Jens Axboe <axboe@kernel.dk>,	Christoph Hellwig <hch@lst.de>,
- Sagi Grimberg <sagi@grimberg.me>,	Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>,	asahi@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org,	devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org,	linux-pm@vger.kernel.org,
- iommu@lists.linux.dev,	linux-gpio@vger.kernel.org,
- linux-i2c@vger.kernel.org,	dri-devel@lists.freedesktop.org,
- linux-bluetooth@vger.kernel.org,	linux-wireless@vger.kernel.org,
- linux-pwm@vger.kernel.org,	linux-watchdog@vger.kernel.org,
- linux-clk@vger.kernel.org,	dmaengine@vger.kernel.org,
- linux-sound@vger.kernel.org,	linux-spi@vger.kernel.org,
- linux-nvme@lists.infradead.org
-Subject: Re: [PATCH 00/37] arm64: Add initial device trees for Apple M2
- Pro/Max/Ultra devices
-Message-ID: <20250830071620.GD204299@robin.jannau.net>
-References: <20250828-dt-apple-t6020-v1-0-507ba4c4b98e@jannau.net>
- <20250829195119.GA1206685-robh@kernel.org>
+	s=arc-20240116; t=1756541117; c=relaxed/simple;
+	bh=E+3FytFWpN13QNaZlIP9PT23YkoDdof1b13hg+sNa10=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KXg9bYg2G4O+N7Si7/3SCG4M2xFcY0/qDX/Goahhb0fG9vvJkl+bFoqYZ7AkGnG3QxWiYxj6LyavefyNbZ96W+x+WOv/+dMXHmoVVIAhR/arJSZ5kUw6jqB4yV9nljm85LRb9yWt6sFiyrvcWgC1U3amD2ovTl8HwzboZixd79I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OWCttz1i; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-afeceee8bb1so421738966b.3;
+        Sat, 30 Aug 2025 01:05:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756541114; x=1757145914; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E+3FytFWpN13QNaZlIP9PT23YkoDdof1b13hg+sNa10=;
+        b=OWCttz1idIoD0VnsSHFGIawRXJFYgGlr1IsFW5L65nEQ2+rYy0cZ31g5jNyBrLABOo
+         5hbz+t8YtsXhYYiuNy1ZlRlFXMqfzEBx6XgAPA8pjWkUM72j2g6BVF+160+JVuC6vhmN
+         fpnRCewYZujadFszMCKLa382P8UIVOIOsUKAJeqTpW4f9gMw54tEIpem1kc/DIzQnMyv
+         CWGdfilRifCnzpNS3iJiATZtxTJsYoJBuaptC328zBxTQ3EZBQqEQUDGZeeSyXh8Oz3d
+         bf7ONrj/gb2xfcoekvf2DiOUO/bX13LtqJL5TW55DUsnZ2brvp1pYbverT/kaj/cGKdt
+         m5PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756541114; x=1757145914;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E+3FytFWpN13QNaZlIP9PT23YkoDdof1b13hg+sNa10=;
+        b=VcAhQPrfOLv8LXg3m0EZQWxedyNB0S0CjLiZQqK1Mz+ACiNYyaVURxvW6Yzc2auDaD
+         FCsVC89+3519zmw5uEb8jhfKipgWld2FfxisQz+7mdu3Ee95vitwBiZxaYPTKHIZdGdD
+         UEDK+9alQifsAdxc+tPMcE2hxmceJFWqWDokhSykzwxLm7SmaIA0w9Xm2LTwd24hr1tE
+         9uBGjD5i+gVWl2klDIcVATWXpBMp9MKNbAVxKKd7dzEtc66elTG0VvhKsLBpxyL6icpx
+         BP02yivy/uiksDHEocZ2OhwxAI95F9kPhALBtK9ZNC3bb3jxVTczSf9XpGjlEJo87NtB
+         Pjbg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+wP2t9w4C9MDx8bCjeG9XxWAAo/8b6AVfUxeOXlkK7ppQO+kDDwEycAW5SolbktEhVEoRG2UysjC0fUbB@vger.kernel.org, AJvYcCUXI+sPMYtg485TDQanhuYWVwMyKVr8MF4t+LSN4ED5s2EcAjaqC5OaHGHQTTQ8WMRRuFjWk82tuCoboykf+wyk@vger.kernel.org, AJvYcCUmmXCsQ+TSou4R/2bwtDRhDPGoD6wZ+FG3ntD3IZYu1PcvIa17n2vUR/tY4tptv5gfvElGvB2Jlqwilw==@vger.kernel.org, AJvYcCVjZO+WVMqoeuVyXw4GRTqCB/3rauHwTuW0mr10JhvyC7ViLrxRfq0k+FTgNAxRhkTx2rN8cakc53wcFA==@vger.kernel.org, AJvYcCWCoy0HamBYezqdodix7IQo5nOBMmfkbfGTznwitFUoJIKnkZ5gWZGa0dVW0I6+lIFIKbcFsbzG1ed2JExD1J6+A00=@vger.kernel.org, AJvYcCXi1qMLwiJ9uzcUURLMIvHXQndaUtuQe+Euwr0uzQLKyHGoDpj4kMDq/n7Jyk6xFxIYE2Uh5ARnw/RIEA==@vger.kernel.org, AJvYcCXvaxj+NXAiZMudh1Od+pz4mgmWAdl28dX6/IoZucd7DoFqzy8JAzHjHEg5lHBHXu/H+kNe7946F2M2/lMY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3A7v62H8aMswOsoCZQXYkweYah+OfSh/udtmcXJvQWHAkk0GY
+	ZeafaQKNicV1nil93d8BmEEgAQYixGYwNV7rYiiA1tUUPzdFK5bJTLM1gmXd61Z1rYYDFnC2Fl5
+	RI9g79Ny5xfM4jjmSUETESjUvdVk4UgU=
+X-Gm-Gg: ASbGncubCSj6ETjgY1Zef7OBfHA0X2Mg3K8kCNROOFhuySp7lY2p9LHAzsc+VvsedaN
+	IA/Z/m/nlFHyFSZfwDoeBLO8UQYDkVUxvSAgPHlWIFQkn5YhfXcCnR+SjKk39O/p75A1UrLvoau
+	Z3XBA93wLiWDbh005j47p6l85RR3bBsIXbypWOJ4pyA0qE4KqmOIGhovj3MHZx5CsKk0K+Inpv/
+	caekSU=
+X-Google-Smtp-Source: AGHT+IGzflFMFHhQCk11BPmcxfewbn8R9ACv8Yo0SSn9TtnTW1JgawjqxVwsmdBQr0ZCbodUJMXZIPy39a0Dt37TD0k=
+X-Received: by 2002:a17:907:7244:b0:af9:6e2b:f30c with SMTP id
+ a640c23a62f3a-b01d972f530mr112838566b.34.1756541113922; Sat, 30 Aug 2025
+ 01:05:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250829195119.GA1206685-robh@kernel.org>
+References: <20250828-pinctrl-gpio-pinfuncs-v6-0-c9abb6bdb689@linaro.org> <20250828-pinctrl-gpio-pinfuncs-v6-4-c9abb6bdb689@linaro.org>
+In-Reply-To: <20250828-pinctrl-gpio-pinfuncs-v6-4-c9abb6bdb689@linaro.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sat, 30 Aug 2025 11:04:37 +0300
+X-Gm-Features: Ac12FXzW7SA_uUOkcPEFLfZfGLYsYzzZVOKlWfYhU6akvDLYnA0W6YgK2rZDIDs
+Message-ID: <CAHp75Vci1uAcA9ahofn95hxufa+Yi1Fjt4w74HSObQq-Rz5zMQ@mail.gmail.com>
+Subject: Re: [PATCH v6 04/15] pinctrl: mediatek: mt7988: use PINCTRL_PIN_FUNCTION()
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Alexey Klimov <alexey.klimov@linaro.org>, 
+	Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
+	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mips@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-mm@kvack.org, imx@lists.linux.dev, linux-omap@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Chen-Yu Tsai <wenst@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 29, 2025 at 02:51:19PM -0500, Rob Herring wrote:
-> On Thu, Aug 28, 2025 at 04:01:19PM +0200, Janne Grunau wrote:
-> > This series adds device trees for Apple's M2 Pro, Max and Ultra based
-> > devices. The M2 Pro (t6020), M2 Max (t6021) and M2 Ultra (t6022) SoCs
-> > follow design of the t600x family so copy the structure of SoC *.dtsi
-> > files.
-> > 
-> > t6020 is a cut-down version of t6021, so the former just includes the
-> > latter and disables the missing bits.
-> > 
-> > t6022 is two connected t6021 dies. The implementation seems to use
-> > t6021 and disables blocks based on whether it is useful to carry
-> > multiple instances. The disabled blocks are mostly on the second die.
-> > MMIO addresses on the second die have a constant offset. The interrupt
-> > controller is multi-die aware. This setup can be represented in the
-> > device tree with two top level "soc" nodes. The MMIO offset is applied
-> > via "ranges" and devices are included with preprocessor macros to make
-> > the node labels unique and to specify the die number for the interrupt
-> > definition.
-> > 
-> > The devices itself are very similar to their M1 Pro, M1 Max and M1 Ultra
-> > counterparts. The existing device templates are SoC agnostic so the new
-> > devices can reuse them and include their t602{0,1,2}.dtsi file. The
-> > minor differences in pinctrl and gpio numbers can be easily adjusted.
-> > 
-> > With the t602x SoC family Apple introduced two new devices:
-> > 
-> > The M2 Pro Mac mini is similar to the larger M1 and M2 Max Mac Studio. The
-> > missing SDHCI card reader and two front USB3.1 type-c ports and their
-> > internal USB hub can be easily deleted.
-> > 
-> > The M2 Ultra Mac Pro (tower and rack-mount cases) differs from all other
-> > devices but may share some bits with the M2 Ultra Mac Studio. The PCIe
-> > implementation on the M2 Ultra in the Mac Pro differs slightly. Apple
-> > calls the PCIe controller "apcie-ge" in their device tree. The
-> > implementation seems to be mostly compatible with the base t6020 PCIe
-> > controller. The main difference is that there is only a single port with
-> > with 8 or 16 PCIe Gen4 lanes. These ports connect to a Microchip
-> > Switchtec PCIe switch with 100 lanes to which all internal PCIe devices
-> > and PCIe slots connect too.
-> > 
-> > This series does not include PCIe support for the Mac Pro for two
-> > reasons:
-> > - the linux switchtec driver fails to probe and the downstream PCIe
-> >   connections come up as PCIe Gen1
-> > - some of the internal devices require PERST# and power control to come
-> >   up. Since the device are connected via the PCIe switch the PCIe
-> >   controller can not do this. The PCI slot pwrctrl can be utilized for
-> >   power control but misses integration with PERST# as proposed in [1].
-> > 
-> > This series depends on "[PATCH v2 0/5] Apple device tree sync from
-> > downstream kernel" [2] due to the reuse of the t600x device templates
-> > (patch dependencies and DT compilation) and 4 page table level support
-> > in apple-dart and io-pgtable-dart [3] since the dart instances report
-> > 42-bit IAS (IOMMU device attach fails without the series).
-> > 
-> > After discussion with the devicetree maintainers we agreed to not extend
-> > lists with the generic compatibles anymore [1]. Instead either the first
-> > compatible SoC or t8103 is used as fallback compatible supported by the
-> > drivers. t8103 is used as default since most drivers and bindings were
-> > initially written for M1 based devices.
-> 
-> An issue here is any OS without the compatibles added to the drivers 
-> won't work. Does that matter here? Soon as you need any new drivers or 
-> significant driver changes it won't. The compatible additions could be 
-> backported to stable. They aren't really any different than new PCI IDs 
-> which get backported.
+On Thu, Aug 28, 2025 at 7:00=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> We have a dedicated initializer macro for defining pin functions for
+> mediatek drivers so use it here.
 
-I don't think backporting the driver compatible additions to stable
-linux is very useful. It is only relevant for t602x devices and the only
-way to interact with them is the serial console. The T602x PCIe support
-added in v6.16 requires dart changes (the posted 4th level io page table
-support) to be useful. After that PCIe ethernet works so there is a
-practical way to interact with t602x systems. So there are probably zero
-user of upstream linux on those devices 
-I'm more concerned about other projects already supporting t602x
-devices. At least u-boot and OpenBSD will be affected by this. As short
-term solution m1n1 will add the generic compatibles [1] temporarily.
-I think keeping this roughly for a year should allow to add the
-compatibles and wait for "fixed" releases of those projects.
-I'll send fixes for u-boot once the binding changes are reviewed.
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-Janne
+--=20
+With Best Regards,
+Andy Shevchenko
 
