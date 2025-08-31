@@ -1,118 +1,141 @@
-Return-Path: <linux-gpio+bounces-25251-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25252-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E26DAB3D370
-	for <lists+linux-gpio@lfdr.de>; Sun, 31 Aug 2025 14:56:05 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F099B3D398
+	for <lists+linux-gpio@lfdr.de>; Sun, 31 Aug 2025 15:25:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AD9BB17D0AF
-	for <lists+linux-gpio@lfdr.de>; Sun, 31 Aug 2025 12:56:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ACE697AB8E9
+	for <lists+linux-gpio@lfdr.de>; Sun, 31 Aug 2025 13:24:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAF5C25DD07;
-	Sun, 31 Aug 2025 12:55:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D584E264A90;
+	Sun, 31 Aug 2025 13:25:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="YCsrnuh9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="epRPYIo1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72C18634C
-	for <linux-gpio@vger.kernel.org>; Sun, 31 Aug 2025 12:55:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB4E20FAB4;
+	Sun, 31 Aug 2025 13:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756644959; cv=none; b=PWJpLHrrwPiqy/lPxlk1RBuhJSxbFACyIfXJ/tgPIOK6Xz9hz6C6u3nAeQuJBI0m4b/N596dx60VOKXiIXKeUmc39xj7YIFJC1aBL76aEv7L3nIPd4FrBm3WxPx/d5bUOPdWc0uUjEoXkNOq0M+cS4NNGxOxDXhO/OhHkcyup0Q=
+	t=1756646728; cv=none; b=PKCR5ZUJ1AcY7eCLFnxqN6YR/Z9IvOAWGOwkeziQrB7czoyxWo8dgj3pKirvvmrn8kPvqonkmeqk/rGt58di3+1UVm7LvBW6tkn1OSC/roaiTeTkfBuZgHIthzfMpNUXW3/vvpvjHg2VmcsWGMiNmIikjDYRcg/qlMf7IrwKCjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756644959; c=relaxed/simple;
-	bh=kQt5ZAHwLEoOMcqUxZJRYUW4ABPDrG3OFWpa0JEgif4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J8xAI2kXOg5Y54rEHTGCEHTSH2J5ZdG+3bjkET6EuJPzQXZNCj23x53Pznuhb7MhvYhLCyQoofYZS4mL/QIWiaeFiy7bYEh76SesccPR/7dZMRzeGhGx+xOYLGNLaEz9GdS48ILgFvk5zScklpAnnvl9ZLhRcK8j/WXdbdMcH9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=YCsrnuh9; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-55f68d7a98aso2006197e87.3
-        for <linux-gpio@vger.kernel.org>; Sun, 31 Aug 2025 05:55:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756644956; x=1757249756; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Vi/Fu/AVii1gBs16M7Z6P1XZ4bS6zvGwg2JRMC6pZNY=;
-        b=YCsrnuh9pTqZlfy7c6Qy849mQzW/frPpodxbRsBcEd8V7UwZDGrU1c1DB/fmXecX64
-         btpta39CQq6ODInJeoOQIMhPvQwH1VmATja1yIi55VyPcE/GT8nwAhzZ8HyRfsXLURgz
-         9LTMjdMMEQnF9G4CLOpx74MxoUhaHDkVr2FS67WDHMFnJYmJqbXaONugRWT1H946uSe2
-         j8X2c6TjWzWVBTXhBTIZLTiSCcMUTnR3Apsh89O+Se1t31fza6nADsBhX9Kl8L7P/r/W
-         NY6SYf7zqXKQ0Cs4/05rbQvJDiC3xjPkdRYX5nZJHbg4BKLHn1zqZx8qvGqXWMVYkuU2
-         NeOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756644956; x=1757249756;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Vi/Fu/AVii1gBs16M7Z6P1XZ4bS6zvGwg2JRMC6pZNY=;
-        b=p3hlKg9H5QVHrwOUo4pMZ5XQeKr6GbLiV7Sh0zfTIX6UOiYc1RTmBKdnecvIQXNysy
-         fTOz/+QLH7USw/5M1j4yYHa84Yf87ggdS3wP7OcFb/sou5ur9It14+X4u++xu4ms8XWR
-         qCaEKN9vzkzFBaFyW55IOiJgs236+0Jvy1B5zxpawmhFRyLoCrr5lJbezn6wGHPy5WRb
-         lAwRBw+gXPRx321OLAPL2/m5I8Grb4FXPkg3FyV7EC8zK2HRsB/98ONsiy6vN9ToXqWo
-         1voqrn8J1fwDhH4eIVxT18USKE2vuQNTsdef3e5D6CjHoJ00cYgoQcwAd6ZMEoDT5vCZ
-         0AOg==
-X-Forwarded-Encrypted: i=1; AJvYcCXLTbvUae5U49mLzUoHSHvSHI+sSh8c+8y1TQhMB+JCUH9g8H27m/fIA9hO/BuO7sIzyl5KfvxA/WUb@vger.kernel.org
-X-Gm-Message-State: AOJu0Yym1cCHvgP16a1da4hylAw+3dKpcUlwnUf8+JH4XofAGfeTDQQx
-	erqCb9wThmcjLqc18hpiXsYFVo1rQ4pBHv2C9R7oF0/I+Kt1xyWBxouxLriaitr/feLkScWhfM0
-	6pqJB5mIGWut0PFcS1ir2MNqxpXDJ28Fbi3g9HzVWXg==
-X-Gm-Gg: ASbGncucHyTx00wyROALImZCALknljgncBPw7stzc4DM3QoHdGEnJZnAxd2h3LQj76Z
-	9JIhO076Cjr7DwjYqe/KUXuNZGBgNVFblEVm4Sp+jxR7o1ZxiRRmMAsJDCjvXiSnsgUTpsahV4k
-	BQjtPZtxf1cFYEWEqLR60ChZ7Lyd7SFeP14aVYDjupxvf32uku/r87arxUAhjZvdi/Wau5amTWy
-	MNflrkswG96P6iiECXTvvy8wJfEfU5FfNnpptHsm75gXJs=
-X-Google-Smtp-Source: AGHT+IHniTXa5/4UjcWJoEBwBQbEyZw/BW9AAZMM7U+Hb9xB55u2uHi/PlTM610ZTLzfQpPenEMzKjZmWLh4kF49NLk=
-X-Received: by 2002:a05:6512:244b:b0:55f:3c07:958c with SMTP id
- 2adb3069b0e04-55f709240e4mr909229e87.37.1756644955560; Sun, 31 Aug 2025
- 05:55:55 -0700 (PDT)
+	s=arc-20240116; t=1756646728; c=relaxed/simple;
+	bh=elVMf+284ZRxCOWIwbNMVAG/IsEPy/rN1u5TN27FxI8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LlyvhH6MFum1enebT1Cv/OL29o4l3drJabUtiRfS0KdNn1EZnErM20K0ebZfFUOnsnbJ73EeS2LAdZn42WWklmsSB0wyIuMc125BTEb2J/3onmsXV0GQLDqJKPYX+mFF1TDYpMjiUvcl/8t0Y0uEEM+fDwbWS3mQ0oCNt8mOP4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=epRPYIo1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58A2FC4CEED;
+	Sun, 31 Aug 2025 13:25:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756646727;
+	bh=elVMf+284ZRxCOWIwbNMVAG/IsEPy/rN1u5TN27FxI8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=epRPYIo1pltWP3Qesp47bCZs1ty5J4ypYuL9JxJ++VKP+A0Hd2d74OOVlGGIC6fOB
+	 FVLKEGVzNsqhbpvVMcdcZ1J2bzBvOer/Rgi4uM+GiZlqfbwgfao63ymtk+0/BBe9L4
+	 lJ2lM00AfmjYHA4FwGSLw1eHF2XGhHaOsWCOegUsfBEdbxFtY3RcukT2ASwgIwMIAv
+	 bhYBQhOeUhzfK6XqfUEYgdRy5alVVZH4fXZzCz7LhdwAAMJ3j57EN82c6sxkZrccew
+	 pVejKf0llZdBgk7J/SEAcCsZU7wWiKGrktUpL6hHnk0jCdXkEZqiKMqEWStRYxnLWq
+	 Sb3faCPcoRRRA==
+Message-ID: <b8085dd8-e1a0-48b1-a49f-f3edaa0381da@kernel.org>
+Date: Sun, 31 Aug 2025 15:25:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250831030855.957707-1-alex.t.tran@gmail.com>
-In-Reply-To: <20250831030855.957707-1-alex.t.tran@gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Sun, 31 Aug 2025 14:55:44 +0200
-X-Gm-Features: Ac12FXyAQEHnGX5GrlT1HPWQ5rbSTaGU-1EY7XEDobHljDh5pDPBlDId2SDPZLg
-Message-ID: <CAMRc=Me5L4XtriaFSwcE9Vqri+6d+Rfn-4FzKUrN_VSOgfA_WA@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: codecs: tlv320dac33: switch to gpiod api
-To: Alex Tran <alex.t.tran@gmail.com>
-Cc: broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
-	linus.walleij@linaro.org, shenghao-ding@ti.com, kevin-lu@ti.com, 
-	baojun.xu@ti.com, linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 04/10] dt-bindings: pinctrl: samsung: Add compatible
+ for ARTPEC-8 SoC
+To: Ravi Patel <ravi.patel@samsung.com>, jesper.nilsson@axis.com,
+ mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, s.nawrocki@samsung.com,
+ cw00.choi@samsung.com, alim.akhtar@samsung.com, linus.walleij@linaro.org,
+ tomasz.figa@gmail.com, catalin.marinas@arm.com, will@kernel.org,
+ arnd@arndb.de
+Cc: ksk4725@coasia.com, kenkim@coasia.com, pjsin865@coasia.com,
+ gwk1013@coasia.com, hgkim05@coasia.com, mingyoungbo@coasia.com,
+ smn1196@coasia.com, pankaj.dubey@samsung.com, shradha.t@samsung.com,
+ inbaraj.e@samsung.com, swathi.ks@samsung.com, hrishikesh.d@samsung.com,
+ dj76.yang@samsung.com, hypmean.kim@samsung.com,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-arm-kernel@axis.com,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org, soc@lists.linux.dev
+References: <20250825114436.46882-1-ravi.patel@samsung.com>
+ <CGME20250825120715epcas5p3a0c8b6eaff7bdd69cbed6ce463079c64@epcas5p3.samsung.com>
+ <20250825114436.46882-5-ravi.patel@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250825114436.46882-5-ravi.patel@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Aug 31, 2025 at 5:09=E2=80=AFAM Alex Tran <alex.t.tran@gmail.com> w=
-rote:
->
-> Changelog:
-> - Changed reset GPIO setup that uses 'gpio_request' and
->   'gpio_direction_output' to use 'devm_gpio_request_one' instead
->   for legacy support.
-> - Convert to gpio descriptor for use.
-> - Better error handling with 'gpiod_set_value'.
-> - Removed cleanup of reset gpio as gpiod api is now used.
->
-> Signed-off-by: Alex Tran <alex.t.tran@gmail.com>
+On 25/08/2025 13:44, Ravi Patel wrote:
+> From: SeonGu Kang <ksk4725@coasia.com>
+> 
+> Document the compatible string for ARTPEC-8 SoC pinctrl block,
+> which is similar to other Samsung SoC pinctrl blocks.
+> 
+> Signed-off-by: SeonGu Kang <ksk4725@coasia.com>
+> Acked-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: Ravi Patel <ravi.patel@samsung.com>
 > ---
+>  Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
-The fact that the call to gpio_request() is still there made me think
-immediately that the conversion is incomplete. I looked into why you
-didn't change that and noticed that the global GPIO number comes
-through platform data, specifically: struct tlv320dac33_platform_data.
-That platform data struct however is not used in the kernel -and even
-the header that defines it - sound/tlv320dac33-plat.h - is never
-included outside of the driver. Seems to me like the main obstacle to
-completing the conversion is not even used in mainline and can be
-dropped?
 
-Bart
+No wakeup-eint interrupts here? samsung,pinctrl-wakeup-interrupt.yaml?
+
+
+Best regards,
+Krzysztof
 
