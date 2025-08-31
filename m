@@ -1,84 +1,79 @@
-Return-Path: <linux-gpio+bounces-25258-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25259-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 020F1B3D3EB
-	for <lists+linux-gpio@lfdr.de>; Sun, 31 Aug 2025 16:41:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52FF8B3D479
+	for <lists+linux-gpio@lfdr.de>; Sun, 31 Aug 2025 18:51:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6C2571895100
-	for <lists+linux-gpio@lfdr.de>; Sun, 31 Aug 2025 14:41:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0DC173B7310
+	for <lists+linux-gpio@lfdr.de>; Sun, 31 Aug 2025 16:51:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9AEE25A34D;
-	Sun, 31 Aug 2025 14:41:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F8C9270576;
+	Sun, 31 Aug 2025 16:51:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="J4+35Cvv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L7AVmz4N"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E73151DF24F;
-	Sun, 31 Aug 2025 14:41:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C63A2629F;
+	Sun, 31 Aug 2025 16:51:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756651292; cv=none; b=UR3v35rOTT6VbqjdQTnJMkYIhutA+jeJwRYnwH1SKgeWy5shrBBH/sQ+rR86E4fp8It1wQ66VQregIl5qqoIOw+JXVLkO4rUuJlqjXTdIEEm5km+kmdV2lSYkJN2vUcFsUCxOMjuJV0gjNn5kGQB3rUWIzd/2b1NfLqCctuzKqI=
+	t=1756659069; cv=none; b=MEltqj6pMb+M2/+KHmvQYq8lGKSdbvzdLpAE9Ig9bXz3I1B/qpPtYtkmgK4kgsjg/cezV/C4ZJkw91lFDeibSe34Bvnx0RhD/C0SbgRggENqCQtXO6UqsOh0W8ZwY+snzNR0we0+enM7egLckiUev6CRZlwQcTemwNLp7QCsILg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756651292; c=relaxed/simple;
-	bh=bvFAVGs/OakVMpYvdYL16ed7cN0RWaNDGI1k9EAuDpo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kMeiJyPKb6zagrFYbeYcPthn083jPCbD0PUWEaTnKGMw30n3Os3gsq66Jp2oFLgG9qh1i8Rj4twMMTU48d0FP7FJEk0Yg7V/b7pGEfAUGCj8u+W/63gmhobHCbRztjKOj+UyTXD3YJFtuZP4WFgZd5fbA8JJs6vqnmzTX/uvwG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=J4+35Cvv; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=1yA5JPGmM9+DIovHFNOYfqsmTWKkkgyERhyC5rBngGI=; b=J4+35CvvDsKQ/kpNwfXcCm65GQ
-	rXJLTHlYgXGoL76HF60A5gT1N1DEllJg4LEeY4poc2aDrrSYcXeG7ROhzylm0vhj0SgbxdJnGBkWp
-	G133F7bu7ZkfIkLtj0i/UAKgC7eBpnuyUPQCf1K3hS7Js+IpPQGdn1ueLxX3R5eC5Yt0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1usjF7-006eZw-E6; Sun, 31 Aug 2025 16:41:17 +0200
-Date: Sun, 31 Aug 2025 16:41:17 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Qianfeng Rong <rongqianfeng@vivo.com>
-Cc: Gregory Clement <gregory.clement@bootlin.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	"moderated list:ARM/Marvell Kirkwood and Armada 370, 375, 38x,..." <linux-arm-kernel@lists.infradead.org>,
-	"open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] pinctrl: armada-37xx: Use int type to store negative
- error codes
-Message-ID: <272eb94c-0d19-47ee-868b-94d07a692877@lunn.ch>
-References: <20250831084958.431913-1-rongqianfeng@vivo.com>
- <20250831084958.431913-2-rongqianfeng@vivo.com>
+	s=arc-20240116; t=1756659069; c=relaxed/simple;
+	bh=rkKDJoFFvTAz6ctkglGOV0JJ1jFeJgq6PjeMco1uriY=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=MU+oE6vDa8CDQdrYvvV5c6O/vDIpbCmz7YN/ab4tYBZEzaxT8pBEYEpFqSmKzroBPafMxCxsFwFSAzCIxPiJs0TfrWYHY/fGSMIHxCxh5fCTFbCpqsO2ybFeC5xl8wChBDC2C22al4lpZr20a42bG8TvaShIGfcL2Ki19P8Adw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L7AVmz4N; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E52BC4CEED;
+	Sun, 31 Aug 2025 16:51:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756659069;
+	bh=rkKDJoFFvTAz6ctkglGOV0JJ1jFeJgq6PjeMco1uriY=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=L7AVmz4NV+o8WBzMPgJHEPXHD0Ct9+Ixizq5gDybrTqifNUl+/S7bKkqeJ+bYil7z
+	 J5LVL52Fym/OctgLmP3Gh+ffSeu0Yj4tTKX4cfZLhamkSLeQX5jmPukDBHJ1fgt6dk
+	 h6Hntjek8eP4OQp18UdflORH5onRqE9P7e6wq2jmywEbRpnABTCo7ts7BeJe07MKz5
+	 wYURsUOYyf/fjjWg/6SD96YxRAD+N1k5RYKC8+dXJHMW2O4hTmPBnQIi3WQmvgkOgd
+	 GW8tTH1gX0m6DTMdT7OupAa/hk/Kr4vNgkgQfBHM1LHFk6LpcMahlVzYR7qtLOFPa3
+	 mC2SJyhAATkYw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70F87383BF4E;
+	Sun, 31 Aug 2025 16:51:16 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio fixes for v6.17-rc4
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250830195417.8262-1-brgl@bgdev.pl>
+References: <20250830195417.8262-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250830195417.8262-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.17-rc4
+X-PR-Tracked-Commit-Id: 6fe31c8b53003134e5573cfb89aea85f96a43afd
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 1c99e3e9f33add5e193591e051735b1179a4382a
+Message-Id: <175665907495.2726201.12522225028597336453.pr-tracker-bot@kernel.org>
+Date: Sun, 31 Aug 2025 16:51:14 +0000
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250831084958.431913-2-rongqianfeng@vivo.com>
 
-On Sun, Aug 31, 2025 at 04:49:56PM +0800, Qianfeng Rong wrote:
-> In armada_37xx_gpio_direction_output(), the 'ret' variable might store
-> the negative error codes returned by regmap_update_bits(), and in
-> armada_37xx_edge_both_irq_swap_pol(), the 'ret' variable directly
-> stores -1, so the type of the 'ret' variable needs to be changed to
-> int in both cases.
-> 
-> No effect on runtime.
-> 
-> Signed-off-by: Qianfeng Rong <rongqianfeng@vivo.com>
+The pull request you sent on Sat, 30 Aug 2025 21:54:17 +0200:
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.17-rc4
 
-    Andrew
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/1c99e3e9f33add5e193591e051735b1179a4382a
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
