@@ -1,133 +1,115 @@
-Return-Path: <linux-gpio+bounces-25306-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25307-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAAF9B3E018
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 12:26:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 780A9B3E03D
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 12:35:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 362D81890DDC
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 10:26:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 32DEE3BDDE8
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 10:35:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBFC830F549;
-	Mon,  1 Sep 2025 10:26:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DE2530F53A;
+	Mon,  1 Sep 2025 10:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qkWonKTu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CCEC3081A9;
-	Mon,  1 Sep 2025 10:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3470D218596;
+	Mon,  1 Sep 2025 10:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756722372; cv=none; b=f5ADvKgqBKHnqJhkT/+EyYHRFoDh8vn7LLVxdPg0Vfd9uUMtXizQapv/zG1R8HChFnX2d+ITOTBFcWm1qoUwoayS+Vbed+ljFVPN6ekuFGRA54/JfHT/iep5mdIKpWAiQk/t1mk6E5tBiaE2k/3FtLKr5uEKfZ9fpmp9tMyE8pA=
+	t=1756722940; cv=none; b=HxeL7DbX+JThJ3rFVm4PrfW0wFQPK84qMsOpxhdtvlg92zrVn45lW3W1AbcuQvX6uhTnIEiOiW5762cDU62w0BG9pXWbN4uj1e8KG8XE4zGNAffPEezjekN3jdju/4qloVJLIVs4R+4F5lexgfIJdvvsfx/N+pRVb+xseTIYjWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756722372; c=relaxed/simple;
-	bh=KlPMli+YTGrSmlreZkYduv5O2gGu89LeCVUbysiOvIA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dUNxPYZ3bmJ9373iGnyalDUAzyGlpxc7NMh9xZMaOePKi483l7+nCVs0kE49gTdNm2JOR4P3x+8JnWfBnSSlBxNk6ZwIpC4Ii97GnRUttU8PrcX+Mcrh0WogKA+e9O7gxVZPeG/JFu4v24Tok7N9AHboqd+BHWvRZyw9hokAHck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-89018eb083eso1953481241.0;
-        Mon, 01 Sep 2025 03:26:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756722370; x=1757327170;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mV3OsbhzOeODyoDYN/QMtyaaE2+Lj2OTOI314KxLNk8=;
-        b=dKkxlOuV9n18ykcgZLTatc82AT4oiXcdLDI3dUPe0Y14ctY6TvszFVGKFDNFJxjpon
-         FuHBzXxKZaUU+wi0R4baxRcchf61HA2PClaLBbiOzC6AyDpPISeL3rHCKAH3dZC+aMXz
-         Gx/wJB0/kzChG5wW6vD1yb/20KwyDKXHGROFxcPIEewf+NKrSCUYiVydT4XiFHQIJ63X
-         3qjOvSa6nCWwiq3RkEUf/RE+BsNZNr2vl7fISdKoIqbaPAZ9GNACFhlq9shTDwYUNwRw
-         /NScUzzYaYZKJdXIrMS02Noy074u6IZtV6a7/Z+doaC3dYhPvvgwNiS9A8Ky3Q0+eOzI
-         5kBg==
-X-Forwarded-Encrypted: i=1; AJvYcCWWK5jXQJahJ5u4eBkRHCyAuUqUQPfOfkHZKL9g+/so3VRS2Vu0A8mvbah0oQcpnIoQJs5WxDwkcjs5E0kz@vger.kernel.org, AJvYcCWn9T4rBtYzC+UwjNr5tKB0dgkrgW0eAPKV983kmAkI+Bg6rI3KGmI5jxDWYJe9QeJBGuefBfvYZGW28MTkxWSeG00=@vger.kernel.org, AJvYcCWvBbkXxu+AFMEr97Wa6zU4LvNJK1E8NlTpyOEbCg/5mFjkQThKK3H2j09uRCGiJVDK7pT0epIoqSZf@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9GBLonHIek0bEKSqyb2mCvrIzJL8TCh+FcKch46KpUtcTEM1K
-	g/E8S7mp/WiPsnwHSW1uy7Qic+lsQk3nCzmSvvi4w0oAoYN16p+DkumTN/UsrXWK
-X-Gm-Gg: ASbGnctFeAj14hTyOEchi3wxuBy97UXF1dVHwyEzyhe+pqauGaLZKOarqUacU6139zG
-	Tm69nLI/Hr7dmPnUuC4ml3krhcrmXfPURCoS/SR9bl9EXoEpO31Hgtl51zXPYJKe18yyYxMgOTG
-	HDyNQ77M0xc5zMlyPuzr0OpihRb6Fkc1cIhL7cvs8H45sHHb0EV/tyf0/1o/+PuEAjXtmNf8weO
-	x5jukifbKC82c+JpFr3dDB0LmL7/x0hL4BtreBZLHmf6nKeyky1wfVEP7RoEmKqYHmP1aeSWqoG
-	+Uozkfdjt8bOVinK9d/2EMG2tXoP4jMlbQNYDv2tG+2O4EWQ6pRUF2L/MTDmeOV+BlTmEvquNKW
-	t9/nwBCDpbDFhFB/3rNJVE8RtRGwU908euQGRf5ywkJ285xnjTcBAJpa0mWbobH+GYdo6Q1Q=
-X-Google-Smtp-Source: AGHT+IFK9ysZbgAOGijhcpN7tzZT2x/hBm7dJTqAmEjvsgNx7fUJRbnQJsJaYMpZ9owW7E1znUIrxw==
-X-Received: by 2002:a05:6102:4691:b0:524:2917:61aa with SMTP id ada2fe7eead31-52b1c149c51mr2204347137.32.1756722369864;
-        Mon, 01 Sep 2025 03:26:09 -0700 (PDT)
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-52af19158a6sm2916513137.9.2025.09.01.03.26.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Sep 2025 03:26:09 -0700 (PDT)
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-8943761ca20so2350119241.2;
-        Mon, 01 Sep 2025 03:26:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUf/JPCijqglL9bpUVFyvg4/MxAVc71BE/TiHxK6DgQNk1zm7SMf0bT1gn1P1N90mTuMiXr2ySxE5hi@vger.kernel.org, AJvYcCV9V3xBRsjQ8Te2pY6J3bpRr35lJXNIX0vyAkTWicitmZtTXOxG72DeMW+1WR/zZdqYBiOaMvX5qNhSrya34mL3O4Q=@vger.kernel.org, AJvYcCW3eM2C/nLs4KqRzQOpYaREbdqfZQQh8XG/lPhLiLu1aroYsx+W9tUrv3589ii0lt42l4/ovKemAuHCaYbP@vger.kernel.org
-X-Received: by 2002:a05:6102:b09:b0:527:8b63:78fb with SMTP id
- ada2fe7eead31-52b1c353160mr2103953137.34.1756722369370; Mon, 01 Sep 2025
- 03:26:09 -0700 (PDT)
+	s=arc-20240116; t=1756722940; c=relaxed/simple;
+	bh=PAYtZO8rvHPxpnmsKxZMRGL3a2TAeTujErtp5EkRzUw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JvHsX7ROl8Cn0452USwA/4B8ithPg73mB73jLgrvpa3w5wOvTH7Oqyuh8BnEwnE380o6vUg86Z/DrsSM+ybyujUni07EI8KhNqYN/BhLcTpMQtEx2S7Fsxj5lupRfvm9D+je8POnHPfk9EqHqjqM3Zj+G72SYA8CS1EpePZOkyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qkWonKTu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA8BDC4CEF0;
+	Mon,  1 Sep 2025 10:35:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756722940;
+	bh=PAYtZO8rvHPxpnmsKxZMRGL3a2TAeTujErtp5EkRzUw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qkWonKTuwJXwZwPxsldkF2+jdXEt6d6brcIcClWo7h5sS5PFjiw6tVkMB5PCv6kOc
+	 UFLGAN8SpbSZGAwbMmpHageIXA0lJXx7VnxLaBl4iVubU339KvDguttH9DIW8m77MR
+	 FKJTfCYoYXJFY4SUx25FzniWOTQ3HLd1x6Ov8WsO+Y0plSJoNhikjivnRT2H9g7BNt
+	 VIOJ+rgmL00E521uaCYVYoSG/3NgL/bvZlxKAnv7QI4wOP/x7lVMFAtYspdR9/e6ds
+	 PkfeTbOlx7UdLPmLDJ4BwKfi0DcASgrAmYs5rkn/aZbxouKDrLIYB3H1IYpd+ZhAa4
+	 AQKQD3+dU7Kow==
+Date: Mon, 1 Sep 2025 11:35:35 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Alex Tran <alex.t.tran@gmail.com>
+Cc: lgirdwood@gmail.com, tiwai@suse.com, perex@perex.cz,
+	shenghao-ding@ti.com, kevin-lu@ti.com, baojun.xu@ti.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl,
+	linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ASoC: codecs: tlv320dac33: switch to gpiod api
+Message-ID: <7de59d85-a72e-4afa-b3d7-8729e22f4c3f@sirena.org.uk>
+References: <20250901035956.1195081-1-alex.t.tran@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250831084958.431913-1-rongqianfeng@vivo.com>
- <20250831084958.431913-4-rongqianfeng@vivo.com> <CAMuHMdW59wJCKq8nQ-SZHXVsX2kSCF0zg_gTP2vi3ApwH_SXAg@mail.gmail.com>
- <89294a30-47a7-45bf-80f7-04ffcad378a7@vivo.com>
-In-Reply-To: <89294a30-47a7-45bf-80f7-04ffcad378a7@vivo.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 1 Sep 2025 12:25:58 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVDSmtpJ_4_Qj7RFukXqgFYo_9WUFKuKtc8DUQWGTNnew@mail.gmail.com>
-X-Gm-Features: Ac12FXxGKDI6SPNUdqsMSWhT3AIsUr6ZHt855FHGjJHCM8cZEvtahFsN0OGRRA0
-Message-ID: <CAMuHMdVDSmtpJ_4_Qj7RFukXqgFYo_9WUFKuKtc8DUQWGTNnew@mail.gmail.com>
-Subject: Re: [PATCH 3/3] pinctrl: renesas: Use int type to store negative
- error codes
-To: Qianfeng Rong <rongqianfeng@vivo.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	"open list:PIN CONTROLLER - RENESAS" <linux-renesas-soc@vger.kernel.org>, 
-	"open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="0pbq1X1Bu6UZ70ua"
+Content-Disposition: inline
+In-Reply-To: <20250901035956.1195081-1-alex.t.tran@gmail.com>
+X-Cookie: Auction:
+
+
+--0pbq1X1Bu6UZ70ua
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Qianfeng,
+On Sun, Aug 31, 2025 at 08:59:56PM -0700, Alex Tran wrote:
+> Changelog:
+> - Changed reset GPIO setup that uses 'gpio_request' and
+>   'gpio_direction_output' to use 'devm_gpio_request_one' instead=20
+>   for legacy support.
+> - Convert to gpio descriptor for use.
+> - Better error handling with 'gpiod_set_value'.
+> - Removed cleanup of reset gpio as gpiod api is now used.
+>=20
+>=20
+> - Performed full conversion to gpiod with 'devm_gpiod_get_optional'.
+> - Removed struct 'tlv320dac33_platform_data' as it is
+>   not used in the kernel.
+> - Removed file 'tlv320dac33-plat.h' as it was not included
+>   anywhere outside this driver.
+> - Removed 'power_gpio' and added 'reset_gpiod'.
+> - Added default value for dac33->burst_bclkdiv as it can't be 0 (2-17).
+>   See <https://www.ti.com/lit/ds/symlink/tlv320dac32.pdf>
 
-On Mon, 1 Sept 2025 at 12:13, Qianfeng Rong <rongqianfeng@vivo.com> wrote:
-> =E5=9C=A8 2025/9/1 17:07, Geert Uytterhoeven =E5=86=99=E9=81=93:
-> > On Sun, 31 Aug 2025 at 10:50, Qianfeng Rong <rongqianfeng@vivo.com> wro=
-te:
-> >> Change the 'ret' variable in ma35_pinctrl_parse_functions() from unsig=
-ned
-> > sh_pfc_pinconf_group_set
->
-> Thank you for pointing out my mistake.
->
-> >> int to int, as it needs to store either negative error codes or zero
-> >> returned by sh_pfc_pinconf_set().
-> >>
-> >> No effect on runtime.
-> > Fortunately the issue was indeed harmless.
-> >
-> >> Signed-off-by: Qianfeng Rong <rongqianfeng@vivo.com>
-> > Fixes: d0593c363f04ccc4 ("pinctrl: sh-pfc: Propagate errors on group co=
-nfig")
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > i.e. will queue in renesas-pinctrl for v6.18, with the above fixed.
->
-> Will do in the next version.
+This is a set of separate changes which as covered in
+submitting-patches.rst should each be split into individual patches,
+this makes things much easier to review.
 
-There is no need to resend; I will fix this up while applying.
+As also covered in submitting-patches.rst any inter-version changelogs
+should go after the --- so they can be removed by tooling.
 
-Gr{oetje,eeting}s,
+--0pbq1X1Bu6UZ70ua
+Content-Type: application/pgp-signature; name="signature.asc"
 
-                        Geert
+-----BEGIN PGP SIGNATURE-----
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmi1dvYACgkQJNaLcl1U
+h9D9sQf/fvSmTxKv27Nx3uUb+QHN1k5uJGC6hMwPvA/X+F26IX4scR1QPiGoVdf2
+w3Sa5sbaPBeZAak88tCD07XDQ6wUldxd/UhAJbO4Ggvhv4k8cw5WDA0tvFchxnPA
+96WK07tdJtlXFH3gFMhXGOk//knMLqVnqcUZlL+4r3G5V+GrSAHBVNLFAaVU8t5Q
+RYem39bkzoNfMuKYeFEnPqp95IcbzsKQYcJJCKhraJv+jPCuyV7tL8yjNG+Sp3aC
+A2GMKsjHJ4RJQnL6PYddjUhaYlc77Rlfp6AnhAkVT9SVn/8atvYt1qI+G5fFR5DC
+MRqCJ0CGuNTZOOUoYsTPe/75CgDARw==
+=xZKN
+-----END PGP SIGNATURE-----
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+--0pbq1X1Bu6UZ70ua--
 
