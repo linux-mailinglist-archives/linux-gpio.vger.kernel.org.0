@@ -1,132 +1,111 @@
-Return-Path: <linux-gpio+bounces-25322-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25323-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9411B3E3DA
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 15:03:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2D71B3E454
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 15:14:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3B71D1A8369E
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 13:04:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F2B017AA38
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 13:13:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C50837A13A;
-	Mon,  1 Sep 2025 13:03:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D84701DF751;
+	Mon,  1 Sep 2025 13:11:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Z2PuDyU1";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lzFhklXV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jVE+raH5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06D54A23;
-	Mon,  1 Sep 2025 13:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E418217A2E6
+	for <linux-gpio@vger.kernel.org>; Mon,  1 Sep 2025 13:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756731828; cv=none; b=Pof/ErLPpJeS9kwTPvlQ82Z++VmsAIxILLc6kL39nZj1X6hbL1se0c6nvCKLvWxEA7WdFJhOH+QMoOOZSCYWNgUtHM3XRY7Zpv97UsM7RfeAGMZHYaY2mXXOljG0xXNXRXtiHhZW1tcScLB0YnWUaC81iUMcP2w7LO7gNr/9Fw8=
+	t=1756732299; cv=none; b=X2UxIzGF9jrA0XI9QevOyE5Ftzta4Dm0y/IkZorOO0mDpgZK03+CYe0VbJUJigYOByiHVNRdvomDMdzeEhhZpVipxtGkGw5q0WDm4OV6DP6npPvNKuJ5N3CqyYSrin9098cPgkKAYobxsuw7bcNEZOkEcDNXESC9mvIErsORcLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756731828; c=relaxed/simple;
-	bh=OaRyPpEf3ICJUO5J1Am7yd7CIdfX8HTlK9xK90rfFMw=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=MtjGBSqesvzcAP0GcUlj1eVoxioXevu/QhCP1UAUCloDkXtLKBoM2uPIicGCGIcQ4fE5W9HTnaSDMcF+qY1aAB/NTEEkzda1xvSYtBlYtXfpq6Qj+4lYqH40E6TpUIz7ttbORPz+3zNsH/o4UltXaSgVBowZiBeuPvSOeNmA7D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Z2PuDyU1; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lzFhklXV; arc=none smtp.client-ip=202.12.124.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id AEAC01D001E7;
-	Mon,  1 Sep 2025 09:03:44 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Mon, 01 Sep 2025 09:03:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1756731824;
-	 x=1756818224; bh=ua+pUEccVHzU7KXErtidkr1gvXjQNlFYt6hNszdXlpo=; b=
-	Z2PuDyU1EPplD9KV7zN/BQzHBW2zET3jSX563Cz1s5tIYcs7tiSQZhQgK3dvOxfB
-	qdU5gQ0ijlopyOCwpWDPgfze+VHnGeyMwUxC9Gdx0Q1PPmibSgujIFaAKPHVpzd1
-	h9nQ2n4yrlRw2Y95pCKAarPoJT616zeAWGwRorx9I3hvR4oC1B1K2LV7QxHzBHP9
-	KxokYto3U4Hj7VO9WVdD3YGix+Q0rCqWgXSWLs9QclxO23vs8StzWIopZQ9Nh7fM
-	Upr/hYH9m8Ve0JIawZcBUI2JttsEvIoMyv7CMV/FMaj65QWktgMOibbkWHocMpD1
-	sdxAbuXQGTz+ESGpjvd4Tw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1756731824; x=
-	1756818224; bh=ua+pUEccVHzU7KXErtidkr1gvXjQNlFYt6hNszdXlpo=; b=l
-	zFhklXVJpu0EH8MVs+eDi8eiQ4Kn9mzM7w7ckXVmfeAK9j3G2cdMkVABrAp971ke
-	26pmVomEs/DQB3FftN1x9uU9abgjVjWQXRPzMeslpf9bm+B8keJREkxadBGytWYc
-	8m5Zi98yP53S1llsDYMSdPC0ghN7L72/DhNiwLdslcK2tv2BI3r768MJxA0pDs25
-	tzCJ0BN7TLKO5p/CsFPR8YDPBNk8R2qX1tm88PwkLDKjk2b+nUDLs2najHRf0i4p
-	lkOxDIsg1D00fFopTsiJI1mM5RyuaUWkigJ24I7+PIgCFNRBkhjmxEjwK530ALtT
-	Cm/kcJYyVcoQS+8CH00sQ==
-X-ME-Sender: <xms:sJm1aDA4CvsScCqOB76_rd4HjIdmh7z4UhqLj6hCnJMaMhaQSMtR7Q>
-    <xme:sJm1aJgoC8YHdYbRGbVoHThhdzFHdphP5F-e7dma6XNe6eQ8WPDGY08sUL-jiAR5C
-    8xhsfh9-f7nT1M4iKo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduledvvddvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnhepfefhheetffduvdfgieeghfejtedvkeetkeejfeekkeelffejteevvdeghffhiefh
-    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgt
-    phhtthhopeeipdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsrhhglhessghgug
-    gvvhdrphhlpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pegsrghrthhoshiirdhgohhlrghsiigvfihskhhisehlihhnrghrohdrohhrghdprhgtph
-    htthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthho
-    pehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    hlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:sJm1aOpu-eRjlci3s3TzjkwWTmJDl7SB4asqdQONDkQVIJRlSfGZ7g>
-    <xmx:sJm1aEDsmtHV-rE5YrpTfgkD88QiQRxpyrO_lrIcDO6EKFrq6jAIDw>
-    <xmx:sJm1aIwbBrno3UFgSjTrvVi-jaLv4R44RDxKrh2T0rFV5qToM00WlA>
-    <xmx:sJm1aJ1erfzgV5BGxR6C3vYouygdtxhpdEg31-_gzJBV3D5BT2SClg>
-    <xmx:sJm1aN1dcMRbPdzdMYGm0jhfL0ua1XE-0ThalWkYsYM3UOCl8gYEQ3We>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 2655B700065; Mon,  1 Sep 2025 09:03:44 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1756732299; c=relaxed/simple;
+	bh=o1/2ukhzETswBvigFCZUS4xPD90/kXRG6GUxtAy8yc0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j++2Rdo4dDUdYGBz0vdfnlAMcgUShaD/Y+aurNpIJU3A+JH31TwURr29MEc1qhuoxcb6B1wxghAp88hAI+5qIw22D+Idf5FCuIolzXKJsAAPOdwippUWFQGVd14FO0reTYOv023yr8kayWOyMz0qH6KJbejPqjTpBWGATzDCsbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jVE+raH5; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-55f6f7edf45so1967322e87.2
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Sep 2025 06:11:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1756732296; x=1757337096; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o1/2ukhzETswBvigFCZUS4xPD90/kXRG6GUxtAy8yc0=;
+        b=jVE+raH5W4w3/+ewfdBBbCYw0l98atQRkgjDtidnGbysDP2Pyi4HkQ0BoReQ/hgbqK
+         nm+FrFgbt/tdN8nFsi1JxDK+/pC15i1XYtRO1Yp4PwS8p7S9DyR5jIFX0CujYWwVYu/e
+         Noxrm3zCcucDeFuBkSWI9z/ckEZlt8RQUlp7pTzZ+BgYWOf6UW/sRMBzkv2uv62+Q7Pd
+         E2r4MtFfeeDlzIPqP3tWuJvxr6E+3i//oKYlVSXaIsaFpzfDu6XvmnXZ6xeKo0nEZAoc
+         pULBQE9cEzNOj3WNwahS5o6pAdCmh3Ys6xaDHnVrVYGLV9Si01LMWEJ2pF4L2K68dHfn
+         cWhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756732296; x=1757337096;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o1/2ukhzETswBvigFCZUS4xPD90/kXRG6GUxtAy8yc0=;
+        b=G2vYP7cCxviG2TaREap/xHmkNtIv/EKcODHfLv9Sxg5JLX0FQz9VaYKNuz/bCmrtt1
+         0Cjnhb5RbhpM4enxWshSXJ4pCd1SAN3TzuCFgazA6JXfxQb0HeigkWVxyQW28T9lc7z2
+         PgSY9d/+0RhKjiSUnG8bn8wQRxbBPeSI7f8MlksshNF6jlO1DeLQ7URP1b1gOaSVGNQW
+         otyKBJZ5YSc4BtObwWi4uPvnpa/G2xKCkgMO5hx2pWzp1Q3Af6kkD4v/MxCjf4JfhwyG
+         YhJZ5GhESUShz9FgDpuEFQ7CzI3o2kWeq00bVTNvL4wmlWMYTqu75O8e9dpT8FF5/kvP
+         Vkyg==
+X-Forwarded-Encrypted: i=1; AJvYcCWXSymuxhIMhtZsyeaDW1k/iFX4NuvaZvodv0DWURcXn+3BIs1nvnPBH5j5PXkxl+tyIg7T+4Bq8oPW@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAqFAxxgsSWCpGNUm+eyOa6YOpoMgPycENFPhTZqJPe1A9Uonu
+	on0bJbTmQL/iuwh3ehxcECsYG54gtPVTVzbdsBzhKGsdWw9RxMnOJWcFTjnzlbtJppMPXZLFduo
+	CsKJaRL+N8iKOPBrjZKSp5dt9OgLIZXaGWPkyWxxk4w==
+X-Gm-Gg: ASbGncsO87CeZQXML1GnjqMq6Ylwp+vpQM5/RTjgIz5LrtKclyyKhedfyi+6NfAADl5
+	5WT/r2eOBXmgOMEMd6FEafggopQt/oSM/jnK2SPnTIEDyQqq0/4mPuiypTXtk2aFV8IX6H9RKS7
+	8PbxFiwf6oG874SFIZ5j8mUxNSFsZtBG7aGJAymTEmnpaSTCAHalgiw3Fx8asrvekOLYsabD/RT
+	E+PT3E=
+X-Google-Smtp-Source: AGHT+IFdtZUV12X2qQohTcmgXoI8sX/n2MdDB3IP/SMHaxKOnh4rNFzghcV2U9qSUnmpWORF0iKHeIacxU0C0GZ7Nxw=
+X-Received: by 2002:a05:6512:2353:b0:55f:6a6a:4955 with SMTP id
+ 2adb3069b0e04-55f708bff41mr1832610e87.25.1756732296026; Mon, 01 Sep 2025
+ 06:11:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: ACw3zk5S_Pss
-Date: Mon, 01 Sep 2025 15:03:22 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Linus Walleij" <linus.walleij@linaro.org>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- linux-kernel@vger.kernel.org,
- "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
- "Rob Herring" <robh@kernel.org>
-Message-Id: <9a1c9735-eb5c-4abe-a96b-bfb02c97c9b2@app.fastmail.com>
-In-Reply-To: <20250901125513.108691-1-brgl@bgdev.pl>
-References: <20250901125513.108691-1-brgl@bgdev.pl>
-Subject: Re: [PATCH] gpio: fix GPIO submenu in Kconfig
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20250831084958.431913-1-rongqianfeng@vivo.com> <20250831084958.431913-2-rongqianfeng@vivo.com>
+In-Reply-To: <20250831084958.431913-2-rongqianfeng@vivo.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 1 Sep 2025 15:11:25 +0200
+X-Gm-Features: Ac12FXzMx74oEGw0sys3dqlvnEr6aJBPDjUSlodZm8Lf6MbYZWveT4WA0nkRQcE
+Message-ID: <CACRpkdY14ZuAp+mg==M62draaaf897Ry-Nkh93UR132iUqnLvw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] pinctrl: armada-37xx: Use int type to store negative
+ error codes
+To: Qianfeng Rong <rongqianfeng@vivo.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, 
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	"moderated list:ARM/Marvell Kirkwood and Armada 370, 375, 38x,..." <linux-arm-kernel@lists.infradead.org>, 
+	"open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 1, 2025, at 14:55, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Sun, Aug 31, 2025 at 10:50=E2=80=AFAM Qianfeng Rong <rongqianfeng@vivo.c=
+om> wrote:
+
+> In armada_37xx_gpio_direction_output(), the 'ret' variable might store
+> the negative error codes returned by regmap_update_bits(), and in
+> armada_37xx_edge_both_irq_swap_pol(), the 'ret' variable directly
+> stores -1, so the type of the 'ret' variable needs to be changed to
+> int in both cases.
 >
-> Commit a86240a37d43 ("gpiolib: enable CONFIG_GPIOLIB_LEGACY even for
-> !GPIOLIB") accidentally pulled all items from within the GPIOLIB submenu
-> into the main driver menu. Put them back under the top-level GPIO entry.
+> No effect on runtime.
 >
-> Suggested-by: Rob Herring <robh@kernel.org>
-> Fixes: a86240a37d43 ("gpiolib: enable CONFIG_GPIOLIB_LEGACY even for !GPIOLIB")
-> Reported-by: Rob Herring <robh@kernel.org>
-> Closes: https://lore.kernel.org/all/20250813222649.GA965895-robh@kernel.org/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Signed-off-by: Qianfeng Rong <rongqianfeng@vivo.com>
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+This patch (1/3) applied for next in the pinctrl tree.
 
-I'm sorry I misunderstood the earlier bug report and assumed this
-was already addressed. I now see what my mistake was and the fix looks
-correct to me.
-
-     Arnd
+Yours,
+Linus Walleij
 
