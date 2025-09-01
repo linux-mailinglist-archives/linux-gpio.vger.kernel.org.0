@@ -1,167 +1,162 @@
-Return-Path: <linux-gpio+bounces-25308-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25309-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3EB5B3E1E9
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 13:44:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40DA6B3E1EE
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 13:45:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AABBA16E282
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 11:44:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0EE6417220F
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 11:45:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 642EA31A063;
-	Mon,  1 Sep 2025 11:44:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E09E31DD89;
+	Mon,  1 Sep 2025 11:45:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xX5CwXFr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DzLy0yZo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F233126B8
-	for <linux-gpio@vger.kernel.org>; Mon,  1 Sep 2025 11:44:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22C62556E;
+	Mon,  1 Sep 2025 11:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756727082; cv=none; b=A+TrvI7K/D6lE8NinYQYh92gWEkW+Q+3s6thq/1OXChDUD4Z/8xsVh39TkMwr4AC+mHKLcE6BIJQ7GZQn+bb2Y1T5jrd52CitSSxk+i0dARl2CkzU5aHO6b2R0pQLcVT5hi4vbR68aIwKfNwHHkk0t6Gd/1qXk4y+pjFaDVrx1o=
+	t=1756727116; cv=none; b=DyeiymXbu82qTkJVtcrC7cWlFXvfhvnOir7L6gSbsHX/8rrF+5erM0p21Okqh6MeTD9MfbbNroYLtEfzig9rCwzD+DlIcKxdTxaUD75EEq+zWcfaz0xemL/x3EwgvZ9iOtGojTWlJgXFjfKVAUSiM1CqYsSMEqkk+TEI6Dh4+aE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756727082; c=relaxed/simple;
-	bh=4VTO7CuosNZS6gYD4T7fljZ87tb27yjDlvWIasBY4aA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b0TNbvtjMhKuyV3TJCpAZ/yjcb+2hxo8GxNSwndf5fqPc88Q2pfvO07H0fyoavklJYmLhiKdzl3SkxIEqrzIp1nPU2XblmxgfChAiBQPFOk8YGyKBDy7eUQfsmQXJ4NjjSTJpZgGQaJDrlM0GcATvnDp5Htg24g8zThuUEwGLe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xX5CwXFr; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-55f6017004dso3839453e87.0
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Sep 2025 04:44:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756727078; x=1757331878; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/OFvV7SQIP1kCtikysf6z3ht4YhehrNRG0T9y62J5/A=;
-        b=xX5CwXFrYnSBXFS6Bww/hvjwTck4y6JvzeWdPnh04tQPOolh9uGOvUTKOkCrXFCmDA
-         h7b2dMqtQ1Yg03YFf8cN+gQlVvUaTiT+MRieQZmkI3LUcrwjTz/13P41RwwQZMBLqIm/
-         kqF1+2e7Brs1AjmLBZscT5XZn5BVN3OzVFsxzxqdVCXu7BglN1OJUjiesoCrTS9F4nvO
-         Aq8Pwjcj6aTag/Z6OOfxViynFJZP8QJlFYVeWDII0OOmvq7tC7uSaCacJcVH071MCUUY
-         gDupotsZtOHYX8uCDNtEaX1xXsf35PD+s2tQI4rFf2kFPCQakvedHIxC8zSQDhorRlan
-         Bv+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756727078; x=1757331878;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/OFvV7SQIP1kCtikysf6z3ht4YhehrNRG0T9y62J5/A=;
-        b=mAdB+OkUt1H6VZ49ebY3wrp333XgSAimSCP18Iz2oZgjtapTGcKMlxvqS1ec+4cO9u
-         KURVFH/maK9XpxWPMiiEJJ0NZFOBlh1TvVvDmpyH1KMJ+6X7vgItN0nImZzhzMdAY50O
-         Rji2WHkrKCiG61aElG1gFedaGSfowYcMc4xJUQM4mOXWbPbnNOfvoyNUZ8bc7nmBIDVZ
-         xqwbWMSpNCw5QJgL+q85ldVAMm6LP/5oEOviXMIB5GX36P8z8RJFy6f+9OWl7Lg5uNVr
-         LF/Wpe9rIxzdt/CuAOk7SKaxkRfhdolkgFc5TYZpHTLj3ZM0MvXsDE45XMRHLEvfV98B
-         aZXA==
-X-Forwarded-Encrypted: i=1; AJvYcCVGQJp/aGPoU/4wiSPHeIAf4vgu4tRUdZTxG5Ycu38ObBXM6QLXL573lrOieQdUN2DGxkuSlvNLnPBr@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxv1wGFUKgpeWX/HfAZCbp9tNgFlcxyC5P1wE2qTcAhL542jqRn
-	LjCY+EHuFWHI+DvoEtyyA4lfAZnamyyYhGRFViG0W19fjN/rwVp24LtHyEtJsQwwJ/stCcJdVds
-	tdoGhQ1vqDlHwQ5cgWGcLscErRwQF3INlOPILB8Pm0g==
-X-Gm-Gg: ASbGncv9xllTyD10B2tB1B5jgPbL3EVeApd8ekgaGoidzJJJYqMVzGOsFLmDJK3s1BP
-	MiaqZo+zjdRaXPjmgJzme+LE0wCbmP8Sjwhhdiq0prXkMo0qUgct0M5ooYsxocKOaYeOCo3aXKU
-	RwMm0eomH62N9f6HSThWEl2pKHmCn4Fxw2snfVC9WIqFm9vDfcDoJuO29Kta05ifWnjlOxBJ5nw
-	MWcMiOhX/Eas3xdiOXvpmyZgeaofr013TRSP9/HC5YzTHflkh59JNw6uE87
-X-Google-Smtp-Source: AGHT+IGtLI6rvBfSpE8htFQQQicBzrqgcgvSaqKsCw69S8fhQAnqyxpmOWemgkeyysAfxtYGJkZiX5XHSjspvtn0xNM=
-X-Received: by 2002:a05:6512:b06:b0:55f:595f:9a37 with SMTP id
- 2adb3069b0e04-55f708ece35mr2216447e87.27.1756727078020; Mon, 01 Sep 2025
- 04:44:38 -0700 (PDT)
+	s=arc-20240116; t=1756727116; c=relaxed/simple;
+	bh=bEIzW3/fXPb01KjYlShH/QlkM+z3ZeP3wwyYkd1vGKQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=kwJSRLBOV4hUO5CmA6JHCv3i9oY01BiA8NHtSK0L4Lqze/p6h0drCydF41cNeiXDMLM1J0sZwygpoISIX3QhbLAGJ/HHca8wM5u25/HDCRhoNieJGnrZA/4JRAk21godSKaaDm+32ph8rY2elUqXDwN21CQcOzRkcWJ4BqmbEF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DzLy0yZo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D718CC4CEF0;
+	Mon,  1 Sep 2025 11:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756727116;
+	bh=bEIzW3/fXPb01KjYlShH/QlkM+z3ZeP3wwyYkd1vGKQ=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=DzLy0yZo0SFY5zVZxWNtmB9b9IdrZuqLdqwb4/lb1W3HOCEkNChfjFs2cVvVqWp8y
+	 LvvMJS0OhaExZHIrVBhiN+dm1u/hUE+hbKjgUv7II0SKoVjLBuaAuTArhPS2lWYh6D
+	 74mvwLq86sYnzKLiPXF6zIY5bjwQR3Gl2t4EFzWmLJrkfkeY8a+9HjHeWuLosa+cc3
+	 OoWx/GmhM+gXAOZ/lXbmrRg+nBqkjuvoSX8nLWP/tsn2lXc8i2mAVEVXj9KmfKFNRr
+	 w0egS63UTgrFo/ULS4ylFytpfLIzwc+rosXSTujDcerQH6GsCTvsdw4FCIQh+aJrq+
+	 E/ntz6i4X9YFQ==
+Message-ID: <451f147b-a193-44e3-b7ca-90136de31a17@kernel.org>
+Date: Mon, 1 Sep 2025 13:45:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250726211053.2226857-1-arnd@kernel.org> <20250813222649.GA965895-robh@kernel.org>
-In-Reply-To: <20250813222649.GA965895-robh@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 1 Sep 2025 13:44:26 +0200
-X-Gm-Features: Ac12FXxgPIwSSpp9eUgR1WdTki5TUVANvw8eRPo8zPYFVF6F739rcWSmPKSsgBQ
-Message-ID: <CAMRc=Me1jL3anzVvHWxzhKG+wAQ-TkUVeUht2mCW87DKb13M_w@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: enable CONFIG_GPIOLIB_LEGACY even for !GPIOLIB
-To: Rob Herring <robh@kernel.org>
-Cc: Arnd Bergmann <arnd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
-	kernel test robot <lkp@intel.com>, Peng Fan <peng.fan@nxp.com>, 
-	Koichiro Den <koichiro.den@canonical.com>, Lee Jones <lee@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
-	Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>, 
-	Thomas Richard <thomas.richard@bootlin.com>, Yixun Lan <dlan@gentoo.org>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 01/10] dt-bindings: soc: aspeed: Add ASPEED PCIe Config
+To: Jacky Chou <jacky_chou@aspeedtech.com>, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
+ mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ joel@jms.id.au, andrew@codeconstruct.com.au, vkoul@kernel.org,
+ kishon@kernel.org, linus.walleij@linaro.org, p.zabel@pengutronix.de,
+ linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
+ linux-phy@lists.infradead.org, openbmc@lists.ozlabs.org,
+ linux-gpio@vger.kernel.org
+References: <20250901055922.1553550-1-jacky_chou@aspeedtech.com>
+ <20250901055922.1553550-2-jacky_chou@aspeedtech.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250901055922.1553550-2-jacky_chou@aspeedtech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Aug 14, 2025 at 12:26=E2=80=AFAM Rob Herring <robh@kernel.org> wrot=
-e:
->
-> On Sat, Jul 26, 2025 at 11:10:43PM +0200, Arnd Bergmann wrote:
-> > From: Arnd Bergmann <arnd@arndb.de>
-> >
-> > A few drivers that use the legacy GPIOLIB interfaces can be enabled
-> > even when GPIOLIB is disabled entirely. With my previous patch this
-> > now causes build failures like:
-> >
-> >    drivers/nfc/s3fwrn5/uart.c: In function 's3fwrn82_uart_parse_dt':
-> >         drivers/nfc/s3fwrn5/uart.c:100:14: error: implicit declaration =
-of function 'gpio_is_valid'; did you mean 'uuid_is_valid'? [-Werror=3Dimpli=
-cit-function-declaration]
-> >
-> > These did not show up in my randconfig tests because randconfig almost
-> > always has GPIOLIB selected by some other driver, and I did most
-> > of the testing with follow-up patches that address the failures
-> > properly.
-> >
-> > Move the symbol outside of the 'if CONFIG_GPIOLIB' block for the moment
-> > to avoid the build failures. It can be moved back and turned off by
-> > default once all the driver specific changes are merged.
-> >
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Closes: https://lore.kernel.org/oe-kbuild-all/202507261934.yIHeUuEQ-lkp=
-@intel.com/
-> > Fixes: 678bae2eaa81 ("gpiolib: make legacy interfaces optional")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> >  drivers/gpio/Kconfig | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> This change causes all of the GPIO submenu to show up directly in the
-> already way too long 'Device Drivers' menu.
->
-> >
-> > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> > index 8bda3c9d47b4..c48f9badb513 100644
-> > --- a/drivers/gpio/Kconfig
-> > +++ b/drivers/gpio/Kconfig
-> > @@ -12,11 +12,11 @@ menuconfig GPIOLIB
-> >
-> >         If unsure, say N.
-> >
-> > -if GPIOLIB
-> > -
-> >  config GPIOLIB_LEGACY
-> >       def_bool y
->
-> Perhaps this has to be before "menuconfig GPIOLIB"?
->
+On 01/09/2025 07:59, Jacky Chou wrote:
+> +description:
+> +  The ASPEED PCIe configuration syscon block provides a set of registers shared
+> +  by multiple PCIe-related devices within the SoC. This node represents the
+> +  common configuration space that allows these devices to coordinate and manage
+> +  shared PCIe settings, including address mapping, control, and status
+> +  registers. The syscon interface enables for various PCIe devices to access
+> +  and modify these shared registers in a consistent and centralized manner.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - aspeed,ast2700-pcie-cfg
 
-Hi Arnd,
+Why this cannot be part of standard syscon binding file?
 
-This is still broken in next, will you have some time to spend on it
-or should I just go with what Rob proposed?
+> +      - const: syscon
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    soc0 {
 
-Bart
+soc {
 
-> >
-> > +if GPIOLIB
-> > +
-> >  config GPIOLIB_FASTPATH_LIMIT
-> >       int "Maximum number of GPIOs for fast path"
-> >       range 32 512
-> > --
-> > 2.39.5
-> >
+although why do you need it in the first place...
+
+> +      #address-cells = <2>;
+> +      #size-cells = <1>;
+> +
+> +      syscon@12c02a00 {
+> +        compatible = "aspeed,ast2700-pcie-cfg", "syscon";
+> +        reg = <0 0x12c02a00 0x80>;
+> +      };
+> +    };
+
+
+Best regards,
+Krzysztof
 
