@@ -1,177 +1,148 @@
-Return-Path: <linux-gpio+bounces-25318-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25310-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68E83B3E294
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 14:22:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95237B3E234
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 14:07:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2938E4421CD
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 12:22:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 545A63BF16E
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 12:07:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 449DC334394;
-	Mon,  1 Sep 2025 12:21:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87E4426B951;
+	Mon,  1 Sep 2025 12:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="subnAYt3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BB1C30BF7B;
-	Mon,  1 Sep 2025 12:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 283F2254B09;
+	Mon,  1 Sep 2025 12:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756729265; cv=none; b=W8bhode5xTqFmLIYARkvEJXpw0H8AL35DhgwW0+wIPyrbE9LaP7csNN9x810bl82Gcr8XSQPg3rLO1qeRuwUra4kGPDzw5RbIJTh0GphqdJMTTEvwqF1UnVaFyl6Lgeia80/gS8QDgFdqVo/cgeCaBT3Jw/bEv1OCAcF0iXtlpI=
+	t=1756728420; cv=none; b=IE2cMFZjf1UQQvMZeiGckhKoTftTKt8VJ5tVebrpgle7EyPDy8eRGY6Wds25tYMzjg3vs7gJ01oYxdyvpdVJW9HHd7id9sEwUlfSzXU+eCHlta5Mj4sRJb7wKe8si8gw5RiaUfjlaCfuvN49lQF6N/Gcmp+mrSd9fGAn4ZKeMiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756729265; c=relaxed/simple;
-	bh=59wZHIxllxZcwCrUxSll7FEcA0fEA5AxS+AodcoXc0o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WYjyuFAp6VLMOh1NvbvR5S0FEDgpy5RV3UH/50l50xIzznOlpkDYEB6/8Nf98pXuEe5VwpN9FcHyONbgZVHJ/QJT+Zmg2ApgbzUnpoQIAexuqOO5VElQLHXf3czz0mP9yJg3V+V4py83u3YqSzRU0/YWOmIHyr9J8/I0ipAkF1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4cFndL0hyTz9sT8;
-	Mon,  1 Sep 2025 14:05:42 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 8chmUpmbiw-6; Mon,  1 Sep 2025 14:05:42 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4cFndD0SFrz9sSs;
-	Mon,  1 Sep 2025 14:05:36 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id ECB808B77B;
-	Mon,  1 Sep 2025 14:05:35 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id vyRL5fj0VNV1; Mon,  1 Sep 2025 14:05:35 +0200 (CEST)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [10.25.207.160])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id BB70F8B78C;
-	Mon,  1 Sep 2025 14:05:35 +0200 (CEST)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Qiang Zhao <qiang.zhao@nxp.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v5 7/7] dt-bindings: soc: fsl: qe: Add support of IRQ in QE GPIO
-Date: Mon,  1 Sep 2025 14:05:14 +0200
-Message-ID: <4d7560f77dbd60f6297958acbc0cf412d8921856.1756727747.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1756727747.git.christophe.leroy@csgroup.eu>
-References: <cover.1756727747.git.christophe.leroy@csgroup.eu>
+	s=arc-20240116; t=1756728420; c=relaxed/simple;
+	bh=KLozvW2/PZEE4MLEPg7Ckr+Jd7gWELOn6bfbOk7IAwQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EUT9oqMqyXpIFydXbq+pD/vAqZKgIdnTH2LYCUxuaUvSH4IMe5wSgvMBolr3zwCxzlse/xGP18jXnAld2zc57zRmQAyfvQwjJ9a6+G3wkfQEAYVegFvGVFbX4+FVGtYBhOMmF+6jBsEG4q+u92kX2H+UEmpVOUCZONt7rO5LF+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=subnAYt3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 750A4C4CEF0;
+	Mon,  1 Sep 2025 12:06:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756728419;
+	bh=KLozvW2/PZEE4MLEPg7Ckr+Jd7gWELOn6bfbOk7IAwQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=subnAYt3W6iRYWiLe4R1hyk02hHWugF12CkdwNtfWO6oweESVzkr4HHQSgrGdK/hQ
+	 8F1KuLkxbirhX9eTa+UlHzROt6oVHRMDVtFWN5s14w38M5Is6TmFeJ5JJ8je4krspg
+	 pBRIf5eDDzE+sPD131SIUvsN9YtFG8xjdavT9OTqqYxDYZRUulC8RH0fZzQh+efv6M
+	 zm0xO5wdKFGcsgmWDEVbNVw84C2PinGI3Z8RXMoIob2mUpV8kkm7QMdnJyTfUcaJ1e
+	 cCDoP5GnBM8z+lPd7plFSP8PsGAkGVMDl6cqmwfcIkGDifWC/YBbKkp9x6hig/ZOBh
+	 elTOdLAEWl7eQ==
+Date: Mon, 1 Sep 2025 13:06:48 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Alexey Klimov <alexey.klimov@linaro.org>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Dong Aisheng <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	NXP S32 Linux Team <s32@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Tony Lindgren <tony@atomide.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	imx@lists.linux.dev, linux-omap@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v6 06/15] pinctrl: imx: don't access the pin function
+ radix tree directly
+Message-ID: <61bad868-d976-4f49-805c-8d14d4d8b3e4@sirena.org.uk>
+References: <20250828-pinctrl-gpio-pinfuncs-v6-0-c9abb6bdb689@linaro.org>
+ <20250828-pinctrl-gpio-pinfuncs-v6-6-c9abb6bdb689@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1756728308; l=3640; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=59wZHIxllxZcwCrUxSll7FEcA0fEA5AxS+AodcoXc0o=; b=cy9tS21IUHMGiZz2LkFhr/4YksRHLYEUvFGDBOX1axyjBo+bzEtfYV3xtcm8RSYCvbvRHjfst 3wmxkdbNoD3BJ0zgTn8FewQGYmGd3efkqIdatLK/NyqRDmBjpdLHkdM
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ck2hWlO4+9LtMqEh"
+Content-Disposition: inline
+In-Reply-To: <20250828-pinctrl-gpio-pinfuncs-v6-6-c9abb6bdb689@linaro.org>
+X-Cookie: Auction:
 
-In the QE, a few GPIOs have an associated IRQ to notify changes.
-Add IRQ support to QE GPIO.
 
-As not all GPIOs have an associated IRQ, the driver needs to know
-to which GPIO corresponds each provided IRQ. This is provided via
-multiple compatible properties:
+--ck2hWlO4+9LtMqEh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	compatible = "fsl,mpc8323-qe-pario-bank-a"
-	compatible = "fsl,mpc8323-qe-pario-bank-b"
-	compatible = "fsl,mpc8323-qe-pario-bank-c"
+On Thu, Aug 28, 2025 at 06:00:14PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>=20
+> The radix tree containing pin function descriptors should not be
+> accessed directly by drivers. There are dedicated functions for it. I
+> suppose this driver does it so that the memory containing the function
+> description is not duplicated but we're going to address that shortly so
+> convert it to using generic pinctrl APIs.
 
-	compatible = "fsl,mpc8360-qe-pario-bank-a"
-	compatible = "fsl,mpc8360-qe-pario-bank-b"
-	compatible = "fsl,mpc8360-qe-pario-bank-c"
-	compatible = "fsl,mpc8360-qe-pario-bank-d"
-	compatible = "fsl,mpc8360-qe-pario-bank-e"
-	compatible = "fsl,mpc8360-qe-pario-bank-f"
-	compatible = "fsl,mpc8360-qe-pario-bank-g"
+This is still failing for me:
 
-	compatible = "fsl,mpc8568-qe-pario-bank-a"
-	compatible = "fsl,mpc8568-qe-pario-bank-b"
-	compatible = "fsl,mpc8568-qe-pario-bank-c"
-	compatible = "fsl,mpc8568-qe-pario-bank-d"
-	compatible = "fsl,mpc8568-qe-pario-bank-e"
-	compatible = "fsl,mpc8568-qe-pario-bank-f"
+[    0.628221] Unable to handle kernel NULL pointer dereference at virtual =
+address 0000000000000000
+[    0.636506] Mem abort info:
 
-When not using IRQ and for banks having no IRQ (like bank D on mpc8323)
-the origin compatible = "fsl,mpc8323-qe-pario-bank" is still valid.
+=2E..
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
-v5: Changed to DT schema
----
- .../fsl/cpm_qe/fsl,mpc8323-qe-pario-bank.yaml | 27 +++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
+[    0.801855]  __pi_strcmp+0x20/0x140 (P)
+[    0.805704]  pinmux_generic_add_pinfunction+0x28/0xe0
+[    0.810777]  imx_pinctrl_parse_functions.isra.0+0xf8/0x4a0
+[    0.816289]  imx_pinctrl_probe+0x404/0x520
 
-diff --git a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,mpc8323-qe-pario-bank.yaml b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,mpc8323-qe-pario-bank.yaml
-index e6ba319a75c1..80f93914c779 100644
---- a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,mpc8323-qe-pario-bank.yaml
-+++ b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,mpc8323-qe-pario-bank.yaml
-@@ -17,6 +17,22 @@ properties:
-     items:
-       - enum:
-           - fsl,chip-qe-pario-bank
-+          - fsl,mpc8323-qe-pario-bank-a
-+          - fsl,mpc8323-qe-pario-bank-b
-+          - fsl,mpc8323-qe-pario-bank-c
-+          - fsl,mpc8360-qe-pario-bank-a
-+          - fsl,mpc8360-qe-pario-bank-b
-+          - fsl,mpc8360-qe-pario-bank-c
-+          - fsl,mpc8360-qe-pario-bank-d
-+          - fsl,mpc8360-qe-pario-bank-e
-+          - fsl,mpc8360-qe-pario-bank-f
-+          - fsl,mpc8360-qe-pario-bank-g
-+          - fsl,mpc8568-qe-pario-bank-a
-+          - fsl,mpc8568-qe-pario-bank-b
-+          - fsl,mpc8568-qe-pario-bank-c
-+          - fsl,mpc8568-qe-pario-bank-d
-+          - fsl,mpc8568-qe-pario-bank-e
-+          - fsl,mpc8568-qe-pario-bank-f
-       - const: fsl,mpc8323-qe-pario-bank
- 
-   reg:
-@@ -28,6 +44,9 @@ properties:
-   '#gpio-cells':
-     const: 2
- 
-+  interrupts:
-+    description: List of interrupts for lines of the port that trigger interrupts on change.
-+
- required:
-   - compatible
-   - reg
-@@ -39,15 +58,19 @@ additionalProperties: false
- examples:
-   - |
-     qe_pio_a: gpio-controller@1400 {
--        compatible = "fsl,mpc8360-qe-pario-bank", "fsl,mpc8323-qe-pario-bank";
-+        compatible = "fsl,mpc8360-qe-pario-bank-a", "fsl,mpc8323-qe-pario-bank";
-         reg = <0x1400 0x18>;
-         gpio-controller;
-         #gpio-cells = <2>;
-+        interrupts = <0 1 2 3>;
-+        interrupt-parent = <&qepic>;
-     };
- 
-     qe_pio_e: gpio-controller@1460 {
--        compatible = "fsl,mpc8360-qe-pario-bank", "fsl,mpc8323-qe-pario-bank";
-+        compatible = "fsl,mpc8360-qe-pario-bank-e", "fsl,mpc8323-qe-pario-bank";
-         reg = <0x1460 0x18>;
-         gpio-controller;
-         #gpio-cells = <2>;
-+        interrupts = <19 20 21 22 23 24 25>;
-+        interrupt-parent = <&qepic>;
-     };
--- 
-2.49.0
+Full log:
 
+   https://lava.sirena.org.uk/scheduler/job/1758025#L704
+
+--ck2hWlO4+9LtMqEh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmi1jFcACgkQJNaLcl1U
+h9BGhwf/dS46HMJilXSgdHmEKJbp5ioFAwW8a4pof2TF7vY7Jpo/qiFqnKkvqhYC
+tZO4exJFROsDCUKlVPp+Qawyyhy3CCU2p+vHcuz8p07gmzIEOw9QkjMf8IMlPGyA
+UKEr+nQae21YF/iNRFDQGH9hqHAT76YwExslci+ilyDzaJeWu6ACPhVMFMNO9a/q
+BjCieo2alJTBGdLUFgFDoMmVmqebVqIBYO0m966vo/efy8UG1BTlGE++FYa1OVnt
+bVDlzyyNsdl94L6s8pxhABsajGCsOXj0inSK7SXdnJ4XusoEfuSIKKSieCGsjMEG
+qkdS6DTMFfXrzPQZI5S3dgsmyVchug==
+=JXXf
+-----END PGP SIGNATURE-----
+
+--ck2hWlO4+9LtMqEh--
 
