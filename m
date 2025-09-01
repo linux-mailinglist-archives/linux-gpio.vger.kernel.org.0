@@ -1,150 +1,113 @@
-Return-Path: <linux-gpio+bounces-25325-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25326-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53770B3E49E
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 15:21:04 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24C12B3E55A
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 15:38:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0B84516A84C
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 13:21:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 66DC37A2572
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 13:37:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 499B02773FB;
-	Mon,  1 Sep 2025 13:20:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15CBD335BAF;
+	Mon,  1 Sep 2025 13:38:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="NXqh/pNg"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="lY6P4iG4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F86273810
-	for <linux-gpio@vger.kernel.org>; Mon,  1 Sep 2025 13:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483F9327794;
+	Mon,  1 Sep 2025 13:38:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756732859; cv=none; b=eb4KBwohO+faneosKI2BHbhibrPlP9lpyb/8/fOB0TJREXEt2TEByKM0kRCD05iDexAcaHi+Y70kSTIOzTFeEQ67//gLCBA9sgadnu9x8lL1SerORGyrcPdRWtSgsp62/5hdw3tBqkoQ1j65mrxrRmaNm3tFYFYPTzJb5xqaWeM=
+	t=1756733913; cv=none; b=Edo0ZBPYmYogz06b6NoFdiBlOwjXhXm5cvSjS1ItBXU9O9IgyFHuTxU/8ST3YocIAGcuCx3p/e3qZx8XSiy9po64TeMn5H8MAjjnF+Ir2tm7DZlqWXMf/d6P3A9pci1kk33HiXND2eGKEm7jBBYWch5fQDlQ7qjRt0jU37+Qm+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756732859; c=relaxed/simple;
-	bh=+FzHD6P3GIG+WbvurBqu4eNuHXM1ihNGPdVL0Rl46EY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PYr0+VPU+G37r+xMs7ArdU1X3b43c2KOipxEcSrxqqua5THUwzOAyIob0dWFXElKe7lwEcMDrf0jKkjwY1LeI+XOXLemICrlLTIudEFzq2xLP4i3zZoMbiNdhdOopcqbKdPuHEFeSRFLnccWpkJcilALgdVFfMPWjndKo5yUkiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=NXqh/pNg; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-55f6b0049fbso3209700e87.0
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Sep 2025 06:20:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756732855; x=1757337655; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/ApJifxHePLgmXB9tTWAWedH0XfL5fOO8paxsOA3xkw=;
-        b=NXqh/pNgFvdh9534gdG5el6/ZagbcM4qdqFZr+bWDTOqlYOI7PzxLWNJpKAk0Jgw1o
-         s0tv+sMZ1fZfMi3cl0T8CdMrzwyvldKPomK1W+l9cLLBhtRBFqMYxk+MIhqu352PH1FT
-         PBoChcd91xX7UCHGjfj9JfHSxJGjH+w1vA2E39gFTUVFDLhItLGeT/Pfj5lTzSy+u+L+
-         OZz2VDGzuqaMeTUlrGP0aZEP6BDnjizjkuyz4hPpPspV1+PUkkfcCcSBLyrjgJDaT80r
-         /+xEWKIfUPKJMg4uwzkVzJBqSKLL4VEHXvCwu4IaATXnNwATlNbZ01/S335v8zUvalv5
-         AMYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756732855; x=1757337655;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/ApJifxHePLgmXB9tTWAWedH0XfL5fOO8paxsOA3xkw=;
-        b=oEplrnm0bpKGXacWJruANbuDLdlkoDdEdJtxTH1bxMUlDHTehSWUW9KlyoTHsdnl8f
-         +yzIfvBjto1kEIgLorBrx+zniyhIoFm7wfLxFXuA2HAorhKVOErggsdJkLKJc/uVsxi3
-         jhDmJwYu0InnNveqxuHKlni4wZpmn9BDL1Y6BHK4LmsqDaAWlXLe/j7hJq8FzaCEOQ4x
-         4ubZudNJIRE5kQ8z8SAXhrz+nf6WI6vHv0YW8QWG3jBqYs6n7eGwJzyqKKe/2UAG6zfo
-         KYXV8y/PsvMEbfwtC7Rj1mJ2asJeqObJMZkugYXVcgezbdfUZr/pVxdmDBmxi1FsBBFk
-         TACw==
-X-Forwarded-Encrypted: i=1; AJvYcCVOLCQ6HrVuHE/W5xKINZJmHUGD+BFNYDYQdzgQUCgIxi8tjwz0O1PaYw8lu+WOAp3NUYUxHBIrDSU1@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHUpr/p1ABT4wYJkRftL7AhuMz59eEYpwsxQ2w0+krmlfiQbxE
-	A8nwm8qunpsOsc0dP7iryDtnA3moU2nX6Zvz2e8nKZrlYTK+KetkJjb2ouE+bkyc0fWg4U5EI5/
-	qzGv0uOfFj1RWOwJwtkWkXwL1hFNrKVrQ/sd0+VRKtQ==
-X-Gm-Gg: ASbGncsQLP/qrZiFVKWoBnwH3saTjPJ2+fCKWrsx8ItHUucR7Oyz1c6YfP4kNCLUdaq
-	CHu33ghfMI7o+8g9YLfhCd/yEFO8LI4J51OfTzULLCAXpKSYafRAHLVHvwvYJOGCU7c6CWHRqaY
-	gwXwU1436DwoT2TuDaEOcQdOWWvpuPnlxdSDo1fqnT1I3IIvJ/jO7BTJ4lr0RCRiB6lhbdnLhdd
-	Oau+jQsv0XtZgm00q7sdi76HNlQemR2zTqHZTE=
-X-Google-Smtp-Source: AGHT+IH912XrSXzjBk2qT9512Zc2BnDvh2hCyUh1tIL/e/b5XAWzm9U6VOUb2k8kMnjWcaLf9C4w4UWLuNtsABXzYyY=
-X-Received: by 2002:a05:6512:2513:b0:55f:4016:ad2b with SMTP id
- 2adb3069b0e04-55f708eae52mr2361617e87.30.1756732855435; Mon, 01 Sep 2025
- 06:20:55 -0700 (PDT)
+	s=arc-20240116; t=1756733913; c=relaxed/simple;
+	bh=ieYcdsd86jg1PezFn6//gKhottikcQbDyhjzNt8NsYY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t2ol8/C0ALLHYLtLADUE/HMeIgcoOHPi1BgKsKOFHNs/SGCX6e8tAINuntjASIlxDzOOhuoWQFKuHEGgRsRJ8My2YOrXpTDck7wsOX1blOxYDYFeVhnTrY22JQnCBSnjVncKHVivMBEyR4pjo0sxVWlYSG7/pEyDkdeF37Q57YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=lY6P4iG4; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 3FAFD2052A;
+	Mon,  1 Sep 2025 15:38:23 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 8jP4eUBOX-ip; Mon,  1 Sep 2025 15:38:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1756733902; bh=ieYcdsd86jg1PezFn6//gKhottikcQbDyhjzNt8NsYY=;
+	h=From:To:Cc:Subject:Date;
+	b=lY6P4iG4uCL/rKZIXFJgB99CwAuwYcU+zQBA6Z1k6Wj3qoiLv8dnF5hmz24GKhlaN
+	 yp5BboZkmO6EzoNlKc8FK3hDvti8wzdGClNSp5zzspsI5gAVMqkr+/AX7Q+OdDjoq2
+	 OMh4gu4vMgDfE3YL/kTIvmfnokWAhHVQ/2ynZPN8sAPhKyHZjqPQNg8ElKdwsX+ov+
+	 sFLSiSklMODM1AFX4fwTj9oXxatH/eCG5dkjJmTwYEHid082dQVKzR4ZOR2mWbqOh6
+	 k9WM+ufKMdvEstVQvEln2Xq+TiH3+YHxvhAYlgq0f1R/SmVZD8IIg8FQdQD/e6ZLzz
+	 DzOHzBlB7S6WQ==
+From: Yao Zi <ziyao@disroot.org>
+To: Yinbo Zhu <zhuyinbo@loongson.cn>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Mingcong Bai <jeffbai@aosc.io>,
+	Kexy Biscuit <kexybiscuit@aosc.io>,
+	Yao Zi <ziyao@disroot.org>
+Subject: [PATCH v2 0/3] Support GPIO controller of Loongson 2K0300 SoC
+Date: Mon,  1 Sep 2025 13:38:01 +0000
+Message-ID: <20250901133804.38433-1-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250828-pinctrl-gpio-pinfuncs-v6-0-c9abb6bdb689@linaro.org>
- <20250828-pinctrl-gpio-pinfuncs-v6-6-c9abb6bdb689@linaro.org> <61bad868-d976-4f49-805c-8d14d4d8b3e4@sirena.org.uk>
-In-Reply-To: <61bad868-d976-4f49-805c-8d14d4d8b3e4@sirena.org.uk>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 1 Sep 2025 15:20:44 +0200
-X-Gm-Features: Ac12FXxw4k3UY5TBARAefSnKyhMDuDCBaUNs2qyNKYW8yrbkHP8etuyQPhIAuGM
-Message-ID: <CAMRc=MfB_3e0sjCpV+XaKcKvit7Opk5LczH2wsxO=RftrAabjg@mail.gmail.com>
-Subject: Re: [PATCH v6 06/15] pinctrl: imx: don't access the pin function
- radix tree directly
-To: Mark Brown <broonie@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Alexey Klimov <alexey.klimov@linaro.org>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
-	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mips@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-mm@kvack.org, imx@lists.linux.dev, linux-omap@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 1, 2025 at 2:07=E2=80=AFPM Mark Brown <broonie@kernel.org> wrot=
-e:
->
-> On Thu, Aug 28, 2025 at 06:00:14PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > The radix tree containing pin function descriptors should not be
-> > accessed directly by drivers. There are dedicated functions for it. I
-> > suppose this driver does it so that the memory containing the function
-> > description is not duplicated but we're going to address that shortly s=
-o
-> > convert it to using generic pinctrl APIs.
->
-> This is still failing for me:
->
-> [    0.628221] Unable to handle kernel NULL pointer dereference at virtua=
-l address 0000000000000000
-> [    0.636506] Mem abort info:
->
-> ...
->
-> [    0.801855]  __pi_strcmp+0x20/0x140 (P)
-> [    0.805704]  pinmux_generic_add_pinfunction+0x28/0xe0
-> [    0.810777]  imx_pinctrl_parse_functions.isra.0+0xf8/0x4a0
-> [    0.816289]  imx_pinctrl_probe+0x404/0x520
->
-> Full log:
->
->    https://lava.sirena.org.uk/scheduler/job/1758025#L704
+This series adds support for Loongson 2K0300's GPIO controller. While
+being mostly identical to previous implementation, its interrupt
+functionality hasn't been implemented in gpio-loongson-64bit.c. PATCH 2
+implements its interrupt support with an IRQCHIP, and the code could be
+reused for other Loongson SoCs with similar interrupt functionality like
+2K1500 and 2K2000.
 
-That's not a lot of info but it fails in strcmp() which - I suppose -
-is the one in pinmux_func_name_to_selector(). Any chance you could
-check what the value of np->name is in imx_pinctrl_parse_functions()?
-Is it NULL for some reason?
+Tested on CTCISZ Forever Pi, reading/writing GPIOs works correctly, and
+both level and edge interrupts could be triggered.
 
-Bart
+The devicetree patch depends on series "Support reset controller of
+Loongson 2K0300 SoC"[1] for a clean apply. Thanks for your time and
+review.
+
+Changed from v1:
+- Rebase on top of gpio/for-next, adapt changes that convert
+  gpio-loongson-64bit.c to use generic gpiochip.
+- Collect review tags
+- Link to v1: https://lore.kernel.org/all/20250816035027.11727-2-ziyao@disroot.org/
+
+[1]: https://lore.kernel.org/all/20250816033327.11359-2-ziyao@disroot.org/
+
+Yao Zi (3):
+  dt-bindings: gpio: loongson: Document GPIO controller of 2K0300 SoC
+  gpio: loongson-64bit: Add support for Loongson 2K0300 SoC
+  LoongArch: dts: Add GPIO controller for Loongson 2K0300
+
+ .../bindings/gpio/loongson,ls-gpio.yaml       |  28 ++-
+ arch/loongarch/boot/dts/loongson-2k0300.dtsi  |  20 ++
+ drivers/gpio/Kconfig                          |   1 +
+ drivers/gpio/gpio-loongson-64bit.c            | 191 +++++++++++++++++-
+ 4 files changed, 232 insertions(+), 8 deletions(-)
+
+-- 
+2.50.1
+
 
