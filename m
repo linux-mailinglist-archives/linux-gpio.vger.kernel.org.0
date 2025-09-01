@@ -1,115 +1,167 @@
-Return-Path: <linux-gpio+bounces-25307-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25308-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 780A9B3E03D
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 12:35:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3EB5B3E1E9
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 13:44:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 32DEE3BDDE8
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 10:35:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AABBA16E282
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 11:44:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DE2530F53A;
-	Mon,  1 Sep 2025 10:35:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 642EA31A063;
+	Mon,  1 Sep 2025 11:44:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qkWonKTu"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xX5CwXFr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3470D218596;
-	Mon,  1 Sep 2025 10:35:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F233126B8
+	for <linux-gpio@vger.kernel.org>; Mon,  1 Sep 2025 11:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756722940; cv=none; b=HxeL7DbX+JThJ3rFVm4PrfW0wFQPK84qMsOpxhdtvlg92zrVn45lW3W1AbcuQvX6uhTnIEiOiW5762cDU62w0BG9pXWbN4uj1e8KG8XE4zGNAffPEezjekN3jdju/4qloVJLIVs4R+4F5lexgfIJdvvsfx/N+pRVb+xseTIYjWM=
+	t=1756727082; cv=none; b=A+TrvI7K/D6lE8NinYQYh92gWEkW+Q+3s6thq/1OXChDUD4Z/8xsVh39TkMwr4AC+mHKLcE6BIJQ7GZQn+bb2Y1T5jrd52CitSSxk+i0dARl2CkzU5aHO6b2R0pQLcVT5hi4vbR68aIwKfNwHHkk0t6Gd/1qXk4y+pjFaDVrx1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756722940; c=relaxed/simple;
-	bh=PAYtZO8rvHPxpnmsKxZMRGL3a2TAeTujErtp5EkRzUw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JvHsX7ROl8Cn0452USwA/4B8ithPg73mB73jLgrvpa3w5wOvTH7Oqyuh8BnEwnE380o6vUg86Z/DrsSM+ybyujUni07EI8KhNqYN/BhLcTpMQtEx2S7Fsxj5lupRfvm9D+je8POnHPfk9EqHqjqM3Zj+G72SYA8CS1EpePZOkyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qkWonKTu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA8BDC4CEF0;
-	Mon,  1 Sep 2025 10:35:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756722940;
-	bh=PAYtZO8rvHPxpnmsKxZMRGL3a2TAeTujErtp5EkRzUw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qkWonKTuwJXwZwPxsldkF2+jdXEt6d6brcIcClWo7h5sS5PFjiw6tVkMB5PCv6kOc
-	 UFLGAN8SpbSZGAwbMmpHageIXA0lJXx7VnxLaBl4iVubU339KvDguttH9DIW8m77MR
-	 FKJTfCYoYXJFY4SUx25FzniWOTQ3HLd1x6Ov8WsO+Y0plSJoNhikjivnRT2H9g7BNt
-	 VIOJ+rgmL00E521uaCYVYoSG/3NgL/bvZlxKAnv7QI4wOP/x7lVMFAtYspdR9/e6ds
-	 PkfeTbOlx7UdLPmLDJ4BwKfi0DcASgrAmYs5rkn/aZbxouKDrLIYB3H1IYpd+ZhAa4
-	 AQKQD3+dU7Kow==
-Date: Mon, 1 Sep 2025 11:35:35 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Alex Tran <alex.t.tran@gmail.com>
-Cc: lgirdwood@gmail.com, tiwai@suse.com, perex@perex.cz,
-	shenghao-ding@ti.com, kevin-lu@ti.com, baojun.xu@ti.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl,
-	linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ASoC: codecs: tlv320dac33: switch to gpiod api
-Message-ID: <7de59d85-a72e-4afa-b3d7-8729e22f4c3f@sirena.org.uk>
-References: <20250901035956.1195081-1-alex.t.tran@gmail.com>
+	s=arc-20240116; t=1756727082; c=relaxed/simple;
+	bh=4VTO7CuosNZS6gYD4T7fljZ87tb27yjDlvWIasBY4aA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b0TNbvtjMhKuyV3TJCpAZ/yjcb+2hxo8GxNSwndf5fqPc88Q2pfvO07H0fyoavklJYmLhiKdzl3SkxIEqrzIp1nPU2XblmxgfChAiBQPFOk8YGyKBDy7eUQfsmQXJ4NjjSTJpZgGQaJDrlM0GcATvnDp5Htg24g8zThuUEwGLe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xX5CwXFr; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-55f6017004dso3839453e87.0
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Sep 2025 04:44:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756727078; x=1757331878; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/OFvV7SQIP1kCtikysf6z3ht4YhehrNRG0T9y62J5/A=;
+        b=xX5CwXFrYnSBXFS6Bww/hvjwTck4y6JvzeWdPnh04tQPOolh9uGOvUTKOkCrXFCmDA
+         h7b2dMqtQ1Yg03YFf8cN+gQlVvUaTiT+MRieQZmkI3LUcrwjTz/13P41RwwQZMBLqIm/
+         kqF1+2e7Brs1AjmLBZscT5XZn5BVN3OzVFsxzxqdVCXu7BglN1OJUjiesoCrTS9F4nvO
+         Aq8Pwjcj6aTag/Z6OOfxViynFJZP8QJlFYVeWDII0OOmvq7tC7uSaCacJcVH071MCUUY
+         gDupotsZtOHYX8uCDNtEaX1xXsf35PD+s2tQI4rFf2kFPCQakvedHIxC8zSQDhorRlan
+         Bv+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756727078; x=1757331878;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/OFvV7SQIP1kCtikysf6z3ht4YhehrNRG0T9y62J5/A=;
+        b=mAdB+OkUt1H6VZ49ebY3wrp333XgSAimSCP18Iz2oZgjtapTGcKMlxvqS1ec+4cO9u
+         KURVFH/maK9XpxWPMiiEJJ0NZFOBlh1TvVvDmpyH1KMJ+6X7vgItN0nImZzhzMdAY50O
+         Rji2WHkrKCiG61aElG1gFedaGSfowYcMc4xJUQM4mOXWbPbnNOfvoyNUZ8bc7nmBIDVZ
+         xqwbWMSpNCw5QJgL+q85ldVAMm6LP/5oEOviXMIB5GX36P8z8RJFy6f+9OWl7Lg5uNVr
+         LF/Wpe9rIxzdt/CuAOk7SKaxkRfhdolkgFc5TYZpHTLj3ZM0MvXsDE45XMRHLEvfV98B
+         aZXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGQJp/aGPoU/4wiSPHeIAf4vgu4tRUdZTxG5Ycu38ObBXM6QLXL573lrOieQdUN2DGxkuSlvNLnPBr@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxv1wGFUKgpeWX/HfAZCbp9tNgFlcxyC5P1wE2qTcAhL542jqRn
+	LjCY+EHuFWHI+DvoEtyyA4lfAZnamyyYhGRFViG0W19fjN/rwVp24LtHyEtJsQwwJ/stCcJdVds
+	tdoGhQ1vqDlHwQ5cgWGcLscErRwQF3INlOPILB8Pm0g==
+X-Gm-Gg: ASbGncv9xllTyD10B2tB1B5jgPbL3EVeApd8ekgaGoidzJJJYqMVzGOsFLmDJK3s1BP
+	MiaqZo+zjdRaXPjmgJzme+LE0wCbmP8Sjwhhdiq0prXkMo0qUgct0M5ooYsxocKOaYeOCo3aXKU
+	RwMm0eomH62N9f6HSThWEl2pKHmCn4Fxw2snfVC9WIqFm9vDfcDoJuO29Kta05ifWnjlOxBJ5nw
+	MWcMiOhX/Eas3xdiOXvpmyZgeaofr013TRSP9/HC5YzTHflkh59JNw6uE87
+X-Google-Smtp-Source: AGHT+IGtLI6rvBfSpE8htFQQQicBzrqgcgvSaqKsCw69S8fhQAnqyxpmOWemgkeyysAfxtYGJkZiX5XHSjspvtn0xNM=
+X-Received: by 2002:a05:6512:b06:b0:55f:595f:9a37 with SMTP id
+ 2adb3069b0e04-55f708ece35mr2216447e87.27.1756727078020; Mon, 01 Sep 2025
+ 04:44:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="0pbq1X1Bu6UZ70ua"
-Content-Disposition: inline
-In-Reply-To: <20250901035956.1195081-1-alex.t.tran@gmail.com>
-X-Cookie: Auction:
-
-
---0pbq1X1Bu6UZ70ua
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250726211053.2226857-1-arnd@kernel.org> <20250813222649.GA965895-robh@kernel.org>
+In-Reply-To: <20250813222649.GA965895-robh@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 1 Sep 2025 13:44:26 +0200
+X-Gm-Features: Ac12FXxgPIwSSpp9eUgR1WdTki5TUVANvw8eRPo8zPYFVF6F739rcWSmPKSsgBQ
+Message-ID: <CAMRc=Me1jL3anzVvHWxzhKG+wAQ-TkUVeUht2mCW87DKb13M_w@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: enable CONFIG_GPIOLIB_LEGACY even for !GPIOLIB
+To: Rob Herring <robh@kernel.org>
+Cc: Arnd Bergmann <arnd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
+	kernel test robot <lkp@intel.com>, Peng Fan <peng.fan@nxp.com>, 
+	Koichiro Den <koichiro.den@canonical.com>, Lee Jones <lee@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
+	Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>, 
+	Thomas Richard <thomas.richard@bootlin.com>, Yixun Lan <dlan@gentoo.org>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Aug 31, 2025 at 08:59:56PM -0700, Alex Tran wrote:
-> Changelog:
-> - Changed reset GPIO setup that uses 'gpio_request' and
->   'gpio_direction_output' to use 'devm_gpio_request_one' instead=20
->   for legacy support.
-> - Convert to gpio descriptor for use.
-> - Better error handling with 'gpiod_set_value'.
-> - Removed cleanup of reset gpio as gpiod api is now used.
->=20
->=20
-> - Performed full conversion to gpiod with 'devm_gpiod_get_optional'.
-> - Removed struct 'tlv320dac33_platform_data' as it is
->   not used in the kernel.
-> - Removed file 'tlv320dac33-plat.h' as it was not included
->   anywhere outside this driver.
-> - Removed 'power_gpio' and added 'reset_gpiod'.
-> - Added default value for dac33->burst_bclkdiv as it can't be 0 (2-17).
->   See <https://www.ti.com/lit/ds/symlink/tlv320dac32.pdf>
+On Thu, Aug 14, 2025 at 12:26=E2=80=AFAM Rob Herring <robh@kernel.org> wrot=
+e:
+>
+> On Sat, Jul 26, 2025 at 11:10:43PM +0200, Arnd Bergmann wrote:
+> > From: Arnd Bergmann <arnd@arndb.de>
+> >
+> > A few drivers that use the legacy GPIOLIB interfaces can be enabled
+> > even when GPIOLIB is disabled entirely. With my previous patch this
+> > now causes build failures like:
+> >
+> >    drivers/nfc/s3fwrn5/uart.c: In function 's3fwrn82_uart_parse_dt':
+> >         drivers/nfc/s3fwrn5/uart.c:100:14: error: implicit declaration =
+of function 'gpio_is_valid'; did you mean 'uuid_is_valid'? [-Werror=3Dimpli=
+cit-function-declaration]
+> >
+> > These did not show up in my randconfig tests because randconfig almost
+> > always has GPIOLIB selected by some other driver, and I did most
+> > of the testing with follow-up patches that address the failures
+> > properly.
+> >
+> > Move the symbol outside of the 'if CONFIG_GPIOLIB' block for the moment
+> > to avoid the build failures. It can be moved back and turned off by
+> > default once all the driver specific changes are merged.
+> >
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes: https://lore.kernel.org/oe-kbuild-all/202507261934.yIHeUuEQ-lkp=
+@intel.com/
+> > Fixes: 678bae2eaa81 ("gpiolib: make legacy interfaces optional")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  drivers/gpio/Kconfig | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> This change causes all of the GPIO submenu to show up directly in the
+> already way too long 'Device Drivers' menu.
+>
+> >
+> > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> > index 8bda3c9d47b4..c48f9badb513 100644
+> > --- a/drivers/gpio/Kconfig
+> > +++ b/drivers/gpio/Kconfig
+> > @@ -12,11 +12,11 @@ menuconfig GPIOLIB
+> >
+> >         If unsure, say N.
+> >
+> > -if GPIOLIB
+> > -
+> >  config GPIOLIB_LEGACY
+> >       def_bool y
+>
+> Perhaps this has to be before "menuconfig GPIOLIB"?
+>
 
-This is a set of separate changes which as covered in
-submitting-patches.rst should each be split into individual patches,
-this makes things much easier to review.
+Hi Arnd,
 
-As also covered in submitting-patches.rst any inter-version changelogs
-should go after the --- so they can be removed by tooling.
+This is still broken in next, will you have some time to spend on it
+or should I just go with what Rob proposed?
 
---0pbq1X1Bu6UZ70ua
-Content-Type: application/pgp-signature; name="signature.asc"
+Bart
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmi1dvYACgkQJNaLcl1U
-h9D9sQf/fvSmTxKv27Nx3uUb+QHN1k5uJGC6hMwPvA/X+F26IX4scR1QPiGoVdf2
-w3Sa5sbaPBeZAak88tCD07XDQ6wUldxd/UhAJbO4Ggvhv4k8cw5WDA0tvFchxnPA
-96WK07tdJtlXFH3gFMhXGOk//knMLqVnqcUZlL+4r3G5V+GrSAHBVNLFAaVU8t5Q
-RYem39bkzoNfMuKYeFEnPqp95IcbzsKQYcJJCKhraJv+jPCuyV7tL8yjNG+Sp3aC
-A2GMKsjHJ4RJQnL6PYddjUhaYlc77Rlfp6AnhAkVT9SVn/8atvYt1qI+G5fFR5DC
-MRqCJ0CGuNTZOOUoYsTPe/75CgDARw==
-=xZKN
------END PGP SIGNATURE-----
-
---0pbq1X1Bu6UZ70ua--
+> >
+> > +if GPIOLIB
+> > +
+> >  config GPIOLIB_FASTPATH_LIMIT
+> >       int "Maximum number of GPIOs for fast path"
+> >       range 32 512
+> > --
+> > 2.39.5
+> >
 
