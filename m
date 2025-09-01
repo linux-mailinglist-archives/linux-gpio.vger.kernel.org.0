@@ -1,51 +1,52 @@
-Return-Path: <linux-gpio+bounces-25326-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25327-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24C12B3E55A
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 15:38:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A581B3E559
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 15:38:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 66DC37A2572
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 13:37:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F22421757CF
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 13:38:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15CBD335BAF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53275335BDB;
 	Mon,  1 Sep 2025 13:38:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="lY6P4iG4"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Ekq0so1u"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483F9327794;
-	Mon,  1 Sep 2025 13:38:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001843314AF;
+	Mon,  1 Sep 2025 13:38:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756733913; cv=none; b=Edo0ZBPYmYogz06b6NoFdiBlOwjXhXm5cvSjS1ItBXU9O9IgyFHuTxU/8ST3YocIAGcuCx3p/e3qZx8XSiy9po64TeMn5H8MAjjnF+Ir2tm7DZlqWXMf/d6P3A9pci1kk33HiXND2eGKEm7jBBYWch5fQDlQ7qjRt0jU37+Qm+E=
+	t=1756733914; cv=none; b=UzuPWghhKAUq+2ks1AcydLzeUWbwVQYbeZwaFzKNuY0x/E2crgrlBzSK0lEgQ1KGGy6KmsVd8uJOHws2fvDXcjWssRsnB6ZZkrkVFriLenM74p8/jQayiBiHiVmMcE2UYncA1PH0PYWve3b3ig20NG3qLD6HILpcUSWNaGSpXcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756733913; c=relaxed/simple;
-	bh=ieYcdsd86jg1PezFn6//gKhottikcQbDyhjzNt8NsYY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t2ol8/C0ALLHYLtLADUE/HMeIgcoOHPi1BgKsKOFHNs/SGCX6e8tAINuntjASIlxDzOOhuoWQFKuHEGgRsRJ8My2YOrXpTDck7wsOX1blOxYDYFeVhnTrY22JQnCBSnjVncKHVivMBEyR4pjo0sxVWlYSG7/pEyDkdeF37Q57YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=lY6P4iG4; arc=none smtp.client-ip=178.21.23.139
+	s=arc-20240116; t=1756733914; c=relaxed/simple;
+	bh=LOMVwhCj+jjyPYlIVU2ct3Dp3VQW+O3+nR63vMu7r8Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=deOPv26Ax6tixezY5zc23pPeMqS1vPXQyMRO0lc1CRw3lM1wONMRQiqXvfY0dZ6YGsgRFo2l4DiB2ggLdkxZePlmNOctUDcF5Ls/U1Wwvl2tA4QN5duMkyRcZx2XzAl6FzZGOytFyLyCWyqsQqcfbg32y5D/SsCmTjVrbuUMFfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=Ekq0so1u; arc=none smtp.client-ip=178.21.23.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 3FAFD2052A;
-	Mon,  1 Sep 2025 15:38:23 +0200 (CEST)
+	by disroot.org (Postfix) with ESMTP id 6D75C20F5E;
+	Mon,  1 Sep 2025 15:38:30 +0200 (CEST)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
  by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 8jP4eUBOX-ip; Mon,  1 Sep 2025 15:38:22 +0200 (CEST)
+ id Sg5SsRGHO6cE; Mon,  1 Sep 2025 15:38:29 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1756733902; bh=ieYcdsd86jg1PezFn6//gKhottikcQbDyhjzNt8NsYY=;
-	h=From:To:Cc:Subject:Date;
-	b=lY6P4iG4uCL/rKZIXFJgB99CwAuwYcU+zQBA6Z1k6Wj3qoiLv8dnF5hmz24GKhlaN
-	 yp5BboZkmO6EzoNlKc8FK3hDvti8wzdGClNSp5zzspsI5gAVMqkr+/AX7Q+OdDjoq2
-	 OMh4gu4vMgDfE3YL/kTIvmfnokWAhHVQ/2ynZPN8sAPhKyHZjqPQNg8ElKdwsX+ov+
-	 sFLSiSklMODM1AFX4fwTj9oXxatH/eCG5dkjJmTwYEHid082dQVKzR4ZOR2mWbqOh6
-	 k9WM+ufKMdvEstVQvEln2Xq+TiH3+YHxvhAYlgq0f1R/SmVZD8IIg8FQdQD/e6ZLzz
-	 DzOHzBlB7S6WQ==
+	t=1756733909; bh=LOMVwhCj+jjyPYlIVU2ct3Dp3VQW+O3+nR63vMu7r8Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Ekq0so1uxYaJkKB2VLtEkIGVgZAOx1ECixTvBXUAqpzKLPDiPzlL0rXjz9bOu4isJ
+	 Vtk6e6hGPg3XJkcz18y0G77gJxyZvGDk0XG94+RduGAvc0tqI+2jaL3ymfrmNsTqlZ
+	 c4nYYWg7Gtr4uivMNheNfVR8fl2vJLNAeboljMeJFUW2Xae2ZLub64lTTSYnbT4/pv
+	 Xe+aZoNaC2dZcFCgzN8FOU9kRfuK9UWLY/3qAgsgyDiBM2BIMwgpWKRHjYGzf8umtZ
+	 s1UnP9vaG7giIwYYZoRNDiRIaZEqegfr30sRnhfYDjD592HgGcg/FzJPDOiSK9nBSA
+	 WEelyH/2v9oLQ==
 From: Yao Zi <ziyao@disroot.org>
 To: Yinbo Zhu <zhuyinbo@loongson.cn>,
 	Linus Walleij <linus.walleij@linaro.org>,
@@ -62,10 +63,13 @@ Cc: linux-gpio@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	Mingcong Bai <jeffbai@aosc.io>,
 	Kexy Biscuit <kexybiscuit@aosc.io>,
-	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH v2 0/3] Support GPIO controller of Loongson 2K0300 SoC
-Date: Mon,  1 Sep 2025 13:38:01 +0000
-Message-ID: <20250901133804.38433-1-ziyao@disroot.org>
+	Yao Zi <ziyao@disroot.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 1/3] dt-bindings: gpio: loongson: Document GPIO controller of 2K0300 SoC
+Date: Mon,  1 Sep 2025 13:38:02 +0000
+Message-ID: <20250901133804.38433-2-ziyao@disroot.org>
+In-Reply-To: <20250901133804.38433-1-ziyao@disroot.org>
+References: <20250901133804.38433-1-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -74,39 +78,83 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series adds support for Loongson 2K0300's GPIO controller. While
-being mostly identical to previous implementation, its interrupt
-functionality hasn't been implemented in gpio-loongson-64bit.c. PATCH 2
-implements its interrupt support with an IRQCHIP, and the code could be
-reused for other Loongson SoCs with similar interrupt functionality like
-2K1500 and 2K2000.
+Loongson 2K0300 ships a GPIO controller whose input/output control logic
+is similar to previous generation of SoCs. Additionally, it acts as an
+interrupt-controller supporting both level and edge interrupts and has a
+distinct reset signal.
 
-Tested on CTCISZ Forever Pi, reading/writing GPIOs works correctly, and
-both level and edge interrupts could be triggered.
+Describe its compatible in devicetree. We enlarge the maximum value of
+ngpios to 128, since the controller technically supports at most 128
+pins, although only 106 are routed out of the package. Properties for
+interrupt-controllers and resets are introduced and limited as 2K0300
+only.
 
-The devicetree patch depends on series "Support reset controller of
-Loongson 2K0300 SoC"[1] for a clean apply. Thanks for your time and
-review.
+Signed-off-by: Yao Zi <ziyao@disroot.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ .../bindings/gpio/loongson,ls-gpio.yaml       | 28 ++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-Changed from v1:
-- Rebase on top of gpio/for-next, adapt changes that convert
-  gpio-loongson-64bit.c to use generic gpiochip.
-- Collect review tags
-- Link to v1: https://lore.kernel.org/all/20250816035027.11727-2-ziyao@disroot.org/
-
-[1]: https://lore.kernel.org/all/20250816033327.11359-2-ziyao@disroot.org/
-
-Yao Zi (3):
-  dt-bindings: gpio: loongson: Document GPIO controller of 2K0300 SoC
-  gpio: loongson-64bit: Add support for Loongson 2K0300 SoC
-  LoongArch: dts: Add GPIO controller for Loongson 2K0300
-
- .../bindings/gpio/loongson,ls-gpio.yaml       |  28 ++-
- arch/loongarch/boot/dts/loongson-2k0300.dtsi  |  20 ++
- drivers/gpio/Kconfig                          |   1 +
- drivers/gpio/gpio-loongson-64bit.c            | 191 +++++++++++++++++-
- 4 files changed, 232 insertions(+), 8 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+index b68159600e2b..69852444df23 100644
+--- a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+@@ -14,6 +14,7 @@ properties:
+     oneOf:
+       - enum:
+           - loongson,ls2k-gpio
++          - loongson,ls2k0300-gpio
+           - loongson,ls2k0500-gpio0
+           - loongson,ls2k0500-gpio1
+           - loongson,ls2k2000-gpio0
+@@ -36,7 +37,7 @@ properties:
+ 
+   ngpios:
+     minimum: 1
+-    maximum: 64
++    maximum: 128
+ 
+   "#gpio-cells":
+     const: 2
+@@ -49,6 +50,14 @@ properties:
+     minItems: 1
+     maxItems: 64
+ 
++  "#interrupt-cells":
++    const: 2
++
++  interrupt-controller: true
++
++  resets:
++    maxItems: 1
++
+ required:
+   - compatible
+   - reg
+@@ -58,6 +67,23 @@ required:
+   - gpio-ranges
+   - interrupts
+ 
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: loongson,ls2k0300-gpio
++    then:
++      required:
++        - "#interrupt-cells"
++        - interrupt-controller
++        - resets
++    else:
++      properties:
++        "#interrupts-cells": false
++        interrupt-controller: false
++        resets: false
++
+ additionalProperties: false
+ 
+ examples:
 -- 
 2.50.1
 
