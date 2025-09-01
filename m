@@ -1,162 +1,134 @@
-Return-Path: <linux-gpio+bounces-25309-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25312-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40DA6B3E1EE
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 13:45:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0DD6B3E27E
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 14:20:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0EE6417220F
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 11:45:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 97D84201B50
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 12:20:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E09E31DD89;
-	Mon,  1 Sep 2025 11:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DzLy0yZo"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15DA331B106;
+	Mon,  1 Sep 2025 12:20:37 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22C62556E;
-	Mon,  1 Sep 2025 11:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FCDD17A2E6;
+	Mon,  1 Sep 2025 12:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756727116; cv=none; b=DyeiymXbu82qTkJVtcrC7cWlFXvfhvnOir7L6gSbsHX/8rrF+5erM0p21Okqh6MeTD9MfbbNroYLtEfzig9rCwzD+DlIcKxdTxaUD75EEq+zWcfaz0xemL/x3EwgvZ9iOtGojTWlJgXFjfKVAUSiM1CqYsSMEqkk+TEI6Dh4+aE=
+	t=1756729236; cv=none; b=PSWAb/2bjweEHvragHdJP8AtWR4WUqTiuo6Se14sXwQEyQ3FdFzz7tAQkWYpaME5QKyH5m8Gy8eJxaZBF4dk6Vmj2eSP7pB/zptZWVBOwhMo1c7WIPg24K5srEPhThHjOoIA5HJmBSKmNTWRQCusk8FpEPj/vKwjYt0ad+6ifIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756727116; c=relaxed/simple;
-	bh=bEIzW3/fXPb01KjYlShH/QlkM+z3ZeP3wwyYkd1vGKQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=kwJSRLBOV4hUO5CmA6JHCv3i9oY01BiA8NHtSK0L4Lqze/p6h0drCydF41cNeiXDMLM1J0sZwygpoISIX3QhbLAGJ/HHca8wM5u25/HDCRhoNieJGnrZA/4JRAk21godSKaaDm+32ph8rY2elUqXDwN21CQcOzRkcWJ4BqmbEF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DzLy0yZo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D718CC4CEF0;
-	Mon,  1 Sep 2025 11:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756727116;
-	bh=bEIzW3/fXPb01KjYlShH/QlkM+z3ZeP3wwyYkd1vGKQ=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=DzLy0yZo0SFY5zVZxWNtmB9b9IdrZuqLdqwb4/lb1W3HOCEkNChfjFs2cVvVqWp8y
-	 LvvMJS0OhaExZHIrVBhiN+dm1u/hUE+hbKjgUv7II0SKoVjLBuaAuTArhPS2lWYh6D
-	 74mvwLq86sYnzKLiPXF6zIY5bjwQR3Gl2t4EFzWmLJrkfkeY8a+9HjHeWuLosa+cc3
-	 OoWx/GmhM+gXAOZ/lXbmrRg+nBqkjuvoSX8nLWP/tsn2lXc8i2mAVEVXj9KmfKFNRr
-	 w0egS63UTgrFo/ULS4ylFytpfLIzwc+rosXSTujDcerQH6GsCTvsdw4FCIQh+aJrq+
-	 E/ntz6i4X9YFQ==
-Message-ID: <451f147b-a193-44e3-b7ca-90136de31a17@kernel.org>
-Date: Mon, 1 Sep 2025 13:45:08 +0200
+	s=arc-20240116; t=1756729236; c=relaxed/simple;
+	bh=OQso3M18Z5ORcR/fPWxtfj+ukdTn1jxV4K9Dtp+9ezM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N+2/VxqoFIOA0rrp5m51IFnwnstEHrwTChvYT39WUdoNuL+D2iQJO06xCZLscN46Hh5U0xyuM0Md+IWHL1ePO0IyuW82nEpOZVJPJYGPAPRphVowfhAgy7+lKuGy93BdvLdD2Kewurag5chdNj+0C1OeH2syEQFTxnYNlSyFBvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4cFndC21Vkz9sSh;
+	Mon,  1 Sep 2025 14:05:35 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id eGxryqrUX_hV; Mon,  1 Sep 2025 14:05:35 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4cFndC0tmwz9sSb;
+	Mon,  1 Sep 2025 14:05:35 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 0A7888B790;
+	Mon,  1 Sep 2025 14:05:35 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id MoqCpBZoSEHQ; Mon,  1 Sep 2025 14:05:34 +0200 (CEST)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [10.25.207.160])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id D60908B77B;
+	Mon,  1 Sep 2025 14:05:34 +0200 (CEST)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Qiang Zhao <qiang.zhao@nxp.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v5 0/7] Add support of IRQs to QUICC ENGINE GPIOs
+Date: Mon,  1 Sep 2025 14:05:07 +0200
+Message-ID: <cover.1756727747.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 01/10] dt-bindings: soc: aspeed: Add ASPEED PCIe Config
-To: Jacky Chou <jacky_chou@aspeedtech.com>, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
- mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- joel@jms.id.au, andrew@codeconstruct.com.au, vkoul@kernel.org,
- kishon@kernel.org, linus.walleij@linaro.org, p.zabel@pengutronix.de,
- linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
- linux-phy@lists.infradead.org, openbmc@lists.ozlabs.org,
- linux-gpio@vger.kernel.org
-References: <20250901055922.1553550-1-jacky_chou@aspeedtech.com>
- <20250901055922.1553550-2-jacky_chou@aspeedtech.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250901055922.1553550-2-jacky_chou@aspeedtech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1756728307; l=2473; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=OQso3M18Z5ORcR/fPWxtfj+ukdTn1jxV4K9Dtp+9ezM=; b=Sa0OBzCBpoGN4HMRxzJnWdq9fZNM5lvmxW/10//o9X7BqvBcy9RkfTft0Q6Nj/WX5r6Z8iMS8 woenspJQt4yAzoKwVux1Pqldu+JN1n3addpi4kD64aZS57VTiqX3XlF
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
 
-On 01/09/2025 07:59, Jacky Chou wrote:
-> +description:
-> +  The ASPEED PCIe configuration syscon block provides a set of registers shared
-> +  by multiple PCIe-related devices within the SoC. This node represents the
-> +  common configuration space that allows these devices to coordinate and manage
-> +  shared PCIe settings, including address mapping, control, and status
-> +  registers. The syscon interface enables for various PCIe devices to access
-> +  and modify these shared registers in a consistent and centralized manner.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - aspeed,ast2700-pcie-cfg
+The QUICC Engine provides interrupts for a few I/O ports. This is
+handled via a separate interrupt ID and managed via a triplet of
+dedicated registers hosted by the SoC.
 
-Why this cannot be part of standard syscon binding file?
+Implement an interrupt driver for those IRQs then add change
+notification capability to the QUICC ENGINE GPIOs.
 
-> +      - const: syscon
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    soc0 {
+The number of GPIOs for which interrupts are supported depends on
+the microcontroller:
+- mpc8323 has 10 GPIOS supporting interrupts
+- mpc8360 has 28 GPIOS supporting interrupts
+- mpc8568 has 18 GPIOS supporting interrupts
 
-soc {
+Changes in v5:
+- Replaced new DT property "fsl,qe-gpio-irq-mask" by a mask encoded
+in the of_device_id table
+- Converted QE QPIO DT bindings to DT schema
 
-although why do you need it in the first place...
+Changes in v4:
+- Removed unused headers
+- Using device_property_read_u32() instead of of_property_read_u32()
 
-> +      #address-cells = <2>;
-> +      #size-cells = <1>;
-> +
-> +      syscon@12c02a00 {
-> +        compatible = "aspeed,ast2700-pcie-cfg", "syscon";
-> +        reg = <0 0x12c02a00 0x80>;
-> +      };
-> +    };
+Changes in v3:
+- Splited dt-bindings update out of patch "soc: fsl: qe: Add support of IRQ in QE GPIO"
+- Reordered DTS node exemples iaw dts-coding-style.rst
 
+Changes in v2:
+- Fixed warning on PPC64 build (Patch 1)
+- Using devm_kzalloc() instead of kzalloc (Patch 2)
+- Stop using of-mm-gpiochip (New patch 3)
+- Added fsl,qe-gpio-irq-mask propertie in DT binding doc (Patch 4)
+- Fixed problems reported by 'make dt_binding_check' (Patch 5)
 
-Best regards,
-Krzysztof
+Christophe Leroy (7):
+  soc: fsl: qe: Add an interrupt controller for QUICC Engine Ports
+  soc: fsl: qe: Change GPIO driver to a proper platform driver
+  soc: fsl: qe: Drop legacy-of-mm-gpiochip.h header from GPIO driver
+  soc: fsl: qe: Add support of IRQ in QE GPIO
+  dt-bindings: soc: fsl: qe: Add an interrupt controller for QUICC
+    Engine Ports
+  dt-bindings: soc: fsl: qe: Convert QE GPIO to DT schema
+  dt-bindings: soc: fsl: qe: Add support of IRQ in QE GPIO
+
+ .../fsl/cpm_qe/fsl,mpc8323-qe-pario-bank.yaml |  76 +++++++
+ .../soc/fsl/cpm_qe/fsl,qe-ports-ic.yaml       |  58 +++++
+ .../bindings/soc/fsl/cpm_qe/qe/par_io.txt     |  26 +--
+ arch/powerpc/platforms/Kconfig                |   1 -
+ drivers/soc/fsl/qe/Makefile                   |   2 +-
+ drivers/soc/fsl/qe/gpio.c                     | 209 ++++++++++++------
+ drivers/soc/fsl/qe/qe_ports_ic.c              | 156 +++++++++++++
+ 7 files changed, 438 insertions(+), 90 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,mpc8323-qe-pario-bank.yaml
+ create mode 100644 Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,qe-ports-ic.yaml
+ create mode 100644 drivers/soc/fsl/qe/qe_ports_ic.c
+
+-- 
+2.49.0
+
 
