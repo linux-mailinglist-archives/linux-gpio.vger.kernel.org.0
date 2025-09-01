@@ -1,52 +1,52 @@
-Return-Path: <linux-gpio+bounces-25327-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25328-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A581B3E559
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 15:38:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EE7FB3E55D
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 15:39:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F22421757CF
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 13:38:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 87B891A84A59
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Sep 2025 13:39:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53275335BDB;
-	Mon,  1 Sep 2025 13:38:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C59B5338F31;
+	Mon,  1 Sep 2025 13:38:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Ekq0so1u"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="cLOOmEo2"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001843314AF;
-	Mon,  1 Sep 2025 13:38:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DCD5334372;
+	Mon,  1 Sep 2025 13:38:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756733914; cv=none; b=UzuPWghhKAUq+2ks1AcydLzeUWbwVQYbeZwaFzKNuY0x/E2crgrlBzSK0lEgQ1KGGy6KmsVd8uJOHws2fvDXcjWssRsnB6ZZkrkVFriLenM74p8/jQayiBiHiVmMcE2UYncA1PH0PYWve3b3ig20NG3qLD6HILpcUSWNaGSpXcU=
+	t=1756733921; cv=none; b=eW4ny7DvaNYUbFruflribZwNL6+9dFNeovQ75SszucxjxLiM/Q6c3CeopTCk9091ygdkIPemwII4ehn90Q/afj/zzIMLZG6Cngkyurw3ER/AN4ByT6apoE4/+Gu0rYTyG/0RejuqOA4qhh3kA4BK5rzEdmfdxoLaYGXq0sjpZu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756733914; c=relaxed/simple;
-	bh=LOMVwhCj+jjyPYlIVU2ct3Dp3VQW+O3+nR63vMu7r8Y=;
+	s=arc-20240116; t=1756733921; c=relaxed/simple;
+	bh=LthOadmCe99IqMTEDUMCM4hdMYnsn5+8gWtszlPtwF4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=deOPv26Ax6tixezY5zc23pPeMqS1vPXQyMRO0lc1CRw3lM1wONMRQiqXvfY0dZ6YGsgRFo2l4DiB2ggLdkxZePlmNOctUDcF5Ls/U1Wwvl2tA4QN5duMkyRcZx2XzAl6FzZGOytFyLyCWyqsQqcfbg32y5D/SsCmTjVrbuUMFfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=Ekq0so1u; arc=none smtp.client-ip=178.21.23.139
+	 MIME-Version; b=gAxM8Y8XG7SHfcS4ussMHJu3hDmKLxgoLtuBZ+qcVwmkiDw+N9p7OQtNC4Pb7bJKl+xmFIXoek5ajzaB3oIzzvPsS3zF5ALQAAROsteMkOleKNcTotuOB99nZucE6v3/bxSyxaDTrIdZUDzjgbOYQHZOZj6a64ufs1fEnIpR7Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=cLOOmEo2; arc=none smtp.client-ip=178.21.23.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 6D75C20F5E;
-	Mon,  1 Sep 2025 15:38:30 +0200 (CEST)
+	by disroot.org (Postfix) with ESMTP id 03A0720E20;
+	Mon,  1 Sep 2025 15:38:38 +0200 (CEST)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
  by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id Sg5SsRGHO6cE; Mon,  1 Sep 2025 15:38:29 +0200 (CEST)
+ id oj-hG7Cojhee; Mon,  1 Sep 2025 15:38:37 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1756733909; bh=LOMVwhCj+jjyPYlIVU2ct3Dp3VQW+O3+nR63vMu7r8Y=;
+	t=1756733916; bh=LthOadmCe99IqMTEDUMCM4hdMYnsn5+8gWtszlPtwF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Ekq0so1uxYaJkKB2VLtEkIGVgZAOx1ECixTvBXUAqpzKLPDiPzlL0rXjz9bOu4isJ
-	 Vtk6e6hGPg3XJkcz18y0G77gJxyZvGDk0XG94+RduGAvc0tqI+2jaL3ymfrmNsTqlZ
-	 c4nYYWg7Gtr4uivMNheNfVR8fl2vJLNAeboljMeJFUW2Xae2ZLub64lTTSYnbT4/pv
-	 Xe+aZoNaC2dZcFCgzN8FOU9kRfuK9UWLY/3qAgsgyDiBM2BIMwgpWKRHjYGzf8umtZ
-	 s1UnP9vaG7giIwYYZoRNDiRIaZEqegfr30sRnhfYDjD592HgGcg/FzJPDOiSK9nBSA
-	 WEelyH/2v9oLQ==
+	b=cLOOmEo2mOOnf+YEJ2f5Brpz8lBI1OZvJtKY8LRQu2HuRhr4GYJR83Cf30MxNNdpF
+	 o6qgPtyskUdsDEIdcLvvjbkYNJIeHUinv0/TSp2lrlvqSfQYbhDF5eeYkKb0CDZF2N
+	 TkASWpCeGqam8wHa4/H5HAbnVD5AvunfrMH8j7+4GRj5k0d1UhlefRoDTC/tjXftN3
+	 /u31TovdeqQRYsD+MCWw0miUwQBnzXwjJ00mn+nM/cj6hvWguOxdeedR4n9d+uqEoL
+	 MEGmW7nqMuFjOhb6FIJSnpojSM4bjcaxdVWeNeio6sKBOXAOd4eXcw2iSpoSySCkRa
+	 VWSHDsmJ8x67A==
 From: Yao Zi <ziyao@disroot.org>
 To: Yinbo Zhu <zhuyinbo@loongson.cn>,
 	Linus Walleij <linus.walleij@linaro.org>,
@@ -63,11 +63,10 @@ Cc: linux-gpio@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	Mingcong Bai <jeffbai@aosc.io>,
 	Kexy Biscuit <kexybiscuit@aosc.io>,
-	Yao Zi <ziyao@disroot.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v2 1/3] dt-bindings: gpio: loongson: Document GPIO controller of 2K0300 SoC
-Date: Mon,  1 Sep 2025 13:38:02 +0000
-Message-ID: <20250901133804.38433-2-ziyao@disroot.org>
+	Yao Zi <ziyao@disroot.org>
+Subject: [PATCH v2 2/3] gpio: loongson-64bit: Add support for Loongson 2K0300 SoC
+Date: Mon,  1 Sep 2025 13:38:03 +0000
+Message-ID: <20250901133804.38433-3-ziyao@disroot.org>
 In-Reply-To: <20250901133804.38433-1-ziyao@disroot.org>
 References: <20250901133804.38433-1-ziyao@disroot.org>
 Precedence: bulk
@@ -78,83 +77,314 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Loongson 2K0300 ships a GPIO controller whose input/output control logic
-is similar to previous generation of SoCs. Additionally, it acts as an
-interrupt-controller supporting both level and edge interrupts and has a
-distinct reset signal.
+This controller's input and output logic is similar to previous
+generations of SoCs. Additionally, it's capable of interrupt masking,
+and could be configured to detect levels and edges, and is supplied with
+a distinct reset signal.
 
-Describe its compatible in devicetree. We enlarge the maximum value of
-ngpios to 128, since the controller technically supports at most 128
-pins, although only 106 are routed out of the package. Properties for
-interrupt-controllers and resets are introduced and limited as 2K0300
-only.
+The interrupt functionality is implemented through an irqchip, whose
+operations are written with previous generation SoCs in mind and could
+be reused. Since all Loongson SoCs with similar interrupt capability
+(2K1500, 2K2000) support byte-control mode, these operations are for
+byte-control mode only for simplicity.
 
 Signed-off-by: Yao Zi <ziyao@disroot.org>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- .../bindings/gpio/loongson,ls-gpio.yaml       | 28 ++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+ drivers/gpio/Kconfig               |   1 +
+ drivers/gpio/gpio-loongson-64bit.c | 191 +++++++++++++++++++++++++++--
+ 2 files changed, 185 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
-index b68159600e2b..69852444df23 100644
---- a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
-@@ -14,6 +14,7 @@ properties:
-     oneOf:
-       - enum:
-           - loongson,ls2k-gpio
-+          - loongson,ls2k0300-gpio
-           - loongson,ls2k0500-gpio0
-           - loongson,ls2k0500-gpio1
-           - loongson,ls2k2000-gpio0
-@@ -36,7 +37,7 @@ properties:
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index a437fe652dbc..c55173643eb4 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -437,6 +437,7 @@ config GPIO_LOONGSON_64BIT
+ 	depends on LOONGARCH || COMPILE_TEST
+ 	depends on OF_GPIO
+ 	select GPIO_GENERIC
++	select GPIOLIB_IRQCHIP
+ 	help
+ 	  Say yes here to support the GPIO functionality of a number of
+ 	  Loongson series of chips. The Loongson GPIO controller supports
+diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loongson-64bit.c
+index 482e64ba9b42..7fb712e101ce 100644
+--- a/drivers/gpio/gpio-loongson-64bit.c
++++ b/drivers/gpio/gpio-loongson-64bit.c
+@@ -7,6 +7,8 @@
  
-   ngpios:
-     minimum: 1
--    maximum: 64
-+    maximum: 128
+ #include <linux/kernel.h>
+ #include <linux/init.h>
++#include <linux/irq.h>
++#include <linux/irqdesc.h>
+ #include <linux/module.h>
+ #include <linux/spinlock.h>
+ #include <linux/err.h>
+@@ -14,6 +16,7 @@
+ #include <linux/gpio/generic.h>
+ #include <linux/platform_device.h>
+ #include <linux/bitops.h>
++#include <linux/reset.h>
+ #include <asm/types.h>
  
-   "#gpio-cells":
-     const: 2
-@@ -49,6 +50,14 @@ properties:
-     minItems: 1
-     maxItems: 64
+ enum loongson_gpio_mode {
+@@ -28,6 +31,14 @@ struct loongson_gpio_chip_data {
+ 	unsigned int		out_offset;
+ 	unsigned int		in_offset;
+ 	unsigned int		inten_offset;
++	unsigned int		intpol_offset;
++	unsigned int		intedge_offset;
++	unsigned int		intclr_offset;
++	unsigned int		intsts_offset;
++	unsigned int		intdual_offset;
++	unsigned int		intr_num;
++	irq_flow_handler_t	irq_handler;
++	const struct irq_chip	*girqchip;
+ };
  
-+  "#interrupt-cells":
-+    const: 2
+ struct loongson_gpio_chip {
+@@ -137,7 +148,140 @@ static int loongson_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
+ 	return platform_get_irq(pdev, offset);
+ }
+ 
+-static int loongson_gpio_init(struct device *dev, struct loongson_gpio_chip *lgpio,
++static void loongson_gpio_irq_ack(struct irq_data *data)
++{
++	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
++	struct loongson_gpio_chip *lgpio = to_loongson_gpio_chip(chip);
++	irq_hw_number_t hwirq = irqd_to_hwirq(data);
 +
-+  interrupt-controller: true
++	writeb(0x1, lgpio->reg_base + lgpio->chip_data->intclr_offset + hwirq);
++}
 +
-+  resets:
-+    maxItems: 1
++static void loongson_gpio_irq_mask(struct irq_data *data)
++{
++	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
++	struct loongson_gpio_chip *lgpio = to_loongson_gpio_chip(chip);
++	irq_hw_number_t hwirq = irqd_to_hwirq(data);
 +
- required:
-   - compatible
-   - reg
-@@ -58,6 +67,23 @@ required:
-   - gpio-ranges
-   - interrupts
++	writeb(0x0, lgpio->reg_base + lgpio->chip_data->inten_offset + hwirq);
++}
++
++static void loongson_gpio_irq_unmask(struct irq_data *data)
++{
++	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
++	struct loongson_gpio_chip *lgpio = to_loongson_gpio_chip(chip);
++	irq_hw_number_t hwirq = irqd_to_hwirq(data);
++
++	writeb(0x1, lgpio->reg_base + lgpio->chip_data->inten_offset + hwirq);
++}
++
++static int loongson_gpio_irq_set_type(struct irq_data *data, unsigned int type)
++{
++	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
++	struct loongson_gpio_chip *lgpio = to_loongson_gpio_chip(chip);
++	irq_hw_number_t hwirq = irqd_to_hwirq(data);
++	u8 pol = 0, edge = 0, dual = 0;
++
++	if ((type & IRQ_TYPE_SENSE_MASK) == IRQ_TYPE_EDGE_BOTH) {
++		edge = 1;
++		dual = 1;
++		irq_set_handler_locked(data, handle_edge_irq);
++	} else {
++		switch (type) {
++		case IRQ_TYPE_LEVEL_HIGH:
++			pol = 1;
++			fallthrough;
++		case IRQ_TYPE_LEVEL_LOW:
++			irq_set_handler_locked(data, handle_level_irq);
++			break;
++
++		case IRQ_TYPE_EDGE_RISING:
++			pol = 1;
++			fallthrough;
++		case IRQ_TYPE_EDGE_FALLING:
++			edge = 1;
++			irq_set_handler_locked(data, handle_edge_irq);
++			break;
++
++		default:
++			return -EINVAL;
++		};
++	}
++
++	writeb(pol, lgpio->reg_base + lgpio->chip_data->intpol_offset + hwirq);
++	writeb(edge, lgpio->reg_base + lgpio->chip_data->intedge_offset + hwirq);
++	writeb(dual, lgpio->reg_base + lgpio->chip_data->intdual_offset + hwirq);
++
++	return 0;
++}
++
++static void loongson_gpio_ls2k0300_irq_handler(struct irq_desc *desc)
++{
++	struct loongson_gpio_chip *lgpio = irq_desc_get_handler_data(desc);
++	struct irq_chip *girqchip = irq_desc_get_chip(desc);
++	int i;
++
++	chained_irq_enter(girqchip, desc);
++
++	for (i = 0; i < lgpio->chip.gc.ngpio; i++) {
++		/*
++		 * For the GPIO controller of 2K0300, interrupts status bits
++		 * may be wrongly set even if the corresponding interrupt is
++		 * disabled. Thus interrupt enable bits are checked along with
++		 * status bits to detect interrupts reliably.
++		 */
++		if (readb(lgpio->reg_base + lgpio->chip_data->intsts_offset + i) &&
++		    readb(lgpio->reg_base + lgpio->chip_data->inten_offset + i))
++			generic_handle_domain_irq(lgpio->chip.gc.irq.domain, i);
++	}
++
++	chained_irq_exit(girqchip, desc);
++}
++
++static const struct irq_chip loongson_gpio_ls2k0300_irqchip = {
++	.irq_ack	= loongson_gpio_irq_ack,
++	.irq_mask	= loongson_gpio_irq_mask,
++	.irq_unmask	= loongson_gpio_irq_unmask,
++	.irq_set_type	= loongson_gpio_irq_set_type,
++	.flags		= IRQCHIP_IMMUTABLE | IRQCHIP_SKIP_SET_WAKE,
++	GPIOCHIP_IRQ_RESOURCE_HELPERS,
++};
++
++static int loongson_gpio_init_irqchip(struct platform_device *pdev,
++				      struct loongson_gpio_chip *lgpio)
++{
++	const struct loongson_gpio_chip_data *data = lgpio->chip_data;
++	struct gpio_chip *chip = &lgpio->chip.gc;
++	int i;
++
++	chip->irq.default_type = IRQ_TYPE_NONE;
++	chip->irq.handler = handle_bad_irq;
++	chip->irq.parent_handler = data->irq_handler;
++	chip->irq.parent_handler_data = lgpio;
++	gpio_irq_chip_set_chip(&chip->irq, data->girqchip);
++
++	chip->irq.num_parents = data->intr_num;
++	chip->irq.parents = devm_kcalloc(&pdev->dev, data->intr_num,
++					 sizeof(*chip->irq.parents), GFP_KERNEL);
++	if (!chip->parent)
++		return -ENOMEM;
++
++	for (i = 0; i < data->intr_num; i++) {
++		chip->irq.parents[i] = platform_get_irq(pdev, i);
++		if (chip->irq.parents[i] < 0)
++			return dev_err_probe(&pdev->dev, chip->irq.parents[i],
++					     "failed to get IRQ %d\n", i);
++	}
++
++	for (i = 0; i < data->intr_num; i++) {
++		writeb(0x0, lgpio->reg_base + data->inten_offset + i);
++		writeb(0x1, lgpio->reg_base + data->intclr_offset + i);
++	}
++
++	return 0;
++}
++
++static int loongson_gpio_init(struct platform_device *pdev, struct loongson_gpio_chip *lgpio,
+ 			      void __iomem *reg_base)
+ {
+ 	struct gpio_generic_chip_config config;
+@@ -146,7 +290,7 @@ static int loongson_gpio_init(struct device *dev, struct loongson_gpio_chip *lgp
+ 	lgpio->reg_base = reg_base;
+ 	if (lgpio->chip_data->mode == BIT_CTRL_MODE) {
+ 		config = (typeof(config)){
+-			.dev = dev,
++			.dev = &pdev->dev,
+ 			.sz = 8,
+ 			.dat = lgpio->reg_base + lgpio->chip_data->in_offset,
+ 			.set = lgpio->reg_base + lgpio->chip_data->out_offset,
+@@ -155,7 +299,7 @@ static int loongson_gpio_init(struct device *dev, struct loongson_gpio_chip *lgp
  
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: loongson,ls2k0300-gpio
-+    then:
-+      required:
-+        - "#interrupt-cells"
-+        - interrupt-controller
-+        - resets
-+    else:
-+      properties:
-+        "#interrupts-cells": false
-+        interrupt-controller: false
-+        resets: false
-+
- additionalProperties: false
+ 		ret = gpio_generic_chip_init(&lgpio->chip, &config);
+ 		if (ret) {
+-			dev_err(dev, "unable to init generic GPIO\n");
++			dev_err(&pdev->dev, "unable to init generic GPIO\n");
+ 			return ret;
+ 		}
+ 	} else {
+@@ -164,16 +308,22 @@ static int loongson_gpio_init(struct device *dev, struct loongson_gpio_chip *lgp
+ 		lgpio->chip.gc.get_direction = loongson_gpio_get_direction;
+ 		lgpio->chip.gc.direction_output = loongson_gpio_direction_output;
+ 		lgpio->chip.gc.set = loongson_gpio_set;
+-		lgpio->chip.gc.parent = dev;
++		lgpio->chip.gc.parent = &pdev->dev;
+ 		spin_lock_init(&lgpio->lock);
+ 	}
  
- examples:
+ 	lgpio->chip.gc.label = lgpio->chip_data->label;
+ 	lgpio->chip.gc.can_sleep = false;
+-	if (lgpio->chip_data->inten_offset)
++	if (lgpio->chip_data->girqchip) {
++		ret = loongson_gpio_init_irqchip(pdev, lgpio);
++		if (ret)
++			return dev_err_probe(&pdev->dev, ret,
++					     "failed to initialize irqchip\n");
++	} else if (lgpio->chip_data->inten_offset) {
+ 		lgpio->chip.gc.to_irq = loongson_gpio_to_irq;
++	}
+ 
+-	return devm_gpiochip_add_data(dev, &lgpio->chip.gc, lgpio);
++	return devm_gpiochip_add_data(&pdev->dev, &lgpio->chip.gc, lgpio);
+ }
+ 
+ static int loongson_gpio_probe(struct platform_device *pdev)
+@@ -181,6 +331,7 @@ static int loongson_gpio_probe(struct platform_device *pdev)
+ 	void __iomem *reg_base;
+ 	struct loongson_gpio_chip *lgpio;
+ 	struct device *dev = &pdev->dev;
++	struct reset_control *rst;
+ 
+ 	lgpio = devm_kzalloc(dev, sizeof(*lgpio), GFP_KERNEL);
+ 	if (!lgpio)
+@@ -192,7 +343,12 @@ static int loongson_gpio_probe(struct platform_device *pdev)
+ 	if (IS_ERR(reg_base))
+ 		return PTR_ERR(reg_base);
+ 
+-	return loongson_gpio_init(dev, lgpio, reg_base);
++	rst = devm_reset_control_get_optional_exclusive_deasserted(&pdev->dev, NULL);
++	if (IS_ERR(rst))
++		return dev_err_probe(&pdev->dev, PTR_ERR(rst),
++				     "failed to get reset control\n");
++
++	return loongson_gpio_init(pdev, lgpio, reg_base);
+ }
+ 
+ static const struct loongson_gpio_chip_data loongson_gpio_ls2k_data = {
+@@ -204,6 +360,23 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls2k_data = {
+ 	.inten_offset = 0x30,
+ };
+ 
++static const struct loongson_gpio_chip_data loongson_gpio_ls2k0300_data = {
++	.label = "ls2k0300_gpio",
++	.mode = BYTE_CTRL_MODE,
++	.conf_offset = 0x800,
++	.in_offset = 0xa00,
++	.out_offset = 0x900,
++	.inten_offset = 0xb00,
++	.intpol_offset = 0xc00,
++	.intedge_offset = 0xd00,
++	.intclr_offset = 0xe00,
++	.intsts_offset = 0xf00,
++	.intdual_offset = 0xf80,
++	.intr_num = 7,
++	.irq_handler = loongson_gpio_ls2k0300_irq_handler,
++	.girqchip = &loongson_gpio_ls2k0300_irqchip,
++};
++
+ static const struct loongson_gpio_chip_data loongson_gpio_ls2k0500_data0 = {
+ 	.label = "ls2k0500_gpio",
+ 	.mode = BIT_CTRL_MODE,
+@@ -300,6 +473,10 @@ static const struct of_device_id loongson_gpio_of_match[] = {
+ 		.compatible = "loongson,ls2k-gpio",
+ 		.data = &loongson_gpio_ls2k_data,
+ 	},
++	{
++		.compatible = "loongson,ls2k0300-gpio",
++		.data = &loongson_gpio_ls2k0300_data,
++	},
+ 	{
+ 		.compatible = "loongson,ls2k0500-gpio0",
+ 		.data = &loongson_gpio_ls2k0500_data0,
 -- 
 2.50.1
 
