@@ -1,155 +1,142 @@
-Return-Path: <linux-gpio+bounces-25420-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25421-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1396B40F58
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 23:25:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA8BFB40FEA
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 00:18:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B17AD16741F
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 21:25:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 787F6562446
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 22:18:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6887233471B;
-	Tue,  2 Sep 2025 21:25:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0912D258CF1;
+	Tue,  2 Sep 2025 22:18:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s+keo995"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tV1oCHyr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1769B1DB958;
-	Tue,  2 Sep 2025 21:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18DD23B63B
+	for <linux-gpio@vger.kernel.org>; Tue,  2 Sep 2025 22:18:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756848300; cv=none; b=WyrhbGCJZKz5wak/ZWr+dY9GmFlz/HsK0yKtTDTl2i8LLt26A2YIu71JMhdARQwXuvQtWg3OlwqbrchlhggJmGZAYXZ3EuRp+/3b2wfcfDcYy9eUFJgi8tx1V6HUXXiuaddi5Wx2ubA/ZhIY9Chj2vxyG/pSzGj7CrO8gIi4H/Q=
+	t=1756851513; cv=none; b=SiVhQ6l+0B+4eDGIloPM5r1HR3yKigxTxc3fBPr9dZuriTkvk6b0TjJ0RJPuQyvkdDZUY7JQk9EYrNTifmH8pCXCfCXhA6Pp5BMo4C80vDnvwPtWAkz44t9azCOBBNhxBsO4VdUxpp85/Wwoj87gTtujzS5q2VGeHSCNXto24H8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756848300; c=relaxed/simple;
-	bh=pIkxlL/RsKrNHjL9bzr/Ff/bVEvw0mwr+CfKjwjIOWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TCqLggV+jYPyeWUXXz/fGWKJrefgiEPyyBY8NFDuVKBlwL4HpP6Rn6s0JYwriMRvQxbr7QY5JcVOHic1DdK3gT7Bk5KKa2u/frmhVrsa4NdwK1nySAsl/fU5EnkjBbg+OJWyWSZbHBfpsOeLJi23hoI5jLFsrioHe2uzKANP1jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s+keo995; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 772A0C4CEED;
-	Tue,  2 Sep 2025 21:24:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756848299;
-	bh=pIkxlL/RsKrNHjL9bzr/Ff/bVEvw0mwr+CfKjwjIOWw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=s+keo995h383ZM6+v2G9KoeMPR42keu0j33nhQxYc6hfkUa2nW0X1VT4IikS1jlju
-	 7BpXG4Tr+rbHR9sLEMO6qebGvsnUgQALfJ6iuUQLYwdm/TsGaL6hhJphBF5jk3cPFs
-	 pmH9ySG+xHDliQ0PVjLWLx3URJVjO8AuyvndLsSqL40j750mGjHLoRYacugUjGiPSe
-	 KrQQXllhd8pbTgz09P95VO70njQKboE5y8wbztLV+yerxWcae9AtTJYPPM0v0CnnYY
-	 xTTqopJeLy+spwriyMqSMLmU67yEsqcWHy517VjzNj5OlTBErvr8WGdQmucpEQApWr
-	 gGia+LdgY2fuA==
-Date: Tue, 2 Sep 2025 16:24:58 -0500
-From: Rob Herring <robh@kernel.org>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Qiang Zhao <qiang.zhao@nxp.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 6/7] dt-bindings: soc: fsl: qe: Convert QE GPIO to DT
- schema
-Message-ID: <20250902212458.GA1184537-robh@kernel.org>
-References: <cover.1756727747.git.christophe.leroy@csgroup.eu>
- <48b4e7b25878b94dcb738f8239c815be484cf9c9.1756727747.git.christophe.leroy@csgroup.eu>
+	s=arc-20240116; t=1756851513; c=relaxed/simple;
+	bh=li67uZ6xqKQCADV810jgcapd5oaTXRr3DZZuD3FIP0o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eU/MWUxLG0sf5u4Ja4B6jK90fd3wAqkOu/vm8uR1IghnfPS485qPwXIgClO/wZQu+cuPCGAikVjLHHyZosfbzw8BTIZsE87NGK2rjVIHo4ETknU8Iyyzemvv1LYaVIUQAKnrKLEtqCqIic9RsmU6TNnO2cVPLU3mFG7VAQ6A3Tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tV1oCHyr; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-55f69cf4b77so4243675e87.2
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Sep 2025 15:18:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1756851510; x=1757456310; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=li67uZ6xqKQCADV810jgcapd5oaTXRr3DZZuD3FIP0o=;
+        b=tV1oCHyrfYmjhrmPLH533BARsrpxRbaJMmIKMNpiBU+cBcoAjdS61zjvYBmxUNSWSE
+         aLQlV49Fpv/lyTrHOgiCRClCVrQmVfAYwYrPsVja3Cz8n6w5wQljG6AStH2AXIaaAkWh
+         357LGU4MIEiI1ubmGF0VLgK+FaxVBli9M0d3co6QlJKjUJrgHwHnL9NEZVuUznqwc9CP
+         S+j1UgUlrXACUZa1nKRyhUNvDBnwf3uB1+8Wthz8opS0iYw7ry0PGN1Vq3T9FzCoyRaj
+         PFlMqIw9ZZCGI6EFQ/qIAeNKWYnpnLly2XhKcY6P5fOUspO4X9L4qxrNK5K6r/0qV1ZY
+         GXOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756851510; x=1757456310;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=li67uZ6xqKQCADV810jgcapd5oaTXRr3DZZuD3FIP0o=;
+        b=E3GAdG1ttuuOjZ1ilxV4YLFIbiEwChtXzSBrx/UkXxH8cD4DAIi1Dk41ecd6Fmondd
+         gv5BPFfMs1FBWVX8kMM4DW7gwJ4370uKhWPgUfJ5GibG5sptM7cNxn7fwh6mETTkQ/OF
+         dG8Yp04bjTHip50QTlk0CkF5ert7yB4zdXhitp8Fi+ZMEWDtQLHo6PvjODmOkq8BJ6v/
+         +sSKRKUwCDjbWYgl8OLEwWqHGGc7GxOm8YDtaaXadi2bXqVDBzKB4h46wdFH9mxxvS6f
+         EbMDO1092zgJrGOqxtYU3L/3qn8caZljOX7WX9Zv3o1CuJAacm/PppdKEBQVHuFJ7PZa
+         N8Vg==
+X-Forwarded-Encrypted: i=1; AJvYcCUcehmF8G3BpPYgGV5QeLVFpQIh0+qEfUj/VPrUqSzkc753t3VH3ld6c79DRyVB1p0qAR3MMoe5ggcC@vger.kernel.org
+X-Gm-Message-State: AOJu0YwihRjqHnPIlqWAMyRJRerFAojFh+tflsesR8/ewmjS6UYMN6eg
+	cdovs3PlF6KbHk94E8mWDdXQLWpoAR5ZoufmWxFXunwgXy7TBz5zt479zJsY7OGs2QrOGzXSEJB
+	sRHP4y5273/ygP7U/UIXtSwSvQd3uzLAV/BPkUeKD1A==
+X-Gm-Gg: ASbGncv47KbZZOKgrtn3W48l/mA3wTbvE/5OnNzzIGyXa0UP7G7hyWJiTithTncNE4y
+	fqdht10FKZqTRQHtRVpGtnQt9/tfzzQW23OfJYMVVMrgyaysevDoFeKimw1B8S4LST/4B4jssxR
+	T7hWy1X4vRs3pJjmNnoc4b+G9bLN/ZXRr7oHpCOIRpw/yzPKkTByQ/46f3Oc+jDawemDB+A+gf1
+	o9M3OU/TyGBjTwQpA==
+X-Google-Smtp-Source: AGHT+IFb5FJ4SVuaW/MZYjqlxiCtjVdy/Gs9hCmULK5gWsYMbnHTDsvg0XfXKbqBDAFJs9xAYF0giEeS6uNYA+ao+FQ=
+X-Received: by 2002:a05:6512:3d11:b0:55f:65fc:8db5 with SMTP id
+ 2adb3069b0e04-55f708b9c56mr3711945e87.23.1756851510074; Tue, 02 Sep 2025
+ 15:18:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <48b4e7b25878b94dcb738f8239c815be484cf9c9.1756727747.git.christophe.leroy@csgroup.eu>
+References: <20250902-pinctrl-gpio-pinfuncs-v7-0-bb091daedc52@linaro.org>
+In-Reply-To: <20250902-pinctrl-gpio-pinfuncs-v7-0-bb091daedc52@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 3 Sep 2025 00:18:18 +0200
+X-Gm-Features: Ac12FXw-1tPuaZxU9kVS8RfwbL5AeZ_YF1A5IdRwoR4crjvnC6JAL_oHeKPOKoA
+Message-ID: <CACRpkdZ-Toq9MziPisZCcT7zcL3rosQYZ1Jw=RWCH1KZTbeBug@mail.gmail.com>
+Subject: Re: [PATCH v7 00/16] pinctrl: introduce the concept of a GPIO pin
+ function category
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Alexey Klimov <alexey.klimov@linaro.org>, Lorenzo Bianconi <lorenzo@kernel.org>, 
+	Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
+	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mips@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-mm@kvack.org, imx@lists.linux.dev, linux-omap@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, stable@vger.kernel.org, 
+	Chen-Yu Tsai <wenst@chromium.org>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 01, 2025 at 02:05:13PM +0200, Christophe Leroy wrote:
-> Convert QE QPIO devicetree binding to DT schema.
-> 
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> ---
-> v5: New
-> ---
->  .../fsl/cpm_qe/fsl,mpc8323-qe-pario-bank.yaml | 53 +++++++++++++++++++
+On Tue, Sep 2, 2025 at 1:59=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
 
-This should move to bindings/gpio/
+> We have many Qualcomm SoCs (and I can imagine it's a common pattern in
+> other platforms as well) where we mux a pin to "gpio" function using the
+> `pinctrl-X` property in order to configure bias or drive-strength and
+> then access it using the gpiod API. This makes it impossible to mark the
+> pin controller module as "strict".
+>
+> This series proposes to introduce a concept of a sub-category of
+> pinfunctions: GPIO functions where the above is not true and the pin
+> muxed as a GPIO can still be accessed via the GPIO consumer API even for
+> strict pinmuxers.
 
->  .../bindings/soc/fsl/cpm_qe/qe/par_io.txt     | 26 +--------
->  2 files changed, 54 insertions(+), 25 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,mpc8323-qe-pario-bank.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,mpc8323-qe-pario-bank.yaml b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,mpc8323-qe-pario-bank.yaml
-> new file mode 100644
-> index 000000000000..e6ba319a75c1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,mpc8323-qe-pario-bank.yaml
-> @@ -0,0 +1,53 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/soc/fsl/cpm_qe/fsl,mpc8323-qe-pario-bank.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale QUICC Engine Parallel I/O (QE PARIO) GPIO Bank
-> +
-> +maintainers:
-> +  - Christophe Leroy <christophe.leroy@csgroup.eu>
-> +
-> +description:
-> +  Bindings for the Freescale QUICC Engine Parallel I/O (PARIO) GPIO controller.
+This is what I want for pin control, and fixes an ages old issue
+that pin control has no intrinsic awareness of if a pin is muxed
+to a function providing GPIO.
+So patches applied!
 
-Just drop if nothing more to say than 'title'.
+Any remaining code nitpicks can be fixed in-tree, I need this
+to be able to apply the much desired Broadcom STB driver,
+so this needs to go into -next now for cooking.
 
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - fsl,chip-qe-pario-bank
-> +      - const: fsl,mpc8323-qe-pario-bank
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: Offset to the register set and its length.
+I also want to strictify some drivers using this, bringing GPIO
+function awareness into them, which is a good thing!
 
-Drop the description. That's every reg.
-
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    const: 2
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - gpio-controller
-> +  - '#gpio-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    qe_pio_a: gpio-controller@1400 {
-
-Drop unused labels.
-
-> +        compatible = "fsl,mpc8360-qe-pario-bank", "fsl,mpc8323-qe-pario-bank";
-
-Doesn't match the schema. 
-
-> +        reg = <0x1400 0x18>;
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +    };
-> +
-> +    qe_pio_e: gpio-controller@1460 {
-> +        compatible = "fsl,mpc8360-qe-pario-bank", "fsl,mpc8323-qe-pario-bank";
-> +        reg = <0x1460 0x18>;
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +    };
+Yours,
+Linus Walleij
 
