@@ -1,131 +1,82 @@
-Return-Path: <linux-gpio+bounces-25342-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25343-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D870CB3F6C9
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 09:38:58 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C5A3B3F70F
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 09:53:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 938FA3BD598
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 07:38:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E89131A85BF2
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 07:53:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D52E22E2DDD;
-	Tue,  2 Sep 2025 07:38:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C01E2E7622;
+	Tue,  2 Sep 2025 07:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dw/QA4iu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.229.205.26])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DFC5BA4A
-	for <linux-gpio@vger.kernel.org>; Tue,  2 Sep 2025 07:38:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.229.205.26
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381AE2E62D4;
+	Tue,  2 Sep 2025 07:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756798734; cv=none; b=SU+X6I7BREPG142w4IC93v7CU4J0W0c82PMN/tadocb+rhOxuuBxAstkBQyxjNzzZgy+pQQVMAkGKQZnSJBQbCEP+tkYcAtzdPqSJdtiAUU0E82cR7kW/+xuGk+ShGgGVfzE/lGsEfQ+WGSBtTHYx/JsBZat7a6RwxQoI5oBOrI=
+	t=1756799588; cv=none; b=Ke9XHAiQPNXEBVO4bOkbH5OusUPypy7u1mZCvmMJ6DoXKdWiXJNXyH93p8rN/hxOy7Y4ZlC8iaS0Krait5mJTMhLjLQSIEyB89ekzibVmY6p+TfBbHqpetQlX8z5WkZJH4dXfGabppYYOi2Z4VfanVQtxtuP8JESjm3NkH98PtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756798734; c=relaxed/simple;
-	bh=DIicJxiWQyb+SMZ9T7IZhgyFHLKNIUiXg83iILkgOR0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=uGiqrmTXzeY7kajAwBv65RYjlva8G/z+HR8pXneolmPrXXBFdkBzZ1dqAfzlgQicM4abOI4gATIkrW3EN/Q+8hkFTBmDcwJWzBl1cxFQ1P8tExICwXb9w+64XCrzgJA3hUSN7+l+iYtjxZPI2/9F3Crv5onJ2znCw5AUYu6dyH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=52.229.205.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from luyulin$eswincomputing.com ( [10.12.96.77] ) by
- ajax-webmail-app2 (Coremail) ; Tue, 2 Sep 2025 15:38:41 +0800 (GMT+08:00)
-Date: Tue, 2 Sep 2025 15:38:41 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: luyulin@eswincomputing.com
-To: "Dan Carpenter" <dan.carpenter@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: Re: Re: [bug report] pinctrl: eswin: Add EIC7700 pinctrl driver
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
- 20241203(6b039d88) Copyright (c) 2002-2025 www.mailtech.cn
- mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
-In-Reply-To: <aLViO8IwbWqZLK-Z@stanley.mountain>
-References: <aKRGiZ-fai0bv0tG@stanley.mountain>
- <2c953e90.a26.1990432fe57.Coremail.luyulin@eswincomputing.com>
- <aLViO8IwbWqZLK-Z@stanley.mountain>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1756799588; c=relaxed/simple;
+	bh=riQZiJZ4exUI8JW+1R+cAI/RIVX8pPtYIePY0YIjLsU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AOTwxq/AIgoaV83Jh/o/oXCZbEUTIqlkl8MGZCrGpeFbUY0fCwc1QtVzK+PHh/bVI2BaOgTWFyg9LUUAp0P4SSBoTf1R5toaSx+xheqT7V1J9NVrNDAmSn5qeqaXrUBNIx58tM+Ds8TtOhs5frsCITLOkIZC2wERV7BfjfNsep8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dw/QA4iu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64829C4CEED;
+	Tue,  2 Sep 2025 07:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756799588;
+	bh=riQZiJZ4exUI8JW+1R+cAI/RIVX8pPtYIePY0YIjLsU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Dw/QA4iuLCsV2GfTsBLU+q7zXIGmkBCLfJNQC89MvqZra4FPAbOmsMl6Q7Iz8cwbw
+	 4PDHfFYokehXrp8huzoiWiL6X6NJiXL/tCtfpnCERdi2Xic4+ba+JytNJpPcFin6ba
+	 hjnW014cTeZC8WsmPlrK5WBpG16uS3T6mEVdQje6SWzma+XO8yszw95Bi1ZPsYRum3
+	 F3tKcY5MTYL1DZurIQ6lDBhuSidLFORmn4YzXz99wOfGYwwmiveWWlmlVEYBwgg40M
+	 h0V+3lnpTJt+VLmCTB1GvWF3+z3f6SNinTHJ3U63jeOwLF16/YLaJlOXRvX/ibuBwH
+	 gjdEiFRUpVF2g==
+Date: Tue, 2 Sep 2025 09:53:05 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, bhelgaas@google.com, lpieralisi@kernel.org, 
+	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au, vkoul@kernel.org, 
+	kishon@kernel.org, linus.walleij@linaro.org, p.zabel@pengutronix.de, 
+	linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
+	linux-phy@lists.infradead.org, openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 04/10] dt-bindings: pinctrl: aspeed,ast2600-pinctrl:
+ Add PCIe RC PERST# group
+Message-ID: <20250902-wakeful-sepia-gecko-eeba05@kuoka>
+References: <20250901055922.1553550-1-jacky_chou@aspeedtech.com>
+ <20250901055922.1553550-5-jacky_chou@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <3eec843c.ae8.199095d1d4c.Coremail.luyulin@eswincomputing.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:TQJkCgAXt5UBn7ZoQdTGAA--.24241W
-X-CM-SenderInfo: pox13z1lq6v25zlqu0xpsx3x1qjou0bp/1tbiAgENA2i1ytEVigAA
-	sU
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250901055922.1553550-5-jacky_chou@aspeedtech.com>
 
-SGksIERhbgoKVGhhbmsgeW91IHZlcnkgbXVjaCBmb3IgeW91ciBzdWdnZXN0aW9ucyBhbmQgcmVw
-bHkuCkkgY2hhbmdlZCBJU19FUlJfT1JfTlVMTCB0byBJU19FUlIgYW5kIGFkZGVkIHNlbGVjdCBS
-RUdVTEFUT1IKYW5kIFJFR1VMQVRPUl9GSVhFRF9WT0xUQUdFIGluIEtjb25maWcuIFRoZSBsb2Nh
-bCB0ZXN0cyBhcmUgbm9ybWFsLgpJIGFsc28gYWRkZWQgIlN1Z2dlc3RlZC1ieTogRGFuIENhcnBl
-bnRlcsKgZGFuLmNhcnBlbnRlckBsaW5hcm8ub3JnIiBpbiB0aGUgY29tbWl0LgpEbyB5b3UgdGhp
-bmsgdGhpcyBpcyBhY2NlcHRhYmxlPwoKVGhlIGNvbW1pdCBjb250ZW50IGlzIGFzIGZvbGxvd3M6
-CgpGcm9tIDRiZjFmMjBiYWZjOGRjZmFlYmQ0M2U3YzhiNDI4MjBlZGIzNmYwMjggTW9uIFNlcCAx
-NyAwMDowMDowMCAyMDAxCkZyb206IFl1bGluIEx1IDxsdXl1bGluQGVzd2luY29tcHV0aW5nLmNv
-bT4KRGF0ZTogVHVlLCAyIFNlcCAyMDI1IDE0OjQxOjUzICswODAwClN1YmplY3Q6IFtQQVRDSF0g
-cGluY3RybDogZXN3aW46IEZpeCByZWd1bGF0b3IgZXJyb3IgY2hlY2sgYW5kIEtjb25maWcKwqBk
-ZXBlbmRlbmN5CgpTbWF0Y2ggcmVwb3J0ZWQgdGhlIGZvbGxvd2luZyB3YXJuaW5nIGluIGVpYzc3
-MDBfcGluY3RybF9wcm9iZSgpOgoKwqAgZHJpdmVycy9waW5jdHJsL3BpbmN0cmwtZWljNzcwMC5j
-OjYzOCBlaWM3NzAwX3BpbmN0cmxfcHJvYmUoKQrCoCB3YXJuOiBwYXNzaW5nIHplcm8gdG8gJ1BU
-Ul9FUlInCgpUaGUgcm9vdCBjYXVzZSBpcyB0aGF0IGRldm1fcmVndWxhdG9yX2dldCgpIG1heSBy
-ZXR1cm4gTlVMTCB3aGVuCkNPTkZJR19SRUdVTEFUT1IgaXMgZGlzYWJsZWQuIEluIHN1Y2ggY2Fz
-ZSwgSVNfRVJSX09SX05VTEwoKSB0cmlnZ2VycwpQVFJfRVJSKE5VTEwpIHdoaWNoIGV2YWx1YXRl
-cyB0byAwLCBsZWFkaW5nIHRvIHBhc3NpbmcgYSBzdWNjZXNzIGNvZGUKYXMgYW4gZXJyb3IuCgpI
-b3dldmVyLCB0aGlzIGRyaXZlciBjYW5ub3Qgd29yayB3aXRob3V0IGEgcmVndWxhdG9yLiBUbyBm
-aXggdGhpczoKCsKgLSBDaGFuZ2UgdGhlIGNoZWNrIGZyb20gSVNfRVJSX09SX05VTEwoKSB0byBJ
-U19FUlIoKQrCoC0gVXBkYXRlIEtjb25maWcgdG8gZXhwbGljaXRseSBzZWxlY3QgUkVHVUxBVE9S
-IGFuZArCoCDCoFJFR1VMQVRPUl9GSVhFRF9WT0xUQUdFLCBlbnN1cmluZyB0aGF0IHRoZSByZWd1
-bGF0b3IgZnJhbWV3b3JrIGlzCsKgIMKgYWx3YXlzIGF2YWlsYWJsZS4KClRoaXMgcmVzb2x2ZXMg
-dGhlIFNtYXRjaCB3YXJuaW5nIGFuZCBlbmZvcmNlcyB0aGUgY29ycmVjdCBkZXBlbmRlbmN5LgoK
-U3VnZ2VzdGVkLWJ5OiBEYW4gQ2FycGVudGVyIDxkYW4uY2FycGVudGVyQGxpbmFyby5vcmc+CkZp
-eGVzOiA1Yjc5N2JjYzAwZWYgKCJwaW5jdHJsOiBlc3dpbjogQWRkIEVJQzc3MDAgcGluY3RybCBk
-cml2ZXIiKQpTaWduZWQtb2ZmLWJ5OiBZdWxpbiBMdSA8bHV5dWxpbkBlc3dpbmNvbXB1dGluZy5j
-b20+CgoKPiAKPiBPbiBNb24sIFNlcCAwMSwgMjAyNSBhdCAwMzozNDozNFBNICswODAwLCBsdXl1
-bGluQGVzd2luY29tcHV0aW5nLmNvbSB3cm90ZToKPiA+IEhpLCBEYW4KPiA+IAo+ID4gVGhhbmsg
-eW91IHZlcnkgbXVjaCBmb3IgeW91ciBmaW5kaW5ncyBhbmQgc3VnZ2VzdGlvbnMuCj4gPiBJIHdv
-dWxkIGFsc28gbGlrZSB0byBjb25maXJtIG15IHVuZGVyc3RhbmRpbmcgd2l0aCB5b3UuCj4gPiAK
-PiA+ID4gCj4gPiA+IEhlbGxvIFl1bGluIEx1LAo+ID4gPiAKPiA+ID4gQ29tbWl0IDViNzk3YmNj
-MDBlZiAoInBpbmN0cmw6IGVzd2luOiBBZGQgRUlDNzcwMCBwaW5jdHJsIGRyaXZlciIpCj4gPiA+
-IGZyb20gSnVuIDEyLCAyMDI1IChsaW51eC1uZXh0KSwgbGVhZHMgdG8gdGhlIGZvbGxvd2luZyBT
-bWF0Y2ggc3RhdGljCj4gPiA+IGNoZWNrZXIgd2FybmluZzoKPiA+ID4gCj4gPiA+IAlkcml2ZXJz
-L3BpbmN0cmwvcGluY3RybC1laWM3NzAwLmM6NjM4IGVpYzc3MDBfcGluY3RybF9wcm9iZSgpCj4g
-PiA+IAl3YXJuOiBwYXNzaW5nIHplcm8gdG8gJ1BUUl9FUlInCj4gPiA+IAo+ID4gPiAKPiA+ID4g
-ICAgIDYzOSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJmYWlsZWQg
-dG8gZ2V0IHZyZ21paSByZWd1bGF0b3JcbiIpOwo+ID4gPiAgICAgNjQwICAgICAgICAgfQo+ID4g
-PiAgICAgNjQxIAo+ID4gPiAgICAgNjQyICAgICAgICAgdm9sdGFnZSA9IHJlZ3VsYXRvcl9nZXRf
-dm9sdGFnZShyZWd1bGF0b3IpOwo+ID4gPiAgICAgNjQzICAgICAgICAgaWYgKHZvbHRhZ2UgPCAw
-KSB7Cj4gPiA+ICAgICA2NDQgICAgICAgICAgICAgICAgIHJldHVybiBkZXZfZXJyX3Byb2JlKCZw
-ZGV2LT5kZXYsIHZvbHRhZ2UsCj4gPiA+ICAgICA2NDUgICAgICAgICAgICAgICAgICAgICAgICAg
-ICJGYWlsZWQgdG8gZ2V0IHZvbHRhZ2UgZnJvbSByZWd1bGF0b3JcbiIpOwo+ID4gPiAKPiA+ID4g
-SWYgQ09ORklHX1JFR1VMQVRPUiBpcyBkaXNhYmxlZCB0aGVuIHRoaXMgd2lsbCByZXR1cm4gbmVn
-YXRpdmUuICBTbyB0aGlzCj4gPiA+IGRyaXZlciBjYW4ndCB3b3JrIHdpdGhvdXQgYSByZWd1bGF0
-b3IuICBJZGVhbGx5IHRoZSBLQ29uZmlnIHdvdWxkIGVuZm9yY2UKPiA+ID4gdGhhdCBzbyB3ZSBk
-b24ndCBidWlsZCBkcml2ZXJzIHdoaWNoIGNhbid0IHdvcmsuCj4gPiAKPiA+IFRoYW5rIHlvdSEg
-WW91IGFyZSByaWdodC7CoElTX0VSUl9PUl9OVUxMwqBzaG91bGQgYmUgY2hhbmdlZCB0b8KgSVNf
-RVJSLgo+ID4gQmFzZWQgb24geW91ciBwcm9mZXNzaW9uYWwgYWR2aWNlLCBzaG91bGQgSSBhZGTC
-oCJkZXBlbmRzIG9uIFJFR1VMQVRPUiIgYW5kCj4gPiAiZGVwZW5kcyBvbiBSRUdVTEFUT1JfRklY
-RURfVk9MVEFHRSIgaW4gdGhlIEtjb25maWcgdG8gZW5mb3JjZSBjb21waWxhdGlvbiBkZXBlbmRl
-bmNpZXM/Cj4gPiAKPiAKPiBkcml2ZXJzL3BpbmN0cmwvS2NvbmZpZwo+ICAgIDIwOSAgY29uZmln
-IFBJTkNUUkxfRUlDNzcwMAo+ICAgIDIxMCAgICAgICAgICB0cmlzdGF0ZSAiRUlDNzcwMCBQSU5D
-VFJMIGRyaXZlciIKPiAgICAyMTEgICAgICAgICAgZGVwZW5kcyBvbiBBUkNIX0VTV0lOIHx8IENP
-TVBJTEVfVEVTVAo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIF5eXl5eXl5eXl4KPiBBUkNI
-X0VTV0lOIGRvZXNuJ3QgZXhpc3Qgc28gdGhpcyBkcml2ZXIgY2FuJ3QgYWN0dWFsbHkgYmUgZW5h
-YmxlZC4gIEknbQo+IG5vdCBhIEtjb25maWcgZXhwZXJ0IGJ1dCBJIHRoaW5rIHRoYXQgQVJDSF9F
-U1dJTiB3b3VsZCBub3JtYWxseSBoYXZlIHRoZQo+IHJlZ3VsYXRvciBzdHVmZj8KPiAKPiAgICAy
-MTIgICAgICAgICAgc2VsZWN0IFBJTk1VWAo+ICAgIDIxMyAgICAgICAgICBzZWxlY3QgR0VORVJJ
-Q19QSU5DT05GCj4gICAgMjE0ICAgICAgICAgIGhlbHAKPiAgICAyMTUgICAgICAgICAgICBUaGlz
-IGRyaXZlciBzdXBwb3J0IGZvciB0aGUgcGluIGNvbnRyb2xsZXIgaW4gRVNXSU4ncyBFSUM3NzAw
-IFNvQywKPiAgICAyMTYgICAgICAgICAgICB3aGljaCBzdXBwb3J0cyBwaW4gbXVsdGlwbGV4aW5n
-LCBwaW4gY29uZmlndXJhdGlvbixhbmQgcmdtaWkgdm9sdGFnZQo+ICAgIDIxNyAgICAgICAgICAg
-IGNvbnRyb2wuCj4gICAgMjE4ICAgICAgICAgICAgU2F5IFkgaGVyZSB0byBlbmFibGUgdGhlIGVp
-Yzc3MDAgcGluY3RybCBkcml2ZXIKPiAKPiBCdXQsIHllcywgdGhlIEtjb25maWcgc2hvdWxkIGVu
-c3VyZSB0aGF0IHRoZSBkcml2ZXIgaGFzIGFsbCB0aGUgcmVxdWlyZWQKPiBiaXRzIHNvIHdlIGRv
-bid0IGNvbXBpbGUgYW4gdW5wcm9iZS1hYmxlIChpbXByb2JlLWFibGU/KSBkcml2ZXIuCj4gClRo
-YW5rcywKWXVsaW4K
+On Mon, Sep 01, 2025 at 01:59:16PM +0800, Jacky Chou wrote:
+> Add PCIe PERST# group to support for PCIe RC.
+> 
+> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
+> ---
+>  .../devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml     | 2 ++
+>  1 file changed, 2 insertions(+)
+
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
+
 
