@@ -1,53 +1,48 @@
-Return-Path: <linux-gpio+bounces-25414-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25415-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E5FCB40CC4
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 20:06:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A93EB40DD2
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 21:24:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 839E64E4844
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 18:06:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 186241B62334
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 19:24:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E7B133EB13;
-	Tue,  2 Sep 2025 18:06:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3024434AAFA;
+	Tue,  2 Sep 2025 19:24:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b="dtSR+rlz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EXsvfV+N"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout9.mo534.mail-out.ovh.net (smtpout9.mo534.mail-out.ovh.net [178.33.251.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7142FD1DC;
-	Tue,  2 Sep 2025 18:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.33.251.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D94001EA6F;
+	Tue,  2 Sep 2025 19:24:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756836405; cv=none; b=pw7fRpKQOkXxrhGaOuwggTUtnEB3I//Dvupbx7UNO8H4ld9ZSYondQ9JS7AXSz1hyy3wumdfL8Cq1Rz8wA00QQoywQgF9li5ExexcbQtWbMWY7Hd/YS46b2ho01QEAGg1kCHtRIJHzJw1iaU2Z1Dz8WoLn8xPgYajbt16IGygxM=
+	t=1756841046; cv=none; b=ixWBxxfumGM1FGYqkmKIJcq87dEyrULjQVMlfuezqaosXDGUEK02ZFxmaWa6bxQTaPd3B29lZtT/HOyQgkB47FIz18kdHzq7NUm7GagDlR0dHQ0wQLxVsCH1kigCpKS4mLcwBGBWSdJJr7E3ZnTQLiNMoqh6nsf49sxrF35MipM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756836405; c=relaxed/simple;
-	bh=Od+kByzKMtlKwxWTpbaY2oui20iYJ8JhWWg6aV/Lr2s=;
+	s=arc-20240116; t=1756841046; c=relaxed/simple;
+	bh=PrZQF7DqB4WBGDbfe5rYBm3EXfW8hqYfhzp4dywtRUc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ksHTIxZLaFzmq++XNCT45iBzYylwGuWO7zpqBsCvWi/9H+MPvbQVal2NByfW0mxVJUQJuksxZvI5hs4nzAjJ6qfBBw9ePb4QofF51CtXU9RyNnHSRR4qSn+T3xiuDfgEdgO7z9NQB3wTRKP4SopOYO8rKbkEKTImtocavnrCsLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b=dtSR+rlz; arc=none smtp.client-ip=178.33.251.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orca.pet
-Received: from director3.derp.mail-out.ovh.net (director3.derp.mail-out.ovh.net [152.228.215.222])
-	by mo534.mail-out.ovh.net (Postfix) with ESMTPS id 4cGYbL69wnz6XLN;
-	Tue,  2 Sep 2025 18:06:38 +0000 (UTC)
-Received: from director3.derp.mail-out.ovh.net (director3.derp.mail-out.ovh.net. [127.0.0.1])
-        by director3.derp.mail-out.ovh.net (inspect_sender_mail_agent) with SMTP
-        for <brgl@bgdev.pl>; Tue,  2 Sep 2025 18:06:38 +0000 (UTC)
-Received: from mta3.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.109.231.133])
-	by director3.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4cGYbL0rDGz5wFY;
-	Tue,  2 Sep 2025 18:06:38 +0000 (UTC)
-Received: from orca.pet (unknown [10.1.6.9])
-	by mta3.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTPSA id BA95894332F;
-	Tue,  2 Sep 2025 18:06:36 +0000 (UTC)
-Authentication-Results:garm.ovh; auth=pass (GARM-104R005f80e0bac-1c8b-4e6a-b81b-3b0d9acbbebe,
-                    B677A376967D575A53C78FE4FF5C940A066EF03B) smtp.auth=marcos@orca.pet
-X-OVh-ClientIp:79.117.41.176
-Message-ID: <45b84c38-4046-4fb0-89af-6a2cc4de99cf@orca.pet>
-Date: Tue, 2 Sep 2025 20:06:37 +0200
+	 In-Reply-To:Content-Type; b=thU2kRkY6ks8a+8BqAlsjEdA0nn++VbsQwloMYXL2zDnlJ7xOEgVugFgaHeMRvZWyea9ouddcUEoR6QaFz5AYD9BYp1L4dI2/2bqx03/JYmrY1HiCwgoHDVwhD2JbjE5eM055hbSYc74dyfXt2WAANulqMzu0Wf8Bh1py1Mup1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EXsvfV+N; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC7A3C4CEED;
+	Tue,  2 Sep 2025 19:24:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756841045;
+	bh=PrZQF7DqB4WBGDbfe5rYBm3EXfW8hqYfhzp4dywtRUc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=EXsvfV+Ne7vgcn5U5Fc1+XxrWxVoYYaW29WTNVPML1WFeSc/1I8o2pQa7ehxasEXQ
+	 UipAW0puLRedbEhatK49RsbW5qQn/VoB871BJ98eqp7/Y2WugHv8iirge3vn6cVdvs
+	 HU04+bYBixr8aTOMI0fYgEmKzkKs9tCAcMucugNu2pB4ngBfpOAAbmIt/c8rueOj1p
+	 SBwEVwDt5sO0+iDZCSIIcatxlnqvM/bni8v7Je26DCHc/wxXJrf9FLqY7c0KjIbLgA
+	 PNzSyYTVG+j+zEyp2Kt4sqVErFYfr7ByvgObDmYgkxVVZLqG6tLeKd2WXUtoiguC+p
+	 UzmlxkYVRgIRQ==
+Message-ID: <893dff7a-2a31-4054-bc93-38544b1d6576@kernel.org>
+Date: Tue, 2 Sep 2025 21:24:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -55,72 +50,90 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] mfd: vortex: implement new driver for Vortex
- southbridges
-To: Lee Jones <lee@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Michael Walle <mwalle@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20250822135816.739582-1-marcos@orca.pet>
- <20250822135816.739582-4-marcos@orca.pet>
- <20250902151828.GU2163762@google.com>
-Content-Language: es-ES
-From: Marcos Del Sol Vives <marcos@orca.pet>
-In-Reply-To: <20250902151828.GU2163762@google.com>
+Subject: Re: [PATCH] pinctrl: eswin: Fix regulator error check and Kconfig
+ dependency
+To: Yulin Lu <luyulin@eswincomputing.com>, linus.walleij@linaro.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: ningyu@eswincomputing.com, zhengyu@eswincomputing.com,
+ linmin@eswincomputing.com, huangyifeng@eswincomputing.com,
+ fenglin@eswincomputing.com, lianghujun@eswincomputing.com,
+ Dan Carpenter <dan.carpenter@linaro.org>
+References: <20250902094508.288-1-luyulin@eswincomputing.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250902094508.288-1-luyulin@eswincomputing.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 3615827553760990822
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdelfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepofgrrhgtohhsucffvghlucfuohhlucggihhvvghsuceomhgrrhgtohhssehorhgtrgdrphgvtheqnecuggftrfgrthhtvghrnheptdegudfgiedugfekudfhlefgjefguedvjeffieevgeetjedvvdeihfeiudejvdehnecukfhppeduvdejrddtrddtrddupdejledruddujedrgedurddujeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehmrghrtghoshesohhrtggrrdhpvghtpdhnsggprhgtphhtthhopeekpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhifrghllhgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvh
- hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehfeegmgdpmhhouggvpehsmhhtphhouhht
-DKIM-Signature: a=rsa-sha256; bh=BShoJ9CtShHpPKQfSV3go4koAPboGRUp6AQIugmCTyM=;
- c=relaxed/relaxed; d=orca.pet; h=From; s=ovhmo-selector-1; t=1756836399;
- v=1;
- b=dtSR+rlz6mvtRdeeIRrhsNfIdY8db6C6KPVunAs2rwNt+gfj4kcrHPT1qwr93+yKjZYRlfKB
- 9UeGMly98dojMoe9yQ+xqJuy8UMn6+PdqtyGso0VsLTxr3MzSaU55mG7VbMkgdTY23rp39hpBtH
- 6AUyGAR7IdypAqJvcTHojpSaOWgxVd7gDFhR00cwunLvkTKdA/8HW2QBqhXg/B4zCJTQcRVHA8r
- tfSJ+JRuPFjGM6GyVniEVmhSm4Kfmmyi6HMEjtsrNq4y/HwMKV3B6OhgMTteWcNUELOz2Y5osbV
- V0y70B20wNX6u6vcvQwxQq6x3CVcnArt6HomtuQop1BjA==
+Content-Transfer-Encoding: 7bit
 
-El 02/09/2025 a las 17:18, Lee Jones escribió:
->> +
->> +struct vortex_southbridge {
->> +	const struct mfd_cell *cells;
->> +	int n_cells;
->> +};
+On 02/09/2025 11:45, Yulin Lu wrote:
+> Smatch reported the following warning in eic7700_pinctrl_probe():
 > 
-> Why is this needed?
+>   drivers/pinctrl/pinctrl-eic7700.c:638 eic7700_pinctrl_probe()
+>   warn: passing zero to 'PTR_ERR'
 > 
-
-To have a variable amount of cells. Currently I am only implementing the
-GPIO device because it's the most critical (required for device shutdown),
-but I plan on implementing once this gets merged at least also the watchdog,
-which is provided by the same southbridge.
-
-Adding support for this is should make adding that simpler.
-
->> +static const struct mfd_cell vortex_dx_sb_cells[] = {
->> +	{
->> +		.name		= "vortex-gpio",
->> +		.resources	= vortex_dx_gpio_resources,
->> +		.num_resources	= ARRAY_SIZE(vortex_dx_gpio_resources),
->> +	},
->> +};
+> The root cause is that devm_regulator_get() may return NULL when
+> CONFIG_REGULATOR is disabled. In such case, IS_ERR_OR_NULL() triggers
+> PTR_ERR(NULL) which evaluates to 0, leading to passing a success code
+> as an error.
 > 
-> It's not an MFD until you have more than one device.
-
-Same as above.
-
->> +static const struct pci_device_id vortex_sb_table[] = {
->> +	/* Vortex86DX */
->> +	{ PCI_DEVICE_DATA(RDC, R6031, &vortex_dx_sb) },
+> However, this driver cannot work without a regulator. To fix this:
 > 
-> We're not passing one initialisation API's data (MFD) through another (PCI).
+>  - Change the check from IS_ERR_OR_NULL() to IS_ERR()
+>  - Update Kconfig to explicitly select REGULATOR and
+>    REGULATOR_FIXED_VOLTAGE, ensuring that the regulator framework is
+>    always available.
+> 
+> This resolves the Smatch warning and enforces the correct dependency.
+> 
+> Suggested-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-Unless I understood you incorrectly, you mean I should not pass MFD cells/
-data as private data?
+Wrong tag. Didn't Dan give you proper way to attribute reported? See
+submitting-patches. You need Reported-by with Closes.
 
-vortex_dx_sb are "struct vortex_southbridge" type, not raw MFD API data.
+
+Best regards,
+Krzysztof
 
