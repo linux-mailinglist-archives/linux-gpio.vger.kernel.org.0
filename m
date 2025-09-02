@@ -1,130 +1,140 @@
-Return-Path: <linux-gpio+bounces-25350-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25351-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A7B9B3FAF5
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 11:45:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28F5EB3FBEA
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 12:11:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 32D4A3BD2FC
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 09:45:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8FED61B23E90
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 10:11:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 796432EC544;
-	Tue,  2 Sep 2025 09:45:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3A352F3608;
+	Tue,  2 Sep 2025 10:11:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qZrp67rN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [13.76.142.27])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0670A2E8DEF;
-	Tue,  2 Sep 2025 09:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.76.142.27
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945FF2F361A
+	for <linux-gpio@vger.kernel.org>; Tue,  2 Sep 2025 10:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756806332; cv=none; b=d74LTBOWjEF7V8WW2qsM1SMknPntlQm4WsFNpYwfsjwvQiT8JDnT6ncLUtWc0NhzrU0icpTDgRPOA32VUrs7U+2e/4YB63fM/pG3yhgoT+WwVfyyODbn6h2+LP2V2ofJT54nKSVqzd1jjRbmM9+2YPyIcllyIt2PmH04/4GD2MI=
+	t=1756807865; cv=none; b=MU4Pj8F5r7x9YYfiEmH3VOuiaxKdKxsPf8nDyRH5X7sONaOMpVJfwaIBU1hDYGjSj5HkLniM3hbpvcrmnoQRjFx+cm93rvaF/CH0jScGWavbb+YiJPxzSdBH/1cc71UzvF+ygqfiGMzkIHON+i/k5uTScNLBz9t3UgrqfjoZ0EU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756806332; c=relaxed/simple;
-	bh=ql+elIt0KJIijNej8diArkCswhobJITiTSz7FP9wt0A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=j05sLALiLEwcNmDQWOh+o85oCNa9rpshAB9FO/CHuRMBxZE/UkiQgGKOlMFLUFAHFL0uaANB0wY/lgPWRnH5qKI1SAJa06NRvgsr+OdQJJK2vEa9DO1dU/YmEh9Ur9fIvgQzpprJi9YnimOHIFP6pmqP+SWIHrVLTNbQoe2r2yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=13.76.142.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0006800LT.eswin.cn (unknown [10.12.96.77])
-	by app2 (Coremail) with SMTP id TQJkCgB3FpWpvLZoXuPGAA--.49929S2;
-	Tue, 02 Sep 2025 17:45:17 +0800 (CST)
-From: Yulin Lu <luyulin@eswincomputing.com>
-To: linus.walleij@linaro.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: ningyu@eswincomputing.com,
-	zhengyu@eswincomputing.com,
-	linmin@eswincomputing.com,
-	huangyifeng@eswincomputing.com,
-	fenglin@eswincomputing.com,
-	lianghujun@eswincomputing.com,
-	Yulin Lu <luyulin@eswincomputing.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Subject: [PATCH] pinctrl: eswin: Fix regulator error check and Kconfig dependency
-Date: Tue,  2 Sep 2025 17:45:08 +0800
-Message-Id: <20250902094508.288-1-luyulin@eswincomputing.com>
-X-Mailer: git-send-email 2.31.1.windows.1
+	s=arc-20240116; t=1756807865; c=relaxed/simple;
+	bh=f4FSCQOOsa/4OCBJBGTowZPZFe3uwXyHE8EAIbJ1KzA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nZHGNoXyWgQJ9iZ9We3iT+ofqyNhIkbZd/iw3vk2Icbk4/Yy5AHTjIuaCNm32swmdQ/zkckhIbghPGFYzXWPoBKybCHjAr9s8PU6AkB4nm4m8IYGJlek44SxM/yCzuBN3qunkJzUBSGO3Qxw8bqySZHsqYpLyJg5gY8VVvyR2hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qZrp67rN; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-55f7ad815ceso2159657e87.3
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Sep 2025 03:11:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1756807862; x=1757412662; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S9/dg3rMdImtSDs9qVPDpc7idBTBiPszJRQRzWERi5Y=;
+        b=qZrp67rN8XplLKcepeAzOZpBM2vkxbddlAxns88NOS75WkWMp5a7tftIC5j31G/gZN
+         vpDQ/U8CedvYpuOl5mU5/0UiKJntFTiucGBTT5etoEDlCR/Cw768+vOUWL0oR7rtsg3X
+         ILfUyWmomFtemqMgb8+kwfc9WWGvbm507EDkPbJ0m5OrQdn4fM4jn2AXsdLIb2sROcX2
+         BMb4IDp1xaSol6aVBAs6D13/rZGFPjqgbd1ItJD6mxwj8K+XE4uoADFV/FZqioEopMwF
+         I3ojUVK6h5kNN0XS7Ib9AxJwDLyUyhe6adhZFeg2Eyo8CDhG8DFl/jFORKWPrWXxVsPf
+         dBWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756807862; x=1757412662;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S9/dg3rMdImtSDs9qVPDpc7idBTBiPszJRQRzWERi5Y=;
+        b=bTUhDBmsYX7QLUK4+IHqprtplOeThmEYfDKHb68b2zmTCR/a5HvDAhI0D6r2BVvbvh
+         B3Tx7XlduV3PHe76walJyvStQtSTHsOiys5uPxMy4vpTqLVSDAR6BNFDbxHYub1fvn53
+         eE3zORN1Q1jfGCkHWeHFWj0yW3kW6Gn0OnZcRjufOPBcExygnM4KcMTda3W0wzyIMA/t
+         k1x/JF+l1no51OQexklu7qGnsevXn+H3xnTs9rmV2WCCVV3Fo0agM00GQFBRJjjzcXOF
+         anTRL6kZkqLUzQfdCWWpqirHBmORXngHCAxI3pSCIfeOfTXWuJLcvdadxNWgNjDjB8SS
+         nuLg==
+X-Forwarded-Encrypted: i=1; AJvYcCWzP56LBxk40tsIJc9d6Ux6qgt2qpUkTLsJXB6HLQOC0yXMaPJ3n27F4JW/4JPABJntwwv0AQ1IyAAr@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+ohFdU0VvxLW5D0yMQjcyATHtghiOJkTi8YoSpglI/yNpZi6S
+	OsVSzePOMMv+4r+GAgrSzgve7mneFO1C5QM1GHiLBy+Kx15n16c6FVFvn1Q71lpgU1Sw2Js4Cyj
+	9aE1PmT+RmGg+FWnbrlHR4GJdDLWmf0UFSVGRpzc5LA==
+X-Gm-Gg: ASbGncuvVO1pky2Ol9FKSD0SVHoHzSrNSbMF10RzzGlhWV5C0pRnCg04gK0QGz1d2Wa
+	yeZSuTnD5hMlOkU9fsejiad6xkd8wllegdd1H7jkLPFvsbik5aoVJkpuiPyNKCyVTJnkoySzAXc
+	duc/JHGyTV7hKkviVKIwhCGKQlOMQYR/yBrmm+OMW/nXGfV5bQkZ7E7cooPDAs341v7VlZTTtfY
+	3EKa1U=
+X-Google-Smtp-Source: AGHT+IGvJOVNe+LUFvOCbgL5wgN/h/Cjvl043KlTfsb1COy3EuiSQw/TerVuRTUEwrGuUBs+VE/GG3RycL486iAnqi4=
+X-Received: by 2002:a05:6512:250d:b0:55f:34e8:b1a4 with SMTP id
+ 2adb3069b0e04-55f709dda1amr3184317e87.56.1756807861583; Tue, 02 Sep 2025
+ 03:11:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TQJkCgB3FpWpvLZoXuPGAA--.49929S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tF4fCry3Jr1fZw47WF4kJFb_yoW8uFW5pF
-	Z3GFyfAr1UJF4xJryUJ34I9Fy3Gan7GrW7Cw48K39xXFs8AFyDA3s0qFW5AFWvkr4kJr1Y
-	y345tFyUWF17ZFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
-	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
-	wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
-	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
-	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
-	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
-X-CM-SenderInfo: pox13z1lq6v25zlqu0xpsx3x1qjou0bp/
+References: <20250828-pinctrl-gpio-pinfuncs-v6-0-c9abb6bdb689@linaro.org>
+ <20250828-pinctrl-gpio-pinfuncs-v6-6-c9abb6bdb689@linaro.org>
+ <61bad868-d976-4f49-805c-8d14d4d8b3e4@sirena.org.uk> <CAMRc=MfB_3e0sjCpV+XaKcKvit7Opk5LczH2wsxO=RftrAabjg@mail.gmail.com>
+ <4a633387-08a9-43c8-81d7-488e7222aeda@sirena.org.uk> <CAMRc=Mf0dOvwsWb6uraCQXeauLYP0TqY6xsQnV3fM0w=wROW+Q@mail.gmail.com>
+In-Reply-To: <CAMRc=Mf0dOvwsWb6uraCQXeauLYP0TqY6xsQnV3fM0w=wROW+Q@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 2 Sep 2025 12:10:50 +0200
+X-Gm-Features: Ac12FXw4LKCvHHNtKGBjLfwABtGCHq93WPj_v3YPD6EUsw9OMGyVKBEoUj5pgYE
+Message-ID: <CACRpkdbrRc6E5idzkdN53QPDCSGpPUfdjmFmEFsS3g+v=cB6LA@mail.gmail.com>
+Subject: Re: [PATCH v6 06/15] pinctrl: imx: don't access the pin function
+ radix tree directly
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Alexey Klimov <alexey.klimov@linaro.org>, Lorenzo Bianconi <lorenzo@kernel.org>, 
+	Mark Brown <broonie@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Tony Lindgren <tony@atomide.com>, 
+	Haojian Zhuang <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mips@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-mm@kvack.org, imx@lists.linux.dev, linux-omap@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Smatch reported the following warning in eic7700_pinctrl_probe():
+On Mon, Sep 1, 2025 at 9:22=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
+> On Mon, Sep 1, 2025 at 4:37=E2=80=AFPM Mark Brown <broonie@kernel.org> wr=
+ote:
+> > On Mon, Sep 01, 2025 at 03:20:44PM +0200, Bartosz Golaszewski wrote:
+> >
+> > > That's not a lot of info but it fails in strcmp() which - I suppose -
+> > > is the one in pinmux_func_name_to_selector(). Any chance you could
+> > > check what the value of np->name is in imx_pinctrl_parse_functions()?
+> > > Is it NULL for some reason?
+> >
+> > [    0.628245] imx8mp-pinctrl 30330000.pinctrl: np->name pinctrl
+> >
+> > https://lava.sirena.org.uk/scheduler/job/1758947#L705
+>
+> Linus,
+>
+> FYI: I reproduced the bug on qemu with an older ARMv7 IMX SoC. Should
+> be able to debug it and figure it out shortly.
 
-  drivers/pinctrl/pinctrl-eic7700.c:638 eic7700_pinctrl_probe()
-  warn: passing zero to 'PTR_ERR'
+Awesome, thanks a lot for your perseverance on this important
+patch series.
 
-The root cause is that devm_regulator_get() may return NULL when
-CONFIG_REGULATOR is disabled. In such case, IS_ERR_OR_NULL() triggers
-PTR_ERR(NULL) which evaluates to 0, leading to passing a success code
-as an error.
-
-However, this driver cannot work without a regulator. To fix this:
-
- - Change the check from IS_ERR_OR_NULL() to IS_ERR()
- - Update Kconfig to explicitly select REGULATOR and
-   REGULATOR_FIXED_VOLTAGE, ensuring that the regulator framework is
-   always available.
-
-This resolves the Smatch warning and enforces the correct dependency.
-
-Suggested-by: Dan Carpenter <dan.carpenter@linaro.org>
-Fixes: 5b797bcc00ef ("pinctrl: eswin: Add EIC7700 pinctrl driver")
-Signed-off-by: Yulin Lu <luyulin@eswincomputing.com>
----
- drivers/pinctrl/Kconfig           | 2 ++
- drivers/pinctrl/pinctrl-eic7700.c | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index be1ca8e85754..0402626c4b98 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -211,6 +211,8 @@ config PINCTRL_EIC7700
- 	depends on ARCH_ESWIN || COMPILE_TEST
- 	select PINMUX
- 	select GENERIC_PINCONF
-+	select REGULATOR
-+	select REGULATOR_FIXED_VOLTAGE
- 	help
- 	  This driver support for the pin controller in ESWIN's EIC7700 SoC,
- 	  which supports pin multiplexing, pin configuration,and rgmii voltage
-diff --git a/drivers/pinctrl/pinctrl-eic7700.c b/drivers/pinctrl/pinctrl-eic7700.c
-index 4874b5532343..ffcd0ec5c2dc 100644
---- a/drivers/pinctrl/pinctrl-eic7700.c
-+++ b/drivers/pinctrl/pinctrl-eic7700.c
-@@ -634,7 +634,7 @@ static int eic7700_pinctrl_probe(struct platform_device *pdev)
- 		return PTR_ERR(pc->base);
- 
- 	regulator = devm_regulator_get(dev, "vrgmii");
--	if (IS_ERR_OR_NULL(regulator)) {
-+	if (IS_ERR(regulator)) {
- 		return dev_err_probe(dev, PTR_ERR(regulator),
- 					 "failed to get vrgmii regulator\n");
- 	}
--- 
-2.25.1
-
+Linus
 
