@@ -1,48 +1,81 @@
-Return-Path: <linux-gpio+bounces-25402-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25403-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 721B5B408A4
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 17:12:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 501A7B408AD
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 17:15:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B3FE3A4133
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 15:12:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8362C3A3C71
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 15:15:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2E1431576D;
-	Tue,  2 Sep 2025 15:12:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F78731576D;
+	Tue,  2 Sep 2025 15:14:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fha+upIT"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="T5j3VJvJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55EF5279DDD;
-	Tue,  2 Sep 2025 15:12:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26EAE30DD3C
+	for <linux-gpio@vger.kernel.org>; Tue,  2 Sep 2025 15:14:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756825958; cv=none; b=Ptvdn4z4sQPZiX2tp1Ei8QeYtQWL1jG4SVt+DvAWX6GAnHL4Nr/f3xr5EYnethHE0ia/u1dO3oTarYTXDmfdNtiO7Hy/XbtmgEEVgUeFIAoeVV716F5WWsQ4R0G/jpAw+8X/Xwelq8G4YJ1CnSjdtsgdH40iFLowVBMW4z7WpV8=
+	t=1756826097; cv=none; b=AVtOBjZcPYbJ0Fhx/epR0g+jZqmxKKrmZWf+sHzy0rucXGBpTlQ30QomjBohO9IH95LYBJin+ypFj03VhP33xebnEjjM1gpqHxV3zrcOisiKECKHJi+Xw8T4eiknXKkm4NKD9b5cFc1G36h0potAVrkdYntuyKcqqgTfd5djCYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756825958; c=relaxed/simple;
-	bh=Qm0MENDGoBpJreb7usssnkk4Erhkc9mDyI1kYmenU/k=;
+	s=arc-20240116; t=1756826097; c=relaxed/simple;
+	bh=k+/O35OLEaFLE720FQq2xXfg7gWF2UlM2xi61rk76LY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fnVME+YCRqmN9/6VQiCXCg2/43LkAZbCdrolclxuurwliIcPlUX68uPQp0qMZAo8nbvK9BRQ/Dz3wT8m/lQpwVgnl7B16ZTK/ufYJi6+JBXTcLQInZqvfjjeWj78WYE95xyF/+K7v3ngCGX2egeJnIHfqg/02gQAYEgN54C8IXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fha+upIT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB76CC4CEED;
-	Tue,  2 Sep 2025 15:12:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756825957;
-	bh=Qm0MENDGoBpJreb7usssnkk4Erhkc9mDyI1kYmenU/k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fha+upITUjR1W0/UPbGo5pqDEYYHq2VFch/hzfP45Cc4DUFZMu/U1HZBKmEZDtzCu
-	 iBDx0UtAvG1Se/1xc+9eCfwZyjV/3B8QlHOzcSsDpxMRslOobnPh84NMMkD/x0Dv/g
-	 xRaeCkokcz/HiStL81OWybnmfeke8xbUFORD+3qh2QF881mhkN4aMXU+IZJA96/1Sp
-	 GT7K7ZaoP9kdQDHPvQM6s9ZrnoBcNhmkS02rGDVOVe7xI1V4vOYoP+D+XPHVNyGzze
-	 eB8+jAUjKEOBQZvHIRChGOBN8u5j/+qtdlLin+slLI13vbKI95OGhjjit3j4/QyXxt
-	 xBDYlmqE/1jCA==
-Message-ID: <1034c70a-da67-4914-b23c-8d006b7611bf@kernel.org>
-Date: Tue, 2 Sep 2025 17:12:24 +0200
+	 In-Reply-To:Content-Type; b=mQUL2+IcoLr5VXSYvgBYFCqTK1+1g9lUEipC8cNsqHdNZGlHkkSQdOvKFvnaLcG2nFqZHvF+hfTXoscVVYWNRe/MsEXFY5AXaiMHkI72Ty3iPBCWCsVNmsrAxZGW+B9HleIrUgPlCJtO0/xytj6f42k7QXxzStjAPl7bY0MaqdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=T5j3VJvJ; arc=none smtp.client-ip=209.85.160.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-319873b2432so1642216fac.3
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Sep 2025 08:14:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1756826094; x=1757430894; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8Xgg2pm+dNGmJi2dTat3GmYq1nuu4RhGRKW9DE9wgjY=;
+        b=T5j3VJvJIq9vtmRuHplfbLq17cSvaZ8NsM6NXDEyqGZaSYFQoNOrKJT9H+6g2aeWqF
+         BDAIJvaqu6Gue/f856kqrhHAVJ8E52RUFuzOb4evK16ovwdgN7PPkcbKj0Z3m7IsjTb/
+         QQVCnXvIE0MKckdi7hpz7uWuR4gMcZ7rS2zOVcMNFiERJ5e5QvgDXzPWYIOVNKKBFJVc
+         Lb+858XYCrodocSVNPsh68YQwFTaj1xw8S17ru1ObzVrNQGC6W2202jSSeTK1EYdYFQT
+         8Zj/lmj+Klitp8db7WBDRs2o6lGVXwyoO3qt526lKM3x6NSC/C371n8N7HGoGVtcLxZ3
+         wJ5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756826094; x=1757430894;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8Xgg2pm+dNGmJi2dTat3GmYq1nuu4RhGRKW9DE9wgjY=;
+        b=YqZpGAX8GaUR5VYRpGy3LLU+iCx/uT+5O2zgSpTjhu5eQOm5wJYPPxHRAGCSt+5EyO
+         XIDZARxXKg9yVxjV72da1xkSPULh7fGep+bfL/x4EYMluv+guftpkPqrmYczjEdZjzu+
+         KeEh3rHwVTyD6b6JUd8Qo1QAwWarhSaLCNxd5+k9vpgIN8/9/BadVZESSFwPQr/3x9TQ
+         f6AWc3kIoOMxhSWgxQdDFoWrimDIdsLrYQLykQk3Bd2DUEJKdQVN6K2LBK+IBzLETO/I
+         VsgOiNi6sL/uvPqjkHJotSuj7mSX8niriLW7m41N4j0wlRc8QZztWhQ4Mzxt5KYzYJe/
+         cqRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWwXH4QpUsE7SF1G597l+X4j+Ug3cXhH5dDPsaiE+Vx/pe2P5MwCKiqYz3EjFDcCtfdlDVcDU8bGpAG@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGKxJIN3o5ldzbdg8Nay3L/ykGiQMTGxBnLaCYGxDL1l7CUC38
+	mtIIte/8QhJyDUjBWjRRMSfk6vVOgZn/QkR+tJJ6yZqKzxcFvl2VWpkZABvjDo5O2NU=
+X-Gm-Gg: ASbGnctsqanY3QkgIbmsbEuu9BYywnXJfrbHaO8E5gnX1atHvcXdjE8DUPOjvFQPiXj
+	vXAhn4evu4Zee4panQkEJa/TwM5d0vknUdIRU4aUpj4IZBbaUbUn84Gq+S5953bDHp3Z+1MktXg
+	J5furgdXCvYM25notJU4w73EmE8POS2u+KiAW4PBCpSf0ZQbjZrTpvjcqw2yKuCQLVriwMfCols
+	zChx8Hx+Xk9N3m1T/nBpws38HmWfcKImoC0NcQvBdPdR0b1WAYziJacyMk36oadTbxJCcycU1ld
+	88Kw/5Bk0E6IX4+gE94uVepOLYktgfpu7T1GgJTsw859bHvW7MZKn7MWUlO8NBFrJR42FEODDnC
+	ouSdlCfCdzf1LszzSPynUgHw5mIzn4e1NP+xvNyqKExhUCaeAN9fmohIBjhFndgWE5iTEHGtIkI
+	KnibdbDavKp/HD1IPNsg==
+X-Google-Smtp-Source: AGHT+IHu9ad7jn5aRdIYj1LhzznHSg+3gNWD0VD4qNGker/OFvxNVNYSGwKe3LEJOn0WHfiGEGVVDw==
+X-Received: by 2002:a05:687c:54:10b0:319:be1e:9dce with SMTP id 586e51a60fabf-319be1edb78mr949993fac.5.1756826094264;
+        Tue, 02 Sep 2025 08:14:54 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:8d95:114e:b6f:bf5b? ([2600:8803:e7e4:1d00:8d95:114e:b6f:bf5b])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-319b60b8f38sm532195fac.30.2025.09.02.08.14.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Sep 2025 08:14:53 -0700 (PDT)
+Message-ID: <a6ae372e-e0c9-4874-8be1-8070ee3e880f@baylibre.com>
+Date: Tue, 2 Sep 2025 10:14:52 -0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,116 +83,116 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 12/16] pinctrl: qcom: use generic pin function helpers
-To: Andy Shevchenko <andriy.shevchenko@intel.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Alexey Klimov <alexey.klimov@linaro.org>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>,
- Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- NXP S32 Linux Team <s32@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>,
- Tony Lindgren <tony@atomide.com>, Haojian Zhuang
- <haojian.zhuang@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Neil Armstrong <neil.armstrong@linaro.org>, Mark Brown <broonie@kernel.org>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org, imx@lists.linux.dev,
- linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-References: <20250902-pinctrl-gpio-pinfuncs-v7-0-bb091daedc52@linaro.org>
- <20250902-pinctrl-gpio-pinfuncs-v7-12-bb091daedc52@linaro.org>
- <aLbt2euqYQM5xXuZ@smile.fi.intel.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 2/3] iio: adc: Support ROHM BD79112 ADC/GPIO
+To: Matti Vaittinen <mazziesaccount@gmail.com>,
+ Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Marcelo Schmitt <marcelo.schmitt@analog.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ Tobias Sperling <tobias.sperling@softing.com>,
+ Antoniu Miclaus <antoniu.miclaus@analog.com>,
+ Trevor Gamblin <tgamblin@baylibre.com>, Esteban Blanc <eblanc@baylibre.com>,
+ Ramona Alexandra Nechita <ramona.nechita@analog.com>,
+ Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+ Hans de Goede <hansg@kernel.org>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+References: <cover.1756813980.git.mazziesaccount@gmail.com>
+ <08929460fe11dd0b749c50a72a634423f13f4104.1756813980.git.mazziesaccount@gmail.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <aLbt2euqYQM5xXuZ@smile.fi.intel.com>
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <08929460fe11dd0b749c50a72a634423f13f4104.1756813980.git.mazziesaccount@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 02/09/2025 15:15, Andy Shevchenko wrote:
-> On Tue, Sep 02, 2025 at 01:59:21PM +0200, Bartosz Golaszewski wrote:
->>
->> With the pinmux core no longer duplicating memory used to store the
->> struct pinfunction objects in .rodata, we can now use the existing
->> infrastructure for storing and looking up pin functions in qualcomm
->> drivers. Remove hand-crafted callbacks.
+On 9/2/25 7:24 AM, Matti Vaittinen wrote:
+> The ROHM BD79112 is an ADC/GPIO with 32 channels. The channel inputs can
+> be used as ADC or GPIO. Using the GPIOs as IRQ sources isn't supported.
 > 
-> ...
+> The ADC is 12-bit, supporting input voltages up to 5.7V, and separate I/O
+> voltage supply. Maximum SPI clock rate is 20 MHz (10 MHz with
+> daisy-chain configuration) and maximum sampling rate is 1MSPS.
 > 
->> +	for (i = 0; i < soc_data->nfunctions; i++) {
->> +		func = &soc_data->functions[i];
->> +
->> +		ret = pinmux_generic_add_pinfunction(pctrl->pctrl, func, NULL);
->> +		if (ret < 0)
+> The IC does also support CRC but it is not implemented in the driver.
 > 
-> Why not simply
+> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> ---
+>  drivers/iio/adc/Kconfig        |  10 +
+>  drivers/iio/adc/Makefile       |   1 +
+>  drivers/iio/adc/rohm-bd79112.c | 542 +++++++++++++++++++++++++++++++++
+>  3 files changed, 553 insertions(+)
+>  create mode 100644 drivers/iio/adc/rohm-bd79112.c
 > 
-> 		if (ret)
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index e3d3826c3357..4b78929bb257 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -1309,6 +1309,16 @@ config RN5T618_ADC
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called rn5t618-adc.
+>  
+> +config ROHM_BD79112
+> +	tristate "Rohm BD79112 ADC driver"
+> +	depends on I2C && GPIOLIB
+> +	select REGMAP_I2C
+
+I think you want SPI rather than I2C. :-)
+
+> +	select IIO_ADC_HELPER
+> +	help
+> +	  Say yes here to build support for the ROHM BD79112 ADC. The
+> +	  ROHM BD79112 is a 12-bit, 32-channel, SAR ADC, which analog
+> +	  inputs can also be used for GPIO.
+> +
 
 
-Because existing code is as readable? This is just some serious
-nitpicking which is not actually helping at all at v7.
 
-Best regards,
-Krzysztof
+> +struct bd79112_data {
+> +	struct spi_device *spi;
+> +	struct regmap *map;
+> +	struct device *dev;
+> +	struct gpio_chip gc;
+> +	unsigned long gpio_valid_mask;
+> +	unsigned int vref_mv;
+> +	struct spi_transfer read_xfer[2];
+> +	struct spi_transfer write_xfer;
+> +	struct spi_message read_msg;
+> +	struct spi_message write_msg;
+> +	/* 16-bit TX, valid data in high byte */
+> +	u8 read_tx[2] __aligned(IIO_DMA_MINALIGN);
+> +	/* 8-bit address followed by 8-bit data */
+> +	u8 reg_write_tx[2] __aligned(IIO_DMA_MINALIGN);
+> +	/* 12-bit of ADC data or 8 bit of reg data */
+> +	__be16 read_rx __aligned(IIO_DMA_MINALIGN);
 
+Usually, we only need one __aligned(IIO_DMA_MINALIGN) (on the first
+field). Since these are only used for SPI messages and we can only
+send one message at a time, there isn't a way for there to be a
+problem that would require them to each need to be in their own
+cache line.
+
+> +};
+> +
+
+
+
+> +static int bd79112_probe(struct spi_device *spi)
+> +{
+
+...
+
+> +	iio_dev->channels = cs;
+> +	iio_dev->num_channels = ret;
+
+This is quite far from where it is assigned. Better to have a dedicated
+local variable for this.
+
+> +	iio_dev->info = &bd79112_info;
+> +	iio_dev->name = "bd79112";
+> +	iio_dev->modes = INDIO_DIRECT_MODE;
+> +
 
