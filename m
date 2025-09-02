@@ -1,165 +1,123 @@
-Return-Path: <linux-gpio+bounces-25352-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25353-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3078FB3FC79
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 12:30:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CFA58B3FC8A
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 12:33:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8EF5E7B5F79
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 10:24:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 83BAB4E3567
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 10:33:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F185B2F3C0F;
-	Tue,  2 Sep 2025 10:24:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5039128466E;
+	Tue,  2 Sep 2025 10:33:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kB9mGtfc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fHlSbO4n"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A831280CCE;
-	Tue,  2 Sep 2025 10:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7DDA28313A
+	for <linux-gpio@vger.kernel.org>; Tue,  2 Sep 2025 10:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756808654; cv=none; b=S2igG0DtqgN39RXhj1KKTPLmSr+LamOIEzVFGyPZx5SS+Ws6JLw7SFATuoaFWC1nwqeSXS0FSDvkPRyNLJugyiJVAReQ9v1Hx8LodQu5Sr8mz+h2kSs6KXiNNetZVwR0UBsHf672iIqw98OSsOZ8Kh2kOfktDzL+2CvkN/BOozQ=
+	t=1756809184; cv=none; b=SZAHbQe+MUTEuSC2AvpaAW6gvBSWM9DAJ0AYhza0XnFOPFaGgpvH38Uw9ibQfq4Q8qCa1NwnquM9pkc1s8Lf9PqYn85nys1kNEtp0Y4p1F6WIL8yX4wARuvL+eW3Rbv8l0/tajBnmWzZmzwnlMl/YNnJk3j9d7SScgD7bq9zOuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756808654; c=relaxed/simple;
-	bh=v5NDjFO8lUrsXYBoNk20x/0jTMsSJewfLyzSWN2NvCQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kvv88kFlhyubbDwm4bw5uzwXb5xQpufioAoBaMqU9x4x+c3hO4HyAPcbfvJSD8QNoghj7YDyQgcy2nsSd39AkoC/Ig5h5MhI/m05qiNInHjimOtUxARwWihq+ctVpTMv3cWcOm+rN5jnHHzGIgipKpmFAETyliNPsVuQtF3PE48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kB9mGtfc; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756808653; x=1788344653;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=v5NDjFO8lUrsXYBoNk20x/0jTMsSJewfLyzSWN2NvCQ=;
-  b=kB9mGtfcuA0QRGswH0l8MKRJysn3eD5noDeyI/wAzG86Y4zWE3tYwKvm
-   725NxrVwV7mLuKTNwcDh7kap5+IMVyRet/MAIL429UCLFP30H1d3BV0xI
-   r6h1D/XxqOY5EjWawVd0iFhN/dX7qZa8x6i0xic8Gh+dodxWXegOplvBK
-   BsYWaNOIJnzEby7NQQvIDEOId21CaGiU8sQ2YjHh2ty9khkf27NvKGrOF
-   0p/JcOvgt3E5JVIZmZZYTQILslfHp4zYnjCJ1qhqKd3e7Jshl9A+qj3V0
-   1WDkdk1vbOFGO3lBdlTz0Zxoeu+0h2GQJESmD0ixsrJ+umZG2IUcBj4vt
-   w==;
-X-CSE-ConnectionGUID: mhFdhiLGQx2Tgqo/8RcBqw==
-X-CSE-MsgGUID: dLNMD7Y/RnKqDfNwY72UjQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11540"; a="62719596"
-X-IronPort-AV: E=Sophos;i="6.18,230,1751266800"; 
-   d="scan'208";a="62719596"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 03:24:12 -0700
-X-CSE-ConnectionGUID: I6HlhqjdSHGTNm9QxC555Q==
-X-CSE-MsgGUID: qaZkQZ/4QvmaUvY93+nUTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,230,1751266800"; 
-   d="scan'208";a="176556266"
-Received: from lkp-server02.sh.intel.com (HELO 06ba48ef64e9) ([10.239.97.151])
-  by orviesa005.jf.intel.com with ESMTP; 02 Sep 2025 03:24:06 -0700
-Received: from kbuild by 06ba48ef64e9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1utOBI-0001pP-0p;
-	Tue, 02 Sep 2025 10:24:04 +0000
-Date: Tue, 2 Sep 2025 18:23:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jacky Chou <jacky_chou@aspeedtech.com>, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
-	vkoul@kernel.org, kishon@kernel.org, linus.walleij@linaro.org,
-	p.zabel@pengutronix.de, linux-aspeed@lists.ozlabs.org,
-	linux-arm-kernel@lists.infradead.org, linux-phy@lists.infradead.org,
-	openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, jacky_chou@aspeedtech.com
-Subject: Re: [PATCH v3 07/10] PHY: aspeed: Add ASPEED PCIe PHY driver
-Message-ID: <202509021806.1NtrcLpF-lkp@intel.com>
-References: <20250901055922.1553550-8-jacky_chou@aspeedtech.com>
+	s=arc-20240116; t=1756809184; c=relaxed/simple;
+	bh=D6kMRVNdjTsHxomh8Umwb4E3q6zvSzEKkpefTTT/TzQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=UcYRtn7//6g7t/C5f5KFHNKqQHWawCzUxmOxWUMS+C7XcgJF+IjmrfU4SsGL8DIv4CjY8CG2ohXkIHm5J31I99KbgFWU7ox6uqd6lWHgr8huiRiW8VgzgNDXuiecVFeO1DJEii9SP0h+8kOVb2vx6DLV3rRwF586HYB/+23c6V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fHlSbO4n; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-afcb731ca55so97287266b.0
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Sep 2025 03:33:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1756809180; x=1757413980; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t+2RmtyC5BdrhVnYkf0pE1bp+20qsxwnCUP1SaL1uDE=;
+        b=fHlSbO4nvFRetVrpPRB6bgLDTOjU/qdzNl0rZ71B3InipDSZ1MMMwMdo0PGcfEL5fs
+         LFcViE5hQl7oi3c1I/H42PHnYeiW0RuhqNAB5gBMg8GmrETEHccPan1j+rJbMaGascMK
+         iKCzMW4cWTyLr91cs1atbLg6ElGZxk3WSWlILzBttnb9qbrHQ1vOBbfwNU05b1Yc7NFu
+         MybDLmgRpIhGt7xwGNl86t/MBneCuXcCAA6indKsJqmAb2qxeVk5NCbjQuzqrXzDVBQy
+         md6/0xArDSxaVZtTZgD3+dLVg3dnnldtBI2PxQur+Ids+bNhFw/evhQ349llSXscnzJV
+         Itwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756809180; x=1757413980;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t+2RmtyC5BdrhVnYkf0pE1bp+20qsxwnCUP1SaL1uDE=;
+        b=WgVpka6MrfU0FtVH0iXg3XY3Chw3GUfElrh6HPTZchUJC7AgRrwQwpOAACW3c/oRqJ
+         I2fpnOB58GSn0RIXIbXqrq43uQZ5rLFhO7S90cgMcHkDngWhITgH3IZCTviIEkXCwpkx
+         qSNiuwl/+sTxs7VVgpBOpmYh/L6f1F2q3+KpO2KrU+sWKDj3KhOn8Nl1NOCnXsg288O0
+         n6+3ZOh0kfO6MNjkoA9yMPV42NkWsKVrOvkOsHO7u+6ajlZYrhro+MJQRgqzBjfcGYAu
+         W3Co9c+VQFY3SPVVnI7sxDF4IRjgO3jdcF4xAQiPw+KiwsK7skz2AsrUoUuAVSR8kC8q
+         28+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWs0UY7iy8BFvKgy52FHE2nra318v37362ksyIaQjE5ThzpR8GiT0h4dRUcnVjF3Dz3ETMVcBPcisbM@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyQCg+wiohhXIxRi4rS0vjsh2K09lL3evhZWpViOkwBi9kpb37
+	XevtsBG+sJT3gxVAJoG87yrqsKb3jenwYwho0U9ncEvZ0v6K3ImWvQE0CL7riZi/YpY=
+X-Gm-Gg: ASbGncvd8blRSX58bAIz9gouwtmeJc0T7odwqwnKY7vWc9+ySLn91DhMFgUsLONEskf
+	EMwXlpXz48u/i8mr6vZf4lCBgB2W5x6mhuu8p/rDHSea4IugYYqeh6Xntt6ejYAJayTKlneXogU
+	XYAwOmZOdfJsHW8CSwYxZma8V+813em4QWjNoBriKqVdFKQy+38oibRULkFKkjPnSEq5DZQtuMi
+	yoVOiMbe5NSGHKlUtCaScHpQHrIHAUZVo8nr7fBr/c0trEFJkx8scFWATPev9y/AXXWd06QMIxv
+	SucY/dsZcsAs2FNaRLr/NbZv6sa2uz6CNEuphGYyZqTTIcpsDUoifHxwwjaZNVhAUMH06vnuDE1
+	UFzkm+ILoXPh32jAVFPD/mKG6AjX1VOODVZGcaIHjLd/AMjYorg==
+X-Google-Smtp-Source: AGHT+IHAsN/656NaYDyz43thubEPzcHhs+/jF4e7qFvC7WKngX9lMBJC+gCJOclV74lgolxYOi8bDw==
+X-Received: by 2002:a17:906:690:b0:b04:1457:93 with SMTP id a640c23a62f3a-b04145702d1mr390858166b.3.1756809180009;
+        Tue, 02 Sep 2025 03:33:00 -0700 (PDT)
+Received: from [127.0.1.1] ([178.197.219.123])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b0423ed35e4sm516431766b.25.2025.09.02.03.32.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Sep 2025 03:32:59 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: stable@vger.kernel.org
+In-Reply-To: <20250830111657.126190-3-krzysztof.kozlowski@linaro.org>
+References: <20250830111657.126190-3-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH 1/2] pinctrl: samsung: Drop unused S3C24xx driver data
+Message-Id: <175680917816.135692.16731223900572881206.b4-ty@linaro.org>
+Date: Tue, 02 Sep 2025 12:32:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250901055922.1553550-8-jacky_chou@aspeedtech.com>
-
-Hi Jacky,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on pci/for-linus]
-[also build test ERROR on robh/for-next linusw-pinctrl/devel linusw-pinctrl/for-next linus/master v6.17-rc4 next-20250902]
-[cannot apply to pci/next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Jacky-Chou/dt-bindings-soc-aspeed-Add-ASPEED-PCIe-Config/20250901-140231
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
-patch link:    https://lore.kernel.org/r/20250901055922.1553550-8-jacky_chou%40aspeedtech.com
-patch subject: [PATCH v3 07/10] PHY: aspeed: Add ASPEED PCIe PHY driver
-config: arm-allmodconfig (https://download.01.org/0day-ci/archive/20250902/202509021806.1NtrcLpF-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250902/202509021806.1NtrcLpF-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202509021806.1NtrcLpF-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/phy/aspeed/phy-aspeed-pcie.c:14:
->> drivers/phy/aspeed/phy-aspeed-pcie.c:195:25: error: 'aspeed_pcie_of_match_table' undeclared here (not in a function); did you mean 'aspeed_pcie_phy_of_match_table'?
-     195 | MODULE_DEVICE_TABLE(of, aspeed_pcie_of_match_table);
-         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/module.h:250:15: note: in definition of macro 'MODULE_DEVICE_TABLE'
-     250 | static typeof(name) __mod_device_table__##type##__##name                \
-         |               ^~~~
->> include/linux/module.h:250:21: error: '__mod_device_table__of__aspeed_pcie_of_match_table' aliased to undefined symbol 'aspeed_pcie_of_match_table'
-     250 | static typeof(name) __mod_device_table__##type##__##name                \
-         |                     ^~~~~~~~~~~~~~~~~~~~
-   drivers/phy/aspeed/phy-aspeed-pcie.c:195:1: note: in expansion of macro 'MODULE_DEVICE_TABLE'
-     195 | MODULE_DEVICE_TABLE(of, aspeed_pcie_of_match_table);
-         | ^~~~~~~~~~~~~~~~~~~
---
-   In file included from phy-aspeed-pcie.c:14:
-   phy-aspeed-pcie.c:195:25: error: 'aspeed_pcie_of_match_table' undeclared here (not in a function); did you mean 'aspeed_pcie_phy_of_match_table'?
-     195 | MODULE_DEVICE_TABLE(of, aspeed_pcie_of_match_table);
-         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/module.h:250:15: note: in definition of macro 'MODULE_DEVICE_TABLE'
-     250 | static typeof(name) __mod_device_table__##type##__##name                \
-         |               ^~~~
->> include/linux/module.h:250:21: error: '__mod_device_table__of__aspeed_pcie_of_match_table' aliased to undefined symbol 'aspeed_pcie_of_match_table'
-     250 | static typeof(name) __mod_device_table__##type##__##name                \
-         |                     ^~~~~~~~~~~~~~~~~~~~
-   phy-aspeed-pcie.c:195:1: note: in expansion of macro 'MODULE_DEVICE_TABLE'
-     195 | MODULE_DEVICE_TABLE(of, aspeed_pcie_of_match_table);
-         | ^~~~~~~~~~~~~~~~~~~
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
 
-vim +195 drivers/phy/aspeed/phy-aspeed-pcie.c
+On Sat, 30 Aug 2025 13:16:58 +0200, Krzysztof Kozlowski wrote:
+> Drop unused declarations after S3C24xx SoC family removal in the commit
+> 61b7f8920b17 ("ARM: s3c: remove all s3c24xx support").
+> 
+> 
 
-   183	
-   184	static const struct of_device_id aspeed_pcie_phy_of_match_table[] = {
-   185		{
-   186			.compatible = "aspeed,ast2600-pcie-phy",
-   187			.data = &pcie_phy_ast2600,
-   188		},
-   189		{
-   190			.compatible = "aspeed,ast2700-pcie-phy",
-   191			.data = &pcie_phy_ast2700,
-   192		},
-   193		{ },
-   194	};
- > 195	MODULE_DEVICE_TABLE(of, aspeed_pcie_of_match_table);
-   196	
+Applied, thanks!
 
+[1/2] pinctrl: samsung: Drop unused S3C24xx driver data
+      https://git.kernel.org/pinctrl/samsung/c/358253fa8179ab4217ac283b56adde0174186f87
+[2/2] dt-bindings: pinctrl: samsung: Drop S3C2410
+      https://git.kernel.org/pinctrl/samsung/c/d37db94b078197ec4be1cadebbfd7bf144e3c5e4
+
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
 
