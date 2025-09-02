@@ -1,121 +1,126 @@
-Return-Path: <linux-gpio+bounces-25413-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25414-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA24AB40C9D
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 19:57:40 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E5FCB40CC4
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 20:06:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7152A48543D
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 17:57:39 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 839E64E4844
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 18:06:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B2543469F9;
-	Tue,  2 Sep 2025 17:57:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E7B133EB13;
+	Tue,  2 Sep 2025 18:06:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PegOE8K1"
+	dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b="dtSR+rlz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout9.mo534.mail-out.ovh.net (smtpout9.mo534.mail-out.ovh.net [178.33.251.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD72343D91;
-	Tue,  2 Sep 2025 17:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7142FD1DC;
+	Tue,  2 Sep 2025 18:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.33.251.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756835849; cv=none; b=TERWLIksg/hkrejQN/fDjuSh0EUJZCHrQ85VufV/CgzAFCeK3VYRd9FO52ou4Y5//aLRmiKGfoBUd8aHsuP4k01EByubrOKlQ+J4oT2CxwtbotyIFzaMBNXD/QHioKmIH6njFtmEL+sK4sPtm8d0IOjroLRR38MD00qF1EGpUHY=
+	t=1756836405; cv=none; b=pw7fRpKQOkXxrhGaOuwggTUtnEB3I//Dvupbx7UNO8H4ld9ZSYondQ9JS7AXSz1hyy3wumdfL8Cq1Rz8wA00QQoywQgF9li5ExexcbQtWbMWY7Hd/YS46b2ho01QEAGg1kCHtRIJHzJw1iaU2Z1Dz8WoLn8xPgYajbt16IGygxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756835849; c=relaxed/simple;
-	bh=w2TaguzTGaTCkEaynjoXVEUablUoBEM80qHQFI4vqXw=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=K8P8Eu2iY68v9ZDMonXvF215IcMsGul9tRATy8JKF2QIyT6QiGnEUW4j2VHc373wsfbomQYXV4uMbaZKfqKGrwTrX+k8KLt4gu5lKab9IheZ5Nee1Vpl8YJlieTgyu70u8N1HTZcya3Cou0oLNlWLBHY9BYZTFfdfiJ45+0lOT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PegOE8K1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9DE6C4CEED;
-	Tue,  2 Sep 2025 17:57:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756835848;
-	bh=w2TaguzTGaTCkEaynjoXVEUablUoBEM80qHQFI4vqXw=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=PegOE8K1FFFnUEW3RvH9zUZ81+KCXtJfzp67UXeFcF7n4UOVnupqIRdJ4HOM0zaAh
-	 iRnl+ZEDMjE09ghkLttjRCjhvrc/d8l9g12cQbKh22MxwWlBxEdZwM/mB2TRUMykOp
-	 TM82HFWPugOuE3Ge13DBAbUSX7PUg4QouumzJS2TFzuxiCNlfufNJZLxPLYK4AO3pZ
-	 CsM6CBeSkwfFmXl0r5o0CjoiW2UQPgsfd9wTQhYg5kaRXkw5/oY72j7fU06TwPWZz6
-	 hA5+SAjtaOssKAvEbNoqCJQxOwtn/YvtnnTby/j4YZEo6mWNqjDkJKF+QLGc5E5u6A
-	 mpENE/CZT/tAg==
-Date: Tue, 02 Sep 2025 12:57:27 -0500
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1756836405; c=relaxed/simple;
+	bh=Od+kByzKMtlKwxWTpbaY2oui20iYJ8JhWWg6aV/Lr2s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ksHTIxZLaFzmq++XNCT45iBzYylwGuWO7zpqBsCvWi/9H+MPvbQVal2NByfW0mxVJUQJuksxZvI5hs4nzAjJ6qfBBw9ePb4QofF51CtXU9RyNnHSRR4qSn+T3xiuDfgEdgO7z9NQB3wTRKP4SopOYO8rKbkEKTImtocavnrCsLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b=dtSR+rlz; arc=none smtp.client-ip=178.33.251.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orca.pet
+Received: from director3.derp.mail-out.ovh.net (director3.derp.mail-out.ovh.net [152.228.215.222])
+	by mo534.mail-out.ovh.net (Postfix) with ESMTPS id 4cGYbL69wnz6XLN;
+	Tue,  2 Sep 2025 18:06:38 +0000 (UTC)
+Received: from director3.derp.mail-out.ovh.net (director3.derp.mail-out.ovh.net. [127.0.0.1])
+        by director3.derp.mail-out.ovh.net (inspect_sender_mail_agent) with SMTP
+        for <brgl@bgdev.pl>; Tue,  2 Sep 2025 18:06:38 +0000 (UTC)
+Received: from mta3.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.109.231.133])
+	by director3.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4cGYbL0rDGz5wFY;
+	Tue,  2 Sep 2025 18:06:38 +0000 (UTC)
+Received: from orca.pet (unknown [10.1.6.9])
+	by mta3.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTPSA id BA95894332F;
+	Tue,  2 Sep 2025 18:06:36 +0000 (UTC)
+Authentication-Results:garm.ovh; auth=pass (GARM-104R005f80e0bac-1c8b-4e6a-b81b-3b0d9acbbebe,
+                    B677A376967D575A53C78FE4FF5C940A066EF03B) smtp.auth=marcos@orca.pet
+X-OVh-ClientIp:79.117.41.176
+Message-ID: <45b84c38-4046-4fb0-89af-6a2cc4de99cf@orca.pet>
+Date: Tue, 2 Sep 2025 20:06:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Jonathan Cameron <jic23@kernel.org>, 
- Javier Carrasco <javier.carrasco.cruz@gmail.com>, 
- Ramona Alexandra Nechita <ramona.nechita@analog.com>, 
- David Lechner <dlechner@baylibre.com>, 
- Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, 
- Marcelo Schmitt <marcelo.schmitt@analog.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, 
- Antoniu Miclaus <antoniu.miclaus@analog.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, 
- Hans de Goede <hansg@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
- Thomas Bonnefille <thomas.bonnefille@bootlin.com>, 
- Tobias Sperling <tobias.sperling@softing.com>, 
- Conor Dooley <conor+dt@kernel.org>, Trevor Gamblin <tgamblin@baylibre.com>, 
- devicetree@vger.kernel.org, Esteban Blanc <eblanc@baylibre.com>, 
- linux-gpio@vger.kernel.org
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <77c36ecaf5992ebcabf6ce862bf2a6ec72d9f606.1756813980.git.mazziesaccount@gmail.com>
-References: <cover.1756813980.git.mazziesaccount@gmail.com>
- <77c36ecaf5992ebcabf6ce862bf2a6ec72d9f606.1756813980.git.mazziesaccount@gmail.com>
-Message-Id: <175683578289.936608.3477668195039989719.robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: iio: adc: ROHM BD79112 ADC/GPIO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/3] mfd: vortex: implement new driver for Vortex
+ southbridges
+To: Lee Jones <lee@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Michael Walle <mwalle@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250822135816.739582-1-marcos@orca.pet>
+ <20250822135816.739582-4-marcos@orca.pet>
+ <20250902151828.GU2163762@google.com>
+Content-Language: es-ES
+From: Marcos Del Sol Vives <marcos@orca.pet>
+In-Reply-To: <20250902151828.GU2163762@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 3615827553760990822
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdelfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepofgrrhgtohhsucffvghlucfuohhlucggihhvvghsuceomhgrrhgtohhssehorhgtrgdrphgvtheqnecuggftrfgrthhtvghrnheptdegudfgiedugfekudfhlefgjefguedvjeffieevgeetjedvvdeihfeiudejvdehnecukfhppeduvdejrddtrddtrddupdejledruddujedrgedurddujeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehmrghrtghoshesohhrtggrrdhpvghtpdhnsggprhgtphhtthhopeekpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhifrghllhgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvh
+ hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehfeegmgdpmhhouggvpehsmhhtphhouhht
+DKIM-Signature: a=rsa-sha256; bh=BShoJ9CtShHpPKQfSV3go4koAPboGRUp6AQIugmCTyM=;
+ c=relaxed/relaxed; d=orca.pet; h=From; s=ovhmo-selector-1; t=1756836399;
+ v=1;
+ b=dtSR+rlz6mvtRdeeIRrhsNfIdY8db6C6KPVunAs2rwNt+gfj4kcrHPT1qwr93+yKjZYRlfKB
+ 9UeGMly98dojMoe9yQ+xqJuy8UMn6+PdqtyGso0VsLTxr3MzSaU55mG7VbMkgdTY23rp39hpBtH
+ 6AUyGAR7IdypAqJvcTHojpSaOWgxVd7gDFhR00cwunLvkTKdA/8HW2QBqhXg/B4zCJTQcRVHA8r
+ tfSJ+JRuPFjGM6GyVniEVmhSm4Kfmmyi6HMEjtsrNq4y/HwMKV3B6OhgMTteWcNUELOz2Y5osbV
+ V0y70B20wNX6u6vcvQwxQq6x3CVcnArt6HomtuQop1BjA==
 
-
-On Tue, 02 Sep 2025 15:23:54 +0300, Matti Vaittinen wrote:
-> The ROHM BD79112 is an ADC/GPIO with 32 channels. The channel inputs can
-> be used as ADC or GPIO. Using the GPIOs as IRQ sources isn't supported.
+El 02/09/2025 a las 17:18, Lee Jones escribió:
+>> +
+>> +struct vortex_southbridge {
+>> +	const struct mfd_cell *cells;
+>> +	int n_cells;
+>> +};
 > 
-> The ADC is 12-bit, supporting input voltages up to 5.7V, and separate I/O
-> voltage supply. Maximum SPI clock rate is 20 MHz (10 MHz with
-> daisy-chain configuration) and maximum sampling rate is 1MSPS.
-> 
-> Add a device tree binding document for the ROHM BD79112.
-> 
-> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-> ---
->  .../bindings/iio/adc/rohm,bd79112.yaml        | 118 ++++++++++++++++++
->  1 file changed, 118 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/rohm,bd79112.yaml
+> Why is this needed?
 > 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+To have a variable amount of cells. Currently I am only implementing the
+GPIO device because it's the most critical (required for device shutdown),
+but I plan on implementing once this gets merged at least also the watchdog,
+which is provided by the same southbridge.
 
-yamllint warnings/errors:
+Adding support for this is should make adding that simpler.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/adc/rohm,bd79112.example.dtb: adc@0 (rohm,bd79112): '#gpio-cells' is a dependency of 'gpio-controller'
-	from schema $id: http://devicetree.org/schemas/gpio/gpio.yaml#
+>> +static const struct mfd_cell vortex_dx_sb_cells[] = {
+>> +	{
+>> +		.name		= "vortex-gpio",
+>> +		.resources	= vortex_dx_gpio_resources,
+>> +		.num_resources	= ARRAY_SIZE(vortex_dx_gpio_resources),
+>> +	},
+>> +};
+> 
+> It's not an MFD until you have more than one device.
 
-doc reference errors (make refcheckdocs):
+Same as above.
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/77c36ecaf5992ebcabf6ce862bf2a6ec72d9f606.1756813980.git.mazziesaccount@gmail.com
+>> +static const struct pci_device_id vortex_sb_table[] = {
+>> +	/* Vortex86DX */
+>> +	{ PCI_DEVICE_DATA(RDC, R6031, &vortex_dx_sb) },
+> 
+> We're not passing one initialisation API's data (MFD) through another (PCI).
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+Unless I understood you incorrectly, you mean I should not pass MFD cells/
+data as private data?
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+vortex_dx_sb are "struct vortex_southbridge" type, not raw MFD API data.
 
