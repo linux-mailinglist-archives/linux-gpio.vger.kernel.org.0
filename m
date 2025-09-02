@@ -1,117 +1,130 @@
-Return-Path: <linux-gpio+bounces-25349-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25350-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5412B3FA64
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 11:30:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A7B9B3FAF5
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 11:45:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B6EF42C16CF
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 09:30:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 32D4A3BD2FC
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 09:45:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C8C62EA743;
-	Tue,  2 Sep 2025 09:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="kZ4iS3eu"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 796432EC544;
+	Tue,  2 Sep 2025 09:45:32 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB842EA74B
-	for <linux-gpio@vger.kernel.org>; Tue,  2 Sep 2025 09:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [13.76.142.27])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0670A2E8DEF;
+	Tue,  2 Sep 2025 09:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.76.142.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756805406; cv=none; b=LIXssgHV0yQxVHtr+EpX4dJ4S6EVXiHERUp3IbiiDhCFLJHr/iueVq/n/WBJXOdW/MhFp7OjUxWI/phlo/B4bnnVu5XWd9lpXrGJTnn+rnMnAbLudopw0RTrJNloH+eIb0RUBTqEU7R5B3vbLbv70QEgZZMxQcp4MwKGadVcWTc=
+	t=1756806332; cv=none; b=d74LTBOWjEF7V8WW2qsM1SMknPntlQm4WsFNpYwfsjwvQiT8JDnT6ncLUtWc0NhzrU0icpTDgRPOA32VUrs7U+2e/4YB63fM/pG3yhgoT+WwVfyyODbn6h2+LP2V2ofJT54nKSVqzd1jjRbmM9+2YPyIcllyIt2PmH04/4GD2MI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756805406; c=relaxed/simple;
-	bh=5UTLFe9Na1x/q+MvJizjhdPCvRgJqWqRho5nedRZ7Og=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ox3FO0rN7N9IFqSxxrLsRbozvTVsGFr0OU02Kl0+VL3dUB8jTHVLLlo7WZLOZi/5c8fOKLgoMBoGL8FkTtg51gpmgiUhCYqzmMpNTYEIcV1mDhPrbL5f6UZ60x67wqVjAT+Mhk9XvIqe9stMRXAqnlvb6wtumq32bHajB4Q2dbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=kZ4iS3eu; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3d4dcf3863dso1445495f8f.1
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Sep 2025 02:30:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756805402; x=1757410202; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=432khs7OCxGBblRoqEqWrfX2I6K5pnQLFbsVSHyt0Es=;
-        b=kZ4iS3eu7DEWmb59PItVJ+I0lMf/Vb0iABIHfY5mOxbAu3Ay/MNDUd2oiGfxrAa7WN
-         ZiTW0lzjDzTQlJU2Yc1xdgKWtfybjywinTDKeLS/2tkbRnRlm0kY846qUHXIFPQTc7wn
-         JjIdwuxkPhOgsVY/RDxvI5ZRVq3vcwHeJIUz0yuiSrUyfRCTXwEH502wQBkOru+D+PWG
-         6acGmh43b7Wq0y7hrHeIuvmhZjr3HCwuNN74BDuv/ItUsMiuFNKYJKP3aXpUEts+7C50
-         euhHCNnChl/1o9YeUor3UZS3YDIfKIjXGngehUINRGaZ5LNvbnamvgU1GV37h0EGz2KF
-         iRMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756805402; x=1757410202;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=432khs7OCxGBblRoqEqWrfX2I6K5pnQLFbsVSHyt0Es=;
-        b=cc9ZP2QjGLtVxwnwsvnSo3GO4SxTjwEsNkipYFALp6BmpfFIExS2844nzpz8g7ZID2
-         Bxq9FG5F3w4V1ywiU2Nv/nIouj3IP4S7Lc3fNSt9P3AqwLZyNHT355vpNb/6CuiLnkck
-         5zLN2SBZuqxyBNfqQp2iitr+J4PpcdPTDnmcYmrB5Edtgsc7z19JcH5SIv5JcDi08Wnt
-         P/GaIzwCKRb28ZP3QOpzJuXB/B3KAFIIr6MhlE72vDMPzgVl4uo7Q5Ok2moqe25wsJt2
-         aX7E6NqDQUQ6Qt4KnqEpsceZZWM2R454ZbQfJJaHFwWWkL1RdyZ907YwTB2TIml5b2Xe
-         kBCw==
-X-Forwarded-Encrypted: i=1; AJvYcCVBeA7oCOAP2mHtYBN/AJ5VZt7pc7tgP4UCD+TC0RdM1EnCo3P1ARvUFbfW7K+l+m/kAe6Ehm7hhqox@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxw4TbBaCiIYM1vHT/Nrtyau+oxh3D6MQjGaxtu6wFk+xC8wNm4
-	cHcfpSSycfT00X5gmybIy9TL5SNZ4N8LIHc2Pfw+Qrv3MJWBcVvCOFW0ZcemSPvMTRw=
-X-Gm-Gg: ASbGncsuRW1UU90jdYs5XErd/BZuBW0vA4YVL6P4zGUB7afE3BA4zfVuSwiqL3y/Aux
-	vFfR0PORj3wllFmE8OGp5vF4/7G8upYZwp+K2kAX2CUASent2/u/23jFVnM5ihIZsKf72OCgk1R
-	9Kz/tfBl5cS++ZgW/EX/U4xpaja1JKJ21R1HQ2yMiis4D/CcP5z1DMCJGgsK89pCQGCtjeZRtnk
-	+tqVL8ynRfGTdBoSQs4hoVhtVx7ZcbQWq/x6wxRvfrkE7WYiVxNWieJsSFFESKsi6fWsPTOm5x3
-	YagPll095QMu6BL5kiwnAHZleuwTZZ2WYTv+6j3CVoF8n0k2EMEblR+v0B5HnZ4WU6ym5dvz7Y5
-	pUU5rc1AwgX34ehn8xFry9x1x5GGQvppq+A==
-X-Google-Smtp-Source: AGHT+IG42W61HHIDR/rDhaz/55c/dQ4iA+jW2ueIWFUoOBDEHqYDk9qKbuROvLVBex1Isp3Sw8cvVg==
-X-Received: by 2002:a05:6000:2909:b0:3c9:4e1f:ef46 with SMTP id ffacd0b85a97d-3d1df349680mr8131402f8f.48.1756805402351;
-        Tue, 02 Sep 2025 02:30:02 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:3327:447f:34e9:44f7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3cf270fbd01sm19307310f8f.13.2025.09.02.02.30.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Sep 2025 02:30:01 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	s=arc-20240116; t=1756806332; c=relaxed/simple;
+	bh=ql+elIt0KJIijNej8diArkCswhobJITiTSz7FP9wt0A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=j05sLALiLEwcNmDQWOh+o85oCNa9rpshAB9FO/CHuRMBxZE/UkiQgGKOlMFLUFAHFL0uaANB0wY/lgPWRnH5qKI1SAJa06NRvgsr+OdQJJK2vEa9DO1dU/YmEh9Ur9fIvgQzpprJi9YnimOHIFP6pmqP+SWIHrVLTNbQoe2r2yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=13.76.142.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0006800LT.eswin.cn (unknown [10.12.96.77])
+	by app2 (Coremail) with SMTP id TQJkCgB3FpWpvLZoXuPGAA--.49929S2;
+	Tue, 02 Sep 2025 17:45:17 +0800 (CST)
+From: Yulin Lu <luyulin@eswincomputing.com>
+To: linus.walleij@linaro.org,
 	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] gpio: fix GPIO submenu in Kconfig
-Date: Tue,  2 Sep 2025 11:30:00 +0200
-Message-ID: <175680539717.52527.14627198705710165881.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250901125513.108691-1-brgl@bgdev.pl>
-References: <20250901125513.108691-1-brgl@bgdev.pl>
+	linux-kernel@vger.kernel.org
+Cc: ningyu@eswincomputing.com,
+	zhengyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	huangyifeng@eswincomputing.com,
+	fenglin@eswincomputing.com,
+	lianghujun@eswincomputing.com,
+	Yulin Lu <luyulin@eswincomputing.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: [PATCH] pinctrl: eswin: Fix regulator error check and Kconfig dependency
+Date: Tue,  2 Sep 2025 17:45:08 +0800
+Message-Id: <20250902094508.288-1-luyulin@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TQJkCgB3FpWpvLZoXuPGAA--.49929S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tF4fCry3Jr1fZw47WF4kJFb_yoW8uFW5pF
+	Z3GFyfAr1UJF4xJryUJ34I9Fy3Gan7GrW7Cw48K39xXFs8AFyDA3s0qFW5AFWvkr4kJr1Y
+	y345tFyUWF17ZFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
+	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+	wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
+	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
+	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
+	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
+X-CM-SenderInfo: pox13z1lq6v25zlqu0xpsx3x1qjou0bp/
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Smatch reported the following warning in eic7700_pinctrl_probe():
 
+  drivers/pinctrl/pinctrl-eic7700.c:638 eic7700_pinctrl_probe()
+  warn: passing zero to 'PTR_ERR'
 
-On Mon, 01 Sep 2025 14:55:13 +0200, Bartosz Golaszewski wrote:
-> Commit a86240a37d43 ("gpiolib: enable CONFIG_GPIOLIB_LEGACY even for
-> !GPIOLIB") accidentally pulled all items from within the GPIOLIB submenu
-> into the main driver menu. Put them back under the top-level GPIO entry.
-> 
-> 
+The root cause is that devm_regulator_get() may return NULL when
+CONFIG_REGULATOR is disabled. In such case, IS_ERR_OR_NULL() triggers
+PTR_ERR(NULL) which evaluates to 0, leading to passing a success code
+as an error.
 
-Applied, thanks!
+However, this driver cannot work without a regulator. To fix this:
 
-[1/1] gpio: fix GPIO submenu in Kconfig
-      https://git.kernel.org/brgl/linux/c/ef9f21c3f370bcd45688a3a573b788e39b364e80
+ - Change the check from IS_ERR_OR_NULL() to IS_ERR()
+ - Update Kconfig to explicitly select REGULATOR and
+   REGULATOR_FIXED_VOLTAGE, ensuring that the regulator framework is
+   always available.
 
-Best regards,
+This resolves the Smatch warning and enforces the correct dependency.
+
+Suggested-by: Dan Carpenter <dan.carpenter@linaro.org>
+Fixes: 5b797bcc00ef ("pinctrl: eswin: Add EIC7700 pinctrl driver")
+Signed-off-by: Yulin Lu <luyulin@eswincomputing.com>
+---
+ drivers/pinctrl/Kconfig           | 2 ++
+ drivers/pinctrl/pinctrl-eic7700.c | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index be1ca8e85754..0402626c4b98 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -211,6 +211,8 @@ config PINCTRL_EIC7700
+ 	depends on ARCH_ESWIN || COMPILE_TEST
+ 	select PINMUX
+ 	select GENERIC_PINCONF
++	select REGULATOR
++	select REGULATOR_FIXED_VOLTAGE
+ 	help
+ 	  This driver support for the pin controller in ESWIN's EIC7700 SoC,
+ 	  which supports pin multiplexing, pin configuration,and rgmii voltage
+diff --git a/drivers/pinctrl/pinctrl-eic7700.c b/drivers/pinctrl/pinctrl-eic7700.c
+index 4874b5532343..ffcd0ec5c2dc 100644
+--- a/drivers/pinctrl/pinctrl-eic7700.c
++++ b/drivers/pinctrl/pinctrl-eic7700.c
+@@ -634,7 +634,7 @@ static int eic7700_pinctrl_probe(struct platform_device *pdev)
+ 		return PTR_ERR(pc->base);
+ 
+ 	regulator = devm_regulator_get(dev, "vrgmii");
+-	if (IS_ERR_OR_NULL(regulator)) {
++	if (IS_ERR(regulator)) {
+ 		return dev_err_probe(dev, PTR_ERR(regulator),
+ 					 "failed to get vrgmii regulator\n");
+ 	}
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.25.1
+
 
