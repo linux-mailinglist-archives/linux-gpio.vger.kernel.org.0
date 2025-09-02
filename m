@@ -1,61 +1,113 @@
-Return-Path: <linux-gpio+bounces-25397-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25398-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 103FBB40776
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 16:47:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C8BBB40781
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 16:48:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 51E333BD0FD
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 14:45:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5F1AA1B649BC
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 14:47:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E51C9320A0A;
-	Tue,  2 Sep 2025 14:44:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC1EE3128D2;
+	Tue,  2 Sep 2025 14:46:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GG4F4Zrv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MFGskFyj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9414131E0FD;
-	Tue,  2 Sep 2025 14:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C30631158C;
+	Tue,  2 Sep 2025 14:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756824240; cv=none; b=gkFdQYR2XP1kaLWjvHDAIzXr9YRCFh4Mf9hA56iIiTtZq8jsxSj0Wf9IwEFusaZz/PaXSaWMCIV0zZkphAC7LxCHpN2Vdlxe9FKEUvVZIAzTpGcDxoNx4WYwLwtEMpMa/pblxcf7zsf5LqarpW2XyKQh+qkq4HUUYxPWqrbmXlU=
+	t=1756824402; cv=none; b=RmtHvFMD8iFqp5Ys3W1E8oRB0UHRGbEVGfVlQ09BS3aBnFczQJBMi6causccLtAG45RGs30UCNl1sNGLSdclds7ER4kD9zB/ZiQqQJaXLo3iQzXH8G54IAw+nwgVZTsHjUuQ5+M2UR+ljURIhS/mxcXXTDgLyulmiXF+Q4KP0sQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756824240; c=relaxed/simple;
-	bh=TvLmx2t15DCYplk5aWh9TQgIG8CqvqbsaQU4DvFndfw=;
+	s=arc-20240116; t=1756824402; c=relaxed/simple;
+	bh=Wx5EU3ck/BxVVGxoCPPqG0+FAlUpEvvPwJtcEzKjaII=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ol8YmDTJJwk4TgfeXQF9WmkeCxtHaaoi7HRzWMhn/ly7HOqxutfdnRXUurtMXSi2cJIEHQsk7j3LdUAda7FrQtza1C+7oUg0ghKyIwhUYdCOxRW9Ue6meRgB4yS5qnMHBA56V0cSOACO366MVNc+YbDDtVnwjmdha4Hn1PkmbII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GG4F4Zrv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCE6FC4CEF5;
-	Tue,  2 Sep 2025 14:43:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756824240;
-	bh=TvLmx2t15DCYplk5aWh9TQgIG8CqvqbsaQU4DvFndfw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GG4F4ZrvjgPWwH6BLpgtnVdKDAqbl7kDKWLTVwpGTe230qpgrspewf0Gf+Vw0048p
-	 Wj2BwLZRP4N7DZE3BmzFeUo61XquTiwr8Js5rdVb3KFCsxL//8RfkAc0CtfbNrFfgr
-	 OrxQZXZrcqHD/oyloG3SYjRF/bDdNkrRmIJUnkVaIb6PV+htv8XOK+bCITNw0XXrIJ
-	 VkAbfzT0tUK18d30I4aN2FHfEzYfOPLEcF8yvUGgzvOMWIW46fjuPvmte6EAqF/r80
-	 mVrPv0rGG1sOMbQ0LwdZLxMK2KluhLIz3xhvK2Cmh0h4P6WMSs/m1ijFmCyL9oanqt
-	 MWcinHnDbCTXA==
-Date: Tue, 2 Sep 2025 09:43:57 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Srinivas Kandagatla <srini@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, kernel@oss.qualcomm.com, 
-	Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v8 1/9] arm64: dts: qcom: qcs6490-audioreach: Add gpr node
-Message-ID: <4yo7v7whxffebzhoxkbpm226vsj2twc56xuf7etwwcyfrf2lzh@x2udmlhvdiwu>
-References: <20250821044914.710044-1-quic_pkumpatl@quicinc.com>
- <20250821044914.710044-2-quic_pkumpatl@quicinc.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=pPyoqADUpf6vqOZUM7yFCVfumKTlwZrG0yr/cOugjUSk2v1Fksp7mTZS4+aIe7vCOF219lqKF0azfrimKKfkuhCMRl9rfWOw06jCSm89ISUyX144qt+vWDZ1PMrTo24yCtQUjx0fKhRspK9Po4O+WmifHlGloxE4cpR6PRYGi0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MFGskFyj; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756824401; x=1788360401;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Wx5EU3ck/BxVVGxoCPPqG0+FAlUpEvvPwJtcEzKjaII=;
+  b=MFGskFyjsH15aNbS6dY1N4MLFe5sztvKqv3LZzw3uPRMt0+432xXJ6kc
+   G0tcOzCQpdFrbvYFoQRcywZjXq5nK+W6Pr2i/XTw4TpNUTsYoWq01eGqD
+   ngU8m21J34F28/aG4dx2G2hUnokG3l00i3V8IwX6b4cQLwWaabfDWVUsk
+   dk2SvviMH1Nn4mO8bsLEvmQFQ4hJELprvMUICB/aj7f1igd3d6M0Xlf1/
+   iM1MuEKcflAdgqdooCX+ulEPvrAlXSQwHPhSjbJZQ1IVspwzPoG3m+GDh
+   dPpLBaVKxjhGDh9Rqe4Dyp3v81BOoA/aJZHf4HIlDyqMqACEAhR20OYPI
+   g==;
+X-CSE-ConnectionGUID: 3UJPX/zYSsmXVWLjb73AHg==
+X-CSE-MsgGUID: xVyJbmWQQq6gD9raPcpb9w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11541"; a="76545788"
+X-IronPort-AV: E=Sophos;i="6.18,230,1751266800"; 
+   d="scan'208";a="76545788"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 07:46:40 -0700
+X-CSE-ConnectionGUID: USnIJsbFRhyH+qHMzQmVsQ==
+X-CSE-MsgGUID: 2OVUpl5DTIeZGPOdwEp2Zw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,230,1751266800"; 
+   d="scan'208";a="171189727"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 07:46:28 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1utSHA-0000000Aig8-04Qa;
+	Tue, 02 Sep 2025 17:46:24 +0300
+Date: Tue, 2 Sep 2025 17:46:23 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Alexey Klimov <alexey.klimov@linaro.org>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Dong Aisheng <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	NXP S32 Linux Team <s32@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Tony Lindgren <tony@atomide.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	imx@lists.linux.dev, linux-omap@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	stable@vger.kernel.org, Chen-Yu Tsai <wenst@chromium.org>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v7 00/16] pinctrl: introduce the concept of a GPIO pin
+ function category
+Message-ID: <aLcDP36eEIZ_tqFv@smile.fi.intel.com>
+References: <20250902-pinctrl-gpio-pinfuncs-v7-0-bb091daedc52@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -64,168 +116,65 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250821044914.710044-2-quic_pkumpatl@quicinc.com>
+In-Reply-To: <20250902-pinctrl-gpio-pinfuncs-v7-0-bb091daedc52@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, Aug 21, 2025 at 10:19:06AM +0530, Prasad Kumpatla wrote:
-> From: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
-
-Subject says "add gpr node", that sounds insignificant, but the patch
-actually introduces the structure for how to model audioreach - and will
-set a precedence that others will follow.
-
-It must be clear from the commit message why this is a separate file, so
-that others will understand, now and in the future.
-
+On Tue, Sep 02, 2025 at 01:59:09PM +0200, Bartosz Golaszewski wrote:
+> Problem: when pinctrl core binds pins to a consumer device and the
+> pinmux ops of the underlying driver are marked as strict, the pin in
+> question can no longer be requested as a GPIO using the GPIO descriptor
+> API. It will result in the following error:
 > 
-> Add GPR(Generic Pack router) node along with
-> APM(Audio Process Manager) and PRM(Proxy resource
-> Manager) audio services.
-
-https://docs.kernel.org/process/submitting-patches.html#describe-your-changes
-says to start your commit message with a problem statement, that makes
-the reviewer understand which problem you're trying to solve. "Adding
-GPR node" is not the problem, that is part of the solution, it should
-come last.
-
+> [    5.095688] sc8280xp-tlmm f100000.pinctrl: pin GPIO_25 already requested by regulator-edp-3p3; cannot claim for f100000.pinctrl:570
+> [    5.107822] sc8280xp-tlmm f100000.pinctrl: error -EINVAL: pin-25 (f100000.pinctrl:570)
 > 
-> A new qcs6490-audioreach.dtsi file has been added to
-> update AudioReach specific device tree configurations.
-
-"Has been added"? When?
-
-> The existing audio nodes in sc7280.dtsi, which were designed
-> for the ADSP Bypass solution.
-
-Please complete this sentence.
-
-> The audio nodes now being updated
-> in qcs6490-audioreach.dtsi to support the ADSP-based AudioReach
-> architecture.
-
-No, you're not updating qcs6490-audioreach.dtsi, you're adding that
-file.
-
-Please start your commit message with a description of what exists
-today and why that doesn't fit your need, explain why we need a separate
-file to carry these things. Make it clear why the bypass solution should
-be kept in sc7280.dtsi (isn't that design only used in
-sc7280-herobrine?).
-
-Also, is qcs6490 the only variant of this SoC that comes with
-AudioReach, what about QCM6490 and SM7325 devices?
-
+> This typically makes sense except when the pins are muxed to a function
+> that actually says "GPIO". Of course, the function name is just a string
+> so it has no meaning to the pinctrl subsystem.
 > 
-> Signed-off-by: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
-> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> ---
->  .../boot/dts/qcom/qcs6490-audioreach.dtsi     | 54 +++++++++++++++++++
->  arch/arm64/boot/dts/qcom/sc7280.dtsi          |  2 +-
->  2 files changed, 55 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
+> We have many Qualcomm SoCs (and I can imagine it's a common pattern in
+> other platforms as well) where we mux a pin to "gpio" function using the
+> `pinctrl-X` property in order to configure bias or drive-strength and
+> then access it using the gpiod API. This makes it impossible to mark the
+> pin controller module as "strict".
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi b/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
-> new file mode 100644
-> index 000000000000..282938c042f7
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
-> @@ -0,0 +1,54 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * qcs6490 device tree source for Audioreach Solution.
-
-That's pretty much what the file name says as well. It might make sense
-to leave a comment here, but if so make it useful.
-
-> + * This file will configure and manage nodes from sc7280.dtsi to
-> + * support the AudioReach solution.
-
-So far it's only adding things, not configuring and managing (which
-isn't something DT does anyways).
-
-Also "This file will" implies that in the future something will be added
-here to deliver something. We don't communicate intent like this, and
-once you add that thing you intend to add in the future this comment
-won't be useful.
-
-Something like this would be better:
-"Common definitions for SC7280-based boards with AudioReach"
-
-But I think that too can be derived from the file name. So, let's make
-sure the commit message for the change that introduces the file has a
-good explanation.
-
-> + *
-> + * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
-
-I think this would look better above the comment. But please use the
-right copyright statement.
-
-Regards,
-Bjorn
-
-> + */
-> +
-> +#include <dt-bindings/clock/qcom,lpass-sc7280.h>
-> +#include <dt-bindings/soc/qcom,gpr.h>
-> +#include <dt-bindings/sound/qcom,q6afe.h>
-> +#include <dt-bindings/sound/qcom,q6dsp-lpass-ports.h>
-> +
-> +&remoteproc_adsp_glink {
-> +	/delete-node/ apr;
-> +
-> +	gpr {
-> +		compatible = "qcom,gpr";
-> +		qcom,glink-channels = "adsp_apps";
-> +		qcom,domain = <GPR_DOMAIN_ID_ADSP>;
-> +		qcom,intents = <512 20>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		q6apm: service@1 {
-> +			compatible = "qcom,q6apm";
-> +			reg = <GPR_APM_MODULE_IID>;
-> +			#sound-dai-cells = <0>;
-> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-> +
-> +			q6apmdai: dais {
-> +				compatible = "qcom,q6apm-dais";
-> +				iommus = <&apps_smmu 0x1801 0x0>;
-> +			};
-> +
-> +			q6apmbedai: bedais {
-> +				compatible = "qcom,q6apm-lpass-dais";
-> +				#sound-dai-cells = <1>;
-> +			};
-> +		};
-> +
-> +		q6prm: service@2 {
-> +			compatible = "qcom,q6prm";
-> +			reg = <GPR_PRM_MODULE_IID>;
-> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-> +
-> +			q6prmcc: clock-controller {
-> +				compatible = "qcom,q6prm-lpass-clocks";
-> +				#clock-cells = <2>;
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> index 0dd6a5c91d10..18e959806a13 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> @@ -3944,7 +3944,7 @@ remoteproc_adsp: remoteproc@3700000 {
->  
->  			status = "disabled";
->  
-> -			glink-edge {
-> +			remoteproc_adsp_glink: glink-edge {
->  				interrupts-extended = <&ipcc IPCC_CLIENT_LPASS
->  							     IPCC_MPROC_SIGNAL_GLINK_QMP
->  							     IRQ_TYPE_EDGE_RISING>;
-> -- 
-> 2.34.1
+> This series proposes to introduce a concept of a sub-category of
+> pinfunctions: GPIO functions where the above is not true and the pin
+> muxed as a GPIO can still be accessed via the GPIO consumer API even for
+> strict pinmuxers.
 > 
+> To that end: we first clean up the drivers that use struct function_desc
+> and make them use the smaller struct pinfunction instead - which is the
+> correct structure for drivers to describe their pin functions with. We
+> also rework pinmux core to not duplicate memory used to store the
+> pinfunctions unless they're allocated dynamically.
+> 
+> First: provide the kmemdup_const() helper which only duplicates memory
+> if it's not in the .rodata section. Then rework all pinctrl drivers that
+> instantiate objects of type struct function_desc as they should only be
+> created by pinmux core. Next constify the return value of the accessor
+> used to expose these structures to users and finally convert the
+> pinfunction object within struct function_desc to a pointer and use
+> kmemdup_const() to assign it. With this done proceed to add
+> infrastructure for the GPIO pin function category and use it in Qualcomm
+> drivers. At the very end: make the Qualcomm pinmuxer strict.
+
+I read all this and do not understand why we take all this way,
+Esp. see my Q in patch 16. Can we rather limit this to the controller
+driver to decide and have it handle all the possible configurations,
+muxing, etc?
+
+I think what we are trying to do here is to delegate part of the
+driver's work pin mux / pin control core. While it sounds like right
+direction the implementation (design wise) seems to me unscalable.
+
+In any case first 12 patch (in case they are not regressing) are good
+to go as soon as they can. I like the part of constification.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
