@@ -1,171 +1,210 @@
-Return-Path: <linux-gpio+bounces-25369-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25371-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3EDEB3FFA3
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 14:13:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B642BB3FFF4
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 14:19:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5F9865E06A5
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 12:08:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE41F4808E1
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Sep 2025 12:13:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EDAE324B01;
-	Tue,  2 Sep 2025 11:59:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 231352F99A9;
+	Tue,  2 Sep 2025 12:08:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="INgqUkgY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oiuGxnBk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D0732144F
-	for <linux-gpio@vger.kernel.org>; Tue,  2 Sep 2025 11:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B15288C20;
+	Tue,  2 Sep 2025 12:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756814393; cv=none; b=dvzPZ8WefZg0h6ApaDYV6I0TZu1M8AIqdej/pp/vx7AyFzEsvixWyNtjnVRuYJtEOIRhwMy5PtJ2wCzbjOLjVdInZTUneaWZWUkg+F2tfRD1H+7JN18BCPVDWuj/Par3psd4qTCysQMxV4RZtvBYhyxipOHJLTQgNovfwaw28iA=
+	t=1756814916; cv=none; b=b1T0z+Us6GcRJTa7ag4esSOT/cOJD28rOBPXBUDl8DZDBHO/2pa4lTcfTlLwHTXEmjx4n0p0GhXf+wPqpWPolqBI62w7fYwUrjrLQJpgcdut39H3FilV4/870TbAr4WVgsGQL43uirwD3nNVyr4aT6QAZXu0LFHJ37fTs6zhD8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756814393; c=relaxed/simple;
-	bh=pmPGULb1s5aSI6ClYNDWVTQCSeoNAD27M4PgucF3E4o=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fXdynX0z+B/mivY+54Fv1paPOiJk72JOhBh4Ue8tQTlQXUs/egFZzulmDbPJL68yow+P74JZLWk27AegQDYoZQPJx4wPeSBJ9vMtgzIS8KaHGBSifN7XiRN2EO+oUa5xbdQN3YtwDRdSrA+xMdOuZWI9sDvvLfxzEev3EmAwdJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=INgqUkgY; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-45b7d87b90fso35892555e9.0
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Sep 2025 04:59:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756814386; x=1757419186; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=P1JFPtEwOFWxLJ4pevnsYlgpYZW/QvB5ELLnfLsEVFI=;
-        b=INgqUkgYx6BaU4rM8Ajotj3byE7tPUqBhDjs6SD5bCcu/ifV2R+tDUzZot6iIrFZrj
-         ZiMDaKmtdgcGkjB2UAOkLbkf9/l7A+XVEe19G6JtCwjWodYGnoFs3DW2p+OsTfNWI1kc
-         eFQ2CnTMRlL2SlYz72RXnLmjKCxXdhkjkcPg9aOzU1SHL3OTrS+oZ+6uveI8BL48y9U9
-         aO801ACYArNz/8ztCxOLsodof2CUi0+Gu8V8hCZT2G03dHwCVqaaqrZcTYx0bHLclll2
-         +3nSbVKWXWF8uQocF9I4Zcxl+gLmb2Bw4SxXG05e9uBuVT5fPTPg3jZr5cud/OGNgkgH
-         gofA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756814386; x=1757419186;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=P1JFPtEwOFWxLJ4pevnsYlgpYZW/QvB5ELLnfLsEVFI=;
-        b=thxN/izzU4/Bgs3eWMY8ypp8+Ip1JH2kQqkmv2+R2jPkTxHzIPcjo6z0r6F740u15n
-         duR6Kso/xCaqb3fH8yLMndS+Hl4ssg7dGJvFMtbm4qwuiHQ3KxdzacVP9xh/nndKMmJJ
-         kaWOc8V9zZTlVforQ6wPEKHfCSYf1UiTPmuKCYsioeaxHQw+whU0BvhkOpbkWMcCkZ3J
-         sRhUTeqH9+ynFlOD/6PI+siLr/2wcFpxMPCzkQPWXaSzS6qSnbW5g8Z5MeUGcRyu92lC
-         JSIvhBLtQyfTUdftju99uthSEaFje4uQH+Q/rEVjnPhmyKJ9ipLnKlja1B53VWoKmD+G
-         MCbg==
-X-Gm-Message-State: AOJu0Yzqd1vyLeiT0iG7jHfnXXXzAOgh0Yj40MqL5upzj/tM9f0L82zI
-	mY5GKvQFgJhwsItjCj0KjrOV+IxiuZ4bZhnRbAhlKnZEZVZ85yjqBN5KOnYev9PR3Q0=
-X-Gm-Gg: ASbGncveW4eBMV2udbzgSbk+LgK/7j8F62DjMKFHyO6GIvfq8K3wzqdDO6TssEYPRxt
-	miuvp8QyKUc8qH/UEm/VyL+RonJbdeyBoAreeTEZGUK85qml/nj7V3p4A7GqZ5jCC3UXNZuYhtP
-	7BGVpbpN8aHHXIwri2j4QDY8T+NMjFMGPXo5f8x7bGevhbSjzARdWQX8JTuS9jhMA9GtkotwW2u
-	WVQB/hXhQmXVdvoGxJAN/XZoYJQn0oOh14MosflALXkez1IeymxY02Z+YC8vjBUYtzabMTcVwL2
-	+/a2191ZXhSzJRtVNI2+4Zz0F52IOsHiZsrtGoCPDepaKM3GO+AK4+a126/U2YO3U9PHoWZQWLO
-	rUjS+0KtidWJ4zgM1
-X-Google-Smtp-Source: AGHT+IERkhZoQX1HV3fDYiEzCgaqV6JXpD5DtzyBRIwQQg9LLBsXxUh/GkJb42UUw5J8EFKuniHI6w==
-X-Received: by 2002:a05:600c:4f83:b0:45b:7deb:3f0f with SMTP id 5b1f17b1804b1-45b84c2256bmr102158145e9.2.1756814386175;
-        Tue, 02 Sep 2025 04:59:46 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:3327:447f:34e9:44f7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b9c234b24sm10224195e9.16.2025.09.02.04.59.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Sep 2025 04:59:45 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 02 Sep 2025 13:59:25 +0200
-Subject: [PATCH v7 16/16] pinctrl: qcom: make the pinmuxing strict
+	s=arc-20240116; t=1756814916; c=relaxed/simple;
+	bh=ZPf10cXY2km1B/FVleWiffi1jphCqVPdfHT9UPrkwwo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JpweuvdkdgLuvPf8YvvyUpqpajwpchEn8+P+Ut5asTwDVOY1Tdi0d0wW3+nNbk58kCbazKhrG1EjQL3DtjF64ufvu6ahoqQ0/77t3Tfm4yGnE7NqiSeEzxpFroCX0DzhDqU+wihYlkzZnI8fK12eB5fOkA8B9unRH2FDMnRt3nM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oiuGxnBk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B238C4CEED;
+	Tue,  2 Sep 2025 12:08:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756814916;
+	bh=ZPf10cXY2km1B/FVleWiffi1jphCqVPdfHT9UPrkwwo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=oiuGxnBk/8quYXPsfzqBm7ce0j/ZCGpRAyoCPjWmIPvVWTkDxk9Fc88foovL2DSlm
+	 ZnHsFZ/ZZH/m3lfYUJ9V4Fmtgi6QmfaInaEtFFtbRYWBJ8OtVB4FCTCuaeZTGyTTcO
+	 f8vxmer0gi1hUohvgWQPO6/kZwnpyi65XNLj2axScHn3K2OQLEesu+h9umUYgwvnNj
+	 pXVDavGkq19mn3SqhXufvOouCB2kAgJ6Ach+eMGW4qPgU1A0tTJRzwmnOI0bygkuGZ
+	 hLs8Ci+33AtMLwB0Yp6/FWkDYpnbyt/hHb1fVnUeq6PPMveHaC190aEAjYWZaV8sN6
+	 Avi1h+ec0TDBQ==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: "Mario Limonciello (AMD)" <superm1@kernel.org>,
+	Amit Chaudhari <amitchaudhari@mac.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Sasha Levin <sashal@kernel.org>,
+	westeri@kernel.org,
+	andriy.shevchenko@linux.intel.com,
+	brgl@bgdev.pl,
+	linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.16] gpiolib: acpi: Add quirk for ASUS ProArt PX13
+Date: Tue,  2 Sep 2025 08:08:12 -0400
+Message-ID: <20250902120833.1342615-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250902-pinctrl-gpio-pinfuncs-v7-16-bb091daedc52@linaro.org>
-References: <20250902-pinctrl-gpio-pinfuncs-v7-0-bb091daedc52@linaro.org>
-In-Reply-To: <20250902-pinctrl-gpio-pinfuncs-v7-0-bb091daedc52@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Alexey Klimov <alexey.klimov@linaro.org>, 
- Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>, 
- Andy Shevchenko <andy@kernel.org>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- David Hildenbrand <david@redhat.com>, 
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
- Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
- Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- NXP S32 Linux Team <s32@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Tony Lindgren <tony@atomide.com>, 
- Haojian Zhuang <haojian.zhuang@linaro.org>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Mark Brown <broonie@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
- linux-hardening@vger.kernel.org, linux-mm@kvack.org, imx@lists.linux.dev, 
- linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1197;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=bNcWH7RYmKxieWZj+11TmEo7Y2F52BicXtYvQjacVVo=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBottwVYBNAIqxX+GTdprLN1KmCRP+T0cr4zPnb7
- WAB05uVr4mJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaLbcFQAKCRARpy6gFHHX
- cm3gD/4gfdNCgi/L1crd3spjH2BfsVhCz8jK0iuHKflwRrBglJW+yuaaNcsIES0+sEg4mbRdkvB
- 1Ww04kOvSuLFZauF0IjgNjcsXM9Y4+a0omjT6JjzrxF4wH11ZUipW6gaRbg5cWC5eo3rgddQEsn
- kwbd/DgAjJie0IMEsgOrpRxSoSPgtiB28j56D9mQlqkaav0Un0XGqHAf52wzHJKASG5FIcLEqk3
- qIM2zlotBfSbMMrimUgMUuracaiWXAgUZEUnTEvPcEqzGxwmGN7aUT3In4gU+ZIAMIA66uGPNE+
- irYNdb4rfWdNdq7+XjiId4yoaKduyzu5Qc/jnjzOGWFHMO2C/qillgL5/et3jIT1GjeUzbUIINn
- CxvwKST8T1S2cPmHe4pwcwmXVDVTneQtdl42O5qh3vP+1L2/R2k4qf2Nl2kX0gqEEV3lZZo9eki
- Ft8oIUThEPJqYpsD0+9gXrBi9I1lYZsOnzBK7tbaaPfJb/rpibcVpT+BJ76HUywsb2N5YPPscbC
- s7dzSCMl03nWf/7ur92d3WElyVXj0DwD7mA0bhE7Qm+yF5en8ldGU3WMcg9FbVS9+hCDk4xtc+s
- aMN2oTM1Lo+DyGbfSI+GpIAarry7nR5402siiOB0KaRWE+zrsWXHk9HH0n2Vu1wv5iSFoFplf5q
- nx4+sTuoQi8FoEg==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.16.4
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+From: "Mario Limonciello (AMD)" <superm1@kernel.org>
 
-The strict flag in struct pinmux_ops disallows the usage of the same pin
-as a GPIO and for another function. Without it, a rouge user-space
-process with enough privileges (or even a buggy driver) can request a
-used pin as GPIO and drive it, potentially confusing devices or even
-crashing the system. Set it globally for all pinctrl-msm users.
+[ Upstream commit 23800ad1265f10c2bc6f42154ce4d20e59f2900e ]
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+The ASUS ProArt PX13 has a spurious wakeup event from the touchpad
+a few moments after entering hardware sleep.  This can be avoided
+by preventing the touchpad from being a wake source.
+
+Add to the wakeup ignore list.
+
+Reported-by: Amit Chaudhari <amitchaudhari@mac.com>
+Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4482
+Tested-by: Amit Chaudhari <amitchaudhari@mac.com>
+Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Link: https://lore.kernel.org/20250814183430.3887973-1-superm1@kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/qcom/pinctrl-msm.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index a5f69464827119dfe2a7781b558094b283fca215..1751d838ce95d6138c824b90098f74891dec7656 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -268,6 +268,7 @@ static const struct pinmux_ops msm_pinmux_ops = {
- 	.function_is_gpio	= pinmux_generic_function_is_gpio,
- 	.gpio_request_enable	= msm_pinmux_request_gpio,
- 	.set_mux		= msm_pinmux_set_mux,
-+	.strict			= true,
+LLM Generated explanations, may be completely bogus:
+
+Based on my comprehensive analysis of this commit and the context, here
+is my assessment:
+
+**Backport Status: YES**
+
+## Extensive Analysis:
+
+### 1. **Nature of the Fix**
+This commit fixes a real hardware bug - spurious wakeup events from the
+touchpad on the ASUS ProArt PX13 laptop. The code change adds a DMI-
+based quirk entry to the `gpiolib_acpi_quirks` table in
+`/home/sasha/linux/drivers/gpio/gpiolib-acpi-quirks.c:350-359`, which
+instructs the GPIO subsystem to ignore wake events from the specific
+touchpad GPIO pin (`ASCP1A00:00@8`).
+
+### 2. **符合稳定内核规则 (Meets Stable Kernel Rules)**
+According to `/home/sasha/linux/Documentation/process/stable-kernel-
+rules.rst`:
+- **Fixes a real bug**: Yes - spurious wakeups are a real hardware issue
+  that impacts users' ability to use sleep/suspend effectively (lines
+  18-19 of rules)
+- **Obviously correct and tested**: Yes - the fix is straightforward
+  (adding a quirk entry), has been tested by the reporter (Amit
+  Chaudhari), and reviewed by Mika Westerberg
+- **Size constraint**: The patch is only ~20 lines with context, well
+  under the 100-line limit
+- **Already in mainline**: Yes - commit
+  23800ad1265f10c2bc6f42154ce4d20e59f2900e
+
+### 3. **Historical Precedent**
+Multiple similar commits for spurious wakeup quirks have been backported
+to stable:
+- Commit `805c74eac8cb3` (GPD G1619-04 touchpad wakeup) - explicitly
+  marked with `Cc: stable@vger.kernel.org`
+- Commit `782eea0c89f7d` (Clevo NL5xNU) - marked with `Cc:
+  stable@vger.kernel.org`
+- Commit `a69982c37cd05` (Clevo NH5xAx) - marked with `Cc:
+  <stable@vger.kernel.org> # v6.1+`
+
+### 4. **Code Structure Analysis**
+The change follows the exact same pattern as other quirk entries in the
+file:
+```c
+.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
+    .ignore_wake = "ASCP1A00:00@8",
+},
+```
+This is a data-only addition to an existing quirk table - no logic
+changes, no new code paths, minimal regression risk.
+
+### 5. **User Impact**
+The bug causes spurious wakeups "a few moments after entering hardware
+sleep", which:
+- Prevents proper system suspend/sleep functionality
+- Drains battery life on laptops
+- Disrupts user workflow
+- Is a clear hardware-specific issue that cannot be worked around by
+  users
+
+### 6. **Risk Assessment**
+- **Extremely low risk**: The change only affects systems that match the
+  specific DMI strings (ASUSTeK COMPUTER INC. + ProArt PX13)
+- **No impact on other systems**: DMI matching ensures this quirk only
+  applies to the affected hardware
+- **Well-established mechanism**: The ignore_wake infrastructure is
+  mature and widely used
+
+### 7. **Backporting Considerations**
+While this specific commit wasn't explicitly marked with `Cc: stable`,
+it follows the exact same pattern as commits that were. The commit has
+already been picked up by Sasha Levin's stable tree (as shown in the `[
+Upstream commit ]` tag in the local repository), suggesting the stable
+maintainers recognize its importance.
+
+The fix is self-contained, requires no prerequisites, and can be cleanly
+applied to any kernel version that has the `gpiolib-acpi-quirks.c` file
+structure (introduced in commit `92dc572852ddc`).
+
+### Conclusion
+This is a textbook example of a stable-appropriate fix: it addresses a
+specific hardware bug affecting real users, uses a well-established
+quirk mechanism, has zero impact on unaffected systems, and follows the
+exact pattern of previously backported fixes for identical issues on
+different hardware.
+
+ drivers/gpio/gpiolib-acpi-quirks.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-acpi-quirks.c
+index c13545dce3492..bfb04e67c4bc8 100644
+--- a/drivers/gpio/gpiolib-acpi-quirks.c
++++ b/drivers/gpio/gpiolib-acpi-quirks.c
+@@ -344,6 +344,20 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
+ 			.ignore_interrupt = "AMDI0030:00@8",
+ 		},
+ 	},
++	{
++		/*
++		 * Spurious wakeups from TP_ATTN# pin
++		 * Found in BIOS 5.35
++		 * https://gitlab.freedesktop.org/drm/amd/-/issues/4482
++		 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_FAMILY, "ProArt PX13"),
++		},
++		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
++			.ignore_wake = "ASCP1A00:00@8",
++		},
++	},
+ 	{} /* Terminating entry */
  };
  
- static int msm_config_reg(struct msm_pinctrl *pctrl,
-
 -- 
-2.48.1
+2.50.1
 
 
