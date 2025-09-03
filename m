@@ -1,81 +1,81 @@
-Return-Path: <linux-gpio+bounces-25504-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25505-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87884B4205A
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 15:06:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6616B42057
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 15:06:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E757018968DD
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 13:07:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7EB2C561151
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 13:06:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6E1930274B;
-	Wed,  3 Sep 2025 13:02:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5371130BF62;
+	Wed,  3 Sep 2025 13:02:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="rkUrGw+c"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="kyLZcjuM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A709530BF54
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Sep 2025 13:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA3830274A
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Sep 2025 13:02:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756904531; cv=none; b=JtvxuDaWrML8iktZKnQaGe9TESMIhlGtAbl9Ut7ih0F5aAmAAeCAiM+RvJx7dwEbkBa0JWd9unVePH1g5k4sJGGFLanq1WnV1i8SteORyFLmME2WlWkmSyUDE+JxTYeUxea5UGbOVude6INteXtoIQQvy+ljB8OcqJ2t4X98wc4=
+	t=1756904532; cv=none; b=GlM383VVeVNZrt/HAt8ASgsTi1hwtIo74DxCUFlivM0Wz00gP7NaXREMStJUlVLNEcTtvl3WuOZOKTGh4oqxtLyKdSVFm80HrzFxfKvS4alYFvsjXtPpZtxXbjGaOIxJg2WaMt3OJAvI51IKtY9bcMNkO8oH9vcG0Z7zBI9nlxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756904531; c=relaxed/simple;
-	bh=Sx4V5EDb1oNmjKlLaZ5yADXO7lJhBdC03qug4rW6YCI=;
+	s=arc-20240116; t=1756904532; c=relaxed/simple;
+	bh=0HXkwQrA0TbuDOePZdkXPnM19ifTDWhxRFzjOzAqp1o=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fvdJwaPsqpXUKDO/aAlBwl0RUdNGYW5O2K7IvbsVjtU2MqLibdHz5IEJjhMs+bMvNHYCohBHZmb6lHOSvgHzNy+tykqND0Z8VNIPBV+iv6Yb/PZ1yYlzhyAvuLV4Q9+i9FHBEFcRDSW783AVFXm5z3oyhh7GlDUmBYsAUURTW6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=rkUrGw+c; arc=none smtp.client-ip=209.85.128.47
+	 In-Reply-To:To:Cc; b=cOwX3Ow8uyFQMsZWLUXIQeXhGhsaZL7y+UQS29LI0tDkSjNdVnLQyyfnhxPLJEet6K8zoC1uslA5ELX+XDL7WL9nCMBi1rVNzB7YY2AJ+bseNWLX2DO7DNql/63t/mjKihZR1Dg+LX4JJ7QW7ZNs6SpNfN/aNe7/pVubQ1DrgBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=kyLZcjuM; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-45cb6d8f42cso3936325e9.1
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-45b8b8d45b3so31433815e9.1
         for <linux-gpio@vger.kernel.org>; Wed, 03 Sep 2025 06:02:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756904528; x=1757509328; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=umqr2w90FQrFg9KtDsVcfq/NxP6zMk+HYGGlgGQqrrU=;
-        b=rkUrGw+cCgY1BTP4oXJ9U69MGAQXcfYEnoHFQA3scy3E8T6cAKHu/FNY0MUSAJbMgI
-         uQ6f+S1A0N8WVx1/efhgeeMUgHksHk1oxZthd6YAJ1S3JnCLAH+laMYEy1QiGoG21CNu
-         5OslJuYcnKfw9d0CVqPaAGXjehSRrY7eq2H55QFU36w+WzusJ8fsgklz6Jw8oZsGHvn3
-         JiMuIjICIpL+ExxkBEKuyIWxwXVbrR54W244zvvEystXeJ+XOsjdP+C0pxUx8pgp0k2S
-         c0uClsBiX2x0U9exVGMn5cKk61ax4K+0gMAfCCzyjtLf4OhpnIQMfz4/SOjAATMiu1ng
-         TtKA==
+        bh=RsAR4bHATJNCX4yihevo11kMN+FfA7V209fhDlNgfBY=;
+        b=kyLZcjuMsgpPcONI2o7RW2cxSicE2qGCVfb/CxXoisjm6csrKws4mFoIPEy6N+Zg08
+         ibUch/4IIXBVmDlets/T2oY/7lR8KfX/MfxHWG+Q6RT7UkI1obzZIqPfykZo5lk4erVp
+         nlbCrBGyqDUueyqrMUI2wUbOIDt+/2u0AmGQOsS7XS2wZLoY7aO/2+Wobd2EToRrh9B9
+         owkKcCXAi9vFCB4nL9iLwdlEr/i+GejMHkVIvKfATLFycfexf8lSBjsb3Ft0q3n6bJCg
+         MUZRqqQBdWkYurgjqR3c3ECoD66/5YZVlmPoSQ4IsjZBbKEbX0m7ZT+XzN2R1SYxfHT/
+         d6OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1756904528; x=1757509328;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=umqr2w90FQrFg9KtDsVcfq/NxP6zMk+HYGGlgGQqrrU=;
-        b=Aes4ZWUyJ6/zJC/VSQ1GVdL7jIbUxVDnpOyXo2eF2nOeaKdfrLleYtlvxEqzkpgvbe
-         01/+ZrmQR+z7BfqT8DXsBshIoddD9/+OdEYIhKl60fWQadwJlEabVwBTzW2y88V46rZ9
-         3f4Cb67i3k6mXwBiAaMAz/5becQ+jLtUmzJqSDV0Mtb+vHNJYi6CGi/U+JlvIwjf9g+p
-         6/VIFXIfmRKWG2a+3f041ICwA7tjyMYzzt2PBUdDGu1sw0OXol9o9F0sKklVcYw/vQe4
-         A1oQ5ZtiGGZ0T3H/D5TPUBQ0SlHI05PJd5uyKi297IThQzjHlENxxATXOgIjyKbqV304
-         ILkQ==
-X-Gm-Message-State: AOJu0YyfQS/rge+IH57cI/9tgHJl2+S05/eZacAhwjmrlbpTo7S6Y7yR
-	RYyWjnnSLO2ky5asX+cAad2E+2JKIcxPb/l7nyv2xqU0BG6ZVX6gU6jB0y8Cz26EObM=
-X-Gm-Gg: ASbGncuddTyECCyNQ7lcymob+Ky6RcHbqa90Ea3Wf998mENf6Z1NQrFcTuix1lQIe53
-	flXC+ePu+frNOJY6DU8eWQGh2vYTpaaOZXjQgHvefb/QvQUWRjadcL4AlTkwE2OZJtRRuRPPO+a
-	hRl4rSwKEEBdksTeTZgQ9ZLjom8klwTHe5ZGJRoR4BjDi0S2KEkFOxoblqpB95iytZgS0hoUtd+
-	meQ72ShnYuucNhs6MRXKH0mzhk7ZX0qpHMXIJmClG1ozhcimwSKQ628bmuOG2S7hTY+x/RH5X9W
-	mYxpbLZ79vuqUigTecCeMJZ8jYq0BQMrmKnEnOg0yYlvoLLBW4szclL+g3mvS9of/h+2oo1s385
-	emUHCQMT465UHSp0XzH8D3TpElkM=
-X-Google-Smtp-Source: AGHT+IG+2MVZfNKVag/5Whu2ew2RatT+77VwXYR7uPfEv32tc2gHgEc42ewUDM7o2+Y9DgnAsxHelw==
-X-Received: by 2002:a05:600c:3ba2:b0:45c:b5ff:8252 with SMTP id 5b1f17b1804b1-45cb5ff838bmr17001855e9.25.1756904527720;
-        Wed, 03 Sep 2025 06:02:07 -0700 (PDT)
+        bh=RsAR4bHATJNCX4yihevo11kMN+FfA7V209fhDlNgfBY=;
+        b=UHMhE0HyYxL6ZXYuD6Lv1vSJYR/DVARsBBAdoRvl+Tqj/cQeCDRP3cm1d5cF4G9WD+
+         sBvkaOaONl4ZMiO7mFjrd4rjs58k+4+Y4ir6PpNl4APa87K4dZVDxuItcIpAvxLRYPWR
+         +vOUuGE6PUkDxfeobtFbHt0jNQBrQFE+fBXnwXJocy8eedKzPttGDq6DJL0EQNlgThJI
+         OTzfmBKmVZJmtHlB0iPKCPrg8hWKtGQj3J67kKofgveDu8pGpFWGuy6cQYAsvLGD24zR
+         awf1DunJ9W8iKmub1zRKG08mbgaEXAzq160+I/2fKObZXeHjMi0UsMdafuvk9QUNSuxv
+         1vJg==
+X-Gm-Message-State: AOJu0Yzq7/oZqAjzvhNf6p9LghnGvnxumPJ9CBSjO9idcQhAIOJWU73N
+	zgeLF8dj0tWwyQep/8fYKv/7myVUzT5Lrhe5Zo29683nrBaADbBpvTZt7ZiqGjLZ3oI=
+X-Gm-Gg: ASbGncudwgRwLJL/E0ZthfnV22Yjx6P+pytrgYGECxxRzztrfQKYFqQyq9FpIBqdrpw
+	VoEWqBy4haGZ+nWxR5uAUerxBa8CvAV5xL1Uap8OxvAIAyAVn2el43BHDekmaMRaR8hhQ4kMnNX
+	MZKzOPmeTKLaFOkGt28+v7l651PmIylRmWrsn1X2oPgUzsiaINY+QfkVVLznXGi30zM2WVKWwZh
+	924ww+NyTU0mYFWQPUzSTcEvH9FJquitXSQ/SES1lOHPJCz3dFJ77LHOewOW2cQPKUt5Ak8vlE5
+	I9g0TATzp6jAw2ekFqoOSvFCLEF1mTyO9iFj+2zTzhzW2preeCLJNeHGPMGn8M7SbhAjGQdG/+c
+	8OzQo/VrK3fEtl2GP
+X-Google-Smtp-Source: AGHT+IGNrEzBOMDkDqYnal4CqK1HkrgEgU1BCGBWnNlrVpZqf4vwh4umSaZ4R7lAAnEjKvH2tMr5Ow==
+X-Received: by 2002:a05:600c:3f0a:b0:45b:8703:741b with SMTP id 5b1f17b1804b1-45b870374demr119508805e9.32.1756904528425;
+        Wed, 03 Sep 2025 06:02:08 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:2f8b:4799:6bd6:35df])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3d6cf485eb7sm13280178f8f.3.2025.09.03.06.02.06
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3d6cf485eb7sm13280178f8f.3.2025.09.03.06.02.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Sep 2025 06:02:06 -0700 (PDT)
+        Wed, 03 Sep 2025 06:02:08 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 03 Sep 2025 15:02:00 +0200
-Subject: [PATCH libgpiod 2/7] build: define a separate API version for the
- core C library
+Date: Wed, 03 Sep 2025 15:02:01 +0200
+Subject: [PATCH libgpiod 3/7] core: change the behavior of
+ gpiod_api_version()
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -84,7 +84,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250903-api-version-detach-v1-2-027ca5928518@linaro.org>
+Message-Id: <20250903-api-version-detach-v1-3-027ca5928518@linaro.org>
 References: <20250903-api-version-detach-v1-0-027ca5928518@linaro.org>
 In-Reply-To: <20250903-api-version-detach-v1-0-027ca5928518@linaro.org>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -93,59 +93,45 @@ To: Linus Walleij <linus.walleij@linaro.org>,
 Cc: linux-gpio@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1381;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=651;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=VoW8hLdR5ii07NSIecwfiJtW4yfCWQQtIJOlBhQee7Q=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBouDxLS2bz9kcqD+J3QxMGQq+6l5UAGy2y3yAOV
- LwZ1aMua9+JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaLg8SwAKCRARpy6gFHHX
- cj7iD/9OcZmRiVBvE9f4dHLVGNyFupL5UPFZLuRyx69Qa/MUQyGQyYVe3rCdzJTU56zLhoGIm3N
- nfbRgxa4laPtQdejIju+NduJwVOWBSJmeuARRJ1DJG50WwdTeAMZLOT/LH5uolEKYshR4pdqV6C
- s6kz3G6nYaVx+CPmz5NMNCON/WkZflh7rKdmJ3a155ZVRpj5fjekENdiEYNkt4coQKpmse6PuDW
- aYkCTKkkz02Zk23VKl2sZDLg8PtVuLWGAXa5VreHHmzuKCZBdC0yVnVLiu7A44P1ZFEZrFUUnKA
- xw8IyKU0otwZV96h8LRRfhnxD4PyHJN/eTQvkN135afqdhO7QfL/rg1fa2heIdEL1Tb1CH677xb
- ZzJ0SfmJFX4DyhGLf6dhOXoXGShajWMduoLmr1mpLaalOecGbCnCDc7A0pkxSRtFMrGC5eaYqyP
- lmkXEIPNJY6vKvWOUkHT7t+vyieWF4YQHHemZGauV4/UzSTN2D2+s8EiAFWFpZ+N5bJavSjvMVH
- hLbpw9RjWAeDTLsobauwNoOiCJ6Tom5zFfbeNBRhIP3QxP0j/4s/1z8LMP7dccQnTH2GeU/6SlN
- RdmLmoH4qAIo/N+U7g/JqUilZDEEwQwe1d/XPrmUeivm+rCnhH8sA1P3HCB8QJaMeJGyUWDqVeA
- HuuMfjLpPZUVXXA==
+ bh=TnAaxAc39yIHkT3YCRbK2/BwZOBpdIMubWsmf334A7g=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBouDxLgdre7CuKRMcqB260WHHfZKZ88RrRd5RHr
+ XVKzHuGT7uJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaLg8SwAKCRARpy6gFHHX
+ cji1D/9pRHUWsoG8Vc1y+XcopAJbkuHHcxyV7zCLLCmB2JpdPKVn/r7DKbMw2vifvVnUJNU/eis
+ x3YA19FF1jenYmtG0TmkK9WEfECpV21m2wZEzJaPWtxFOoBQXaY0AJFBtj53cecqu5mhLsq1PZM
+ J4T8Q/ExoMWQ/nm0J7TCIi+S6ENbv/U7P8MvGicdkMIdD7OasjF3i5CwtIBDVcnaWKUm42J7v4U
+ 57n5mK/aOnrLzotu0I0CXjbR6ouP8JbtFX/EposhjM/naEnRImAEhcru8fBvUGDqvklyoE8MLct
+ b1roi1fVr9SpHsms4WjDwlmanbias/7cIZ2uhGR4nnQjfv2iy0x3PCEfybE/RtWsvV39lygYAcJ
+ AS3zFLxSX9vuUGlkbILCXYdHWG7wUDIXm0y1KqyAtA9THwMc+1J58iTf7fmLimHjSEQimPYQNBO
+ yl8KVxPsju0X5ADLNp7yJxXAhezmfup2+B/4AvmHJE+bfSavPO1VocPJHhYH2rhFW//GEa9VeiU
+ 8QC12IcjIXfSOf/VW+BOut0tPGy05LOjrYmfhALgiA8Ddlt99ht19lAM3UZm5aUpjtoeKduba2r
+ Ni6FoVHREWPmrlP9E4lB/z3xXoDFiQk2Hzf0n/sUUtMBws40c+pRaq5u9RgfFs/W65YJl7zNr0L
+ AUGrdvf45LwQOug==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-The core C API of libgpiod has become quite stable and unlikely to
-change soon. We will still be adding some new features to the included
-programs and some of the bindings (notably: Python and Rust) but it
-doesn't make sense to bump the C API which hasn't changed, just becuase
-we're doing a minor release of the larger package.
-
-Define a separate libgpiod C API version in configure.ac. This will
-affect the C, C++ and GLib APIs as the latter two track the C API
-closely. Rust and Python bindings already have their own API versions.
-
-Set the API version to v2.2.0 as it hasn't changed in the libgpiod v2.3
-release cycle yet.
+Make gpiod_api_version() return the human-readable form of the libgpiod
+C API instead of the libgpiod package version.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- configure.ac | 4 ++++
- 1 file changed, 4 insertions(+)
+ lib/misc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/configure.ac b/configure.ac
-index fe9673904c5ffcda2c7aa6783b28a93793a01c0c..4d4996053dafcbf95c60ba1396910fec4826ad7e 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -35,6 +35,10 @@ AC_SUBST(ABI_GPIOSIM_VERSION, [1.1.0])
- # ... and another one for GLib bindings:
- AC_SUBST(ABI_GLIB_VERSION, [1.0.0])
+diff --git a/lib/misc.c b/lib/misc.c
+index e109f8086b4c22edccfb5e88b89e4bf2fac4feee..33d68379032f6dfdc17d40c13ac08a5d911dc93f 100644
+--- a/lib/misc.c
++++ b/lib/misc.c
+@@ -12,5 +12,5 @@ GPIOD_API bool gpiod_is_gpiochip_device(const char *path)
  
-+# Core libgpiod API version.
-+AC_SUBST(API_VERSION, [2.2.0])
-+AC_DEFINE_UNQUOTED([GPIOD_API_VERSION_STR], ["$API_VERSION"], [Library API version string.])
-+
- AC_CONFIG_AUX_DIR([autostuff])
- AC_CONFIG_MACRO_DIRS([m4])
- AM_INIT_AUTOMAKE([foreign subdir-objects])
+ GPIOD_API const char *gpiod_api_version(void)
+ {
+-	return GPIOD_VERSION_STR;
++	return GPIOD_API_VERSION_STR;
+ }
 
 -- 
 2.48.1
