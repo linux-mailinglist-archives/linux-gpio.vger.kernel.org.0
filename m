@@ -1,193 +1,206 @@
-Return-Path: <linux-gpio+bounces-25482-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25484-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABC78B41C66
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 12:55:46 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDEA6B41C77
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 12:57:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6862C5614C2
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 10:55:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9689F7B280B
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 10:55:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 051012F6587;
-	Wed,  3 Sep 2025 10:53:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43D432F3626;
+	Wed,  3 Sep 2025 10:54:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dEgQXq78"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="XL9JUpZ+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D582F5465;
-	Wed,  3 Sep 2025 10:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434212F39A0
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Sep 2025 10:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756896799; cv=none; b=IuhCFFxHPoMWrD27Hwu42T5YHco/p2WSv5Tv+2smpsDB4r1yQkza4Ug5kcbTaAtOg8rlIG9OGadsF82817lggWFifVvAUEnRSE9puzaBrlNfUcMpj9B0PeoxoxKpHMHFEYvz7JEZCCPeW/TkNLNW6gPF5AEptP6qHi3aThbCa3c=
+	t=1756896889; cv=none; b=mZJeexPG6N3McS5h2CUuzm6s1Ns4JlhfCR8THm3L7xDZ64s/fjlb2MIFaiy9BV6lr9OuA1UXq60KrecRjbn2RhiWYWcZY3rX4dqhQQo/gXknrHBTvpES9ruDByOEOBj3RCQ6wlPZ9LvcvebLV2HEf2d4QV6l42b+DaL242qHrh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756896799; c=relaxed/simple;
-	bh=FUmeNCPfNa/iZWbYGZH641C9Ogg0J/3dPBsw0VAIiWE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y5zJp0/CLcsmSzfHjmusc8RRiievp17jWT+4KIcC9kVO0tx2qB2MPxZw4ND8/8WKMc/zb+y1OBi0R5ChmDm6So5VT1DR6kLBPPEE8ZlEoGNJb8SkDyRm6lRg56POW0VTdh8npp97hP70KQDKnp+RMqtoVVprtj/Y4DrGfOu9DNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dEgQXq78; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756896798; x=1788432798;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=FUmeNCPfNa/iZWbYGZH641C9Ogg0J/3dPBsw0VAIiWE=;
-  b=dEgQXq78M2YQgnpeO8U3xJcmbQg0Ro5XBbZvHD1s35peTP5NOI33bJU+
-   ro2oD5mWx3fM9t/J36Jr1VOipX7QUkJiFHjXd2wQfZuVgw2t+GHF5GZ1J
-   jz3+FHa32PN8YkKzT82PMmfj1j0p9Sw3sLJKW5e7oopJ2SYfJGL+0KgQe
-   TR2llJ90P+NA8Z2q3ERTabciaNU8LovQSyF0/fMsyktjBIASor5oJq3jb
-   FBDl0h/Mz0jLEAWICL16xmFxnBlXFY5pSulqJZS2R6/kg+tpTXBlUxns+
-   YQ10Q8Wuofcfc4WFKx8plfQu0uO/E/TDpX5/DqfA7NfGnW4wNnVOfrfAs
-   A==;
-X-CSE-ConnectionGUID: wY9Ge3NdTzKbB7g0lM4vXw==
-X-CSE-MsgGUID: +HwtmeoMT/m2vP5TuJ/sQQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="59273776"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="59273776"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2025 03:53:17 -0700
-X-CSE-ConnectionGUID: fZSJg/OdSLSicfgtY1CHmg==
-X-CSE-MsgGUID: PfccqARKQ1qrVxLteKqPew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,233,1751266800"; 
-   d="scan'208";a="175704587"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2025 03:53:06 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1utl6r-0000000Axff-11tp;
-	Wed, 03 Sep 2025 13:53:01 +0300
-Date: Wed, 3 Sep 2025 13:53:00 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Alexey Klimov <alexey.klimov@linaro.org>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Paul Cercueil <paul@crapouillou.net>, Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	NXP S32 Linux Team <s32@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Tony Lindgren <tony@atomide.com>,
-	Haojian Zhuang <haojian.zhuang@linaro.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-	imx@lists.linux.dev, linux-omap@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v7 16/16] pinctrl: qcom: make the pinmuxing strict
-Message-ID: <aLgeDNLABpmkShIU@smile.fi.intel.com>
-References: <20250902-pinctrl-gpio-pinfuncs-v7-0-bb091daedc52@linaro.org>
- <20250902-pinctrl-gpio-pinfuncs-v7-16-bb091daedc52@linaro.org>
- <aLcBcjvMbrxoDYoC@smile.fi.intel.com>
- <CAMRc=MfcFMgkNqWNZV5o0NxkAvxBTjC3vv56Cr98n0R2CkxuPw@mail.gmail.com>
- <CAHp75VcgaqnDrPH27wxfgyK6zz4RAKJQB0r7G2vbTONTxkEzTw@mail.gmail.com>
- <CAMRc=MfhhX2NJ0fhhX8u+7=sdyUy0G27n7caGf9=TpHxUDJVxg@mail.gmail.com>
- <aLgW7J-j4nn0u8uo@smile.fi.intel.com>
- <CAMRc=MdA21fwnamymG6YhqBjKDso_nJs_4xefPNONQNfEcPHXA@mail.gmail.com>
- <aLgaoivmBUgoeO6B@smile.fi.intel.com>
- <CAMRc=Me84OX=UEmAXxmwE8oOH=1UBsyHe-7XmU0c8a2gG9JnCA@mail.gmail.com>
+	s=arc-20240116; t=1756896889; c=relaxed/simple;
+	bh=Tm+ubvDpNij69TvVH7w3Pi5cDsVKJICM7WBgBpUCufU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KnOr79aRGdz/kEnjHYMJPKP5I7ex9p2t4+n1jHDVyrennnb4f6d4u241Oo45/fT0LETifihCLBgc7ZscGA/ubrBoTAPU5nbQWxdy5laNVajIZp+MOdUNvzJtR5mkV6ROuund420ILFVRIIisqVJ0xi4X8SzItUiCkZnQ3aLNbb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=XL9JUpZ+; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 583AAI1u021315
+	for <linux-gpio@vger.kernel.org>; Wed, 3 Sep 2025 10:54:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	SN52Stku6irzzygye658oXiBDSvkmv+/53cdsuo8Qoc=; b=XL9JUpZ+VtDwPbNG
+	R12bsrBYQgiEvFwu7M6IkEk0sHMwzQjPhmsvgvSX/rcv72V3Xad3TjVc4xMZFrrF
+	ly+LStev01TlDrXqB3MUO8ipPdmAzrtcuQNmRAAbaeDH/pryFP357V7OITcmz8JU
+	3vIpsQjTkFotg5EFcDTtAnwa1k5tvD5FVya2qjvL0oJXNtxA9FBg/eTxEQsTN6Eb
+	yOTX7AI448QwROoEYzShuS5QdElPe1Yu7fjJWYMf37V9K8cW4eGYazkhN4NMIrrc
+	yREXPskGTy6/7D9GWSAiCkdz57G50OTIGECgZ07VMftIU4bGD/kgJ+I530QXQiiO
+	6W6O2w==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48ur8s3e6n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Wed, 03 Sep 2025 10:54:46 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-721c6ffab9cso3793586d6.2
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Sep 2025 03:54:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756896885; x=1757501685;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SN52Stku6irzzygye658oXiBDSvkmv+/53cdsuo8Qoc=;
+        b=Vrhj7aHVnBfJz8wmJncXPGhbUIxXTeltOK8g708J7GABlevtg875gOArHwADO/hBTs
+         sXVnwuJpjBWGH0GvJc2qfKkBFlIJZwR9FFiixWdMHi/oOCZCSUOAtZB6XZRgDNv75rJQ
+         M2kYX2bOZ+oUz2L/pRBHMmKW5yEfsJeVv0+6bVFx3uD7Xa4Vii+7T5FYei0hqxz4dfwf
+         VrY/gK6XwUsP4KnEQiVxdY51q//9wrwa3JotMRvbr50AIoaxY4zlJ5qEIFQfb9BH9CVE
+         bLocZNhaDGuCAOxtxmfBmHxIWpa7GQ2BEh731efi8+wV+LzljDmt4UpthjBrS1ZUYT2j
+         qL3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVxU5Lvi8LgPVgZorNJDHlOIj1LHhVMi2SKfFsF40DgRSyEH85VU0G12QHU7I3IROKXXLzKHiSz/WiQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQitwK9/DfCszzj7evSgQq7hJsGmNlDzEHHhnz8m/nRneKJV7b
+	96ktUO1xmR1ik5flWshBDgAr0+VmmBoshFR3TXsAdR0j+Gzw6vFXfzuOKIRpF0QpKotyr+nriFF
+	N4Dn3OyU2ligjQm6jAxvHPAamPGcvHhSmJbrVTYBGa94YvWO1WVmedpc/giIWSdBc
+X-Gm-Gg: ASbGnctKxp6TbqA+TUSZ2f4ROW2PIolSf0EjBPTyEnzZE/oQIr14AyokveoBc89mGga
+	wZcqA/lm0XXYvesVGPqNfpZf2Xc98mYYskGAgDJDrZL4kz8aYegkVYKlrQhGnVl9l1hQTfdGwGv
+	YQcMxQs8f/bCnzrDz4Rq0RMZx20prj7H7cOTdr4erhRttSyTUFNxnxrzK78S49xgFWZ7BfSjT8d
+	WXmDigF03VBuQtLhBiVFwqkAwCK1l27m2N5R1AD4u23qphNLMxl2yji/m9xyAdclBev/rKaYP1M
+	eO+/m8gc7Tvb0YhGBrsZ3N72i2w9wCQ22haHquuBsv45sAPXatVl6YrgUFbl755s34s6c1fAncC
+	ayGdDt3AxB6YWujMDDLSh5Q==
+X-Received: by 2002:ad4:5743:0:b0:707:4eab:2b5e with SMTP id 6a1803df08f44-70fa1d92d30mr148150776d6.4.1756896884455;
+        Wed, 03 Sep 2025 03:54:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEetDZkFBnEZJ/kKVop60xaty004rw6FYmAAfEqO0MuEDwRglU3hRd6MaQX/oR3QxdMGUb85g==
+X-Received: by 2002:ad4:5743:0:b0:707:4eab:2b5e with SMTP id 6a1803df08f44-70fa1d92d30mr148150266d6.4.1756896883912;
+        Wed, 03 Sep 2025 03:54:43 -0700 (PDT)
+Received: from [192.168.149.223] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-61ded4749aesm7462141a12.32.2025.09.03.03.54.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Sep 2025 03:54:43 -0700 (PDT)
+Message-ID: <6083a6b2-c5cc-41f0-8026-e022f2f4eb38@oss.qualcomm.com>
+Date: Wed, 3 Sep 2025 12:54:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 5/7] arm64: dts: qcom: Add initial support for MSM8937
+To: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>,
+        Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Konrad Dybcio <konradybcio@kernel.org>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Rob Clark
+ <robin.clark@oss.qualcomm.com>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Robert Marko <robimarko@gmail.com>,
+        Das Srinagesh <quic_gurus@quicinc.com>,
+        Srinivas Kandagatla <srini@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, iommu@lists.linux.dev,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+        linux@mainlining.org, Dang Huynh <danct12@riseup.net>
+References: <20250831-msm8937-v8-0-b7dcd63caaac@mainlining.org>
+ <20250831-msm8937-v8-5-b7dcd63caaac@mainlining.org>
+ <67aa2a1a-3adf-4c97-a7b8-865b5ca3b17e@oss.qualcomm.com>
+ <EA8D417C-9B17-4AA0-A448-316F8904AF90@mainlining.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <EA8D417C-9B17-4AA0-A448-316F8904AF90@mainlining.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Me84OX=UEmAXxmwE8oOH=1UBsyHe-7XmU0c8a2gG9JnCA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODMwMDAxOSBTYWx0ZWRfX3DpXwNn3O4vK
+ ESxoSVT3L2BVS8200X4dtA6zfNaCVigjnm4kpdamS6KmNRbIFBBwjpsflD88hDJ91OpM3NMTVvl
+ MlvZBNZ8hf5JxvkWLTzxQ3EntWi803LKIAsiy9lNrQltXGEILsTQupkMzcSyE2jZKoddcWrQZwf
+ DG3kXFQlSnAKj1pfU+3RYAtU8J2WACmAy0VqDnQOthJoaudN5eYb94eGja3U8luNYNXQu5qFHFl
+ qOcunVbfEOsPsCQL2HpA25aGhJ6TO9wGisEFjpGVDKdzbbhSy2hez6r4UEWvtGsvXiac8GdFzN8
+ Z0OiuijJ8f19VHMZxqtJkJq75mBTWnd2DBirvwlEfXd3+BREzvz5pJfpQBYeZIB1r8GWZHj0gxE
+ gCUOYL5n
+X-Proofpoint-GUID: WG_y4Cpu_19oiC2oUec8R9zz3RrQ68r1
+X-Proofpoint-ORIG-GUID: WG_y4Cpu_19oiC2oUec8R9zz3RrQ68r1
+X-Authority-Analysis: v=2.4 cv=PNkP+eqC c=1 sm=1 tr=0 ts=68b81e76 cx=c_pps
+ a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=EUspDBNiAAAA:8 a=bBqXziUQAAAA:8
+ a=OuZLqq7tAAAA:8 a=G6GrHqeLqaT2Jh2KzrsA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=pJ04lnu7RYOZP9TFuWaZ:22 a=BjKv_IHbNJvPKzgot4uq:22 a=AKGiAy9iJ-JzxKVHQNES:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-03_06,2025-08-28_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 bulkscore=0 priorityscore=1501 impostorscore=0 clxscore=1015
+ suspectscore=0 adultscore=0 phishscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508300019
 
-On Wed, Sep 03, 2025 at 12:41:48PM +0200, Bartosz Golaszewski wrote:
-> On Wed, Sep 3, 2025 at 12:38 PM Andy Shevchenko
-> <andriy.shevchenko@intel.com> wrote:
-> > On Wed, Sep 03, 2025 at 12:34:00PM +0200, Bartosz Golaszewski wrote:
-> > > On Wed, Sep 3, 2025 at 12:22 PM Andy Shevchenko
-> > > <andriy.shevchenko@intel.com> wrote:
-> > > > On Wed, Sep 03, 2025 at 09:33:34AM +0200, Bartosz Golaszewski wrote:
-> > > > > On Tue, Sep 2, 2025 at 10:46 PM Andy Shevchenko
-> > > > > <andy.shevchenko@gmail.com> wrote:
-> > > > > > On Tue, Sep 2, 2025 at 8:42 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > > > > > > On Tue, Sep 2, 2025 at 4:38 PM Andy Shevchenko
-> > > > > > > <andriy.shevchenko@intel.com> wrote:
-> > > > > > > > On Tue, Sep 02, 2025 at 01:59:25PM +0200, Bartosz Golaszewski wrote:
-
-...
-
-> > > > > > > > > The strict flag in struct pinmux_ops disallows the usage of the same pin
-> > > > > > > > > as a GPIO and for another function. Without it, a rouge user-space
-> > > > > > > > > process with enough privileges (or even a buggy driver) can request a
-> > > > > > > > > used pin as GPIO and drive it, potentially confusing devices or even
-> > > > > > > > > crashing the system. Set it globally for all pinctrl-msm users.
-> > > > > > > >
-> > > > > > > > How does this keep (or allow) I²C generic recovery mechanism to work?
-> > > > >
-> > > > > Anyway, what is your point? I don't think it has any impact on this.
-> > > >
-> > > > If we have a group of pins that are marked as I²C, and we want to use recovery
-> > > > via GPIOs, would it be still possible to request as GPIO when controller driver
-> > > > is in the strict mode?
-> > >
-> > > Yes, if you mark that function as a "GPIO" function in the pin
-> > > controller driver.
-> >
-> > How would it prevent from requesting from user space?
+On 9/3/25 12:47 PM, Barnabás Czémán wrote:
 > 
-> It wouldn't, we don't discriminate between user-space and in-kernel
-> GPIO users. A function either is a GPIO or isn't. Can you point me to
-> the driver you're thinking about or is this a purely speculative
-> question?
+> 
+> On 3 September 2025 12:42:38 CEST, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> wrote:
+>> On 8/31/25 2:29 PM, Barnabás Czémán wrote:
+>>> From: Dang Huynh <danct12@riseup.net>
+>>>
+>>> Add initial support for MSM8937 SoC.
+>>>
+>>> Signed-off-by: Dang Huynh <danct12@riseup.net>
+>>> Co-developed-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>>> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>>> ---
+>>
+>> [...]
+>>
+>>> +		qfprom: qfprom@a4000 {
+>>> +			compatible = "qcom,msm8937-qfprom", "qcom,qfprom";
+>>> +			reg = <0x000a4000 0x1000>;
+>>
+>> here you reserve 0x1000 for the qfprom
+>>
+>> [...]
+>>
+>>> +			gpu_speed_bin: gpu-speed-bin@601b {
+>>> +				reg = <0x601b 0x1>;
+>>
+>> and here you make way for OOB accesses
+> Ack
+>>
+>> Make qfprom length 0x3000 with the current base and the gpu
+>> speed bin should be at base+0x201b, I *think* (the docs aren't
+>> super clear on that)
+>>
+>> [...]
+>>
+>>> +		mdss: display-subsystem@1a00000 {
+>>> +			compatible = "qcom,mdss";
+>>> +			reg = <0x01a00000 0x1000>,
+>>> +			      <0x01ab0000 0x1040>;
+>>
+>> In v5, I pointed out the size of vbif should be 0x3000.. and the random
+> Where 0x3000 is come from downstream is using 0x1040 for vbif.
 
-The recovery mechanism is in I²C core and many drivers use that.
-I'm not aware of Qualcomm drivers in particular. But mechanism is
-in use in I²C DesignWare which is distributed a lot among platforms,
-so using word 'purely' is incorrect, and word 'speculative' is a bit
-strong, but you can think of the issue coming later on when somebody
-does something like this.
+Hardware documentation.
 
-The same applies to the in-band wakeup UART mechanism.
-
-Which means that with this series we will relax it back anyway for
-the above mentioned cases.
-
-(Not sure, but SPI DesignWare requires programming SPI native chip selects even
- if the GPIO is used for that, this might have also some implications, but here
- it's for real 'purely speculative'.)
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Konrad
 
