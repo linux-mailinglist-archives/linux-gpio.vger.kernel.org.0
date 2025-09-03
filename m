@@ -1,101 +1,97 @@
-Return-Path: <linux-gpio+bounces-25440-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25441-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 845ECB416E3
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 09:39:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6D9BB416E5
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 09:39:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0E08D482D90
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 07:39:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 526B55619E2
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 07:39:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFBE52DAFDB;
-	Wed,  3 Sep 2025 07:38:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CE2F2DE6FB;
+	Wed,  3 Sep 2025 07:39:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="RKyW3rPN"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="X5nmqeCa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F202DCF78
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Sep 2025 07:38:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB51F2DE1E3
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Sep 2025 07:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756885138; cv=none; b=ePHWLBVRpwROw12/G5LzR9hE0QPJiEDvme63hAkFEYkF+a8yuR8WuvQ9+JHtmnUNoNmkkX6CmaALtGI+DtlsnhfVesaMpOYbzwHCRMRljYIPvjnX2+OqLoicaSTY3WuO8iHDmrlK0wNr1ciuYMwaskZQzS22DpVH8vgOfpKa8tc=
+	t=1756885140; cv=none; b=uEdGVQ5KdCGWgSZR6IhdKc9ndq85oaHrEVmoP5cxkit2IaxcJ0NIFO9U1f571/NtxNduJRNhT92nflZNkTjoc1FdYVe9qsSROMRTpVDUlbqfOStxwiBpX9e8ZvqaLBQvS9uGahsyTrUGqF3xQbKcyL8i5Kb1lb0OpwSU03hoJWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756885138; c=relaxed/simple;
-	bh=5R1W8LWzThf0lefJvjX7dgtNUQ87EdiwGUIQXxLzwL0=;
+	s=arc-20240116; t=1756885140; c=relaxed/simple;
+	bh=ZMq+/DLAY/G0cbCuJHDGH9PS4rmeWgA649rs001QIRY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RP3GKjZt6VrpKMtnGpSPnP89hdGXsdMfZkJjvJGIWMcq+KiGRdXBJQROOqsWheAXckwegwGOCGT02ZP9UXXURMwnY2ITfKEAG+Ng1/mYhRp+rW73/ydQpKx6IHW7X9gRBA2kh/cAik6PEprMEbW8DCyWuH2CaFkCEXONVodp4Lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=RKyW3rPN; arc=none smtp.client-ip=209.85.221.45
+	 MIME-Version:Content-Type; b=chPUBadXBa6E/SUCfkGYgKU9MTKVLabSCFLigGMuQHYubRr3BUR2gVTBmXlYJ68bFmAabgB2STgFZEtAEOFvUnG0Osd7jygV5Q1xWNT/uWHXibjDd1S8vtEygdWq4PI7Kfyy3Ej/q1BEavLuLF3WnOSzO9bTvxxp8aosh73qhTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=X5nmqeCa; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3dce6eed889so382007f8f.0
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Sep 2025 00:38:56 -0700 (PDT)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-45b9c35bc0aso9854665e9.2
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Sep 2025 00:38:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756885135; x=1757489935; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756885137; x=1757489937; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Mp5T71lPvUAjJD5COGIsnq0220IphycqvLkiYGEuO38=;
-        b=RKyW3rPNGi/Nz4B9jAeglCHRkp9TFvVoix3yKzjp/SGPL00lJe+XwBFLumtC2YpB89
-         j634Iuyub94+CuOUABGVKQG3rjIzP4jiQ1JfdbS3yU2K3uQWuUjoXduL3/qDh1lLwGFN
-         QNTnbH5OseM2XVNwNp6cLsw6qNmdjB8dcnWev0hyB92RNotodYpCQYSgSRqYlK2nRQOn
-         A+RslbeQZMi3wYooTKd6hjQYT4y6uOs05BMfXjLtUbhfAqqH8KEeW/NLTeMWavz0igKv
-         I3MYykytH8vkUAveyUO7pfSYCOf28vm1sA2JstNITLVGU2mcCngM46Y8hpRMnjHtm/0P
-         Oxtw==
+        bh=QzDrLtK3tVYXpgajpgV5xkfeNF5cniPAFxRcbhLkKq4=;
+        b=X5nmqeCa6G3jNoRzJVGcTJgsq+jjaefzCJhNRwlv4WQgt+oxk+4e74BtDTrFe8Mwl0
+         n0NwXGwV56+TtFkYXsuRndj1GNG9uZ39LzO3l3kjbS/ZPBPUyWzIgdLAt0mI9FuFnmIH
+         T4ZkZIV8wyEsJyzKAG6CSEwYxSD05Mr2GNOyoXRYWPYATxbTHvEGZPgzRqWFItPFQLn/
+         jyJ0ImPhA3hmqBp8K0SDJiApbfPZhqqly7nItjxGeUFUWqkpxofVD3HHQxt642SUpLL8
+         cOI79bpx4JZRnoAs9uZNSIZL6aT+A0HLZAdRUGI8/zOmUfP4V/VCyxhT5I+9ZnQAJGeC
+         RFew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756885135; x=1757489935;
+        d=1e100.net; s=20230601; t=1756885137; x=1757489937;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Mp5T71lPvUAjJD5COGIsnq0220IphycqvLkiYGEuO38=;
-        b=WMdj1DlqogPZp4Nb1PySFXN5Tw0CuWTWSHuiZdsZ21km9QGyV7AXjuMv+zr1HUJB+S
-         jbraNBq8IHu308PvZD9l4MI0wezvDIYfVwXxgHr1ngMFDy/M5MBpKTFeXbbjbaDt15vg
-         9MAf5HTyM0nXx7uiVPC7xnl67seJJNFccJuTbitnJeM4rGd23rCPsHxNAHdCdgZ283Qw
-         DqM04e8+yKKyPE3fNWucTVtIQhZkF+oJsceWHIWqGqTkUiBVa3oLcq8OTHiAzxPmo+fm
-         nto3qZG18zgBrjbkqW4WRjhUwpO75aS9b+zc0AlR/kCbLCBhpQSYj6uBsLtF76mKGO9j
-         g3Gg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGKK4SyUsl0eQS7guILHhToAVCt6CeI0IALkSwvPBw2nmstOaOI/c6qHK93lQKKiuNEtw+ETISsIAn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2+kseoZi86fD4NogsVmFgxJdzuOxWgb1xEK8VHYxMwqSPDfkJ
-	2mO0neBKbQgAekJWXSSz1Q6sMJjGhfp1agEOB3+n4ixc3Z9MjN0dbOvFOr1wJ6H3agU=
-X-Gm-Gg: ASbGncuRFr+vSgDHFfd3NGZSPhuMQxf6cLiv9NB9tLW1FJYlsptVRCfoy8N9kFYI7Ps
-	XiaasHq9BgngcJeJJuXpOO7tZm58BETX5fzxKwmq0+7ep90XL0cgYNEpSMkQuhTkUfTU/KCyw4B
-	LTVdXNkHdFuCN6iyKrrpHp5VL0jgg9oRVbU2AkDBOLQDDMc4QpLRnZBpNVGQWBtOCI7eraoQjMf
-	fxgIVIyEpweR5Ew5VkPcCpPdfL9E5xYrugyiArlf0a8cvLZZClgYtVoIClEqcl1VXmXT9DoXDmv
-	NmiOBeZfS8uPajO1o/Q+8EDGutbVY3Zx7kiSf7HZiQroZuHXICf//bmDuLB31Pyp97Sfr2eLWnn
-	ddxxtBHXQtxc4j3c+61gybL0=
-X-Google-Smtp-Source: AGHT+IFkZYEPWWCkKse2PQo7g1HVYHPWt9iUadycuLD1iYe9gFsnwRwmTjB2wHvwzo04UWlct/Y1jQ==
-X-Received: by 2002:a05:6000:64f:b0:3d3:1ad0:e8b7 with SMTP id ffacd0b85a97d-3d31b2c7c54mr11268847f8f.12.1756885135098;
-        Wed, 03 Sep 2025 00:38:55 -0700 (PDT)
+        bh=QzDrLtK3tVYXpgajpgV5xkfeNF5cniPAFxRcbhLkKq4=;
+        b=kLznhGutzTKKTCaEcN/yQM3JvrFPaV74ufB51g0hsqMI9XckOtq0sOATULNgyeq5cj
+         ncRnlcDTjCjA3cUGfSyclcxCrsargJHks5LJ1oo5PtjlEZjnA8HtkjJSMMWtWplNFfX8
+         ybA21B8xIyhMoKO554vUCYI0FFNNQnxPJN3so2avgld2f2/4QC7zNLxTyl8JgssTwwlI
+         yADvsD9PeKKlsE+hBWR5yX3nag4OcwN8YPRFk2NmiPSz9NMg1uzikQ4EWj8QOufGTHFm
+         xUWEjxHxtjJElLSVKCfraNlVkYmR3WCQJI9AmEUEy5CRVlI/s7oKfRJ2lved9ZsfkcKz
+         M+7g==
+X-Forwarded-Encrypted: i=1; AJvYcCWQxnhYOdmPjn2r9IrYibsjn/Sdn7tweQO8h+ArAN9s/V3M+lQPS4HW+PqrD7r+hPgTMc0EDj8nLY7S@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjYSXsr2K6FxZrFelgD7ao817KfIQxqRbu8o1zu5ma2y9yui3d
+	tlO81sBUonC71tR85sQSfdp4FpL6MHEitWM3Xjtz+Y1llIZTta9nViLcm1s9juk1u+Q=
+X-Gm-Gg: ASbGnct/kKFUp6RCmTAUuvYAX3sSKsduQgZy4IwZn5+zjEN/R+FU4Upt2xTMrwft7qu
+	wzI24oaZdPeK5sAQJelEborGbhWLuz7eYq5GTHIRXgmeDORR6QcxuhPGsVJ4jNkctNVIubkHecy
+	2/hGwj46Davr7Ykg+2GxzRHHTt0UJ89MIy49NeIv89G3DO2Me7Fb1vXIsjx8mfH5JFEHUNa6o+Q
+	UYdB1YE28o2Pal+IRsthhi5RitFGZnnhM7SQyAIKL8krHQiblWSJ4Eh1XaC4DJmCnh0OTRRtcWq
+	vxxfRitFmlNo9NJdp7sNaUFEd1W5E7muPGM/C9lKAZpIXbbVmIIrZ9yjxzjuDbdt+ksh8e4zXpi
+	5knNcdEtrfG8Ae3X26skmJq2k9vjSY0BDiw==
+X-Google-Smtp-Source: AGHT+IGzMNTEASi0Qi6RgPFb9XAbV8YDnYAnOHuJi0TADIjDiS29XexXLdCQiRjZjgcY+IsF0TsvRA==
+X-Received: by 2002:a05:600c:3b29:b0:45b:6269:d257 with SMTP id 5b1f17b1804b1-45b855c428fmr121644965e9.35.1756885137007;
+        Wed, 03 Sep 2025 00:38:57 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:2f8b:4799:6bd6:35df])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3d53fda847dsm13417216f8f.0.2025.09.03.00.38.54
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3d53fda847dsm13417216f8f.0.2025.09.03.00.38.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Sep 2025 00:38:54 -0700 (PDT)
+        Wed, 03 Sep 2025 00:38:56 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Linus Walleij <linus.walleij@linaro.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Yang Shen <shenyang39@huawei.com>,
-	Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	linux-gpio@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 00/12] gpio: replace legacy bgpio_init() with its modernized alternative - part 2
-Date: Wed,  3 Sep 2025 09:38:51 +0200
-Message-ID: <175688512868.10115.1073812305846607850.b4-ty@linaro.org>
+	patches@opensource.cirrus.com,
+	linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 0/6] gpio: remove references to gpio_chip::base from debugfs callbacks
+Date: Wed,  3 Sep 2025 09:38:52 +0200
+Message-ID: <175688512869.10115.2172054090244481140.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250826-gpio-mmio-gpio-conv-part2-v1-0-f67603e4b27e@linaro.org>
-References: <20250826-gpio-mmio-gpio-conv-part2-v1-0-f67603e4b27e@linaro.org>
+In-Reply-To: <20250826-gpio-dbg-show-base-v1-0-7f27cd7f2256@linaro.org>
+References: <20250826-gpio-dbg-show-base-v1-0-7f27cd7f2256@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -108,38 +104,26 @@ Content-Transfer-Encoding: 8bit
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On Tue, 26 Aug 2025 11:35:01 +0200, Bartosz Golaszewski wrote:
-> Here's another round of patches converting GPIO drivers to the
-> modernized generic GPIO chip API.
+On Tue, 26 Aug 2025 11:54:34 +0200, Bartosz Golaszewski wrote:
+> We've stopped displaying the global GPIO numbers from core GPIOLIB
+> debugfs callbacks. Start dropping it from drivers too.
 > 
 > 
 
 Applied, thanks!
 
-[01/12] gpio: xgene-sb: use new generic GPIO chip API
-        https://git.kernel.org/brgl/linux/c/38d98a822c143a4a7337d08f50968cbd7b701ca2
-[02/12] gpio: mxs: order includes alphabetically
-        https://git.kernel.org/brgl/linux/c/d3332dd1f6e2cf82744dbab37d05857e2d028fa0
-[03/12] gpio: mxs: use new generic GPIO chip API
-        https://git.kernel.org/brgl/linux/c/c7357c8b6703d4bc0db6198782fcbf0cf3033844
-[04/12] gpio: mlxbf2: use dev_err_probe() where applicable
-        https://git.kernel.org/brgl/linux/c/7cb9086790a0de526ee40508a4deaebfd82a5bca
-[05/12] gpio: mlxbf2: use new generic GPIO chip API
-        https://git.kernel.org/brgl/linux/c/72fdbf35ec7273bb1c885696680e611c47b261b4
-[06/12] gpio: xgs-iproc: use new generic GPIO chip API
-        https://git.kernel.org/brgl/linux/c/6821e5d5877ca80b6989dfba2648a7ecbe3d9a64
-[07/12] gpio: ftgpio010: order includes alphabetically
-        https://git.kernel.org/brgl/linux/c/cf0257d3ce05259a74265fe0a0bd7de063cc6793
-[08/12] gpio: ftgpio010: use new generic GPIO chip API
-        https://git.kernel.org/brgl/linux/c/3ff7ab070b4804aad5b1d3e3d82a793710ef1f27
-[09/12] gpio: realtek-otto: use new generic GPIO chip API
-        https://git.kernel.org/brgl/linux/c/b9dac8251e7e6aa433f54a7da45cb05c66627695
-[10/12] gpio: hisi: use new generic GPIO chip API
-        https://git.kernel.org/brgl/linux/c/c0378e59a6af2efa470a384b69fd24d3f3f3dd97
-[11/12] gpio: vf610: use new generic GPIO chip API
-        https://git.kernel.org/brgl/linux/c/656dc0c6f725a29c9e48657ae3db78f9016f518c
-[12/12] gpio: visconti: use new generic GPIO chip API
-        https://git.kernel.org/brgl/linux/c/a6f03347debb7c2c6d04cd4be67ed766e19633ba
+[1/6] gpio: stmpe: don't print out global GPIO numbers in debugfs callbacks
+      https://git.kernel.org/brgl/linux/c/246b889c704e3209050eb0aa5a3733564aee1b38
+[2/6] gpio: nomadik: don't print out global GPIO numbers in debugfs callbacks
+      https://git.kernel.org/brgl/linux/c/ddeb66d2cb10f03a43d97a0ff2c3869d1951c87d
+[3/6] gpio: wm831x: don't print out global GPIO numbers in debugfs callbacks
+      https://git.kernel.org/brgl/linux/c/3767426b234f0d7b82ccfa05e53c47c83e0a12c2
+[4/6] gpio: wm8994: don't print out global GPIO numbers in debugfs callbacks
+      https://git.kernel.org/brgl/linux/c/aaa1279b8b5b46cc42b6175c2bcd83d8ac5fd2b3
+[5/6] gpio: mvebu: don't print out global GPIO numbers in debugfs callbacks
+      https://git.kernel.org/brgl/linux/c/2d71156cfea8391625ea146eff32b3d2ef059345
+[6/6] gpio: xra1403: don't print out global GPIO numbers in debugfs callbacks
+      https://git.kernel.org/brgl/linux/c/3be2d43534aab7291b59c4e66526f911854aa3a7
 
 Best regards,
 -- 
