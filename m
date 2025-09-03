@@ -1,147 +1,127 @@
-Return-Path: <linux-gpio+bounces-25533-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25534-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56B76B4286C
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 19:58:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AAFEDB42A78
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 22:05:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 18847565BFB
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 17:58:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 69E943B4023
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 20:05:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F003435207F;
-	Wed,  3 Sep 2025 17:58:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R/XGKVsA"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E19BB2BE036;
+	Wed,  3 Sep 2025 20:05:07 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FEE350D68;
-	Wed,  3 Sep 2025 17:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B112DCF77
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Sep 2025 20:04:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756922303; cv=none; b=r6EH+disiK2bRkJqRyEQpXJPja/QO1EsuTxp5x/Kmj2UFkOY6GdNeaSDPjf4ish3y5t/E+jr24H80QQ+2wGDUWdPEFLj6yTCiWbYBpTB10Pro0RN7kotDBmRZbRoFFZkfnsiK4Mlr5zIY1Rpl1SHpNCES5RvWMWiZIrR+t4qQaM=
+	t=1756929907; cv=none; b=asb+6uDm/X7vcmYfQI6CctR+ifEUroJqOPENE0BWBuVUugl+x/gXo2H2C10/74vNun6psFhYBJ1BmK6a0EyFdMzDeeSWqQv0E6uiNdcW3TTE9Rib6AfpumSyQusSzYsz3gmshrmZcDmAO/iA1tgp4ZlIgbPGPof25hYTudTfMy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756922303; c=relaxed/simple;
-	bh=wY2bW8fq3Ft+chy83Xdc3EUaRkyWqSV3KeQlYOmD67I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pGZcZXK15jqsS+quS5clWaqowRatBccJhvObaTSHfHD4rkAkwWjdrpA4W3m8UewyLduPAv8WeIr8+KCYn3VgveHar0w2JHhfsRKLEH59Xhhqjx55EsuuPa3KlGzyx5kArW8uQ7ZBw5AILxuVFlpBguR6Z0kMvv3eGV+c4uLmmgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R/XGKVsA; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-55f6aef1a7dso129486e87.0;
-        Wed, 03 Sep 2025 10:58:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756922299; x=1757527099; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rVkerZVITJ75R1A8DbL3xIDB9OLG8LafZy9yCcs7YDc=;
-        b=R/XGKVsAjk2uFVa62AQTvsgPPfs/vpYpTsgqy8/7KlpB2EP+Qt418KPUQuk37aaKNm
-         psyvyvJ62ItDrZrqflivCqyBcfypp1Caff6wA3h6Z1UwgJhaxFS6cLDkgmmLbqgplwzs
-         mAc2N7/NUUaC1Sdt2BAplcMjRPhY6425aGwDpDrewRjeVL+UJkAanqijLv6XwJF9scDz
-         v2K71sIQau6hJdgpVPoWhthKomEZbm+lj9bZukBdzBWhPEos+cpD/N+XZk3D4XqwliRC
-         EV23Ku6vk5XJOi/2p9ez6A8B3rvSkGM6NBMlB+iZtHuFxyiUOS+yDSPf6IcpMh2Z16vk
-         JPYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756922299; x=1757527099;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rVkerZVITJ75R1A8DbL3xIDB9OLG8LafZy9yCcs7YDc=;
-        b=OAd4iif4NaB7sHxMwGV7i3L+6S5MqWciG6zOowo/SK0gaUFnrrODB8GzznBUO5Q7il
-         gkv++LrqpxB4B5IEBDHVN5JjLgoInDNCnyiiRpkOvfMlAHEE2yQqUSZgQxiN1AMQ5i64
-         MaaCFx8YE6nQx3ha7nW5nM0VCzAwQEMiOzhyx759L1zLwj31RGNX2IbtOW+VnLYgLc3C
-         +vT9oLM+ib0PgDrz2iyzFuzc6tnnm9Xmi/VIh+HeAYj+5ibF7v8nKS2tNw3nODaFb5TT
-         iEEf/qmEUizQ4rUyUtUWCRTqMHHZwaCFoImz+3qXgXpz5HDtBZ9kDsO1Z3pc4Y5jjkE3
-         eZbg==
-X-Forwarded-Encrypted: i=1; AJvYcCUVoARWKPVBsH6aQOhXt1SLUUs0DwUs+4RicvVL49PkEWEe4ORU5lwR2SaC7y03neI+nMqUm267AdhwbbEj@vger.kernel.org, AJvYcCUhTFlutrGmdNE2QV/dOlfteCIQF9DrJKnt8BJ7G6WxkLUinhWaVn+yr54ifspA4NAXsEKGY7ymrhO0WWc=@vger.kernel.org, AJvYcCUvVwavXIsUCJEp/80XdJ/0SubDTY5BPFlsKliQmnQKAsUjCeQ3GAOWYApGm/rdwbXNFfSfaHh/ZxD2@vger.kernel.org, AJvYcCWBWvcUbhs5zYyb/boeLR7dGVU8qmbx09RDcFwqv/1kVOTiuR2y3CDbDEXbQhP7SU/zguAwdhUoE8OSow==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCR/u+5Lt7hc8MjrbdQWgyvCzMktjlA7wNnF8BROtgTOHGDGFq
-	SQQcCnwDBcBZp2gFiXFVau+HRaeIcC05Icay3w1/i4xn8i6c0jtm41NVT32RE2eI+A3eFGmz4A9
-	0GDOW2SlvZ5xzO8FHPenw/fNt55R+0F8=
-X-Gm-Gg: ASbGncu8BNpiic4mGKJaRUG4/vIua51yqF5w98VF2L9g+lZDdygXUVvFqwJ/PJY7jzA
-	cdSO4+jiMb/5W3TjZ4WxOttBBS5Yaq0FwEeO8CByiXlg88dlzKXwOMKb7a1QioUmngOYew8EZlS
-	CHo2D0jWYPHpnQIVubmD2HTe6nm8bnd3Zss3vwUXfIAb0VmVuWhctYCSXIulJF+rkFOo8RrS0Ft
-	E7hMjbazsFgOoejRg==
-X-Google-Smtp-Source: AGHT+IEM3391jGaZ5H7KUN2s6kIYrcivIvySSHlaVz037M26bpuhJ5pwlWQPEBWsLq32weOR5d9HjCh3JN3yqFD4VuU=
-X-Received: by 2002:a05:6512:258c:b0:55f:6c72:b70d with SMTP id
- 2adb3069b0e04-55f709f6057mr4422732e87.48.1756922298765; Wed, 03 Sep 2025
- 10:58:18 -0700 (PDT)
+	s=arc-20240116; t=1756929907; c=relaxed/simple;
+	bh=3haZJmhMwJAtNWKubxBwq6VB+yAT1aEVXcYQvKoKDlQ=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:Content-Type; b=M8jh5HADFVFoqUkhxRHNkAqFK5Rh2/tOzIPMsJZaJaA60m5IfrRBk3Ae/kpjLTZ/n1CkUp+xsVN9aYVrLSi7q86hlci+2fc55cZpOp93N6CmTUM/v1mJUCJux8vXHLiS+NaGLyKNzL5p9OFwu0HCNEESZOKj2Ug3W1iXQdwkn7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.2.102] (213.87.131.167) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Wed, 3 Sep
+ 2025 22:49:38 +0300
+Message-ID: <179c9e8c-8760-41e6-aad7-7a128df60984@omp.ru>
+Date: Wed, 3 Sep 2025 22:48:54 +0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250812-tegra186-pinctrl-v3-0-115714eeecb1@gmail.com>
- <CACRpkdb=U=h5OguMuy9G6avCCN6Aem=2_60C+_uBsrY+UvD5ng@mail.gmail.com>
- <CALHNRZ-dRvaN_SyHRfAsq2MO-ec8rzkeCy6CtJpYdWTobf1-Wg@mail.gmail.com> <CACRpkdb46OwzNQuSp0+QQVjy2LojMyhdE7XrNwdsyqGi5okASw@mail.gmail.com>
-In-Reply-To: <CACRpkdb46OwzNQuSp0+QQVjy2LojMyhdE7XrNwdsyqGi5okASw@mail.gmail.com>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Wed, 3 Sep 2025 12:58:06 -0500
-X-Gm-Features: Ac12FXwYT3HuWemAngCiQwse3I0_AJd8-Hn-0mwSL6IgfLf-ieUlbAGMCMdMG4Q
-Message-ID: <CALHNRZ_+Oh2AGZTvJ66EjBEKEf7PdQsMM_BTNNnjENJpbOKiog@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] pinctrl: tegra: Add Tegra186 pinmux driver
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Subject: [PATCH] pinctrl: rockchip: fix NULL ptr deref in
+ rockchip_pinctrl_parse_groups()
+To: Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner
+	<heiko@sntech.de>, <linux-gpio@vger.kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>,
+	<linux-rockchip@lists.infradead.org>
+Content-Language: en-US
+Organization: Open Mobile Platform
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 09/03/2025 19:33:07
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 0
+X-KSE-AntiSpam-Info: Lua profiles 196014 [Sep 03 2025]
+X-KSE-AntiSpam-Info: Version: 6.1.1.11
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 66 0.3.66
+ fc5dda3b6b70d34b3701db39319eece2aeb510fb
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info:
+	omp.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
+X-KSE-AntiSpam-Info: {Tracking_ip_hunter}
+X-KSE-AntiSpam-Info: FromAlignment: s
+X-KSE-AntiSpam-Info: ApMailHostAddress: 213.87.131.167
+X-KSE-AntiSpam-Info: Rate: 0
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 09/03/2025 19:34:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 9/3/2025 3:35:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On Wed, Sep 3, 2025 at 1:55=E2=80=AFAM Linus Walleij <linus.walleij@linaro.=
-org> wrote:
->
-> On Wed, Sep 3, 2025 at 6:54=E2=80=AFAM Aaron Kling <webgeek1234@gmail.com=
-> wrote:
-> > On Tue, Aug 19, 2025 at 6:30=E2=80=AFAM Linus Walleij <linus.walleij@li=
-naro.org> wrote:
-> > >
-> > > On Tue, Aug 12, 2025 at 11:24=E2=80=AFPM Aaron Kling via B4 Relay
-> > > <devnull+webgeek1234.gmail.com@kernel.org> wrote:
-> > >
-> > > > This series adds support for Tegra186 pin control, based on a downs=
-tream
-> > > > driver, updated to match the existing Tegra194 driver.
-> > > >
-> > > > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> > > (...)
-> > > > Aaron Kling (3):
-> > > >       dt-bindings: pinctrl: Document Tegra186 pin controllers
-> > > >       pinctrl: tegra: Add Tegra186 pinmux driver
-> > >
-> > > These two applied to the pin control git tree.
-> >
-> > On patch 3, Mikko noted that I accidentally amended the formatting
-> > changes intended for patch 2 into patch 3. Linus, since you've already
-> > picked this up to your tree, is it too late to fix this properly in a
-> > new revision? It doesn't appear to have made it to the main tree yet.
-> > Or do I need to send in a fixup?
->
-> It's one of the first drivers I merged with plenty of other stuff on top
-> so I can't amend it, just send a fixup based on my "devel" branch
-> (or linux-next, it should work too).
+In the Rockchip driver, rockchip_pinctrl_parse_groups() assumes that the
+"rockchip,pins" property will always be present in the DT node it parses
+and so doesn't check the result of of_get_property() for NULL. If the DT
+passed to the kernel happens to have such property missing, then we will
+get a kernel oops when the pointer is dereferenced in the *for* loop just
+a few lines after the call.  I think it's better to play safe by checking
+the list variable for NULL (and reporting error if so), like we check the
+size variable for validity further down...
 
-I am highly confused now. When I went to make the fixup series, the
-fixup didn't apply. Looking at next-20250903 [0], pinctrl-tegra186.c
-looks like I wanted it to, the base commit has all the format fixes.
-Which doesn't match the commit on this series. Which leads me to a
-couple questions:
+Found by Linux Verification Center (linuxtesting.org) with the Svace static
+analysis tool.
 
-1) Does anyone know what happened? I'm not particularly a fan of not
-knowing why something happened, even if it's beneficial at the time.
+Fixes: d3e5116119bd ("pinctrl: add pinctrl driver for Rockchip SoCs")
+Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
 
-2) What should I do with the dt commit now? Ask the Tegra subsystem
-maintainer to do a manual fixup when pulling? Even without a manual
-fixup, the bad part of the commit would fall out when getting applied
-on top of next.
+---
+The patch is against the master branch of Linus Torvalds' linux.git repo.
 
-Aaron
+ drivers/pinctrl/pinctrl-rockchip.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tre=
-e/drivers/pinctrl/tegra/pinctrl-tegra186.c?h=3Dnext-20250903
+Index: linux/drivers/pinctrl/pinctrl-rockchip.c
+===================================================================
+--- linux.orig/drivers/pinctrl/pinctrl-rockchip.c
++++ linux/drivers/pinctrl/pinctrl-rockchip.c
+@@ -3488,7 +3488,9 @@ static int rockchip_pinctrl_parse_groups
+ 	 * do sanity check and calculate pins number
+ 	 */
+ 	list = of_get_property(np, "rockchip,pins", &size);
+-	/* we do not check return since it's safe node passed down */
++	if (!list)
++		return dev_err_probe(dev, -EINVAL,
++				     "%pOF: no rockchip,pins property\n", np);
+ 	size /= sizeof(*list);
+ 	if (!size || size % 4)
+ 		return dev_err_probe(dev, -EINVAL,
 
