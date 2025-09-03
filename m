@@ -1,105 +1,155 @@
-Return-Path: <linux-gpio+bounces-25443-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25445-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56C4CB4173F
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 09:52:08 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F284B4178C
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 10:00:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E99071A816EE
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 07:52:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 54D09178C43
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 08:00:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 749BF2E284B;
-	Wed,  3 Sep 2025 07:51:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC8B82E2F0E;
+	Wed,  3 Sep 2025 08:00:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b="aXiXgkj8"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="rLpziD0o"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout3.mo533.mail-out.ovh.net (3.mo533.mail-out.ovh.net [46.105.35.92])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD67F2DFA32
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Sep 2025 07:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.35.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183F02DC344
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Sep 2025 08:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756885906; cv=none; b=oVEE7BC7Ol+N64m0yuOPSg3/cSCfxAB8oo3Pn51PgqMpfkkfyP3NZ8e4avpEJIJ2oYCf7hys6BMnlWGRXPk2Uw8A4/VBZASY678uvkniayHxRMA8ltc0hMYNeV0tX7JTglmys0/Y8q+fHkvjBmS5DswgLElOeRadnzk2CNc8YYU=
+	t=1756886423; cv=none; b=hY3wKMAkH73otmblrH13PDYdGnJnIoWys3lUdzJuk9c61GMsIWGdNHw1ttiKFw52leBXGJEeeYydqLHWKb+PJftRKKkVV87t0/S7Rk92f8/mnUQd1HCFZlj+MVO2hdbW4zJ5Xh4aGKTVC0GTlIXLWJ+xCZmpFRkYXvYpp68qrFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756885906; c=relaxed/simple;
-	bh=663KoJU1ldM4IAb3QXT68+FeZh2kwq0BYEZ09XzUgbw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YLntWzIxum+51QFJgkmR3CUX8liyQBXxwKEUEaul3fzvqd8wltC7m+4+3yT5pfi8bq5PAykJk8k9Lzcw9/VdS1yHXVV5zlycp+KQVbDvkIZq6MBlObr+pRXB6NV7ZhPH0+5zcVCkqNl0VkwcoGTcCJ8mkaLdK/InVi18RHr0HpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b=aXiXgkj8; arc=none smtp.client-ip=46.105.35.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orca.pet
-Received: from director1.derp.mail-out.ovh.net (director1.derp.mail-out.ovh.net [51.68.80.175])
-	by mo533.mail-out.ovh.net (Postfix) with ESMTPS id 4cGvkM5C5Rz6S7S;
-	Wed,  3 Sep 2025 07:43:55 +0000 (UTC)
-Received: from director1.derp.mail-out.ovh.net (director1.derp.mail-out.ovh.net. [127.0.0.1])
-        by director1.derp.mail-out.ovh.net (inspect_sender_mail_agent) with SMTP
-        for <brgl@bgdev.pl>; Wed,  3 Sep 2025 07:43:55 +0000 (UTC)
-Received: from mta2.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.110.113.54])
-	by director1.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4cGvkM1bbPz5vR1;
-	Wed,  3 Sep 2025 07:43:55 +0000 (UTC)
-Received: from orca.pet (unknown [10.1.6.5])
-	by mta2.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTPSA id 11D093E3354;
-	Wed,  3 Sep 2025 07:43:54 +0000 (UTC)
-Authentication-Results:garm.ovh; auth=pass (GARM-99G0031b4fb290-efa1-475b-aec7-15426595f32d,
-                    FA25AB0AA1A9BF3DCBEBCC83EEB30DB7881EF5C4) smtp.auth=marcos@orca.pet
-X-OVh-ClientIp:79.117.41.176
-Message-ID: <4057768b-82f3-4b5b-b301-afae30bd5bca@orca.pet>
-Date: Wed, 3 Sep 2025 09:43:54 +0200
+	s=arc-20240116; t=1756886423; c=relaxed/simple;
+	bh=gKWwUvnAEvt2ScQRr56TGrFFGK11fkBKFuB/ae7rjDs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=odxgnE92VLRGWtkRTXxN6ioVsRB2gb/ah9gUj9r8bbnWZ+6hUYR674mccu+jAXtGDV0DTmeXOWwc4ZxOU+6ZiFNF9o/bcM/kjsvV1fRE78ZY+UW94tt4MRLpcDMS1nVxBugg3rE0RuWUfqZjdRkjKl6VgpL3xw9ZnyeVvNf3I4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=rLpziD0o; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-45b87bc67a4so24841265e9.3
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Sep 2025 01:00:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756886420; x=1757491220; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DpPPqJ6vfvGH4vuO+e6EX5ng+865t3uw6R5fP2qsALM=;
+        b=rLpziD0o/ZGofM9iyt8raiYE/NDnwKoKOgxjILmZGwE6jjTK6+u31BfqfiRMhSV7hQ
+         TijKvIs6HpG4QyzHFu4edKWFJdgX0tJSDWIq7hQi4QPb+qQf1nxuzehMt7Xjx25MB61R
+         8uNgWxJ3mSsfZ2CwRWRDHDq31LGfTO7yz1RkPx2U7r6i+IcAvxFA2E1mKtOajw7COx5N
+         YhaynUl15b2lBTwvMV+r/jTiXJ9BSIHvtn6wktnIGdwSkYfOdqyAi9MgsK+kvgjnCCGO
+         xNdH9fpaewrlcr+gww1p0jDaYWf8VN2ttKUPmVj4TPyUnUl7Ad7khl3Lh/Gjbd7Y7Nfw
+         QjkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756886420; x=1757491220;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DpPPqJ6vfvGH4vuO+e6EX5ng+865t3uw6R5fP2qsALM=;
+        b=ffkSBurDAEJZ6knZss6iGqTaJURsrExdy+14IZd1v8R80tSaDdUk3lEOw4fhXJEA2w
+         srrIpx4YYxtjpOt+MsuYYebkeYjijVOg95mgUI1r4wT75LgP3T1bEDqa5ONDklK53/vg
+         Xb7M1QPxR3qP3jcDl0oibTmn3xmcpSmmoAy/HqVaRfa/qwMQj55yPY8MAKPH07ml8uom
+         Mqghg0WJiRaQ2fsluG1Hsa1YUJTK3e6QrZhg8K1oL3WGMrvPYmhhJrf8IM/D/IlOdaW0
+         SqDC26EnLOKSfPVE7kuJhPlrRINrFaAjW1iMUIh0Xo66tlvp9sIwpyCvoA5AkJftp8M5
+         Iqqw==
+X-Gm-Message-State: AOJu0Yw3xmYSWurUBaBMdTDnuZrOQrD/Xgf8QshfbjpwT9AvzxuziBA9
+	EbFno9SJtRlcUb1NeB6JwN2Vgv7bmYxuAYMLcuAmSQ0Ad2bsxpBvI+fXwXKr0gjbW7LFyTzFHuz
+	N5sH0
+X-Gm-Gg: ASbGncs9mvg4ojFrUQieR8PPIrVUfDeHUSN2qLIHF4MMvzU0yRPs5CqgkZ/qoIFRO3J
+	ijFKF94aPcbmdd1yfCwSva3gJD6NmQaFR464pCADOUh0dmFuxgqRF8gUazQNNyg29lkjI7t8SyR
+	MukUVjcrMmiqAhdW1KqMRvIanJrCAEbKTmGcYGw2LZk9NmjguU8k3rx3P+9QDIBwOqSV6Q4WS4p
+	fLYtcPEvLpY6skpaR/qOV1Wil5RYwKD4Ehe+sWUbI9aCruV/hA/iKJKc8+j8FZFVPLhbExDKgSh
+	WyhM3kB96nT3mMHnq+aHbo5SlxacDyyMXb5nfP49fTlUSYPZkSrcOkicpGnlYQIB29HTBf3E9YO
+	TTSanesrlfNBz/PLZ
+X-Google-Smtp-Source: AGHT+IFwjP7yYn1uifzActrfXYI79jTCrc8TnAVAgAEQ4T0bxdVQdBTd41jSKK0TuTYpRpjrFDEjGw==
+X-Received: by 2002:a05:600c:4e44:b0:459:dde3:1a27 with SMTP id 5b1f17b1804b1-45b855fc86amr107466725e9.26.1756886420178;
+        Wed, 03 Sep 2025 01:00:20 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:2f8b:4799:6bd6:35df])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b83e954b7sm113331635e9.1.2025.09.03.01.00.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Sep 2025 01:00:19 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 00/12] gpio: replace legacy bgpio_init() with its
+ modernized alternative - part 3
+Date: Wed, 03 Sep 2025 10:00:04 +0200
+Message-Id: <20250903-gpio-mmio-gpio-conv-part3-v1-0-ff346509f408@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] mfd: vortex: implement new driver for Vortex
- southbridges
-To: Lee Jones <lee@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Michael Walle <mwalle@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20250822135816.739582-1-marcos@orca.pet>
- <20250822135816.739582-4-marcos@orca.pet>
- <20250902151828.GU2163762@google.com>
- <45b84c38-4046-4fb0-89af-6a2cc4de99cf@orca.pet>
- <20250903072117.GY2163762@google.com>
-Content-Language: es-ES
-From: Marcos Del Sol Vives <marcos@orca.pet>
-In-Reply-To: <20250903072117.GY2163762@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 17418515985921168998
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvheejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeforghrtghoshcuffgvlhcuufholhcugghivhgvshcuoehmrghrtghoshesohhrtggrrdhpvghtqeenucggtffrrghtthgvrhhnpedtgedugfeiudfgkeduhfelgfejgfeuvdejffeiveegteejvddviefhiedujedvheenucfkphepuddvjedrtddrtddruddpjeelrdduudejrdeguddrudejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepmhgrrhgtohhssehorhgtrgdrphgvthdpnhgspghrtghpthhtohepkedprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmfigrlhhlvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlse
- hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheeffegmpdhmohguvgepshhmthhpohhuth
-DKIM-Signature: a=rsa-sha256; bh=SBwCDNG5ruuO0roHhgmwKoJ1Cs1X4uZOY7er01eXoUI=;
- c=relaxed/relaxed; d=orca.pet; h=From; s=ovhmo-selector-1; t=1756885435;
- v=1;
- b=aXiXgkj81uCW4s1t3tuig22XwNhncczb1zlf7lPR+84igv15/kf8LVLteBOQ01F+GJOuDPKm
- hI0ZJaT0nkJzGvFgbt7vS2lnzzNMW9g4mUmfqsTRH7aT7xsw9Mb1LMZW4tkp00mYwDFFizhHY+h
- U9nozsL3rSTFfkkNM/hLQM6pzdT6bvBbubIBCakC8+Yw8ROg2MUA4r9iH0S8GBWH8GDYOwiJlTO
- SCgNcjGmH/PbAP+esraOOWqeMVC95PJRi6uIipBj7Ic6+0/dAGeIomhR7+WfQefFRMp3g+TQiR7
- MomPGPaAMDx7KrUNPSut/VtviZqyI6SXauSVYHejum7ug==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIT1t2gC/x2MOwqAMBAFryJbuxCjInoVsTBxE7fIh0REEO9uS
+ DO8Kd68kCkxZViaFxLdnDn4Il3bgD53bwn5KA5SyFHMokMbOaBzBXXp4G+Me7p6HPtBzcaoiaS
+ G8o+JDD+1vW7f9wMBCkNvawAAAA==
+X-Change-ID: 20250901-gpio-mmio-gpio-conv-part3-534b9ffb7e2c
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij <linusw@kernel.org>, 
+ Imre Kaloz <kaloz@openwrt.org>, James Cowgill <james.cowgill@blaize.com>, 
+ Matt Redfearn <matt.redfearn@blaize.com>, 
+ Neil Jones <neil.jones@blaize.com>, 
+ Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1600;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=gKWwUvnAEvt2ScQRr56TGrFFGK11fkBKFuB/ae7rjDs=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBot/WMzbJ/KeLZaXwwbG7zHqK/b9QJqWbxJVEkF
+ NwdikCx+xqJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaLf1jAAKCRARpy6gFHHX
+ ciaYEACZUQUFrz8EUOXz/wW+8FpV4nOg7WED+poFNv1ix3BYoSfeycNXw6ASf8bmTHYuRUfMeN1
+ RfJfuwFT9hdegcIBuWDhcHRmW/MhmZN/lfl2jipA5Z0T+f9Bcs/jU64irF6NgBMONC36lWxz434
+ tSq+qphMiMajKiFrcwoWa8GenarK0R3+JcoTAhDwfAr5F6+GTanDnjNwY6CVcz/ns6Jpkj6Qjm/
+ DXZgC2xB1dlOgRk/KBm0uVd5ztLeToZOW93AyDUZdsF8aKnRvKKU85ypaJ/U3hxwQEpw0r5X9c/
+ 4vwFH4beR1yILC2lFhkhsU/M8fU0lhSmgc6ajG/XeV7EuUlPhz9+ozGz/OxCzeHr5Zuq3SQc3VT
+ jPCVSYynJOUfAWmBKaKgKg4YGHufyqswORJ1Gu6S+PokAhRamn2cFOF+zfsJ+n83f02+J5YT4S6
+ m38OkRc6GTE636Q9OnZOk0VoH2hhWWQMsn+VPysDq7YQQiJWli9piqELKJ4lT+wKVJSgDcIixNk
+ A2UvApfvhhuPYuFH+Wdtp8ivAh2v57RpT1czjXW4nHXz9KtIj7r2G/93f6wED0SMWHaGkSn5Bgg
+ aLBCXTs8AyWbCXyQEagHqPvuVrllsdtt8bKra3fhbclCiYgUYtC9e64Dby7AYCdtdAUK5l2bLQp
+ htd9ZzHD04avA7g==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-El 03/09/2025 a las 9:21, Lee Jones escribió:
->> vortex_dx_sb are "struct vortex_southbridge" type, not raw MFD API data.
-> 
-> I like your style, but nope!
-> 
-> vortex_southbridge contains MFD data and shouldn't exist anyway.
+Here's another round of patches converting GPIO drivers to the
+modernized generic GPIO chip API.
 
-I'm not sure if I follow.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (12):
+      gpio: ixp4xx: allow building the module with COMPILE_TEST enabled
+      gpio: ixp4xx: use new generic GPIO chip API
+      gpio: idt3243x: use new generic GPIO chip API
+      gpio: blzp1600: use new generic GPIO chip API
+      gpio: tb10x: order includes alphabetically
+      gpio: tb10x: allow building the module with COMPILE_TEST=y
+      gpio: tb10x: use new generic GPIO chip API
+      gpio: mlxbf: use new generic GPIO chip API
+      gpio: ep93xx: allow building the module with COMPILE_TEST enabled
+      gpio: ep93xx: order includes alphabetically
+      gpio: ep93xx: use new generic GPIO chip API
+      gpio: mlxbf3: use new generic GPIO chip API
 
-You're suggesting not using driver_data at all and using a big "if" instead,
-matching manually myself on the correct cells to register against the PCI
-device ID, instead of relying on PCI matching giving me already the cells
-structure inside driver_data?
+ drivers/gpio/Kconfig         |   8 ++--
+ drivers/gpio/gpio-blzp1600.c |  39 ++++++++++-------
+ drivers/gpio/gpio-ep93xx.c   |  33 +++++++++-----
+ drivers/gpio/gpio-idt3243x.c |  45 +++++++++----------
+ drivers/gpio/gpio-ixp4xx.c   |  70 +++++++++++++++---------------
+ drivers/gpio/gpio-mlxbf.c    |  25 ++++++-----
+ drivers/gpio/gpio-mlxbf3.c   | 101 ++++++++++++++++++++++---------------------
+ drivers/gpio/gpio-tb10x.c    |  74 +++++++++++++++----------------
+ 8 files changed, 214 insertions(+), 181 deletions(-)
+---
+base-commit: 5d50cf9f7cf20a17ac469c20a2e07c29c1f6aab7
+change-id: 20250901-gpio-mmio-gpio-conv-part3-534b9ffb7e2c
 
-That seems to increase code size and be more error prone for no reason.
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
