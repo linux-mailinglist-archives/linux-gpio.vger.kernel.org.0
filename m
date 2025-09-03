@@ -1,329 +1,161 @@
-Return-Path: <linux-gpio+bounces-25499-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25500-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D855B41E95
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 14:15:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06C16B41ECF
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 14:22:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0C2CA5449E9
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 12:15:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8AB0F188FE99
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 12:23:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B61AC2FCC1E;
-	Wed,  3 Sep 2025 12:14:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DE222F5305;
+	Wed,  3 Sep 2025 12:22:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OUbSyWWg"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Jtu/IL2K"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 422852FC875;
-	Wed,  3 Sep 2025 12:14:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA36D2EA737
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Sep 2025 12:22:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756901688; cv=none; b=RPSk0Hk41HBrIebz9zI+PBg8QHqIk09PPfhjgqnB91cks9Wb5yDIDfBSEzdRCfc59uEssI50ZpXL97o8ERqVWUQEho1+O2zwmyYrNL4DSFWnPZNwSuBcIyOoyl25JAxTumyS1PAClZmK4hIggfNrMYYkAdB9at/EX4xsLI6lyr4=
+	t=1756902162; cv=none; b=tfz+OVBr4KSM5gRted7Aq9F24pt3vmmmIPbvF9J2mg4xxogHTBi96x3U5xxmJZ6/huF3TfuDoJ8w96V5BmyMQcDXqmFamkbWgcE1L2wL5RIgi3SooI7sLg1egZb52L+4JCmXpCrWA95V1MwhGp5zSpGZZmQcIrwhhW0iFHm0q38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756901688; c=relaxed/simple;
-	bh=I3Rwui5h8i8VWqYrb6PdFvNsET6DUKRQRuELuzNdVKs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BdzRTR8ZSXpbrp9ETn6TI9Qf/LQyv6iKeaOpOTFQQxmCmYIVdVZ5mXCJRdH1mHdbRNpPnF2uZWSOskaz6yeyORJ/0f2K/18+kJ4dwV15L33zDtt20s1gDB0s2udpp5rCnlXkHgFcL8+x8sOvlJOdK/liuGRC1fWPMyW5X1d8bPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OUbSyWWg; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-55f720ffe34so1244658e87.1;
-        Wed, 03 Sep 2025 05:14:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756901684; x=1757506484; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4bnFdOSUcb5DzapHVKdsvSL7DbxrbpUwGDL+u7NsRkk=;
-        b=OUbSyWWg4VhOCA+5tonWzPlbwN1c9ypIP43TOKCDyGYnj4RgOzXWmf3R5jA7ol/ql2
-         rLd5QNQxBZx6IMYUCAi9iNF2uDrfG9yjlxpUhqZN4Q5viYLFvlKar7yvcFVErBDi8+1r
-         dWY1dqewcsWIgWB6clWVxJCsEw502tr/O+Xv/RMC68+I0yS9F3Cwoq0BIjEIeNdqgJE6
-         6Jh6VjxRUkfo/06Us45RMzEcgw4Xpsx31cNFLIlNtKPf7AW5U/nMVzuNkktjSDA6Y9Se
-         2/+zpDYgskMkOjr9J0ztwluW1SKyMfcoRmlb/kywmZORQ4S7LOU547MMwD7KoU6jz0M6
-         Vcwg==
+	s=arc-20240116; t=1756902162; c=relaxed/simple;
+	bh=q2Zj0cl8lYA5N8WZHyQQlQ3Qp6xdIaxhynORgU8nFAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kBZCNeLHy9CkZz+7NjckNPXdBKrHup274lOKR6FLRZgZ657WYdFbqGYjBuRRxJgIBRQBfrxHn3S6i9nUdoFFymoZ9W1z2D6gxt8kwkjziT6ufd9pZtY7kiViYOxas4H9/+F3O8xZMRmT2+/mc7eL1IYecHHkqUSagaHzVGbLTW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Jtu/IL2K; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 583BFIXa023837
+	for <linux-gpio@vger.kernel.org>; Wed, 3 Sep 2025 12:22:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=SKm1bfgXnDxPg9BzYUZi1YNq
+	zOZXroVzr/NmpGjdi08=; b=Jtu/IL2KrkSx5TMbE/DFsgGnqMMy/E5AyajJJcOq
+	FgX85h5Z/97+9giWQ9I7TucpxGr5mLQ61iWXqI+4+fHA1K7trWyYasLYxyTMhiga
+	a9ADihQ1KpB9uBMeaMrg5i74/I2azN7Kf6cjB3phA3ilyxM1evqaTFCZFkDFyfJb
+	9gyFIWLdbK0vnUv1fofqKb9ajWWSzeuNeDlCmuwHkbZlyU9X5SMQPtioi8YO+8Mb
+	hzYO81HZ3T03DLXbWPfVPVADRj+tyNzYaNrK6nbFFGDQb1gRU1Vro/019bSMTsrJ
+	sOIF9wmALbb//lS1iMQQ7TazP7pwxKv9Cy36XsgRJpod/Q==
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48ut2fkg7k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Wed, 03 Sep 2025 12:22:39 +0000 (GMT)
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4b3476fbe7eso43449571cf.2
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Sep 2025 05:22:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756901684; x=1757506484;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4bnFdOSUcb5DzapHVKdsvSL7DbxrbpUwGDL+u7NsRkk=;
-        b=K92rLnfCE4c+YyMWQGB3oP2M3n8h74NxG+XLFYf7K0zJJLyeWqrcj+k0g6xdKN1IjK
-         syUP2yQI0qC40RvYt0lquw5wHJR0RwwTeBCzh4s1M+co5F9XHmRQlEM8VpWICJeFhqxC
-         jP1keJPQMfVgpsz+3ULuci8MBejDDflSUvb0hB2iEEGSF+WIqM0OeuErDjDxS1VZk3m2
-         aCwHscD9HFlPUQoJr61aEZ4ux7394G+qpdEjHeTtMd5AnUHDJo2KjcwBqE5O6IJkLHpH
-         YRygm+DXT3GMs+SuLCpyqsU92VcsZGpAN1BT7HchXu+UU+Nba1Z0kVLjkN4OqJpAwpHS
-         JFtA==
-X-Forwarded-Encrypted: i=1; AJvYcCVO82mQAGC+AO2NAVaTEHaYQ5QRjzMI1qqJGTDaZfR5LiyMC1aGT1FgfbKZH85EHJyW/pDwwPdlRMLh32Ux@vger.kernel.org, AJvYcCW6fWIxcK4VioddPu6xUHq/HxpU5DQ2PUKl5D6lfsCfwQJQp5rn4gvpwjs7WXuAdWKvcC1iOl7pwMw5yw==@vger.kernel.org, AJvYcCW9CbSFMpjkMZARD6N1c+xhfSX0ODsqZmDc7tSNBGtLKoYYhqIjOZAtoKJ52CnNMj1STN1GNKUiyJDD@vger.kernel.org, AJvYcCXImG03T2RqJowdUPzLDlSxwFUutJDbRrr3EoO2UxtWu4EEtHurj8C3Cxh8GXM2ZkOofR35JytVZ9tH@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPEP1ffDSmNQkoV66VopQtHG5lm0fov5vidIMzq7oTqoxK1SBw
-	voroVp0s9Ijk7/LRqtW74pL3DuJknGCzED8p8gy96jYkOWixEgCXs0nx
-X-Gm-Gg: ASbGncuJlU/Tl2dJKlX/tdbQxApFfGNzT3AIsKl6CgW1ghUZg5Xc7VH3WUeIVTfpICX
-	RUCcOD0GpdtncjRQuAtpjyCxmY97Fys92r9k8CVd/rwgMrpKBpfKQBI3CuWbjZYl3SCG6YD5slf
-	syu+BKYbkjwNqmyjisbppxR/I7BvbUN0esl4OYwXDKgrMpvRYwwIcHqnLsdCxUiiaeNZ329n4rB
-	e3xqKUbfDygYNDc6DnLfB6JZjAgPmeUjGRvQB+o5HVPHQTR3GRQJt7+CQ6n3TaBmrGZfh98kx/u
-	fwKnYnhRvQWUzvy/gb0gT6brykaQhnUfNWz9ob7BxGuMFD+rrTzmuM+8ki+eyxxHpuiqwyaT76o
-	U8zfS6kwN82d7xkfw0CD55dPBtOJhoxCx1TrHPl3n8MQx6WJ3u7p54TKDN+IkwkA47oI6yglT1a
-	WD8iwV
-X-Google-Smtp-Source: AGHT+IH6jxbRHLcb1E9iKj6tlhXFNKumhSggGsD/bmyTaclcpbDEyHbuFaQHrtmGJ6Z1IZ53ftI55Q==
-X-Received: by 2002:a05:6512:140d:b0:55f:3fea:db7 with SMTP id 2adb3069b0e04-55f708c0672mr4182756e87.9.1756901683861;
-        Wed, 03 Sep 2025 05:14:43 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5608ad0f6besm470470e87.116.2025.09.03.05.14.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Sep 2025 05:14:43 -0700 (PDT)
-Message-ID: <10c6b0c4-d75f-494c-bb3c-883c06cf3bc2@gmail.com>
-Date: Wed, 3 Sep 2025 15:14:42 +0300
+        d=1e100.net; s=20230601; t=1756902159; x=1757506959;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SKm1bfgXnDxPg9BzYUZi1YNqzOZXroVzr/NmpGjdi08=;
+        b=nEEd3mrURVDxRaEIAQhwLSk52mMQll2jNYyBuLt+vwFoP0RwAjdS0JWlk9hR/LIwdk
+         Ya00ymEoMdkoiqA4ZCOyXXZCqHd1waUNFfolp9BMN2jWQrZrYpwDLat6zhQjwo5rNCo4
+         lpYxRKe0hLNwO5KkEhaiCFiQ67vhyg8lOWHxdlBxzHgNnoYxAUOgm8HkGRadzMuMP+rr
+         qWI25ZFWA3r7oVc2Ku5vIS0IpJaiRxXZEOmTnuUYTdAAi1NKopfqOxM/0FJ/OtrvnWNq
+         8gDLS38LlfeXvGBkKSL8Rgq62N43VAD9mQMfkBPQJ25/raB6Lc37K99A3ItPdGe7GIrZ
+         YYpw==
+X-Forwarded-Encrypted: i=1; AJvYcCVZDwFFtdy6lIW3WlLwNAVZX0G8DqbvXTkojRCuIww4yARK8+Q064lKR0ZOCXoOjQhkPjHmiXi3Oqw/@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEQQTTyY6xcD1xX89TCqLZrir3iesGxoeePjEukpyby3fQ+wfi
+	M2l44Zq3PRJeVWUDraQk9A2MU94+44ssxBSkTjognadvZj5y/YTqvED/wp3YR3EkyV5cqe/igHg
+	RHGQJrHuVqZlZeNm9DtCg/wcBbkcirZXJnp1vVxuYsorgdK/KyAQ2eE82pAyFEogZ
+X-Gm-Gg: ASbGncsmRtzkzvbRSMaTTY6YcQTMQGte/4wwq/4XZZltICkRIWrryDOtFYJcKxLx3Rg
+	2+yptVbJF0I/8C0nk0gbC7gf63NrqYjrvc11jBVZ8YsMUHom87WS+6GN9c0XRFnEEh//RjISdFz
+	sm11qy79ycSXyQVkQ4WGOwpUknUGx1angjKninu/15P/G9aNcxrlYNO4j5i8W0rkJOmdaDrcypK
+	e/UKN5wxuCdzOi8wE2MszQApnGFeSp/ZanLVz2Dz3imWvD4QgJkNUf+BuEIvCvKBgtQJdbEht9o
+	hB+HhVocUw9qsCfT96+Su5B2zRhD0IQ7DFWw7QSHLfYrfeOtCgx4M/+RUQINwpJ7OUOSDYGZTGD
+	SO0ki5eagn30fGGSjiVRL7BfTzhGsilfnji1xksMNxNX87Zm3LFAQ
+X-Received: by 2002:a05:622a:5146:b0:4b3:4e8e:9e4a with SMTP id d75a77b69052e-4b34e8ea939mr65237621cf.56.1756902158513;
+        Wed, 03 Sep 2025 05:22:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF2FoqT0z4zyASuUjUeIGy8E5KMANVV7KhtQlJY8p5efCPL8u0tAS3LoPMY6FjYaebAlTSVcA==
+X-Received: by 2002:a05:622a:5146:b0:4b3:4e8e:9e4a with SMTP id d75a77b69052e-4b34e8ea939mr65237251cf.56.1756902158009;
+        Wed, 03 Sep 2025 05:22:38 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5608acfaae4sm495216e87.99.2025.09.03.05.22.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Sep 2025 05:22:37 -0700 (PDT)
+Date: Wed, 3 Sep 2025 15:22:34 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Pankaj Patil <pankaj.patil@oss.qualcomm.com>, andersson@kernel.org,
+        linus.walleij@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, rajendra.nayak@oss.qualcomm.com,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] dt-bindings: pinctrl: qcom: Add Glymur pinctrl
+ bindings
+Message-ID: <hxwrmoyik5bzgtxufw2trjwz5oqn7jut5wsej4v5xqdk5ho6hi@jic2xbti5jn6>
+References: <20250813065533.3959018-1-pankaj.patil@oss.qualcomm.com>
+ <20250813065533.3959018-2-pankaj.patil@oss.qualcomm.com>
+ <bdfb09a2-0053-4a07-85d6-5e15b8bc126a@kernel.org>
+ <d35s5ldfswavajxkj7cg3erd75s2pcyv725iblyfya4mk4ds4g@hekhirg4fz65>
+ <bbf60240-4d84-47fc-ae35-483e55968643@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] iio: adc: Support ROHM BD79112 ADC/GPIO
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>,
- Marcelo Schmitt <marcelo.schmitt@analog.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>,
- Tobias Sperling <tobias.sperling@softing.com>,
- Antoniu Miclaus <antoniu.miclaus@analog.com>,
- Trevor Gamblin <tgamblin@baylibre.com>, Esteban Blanc <eblanc@baylibre.com>,
- Ramona Alexandra Nechita <ramona.nechita@analog.com>,
- Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
- Hans de Goede <hansg@kernel.org>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org
-References: <cover.1756813980.git.mazziesaccount@gmail.com>
- <08929460fe11dd0b749c50a72a634423f13f4104.1756813980.git.mazziesaccount@gmail.com>
- <aLb8HuIG0XXLu653@smile.fi.intel.com>
- <00ee1968-a471-4d2b-a024-4bee00e40513@gmail.com>
- <aLglJoqBDap_eMIj@smile.fi.intel.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <aLglJoqBDap_eMIj@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bbf60240-4d84-47fc-ae35-483e55968643@kernel.org>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODMwMDAzOCBTYWx0ZWRfX76eawAHd75gw
+ 4jVnkZaszOqzpsOKa8PNPesDvTiCFUgPPGUXKyXRlCCXi9mMYSnyKsqv1FUanbobboW3y22UQ6z
+ 6cU5EhLLHFK38hYTvPU771t5WnG5FQEh+JaOy+z/1Pr8VOveyaHJMpuSFrkUtAdal2+qJ5rAbL0
+ aY5pn3Qhqi+wrggZqJSC4XqGl4vox5rmi/SIWYUSyoNICXRvSmcF5zwjhgMTpQj1WLMM7nQ3Z6r
+ HUytveBQ7aeq9LYi2QRJKu71MEanx2l85tD1i7iJMhfoZMhWUdu8Ww9wzppJ2XV+ppDWEU+b0El
+ qlaINSBhDM+7wOZYpC1nHye2vv2Xf6MpdNTL6PW+pSW2bvWNyD8DRkkurZ3AbY/b21JwJde4E9+
+ OsVS5gUi
+X-Proofpoint-ORIG-GUID: 5Mlzp1SZDmibu6wh7awP8bjr83wFBRl0
+X-Proofpoint-GUID: 5Mlzp1SZDmibu6wh7awP8bjr83wFBRl0
+X-Authority-Analysis: v=2.4 cv=U7iSDfru c=1 sm=1 tr=0 ts=68b83310 cx=c_pps
+ a=JbAStetqSzwMeJznSMzCyw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=yJojWOMRYYMA:10 a=9UiGzq1QuJPVDsM1CnsA:9 a=CjuIK1q_8ugA:10
+ a=uxP6HrT_eTzRwkO_Te1X:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-03_06,2025-08-28_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 phishscore=0 clxscore=1015 impostorscore=0 suspectscore=0
+ malwarescore=0 priorityscore=1501 adultscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508300038
 
-On 03/09/2025 14:23, Andy Shevchenko wrote:
-> On Wed, Sep 03, 2025 at 09:52:02AM +0300, Matti Vaittinen wrote:
->> On 02/09/2025 17:15, Andy Shevchenko wrote:
->>> On Tue, Sep 02, 2025 at 03:24:31PM +0300, Matti Vaittinen wrote:
+On Wed, Sep 03, 2025 at 01:28:43PM +0200, Krzysztof Kozlowski wrote:
+> On 03/09/2025 13:01, Dmitry Baryshkov wrote:
+> >>> +  interrupts:
+> >>> +    maxItems: 1
+> >>> +
+> >>> +  gpio-reserved-ranges:
+> >>> +    minItems: 1
+> >>> +    maxItems: 119
+> >>
+> >> 124, I guess
 > 
 > ...
 > 
->>>> +	unsigned int vref_mv;
->>>
->>> Perhaps _mV to follow the actual unit spelling?
->>> (and yes, I know that both variants are present in the kernel)
->>
->> The 'mv' is a deliberate choise. I still remember our previous discussion
->> about this same topic [1].
+> >>> +    properties:
+> >>> +      pins:
+> >>> +        description:
+> >>> +          List of gpio pins affected by the properties specified in this
+> >>> +          subnode.
+> >>> +        items:
+> >>> +          oneOf:
+> >>> +            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9])$"
+> > 
+> > If it's up to 124, then this pattern is incorrect.
 > 
-> Rings a bell. And I still think the proper spelling is more important when
-> we talk about physics.
-> 
-> ...
-> 
->> TLDR; I can combine the conditions in one if (), thanks.
-> 
-> Works for me.
-> 
-> ...
-> 
->>>> +static int bd79112_gpio_dir_set(struct bd79112_data *data, unsigned int offset,
->>>> +				int dir)
->>>> +{
->>>> +	unsigned int set_reg, clear_reg, bit;
->>>> +	int ret;
->>>> +
->>>> +	bit = GET_GPIO_BIT(offset);
->>>> +
->>>> +	if (dir == GPIO_LINE_DIRECTION_IN) {
->>>> +		set_reg = GET_GPI_EN_REG(offset);
->>>> +		clear_reg = GET_GPO_EN_REG(offset);
->>>> +	} else {
->>>> +		set_reg = GET_GPO_EN_REG(offset);
->>>> +		clear_reg = GET_GPI_EN_REG(offset);
->>>> +	}
->>>
->>>> +	ret = regmap_set_bits(data->map, set_reg, bit);
->>>> +	if (ret)
->>>> +		return ret;
->>>> +
->>>> +	return regmap_clear_bits(data->map, clear_reg, bit);
->>>
->>> I believe the order depends on the out-in or in-out switch.
->>> Otherwise it might be potential glitches on input (hw) buffer.
->>> Right now when it's not an interrupt it may be okay to don't
->>> bother, but in general I see a potential issues with that.
->>
->> Can you please explain what you mean. I am not sure I can follow you here.
-> 
-> If we set out first with enabled input, input can get a value from the output.
-> If the value before was different, it will be an event condition (of course
-> it all depends on the HW and I haven't read datasheet for this one).
+> So 125.
 
-Ah. I guess I see what you mean. I have a feeling there is a problem at 
-the GPIO user side, if it keeps listening for inputs after it calls 
-direction to be switched to output.
+I think so
 
-But yes. I believe turning off the 'input listening' first, and toggling 
-direction to output only afterwards makes sense. So, thanks. And thanks 
-for explaining this further.
-
-> ...
-> 
->>>> +static int bd79112_probe(struct spi_device *spi)
->>>> +{
->>>> +	/* ADC channels as named in the data-sheet */
->>>> +	static const char * const chan_names[] = {
->>>> +		"AGIO0A", "AGIO1A", "AGIO2A", "AGIO3A", "AGIO4A", "AGIO5A",
->>>> +		"AGIO6A", "AGIO7A", "AGIO8A", "AGIO9A", "AGIO10A", "AGIO11A",
->>>> +		"AGIO11A", "AGIO12A", "AGIO13A", "AGIO14A", "AGIO15A",
->>>> +		"AGIO0B", "AGIO1B", "AGIO2B", "AGIO3B", "AGIO4B", "AGIO5B",
->>>> +		"AGIO6B", "AGIO7B", "AGIO8B", "AGIO9B", "AGIO10B", "AGIO11B",
->>>> +		"AGIO11B", "AGIO12B", "AGIO13B", "AGIO14B", "AGIO15B",
->>>
->>> Can you make all of the lines to be the same in terms of amount of entries?
->>
->> Maybe :) I would like to know why? As you know, I prefer to keep lines short
->> to fit multiple terminals in parallel, so this will probably make the entry
->> to consume more rows. Thus, I would like to have a solid reason.
-> 
-> Sure, the array above is unindexed. It's prone to errors and typos.
-
-Ha. Thanks :) I see it now when I counted the entries :) Should be 32, 
-was 34. I agree this would have been easier to spot!
-
-> Moreover, it's really hard to follow in case one needs to debug such
-> a typo and see which value needs to be fixed (imagine you typed twice
-> the same name).
-
-Or, if I typed twice the same name twice ;) Thanks!
-
-> 
-> Recommended way is to use power-of-two per line (and even add a comment
-> at the end), like
-> 
-> static const char * const chan_names[] = {
-> 	"AGIO0A", "AGIO1A", "AGIO2A", "AGIO3A",		/*  0 -  3 */
-> 	"AGIO4A", "AGIO5A", "AGIO6A", "AGIO7A",		/*  4 -  7 */
-> 	"AGIO8A", "AGIO9A", "AGIO10A", "AGIO11A",	/*  8 - 11 */
-> 	...
-> 
-> (or hexadecimal offsets, whatever is better and more in accordance with
->   the SW / data sheet).
-
-Ok, This makes sense now.
-
-> 
->>>> +	};
-> 
-> ...
-> 
->>>> +	data->vref_mv = ret / 1000;
->>>
->>> (MICRO / MILLI)
->>
->> I find this much more confusing than plain 1000. (I know we had this type of
->> discussion before. See [1] again).
-> 
-> Rings a bell, but that's what IIO reviewers suggest to do nowadays as a
-> compromise between creating a new bunch of unit (V) related definitions.
-
-I am sorry, but this just seems stupid to me. I'd say that it is very 
-obvious for most of the readers dividing microvolts by 1000 results 
-millivolts. And if it is not, then having this MICRO / MILLI is likely 
-to just cause more confusion.
-
-I _really_ dislike these defines. Why is MILLI 1000? Why it isn't 0.001? 
-It makes no sense that KILO and MILLI are the same. Especially not when 
-we are dealing with physics.
-
-This is just an obfuscation compared to using plain 1000. (I kind of 
-understand having a define for a value like 100000 - where counting the 
-zeros gets cumbersome, although 100 * 1000 would be equally clear. But 
-1000 _is_ really 100% clear, whereas MICRO / MILLI is not).
-
->>>> +	ret = devm_iio_adc_device_alloc_chaninfo_se(dev, &bd79112_chan_template,
->>>> +		BD79112_MAX_NUM_CHANNELS - 1, &cs);
->>>
->>> Hmm... Indentation can be amended.
->>
->> Sorry but I am not sure I understand what you mean by amended? Can you
->> please go an extra mile and explain :)
-> 
-> 	ret = devm_iio_adc_device_alloc_chaninfo_se(dev,
-> 						    &bd79112_chan_template,
-> 						    BD79112_MAX_NUM_CHANNELS - 1,
-> 						    &cs);
-> 
-
-Ah, Ok. I'll do this, thanks.
-
-> ...
-> 
->>>> +	gpio_pins = bd79112_get_gpio_pins(iio_dev->channels,
->>>> +					  iio_dev->num_channels);
->>>
->>>> +
->>>
->>> Instead of leaving this rather unneeded blank line I would move above...
->>>
->>>> +	/* We're done if all channels are reserved for ADC. */
->>>
->>> ...to be here
->>>
->>> 	gpio_pins = bd79112_get_gpio_pins(iio_dev->channels,
->>> 					  iio_dev->num_channels);
->>
->> I suppose you mean something like:
->>
->> register_gpios:
->> 	/* We're done if all channels are reserved for ADC. */
->> 	gpio_pins = bd79112_get_gpio_pins(iio_dev->channels,
->>                                            iio_dev->num_channels);
->> 	if (!gpio_pins)
->> 		return 0;
->>
->> right?
-> 
-> Yes.
-> 
->> I don't like this because now the comment suggests we do call
->> bd79112_get_gpio_pins() only to see if all channels were for ADCs. This,
->> however, is not THE reason for this call, only an optimization. I think:
->> having:
->>
->>          /* We're done if all channels are reserved for ADC. */
-> 
-> Then you can amend the comment
-> 
->           /* If all channels are reserved for ADC, we are done. */
-> 
->>          if (!gpio_pins)
->>                  return 0;
->>
->> is clearer.
-> 
-> Which makes my approach sustainable.
-
-I like your wording better, but placing this comment before the call to 
-bd79112_get_gpio_pins() is still more confusing that placing it before 
-the actual check:
-	if (!gpio_pins)
-is still misleading. Comment applies to the check, not the retrieval.
-
-
-Yours,
-	-- Matti
+-- 
+With best wishes
+Dmitry
 
