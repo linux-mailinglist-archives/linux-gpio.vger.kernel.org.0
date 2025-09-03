@@ -1,114 +1,105 @@
-Return-Path: <linux-gpio+bounces-25442-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25443-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6232EB416F1
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 09:39:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56C4CB4173F
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 09:52:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DF11D7C0FA9
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 07:39:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E99071A816EE
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 07:52:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D1362DCF58;
-	Wed,  3 Sep 2025 07:39:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 749BF2E284B;
+	Wed,  3 Sep 2025 07:51:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qoDk0nl6"
+	dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b="aXiXgkj8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout3.mo533.mail-out.ovh.net (3.mo533.mail-out.ovh.net [46.105.35.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD362D73B2;
-	Wed,  3 Sep 2025 07:39:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD67F2DFA32
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Sep 2025 07:51:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.35.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756885170; cv=none; b=WfBtjbpphX0IgXY4WYkGl8JBprfRVpTz0rk3tdbMhqeAHXezWuoXt48ccBwm0VgBboaX9Q5ypA5f/6o8fSABXReiGW7GOQ6I3/1xJeIz2xCkzYY/XygLEsIezY6q2COduw9SOIcxZJoyukTzO6wwkHF/7nLQpyLaq/DPunEECic=
+	t=1756885906; cv=none; b=oVEE7BC7Ol+N64m0yuOPSg3/cSCfxAB8oo3Pn51PgqMpfkkfyP3NZ8e4avpEJIJ2oYCf7hys6BMnlWGRXPk2Uw8A4/VBZASY678uvkniayHxRMA8ltc0hMYNeV0tX7JTglmys0/Y8q+fHkvjBmS5DswgLElOeRadnzk2CNc8YYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756885170; c=relaxed/simple;
-	bh=nabVaKDp95bXX1pjLpK4nzWf1nseMWBruv5tgZaJBoA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RgLSo4t9RnL2L+JF4an+eVqMdPBh1rtIXER+V/S9sbvnXb+k1NqL6WRuwPspTYV66mcMM27zLuIVDaADulwlmU+XNeZ082KD0yNliA72zJEDa0JPCqzX+D7j1m+BwbkhG+dRWUiFHhPdtE1qwVi9IFNUgxlLzyB3pJr/ahGExq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qoDk0nl6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EA52C4CEF0;
-	Wed,  3 Sep 2025 07:39:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756885169;
-	bh=nabVaKDp95bXX1pjLpK4nzWf1nseMWBruv5tgZaJBoA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qoDk0nl6DGMhrsb9Zero2GRf3mxlO2Zkmtca2Z/KeKD/A+oBDZ96dYcBPT94dwlkU
-	 f0DLzIj/ZwhCrb5B4tPNd/VVQsfYxVSV2/QOOMs9cLSO9APl7W8P7vIBAVhCCtvHGN
-	 Wtzw48LeMkWre+8zpgwv+Li+KmKBA5Y9dXQUwTFoIo9DK79zaqWKJYA9eeL0JZADFS
-	 qD9EiS0+jbqaNpPL+mO71C0U1WpdfN7z2meHxEAo+95mgjgwwldX3TLfUrljS59Nku
-	 X8Zz7gNiYLjBFpa/8drEj34cjLfh0bA/7FZxXieklmnEs9cQou/+e+pY9sOk2PlsS3
-	 SwaRwN9OWsD2w==
-Date: Wed, 3 Sep 2025 08:39:20 +0100
-From: Lee Jones <lee@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	Tim Harvey <tharvey@gateworks.com>,
-	Michael Walle <mwalle@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Jean Delvare <jdelvare@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Cheng-Yi Chiang <cychiang@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Tinghan Shen <tinghan.shen@mediatek.com>,
-	devicetree@vger.kernel.org, chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-sound@vger.kernel.org,
-	linux-watchdog@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Mathew McBride <matt@traverse.com.au>
-Subject: Re: (subset) [PATCH v2] dt-bindings: mfd: Move embedded controllers
- to own directory
-Message-ID: <20250903073920.GA2163762@google.com>
-References: <20250822075712.27314-2-krzysztof.kozlowski@linaro.org>
- <175682479961.2401991.17056649550187344851.b4-ty@kernel.org>
- <63e43445-ef5f-49b2-85c1-f85d95426d5d@kernel.org>
+	s=arc-20240116; t=1756885906; c=relaxed/simple;
+	bh=663KoJU1ldM4IAb3QXT68+FeZh2kwq0BYEZ09XzUgbw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YLntWzIxum+51QFJgkmR3CUX8liyQBXxwKEUEaul3fzvqd8wltC7m+4+3yT5pfi8bq5PAykJk8k9Lzcw9/VdS1yHXVV5zlycp+KQVbDvkIZq6MBlObr+pRXB6NV7ZhPH0+5zcVCkqNl0VkwcoGTcCJ8mkaLdK/InVi18RHr0HpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet; spf=pass smtp.mailfrom=orca.pet; dkim=pass (2048-bit key) header.d=orca.pet header.i=@orca.pet header.b=aXiXgkj8; arc=none smtp.client-ip=46.105.35.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orca.pet
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orca.pet
+Received: from director1.derp.mail-out.ovh.net (director1.derp.mail-out.ovh.net [51.68.80.175])
+	by mo533.mail-out.ovh.net (Postfix) with ESMTPS id 4cGvkM5C5Rz6S7S;
+	Wed,  3 Sep 2025 07:43:55 +0000 (UTC)
+Received: from director1.derp.mail-out.ovh.net (director1.derp.mail-out.ovh.net. [127.0.0.1])
+        by director1.derp.mail-out.ovh.net (inspect_sender_mail_agent) with SMTP
+        for <brgl@bgdev.pl>; Wed,  3 Sep 2025 07:43:55 +0000 (UTC)
+Received: from mta2.priv.ovhmail-u1.ea.mail.ovh.net (unknown [10.110.113.54])
+	by director1.derp.mail-out.ovh.net (Postfix) with ESMTPS id 4cGvkM1bbPz5vR1;
+	Wed,  3 Sep 2025 07:43:55 +0000 (UTC)
+Received: from orca.pet (unknown [10.1.6.5])
+	by mta2.priv.ovhmail-u1.ea.mail.ovh.net (Postfix) with ESMTPSA id 11D093E3354;
+	Wed,  3 Sep 2025 07:43:54 +0000 (UTC)
+Authentication-Results:garm.ovh; auth=pass (GARM-99G0031b4fb290-efa1-475b-aec7-15426595f32d,
+                    FA25AB0AA1A9BF3DCBEBCC83EEB30DB7881EF5C4) smtp.auth=marcos@orca.pet
+X-OVh-ClientIp:79.117.41.176
+Message-ID: <4057768b-82f3-4b5b-b301-afae30bd5bca@orca.pet>
+Date: Wed, 3 Sep 2025 09:43:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/3] mfd: vortex: implement new driver for Vortex
+ southbridges
+To: Lee Jones <lee@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Michael Walle <mwalle@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250822135816.739582-1-marcos@orca.pet>
+ <20250822135816.739582-4-marcos@orca.pet>
+ <20250902151828.GU2163762@google.com>
+ <45b84c38-4046-4fb0-89af-6a2cc4de99cf@orca.pet>
+ <20250903072117.GY2163762@google.com>
+Content-Language: es-ES
+From: Marcos Del Sol Vives <marcos@orca.pet>
+In-Reply-To: <20250903072117.GY2163762@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <63e43445-ef5f-49b2-85c1-f85d95426d5d@kernel.org>
+X-Ovh-Tracer-Id: 17418515985921168998
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvheejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeforghrtghoshcuffgvlhcuufholhcugghivhgvshcuoehmrghrtghoshesohhrtggrrdhpvghtqeenucggtffrrghtthgvrhhnpedtgedugfeiudfgkeduhfelgfejgfeuvdejffeiveegteejvddviefhiedujedvheenucfkphepuddvjedrtddrtddruddpjeelrdduudejrdeguddrudejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepmhgrrhgtohhssehorhgtrgdrphgvthdpnhgspghrtghpthhtohepkedprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmfigrlhhlvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlse
+ hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheeffegmpdhmohguvgepshhmthhpohhuth
+DKIM-Signature: a=rsa-sha256; bh=SBwCDNG5ruuO0roHhgmwKoJ1Cs1X4uZOY7er01eXoUI=;
+ c=relaxed/relaxed; d=orca.pet; h=From; s=ovhmo-selector-1; t=1756885435;
+ v=1;
+ b=aXiXgkj81uCW4s1t3tuig22XwNhncczb1zlf7lPR+84igv15/kf8LVLteBOQ01F+GJOuDPKm
+ hI0ZJaT0nkJzGvFgbt7vS2lnzzNMW9g4mUmfqsTRH7aT7xsw9Mb1LMZW4tkp00mYwDFFizhHY+h
+ U9nozsL3rSTFfkkNM/hLQM6pzdT6bvBbubIBCakC8+Yw8ROg2MUA4r9iH0S8GBWH8GDYOwiJlTO
+ SCgNcjGmH/PbAP+esraOOWqeMVC95PJRi6uIipBj7Ic6+0/dAGeIomhR7+WfQefFRMp3g+TQiR7
+ MomPGPaAMDx7KrUNPSut/VtviZqyI6SXauSVYHejum7ug==
 
-On Tue, 02 Sep 2025, Krzysztof Kozlowski wrote:
-
-> On 02/09/2025 16:53, Lee Jones wrote:
-> >> [...]
-> > 
-> > Applied, thanks!
-> > 
-> > [1/1] dt-bindings: mfd: Move embedded controllers to own directory
-> >       commit: 152afab28f7659a4292c9f7d3324eaeb49a55b8b
+El 03/09/2025 a las 9:21, Lee Jones escribió:
+>> vortex_dx_sb are "struct vortex_southbridge" type, not raw MFD API data.
 > 
+> I like your style, but nope!
 > 
-> There was a v3 here:
-> 
-> https://lore.kernel.org/r/20250825081201.9775-2-krzysztof.kozlowski@linaro.org/
+> vortex_southbridge contains MFD data and shouldn't exist anyway.
 
-Drop this, applied that!
+I'm not sure if I follow.
 
--- 
-Lee Jones [李琼斯]
+You're suggesting not using driver_data at all and using a big "if" instead,
+matching manually myself on the correct cells to register against the PCI
+device ID, instead of relying on PCI matching giving me already the cells
+structure inside driver_data?
+
+That seems to increase code size and be more error prone for no reason.
+
 
