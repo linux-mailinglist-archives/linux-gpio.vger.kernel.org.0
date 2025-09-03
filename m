@@ -1,66 +1,66 @@
-Return-Path: <linux-gpio+bounces-25526-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25527-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1859EB425C6
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 17:45:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87E0DB425D1
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 17:48:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C262F1BA4E02
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 15:46:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3708F189D364
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 15:48:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBE8828726E;
-	Wed,  3 Sep 2025 15:45:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FDF7283FF9;
+	Wed,  3 Sep 2025 15:48:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HUmjNwYe"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P26X69lc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD34D287243;
-	Wed,  3 Sep 2025 15:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF5C271A9D;
+	Wed,  3 Sep 2025 15:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756914306; cv=none; b=px3SQULzgHM9eFqY3vAy+Z7IzLpScc78bqim73W4kblsGrUDsVSDVSHXIGIW+47+ZSQf36WRFPGn2ak9Bw6TCfVaieSq4E7prjDgQm0/PRsdpdmzniYiJCdFpJYDo95BaNDY04T0CtdcjOdEPk1vcN0xTE3V+qT0FtXLQy72HQM=
+	t=1756914494; cv=none; b=rb6xaxIRfKjjnEAh8HBYZsRtb/0Rms/MOEebkRtJuAC3CVi3BvbcSD0efMi3FMzs5R8rlViMOPeDXx+/7s4Up82ScgLbkU5s1u0wh+odcZklR/TvM+fjLJHGHfP0mZ3/YUzOs3U38F5ZOcXa+RUierVFbjgsyjF1j6pVqStmR20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756914306; c=relaxed/simple;
-	bh=RmIXgX4EPYbEWf+ZuRyxg8gVS0O/rPn4FNVOhp5P5DQ=;
+	s=arc-20240116; t=1756914494; c=relaxed/simple;
+	bh=Ibe9kE7bJQVzmN0iWK+qfrTbPUnPCwHMYJUF1OEdNRc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fhnLIsEDYDzw1LQlJp152mymDLz7RHlNKWEf+boMBHUJmM2zE0KNlAdr1KhaEW8cl04384Vyb6AUZ0MWtYm0ryApQtDmqubloLdh3u5/2R+SIrSVhZyVEjf8Wt6T/HCoFoSBKjrGLp1pHbo6cuCJqESqAdnQ7IH5mPGIPvZH91E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HUmjNwYe; arc=none smtp.client-ip=192.198.163.7
+	 Content-Type:Content-Disposition:In-Reply-To; b=dLBbx56wNhsvtAlr11nYIqMA8r8q73wRY3qv3UAHO28tYNhwT27u6H/fOcZVVmMDNFPgiuJFSAWYeZTpNWP2t3/nMyjnQCA8oameVsrPfAb2heHoqMJ2sX0JRJGGNaExEaZD43A2Maq1710OGoOBTADq8/Qr5lSFt+z43FoWl6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P26X69lc; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756914305; x=1788450305;
+  t=1756914494; x=1788450494;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=RmIXgX4EPYbEWf+ZuRyxg8gVS0O/rPn4FNVOhp5P5DQ=;
-  b=HUmjNwYefqozFulfvhzDN4QhVqH6Rc8D/xaqEZerat3IAxge0JcwGhxp
-   BvM8AJbl8chb3ji0nPRPsOPtmRjDmQ7r/0Y9oRxHgr4k+jT+KMQlN9MNw
-   2ptEobpSm06TE2cEELonEsxOW/4QV3q7YeutEIWkrz6TkW6S03eSeuUxc
-   8DseELcQ+NZjewJWuf/j4cz0ughOJoD9y9KeQjpFQxwUV936IRnSJOxz8
-   mGUReOj4wCj8+aM4UAY7tZFC4aQsUS4JWn8jQvt/z1MCNjjNQSz3FCTPb
-   NwKg3Lj94HDyQf9n3dx6+kB0lHpmpIwr3X3HZWbSOc2q3LO5Zl75xfHGM
+  bh=Ibe9kE7bJQVzmN0iWK+qfrTbPUnPCwHMYJUF1OEdNRc=;
+  b=P26X69lcPMH25GGZDSy1cgmAT1yfTFml3mJGa1nC22tao2dZygKAbnZ/
+   yyN9jVxU78v+bbchyPCksLE1Pi9Ejcz9Rqg/aJPmr/h2WweErpNBDA8PG
+   ZGwdZHWOOklYk5dENOo5NPtyGWd8SneME182VVd+m12mBcnygLQESxdcU
+   85WNbiq00X37nUA/0GnGNlDyeMjw3PC4+BE7mznx4E9zYU6cdr+FeQidm
+   TOMjD7m1fsggZNEu6mH9kHh/+G9a+OKuPAH5aIxFhiV/93+pD7P4U9nJm
+   CJ0v2AsaCWpCfIjxJTXbhimWJagwUtxuokmhYCxLuNj+GhjZyMcjTqhay
    w==;
-X-CSE-ConnectionGUID: bE54IqfuTl6Tj+/Ba0Zz+g==
-X-CSE-MsgGUID: B3M0HyvcSJaKpKUkZ7BNFg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11542"; a="84662832"
+X-CSE-ConnectionGUID: zFKpMO//Sv2A0tUXQc6Gkg==
+X-CSE-MsgGUID: BDa2ETrYR/qI3clIwjKdfw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11542"; a="76678524"
 X-IronPort-AV: E=Sophos;i="6.18,236,1751266800"; 
-   d="scan'208";a="84662832"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2025 08:45:04 -0700
-X-CSE-ConnectionGUID: iISP29WiSIKcCafvMOGpUw==
-X-CSE-MsgGUID: JOSrHn6xRGumw7gqBYMURg==
+   d="scan'208";a="76678524"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2025 08:48:13 -0700
+X-CSE-ConnectionGUID: tJhmELzKQICPQfuLn4iUQg==
+X-CSE-MsgGUID: LxeRLip3RROHG4izuv4+mA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,236,1751266800"; 
-   d="scan'208";a="175985164"
+   d="scan'208";a="171185220"
 Received: from black.igk.intel.com ([10.91.253.5])
-  by orviesa004.jf.intel.com with ESMTP; 03 Sep 2025 08:45:01 -0700
+  by fmviesa007.fm.intel.com with ESMTP; 03 Sep 2025 08:48:09 -0700
 Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id D7E0695; Wed, 03 Sep 2025 17:44:59 +0200 (CEST)
-Date: Wed, 3 Sep 2025 17:44:59 +0200
+	id 5F61595; Wed, 03 Sep 2025 17:48:08 +0200 (CEST)
+Date: Wed, 3 Sep 2025 17:48:08 +0200
 From: Andy Shevchenko <andriy.shevchenko@intel.com>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Linus Walleij <linus.walleij@linaro.org>,
@@ -72,9 +72,10 @@ Cc: Linus Walleij <linus.walleij@linaro.org>,
 	linux-unisoc@lists.infradead.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Subject: Re: [PATCH RESEND 07/14] gpio: ts4800: use new generic GPIO chip API
-Message-ID: <aLhie72v1T9Bw1vx@black.igk.intel.com>
+Message-ID: <aLhjOAttpdT--tW7@black.igk.intel.com>
 References: <20250825-gpio-mmio-gpio-conv-v1-0-356b4b1d5110@linaro.org>
  <20250825-gpio-mmio-gpio-conv-v1-7-356b4b1d5110@linaro.org>
+ <aLhie72v1T9Bw1vx@black.igk.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,37 +84,41 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250825-gpio-mmio-gpio-conv-v1-7-356b4b1d5110@linaro.org>
+In-Reply-To: <aLhie72v1T9Bw1vx@black.igk.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Aug 25, 2025 at 11:48:48AM +0200, Bartosz Golaszewski wrote:
-> 
-> Convert the driver to using the new generic GPIO chip interfaces from
-> linux/gpio/generic.h.
+On Wed, Sep 03, 2025 at 05:44:59PM +0200, Andy Shevchenko wrote:
+> On Mon, Aug 25, 2025 at 11:48:48AM +0200, Bartosz Golaszewski wrote:
+> > 
+> > Convert the driver to using the new generic GPIO chip interfaces from
+> > linux/gpio/generic.h.
 
 ...
 
-> +	config = (typeof(config)){
+> > +	config = (typeof(config)){
+> 
+> First of all, what's wrong with the pattern used in the kernel when we
+> explicitly show the compound literal? Also we put a space before {.
+> 
+> > +		.dev = dev,
+> > +		.sz = 2,
+> > +		.dat = base_addr + INPUT_REG_OFFSET,
+> > +		.set = base_addr + OUTPUT_REG_OFFSET,
+> > +		.dirout = base_addr + DIRECTION_REG_OFFSET,
+> > +	};
+> > +
+> > +	retval = gpio_generic_chip_init(chip, &config);
+> >  	if (retval)
+> > -		return dev_err_probe(dev, retval, "bgpio_init failed\n");
+> > +		return dev_err_probe(dev, retval,
+> > +				     "failed to initialize the generic GPIO chip\n");
+> 
+> Second, can't it all be hidden in the GPIOLIB just by passing the pointer to
+> the above initialised structure? Yes, it will take a pointer space in GPIO chip
+> for all, but I think it will reduce the burden.
 
-First of all, what's wrong with the pattern used in the kernel when we
-explicitly show the compound literal? Also we put a space before {.
-
-> +		.dev = dev,
-> +		.sz = 2,
-> +		.dat = base_addr + INPUT_REG_OFFSET,
-> +		.set = base_addr + OUTPUT_REG_OFFSET,
-> +		.dirout = base_addr + DIRECTION_REG_OFFSET,
-> +	};
-> +
-> +	retval = gpio_generic_chip_init(chip, &config);
->  	if (retval)
-> -		return dev_err_probe(dev, retval, "bgpio_init failed\n");
-> +		return dev_err_probe(dev, retval,
-> +				     "failed to initialize the generic GPIO chip\n");
-
-Second, can't it all be hidden in the GPIOLIB just by passing the pointer to
-the above initialised structure? Yes, it will take a pointer space in GPIO chip
-for all, but I think it will reduce the burden.
+Okay, it seems the motivation is to make it in align with, e.g., gpio-regmap.
+But why not simply convert the drivers to use gpio-regmap instead?
 
 -- 
 With Best Regards,
