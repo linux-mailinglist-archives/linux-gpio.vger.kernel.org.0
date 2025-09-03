@@ -1,54 +1,81 @@
-Return-Path: <linux-gpio+bounces-25425-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25426-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6522B4144B
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 07:20:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A5DDB41450
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 07:24:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 66BC07AC76B
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 05:19:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 89BE87A0324
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 05:21:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4431D2D3A94;
-	Wed,  3 Sep 2025 05:20:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4B8D2D592B;
+	Wed,  3 Sep 2025 05:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b89xv3a+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 222471C6FF6;
-	Wed,  3 Sep 2025 05:20:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20342D24A4;
+	Wed,  3 Sep 2025 05:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756876837; cv=none; b=JzoQLNgHda4ol0HVsQkqPwlI0rhkytV9iryRv93iok6pIFUdYM2goahGQB8jHL8fTLW0Y8WC7bW20HGnkoC8IRneMZN1Culi7v55ny77D+oSSJi4SDulOAYBo6DpKVeVP1jNtoB3miimkyZ/ZNrfIsLxboaj9MugWjiOw8OzU0Q=
+	t=1756877005; cv=none; b=cvsEYfbr9moFprENBsj6/KnLYkeZVVsN283mqY4AzqkGjRxe0S8ZafyOM//AvEZqZ4gto4eYy3476sIsVBtGcSV3HctZD+BYIk1p14z+K/8JDyqH45uWiqcMh5/zRDs8FWAzseNT9HMbtIVSEezB5SKsCh8VseGtlCoOkjzH7BU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756876837; c=relaxed/simple;
-	bh=cQsd9f3pz0GvlDgstoKvbSwGB9vpxc0Tul+ZBHwCask=;
+	s=arc-20240116; t=1756877005; c=relaxed/simple;
+	bh=KaObTtBgadRB4aZZUNrcngukeIsotpLMlnkYwfPODPE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GO2wum26iRFH0leQYhEmG224Q2jYxPDDDyGLizVh9YKHq3gm7alX07vv6MJvaYWsv9JzMhyY9X2Z5SJUvM3FNBT8mI7s2xybCCW2Nr4aCmOHKBD9VEeQLU8v3YYwC+nVLMeR/3zOnQRS+Z1HyVHpejzYzKxcV+iuf3bHFLx2fMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4cGr3X4MGDz9sSC;
-	Wed,  3 Sep 2025 06:58:32 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id UqXfjTzkKbXw; Wed,  3 Sep 2025 06:58:32 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4cGr3X3cvPz9sRs;
-	Wed,  3 Sep 2025 06:58:32 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 665ED8B764;
-	Wed,  3 Sep 2025 06:58:32 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id HhVS512OWuWk; Wed,  3 Sep 2025 06:58:32 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id D82298B763;
-	Wed,  3 Sep 2025 06:58:31 +0200 (CEST)
-Message-ID: <646c8a39-c78e-4c2c-b820-d7d57e0a85fc@csgroup.eu>
-Date: Wed, 3 Sep 2025 06:58:31 +0200
+	 In-Reply-To:Content-Type; b=JnE6pecJ7SMayLMY8WrKgHQjdXaJUAYIuFOAxybK7VS1tnm29PeZfcbFPL2muOKVJcUiVn5f75KQHy5jeXld0nLc6ud7J47EnKNmiNWJlsQbye2scAItD1XGrzJlQT0cRoqpiwIepIYBUkNzWpRq5JrJtwj2P7sD3hbfGLSjDZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b89xv3a+; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-336b5c44a5bso4539561fa.1;
+        Tue, 02 Sep 2025 22:23:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756877002; x=1757481802; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OgWMe5VZc0P4oCL4svW7wUtQ2mqMGRwwRtj+h0neqNo=;
+        b=b89xv3a+8QWvDPLz2JuqIpX9+dTkjJBe60COpJYySj9pLNG24pFSorYEXGczV7NayI
+         /lCi3v6jGI/rSuLC4jnw9YHeyk1yjViBwStyvu7+Ptd9nMWSjOjZ0NUr43V1253OYAqJ
+         al5SWht5n+beuQwxlZeObcir+u8Zk8aNu3Z5KUVdz85Y6VKrHhLy5B7gC4RTvS1NLXxw
+         Y/R3ptv10qevwzmU5ojZqBhFMAMUTC+kjM7q8VxPBM80ej7srLfeMdt+UdRECAD3UuIw
+         ODpniEXGi2X2otrOT2hqFJpVIjev3UVlepRyKcr2w7J89r1c4JlOUASyJq7kkUjBEp7u
+         mUkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756877002; x=1757481802;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OgWMe5VZc0P4oCL4svW7wUtQ2mqMGRwwRtj+h0neqNo=;
+        b=s/Gqk9oB8/XC4I7nOLgbsNxy7aIy5RlFruzUNw13t/bOTY8kPXg+50nC9m4qzlr1YB
+         n1LRTXETf6v1lIK0v4HXKblDNNrCnB4sSOyaFMjoXOuWQVuDkym96mcqISsb2vCJyTZT
+         6zjnsApzdkJbI0MkhXE032e6l3uf7YCFHinwcX82Adq8qYhs2eJSNbLBT2yMfQ7wKQoX
+         Pf+LlftaMy7evcGp3BJ1EkxVMY0cet9iVEQ3kQ4VoFyKmKIRpIhXJwslZsGllrS4V2/E
+         XOMwVHR4hVw+dknEW9rMHf/tQLFkw6LUXLrY56Rn5bN4ogOlVWowGPgH8VlIYhNgK5gh
+         0MsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV2dThuaRr9sEQ36M0d7ro7BFrmO9U31cNjSJPx7yS01n2MpPEx9S4Fqw7UgoWNN1CAft9qip5tLlhH@vger.kernel.org, AJvYcCVX8fhcAmqTGU48QmYgDO9fAVKDuV3s8m56snMAduhM+PdXu5YVQOip82bWkSrkENW0PkJdFdf73Myd52nb@vger.kernel.org, AJvYcCWYJigmS3YimjOqre93jS40MsbkksIBD4+n3zVQ7GK8UkhUOafex8NHtOGejqVqtcDWVjNNHjPrYQZO@vger.kernel.org, AJvYcCXPcwGWdu/0y2Dfr5b9hm2syYsnpCeX4OQ9hVQaiEG3STSTWP++mExlSUejlHZPJhQV7/wGukavs8aSUg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzu+q4CI3uAS3sYmVkush2taNao80VAs5/Gd7qLe0CXV98YkZAi
+	fQuDtuBSh0mLFcviVzB9wR+s8fP3CjsYSSGwe/EkFBO3drCidh+sSQ5g
+X-Gm-Gg: ASbGncsnxu4d9gpme42mtSkaAES9PFpWZ6FHa3DIg/OsU03Qf/HHgd1LV7mV9BTHMIM
+	W++feW0mpDBsJxEqWXd1LBSNALyp6VbgS+bL8nMPT7p2aq1cPAfb7He4VmKk2SzwVmMMEUCM6FW
+	RMm+T1Y+eHrwTQOzkppGmPrVoNWFhVfKPXHi1rDY9jJGDmA7hNI19QVMeKMKXIH2tGJxuwYti0r
+	G37hA3KI2fDAei6JFxs99BEN3mdQ4mpl9i8gR4WL24CKDD0hiIxmz51V6pOt8i6Y9fgAXUXk5j6
+	GX5InE31oS+d4oC2t2m9W4XEG7p58+hvc3Es88gLRDZQBu98dYsYRCECw9Zx9QSRHH2EJsbfoHs
+	7wTcUrrYnVJavGjnewMDApMoxdbSoGUeBsuJJ9ecZsgMoFsijKs+TqTRXhBkd1zNLGMHZ33nuFK
+	7wbuqqBsmBM6RcDso=
+X-Google-Smtp-Source: AGHT+IGWPOQdXbzAlZL/kPLWMGdVLFFRdkHqC80V2OpQ8IVEg4/tdgoa4gAcBqd0FUQy+LPGtCcCQw==
+X-Received: by 2002:a2e:a00d:0:b0:334:145:4fa3 with SMTP id 38308e7fff4ca-336c7f29c0amr28522651fa.4.1756877001624;
+        Tue, 02 Sep 2025 22:23:21 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-337f5032caasm8320201fa.35.2025.09.02.22.23.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Sep 2025 22:23:19 -0700 (PDT)
+Message-ID: <ffef0fa6-45e4-467b-b264-1df15754d213@gmail.com>
+Date: Wed, 3 Sep 2025 08:23:18 +0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -56,74 +83,86 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 6/7] dt-bindings: soc: fsl: qe: Convert QE GPIO to DT
- schema
-To: Rob Herring <robh@kernel.org>
-Cc: Qiang Zhao <qiang.zhao@nxp.com>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+Subject: Re: [PATCH 2/3] iio: adc: Support ROHM BD79112 ADC/GPIO
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-References: <cover.1756727747.git.christophe.leroy@csgroup.eu>
- <48b4e7b25878b94dcb738f8239c815be484cf9c9.1756727747.git.christophe.leroy@csgroup.eu>
- <20250902212458.GA1184537-robh@kernel.org>
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-Content-Language: fr-FR
-In-Reply-To: <20250902212458.GA1184537-robh@kernel.org>
+ <conor+dt@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Marcelo Schmitt <marcelo.schmitt@analog.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ Tobias Sperling <tobias.sperling@softing.com>,
+ Antoniu Miclaus <antoniu.miclaus@analog.com>,
+ Trevor Gamblin <tgamblin@baylibre.com>, Esteban Blanc <eblanc@baylibre.com>,
+ Ramona Alexandra Nechita <ramona.nechita@analog.com>,
+ Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+ Hans de Goede <hansg@kernel.org>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+References: <cover.1756813980.git.mazziesaccount@gmail.com>
+ <08929460fe11dd0b749c50a72a634423f13f4104.1756813980.git.mazziesaccount@gmail.com>
+ <CACRpkdbOhm4PawYZUxU1SMi8WGr-LxhR1jhSVPDvPh3TTp8SWQ@mail.gmail.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <CACRpkdbOhm4PawYZUxU1SMi8WGr-LxhR1jhSVPDvPh3TTp8SWQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi Rob,
+Hi deee Ho Linus,
 
-Le 02/09/2025 à 23:24, Rob Herring a écrit :
-> On Mon, Sep 01, 2025 at 02:05:13PM +0200, Christophe Leroy wrote:
->> Convert QE QPIO devicetree binding to DT schema.
+Long time no chat. Thanks for the review!
+
+On 03/09/2025 01:34, Linus Walleij wrote:
+> Hi Matti,
+> 
+> On Tue, Sep 2, 2025 at 2:24 PM Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+> 
+>> The ROHM BD79112 is an ADC/GPIO with 32 channels. The channel inputs can
+>> be used as ADC or GPIO. Using the GPIOs as IRQ sources isn't supported.
 >>
->> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
->> ---
->> v5: New
->> ---
+>> The ADC is 12-bit, supporting input voltages up to 5.7V, and separate I/O
+>> voltage supply. Maximum SPI clock rate is 20 MHz (10 MHz with
+>> daisy-chain configuration) and maximum sampling rate is 1MSPS.
+>>
+>> The IC does also support CRC but it is not implemented in the driver.
+>>
+>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
 > 
->> +
->> +properties:
->> +  compatible:
->> +    items:
->> +      - enum:
->> +          - fsl,chip-qe-pario-bank
->> +      - const: fsl,mpc8323-qe-pario-bank
->> +
-
-snip
-
+>> +static int bd79112_gpio_dir_get(struct gpio_chip *gc, unsigned int offset)
+>> +static int bd79112_gpio_get(struct gpio_chip *gc, unsigned int offset)
+>> +static int bd79112_gpio_set(struct gpio_chip *gc, unsigned int offset,
+>> +                           int value)
+>> +static int bd79112_gpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
+>> +                                    unsigned long *bits)
+>> +static int bd79112_gpio_dir_set(struct bd79112_data *data, unsigned int offset,
+>> +                               int dir)
+>> +static int bd79112_gpio_input(struct gpio_chip *gc, unsigned int offset)
+>> +static int bd79112_gpio_output(struct gpio_chip *gc, unsigned int offset,
+>> +                              int value)
 > 
->> +        compatible = "fsl,mpc8360-qe-pario-bank", "fsl,mpc8323-qe-pario-bank";
+> This looks like it could use
 > 
-> Doesn't match the schema.
+> select GPIO_REGMAP
 > 
+> #include <linux/gpio/regmap.h>
+> 
+> struct gpio_regmap_config config = {};
+> 
+> etc. Did you check out the GPIO_REGMAP
+> helper library?
 
-Can you be more explicit ? Is it the 'mpc8360' ? It is the 'chip'.
+I did - but that was couple of years ago :) I was very excited about it 
+back then. I actually tried (tried hard, fingers almost bleeding) to 
+write a patch to make it cover all of the ROHM PMIC GPIOs which I had to 
+deal with. I thought it won't get it's full potential due to it's 
+somewhat inflexible design. (And to tell the truth, I still believe so).
 
+Anyways, fast-forward to this day, I don't see it handling valid_mask. I 
+think it is a must for this device/driver, where pins can be either 
+GPIOs or ADC inputs.
 
-bindings/soc/fsl/cpm_qe/qe/par_io.txt was saying:
-
-   - compatible : should be "fsl,<chip>-qe-pario-bank", 
-"fsl,mpc8323-qe-pario-bank".
-
-Which I first translated in yaml as :
-
-   properties:
-     compatible:
-       items:
-         - enum:
-           - fsl,<chip>-qe-pario-bank
-         - const: fsl,mpc8323-qe-pario-bank
-
-But 'make dt_binding_check' complained about the < > around 'chip' so I 
-removed them.
-
-How should it be described ?
-
-Thanks
-Christophe
+Yours,
+	-- Matti
 
