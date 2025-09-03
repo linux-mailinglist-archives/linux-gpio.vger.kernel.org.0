@@ -1,137 +1,142 @@
-Return-Path: <linux-gpio+bounces-25462-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25463-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4839CB419C9
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 11:19:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EA2CDB41A05
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 11:29:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DE750189771B
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 09:20:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 93B0C1BA3BA5
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 09:30:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 437052877C2;
-	Wed,  3 Sep 2025 09:19:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2F922F0C60;
+	Wed,  3 Sep 2025 09:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="ApFFuVFa";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FThJAawm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.237.72.81])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDCD12AE66;
-	Wed,  3 Sep 2025 09:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.237.72.81
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA502E552;
+	Wed,  3 Sep 2025 09:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756891190; cv=none; b=Yo1uqjGEFsTzw9H99bQWslSJqq0kFwusspYnEm654hfdhpQXXII3zD4xsv4miT/5GDw7fl5xh2Fvu5bPAxJnGsvMj+nntFh82Asl7kwgCFGIqocHNI/ORB9sa6AbRvxXShxFvStMxfDKRhtRP+4WV2hy/x4WfuJ9lg/fypjzVyU=
+	t=1756891644; cv=none; b=GgP0jB/UKE2pYSN8Uu4oC23t4IKXJJ++RrrGoj0qIUPVSJbUtxdJFj97KMRgbU6JN4cNOydE7BHW1B3AIY1e0oul2U8xCNvRxZ6xaYDVOc5Wa3HQb3uItLmGgcoGbRnCOnnwVStcqBkAPXhKiR+bxCSvXCEI49JTU/kzk1uGhE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756891190; c=relaxed/simple;
-	bh=HEdeRtV5Q1OZXNw9HdTPR1mlzpEiS6bDQlDTVG298EU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nE6JdeqwTzPqvMD0F2qBZWS27IlTbyg3cri24XfGBPNw/LOVjurzQzz3Jpqj7R+ADTi8PsDAEhayeVuzk8sXmGipHA3ReXyLtipx5DnUaluLFAYehMtL2dbe8SkWrr/tnZG8pRfhTPco4aVrNG3E0roPnFM1Y+PPjcjrYvubER0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=52.237.72.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0006800LT.eswin.cn (unknown [10.12.96.77])
-	by app1 (Coremail) with SMTP id TAJkCgDX7Q4WCLhoPozHAA--.31055S2;
-	Wed, 03 Sep 2025 17:19:20 +0800 (CST)
-From: Yulin Lu <luyulin@eswincomputing.com>
-To: linus.walleij@linaro.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: ningyu@eswincomputing.com,
-	zhengyu@eswincomputing.com,
-	linmin@eswincomputing.com,
-	huangyifeng@eswincomputing.com,
-	fenglin@eswincomputing.com,
-	lianghujun@eswincomputing.com,
-	Yulin Lu <luyulin@eswincomputing.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Subject: [PATCH v2] pinctrl: eswin: Fix regulator error check and Kconfig dependency
-Date: Wed,  3 Sep 2025 17:19:15 +0800
-Message-Id: <20250903091915.2026-1-luyulin@eswincomputing.com>
-X-Mailer: git-send-email 2.31.1.windows.1
+	s=arc-20240116; t=1756891644; c=relaxed/simple;
+	bh=QhEhXimFtFfBngVFm910ugOUVk1s9S7/j+4YGhy4XpI=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=sbSmcH3RjFRZZcQHt4iAVL68H1fc/dKlP5weAjD65Jimg7OY5+cCABqdmVTSPL8IsHkBREF3sw47OFROr6mAU9H+ODrFsEPKd8qtrzL+hT+Ve64nTeVBaIXxoq50xuE3pa2Fn4PY6tAHg4ugB7L7UTbBEyNTICAyxtQHY2I7Rg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=ApFFuVFa; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FThJAawm; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 96F131400384;
+	Wed,  3 Sep 2025 05:27:20 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Wed, 03 Sep 2025 05:27:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1756891640;
+	 x=1756978040; bh=lyiEjpYfQmC6T9sK1MM5ZWu/jRhXLNqX0wlj6OYgL/Y=; b=
+	ApFFuVFaDmKE2unCWpPSKFoz/3ftN87RwmlMCIHg35X9Zay201nU35beNVkzmL1S
+	Rpf96vBFPrvI/ALLObVA38V3oM2VtNKJHi9nHyc+S8qW33k6E0GKOJX+BawG9ZFy
+	xK1rhsWH6zU7M6nPwy6iCSjBZQ9fpeLb7kNvXPoguGc8+DPPbxkGbSoCZYDIASik
+	j7e2I/Xtf7YfWTSP7iFJYL1QUbO/d8hXi1SpU36k22Dr+FRLyb+MwXXXmX0KlDKd
+	5IaAFv+7JoTVru3PnmrOQqsVHBSU6xO3HZ7Gs+tzheo9+hG3wh65emFannsOiVD6
+	/4zpCXnVzLdcWYps/YuKIw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1756891640; x=
+	1756978040; bh=lyiEjpYfQmC6T9sK1MM5ZWu/jRhXLNqX0wlj6OYgL/Y=; b=F
+	ThJAawm1zxT7beyvO7o6OJlv00V2KF2tVgjBeL77+ymv7o21Apzi6YmNQO7hbsDB
+	1qTznuHRgYhjy+1Nu87KAnFR07MGuz+3P058+znfgH53NxqXNbaM8CzF0QaI835V
+	HNwjWZW+xFBVigp+yBD4YtBM2CAwoHw9btDbgGfDVQ8x1Bmy3yd04iAgyUSswBjl
+	lLtkvU0KbeABMGSHzykrhjFD0EpDLxptf8GvbvbGv+rJRD0EUw5EQ0akeFsiM8cA
+	c6bEtSOTWdVRsBBYwxL6XHzs/ao9rmiRBt6B+gxQ/6/y9Squi3J5TnbicAQ3SiQt
+	SFC9Byp6gOnQV2oy4w7pA==
+X-ME-Sender: <xms:9wm4aM0X7yVVL2DN_3bOtvd1CdIAJ19UrnNlYfbtzzQb1Dnk_np6pg>
+    <xme:9wm4aHFsIfUO_ZPUagqhs4wz4tUUJf2hHlpyRXI5jdO8c4rqMFbQ9G_YoGvFSPCM5
+    2iRNHwaVKkfdvaZZbA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvjeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhguuceu
+    vghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvghrnh
+    ephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdeinecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhguse
+    grrhhnuggsrdguvgdpnhgspghrtghpthhtohepudehpdhmohguvgepshhmthhpohhuthdp
+    rhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtoheplhhgihhrugifoh
+    hougesghhmrghilhdrtghomhdprhgtphhtthhopegrrhhnugeskhgvrhhnvghlrdhorhhg
+    pdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjh
+    hirhhishhlrggshieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhgvvgeskhgvrhhn
+    vghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhord
+    horhhgpdhrtghpthhtohepshgrkhgrrhhirdgrihhluhhssehlihhnuhigrdhinhhtvghl
+    rdgtohhmpdhrtghpthhtoheptghkvggvphgrgiesohhpvghnshhouhhrtggvrdgtihhrrh
+    hushdrtghomh
+X-ME-Proxy: <xmx:9wm4aEeHBhKf_WDMTuJwu4E9oDIBPSNkHvFbznRkQKtN_unUFZaDQw>
+    <xmx:9wm4aBF_wUcRz-KNlaq-ebFMGtUrKuSDGe8QEaXmO1NEGXuisoxzHg>
+    <xmx:9wm4aPurnhj74Msi-V9zeKJjUUEeDtujynbZeOyznefAMQYfduOURg>
+    <xmx:9wm4aLr5dQ9GvURRobTeEWpWqR5nlwI92RGS95gLKY5s_nyi1PoK2w>
+    <xmx:-Am4aNCDOtCfl0s0Kwkzqg_g4G4iwXzeDoAsM4lK1pvJmVrLYnuf_hUm>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id D106F700065; Wed,  3 Sep 2025 05:27:19 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TAJkCgDX7Q4WCLhoPozHAA--.31055S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tF4fCry3Jr1fZw47WF4kJFb_yoW5JF4UpF
-	Z3GFy3Ar15tF4xJryUJa4I9Fy3Wan7GrW7Cw18K39xZFs8AFykA3s09FW5AFWqkr4kJw1Y
-	y345tFyUuF9rZFDanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
-	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72
-	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7
-	M4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS14v26r1q6r43MxkIecxEwVCm-wCF04
-	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
-	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr4
-	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l
-	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
-	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUBVbkUUUUU=
-X-CM-SenderInfo: pox13z1lq6v25zlqu0xpsx3x1qjou0bp/
+X-ThreadId: AXipOkXRca9w
+Date: Wed, 03 Sep 2025 11:26:59 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Lee Jones" <lee@kernel.org>
+Cc: "Arnd Bergmann" <arnd@kernel.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Linus Walleij" <linus.walleij@linaro.org>,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ "Liam Girdwood" <lgirdwood@gmail.com>, "Mark Brown" <broonie@kernel.org>,
+ "Jaroslav Kysela" <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
+ "Jiri Slaby" <jirislaby@kernel.org>,
+ "Sakari Ailus" <sakari.ailus@linux.intel.com>,
+ "Charles Keepax" <ckeepax@opensource.cirrus.com>,
+ patches@opensource.cirrus.com, linux-kernel@vger.kernel.org,
+ linux-sound@vger.kernel.org
+Message-Id: <6ba87b48-4fa5-4a32-9b73-dac6a5e8128f@app.fastmail.com>
+In-Reply-To: <20250903080558.GC2163762@google.com>
+References: <20250808151822.536879-1-arnd@kernel.org>
+ <20250808151822.536879-13-arnd@kernel.org>
+ <20250902124427.GM2163762@google.com>
+ <5a683d99-b323-4ab7-bf0a-e91436ffd301@app.fastmail.com>
+ <20250903080558.GC2163762@google.com>
+Subject: Re: [PATCH 12/21] mfd: arizona: make legacy gpiolib interface optional
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Smatch reported the following warning in eic7700_pinctrl_probe():
+On Wed, Sep 3, 2025, at 10:05, Lee Jones wrote:
+> On Tue, 02 Sep 2025, Arnd Bergmann wrote:
 
-  drivers/pinctrl/pinctrl-eic7700.c:638 eic7700_pinctrl_probe()
-  warn: passing zero to 'PTR_ERR'
+>> Making those platforms 'select GPIOLIB_LEGACY' is technically
+>> incorrect since they don't need the legayc interfaces, but it
+>> would be a temporary workaround until wlf_cragg_6410 is
+>> gone.
+>
+> I've applied the patches for now in the hope that these can get cleaned
+> away at one point.
 
-The root cause is that devm_regulator_get() may return NULL when
-CONFIG_REGULATOR is disabled. In such case, IS_ERR_OR_NULL() triggers
-PTR_ERR(NULL) which evaluates to 0, leading to passing a success code
-as an error.
+Thanks a lot!
 
-However, this driver cannot work without a regulator. To fix this:
+Cleaning these up eventually is definition the idea here, hiding
+the interfaces in an #ifdef block should both help catch any
+remaining accidental users, and make it trivial to remove the
+remnants when they are no longer needed.
 
- - Change the check from IS_ERR_OR_NULL() to IS_ERR()
- - Update Kconfig to explicitly select REGULATOR and
-   REGULATOR_FIXED_VOLTAGE, ensuring that the regulator framework is
-   always available.
-
-This resolves the Smatch warning and enforces the correct dependency.
-
-Suggested-by: Dan Carpenter <dan.carpenter@linaro.org>
-Fixes: 5b797bcc00ef ("pinctrl: eswin: Add EIC7700 pinctrl driver")
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/linux-gpio/aKRGiZ-fai0bv0tG@stanley.mountain/
-Signed-off-by: Yulin Lu <luyulin@eswincomputing.com>
----
-Changes in v2:
- - Add Reported-by with Closes in the commit message.
- - Link to v1:
-   https://lore.kernel.org/linux-gpio/20250902094508.288-1-luyulin@eswincomputing.com/
----
- drivers/pinctrl/Kconfig           | 2 ++
- drivers/pinctrl/pinctrl-eic7700.c | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index be1ca8e85754..0402626c4b98 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -211,6 +211,8 @@ config PINCTRL_EIC7700
- 	depends on ARCH_ESWIN || COMPILE_TEST
- 	select PINMUX
- 	select GENERIC_PINCONF
-+	select REGULATOR
-+	select REGULATOR_FIXED_VOLTAGE
- 	help
- 	  This driver support for the pin controller in ESWIN's EIC7700 SoC,
- 	  which supports pin multiplexing, pin configuration,and rgmii voltage
-diff --git a/drivers/pinctrl/pinctrl-eic7700.c b/drivers/pinctrl/pinctrl-eic7700.c
-index 4874b5532343..ffcd0ec5c2dc 100644
---- a/drivers/pinctrl/pinctrl-eic7700.c
-+++ b/drivers/pinctrl/pinctrl-eic7700.c
-@@ -634,7 +634,7 @@ static int eic7700_pinctrl_probe(struct platform_device *pdev)
- 		return PTR_ERR(pc->base);
- 
- 	regulator = devm_regulator_get(dev, "vrgmii");
--	if (IS_ERR_OR_NULL(regulator)) {
-+	if (IS_ERR(regulator)) {
- 		return dev_err_probe(dev, PTR_ERR(regulator),
- 					 "failed to get vrgmii regulator\n");
- 	}
--- 
-2.25.1
-
+     Arnd
 
