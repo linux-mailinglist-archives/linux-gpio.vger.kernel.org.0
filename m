@@ -1,375 +1,239 @@
-Return-Path: <linux-gpio+bounces-25472-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25474-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45B52B41B10
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 12:05:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EE35B41B33
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 12:08:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E23353A2306
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 10:04:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 96F8E1BA5506
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 10:09:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA1CA2E92C3;
-	Wed,  3 Sep 2025 10:04:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E83FD2EA146;
+	Wed,  3 Sep 2025 10:08:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D9C2F0eD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KbRuNGhh"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C03E2D7DE1;
-	Wed,  3 Sep 2025 10:04:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD052E9EC0;
+	Wed,  3 Sep 2025 10:08:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756893882; cv=none; b=ZaoQ1uIDyQZxeBapgiz8DOpJZOnSPyzn7mbzbASWg2Jhe68dGasfyAaP6FJM7tEbK66H190YTpjkS8vwrAFpoEQooPYCNbs5OUuxn2zrjIph+nHdKwlEMp0wJF9YG2rpQqE2wsYcEZ2BkQYeICLsgBcQeVR6YWPTyfws3egOntY=
+	t=1756894113; cv=none; b=E/9Z4zqtuErjqt6YlXAnlV94+k8gmXSrsmh+14Z3+H+ka9CtDZNuaxN8/YFadj5nDAuKcVvEm8epDu+lkRAgJUzdsgaRkRtUcvX9rTnk7kL+Te+TaOTsKsZk2jViowu0nOqqw1ygGj2NgcSNi/NaRWigbaTWJ8D7c2htjQLdHOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756893882; c=relaxed/simple;
-	bh=URSUCuo4lukVRC/SB1c5Gbdn9rH5zPYoNOcmcXPLuwY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=q7w92VcNmlDXOI5lMsxLA5dlV9bFD+JGppPoJgn4899EipmwBCwMD0FEpGtPjC56XZ2JdCKxA//6RP1Gsr3y2fYu/HOdksrVqD6I47dnn/RToqwOuDq4Wu1v4tV3+dh76oMltnjTF98jzHYZEcqCqJzW3apJUOKpKRVLc6V0YqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D9C2F0eD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 295EFC4CEFA;
-	Wed,  3 Sep 2025 10:04:42 +0000 (UTC)
+	s=arc-20240116; t=1756894113; c=relaxed/simple;
+	bh=sZ3IkoCP7O9lq9+deKs5Gw4NshL3+xtAL3axUnXJHmo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aCU8ucLcgk2t6yPVLHf6vT9Ujvnxx5114Jfq3Dehz5ao6gE1h+Q44BHsiAO4dRczxGPdBXVP4az3JytIK+EM7XCPDhNsQR4I39VvEtVvet6RirL6ACPT+C3BZDIcvN8lTcYNuMQpwBI/F+aatiH7HlePeys0kbHl3+uz+UXK9rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KbRuNGhh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CD00C4CEF0;
+	Wed,  3 Sep 2025 10:08:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756893882;
-	bh=URSUCuo4lukVRC/SB1c5Gbdn9rH5zPYoNOcmcXPLuwY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=D9C2F0eDkpoqDs0XRicBKJTSwcO+Wya6Hc+vKMXD0m3ylbazfZOcU7xC6Uev6wYTs
-	 1wTvG3LFWiB4+pPMBSd/huHlGiTz+vsIRO3KMrNjTBvoMZ6UYJKaLwRUYQw8nXMuqi
-	 vh6rI9K0uHHgC5cifaDas2H8jVN+0IJqIdOHkZ3nE2WiKlUQqmT8gcnkvHmiLgjfC0
-	 b5E8mB+DSQulO9/A3ULxBvMWfjNO9cZRLSZh//MSEySn/qoswDfQOmBkVNuOWZYA21
-	 lo4AI31R8xfEeqWgFw42+hhjFTk+RYdfEQa6MNkUORURK3TrWiAm+tOII+aPYUTkTk
-	 5p7XqVLOplvgw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB6DCA1014;
-	Wed,  3 Sep 2025 10:04:42 +0000 (UTC)
-From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
-Date: Wed, 03 Sep 2025 11:05:01 +0100
-Subject: [PATCH v2 3/3] gpio: gpio-ltc4283: Add support for the LTC4283
- Swap Controller
+	s=k20201202; t=1756894113;
+	bh=sZ3IkoCP7O9lq9+deKs5Gw4NshL3+xtAL3axUnXJHmo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KbRuNGhh/Dru+pjeSpfjsHmgtvan1AEmeME3RqGOktqfakYfRcpOnt2FqfCHA6KyK
+	 dWvwO4WMc9S36f5LQTXcq4IbRODAM2xRF8E8xIIvpJz0tdo9V7GSmT6G2S3dBjhxmd
+	 nXyNyh0bfm2JQjuL0hJrZsD1amXWPBoYEYrSSNYrNQd0ap+CCE3bzjJiW1rpAUr9ev
+	 uYky504lzC3W1A114e629/XAKo/xIjxnIzM3LKnUN/HIecQeApgbA10HWpW/G/Cuvy
+	 NaBGLgaRcMbuNKSSCrLNrCaPJ54rkCwJ1ppWksIJ+ZbIrOXeQryZsGNi2ISoKHfXbl
+	 jgxrI+mcSWQPg==
+Message-ID: <bdfb09a2-0053-4a07-85d6-5e15b8bc126a@kernel.org>
+Date: Wed, 3 Sep 2025 12:08:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250903-ltc4283-support-v2-3-6bce091510bf@analog.com>
-References: <20250903-ltc4283-support-v2-0-6bce091510bf@analog.com>
-In-Reply-To: <20250903-ltc4283-support-v2-0-6bce091510bf@analog.com>
-To: linux-hwmon@vger.kernel.org, linux-gpio@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, 
- Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1756893904; l=8841;
- i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=AtnUM/0E2zKsJgSB87Tc//XbZGgsV25VeLSyTurAxJQ=;
- b=04CtV2gy2d8EgG4X7As9UrkyNgCPHnYUtsEkSSU9vAhpEe9j+9EwIs8Lnwmr26PhZ+lrV2PpT
- KFvGIuokt5bD03vAp89V/MtIM7EK1aDEeLpWlhrxdLuQ3CMLR+ffBTT
-X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
- pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
-X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
- auth_id=100
-X-Original-From: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
-Reply-To: nuno.sa@analog.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/2] dt-bindings: pinctrl: qcom: Add Glymur pinctrl
+ bindings
+To: Pankaj Patil <pankaj.patil@oss.qualcomm.com>, andersson@kernel.org,
+ linus.walleij@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, rajendra.nayak@oss.qualcomm.com
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250813065533.3959018-1-pankaj.patil@oss.qualcomm.com>
+ <20250813065533.3959018-2-pankaj.patil@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <20250813065533.3959018-2-pankaj.patil@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Nuno Sá <nuno.sa@analog.com>
+On 13/08/2025 08:55, Pankaj Patil wrote:
+> Add DeviceTree binding for Glymur SoC TLMM block
 
-The LTC4283 device has up to 8 pins that can be configured as GPIOs.
+A nit, subject: drop second/last, redundant "bindings". The
+"dt-bindings" prefix is already stating that these are bindings.
+See also:
+https://elixir.bootlin.com/linux/v6.17-rc3/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
 
-Note that PGIO pins are not set as GPIOs by default so if they are
-configured to be used as GPIOs we need to make sure to initialize them
-to a sane default. They are set as inputs by default.
-
-Signed-off-by: Nuno Sá <nuno.sa@analog.com>
----
- MAINTAINERS                 |   2 +
- drivers/gpio/Kconfig        |  10 ++
- drivers/gpio/Makefile       |   1 +
- drivers/gpio/gpio-ltc4283.c | 217 ++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 230 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 10f7869bc8d91a093d841b9e4229566b08f0eec0..6b898c57d94e186787444506623e04b6f024cfa3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14502,9 +14502,11 @@ F:	drivers/hwmon/ltc4282.c
- 
- LTC4283 HARDWARE MONITOR AND GPIO DRIVER
- M:	Nuno Sá <nuno.sa@analog.com>
-+L:	linux-gpio@vger.kernel.org
- L:	linux-hwmon@vger.kernel.org
- S:	Supported
- F:	Documentation/devicetree/bindings/hwmon/adi,ltc4283.yaml
-+F:	drivers/gpio/gpio-ltc4283.c
- F:	drivers/hwmon/ltc4283.c
- 
- LTC4286 HARDWARE MONITOR DRIVER
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index e43abb322fa6e15f19f2f498aa5adea03e6cd3bf..0273b0f8944b634f14141aac4d99f502d03b3a32 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -461,6 +461,16 @@ config GPIO_LPC32XX
- 	  Select this option to enable GPIO driver for
- 	  NXP LPC32XX devices.
- 
-+config GPIO_LTC4283
-+	tristate "Analog Devices LTC4283 GPIO support"
-+	depends on SENSORS_LTC4283
-+	help
-+	  If you say yes here you want the GPIO function available in Analog
-+	  Devices LTC4283 Negative Voltage Hot Swap Controller.
-+
-+	  This driver can also be built as a module. If so, the module will
-+	  be called gpio-ltc4283.
-+
- config GPIO_MB86S7X
- 	tristate "GPIO support for Fujitsu MB86S7x Platforms"
- 	help
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 379f55e9ed1e69cd9c5745f8643541b85953db1c..513f2b5c82ccff3a1da855d45abb5ad6abf5a14e 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -99,6 +99,7 @@ obj-$(CONFIG_GPIO_LP873X)		+= gpio-lp873x.o
- obj-$(CONFIG_GPIO_LP87565)		+= gpio-lp87565.o
- obj-$(CONFIG_GPIO_LPC18XX)		+= gpio-lpc18xx.o
- obj-$(CONFIG_GPIO_LPC32XX)		+= gpio-lpc32xx.o
-+obj-$(CONFIG_GPIO_LTC4283)		+= gpio-ltc4283.o
- obj-$(CONFIG_GPIO_MACSMC)		+= gpio-macsmc.o
- obj-$(CONFIG_GPIO_MADERA)		+= gpio-madera.o
- obj-$(CONFIG_GPIO_MAX3191X)		+= gpio-max3191x.o
-diff --git a/drivers/gpio/gpio-ltc4283.c b/drivers/gpio/gpio-ltc4283.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..885af67146a87c62b5a315624282c523ee54bee0
---- /dev/null
-+++ b/drivers/gpio/gpio-ltc4283.c
-@@ -0,0 +1,217 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Analog Devices LTC4283 GPIO driver
-+ *
-+ * Copyright 2025 Analog Devices Inc.
-+ */
-+#include <linux/auxiliary_bus.h>
-+#include <linux/bitmap.h>
-+#include <linux/bits.h>
-+#include <linux/device.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/regmap.h>
-+
-+#define LTC4283_PINS_MAX			8
-+#define LTC4283_PGIOX_START_NR			4
-+#define LTC4283_INPUT_STATUS			0x02
-+#define LTC4283_PGIO_CONFIG			0x10
-+#define   LTC4283_PGIO_CFG_MASK(pin) \
-+	GENMASK(((pin) - LTC4283_PGIOX_START_NR) * 2 + 1, (((pin) - LTC4283_PGIOX_START_NR) * 2))
-+#define LTC4283_PGIO_CONFIG_2			0x11
-+
-+#define LTC42823_ADIO_CONFIG			0x12
-+/* starts at bit 4 */
-+#define   LTC4283_ADIOX_CONFIG_MASK(pin)	BIT((pin) + 4)
-+#define LTC4283_PGIO_DIR_IN			3
-+#define LTC4283_PGIO_DIR_OUT			2
-+
-+/* Non-constant mask variant of FIELD_GET() and FIELD_PREP() */
-+#define field_get(_mask, _reg)	(((_reg) & (_mask)) >> (ffs(_mask) - 1))
-+#define field_prep(_mask, _val)	(((_val) << (ffs(_mask) - 1)) & (_mask))
-+
-+struct ltc4283_gpio {
-+	struct gpio_chip gpio_chip;
-+	struct regmap *regmap;
-+};
-+
-+static int ltc4283_pgio_get_direction(const struct ltc4283_gpio *st, unsigned int off)
-+{
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_read(st->regmap, LTC4283_PGIO_CONFIG, &val);
-+	if (ret)
-+		return ret;
-+
-+	val = field_get(LTC4283_PGIO_CFG_MASK(off), val);
-+	if (val == LTC4283_PGIO_DIR_IN)
-+		return GPIO_LINE_DIRECTION_IN;
-+
-+	return GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+static int ltc4283_gpio_get_direction(struct gpio_chip *gc, unsigned int off)
-+{
-+	struct ltc4283_gpio *st = gpiochip_get_data(gc);
-+	unsigned int val;
-+	int ret;
-+
-+	if (off >= LTC4283_PGIOX_START_NR)
-+		return ltc4283_pgio_get_direction(st, off);
-+
-+	ret = regmap_read(st->regmap, LTC42823_ADIO_CONFIG, &val);
-+	if (ret)
-+		return ret;
-+
-+	if (val & LTC4283_ADIOX_CONFIG_MASK(off))
-+		return GPIO_LINE_DIRECTION_IN;
-+
-+	return GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+static int ltc4283_gpio_direction_set(const struct ltc4283_gpio *st,
-+				      unsigned int off, bool input)
-+{
-+	if (off >= LTC4283_PGIOX_START_NR) {
-+		unsigned int val = LTC4283_PGIO_DIR_OUT;
-+
-+		if (input)
-+			val = LTC4283_PGIO_DIR_IN;
-+
-+		val = field_prep(LTC4283_PGIO_CFG_MASK(off), val);
-+		return regmap_update_bits(st->regmap, LTC4283_PGIO_CONFIG,
-+					  LTC4283_PGIO_CFG_MASK(off), val);
-+	}
-+
-+	return regmap_update_bits(st->regmap, LTC42823_ADIO_CONFIG,
-+				  LTC4283_ADIOX_CONFIG_MASK(off),
-+				  field_prep(LTC4283_ADIOX_CONFIG_MASK(off), input));
-+}
-+
-+static int __ltc4283_gpio_set_value(const struct ltc4283_gpio *st,
-+				    unsigned int off, int val)
-+{
-+	u32 reg = off < LTC4283_PGIOX_START_NR ? LTC42823_ADIO_CONFIG : LTC4283_PGIO_CONFIG_2;
-+
-+	return regmap_update_bits(st->regmap, reg, BIT(off),
-+				  field_prep(BIT(off), !!val));
-+}
-+
-+static int ltc4283_gpio_direction_input(struct gpio_chip *gc, unsigned int off)
-+{
-+	struct ltc4283_gpio *st = gpiochip_get_data(gc);
-+
-+	return ltc4283_gpio_direction_set(st, off, true);
-+}
-+
-+static int ltc4283_gpio_direction_output(struct gpio_chip *gc, unsigned int off, int val)
-+{
-+	struct ltc4283_gpio *st = gpiochip_get_data(gc);
-+	int ret;
-+
-+	ret = ltc4283_gpio_direction_set(st, off, false);
-+	if (ret)
-+		return ret;
-+
-+	return __ltc4283_gpio_set_value(st, off, val);
-+}
-+
-+static int ltc4283_gpio_get_value(struct gpio_chip *gc, unsigned int off)
-+{
-+	struct ltc4283_gpio *st = gpiochip_get_data(gc);
-+	unsigned int val, reg;
-+	int ret, dir;
-+
-+	dir = ltc4283_gpio_get_direction(gc, off);
-+	if (dir < 0)
-+		return dir;
-+
-+	if (dir == GPIO_LINE_DIRECTION_IN) {
-+		ret = regmap_read(st->regmap, LTC4283_INPUT_STATUS, &val);
-+		if (ret)
-+			return ret;
-+
-+		/* ADIO1 is at bit 3. */
-+		if (off < LTC4283_PGIOX_START_NR)
-+			return !!(val & BIT(3 - off));
-+
-+		/* PGIO1 is at bit 7. */
-+		return !!(val & BIT(7 - (off - LTC4283_PGIOX_START_NR)));
-+	}
-+
-+	if (off < LTC4283_PGIOX_START_NR)
-+		reg = LTC42823_ADIO_CONFIG;
-+	else
-+		reg = LTC4283_PGIO_CONFIG_2;
-+
-+	ret = regmap_read(st->regmap, reg, &val);
-+	if (ret)
-+		return ret;
-+
-+	return !!(val & BIT(off));
-+}
-+
-+static int ltc4283_gpio_set_value(struct gpio_chip *gc, unsigned int off, int val)
-+{
-+	struct ltc4283_gpio *st = gpiochip_get_data(gc);
-+
-+	return __ltc4283_gpio_set_value(st, off, val);
-+}
-+
-+static int ltc4283_init_valid_mask(struct gpio_chip *gc, unsigned long *valid_mask,
-+				   unsigned int ngpios)
-+{
-+	unsigned long *mask = dev_get_platdata(gc->parent);
-+
-+	bitmap_copy(valid_mask, mask, ngpios);
-+	return 0;
-+}
-+
-+static int ltc4283_gpio_probe(struct auxiliary_device *adev,
-+			      const struct auxiliary_device_id *id)
-+{
-+	struct device *dev = &adev->dev;
-+	struct ltc4283_gpio *st;
-+	struct gpio_chip *gc;
-+
-+	st = devm_kzalloc(dev, sizeof(*st), GFP_KERNEL);
-+	if (!st)
-+		return -ENOMEM;
-+
-+	st->regmap = dev_get_regmap(dev->parent, NULL);
-+
-+	gc = &st->gpio_chip;
-+	gc->parent = dev;
-+	gc->get_direction = ltc4283_gpio_get_direction;
-+	gc->direction_input = ltc4283_gpio_direction_input;
-+	gc->direction_output = ltc4283_gpio_direction_output;
-+	gc->get = ltc4283_gpio_get_value;
-+	gc->set = ltc4283_gpio_set_value;
-+	gc->init_valid_mask = ltc4283_init_valid_mask;
-+	gc->can_sleep = true;
-+
-+	gc->base = -1;
-+	gc->ngpio = LTC4283_PINS_MAX;
-+	gc->label = adev->name;
-+	gc->owner = THIS_MODULE;
-+
-+	return devm_gpiochip_add_data(dev, &st->gpio_chip, st);
-+}
-+
-+static const struct auxiliary_device_id ltc4283_aux_id_table[] = {
-+	{ "ltc4283.gpio" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(auxiliary, ltc4283_aux_id_table);
-+
-+static struct auxiliary_driver ltc4283_gpio_driver = {
-+	.probe = ltc4283_gpio_probe,
-+	.id_table = ltc4283_aux_id_table,
-+};
-+module_auxiliary_driver(ltc4283_gpio_driver);
-+
-+MODULE_AUTHOR("Nuno Sá <nuno.sa@analog.com>");
-+MODULE_DESCRIPTION("GPIO LTC4283 Driver");
-+MODULE_LICENSE("GPL");
-
--- 
-2.51.0
+> 
+> Signed-off-by: Pankaj Patil <pankaj.patil@oss.qualcomm.com>
+> ---
+> Changes in v5:
+> Rebased on top of v6.17-rc1
 
 
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,glymur-tlmm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  gpio-reserved-ranges:
+> +    minItems: 1
+> +    maxItems: 119
+
+124, I guess
+
+
+> +
+> +  gpio-line-names:
+> +    maxItems: 250
+> +
+> +patternProperties:
+> +  "-state$":
+> +    oneOf:
+> +      - $ref: "#/$defs/qcom-glymur-tlmm-state"
+> +      - patternProperties:
+> +          "-pins$":
+> +            $ref: "#/$defs/qcom-glymur-tlmm-state"
+> +        additionalProperties: false
+> +
+> +$defs:
+> +  qcom-glymur-tlmm-state:
+> +    type: object
+> +    description:
+> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+> +      Client device subnodes use below standard properties.
+> +    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
+> +    unevaluatedProperties: false
+> +
+> +    properties:
+> +      pins:
+> +        description:
+> +          List of gpio pins affected by the properties specified in this
+> +          subnode.
+> +        items:
+> +          oneOf:
+> +            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9])$"
+> +            - enum: [ ufs_reset, sdc2_clk, sdc2_cmd, sdc2_data ]
+> +        minItems: 1
+> +        maxItems: 36
+> +
+> +      function:
+> +        description:
+> +          Specify the alternative function to be configured for the specified
+> +          pins.
+> +        enum: [ gpio, resout_gpio_n, aoss_cti, asc_cci, atest_char, atest_usb,
+> +                audio_ext_mclk0, audio_ext_mclk1, audio_ref_clk, cam_asc_mclk4,
+> +                cam_mclk, cci_async_in, cci_i2c_scl, cci_i2c_sda, cci_timer,
+> +                cmu_rng, cri_trng, dbg_out_clk, ddr_bist_complete,
+> +                ddr_bist_fail, ddr_bist_start, ddr_bist_stop, ddr_pxi,
+> +                edp0_hot, edp0_lcd, edp1_lcd, egpio, eusb0_ac_en, eusb1_ac_en,
+> +                eusb2_ac_en, eusb3_ac_en, eusb5_ac_en, eusb6_ac_en, gcc_gp1,
+> +                gcc_gp2, gcc_gp3, host2wlan_sol, i2c0_s_scl, i2c0_s_sda,
+> +                i2s0_data, i2s0_sck, i2s0_ws, i2s1_data, i2s1_sck, i2s1_ws,
+> +                ibi_i3c, jitter_bist, mdp_vsync_out, mdp_vsync_e, mdp_vsync_p,
+> +                mdp_vsync_s, pcie3a_clk, pcie3a_rst_n, pcie3b_clk,
+> +                pcie4_clk_req_n, pcie5_clk_req_n, pcie6_clk_req_n, phase_flag,
+> +                pll_bist_sync, pll_clk_aux, pmc_oca_n, pmc_uva_n, prng_rosc,
+> +                qdss_cti, qdss_gpio, qspi, qup0_se0, qup0_se1, qup0_se2,
+> +                qup0_se3_l0, qup0_se3, qup0_se4, qup0_se5, qup0_se6, qup0_se7,
+> +                qup1_se0, qup1_se1, qup1_se2, qup1_se3, qup1_se4, qup1_se5,
+> +                qup1_se6, qup1_se7, qup2_se0, qup2_se1, qup2_se2, qup2_se3,
+> +                qup2_se4, qup2_se5, qup2_se6, qup2_se7, qup3_se0, qup3_se1,
+> +                sd_write_protect, sdc4_clk, sdc4_cmd, sdc4_data, smb_acok_n,
+> +                sys_throttle, tb_trig_sdc2, tb_trig_sdc4, tmess_prng,
+> +                tsense_pwm, tsense_therm, usb0_dp, usb0_phy_ps, usb0_sbrx,
+> +                usb0_sbtx, usb0_tmu, usb1_dbg, usb1_dp, usb1_phy_ps, usb1_sbrx,
+> +                usb1_sbtx, usb1_tmu, usb2_dp, usb2_phy_ps, usb2_sbrx, usb2_sbtx,
+> +                usb2_tmu, vsense_trigger_mirnat, wcn_sw, wcn_sw_ctrl ]
+> +
+> +    required:
+> +      - pins
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    tlmm: pinctrl@f100000 {
+> +        compatible = "qcom,glymur-tlmm";
+> +        reg = <0x0f100000 0xf00000>;
+> +        interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +        gpio-ranges = <&tlmm 0 0 249>;
+> +        wakeup-parent = <&pdc>;
+> +        gpio-reserved-ranges = <4 4>, <10 2>, <33 3>, <44 4>;
+
+Blank line
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+
+
+Best regards,
+Krzysztof
 
