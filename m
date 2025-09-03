@@ -1,126 +1,105 @@
-Return-Path: <linux-gpio+bounces-25431-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25432-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED65FB415AA
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 08:56:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98AA5B415B6
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 08:58:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 906D05E4313
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 06:56:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6C0AB176ACB
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 06:58:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7E6A2D949F;
-	Wed,  3 Sep 2025 06:55:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B0742D9482;
+	Wed,  3 Sep 2025 06:58:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s3rFveK/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BVxBt29G"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A91E2D8370
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Sep 2025 06:55:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238C61E2307
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Sep 2025 06:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756882554; cv=none; b=VVKXfhtXnWM/ZkKQJ2oXpW/UMktaCZSc2mmAx4viFoKKCessXbO9ZiuHNZT7rBHcZnwGgR2i+QlyrHgWWbjVKBhb/3Rk4EzsKHn7VXbcx0U1vZpvyOrxDJwiGh3VkuYxfs04sM16weFOVqOfSxL05js2jGmcA7HdWkOJ4cn/aUk=
+	t=1756882719; cv=none; b=XICQuSI9LUG/2sP7h+tf6NWWsEOHlBW8nFuigM7S+TWqNpn5ec0JCYWDMs5HctSLcBIk3xuOc8F1NmHwDLxhbrdxYS2o5jLCzI8OlYinMoO+slBkiGc65eeNUfGNHGDnhOX13m4JQn8TyQrfoCxCdsiS2IJVI1a0gdLhOEkh0v8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756882554; c=relaxed/simple;
-	bh=IDpAPdDZzSrb50R42xhvKngU2V5A6SF5b3FmEOfvqg4=;
+	s=arc-20240116; t=1756882719; c=relaxed/simple;
+	bh=Zvbg028o924LlAp46GQB2tjDgAbUJlME1N2hULgcBJ4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PMGRmZE7Xraeqrk7HxvDV92O1fBbnIVb9/feJMcqk2u3g2TDMvH+E0wQRonfSrbHx98GtJdmOxBHUKFKHTfBJJBEYU92gn7AkHU/d3w4jQQrJeWypxY/vUcjV+Y0Sb+6z/ShouuOAPCh7qrxMKnK8Zb4wquZRBUvt6gRbY63xrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s3rFveK/; arc=none smtp.client-ip=209.85.167.43
+	 To:Cc:Content-Type; b=QSTIuTc7rCqwBnawQP0ACn0Vi4QMTqdd0VT/kQxNoEQ3k9ESQbfP+lm9sNljmv8MdvsLcbkTDQt4soG/u3RbN+gL/TeFryMyfg7XE6jmm/dM1vrAq23JNozO2gF7dVmGPl5xIY88IP0kjGorbK7OEDN48i82wTWMr/gxhokNPHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BVxBt29G; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5607c2f1598so2570667e87.3
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Sep 2025 23:55:51 -0700 (PDT)
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5607a240c75so2889556e87.2
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Sep 2025 23:58:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1756882549; x=1757487349; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1756882716; x=1757487516; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3izdWZnZsKRsTL0QdhHG4QsyOhmQjAte3ln1Hvsa9JM=;
-        b=s3rFveK/DerufccgV308IX5ZL1EQTpNBvnv2OoPrVxGVnnw70gcoUAIIue6AKS6gLd
-         RjIdQCf6Szjbh2cdtMWczIRM9TQps8MJQnaH/skYZDAjwIHNc4eQRj/pfYN54Z8HrPOH
-         liDihFO+YGHGavpIBo5sD1GB/OicAG8pSXBPPGANOXEDe9aXxpClBM4/Y1jPZcwUg/3w
-         5HRIQJIe1B2JJ6eW/Rx5m8jMrXF84mT1dwpjwOyjeJM+4eJbm/oUmcN8tdeLWAe9KjqN
-         ak69+AvDyAKtWAK4GM5odv/j0RDQqPNiFupTLVZTbuSeiy2wQCtrFAntyOTXW4a3dMx3
-         9bLA==
+        bh=Zvbg028o924LlAp46GQB2tjDgAbUJlME1N2hULgcBJ4=;
+        b=BVxBt29GXSiFBaHseqW8DOAmQQ0xtH1KcZsfrb7b+zpBNY13JQYGE5Wh0GdnPqAR/X
+         asEymHSrfSX157lvVaSWAJNn2KXA6F3p+6F9NAoyWDyFQVJfQEGVjjdHR6hwG60FCKx1
+         aJQGOFjIrgs/i18oS8rqntD0v0/VEsHLDbtwwTvLrRp3ygw45yrdgzbc6G+u588y6i62
+         VM9G7CQ1BSmQGFA28TXfFIyOrcZrZWwVy60qCLqY7B4aiNf0gfrU1TQzYd2ZiKoxKFDr
+         ibqieOcSLpbjRGTIuh9GjvIcpLh6Geuj0sWZmJansQykytMeyX3j5KVr3kVQh3DGyE71
+         gdAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756882549; x=1757487349;
+        d=1e100.net; s=20230601; t=1756882716; x=1757487516;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3izdWZnZsKRsTL0QdhHG4QsyOhmQjAte3ln1Hvsa9JM=;
-        b=NbbFzm45gxD4CQZJOvE2F2RwLbOUoJjQeK+axfDvlFJI28z1sHDAHTOgeo7P6LLR/P
-         5ffCKJ+rVo993pdHnHtWG3b68SCo6AKnkDKp9TeYwltrfv4m08NPDyytxuYVYxYAcFVa
-         yLp1JjtcE3FRIEx4zupSFI4v9B165XMExMngaAGAr5Ca7GimVWZIZpoq84DWzHy3tCd6
-         eKWWNJHowRzL4MV/+I+wtfPUiSIvYwHLD8gWguo59o2YGxmQAOqOKFrc3FMS5Yv4A5ES
-         FBNMpgpd37UozAEcUZlqN31C98Dl65X6buC95gmM4Hhnb2dtM2bswBNfWjvjFI67m2tE
-         Rs/A==
-X-Forwarded-Encrypted: i=1; AJvYcCXDki3FOVrYfV+Bc29PDcl3DTO1mj5c1V6mEsx9SAOyblUWyxQUVDMLSW1vzZwsAhYxaOpbafL5T0KK@vger.kernel.org
-X-Gm-Message-State: AOJu0YyM+gidtXFnevA0sExLNFhBlbrsJwNwcV+6eNwgKfpgKlVyWRvB
-	FknOqNI14Wz1ht2sI1to+yVTaSxcP5TMIqwPBvgCldVSmRxF2AWHzIb7vl13uGqYNVaDzlk1TvE
-	/Y82dPRfSDiyeiN2igCUeC44NzRSlu7Jz8/B4QYzNjA==
-X-Gm-Gg: ASbGnctAzan5fpk63rLh0jTywA2bKadYZWvCWdvMUejkJqk1EO9xNKBzVE4sXSqVCo9
-	U1jsN3fyxdM3lyILS6imUiODcutJQC/74DazD57doO14aKnVzdQWGxfFiwVBMtyjtjyZQbIucyP
-	jGHT5Pp4+9tuRbEadqkxXXrPO0p51J2lcvn/lMK9xrI6VQ0/T4KuL2gVy8coCGMEd4c7spE62go
-	2aRy+g=
-X-Google-Smtp-Source: AGHT+IEmLx7loP9ZecOZBO3528SSI/yRm+MhYRdfiMwPjoy+KPrBG8249IPqTCwY1GOtN0xl5pEKKGRDKB/zlEGXKBU=
-X-Received: by 2002:a05:6512:2392:b0:55f:6e87:10c1 with SMTP id
- 2adb3069b0e04-55f708db54amr4348155e87.35.1756882549501; Tue, 02 Sep 2025
- 23:55:49 -0700 (PDT)
+        bh=Zvbg028o924LlAp46GQB2tjDgAbUJlME1N2hULgcBJ4=;
+        b=nVU8iQZPqPM9DHt4UBP3gohHEHs4zfwzxWdeSfmSbPQ761aY9X+sHznoDJrHcIjT0c
+         5CoPcw8HIY8BXA7XG2/AUs1dD9hFFqpmy/2kgwRedTLExP7ckvN8dSEehi/waf+2/RIH
+         770qq5/PMmKS6rnXUmUjJEHnZ78ujHL4shXF6Qs9BBUDkiiLeINztMJ4+zygRlVvat8u
+         E16pAnoxEkmHr/+BdKQb03bLH5fNNQIKSpRN21nKuIp1wFBd4eKv3IzYm5J+6d3exJO8
+         XeVpsT1rGLVcc/FC7hvhkT+f6O1V6gdd52A6jOy2la51qb/v6LI7jgRBxmsos12MIIUu
+         fvkg==
+X-Forwarded-Encrypted: i=1; AJvYcCWsIsyA0tAhqwa6t4dosYvB5cw8ixidmdVIGiplXmD6muft+bApXFFFq5XHsPIw/2ZR0c1BHohUhobv@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtejqaOKfjdIoQUgya9XZ889Uc8rsN0Fu/3GVTOYyisFKJVggn
+	x51+YiT5FhijMGpOUwHY6ggfqDmEff8gvJnPv6JDYjOAFMsArqXrFVRoiWL3nsWHtohPn8uHAtv
+	wUUB3tJAsIXLUk7YnIPQP3xC7s1gRB1toALVP786TOA==
+X-Gm-Gg: ASbGnctr48nOjJrdDSsKLnQapcgY78NsjCmA/aTpa0Ms8X1ruKyaOBZjIElbujV8470
+	IKe1yzSRR21Nja7qz8eZnI7Gz5zJ/80IG5YtkCR0ZwJO37reuEdP7yshoZGPh3TUnuWNnjD7aYw
+	Ulm7BE7rT4yhSgKOB2r7snfMyCIPUJhkwSF21gDsI82jICHYpB7E8D6kjNeN6isgOEdyEfboGUL
+	4KuGj9PsXFDn9S3aw==
+X-Google-Smtp-Source: AGHT+IH3GxfscI6GGSr/NNb7LHY9u9DqMXt7p2udpQ/Pdohy0CbQd0xJDDE+ctimHiSeoPF/quwYh4dzc17DcEr2yUM=
+X-Received: by 2002:a05:6512:6702:b0:55f:486b:7e5b with SMTP id
+ 2adb3069b0e04-55f70995c72mr3489756e87.41.1756882716285; Tue, 02 Sep 2025
+ 23:58:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250812-tegra186-pinctrl-v3-0-115714eeecb1@gmail.com>
- <CACRpkdb=U=h5OguMuy9G6avCCN6Aem=2_60C+_uBsrY+UvD5ng@mail.gmail.com> <CALHNRZ-dRvaN_SyHRfAsq2MO-ec8rzkeCy6CtJpYdWTobf1-Wg@mail.gmail.com>
-In-Reply-To: <CALHNRZ-dRvaN_SyHRfAsq2MO-ec8rzkeCy6CtJpYdWTobf1-Wg@mail.gmail.com>
+References: <cover.1756372805.git.andrea.porta@suse.com>
+In-Reply-To: <cover.1756372805.git.andrea.porta@suse.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 3 Sep 2025 08:55:37 +0200
-X-Gm-Features: Ac12FXzeaQco56Y2RwPUQv74y9to5SIPZF1IYZUjwIRBuYrEJbptpSe99KCxkJ0
-Message-ID: <CACRpkdb46OwzNQuSp0+QQVjy2LojMyhdE7XrNwdsyqGi5okASw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] pinctrl: tegra: Add Tegra186 pinmux driver
-To: Aaron Kling <webgeek1234@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Wed, 3 Sep 2025 08:58:25 +0200
+X-Gm-Features: Ac12FXw-cperMlNMDgWs1JD1q73qBaU6s0VdFIuvSNEdtJCo3HZmhANsMkTdUts
+Message-ID: <CACRpkdb8fFvgyWPAaP6AumwHUYhnvc7BXX0V5kwO4sts6zSGUA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] Add pin control driver for BCM2712 SoC
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	florian.fainelli@broadcom.com, wahrenst@gmx.net, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, iivanov@suse.de, 
+	svarbanov@suse.de, mbrugger@suse.com, 
+	Jonathan Bell <jonathan@raspberrypi.com>, Phil Elwell <phil@raspberrypi.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 3, 2025 at 6:54=E2=80=AFAM Aaron Kling <webgeek1234@gmail.com> =
-wrote:
-> On Tue, Aug 19, 2025 at 6:30=E2=80=AFAM Linus Walleij <linus.walleij@lina=
-ro.org> wrote:
-> >
-> > On Tue, Aug 12, 2025 at 11:24=E2=80=AFPM Aaron Kling via B4 Relay
-> > <devnull+webgeek1234.gmail.com@kernel.org> wrote:
-> >
-> > > This series adds support for Tegra186 pin control, based on a downstr=
-eam
-> > > driver, updated to match the existing Tegra194 driver.
-> > >
-> > > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> > (...)
-> > > Aaron Kling (3):
-> > >       dt-bindings: pinctrl: Document Tegra186 pin controllers
-> > >       pinctrl: tegra: Add Tegra186 pinmux driver
-> >
-> > These two applied to the pin control git tree.
->
-> On patch 3, Mikko noted that I accidentally amended the formatting
-> changes intended for patch 2 into patch 3. Linus, since you've already
-> picked this up to your tree, is it too late to fix this properly in a
-> new revision? It doesn't appear to have made it to the main tree yet.
-> Or do I need to send in a fixup?
+On Thu, Aug 28, 2025 at 2:45=E2=80=AFPM Andrea della Porta
+<andrea.porta@suse.com> wrote:
 
-It's one of the first drivers I merged with plenty of other stuff on top
-so I can't amend it, just send a fixup based on my "devel" branch
-(or linux-next, it should work too).
+> The following patches add a pin control driver for the BCM2712 SoC.
+
+I have merged the prerequisites providing .function_is_gpio(),
+do you want to do any last minute changes or shall I just apply
+the v4 version and fix up anything minor in the process?
 
 Yours,
 Linus Walleij
