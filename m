@@ -1,203 +1,246 @@
-Return-Path: <linux-gpio+bounces-25582-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25583-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BE60B43B78
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 14:24:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24CDDB43BAD
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 14:35:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F11E316960E
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 12:24:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A22CC1BC486D
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 12:36:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 692E62ECEBB;
-	Thu,  4 Sep 2025 12:24:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FAC32EBB83;
+	Thu,  4 Sep 2025 12:35:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="hDNDwMru";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nwHa/7xp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bg6hOliE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from flow-a3-smtp.messagingengine.com (flow-a3-smtp.messagingengine.com [103.168.172.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E8A2E1C6F;
-	Thu,  4 Sep 2025 12:24:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D8C2773CB;
+	Thu,  4 Sep 2025 12:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756988671; cv=none; b=nUnMh4qZMgUNwbAVKrgTIcN/7BkzL90zYllU0/0rmQD53enbX1tQuUm4B4SZqzegn2Z1kgyGrS7YraK+7OJwH4pVsbGYLSXPRlMQdteL9ePw5f4E69iaQ0thIDcD9uUDbD/xon7edfVSeMi7bA6YtoHiVTvXHB6PeQN4Lr3rWos=
+	t=1756989342; cv=none; b=qCVOrwU2GGXP25iFdss2ZKLAJS56j0dDBKyrPb90Pz1xjfgUjF2eyWrU7SZ6KseSEaw2nLBOpoDuvIKVZo/COJ4umhlnCB4djzB8GahL4I2isWeIgnDc/xvAFl/ezK9JMzETczkrp5G3RTEcNRws0djeFbqFLpLrBaknhLSx2zI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756988671; c=relaxed/simple;
-	bh=KTI+fAni0p2MENKwxEmxfldj86CWpRNVIqjj2os4Uhw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=swZ3D021e9GKvqpwcHdeFHpyRidBYOrSm+XnXxAbMvt7yxJ0cavyfgfzMMFQchani6r0z29WFfqqmV1hPKNwI3p07IYFleN6cAgiZ8bnnPZTIkavwKOtd1Bi9vGr68s+imvANCjcYG3ltDHFgopM0G8QRsNEReNKagBIwtgxBA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=hDNDwMru; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=nwHa/7xp; arc=none smtp.client-ip=103.168.172.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
-Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
-	by mailflow.phl.internal (Postfix) with ESMTP id 91B7A138030E;
-	Thu,  4 Sep 2025 08:24:27 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-12.internal (MEProxy); Thu, 04 Sep 2025 08:24:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1756988667; x=1756995867; bh=8U7GdOjxhs
-	TzAyM8D4u5BI8G2Xd1f8HkMUIoKDmyl7w=; b=hDNDwMrunWW+ZSBiQCae5O6HdM
-	rHIzrk1w93POFvUtWhk8/PTcjfDQw70b/bAYalCtI2CEx2Jf3r36xMTLqz9CDIHu
-	HZcPpZPQ+saIaP0ny4IDb8U+Rt3hJOO0nBCCwBQG1znzCFlMcLqF43sj3v5cxi5F
-	JrUfDaG0n1YTh8zUbpL1UxNYnnzVf7SsFPCIxwfijVgSkmuLxLS3N65UfaS6exGA
-	ADh5LalaVXZoXMFdoF1Z1f55no4+j5lcUJw0Jasq3jj0uF9M2iWqQlJ4iQPxmKgW
-	bJR0slNQsYWBDyjz0B2oPnJfmGr+7Cs2dBc6c3jMcMe8lqkFrYcT3BVZQUFg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1756988667; x=1756995867; bh=8U7GdOjxhsTzAyM8D4u5BI8G2Xd1f8HkMUI
-	oKDmyl7w=; b=nwHa/7xpjU32Z0Hf4NkHRGrhCI9S0+o+3GkFeLYaD4BO4ahSIiE
-	AzfgjNUTcHpC8m5rkhEaZpprVmEahYBL4a3IXs7TKP7uSms2vaqjFv/7OVT1+BrN
-	HiMWeD78WUeyUOqv6Ut+wjdDFtN7PwBIpxpp77y9j/hfwsM5M40bJShcazAq2Nfj
-	vU0k0733ZUqRn1WSn2lEKneSOFqnM5iYPhEZMUh5lh5NYIX7eFe8AmPGcP1UL9Oo
-	NpVS0IuWh+DjWJNqzDnp+c3xE7dELMyc/KjBBuMsB0ith0KURGCxVQ8t1hCBLsHq
-	Nw/5Zqgh0Zq1JjITNRJNb43qV+z/R/mJORA==
-X-ME-Sender: <xms:-YS5aPp7-Q-PJ75oKwTPe0FcPwMF6CU7PPlMZUYvafzhxITyOuiNQQ>
-    <xme:-YS5aNw42Jh_uRF-Vh88T3KVyMb5UDEtsSugx0zRywWFbbhkl6SwQIyf9iLELaMQ5
-    m338mmu0yL4v5o3LG8>
-X-ME-Received: <xmr:-YS5aHydJs3sY-GK3oCbvAHsOkngOP2IJEXL3-Xsm7VL-Gn688r9we0YV-V5onScvbN07mdHctJXOIr-NeHO4ekZlmvdoAv7z3Y>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdeitdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvfevuffkfhggtggujgesthdtredttddtjeenucfhrhhomheplfgrnhhnvgcuifhr
-    uhhnrghuuceojhesjhgrnhhnrghurdhnvghtqeenucggtffrrghtthgvrhhnpefgvdffve
-    elgedujeeffeehheekheelheefgfejffeftedugeethfeuudefheefteenucevlhhushht
-    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjsehjrghnnhgruhdrnh
-    gvthdpnhgspghrtghpthhtohepieefpdhmohguvgepshhmthhpohhuthdprhgtphhtthho
-    pehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhvvghnsehkvghrnhgvlh
-    drohhrghdprhgtphhtthhopegrlhihshhsrgesrhhoshgvnhiifigvihhgrdhiohdprhgt
-    phhtthhopehnvggrlhesghhomhhprgdruggvvhdprhgtphhtthhopehkrhiikhdoughtse
-    hkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtohepmhgrrhgtrghnsehmrghrtggrnhdrshhtpdhrtghpthhtoheprh
-    grfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehvihhrvghshhdrkhhumhgr
-    rheslhhinhgrrhhordhorhhg
-X-ME-Proxy: <xmx:-YS5aFL5RENaptCIz0BuOu7c20yv3c3vvpf0r7dw-JaCLTja_Bz-qQ>
-    <xmx:-YS5aMhqfqjJDjwhEwdZLnuYL-XJITqjWEtj1CN62kOs7Lr-e1ARig>
-    <xmx:-YS5aLmrOIowpLzSrzFmFlJi5IwpCHBFCji4UnFHC3LawjtEN9XozQ>
-    <xmx:-YS5aBjdESh3CesfnA5BUM2uF_YS4jSIK-ieYu5ywQQcEQrIsgMdmQ>
-    <xmx:-4S5aHzTvFrOsjIChzaXkMhnpIzOEDH0ImtlmNuExND3IUGhmeRiqy8O>
-Feedback-ID: i47b949f6:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 4 Sep 2025 08:24:24 -0400 (EDT)
-Date: Thu, 4 Sep 2025 14:24:23 +0200
-From: Janne Grunau <j@jannau.net>
-To: Rob Herring <robh@kernel.org>
-Cc: Sven Peter <sven@kernel.org>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Neal Gompa <neal@gompa.dev>,	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,	Hector Martin <marcan@marcan.st>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,	Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>,	Robin Murphy <robin.murphy@arm.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Mark Kettenis <kettenis@openbsd.org>,	Andi Shyti <andi.shyti@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Sasha Finkelstein <fnkl.kernel@gmail.com>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	van Spriel <arend@broadcom.com>, Lee Jones <lee@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>,
-	Vinod Koul <vkoul@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,	Keith Busch <kbusch@kernel.org>,
- Jens Axboe <axboe@kernel.dk>,	Christoph Hellwig <hch@lst.de>,
- Sagi Grimberg <sagi@grimberg.me>,	Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>,	asahi@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org,	devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org,	linux-pm@vger.kernel.org,
- iommu@lists.linux.dev,	linux-gpio@vger.kernel.org,
- linux-i2c@vger.kernel.org,	dri-devel@lists.freedesktop.org,
- linux-bluetooth@vger.kernel.org,	linux-wireless@vger.kernel.org,
- linux-pwm@vger.kernel.org,	linux-watchdog@vger.kernel.org,
- linux-clk@vger.kernel.org,	dmaengine@vger.kernel.org,
- linux-sound@vger.kernel.org,	linux-spi@vger.kernel.org,
- linux-nvme@lists.infradead.org
-Subject: Re: [PATCH 00/37] arm64: Add initial device trees for Apple M2
- Pro/Max/Ultra devices
-Message-ID: <20250904122423.GB89417@robin.jannau.net>
-References: <20250828-dt-apple-t6020-v1-0-507ba4c4b98e@jannau.net>
- <20250829195119.GA1206685-robh@kernel.org>
- <20250830071620.GD204299@robin.jannau.net>
- <20250902194528.GA1014943-robh@kernel.org>
+	s=arc-20240116; t=1756989342; c=relaxed/simple;
+	bh=iGXqsuFVuUG2I1oYAHZMxD6alZmWDXebto1yrO4oz5o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TxUPzDNzVv/cxdaKCrpkhk822uooHDou3wBtCgksBL1ClahQRLfnRV3zkAjtR42JMrEOh6IcPpnoDFmO+M35UHynmcWRJBjyyMn5V1q8kgh1RrruB2ur8JgLM8kXYBBgBvr80LPHX1+Krb2KTpF4ziAsoRCHwn+TAkNIqD7Vfh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bg6hOliE; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5607a240c75so1014525e87.2;
+        Thu, 04 Sep 2025 05:35:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756989338; x=1757594138; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DzLj+zIgPpFrAWVtQ6jPGHmw4+7i/5dMoIlp+lkaKxU=;
+        b=Bg6hOliEUsH9Vc1qD4Pt2pr28rcTznEsyc3MdkW88lmU+EExJDvLQ6n7IHOP5wgHOP
+         8EmmQmfwJmKhr/zWXr94pSkEmicJQ1tpCGV0i+0IhtlCGz6XSjKZhigIN48bqS16e1z6
+         or3eoImaCLTuxV+CLbgsngznPiJRCDt3jXNeiaxQzFQjyymRdMt194jc6jbCRxgJassM
+         qmMWagCkmkaOgf4NntjdwhBg8mI/vp+HhuKNOI9tQqfCi7FxbvpXgycfb8zd5iu0WQsP
+         T6SWAJwPlG9lFAVDGLM/aDCOJ/EOaUPFNz2+bHIt+JiicS1BDNaDepTt14Fr8HaefLSC
+         u+kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756989338; x=1757594138;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DzLj+zIgPpFrAWVtQ6jPGHmw4+7i/5dMoIlp+lkaKxU=;
+        b=llq3rzq36mzc88+fBgJ11yoTg7MrEXfAZTxri05vJA90Vn3CFHEV5LaX+zkwM+BIUI
+         YTgJttYv2TTT2T3YDYfWfrWpnq26RnMKZdJAJCe++N3oloz6aywt4pUscp6ovYeECzvo
+         GALb3WPMqFI8wAYuJz5F3fTiLvfsi5d0089bINbPy9nBxR0hqjuUncSzY+52XTNvsYOM
+         iUpe8xgqtqTj7qf0jg5Nj1nGcpLX/s6UWKNIjIN96kbuiDVYVorszkUZ2vzFjC4ttJaY
+         ANz4AF7kQujwA7T0PpOIIecjnFRB//sfGNp1RqD6ARN/htVRkH5ZTqjjTVKtktRvNSrB
+         SqbA==
+X-Forwarded-Encrypted: i=1; AJvYcCViFNA0ZALerrA69jAmaK0ybiZC9khPTuY8gcITySeeXXm9O5bLL5rvj1pDG0YzJ6ib3f7pPMsRUbfF@vger.kernel.org, AJvYcCVrTm0lcMBIls6ihvkw7czlYzfu5QT222cxPBckOSOJ/8C1xnicgQFzwL3Y2FiND7mz5qgwrdZlSAoor0uV@vger.kernel.org, AJvYcCXazBo8Q9g5Y8xcrdGUi8bSeLwsIyyhPMAe2Bunss5odJy/kRLo8fNdjxq149/AwUn2nwJyIf4Wfv+zKA==@vger.kernel.org, AJvYcCXhyiEjELJkpm0XxUfo6J3EqK/7UY4k3S+M8l/lRLzJgmZ+T0f6//BXp3LFKZ+lWfsSZtojxo7z/kLm@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSYckjiL+ZI+ExkL44QKILlqn4TT4IXJCptL3YSlQ5KEqt/SS4
+	4a/RM0yRuEOxgVXP9myhASPEzlhCeHB72xmbGi03jCm3KfatCaSmjXAI
+X-Gm-Gg: ASbGncvWLKuHX3Sf6xgx0qbhgrA0fojTkLBVQgJiYGYiucpxjiQAT5l7M8UcfbA3Kfi
+	AYMnj6uC3ccghLnyDvuWeIxNglDBsf6R7n0fDrEQsAD7ylEchU+P/R6JzGcfO69y4LScvpB2Lbl
+	9qKmjqcHGpD9MCls/HR6s6Pjo12nqxxA3jX4LMefmlaiwepS/KSch8Gj9rp01v6lcNtfFKdIWpS
+	qUVp53bBhbAgwsihOvtlowYTHW9Mwjk56vP/ZAAwhCKpNe01Q9KHpjQ7LxId9jx3GgKajpLCrJC
+	CLEvmQ+54dhps1Klmg4Zx1WT/R28NFxLvBkRSEQXsqfslNmSZZd2YDMGleCfgbTmq73sb/LtEU2
+	xliCZ4MYebjG2GsCMyTc5YnGmQf40TDrU
+X-Google-Smtp-Source: AGHT+IENMFv5xHK/CdOCub0m4AEAAbu/52uJtZNubU/VRWn4qjb27C+owK+OSqSLCNN4YWFaLtIHPQ==
+X-Received: by 2002:a05:6512:6390:b0:55f:348b:ffd with SMTP id 2adb3069b0e04-55f708c1fcfmr4313703e87.21.1756989337947;
+        Thu, 04 Sep 2025 05:35:37 -0700 (PDT)
+Received: from [10.38.18.54] ([213.255.186.37])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5608ab5c174sm1216379e87.11.2025.09.04.05.35.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Sep 2025 05:35:37 -0700 (PDT)
+Message-ID: <43141a95-2267-44de-bd7e-11eb8c80090e@gmail.com>
+Date: Thu, 4 Sep 2025 15:35:36 +0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250902194528.GA1014943-robh@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] iio: adc: Support ROHM BD79112 ADC/GPIO
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
+ Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>,
+ Marcelo Schmitt <marcelo.schmitt@analog.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ Tobias Sperling <tobias.sperling@softing.com>,
+ Antoniu Miclaus <antoniu.miclaus@analog.com>,
+ Trevor Gamblin <tgamblin@baylibre.com>, Esteban Blanc <eblanc@baylibre.com>,
+ Ramona Alexandra Nechita <ramona.nechita@analog.com>,
+ Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+ Hans de Goede <hansg@kernel.org>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+References: <cover.1756813980.git.mazziesaccount@gmail.com>
+ <08929460fe11dd0b749c50a72a634423f13f4104.1756813980.git.mazziesaccount@gmail.com>
+ <aLb8HuIG0XXLu653@smile.fi.intel.com>
+ <00ee1968-a471-4d2b-a024-4bee00e40513@gmail.com>
+ <aLglJoqBDap_eMIj@smile.fi.intel.com>
+ <10c6b0c4-d75f-494c-bb3c-883c06cf3bc2@gmail.com>
+ <CAHp75Ve4vgU5kK3z3bZyGqDOPVkMbW7RUd6_EA3jjZSeruWs=Q@mail.gmail.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <CAHp75Ve4vgU5kK3z3bZyGqDOPVkMbW7RUd6_EA3jjZSeruWs=Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Sep 02, 2025 at 02:54:34PM -0500, Rob Herring wrote:
-> On Sat, Aug 30, 2025 at 09:16:20AM +0200, Janne Grunau wrote:
-> > On Fri, Aug 29, 2025 at 02:51:19PM -0500, Rob Herring wrote:
-> > > On Thu, Aug 28, 2025 at 04:01:19PM +0200, Janne Grunau wrote:
-> > > > This series adds device trees for Apple's M2 Pro, Max and Ultra based
-> > > > devices. The M2 Pro (t6020), M2 Max (t6021) and M2 Ultra (t6022) SoCs
-> > > > follow design of the t600x family so copy the structure of SoC *.dtsi
-> > > > files.
-
-...
-
-> > > > After discussion with the devicetree maintainers we agreed to not extend
-> > > > lists with the generic compatibles anymore [1]. Instead either the first
-> > > > compatible SoC or t8103 is used as fallback compatible supported by the
-> > > > drivers. t8103 is used as default since most drivers and bindings were
-> > > > initially written for M1 based devices.
-> > > 
-> > > An issue here is any OS without the compatibles added to the drivers 
-> > > won't work. Does that matter here? Soon as you need any new drivers or 
-> > > significant driver changes it won't. The compatible additions could be 
-> > > backported to stable. They aren't really any different than new PCI IDs 
-> > > which get backported.
-> > 
-> > I don't think backporting the driver compatible additions to stable
-> > linux is very useful. It is only relevant for t602x devices and the only
-> > way to interact with them is the serial console. The T602x PCIe support
-> > added in v6.16 requires dart changes (the posted 4th level io page table
-> > support) to be useful. After that PCIe ethernet works so there is a
-> > practical way to interact with t602x systems. So there are probably zero
-> > user of upstream linux on those devices 
-> > I'm more concerned about other projects already supporting t602x
-> > devices. At least u-boot and OpenBSD will be affected by this. As short
-> > term solution m1n1 will add the generic compatibles [1] temporarily.
-> > I think keeping this roughly for a year should allow to add the
-> > compatibles and wait for "fixed" releases of those projects.
-> > I'll send fixes for u-boot once the binding changes are reviewed.
+On 03/09/2025 16:29, Andy Shevchenko wrote:
+> On Wed, Sep 3, 2025 at 3:14 PM Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+>> On 03/09/2025 14:23, Andy Shevchenko wrote:
+>>> On Wed, Sep 03, 2025 at 09:52:02AM +0300, Matti Vaittinen wrote:
+>>>> On 02/09/2025 17:15, Andy Shevchenko wrote:
+>>>>> On Tue, Sep 02, 2025 at 03:24:31PM +0300, Matti Vaittinen wrote:
 > 
-> Honestly, at least in the cases where the generic compatible works for 
-> every chip so far, I'd just stick with it. The issue with generic 
-> compatibles is more that you don't really know if things are going to be 
-> the same or not. And most of the time, the h/w ends up changing.
+> ...
 > 
-> If you want to keep it like this since you've already done it, then for 
-> all the binding patches:
+>>>>>> +  data->vref_mv = ret / 1000;
+>>>>>
+>>>>> (MICRO / MILLI)
+>>>>
+>>>> I find this much more confusing than plain 1000. (I know we had this type of
+>>>> discussion before. See [1] again).
+>>>
+>>> Rings a bell, but that's what IIO reviewers suggest to do nowadays as a
+>>> compromise between creating a new bunch of unit (V) related definitions.
+>>
+>> I am sorry, but this just seems stupid to me. I'd say that it is very
+>> obvious for most of the readers dividing microvolts by 1000 results
+>> millivolts. And if it is not, then having this MICRO / MILLI is likely
+>> to just cause more confusion.
+> 
+> No, it tells that we have a value in microSOMETHING that is converted
+> to MILLIsomething.
 
-Let's keep with this series. I still have a branch with dt-binding
-changes using the generic compatibles but let's keep this approach to
-confusion and duplicate review work.
+No. I disagree. This tells that 'ret' from the regulator API is divided 
+by some unknown value, which is a result of division of two odd defines. 
+Especially odd because one would intuitively think MICRO is smaller than 
+MILLI. You need to look up the definitions to understand WTF is really 
+going on. I think this is plain terrible.
 
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
+The fact that we store value in vref_mv should be enough of hint that 
+idea is to have value in millivolts. Dividing by 1000 before assigning 
+makes it 100% clear the ret is in microvolts even if you didn't know the 
+regulator API to return micro volts.
 
-Thanks
+>> I _really_ dislike these defines. Why is MILLI 1000? Why it isn't 0.001?
+> 
+> You know exactly a few reasons why it's not.
+> 
+>> It makes no sense that KILO and MILLI are the same. Especially not when
+>> we are dealing with physics.
+> 
+> Yes, this is the limitation of computers and particularly of _a_ kernel.
 
-Janne
+No. In my opinion, this is an example of, hopefully unintentional, 
+obfuscation where blindly following some paradigm like 'avoid plain 
+numbers and always use named defines' just results things getting worse. 
+That combined with bad naming. If KILO is 1000, then MILLI can't be 
+1000. That's 1 per milli.
+
+And still, the original "mv = uv / 1000" is superior in clarity. Using 
+(MICRO / MILLI) there to avoid plain number is just a sign of blindly 
+and religiously following some 'golden rule', even when it results worse 
+code.
+
+>> This is just an obfuscation compared to using plain 1000. (I kind of
+>> understand having a define for a value like 100000 - where counting the
+>> zeros gets cumbersome, although 100 * 1000 would be equally clear. But
+>> 1000 _is_ really 100% clear, whereas MICRO / MILLI is not).
+> 
+> See above why this way.
+
+I see no real justification to degrade this - other than "because I say 
+so". Sorry but that's not really a good reason to me.
+
+> ...
+> 
+>>>>>> +  gpio_pins = bd79112_get_gpio_pins(iio_dev->channels,
+>>>>>> +                                    iio_dev->num_channels);
+>>>>>
+>>>>>> +
+>>>>>
+>>>>> Instead of leaving this rather unneeded blank line I would move above...
+>>>>>
+>>>>>> +  /* We're done if all channels are reserved for ADC. */
+>>>>>
+>>>>> ...to be here
+>>>>>
+>>>>>      gpio_pins = bd79112_get_gpio_pins(iio_dev->channels,
+>>>>>                                        iio_dev->num_channels);
+>>>>
+>>>> I suppose you mean something like:
+>>>>
+>>>> register_gpios:
+>>>>       /* We're done if all channels are reserved for ADC. */
+>>>>       gpio_pins = bd79112_get_gpio_pins(iio_dev->channels,
+>>>>                                             iio_dev->num_channels);
+>>>>       if (!gpio_pins)
+>>>>               return 0;
+>>>>
+>>>> right?
+>>>
+>>> Yes.
+>>>
+>>>> I don't like this because now the comment suggests we do call
+>>>> bd79112_get_gpio_pins() only to see if all channels were for ADCs. This,
+>>>> however, is not THE reason for this call, only an optimization. I think:
+>>>> having:
+>>>>
+>>>>           /* We're done if all channels are reserved for ADC. */
+>>>
+>>> Then you can amend the comment
+>>>
+>>>            /* If all channels are reserved for ADC, we are done. */
+>>>
+>>>>           if (!gpio_pins)
+>>>>                   return 0;
+>>>>
+>>>> is clearer.
+>>>
+>>> Which makes my approach sustainable.
+>>
+>> I like your wording better, but placing this comment before the call to
+>> bd79112_get_gpio_pins() is still more confusing that placing it before
+>> the actual check:
+>>          if (!gpio_pins)
+>> is still misleading. Comment applies to the check, not the retrieval.
+> 
+> The variable assignment, or i.o.w. the source of the value we are
+> testing is also part of the equation.
+
+The comment explains why the check, not why the value is obtained.
+
+Yours,
+	-- Matti
 
