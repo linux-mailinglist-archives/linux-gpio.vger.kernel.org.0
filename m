@@ -1,115 +1,115 @@
-Return-Path: <linux-gpio+bounces-25615-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25616-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C0B9B44645
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 21:18:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55BF9B44650
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 21:24:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D3EB87AD989
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 19:16:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B5F2487A30
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 19:24:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6E3B26E702;
-	Thu,  4 Sep 2025 19:18:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12B68271476;
+	Thu,  4 Sep 2025 19:24:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KBgt/5sH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gp3+Ln+h"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BCA533997
-	for <linux-gpio@vger.kernel.org>; Thu,  4 Sep 2025 19:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B687915DBC1;
+	Thu,  4 Sep 2025 19:24:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757013486; cv=none; b=oNCDvJzAdB7suKzkrUniRf6f4E0zWKlpLS2lit1cX3eh2SnsPbl+q8BgAUxBWw0wta/k3BV9zIxVnMqKjdWU6XSAltq2lCbtrBctiev34bahwNMNBzQDULHPoKpaAYfIpsu48hd+v+9YhYHGh9gICrnhLZFcSFzamgg3uaD2s+w=
+	t=1757013850; cv=none; b=cluZMhdtDCGUw+hW7+XLp2+C3TejE+revnsiMZ1TGNtZofL1ATvA2MrTPyauzdaOMAZskxquz1eBWp4Pqu06ui9OhF1RqEc2r0dS3liivje2Q2jZXKZV5fdBEilm71PeNGYW5Z1O1HneTJikByp1xw1VJX0Y63jefACNTzUbnp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757013486; c=relaxed/simple;
-	bh=gWbxFQ6x7UcC2lbZjKJgloxh5fAj8MyhODzBvH+P2P4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SP7CFeZdOJwRuwH7+i8zxjba2zIlRiU15frjMJxe1ir81jhuKC7Fj0hcCoQIZm2oV+x5SgxMJ4D44gPO7TuUtCUfzZlKSQ3hvQu1BOBFOGojQfrakTKkHOvi0JxKmFZfJbhUnWYouxnNywwGXbKQJUps8deALtcWDn3rIcKe1HU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KBgt/5sH; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-336b88c5362so13525551fa.0
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Sep 2025 12:18:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757013483; x=1757618283; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZF5lLMA7h2yx16E/Z/NbIZblFHx04/IPYs+dkVSu0nM=;
-        b=KBgt/5sHrM2l3a/1CVjYwG8yfaSHV/FyGfYg5AChUS87pDvvcTk3QORGe2kwKeUcwi
-         J3p5tWH6lLScGwlWOTACneelzUqEHoeTvsfj50p87SWCZWchqiWcXeX4N8tZFiLymtp6
-         1mJ6g6+eSyrFg8dqurY0bLfAJWHvOqEjFcpyGT/L4swGjw2PGbOi6Dg94QLxdbI+bs2X
-         0pfyV7l8sXiLW+ToKpiZ0tw9wOSfJDzG7gab4bpX1Bfk3fkj/Snpa5t68Kafo0hTGf67
-         4Qe59PCmvZOwmWXpLH7ez/x1fUngriXFocomhyOLgrTMv8OioZuNkb++h7OOXNYdrNo+
-         UDQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757013483; x=1757618283;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZF5lLMA7h2yx16E/Z/NbIZblFHx04/IPYs+dkVSu0nM=;
-        b=u6WKKywUnq2oqM9csOYY15k2ScSxnv8mAL5ytcE3H+XYui2r+Kk6M4Maj/nVGuJCei
-         uIkvzE/SlNDILoO0+mkhLKePjIZV0x2uGWkGBYHPUemkv+6vxbXZYQkfawRApV5iv6dN
-         GVVY3wecsIbZ5o4ZKlmkbo8ZaVSQUX6kuVJmUeRIDbZGxMdyQyZD581JUEQyYMUn9fam
-         KOybZlhnseVtVBnCeiEs28R4zXU/rRt6QKD0nKh38I/56xXXJ896IT6q4nRplTgUideJ
-         ed50m+C1t1Cb3Xo/CrBdSXXfXUFGwLcoL+SawdbP3ZDMNKD59EfIWMzlrnuQBdrZK8Mu
-         r7cQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUqaiPDvlGfTqTIhalH2d9cJZNqXtN/zQSFVJ6V/Ea7mPGYRzYLcwlZnmpPGdEHc9vGKZHr79x8Hrs0@vger.kernel.org
-X-Gm-Message-State: AOJu0YyR+LIBXe7ZPjR4wdIupth+L8B4dNiexXKX7tH+2qsY7Y4OdVE5
-	tsXDsByQJNcxhavQ/d2uxwspQ+YVYPQaT615/6RAWGCnD/IeL4ulTFbfks0UXFtY3UgoQJkFuD3
-	4PV6tptN8/mP6s0ZqR5EatoEKROChWlB14AL0o4kqzQ==
-X-Gm-Gg: ASbGncvLJxbZxYm5jLUldSstpPShzPHe/CmpdjIoE7FubO/7Io4kOJ1Qsse9Qk9GkJ/
-	fNGSo+e1By1d5247HSM46R0i9oQvbPxSTqtfGpTXsMRy4Gxs5EPXZdN0nEW1mIkfCBtf5TGrG+y
-	Rwg08piGojTBP5ztV9rDNKzZEgJxbopbzQVJyta7ceeBxQTY2jmZ2sqG2B/K3xZfn6R1hWn6pbR
-	WC/C20QZu4ophJxsQ==
-X-Google-Smtp-Source: AGHT+IE5rwrhvv5qZHz6lW/fqD0gYW2CFROKD+rC1PEOKV3cpUw2gd7Ym9I+S+hnXU1PgSDTxTy2pPIOFXTSby/SrY4=
-X-Received: by 2002:a05:651c:b13:b0:337:e8cf:f049 with SMTP id
- 38308e7fff4ca-337e8cff1b1mr41377231fa.32.1757013483147; Thu, 04 Sep 2025
- 12:18:03 -0700 (PDT)
+	s=arc-20240116; t=1757013850; c=relaxed/simple;
+	bh=DcZBwbvCs/APcDLJmkpflaT6uT/JUTX4N2f8nqi57sg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RkIYsHGyWGqDauWJwQdeBy1szEu7C1HooWifexcYJc4UtqcFXNAJY4OP9YkczUHkLA7IZg5NF6j6NAUCsQaNKb6AmXTVMWiXPEYj9QIyx9WuNur5w/wQ9Z/2VicyA0aleF+Z9ohXMXZvjmU/qMcmIvzG/v9tcuiXWmLQpyvPOTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gp3+Ln+h; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7D14C4CEF0;
+	Thu,  4 Sep 2025 19:24:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757013850;
+	bh=DcZBwbvCs/APcDLJmkpflaT6uT/JUTX4N2f8nqi57sg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gp3+Ln+hhB1+8+lkFXXSillDiYum+dAPdUfELaZ7FRDiOTzBpVrgbAwIhJ+3hXR1s
+	 dOn4PqmUueHjXKJUs635qGZN7SZRDdWsMXwiPlPWkYDXvLnR8QGou6xrYNB97GTIXE
+	 PbOMK2KV0EMEuszui0Rr+3gdzdcyUC3XFFgRw1qNt7Jarycl+lPLEq7BWZZWAuS7pO
+	 SpxTYO34dGmrwlyYX+yQTNkv3IentC7g/DdNwluX0DVdFU7WWzab0K57zoWo9IXl+E
+	 OVGDEjjhcfpPp6NAjNrqHvOxoSDwRDe09WSFwDba3EIevvWIpnxJAEsbyA48Y61ecz
+	 kz8xv94usKF6A==
+Date: Thu, 4 Sep 2025 20:24:02 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Marcelo Schmitt <marcelo.schmitt@analog.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Tobias Sperling <tobias.sperling@softing.com>,
+	Antoniu Miclaus <antoniu.miclaus@analog.com>,
+	Trevor Gamblin <tgamblin@baylibre.com>,
+	Esteban Blanc <eblanc@baylibre.com>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Ramona Alexandra Nechita <ramona.nechita@analog.com>,
+	Eason Yang <j2anfernee@gmail.com>,
+	Pop Ioan Daniel <pop.ioan-daniel@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: iio: adc: ROHM BD79112 ADC/GPIO
+Message-ID: <20250904-suffering-napping-cfb886addf1e@spud>
+References: <cover.1756988028.git.mazziesaccount@gmail.com>
+ <af7292dea5cebe97553af67a8897e092bef3ec56.1756988028.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1756372805.git.andrea.porta@suse.com> <CACRpkdb8fFvgyWPAaP6AumwHUYhnvc7BXX0V5kwO4sts6zSGUA@mail.gmail.com>
- <aLf1nc20SRkWJW51@apocalypse>
-In-Reply-To: <aLf1nc20SRkWJW51@apocalypse>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 4 Sep 2025 21:17:52 +0200
-X-Gm-Features: Ac12FXwADs87l60RXY9dk-u4dU-hiNHF0BGDc7fS0K4iRh-4CbDl_UBjzeodFfo
-Message-ID: <CACRpkdYNaVQ+NgAhZCiKmU16jf6rtGL02JOJk0w=kezz=YRbTA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] Add pin control driver for BCM2712 SoC
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	florian.fainelli@broadcom.com, wahrenst@gmx.net, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, iivanov@suse.de, 
-	svarbanov@suse.de, mbrugger@suse.com, 
-	Jonathan Bell <jonathan@raspberrypi.com>, Phil Elwell <phil@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="TYMVqA+xISrwz0kg"
+Content-Disposition: inline
+In-Reply-To: <af7292dea5cebe97553af67a8897e092bef3ec56.1756988028.git.mazziesaccount@gmail.com>
+
+
+--TYMVqA+xISrwz0kg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 3, 2025 at 9:58=E2=80=AFAM Andrea della Porta <andrea.porta@sus=
-e.com> wrote:
-> On 08:58 Wed 03 Sep     , Linus Walleij wrote:
-> > On Thu, Aug 28, 2025 at 2:45=E2=80=AFPM Andrea della Porta
-> > <andrea.porta@suse.com> wrote:
-> >
-> > > The following patches add a pin control driver for the BCM2712 SoC.
-> >
-> > I have merged the prerequisites providing .function_is_gpio(),
-> > do you want to do any last minute changes or shall I just apply
-> > the v4 version and fix up anything minor in the process?
->
-> No further changes from my side, please go ahead with V4.
+On Thu, Sep 04, 2025 at 03:36:30PM +0300, Matti Vaittinen wrote:
+> The ROHM BD79112 is an ADC/GPIO with 32 channels. The channel inputs can
+> be used as ADC or GPIO. Using the GPIOs as IRQ sources isn't supported.
+>=20
+> The ADC is 12-bit, supporting input voltages up to 5.7V, and separate I/O
+> voltage supply. Maximum SPI clock rate is 20 MHz (10 MHz with
+> daisy-chain configuration) and maximum sampling rate is 1MSPS.
+>=20
+> Add a device tree binding document for the ROHM BD79112.
+>=20
+> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
 
-I applied patches 1 & 2 now, please apply patch 3 to the
-BCM SoC tree (Florian handles this I guess?)
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-Yours,
-Linus Walleij
+--TYMVqA+xISrwz0kg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaLnnUgAKCRB4tDGHoIJi
+0hpgAQDEQSDG09i4H4ASWiQgAGYg6VSHoZz4ZF4QmHuzBaKuagD/ScVzBQXl5SZQ
+ctKeXmDU5aEZNzQzIDFHLgQG0q0O6w4=
+=YMPt
+-----END PGP SIGNATURE-----
+
+--TYMVqA+xISrwz0kg--
 
