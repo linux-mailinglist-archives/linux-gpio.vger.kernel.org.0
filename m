@@ -1,111 +1,105 @@
-Return-Path: <linux-gpio+bounces-25619-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25620-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67D2BB44676
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 21:34:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E676CB44679
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 21:35:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 21B2DA44CAF
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 19:34:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A4DCA00DF4
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 19:35:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FFA226A1C4;
-	Thu,  4 Sep 2025 19:34:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9621426F445;
+	Thu,  4 Sep 2025 19:35:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lpQzrJpv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xFVx0wqg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C9C2940D
-	for <linux-gpio@vger.kernel.org>; Thu,  4 Sep 2025 19:34:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49EB72459C5
+	for <linux-gpio@vger.kernel.org>; Thu,  4 Sep 2025 19:35:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757014457; cv=none; b=eLrD35OojQsQBqO7Qw7cHhdviqNkA0LecKqhIMFrTmmxSk2pOjE/W2kMTQXV8o9Yz5wmxrCWHT2h2FgSmhlZCsmoxigW5ZsiTt61562xBsczSackw3Fx0ifHrw/jryOIuV9Jeadqx4dn3yELo4vtYyroRr9u7HeTWibRiohWmyI=
+	t=1757014543; cv=none; b=IpLc7PP0qLB9ZFOasmCepgbTm93DoRmaBNM9gb6k2wZlrfCgAPeynl8MTHOk0UpIzJkQbVyh3fa+G1su3s3M7HzBAN8V5o3YrsZfnpJSQIqBLVNjobXr6j7AuM9AKpClnt7uKB92/rBAVAD6QdPkeALZO5GekQWwDXcMAmozmN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757014457; c=relaxed/simple;
-	bh=clPjNzrRlrR9W8iK7IsCzqluvKE3yxrC0Jr2QIzTItE=;
+	s=arc-20240116; t=1757014543; c=relaxed/simple;
+	bh=32nYEhO3U0uVRAxCwAscIZa3xyyyN4IzR3cTBfcZ/4s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OXLSiqQ5w4KnmSxl8vcLBo5ULFRHxWq6E1bB3xzQWgThZTTaa6Bar2MEGaXX5JfIZTCEIr9OVrL/WPe56s0MqIAqO6vlrfR5CT20H6PGk55C2KJACIOK1EKy8wcegojhIKN+L2qhi/+dksC2Fgjpw6lcKgS1QVEYucYGkEVGWfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lpQzrJpv; arc=none smtp.client-ip=209.85.208.181
+	 To:Cc:Content-Type; b=aywn75A0q+RB8fL3/JhPagw1vQqGUF5fn/d8r9+E6mKyM68ftRpqC77eZUOi4FE2c2YyDx/QSweHG6hdcYhqigfi2poC4i2zA90GOBBAithFwhtA4+8sVdfADCblPv0Ty797BJ7x0ViindgtWxZq06mdkQsLu+Lic6tw+MFT0+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xFVx0wqg; arc=none smtp.client-ip=209.85.208.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-336b071e7e5so12164311fa.1
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Sep 2025 12:34:15 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-336b88c5362so13675491fa.0
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Sep 2025 12:35:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757014454; x=1757619254; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1757014539; x=1757619339; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=clPjNzrRlrR9W8iK7IsCzqluvKE3yxrC0Jr2QIzTItE=;
-        b=lpQzrJpv5R031VqsaxozYtelK2+fHPlPiWcr/M/NY9bFP9+cIsIQHAEgK/97S8yS/F
-         8pHAUUSAzNNelLpjKTYwELxGCiJ29kN3acRlAePIGwKh2yVC3t7LSQ2Qf4cxG70J7yzP
-         lFGnuS0ji6C6mTd1QqrKoevzxgsdfhC98Q9DG9gt1uOFZ7ugk9EpxjvB89kOq7DJx2sz
-         CQk71nq/uoajVuakD0UUM9ccBBNxNNO8OLJUE3Dqr64aOZIpuQ5H+ZLh6or1rMZCYugY
-         5dgvNcLbOgdqsaB1BMT2Zxk744RJLWN6aepQGffHXT3S8isKQtJv7xIXOpbZtMsTzI2V
-         fRRQ==
+        bh=32nYEhO3U0uVRAxCwAscIZa3xyyyN4IzR3cTBfcZ/4s=;
+        b=xFVx0wqgOn7c2ZpHLjaVzxtGc4XHsgiAAS4p9qJLptr7Si1mgY+XmAKEpqRuYm/cdb
+         7gVnfC9pGrukbXoiDPPavzOZlAmm0/9c+O9oHYeCUNkjYNXIC4XSXA3KyqDtQMM9CEcA
+         dnvpTCRCQhKFaSlUw141azOpaLG26XAA25rM8ayG8IPDHMYs+4ycpmC8Fw8wM5F9aPjF
+         cIiJWPxJqwiWszERMOUIaWOmGE2F3zptKsc/vaLgrO6EBD3f56lvBq7HD+xrH9Tl5o6D
+         xT7YvowSW4Db+7wxPtJ1aXiJYQYhG4p1yp/Ov8ZHyIpHDSC9lt1D4LAMI7TQuRGB3x6i
+         1N6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757014454; x=1757619254;
+        d=1e100.net; s=20230601; t=1757014539; x=1757619339;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=clPjNzrRlrR9W8iK7IsCzqluvKE3yxrC0Jr2QIzTItE=;
-        b=mWOG07vOERHhAXcEb1A9KeBCFtadHrn2NZywdIFwJRJK3wTT3tmSHmBcCbDMpFJCqi
-         MwIJlReT7U7sHzLN9d599xOKYfcMAPj3maVWQcATJOaIbnTzSKC03uHQqZUR9IJdHCwF
-         U1/LGHpIR3IreghdQj1i0ryYL/QnYKM7jRFAwhlczj8OgZDYhMxfS4hoMr7rGwUSs297
-         hzCwg2GrGlh/Hd6tvF4tUIOQEmvuEsWkl1Eq/0IEYuUFBZvbNMciDE4RIi78oqb6iFSr
-         Fa9rtgGV0KMpcoE1M8PLHAejNaJ13PP5T/IUJjCsH+CBZDL13ZGx42Q0vMnRTy4CXMnx
-         weRw==
-X-Forwarded-Encrypted: i=1; AJvYcCXq1jqbkcUm8zDNkP8IyvHr7XH7DZaOg2cv39r+2xZKKk9flCb7+ISzB6kiWSvwxWvoHf3MJCCx21fp@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGC8ZqgIYb85CMNjf3zpLcWzpgtEclGMwxOqAlxLqsfwHpUovV
-	bWtEybrXOz2PiEdPkDcu3wi74Jew2K5CIWBjFlXjXcFl8XWFMwpyoQul4REfg4WJAoPJaPMTfxA
-	sD1hD/2FBnmASO595wNBX1qjNTohrkocb+pXExyg6Mw==
-X-Gm-Gg: ASbGncuUF3vSOkCKfV29IuciNyWL+XmcSg48INi0jfwmzVlRkQOQ2nDH9oRtsTGQTVx
-	iv+GNOuhKWiR2afhAL7dlyxpY+fY4PlO5WKq8qgifErjEFgiXnekRPJ/29nUD753oamSrHTXQF0
-	K1Qb35F/cd3xGpwwzxgudvg/BVrzUGQjbG3EiiniqT0Lu13oBy7HKGD26nkDgL6+Ph5UV9OXit7
-	58P55eN968GzHeTWg==
-X-Google-Smtp-Source: AGHT+IEM7jhXKP31Q5ndk+KiHK48PfI3HF/sr3X8hFMQjwNo5zeLcG5ihiQY4yJX8VctkDHZ0/XvKBh/j6C82Ua3sDc=
-X-Received: by 2002:a05:651c:19a3:b0:336:72e1:7f45 with SMTP id
- 38308e7fff4ca-336caae1d45mr49522041fa.24.1757014453579; Thu, 04 Sep 2025
- 12:34:13 -0700 (PDT)
+        bh=32nYEhO3U0uVRAxCwAscIZa3xyyyN4IzR3cTBfcZ/4s=;
+        b=MerBqjaJ3XBdsy7jF6MkbgMt6ZKnNd1W6QB6MyfOXMXT6YdRX4JEZ74salyvFasGYI
+         c+PorCjyAb9n97TNs87ZipPxNt4JYaYMX/ZpKYG/BY9W0+i5nODX2CwYvVBJaV69uyQR
+         kmlkzWkt5MYFJyK11pXIvSsOoHsOofVTpwLQbK74yTuCGPucMeIFHDApsuU5/l97+Zd8
+         cqbEX9JwmdyelRg4PrnICCeZYzroIvj2LUs7f4WzA1qBBVmJ/wnAkA7FlaBq5tJnlfhm
+         W8iNnGAErTYcetAlRor5kMsIKFKaLMKx5n+hNujPqDpa+g0VcCtqN/hne9xtoRq5FZwP
+         MEVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWvsZZnG1lTHgCftIirMdFK7iaq31ai68VkI4WMTWpEN2dQ0vO9tRb/7ii7uv+R/anN3eQIJ0NZ2WY/@vger.kernel.org
+X-Gm-Message-State: AOJu0YwypTNE1k5ctmuQL6MNGsPSdi/jE25qumb7GbY+xjuCpMOYXpU3
+	8jnGllAM6g9CcWeU8tGbK6VKdmezbnBuDva+KruSTDJN2MCU6Sun9/rAPZm8PCVUIxAkuPc+Qvl
+	dGQlEq2t0IQcCiAfC1S05GoOdsu0Thq/8iL3SaqV8+A==
+X-Gm-Gg: ASbGncsgdGB5GWVfd7RxXrkKcOQ/i9HNZnA8gu2UFhOAJUm+xkmgbyHClYlM2C9QmvC
+	lPaA65TtckMDBjgYZFnNWud1r3wJAKlTSqoS4qKSW88Hl7RVilh6TXosKVeFSPwLRwM782VqwU+
+	qJFM2TGd7/TJNIeyQtPbVhM49TQ7etu1WO1YB5ZREAquFI6OtneqZKOnbWNg8CLFDZUVC7Tx9cc
+	7lV8R8cdF3efiWcdQ==
+X-Google-Smtp-Source: AGHT+IFk6qWrCgBCMUMmRXmwNfVdMojmRglmfhyiJ5psNymemT9FqXab1r+PbaMVvluse9Mju6Gt2tnrWCGHPJdZfDY=
+X-Received: by 2002:a05:651c:1079:b0:332:3fd0:15fb with SMTP id
+ 38308e7fff4ca-336ca5c1a70mr38397421fa.0.1757014539436; Thu, 04 Sep 2025
+ 12:35:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250813065533.3959018-1-pankaj.patil@oss.qualcomm.com>
- <20250813065533.3959018-3-pankaj.patil@oss.qualcomm.com> <vxd4gr6hcbv3wmgbo3phhwserinub6y5o2dhkoaheofbwphaz7@3mkfwswaukeh>
- <9be4695b-54eb-461a-9e59-81670089ff38@oss.qualcomm.com>
-In-Reply-To: <9be4695b-54eb-461a-9e59-81670089ff38@oss.qualcomm.com>
+References: <20250903100104.360637-1-hendrik.hamerlinck@hammernet.be>
+In-Reply-To: <20250903100104.360637-1-hendrik.hamerlinck@hammernet.be>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 4 Sep 2025 21:34:02 +0200
-X-Gm-Features: Ac12FXxoMfMgKe3bppQxjm3t8wtzMbd4lxjj0GXJNQiFFIQLEQle8aSsfY7NR58
-Message-ID: <CACRpkdawjL1CKy776Ya_tZJaurmxRVqx98DGSUZjUWZe=Gdrcw@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] pinctrl: qcom: Add glymur pinctrl driver
-To: Pankaj Patil <pankaj.patil@oss.qualcomm.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	rajendra.nayak@oss.qualcomm.com, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+Date: Thu, 4 Sep 2025 21:35:28 +0200
+X-Gm-Features: Ac12FXwi4fLng12UMi28VuiL73WI6CiLUWCY-CJjaRNMNpJieZixpye9Zb1GrH8
+Message-ID: <CACRpkdYMHMvFCzcA0G9sj+xSrjXROU4OmnV=x0EPfRBpVycQtg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: spacemit: fix typo in PRI_TDI pin name
+To: Hendrik Hamerlinck <hendrik.hamerlinck@hammernet.be>
+Cc: dlan@gentoo.org, skhan@linuxfoundation.org, 
+	linux-kernel-mentees@lists.linux.dev, linux-gpio@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 3, 2025 at 11:53=E2=80=AFAM Pankaj Patil
-<pankaj.patil@oss.qualcomm.com> wrote:
+On Wed, Sep 3, 2025 at 12:01=E2=80=AFPM Hendrik Hamerlinck
+<hendrik.hamerlinck@hammernet.be> wrote:
 
-> This patch was not pulled in linux-next,
-> commit- 9a1d01fbf43f56a02026eee44181f70108a0dec8
+> The datasheet lists this signal as PRI_TDI, not PRI_DTI.
+> Fix the pin name to match the documentation and JTAG naming
+> convention (TDI =3D Test Data In).
+>
+> Signed-off-by: Hendrik Hamerlinck <hendrik.hamerlinck@hammernet.be>
 
-No you said you would do changes to 1/2 so I have not applied it,
-waiting for v6.
-
-> Does this need a rebase?
-
-Maybe, then use my "devel" branch.
-
-Pick up any ACKs and Review tags please!
+Patch applied!
 
 Yours,
 Linus Walleij
