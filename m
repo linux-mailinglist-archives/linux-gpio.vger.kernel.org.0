@@ -1,119 +1,116 @@
-Return-Path: <linux-gpio+bounces-25604-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25605-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A59CB43FFD
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 17:08:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C219B44044
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 17:17:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A8215429B5
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 15:07:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 460C1189E8D9
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 15:17:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82A0B2367DC;
-	Thu,  4 Sep 2025 15:07:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 947E525A337;
+	Thu,  4 Sep 2025 15:16:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0sKVNZh"
+	dkim=pass (1024-bit key) header.d=iitb.ac.in header.i=@iitb.ac.in header.b="tls13l0o"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp1.iitb.ac.in (smtpd9.iitb.ac.in [103.21.126.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86B4308F07
-	for <linux-gpio@vger.kernel.org>; Thu,  4 Sep 2025 15:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3421B85F8
+	for <linux-gpio@vger.kernel.org>; Thu,  4 Sep 2025 15:16:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.21.126.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756998459; cv=none; b=NjmTfig62uIKcZqKQDpiSbi8xsW7qbeDFw3b/Eu7kSeR36oV0+RywBAxg3wmHvnvbd03koNJzZh0XogK+V/fULSKgO3CJoaXcicwZwJt2dC8XPNMs5feIuAgaHGQpUDFynqxtSX5Ju4rPKMxksoVhlR+vtcIpkssHy2C2u2caLY=
+	t=1756998993; cv=none; b=HUK7tBvVdXya9+dvyZzD4XImO/8mMc8M4Kg9EWwlG5TeDwOVdCs7fniBWNgY3lwFeP9EifedNMMVqtvhi3+rA0RojKcMXNJRKsfCtiJNS+SA3fqNfEsUIFt5QC6B+AnvvRQuwikWtpayNm27jVpUu+e3GPI5rjS5abFvdy0wQ0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756998459; c=relaxed/simple;
-	bh=Z20zI4u9ghFEvxn/9Nlvcp2HXjgRbxnClcQSVehBtMs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tO7c7aVtshmDiVLmCiizCsLp2t/hPj0NY0Vdiwswl6+8stPQxpWJ7KmqPSEQazordDfC47wwSKsTAmh9rjqBP7/mkmhhSzo4jBYg2ZnSbO7fknKUbXCSM13xnzAOlzDXcua/Kx+0mNhjUDheQ+NV7erVVxzePxd4DdLUgL6QkU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T0sKVNZh; arc=none smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-89a89313bb7so401568241.3
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Sep 2025 08:07:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756998456; x=1757603256; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=J3JiyBjhFtxN3QRkg1io4u96odnjPYhfkApW+0FQvoA=;
-        b=T0sKVNZhDpyAIPtGWFPCc1RdiiWutisa6rkiidQYO4igPVde7RXEEyt1t9UX1bH3hg
-         nPh5MTk43Qt3LKkxzzVt8Xn/482NM2HJpSv1YVBqeBKSmopuz8g+rjW0MgP0In4lH0nY
-         oipqPVBAZ/oG1fVYTcI4i+ODIPpTeNWEEenK2p4/oTEjfvJm52kdXdl9Ub64E6cwhi/y
-         +qR1o4KbeA8CH08dQChUUQmZrYbAmbIwKS+evmfsnoXeWx6W+Nmv0JKS1toPUFQmxEDH
-         VPanjgXJR82y2m9oWBF7FljlTIN+sWEUQhhGv0yUVocL3d5oNUvMkbIbGDTjAmu2VeXA
-         GJrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756998456; x=1757603256;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=J3JiyBjhFtxN3QRkg1io4u96odnjPYhfkApW+0FQvoA=;
-        b=vdK7YelSzjo8pH0r6pbwO9VjNEkYKcaxStaaIv+QPTk7P6WVXXUxLVVuPyrC/MA1/T
-         RunxhfsS6j8VV2wu0hyK2OVW0vkUWQLn+nN07gsvGWIUpK3ArBx+GWaU5tddWVLpRaTL
-         C8Xlz6aTi5TkFmRgNRBR6F49UEkOqBT99VblUvipO9cQIvVlowcNVK1/X16ZTpGxwQit
-         YSJPOKdidIugOke61+/ajmTQsKcvwo/Yc+mG4En8XJrvpUhzc5Ckj7svzd5d/iQSg0gK
-         jlthMzDdSkAmceSXpwuk8ZUcGmn8MsU8wzN0d2yqlSOd5Z0gJkGcEJDTTj+Z2YoWsE8m
-         GhhQ==
-X-Gm-Message-State: AOJu0Yy5gLKCOZvHfaRIQ1PJju5yq5TWzOq9UuhTECjC+qCgggjE5pmX
-	2vi7J19A/7u/DsM8+YCnKUrL6/kpZVVvfhdEj0/elJr+SWkZF7rBt2kkFoC6/vbsIWLHFEvhEEi
-	9Nk/8kYn2Do5s9TLBfpwAOQUkN5S1GtU=
-X-Gm-Gg: ASbGncvLE6wJW6qalBohX/GesF01FuWMMlPCX27jk2AeZTIlknj1BxBdl5G8+JJUNE9
-	OKvpX4eimTP6YPNfpiYur9bnOwr5KAPV4M9lK96uhArqCfMZ7+dafdtSqhWgB1Qyl0m2xIy5ZV5
-	w7FZJFy3hqlj9IuTAGTnPyyTSwPYY8OuaZolfDUyL3CjmkRoMz3WIlcdYLQsYnOKUMvJHDOQWZ/
-	Ish2T6qeHFsQDNK6pZUdeFwxlTvmXpLV3sifatV6ONQGmCvrgg=
-X-Google-Smtp-Source: AGHT+IEh0V106NzupPh8L74H6G/2ZHGpICnChXK67K9fuZtMa16HmEIJ6kVi3ytDQI+wFblyklX4Y1MHQEK7zbupkUM=
-X-Received: by 2002:a67:e7c6:0:b0:52a:7083:2f67 with SMTP id
- ada2fe7eead31-52b1b9185f6mr6550315137.24.1756998456226; Thu, 04 Sep 2025
- 08:07:36 -0700 (PDT)
+	s=arc-20240116; t=1756998993; c=relaxed/simple;
+	bh=kGHx+2hvlk+s/C5InmRZGzQib9BkkISU8qMkaFbeH2c=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=EfgRJEJ5sXQpOYy9GwhfDYpsNqnPleMd5vHTYoRZVe1f5NSjXloTrrT7V9TjtKmRaspdVqzJwVL9qu+CyQEviB4gwubWDMuhF0IbYqJ/ocITR2f6C3dIgBUl6x1lkeGULstzAgzOCAVZK6+GluhJssfBtYwgU5RIYbt3aHY8Sp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ee.iitb.ac.in; spf=pass smtp.mailfrom=ee.iitb.ac.in; dkim=pass (1024-bit key) header.d=iitb.ac.in header.i=@iitb.ac.in header.b=tls13l0o; arc=none smtp.client-ip=103.21.126.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ee.iitb.ac.in
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ee.iitb.ac.in
+Received: from ldns1.iitb.ac.in (ldns1.iitb.ac.in [10.200.12.1])
+	by smtp1.iitb.ac.in (Postfix) with SMTP id 1B0E8104D004
+	for <linux-gpio@vger.kernel.org>; Thu,  4 Sep 2025 20:46:17 +0530 (IST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.iitb.ac.in 1B0E8104D004
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=iitb.ac.in; s=mail;
+	t=1756998977; bh=kGHx+2hvlk+s/C5InmRZGzQib9BkkISU8qMkaFbeH2c=;
+	h=Date:From:To:Cc:Subject:From;
+	b=tls13l0oHdoB0mkCCtbv0Q7xKoASSioyJQxINbQOFRuhWmfpjMyRZ59vLJfz4vwNQ
+	 Nn41L2YsEaypntzvM15ZkP4wzBysRrjjPIZxmONF4gafuAflnvGE02GFwA60NQrruh
+	 N+0cm+SOmpQl2wjMaJAJ03vnaoZCg5p7O4OWv3ng=
+Received: (qmail 11093 invoked by uid 510); 4 Sep 2025 20:46:17 +0530
+X-Qmail-Scanner-Diagnostics: from 10.200.1.25 by ldns1 (envelope-from <akhilesh@ee.iitb.ac.in>, uid 501) with qmail-scanner-2.11
+ spamassassin: 3.4.1. mhr: 1.0. {clamdscan: 0.101.4/26439} 
+ Clear:RC:1(10.200.1.25):SA:0(0.0/7.0):. Processed in 2.134336 secs; 04 Sep 2025 20:46:17 +0530
+X-Spam-Level: 
+X-Spam-Pyzor: Reported 0 times.
+X-Envelope-From: akhilesh@ee.iitb.ac.in
+X-Qmail-Scanner-Mime-Attachments: |
+X-Qmail-Scanner-Zip-Files: |
+Received: from unknown (HELO ldns1.iitb.ac.in) (10.200.1.25)
+  by ldns1.iitb.ac.in with SMTP; 4 Sep 2025 20:46:14 +0530
+Received: from bhairav.ee.iitb.ac.in (bhairav.ee.iitb.ac.in [10.107.1.1])
+	by ldns1.iitb.ac.in (Postfix) with ESMTP id 8B3E236004B;
+	Thu,  4 Sep 2025 20:46:14 +0530 (IST)
+Received: from bhairav-test.ee.iitb.ac.in (bhairav.ee.iitb.ac.in [10.107.1.1])
+	(Authenticated sender: akhilesh)
+	by bhairav.ee.iitb.ac.in (Postfix) with ESMTPSA id 6E9C91E81442;
+	Thu,  4 Sep 2025 20:46:14 +0530 (IST)
+Date: Thu, 4 Sep 2025 20:46:09 +0530
+From: Akhilesh Patil <akhilesh@ee.iitb.ac.in>
+To: linus.walleij@linaro.org, brgl@bgdev.pl
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	akhileshpatilvnit@gmail.com, skhan@linuxfoundation.org
+Subject: [PATCH] gpio: Kconfig: Update help for GPIO_PCA953X
+Message-ID: <aLmtOWjAWPtWe/gH@bhairav-test.ee.iitb.ac.in>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250902123905.6491-1-vfazio@gmail.com> <CAMRc=McdCY5q9+DGBqCCL7kYAF69q0n43G4yF3=g18VBawO9tA@mail.gmail.com>
-In-Reply-To: <CAMRc=McdCY5q9+DGBqCCL7kYAF69q0n43G4yF3=g18VBawO9tA@mail.gmail.com>
-From: Vincent Fazio <vfazio@gmail.com>
-Date: Thu, 4 Sep 2025 10:07:24 -0500
-X-Gm-Features: Ac12FXyVQXUcXq9mUeikIjftnIdBpywePDaruAduFRd71BDa5vtrbTk8zY9wBdU
-Message-ID: <CAOrEah4xbLYsD4Rk6UYHiskMa71ue6gmhDW7yLtOgSZ+oP_pJA@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] bindings: python: parse non-tuple Iterable keys
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, Vincent Fazio <vfazio@xes-inc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> >          # Sanitize lines - don't allow offset repetitions or offset-name conflicts.
-> >          for offset, count in Counter(
-> > -            [
-> > -                self.line_offset_from_id(line)
-> > -                for line in (
-> > -                    lambda t: [
-> > -                        j for i in (t) for j in (i if isinstance(i, tuple) else (i,))
-> > -                    ]
-> > -                )(tuple(config.keys()))
-> > -            ]
-> > +            self._resolve_config_keys_to_offsets(config_keys=config.keys())
->
-> This looks good, just a quick question: is there any particular reason
-> to use a named argument here? Looks like a positional parameter would
-> work just fine and stay pretty clear as the method only takes one.
->
+Update help description with supported ICs from gpio-pca953x.c
+Include missing IC names.
 
-No specific reason, it has just become my habit to use named arguments
-even if it's not a kwarg.
+Signed-off-by: Akhilesh Patil <akhilesh@ee.iitb.ac.in>
+---
+ drivers/gpio/Kconfig | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-Providing the name for a positional argument allows them to be
-declared in any order should new arguments be added and is a bit more
-self-documenting.
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index e43abb322fa6..02e4cf83b9bf 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1194,14 +1194,18 @@ config GPIO_PCA953X
+ 	  4 bits:       pca9536, pca9537
+ 
+ 	  8 bits:       max7310, max7315, pca6107, pca9534, pca9538, pca9554,
+-	                pca9556, pca9557, pca9574, tca6408, tca9554, xra1202
++	                pca9556, pca9557, pca9574, tca6408, tca9554, xra1202,
++			pcal6408, pcal9554b, tca9538
+ 
+ 	  16 bits:      max7312, max7313, pca9535, pca9539, pca9555, pca9575,
+-	                tca6416
++	                tca6416, pca6416, pcal6416, pcal9535, pcal9555a, max7318,
++			tca9539
+ 
+-	  24 bits:      tca6424
++	  18 bits:	tca6418
+ 
+-	  40 bits:      pca9505, pca9698
++	  24 bits:      tca6424, pcal6524
++
++	  40 bits:      pca9505, pca9698, pca9506
+ 
+ config GPIO_PCA953X_IRQ
+ 	bool "Interrupt controller support for PCA953x"
+-- 
+2.34.1
 
-Granted, in a function that's only ever expected to take a single
-argument, it's probably overkill.
-
-If it looks ok otherwise and you intend to accept the patch, please
-feel free to amend the patch to remove the named argument. Otherwise I
-can submit a v2.
-
--Vincent
 
