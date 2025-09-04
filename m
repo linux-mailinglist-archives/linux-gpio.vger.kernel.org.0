@@ -1,116 +1,143 @@
-Return-Path: <linux-gpio+bounces-25605-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25625-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C219B44044
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 17:17:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BF78B4472A
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 22:19:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 460C1189E8D9
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 15:17:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 36208581C66
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 20:19:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 947E525A337;
-	Thu,  4 Sep 2025 15:16:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8A95253F05;
+	Thu,  4 Sep 2025 20:19:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=iitb.ac.in header.i=@iitb.ac.in header.b="tls13l0o"
+	dkim=pass (2048-bit key) header.d=armadeus.com header.i=@armadeus.com header.b="suPBrdPb"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp1.iitb.ac.in (smtpd9.iitb.ac.in [103.21.126.64])
+Received: from 3.mo583.mail-out.ovh.net (3.mo583.mail-out.ovh.net [46.105.40.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3421B85F8
-	for <linux-gpio@vger.kernel.org>; Thu,  4 Sep 2025 15:16:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.21.126.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28C3627D77A
+	for <linux-gpio@vger.kernel.org>; Thu,  4 Sep 2025 20:19:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.40.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756998993; cv=none; b=HUK7tBvVdXya9+dvyZzD4XImO/8mMc8M4Kg9EWwlG5TeDwOVdCs7fniBWNgY3lwFeP9EifedNMMVqtvhi3+rA0RojKcMXNJRKsfCtiJNS+SA3fqNfEsUIFt5QC6B+AnvvRQuwikWtpayNm27jVpUu+e3GPI5rjS5abFvdy0wQ0k=
+	t=1757017169; cv=none; b=epgdiFoLvJHo6n5kTvErZxRIzKfPJaCoG21L7Fikx0iaytJQ+4J20XTFZF1TNU3UZ1YZtNoIRJ/zYFOnW/gFAqGc45hJNmyEsyhzeHJrMkzg4GHqvj9f7/eqWLH0AvesPyeDmeChq6AU8jHsOXpvXZNPpDENaOoTFSA71SUlqQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756998993; c=relaxed/simple;
-	bh=kGHx+2hvlk+s/C5InmRZGzQib9BkkISU8qMkaFbeH2c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=EfgRJEJ5sXQpOYy9GwhfDYpsNqnPleMd5vHTYoRZVe1f5NSjXloTrrT7V9TjtKmRaspdVqzJwVL9qu+CyQEviB4gwubWDMuhF0IbYqJ/ocITR2f6C3dIgBUl6x1lkeGULstzAgzOCAVZK6+GluhJssfBtYwgU5RIYbt3aHY8Sp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ee.iitb.ac.in; spf=pass smtp.mailfrom=ee.iitb.ac.in; dkim=pass (1024-bit key) header.d=iitb.ac.in header.i=@iitb.ac.in header.b=tls13l0o; arc=none smtp.client-ip=103.21.126.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ee.iitb.ac.in
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ee.iitb.ac.in
-Received: from ldns1.iitb.ac.in (ldns1.iitb.ac.in [10.200.12.1])
-	by smtp1.iitb.ac.in (Postfix) with SMTP id 1B0E8104D004
-	for <linux-gpio@vger.kernel.org>; Thu,  4 Sep 2025 20:46:17 +0530 (IST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.iitb.ac.in 1B0E8104D004
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=iitb.ac.in; s=mail;
-	t=1756998977; bh=kGHx+2hvlk+s/C5InmRZGzQib9BkkISU8qMkaFbeH2c=;
-	h=Date:From:To:Cc:Subject:From;
-	b=tls13l0oHdoB0mkCCtbv0Q7xKoASSioyJQxINbQOFRuhWmfpjMyRZ59vLJfz4vwNQ
-	 Nn41L2YsEaypntzvM15ZkP4wzBysRrjjPIZxmONF4gafuAflnvGE02GFwA60NQrruh
-	 N+0cm+SOmpQl2wjMaJAJ03vnaoZCg5p7O4OWv3ng=
-Received: (qmail 11093 invoked by uid 510); 4 Sep 2025 20:46:17 +0530
-X-Qmail-Scanner-Diagnostics: from 10.200.1.25 by ldns1 (envelope-from <akhilesh@ee.iitb.ac.in>, uid 501) with qmail-scanner-2.11
- spamassassin: 3.4.1. mhr: 1.0. {clamdscan: 0.101.4/26439} 
- Clear:RC:1(10.200.1.25):SA:0(0.0/7.0):. Processed in 2.134336 secs; 04 Sep 2025 20:46:17 +0530
-X-Spam-Level: 
-X-Spam-Pyzor: Reported 0 times.
-X-Envelope-From: akhilesh@ee.iitb.ac.in
-X-Qmail-Scanner-Mime-Attachments: |
-X-Qmail-Scanner-Zip-Files: |
-Received: from unknown (HELO ldns1.iitb.ac.in) (10.200.1.25)
-  by ldns1.iitb.ac.in with SMTP; 4 Sep 2025 20:46:14 +0530
-Received: from bhairav.ee.iitb.ac.in (bhairav.ee.iitb.ac.in [10.107.1.1])
-	by ldns1.iitb.ac.in (Postfix) with ESMTP id 8B3E236004B;
-	Thu,  4 Sep 2025 20:46:14 +0530 (IST)
-Received: from bhairav-test.ee.iitb.ac.in (bhairav.ee.iitb.ac.in [10.107.1.1])
-	(Authenticated sender: akhilesh)
-	by bhairav.ee.iitb.ac.in (Postfix) with ESMTPSA id 6E9C91E81442;
-	Thu,  4 Sep 2025 20:46:14 +0530 (IST)
-Date: Thu, 4 Sep 2025 20:46:09 +0530
-From: Akhilesh Patil <akhilesh@ee.iitb.ac.in>
-To: linus.walleij@linaro.org, brgl@bgdev.pl
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	akhileshpatilvnit@gmail.com, skhan@linuxfoundation.org
-Subject: [PATCH] gpio: Kconfig: Update help for GPIO_PCA953X
-Message-ID: <aLmtOWjAWPtWe/gH@bhairav-test.ee.iitb.ac.in>
+	s=arc-20240116; t=1757017169; c=relaxed/simple;
+	bh=9zcNQP9m+mY9M0THwqxOYRx5V0BtNFsXoxQfLjlPZdQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=DpaLG7HVP8D7RTAm5kEHYcg+vy2/SBmXQpGM/tUoqHAvgNcXbs6yX7nYQ2ln3gXM2zwI6xKkEJj1EiQ1aZB3iML9SclUxhZNklDz/0hpvfrbW11qCR6b7ZLH2F6OIHZU12OGPgFKoFrQvDdZF474f/ngz8hEZ87QQwyphYvDSHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=armadeus.com; spf=pass smtp.mailfrom=armadeus.com; dkim=pass (2048-bit key) header.d=armadeus.com header.i=@armadeus.com header.b=suPBrdPb; arc=none smtp.client-ip=46.105.40.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=armadeus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=armadeus.com
+Received: from director8.ghost.mail-out.ovh.net (unknown [10.110.54.180])
+	by mo583.mail-out.ovh.net (Postfix) with ESMTP id 4cHld84xX1z6X06
+	for <linux-gpio@vger.kernel.org>; Thu,  4 Sep 2025 16:42:20 +0000 (UTC)
+Received: from ghost-submission-5b5ff79f4f-v9gcr (unknown [10.110.118.54])
+	by director8.ghost.mail-out.ovh.net (Postfix) with ESMTPS id EFDF7C02DE;
+	Thu,  4 Sep 2025 16:42:19 +0000 (UTC)
+Received: from armadeus.com ([37.59.142.108])
+	by ghost-submission-5b5ff79f4f-v9gcr with ESMTPSA
+	id xzN5MmvBuWjlnwAAJZEplA
+	(envelope-from <sebastien.szymanski@armadeus.com>); Thu, 04 Sep 2025 16:42:19 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-108S0025b848ee2-3489-4988-acd6-dcb84b63b1b0,
+                    86F439A93EF419A5F8DFEFFE961FF85F9AC47286) smtp.auth=sebastien.szymanski@armadeus.com
+X-OVh-ClientIp:86.243.209.203
+From: =?utf-8?q?S=C3=A9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
+Date: Thu, 04 Sep 2025 18:42:07 +0200
+Subject: [PATCH] HID: cp2112: fix setter callbacks return value
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250904-hid-cp2112-fix-set-value-v1-1-17d2e26dc8c9@armadeus.com>
+X-B4-Tracking: v=1; b=H4sIAF7BuWgC/x2MQQqAMAzAvjJ6trAWBfUr4mFsVQuisqkIw787P
+ AaSZEgSVRL0JkOUW5PuWwGqDPjFbbOghsLAlhvbWcZFA/qDiRgnfTDJibdbL0Fqu9a5RmxNE5T
+ 8iFKEfz2M7/sBV+n8tGoAAAA=
+X-Change-ID: 20250902-hid-cp2112-fix-set-value-1898aa5e041f
+To: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, 
+ =?utf-8?q?S=C3=A9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
+X-Mailer: b4 0.14.2
+X-Ovh-Tracer-Id: 13937514947645991849
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdeihedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkffvvefosehtkeertdertdejnecuhfhrohhmpefurogsrghsthhivghnucfuiiihmhgrnhhskhhiuceoshgvsggrshhtihgvnhdrshiihihmrghnshhkihesrghrmhgruggvuhhsrdgtohhmqeenucggtffrrghtthgvrhhnpeetudffuedugeffuddvhfefjedufeejleekgefhjeeuuedtvdegheeikefhleehgeenucfkphepuddvjedrtddrtddruddpkeeirddvgeefrddvtdelrddvtdefpdefjedrheelrddugedvrddutdeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehsvggsrghsthhivghnrdhsiiihmhgrnhhskhhisegrrhhmrgguvghushdrtghomhdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheekfegmpdhmohguvgepshhmthhpohhuth
+DKIM-Signature: a=rsa-sha256; bh=0FeKAQxjy6vo6196zHIUsEHi4EuwsIHIs8qqJrNf2iA=;
+ c=relaxed/relaxed; d=armadeus.com; h=From; s=ovhmo103079-selector1;
+ t=1757004140; v=1;
+ b=suPBrdPbNHYAteDart3sbrNHPZP3kovOzIj9XBwisohzZ1T03wPjNOcs0TtYN+av6DbCJHkO
+ P0IJa9qCE3Gu2a6LYSMjYb1uRKR4LxntG7BHLmB3lJHOu39OMky3E9zKG/XtNepLs3oepzIMLnH
+ iee8RpdTizQp4+wkGG8B+zCbkM9aYe7c55OnbaRKLh0/gVumkfVBtHYoPwgTbnXRgEubzqKo3x2
+ iE6g6tludTpHI87vXOoV9ycUnxMIIw+ZXwMVPQ4Cp6QWsXCTJ8tm40jjgqLh0FRKOUkYspE9g5I
+ cZvDIZSbnlt9BsQ+r0uGdCz7MWWY/xJCjXVYUJD1o7VuA==
 
-Update help description with supported ICs from gpio-pca953x.c
-Include missing IC names.
+Since commit 6485543488a6 ("HID: cp2112: use new line value setter
+callbacks"), setting a GPIO value always fails with error -EBADE.
 
-Signed-off-by: Akhilesh Patil <akhilesh@ee.iitb.ac.in>
+That's because the returned value by the setter callbacks is the
+returned value by the hid_hw_raw_request() function which is the number of
+bytes sent on success or a negative value on error. The function
+gpiochip_set() returns -EBADE if the setter callbacks return a value >
+0.
+
+Fix this by making the setter callbacks return 0 on success or a negative
+value on error.
+
+While at it, use the returned value by cp2112_gpio_set_unlocked() in the
+direction_output callback.
+
+Fixes: 6485543488a6 ("HID: cp2112: use new line value setter callbacks")
+Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
 ---
- drivers/gpio/Kconfig | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/hid/hid-cp2112.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index e43abb322fa6..02e4cf83b9bf 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1194,14 +1194,18 @@ config GPIO_PCA953X
- 	  4 bits:       pca9536, pca9537
+diff --git a/drivers/hid/hid-cp2112.c b/drivers/hid/hid-cp2112.c
+index 482f62a78c4155a50cceea3c8894ee5959e9aaed..5a95ea3bec9805453712b7b9e3d3fefec2351822 100644
+--- a/drivers/hid/hid-cp2112.c
++++ b/drivers/hid/hid-cp2112.c
+@@ -229,10 +229,12 @@ static int cp2112_gpio_set_unlocked(struct cp2112_device *dev,
+ 	ret = hid_hw_raw_request(hdev, CP2112_GPIO_SET, buf,
+ 				 CP2112_GPIO_SET_LENGTH, HID_FEATURE_REPORT,
+ 				 HID_REQ_SET_REPORT);
+-	if (ret < 0)
++	if (ret != CP2112_GPIO_SET_LENGTH) {
+ 		hid_err(hdev, "error setting GPIO values: %d\n", ret);
++		return ret < 0 ? ret : -EIO;
++	}
  
- 	  8 bits:       max7310, max7315, pca6107, pca9534, pca9538, pca9554,
--	                pca9556, pca9557, pca9574, tca6408, tca9554, xra1202
-+	                pca9556, pca9557, pca9574, tca6408, tca9554, xra1202,
-+			pcal6408, pcal9554b, tca9538
+-	return ret;
++	return 0;
+ }
  
- 	  16 bits:      max7312, max7313, pca9535, pca9539, pca9555, pca9575,
--	                tca6416
-+	                tca6416, pca6416, pcal6416, pcal9535, pcal9555a, max7318,
-+			tca9539
+ static int cp2112_gpio_set(struct gpio_chip *chip, unsigned int offset,
+@@ -309,9 +311,7 @@ static int cp2112_gpio_direction_output(struct gpio_chip *chip,
+ 	 * Set gpio value when output direction is already set,
+ 	 * as specified in AN495, Rev. 0.2, cpt. 4.4
+ 	 */
+-	cp2112_gpio_set_unlocked(dev, offset, value);
+-
+-	return 0;
++	return cp2112_gpio_set_unlocked(dev, offset, value);
+ }
  
--	  24 bits:      tca6424
-+	  18 bits:	tca6418
- 
--	  40 bits:      pca9505, pca9698
-+	  24 bits:      tca6424, pcal6524
-+
-+	  40 bits:      pca9505, pca9698, pca9506
- 
- config GPIO_PCA953X_IRQ
- 	bool "Interrupt controller support for PCA953x"
+ static int cp2112_hid_get(struct hid_device *hdev, unsigned char report_number,
+
+---
+base-commit: b320789d6883cc00ac78ce83bccbfe7ed58afcf0
+change-id: 20250902-hid-cp2112-fix-set-value-1898aa5e041f
+
+Best regards,
 -- 
-2.34.1
+Sébastien Szymanski <sebastien.szymanski@armadeus.com>
 
 
