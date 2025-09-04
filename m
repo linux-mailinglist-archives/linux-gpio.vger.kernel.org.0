@@ -1,127 +1,119 @@
-Return-Path: <linux-gpio+bounces-25603-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25604-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FED2B43F41
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 16:41:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A59CB43FFD
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 17:08:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EB0A51CC24D8
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 14:39:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A8215429B5
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 15:07:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36520319866;
-	Thu,  4 Sep 2025 14:35:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82A0B2367DC;
+	Thu,  4 Sep 2025 15:07:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o92AJnVr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0sKVNZh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5A130F557;
-	Thu,  4 Sep 2025 14:35:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86B4308F07
+	for <linux-gpio@vger.kernel.org>; Thu,  4 Sep 2025 15:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756996521; cv=none; b=kcrn+NU5MT7lxRwh1CSo4c1z1fJMNpPmsa2BXtY9enzdKfkO0eTzmBXUo48LrZFPQDRHG+QjpIF4lHDi+GTRBiyEKR1mYFKcuT6ywIbaT7REouAsMpidIgv/k98O1aHepstYJ7oPoZFF4HFk7YwBalM3d3IbR8oIcOo4YfQaDEA=
+	t=1756998459; cv=none; b=NjmTfig62uIKcZqKQDpiSbi8xsW7qbeDFw3b/Eu7kSeR36oV0+RywBAxg3wmHvnvbd03koNJzZh0XogK+V/fULSKgO3CJoaXcicwZwJt2dC8XPNMs5feIuAgaHGQpUDFynqxtSX5Ju4rPKMxksoVhlR+vtcIpkssHy2C2u2caLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756996521; c=relaxed/simple;
-	bh=8kIGznDy+yBjtOzEZBMp/gYRmqnIWETZTPphA2eOkh8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jPCrzasyYqYONFINqhggIVJE0flifYOLfb1a1E+DWN6ipI/PbRlFuUdMVmnDH+N4l3JYlPifElhmc1y3L8S2HynPyB8SeNiz9OFmjutseQcHULbpbZfPM9+t0+d+2UYvygzYMoj48Xjhw8Owukody/EOTnLHSwBe/RVPq4pcTWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o92AJnVr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7651AC4CEF0;
-	Thu,  4 Sep 2025 14:35:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756996520;
-	bh=8kIGznDy+yBjtOzEZBMp/gYRmqnIWETZTPphA2eOkh8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=o92AJnVroMgO0xyUlw5zPy+0SOqoU8a73BKt5yk4HJ/rA6ZxM/Z4lnFBvkqCTCcUt
-	 g55GxGyJ4kUwstKETLKrzHpfRrXg1HXAFoT0g4qT6YMWzAA+sBlDYUwQKIxp3EWIAq
-	 qSjq8hUsOGyVnMDYJl6+EUFw/w0owqY6Wo9+MsgUIRgAJ5+NY8nrN2n+lOZRu8+feE
-	 eoTkxkplcOyrx0yLVoCoIHziOC/DHMYyRGcfgYBUVwTa4aZJwEGv9m6LNB7YRSjOhS
-	 PhPBCM5x3ORKjDJK7txAcwIKaho+KEKGM9LQ5AvnsrOOD6SmUSh3mB3CpmVsRjSDhP
-	 EgaYwvQIsFwSQ==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Stephan Gerhold <stephan@gerhold.net>,
-	=?UTF-8?q?Otto=20Pfl=C3=BCger?= <otto.pflueger@abscue.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Lee Jones <lee@kernel.org>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Rob Clark <robin.clark@oss.qualcomm.com>,
-	Abhinav Kumar <abhinav.kumar@linux.dev>,
-	Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
-	Robert Marko <robimarko@gmail.com>,
-	Adam Skladowski <a_skl39@protonmail.com>,
-	Sireesh Kodali <sireeshkodali@protonmail.com>,
-	Das Srinagesh <quic_gurus@quicinc.com>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	=?UTF-8?q?Barnab=C3=A1s=20Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
-Cc: linux-arm-msm@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	iommu@lists.linux.dev,
-	dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org,
-	phone-devel@vger.kernel.org,
-	~postmarketos/upstreaming@lists.sr.ht,
-	linux@mainlining.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Daniil Titov <daniilt971@gmail.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Dang Huynh <danct12@riseup.net>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: (subset) [PATCH v9 0/7] Initial support of MSM8937 and Xiaomi Redmi 3S
-Date: Thu,  4 Sep 2025 09:35:13 -0500
-Message-ID: <175699650574.2182703.5262816788916742029.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250903-msm8937-v9-0-a097c91c5801@mainlining.org>
-References: <20250903-msm8937-v9-0-a097c91c5801@mainlining.org>
+	s=arc-20240116; t=1756998459; c=relaxed/simple;
+	bh=Z20zI4u9ghFEvxn/9Nlvcp2HXjgRbxnClcQSVehBtMs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tO7c7aVtshmDiVLmCiizCsLp2t/hPj0NY0Vdiwswl6+8stPQxpWJ7KmqPSEQazordDfC47wwSKsTAmh9rjqBP7/mkmhhSzo4jBYg2ZnSbO7fknKUbXCSM13xnzAOlzDXcua/Kx+0mNhjUDheQ+NV7erVVxzePxd4DdLUgL6QkU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T0sKVNZh; arc=none smtp.client-ip=209.85.222.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-89a89313bb7so401568241.3
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Sep 2025 08:07:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756998456; x=1757603256; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=J3JiyBjhFtxN3QRkg1io4u96odnjPYhfkApW+0FQvoA=;
+        b=T0sKVNZhDpyAIPtGWFPCc1RdiiWutisa6rkiidQYO4igPVde7RXEEyt1t9UX1bH3hg
+         nPh5MTk43Qt3LKkxzzVt8Xn/482NM2HJpSv1YVBqeBKSmopuz8g+rjW0MgP0In4lH0nY
+         oipqPVBAZ/oG1fVYTcI4i+ODIPpTeNWEEenK2p4/oTEjfvJm52kdXdl9Ub64E6cwhi/y
+         +qR1o4KbeA8CH08dQChUUQmZrYbAmbIwKS+evmfsnoXeWx6W+Nmv0JKS1toPUFQmxEDH
+         VPanjgXJR82y2m9oWBF7FljlTIN+sWEUQhhGv0yUVocL3d5oNUvMkbIbGDTjAmu2VeXA
+         GJrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756998456; x=1757603256;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=J3JiyBjhFtxN3QRkg1io4u96odnjPYhfkApW+0FQvoA=;
+        b=vdK7YelSzjo8pH0r6pbwO9VjNEkYKcaxStaaIv+QPTk7P6WVXXUxLVVuPyrC/MA1/T
+         RunxhfsS6j8VV2wu0hyK2OVW0vkUWQLn+nN07gsvGWIUpK3ArBx+GWaU5tddWVLpRaTL
+         C8Xlz6aTi5TkFmRgNRBR6F49UEkOqBT99VblUvipO9cQIvVlowcNVK1/X16ZTpGxwQit
+         YSJPOKdidIugOke61+/ajmTQsKcvwo/Yc+mG4En8XJrvpUhzc5Ckj7svzd5d/iQSg0gK
+         jlthMzDdSkAmceSXpwuk8ZUcGmn8MsU8wzN0d2yqlSOd5Z0gJkGcEJDTTj+Z2YoWsE8m
+         GhhQ==
+X-Gm-Message-State: AOJu0Yy5gLKCOZvHfaRIQ1PJju5yq5TWzOq9UuhTECjC+qCgggjE5pmX
+	2vi7J19A/7u/DsM8+YCnKUrL6/kpZVVvfhdEj0/elJr+SWkZF7rBt2kkFoC6/vbsIWLHFEvhEEi
+	9Nk/8kYn2Do5s9TLBfpwAOQUkN5S1GtU=
+X-Gm-Gg: ASbGncvLE6wJW6qalBohX/GesF01FuWMMlPCX27jk2AeZTIlknj1BxBdl5G8+JJUNE9
+	OKvpX4eimTP6YPNfpiYur9bnOwr5KAPV4M9lK96uhArqCfMZ7+dafdtSqhWgB1Qyl0m2xIy5ZV5
+	w7FZJFy3hqlj9IuTAGTnPyyTSwPYY8OuaZolfDUyL3CjmkRoMz3WIlcdYLQsYnOKUMvJHDOQWZ/
+	Ish2T6qeHFsQDNK6pZUdeFwxlTvmXpLV3sifatV6ONQGmCvrgg=
+X-Google-Smtp-Source: AGHT+IEh0V106NzupPh8L74H6G/2ZHGpICnChXK67K9fuZtMa16HmEIJ6kVi3ytDQI+wFblyklX4Y1MHQEK7zbupkUM=
+X-Received: by 2002:a67:e7c6:0:b0:52a:7083:2f67 with SMTP id
+ ada2fe7eead31-52b1b9185f6mr6550315137.24.1756998456226; Thu, 04 Sep 2025
+ 08:07:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20250902123905.6491-1-vfazio@gmail.com> <CAMRc=McdCY5q9+DGBqCCL7kYAF69q0n43G4yF3=g18VBawO9tA@mail.gmail.com>
+In-Reply-To: <CAMRc=McdCY5q9+DGBqCCL7kYAF69q0n43G4yF3=g18VBawO9tA@mail.gmail.com>
+From: Vincent Fazio <vfazio@gmail.com>
+Date: Thu, 4 Sep 2025 10:07:24 -0500
+X-Gm-Features: Ac12FXyVQXUcXq9mUeikIjftnIdBpywePDaruAduFRd71BDa5vtrbTk8zY9wBdU
+Message-ID: <CAOrEah4xbLYsD4Rk6UYHiskMa71ue6gmhDW7yLtOgSZ+oP_pJA@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH] bindings: python: parse non-tuple Iterable keys
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, Vincent Fazio <vfazio@xes-inc.com>
+Content-Type: text/plain; charset="UTF-8"
 
+> >          # Sanitize lines - don't allow offset repetitions or offset-name conflicts.
+> >          for offset, count in Counter(
+> > -            [
+> > -                self.line_offset_from_id(line)
+> > -                for line in (
+> > -                    lambda t: [
+> > -                        j for i in (t) for j in (i if isinstance(i, tuple) else (i,))
+> > -                    ]
+> > -                )(tuple(config.keys()))
+> > -            ]
+> > +            self._resolve_config_keys_to_offsets(config_keys=config.keys())
+>
+> This looks good, just a quick question: is there any particular reason
+> to use a named argument here? Looks like a positional parameter would
+> work just fine and stay pretty clear as the method only takes one.
+>
 
-On Wed, 03 Sep 2025 23:08:20 +0200, Barnabás Czémán wrote:
-> This patch series add initial support for MSM8937 SoC
-> and Xiaomi Redmi 3S (land).
-> 
-> The series is extending the MSM8917 gcc and pinctrl drivers
-> because they are sibling SoCs.
-> MSM8937 have 4 more A53 cores and have one more dsi port then
-> MSM8917.
-> It implements little-big architecture and uses Adreno 505.
-> 
-> [...]
+No specific reason, it has just become my habit to use named arguments
+even if it's not a kwarg.
 
-Applied, thanks!
+Providing the name for a positional argument allows them to be
+declared in any order should new arguments be added and is a bit more
+self-documenting.
 
-[3/7] dt-bindings: firmware: qcom,scm: Add MSM8937
-      commit: cf13bed78c90b2c0fc65774e86d564c868fa2a23
+Granted, in a function that's only ever expected to take a single
+argument, it's probably overkill.
 
-Best regards,
--- 
-Bjorn Andersson <andersson@kernel.org>
+If it looks ok otherwise and you intend to accept the patch, please
+feel free to amend the patch to remove the named argument. Otherwise I
+can submit a v2.
+
+-Vincent
 
