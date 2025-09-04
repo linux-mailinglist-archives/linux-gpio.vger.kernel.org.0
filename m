@@ -1,147 +1,130 @@
-Return-Path: <linux-gpio+bounces-25633-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25634-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84AE9B4489C
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 23:34:08 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF044B44958
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 00:16:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ABE061CC1769
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 21:34:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 11A597AB289
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 22:14:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63E642C15AB;
-	Thu,  4 Sep 2025 21:33:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C1BF2E764E;
+	Thu,  4 Sep 2025 22:16:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fSiUCYcQ"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="jj5agdIu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BC22BEFE7;
-	Thu,  4 Sep 2025 21:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597052DCC13;
+	Thu,  4 Sep 2025 22:16:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757021637; cv=none; b=h5g6tobOCM4jPSqWGC851Fa3IS2U//5nXUGZrVi8aybyOvotlsbb1A55JZD8s2vPB10JGEWrbyWwOCjLxrgFFVLyMwmhlVBES6qFpxPnp6rFSlJVTsfR2S7iMIvCwn4SdFBLVoRzY6OSAvEpu8ithb6OivRkgaEjE7tERP9+sJI=
+	t=1757024174; cv=none; b=W0SuS4ozE76t//dhgzDDVDHtImvLCESBiqGxlg7UZJFiPEOFgpvr11o/sL/lsGpqhSMVIcJIeSL9dVthuHu9m2FxAW2MCURiu92tihNeq2ySddGwNvUFzdmniEcuQsZUPohfDoK8bz+zfpCrLrOaB5nDkiDlsE4IWCJW1LnwyeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757021637; c=relaxed/simple;
-	bh=p/s/kJpm8SZfihBzXvBjykI1k2rg3DZ0ryhkDZpJKe4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q75Rip2Nq9j9Etpq43NCzvH24+bhN6vYsMAweqcVIL2jq4aFx53vpvfrwtcbX1+RkpqEUBs4jt/PcvJ9Fld9J5xwswE8DlL1k02fgbbYQ/NfJKtbAmkmwIyJ+CioPOd2xqwUXZ+4BGsbX4E5jmhFkYsYgQynBv0d5lHCeHkBOVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fSiUCYcQ; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757021636; x=1788557636;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=p/s/kJpm8SZfihBzXvBjykI1k2rg3DZ0ryhkDZpJKe4=;
-  b=fSiUCYcQqPUoC+0oVVx2LIg01FIa6JOmML/lNH3Y37JdoInrnOq1ppX4
-   azwqJRwY+3A2bWOmU6y6zZMyuuwAyWG4y8IwZHVdycOchxVNxqtxzQ315
-   qk8gNyRuLZgbItuvs6RCsXx+Kc5mioOOMFEsd7W7Em7AKl71JDeh8uNK5
-   v29nYIUkG6Hc5LKPkxUjM/Kp4j5v96rWDWtOUi9C+aX2mTcnWaziEnaqU
-   nUis4RF51OD+pK3LjBLP3HGbI2Zce0KxqU07gPAQbqYuGfGCN1KVwC3IE
-   Jg+d6LzUWLenu7um91D7JLZT+sJzmvoPO0T0rY39CSdtdFJe5B/6Lcpsz
-   A==;
-X-CSE-ConnectionGUID: 70bzBgCgR7uxMRNnQbCuxw==
-X-CSE-MsgGUID: oxHPqsB8S/KDRJenDSpQSA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11543"; a="59522603"
-X-IronPort-AV: E=Sophos;i="6.18,239,1751266800"; 
-   d="scan'208";a="59522603"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2025 14:33:55 -0700
-X-CSE-ConnectionGUID: d8h7wvHORNuG1VzVvVYbxw==
-X-CSE-MsgGUID: X2KPy3u+TVekGncrgIKZIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,239,1751266800"; 
-   d="scan'208";a="171891495"
-Received: from lkp-server02.sh.intel.com (HELO 06ba48ef64e9) ([10.239.97.151])
-  by orviesa007.jf.intel.com with ESMTP; 04 Sep 2025 14:33:49 -0700
-Received: from kbuild by 06ba48ef64e9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uuHa1-0005wZ-1p;
-	Thu, 04 Sep 2025 21:33:25 +0000
-Date: Fri, 5 Sep 2025 05:30:48 +0800
-From: kernel test robot <lkp@intel.com>
-To: Nuno =?iso-8859-1?Q?S=E1?= via B4 Relay <devnull+nuno.sa.analog.com@kernel.org>,
-	linux-hwmon@vger.kernel.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Krzysztof Kozlowski <krzk@kernel.org>,
+	s=arc-20240116; t=1757024174; c=relaxed/simple;
+	bh=FfkRI+Thfq9FLWdeGquE+YXJSXWp3aWZQCznOMbITyI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lSdt4NF4hsbdyljBC3XjvYx369F/iArlgRjvwiiUJvVPqNpvU09jz1IhyZdoGp/mPu6FdbWhoj0muvIJXRfZkBZHHX6VmESNYtm8N9pAMib1/MftfKKGDuLKAlvzVVzXHrhxakff8ocW9N6VpovYGNIrNdEnWn2AU+t0lNDQuYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=jj5agdIu; arc=none smtp.client-ip=192.19.144.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 00813C00151A;
+	Thu,  4 Sep 2025 15:16:05 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 00813C00151A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1757024165;
+	bh=FfkRI+Thfq9FLWdeGquE+YXJSXWp3aWZQCznOMbITyI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=jj5agdIupuNpfglCUEa2dAc3pRYIR+M/3P1yNtjfospVkOl8dfiOPDXtFcjcZc0sl
+	 eArjms3P9QmpLWWz9ORrwX30AtSoOAraPOsvB//vvB6dy32Khkc8G+s3384E8r85bd
+	 e9z4/294XS+ibqTGk0Y2m9N0FdrJIZhZb1BgLxlg=
+Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 58A7C18000530;
+	Thu,  4 Sep 2025 15:15:34 -0700 (PDT)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: bcm-kernel-feedback-list@broadcom.com,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jonathan Corbet <corbet@lwn.net>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v2 2/3] hwmon: ltc4283: Add support for the LTC4283 Swap
- Controller
-Message-ID: <202509050501.MXDrcrZA-lkp@intel.com>
-References: <20250903-ltc4283-support-v2-2-6bce091510bf@analog.com>
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Phil Elwell <phil@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	kernel-list@raspberrypi.com,
+	Matthias Brugger <mbrugger@suse.com>,
+	iivanov@suse.de,
+	svarbanov@suse.de
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: broadcom: amend the comment about the role of BCM2712 board DTS
+Date: Thu,  4 Sep 2025 15:15:33 -0700
+Message-ID: <20250904221533.227156-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <47f6368a77d6bd846c02942d20c07dd48e0ae7df.1754914766.git.andrea.porta@suse.com>
+References: <cover.1754914766.git.andrea.porta@suse.com> <47f6368a77d6bd846c02942d20c07dd48e0ae7df.1754914766.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250903-ltc4283-support-v2-2-6bce091510bf@analog.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Nuno,
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-kernel test robot noticed the following build warnings:
+On Mon, 11 Aug 2025 16:12:35 +0200, Andrea della Porta <andrea.porta@suse.com> wrote:
+> Current board DTS for Raspberry Pi5 states that bcm2712-rpi-5-b.dts
+> should not be modified and all declarations should go in the overlay
+> board DTS instead (bcm2712-rpi-5-b-ovl-rp1.dts).
+> 
+> There's a caveat though: there's currently no infrastructure to reliably
+> reference nodes that have not been declared yet, as is the case when
+> loading those nodes from a runtime overlay. For more details about
+> these limitations see [1] and follow-ups.
+> 
+> Change the comment to make it clear which DTS file will host specific
+> nodes, especially the RP1 related nodes which should be customized
+> outside the overlay DTS.
+> 
+> Link
+> [1] - https://lore.kernel.org/all/CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com/
+> 
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> ---
 
-[auto build test WARNING on 9703c672af8dd3573c76ce509dfff26bf6c4768d]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Nuno-S-via-B4-Relay/dt-binbings-hwmon-Document-the-LTC4283-Swap-Controller/20250903-180813
-base:   9703c672af8dd3573c76ce509dfff26bf6c4768d
-patch link:    https://lore.kernel.org/r/20250903-ltc4283-support-v2-2-6bce091510bf%40analog.com
-patch subject: [PATCH v2 2/3] hwmon: ltc4283: Add support for the LTC4283 Swap Controller
-config: hexagon-allmodconfig (https://download.01.org/0day-ci/archive/20250905/202509050501.MXDrcrZA-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250905/202509050501.MXDrcrZA-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202509050501.MXDrcrZA-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/hwmon/ltc4283.c:595:10: warning: result of comparison of constant 65536 with expression of type 'u16' (aka 'unsigned short') is always false [-Wtautological-constant-out-of-range-compare]
-     595 |         if (tmp == BIT(16))
-         |             ~~~ ^  ~~~~~~~
-   1 warning generated.
-
-
-vim +595 drivers/hwmon/ltc4283.c
-
-   586	
-   587	static int __ltc4283_write_in_history(struct ltc4283_hwmon *st,
-   588					      u32 reg, long lowest, u32 fs)
-   589	{
-   590		__be16 __raw;
-   591		u16 tmp;
-   592		int ret;
-   593	
-   594		tmp = DIV_ROUND_CLOSEST(BIT(16) * lowest, fs);
- > 595		if (tmp == BIT(16))
-   596			tmp = U16_MAX;
-   597	
-   598		__raw = cpu_to_be16(tmp);
-   599	
-   600		ret = regmap_bulk_write(st->map, reg, &__raw, sizeof(__raw));
-   601		if (ret)
-   602			return ret;
-   603	
-   604		tmp = 0;
-   605		return regmap_bulk_write(st->map, reg + 1,  &tmp, sizeof(tmp));
-   606	}
-   607	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Applied to https://github.com/Broadcom/stblinux/commits/devicetree-arm64/next, thanks!
+--
+Florian
 
