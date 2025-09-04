@@ -1,123 +1,154 @@
-Return-Path: <linux-gpio+bounces-25596-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25597-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3995B43D98
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 15:47:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82BDBB43DFC
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 16:04:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B9921C85438
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 13:47:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1F8EE1C22A98
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 14:05:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D8F9307ACC;
-	Thu,  4 Sep 2025 13:46:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 196A5304BB6;
+	Thu,  4 Sep 2025 14:04:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XllKDlSw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KfJohFUH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F07306D40
-	for <linux-gpio@vger.kernel.org>; Thu,  4 Sep 2025 13:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3952D8771;
+	Thu,  4 Sep 2025 14:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756993579; cv=none; b=FD5zDbeK2s+5iNZlVlUb7+RL1qIwAw8Gl7V9Kyj1Sap3XHXfUWyPbpmKlUpspDQH3GCdv5r8yxxh8wio4LVUvk8qCCfWO7tDCUCIJYcoNDRbryfZthcPnybsR9yu98cqzqHNMZvpAaezUUiX5esmcw+KBZT5wdPaFH8f82Q9cLE=
+	t=1756994679; cv=none; b=dEzAtVj0GQJ9AX9aQt+97z+jLJirH3ZnHunQZYL95n/gJCx6XqepipXK4rbIVMiTn9FWG2vhaTC2tXox0SC8j1W45GcDyq6tCgdHo2GrxGpBwmcqoy+gcFLJym4+9R4pb8C6hBfB7DD5ukoqMbyq99JZF63+VvdwuGX0MqzqPGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756993579; c=relaxed/simple;
-	bh=exbALax/KRnxM/htU8cfFCENh4IpreCWgJhwJJBmuts=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=kPzrESa59a+ZVD3Cz94TLjE1zqSBo35lt21ZjeVgRPzPl4JfHCdOc7EG0NcFIO/c0PyZm2ZJRhAOi1nFrjJ4RdVLS2fREfQpXeVN2xFox1EydtyHNrykN1Ug07rn4IO/Wwk4rYm+viz6M36QzHqZ0508HkeCGpqFIjueH0bJH6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XllKDlSw; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-afcb7ab87ffso14606866b.3
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Sep 2025 06:46:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1756993576; x=1757598376; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bWzUXsK84owgqc3mGwjxow+K46mQbNDiKZu7L/mwO3w=;
-        b=XllKDlSwVYM4Dm4Eyfg6UnPT9NGYHhowMX4kzz7IeWlSwsiCSzBy66y1nfjR2iROfs
-         KZ74/ywLobRVkbXPbBJNd2jAx/XM+T/tZbRg1W6f8kwWw1IDBhMydMM6m9XXN/rEXXY7
-         mRJ/r5x3pMlF0ipbplmE6ad7ym53WYpeSuXPH9HmH2FF03bZ5kOG6rJK46teDxxyrh69
-         RD4FFDxSsYdRZsF0JWGceHkOT2qjObiJJXhykEJ7sAvn22Wa8qV+cnZvtWdpeENARRJF
-         6DmU9ST+6yT1x/1S1qqCwKD6mhbALNoC1pVg5ONceldmh4tkWV50hFFIF5mY8LLBqoYu
-         56aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756993576; x=1757598376;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bWzUXsK84owgqc3mGwjxow+K46mQbNDiKZu7L/mwO3w=;
-        b=XB1ZY53ZwVqK5ZH3iYlThaqxIopMhMA615vE+o6Ar7ODeQbW2GpttvNvr1SNEz7yoA
-         VJtyxMITovyjO3Tk+nqDCyHQQ2a45rsC7ZXXLw8CIqoMFDeI3vYxISjpAI/vlh8YrkWA
-         +2W8nAW89/WXTKOCoitc9qbjGro+4U7KTpGVWqw4+EqeusIPJf2lvSUOKlnCWyat7SFu
-         mZ7F9mREO4qZEow9R2VCU3BxLUzjbq2C+yRbRHwkkQm8jvqm3P4usWHeqSImO9UASO8d
-         v55DwA+zq9qpTbf30fjoS5AQ5p+ypXsIXD7M8D4QsKf+xjBrrEd/gDyWk8HQmNLeZxo8
-         Tqjg==
-X-Forwarded-Encrypted: i=1; AJvYcCUe6apPdPyWaCFS8IsCxN8D4yh7TJxhRaL81asOZhJNxQ33mwmycDeO8Csqj5a578AwIWiojm86a+3O@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIwx+rZxp7su7GPYVOG4vu4Mx8rcy+ab4wTHuVHCfraExgiigu
-	4YYfitM2Mko/8KrPIoDeOE4dr4ovowwdWVXIGxnfHpy6AA5z+AXCyYVON4IvSZQFSSc=
-X-Gm-Gg: ASbGnct0eHbJlgNIvBZMUFOfuoi8wuUD64YizIN2b4ZEObl8F+btqtcewzWB55oK/EF
-	6+NIi5od9mFaNPz05OypZ1Ny7FpFkbW2tdUjFwD++1R+ZwVwgoGSg0SJoWjVnDuCIlSWoNra0bu
-	FmPvAL7cF/wnpZfiSFNyEGWiYfIL8xv4LrraaSbpTpI8BskPSWxrmawFgogIPfe243CseVHexav
-	aE5H8JHnH3UGrFdZcZzovtnyOW7J1ERsgZYiTBEBL/VGO2BY/oGWC46yMGfT6a0tJEoaEYuYqC0
-	D6dFd30f1KbKs1TvPYJ4HLfYzVL8xnb7zN2TOF4RAieAxLGfljx4ne5U4M92cE5Fayi18d8pIpV
-	uzgeN+qN9lRfxIHKwAP6wzfS2ZsD9RxgVY8aw/brvYrPOZtmehA==
-X-Google-Smtp-Source: AGHT+IFRjqi0rL8OiC4NZXNOIG4FcZYbVhKsdzHVKskJZtLsw0JBOE11012YrpNCw1Y7RX8De6y4QA==
-X-Received: by 2002:a17:906:4785:b0:af9:5a1c:fee5 with SMTP id a640c23a62f3a-aff0e28e4e5mr1209123966b.0.1756993575559;
-        Thu, 04 Sep 2025 06:46:15 -0700 (PDT)
-Received: from [127.0.1.1] ([178.197.219.123])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b0413782b94sm1180634266b.35.2025.09.04.06.46.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Sep 2025 06:46:14 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: jesper.nilsson@axis.com, mturquette@baylibre.com, sboyd@kernel.org, 
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, krzk@kernel.org, 
- s.nawrocki@samsung.com, cw00.choi@samsung.com, alim.akhtar@samsung.com, 
- linus.walleij@linaro.org, tomasz.figa@gmail.com, catalin.marinas@arm.com, 
- will@kernel.org, arnd@arndb.de, Ravi Patel <ravi.patel@samsung.com>
-Cc: ksk4725@coasia.com, kenkim@coasia.com, pjsin865@coasia.com, 
- gwk1013@coasia.com, hgkim05@coasia.com, mingyoungbo@coasia.com, 
- smn1196@coasia.com, shradha.t@samsung.com, inbaraj.e@samsung.com, 
- swathi.ks@samsung.com, hrishikesh.d@samsung.com, dj76.yang@samsung.com, 
- hypmean.kim@samsung.com, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- linux-arm-kernel@axis.com, devicetree@vger.kernel.org, 
- linux-gpio@vger.kernel.org
-In-Reply-To: <20250901051926.59970-7-ravi.patel@samsung.com>
-References: <20250901051926.59970-1-ravi.patel@samsung.com>
- <CGME20250901054303epcas5p3d8079b7806d995bfaf3004cbb4f95e41@epcas5p3.samsung.com>
- <20250901051926.59970-7-ravi.patel@samsung.com>
-Subject: Re: (subset) [PATCH v4 6/6] arm64: defconfig: Enable Axis ARTPEC
- SoC
-Message-Id: <175699357327.171312.14592323274121562181.b4-ty@linaro.org>
-Date: Thu, 04 Sep 2025 15:46:13 +0200
+	s=arc-20240116; t=1756994679; c=relaxed/simple;
+	bh=8D15COu2exGUd3E0Qy8knhTqB4T/stT3kGk+YvNt1Xc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BtGJNnHqiAsLiPU25ARVPZjYgLNvKVd4UdnlFgS/1OMVsiss/8/lLDdB+NOB7m6XCEe8jNou9HJbFshHdqRu1qa5nACBSipqdYFWmIJRtcDk1Z0KWCf18f2+ZRSss1X9koT7pZqQ8DCJwerWs+VOBuCUQ7mZi9YC+oRrhAZKg+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KfJohFUH; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756994678; x=1788530678;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8D15COu2exGUd3E0Qy8knhTqB4T/stT3kGk+YvNt1Xc=;
+  b=KfJohFUH7Hn1UeO43oPCiN3r+3F941+Cogr92jFKdEr40icswc/cO/Q1
+   P4ZXVOEFo4TOHlPuR/3xJYWVJqbuoj3LLbSOOUmWEF59xJhZaQ3xqLwIV
+   zZoIdG376fb/57Zl6nMqJdCHKUNd7dd0WnXBywvjPToeTaNJ72YD+D/tu
+   CJfOt1RX9do3P6jR3r2MnvnazJ302KTRUQ6dbBbpXXiZG7BmOdpt89X5Q
+   qjPZJ0WiQoBA4A6BVYaZ33ifaOVyiSKNgcjAHI3jgdLGIQKL/JIh53vMN
+   iqYLxc84JY6RmGVe1btPRJFy225gJwcXpk0s3EbEe1d4kWXe+lIfJPH+z
+   w==;
+X-CSE-ConnectionGUID: dur8aXbyR4icYs9PvtclUw==
+X-CSE-MsgGUID: 8XQCbnVKQZGLYFK/yZFDaQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11542"; a="70431585"
+X-IronPort-AV: E=Sophos;i="6.18,238,1751266800"; 
+   d="scan'208";a="70431585"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2025 07:04:37 -0700
+X-CSE-ConnectionGUID: jk3xqa1ERUuvLneeMH0DuQ==
+X-CSE-MsgGUID: ZlXGG7xRRzuIrTFtgMNG7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,238,1751266800"; 
+   d="scan'208";a="202827580"
+Received: from lkp-server02.sh.intel.com (HELO 06ba48ef64e9) ([10.239.97.151])
+  by fmviesa001.fm.intel.com with ESMTP; 04 Sep 2025 07:04:31 -0700
+Received: from kbuild by 06ba48ef64e9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uuAYv-0005Mt-2U;
+	Thu, 04 Sep 2025 14:03:53 +0000
+Date: Thu, 4 Sep 2025 22:02:41 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: oe-kbuild-all@lists.linux.dev, Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Marcelo Schmitt <marcelo.schmitt@analog.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Tobias Sperling <tobias.sperling@softing.com>,
+	Antoniu Miclaus <antoniu.miclaus@analog.com>,
+	Trevor Gamblin <tgamblin@baylibre.com>,
+	Esteban Blanc <eblanc@baylibre.com>,
+	Ramona Alexandra Nechita <ramona.nechita@analog.com>,
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+	Hans de Goede <hansg@kernel.org>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 2/3] iio: adc: Support ROHM BD79112 ADC/GPIO
+Message-ID: <202509042119.GiwpuwCl-lkp@intel.com>
+References: <08929460fe11dd0b749c50a72a634423f13f4104.1756813980.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <08929460fe11dd0b749c50a72a634423f13f4104.1756813980.git.mazziesaccount@gmail.com>
 
+Hi Matti,
 
-On Mon, 01 Sep 2025 10:49:26 +0530, Ravi Patel wrote:
-> Enable the Axis ARTPEC-8 SoC in arm64 defconfig.
-> 
-> 
+kernel test robot noticed the following build warnings:
 
-Applied, thanks!
+[auto build test WARNING on d1487b0b78720b86ec2a2ac7acc683ec90627e5b]
 
-[6/6] arm64: defconfig: Enable Axis ARTPEC SoC
-      https://git.kernel.org/krzk/linux/c/eca86a61aedaa40310135c8799b28187afbc677e
+url:    https://github.com/intel-lab-lkp/linux/commits/Matti-Vaittinen/dt-bindings-iio-adc-ROHM-BD79112-ADC-GPIO/20250902-203558
+base:   d1487b0b78720b86ec2a2ac7acc683ec90627e5b
+patch link:    https://lore.kernel.org/r/08929460fe11dd0b749c50a72a634423f13f4104.1756813980.git.mazziesaccount%40gmail.com
+patch subject: [PATCH 2/3] iio: adc: Support ROHM BD79112 ADC/GPIO
+config: sparc-randconfig-r071-20250904 (https://download.01.org/0day-ci/archive/20250904/202509042119.GiwpuwCl-lkp@intel.com/config)
+compiler: sparc-linux-gcc (GCC) 14.3.0
 
-Best regards,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202509042119.GiwpuwCl-lkp@intel.com/
+
+smatch warnings:
+drivers/iio/adc/rohm-bd79112.c:212 bd79112_read_raw() warn: inconsistent indenting
+
+vim +212 drivers/iio/adc/rohm-bd79112.c
+
+   192	
+   193	static int bd79112_read_raw(struct iio_dev *indio_dev,
+   194				    struct iio_chan_spec const *chan, int *val,
+   195				    int *val2, long m)
+   196	{
+   197		struct bd79112_data *data = iio_priv(indio_dev);
+   198		int ret;
+   199	
+   200		switch (m) {
+   201		case IIO_CHAN_INFO_RAW:
+   202			ret = regmap_read(data->map, chan->channel, val);
+   203			if (ret < 0)
+   204				return ret;
+   205	
+   206			return IIO_VAL_INT;
+   207	
+   208		case IIO_CHAN_INFO_SCALE:
+   209			 *val = data->vref_mv;
+   210			 *val2 = 12;
+   211	
+ > 212			return IIO_VAL_FRACTIONAL_LOG2;
+   213		}
+   214	
+   215		return -EINVAL;
+   216	}
+   217	
+
 -- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
