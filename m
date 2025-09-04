@@ -1,119 +1,165 @@
-Return-Path: <linux-gpio+bounces-25623-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25624-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D147DB446AD
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 21:46:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AC610B446C6
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 21:57:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 90E8E5A0C75
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 19:46:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6E7415A3B88
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 19:57:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC9F2272803;
-	Thu,  4 Sep 2025 19:45:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7254A277814;
+	Thu,  4 Sep 2025 19:57:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U6SvjqDu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Iv+32+pl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D605C202C43
-	for <linux-gpio@vger.kernel.org>; Thu,  4 Sep 2025 19:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896101BD035
+	for <linux-gpio@vger.kernel.org>; Thu,  4 Sep 2025 19:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757015155; cv=none; b=FXx+bdMHqwlyqBgE7r5foTktmAvuWn8Lo7h1RHD8rZvYETfmxOp/yDyfu/suBrhGohAjyxVfYRRHlG96Lc4fKCh8y31f0lRaIme2Gb7KF5ygQozNzSW6KkNoJ8XDgxWJSuOCZ1iljdVE66CK91xgllIaeb4/umtgxEuKt99aaCc=
+	t=1757015860; cv=none; b=Not0wzpPnj/ALNAOQVr2eEIhVyIMvV9d886VjN1BGuClnYZZIlnfJIpWnWa9s6caghvcQ29tq2bFjRppFVbLBVNWX3Xomr+nlB7qzyv3H+2NuoDhJrGem2c88Tc7OH3+KFshPVl8M+PnwRmytt1T7vrFfvnKoN0l/x9q/CI8eqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757015155; c=relaxed/simple;
-	bh=hzWQ+NZvkCjPqaF5rQWuE+BV3WjbZDFdOwhEuuB25rY=;
+	s=arc-20240116; t=1757015860; c=relaxed/simple;
+	bh=AkQDfljW56aeK9hFyEplI/9Ee67wMd+uq6QJcRF62eo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O2hEWDx5jTE6+JnVX3fEMGFDhVt6vU9tI2ru8cjLxKppwRE+2KuLucdA7iZ0IjhgAjxpjeZYmMeK2J462QPQIVBeGFTLZoOvvzcEb11otvzxX1U6hHF6ZtQStJMkZD3ZYCup2+Yk9/tEDPe9nkSycFKWk7ENHww8LHTbSKZmekk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=U6SvjqDu; arc=none smtp.client-ip=209.85.208.170
+	 To:Cc:Content-Type; b=AA1Sqk5+uW482JP66HUXAbgYkDCAiyj6dxV65H07zW9t7YYUupg8pGWj0Sbv0n9MQVkm7QNoQbddCl0JobvcfXIYHGUjI+dHnFht2wcGudTroyrx1o/e2oB/3zVA8HsNh7g7hIPL709yrlIpyfjgS83o7TJ3XY8iyR/n6y4tvX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Iv+32+pl; arc=none smtp.client-ip=209.85.167.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-336b0b3d753so15067781fa.1
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Sep 2025 12:45:53 -0700 (PDT)
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-55f68d7a98aso1498168e87.3
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Sep 2025 12:57:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757015152; x=1757619952; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1757015857; x=1757620657; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hzWQ+NZvkCjPqaF5rQWuE+BV3WjbZDFdOwhEuuB25rY=;
-        b=U6SvjqDug2r3Bh3E+xqa4ahbWya/SCsScNAUzYXo7STgzFY7SGDUVbJeGEwcP9uyLy
-         yh7VoojAACI/g0vl6OpsjytJ5BJAu5Ve91rGKNEecJJ3DGeO6U9I1zjeOIfTFY1tKYaT
-         E/HE1uZUECFVPxtHclhCgxXxMAeO3Qwo7HLVWP2mqXoP7IGdhPjzUybgKFLlwX1bRHXJ
-         MlceJUyuQB974GiA7zwJ4xLi60HKG0XUtRSR7nJNSw4aTwBonuH3jGNcei/MxVfp9G2p
-         y8C85NKksNxhBFDNgHw1AopZssg+8dZDHABoj12Qs3jMsiU3XnYi5lKVuzC7iyxEfIXh
-         3gHw==
+        bh=6kwPz46AfjWSljE81nGPsJRjk/PBKufX3IFU3DIxO20=;
+        b=Iv+32+pl+RF/5u9CXQ2H/5eyAmAkycT/gu4sr+1dppOQN7ClaN1+UkvsAo99TDI91J
+         JZTVbf1mcgBfbJyKlqFd/ymeo2YWyWes8minSpK/VUiXqtkViDeOzo2lbrRAE5bQek52
+         q7j1d2+8Ch3M7w8baGcVVxySNOnd3S8w3zQ1FKgO/1yjTjh5HXjnSgWETLcT72Gu/vjb
+         ffs9gc7cT4wIel3sXqOYcTnic/NCW8dGMWJ7sHdrnzLj4QQ/LSUXF7Rmr0UlikLNkxeq
+         gW2jIybvjzI3HKgnIZedva/HORa3f5dytWHHplPHe20DUd1v5W8Uzb2HzpDXsUZFSytk
+         aCsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757015152; x=1757619952;
+        d=1e100.net; s=20230601; t=1757015857; x=1757620657;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hzWQ+NZvkCjPqaF5rQWuE+BV3WjbZDFdOwhEuuB25rY=;
-        b=RGAQUPfW8R+JJYrNJ6WS+K5+nNCcDaH9fIqx0WnY84atK8CGjd8qZOIz4qXlVEf734
-         Y6Ujssv7sIQ3k7Cufk+CkaOK2lruJEa4rIKg1vr19P+jbZX2IktHWfPYSc3YKLQm6St/
-         OyfFS2ySoNoHrjbeWK5V5qk31CDCwmsMxzpvRJchvZ6KukFMsZarlsctcY+SS3t+15Tq
-         pLG3s6H8t/+vonbuMAdjc6Th0BYU3A6acSnCceNHW9e0RN7iO3LEhnVJxB0jcb95cQQR
-         fShmKoVk1g7hHKgymCaNDKVD4J+L3wvU9M1zEH1iWBiYmV70v8Hy2g+QNOImkFDaOCm/
-         eV2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCURqULaxu5ZS1lFNEH/xZdFXEMUggONulNzGKpmwBkQDAbWNWMQhyfFSEzFcZQJa7xRmfSxuhAmXAOW@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3MGnnYsfDwnSSRkuVhOjX53MJforYUybheQW70guqePK9nhLK
-	/eFt6qeDWBGCpXO/TOqUZoE1N2NIOF+TYObT67q0MBq1zCrlTg6vD65Mug6mxh2HuWOreU8bFch
-	p3jx3j3hjx+LF3RVKfAN96oAEaxGPgM4okI7ujTrw6w==
-X-Gm-Gg: ASbGnct/D07nMsGP12BOMZCcOGv316sjm0mQ21UdssTxVxspurw5jFrCvmwWAoeYmJu
-	Zk+YV9UZ+u9PcNL/i2MkNHONp2OWeTFxLc/hSoJjTta2/NudLXMh+VY95jeiVpaOxt3wFC1iP2t
-	QIj7ezJVQWC3ncPkgdLx/GQJ+iCJg62jBz6f3Lxp1hHcIC797LIyTPbEA5lXwGP83rwpvwq5Hzb
-	pd15/QNaLdr/aeH7w==
-X-Google-Smtp-Source: AGHT+IHyOco31RUv2Oe9cKuPvD0Htgm4IoRC25q2CFRrREw8Wo2WlCc9mBvTU1sMDJcN9tENLMEe0p4jJKwMHOJBxZ8=
-X-Received: by 2002:a2e:a54c:0:b0:337:e460:bef6 with SMTP id
- 38308e7fff4ca-337e460c680mr43543631fa.10.1757015152027; Thu, 04 Sep 2025
- 12:45:52 -0700 (PDT)
+        bh=6kwPz46AfjWSljE81nGPsJRjk/PBKufX3IFU3DIxO20=;
+        b=WixM7XYej8/3jqUW1yV+ecdCD48WYgDd/YW/H4yz1C96Aum6BREIb4bM2hThqJzPdX
+         y2JiLXGtPkHXiuSFglaPgjPFoDiXcSBzBd/O7dpyr2d5PP+cN5dqQs9R1wGf2Kod/rP2
+         ALioqAejOIX9AOhIqqoe/nWrCmGlBz8oIcBnW6BQVvt3+noTldTjqXM6j7K3qff0gZZa
+         06UjBUVjrfDhthoXZs5AdUMtD8OZ7X5rvPOBUf32Ogi5MIWxm+hWkMyVQKTSQbJmUULi
+         ZYZZiBW6zvCvdZ5q1Wq+2dVACTww9uVAi6mwcB9IP4NiXXq1EVELBz/gr6Qzugc8Cs1B
+         Uu6A==
+X-Forwarded-Encrypted: i=1; AJvYcCWDgg3/141MqIxpD2UGNC3p3SDmjFQ3/YUB/py8Sm24TNE97KhNzKh3RCuMZJNYsvPx74svZ1LfQQXr@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxrRfkxG5Xj9+b6kl+vY5okbpw5d/T1/Dm3eieUBX/yXM3CcS0
+	0j0r/Cb7niPonC9H2Oh74L3Zr9jZficlfjm6U/BHOZM68eENH9kQUMVZUqnUdePB63Qn3wIW9qv
+	EmiAqcf8jH6VAPtacKfvZBbzStX1jUyhOX/8/jdZhdA==
+X-Gm-Gg: ASbGncu0QoJCxh+BryygWxEpfCVdLsou0bx62Nc14KoaGvpVkilq7m/AVs44mV5ouFu
+	UiXeGiZaWEz8D329/JSwiCrubtk5V9xIVbkhRZ9dlU4CaLoTYoJ2nJfq/VlKeU8hSkwbSrOIf5p
+	K7uxmXNtHVCFp8Nc6qhl4MCvC6EJ1DBj0xcCtlmGD6HX61mkF8mDO5jIFm3X2TlIbdU89jn5h+9
+	SO1qiE=
+X-Google-Smtp-Source: AGHT+IGSNGuoZa0tGd2MuceeY+rWx4+fE98zKz5kXJNG5SS9yafrJ2IfBrrLXPyBqms3qzMRhIcBxsxK/c607/IOLes=
+X-Received: by 2002:a2e:a4d8:0:b0:32c:abf4:d76a with SMTP id
+ 38308e7fff4ca-336caf58af5mr43186631fa.38.1757015856723; Thu, 04 Sep 2025
+ 12:57:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250904013438.2405-1-ziyao@disroot.org> <20250904013438.2405-2-ziyao@disroot.org>
-In-Reply-To: <20250904013438.2405-2-ziyao@disroot.org>
+References: <20250903-ltc4283-support-v2-0-6bce091510bf@analog.com> <20250903-ltc4283-support-v2-3-6bce091510bf@analog.com>
+In-Reply-To: <20250903-ltc4283-support-v2-3-6bce091510bf@analog.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 4 Sep 2025 21:45:40 +0200
-X-Gm-Features: Ac12FXx4X2_pNhzcdcYEzziDJRvtowb7CpE7cKPonDOwSax6LARZw_4oRio8qGA
-Message-ID: <CACRpkdZfruCqEzN-sMtxidh_e7JM1e_LG3JKaQ3ahkDAnx59Cg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: gpio: loongson: Document GPIO
- controller of LS2K0300 SoC
-To: Yao Zi <ziyao@disroot.org>
-Cc: Yinbo Zhu <zhuyinbo@loongson.cn>, Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+Date: Thu, 4 Sep 2025 21:57:25 +0200
+X-Gm-Features: Ac12FXySP_jPTakETmSTujg6AZkgjLE-3L81eBmgyMtwcrvqz9e4_hK7r8cr0mE
+Message-ID: <CACRpkdbgcCjZbZ2HtrNO7vK1HXzrwxkrNFCzqGguq=ckKg3cFQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] gpio: gpio-ltc4283: Add support for the LTC4283
+ Swap Controller
+To: nuno.sa@analog.com
+Cc: linux-hwmon@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-doc@vger.kernel.org, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>, 
-	Kexy Biscuit <kexybiscuit@aosc.io>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Huacai Chen <chenhuacai@loongson.cn>
+	Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 4, 2025 at 3:35=E2=80=AFAM Yao Zi <ziyao@disroot.org> wrote:
+Hi Nuno,
 
-> Loongson-2K0300 ships a GPIO controller whose input/output control logic
-> is similar to previous generation of SoCs. Additionally, it acts as an
-> interrupt-controller supporting both level and edge interrupts and has a
-> distinct reset signal.
->
-> Describe its compatible in devicetree. We enlarge the maximum value of
-> ngpios to 128, since the controller technically supports at most 128
-> pins, although only 106 are routed out of the package. Properties for
-> interrupt-controllers and resets are introduced and limited as LS2K0300
-> only.
->
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+thanks for your patch!
 
-Looks good:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On Wed, Sep 3, 2025 at 12:04=E2=80=AFPM Nuno S=C3=A1 via B4 Relay
+<devnull+nuno.sa.analog.com@kernel.org> wrote:
+
+> From: Nuno S=C3=A1 <nuno.sa@analog.com>
+>
+> The LTC4283 device has up to 8 pins that can be configured as GPIOs.
+>
+> Note that PGIO pins are not set as GPIOs by default so if they are
+> configured to be used as GPIOs we need to make sure to initialize them
+> to a sane default. They are set as inputs by default.
+>
+> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+
+(...)
+
+> +config GPIO_LTC4283
+> +       tristate "Analog Devices LTC4283 GPIO support"
+> +       depends on SENSORS_LTC4283
+
+Could that be
+depends on REGMAP && (SENSOR_LTC4283 || COMPILE_TEST)
+?
+
+Or does something blow up if you do that? (I guess it also needs
+AUXBUS but more on that below)
+
+should it also be
+
+default SENSOR_LTC4283
+
+Sof if that is compiled in (=3Dy) or module (=3Dm) then this becomes
+the same by default?
+
+> +       help
+> +         If you say yes here you want the GPIO function available in Ana=
+log
+> +         Devices LTC4283 Negative Voltage Hot Swap Controller.
+> +
+> +         This driver can also be built as a module. If so, the module wi=
+ll
+> +         be called gpio-ltc4283.
+> +
+>  config GPIO_MB86S7X
+
+This is placed among the memory-mapped drivers, but:
+
+> +#include <linux/auxiliary_bus.h>
+(...)
+> +static struct auxiliary_driver ltc4283_gpio_driver =3D {
+> +       .probe =3D ltc4283_gpio_probe,
+> +       .id_table =3D ltc4283_aux_id_table,
+> +};
+> +module_auxiliary_driver(ltc4283_gpio_driver);
+
+Create a new submenu for auxiliary bus drivers and add it
+there. We already have a submenu for MFD so why not?
+
+menu "AUXBUS GPIO expanders"
+  depends on AUXILIARY_BUS
+...
+
+Have you looked into using GPIO_REGMAP?
+I guess some specials are used here so maybe it is
+not possible.
 
 Yours,
 Linus Walleij
