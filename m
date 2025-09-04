@@ -1,160 +1,92 @@
-Return-Path: <linux-gpio+bounces-25572-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25575-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5861B43874
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 12:19:20 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38F8BB438F9
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 12:39:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5184A1C81B44
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 10:19:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B8BB87A8EBE
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 10:37:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31BAF2FF661;
-	Thu,  4 Sep 2025 10:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NbZV1EL9"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5558E2F0693;
+	Thu,  4 Sep 2025 10:39:13 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38D12FC88C;
-	Thu,  4 Sep 2025 10:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848477081F;
+	Thu,  4 Sep 2025 10:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756981030; cv=none; b=QuYLj6rb/0OeAmhWEeIVPq7U6VAOSRGBdnXI1PbKSkZdgXQHgCxs2Wcefu5Ubk4M8ZmjknThX7bHBIYGkxayrVbX0RqAVV064viJ/gcUMns8Mwo2YudgDyEA1Pob5ZPWK3BhDKxo1Kxjx/ZVTNM37SJG4/2JoHi0J5NAf8DgPQ0=
+	t=1756982353; cv=none; b=XLAHsnIbxMD5tlXXS4oItlCWPqvbBioDEWsVdl5Z3CJW6OlaWUpCar7747mzLEq74C/gGwR5QmaWNxUWTDugoSebSV2O6EK5HNNngKKwyyaALeanEccjZM4xGLHcbTR8qTD0sCBPij76VneaYyD8klRga4ttaSn98Pcu0qPUKOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756981030; c=relaxed/simple;
-	bh=duLXcxHxnqA9I6Kn+bFKpUPkSdYijVdBFHayt4D5GN8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K9z5Ivaf9mBHwR1SS+B4RSFzEEMFIHJ4Polu6/kaPQ4nfP4qgT6D+hELL9os+2yzd4Puf94Z5uBVGDmlgkCBLcSVB9zX4XakLntnNMQThnph61VEskoR/MEzDDfuS1TJLUPhA6MtAeK+w+F6CiIqT9Gf4krS/NJnETQLexaaP6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NbZV1EL9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7785DC4CEF1;
-	Thu,  4 Sep 2025 10:17:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756981030;
-	bh=duLXcxHxnqA9I6Kn+bFKpUPkSdYijVdBFHayt4D5GN8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NbZV1EL9biqhu+pH/c9KXyw0mkZ6P//zxZ4SeeqcfTNtHJrozOl/nQfjnBF55nlZ8
-	 O+dll3UN/fXrLTIn6pxoSsdAjurfENPU8URzR4osQGFAc+HleTBJKahk0KgLMpedRF
-	 4wQbC1wVUj01/3BSctg6FEYOWSHEzuCOsux7hWTXT+s6R1oXPIWvHP7hZcgtWcmsNH
-	 nZ4qnYh/9iMk1JRAUlVH6MCNmhGoshJQgAqQoY1VV4XplYCfgaQr1y7n9A4SRY29/j
-	 bynuvOI8eJlpB0UzKtzYvz+xwBjKidDkG/79XfNyvhvGYIp7xenvVysZkY6xrOjuQG
-	 qfEjnAuVbE6EQ==
-Date: Thu, 4 Sep 2025 11:17:05 +0100
-From: Lee Jones <lee@kernel.org>
-To: Marcos Del Sol Vives <marcos@orca.pet>
-Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Michael Walle <mwalle@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] mfd: vortex: implement new driver for Vortex
- southbridges
-Message-ID: <20250904101705.GH2764654@google.com>
-References: <20250822135816.739582-1-marcos@orca.pet>
- <20250822135816.739582-4-marcos@orca.pet>
- <20250902151828.GU2163762@google.com>
- <45b84c38-4046-4fb0-89af-6a2cc4de99cf@orca.pet>
- <20250903072117.GY2163762@google.com>
- <1d4352b6-c27e-4946-be36-87765f3fb7c3@orca.pet>
- <20250903140115.GC2764654@google.com>
- <b11dcd50-a87e-47ff-b406-776e432f07bd@orca.pet>
+	s=arc-20240116; t=1756982353; c=relaxed/simple;
+	bh=m9KZifQbl2hwXaQWg/lWRnYIPXZP38z0b5trFu3qDSg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eglRS7BHAu8MyS6T8sQlTYdvbd4abPMMTzOGJVUG0LankJ/DOgeKY31nFuoGWRAsOxbf1UbQDtyjvhFa9yQ3ff7qHSnzgEh268xywIzC7g/8I1wJialCdgAFSJn1xdAviLjWsg3y5TmhB67ID9CMIVxSo1jVpwC9gxHp+pdoWbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 4 Sep
+ 2025 18:34:01 +0800
+Received: from twmbx02.aspeed.com (192.168.10.13) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Thu, 4 Sep 2025 18:34:01 +0800
+From: Billy Tsai <billy_tsai@aspeedtech.com>
+To: <lee@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <joel@jms.id.au>, <andrew@codeconstruct.com.au>,
+	<linus.walleij@linaro.org>, <brgl@bgdev.pl>, <billy_tsai@aspeedtech.com>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+	<openbmc@lists.ozlabs.org>, <linux-gpio@vger.kernel.org>,
+	<BMC-SW@aspeedtech.com>
+Subject: [PATCH v2 0/4] Add pinctrl support for AST2700 SoC
+Date: Thu, 4 Sep 2025 18:33:57 +0800
+Message-ID: <20250904103401.88287-1-billy_tsai@aspeedtech.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b11dcd50-a87e-47ff-b406-776e432f07bd@orca.pet>
+Content-Type: text/plain
 
-On Wed, 03 Sep 2025, Marcos Del Sol Vives wrote:
+Document and add the pinctrl driver for AST2700 SoC.
 
-> El 03/09/2025 a las 16:01, Lee Jones escribió:
-> >> patch series and thus make it a proper MFD (at the cost of delaying
-> >> even further the GPIO inclusion), or keep the struct mfd_cell array
-> >> as a single-element array and implement the watchdog later on another
-> >> merge request, using that very same array.
-> >>
-> >> I am however not okay with wasting my time rewriting that to bypass
-> >> the MFD API for this, so I can waste even more time later
-> >> implementing again the MFD API, just because linguistically
-> >> one (right now) is technically not "multi".
-> > 
-> > I don't get this.  If you implement the WDT now, you will be "multi", so
-> > what are you protesting against?
-> 
-> That GPIO is something required to perform the poweroff sequence, a must
-> for any machine, while WDT is just a "nice to have".
-> 
-> Implementing now the WDT just because of a linguistic preference means
-> delaying something more important in favour of a "nice to have".
+Changes since v1:
+- Update pinctrl aspeed binding files.
+- Update the commit message for pinctrl binding patch.
 
-You use the word "delaying" here.  What's the rush?
+Billy Tsai (4):
+  dt-bindings: mfd: aspeed,ast2x00-scu: Support ast2700 pinctrl
+  dt-bindings: pinctrl: aspeed: Add support for AST27xx
+  pinctrl: aspeed: Add AST2700 pinmux support
+  arm64: dts: add AST27xx pinctrl configuration nodes
 
-If you only need a GPIO driver, then you don't need the MFD part.
-
-> >> That seems very unreasonable, specially when it wouldn't be a first
-> >> since at least these other devices are also using MFD with a single
-> >> device:
-> >>
-> >>   - 88pm80
-> > 
-> > % grep name drivers/mfd/88pm800.c
-> > 	.name = "88pm80x-rtc",
-> > 	.name = "88pm80x-onkey",
-> > 	.name = "88pm80x-regulator",
-> > 	.name = "88pm800",
-> 
-> If you open the file, you'll see it uses five single-element arrays.
-
-Which is fine.
-
-> >>   - 88pm805
-> > 
-> > % grep name drivers/mfd/88pm805.c       
-> > 	.name = "88pm80x-codec",
-> > 	.name = "88pm805",
-> > 
-> 
-> Same as above.
-> 
-> >>   - at91-usart
-> > 
-> > % grep NAME drivers/mfd/at91-usart.c
-> > 	MFD_CELL_NAME("at91_usart_spi");
-> > 	MFD_CELL_NAME("atmel_usart_serial");
-> 
-> Has two single-element arrays. It registers one or the other, never both
-> (just like my patch does!)
-
-Fair point.
-
-I guess this is more of a selector than a true concurrent MFD.
-
-> >>   - stw481x
-> > 
-> > * Copyright (C) 2013 ST-Ericsson SA
-> > 
-> >>   - vx855
-> > 
-> > * Copyright (C) 2009 VIA Technologies, Inc.
-> > 
-> >>   - wm8400
-> > 
-> > * Copyright 2008 Wolfson Microelectronics PLC.
-> > 
-> 
-> To my knowledge the definition of "multi" has not been changed
-> since any of those years.
-
-If they were submitted during my tenure, it is likely that they would
-not have been accepted.  Besides, past mistakes is no excuse for making
-them in the present.
+ .../bindings/mfd/aspeed,ast2x00-scu.yaml      |    2 +
+ .../pinctrl/aspeed,ast2700-soc0-pinctrl.yaml  |  115 +
+ .../pinctrl/aspeed,ast2700-soc1-pinctrl.yaml  |  435 +++
+ .../boot/dts/aspeed/aspeed-g7-pinctrl.dtsi    | 1359 +++++++++
+ drivers/pinctrl/aspeed/Kconfig                |    8 +
+ drivers/pinctrl/aspeed/Makefile               |    1 +
+ .../pinctrl/aspeed/pinctrl-aspeed-g7-soc0.c   |  503 ++++
+ .../pinctrl/aspeed/pinctrl-aspeed-g7-soc1.c   | 2523 +++++++++++++++++
+ drivers/pinctrl/aspeed/pinctrl-aspeed.c       |   47 +
+ drivers/pinctrl/aspeed/pinctrl-aspeed.h       |   11 +-
+ drivers/pinctrl/aspeed/pinmux-aspeed.h        |   35 +-
+ 11 files changed, 5034 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2700-soc0-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2700-soc1-pinctrl.yaml
+ create mode 100644 arch/arm64/boot/dts/aspeed/aspeed-g7-pinctrl.dtsi
+ create mode 100644 drivers/pinctrl/aspeed/pinctrl-aspeed-g7-soc0.c
+ create mode 100644 drivers/pinctrl/aspeed/pinctrl-aspeed-g7-soc1.c
 
 -- 
-Lee Jones [李琼斯]
+2.25.1
+
 
