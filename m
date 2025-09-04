@@ -1,215 +1,119 @@
-Return-Path: <linux-gpio+bounces-25548-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25550-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A762FB42D81
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 01:39:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E87B5B42EE1
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 03:35:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 69536169FC1
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Sep 2025 23:39:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 126233B1ABB
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 01:35:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 980332EA479;
-	Wed,  3 Sep 2025 23:39:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BC071DC9B3;
+	Thu,  4 Sep 2025 01:35:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QnYIXalS"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="IEj1Q5BS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C97E24677D
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Sep 2025 23:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80B71DFCB;
+	Thu,  4 Sep 2025 01:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756942746; cv=none; b=Oyp5fKBDd0z2GhEiSSWCrkZsQ9ximbPm41O80JJM8ocWl1HvzvBKFJ7iA4MkUpDjGDPL7hksQBg9vTRxDfh6RnrExVErLIc5uULQymwbDAs4zVsoG5qJnE0paLUAaeY6MrmGg0TEHBtMvFK/kmjW3nGN18tLDo4odNZeb9kq6c0=
+	t=1756949713; cv=none; b=NYhkSvfCPzzImcqCXol3Oc3e7CW6qrnPmWxIVLhGaD1ltkITD7qaOk0bp0CE6bg8ceFX2sQwCUQjltIHli65S2z8seikA/hV6xSlcYwbtesvkAaldvAQDIpmqGzBK9QzQBntMOQ8dKQEHe+T13R1vP6KqG2iIMIDBBdq5hnsshw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756942746; c=relaxed/simple;
-	bh=eDwpOxBar/RIznTot4ld83U1QQMbfmegBgpwrSEutgE=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=sIrt/umW4SMh+iAkboTdNo2MBq/QT9aWs7uE8CMVnb75yHscy6sBp2v18m8ecWn5TOpFCtAUcjwSkl8Va2EDdof9VJy/UDsjbfVwc00w9p64x4BSI/HqB9fiXz4KrqUGkuUE48ReX2fKTAmghmkNUUhjDCsbShZvzIyizO3Eojc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QnYIXalS; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756942744; x=1788478744;
-  h=date:from:to:cc:subject:message-id;
-  bh=eDwpOxBar/RIznTot4ld83U1QQMbfmegBgpwrSEutgE=;
-  b=QnYIXalSjMFD+N+utFwC1nGiobDDwSuGza5/2+VPiha4/MvXaA8NY+a7
-   4VRf5avggq33S6gmX85rg/luVISIpKekyHyI7vBivrPdVn5DUpWkyStBJ
-   IqXRwzz+amiwvyAv6z2lnIPC2jXP88/XOuu1o44gl5QXFOVra7C6WKGk1
-   zGXJy0lnIsTBAE4QN3V7bY0A1HiWBlmouJoslE2se/ybTKl9NVyeLHakQ
-   xyfoxTCQSD1E5kBjIlL5Hjtr94dcY5+HL7+7nbBbIwFaoBgS6kWlX4ZnF
-   /CTUGCICb/i4YqqZdtRFb0Bo0tmnPFvx34zRGupFuO99A8UroNgIN3Ikh
-   g==;
-X-CSE-ConnectionGUID: lC7TKrG/Sgin2y0dF4H5oA==
-X-CSE-MsgGUID: 5cFDTfgrQC2bTSpknRjOyA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11542"; a="61906625"
-X-IronPort-AV: E=Sophos;i="6.18,236,1751266800"; 
-   d="scan'208";a="61906625"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2025 16:39:04 -0700
-X-CSE-ConnectionGUID: FTUlFLgzQFipSa5RzDcElQ==
-X-CSE-MsgGUID: sQBRO8B6QjCqk0IY2SKShw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,236,1751266800"; 
-   d="scan'208";a="172560382"
-Received: from lkp-server02.sh.intel.com (HELO 06ba48ef64e9) ([10.239.97.151])
-  by fmviesa010.fm.intel.com with ESMTP; 03 Sep 2025 16:39:03 -0700
-Received: from kbuild by 06ba48ef64e9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1utx3V-0004Wd-1w;
-	Wed, 03 Sep 2025 23:38:38 +0000
-Date: Thu, 04 Sep 2025 07:34:42 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 57810fd8312bcbef7cb5f38f7ab0d1703f26e9c4
-Message-ID: <202509040728.SDVp61YP-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1756949713; c=relaxed/simple;
+	bh=rK7UvUnvod158lPYL4vusiZ8if3giwXepEt7gycPh1Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Idh7KLNCh2r0KCGBmFXi1OZJUeHpOsuaHWI1MN4QgTPJfUpoz7H2k5+b0hGvfr6bwvRb/+jJ2jRP+rxQSygBn34gACGbo4rKy3JALEcCZ9Xz+tyulJ28NeEpejNAfDZDoO02jEZ5vHmomvF8065jeilApcLPAR+JT/RPyy61ZfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=IEj1Q5BS; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 91BF825D3B;
+	Thu,  4 Sep 2025 03:35:02 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id c0C6HC74cgYU; Thu,  4 Sep 2025 03:35:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1756949701; bh=rK7UvUnvod158lPYL4vusiZ8if3giwXepEt7gycPh1Q=;
+	h=From:To:Cc:Subject:Date;
+	b=IEj1Q5BSXsa2ONfQS4DsgxI96IdyTugFe3QSzh4wrmtgV+QwZh4mUz4rbFDarvOMX
+	 RDbGDG6fZH0ro52ZdHsnDPoYYYEGrQK5sXXr/byTPMLq5Jko+smAUJcv3xL689A3mI
+	 PxmtXtuhvioFpqzzI1xNsJAKtvwiiXqg8qSCCg+MKmfWpQuWJ56Tw2vdTeJ8TILrQI
+	 3w6DpNsAOP1ve2TPhhQ2nBDMaEHFEqZFfd4SKAPmPZseOWhEg4592Uf8m6whpMfco8
+	 1+v0U8sQhN96dIDH+pqYbmbFybO/5KuWYZcpO8vq0vbxKFijJl63wpfhJzL4friJWy
+	 QTkN1JENLQ3XA==
+From: Yao Zi <ziyao@disroot.org>
+To: Yinbo Zhu <zhuyinbo@loongson.cn>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Mingcong Bai <jeffbai@aosc.io>,
+	Kexy Biscuit <kexybiscuit@aosc.io>,
+	Yao Zi <ziyao@disroot.org>
+Subject: [PATCH v3 0/3] Support GPIO controller of Loongson-2K0300 SoC
+Date: Thu,  4 Sep 2025 01:34:35 +0000
+Message-ID: <20250904013438.2405-1-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 57810fd8312bcbef7cb5f38f7ab0d1703f26e9c4  pinctrl: qcom: make the pinmuxing strict
+This series adds support for Loongson-2K0300's GPIO controller. While
+being mostly identical to previous implementation, its interrupt
+functionality hasn't been implemented in gpio-loongson-64bit.c. PATCH 2
+implements its interrupt support with an IRQCHIP, and the code could be
+reused for other Loongson SoCs with similar interrupt functionality like
+LS2K1500 and LS2K2000.
 
-elapsed time: 1476m
+Tested on CTCISZ Forever Pi, reading/writing GPIOs works correctly, and
+both level and edge interrupts could be triggered.
 
-configs tested: 122
-configs skipped: 3
+The devicetree patch depends on series "Support reset controller of
+Loongson 2K0300 SoC"[1] for a clean apply. Thanks for your time and
+review.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Changed from v2:
+- Adjust SoC naming style
+- Fold some multi-line calls to dev_err_probe() in the driver into a
+  single line
+- Collect review tags
+- Link to v2: https://lore.kernel.org/all/20250901133804.38433-1-ziyao@disroot.org/
+Changed from v1:
+- Rebase on top of gpio/for-next, adapt changes that convert
+  gpio-loongson-64bit.c to use generic gpiochip.
+- Collect review tags
+- Link to v1: https://lore.kernel.org/all/20250816035027.11727-2-ziyao@disroot.org/
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                     haps_hs_smp_defconfig    gcc-15.1.0
-arc                   randconfig-001-20250903    gcc-15.1.0
-arc                   randconfig-002-20250903    gcc-8.5.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.1.0
-arm                         assabet_defconfig    clang-18
-arm                   randconfig-001-20250903    clang-22
-arm                   randconfig-002-20250903    clang-16
-arm                   randconfig-003-20250903    clang-22
-arm                   randconfig-004-20250903    clang-22
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20250903    gcc-8.5.0
-arm64                 randconfig-002-20250903    gcc-11.5.0
-arm64                 randconfig-003-20250903    clang-22
-arm64                 randconfig-004-20250903    clang-22
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20250903    gcc-9.5.0
-csky                  randconfig-002-20250903    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon               randconfig-001-20250903    clang-22
-hexagon               randconfig-002-20250903    clang-18
-i386                              allnoconfig    gcc-13
-i386                             allyesconfig    gcc-13
-i386        buildonly-randconfig-001-20250903    gcc-12
-i386        buildonly-randconfig-002-20250903    gcc-12
-i386        buildonly-randconfig-003-20250903    clang-20
-i386        buildonly-randconfig-004-20250903    clang-20
-i386        buildonly-randconfig-005-20250903    clang-20
-i386        buildonly-randconfig-006-20250903    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch             randconfig-001-20250903    gcc-15.1.0
-loongarch             randconfig-002-20250903    clang-22
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                       bvme6000_defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                        bcm47xx_defconfig    clang-18
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20250903    gcc-10.5.0
-nios2                 randconfig-002-20250903    gcc-10.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-openrisc                    or1ksim_defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250903    gcc-13.4.0
-parisc                randconfig-002-20250903    gcc-15.1.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-22
-powerpc               randconfig-001-20250903    gcc-8.5.0
-powerpc               randconfig-002-20250903    gcc-8.5.0
-powerpc               randconfig-003-20250903    gcc-14.3.0
-powerpc                     sequoia_defconfig    clang-17
-powerpc                     tqm8548_defconfig    clang-22
-powerpc64             randconfig-001-20250903    clang-22
-powerpc64             randconfig-002-20250903    clang-22
-powerpc64             randconfig-003-20250903    clang-22
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20250903    gcc-8.5.0
-riscv                 randconfig-002-20250903    gcc-9.5.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                  randconfig-001-20250903    gcc-8.5.0
-s390                  randconfig-002-20250903    clang-22
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20250903    gcc-12.5.0
-sh                    randconfig-002-20250903    gcc-10.5.0
-sh                             shx3_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250903    gcc-11.5.0
-sparc                 randconfig-002-20250903    gcc-15.1.0
-sparc64               randconfig-001-20250903    gcc-8.5.0
-sparc64               randconfig-002-20250903    gcc-11.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-13
-um                    randconfig-001-20250903    gcc-12
-um                    randconfig-002-20250903    clang-18
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250903    clang-20
-x86_64      buildonly-randconfig-002-20250903    clang-20
-x86_64      buildonly-randconfig-003-20250903    clang-20
-x86_64      buildonly-randconfig-004-20250903    gcc-12
-x86_64      buildonly-randconfig-005-20250903    clang-20
-x86_64      buildonly-randconfig-006-20250903    gcc-13
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250903    gcc-11.5.0
-xtensa                randconfig-002-20250903    gcc-14.3.0
+[1]: https://lore.kernel.org/all/20250816033327.11359-2-ziyao@disroot.org/
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Yao Zi (3):
+  dt-bindings: gpio: loongson: Document GPIO controller of LS2K0300 SoC
+  gpio: loongson-64bit: Add support for Loongson-2K0300 SoC
+  LoongArch: dts: Add GPIO controller for Loongson-2K0300
+
+ .../bindings/gpio/loongson,ls-gpio.yaml       |  28 ++-
+ arch/loongarch/boot/dts/loongson-2k0300.dtsi  |  20 ++
+ drivers/gpio/Kconfig                          |   1 +
+ drivers/gpio/gpio-loongson-64bit.c            | 189 +++++++++++++++++-
+ 4 files changed, 230 insertions(+), 8 deletions(-)
+
+-- 
+2.50.1
+
 
