@@ -1,262 +1,185 @@
-Return-Path: <linux-gpio+bounces-25589-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25590-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D233B43C79
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 15:04:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9E0DB43CA5
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 15:09:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2023F188FBF3
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 13:05:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 273E43A791E
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 13:09:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70CC12FF168;
-	Thu,  4 Sep 2025 13:04:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D8AB2FFDCF;
+	Thu,  4 Sep 2025 13:09:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HDrr0wXA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MaPreMtL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5966D2FDC28;
-	Thu,  4 Sep 2025 13:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5A72F5333;
+	Thu,  4 Sep 2025 13:09:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756991081; cv=none; b=eHREFQmj+VDZWYc8pT7EN1sves8OsgqifhFxr28g2LUFwFmfTbGXRIhKq54QxFOkgjJQAqg7n3NGH1mnSDoW6k/p/LDg7EM8x7+hsxU5KpTxcy9ZAjli9cTQQlBB/t56qktr/USFiiT6jGVs30rrtL5FcVvrJt+umgBOYxxHCI0=
+	t=1756991368; cv=none; b=ZHLI5wm5vkHH/Xf5oKzl/lvqwU/vJj9j2BxipyXolZ4M0iFPuheIRkQ3iw6hpdP6PzZANQUCWNic1vBnrmowIdjoLdceMbJipBTwFOlLghb3sXlfqB/WXJRh/+l0XzkI3l++gvPeaIZb4kafJgXrntXGVK2Z49/SBp3ek2FCmQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756991081; c=relaxed/simple;
-	bh=UDIZnclyMgk6mq7yGflC4fULp9pmEgo18qUYO+/ashU=;
+	s=arc-20240116; t=1756991368; c=relaxed/simple;
+	bh=CEkGmN+eH+9br4VN/3hyHqhPwZ4rUpjB9RWfPNGjp+Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ewPWHcV2KVXKNS3VvDZ0OYELOk1rVME3WSAADipQbyeNULgduExHLriTBAtuGkP4+AL+oTnuNrTOU97W3KdBKmop8lZMQc3CW9kmGrrWWjHhlnEY2YbkWA03KkxhrEQLLbQ718yXTq6Kpu0WT6VdGW5xc9z7W6RVfYXX+dg+bnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HDrr0wXA; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756991080; x=1788527080;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=UDIZnclyMgk6mq7yGflC4fULp9pmEgo18qUYO+/ashU=;
-  b=HDrr0wXAIwTZ+VPD00GBVSjedDDDeDVZo3RaU645Qt9cUqtD/LmNZmj/
-   ItYWbY6EsT8HB0IWntwAMV7p4ZW/0Sjp6yjH8c9nSxqbOMkE9Y5SBzJvc
-   nUZLdtN8+Bnc6+/+1jSt/8UNHBM7GNzJyQmfqYtFqiBOEVjKuQ2P/xLZq
-   BvOqLXYwtxAmnO4nqnFtwZEc/oMXj6AJ1H+qO0RIpXvUofZpUZ4O+HahJ
-   4Nm6j6uBY4eLJMezDS27Q3PJQtVnKieR1NkCGc9l5s+BxFTKr253MJJii
-   ZtgOQL8YSnUWYNYLzOdqm3EBKcG8uWi8DdwKaZymv5wa/KzhtplkBtgJ5
-   g==;
-X-CSE-ConnectionGUID: EPLiZUNmTnqieG/bzCQrwQ==
-X-CSE-MsgGUID: qr1whVLSRamsFDkp7mV8RQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11542"; a="69943082"
-X-IronPort-AV: E=Sophos;i="6.18,238,1751266800"; 
-   d="scan'208";a="69943082"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2025 06:04:39 -0700
-X-CSE-ConnectionGUID: 2S4+ZtsRR8aSbK7GKaPtfA==
-X-CSE-MsgGUID: t7KJxasoQVqtWk1dFi/icw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,238,1751266800"; 
-   d="scan'208";a="177152150"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2025 06:04:33 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uu9dd-0000000BH0N-1vDs;
-	Thu, 04 Sep 2025 16:04:29 +0300
-Date: Thu, 4 Sep 2025 16:04:29 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Marcelo Schmitt <marcelo.schmitt@analog.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Tobias Sperling <tobias.sperling@softing.com>,
-	Antoniu Miclaus <antoniu.miclaus@analog.com>,
-	Trevor Gamblin <tgamblin@baylibre.com>,
-	Esteban Blanc <eblanc@baylibre.com>,
-	Ramona Alexandra Nechita <ramona.nechita@analog.com>,
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
-	Hans de Goede <hansg@kernel.org>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 2/3] iio: adc: Support ROHM BD79112 ADC/GPIO
-Message-ID: <aLmOXTcUjw7cj9OK@smile.fi.intel.com>
-References: <cover.1756813980.git.mazziesaccount@gmail.com>
- <08929460fe11dd0b749c50a72a634423f13f4104.1756813980.git.mazziesaccount@gmail.com>
- <aLb8HuIG0XXLu653@smile.fi.intel.com>
- <00ee1968-a471-4d2b-a024-4bee00e40513@gmail.com>
- <aLglJoqBDap_eMIj@smile.fi.intel.com>
- <10c6b0c4-d75f-494c-bb3c-883c06cf3bc2@gmail.com>
- <CAHp75Ve4vgU5kK3z3bZyGqDOPVkMbW7RUd6_EA3jjZSeruWs=Q@mail.gmail.com>
- <43141a95-2267-44de-bd7e-11eb8c80090e@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=j0ESVm3s96bCfTEDaCliIa3mLTjE3ugWujhoLha8yRFw59RPjcoPuzxVOp2qUiJzH7RCwILZwwQ94jm6hY5lgegtVmzj8JiR2NwzKQEqwCJj7LuDKxGl/l2xF2Q3LJTe219/GlPArHv0eWqmN9JDPgA+LodBys88UkLMMP9+dMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MaPreMtL; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3cf991e8bb8so727410f8f.2;
+        Thu, 04 Sep 2025 06:09:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756991364; x=1757596164; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6hnoEkRgYt1VB/BhJ9Gz7UNyqHPo14C0inEKe2HRcF0=;
+        b=MaPreMtLXj7qMFOHg2FaRTLvJfaCNRXK11j6SueS6o/8aRDit6G5HZ77pFguFTPsLp
+         N0WsHmvnYu8nUXJQub7UfhihE3GfeLggOMMz0UXE3y0YOIaI5adISvpQhJvfI2sUwKol
+         QiouEjj6XPRVagZLwxkfHclUoArWoI/kUC272eQInrGkebLsdCyY9Nkx2b4eW7GuamPX
+         MHw0FDJmFbTTLBHltpbHmUqmQBGcdV0+rIw514fUSIr15ZCB8966BxjV84RQ6V2tnqOo
+         K8UfwPF/zF6MjBrRHfmSATmHoy4Oz/66WrE17XhW7r1AssY3Tz7DzjRfW830sytNLmpa
+         Piyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756991364; x=1757596164;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6hnoEkRgYt1VB/BhJ9Gz7UNyqHPo14C0inEKe2HRcF0=;
+        b=H8trZ27S5UifutmlbBSKgCLja9eh/D5wDSW+PHlwkPlvnqnQ0qZdGXh9ScJwA7eDSQ
+         PbHpkc8yypgeSsI+L9Eep7FEucDFOdj8O9JvejvFuGEmjwnCc3i/1px68yC4YLtByaV8
+         0u5Xf2eeLyWrEMAs4ox0m4NQ2BXoXGgb40KXzzvjwEBx8F/IJkQebh/JiT84TS+PeVzK
+         8zi4QAfvPsvHTinznULD+78KbhK6UmT7erfBeSIxtCPQXAHLUqPynLBuO0tPpMbCIToD
+         zg0OLVAeWWl8ZqsaPdjqijVcw1aSuMQgdZflHkjiC7iL+QaBAczc+7aztdipbCfRFfaK
+         9g6A==
+X-Forwarded-Encrypted: i=1; AJvYcCVC2yrv0wocWK5PxB647wSH1Wr0Bchd6j69GbQTPFzA7n8el2Wg3SBc1LSB/XTKvQKltkwi3UUS0WoKig==@vger.kernel.org, AJvYcCVu+t6g3IPul8E9rljhja3g13KkXqjyTyM7TdyEG3+RLkhFMsodU6X7vY/W27zTKYcMYG+732GbNPW1oxuh@vger.kernel.org, AJvYcCXAQgjgVCROxfi8fFFsyd8DyXlhI44Qm/fxp9hkD8aGvgmlaprfrBlKmdfq/kwjnSyjOQ5G8+qBtHFG0B0=@vger.kernel.org, AJvYcCXNLOufWSfbmlNa0nkd4or6YlZ2PXSxQjjymPA+KfnfYlvZ1lqDtmFqfVRHRLX2yWBP7SLQFMprJdEU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxh9r2MUv3PCjg0RXcbzUVszJZUnPyLfub/8zpPeudhy/FDyfHu
+	uKFjLY2uyHqk7RIn8cxxnzAqr8QZPAcjKx4YAh6KjOWvME/qLf6Pn6/y
+X-Gm-Gg: ASbGncssAKaA9rdTEWhuGPfxp7OY/nmtoyL/rlnowWvBTbrpQYoXYS3TWoFPSOQfVPZ
+	pU8dDMjrqlFu00U73WrbyzJrKY87nlIbFJ0SBQ++GtDejKe0GnuUswmQHHmWxEWryQdxseGqQ31
+	H897DK4KjuWmSmVMdcHt1E7llSqrR8dput9gESxWnoBz16EEyhqvXLVktWn6IC1uMmpHwNLJpEz
+	1212fLCFEn61t25qHUzJN8Q1uPoGZCgi16xPzF+LANZ20T4pR+rSh+teTySziB/UPVBgBPi7Ysp
+	T/edszeysw4HoYtz20GeO+imOCilYzJuIAeWg4FPKDgEWGIQAygdx4Ezk5Ik1/IQR1Ca66lnMaD
+	KiE5R1X1ya4G2wcxeYx3K3t7MxHp6rhxbfWsBqR9Kv+TZheY5nXtz9+upiFxrpjXT6hcnJOJW6+
+	t34ro3RZeIxhkHlcIdb9c=
+X-Google-Smtp-Source: AGHT+IFWMN7swaLNK+wnZQ+3fREEzQC21iZytwCjaGlZNL1G853b7yiEMxqpjuXMqzSm3k04KQ7Neg==
+X-Received: by 2002:a05:6000:1ac8:b0:3d1:9202:9e with SMTP id ffacd0b85a97d-3d1de4bb305mr16267989f8f.36.1756991364377;
+        Thu, 04 Sep 2025 06:09:24 -0700 (PDT)
+Received: from orome (p200300e41f1c4d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:4d00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3deb99d10a0sm6155456f8f.37.2025.09.04.06.09.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Sep 2025 06:09:23 -0700 (PDT)
+Date: Thu, 4 Sep 2025 15:09:21 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Aaron Kling <webgeek1234@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] pinctrl: tegra: Add Tegra186 pinmux driver
+Message-ID: <czukh3b6lb7x3uwn2khcgzrkccyveokdpksxban7arhod6ygh3@uukoulmn5gil>
+References: <20250812-tegra186-pinctrl-v3-0-115714eeecb1@gmail.com>
+ <CACRpkdb=U=h5OguMuy9G6avCCN6Aem=2_60C+_uBsrY+UvD5ng@mail.gmail.com>
+ <CALHNRZ-dRvaN_SyHRfAsq2MO-ec8rzkeCy6CtJpYdWTobf1-Wg@mail.gmail.com>
+ <CACRpkdb46OwzNQuSp0+QQVjy2LojMyhdE7XrNwdsyqGi5okASw@mail.gmail.com>
+ <CALHNRZ_+Oh2AGZTvJ66EjBEKEf7PdQsMM_BTNNnjENJpbOKiog@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="y3cbsqasrarpcn4l"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <43141a95-2267-44de-bd7e-11eb8c80090e@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
-
-On Thu, Sep 04, 2025 at 03:35:36PM +0300, Matti Vaittinen wrote:
-> On 03/09/2025 16:29, Andy Shevchenko wrote:
-> > On Wed, Sep 3, 2025 at 3:14 PM Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-> > > On 03/09/2025 14:23, Andy Shevchenko wrote:
-> > > > On Wed, Sep 03, 2025 at 09:52:02AM +0300, Matti Vaittinen wrote:
-> > > > > On 02/09/2025 17:15, Andy Shevchenko wrote:
-> > > > > > On Tue, Sep 02, 2025 at 03:24:31PM +0300, Matti Vaittinen wrote:
-
-...
-
-> > > > > > > +  data->vref_mv = ret / 1000;
-> > > > > > 
-> > > > > > (MICRO / MILLI)
-> > > > > 
-> > > > > I find this much more confusing than plain 1000. (I know we had this type of
-> > > > > discussion before. See [1] again).
-> > > > 
-> > > > Rings a bell, but that's what IIO reviewers suggest to do nowadays as a
-> > > > compromise between creating a new bunch of unit (V) related definitions.
-> > > 
-> > > I am sorry, but this just seems stupid to me. I'd say that it is very
-> > > obvious for most of the readers dividing microvolts by 1000 results
-> > > millivolts. And if it is not, then having this MICRO / MILLI is likely
-> > > to just cause more confusion.
-> > 
-> > No, it tells that we have a value in microSOMETHING that is converted
-> > to MILLIsomething.
-> 
-> No. I disagree. This tells that 'ret' from the regulator API is divided by
-> some unknown value, which is a result of division of two odd defines.
-> Especially odd because one would intuitively think MICRO is smaller than
-> MILLI. You need to look up the definitions to understand WTF is really going
-> on. I think this is plain terrible.
-> 
-> The fact that we store value in vref_mv should be enough of hint that idea
-> is to have value in millivolts. Dividing by 1000 before assigning makes it
-> 100% clear the ret is in microvolts even if you didn't know the regulator
-> API to return micro volts.
-
-"Dividing by 1000... makes 100% clear...". I disagree on this. It's not clear
-and 1000 needs to be counted (it's harder to read, than reader needs to think
-what mv and not mV (!) means) and so on. For bare minimum make it mV to
-understand the semantics.
-
-So, since it's one of the principal disagreements between us on this particular
-issue, I leave it other reviewers and maintainers.
-
-> > > I _really_ dislike these defines. Why is MILLI 1000? Why it isn't 0.001?
-> > 
-> > You know exactly a few reasons why it's not.
-> > 
-> > > It makes no sense that KILO and MILLI are the same. Especially not when
-> > > we are dealing with physics.
-> > 
-> > Yes, this is the limitation of computers and particularly of _a_ kernel.
-> 
-> No. In my opinion, this is an example of, hopefully unintentional,
-> obfuscation where blindly following some paradigm like 'avoid plain numbers
-> and always use named defines' just results things getting worse. That
-> combined with bad naming. If KILO is 1000, then MILLI can't be 1000. That's
-> 1 per milli.
-
-You have a point, send a patch!
-
-> And still, the original "mv = uv / 1000" is superior in clarity. Using
-> (MICRO / MILLI) there to avoid plain number is just a sign of blindly and
-> religiously following some 'golden rule', even when it results worse code.
-
-No, it's not.
-
-> > > This is just an obfuscation compared to using plain 1000. (I kind of
-> > > understand having a define for a value like 100000 - where counting the
-> > > zeros gets cumbersome, although 100 * 1000 would be equally clear. But
-> > > 1000 _is_ really 100% clear, whereas MICRO / MILLI is not).
-> > 
-> > See above why this way.
-> 
-> I see no real justification to degrade this - other than "because I say so".
-
-You may (mis)interpret this, up to you.
-
-> Sorry but that's not really a good reason to me.
-
-OK.
-
-...
-
-> > > > > > > +  gpio_pins = bd79112_get_gpio_pins(iio_dev->channels,
-> > > > > > > +                                    iio_dev->num_channels);
-> > > > > > 
-> > > > > > > +
-> > > > > > 
-> > > > > > Instead of leaving this rather unneeded blank line I would move above...
-> > > > > > 
-> > > > > > > +  /* We're done if all channels are reserved for ADC. */
-> > > > > > 
-> > > > > > ...to be here
-> > > > > > 
-> > > > > >      gpio_pins = bd79112_get_gpio_pins(iio_dev->channels,
-> > > > > >                                        iio_dev->num_channels);
-> > > > > 
-> > > > > I suppose you mean something like:
-> > > > > 
-> > > > > register_gpios:
-> > > > >       /* We're done if all channels are reserved for ADC. */
-> > > > >       gpio_pins = bd79112_get_gpio_pins(iio_dev->channels,
-> > > > >                                             iio_dev->num_channels);
-> > > > >       if (!gpio_pins)
-> > > > >               return 0;
-> > > > > 
-> > > > > right?
-> > > > 
-> > > > Yes.
-> > > > 
-> > > > > I don't like this because now the comment suggests we do call
-> > > > > bd79112_get_gpio_pins() only to see if all channels were for ADCs. This,
-> > > > > however, is not THE reason for this call, only an optimization. I think:
-> > > > > having:
-> > > > > 
-> > > > >           /* We're done if all channels are reserved for ADC. */
-> > > > 
-> > > > Then you can amend the comment
-> > > > 
-> > > >            /* If all channels are reserved for ADC, we are done. */
-> > > > 
-> > > > >           if (!gpio_pins)
-> > > > >                   return 0;
-> > > > > 
-> > > > > is clearer.
-> > > > 
-> > > > Which makes my approach sustainable.
-> > > 
-> > > I like your wording better, but placing this comment before the call to
-> > > bd79112_get_gpio_pins() is still more confusing that placing it before
-> > > the actual check:
-> > >          if (!gpio_pins)
-> > > is still misleading. Comment applies to the check, not the retrieval.
-> > 
-> > The variable assignment, or i.o.w. the source of the value we are
-> > testing is also part of the equation.
-> 
-> The comment explains why the check, not why the value is obtained.
-
-Yes, but value is not taken from out-of-nowhere. It belongs to that check.
-
--- 
-With Best Regards,
-Andy Shevchenko
+In-Reply-To: <CALHNRZ_+Oh2AGZTvJ66EjBEKEf7PdQsMM_BTNNnjENJpbOKiog@mail.gmail.com>
 
 
+--y3cbsqasrarpcn4l
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 0/3] pinctrl: tegra: Add Tegra186 pinmux driver
+MIME-Version: 1.0
+
+On Wed, Sep 03, 2025 at 12:58:06PM -0500, Aaron Kling wrote:
+> On Wed, Sep 3, 2025 at 1:55=E2=80=AFAM Linus Walleij <linus.walleij@linar=
+o.org> wrote:
+> >
+> > On Wed, Sep 3, 2025 at 6:54=E2=80=AFAM Aaron Kling <webgeek1234@gmail.c=
+om> wrote:
+> > > On Tue, Aug 19, 2025 at 6:30=E2=80=AFAM Linus Walleij <linus.walleij@=
+linaro.org> wrote:
+> > > >
+> > > > On Tue, Aug 12, 2025 at 11:24=E2=80=AFPM Aaron Kling via B4 Relay
+> > > > <devnull+webgeek1234.gmail.com@kernel.org> wrote:
+> > > >
+> > > > > This series adds support for Tegra186 pin control, based on a dow=
+nstream
+> > > > > driver, updated to match the existing Tegra194 driver.
+> > > > >
+> > > > > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> > > > (...)
+> > > > > Aaron Kling (3):
+> > > > >       dt-bindings: pinctrl: Document Tegra186 pin controllers
+> > > > >       pinctrl: tegra: Add Tegra186 pinmux driver
+> > > >
+> > > > These two applied to the pin control git tree.
+> > >
+> > > On patch 3, Mikko noted that I accidentally amended the formatting
+> > > changes intended for patch 2 into patch 3. Linus, since you've already
+> > > picked this up to your tree, is it too late to fix this properly in a
+> > > new revision? It doesn't appear to have made it to the main tree yet.
+> > > Or do I need to send in a fixup?
+> >
+> > It's one of the first drivers I merged with plenty of other stuff on top
+> > so I can't amend it, just send a fixup based on my "devel" branch
+> > (or linux-next, it should work too).
+>=20
+> I am highly confused now. When I went to make the fixup series, the
+> fixup didn't apply. Looking at next-20250903 [0], pinctrl-tegra186.c
+> looks like I wanted it to, the base commit has all the format fixes.
+> Which doesn't match the commit on this series. Which leads me to a
+> couple questions:
+>=20
+> 1) Does anyone know what happened? I'm not particularly a fan of not
+> knowing why something happened, even if it's beneficial at the time.
+
+Maybe auto-formatting or something else that Linus did?
+
+> 2) What should I do with the dt commit now? Ask the Tegra subsystem
+> maintainer to do a manual fixup when pulling? Even without a manual
+> fixup, the bad part of the commit would fall out when getting applied
+> on top of next.
+
+I can drop the extra hunks when applying, no need to do anything.
+
+Thierry
+
+--y3cbsqasrarpcn4l
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmi5j30ACgkQ3SOs138+
+s6Gx3BAAsVp4U/76YecvVcNkWzqZG1qR/e//wbvhrVA4MPWnA0vtDgUClKCKNax4
+cZwaV+CrRL1bYCjmwlS0hJipu13+iAQyKd6wdessvKUs6SIyN7SM/E4bg6n6Bnq5
+IhcbJpyYEk40j+PKriLSN3PF08lKiqiPKjLfU8OSBo62KzeUEJhwXlJF55FzARbt
+xxjSbjzs5Act7IVFijefweHsoL29OaNDmr+e1qVpRLjqoV5U2CNJ+fNjrB3s7qwq
+CBODSlw2swfF2d9Z8D7WkxHFSvNLihThfgSxO2aaQpDrePznr2emsVr3esjiNma8
+4hckBxmrJgntGjRxrPq0P+/ycxXE5i55F6pCtnw0jlBgy1zZ9nTHlOBDem6KBMUa
+YVamLfRPNM12hXA+iZRaib6R8i6N5vUplcc8B11zU39dVpkHMPPixJHerdTZaZD6
+chiZArTYQ9HCutLwzcGuXEinZZeG15qpHIA/CW98MXV9rd/gBm62JT0g8aUjXBHm
+Ogu1AeTL3wEDgN+ffMdLd5Xs/dKR2d6/1G7i4fiyklmiTU6Hi+TQEDYKpE0xyJsG
+UpIq2N+mWsxH2rbcHyc3ixMc09tJGiStLqVS4pPPzRexUW5BB7PPh+O8nwCUoFgA
++ZTVZgEjKcMcoefLWvDnEuDMLHM4NWtZSKT4u6dequPkfEgauY8=
+=743D
+-----END PGP SIGNATURE-----
+
+--y3cbsqasrarpcn4l--
 
