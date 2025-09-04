@@ -1,112 +1,154 @@
-Return-Path: <linux-gpio+bounces-25636-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25637-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B123B449A2
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 00:29:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E64DAB449F8
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 00:52:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 07F92481EB0
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 22:28:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 873EC17F512
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Sep 2025 22:52:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 784902EAD19;
-	Thu,  4 Sep 2025 22:28:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE1BD2F5463;
+	Thu,  4 Sep 2025 22:52:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="e0ZRpMNR";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="Y0gx2hsF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="roBVwgBQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0EFB28C5B8;
-	Thu,  4 Sep 2025 22:28:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADCD2F069E;
+	Thu,  4 Sep 2025 22:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757024911; cv=none; b=L0pYGJA4VuBY8vPh0OnsatqUDhGxdPYDHt7sAFXmHu6NQp1qS1O0oWk3jv2MBhLRjH8OHw3XQVen9pmL9p53PFtWur7eUQvrf/5tvnmyZa1v2a4nvEuxYDESWa747xzuGw+XTP9GkNZAt9RcozIcDSxEfMrVSAzQrdcsIVSnKWg=
+	t=1757026344; cv=none; b=HwnpQdFMa6uwdnByciT+z5gj5LRtMI29EK+I4Co0bymv6byeg24B7SrraC92Od8vitgVNpZK0nH7wxvrPK9Pt0DrBCMqG6PubtatQFr7nwZ0nrUfYmGu1XKtqytCWorz4zdLUmPGu4ab3VxeDdHhMEjNDTLyfe7dDveTyJxuRq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757024911; c=relaxed/simple;
-	bh=VxaipZE/W9XDe7UN0GNULCEQrSK6FRSQCfMldl/qMCU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XPkUn4FdX2/14Oo3FQIAD2UFQynJjrmTCyF71VaI1teGrpyERBCDZb84EeE+djcLmdlK0ndzmPOJYEUB8hKsZP7sVi2N9WyGY1VT2OIAv8N9AQ0r2MNxN32bMQaZ5x6A0JE/DyfLtZHNUgnftgxDQ+MH6vvzDLNey13g5XBF1dE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=e0ZRpMNR; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=Y0gx2hsF; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4cHvJP30QXz9tVN;
-	Fri,  5 Sep 2025 00:28:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1757024901;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=JCfZDqOW3xYUnS4qfRX3DC2JgwtDWIhIkGDWmHc2PpA=;
-	b=e0ZRpMNRQGLryewqCpS/3+JvA4D/B76+kiY62TbaQSEtIdzxeLh2h+L8AxGfXWGDRLjWmF
-	G89G8/IurSpsEWUpnRNDuUDgrGyQeNyutJ/IQcgm8EYqkV9IEstP8W3PzEyeETAmxndt/s
-	fjZ20uwJuLRLd8xTagw/wwl9JBo69/yUZbTI+xq7+oaUyqWDk4X40AObNsmJT+cQ5oszO7
-	K96EMAUhJtaU0Ihdqp9gmrScU63ksE8a3qP3dS7mN7d9EdgOxonAVJL64PUA0mscddinMd
-	sADb6Kv28ucvA1Q+9+9begb2RB2FrES3V/ykve6eaB9wzem2pQef6vONbrgVoA==
-From: Marek Vasut <marek.vasut+renesas@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1757024899;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=JCfZDqOW3xYUnS4qfRX3DC2JgwtDWIhIkGDWmHc2PpA=;
-	b=Y0gx2hsFq+4s/uYCQxW/jpI5/1KPUQbGGRMcfJwvzmywREFGxImjit8pGMVyPJPOBc2wYv
-	DzUgx0acsiLf48xZWHcy84RGx5DJutoT/YCIa3H4/FqAbh9oHzOI1cS/HKx8xeBMBTA0Fb
-	6RNCIc3FdVqzwFtCUQeHG4gFNeRXbEv82+XqGb1G/pLt05aquC9gBY5dhMuK/Q+pJMp6Vy
-	dY8pYlZQ547oAhcQD2HGX/U8achT67f8tL9hjx14m2N7CQR5213tRgosKzKrzaCcgyESaQ
-	glzYmR/4V9QyQqmVllMnlEZ+8mDiKr/SLD0A7dGeURqy9uOozvHWfJojwEsZuA==
-To: linux-arm-kernel@lists.infradead.org
-Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org
-Subject: [PATCH] pinctrl: renesas: r8a779g0: Fix trivial typo in SoC type comment
-Date: Fri,  5 Sep 2025 00:27:44 +0200
-Message-ID: <20250904222806.193260-1-marek.vasut+renesas@mailbox.org>
+	s=arc-20240116; t=1757026344; c=relaxed/simple;
+	bh=2MViS1nqSpyNjI/P7K/k2Spz+R3IZ3I4vxgoMymb5Uo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ifBDuZ7HlphKbl5jCsc8FsUSMkx8CAk/E3X2KkU4Y3Vcsl2TWBQIG26gKvd0wz11CLF2tWlM/0+D0pA3qBgqONiSTf4z/0KiHxX2URaEyGUYelac4kp2lBsXZdLVkBys/L7FsYM0rJ8QWk7xbQJlvcJqxFRbXwsqQhs/3wkUnlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=roBVwgBQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38DDFC4CEF0;
+	Thu,  4 Sep 2025 22:52:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757026343;
+	bh=2MViS1nqSpyNjI/P7K/k2Spz+R3IZ3I4vxgoMymb5Uo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=roBVwgBQdHjRYDAC6Yyl8gcjTa1sebepK19RtdZM5Kr+BJYNj5zWJeB02etY8KIyI
+	 b+RcIMOwSoGmpxXqnXcfjEYxksz+RXpt+pf2VjEB1VgJcIRHBceav+UIWYbNx2fE3K
+	 7+WEHceX9Cz41lRwl8VloRIumOdI4m0IKDa6VphbPJDeULrt3x0bJuAUukQ6/WKuL0
+	 REQt3WpNlSm3UUve2h7bV157b/yJ+NQBKzl9CGFniIjjyb7AShIWGiI11Zck6rcSys
+	 VyQI9wmTi+B2BLN4VmdvCQSrI8EEXTLBevvUrwyGOOOrG/WVf+G3vDakrZ7qQCvomP
+	 m3ZuahDyWvLeg==
+Date: Fri, 5 Sep 2025 00:52:20 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Janne Grunau <j@jannau.net>
+Cc: Sven Peter <sven@kernel.org>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+	Neal Gompa <neal@gompa.dev>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Hector Martin <marcan@marcan.st>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Mark Kettenis <kettenis@openbsd.org>, Jassi Brar <jassisinghbrar@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Sasha Finkelstein <fnkl.kernel@gmail.com>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, van Spriel <arend@broadcom.com>, Lee Jones <lee@kernel.org>, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
+	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Michael Turquette <mturquette@baylibre.com>, Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>, 
+	Vinod Koul <vkoul@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, asahi@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, iommu@lists.linux.dev, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-bluetooth@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+	linux-clk@vger.kernel.org, dmaengine@vger.kernel.org, linux-sound@vger.kernel.org, 
+	linux-spi@vger.kernel.org, linux-nvme@lists.infradead.org
+Subject: Re: [PATCH 10/37] dt-bindings: i2c: apple,i2c: Add apple,t6020-i2c
+ compatible
+Message-ID: <f5o23zrqe2ei3bmwlxokhtkgfpeki6ctoq3ahd4f66utfu5hdk@6q55hvy4hvq4>
+References: <20250828-dt-apple-t6020-v1-0-507ba4c4b98e@jannau.net>
+ <20250828-dt-apple-t6020-v1-10-507ba4c4b98e@jannau.net>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-MBO-RS-META: mfes1j688q8wf3wu6ec8ger8k67kyhis
-X-MBO-RS-ID: 139fc08f7d3b6ce8f2e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250828-dt-apple-t6020-v1-10-507ba4c4b98e@jannau.net>
 
-Fix SoC type comment in the PFC table file, replace R8A779A0
-likely copy-paste error with R8A779G0. No functional change.
+Hi Janne,
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
----
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org
----
- drivers/pinctrl/renesas/pfc-r8a779g0.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, Aug 28, 2025 at 04:01:29PM +0200, Janne Grunau wrote:
+> After discussion with the devicetree maintainers we agreed to not extend
+> lists with the generic compatible "apple,i2c" anymore [1]. Use
+> "apple,t8103-i2c" as fallback compatible as it is the SoC the driver
+> and bindings were written for.
+> 
+> This block is compatible with t8103, so just add the new per-SoC
+> compatible using apple,t8103-i2c as base.
+> 
+> [1]: https://lore.kernel.org/asahi/12ab93b7-1fc2-4ce0-926e-c8141cfe81bf@kernel.org/
+> 
+> Signed-off-by: Janne Grunau <j@jannau.net>
 
-diff --git a/drivers/pinctrl/renesas/pfc-r8a779g0.c b/drivers/pinctrl/renesas/pfc-r8a779g0.c
-index cae3e65534997..218c5eff9b67f 100644
---- a/drivers/pinctrl/renesas/pfc-r8a779g0.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a779g0.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * R8A779A0 processor support - PFC hardware block.
-+ * R8A779G0 processor support - PFC hardware block.
-  *
-  * Copyright (C) 2021 Renesas Electronics Corp.
-  *
--- 
-2.50.1
+Acked-by: Andi Shyti <andi.shyti@kernel.org>
 
+Andi
+
+> ---
+>  .../devicetree/bindings/i2c/apple,i2c.yaml         | 27 +++++++++++++---------
+>  1 file changed, 16 insertions(+), 11 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/apple,i2c.yaml b/Documentation/devicetree/bindings/i2c/apple,i2c.yaml
+> index fed3e1b8c43f67b8f5a19e5c1e046b0e17ab8017..500a965bdb7a84e4997b52e8c19dcc1a7ee0cff7 100644
+> --- a/Documentation/devicetree/bindings/i2c/apple,i2c.yaml
+> +++ b/Documentation/devicetree/bindings/i2c/apple,i2c.yaml
+> @@ -20,17 +20,22 @@ allOf:
+>  
+>  properties:
+>    compatible:
+> -    items:
+> -      - enum:
+> -          - apple,s5l8960x-i2c
+> -          - apple,t7000-i2c
+> -          - apple,s8000-i2c
+> -          - apple,t8010-i2c
+> -          - apple,t8015-i2c
+> -          - apple,t8103-i2c
+> -          - apple,t8112-i2c
+> -          - apple,t6000-i2c
+> -      - const: apple,i2c
+> +    oneOf:
+> +      - items:
+> +          - const: apple,t6020-i2c
+> +          - const: apple,t8103-i2c
+> +      - items:
+> +          - enum:
+> +              # Do not add additional SoC to this list.
+> +              - apple,s5l8960x-i2c
+> +              - apple,t7000-i2c
+> +              - apple,s8000-i2c
+> +              - apple,t8010-i2c
+> +              - apple,t8015-i2c
+> +              - apple,t8103-i2c
+> +              - apple,t8112-i2c
+> +              - apple,t6000-i2c
+> +          - const: apple,i2c
+>  
+>    reg:
+>      maxItems: 1
+> 
+> -- 
+> 2.51.0
+> 
 
