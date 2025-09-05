@@ -1,135 +1,167 @@
-Return-Path: <linux-gpio+bounces-25671-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25672-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33876B457FE
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 14:41:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C60C7B4583A
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 14:53:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D84C67C8519
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 12:40:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6687F1C28524
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 12:54:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB58E34DCD2;
-	Fri,  5 Sep 2025 12:40:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20681350835;
+	Fri,  5 Sep 2025 12:53:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Yrk2MU6b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YphyGiUh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE1A32C301
-	for <linux-gpio@vger.kernel.org>; Fri,  5 Sep 2025 12:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DDE38DDB;
+	Fri,  5 Sep 2025 12:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757076054; cv=none; b=UCpKjR1dRP17UuKfu3hRiAxWgTg3QOwt+/mAvt3qkpKuqz+gB/WP/4rnKdXB6PTlr48T/7PtUF2NJ8fV35y+ruYjHfrq12dF0zBDKBTIEf+9uT36/vAgG5GztEG4hPyCgzY8Uq0EmpFoDXfl0OcXusL5C2W46BVHKMOhOy5p0wE=
+	t=1757076831; cv=none; b=qYq7jJxT857o4fA5ePp/lzJmqy1qGjpgxdk8w/00ZnjXcfzUWZqyv84DujG8NTUR/zrtiaPW40Pw2LgEudYTnqEpx5RMaKVJFtXgQvzbLulsO7+sFhO6KKrJIYFnkqHABu9BqxzVYehyqfN2ZXXeUcfPEorIinyO5I8zaArYebs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757076054; c=relaxed/simple;
-	bh=RCvW+v+WM4Nm5wMAGPraUo2CrUGI6VSVlbDrWsaLXAY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ptZzUygdh7ck3h4lp1o5gziEy5bOe5gDGWAEYIeaGGFP49eeQvLU+Uf8OAP3ptWy3CQZN7lG9qGLl9PYyGgY3RhslBzKBd01m1yVqdlEuYklPhW58/9b4DynvY5zxq1oFF0zHGFLy0O/mwVgUGxSNHKVDCfxxtOaQJf+EDWEbUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Yrk2MU6b; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58574E8g008089
-	for <linux-gpio@vger.kernel.org>; Fri, 5 Sep 2025 12:40:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	RCvW+v+WM4Nm5wMAGPraUo2CrUGI6VSVlbDrWsaLXAY=; b=Yrk2MU6biv7gcNOl
-	dkOKktv5V14eoWw9FdK0pOkhfEqLFuX7WIcDIU9fjNeKTcKAHgIb3eGLRYIY+a5x
-	foIbnY+zxbT6ldQesjFPyIftRKGfafC9eW+Ym5t1gUJleQNreJ0Q+6862MnJUYdN
-	u/V01tJOrqBEFUE4N0SQMRiJawdklu14kIHgPe/Ui5A1BU5l2qo3U7bjp7BzXek/
-	u0sPinUXpmUEPW9KvkMJ4w/P8rh3ks3OeARDuDhonAmMKcWGE0MuIv0ith7lXIfl
-	E1XKzFJStNLQ8YWDFFmkZmfj5dvy2HbfAdEX0cELQ0/fIwNQ5RGgqJmjGQhj0llQ
-	8NdvxQ==
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 48urmju3cg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Fri, 05 Sep 2025 12:40:51 +0000 (GMT)
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4b4bcb1e32dso9596961cf.1
-        for <linux-gpio@vger.kernel.org>; Fri, 05 Sep 2025 05:40:51 -0700 (PDT)
+	s=arc-20240116; t=1757076831; c=relaxed/simple;
+	bh=5ckxlBqChHNEt0/61pFY3yAoEfx3s3PCFryFHohgRR0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Pn9ITIVUVIh357xFPdsupq9EQYVvfeMX5bMqvSKbZBSzuZyAC2nATq1lskW8ODotXezEJIQoiT4V5/Q6KTZWb4cpKox6cSMIjT77I1FKyuF7UeZAyHF91T0oRz4qmlnLAUShSV28gPWtEQ6Rg4ncOo4WkuOuWcCn7hHLpxM/bc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YphyGiUh; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b0415e03e25so306875066b.0;
+        Fri, 05 Sep 2025 05:53:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757076829; x=1757681629; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T33stcPp6bK9hL8nH81dnT87IxHmxbJraeRaG/h8CM0=;
+        b=YphyGiUhgigsdRDm36BD5rWIC3hM4UwvtuKDz6/mYohYs6x7v2u1xBvOf4GZFDEb6X
+         7PJzgVyZ0Ix+4ID0BJO7iQ8+TIBst9uny2qCE2hrd6eYZFeJRDcVUHlR4EMOdN7TuyxF
+         FBMgw55fsdKnrD16ylUg4fZS5TvtLJt66Gv2HTftuiT7s6sgi63khvs9dFZ+QVHm8z8i
+         rDBBYxk5UfjeUkViDGzEw9q88bcLFVZKgVw2Qe3+WUafpFgHYUC+VGa9zrK4hHFPWkQ7
+         hzPq0AkueN6IoIjh/XNFczGPP/C24c9d4nSzmfAV84Mw5tV1Dd/dolWVyhPQYC+uaSS+
+         pgFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757076051; x=1757680851;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RCvW+v+WM4Nm5wMAGPraUo2CrUGI6VSVlbDrWsaLXAY=;
-        b=LfMzMV+BGpnMwbiXD/cow3jwx+SVA0h3XlWqaDMJ9AyFBnvhaQB2EAvVVuQEj5OJq+
-         lOCwrc0a3aInxaNImUpYznczKaLtMPpMZ2ru8BykKBam6FP+IYjep1EZap2BYchQKLzU
-         IeGoOSXM4UXwKR0JgemHqJvctBZ4CK3qM3dgNmbp5jnZY/yEGPfjDREzrP2birmqE3a9
-         hrc5/1sCo8hreLo+5Q9ebHRMbd1D64v3Miu9Ew45a6lMDhke+RTMVlhLFAPMP9w3DIGm
-         P6zS6Mk9UcTK7zsSPtJCSIZIAyAgj/8Hut1xV40ZN9/xQzoMqKGvMPZz0+fRALmtmq+a
-         hHMg==
-X-Forwarded-Encrypted: i=1; AJvYcCW9hw4mhrctdnR9v1hjhEQNjARSbAciZk1Sxv9qDly+sGN5soWR7wjhV3Njfro8Rzxglk0ROdajmvG9@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyve4Vmn4UClboTqbXvB4dQ3MPYzoee3Y6Xs1s/FBVB4k3TKOCW
-	g4duL8c+O/IkXI5NFVWyqnKCVvWJkGV20rt7og2Idklxn+r32N8j+QwV9EwdjdvKEjJANdhdJni
-	infw0WPK8Zqbayqe7XKzmh6UP3ctTliUuX5I6lxs7aZPzcLZ2y+cjCRAzSd0/KorT
-X-Gm-Gg: ASbGncs/pqC+Q3fu2GqdpMNGA+E6F6jHgju4vd8lKYvVT3CaxEHhDHAl39UoRfshags
-	1X4yUgUcnG4BYzavJQXC1sqyPMPhVqph2AyrEU7mm36Q0+kFldWE/Nxgno8obX0rinhQs6mUq0q
-	ZfY98DxPsC5lsKZneVYWqS97Bfh2KlBQ0CswCBhLtHUqp8np7r5iEsmOY/IDhKAYcKwEIxmga0Z
-	MeYQvjPoBGrNSFN2tJbuw0O4yAkp/mfp+4FfLwX/snJImCOc4MYSCbZN/mlNLP3asfB8U6AZHve
-	BMxQZlZvlyHaLWNrLJrgjeo+6E/M7RFo1owXfnL0O2i2GQ3/2gIE4ln2ODLCzvk3Vkyg1fpD3SQ
-	xE/tuF/HRsCqPU+ogzGSaUg==
-X-Received: by 2002:ac8:5a48:0:b0:4b5:eeb8:9dbd with SMTP id d75a77b69052e-4b5eeb8a299mr9780831cf.5.1757076050551;
-        Fri, 05 Sep 2025 05:40:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGhwQd/eQ/Fwu0ttahhKY21yFepGgyDfwsgnKKPIe1LttWQUPiyRGUF7MyOygLic0H9YbExGg==
-X-Received: by 2002:ac8:5a48:0:b0:4b5:eeb8:9dbd with SMTP id d75a77b69052e-4b5eeb8a299mr9780531cf.5.1757076050011;
-        Fri, 05 Sep 2025 05:40:50 -0700 (PDT)
-Received: from [192.168.149.223] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-61cfc1c7a27sm16591905a12.10.2025.09.05.05.40.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Sep 2025 05:40:49 -0700 (PDT)
-Message-ID: <daa84fc7-b191-470a-933a-b41b8713d1d6@oss.qualcomm.com>
-Date: Fri, 5 Sep 2025 14:40:47 +0200
+        d=1e100.net; s=20230601; t=1757076829; x=1757681629;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=T33stcPp6bK9hL8nH81dnT87IxHmxbJraeRaG/h8CM0=;
+        b=w2tjjAur0afurwYkdUk/LzaQ41D4ZhqDgTgNmweCeJHCzYF6iB/OlkXiX1Qw9ezB+m
+         yPWMj1ZIrMHqkdq2o9X2/YrlSKsZfZItFfRekOtIuKRC7wTjeadmGgH5DntcYbgNrN46
+         P081S1/ZsipfTLy8Kbyj1dMbSVHVZ022XwG2zu244DtjRILnW1zvv7vUM5rwhlbtQT57
+         GO3PgN5XKTkonVpDs0pxPLVrp0vrQ2sBG+g3qdOsX9W0+kG7DPPPXUw+YBCKxHBXqOUE
+         YvgroQc7CCZWrna3xk2snfKOuGXpDsNaXkmVUVSnV2mUU/kpJ798Yh+QRVb4ve2mZLAS
+         De6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUTgjGbdHzk7WhRu3N2KhnKKboOHi3CjYEO7JXoOQkELL9ZhwoZtOQg6FR4sw1rG84wGiTKgY4ivwm/CA==@vger.kernel.org, AJvYcCVZbyaIfJM3t51LlEqYUHsys0SZF/wtpmf2bLQTiiWRRBiJq46B75pKTfAT/21cnLt4p5xLzDkgRpwQ@vger.kernel.org, AJvYcCWHqYVk33KmJB0JLE09NsqDU2elqsTwEIGTvzaANr7sws14x19MAuTBG1N4aH7K7+GHmCaL2OqRE7vz@vger.kernel.org, AJvYcCXkriMFs/GUD8TLxMUgmc/FUROTLZasu2SYTEJ3MLdXfdg1oB1ez1ehVFeP/rNQf2nvdMYSdiQ/6rnmnoyR@vger.kernel.org
+X-Gm-Message-State: AOJu0YytpHSxaWZ1ddIBLh8YhobCC/F/R1Pogui3mtD+ePozMEF9fjdF
+	ygzEbSqGi/GJgFkR4av5W32BpwNoI1N9cFTgmv2hdHqWM61WWTuNeMPPW0CDCcbF34bs1Cc+okL
+	+xWpjJkc5Jygu4iYg3TcCcN+I6E2GBKu/Tfzp
+X-Gm-Gg: ASbGncsjwT3vOS6mtnaqL1bh5S0SwGPGiY3lrODHZPm4hQs5ybaCs+IRMj4E0V8BPSk
+	bALRgSP9imnCxwTNRuGLrtbHVQ0WVGjlnl4axWK9KKIzhyCp66uVxgxebwofza1JBAuhANRuKG0
+	bGKRQ6PFErKfYb+ELEZryF3edGcY4uVMPCTMCZl47/LJ04waL1BI0yRqyr4cdEHSmjmgj6sHA8V
+	/qDNfpV4g==
+X-Google-Smtp-Source: AGHT+IEsfu4gvqMD8OwVlaIS7RK7dSX5WGQAcTtTRrhsReDH3Vd1wM+apHYJwSdx0NbhTNcmTuGwy1GUhGONE1k9GQM=
+X-Received: by 2002:a17:907:3d55:b0:afe:9e58:754d with SMTP id
+ a640c23a62f3a-b01dda8645fmr2203141666b.64.1757076828364; Fri, 05 Sep 2025
+ 05:53:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pinctrl: qcom: sm8250: Add egpio support
-To: Sean Parker <sean.parker@viasat.com>, andersson@kernel.org,
-        linus.walleij@linaro.org
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250904170613.68855-1-sean.parker@viasat.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250904170613.68855-1-sean.parker@viasat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=OemYDgTY c=1 sm=1 tr=0 ts=68bada53 cx=c_pps
- a=JbAStetqSzwMeJznSMzCyw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=EUspDBNiAAAA:8 a=o8bG7SlRqXj42srI09MA:9
- a=QEXdDO2ut3YA:10 a=uxP6HrT_eTzRwkO_Te1X:22
-X-Proofpoint-GUID: eeMBhmi20SqdibW1lebIHRQ7hwxNEVfQ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODMwMDAyNCBTYWx0ZWRfX3f1NBbXqlpwx
- 9jUgPihBcqpEAYViSjU0goAJzLj7wWg00Kaj2xtwPMWLOQZvGf8x5Ks4wptQAw32bzM8ueGOiju
- mR8sVJ8oyL8TJPhqhPeB/cynZNSoY4I5rlBk4d4zXYIzL1iCvn7E6pJ87HNUTlIorNHyQhopvak
- 5jASorwRTCiWDFqrbFQjNZXGJsy3Hh2jhPK7fxs50uJP903l1b7Cz8XtNu4Q/KXt02YqfyxfDaf
- bGLXDTXPOOJ7XDlxOuk42CAyuf1us0CMlgGZRqiW90gO39YCVf9Yf63gzkkeWGtsKWnghn2wa2S
- 3cjdMU4YxHAny7OnpxgVbQPnk0lpp7rn10L0Txgy/n7bf9XI84Yzqz5rq11Ag4S66rJkDrBlf+l
- 5US8l+PZ
-X-Proofpoint-ORIG-GUID: eeMBhmi20SqdibW1lebIHRQ7hwxNEVfQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-05_04,2025-09-04_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 suspectscore=0 spamscore=0 bulkscore=0 priorityscore=1501
- adultscore=0 clxscore=1015 phishscore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508300024
+References: <cover.1757053456.git.mazziesaccount@gmail.com>
+ <3cc1faffcb4f71f0755b6192f193acecd36bea67.1757053456.git.mazziesaccount@gmail.com>
+ <CAHp75VdaAH+1mh16KWoYtYFMV+_ec8x9YipeD3K8g6yQr-2VjA@mail.gmail.com> <2c36496c-68bb-4c06-8580-3efc694429ea@gmail.com>
+In-Reply-To: <2c36496c-68bb-4c06-8580-3efc694429ea@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 5 Sep 2025 15:53:11 +0300
+X-Gm-Features: Ac12FXxynidtISOU6Dli41yMOcpy9qfjqFReTGh1U0WVTOgJVRzzEgetmIKArAE
+Message-ID: <CAHp75VcDJm9ZQwuHNDZf79LBAH=cEHLoNskT6On2v9zquLJESw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] iio: adc: Support ROHM BD79112 ADC/GPIO
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Jonathan Cameron <jic23@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Marcelo Schmitt <marcelo.schmitt@analog.com>, 
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>, 
+	Tobias Sperling <tobias.sperling@softing.com>, Antoniu Miclaus <antoniu.miclaus@analog.com>, 
+	Trevor Gamblin <tgamblin@baylibre.com>, Esteban Blanc <eblanc@baylibre.com>, 
+	Ramona Alexandra Nechita <ramona.nechita@analog.com>, Hans de Goede <hansg@kernel.org>, 
+	Herve Codina <herve.codina@bootlin.com>, Alisa-Dariana Roman <alisadariana@gmail.com>, 
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 9/4/25 7:04 PM, Sean Parker wrote:
-> This mirrors the egpio support added to sc7280/sm8450/etc. This change
-> is necessary for GPIOs 146 - 180 (34 GPIOs) to be used as normal GPIOs.
+On Fri, Sep 5, 2025 at 10:10=E2=80=AFAM Matti Vaittinen
+<mazziesaccount@gmail.com> wrote:
+> On 05/09/2025 09:54, Andy Shevchenko wrote:
+> > On Fri, Sep 5, 2025 at 9:42=E2=80=AFAM Matti Vaittinen <mazziesaccount@=
+gmail.com> wrote:
 
-* -179 (in line with the code)
+...
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> >> +/*
+> >> + * The data-sheet explains register I/O communication as follows:
+> >> + *
+> >> + * Read, two 16-bit sequences separated by CSB:
+> >> + * MOSI:
+> >> + * SCK:        | 1 | 2 | 3   | 4      | 5 .. 8 | 9 .. 16 |
+> >> + * data:| 0 | 0 |IOSET| RW (1) | ADDR   | 8'b0    |
+> >> + *
+> >> + * MISO:
+> >> + * SCK:        | 1 .. 8 | 9 .. 16 |
+> >> + * data:| 8'b0   | data    |
+> >> + *
+> >> + * Note, CSB is shown to be released between writing the address (MOS=
+I) and
+> >> + * reading the register data (MISO).
+> >> + *
+> >> + * Write, single 16-bit sequence:
+> >> + * MOSI:
+> >> + * SCK:        | 1 | 2 | 3   | 4     | 5 .. 8 |
+> >> + * data:| 0 | 0 |IOSET| RW(0) | ADDR   |
+> >> + *
+> >> + * MISO:
+> >> + * SCK:        | 1 .. 8 |
+> >> + * data:| data   |
+> >> + */
+> >
+> > What I meant in previous reviews is that the | are not aligned (in the
+> > same columns). Is it on purpose? If so, I can't read that as I don't
+> > understand the meaning of | in each case. For example, the data starts
+> > with 0, followed by 0, and the latter one is when SCL is #1? Okay, but
+> > how to read IOSET that overlaps 2 SCK cycles and is unaligned with
+> > times... I'm really quite confused by these charts.
+>
+> Ah. I think I now know what you mean. Whitespaces are hard :)
+> I see I have '\t' between the SCK: and first |.
+>  >> + * SCK: /* '\t' here */       | 1 | 2 | 3   | 4     | 5 .. 8 |
+>
+> It works perfectly on my editor, which has tab width 8. Thus, all the
+> '|' on SCK and data rows are perfectly aligned for me. My original
+> thought has been to align the first '|' on all rows by tab, but since
+> the " * data:" is already 8 chars I didn't add a tab for this row...
+>
+> I now realize this will not work if tabs behave different from my setup.
+> I will do replacing the '\t' with ' '. Does this make it better for your
+> editor or do you see some other problem besides that?
 
-Konrad
+I can't answer before seeing. Can you reply with what you mean?
+
+> Thanks for the patience explaining it.
+
+You're welcome!
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
