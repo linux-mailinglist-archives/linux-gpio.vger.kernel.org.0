@@ -1,85 +1,84 @@
-Return-Path: <linux-gpio+bounces-25659-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25660-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5EF02B4519D
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 10:36:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E69CBB451A1
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 10:36:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F06A05A6A69
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 08:36:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EE47B172B39
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 08:36:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EE9630C606;
-	Fri,  5 Sep 2025 08:33:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3220E277C87;
+	Fri,  5 Sep 2025 08:35:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Y8wHOUX7"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Ha4Y9ktL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f66.google.com (mail-ej1-f66.google.com [209.85.218.66])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61CDA308F34
-	for <linux-gpio@vger.kernel.org>; Fri,  5 Sep 2025 08:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F9F2222D1
+	for <linux-gpio@vger.kernel.org>; Fri,  5 Sep 2025 08:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757061234; cv=none; b=SdZ3tTFDS0ODIBCWD6K9/HzkvfRg24b0EpjhuVHh91vSFibSvSXvB+XlrMoV/AKXYz9W9m0KMPFHf23FqbEIWbRaAy+/fNu3Ju6iaO/l+Ch9dK9zUj98qLrU0i5WxLNo+/oGliTNve4p0nalsnY45B4Xf4qpGZ/iH2grbFV+EZQ=
+	t=1757061304; cv=none; b=f9e7AV2ES+MIk/b/zbPFXz+xJm08JvTjXTW/5wZ85zSrjX6Ep5ObCA5RNQNj88SQo+3+ibxXzNqiAWl5HalTOxNiEgGZbn2u+GTkcE6+RgCgxFhJ5UUqWV29iEznTC6aBGWdbkM6ylfa+d0KfGq+5Jk3tTbeNPxRvBYB3M5DapQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757061234; c=relaxed/simple;
-	bh=FIivkbvlsUwuCxef19rZwLbxAQtBUlqR3Yy9oUPywFI=;
+	s=arc-20240116; t=1757061304; c=relaxed/simple;
+	bh=gUFlgVxs2HwY8p21h+fiYn/r/RFcmPpeFJj4rvWWkqg=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OfCtQGfzHGdb+0A5vBXdaiCZnjjyc5mubnOxUzHL4VyYytSEazYMujO/T3B2hAJVoduye4p+r8VJKym3Jdj70nHkD3TTiKi35ifkasP6XenB87dSJHgduHt6AwlfngCE1bW6eeJiUKNHy2yV+Q+UO6C9j+KrTCRR3c3HvlgHgWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Y8wHOUX7; arc=none smtp.client-ip=209.85.218.66
+	 Content-Type:Content-Disposition:In-Reply-To; b=lE1+t/FLpTdKYzLZruLdqSm9eZVu6MsTxqNVveoY7AFpwVBeS7LE8lbzJXyz47jrfVdkBKtarL9LRzRqUovpuDbG7KArs2gp6/DR9koYYRwY8NVVCI9F3GW5MoVewkRf1m1chilHAD3e/0vn7bllUZSfynczxVShFfC/N6BTd9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Ha4Y9ktL; arc=none smtp.client-ip=209.85.218.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f66.google.com with SMTP id a640c23a62f3a-b04770a25f2so279061466b.2
-        for <linux-gpio@vger.kernel.org>; Fri, 05 Sep 2025 01:33:52 -0700 (PDT)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b0431c12df3so323762066b.1
+        for <linux-gpio@vger.kernel.org>; Fri, 05 Sep 2025 01:35:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1757061230; x=1757666030; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1757061300; x=1757666100; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:date:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=SgnJRI/egxtjaoqDVVqBQgVUu4WIklNB+SAbz2GeD+U=;
-        b=Y8wHOUX7gv2lRLEVRboxWfmsFRzGQ2GfjNmCwPG1gFkhIOqQTlUs8kPPR7dxKv7XqN
-         mpngCDXmDpcZy0KN92rfMotPsmNw9AESxF5v2NximqIX5aYbgpaEwS+dSz5L+7N3m9U5
-         kSqoxGOJnWwJR/SkVckgeuymKQFFy41CUh8TJ1E371xAX8aJuzbh/iPi0ecdVrM38Qzn
-         naDc/E9nput3SOTTTCbRfs2rskAodkzyMLJQkK6AMmvdrYfgxub3GgXP2+Rc9+ErATxl
-         cWLEZLWMuWLFaug8Mj1HcrOScT28tkIFWxBDJogVRIjuanKfl9Q6gt+wPofqEWKvmtiu
-         8Iug==
+        bh=I0QfRj9jvOthmyPm6ramOPb3vkM0waaC133mmZ4sCqQ=;
+        b=Ha4Y9ktLkPlhwA7xBsC5b6AqtI2/F8Nsn9ZPixBfOphx1B6ecpfVyWD6sweAO9fZ6g
+         oRQJnMY+wZDKbvSp71yITmhgAi/gkJ9pZhqjx8B85VLhKUmdqwXvqhebT8a9b16Vcsl3
+         LebL73+kA61Y6FB/gXbK00m3uV7nkIkade3Ix0QeFygMs6OgC3d7Jzn7kTWmLwEPyAoZ
+         zOhC1Rl9pQE1e5WdSkiLSyrQr2refBvpmWBMk9726mIFxeQTRjzRtWIGAJnvTFBl/srl
+         18NigLvnzRI4M4Q9u2O6K/SpxMNsyDgzUgMClnYVjgdnK4p7kKAC567u8negePEhYWW0
+         wpEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757061230; x=1757666030;
+        d=1e100.net; s=20230601; t=1757061300; x=1757666100;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SgnJRI/egxtjaoqDVVqBQgVUu4WIklNB+SAbz2GeD+U=;
-        b=ni/gg+1um6Jxslv3txH7GXuJjGc01RjBfUJK3iZJpG49Pzj6Yna2IXEPMWh1Xn0lDl
-         lq49xZEnvnjEIVjDmC96E2pLAZNpmROPx7epZW/TtdqXOLPGJApC8z3D8Xzz/F2FzxjS
-         juNgbj/B2oOPliwM7ax+ZO1i5b4knr9+9FKrVOOQZPtygR9IyGgFTj4MWoxqg7ctbHnu
-         pwW+UA1FRbDHtX7zOboVem4RHxm2+1UDUtlicrcWbIj2jCecguqnMofb5QaDTExB7slG
-         0g2vPTAdnA42jux9R29/19qRDjJxFD1uTj3A/9xWxfN/rv34cvqEk3KitfudAtHX3OKG
-         j4dg==
-X-Forwarded-Encrypted: i=1; AJvYcCVv+qgHCnBoo4ZlQB2scRqpGr7i3EHbLvF+gVrUowdzB2DfIN/uWbrYT/E9uuIBR+Yn/+CI6RSMk/52@vger.kernel.org
-X-Gm-Message-State: AOJu0YyB4qWx+M0quc5MN+sg5NnkoFdmKKQuNzDp1byD2vGHuE4n6LVJ
-	+iRQBvkBs5yVpIq+shPvGNtC/5PtvlTqNYaV6f1UBhQ9VyfLo5XiYOPGo9wpTL7OGbM=
-X-Gm-Gg: ASbGncsQvUJ02OYFBH5IQXAuQSWk350YKqTkXSMXCk4E8rVxaUK/ZVHoFEAclkdmubJ
-	1rnRD4cPSHWdt9dtkk68CG9quLCrya+EgE499nwxJdOx8IXQKFugDXzdpt6578KplTj4m+29GrZ
-	eXZh4zQfAPi5U4PBXqXJPkBgdh12voDyaLy4kWSHY5exNNov1vuCdWgVeyfi4ylOzXwDtvocW7O
-	AH3J949UPw8+tefOA4gqWiHuOzBa6AbzQ35LCYmDvKIjFo23xzdPYy52jZ8CC76cyOGG8fDKTAV
-	9dibN8qVIYeFEmyY0petTC4N8/m0K+8dNRbGULYDxTM6Qc8/hdAf52inXYBbrijmDwvFCBlaAn5
-	WdoXPKDL4KWqlqWzzO0SmOvSNjjAyCns02jVLkkKEYi2o1u1IzUr8xr5nEovScrY5/ke+sWJvfN
-	WOcoQJ9PvGDSGffPnIU0pX0dSgqAEaSE9l
-X-Google-Smtp-Source: AGHT+IGKUP3RZ5t2/gasPzJzuI8AOjzwK+b1qdxRjHmmhV48QCT+F5m6d9XTYWi3CHhwJeSzib8Gkg==
-X-Received: by 2002:a17:907:a44:b0:aff:9906:e452 with SMTP id a640c23a62f3a-b01d972d878mr2222435766b.31.1757061228746;
-        Fri, 05 Sep 2025 01:33:48 -0700 (PDT)
+        bh=I0QfRj9jvOthmyPm6ramOPb3vkM0waaC133mmZ4sCqQ=;
+        b=Tm3aDgKHFV2mFgxh7jtWoxq16sCc2AkMe/g7ou86g8Da6xSVxoNgJ9FbGyUGPwPfs8
+         GCp7NzCJLIWhOTrr9QkovPUt1yW2mDO02/15DUozyltJACKm/T1ikQ5mpH5/vjzxqsMk
+         CiX/t89rFR4p6bsefkgYImZ8bY9MoXRlzTrqBIl3zZ8M877iyJRwjPWb7TGb8ODEDDuU
+         xxuyGc+Y+Ym+cVt3MXW8NY/EqPE7nL9ogFVOXBkt/uExaT7l3di85mq5YyfLZX+Wtt4J
+         o4791VMXRTANSjYKAvHXdrWK2ix5WjNVY9OVH+cXF3RhqhQ2uNow0IFuBne8EQxjzTmw
+         qaVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU6/vRIyhIj9SttPvHiomAsbfg0bySuFQq5kISTW9ho7efvPM2tLyCq9LZEEqP14PvQXQ9opKQ8aHTV@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTcU7FcCvkZ6AAcGvrCth7q9spTJ5T/3ZFeTC8Drc/ZXIpipdP
+	OJ04LYty7QQpBsy3IQS1cgj3EJMG6+BVIU/O3FJ0BIw7SpBK3G8eAeSRBOM24vc4pR4=
+X-Gm-Gg: ASbGnctQRdlREqE5AzHwocOY4EK3X808vD8BeB7U9inWlV+X1w1GbZByj+0126tR2+H
+	hh04Pp+QECl/ppTr233PXR6dTakmxjtY3SHTIgVVW8oI88/+yacbe02jjnESJiypeZXYVPxDnDl
+	q6LRd5207t4qDbQXoEy57L4j+cuhF3w5XxMJ0JVGBWTeoseBUk+X4R2UokGwrt2YQnoYXvZ0D57
+	SN0YmlWLd0lrXC7LUcHpAqUnc3rA2cf8CD+doqIpev/M8wiD2PtSYaAFxhg0h0lMzibSJFsCBwl
+	M7zrwhJu++kVGEG9IgYoENXNO9Xz3T9eXjSCYoAeGtWag1pk6rHXg82xmD4fBfi4LgKoexLrbsU
+	6y37V72OfRMQg8RkFdjps1kkxGd/pwKa3uzFA4T83jgdaTsJLO/3fF9ZEnQAwPbMXouYXQ4WtV6
+	0rTe0SLloqMpiQgD6hyIRe9/0teBt7ITTN1tauTrNiUvQ=
+X-Google-Smtp-Source: AGHT+IGMvV568alFhaO1aRFyGGr0BaG+pxGIbUoe47SM2b+PJhzJ5Zs/nWs2YwiwF5F4lh/jU0qAbQ==
+X-Received: by 2002:a17:907:9410:b0:b04:7708:ee36 with SMTP id a640c23a62f3a-b047708f30bmr745911066b.9.1757061300349;
+        Fri, 05 Sep 2025 01:35:00 -0700 (PDT)
 Received: from localhost (host-79-31-194-29.retail.telecomitalia.it. [79.31.194.29])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b0474be5e99sm476564766b.94.2025.09.05.01.33.48
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b046f2dda22sm541367466b.40.2025.09.05.01.34.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Sep 2025 01:33:48 -0700 (PDT)
+        Fri, 05 Sep 2025 01:35:00 -0700 (PDT)
 From: Andrea della Porta <andrea.porta@suse.com>
 X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Fri, 5 Sep 2025 10:35:45 +0200
+Date: Fri, 5 Sep 2025 10:36:57 +0200
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Peter Robinson <pbrobinson@gmail.com>, robh@kernel.org,
+Cc: Andrea della Porta <andrea.porta@suse.com>, robh@kernel.org,
 	krzk+dt@kernel.org, conor+dt@kernel.org,
 	florian.fainelli@broadcom.com, wahrenst@gmx.net,
 	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
@@ -88,11 +87,12 @@ Cc: Andrea della Porta <andrea.porta@suse.com>,
 	Will Deacon <will@kernel.org>, iivanov@suse.de, svarbanov@suse.de,
 	mbrugger@suse.com, Jonathan Bell <jonathan@raspberrypi.com>,
 	Phil Elwell <phil@raspberrypi.com>
-Subject: Re: [PATCH v4 2/3] pinctrl: bcm: Add STB family pin controller driver
-Message-ID: <aLqg4ZTbUjsgoMwy@apocalypse>
+Subject: Re: [PATCH v4 1/3] dt-bindings: pinctrl: Add support for Broadcom
+ STB pin controller
+Message-ID: <aLqhKcsJPB5ymEPF@apocalypse>
 References: <cover.1756372805.git.andrea.porta@suse.com>
- <bee7c98a96c7000db32495b94ebae2ea06fe0e77.1756372805.git.andrea.porta@suse.com>
- <CACRpkdY82ohgX_7YP16DJrzDvxMHcSu3rW+UtEmrP0AQiD_Exg@mail.gmail.com>
+ <7ed0f2779829f4e63b69d8cf5cedda9f849996bc.1756372805.git.andrea.porta@suse.com>
+ <CACRpkdZAROUdz1SJY=h_dcUiojazO1fYxGJ8X2KEE6ow7oFZaA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -102,41 +102,36 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdY82ohgX_7YP16DJrzDvxMHcSu3rW+UtEmrP0AQiD_Exg@mail.gmail.com>
+In-Reply-To: <CACRpkdZAROUdz1SJY=h_dcUiojazO1fYxGJ8X2KEE6ow7oFZaA@mail.gmail.com>
 
 Hi Linus,
 
-On 21:06 Thu 04 Sep     , Linus Walleij wrote:
+On 20:58 Thu 04 Sep     , Linus Walleij wrote:
 > On Thu, Aug 28, 2025 at 2:45 PM Andrea della Porta
 > <andrea.porta@suse.com> wrote:
 > 
 > > From: "Ivan T. Ivanov" <iivanov@suse.de>
 > >
-> > This driver provide pin muxing and configuration functionality
-> > for BCM2712 SoC used by RPi5. According to [1] this chip is an
-> > instance of the one used in Broadcom STB  product line.
+> > The STB pin controller represents a family whose silicon instances
+> > are found e.g. on BCM2712 SoC.
 > >
-> > [1] https://lore.kernel.org/lkml/f6601f73-cb22-4ba3-88c5-241be8421fc3@broadcom.com/
+> > In particular, on RaspberryPi 5, there are two separate instantiations
+> > of the same IP block which differ in the number of pins that are
+> > associated and the pinmux functions for each of those pins. The
+> > -aon- variant stands for 'Always On'.
 > >
-> > Cc: Jonathan Bell <jonathan@raspberrypi.com>
-> > Cc: Phil Elwell <phil@raspberrypi.com>
+> > Depending on the revision of the BCM2712 (CO or D0), the pin
+> > controller instance has slight differences in the register layout.
+> >
 > > Signed-off-by: Ivan T. Ivanov <iivanov@suse.de>
-> > Reviewed-by: Phil Elwell <phil@raspberrypi.com>
 > > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 > 
-> Patch applied!
-> 
-> > +config PINCTRL_BRCMSTB
-> > +        tristate "Broadcom STB product line pin controller driver"
-> > +        depends on OF && (ARCH_BRCMSTB || COMPILE_TEST)
-> 
-> I changed this to (ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST)
-> because Peter Robinson told me the Pi5 needs this driver too.
-> See commit 1d99f92f71b6b4b2eee776562c991428490f71ef for details.
+> Fixed up the extraneous label and whitespace error
+> and applied this patch!
 
-Indeed, thanks for spotting this!
+Thanks for fixing that up!
 
-Cheers,
+Regards,
 Andrea
 
 > 
