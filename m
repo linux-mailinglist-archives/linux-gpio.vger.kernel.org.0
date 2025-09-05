@@ -1,79 +1,178 @@
-Return-Path: <linux-gpio+bounces-25691-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25692-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E8B0B4647F
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 22:17:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D2DF0B4657F
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 23:28:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2192D1BC383C
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 20:18:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 831EA1B21DE9
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 21:28:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A599F2741BC;
-	Fri,  5 Sep 2025 20:17:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7969B2F0681;
+	Fri,  5 Sep 2025 21:28:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="acs2Sfyp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YJSfrzMF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E89271447;
-	Fri,  5 Sep 2025 20:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9261028000F;
+	Fri,  5 Sep 2025 21:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757103445; cv=none; b=RY0Cne86jTLi8tgeu/8v632J5LStfkv7DwHye9pQ1CL/BflzU6BQYtnkSDEdoX3wzEuAJQ415RGiWgIy3Qe+/QLrnZYgq2EyXLOs0Dya8ZT8PnqyXZbagOxzAWoa/ilIR4r7OaatPVKV/Y/UlTMjefUgz85MC+sfZUDKf/jcpf8=
+	t=1757107710; cv=none; b=JjERKgl6AV2t62ZSsGKtdPl/PJIGsV8PdUDqU68C641jfs+Ga9Y3ZwT/eNawHbti1QYVYOljCOAdyeXEcj9TAU4h1WMdeXo07imZNWl6qIMUp8FJidPW0lzC0gn394DmMZC8J5w8XG1Pg8oLEcvXY2i7RQxYI8yN1fC9EZnyzO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757103445; c=relaxed/simple;
-	bh=CuX3jLqS01ybc79PndFinBGhQNBsivyAOuKcNF5Xqiw=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=f8vp5imEVil4FpfzlmJ5l44X4P1KRxDxWysSWCXMs2OUNK2G6sD7WghfGy0NnKgktvxm0xsog7gtK7BMUxm+iixkW5pIp0aRIa9IM5FIHVx/wsyHmczUgaw2p4cwXueeo/ggixN8UCmNbOMhMgRAni1sRMWUCHc1DPw6Vh2MfWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=acs2Sfyp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37757C4CEF1;
-	Fri,  5 Sep 2025 20:17:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757103445;
-	bh=CuX3jLqS01ybc79PndFinBGhQNBsivyAOuKcNF5Xqiw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=acs2SfypHKOoXGaxtVjaJmWN/mqymjgv+eNPizIA2knfvPw2dcCw7Cm7NSyI7KjEv
-	 9Glf5W/CeHzrlzHqyquV7rRY/suWSAPHHAdhzm6OSoM+KSVS5EH0sSn6FpnMY6JLWc
-	 3yeujColILJp76Z5s54GpTZ+KWHrOmk0RrBq7ZEBR4+EDDdV8cZgOEFemCSUNNvIeU
-	 gHYhiOuGt63q29/WRP9eihjQ2WiAkJQvhP0f0fpU0ONEAhRumzd+Kz++7JSGVJsBAZ
-	 lVcyRy50EwvICXvgcD8dg3f342ABqbxPPsU/1sLlX1lrUCa4XIx/DfL6ecMjkSAqFx
-	 tAlpPDqZXnpYw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB213383BF69;
-	Fri,  5 Sep 2025 20:17:30 +0000 (UTC)
-Subject: Re: [GIT PULL] gpio fixes for v6.17-rc5
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250905131345.105630-1-brgl@bgdev.pl>
-References: <20250905131345.105630-1-brgl@bgdev.pl>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250905131345.105630-1-brgl@bgdev.pl>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.17-rc5
-X-PR-Tracked-Commit-Id: ed42d80f3bae89592fbb2ffaf8b6b2e720d53f6a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3d1e36499e02457f8de0edc9d87783cce97e8677
-Message-Id: <175710344954.2676293.13198623137328471526.pr-tracker-bot@kernel.org>
-Date: Fri, 05 Sep 2025 20:17:29 +0000
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+	s=arc-20240116; t=1757107710; c=relaxed/simple;
+	bh=5VN1HdLHibaUHpWBmaGIzqTIt9Taue5XTLEQJXUWDkw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gL3hywI6LsF+ioTQVFgdoiC6wGuFeDwFae/dro4WyAMpOwrS0eUEXLXkQKh9FSH87yMxRs7jymTtDNRMRBVKHsiPrZkwMXwdSbKK6pPh/doZGTKX20PuUOcrMQwjZVYUExhQyQDiFQGe6JUjuIJ679jv+Lxf3E62vAyiwfcizcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YJSfrzMF; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1757107709; x=1788643709;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5VN1HdLHibaUHpWBmaGIzqTIt9Taue5XTLEQJXUWDkw=;
+  b=YJSfrzMF2qeMC2o3jyPBAY9qOZEAwcR1JTKyhYipUe87tJrrY6zoQzLG
+   uOkr088u68p7uKZjp08g3mX7woHT6gR1enyAtFvJQZhKcYWSNkD62M6jq
+   BY83eBS0MPGFjU/gUj+EzU4cgPGNO+hlpHVroMKpW4za4ZUiQa4mP5Dj8
+   dQKpPM6JpUJDhq6/Ge20Wc3HdGvAWH+LM6AxiMR9koxzPdBnaRopzgIGe
+   tYdlfL+R5CHlGTQ/K/x98HeUz88gSupeGiaJBIiXE94Yk5irzyzfhOMNT
+   xiNHYpBkQwXHQ/IhdD4qk3aILM0xAZ9R9KnLzeokuNNlIVmWBbyqK6+6x
+   Q==;
+X-CSE-ConnectionGUID: 9J7WBZbERnK+8Z5ZJCre7g==
+X-CSE-MsgGUID: 4/SrcosRSTWZ16Lc7ZcY2w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11544"; a="77075790"
+X-IronPort-AV: E=Sophos;i="6.18,242,1751266800"; 
+   d="scan'208";a="77075790"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2025 14:28:28 -0700
+X-CSE-ConnectionGUID: vZkAXhpMQv+h6F33oSsZIw==
+X-CSE-MsgGUID: QkeVJHYmRYqxUEVBW1gUKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,242,1751266800"; 
+   d="scan'208";a="209426551"
+Received: from abityuts-desk.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.91])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2025 14:28:25 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 2FEDE1201E4;
+	Sat, 06 Sep 2025 00:28:21 +0300 (EEST)
+Date: Sat, 6 Sep 2025 00:28:21 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Hans de Goede <hansg@kernel.org>
+Cc: Israel Cepeda <israel.a.cepeda.lopez@intel.com>,
+	Wolfram Sang <wsa@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
+	Richard Hughes <rhughes@redhat.com>, linux-i2c@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 3/3] i2c: Add Intel USBIO I2C driver
+Message-ID: <aLtV9THflQYXmSlK@kekkonen.localdomain>
+References: <20250809102326.6032-1-hansg@kernel.org>
+ <20250809102326.6032-4-hansg@kernel.org>
+ <aJmY42ugarABq0Ew@kekkonen.localdomain>
+ <7321f79e-6004-4bca-85bb-a10f0636deb5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7321f79e-6004-4bca-85bb-a10f0636deb5@kernel.org>
 
-The pull request you sent on Fri,  5 Sep 2025 15:13:45 +0200:
+Hi Hans,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.17-rc5
+On Mon, Aug 11, 2025 at 11:49:29AM +0200, Hans de Goede wrote:
+> Hi Sakari,
+> 
+> Thank you for your review, note this
+> is not a full reply.
+> 
+> On 11-Aug-25 9:16 AM, Sakari Ailus wrote:
+> 
+> <snip>
+> 
+> >> +static int usbio_i2c_probe(struct auxiliary_device *adev,
+> >> +		const struct auxiliary_device_id *adev_id)
+> >> +{
+> >> +	struct usbio_i2c_bus_desc *i2c_desc;
+> >> +	struct device *dev = &adev->dev;
+> >> +	u8 dummy_read_buf;
+> >> +	struct i2c_msg dummy_read = {
+> >> +		.addr = 0x08,
+> >> +		.flags = I2C_M_RD,
+> >> +		.len = 1,
+> >> +		.buf = &dummy_read_buf,
+> >> +	};
+> >> +	struct usbio_i2c *i2c;
+> >> +	u32 max_speed;
+> >> +	int ret;
+> >> +
+> >> +	i2c_desc = dev_get_platdata(dev);
+> >> +	if (!i2c_desc)
+> >> +		return -EINVAL;
+> >> +
+> >> +	/* Some USBIO chips have caps set to 0, but all chips can do 400KHz */
+> >> +	if (!i2c_desc->caps)
+> >> +		max_speed = I2C_MAX_FAST_MODE_FREQ;
+> >> +	else
+> >> +		max_speed = usbio_i2c_speeds[i2c_desc->caps & USBIO_I2C_BUS_MODE_CAP_MASK];
+> >> +
+> >> +	i2c = devm_kzalloc(dev, sizeof(*i2c), GFP_KERNEL);
+> >> +	if (!i2c)
+> >> +		return -ENOMEM;
+> > 
+> > Same comment on devm memory allocation than on the GPIO driver: I think you
+> > need to use the release callback of struct device here.
+> 
+> And more or less the same reply, i2c_del_adapter() ensures
+> all i2c_clients on the adapters bus are unregistered so
+> it guarantees that after i2c_del_adapter() none of the adapter
+> functions will get called.
+> 
+> So freeing the struct containing the adapter after remove()
+> has run is fine.
+> 
+> I know that the media subsystem does not handle v4l2-subdevs
+> (which the i2c-clients are) going away very well.
+> 
+> Richard mentioned that after a fw-update the usbio chip will
+> not come back until a reboot. And I've noticed that after crashing
+> the usbio fw it will not come back until a full power-cycle.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3d1e36499e02457f8de0edc9d87783cce97e8677
+Ouch. I guess this also depends on the implementation. Some presumably
+behave better and with firmware upgrades the behaviour could (at least
+theoretically) change as well.
 
-Thank you!
+> 
+> So we do not need to worry about somehow slotting new i2c-clients
+> into the media-controller graph after a disconnect + reconnect
+> since the reconnect will never happen during the current boot.
+
+Ack.
+
+> 
+> We do need to somehow make sure that trying to access the v4l2-subdev
+> after disconnect does not cause oopses or worse.
+> 
+> We will likely need to somehow keep the memory for the v4l2-subdev
+> around and add something like a disconnected / dead flag to it.
+
+For this exact reason. V4L2 sub-devices can't be reliably removed for the
+time being. (The same goes for the Media device.) I presume the sub-devices
+will remain, but just won't actually be functional in this case?
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Kind regards,
+
+Sakari Ailus
 
