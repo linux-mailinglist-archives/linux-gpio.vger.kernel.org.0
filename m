@@ -1,47 +1,47 @@
-Return-Path: <linux-gpio+bounces-25653-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25654-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17FA6B450FB
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 10:12:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AAF8B45101
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 10:13:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 733AA1BC5EE3
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 08:12:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DDEC21BC7C4E
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 08:13:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E8D92FE584;
-	Fri,  5 Sep 2025 08:12:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5F282FD7D7;
+	Fri,  5 Sep 2025 08:13:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rjBIK5wn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uqfTjSQi"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68A82045B7;
-	Fri,  5 Sep 2025 08:12:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B8E5270557;
+	Fri,  5 Sep 2025 08:13:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757059923; cv=none; b=d1JUY/kkaeGLxA/Nbro4m+1W5mSOpg4v98fnV1izpOLWk9Fx5EUhWJhKfkEWOpWSv4WL1108L7c3RviB/JkTkUHnxAj0zUG5rsdjyrW0UOI80vKRi+t/gSL7nZrrFA+J4IxLIsxFaQKw6eFV6FE6I0I17846dhbPHTK9RYutOj0=
+	t=1757059991; cv=none; b=VCMqMsFVxG/63o3KqiePn5UW4n7GDHB2WUKb49ethZ8EJIeH9+dWEk3dHCqg3w2RRKXjuIh+hPMZ20fmSbHpn8cjTxgLh0rCl4g4s80EOUe9Jr/kqbKjjqOl2xLAKkJQVpxcyFwREk7Y2C4qH22WVtf0lhfNyLCEgWLVZR7Dvls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757059923; c=relaxed/simple;
-	bh=mNHu3Dq59LBMQxbgLxMaQI+8a9Nh6j71J6ILlJhwpkI=;
+	s=arc-20240116; t=1757059991; c=relaxed/simple;
+	bh=S6kWmIW0hVTEZZAoAewWz0JxbYGS//J7DbVnzoq7lWw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LZY21FQ2nwIw39hFrH3Jjs8jrc0rWeok4VxLyN4jWImp4eYEkTXRaJC7y/5t23bDsNVU2Aekb0uzpCbNYEEcQSHhSUKSLwDQyRpy4V9ubclhajcWiAZbzM+C5fG0uT97hqvKleEhsG1/CGSpZ9U6lTeTyNAwVc2wHoW15vV7rM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rjBIK5wn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0666C4CEF1;
-	Fri,  5 Sep 2025 08:12:02 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=jwXYVECe9JQmRUN7s+E6rPpVbVQJLxcP19y4XE41JJxikeZw/zkbgONd126X4zO0d1uAnCNeaOkE8CLFOhXikg2NVGZ8VUaINUAxexNwyrIBYbSy3RNrB0ON4HVJB0oCBL4BiWSFMikQh/erOd/68P82TKBXOFcn6OBHqvkbIEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uqfTjSQi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CF30C4CEF1;
+	Fri,  5 Sep 2025 08:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757059923;
-	bh=mNHu3Dq59LBMQxbgLxMaQI+8a9Nh6j71J6ILlJhwpkI=;
+	s=k20201202; t=1757059991;
+	bh=S6kWmIW0hVTEZZAoAewWz0JxbYGS//J7DbVnzoq7lWw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rjBIK5wn6f7pd2b8kgpHsnktswpp0jsDZKR+mzoJkrpRqXsGOQ8Hq09cIY3lkFHJg
-	 nzUh8vJeVvCdy9sg3kNocvcU8WKjE48Xzke8Ix1mGA+L6jOujXWlGqEKQiScJzXtiT
-	 5hu0HdszSfr9/RVGP78AH7xeJ5J0/kP61EnA1qETBh7gigujUy74ck5aukJnDbbpdo
-	 ceEGFRzCva4VFLytCgA8BZFa31Uh77McjxyDjNeh9C9WbrRs7irDuQZ2wO9B2dsW3q
-	 R4hHdZ5RcHXuB6vVQasltt21cL+OyQihQpV+b/IXU6ogkDBDmcHSHfmCi11schly5c
-	 SSVP5k2l+rypA==
-Date: Fri, 5 Sep 2025 10:12:00 +0200
+	b=uqfTjSQidjTXugpGnslEzU82f/RadZElrGPTahUGa2Vj5cKM5BL5TuFZJyfNoVThP
+	 cXJqvvemUKZHUrcqJZj7S+nU2Mt/FOKD+ANHVUJDojYsr5/k6McPz32+9bHLye4urn
+	 1YvTNlTZ7ERiS/E3Q9h0TGVAo5cOi9RH9MY+eUMzyfVSeziJqjw93A3IIQ/qdHRK9U
+	 gm6OUCPSqji0ceFUTD5F2sflO21MDu6wIywexM4+gWmryX0aOhjgvVx2k+jpjZ2CGB
+	 dGnkwzASq7uyDcyrPakuM3WTWOS4lD5GVXOsqnJA5sbDKTJKhFkuNxRCnkvQ3cfDX8
+	 QhlCb/hGrMHrQ==
+Date: Fri, 5 Sep 2025 10:13:08 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Billy Tsai <billy_tsai@aspeedtech.com>
 Cc: lee@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
@@ -49,9 +49,11 @@ Cc: lee@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
 	linus.walleij@linaro.org, brgl@bgdev.pl, devicetree@vger.kernel.org, 
 	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
 	openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org, BMC-SW@aspeedtech.com
-Subject: Re: [PATCH v2 0/4] Add pinctrl support for AST2700 SoC
-Message-ID: <20250905-rough-notorious-leech-dd7a0d@kuoka>
+Subject: Re: [PATCH v2 1/4] dt-bindings: mfd: aspeed,ast2x00-scu: Support
+ ast2700 pinctrl
+Message-ID: <20250905-oxpecker-of-impossible-prosperity-63ee96@kuoka>
 References: <20250904103401.88287-1-billy_tsai@aspeedtech.com>
+ <20250904103401.88287-2-billy_tsai@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -60,18 +62,19 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250904103401.88287-1-billy_tsai@aspeedtech.com>
+In-Reply-To: <20250904103401.88287-2-billy_tsai@aspeedtech.com>
 
-On Thu, Sep 04, 2025 at 06:33:57PM +0800, Billy Tsai wrote:
-> Document and add the pinctrl driver for AST2700 SoC.
+On Thu, Sep 04, 2025 at 06:33:58PM +0800, Billy Tsai wrote:
+> Add the ast2700 pinctrl compatible string.
+> "aspeed,ast2700-soc0-pinctrl" and "aspeed,ast2700-soc1-pinctrl"
+
+Nothing improved, completely redundant commit msg. We see this from the
+diff.
+
+You got comment last time and it applies everywhere.
+
 > 
-> Changes since v1:
-> - Update pinctrl aspeed binding files.
-
-Anything is an update.
-
-Really too vague and some time ago I am sure I complained about this to
-Aspeed.
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
 
 Best regards,
 Krzysztof
