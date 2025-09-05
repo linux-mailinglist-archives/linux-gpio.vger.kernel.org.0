@@ -1,141 +1,180 @@
-Return-Path: <linux-gpio+bounces-25688-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25689-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01AECB45DCD
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 18:19:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4821DB46257
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 20:36:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B7199B63E8E
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 16:17:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 17EDF1CC5607
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 18:36:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E4261F61C;
-	Fri,  5 Sep 2025 16:18:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F07C26FA5A;
+	Fri,  5 Sep 2025 18:36:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SugGAY0i"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dFSM/hip"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA45537F8
-	for <linux-gpio@vger.kernel.org>; Fri,  5 Sep 2025 16:18:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24FB9305947;
+	Fri,  5 Sep 2025 18:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757089120; cv=none; b=SOesbTVcwO6wu4Kl1F5JtUVely0TXwUSrsAB7KuhH4/DYK0tE/zLDkjmcJPHRb/1DaLwdU9JkoHtGeRwj7yFc+nzrl226eLTE8x7mXw319814URw0Au330Q/kXMal+O8P2W1YexEprsn3bkNcTgB2b5QFyy6FXU8UQ+74pVEk+g=
+	t=1757097384; cv=none; b=ICZrymLsY2w2zFhTOmbSCV5dJXNUFbn4NDHPGWkKVazhMC0epm7hoS292FvF5Cy/DyQqWnAx/LRITD16jCybhelQggsoej4UHm+qbiZIDiPj4WHArLPPkn37qLvMQsZdEqBK0f55lUoGW7/dcOVXzhB4sge7VQ9UUjZlCvWEzU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757089120; c=relaxed/simple;
-	bh=9QBRrvW6PmncpOdYH8hcxPkHEAlQQ3fdIYF1QbiuVhQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=JmKrnRMlc1TPy5VXOw4Gy+n0/hW8sWutAEJRXkZ7yZZN+nVNEHgMNVnQXit2d27N3Hb/gYEhK7qc8CKGmY4deonz4QMKJquBWlUbce97dHN5TkPmBmI9rskZFN4j14U0Gy0w/LakkEcjDngjlD3mSda1mzt5ukQ4mWCCCx7GeDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SugGAY0i; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757089117; x=1788625117;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=9QBRrvW6PmncpOdYH8hcxPkHEAlQQ3fdIYF1QbiuVhQ=;
-  b=SugGAY0iQalBJ8dW5Xx4cTxDi2S46CzMtPw3P3meez1px6PcbwUVsj4K
-   +W0qkHr0AgBF7wsAAyZHmlSPcX3XV4GRgkpLgeJtZFgFnPB0VAP8SQ0Xf
-   f8oYxtbnyA/Wdi8ZPFIdxk1xZ6EblIbEDQXyT3rBaHUEMmPe98okiaQRD
-   QntCrRazV+yAmdLEfkFOy8JfHh6Hu8yGHkLSXwsceVHnDi1seC9Exiqzf
-   9ATXHgbnLGcPllp6V4r2ms2xInUYpQlhAK00vP9DCeKpQhAO0HIm1Qqmq
-   YPnHghBeiV/OWZAZ4sAHdN00w08c4lbfY1JLvyGZ/dzhByHxwFBB+tdce
-   w==;
-X-CSE-ConnectionGUID: TqIdRqBsQEWFa7o29wPNKA==
-X-CSE-MsgGUID: nVigWdJ/QxyLJGF8IE6kSQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11544"; a="58476033"
-X-IronPort-AV: E=Sophos;i="6.18,241,1751266800"; 
-   d="scan'208";a="58476033"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2025 09:18:37 -0700
-X-CSE-ConnectionGUID: /y+nDpffRvqxaNk+iDb81Q==
-X-CSE-MsgGUID: 8EL30heDT/OTrWdBIy18bQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,241,1751266800"; 
-   d="scan'208";a="172549633"
-Received: from lkp-server01.sh.intel.com (HELO 114d98da2b6c) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 05 Sep 2025 09:18:36 -0700
-Received: from kbuild by 114d98da2b6c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uuZ8z-0000c5-2F;
-	Fri, 05 Sep 2025 16:18:33 +0000
-Date: Sat, 6 Sep 2025 00:18:19 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/devel 20/28] drivers/gpio/gpio-brcmstb.c:509:27: warning:
- variable 'gc' set but not used
-Message-ID: <202509060000.Rs09YhdM-lkp@intel.com>
+	s=arc-20240116; t=1757097384; c=relaxed/simple;
+	bh=Z0l0aww+0sTvmNTqaq97C4lrWO6iKtSAsranbZR2N6U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Sq8E4JIdSvLlXPcSUQhuu8AhQAfztt4O+3uPwTjFm0EUfeYkhROUVKnWvxWxX/CMjtvqml5USxmfIVWvBrGPzcExBf4i6DLVL/FwjqZOJtJ5wtCth3F0BXebpdsi0VymzIKtOb3GOwDBPZ0xevW4cE0uVLmgF8SjP4JpXRTOJ28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dFSM/hip; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D823C4CEF1;
+	Fri,  5 Sep 2025 18:36:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757097383;
+	bh=Z0l0aww+0sTvmNTqaq97C4lrWO6iKtSAsranbZR2N6U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dFSM/hip1IM+ZMi1IniF1JusPZmfyWStbu37GUi3tUsTTMb5yRA+0crc0aAUs6PwP
+	 mRzwZwlDQbWgitgaCY+QeVcYSqO7pTU6G18+buVPNZmKIPM6h/3SBLxqqRrJLj/dLl
+	 kVjqIEFEMgi47BHsCgiaCDxI1C/6WO0PGYClk0ftVvL4vrfD7PJEKaEt3PybNNc/Ox
+	 3uuymTce4+GQvzBQVr9ubQxv2xOMVeqgOsBlH0EB6cyd9k+aHXMLQBWlBEjC7HQaYI
+	 z1LH3FZsS1a2GJOK0a72H/vUOMRgp65hxc2nN3d1a7Uf+nQyBVf1HDCS4sOlpF+g6A
+	 fiMBpaiDJ07Ug==
+Message-ID: <3173a8f8-ccbb-4478-8b2f-b7770cf3815c@kernel.org>
+Date: Fri, 5 Sep 2025 20:36:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] usb: misc: Add Intel USBIO bridge driver
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Israel Cepeda <israel.a.cepeda.lopez@intel.com>,
+ Wolfram Sang <wsa@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij
+ <linus.walleij@linaro.org>,
+ Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
+ Richard Hughes <rhughes@redhat.com>, linux-i2c@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20250809102326.6032-1-hansg@kernel.org>
+ <20250809102326.6032-2-hansg@kernel.org>
+ <aJmS15MlcHz__S0p@kekkonen.localdomain>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <aJmS15MlcHz__S0p@kekkonen.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/devel
-head:   46880c17e85d6822b8c45c226dc932dae157cc07
-commit: 967e3cee02c1f72c158066cb1b1ec5192aca82b5 [20/28] gpio: brcmstb: use new generic GPIO chip API
-config: arm-randconfig-004-20250905 (https://download.01.org/0day-ci/archive/20250906/202509060000.Rs09YhdM-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 14.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250906/202509060000.Rs09YhdM-lkp@intel.com/reproduce)
+Hi Sakari,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202509060000.Rs09YhdM-lkp@intel.com/
+On 11-Aug-25 8:51 AM, Sakari Ailus wrote:
+> Hi Hans,
+> 
+> Thanks for posting this. Some comments below...
+> 
+> On Sat, Aug 09, 2025 at 12:23:24PM +0200, Hans de Goede wrote:
+>> From: Israel Cepeda <israel.a.cepeda.lopez@intel.com>
+>>
+>> Add a driver for the Intel USBIO USB IO-expander used by the MIPI cameras
+>> on various new (Meteor Lake and later) Intel laptops.
+>>
+>> This is an USB bridge driver which adds auxbus child devices for the GPIO,
+>> I2C and SPI functions of the USBIO chip and which exports IO-functions for
+>> the drivers for the auxbus child devices to communicate with the USBIO
+>> device's firmware.
+>>
+>> Co-developed-by: Hans de Goede <hansg@kernel.org>
+>> Signed-off-by: Hans de Goede <hansg@kernel.org>
+>> Signed-off-by: Israel Cepeda <israel.a.cepeda.lopez@intel.com>
 
-All warnings (new ones prefixed by >>):
+Once more thank you for the review.
 
-   drivers/gpio/gpio-brcmstb.c: In function 'brcmstb_gpio_quiesce':
->> drivers/gpio/gpio-brcmstb.c:509:27: warning: variable 'gc' set but not used [-Wunused-but-set-variable]
-     509 |         struct gpio_chip *gc;
-         |                           ^~
+I'm replying here to correct some of my previous replies to your
+review. Anything not mentioned below I've addressed as discussed
+before.
+
+...
+
+>> diff --git a/drivers/usb/misc/usbio.c b/drivers/usb/misc/usbio.c
+>> new file mode 100644
+>> index 000000000000..88197092f39a
+>> --- /dev/null
+>> +++ b/drivers/usb/misc/usbio.c
+>> @@ -0,0 +1,693 @@
+
+...
+
+>> +#define adev_to_client(adev) container_of(adev, struct usbio_client, adev)
+> 
+> Please use a different name than "adev" for the argument, which is also the
+> struct field of interest.
+
+Ignore my previous comment on this remark. I've decided to
+clean this up for v2 and use a different names for the 2
+container_of() arguments.
+
+>> +
+>> +static int usbio_ctrl_msg(struct usbio_device *usbio, u8 type, u8 cmd,
+>> +			  const void *obuf, u16 obuf_len, void *ibuf, u16 ibuf_len)
+>> +{
+>> +	u8 request = USB_TYPE_VENDOR | USB_RECIP_DEVICE;
+>> +	struct usbio_ctrl_packet *cpkt;
+>> +	unsigned int pipe;
+>> +	u16 cpkt_len;
+>> +	int ret;
+>> +
+>> +	lockdep_assert_held(&usbio->mutex);
+>> +
+>> +	if ((obuf_len > (usbio->ctrlbuf_len - sizeof(*cpkt))) ||
+>> +	    (ibuf_len > (usbio->ctrlbuf_len - sizeof(*cpkt))))
+> 
+> You can (and should) remove all parentheses except the outer ones here.
+
+As mentioned by Greg parentheses help to keep the code readable, so
+I'm going to keep these as well as those in other places where you've
+asked to drop them.
+
+...
+
+>> +	pipe = usb_sndctrlpipe(usbio->udev, usbio->ctrl_pipe);
+>> +	cpkt_len = sizeof(*cpkt) + obuf_len;
+>> +	ret = usb_control_msg(usbio->udev, pipe, 0, request | USB_DIR_OUT, 0, 0,
+>> +			      cpkt, cpkt_len, USBIO_CTRLXFER_TIMEOUT);
+>> +	dev_dbg(usbio->dev, "control out %d hdr %*phN data %*phN\n", ret,
+>> +		(int)sizeof(*cpkt), cpkt, (int)cpkt->len, cpkt->data);
+> 
+> Instead of casting, how about using %zu for printing a size_t?
+
+This is not printing the size, this is filling the * field-width
+parameter for the %*phN dumping of the header. Using an int when
+setting field-width with * is mandatory. The same applies to
+your other %zu review remarks.
+
+...
+
+>> +	if (ibuf_len < cpkt->len)
+>> +		return -ENOSPC;
+>> +
+>> +	memcpy(ibuf, cpkt->data, cpkt->len);
+> 
+> It'd be nice to have one more newline here.
+
+As already mentioned I've fixed for v2, as well as all the other
+requests for extra newlines.
+
+> 
+>> +	return cpkt->len;
+>> +}
+
+...
+
+Regards,
+
+Hans
 
 
-vim +/gc +509 drivers/gpio/gpio-brcmstb.c
-
-4714221b0c62e6 Doug Berger         2017-10-24  504  
-4714221b0c62e6 Doug Berger         2017-10-24  505  static void brcmstb_gpio_quiesce(struct device *dev, bool save)
-4714221b0c62e6 Doug Berger         2017-10-24  506  {
-4714221b0c62e6 Doug Berger         2017-10-24  507  	struct brcmstb_gpio_priv *priv = dev_get_drvdata(dev);
-4714221b0c62e6 Doug Berger         2017-10-24  508  	struct brcmstb_gpio_bank *bank;
-4714221b0c62e6 Doug Berger         2017-10-24 @509  	struct gpio_chip *gc;
-4714221b0c62e6 Doug Berger         2017-10-24  510  	u32 imask;
-4714221b0c62e6 Doug Berger         2017-10-24  511  
-4714221b0c62e6 Doug Berger         2017-10-24  512  	/* disable non-wake interrupt */
-4714221b0c62e6 Doug Berger         2017-10-24  513  	if (priv->parent_irq >= 0)
-4714221b0c62e6 Doug Berger         2017-10-24  514  		disable_irq(priv->parent_irq);
-4714221b0c62e6 Doug Berger         2017-10-24  515  
-4714221b0c62e6 Doug Berger         2017-10-24  516  	list_for_each_entry(bank, &priv->bank_list, node) {
-967e3cee02c1f7 Bartosz Golaszewski 2025-09-05  517  		gc = &bank->chip.gc;
-4714221b0c62e6 Doug Berger         2017-10-24  518  
-4714221b0c62e6 Doug Berger         2017-10-24  519  		if (save)
-4714221b0c62e6 Doug Berger         2017-10-24  520  			brcmstb_gpio_bank_save(priv, bank);
-4714221b0c62e6 Doug Berger         2017-10-24  521  
-4714221b0c62e6 Doug Berger         2017-10-24  522  		/* Unmask GPIOs which have been flagged as wake-up sources */
-4714221b0c62e6 Doug Berger         2017-10-24  523  		if (priv->parent_wake_irq)
-4714221b0c62e6 Doug Berger         2017-10-24  524  			imask = bank->wake_active;
-4714221b0c62e6 Doug Berger         2017-10-24  525  		else
-4714221b0c62e6 Doug Berger         2017-10-24  526  			imask = 0;
-967e3cee02c1f7 Bartosz Golaszewski 2025-09-05  527  		gpio_generic_write_reg(&bank->chip,
-967e3cee02c1f7 Bartosz Golaszewski 2025-09-05  528  				       priv->reg_base + GIO_MASK(bank->id),
-4714221b0c62e6 Doug Berger         2017-10-24  529  				       imask);
-4714221b0c62e6 Doug Berger         2017-10-24  530  	}
-4714221b0c62e6 Doug Berger         2017-10-24  531  }
-4714221b0c62e6 Doug Berger         2017-10-24  532  
-
-:::::: The code at line 509 was first introduced by commit
-:::::: 4714221b0c62e6dc3f7ac31d1f50478f16259e71 gpio: brcmstb: implement suspend/resume/shutdown
-
-:::::: TO: Doug Berger <opendmb@gmail.com>
-:::::: CC: Linus Walleij <linus.walleij@linaro.org>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
