@@ -1,566 +1,309 @@
-Return-Path: <linux-gpio+bounces-25639-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25640-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4077B44B4E
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 03:41:28 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56A25B44C30
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 05:20:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 745303AB31B
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 01:41:27 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5FC4F7B633D
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Sep 2025 03:18:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BFDC1E520F;
-	Fri,  5 Sep 2025 01:41:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BC54221FDE;
+	Fri,  5 Sep 2025 03:20:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="VeG3D/IC"
+	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="xYwN586c"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023084.outbound.protection.outlook.com [52.101.127.84])
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023136.outbound.protection.outlook.com [52.101.127.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04066145329;
-	Fri,  5 Sep 2025 01:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFB8EEBD;
+	Fri,  5 Sep 2025 03:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.136
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757036481; cv=fail; b=fOaXXwZtG0x3blYUYexPy5RtpYMwlOOlOAuF+Kp0250O7ln04fWZ9rUTerMs8+Hq95TpOyFnzN7RcjQHwzx5oKW2r0m8XiQ49fFHjam4Hhoo9t6e4dnXoncpxwVYn4y/aOyu0S2poM9ie60tkqY4bFQ5gn7rwyIXrhC5DoqpPSU=
+	t=1757042407; cv=fail; b=bf2iW+2kolObECX8lBa4u35OJyhQGBmyM20zs2jHCE5JOrNw5Lfu5CKhjP/iH9Y5jZWHDfOBqg/h3ESu9Tt2qPg2iU7ip2R0dvcIgAy6/Y2iel3dVnbqS8u9uE+atgGi1vZsL2W7h/3JunZ2rwLo0FKf/fP3v5sx+RejvmKKZ+8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757036481; c=relaxed/simple;
-	bh=+cOJRJg9lMzmO2ChCaU2MYsMnMyY62ROPuHi4Ssz5IQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=BCCUbJSV0ynOwKmvRE2PNIL2PRTy+Fnp0asmkDN1QxOuAIAZ5VfyOR9RROcWMZ+iKgUGHGMy8ISCrHaaMhwXqLapbFCmVEdupOq+hkrKWNqYexx0ZnU83ZOMsS3kBKlogYNxMfxin5smZjrBgDt0/0W7itL05y1RyM89MhO3fVQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=VeG3D/IC; arc=fail smtp.client-ip=52.101.127.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+	s=arc-20240116; t=1757042407; c=relaxed/simple;
+	bh=9MsB8NdMVZgk73+mZ9blPwnxvMkQN5yRqa1F+0YNd+0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=VpQ9mwufueedF5W1CnBZ53cMI/gcu6tNpPXyTwSzZbWU0w7zapFmkgX+yZbP3ryuSrn6m7Nho9XdAI69wB8VubD9lzVD1iuvfAgR9Wvw4GjzPqUUfGwbEfNsvo/NdZgSKl3IDte8aNqAo9A7wsgOZ8cujh9KaThPrzxq3GYP3vg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=xYwN586c; arc=fail smtp.client-ip=52.101.127.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Og3XgnfxNOlEW2kin+E3Bfvelahx1YIyc78zsPCGHLzsgrntEfVb6LfA/K46xY+HPLV1F5w+falT9l1puGaZxCzF67ELfjELXR8gqM9MlJ1JILvOyr+koBU7aNmqDP83ThO9RJpY2myCRd7fRr7q9vDhqHaFAiSNguaqmEp1zlZgihiBD0aLHaKWducsohS4aRsL7FyTgZLI31oVFoC/crxOxW/+9jdSqWKGNrsVzUpltG55/we2IuVhDyKVHhbdy+RHARrCWPEZIApv3Q0aewZtpZN4rhqKS7dzVCzdniSKBz0q6kHJkHVymhsaHtk+Zd8I60ZpdO1xY1A9lK+xRA==
+ b=UlhOSohOj/ezJccLThk/eIGUARb3nvHSAJYV/0HGzxu2pfgh7j4lyoK27c0kkMjPLI69n2bN6t/Lp/fETifH3AIp/R3nX9F/u0ajK1UaHZd4k8VUCbbXbVX4yahFGZhAgnkUdiHh8e/c29XX9VJlYTHI6A2hLDkLjLJ9aXgdE4Ew8Z3b5luWq7cKFjzQtJF7XkPhjTi4/UY5KfDs3U0oOcrbaMPsK8q3BArvtRVjI6LRZphhRSOgZ0NJp5ztq8MSvcGWlie+AJAwQFdBesfIze/9zt/HbbGYnsgGBBy2fc6/8xac6y37ilrV2i6mRwpJRppHr0K0wc7H37kmiy2OiQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5qO1kRcHfW3GUuZMT7GD6MofdTG5ccKj8GCpFfhN9i0=;
- b=SAUNxfTFZEUzpIR82e97oFm2OMcWMV/HRTb6nlj7ibKRhKLa/DIJLEssbdYOEP4lToCUT80LvKID1b6KpxesAClnblaHzJukYYLJ6hwB9WoLkev7/AmYDKu+EAEllCainmNkBrgxyFNGWTgfA6r2jWtsvBWI6rIU61D54f8Isc8rVv8WgBxV5IBJ0pe0ab3dvqv42Oa5hUe97DZ7rvkeiIrmXqvYd7ygxFdgBXwJiTPsm3NsG5j0WNfsZkKL/SLWdX8x9+xqgEK9mBDlpon+7VLZoD8Rwwmc1kskS4NAXSTdJrsD9E0nodvDGe4pcvgAcXu7KeIUBZcU400gL+iZsg==
+ bh=+ACEnjg7YYIZNhu8dltQXBXCnU7J18kFazW6atZbxOE=;
+ b=fdOKeDvkpovGerZQvVj4LSG1IeOMyI9MjXAaGMnIHo6qUgDiG+fS9gkWmCM6GkuS2+PS/dxNDmAmZbpZbcfdTcB/TWTlvQOLodxuCJi0dQXb+6WgTP/dHQkVKRFeYfvoZJSGSlcfOG2CqozD8N3aGyY2C96VTO6/a6yflcRrYVLUW7f3r9rk0MeoIUDLXuAJoTW9R2NvhksdLOi/hda1QUdpO36/Ou1ygpBj/c4wFH3sK2i1tN2tadqA9YqN45ohmKiI0rsa/mR8WlnmjpOuae+ZIM94Y3NJd6fT7Qr3UyV5BRoqh1R5BszlAmnyzH9DYLR1Nwlnrj7LLsBtSfftaA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
+ smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
+ dkim=pass header.d=amlogic.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5qO1kRcHfW3GUuZMT7GD6MofdTG5ccKj8GCpFfhN9i0=;
- b=VeG3D/ICsQReLFm6zXy7VJuN6qRaXOR8GNcRJDwhFUeRxUuczoCsPcHfYL2hEAI9fpFpEUk0HfZfTffzLJS9eo8+jWTWLYQp7qfPYZP0v4ZVlIhmxm3Fo6ddZaiK0tSXh6wpF7mERFr+wnBqYg+4WewAWmjmrU+tXWCyaebjnvzgG9sUerv0Ta3UOUMn2y3y1xnCh8I+J50uLdHXpFzkvwnsub1RioiogL2+6l1otq+W0gS5dZnsQ/BcJJUI0Huc4u4BK80TiL+vFZxrES8nyS9mf6sVWUK8SQMWtZ/WQRX4r3GG6atJbLx0EVPWtV4mLhxMzmIYo+fcnP3x9blhAg==
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com (2603:1096:101:5a::12)
- by JH0PR06MB7210.apcprd06.prod.outlook.com (2603:1096:990:8d::5) with
+ bh=+ACEnjg7YYIZNhu8dltQXBXCnU7J18kFazW6atZbxOE=;
+ b=xYwN586cTwCZgc8Rfv8je6ATgy6JbBqUQ0L9HzBUzDivdwzHYnQjCuRpl4JCIpjC5aDOhKALxNnALhVQhR9a8DdmoqczpXnGytK9OAE6CFd7vkFjiZrlWd3rYIVC/1sfaGH57S6xuzSdb180jzGXWkWbmivYE71qOu3TgMH/uLFAiFWsUR5FltffLA+klkm5k8OkgdMr35LlCi4hZ4WVivaH/x1yXb6KoqqyZ4osoGIof9CGLFNQ7Nq7/7prEQ5nmbDhfwGEAV1pp4sXA67ZChvzB5ygv48mLiPUwMPuIf3K9x/3xoQFqOZ8f05LqTbwn9K9Lf5CNFcws6DqrziThw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amlogic.com;
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
+ by JH0PR03MB8809.apcprd03.prod.outlook.com (2603:1096:990:a1::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.18; Fri, 5 Sep
- 2025 01:41:13 +0000
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28]) by SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28%7]) with mapi id 15.20.9094.017; Fri, 5 Sep 2025
- 01:41:13 +0000
-From: Jacky Chou <jacky_chou@aspeedtech.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
-	<lpieralisi@kernel.org>, "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
-	"mani@kernel.org" <mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
-	<conor+dt@kernel.org>, "joel@jms.id.au" <joel@jms.id.au>,
-	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
-	"vkoul@kernel.org" <vkoul@kernel.org>, "kishon@kernel.org"
-	<kishon@kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-phy@lists.infradead.org"
-	<linux-phy@lists.infradead.org>, "openbmc@lists.ozlabs.org"
-	<openbmc@lists.ozlabs.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>
-Subject: [PATCH v3 09/10] PCI: aspeed: Add ASPEED PCIe RC driver
-Thread-Topic: [PATCH v3 09/10] PCI: aspeed: Add ASPEED PCIe RC driver
-Thread-Index: AQHcGwWaph4aFqMwQkOoce6H5iMHG7SCE6UAgAGyyVA=
-Date: Fri, 5 Sep 2025 01:41:13 +0000
-Message-ID:
- <SEYPR06MB5134E916ABFBF7FBB8744F189D03A@SEYPR06MB5134.apcprd06.prod.outlook.com>
-References: <20250901055922.1553550-10-jacky_chou@aspeedtech.com>
- <20250903224820.GA1234878@bhelgaas>
-In-Reply-To: <20250903224820.GA1234878@bhelgaas>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=aspeedtech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SEYPR06MB5134:EE_|JH0PR06MB7210:EE_
-x-ms-office365-filtering-correlation-id: 8cf39087-8218-4162-c769-08ddec1d4c5e
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?3G4OGqqYJEpS1hcn72gZG0s0BkbQfL9SC8qEvdYhKlTtcJP5BZ2JVn7uYzj8?=
- =?us-ascii?Q?CugYCIGdPbfOh4Jrwj5USe5/k4GeeW753w2IxAk+ACZPn6BYU+6Kc0OYioM6?=
- =?us-ascii?Q?jq31ygDjljv2iJM2muhsKFKB1OH4iseG6lwgbUT3JI42b1xDZ6hTwN/l32a6?=
- =?us-ascii?Q?7D1P86pw1jrMegRmkVK7vncDqGyKBrQKDI2trnlB1wBMopNrzP7e2ptc22Vs?=
- =?us-ascii?Q?42xJ9C8/6BQTeenR+YzKAkvhG2OXFd3f7UvclYAtaFS63fDHFVzu5IWrOqvU?=
- =?us-ascii?Q?TQkIrUH2L40cp/DwPRyO0uQAhHYjvm55MZ/3/okHuAZe1Av5fDaamrcxk1WV?=
- =?us-ascii?Q?NqOr3Lrqz3955sY1LEsSC0M14G3N+bfJGYqi/bUsXtdmyTNLWzazeZhBAsr7?=
- =?us-ascii?Q?TRUtymq8/D+h4zRxFym6p39u/N/RlFnrjJb1s4+lWjfbDEtH/C1LSrglgckH?=
- =?us-ascii?Q?PoenvvYlMQv6Jt0pItyo5OUIiPHLML7cDKjIGTIDJtiinGPd5+Nbo77gktef?=
- =?us-ascii?Q?Pw/N3Ee+nS+m+r7YbSPJBOIgV1s7qfBrBV9eNYMc1Ktcor771qxAX19YzFdU?=
- =?us-ascii?Q?/y9KUFTLPaPVZfUATBwVBuWJCF9U2dU+J/6xEvxcgbtc83kMXkStpIgyIO3/?=
- =?us-ascii?Q?dFD1Iddk6RNhpVKAMBXqM5MHQvLhDYjMQ79LhGPe5CCjTQSVfvhPvUwYhUix?=
- =?us-ascii?Q?OmUqERhsKImqbvhtyxfQCGt80hKn97+xU+VjWmQRiwbZjABnyNk0i5D64M6t?=
- =?us-ascii?Q?NHg2f0VU5uS8g794u/A0NLJgvPmUNkhJ4s12FIheQYcEaJcICyoJ2uWSZXrL?=
- =?us-ascii?Q?I0lXy6E+bWBwWjqh2FrZGRYzV7fp6MfLPCGvg7lDP81tEGozCOGCY/Faom5n?=
- =?us-ascii?Q?ebEqBSePKdpskqGrkVF8rRovmvYNGmD/G+EI1wzpnK6CJ51IH3BVchM7piMz?=
- =?us-ascii?Q?L/XS0pyLSParw7i6VO0nRjPUolfF6N/WU+5F+oetzwrf40xOM659gWb1bNuQ?=
- =?us-ascii?Q?cFr8gZyngigTz/jNf14OpOWCC6ztKnXlWFYsgfquoCxBaOO9Pait9lGunmrt?=
- =?us-ascii?Q?rGkvZbEbUrJpY+BKTp3lPaHMaCl0sOxVe/dVs8B1ESUBMWyNaDSkLmhk+70B?=
- =?us-ascii?Q?MlNJHoUFt0M6uzwe7wbOMjIGQmqfRX/61DXCuRWUAum6QgMCHfhb0N8kALrq?=
- =?us-ascii?Q?XuFOv4xiAeyxgvPK9DoRpjjbB1PKDKEB4XN9wW2YkhFLiqg4w+eJJuDmIzZ5?=
- =?us-ascii?Q?yicLePE7w2OwdpwsZSeiQCtrB4Ucqs0dRv3PVeQ6oGAQOtLUUCzMFLUMFo+b?=
- =?us-ascii?Q?nTT5/F7yp332nWHDt8qeeYuPY/BtK3BFn43TnCWkNtRkAmhEU8WTAI/G4/kL?=
- =?us-ascii?Q?bP+ZAlbDcVuMpL2n+zmS5O1mEatqioWCFgbkI793pYGX2x1bDdO25Erd4/W+?=
- =?us-ascii?Q?FiotyckX41Nf61CoolqPWhlCxf4vtcouZvWhDVC4pqVf3rLv9L3D2w=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB5134.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?0koKuglpQa2zik8kfT/uPeJdYiIjJRC1AnlwZWK45JZUJ/akcsv2LnTmt/Vu?=
- =?us-ascii?Q?md1O3a+tRR34l02H6+RamlAY0qJT2eDQP6hn4CofymY/n8s8aKuPexjX7rwb?=
- =?us-ascii?Q?tCrNLbcPSDp2olCcHbY1DeZqcGcdR4zGFHjO0MNgwZHMb7auOXcIZyLEYtN6?=
- =?us-ascii?Q?VhIpr5cFQ/LAHK9vdRHwzogrDAiQOmTNKVtkjO2XWwLKkxBgAkKSnU1/chYk?=
- =?us-ascii?Q?dnOOTHT5G5MtG0GMO9cDxFOhKHn6OPu62+pF10TA1swTUBHuCSeMT+uP7/Y+?=
- =?us-ascii?Q?HKFiJE8Pn14/97LBjnDUMJklptETqYuj5OFZgq943uTZfbKZTjIQtq7D3VPz?=
- =?us-ascii?Q?TGvu4BwAIVZDy0v/fvmrTqEVOE+CSP+qWhlgV5UAHoAhNbvlgr7s9dfGMEk9?=
- =?us-ascii?Q?/aG3hmWAiKu4WQq55eN9jELMlve65xvf6eiBAkMe5FWh/msOiwIN+t/LK/iq?=
- =?us-ascii?Q?2TDjv0DK/p7ZchBBgHFG3qKYxd/tzkhfTKG3pkOJM6qgYLV+49pfIVHf2fpH?=
- =?us-ascii?Q?+iE/cDCCYN7WrmfP75HD3P30c0P8HFGI8DOHAPnZOdveFiNetgJ+tCx12h7r?=
- =?us-ascii?Q?fhLWEMJ8+IrdhAUEOr3KkjYBL51ROeAtpMYaz2fJENyDKQcu4cmmCa4ab55B?=
- =?us-ascii?Q?Tt9w4OTpYwNHXyP/L/zZtyvUuFsXuUKZRfOfn5j04R+AbbPpkD2LGATQf1AM?=
- =?us-ascii?Q?wweyI05ZSy7C1yGcOXBEVtCnbmoVs1chwCnF6NPlHE5MFga2dYsxdFbryPE/?=
- =?us-ascii?Q?m+K7Jj33KE8357Lezd3FtS6Eo0IQt9G6aM3QerqdbYiruqqnPk/PcMBORGwK?=
- =?us-ascii?Q?aJBjU8perIzWh1XciCp0JKxCeNEbxVxWoR7+EjnNOlmoUVKXS+zGbMUZMLBG?=
- =?us-ascii?Q?g5/q+A6ML88uHZo1UFoW6B7EjZsydLBFlyZGhu+F5dJY3V1Ze09Ydkro13yf?=
- =?us-ascii?Q?60C0GDSUhZudvYGhp8FhitgM5AR9mIM7VucOwiGr54VTQXbEBAbTF9O/7jpd?=
- =?us-ascii?Q?ShBcVwTsvmXqqq+LxhWUkWdaVB5Jmp1x0+zxq8ZmF/7idK6tRHkbNIu3YSEG?=
- =?us-ascii?Q?sUfxTDHULJOMvpVgk0MfZIeNtucH0eNkxbpPPZ09WnO4HyR7oOHzLbzmsiun?=
- =?us-ascii?Q?dM0h6VQUorfm/wfZ/VfIOIgFYAwxgNrPE5UQ8MiuzLlbvjgUgVLwQe0khD7m?=
- =?us-ascii?Q?rfxD87IUi3QMKTn4WVOfMGfIoRCMe5BYTcAKeIeU76x4kedJb9WCm4t1+mmh?=
- =?us-ascii?Q?6UEDFs6ZimADLgdYxzCO1y21B78TtVPjjJHmqMGbtxZB7ylSvrH0zteXV7vS?=
- =?us-ascii?Q?pZdPaPlTGFr/CjuTMTz+LN4ekUp8Alecu6s6qFAUN1EFI3Xw7h0+BDl8Tj1C?=
- =?us-ascii?Q?azrGgqu1an6/CQX4Ug5+foxzxMpNlAiyVBEffZPVI+OT1zA36Huyk5gYQH/b?=
- =?us-ascii?Q?N3fTooCnmG2Sh5Pw8xScAOtecSApu73ZUthcFuJx8S79j93YcbRgsdYZNqwg?=
- =?us-ascii?Q?JIvE6ZAn+rOxgZo+NM70kVq2jBZFM453PdtBvs/DhOgxl3wBSzZiUHBQPUBr?=
- =?us-ascii?Q?4g837rSTjVbW2QVJ35LA2wb91cugabynPKdZ1n/H?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.27; Fri, 5 Sep
+ 2025 03:20:01 +0000
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::ac4e:718:3b03:3123]) by TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::ac4e:718:3b03:3123%4]) with mapi id 15.20.9073.026; Fri, 5 Sep 2025
+ 03:20:01 +0000
+Message-ID: <6ebddeb4-b33f-4392-b5da-56501b38fd6d@amlogic.com>
+Date: Fri, 5 Sep 2025 11:19:56 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] dts: arm64: amlogic: add a5 pinctrl node
+Content-Language: en-US
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20250403-a5-pinctrl-v3-0-a8c067e22295@amlogic.com>
+ <20250403-a5-pinctrl-v3-2-a8c067e22295@amlogic.com>
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+In-Reply-To: <20250403-a5-pinctrl-v3-2-a8c067e22295@amlogic.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI2PR02CA0051.apcprd02.prod.outlook.com
+ (2603:1096:4:196::10) To TYZPR03MB6896.apcprd03.prod.outlook.com
+ (2603:1096:400:289::14)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZPR03MB6896:EE_|JH0PR03MB8809:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7ae2e82c-7ebe-4dd2-1404-08ddec2b193f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TC9WSW5Icmt2akNJODV4OWVhckh0c2M1cWlhcks3NVViZ2M2VDJJbmlveUlG?=
+ =?utf-8?B?TzVwbU9ka1AzcHc1SzdIZU0rTHlwMW13ZWw4K3FlbVpjOENxZlY4aDdvU3hV?=
+ =?utf-8?B?WnIreldSRUVONnR1YzZCOU42emhIaWRXRlVWZjFhZjlrTnN6Tm9acWFnd2hs?=
+ =?utf-8?B?d2VlNlVDT252TlZtU0x4eXgxNk5FVllscXY2eTE1b3pJWDdUd0FoQkE1UDhI?=
+ =?utf-8?B?UE9XUEQzeStZS2hHcXdaZnk4OWtPZkFBUk5mMUpWMmowMjUrdjBqdmpPeGtY?=
+ =?utf-8?B?ZENuZ2huZDRpcy91cmVxM09KVzhaNHpVWnFPTTA0ZCtNQTJSaW4zZm10a0pw?=
+ =?utf-8?B?SEw2SGdiUEVvVmZyMWZIaU5uRzdLSElLUlBURC9zeHp2TmptYlE3M0orVEIv?=
+ =?utf-8?B?VGg5a3ZhbTVsM05xdjl5U2EwQW0vaGtFTVVBSCtCN2pETWp3cW5YZ2NoNnhq?=
+ =?utf-8?B?NnBMenFJT2d4d1BYbHl0SDk0N0ptekJwZWE0TW1vODgwVlRscDRJK2Fxa1Js?=
+ =?utf-8?B?b1dOWTkrNFBzMmZjTndDRWNEbW5MV3VnSVI0RHJUaDJob2E2MWdNUjdOVW5o?=
+ =?utf-8?B?MnIyQVlCTmNJVlVyYWdIb3cyc3VuaURBZjdhT1JpT2tNQ3N0K2gwWWdTZU5k?=
+ =?utf-8?B?M2RUSEJHampBMG9Kd2hIZmZqeW5ubHZBOUlwajhKQXc5cWU5UUducTVkYXhT?=
+ =?utf-8?B?ekhKMlZKOXVDQU5iYnVJMW9rVWF3UlIwTGlaTURWNEExOWhSUTlkK0YzZE9y?=
+ =?utf-8?B?L0tiZm1FWGY1T0VRUDBTQWh1Y0tLYWhMVDJsN2hDS0lMNk9DTTdiMEltTnFG?=
+ =?utf-8?B?WWpTdFBMa1FLNjhSOU9lSUdwMnRCVVpIem5QdzlGVzN4aW9KRmhlME4rZ2lN?=
+ =?utf-8?B?UkxjWUZlT1llZFd5eUZhRmgrUjh0ZGZFQTBKT3BEQis2L2tHeFgxQStUT2lh?=
+ =?utf-8?B?UDNnNGF4cG81T3BVRmpoU3c1cXlXbXl4bGgzSVVzR3hzSGdMVlMza2pwYWJj?=
+ =?utf-8?B?MmNLMUs5RWFNZmlMYWI2S3B6MmZNR0ZSQ1lQRGZYNFVpdzJyMERzVVhQR1hm?=
+ =?utf-8?B?Z0xwZ01aa09uWVZDaENyeHR3QlJrK3Z2RHQ2M1VQNlBETTZPSVdqQk9hMU43?=
+ =?utf-8?B?SFJhZFRTeFdPeGp0S1VEOHY5UTJjUGRzT2Z3VTEvL3RxWHdyUGhteTgrVEto?=
+ =?utf-8?B?L0JrWU9XdU9ZSFJYQWVHUDRBMzB6OGs3MkhGWDN6QUhHL2hRVWdCSStOL2pK?=
+ =?utf-8?B?Wk01S3h3UEF6ZFl2T1Z3Q1dKa0ZXRE05aHhBaDdpamw4YjEzZ0Uvc3VsUFdS?=
+ =?utf-8?B?a2QrRGJNbmRrdEtlNzcrVlBua3d2M0s0VVlHVzZQaW5MVTZwcEVnNkVueDJF?=
+ =?utf-8?B?OFJlOUY1U0VXT3kyVFhzM29MQ3pRbXRIc3ZHeWYvejg2UXNOQkpZeVhLVW5I?=
+ =?utf-8?B?U1JvVW5PNG1RTjVyU0U0SS9PdW9mbFFrTHlIOUxmbWs5c21JOGFQYjZnQW1H?=
+ =?utf-8?B?am85OVlkSlROODdrN2RZbkVibUxUWG5vUks0OXphMkE4SCtObEpJcEl6VFRY?=
+ =?utf-8?B?bjQvK1I0ZGtNSTMwdUFPOURvSzYrK1VTZFJiYjE1N3lINXpxWmZoSWVIam5o?=
+ =?utf-8?B?cGFFTkhOVkNTRis5OEovaVozTDFBUHZZVUtXYlVhV090MDFQZFBnUVBLaUhs?=
+ =?utf-8?B?ZlNmbjcxNitEcm1UTVJuVlozcldyOVVMcDZTWitwK05vditORmhLQWUxdklu?=
+ =?utf-8?B?TlJvVWtVUVB6bU4vaUkydEcydUtTdzU2RW1kcUpiZjk2LzJOSWcvOE9IWmpn?=
+ =?utf-8?B?U2tEQVA5TFcyblY2OStzWUpTMGVpcGwwT2luQ2NVeTFCcXd0WERLTWg4VE8y?=
+ =?utf-8?B?R0J2MnliNWhERHFyVlZKSHVlVkN0SEQ5bG8wVUh3MGlhZ3NManhxdGpQZzhq?=
+ =?utf-8?Q?I/8Ubyar5g0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6896.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RmhoY0R0N3hXMkduZE9wSG5xejBvUWpBb2R6ekJ6aG80MTRFU3FXdXNmOUtx?=
+ =?utf-8?B?SG5qTVVJQjZPaXlPSk45QlBmSWc3emVIQ1FqYUNlelVyaVB6K2UyRkhKYkFh?=
+ =?utf-8?B?SjBNSUxCUlZFVTJHZGdqc091TEhZTCs2Nk9TUFFLQjZwTlo2VkNoZWhld3Q5?=
+ =?utf-8?B?MUVVMjU3RGYxZWtYWUNaM2VZRitVaVVSUXczMVVyWXFRRytEN3BpZ1phWnlS?=
+ =?utf-8?B?aFd2SlNpcmlJMm1XdENsbHRlYnZaazlVVEpqdnlMeks0ZzVVYm03MmhyRVRh?=
+ =?utf-8?B?OS9wck1yMlZLR01qcnBvc1duOTlEQlV3R1lENUNRalhOaWdpazRkcVZGcnR6?=
+ =?utf-8?B?TklVTlUrdDRCNkhlSnAwNC9DRzlCZ0kydWxCRVY3RTVLZUtoOVh0YjBPZTd4?=
+ =?utf-8?B?dlByd1l5aUJsWkgwZHlHcFBEaGtoam9Ma0pSN1dpQWFmeDg5N0E3YVBTNDQv?=
+ =?utf-8?B?cTRJVXRUTjZUL0QzWmEvN3FPL1BjL080UFFWZE9Sc0VZalNhMDhLb05MVFp5?=
+ =?utf-8?B?aDErNHpVUVQ4dEZHQ1I5d0M4MTdGSVRxQmI3YTNNbGZ3aHkySU4yc2I4UTAv?=
+ =?utf-8?B?YWxIeFZmdDBlV2UxWE1vUGxaVTNzQXV6OFByTHdZWGVlbVhiYTBDbGQxTVlQ?=
+ =?utf-8?B?WXI3ejAxcmpqWXpNRDhQekUvbXByVlhtS1FiSGVXMnJaYlV2YzgzbHF6L1NM?=
+ =?utf-8?B?YWk2NHBOTnY0ekNIN240ME9TM3Rkemg4UW9xU0lnbDR4YTd4QlZrL2RUZko4?=
+ =?utf-8?B?eUdtWEY4YzJRS1F2U1lRaTV1MFlpc0F4NjlBdm4rOVp3MTBldGFNTU5pb0s4?=
+ =?utf-8?B?VGlSTGQ5blBJS3BuSGJmZkowaWFwbGthMVUxV2hrcVlaT1dMNjdXSDVMQkw4?=
+ =?utf-8?B?cDdCcUgvNEpiMXZxQ3FEeG1vRkIvei9zcC9xWlluY1ZxWXR6ZFF1NndXcGlQ?=
+ =?utf-8?B?cWpTMXFPR1Rrcng1SGxZMGo0WUMwdng0VUhrSXFLM3FXS0Rid3luVlhzRHV6?=
+ =?utf-8?B?eFJpOE5EdkZjL1plODh3S0lSbkszQWRvSVNvTVdXT0tkK2dkZytmTmh6aFQz?=
+ =?utf-8?B?RGlHTGE3UnY4c25MdjZHMmcrTzk1TWE0engzR3N3WXJpb3Z1dkZNY21HbmY1?=
+ =?utf-8?B?bzJoNzRRYWRqazFkUWhmUytNT3RkQ1Q5QkVCbWR6dThiMnlTSVVVM09aUm5p?=
+ =?utf-8?B?MGkzbVlkOXVFbUJDQ01GakZ3aUZHZzVodXFQd3NhNGkwM3lUMHdMUTQzV0tJ?=
+ =?utf-8?B?OUZZSDBlRUViT1JSVTV6TTE0K1NLV2paVHduYk5vWTREdG5pVkhweVpBZlJi?=
+ =?utf-8?B?RFlyWkN2Z3ZkY2E4UGlBeit1VmlRNllhUkNSb3E3MEVnUlF4cmdxS3hidW9N?=
+ =?utf-8?B?amRoTFE4KzlXN2hkTzJVcGpKREpYRUtNQzhSZzRRZmRObGF4M0hFRERNZ0dl?=
+ =?utf-8?B?QWpmRzVockZ3cXVlemI4R2drdW9VK3RtVStQN2FzTGo0YUNDdUNKYVhiMndy?=
+ =?utf-8?B?dFdxcmdMcWhWVDBPaFoyaVIxbDRBblVQakh2djVhYzdBNzJtRU9SdHBqeGRY?=
+ =?utf-8?B?ZFFRZ1dhOEhISVNLaWhRSjFXd3V5RW1vQnN2MnNTNHl4RGlqZ2lBZlRJY0dN?=
+ =?utf-8?B?RThMa09rYy95WHRidDE0bzF6SzE5SzdkNWFhbGtzL0VMYUZtdGpxTWNHUTlV?=
+ =?utf-8?B?K1hyWFRGaGRPQ29NYXVoTUpkVU9GeWNwNjUrdndSNjVSazNrRVg4MjNlejlS?=
+ =?utf-8?B?NzlCR0lYaGZ3WWpiQk15alRDdlJlZVJOU0pCd2w0NlYrUXhVN3NDV0t2RDJI?=
+ =?utf-8?B?dE4vTXJtQi9xOWhTY3hrbzRqYld2NWtGTzJkVU14WlZ0TXZGSlJDZGFPRzJK?=
+ =?utf-8?B?cE9rVHRPaVNIaU5LcjBmU0JmRTR5dE1YeEhvVm91K3dxclBYUU9pd0JnWkht?=
+ =?utf-8?B?VFVOdFdiWktrci9JcWFCT1l1U1RvbStsZzg0TjRtd1owYmdqRWhzOGlvclZu?=
+ =?utf-8?B?VE9FdnU3ZzMraUFmMktwRlFxT2pwTk1CU0ZSanZzY0JKT2tFSGkrRnlYaHgz?=
+ =?utf-8?B?MGhLRkExQWNDRzVoUTVtS3lNaFU5VEFuMCtCOHRrRmFLY280dElodEp2SGlX?=
+ =?utf-8?B?K1Rlb3dmQnhXRWh2ekZHUUNjWHlpbUM3WUx5OXZ3UHF2a3F3dDB6Tld6Q1By?=
+ =?utf-8?B?cXc9PQ==?=
+X-OriginatorOrg: amlogic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ae2e82c-7ebe-4dd2-1404-08ddec2b193f
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6896.apcprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB5134.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8cf39087-8218-4162-c769-08ddec1d4c5e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2025 01:41:13.5733
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2025 03:20:01.0386
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4cHLPrvtqhSanP7jm81q7jyhmS2J07epe0PUr/k6L2LeOefoLm5b03GROVSPLKm4r9QdvJ8XWZut1KaB5MqAVUKOaY6cyJd9iJgajQBGjDw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB7210
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LtWh6G0+30mcYYUaz+EK0l1mT/thbwCsIblP4bH2NI5mGFN+3Q4BXELYNwCGkjkMxtdv0DR1qfgQsXpa3REa5EpJOSGpnOthxlJggX1CWXI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR03MB8809
 
-Hi Bjorn,
+Hi Neil,
+    Could you please take some time to review this submission?
 
-Thank you for your reply.
-
-> > +/* TLP configuration type 0 and type 1 */
-> > +#define CRG0_READ_FMTTYPE
-> \
-> > +	FIELD_PREP(ASPEED_TLP_COMMON_FIELDS,                     \
-> > +		   ASPEED_TLP_FMT_TYPE(PCIE_TLP_FMT_3DW_NO_DATA, \
-> > +				       PCIE_TLP_TYPE_CFG0_RD))
-> > +#define CRG0_WRITE_FMTTYPE
-> \
-> > +	FIELD_PREP(ASPEED_TLP_COMMON_FIELDS,                  \
-> > +		   ASPEED_TLP_FMT_TYPE(PCIE_TLP_FMT_3DW_DATA, \
-> > +				       PCIE_TLP_TYPE_CFG0_WR))
-> > +#define CRG1_READ_FMTTYPE
-> \
-> > +	FIELD_PREP(ASPEED_TLP_COMMON_FIELDS,                     \
-> > +		   ASPEED_TLP_FMT_TYPE(PCIE_TLP_FMT_3DW_NO_DATA, \
-> > +				       PCIE_TLP_TYPE_CFG1_RD))
-> > +#define CRG1_WRITE_FMTTYPE
-> \
-> > +	FIELD_PREP(ASPEED_TLP_COMMON_FIELDS,                  \
-> > +		   ASPEED_TLP_FMT_TYPE(PCIE_TLP_FMT_3DW_DATA, \
-> > +				       PCIE_TLP_TYPE_CFG1_WR))
-> > +#define CRG_PAYLOAD_SIZE		0x01 /* 1 DWORD */
->=20
-> What does "CRG" in the above mean?  If it means the same as "CFG", i.e., =
-an
-> abbreviation for "configuration", can you use "CFG" instead?
-> It it's to match an internal spec, go ahead and keep "CRG".
->=20
-
-It is "configuration". I will change "CRG" to "CFG" in next version.
-
-> > + * struct aspeed_pcie_rc_platform - Platform information
-> > + * @setup: initialization function
-> > + * @reg_intx_en: INTx enable register offset
-> > + * @reg_intx_sts: INTx status register offset
-> > + * @reg_msi_en: MSI enable register offset
-> > + * @reg_msi_sts: MSI enable register offset
-> > + * @msi_address: HW fixed MSI address  */ struct
-> > +aspeed_pcie_rc_platform {
-> > +	int (*setup)(struct platform_device *pdev);
-> > +	int reg_intx_en;
-> > +	int reg_intx_sts;
-> > +	int reg_msi_en;
-> > +	int reg_msi_sts;
-> > +	int msi_address;
->=20
-> I think this should be u32 to match struct msi_msg.address_lo.
->=20
-
-Agreed.
-
-> > +static irqreturn_t aspeed_pcie_intr_handler(int irq, void *dev_id) {
-> > +	struct aspeed_pcie *pcie =3D dev_id;
-> > +	const struct aspeed_pcie_rc_platform *platform =3D pcie->platform;
-> > +	unsigned long status;
-> > +	unsigned long intx;
-> > +	u32 bit;
-> > +	int i;
-> > +
-> > +	intx =3D FIELD_GET(PCIE_INTX_STS,
-> > +			 readl(pcie->reg + platform->reg_intx_sts));
-> > +	for_each_set_bit(bit, &intx, PCI_NUM_INTX)
-> > +		generic_handle_domain_irq(pcie->intx_domain, bit);
-> > +
-> > +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> > +		for (i =3D 0; i < 2; i++) {
-> > +			int msi_sts_reg =3D platform->reg_msi_sts + (i * 4);
-> > +
-> > +			status =3D readl(pcie->reg + msi_sts_reg);
-> > +			writel(status, pcie->reg + msi_sts_reg);
-> > +
-> > +			/*
-> > +			 * AST2700 A1 workaround:
-> > +			 * The MSI status needs to clear one more time.
-> > +			 */
-> > +			if (of_device_is_compatible(pcie->dev->of_node,
-> > +						    "aspeed,ast2700-pcie"))
->=20
-> It looks pretty expensive to look this up for every interrupt.  It's cons=
-tant for
-> the life of the driver, so you only need to do it once at probe time.
->=20
-
-Calling of_device_is_compatible() in the interrupt path is unnecessary.
-In next version, I will add a variable in private at probe and=20
-have the ISR check the variable instead.
-
-> > +				writel(status, pcie->reg + msi_sts_reg);
-> > +
-> > +			for_each_set_bit(bit, &status, 32) {
-> > +				bit +=3D (i * 32);
-> > +				generic_handle_domain_irq(pcie->msi_domain,
-> > +							  bit);
-> > +			}
-> > +		}
-> > +	}
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
->=20
-> > +static int aspeed_msi_set_affinity(struct irq_data *irq_data,
-> > +				   const struct cpumask *mask, bool force) {
-> > +	return -EINVAL;
-> > +}
->=20
-> From comparing with other drivers, I doubt this is needed.
->=20
-
-Agreed.
-It seems unnecessary. I will remove in next version.
-
-> > +
-> > +static struct irq_chip aspeed_msi_bottom_irq_chip =3D {
-> > +	.name =3D "ASPEED MSI",
-> > +	.irq_compose_msi_msg =3D aspeed_msi_compose_msi_msg,
->=20
-> I would prefer a name that matches irq_chip.irq_compose_msi_msg, e.g.,
-> "aspeed_irq_compose_msi_msg()".
->=20
-
-Agreed.
-
-> > +static int aspeed_pcie_msi_init(struct aspeed_pcie *pcie) {
-> > +	int ret =3D 0;
-> > +
-> > +	writel(~0, pcie->reg + pcie->platform->reg_msi_en);
-> > +	writel(~0, pcie->reg + pcie->platform->reg_msi_en + 0x04);
-> > +	writel(~0, pcie->reg + pcie->platform->reg_msi_sts);
-> > +	writel(~0, pcie->reg + pcie->platform->reg_msi_sts + 0x04);
-> > +
-> > +	struct irq_domain_info info =3D {
-> > +		.fwnode		=3D dev_fwnode(pcie->dev),
-> > +		.ops		=3D &aspeed_msi_domain_ops,
-> > +		.host_data	=3D pcie,
-> > +		.size		=3D MAX_MSI_HOST_IRQS,
-> > +	};
-> > +
-> > +	pcie->msi_domain =3D msi_create_parent_irq_domain(&info,
-> > +							&aspeed_msi_parent_ops);
-> > +	if (!pcie->msi_domain)
-> > +		return dev_err_probe(pcie->dev, -ENOMEM,
-> > +				     "failed to create MSI domain\n");
-> > +
-> > +	return ret;
->=20
-> Useless "ret".  Remove it and just "return 0;"
->=20
-
-Agreed.
-
-> > +static int aspeed_ast2600_setup(struct platform_device *pdev) {
-> > +	struct aspeed_pcie *pcie =3D platform_get_drvdata(pdev);
-> > +	struct device *dev =3D pcie->dev;
-> > +
-> > +	if (pcie->host_bus_num !=3D 0x80)
-> > +		return dev_err_probe(dev, -EINVAL,
-> > +				     "The host bus must be 0x80\n");
->=20
-> Why not check this at the point you read it from the devicetree?
->=20
-
-Sorry.
-Do you mean this check put in aspeed_pcie_parse_dt()?
-
-> > +	pcie->ahbc =3D syscon_regmap_lookup_by_phandle(dev->of_node,
-> > +						     "aspeed,ahbc");
-> > +	if (IS_ERR(pcie->ahbc))
-> > +		return dev_err_probe(dev, PTR_ERR(pcie->ahbc),
-> > +				     "failed to map ahbc base\n");
->=20
-> Same here.  Looks like a devicetree validation check.
->=20
-
-And this also puts to aspeed_pcie_parse_dt()?
-
-> > +static int aspeed_pcie_parse_port(struct aspeed_pcie *pcie,
-> > +				  struct device_node *node,
-> > +				  int slot)
-> > +{
-> > +	struct aspeed_pcie_port *port;
-> > +	struct device *dev =3D pcie->dev;
-> > +	int ret;
-> > +
-> > +	port =3D devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
-> > +	if (!port)
-> > +		return -ENOMEM;
-> > +
-> > +	port->clk =3D devm_get_clk_from_child(dev, node, NULL);
-> > +	if (IS_ERR(port->clk))
-> > +		return dev_err_probe(dev, PTR_ERR(port->clk),
-> > +				     "failed to get pcie%d clock\n", slot);
-> > +
-> > +	port->phy =3D devm_of_phy_get(dev, node, NULL);
-> > +	if (IS_ERR(port->phy))
-> > +		return dev_err_probe(dev, PTR_ERR(port->phy),
-> > +				     "failed to get phy pcie%d\n",
-> > +				     port->slot);
->=20
-> port->slot hasn't been set yet.
->=20
-
-Agreed.
-I will change it to "slot" in next version.
-
-> > +	port->perst =3D of_reset_control_get_exclusive(node, "perst");
-> > +	if (IS_ERR(port->perst))
-> > +		return dev_err_probe(dev, PTR_ERR(port->perst),
-> > +				     "failed to get pcie%d reset control\n",
-> > +				     slot);
-> > +	ret =3D devm_add_action_or_reset(dev, aspeed_pcie_reset_release,
-> > +				       port->perst);
-> > +	if (ret)
-> > +		return ret;
-> > +	reset_control_assert(port->perst);
-> > +
-> > +	port->slot =3D slot;
-> > +	port->pcie =3D pcie;
-> > +
-> > +	INIT_LIST_HEAD(&port->list);
-> > +	list_add_tail(&port->list, &pcie->ports);
-> > +
-> > +	return 0;
-> > +}
->=20
-> > +static int aspeed_pcie_probe(struct platform_device *pdev) {
-> > +	struct device *dev =3D &pdev->dev;
-> > +	struct pci_host_bridge *host;
-> > +	struct aspeed_pcie *pcie;
-> > +	struct device_node *node =3D dev->of_node;
-> > +	const struct aspeed_pcie_rc_platform *md;
-> > +	u32 bus_range[2];
-> > +	int irq, ret;
-> > +
-> > +	md =3D of_device_get_match_data(dev);
-> > +	if (!md)
-> > +		return -ENODEV;
-> > +
-> > +	host =3D devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
-> > +	if (!host)
-> > +		return -ENOMEM;
-> > +
-> > +	pcie =3D pci_host_bridge_priv(host);
-> > +	pcie->dev =3D dev;
-> > +	pcie->tx_tag =3D 0;
-> > +	platform_set_drvdata(pdev, pcie);
-> > +
-> > +	pcie->platform =3D md;
-> > +	pcie->host =3D host;
-> > +	INIT_LIST_HEAD(&pcie->ports);
-> > +
-> > +	ret =3D of_property_read_u32_array(node, "bus-range", bus_range,
-> > +					 ARRAY_SIZE(bus_range));
->=20
-> No other drivers do this; why do you need it?
->=20
-
-I need to get the number of root bus.
-At 2700 configuration command, it needs to use the next number of root bus
-to send the header type of cfg command of TLP.
-
-static int aspeed_ast2700_child_config(struct pci_bus *bus, unsigned int de=
-vfn,
-				       int where, int size, u32 *val,
-				       bool write)
-{
-
-.....
-
-	if (write)
-		cfg_val |=3D (bus->number =3D=3D (pcie->host_bus_num + 1)) ?
-				   CFG0_WRITE_FMTTYPE :
-				   CFG1_WRITE_FMTTYPE;
-	else
-		cfg_val |=3D (bus->number =3D=3D (pcie->host_bus_num + 1)) ?
-				   CFG0_READ_FMTTYPE :
-				   CFG1_READ_FMTTYPE;
-	writel(cfg_val, pcie->reg + H2X_CFGE_TLP_1ST);
-
-....
-
-> > +	if (ret) {
-> > +		dev_warn(dev, "failed to get bus range, assuming bus is 0\n");
-> > +		pcie->host_bus_num =3D 0;
-> > +	}
-> > +	pcie->host_bus_num =3D bus_range[0];
-> > +
-> > +	pcie->reg =3D devm_platform_ioremap_resource(pdev, 0);
-> > +	if (IS_ERR(pcie->reg))
-> > +		return PTR_ERR(pcie->reg);
-> > +
-> > +	pcie->domain =3D of_get_pci_domain_nr(node);
->=20
-> Almost no drivers use this; why do you need it?
->=20
-
-It is just used for message, must not be requirement.
-I will remove it in next version.
-
-> > +	pcie->h2xrst =3D devm_reset_control_get_exclusive(dev, "h2x");
-> > +	if (IS_ERR(pcie->h2xrst))
-> > +		return dev_err_probe(dev, PTR_ERR(pcie->h2xrst),
-> > +				     "failed to get h2x reset\n");
-> > +
-> > +	ret =3D devm_mutex_init(dev, &pcie->lock);
-> > +	if (ret)
-> > +		return dev_err_probe(dev, ret, "failed to init mutex\n");
-> > +
-> > +	ret =3D pcie->platform->setup(pdev);
-> > +	if (ret)
-> > +		return dev_err_probe(dev, ret, "failed to setup PCIe RC\n");
-> > +
-> > +	ret =3D aspeed_pcie_parse_dt(pcie);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret =3D aspeed_pcie_init_ports(pcie);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	host->sysdata =3D pcie;
-> > +
-> > +	ret =3D aspeed_pcie_init_irq_domain(pcie);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	irq =3D platform_get_irq(pdev, 0);
-> > +	if (irq < 0)
-> > +		return irq;
-> > +
-> > +	ret =3D devm_add_action_or_reset(dev, aspeed_pcie_irq_domain_free,
-> pcie);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret =3D devm_request_irq(dev, irq, aspeed_pcie_intr_handler,
-> IRQF_SHARED,
-> > +			       dev_name(dev), pcie);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret =3D pci_host_probe(host);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return 0;
->=20
-> This is the same as:
->=20
->   return pci_host_probe(hoste);
->=20
-
-Agreed.
-
-> > +}
-> > +
-> > +const struct aspeed_pcie_rc_platform pcie_rc_ast2600 =3D {
-> > +	.setup =3D aspeed_ast2600_setup,
-> > +	.reg_intx_en =3D 0xc4,
-> > +	.reg_intx_sts =3D 0xc8,
-> > +	.reg_msi_en =3D 0xe0,
-> > +	.reg_msi_sts =3D 0xe8,
-> > +	.msi_address =3D 0x1e77005c,
->=20
-> Where does this .msi_address come from?  Does this depend on an address
-> map that could vary based on the platform?  Should it come from devicetre=
-e?
->=20
-
-The .msi_address is a SoC-fixed MSI doorbell target address used by the RC
-to capture MSI writes. The memory write of MSI will not be mapped to RAM.
-I think it should be keep in the SoC match data rather than Devicetree.
-
-> > +};
-> > +
-> > +const struct aspeed_pcie_rc_platform pcie_rc_ast2700 =3D {
-> > +	.setup =3D aspeed_ast2700_setup,
-> > +	.reg_intx_en =3D 0x40,
-> > +	.reg_intx_sts =3D 0x48,
-> > +	.reg_msi_en =3D 0x50,
-> > +	.reg_msi_sts =3D 0x58,
-> > +	.msi_address =3D 0x000000f0,
-> > +};
-
-Thanks,
-Jacky
+On 2025/4/3 16:33, Xianwei Zhao via B4 Relay wrote:
+> [ EXTERNAL EMAIL ]
+> 
+> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> 
+> Add pinctrl device to support Amlogic A5.
+> 
+> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> ---
+>   arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi | 90 +++++++++++++++++++++++++++++
+>   1 file changed, 90 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
+> index 32ed1776891b..844302db2133 100644
+> --- a/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
+> @@ -4,6 +4,7 @@
+>    */
+> 
+>   #include "amlogic-a4-common.dtsi"
+> +#include <dt-bindings/pinctrl/amlogic,pinctrl.h>
+>   #include <dt-bindings/power/amlogic,a5-pwrc.h>
+>   / {
+>          cpus {
+> @@ -50,6 +51,95 @@ pwrc: power-controller {
+>   };
+> 
+>   &apb {
+> +       periphs_pinctrl: pinctrl@4000 {
+> +               compatible = "amlogic,pinctrl-a5",
+> +                            "amlogic,pinctrl-a4";
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
+> +               ranges = <0x0 0x0 0x0 0x4000 0x0 0x300>;
+> +
+> +               gpioz: gpio@c0 {
+> +                       reg = <0x0 0xc0 0x0 0x40>,
+> +                             <0x0 0x18 0x0 0x8>;
+> +                       reg-names = "gpio", "mux";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_Z<<8) 16>;
+> +               };
+> +
+> +               gpiox: gpio@100 {
+> +                       reg = <0x0 0x100 0x0 0x40>,
+> +                             <0x0 0xc   0x0 0xc>;
+> +                       reg-names = "gpio", "mux";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_X<<8) 20>;
+> +               };
+> +
+> +               gpiot: gpio@140 {
+> +                       reg = <0x0 0x140 0x0 0x40>,
+> +                             <0x0 0x2c  0x0 0x8>;
+> +                       reg-names = "gpio", "mux";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_T<<8) 14>;
+> +               };
+> +
+> +               gpiod: gpio@180 {
+> +                       reg = <0x0 0x180 0x0 0x40>,
+> +                             <0x0 0x40  0x0 0x8>;
+> +                       reg-names = "gpio", "mux";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_D<<8) 16>;
+> +               };
+> +
+> +               gpioe: gpio@1c0 {
+> +                       reg = <0x0 0x1c0 0x0 0x40>,
+> +                             <0x0 0x48  0x0 0x4>;
+> +                       reg-names = "gpio", "mux";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_E<<8) 2>;
+> +               };
+> +
+> +               gpioc: gpio@200 {
+> +                       reg = <0x0 0x200 0x0 0x40>,
+> +                             <0x0 0x24  0x0 0x8>;
+> +                       reg-names = "gpio", "mux";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_C<<8) 11>;
+> +               };
+> +
+> +               gpiob: gpio@240 {
+> +                       reg = <0x0 0x240 0x0 0x40>,
+> +                             <0x0 0x0   0x0 0x8>;
+> +                       reg-names = "gpio", "mux";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_B<<8) 14>;
+> +               };
+> +
+> +               gpioh: gpio@280 {
+> +                       reg = <0x0 0x280 0x0 0x40>,
+> +                             <0x0 0x4c  0x0 0x4>;
+> +                       reg-names = "gpio", "mux";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_H<<8) 5>;
+> +               };
+> +
+> +               gpio_test_n: gpio@2c0 {
+> +                       reg = <0x0 0x2c0 0x0 0x40>,
+> +                             <0x0 0x3c  0x0 0x4>;
+> +                       reg-names = "gpio", "mux";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_TEST_N<<8) 1>;
+> +               };
+> +       };
+> +
+>          gpio_intc: interrupt-controller@4080 {
+>                  compatible = "amlogic,a5-gpio-intc",
+>                               "amlogic,meson-gpio-intc";
+> 
+> --
+> 2.37.1
+> 
+> 
 
