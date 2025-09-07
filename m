@@ -1,182 +1,118 @@
-Return-Path: <linux-gpio+bounces-25708-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25709-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 866FCB47B61
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Sep 2025 14:42:05 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20228B47B93
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Sep 2025 15:25:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E8B317CBC4
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Sep 2025 12:42:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 21D60189AEEF
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Sep 2025 13:26:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0005626F28C;
-	Sun,  7 Sep 2025 12:41:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77631277003;
+	Sun,  7 Sep 2025 13:25:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="He3WXDuW"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="ZS9Na2BC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from smtp.smtpout.orange.fr (smtp-28.smtpout.orange.fr [80.12.242.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B555C88;
-	Sun,  7 Sep 2025 12:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0C4248F7D;
+	Sun,  7 Sep 2025 13:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757248917; cv=none; b=DO5k9DQ4THPrNBE7TyyC/nshDBQqJSjokMFZgrw1XlvGRNbyYf3yhkgVHokBIewc5j8pXoqp9vITGS1obLlZToVzHATxRWVsoSH/Za/1CaJrSvjtt21MFyVoQXUGj3vGUPJKheNkEl0R8Kwthc+lr475INWKVv/WX0EoLebyb0Y=
+	t=1757251549; cv=none; b=u3Hdw43d3LCDD8c2XcWk/4Z+KurDqgpz360XlzULm0QYfT+B5w8YePiAdORIAzNvfXGUD0zqePiU7yk2iVkAjcLcsbo9rppmQNGHyq2gz9R0v/dEocZVu2dPZBzHcDGJ9bfWs5aVWJUumJvxeAvMvntpxi1xr6t9jItwKzweRrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757248917; c=relaxed/simple;
-	bh=SnHjhs2yApPbBCCwhqp/mqzVT1uN/mjFIYxuY+jSiZU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uS62QN/yVgSvkSRz38F8/IZzgjqxq33I+pSEAZb4s/rSEBaaKfbUt6POD3Kht9C1AUTmRK5TnFv0j2bcOjdRq78PnLsLPZpfEMhyTSSkbdkTZ1urPXl85PdLW66slD25BjWJbg4JLMJce2RlSkNy+Ezm/Hbwjd7YkJYegbtwG9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=He3WXDuW; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-337e1ce5dd1so26888811fa.3;
-        Sun, 07 Sep 2025 05:41:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757248913; x=1757853713; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=En4pEgo3HzN81VOXQC3uWh3DV4FBwtg/Su3ZTWTLHHg=;
-        b=He3WXDuWYIa19HQIiyPhx13O7m9oHdhduONRqMxEwKBfXLY6Sh95Ov2nT/GYA7YRHu
-         cba7enNe0hIWud35WNmAZkcLOa0rcrwBohTPplTx9TVWJLid+o5JAh5nHqTZU5eNgG1x
-         7q0Zg/kBV2xTFJgf8zL0VpOdnDEoR0TDhkNg3W5wDLRDpsllltxLsony0aFTx1sIymjO
-         teRmtgOJp3qpLqkzSLnyBe50/UPhAz5scPqxGHXntXQfkzgifozrR9HROGvr8MFu8f08
-         GWOzQEkWiuPNPJLrmQvD6ZnVIEgMgwbqBd5Hoph+vWCpMc392d/Xl7hXarC1k7W/MIky
-         R5ZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757248913; x=1757853713;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=En4pEgo3HzN81VOXQC3uWh3DV4FBwtg/Su3ZTWTLHHg=;
-        b=LWr69nYjdEiOjeaK36DKKxr4BmKL0t7g94bkoqAuRD5YZNzp+CIkhOx5RdbZym6JgX
-         GSHWkcdIMGmS71MHcjsRKyZKYeGX2WYYa1N6Qid0vPLwWCVtySKK+Oc42GIho3yDQJRO
-         kAV/8cz2JylSXfAWFJWOB8YsFAFD2km9AiVcrp5MrZ2BhmdBfZ2yhol4wFf6iiYzxa/Z
-         EuTbQAcVs2xKVJXRTXC5xcKjvkSQB61oicrnAY+AJELfTnUJl1KBT2ppF8SkNr136Q+R
-         yo5SNVrnVFRZcPDxLOmhREWqpLXWFolwlcUlg+GQbdnjh1gCVSoHNlJZy1qpd+kVki2D
-         x59Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU58SEgW9GJ9lf8rrGbhiC6oUmWRViUgrqQ9Ns+A3kiNxcm3Yhi+FYQJdUMMVsxKAnFddbCu4AL/k3Gug==@vger.kernel.org, AJvYcCUMBtm6w34lt2DGQBSCoenxfXWbrBX4O+dEsQOhhi2uTcNt6IhwGbNIBEcoMB8DLY98/yDuDwjeOBtP@vger.kernel.org, AJvYcCW0E33OaPDzlBNv86vwKtzHGl+qgyTZNTLoUGxngyRWjzOx+aJd9qpZCJu/gHAFCJ7c1xfmbjla21bGbCne@vger.kernel.org, AJvYcCXZ6yhTUDG9zS41hQT7nAQLP409UmO79GXotZZP+o2cwJWM4Bjlgw2G3+1lZnKfOIEQo9YGhKuJwTC3@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeGPiDcyEiTvPyDOwNYtWVcwdpq0YUNW1B8Q0QuQMxtIjRNtwx
-	RFi8JmvvZATlalk8lfoajSDktwIcgK2H1xQxPW8CuDVNyFbCORJ4mZep
-X-Gm-Gg: ASbGncuYMOtPjBkcR5SXVggOZVplcBN0qDoO80v5UWw82Nse2Qi9fzZ+30ArTzHoob6
-	6c5ukv5aS4kqxamWcP624Rm0OWGg8TuOI7Pp92rbXQKQGSZ3zjV/AXMmgAuE7cL0VJEsikjF2CC
-	aecLpWIpdfblGZ9GnBlU9gP/rnPfbBSWvRi6uwPhSbjjXUNrx1OlsRcpTuvOV02lzhCt8iqWi4L
-	TNeC8Sa2ufE+45KjLnO+j8lxyRf6+nCBIxQb/4q9XD40cpK8SEWPYbm1r4a9Nc4Z23oGFOKdE0V
-	hcY+ggzDCAbJHjUvlJ8D2+exF0yl+znc4kZrqX6lQWrrUr6cjkHhpP2j+lu786i/FzHnvFNn+ff
-	DaYWJW+3/3YGe7Io8E6KT5zn2bjpO+OdBn4sWAcmIeJttBtaSjlPymhQ2hVv3qvGDrSyYiXFoz/
-	Fwv3o1FvtVUJiJcmE=
-X-Google-Smtp-Source: AGHT+IGIVc7DdUcow7qdN0jKbRXTXIAiOaBlx1JI72g5IVucoKwojWQtzdcnKlAJrBM/N5ve3UFaYg==
-X-Received: by 2002:a2e:a54e:0:b0:339:1ceb:33db with SMTP id 38308e7fff4ca-33b608c5982mr12243511fa.38.1757248912796;
-        Sun, 07 Sep 2025 05:41:52 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-337f4c5030csm29410381fa.9.2025.09.07.05.41.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 Sep 2025 05:41:50 -0700 (PDT)
-Message-ID: <ecd6cf45-0d60-4f88-a24a-14a5b84c4007@gmail.com>
-Date: Sun, 7 Sep 2025 15:41:49 +0300
+	s=arc-20240116; t=1757251549; c=relaxed/simple;
+	bh=a4guLoMBhzfxWOET15e5kQm0vrWnUpcSCI+d9tZ7IU0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i6tmW11QA1rg5DGtEV2GIKlYbjPcriQKzqcEyqiLY7E3qTzCQ0HwQvcQxMz3CyZV+njcxddr9WWYPTvoaxtNBKePSLC5FMODaLjgofosYns8qdRUYKCGmR/Sjj2NVaJ+FCIKf386/WXCC8sbeZ+orGmSJvPYGn4K1r1QszYxUH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=ZS9Na2BC; arc=none smtp.client-ip=80.12.242.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from fedora ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
+	by smtp.orange.fr with ESMTPA
+	id vFOous9LW0vTevFOouhc72; Sun, 07 Sep 2025 15:25:43 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1757251543;
+	bh=swveuZJuqIP5IKsdaIkmgdwwjs028Dc0hj0b/QeseIg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=ZS9Na2BCbLyho4ayNteQNCuqfLxOOkDpx4JZFfm0h9nZr7Oj+I44vksKM4dXmz0rF
+	 hq1vEJNi18xbgyL9jEyoipJfWhVweNTv7je/6NnNaunsjbwBaAPwLf7JE9b+19/4a3
+	 X6g95/cdGZY4eJLLV8sUwsHbsxGL41BXpJ6zOcB2YEg/6Idw79bHBNehY3eVCaFEhs
+	 KWltcMluaSE5jeb4pht9rxLTjKrbHr3BqCxf5YVSpGgAlC7ru74FXK4cGW54aRvvkS
+	 p4E5ewRJ8VuBSecCgeFuwkLQjVKDFcNitv9/cUo3Np/8UpdUS6tOo96tKz5P1X9p9W
+	 iEybEg+CCWqqA==
+X-ME-Helo: fedora
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 07 Sep 2025 15:25:43 +0200
+X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH] gpio: pisosr: Use devm_mutex_init()
+Date: Sun,  7 Sep 2025 15:25:38 +0200
+Message-ID: <01910ebdaba7d8d0cdc4ac60eb70da8e29cb85f1.1757251512.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] iio: adc: Support ROHM BD79112 ADC/GPIO
-To: David Lechner <dlechner@baylibre.com>,
- Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Marcelo Schmitt <marcelo.schmitt@analog.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>,
- Tobias Sperling <tobias.sperling@softing.com>,
- Antoniu Miclaus <antoniu.miclaus@analog.com>,
- Trevor Gamblin <tgamblin@baylibre.com>, Esteban Blanc <eblanc@baylibre.com>,
- Herve Codina <herve.codina@bootlin.com>,
- Ramona Alexandra Nechita <ramona.nechita@analog.com>,
- Eason Yang <j2anfernee@gmail.com>,
- Pop Ioan Daniel <pop.ioan-daniel@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org
-References: <cover.1756988028.git.mazziesaccount@gmail.com>
- <facc8b9255a754f767807b7e5c79c0eb20c680e4.1756988028.git.mazziesaccount@gmail.com>
- <aLmVzDB4bk-z5d16@smile.fi.intel.com>
- <796291b5-f61a-4d68-9cbb-ae099dbb93d8@gmail.com>
- <d9aa680f-0664-4caf-b885-92c3fce6c7a4@baylibre.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <d9aa680f-0664-4caf-b885-92c3fce6c7a4@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 05/09/2025 16:18, David Lechner wrote:
-> On 9/5/25 12:41 AM, Matti Vaittinen wrote:
->> Hi dee Ho Andy!
->>
->> Thanks again. I really appreciate the effort you put in these reviews! :)
->>
->> On 04/09/2025 16:36, Andy Shevchenko wrote:
->>> On Thu, Sep 04, 2025 at 03:36:46PM +0300, Matti Vaittinen wrote:
->>>> The ROHM BD79112 is an ADC/GPIO with 32 channels. The channel inputs can
->>>> be used as ADC or GPIO. Using the GPIOs as IRQ sources isn't supported.
->>>>
->>>> The ADC is 12-bit, supporting input voltages up to 5.7V, and separate I/O
->>>> voltage supply. Maximum SPI clock rate is 20 MHz (10 MHz with
->>>> daisy-chain configuration) and maximum sampling rate is 1MSPS.
->>>>
->>>> The IC does also support CRC but it is not implemented in the driver.
->>>
->>> ...
->>>
->>>> +/*
->>>> + * The data-sheet explains register I/O communication as follows:
->>>> + *
->>>> + * Read, two 16-bit sequences separated by CSB:
->>>> + * MOSI:
->>>> + * SCK:    | 1 | 2 | 3   | 4      | 5 .. 8 | 9 .. 16 |
->>>> + * data:| 0 | 0 |IOSET| RW (1) | ADDR   | 8'b0    |
->>>> + *
->>>> + * MISO:
->>>> + * SCK:    | 1 .. 8 | 9 .. 16 |
->>>> + * data:| 8'b0   | data    |
->>>> + *
->>>> + * Note, CSB is shown to be released between writing the address (MOSI) and
->>>> + * reading the register data (MISO).
->>>> + *
->>>> + * Write, single 16-bit sequence:
->>>> + * MOSI:
->>>> + * SCK:    | 1 | 2 | 3   | 4     | 5 .. 8 |
->>>> + * data:| 0 | 0 |IOSET| RW(0) | ADDR   |
->>>> + *
->>>> + * MISO:
->>>> + * SCK:    | 1 .. 8 |
->>>> + * data:| data   |
->>>> + */
->>>
->>> I don't know how to read this comment. In the monospace font the whole block
->>> looks like a mess.
->>
->> What do you mean by a mess? Don't you have the '|' -characters aligned? That's very odd because they are aligned for me. Or, is this otherwise unclear?
-> 
-> I find these diagrams very hard to read as well. I would just drop this part
-> and let people look it up in the datasheet. I don't think it adds anything
-> essential to understanding how the driver works.
-> 
+Use devm_mutex_init() instead of hand-writing it.
 
-I am a bit reluctant to drop this because I don't see public data-sheet 
-anywhere... :/ I think explaining the protocol is somewhat useful so 
-readers can understand why we have custom regmap read/write functions, 
-and hopefully also the I/O and RW bits.
+This saves some LoC, improves readability and saves some space in the
+generated .o file.
 
-I am all for improving this documentation though! Starting by dropping 
-those tabs, and seeing if I can think of something else too :)
+Before:
+======
+   text	   data	    bss	    dec	    hex	filename
+   8431	   1808	    192	  10431	   28bf	drivers/gpio/gpio-pisosr.o
 
-Yours,
-	-- Matti
+After:
+=====
+   text	   data	    bss	    dec	    hex	filename
+   8112	   1736	    192	  10040	   2738	drivers/gpio/gpio-pisosr.o
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/gpio/gpio-pisosr.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/drivers/gpio/gpio-pisosr.c b/drivers/gpio/gpio-pisosr.c
+index a69b74866a13..7ec6a46ed600 100644
+--- a/drivers/gpio/gpio-pisosr.c
++++ b/drivers/gpio/gpio-pisosr.c
+@@ -108,11 +108,6 @@ static const struct gpio_chip template_chip = {
+ 	.can_sleep		= true,
+ };
+ 
+-static void pisosr_mutex_destroy(void *lock)
+-{
+-	mutex_destroy(lock);
+-}
+-
+ static int pisosr_gpio_probe(struct spi_device *spi)
+ {
+ 	struct device *dev = &spi->dev;
+@@ -139,8 +134,7 @@ static int pisosr_gpio_probe(struct spi_device *spi)
+ 		return dev_err_probe(dev, PTR_ERR(gpio->load_gpio),
+ 				     "Unable to allocate load GPIO\n");
+ 
+-	mutex_init(&gpio->lock);
+-	ret = devm_add_action_or_reset(dev, pisosr_mutex_destroy, &gpio->lock);
++	ret = devm_mutex_init(dev, &gpio->lock);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.51.0
 
 
