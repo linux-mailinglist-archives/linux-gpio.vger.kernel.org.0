@@ -1,123 +1,130 @@
-Return-Path: <linux-gpio+bounces-25714-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25715-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDC0DB47C8F
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Sep 2025 19:29:14 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75AD3B47CA3
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Sep 2025 19:51:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9B9B67A4E0E
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Sep 2025 17:27:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3195B17B156
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Sep 2025 17:51:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56E0627AC21;
-	Sun,  7 Sep 2025 17:29:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F7DB28751C;
+	Sun,  7 Sep 2025 17:51:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="LDvPL+9w"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CIuVoiTi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEFCD528
-	for <linux-gpio@vger.kernel.org>; Sun,  7 Sep 2025 17:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A5D3C465;
+	Sun,  7 Sep 2025 17:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757266147; cv=none; b=iNfi45m/iOv/YAwcolfRoxfhB/KCzC7R2kBIZSQ9P+l5PsyGYwe2O2RmH3wMKQCm+sl52dwVW3RCNYWrhHndLNdhpqQer3c7vblzIZu02wxFISb0KLTac2HQHTmJWNnQO4yl4QcMIEi66HfpZie+cLzpOyE4cg7ViIGHAHp92kg=
+	t=1757267462; cv=none; b=Q5UL/3kXPw9rWLlzyuYzwRqM5kbBA945SLYVCtTI34UW8M1gmG9yTpfJecMSsEHHIMj1FP6JxacDIyRPtT7dNoUfuawzE7fNo3ipCEDKB8W8xawqWfPxZiG4waMIMkQbyUFnm1pjJpFIr9Lg+TppUmw7FYlUbZb8511lHeqb/cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757266147; c=relaxed/simple;
-	bh=Cfp9mm5jePYAFrNTC3WesVMaULU0Cbtb9Mmm3IeyLFA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IYn4lRmfOOdm6odkEkHLScgykx93d7QUTRL7BqsQtA221KXPuc3tSRuoZEhYqhNd5Tay1qCFIoTvH+2NB9Eyx2cltzgoSF5Ag2aM87ubQfogs47z7Ckopp+pHHsGYKstnwSjNo5cRPi3IDytZRNU1AyhkfcnUlKqB+f5MDHVa1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=LDvPL+9w; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
-	bh=HI7cBrf/VB0tvEUFj8M36AcWOsz9VdohrYv1q3umpTQ=; b=LDvPL+9w8nffgf51qfs60Ztwj/
-	SjwY2Qk0KC/THjpsUX/8//wPP9CySwk7/KOAX7S4J2UTGyX2Zst3xjpsekLLhMutltVyAIxGHEd4S
-	aJ3z466Q5+VdG8h/Car/C3QCy88WoX6yYqwH5o7o65ByqutRcOhuz/1UEq7UDuHveqwpseOaba8z3
-	2ozi1TpRxZ9F7IBFM/HVKBpPwFWK1u3MTZdHhEJPUMy9T0minU5+KWCd4o1Krw6rR7fjdawfT35mr
-	fnpkUKJ3ZrHdLM5CguuRxplZnjkpVpI6faWfKmCM3fBCSs9u7zFdB8B3KUWf8Ax5XhRWNDQdwfy9r
-	vBYKsJaw==;
-Received: from [61.8.147.163] (helo=phil.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uvJC8-0004IN-3o; Sun, 07 Sep 2025 19:28:52 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
- Sergey Shtylyov <s.shtylyov@omp.ru>
-Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Subject:
- Re: [PATCH] pinctrl: rockchip: fix NULL ptr deref in
- rockchip_pinctrl_parse_groups()
-Date: Sun, 07 Sep 2025 19:28:50 +0200
-Message-ID: <6789547.RUnXabflUD@phil>
-In-Reply-To: <179c9e8c-8760-41e6-aad7-7a128df60984@omp.ru>
-References: <179c9e8c-8760-41e6-aad7-7a128df60984@omp.ru>
+	s=arc-20240116; t=1757267462; c=relaxed/simple;
+	bh=wwPZ3HomiYGGjQ62hDXA3II6GwdL97z+pd2v39RBOJU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oCzkiBLUKk89MrVZp/AofbpqM/emSqOV327RQhN0tZjYPH4vV0iXzt7iERYD94d1RL0sBKxFJ9l6c5eeNwGGK6GsZsRWF1a8zWVoqh0lCvEzO8TzYFBaj92CJhlNuBMOIBH9mYt5iuZUkrNHove+xwIjZaXHLgIIu2HSfh3vFhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CIuVoiTi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05137C4CEF0;
+	Sun,  7 Sep 2025 17:50:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757267461;
+	bh=wwPZ3HomiYGGjQ62hDXA3II6GwdL97z+pd2v39RBOJU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CIuVoiTiVnzPgiXxRf/qWvoOjBaOvxDwS6XgAP3Ent0B1v6rW1+DiJY+ing/RBTmc
+	 6e3ieyECdgihpgmWxv50Tk7c4GEQNC8tfZMS/G9rwsabrP4OiDYH8TCAlRTgz7H1W3
+	 Bu1+Y0ilLtFr4SVeVSX6zN2afGYfElWVFoK2Hb5NG94rgYxBEmE0s6WKjWIaHCbg6n
+	 /V7vmxg3ZiJkZYMpBGXp7m9aZeWDpzZgHGmQ3O/SqN2jGc8Yt2+MTmogoMmZ3kAc+N
+	 n7yL6Av9TWxpvtMhxg3qNUhgiDvDUegeB1lYKY2h/7ACEvACRu+NQtYSt4KVjn8UVn
+	 o80EjKT2KXP3g==
+From: Hans de Goede <hansg@kernel.org>
+To: Israel Cepeda <israel.a.cepeda.lopez@intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: Hans de Goede <hansg@kernel.org>,
+	Richard Hughes <rhughes@redhat.com>,
+	linux-i2c@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH v2 0/3] usb/gpio/i2c: Add Intel USBIO USB IO-expander drivers
+Date: Sun,  7 Sep 2025 19:50:53 +0200
+Message-ID: <20250907175056.47314-1-hansg@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Am Mittwoch, 3. September 2025, 21:48:54 Mitteleurop=C3=A4ische Sommerzeit =
-schrieb Sergey Shtylyov:
-> In the Rockchip driver, rockchip_pinctrl_parse_groups() assumes that the
-> "rockchip,pins" property will always be present in the DT node it parses
-> and so doesn't check the result of of_get_property() for NULL. If the DT
-> passed to the kernel happens to have such property missing, then we will
-> get a kernel oops when the pointer is dereferenced in the *for* loop just
-> a few lines after the call.  I think it's better to play safe by checking
-> the list variable for NULL (and reporting error if so), like we check the
-> size variable for validity further down...
->=20
-> Found by Linux Verification Center (linuxtesting.org) with the Svace stat=
-ic
-> analysis tool.
->=20
-> Fixes: d3e5116119bd ("pinctrl: add pinctrl driver for Rockchip SoCs")
-> Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+Hi All,
 
-Assuming that the DT is our friend, really is a bad assumption :-) .
+Here is v2 of the patch series to add support for the Intel USBIO USB
+IO-expander used by the MIPI cameras on various new (Meteor Lake and later)
+Intel laptops.
 
-While I can't imagine what 12-year-ago-me was thinking then, simply
-checking the return value really is the better way
+Changes in v2:
+- Split usbio-bridge mutex into ctrl_mutex and bulk_mutex
+- Drop SPI support since this is not used on devices in the field
+- Rework disconnect handling to be more robust
+- Several different revisions need special casing add a quirks mechanism
+  for this
+- Stop using stdint.h (uintX_t) types
+- Use __le16, __le32 type + cpu_to_le16() and friends for on wire words
+- Properly check auxiliary_device_add() return value
+- Add a mutex to the GPIO driver to protect usbio_gpio_update_config()
+  calls, which read-modify-write banks[x].config, racing with each other
+- Adjust usbio_gpio_get() to have an int return value and propagate the
+  usbio_control_msg() return value
+- Various (small) style fixes from Sakari's review of all 3 patches
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+The first patch adds an USB bridge driver which registers auxbus children
+for the GPIO and I2C functions of the USBIO chip.
 
+The second and third patch add a GPIO resp. an I2C driver for the
+auxbus children using the IO functions exported by the USB bridge driver.
 
->=20
-> ---
-> The patch is against the master branch of Linus Torvalds' linux.git repo.
->=20
->  drivers/pinctrl/pinctrl-rockchip.c |    4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> Index: linux/drivers/pinctrl/pinctrl-rockchip.c
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> --- linux.orig/drivers/pinctrl/pinctrl-rockchip.c
-> +++ linux/drivers/pinctrl/pinctrl-rockchip.c
-> @@ -3488,7 +3488,9 @@ static int rockchip_pinctrl_parse_groups
->  	 * do sanity check and calculate pins number
->  	 */
->  	list =3D of_get_property(np, "rockchip,pins", &size);
-> -	/* we do not check return since it's safe node passed down */
-> +	if (!list)
-> +		return dev_err_probe(dev, -EINVAL,
-> +				     "%pOF: no rockchip,pins property\n", np);
->  	size /=3D sizeof(*list);
->  	if (!size || size % 4)
->  		return dev_err_probe(dev, -EINVAL,
->=20
+The second and third patch depend on the IO functions exported by
+the first patch. So to merge this we will need either an immutable tag on
+the USB tree, or all 3 patches can be merged through the USB tree with
+acks from the GPIO and I2C subsystem maintainers.
+
+Regards,
+
+Hans
 
 
+Israel Cepeda (3):
+  usb: misc: Add Intel USBIO bridge driver
+  gpio: Add Intel USBIO GPIO driver
+  i2c: Add Intel USBIO I2C driver
 
+ MAINTAINERS                    |  10 +
+ drivers/gpio/Kconfig           |  11 +
+ drivers/gpio/Makefile          |   1 +
+ drivers/gpio/gpio-usbio.c      | 266 ++++++++++++
+ drivers/i2c/busses/Kconfig     |  11 +
+ drivers/i2c/busses/Makefile    |   1 +
+ drivers/i2c/busses/i2c-usbio.c | 325 ++++++++++++++
+ drivers/usb/misc/Kconfig       |  14 +
+ drivers/usb/misc/Makefile      |   1 +
+ drivers/usb/misc/usbio.c       | 748 +++++++++++++++++++++++++++++++++
+ include/linux/usb/usbio.h      | 177 ++++++++
+ 11 files changed, 1565 insertions(+)
+ create mode 100644 drivers/gpio/gpio-usbio.c
+ create mode 100644 drivers/i2c/busses/i2c-usbio.c
+ create mode 100644 drivers/usb/misc/usbio.c
+ create mode 100644 include/linux/usb/usbio.h
+
+-- 
+2.51.0
 
 
