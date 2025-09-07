@@ -1,473 +1,144 @@
-Return-Path: <linux-gpio+bounces-25718-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25719-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5703B47CAE
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Sep 2025 19:51:26 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9CD4B48022
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Sep 2025 22:56:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 93E3C7A9157
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Sep 2025 17:49:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8FE117AAD7D
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Sep 2025 20:54:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 121F528AAEB;
-	Sun,  7 Sep 2025 17:51:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C66412222A9;
+	Sun,  7 Sep 2025 20:56:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ezxB7fHe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VB6JSZ9e"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD90C3C465;
-	Sun,  7 Sep 2025 17:51:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9D414D29B;
+	Sun,  7 Sep 2025 20:56:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757267471; cv=none; b=hwWkCzkmqDY250lOZJiMSVeCuxcPqjTQ5qlRU7Y+e2PzpehBPNNegbGYAmUvDl6JPNjNI0H3j35ca/d3W7ICjpMwNm6A5dYJJpQlN57mgnnDSCbOre8cnM8OK0lt/FFdUgizMCthVL1RcEuYKJi5z4OI0u2ZnG+cvBhkZjVxXRY=
+	t=1757278575; cv=none; b=dDvz2tGosagUI2vk7G+pLZ9hXbR4yZXtm/if5vW4hlGsK4bQggxq45BRh4YRVFXmX6sTfo1Kk8sS+4gJkaWaoyL0G4hj1SVj0GNlhfl2hb5g7S12lLFikUhgCtPp/+eu2PJy9IuUIQfOemvFdZI2Cp20eEa58a7lUqLkMrGZWV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757267471; c=relaxed/simple;
-	bh=RKf2jdzdag/bvA6N5rcyAp0AZWWwRI9G4RCqvL0CNp0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aifPkhqtyQ/Xvr5YYHp2Mfcx8ykA1nJnL4UeXOE2Qp6J48UV/vHb/f8/jyfIWkWfJZBf/pO2nBWj/y0P75+i9Tt9j4n27fImeQlU8nywFaB4lVjtapXooDzvZ0/oHFsHN2yeu5F/K4g25UTk7Y/C5iwvSTnPlqxZ4hBl0RTjSRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ezxB7fHe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93C94C4CEF8;
-	Sun,  7 Sep 2025 17:51:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757267471;
-	bh=RKf2jdzdag/bvA6N5rcyAp0AZWWwRI9G4RCqvL0CNp0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ezxB7fHeKotTUSA3wMZ73ZH19gKDzsrpc93XyivyURYdaxegvi7Qim2zbMiYEuwMj
-	 5XlbLOihaG3fXsFnFuGUytfdDvKmBEc17kPVv+gXiqB/a//0UH2bNfeB0QDHusCenO
-	 WmXVhltuTSUftkmepDWcF4A57a3MscrbD+DN4JqLWRyJr/OUdiK8op1kMTN9PY/L6c
-	 17tRKidhzb2G3mx5j60dT3fNhBNKsJpEhbIJTKtX4qHaVYXXDZQuIu3FLMF9WupnZD
-	 Mcsh+1KSkCPTFoMYCLIczOfNfTQ3UdFgbG6UDoMSDo6XnjS69E4rV1QtXVP8Dus/6g
-	 7jSocxXUagI1Q==
-From: Hans de Goede <hansg@kernel.org>
-To: Israel Cepeda <israel.a.cepeda.lopez@intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: Hans de Goede <hansg@kernel.org>,
-	Richard Hughes <rhughes@redhat.com>,
-	linux-i2c@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH v2 3/3] i2c: Add Intel USBIO I2C driver
-Date: Sun,  7 Sep 2025 19:50:56 +0200
-Message-ID: <20250907175056.47314-4-hansg@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20250907175056.47314-1-hansg@kernel.org>
-References: <20250907175056.47314-1-hansg@kernel.org>
+	s=arc-20240116; t=1757278575; c=relaxed/simple;
+	bh=6P0HgZbw4HXtenDT6y2xs8u/qk5v4ufWtF4mxqooHm8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JlCDlxMWsKncELd1pC7QEy615FUKjwuoXyCxR0uLR8Qk00gJV4VP4tdPT4KM3Mb47rccc1l+QFUUI+KMcBznqNYZIOr6BS/7uo5UCaFT54LJSfEV2JJTFmtiE0YGOooOK93oM9XOf659dEZ6VGdznNPo1RgFJ/caB6O8zZNhPB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VB6JSZ9e; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-625e1dfc43dso1875092a12.1;
+        Sun, 07 Sep 2025 13:56:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757278572; x=1757883372; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0zZEheeM1rUpP8ZGVFjjiK4EdwdbE8pDt0S3/UybYHU=;
+        b=VB6JSZ9eQ4t9WzvTZXBRS9rDNEJMY7IltFagPHwk7oCnHf8vekUpYJDwoJ8BRqSo/b
+         8INrWT73CFI4uoOZ13hUzNpenn86re4XIkNfkj9a4ioIKVKY7RqmWfdnJofaaggmTFzN
+         DqBWKpjDOqc1b8hE+ua0YjE0eTmJhtQGuaKX5+ZCRuBAdkhF/wQMzCNt8pt2uVvPZ5Bo
+         rgGfI9e9H8dzOMwYDV5T4oRZg3WPtOSTGS3Gb7kSi9mfyQ7/Zapt0ZnHV5RFaEAa/nnG
+         EEb0YA9IiXbAbmq+Tz3TRGV7XkI0Mljt0Sm7+hHK/0elHv5wTYAXrGhjtKU9xQ9r/Qmp
+         qt5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757278572; x=1757883372;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0zZEheeM1rUpP8ZGVFjjiK4EdwdbE8pDt0S3/UybYHU=;
+        b=HHDYgIA8ywBSyndyXzo7+MyGuLhrQtEL0ESerNLlXIvSuLJ/6Ibh6kl9P3MveDTp1M
+         J16bI6XT8nR4LgFylCgABk97D88pIOYsRdRvl2U5k3zFtwGvcp+Oo9hnudYpRKBTan0B
+         ZyTN8Lil9CYH+rwDQ9DZ7/JbxtxufVP3jALaRpsfoNpVGPSVs/M3ME1asYL+LmGbgoYE
+         KN6OHGE+YGplCkDBs+394t1KUMtOPqaEk3XWt9z+WveDjmoaJ33fCV5z/XAo9393X+eU
+         YE4+F0vzrt8s4z/n1Ffxy03WvpbJVhKGsOHPFofVuxtMbvX0voEBotzppvVQV57Zy/Ez
+         g38A==
+X-Forwarded-Encrypted: i=1; AJvYcCUyXq0uU/JaV6aHLLabbU+XQtkHAsrGlH7rLGIgKRFM0/+F6nP5BiEht+19YMCKlQ4kiZQ9xE5qu9Cr@vger.kernel.org, AJvYcCVYInka3IBUvSN1ZopzeaOSp2S0ckLOXE8HeJAyUKJ803cR7MYcJAYN01IrBfm2jPyXzk0JnBLBKG+4TC+V@vger.kernel.org, AJvYcCW4Lrdhvfa/Z70vDXzeC15+WK8ebxbD/QxPgHuK097Q+QE83LaeeUe5lTNq/vzqInQ1OW0SNx+2b9Dq@vger.kernel.org, AJvYcCXcdvv/qsZQwCDJEVcbV2YyWDX89DyzCJtQUEWfQYFcvwzhtNVxowazveXy2t4+mbjbq8yJw5sI6zMP8A==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdrTK8ZjjoI5Igg+peEXyKqfuTNSFfaG4uoWcLHQYwJS3NsLCY
+	yFe5S/4IYYiVKeBwKO4clcND65ZsTKsQwNBoBjpmga/k1M/A7voHgK6DlwZ8WI/qVHaaFhGtN87
+	t0NBy7HEYrb1jMw45j2+WSmamgzhdNjc=
+X-Gm-Gg: ASbGncubwwC+cAFMnK06ypAiVC1LYXYUzDFeINX4m0du0liQiZ/0Zea6TT8djJ+wvpv
+	shQJGaGdoAYTXOw5MXhEvPjEesvyuCMCYFYqcwEDt5RCtzB6HuZMnSXPo8XS0Ow02KCoAYln8Ah
+	133R6ZZ0GnQ3r55N/IL2OHvbdD0TfIiuTSYBx0BztykE4gdTwYpmBb/8vC15iaAT5M/j/CTYb5y
+	jatsLE/dNMrADYL2Q==
+X-Google-Smtp-Source: AGHT+IG2cAHaNzeA2PPUEo6E90wAox3EQpXy6vAMOvdMI6HFpRD5lFQmKjzj246bI+rwMmB4f+CnhxohPl4jX9hXxGE=
+X-Received: by 2002:a17:907:d94:b0:afe:db34:d769 with SMTP id
+ a640c23a62f3a-b04b140d092mr551593766b.18.1757278572085; Sun, 07 Sep 2025
+ 13:56:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1757053456.git.mazziesaccount@gmail.com>
+ <3cc1faffcb4f71f0755b6192f193acecd36bea67.1757053456.git.mazziesaccount@gmail.com>
+ <20250907124207.2fe64214@jic23-huawei>
+In-Reply-To: <20250907124207.2fe64214@jic23-huawei>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sun, 7 Sep 2025 23:55:35 +0300
+X-Gm-Features: Ac12FXxb44-QyBlIfiDXLWTvbl0eO5yLXHfNVS4oRrwPF2pu7aYj4Q6saPNfw5E
+Message-ID: <CAHp75VeaHFDDZDmc9xsbUxZbRgkipRtcSdXN=ZXL2+V2OvL=Mw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] iio: adc: Support ROHM BD79112 ADC/GPIO
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>, 
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, David Lechner <dlechner@baylibre.com>, 
+	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Marcelo Schmitt <marcelo.schmitt@analog.com>, 
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>, 
+	Tobias Sperling <tobias.sperling@softing.com>, Antoniu Miclaus <antoniu.miclaus@analog.com>, 
+	Trevor Gamblin <tgamblin@baylibre.com>, Esteban Blanc <eblanc@baylibre.com>, 
+	Ramona Alexandra Nechita <ramona.nechita@analog.com>, Hans de Goede <hansg@kernel.org>, 
+	Herve Codina <herve.codina@bootlin.com>, Alisa-Dariana Roman <alisadariana@gmail.com>, 
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Israel Cepeda <israel.a.cepeda.lopez@intel.com>
+On Sun, Sep 7, 2025 at 2:42=E2=80=AFPM Jonathan Cameron <jic23@kernel.org> =
+wrote:
+> On Fri, 5 Sep 2025 09:42:31 +0300
+> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
 
-Add a a driver for the I2C auxbus child device of the Intel USBIO USB
-IO-expander used by the MIPI cameras on various new (Meteor Lake and
-later) Intel laptops.
+...
 
-Co-developed-by: Hans de Goede <hansg@kernel.org>
-Signed-off-by: Hans de Goede <hansg@kernel.org>
-Signed-off-by: Israel Cepeda <israel.a.cepeda.lopez@intel.com>
----
-Changes in v2:
-- Use new quirks mechanism to treat various revisions differently
-- Use __le16, __le32 type + cpu_to_le16() and friends for on wire words
-- Some small style fixes from Sakari's review
----
- MAINTAINERS                    |   1 +
- drivers/i2c/busses/Kconfig     |  11 ++
- drivers/i2c/busses/Makefile    |   1 +
- drivers/i2c/busses/i2c-usbio.c | 325 +++++++++++++++++++++++++++++++++
- 4 files changed, 338 insertions(+)
- create mode 100644 drivers/i2c/busses/i2c-usbio.c
+> > +/* ADC channels as named in the data-sheet */
+> > +static const char * const bd79112_chan_names[] =3D {
+> > +     "AGIO0A", "AGIO1A", "AGIO2A", "AGIO3A", "AGIO4A",       /* 0 - 4 =
+*/
+> > +     "AGIO5A", "AGIO6A", "AGIO7A", "AGIO8A", "AGIO9A",       /* 5 - 9 =
+*/
+> > +     "AGIO10A", "AGIO11A", "AGIO12A", "AGIO13A", "AGIO14A",  /* 10 - 1=
+4 */
+> > +     "AGIO15A", "AGIO0B", "AGIO1B", "AGIO2B", "AGIO3B",      /* 15 - 1=
+9 */
+> > +     "AGIO4B", "AGIO5B", "AGIO6B", "AGIO7B", "AGIO8B",       /* 20 - 2=
+4 */
+> > +     "AGIO9B", "AGIO10B", "AGIO11B", "AGIO12B", "AGIO13B",   /* 25 - 2=
+9 */
+> > +     "AGIO14B", "AGIO15B",                                   /* 30 - 3=
+1 */
+> > +};
+>
+> > +     /* Let's assign data-sheet names to channels */
+> Not seeing any value in this comment given the code that follows.
+> Probably drop it
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 53694bd91861..0f5de266d6df 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12700,6 +12700,7 @@ M:	Hans de Goede <hansg@kernel.org>
- R:	Sakari Ailus <sakari.ailus@linux.intel.com>
- S:	Maintained
- F:	drivers/gpio/gpio-usbio.c
-+F:	drivers/i2c/busses/i2c-usbio.c
- F:	drivers/usb/misc/usbio.c
- F:	include/linux/usb/usbio.h
- 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 070d014fdc5d..06b1b702fd7a 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -1357,6 +1357,17 @@ config I2C_LJCA
- 	  This driver can also be built as a module.  If so, the module
- 	  will be called i2c-ljca.
- 
-+config I2C_USBIO
-+	tristate "Intel USBIO I2C Adapter support"
-+	depends on USB_USBIO
-+	default USB_USBIO
-+	help
-+	  Select this option to enable I2C driver for the INTEL
-+	  USBIO driver stack.
-+
-+	  This driver can also be built as a module.  If so, the module
-+	  will be called i2c_usbio.
-+
- config I2C_CP2615
- 	tristate "Silicon Labs CP2615 USB sound card and I2C adapter"
- 	depends on USB
-diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
-index 04db855fdfd6..401a79c9767e 100644
---- a/drivers/i2c/busses/Makefile
-+++ b/drivers/i2c/busses/Makefile
-@@ -135,6 +135,7 @@ obj-$(CONFIG_I2C_GXP)		+= i2c-gxp.o
- obj-$(CONFIG_I2C_DIOLAN_U2C)	+= i2c-diolan-u2c.o
- obj-$(CONFIG_I2C_DLN2)		+= i2c-dln2.o
- obj-$(CONFIG_I2C_LJCA)		+= i2c-ljca.o
-+obj-$(CONFIG_I2C_USBIO)		+= i2c-usbio.o
- obj-$(CONFIG_I2C_CP2615) += i2c-cp2615.o
- obj-$(CONFIG_I2C_PARPORT)	+= i2c-parport.o
- obj-$(CONFIG_I2C_PCI1XXXX)	+= i2c-mchp-pci1xxxx.o
-diff --git a/drivers/i2c/busses/i2c-usbio.c b/drivers/i2c/busses/i2c-usbio.c
-new file mode 100644
-index 000000000000..10ed183ae881
---- /dev/null
-+++ b/drivers/i2c/busses/i2c-usbio.c
-@@ -0,0 +1,325 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2025 Intel Corporation.
-+ * Copyright (c) 2025 Red Hat, Inc.
-+ */
-+
-+#include <linux/auxiliary_bus.h>
-+#include <linux/dev_printk.h>
-+#include <linux/device.h>
-+#include <linux/i2c.h>
-+#include <linux/types.h>
-+#include <linux/usb/usbio.h>
-+
-+#define I2C_RW_OVERHEAD (sizeof(struct usbio_bulk_packet) + sizeof(struct usbio_i2c_rw))
-+
-+struct usbio_i2c {
-+	struct i2c_adapter adap;
-+	struct auxiliary_device *adev;
-+	struct usbio_i2c_rw *rwbuf;
-+	unsigned long quirks;
-+	u32 speed;
-+	u16 txbuf_len;
-+	u16 rxbuf_len;
-+};
-+
-+static const struct acpi_device_id usbio_i2c_acpi_hids[] = {
-+	{ "INTC1008" }, /* MTL */
-+	{ "INTC10B3" }, /* ARL */
-+	{ "INTC10B6" }, /* LNL */
-+	{ "INTC10E3" }, /* PTL */
-+	{ }
-+};
-+
-+static const u32 usbio_i2c_speeds[] = {
-+	I2C_MAX_STANDARD_MODE_FREQ,
-+	I2C_MAX_FAST_MODE_FREQ,
-+	I2C_MAX_FAST_MODE_PLUS_FREQ,
-+	I2C_MAX_HIGH_SPEED_MODE_FREQ
-+};
-+
-+static void usbio_i2c_uninit(struct i2c_adapter *adap, struct i2c_msg *msg)
-+{
-+	struct usbio_i2c *i2c = i2c_get_adapdata(adap);
-+	struct usbio_i2c_uninit ubuf;
-+
-+	ubuf.busid = i2c->adev->id;
-+	ubuf.config = cpu_to_le16(msg->addr);
-+
-+	usbio_bulk_msg(i2c->adev, USBIO_PKTTYPE_I2C, USBIO_I2CCMD_UNINIT, true,
-+		       &ubuf, sizeof(ubuf), NULL, 0);
-+}
-+
-+static int usbio_i2c_init(struct i2c_adapter *adap, struct i2c_msg *msg)
-+{
-+	struct usbio_i2c *i2c = i2c_get_adapdata(adap);
-+	struct usbio_i2c_init ibuf;
-+	void *reply_buf;
-+	u16 reply_len;
-+	int ret;
-+
-+	ibuf.busid = i2c->adev->id;
-+	ibuf.config = cpu_to_le16(msg->addr);
-+	ibuf.speed = cpu_to_le32(i2c->speed);
-+
-+	if (i2c->quirks & USBIO_QUIRK_I2C_NO_INIT_ACK) {
-+		reply_buf = NULL;
-+		reply_len = 0;
-+	} else {
-+		reply_buf = &ibuf;
-+		reply_len = sizeof(ibuf);
-+	}
-+
-+	ret = usbio_bulk_msg(i2c->adev, USBIO_PKTTYPE_I2C, USBIO_I2CCMD_INIT, true,
-+			     &ibuf, sizeof(ibuf), reply_buf, reply_len);
-+	if (ret != sizeof(ibuf))
-+		return (ret < 0) ? ret : -EIO;
-+
-+	return 0;
-+}
-+
-+static int usbio_i2c_read(struct i2c_adapter *adap, struct i2c_msg *msg)
-+{
-+	struct usbio_i2c *i2c = i2c_get_adapdata(adap);
-+	u16 rxchunk = i2c->rxbuf_len - I2C_RW_OVERHEAD;
-+	struct usbio_i2c_rw *rbuf = i2c->rwbuf;
-+	int ret;
-+
-+	rbuf->busid = i2c->adev->id;
-+	rbuf->config = cpu_to_le16(msg->addr);
-+	rbuf->size = cpu_to_le16(msg->len);
-+
-+	if (msg->len > rxchunk) {
-+		/* Need to split the input buffer */
-+		u16 len = 0;
-+
-+		do {
-+			if (msg->len - len < rxchunk)
-+				rxchunk = msg->len - len;
-+
-+			ret = usbio_bulk_msg(i2c->adev, USBIO_PKTTYPE_I2C,
-+					     USBIO_I2CCMD_READ, true,
-+					     rbuf, len == 0 ? sizeof(*rbuf) : 0,
-+					     rbuf, sizeof(*rbuf) + rxchunk);
-+			if (ret < 0)
-+				return ret;
-+
-+			memcpy(&msg->buf[len], rbuf->data, rxchunk);
-+			len += rxchunk;
-+		} while (msg->len > len);
-+
-+		goto out_log;
-+	}
-+
-+	ret = usbio_bulk_msg(i2c->adev, USBIO_PKTTYPE_I2C, USBIO_I2CCMD_READ, true,
-+			     rbuf, sizeof(*rbuf), rbuf, sizeof(*rbuf) + msg->len);
-+	if (ret != sizeof(*rbuf) + msg->len)
-+		return (ret < 0) ? ret : -EIO;
-+
-+	memcpy(msg->buf, rbuf->data, msg->len);
-+
-+out_log:
-+	dev_dbg(adap->dev.parent, "RD[%d]:%*phN\n", msg->len, msg->len, msg->buf);
-+
-+	return 0;
-+}
-+
-+static int usbio_i2c_write(struct i2c_adapter *adap, struct i2c_msg *msg)
-+{
-+	struct usbio_i2c *i2c = i2c_get_adapdata(adap);
-+	u16 txchunk = i2c->txbuf_len - I2C_RW_OVERHEAD;
-+	struct usbio_i2c_rw *wbuf = i2c->rwbuf;
-+	int ret;
-+
-+	dev_dbg(adap->dev.parent, "WR[%d]:%*phN\n", msg->len, msg->len, msg->buf);
-+
-+	if (msg->len > txchunk) {
-+		/* Need to split the output buffer */
-+		u16 len = 0;
-+
-+		do {
-+			wbuf->busid = i2c->adev->id;
-+			wbuf->config = cpu_to_le16(msg->addr);
-+
-+			if (i2c->quirks & USBIO_QUIRK_I2C_USE_CHUNK_LEN)
-+				wbuf->size = cpu_to_le16(txchunk);
-+			else
-+				wbuf->size = cpu_to_le16(msg->len);
-+
-+			memcpy(wbuf->data, &msg->buf[len], txchunk);
-+			len += txchunk;
-+
-+			ret = usbio_bulk_msg(i2c->adev, USBIO_PKTTYPE_I2C,
-+					     USBIO_I2CCMD_WRITE, msg->len == len,
-+					     wbuf, sizeof(*wbuf) + txchunk,
-+					     wbuf, sizeof(*wbuf));
-+			if (ret < 0)
-+				return ret;
-+
-+			if (msg->len - len < txchunk)
-+				txchunk = msg->len - len;
-+		} while (msg->len > len);
-+
-+		return 0;
-+	}
-+
-+	wbuf->busid = i2c->adev->id;
-+	wbuf->config = cpu_to_le16(msg->addr);
-+	wbuf->size = cpu_to_le16(msg->len);
-+	memcpy(wbuf->data, msg->buf, msg->len);
-+
-+	ret = usbio_bulk_msg(i2c->adev, USBIO_PKTTYPE_I2C, USBIO_I2CCMD_WRITE, true,
-+			     wbuf, sizeof(*wbuf) + msg->len, wbuf, sizeof(*wbuf));
-+	if (ret != sizeof(*wbuf) || le16_to_cpu(wbuf->size) != msg->len)
-+		return (ret < 0) ? ret : -EIO;
-+
-+	return 0;
-+}
-+
-+static int usbio_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
-+{
-+	struct usbio_i2c *i2c = i2c_get_adapdata(adap);
-+	int ret;
-+
-+	usbio_acquire(i2c->adev);
-+
-+	ret = usbio_i2c_init(adap, msgs);
-+	if (ret)
-+		goto out_release;
-+
-+	for (int i = 0; i < num; ret = ++i) {
-+		if (msgs[i].flags & I2C_M_RD)
-+			ret = usbio_i2c_read(adap, &msgs[i]);
-+		else
-+			ret = usbio_i2c_write(adap, &msgs[i]);
-+
-+		if (ret)
-+			break;
-+	}
-+
-+	usbio_i2c_uninit(adap, msgs);
-+
-+out_release:
-+	usbio_release(i2c->adev);
-+
-+	return ret;
-+}
-+
-+static u32 usbio_i2c_func(struct i2c_adapter *adap)
-+{
-+	return I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR | I2C_FUNC_SMBUS_EMUL;
-+}
-+
-+static const struct i2c_adapter_quirks usbio_i2c_quirks = {
-+	.flags = I2C_AQ_NO_REP_START,
-+	.max_read_len = SZ_4K,
-+	.max_write_len = SZ_4K,
-+};
-+
-+static const struct i2c_adapter_quirks usbio_i2c_quirks_max_rw_len52 = {
-+	.flags = I2C_AQ_NO_REP_START,
-+	.max_read_len = 52,
-+	.max_write_len = 52,
-+};
-+
-+static const struct i2c_algorithm usbio_i2c_algo = {
-+	.master_xfer = usbio_i2c_xfer,
-+	.functionality = usbio_i2c_func,
-+};
-+
-+static int usbio_i2c_probe(struct auxiliary_device *adev,
-+			   const struct auxiliary_device_id *adev_id)
-+{
-+	struct usbio_i2c_bus_desc *i2c_desc;
-+	struct device *dev = &adev->dev;
-+	struct usbio_i2c *i2c;
-+	u32 max_speed;
-+	int ret;
-+
-+	i2c_desc = dev_get_platdata(dev);
-+	if (!i2c_desc)
-+		return -EINVAL;
-+
-+	i2c = devm_kzalloc(dev, sizeof(*i2c), GFP_KERNEL);
-+	if (!i2c)
-+		return -ENOMEM;
-+
-+	i2c->adev = adev;
-+
-+	usbio_acpi_bind(i2c->adev, usbio_i2c_acpi_hids);
-+	usbio_get_txrxbuf_len(i2c->adev, &i2c->txbuf_len, &i2c->rxbuf_len);
-+
-+	i2c->rwbuf = devm_kzalloc(dev, max(i2c->txbuf_len, i2c->rxbuf_len), GFP_KERNEL);
-+	if (!i2c->rwbuf)
-+		return -ENOMEM;
-+
-+	i2c->quirks = usbio_get_quirks(i2c->adev);
-+
-+	max_speed = usbio_i2c_speeds[i2c_desc->caps & USBIO_I2C_BUS_MODE_CAP_MASK];
-+	if (max_speed < I2C_MAX_FAST_MODE_FREQ &&
-+	    (i2c->quirks & USBIO_QUIRK_I2C_ALLOW_400KHZ))
-+		max_speed = I2C_MAX_FAST_MODE_FREQ;
-+
-+	i2c->speed = i2c_acpi_find_bus_speed(dev);
-+	if (!i2c->speed)
-+		i2c->speed = I2C_MAX_STANDARD_MODE_FREQ;
-+	else if (i2c->speed > max_speed) {
-+		dev_warn(dev, "Invalid speed %u adjusting to bus max %u\n",
-+			 i2c->speed, max_speed);
-+		i2c->speed = max_speed;
-+	}
-+
-+	i2c->adap.owner = THIS_MODULE;
-+	i2c->adap.class = I2C_CLASS_HWMON;
-+	i2c->adap.dev.parent = dev;
-+	i2c->adap.algo = &usbio_i2c_algo;
-+
-+	if (i2c->quirks & USBIO_QUIRK_I2C_MAX_RW_LEN_52)
-+		i2c->adap.quirks = &usbio_i2c_quirks_max_rw_len52;
-+	else
-+		i2c->adap.quirks = &usbio_i2c_quirks;
-+
-+	snprintf(i2c->adap.name, sizeof(i2c->adap.name), "%s.%d",
-+		 USBIO_I2C_CLIENT, i2c->adev->id);
-+
-+	device_set_node(&i2c->adap.dev, dev_fwnode(&adev->dev));
-+
-+	auxiliary_set_drvdata(adev, i2c);
-+	i2c_set_adapdata(&i2c->adap, i2c);
-+
-+	ret = i2c_add_adapter(&i2c->adap);
-+	if (ret)
-+		return ret;
-+
-+	if (has_acpi_companion(&i2c->adap.dev))
-+		acpi_dev_clear_dependencies(ACPI_COMPANION(&i2c->adap.dev));
-+
-+	return 0;
-+}
-+
-+static void usbio_i2c_remove(struct auxiliary_device *adev)
-+{
-+	struct usbio_i2c *i2c = auxiliary_get_drvdata(adev);
-+
-+	i2c_del_adapter(&i2c->adap);
-+}
-+
-+static const struct auxiliary_device_id usbio_i2c_id_table[] = {
-+	{ "usbio.usbio-i2c" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(auxiliary, usbio_i2c_id_table);
-+
-+static struct auxiliary_driver usbio_i2c_driver = {
-+	.name = USBIO_I2C_CLIENT,
-+	.probe = usbio_i2c_probe,
-+	.remove = usbio_i2c_remove,
-+	.id_table = usbio_i2c_id_table
-+};
-+module_auxiliary_driver(usbio_i2c_driver);
-+
-+MODULE_DESCRIPTION("Intel USBIO I2C driver");
-+MODULE_AUTHOR("Israel Cepeda <israel.a.cepeda.lopez@intel.com>");
-+MODULE_AUTHOR("Hans de Goede <hansg@kernel.org>");
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS("USBIO");
--- 
-2.51.0
+It was my suggestion. I don't know if you noticed that the amount of
+the values is *not* power-of-two and it's harder to find a needed
+value in the list. Moreover, you can read the discussion back and find
+that actually it was a mistake in the list, which can be avoided (or
+chances of which will be minimized) in the first place if we see the
+comments.
 
+--=20
+With Best Regards,
+Andy Shevchenko
 
