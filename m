@@ -1,55 +1,56 @@
-Return-Path: <linux-gpio+bounces-25704-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25705-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C214CB47AC6
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Sep 2025 13:19:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92163B47AFB
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Sep 2025 13:33:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B6FF2189E07D
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Sep 2025 11:19:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 59206200E0C
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Sep 2025 11:33:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BEE325F984;
-	Sun,  7 Sep 2025 11:19:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BBC1262FD2;
+	Sun,  7 Sep 2025 11:33:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BfD/CFLD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TIYQ5x+d"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E31723C4E1;
-	Sun,  7 Sep 2025 11:19:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20D41DF26A;
+	Sun,  7 Sep 2025 11:33:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757243962; cv=none; b=kblzamoeW9YCn0FxnZDLxL3Udh9wYQc8dKH9Ri6jvv6d1tENCqwXgj490+Q+adB0cfQTazqwhxnHSkvHGbI+wF8r4r6hbZbvXvYxlRnFuRGeBHab9qto19VtP3yETAlQTVrR0BoHlIIbjRX6MvkD5dJCuHgG/lFSbi18ThcKri8=
+	t=1757244805; cv=none; b=Sv41M+a8jvRymYL9IXH63GEry8XsY9wd7VAzBGpsAFOFAHUGvkwIH7IZ45hvvBkmnXKo+SXxnuhJeH41Wje0wsJhLOxsYavogAzTdL+y2POdTJG+WDDIktgTxOm7yWeQWfLHipEEDtpBlFgwcakl3blJIxyBFLm4BqfRBJdJmwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757243962; c=relaxed/simple;
-	bh=fDoAKMJaeYEEYbOBCIEyDcPkC1/z8ZJGDMMAkBGmph8=;
+	s=arc-20240116; t=1757244805; c=relaxed/simple;
+	bh=urBdq2a4lKJDO9ZZYNrOKJ8eTnycxkF3tJJ4jFvOdfo=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jIr6qNVOF7xrlUATY99w1xYFnt2OoB+3VbKDtAurj6E7FiQfpTaggWeYurknqK6UjoZeHQi0jTTcxSLZ3Lzs+yqEjGW96/7MrmRpNm3BiwFVJFUgOLtBSxJHMjc9WHxzADKwqGJqTRVN2R0nF+3gi5uRwTsdUlh6J9VkjYzejQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BfD/CFLD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FE41C4CEF0;
-	Sun,  7 Sep 2025 11:19:13 +0000 (UTC)
+	 MIME-Version:Content-Type; b=aNJ2EGXd8GjbLCyPLuAB1wIQ8VVo21Rhy2McowGos35Cd5VpqJlhDcqtXoH9bXucm2KiHstx4aJVsdMheUQFJTRQ18LhT7U3STODxD3G/p2YhnpNFFT+KI9a6jnARrumL78T9waVY5L/Q9CIsvWWFyzeLH7FxwrW3+yJ3Gz0XuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TIYQ5x+d; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62C0AC4CEF0;
+	Sun,  7 Sep 2025 11:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757243962;
-	bh=fDoAKMJaeYEEYbOBCIEyDcPkC1/z8ZJGDMMAkBGmph8=;
+	s=k20201202; t=1757244804;
+	bh=urBdq2a4lKJDO9ZZYNrOKJ8eTnycxkF3tJJ4jFvOdfo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BfD/CFLDunYFmGPb8op/nsyheiwx8oYcZErBODNLcs8ed4gZInOOLEUlag9B6lFXQ
-	 InlR/1mX9GHgIz7FQk/XQ/XNFuYEivGWU/jJ1fjg5SIY4Ew8oRPlZOq0b981J+1PJZ
-	 CpqX4xjlBaogA/mpe9uW2O0mkXQfot1bzI2oAFGG95UFIEGMMIOnezuskWa9Eh+BW9
-	 S4ZA+uNPBDNE1yvAobUCsAz7HaatGT21eSg9jmQFFGJRbas/6cN0Y4AsdEpKewmjnp
-	 6v4Pi5HYKOoUfMJL//LYmTNMHnStrQKeVVA/9i5wIIpuxic/F99F7HG0IMeh/aX9N+
-	 UBxNLxpTzKrIw==
-Date: Sun, 7 Sep 2025 12:19:11 +0100
+	b=TIYQ5x+d/DzPvcNJCm/NtOMsAzyL32HodhmT79zBmt8OTF6SXvDFym49sX59odxsq
+	 a3DwZFKp3kV5lCDWC7TSBXtouWwd/N6WpdsgwjPsQDynZ2pd0xFjo6toSDJpSee3PP
+	 efgAdpISM0uq44R0Bskd5YZC0bEAntIgwC89s+OdXyofTb6KHxvvJYuf94Fr/aqeg4
+	 Axj5swrReFGxPFIzsLm8GgyjwBiuIfM8jjKs0fR2YXfWisvh7cZPREDZJWsvc6XM+f
+	 x12iVxA7LzjBPz8TyCt+0m0lH/lcnpAJhjFHLcTy4FMR7WG0QdprIk3Z/pwqEhDc26
+	 6Zr5zZCEfjacw==
+Date: Sun, 7 Sep 2025 12:33:10 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, David Lechner
- <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy
- Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Linus
- Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Marcelo Schmitt <marcelo.schmitt@analog.com>, Javier Carrasco
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Matti Vaittinen
+ <matti.vaittinen@fi.rohmeurope.com>, David Lechner <dlechner@baylibre.com>,
+ Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
+ <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Marcelo
+ Schmitt <marcelo.schmitt@analog.com>, Javier Carrasco
  <javier.carrasco.cruz@gmail.com>, Tobias Sperling
  <tobias.sperling@softing.com>, Antoniu Miclaus
  <antoniu.miclaus@analog.com>, Trevor Gamblin <tgamblin@baylibre.com>,
@@ -58,11 +59,13 @@ Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, David Lechner
  <herve.codina@bootlin.com>, Alisa-Dariana Roman <alisadariana@gmail.com>,
  linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: iio: adc: ROHM BD79112 ADC/GPIO
-Message-ID: <20250907121911.7c2fa1cb@jic23-huawei>
-In-Reply-To: <fc3cffa3b75d1fcd19df0ff794e6ad75c8c87373.1757053456.git.mazziesaccount@gmail.com>
+Subject: Re: [PATCH v3 2/3] iio: adc: Support ROHM BD79112 ADC/GPIO
+Message-ID: <20250907123310.2209f824@jic23-huawei>
+In-Reply-To: <2c36496c-68bb-4c06-8580-3efc694429ea@gmail.com>
 References: <cover.1757053456.git.mazziesaccount@gmail.com>
-	<fc3cffa3b75d1fcd19df0ff794e6ad75c8c87373.1757053456.git.mazziesaccount@gmail.com>
+	<3cc1faffcb4f71f0755b6192f193acecd36bea67.1757053456.git.mazziesaccount@gmail.com>
+	<CAHp75VdaAH+1mh16KWoYtYFMV+_ec8x9YipeD3K8g6yQr-2VjA@mail.gmail.com>
+	<2c36496c-68bb-4c06-8580-3efc694429ea@gmail.com>
 X-Mailer: Claws Mail 4.3.1 (GTK 3.24.50; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -70,80 +73,58 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 5 Sep 2025 09:42:18 +0300
+On Fri, 5 Sep 2025 10:10:55 +0300
 Matti Vaittinen <mazziesaccount@gmail.com> wrote:
 
-> The ROHM BD79112 is an ADC/GPIO with 32 channels. The channel inputs can
-> be used as ADC or GPIO. Using the GPIOs as IRQ sources isn't supported.
-> 
-> The ADC is 12-bit, supporting input voltages up to 5.7V, and separate I/O
-> voltage supply. Maximum SPI clock rate is 20 MHz (10 MHz with
-> daisy-chain configuration) and maximum sampling rate is 1MSPS.
-> 
-> Add a device tree binding document for the ROHM BD79112.
-> 
-> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> On 05/09/2025 09:54, Andy Shevchenko wrote:
+> > On Fri, Sep 5, 2025 at 9:42=E2=80=AFAM Matti Vaittinen <mazziesaccount@=
+gmail.com> wrote: =20
+> >>
+> >> The ROHM BD79112 is an ADC/GPIO with 32 channels. The channel inputs c=
+an
+> >> be used as ADC or GPIO. Using the GPIOs as IRQ sources isn't supported.
+> >>
+> >> The ADC is 12-bit, supporting input voltages up to 5.7V, and separate =
+I/O
+> >> voltage supply. Maximum SPI clock rate is 20 MHz (10 MHz with
+> >> daisy-chain configuration) and maximum sampling rate is 1MSPS.
+> >>
+> >> The IC does also support CRC but it is not implemented in the driver. =
+=20
+> >=20
+> > ...
+> >  =20
+> >> +config ROHM_BD79112
+> >> +       tristate "Rohm BD79112 ADC driver"
+> >> +       depends on I2C && GPIOLIB =20
+> >=20
+> > Still I2C? =20
+>=20
+> Thanks :) I didn't spot this @_@. I just switched the REGMAP_I2C to=20
+> REGMAP_SPI. Will fix.
+>=20
+> >  =20
+> >> +       select REGMAP_SPI
+> >> +       select IIO_ADC_HELPER
+> >> +       help
+> >> +         Say yes here to build support for the ROHM BD79112 ADC. The
+> >> +         ROHM BD79112 is a 12-bit, 32-channel, SAR ADC, which analog =
+=20
+> >=20
+> > which --> where =20
+>=20
+> I thought which (as a genetive case) would work here just fine?
 
-Trivial comment below.  If everything else is good on this version
-it isn't worth a respin.
+If you had 'on which' I think it would be fine.
+With just 'which' it doesn't work.  I'm too lazy to figure out exactly
+why though :(
 
-> +examples:
-> +  - |
-> +    spi {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        adc: adc@0 {
-> +            compatible = "rohm,bd79112";
-> +            reg = <0x0>;
-> +
-> +            spi-cpha;
-> +            spi-cpol;
-> +
-> +            vdd-supply = <&dummyreg>;
-> +            iovdd-supply = <&dummyreg>;
-> +
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            gpio-controller;
-> +            #gpio-cells = <2>;
-> +
-> +            channel@0 {
-> +                reg = <0>;
-> +            };
-> +            channel@1 {
-> +                reg = <1>;
-> +            };
-> +            channel@2 {
-> +                reg = <2>;
-> +            };
-> +            channel@3 {
-> +                reg = <3>;
-Trivial point but I get bored scrolling.
-Would a smaller set of channels allow you to provide same level
-of testing / documentation?
+I'd probably make it a separate sentence though.  Analog inputs can also
+be used for GPIO.
 
-> +            };
-> +            channel@4 {
-> +                reg = <4>;
-> +            };
-> +            channel@5 {
-> +                reg = <5>;
-> +            };
-> +            channel@6 {
-> +                reg = <6>;
-> +            };
-> +            channel@16 {
-> +                reg = <16>;
-> +            };
-> +            channel@20 {
-> +                reg = <20>;
-> +            };
-> +        };
-> +    };
+
 
 
