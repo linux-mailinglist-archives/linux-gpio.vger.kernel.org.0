@@ -1,271 +1,224 @@
-Return-Path: <linux-gpio+bounces-25712-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25713-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9745B47BD4
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Sep 2025 16:29:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65AAEB47C6A
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Sep 2025 18:25:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 906017A4EE8
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Sep 2025 14:28:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0B90E17B68C
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Sep 2025 16:25:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEAE92765C8;
-	Sun,  7 Sep 2025 14:29:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F7CC283FD4;
+	Sun,  7 Sep 2025 16:24:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="da2AVEte"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I8TAd9MA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18161C8E6
-	for <linux-gpio@vger.kernel.org>; Sun,  7 Sep 2025 14:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931C523741;
+	Sun,  7 Sep 2025 16:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757255380; cv=none; b=PcJjlON3LF/1ta+ArIJpeeOFrIdAEcR54GXYlk+j9kZqHD6Kcge2nFJ+9k9t5FMgTy03buVpzqCQrjFl5HgbLTjXHmydnaq4DRYbAK7SKTyMyx9NGS5s+IV2euPjhztJ3Q3qHn+mXsOsdxY/bKj+N53/cyWR9TCqebz5XXF6yIw=
+	t=1757262298; cv=none; b=fOx0as+wYNZluc4ZJ9A0HlPtfEFZ/2Voax9PuFMPJE9q/SytYVPS+4Jr3HauBYKh9sK4av1iHvi2gxjBGc1Gf4scB3akAUaj+2ZKZlsJgI2srnvw0PUEfJnEhwSRm/UFDS3fq94athGIW6OcHAlOceEMk19GRGrNJRiLgmg7Cpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757255380; c=relaxed/simple;
-	bh=DQDpVF8MYpSztunyi5AIenYICnTY/Ak4epQGp+nEuuI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ybcj7vE409YZrZ8Z00JgY+l60iOjA3WbhU11aZ69UAYm4Q9sG+wISe0m5z4XyMkRT1czIxQi36zdP2Cuj68Ok8DfaDmW5bQvumI9zMSwpknoFi1NTKqC6fsbmMc0xrWSPUrygAwt/65lwJQHVbsFaJKBhO2b28h8+WYf+5UxqP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=da2AVEte; arc=none smtp.client-ip=209.85.166.46
+	s=arc-20240116; t=1757262298; c=relaxed/simple;
+	bh=a2dhqNEk31F+J5WSKULD6uJJzKpz59A7i8RdXkq2MGc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KtyMcuptyTdRMY4rW9uccsWJprLZ7Ul9MHg+mUxUqTKyhL7srdgIe16lVoKT/F8ukid0rCnxNLXH48xEqhmCoZjxGO8Fp9MjCZ5ek4N2uL4h6pDH9yCCyEVNftOa91o+5gTL6fw99XTnf1UyLF2Y2Ez0Fgqd1xtg+S8j6fRasw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I8TAd9MA; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-8876de33c86so201197439f.3
-        for <linux-gpio@vger.kernel.org>; Sun, 07 Sep 2025 07:29:38 -0700 (PDT)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-621b8b0893bso3550210a12.2;
+        Sun, 07 Sep 2025 09:24:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757255378; x=1757860178; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AMgI54HnhVxgNrBT+t3Fy8JTrQWJAyWKk270tkbQhbg=;
-        b=da2AVEte8im8J9vIAQd1aaIsl9SNzmcEN+jt7XUJ4ZMTEmoWOHsA5BQ9chnQoYlQU5
-         wXGmRYkjY5dTYlLiviMTDIMaKQQ2JhFHSU4HbXdfWJNjabpuSQX6eBAzkVGMNCEC7+5F
-         nI1ejf7v6OcFcYW5NkUU7Oh0T36qIFroeDM5e8ITl4jaR2qrZnxYw0dwm7yAYZSgkw7d
-         2hNb94VoTPMhkjsxKUO5CtTB7KLVcWbFx6khNncR2EQgR6zGKHs7UV5ueNUS5QapTBPA
-         OK1/KxM5rzrY0RgcIpxG3QD7mM8Bx3lxqqO5WtkX77pwDRk7weHVaLbf4II+99mc2HCh
-         j6QA==
+        d=gmail.com; s=20230601; t=1757262295; x=1757867095; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EiRNyzOe298r/AZQWMjcltwwDXu8VvyeRKjL05VJt+k=;
+        b=I8TAd9MAfDjl9/sIqgmV4wlDE4EXT1OHvadRFHou8Ol9yFl54k2HrN0eNV3a1xqc6e
+         hI9W5dfplf4IGrgCs0OrHQqXnToc1OdZI8tjPJA+Tt/QjwsmPl9bXFAMbQTRzWxHhbIm
+         pvLEd+dTCWnSZa8Hyl/Ng0fNmGN8t/w68XmkCJoYE3Z/l45SiaThKZUaed4a93b6EfjR
+         MWKnY+muG/r4PRnjPDkKDfQqO4+wzDZ35HZKYnbWyvHqCwMoUNPrMiEPh9P01LiCGg+W
+         dugYuKDoMS1hr3jbN13P/pIvUj54Sw88D64b4PvOXJ/gVbyHoUHffiqxfOrc3BaFtS/m
+         7T8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757255378; x=1757860178;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AMgI54HnhVxgNrBT+t3Fy8JTrQWJAyWKk270tkbQhbg=;
-        b=HiDFQmxTRIAJjqsSyfIYW7xCFBlA7FuKjdLDAvBsP8Rg0aKisY27abX/qlHvfcniAa
-         10gwocgqu+wIQBLCHwVtUEkTzgNVmlf9Z9rQzqqtdaHmy9t8+uZc21sPUSwddOrp7oZM
-         4O+rkMSe7v+nLYuSkglSzMN+txt1G36x72lBoXqqwsLoH+tRw9U84XT48jpI4jD3wPy/
-         AsTQGqmlsaFY/JwEQ8KAtj64rILfXb91rPEh3JrLA8xpbspfxSCC/ufn30DPDmfkpCvX
-         UwACRroY/VBHl2cyiS+14ANUAXnUX6T/EDB/NzvaGQwRDSGmgitLYMsFAmbNczZFn8Ji
-         Uz0A==
-X-Gm-Message-State: AOJu0YzZVHsmSm1o8q10SwJSuDf6x+8iE/YiG50UQjpsdI4VAr5PaRIe
-	2nIWuL+EXs1RYFDc/R/O3jcb2p6Yl5WqnF/bG7OVEbYfA97OaYHezSVnvr436w==
-X-Gm-Gg: ASbGncuCG3iD2Yv9pUBoyVMI9/v/MEnPRHertwOIcMv6iWphwaDNJTk3c9aCKhyM1Ws
-	wOziBPqS4bhqbi3js4wD+CBSnn9WHToQG0zkecwzdBUFhLB/MXxPgUn5StimAUHyL0OzQKgoJkH
-	HgKRhFiaMl8VlJXFy+fIcIzUolMOgtfA9KOtcZlT4I9YTfBRe8PV8rb13BUF6CynY+h/lfOXmL8
-	3I6xSAmn+9xvFpv1CCsODKJlpmKwu0zn8ETy6NnHaQhmcJJbkKkljuGHGfewjku+W8XZF8oNq9X
-	VyqdgVbR9g2tXoaD343Zv7M278BMPrcNOWQBPs+STRxyofBXa9oIMAlApaP+vAobKWB8qOTeba4
-	8aaZsOPlPswxyOORVtxEv0WSe2Ixgrt54bFjgX6TSpaairZfXnyylZ97ZKvzLk+miuFDnM/EL
-X-Google-Smtp-Source: AGHT+IGYCzvun4wizeQ56wN6C92JrYdFV7aprZoVUCtkFjp+9GJY9VvW+w6rabXnxi2GYANFCOPvdQ==
-X-Received: by 2002:a05:6602:1647:b0:887:62ec:21df with SMTP id ca18e2360f4ac-887776a26f6mr738272239f.14.1757255377873;
-        Sun, 07 Sep 2025 07:29:37 -0700 (PDT)
-Received: from Zephyrus.localdomain ([162.248.234.10])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8876462d2casm311770339f.14.2025.09.07.07.29.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Sep 2025 07:29:37 -0700 (PDT)
-From: Vincent Fazio <vfazio@gmail.com>
-To: linux-gpio@vger.kernel.org
-Cc: Vincent Fazio <vfazio@xes-inc.com>,
-	Vincent Fazio <vfazio@gmail.com>
-Subject: [libgpiod][PATCH] bindings: python: use quoted types when casting
-Date: Sun,  7 Sep 2025 09:29:34 -0500
-Message-ID: <20250907142934.1382852-1-vfazio@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1757262295; x=1757867095;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EiRNyzOe298r/AZQWMjcltwwDXu8VvyeRKjL05VJt+k=;
+        b=qkNhuF0tv0FCSVKcmQ0sMFOx317fylo3G3yBdhjUIQw+o408RozBcBV4+j+mCU/U84
+         yZEmPd86FA9TX6eU/fCG1CtsQFMg1q64KGExl9bH7RsJgGm0h3Q4XUP1TEdXSPDgkls3
+         59c9KW3+GarZ43zX4lXFDOlndldlQC45nP13NgGBh7kCK14dBYxSO4Yslj+n+73f8eYi
+         XOK9DBy0j7Z2RH/LGj/hvrewJ3JA5VhhXJF9JgvURoKiwyWFIzrjLqTc3C7GR73vpB1N
+         EXMvtlae0maCi0Bi7GLczPVw7h+MNQ+4K774CdxzQOGxEh14svW53EK8k2JUXBS+sBhM
+         72cQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWjawr3SwnKnv3D7i67zAtsa+/uhSCoYU1QrxuR9DlZQaSCZdKjx+wcJBLlnHQstRjsmK3vj6f1Rp8o/g==@vger.kernel.org, AJvYcCXb/IVfo7IJ5QzLf10vtj6NXWjTA2kj8lI9N6h59vfo8VyQwrM+KkztTmzsoFkJQW3xpd5tkm0Fe2kH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz34BZMDAir9CqgzGobF6mOo6d5gNmZ2Kdxq8kHt4GtA3JFOA4h
+	F9FB9ycA4Sg9SlLVGqwhlxDJqL7hlLcyuIdVMvA9VlhekgS0lb5v5AbbOZ8xqixvYB99sBAvZh/
+	0rlzPMmRmu6/hpdOFJr+N8PNhhWmcblE=
+X-Gm-Gg: ASbGncu6IxCxfn+TvBUVuC3fMkP/K+KEpj1+pXVGDLuMXECubJhU/lhF72/WuL2Jz+E
+	NDe8TpFWwHs6psdUeLYDWE3id5rht1mylRJ0jeR7j5nZ7UVNtxzoUmsgbx3+QUYK2AHWyeuwTDZ
+	EjFZeHT17hcslWrKHj0sbTVD0Jn0IA1UvcWrMEoGH9neIUSXyigNW72lZFSabXUm/2+IRDdo0tW
+	VX5DCXYyY6llsL+mJLnAzZr6qy8Nq7+0gs=
+X-Google-Smtp-Source: AGHT+IEUh6UJBSIy7uo4UeXfaJOjmOBfvt+baz+Zj/IM1FZe0WwfnCLd6E2TEKnFs8F+Okrwc8Mjvj/w45twhB1XxLk=
+X-Received: by 2002:a05:6402:2344:b0:61c:8114:8832 with SMTP id
+ 4fb4d7f45d1cf-6237c32cb64mr5651148a12.16.1757262294701; Sun, 07 Sep 2025
+ 09:24:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1756372805.git.andrea.porta@suse.com> <bee7c98a96c7000db32495b94ebae2ea06fe0e77.1756372805.git.andrea.porta@suse.com>
+ <CACRpkdY82ohgX_7YP16DJrzDvxMHcSu3rW+UtEmrP0AQiD_Exg@mail.gmail.com> <aLqg4ZTbUjsgoMwy@apocalypse>
+In-Reply-To: <aLqg4ZTbUjsgoMwy@apocalypse>
+From: Peter Robinson <pbrobinson@gmail.com>
+Date: Sun, 7 Sep 2025 17:24:43 +0100
+X-Gm-Features: AS18NWBwzsJHe_6E2dyS_2mGziKRRgdiIeyrYys7qDjqxQdP84-pkGK82KYLoRs
+Message-ID: <CALeDE9O-CxmHUb2sOauyMbNtPftQnqcGchpp-VrD=Ju=QPS4jw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] pinctrl: bcm: Add STB family pin controller driver
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, florian.fainelli@broadcom.com, wahrenst@gmx.net, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, iivanov@suse.de, 
+	svarbanov@suse.de, mbrugger@suse.com, 
+	Jonathan Bell <jonathan@raspberrypi.com>, Phil Elwell <phil@raspberrypi.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Linter check T006 [0] recommends using quotes around types (making them
-strings) when casting values to a type to avoid the overhead of runtime
-type evaluation.
+Hey Andrea,
 
-This provides a small performance benefit at runtime [1].
+> On 21:06 Thu 04 Sep     , Linus Walleij wrote:
+> > On Thu, Aug 28, 2025 at 2:45=E2=80=AFPM Andrea della Porta
+> > <andrea.porta@suse.com> wrote:
+> >
+> > > From: "Ivan T. Ivanov" <iivanov@suse.de>
+> > >
+> > > This driver provide pin muxing and configuration functionality
+> > > for BCM2712 SoC used by RPi5. According to [1] this chip is an
+> > > instance of the one used in Broadcom STB  product line.
+> > >
+> > > [1] https://lore.kernel.org/lkml/f6601f73-cb22-4ba3-88c5-241be8421fc3=
+@broadcom.com/
+> > >
+> > > Cc: Jonathan Bell <jonathan@raspberrypi.com>
+> > > Cc: Phil Elwell <phil@raspberrypi.com>
+> > > Signed-off-by: Ivan T. Ivanov <iivanov@suse.de>
+> > > Reviewed-by: Phil Elwell <phil@raspberrypi.com>
+> > > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> >
+> > Patch applied!
+> >
+> > > +config PINCTRL_BRCMSTB
+> > > +        tristate "Broadcom STB product line pin controller driver"
+> > > +        depends on OF && (ARCH_BRCMSTB || COMPILE_TEST)
+> >
+> > I changed this to (ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST)
+> > because Peter Robinson told me the Pi5 needs this driver too.
+> > See commit 1d99f92f71b6b4b2eee776562c991428490f71ef for details.
+>
+> Indeed, thanks for spotting this!
 
-  >>> timeit(lambda: cast(gpiod._ext.Request, "a"), number=100000000)
-  6.4817840601317585
-  >>> timeit(lambda: cast("gpiod._ext.Request", "a"), number=100000000)
-  4.369633618975058
+I've been testing this, and other associated patches, with Fedora
+(feel free to cc: me on any patches too) and I'm seeing the following
+crash on the 2Gb model, someone else reported to me they see it on
+their 16gb, I'm assuming there's some issue/nuance in the d0 rev of
+the SoC that causes issues. Wondering if you've done any testing with
+the newer SoC rev or know of any issues there?
 
-This also allows moving some imports behind type checking guards as they
-are not required at runtime.
+Peter
 
-[0]: https://docs.astral.sh/ruff/rules/runtime-cast-value/
-[1]: https://github.com/snok/flake8-type-checking/issues/119#issuecomment-2511022212
-
-Signed-off-by: Vincent Fazio <vfazio@gmail.com>
----
- bindings/python/gpiod/chip.py         | 18 +++++++++---------
- bindings/python/gpiod/line_request.py | 16 ++++++++--------
- 2 files changed, 17 insertions(+), 17 deletions(-)
-
-diff --git a/bindings/python/gpiod/chip.py b/bindings/python/gpiod/chip.py
-index 5641343..c6f7542 100644
---- a/bindings/python/gpiod/chip.py
-+++ b/bindings/python/gpiod/chip.py
-@@ -101,7 +101,7 @@ class Chip:
-         longer be used after this method is called.
-         """
-         self._check_closed()
--        cast(_ext.Chip, self._chip).close()
-+        cast("_ext.Chip", self._chip).close()
-         self._chip = None
- 
-     def get_info(self) -> ChipInfo:
-@@ -114,7 +114,7 @@ class Chip:
-         self._check_closed()
- 
-         if not self._info:
--            self._info = cast(_ext.Chip, self._chip).get_info()
-+            self._info = cast("_ext.Chip", self._chip).get_info()
- 
-         return self._info
- 
-@@ -139,7 +139,7 @@ class Chip:
- 
-         if not isinstance(id, int):
-             try:
--                return cast(_ext.Chip, self._chip).line_offset_from_id(id)
-+                return cast("_ext.Chip", self._chip).line_offset_from_id(id)
-             except OSError as ex:
-                 if ex.errno == ENOENT:
-                     try:
-@@ -158,7 +158,7 @@ class Chip:
- 
-     def _get_line_info(self, line: Union[int, str], watch: bool) -> LineInfo:
-         self._check_closed()
--        return cast(_ext.Chip, self._chip).get_line_info(
-+        return cast("_ext.Chip", self._chip).get_line_info(
-             self.line_offset_from_id(line), watch
-         )
- 
-@@ -198,7 +198,7 @@ class Chip:
-             Offset or name of the line to stop watching.
-         """
-         self._check_closed()
--        return cast(_ext.Chip, self._chip).unwatch_line_info(
-+        return cast("_ext.Chip", self._chip).unwatch_line_info(
-             self.line_offset_from_id(line)
-         )
- 
-@@ -234,7 +234,7 @@ class Chip:
-           This function may block if there are no available events in the queue.
-         """
-         self._check_closed()
--        return cast(_ext.Chip, self._chip).read_info_event()
-+        return cast("_ext.Chip", self._chip).read_info_event()
- 
-     def request_lines(
-         self,
-@@ -328,7 +328,7 @@ class Chip:
-         if len(global_output_values):
-             line_cfg.set_output_values(global_output_values)
- 
--        req_internal = cast(_ext.Chip, self._chip).request_lines(
-+        req_internal = cast("_ext.Chip", self._chip).request_lines(
-             line_cfg, consumer, event_buffer_size
-         )
-         request = LineRequest(req_internal)
-@@ -374,7 +374,7 @@ class Chip:
-         Filesystem path used to open this chip.
-         """
-         self._check_closed()
--        return cast(_ext.Chip, self._chip).path
-+        return cast("_ext.Chip", self._chip).path
- 
-     @property
-     def fd(self) -> int:
-@@ -382,4 +382,4 @@ class Chip:
-         File descriptor associated with this chip.
-         """
-         self._check_closed()
--        return cast(_ext.Chip, self._chip).fd
-+        return cast("_ext.Chip", self._chip).fd
-diff --git a/bindings/python/gpiod/line_request.py b/bindings/python/gpiod/line_request.py
-index 0220ba3..69f86f6 100644
---- a/bindings/python/gpiod/line_request.py
-+++ b/bindings/python/gpiod/line_request.py
-@@ -8,7 +8,6 @@ from typing import TYPE_CHECKING, Optional, Union, cast
- from . import _ext
- from ._internal import poll_fd
- from .exception import RequestReleasedError
--from .line import Value
- from .line_settings import LineSettings, _line_settings_to_ext
- 
- if TYPE_CHECKING:
-@@ -17,6 +16,7 @@ if TYPE_CHECKING:
-     from types import TracebackType
- 
-     from .edge_event import EdgeEvent
-+    from .line import Value
- 
- 
- __all__ = ["LineRequest"]
-@@ -76,7 +76,7 @@ class LineRequest:
-         not be used after a call to this method.
-         """
-         self._check_released()
--        cast(_ext.Request, self._req).release()
-+        cast("_ext.Request", self._req).release()
-         self._req = None
- 
-     def get_value(self, line: Union[int, str]) -> Value:
-@@ -122,9 +122,9 @@ class LineRequest:
- 
-         offsets = [self._line_to_offset(line) for line in lines]
- 
--        buf = cast(list[Value], [None] * len(offsets))
-+        buf = cast("list[Value]", [None] * len(offsets))
- 
--        cast(_ext.Request, self._req).get_values(offsets, buf)
-+        cast("_ext.Request", self._req).get_values(offsets, buf)
-         return buf
- 
-     def set_value(self, line: Union[int, str], value: Value) -> None:
-@@ -151,7 +151,7 @@ class LineRequest:
- 
-         mapped = {self._line_to_offset(line): value for line, value in values.items()}
- 
--        cast(_ext.Request, self._req).set_values(mapped)
-+        cast("_ext.Request", self._req).set_values(mapped)
- 
-     def reconfigure_lines(
-         self,
-@@ -186,7 +186,7 @@ class LineRequest:
-             settings = line_settings.get(offset) or LineSettings()
-             line_cfg.add_line_settings([offset], _line_settings_to_ext(settings))
- 
--        cast(_ext.Request, self._req).reconfigure_lines(line_cfg)
-+        cast("_ext.Request", self._req).reconfigure_lines(line_cfg)
- 
-     def wait_edge_events(
-         self, timeout: Optional[Union[timedelta, float]] = None
-@@ -220,7 +220,7 @@ class LineRequest:
-         """
-         self._check_released()
- 
--        return cast(_ext.Request, self._req).read_edge_events(max_events)
-+        return cast("_ext.Request", self._req).read_edge_events(max_events)
- 
-     def fileno(self) -> int:
-         """
-@@ -276,4 +276,4 @@ class LineRequest:
-         File descriptor associated with this request.
-         """
-         self._check_released()
--        return cast(_ext.Request, self._req).fd
-+        return cast("_ext.Request", self._req).fd
--- 
-2.43.0
-
+[   56.289183] SError Interrupt on CPU3, code 0x00000000be000011 -- SError
+[   56.289194] CPU: 3 UID: 0 PID: 341 Comm: (udev-worker) Tainted: G
+M               ------  ---  6.17.0-0.rc4.36.pr3.fc43.aarch64 #1
+PREEMPT(voluntary)
+[   56.289200] Tainted: [M]=3DMACHINE_CHECK
+[   56.289201] Hardware name: raspberrypi Raspberry Pi 5 Model B Rev
+1.0/Raspberry Pi 5 Model B Rev 1.0, BIOS 2025.04 04/01/2025
+[   56.289204] pstate: 804000c9 (Nzcv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=
+=3D--)
+[   56.289208] pc : brcmstb_pull_config_set+0x5c/0xd8
+[   56.289216] lr : brcmstb_pull_config_set+0x44/0xd8
+[   56.289220] sp : ffff800080663500
+[   56.289221] x29: ffff800080663500 x28: ffffbcba6aaab480 x27: 00000000000=
+00370
+[   56.289227] x26: 0000ffffa9554298 x25: ffffbcbad6ad2360 x24: ffff0000007=
+76240
+[   56.289231] x23: ffff0000011352b8 x22: ffff000002a16080 x21: 00000000000=
+00014
+[   56.289235] x20: 0000000000000118 x19: ffff000002a16080 x18: 00000000fff=
+ffffc
+[   56.289239] x17: ffff0000010f1180 x16: ffffbcbad419c418 x15: 00000000000=
+0000a
+[   56.289243] x14: ffffffffffffffff x13: 0000000000000001 x12: 00000000000=
+00000
+[   56.289247] x11: 0000000000000040 x10: 0000000000000000 x9 : ffffbcbad3d=
+da6d4
+[   56.289251] x8 : 0000000000000014 x7 : 0000000000000000 x6 : ffffbcbad3d=
+da768
+[   56.289254] x5 : ffff00000204f480 x4 : 0000000000000020 x3 : 00000000000=
+00000
+[   56.289258] x2 : 0000000000000001 x1 : 0000000000000000 x0 : 00000000000=
+00000
+[   56.289262] Kernel panic - not syncing: Asynchronous SError Interrupt
+[   56.422659] CPU: 3 UID: 0 PID: 341 Comm: (udev-worker) Tainted: G
+M               ------  ---  6.17.0-0.rc4.36.pr3.fc43.aarch64 #1
+PREEMPT(voluntary)
+[   56.436367] Tainted: [M]=3DMACHINE_CHECK
+[   56.440123] Hardware name: raspberrypi Raspberry Pi 5 Model B Rev
+1.0/Raspberry Pi 5 Model B Rev 1.0, BIOS 2025.04 04/01/2025
+[   56.451472] Call trace:
+[   56.453919]  show_stack+0x30/0x90 (C)
+[   56.457595]  dump_stack_lvl+0x7c/0xa0
+[   56.461268]  dump_stack+0x18/0x2c
+[   56.464590]  vpanic+0x140/0x338
+[   56.467737]  panic+0x68/0x70
+[   56.470622]  nmi_panic+0x90/0xa0
+[   56.473859]  arm64_serror_panic+0x78/0x90
+[   56.477878]  arm64_is_fatal_ras_serror+0x90/0x98
+[   56.482509]  do_serror+0x38/0x60
+[   56.485742]  el1h_64_error_handler+0x38/0x60
+[   56.490026]  el1h_64_error+0x84/0x88
+[   56.493609]  brcmstb_pull_config_set+0x5c/0xd8 (P)
+[   56.498416]  brcmstb_pinconf_set+0xbc/0xe8
+[   56.502523]  pinconf_apply_setting+0xc4/0x148
+[   56.506893]  pinctrl_commit_state+0x124/0x240
+[   56.511262]  pinctrl_select_state+0x24/0x40
+[   56.515456]  pinctrl_bind_pins+0x1ec/0x280
+[   56.519565]  really_probe+0x60/0x3a0
+[   56.523150]  __driver_probe_device+0x84/0x160
+[   56.527520]  driver_probe_device+0x48/0x130
+[   56.531716]  __driver_attach+0xd0/0x1f8
+[   56.535560]  bus_for_each_dev+0x84/0x100
+[   56.539494]  driver_attach+0x2c/0x40
+[   56.543078]  bus_add_driver+0x158/0x280
+[   56.546924]  driver_register+0x70/0x138
+[   56.550769]  __platform_driver_register+0x28/0x40
+[   56.555487]  gpio_keys_init+0x28/0xff8 [gpio_keys]
+[   56.560296]  do_one_initcall+0x5c/0x318
+[   56.564143]  do_init_module+0x9c/0x2b8
+[   56.567903]  load_module+0x7e0/0x998
+[   56.571486]  init_module_from_file+0x90/0xf0
+[   56.575769]  __arm64_sys_finit_module+0x270/0x380
+[   56.580488]  invoke_syscall.constprop.0+0x64/0xe8
+[   56.585208]  el0_svc_common.constprop.0+0xc0/0xe8
+[   56.589927]  do_el0_svc+0x24/0x38
+[   56.593250]  el0_svc+0x3c/0x168
+[   56.596398]  el0t_64_sync_handler+0xa0/0xf0
+[   56.600593]  el0t_64_sync+0x1b0/0x1b8
+[   56.604264] SMP: stopping secondary CPUs
+[   56.608198] Kernel Offset: 0x3cba532a0000 from 0xffff800080000000
+[   56.614310] PHYS_OFFSET: 0x0
+[   56.617194] CPU features: 0x080000,00017000,24023140,0401720b
+[   56.622958] Memory Limit: none
+[   56.626147] ---[ end Kernel panic - not syncing: Asynchronous
+SError Interrupt ]---
 
