@@ -1,198 +1,92 @@
-Return-Path: <linux-gpio+bounces-25757-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25758-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97BF5B4986C
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Sep 2025 20:37:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1124B49956
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Sep 2025 21:06:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 285DF3B21AD
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Sep 2025 18:37:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9231C2083F9
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Sep 2025 19:06:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7216C31B82D;
-	Mon,  8 Sep 2025 18:37:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20E5722ACF3;
+	Mon,  8 Sep 2025 19:06:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b="UhaQwwTj"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="KClgd9bh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9FE8314B75;
-	Mon,  8 Sep 2025 18:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757356641; cv=pass; b=dmVOfw1qWmJYRYsVXjpoa7KXUFIq8sD5WGzQwPV2OwHfx38NjjJBQY8t7Wp86NhqGJnqWhCz8daWO7IGNOvNoHdXiO7GjSQejG0AFF6AaOILlc6UduISbYO9IGSZLXv67b3gwKBWqt9pT95BW71SuQS8Gek47EpxB0VzMWBVdrs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757356641; c=relaxed/simple;
-	bh=RnxaE3KiraFUwjH7IqB0XC7621NVji1ZG4b3sg6u+1A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rQwg7khRsyxcxNtRPDP3gvggtePrImH3mIHueRLazi7MmBGVFEzBielGMsjKHMHzsDQLbkj0QLuFkdB7k4cUc8yfGVRpCUp8cWFX5RQ3vHFjW9EyW0PdBz6afLDKHfHbYLuEogWac5QF6rhPNZpNzhE0VzNbAKcYL69AzE2Ixpo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b=UhaQwwTj; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1757356580; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=cdVYgURB89dbHupAw4KMy46mfFbhabKB0fbmHFBgRBvBYvTtSQExrU1sKpfkpjcx1w/YUJ8oV4j9+YhGcpEjW7Zwj1jsW1OKgfubHjb4G2koqFAxMLoVYAz8Ccw0+lylg0YO1Htsg+KdPOqoubvi0rri2cAvyirq77JW+Ay5MYc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1757356580; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=mqorkaZP8K3w37+KQC5xsu9iciTdS53JJYYC8j1jjZY=; 
-	b=lw0+9hG76wtgGAX2WMoklsJubSvxRXKF08iwS28xRKhrNx1q6Cy5o04wQBEzwFoYCfg3NXiHFcSLuWgyv23G8QKMtYdPesUVladZMLFYZLSp6+nayixftZ6vLJb3H28vG8XCLQdinZhZxABbk/hAEKpPDM5kWMqp0o6B9ah+w94=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=ariel.dalessandro@collabora.com;
-	dmarc=pass header.from=<ariel.dalessandro@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1757356580;
-	s=zohomail; d=collabora.com; i=ariel.dalessandro@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=mqorkaZP8K3w37+KQC5xsu9iciTdS53JJYYC8j1jjZY=;
-	b=UhaQwwTja7SFF9hVLfmnIc1Nk3Ao2vojsdkFkQ1NSXggwHTHU8YksUOjnlk+k/dQ
-	Zo810evf7Bf1W1IQVDWhYK4GEiE3z9tw0FTs6kDO5JCJJ8/no4Jni8fjICCwkBC3Oo8
-	n7wmxd995Nc2uwbGBP5jZdIa+Dk2ftPoB1SA5g1U=
-Received: by mx.zohomail.com with SMTPS id 1757356577657388.2831972624366;
-	Mon, 8 Sep 2025 11:36:17 -0700 (PDT)
-Message-ID: <79baaa0a-7cc4-44f0-bf71-38aff550b177@collabora.com>
-Date: Mon, 8 Sep 2025 15:35:58 -0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8BA51E500C;
+	Mon,  8 Sep 2025 19:06:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757358374; cv=none; b=Qf7l2lCLPkFCasaI5MzN8J0Sx4ocRiK1GkkOI5Kk8IB1UYZBCcpwjL4uaqY437h27RZMaZ1PAImbj6tH+wzIfxDbj++D3oy1t/mr8/6Is1GoqpzYcIUUgnqA/GgcgVjAop9EAewdLtGtXJPKPpXc+tHcilo4IB4S/W2lwUSvS0U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757358374; c=relaxed/simple;
+	bh=lIFtwkBXSrNsvaFjgCMkE3JLuDN6ncd/6x/ZN3jh/8o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pLlmHq6yDC3tPcWRALjSVT7xIfVqWt2dwrDg3A1X6yJ+zXxgVT5ttZWCkB0G+fJoKBmj26o6FtvV3aMglj1qvc6bA8FaM8mX1QGy2SkZeyhxqsiUgDHd6nHKgqdvKVARt3b9U1KTJ+OwXSWvQXa98ma8Msy9teUgXCMd/p9gssI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=KClgd9bh; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=07LtSeWo/AmLZHtl6LX+u3Mr0O3ybeIZifoEkYMgMgM=; b=KClgd9bhUawW8/SwsL/AD4WJe8
+	mMGpaecMywwKaJtk1DDS8s+hN2JLX2eStBVdYpymdA0NS7wP3vSmeJoGLFyoz7hwCL9joAkJQkY6Q
+	MUBHr89CzbDUc8m/E0fKYpPC45i3/W6zumMPEPO7RrxSQ0wlyv4ywyxTU4BrGQw/VfLM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uvhBj-007i1L-4F; Mon, 08 Sep 2025 21:06:03 +0200
+Date: Mon, 8 Sep 2025 21:06:03 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: airoha: fix wrong MDIO function bitmaks
+Message-ID: <d1bc3887-5b88-4fb9-8f89-4b520427ccdc@lunn.ch>
+References: <20250908113723.31559-1-ansuelsmth@gmail.com>
+ <583981f9-b2ed-45fe-a327-4fd8218dc23e@lunn.ch>
+ <68bf16e5.df0a0220.2e182c.b822@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 02/14] media: dt-bindings: Convert MediaTek mt8173-vpu
- bindings to YAML
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: airlied@gmail.com, amergnat@baylibre.com, andrew+netdev@lunn.ch,
- andrew-ct.chen@mediatek.com, angelogioacchino.delregno@collabora.com,
- broonie@kernel.org, chunkuang.hu@kernel.org, ck.hu@mediatek.com,
- conor+dt@kernel.org, davem@davemloft.net, dmitry.torokhov@gmail.com,
- edumazet@google.com, flora.fu@mediatek.com, houlong.wei@mediatek.com,
- jeesw@melfas.com, jmassot@collabora.com, kernel@collabora.com,
- krzk+dt@kernel.org, kuba@kernel.org,
- kyrie.wu@mediatek.corp-partner.google.com, lgirdwood@gmail.com,
- linus.walleij@linaro.org, louisalexis.eyraud@collabora.com,
- maarten.lankhorst@linux.intel.com, matthias.bgg@gmail.com,
- mchehab@kernel.org, minghsiu.tsai@mediatek.com, mripard@kernel.org,
- p.zabel@pengutronix.de, pabeni@redhat.com, robh@kernel.org,
- sean.wang@kernel.org, simona@ffwll.ch, support.opensource@diasemi.com,
- tiffany.lin@mediatek.com, tzimmermann@suse.de, yunfei.dong@mediatek.com,
- devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-mediatek@lists.infradead.org, linux-sound@vger.kernel.org,
- netdev@vger.kernel.org
-References: <20250820171302.324142-1-ariel.dalessandro@collabora.com>
- <20250820171302.324142-3-ariel.dalessandro@collabora.com>
- <20250821-piquant-rapid-bear-8cedc0@kuoka>
-Content-Language: en-US
-From: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
-In-Reply-To: <20250821-piquant-rapid-bear-8cedc0@kuoka>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <68bf16e5.df0a0220.2e182c.b822@mx.google.com>
 
-Krzysztof,
-
-On 8/21/25 3:47 AM, Krzysztof Kozlowski wrote:
-> On Wed, Aug 20, 2025 at 02:12:50PM -0300, Ariel D'Alessandro wrote:
->> Convert the existing text-based DT bindings for Mediatek MT8173 Video Processor
->> Unit to a YAML schema.
+On Mon, Sep 08, 2025 at 07:48:17PM +0200, Christian Marangi wrote:
+> On Mon, Sep 08, 2025 at 06:54:15PM +0200, Andrew Lunn wrote:
+> > On Mon, Sep 08, 2025 at 01:37:19PM +0200, Christian Marangi wrote:
+> > > With further testing with an attached Aeonsemi it was discovered that
+> > > the pinctrl MDIO function applied the wrong bitmask. The error was
+> > > probably caused by the confusing documentation related to these bits.
+> > > 
+> > > Inspecting what the bootloader actually configure, the SGMII_MDIO_MODE
+> > > is never actually set but instead it's set force enable to the 2 GPIO
+> > > (gpio 1-2) for MDC and MDIO pin.
+> > 
+> > Is the MDIO bus implemented using the GPIO bitbanging driver?
+> > 
 > 
-> DT schema, not YAML. Don't say YAML at all, neither here nor in subject.
+> No it does use the MDIO bus integrated in the MT7530 Switch. It's just
+> that the MDIO pin can be muxed as GPIO usage.
 
-Ack.
+Then i do not understand this patch. Why configure the pinmux for GPIO
+when you want it connected to the MDIO bus device?
 
-> 
-> Also looks not wrapped...
-
-Ack.
-
-> 
->>
->> Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
->> ---
->>   .../bindings/media/mediatek,mt8173-vpu.yaml   | 76 +++++++++++++++++++
->>   .../bindings/media/mediatek-vpu.txt           | 31 --------
->>   2 files changed, 76 insertions(+), 31 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8173-vpu.yaml
->>   delete mode 100644 Documentation/devicetree/bindings/media/mediatek-vpu.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/mediatek,mt8173-vpu.yaml b/Documentation/devicetree/bindings/media/mediatek,mt8173-vpu.yaml
->> new file mode 100644
->> index 0000000000000..44f5d7cc44042
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/mediatek,mt8173-vpu.yaml
->> @@ -0,0 +1,76 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/media/mediatek,mt8173-vpu.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Mediatek MT8173 Video Processor Unit
->> +
->> +maintainers:
->> +  - Ariel D'Alessandro <ariel.dalessandro@collabora.com>
->> +
->> +description:
->> +  Video Processor Unit is a HW video controller. It controls HW Codec including
->> +  H.264/VP8/VP9 Decode, H.264/VP8 Encode and Image Processor (scale/rotate/color convert).
-> 
-> Please wrap code according to the preferred limit expressed in Kernel
-> coding style (checkpatch is not a coding style description, but only a
-> tool).  However don't wrap blindly (see Kernel coding style).
-
-Thanks for the comment. Wrapped to 80 column width.
-
-> 
->> +
->> +properties:
->> +  compatible:
->> +    const: mediatek,mt8173-vpu
->> +
->> +  reg:
->> +    minItems: 2
-> 
-> No, from where do you get such syntax?
-
-IIUC, what you mean is s/minItems/maxItems.
-
-> 
->> +
->> +  reg-names:
->> +    items:
->> +      - const: tcm
->> +      - const: cfg_reg
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  clock-names:
->> +    items:
->> +      - const: main
->> +
->> +  memory-region:
->> +    description:
->> +      phandle to a node describing reserved memory used by VPU
->> +      (see bindings/reserved-memory/reserved-memory.txt)
-> 
-> Drop, redundant description.
-
-Ack.
-
-Thanks a lot!
-
--- 
-Ariel D'Alessandro
-Software Engineer
-
-Collabora Ltd.
-Platinum Building, St John's Innovation Park, Cambridge CB4 0DS, UK 
-Registered in England & Wales, no. 5513718
-
+     Andrew
 
