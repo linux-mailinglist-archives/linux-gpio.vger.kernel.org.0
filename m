@@ -1,58 +1,58 @@
-Return-Path: <linux-gpio+bounces-25765-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25766-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2570B499C0
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Sep 2025 21:20:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D380AB49A67
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Sep 2025 21:56:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A818E3416E2
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Sep 2025 19:20:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 80084205EB9
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Sep 2025 19:56:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55D5F2594B9;
-	Mon,  8 Sep 2025 19:20:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47D382D5C67;
+	Mon,  8 Sep 2025 19:56:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b="MDQHe4Dq"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b="WuspcEjl"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D9B424A04D;
-	Mon,  8 Sep 2025 19:20:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A21D1E231E;
+	Mon,  8 Sep 2025 19:56:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757359221; cv=pass; b=aLhlpsQvCcqdw7OGsnbWd4GoL0nTO0ax6qzWZlSei2CRlMiUork4intDIiFjuXOgpga4tfYxysSyNvH8WN6mfdfGeOv4z5yRPJu0hxw6n3XGe+njua5u5pCCfYcpTpRp3EVXEhCHQJRlJcX8+NtULAPMgBOB6Kjb07L+FS/uTrg=
+	t=1757361364; cv=pass; b=HiW8rPVPUhv3jc8h7fHLTG3RNp82HmE8E/A9VlS9nwydj7vi3c1qHk6jyKAbcByqf0vCo6yzIxZW1MxBQ9mckQNvee5TLHL9MIH+tcaNPq1c2EZVjocQZOsSoJf+H7wGyggwpUh9CocZqPuubtHC5GVnczP2h+AV/mIwif/2RPA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757359221; c=relaxed/simple;
-	bh=N4KX4iYjQlsSAC7XbRdcqC2Wav7eEMkfZTLFXxOZ5mk=;
+	s=arc-20240116; t=1757361364; c=relaxed/simple;
+	bh=MWpV4A2WRkUfqblRPidOKOMyFxPO/XuuQrBHbl8uMQI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TzmWK6mwJVw73OJlutWSvfA+sKtd6hl90Lyh9zXRmfXZub0eQQPuL02ASUhV+yaVrGd8I4BAz/X2mkCHRXmJM3JaByub/pp03cZPumdINsa1pSMcjtszfv4j7+7l/WfFVxps7y5C7iKt6hTkrHyZ3+0yIxBeUg/iESrE1aUHRdQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b=MDQHe4Dq; arc=pass smtp.client-ip=136.143.188.112
+	 In-Reply-To:Content-Type; b=oUxeZUZLouoAhqIhaVJAaz7Pb0Gw1Dslw9ChUD7T+y+XI0WEgU7fRF1IRFSHg4aCRLVLBNkisnIGTh3HcJL1DjnNL6vm+YErA2a8xnASXxcmUJmNy4I4xOd0el2ejuFIVEUdRq2e4RjGebPsTQnGAv00jnzOn+AnU5Z4tFb6Amk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b=WuspcEjl; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1757359161; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1757361303; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=SR21xJbjuheCmpRO47GHS8daLjO4bieeiZzmtZ1cpc55VPRfVg548p5JS7agjhBhxNyqLOj4aSq+sv4fBoBAFwinz+AErAYyDnm9dFMD1lYZFLK2nGxh32KU9UBpnwa4JOgAkGhXXZk1Ezt/EytGOrIDKz/fJ1yBYOqSVdPDvEQ=
+	b=mUzmnkI7ls4AvpKk9PkLBBYeCu+pH9kCHwMoKRU9mS8Va3Rk3P1EnjIukFHIQ1sAgt4nQPlbPOXlK83kFmYc2xVS75KjHCPk94ELyPusE++ff8czzuFzys66QYc4l6TbNekfLo+fBNe1sVSwmyurSAX0CZXICiNB/U581LhcNrU=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1757359161; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=WKomwiWRLnM4IVkNJXgsDxoTaoxCuRYCEVpcC0hexTc=; 
-	b=htmAjoNLy5CO05zAuH6G9LKsksKbRORMRlY2ga//3IUV8oR1JzNf+k84WVaUN8L2BLKsKIhlEp5YQ3KZB1vW4nlER4kFzE9gNteCx4wTgatNBcVznKJb5H1OLhHsmd7Rx2SXOPvHQ6Ssw5cfdqXuwJAAJJ/8DSbGxjiAwoM21VE=
+	t=1757361303; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=M/VFSbxaoCdLjJSeyTwHsH+gRgpx/aAWpUtZlGe7uGk=; 
+	b=BaZlsaht09RzyFGIw897Zk6xphgJqy43DTSQKT9TkRm0X5MkO3meBCJ4cTbsHdUbbD2SEdI/5kc03gzpBrHIl+mADS6abfJXQtNg+5HPGSQoyur59mlSQ7Ia3ZhxJAtvYUVT99Q1iWwbwHsF4hvHTz/xFr1r9Snnsvu9tXKFPY0=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=ariel.dalessandro@collabora.com;
 	dmarc=pass header.from=<ariel.dalessandro@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1757359161;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1757361303;
 	s=zohomail; d=collabora.com; i=ariel.dalessandro@collabora.com;
 	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=WKomwiWRLnM4IVkNJXgsDxoTaoxCuRYCEVpcC0hexTc=;
-	b=MDQHe4Dqfppv+jVMwZnyFuAG2uAH30HHHO82FejqVc2iciJuMenfzAvgyXzq4Uui
-	4cmxT8BC0FYcgwWgEs3oRnI/N4M6nE/u/LHyPhm0wpuYeXoPlqRJqe/erXnbU3QzXJ8
-	v3SChD6qsHNwSMzyTd0ri4Nf8MkPaF09mbhQTE+8=
-Received: by mx.zohomail.com with SMTPS id 175735915950243.97346092425232;
-	Mon, 8 Sep 2025 12:19:19 -0700 (PDT)
-Message-ID: <1cf0b296-adaa-4c80-864c-9b78f09cd3e3@collabora.com>
-Date: Mon, 8 Sep 2025 16:19:03 -0300
+	bh=M/VFSbxaoCdLjJSeyTwHsH+gRgpx/aAWpUtZlGe7uGk=;
+	b=WuspcEjlUBylmJh1B0BghZqg5B6vUEjxtdYtMYSmMk6RsbTPP0bLHXw0NlWAcceJ
+	xsO8L1flgUuEeUGRtXTkjsV0T9f76hnyQvEhLCzhzUA5H4Yt1V6Miux3sq5qAOgM9B+
+	4LA1qn9GmOhsgJZge5/qJBesfNjPEAzNODbFUE/w=
+Received: by mx.zohomail.com with SMTPS id 1757361302113105.67245372545813;
+	Mon, 8 Sep 2025 12:55:02 -0700 (PDT)
+Message-ID: <0b1d77ab-7b39-4764-9f0c-4b4a15aa0e56@collabora.com>
+Date: Mon, 8 Sep 2025 16:54:46 -0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -60,9 +60,9 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 03/14] dt-bindings: arm: mediatek: mmsys: Add
- assigned-clocks/rates properties
-To: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v1 04/14] net: dt-bindings: Convert Marvell 8897/8997
+ bindings to YAML
+To: Rob Herring <robh@kernel.org>
 Cc: airlied@gmail.com, amergnat@baylibre.com, andrew+netdev@lunn.ch,
  andrew-ct.chen@mediatek.com, angelogioacchino.delregno@collabora.com,
  broonie@kernel.org, chunkuang.hu@kernel.org, ck.hu@mediatek.com,
@@ -74,73 +74,179 @@ Cc: airlied@gmail.com, amergnat@baylibre.com, andrew+netdev@lunn.ch,
  linus.walleij@linaro.org, louisalexis.eyraud@collabora.com,
  maarten.lankhorst@linux.intel.com, matthias.bgg@gmail.com,
  mchehab@kernel.org, minghsiu.tsai@mediatek.com, mripard@kernel.org,
- p.zabel@pengutronix.de, pabeni@redhat.com, robh@kernel.org,
- sean.wang@kernel.org, simona@ffwll.ch, support.opensource@diasemi.com,
- tiffany.lin@mediatek.com, tzimmermann@suse.de, yunfei.dong@mediatek.com,
- devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-mediatek@lists.infradead.org, linux-sound@vger.kernel.org,
- netdev@vger.kernel.org
+ p.zabel@pengutronix.de, pabeni@redhat.com, sean.wang@kernel.org,
+ simona@ffwll.ch, support.opensource@diasemi.com, tiffany.lin@mediatek.com,
+ tzimmermann@suse.de, yunfei.dong@mediatek.com, devicetree@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
+ linux-sound@vger.kernel.org, netdev@vger.kernel.org
 References: <20250820171302.324142-1-ariel.dalessandro@collabora.com>
- <20250820171302.324142-4-ariel.dalessandro@collabora.com>
- <20250821-electric-kestrel-of-awe-cb89dc@kuoka>
+ <20250820171302.324142-5-ariel.dalessandro@collabora.com>
+ <CAL_Jsq+K72Kof-Z3q2DSh3FKO64npLF6hDJnqnTzNBUoOoVQFA@mail.gmail.com>
 Content-Language: en-US
 From: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
-In-Reply-To: <20250821-electric-kestrel-of-awe-cb89dc@kuoka>
+In-Reply-To: <CAL_Jsq+K72Kof-Z3q2DSh3FKO64npLF6hDJnqnTzNBUoOoVQFA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-Krzysztof,
+Hi Rob,
 
-On 8/21/25 3:43 AM, Krzysztof Kozlowski wrote:
-> On Wed, Aug 20, 2025 at 02:12:51PM -0300, Ariel D'Alessandro wrote:
->> Current, the DT bindings for MediaTek mmsys controller is missing the
->> assigned-clocks and assigned-clocks-rates properties. Add these and
-> 
-> No, they do not miss them. I don't understand why you are adding these.
-
-The reason I added these is due to the following check error:
-
-$ make -j$(nproc) CHECK_DTBS=y mediatek/mt8173-elm.dtb
-   DTC [C] arch/arm64/boot/dts/mediatek/mt8173-elm.dtb
-[...]
-arch/arm64/boot/dts/mediatek/mt8173-elm.dtb: syscon@14000000 
-(mediatek,mt8173-mmsys): 'assigned-clock-rates', 'assigned-clocks' do 
-not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: 
-http://devicetree.org/schemas/arm/mediatek/mediatek,mmsys.yaml#
-
-> 
->> update the example as well.
+On 8/21/25 11:28 AM, Rob Herring wrote:
+> On Wed, Aug 20, 2025 at 12:15 PM Ariel D'Alessandro
+> <ariel.dalessandro@collabora.com> wrote:
+>>
+>> Convert the existing text-based DT bindings for Marvell 8897/8997
+>> (sd8897/sd8997) bluetooth devices controller to a YAML schema.
+>>
+>> While here, bindings for "usb1286,204e" (USB interface) are dropped from
+>> the YAML definition as these are currently documented in file:
+>>
+>> - Documentation/devicetree/bindings/net/btusb.txt
 >>
 >> Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
 >> ---
->>   .../devicetree/bindings/arm/mediatek/mediatek,mmsys.yaml | 9 +++++++++
->>   1 file changed, 9 insertions(+)
+>>   .../bindings/net/marvell,sd8897-bt.yaml       | 91 +++++++++++++++++++
+> 
+> This needs to move to net/bluetooth/
+
+Ack.
+
+> 
+>>   .../bindings/net/marvell-bt-8xxx.txt          | 83 -----------------
+>>   2 files changed, 91 insertions(+), 83 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/net/marvell,sd8897-bt.yaml
+>>   delete mode 100644 Documentation/devicetree/bindings/net/marvell-bt-8xxx.txt
 >>
->> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.yaml b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.yaml
->> index 3f4262e93c789..d045d366eb8e2 100644
->> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.yaml
->> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.yaml
->> @@ -68,6 +68,12 @@ properties:
->>         of the power controller specified by phandle. See
->>         Documentation/devicetree/bindings/power/power-domain.yaml for details.
->>   
->> +  assigned-clocks:
->> +    maxItems: 1
+>> diff --git a/Documentation/devicetree/bindings/net/marvell,sd8897-bt.yaml b/Documentation/devicetree/bindings/net/marvell,sd8897-bt.yaml
+>> new file mode 100644
+>> index 0000000000000..6539868c08b8a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/marvell,sd8897-bt.yaml
+>> @@ -0,0 +1,91 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/net/marvell,sd8897-bt.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 >> +
->> +  assigned-clock-rates:
->> +    maxItems: 1
+>> +title: Marvell 8897/8997 (sd8897/sd8997) bluetooth devices (SDIO)
+>> +
+>> +maintainers:
+>> +  - Ariel D'Alessandro <ariel.dalessandro@collabora.com>
 >> +
 > 
-> Drop both, completely redundant and not actually in the scope of the binding.
+> Needs a $ref to bluetooth-controller.yaml
 
-Ack. Will fix accordingly in v2 based on the discussion above.
+Ack.
 
-Thanks!
+> 
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - marvell,sd8897-bt
+>> +      - marvell,sd8997-bt
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  marvell,cal-data:
+>> +    $ref: /schemas/types.yaml#/definitions/uint8-array
+>> +    description:
+>> +      Calibration data downloaded to the device during initialization.
+>> +    minItems: 28
+> 
+> Just: maxItems: 28
+
+Ack.
+
+> 
+>> +
+>> +  marvell,wakeup-pin:
+>> +    $ref: /schemas/types.yaml#/definitions/uint16
+>> +    description:
+>> +      Wakeup pin number of the bluetooth chip. Used by firmware to wakeup host
+>> +      system.
+>> +
+>> +  marvell,wakeup-gap-ms:
+> 
+> This unfortunately needs a uint16 type. That will cause a warning
+> which has to be fixed on the dtschema side.
+
+Yeah, that's what I thought but wasn't sure on the proper solution. Will 
+fix in v2.
+
+> 
+>> +    description:
+>> +      Wakeup latency of the host platform. Required by the chip sleep feature.
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>> +    #include <dt-bindings/pinctrl/rockchip.h>
+> 
+> Please drop this and just use a number below.
+
+Ack.
+
+> 
+>> +
+>> +    sdio0 {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +
+>> +        btmrvl: btmrvl@2 {
+>> +            compatible = "marvell,sd8897-bt";
+>> +            reg = <2>;
+>> +            interrupt-parent = <&gpio4>;
+>> +            interrupts = <RK_PD7 IRQ_TYPE_LEVEL_LOW>;
+>> +            marvell,wakeup-pin = /bits/ 16 <13>;
+>> +            pinctrl-names = "default";
+>> +            pinctrl-0 = <&bt_host_wake_l>;
+>> +        };
+>> +    };
+> 
+> I would drop this example.
+
+Agreed.
+
+> 
+>> +
+>> +    mmc3 {
+> 
+> mmc {
+
+Ack.
+
+> 
+>> +        vmmc-supply = <&wlan_en_reg>;
+>> +        bus-width = <4>;
+>> +        cap-power-off-card;
+>> +        keep-power-in-suspend;
+>> +
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +
+>> +        bluetooth: bluetooth@2 {
+> 
+> Drop the label.
+
+Ack.
+
+Thanks a lot for your feedback and help!
+Regards,
 
 -- 
 Ariel D'Alessandro
