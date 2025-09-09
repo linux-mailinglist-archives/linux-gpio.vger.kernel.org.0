@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-25774-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25775-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED02FB4A23E
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Sep 2025 08:29:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6E6EB4A24C
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Sep 2025 08:32:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 55CE27A19EA
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Sep 2025 06:28:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6EB21175095
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Sep 2025 06:32:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FC73302CD7;
-	Tue,  9 Sep 2025 06:29:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42B4C303A0C;
+	Tue,  9 Sep 2025 06:32:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ODPEczKa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pp/hdWj6"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF303235074;
-	Tue,  9 Sep 2025 06:29:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92B118A93F;
+	Tue,  9 Sep 2025 06:32:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757399374; cv=none; b=GCpckla+wgpFELiNz/tPWQPHrqqLgNLjLKGL7dA4RC8i+XgB59T94W9xIwRu7xHDqKuaos1OhdwnZON2Q6+0fAqff/NZU8VH2cJd7u1k/4dNQhpOrrhYghYJjQoKLm+RnO889xAwRMOdFzN9gdsxhTdb3zz0SgbF22d/Hx6bPdI=
+	t=1757399551; cv=none; b=KEceyEFFXzBzuVvbjbnS7dRp6DwlwW15gknr+jb8AhZFDGr0KEiEr1yv+pmRz5Qgt5aQz64wUPGJU7N5feCHtx2JSLm1rBf+a7ueYUQCB+Cf+i971nuf+sbvd0Jjt4Z3iQI02rGUKfaDgYFIZxgntBjTTxasG3Um/Qbok+DPPJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757399374; c=relaxed/simple;
-	bh=RSVuLnwfn6lKemssdBwmkRTtO64cdfYMqOYTLPlQs3s=;
+	s=arc-20240116; t=1757399551; c=relaxed/simple;
+	bh=2G05gzx1PbaHyR1yYOE2y+mLcbStlpmfMPAJKrEzaC8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Gfar64rKewtwRmUjN84mhJB7eA7yilT9ZgpV7aIw2vsy+ma8vw6yCHGhA3rKCPXCabMGoBGwTEhJtEDiYzrkYvPZf70wr8oldmIKOyahkXY0c8VVRmXoYaJUW1ADb+yG4Zd9SPGtZhQ0Gv+Sk+38exiGgYibScrYz2UdyoKFJMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ODPEczKa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51560C4CEF4;
-	Tue,  9 Sep 2025 06:29:23 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=sQpcxBDGFDVYOzLAK+x8GbMPJABX+l0gMvQQQWYwGE5lJlCIjz4Qr1qWUOwWR/LME2ryNWI9NXibLe1T1GHz3zmigHr4cvKu+OoutV6x6C0IQXemU9kWVfCHWmkTc3ZWsrE6V1KPtHgt1RJCjXigIC8xhuoA0pWjNm2Zk6SKBhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pp/hdWj6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 634CDC4CEF5;
+	Tue,  9 Sep 2025 06:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757399373;
-	bh=RSVuLnwfn6lKemssdBwmkRTtO64cdfYMqOYTLPlQs3s=;
+	s=k20201202; t=1757399549;
+	bh=2G05gzx1PbaHyR1yYOE2y+mLcbStlpmfMPAJKrEzaC8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ODPEczKa/AlXKhw6F8c9TO09Io1SaxNo2XlIOUAggPIbGDm87relJQDwAsvfXFd7P
-	 rzIHU+XrDwvKXq4U+1b4yJVDvOJBp/lSFUBg+od9u0qR+S5uCy0m2bClTkMA33SBYx
-	 NXn7fg6brMGNc1u/FUII/nK7/oPS70XAGvEeGNLPuiTHBV4U6QqWkrj/Q2PyiGnujU
-	 5RaqwplwO5CHfsdCRSX0KyHGS3p7+50u6GJQANsnvNtLaV/B3eorVx4hq1sn3FgVT5
-	 6g3Vc/sebHYaIwlAfYy+zBitJas0cE1IYEoJhEclbmmxrUlIEy2T+eQxyye0p+SyM5
-	 7XaiAU2f3FKDA==
-Message-ID: <898bf39e-1b34-40e9-bdfa-ec4eca1c3f7d@kernel.org>
-Date: Tue, 9 Sep 2025 08:29:21 +0200
+	b=pp/hdWj6LY6bGFjsgsADGJsGjUD6dcZ8sIz1E2W8Bp78HpLJf5tiqc6PaS2tctJdm
+	 vmRk4z5ffK38g1LunQBW0MQIF8wH/i8WasdyLDVZhqU5vYlbAWpRm+5WdrI4F4e1nx
+	 SZk6v7FD0wB9wfJnihoizbTt7Ts6XaoOFKQzUFaVUmnfIwh3Fb69isdIlQwB+DU/zV
+	 sUK7LXBTh4A/R913c5kWjfFNoDCsJAzLL/Fjd+T7S001RLhPcMZsFqlGTK+5PtZRI4
+	 Rh2iw78Rf2haihzrZVl0vVKInRdOFZSP9QhMrMB3DmwQLT65Da5TroKWm2ahjZzO7A
+	 YG0KA2UCAnqHw==
+Message-ID: <5421cfe7-dfe0-4bb8-8722-6f449cd365be@kernel.org>
+Date: Tue, 9 Sep 2025 08:32:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 03/14] dt-bindings: arm: mediatek: mmsys: Add
- assigned-clocks/rates properties
+Subject: Re: [PATCH v1 01/14] media: dt-bindings: Convert MediaTek mt8173-mdp
+ bindings to YAML
 To: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
 Cc: airlied@gmail.com, amergnat@baylibre.com, andrew+netdev@lunn.ch,
  andrew-ct.chen@mediatek.com, angelogioacchino.delregno@collabora.com,
@@ -74,9 +74,9 @@ Cc: airlied@gmail.com, amergnat@baylibre.com, andrew+netdev@lunn.ch,
  linux-mediatek@lists.infradead.org, linux-sound@vger.kernel.org,
  netdev@vger.kernel.org
 References: <20250820171302.324142-1-ariel.dalessandro@collabora.com>
- <20250820171302.324142-4-ariel.dalessandro@collabora.com>
- <20250821-electric-kestrel-of-awe-cb89dc@kuoka>
- <1cf0b296-adaa-4c80-864c-9b78f09cd3e3@collabora.com>
+ <20250820171302.324142-2-ariel.dalessandro@collabora.com>
+ <20250821-silky-slug-of-novelty-e4bb64@kuoka>
+ <d286ec0b-c8dc-4103-9aa3-2f40e0ade4a3@collabora.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -122,33 +122,196 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <1cf0b296-adaa-4c80-864c-9b78f09cd3e3@collabora.com>
+In-Reply-To: <d286ec0b-c8dc-4103-9aa3-2f40e0ade4a3@collabora.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 08/09/2025 21:19, Ariel D'Alessandro wrote:
+On 08/09/2025 19:52, Ariel D'Alessandro wrote:
 > Krzysztof,
 > 
-> On 8/21/25 3:43 AM, Krzysztof Kozlowski wrote:
->> On Wed, Aug 20, 2025 at 02:12:51PM -0300, Ariel D'Alessandro wrote:
->>> Current, the DT bindings for MediaTek mmsys controller is missing the
->>> assigned-clocks and assigned-clocks-rates properties. Add these and
+> On 8/21/25 3:46 AM, Krzysztof Kozlowski wrote:
+>> On Wed, Aug 20, 2025 at 02:12:49PM -0300, Ariel D'Alessandro wrote:
+>>> Convert the existing text-based DT bindings for MediaTek MT8173 Media Data Path
+>>> to a YAML schema.
 >>
->> No, they do not miss them. I don't understand why you are adding these.
+>> Please wrap commit message according to Linux coding style / submission
+>> process (neither too early nor over the limit):
+>> https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
 > 
-> The reason I added these is due to the following check error:
+> Thanks. Looks like my editor was misconfigured, sorry. Will fix in v2.
 > 
-> $ make -j$(nproc) CHECK_DTBS=y mediatek/mt8173-elm.dtb
->    DTC [C] arch/arm64/boot/dts/mediatek/mt8173-elm.dtb
-> [...]
-> arch/arm64/boot/dts/mediatek/mt8173-elm.dtb: syscon@14000000 
-> (mediatek,mt8173-mmsys): 'assigned-clock-rates', 'assigned-clocks' do 
-> not match any of the regexes: '^pinctrl-[0-9]+$'
-> 	from schema $id: 
-> http://devicetree.org/schemas/arm/mediatek/mediatek,mmsys.yaml#
+>>
+>>>
+>>> Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+>>> ---
+>>>   .../bindings/media/mediatek,mt8173-mdp.yaml   | 174 ++++++++++++++++++
+>>>   .../bindings/media/mediatek-mdp.txt           |  95 ----------
+>>>   2 files changed, 174 insertions(+), 95 deletions(-)
+>>>   create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8173-mdp.yaml
+>>>   delete mode 100644 Documentation/devicetree/bindings/media/mediatek-mdp.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/media/mediatek,mt8173-mdp.yaml b/Documentation/devicetree/bindings/media/mediatek,mt8173-mdp.yaml
+>>> new file mode 100644
+>>> index 0000000000000..f3a08afc305b1
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/media/mediatek,mt8173-mdp.yaml
+>>> @@ -0,0 +1,174 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/media/mediatek,mt8173-mdp.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: MediaTek MT8173 Media Data Path
+>>> +
+>>> +maintainers:
+>>> +  - Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+>>> +
+>>> +description:
+>>> +  Media Data Path is used for scaling and color space conversion.
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    oneOf:
+>>> +      - items:
+>>
+>> Just enum, no items here
+> 
+> See below.
+> 
+>>
+>>
+>>> +          - enum:
+>>> +              - mediatek,mt8173-mdp-rdma
+>>> +              - mediatek,mt8173-mdp-rsz
+>>> +              - mediatek,mt8173-mdp-wdma
+>>> +              - mediatek,mt8173-mdp-wrot
+>>> +      - items:
+>>> +          - enum:
+>>> +              - mediatek,mt8173-mdp-rdma
+>>> +              - mediatek,mt8173-mdp-rsz
+>>> +              - mediatek,mt8173-mdp-wdma
+>>> +              - mediatek,mt8173-mdp-wrot
+>>> +          - const: mediatek,mt8173-mdp
+>>
+>> This makes no sense. How devices can be compatible and can not be
+>> compatible.
+> 
+> According to the driver source code (and the previous txt mt8173-mdp 
+> bindings), there must be a "controller node" with compatible 
+> `mediatek,mt8173-mdp`. Then its sibling nodes (including itself) should 
 
-This is looking like missing clocks or other unevaluated property by the
-binding.
+But you did not define "mediatek,mt8173-mdp" here, so what are you
+talking about?
+
+I talk here about "wrot" and others, I thought it is obvious from the
+mistake in the schema.
+
+
+> be one of the component node ids, listed in `struct of_device_id 
+> mtk_mdp_comp_dt_ids[]`.
+> 
+> Is there a proper/different way to describe this compatible binding in 
+> the yaml? Or you're saying the driver doesn't make sense here?
+> 
+> [0] drivers/media/platform/mediatek/mdp/mtk_mdp_core.c
+> 
+>>
+>>> +
+>>> +  reg:
+>>> +    maxItems: 1
+>>> +
+>>> +  clocks: true
+>>
+>> No, there's no such syntax. Look at other bindings.
+> 
+> Ack.
+> 
+>>
+>>
+>>> +
+>>> +  power-domains:
+>>> +    maxItems: 1
+>>> +
+>>> +  iommus:
+>>> +    description: |
+>>
+>> Drop |
+> 
+> Ack.
+> 
+>>
+>>> +      This property should point to the respective IOMMU block with master port as argument,
+>>> +      see Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml for details.
+>>
+>> Drop entire description, completely redundant. I don't know why my patch
+>> fixing this was not applied, so you keep repeating same mistakes...
+> 
+> Ack.
+> 
+>>
+>>> +    maxItems: 1
+>>> +
+>>> +  mediatek,vpu:
+>>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>>> +    description:
+>>> +      Describes point to vpu.
+>>
+>> Useless description. We see that from the property name. Explain the
+>> purpose in the hardware.
+> 
+> Ack.
+> 
+>>
+>>> +
+>>> +required:
+>>> +  - compatible
+>>> +  - reg
+>>> +  - clocks
+>>> +  - power-domains
+>>> +
+>>> +allOf:
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            const: mediatek,mt8173-mdp-rdma
+>>> +    then:
+>>> +      properties:
+>>> +        clocks:
+>>> +          items:
+>>> +            - description: Main clock
+>>> +            - description: Mutex clock
+>>> +    else:
+>>> +      properties:
+>>> +        clocks:
+>>> +          items:
+>>> +            - description: Main clock
+>>> +
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            enum:
+>>> +              - mediatek,mt8173-mdp-rdma
+>>> +              - mediatek,mt8173-mdp-wdma
+>>> +              - mediatek,mt8173-mdp-wrot
+>>> +    then:
+>>> +      required:
+>>> +        - iommus
+>>> +
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            const: mediatek,mt8173-mdp
+>>
+>> This makes no sense either.
+> 
+> Same question above about compatibles.
+
+How same question? Do you understand this code? It is nothing the same -
+you have here contains!
 
 
 Best regards,
