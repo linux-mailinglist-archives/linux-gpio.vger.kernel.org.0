@@ -1,150 +1,131 @@
-Return-Path: <linux-gpio+bounces-25841-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25842-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96D88B50516
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Sep 2025 20:18:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E412B505D6
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Sep 2025 21:04:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4BC205E0E95
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Sep 2025 18:18:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4C3E91BC064A
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Sep 2025 19:05:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA92F2FC88C;
-	Tue,  9 Sep 2025 18:18:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC747303A0F;
+	Tue,  9 Sep 2025 19:04:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MKqMaMZo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hDvXR8Km"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FF626E179
-	for <linux-gpio@vger.kernel.org>; Tue,  9 Sep 2025 18:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7273009F7;
+	Tue,  9 Sep 2025 19:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757441928; cv=none; b=Yo4t3Ym6EGg754D+H/p3RnlWCJjMVQ0Ts6yKtkhKDWr4KSFcBTK709YS64Adtdo2f222iXbxcgZRQ71bBtIt5Pi59gP1BLeJRSFECH4J1dFFe4QDQG/Tf84iJM+EWy7VJQoDN757CnGg9kJspprnVzDpm/IuLKn4mFXko2KTkKY=
+	t=1757444686; cv=none; b=kwQHy7i3Zmk8wVAa0yVPwyr/E96uacP05qxEsMBhcDUTzRbehxTC7EkrS+NyHxxjxlZG0O0p01L1NsvaDkhXAccsvKXf8E3rCUEEhwxJ51etrsZThi3egu0nG/MmoW72rAqmkKOw02w3fv2BAp0ujU2+91HwlFjrI3QJUMaPQuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757441928; c=relaxed/simple;
-	bh=QKAZhgwl8C9a3pJ24Kw/6R/+17cXSST9anu6lQ+Gwzc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X6QVfMme8Omq7hsA5mf48NroFSrD0QLpzGKIMSHs2vZo3lM4BxQQUVr/bzGVPq/Y6vpJgb6xzoNLfVb5t/2DvrSIbEu1cfrumH0o9vydHciEZ67TZStxfuk/KEmLzMEDVqZXD61Khqq9d5tc7lof6eN+5KasLkKdTGrMpzohlhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MKqMaMZo; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-62ad0c9cf8bso258548a12.0
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Sep 2025 11:18:46 -0700 (PDT)
+	s=arc-20240116; t=1757444686; c=relaxed/simple;
+	bh=9fXxQpn5wuAg5aR/rkNAmhWdIsYeyhcJcYmeZKN86S8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Wg3Z7C0zvPDb9lHp7+f/WKL99gxzjXZyE0breAAHiOPzLhNafKNMx6iEKYUJ7M2MEvqtV5IPC3qBTHknYDXUaBrHk0iOG6/FmcKa+3xEcZpt9E+lBONnB6bWoDHTJReNWUaL/9kwTv46Z7ud+uF+4fxCVKTOX1IrJ1gRAVyCdwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hDvXR8Km; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-45cb6180b60so38427905e9.0;
+        Tue, 09 Sep 2025 12:04:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757441925; x=1758046725; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1757444683; x=1758049483; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=n3SZVEt5zs+XMpyDtIWhZjJMWmB8ACyyA+oaZqN6VC4=;
-        b=MKqMaMZoZ4d7lgtPtbwaqPCbSNjf0mpcNTmvSmH7+SUEfbKmL1inPwnYX0N0K6UxjH
-         63OCD397YAu0sVz6T2S+ceGElAPL7xhuAvk80L5hmrBMl6oXNSVUZ3qZgJ9ppRa4qqp/
-         OTT5IxpfBofxEm8Aa4OCziQku8nDtSJnhUElckdpYhUSy6jRyVg0THfLaM0xg1w9kj39
-         rjL3mgrVSyO7lsoVqMmRzPijYg5nkdOZzqA+0Y9GPqeAbQgGUKH6+P9N86j/pcmPEoif
-         r+BCjufiZznlPfDJwPSUH1Acx/HjGpeWNeC31llBxUJZPX+9AzBMMU+B6voybs0Pp9mV
-         ysNQ==
+        bh=GhzB0OEro6C+Ab4zuDnjl2RgZNMG68c3vMDXlukcxy4=;
+        b=hDvXR8KmUmbuyFS4U9dHdhrgbvrwVKuw4b1f+uR4Wl1MLygDTqD8J1ZbzPR252RoJ7
+         xQjndxMagxDQkjjJZBSLOcZ2TEN2ECjqznw2CFbNcqPg6rUy9UdvoTwFwC8uTVrrdQXS
+         bt0GHkTT5LiaOm6KGlOM5qwNPLo3u/82j0+KVuQw+xK2L4SCFyYxdR0W1rctJ0r2mUap
+         x6be1WzWrWZxshAgueL/OO1Ykp06rHPHmFU6uEc+rRlPaRxLzIwlJvJRbgg5BFpsChuw
+         zKFcT9nrkU1p0x4LtZopADVzAYwdxn6m9/1vKGBZkNLvEvPXZ1a6YrRDNzrwDKXZkYG5
+         KNAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757441925; x=1758046725;
+        d=1e100.net; s=20230601; t=1757444683; x=1758049483;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=n3SZVEt5zs+XMpyDtIWhZjJMWmB8ACyyA+oaZqN6VC4=;
-        b=PFmMXYyWOXQrQjX7h75jRE0tHRM1c1oG7P3dtxNr3f2FJw/pakGinJLWOdN/Goalnv
-         prGmCLRYxSpBviaDmebaaMn2r2BUArZCDlzLokjtB+xmRzNTFlPazDcMr1yTh2t18eLZ
-         Y5fdM0vkUqnDkopAntNaCfPPwu2L0lJqWJLUoo4TA2rJUfOOBwbdVi8mq7iAwBUOVFvt
-         gxBV7n6FX+OCGJ2fVL1rzdrUv9TIkldcWfO32XYVWiGkmEylT4JDQPcWPrg+WvpiGgNq
-         Zy3toWQAhWThaGSWe8iBFIJsTB7I3lq+w1RXK23Zi66S3Xf/vVi4K8I9ZaDj+fyrP//D
-         S/ag==
-X-Forwarded-Encrypted: i=1; AJvYcCX9uJ5f7R97O0vI0VHRbFw+sVSsa0cdHIFnKj8cVrO0su2qhgWI25DNeDsH4JezZrn8QLRP3YweOghu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7iU/4BTUMNg+jeFSbYTSwVJ6pItUufOPjUsPY/CYliYO9AZ7L
-	Sjdo13S6opng3zUegwBxRN7zHRCPWFgxBf090dZbd1srHUdER093iZ8TDTJlC7rQcs0=
-X-Gm-Gg: ASbGnctDfXBKIfW9sTqJjmwPuqVDYI96jkIZWOHBYB5b9Hay2ch1lxmJJx8qhq1srs8
-	fyPBLcfdnwImnQARnx/t4fNZrZM5dcYH8BRmvNgsrRNuD0SpxFz0WCrMYHOmihsIJZlPmoQ8PPZ
-	nBOaQyUKyDFy6lMixTQuRoSuVA5mI3CYh9NqSvbpYzuR50abaeECo30O757BBtaIfJUoMIJ902j
-	q52qtOI9/sL6Qh3dX26BVczpsR5LFmnzJD7ELu+ntTzL+OJ4LPkxYtSo2kUI1yIpLCZ/L+FYSEK
-	LfkikFIye0Kl2f8Fyyhpf/xLbnZQ9OsjFod+aMxY2hkOvfaD97G2o5NFyg9GYekNqknr2kYTbd7
-	WjdiyzzvH5o5kWAf70mD6y8e1Iuw1XfFIBlc2C1Bm2L/S
-X-Google-Smtp-Source: AGHT+IGNth9oSerkP6rAYgoEwMoe6KL9F9a2LImFw8iipYkxvb4dQmj4okAnUSdxaK0gh9AuCZGu0w==
-X-Received: by 2002:a05:6402:520e:b0:61e:a890:aee6 with SMTP id 4fb4d7f45d1cf-6237a42fb5emr6064679a12.7.1757441925351;
-        Tue, 09 Sep 2025 11:18:45 -0700 (PDT)
-Received: from kuoka.. ([178.197.219.123])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-62c018007casm1668531a12.35.2025.09.09.11.18.44
+        bh=GhzB0OEro6C+Ab4zuDnjl2RgZNMG68c3vMDXlukcxy4=;
+        b=u5e6etS0HPxi0U2sMwM0OhVLTBBfEiWOK/jnBn94P0lrM41sW6Rr0CNQxgcsFl7eLy
+         UZjZSoZ8rBqNR3Y9t7mlYLBBljVTRUwTZHZjMj5m6d+LWbAvhEX3ug0JemXTpkbX7pkg
+         XGSs1RLz5T+AC0+27shPGJ1u8ayjOXgbDSqsilgMMsYSrT2qW/McG0nrpfnefmo5hdEP
+         KpLSlUwpYz+vSIMmF3Qdmd3BMOYiyPx/3TR7tkFmAhiVSEgC7KckHoI/GEpP3e3HsdF3
+         5EKF0Y7Fa52EzVTCRmpvuh/WEuWt2T0RPSglUtmi93hXHZ0pedHs+HYGvEJi2CvL0fZ2
+         WT9A==
+X-Forwarded-Encrypted: i=1; AJvYcCVZIhtl/uonMNOh9QG5RHpHuamRzYToEx8q7893Hae+7ikmO7bINAHsnZTtulFVim4GFFrhyL1UUAV1CLbq@vger.kernel.org, AJvYcCWtsouv42lXd6eDFMuCRUDo4DRugChsVMs37s9vRqNtn0jN463QKacnr4KiA2+JCzz8jBn5d9I0kOKs@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYkXzAh3YyAtvqD5snLYKOdKaiDIZW4y7uHAJxdJjWHuZrrVCv
+	P6UTErLQ37vJ3FkgIsHwApG00NLgg4/1PQvxJKznzPBzq8hF+OxzreIz
+X-Gm-Gg: ASbGncs/IdkEJjh1YlG8VtEAkkLFuJ/e25Gm/K+WCP+vp2x9SoUBDEwgSkLA5eMoWn+
+	LX481/2TFC8PPreap1SoGd5T8u0fJgeAErF+EOzIdmFnnzldQ5URxbCrLqb8YMjSZRI3HkAdlxy
+	wo2wJWWgmCs1cvFrxu6CQsN05qAI9xjYyFKXnXSjCYQjFfedPxw6qmU2BaFu4ouDEm4KFyHtW1b
+	XCbOYlMr5plA+MQI8nwfLJrzsiK3eTgKq4k2XLhTO2t1cXros+Kk5nnHTu4UO6ysSK+H6OCpekc
+	eEmhbw1IEQVxBfaxNLUXj6HwhqY4euBtA6WWBpiSzlrVVUz1xJEZp2aIBviwSmxTLT0Ouar+KXi
+	rCy3ZVyZlze/QDBt//eh3UIclOzP4Q0E=
+X-Google-Smtp-Source: AGHT+IFofAuec90G176pP3cVIJSPBy3FefJKT6bJWv1ZoNX6Vi2TQc94eQQIy9PbJQunocF67lSoYQ==
+X-Received: by 2002:a05:6000:290b:b0:3e7:492f:72b4 with SMTP id ffacd0b85a97d-3e7492f72e0mr7764781f8f.42.1757444682901;
+        Tue, 09 Sep 2025 12:04:42 -0700 (PDT)
+Received: from localhost ([87.254.0.133])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-45d468dbf48sm259596245e9.11.2025.09.09.12.04.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Sep 2025 11:18:44 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Sylwester Nawrocki <snawrocki@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [GIT PULL] pinctrl: samsung: drivers for v6.18
-Date: Tue,  9 Sep 2025 20:18:41 +0200
-Message-ID: <20250909181841.102103-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.48.1
+        Tue, 09 Sep 2025 12:04:42 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Yinbo Zhu <zhuyinbo@loongson.cn>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Yao Zi <ziyao@disroot.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	linux-gpio@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] gpio: loongson-64bit: Fix a less than zero check on an unsigned int struct field
+Date: Tue,  9 Sep 2025 20:03:56 +0100
+Message-ID: <20250909190356.870000-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1694; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=QKAZhgwl8C9a3pJ24Kw/6R/+17cXSST9anu6lQ+Gwzc=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBowG+BZOESL0M4KVTSYey6u54mYycQfsFUzEvyQ
- SgmbY+SFAaJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaMBvgQAKCRDBN2bmhouD
- 13DFEACQ/DzLe8tGD51gCZ2sgoIL8ELCE3e1EmGSt7dS59c0+FRk92zaq9qdbaolAJgqy2GDO9y
- EZ2kcYxMZ/DU+ySaTAvCEJoxmTgf1sOyEEey3UI9mm1P4gxZ2UHuljxuOfWqHKD7PJJbdvQhJa3
- w00oN/TszoQ32k7fd8tK2uGpfuF74tRC8En7Cp2+DX5CEyTTeQ9URb3OUiIj5nVoVVxseFA+EtF
- IQiCrS7moxnrN9KTMEicM2PvpugJLsFwph1UL3oLWYnZYHSYC5DrY1MB6VuEBHTNrf93oct24Az
- 6/1fKOgwxdc72ZRGKgM5dqV/espiu7hSsKGqxFFP21DmBqgCz9xTixDjrzAwoywL9xRHbgNVmyC
- /eH7AvrhdH4f0S5dz1kRCS9tJcs40CXOpJ4vaQ+gC/ThZtb+ySbtBhi+lIJ+5WxPQHq60llULSD
- C0mSILK1Btnuilf3BH8HIk/noRZMAWKA+U5mbROxRkyAIMcmMhqb9Ivj9dPXO3vjrRpDrZJv36g
- It+arAkoY8Ba+KaHZ9pDHbdFVsSNQNCgUwaNEHVbw+48bUeLUGcMY8UAF6+U7Vx0vlGmq2k/Yve
- Xj25uLN+NhKvc9syIAjR73z8R9QRhE2w+oSW0HztC9bD5EF3MAiQltNpzYR49mlCKqBZIEPLAaz ACETqPzn7WNXDVg==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-The following changes since commit 8f5ae30d69d7543eee0d70083daf4de8fe15d585:
+Currently the error check from the call to platform_get_irq is always
+false because an unsigned int chip->irq.parents[i] is being used to
+to perform the less than zero error check. Fix this by using the int
+variable ret to perform the check.
 
-  Linux 6.17-rc1 (2025-08-10 19:41:16 +0300)
+Fixes: 03c146cb6cd1 ("gpio: loongson-64bit: Add support for Loongson-2K0300 SoC")
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/gpio/gpio-loongson-64bit.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-are available in the Git repository at:
+diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loongson-64bit.c
+index f84f8c537249..24b7219db34a 100644
+--- a/drivers/gpio/gpio-loongson-64bit.c
++++ b/drivers/gpio/gpio-loongson-64bit.c
+@@ -267,10 +267,13 @@ static int loongson_gpio_init_irqchip(struct platform_device *pdev,
+ 		return -ENOMEM;
+ 
+ 	for (i = 0; i < data->intr_num; i++) {
+-		chip->irq.parents[i] = platform_get_irq(pdev, i);
+-		if (chip->irq.parents[i] < 0)
+-			return dev_err_probe(&pdev->dev, chip->irq.parents[i],
++		int ret;
++
++		ret = platform_get_irq(pdev, i);
++		if (ret < 0)
++			return dev_err_probe(&pdev->dev, ret,
+ 					     "failed to get IRQ %d\n", i);
++		chip->irq.parents[i] = ret;
+ 	}
+ 
+ 	for (i = 0; i < data->intr_num; i++) {
+-- 
+2.51.0
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung.git tags/samsung-pinctrl-6.18
-
-for you to fetch changes up to d37db94b078197ec4be1cadebbfd7bf144e3c5e4:
-
-  dt-bindings: pinctrl: samsung: Drop S3C2410 (2025-09-02 12:31:25 +0200)
-
-----------------------------------------------------------------
-Samsung pinctrl drivers changes for v6.18
-
-1. Add pin controller drivers for new Axis ARTPEC-8 SoC.  The SoC shares
-   all main blocks, including the pin controller, with Samsung SoC, so
-   same drivers and bindings are used.
-
-2. Drop remaining support for Samsung S3C2410 SoC pin controllers.  The
-   actual SoC support was removed in January 2023, so this is just
-   remaining cleanup.
-
-----------------------------------------------------------------
-Krzysztof Kozlowski (2):
-      pinctrl: samsung: Drop unused S3C24xx driver data
-      dt-bindings: pinctrl: samsung: Drop S3C2410
-
-SeonGu Kang (2):
-      dt-bindings: pinctrl: samsung: Add compatible for ARTPEC-8 SoC
-      pinctrl: samsung: Add ARTPEC-8 SoC specific configuration
-
- .../pinctrl/samsung,pinctrl-wakeup-interrupt.yaml  | 19 +-------
- .../bindings/pinctrl/samsung,pinctrl.yaml          |  5 +--
- drivers/pinctrl/samsung/pinctrl-exynos-arm64.c     | 50 ++++++++++++++++++++++
- drivers/pinctrl/samsung/pinctrl-exynos.h           | 10 +++++
- drivers/pinctrl/samsung/pinctrl-samsung.c          |  2 +
- drivers/pinctrl/samsung/pinctrl-samsung.h          |  5 +--
- 6 files changed, 65 insertions(+), 26 deletions(-)
 
