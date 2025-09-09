@@ -1,55 +1,54 @@
-Return-Path: <linux-gpio+bounces-25781-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25798-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34E7CB4A465
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Sep 2025 10:00:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02062B4A80F
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Sep 2025 11:34:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8BE487A4A6B
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Sep 2025 07:58:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BBB763BE306
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Sep 2025 09:29:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0FD7242D70;
-	Tue,  9 Sep 2025 08:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="SC5DxzuB"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C824E2737E3;
+	Tue,  9 Sep 2025 09:20:36 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCDF023ABB3;
-	Tue,  9 Sep 2025 08:00:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93C021946AA;
+	Tue,  9 Sep 2025 09:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757404820; cv=none; b=A3lzlScR+QTPamY2MlETz8keKcc0ZFI3m/XQrxR7wstBHZ6fqO0TdkWzPb8eeUtFtrfC+gepz8bHIhCqa+FNbKpo+Vr3jfAwlGZ6MDsfFMqO61rgLZfMd5hExhaTghAq8ZbqVki4eGK5Zu3ngWqcr1AY5gVFMKEjzmaCMgR6zDI=
+	t=1757409636; cv=none; b=BWHnKKuR7Ybe0GzBtoBOizAxYj5nCXl/MQ98guszyuBkrtel3KcypzkRoB45o1c+DJfluYHidLe/HnZlbrhoBwBGzIwhtL+d8W31QZAo2vn6V+SG5ekE5OSyx5NQ2W3QKSB7ucZw2OuRw6hslLpVhcfaVsuaCMiWPNJkxIOn5N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757404820; c=relaxed/simple;
-	bh=oCLEvvVWTE44t3aDmRT7ZhIFJug4E7QdqqWFMsbwgXQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k3D/4eG1hmvGO6W7ow0daqN9j7Cv5Flo6tTVcNYqyGPaZ0Mcv7Y0jyEDywGVPxbIE/rNDNIcnNObluQ84ZBgQkPFHu8/1Wi2saxHWsdPwXcsUXEducfjG3GLyqSuJH37Di64sgcXsc0VRjnr990R1Ri1bXJZ6Alv7NuvsU/41GY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=SC5DxzuB; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1757404816;
-	bh=oCLEvvVWTE44t3aDmRT7ZhIFJug4E7QdqqWFMsbwgXQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SC5DxzuB36zfuF0hEiz3OhRCrqpP0wmu3sK9sAFfUcEYCc3enPHy5uzCpayPzsahX
-	 luKZrCwgKkPO2OIRlPpv985qyqGnM7o9WplsuAv9P9tzrGoaBmEtkJ3U/IWFEbgNOc
-	 3soqSytqBwAbuZEEmCdS5BZAbR+ZDCZlrdqOfP5jam0YXop0NPSF8N+dxPvYuzJunW
-	 1gnimL7jrpMY55dWa+j4noaPqrYgzyCusZY2NZiByZ+qUuvdD9nzWp9Ie+RMs9GnID
-	 o6QKTnBdcQTPtCntZUN7WmkjHv8jruvk2SEZ3kXVNjKh9WRRJdpIwIPjA/pkU33T/d
-	 ZeDvUeefzgvuQ==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 65F3A17E0C96;
-	Tue,  9 Sep 2025 10:00:16 +0200 (CEST)
-Message-ID: <493794af-a1e8-4a4e-a253-2b6b703df53b@collabora.com>
-Date: Tue, 9 Sep 2025 10:00:15 +0200
+	s=arc-20240116; t=1757409636; c=relaxed/simple;
+	bh=jof31GOepMVN3VwFj3dcUIkocpOgrK0Snh6jQKWjRnI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Cov7fbBZsgvQVakc1aOmiC1p2sH/PA/MAnX6JUYEzfSuexRPOxAGDOYB6SkEqgcrlEK2TMKmacf0MBX3Vo5Ct9i4jv3EoDSqYJlSJCQs2jWFJ19fwGwE0BP+cZ2zn5K9dp6VPg4QOzVcrAeMBFCCjHjaZGSRLf1rgLBnDNqvmrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4cLd2s6McVz9sRh;
+	Tue,  9 Sep 2025 10:56:05 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id HVtZoeAlc5y4; Tue,  9 Sep 2025 10:56:05 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4cLd2s55HRz9sRg;
+	Tue,  9 Sep 2025 10:56:05 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 83A658B766;
+	Tue,  9 Sep 2025 10:56:05 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id vVFyT6NJGbhy; Tue,  9 Sep 2025 10:56:05 +0200 (CEST)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id D2D438B764;
+	Tue,  9 Sep 2025 10:55:46 +0200 (CEST)
+Message-ID: <ccb27487-9b3f-489f-bcea-dc5d7cca465e@csgroup.eu>
+Date: Tue, 9 Sep 2025 10:55:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -57,66 +56,117 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] pinctrl: mediatek: Add debounce times for MT6878
-To: Igor Belwon <igor.belwon@mentallysanemainliners.org>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- Sean Wang <sean.wang@kernel.org>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20250908-mt6878-pinctrl-support-v1-0-3fb78c8ab4e8@mentallysanemainliners.org>
- <20250908-mt6878-pinctrl-support-v1-3-3fb78c8ab4e8@mentallysanemainliners.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250908-mt6878-pinctrl-support-v1-3-3fb78c8ab4e8@mentallysanemainliners.org>
+Subject: Re: [PATCH v5 6/7] dt-bindings: soc: fsl: qe: Convert QE GPIO to DT
+ schema
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Qiang Zhao <qiang.zhao@nxp.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <cover.1756727747.git.christophe.leroy@csgroup.eu>
+ <48b4e7b25878b94dcb738f8239c815be484cf9c9.1756727747.git.christophe.leroy@csgroup.eu>
+ <20250902212458.GA1184537-robh@kernel.org>
+ <646c8a39-c78e-4c2c-b820-d7d57e0a85fc@csgroup.eu>
+Content-Language: fr-FR
+In-Reply-To: <646c8a39-c78e-4c2c-b820-d7d57e0a85fc@csgroup.eu>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Il 08/09/25 21:17, Igor Belwon ha scritto:
-> MT6878 uses different debounce times than other SoCs. Add them to the
-> EINT driver.
+Rob, Conor, Krzysztof,
 
-The only reason why I can't give you a R-b for this is that you forgot to add
-your S-o-b...
+Can one of you or someone else help me with below comment from Rob ?
 
-Cheers,
-Angelo
-
-> ---
->   drivers/pinctrl/mediatek/mtk-eint.c | 5 +++++
->   drivers/pinctrl/mediatek/mtk-eint.h | 1 +
->   2 files changed, 6 insertions(+)
+Le 03/09/2025 à 06:58, Christophe Leroy a écrit :
+> Hi Rob,
 > 
-> diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
-> index 9f175c73613f84b47c0160947f32da7aca7d5a18..c8c5097c11c4d14eb41bdd7f9cb93b4a5756d2b2 100644
-> --- a/drivers/pinctrl/mediatek/mtk-eint.c
-> +++ b/drivers/pinctrl/mediatek/mtk-eint.c
-> @@ -66,6 +66,11 @@ const unsigned int debounce_time_mt6795[] = {
->   };
->   EXPORT_SYMBOL_GPL(debounce_time_mt6795);
->   
-> +const unsigned int debounce_time_mt6878[] = {
-> +	156, 313, 625, 1250, 20000, 40000, 80000, 160000, 320000, 640000, 0
-> +};
-> +EXPORT_SYMBOL_GPL(debounce_time_mt6878);
-> +
->   static void __iomem *mtk_eint_get_offset(struct mtk_eint *eint,
->   					 unsigned int eint_num,
->   					 unsigned int offset)
-> diff --git a/drivers/pinctrl/mediatek/mtk-eint.h b/drivers/pinctrl/mediatek/mtk-eint.h
-> index fc31a4c0c77bf28b106943e9292d0dcc425c4922..3cdd6f6310cd0da5aa74623c5f1dbe8f8495d689 100644
-> --- a/drivers/pinctrl/mediatek/mtk-eint.h
-> +++ b/drivers/pinctrl/mediatek/mtk-eint.h
-> @@ -52,6 +52,7 @@ struct mtk_eint_pin {
->   extern const unsigned int debounce_time_mt2701[];
->   extern const unsigned int debounce_time_mt6765[];
->   extern const unsigned int debounce_time_mt6795[];
-> +extern const unsigned int debounce_time_mt6878[];
->   
->   struct mtk_eint;
->   
+> Le 02/09/2025 à 23:24, Rob Herring a écrit :
+>> On Mon, Sep 01, 2025 at 02:05:13PM +0200, Christophe Leroy wrote:
+>>> Convert QE QPIO devicetree binding to DT schema.
+>>>
+>>> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+>>> ---
+>>> v5: New
+>>> ---
+>>
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    items:
+>>> +      - enum:
+>>> +          - fsl,chip-qe-pario-bank
+>>> +      - const: fsl,mpc8323-qe-pario-bank
+>>> +
+> 
+> snip
+> 
+>>
+>>> +        compatible = "fsl,mpc8360-qe-pario-bank", "fsl,mpc8323-qe- 
+>>> pario-bank";
+>>
+>> Doesn't match the schema.
+>>
+> 
+> Can you be more explicit ? Is it the 'mpc8360' ? It is the 'chip'.
+> 
+> 
+> bindings/soc/fsl/cpm_qe/qe/par_io.txt was saying:
+> 
+>    - compatible : should be "fsl,<chip>-qe-pario-bank", "fsl,mpc8323-qe- 
+> pario-bank".
+> 
+> Which I first translated in yaml as :
+> 
+>    properties:
+>      compatible:
+>        items:
+>          - enum:
+>            - fsl,<chip>-qe-pario-bank
+>          - const: fsl,mpc8323-qe-pario-bank
+> 
+> But 'make dt_binding_check' complained about the < > around 'chip' so I 
+> removed them.
+> 
+> How should it be described ?
 > 
 
+Here is what we have in existing DTS upstream:
+
+arch/powerpc/boot/dts/fsl/mpc8569mds.dts- 
+compatible = "fsl,mpc8569-qe-pario-bank",
+arch/powerpc/boot/dts/fsl/mpc8569mds.dts: 
+             "fsl,mpc8323-qe-pario-bank";
+--
+arch/powerpc/boot/dts/fsl/mpc8569mds.dts- 
+compatible = "fsl,mpc8569-qe-pario-bank",
+arch/powerpc/boot/dts/fsl/mpc8569mds.dts: 
+             "fsl,mpc8323-qe-pario-bank";
+--
+arch/powerpc/boot/dts/kmeter1.dts- 
+compatible = "fsl,mpc8360-qe-pario-bank",
+arch/powerpc/boot/dts/kmeter1.dts: 
+     "fsl,mpc8323-qe-pario-bank";
+--
+arch/powerpc/boot/dts/mpc832x_rdb.dts: 
+compatible = "fsl,mpc8323-qe-pario-bank";
+--
+arch/powerpc/boot/dts/mpc836x_rdk.dts-                  compatible = 
+"fsl,mpc8360-qe-pario-bank",
+arch/powerpc/boot/dts/mpc836x_rdk.dts: 
+"fsl,mpc8323-qe-pario-bank";
+--
+arch/powerpc/boot/dts/mpc836x_rdk.dts-                  compatible = 
+"fsl,mpc8360-qe-pario-bank",
+arch/powerpc/boot/dts/mpc836x_rdk.dts: 
+"fsl,mpc8323-qe-pario-bank";
+
+If the problem in the DT schema is the fsl,chip-qe-pario-bank, should I 
+replace it with the two possible compatible we have in existing DTS, ie 
+"fsl,mpc8569-qe-pario-bank" and "fsl,mpc8360-qe-pario-bank", or should I 
+just ignore them are they are useless for the drivers, or else ?
+
+Thanks
+Christophe
 
