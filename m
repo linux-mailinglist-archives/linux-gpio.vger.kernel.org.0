@@ -1,53 +1,53 @@
-Return-Path: <linux-gpio+bounces-25816-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25817-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB526B4AD28
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Sep 2025 14:02:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0F53B4AD2A
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Sep 2025 14:02:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 62CF71C250D7
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Sep 2025 12:02:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 707B4447AD4
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Sep 2025 12:02:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1C6232CF79;
-	Tue,  9 Sep 2025 12:01:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 970A132CF98;
+	Tue,  9 Sep 2025 12:01:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hfFrLIXp"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="cB31eYEJ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED1C32CF71;
-	Tue,  9 Sep 2025 12:01:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF4332C336;
+	Tue,  9 Sep 2025 12:01:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757419286; cv=none; b=jkiv+crjb56VlZsZB+81u5Si6zFYGA9BVw9UNo3zgszT6Sd/EpVtyTQS08yDi6zNLxvsBLl3GVOHr3/rtvVv78EWWa6P3lHrFOFJb+0/HjujD7kaEjFvJEzKLnHRYreZMyI2leV6EFftUpM4RxOTwGwqXwC2XQKtUrHS7VVV/Is=
+	t=1757419288; cv=none; b=JQgUgCfqetC1dUoYztPlhYvu+/8bTVQeQ3leTGppUwVOH4uRoTdeu/SHAtR9sr7K9Fg8tyze/sl98MxVomMVOGlMz9fXgolyXaPz9zB6kLEoqSue6SfzBOSMDtCR8TDxEtVm4K1wlYLg1nxPlyTCrCTzgRUkz5fjGBs4bUZpG68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757419286; c=relaxed/simple;
-	bh=VXqAsTkP8pRNA71qjFKnccY+EqssJbde5MQbankgew4=;
+	s=arc-20240116; t=1757419288; c=relaxed/simple;
+	bh=YvfUbxs6b1JbGsqCGcavEKTXNJKfk3IHkVxfwx0HuOg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k8ByRv9Fzr+TC5FmtaReY+pAqVyiGKgQhmghZRPH950H1G3fbqHh3QemJmpSHBHn2cO5/YtSTiZlErWQLUYv7HEakaL533gqWDAoIYLTvBor8epjYMQznK+k0Lk9W2HozFvzhWKpygib13dcOuvG2sqtoZuaYEUw022kQFOInZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hfFrLIXp; arc=none smtp.client-ip=185.246.84.56
+	 MIME-Version; b=pYnAXruIlhIwBr5Yo33AxFGvzKPcryVqLzBqGd86/6nZcfSuCuRzPIH8ibDnwC+RiqzhIhbD7pmYLyedX87a2gKNAs+5uzlCcK4ZwSPepwMlC9Ttb5+xdhbGh3uZGeNPhljcoT2ikCREbcwf18t3WDWeDBLGDo3wtnPy4VNdB8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=cB31eYEJ; arc=none smtp.client-ip=185.246.84.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id A48FA1A0E15;
-	Tue,  9 Sep 2025 12:01:21 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 2BE891A0E11;
+	Tue,  9 Sep 2025 12:01:25 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 7E10060630;
-	Tue,  9 Sep 2025 12:01:21 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C5E1C102F2907;
-	Tue,  9 Sep 2025 14:01:17 +0200 (CEST)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id F35C160630;
+	Tue,  9 Sep 2025 12:01:24 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 06F65102F2948;
+	Tue,  9 Sep 2025 14:01:20 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1757419280; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1757419283; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=HsW0cZ9EbLnOGTHwvUhelG9CYt2QpPeJTLFnCHhucUw=;
-	b=hfFrLIXpmInQRb6tKJhpsNWnBf3Gxt1lxkNdTgdMRCFVP80rkh4URwmCiPkgM8hXNOA1nm
-	WD7aeR7AFfHIybdTcNUIa1LWzcasmbVYx9t2/S2VRIxS3O7QqMu6wxTBZQmjwUZXW6+vwL
-	FnEBZ+PTpUnd/MvHqSdm5oYKPcMCd0IfWkiXG8YJraepA2nhRb98xT29phtgcxKaFWFZfs
-	DQ6E4eD4kFbJQAIqLejLldS2FVnPQrC3NIcY9YdTrFpAI9wsCQZGHHJS0yPIW5wWu+Dl0H
-	fDv9bul/ArVfMAS1P1IfoXN10en4W45pxICuoLY0g2vEOAfQMA56TWSI2BZoNQ==
+	bh=2slxBNx7/pAHTmwz0kURbwV+wrtZxV+abSkxTsXNeRg=;
+	b=cB31eYEJpVg0R2mEsv4E11tUQZ9sfHeZBLkblLOSXeimwJDQteIEuoyHgnYSAx8wk2IenB
+	gzODyR9Ee2GFWeUjNiN92VskVgCr2o1CZgd0ywLh/8hwOw2tgFDhTz7sgPAlBVw2j92zw0
+	HCDjjoHeSxUrkd9aIKNa2pxOAfZdaOImZaynU6Dmrd7ClWq3mfsnVgJtOaVD0Xxb1tKB5T
+	d0q4d8mhut99zop1wESPhli/C5sJlGl1uUn6RIv7YPejBMbrrb7Cs3pWHBWa70f55RkMxX
+	q6PuivdHfdejpTIfeWgpgRsJ4DfsEt4Qm6kT/i9rziAJULO3bj8+xG16a3Kh0g==
 From: "Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>
 To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
 	Hoan Tran <hoan@os.amperecomputing.com>,
@@ -69,9 +69,9 @@ Cc: Phil Edworthy <phil.edworthy@renesas.com>,
 	Pascal Eberhard <pascal.eberhard@se.com>,
 	Miquel Raynal <miquel.raynal@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v2 1/8] ARM: dts: r9a06g032: Add GPIO controllers
-Date: Tue,  9 Sep 2025 14:00:32 +0200
-Message-ID: <20250909120041.154459-2-herve.codina@bootlin.com>
+Subject: [PATCH v2 2/8] dt-bindings: soc: renesas: Add the Renesas RZ/N1 GPIO Interrupt Multiplexer
+Date: Tue,  9 Sep 2025 14:00:33 +0200
+Message-ID: <20250909120041.154459-3-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250909120041.154459-1-herve.codina@bootlin.com>
 References: <20250909120041.154459-1-herve.codina@bootlin.com>
@@ -84,146 +84,111 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-Add GPIO controllers (Synosys DesignWare IPs) available in the
-r9a06g032 (RZ/N1D) SoC.
+On the Renesas RZ/N1 SoC, GPIOs can generate interruptions. Those
+interruption lines are multiplexed by the GPIO Interrupt Multiplexer in
+order to map 32 * 3 GPIO interrupt lines to 8 GIC interrupt lines.
+
+The GPIO interrupt multiplexer IP does nothing but select 8 GPIO
+IRQ lines out of the 96 available to wire them to the GIC input lines.
 
 Signed-off-by: Herve Codina (Schneider Electric) <herve.codina@bootlin.com>
 ---
- arch/arm/boot/dts/renesas/r9a06g032.dtsi | 121 +++++++++++++++++++++++
- 1 file changed, 121 insertions(+)
+ .../soc/renesas/renesas,rzn1-gpioirqmux.yaml  | 86 +++++++++++++++++++
+ 1 file changed, 86 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/renesas/renesas,rzn1-gpioirqmux.yaml
 
-diff --git a/arch/arm/boot/dts/renesas/r9a06g032.dtsi b/arch/arm/boot/dts/renesas/r9a06g032.dtsi
-index 13a60656b044..da977cdd8487 100644
---- a/arch/arm/boot/dts/renesas/r9a06g032.dtsi
-+++ b/arch/arm/boot/dts/renesas/r9a06g032.dtsi
-@@ -499,6 +499,127 @@ gic: interrupt-controller@44101000 {
- 				<GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
- 		};
- 
-+		/*
-+		 * The GPIO mapping to the corresponding pins is not obvious.
-+		 * See the hardware documentation for details.
-+		 */
-+		gpio0: gpio@5000b000 {
-+			compatible = "snps,dw-apb-gpio";
-+			reg = <0x5000b000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&sysctrl R9A06G032_HCLK_GPIO0>;
-+			clock-names = "bus";
-+			status = "disabled";
+diff --git a/Documentation/devicetree/bindings/soc/renesas/renesas,rzn1-gpioirqmux.yaml b/Documentation/devicetree/bindings/soc/renesas/renesas,rzn1-gpioirqmux.yaml
+new file mode 100644
+index 000000000000..4a5aad8b2c44
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/renesas/renesas,rzn1-gpioirqmux.yaml
+@@ -0,0 +1,86 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/soc/renesas/renesas,rzn1-gpioirqmux.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+			/* GPIO0a[0]      connected to pin  GPIO0      */
-+			/* GPIO0a[1..2]   connected to pins GPIO3..4   */
-+			/* GPIO0a[3..4]   connected to pins GPIO9..10  */
-+			/* GPIO0a[5]      connected to pin  GPIO12     */
-+			/* GPIO0a[6..7]   connected to pins GPIO15..16 */
-+			/* GPIO0a[8..9]   connected to pins GPIO21..22 */
-+			/* GPIO0a[10]     connected to pin  GPIO24     */
-+			/* GPIO0a[11..12] connected to pins GPIO27..28 */
-+			/* GPIO0a[13..14] connected to pins GPIO33..34 */
-+			/* GPIO0a[15]     connected to pin  GPIO36     */
-+			/* GPIO0a[16..17] connected to pins GPIO39..40 */
-+			/* GPIO0a[18..19] connected to pins GPIO45..46 */
-+			/* GPIO0a[20]     connected to pin  GPIO48     */
-+			/* GPIO0a[21..22] connected to pins GPIO51..52 */
-+			/* GPIO0a[23..24] connected to pins GPIO57..58 */
-+			/* GPIO0a[25..31] connected to pins GPIO62..68 */
-+			gpio0a: gpio-port@0 {
-+				compatible = "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				snps,nr-gpios = <32>;
-+				reg = <0>;
-+			};
++title: Renesas RZ/N1 SoCs GPIO Interrupt Multiplexer
 +
-+			/* GPIO0b[0..1]   connected to pins GPIO1..2   */
-+			/* GPIO0b[2..5]   connected to pins GPIO5..8   */
-+			/* GPIO0b[6]      connected to pin  GPIO11     */
-+			/* GPIO0b[7..8]   connected to pins GPIO13..14 */
-+			/* GPIO0b[9..12]  connected to pins GPIO17..20 */
-+			/* GPIO0b[13]     connected to pin  GPIO23     */
-+			/* GPIO0b[14..15] connected to pins GPIO25..26 */
-+			/* GPIO0b[16..19] connected to pins GPIO29..32 */
-+			/* GPIO0b[20]     connected to pin  GPIO35     */
-+			/* GPIO0b[21..22] connected to pins GPIO37..38 */
-+			/* GPIO0b[23..26] connected to pins GPIO41..44 */
-+			/* GPIO0b[27]     connected to pin  GPIO47     */
-+			/* GPIO0b[28..29] connected to pins GPIO49..50 */
-+			/* GPIO0b[30..31] connected to pins GPIO53..54 */
-+			gpio0b: gpio-port@1 {
-+				compatible = "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				snps,nr-gpios = <32>;
-+				reg = <1>;
-+			};
-+		};
++description: |
++   The Renesas RZ/N1 GPIO Interrupt Multiplexer multiplexes GPIO interrupt
++   lines to the interrupt controller available in the SoC.
 +
-+		gpio1: gpio@5000c000 {
-+			compatible = "snps,dw-apb-gpio";
-+			reg = <0x5000c000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&sysctrl R9A06G032_HCLK_GPIO1>;
-+			clock-names = "bus";
-+			status = "disabled";
++   It selects up to 8 of the 96 GPIO interrupt lines available and connect them
++   to 8 output interrupt lines.
 +
-+			/* GPIO1a[0..4]  connected to pins GPIO69..73 */
-+			/* GPIO1a[5..31] connected to pins GPIO95..121 */
-+			gpio1a: gpio-port@0 {
-+				compatible = "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				snps,nr-gpios = <32>;
-+				reg = <0>;
-+			};
++maintainers:
++  - Herve Codina <herve.codina@bootlin.com>
 +
-+			/* GPIO1b[0..1]   connected to pins GPIO55..56 */
-+			/* GPIO1b[2..4]   connected to pins GPIO59..61 */
-+			/* GPIO1b[5..25]  connected to pins GPIO74..94 */
-+			/* GPIO1b[26..31] connected to pins GPIO150..155 */
-+			gpio1b: gpio-port@1 {
-+				compatible = "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				snps,nr-gpios = <32>;
-+				reg = <1>;
-+			};
-+		};
++properties:
++  compatible:
++    items:
++      - enum:
++          - renesas,r9a06g032-gpioirqmux
++      - const: renesas,rzn1-gpioirqmux
 +
-+		gpio2: gpio@5000d000 {
-+			compatible = "snps,dw-apb-gpio";
-+			reg = <0x5000d000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&sysctrl R9A06G032_HCLK_GPIO2>;
-+			clock-names = "bus";
-+			status = "disabled";
++  reg:
++    maxItems: 1
 +
-+			/* GPIO2a[0..27]  connected to pins GPIO122..149 */
-+			/* GPIO2a[28..31] connected to pins GPIO156..159 */
-+			gpio2a: gpio-port@0 {
-+				compatible = "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				snps,nr-gpios = <32>;
-+				reg = <0>;
-+			};
++  "#address-cells":
++    const: 0
 +
-+			/* GPIO2b[0..9] connected to pins GPIO160..169 */
-+			gpio2b: gpio-port@1 {
-+				compatible = "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				snps,nr-gpios = <10>;
-+				reg = <1>;
-+			};
-+		};
++  "#interrupt-cells":
++    const: 1
 +
- 		can0: can@52104000 {
- 			compatible = "renesas,r9a06g032-sja1000", "renesas,rzn1-sja1000";
- 			reg = <0x52104000 0x800>;
++  interrupt-map-mask:
++    items:
++      - const: 0x7f
++
++  interrupt-map:
++    description:
++      Specifies the mapping from external GPIO interrupt lines to the output
++      interrupts. The array items have to be ordered with the first item
++      related to the output line 0 (IRQ 103), the next one to the output line 1
++      (IRQ 104) and so on up to the output line 8 (IRQ 110).
++
++required:
++  - compatible
++  - reg
++  - "#address-cells"
++  - "#interrupt-cells"
++  - interrupt-map-mask
++  - interrupt-map
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    gic: interrupt-controller {
++        interrupt-controller;
++        #interrupt-cells = <3>;
++    };
++
++    interrupt-controller@51000480 {
++        compatible = "renesas,r9a06g032-gpioirqmux", "renesas,rzn1-gpioirqmux";
++        reg = <0x51000480 0x20>;
++        #address-cells = <0>;
++        #interrupt-cells = <1>;
++        interrupt-map-mask = <0x7f>;
++        /*
++         * The child interrupt number is computed using the following formula:
++         *    gpio_bank * 32 + gpio_number
++         *
++         * with:
++         *    - gpio_bank: The GPIO bank number
++         *          - 0 for GPIO0A,
++         *          - 1 for GPIO1A,
++         *          - 2 for GPIO2A
++         *    - gpio_number: Number of the gpio in the bank (0..31)
++         */
++        interrupt-map =
++            <32 &gic GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>, /* GPIO1A.0 */
++            <89 &gic GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>, /* GPIO2A.25 */
++            <9 &gic GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>; /* GPIO0A.9 */
++    };
 -- 
 2.51.0
 
