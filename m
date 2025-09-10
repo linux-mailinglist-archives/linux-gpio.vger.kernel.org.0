@@ -1,67 +1,66 @@
-Return-Path: <linux-gpio+bounces-25849-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25850-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0E95B50AC8
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 04:08:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07027B50ADA
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 04:10:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1DDA47A23B5
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 02:07:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DFCAE1C63116
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 02:10:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1EAD23185E;
-	Wed, 10 Sep 2025 02:08:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2658D23815D;
+	Wed, 10 Sep 2025 02:10:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GITImNdl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bGQRiSC6"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95EE422D7B6;
-	Wed, 10 Sep 2025 02:08:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26A0238C3B;
+	Wed, 10 Sep 2025 02:10:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757470120; cv=none; b=fgOAdz3krfDiRFpFkfY2yNpXN575+PyvoUH3mFvm+isyZi8xegjaJqA5yrCl7eLeFy5bLgpIHWno4DyFLMFFzFbpFKpXzqfZgGNLm+yQj6KduWNYmAOS/VFkYQkYVxnV503jI6VPDMqLkKxLGWZadVuqFW2onKeUnCUyMTlCKSE=
+	t=1757470218; cv=none; b=fvQZNEKmenRETIhuVqHA+XGjOK7wJz247x1xDciqjGV5sv41YR8bbJXjHkn81aDa/3nEX0QMjHaWledLFMr4SP4pufmPGl1xs4bzRgLkW3FnaLlmXG5aVLSLvI3U/PY+4mpZu6JnpIH0N7U4JGuCvDGNzEsqDsRqH3ydtKPIA7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757470120; c=relaxed/simple;
-	bh=oXLn8INDpdCoJrpkQGlJIpgFhY/DdHeBq7FxlLPN/QA=;
+	s=arc-20240116; t=1757470218; c=relaxed/simple;
+	bh=/NMz5XCTrhQRZtCAewkKfQnSTyNwhw8EMFsxenzy7vM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XvxuiwGtVCPl+wBQ/A9xPyjSE0K9m+PPkdb6eHJ7QWxrl4rXz7HhjmNnu1OyLd5oCVYB6tT1u14rWHIFvz7fLE5rem8ee85T+aTXzwdF4yI976PyR0fytQIX0yrygUWeqmvKWNjVcaWQsTKaPo2GWwGA/qG2/AMkAsnEo6GLUcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GITImNdl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F02FC4CEF4;
-	Wed, 10 Sep 2025 02:08:39 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hjl2RhIT+bnUrCgv3YiO/SeW8wFhfY1BKlErRyuWwWzeXeQ9kwxTrH7WcGba8B+gg0GA0gMTl6PhSNXxxEXkftwo7806Cn8TLQNSgF8uwU1pcNYAuhpD2Rxk71RrFBAeG8zw8Fj/UAkqs5BKHJOuW/smRsPt1R7w/2W24jBKmFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bGQRiSC6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EB0DC4CEF8;
+	Wed, 10 Sep 2025 02:10:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757470120;
-	bh=oXLn8INDpdCoJrpkQGlJIpgFhY/DdHeBq7FxlLPN/QA=;
+	s=k20201202; t=1757470216;
+	bh=/NMz5XCTrhQRZtCAewkKfQnSTyNwhw8EMFsxenzy7vM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GITImNdl8yjBYTBk+yQX/0uVI7ltS4/7XTrkNfaxIJHXYKft1RXu9SwcEiy/Sy5bs
-	 6bdVpM6Gwf1mjLTdS9K5NE+Pl3DXTqFkPbfYd/R8q3fgo815ac2nao1ORqBMwNhGqk
-	 3dwdifNPSWhqoyBB6unLZ9lZyRslZOtg+2nqu+DKJqgRNTyMkHjgM2bGZEBNxdC5EX
-	 7B4lT+XR/2wik9T6Wd+0XsIhMwuaQrVeDpewcB22N9NtIDUSCnIbZrXtJIotOauMI7
-	 BaAxguReXGE32lMgS9CzrOu9nkoeXk+eP2fJqReOyu5th/roU2pO5hMyPxGJlBHxA5
-	 kk5KMFM0JGx6w==
-Date: Tue, 9 Sep 2025 21:08:39 -0500
+	b=bGQRiSC6AM+KaTvn8KrTJ3VH1tnQsN6wTWZGjGeB/WWsq3ERmw6Pv1i3Rcy2GzWur
+	 ZbUTRPHXmkm03tv3xpfu8kx6ZFO3R1GFIlFo7zBFf5MPgPP/VEkdB9n4KgqnJeLuVI
+	 cYDLG0Ug6Qvlhbmur/RYnCa7GoQRg/GsWFUp1OWL+45O793A7NV2fnGaUU0mUqyUcJ
+	 9McAK6Q33tliEqVCxqn+Ddvpl7srf6oGXYrZZDc6pwZwMXMbGrIPAK6C1WsCLZ31RP
+	 BheSW+JiS1Pl0ygcnvXntu+5P3uqjKFwBCvBplTsfQQ6b4YNx0FjcyZamw53z9EEVY
+	 1h5O2/SX+iOlQ==
+Date: Tue, 9 Sep 2025 21:10:15 -0500
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Antonio Borneo <antonio.borneo@foss.st.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Valentin Caron <valentin.caron@foss.st.com>,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
 	Christophe Roullier <christophe.roullier@foss.st.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
 	Fabien Dessenne <fabien.dessenne@foss.st.com>,
 	linux-stm32@st-md-mailman.stormreply.com,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
 	linux-arm-kernel@lists.infradead.org,
-	Valentin Caron <valentin.caron@foss.st.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/9] dt-bindings: pincfg-node: Add property
- "skew-delay-direction"
-Message-ID: <175747011863.3632305.14159900534334210899.robh@kernel.org>
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v2 8/9] dt-bindings: pinctrl: stm32: Support I/O
+ synchronization parameters
+Message-ID: <175747021462.3634607.17013207905541885888.robh@kernel.org>
 References: <20250905135547.934729-1-antonio.borneo@foss.st.com>
- <20250905135547.934729-3-antonio.borneo@foss.st.com>
+ <20250905135547.934729-9-antonio.borneo@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -70,23 +69,27 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250905135547.934729-3-antonio.borneo@foss.st.com>
+In-Reply-To: <20250905135547.934729-9-antonio.borneo@foss.st.com>
 
 
-On Fri, 05 Sep 2025 15:55:40 +0200, Antonio Borneo wrote:
-> Add the property "skew-delay-direction" to specify on which pin's
-> direction (either input, output or both) the value of the generic
-> property 'skew-delay' applies.
-> For backward compatibility, 'skew-delay' applies on both input and
-> output directions when the new property is not present or has
-> value '0'.
+On Fri, 05 Sep 2025 15:55:46 +0200, Antonio Borneo wrote:
+> Document the support of the I/O synchronization parameters:
+> - skew-delay;
+> - skew-delay-direction;
+> - st,io-sync.
 > 
+> Require 'skew-delay-direction' when 'skew-delay' is non zero.
+> Allow the new properties only with compatibles that support them.
+> Add an example that uses all the new properties.
+> 
+> Co-developed-by: Fabien Dessenne <fabien.dessenne@foss.st.com>
+> Signed-off-by: Fabien Dessenne <fabien.dessenne@foss.st.com>
 > Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
 > ---
->  .../devicetree/bindings/pinctrl/pincfg-node.yaml    | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+>  .../bindings/pinctrl/st,stm32-pinctrl.yaml    | 92 +++++++++++++++++++
+>  1 file changed, 92 insertions(+)
 > 
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
 
