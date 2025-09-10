@@ -1,228 +1,230 @@
-Return-Path: <linux-gpio+bounces-25917-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25918-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CA4EB51F57
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 19:47:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46E17B52262
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 22:39:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 25CAE1891E69
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 17:47:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0170F5E1234
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 20:39:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D63D334702;
-	Wed, 10 Sep 2025 17:46:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7D1B2F1FFE;
+	Wed, 10 Sep 2025 20:39:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hnoGWGmD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J7QmIi2Q"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBEF261B9A;
-	Wed, 10 Sep 2025 17:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832B22EFDAE;
+	Wed, 10 Sep 2025 20:39:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757526385; cv=none; b=X3VAOByE9HIhx/67C0EzWFhAG3Aso3WDyLTUPWV8wskmv3sdzAbxIE2L7khZ39wAjuTZ9xQhlWyTjw+A36jniTgA2E9hi7dj14nQUCVwIH3MPxz+JEwqrZ0iusv8KuODthZJTMTfAL225EUKiTqIJPvS/F4HQzgXyATyG38FknU=
+	t=1757536748; cv=none; b=i28yO1qKN7ZHBF620rT5j2Ri1n+qiZJm3UbIGxabCc0UXDRV3DqAEZJgVpD0VB5Qy9m3pMT3aSmrqZk9PgmCghjK83cps5jABo7LEOLOyVwV7loNefJB9xhaaxnD9qNoILVr9xh+7rRVTQjz2SBPMNZAi9Au1n/NRlF+8DJtkcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757526385; c=relaxed/simple;
-	bh=0dXcKztqcBTIOPXYflckkwx4jmeZlOxeJTyT5RrxD4E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P6vStQQ4/Fqd18JEePhO6PPYkpZDZ9e4/ZFMV0MvN3TWCRHojxgu858aP39HxnU2Jz5AmqTsgeViqNn+LIpAlpP6OPxJ+wJ+gx9MNumYlNvIrerklnfacoWH/75rXS+6CveqlQSDghVaQpZswlOj1zYztKSuZ9TF+EuuSQatTY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hnoGWGmD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94622C4CEEB;
-	Wed, 10 Sep 2025 17:46:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757526385;
-	bh=0dXcKztqcBTIOPXYflckkwx4jmeZlOxeJTyT5RrxD4E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hnoGWGmDsGGsuBI8+xP9ocNVkgIr1W7X79Iy8FHpqHRwlfqsr0bcNw97A2akFb9ab
-	 H4vfxU/L377lNc6Y3f9tdzKpp9XAIIJtCboHfGPpPoYVVy9W4lnqzaB9yxdw1Ri3Xs
-	 BBZPJO8lzXJjTYZXiCd8L0rSxHl7WbDBiS5Td53z2yzj8liwKQqfq9sAFhvukRjRvk
-	 HpSqobSH5GbYN4S69SgLIB+MEoPA4YepCjpb0bkodHkQ/oK6gTVSq9AYMq01lccK11
-	 AprDuLOpqW8/99B4l7wMDJW86FpeSpxmxmaxpzdspoa9/OXvG0sF8CHPw8u4x7bZgp
-	 F3/jPcySK/r5A==
-Date: Wed, 10 Sep 2025 18:46:19 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] iio: adc: Support ROHM BD79112 ADC/GPIO
-Message-ID: <20250910184619.0303163d@jic23-huawei>
-In-Reply-To: <20250910-bd79112-v4-2-f82f43746a8c@gmail.com>
-References: <20250910-bd79112-v4-0-f82f43746a8c@gmail.com>
-	<20250910-bd79112-v4-2-f82f43746a8c@gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.50; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1757536748; c=relaxed/simple;
+	bh=B6fkvpBK+Ee+0YOFckXyRfEu8C3ZmYjOmbvJLcYj7rE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Euj9giLq6hRfGE1TQDKRrMsWPdf210vPiAW61KorHQN6neSJXd8IZYbt9EqjUqVHHLz1f8u7SsenLE441GBM/9aoXJ3gf6NSPFCxrSRgaza1ie2cLNBniB19wiz8I3eKf4Fbg6GtDvNeICNKi0E8iklRKuNkZF9uJdMC1FbjiJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J7QmIi2Q; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1757536747; x=1789072747;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=B6fkvpBK+Ee+0YOFckXyRfEu8C3ZmYjOmbvJLcYj7rE=;
+  b=J7QmIi2QJY5HUkAH3NfAikUxt3pwi7OnJFxCnE5HSRjB4uAkKF8UPfiE
+   dVN6pF7m9ofNtTQ2EkK6ZivBc/3ZuRDoNS2g7UJCMsptKgy0IsOkLTUBT
+   dOamGWO14OhNUgLMm2dLH9c8lSJpBwq+8Os/M183On/D3vkRetdXKdvT6
+   qnLkkTE7Dvv6528q0liJMgG6FHzacbQqqILrTeoYwL04SgYS3kTAeOyzZ
+   ZC6ToKNUwWP40dZaC9oMdcohTZ7+Uu5a9ByxHtVZ20mXftaiCIcdmoKkC
+   7+mraI6FvZVLdjNlnJaTJjnl7tJo95Ei7ZmwolH54+vR/u+zWaFDL+NYL
+   g==;
+X-CSE-ConnectionGUID: PSrwnMjDTteQbtkXsT2bDg==
+X-CSE-MsgGUID: hu/LLBQJRhGgERGE/51PZw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11549"; a="59083187"
+X-IronPort-AV: E=Sophos;i="6.18,255,1751266800"; 
+   d="scan'208";a="59083187"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 13:39:05 -0700
+X-CSE-ConnectionGUID: 0pc5aoHiT2OxenyLymEnVA==
+X-CSE-MsgGUID: Sz8c7R3oQ0WyCVA7akPy3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,255,1751266800"; 
+   d="scan'208";a="210615967"
+Received: from lkp-server01.sh.intel.com (HELO 114d98da2b6c) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 10 Sep 2025 13:39:00 -0700
+Received: from kbuild by 114d98da2b6c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uwRaj-0006GZ-2H;
+	Wed, 10 Sep 2025 20:38:57 +0000
+Date: Thu, 11 Sep 2025 04:38:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>,
+	Wolfram Sang <wsa-dev@sang-engineering.com>,
+	Hoan Tran <hoan@os.amperecomputing.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Serge Semin <fancer.lancer@gmail.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Phil Edworthy <phil.edworthy@renesas.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	Pascal Eberhard <pascal.eberhard@se.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 3/8] of/irq: Introduce for_each_of_imap_item
+Message-ID: <202509110402.OHHgtxRA-lkp@intel.com>
+References: <20250909120041.154459-4-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250909120041.154459-4-herve.codina@bootlin.com>
 
-On Wed, 10 Sep 2025 14:24:35 +0300
-Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+Hi Herve,
 
-> The ROHM BD79112 is an ADC/GPIO with 32 channels. The channel inputs can
-> be used as ADC or GPIO. Using the GPIOs as IRQ sources isn't supported.
-> 
-> The ADC is 12-bit, supporting input voltages up to 5.7V, and separate I/O
-> voltage supply. Maximum SPI clock rate is 20 MHz (10 MHz with
-> daisy-chain configuration) and maximum sampling rate is 1MSPS.
-> 
-> The IC does also support CRC but it is not implemented in the driver.
-> 
-> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+kernel test robot noticed the following build warnings:
 
-Hi Matti,
+[auto build test WARNING on robh/for-next]
+[also build test WARNING on tip/irq/core linus/master v6.17-rc5 next-20250910]
+[cannot apply to geert-renesas-devel/next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-A few trivial things that I'll tidy up if nothing else comes up (I might not
-bother given how trivial they are!)
+url:    https://github.com/intel-lab-lkp/linux/commits/Herve-Codina-Schneider-Electric/ARM-dts-r9a06g032-Add-GPIO-controllers/20250909-200642
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/20250909120041.154459-4-herve.codina%40bootlin.com
+patch subject: [PATCH v2 3/8] of/irq: Introduce for_each_of_imap_item
+config: x86_64-allnoconfig (https://download.01.org/0day-ci/archive/20250911/202509110402.OHHgtxRA-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250911/202509110402.OHHgtxRA-lkp@intel.com/reproduce)
 
-Also one question. I couldn't immediately follow why any random register
-read is sanity checking if an ADC pin is configured as GPIO.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202509110402.OHHgtxRA-lkp@intel.com/
 
-Jonathan
+All warnings (new ones prefixed by >>):
 
-> diff --git a/drivers/iio/adc/rohm-bd79112.c b/drivers/iio/adc/rohm-bd79112.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..a2a3affe2c6dc86a237a164139c27ec66dc9d131
-> --- /dev/null
-> +++ b/drivers/iio/adc/rohm-bd79112.c
-> @@ -0,0 +1,553 @@
-
-
-> +/*
-> + * The BD79112 requires "R/W bit" to be set for SPI register (not ADC data)
-> + * reads and an "IOSET bit" to be set for read/write operations (which aren't
-> + * reading the ADC data).
-> + */
-
-> +/*
-> + * Read transaction consists of two 16-bit sequences separated by CSB.
-> + * For register read, 'IOSET' bit must be set. For ADC read, IOSET is cleared
-> + * and ADDR equals the channel number (0 ... 31).
-> + *
-> + * First 16-bit sequence, MOSI as below, MISO data ignored:
-> + * - SCK: | 1 | 2 |   3   |    4   | 5 .. 8 | 9 .. 16 |
-> + * - MOSI:| 0 | 0 | IOSET | RW (1) |  ADDR  |  8'b0   |
-> + *
-> + * CSB released and re-acquired between these sequences
-> + *
-> + * Second 16-bit sequence, MISO as below, MOSI data ignored:
-> + *   For Register read data is 8 bits:
-> + *   - SCK: | 1 .. 8 |   9 .. 16   |
-> + *   - MISO:|  8'b0  | 8-bit data  |
-> + *
-> + *   For ADC read data is 12 bits:
-> + *   - SCK: | 1 .. 4 |   4 .. 16   |
-> + *   - MISO:|  4'b0  | 12-bit data |
-> + */
-> +static int bd79112_reg_read(void *context, unsigned int reg, unsigned int *val)
-> +{
-> +	struct bd79112_data *data = context;
-> +	int ret;
-> +
-> +	if (reg & BD79112_BIT_IO)
-> +		reg |= BD79112_BIT_RW;
-> +
-> +	data->read_tx[0] = reg;
-> +
-> +	ret = spi_sync(data->spi, &data->read_msg);
-> +	if (!ret)
-> +		*val = be16_to_cpu(data->read_rx);
-> +
-> +	if (reg & BD79112_BIT_IO && *val & BD79112_ADC_STATUS_FLAG)
-> +		dev_err(data->dev, "ADC pin configured as GPIO\n");
-
-Why are we checking this in a regmap callback?
-Maybe it needs rewording and the point is some missmatch in what we
-can read vs the state?
-
-> +
-> +	return ret;
-> +}
-
-> +
-> +static int bd79112_probe(struct spi_device *spi)
-> +{
-> +	struct bd79112_data *data;
-> +	struct iio_dev *iio_dev;
-> +	struct iio_chan_spec *cs;
-> +	struct device *dev = &spi->dev;
-> +	unsigned long gpio_pins, pin;
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	iio_dev = devm_iio_device_alloc(dev, sizeof(*data));
-> +	if (!iio_dev)
-> +		return -ENOMEM;
-> +
-> +	data = iio_priv(iio_dev);
-> +	data->spi = spi;
-> +	data->dev = dev;
-> +	data->map = devm_regmap_init(&spi->dev, NULL, data, &bd79112_regmap);
-
-	data->mpa = devm_regmap_init(dev, ...
+   In file included from drivers/base/platform.c:15:
+>> include/linux/of_irq.h:123:29: warning: no previous prototype for function 'of_imap_parser_one' [-Wmissing-prototypes]
+     123 | extern struct of_imap_item *of_imap_parser_one(struct of_imap_parser *parser,
+         |                             ^
+   include/linux/of_irq.h:123:8: note: declare 'static' if the function is not intended to be used outside of this translation unit
+     123 | extern struct of_imap_item *of_imap_parser_one(struct of_imap_parser *parser,
+         |        ^
+   1 warning generated.
 
 
-> +	if (IS_ERR(data->map))
-> +		return dev_err_probe(dev, PTR_ERR(data->map),
-> +				     "Failed to initialize Regmap\n");
-> +
-> +	ret = devm_regulator_get_enable_read_voltage(dev, "vdd");
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "Failed to get the Vdd\n");
-> +
-> +	data->vref_mv = ret / 1000;
-> +
-> +	ret = devm_regulator_get_enable(dev, "iovdd");
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "Failed to enable I/O voltage\n");
-> +
-> +	data->read_xfer[0].tx_buf = &data->read_tx[0];
-> +	data->read_xfer[0].len = sizeof(data->read_tx);
-> +	data->read_xfer[0].cs_change = 1;
-> +	data->read_xfer[1].rx_buf = &data->read_rx;
-> +	data->read_xfer[1].len = sizeof(data->read_rx);
-> +	spi_message_init_with_transfers(&data->read_msg, data->read_xfer, 2);
-> +
-> +	data->write_xfer.tx_buf = &data->reg_write_tx[0];
-> +	data->write_xfer.len = sizeof(data->reg_write_tx);
-> +	spi_message_init_with_transfers(&data->write_msg, &data->write_xfer, 1);
-> +
-> +	ret = devm_iio_adc_device_alloc_chaninfo_se(dev, &bd79112_chan_template,
-> +						    BD79112_MAX_NUM_CHANNELS - 1,
-> +						    &cs);
-> +
-> +	/* Register all pins as GPIOs if there are no ADC channels */
-> +	if (ret == -ENOENT)
-> +		goto register_gpios;
-> +
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	iio_dev->num_channels = ret;
-> +	iio_dev->channels = cs;
-> +
-> +	for (i = 0; i < iio_dev->num_channels; i++) {
-> +		unsigned int ch = cs[i].channel;
-> +
-> +		cs[i].datasheet_name = bd79112_chan_names[ch];
+vim +/of_imap_parser_one +123 include/linux/of_irq.h
 
-Could have done
+    58	
+    59	extern int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq);
+    60	extern unsigned int irq_create_of_mapping(struct of_phandle_args *irq_data);
+    61	extern int of_irq_to_resource(struct device_node *dev, int index,
+    62				      struct resource *r);
+    63	
+    64	#ifdef CONFIG_OF_IRQ
+    65	extern void of_irq_init(const struct of_device_id *matches);
+    66	extern int of_irq_parse_one(struct device_node *device, int index,
+    67				  struct of_phandle_args *out_irq);
+    68	extern int of_irq_count(struct device_node *dev);
+    69	extern int of_irq_get(struct device_node *dev, int index);
+    70	extern int of_irq_get_byname(struct device_node *dev, const char *name);
+    71	extern int of_irq_to_resource_table(struct device_node *dev,
+    72			struct resource *res, int nr_irqs);
+    73	extern struct device_node *of_irq_find_parent(struct device_node *child);
+    74	extern int of_imap_parser_init(struct of_imap_parser *parser,
+    75				       struct device_node *node,
+    76				       struct of_imap_item *item);
+    77	extern struct of_imap_item *of_imap_parser_one(struct of_imap_parser *parser,
+    78						       struct of_imap_item *item);
+    79	extern struct irq_domain *of_msi_get_domain(struct device *dev,
+    80						    const struct device_node *np,
+    81						    enum irq_domain_bus_token token);
+    82	extern struct irq_domain *of_msi_map_get_device_domain(struct device *dev,
+    83								u32 id,
+    84								u32 bus_token);
+    85	extern void of_msi_configure(struct device *dev, const struct device_node *np);
+    86	extern u32 of_msi_xlate(struct device *dev, struct device_node **msi_np, u32 id_in);
+    87	#else
+    88	static inline void of_irq_init(const struct of_device_id *matches)
+    89	{
+    90	}
+    91	static inline int of_irq_parse_one(struct device_node *device, int index,
+    92					   struct of_phandle_args *out_irq)
+    93	{
+    94		return -EINVAL;
+    95	}
+    96	static inline int of_irq_count(struct device_node *dev)
+    97	{
+    98		return 0;
+    99	}
+   100	static inline int of_irq_get(struct device_node *dev, int index)
+   101	{
+   102		return 0;
+   103	}
+   104	static inline int of_irq_get_byname(struct device_node *dev, const char *name)
+   105	{
+   106		return 0;
+   107	}
+   108	static inline int of_irq_to_resource_table(struct device_node *dev,
+   109						   struct resource *res, int nr_irqs)
+   110	{
+   111		return 0;
+   112	}
+   113	static inline void *of_irq_find_parent(struct device_node *child)
+   114	{
+   115		return NULL;
+   116	}
+   117	static inline int of_imap_parser_init(struct of_imap_parser *parser,
+   118					      struct device_node *node,
+   119					      struct of_imap_item *item)
+   120	{
+   121		return -ENOSYS;
+   122	}
+ > 123	extern struct of_imap_item *of_imap_parser_one(struct of_imap_parser *parser,
+   124						       struct of_imap_item *item)
+   125	{
+   126		return NULL;
+   127	}
+   128	static inline struct irq_domain *of_msi_get_domain(struct device *dev,
+   129							   struct device_node *np,
+   130							   enum irq_domain_bus_token token)
+   131	{
+   132		return NULL;
+   133	}
+   134	static inline struct irq_domain *of_msi_map_get_device_domain(struct device *dev,
+   135							u32 id, u32 bus_token)
+   136	{
+   137		return NULL;
+   138	}
+   139	static inline void of_msi_configure(struct device *dev, struct device_node *np)
+   140	{
+   141	}
+   142	static inline u32 of_msi_xlate(struct device *dev, struct device_node **msi_np, u32 id_in)
+   143	{
+   144		return id_in;
+   145	}
+   146	#endif
+   147	
 
-		cs[i].datasheet_name = bd79112_chan_names[cs[i].channel];
-
-and I don't think it makes it harder to read, but doesn't matter enough to respin.
-
-> +	}
-
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
