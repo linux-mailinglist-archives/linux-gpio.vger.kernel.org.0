@@ -1,111 +1,138 @@
-Return-Path: <linux-gpio+bounces-25922-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25923-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CCF2B523E1
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 23:53:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E18EB523E4
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 23:54:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E0AEB486044
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 21:53:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C1A25561D8D
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 21:54:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D769730F927;
-	Wed, 10 Sep 2025 21:53:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FBD83112AB;
+	Wed, 10 Sep 2025 21:54:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k8YjWIwN"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="WFnOPSWO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E852A2D1926
-	for <linux-gpio@vger.kernel.org>; Wed, 10 Sep 2025 21:53:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A977130F935
+	for <linux-gpio@vger.kernel.org>; Wed, 10 Sep 2025 21:54:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757541227; cv=none; b=OwNV99wV6nh3ldFFyorlC7lVnmFOthpAQCh9UUX/RvvFp5UmUj/AmDzfO1QkonGkasZfeUFkTfQHgTXW49ppLIwYo7NIH9jHshYaU8284P9Or8eCmNQzULNfR4EwZiXOoKozRb353vXbOC1ClVLYCL3p5nSF3BVSYvLtcwrp+Vc=
+	t=1757541282; cv=none; b=evL+Jx934tyiCJdsDwdjDIY1S3c7BH663jNmqwQXL8V/Ju0F3GvScGsEeLb0y3NyU1Z7ZIhLO1IzmMkA9vhYh1+kUB+8jPbWCn0z4+pwGFLhDj5BHNvwzzd8HXQufbFTvzMjRXogEgsoe/xJPS0/MC/YRMNodQE1oFpm/1ISqN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757541227; c=relaxed/simple;
-	bh=q//PQSm+h1ITIo5hhQmSWhiVmrcAM9Xk9nSTnv4AmqI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oMpAj+bh+rDMs/YL3YOb1D4SlpnaxCiP1Kw2u+YGULDJft1atJkG8Csr9aSCdJT4g3CND0ZtYalij1UjL0j7m3XhmhVeXdtScbZtzgm9+EcyvkJjsJAjyds9t5DCBmNwvjCHzKY9b/D6jfLDKpyq/qWrVv3Y9C3TU6ATpVnJKKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=k8YjWIwN; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-55f6bb0a364so9926e87.1
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Sep 2025 14:53:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757541224; x=1758146024; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q//PQSm+h1ITIo5hhQmSWhiVmrcAM9Xk9nSTnv4AmqI=;
-        b=k8YjWIwNXt9AhpBsZYI5c1P1Ult0DUK9SpR/tWT25rBCQSdlpnUf//JMDtG4eRwY91
-         P5sTeu2g8LjVmdc/avNABQrvxxui+wT5lST7QMDFqd4zbL0P9MJiFQjqQ9WVUaeAyFDw
-         V5vtE41Bc4SUHz/2K0EIBL/gFXvuljDbqJhQpptMA8689Qr6WLyRM0p2JGTsYam3zcyT
-         BagzspZUBRYpe9pGhtVxlLkXxYp3VO1mPPmPnbG4m0tGcbhEgeH7Eyjx/s6KR0fYeacQ
-         qDxibPg5KB47cNSr59UleFSOZaGrIL7rE5JC5WjbrCTHUq4oN9A82geZ9dC/rtKgJfXh
-         k67g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757541224; x=1758146024;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q//PQSm+h1ITIo5hhQmSWhiVmrcAM9Xk9nSTnv4AmqI=;
-        b=AjC5Dd/LQUw/o7qjdBXpblw4WJXUVq7Aq8ps4Cyu2oK4FG6deSKJZpDVzv+juTGnu1
-         olMT1p16vbvl+qALW2CuqXr+2YoPbCAdb3+K8gt7zlccs06a89rTXLC31nwdIO7/+Sq+
-         LPT6b1AkNmjvf16FTtBeobmBCEG6QRY3fg6CsNBxyfsmbNOH3BUxwn7lLcHn3tAyrNc9
-         X8ZMzYV9eCERNSwzNQOmNFJdVVQViOqbnn58CNTiWc5LZdDqeWgbm4rhZOMFNx34anlK
-         HqrHsP9xyb/jsy9FKPNu4TQJBXX31mSvAed3AF13UFUmhyENVX7ZQ3KWT5mWOmBmwys+
-         WTrw==
-X-Forwarded-Encrypted: i=1; AJvYcCXAowBmhs18ubVZ2zprunGrKakFIo5s5018/8d5i9pt1kAG2yqKGpNdRersmcMzFttuC1aHPqFdWAv4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw706IxjsZX8ba7KudXuK2DXty3m6j4UUVMvNUeDrpAy7g/7q32
-	pRFuDNflMu1YD44hKSDJGam/s62/GfzeAV4Al54meLa8FPIQPuseNvIfxo3qwY8R14Fzm+EoL5V
-	blXVe6PDrlqSjLPNi4D50sQJKa9+4pY/wtnTKUQ+1ZQ==
-X-Gm-Gg: ASbGncund2RVdZ9SCUxwzB2RftDxLkXIfLkANGGZz7iiWjOzmTSvvr8seCrb7fq5m2F
-	XfcX5brUQl1XI8MESYU3ieSO38pwjHrVWOqXBxWahvMTW1Owv+Sa9+35ljXbIjEYONzB4kHZSxl
-	hTZ8LWFnxjYAQDGUG3pa03OTa4royVMz1gWIWeTCwiK3/uTmTludAfPTOqlUPGqesWcl7amXD+K
-	OXhyTk=
-X-Google-Smtp-Source: AGHT+IH3I4tPdCs41TsyB8DNSw/AUL2jC4I7vr2eCoO2ENLBclkXCb0BiXvJWpuRW0sLm6X70ksUUgQXaXO8K7LFJSg=
-X-Received: by 2002:a05:6512:ba2:b0:55c:c9f3:6ed9 with SMTP id
- 2adb3069b0e04-56261bc58e8mr5471578e87.35.1757541224157; Wed, 10 Sep 2025
- 14:53:44 -0700 (PDT)
+	s=arc-20240116; t=1757541282; c=relaxed/simple;
+	bh=1HCvhd3VQGy5PvNhZFTJLOJnc634aHZegGeRdIBZzUY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ArqMSI3qze5eH9FYfUGCzyfbnromqwStjUL/Crkll2Ymx5ipkIMN0ERwGZEOsqfe5ObjGwPviyjFTs71pSqfyarLEccbBBORc2sE2kruewoWvug+fn+vsSjDl5E7E9jfrSu2Qmd/5O3NdoVDMDYdy9Q3Nt+Io/WDwXxp5xx4CK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=WFnOPSWO; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=VeZk
+	NDxYDFAIVO0EYji6v7iRjsKhPDhDyOrk4uRvel0=; b=WFnOPSWOPSKHbU+tl649
+	Q271Ayd8soypdTfKjUP2fQmAvH8Ooofkpp+DFE9tc+AbLH+RZraDKDIaWLYtqtsT
+	QihwFY2yzsLK7CnEgLtxATHTdlzaL5fKv2SIERieMVQ2JmuYkMeeik/GE7yc5YAB
+	GczumHBfYoaIteT3JqSFz3q0zP44xozV9faH5qTavXwSqTjQSqaeafpxzNIjD3Jj
+	3nDpNd7xQTa6aLLJRynEXnhmNMQxdajyvi4m71WYpGLu7htFqFC1FYhcWanol1GU
+	1lvYFbX6SCKL0cXh84GU8I7xXIpf1G+Jrz06vHF+FalLsfrZw+REsjb+vF/DumTu
+	SQ==
+Received: (qmail 750343 invoked from network); 10 Sep 2025 23:54:37 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 10 Sep 2025 23:54:37 +0200
+X-UD-Smtp-Session: l3s3148p1@03qAd3k+hoEujnuV
+Date: Wed, 10 Sep 2025 23:54:36 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Hans de Goede <hansg@kernel.org>
+Cc: Israel Cepeda <israel.a.cepeda.lopez@intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Richard Hughes <rhughes@redhat.com>, linux-i2c@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] i2c: Add Intel USBIO I2C driver
+Message-ID: <aMHznOCa_9vtW6_1@shikoro>
+References: <20250910133958.224921-1-hansg@kernel.org>
+ <20250910133958.224921-4-hansg@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250909-rename-gpio-flags-v1-1-bda208a40856@linaro.org>
-In-Reply-To: <20250909-rename-gpio-flags-v1-1-bda208a40856@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 10 Sep 2025 23:53:33 +0200
-X-Gm-Features: Ac12FXxLPdZ38un1m9ptC603ZmrUP6by2OMkj-xvoDoxfyG3HCKzWeGPfFD0A5U
-Message-ID: <CACRpkdaFj7okjN+n2+kRAopf17DV1QGV2mbmndVtDoi=GuqAug@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: add a common prefix to GPIO descriptor flags
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="65RaCaNE39VXsE2H"
+Content-Disposition: inline
+In-Reply-To: <20250910133958.224921-4-hansg@kernel.org>
 
-On Tue, Sep 9, 2025 at 2:28=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> While these flags are private within drivers/gpio/, when looking at the
-> code, it's not really clear they are GPIO-specific. Since these are GPIO
-> descriptor flags, prepend their names with a common "GPIOD" prefix.
->
-> While at it: update the flags' docs: make spelling consistent, correct
-> outdated information, etc.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+--65RaCaNE39VXsE2H
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-That's a good patch.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Hi Hans,
 
-Yours,
-Linus Walleij
+> +out_log:
+> +	dev_dbg(adap->dev.parent, "RD[%d]:%*phN\n", msg->len, msg->len, msg->buf);
+
+I think this...
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int usbio_i2c_write(struct i2c_adapter *adap, struct i2c_msg *msg)
+> +{
+> +	struct usbio_i2c *i2c = i2c_get_adapdata(adap);
+> +	u16 txchunk = i2c->txbuf_len - I2C_RW_OVERHEAD;
+> +	struct usbio_i2c_rw *wbuf = i2c->rwbuf;
+> +	int ret;
+> +
+> +	dev_dbg(adap->dev.parent, "WR[%d]:%*phN\n", msg->len, msg->len, msg->buf);
+
+... and this dbg can go. The tracepoints we have should do?
+
+> +static u32 usbio_i2c_func(struct i2c_adapter *adap)
+> +{
+> +	return I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR | I2C_FUNC_SMBUS_EMUL;
+> +}
+
+How did you test 10 bit addresses? I have never seen them in the wild?
+
+Did you also check SMBUS_QUICK? 'i2cdetect' uses it by default.
+
+Does the underlying USBIO driver use usb_control_msg? If so, we need to
+disable zero length read messages. See [1] for a reference.
+
+Rest looks good to me!
+
+[1] https://lore.kernel.org/all/20250522064234.3721-2-wsa+renesas@sang-engineering.com/
+
+
+--65RaCaNE39VXsE2H
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmjB85QACgkQFA3kzBSg
+KbaLCA/6A6PtxlNN/+ZxKkBXiwdOerYgaoYdNRoshHS0dhwcNLPaQ2gmTiQg+Zi3
+VM8CGXssak1ZeoyE6F2pY+Y+RrriCucVsr53TSBuBlr8GTFLe/aARDvL0u8C/5P8
+iK71Mc/wqfrOPjDey7LNzuyqQy9MVrTEIWnz52OZc2skF7lqTWM1ROdgIXuYjl2s
+xjiCbIIbJSqAEqVjUwy8sDUjhJhSBKBAtHROp/xCQpk8uykYORctPxaafmRxK39q
+QFDyqIkOkk1HrfsOdCC9IbiGTpes7/rDnW7nrJumSrddnEEKA0wbhUUzvWEtNONk
+xcdbEs97Owj+VlazG5xblFbxF7BFBjqGnLY/vOiZhQmjcBJLJJ3z13WoAjxyTJm6
+Csdn1nA+7NNpALTr/RZyEQN4ssbWhZ0J3Sy0IuE+k/npf30Y/NYP+dmiBs52ZCOF
+fqFdTubyQD1H5swJEJlbDFaoIZDHAegs7WjcXczJ+od9ZGWbvaO/F8jcC0qmf2w8
+fTuiYQZbSrjJZ4Y/vUjdIn2Au7RX02ckvqoUcCmADzcsEgmILELgWvci2UWJv+3Y
+iZ+KZMywwwWzE8aQPPvQFKDhQVkPVOe934mi7lRUwS968riLUremgLCbgm5N0Uz3
+EM9yIoF9bV36crzxe7b4A/Mb2p5QdKQZuEir0/urdN87fhbYJnA=
+=zfEe
+-----END PGP SIGNATURE-----
+
+--65RaCaNE39VXsE2H--
 
