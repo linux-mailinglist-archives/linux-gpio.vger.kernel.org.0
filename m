@@ -1,145 +1,127 @@
-Return-Path: <linux-gpio+bounces-25882-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25883-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60C83B51465
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 12:49:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29214B51547
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 13:18:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 90D611C8100B
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 10:49:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 62B241C82F9D
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 11:18:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B50F311969;
-	Wed, 10 Sep 2025 10:48:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49702279792;
+	Wed, 10 Sep 2025 11:17:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GFmjIxH0"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="QKpukNVB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F6C239E7D;
-	Wed, 10 Sep 2025 10:48:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9798271A7B
+	for <linux-gpio@vger.kernel.org>; Wed, 10 Sep 2025 11:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757501334; cv=none; b=uEuhV6/IEJi1KmICLKXTadem/BW6rwzRlPVRog7cjuvNy62bF64nl4LN9RYcfj15GLtxDyniNCWAvAL4tWME1h3L5S7GJVsLceuT6lkOXdy6nu6b1LvBughV6D9GmmY/pGpRkEk2dzXqlBoOtP6asOn0QwE0lXvOPDY646LpaF8=
+	t=1757503075; cv=none; b=JcsxLd9U2t+E0VA+g2ddVtt15j0y9tr90lvvcMoGLpX7i/0y4x61JGXqkn89SQmTzGZESBKoEtLtBCLe2X8VcF+PfQ28JzRqDFEtdB5TENy/TCb16H4ot5pYfTNiRsuSjVPTo9Almi3bGMfaCLfHx+z7iPFjCLUuq9Opn4bGiZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757501334; c=relaxed/simple;
-	bh=oZuskF8rQFH7X1X26xw4eX994bR051hWbKT9n03w/6Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gTZtKydDKKD3Mz2yJ/rt4bD8USHOy6HEsym3eUMOc3+chVINabwBHUVgOpqYP0pDodVtVAPjoNs94t/elrYaz3JmSQnqHmMr5sBijmI7b+yyB0ynasm8tdddt6G19+V/c9T0/LMMPcsMRRPb64AWUJHmH893zwnFTk6i9BPRslo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GFmjIxH0; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3d19699240dso299008f8f.1;
-        Wed, 10 Sep 2025 03:48:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757501330; x=1758106130; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+N7hk82kSw/hD5RnH/Wdj/jHeKN7m/X8ltb3+xi6FX4=;
-        b=GFmjIxH0/6BG9POU6zwX30h1CQxiF814sHXYThxhVMP5/19kxIpflWgpkB4vnjhssi
-         EkHp8F92zljsDvYAphYasdfpYnrW4B4VvCkxgNzdjp+vpiszuVv8VR0YLpMBeJf5kCxZ
-         y+fk00IWSvDxbn1rS3As26oAkxPkzkGNbKxxnD/1YrK0GV98a2yvtDOUJE4pPR9UxeVl
-         JHI8TJg/rkZHy4hJ+t8E2wDq+gO4Md9l5lrp4DgbpoeTfjBlEtaHOu+YQZO5yQsqFrKU
-         AEa7nLfDbiGUz9ppXPSRssDjRR7v4JF1b90ximl5hHOUHBVAlCJkCjohwLwtz+nG6mQS
-         6p4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757501330; x=1758106130;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+N7hk82kSw/hD5RnH/Wdj/jHeKN7m/X8ltb3+xi6FX4=;
-        b=rUYWakpveUIVhIgSnZLq5SHXNqU8Ouo6jAZZ+QcxempGpN3D6IOmIdbWl/eMAvXTNS
-         LF6uMQCoTZn/Dd/NFF+GoOZaOMssxhUMACzhzPgLRLRsDaokWLXivRSGwgh8s6ZlWEPi
-         de68URyoWoeQB8w8UawcYypHF9P33DiAk32qiAvQS/dhHEewmGuH01kSsnUJ8SzdG/6y
-         h8fOKaSJ5jCHgX4twm0J3iYyuq7d/VLO9a0dsT6yqNOpnZlC+ByLBFaS7UK7raukb57T
-         k6hYM0a6sVX2mpL35f2aqbyCrQk5d5wv1zNJnlUXvFHwM1wRW620WOLzLXNEFqttnik9
-         Gxkw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9BNfqh1GBAJValu3MS1wKjzYouNrxFktnk9sD4gpvAwPgcOAOSe1tvxM4T/z87pO+b+efS8YT6vL6@vger.kernel.org, AJvYcCWagSnM7Z9uWTKewpqcRnsii7qFq3m18/VMSDoVQVsoDu4/qbnDtYbnTaBr2fSBqCiA8lYbxadkcWKnnQ==@vger.kernel.org, AJvYcCX8UoKoyPxsFv8KjaA3HTzkmj8NiFnK8g3vhN88JFvej/RidJ7CmKQb9PN+gUkR7XTM6iP6v6yxpOJMiXE=@vger.kernel.org, AJvYcCXzt6NfotCEo4Zs4QBVdn26OC3P2btpc/MTM5TWS/qSxgJVrwhbDahxD+tEvYAwMyZMOBbFyCNbXWmcWR3p@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+hkgS69zsv4WqhLEeSWX664UItnqGqqTD/b2s5+mMJspekfcz
-	xL1QF50d8+MuHAnQEpklZWd44ypNPw7pQp5MB+AxV2kM9sGNtE1iqTdF
-X-Gm-Gg: ASbGnct72QMffhGfYmv5huMHDjZYxVb3aK6lMxDC2bxl2pM5u0je/lHGwv/9D1EvQGB
-	bCz66qutr/W3sczr2moFsfCiIPHnYQ5wzUPNlDmszV+j6YauDjXxLIT+6rdXzxo2UfjbmMNNdCT
-	aDKQ3oL8MXr4csVk95f6sLY/c/Omwl/Fxr+tDhLCOHC1dTpLfMrmSCByvvcLiDY4AY1cXZVnCTN
-	LvtyEejTA8vDsDSrgSCHF3ihX5qziNAbo3KK+KlvUPsRZz5k5he0aXHmUykhwMRpL0mkhWijR75
-	3VUXocNkG1WGwXQh9ObMUldR8NIgSv55wGZUrFTolPnk2kYAY9FcGc4GaQBQAU6q2x/IPQGAzRY
-	YVm3FshS/FCJ0ZVVLUxgwCJP9KvUndX5WdPC9BPYxMo9+EtsWQwjoNrOWKBs12Jk=
-X-Google-Smtp-Source: AGHT+IG5tS3kYUiCCRtnanVvpm0dBMkyeaNotcMroSTBo+RZ/HHESf9S7ra3pDeqhyi3AeZM8IcVgA==
-X-Received: by 2002:a5d:5e92:0:b0:3e7:428f:d33 with SMTP id ffacd0b85a97d-3e7428f0fe6mr15632685f8f.16.1757501330343;
-        Wed, 10 Sep 2025 03:48:50 -0700 (PDT)
-Received: from [192.168.0.100] ([188.24.124.246])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7521ca0e9sm6821205f8f.25.2025.09.10.03.48.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Sep 2025 03:48:49 -0700 (PDT)
-Message-ID: <1b79e467-1d39-457f-a488-0f3eb9e14efc@gmail.com>
-Date: Wed, 10 Sep 2025 13:48:29 +0300
+	s=arc-20240116; t=1757503075; c=relaxed/simple;
+	bh=Xtb/sLzI5bW8Bo35Swpy28juwuCbw+RUPfTq/h5670o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BahGH5+0Epc+yggC5dVJajohxgDbyzCcv6d2JqFCkHrgrSUHhQY1+qjp6e4u2O9dpB/hUJreOLazfZzfzUbDtGQzJyhDYZlO6R9pyGymfbJ3e7pE869ohGJsMS05rlNfVGG+Mrirgf2lVHzpe462tBzWvvNFoOlkeecNVKLLZRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=QKpukNVB; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=Xtb/
+	sLzI5bW8Bo35Swpy28juwuCbw+RUPfTq/h5670o=; b=QKpukNVB4TrB18ESciEG
+	Y1BK6GL0+tBbE8uORRbGDneKzuh9uGhhKCB2cmtcYXdo9P8URsWJMc5kroXb5xku
+	/95y7vKfD28hQkEtqoBh/Zd8sfLN8TbO2uVxbmYomKwcV5SqVdjtrGW+bzktOtCd
+	X2QgSDBGKTdKZmcgdCEVmYHwW9khCrPWKve/iYDCm3d11lxgiaSDM7lcQe5Hsdg1
+	oiGLbyAZy7qpRc1RpDEaYDh0/xK5QulJ5wYVr5YmkO5CzI5Zb5Wjs7E3xQgR7Iie
+	yCeMLOrK7Hb+7wUOPLXU0oljL5YpenVUYrdkagHlXWpXIsb13TIDN0e4qSgeR2Tp
+	LQ==
+Received: (qmail 578202 invoked from network); 10 Sep 2025 13:17:49 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 10 Sep 2025 13:17:49 +0200
+X-UD-Smtp-Session: l3s3148p1@ieomknA+gpwujnuV
+Date: Wed, 10 Sep 2025 13:17:49 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: "Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>
+Cc: Hoan Tran <hoan@os.amperecomputing.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Phil Edworthy <phil.edworthy@renesas.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	Pascal Eberhard <pascal.eberhard@se.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 1/8] ARM: dts: r9a06g032: Add GPIO controllers
+Message-ID: <aMFeXXXuks0OVkj5@ninjato>
+References: <20250909120041.154459-1-herve.codina@bootlin.com>
+ <20250909120041.154459-2-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 00/24] media: i2c: add Maxim GMSL2/3 serializer and
- deserializer drivers
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Cosmin Tanislav <cosmin.tanislav@analog.com>,
- Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
- Julien Massot <julien.massot@collabora.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Linus Walleij <linus.walleij@linaro.org>, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev,
- linux-gpio@vger.kernel.org
-References: <20250718152500.2656391-1-demonsingur@gmail.com>
- <aLBqxQQsnY3ZK4eT@kekkonen.localdomain>
- <d558ede0-5838-4a69-b25d-cafaa3b6cc97@gmail.com>
- <aMEgNtjcy1-NuBds@kekkonen.localdomain>
-From: Cosmin Tanislav <demonsingur@gmail.com>
-Content-Language: en-US
-In-Reply-To: <aMEgNtjcy1-NuBds@kekkonen.localdomain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="iumSSLlPufN+jsYR"
+Content-Disposition: inline
+In-Reply-To: <20250909120041.154459-2-herve.codina@bootlin.com>
 
 
+--iumSSLlPufN+jsYR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 9/10/25 9:52 AM, Sakari Ailus wrote:
-> Hi Cosmin,
-> 
-> On Thu, Sep 04, 2025 at 10:52:09AM +0300, Cosmin Tanislav wrote:
->> Hi Sakari.
->>
->> I recently left Analog Devices but I will continue to try upstreaming
->> this driver. After the upstreaming is done we can switch the
->> maintainer status to someone else.
-> 
-> Ack, thank you.
-> 
->>
->> Here's the output for the commands you asked, provided by my
->> ex-coworker. It's for MAX96716 + 2xMAX96717 + 2x IMX219.
->>
->> Do we need to fix anything based on the compliance tests?
-> 
-> Looking at the errors, it looks like some fixing is needed, possibly also
-> on v4l2-compliance side.
-> 
+On Tue, Sep 09, 2025 at 02:00:32PM +0200, Herve Codina (Schneider Electric)=
+ wrote:
+> Add GPIO controllers (Synosys DesignWare IPs) available in the
+> r9a06g032 (RZ/N1D) SoC.
+>=20
+> Signed-off-by: Herve Codina (Schneider Electric) <herve.codina@bootlin.co=
+m>
 
-I'll take a closer look at the failures whenever I get the time.
+Of course, I couldn't test and review all GPIOs but the GPIOs I tested
+on my N1D-DB and EB work nicely so far. Previous tests didn't work
+because I simply missed to setup a configuration switch properly for
+this case. Phew!
 
-> Regarding GMSL, are the image width, height or mbus code used for anything
-> by the serialiser or deserialiser drivers?
-> 
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-No, not really. All the information needed by the GMSL drivers is
-provided through get_frame_desc() ops, and there's no fallback for the
-data type, so the stream format is not involved at all, but as far as I
-remember it's necessary to be set properly for the media pipeline to
-pass validation.
+I won't have the bandwidth to review the irq patches. Maybe I can donate
+tests, but no promises...
 
+
+--iumSSLlPufN+jsYR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmjBXlkACgkQFA3kzBSg
+KbbEaA//fbbtj5vTazGI3o6nzrkselioCZlzKsf5vGNmi8jqg+aXHRK7vm7yTfSW
+i0A3/MxjuXHIaEDf/MW8SgPp6/z+TtyMohi3cnwPPonAbOKaICpEEbQmrEXTO4kn
+AQE3VM1lXAxGjL/rHi7tv+d2o3s3SM9fHGNvmsTaYHsLxJni/ylOERHKSCDNZvdT
+spoyw+5i7xw5rmN5Drjh+LWT04H3YwPMs9Hikbk6fdd2eTZ9yEWi2wLiNwbSLX9z
+iSNkE6TTth9OvGGQusfuzgwJVq9oAMFNcW1YWISCznGHJ1hOaHhvi2+mTStfNgtR
+h9mgNiOF3NuPm6OMqtNSQYYkJ3Y/LEYy3O3RAhRCVk3B1Gdt/nkKMuigVSvV7m1Q
+3xFNMiDqCuzdX15JPAgu927pSNnQXP0GKshTtZTpCtzFjj/GgEl8KJCjqQ7og0bx
+FatOjTUnFv1BZXc/LaVPthp1FSozfje7RULinOrXSq+nVUZJJrNcHYflR9qKx51q
+5Q5iC7TX8qmyewAgqwnMJMNNMgwt3ykWfxeVte8P2CgBJdPfaRIqYxEC+8KQHBF6
+WeAin+KN5RWDAAceH6NZuJKlQzO1QucH/ciAxwO6naSa3DBgasISrvOU9s0dZCvt
+jkeXbOIhevD6w2y6CsApyTG7UX9ckayXAec1htNOJOL15VpGToc=
+=Mu3J
+-----END PGP SIGNATURE-----
+
+--iumSSLlPufN+jsYR--
 
