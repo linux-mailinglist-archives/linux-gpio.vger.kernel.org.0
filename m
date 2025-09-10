@@ -1,70 +1,68 @@
-Return-Path: <linux-gpio+bounces-25907-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25908-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2375FB5196E
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 16:33:27 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC233B51A36
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 16:51:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CCD8B5E20E6
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 14:33:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3E3E27A977F
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 14:47:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD842322DD2;
-	Wed, 10 Sep 2025 14:33:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 767FD370594;
+	Wed, 10 Sep 2025 14:39:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vr3ts2KD"
+	dkim=pass (1024-bit key) header.d=csh.rit.edu header.i=@csh.rit.edu header.b="UDNUv3uL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from greygoose-centos7.csh.rit.edu (greygoose-centos7.csh.rit.edu [129.21.49.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A75E235072;
-	Wed, 10 Sep 2025 14:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C670337696;
+	Wed, 10 Sep 2025 14:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.21.49.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757514801; cv=none; b=UClprmgiPcwKZXJGoNYiFKakaCXcpPo4JX0fMRSl0yxjHPpaVFUarPEaSUefNHvssU9MbUKMYi2xtWFrogFzRQyncYd9aPAU8Gabh1y0ouUudOel2ecXshnWMoVNCE8FJg6a0fVk6oCn98ABBOjMMMmdeHhEnVFUs0uQvUR8x0c=
+	t=1757515182; cv=none; b=XOWSnJ7vgaxs1855w0vqh4x2bPQ98Vqy2jqJLio8OGuS5SF8l/tkV1XPN4BuELQ3zvVLbm1L0/RFsLZsoEShaSDZ8f3w9ly9FWv84n2u0w6A1hGSuwtAuMox/0q1KiV+NQcZKOP5LWz/jK5tMPLlBoehrT7JB1v27qInLy5hX4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757514801; c=relaxed/simple;
-	bh=iT7zclflmd1yORb9IPElJ8G2KRxHqWWg+3bH4wQEm0Q=;
+	s=arc-20240116; t=1757515182; c=relaxed/simple;
+	bh=MxtjxFZqB4NM6D4mTHBIVDGaL2MJqKi238yF8K4H9AE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gmrv9s3OFrVhsZqDTK6l6c15DW++XN3Yj9X3VcrMLn5jikEDupddJpLcQjHmmDuQcWenyp0s7TqZSvmgU8islvWQJnTmJr4bAwbRZZ2HJLlEsjp5F2BBRMwbGw9Ni0vtQTG63/T1fb6V2j8+unz7CoFUp6jY3bKszkH0i8tCmgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vr3ts2KD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC241C4CEEB;
-	Wed, 10 Sep 2025 14:33:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757514797;
-	bh=iT7zclflmd1yORb9IPElJ8G2KRxHqWWg+3bH4wQEm0Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Vr3ts2KDd9XCPSBzlJK5d/Gk7r8Bvo8ikCB+PM//j9dYWFCNEpneirBg76oSe5/Nr
-	 Aqdx0Se1ICCl8jwrUigByaTPnXsCETPsstbUQzMSSfSL/jLf4xYakTyxRtAuVUzA42
-	 PHFqyaoyJ4KCRrIwP+bG7T6V22uot/cUbYhvHWZJ172l70zU/byMQSVFmWZLTxoEcY
-	 5bNtzPDmDZb0YGQrv9hbsoP2Np4aFsr6n1fJaTJoaPIPgDWAuPuN/E9qcO8IfXFaoz
-	 tMjmCwgumy6CBB0vbnW5QNNe2MHBcWgldpQnm4W/IdWsEyo8B7xpSGGdMEcQ3z1d5I
-	 skSOsWKHlqBGQ==
-Date: Wed, 10 Sep 2025 09:33:16 -0500
-From: Rob Herring <robh@kernel.org>
-To: "Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Hoan Tran <hoan@os.amperecomputing.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Phil Edworthy <phil.edworthy@renesas.com>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	Pascal Eberhard <pascal.eberhard@se.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 2/8] dt-bindings: soc: renesas: Add the Renesas RZ/N1
- GPIO Interrupt Multiplexer
-Message-ID: <20250910143316.GA4047084-robh@kernel.org>
-References: <20250909120041.154459-1-herve.codina@bootlin.com>
- <20250909120041.154459-3-herve.codina@bootlin.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=HQdLFrEa3wKQtgH3hbYhVDXwmWhFZeUZsFT4VElAW4XuUrbtKtyREEJ49Bpk6uuqfA2kJ49r8AalK8Fyi3OTZ3GPyGy0+3QMvq4tDnmEiYVxgGFEm56ncvafKkZCOBiQ6xc91TJ5HlrMo7DiRRyTsbI2E0g024PuuTP3TCC1Oug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csh.rit.edu; spf=pass smtp.mailfrom=csh.rit.edu; dkim=pass (1024-bit key) header.d=csh.rit.edu header.i=@csh.rit.edu header.b=UDNUv3uL; arc=none smtp.client-ip=129.21.49.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csh.rit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csh.rit.edu
+Received: from localhost (localhost [127.0.0.1])
+	by greygoose-centos7.csh.rit.edu (Postfix) with ESMTP id 2D34640E2F43;
+	Wed, 10 Sep 2025 10:39:38 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=csh.rit.edu; h=
+	in-reply-to:content-disposition:content-type:content-type
+	:mime-version:references:message-id:subject:subject:from:from
+	:date:date:received:received; s=mail; t=1757515171; x=
+	1759329572; bh=MxtjxFZqB4NM6D4mTHBIVDGaL2MJqKi238yF8K4H9AE=; b=U
+	DNUv3uLd0VJMz0UvfN5WeXvhWelloKII5YqQjwG/APzYVCGF50PqIHY8jVVev5cz
+	70ILovxPPoIx4SxE4JOoKBceqRjRwoZ/I+oREj3XW888SKDWAiLwVzT38za9Khza
+	N1f7qlbJWzgrK+P3SM5h/xNnDYcLb1PPsY/FuZGaI0=
+X-Virus-Scanned: amavisd-new at csh.rit.edu
+Received: from greygoose-centos7.csh.rit.edu ([127.0.0.1])
+ by localhost (mail.csh.rit.edu [127.0.0.1]) (amavisd-new, port 10026)
+ with ESMTP id V9o6rRs7apyN; Wed, 10 Sep 2025 10:39:31 -0400 (EDT)
+Received: from ada.csh.rit.edu (ada.csh.rit.edu [129.21.49.156])
+	by greygoose-centos7.csh.rit.edu (Postfix) with ESMTPS id BBB3740E9C9C;
+	Wed, 10 Sep 2025 10:39:31 -0400 (EDT)
+Date: Wed, 10 Sep 2025 10:39:30 -0400
+From: Mary Strodl <mstrodl@csh.rit.edu>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
+	oe-kbuild-all@lists.linux.dev, linus.walleij@linaro.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] gpio: mpsse: support bryx radio interface kit
+Message-ID: <aMGNoqRaUf722QrF@ada.csh.rit.edu>
+References: <20250908173804.3816149-1-mstrodl@csh.rit.edu>
+ <202509092305.ncd9mzaZ-lkp@intel.com>
+ <aMFzTaO7zGVgWNRK@ada.csh.rit.edu>
+ <CAMRc=McBdJ16RYvJM_R7pL+u3zcs_+A0nj5_5twP7KxWhW6VDw@mail.gmail.com>
+ <aMF9QFIvXC5kI_9J@ada.csh.rit.edu>
+ <CAMRc=MfSOTTBv3spbyiedpMifMyfmTkpmbvuDuKcbs5S1B+Esg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -73,23 +71,25 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250909120041.154459-3-herve.codina@bootlin.com>
+In-Reply-To: <CAMRc=MfSOTTBv3spbyiedpMifMyfmTkpmbvuDuKcbs5S1B+Esg@mail.gmail.com>
 
-On Tue, Sep 09, 2025 at 02:00:33PM +0200, Herve Codina (Schneider Electric) wrote:
-> On the Renesas RZ/N1 SoC, GPIOs can generate interruptions. Those
-> interruption lines are multiplexed by the GPIO Interrupt Multiplexer in
-> order to map 32 * 3 GPIO interrupt lines to 8 GIC interrupt lines.
-> 
-> The GPIO interrupt multiplexer IP does nothing but select 8 GPIO
-> IRQ lines out of the 96 available to wire them to the GIC input lines.
-> 
-> Signed-off-by: Herve Codina (Schneider Electric) <herve.codina@bootlin.com>
-> ---
->  .../soc/renesas/renesas,rzn1-gpioirqmux.yaml  | 86 +++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/renesas/renesas,rzn1-gpioirqmux.yaml
+On Wed, Sep 10, 2025 at 03:46:03PM +0200, Bartosz Golaszewski wrote:
+> If these are bugfixes that should be backported to stable then they
+> should indeed come first.
 
-Documentation/devicetree/bindings/soc/renesas/renesas,rzn1-gpioirqmux.example.dts:42.13-45.34: Warning (interrupt_map): /example-0/interrupt-controller@51000480:interrupt-map: Missing property '#address-cells' in node /example-0/interrupt-controller, using 0 as fallback
-Documentation/devicetree/bindings/soc/renesas/renesas,rzn1-gpioirqmux.example.dts:42.13-45.34: Warning (interrupt_map): /example-0/interrupt-controller@51000480:interrupt-map: Missing property '#address-cells' in node /example-0/interrupt-controller, using 0 as fallback
-Documentation/devicetree/bindings/soc/renesas/renesas,rzn1-gpioirqmux.example.dts:42.13-45.34: Warning (interrupt_map): /example-0/interrupt-controller@51000480:interrupt-map: Missing property '#address-cells' in node /example-0/interrupt-controller, using 0 as fallback
+Yeah I agree... I'll try my best :)
+
+To be fair, in practice this can never happen with the hardware that
+implements this since it can't do hotplug.
+
+...With that said, I think you can bind it to another device with
+new_id so maybe it would still be good to backport? Dunno.
+
+On Wed, Sep 10, 2025 at 03:46:03PM +0200, Bartosz Golaszewski wrote:
+> FYI: Maybe consider also adding lock guards for rcu read locks if you're at it?
+
+I'll take a look! I didn't notice there were guards for rcu when I
+was working on this.
+
+Thank you!
 
