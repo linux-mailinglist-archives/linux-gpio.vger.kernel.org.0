@@ -1,99 +1,130 @@
-Return-Path: <linux-gpio+bounces-25897-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25898-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B32EFB517EA
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 15:30:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8C4DB51803
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 15:36:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7CD787AFC92
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 13:28:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E8C17188D804
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Sep 2025 13:37:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA6AC306B33;
-	Wed, 10 Sep 2025 13:29:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE5523112C7;
+	Wed, 10 Sep 2025 13:36:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=csh.rit.edu header.i=@csh.rit.edu header.b="XzR4y1qn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nd8YzN4z"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from greygoose-centos7.csh.rit.edu (greygoose-centos7.csh.rit.edu [129.21.49.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C2F30649B;
-	Wed, 10 Sep 2025 13:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.21.49.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964901BF58;
+	Wed, 10 Sep 2025 13:36:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757510989; cv=none; b=tdn0VmN04j/xtrC+4Ybkhpj/tf9askZniE64+ymOm7erOXoc8QOUWusqv4y8dYnHJWR94n77MSylK1SOVAGcj0ZNqm3J2cxNii4T33DyOEIbQzAVvCzLVotDIpV5qPjxjHGb+3Q/pYpxhOnfKmgPVWS9IfBw+9OWY8pRHYtzqZA=
+	t=1757511399; cv=none; b=hFNkzxMKMt/3qzHVA90nKSbHfbR98ALjgfvxPSUcc0UdVMXRhp6PmpbwXwN9EFR0Kt0CAzxjNWavuXzFoEhesN1TNaylTEzciVjqL4GMAYvdDS0SZLBO0rF0Nfofoj2R0iT+tBZ0TQ3qN2tVYgvixLEsVMPuCJTGpK294TU253Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757510989; c=relaxed/simple;
-	bh=xH+i6/5I5ZBpVbSk5ltETC/lLwr4zxOeT6T7d6S7fzo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bvaJCSiZIU4lCeP1/MusYhsMAxgVsvxOT3BZm8eBVGDzsn0KuYDLQvbFzBOLXAlZvlhEnXArkMopGG4Xooif5FkCmi2NEy3KWFdoINrj+roGSN7hZZIRW/+HDy7r3rWvEgnYZ97x6NT9OR11knnX6NSaZctfE0iCDfqBxRoWI9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csh.rit.edu; spf=pass smtp.mailfrom=csh.rit.edu; dkim=pass (1024-bit key) header.d=csh.rit.edu header.i=@csh.rit.edu header.b=XzR4y1qn; arc=none smtp.client-ip=129.21.49.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csh.rit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csh.rit.edu
-Received: from localhost (localhost [127.0.0.1])
-	by greygoose-centos7.csh.rit.edu (Postfix) with ESMTP id 7951440EA01A;
-	Wed, 10 Sep 2025 09:29:44 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=csh.rit.edu; h=
-	in-reply-to:content-disposition:content-type:content-type
-	:mime-version:references:message-id:subject:subject:from:from
-	:date:date:received:received; s=mail; t=1757510978; x=
-	1759325379; bh=xH+i6/5I5ZBpVbSk5ltETC/lLwr4zxOeT6T7d6S7fzo=; b=X
-	zR4y1qnJUXbovvZX6a8yFEt3Yn0ojQX63wAyo5bJan2z/j8skScudMncQDrL+0A1
-	IiU7cEOhM1IKR+fFhSIVf0nhrRhi7dHzruZCTKwb6jfs/YjwMh/qGe6dq+j3gLdH
-	rLpP3V5+lrSz+X6ZUbqGKD/88lmbJsua2HAG/XYMTg=
-X-Virus-Scanned: amavisd-new at csh.rit.edu
-Received: from greygoose-centos7.csh.rit.edu ([127.0.0.1])
- by localhost (mail.csh.rit.edu [127.0.0.1]) (amavisd-new, port 10026)
- with ESMTP id r-HOzhL03qOY; Wed, 10 Sep 2025 09:29:38 -0400 (EDT)
-Received: from ada.csh.rit.edu (ada.csh.rit.edu [129.21.49.156])
-	by greygoose-centos7.csh.rit.edu (Postfix) with ESMTPS id D32A540DFF6E;
-	Wed, 10 Sep 2025 09:29:37 -0400 (EDT)
-Date: Wed, 10 Sep 2025 09:29:36 -0400
-From: Mary Strodl <mstrodl@csh.rit.edu>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
-	oe-kbuild-all@lists.linux.dev, linus.walleij@linaro.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] gpio: mpsse: support bryx radio interface kit
-Message-ID: <aMF9QFIvXC5kI_9J@ada.csh.rit.edu>
-References: <20250908173804.3816149-1-mstrodl@csh.rit.edu>
- <202509092305.ncd9mzaZ-lkp@intel.com>
- <aMFzTaO7zGVgWNRK@ada.csh.rit.edu>
- <CAMRc=McBdJ16RYvJM_R7pL+u3zcs_+A0nj5_5twP7KxWhW6VDw@mail.gmail.com>
+	s=arc-20240116; t=1757511399; c=relaxed/simple;
+	bh=Rmmz0W1YezkmiOArAFJY2L0ckRfJRNnGANNFgHFpCkM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mlkIzs4HrtKceJ9UO/w2+3w9dtVdLYB0XwYvR/vx55FBESSgRK9CbgMGA2hmjvmgWlZ/vPE4+KUzW2f3idyeuMcKkjEF+52xpUOGBh/jZ4D+c+8/HsadYXp5GBUJkFRMxKH94L8b4P5MGnV1Vxvj+m+5scI9HYJUHPwtvBlX07s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nd8YzN4z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B409C4CEF0;
+	Wed, 10 Sep 2025 13:36:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757511398;
+	bh=Rmmz0W1YezkmiOArAFJY2L0ckRfJRNnGANNFgHFpCkM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nd8YzN4zrI3cv+L0pcTB96L+Xvgn3Zfdf88h/aRu/YPwHlqa5N5LXOyK9NI4D8fOO
+	 758CPm8AoHrUcbs5Qj/HwMncYb70RNMq+ZVUQw4r1R//1nFPMW3f+++7ZeXMld7Exe
+	 opLKuTsoyr2K7SJdWul3EvQ2A8sEfZTlIV4ehkY8WMhUQIYKh/+J5gRrpAeAfpzWtP
+	 xHa1ms1R3er18BQphxDuxKK+3iO7/i9SnOslVPJ1eYuxFocmaPs/2r5Yx7gbsIupuC
+	 I45BPOZF+U9q/eI9ELVru9h2oFHE7zvtOFRFcfXVdENqQCpxpR6Qw2ld6nVU5Al4Jw
+	 4CyDzF6C8db1w==
+Message-ID: <dbfe2464-394e-46fd-9e4d-7e41b62069e8@kernel.org>
+Date: Wed, 10 Sep 2025 15:36:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=McBdJ16RYvJM_R7pL+u3zcs_+A0nj5_5twP7KxWhW6VDw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] usb/gpio/i2c: Add Intel USBIO USB IO-expander
+ drivers
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Israel Cepeda <israel.a.cepeda.lopez@intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>,
+ Andi Shyti <andi.shyti@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Linus Walleij <linus.walleij@linaro.org>, Richard Hughes
+ <rhughes@redhat.com>, linux-i2c@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+References: <20250907175056.47314-1-hansg@kernel.org>
+ <2025091045-expel-fiction-299f@gregkh>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <2025091045-expel-fiction-299f@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Sep 10, 2025 at 03:15:46PM +0200, Bartosz Golaszewski wrote:
-> I cannot really give you much feedback because this patch should be
-> first split into smaller chunks that explain what each change is
-> doing. As it is: it's so complex, I simply don't understand it and
-> don't have enough time to try and decipher it. Please try to make it
-> into a series of smaller patches.
+Hi Greg,
 
-Got it. That's why I offered to break it up.
+On 10-Sep-25 3:25 PM, Greg Kroah-Hartman wrote:
+> On Sun, Sep 07, 2025 at 07:50:53PM +0200, Hans de Goede wrote:
+>> Hi All,
+>>
+>> Here is v2 of the patch series to add support for the Intel USBIO USB
+>> IO-expander used by the MIPI cameras on various new (Meteor Lake and later)
+>> Intel laptops.
+>>
+>> Changes in v2:
+>> - Split usbio-bridge mutex into ctrl_mutex and bulk_mutex
+>> - Drop SPI support since this is not used on devices in the field
+>> - Rework disconnect handling to be more robust
+>> - Several different revisions need special casing add a quirks mechanism
+>>   for this
+>> - Stop using stdint.h (uintX_t) types
+>> - Use __le16, __le32 type + cpu_to_le16() and friends for on wire words
+>> - Properly check auxiliary_device_add() return value
+>> - Add a mutex to the GPIO driver to protect usbio_gpio_update_config()
+>>   calls, which read-modify-write banks[x].config, racing with each other
+>> - Adjust usbio_gpio_get() to have an int return value and propagate the
+>>   usbio_control_msg() return value
+>> - Various (small) style fixes from Sakari's review of all 3 patches
+>>
+>> The first patch adds an USB bridge driver which registers auxbus children
+>> for the GPIO and I2C functions of the USBIO chip.
+>>
+>> The second and third patch add a GPIO resp. an I2C driver for the
+>> auxbus children using the IO functions exported by the USB bridge driver.
+>>
+>> The second and third patch depend on the IO functions exported by
+>> the first patch. So to merge this we will need either an immutable tag on
+>> the USB tree, or all 3 patches can be merged through the USB tree with
+>> acks from the GPIO and I2C subsystem maintainers.
+> 
+> Either is fine with me, patch 1 looks good enough for me to queue it up
+> now.
 
-Here's the order I did the work in:
-1. Add quirk support + brik quirk
-2. Label format (Only a few lines, could go into 1 or 3 if preferred)
-3. RCU stuff
+That is good news.
 
-Is this a reasonable order for the series? This would be the easiest
-way for me to do it given what I have in git.
+> Let me know what you want me to do.
 
-In a perfect world, I would like to have had:
+I've done a v3 of just the GPIO patch since Bart had some review-comments
+there. Bart still had 2 more small remarks on the v3 GPIO patch. So I'm
+about to send out a v4 series (with just changes to the GPIO driver
+compared to this v2).
 
-1. RCU stuff (These are effectively bugfixes)
-2. Label stuff
-3. Quirks
-4. Brik quirk (possibly squashed into 3)
+I hope Bart will be happy with v4, so then Bart can let you know if
+he prefers an immutable tag, or wants you to merge the GPIO driver
+into usb-next.
 
-Let me know what you think... Thank you!
+Once it is clear how to proceed with the GPIO driver I suggest that
+we get both of them merged and then wait for feedback on the I2C driver.
+
+Regards,
+
+Hans
+
+
 
