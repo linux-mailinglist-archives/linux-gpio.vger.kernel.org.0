@@ -1,108 +1,166 @@
-Return-Path: <linux-gpio+bounces-25950-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25952-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3B16B533CC
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 15:31:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7AB57B533F0
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 15:39:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0EF7E1898DAC
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 13:32:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 300D93B55F2
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 13:39:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA9D215746E;
-	Thu, 11 Sep 2025 13:31:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 256B732CF8D;
+	Thu, 11 Sep 2025 13:39:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="d+owmBMM"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b="Fk3d5f5c"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E601E87B;
-	Thu, 11 Sep 2025 13:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757597511; cv=none; b=iZ2sr1CigB+JvHEj9SkiQk0ZBTTvvBVx+UeJi85Ba8r9TN7dY8kjdGAreJIH3spxEDJxWoPjeaslz8W68Ij7pepkD8PAfHBl8RpqRHehuJSWQw5ZlrRv/H8NGSRnnjhEXsou9hsaEn2gd4UEP/pG8g/EvoFOz4K8WF+x1kupCCM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757597511; c=relaxed/simple;
-	bh=bdkAfeqOtLrw8Rk5fQ1/9AGIZ5sgo/ymKSpCkXno8jU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X6H6rneVk/QPNabVlfWdOARWtnYD82/q5bMjlhxnGAZnqQErBhQRFSJ5UWsPfkd95yuG7qF2qBT/RlZ+VlPXDL95MRwWBvuQos+oqivgAk5cOUt8XZQpn7n29IVPPsUQtYQ/CFx1h+uArAR/1Wy4Lw5UMTv8T+3tZO3Lj4eDe+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=d+owmBMM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AA7DC4CEF0;
-	Thu, 11 Sep 2025 13:31:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1757597511;
-	bh=bdkAfeqOtLrw8Rk5fQ1/9AGIZ5sgo/ymKSpCkXno8jU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d+owmBMMaoEYzj7ijuFcfepx8EZTCenoIM/Aas2XsSCUme6oQf3QNm9c+C5pmAVTy
-	 1nI6kLuQiegxBIBwQQm1ocG9LPSAfY0JgGVHgQ2LZvKmjfKInjJLLQnSDinuVDIkje
-	 kHIztKDvS5rbYjRd2ciomJgpFwf99XX5bQ39NvOE=
-Date: Thu, 11 Sep 2025 15:31:48 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Hans de Goede <hansg@kernel.org>, Richard Hughes <rhughes@redhat.com>,
-	linux-i2c@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Israel Cepeda <israel.a.cepeda.lopez@intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 2/3] gpio: Add Intel USBIO GPIO driver
-Message-ID: <2025091139-scalping-twenty-93d2@gregkh>
-References: <20250911131832.59335-1-hansg@kernel.org>
- <20250911131832.59335-3-hansg@kernel.org>
- <CAMRc=McKOTWxu=M0S0p0Uyhod-h4mNH9QfsLsycN4vbHJPtgeQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8713631B131;
+	Thu, 11 Sep 2025 13:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757597986; cv=pass; b=BS/UwxN/rGv4iy/M9bK7PaIC+VXoISyihRUyYNIUeU3XY3bDcvICS57/gq5TYmE23mdkdWDpQ8U4tCx2BDslFwlZ7RRFkB6P16r/IuJs2EI8CHFLLZjt5mrx8AD34mMovq5q/AA6Dl0FTDCSJIPrx25ZRq5FtyXGk3tudr3sECw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757597986; c=relaxed/simple;
+	bh=j8lpntQzzYMtk7wMPyC9pfzz7cSxvnQauwFcEWCrz+s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PJHudjNn0ZVehifHiMEOA6R8YFRlzvXYTLFvtuiNy1cFHz061kS4Piu6WXFgy3vBMkyBMVE/+RjUwy5q0KmmIzvb2e9aSPvWgs7y3MMkZb9RljlbHp/52ruMX1Zck2RWcPrB3zA+aAkvh/XNF+x4VNidmJpnVk99QD5iy9Zvrn8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b=Fk3d5f5c; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1757597924; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=cW8WQVw54kCwOrp4Z6nOM5zB+0ttwfZp2WlQWstN3VR5HDOvUIUqj7OMd52M9joD6VV4KN+dfh1dQl0/5irEs3WahGrue0xzDie3hjaV5tdBCW5k0AttByOZuRIZk3wFOzjsTr7EerdMeKTQT6Q0jEdxIQCRmWwkyus6WmtY4rc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1757597924; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=z0wfAw1RoyH3XxGnHu3OjGHYgzFrel7esRCkMh235Uo=; 
+	b=OeyfDXnfBQFt2RGO4gMm6yb7HyyWhJFSbXpukrZivXBHUSu4zZB8tX0p+rGZvOotIcQlOG+e+z+/2AUnulQ/1bXPqaS4dqL3N5WfURJHVehrqpu51EIbJ/iUuIEJYOINb4anVnFgKEZp2BKvmfJNvG1rj5/t+jyUxszFxqMpZ4w=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=ariel.dalessandro@collabora.com;
+	dmarc=pass header.from=<ariel.dalessandro@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1757597924;
+	s=zohomail; d=collabora.com; i=ariel.dalessandro@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=z0wfAw1RoyH3XxGnHu3OjGHYgzFrel7esRCkMh235Uo=;
+	b=Fk3d5f5c7xQh1L26LGxVS1MYZeolPRgvuj4odZIpMebZ02Z5jpCxFefRidPAF1ey
+	NwGxrrIocLa0JWk6u1Dpzl1zGCrU4lt1loeAoSLF2sMV/6OmrnCFottPBZbgLe1Y1W+
+	P4w+y0nD1DpQDK/sWlie56qNQMIlY8RyUyzFaKLM=
+Received: by mx.zohomail.com with SMTPS id 175759792104776.9989768199938;
+	Thu, 11 Sep 2025 06:38:41 -0700 (PDT)
+Message-ID: <f4a18a08-516a-4a0b-a477-1e9f5269f1d8@collabora.com>
+Date: Thu, 11 Sep 2025 10:38:23 -0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=McKOTWxu=M0S0p0Uyhod-h4mNH9QfsLsycN4vbHJPtgeQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 01/14] media: dt-bindings: Convert MediaTek mt8173-mdp
+ bindings to YAML
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: airlied@gmail.com, amergnat@baylibre.com, andrew+netdev@lunn.ch,
+ andrew-ct.chen@mediatek.com, angelogioacchino.delregno@collabora.com,
+ broonie@kernel.org, chunkuang.hu@kernel.org, ck.hu@mediatek.com,
+ conor+dt@kernel.org, davem@davemloft.net, dmitry.torokhov@gmail.com,
+ edumazet@google.com, flora.fu@mediatek.com, houlong.wei@mediatek.com,
+ jeesw@melfas.com, jmassot@collabora.com, kernel@collabora.com,
+ krzk+dt@kernel.org, kuba@kernel.org,
+ kyrie.wu@mediatek.corp-partner.google.com, lgirdwood@gmail.com,
+ linus.walleij@linaro.org, louisalexis.eyraud@collabora.com,
+ maarten.lankhorst@linux.intel.com, matthias.bgg@gmail.com,
+ mchehab@kernel.org, minghsiu.tsai@mediatek.com, mripard@kernel.org,
+ p.zabel@pengutronix.de, pabeni@redhat.com, robh@kernel.org,
+ sean.wang@kernel.org, simona@ffwll.ch, support.opensource@diasemi.com,
+ tiffany.lin@mediatek.com, tzimmermann@suse.de, yunfei.dong@mediatek.com,
+ devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-mediatek@lists.infradead.org, linux-sound@vger.kernel.org,
+ netdev@vger.kernel.org
+References: <20250820171302.324142-1-ariel.dalessandro@collabora.com>
+ <20250820171302.324142-2-ariel.dalessandro@collabora.com>
+ <20250821-silky-slug-of-novelty-e4bb64@kuoka>
+ <d286ec0b-c8dc-4103-9aa3-2f40e0ade4a3@collabora.com>
+ <5421cfe7-dfe0-4bb8-8722-6f449cd365be@kernel.org>
+Content-Language: en-US
+From: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+In-Reply-To: <5421cfe7-dfe0-4bb8-8722-6f449cd365be@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-On Thu, Sep 11, 2025 at 09:27:19AM -0400, Bartosz Golaszewski wrote:
-> On Thu, 11 Sep 2025 15:18:31 +0200, Hans de Goede <hansg@kernel.org> said:
-> > From: Israel Cepeda <israel.a.cepeda.lopez@intel.com>
-> >
-> > Add a a driver for the GPIO auxbus child device of the Intel USBIO USB
-> > IO-expander used by the MIPI cameras on various new (Meteor Lake and
-> > later) Intel laptops.
-> >
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > Co-developed-by: Hans de Goede <hansg@kernel.org>
-> > Signed-off-by: Hans de Goede <hansg@kernel.org>
-> > Signed-off-by: Israel Cepeda <israel.a.cepeda.lopez@intel.com>
-> > ---
-> > Changes in v5:
-> > - Move GPIO_USBIO Kconfig option under 'menu "USB GPIO expanders"'
-> >
-> > Changes in v4:
-> > - Drop include <linux/dev_printk.h>, unneeded auxiliary_set_drvdata()
-> >
-> > Changes in v3:
-> > - Drop (offset >= gc->ngpio) check and make usbio_gpio_get_bank_and_pin()
-> >   return void
-> > - Propagate usbio_gpio_set() ret val in usbio_gpio_direction_output()
-> > - Use devm_gpiochip_add_data() and drop auxiliary_driver remove() callback
-> >
-> > Changes in v2:
-> > - Add a config_mutex protect usbio_gpio_update_config() calls, which
-> >   read-modify-write banks[x].config, racing with each other
-> > - Adjust usbio_gpio_get() to have an int return value and propagate the
-> >   usbio_control_msg() return value
-> > - Use __le16, __le32 type + cpu_to_le16() and friends for on wire words
-> > - Some small style fixes from Sakari's review
-> 
-> If Greg wants to take it:
-> 
-> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> or I can take it once patch 1/3 is in an immutable branch.
+Krzysztof,
 
-I'll just take it, simpler that way, thanks!
+On 9/9/25 3:32 AM, Krzysztof Kozlowski wrote:
+> On 08/09/2025 19:52, Ariel D'Alessandro wrote:
+>> Krzysztof,
+>>
+>> On 8/21/25 3:46 AM, Krzysztof Kozlowski wrote:
+>>> On Wed, Aug 20, 2025 at 02:12:49PM -0300, Ariel D'Alessandro wrote:
 
-greg k-h
+[...]
+
+>>>> +          - enum:
+>>>> +              - mediatek,mt8173-mdp-rdma
+>>>> +              - mediatek,mt8173-mdp-rsz
+>>>> +              - mediatek,mt8173-mdp-wdma
+>>>> +              - mediatek,mt8173-mdp-wrot
+>>>> +      - items:
+>>>> +          - enum:
+>>>> +              - mediatek,mt8173-mdp-rdma
+>>>> +              - mediatek,mt8173-mdp-rsz
+>>>> +              - mediatek,mt8173-mdp-wdma
+>>>> +              - mediatek,mt8173-mdp-wrot
+>>>> +          - const: mediatek,mt8173-mdp
+>>>
+>>> This makes no sense. How devices can be compatible and can not be
+>>> compatible.
+>>
+>> According to the driver source code (and the previous txt mt8173-mdp
+>> bindings), there must be a "controller node" with compatible
+>> `mediatek,mt8173-mdp`. Then its sibling nodes (including itself) should
+> 
+> But you did not define "mediatek,mt8173-mdp" here, so what are you
+> talking about?
+> 
+> I talk here about "wrot" and others, I thought it is obvious from the
+> mistake in the schema.
+
+Ack.
+
+[...]
+
+>>>> +
+>>>> +  - if:
+>>>> +      properties:
+>>>> +        compatible:
+>>>> +          contains:
+>>>> +            const: mediatek,mt8173-mdp
+>>>
+>>> This makes no sense either.
+>>
+>> Same question above about compatibles.
+> 
+> How same question? Do you understand this code? It is nothing the same -
+> you have here contains!
+
+
+Ack. Will resubmit properly in v2.
+
+Thanks,
+
+-- 
+Ariel D'Alessandro
+Software Engineer
+
+Collabora Ltd.
+Platinum Building, St John's Innovation Park, Cambridge CB4 0DS, UK 
+Registered in England & Wales, no. 5513718
+
 
