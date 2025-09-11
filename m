@@ -1,131 +1,101 @@
-Return-Path: <linux-gpio+bounces-25956-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25957-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0FBFDB5355D
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 16:31:31 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D2D3B53582
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 16:33:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E3A687A28E9
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 14:29:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 48E007A292E
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 14:32:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 231DD33CEA8;
-	Thu, 11 Sep 2025 14:31:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51B8433EB0F;
+	Thu, 11 Sep 2025 14:33:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b="ZCWq2Dt/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nuojx2Vl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FCD122259B;
-	Thu, 11 Sep 2025 14:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757601071; cv=pass; b=AxW569ca/UZ9VVbILIlOHvBwNV5H7uKXnt7AW5X+Rql6M9tRF8W/EPfsAt4+0u5dwKj0umNqXkLGDckr+v7MSZfyBXXW/hKE0/81GePp+AEL/yi2PeCOEWZIQ11kj1c+ysiKl247Dc82LPnlCYWma2mpzVUSOnMK0WYWGU3SQeE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757601071; c=relaxed/simple;
-	bh=ENyo8hlExL0a64lneN3wYIQx9ceQ4J02gvt6LoyVFaY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cmdEz6WnYVzJogjLHGGT7dHaNP7KbvF289LTQcJkzHcILlYjDPF0QXKsM6z7zrgwZLd+F+g2PCd9S7qQ20mvYrJbN1hy57upXwzq3vIE/JFDuhCTgwihrvyXioR96Y5mIWM0rVYgGMvn7z3ubc1chgK4i1tYhhDs3ABzpKPVgFs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b=ZCWq2Dt/; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1757601008; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=fKylatfoGlWuRdvSCbn3egSlJ82Cbc81pjdBqhTrxvRWzYzpTEHGB+pEol0MxJFv7cSofmdSTGfeMveBJ4mREx8G0LNwE4bLDqwId4ZgLEBpbzxFN5xNm3TfnYFrjN4gd9GASWxHA6CkqAJFTwF8ahTJVfVL7hALfGHbVQ+PHwE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1757601008; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Mt87tHkCDrz9K7C85pTFu77GL3qr/zrL67mBd2f4Ly4=; 
-	b=ggbsi/0msrtWqOmLEDVikyKSGUHKt7JutW13zHhtrhLZBh0iFNMP/iLNtcBHMM8VJQQloVCdWfwAJp/kcnqt5JjF3WtDZmfGJbgZoBeqeXi4CvWMjPiwUzZUx0ukViLgRPnLZVHklPCxqzP1hm9l0qN0YxKWLqXUyk6AsisUGWc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=ariel.dalessandro@collabora.com;
-	dmarc=pass header.from=<ariel.dalessandro@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1757601008;
-	s=zohomail; d=collabora.com; i=ariel.dalessandro@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=Mt87tHkCDrz9K7C85pTFu77GL3qr/zrL67mBd2f4Ly4=;
-	b=ZCWq2Dt/O+0lXM5sUN/qed2Rp3/lwSfyQJVEzLijcl+pa7YXFipLOLT0myJB/N9/
-	Oq1o7TaV4NBQPNCrbWbExkBpxQABWH1+bda9C3mCLe1Nwh8zGc7CcC7tk4gO6ltwUvI
-	XH41PpeHAD6HBnluijWBcoUR53jddWzEKR6ukUKA=
-Received: by mx.zohomail.com with SMTPS id 1757601005694334.08530516479357;
-	Thu, 11 Sep 2025 07:30:05 -0700 (PDT)
-Message-ID: <5486a77a-7c5b-4316-9ff9-4cd458fb1001@collabora.com>
-Date: Thu, 11 Sep 2025 11:29:48 -0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E0A33CE9F;
+	Thu, 11 Sep 2025 14:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757601211; cv=none; b=j/KBWU352Om+yOBZDNl5RXTGtBTfz+jF4v371oDcbUJflQBdb0YOfLvlrcG7VqMZOx9VAQFNVp84qvQOv7hCfhdRG/E5sE/ggkjgFAYH05h0egpPJEukjLpdtD7lmNeYMfsWCG3rk/eSZYXyWX1BQX6bj0VtsVFM8xDz/oErk2c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757601211; c=relaxed/simple;
+	bh=VknHXt4LplxbC+RtRdbSVloO2q04brRlFbVLiPqTwTM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=b9FHvT9KdIvzb00ovRS4LQcwCoKrNxnWHfrpXqNSijbx5IZnkw0pXBv4k1hr98vM4ZPVYKOqfeuPi4ryIRzjOXIt39M/x4owh1DdnlUWeO74HTWIvo8QRYPh7mODAki4neXmvIHpsJ5eIGfCxydhuv9K3Fu/CM2oWbSn05r1oT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nuojx2Vl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCF47C4CEF1;
+	Thu, 11 Sep 2025 14:33:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757601208;
+	bh=VknHXt4LplxbC+RtRdbSVloO2q04brRlFbVLiPqTwTM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=nuojx2VlzTv0H2yyDy1sGm6RWQYlYevIkjeAwJm1Nq8ikF/OfCntuRooyF239m7YQ
+	 85L2dhGazuLlnacTK4vA2DjiTyyYboa7/Sa4xQi/y3176HTEx/2jbLNvG4/8e3BVxh
+	 U3Y2nneAsmi+dpjMBH4fhEo3oOUchoV8PuKz1mNmxWTFfAJgA+mwzMsCeFFYHmkC+E
+	 VAzVLwESX50aCGHR2Xy581eCj1LcVbLi6HsXwyi2r5S7FJVe/REFooXF8Zwu5ASiLY
+	 58uRvUo4OmzlP1I3Zi0jpzKd9WUzw1RZh4UrObFVkknfNp/eZ+TsHvbSFoHdPTHE5C
+	 BMdVcPukypBWQ==
+From: Lee Jones <lee@kernel.org>
+To: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
+ brgl@bgdev.pl, andi.shyti@kernel.org, mkl@pengutronix.de, 
+ mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, davem@davemloft.net, 
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+ wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+ alexandre.belloni@bootlin.com, a0282524688@gmail.com
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, 
+ netdev@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+ linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org, 
+ linux-usb@vger.kernel.org
+In-Reply-To: <20250715025626.968466-1-a0282524688@gmail.com>
+References: <20250715025626.968466-1-a0282524688@gmail.com>
+Subject: Re: [PATCH v14 0/7] Add Nuvoton NCT6694 MFD drivers
+Message-Id: <175760120359.1552180.13642892946623465762.b4-ty@kernel.org>
+Date: Thu, 11 Sep 2025 15:33:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 00/14] MediaTek dt-bindings sanitization (MT8173)
-To: Mark Brown <broonie@kernel.org>
-Cc: airlied@gmail.com, amergnat@baylibre.com, andrew+netdev@lunn.ch,
- andrew-ct.chen@mediatek.com, angelogioacchino.delregno@collabora.com,
- chunkuang.hu@kernel.org, ck.hu@mediatek.com, conor+dt@kernel.org,
- davem@davemloft.net, dmitry.torokhov@gmail.com, edumazet@google.com,
- flora.fu@mediatek.com, houlong.wei@mediatek.com, jeesw@melfas.com,
- jmassot@collabora.com, kernel@collabora.com, krzk+dt@kernel.org,
- kuba@kernel.org, kyrie.wu@mediatek.corp-partner.google.com,
- lgirdwood@gmail.com, linus.walleij@linaro.org,
- louisalexis.eyraud@collabora.com, maarten.lankhorst@linux.intel.com,
- matthias.bgg@gmail.com, mchehab@kernel.org, minghsiu.tsai@mediatek.com,
- mripard@kernel.org, p.zabel@pengutronix.de, pabeni@redhat.com,
- robh@kernel.org, sean.wang@kernel.org, simona@ffwll.ch,
- support.opensource@diasemi.com, tiffany.lin@mediatek.com,
- tzimmermann@suse.de, yunfei.dong@mediatek.com, devicetree@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
- linux-sound@vger.kernel.org, netdev@vger.kernel.org
-References: <20250820171302.324142-1-ariel.dalessandro@collabora.com>
- <9401aab0-1168-4570-a0a1-1310f37142eb@sirena.org.uk>
-Content-Language: en-US
-From: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
-In-Reply-To: <9401aab0-1168-4570-a0a1-1310f37142eb@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-c81fc
 
-Mark,
-
-On 8/20/25 2:19 PM, Mark Brown wrote:
-> On Wed, Aug 20, 2025 at 02:12:48PM -0300, Ariel D'Alessandro wrote:
->> This patch series continues the effort to address Device Tree validation
->> warnings for MediaTek platforms, with a focus on MT8173. It follows the initial
->> cleanup series by Angelo (https://www.spinics.net/lists/kernel/msg5780177.html)
->>
->> Similarly to the ongoing MT8183 work done by Julien Massot, this patchset
->> eliminates several of the remaining warnings by improving or converting DT
->> bindings to YAML, adding missing properties, and updating device tree files
->> accordingly.
+On Tue, 15 Jul 2025 10:56:19 +0800, a0282524688@gmail.com wrote:
+> From: Ming Yu <a0282524688@gmail.com>
 > 
-> Same question as for that series, what's the story with
-> interdependencies between the patches?
+> This patch series introduces support for Nuvoton NCT6694, a peripheral
+> expander based on USB interface. It models the chip as an MFD driver
+> (1/7), GPIO driver(2/7), I2C Adapter driver(3/7), CANfd driver(4/7),
+> WDT driver(5/7), HWMON driver(6/7), and RTC driver(7/7).
 > 
-> Please submit patches using subject lines reflecting the style for the
-> subsystem, this makes it easier for people to identify relevant patches.
-> Look at what existing commits in the area you're changing are doing and
-> make sure your subject lines visually resemble what they're doing.
-> There's no need to resubmit to fix this alone.
+> [...]
 
-I'm resubmitting patchset v2 with several fixes addressing feedback on 
-each patch. While doing so, I've updated each subject line according to 
-each subsystem log.
+Applied, thanks!
 
-Of course let me know if this still need some work.
+[1/7] mfd: Add core driver for Nuvoton NCT6694
+      commit: 8c13787893fde313190b7dc844a24114dcc172a2
+[2/7] gpio: Add Nuvoton NCT6694 GPIO support
+      (no commit info)
+[3/7] i2c: Add Nuvoton NCT6694 I2C support
+      (no commit info)
+[4/7] can: Add Nuvoton NCT6694 CANFD support
+      (no commit info)
+[5/7] watchdog: Add Nuvoton NCT6694 WDT support
+      (no commit info)
+[6/7] hwmon: Add Nuvoton NCT6694 HWMON support
+      (no commit info)
+[7/7] rtc: Add Nuvoton NCT6694 RTC support
+      (no commit info)
 
-Thanks for your help!
-
--- 
-Ariel D'Alessandro
-Software Engineer
-
-Collabora Ltd.
-Platinum Building, St John's Innovation Park, Cambridge CB4 0DS, UK 
-Registered in England & Wales, no. 5513718
+--
+Lee Jones [李琼斯]
 
 
