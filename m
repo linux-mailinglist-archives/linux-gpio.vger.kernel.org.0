@@ -1,56 +1,56 @@
-Return-Path: <linux-gpio+bounces-25970-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25971-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51D0AB5373D
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 17:15:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B566B53742
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 17:16:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BA2E2AA2039
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 15:15:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CAA83AA1068
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 15:16:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFFEE3570B3;
-	Thu, 11 Sep 2025 15:14:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 009BE352FC8;
+	Thu, 11 Sep 2025 15:14:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b="N5QfbwJ9"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b="ZMo38IgK"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B0C350D61;
-	Thu, 11 Sep 2025 15:14:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A051E34A31E;
+	Thu, 11 Sep 2025 15:14:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757603666; cv=pass; b=pXRNvlh5TC6PKmObeV22fdozGhn1RKZOrXW5kNEyu6Z9SPFrWdo8hFJXee4VEfzqtr44a/vxwB3G4LGrSfk2sVSnxqGot45kp2H1YQPE3phlKcvwkQv4wrFYiMNQKbj3BwaHb67SXeDRIBMQkkBW/lK2i7qfGH9bkENGA8VzjtE=
+	t=1757603679; cv=pass; b=TicRbcZ0GnZR+/ui1iC3FLqD9GCQmMoF4nCCyJo5+4q+iIzIZYxOU5Tso61DopbiRv4Egm8PTS/qqa1LqRmuV8mleKS4KF+dTI+v4xwWCQbWY0vuO578OiudoxsaZ17aiPjATR9Ukw5KemRJTCH5U+7L6SoE25sOluqVYEj+gKA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757603666; c=relaxed/simple;
-	bh=6rB+bBL99k76FU+7hRIDnEiSThkf6d7imnmiWq6Yvd4=;
+	s=arc-20240116; t=1757603679; c=relaxed/simple;
+	bh=YmgB/S4t3IgILUiv5dzro57jwCS6HER+ffkoHw1Kw0o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nW9l0saRAl8/UypliCRYRa9b82Ha7/2HP1GGpi4qhj8KB6wBT+764uKVC9nkjCKQtPATTAs8PkNd5673WpH+bKcEo+Fe43X6BfVXYa0RW1PGhbCs15ViGgoEQNd7iXfnMqw8br9zrhOjl51t4usEmQ7slZLl3rrNfglB+bopXxA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b=N5QfbwJ9; arc=pass smtp.client-ip=136.143.188.112
+	 MIME-Version; b=SWVQ/LrUJMGNqBeGoj8rW8wYlsOEFU1NHrNzR3MSdu1e56zBoM++5IKCM9LO7QYCJHuNVGhav3U3Md9fsZhCP+CsZVyhOVsUKVyNg+mHggRLwjgMK3EHzBFwx8IifQjEFjaCNa6cY56ZIqABNeFSOTXZ3gFkIKGBwpxkZb3A+p8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b=ZMo38IgK; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1757603611; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1757603627; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=Y3TWVD8OQzag4n7vlKhHW5hOxDdlpiKY6usJ9p/Cd7xIJo+Wt+wwGpMU1mwM+/yaTN70Q+HkZEvfU4U5Nye8JRjBACTcEb2BPVgFIvEJfd1jRM0UAHYwJoRphYahJ2NnI6bDe/++mWRFzbzDRVIJNAiXFd2MlhOvUgniihMT4ro=
+	b=l9yVUxbnprKzKAH6i6S1etdnpW4Rwe9ZSe4Aneecn16CYwS0YuKfSrdZf/go4/7q8luTKRkR+u1b1ja0rEbKW4zqOnPJYLnlbNYWqR9NdE7xo7WRsA+wy7R6xXumEZwQ4OY++NgkytSAql1552V+arrzIBgqmbKVk8TlcyFoIHo=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1757603611; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=bY54AAdDsGJHBRu4VNnRBqaafsYGU+PM+RWfhefn48Q=; 
-	b=SDZ70MmO1l08Sec8X99CQjE+6BeOZSjEsYq6rf3CQ8i5apB5Su+nEys4dfRw2Ptfq84xKDgJCcdnRUA2LioqVQ655gfYIGPlmaBf+2EL7LGCc2j0u4AlA0fEjU+8UqvIx7CTDdbnZhWHPXUFvx8JizPAtqUMamd9/AwpOa4Y82U=
+	t=1757603627; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=rI6WcTEalAQk8pq1qEVklqk9hlyym9Zy0E+/hYJI8Qk=; 
+	b=lEOOWXKBptumL7+0UcliD7SqsCzTaimH9Xn5N35wf3NOCSxuX6Sv2FPq2oDLCz/+gFKGiP59uIm5ThjDll4qJNvNp9TBr9/h/RM/eDa7D6okbrAQIbyQ3jL9GZvxRa58V7RlVogNiSgV8Y8yD3sEnD8NnQzwMKwDjL+CXq+QhyI=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=ariel.dalessandro@collabora.com;
 	dmarc=pass header.from=<ariel.dalessandro@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1757603610;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1757603627;
 	s=zohomail; d=collabora.com; i=ariel.dalessandro@collabora.com;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=bY54AAdDsGJHBRu4VNnRBqaafsYGU+PM+RWfhefn48Q=;
-	b=N5QfbwJ900PSelAysTK+1BMVDe9AfBePeRmlJVYGFQn+jbiN9qM/JfZSQQH6pdsq
-	CV0/LWZV3dzLQcKLLX3OPZ13viNYqb0CLjUtbjRvarvzuzZ5sbRNrKRXwhRgdtsupdp
-	U2ff0D8faKik7RS3sTIgM9M/EVfMY/CFZKSM1iR0=
-Received: by mx.zohomail.com with SMTPS id 1757603609772835.2831161402115;
-	Thu, 11 Sep 2025 08:13:29 -0700 (PDT)
+	bh=rI6WcTEalAQk8pq1qEVklqk9hlyym9Zy0E+/hYJI8Qk=;
+	b=ZMo38IgKXGAmLLZcMtqxZbtw/C4dS2OHgfYuKZFZGiGhuRGIzTTFv/MIR4Dq0OWy
+	TNG27CnntGme/rguaXSnDyzVQR+mmfAERHhU6yxfWdTUuOivGBdpFmd+oBL6vHKeDt5
+	tcK2qn6cuuhUdWMQn9lpn+DKfeFzDKHRcFMzSxcM=
+Received: by mx.zohomail.com with SMTPS id 1757603625234917.6573362587322;
+	Thu, 11 Sep 2025 08:13:45 -0700 (PDT)
 From: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
 To: airlied@gmail.com,
 	amergnat@baylibre.com,
@@ -102,9 +102,9 @@ Cc: devicetree@vger.kernel.org,
 	linux-rockchip@lists.infradead.org,
 	linux-sound@vger.kernel.org,
 	netdev@vger.kernel.org
-Subject: [PATCH v2 05/12] dt-bindings: display: mediatek,od: Add mediatek,gce-client-reg property
-Date: Thu, 11 Sep 2025 12:09:54 -0300
-Message-ID: <20250911151001.108744-6-ariel.dalessandro@collabora.com>
+Subject: [PATCH v2 06/12] dt-bindings: display: mediatek,ufoe: Add mediatek,gce-client-reg property
+Date: Thu, 11 Sep 2025 12:09:55 -0300
+Message-ID: <20250911151001.108744-7-ariel.dalessandro@collabora.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250911151001.108744-1-ariel.dalessandro@collabora.com>
 References: <20250911151001.108744-1-ariel.dalessandro@collabora.com>
@@ -117,8 +117,9 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-Currently, users of Mediatek OD (display overdrive) DT bindings set
-mediatek,gce-client-reg node property, which is missing from the DT schema.
+Currently, users of Mediatek UFOe (Unified Frame Optimization engine) DT
+bindings set mediatek,gce-client-reg node property, which is missing from
+the DT schema.
 
 For example, device tree arch/arm64/boot/dts/mediatek/mt8173.dtsi is
 causing the following dtb check error:
@@ -128,8 +129,8 @@ $ make CHECK_DTBS=y mediatek/mt8173-elm.dtb
    SCHEMA  Documentation/devicetree/bindings/processed-schema.json
    DTC [C] arch/arm64/boot/dts/mediatek/mt8173-elm.dtb
 [...]
-arch/arm64/boot/dts/mediatek/mt8173-elm.dtb: od@14023000
-(mediatek,mt8173-disp-od): 'mediatek,gce-client-reg' does not match
+arch/arm64/boot/dts/mediatek/mt8173-elm.dtb: ufoe@1401a000
+(mediatek,mt8173-disp-ufoe): 'mediatek,gce-client-reg' does not match
 any of the regexes: '^pinctrl-[0-9]+$'
 ```
 
@@ -138,14 +139,14 @@ example as well.
 
 Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
 ---
- .../bindings/display/mediatek/mediatek,od.yaml     | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ .../bindings/display/mediatek/mediatek,ufoe.yaml  | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,od.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,od.yaml
-index 71534febd49c6..930c088a722a8 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,od.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,od.yaml
-@@ -60,6 +60,18 @@ properties:
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,ufoe.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,ufoe.yaml
+index 61a5e22effbf2..036a66ed42e73 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,ufoe.yaml
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,ufoe.yaml
+@@ -64,6 +64,18 @@ properties:
        - port@0
        - port@1
  
@@ -164,19 +165,21 @@ index 71534febd49c6..930c088a722a8 100644
  required:
    - compatible
    - reg
-@@ -70,6 +82,7 @@ additionalProperties: false
- examples:
+@@ -77,7 +89,9 @@ examples:
    - |
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
      #include <dt-bindings/clock/mt8173-clk.h>
 +    #include <dt-bindings/gce/mt8173-gce.h>
- 
+     #include <dt-bindings/power/mt8173-power.h>
++
      soc {
          #address-cells = <2>;
-@@ -79,5 +92,6 @@ examples:
-             compatible = "mediatek,mt8173-disp-od";
-             reg = <0 0x14023000 0 0x1000>;
-             clocks = <&mmsys CLK_MM_DISP_OD>;
-+            mediatek,gce-client-reg = <&gce SUBSYS_1402XXXX 0x3000 0x1000>;
+         #size-cells = <2>;
+@@ -88,5 +102,6 @@ examples:
+             interrupts = <GIC_SPI 191 IRQ_TYPE_LEVEL_LOW>;
+             power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+             clocks = <&mmsys CLK_MM_DISP_UFOE>;
++            mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0xa000 0x1000>;
          };
      };
 -- 
