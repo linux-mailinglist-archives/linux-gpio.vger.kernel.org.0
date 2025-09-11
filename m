@@ -1,188 +1,137 @@
-Return-Path: <linux-gpio+bounces-25954-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25955-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F3ABB53485
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 15:54:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21E6FB53494
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 15:55:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E57C63AA03E
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 13:54:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CF8515A7073
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 13:54:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5D81345720;
-	Thu, 11 Sep 2025 13:51:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 668263375CD;
+	Thu, 11 Sep 2025 13:52:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="A8TDZ5kV"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LkK6jdpx";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HnHouNSe"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDCA3451A5
-	for <linux-gpio@vger.kernel.org>; Thu, 11 Sep 2025 13:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1C8335BBB;
+	Thu, 11 Sep 2025 13:52:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757598669; cv=none; b=muprjjsmUjbA48zOp1+D1xSEihuW7zmodhGLz+6S/2UZB+K46YEVIUDU3j+RfgBjGDCsKm7coW+FclU+2EpUB/lY6aKPKNgFySshktiIihq0mIb7AZyPr4Lygsrx+228gGdzivSiwdH08+JFttLjTVsCEOBYkOos04+i/DPL2Ws=
+	t=1757598746; cv=none; b=Uze7yOf9Du22il+82coWq8ABTekp7TCJWf1Kkxrv+7CqbB2XHs1kq9Q9kNKDA04HdUnrd+YbRwB8aUxNs0TYfB+At9VM4NAN5Pa1ofLNrgcdhNF67BVuvNsSimdEeVcNiPL4WpZklsIb+ucBr3fUVdyu7j2MlAg+trrNFNAHDEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757598669; c=relaxed/simple;
-	bh=aKsAZFYuBd/AQWpaWEX8ThXsjnBnZ6NLciQvyn21cDo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bfffpWuYoSnbfRY8wlBlz8Tj0KJMPjDZoCLOu0cjeEvdSKKzp3x39watw8stXrWky1YxEDz8kG9FShTHgS5esSkkjU194Wt+HCmqYxem3UKKd2oBTl3BN1G3HCVdc+RGal1lvb7h0YRCyi3qyoHlkatcKGx+eeAeUFOWGIENT60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=A8TDZ5kV; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3c6abcfd142so363702f8f.2
-        for <linux-gpio@vger.kernel.org>; Thu, 11 Sep 2025 06:51:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1757598666; x=1758203466; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZcWiaBosOtX/ctQvR+tRX52W6WE3mA+pedyBvnIGg6w=;
-        b=A8TDZ5kV11UbCt3NHOV+1GQTg+lKHzi4he8QUaloh0hCRiIUjuxJi08CRZ+drTR9UM
-         NHFHRpqQzX1XmjjJFnos2DekiqfR/Ve4VOw+PgJVfcrb3OaCtFpkhfGM51oZS+aG+QEp
-         cfXBRpJGuKI/u2nPU3h39S1zh3IJMx8vjgGPIiEhb8j/O/LDkj9ilGuKnHi2Cnf7P1dX
-         ayn/P+uBK8NPVM/gFEGUQu7fiAPdKn4l9TNwsBjoKEzbzc4unerT42JaPiExX4shnpO4
-         8tPLmNU4lQK24ATh5IgzEO+3upLfNO9yDs7KTJDmzHPJxjJFLdxcxLGpRLDK5Tt9IOVu
-         n9hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757598666; x=1758203466;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZcWiaBosOtX/ctQvR+tRX52W6WE3mA+pedyBvnIGg6w=;
-        b=EmWBk4FeGriFPYNCF9vjWakAYi2o6qeh9vV39ZRtCEmKGUo5YOe8oVsE7BobBnJ5pU
-         At4Qe4dDivcAIy4torL+bJuLQrmLQyd0VrKk5+dK2/ATNTfXOT6ufTaK4M9eDZu+7jYb
-         KdiYY1UDrIK3LSnrMw24JoFlolu3LVJ9vNhV/wEYHlDb7suPgetKP9ll8DCM4PbrNQIw
-         yYneGULXhbOGe4fHBzh4QO7rUlcnGCOogZrMhII34UYviDqpKW5bZlPeWlukqeliBNSY
-         8dlCQu1/eYrJIVE2m5VJd5gDCO3YTfPmH+XulCRF5HN9GdJms0Wv0W9rV56gLwGv6tXS
-         O/PQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXIO/bJCtTh1px2mYzbKEvAdW1AyMeqYOGQSgJsQRuoN19Nq0zFCSHRITYnNm9HNSv+mblltClSbM3b@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVX3X3ylpDOcwClbQs5C8WTViduhpknOpBacDWpkXTewIEWbtX
-	rJ2Foz6rhwtfKBern8mvegGAE3x/2MJG/1+CDx5AQmBlMNSeg9jAgdVJa+KrwVoVvnawA01QzgS
-	ak7Q/
-X-Gm-Gg: ASbGncsXogTc506p3qDglodYSSQX9NiEySv1yLiq/gZtg3aDM0I6lAL5QEpHyiu+fYZ
-	PpPjhmMV9jUY1H2jFx6JZtDmYrwljOUpEoYQoVXkNS/qa/SVkaAP4Qhk1xavcrVRlOZxe1vBhtp
-	+TjrXBZJaBIV/z6SfiUTbqhS2qZFf6LfPZeuV49XCYhiy3JPH4tW6FoYicqZ513cxYxSpkW9eCU
-	ryhhyXyrjNPE0V1tPzypuJKpb6DXJ85COMwXgcHQUoyPHKSoQf3DBRRllPRtccLO8S/PYlXl4Mg
-	S2yEu0XAmhixym4Qc5xkgVP+dzYy2oXBCiEvs1Q7/L4M3K87DP/oIw7VdkkTCVGSChiRz3hgSgQ
-	D1hEUOj02Fs1pQ82zH+jxrgvGmjB3tnqYL8cW9/PTYw==
-X-Google-Smtp-Source: AGHT+IHq9qlr5SVbxPXrHpqCsoSxO3Cd+428J/sKOCg7NzkP9nlaNJcC4VfpZGPRxO+l3VOLPYaElQ==
-X-Received: by 2002:a05:6000:240c:b0:3df:c5e3:55fe with SMTP id ffacd0b85a97d-3e64392d4bemr15907531f8f.29.1757598665615;
-        Thu, 11 Sep 2025 06:51:05 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.139])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e760787604sm2596615f8f.24.2025.09.11.06.51.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Sep 2025 06:51:04 -0700 (PDT)
-Message-ID: <0d0aeb02-aff4-4932-b785-ce156cc4902d@tuxon.dev>
-Date: Thu, 11 Sep 2025 16:51:03 +0300
+	s=arc-20240116; t=1757598746; c=relaxed/simple;
+	bh=deGvupzM/LLKwOeN5SKhrOyqbm5RrItp4EoBaXJwJCM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=O2WzBguI/jdHVobNGI098Bm+zRFNRxM7WRW3HXBvFBJOcfYpNEbmpiq3rMgjIYFJunsqejQ2zONpARPCR7FUfxc6LSwkP+B3dxYET7qa3EYrT2U37TVg+gU95D55EV6QkgZYvcNle5Hv0WyXVe7+ILqLg7LdUs5TfLwLGfAW8c0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LkK6jdpx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HnHouNSe; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1757598742;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C92gKHTmPMKru6z9KnmAjno8euROQELszOPMKezd0q4=;
+	b=LkK6jdpxw21FjYkLcj1CNXjZ4trzKKHygKuDeJVQAC72SCjmTtdwpmSDIVJtOfvxUTtu/E
+	MrkjH9BZm9gcLa8xnTG+kkxvGY2DQJ/zGj+PXZSKW99G0V5DeX96wFvl+85VdqGdOisqAe
+	JrXYBwsSYyn9+ed/hrwNvwa9k6kWby3U9Po8aMzo6jNERFwwiCSK72ldY/U1f/hR+uqIZE
+	Oq9BVCOQutMM7+wZJIkIxg5h3u4koSSlorKovwuReQMFsYxcFeZ9oqhEanhx5i0mB1ogxg
+	4mRhgP43rBruIFfHEXSdV6yYmTXwKqDoLXKk7fTjaWRU0UnDAHpbrnnMfPGWGg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1757598742;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C92gKHTmPMKru6z9KnmAjno8euROQELszOPMKezd0q4=;
+	b=HnHouNSegRS6LE+/7RLUmAhvPaJKyUXtknAuAb6SrGfH+ZreDU91Pnl0x68VvI5zDFg8m/
+	fIoDD0wV6LaRjvDg==
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Hoan Tran
+ <hoan@os.amperecomputing.com>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>,
+ Magnus
+ Damm <magnus.damm@gmail.com>, Saravana Kannan <saravanak@google.com>, Serge
+ Semin <fancer.lancer@gmail.com>, Phil Edworthy <phil.edworthy@renesas.com>,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Pascal
+ Eberhard <pascal.eberhard@se.com>, Miquel Raynal
+ <miquel.raynal@bootlin.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 0/8] gpio: renesas: Add support for GPIO and related
+ interrupts in RZ/N1 SoC
+In-Reply-To: <20250911090450.32c7cdbe@bootlin.com>
+References: <20250909120041.154459-1-herve.codina@bootlin.com>
+ <87y0qntkmy.ffs@tglx> <87segvtkha.ffs@tglx>
+ <20250911090450.32c7cdbe@bootlin.com>
+Date: Thu, 11 Sep 2025 15:52:21 +0200
+Message-ID: <87cy7xrt9m.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Fix ISEL restore on resume
-To: Biju Das <biju.das.jz@bp.renesas.com>,
- "geert+renesas@glider.be" <geert+renesas@glider.be>,
- "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <20250908144250.1269294-1-claudiu.beznea.uj@bp.renesas.com>
- <TY3PR01MB113460BE4B4D20305021D85328609A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <54d7c3b2-762f-4f61-af21-02247a471251@tuxon.dev>
- <TY3PR01MB113469D5FBD53A8B507E5DC4A8609A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <TY3PR01MB113469D5FBD53A8B507E5DC4A8609A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
+On Thu, Sep 11 2025 at 09:04, Herve Codina wrote:
+> On Tue, 09 Sep 2025 22:54:41 +0200
+> Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+>> On Tue, Sep 09 2025 at 22:51, Thomas Gleixner wrote:
+>> > On Tue, Sep 09 2025 at 14:00, Herve Codina wrote:  
+>> >>   Patch 5 (new in v2)
+>> >>    - Convert irqchip/ls-extirq to use for_each_of_imap_item
+>> >>
+>> >>   Patch 6 (new in v2)
+>> >>    - Convert irqchip/renesas-rza1 to use for_each_of_imap_item  
+>> >
+>> > How are those two patches related to adding GPIO support?
+>> >
+>> > AFAICT, they are completely unrelated and just randomly sprinkled into
+>> > this series, but I might be missing something.  
+>> 
+>> Ah. I missed that this iterator got introduced in this series. Did you
+>> check whether that creates any conflicts against pending irqchip
+>> patches?
+>> 
+>
+> Indeed, I have a conflict in my patch 6 with 40c26230a1bf ("irqchip: Use int
+> type to store negative error codes").
+>
+> I can rebase my next iteration on top of 40c26230a1bf and mention this commit
+> in my next iteration cover letter but an immutable tag and referencing this
+> tag in the cover letter should be better.
 
+No. Don't do that.
 
-On 9/11/25 16:39, Biju Das wrote:
-> HI Caludiu,
-> 
->> -----Original Message-----
->> From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
->> Sent: 11 September 2025 14:24
->> Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Fix ISEL restore on resume
->>
->> Hi, Biju,
->>
->> On 9/11/25 13:43, Biju Das wrote:
->>> Hi Claudiu,
->>>
->>>> -----Original Message-----
->>>> From: Claudiu <claudiu.beznea@tuxon.dev>
->>>> Sent: 08 September 2025 15:43
->>>> Subject: [PATCH] pinctrl: renesas: rzg2l: Fix ISEL restore on resume
->>>>
->>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>>>
->>>> Commit 1d2da79708cb ("pinctrl: renesas: rzg2l: Avoid configuring ISEL
->>>> in
->>>> gpio_irq_{en,dis}able*()") dropped the configuration of ISEL from
->>>> rzg2l_gpio_irq_enable()/rzg2l_gpio_irq_disable() and moved it to
->>>> rzg2l_gpio_child_to_parent_hwirq()/rzg2l_gpio_irq_domain_free() to fix spurious IRQs.
->>>>
->>>> The resume code used rzg2l_gpio_irq_enable() (called from
->>>> rzg2l_gpio_irq_restore()) to reconfigure the wakeup interrupts. Some
->>>> drivers (e.g. Ethernet) may also reconfigure interrupts in their own
->>>> code, eventually calling rzg2l_gpio_irq_enable(), when these are not wakeup interrupts.
->>>>
->>>> After commit 1d2da79708cb ("pinctrl: renesas: rzg2l: Avoid
->>>> configuring ISEL in gpio_irq_{en,dis}able*()"), ISEL was no longer configured properly after resume.
->>>>
->>>> Fix this by adding rzg2l_gpio_irq_endisable() back into
->>>> rzg2l_gpio_irq_enable(), and by using its unlocked variant in
->>>> rzg2l_gpio_irq_restore(). Having IRQs enable in
->>>> rzg2l_gpio_irq_enable() should be safe with respect to spurious IRQs,
->>>> as in the probe case IRQs are enabled anyway in rzg2l_gpio_child_to_parent_hwirq(). No spurious IRQs
->> were detected on suspend/resume tests (executed on RZ/G3S).
->>>
->>> IIRC, I believe the issue is ISEL is not restored during resume.
->>
->> Yes
->>
->>> Can we restore this register just like Schmitt register
->>> suspend/restore[1]
->>
->> The IA55 would have to be configured for interrupts as well. Doing it in other order will lead to
->> spurious interrupts while resuming. The commit 254203f9a94c ("pinctrl: renesas: rzg2l: Add
->> suspend/resume support") that introduced this approach, mentions the following:
->>
->>     Because interrupt signals are routed to IA55 interrupt controller and
->>     IA55 interrupt controller resumes before pin controller, patch restores
->>     also the configured interrupts just after pin settings are restored to
->>     avoid invalid interrupts while resuming.
-> 
-> OK. So enable/disable Keep ISEL configuration as it is, so the pin gpio int always.
+> What is the best approach?
 
-Yes
+Just base it on upstream and mentioning the conflict in the cover
+letter. For actual merging, if it's ready before the merge window, we
+can sort it out by:
 
-> Which commit 1d2da79708cb ("pinctrl: renesas: rzg2l: Avoidconfiguring ISEL in gpio_irq_{en,dis}able*()")
-> is doing.
-> 
-> The new addition is suspend/resume restores ISEL along with reconfiguring interrupts.
-> 
-> Is it correct?
+  1) You putting patch (3-6) in front of the queue
 
-This commit only fixes the ISEL restore on resume. The rest of interrupt
-reconfiguration on resume was in place from previous commits.
+  2) Me picking up these 4 patches into a separate branch based on rc1
+     or later, which gets tagged and is consumable by the GPIO
+     maintainers.
 
-Thank you,
-Claudiu
+     Then I can merge that branch into irq/drivers and resolve the
+     conflict, which is trivial enough
 
-> 
-> Cheers,
-> Biju
-> 
-> 
-> 
+Alternatively GPIO folks pick up the whole lot and sort the conflict out
+with -next and Linus themself. No real preference from my side.
 
+Thanks,
+
+        tglx
 
