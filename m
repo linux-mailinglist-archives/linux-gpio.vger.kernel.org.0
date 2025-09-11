@@ -1,159 +1,137 @@
-Return-Path: <linux-gpio+bounces-25948-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25949-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D97C1B53391
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 15:23:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2FC57B533B8
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 15:29:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C42AC7BF24A
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 13:22:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 45F7AAA04A0
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 13:27:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38076326D50;
-	Thu, 11 Sep 2025 13:23:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A43C3277BA;
+	Thu, 11 Sep 2025 13:27:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="jxKV0quu"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="tRHrj973"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 692C8322DCA
-	for <linux-gpio@vger.kernel.org>; Thu, 11 Sep 2025 13:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56683313531
+	for <linux-gpio@vger.kernel.org>; Thu, 11 Sep 2025 13:27:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757597017; cv=none; b=BW2Fu37iIfBlDE7cKNP9swyDRKijUYYIGMV6tFD9Q8cx/SVvthMCiWnYqzb6yEeKCVxaHibKROIvRouaEBJGiwpAvr8YJz7ldwqhjxqjzr6/El/RqB7eM78ZjPUVjSvQH0VBu7PUGKQuCd+zD+p3j82su1TEGho1gF7mULgDZDs=
+	t=1757597245; cv=none; b=lvA9Q1yJ/R39fwjt70Mo26qxJ8L5/iBbJz92EqLoY4rowUBNWRmk0RvpxxCrnNnX7kOe70KLzwV0YW4rX1BW2NbUnSrb615H6mCpoUb48dqHzgznzkX1tz6mgiWhNkEE/SVzZfP7a4T4pR5zcjdgSFwCjDExltQk3KygZXm1m+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757597017; c=relaxed/simple;
-	bh=/YhstqouVriUy4uvZSzgUIQdc4wbmJHjZqK9gJmykTo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eFk/L0Ulfues+jypeVjQ8/5g25juFjQH9wKD4pnuZrfXNWaR/0WIZh227pV1+eMMbotLPGLSFf3SPX301ja+lEibIMWEgj+8NOLnOf8j6RpYPtPKzaJ+zGUXEKqI1zcKIU3TXlh30LyUYkHz6cReBtpCGZvz4pzAU7T4D+Gq43Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=jxKV0quu; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-45dda7d87faso4938645e9.2
-        for <linux-gpio@vger.kernel.org>; Thu, 11 Sep 2025 06:23:35 -0700 (PDT)
+	s=arc-20240116; t=1757597245; c=relaxed/simple;
+	bh=A7yKxmDExMeHFoZ5DS5kS/O/awUG1znqYvQLffqw0n0=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=M6M5atYmBSMo3igEwD6psZGLuk/waS9CwzQSoSc0A2IO0Hiwopbb2XJFji5Ki7j+kV3j2PZEPZVWKaA2hNVtbKnDL9H2rTJDom0mFwqMyHChgTmBL7OaCjbLR78oN7c+g3JuHXpMztMUSyvztUzCWaSRaSdh+DyQvRm+b7+B9Wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=tRHrj973; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-336dc57f3f2so6499201fa.3
+        for <linux-gpio@vger.kernel.org>; Thu, 11 Sep 2025 06:27:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1757597014; x=1758201814; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=v5DZdOOp7kCLf5PJMbTE+QCt8MHwfrXt8sp1qPFYcuQ=;
-        b=jxKV0quuGckntUYYYEW+UpPFojkZGJkkgX1FZ71A3sfYG7EjYAEvbhKzbnG/AJzNPQ
-         mLZxyAy+8nLmnu/EwiUH7bAeNuPsGoBgr1vv22wBclGAbXmYqCQh5zP9wJ5xnFxDdCA5
-         /BUM+uhy5wFkozK64ldxFKelFhiMHw6oewM5DclJFnJJyaoqVU5anOGt6aFH4IEXiiE7
-         Z6czntYjPKOyymEZq358KS0dov6ETFDzYUh4dWZCRM/dLJdEV046qsqW4kTHfSwO7Gny
-         Wl5/yAHQYKo/bybTl33yfEM72pBAyIj0s/vh2ce/sBxFU3lj9f5GSomJQ/c2gr5HiUOm
-         Evcg==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1757597241; x=1758202041; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DeUccbeQ/kyM8X+MjI6gjEtxWNHGIttYsHKE4be0R7E=;
+        b=tRHrj973G55r4OyQWIn7hI2+n0BSnUWv57OqmDIfoBhLK1FL40cPaHiE73uh2bV4Wy
+         41aqxqZx+QMhqjklcVLEmqBG38QE/c97qC6X3ptv/mmv/LFMEwNi/Whqzqa3vz1u4hao
+         4OlbtV8G1ULnGjE1QyBEZwQsfDE2xPGPI7g61osmt6ISwibFpglCJB3NU6FxIEZppT+1
+         bQ+/advy5gI6LNRHiW1HYSgo5ydlP2Jxz/Se4H3GihA16QS2f6UbVKQBqLPHp1/F7yMY
+         rpIBF/oUpvwtxyVa3CuyEbqgdbOrXy1x0fzoGn5aC2i8E6nB78qEMB+e9IwttCUzCSFE
+         TFFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757597014; x=1758201814;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v5DZdOOp7kCLf5PJMbTE+QCt8MHwfrXt8sp1qPFYcuQ=;
-        b=GFoKBrZiAUD058EkgZe73fN4rSW7QqU6Euo5VFOkygaA2mbbbaq2qjVRQwfVnowutc
-         pfzXBD7pynLkUeDbx49k9T7LOQsqjwZcykgEvP372+8BgQPM72kSjRKsewHw4SdTeKHw
-         X1F0SuaK0hgBQiMWOjGg81MEqtkhSGdXRBpvHHMHJ8m4VR+GXSdL0GXb80Kxnoi8eP1R
-         os3lujStETgn2GleaJd14w1+JSGARB3xzKduFOixHh6w/PPIqVdHUW0Z82xQpnJACVvx
-         eysIKq2Dqt1SiqQUOe221nVpuvBWDSrIUhMkjbkZHPNfmTK0r4x2YgDf+6OG2+zDpiz7
-         Vc6w==
-X-Forwarded-Encrypted: i=1; AJvYcCUHcvI1Rhd+BQ5FmyCxhb+lJ32PWVlzCOXa470J6dsMbaipsDeUn317y/wtBSjUuDQlWr2a6xGRaWLW@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIOS0AVSY17e8zXVptd6m7cWNm/1r5LC1kN1KVoy5I1nGK3XhJ
-	mG/4Jqtk5PCUn0gIzNtShIpf/a1C+j77N1q0Ffov7OfoZZYCqZX3WlC5b936z93e2ck=
-X-Gm-Gg: ASbGncvbTQghqCUnEOjsD91cAHJ2PpfLIE2vP6Hpi/GD1EGGywEAbvVw3zy1hTw48VL
-	mGkdTNkmt3Qh8voY/aLmoauNEpKKypy/tU/cjjdvJ/4haG2lNTDqj/MumsRAeoDoKijzvmTLD5L
-	Oza1lnAmn45fbIAinC2/AQUbzPox9qOwgGThHRrs2A0U9pd71v+3wAPwaJ2zt6HO9wcrccoBf8U
-	ZHw605VIwQ25VmpZAQwCEW0sIsJQa6Exh7eBI76BNTQtUPdfze2JoL3CoWY9GKjks4NR6yKSfTu
-	dpUUPiQrTh7LpZV5+Bsw+yG3j8n9vcJOwMGSepMxvYoTFDrpz0Fy6BXoxgxHQ3kVCDGMFWVuJBZ
-	tgzCNFq22gKT9eJeDHNsb04uDxzh/elE=
-X-Google-Smtp-Source: AGHT+IFjnfzF7F/GlJxwpHM8SNF/LM5GQGWaMSdVtiWgkVzuGZF4P9oVll9idmR9VsX8OIWFod6saA==
-X-Received: by 2002:a05:600c:1f13:b0:45b:97e0:22ad with SMTP id 5b1f17b1804b1-45dddee9082mr196072155e9.24.1757597013684;
-        Thu, 11 Sep 2025 06:23:33 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.139])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45e037c3ee8sm24444215e9.18.2025.09.11.06.23.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Sep 2025 06:23:33 -0700 (PDT)
-Message-ID: <54d7c3b2-762f-4f61-af21-02247a471251@tuxon.dev>
-Date: Thu, 11 Sep 2025 16:23:32 +0300
+        d=1e100.net; s=20230601; t=1757597241; x=1758202041;
+        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DeUccbeQ/kyM8X+MjI6gjEtxWNHGIttYsHKE4be0R7E=;
+        b=s/yVJrUbMS1Zyhrqek5v2bPMZ9cFulu0aBfIq1qjs9dwkM6bne4t8jqa3dXAOmWX2G
+         eAn/d3rAKWZUtM9B/nAnQGH7X0cS3iHPHGsteQdQbrVr13OuLobOomkfz11uZJauxMDC
+         BH710MVnshZifrTps8p6nrNSe4dQg/CbJ5CrMJwSEhaKs3yfkKRFF/zZ/E0sUyPtKiuN
+         q6oRk1TYfIvsiH5osjZBlPJ4q8CRMuGeqt006mvbI2X8g+vpTUrBAFcV7DCzgugD7buG
+         TZ1Zvk0iwVZmlDTAYtEmuwgWGoctgMWlONyNaID6S99nbsJV4i1oYJ4IQpRxnFjq8yPQ
+         5T9A==
+X-Forwarded-Encrypted: i=1; AJvYcCX51XDPYJK/xwRCmkg0AeV/rNllz4++c0pU9BxvVkWDWJL5ZxkLzQNTv/iRU/cu8Af3ekZGcMjVCbpP@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMpjG9npjDdoDi1+ZAi3pxbtCXeWjsUOq17xW5QdgmtGPPNXMy
+	kjjXHRHiFyHG3u0VQeVWqe0OXxmSFQ4W5P8NoLwQKn7sGHXywcSH8ZT/qlux7emFnWrJP6mfFWS
+	1denVhzNNZ2xJfJ+N8ZFwqYPdkNFrMcTD1B+bwkv4GQ==
+X-Gm-Gg: ASbGncsy34YD3GIdhnAIh4kboJa9B0sqw6ye5xsoUNM7lR4UIeqx9/ETU7Xq/Ez7mTU
+	yYxrJXcEsAcWKrDJ/W6UTb4JuUGpl+XLS39zBtgqa6HYiIpNUY0UcqVCwBUraNNTuUoCZemWfN5
+	oUIPtgR5QuyjpjZ26Z1GljhfeMjCjdRMgXK60XmBVRkDNR5sqUL03blGitNCnFctmoDgJkPoULi
+	ZbqzxXUMDCWYjrKM56cKyOD7RbO6eVqyVXseH5G9Q52TSO7SA==
+X-Google-Smtp-Source: AGHT+IGBB6D1hNdnllPGf95Uj3l9EU2JfY7JcduwYvVgx0oChEBeWjvr5yTav4TCpbqAhFjiHyDJdIQ3rvnvP4CkIb8=
+X-Received: by 2002:a05:651c:1117:10b0:336:b4d2:6c4 with SMTP id
+ 38308e7fff4ca-33b520d6d1emr49059301fa.17.1757597241429; Thu, 11 Sep 2025
+ 06:27:21 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 11 Sep 2025 09:27:19 -0400
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 11 Sep 2025 09:27:19 -0400
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+In-Reply-To: <20250911131832.59335-3-hansg@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Fix ISEL restore on resume
-To: Biju Das <biju.das.jz@bp.renesas.com>,
- "geert+renesas@glider.be" <geert+renesas@glider.be>,
- "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <20250908144250.1269294-1-claudiu.beznea.uj@bp.renesas.com>
- <TY3PR01MB113460BE4B4D20305021D85328609A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <TY3PR01MB113460BE4B4D20305021D85328609A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250911131832.59335-1-hansg@kernel.org> <20250911131832.59335-3-hansg@kernel.org>
+Date: Thu, 11 Sep 2025 09:27:19 -0400
+X-Gm-Features: Ac12FXwV3WssWXmZ6g0rdQcbcorV7HFa5hX2cT1C7ZyRIRy9qt885Y0faI-jmjQ
+Message-ID: <CAMRc=McKOTWxu=M0S0p0Uyhod-h4mNH9QfsLsycN4vbHJPtgeQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] gpio: Add Intel USBIO GPIO driver
+To: Hans de Goede <hansg@kernel.org>
+Cc: Richard Hughes <rhughes@redhat.com>, linux-i2c@vger.kernel.org, 
+	linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Israel Cepeda <israel.a.cepeda.lopez@intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, 
+	Andi Shyti <andi.shyti@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, Biju,
+On Thu, 11 Sep 2025 15:18:31 +0200, Hans de Goede <hansg@kernel.org> said:
+> From: Israel Cepeda <israel.a.cepeda.lopez@intel.com>
+>
+> Add a a driver for the GPIO auxbus child device of the Intel USBIO USB
+> IO-expander used by the MIPI cameras on various new (Meteor Lake and
+> later) Intel laptops.
+>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Co-developed-by: Hans de Goede <hansg@kernel.org>
+> Signed-off-by: Hans de Goede <hansg@kernel.org>
+> Signed-off-by: Israel Cepeda <israel.a.cepeda.lopez@intel.com>
+> ---
+> Changes in v5:
+> - Move GPIO_USBIO Kconfig option under 'menu "USB GPIO expanders"'
+>
+> Changes in v4:
+> - Drop include <linux/dev_printk.h>, unneeded auxiliary_set_drvdata()
+>
+> Changes in v3:
+> - Drop (offset >= gc->ngpio) check and make usbio_gpio_get_bank_and_pin()
+>   return void
+> - Propagate usbio_gpio_set() ret val in usbio_gpio_direction_output()
+> - Use devm_gpiochip_add_data() and drop auxiliary_driver remove() callback
+>
+> Changes in v2:
+> - Add a config_mutex protect usbio_gpio_update_config() calls, which
+>   read-modify-write banks[x].config, racing with each other
+> - Adjust usbio_gpio_get() to have an int return value and propagate the
+>   usbio_control_msg() return value
+> - Use __le16, __le32 type + cpu_to_le16() and friends for on wire words
+> - Some small style fixes from Sakari's review
 
-On 9/11/25 13:43, Biju Das wrote:
-> Hi Claudiu,
-> 
->> -----Original Message-----
->> From: Claudiu <claudiu.beznea@tuxon.dev>
->> Sent: 08 September 2025 15:43
->> Subject: [PATCH] pinctrl: renesas: rzg2l: Fix ISEL restore on resume
->>
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>
->> Commit 1d2da79708cb ("pinctrl: renesas: rzg2l: Avoid configuring ISEL in
->> gpio_irq_{en,dis}able*()") dropped the configuration of ISEL from
->> rzg2l_gpio_irq_enable()/rzg2l_gpio_irq_disable() and moved it to
->> rzg2l_gpio_child_to_parent_hwirq()/rzg2l_gpio_irq_domain_free() to fix spurious IRQs.
->>
->> The resume code used rzg2l_gpio_irq_enable() (called from
->> rzg2l_gpio_irq_restore()) to reconfigure the wakeup interrupts. Some drivers (e.g. Ethernet) may also
->> reconfigure interrupts in their own code, eventually calling rzg2l_gpio_irq_enable(), when these are
->> not wakeup interrupts.
->>
->> After commit 1d2da79708cb ("pinctrl: renesas: rzg2l: Avoid configuring ISEL in
->> gpio_irq_{en,dis}able*()"), ISEL was no longer configured properly after resume.
->>
->> Fix this by adding rzg2l_gpio_irq_endisable() back into rzg2l_gpio_irq_enable(), and by using its
->> unlocked variant in rzg2l_gpio_irq_restore(). Having IRQs enable in rzg2l_gpio_irq_enable() should be
->> safe with respect to spurious IRQs, as in the probe case IRQs are enabled anyway in
->> rzg2l_gpio_child_to_parent_hwirq(). No spurious IRQs were detected on suspend/resume tests (executed on
->> RZ/G3S).
-> 
-> IIRC, I believe the issue is ISEL is not restored during resume.
+If Greg wants to take it:
 
-Yes
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> Can we restore this register just like
-> Schmitt register suspend/restore[1]
+or I can take it once patch 1/3 is in an immutable branch.
 
-The IA55 would have to be configured for interrupts as well. Doing it in
-other order will lead to spurious interrupts while resuming. The commit
-254203f9a94c ("pinctrl: renesas: rzg2l: Add suspend/resume support") that
-introduced this approach, mentions the following:
+I'm fine either way.
 
-    Because interrupt signals are routed to IA55 interrupt controller and
-    IA55 interrupt controller resumes before pin controller, patch restores
-    also the configured interrupts just after pin settings are restored to
-    avoid invalid interrupts while resuming.
-
-Thank you,
-Claudiu
-
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20250911&id=837afa592c6234be82acb5d23e0a39e9befdaa85
-> 
-> Cheers,
-> Biju
-> 
+Bartosz
 
