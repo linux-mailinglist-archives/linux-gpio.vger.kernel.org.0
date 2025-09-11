@@ -1,132 +1,143 @@
-Return-Path: <linux-gpio+bounces-25942-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25943-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71543B53161
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 13:49:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1590EB5336F
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 15:18:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4F2671C88516
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 11:49:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C2DC6568711
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 13:18:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8790C307AC8;
-	Thu, 11 Sep 2025 11:48:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79950322C66;
+	Thu, 11 Sep 2025 13:18:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XqU0Rtfx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bp1UzKVq"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA282356C7;
-	Thu, 11 Sep 2025 11:48:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFFC2E401;
+	Thu, 11 Sep 2025 13:18:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757591328; cv=none; b=RcrhEzmFCYlL7xZU/iNwLYBsf90m/yD/1iPlekosiAAHei4zXvtpbMAO/YLm0lstY99Xrw/++q8i3FnCBkTp9Yv6OS/rnjJusq9J1cVof2k1INN3mkt3qyphdxdyn/pDrZDY9CeZ2Whwym7C9yPF60lxpv/jj3HHiyajC3MgrJc=
+	t=1757596717; cv=none; b=i/DLPofKFrPOF8jFBx5SA2wkz+vB6DRpeAX3LdQrn9bKkL71vblSPkWryeAM4uIuIqEd0LS8Rew/c5l+8KJxWSxiQgrjuX4wN68xKz7SRWY3CXYBSgZamaIg3AGhfbQd14OtImAYwsq4LnjL24DW7o+PlcuP/WSSxax4oaLfDFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757591328; c=relaxed/simple;
-	bh=cGE5k+kFKKQS6S9eVsIFsd8HWI3xBL9EZbWqUSFBAH0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dCDaLSyFu2sRZaCgaIPNsUfbJfUaHrerzMNgs42t8fOqXQYbfjZUDWV4+hvstzTzRmen5XCVSOnZjsAJxVG6ZdUVxdmEq2xEkcRcGCnzVptiMUz2du/6TYWJS4wxW4D8B0Z3K8KpX+BzPSA21sKk4rq1NsOzcUjFOEheyFAl9xI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XqU0Rtfx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 530DAC4CEF0;
-	Thu, 11 Sep 2025 11:48:44 +0000 (UTC)
+	s=arc-20240116; t=1757596717; c=relaxed/simple;
+	bh=YG/vEhqn3/yG3yOUHYvMDp3IurV7m/ZP6vW11i4EWmQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c32EOmPv0S54jcALj+xGGsqb4a+Olu30Z0G9Jaxa/QW350Nz9BvzQU8qwNHwhnysyxuXFIjRnuuv/wnyu68oSulfA5Oo5p1XGyxfEfuydvkTOOKRJtlaBGf3FBx7WKr4UKjM+caw+fT8TcSuShzCrmdJpF3I1Qbws4nkEdiyqRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bp1UzKVq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 494F0C4CEF0;
+	Thu, 11 Sep 2025 13:18:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757591326;
-	bh=cGE5k+kFKKQS6S9eVsIFsd8HWI3xBL9EZbWqUSFBAH0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XqU0RtfxG0TTerds6PYDH+8dIAJedn9CzY0KZ+7H+7MzffhCroODbphc6fNkVhwZe
-	 KA+GTFVs9Rn/GHekjQAB/jKiC8Esoogx055r7+qNNY1StCcT0a+6482ySecCmBxG6r
-	 y1xGt1YLane7YS3iV1gr1d/bXEy84PKn3mPhGtdOp3awA0t0cYUa4jfR5dAXKFJXB7
-	 M4QZeXbCwmGxrh7p3iK/F/56l7xM/cWNstwjLYEJtk79ztmZhrmIzv9mBG7hyd2Zct
-	 uJmJWmaBUE8MFajZwNUXkEWDqnU29ljSGPvPExj7hi9Ho5+39pR1rKCLxScHormCsQ
-	 M/TZsD0CVfp6Q==
-Message-ID: <4e2f79bc-2827-4db9-bb2b-4a330cd14f2d@kernel.org>
-Date: Thu, 11 Sep 2025 13:48:42 +0200
+	s=k20201202; t=1757596716;
+	bh=YG/vEhqn3/yG3yOUHYvMDp3IurV7m/ZP6vW11i4EWmQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Bp1UzKVq5D4iH+KtWvf2g/vd6xeHncUEijGskp5faarVNhcJMhziGwlWJcqZOrPpX
+	 1PJDfeY8GinJ0Zwq2IGd7KOm0J06Kg2m3LubADCaGwR/WXf0RM4vZ1bX655tkIEpFE
+	 uJWud1krT2mVRp4Qo84O4jy9eGoQPW+1ygN3+OPHL5g3RsOQRyQoCrhYbHnRNRuBOj
+	 hHop0rzn5GCbUrwTdivdwCoqpslqB5ioHR+wdeAKpmXgydk7CjydJICsP3orm34X4Z
+	 JbGvz63wDVy292KX3Kiio5XX2W26Uwx5/10eQLHS6ZPt7A88cH3QuCQ/8HEHK4pcaE
+	 6CvqNsmoS2tdw==
+From: Hans de Goede <hansg@kernel.org>
+To: Israel Cepeda <israel.a.cepeda.lopez@intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: Hans de Goede <hansg@kernel.org>,
+	Richard Hughes <rhughes@redhat.com>,
+	linux-i2c@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH v5 0/3] usb/gpio/i2c: Add Intel USBIO USB IO-expander drivers
+Date: Thu, 11 Sep 2025 15:18:29 +0200
+Message-ID: <20250911131832.59335-1-hansg@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] i2c: Add Intel USBIO I2C driver
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Israel Cepeda <israel.a.cepeda.lopez@intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>,
- Andi Shyti <andi.shyti@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij
- <linus.walleij@linaro.org>, Richard Hughes <rhughes@redhat.com>,
- linux-i2c@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-gpio@vger.kernel.org
-References: <20250910133958.224921-1-hansg@kernel.org>
- <20250910133958.224921-4-hansg@kernel.org> <aMHznOCa_9vtW6_1@shikoro>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <aMHznOCa_9vtW6_1@shikoro>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Wolfram,
+Hi All,
 
-Thank you for the review.
+Here is v5 of the patch series to add support for the Intel USBIO USB
+IO-expander used by the MIPI cameras on various new (Meteor Lake and later)
+Intel laptops.
 
-On 10-Sep-25 11:54 PM, Wolfram Sang wrote:
-> Hi Hans,
-> 
->> +out_log:
->> +	dev_dbg(adap->dev.parent, "RD[%d]:%*phN\n", msg->len, msg->len, msg->buf);
-> 
-> I think this...
-> 
->> +
->> +	return 0;
->> +}
->> +
->> +static int usbio_i2c_write(struct i2c_adapter *adap, struct i2c_msg *msg)
->> +{
->> +	struct usbio_i2c *i2c = i2c_get_adapdata(adap);
->> +	u16 txchunk = i2c->txbuf_len - I2C_RW_OVERHEAD;
->> +	struct usbio_i2c_rw *wbuf = i2c->rwbuf;
->> +	int ret;
->> +
->> +	dev_dbg(adap->dev.parent, "WR[%d]:%*phN\n", msg->len, msg->len, msg->buf);
-> 
-> ... and this dbg can go. The tracepoints we have should do?
+Changes in v5:
+- GPIO: Move GPIO_USBIO Kconfig option under 'menu "USB GPIO expanders"'
+- I2C: Drop some unnecessary dev_dbg() messages
+- I2C: Add I2C_AQ_NO_ZERO_LEN to the adapter quirks
 
-Ack, I've dropped both for the upcoming v5.
+Changes in v4:
+- GPIO: Drop include <linux/dev_printk.h>, unneeded auxiliary_set_drvdata()
 
->> +static u32 usbio_i2c_func(struct i2c_adapter *adap)
->> +{
->> +	return I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR | I2C_FUNC_SMBUS_EMUL;
->> +}
-> 
-> How did you test 10 bit addresses? I have never seen them in the wild?
+Changes in v3:
+- Drop (offset >= gc->ngpio) check and make usbio_gpio_get_bank_and_pin()
+  return void
+- Propagate usbio_gpio_set() ret val in usbio_gpio_direction_output()
+- Use devm_gpiochip_add_data() and drop auxiliary_driver remove() callback
 
-I did not test 10 bit addresses. This was there in the original code
-from Intel.
+Changes in v2:
+- Split usbio-bridge mutex into ctrl_mutex and bulk_mutex
+- Drop SPI support since this is not used on devices in the field
+- Rework disconnect handling to be more robust
+- Several different revisions need special casing add a quirks mechanism
+  for this
+- Stop using stdint.h (uintX_t) types
+- Use __le16, __le32 type + cpu_to_le16() and friends for on wire words
+- Properly check auxiliary_device_add() return value
+- Add a mutex to the GPIO driver to protect usbio_gpio_update_config()
+  calls, which read-modify-write banks[x].config, racing with each other
+- Adjust usbio_gpio_get() to have an int return value and propagate the
+  usbio_control_msg() return value
+- Various (small) style fixes from Sakari's review of all 3 patches
 
-> Did you also check SMBUS_QUICK? 'i2cdetect' uses it by default.
+The first patch adds an USB bridge driver which registers auxbus children
+for the GPIO and I2C functions of the USBIO chip.
 
-I just tested this and this indeed does not work, when doing
-a 0 byte write then waiting for the chip to respond times-out and
-further i2c transfers after that also fail until the chip is
-power-cycled.
+The second and third patch add a GPIO resp. an I2C driver for the
+auxbus children using the IO functions exported by the USB bridge driver.
 
-> Does the underlying USBIO driver use usb_control_msg? If so, we need to
-> disable zero length read messages. See [1] for a reference.
-
-No it uses bulk messages.
-
-Still based on the no support for writing 0 byte messages, I've tried
-a 0 byte read, since the 0 byte write was not liked much and doing
-i2ctransfer ... r0@0x10 results in the same problem.
-
-So I'll add I2C_AQ_NO_ZERO_LEN to the quirks.
+The second and third patch depend on the IO functions exported by
+the first patch. So to merge this we will need either an immutable tag on
+the USB tree.
 
 Regards,
 
 Hans
+
+
+Israel Cepeda (3):
+  usb: misc: Add Intel USBIO bridge driver
+  gpio: Add Intel USBIO GPIO driver
+  i2c: Add Intel USBIO I2C driver
+
+ MAINTAINERS                    |  10 +
+ drivers/gpio/Kconfig           |  11 +
+ drivers/gpio/Makefile          |   1 +
+ drivers/gpio/gpio-usbio.c      | 247 +++++++++++
+ drivers/i2c/busses/Kconfig     |  11 +
+ drivers/i2c/busses/Makefile    |   1 +
+ drivers/i2c/busses/i2c-usbio.c | 320 ++++++++++++++
+ drivers/usb/misc/Kconfig       |  14 +
+ drivers/usb/misc/Makefile      |   1 +
+ drivers/usb/misc/usbio.c       | 749 +++++++++++++++++++++++++++++++++
+ include/linux/usb/usbio.h      | 177 ++++++++
+ 11 files changed, 1542 insertions(+)
+ create mode 100644 drivers/gpio/gpio-usbio.c
+ create mode 100644 drivers/i2c/busses/i2c-usbio.c
+ create mode 100644 drivers/usb/misc/usbio.c
+ create mode 100644 include/linux/usb/usbio.h
+
+-- 
+2.51.0
 
 
