@@ -1,248 +1,264 @@
-Return-Path: <linux-gpio+bounces-25937-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25938-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BED1AB52DB7
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 11:54:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D9C74B52DE1
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 12:00:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 64B2F3BD422
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 09:54:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A5BDD3B8E6F
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 10:00:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E8722EA49E;
-	Thu, 11 Sep 2025 09:53:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABC7230E849;
+	Thu, 11 Sep 2025 10:00:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NCP1yhSL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD9C2EAB70;
-	Thu, 11 Sep 2025 09:53:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F0E30E0CE;
+	Thu, 11 Sep 2025 10:00:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757584438; cv=none; b=YR2W0pH6IPxDlvxBMQacZI8O/g7gFkEeuIEb2CWaW25WB6sFdb6CnEXgvcAnMHmvF9bsq1fm6Y/9Im8pXMk1DNVQX78Ee+3P4L8OkR7cYznDwesnEqMBhSJU85rjjNhUi4DHcEcnzqMKQ0BDNMp5EgOhW+BHQx0hoMRC64gQWQQ=
+	t=1757584851; cv=none; b=LUqjagAXVwHgSS4tSDLEnM4gHH49u6kPQZtkOLH7tBlx0EK3QhLBB1ngsK8HH4kiEB1O7ogd36H2NL0Z5gGHdFDHxlHoQ9kg6A2D+4byUysKUublFzDDxwM0syETKf4zAvOKEU5P6IEuAZ2KX9QUdF333pc9Az8yyQvJUHGGiDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757584438; c=relaxed/simple;
-	bh=vexckqvgr+n/Q8DUs0GImyk3xaI0GrnJgcQWdAXHJB4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s14MPnmBPpjOcQziahltxuWpEFuO/U+gdGhd/AjisVfO5Z0xKTZsCaxQrqlxea8MofuhRBN/sa1zn+kwFxWh+8gya5MuzyeRbh/y4cXwxcyGR/jJ+3PTb51Mn5TQfLwQFv/uemuqwFDI2K5NkikuE2ow/shrYgib3Ver6z0Nx4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-52dd67b03c8so422731137.2;
-        Thu, 11 Sep 2025 02:53:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757584435; x=1758189235;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bSF0/8/8k+hhEh/LF66/wbc0YiFnHMUi/eNs3GBn8lg=;
-        b=OUB0/vwfuS0Mfww5XNROc/UKDRH66shp2sEmyG9oe66GGmxbHD/ahKD3U59Rp063ZQ
-         7oV0NSafub2VNrF1pzWBlsat831MO1hi04cdQxW5UMpHgbhNiiubx0WTX3BP20BZEqW6
-         CmfDg5WApepbPXS+PwhjVGisbpeBvOa+9WoN0FWhWyAdExnRCyO24rReRFSbB4Z6KZ42
-         kQeI7iwtiNmwJIH6UU9acgLOpbysDGKB7bjqRgRMMM1aXR/aOQvkCVWw0bAqD5TLf8RF
-         lD2zUm11+ymsCbT4SLjh1/ZbvR79ug1+8jhVeEPFPSYHrOEAy7OZpfe3h1f9+xXU+0Hx
-         eFMg==
-X-Forwarded-Encrypted: i=1; AJvYcCU+P2fGPtU0zXtHC9zSYgGh1540w5uovvJp5sDDCjN6dIY8mmCSG0dafTlMH/PTg3B64vtlJhUE8aHmnhkf@vger.kernel.org, AJvYcCVldXU7XDKbKQeECaoEw8vJQd1w21tTfCfeHAqg+NiXQGZU4woiDCHV6FkyI+DH1l0UrMjNGoHXITt044gaHflI2ZM=@vger.kernel.org, AJvYcCX0t2FzaOykqvjGHGLAkWYQsYNuxkydUb/XVEsloJe8JlxBAG/2zRPX1vbMXcBQ77DipO7vG9Tq@vger.kernel.org, AJvYcCXjUCBptZJUJBiVGocQ3mjWgmH9c1xKcH4P5vqHBobtwI9sN32IdaYQcEMLtHYvnUBRVYfhmGEUgM+6@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCSSGrNwluDqY2jh2D2sSD/Xo8UOPQy4NnCjsq0ztmOt5F9WvW
-	hOU0iixGov47jxnAuQladWgyO/ysFelq1YrCQFf1eeqjwEnNZYfVm6x7qjj+/bhj
-X-Gm-Gg: ASbGncsv3CaWULFV3S9/0jTk9VqvywRe1Xl4pXTYaJHXT0n3jGIPKSEuOvmL2cBiv+X
-	ZRCLz5HyzxYRmEz91s+cNtIEJtqMXc+hWxXwqEUoEcmICYcGc6DpQCaj6/ZxpDdSzSHGo0Ytds9
-	3pEb90vxurhHyZa/G42nk4YwYMLBTPpJuWIoe9IxHbGhiMYIrETjBRyqqFOiee8L3hNcyriL4X2
-	N99GH+eKbEDzmlW1ebUmVBvCD/eNbC7MJEJ2bPuKtYEP8q9q6c+bSAluw0eG/ReQ4w/+66udjQq
-	jM1TnAD+HXHQtE2prIdtSQ0UOJuO01V527ddcTPVCqB/utpUF4AuvzKRFnPeYwTXb1o7NT9c0OT
-	N1iQvVbFF9Z6zW4kdoclwaCzO8+teFoMuag+3pSXLDhrfUjhtPDaGEPcPJsUL
-X-Google-Smtp-Source: AGHT+IE07bJfPKVJq8iVTeDCmqd9Kv5qaMxYTFeEfbiKPF3gYclsvkyycpNti780EXac6NnZpuSYlA==
-X-Received: by 2002:a05:6102:4414:b0:534:1aae:2d7b with SMTP id ada2fe7eead31-53d231f8b57mr5206273137.24.1757584434617;
-        Thu, 11 Sep 2025 02:53:54 -0700 (PDT)
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8ccd38f8d83sm172075241.11.2025.09.11.02.53.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Sep 2025 02:53:54 -0700 (PDT)
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-52dd67b03c8so422728137.2;
-        Thu, 11 Sep 2025 02:53:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVMjM/2O/M7pGPrpcTU4QaWEvNsNl7THvi64Ge75Lbd3NBxkF9ifZUy2YsZ1z55bvOIXz8eixHH@vger.kernel.org, AJvYcCW95cOFBq00FSb9laK92QhOqbKh3Q1jAGHNq007f8A/V/OFfo69uEYMJ98OgCN/rT8BfkTdraKiMejvYU/8@vger.kernel.org, AJvYcCX9AHb+KIt9wolBuyWcJx5pKzC4I5PSQCZFScPVRG83fEQ/7LQEwgTqzYe96Dk1xTZeeIwMiMJWbpms7mBqxuhv9a8=@vger.kernel.org, AJvYcCXqVyQbSLVxdOWvc3PrPql3OkF2ScvIdogGQfcQpgdMRgdWOTSi0QJoIm9hJ0hWNDcAqQ07BrzNtibV@vger.kernel.org
-X-Received: by 2002:a05:6102:41a6:b0:529:b446:1749 with SMTP id
- ada2fe7eead31-53d1d61d3d8mr391658137.15.1757584434133; Thu, 11 Sep 2025
- 02:53:54 -0700 (PDT)
+	s=arc-20240116; t=1757584851; c=relaxed/simple;
+	bh=26ef/AWDr6iPql13XdUNHtcG4FfN13JknCbbcMnKvjQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sj+TgBRVQRWoIxU5U+M0auo1+yRpapYVh89NEZAbS9ysmNqPn5vX4p4/+hx6CEvGJ6HgwPXuyCteJzt5uIVzQJ4ZLVsVpz3wtCcDu64PR8AFJRR+J/kpA5soYRgYYQw1JL2jzsL40/bl9AULiNX9XCqpMfXTl/eB4diO4zTUHJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NCP1yhSL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49386C4CEF1;
+	Thu, 11 Sep 2025 10:00:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757584850;
+	bh=26ef/AWDr6iPql13XdUNHtcG4FfN13JknCbbcMnKvjQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NCP1yhSLNMvNznM42Tdg6Lt6sWqmT8tMeD6ADk8zRD2WLjrAEsAKgGhiY/zuwS3ya
+	 8j+hNc9K5dh6SmpsEcpPZETAIvyLEojL+064pdWi8Ci2nNu5bSPimco+gjTIzn36Cv
+	 RtJoM5ODWvQsg5K6MY3OPJy9tVrWmmrhadoApDj/f3BwmVXyEBo2mTSGmklPtJUT7l
+	 scSwtBNQctN/iBNm5Vlb2MBsMcWrbH5TvWyz56AOJ5bvfXDWeLVrT7C89LQofvl+9i
+	 E+Q3LIJwkRPWU1p/1gpBfePpCySFufkixlhk1ofk4gznzoOYWwCeupSgD7jAKqtGdO
+	 h4mkgl0Z9tXLQ==
+Date: Thu, 11 Sep 2025 11:00:43 +0100
+From: Lee Jones <lee@kernel.org>
+To: a0282524688@gmail.com
+Cc: tmyu0@nuvoton.com, linus.walleij@linaro.org, brgl@bgdev.pl,
+	andi.shyti@kernel.org, mkl@pengutronix.de,
+	mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net,
+	jdelvare@suse.com, alexandre.belloni@bootlin.com,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
+	netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH RESEND v14 0/7] Add Nuvoton NCT6694 MFD drivers
+Message-ID: <20250911100043.GH9224@google.com>
+References: <20250904015048.1801451-1-a0282524688@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250908144250.1269294-1-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20250908144250.1269294-1-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 11 Sep 2025 11:53:43 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVVWTAvEMgv2NVg0-2f4Cs4oXp4yBM1tQYUUbMKH6EiGQ@mail.gmail.com>
-X-Gm-Features: AS18NWBculkJs5so6XRweGBNYpGT0R-tE5oiBNK2yMaNi3azGBKUpJib1f4NyPU
-Message-ID: <CAMuHMdVVWTAvEMgv2NVg0-2f4Cs4oXp4yBM1tQYUUbMKH6EiGQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Fix ISEL restore on resume
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: linus.walleij@linaro.org, biju.das.jz@bp.renesas.com, 
-	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250904015048.1801451-1-a0282524688@gmail.com>
 
-Hi Claudiu,
+On Thu, 04 Sep 2025, a0282524688@gmail.com wrote:
 
-On Mon, 8 Sept 2025 at 16:42, Claudiu <claudiu.beznea@tuxon.dev> wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> Commit 1d2da79708cb ("pinctrl: renesas: rzg2l: Avoid configuring ISEL in
-> gpio_irq_{en,dis}able*()") dropped the configuration of ISEL from
-> rzg2l_gpio_irq_enable()/rzg2l_gpio_irq_disable() and moved it to
-> rzg2l_gpio_child_to_parent_hwirq()/rzg2l_gpio_irq_domain_free() to fix
-> spurious IRQs.
->
-> The resume code used rzg2l_gpio_irq_enable() (called from
-> rzg2l_gpio_irq_restore()) to reconfigure the wakeup interrupts. Some
-> drivers (e.g. Ethernet) may also reconfigure interrupts in their own code,
-> eventually calling rzg2l_gpio_irq_enable(), when these are not wakeup
-> interrupts.
->
-> After commit 1d2da79708cb ("pinctrl: renesas: rzg2l: Avoid configuring ISEL
-> in gpio_irq_{en,dis}able*()"), ISEL was no longer configured properly after
-> resume.
->
-> Fix this by adding rzg2l_gpio_irq_endisable() back into
-> rzg2l_gpio_irq_enable(), and by using its unlocked variant in
-> rzg2l_gpio_irq_restore(). Having IRQs enable in rzg2l_gpio_irq_enable()
+> From: Ming Yu <a0282524688@gmail.com>
+> 
+> This patch series introduces support for Nuvoton NCT6694, a peripheral
+> expander based on USB interface. It models the chip as an MFD driver
+> (1/7), GPIO driver(2/7), I2C Adapter driver(3/7), CANfd driver(4/7),
+> WDT driver(5/7), HWMON driver(6/7), and RTC driver(7/7).
+> 
+> The MFD driver implements USB device functionality to issue
+> custom-define USB bulk pipe packets for NCT6694. Each child device can
+> use the USB functions nct6694_read_msg() and nct6694_write_msg() to issue
+> a command. They can also request interrupt that will be called when the
+> USB device receives its interrupt pipe.
+> 
+> The following introduces the custom-define USB transactions:
+>         nct6694_read_msg - Send bulk-out pipe to write request packet
+>                            Receive bulk-in pipe to read response packet
+>                            Receive bulk-in pipe to read data packet
+> 
+>         nct6694_write_msg - Send bulk-out pipe to write request packet
+>                             Send bulk-out pipe to write data packet
+>                             Receive bulk-in pipe to read response packet
+>                             Receive bulk-in pipe to read data packet
+> 
+> Changes since version 13:
+> - Update to guard(spinlock_irqsave)() in nct6694.c
+> - Add struct i2c_adapter_quirks in i2c-nct6694.c
+> - Rebased on top of v6.17-rc1 as requested
 
-enabled
+I thought you were going to rebase this onto v6.17-rc1?
 
-> should be safe with respect to spurious IRQs, as in the probe case IRQs are
-> enabled anyway in rzg2l_gpio_child_to_parent_hwirq(). No spurious IRQs
-> were detected on suspend/resume tests (executed on RZ/G3S).
->
-> Fixes: 1d2da79708cb ("pinctrl: renesas: rzg2l: Avoid configuring ISEL in gpio_irq_{en,dis}able*(")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+It still does not apply.
 
-Thanks for your patch!
-
-I have to admit I don't fully understand what is going on...
-
-> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> @@ -2428,7 +2428,7 @@ static int rzg2l_gpio_get_gpioint(unsigned int virq, struct rzg2l_pinctrl *pctrl
->  }
->
->  static void rzg2l_gpio_irq_endisable(struct rzg2l_pinctrl *pctrl,
-> -                                    unsigned int hwirq, bool enable)
-> +                                    unsigned int hwirq, bool enable, bool lock)
->  {
->         const struct pinctrl_pin_desc *pin_desc = &pctrl->desc.pins[hwirq];
->         u64 *pin_data = pin_desc->drv_data;
-> @@ -2443,12 +2443,16 @@ static void rzg2l_gpio_irq_endisable(struct rzg2l_pinctrl *pctrl,
->                 addr += 4;
->         }
->
-> -       spin_lock_irqsave(&pctrl->lock, flags);
-> +       if (lock)
-> +               spin_lock_irqsave(&pctrl->lock, flags);
-> +
->         if (enable)
->                 writel(readl(addr) | BIT(bit * 8), addr);
->         else
->                 writel(readl(addr) & ~BIT(bit * 8), addr);
-> -       spin_unlock_irqrestore(&pctrl->lock, flags);
-> +
-> +       if (lock)
-> +               spin_unlock_irqrestore(&pctrl->lock, flags);
->  }
-
-I am not so fond of these "if (lock) ..."-constructs, especially as
-the function now takes two bool parameters, which is error-prone.
-
-What about renaming rzg2l_gpio_irq_endisable() to
-__rzg2l_gpio_irq_endisable(), and moving the locking to a wrapper
-rzg2l_gpio_irq_endisable()?
-
-    static void __rzg2l_gpio_irq_endisable(struct rzg2l_pinctrl *pctrl,
-                                         unsigned int hwirq, bool enable)
-    {
-            /* old functionality without locking */
-            ...
-    }
-
-    static void rzg2l_gpio_irq_endisable(struct rzg2l_pinctrl *pctrl,
-                                        unsigned int hwirq, bool enable)
-    {
-            unsigned long flags;
-
-            spin_lock_irqsave(&pctrl->lock, flags);
-            __rzg2l_gpio_irq_endisable(pctrl, hwirq, enable);
-            spin_unlock_irqrestore(&pctrl->lock, flags);
-    }
-
-Then no existing callers of rzg2l_gpio_irq_endisable() need to be
-changed.
-
-> @@ -2460,15 +2464,22 @@ static void rzg2l_gpio_irq_disable(struct irq_data *d)
->         gpiochip_disable_irq(gc, hwirq);
->  }
->
-> -static void rzg2l_gpio_irq_enable(struct irq_data *d)
-> +static void rzg2l_gpio_irq_enable_helper(struct irq_data *d, bool lock)
-
-Here we can't do without the "lock" parameter, unless duplicating the
-full body, so this is fine.  I'd rename it to __rzg2l_gpio_irq_enable(),
-though.
-
->  {
->         struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +       struct rzg2l_pinctrl *pctrl = container_of(gc, struct rzg2l_pinctrl, gpio_chip);
->         unsigned int hwirq = irqd_to_hwirq(d);
->
->         gpiochip_enable_irq(gc, hwirq);
-> +       rzg2l_gpio_irq_endisable(pctrl, hwirq, true, lock);
-
-if (lock)
-    rzg2l_gpio_irq_endisable(pctrl, hwirq, true);
-else
-    __rzg2l_gpio_irq_endisable(pctrl, hwirq, true);
-
->         irq_chip_enable_parent(d);
->  }
->
-> +static void rzg2l_gpio_irq_enable(struct irq_data *d)
-> +{
-> +       rzg2l_gpio_irq_enable_helper(d, true);
-
-__rzg2l_gpio_irq_enable(d, true);
-
-> +}
-> +
->  static int rzg2l_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->  {
->         return irq_chip_set_type_parent(d, type);
-> @@ -2617,7 +2628,7 @@ static void rzg2l_gpio_irq_restore(struct rzg2l_pinctrl *pctrl)
->                 spin_lock_irqsave(&pctrl->lock, flags);
->                 ret = rzg2l_gpio_irq_set_type(data, irqd_get_trigger_type(data));
->                 if (!ret && !irqd_irq_disabled(data))
-> -                       rzg2l_gpio_irq_enable(data);
-> +                       rzg2l_gpio_irq_enable_helper(data, false);
-
-__rzg2l_gpio_irq_enable(data, false);
-
-Before, the lock was taken again, while it was already held.
-Didn't this cause a deadlock?
-
->                 spin_unlock_irqrestore(&pctrl->lock, flags);
->
->                 if (ret)
-
-Gr{oetje,eeting}s,
-
-                        Geert
+> Changes since version 12:
+> - Implement IDA in MFD driver to handle per-device IDs
+> - Use spinlock to replace irq mutex lock
+> - Use same email address in the signature
+> 
+> Changes since version 11:
+> - Use platform_device's id to replace IDA
+> - Modify the irq_domain_add_simple() to irq_domain_create_simple() in
+>   nct6694.c
+> - Update struct data_bittiming_params related part in nct6694_canfd.c
+> - Fix the typo in the header in nct6694-hwmon.c
+> 
+> Changes since version 10:
+> - Add change log for each patch
+> - Fix mfd_cell to MFD_CELL_NAME() in nct6694.c
+> - Implement IDA to allocate id in gpio-nct6694.c, i2c-nct6694.c,
+>   nct6694_canfd.c and nct6694_wdt.c
+> - Add header <linux/bitfield.h> in nct6694_canfd.c
+> - Add support to config tdc in nct6694_canfd.c
+> - Add module parameters to configure WDT's timeout and pretimeout value
+>   in nct6694_wdt.c
+> 
+> Changes since version 9:
+> - Add devm_add_action_or_reset() to dispose irq mapping
+> - Add KernelDoc to exported functions in nct6694.c
+> 
+> Changes since version 8:
+> - Modify the signed-off-by with my work address
+> - Rename all MFD cell names to "nct6694-xxx"
+> - Add irq_dispose_mapping() in the error handling path and in the remove
+>   function
+> - Fix some comments in nct6694.c and in nct6694.h
+> - Add module parameters to configure I2C's baudrate in i2c-nct6694.c
+> - Rename all function names nct6694_can_xxx to nct6694_canfd_xxx in
+>   nct6694_canfd.c
+> - Fix nct6694_canfd_handle_state_change() in nct6694_canfd.c
+> - Fix nct6694_canfd_start() to configure NBTP and DBTP in nct6694_canfd.c
+> - Add can_set_static_ctrlmode() in nct6694_canfd.c
+> 
+> Changes since version 7:
+> - Add error handling for devm_mutex_init()
+> - Modify the name of the child devices CAN1 and CAN2 to CAN0 and CAN1.
+> - Fix multiline comments to net-dev style in nct6694_canfd.c
+> 
+> Changes since version 6:
+> - Fix nct6694_can_handle_state_change() in nct6694_canfd.c
+> - Fix warnings in nct6694_canfd.c
+> - Move the nct6694_can_priv's bec to the end in nct6694_canfd.c
+> - Fix warning in nct6694_wdt.c
+> - Fix temp_hyst's data type to signed variable in nct6694-hwmon.c
+> 
+> Changes since version 5:
+> - Modify the module name and the driver name consistently
+> - Fix mfd_cell to MFD_CELL_NAME() and MFD_CELL_BASIC()
+> - Drop unnecessary macros in nct6694.c
+> - Update private data and drop mutex in nct6694_canfd.c
+> - Fix nct6694_can_handle_state_change() in nct6694_canfd.c
+> 
+> Changes since version 4:
+> - Modify arguments in read/write function to a pointer to cmd_header
+> - Modify all callers that call the read/write function
+> - Move the nct6694_canfd.c to drivers/net/can/usb/
+> - Fix the missing rx offload function in nct6694_canfd.c
+> - Fix warngings in nct6694-hwmon.c
+> 
+> Changes since version 3:
+> - Modify array buffer to structure for each drivers
+> - Fix defines and comments for each drivers
+> - Add header <linux/bits.h> and use BIT macro in nct6694.c and
+>   gpio-nct6694.c
+> - Modify mutex_init() to devm_mutex_init()
+> - Add rx-offload helper in nct6694_canfd.c
+> - Drop watchdog_init_timeout() in nct6694_wdt.c
+> - Modify the division method to DIV_ROUND_CLOSEST() in nct6694-hwmon.c
+> - Drop private mutex and use rtc core lock in rtc-nct6694.c
+> - Modify device_set_wakeup_capable() to device_init_wakeup() in
+>   rtc-nct6694.c
+> 
+> Changes since version 2:
+> - Add MODULE_ALIAS() for each child driver
+> - Modify gpio line names be a local variable in gpio-nct6694.c
+> - Drop unnecessary platform_get_drvdata() in gpio-nct6694.c
+> - Rename each command in nct6694_canfd.c
+> - Modify each function name consistently in nct6694_canfd.c
+> - Modify the pretimeout validation procedure in nct6694_wdt.c
+> - Fix warnings in nct6694-hwmon.c
+> 
+> Changes since version 1:
+> - Implement IRQ domain to handle IRQ demux in nct6694.c
+> - Modify USB_DEVICE to USB_DEVICE_AND_INTERFACE_INFO API in nct6694.c
+> - Add each driver's command structure
+> - Fix USB functions in nct6694.c
+> - Fix platform driver registration in each child driver
+> - Sort each driver's header files alphabetically
+> - Drop unnecessary header in gpio-nct6694.c
+> - Add gpio line names in gpio-nct6694.c
+> - Fix errors and warnings in nct6694_canfd.c
+> - Fix TX-flow control in nct6694_canfd.c
+> - Fix warnings in nct6694_wdt.c
+> - Drop unnecessary logs in nct6694_wdt.c
+> - Modify start() function to setup device in nct6694_wdt.c
+> - Add voltage sensors functionality in nct6694-hwmon.c
+> - Add temperature sensors functionality in nct6694-hwmon.c
+> - Fix overwrite error return values in nct6694-hwmon.c
+> - Add write value limitation for each write() function in nct6694-hwmon.c
+> - Drop unnecessary logs in rtc-nct6694.c
+> - Fix overwrite error return values in rtc-nct6694.c
+> - Modify to use dev_err_probe API in rtc-nct6694.c
+> 
+> 
+> Ming Yu (7):
+>   mfd: Add core driver for Nuvoton NCT6694
+>   gpio: Add Nuvoton NCT6694 GPIO support
+>   i2c: Add Nuvoton NCT6694 I2C support
+>   can: Add Nuvoton NCT6694 CANFD support
+>   watchdog: Add Nuvoton NCT6694 WDT support
+>   hwmon: Add Nuvoton NCT6694 HWMON support
+>   rtc: Add Nuvoton NCT6694 RTC support
+> 
+>  MAINTAINERS                         |  12 +
+>  drivers/gpio/Kconfig                |  12 +
+>  drivers/gpio/Makefile               |   1 +
+>  drivers/gpio/gpio-nct6694.c         | 499 +++++++++++++++
+>  drivers/hwmon/Kconfig               |  10 +
+>  drivers/hwmon/Makefile              |   1 +
+>  drivers/hwmon/nct6694-hwmon.c       | 949 ++++++++++++++++++++++++++++
+>  drivers/i2c/busses/Kconfig          |  10 +
+>  drivers/i2c/busses/Makefile         |   1 +
+>  drivers/i2c/busses/i2c-nct6694.c    | 196 ++++++
+>  drivers/mfd/Kconfig                 |  15 +
+>  drivers/mfd/Makefile                |   2 +
+>  drivers/mfd/nct6694.c               | 388 ++++++++++++
+>  drivers/net/can/usb/Kconfig         |  11 +
+>  drivers/net/can/usb/Makefile        |   1 +
+>  drivers/net/can/usb/nct6694_canfd.c | 832 ++++++++++++++++++++++++
+>  drivers/rtc/Kconfig                 |  10 +
+>  drivers/rtc/Makefile                |   1 +
+>  drivers/rtc/rtc-nct6694.c           | 297 +++++++++
+>  drivers/watchdog/Kconfig            |  11 +
+>  drivers/watchdog/Makefile           |   1 +
+>  drivers/watchdog/nct6694_wdt.c      | 307 +++++++++
+>  include/linux/mfd/nct6694.h         | 102 +++
+>  23 files changed, 3669 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-nct6694.c
+>  create mode 100644 drivers/hwmon/nct6694-hwmon.c
+>  create mode 100644 drivers/i2c/busses/i2c-nct6694.c
+>  create mode 100644 drivers/mfd/nct6694.c
+>  create mode 100644 drivers/net/can/usb/nct6694_canfd.c
+>  create mode 100644 drivers/rtc/rtc-nct6694.c
+>  create mode 100644 drivers/watchdog/nct6694_wdt.c
+>  create mode 100644 include/linux/mfd/nct6694.h
+> 
+> -- 
+> 2.34.1
+> 
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Lee Jones [李琼斯]
 
