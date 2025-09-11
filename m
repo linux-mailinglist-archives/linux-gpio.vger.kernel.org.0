@@ -1,113 +1,135 @@
-Return-Path: <linux-gpio+bounces-25932-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25933-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A13CB52A54
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 09:44:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E5F0B52A7F
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 09:50:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1157EA00E93
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 07:44:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 107E8189B7FB
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Sep 2025 07:50:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B247527F195;
-	Thu, 11 Sep 2025 07:43:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3571226CE02;
+	Thu, 11 Sep 2025 07:50:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="woWkgeB+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cYTD3Z+j"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4712227F00F
-	for <linux-gpio@vger.kernel.org>; Thu, 11 Sep 2025 07:43:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80379267B7F;
+	Thu, 11 Sep 2025 07:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757576638; cv=none; b=lyCpYvO7+h9UcGDIwB2fthTngDA+OwW02QPldagqU2fH5S7uCRgBd6x0hwL1gMJz0Hfs+zWHxgtlZGRbnWTro1leCmQBzwjt7zUOkdhJ/mh7JFsL5RwdNr5x+G0QxiSdFVMphvZRzzWi6+vii4P+fVhobCA73qJj0A12KgoL/Ho=
+	t=1757577034; cv=none; b=fbDw3ZLCkEVmr7W8g10QW7ra4aIFl5cXKsGYlFynd0m9vWS5l7kAwe6dMvCcmFMspxJh8n97O97HR6o0ek9wKwOQ88to/ZmzdGowYuRHHaxumukuB44XtaxOnyJbBe5hZ+Rg5tubB64HvBabp9OQ9Ga6hDKDXWBwJQJlIAgOOgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757576638; c=relaxed/simple;
-	bh=xSsBhd9wl9OWCIdDg1strQ4Gj08jjYdy8SaR4+qPIds=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z70Dwo45zzQnV/WqRPaD7hY32hempl1eaTI+F6F8Yc/4QweBK073aKsPmBx17yq5+BPa5RhI9kDViBIbuGv8YBXU9cIgVK226NFMkBHipnU6AgJb9J/Bfs6Rvc4rftSB6c24RpkZXXeo49w+mchY220tqPqOw6R4uXBGJI0mw24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=woWkgeB+; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 9A6061A0DC8;
-	Thu, 11 Sep 2025 07:43:54 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 67FA3606BB;
-	Thu, 11 Sep 2025 07:43:54 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3C48B102F1CED;
-	Thu, 11 Sep 2025 09:43:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1757576633; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=3PWCgwLcwSLejuAlR8rVzGE518PeUERmFz0/d/WdfYg=;
-	b=woWkgeB+8YV0vtNWYSuBaLO1uznLAH0FweMoufdjarl9/H7hrqB3ARuXISnQqwSftfbjia
-	ba6R/9DrsLBkt6cN7IQ+vhxDsOCHeHO/gM+S7rAA991tLnTf7LE+/nqfuxuf4DZ++B/IOK
-	sHoziFxv+3ANQM3M6aWhRrCpaDVBgAgYZdi/318/0Pf9VLenmdvqAJYa/N0ARjEGGMG836
-	EJdOsQMf0xzupbUBWm5IdbqQMyHaia3O1NjkC62WgsSCBA19NyvtMW1K9jC3NVCsCrdllK
-	vBJ8YvhqS6LyXcyO7NHe5rFe5kUno4TLgPoq10r4vl5VMgEwcFFSgD1VDCOuAg==
-Date: Thu, 11 Sep 2025 09:43:39 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Hoan Tran
- <hoan@os.amperecomputing.com>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Geert
- Uytterhoeven <geert+renesas@glider.be>, Magnus Damm
- <magnus.damm@gmail.com>, Saravana Kannan <saravanak@google.com>, Serge
- Semin <fancer.lancer@gmail.com>, Phil Edworthy <phil.edworthy@renesas.com>,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Pascal
- Eberhard <pascal.eberhard@se.com>, Miquel Raynal
- <miquel.raynal@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 2/8] dt-bindings: soc: renesas: Add the Renesas RZ/N1
- GPIO Interrupt Multiplexer
-Message-ID: <20250911094339.5a70e906@bootlin.com>
-In-Reply-To: <20250910143316.GA4047084-robh@kernel.org>
-References: <20250909120041.154459-1-herve.codina@bootlin.com>
-	<20250909120041.154459-3-herve.codina@bootlin.com>
-	<20250910143316.GA4047084-robh@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1757577034; c=relaxed/simple;
+	bh=m30L7S1WvoRggLHv6LreiIlctXHF+XJ1XKVdT0+e9qo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cx1i5Aus6eO3UnCtDVA+OpXxpr6hC9l/RRHJv2x2PyzAPC3JMUn0CvdIIklcNHT68wJYD3OAgfwZSkEmrfSP0iFgPFDd10IJZaMdZxhSHpA3cL9veWDL7VrH9peOwUabEAjOeSWZuQegfEjziuPxPBrHLFyHwd7qT/Hh6S9ADlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cYTD3Z+j; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1757577033; x=1789113033;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=m30L7S1WvoRggLHv6LreiIlctXHF+XJ1XKVdT0+e9qo=;
+  b=cYTD3Z+jVrnTnd+ax8CniyL9wCCIrU39kQ2kCsqPB86fHwq/dodoLqsM
+   7wvrTYNaLhLZkp7uiB66+DN5wRqDWIACq7ROnFZilW9nBqbmePNYsRagU
+   zIe26nDcheavVzEE15kBP0lXFJXLtUcs8/RNgigp2akp5dF1OHRj9a7Wq
+   gwE+RkP75WeEhjgNhTTzhp6SIFWbK/muwPdgCr7ABAKI8/HT6n5he//Pv
+   U1mwujWx5zTG8J5jh9ldzFFxdgCt1AVGyvVY05jGr1EQjUVsrgICxk6nb
+   buF//Ceghj+IR0xkN9PIHSrMwc0+q1kddeGvQvqzJwS9JYmapuDvwCRyf
+   Q==;
+X-CSE-ConnectionGUID: 9iNcqjASRm+TBvYVltk7+g==
+X-CSE-MsgGUID: 3SifTtzVTWmL+zXuclYbtA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11549"; a="58941625"
+X-IronPort-AV: E=Sophos;i="6.18,256,1751266800"; 
+   d="scan'208";a="58941625"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2025 00:50:32 -0700
+X-CSE-ConnectionGUID: /rkAzoZPQPW19fuKTvUXuA==
+X-CSE-MsgGUID: uzsJIT7GTJKG20+iNoc2mA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,256,1751266800"; 
+   d="scan'208";a="178821912"
+Received: from smile.fi.intel.com ([10.237.72.51])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2025 00:50:23 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uwc4R-000000022QJ-0Efr;
+	Thu, 11 Sep 2025 10:50:19 +0300
+Date: Thu, 11 Sep 2025 10:50:18 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Lee Jones <lee@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Avi Fishman <avifishman70@gmail.com>,
+	Tomer Maimon <tmaimon77@gmail.com>,
+	Tali Perry <tali.perry1@gmail.com>,
+	Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>,
+	Benjamin Fair <benjaminfair@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+	=?iso-8859-1?Q?Cl=E9ment?= Le Goffic <legoffic.clement@gmail.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	James Cowgill <james.cowgill@blaize.com>,
+	Matt Redfearn <matt.redfearn@blaize.com>,
+	Neil Jones <neil.jones@blaize.com>,
+	Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>,
+	Hoan Tran <hoan@os.amperecomputing.com>,
+	Yang Shen <shenyang39@huawei.com>, Imre Kaloz <kaloz@openwrt.org>,
+	Yinbo Zhu <zhuyinbo@loongson.cn>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Nobuhiro Iwamatsu <nobuhiro.iwamatsu.x90@mail.toshiba>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com, imx@lists.linux.dev,
+	linux-unisoc@lists.infradead.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 0/3] gpio/pinctrl/mfd: use more common syntax for
+ compound literals
+Message-ID: <aMJ_Ohp5YtYNFnYV@smile.fi.intel.com>
+References: <20250910-make-compound-literals-normal-again-v1-0-076ee7738a0b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250910-make-compound-literals-normal-again-v1-0-076ee7738a0b@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi Rob,
-
-On Wed, 10 Sep 2025 09:33:16 -0500
-Rob Herring <robh@kernel.org> wrote:
-
-> On Tue, Sep 09, 2025 at 02:00:33PM +0200, Herve Codina (Schneider Electric) wrote:
-> > On the Renesas RZ/N1 SoC, GPIOs can generate interruptions. Those
-> > interruption lines are multiplexed by the GPIO Interrupt Multiplexer in
-> > order to map 32 * 3 GPIO interrupt lines to 8 GIC interrupt lines.
-> > 
-> > The GPIO interrupt multiplexer IP does nothing but select 8 GPIO
-> > IRQ lines out of the 96 available to wire them to the GIC input lines.
-> > 
-> > Signed-off-by: Herve Codina (Schneider Electric) <herve.codina@bootlin.com>
-> > ---
-> >  .../soc/renesas/renesas,rzn1-gpioirqmux.yaml  | 86 +++++++++++++++++++
-> >  1 file changed, 86 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/soc/renesas/renesas,rzn1-gpioirqmux.yaml  
+On Wed, Sep 10, 2025 at 09:25:44AM +0200, Bartosz Golaszewski wrote:
+> As discussed[1] with Andy: it's probably better to use a more common
+> syntax for compound literals so fix the commits that converted GPIO
+> chips to using the new generic GPIO chip API and make them explicitly
+> spell out the type they're initializing.
 > 
-> Documentation/devicetree/bindings/soc/renesas/renesas,rzn1-gpioirqmux.example.dts:42.13-45.34: Warning (interrupt_map): /example-0/interrupt-controller@51000480:interrupt-map: Missing property '#address-cells' in node /example-0/interrupt-controller, using 0 as fallback
-> Documentation/devicetree/bindings/soc/renesas/renesas,rzn1-gpioirqmux.example.dts:42.13-45.34: Warning (interrupt_map): /example-0/interrupt-controller@51000480:interrupt-map: Missing property '#address-cells' in node /example-0/interrupt-controller, using 0 as fallback
-> Documentation/devicetree/bindings/soc/renesas/renesas,rzn1-gpioirqmux.example.dts:42.13-45.34: Warning (interrupt_map): /example-0/interrupt-controller@51000480:interrupt-map: Missing property '#address-cells' in node /example-0/interrupt-controller, using 0 as fallback
+> Each commit in this series can go directly into its respective tree:
+> MFD, pinctrl and GPIO.
 
-Ok, I will add '#address-cells = <0>;' in the interrupt-controller node
-available in the example.
+Thank you! All look good to me,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 
-Best regards,
-Hervé
+> [1] https://lore.kernel.org/all/20250909-gpio-mmio-gpio-conv-part4-v1-13-9f723dc3524a@linaro.org/
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
