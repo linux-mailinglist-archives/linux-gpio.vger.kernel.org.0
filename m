@@ -1,142 +1,112 @@
-Return-Path: <linux-gpio+bounces-26041-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26042-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 028EAB54D10
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 14:17:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54FFBB54D18
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 14:18:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C96E75A34A7
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 12:12:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F4125172A25
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 12:13:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30D4B3148B7;
-	Fri, 12 Sep 2025 12:05:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B37DB30FF01;
+	Fri, 12 Sep 2025 12:05:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OE3gEZ6X"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e8Kx3CVW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AF3312838;
-	Fri, 12 Sep 2025 12:05:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACE93164BC
+	for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 12:05:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757678740; cv=none; b=OsALTQv8L1rNdVy0QLNfp+9lzKZUiB/gsEj/LQBfXZ3Jed/CInkiuJ8tCFlZIwVCwZn/8qykc0hoqj7emUWb5nE5m46xoTxi9WnNMcZXTOYYluy4gJrOJMb7/MCe+T1nPa+rFAK+Jyw9JuTIAb7KJqvg8tvf3T44akBduW8Arqs=
+	t=1757678747; cv=none; b=HqpxiVMRrMleZU0ON0JIPrFvxBBU9bVyY8MyC7lKS9sTi2PY340yIQPKvGfZfBsQHZxNyL08EGaXAVXD1KWsbQ6vs1VgeNsdKYeaPAg5nmWetKjIRBi13UEU9ei9wjDzkCaBv5OOiXD1sK/ddKg+0jAXrY1+3SQJK+4sUPm6JFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757678740; c=relaxed/simple;
-	bh=6kXTvgsEt4hrAQkTdQrB5UQT/65SaHckvtwi0km/o5Q=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=NzevxnkIrMXSPvRzcqLh8U+FexRBhtLXPmOwuK84yof6/tVia2zQDdt9fOMGyCZV4R4rUjAT8CzuUEFRy4J1rtnb01R+KSVqtweIzn8i9fQrOx1fc+Ue7OtcQwpC+Kxb1IcK6VROQSMUVJxPAqcZeToXiJT2WxGJeGx3EefAnjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OE3gEZ6X; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 6282E1A0DCD;
-	Fri, 12 Sep 2025 12:05:35 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 28A6160638;
-	Fri, 12 Sep 2025 12:05:35 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 8F324102F2999;
-	Fri, 12 Sep 2025 14:05:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1757678734; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=Os+OidjTl+c1dT3HL1cuaSdhlkiI53JVGWAi5cjuG5g=;
-	b=OE3gEZ6X44PjnQgyrjxBYK80kz9SpzxFU5P6SwdMm81+KP5hIFW7PNtGVIDrgqmh5Cex8C
-	INo3PxGEWtzFW/10tnhbx+Eo0zQKV/+KXZ6zVxN5eHDVaHYkno9fatGG4GcYDlt6kf7OkL
-	/GdcTD6y8s6vhEcjeBrVkUI1zVI6gjwotmc4itWYm3MIoPm0TtO34qMmP350zAF59XnhYA
-	cJfCNZaMvrMaWqJTpyXsPaj8D1Rx7zLJFGqp5VVaxcjH4YqdLYUtK8LNCFCLUIU2iNdoMW
-	eEj7/g6Y47SUTvkRFrQTlFODlOP4c7iItOnrjsMUPlgWokcnxM+locoSf1pMrA==
+	s=arc-20240116; t=1757678747; c=relaxed/simple;
+	bh=2HZs3RhpADmvQOPZauIqpaCVKlWVA26wOATz0MoDUgs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TzekrFTIiIk2hCKSmCWBmVgc7jwhTMqQDsuvXs2Bj2Ehgcm8Hj0IDlPkplzBsVm4dftbbFYKq9E9iKPDWIqmPaU4I6c2H8NiAKvOvLC2jAwIKYBypNfGzaDPX/4da98RrHtZy5+vXWT/t80sYZvsOzRnN5RFy1w5F+LyyKnmxkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e8Kx3CVW; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-55f6507bd53so1901113e87.3
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 05:05:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1757678743; x=1758283543; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kQHCeemvJiUl1jquvWnCNozolzxgcKwBQKlns8lZfT0=;
+        b=e8Kx3CVWKClpZe/jOnPLqCCawpiAGQHjLJUbFWb36707WUygXsEPM0nngZHkazd43b
+         5B6TWEiCg2ei3IugXux39rBg3kSHTYd11vranMoIyX5GosnwO238fnAVmbVoN8TEq9N2
+         c+h+ByEM6ex4SBPe/BEaobnT0uhPfcEy2LEbMRY5iUp34tfiLEma8ZHj6jGebqTc0CoN
+         4x+1UH3T2e34Cta2rkpyxS9KS3e96HLEGj0WVEezxXM1KeyXVIONC/8a0v/MkeuyLeBR
+         Q6hY5Cl0fTPy5lJTbRmNJEhXS8leRnJmnoYjEt5wvt+qFZpanIJVsC6NXBcHCESdTFwA
+         bejg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757678743; x=1758283543;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kQHCeemvJiUl1jquvWnCNozolzxgcKwBQKlns8lZfT0=;
+        b=A+gQ6EZjYKIN8xrhnXeefoTyzLB9NVEfwoWRB79x045iKJovKi3I/nN/A/YrTCmeGs
+         /MlDMLEsqHfRSfk27LxwNOuAHe0ue+jjN3gEwHHIysV75/CmRUBf9COWM0fEQmuqXZ0g
+         qJemSYjYyvL8kC3KiauOkIK0JzZ9szF4LAdVZ3M2WBq4InqSRlVccL/aGBzPRfkBmv04
+         +V9f/2hu5gAt1e6Wzan86SwJ/6XIxByFDeVE11DBuUIvC5LNXvxtX7fvmZVllmzyKqZ0
+         JI7vpDl4tfzSVXX2zNjnctY1R4JXmgn2Foai2f+1Wo/GKrAq/dO3aK/yt1hCjegKlNwv
+         ReZA==
+X-Gm-Message-State: AOJu0YzHGFPaY2/kBMdzInw0aNpOgtD0jSarknLy/016s5AXHlrLYQvN
+	Wm2xMDZ3GfaZIjrDIvKklQxtBFNMVjvsZycFtLGWVG4famUQ40UyFdMISF+VRE0PGopSt/pCyu7
+	V7exyFCSwcEY+vfS12ij3df2zyxsUHj9hxAyKoG03nw==
+X-Gm-Gg: ASbGncue42ueCwWSowDem9dSGyccdF07NwEoi9f4/ttIuHKBSJvGm6B5x4uGU+YgzkT
+	uDYcrc27Fig/Ci1K+Azh+yrjsk3LMYbT3iH4Xdf06xwhXBiP89UkrPABr2Sl2lwxR4uy3MhKSdR
+	+lFe22sMu7/fbt3G1vBbnQynbyBtTBqLzx09BPTkAzcAiLNvzV6Fbv0ri0DUm6M52B+xtCQjc1P
+	VxHHCU1ui8tJVfbgQ==
+X-Google-Smtp-Source: AGHT+IHJB0Rno3XXcsg4RApEyBhDouflUDi0GiuW0I0tWqkd4xyWJGM9sQOnJJjTWjRIva9RHRx8gOHAh7+9UsXKv4w=
+X-Received: by 2002:a05:6512:798:b0:55f:467f:37d6 with SMTP id
+ 2adb3069b0e04-5704f5b1565mr747764e87.35.1757678743172; Fri, 12 Sep 2025
+ 05:05:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <cover.1757670094.git.geert+renesas@glider.be>
+In-Reply-To: <cover.1757670094.git.geert+renesas@glider.be>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 12 Sep 2025 14:05:32 +0200
+X-Gm-Features: Ac12FXx5rf1yv2w2VFCei6KOe_K45puo1mMdv5QraMtvJYmAHO--3JBHxkS2L5Y
+Message-ID: <CACRpkdafaEZPfxi3CEhTSib6=aAy9D4r8-OC2+G5pL35Dnqvjw@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: renesas: Updates for v6.18 (take two)
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 12 Sep 2025 14:05:24 +0200
-Message-Id: <DCQT3UNG2Y41.2V411GFLLDVEP@bootlin.com>
-Subject: Re: [PATCH v14 04/10] pwm: max7360: Add MAX7360 PWM support
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>, "Michael Walle"
- <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>, "Andy Shevchenko"
- <andriy.shevchenko@linux.intel.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250824-mdb-max7360-support-v14-0-435cfda2b1ea@bootlin.com>
- <20250824-mdb-max7360-support-v14-4-435cfda2b1ea@bootlin.com>
- <7jytyub4v7tn6vbwh4drusaagnskl2dsfg2xr6eqp4leqpfq3y@a7g3de5echs4>
-In-Reply-To: <7jytyub4v7tn6vbwh4drusaagnskl2dsfg2xr6eqp4leqpfq3y@a7g3de5echs4>
-X-Last-TLS-Session-Version: TLSv1.3
 
-On Fri Sep 12, 2025 at 10:57 AM CEST, Uwe Kleine-K=C3=B6nig wrote:
-> On Sun, Aug 24, 2025 at 01:57:23PM +0200, Mathieu Dubois-Briand wrote:
->> +static int max7360_pwm_round_waveform_tohw(struct pwm_chip *chip,
->> +					   struct pwm_device *pwm,
->> +					   const struct pwm_waveform *wf,
->> +					   void *_wfhw)
->> +{
->> +	struct max7360_pwm_waveform *wfhw =3D _wfhw;
->> +	u64 duty_steps;
->> +
->> +	/*
->> +	 * Ignore user provided values for period_length_ns and duty_offset_ns=
-:
->> +	 * we only support fixed period of MAX7360_PWM_PERIOD_NS and offset of=
- 0.
->> +	 * Values from 0 to 254 as duty_steps will provide duty cycles of 0/25=
-6
->> +	 * to 254/256, while value 255 will provide a duty cycle of 100%.
->> +	 */
->> +	if (wf->duty_length_ns >=3D MAX7360_PWM_PERIOD_NS) {
->> +		duty_steps =3D MAX7360_PWM_MAX;
->> +	} else {
->> +		duty_steps =3D (u32)wf->duty_length_ns * MAX7360_PWM_STEPS / MAX7360_=
-PWM_PERIOD_NS;
->> +		if (duty_steps =3D=3D MAX7360_PWM_MAX)
->> +			duty_steps =3D MAX7360_PWM_MAX - 1;
->> +	}
->> +
->> +	wfhw->duty_steps =3D min(MAX7360_PWM_MAX, duty_steps);
->
-> duty_steps is never bigger than MAX7360_PWM_MAX, isn't it? Then this can
-> be simplified to just
->
-> 	wfhw->duty_steps =3D duty_steps;
->
+On Fri, Sep 12, 2025 at 1:14=E2=80=AFPM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-Ok, I reviewed this section and I do agree with you. I will prepare a
-new patch to fix this line and will send it separately.
-
-> Otherwise looks fine to me.
+> The following changes since commit d1d31e2739ff063da1e85cd9b44316ca5cccdb=
+a8:
 >
-> To get this series forward, it's OK for me to apply the series as is via
-> Lee's MFD tree and cope for this minor optimisation later. So:
+>   pinctrl: renesas: rzt2h: Add support for RZ/N2H (2025-08-20 08:56:15 +0=
+200)
 >
-> Acked-by: Uwe Kleine-K=C3=B6nig <ukleinek@kernel.org>
+> are available in the Git repository at:
 >
-> Best regards
-> Uwe
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git=
+ tags/renesas-pinctrl-for-v6.18-tag2
+>
+> for you to fetch changes up to 512bf60226c621893729605121a396240e84a5d4:
+>
+>   pinctrl: renesas: r8a779g0: Fix trivial typo in SoC type comment (2025-=
+09-08 12:03:08 +0200)
 
-Thanks,
-Mathieu
+Pulled in, thanks Geert!
 
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Yours,
+Linus Walleij
 
