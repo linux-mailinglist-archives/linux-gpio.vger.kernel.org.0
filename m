@@ -1,81 +1,81 @@
-Return-Path: <linux-gpio+bounces-26065-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26077-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78D83B55108
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 16:22:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C83EB551B9
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 16:35:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 59EE55864D5
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 14:22:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6D352585123
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 14:32:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 795723126DD;
-	Fri, 12 Sep 2025 14:21:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4A88324B1E;
+	Fri, 12 Sep 2025 14:28:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8bJWuWo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MaTESpGq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577B025C821
-	for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 14:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2E731D39B
+	for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 14:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757686863; cv=none; b=T4LQVeovkcmjFaJ2DuAVjIUwzK6eKVBqCLQ8pNyfCw4HvjhNx/2+8UbaG07TZstLMlDHfG/EMauN8fOMTLfypGzjKHlXPRTu9ErrePprw4tguGEabKXUZzS0Dt4Q63vt0FRKyUori46d37rxdqjgAAX7YyQuhlnSoxYUVHg+V9U=
+	t=1757687291; cv=none; b=j8HCoryScZN2XnM54K7bN80b5Let7SGSIAhlCy9ctj8NUE7CD96L38lNqV3rjSh5JKwGhHt3vgscU07XHqJ6sNi6uyPZaN+/YIoXD46yWsHV/ZdqJ6zGk0LfasmoJUkneC4PUp2/qj4wbag1W0+PEuP+8LYurwsO8o8OlpZIxiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757686863; c=relaxed/simple;
-	bh=LhFvZeUZESo+BqKcF+l1lftDAN8nJvGBnxH4OQlr4Sk=;
+	s=arc-20240116; t=1757687291; c=relaxed/simple;
+	bh=JFOg5p1iJ5KxXp0KyBvJj/giFbvKAa15YFCa02d2BZ8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iPyJA04lLyGE++SOM/f5JVKpHlJojqDpwziCl4m2QLQzDTPn0W/vuEHVNbgaHJudOQXdWw5dsKwXP5EQKjwjX+Sv1RbvTMW4givQpsSOtED6jLp49rEetdE/HwrdCw3/aALpA/VdEFm2kdpTBWfKZmecp//q48lDuJdTqwE/sDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b8bJWuWo; arc=none smtp.client-ip=209.85.221.42
+	 In-Reply-To:Content-Type; b=dKTAPnga+qOkaa5MPlDeaKr1kDB4IFbvnkYQmsoBiEZhwf+8CrAZsU7+zNp8olijZnhUzdC6lQoonKlFdQ9S4ICyV0ceje0gJOnpKtYbH1uuQRAWhhljg8HTCbeahmX0KHQNNmMLoIxw5nUzBwsH/ssMj/ask5q75cmIepg5HYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MaTESpGq; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3e2055ce973so1121839f8f.0
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 07:21:01 -0700 (PDT)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-45dd7b15a64so17804605e9.0
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 07:28:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757686860; x=1758291660; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1757687288; x=1758292088; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=4cur4X75SOX+L9Hbv3cU7NjYIOtP0WJSnDy9zZzynTY=;
-        b=b8bJWuWoQT98KnHA+pT3gitJeCu0mmyBmd5H6yoIbZW/KT5S/VipU+HlTqGXT8cy/f
-         0dAKCJde9nepMrRilLmKKW1cZxI6pfTtEgPh5YhnwK/pRWTdXpgsYOAsxhosKwn/jRc1
-         OJsR9W8c5oSo2y+bqhvRMJqY+tLIC21elJhj1M+T064a3OLSzrDGETrMt2sbu/HTpGf0
-         SQt/scjPtpjY/YZNcBBuDEFQXgQlT9q7DhzPIcdNUJ7BnDVF+fkN6wbm2a3K7xjHrSwv
-         qFd7Pflb0ScCfELi7EkM8/BJFbF0FMKgib3sLr+VRTFisfP60ulqYfoFIWSNjVDEHkD9
-         dLTg==
+        bh=jnkM+AnZyhps3qygpz2dIT80TKNeLfoU88kbfoaXJwA=;
+        b=MaTESpGqpTMpTxS5eQvECHwzZqQxvguH81IoIjAdnY6Iuon/s97rA4MgR7ETN4ig4W
+         ZB4kYLAIl5NCHpNeQhKXG2zUbFj4D2hD2Gr8oZV5LTseZWBSFCjCwfxSwTtS87WAwzPa
+         vDF2+G3vWpzq8FbfUpruZSNWV2Nr5Yw4vuEhmyeC4C6qPwjRXq+892caanXthJfzsT5I
+         ofNQi44GhPK9gBRN2TikmfEwn9zuQ1w/6iDiKIn43duVCQJMDlP9fO3qXW6WJBh+w/AR
+         FmItq8OgX7XQln6LAuxWFtzcuITtmn0IsoDUsVwJ3inhv7zLTKjaamm4hsDU2sNgDLTY
+         YTiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757686860; x=1758291660;
+        d=1e100.net; s=20230601; t=1757687288; x=1758292088;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4cur4X75SOX+L9Hbv3cU7NjYIOtP0WJSnDy9zZzynTY=;
-        b=apysnY1GkvIl/EZVuMx68LwW5Oi+fUqL8zkkT1AHjXFXmmq9CsZMM3hcQTXNK6JbES
-         ppc3Q0x5gfxdtYBC9LAHTeyjZG4EFQADAZStY6OP/2oPa2vHMB52J4GOYKjO+gr55eyb
-         HdHwU/B+nsVWp7rL4chl8c/GMapW72//lJv1UY9dvHWFAR7OV/FXqJ26J3/el8qJTw63
-         fRq+a6RN0bGogZiL7QkCHd6qtnzlxqQb36nJ84/maPHq+JQ80UeYfGBqS+6qAciH+9ml
-         iMMFjduGI5Gg8IAv4K1YfrwVzR8k0513EP0+yME5/uFTPfGIZhCqRCXrepP7zyZVoHAH
-         Yg/g==
-X-Forwarded-Encrypted: i=1; AJvYcCXNWX87YcV5XDZ1QKYnOxnSGxoKf8ENsQNwRJiAQzDhYcxutPodFRA7qSHkcpc2N8+s9AAtA/nt1x4L@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3eF2GObr6LJSzwdH0hCnYIL/oOdB1FIEzxdhV/pyOzNySKJ8e
-	BVRdTh63S8Yddqba+XzVMTTQN0G2EC+ZsJyFuzIup3TRDrCsL479qMKF
-X-Gm-Gg: ASbGncsgpAdEVliYIDbyuJdPB/M1BPfVEpTme0G4+4YC2ZbU+g/cvG/5EJjOooso00D
-	3tWAp6JEe1Zg9SCNhL2CTMbV07JMFdzdTd+mIPDKj2UFdV94yBwXhDZ4W0jg/BEayZE1yyCPEFR
-	bvqc7wp/R/SzSxODvCmoAfdAg71Qq/TUiM8vk1kk9Nm20KR/9e7yk3CCus0/8b4DuXlkHXp5DDC
-	zSZ05dLrgJa/OZrHty3JEdSoQ96HWzOS6B8uQE2qQiKBKRGEgs9+jr+VpOflhNjG4BwUuGphZf6
-	EUJjdFOXlmYIrFTD29Ylc/lO4AH/xdkYCdbdkVBv1lfhYX+RaiB17IgeFQjzsmobxKpsiEgOTqm
-	t2ZTutyGoPdFIe3WW9CdNRMA9Tre1edQ24ZyFkaYnfh2oy2oIdlnz
-X-Google-Smtp-Source: AGHT+IETnSVaOaRKN/Bmr4IDnznOAwChZ2qQ4ywH5VxUBMfTXYJEq367ON+ECBnG0YBYE/RxZE/ipA==
-X-Received: by 2002:a05:6000:2012:b0:3e7:441e:c9e1 with SMTP id ffacd0b85a97d-3e765793127mr2932126f8f.18.1757686859589;
-        Fri, 12 Sep 2025 07:20:59 -0700 (PDT)
+        bh=jnkM+AnZyhps3qygpz2dIT80TKNeLfoU88kbfoaXJwA=;
+        b=dyA5v7uCBaxdfV8/0QbRpuk3WWiuZ2x78m/gCiOcIRPm3XWpMfaGn0tLBIrGzIYMbI
+         IuFVqamaKML53YvwXQkodOwDZa5JYJkkpE2ros5rMk0OkLbWapKpOsgoQvcdiPp30gVY
+         Pn+19wwHpmal1EVnK4fAvGlDQS0zVEQnfnqBzJQuGoKIusNOfU8l6vNmtZsP09KoLtGR
+         7O6jvK4NcMfLA3tN4bxO8x2qOM3kByiUJpH5IYmA77jVNRTbLOjesmXqgWjpS2zmrIZ5
+         gmEpUWSKyvYLgRO1H/o1kcZFUB5l03/M+qnlxuMce1J5AimmbxGrv4MJlUJBz1KxfYkS
+         R1mQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWWOKrcGfi4th6geIUGHpRl71vxPyK+c6yNZq4BUTsXO7/6SVRaHQxiYz7XJUtPSmQeXyQLNiVuRAdJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YysngeVKwWGAYzXt03HRre8Bjm+Z4Lscucb2yf1Wd//hGXFX53G
+	VWK0PrQ2vbsnmdk3t4/dD7GjCZQXE+Yj3DbDOvaOeL5et8FOZuMT/Gul
+X-Gm-Gg: ASbGncvmWopPQYmROzIOxo8BfRWKmFfr4ZTtV6c6PVWDHl9FBEzREt6GKxpKwMDYJ68
+	vJCg3qUWv4VE3uUfJJRg+2hTGlBsazI+Pj4A/E/bFP7eKxcj2WnBeA0n6Wq/Nwpiwd53oX2wA39
+	jPMgl+2TOdAvApSpVU9M4y11yhgIFA6slp4D7rW+SpXUxsv1Hwrf4bBI0a5pOTBhbZiYdiwatZJ
+	6RwEV7rDD/z5ppWXvMj9o0ZtmLqfkDTaopQsaUHt3P/2ErCFh7bhiWVQgPIQaqPzfVYG7rYx0rh
+	5I4uLq9zguyd7kaYSvGCUsqnUw0Yck3MCCm1yCoKAWWo9qVKVmiHJOy+0dfqN+lpsWBmywscuWD
+	qV/1eP6Pjsv1shnMD+KjkLQR3WSHikfZlG8CF+TqGlQ==
+X-Google-Smtp-Source: AGHT+IGDvV53/LNE/OpdCCjsAZPEbICrc+wJ2bgnqrFTzigP/wpDBOWh7QRU2BBuWo1pqbgZm/YfGQ==
+X-Received: by 2002:a05:600c:1c19:b0:45d:d259:9a48 with SMTP id 5b1f17b1804b1-45f2128cba7mr31759255e9.9.1757687287618;
+        Fri, 12 Sep 2025 07:28:07 -0700 (PDT)
 Received: from [192.168.2.177] ([91.116.220.47])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7607cd415sm6697435f8f.30.2025.09.12.07.20.55
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45e017b27b6sm67769045e9.16.2025.09.12.07.27.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Sep 2025 07:20:58 -0700 (PDT)
-Message-ID: <cda40929-12d7-4206-a4d9-3a74314c6b2e@gmail.com>
-Date: Fri, 12 Sep 2025 16:13:30 +0200
+        Fri, 12 Sep 2025 07:28:06 -0700 (PDT)
+Message-ID: <3de4b03d-4940-4d96-bf20-5bb45f1cc5a5@gmail.com>
+Date: Fri, 12 Sep 2025 16:13:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,8 +83,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 25/38] arm64: dts: mediatek: mt7986a-bpi-r3: Set
- interrupt-parent to mdio switch
+Subject: Re: [PATCH 26/38] arm64: dts: mediatek: acelink-ew-7886cax: Remove
+ unnecessary cells in spi-nand
 To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
  linux-mediatek@lists.infradead.org, robh@kernel.org
 Cc: herbert@gondor.apana.org.au, davem@davemloft.net, krzk+dt@kernel.org,
@@ -108,7 +108,7 @@ Cc: herbert@gondor.apana.org.au, davem@davemloft.net, krzk+dt@kernel.org,
  linux-gpio@vger.kernel.org, linux-remoteproc@vger.kernel.org,
  linux-sound@vger.kernel.org
 References: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com>
- <20250724083914.61351-26-angelogioacchino.delregno@collabora.com>
+ <20250724083914.61351-27-angelogioacchino.delregno@collabora.com>
 Content-Language: en-US, ca-ES, es-ES
 From: Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; keydata=
@@ -154,42 +154,40 @@ Autocrypt: addr=matthias.bgg@gmail.com; keydata=
  +zFJv9fVUpo/bjePOL4PMP1y+PYrp4PmPmRwoklBpy1ep8m8XURv46fGUHUEIsTwPWs2Q87k
  7vjYyrcyAOarX2X5pvMQvpAMADGf2Z3wrCsDdG25w2HztweUNd9QEprtJG8GNNzMOD4cQ82T
  a7eGvPWPeXauWJDLVR9jHtWT9Ot3BQgmApLxACvwvD1a69jaFKov28SPHxUCQ9Y1Y/Ct
-In-Reply-To: <20250724083914.61351-26-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250724083914.61351-27-angelogioacchino.delregno@collabora.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
 On 24/07/2025 10:39, AngeloGioacchino Del Regno wrote:
-> Being this an interrupt controller, the binding forbids to use
-> interrupts-extended and wants an `interrupts` property instead.
+> There is no need to specify #address-cells and #size-cells in a
+> node that has only one non-addressable subnode, and this is the
+> case of the flash@0 node in this devicetree, as it has only one
+> "partitions" subnode.
 > 
-> Since this interrupt controller's parent is on the GPIO controller
-> set it as interrupt-parent and change interrupts-extended to just
-> interrupts to silence a dtbs_check warning.
+> Remove those to suppress an avoid_unnecessary_addr_size warning.
 > 
 > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
 Applied, thanks
 
 > ---
->   arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+>   arch/arm64/boot/dts/mediatek/mt7986a-acelink-ew-7886cax.dts | 2 --
+>   1 file changed, 2 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
-> index 6d2762866a1a..e7654dc9a1c9 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
-> @@ -200,8 +200,9 @@ switch: switch@31 {
->   		compatible = "mediatek,mt7531";
->   		reg = <31>;
->   		interrupt-controller;
-> +		interrupt-parent = <&pio>;
-> +		interrupts = <66 IRQ_TYPE_LEVEL_HIGH>;
->   		#interrupt-cells = <1>;
-> -		interrupts-extended = <&pio 66 IRQ_TYPE_LEVEL_HIGH>;
->   		reset-gpios = <&pio 5 GPIO_ACTIVE_HIGH>;
->   	};
->   };
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-acelink-ew-7886cax.dts b/arch/arm64/boot/dts/mediatek/mt7986a-acelink-ew-7886cax.dts
+> index 08b3b0827436..30805a610262 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt7986a-acelink-ew-7886cax.dts
+> +++ b/arch/arm64/boot/dts/mediatek/mt7986a-acelink-ew-7886cax.dts
+> @@ -98,8 +98,6 @@ &spi0 {
+>   	flash@0 {
+>   		compatible = "spi-nand";
+>   		reg = <0>;
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+>   		spi-max-frequency = <52000000>;
+>   		spi-rx-bus-width = <4>;
+>   		spi-tx-bus-width = <4>;
 
 
