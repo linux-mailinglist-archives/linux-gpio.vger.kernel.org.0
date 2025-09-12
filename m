@@ -1,65 +1,65 @@
-Return-Path: <linux-gpio+bounces-26082-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26083-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55610B553E8
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 17:41:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 898F2B553EA
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 17:42:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 38064AE414E
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 15:41:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 619FCAE2332
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 15:41:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5544431A550;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8610D31AF1B;
 	Fri, 12 Sep 2025 15:41:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="o0Kg3em/"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="T0QVICwo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CE631353B;
-	Fri, 12 Sep 2025 15:41:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2D131354D;
+	Fri, 12 Sep 2025 15:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757691670; cv=none; b=C+ZoH/dOCvTuAy9Ba+Mpn3SU3K0WtX7UhgGgx6AulyXIx+xwCFTl5aa5ZYgJLpgpCzA/roLl7fwUc8Q7NgmWJd6Bt1dd2203a/KSTUMGiZtczWdKzgWabep4zDThbJutiXSM6ZaFKc9ME8DGvrukb19tx7eWxI0jeHg1RHrdwo8=
+	t=1757691670; cv=none; b=rPqE0KXhIjEe5uAvhlNYLJ5ucqNnajUP36AXa2zz0LIEVvVzQK+3K3fPpUjcPxSf1WbztIBrKkzV6CQfho+cgz2SrviQKuSZiu0IpfuzKHnzx/pwXAuKcyQ0TAaQMNXZDZ9cEcSnu+AtY78IjbSVoHd77Gz5cYaccf5EA5i49n4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1757691670; c=relaxed/simple;
-	bh=gRCPvaPPWmbn6LXQllnY0gGsFzpi9KXBEevwPcokiIM=;
+	bh=Z7v519uWdUo89ZiHiNFDw2c32jxqAA9Bj+scBdD1a7g=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=GeYkDvMx3weg3u7kZDRWatUfW39DqrCWlQpZXKsjpCuuhekPi6ahhQOMzbw6LqnUC2PPBtd8AcbaeJi60T1U6EijxCO1HZxbtGVIJtCtRfdzfD2pMqUoL2cUUCGYgTLK5fXpdeTZUPI/w9YzUUkgBUQq8GIRxIaLHLpnpVCOSm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=o0Kg3em/; arc=none smtp.client-ip=198.47.19.245
+	 In-Reply-To:To:CC; b=A1SeLRldJgXaFOj6sDuz0e+xw1XJzV8/NWJPvoAHaeZjwMiQ4xSC8IiX/BQ956iEb5PLcSDXzzn1+K9l7gWE2vdgXBgfFyReWezlprXvo807chGhzPMmyUV0jkKiN0Uozf4iOGKRrynGavZ3zcDl1PX4IzJaV5+XRJagwYiHeMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=T0QVICwo; arc=none smtp.client-ip=198.47.23.235
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 58CFei6b549120;
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 58CFeiiZ1062316;
 	Fri, 12 Sep 2025 10:40:44 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
 	s=ti-com-17Q1; t=1757691644;
-	bh=6e4taBMAJVKjLMAoV37pWoOcmcCiPhM2my2vM1783Ig=;
+	bh=YhabVYyzSOeYvEJDGB2G48jRn5HpsYcJMnGseYW00zI=;
 	h=From:Date:Subject:References:In-Reply-To:To:CC;
-	b=o0Kg3em/RHAzZS5miTUqxJf1TbZ9b7c3ux53m/F11hkqSOPiQrW7ttjLHY563udTk
-	 mCunwgrVtLrLI5SgOGl9Gyww7tPdj8PlNNHYLL0NDFwLf714CeVfIrcXk3lEQd1X8G
-	 PYT8hp1wwEkLiROZ8wiWhE+msgXDCB13h/t94030=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 58CFeiRc1398283
+	b=T0QVICwo9BsStIcsr+8L+wtsPel/6HhuEEcifQMExVVEUII6J3m45Xi2b21U3eduE
+	 ZwJ1pAWhILzgtUlfjnUtJ5eWS8vdbfVr35HAuCGuW/YJIaKdharE/F3HRYFpDBC5hE
+	 AK849tfXOatVufzINo38Il77hd5WyLH6hvS0zpbI=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 58CFeifP2870515
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
 	Fri, 12 Sep 2025 10:40:44 -0500
-Received: from DLEE200.ent.ti.com (157.170.170.75) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DLEE214.ent.ti.com (157.170.170.117) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 12
  Sep 2025 10:40:43 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE200.ent.ti.com
- (157.170.170.75) with Microsoft SMTP Server (version=TLS1_2,
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE214.ent.ti.com
+ (157.170.170.117) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
  Transport; Fri, 12 Sep 2025 10:40:43 -0500
 Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 58CFehjA4123681;
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 58CFehPP3820088;
 	Fri, 12 Sep 2025 10:40:43 -0500
 From: Bryan Brattlof <bb@ti.com>
-Date: Fri, 12 Sep 2025 10:40:42 -0500
-Subject: [PATCH v6 3/4] arm64: dts: ti: k3-am62l: add initial
- infrastructure
+Date: Fri, 12 Sep 2025 10:40:43 -0500
+Subject: [PATCH v6 4/4] arm64: dts: ti: k3-am62l: add initial reference
+ board file
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250912-am62lx-v6-3-29d5a6c60512@ti.com>
+Message-ID: <20250912-am62lx-v6-4-29d5a6c60512@ti.com>
 References: <20250912-am62lx-v6-0-29d5a6c60512@ti.com>
 In-Reply-To: <20250912-am62lx-v6-0-29d5a6c60512@ti.com>
 To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
@@ -86,1051 +86,416 @@ CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
         <linux-gpio@vger.kernel.org>, Bryan Brattlof <bb@ti.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=31729; i=bb@ti.com;
- h=from:subject:message-id; bh=DQVULAHShtjeKNJe/6GuGRGSlyF7jTky1q/qOsP4Yk8=;
- b=owNCWmg5MUFZJlNZ3F6GrgAAav///79N7rPuO3vd/up4O073G/tv+r5Z/m7JVzrb/331yf+wA
- Rtq0O1BkDQ0A0AGIADQGCAAaGg0A0ANqDTIBpo0aAaZAD0mm1GEPUDT1NobVEAGTQNNAYgYmgND
- Ro0wmT1DEwTTIAyMmTTQA0NGQNA0yGEyaNMIGTIaDT1AMhpND1NMRiNNNA0AGQwQGg0NABoBk0y
- ZAxMJhGmEGhkANAGjQaDQMCASJhhH2YpP4xg4sQ21o5PKIqeeC5WTNGicAyUf1tykqADFfzjwBW
- krgWWu8uyu4QSqAQauPeK05l2T8CazBm4KKnADAEgUjOd5z6GVzeUU52gzNLhrFX7aX5nNhhxON
- ZfL4560KFly8VtSKGDQ8mExeABGoM4L+EBh8vbt6ffpas0zPONlJtDjz35CYK2Uoerz7EsBqBFP
- Gn8dG6d0u77BK2NhKLCKx/qYULGEuCqn4KnLhImss3oGXN1nKJaxOomZuWe7ujF8I4YrI19SaMi
- /Y43mMn5wzbV2oSQLYVKGYQqzVQWWLwyzZ7ItDhw03omV+D2vG6FBTfhABIRhLzv9hBPhgxu/Rw
- oD6CdDRIBRCFkQqDK7BHTVzBVnV+t3gQxhzDymP6rq2VLADdPGDsm81zIABRqMlWSUhDhlLPEgW
- JlpCH/F3JFOFCQ3F6GrgA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10522; i=bb@ti.com;
+ h=from:subject:message-id; bh=rZENMQ5wn18nV0zmN4TDUC16o97lMtvclVHm5b8BTU4=;
+ b=owNCWmg5MUFZJlNZVMs/hAAAaX///r79yq/sfn/texX//c+v871/961Xbeb/Zu7vrzPH7t+wA
+ RtqB2oAAGgAAANAABkAA0BoGmQGQNNDBAAGCNMjRpoZAep5TQYjRo0w9KIMTJ6hoGjQxDQ0AaDI
+ YQ0AAD1AANGhoNDaBMQ9QaBobSGQ0AYmgaaAaAaaHCaMTIMRiZDTJkAYJoxDQGjQaAAGACMgYhg
+ jQAAANGgGmEAAAAECfIclVR4W7g4gS2FZVADmpgKUBBwGmMhhgLp4iiWoegeDEFj0xK66OSB1AZ
+ 0yAF6YsyRtlpKL6pzu/herhNsEyAgZDZtJaIQRh9VMXENp9EQICjDpytzrB/hWUhQxxdilQ9bU0
+ LVJhlqk6bp8bmFTm5wZO1kpW0vnDbVGxUCbs1Dys4omCLBsBaFQCVwOf+xwjn25HvM5hHwy2x6O
+ fOBwEe7qoVAT20SYhRPrnhPsvldG4CLaHAMZh5XBkhBOoCsMr0qupgWMTTETz9/lbbfUOT8BYIp
+ xH9AJ6WFRCzOcvVwCaNGZfrREnFD01Jo6vON27L1q0pdAvYDj/sUX1D09+6yZR1MeyE9AUX4FwK
+ GgLIwFkz4CBFuebDW6TvCMj3G/sipf1yAS/tog4afA+R0UiOJdtYHiErcOUGhZjPAEQO7pVDf4u
+ 5IpwoSCpln8IA==
 X-Developer-Key: i=bb@ti.com; a=openpgp;
  fpr=D3D177E40A38DF4D1853FEEF41B90D5D71D56CE0
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
 From: Vignesh Raghavendra <vigneshr@ti.com>
 
-Add the initial infrastructure needed for the AM62L. ALl of which can be
-found in the Technical Reference Manual (TRM) located here:
-
-    https://www.ti.com/lit/pdf/sprujb4
+Add the initial board file for the AM62L3's Evaluation Module.
 
 Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 Signed-off-by: Bryan Brattlof <bb@ti.com>
 ---
-Changes in v4:
+Changes from v1:
+ - switched to non-direct links so TRM updates are automatic
+ - removed current-speed property from main_uart0
+ - removed empty reserved-memory{} node
+ - removed serial2 from aliases{} node
+ - corrected main_uart0 pinmux
+
+Changes from v2:
+ - alphabetized phandles
+ - corrected macros and node names for main_uart0 pinmux node
+
+Changes from v3:
+ - added and enabled more nodes that have been validated
+ - added link to data sheet which is now public
+
+ Changes in v4:
  - Corrected Copyright year
- - Used 'ranges' property in the fss{} node
-
-Changes in v3:
- - Added more nodes now that the SCMI interface is ready
-
-Changes in v1:
- - switched to non-direct links to TRM updates are automatic
- - fixed white space indent issues with a few nodes
- - separated out device tree bindings
 ---
- arch/arm64/boot/dts/ti/k3-am62l-main.dtsi    | 603 +++++++++++++++++++++++++++
- arch/arm64/boot/dts/ti/k3-am62l-thermal.dtsi |  25 ++
- arch/arm64/boot/dts/ti/k3-am62l-wakeup.dtsi  | 141 +++++++
- arch/arm64/boot/dts/ti/k3-am62l.dtsi         | 120 ++++++
- arch/arm64/boot/dts/ti/k3-am62l3.dtsi        |  67 +++
- arch/arm64/boot/dts/ti/k3-pinctrl.h          |   2 +
- 6 files changed, 958 insertions(+)
+ arch/arm64/boot/dts/ti/Makefile          |   3 +
+ arch/arm64/boot/dts/ti/k3-am62l3-evm.dts | 345 +++++++++++++++++++++++++++++++
+ 2 files changed, 348 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62l-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62l-main.dtsi
+diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
+index aad9177930e6fc8ade9432a9487e55b53d1e4763..a05cc096b6716e2ab245a8e26ad1f5c3a3142632 100644
+--- a/arch/arm64/boot/dts/ti/Makefile
++++ b/arch/arm64/boot/dts/ti/Makefile
+@@ -36,6 +36,9 @@ dtb-$(CONFIG_ARCH_K3) += k3-am62a7-phyboard-lyra-rdk.dtb
+ # Boards with AM62Dx SoC
+ dtb-$(CONFIG_ARCH_K3) += k3-am62d2-evm.dtb
+ 
++# Boards with AM62Lx SoCs
++dtb-$(CONFIG_ARCH_K3) += k3-am62l3-evm.dtb
++
+ # Boards with AM62Px SoC
+ dtb-$(CONFIG_ARCH_K3) += k3-am62p5-sk.dtb
+ dtb-$(CONFIG_ARCH_K3) += k3-am62p5-verdin-nonwifi-dahlia.dtb
+diff --git a/arch/arm64/boot/dts/ti/k3-am62l3-evm.dts b/arch/arm64/boot/dts/ti/k3-am62l3-evm.dts
 new file mode 100644
-index 0000000000000000000000000000000000000000..229c34f23d1625e9c38bcf6db962c86eb17b16c1
+index 0000000000000000000000000000000000000000..1df76844c1900d4829ee5d5444b129e72b479390
 --- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am62l-main.dtsi
-@@ -0,0 +1,603 @@
++++ b/arch/arm64/boot/dts/ti/k3-am62l3-evm.dts
+@@ -0,0 +1,345 @@
 +// SPDX-License-Identifier: GPL-2.0-only or MIT
 +/*
-+ * Device Tree file for the AM62L main domain peripherals
++ * Device Tree file for the AM62L3 Evaluation Module
 + * Copyright (C) 2025 Texas Instruments Incorporated - https://www.ti.com/
 + *
 + * Technical Reference Manual: https://www.ti.com/lit/pdf/sprujb4
-+ */
-+
-+&cbass_main {
-+	gic500: interrupt-controller@1800000 {
-+		compatible = "arm,gic-v3";
-+		reg = <0x00 0x01800000 0x00 0x10000>,	/* GICD */
-+		      <0x00 0x01840000 0x00 0xc0000>,	/* GICR */
-+		      <0x01 0x00000000 0x00 0x2000>,    /* GICC */
-+		      <0x01 0x00010000 0x00 0x1000>,    /* GICH */
-+		      <0x01 0x00020000 0x00 0x2000>;    /* GICV */
-+		ranges;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		#interrupt-cells = <3>;
-+		interrupt-controller;
-+		/*
-+		 * vcpumntirq:
-+		 * virtual CPU interface maintenance interrupt
-+		 */
-+		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		gic_its: msi-controller@1820000 {
-+			compatible = "arm,gic-v3-its";
-+			reg = <0x00 0x01820000 0x00 0x10000>;
-+			socionext,synquacer-pre-its = <0x1000000 0x400000>;
-+			msi-controller;
-+			#msi-cells = <1>;
-+		};
-+	};
-+
-+	gpio0: gpio@600000 {
-+		compatible = "ti,am64-gpio", "ti,keystone-gpio";
-+		reg = <0x00 0x00600000 0x00 0x100>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-parent = <&gic500>;
-+		interrupts = <GIC_SPI 260 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 261 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 262 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 263 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 264 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 265 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 267 IRQ_TYPE_EDGE_RISING>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		power-domains = <&scmi_pds 34>;
-+		clocks = <&scmi_clk 140>;
-+		clock-names = "gpio";
-+		ti,ngpio = <126>;
-+		ti,davinci-gpio-unbanked = <0>;
-+		status = "disabled";
-+	};
-+
-+	gpio2: gpio@610000 {
-+		compatible = "ti,am64-gpio", "ti,keystone-gpio";
-+		reg = <0x00 0x00610000 0x00 0x100>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-parent = <&gic500>;
-+		interrupts = <GIC_SPI 280 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 281 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 282 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 283 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 284 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 285 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 286 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 287 IRQ_TYPE_EDGE_RISING>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		power-domains = <&scmi_pds 35>;
-+		clocks = <&scmi_clk 141>;
-+		clock-names = "gpio";
-+		ti,ngpio = <79>;
-+		ti,davinci-gpio-unbanked = <0>;
-+		status = "disabled";
-+	};
-+
-+	timer0: timer@2400000 {
-+		compatible = "ti,am654-timer";
-+		reg = <0x00 0x2400000 0x00 0x400>;
-+		interrupts = <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&scmi_clk 58>;
-+		clock-names = "fck";
-+		power-domains = <&scmi_pds 15>;
-+		ti,timer-pwm;
-+	};
-+
-+	timer1: timer@2410000 {
-+		compatible = "ti,am654-timer";
-+		reg = <0x00 0x2410000 0x00 0x400>;
-+		interrupts = <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&scmi_clk 63>;
-+		clock-names = "fck";
-+		power-domains = <&scmi_pds 16>;
-+		ti,timer-pwm;
-+	};
-+
-+	timer2: timer@2420000 {
-+		compatible = "ti,am654-timer";
-+		reg = <0x00 0x2420000 0x00 0x400>;
-+		interrupts = <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&scmi_clk 77>;
-+		clock-names = "fck";
-+		power-domains = <&scmi_pds 17>;
-+		ti,timer-pwm;
-+	};
-+
-+	timer3: timer@2430000 {
-+		compatible = "ti,am654-timer";
-+		reg = <0x00 0x2430000 0x00 0x400>;
-+		interrupts = <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&scmi_clk 82>;
-+		clock-names = "fck";
-+		power-domains = <&scmi_pds 18>;
-+		ti,timer-pwm;
-+	};
-+
-+	uart0: serial@2800000 {
-+		compatible = "ti,am64-uart", "ti,am654-uart";
-+		reg = <0x00 0x02800000 0x00 0x100>;
-+		interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 89>;
-+		clocks = <&scmi_clk 358>;
-+		clock-names = "fclk";
-+		status = "disabled";
-+	};
-+
-+	uart1: serial@2810000 {
-+		compatible = "ti,am64-uart", "ti,am654-uart";
-+		reg = <0x00 0x02810000 0x00 0x100>;
-+		interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 77>;
-+		clocks = <&scmi_clk 312>;
-+		clock-names = "fclk";
-+		status = "disabled";
-+	};
-+
-+	uart2: serial@2820000 {
-+		compatible = "ti,am64-uart", "ti,am654-uart";
-+		reg = <0x00 0x02820000 0x00 0x100>;
-+		interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 78>;
-+		clocks = <&scmi_clk 314>;
-+		clock-names = "fclk";
-+		status = "disabled";
-+	};
-+
-+	uart3: serial@2830000 {
-+		compatible = "ti,am64-uart", "ti,am654-uart";
-+		reg = <0x00 0x02830000 0x00 0x100>;
-+		interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 79>;
-+		clocks = <&scmi_clk 316>;
-+		clock-names = "fclk";
-+		status = "disabled";
-+	};
-+
-+	uart4: serial@2840000 {
-+		compatible = "ti,am64-uart", "ti,am654-uart";
-+		reg = <0x00 0x02840000 0x00 0x100>;
-+		interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 80>;
-+		clocks = <&scmi_clk 318>;
-+		clock-names = "fclk";
-+		status = "disabled";
-+	};
-+
-+	uart5: serial@2850000 {
-+		compatible = "ti,am64-uart", "ti,am654-uart";
-+		reg = <0x00 0x02850000 0x00 0x100>;
-+		interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 81>;
-+		clocks = <&scmi_clk 320>;
-+		clock-names = "fclk";
-+		status = "disabled";
-+	};
-+
-+	uart6: serial@2860000 {
-+		compatible = "ti,am64-uart", "ti,am654-uart";
-+		reg = <0x00 0x02860000 0x00 0x100>;
-+		interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 82>;
-+		clocks = <&scmi_clk 322>;
-+		clock-names = "fclk";
-+		status = "disabled";
-+	};
-+
-+	conf: bus@9000000 {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x00 0x00 0x09000000 0x380000>;
-+
-+		phy_gmii_sel: phy@1be000 {
-+			compatible = "ti,am654-phy-gmii-sel";
-+			reg = <0x1be000 0x8>;
-+			#phy-cells = <1>;
-+		};
-+
-+		epwm_tbclk: clock-controller@1e9100 {
-+			compatible = "ti,am62-epwm-tbclk";
-+			reg = <0x1e9100 0x4>;
-+			#clock-cells = <1>;
-+		};
-+	};
-+
-+	usbss0: dwc3-usb@f900000 {
-+		compatible = "ti,am62-usb";
-+		reg = <0x00 0x0f900000 0x00 0x800>,
-+		      <0x00 0x0f908000 0x00 0x400>;
-+		clocks = <&scmi_clk 331>;
-+		clock-names = "ref";
-+		ti,syscon-phy-pll-refclk = <&usb_phy_ctrl 0x0>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		power-domains = <&scmi_pds 95>;
-+		ranges;
-+		status = "disabled";
-+
-+		usb0: usb@31000000 {
-+			compatible = "snps,dwc3";
-+			reg = <0x00 0x31000000 0x00 0x50000>;
-+			interrupts = <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>, /* irq.0 */
-+				     <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>; /* irq.0 */
-+			interrupt-names = "host", "peripheral";
-+			maximum-speed = "high-speed";
-+			dr_mode = "otg";
-+			snps,usb2-gadget-lpm-disable;
-+			snps,usb2-lpm-disable;
-+		};
-+	};
-+
-+	usbss1: dwc3-usb@f910000 {
-+		compatible = "ti,am62-usb";
-+		reg = <0x00 0x0f910000 0x00 0x800>,
-+		      <0x00 0x0f918000 0x00 0x400>;
-+		clocks = <&scmi_clk 338>;
-+		clock-names = "ref";
-+		ti,syscon-phy-pll-refclk = <&usb_phy_ctrl 0x4>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		power-domains = <&scmi_pds 96>;
-+		ranges;
-+		status = "disabled";
-+
-+		usb1: usb@31100000 {
-+			compatible = "snps,dwc3";
-+			reg = <0x00 0x31100000 0x00 0x50000>;
-+			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>, /* irq.0 */
-+			<GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>; /* irq.0 */
-+			interrupt-names = "host", "peripheral";
-+			maximum-speed = "high-speed";
-+			dr_mode = "otg";
-+			snps,usb2-gadget-lpm-disable;
-+			snps,usb2-lpm-disable;
-+		};
-+	};
-+
-+	sdhci1: mmc@fa00000 {
-+		compatible = "ti,j721e-sdhci-4bit";
-+		reg = <0x00 0x0fa00000 0x00 0x1000>,
-+		      <0x00 0x0fa08000 0x00 0x400>;
-+		interrupts = <GIC_SPI 237 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 26>;
-+		clocks = <&scmi_clk 106>, <&scmi_clk 109>;
-+		clock-names = "clk_ahb", "clk_xin";
-+		assigned-clocks = <&scmi_clk 109>;
-+		bus-width = <4>;
-+		ti,clkbuf-sel = <0x7>;
-+		ti,otap-del-sel-legacy = <0x0>;
-+		ti,itap-del-sel-legacy = <0x0>;
-+		status = "disabled";
-+	};
-+
-+	sdhci0: mmc@fa10000 {
-+		compatible = "ti,am62-sdhci";
-+		reg = <0x00 0xfa10000 0x00 0x1000>,
-+		      <0x00 0xfa18000 0x00 0x400>;
-+		interrupts = <GIC_SPI 239 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 28>;
-+		clocks = <&scmi_clk 122>, <&scmi_clk 125>;
-+		clock-names = "clk_ahb", "clk_xin";
-+		assigned-clocks = <&scmi_clk 125>;
-+		bus-width = <8>;
-+		ti,clkbuf-sel = <0x7>;
-+		ti,otap-del-sel-legacy = <0x0>;
-+		ti,otap-del-sel-mmc-hs = <0x0>;
-+		ti,otap-del-sel-hs200 = <0x6>;
-+		status = "disabled";
-+	};
-+
-+	sdhci2: mmc@fa20000 {
-+		compatible = "ti,am62-sdhci";
-+		reg = <0x00 0x0fa20000 0x00 0x1000>,
-+		      <0x00 0x0fa28000 0x00 0x400>;
-+		interrupts = <GIC_SPI 238 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 27>;
-+		clocks = <&scmi_clk 114>, <&scmi_clk 117>;
-+		clock-names = "clk_ahb", "clk_xin";
-+		assigned-clocks = <&scmi_clk 117>;
-+		bus-width = <4>;
-+		ti,clkbuf-sel = <0x7>;
-+		ti,otap-del-sel-legacy = <0x0>;
-+		ti,itap-del-sel-legacy = <0x0>;
-+		status = "disabled";
-+	};
-+
-+	i2c0: i2c@20000000 {
-+		compatible = "ti,am64-i2c", "ti,omap4-i2c";
-+		reg = <0x00 0x20000000 0x00 0x100>;
-+		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		power-domains = <&scmi_pds 53>;
-+		clocks = <&scmi_clk 246>;
-+		clock-names = "fck";
-+		status = "disabled";
-+	};
-+
-+	i2c1: i2c@20010000 {
-+		compatible = "ti,am64-i2c", "ti,omap4-i2c";
-+		reg = <0x00 0x20010000 0x00 0x100>;
-+		interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		power-domains = <&scmi_pds 54>;
-+		clocks = <&scmi_clk 250>;
-+		clock-names = "fck";
-+		status = "disabled";
-+	};
-+
-+	i2c2: i2c@20020000 {
-+		compatible = "ti,am64-i2c", "ti,omap4-i2c";
-+		reg = <0x00 0x20020000 0x00 0x100>;
-+		interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		power-domains = <&scmi_pds 55>;
-+		clocks = <&scmi_clk 254>;
-+		clock-names = "fck";
-+		status = "disabled";
-+	};
-+
-+	i2c3: i2c@20030000 {
-+		compatible = "ti,am64-i2c", "ti,omap4-i2c";
-+		reg = <0x00 0x20030000 0x00 0x100>;
-+		interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		power-domains = <&scmi_pds 56>;
-+		clocks = <&scmi_clk 258>;
-+		clock-names = "fck";
-+		status = "disabled";
-+	};
-+
-+	mcan0: can@20701000 {
-+		compatible = "bosch,m_can";
-+		reg = <0x00 0x20701000 0x00 0x200>,
-+		      <0x00 0x20708000 0x00 0x8000>;
-+		reg-names = "m_can", "message_ram";
-+		power-domains = <&scmi_pds 47>;
-+		clocks = <&scmi_clk 179>, <&scmi_clk 178>;
-+		clock-names = "hclk", "cclk";
-+		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "int0", "int1";
-+		bosch,mram-cfg = <0x0 128 64 64 64 64 32 32>;
-+		status = "disabled";
-+	};
-+
-+	mcan1: can@20711000 {
-+		compatible = "bosch,m_can";
-+		reg = <0x00 0x20711000 0x00 0x200>,
-+		      <0x00 0x20718000 0x00 0x8000>;
-+		reg-names = "m_can", "message_ram";
-+		power-domains = <&scmi_pds 48>;
-+		clocks = <&scmi_clk 185>, <&scmi_clk 184>;
-+		clock-names = "hclk", "cclk";
-+		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "int0", "int1";
-+		bosch,mram-cfg = <0x0 128 64 64 64 64 32 32>;
-+		status = "disabled";
-+	};
-+
-+	mcan2: can@20721000 {
-+		compatible = "bosch,m_can";
-+		reg = <0x00 0x20721000 0x00 0x200>,
-+		      <0x00 0x20728000 0x00 0x8000>;
-+		reg-names = "m_can", "message_ram";
-+		power-domains = <&scmi_pds 49>;
-+		clocks = <&scmi_clk 191>, <&scmi_clk 190>;
-+		clock-names = "hclk", "cclk";
-+		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "int0", "int1";
-+		bosch,mram-cfg = <0x0 128 64 64 64 64 32 32>;
-+		status = "disabled";
-+	};
-+
-+	spi0: spi@20100000 {
-+		compatible = "ti,am654-mcspi", "ti,omap4-mcspi";
-+		reg = <0x00 0x20100000 0x00 0x400>;
-+		interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		power-domains = <&scmi_pds 72>;
-+		clocks = <&scmi_clk 299>;
-+		status = "disabled";
-+	};
-+
-+	spi1: spi@20110000 {
-+		compatible = "ti,am654-mcspi","ti,omap4-mcspi";
-+		reg = <0x00 0x20110000 0x00 0x400>;
-+		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		power-domains = <&scmi_pds 73>;
-+		clocks = <&scmi_clk 302>;
-+		status = "disabled";
-+	};
-+
-+	spi2: spi@20120000 {
-+		compatible = "ti,am654-mcspi","ti,omap4-mcspi";
-+		reg = <0x00 0x20120000 0x00 0x400>;
-+		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		power-domains = <&scmi_pds 74>;
-+		clocks = <&scmi_clk 305>;
-+		status = "disabled";
-+	};
-+
-+	spi3: spi@20130000 {
-+		compatible = "ti,am654-mcspi","ti,omap4-mcspi";
-+		reg = <0x00 0x20130000 0x00 0x400>;
-+		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		power-domains = <&scmi_pds 75>;
-+		clocks = <&scmi_clk 308>;
-+		status = "disabled";
-+	};
-+
-+	epwm0: pwm@23000000 {
-+		compatible = "ti,am64-epwm", "ti,am3352-ehrpwm";
-+		reg = <0x00 0x23000000 0x00 0x100>;
-+		power-domains = <&scmi_pds 40>;
-+		clocks = <&epwm_tbclk 0>, <&scmi_clk 164>;
-+		clock-names = "tbclk", "fck";
-+		#pwm-cells = <3>;
-+		status = "disabled";
-+	};
-+
-+	epwm1: pwm@23010000 {
-+		compatible = "ti,am64-epwm", "ti,am3352-ehrpwm";
-+		reg = <0x00 0x23010000 0x00 0x100>;
-+		power-domains = <&scmi_pds 41>;
-+		clocks = <&epwm_tbclk 1>, <&scmi_clk 165>;
-+		clock-names = "tbclk", "fck";
-+		#pwm-cells = <3>;
-+		status = "disabled";
-+	};
-+
-+	epwm2: pwm@23020000 {
-+		compatible = "ti,am64-epwm", "ti,am3352-ehrpwm";
-+		reg = <0x00 0x23020000 0x00 0x100>;
-+		power-domains = <&scmi_pds 42>;
-+		clocks = <&epwm_tbclk 2>, <&scmi_clk 166>;
-+		clock-names = "tbclk", "fck";
-+		#pwm-cells = <3>;
-+		status = "disabled";
-+	};
-+
-+	ecap0: pwm@23100000 {
-+		compatible = "ti,am3352-ecap";
-+		reg = <0x00 0x23100000 0x00 0x100>;
-+		power-domains = <&scmi_pds 23>;
-+		clocks = <&scmi_clk 99>;
-+		clock-names = "fck";
-+		#pwm-cells = <3>;
-+		status = "disabled";
-+	};
-+
-+	ecap1: pwm@23110000 {
-+		compatible = "ti,am3352-ecap";
-+		reg = <0x00 0x23110000 0x00 0x100>;
-+		power-domains = <&scmi_pds 24>;
-+		clocks = <&scmi_clk 100>;
-+		clock-names = "fck";
-+		#pwm-cells = <3>;
-+		status = "disabled";
-+	};
-+
-+	ecap2: pwm@23120000 {
-+		compatible = "ti,am3352-ecap";
-+		reg = <0x00 0x23120000 0x00 0x100>;
-+		power-domains = <&scmi_pds 25>;
-+		clocks = <&scmi_clk 101>;
-+		clock-names = "fck";
-+		#pwm-cells = <3>;
-+		status = "disabled";
-+	};
-+
-+	eqep0: counter@23200000 {
-+		compatible = "ti,am62-eqep";
-+		reg = <0x00 0x23200000 0x00 0x100>;
-+		power-domains = <&scmi_pds 29>;
-+		clocks = <&scmi_clk 127>;
-+		interrupts = <GIC_SPI 162 IRQ_TYPE_EDGE_RISING>;
-+		status = "disabled";
-+	};
-+
-+	eqep1: counter@23210000 {
-+		compatible = "ti,am62-eqep";
-+		reg = <0x00 0x23210000 0x00 0x100>;
-+		power-domains = <&scmi_pds 30>;
-+		clocks = <&scmi_clk 128>;
-+		interrupts = <GIC_SPI 163 IRQ_TYPE_EDGE_RISING>;
-+		status = "disabled";
-+	};
-+
-+	eqep2: counter@23220000 {
-+		compatible = "ti,am62-eqep";
-+		reg = <0x00 0x23220000 0x00 0x100>;
-+		power-domains = <&scmi_pds 31>;
-+		clocks = <&scmi_clk 129>;
-+		interrupts = <GIC_SPI 164 IRQ_TYPE_EDGE_RISING>;
-+		status = "disabled";
-+	};
-+
-+	elm0: ecc@25010000 {
-+		compatible = "ti,am64-elm";
-+		reg = <0x00 0x25010000 0x00 0x2000>;
-+		interrupts = <GIC_SPI 243 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&scmi_pds 25>;
-+		clocks = <&scmi_clk 102>;
-+		clock-names = "fck";
-+		status = "disabled";
-+	};
-+
-+	dss: display@30200000 {
-+		compatible = "ti,am62l-dss";
-+		reg = <0x00 0x30200000 0x00 0x1000>, /* common */
-+		      <0x00 0x30202000 0x00 0x1000>, /* vidl1 */
-+		      <0x00 0x30207000 0x00 0x1000>, /* ovr1 */
-+		      <0x00 0x3020a000 0x00 0x1000>, /* vp1 */
-+		      <0x00 0x30201000 0x00 0x1000>; /* common1 */
-+		reg-names = "common", "vidl1", "ovr1", "vp1", "common1";
-+		power-domains = <&scmi_pds 39>;
-+		clocks = <&scmi_clk 162>,
-+			 <&scmi_clk 161>;
-+		clock-names = "fck", "vp1";
-+		interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-+		status = "disabled";
-+
-+		dss_ports: ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+	};
-+
-+	gpmc0: memory-controller@3b000000 {
-+		compatible = "ti,am64-gpmc";
-+		power-domains = <&scmi_pds 37>;
-+		clocks = <&scmi_clk 149>;
-+		clock-names = "fck";
-+		reg = <0x00 0x3b000000 0x00 0x400>,
-+		      <0x00 0x50000000 0x00 0x8000000>;
-+		reg-names = "cfg", "data";
-+		interrupts = <GIC_SPI 244 IRQ_TYPE_LEVEL_HIGH>;
-+		gpmc,num-cs = <3>;
-+		gpmc,num-waitpins = <2>;
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		status = "disabled";
-+	};
-+
-+	oc_sram: sram@70800000 {
-+		compatible = "mmio-sram";
-+		reg = <0x00 0x70800000 0x00 0x10000>;
-+		ranges = <0x00 0x00 0x70800000 0x10000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		scmi_shmem: sram@0 {
-+			compatible = "arm,scmi-shmem";
-+			reg = <0x00 0x100>;
-+			bootph-all;
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/ti/k3-am62l-thermal.dtsi b/arch/arm64/boot/dts/ti/k3-am62l-thermal.dtsi
-new file mode 100644
-index 0000000000000000000000000000000000000000..4804c24d56748067ff27acbc8259e6d4306109a6
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am62l-thermal.dtsi
-@@ -0,0 +1,25 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree file for the AM62L Bangap Sensors
-+ * Copyright (C) 2025 Texas Instruments Incorporated - https://www.ti.com/
-+ *
-+ * Technical Reference Manual: https://www.ti.com/lit/pdf/sprujb4
-+ */
-+
-+#include <dt-bindings/thermal/thermal.h>
-+
-+thermal_zones: thermal-zones {
-+	thermal0: thermal0 {
-+		polling-delay-passive = <250>;  /* milliSeconds */
-+		polling-delay = <500>;          /* milliSeconds */
-+		thermal-sensors = <&vtm0 0>;
-+
-+		trips {
-+			crit0: crit0 {
-+				temperature = <125000>; /* milliCelsius */
-+				hysteresis = <2000>;    /* milliCelsius */
-+				type = "critical";
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/ti/k3-am62l-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am62l-wakeup.dtsi
-new file mode 100644
-index 0000000000000000000000000000000000000000..a0ab21a378e48da4b28a8dbb9a10e98b74b89614
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am62l-wakeup.dtsi
-@@ -0,0 +1,141 @@
-+// SPDX-License-Identifier: GPL-2.0-only or MIT
-+/*
-+ * Device Tree file for the AM62L wakeup domain peripherals
-+ * Copyright (C) 2025 Texas Instruments Incorporated - https://www.ti.com/
-+ *
-+ * Technical Reference Manual: https://www.ti.com/lit/pdf/sprujb4
-+ */
-+
-+#include <dt-bindings/bus/ti-sysc.h>
-+
-+&cbass_wakeup {
-+	vtm0: temperature-sensor@b00000 {
-+		compatible = "ti,j7200-vtm";
-+		reg = <0x00 0xb00000 0x00 0x400>,
-+		      <0x00 0xb01000 0x00 0x400>;
-+		power-domains = <&scmi_pds 46>;
-+		#thermal-sensor-cells = <1>;
-+	};
-+
-+	pmx0: pinctrl@4084000 {
-+		compatible = "ti,am62l-padconf", "pinctrl-single";
-+		reg = <0x00 0x4084000 0x00 0x24c>;
-+		pinctrl-single,register-width = <32>;
-+		pinctrl-single,function-mask = <0xffffffff>;
-+		#pinctrl-cells = <1>;
-+	};
-+
-+	wkup_gpio0: gpio@4201000 {
-+		compatible = "ti,am64-gpio", "ti,keystone-gpio";
-+		reg = <0x00 0x04201000 0x00 0x100>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-parent = <&gic500>;
-+		interrupts = <GIC_SPI 276 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 704 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 705 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 706 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 707 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 708 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 709 IRQ_TYPE_EDGE_RISING>,
-+			     <GIC_SPI 710 IRQ_TYPE_EDGE_RISING>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		power-domains = <&scmi_pds 36>;
-+		clocks = <&scmi_clk 146>;
-+		clock-names = "gpio";
-+		ti,ngpio = <7>;
-+		ti,davinci-gpio-unbanked = <0>;
-+		status = "disabled";
-+	};
-+
-+	wkup_timer0: timer@2b100000 {
-+		compatible = "ti,am654-timer";
-+		reg = <0x00 0x2b100000 0x00 0x400>;
-+		interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&scmi_clk 93>;
-+		clock-names = "fck";
-+		power-domains = <&scmi_pds 19>;
-+		ti,timer-pwm;
-+	};
-+
-+	wkup_timer1: timer@2b110000 {
-+		compatible = "ti,am654-timer";
-+		reg = <0x00 0x2b110000 0x00 0x400>;
-+		interrupts = <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&scmi_clk 98>;
-+		clock-names = "fck";
-+		power-domains = <&scmi_pds 20>;
-+		ti,timer-pwm;
-+	};
-+
-+	wkup_i2c0: i2c@2b200000 {
-+		compatible = "ti,am64-i2c", "ti,omap4-i2c";
-+		reg = <0x00 0x2b200000 0x00 0x100>;
-+		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		power-domains = <&scmi_pds 57>;
-+		clocks = <&scmi_clk 262>;
-+		clock-names = "fck";
-+		status = "disabled";
-+	};
-+
-+	target-module@2b300050 {
-+		compatible = "ti,sysc-omap2", "ti,sysc";
-+		reg = <0x00 0x2b300050 0x00 0x4>,
-+		      <0x00 0x2b300054 0x00 0x4>,
-+		      <0x00 0x2b300058 0x00 0x4>;
-+		reg-names = "rev", "sysc", "syss";
-+		ranges = <0x00 0x00 0x2b300000 0x100000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		power-domains = <&scmi_pds 83>;
-+		clocks = <&scmi_clk 324>;
-+		clock-names = "fck";
-+		ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+				 SYSC_OMAP2_SOFTRESET |
-+				 SYSC_OMAP2_AUTOIDLE)>;
-+		ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+				<SYSC_IDLE_NO>,
-+				<SYSC_IDLE_SMART>,
-+				<SYSC_IDLE_SMART_WKUP>;
-+		ti,syss-mask = <1>;
-+		ti,no-reset-on-init;
-+		status = "disabled";
-+
-+		wkup_uart0: serial@0 {
-+			compatible = "ti,am64-uart", "ti,am654-uart";
-+			reg = <0x00 0x100>;
-+			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&scmi_clk 324>;
-+			assigned-clocks = <&scmi_clk 324>;
-+			clock-names = "fck";
-+			status = "disabled";
-+		};
-+	};
-+
-+	wkup_conf: bus@43000000 {
-+		compatible = "simple-bus";
-+		ranges = <0x00 0x00 0x43000000 0x80000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		chipid: chipid@14 {
-+			compatible = "ti,am654-chipid";
-+			reg = <0x14 0x8>;
-+			bootph-all;
-+		};
-+
-+		cpsw_mac_syscon: ethernet-mac-syscon@2000 {
-+			compatible = "ti,am62p-cpsw-mac-efuse", "syscon";
-+			reg = <0x2000 0x8>;
-+		};
-+
-+		usb_phy_ctrl: syscon@45000 {
-+			compatible = "ti,am62-usb-phy-ctrl", "syscon";
-+			reg = <0x45000 0x8>;
-+			bootph-all;
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/ti/k3-am62l.dtsi b/arch/arm64/boot/dts/ti/k3-am62l.dtsi
-new file mode 100644
-index 0000000000000000000000000000000000000000..d058394a8d19d16f100cd87cf293c67bc189b475
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am62l.dtsi
-@@ -0,0 +1,120 @@
-+// SPDX-License-Identifier: GPL-2.0-only or MIT
-+/*
-+ * Device Tree Source for AM62L SoC Family
-+ * Copyright (C) 2025 Texas Instruments Incorporated - https://www.ti.com/
-+ *
-+ * Technical Reference Manual: https://www.ti.com/lit/pdf/sprujb4
-+ */
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+#include "k3-pinctrl.h"
-+
-+/ {
-+	model = "Texas Instruments K3 AM62L3 SoC";
-+	compatible = "ti,am62l3";
-+	interrupt-parent = <&gic500>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	firmware {
-+		optee {
-+			compatible = "linaro,optee-tz";
-+			method = "smc";
-+		};
-+
-+		psci: psci {
-+			compatible = "arm,psci-1.0";
-+			method = "smc";
-+		};
-+
-+		scmi: scmi {
-+			compatible = "arm,scmi-smc";
-+			arm,smc-id = <0x82004000>;
-+			shmem = <&scmi_shmem>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			scmi_clk: protocol@14 {
-+				reg = <0x14>;
-+				#clock-cells = <1>;
-+				bootph-all;
-+			};
-+
-+			scmi_pds: protocol@11 {
-+				reg = <0x11>;
-+				#power-domain-cells = <1>;
-+				bootph-all;
-+			};
-+		};
-+	};
-+
-+	a53_timer0: timer-cl0-cpu0 {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>, /* cntpsirq */
-+			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>, /* cntpnsirq */
-+			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>, /* cntvirq */
-+			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>; /* cnthpirq */
-+	};
-+
-+	pmu: pmu {
-+		compatible = "arm,cortex-a53-pmu";
-+		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	cbass_main: bus@f0000 {
-+		compatible = "simple-bus";
-+		ranges = <0x00 0x00600000 0x00 0x00600000 0x00 0x00010100>, /* GPIO */
-+			 <0x00 0x01000000 0x00 0x01000000 0x00 0x01b28400>, /* First Peripheral Window */
-+			 <0x00 0x00a40000 0x00 0x00a40000 0x00 0x00000400>, /* Timesync Router */
-+			 <0x00 0x08000000 0x00 0x08000000 0x00 0x00200000>, /* CPSW */
-+			 <0x00 0x09000000 0x00 0x09000000 0x00 0x00400000>, /* CTRL MMRs */
-+			 <0x00 0x0e000000 0x00 0x0e000000 0x00 0x1a001400>, /* Second Peripheral Window */
-+			 <0x00 0x301c0000 0x00 0x301c0000 0x00 0x00001000>, /* DPHY-TX */
-+			 <0x00 0x30200000 0x00 0x30200000 0x00 0x0000b000>, /* DSS */
-+			 <0x00 0x30270000 0x00 0x30270000 0x00 0x00390000>, /* DSI Wrapper */
-+			 <0x00 0x30500000 0x00 0x30500000 0x00 0x00100000>, /* DSI Config */
-+			 <0x00 0x31000000 0x00 0x31000000 0x00 0x00050000>, /* USB0 DWC3 Core Window */
-+			 <0x00 0x31100000 0x00 0x31100000 0x00 0x00050000>, /* USB1 DWC3 Core Window */
-+			 <0x00 0x3b000000 0x00 0x3b000000 0x00 0x00000400>, /* GPMC0 */
-+			 <0x00 0x45810000 0x00 0x45810000 0x00 0x03170000>, /* DMSS */
-+			 <0x00 0x50000000 0x00 0x50000000 0x00 0x08000000>, /* GPMC DATA */
-+			 <0x00 0x60000000 0x00 0x60000000 0x00 0x08000000>, /* FSS DAT1 */
-+			 <0x00 0x70800000 0x00 0x70800000 0x00 0x00018000>, /* OCSRAM */
-+			 <0x01 0x00000000 0x01 0x00000000 0x00 0x00310000>, /* A53 PERIPHBASE */
-+			 <0x04 0x00000000 0x04 0x00000000 0x01 0x00000000>, /* FSS DAT0 */
-+			 <0x05 0x00000000 0x05 0x00000000 0x01 0x00000000>, /* FSS DAT3 */
-+
-+			 /* Wakeup Domain Range */
-+			 <0x00 0x00a80000 0x00 0x00a80000 0x00 0x00034000>, /* GTC */
-+			 <0x00 0x00b00000 0x00 0x00b00000 0x00 0x00001400>, /* VTM */
-+			 <0x00 0x04080000 0x00 0x04080000 0x00 0x00008000>, /* PDCFG */
-+			 <0x00 0x04201000 0x00 0x04201000 0x00 0x00000100>, /* GPIO */
-+			 <0x00 0x2b100000 0x00 0x2b100000 0x00 0x00100100>, /* Wakeup Peripheral Window */
-+			 <0x00 0x40800000 0x00 0x40800000 0x00 0x00014000>, /* DMA */
-+			 <0x00 0x43000000 0x00 0x43000000 0x00 0x00080000>; /* CTRL MMRs */
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+
-+		cbass_wakeup:  bus@43000000 {
-+			compatible = "simple-bus";
-+			ranges = <0x00 0x00a80000 0x00 0x00a80000 0x00 0x00034000>, /* GTC */
-+				 <0x00 0x00b00000 0x00 0x00b00000 0x00 0x00001400>, /* VTM */
-+				 <0x00 0x04080000 0x00 0x04080000 0x00 0x00008000>, /* PDCFG */
-+				 <0x00 0x04201000 0x00 0x04201000 0x00 0x00000100>, /* GPIO */
-+				 <0x00 0x2b100000 0x00 0x2b100000 0x00 0x00100100>, /* Wakeup Peripheral Window */
-+				 <0x00 0x40800000 0x00 0x40800000 0x00 0x00014000>, /* DMA */
-+				 <0x00 0x43000000 0x00 0x43000000 0x00 0x00080000>; /* CTRL MMRs */
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+		};
-+	};
-+
-+	#include "k3-am62l-thermal.dtsi"
-+};
-+
-+/* Now include peripherals for each bus segment */
-+#include "k3-am62l-main.dtsi"
-+#include "k3-am62l-wakeup.dtsi"
-diff --git a/arch/arm64/boot/dts/ti/k3-am62l3.dtsi b/arch/arm64/boot/dts/ti/k3-am62l3.dtsi
-new file mode 100644
-index 0000000000000000000000000000000000000000..da220b85151227c63f59b2b8ec48ae2ebb37e7bf
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am62l3.dtsi
-@@ -0,0 +1,67 @@
-+// SPDX-License-Identifier: GPL-2.0-only or MIT
-+/*
-+ * Device Tree file for the AM62L3 SoC family (Dual Core A53)
-+ * Copyright (C) 2025 Texas Instruments Incorporated - https://www.ti.com/
-+ *
-+ * Technical Reference Manual: https://www.ti.com/lit/pdf/sprujb4
++ * Data Sheet: https://www.ti.com/lit/pdf/sprspa1
 + */
 +
 +/dts-v1/;
 +
-+#include "k3-am62l.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/leds/common.h>
++#include <dt-bindings/net/ti-dp83867.h>
++#include "k3-am62l3.dtsi"
++#include "k3-pinctrl.h"
 +
 +/ {
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++	compatible = "ti,am62l3-evm", "ti,am62l3";
++	model = "Texas Instruments AM62L3 Evaluation Module";
 +
-+		cpu-map {
-+			cluster0: cluster0 {
-+				core0 {
-+					cpu = <&cpu0>;
-+				};
++	chosen {
++		stdout-path = &uart0;
++	};
 +
-+				core1 {
-+					cpu = <&cpu1>;
++	memory@80000000 {
++		reg = <0x00000000 0x80000000 0x00000000 0x80000000>;
++		device_type = "memory";
++		bootph-all;
++	};
++
++	gpio_keys: gpio-keys {
++		compatible = "gpio-keys";
++		autorepeat;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usr_button_pins_default>;
++
++		usr: button-usr {
++			label = "User Key";
++			linux,code = <BTN_0>;
++			gpios = <&gpio0 90 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&usr_led_pins_default>;
++
++		led-0 {
++			label = "am62-sk:green:heartbeat";
++			gpios = <&gpio0 123 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++			function = LED_FUNCTION_HEARTBEAT;
++			default-state = "on";
++		};
++	};
++
++	vmain_pd: regulator-0 {
++		/* TPS65988 PD CONTROLLER OUTPUT */
++		compatible = "regulator-fixed";
++		regulator-name = "vmain_pd";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++		regulator-boot-on;
++		bootph-all;
++	};
++
++	vcc_3v3_sys: regulator-1 {
++		/* output of LM61460-Q1 */
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_3v3_sys";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&vmain_pd>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	vdd_mmc1: regulator-2 {
++		/* TPS22918DBVR */
++		compatible = "regulator-fixed";
++		regulator-name = "vdd_mmc1";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		enable-active-high;
++		vin-supply = <&vcc_3v3_sys>;
++		gpio = <&exp1 3 GPIO_ACTIVE_HIGH>;
++		bootph-all;
++	};
++
++	vcc_1v8: regulator-3 {
++		/* output of TPS6282518DMQ */
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_1v8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vcc_3v3_sys>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++};
++
++&gpio0 {
++	status = "okay";
++	bootph-all;
++};
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins_default>;
++	clock-frequency = <400000>;
++
++	eeprom@51 {
++		/* AT24C512C-MAHM-T or M24512-DFMC6TG */
++		compatible = "atmel,24c512";
++		reg = <0x51>;
++	};
++};
++
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins_default>;
++	clock-frequency = <100000>;
++	status = "okay";
++
++	exp1: gpio@22 {
++		compatible = "ti,tca6424";
++		reg = <0x22>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		gpio-line-names = "", "",
++				  "UART1_FET_SEL", "MMC1_SD_EN",
++				  "VPP_LDO_EN", "EXP_PS_3V3_EN",
++				  "UART1_FET_BUF_EN", "", "",
++				  "", "DSI_GPIO0", "DSI_GPIO1",
++				  "", "BT_UART_WAKE_SOC_3V3",
++				  "USB_TYPEA_OC_INDICATION", "",
++				  "", "WLAN_ALERTn", "", "",
++				  "HDMI_INTn", "TEST_GPIO2",
++				  "MCASP0_FET_EN", "MCASP0_BUF_BT_EN",
++				  "MCASP0_FET_SEL", "DSI_EDID",
++				  "PD_I2C_IRQ", "IO_EXP_TEST_LED";
++
++		interrupt-parent = <&gpio0>;
++		interrupts = <91 IRQ_TYPE_EDGE_FALLING>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&gpio0_ioexp_intr_pins_default>;
++		bootph-all;
++	};
++
++	exp2: gpio@23 {
++		compatible = "ti,tca6424";
++		reg = <0x23>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		gpio-line-names = "BT_EN_SOC", "VOUT0_FET_SEL0",
++				  "", "",
++				  "", "",
++				  "", "",
++				  "WL_LT_EN", "EXP_PS_5V0_EN",
++				  "TP45", "TP48",
++				  "TP46", "TP49",
++				  "TP47", "TP50",
++				  "GPIO_QSPI_NAND_RSTn", "GPIO_HDMI_RSTn",
++				  "GPIO_CPSW1_RST", "GPIO_CPSW2_RST",
++				  "", "GPIO_AUD_RSTn",
++				  "GPIO_eMMC_RSTn", "SoC_WLAN_SDIO_RST";
++		bootph-all;
++	};
++
++};
++
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins_default>;
++	clock-frequency = <400000>;
++	status = "okay";
++
++	typec_pd0: tps658x@3f {
++		compatible = "ti,tps6598x";
++		reg = <0x3f>;
++
++		connector {
++			compatible = "usb-c-connector";
++			label = "USB-C";
++			self-powered;
++			data-role = "dual";
++			power-role = "sink";
++
++			port {
++				usb_con_hs: endpoint {
++					remote-endpoint = <&usb0_hs_ep>;
 +				};
 +			};
 +		};
-+
-+		cpu0: cpu@0 {
-+			compatible = "arm,cortex-a53";
-+			reg = <0x000>;
-+			device_type = "cpu";
-+			enable-method = "psci";
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2_0>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			compatible = "arm,cortex-a53";
-+			reg = <0x001>;
-+			device_type = "cpu";
-+			enable-method = "psci";
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2_0>;
-+		};
-+	};
-+
-+	l2_0: l2-cache0 {
-+		compatible = "cache";
-+		cache-unified;
-+		cache-level = <2>;
-+		cache-size = <0x40000>;
-+		cache-line-size = <64>;
-+		cache-sets = <256>;
 +	};
 +};
-diff --git a/arch/arm64/boot/dts/ti/k3-pinctrl.h b/arch/arm64/boot/dts/ti/k3-pinctrl.h
-index c0f09be8d3f94a70812b66c3f91626aac35f4026..fad0fd3fc656eecf97273143a0e530d4b745dd8a 100644
---- a/arch/arm64/boot/dts/ti/k3-pinctrl.h
-+++ b/arch/arm64/boot/dts/ti/k3-pinctrl.h
-@@ -78,6 +78,8 @@
- #define AM62PX_IOPAD(pa, val, muxmode)		(((pa) & 0x1fff)) ((val) | (muxmode))
- #define AM62PX_MCU_IOPAD(pa, val, muxmode)	(((pa) & 0x1fff)) ((val) | (muxmode))
- 
-+#define AM62LX_IOPAD(pa, val, muxmode)		(((pa) & 0x1fff)) ((val) | (muxmode))
 +
- #define AM62X_IOPAD(pa, val, muxmode)		(((pa) & 0x1fff)) ((val) | (muxmode))
- #define AM62X_MCU_IOPAD(pa, val, muxmode)	(((pa) & 0x1fff)) ((val) | (muxmode))
- 
++&pmx0 {
++	gpio0_ioexp_intr_pins_default: gpio0-ioexp-intr-default-pins {
++		pinctrl-single,pins = <
++			AM62LX_IOPAD(0x01b0, PIN_INPUT, 7) /* (B12) SPI0_D1.GPIO0_91 */
++		>;
++		bootph-all;
++	};
++
++	i2c0_pins_default: i2c0-default-pins {
++		pinctrl-single,pins = <
++			AM62LX_IOPAD(0x01cc, PIN_INPUT_PULLUP, 0) /* (B7) I2C0_SCL */
++			AM62LX_IOPAD(0x01d0, PIN_INPUT_PULLUP, 0) /* (A7) I2C0_SDA */
++		>;
++		bootph-all;
++	};
++
++	i2c1_pins_default: i2c1-default-pins {
++		pinctrl-single,pins = <
++			AM62LX_IOPAD(0x01d4, PIN_INPUT_PULLUP, 0) /* (D7) I2C1_SCL */
++			AM62LX_IOPAD(0x01d8, PIN_INPUT_PULLUP, 0) /* (A6) I2C1_SDA */
++		>;
++		bootph-all;
++	};
++
++	i2c2_pins_default: i2c2-default-pins {
++		pinctrl-single,pins = <
++			AM62LX_IOPAD(0x01dc, PIN_INPUT_PULLUP, 0) /* (B8) I2C2_SCL */
++			AM62LX_IOPAD(0x01e0, PIN_INPUT_PULLUP, 0) /* (D8) I2C2_SDA */
++		>;
++	};
++
++	mmc0_pins_default: mmc0-default-pins {
++		pinctrl-single,pins = <
++			AM62LX_IOPAD(0x0214, PIN_INPUT_PULLUP, 0) /* (D2) MMC0_CMD */
++			AM62LX_IOPAD(0x020c, PIN_OUTPUT, 0) /* (B2) MMC0_CLK */
++			AM62LX_IOPAD(0x0208, PIN_INPUT_PULLUP, 0) /* (D3) MMC0_DAT0 */
++			AM62LX_IOPAD(0x0204, PIN_INPUT_PULLUP, 0) /* (D4) MMC0_DAT1 */
++			AM62LX_IOPAD(0x0200, PIN_INPUT_PULLUP, 0) /* (C1) MMC0_DAT2 */
++			AM62LX_IOPAD(0x01fc, PIN_INPUT_PULLUP, 0) /* (C2) MMC0_DAT3 */
++			AM62LX_IOPAD(0x01f8, PIN_INPUT_PULLUP, 0) /* (C4) MMC0_DAT4 */
++			AM62LX_IOPAD(0x01f4, PIN_INPUT_PULLUP, 0) /* (B3) MMC0_DAT5 */
++			AM62LX_IOPAD(0x01f0, PIN_INPUT_PULLUP, 0) /* (A3) MMC0_DAT6 */
++			AM62LX_IOPAD(0x01ec, PIN_INPUT_PULLUP, 0) /* (B4) MMC0_DAT7 */
++		>;
++		bootph-all;
++	};
++
++	mmc1_pins_default: mmc1-default-pins {
++		pinctrl-single,pins = <
++			AM62LX_IOPAD(0x0230, PIN_INPUT, 0) /* (Y3) MMC1_CMD */
++			AM62LX_IOPAD(0x0228, PIN_OUTPUT, 0) /* (Y2) MMC1_CLK */
++			AM62LX_IOPAD(0x0224, PIN_INPUT, 0) /* (AA1) MMC1_DAT0 */
++			AM62LX_IOPAD(0x0220, PIN_INPUT_PULLUP, 0) /* (Y4) MMC1_DAT1 */
++			AM62LX_IOPAD(0x021c, PIN_INPUT_PULLUP, 0) /* (AA2) MMC1_DAT2 */
++			AM62LX_IOPAD(0x0218, PIN_INPUT_PULLUP, 0) /* (AB2) MMC1_DAT3 */
++			AM62LX_IOPAD(0x0234, PIN_INPUT, 0) /* (B6) MMC1_SDCD */
++		>;
++		bootph-all;
++	};
++
++	uart0_pins_default: uart0-default-pins {
++		pinctrl-single,pins = <
++			AM62LX_IOPAD(0x01b4, PIN_INPUT, 0) /* (D13) UART0_RXD */
++			AM62LX_IOPAD(0x01b8, PIN_OUTPUT, 0) /* (C13) UART0_TXD */
++		>;
++		bootph-all;
++	};
++
++	usb1_default_pins: usb1-default-pins {
++		pinctrl-single,pins = <
++			AM62LX_IOPAD(0x0248, PIN_INPUT | PIN_DS_PULLUD_ENABLE | PIN_DS_PULL_UP, 0) /* (A5) USB1_DRVVBUS */
++		>;
++	};
++
++	usr_button_pins_default: usr-button-default-pins {
++		pinctrl-single,pins = <
++			AM62LX_IOPAD(0x01ac, PIN_INPUT, 7) /* (E12) SPI0_D0.GPIO0_90 */
++		>;
++	};
++
++	usr_led_pins_default: usr-led-default-pins {
++		pinctrl-single,pins = <
++			AM62LX_IOPAD(0x0238, PIN_OUTPUT, 7) /* (D24) MMC1_SDWP.GPIO0_123 */
++		>;
++	};
++
++};
++
++&sdhci0 {
++	/* eMMC */
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_default>;
++	non-removable;
++	status = "okay";
++	bootph-all;
++};
++
++&sdhci1 {
++	/* SD/MMC */
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc1_pins_default>;
++	vmmc-supply = <&vdd_mmc1>;
++	disable-wp;
++	status = "okay";
++	bootph-all;
++};
++
++&uart0 {
++	pinctrl-0 = <&uart0_pins_default>;
++	pinctrl-names = "default";
++	status = "okay";
++	bootph-all;
++};
++
++&usbss0 {
++	status = "okay";
++	ti,vbus-divider;
++};
++
++&usb0 {
++	usb-role-switch;
++
++	port {
++		usb0_hs_ep: endpoint {
++			remote-endpoint = <&usb_con_hs>;
++		};
++	};
++};
++
++&usbss1 {
++	status = "okay";
++	ti,vbus-divider;
++};
++
++&usb1 {
++	dr-mode = "host";
++	pinctrl-names = "default";
++	pinctrl-0 = <&usb1_default_pins>;
++};
 
 -- 
 2.50.1
