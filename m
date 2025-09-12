@@ -1,125 +1,107 @@
-Return-Path: <linux-gpio+bounces-26089-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26090-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE8F6B558D6
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Sep 2025 00:08:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C7CBB5590D
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Sep 2025 00:19:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7FC407AAFCB
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 22:06:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 286F03A4017
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 22:19:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC04B284694;
-	Fri, 12 Sep 2025 22:07:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68E9426D4DD;
+	Fri, 12 Sep 2025 22:19:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="U/TSqtgk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5mKPOrd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF85E2798F3
-	for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 22:07:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C7424A046;
+	Fri, 12 Sep 2025 22:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757714873; cv=none; b=ZqH7tRh+KCHBbXrRzJ7vZueCK5s3k+jGPVcatejEyG9QMXFcIFhreFYtJy9fZl2qMhaYs/Wj4dhkh9CZ90nKkc6RfPaQkBwxbcaH40LnB2vOM707J4Nl8JDxR2GS2PPNAGG+m1pc+HCyxuNjp7I6JRDFc5ytqlrTKaKddaWzfdQ=
+	t=1757715544; cv=none; b=k2QH3v4E0HnBAN2mux07r7QC+8YxJN9PFHL5xF3ZZ8o4c1sktShkq7ySkwJPhcunqss/bXfCGE8xa/ZkU4ouN7rGwDoGR96ZZZkQ4A3RtpULBeXOlzyeB7d51sFKSKbwdANZEo5tqBtBwodPeUC6/Bbqh02oiPam8gpnq8WVNC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757714873; c=relaxed/simple;
-	bh=+yph0vA7hH7D2dOH8dcz8OTQ5zI8ZyZYi0J1x57wbuc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RSFGa977XX/WAjTvhjtixhVG4gbq2hpZ/1g+S001jZjRGLwR52emz16cuLD8PR+DkIAW1zuW7Ph31yxMhlsdpWavzGsj9CjZ4F03+LGf3eM7v+xyCJFQXXUZ0Or3nzCSiWk1VQYwgGjOd+Ho0SR/i/WS3+ZI8XAMkjVdwTeFRzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=U/TSqtgk; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=XtZM
-	38dcKGfPDowHADfBNhN+yZMd/DBKAr/Q56lBQhU=; b=U/TSqtgky9mRHKpLYuTy
-	UfXd7XedJP9Hk+5/2IqTWU+ncNGhELZK0Vc0RXbSYaIz7Hw6VMZAT5JoyMYY6z4g
-	WzMES95KXJxGoQ7e6ctjM2JN/2k4u/gVXKL/EPXHHKnINEvdgPhLK+f+fB3cHt9L
-	BpsliJIKV+ndVoI8YPP2/7JNqgTQ5aLQNm6R5gAL99+5MFMbIChu6laV+I2f8W3m
-	RpmupwmKLyH5mtQ8NSf2xEebzmoGbDEbi8by9Z1l1UyIN+iGY8UbAOXQISM6qt8c
-	5VvYJPYCkQGivyZtg4DnvEdmEwmxNTAeKfuH6DGfDaXfeL6rCKUkNLis+l/AE6hJ
-	Eg==
-Received: (qmail 1499859 invoked from network); 13 Sep 2025 00:07:43 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 Sep 2025 00:07:43 +0200
-X-UD-Smtp-Session: l3s3148p1@dRQG4qE+rtYgAQnoAHJ8AC93OVDMgFWg
-Date: Sat, 13 Sep 2025 00:07:42 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Janne Grunau <j@jannau.net>
-Cc: Sven Peter <sven@kernel.org>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Neal Gompa <neal@gompa.dev>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Hector Martin <marcan@marcan.st>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Mark Kettenis <kettenis@openbsd.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Sasha Finkelstein <fnkl.kernel@gmail.com>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	van Spriel <arend@broadcom.com>, Lee Jones <lee@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>,
-	Vinod Koul <vkoul@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, iommu@lists.linux.dev,
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-bluetooth@vger.kernel.org,
-	linux-wireless@vger.kernel.org, linux-pwm@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-clk@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-nvme@lists.infradead.org
-Subject: Re: [PATCH 10/37] dt-bindings: i2c: apple,i2c: Add apple,t6020-i2c
- compatible
-Message-ID: <aMSZrp3pbS2CeBOE@shikoro>
-References: <20250828-dt-apple-t6020-v1-0-507ba4c4b98e@jannau.net>
- <20250828-dt-apple-t6020-v1-10-507ba4c4b98e@jannau.net>
+	s=arc-20240116; t=1757715544; c=relaxed/simple;
+	bh=RbPveMq+wUujHCh2U8cE2C1bMP4tSmoOr+Umu0UNfzg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kysSSbmSy3tYA2ohhB6UZIcFYCz5tq1XlAohZdeX8eBhNk2U48vNfUUQZHUp6Yy/dDnoDjS6QFrJ7htrusoviPJEgKhG2yj10OYvCY0lj5ORnvl8sly68mwN7fhhmF0tEeJRo1yv7+29kn/dQGiKW3cNAJmrYWFRtoyqdAp4Ank=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5mKPOrd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06D98C4CEF1;
+	Fri, 12 Sep 2025 22:19:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757715543;
+	bh=RbPveMq+wUujHCh2U8cE2C1bMP4tSmoOr+Umu0UNfzg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=O5mKPOrdXEOjALlLBJVr1vGQJXJcItEeixGlI+9dJg5I5QMN4C3sf5rHXczNa9wut
+	 sZ/cezKIxekFgigOl8KyZ7KrkrqSJI3v3RehxpcjGqxRkJMPKB4CLWIu3Py+FGtqmp
+	 tjFg/n9Orbh0F309UZHzWj0hnQaI7zYQKMO16o7iDf08PaugvitDBfBtWzp9TgnUvs
+	 DbzS67V41iaiCsb+f0Uow0younCcOwgJyGG62eGHul9mNQ4ji6kXGx05VNgIYJ+i5r
+	 g+/Z2i9QXmuuZYDLlLnifn48G8ft/7glnyxC2ooYXbsdwMyT9Ko/mqTtGaScbQDyUN
+	 2MLFazUJ2BRxw==
+From: Hans de Goede <hansg@kernel.org>
+To: Mika Westerberg <westeri@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: Hans de Goede <hansg@kernel.org>,
+	linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Subject: [6.17 REGRESSION FIX] gpiolib: acpi: Fix using random stack memory during GPIO lookups
+Date: Sat, 13 Sep 2025 00:18:59 +0200
+Message-ID: <20250912221859.368173-1-hansg@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250828-dt-apple-t6020-v1-10-507ba4c4b98e@jannau.net>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Aug 28, 2025 at 04:01:29PM +0200, Janne Grunau wrote:
-> After discussion with the devicetree maintainers we agreed to not extend
-> lists with the generic compatible "apple,i2c" anymore [1]. Use
-> "apple,t8103-i2c" as fallback compatible as it is the SoC the driver
-> and bindings were written for.
-> 
-> This block is compatible with t8103, so just add the new per-SoC
-> compatible using apple,t8103-i2c as base.
-> 
-> [1]: https://lore.kernel.org/asahi/12ab93b7-1fc2-4ce0-926e-c8141cfe81bf@kernel.org/
-> 
-> Signed-off-by: Janne Grunau <j@jannau.net>
-> Acked-by: Andi Shyti <andi.shyti@kernel.org>
+Before commit 8b4f52ef7a41 ("gpiolib: acpi: Deduplicate some code in
+__acpi_find_gpio()") and the follow-up fix commit 7c010d463372 ("gpiolib:
+acpi: Make sure we fill struct acpi_gpio_info"). The struct acpi_gpio_info
+used during lookups was part of struct acpi_gpio_lookup which gets
+memset() to 0 before use.
 
-Applied to for-next, thanks!
+And then after a successful lookup, acpi_gpio_resource_lookup() would
+copy the content of the zeroed acpi_gpio_lookup.info to the on
+stack struct acpi_gpio_info in __acpi_find_gpio(), overwriting any
+uninitialized memory contents there.
+
+But now instead a pointer to the on stack struct acpi_gpio_info in
+__acpi_find_gpio() is passed around, but that struct is never
+initialized.
+
+This passing around of the uninitialized struct breaks index based
+lookups of GpioInt GPIOs because info->quirks now contains some random
+on stack data which may contain ACPI_GPIO_QUIRK_ONLY_GPIOIO.
+
+Initialize the on stack struct acpi_gpio_info to 0 to fix this.
+
+Fixes: 8b4f52ef7a41 ("gpiolib: acpi: Deduplicate some code in __acpi_find_gpio()")
+Fixes: 7c010d463372 ("gpiolib: acpi: Make sure we fill struct acpi_gpio_info")
+Signed-off-by: Hans de Goede <hansg@kernel.org>
+---
+ drivers/gpio/gpiolib-acpi-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpiolib-acpi-core.c b/drivers/gpio/gpiolib-acpi-core.c
+index 12b24a717e43..1cc5d0702ee1 100644
+--- a/drivers/gpio/gpiolib-acpi-core.c
++++ b/drivers/gpio/gpiolib-acpi-core.c
+@@ -942,7 +942,7 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
+ {
+ 	struct acpi_device *adev = to_acpi_device_node(fwnode);
+ 	bool can_fallback = acpi_can_fallback_to_crs(adev, con_id);
+-	struct acpi_gpio_info info;
++	struct acpi_gpio_info info = { };
+ 	struct gpio_desc *desc;
+ 
+ 	desc = __acpi_find_gpio(fwnode, con_id, idx, can_fallback, &info);
+-- 
+2.51.0
 
 
