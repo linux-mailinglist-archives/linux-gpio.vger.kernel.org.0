@@ -1,92 +1,85 @@
-Return-Path: <linux-gpio+bounces-26029-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26030-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8ADA2B5478B
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 11:30:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A495B547A5
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 11:33:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D59071887BF1
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 09:30:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A6EE3A33A7
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 09:30:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5DEE2D73B8;
-	Fri, 12 Sep 2025 09:24:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AB132D6E5C;
+	Fri, 12 Sep 2025 09:24:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XhI3DojY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EGyzpvQi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5881C2D593F
-	for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 09:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1B928642E
+	for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 09:24:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757669047; cv=none; b=T0rXHYT7UueubxNiHgAVJFmUgTJunzNj7hvIR5clog9JJrNs39Wq4itZf1RcLqRM8EcCjAc3sQioE+qzP3C3nlwgc3FgomvRSAimhTZr21rxKkGvVTXgifGnnYl25qfhXAAxHGeNbu3zZeaEfSbIsXZDgjX9r43mg1+xeJD92I4=
+	t=1757669057; cv=none; b=indP2Y3q32G5ERC4wKB+IudPnosJ4Cf2F3/Sf+52AfjJHd7prnbe5HI0CbVXU2yYlF3N09g9IK0D0MMEAbfICohFu6tAs1zK6BNvcZgq3lpp5FvlFONAk0BiYNsS1FjCgixq2buoRwomurJpqY1BxyNuusfXVSsOuvIC0F8ORcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757669047; c=relaxed/simple;
-	bh=+bVJ+4hy5vMtuVwCqUQtQcNPKerS7zzgW7OjoDwLJD0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bzz9UIgQhrS2VmKd2ZGsAHlkciB5WWy5pnuhXfM1XVhCn0LDmPR1l3llkH4axDJkdICWpKfc406Sq6FF7N3r/BIVk0b3ojuK4vo8AeICMDufA/W2kE+mbeImhbTuFFFxcsnhmBfcdAh+GqMVm41lTrLZUn1lEKT3bOUUWfFljMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XhI3DojY; arc=none smtp.client-ip=209.85.221.47
+	s=arc-20240116; t=1757669057; c=relaxed/simple;
+	bh=tRJzunUVe2K3c4/6UwQXO9iXv15BUdIvNnjbOzjw+oI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dwelbhmeDkF9YcuLEjgy/cOW7VtTUovglI0vL5zTk9gDvZ/lMp2dnuSlul9VCh1fPTOTeArYVTa0i/2RW/Q5bUTsdEGoUz5vJBusBhX/obOethDBDA6d7fKcWPC6EZV3L4S+WhAUgvhqtqFi6rTYR9N8o/NsC5iAnlqjrGKGhAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EGyzpvQi; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3e7516606c2so149806f8f.0
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 02:24:04 -0700 (PDT)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-45e05ff0c86so1876275e9.2
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 02:24:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757669042; x=1758273842; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1757669054; x=1758273854; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BOMYwUSj3ToMRrs1GbfaZczlic4yEzoQ0wQhZEu+bgo=;
-        b=XhI3DojYX1yHSioSnY/jgX0719BbhGvKyMU/pE1mcXdBZ813hxB6E/IUgN+KcLRsJp
-         d0HGk7MQVM/HCxxJlK2FM2IZMpAb8tpUewhIp/8jkBe9VWEbh39R9q3f39dByIZh2R1m
-         A1hrQ7dDN9y5Zmv/FSi3nfuoJdLnTDkO9Zdp+xd2eZNCvIof6htbqgp00GE4UEzN+eAi
-         q024Eep7dEToGe5T/LPF3m0Rh4MaE6j+YR3Y5keR73hi0YppnF+6S1HuOgWjR9FD8qbh
-         tPO3YaaIGFYn5azHzsHmCwbyopHZSG+QRq+A5GDJUIA6Hfa3R3lrlzlZ/v4lSLffkou8
-         sXhw==
+        bh=FOviwQVOZASYbKzQVeCxPKzOJy49KCwq9xAVTlkhfD0=;
+        b=EGyzpvQimNSq5Y1cIanyFi8HtrkHB3RIIv/OLb60Hxn5mQJ/vWrcBnNlyb6bwNuBHD
+         0M0Ehv4XplEqS7Xme5MKZi0KqN++B3PeGereHGeXL8Dd1HzQN5UclJM9UxXrzqXD7IpS
+         QVSEqVa+yt4lh5G5YM2R/BmJ1+n7qKSJpNEj/O/zg5ZyMqXMMD2y76MFmv1Iwq3gBHPg
+         8kG1bSVrSRJ4H2sDbbT7rdumzuo1uvsKRKDvccOKvjXYAaS5dnj0tYFMYxUq66RJXGzS
+         OsnryTDUIt8Wnnq+HfHOlGdPZCRABn+9BHUxIkHin4yo40jzuArUd0y+qJZNIC3k3V1U
+         44hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757669042; x=1758273842;
+        d=1e100.net; s=20230601; t=1757669054; x=1758273854;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=BOMYwUSj3ToMRrs1GbfaZczlic4yEzoQ0wQhZEu+bgo=;
-        b=PwHTAAV4rpk05fedKalliiezhB2MveE/DOv1fZPq5JGi/NjNFpL7x7STPOOzFFVWUU
-         ajO5Z/Z/BDN6tlIiicPlHN25jPwh4+B8ar9YDvCJXY5C1za1MAbKjcmdBETywwG9vY/V
-         eoPdGxw24OIa7PnUUnS2m49JbntTgtmd88fFyuN3jkeE/ZgZHu04DtdJZ18Z4AMCG4vh
-         xk2HwftffY9IDYjuLSVe9JoiJaVMc5Pd6NacsfAp3obOgUcuwEbI0DfqM9s4tNidHkjg
-         2fzuDqPwF0RTGpLohEwJBMPXhCvQcht0inZvh5wDq8Nw5P5OjZwGIBq9yzM46ltI733o
-         Uokw==
-X-Forwarded-Encrypted: i=1; AJvYcCXXny+4eAD0A/r4OM1QMjz/oiWOhM5ttITGycuOv8YQ73FqCZSBbOywpmdGsPPvXEXq81LNN8UbFbpC@vger.kernel.org
-X-Gm-Message-State: AOJu0YwR5PoLmPtu4jibpKTuOWPIJvDJutE+OLnjbHrRyrQGgnLzAo7T
-	SAFoBhPB2MTkfLYiNd6iqZWUCXUnWXpEAx4Dn7TJ+QcXpMynrLKUFJpstDWKyTeFlLc=
-X-Gm-Gg: ASbGncuxYGTl7JrK+lPI34iwu/GgCO6jDO2ejaLYGyemc2viAdV9mEK2qncO67fEryK
-	M6I9BuyvQRIN6PTDyq4CvoaruiDoDw69+rF2AiZFI/iqgspok868YQX8wfW85Fz+ISGlxxG2bqS
-	9RrGSY3o777n6Zb0ZJwIHvW4AhTLjuNQjFU9wrejEWiAvzClvQVGTmXPEt06rY7c5QpXrQjOnRe
-	y0A8rOZksgoz0GMX431a5YFBYF6vQcAZEt+5IMp2khkC8LMRhCXxE1/La16I0OUCBxWYtbGM8mV
-	xaRFD9wfulWlMPlZ0OuyC2j42hb0uoBRiAcZR3kjVC0WgCKvEnzPEyADWJvjdu+IH+dYpqmsF+F
-	/r1S+yab9XMkHX5V99R5IVsE1rhgcB7KB4w==
-X-Google-Smtp-Source: AGHT+IFZ4LkljsZAZV2KGxX2vnp7A1Ij/erNB1dV87KomdD4NYdDAGsePpI/vQBLekU2xgSQDZkE4w==
-X-Received: by 2002:a05:6000:2503:b0:3d4:c46b:e57e with SMTP id ffacd0b85a97d-3e765536c58mr1041490f8f.0.1757669042563;
-        Fri, 12 Sep 2025 02:24:02 -0700 (PDT)
+        bh=FOviwQVOZASYbKzQVeCxPKzOJy49KCwq9xAVTlkhfD0=;
+        b=bvzU+TBtgAnqO21cImDw/0WWjHhmAazLYHgfPlqVjuq+CQVjdoQWvKdPXkdH1PUL5Y
+         PF6bc5dXVekxyHBbdWS5JBi+6kQ0W8sjx0POlMTvb1f7K7AZDIfZOh72mi0BT8lrMpId
+         77DPJpEV9k1n3zisTgPrOa0Kw7X1RZY04Es4/3ADSZjKO7wppQZcgkv6qqOGwsMkdals
+         eo3YfjSCN0GnyGYCFOBMqVTOsdGkQJTR+3Mk9UQJuFX+y9fcv/s6XEo7oV2stpA+tlTU
+         ATirm6LPB4dSdGaOnzEDbUW5sjWbb6YRrzwcsIKm4E3OQsgPTQT7mYwQ0yhpuSTuc+3t
+         GeMw==
+X-Forwarded-Encrypted: i=1; AJvYcCUEPLZBk3pDdqkfFFCatvFyJm4Vy1kDkTfJptxHzx+rlj9TOC/pk4cOc2tAogBgGan0O2+9QKi2qu/4@vger.kernel.org
+X-Gm-Message-State: AOJu0YznTZ39NHUz5TnVxW+YDJwq+UDj3Fgvg+GpEWKhcUDylml/59Z7
+	3kf9xiKmgJpJfPi4BHAES2ZGmVXEg+ps37RSJ3iyWkCNJhBPpxEQ/jgulqiP1G3SqC8=
+X-Gm-Gg: ASbGncvLoh0ckk9cp5vq/OmwrCJnrbsuFjTiubzt0MMeGvz0pdaengmo49CCwV0WjT4
+	0yC9kL4eMFYyRZij9U24E52TBOzLjtEl/GsDDnES+2MGoLpZm3HtqwcBRKu0pn7oCi3iEO/FMzg
+	NQFKLRWJD5RGyb4YvOeGEPqQ0o6+3xsAo4wT3j9dPm19IL5cE7hLPvzXgfmXEjlKmX+BRg2CPYE
+	IXy9bUnnT9oqpmsxkM+yYaos11+bbRkzEEuSVEylxDRBaIRN5nVj0FjksXIHoB87AzwoyRZQD5K
+	2pjCdeKmMgFOCOoV/0FemuiIK1/3V/CTrl0wPPH/ewId19Kt4RTql0CymJ3o3cI2WFjyq4KTSsv
+	FzMMPKsjJ4iZpCRHHzX0OtN4ksQCMC6kbRA+5/iXiAkrx
+X-Google-Smtp-Source: AGHT+IF2RKjPHU5PyyMu6nXLRqroWat3tSIrw2IuPNtUNZFe81YtcX1shc8aVwj2VyT1I6rhWLSpow==
+X-Received: by 2002:a05:600c:4691:b0:459:dfa8:b866 with SMTP id 5b1f17b1804b1-45f214afb6dmr12047775e9.2.1757669053738;
+        Fri, 12 Sep 2025 02:24:13 -0700 (PDT)
 Received: from kuoka.. ([178.197.219.123])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7607d7b3esm5727337f8f.46.2025.09.12.02.23.59
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45e015ad780sm29696035e9.10.2025.09.12.02.24.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Sep 2025 02:24:01 -0700 (PDT)
+        Fri, 12 Sep 2025 02:24:13 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To: Linus Walleij <linus.walleij@linaro.org>,
-	Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
 	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev
+	linux-kernel@vger.kernel.org
 Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] pinctrl: Simplify printks with pOF format
-Date: Fri, 12 Sep 2025 11:23:52 +0200
-Message-ID: <20250912092351.162307-2-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] gpio: of: Simplify printks with pOF format
+Date: Fri, 12 Sep 2025 11:24:10 +0200
+Message-ID: <20250912092409.162426-2-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -94,89 +87,94 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2536; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=+bVJ+4hy5vMtuVwCqUQtQcNPKerS7zzgW7OjoDwLJD0=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBow+anDJAMN9wRUbRQ5JlQl3eiWjS4RDs50mngh
- v0da2zDAfqJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaMPmpwAKCRDBN2bmhouD
- 18n5D/4hSZl8udzkB2YzvH4Z9aKuFcLBa9CFrbK1nRLSDu5FSjWXEXWKEbFj1MHjLOqSErjfA6f
- fc2Ubu88L88RmHPoMzOYbLoElN/YbJz/dIcfvMLod8fnzL+nyanIDfXmVZtUmmDYQSgiudqq55N
- OgcP1rd3Njv+m6SEpSi9mucEgKnmUW/IXbyBYlD+Kf9WQMw6AGL4ICHWW/kdhFOk5ZcOjb1HnW4
- OAHTA2vvtVF74+R8APPWN46YH+EFMlIbmGxIAT4HXnpqw9hdoUbIXp5OqY+f027EOcWS+tUlw/L
- U+PodlsU4UHYaoRtvkk8VhihoB1YgDyYkotQtLGqHYP970ckzBwoScgk7ZWMrRY67jWusybohk/
- s0Sp6GbG2Iio6vqkiMMxTYn9Yvj1+Gifxh39F+gN7GBgU9oAjMTiPuB3aEF7oV1Pm9sO+X13wCk
- JZrp9Lr7mtvLvnSqC8NcPGe6K4RBMSK16uLP8KVuigMVo22/6w4qqL3uOChq/sXCS5+s5ImXBOQ
- XMGDwuPVLAxgzYT7HmVuCKaR23ULDBoq29eCZLj3YUNm5MuzgKkthjnb9mQWiHhNWP25F0eJDuD
- ujygi2OswjTMsQQ+Ad8fb301JcyprI6J6eqSPB4ZFgCmc1C+y4Btbks/pdsehgKkZWjRTK3XoZC PTV13F72brgao+g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2855; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=tRJzunUVe2K3c4/6UwQXO9iXv15BUdIvNnjbOzjw+oI=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBow+a5cIPMku6YiL8z9OgIg+yldDDyqIzmeH9cC
+ GJ+vyRmeBSJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaMPmuQAKCRDBN2bmhouD
+ 15oLD/9Vd4aatYqHVI+A/qBGNkv0k7CR9r+TT0RPFwYSBCvP/OVRLaG3QpPCl+5s5USMX3amPK3
+ lBzwZ7bOBJYBoC02q0GV1evQJUO9qvoErzm6jLlKs1F//UJEjZef4iVu/y1YV6ah6A4GTVfPEfm
+ ORLtAIqksjmI7bQ6tiWUW+z4UXROAzbf9w3TCsNKXI+ARdwv/3AczExXtVSrTd53ky4oooHGL4Q
+ otjZe74jWZjYJ6S8eKxzkLUuEP5c8Xd3k7gU+w8XswafssszqNnSOXPgtDcMwuSQVABxphMQVR+
+ DLO5urLYI2SuxAWlN9r4IkRRQjMJoodWYzQLrqoLNn8B20G1aLSPzENyQmOjOn/DEgJFaJ+qS9F
+ WtWdx6QxGWGKRhTG70CbnHegjfkNPp+ldZEbOqx02c4y8PoYq6csaPHXzMZ0Q1oKscVTQ6BKq7D
+ 41gXOU6MhBEVCM9DxCMy0VgWaHoZsefybUvwYdHdacAs1jNmuRessEgWdII/UjGJkj6IT4TYseE
+ v0k8K9Z1QQRXfIYLF1F739Ar2WX2vZBSMJYpTONdgYArCknQsQMxDfWXpx0eh3uQFQGrhRIKL4n
+ ObcMi4UiCpsOqKoXWJ+aI6Um1eZ2OW/m/J7zB/2zjLNzztDCA1SRwgXJb+tZLe2NvGtAqCcSg46 kG75Q69AXQns6gg==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 Content-Transfer-Encoding: 8bit
 
 Print full device node name with %pOF format, so the code will be a bit
-simpler.
+simpler.  Code already uses pOF in other places, so this also unifies
+with the rest.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- drivers/pinctrl/sprd/pinctrl-sprd.c      | 9 +++------
- drivers/pinctrl/sunxi/pinctrl-sunxi-dt.c | 7 +++----
- 2 files changed, 6 insertions(+), 10 deletions(-)
+ drivers/gpio/gpiolib-of.c | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.c b/drivers/pinctrl/sprd/pinctrl-sprd.c
-index c4a1d99dfed0..16cf9d15f247 100644
---- a/drivers/pinctrl/sprd/pinctrl-sprd.c
-+++ b/drivers/pinctrl/sprd/pinctrl-sprd.c
-@@ -258,8 +258,7 @@ static int sprd_dt_node_to_map(struct pinctrl_dev *pctldev,
- 
- 	grp = sprd_pinctrl_find_group_by_name(pctl, np->name);
- 	if (!grp) {
--		dev_err(pctl->dev, "unable to find group for node %s\n",
--			of_node_full_name(np));
-+		dev_err(pctl->dev, "unable to find group for node %pOF\n", np);
- 		return -EINVAL;
- 	}
- 
-@@ -276,16 +275,14 @@ static int sprd_dt_node_to_map(struct pinctrl_dev *pctldev,
- 	if (ret < 0) {
- 		if (ret != -EINVAL)
- 			dev_err(pctl->dev,
--				"%s: could not parse property function\n",
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 37ab78243fab..bf17658623b9 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -160,14 +160,12 @@ static void of_gpio_quirk_polarity(const struct device_node *np,
+ {
+ 	if (active_high) {
+ 		if (*flags & OF_GPIO_ACTIVE_LOW) {
+-			pr_warn("%s GPIO handle specifies active low - ignored\n",
 -				of_node_full_name(np));
-+				"%pOF: could not parse property function\n", np);
- 		function = NULL;
++			pr_warn("%pOF GPIO handle specifies active low - ignored\n", np);
+ 			*flags &= ~OF_GPIO_ACTIVE_LOW;
+ 		}
+ 	} else {
+ 		if (!(*flags & OF_GPIO_ACTIVE_LOW))
+-			pr_info("%s enforce active low on GPIO handle\n",
+-				of_node_full_name(np));
++			pr_info("%pOF enforce active low on GPIO handle\n", np);
+ 		*flags |= OF_GPIO_ACTIVE_LOW;
  	}
- 
- 	ret = pinconf_generic_parse_dt_config(np, pctldev, &configs,
- 					      &num_configs);
- 	if (ret < 0) {
--		dev_err(pctl->dev, "%s: could not parse node property\n",
+ }
+@@ -347,8 +345,8 @@ static void of_gpio_flags_quirks(const struct device_node *np,
+ 	    of_device_is_compatible(np, "reg-fixed-voltage") &&
+ 	    of_property_read_bool(np, "gpio-open-drain")) {
+ 		*flags |= (OF_GPIO_SINGLE_ENDED | OF_GPIO_OPEN_DRAIN);
+-		pr_info("%s uses legacy open drain flag - update the DTS if you can\n",
 -			of_node_full_name(np));
-+		dev_err(pctl->dev, "%pOF: could not parse node property\n", np);
- 		return ret;
++		pr_info("%pOF uses legacy open drain flag - update the DTS if you can\n",
++			np);
  	}
  
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi-dt.c b/drivers/pinctrl/sunxi/pinctrl-sunxi-dt.c
-index 5f13315ebff3..50a16f3bd131 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi-dt.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi-dt.c
-@@ -274,8 +274,7 @@ static void fill_pin_function(struct device *dev, struct device_node *node,
- 			if (!strcmp(pins[pin].pin.name, name))
- 				break;
- 		if (pin == npins) {
--			dev_warn(dev, "%s: cannot find pin %s\n",
--				 of_node_full_name(node), name);
-+			dev_warn(dev, "%pOF: cannot find pin %s\n", node, name);
- 			index++;
- 			continue;
+ 	/*
+@@ -625,8 +623,8 @@ static struct gpio_desc *of_find_gpio_rename(struct device_node *np,
+ 		legacy_id = gpios[i].legacy_id ?: gpios[i].con_id;
+ 		desc = of_get_named_gpiod_flags(np, legacy_id, idx, of_flags);
+ 		if (!gpiod_not_found(desc)) {
+-			pr_info("%s uses legacy gpio name '%s' instead of '%s-gpios'\n",
+-				of_node_full_name(np), legacy_id, con_id);
++			pr_info("%pOF uses legacy gpio name '%s' instead of '%s-gpios'\n",
++				np, legacy_id, con_id);
+ 			return desc;
  		}
-@@ -283,8 +282,8 @@ static void fill_pin_function(struct device *dev, struct device_node *node,
- 		/* Read the associated mux value. */
- 		muxval = sunxi_pinctrl_dt_read_pinmux(node, index);
- 		if (muxval == INVALID_MUX) {
--			dev_warn(dev, "%s: invalid mux value for pin %s\n",
--				 of_node_full_name(node), name);
-+			dev_warn(dev, "%pOF: invalid mux value for pin %s\n",
-+				 node, name);
- 			index++;
- 			continue;
- 		}
+ 	}
+@@ -660,8 +658,8 @@ static struct gpio_desc *of_find_mt2701_gpio(struct device_node *np,
+ 
+ 	desc = of_get_named_gpiod_flags(np, legacy_id, 0, of_flags);
+ 	if (!gpiod_not_found(desc))
+-		pr_info("%s is using legacy gpio name '%s' instead of '%s-gpios'\n",
+-			of_node_full_name(np), legacy_id, con_id);
++		pr_info("%pOF is using legacy gpio name '%s' instead of '%s-gpios'\n",
++			np, legacy_id, con_id);
+ 
+ 	return desc;
+ }
+@@ -687,7 +685,7 @@ static struct gpio_desc *of_find_trigger_gpio(struct device_node *np,
+ 
+ 	desc = of_get_named_gpiod_flags(np, con_id, idx, of_flags);
+ 	if (!gpiod_not_found(desc))
+-		pr_debug("%s is used as a trigger\n", of_node_full_name(np));
++		pr_debug("%pOF is used as a trigger\n", np);
+ 
+ 	return desc;
+ }
 -- 
 2.48.1
 
