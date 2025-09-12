@@ -1,96 +1,83 @@
-Return-Path: <linux-gpio+bounces-26037-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26038-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CAEBB54AC7
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 13:14:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0EFCB54B4F
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 13:44:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D8A681CC8390
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 11:15:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0835B18802B1
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 11:45:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48B4F2FF16D;
-	Fri, 12 Sep 2025 11:14:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6CFB301011;
+	Fri, 12 Sep 2025 11:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZTs+bXh6"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D503296BBC;
-	Fri, 12 Sep 2025 11:14:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3CAA920;
+	Fri, 12 Sep 2025 11:44:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757675683; cv=none; b=aKuFbWajph7pBqJiZ079/MQRzn96PX7+9bR9oCCjEj1buXIkc4OJMFvLV3RhZvcuXmbT++z4mj25LswOh4PrG54Xu1YJhYDuFnaV4Lagr2ZMzcIN4EGgaJfvH6CpuQUr7vXIQygptkqOGE4n5YaPyt4LwmTI3I186Oq9a3Vt6ok=
+	t=1757677487; cv=none; b=QAp+F8Q/Wz+mi6PcLL0SqYvgXRri1MiAR8UxgGaswagqndGbrHXy36BhsKWfeIUeShj913XC0MAbOm1nkEY5mEQ2HZPi9YWRR5zEUKGtDHseUJiBmbW9ecXaoVHMEAvAfeqAd1NtMHeSIm0dZCIfzDfmjC/5hYCpVfNksVdAd6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757675683; c=relaxed/simple;
-	bh=mNqoRA3SQT8Q3pCzh+04uFfjRwXQIPEB3BJeZR243XM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rfZdei813vnAAtT8i7UOuq3reZJR2wcR4qa3UV6zXXk5vsN4UvXZt4piVfD0DJq7MIDzonyzBvKzyRobdnwd1Iyy6btqNMO1zWBOOUfX5k4yz0o8fQIj8hI/Kw2lhm3ec6HFQ++cGX4EZqvRaKePgflRADSG79wzhOHBts9gndk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0A5EC4CEF1;
-	Fri, 12 Sep 2025 11:14:41 +0000 (UTC)
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [GIT PULL] pinctrl: renesas: Updates for v6.18 (take two)
-Date: Fri, 12 Sep 2025 13:14:36 +0200
-Message-ID: <cover.1757670094.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1757677487; c=relaxed/simple;
+	bh=DMcy4lLGqxGXpI3eI5YfoU8fCZvbZRIkrODm2pgnZYM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pNGO3uryYPcLGEGtoqZQ1d2v/oW793VZ9a8w+X1rUgUJgkyztmK2RmqRGIG159UXcKz/yZAwUD3PlXnoIGMEnkQAHwKVxTyq1wkoDxeLY+/wG9l1exsnlkUwoIcs6C35ieUMMsj3SCU3daSYHjfqPzDgrFZm7SROlGAgh2XWBVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZTs+bXh6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C686C4CEF1;
+	Fri, 12 Sep 2025 11:44:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1757677487;
+	bh=DMcy4lLGqxGXpI3eI5YfoU8fCZvbZRIkrODm2pgnZYM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZTs+bXh6i96O0UC3UUh+pXJqabqWk4F8pucNNfqNHO3is9SsKiyYs6fE9bLMeF69l
+	 3HjJMa2ZTrl9XYUdd12FlbqTAjDm4FLqYmRh4GH2VAR6yusS95ld3MacpcKBtxx5Hy
+	 P5fGQo6hMIsREQOGbaACjWU9gUxVr1UKz9QI2EGA=
+Date: Fri, 12 Sep 2025 13:44:44 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Hans de Goede <hansg@kernel.org>,
+	Israel Cepeda <israel.a.cepeda.lopez@intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Richard Hughes <rhughes@redhat.com>, linux-i2c@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v6 3/3] i2c: Add Intel USBIO I2C driver
+Message-ID: <2025091232-abruptly-stargazer-4a0e@gregkh>
+References: <20250911181343.77398-1-hansg@kernel.org>
+ <20250911181343.77398-4-hansg@kernel.org>
+ <aMMVKsbDIIFzaWdu@ninjato>
+ <18011d86-6f9e-4a0d-9514-fcc69cec1fc2@kernel.org>
+ <aMPc_jHmlMsVtJKG@ninjato>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aMPc_jHmlMsVtJKG@ninjato>
 
-	Hi Linus,
+On Fri, Sep 12, 2025 at 10:42:38AM +0200, Wolfram Sang wrote:
+> 
+> > > Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> > 
+> > Thank you.
+> > 
+> > Is it ok if Greg picks this up together with the rest of
+> > the series?
+> 
+> Yes.
 
-The following changes since commit d1d31e2739ff063da1e85cd9b44316ca5cccdba8:
+Great, I'll go queue it up in a bit, thanks!
 
-  pinctrl: renesas: rzt2h: Add support for RZ/N2H (2025-08-20 08:56:15 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v6.18-tag2
-
-for you to fetch changes up to 512bf60226c621893729605121a396240e84a5d4:
-
-  pinctrl: renesas: r8a779g0: Fix trivial typo in SoC type comment (2025-09-08 12:03:08 +0200)
-
-----------------------------------------------------------------
-pinctrl: renesas: Updates for v6.18 (take two)
-
-  - Improve suspend/resume support on RZ/G2L family SoCs,
-  - Miscellaneous fixes and improvements.
-
-Thanks for pulling!
-
-----------------------------------------------------------------
-Biju Das (2):
-      pinctrl: renesas: rzg2l: Fix OEN resume
-      pinctrl: renesas: rzg2l: Add suspend/resume support for Schmitt control registers
-
-Marek Vasut (1):
-      pinctrl: renesas: r8a779g0: Fix trivial typo in SoC type comment
-
-Qianfeng Rong (1):
-      pinctrl: renesas: Use int type to store negative error codes
-
- drivers/pinctrl/renesas/pfc-r8a779g0.c  |  2 +-
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 23 ++++++++++++++++++++++-
- drivers/pinctrl/renesas/pinctrl.c       |  3 ++-
- 3 files changed, 25 insertions(+), 3 deletions(-)
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+greg k-h
 
