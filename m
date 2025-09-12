@@ -1,81 +1,81 @@
-Return-Path: <linux-gpio+bounces-26073-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26074-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4974FB5514F
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 16:26:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03F44B55175
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 16:29:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6D9327C769E
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 14:26:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 669B45A146B
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 14:27:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 434FD31A072;
-	Fri, 12 Sep 2025 14:23:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FAB9313542;
+	Fri, 12 Sep 2025 14:23:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e9jSqWQ7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bsvX46yj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE32230F52D
-	for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 14:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B681931AF3F
+	for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 14:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757686985; cv=none; b=oOThqGhpG8KUTjdH8CHhxSnYrbER9b+I9/O/a7W63ns30k/OQWf5UW5iY8Ww/FqmviTBg8s2iRMzVDa3o2SVDUOCps/cwKKtgBG+n/rH8wXTYKhGBcWppDxGZR9ulr9wk9jZMrFVfYKr5lTKtVI3LojxDg7QKdhAdwTe/l43aVA=
+	t=1757687004; cv=none; b=kH29LlLcYSgY0eKOMlSStqdW1GI2R+SJZjRUz1dNamQeA5mGYPKXV+HRUQLyJjHV8UmDtneMfuog2kt203RYP7xn6FnoHMcn407zXVA/BMv38ncsep9YAs0ikvsAxMe8pwhST1yNK0qCKTyoop9a04n2HQa7leXBOJXTtkcXgfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757686985; c=relaxed/simple;
-	bh=nx6xFnItCGXcISjxReH3/VA4Sb0JnyRrb3I1w2HIANw=;
+	s=arc-20240116; t=1757687004; c=relaxed/simple;
+	bh=unhgIN6U+zpitqxvR0gDATDfv301/LFJXEAxIROoZKE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VE+FKO/ZvjI3ynOiNEotD+Nl7Zz9KSMDQ78mPFkisv/BpCGgmCZXUXGkvV7iAr6SKLeZ+xrQDaIn+l6C6F6jMALiX43s4+pMtA3x1Ygm3oHNPCr7s8VXG0FpTet6VkkpWlWHYtn35nWngpyU2XP3IDioISDIfEe3TmzUKBbCbcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e9jSqWQ7; arc=none smtp.client-ip=209.85.221.46
+	 In-Reply-To:Content-Type; b=e+vwwUVUxIBO2MbbSZIpgCFmO6YTUlnQ7oSw4z//NkIHx3ihIeZUEhb8ByeGj+QCnsan/WoK4UmaOAFGNYxB7f7/aIpkBXR/C3dFSfbtqaHwgu9DLACQcZ2nSLblaDOPA9HKP+lSvawovOn9pGu1RUoNdD93bQxvc5jUC8b+Zhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bsvX46yj; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3e7643b0ab4so1094547f8f.2
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 07:23:01 -0700 (PDT)
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-45dd7b15a64so17751535e9.0
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 07:23:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757686980; x=1758291780; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1757687001; x=1758291801; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ek0TO7GNCfMGdZrn2a6dssI2HabH0ybImb9FG8faTKA=;
-        b=e9jSqWQ79UnmWGmn+kmvUMsz2VtjnIANExxyKp0Vcvq7GdhaV4WDzNP2ID7lW2/v8E
-         tbobSTgbHNq4UwpTwF2J54Z2KK13+hFDIyWpvgiFCbNOfatvUZEWKtuQhd4jnRJaxXZ4
-         pd/2R4Ze7J1dFPbw2D0UaIJ/9+Av1f5xPeVx80SYFGUq6HSWXPkYgGOifYwcEbeIl1ga
-         j9cJe+npACJMklXevDWm0vFqAj/tSfyUuBHV7suxMV09ap/BSafW96Cm7j94ahDiyAtK
-         hk26WFTPvHp+qWzWv58CNTppCd0bH+4zGIrC7cGEMjPY/jS318BLAwsaIDWvo74gcgKp
-         PY2w==
+        bh=1Ug4rvDJVrD/KFt1LWLn8j4wXGstlIATd7OgVTytDCs=;
+        b=bsvX46yjVssnuPus1LkFdNw75J27YW2pphTF9IbX6pHY2uYDIJKXxxXlKMnKpGyPke
+         pgKRAMtSNku6i2Mvs9B3qr08aS3XKsEt0J0Mn4Qk1p3WNJpJm5AXVGLySwHhptKePYBF
+         MFcfjXOgLegeC+ftlwnUa1/XXDSBB+aogSzK/h8ZEAeyr0eUDyXI7AoF5LjG8f8VAVTW
+         4HwZN/jrZ9lHTWaJRAIk7EcugflXYFqDyuHoqSX7SYQlPCOhmqjNrjc8FW2ynNQYOtNm
+         lW1sLNQXuMwmVKoKDDs6Ue8/VrDbufxyib9QimqWJIizwu/DW1DVVUlxRcX6V80jpHQy
+         Ybfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757686980; x=1758291780;
+        d=1e100.net; s=20230601; t=1757687001; x=1758291801;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ek0TO7GNCfMGdZrn2a6dssI2HabH0ybImb9FG8faTKA=;
-        b=wvyS8XqQe+VVRHnj+n5N1phxTjZQbhHDfMYkwSiU1KeL4EYr63u3Ky8+S0Qt8/vSj1
-         dmcbanfBQKqNppAm7DzKt4+xc64tAWpLCJGSlrJ4aAxXLXMhCnlc9XWZJ5t4tgmznHE8
-         ClWaIUycRJDsZbW3JpJBBuGZkaC5dYNtb+PZjpJGifWYfyULYO5YNhxEPqOzKujbKztT
-         0HNnlsVZO4mOVCJM0fZQj6cKgtsiaXSTtiY7BW8TaUmrslWDP0IzyJL9L2nhNNky/YDv
-         UrbCJzpDRkRUxcBnTLoGFcdZPtPXUGErjuTvMNuPI2UeIobe/E77N5pGtLSK1C1EUKi9
-         4WRw==
-X-Forwarded-Encrypted: i=1; AJvYcCViH9SLPLqe7Vs+4TBtikqdhy9s+AAdD64tfwJUWdOLw1KEcDw2m3VwppNyV+SKUGMfVLlrekWv+0sn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyycu4hJYVSaXbeLmOeNfOfN3I0lEo+0+IvA3m2xQNRFA1oZ7/A
-	kR88TN5Jy3SQoZXAIZTl7A3FJYiz2WIxVnVmnEs2ZC4VeF+WyiV5U8jw
-X-Gm-Gg: ASbGncvUJq1RyVjKyM3LllpqfJPXOdHUNwA4ILE0/O5JTZvEZjKJlaaqP4xbXBKcSlO
-	ct5YRwCE2x+BXX6qWoJzkOQ4h1qeQC1Fdt+uY/rh0lKcoD9H0ZxS+02ax90/ARV8h7maLjSB3cj
-	DFF0pnYMBcZ+Ylor1YO3XgDPMY5EFwf3Hkpb5lEf5PWcShoTvW5Fo4h55tMcVBbDOBiFPd4SJqL
-	8Dhyh/qebm4WIXGQjFviu1eByVCYJViI1aciFfJXjCQeXsW8z5uOjChETdnG61oqqnvPU0wxyUm
-	ZPCbkTWQOnTtaRCoxaPCz/UTS8Nm0xtPIgcZ6KNUyhDECSsUBzYixUzAe6cznVsGvdMi3vYMezb
-	oT5BlhjBgvl8UI3n2eXlq/nNBEOddajw=
-X-Google-Smtp-Source: AGHT+IEyMrgn2AGObMNXrXfOyNSBeXONFdMwd2oXsFxZJiErmFGwTSul75U9TPJBys255/fSCwqlMQ==
-X-Received: by 2002:a05:6000:26cc:b0:3e0:34f4:3225 with SMTP id ffacd0b85a97d-3e765a09238mr3563649f8f.45.1757686979724;
-        Fri, 12 Sep 2025 07:22:59 -0700 (PDT)
+        bh=1Ug4rvDJVrD/KFt1LWLn8j4wXGstlIATd7OgVTytDCs=;
+        b=Y04Kqlb2jzKksIGLbg3W+AIPleX2nZg5SjC3YaSracnrzcX79/AtUHlwxyY3opbUGp
+         VzRmzj3YDI1IJgKwpC9bitn3f8XMLAjBaTCO9VAjoW/pVQZtTuwdOY4309EWj5bgCPls
+         T5w2x3wXRSDV5YGtxPDh1GeMnJTxBJ+A6cvm2cD3GqwQ/o7A6MTUMPAY7QO0nN3emtCV
+         LMl3jpMElhCFb1VUJowTI8Y2qsqmErdOmO7aD5gD81vcalVNO5mfDjB45gCBrjg/sYJu
+         xUZsokI54AqLMr+Ca07KDB2bbPingvn/od/Q+ElWpxp1iDV2RI8AC7TMGvN8tf3PLTwT
+         H3Sg==
+X-Forwarded-Encrypted: i=1; AJvYcCWgZWxCjFTp/QknURB0Fd4w6j0RdMpIy7z+aewy0L/dfKnuiMvgaFYjXZPuGUcmFfehNhdUpIuPVoGf@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8dfxBzOMzIoaXS5RvIEMxZwxJnjENd+kt/q7I8pWKaDHrcbJZ
+	HwBeAcLkZpWFTz95IFfNfLvmJjnCLNSBBv+AJfc+elyPTjjFMnBZ+YPL
+X-Gm-Gg: ASbGncs02zB/2neIgt1kfrXBpr8r48jnmbTp60rn4Y/kP+/BO1wIdaXWovXH9WNmi2y
+	dNffWk7RTesUS2SPkSPvsXH+TtsPFOE9POht1AENqaUQPEPaRR38zi1PTITekuC7g6w2O9GoGoK
+	7MzvR1GRWcRrVxW1k5CXw177eIO/uQSwO0TTEq6W5ghIN+z5oXcMBgy7+c9hhDKIcImVvsS60Zx
+	znkC1567luSQBmyRhxMZ4eNQ5iokT9kx92MMBDP9MdIBvAyUpRG6YTRKFcGU80dIYLNd+ojZIHM
+	s9Cc5E+nArax+uU25prmKjoLnmWpowMoE5+4tzAmaHXbgKBqjOxTcFOitew9rf8Kkr7MLLmYi8F
+	ijHTfa5ue8Rvc2puUd4+XU9c4+MVzYd7B7+s+aODrbA==
+X-Google-Smtp-Source: AGHT+IE5UXOItxjbn0zFICANNc5GuRpVNR7hiqiKPBU9+i1k2C8vaMc+CHm3lHcY/3oRsKpLL3Rr0Q==
+X-Received: by 2002:a05:600c:468a:b0:45d:5c71:769d with SMTP id 5b1f17b1804b1-45f2126253emr34464315e9.8.1757687000920;
+        Fri, 12 Sep 2025 07:23:20 -0700 (PDT)
 Received: from [192.168.2.177] ([91.116.220.47])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7607cd0a7sm6624214f8f.39.2025.09.12.07.22.55
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45e016b5a2esm67200825e9.13.2025.09.12.07.23.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Sep 2025 07:22:58 -0700 (PDT)
-Message-ID: <2d711432-f6db-400d-b97c-135c839cf5f1@gmail.com>
-Date: Fri, 12 Sep 2025 16:22:53 +0200
+        Fri, 12 Sep 2025 07:23:18 -0700 (PDT)
+Message-ID: <30468c15-16bf-4c20-bef3-35d58b9a31b1@gmail.com>
+Date: Fri, 12 Sep 2025 16:23:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,8 +83,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 36/38] arm64: dts: mediatek: mt8195-cherry: Add missing
- regulators to rt5682
+Subject: Re: [PATCH 37/38] arm64: dts: mediatek: mt8395-kontron-i1200: Fix
+ MT6360 regulator nodes
 To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
  linux-mediatek@lists.infradead.org, robh@kernel.org
 Cc: herbert@gondor.apana.org.au, davem@davemloft.net, krzk+dt@kernel.org,
@@ -108,7 +108,7 @@ Cc: herbert@gondor.apana.org.au, davem@davemloft.net, krzk+dt@kernel.org,
  linux-gpio@vger.kernel.org, linux-remoteproc@vger.kernel.org,
  linux-sound@vger.kernel.org
 References: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com>
- <20250724083914.61351-37-angelogioacchino.delregno@collabora.com>
+ <20250724083914.61351-38-angelogioacchino.delregno@collabora.com>
 Content-Language: en-US, ca-ES, es-ES
 From: Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; keydata=
@@ -154,41 +154,103 @@ Autocrypt: addr=matthias.bgg@gmail.com; keydata=
  +zFJv9fVUpo/bjePOL4PMP1y+PYrp4PmPmRwoklBpy1ep8m8XURv46fGUHUEIsTwPWs2Q87k
  7vjYyrcyAOarX2X5pvMQvpAMADGf2Z3wrCsDdG25w2HztweUNd9QEprtJG8GNNzMOD4cQ82T
  a7eGvPWPeXauWJDLVR9jHtWT9Ot3BQgmApLxACvwvD1a69jaFKov28SPHxUCQ9Y1Y/Ct
-In-Reply-To: <20250724083914.61351-37-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250724083914.61351-38-angelogioacchino.delregno@collabora.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
 On 24/07/2025 10:39, AngeloGioacchino Del Regno wrote:
-> Add the missing DBVDD and LDO1-IN power supplies to the codec
-> node as both RT5682i and RT5682s require those.
+> All of the MT6360 regulator nodes were wrong and would not probe
+> because the regulator names are supposed to be lower case, but
+> they are upper case in this devicetree.
 > 
-> This commit only fixes a dtbs_check warning but doesn't produce
-> any functional changes because the VIO18 LDO is already powered
-> on because it's assigned as AVDD supply anyway.
+> Change all nodes to be lower case to get working regulators.
 > 
+> Fixes: 94aaf79a6af5 ("arm64: dts: mediatek: add Kontron 3.5"-SBC-i1200")
 > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
 Applied, thanks
 
 > ---
->   arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi | 2 ++
->   1 file changed, 2 insertions(+)
+>   .../mediatek/mt8395-kontron-3-5-sbc-i1200.dts    | 16 ++++++++--------
+>   1 file changed, 8 insertions(+), 8 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi b/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
-> index d40f4c1b9766..b3761b80cac7 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
-> @@ -534,7 +534,9 @@ audio_codec: codec@1a {
->   		realtek,jd-src = <1>;
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8395-kontron-3-5-sbc-i1200.dts b/arch/arm64/boot/dts/mediatek/mt8395-kontron-3-5-sbc-i1200.dts
+> index 4985b65925a9..d16f545cbbb2 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8395-kontron-3-5-sbc-i1200.dts
+> +++ b/arch/arm64/boot/dts/mediatek/mt8395-kontron-3-5-sbc-i1200.dts
+> @@ -352,7 +352,7 @@ regulator {
+>   			LDO_VIN2-supply = <&vsys>;
+>   			LDO_VIN3-supply = <&vsys>;
 >   
->   		AVDD-supply = <&mt6359_vio18_ldo_reg>;
-> +		DBVDD-supply = <&mt6359_vio18_ldo_reg>;
->   		MICVDD-supply = <&pp3300_z2>;
-> +		LDO1-IN-supply = <&mt6359_vio18_ldo_reg>;
->   	};
->   };
+> -			mt6360_buck1: BUCK1 {
+> +			mt6360_buck1: buck1 {
+>   				regulator-name = "emi_vdd2";
+>   				regulator-min-microvolt = <600000>;
+>   				regulator-max-microvolt = <1800000>;
+> @@ -362,7 +362,7 @@ MT6360_OPMODE_LP
+>   				regulator-always-on;
+>   			};
 >   
+> -			mt6360_buck2: BUCK2 {
+> +			mt6360_buck2: buck2 {
+>   				regulator-name = "emi_vddq";
+>   				regulator-min-microvolt = <300000>;
+>   				regulator-max-microvolt = <1300000>;
+> @@ -372,7 +372,7 @@ MT6360_OPMODE_LP
+>   				regulator-always-on;
+>   			};
+>   
+> -			mt6360_ldo1: LDO1 {
+> +			mt6360_ldo1: ldo1 {
+>   				regulator-name = "mt6360_ldo1"; /* Test point */
+>   				regulator-min-microvolt = <1200000>;
+>   				regulator-max-microvolt = <3600000>;
+> @@ -380,7 +380,7 @@ mt6360_ldo1: LDO1 {
+>   							   MT6360_OPMODE_LP>;
+>   			};
+>   
+> -			mt6360_ldo2: LDO2 {
+> +			mt6360_ldo2: ldo2 {
+>   				regulator-name = "panel1_p1v8";
+>   				regulator-min-microvolt = <1800000>;
+>   				regulator-max-microvolt = <1800000>;
+> @@ -388,7 +388,7 @@ mt6360_ldo2: LDO2 {
+>   							   MT6360_OPMODE_LP>;
+>   			};
+>   
+> -			mt6360_ldo3: LDO3 {
+> +			mt6360_ldo3: ldo3 {
+>   				regulator-name = "vmc_pmu";
+>   				regulator-min-microvolt = <1800000>;
+>   				regulator-max-microvolt = <3300000>;
+> @@ -396,7 +396,7 @@ mt6360_ldo3: LDO3 {
+>   							   MT6360_OPMODE_LP>;
+>   			};
+>   
+> -			mt6360_ldo5: LDO5 {
+> +			mt6360_ldo5: ldo5 {
+>   				regulator-name = "vmch_pmu";
+>   				regulator-min-microvolt = <3300000>;
+>   				regulator-max-microvolt = <3300000>;
+> @@ -404,7 +404,7 @@ mt6360_ldo5: LDO5 {
+>   							   MT6360_OPMODE_LP>;
+>   			};
+>   
+> -			mt6360_ldo6: LDO6 {
+> +			mt6360_ldo6: ldo6 {
+>   				regulator-name = "mt6360_ldo6"; /* Test point */
+>   				regulator-min-microvolt = <500000>;
+>   				regulator-max-microvolt = <2100000>;
+> @@ -412,7 +412,7 @@ mt6360_ldo6: LDO6 {
+>   							   MT6360_OPMODE_LP>;
+>   			};
+>   
+> -			mt6360_ldo7: LDO7 {
+> +			mt6360_ldo7: ldo7 {
+>   				regulator-name = "emi_vmddr_en";
+>   				regulator-min-microvolt = <1800000>;
+>   				regulator-max-microvolt = <1800000>;
 
 
