@@ -1,127 +1,185 @@
-Return-Path: <linux-gpio+bounces-26005-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26006-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3607B5441E
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 09:45:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC04DB544A8
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 10:11:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8703D584E18
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 07:45:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AE1C91777AA
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 08:11:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF8D62D249C;
-	Fri, 12 Sep 2025 07:45:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B6002D4B6F;
+	Fri, 12 Sep 2025 08:11:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ou01/gYm"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="mjESWjIK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5122857F5
-	for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 07:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39701B042E;
+	Fri, 12 Sep 2025 08:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757663134; cv=none; b=J7J7Ke+muXxiLyQwv0FlRZfolPkhWfDT81c3dHNtOuta8d/Ao4+d/DgxARUG8CAS/wf2Xf3xaJ5pEQ4bfKacqVeYJBi3/0F/MQ6WUZfczsq6FHY1yEKr4BFVKNQlbPyXX54woTtxCdmHTopELIHEBH5oXeX/qYz07dAmQRI3WZk=
+	t=1757664696; cv=none; b=BIofuewd/P0ZIAGRM0i76uEkwnu1fwvN9jfkpWAkx/q5NnrDQuf+wULl9cjAtJhTpKjH70uN3FSWBQPEttm4xijtL0pIaDtaI4nnRYqNgTlHU8xETm60WAWhCePmqUxeahKQNyjWcx+WIAzC2dneJcuaWzWO7d1PoIDStX0HZds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757663134; c=relaxed/simple;
-	bh=6FZzZpXKOXHzhJ2wnkOGqaqwmyZ8ymDmUm9n/R7xppU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T/y2Apv07JDbLKOzhDh77rCNcs2jQZw2INVGe9IurTpaMYPQTmvJAoD/V8Yf9/XGODLnmfMrMphDar54p2JsOSYt2+HUpYLTMK18hiFZXERBjz0FvF5/m5hOv/01urM8oHMUdzQST9XKwVwn8KHCcbYtK5TSpzzeEE7GDiJLITQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ou01/gYm; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-55f6f434c96so1689240e87.2
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 00:45:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757663131; x=1758267931; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6FZzZpXKOXHzhJ2wnkOGqaqwmyZ8ymDmUm9n/R7xppU=;
-        b=ou01/gYmHWzmRqiHYqhf+HrV5cImsTJB6CuCDvjdCPRBFGWdlWsyYwKoFUiacRx5qP
-         gnepZNDoq9grfoKdcfF934UjQu9o/nAC/SPg/NeCpQAD5nYiHbSbZ5co3xX62Y8Y/2nD
-         RJJbFB13Ik4LFgjmE4UJYoaRxcRC7UFpfi4WgIckO62d1R66WiwlFEslMmub9jXojb+6
-         XzLhbXC2ESDJwnQNom5cbdfCw8S9lEWv0KLnEKK32FCjTgi1zJ/y1/9JNly5UBxLNqZV
-         PP8lb4Tzp1hWXoKXvjVu7l5Kv0pWdc0qZEx3sZ/zioQbOI0/Km9adp4KuwXATiJ05hWb
-         9Y+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757663131; x=1758267931;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6FZzZpXKOXHzhJ2wnkOGqaqwmyZ8ymDmUm9n/R7xppU=;
-        b=r0sCXwL8RQHlhDZ2FDPkNlHXVUo3tf1y460EGbPGhLI7BeVGq3rO2bXft/b13wkixe
-         80zavXQcXil+NVo3V7n/aKBcJa3P+0EwcWSFPDHUZvt9UIz7NEgmFhj3MxiwvRtCaXv0
-         AMhg4tesrNBWEroVD7Z0I1vimID30UqIcTtr4vCz/Wmc68zqEwt/0TuUpShMEv/cK+5d
-         GzuxfFuoFkQAntnetRvm4N/c1h2OcjUvI8HY9SRQ3c8eUSH1MEkaXNYaGSvo6jFCYPfy
-         TuvH6meEm13Au5ake0aVwYm5SWyXuNVIK3J0vLRedeaazQsLl8LNTIaSI1j/NzD/WHvg
-         bfww==
-X-Forwarded-Encrypted: i=1; AJvYcCUDXZn+WlOuMVSoJpTrVv0uukn3lGOALeY9sGP47K9Zi2oAMe3tCZb0y7a6jsnQok0xciO1fQVSFwMe@vger.kernel.org
-X-Gm-Message-State: AOJu0YykhAtlOx+EjMTq6rtFOcXLX7AGY9ebtCYMuW71IWJQKzHU/BF5
-	z4OXoFiavjXfajsj5XttSg4dCpHWLJcNaKPgrocsu+ZTYVrHiTenTJCI0c+ttwCVlIlMtvnQZol
-	swADfERmwTfQh1BmrFpdy+fYEwx11Jywdy98gvWkg9Q==
-X-Gm-Gg: ASbGnctc7R/ZiittMsqstX14cFe4Ri9B3Mx9dsy/6BEhqwv87UOD1Fp0KhowZ1Wvl+5
-	rKfgtNwd9mrYWysgeFAYcxTg2scY9OB/CCdcAqE2vS8m+wSYrEqDbICWSnjdWMn9QZaUmp8hJ5J
-	t95JsNkPhyNfUANKeWubSTw2wlvhxoBKFKECVaefZuFZT8an6n7vHz04oVRJgSawxj48ekg1wL3
-	AyE7T4=
-X-Google-Smtp-Source: AGHT+IHlmRAHKqSdot79mnaN0SJhfcVcwXH1gxvx+jUHEDO9IZALMIrMYqfVCaNGxNsDXGYCgXZm+lDZA6bq0RfiLP8=
-X-Received: by 2002:a05:651c:2359:20b0:336:c290:b321 with SMTP id
- 38308e7fff4ca-3513a8f1a35mr3890011fa.13.1757663130915; Fri, 12 Sep 2025
- 00:45:30 -0700 (PDT)
+	s=arc-20240116; t=1757664696; c=relaxed/simple;
+	bh=CzesZ0+83XgeIbXL6u4EnFLvcQwKX0MimNmWx+DMUmA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BnnnnP35jfEPbi27DZb5NkSnnqBvttRja/3zigS2vbhu45+5/QOvqw2Eor66MS2OHdMHYNOW3+0hMOWjzCbagyVHCl+KUTdKR/wH5KMKqZTwgb+k++L0Hq9LTPbPUwnJmp0MmJ0CmZYRpfrSg+OO2AcXs+5LSOX7dtS1XPWA4vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=mjESWjIK; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1757664691;
+	bh=CzesZ0+83XgeIbXL6u4EnFLvcQwKX0MimNmWx+DMUmA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mjESWjIKXRwZVDydET4lIeaI2BUyFqWGWT6Asttm4aF5IV7TCbY64i3KVe3SFvp1m
+	 zJ2cF6z0RJm5hhJh8/m+NdT/F3od9v7fDRXhyW/+eq5viQpRdCV5HSQnbLjZ/xc9n+
+	 tvutCB33fYeaQQ/sjE2gmmlRRwCzOyenC5oVYCY3CEChAf5dclzUyWDHVn+100ldl4
+	 A+mk2crY1sSjswYOvdhQNAcif4ADPpaTOSLdWeUrv621E2NCndrFeRavnqVmjqL0RK
+	 Ky9ikvwGpz9bZk6zS58reSv5qz2R6PZGO0RuYuoG3BDkIfGuSmLun0R/aRpvUx0eoB
+	 PNZFWtzaQjM6A==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8B03017E0100;
+	Fri, 12 Sep 2025 10:11:29 +0200 (CEST)
+Message-ID: <f44a0f08-1b00-49b4-82e6-17135138c55e@collabora.com>
+Date: Fri, 12 Sep 2025 10:11:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250912060650.2180691-1-gary.yang@cixtech.com>
-In-Reply-To: <20250912060650.2180691-1-gary.yang@cixtech.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 12 Sep 2025 09:45:19 +0200
-X-Gm-Features: Ac12FXzUbHER-mkVUjmDr0R7CXpg398gO_vKvZUgNOQ1exRFoKJFGV6d7epl9gM
-Message-ID: <CACRpkdbsJ75Th5=K65_teYXv34ECB9yx7hWeHG4QBao3wbCDvA@mail.gmail.com>
-Subject: Re: [v2 0/3] Add pinctrl support for sky1
-To: Gary Yang <gary.yang@cixtech.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	cix-kernel-upstream@cixtech.com, 
-	Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 02/12] dt-bindings: media: Convert MediaTek mt8173-vpu
+ bindings to DT schema
+To: Ariel D'Alessandro <ariel.dalessandro@collabora.com>, airlied@gmail.com,
+ amergnat@baylibre.com, andrew+netdev@lunn.ch, andrew-ct.chen@mediatek.com,
+ broonie@kernel.org, chunkuang.hu@kernel.org, conor+dt@kernel.org,
+ davem@davemloft.net, dmitry.torokhov@gmail.com, edumazet@google.com,
+ flora.fu@mediatek.com, heiko@sntech.de, houlong.wei@mediatek.com,
+ jeesw@melfas.com, kernel@collabora.com, krzk+dt@kernel.org, kuba@kernel.org,
+ lgirdwood@gmail.com, linus.walleij@linaro.org,
+ louisalexis.eyraud@collabora.com, luiz.dentz@gmail.com,
+ maarten.lankhorst@linux.intel.com, marcel@holtmann.org,
+ matthias.bgg@gmail.com, mchehab@kernel.org, minghsiu.tsai@mediatek.com,
+ mripard@kernel.org, p.zabel@pengutronix.de, pabeni@redhat.com,
+ robh@kernel.org, sean.wang@kernel.org, simona@ffwll.ch,
+ support.opensource@diasemi.com, tiffany.lin@mediatek.com,
+ tzimmermann@suse.de, yunfei.dong@mediatek.com
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-arm-kernel@lists.infradead.org, linux-bluetooth@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-mediatek@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-sound@vger.kernel.org, netdev@vger.kernel.org
+References: <20250911151001.108744-1-ariel.dalessandro@collabora.com>
+ <20250911151001.108744-3-ariel.dalessandro@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250911151001.108744-3-ariel.dalessandro@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Gary,
+Il 11/09/25 17:09, Ariel D'Alessandro ha scritto:
+> Convert the existing text-based DT bindings for Mediatek MT8173 Video
+> Processor Unit to a DT schema.
+> 
+> Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
 
-On Fri, Sep 12, 2025 at 8:06=E2=80=AFAM Gary Yang <gary.yang@cixtech.com> w=
-rote:
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-> Patch 1: add Cix pinctrl driver to support pinmux and pinconfigs
-> Patch 2: add Cix pinctrl nodes and header file
-> Patch 3: add yaml doc
->
-> Changes for v2:
-> - restructure the pinctrl driver to support pinmux=3D<..>
-> - redefine pinmux macros
-> - move header file from dt-bindings to dts
-> - fix the code-style issues
-
-If you want help for managing the different revisions of a patch series,
-you can use the "b4" tool, here is a tutorial:
-
-https://people.kernel.org/monsieuricon/sending-a-kernel-patch-with-b4-part-=
-1
-
-[Konstantin: the doc link on the bottom of the article is wrong
-and needs to be augmented to point to latest!]
-
-It's a bit tricky to switch to v3 since you already started without it,
-but it can be done with
-
-b4 prep --force-revision 3
-(see full docs https://b4.docs.kernel.org/en/latest/ )
-
-
-Yours,
-Linus Walleij
+> ---
+>   .../bindings/media/mediatek,mt8173-vpu.yaml   | 74 +++++++++++++++++++
+>   .../bindings/media/mediatek-vpu.txt           | 31 --------
+>   2 files changed, 74 insertions(+), 31 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8173-vpu.yaml
+>   delete mode 100644 Documentation/devicetree/bindings/media/mediatek-vpu.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/mediatek,mt8173-vpu.yaml b/Documentation/devicetree/bindings/media/mediatek,mt8173-vpu.yaml
+> new file mode 100644
+> index 0000000000000..8a47761f1e6b5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/mediatek,mt8173-vpu.yaml
+> @@ -0,0 +1,74 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/mediatek,mt8173-vpu.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Mediatek MT8173 Video Processor Unit
+> +
+> +maintainers:
+> +  - Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+> +
+> +description:
+> +  Video Processor Unit is a HW video controller. It controls HW Codec including
+> +  H.264/VP8/VP9 Decode, H.264/VP8 Encode and Image Processor (scale/rotate/color
+> +  convert).
+> +
+> +properties:
+> +  compatible:
+> +    const: mediatek,mt8173-vpu
+> +
+> +  reg:
+> +    maxItems: 2
+> +
+> +  reg-names:
+> +    items:
+> +      - const: tcm
+> +      - const: cfg_reg
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: main
+> +
+> +  memory-region:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - memory-region
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/mt8173-clk.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    soc {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        vpu: vpu@10020000 {
+> +            compatible = "mediatek,mt8173-vpu";
+> +            reg = <0 0x10020000 0 0x30000>,
+> +                  <0 0x10050000 0 0x100>;
+> +            reg-names = "tcm", "cfg_reg";
+> +            interrupts = <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>;
+> +            clocks = <&topckgen CLK_TOP_SCP_SEL>;
+> +            clock-names = "main";
+> +            memory-region = <&vpu_dma_reserved>;
+> +        };
+> +    };
+> +
+> +...
 
