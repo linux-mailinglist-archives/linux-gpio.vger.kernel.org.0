@@ -1,239 +1,176 @@
-Return-Path: <linux-gpio+bounces-25991-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25992-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CFECB5426B
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 08:06:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D20CFB54272
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 08:07:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E68FFA065B6
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 06:06:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 85EFBA0660C
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 06:07:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5173A27C854;
-	Fri, 12 Sep 2025 06:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJFK7rGz"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B65627F015;
+	Fri, 12 Sep 2025 06:06:58 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022106.outbound.protection.outlook.com [52.101.126.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA84846F;
-	Fri, 12 Sep 2025 06:06:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757657203; cv=none; b=W8v5OPYq6FBfSW01OMJDfRrEfAlJlQ34K9Yp3OJo+OBdwVsVI2mnkDbzVPJUbwl4BAU675MOT5qhYTlfKE1w0LgwWdFxLge5fTgBqSYZlEy64MlwLsMyyXzRccLaF0r2zYkccKWRUmIIc5tXPwZEwyPgNy+yovWXURqcQywv+Cw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757657203; c=relaxed/simple;
-	bh=nF4lItlwYcOfTnssRbtSp09OmwNC56e9ezNLiwIkcKE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gxb7JaAQrci9HEsthWWGFgHnNP/GfBGwEquiTeCymwgFUhjHW/r2BvKaa9OqEofh6A9iciC+dW2C3aQ6QZ3ZfcRG2PG1eRZP6dm6ZdScAQR0xjoezyyain7Q3rk3xdtTTLeGGOjuMBXVihWpxKblY6BCwH902YNvTB8+hCylf4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJFK7rGz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA2BBC4CEF4;
-	Fri, 12 Sep 2025 06:06:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757657202;
-	bh=nF4lItlwYcOfTnssRbtSp09OmwNC56e9ezNLiwIkcKE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EJFK7rGzhfob+IekXtskHBj9H3/tlwfA5r6OsrA5/XqgADcxCkFG+wxRo3MQJ6Hj+
-	 e/nziZ9YO9zrEXEVmQwbi4lLgZH+TF9EK7O+x4jucMkwIMQWkaCZ8HpJy4f2jGu+dx
-	 GS7rYRGpg1nUATgMZlpUSlxYRolA2Gy41lBuh64hjod/AW9zpbR5J+RHwbCpLg3UOi
-	 6osILbswgGibrPTlCzKfqtVQlaQkt2/YHx8TWlkhdpizWmi89w9OMb3VSD4DxrVVZK
-	 ptWCx0Yw3lHjI8ztpwlRCRfDvNiunmUZCKtdQrmz0KV+KNxpim8XEq3dgfzQ8jSwrM
-	 1klI6eVNRA0gA==
-Date: Fri, 12 Sep 2025 08:06:39 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
-Cc: airlied@gmail.com, amergnat@baylibre.com, andrew+netdev@lunn.ch, 
-	andrew-ct.chen@mediatek.com, angelogioacchino.delregno@collabora.com, broonie@kernel.org, 
-	chunkuang.hu@kernel.org, conor+dt@kernel.org, davem@davemloft.net, 
-	dmitry.torokhov@gmail.com, edumazet@google.com, flora.fu@mediatek.com, heiko@sntech.de, 
-	houlong.wei@mediatek.com, jeesw@melfas.com, kernel@collabora.com, krzk+dt@kernel.org, 
-	kuba@kernel.org, lgirdwood@gmail.com, linus.walleij@linaro.org, 
-	louisalexis.eyraud@collabora.com, luiz.dentz@gmail.com, maarten.lankhorst@linux.intel.com, 
-	marcel@holtmann.org, matthias.bgg@gmail.com, mchehab@kernel.org, 
-	minghsiu.tsai@mediatek.com, mripard@kernel.org, p.zabel@pengutronix.de, pabeni@redhat.com, 
-	robh@kernel.org, sean.wang@kernel.org, simona@ffwll.ch, 
-	support.opensource@diasemi.com, tiffany.lin@mediatek.com, tzimmermann@suse.de, 
-	yunfei.dong@mediatek.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-arm-kernel@lists.infradead.org, linux-bluetooth@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-sound@vger.kernel.org, 
-	netdev@vger.kernel.org
-Subject: Re: [PATCH v2 01/12] dt-bindings: media: Convert MediaTek mt8173-mdp
- bindings to DT schema
-Message-ID: <20250912-alluring-turaco-of-conversion-dca193@kuoka>
-References: <20250911151001.108744-1-ariel.dalessandro@collabora.com>
- <20250911151001.108744-2-ariel.dalessandro@collabora.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36237846F;
+	Fri, 12 Sep 2025 06:06:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.106
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757657218; cv=fail; b=fWI8L7DugxL3szOIcs1VOesjRQE9kY0NWJA2crrl8W1H328YlU4z6CZY2LuNx9Nih/WRbMvutBDm+z8mNsAiZlPzRMpg3VHpB2h67+aAeCt+RHtqgl/HoupcbWYrB1+nm4nSydlEx0jglqDCd4QF/ame8dqbaGYuuEarUM0SLIo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757657218; c=relaxed/simple;
+	bh=Ai9btz1quGArzXJliY8lt27C/OnkkfcCDTz7QiG3ihU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=F5i7zFTAnCN6aMlQCdhXpEyiMeSknPSaUDFrI6hKLQikBGTH0geX+qZ7jI5vpL+Mp9Tms5/Ovo06iV5CWEUYu7iBnlY4kTsLSPBl/ovHHAgjPBUmaRDx31D+fmBfYMlnk4gFbuIGfgh1PkRYFIrdsjOM8FwOsjtHT49PEozKUi8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.126.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Q81hFw+KuTmPPkjY9IKxd7AwrW8BFtRNhNiNwSntOMOIsK3br8i6+YVH+kN6znaD0J4hkWIjOaSED+rjDKzkKeXaNf7MT23WPlOlspvH/Xpr9rooA5jfuB92c9RkiHnzSNyGQnoRKNWAOV/VkRU2f9cyBX1cpckZ3P/qw+523KfiCmeOHcXW+/8WZlIBrTq3ytyABN2DEXNfUM1VbwiQgSIz2mTxlsUBjssf/TIempjbbD7vj0a5RYcIEoD5fhaFmxwGchX9ybAXE4rMmNH1He6mzBAS6sTHcwE6xUhJZSmtNHPJWE4UF2hesMV4In7xAyGgQQzGvPAAc+Yv7Y90kQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gLs3bBN2UGIELnav4B4+GwA6oh3fAE8c+1IGQsP9Zpk=;
+ b=Z0/U7uj16bKML+D3XhyFT7oPOQiLLhgnDMkjrq1bXIFR/5H2MQOpyql/k/D4XKMQMbjlpETqrj+4lHnko/t1FT3NBRtBbPvEIB+gH5a8uRiZowfmEzX9ywPHwzZ7jBnOBZVdBS6n0k19aB1mdcIkon0/jv0O1HQQaSGCZl2hFR0c0z7dQiJrB3z3hjejF8N10WeeYoo3CLIDl+JO1JtQbMNbDxEOmeW1Ccpmo9UyNPS3+A3vjwoShrL9ZOmXbM7/kuAvhSvJAGFl7fa7Ota620t/g4yhgFXDREVyWft/tElfKFmoPpz1mbTywUoFfHO+8cRLkAwIM370frI1IqGHeQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=cixtech.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from SG2P153CA0048.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c6::17) by
+ KUXPR06MB8032.apcprd06.prod.outlook.com (2603:1096:d10:4e::11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9094.22; Fri, 12 Sep 2025 06:06:52 +0000
+Received: from SG2PEPF000B66CD.apcprd03.prod.outlook.com
+ (2603:1096:4:c6:cafe::38) by SG2P153CA0048.outlook.office365.com
+ (2603:1096:4:c6::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9137.6 via Frontend Transport; Fri,
+ 12 Sep 2025 06:06:48 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ SG2PEPF000B66CD.mail.protection.outlook.com (10.167.240.27) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9115.13 via Frontend Transport; Fri, 12 Sep 2025 06:06:51 +0000
+Received: from localhost.localdomain (unknown [172.16.64.196])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id AD4EA41C0144;
+	Fri, 12 Sep 2025 14:06:50 +0800 (CST)
+From: Gary Yang <gary.yang@cixtech.com>
+To: linus.walleij@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	cix-kernel-upstream@cixtech.com,
+	Gary Yang <gary.yang@cixtech.com>
+Subject: [v2 0/3] Add pinctrl support for sky1
+Date: Fri, 12 Sep 2025 14:06:47 +0800
+Message-ID: <20250912060650.2180691-1-gary.yang@cixtech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250911151001.108744-2-ariel.dalessandro@collabora.com>
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CD:EE_|KUXPR06MB8032:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: e63a0d50-c03e-426c-8721-08ddf1c29147
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|1800799024|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Oo9xG0sCwNOiLaklhgxtt4hHejY+ph1IzXRVC4h7LzYXPfrvL/i6h3z3syeo?=
+ =?us-ascii?Q?LDddV3eDwXXtfM2dxoFBStFoxmKnqHVVuDlgcVzbGB/YczkIMIOnnJwSSMqK?=
+ =?us-ascii?Q?iuG3rcYgAKrLZYtWVpWGRZImSMZ1BbFNU1upPCKwl57RDgZzTB8UeQ20hFoY?=
+ =?us-ascii?Q?orpviw3habaPk3l3K/qAEzQqqdzxG+fQk2n1CElUTxCOYkmcupZio9Z4PlmO?=
+ =?us-ascii?Q?AL0+Nol7vH65PmWdy6CUB3hWFUZ5ltHUQWUi9/NQlfpbL0ISOorkAtPmcj50?=
+ =?us-ascii?Q?SYetiXJ7/NjRS+XwGVDQkD1z5wMGo9JFzd5XIxBkpls7kqw5uWL/5+GGTCmi?=
+ =?us-ascii?Q?pNQtI1Tx2aWVFak4BZeCFG2xocikmRCU+ARGWbLZjqXlhEtc/5+O6kQ5ezUG?=
+ =?us-ascii?Q?hStkoUcBqBx4g3gh91UEa+ShDuT7uTlHzAW2U/BNVp0zdw24FyTTKFsJaQ3Y?=
+ =?us-ascii?Q?66ii+An1xzqVHnyYxGniJXUvcfqEHOsaIbbfjipZGJ0jgl0nbUbkNfntvOYJ?=
+ =?us-ascii?Q?WPtJYCkF16hbeB0ZKqCZZOqVWujaGvtckxkmBej5mNNo9r9trt+XvfG8KKG0?=
+ =?us-ascii?Q?oHz1RyYnWPB2b46R9Rj2Bl7atKljc2HFTsqw3L9DgU8dnXaoaX/NP6WYh2tv?=
+ =?us-ascii?Q?/bPNNHjrstkxJ6YUZPCjwMw2Nev2RMdrbB7/P5O4HyKKQxVgjbKxC1NMowFc?=
+ =?us-ascii?Q?VIjUx7oaH87EXlurcyC6HXGI/v39gXONpB2Y0kVR43F65TV4BRElwjBPzb0R?=
+ =?us-ascii?Q?Lfaf53IsgSPaV8PEb9M9dhb8zzJ/CB50EqVyFkpxIT3jhRGFqnY8SsfLY2m+?=
+ =?us-ascii?Q?/EJ3LQc6VvaVfxh6AwhqwwjCtHWRK7UhrvEFN371LIx+Vje2TZho9xzwrlRp?=
+ =?us-ascii?Q?pxFdmlHn+ZDva8CkaNbxUXHxxpamX4p1yFEarJsZWK8hiYxDPWcvek+UZqnj?=
+ =?us-ascii?Q?k+FRqVB0gYw3V2W9GkcAmnJEZT4M0MSdubQnKn7A0gWGGtwqstPsMLRLdtW6?=
+ =?us-ascii?Q?8G300osaaDzFhDYRO6CEn8IKUhX2sCB/5XHULQZZU4Ay+GsS77UVuPgnsJlf?=
+ =?us-ascii?Q?rGPr/G8nRiijXSq1eP8d5hSfbTbQ3GKxUPdyydoQqpsBlpilevkdjspUjhUv?=
+ =?us-ascii?Q?eodfhba4h9nbqSX+jsLwYpTSyuxlCzy9dlWPY1btYSwuXtYU/l9pJnzpfHVL?=
+ =?us-ascii?Q?Y1b+tYdcDS1b/ydlLyns7Z6SmXnFG3mdN8+b4qHvbHO0pZEyRCEYRcJ8X+eA?=
+ =?us-ascii?Q?Z4BQANzktm9whWJp2sMJejxt3MYbaArPGe0qRZwFom6PE/Ukm/Y46f8kVj9S?=
+ =?us-ascii?Q?UzOXNliQRXHTJ3Tkd3P9REWRKR4Yb2PO41WwcyR4gg5rV9E0g3eYfN7xFmgG?=
+ =?us-ascii?Q?FpTveXevLiFRpsspC7ATfiBmXFJN9riJIpU2Dx5kN+H7UjlBB+4C3AdIdQuY?=
+ =?us-ascii?Q?KiKEVc9LWh9Z4uirqmN00mpfTxWKsyuyL8z4KcSi0w9d2a/WNVlyTeNDpqNW?=
+ =?us-ascii?Q?YqNsz+8Np7tsq1EtDcsyZXK4up9fKtn4kPgJ?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(1800799024)(82310400026);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Sep 2025 06:06:51.3038
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e63a0d50-c03e-426c-8721-08ddf1c29147
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SG2PEPF000B66CD.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KUXPR06MB8032
 
-On Thu, Sep 11, 2025 at 12:09:50PM -0300, Ariel D'Alessandro wrote:
-> Convert the existing text-based DT bindings for MediaTek MT8173 Media Data
-> Path to a DT schema.
-> 
-> Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
-> ---
->  .../bindings/media/mediatek,mt8173-mdp.yaml   | 169 ++++++++++++++++++
->  .../bindings/media/mediatek-mdp.txt           |  95 ----------
->  2 files changed, 169 insertions(+), 95 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8173-mdp.yaml
->  delete mode 100644 Documentation/devicetree/bindings/media/mediatek-mdp.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/mediatek,mt8173-mdp.yaml b/Documentation/devicetree/bindings/media/mediatek,mt8173-mdp.yaml
-> new file mode 100644
-> index 0000000000000..8ca33a733c478
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/mediatek,mt8173-mdp.yaml
-> @@ -0,0 +1,169 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/mediatek,mt8173-mdp.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MediaTek MT8173 Media Data Path
-> +
-> +maintainers:
-> +  - Ariel D'Alessandro <ariel.dalessandro@collabora.com>
-> +
-> +description:
-> +  Media Data Path is used for scaling and color space conversion.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - enum:
-> +          - mediatek,mt8173-mdp-rdma
-> +          - mediatek,mt8173-mdp-rsz
-> +          - mediatek,mt8173-mdp-wdma
-> +          - mediatek,mt8173-mdp-wrot
+Patch 1: add Cix pinctrl driver to support pinmux and pinconfigs
+Patch 2: add Cix pinctrl nodes and header file
+Patch 3: add yaml doc
 
-Why there is no mediatek,mt8173-mdp here? What does this compatible
-represent?
+Changes for v2:
+- restructure the pinctrl driver to support pinmux=<..>
+- redefine pinmux macros
+- move header file from dt-bindings to dts
+- fix the code-style issues
 
-> +      - items:
-> +          - const: mediatek,mt8173-mdp-rdma
 
-Still suspicious. Device cannot be simulatanously: compatible and not
-compatible. This is not a well known cat that has superposition of two
-states, whenenver you look the other way.
 
-Maybe the old binding was incorrect, maybe the in-tree DTS is incorrect.
-Whichever the reason, this must be investigated and documented, because
-by standard rules this is wrong. Each wrong code needs very clear
-explanations (and "someone did it" is not a good enough explanation).
+Gary Yang (3):
+  pinctrl: cix: Add pin-controller support for sky1
+  dt-bindings: pinctrl: Add cix,sky1-pinctrl
+  arm64: dts: cix: Add pinctrl nodes for sky1
 
-> +          - const: mediatek,mt8173-mdp
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  iommus:
-> +    maxItems: 1
-> +
-> +  mediatek,vpu:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      phandle to Mediatek Video Processor Unit for HW Codec encode/decode and
-> +      image processing.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - power-domains
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: mediatek,mt8173-mdp-rdma
-> +    then:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: Main clock
-> +            - description: Mutex clock
-> +    else:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: Main clock
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - mediatek,mt8173-mdp-rdma
-> +              - mediatek,mt8173-mdp-wdma
-> +              - mediatek,mt8173-mdp-wrot
-> +    then:
-> +      required:
-> +        - iommus
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: mediatek,mt8173-mdp
-> +    then:
-> +      required:
-> +        - mediatek,vpu
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/mt8173-clk.h>
-> +    #include <dt-bindings/memory/mt8173-larb-port.h>
-> +    #include <dt-bindings/power/mt8173-power.h>
-> +
-> +    soc {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        mdp_rdma0: rdma@14001000 {
-> +            compatible = "mediatek,mt8173-mdp-rdma",
-> +                         "mediatek,mt8173-mdp";
-> +            reg = <0 0x14001000 0 0x1000>;
-> +            clocks = <&mmsys CLK_MM_MDP_RDMA0>,
-> +                     <&mmsys CLK_MM_MUTEX_32K>;
-> +            power-domains = <&spm MT8173_POWER_DOMAIN_MM>;
-> +            iommus = <&iommu M4U_PORT_MDP_RDMA0>;
-> +            mediatek,vpu = <&vpu>;
-> +        };
-> +
-> +        mdp_rdma1: rdma@14002000 {
-> +            compatible = "mediatek,mt8173-mdp-rdma";
-> +            reg = <0 0x14002000 0 0x1000>;
-> +            clocks = <&mmsys CLK_MM_MDP_RDMA1>,
-> +                     <&mmsys CLK_MM_MUTEX_32K>;
-> +            power-domains = <&spm MT8173_POWER_DOMAIN_MM>;
-> +            iommus = <&iommu M4U_PORT_MDP_RDMA1>;
-> +        };
+ .../bindings/pinctrl/cix,sky1-pinctrl.yaml    |   85 +
+ arch/arm64/boot/dts/cix/sky1-orion-o6.dts     |   32 +
+ arch/arm64/boot/dts/cix/sky1-pinfunc.h        |  417 +++++
+ arch/arm64/boot/dts/cix/sky1.dtsi             |   10 +
+ drivers/pinctrl/Kconfig                       |    1 +
+ drivers/pinctrl/Makefile                      |    1 +
+ drivers/pinctrl/cix/Kconfig                   |   14 +
+ drivers/pinctrl/cix/Makefile                  |    4 +
+ drivers/pinctrl/cix/pinctrl-sky1-base.c       |  581 +++++++
+ drivers/pinctrl/cix/pinctrl-sky1.c            | 1435 +++++++++++++++++
+ drivers/pinctrl/cix/pinctrl-sky1.h            |   46 +
+ 11 files changed, 2626 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/cix,sky1-pinctrl.yaml
+ create mode 100644 arch/arm64/boot/dts/cix/sky1-pinfunc.h
+ create mode 100644 drivers/pinctrl/cix/Kconfig
+ create mode 100644 drivers/pinctrl/cix/Makefile
+ create mode 100644 drivers/pinctrl/cix/pinctrl-sky1-base.c
+ create mode 100644 drivers/pinctrl/cix/pinctrl-sky1.c
+ create mode 100644 drivers/pinctrl/cix/pinctrl-sky1.h
 
-My previous comment applies.
-
-Keep one or two examples.
-
-Best regards,
-Krzysztof
+-- 
+2.49.0
 
 
