@@ -1,83 +1,51 @@
-Return-Path: <linux-gpio+bounces-26087-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26088-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9225BB556E6
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 21:27:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A641CB557B0
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 22:37:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 48A31AA6510
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 19:27:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 059DF1D62F5D
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 20:37:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47EEC32BF38;
-	Fri, 12 Sep 2025 19:27:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C317E2417E0;
+	Fri, 12 Sep 2025 20:37:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZZ+EeJ/X"
+	dkim=pass (2048-bit key) header.d=armadeus.com header.i=@armadeus.com header.b="i/yNa6K0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from 20.mo550.mail-out.ovh.net (20.mo550.mail-out.ovh.net [188.165.45.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7142C21E7;
-	Fri, 12 Sep 2025 19:27:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C6A2DC76D
+	for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 20:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.45.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757705247; cv=none; b=bPtrMiS96q8RuuIrCOnR+ROKqdtPHHHsf5H5j+ono40DsKES/MJ6rdtkcFQT4svDX/8StojOpQrlWE7fe/nxCRhc+9C2PoaFCw3lsm+4MFIny3Qdcs17qYQHND9F9QEM489NzSxkwQ/W9JVDakRYF9feTbnbx8B9UXgrf4KSuSo=
+	t=1757709440; cv=none; b=cXjT7J6QWP4zrKjesYbvyMsP113SM3VOTj/tBXWz7R84jxu6mNleGzAF5YraxMVDLhj3WQdAN2aw0XvkVrJ6byhV5ayjmUgROEc5VLwZ/mSswNaIHA89hT1VuNeVCiTni0EQPYyy7la9eVzqjeSrg0gh6J8zkA+a71tKukeK2qY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757705247; c=relaxed/simple;
-	bh=EHXp00PvSV5BL2JzcicYuQ7QaA7Hb0E5dVZbhEWZgVU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q4O3U5sGZdymDrGKi/M6R/t5jzcDdcAEGA74Bl/qbcFfFKeH9lpPldERV53bJv87+cNzY0woJFCARfqffOgTgCqgG8n8z5at+aqUvdEH2UoqiHoj2FOlRsp2UM4ezKvGJ9bf5qgw+eoo9HXcujcNEyZW1FI8XodyT2Rrb7of6HI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZZ+EeJ/X; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 58CJOvCc668524;
-	Fri, 12 Sep 2025 14:24:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1757705097;
-	bh=Q4NS2lGNDYPRFSd1ovtwkZb7OAAyExi6xlEfHJJUBmQ=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=ZZ+EeJ/XiIL22njUd2gX5udls+1mAirxXEHksdBu0njlTzgvOx7WWptSXLbMNKltE
-	 M/O8RcnXHxUHFnpQZRP2Jp3wEK6u4t9k78rHVtuRrKQJsGpUduLu13T3ZpxEQGtEcC
-	 HwW/XN6U4cqMbAhoA7IxW84ZRc2IgDv4qXLAh1IU=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 58CJOu6i2993241
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Fri, 12 Sep 2025 14:24:57 -0500
-Received: from DFLE200.ent.ti.com (10.64.6.58) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 12
- Sep 2025 14:24:56 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE200.ent.ti.com
- (10.64.6.58) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Fri, 12 Sep 2025 14:24:56 -0500
-Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 58CJOuXa187040;
-	Fri, 12 Sep 2025 14:24:56 -0500
-Date: Fri, 12 Sep 2025 14:24:56 -0500
-From: Bryan Brattlof <bb@ti.com>
-To: Andrew Davis <afd@ti.com>
-CC: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero
- Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Linus
- Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-        <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v6 3/4] arm64: dts: ti: k3-am62l: add initial
- infrastructure
-Message-ID: <20250912192456.msnw64b62yr5ricw@bryanbrattlof.com>
-X-PGP-Fingerprint: D3D1 77E4 0A38 DF4D 1853 FEEF 41B9 0D5D 71D5 6CE0
-References: <20250912-am62lx-v6-0-29d5a6c60512@ti.com>
- <20250912-am62lx-v6-3-29d5a6c60512@ti.com>
- <0153912f-04a5-4118-a286-4e9c0293aae6@ti.com>
+	s=arc-20240116; t=1757709440; c=relaxed/simple;
+	bh=g9s4aBgq9mUA/MaM7/N6IjRsE8phQz3zLoYU9BI7XB4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=hjyEZckjkdTvt6OWYdABSfAEFDkSLtviR5ltRfEeW6aTsSXMLn7YH8hmDFB9GvjQ0/H+2S7P5Bg3kAZ8EoNEnfHTFpxoTpnWbAJY/OZrJgGTRceu3AYB3lEEhQCqeKGs5I1W97Jwm+xOAc+eY9tHsUHrOwgeUt7oyakDPU34OKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=armadeus.com; spf=pass smtp.mailfrom=armadeus.com; dkim=pass (2048-bit key) header.d=armadeus.com header.i=@armadeus.com header.b=i/yNa6K0; arc=none smtp.client-ip=188.165.45.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=armadeus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=armadeus.com
+Received: from director10.ghost.mail-out.ovh.net (unknown [10.109.249.41])
+	by mo550.mail-out.ovh.net (Postfix) with ESMTP id 4cNm3X6FxFz5xtv
+	for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 20:19:04 +0000 (UTC)
+Received: from ghost-submission-5b5ff79f4f-8lnd4 (unknown [10.110.188.251])
+	by director10.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 2D59FC15C2;
+	Fri, 12 Sep 2025 20:19:04 +0000 (UTC)
+Received: from armadeus.com ([37.59.142.112])
+	by ghost-submission-5b5ff79f4f-8lnd4 with ESMTPSA
+	id LoviOjeAxGilAw4AMdo/aw
+	(envelope-from <sebastien.szymanski@armadeus.com>); Fri, 12 Sep 2025 20:19:04 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-112S006d9550b98-7ae0-4798-a2a1-6fec4990740f,
+                    24C0CD233B02D59DA4C9EFE158FBDB7975D525F0) smtp.auth=sebastien.szymanski@armadeus.com
+X-OVh-ClientIp:86.243.209.203
+From: =?utf-8?q?S=C3=A9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
+Date: Fri, 12 Sep 2025 22:18:50 +0200
+Subject: [PATCH] gpiolib: acpi: initialize acpi_gpio_info struct
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -85,92 +53,80 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <0153912f-04a5-4118-a286-4e9c0293aae6@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250912-gpiolib-acpi-fix-v1-1-1a41acbffadf@armadeus.com>
+X-B4-Tracking: v=1; b=H4sIACmAxGgC/x2MUQqAIBAFrxL73YJKUXaV6KPsZQtRohBBePekz
+ xmYeSkhChIN1UsRtyS5zgK6rsjt8+nBshYmo0yrrDbsg1yHLDy7ILzJwx3QWINlbdFTyUJE0f9
+ ynHL+AObJw7RiAAAA
+X-Change-ID: 20250912-gpiolib-acpi-fix-7ee492ebd5e8
+To: Mika Westerberg <westeri@kernel.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, 
+ linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?S=C3=A9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
+X-Mailer: b4 0.14.2
+X-Ovh-Tracer-Id: 9239134636664548198
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvleellecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkvfevofesthekredtredtjeenucfhrhhomhepuforsggrshhtihgvnhcuufiihihmrghnshhkihcuoehsvggsrghsthhivghnrdhsiiihmhgrnhhskhhisegrrhhmrgguvghushdrtghomheqnecuggftrfgrthhtvghrnhepleelgeetueelieekffeiveekvddukefgfeetvedtgedvjedtgedvheehkeeuleetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddvjedrtddrtddruddpkeeirddvgeefrddvtdelrddvtdefpdefjedrheelrddugedvrdduuddvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehsvggsrghsthhivghnrdhsiiihmhgrnhhskhhisegrrhhmrgguvghushdrtghomhdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheehtdgmpdhmohguvgepshhmthhpohhuth
+DKIM-Signature: a=rsa-sha256; bh=p8MdL3xIorxozybFE1L91018QY5I/1ptU7GUsykpYEE=;
+ c=relaxed/relaxed; d=armadeus.com; h=From; s=ovhmo103079-selector1;
+ t=1757708344; v=1;
+ b=i/yNa6K0lMjZqi+wijFic2vsqkF2gxMVzZxSAwTGjghyf8NUs3NVmAznCr9v3dNSfU5+63yp
+ APiYmO2HTAaYrbd0JWjGeRkh4hu/o/jA8I6nJX0LqDvNq/F8CTQBd6MBsCfK57THcQ7bSTKc4z1
+ D6hydl1YdpZMQHWHwVzHiBSXSmy/YQqek9sCub1QjlZoN9kP0HC0jJRri4vszDQVg6hZ9D/sDb2
+ Z3chzBacKjv36GASfqsKokTU0TLE3h9uP5Tt8yjDmCwZazazdsvNHFUCX5WOJ6usIkdnJtGN/J2
+ E7v8q8irfevLf3fIPuuqmWyWrbc0Wx8HV/DBgOmJJdJ3w==
 
-On September 12, 2025 thus sayeth Andrew Davis:
-> On 9/12/25 10:40 AM, Bryan Brattlof wrote:
-> > From: Vignesh Raghavendra <vigneshr@ti.com>
-> > 
-> > Add the initial infrastructure needed for the AM62L. ALl of which can be
-> > found in the Technical Reference Manual (TRM) located here:
-> > 
-> >      https://www.ti.com/lit/pdf/sprujb4
-> > 
-> > Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> > Signed-off-by: Bryan Brattlof <bb@ti.com>
-> > ---
-> > Changes in v4:
-> >   - Corrected Copyright year
-> >   - Used 'ranges' property in the fss{} node
-> > 
-> > Changes in v3:
-> >   - Added more nodes now that the SCMI interface is ready
-> > 
-> > Changes in v1:
-> >   - switched to non-direct links to TRM updates are automatic
-> >   - fixed white space indent issues with a few nodes
-> >   - separated out device tree bindings
-> > ---
-> >   arch/arm64/boot/dts/ti/k3-am62l-main.dtsi    | 603 +++++++++++++++++++++++++++
-> >   arch/arm64/boot/dts/ti/k3-am62l-thermal.dtsi |  25 ++
-> >   arch/arm64/boot/dts/ti/k3-am62l-wakeup.dtsi  | 141 +++++++
-> >   arch/arm64/boot/dts/ti/k3-am62l.dtsi         | 120 ++++++
-> >   arch/arm64/boot/dts/ti/k3-am62l3.dtsi        |  67 +++
-> >   arch/arm64/boot/dts/ti/k3-pinctrl.h          |   2 +
-> >   6 files changed, 958 insertions(+)
-> > 
+Since commit 7c010d463372 ("gpiolib: acpi: Make sure we fill struct
+acpi_gpio_info"), uninitialized acpi_gpio_info struct are passed to
+__acpi_find_gpio() and later in the call stack info->quirks is used in
+acpi_populate_gpio_lookup. This breaks the i2c_hid_cpi driver:
 
-...
+[   58.122916] i2c_hid_acpi i2c-UNIW0001:00: HID over i2c has not been provided an Int IRQ
+[   58.123097] i2c_hid_acpi i2c-UNIW0001:00: probe with driver i2c_hid_acpi failed with error -22
 
-> > diff --git a/arch/arm64/boot/dts/ti/k3-am62l.dtsi 
-> > b/arch/arm64/boot/dts/ti/k3-am62l.dtsi
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..d058394a8d19d16f100cd87cf293c67bc189b475
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/ti/k3-am62l.dtsi
-> > @@ -0,0 +1,120 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only or MIT
-> > +/*
-> > + * Device Tree Source for AM62L SoC Family
-> > + * Copyright (C) 2025 Texas Instruments Incorporated - https://www.ti.com/
-> > + *
-> > + * Technical Reference Manual: https://www.ti.com/lit/pdf/sprujb4
-> > + */
-> > +
+Fix this by initializing the acpi_gpio_info pass to __acpi_find_gpio()
 
-...
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220388
+Fixes: 7c010d463372 ("gpiolib: acpi: Make sure we fill struct acpi_gpio_info")
+Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+---
+ drivers/gpio/gpiolib-acpi-core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> > +		};
-> > +	};
-> > +
-> > +	#include "k3-am62l-thermal.dtsi"
-> 
-> Not a fan of how this is included (yes I know it is done like this in
-> a couple other places, those need fixed too), as we have better/standard
-> ways to add nodes to nodes other than directly including a file with the
-> node. The other issue is now the content of the file, including its #include
-> lines are now inside this parent node.
-> 
-> This dtsi file should just start with "/ {" and add the extra node.
-> 
-> Also, isn't this broken out into a dtsi so we can handle versions of
-> this device qualified for other thermal ranges without having to use
-> a different parent device dtsi? If so then adding it directly to the
-> base dtsi prevents that. Either all AM62L have this one thermal situation
-> and then it doesn't need to be a dtsi, or this include should go into the
-> board level as it is up to the given board what specific variant was chosen
-> to be populated on that board type.
-> 
+diff --git a/drivers/gpio/gpiolib-acpi-core.c b/drivers/gpio/gpiolib-acpi-core.c
+index 12b24a717e43f17621c054bfc4e9c2e287236d8c..d11bcaf1ae88421e5e5a11a2ba94983f437c413a 100644
+--- a/drivers/gpio/gpiolib-acpi-core.c
++++ b/drivers/gpio/gpiolib-acpi-core.c
+@@ -942,7 +942,7 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
+ {
+ 	struct acpi_device *adev = to_acpi_device_node(fwnode);
+ 	bool can_fallback = acpi_can_fallback_to_crs(adev, con_id);
+-	struct acpi_gpio_info info;
++	struct acpi_gpio_info info = {};
+ 	struct gpio_desc *desc;
+ 
+ 	desc = __acpi_find_gpio(fwnode, con_id, idx, can_fallback, &info);
+@@ -992,7 +992,7 @@ int acpi_dev_gpio_irq_wake_get_by(struct acpi_device *adev, const char *con_id,
+ 	int ret;
+ 
+ 	for (i = 0, idx = 0; idx <= index; i++) {
+-		struct acpi_gpio_info info;
++		struct acpi_gpio_info info = {};
+ 		struct gpio_desc *desc;
+ 
+ 		/* Ignore -EPROBE_DEFER, it only matters if idx matches */
 
-Yeah I've noticed this as well. We have a few parts available in 
-different packaging that have different maximum temp ratings. Ideally we 
-should have some way to specify which package variant the board is using 
-and include these thermal trip points for that package.
+---
+base-commit: 76eeb9b8de9880ca38696b2fb56ac45ac0a25c6c
+change-id: 20250912-gpiolib-acpi-fix-7ee492ebd5e8
 
-It does add more #includes into all of this but I guess if you've picked 
-up on this as well I should probably look into seeing what we can do.
+Best regards,
+-- 
+Sébastien Szymanski <sebastien.szymanski@armadeus.com>
 
-~Bryan
 
