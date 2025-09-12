@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-26051-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26052-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3FBEB54F59
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 15:23:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB24CB54F75
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 15:25:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6EA0D7C64BC
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 13:23:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5EEFE3B3994
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 13:25:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ED3230DED0;
-	Fri, 12 Sep 2025 13:23:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5953430DEA5;
+	Fri, 12 Sep 2025 13:25:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AvXyZIi8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bIe2JqmV"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227B0308F2D;
-	Fri, 12 Sep 2025 13:23:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE1421CC47;
+	Fri, 12 Sep 2025 13:25:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757683388; cv=none; b=nW4tE1e8M2+f8RrT7jOqNktvU7w2Xypj9D1Izs5QUi0x9jXBN99p/TLb0r77MEOXscOSa/05x3WVgxAQLgV8gkpvSi7gJMKt2va81BoxvCA5BEWBUWZJpz5e/ycmlpcVcY70U9GJyTllHFIrBafkkMzsBQUGKANSucLzg8Xg/hE=
+	t=1757683532; cv=none; b=HnhinCBYZZvlXX+fhKvTXFMQdru1omB1DJDyybhVx/grMtcHw74S5Rg4bb1gL+BdgPQUdKsAVy2Tg/IwHLJMhYdFo2nD+tlxuHdHXjeYTrtO7EP6En/UAaTmzIf/N+FiYr9FmvNMpzkY05h8oYaqt6D9/WJdJA6h5kWsXOiggio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757683388; c=relaxed/simple;
-	bh=c9p9bPrxSi+sJWVsWiSYSAd6dX2DEW2af6xw4qih9Jw=;
+	s=arc-20240116; t=1757683532; c=relaxed/simple;
+	bh=1Zm2iA1SB8GWLNScSpRQxUq0UzkNRCiIepB0sNuFx9c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J0ZtaX0/CCLBY5XK09EqTi1Htg4tzPkVt3d41g+lUhNb8rUF7Xxb58gXp784CXsOTX8p87mrtrQP3v8zlBRObnsKvKi3yAZ6xMBF/lGl6i2VkfVL9OA0PqDvp6efs4eqd6/IFle5af+RGMHKz1GFFLcs7ZXG2a/mjMbXjIQOvak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AvXyZIi8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D6B4C4CEF1;
-	Fri, 12 Sep 2025 13:22:56 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=pokh8xVBqMAbzhcc7ALuIrWWoWhd1FtHbOwYh7eE9JK7OIuUYougVZMwXu/9CXs6BD1m+tje1pXuE7Gdd1cYhvWBoR+KSlhS+iZxCss3xXu6StTxIZPTAIrEAQMCyFRfra5fPOmkpc9wwaKkBEqDl8HhLazzzQwiDmTegtJGpFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bIe2JqmV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3059C4CEF1;
+	Fri, 12 Sep 2025 13:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757683387;
-	bh=c9p9bPrxSi+sJWVsWiSYSAd6dX2DEW2af6xw4qih9Jw=;
+	s=k20201202; t=1757683531;
+	bh=1Zm2iA1SB8GWLNScSpRQxUq0UzkNRCiIepB0sNuFx9c=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AvXyZIi8lDfAalXgF1WdETnPgZZ8RM/3fqPD7soAGpkwubprAipGOV6yOoTY3OHSk
-	 yLXY4Sb2YO/3+SqgiF7wj7VGLz9j0uKOmb/GGgy4yndBEsWYvpN5dZma3c60ozNQjC
-	 zG6jkUFWEpkmUpJsBq3cIF3+Hkmtat4QYo+4SuWmEgfIpTAhP/EdrRrE7+MW6ktgiP
-	 sfM2z8ccxdfOJDSOxatKj3UU3+RNd90XT8NCn4Pmwy2G9TD8BXnb2X5PFl8d+ef8oP
-	 MS/OfpRkXMSwF9yOSsOYwPTssnDsx74nkFfSmqUcMqNSlQrdT9mzuIu9ED/Is4y8wJ
-	 KD26QXnW1JVXw==
-Message-ID: <bcad01be-fd00-4789-ae83-b855e495fab9@kernel.org>
-Date: Fri, 12 Sep 2025 15:22:54 +0200
+	b=bIe2JqmVPWIT7obUy1SUAhW38eyOok5HPLQ+/4LEGiuLz/ht0tY1zJp2rl9bx+18B
+	 5imW1Gcg8bKvley0iMw/sgyMNZQuNlXfmJSYdtvSwE6yrl/Y5hgZwLXn2Y3Wedx6/q
+	 OZvaUQdQjwhDTn3CRTHY8RnIwjTIiqN/nZnolaxMW97eDNQ4LRBlsGoSQOCOx08YZd
+	 p6ZWN/UguNuoLtaaqTucnez2kvZoXcB7HTFgoJdjB+bT7QbdvrwcE9PSLoOPWFSQTt
+	 eoYV8wbzKYP1BxiFMuk3msPyEfABLfW95Jho6xEYEa0nSK0Mi0j8Gs1au7+ToDFAE3
+	 DsQQCmup3eMRA==
+Message-ID: <969842f0-5113-40c1-b80d-d46bd239936a@kernel.org>
+Date: Fri, 12 Sep 2025 15:25:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,35 +50,34 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 14/38] dt-bindings: media: mediatek,mt8195-jpeg: Allow
- range number in node address
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-mediatek@lists.infradead.org, robh@kernel.org
-Cc: herbert@gondor.apana.org.au, davem@davemloft.net, krzk+dt@kernel.org,
- conor+dt@kernel.org, chunkuang.hu@kernel.org, p.zabel@pengutronix.de,
- airlied@gmail.com, simona@ffwll.ch, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, jassisinghbrar@gmail.com,
- mchehab@kernel.org, matthias.bgg@gmail.com, chunfeng.yun@mediatek.com,
- vkoul@kernel.org, kishon@kernel.org, sean.wang@kernel.org,
- linus.walleij@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
- andersson@kernel.org, mathieu.poirier@linaro.org, daniel.lezcano@linaro.org,
- tglx@linutronix.de, atenart@kernel.org, jitao.shi@mediatek.com,
- ck.hu@mediatek.com, houlong.wei@mediatek.com,
- kyrie.wu@mediatek.corp-partner.google.com, andy.teng@mediatek.com,
- tinghan.shen@mediatek.com, jiaxin.yu@mediatek.com, shane.chien@mediatek.com,
- olivia.wen@mediatek.com, granquet@baylibre.com, eugen.hristev@linaro.org,
- arnd@arndb.de, sam.shih@mediatek.com, jieyy.yang@mediatek.com,
- frank-w@public-files.de, mwalle@kernel.org, fparent@baylibre.com,
- linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
- linux-remoteproc@vger.kernel.org, linux-sound@vger.kernel.org
-References: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com>
- <20250724083914.61351-15-angelogioacchino.delregno@collabora.com>
- <70ae6787-ee0b-43a0-851e-1fb6c82f6c31@kernel.org>
- <72934f23-08eb-4214-a946-7aa7a432352e@collabora.com>
- <56380fe5-8358-4341-9478-ba4ce52daeed@collabora.com>
+Subject: Re: [PATCH v2 01/12] dt-bindings: media: Convert MediaTek mt8173-mdp
+ bindings to DT schema
+To: Chen-Yu Tsai <wenst@chromium.org>
+Cc: Ariel D'Alessandro <ariel.dalessandro@collabora.com>, airlied@gmail.com,
+ amergnat@baylibre.com, andrew+netdev@lunn.ch, andrew-ct.chen@mediatek.com,
+ angelogioacchino.delregno@collabora.com, broonie@kernel.org,
+ chunkuang.hu@kernel.org, conor+dt@kernel.org, davem@davemloft.net,
+ dmitry.torokhov@gmail.com, edumazet@google.com, flora.fu@mediatek.com,
+ heiko@sntech.de, houlong.wei@mediatek.com, jeesw@melfas.com,
+ kernel@collabora.com, krzk+dt@kernel.org, kuba@kernel.org,
+ lgirdwood@gmail.com, linus.walleij@linaro.org,
+ louisalexis.eyraud@collabora.com, luiz.dentz@gmail.com,
+ maarten.lankhorst@linux.intel.com, marcel@holtmann.org,
+ matthias.bgg@gmail.com, mchehab@kernel.org, minghsiu.tsai@mediatek.com,
+ mripard@kernel.org, p.zabel@pengutronix.de, pabeni@redhat.com,
+ robh@kernel.org, sean.wang@kernel.org, simona@ffwll.ch,
+ support.opensource@diasemi.com, tiffany.lin@mediatek.com,
+ tzimmermann@suse.de, yunfei.dong@mediatek.com, devicetree@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+ linux-bluetooth@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-sound@vger.kernel.org,
+ netdev@vger.kernel.org
+References: <20250911151001.108744-1-ariel.dalessandro@collabora.com>
+ <20250911151001.108744-2-ariel.dalessandro@collabora.com>
+ <20250912-alluring-turaco-of-conversion-dca193@kuoka>
+ <CAGXv+5GovP7NuG042AwfmtC-sPJMGuFAm6iZ0iqNZgU0VE+qmQ@mail.gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -124,48 +123,49 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <56380fe5-8358-4341-9478-ba4ce52daeed@collabora.com>
+In-Reply-To: <CAGXv+5GovP7NuG042AwfmtC-sPJMGuFAm6iZ0iqNZgU0VE+qmQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 12/09/2025 11:00, AngeloGioacchino Del Regno wrote:
-> Il 04/08/25 11:02, AngeloGioacchino Del Regno ha scritto:
->> Il 24/07/25 11:14, Krzysztof Kozlowski ha scritto:
->>> On 24/07/2025 10:38, AngeloGioacchino Del Regno wrote:
->>>> The dual and triple core jpeg encoder and decoder (respectively)
->>>> on MT8195 are far apart: the only way to have this to make sense
->>>> is to split those in multiple address ranges in device trees as
->>>> one big range would overlap with other IP in at least the MT8195
->>>> SoC.
->>>>
->>>> Change both the jpegdec and jpegenc bindings to allow specifying
->>>> children nodes such as "jpegdec@0,10000", "jpegdec@1,0" or for
->>>> encoder "jpegenc@0,0", "jpegenc@1,0" to resolve dtbs_check issues.
->>>
->>>
->>> This should not be needed for standard MMIO/simple-bus nodes. I think
->>> DTS is wrong here.
->>>
->>> Which cases really need the ','?
->>>
+On 12/09/2025 10:27, Chen-Yu Tsai wrote:
+>>> +properties:
+>>> +  compatible:
+>>> +    oneOf:
+>>> +      - enum:
+>>> +          - mediatek,mt8173-mdp-rdma
+>>> +          - mediatek,mt8173-mdp-rsz
+>>> +          - mediatek,mt8173-mdp-wdma
+>>> +          - mediatek,mt8173-mdp-wrot
 >>
->> All of the multi-core JPEG enc/decoders on MT8195 (and newer).
+>> Why there is no mediatek,mt8173-mdp here? What does this compatible
+>> represent?
 >>
->> The DT changes are included in the same series as this commit; check:
+>>> +      - items:
+>>> +          - const: mediatek,mt8173-mdp-rdma
 >>
->> 20250724083914.61351-35-angelogioacchino.delregno@collabora.com
+>> Still suspicious. Device cannot be simulatanously: compatible and not
+>> compatible. This is not a well known cat that has superposition of two
+>> states, whenenver you look the other way.
 >>
->> Cheers,
->> Angelo
->>
+>> Maybe the old binding was incorrect, maybe the in-tree DTS is incorrect.
+>> Whichever the reason, this must be investigated and documented, because
+>> by standard rules this is wrong. Each wrong code needs very clear
+>> explanations (and "someone did it" is not a good enough explanation).
 > 
-> Any further comments on this?
+> My guess is that "mediatek,mt8173-mdp" is meant to serve as a single
+> entry point for the implementation to bind the driver to. The MDP is
 
-Well yeah, that's still wrong. These are simple MMIO, so comma is not
-correct. Rob already commented on this at v1 of Ariel's patchset. It was
-BTW the same device - mt8195 jpeg!
+I am speaking about hardware. What piece of hardware it implements and
+why sometimes it is RDMA MDP and sometimes it is not RDMA MDP, but only MDP.
 
-
+> a Data Pipeline and there could be multiple instances of the same
+> IP block, as seen in the original example.
+> 
+> The datasheet I have doesn't cover the "RDMA" block specifically, so
+> I can't say whether there is an actual difference between the two RDMA
+> blocks.
+> 
+> 
 Best regards,
 Krzysztof
 
