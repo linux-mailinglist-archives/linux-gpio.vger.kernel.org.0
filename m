@@ -1,81 +1,81 @@
-Return-Path: <linux-gpio+bounces-26077-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26066-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C83EB551B9
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 16:35:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D39DAB55112
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 16:23:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6D352585123
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 14:32:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F312A587C34
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 14:22:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4A88324B1E;
-	Fri, 12 Sep 2025 14:28:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9C03313275;
+	Fri, 12 Sep 2025 14:21:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MaTESpGq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eFLqCZiu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2E731D39B
-	for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 14:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35AC03128D8
+	for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 14:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757687291; cv=none; b=j8HCoryScZN2XnM54K7bN80b5Let7SGSIAhlCy9ctj8NUE7CD96L38lNqV3rjSh5JKwGhHt3vgscU07XHqJ6sNi6uyPZaN+/YIoXD46yWsHV/ZdqJ6zGk0LfasmoJUkneC4PUp2/qj4wbag1W0+PEuP+8LYurwsO8o8OlpZIxiQ=
+	t=1757686874; cv=none; b=H8q4z2bvqXwwpBjyMchr3V4mI2zh+2sfTzjhT8zVUV6yLSNIZCzQQoFOV98pdfXYPD11zZcVEEElfuGTobuJB1iUoe5MAxA5IrhDqQWzUiAkq5vouEI+9x/K28QZuebJTs0jNG3hvAg30dZfIF5ClsKgEJge4vYPrweWu2DPiJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757687291; c=relaxed/simple;
-	bh=JFOg5p1iJ5KxXp0KyBvJj/giFbvKAa15YFCa02d2BZ8=;
+	s=arc-20240116; t=1757686874; c=relaxed/simple;
+	bh=+5xPNEdwkYToxA6p/pW15OaDKoXxRJW5KqhiXHo35B4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dKTAPnga+qOkaa5MPlDeaKr1kDB4IFbvnkYQmsoBiEZhwf+8CrAZsU7+zNp8olijZnhUzdC6lQoonKlFdQ9S4ICyV0ceje0gJOnpKtYbH1uuQRAWhhljg8HTCbeahmX0KHQNNmMLoIxw5nUzBwsH/ssMj/ask5q75cmIepg5HYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MaTESpGq; arc=none smtp.client-ip=209.85.128.49
+	 In-Reply-To:Content-Type; b=mxHWEvxg958WoSA0rW63kPT353lgKQYGJYkE14qht4GeyM4pQkQxkemrNFNPQMKJKKpj9MQMjZOPH7orpJq0f8FeLEvLlrr+Bv3/HMXAtRINLhUgdARxR3CS741IvHDJYqkCtfElsvgOJRsO0gKxe/vBCY20Jw8VZY3c1KIt0go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eFLqCZiu; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-45dd7b15a64so17804605e9.0
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 07:28:09 -0700 (PDT)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-45dcff2f313so14258265e9.0
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Sep 2025 07:21:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757687288; x=1758292088; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1757686870; x=1758291670; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=jnkM+AnZyhps3qygpz2dIT80TKNeLfoU88kbfoaXJwA=;
-        b=MaTESpGqpTMpTxS5eQvECHwzZqQxvguH81IoIjAdnY6Iuon/s97rA4MgR7ETN4ig4W
-         ZB4kYLAIl5NCHpNeQhKXG2zUbFj4D2hD2Gr8oZV5LTseZWBSFCjCwfxSwTtS87WAwzPa
-         vDF2+G3vWpzq8FbfUpruZSNWV2Nr5Yw4vuEhmyeC4C6qPwjRXq+892caanXthJfzsT5I
-         ofNQi44GhPK9gBRN2TikmfEwn9zuQ1w/6iDiKIn43duVCQJMDlP9fO3qXW6WJBh+w/AR
-         FmItq8OgX7XQln6LAuxWFtzcuITtmn0IsoDUsVwJ3inhv7zLTKjaamm4hsDU2sNgDLTY
-         YTiw==
+        bh=Mh847jTVsdHp5PSiZloNgRx7N4mwQX3rcBfkpvW4srE=;
+        b=eFLqCZiuGRfaBLU9Bc6Fwbef/+flmKn12+thFyVAuuedHCQgVePnQdSSKk8GglBugD
+         2zraL8oGFb9ql5/2EFlb+VpZzyi8yFPD9b5xZFS0FCuItYt2m8MVf+vcfL1b/QmG3t6h
+         Bcbtxm/l4nVyasr6pAX3/Ma2VtP+MH8ZombZRlMYaDrhMp7l6MzAF1jxWnxh2VKDroVr
+         XhPnHgVp3LPhF/Dt9CxwBu8byMYc4LO1C3aDtXPD7u1cYb5FGg+AN/cEZj4pnXxe/sUD
+         phRcEYud0w1O3wwfHDcAgittL6aPn38Ms3JMMo8/cYWEV00AQNJOai8siy0Mq3LxgrWi
+         Xd8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757687288; x=1758292088;
+        d=1e100.net; s=20230601; t=1757686870; x=1758291670;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jnkM+AnZyhps3qygpz2dIT80TKNeLfoU88kbfoaXJwA=;
-        b=dyA5v7uCBaxdfV8/0QbRpuk3WWiuZ2x78m/gCiOcIRPm3XWpMfaGn0tLBIrGzIYMbI
-         IuFVqamaKML53YvwXQkodOwDZa5JYJkkpE2ros5rMk0OkLbWapKpOsgoQvcdiPp30gVY
-         Pn+19wwHpmal1EVnK4fAvGlDQS0zVEQnfnqBzJQuGoKIusNOfU8l6vNmtZsP09KoLtGR
-         7O6jvK4NcMfLA3tN4bxO8x2qOM3kByiUJpH5IYmA77jVNRTbLOjesmXqgWjpS2zmrIZ5
-         gmEpUWSKyvYLgRO1H/o1kcZFUB5l03/M+qnlxuMce1J5AimmbxGrv4MJlUJBz1KxfYkS
-         R1mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWWOKrcGfi4th6geIUGHpRl71vxPyK+c6yNZq4BUTsXO7/6SVRaHQxiYz7XJUtPSmQeXyQLNiVuRAdJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YysngeVKwWGAYzXt03HRre8Bjm+Z4Lscucb2yf1Wd//hGXFX53G
-	VWK0PrQ2vbsnmdk3t4/dD7GjCZQXE+Yj3DbDOvaOeL5et8FOZuMT/Gul
-X-Gm-Gg: ASbGncvmWopPQYmROzIOxo8BfRWKmFfr4ZTtV6c6PVWDHl9FBEzREt6GKxpKwMDYJ68
-	vJCg3qUWv4VE3uUfJJRg+2hTGlBsazI+Pj4A/E/bFP7eKxcj2WnBeA0n6Wq/Nwpiwd53oX2wA39
-	jPMgl+2TOdAvApSpVU9M4y11yhgIFA6slp4D7rW+SpXUxsv1Hwrf4bBI0a5pOTBhbZiYdiwatZJ
-	6RwEV7rDD/z5ppWXvMj9o0ZtmLqfkDTaopQsaUHt3P/2ErCFh7bhiWVQgPIQaqPzfVYG7rYx0rh
-	5I4uLq9zguyd7kaYSvGCUsqnUw0Yck3MCCm1yCoKAWWo9qVKVmiHJOy+0dfqN+lpsWBmywscuWD
-	qV/1eP6Pjsv1shnMD+KjkLQR3WSHikfZlG8CF+TqGlQ==
-X-Google-Smtp-Source: AGHT+IGDvV53/LNE/OpdCCjsAZPEbICrc+wJ2bgnqrFTzigP/wpDBOWh7QRU2BBuWo1pqbgZm/YfGQ==
-X-Received: by 2002:a05:600c:1c19:b0:45d:d259:9a48 with SMTP id 5b1f17b1804b1-45f2128cba7mr31759255e9.9.1757687287618;
-        Fri, 12 Sep 2025 07:28:07 -0700 (PDT)
+        bh=Mh847jTVsdHp5PSiZloNgRx7N4mwQX3rcBfkpvW4srE=;
+        b=NjbxOpsbIyPAyp9vr9epkULA46Wjdq59Z8tjk3z+6bbV6zCD+jIQkgVifWs+S8NA0d
+         H8i1q2+l0Ytc8yARNLJtUkA2S/ThdvVqjBChr4YdUGQmKGEkprIpOa/YUkEpKhfiP/cj
+         vJEjE+jAu49wgwRZbPgaOzBDJLhKMkNktsg8oSg5Oy5WBBst9Y77qy+Rez/ypVGPN5o8
+         XhYoH1BcDkpuqfvqrJhb4J4SBFld9S/03qK22p9qzYc5HAG1pW95DbPCRO5GzBvJmw/0
+         2E5lL+H+sWpohOCNWcVEkPKdofmft1l9M0BnRY8Zk1RVJowqDvvq5dEUHSIaOdMWLldR
+         GyGw==
+X-Forwarded-Encrypted: i=1; AJvYcCXkcM67ZugwNJBcmMpdI9VWC55ZuZIO/apIdTiQovGRAfjpNBAs0aSgiwWmheaTdHS7ShuM+sViSXux@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1fbcYEpEc+iQuAGZbmm3fPscbIGdbmbqli0Fb5uZPKffYBqxx
+	ZU95gDjls/utriw04mJ/w3vK4K/JKVU7OeDarNI43zboYmU1Xg66C+lD
+X-Gm-Gg: ASbGncvjoYrllhsSPjzoYc6qwF8d65BdAsj2bNpq6JpVy8PVjo03PbOw+z0jNip/Tvb
+	O0luuY+/eng1uxTNyNZE3VAJfXZfK6M9VWvLr14uM8tF5uUV3yWEbH6KoCS+nmE7thlwKZ0yyyu
+	ffbYrbfy+5kCTPua+A0R1btNwaLF8E9Ys9x3YOz3lGWaD8Z0ptm/G9HuhW6tryYW65DU+1JZQ6K
+	TZkyBg4eOTvE/7AHi1y8XWicP61uX+O3jLodhADKZxmbasZvTHAIl3J1zJIgqXOTB6Z+z/tJBL2
+	szR2DqcSf3szA1Xhg/4z4KdkOfb/vkWwrgVK6/nOtVxfaCHT7aKr/XQF+ahPOQNnKeH0pAn8yWZ
+	nSECFZY3+3xLKLVK66CCe3KD5gbjq0WjWxn66ru1NgHzzDjS4J2Id
+X-Google-Smtp-Source: AGHT+IEgVeXeyJbbLWzjxvD2c17xr/vxYAjjhHQO52g1Vm4B1ScelvqGjTFjTPOjVLrbuAtUqgjPzg==
+X-Received: by 2002:a05:600c:4453:b0:45d:d356:c358 with SMTP id 5b1f17b1804b1-45f211db372mr39596505e9.16.1757686870181;
+        Fri, 12 Sep 2025 07:21:10 -0700 (PDT)
 Received: from [192.168.2.177] ([91.116.220.47])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45e017b27b6sm67769045e9.16.2025.09.12.07.27.55
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e760787080sm6943265f8f.20.2025.09.12.07.21.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Sep 2025 07:28:06 -0700 (PDT)
-Message-ID: <3de4b03d-4940-4d96-bf20-5bb45f1cc5a5@gmail.com>
-Date: Fri, 12 Sep 2025 16:13:54 +0200
+        Fri, 12 Sep 2025 07:21:09 -0700 (PDT)
+Message-ID: <cbbdf567-7039-40cd-8e76-5e0d05354af1@gmail.com>
+Date: Fri, 12 Sep 2025 16:18:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,8 +83,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 26/38] arm64: dts: mediatek: acelink-ew-7886cax: Remove
- unnecessary cells in spi-nand
+Subject: Re: [PATCH 29/38] arm64: dts: mediatek: mt8183: Fix pinctrl node
+ names
 To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
  linux-mediatek@lists.infradead.org, robh@kernel.org
 Cc: herbert@gondor.apana.org.au, davem@davemloft.net, krzk+dt@kernel.org,
@@ -108,7 +108,7 @@ Cc: herbert@gondor.apana.org.au, davem@davemloft.net, krzk+dt@kernel.org,
  linux-gpio@vger.kernel.org, linux-remoteproc@vger.kernel.org,
  linux-sound@vger.kernel.org
 References: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com>
- <20250724083914.61351-27-angelogioacchino.delregno@collabora.com>
+ <20250724083914.61351-30-angelogioacchino.delregno@collabora.com>
 Content-Language: en-US, ca-ES, es-ES
 From: Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; keydata=
@@ -154,40 +154,582 @@ Autocrypt: addr=matthias.bgg@gmail.com; keydata=
  +zFJv9fVUpo/bjePOL4PMP1y+PYrp4PmPmRwoklBpy1ep8m8XURv46fGUHUEIsTwPWs2Q87k
  7vjYyrcyAOarX2X5pvMQvpAMADGf2Z3wrCsDdG25w2HztweUNd9QEprtJG8GNNzMOD4cQ82T
  a7eGvPWPeXauWJDLVR9jHtWT9Ot3BQgmApLxACvwvD1a69jaFKov28SPHxUCQ9Y1Y/Ct
-In-Reply-To: <20250724083914.61351-27-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250724083914.61351-30-angelogioacchino.delregno@collabora.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
 On 24/07/2025 10:39, AngeloGioacchino Del Regno wrote:
-> There is no need to specify #address-cells and #size-cells in a
-> node that has only one non-addressable subnode, and this is the
-> case of the flash@0 node in this devicetree, as it has only one
-> "partitions" subnode.
-> 
-> Remove those to suppress an avoid_unnecessary_addr_size warning.
+> Fix the pinctrl node names to adhere to the bindings, as the main
+> pin node is supposed to be named like "uart0-pins" and the pinmux
+> node named like "pins-bus".
 > 
 > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
 Applied, thanks
 
 > ---
->   arch/arm64/boot/dts/mediatek/mt7986a-acelink-ew-7886cax.dts | 2 --
->   1 file changed, 2 deletions(-)
+>   .../mediatek/mt8183-kukui-audio-da7219.dtsi   |  4 +-
+>   .../mediatek/mt8183-kukui-audio-ts3a227e.dtsi |  2 +-
+>   .../dts/mediatek/mt8183-kukui-jacuzzi.dtsi    | 22 +++---
+>   .../dts/mediatek/mt8183-kukui-kakadu.dtsi     | 16 ++--
+>   .../dts/mediatek/mt8183-kukui-kodama.dtsi     | 12 +--
+>   .../boot/dts/mediatek/mt8183-kukui-krane.dtsi | 12 +--
+>   .../arm64/boot/dts/mediatek/mt8183-kukui.dtsi | 78 +++++++++----------
+>   7 files changed, 73 insertions(+), 73 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-acelink-ew-7886cax.dts b/arch/arm64/boot/dts/mediatek/mt7986a-acelink-ew-7886cax.dts
-> index 08b3b0827436..30805a610262 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt7986a-acelink-ew-7886cax.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt7986a-acelink-ew-7886cax.dts
-> @@ -98,8 +98,6 @@ &spi0 {
->   	flash@0 {
->   		compatible = "spi-nand";
->   		reg = <0>;
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
->   		spi-max-frequency = <52000000>;
->   		spi-rx-bus-width = <4>;
->   		spi-tx-bus-width = <4>;
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-audio-da7219.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-audio-da7219.dtsi
+> index 586eee79c73c..f69ffcb9792a 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-audio-da7219.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-audio-da7219.dtsi
+> @@ -39,8 +39,8 @@ da7219_aad {
+>   };
+>   
+>   &pio {
+> -	da7219_pins: da7219_pins {
+> -		pins1 {
+> +	da7219_pins: da7219-pins {
+> +		pins-intn {
+>   			pinmux = <PINMUX_GPIO165__FUNC_GPIO165>;
+>   			input-enable;
+>   			bias-pull-up;
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-audio-ts3a227e.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-audio-ts3a227e.dtsi
+> index 548e22c194a2..c4aedf8cbfcd 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-audio-ts3a227e.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-audio-ts3a227e.dtsi
+> @@ -17,7 +17,7 @@ ts3a227e: ts3a227e@3b {
+>   };
+>   
+>   &pio {
+> -	ts3a227e_pins: ts3a227e_pins {
+> +	ts3a227e_pins: ts3a227e-pins {
+>   		pins1 {
+>   			pinmux = <PINMUX_GPIO157__FUNC_GPIO157>;
+>   			input-enable;
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi
+> index 80888bd4ad82..f2afca63c75a 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi
+> @@ -395,14 +395,14 @@ &pio {
+>   		"",
+>   		"";
+>   
+> -	pp1000_mipibrdg_en: pp1000-mipibrdg-en {
+> +	pp1000_mipibrdg_en: pp1000-mipibrdg-en-pins {
+>   		pins1 {
+>   			pinmux = <PINMUX_GPIO54__FUNC_GPIO54>;
+>   			output-low;
+>   		};
+>   	};
+>   
+> -	pp1800_mipibrdg_en: pp1800-mipibrdg-en {
+> +	pp1800_mipibrdg_en: pp1800-mipibrdg-en-pins {
+>   		pins1 {
+>   			pinmux = <PINMUX_GPIO36__FUNC_GPIO36>;
+>   			output-low;
+> @@ -410,20 +410,20 @@ pins1 {
+>   	};
+>   
+>   	pp3300_panel_pins: pp3300-panel-pins {
+> -		panel_3v3_enable: panel-3v3-enable {
+> +		panel_3v3_enable: pins-panel-en {
+>   			pinmux = <PINMUX_GPIO35__FUNC_GPIO35>;
+>   			output-low;
+>   		};
+>   	};
+>   
+> -	ppvarp_lcd_en: ppvarp-lcd-en {
+> +	ppvarp_lcd_en: ppvarp-lcd-en-pins {
+>   		pins1 {
+>   			pinmux = <PINMUX_GPIO66__FUNC_GPIO66>;
+>   			output-low;
+>   		};
+>   	};
+>   
+> -	ppvarn_lcd_en: ppvarn-lcd-en {
+> +	ppvarn_lcd_en: ppvarn-lcd-en-pins {
+>   		pins1 {
+>   			pinmux = <PINMUX_GPIO166__FUNC_GPIO166>;
+>   			output-low;
+> @@ -444,27 +444,27 @@ pins2 {
+>   	};
+>   
+>   	touchscreen_pins: touchscreen-pins {
+> -		touch-int-odl {
+> +		pins-intn {
+>   			pinmux = <PINMUX_GPIO155__FUNC_GPIO155>;
+>   			input-enable;
+>   			bias-pull-up;
+>   		};
+>   
+> -		touch-rst-l {
+> +		pins-rst {
+>   			pinmux = <PINMUX_GPIO156__FUNC_GPIO156>;
+>   			output-high;
+>   		};
+>   	};
+>   
+>   	trackpad_pins: trackpad-pins {
+> -		trackpad-int {
+> +		pins-intn {
+>   			pinmux = <PINMUX_GPIO7__FUNC_GPIO7>;
+>   			input-enable;
+>   			bias-disable; /* pulled externally */
+>   		};
+>   	};
+>   
+> -	pp3300_mipibrdg_en: pp3300-mipibrdg-en {
+> +	pp3300_mipibrdg_en: pp3300-mipibrdg-en-pins {
+>   		pins1 {
+>   			pinmux = <PINMUX_GPIO37__FUNC_GPIO37>;
+>   			output-low;
+> @@ -472,13 +472,13 @@ pins1 {
+>   	};
+>   
+>   	volume_button_pins: volume-button-pins {
+> -		voldn-btn-odl {
+> +		pins-voldn {
+>   			pinmux = <PINMUX_GPIO6__FUNC_GPIO6>;
+>   			input-enable;
+>   			bias-pull-up;
+>   		};
+>   
+> -		volup-btn-odl {
+> +		pins-volup {
+>   			pinmux = <PINMUX_GPIO5__FUNC_GPIO5>;
+>   			input-enable;
+>   			bias-pull-up;
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi
+> index ff02f63bac29..472d4987615a 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi
+> @@ -304,35 +304,35 @@ &pio {
+>   		"",
+>   		"";
+>   
+> -	ppvarp_lcd_en: ppvarp-lcd-en {
+> +	ppvarp_lcd_en: ppvarp-lcd-en-pins {
+>   		pins1 {
+>   			pinmux = <PINMUX_GPIO66__FUNC_GPIO66>;
+>   			output-low;
+>   		};
+>   	};
+>   
+> -	ppvarn_lcd_en: ppvarn-lcd-en {
+> +	ppvarn_lcd_en: ppvarn-lcd-en-pins {
+>   		pins1 {
+>   			pinmux = <PINMUX_GPIO166__FUNC_GPIO166>;
+>   			output-low;
+>   		};
+>   	};
+>   
+> -	pp1800_lcd_en: pp1800-lcd-en {
+> +	pp1800_lcd_en: pp1800-lcd-en-pins {
+>   		pins1 {
+>   			pinmux = <PINMUX_GPIO36__FUNC_GPIO36>;
+>   			output-low;
+>   		};
+>   	};
+>   
+> -	open_touch: open_touch {
+> -		irq_pin {
+> +	open_touch: opentouch-pins {
+> +		pins-intn {
+>   			pinmux = <PINMUX_GPIO155__FUNC_GPIO155>;
+>   			input-enable;
+>   			bias-pull-up;
+>   		};
+>   
+> -		rst_pin {
+> +		pins-rst {
+>   			pinmux = <PINMUX_GPIO156__FUNC_GPIO156>;
+>   
+>   			/*
+> @@ -349,8 +349,8 @@ rst_pin {
+>   		};
+>   	};
+>   
+> -	pen_eject: peneject {
+> -		pen_eject {
+> +	pen_eject: pen-pins {
+> +		pins-eject {
+>   			pinmux = <PINMUX_GPIO6__FUNC_GPIO6>;
+>   			input-enable;
+>   			/* External pull-up. */
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi
+> index da6e767b4cee..1b21e3958061 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi
+> @@ -292,35 +292,35 @@ &pio {
+>   		"",
+>   		"";
+>   
+> -	ppvarp_lcd_en: ppvarp-lcd-en {
+> +	ppvarp_lcd_en: ppvarp-lcd-en-pins {
+>   		pins1 {
+>   			pinmux = <PINMUX_GPIO66__FUNC_GPIO66>;
+>   			output-low;
+>   		};
+>   	};
+>   
+> -	ppvarn_lcd_en: ppvarn-lcd-en {
+> +	ppvarn_lcd_en: ppvarn-lcd-en-pins {
+>   		pins1 {
+>   			pinmux = <PINMUX_GPIO166__FUNC_GPIO166>;
+>   			output-low;
+>   		};
+>   	};
+>   
+> -	pp1800_lcd_en: pp1800-lcd-en {
+> +	pp1800_lcd_en: pp1800-lcd-en-pins {
+>   		pins1 {
+>   			pinmux = <PINMUX_GPIO36__FUNC_GPIO36>;
+>   			output-low;
+>   		};
+>   	};
+>   
+> -	touch_default: touchdefault {
+> -		pin_irq {
+> +	touch_default: touch-pins {
+> +		pins-intn {
+>   			pinmux = <PINMUX_GPIO155__FUNC_GPIO155>;
+>   			input-enable;
+>   			bias-pull-up;
+>   		};
+>   
+> -		touch_pin_reset: pin_reset {
+> +		touch_pin_reset: pins-rst {
+>   			pinmux = <PINMUX_GPIO156__FUNC_GPIO156>;
+>   
+>   			/*
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
+> index 8b56b8564ed7..a85c73b43195 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
+> @@ -296,35 +296,35 @@ &pio {
+>   		"",
+>   		"";
+>   
+> -	ppvarp_lcd_en: ppvarp-lcd-en {
+> +	ppvarp_lcd_en: ppvarp-lcd-en-pins {
+>   		pins1 {
+>   			pinmux = <PINMUX_GPIO66__FUNC_GPIO66>;
+>   			output-low;
+>   		};
+>   	};
+>   
+> -	ppvarn_lcd_en: ppvarn-lcd-en {
+> +	ppvarn_lcd_en: ppvarn-lcd-en-pins {
+>   		pins1 {
+>   			pinmux = <PINMUX_GPIO166__FUNC_GPIO166>;
+>   			output-low;
+>   		};
+>   	};
+>   
+> -	pp1800_lcd_en: pp1800-lcd-en {
+> +	pp1800_lcd_en: pp1800-lcd-en-pins {
+>   		pins1 {
+>   			pinmux = <PINMUX_GPIO36__FUNC_GPIO36>;
+>   			output-low;
+>   		};
+>   	};
+>   
+> -	open_touch: open_touch {
+> -		irq_pin {
+> +	open_touch: opentouch-pins {
+> +		pins-intn {
+>   			pinmux = <PINMUX_GPIO155__FUNC_GPIO155>;
+>   			input-enable;
+>   			bias-pull-up;
+>   		};
+>   
+> -		rst_pin {
+> +		pins-rst {
+>   			pinmux = <PINMUX_GPIO156__FUNC_GPIO156>;
+>   
+>   			/*
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+> index 400c61d11035..8f3a0e85b4ed 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+> @@ -435,7 +435,7 @@ &mt6358_vsram_gpu_reg {
+>   };
+>   
+>   &pio {
+> -	aud_pins_default: audiopins {
+> +	aud_pins_default: audio-pins {
+>   		pins-bus {
+>   			pinmux = <PINMUX_GPIO97__FUNC_I2S2_MCK>,
+>   				<PINMUX_GPIO98__FUNC_I2S2_BCK>,
+> @@ -457,7 +457,7 @@ pins-bus {
+>   		};
+>   	};
+>   
+> -	aud_pins_tdm_out_on: audiotdmouton {
+> +	aud_pins_tdm_out_on: audio-tdmout-on-pins {
+>   		pins-bus {
+>   			pinmux = <PINMUX_GPIO169__FUNC_TDM_BCK_2ND>,
+>   				<PINMUX_GPIO170__FUNC_TDM_LRCK_2ND>,
+> @@ -469,7 +469,7 @@ pins-bus {
+>   		};
+>   	};
+>   
+> -	aud_pins_tdm_out_off: audiotdmoutoff {
+> +	aud_pins_tdm_out_off: audio-tdmout-off-pins {
+>   		pins-bus {
+>   			pinmux = <PINMUX_GPIO169__FUNC_GPIO169>,
+>   				<PINMUX_GPIO170__FUNC_GPIO170>,
+> @@ -490,22 +490,22 @@ pins-bt-en {
+>   		};
+>   	};
+>   
+> -	ec_ap_int_odl: ec-ap-int-odl {
+> -		pins1 {
+> +	ec_ap_int_odl: ec-ap-int-odl-pins {
+> +		pins-intn {
+>   			pinmux = <PINMUX_GPIO151__FUNC_GPIO151>;
+>   			input-enable;
+>   			bias-pull-up;
+>   		};
+>   	};
+>   
+> -	h1_int_od_l: h1-int-od-l {
+> -		pins1 {
+> +	h1_int_od_l: h1-int-od-l-pins {
+> +		pins-intn {
+>   			pinmux = <PINMUX_GPIO153__FUNC_GPIO153>;
+>   			input-enable;
+>   		};
+>   	};
+>   
+> -	i2c0_pins: i2c0 {
+> +	i2c0_pins: i2c0-pins {
+>   		pins-bus {
+>   			pinmux = <PINMUX_GPIO82__FUNC_SDA0>,
+>   				 <PINMUX_GPIO83__FUNC_SCL0>;
+> @@ -513,7 +513,7 @@ pins-bus {
+>   		};
+>   	};
+>   
+> -	i2c1_pins: i2c1 {
+> +	i2c1_pins: i2c1-pins {
+>   		pins-bus {
+>   			pinmux = <PINMUX_GPIO81__FUNC_SDA1>,
+>   				 <PINMUX_GPIO84__FUNC_SCL1>;
+> @@ -521,7 +521,7 @@ pins-bus {
+>   		};
+>   	};
+>   
+> -	i2c2_pins: i2c2 {
+> +	i2c2_pins: i2c2-pins {
+>   		pins-bus {
+>   			pinmux = <PINMUX_GPIO103__FUNC_SCL2>,
+>   				 <PINMUX_GPIO104__FUNC_SDA2>;
+> @@ -529,7 +529,7 @@ pins-bus {
+>   		};
+>   	};
+>   
+> -	i2c3_pins: i2c3 {
+> +	i2c3_pins: i2c3-pins {
+>   		pins-bus {
+>   			pinmux = <PINMUX_GPIO50__FUNC_SCL3>,
+>   				 <PINMUX_GPIO51__FUNC_SDA3>;
+> @@ -537,7 +537,7 @@ pins-bus {
+>   		};
+>   	};
+>   
+> -	i2c4_pins: i2c4 {
+> +	i2c4_pins: i2c4-pins {
+>   		pins-bus {
+>   			pinmux = <PINMUX_GPIO105__FUNC_SCL4>,
+>   				 <PINMUX_GPIO106__FUNC_SDA4>;
+> @@ -545,7 +545,7 @@ pins-bus {
+>   		};
+>   	};
+>   
+> -	i2c5_pins: i2c5 {
+> +	i2c5_pins: i2c5-pins {
+>   		pins-bus {
+>   			pinmux = <PINMUX_GPIO48__FUNC_SCL5>,
+>   				 <PINMUX_GPIO49__FUNC_SDA5>;
+> @@ -553,7 +553,7 @@ pins-bus {
+>   		};
+>   	};
+>   
+> -	i2c6_pins: i2c6 {
+> +	i2c6_pins: i2c6-pins {
+>   		pins-bus {
+>   			pinmux = <PINMUX_GPIO11__FUNC_SCL6>,
+>   				 <PINMUX_GPIO12__FUNC_SDA6>;
+> @@ -561,7 +561,7 @@ pins-bus {
+>   		};
+>   	};
+>   
+> -	mmc0_pins_default: mmc0-pins-default {
+> +	mmc0_pins_default: mmc0-default-pins {
+>   		pins-cmd-dat {
+>   			pinmux = <PINMUX_GPIO123__FUNC_MSDC0_DAT0>,
+>   				 <PINMUX_GPIO128__FUNC_MSDC0_DAT1>,
+> @@ -625,7 +625,7 @@ pins-rst {
+>   		};
+>   	};
+>   
+> -	mmc1_pins_default: mmc1-pins-default {
+> +	mmc1_pins_default: mmc1-default-pins {
+>   		pins-cmd-dat {
+>   			pinmux = <PINMUX_GPIO31__FUNC_MSDC1_CMD>,
+>   				 <PINMUX_GPIO32__FUNC_MSDC1_DAT0>,
+> @@ -643,7 +643,7 @@ pins-clk {
+>   		};
+>   	};
+>   
+> -	mmc1_pins_uhs: mmc1-pins-uhs {
+> +	mmc1_pins_uhs: mmc1-uhs-pins {
+>   		pins-cmd-dat {
+>   			pinmux = <PINMUX_GPIO31__FUNC_MSDC1_CMD>,
+>   				 <PINMUX_GPIO32__FUNC_MSDC1_DAT0>,
+> @@ -663,15 +663,15 @@ pins-clk {
+>   		};
+>   	};
+>   
+> -	panel_pins_default: panel-pins-default {
+> -		panel-reset {
+> +	panel_pins_default: panel-pins {
+> +		pins-panel-reset {
+>   			pinmux = <PINMUX_GPIO45__FUNC_GPIO45>;
+>   			output-low;
+>   			bias-pull-up;
+>   		};
+>   	};
+>   
+> -	pwm0_pin_default: pwm0-pin-default {
+> +	pwm0_pin_default: pwm0-pins {
+>   		pins1 {
+>   			pinmux = <PINMUX_GPIO176__FUNC_GPIO176>;
+>   			output-high;
+> @@ -682,15 +682,15 @@ pins2 {
+>   		};
+>   	};
+>   
+> -	scp_pins: scp {
+> +	scp_pins: scp-pins {
+>   		pins-scp-uart {
+>   			pinmux = <PINMUX_GPIO110__FUNC_TP_URXD1_AO>,
+>   				 <PINMUX_GPIO112__FUNC_TP_UTXD1_AO>;
+>   		};
+>   	};
+>   
+> -	spi0_pins: spi0 {
+> -		pins-spi {
+> +	spi0_pins: spi0-pins {
+> +		pins-bus {
+>   			pinmux = <PINMUX_GPIO85__FUNC_SPI0_MI>,
+>   				 <PINMUX_GPIO86__FUNC_GPIO86>,
+>   				 <PINMUX_GPIO87__FUNC_SPI0_MO>,
+> @@ -699,8 +699,8 @@ pins-spi {
+>   		};
+>   	};
+>   
+> -	spi1_pins: spi1 {
+> -		pins-spi {
+> +	spi1_pins: spi1-pins {
+> +		pins-bus {
+>   			pinmux = <PINMUX_GPIO161__FUNC_SPI1_A_MI>,
+>   				 <PINMUX_GPIO162__FUNC_SPI1_A_CSB>,
+>   				 <PINMUX_GPIO163__FUNC_SPI1_A_MO>,
+> @@ -709,21 +709,21 @@ pins-spi {
+>   		};
+>   	};
+>   
+> -	spi2_pins: spi2 {
+> -		pins-spi {
+> +	spi2_pins: spi2-pins {
+> +		pins-bus {
+>   			pinmux = <PINMUX_GPIO0__FUNC_SPI2_CSB>,
+>   				 <PINMUX_GPIO1__FUNC_SPI2_MO>,
+>   				 <PINMUX_GPIO2__FUNC_SPI2_CLK>;
+>   			bias-disable;
+>   		};
+> -		pins-spi-mi {
+> +		pins-miso {
+>   			pinmux = <PINMUX_GPIO94__FUNC_SPI2_MI>;
+>   			mediatek,pull-down-adv = <00>;
+>   		};
+>   	};
+>   
+> -	spi3_pins: spi3 {
+> -		pins-spi {
+> +	spi3_pins: spi3-pins {
+> +		pins-bus {
+>   			pinmux = <PINMUX_GPIO21__FUNC_SPI3_MI>,
+>   				 <PINMUX_GPIO22__FUNC_SPI3_CSB>,
+>   				 <PINMUX_GPIO23__FUNC_SPI3_MO>,
+> @@ -732,8 +732,8 @@ pins-spi {
+>   		};
+>   	};
+>   
+> -	spi4_pins: spi4 {
+> -		pins-spi {
+> +	spi4_pins: spi4-pins {
+> +		pins-bus {
+>   			pinmux = <PINMUX_GPIO17__FUNC_SPI4_MI>,
+>   				 <PINMUX_GPIO18__FUNC_SPI4_CSB>,
+>   				 <PINMUX_GPIO19__FUNC_SPI4_MO>,
+> @@ -742,8 +742,8 @@ pins-spi {
+>   		};
+>   	};
+>   
+> -	spi5_pins: spi5 {
+> -		pins-spi {
+> +	spi5_pins: spi5-pins {
+> +		pins-bus {
+>   			pinmux = <PINMUX_GPIO13__FUNC_SPI5_MI>,
+>   				 <PINMUX_GPIO14__FUNC_SPI5_CSB>,
+>   				 <PINMUX_GPIO15__FUNC_SPI5_MO>,
+> @@ -752,7 +752,7 @@ pins-spi {
+>   		};
+>   	};
+>   
+> -	uart0_pins_default: uart0-pins-default {
+> +	uart0_pins_default: uart0-pins {
+>   		pins-rx {
+>   			pinmux = <PINMUX_GPIO95__FUNC_URXD0>;
+>   			input-enable;
+> @@ -763,7 +763,7 @@ pins-tx {
+>   		};
+>   	};
+>   
+> -	uart1_pins_default: uart1-pins-default {
+> +	uart1_pins_default: uart1-pins {
+>   		pins-rx {
+>   			pinmux = <PINMUX_GPIO121__FUNC_URXD1>;
+>   			input-enable;
+> @@ -781,7 +781,7 @@ pins-cts {
+>   		};
+>   	};
+>   
+> -	uart1_pins_sleep: uart1-pins-sleep {
+> +	uart1_pins_sleep: uart1-sleep-pins {
+>   		pins-rx {
+>   			pinmux = <PINMUX_GPIO121__FUNC_GPIO121>;
+>   			input-enable;
+> @@ -799,14 +799,14 @@ pins-cts {
+>   		};
+>   	};
+>   
+> -	wifi_pins_pwrseq: wifi-pins-pwrseq {
+> +	wifi_pins_pwrseq: wifi-pwr-pins {
+>   		pins-wifi-enable {
+>   			pinmux = <PINMUX_GPIO119__FUNC_GPIO119>;
+>   			output-low;
+>   		};
+>   	};
+>   
+> -	wifi_pins_wakeup: wifi-pins-wakeup {
+> +	wifi_pins_wakeup: wifi-wake-pins {
+>   		pins-wifi-wakeup {
+>   			pinmux = <PINMUX_GPIO113__FUNC_GPIO113>;
+>   			input-enable;
 
 
