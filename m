@@ -1,110 +1,376 @@
-Return-Path: <linux-gpio+bounces-25997-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-25998-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43857B542A9
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 08:19:42 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE2A7B542D2
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 08:24:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EC56C3BE480
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 06:19:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B55977BCABB
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 06:22:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E87C27FB2D;
-	Fri, 12 Sep 2025 06:19:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54723285412;
+	Fri, 12 Sep 2025 06:24:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TAfBsjAS"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="eAE+Tka1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC5F134BD;
-	Fri, 12 Sep 2025 06:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CBF1DF270;
+	Fri, 12 Sep 2025 06:24:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757657975; cv=none; b=X7pYdzTJOpdaWp2TbcJS6Nkyj24dzj893fNKUzf4mZnkSIHtBJKnFJxcgQbGm/jJhiouxHvz7m/+kuls99BtBlwt4HcwDSPkchsscIn/3sfnto8Mn5zWvG8c6iO7eco5gcWd8aCaSGGc/GyoyfdotE9X0CWJ6AnL1zvBcF3C93g=
+	t=1757658253; cv=none; b=H0+PHEwYINLiKKum9v+AA1r+J0X4tb7AHMobiLRcx7a7FTlngCvwFUU1CUILg39fnIAQ2kel2Ofn9hf+nbpq6zJWrl2prO2PV3MevEhwOoNgjvuu8dkaOnubvwa6tN0kQ9+RlWw6Wufkmv1UnDrtBHVNQO/lLWU5Bdk735qS6LI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757657975; c=relaxed/simple;
-	bh=o8hk3zQNATXcYNezfLWUb6kcglAXSeb1kRjCzbDhJIw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YzgtSpF6mXwH7jDAD0UqGaW4ZaBURKsxuu4G0cKnTfdcHrUTsyR7kP0VkgByDFvoYyoSaetRZQXv7ZELQvPeFo1jEMDbOyxe34CD8LU4fszuk7WG64CWy/fUc+P7FmVOExaLT00SGdPUUOYH6Y+MTzdayE9Nxs4l92uAz5Mvqug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TAfBsjAS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1432C4CEF4;
-	Fri, 12 Sep 2025 06:19:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757657974;
-	bh=o8hk3zQNATXcYNezfLWUb6kcglAXSeb1kRjCzbDhJIw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TAfBsjASg0j47G0aj71WpPiHwEzVjLh8frxE9MTlUre9o4kgdD0AT9C2l8NxGKnp8
-	 7IFEcYbPKl8ue4IGOaLDKbEJWbquIJXUUac3GR9E8dEo3Jh7cz5KyP8qh3mPDlVArz
-	 meCJadPxluLfi2gaQmclFasUpdycrQpAxtv6mRtBuVlbMKoWoMt6LIpZ7jlivjF0dg
-	 SBAPM4eomEn87Qqye6+Q6x4eBzcUHZ4H1iHg9AmOB6gpsAuvBFvm28piizL42FE7pD
-	 /GR042vD8YIz4ZS/9nvYqbhp9jXT7LOUgXCQDvL0U4FZWriZxiFMJkIGihya5dMtB1
-	 KwwnUs4bBEHfQ==
-Date: Fri, 12 Sep 2025 08:19:32 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
-Cc: airlied@gmail.com, amergnat@baylibre.com, andrew+netdev@lunn.ch, 
-	andrew-ct.chen@mediatek.com, angelogioacchino.delregno@collabora.com, broonie@kernel.org, 
-	chunkuang.hu@kernel.org, conor+dt@kernel.org, davem@davemloft.net, 
-	dmitry.torokhov@gmail.com, edumazet@google.com, flora.fu@mediatek.com, heiko@sntech.de, 
-	houlong.wei@mediatek.com, jeesw@melfas.com, kernel@collabora.com, krzk+dt@kernel.org, 
-	kuba@kernel.org, lgirdwood@gmail.com, linus.walleij@linaro.org, 
-	louisalexis.eyraud@collabora.com, luiz.dentz@gmail.com, maarten.lankhorst@linux.intel.com, 
-	marcel@holtmann.org, matthias.bgg@gmail.com, mchehab@kernel.org, 
-	minghsiu.tsai@mediatek.com, mripard@kernel.org, p.zabel@pengutronix.de, pabeni@redhat.com, 
-	robh@kernel.org, sean.wang@kernel.org, simona@ffwll.ch, 
-	support.opensource@diasemi.com, tiffany.lin@mediatek.com, tzimmermann@suse.de, 
-	yunfei.dong@mediatek.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-arm-kernel@lists.infradead.org, linux-bluetooth@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-sound@vger.kernel.org, 
-	netdev@vger.kernel.org
-Subject: Re: [PATCH v2 06/12] dt-bindings: display: mediatek,ufoe: Add
- mediatek,gce-client-reg property
-Message-ID: <20250912-innocent-polite-cricket-05dbd8@kuoka>
-References: <20250911151001.108744-1-ariel.dalessandro@collabora.com>
- <20250911151001.108744-7-ariel.dalessandro@collabora.com>
+	s=arc-20240116; t=1757658253; c=relaxed/simple;
+	bh=7ifweptQB82L2fvWYkjraRwW321Ua213iGlPWa7zjsk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Subject:Cc:From:
+	 References:In-Reply-To; b=LWmFyZIBuZhoZ/VmZJoyAg+kr2T2OhCxAHNwe8+dDXc6ZXUsft7o4ioS5MhdM9humAoLdddSENuuN8vkyqFwyLpo+FbR2HKmhQtqzS2FJ5jNpywJBqP/SNYt7+DLKhye7tPaqwz0De4vXuHhhzYrd5Dtv0y5c/VYp8opjQDmHFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=eAE+Tka1; arc=none smtp.client-ip=185.171.202.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 665D5C8EC43;
+	Fri, 12 Sep 2025 06:23:51 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 46F0360638;
+	Fri, 12 Sep 2025 06:24:07 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 03705102F29D8;
+	Fri, 12 Sep 2025 08:23:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1757658246; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=5owq+y5TmSlW6EKLN0YJ4cOpLUP+7KPBn1QVcPQ/Stk=;
+	b=eAE+Tka1pUnbJaGLXfPStw22RvgK+i0hE2uVw8hJmvOMgHK6PyfcfvBoDZTSwBM0NePU0J
+	ExVmezdkjPIst+QZFPuYArE+X4rRcXwjtkGIxMHXy5FY45dzGr3Wa9QFGzx80cwGQ3IQlY
+	hMY4y+Zyd3CDUlW2o2crO8dDTZGnucoTCtRSvf4WWmxfN2PWSu0YDQvthgHxy+PzvCxBD9
+	04n/wTMnnuuGvnxi554ibnlKZI79PtMwYh7wMS6TdkTAb2+Su94bcyaIpKakPZk2vgi6R/
+	nyUMJ9Z9iHi/9t42mkdlNvz7duzjwC3hsHeghArI2edfVrkQhAANYyBCCUr00g==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250911151001.108744-7-ariel.dalessandro@collabora.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 12 Sep 2025 08:23:48 +0200
+Message-Id: <DCQLUB80GU6Y.18U540Q0R3YFP@bootlin.com>
+To: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
+ <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>
+Subject: Re: [PATCH v14 04/10] pwm: max7360: Add MAX7360 PWM support
+Cc: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>, "Andy Shevchenko"
+ <andriy.shevchenko@linux.intel.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250824-mdb-max7360-support-v14-0-435cfda2b1ea@bootlin.com>
+ <20250824-mdb-max7360-support-v14-4-435cfda2b1ea@bootlin.com>
+In-Reply-To: <20250824-mdb-max7360-support-v14-4-435cfda2b1ea@bootlin.com>
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Thu, Sep 11, 2025 at 12:09:55PM -0300, Ariel D'Alessandro wrote:
-> Currently, users of Mediatek UFOe (Unified Frame Optimization engine) DT
-> bindings set mediatek,gce-client-reg node property, which is missing from
-> the DT schema.
-> 
-> For example, device tree arch/arm64/boot/dts/mediatek/mt8173.dtsi is
-> causing the following dtb check error:
-> 
-> ```
-> $ make CHECK_DTBS=y mediatek/mt8173-elm.dtb
->    SCHEMA  Documentation/devicetree/bindings/processed-schema.json
->    DTC [C] arch/arm64/boot/dts/mediatek/mt8173-elm.dtb
-> [...]
+On Sun Aug 24, 2025 at 1:57 PM CEST, Mathieu Dubois-Briand wrote:
+> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+>
+> Add driver for Maxim Integrated MAX7360 PWM controller, supporting up to
+> 8 independent PWM outputs.
+>
+> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> Co-developed-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com=
+>
+> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/pwm/Kconfig       |  10 +++
+>  drivers/pwm/Makefile      |   1 +
+>  drivers/pwm/pwm-max7360.c | 209 ++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 220 insertions(+)
+>
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index f00ce973dddf..f2b1ce47de7f 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -432,6 +432,16 @@ config PWM_LPSS_PLATFORM
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-lpss-platform.
+> =20
+> +config PWM_MAX7360
+> +	tristate "MAX7360 PWMs"
+> +	depends on MFD_MAX7360
+> +	help
+> +	  PWM driver for Maxim Integrated MAX7360 multifunction device, with
+> +	  support for up to 8 PWM outputs.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-max7360.
+> +
+>  config PWM_MC33XS2410
+>  	tristate "MC33XS2410 PWM support"
+>  	depends on OF
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index ff4f47e5fb7a..dfa8b4966ee1 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -38,6 +38,7 @@ obj-$(CONFIG_PWM_LPC32XX)	+=3D pwm-lpc32xx.o
+>  obj-$(CONFIG_PWM_LPSS)		+=3D pwm-lpss.o
+>  obj-$(CONFIG_PWM_LPSS_PCI)	+=3D pwm-lpss-pci.o
+>  obj-$(CONFIG_PWM_LPSS_PLATFORM)	+=3D pwm-lpss-platform.o
+> +obj-$(CONFIG_PWM_MAX7360)	+=3D pwm-max7360.o
+>  obj-$(CONFIG_PWM_MC33XS2410)	+=3D pwm-mc33xs2410.o
+>  obj-$(CONFIG_PWM_MEDIATEK)	+=3D pwm-mediatek.o
+>  obj-$(CONFIG_PWM_MESON)		+=3D pwm-meson.o
+> diff --git a/drivers/pwm/pwm-max7360.c b/drivers/pwm/pwm-max7360.c
+> new file mode 100644
+> index 000000000000..ebf93a7aee5b
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-max7360.c
+> @@ -0,0 +1,209 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright 2025 Bootlin
+> + *
+> + * Author: Kamel BOUHARA <kamel.bouhara@bootlin.com>
+> + * Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+> + *
+> + * PWM functionality of the MAX7360 multi-function device.
+> + * https://www.analog.com/media/en/technical-documentation/data-sheets/M=
+AX7360.pdf
+> + *
+> + * Limitations:
+> + * - Only supports normal polarity.
+> + * - The period is fixed to 2 ms.
+> + * - Only the duty cycle can be changed, new values are applied at the b=
+eginning
+> + *   of the next cycle.
+> + * - When disabled, the output is put in Hi-Z immediately.
+> + */
+> +#include <linux/bits.h>
+> +#include <linux/dev_printk.h>
+> +#include <linux/err.h>
+> +#include <linux/math64.h>
+> +#include <linux/mfd/max7360.h>
+> +#include <linux/minmax.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/regmap.h>
+> +#include <linux/time.h>
+> +#include <linux/types.h>
+> +
+> +#define MAX7360_NUM_PWMS			8
+> +#define MAX7360_PWM_MAX				255
+> +#define MAX7360_PWM_STEPS			256
+> +#define MAX7360_PWM_PERIOD_NS			(2 * NSEC_PER_MSEC)
+> +
+> +struct max7360_pwm_waveform {
+> +	u8 duty_steps;
+> +	bool enabled;
+> +};
+> +
+> +static int max7360_pwm_request(struct pwm_chip *chip, struct pwm_device =
+*pwm)
+> +{
+> +	struct regmap *regmap =3D pwmchip_get_drvdata(chip);
+> +
+> +	/*
+> +	 * Make sure we use the individual PWM configuration register and not
+> +	 * the global one.
+> +	 * We never need to use the global one, so there is no need to revert
+> +	 * that in the .free() callback.
+> +	 */
+> +	return regmap_write_bits(regmap, MAX7360_REG_PWMCFG(pwm->hwpwm),
+> +				 MAX7360_PORT_CFG_COMMON_PWM, 0);
+> +}
+> +
+> +static int max7360_pwm_round_waveform_tohw(struct pwm_chip *chip,
+> +					   struct pwm_device *pwm,
+> +					   const struct pwm_waveform *wf,
+> +					   void *_wfhw)
+> +{
+> +	struct max7360_pwm_waveform *wfhw =3D _wfhw;
+> +	u64 duty_steps;
+> +
+> +	/*
+> +	 * Ignore user provided values for period_length_ns and duty_offset_ns:
+> +	 * we only support fixed period of MAX7360_PWM_PERIOD_NS and offset of =
+0.
+> +	 * Values from 0 to 254 as duty_steps will provide duty cycles of 0/256
+> +	 * to 254/256, while value 255 will provide a duty cycle of 100%.
+> +	 */
+> +	if (wf->duty_length_ns >=3D MAX7360_PWM_PERIOD_NS) {
+> +		duty_steps =3D MAX7360_PWM_MAX;
+> +	} else {
+> +		duty_steps =3D (u32)wf->duty_length_ns * MAX7360_PWM_STEPS / MAX7360_P=
+WM_PERIOD_NS;
+> +		if (duty_steps =3D=3D MAX7360_PWM_MAX)
+> +			duty_steps =3D MAX7360_PWM_MAX - 1;
+> +	}
+> +
+> +	wfhw->duty_steps =3D min(MAX7360_PWM_MAX, duty_steps);
+> +	wfhw->enabled =3D !!wf->period_length_ns;
+> +
+> +	if (wf->period_length_ns && wf->period_length_ns < MAX7360_PWM_PERIOD_N=
+S)
+> +		return 1;
+> +	else
+> +		return 0;
+> +}
+> +
+> +static int max7360_pwm_round_waveform_fromhw(struct pwm_chip *chip, stru=
+ct pwm_device *pwm,
+> +					     const void *_wfhw, struct pwm_waveform *wf)
+> +{
+> +	const struct max7360_pwm_waveform *wfhw =3D _wfhw;
+> +
+> +	wf->period_length_ns =3D wfhw->enabled ? MAX7360_PWM_PERIOD_NS : 0;
+> +	wf->duty_offset_ns =3D 0;
+> +
+> +	if (wfhw->enabled) {
+> +		if (wfhw->duty_steps =3D=3D MAX7360_PWM_MAX)
+> +			wf->duty_length_ns =3D MAX7360_PWM_PERIOD_NS;
+> +		else
+> +			wf->duty_length_ns =3D DIV_ROUND_UP(wfhw->duty_steps * MAX7360_PWM_PE=
+RIOD_NS,
+> +							  MAX7360_PWM_STEPS);
+> +	} else {
+> +		wf->duty_length_ns =3D 0;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int max7360_pwm_write_waveform(struct pwm_chip *chip,
+> +				      struct pwm_device *pwm,
+> +				      const void *_wfhw)
+> +{
+> +	struct regmap *regmap =3D pwmchip_get_drvdata(chip);
+> +	const struct max7360_pwm_waveform *wfhw =3D _wfhw;
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	if (wfhw->enabled) {
+> +		ret =3D regmap_write(regmap, MAX7360_REG_PWM(pwm->hwpwm), wfhw->duty_s=
+teps);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	val =3D wfhw->enabled ? BIT(pwm->hwpwm) : 0;
+> +	return regmap_write_bits(regmap, MAX7360_REG_GPIOCTRL, BIT(pwm->hwpwm),=
+ val);
+> +}
+> +
+> +static int max7360_pwm_read_waveform(struct pwm_chip *chip,
+> +				     struct pwm_device *pwm,
+> +				     void *_wfhw)
+> +{
+> +	struct regmap *regmap =3D pwmchip_get_drvdata(chip);
+> +	struct max7360_pwm_waveform *wfhw =3D _wfhw;
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	ret =3D regmap_read(regmap, MAX7360_REG_GPIOCTRL, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (val & BIT(pwm->hwpwm)) {
+> +		wfhw->enabled =3D true;
+> +		ret =3D regmap_read(regmap, MAX7360_REG_PWM(pwm->hwpwm), &val);
+> +		if (ret)
+> +			return ret;
+> +
+> +		wfhw->duty_steps =3D val;
+> +	} else {
+> +		wfhw->enabled =3D false;
+> +		wfhw->duty_steps =3D 0;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct pwm_ops max7360_pwm_ops =3D {
+> +	.request =3D max7360_pwm_request,
+> +	.round_waveform_tohw =3D max7360_pwm_round_waveform_tohw,
+> +	.round_waveform_fromhw =3D max7360_pwm_round_waveform_fromhw,
+> +	.read_waveform =3D max7360_pwm_read_waveform,
+> +	.write_waveform =3D max7360_pwm_write_waveform,
+> +};
+> +
+> +static int max7360_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct pwm_chip *chip;
+> +	struct regmap *regmap;
+> +	int ret;
+> +
+> +	regmap =3D dev_get_regmap(dev->parent, NULL);
+> +	if (!regmap)
+> +		return dev_err_probe(dev, -ENODEV, "Could not get parent regmap\n");
+> +
+> +	/*
+> +	 * This MFD sub-device does not have any associated device tree node:
+> +	 * properties are stored in the device node of the parent (MFD) device
+> +	 * and this same node is used in phandles of client devices.
+> +	 * Reuse this device tree node here, as otherwise the PWM subsystem
+> +	 * would be confused by this topology.
+> +	 */
+> +	device_set_of_node_from_dev(dev, dev->parent);
+> +
+> +	chip =3D devm_pwmchip_alloc(dev, MAX7360_NUM_PWMS, 0);
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +	chip->ops =3D &max7360_pwm_ops;
+> +
+> +	pwmchip_set_drvdata(chip, regmap);
+> +
+> +	ret =3D devm_pwmchip_add(dev, chip);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to add PWM chip\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver max7360_pwm_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "max7360-pwm",
+> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +	.probe =3D max7360_pwm_probe,
+> +};
+> +module_platform_driver(max7360_pwm_driver);
+> +
+> +MODULE_DESCRIPTION("MAX7360 PWM driver");
+> +MODULE_AUTHOR("Kamel BOUHARA <kamel.bouhara@bootlin.com>");
+> +MODULE_AUTHOR("Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>=
+");
+> +MODULE_LICENSE("GPL");
 
-You can drop above 4 lines, they are obvious. Your "dtbs_check error"
-message already defined that.
 
-> arch/arm64/boot/dts/mediatek/mt8173-elm.dtb: ufoe@1401a000
-> (mediatek,mt8173-disp-ufoe): 'mediatek,gce-client-reg' does not match
-> any of the regexes: '^pinctrl-[0-9]+$'
+Hi Uwe,
 
-The warning message should not be wrapped, so this should be two lines.
-Maybe entire warning should be in one line, at least that's what I would
-do, after dropping "arch/arm64/boot/dts/".
+Any thought about this new version? I believe I fixed all the points we
+have been discussing previously.
 
-Anyway, no need to resend just for these. Thanks for the update.
+Thanks,
+Mathieu
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
