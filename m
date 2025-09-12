@@ -1,104 +1,94 @@
-Return-Path: <linux-gpio+bounces-26076-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26078-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79F69B55168
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 16:28:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBE21B55302
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 17:18:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2F4737C48F1
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 14:27:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9903E171F3B
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Sep 2025 15:18:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B9D932A819;
-	Fri, 12 Sep 2025 14:23:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81B473191C7;
+	Fri, 12 Sep 2025 15:15:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dwQWORoq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jmvu3sVW"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DC530AAC1;
-	Fri, 12 Sep 2025 14:23:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3601C31352B;
+	Fri, 12 Sep 2025 15:15:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757687036; cv=none; b=GQVpU2GtV5bOGF7fxGyfOV+gjLhSlg0/QyKSK7aY2Pv1wBjRTubbRLgX3YutClKj+tktSM1/Jd4E+19IjsKyRIgDqktxRGRcjq2UO5k0fKh0E6Vm2Tpr+D23GG++DiYPlTzE/v349o8hCsqwf0cMQ6V6JbT/6wz00oswhEAEM3w=
+	t=1757690159; cv=none; b=rCdu2iRBkHQzqE3pbrvLTfRKV/uxGa8v/E9wShx9O3/71enxkpWNA8a1mFURQAbyJejM+R6cIpAboEv/JBZ+SZCYlUrtXPujfpI3cM4WzRjY2ZZJCUIrjB6kQuxaKlr44AIeVFMv4JbHyjnumqUTqYH2RxanzF5ZQcAEgHfNDoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757687036; c=relaxed/simple;
-	bh=NFv/yYr1KOxreJRPTaFPS6HpBuZ76BcfhaKQEMHG2H4=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=biv6t/78ZWsiZf3ny3mWXbhWFImmkJBr0ScGPJNAkxqbPq33Ouww9lhl81Biz6RrDhuvbRey/BY5HxCpzssIwxwyULqZIqeS7l8QRj7bxv0mmfCnN/VZ8G5AlGmWkdNPL+xmGGv1JJGOzelRFs3Uo1JW9rZuq1JsNTa3on6VPsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dwQWORoq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88439C4CEF1;
-	Fri, 12 Sep 2025 14:23:55 +0000 (UTC)
+	s=arc-20240116; t=1757690159; c=relaxed/simple;
+	bh=xhgQ+phyume8JNK88sBHYAzojU2fbVOtryATkCc/Gdo=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=OzkUyyc/mSYwaYHkFnsztj4JZnN+r3YLl+Vx2moUjfO1XPpcxKe8GPG6D6PXuCS5UsFeIGZhcceN+11yiioqtqpdniAPiuxvfj7TGcHxZAVXlqJY5bz4+sm3lQBTbRAeObe3FRlOI/ZIRXHJpUjAD6vwVHdUBe4Ijv3n6Hy6UTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jmvu3sVW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67D74C4CEF1;
+	Fri, 12 Sep 2025 15:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757687035;
-	bh=NFv/yYr1KOxreJRPTaFPS6HpBuZ76BcfhaKQEMHG2H4=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=dwQWORoqLKX7hCzuvdQ6m1qIZ5eGYlNfV4cHStnVnbsoDt/iiQzrRVkbLyL1QExuU
-	 699F7UYbQ9CypuGbnco47riN7D0rVCBBEQuQVNb9daHtErb5xnfxyTL02+vHLrAtcW
-	 AdlUQpVqLeGTEFDYn3ywOQVT8O014qmNuqsFLym9EyONKxCOL05n2jqcxVLphWwGjp
-	 DuhHoK2pFnqmrM+B41gnTHSBtBwVfaWYyo6CUG4nIsHVDM2bq+v/nIqhmhvfJIacIl
-	 UwlSA8seNolE70FB/mLjtrRF2G5jXr22Fsk7MP5AW/lpBziBWe/uaKTLNFmSO6Vs/9
-	 qPz+IPF6X8H4A==
-Date: Fri, 12 Sep 2025 09:23:54 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1757690157;
+	bh=xhgQ+phyume8JNK88sBHYAzojU2fbVOtryATkCc/Gdo=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=jmvu3sVWY6OzUSwk0wXsSK6mUYqVAx09yDStz0z7tUt1FrXl3OdrC+3o1YBK4pig2
+	 cYOdcVtJp086pE0ozLGtH3p1DiYeFO4NXtRPVStkTQ/xB6wVi9FFTtT6RMkW/I/hzm
+	 Ij5VUDPHQc2YpDFaZM8q9Pr13rAvbwCYQnIc8bH2jQTonoJJTYwaKCcvRbsCdhvpmE
+	 7uGBHQINGMDU85PTyjT0w2ttDNc/Tqvt204V0OqekuSNvmQThmn2DgVZvC2PHgiw7f
+	 ZmtYjlI+ZTyENWxK1djqAGcgxWUh/cuG+yTgNQ8VSyrMo9snRAdr4/3uOkWnLfc5sU
+	 IC+nGh8o0xHOQ==
+Date: Fri, 12 Sep 2025 17:15:55 +0200 (CEST)
+From: Jiri Kosina <jikos@kernel.org>
+To: =?ISO-8859-15?Q?S=E9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
+cc: Benjamin Tissoires <bentiss@kernel.org>, 
+    Linus Walleij <linus.walleij@linaro.org>, 
+    Bartosz Golaszewski <brgl@bgdev.pl>, 
+    Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+    linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] HID: cp2112: fix setter callbacks return value
+In-Reply-To: <20250904-hid-cp2112-fix-set-value-v1-1-17d2e26dc8c9@armadeus.com>
+Message-ID: <22n5q16s-o283-q94s-o7rq-o92p6s248qpo@xreary.bet>
+References: <20250904-hid-cp2112-fix-set-value-v1-1-17d2e26dc8c9@armadeus.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
- cix-kernel-upstream@cixtech.com, krzk+dt@kernel.org, 
- linux-kernel@vger.kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org, 
- linux-arm-kernel@lists.infradead.org
-To: Gary Yang <gary.yang@cixtech.com>
-In-Reply-To: <20250912060650.2180691-3-gary.yang@cixtech.com>
-References: <20250912060650.2180691-1-gary.yang@cixtech.com>
- <20250912060650.2180691-3-gary.yang@cixtech.com>
-Message-Id: <175768614788.1334014.18023232974115676473.robh@kernel.org>
-Subject: Re: [v2 2/3] dt-bindings: pinctrl: Add cix,sky1-pinctrl
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
+On Thu, 4 Sep 2025, S=C3=A9bastien Szymanski wrote:
 
-On Fri, 12 Sep 2025 14:06:49 +0800, Gary Yang wrote:
-> The pin-controller is used to control the Soc pins.
-> There are two pin-controllers on Cix Sky1 platform.
-> One is used under S0 state, the other is used under
-> S5 state.
-> 
-> Signed-off-by: Gary Yang <gary.yang@cixtech.com>
-> ---
->  .../bindings/pinctrl/cix,sky1-pinctrl.yaml    | 85 +++++++++++++++++++
->  1 file changed, 85 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/cix,sky1-pinctrl.yaml
-> 
+> Since commit 6485543488a6 ("HID: cp2112: use new line value setter
+> callbacks"), setting a GPIO value always fails with error -EBADE.
+>=20
+> That's because the returned value by the setter callbacks is the
+> returned value by the hid_hw_raw_request() function which is the number o=
+f
+> bytes sent on success or a negative value on error. The function
+> gpiochip_set() returns -EBADE if the setter callbacks return a value >
+> 0.
+>=20
+> Fix this by making the setter callbacks return 0 on success or a negative
+> value on error.
+>=20
+> While at it, use the returned value by cp2112_gpio_set_unlocked() in the
+> direction_output callback.
+>=20
+> Fixes: 6485543488a6 ("HID: cp2112: use new line value setter callbacks")
+> Signed-off-by: S=C3=A9bastien Szymanski <sebastien.szymanski@armadeus.com=
+>
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Applied, thank you!
 
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/cix,sky1-pinctrl.example.dtb: wifi-vbat-gpio-pins: pins-wifi-vbat-gpio: {'pinmux': [2816], 'bias-pull-up': True, 'drive-strength': 4} is not of type 'array'
-	from schema $id: http://devicetree.org/schemas/gpio/gpio-consumer.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250912060650.2180691-3-gary.yang@cixtech.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+--=20
+Jiri Kosina
+SUSE Labs
 
 
