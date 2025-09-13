@@ -1,124 +1,142 @@
-Return-Path: <linux-gpio+bounces-26095-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26096-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4EEEB56071
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Sep 2025 13:02:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08F0EB560B7
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Sep 2025 14:25:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C172483C28
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Sep 2025 11:02:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9F5B91886DF3
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Sep 2025 12:25:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18AF32EB869;
-	Sat, 13 Sep 2025 11:02:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2374C2ECD07;
+	Sat, 13 Sep 2025 12:24:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="THdh2vyh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eQCQks+N"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670B412FF69
-	for <linux-gpio@vger.kernel.org>; Sat, 13 Sep 2025 11:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC2D26057A;
+	Sat, 13 Sep 2025 12:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757761350; cv=none; b=FROe5qPi9zooKU7DLi6P1ooLFeHQPrGTS7KfyHq+tpI6acVsFekuUTx+ZDU071nqgI6RJ5UX/rBxIGssGy/0TujfuQvdd190A94V2Ihhfyf/1XbQDLc9e6NxQqmrjuzo9rE0fp12L6SKndZyzWfPkjC8u5rWqp2Oex/9MZyBBZs=
+	t=1757766288; cv=none; b=vCZ5tTwQVjVdpMXi6gOkVmT2Ckg98xRrgX2YOix/GQdzQxow5tqL0kHbBshOSnxVvKIomyyum1l8RXKsKe8NX5qODDRQeRJhOc4CIZnhtqWQma4Ib0f3/dn9/8mO+sP29tnU2nxemGUr1rENPUuZvxo7uu6Wj+BV5H0Lj8pDs4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757761350; c=relaxed/simple;
-	bh=BXHeodyc6oI0LqMSWJ3CeHdCp3CLonWo1Am23e37j80=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SPvspFmwYH0/64Yh7V4+y38uG+4ujZIi8otqhW2mpOWlnM1B1xZp+G9gbQp9IOEAirRHnsY3ovrMPY8mTldp7H+y4nebzKOEo7+BRrwN8Qw3mhnyCmJh7nTkEb92I2cG5Ae6KfrhkgNt4rIbtNoSzJRFZO3AtcLdNaiufUk3aC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=THdh2vyh; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-24eb713b2dfso23227065ad.0
-        for <linux-gpio@vger.kernel.org>; Sat, 13 Sep 2025 04:02:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757761349; x=1758366149; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lSHxxUm5MkO+s5BZz5eceu1yg1KflUbRrShjzBDT/G0=;
-        b=THdh2vyh3Jtpg3laeiJ84oORXNH7/VgDJ77kVd6Ugetpn3RAsllx+5kgQ+X+1TMvSy
-         AkZ4j5jr4PDOKVrKlgCWqdabAtbxFcyDjd46vSn4ojicK2lcOxpczQMB95lhfLR5hDV6
-         CySMeL7MPjHZULkL6SD7dk0FxG+zpqbEOmHraI/rtcZH+xPNZYFSd/WpVS31glpuYyrm
-         E60FEN8aLs598rPvXM4j1gcZ1gUS8vHDjV9j3SmPSv0KS66B04p6YMvHkmw02PLCPig2
-         kqvTyDGk51WDe1LQI28sFig1Pm3qcgqodq2EkG/cnrg3sodYFE63vdBBCi+f/r1tVbcG
-         Adgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757761349; x=1758366149;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lSHxxUm5MkO+s5BZz5eceu1yg1KflUbRrShjzBDT/G0=;
-        b=TjbChtgP7jOMwe+sGO3k56rD2HyTsmZmM1dQRC6A0YpBHo/8QoRSnbRvEB2G6OVBkt
-         jYOjFD3fI715jjKJe0Ta9MeQGhVPewrYaD/0Q2Jl0tzZNpf3gvQQtKBmHHgMwrLL+oC/
-         8LsuWy3SFDJlgCM2CT8dz/0+OXF1mvVKm+4mnDJRIjC1L2eNaYVDQRFz9R8x+CglcOsJ
-         mgtSO/PcNElFs6BtfhcoIXxJYzXsEgcJhbNeCvtbvAyACYheNNucZiZr0JI/tDq4JB3X
-         Lv/LeJjq08Uf9k7UULR5sPzU/GNEZ6b9UyHejwV6ccKfAc4GrUlfO0NHSBG5C252s04H
-         v9kA==
-X-Forwarded-Encrypted: i=1; AJvYcCXx2PCNgdjFupwMg85mzN85YwffQTR4JUJ1fkRdjQtRS0O6uCtw2mpI20JgaOZMW5DkUjuOocBK/V2K@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8s4Ay0lqKobcUI1Nd+NmICAgGdlGnuMI2qBRtm5LpBOYB59AB
-	4kp5TuUPfFAWld2fywwevNf64rUuk0B6ELa96WjQUs2/3zXHyrBfcrTS
-X-Gm-Gg: ASbGnctfzgwTqUxXq5PUNWqyPFIZRgQyS7c6vfa+4F+V5ZWiFIYVvf416Hg0njRUdRp
-	gwRYJnPFUbEgmIHiCixM3jPEkYTag9WZxlYSLXc7vbOqOO8SdeoZ/fgFBAICqvX8ZnsAVRBb3Bw
-	kztfWVJ+kNU3FuMaJcek93DSDlk2uscqsBP3t3qSGQenFLng4ZoJBFhZqBa3xJVrzkhetbjQRbz
-	DYgI2CvGj0KTAxO7eq3unBr6Sz680y+L0t6QpCimUOeTMPSr5HM11gJx9xyjVHoNs/mqVUe56/V
-	bqBwKq81PbWEdfdPvINjkIMPYWPL7t0tOE7ffr/89lNNmeUJylZBZUSOePFNQecfpecrL8AqryS
-	qzCg7gpKijbpNcEQ83+Ed5P1iHrXslzzf3b6UJiyGhupryw==
-X-Google-Smtp-Source: AGHT+IE4JTVtkLqMLoiz8/TSrmFSmKr5Hr/jEFds8tWyqz0lknQdtFDueUAIhY8b3MH0shhwJn12bw==
-X-Received: by 2002:a17:902:e807:b0:252:8cc1:84a3 with SMTP id d9443c01a7336-25d26e484f0mr71857785ad.43.1757761348521;
-        Sat, 13 Sep 2025 04:02:28 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-25c3b305054sm74144345ad.133.2025.09.13.04.02.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Sep 2025 04:02:27 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Sat, 13 Sep 2025 04:02:26 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-Cc: nuno.sa@analog.com, linux-hwmon@vger.kernel.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-doc@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v2 2/3] hwmon: ltc4283: Add support for the LTC4283 Swap
- Controller
-Message-ID: <0ce54816-2f00-4682-8fde-182950c500b9@roeck-us.net>
-References: <20250903-ltc4283-support-v2-0-6bce091510bf@analog.com>
- <20250903-ltc4283-support-v2-2-6bce091510bf@analog.com>
- <742fe9b5-bc53-45f2-a5f1-d086a0c9dd1c@roeck-us.net>
- <0765a0b89779331c62a3f136ef030f7f2f40ea47.camel@gmail.com>
+	s=arc-20240116; t=1757766288; c=relaxed/simple;
+	bh=Vv4EpD59A8wJjkz0wkOsjCktkIvh4LqGHl4EZ4PD0OM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aJlENu0n3nEnvnns3qpwqxgQojKgZZu3xRQB+z1ilLD3BI/Esq83vfvQ7EktQdwfFGZKKcMME+GSQ96G2uh0mKkRJ8uH3kQaeHnJsMzxxC74oTSUup/MpfOC9RV56N0ijyrmnqx/O1+h1R9cGMR7QmaHEGcXcJLBpkiIhIxyPk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eQCQks+N; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E14DEC4CEEB;
+	Sat, 13 Sep 2025 12:24:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757766288;
+	bh=Vv4EpD59A8wJjkz0wkOsjCktkIvh4LqGHl4EZ4PD0OM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=eQCQks+NlXUcRnFtT45lg0458Zhcws1AN9ZBsGkb0V7k9pGL7WpYOM8mUxw7D0Nmt
+	 qbaztFs/t6xiw7B17OIVZC48WKvpfmalX1c7RWhnvyiIsBfs6ieEqM6M4EHCJdak76
+	 Bl4i1YEf7pmW2ZsEobH0rMibbmiZQ9BEvlkWEMm2PaMkQa9XnCSCPraIw3CuXPcwcX
+	 RgXMW3fGTVRSnTLJhtKylrbgUPZ0Bf7VttYbhOTmfCAK/MeW9Oeq61t9BLXyGxjNHx
+	 Wioi2qghp/QltAiSU1b2dVAGaWVadmFZ0IjNLsYSqMS6LbOK7e/xCwzTQwKWt0KHP8
+	 fAnKdH7IVYiBw==
+Date: Sat, 13 Sep 2025 13:24:38 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz
+ Golaszewski <brgl@bgdev.pl>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] iio: adc: Support ROHM BD79112 ADC/GPIO
+Message-ID: <20250913132438.11d14416@jic23-huawei>
+In-Reply-To: <d586b4a3-8fb8-45b5-a5a6-5bee8d366879@gmail.com>
+References: <20250910-bd79112-v4-0-f82f43746a8c@gmail.com>
+	<20250910-bd79112-v4-2-f82f43746a8c@gmail.com>
+	<20250910184619.0303163d@jic23-huawei>
+	<d586b4a3-8fb8-45b5-a5a6-5bee8d366879@gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.50; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0765a0b89779331c62a3f136ef030f7f2f40ea47.camel@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Sep 12, 2025 at 03:00:22PM +0100, Nuno Sá wrote:
-...
-> 
-> i2cdump -y -r 0x41-0x79 1 0x15 w
->      0,8  1,9  2,a  3,b  4,c  5,d  6,e  7,f
-> 40:      b004 0000 b00c a03e a03e a03e 2501
-> 48: 0000 1a03 e07f e07f f07f e07f e07f e07f
-> 50: e07f e07f e07f e07f e07f e07f 0000 0000
-> 58: 0000 7002 7002 7002 b07e b07e b07e a030
-> 60: 9030 a030 0000 0000 802f 1000 1000 f0ff
-> 68: a004 a004 0014 a004 a004 c004 0000 0000
-> 70: 0000 0000 0000 0000 0000 0000 0000 0000
-> 78: 0000 0000
-> 
-Thanks - this should do. Note that I am traveling and will be away from my
-systems until September 25, so I'll only be able to look into this further
-after I am back.
+On Thu, 11 Sep 2025 08:13:03 +0300
+Matti Vaittinen <mazziesaccount@gmail.com> wrote:
 
-Guenter
+> Morning Jonathan,
+> 
+> On 10/09/2025 20:46, Jonathan Cameron wrote:
+> > On Wed, 10 Sep 2025 14:24:35 +0300
+> > Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+> >   
+> >> The ROHM BD79112 is an ADC/GPIO with 32 channels. The channel inputs can
+> >> be used as ADC or GPIO. Using the GPIOs as IRQ sources isn't supported.
+> >>
+> >> The ADC is 12-bit, supporting input voltages up to 5.7V, and separate I/O
+> >> voltage supply. Maximum SPI clock rate is 20 MHz (10 MHz with
+> >> daisy-chain configuration) and maximum sampling rate is 1MSPS.
+> >>
+> >> The IC does also support CRC but it is not implemented in the driver.
+> >>
+> >> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>  
+> > 
+> > Hi Matti,
+> > 
+> > A few trivial things that I'll tidy up if nothing else comes up (I might not
+> > bother given how trivial they are!)  
+> 
+> Thanks again!
+> 
+> > Also one question. I couldn't immediately follow why any random register
+> > read is sanity checking if an ADC pin is configured as GPIO.
+> >   
+> 
+> Ah. Valid question! I see my comment below is partially wrong.
+> 
+> 
+> >> +/*
+> >> + * Read transaction consists of two 16-bit sequences separated by CSB.
+> >> + * For register read, 'IOSET' bit must be set. For ADC read, IOSET is cleared
+> >> + * and ADDR equals the channel number (0 ... 31).
+> >> + *
+> >> + * First 16-bit sequence, MOSI as below, MISO data ignored:
+> >> + * - SCK: | 1 | 2 |   3   |    4   | 5 .. 8 | 9 .. 16 |
+> >> + * - MOSI:| 0 | 0 | IOSET | RW (1) |  ADDR  |  8'b0   |
+> >> + *
+> >> + * CSB released and re-acquired between these sequences
+> >> + *
+> >> + * Second 16-bit sequence, MISO as below, MOSI data ignored:
+> >> + *   For Register read data is 8 bits:
+> >> + *   - SCK: | 1 .. 8 |   9 .. 16   |
+> >> + *   - MISO:|  8'b0  | 8-bit data  |
+> >> + *
+> >> + *   For ADC read data is 12 bits:
+> >> + *   - SCK: | 1 .. 4 |   4 .. 16   |
+> >> + *   - MISO:|  4'b0  | 12-bit data |  
+> 
+> This is not 100% true. I overlooked the ADC read "status flag" when 
+> adding this comment for the ADC data reading.
+> 
+> This should be:
+> 
+>   *   For ADC, read data is 12 bits prepended with a status flag:
+>   *   - SCK: | 1 |      2      | 3  4 |   4 .. 16   |
+>   *   - MISO:| 0 | STATUS_FLAG | 2'b0 | 12-bit data |
+> 
+> The 'STATUS_FLAG' is set if the input pin is configured as a GPIO.
+
+That's good additional info, but I'm still struggling on why
+we are effectively providing a 'debug' check in ever register
+read. My assumption is that it should never fire unless you have
+a driver bug?  
+
+Jonathan
 
