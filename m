@@ -1,79 +1,79 @@
-Return-Path: <linux-gpio+bounces-26103-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26104-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF488B56804
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Sep 2025 13:45:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0361B56801
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Sep 2025 13:45:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4D22A3AF619
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Sep 2025 11:45:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 86A6116BD1E
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Sep 2025 11:45:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27EF7262FD8;
-	Sun, 14 Sep 2025 11:45:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 574272641FB;
+	Sun, 14 Sep 2025 11:45:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DMmpQjw5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eMX26hlL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBDE0257820
-	for <linux-gpio@vger.kernel.org>; Sun, 14 Sep 2025 11:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5DD32586CE
+	for <linux-gpio@vger.kernel.org>; Sun, 14 Sep 2025 11:45:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757850307; cv=none; b=FhDtQJ0F5jCPfP7TdWKf7qkGwZVq7zg1nxDS5JO7ys3vdep5ZZH11167Vc+8MESZDPQPZCqPwIPEiW/Tr+M66kbEpmow7hEO4YNl4aKCGlFpt/rEdrxtr9+6DKWfDodtp/t+auHSeTHsHDvFOHBSaklbIoEIA8zXQ6UgzeV2dOo=
+	t=1757850309; cv=none; b=bBASXVByHPI3rtj1BXe03h4cdZj8DMfsWd33HJqNn82WB93pQPPnmzKCwvjqEzMFQXoiaw/JguOadbJyH4ph7LbXGNw+rJrLmUPPuNVt7zHovtQGLSXZElo5F0BV9XU1rm3JpFXueZN0TCCpZnTHaEPpxKHv/v1UszzfWbHM1iY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757850307; c=relaxed/simple;
-	bh=nnxWlv+OJi30txzuvQA8yOIXIEYLUlnbIbZsAeav1ZU=;
+	s=arc-20240116; t=1757850309; c=relaxed/simple;
+	bh=ogSWVbPDpjLlo4b+vc5rGJJ9Kt1VHCymn7/dpTScrdk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XafE64M9zGCAeY7zdRqJJ9v9pvHD3x+IYetY8+EpanqIJ71Uhb+uK+BHSBrqnTMg4sxuv44LoVhCKmj9w+b9IAdZCDkm5tLxUihQ7eCvLb+vRPc2wwog3zGH1DZbiIojUjUg5xDFUL+6Y1sRz0aZ2EE81Tt9ulVwpemxYq3AgcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DMmpQjw5; arc=none smtp.client-ip=209.85.221.42
+	 MIME-Version; b=cjllc2JopdhSzE/yvHgwMBFofWrHEAanJLIB4MxG3H7EfLt9uU7N+nPSGPzy2GZ8empFJwEQcPSifBtxetuquQxR3fM4pFPh4sRJmTIqeCLe4je8JT9+zXRTRL4emga/A94NyNxPso3NdcNq1BbtqJ+g5Imu7Z7OnUaaoeUG+N0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eMX26hlL; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3dce6eed889so2946742f8f.0
-        for <linux-gpio@vger.kernel.org>; Sun, 14 Sep 2025 04:45:04 -0700 (PDT)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3e9042021faso541402f8f.3
+        for <linux-gpio@vger.kernel.org>; Sun, 14 Sep 2025 04:45:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757850303; x=1758455103; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1757850304; x=1758455104; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=f1jxxIyK9Ih5zhWAbEfQ/SUSMwO68aineNys1TdCPOI=;
-        b=DMmpQjw5WkJ/wPCKXgTmLTpmIyFSS2UnR/CPcQ7BqP9O7YSaT7fwfsAhWnKp6vVurF
-         5xYg5QD7ObwVcrMVXzr+Jost8bI5drLBnISACaYGXvMyISOwJ5DXfO6zdolmbLhHsj4x
-         2nz68HO3UNunq3ZSsiGFbhzxQ9jDNRlg/jsshfhsfute9UQhGuFa3HzJQh5Hgk240Cg+
-         q1/Mtai3iXDc8UGgWpQq9BdxIYZ7bv8u1wcSVu0DCSIRM8CdImErvcrZC//GmdVhMZ60
-         l8McpjVNp6/ymyn5AXmfVYONdMGezd8pDXNJx4JNYkEEb14BAujlg4NHKNgPJ3N719x3
-         crzA==
+        bh=cXrnMo8AcgyeVtAkkZty6h5coZF1I0BtRGtERaxF9cY=;
+        b=eMX26hlLeMJQUl+9JAc8GKmh9N274eqJ0STTZv/Rcn4W0aoyZxkXwkUYVJ/fnDiPF0
+         GHtBxSbog6J7RYYqfUe0i/mHu1fxAAC0LOEmkT2mb+Xt+4yWTRhtX/n1WeON4fDLMCgO
+         4NbEaEmy7y3QGXsPVf8lAaHaGDInfVOqUXSPObMJKZSha4R00p2pt0f24ZEAngjurKjd
+         6V/R0ZpZ6kqe8KBLb/MIEhytbn2kck02y3qjZfUk94pRCBHloCT2VyF8Q/NyaoRzyIjQ
+         CoIhb109g4Zm07nvv6JRJoOt/cSFzXq20kIkkeOLYJYKDlL8536sdbeugzEjD6ozSV5L
+         RvRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757850303; x=1758455103;
+        d=1e100.net; s=20230601; t=1757850304; x=1758455104;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=f1jxxIyK9Ih5zhWAbEfQ/SUSMwO68aineNys1TdCPOI=;
-        b=OeV1RhUjG6aiW5VZLPAtsRI0nHRn5Xx5HHvTnCKnrze9jt+iWU5AZfprBb7DGs6MTN
-         lTpwan4F3h2oU0VprQfvm7JUxMIVsFR5joqy5ZOmfmUiplMCcSUHKGJY0K4IxSMd7UDq
-         s1IzxlbIDKsZ0dd1dyl0CaIAYgUD8Gpq38Pb7FDKj+gUAINaH+Kp4LTi17YsFNBIY/90
-         ICWoNjMTctpTDqFO8fU5bSiPtORSl5/dsrcRv5GiS33qq/hwN3IVm+MuJF/EthbhfCRn
-         D1zB0jvxmVpEC/FJ+zseciH5j/Cl2hDWcwFwYrJ9lIRy7prkSoCENIauY+D0hyBcQNla
-         l1tA==
-X-Forwarded-Encrypted: i=1; AJvYcCV29U7kQDoO6YwEgtcIvEfDOTABc+rGiykLpGB83MWKMBOyX+erGYhF6EZmSU2JrALV1g+RAQtiGSkp@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvR6Is5qgAl/OJ/D2LkpiStxOFo2V5Ei/F3Fni6lEoHyKJnkSP
-	BWU108PRi62J6/f2SR836c3XFuZE6GKtcm9oJbyzKfs4WEClmMgAO5m+
-X-Gm-Gg: ASbGnctzhzCFdy36hJSUGIXbhDaXq/9apxah39+115HEN2sGywd6P/Iv9Rxa2M/sEcX
-	R+2Ry7GEoIl/tgAZtiRb+Ty4ZBdcVcTjpxGbHeWGJu2Go3uz9iOKVHhclz2Fo/s+yEifLxvqAXK
-	MLJVPlfchVBxWsVcUdknOMIN/iOAJA9ODCMW+K9PMmC3p4b4HpYJyQ4H8Pvo7BcVwKUvFoFPeAV
-	RC5NXbWiOWr/OtAt10Mp8bepasEDd696qFVvh6cfnTHFspWblEiOWk3g+HFxEPyez3AmHBns+gh
-	pVZZLuSFPUGQWCkZyxJYt53lKBWFY2WYCGN+pguxCJkBt8z4qy7/mFEYqs4ULbYNHg0xc6xA+iP
-	jrM385+9HENESso8/7f2/YQmWSeOTs9ZZorsTMo6MEu5TSM5yI+obYz+At5w5z6W+NkPn55mSKQ
-	1W7kcXo/SG
-X-Google-Smtp-Source: AGHT+IE1BqJhX9iGCNG9Rwq5f7XlNdOwfaGHziUaIwwwVkNizVz8cQGq1fatGEsUFHWt7rHYFPM5cw==
-X-Received: by 2002:a05:6000:2281:b0:3e7:1f63:6e7d with SMTP id ffacd0b85a97d-3e7659ee4e1mr10069982f8f.45.1757850302860;
-        Sun, 14 Sep 2025 04:45:02 -0700 (PDT)
+        bh=cXrnMo8AcgyeVtAkkZty6h5coZF1I0BtRGtERaxF9cY=;
+        b=L9jiqpnzQOtwOWyTke9RXOXH2zKmICjoS5DlRcQ59+iWi8bSNRSrW1dC3yPQWHjuVC
+         QwRaV0diVFXuGbkcxO7J7zNxqb7AvSbc0nvFWQjoJ00jj4/mVrAaPvN3BLkui3P1lUFm
+         9p+NTkN43rHEdkZ1RI6HS2NGXejoJpND/CZSV6ELNSDQ3JInHdEmpcJyDzUz4IrnITzB
+         qBPkrLjCETLkxZQ7ePvK/4g1FYXEH4NLa+p1FHFQXeFIGyTbVYK723MJKgoyBDwJf3BN
+         AZ8XFBb1qhl/de0hW9JwjcH03Vss8iylqanDro/m5cgRbEb+zKLDKQa4CereOu6OKv9c
+         n7Iw==
+X-Forwarded-Encrypted: i=1; AJvYcCWsySzlRTUs8HeOOkTIZ36suumpJxUmGytqt1pjGgAgsToVy/0sDeAtzrcs1S4DtnKXXSw16Uqx1FCT@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFbX0dWieJNDjJ13s8w3+TYuc+dCAqZdqYIG6ngF41JsiFJpEW
+	Yz2MSma50qttit7RIf1/DItSyJjZD6Pa9nLNBplRF+17FWFJ4w4Y+hR5
+X-Gm-Gg: ASbGncsvTVLUw6AMhZvfEwpzmL9MGCB0y84NMr25YuXxfEIKdug7hS7cA97S5cR36Yx
+	3Sai9hVombCt+6bTPoPHGhBWobyHFtsHyNrFhX+vUZPlgg5eLfPQc5XTMLOTNcsoTg08o0WVFj0
+	tZtA2GTSOEeXeCQRfEcnm9WhW3gS18csX51CgU45OoLB+3pI8hgR2FTuiZeLIjMbVdeJB0Hb85T
+	eDLCzyuWSoRmRhA/LOH6au1IRqA3rG9a27GEKUBhLk7Kt/XsL3flnUZEHYd0TCMPXdgotHRWI0T
+	C3Fdo68NpsvfmY4CMaU0xtOauGVSuz5yg0gY6HhXnQcK+L5fynKlnmlOiacTS44+GBolNYYJEiz
+	2784tnuxwLepe7z1pk/KBKDnnQb3vnO/DumTh8MMeruMWBt8t6eUihRo1Euxi/461T6XslLKydr
+	rCGrJZr24i
+X-Google-Smtp-Source: AGHT+IESZdZImuHvupg31XiagY9dmwJfZhjEPnB8mK2o9JeW0P+8+vI82HCX5Qrgtqz633EQ0Ul55Q==
+X-Received: by 2002:a05:6000:2284:b0:3e7:47c7:9d5 with SMTP id ffacd0b85a97d-3e76579652amr9007686f8f.21.1757850304075;
+        Sun, 14 Sep 2025 04:45:04 -0700 (PDT)
 Received: from ivaylo-T580.. (91-139-201-119.stz.ddns.bulsat.com. [91.139.201.119])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3ea21a6e4basm1503252f8f.11.2025.09.14.04.45.01
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3ea21a6e4basm1503252f8f.11.2025.09.14.04.45.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Sep 2025 04:45:02 -0700 (PDT)
+        Sun, 14 Sep 2025 04:45:03 -0700 (PDT)
 From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
 To: Krzysztof Kozlowski <krzk@kernel.org>,
 	Sylwester Nawrocki <s.nawrocki@samsung.com>,
@@ -87,9 +87,9 @@ Cc: linux-samsung-soc@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/3] dt-bindings: pinctrl: samsung: add exynos8890 compatible
-Date: Sun, 14 Sep 2025 14:44:55 +0300
-Message-ID: <20250914114457.2610013-2-ivo.ivanov.ivanov1@gmail.com>
+Subject: [PATCH v1 2/3] dt-bindings: pinctrl: samsung: add exynos8890-wakeup-eint compatible
+Date: Sun, 14 Sep 2025 14:44:56 +0300
+Message-ID: <20250914114457.2610013-3-ivo.ivanov.ivanov1@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250914114457.2610013-1-ivo.ivanov.ivanov1@gmail.com>
 References: <20250914114457.2610013-1-ivo.ivanov.ivanov1@gmail.com>
@@ -101,37 +101,25 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Document the pinctrl compatible for the exynos8890 SoC. Let the
-driver handle our clocks for pinctrl as well.
+Add a dedicated compatible for exynos8890.
 
 Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
 ---
- .../devicetree/bindings/pinctrl/samsung,pinctrl.yaml         | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ .../bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml       | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
-index de8460856..ffd3e2dd2 100644
---- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
-@@ -55,6 +55,7 @@ properties:
-       - samsung,exynos7870-pinctrl
-       - samsung,exynos7885-pinctrl
-       - samsung,exynos850-pinctrl
-+      - samsung,exynos8890-pinctrl
-       - samsung,exynos8895-pinctrl
-       - samsung,exynos9810-pinctrl
-       - samsung,exynos990-pinctrl
-@@ -136,7 +137,9 @@ allOf:
-       properties:
-         compatible:
-           contains:
--            const: google,gs101-pinctrl
-+            enum:
-+              - google,gs101-pinctrl
-+              - samsung,exynos8890-pinctrl
-     then:
-       required:
-         - clocks
+diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
+index 0da6d69f5..dcd96104c 100644
+--- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
+@@ -43,6 +43,7 @@ properties:
+               - samsung,exynos7870-wakeup-eint
+               - samsung,exynos7885-wakeup-eint
+               - samsung,exynos850-wakeup-eint
++              - samsung,exynos8890-wakeup-eint
+               - samsung,exynos8895-wakeup-eint
+           - const: samsung,exynos7-wakeup-eint
+       - items:
 -- 
 2.43.0
 
