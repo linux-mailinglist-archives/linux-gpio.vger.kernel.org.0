@@ -1,191 +1,122 @@
-Return-Path: <linux-gpio+bounces-26101-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26102-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66D14B56760
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Sep 2025 11:25:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 961CBB567F9
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Sep 2025 13:45:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B5C03A8615
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Sep 2025 09:25:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 05F36189A0FF
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Sep 2025 11:45:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BB6F238C3A;
-	Sun, 14 Sep 2025 09:25:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CED5E248F58;
+	Sun, 14 Sep 2025 11:45:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ou2ulugE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SgvYWpGq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343EE230BFD
-	for <linux-gpio@vger.kernel.org>; Sun, 14 Sep 2025 09:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A188B640
+	for <linux-gpio@vger.kernel.org>; Sun, 14 Sep 2025 11:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757841911; cv=none; b=Tnn91BkydZ5aiucXWsSU4PZ/iobj5WzmXl2HQTpFmX+hzSzbWrZ7bDaKbsnCbK32kMCPlv1+0bim+SA/9Es/bWxdPKBg798MyYYELbK9AlSoHhbRk0t4lwyJ0SXdfwCjmVOOhvgAbWhxFR/487zRRWirzwrYM7koGITtzknpj4U=
+	t=1757850304; cv=none; b=AhKPFvuogfXmhagMY0eRlJsKWzEuf/VF+OpqCYEbewVrHHEutN7Q4RBRRieJblV5V/UIB7HFH2JbKb46fJvUb3A4tqG1bebkLGPGPuanEnaNmTwEC+MWgf7z3z/qBNLUp3PMYdPnmdo/e6IbcDMdOk0ZGbrbi7sztygOlB/Zulo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757841911; c=relaxed/simple;
-	bh=+4rCll//JnoBBbuxAXcj/sXjckzLz0gNp0tqg1XIkys=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e+h2wnrUcOnCKIO5VA1+ot7w4cO9l6dVC9WMZ4t7h6JUSvpz57RmGOpGSBY36gfyayD/7LxiIDHMS9cZGbnXAwVsw8ZP2FAAN7Aj9Ic7qbFqRG6+rBcmO8Pzx1a30y/HlYS9TVMrxiwqL8lbuKcoRWYcJlx8Ja+hA5vno9lkR3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ou2ulugE; arc=none smtp.client-ip=209.85.167.49
+	s=arc-20240116; t=1757850304; c=relaxed/simple;
+	bh=fIdw23kCtB7mdE2ObsS2whaNsMI65r/FonqsAsCDIf4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kM7c2Q8j05QxzBkUTTZ6GttH/xEEQf6gozGpvkpb8ch2ffO1WpkqmXPNWv0oLESY60avWRNSuPffaT7CqAJZgOk37Hh3do5/NwkS3FkoM/sP/9MBZdW6FQyKdqOBlFy7tCTV14JpDzPIuAS6yPhnIKVQ/ul0eW++UYgihBukshk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SgvYWpGq; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5725e554ec1so622775e87.3
-        for <linux-gpio@vger.kernel.org>; Sun, 14 Sep 2025 02:25:10 -0700 (PDT)
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3e8123c07d7so572620f8f.0
+        for <linux-gpio@vger.kernel.org>; Sun, 14 Sep 2025 04:45:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757841908; x=1758446708; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ho58j4q8V+4E8zb9CufZ62itbJsz3Kolr/iP45Pw0Rc=;
-        b=Ou2ulugEbuNt8gwKSxoQkbh5M4n34ZRR3/ZDIZ5cHlHNRYeQBYHALfXK9DRrBY4iMz
-         H38ZWIiQg4U61NU2YFwIADh86IdCr27GD4JJXwOOf9WlHT6OKgwjJKKmaa4G9ehHWUvf
-         ePMGvobZWCp6JNqfjvUpXGDQvP2J2pVFdZzwqL78nudqx82gBKOvNvldXLpnbBUXWeqJ
-         pbD8rpXsXXRtfOGn9PBpvwGCHH8hLoMJnwuSCDSbspHRW74dgJMEJ39gH+QD8poYtEfG
-         v2vSYpOjobnF31Njp2cBVmP80vMxnJ/gVDq6v9LFu+/shNgPHNyOO42sSTjdS585T6ah
-         p3Zg==
+        d=gmail.com; s=20230601; t=1757850301; x=1758455101; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zl9epDnVBDf5FGwQnol7WPxPj6t42uf2hUNcw7PBwX4=;
+        b=SgvYWpGq43cB7t/JShNl/aLM3QH5u9bIB3pCoTaxzCbWGihOg5NeWk1sx5jlRRN2W/
+         1hcEmxw8cjnqyQ82uXR5AJj8YkTgD4ASMagzuhe5BUsfgdxrIp9X15PGxBrGJnp5hfwU
+         SJhad+5ot1AcgqYquRMtS/calSmiXLIiPxqxk8BCc1i1jBgXLO41azrxm3zhNLHGgt+f
+         +m6snHE/CLDPCd7WBnG3bK/3Ur/bq3uLuXOnV6YxFHaQE3xuMTCkMFwcl571r5vYcTED
+         8MwRQncNaxYJgNWro+1TzaoKmEQ1fVXgu8RMh9gmxp65xC4XpvaCN6gLrj91v3DPdxAI
+         rhYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757841908; x=1758446708;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ho58j4q8V+4E8zb9CufZ62itbJsz3Kolr/iP45Pw0Rc=;
-        b=WQFPFSXU62U1YXYMA3nO5/8Fhw25LiOvOek5b5SGs932WQuBqPefnwO903EqHqsQ4z
-         9uO5ctwRSzXntRVMooiDyCoKQDW5/U+VdpW31SFF9Tod7wMVJwLWY71hr/siA8Uc3Ngb
-         t9+cVokQPDA+cz8Ef09MbxTtyBLccR7FoROK74ieTuF0Umm7cbIMr5xufVN52wAKUJxt
-         JWbr2ysOAdXDww/e8Hv4RXlc/V8Uc+MeqW5J6DjRUtwVU6IVbTWtAkRUHgT4bbv+LV3z
-         UkaPnZh06CGR/OD1uEnRgiEkjt+44pQCxuXCxFPEOgybzG0GeUsbR+wLw14Je6lBmx0B
-         pxuA==
-X-Forwarded-Encrypted: i=1; AJvYcCX15almhKPzeweXsfWANUIoRRR88GNskwy+n9Byjt4emE9LVgW1b9/QkrYxEjyiFj2ObSoSR+Acbiy0@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0mv68TK7343aBRBF8JSeRmIuatLyKNOQGF1gntL1ivWWXu7Q/
-	W0KHV0tpHO1eJwYH8ZfK1bl0dDSAdxq4ynvoz8S8SK9ijn0e4y7x/XGT
-X-Gm-Gg: ASbGncvv3sd+NHbjdz9fCjwYodkTqH3c2bWC86WkNIYb/uZMMRNDPgqn/nZ7eWSDggv
-	8yKf/J6FThavPXWkn8C4+1P+k5hSiSdhDIDU1B/o6JJ59zXUNnlPRucZXBDnLaMXQuuayZ6ZyqA
-	TaR/Jtv5qGMjjpYRIbJhY8WNXBqrlIdwiwVzwx5zATA3pa7+qzqX0zSOqfLt52FS4s3ooydYF0f
-	lt77HpHx/LXrPOr8Y4f1VTIEWZq9p7jaeSBs1MdyvVhMyxEhBpCVJfIdUXWm5NmlVekUsMd/NJX
-	pe1jJ7PIpYnSC/vSgm8ZVjxhFjjXZZ7ugQAuzaBL88o4/LXEHpSoeG70jyswEyOkK7USI5j1xji
-	9Za1wreVnLauVr0CqL8gEYpRZ2+hvBO+aINsjXwCfJTEIdbaDCCKH52LJE8mmhssOBP02enAwOa
-	ha9h3JzzPX1s23Vt4=
-X-Google-Smtp-Source: AGHT+IGAdpstb81hppchzd4Q1HxoZsk6kfcEpq+JyA9XWnS84y0k2oKP6wonMMCI2UNWVAsmaWZNPQ==
-X-Received: by 2002:a05:6512:140d:b0:55f:7050:9550 with SMTP id 2adb3069b0e04-57050440100mr2502409e87.38.1757841908140;
-        Sun, 14 Sep 2025 02:25:08 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-56e5c3b6167sm2721362e87.25.2025.09.14.02.25.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 14 Sep 2025 02:25:07 -0700 (PDT)
-Message-ID: <7c1cd888-539e-42f9-8333-a68044257531@gmail.com>
-Date: Sun, 14 Sep 2025 12:25:06 +0300
+        d=1e100.net; s=20230601; t=1757850301; x=1758455101;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Zl9epDnVBDf5FGwQnol7WPxPj6t42uf2hUNcw7PBwX4=;
+        b=dGKh/dE6L2txr52Vm62Z/RrPn4L7TChM1Aflv+N/DOVfiP401Lf/OsHTn3kHKn7z3q
+         4JwwXrG/OuW4ZouVNO7+6cv4US4hxyZaWqShdFuC/jkd/9tHdrL1weY8f9aGGEBeOHir
+         zO+KtHcW/STUxqq/5E9IzQMKpHtED/+9EiEC5TlR3TR2xSUt98oWRPFZZhcx5BUaqBgR
+         FSVfD2d6Qu9RlmVFYnKmvfcMg182UxDnX/qjP0x90OzdQo0xuGcbybkcJnQz7x+VBKZH
+         w/99hk0plMdQH2P1bhyR4EpT2gjq+EQu4KTJPRCQCfJ4tsCsEafZjAwqVPQl3ph7UOYQ
+         jQ4w==
+X-Forwarded-Encrypted: i=1; AJvYcCV0c+uuMKOPKQtOpjaARr6vE9tDgY1x110225W2BKVt1/bHgV/U6/ZKkgAC0qM0d1eAr3+ClHjLxAfo@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywnqv+mA/tK9z+0GYeReEt4/UeaX8kA67iQBow70D7cwrkQOC/t
+	P2Wno0BZQGZXcDtJwINGvLs+VGbTYWGwjEtlVNX0Bl122cWFF6F+hyTS
+X-Gm-Gg: ASbGncs8iwWUaAeRm4lhBvDtZyCxI+1bpICTW9fXjF/SYQwwuP4+QB69E/2kHnq8ECh
+	GKHhaZfPhS2EAY/xxmQCIc+PMCGaUlzGuoCZas+UqFc15YnoWBpFOSpDBowv9B2pD6AMJ9DUcbq
+	6gHg506Q5CdCZm139ld4czlhXk2buFxS8vhm0yT4l6XodGd/zNpj1CT+3JGXNmQ2eNXSsRaw2os
+	qFsk69GY5y1hWxq84leUwE0RTKGOEB79mcv9rXec/SK1BT0yIB2aJVj+segWSK26R2qAmUnfMX2
+	asjh2jn/Ww2Bm4v5Tzb6ZKjUX+T0kIeY1uR79yjK/6xXbPR7SlzINxRSJqpuSH65/f/IWlaffgI
+	bVepZkAC3Lw0IuzanFz0ViynxMK2Uyf6DV3u85yuOcgnChWVNi1EXSATilPBmFUcOsZuNRY+WAz
+	0T/KE2j+0n
+X-Google-Smtp-Source: AGHT+IEKZoR43PuG4u0ovxcf8LSqoSkXytpnNXieBus8x9zq/gDUlem4pul2S/1lpLAukbDJ5yAyag==
+X-Received: by 2002:a5d:5f53:0:b0:3e2:a287:2cf2 with SMTP id ffacd0b85a97d-3e765a0915amr6836384f8f.23.1757850301352;
+        Sun, 14 Sep 2025 04:45:01 -0700 (PDT)
+Received: from ivaylo-T580.. (91-139-201-119.stz.ddns.bulsat.com. [91.139.201.119])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3ea21a6e4basm1503252f8f.11.2025.09.14.04.45.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Sep 2025 04:45:00 -0700 (PDT)
+From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Tomasz Figa <tomasz.figa@gmail.com>
+Cc: linux-samsung-soc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/3] pinctrl: samsung: add exynos8890 SoC pinctrl
+Date: Sun, 14 Sep 2025 14:44:54 +0300
+Message-ID: <20250914114457.2610013-1-ivo.ivanov.ivanov1@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/3] iio: adc: Support ROHM BD79112 ADC/GPIO
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20250910-bd79112-v4-0-f82f43746a8c@gmail.com>
- <20250910-bd79112-v4-2-f82f43746a8c@gmail.com>
- <20250910184619.0303163d@jic23-huawei>
- <d586b4a3-8fb8-45b5-a5a6-5bee8d366879@gmail.com>
- <20250913132438.11d14416@jic23-huawei>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20250913132438.11d14416@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 13/09/2025 15:24, Jonathan Cameron wrote:
-> On Thu, 11 Sep 2025 08:13:03 +0300
-> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-> 
->> Morning Jonathan,
->>
->> On 10/09/2025 20:46, Jonathan Cameron wrote:
->>> On Wed, 10 Sep 2025 14:24:35 +0300
->>> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
->>>    
->>>> The ROHM BD79112 is an ADC/GPIO with 32 channels. The channel inputs can
->>>> be used as ADC or GPIO. Using the GPIOs as IRQ sources isn't supported.
->>>>
->>>> The ADC is 12-bit, supporting input voltages up to 5.7V, and separate I/O
->>>> voltage supply. Maximum SPI clock rate is 20 MHz (10 MHz with
->>>> daisy-chain configuration) and maximum sampling rate is 1MSPS.
->>>>
->>>> The IC does also support CRC but it is not implemented in the driver.
->>>>
->>>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
->>>
->>> Hi Matti,
->>>
->>> A few trivial things that I'll tidy up if nothing else comes up (I might not
->>> bother given how trivial they are!)
->>
->> Thanks again!
->>
->>> Also one question. I couldn't immediately follow why any random register
->>> read is sanity checking if an ADC pin is configured as GPIO.
->>>    
->>
->> Ah. Valid question! I see my comment below is partially wrong.
->>
->>
->>>> +/*
->>>> + * Read transaction consists of two 16-bit sequences separated by CSB.
->>>> + * For register read, 'IOSET' bit must be set. For ADC read, IOSET is cleared
->>>> + * and ADDR equals the channel number (0 ... 31).
->>>> + *
->>>> + * First 16-bit sequence, MOSI as below, MISO data ignored:
->>>> + * - SCK: | 1 | 2 |   3   |    4   | 5 .. 8 | 9 .. 16 |
->>>> + * - MOSI:| 0 | 0 | IOSET | RW (1) |  ADDR  |  8'b0   |
->>>> + *
->>>> + * CSB released and re-acquired between these sequences
->>>> + *
->>>> + * Second 16-bit sequence, MISO as below, MOSI data ignored:
->>>> + *   For Register read data is 8 bits:
->>>> + *   - SCK: | 1 .. 8 |   9 .. 16   |
->>>> + *   - MISO:|  8'b0  | 8-bit data  |
->>>> + *
->>>> + *   For ADC read data is 12 bits:
->>>> + *   - SCK: | 1 .. 4 |   4 .. 16   |
->>>> + *   - MISO:|  4'b0  | 12-bit data |
->>
->> This is not 100% true. I overlooked the ADC read "status flag" when
->> adding this comment for the ADC data reading.
->>
->> This should be:
->>
->>    *   For ADC, read data is 12 bits prepended with a status flag:
->>    *   - SCK: | 1 |      2      | 3  4 |   4 .. 16   |
->>    *   - MISO:| 0 | STATUS_FLAG | 2'b0 | 12-bit data |
->>
->> The 'STATUS_FLAG' is set if the input pin is configured as a GPIO.
-> 
-> That's good additional info, but I'm still struggling on why
-> we are effectively providing a 'debug' check in ever register
-> read. My assumption is that it should never fire unless you have
-> a driver bug?
+Hey folks,
 
-Yes, a driver bug or someone accessing the ADC outside the driver.
+This patchset adds pinctrl support for the exynos8890 SoC.
 
-I kind of agree the check shouldn't be needed - but I've seen quite a 
-few driver bugs during my career. XD The check is _very_ light weight 
-compared to the SPI access time - but you're right that it is done at 
-every ADC data read - which is 'hot path'. As a result, I am not sure 
-whether to leave or drop it.
+Best regards,
+Ivaylo
 
-Yours,
-	-- Matti
+Ivaylo Ivanov (3):
+  dt-bindings: pinctrl: samsung: add exynos8890 compatible
+  dt-bindings: pinctrl: samsung: add exynos8890-wakeup-eint compatible
+  pinctrl: samsung: add exynos8890 SoC pinctrl configuration
 
-> 
-> Jonathan
+ .../samsung,pinctrl-wakeup-interrupt.yaml     |   1 +
+ .../bindings/pinctrl/samsung,pinctrl.yaml     |   5 +-
+ .../pinctrl/samsung/pinctrl-exynos-arm64.c    | 157 ++++++++++++++++++
+ drivers/pinctrl/samsung/pinctrl-samsung.c     |   2 +
+ drivers/pinctrl/samsung/pinctrl-samsung.h     |   1 +
+ 5 files changed, 165 insertions(+), 1 deletion(-)
+
+-- 
+2.43.0
 
 
