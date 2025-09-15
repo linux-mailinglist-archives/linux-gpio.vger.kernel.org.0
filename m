@@ -1,108 +1,166 @@
-Return-Path: <linux-gpio+bounces-26178-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26179-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49C0FB580F8
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 17:40:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86FADB58158
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 17:55:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A4DB93A2BA9
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 15:40:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 02036189E41F
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 15:55:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3630121771B;
-	Mon, 15 Sep 2025 15:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aKz2iEw5"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E2C122A4E5;
+	Mon, 15 Sep 2025 15:55:11 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA91E2DC786;
-	Mon, 15 Sep 2025 15:40:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F2821883F;
+	Mon, 15 Sep 2025 15:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757950826; cv=none; b=rgEFP8FNL69PvKRtTNm+aIjo2KWQCTXOJhxyo7NvfTxJmj0YjTDfVsk4phOB/HhDa1OD8BJBCb8fpP/5SdZPPwsRweAlcVysVeSgz0scu6DBt2soxbB4Lvyd67qF5fphqkb+MuHPNLeBhSPMed/TchF/GNGezNKRvU5OiYvJ6OA=
+	t=1757951711; cv=none; b=Y6qHb/SIG1PdyrXfIw8Am0+80VpXaglw7I8zlFirJ9d51ltk8Y9yZwVPSoMsg27LaXYnWuJe+DJ89H+xAIn0RqJui6YgfjOcszTIvvJBRBL2x4B0JI4kPowcBfMKi0HuaXf1KMXyFabcDreMAAYL3iUIqCVHMJBweUWp6Mb48Ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757950826; c=relaxed/simple;
-	bh=Pk6D9lV4pLzfRVkOAYasCLtsJzsCxwcDyjYDQJ1hP1w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ef3gYNfrj/zynHzWsYqVFFVUQN/pfFsctfQn06FDG9qNScTiSoYmh17/KN5MrJODFEtczub3y3EbK7pt7YYNmQ3Kx9tv1aUy8ZkvQsoVws0CATWnrPSOrCMoa5PBUAn20V3RC18SFZoAMsi1Cz4xuOF3SWYzj3G9bitVQC6h2Oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aKz2iEw5; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757950824; x=1789486824;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=Pk6D9lV4pLzfRVkOAYasCLtsJzsCxwcDyjYDQJ1hP1w=;
-  b=aKz2iEw53TJyz8idJKh4LkNnaWSa3q7WOq1ByJrvfISbk+O/sNISdK5w
-   EiVppuWhm60iXxUohWrvH4rCZczt48qSRxsBmYcamIdBOlWF+V5YKtJHD
-   vRNZxHC490xY5n7hpXMsBfW8TjQQ/A8NGnQj/VqVxDWxC/K9yjHjogbU9
-   o0Uxw+aylqXY9NCnJkPgwIG1iU3+zLIaO1FdvB4XUFJOGV76sbVubiBUC
-   38w5lpD7no0ttj7hUBG0poIT+yxe1Rg7nF3xkDv8iGcBQen8eTK/pS/DT
-   0VfnzyNO7J1aJwBtUpaf+HhLZ6x6z9SLqwC7P35QU/6zPcS69n/VG/F6A
-   w==;
-X-CSE-ConnectionGUID: 6ckpduVYToanCIWcvqiV4w==
-X-CSE-MsgGUID: CcfAJRSpS9OeNer3RfrgLA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11554"; a="59438706"
-X-IronPort-AV: E=Sophos;i="6.18,266,1751266800"; 
-   d="scan'208";a="59438706"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2025 08:40:23 -0700
-X-CSE-ConnectionGUID: ykgN3T4NQzyzbAJC8MHMAA==
-X-CSE-MsgGUID: OnnQbopQRVebJyE1w/1B8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,266,1751266800"; 
-   d="scan'208";a="174750315"
-Received: from smile.fi.intel.com ([10.237.72.51])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2025 08:40:20 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uyBJR-00000003I5V-3wP9;
-	Mon, 15 Sep 2025 18:40:17 +0300
-Date: Mon, 15 Sep 2025 18:40:17 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: =?iso-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>
-Cc: Mika Westerberg <westeri@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: acpi: initialize acpi_gpio_info struct
-Message-ID: <aMgzYa-I5SQHaAY2@smile.fi.intel.com>
-References: <20250912-gpiolib-acpi-fix-v1-1-1a41acbffadf@armadeus.com>
+	s=arc-20240116; t=1757951711; c=relaxed/simple;
+	bh=jyNyeciSLMh+iVMZpndRFFCqFiP+0UlzjSzUmf7LWzY=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=a5BHALqzHP9sVGPAQGcGSDHW/sewheYhmAYqJte7313KFyXPunznlqa7F3w73AnZ/9Ih2DpIHNBCZseThIUYS039f9+i3/gl1RuKIzlkbFMPX1xD9exaFwqKvag1nO+2QuHYNGWjJvwCkznuclpu6iteV/k2wZNJ7jbQiO7pLzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cQTyR6nsHz67J7D;
+	Mon, 15 Sep 2025 23:50:39 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4C4FF1400DC;
+	Mon, 15 Sep 2025 23:55:06 +0800 (CST)
+Received: from localhost (10.203.177.15) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 15 Sep
+ 2025 17:55:05 +0200
+Date: Mon, 15 Sep 2025 16:55:04 +0100
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+CC: Jonathan Cameron <jic23@kernel.org>, David Lechner
+	<dlechner@baylibre.com>, Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, "Linus
+ Walleij" <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v4 2/3] iio: adc: Support ROHM BD79112 ADC/GPIO
+Message-ID: <20250915165504.000077e3@huawei.com>
+In-Reply-To: <7c1cd888-539e-42f9-8333-a68044257531@gmail.com>
+References: <20250910-bd79112-v4-0-f82f43746a8c@gmail.com>
+	<20250910-bd79112-v4-2-f82f43746a8c@gmail.com>
+	<20250910184619.0303163d@jic23-huawei>
+	<d586b4a3-8fb8-45b5-a5a6-5bee8d366879@gmail.com>
+	<20250913132438.11d14416@jic23-huawei>
+	<7c1cd888-539e-42f9-8333-a68044257531@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250912-gpiolib-acpi-fix-v1-1-1a41acbffadf@armadeus.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, Sep 12, 2025 at 10:18:50PM +0200, Sébastien Szymanski wrote:
-> Since commit 7c010d463372 ("gpiolib: acpi: Make sure we fill struct
-> acpi_gpio_info"), uninitialized acpi_gpio_info struct are passed to
-> __acpi_find_gpio() and later in the call stack info->quirks is used in
-> acpi_populate_gpio_lookup. This breaks the i2c_hid_cpi driver:
+On Sun, 14 Sep 2025 12:25:06 +0300
+Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+
+> On 13/09/2025 15:24, Jonathan Cameron wrote:
+> > On Thu, 11 Sep 2025 08:13:03 +0300
+> > Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+> >   
+> >> Morning Jonathan,
+> >>
+> >> On 10/09/2025 20:46, Jonathan Cameron wrote:  
+> >>> On Wed, 10 Sep 2025 14:24:35 +0300
+> >>> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+> >>>      
+> >>>> The ROHM BD79112 is an ADC/GPIO with 32 channels. The channel inputs can
+> >>>> be used as ADC or GPIO. Using the GPIOs as IRQ sources isn't supported.
+> >>>>
+> >>>> The ADC is 12-bit, supporting input voltages up to 5.7V, and separate I/O
+> >>>> voltage supply. Maximum SPI clock rate is 20 MHz (10 MHz with
+> >>>> daisy-chain configuration) and maximum sampling rate is 1MSPS.
+> >>>>
+> >>>> The IC does also support CRC but it is not implemented in the driver.
+> >>>>
+> >>>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>  
+> >>>
+> >>> Hi Matti,
+> >>>
+> >>> A few trivial things that I'll tidy up if nothing else comes up (I might not
+> >>> bother given how trivial they are!)  
+> >>
+> >> Thanks again!
+> >>  
+> >>> Also one question. I couldn't immediately follow why any random register
+> >>> read is sanity checking if an ADC pin is configured as GPIO.
+> >>>      
+> >>
+> >> Ah. Valid question! I see my comment below is partially wrong.
+> >>
+> >>  
+> >>>> +/*
+> >>>> + * Read transaction consists of two 16-bit sequences separated by CSB.
+> >>>> + * For register read, 'IOSET' bit must be set. For ADC read, IOSET is cleared
+> >>>> + * and ADDR equals the channel number (0 ... 31).
+> >>>> + *
+> >>>> + * First 16-bit sequence, MOSI as below, MISO data ignored:
+> >>>> + * - SCK: | 1 | 2 |   3   |    4   | 5 .. 8 | 9 .. 16 |
+> >>>> + * - MOSI:| 0 | 0 | IOSET | RW (1) |  ADDR  |  8'b0   |
+> >>>> + *
+> >>>> + * CSB released and re-acquired between these sequences
+> >>>> + *
+> >>>> + * Second 16-bit sequence, MISO as below, MOSI data ignored:
+> >>>> + *   For Register read data is 8 bits:
+> >>>> + *   - SCK: | 1 .. 8 |   9 .. 16   |
+> >>>> + *   - MISO:|  8'b0  | 8-bit data  |
+> >>>> + *
+> >>>> + *   For ADC read data is 12 bits:
+> >>>> + *   - SCK: | 1 .. 4 |   4 .. 16   |
+> >>>> + *   - MISO:|  4'b0  | 12-bit data |  
+> >>
+> >> This is not 100% true. I overlooked the ADC read "status flag" when
+> >> adding this comment for the ADC data reading.
+> >>
+> >> This should be:
+> >>
+> >>    *   For ADC, read data is 12 bits prepended with a status flag:
+> >>    *   - SCK: | 1 |      2      | 3  4 |   4 .. 16   |
+> >>    *   - MISO:| 0 | STATUS_FLAG | 2'b0 | 12-bit data |
+> >>
+> >> The 'STATUS_FLAG' is set if the input pin is configured as a GPIO.  
+> > 
+> > That's good additional info, but I'm still struggling on why
+> > we are effectively providing a 'debug' check in ever register
+> > read. My assumption is that it should never fire unless you have
+> > a driver bug?  
 > 
-> [   58.122916] i2c_hid_acpi i2c-UNIW0001:00: HID over i2c has not been provided an Int IRQ
-> [   58.123097] i2c_hid_acpi i2c-UNIW0001:00: probe with driver i2c_hid_acpi failed with error -22
+> Yes, a driver bug or someone accessing the ADC outside the driver.
 > 
-> Fix this by initializing the acpi_gpio_info pass to __acpi_find_gpio()
+> I kind of agree the check shouldn't be needed - but I've seen quite a 
+> few driver bugs during my career. XD The check is _very_ light weight 
+> compared to the SPI access time - but you're right that it is done at 
+> every ADC data read - which is 'hot path'. As a result, I am not sure 
+> whether to leave or drop it.
+Maybe just add a comment along the lines of
+/* Lets check this whilst here, but should never happen! */
 
-Pushed to my review and testing queue, thanks!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> 
+> Yours,
+> 	-- Matti
+> 
+> > 
+> > Jonathan  
+> 
+> 
 
 
