@@ -1,46 +1,47 @@
-Return-Path: <linux-gpio+bounces-26169-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26170-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45E35B57BC1
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 14:48:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 979BDB57BC2
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 14:48:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E3FAC17A623
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 12:48:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E9EC718954BA
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 12:48:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B1992D63E2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82A0830BF78;
 	Mon, 15 Sep 2025 12:47:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b="mrh2NbHx"
+	dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b="w508YE6u"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from sendmail.purelymail.com (sendmail.purelymail.com [34.202.193.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D44E30EF87
-	for <linux-gpio@vger.kernel.org>; Mon, 15 Sep 2025 12:47:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D4C630EF92
+	for <linux-gpio@vger.kernel.org>; Mon, 15 Sep 2025 12:47:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.202.193.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757940446; cv=none; b=HMUXux0q66G6LM5QwGZx47b1Iq09D5P4ajwKN8LeqJ/YeuVSPtCMth/HJQ0AeIJ84qPcEznP4MLOqXS4a8UvNNsHjRbl1BjlV4hGmbaDm6txlfGJDa106AOdLezzoSvqqRQF/5NxTcYrlyxlaaqQD3NzTmxLVct1+SAa+tmBCuI=
+	t=1757940446; cv=none; b=XISihdoHIW7bxlDAI4NXdRYcDxWr3PLNjCcS6zKo6MQoXUpgN0qhNjZIwcdTKIlI2dhqIitEYXjVOFRASF3HbJgHaeMdDgl51uumOpVvkpTzq/KYJCkmTq2mW8c+CjOJ9ChhkNSa+WL70JAMvQuPBqYD/7KKgFuaJndEm3Zc4hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1757940446; c=relaxed/simple;
-	bh=nZ7OKo1OumVzkuKry68ZUJeaNsWtdwCoQlST8Zyjk5k=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Hdtl29y7RBD3/BetIz0OIe0b55CKFC0t5EgFlPqSHDc0OrH+/HWAn/y203LS4OtRoJEqdXyY65i8E8iRSgpvHcZPdMWFzrxPpIW6oApq4BfkoeR7eqA9qjJliADbGkecIL583fVIS+GvB2k0YTMk5BdrXellcjIWpYT5bKiMwbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org; spf=pass smtp.mailfrom=mentallysanemainliners.org; dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b=mrh2NbHx; arc=none smtp.client-ip=34.202.193.197
+	bh=irm5rOzkMCBKy8afw3JexKMiBbgIOkVmWCMIQ2l0hUY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=CdAPNPr/OQdLrUbuk/xZSIt7d7v6JRljbTm/Nlv3DJ+oCZ6fsUlOEZ+tnnXMVedRrgdqjxqP/GARBWNQUo1ACmzKAlXv57uRoAG0m689AWJs3Ua48eJGzb1Y6mEQXKiWBJ2eiYYpUEXvrDsZun6+R/ydQgIpzfO0STn5pE1flws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org; spf=pass smtp.mailfrom=mentallysanemainliners.org; dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b=w508YE6u; arc=none smtp.client-ip=34.202.193.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mentallysanemainliners.org
 Authentication-Results: purelymail.com; auth=pass
-DKIM-Signature: a=rsa-sha256; b=mrh2NbHx0ApUEq6mOLe51fG0WP5c6GZwIxnZXPh5zzAsiHX28BeTTHgK4ARDvNuM3zf/zMPq4HRMC3XpO4xAcg60zZmrhd4D73R0O6qTK2xTOqGjdn/Na3neNJIc7Z1XO5Ez5yGpdb53j1YGfRfsuGgApfcOG3OnEF8HtyGKirGRuSJetp4bPc1hl69xPPWA72kUWBbFdgmkTdwznUc8BKp/xmu8MZdRTJL+3thPTDtacmBQ+lhUjyTwLTYPAL3ifO/G5HTbl/krO55g6vjoye2ESvMIBz5H+yNZu+sIlioiWii9odijx17Zr3HXxEz6qf+fcK4JXNNuHGIh1U2TKA==; s=purelymail3; d=purelymail.com; v=1; bh=nZ7OKo1OumVzkuKry68ZUJeaNsWtdwCoQlST8Zyjk5k=; h=Feedback-ID:Received:From:Subject:Date:To;
+DKIM-Signature: a=rsa-sha256; b=w508YE6uho32x7yE7/EJBlz8koT3SVa2CC+66Zgn5IwpQmySNfUD2ZfJwbFBkxQM8/C6rdlzbZwO4os4rYCikmo9NK5VnEg7aTqIToCZavahpCkVbfsEgomtNbKeeyX49mKmj1V5lfd8C2XHtAk4olDP3/zkM+iBBBk/CieHxETjcRZgjP0ojIBpT9CTfa8Fl0LYABIqmHmBnVdRQZ9c5WU7Amvn5725/7hAbIYe75uiIMSJ2k7zeXMMqNW+T/dGXb9vYjG3abowl/xUmY9S7Bg4ycXL3KEB2pymwAr5xKvrN11a2Rm2V3WMViQaFWwk1Iu1FuRo/5N23ppWHlAV/Q==; s=purelymail3; d=purelymail.com; v=1; bh=irm5rOzkMCBKy8afw3JexKMiBbgIOkVmWCMIQ2l0hUY=; h=Feedback-ID:Received:From:Date:Subject:To;
 Feedback-ID: 68247:10037:null:purelymail
 X-Pm-Original-To: linux-gpio@vger.kernel.org
 Received: by smtp.purelymail.com (Purelymail SMTP) with ESMTPSA id 1506483826;
           (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
-          Mon, 15 Sep 2025 12:46:27 +0000 (UTC)
+          Mon, 15 Sep 2025 12:46:29 +0000 (UTC)
 From: Igor Belwon <igor.belwon@mentallysanemainliners.org>
-Subject: [PATCH v3 0/4] Add support for mt6878 pinctrl
-Date: Mon, 15 Sep 2025 14:46:22 +0200
-Message-Id: <20250915-mt6878-pinctrl-support-v3-0-593cc007d4cf@mentallysanemainliners.org>
+Date: Mon, 15 Sep 2025 14:46:23 +0200
+Subject: [PATCH v3 1/4] dt-bindings: pinctrl: mediatek: Document MT6878 pin
+ controller bindings
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -49,11 +50,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJ4KyGgC/4XNQQ7CIBCF4asY1mKAtoKuvIdxQdtpOwkFAtjYN
- L27tCs36vKfZL63kAgBIZLrYSEBJozobI7ieCDNoG0PFNvcRDBRsQtTdExnJRX1aJsUDI1P711
- IVPOWc8lLBl1N8rMP0OFrh++P3APG5MK870x8u/4lJ04ZLbpaqkbpugR1G8EmbcwctYVRozVoI
- cSTCz3ZNibx4fLyqyuyK6pSFlzromvET3dd1zcjm61oJQEAAA==
-X-Change-ID: 20250908-mt6878-pinctrl-support-a1d117140efb
+Message-Id: <20250915-mt6878-pinctrl-support-v3-1-593cc007d4cf@mentallysanemainliners.org>
+References: <20250915-mt6878-pinctrl-support-v3-0-593cc007d4cf@mentallysanemainliners.org>
+In-Reply-To: <20250915-mt6878-pinctrl-support-v3-0-593cc007d4cf@mentallysanemainliners.org>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
@@ -65,54 +64,241 @@ Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
  linux-mediatek@lists.infradead.org, 
  Igor Belwon <igor.belwon@mentallysanemainliners.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1757940385; l=1613;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1757940385; l=7159;
  i=igor.belwon@mentallysanemainliners.org; s=20250908;
- h=from:subject:message-id; bh=nZ7OKo1OumVzkuKry68ZUJeaNsWtdwCoQlST8Zyjk5k=;
- b=vT5USx8yXGrkJw4bzhrJotrS/vOL8+/o4FILRu/5UGNxjhXiDDrY8dLNbeJwsoMscv99/cDg/
- xlLNTYlDzbIBG6pVYxyM0/nPSLh2vnIdVsyKZaJ0U31pjsEmSWEw6k5
+ h=from:subject:message-id; bh=irm5rOzkMCBKy8afw3JexKMiBbgIOkVmWCMIQ2l0hUY=;
+ b=kY5stO3TWCNOuMxLH3HOmWHosNYVTrd6ojPgwbhL4T3EnOKSMWAi11YFYNfSdBNc4j6tnRBwR
+ saLN2TsUfLAC6fOtbKa39jJjOjYmxXQ4zXkQPqg/yU5KLOo9ckiVQIU
 X-Developer-Key: i=igor.belwon@mentallysanemainliners.org; a=ed25519;
  pk=t9Kz6B3jEwJD7YAKcp8XftfEz7SUSlGbrsfFlbrrFwA=
 
-Hi all,
-
-This patchset adds support for the pin controller found in the MediaTek
-MT6878 SoC. This SoC has 9 pinctrl groups, and 4 EINT controller
-instances.
-
-This SoC also uses the new "eh" bit for controlling i2c driving, support
-for which is also added here.
-
-Changes in V3:
-- (Krzysztof) DT binding: Limit gpio-line-names
-
-Link to V2: https://lore.kernel.org/linux-mediatek/20250914-mt6878-pinctrl-support-v2-0-254731aa3fc2@mentallysanemainliners.org/
-
-Kind regards,
-Igor
+Add device-tree bindings for the pin controller and the EINT controller
+found in the MediaTek MT6878 SoC.
 
 Signed-off-by: Igor Belwon <igor.belwon@mentallysanemainliners.org>
 ---
-Igor Belwon (4):
-      dt-bindings: pinctrl: mediatek: Document MT6878 pin controller bindings
-      pinctrl: mediatek: Add debounce times for MT6878
-      pinctrl: mediatek: Add support for MT6878 pinctrl
-      arm64: dts: mediatek: Add MT6878 pinmux macro header file
+ .../bindings/pinctrl/mediatek,mt6878-pinctrl.yaml  | 211 +++++++++++++++++++++
+ 1 file changed, 211 insertions(+)
 
- .../bindings/pinctrl/mediatek,mt6878-pinctrl.yaml  |  211 ++
- arch/arm64/boot/dts/mediatek/mt6878-pinfunc.h      | 1201 +++++++++++
- drivers/pinctrl/mediatek/Kconfig                   |   10 +
- drivers/pinctrl/mediatek/Makefile                  |    1 +
- drivers/pinctrl/mediatek/mtk-eint.c                |    5 +
- drivers/pinctrl/mediatek/mtk-eint.h                |    1 +
- drivers/pinctrl/mediatek/pinctrl-mt6878.c          | 1478 +++++++++++++
- drivers/pinctrl/mediatek/pinctrl-mtk-mt6878.h      | 2248 ++++++++++++++++++++
- 8 files changed, 5155 insertions(+)
----
-base-commit: 9bee9db994df9f1a2572e3ecd61996fbe9a871b0
-change-id: 20250908-mt6878-pinctrl-support-a1d117140efb
+diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt6878-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6878-pinctrl.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..8d44194a79389663de339a422dea7b68d8a060e2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6878-pinctrl.yaml
+@@ -0,0 +1,211 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/mediatek,mt6878-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MediaTek MT6878 Pin Controller
++
++maintainers:
++  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
++  - Igor Belwon <igor.belwon@mentallysanemainliners.org>
++
++description:
++  The MediaTek MT6878 Pin controller is used to control SoC pins.
++
++properties:
++  compatible:
++    const: mediatek,mt6878-pinctrl
++
++  reg:
++    items:
++      - description: pin controller base
++      - description: bl group IO
++      - description: bm group IO
++      - description: br group IO
++      - description: bl1 group IO
++      - description: br1 group IO
++      - description: lm group IO
++      - description: lt group IO
++      - description: rm group IO
++      - description: rt group IO
++      - description: EINT controller E block
++      - description: EINT controller S block
++      - description: EINT controller W block
++      - description: EINT controller C block
++
++  reg-names:
++    items:
++      - const: base
++      - const: bl
++      - const: bm
++      - const: br
++      - const: bl1
++      - const: br1
++      - const: lm
++      - const: lt
++      - const: rm
++      - const: rt
++      - const: eint-e
++      - const: eint-s
++      - const: eint-w
++      - const: eint-c
++
++  gpio-controller: true
++
++  '#gpio-cells':
++    description:
++      Number of cells in GPIO specifier. Since the generic GPIO binding is used,
++      the amount of cells must be specified as 2. See the below mentioned gpio
++      binding representation for description of particular cells.
++    const: 2
++
++  gpio-ranges:
++    maxItems: 1
++
++  gpio-line-names:
++    maxItems: 216
++
++  interrupts:
++    description: The interrupt outputs to sysirq
++    maxItems: 1
++
++  interrupt-controller: true
++
++  '#interrupt-cells':
++    const: 2
++
++# PIN CONFIGURATION NODES
++patternProperties:
++  '-pins$':
++    type: object
++    additionalProperties: false
++
++    patternProperties:
++      '^pins':
++        type: object
++        allOf:
++          - $ref: /schemas/pinctrl/pincfg-node.yaml
++          - $ref: /schemas/pinctrl/pinmux-node.yaml
++        description:
++          A pinctrl node should contain at least one subnodes representing the
++          pinctrl groups available on the machine. Each subnode will list the
++          pins it needs, and how they should be configured, with regard to muxer
++          configuration, pullups, drive strength, input enable/disable and input
++          schmitt.
++
++        properties:
++          pinmux:
++            description:
++              Integer array, represents gpio pin number and mux setting.
++              Supported pin number and mux are defined as macros in
++              arch/arm64/boot/dts/mediatek/mt8196-pinfunc.h for this SoC.
++
++          drive-strength:
++            enum: [2, 4, 6, 8, 10, 12, 14, 16]
++
++          drive-strength-microamp:
++            enum: [125, 250, 500, 1000]
++
++          bias-pull-down:
++            oneOf:
++              - type: boolean
++              - enum: [75000, 5000]
++                description: Pull down RSEL type resistance values (in ohms)
++            description:
++              For normal pull down type there is no need to specify a resistance
++              value, hence this can be specified as a boolean property.
++              For RSEL pull down type a resistance value (in ohms) can be added.
++
++          bias-pull-up:
++            oneOf:
++              - type: boolean
++              - enum: [10000, 5000, 4000, 3000]
++                description: Pull up RSEL type resistance values (in ohms)
++            description:
++              For normal pull up type there is no need to specify a resistance
++              value, hence this can be specified as a boolean property.
++              For RSEL pull up type a resistance value (in ohms) can be added.
++
++          bias-disable: true
++
++          output-high: true
++
++          output-low: true
++
++          input-enable: true
++
++          input-disable: true
++
++          input-schmitt-enable: true
++
++          input-schmitt-disable: true
++
++        required:
++          - pinmux
++
++        additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-controller
++  - '#interrupt-cells'
++  - gpio-controller
++  - '#gpio-cells'
++  - gpio-ranges
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/pinctrl/mt65xx.h>
++    #define PINMUX_GPIO0__FUNC_GPIO0 (MTK_PIN_NO(0) | 0)
++    #define PINMUX_GPIO99__FUNC_SCL0 (MTK_PIN_NO(99) | 1)
++    #define PINMUX_GPIO100__FUNC_SDA0 (MTK_PIN_NO(100) | 1)
++
++    pio: pinctrl@10005000 {
++        compatible = "mediatek,mt6878-pinctrl";
++        reg = <0x10005000 0x1000>,
++              <0x11d10000 0x1000>,
++              <0x11d30000 0x1000>,
++              <0x11d40000 0x1000>,
++              <0x11d50000 0x1000>,
++              <0x11d60000 0x1000>,
++              <0x11e20000 0x1000>,
++              <0x11e30000 0x1000>,
++              <0x11eb0000 0x1000>,
++              <0x11ec0000 0x1000>,
++              <0x11ce0000 0x1000>,
++              <0x11de0000 0x1000>,
++              <0x11e60000 0x1000>,
++              <0x1c01e000 0x1000>;
++        reg-names = "base", "bl", "bm", "br", "bl1", "br1",
++                    "lm", "lt", "rm", "rt", "eint-e", "eint-s",
++                    "eint-w", "eint-c";
++        gpio-controller;
++        #gpio-cells = <2>;
++        gpio-ranges = <&pio 0 0 220>;
++        interrupt-controller;
++        interrupts = <GIC_SPI 239 IRQ_TYPE_LEVEL_HIGH 0>;
++        #interrupt-cells = <2>;
++
++        gpio-pins {
++            pins {
++                pinmux = <PINMUX_GPIO0__FUNC_GPIO0>;
++                bias-pull-up = <4000>;
++                drive-strength = <6>;
++            };
++        };
++
++        i2c0-pins {
++            pins-bus {
++                pinmux = <PINMUX_GPIO99__FUNC_SCL0>,
++                         <PINMUX_GPIO100__FUNC_SDA0>;
++                bias-pull-down = <75000>;
++                drive-strength-microamp = <1000>;
++            };
++        };
++    };
 
-Best regards,
 -- 
-Igor Belwon <igor.belwon@mentallysanemainliners.org>
+2.51.0
 
 
