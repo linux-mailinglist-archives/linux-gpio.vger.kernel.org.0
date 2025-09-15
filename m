@@ -1,117 +1,101 @@
-Return-Path: <linux-gpio+bounces-26140-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26141-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DD35B56DCF
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 03:22:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DBC0B56F86
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 06:47:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DC6E27AC066
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 01:20:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 85B7A189C43C
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 04:47:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CACFA1E3DE5;
-	Mon, 15 Sep 2025 01:22:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AA411F4C84;
+	Mon, 15 Sep 2025 04:47:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BFu+ld37"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jUEu5ico"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EDF21A3A80
-	for <linux-gpio@vger.kernel.org>; Mon, 15 Sep 2025 01:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50F52DC77E;
+	Mon, 15 Sep 2025 04:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757899324; cv=none; b=E8AX0kw/smw3z32veIUbs94HTlI7XLJ797f69qArkliGhG0pmR1cM7G3RLRewnp1Zl7/66msCxlHDn+0thBIC1OP2rMuvYNczaUxVg/8phqAyWV49VNDbmZH/ZSXS8s4EdISJEmzYXkWQ9BzerXDcCACWsdcC1tHH6RlCoLMUzk=
+	t=1757911629; cv=none; b=AVKBtKzZg/OMsa6rC2dCGJjE1eptpC8g94KStBnPv2KPhxvh3LpOnPbBjeJeAFoPxLWrSY4ToMPO/hQvpkZSGLlxVn3OY1+BC72SECOTcRUcAlpulUBXhdnwqbg+dZ9crnNTWZ898DQXSs+EdGltHwbLpVA9yJpdXU4QfZa34Ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757899324; c=relaxed/simple;
-	bh=AjKw6PEaz3BcGdiBDSwiRmCOJqo1nibhkDfGdbCSQ3w=;
+	s=arc-20240116; t=1757911629; c=relaxed/simple;
+	bh=O+NCMkR0n/qMQIfxHkPyef5o544Jxh6f/x5koCgrmB0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WKXxUzKCkcSObUMxor6n/p3lyOr4+j9ygW/pzjtGwSLXgrb8r5p+gp/mCy1NOAcnYr2WP19sYFmeLEvgUKwaFGDR3yjqNtGhpzKmXCyJcYHsMyFO3FBLvuBHa/PurJZKR1oBnoIBJlDVUDXoc2QYnUG/IztjkjmUg7zAP9Yzgvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BFu+ld37; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-77615d6af4fso2840725b3a.3
-        for <linux-gpio@vger.kernel.org>; Sun, 14 Sep 2025 18:22:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757899321; x=1758504121; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zhrGXtUHP77SSFf0UteGZvmmtOiRSwSPGvsy3hAXYxc=;
-        b=BFu+ld37nf9FiKKQ7L0kPWRxYjbvyGCD3ZtEzdQD+JC6IzI7iwx9dKe9MCmOMP4SQt
-         kOVyrxfAX3viK0oQE3n3Jew44Bb/iH4+gMbV67PGNarxLKP7wAgwpku1r4JqHcvwugBh
-         MDCj85GMjKDrtyfWACDh2HAps5ka2ZMAECN1eiU8MIIjbUgFy6wTKFVmbuRZtUrVJnOs
-         MPVL4BVVj88nreLwMJxUyLO2mCCSQW5WwTyXCtvJeHE4r6dVpWDLzpjGpeWTugOTSvoL
-         6N4hdEHjN/TK+gqEvvZ4WcX4Pv0c0m3gx9piZWua19iHPVtRF0CCmBiWGcvNCu4oDSIV
-         E9NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757899321; x=1758504121;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zhrGXtUHP77SSFf0UteGZvmmtOiRSwSPGvsy3hAXYxc=;
-        b=NCntH7TQy+c0IfSXP+5Vl1jy97asCoaPQKshD0NLNRnII5LtLSE9gcTZW7P8ZuyBm/
-         Ore0lHYnoJhjMi+jRU5YF/nSpVjg7hXt/DRpyjM9I9Lau2ismGrcEIeNFK6G78W3OlOa
-         T+HZUDCo1EpTopIsPiNiKJnIZrG4dcQYdW2FUnaKtlHgw7u3hC1U3wujweQ1iweOhw80
-         KQD8EsU7NZdNZMmxl65UtMFHkCft6MZF9pGdNjbvOMTBa2TpxSUEXn/X170ryzZ7Ofeq
-         NRMdsrb+oLfXX2NJgXL5nkFpvjzo1rK+hZwGMAANhyvdkPGPEI5Angzz9yhh2z2rE3bY
-         x3Ig==
-X-Forwarded-Encrypted: i=1; AJvYcCUepgUUh3qMD53VdkBw4VnoItH5bgSb5dImSll56Jq1up+5IcfauQZvqLHg18eWcL0hzC+CK8s8kBDw@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1cpUD4HIBROk+/+r3zzTSgFTYpZtBHD3nffj5xXnU3ycDPnpg
-	kVj8oeI6bJMMQLQqrHiH9ILirHLiwJaolVkkjDozDIj3Uc4uPoB+MU5H
-X-Gm-Gg: ASbGncudv7/iVqj/x0eun1wINYHhjZq0bJV1xw/+4xCOhYwIdjsiiTftaVQbORW2D3n
-	5dxpXcrqC/foMkfhXNpJMiLBm/VxIVBG+Dbl+GM47IXaN+jjQ4WKs4KhA4zTKFulDOz4vL61WmE
-	sJC0JmR54sFnWDPKtmBQ0/fkRuLh8GkaQP92N6AAFiDtinLFjq6nuUdW+FI7c4fJOvEXyCE/9LE
-	QrisGSISCAmTiHoSL1lTCDhP1e5+hbyXba4CbS13iFLRwtOIN3Uo1YjC9AQ3XsL9YYzbS1ZQTtS
-	gpviopgXqCPL+T0swtmlQ+mX61OL8anNfFRVOutCV8TKUm4yEXe+5Q685DQVOMtvd2NezSVepmr
-	FZfmnFSktSStIw78hgUyEqg==
-X-Google-Smtp-Source: AGHT+IF7cZF4LyNOq8KLkkPfU+soq4VEFgYqOlZpq0rovEoiTKXGjy1E/ebjq0srKeY/xi5pzGFAvg==
-X-Received: by 2002:a05:6a21:e082:b0:262:8bce:33e4 with SMTP id adf61e73a8af0-2628bce3f27mr5200250637.20.1757899321383;
-        Sun, 14 Sep 2025 18:22:01 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:aa7d:7a2:2fd7:5bae])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b54a3aa9234sm10446429a12.54.2025.09.14.18.22.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Sep 2025 18:22:00 -0700 (PDT)
-Date: Sun, 14 Sep 2025 18:21:57 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Hans de Goede <hansg@kernel.org>
-Cc: Mika Westerberg <westeri@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: Extend software-node support to support
- secondary software-nodes
-Message-ID: <kpoek6bs3rea4fl6b4h55grmsykw2zw2j6kohu3aijlabjngyc@7fbnoon3ilhw>
-References: <20250913184309.81881-1-hansg@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pac20g93I2jRYZUxSd2Brd5fFX8vkKXWVrzI4wABi9rqURwKVCG9axipr8d5LwQQUGHMMDe56xCjNSjt7m257R+uy3yDkpeD62ke3/kuQl9+x4twakY0ORuk9ubMGWqoFIFdAbmb33uCBxFxoPHYlrDb7FXM9W/dQBB1FAw3zkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jUEu5ico; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1757911628; x=1789447628;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=O+NCMkR0n/qMQIfxHkPyef5o544Jxh6f/x5koCgrmB0=;
+  b=jUEu5icoKvraiooZDst6lpvypHso/lqrHFWcAuePxzoP9dBw6h6HjNrv
+   nFaPfpxNOFScwNNBVisfYslq+/zn7ZZKJ2/4N30G2aOHu8p+suTYLM7xf
+   JFxfHp+OyKJchYn0yur1zDrnYdiyDYqv/L48j08jzsdWKcl/3BShyuwR8
+   F9IedP4VnFEMmnu56Vk6RXixmpm22KZwDMXRyeuEWS5XA7nJq2NFOoOe0
+   lXpQ4ntyPgVWOeTc4SsD9bQRQ0pT9uqHLWv+XvZfpGeOxQ5uUqt68apof
+   sRsiQTtp9ReixWmvsBi0S+w5yktzIMl124Ahwm+TsZe5BM3HbDRpzpszV
+   g==;
+X-CSE-ConnectionGUID: KVPAG60ERsCRuWh65jLASg==
+X-CSE-MsgGUID: SJnQxZymR1KkNHzyT8CWjw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11553"; a="70409063"
+X-IronPort-AV: E=Sophos;i="6.18,265,1751266800"; 
+   d="scan'208";a="70409063"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2025 21:47:07 -0700
+X-CSE-ConnectionGUID: 3I86ZipSQoKMBUIiohpTaw==
+X-CSE-MsgGUID: J8Ryg6TxRNCdR+q/U4lDnw==
+X-ExtLoop1: 1
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa003.fm.intel.com with ESMTP; 14 Sep 2025 21:47:05 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id 866E794; Mon, 15 Sep 2025 06:47:03 +0200 (CEST)
+Date: Mon, 15 Sep 2025 06:47:03 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: =?utf-8?Q?S=C3=A9bastien?= Szymanski <sebastien.szymanski@armadeus.com>
+Cc: Mika Westerberg <westeri@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: acpi: initialize acpi_gpio_info struct
+Message-ID: <20250915044703.GA476609@black.igk.intel.com>
+References: <20250912-gpiolib-acpi-fix-v1-1-1a41acbffadf@armadeus.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250913184309.81881-1-hansg@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250912-gpiolib-acpi-fix-v1-1-1a41acbffadf@armadeus.com>
 
-Hi Hans,
-
-On Sat, Sep 13, 2025 at 08:43:09PM +0200, Hans de Goede wrote:
-> When a software-node gets added to a device which already has another
-> fwnode as primary node it will become the secondary fwnode for that
-> device.
+On Fri, Sep 12, 2025 at 10:18:50PM +0200, Sébastien Szymanski wrote:
+> Since commit 7c010d463372 ("gpiolib: acpi: Make sure we fill struct
+> acpi_gpio_info"), uninitialized acpi_gpio_info struct are passed to
+> __acpi_find_gpio() and later in the call stack info->quirks is used in
+> acpi_populate_gpio_lookup. This breaks the i2c_hid_cpi driver:
 > 
-> Currently if a software-node with GPIO properties ends up as the secondary
-> fwnode then gpiod_find_by_fwnode() will fail to find the GPIOs.
+> [   58.122916] i2c_hid_acpi i2c-UNIW0001:00: HID over i2c has not been provided an Int IRQ
+> [   58.123097] i2c_hid_acpi i2c-UNIW0001:00: probe with driver i2c_hid_acpi failed with error -22
 > 
-> Add a check to gpiod_find_by_fwnode() to try a software-node lookup on
-> the secondary fwnode if the GPIO was not found in the primary fwnode.
+> Fix this by initializing the acpi_gpio_info pass to __acpi_find_gpio()
+> 
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220388
+> Fixes: 7c010d463372 ("gpiolib: acpi: Make sure we fill struct acpi_gpio_info")
+> Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
 
-Thanks for catching this. I think it would be better if we added
-handling of the secondary node to gpiod_find_and_request(). This way the
-fallback will work for all kind of combinations, even if secondary node
-happens to be an OF or ACPI one.
+Should have stable tag too, I think. Andy can add that once he applies.
 
-Thanks.
-
--- 
-Dmitry
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
