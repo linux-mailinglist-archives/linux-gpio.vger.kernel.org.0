@@ -1,121 +1,235 @@
-Return-Path: <linux-gpio+bounces-26184-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26185-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE232B583F3
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 19:49:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D882B585BF
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 22:13:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3BC717A19A2
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 17:47:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F33B44C15FA
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 20:13:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44974274FE8;
-	Mon, 15 Sep 2025 17:49:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C94CC288514;
+	Mon, 15 Sep 2025 20:13:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJSf30fI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hUtK8wJx"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A9D101F2;
-	Mon, 15 Sep 2025 17:49:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7763F2747B;
+	Mon, 15 Sep 2025 20:13:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757958561; cv=none; b=jKkQW0ys3K0YKmF7j0feOUenk8qNlEKWeu2WhK1+Oaaug2DVB7h6okwlb+zMeaKI9z/rK213bhY/P4cM7pjkgC1s5lqJ6uLZBGBO883FXn6wN1gGN5Au6eDsq8/TzcDkgc5F9aHhaoOd2CpyNEgyRBew//l9yfyIjMlABRlv3Rg=
+	t=1757967211; cv=none; b=hH8fui/SUslM7k4yrIAnGGUB8Ju4IhqDRFG74u0VDeNxUXA54NPqW174ab9FasLf2Zb8j23J23lHYYSn4doWvw/zYoENgqBGxNAybeGmPRnJXd7yfexcz8/zS3gP67jPaCapm/t+JyjsCwzCbGTkgAV4vpf2+MuHCF2Dw2DkquQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757958561; c=relaxed/simple;
-	bh=oqOMkDLjrDehn7S/LFap64KzjTGq4HPu0TK1qIK27T0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cU69NdlMwE1QRRqLQu4HvwleYeAjv3TLPsOqkcxJDPZn+Yrrc7+G86PRUt7o0tD6uinBADG9qUZw/XRLTtFP8CdK3/pa3B1LYHg2ReKH8eupiGfzsBJaTMn0W3MfoAukCABGm45Vo5w8JRQorNm6tNOdrftppkPp0LYUZzkIcPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJSf30fI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E23EC4CEF1;
-	Mon, 15 Sep 2025 17:49:17 +0000 (UTC)
+	s=arc-20240116; t=1757967211; c=relaxed/simple;
+	bh=sCG6ETdfTXdU2pnnMtozox8YjbeWgsBQMnCaCblSvgk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CDPZlT6PL4Xsj64vicIFoGSEWEe/v9slMDZFrvsG213Z9Trfus9zNbnBwZKb4nXN2/YyUsxuWrOuaWZFHy8hZBQAuhWH673Ykqhkr7QQ830izU3Nwct/ZEe1exQCnDVGq838zn2KZNS5xWD1/Ob+Sy+AITwo92mKZZ2218DcrRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hUtK8wJx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2474C4CEF1;
+	Mon, 15 Sep 2025 20:13:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757958559;
-	bh=oqOMkDLjrDehn7S/LFap64KzjTGq4HPu0TK1qIK27T0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gJSf30fIVQ5uENV2J7AWHrMcZSXJ/asmHxhqPi7jeCK5keTs14GXGBCja+nIx/p1R
-	 M7cULPglnFeaI8rMKcZzYpxIFtjw/2w9xG7q2XsOZ/C/uAiItwup/itWAkIu0GmwWl
-	 s9009sYHQXMcu8qRqnVqmmuAh1guQDTdvIliXJzimGYObOtIjRHix/lplHZQSYUmCA
-	 Alg5XOfF423Wj36CCpEE9HQBCVeRjn/gFXBnf9G+nnWOYJ6/T65p8CKWMZyNtRMp7F
-	 OBn1yVKtjmKEgc73OUdnHRfYy+nvqhRpHSGMowu07Gwibcq8nbgSXL6OP6VYajVg8U
-	 mVULXJ3u8MvOg==
-Message-ID: <f6c18910-d870-4fa7-8035-abc8700aef2b@kernel.org>
-Date: Mon, 15 Sep 2025 19:49:16 +0200
+	s=k20201202; t=1757967211;
+	bh=sCG6ETdfTXdU2pnnMtozox8YjbeWgsBQMnCaCblSvgk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hUtK8wJxUjCzDYLa5vedEHLvsx5Af0pWXUKHmFdth0E7Ds3tPKgFwXhFA2Dhw4YXP
+	 ga1bGxoH9FNInZ1/DbtTcIKMc2hLqL1Xa2jXs0fk52BlAA1IpcCqS1nbeYU5qzcyJ7
+	 G8z68f7IeRhPL2OTGyJC7cxWTxwyJ/gkV1ULq3YBv0tXx7J5Tv2C5ncBTXbVEAxACa
+	 YHMJ/IuoJKoE9ZWzsZhK6FEukKJZzMv8uQMlKfzvTsfp8G0KzSemAado53Uaa/LSHQ
+	 JnVJv9E7IiBlBffIwVI/b/owd/BaaKg2w5MvpgjmpIVoBnApXEJD7Pv0VbMTGCv14J
+	 rh23Z04Iet+wQ==
+Date: Mon, 15 Sep 2025 21:13:21 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>, David Lechner
+ <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy
+ Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Linus
+ Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] iio: adc: Support ROHM BD79112 ADC/GPIO
+Message-ID: <20250915211321.47865d3d@jic23-huawei>
+In-Reply-To: <aMge0jYwYCiY72Yb@smile.fi.intel.com>
+References: <20250915-bd79112-v5-0-a74e011a0560@gmail.com>
+	<20250915-bd79112-v5-2-a74e011a0560@gmail.com>
+	<aMge0jYwYCiY72Yb@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.50; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gpiolib: Extend software-node support to support
- secondary software-nodes
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Mika Westerberg <westeri@kernel.org>, Andy Shevchenko <andy@kernel.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij
- <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
- stable@vger.kernel.org
-References: <20250913184309.81881-1-hansg@kernel.org>
- <kpoek6bs3rea4fl6b4h55grmsykw2zw2j6kohu3aijlabjngyc@7fbnoon3ilhw>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <kpoek6bs3rea4fl6b4h55grmsykw2zw2j6kohu3aijlabjngyc@7fbnoon3ilhw>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi,
+On Mon, 15 Sep 2025 17:12:34 +0300
+Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
 
-On 15-Sep-25 3:21 AM, Dmitry Torokhov wrote:
-> Hi Hans,
+> On Mon, Sep 15, 2025 at 10:12:43AM +0300, Matti Vaittinen wrote:
+> > The ROHM BD79112 is an ADC/GPIO with 32 channels. The channel inputs can
+> > be used as ADC or GPIO. Using the GPIOs as IRQ sources isn't supported.
+> > 
+> > The ADC is 12-bit, supporting input voltages up to 5.7V, and separate I/O
+> > voltage supply. Maximum SPI clock rate is 20 MHz (10 MHz with
+> > daisy-chain configuration) and maximum sampling rate is 1MSPS.
+> > 
+> > The IC does also support CRC but it is not implemented in the driver.  
 > 
-> On Sat, Sep 13, 2025 at 08:43:09PM +0200, Hans de Goede wrote:
->> When a software-node gets added to a device which already has another
->> fwnode as primary node it will become the secondary fwnode for that
->> device.
->>
->> Currently if a software-node with GPIO properties ends up as the secondary
->> fwnode then gpiod_find_by_fwnode() will fail to find the GPIOs.
->>
->> Add a check to gpiod_find_by_fwnode() to try a software-node lookup on
->> the secondary fwnode if the GPIO was not found in the primary fwnode.
+> ...
 > 
-> Thanks for catching this. I think it would be better if we added
-> handling of the secondary node to gpiod_find_and_request(). This way the
-> fallback will work for all kind of combinations, even if secondary node
-> happens to be an OF or ACPI one.
+> > +static int bd79112_probe(struct spi_device *spi)
+> > +{
+> > +	struct bd79112_data *data;
+> > +	struct iio_dev *iio_dev;
+> > +	struct iio_chan_spec *cs;
+> > +	struct device *dev = &spi->dev;
+> > +	unsigned long gpio_pins, pin;
+> > +	unsigned int i;
+> > +	int ret;
+> > +
+> > +	iio_dev = devm_iio_device_alloc(dev, sizeof(*data));
+> > +	if (!iio_dev)
+> > +		return -ENOMEM;
+> > +
+> > +	data = iio_priv(iio_dev);
+> > +	data->spi = spi;
+> > +	data->dev = dev;
+> > +	data->map = devm_regmap_init(dev, NULL, data, &bd79112_regmap);
+> > +	if (IS_ERR(data->map))
+> > +		return dev_err_probe(dev, PTR_ERR(data->map),
+> > +				     "Failed to initialize Regmap\n");
+> > +
+> > +	ret = devm_regulator_get_enable_read_voltage(dev, "vdd");
+> > +	if (ret < 0)
+> > +		return dev_err_probe(dev, ret, "Failed to get the Vdd\n");  
+> 
+> > +	data->vref_mv = ret / 1000;  
+> 
+> I still think moving to _mV is the right thing to do.
+> There is no 'mv' in the physics for Volts.
 
-IOW something like this:
+I'm not disagreeing with this review but I'm also not going to hold a
+driver back for that given timing is pretty much such that I merge it
+today or it sits a cycle and this one is very near...
+I'll get fussier on this once we have written up some guidance and may
+well send a patch to modify existing recent cases like this one!
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index b619fea498c8..1a3b5ca00554 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4630,6 +4630,13 @@ struct gpio_desc *gpiod_find_and_request(struct device *consumer,
- 	scoped_guard(srcu, &gpio_devices_srcu) {
- 		desc = gpiod_find_by_fwnode(fwnode, consumer, con_id, idx,
- 					    &flags, &lookupflags);
-+
-+		if (gpiod_not_found(desc) && fwnode) {
-+			dev_dbg(consumer, "trying secondary fwnode for GPIO lookup\n");
-+			desc = gpiod_find_by_fwnode(fwnode->secondary, consumer,
-+						    con_id, idx, &flags, &lookupflags);
-+		}
-+
- 		if (gpiod_not_found(desc) && platform_lookup_allowed) {
- 			/*
- 			 * Either we are not using DT or ACPI, or their lookup
+> 
+> > +	ret = devm_regulator_get_enable(dev, "iovdd");
+> > +	if (ret < 0)
+> > +		return dev_err_probe(dev, ret, "Failed to enable I/O voltage\n");
+> > +
+> > +	data->read_xfer[0].tx_buf = &data->read_tx[0];
+> > +	data->read_xfer[0].len = sizeof(data->read_tx);
+> > +	data->read_xfer[0].cs_change = 1;
+> > +	data->read_xfer[1].rx_buf = &data->read_rx;
+> > +	data->read_xfer[1].len = sizeof(data->read_rx);
+> > +	spi_message_init_with_transfers(&data->read_msg, data->read_xfer, 2);  
+> 
+> > +	devm_spi_optimize_message(dev, spi, &data->read_msg);  
+> 
+> And if it fails?..
+I've added the following and applied the series.
 
-That should work too, but if there is an OF or ACPI node it should always
-be the primary one. So my original patch id fine as is.
+Note I'm cutting this fine so if we get any build issues or similar
+it might well get pushed back to next cycle yet!
 
-Either way works for me. If you prefer the above approach instead of my
-original patch let me know and I'll give it a test-run and then post a v2.
-
-Regards,
-
-Hans
-
+diff --git a/drivers/iio/adc/rohm-bd79112.c b/drivers/iio/adc/rohm-bd79112.c
+index b406d4ee5411..d15e06c8b94d 100644
+--- a/drivers/iio/adc/rohm-bd79112.c
++++ b/drivers/iio/adc/rohm-bd79112.c
+@@ -454,12 +454,18 @@ static int bd79112_probe(struct spi_device *spi)
+        data->read_xfer[1].rx_buf = &data->read_rx;
+        data->read_xfer[1].len = sizeof(data->read_rx);
+        spi_message_init_with_transfers(&data->read_msg, data->read_xfer, 2);
+-       devm_spi_optimize_message(dev, spi, &data->read_msg);
++       ret = devm_spi_optimize_message(dev, spi, &data->read_msg);
++       if (ret < 0)
++               return dev_err_probe(dev, ret,
++                                    "Failed to optimize SPI read message\n");
+ 
+        data->write_xfer.tx_buf = &data->reg_write_tx[0];
+        data->write_xfer.len = sizeof(data->reg_write_tx);
+        spi_message_init_with_transfers(&data->write_msg, &data->write_xfer, 1);
+-       devm_spi_optimize_message(dev, spi, &data->write_msg);
++       ret = devm_spi_optimize_message(dev, spi, &data->write_msg);
++       if (ret < 0)
++               return dev_err_probe(dev, ret,
++                                    "Failed to optimize SPI write message\n");
+ 
+        ret = devm_iio_adc_device_alloc_chaninfo_se(dev, &bd79112_chan_template,
+                                                    BD79112_MAX_NUM_CHANNELS - 1,
+> 
+> > +	data->write_xfer.tx_buf = &data->reg_write_tx[0];
+> > +	data->write_xfer.len = sizeof(data->reg_write_tx);
+> > +	spi_message_init_with_transfers(&data->write_msg, &data->write_xfer, 1);
+> > +	devm_spi_optimize_message(dev, spi, &data->write_msg);
+> > +
+> > +	ret = devm_iio_adc_device_alloc_chaninfo_se(dev, &bd79112_chan_template,
+> > +						    BD79112_MAX_NUM_CHANNELS - 1,
+> > +						    &cs);
+> > +
+> > +	/* Register all pins as GPIOs if there are no ADC channels */
+> > +	if (ret == -ENOENT)
+> > +		goto register_gpios;
+> > +
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	iio_dev->num_channels = ret;
+> > +	iio_dev->channels = cs;
+> > +
+> > +	for (i = 0; i < iio_dev->num_channels; i++)
+> > +		cs[i].datasheet_name = bd79112_chan_names[cs[i].channel];
+> > +
+> > +	iio_dev->info = &bd79112_info;
+> > +	iio_dev->name = "bd79112";
+> > +	iio_dev->modes = INDIO_DIRECT_MODE;
+> > +
+> > +	/*
+> > +	 * Ensure all channels are ADCs. This allows us to register the IIO
+> > +	 * device early (before checking which pins are to be used for GPIO)
+> > +	 * without having to worry about some pins being initially used for
+> > +	 * GPIO.
+> > +	 */
+> > +	for (i = 0; i < BD79112_NUM_GPIO_EN_REGS; i++) {
+> > +		ret = regmap_write(data->map, BD79112_FIRST_GPIO_EN_REG + i, 0);
+> > +		if (ret)
+> > +			return dev_err_probe(dev, ret,
+> > +					     "Failed to initialize channels\n");
+> > +	}
+> > +
+> > +	ret = devm_iio_device_register(data->dev, iio_dev);
+> > +	if (ret)
+> > +		return dev_err_probe(data->dev, ret, "Failed to register ADC\n");
+> > +
+> > +register_gpios:
+> > +	gpio_pins = bd79112_get_gpio_pins(iio_dev->channels,
+> > +					  iio_dev->num_channels);
+> > +
+> > +	/* If all channels are reserved for ADC, then we're done. */
+> > +	if (!gpio_pins)
+> > +		return 0;
+> > +
+> > +	/* Default all the GPIO pins to GPI */
+> > +	for_each_set_bit(pin, &gpio_pins, BD79112_MAX_NUM_CHANNELS) {
+> > +		ret = bd79112_gpio_dir_set(data, pin, GPIO_LINE_DIRECTION_IN);
+> > +		if (ret)
+> > +			return dev_err_probe(dev, ret,
+> > +					     "Failed to mark pin as GPI\n");
+> > +	}
+> > +
+> > +	data->gpio_valid_mask = gpio_pins;
+> > +	data->gc = bd79112_gpio_chip;
+> > +	data->gc.parent = dev;
+> > +
+> > +	return devm_gpiochip_add_data(dev, &data->gc, data);
+> > +}  
+> 
 
 
