@@ -1,77 +1,78 @@
-Return-Path: <linux-gpio+bounces-26147-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26148-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4589DB570E9
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 09:11:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFA99B570ED
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 09:12:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7449E7A764C
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 07:10:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 652BC3B8088
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 07:12:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E37712D24B3;
-	Mon, 15 Sep 2025 07:11:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AFDB2D24B3;
+	Mon, 15 Sep 2025 07:12:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U/TwOcog"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X6D8tncG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308C42D2488
-	for <linux-gpio@vger.kernel.org>; Mon, 15 Sep 2025 07:11:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9ED202976
+	for <linux-gpio@vger.kernel.org>; Mon, 15 Sep 2025 07:12:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757920308; cv=none; b=CanPH8Fg6fHJ12ZqFtTn458EKIRU86Vy+wd0pOBGPj1mph6rLFCfDY9KDXwg2crdLpi3RRViQ/o5cmJ7SrHAxVshQQoa5jPNqGDRMK7xXJiDADD4uI2Y8ZqL/HIU3qA5LQOWCzAFf7OSwVxnJFmKYOK5BGjQkvNTa3SHGvtTGJM=
+	t=1757920356; cv=none; b=ieKj4Yn6Wn7YIzsKc2ypBdYdFv8Efosgh8UWOTw0xhfEmdZl5S9ZKIGlhyM8yzyUlKKzwbC09mKmIXiPM9I5jMF2m9aIHA05xTEZ4M8m0YqDBdbj3gZZoEke1W7zgE1+W92drYArWBoz9wuDyAOfVronDv/4dw/lDfPKIcip9ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757920308; c=relaxed/simple;
-	bh=IsgAPpyXkbreJRRA0w7kjsQFxpj1ev/QH3Dka/0dZS4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=baJR1khlCGDOrUrEhiqwFCLSIlFLjg8PwY5SSppc4ndu7FYziDOIStffdC4v9COBmZS9buQLxKaZbVqEsc+T9q6ZAMAb4zcVBbwRAYBfXkAvF0ZVDjTvE0QoOSM/6lv5M4oTHIljFeeGSGJTQm9PZXP03F834KIOSIur/LjZZw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U/TwOcog; arc=none smtp.client-ip=209.85.208.177
+	s=arc-20240116; t=1757920356; c=relaxed/simple;
+	bh=A/pvIm8LIuK60+1hR9C0NY5zWTyTKfhuv51MAMU58ik=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=orp65YCLBB9k+8zJiqsEzK4vk7ppJ8tuiPu1v56lSr4q0ZH//2kzlxOzjZ5tAo67xQEBx0oAmVaAE8QDxlH+jZBNv7vJt/bA4b9onRu99SyygNTy9JEfm1H4GTE/d+SCRirP5CWoymBKyMHrwDUXvkKSp0sf4/3N4z0LLtlLonw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X6D8tncG; arc=none smtp.client-ip=209.85.208.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-336c2194a65so29767531fa.2
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Sep 2025 00:11:45 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-336c86796c0so29407871fa.2
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Sep 2025 00:12:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757920304; x=1758525104; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bfX7diTZFOB89teVPyN0MNu/bt0BkcOn8S63v6cexCc=;
-        b=U/TwOcog4nGwRa92uR2r/+gTYTVD1MbQ4RsHGQapP82m/TB9e9rARu6Mi6rAGHkh69
-         sJrO1FbZQKhMcP7sVNjjv+hVgUKBz5ZwqwmIkbgWh/91AEnMMuyNxSa3d/8cD7xhQkhU
-         b2VD6CsxjxJ8QVwKiikufuAygkrPh/lKi4DRi4ncBv9Q/MQeFt9coem9EGqiVHlaLzpO
-         BbLWOkD8wPg7gpj5Iv1AK8Ogrc14KPNccZJZxMuHQmAnWvZfcmb+VDrXD+hXDnE1Ec66
-         mh1vk+0eBF3n0FBWmyGxCs8eF14mYM6Do6MqD2MU6SllRNB4hUu1IjMKzSJRu2W3GSNs
-         GkoA==
+        d=gmail.com; s=20230601; t=1757920351; x=1758525151; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BCTGsKnEAhIcIWggtSqgF0UGR2T7jy2XV44IdHUz0qs=;
+        b=X6D8tncG+PXQxBhFu8x7cusqpaxXdAyJMKkfAH1aDDw3b5Hs0bjZrIl8l+8YQ4ocRx
+         919YX9OLb8ntm7GDQblrg23gBOKJoK8fmedV14lGpPzvgO7l5wgvcRKOYfiTST4uPKkM
+         gPkejqR1mbP7Q+fCsVCMh95sEhtXREXhK9LP8g4LzzxNI9x5zX8qBJ7Wv7fYZN3iJ4aK
+         zemMw9rh9RHeyznmuvJskgW+lG/ABkhnx27tPg2LlM2WGSZIV5ba3cDJZMC0RWs8omoQ
+         w2X9m5DxSobjmnEvs1aWEbIvsEG9EgZBEvjO8FuhA87eURX97I9JJ8rItO82wL9+ujfv
+         HLfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757920304; x=1758525104;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bfX7diTZFOB89teVPyN0MNu/bt0BkcOn8S63v6cexCc=;
-        b=IWu342ubBHbHqOH0I98YNOXpr6J63Pfnz2h0ynZ8KixMiQnixa2KXo3viM2T5erCBm
-         zx+Zgqz15coDnZTriESdHTdCOt5A0S3Nrrji1AREDqbEN6mgLhkvXziJ4INwrghF3iMx
-         wyJlx4PKogfQ+cNayD8aKmMyscCpgnTGPT9emR+D+mtph9L7Cz8Ng0W6Zfip1w5JudUZ
-         025LinfrQAHnnu1wzfu/JjxtJTvkdLaSdKVXVeVp81+yRZ4YV3Wy5aBGW0d9cY2hlr2h
-         aU0Z7V+lsse5wyTu5zh2FuRLJU1XfAqS0NWRhCVIM0Kyapo+C9eQwd10PjokoS81PiUg
-         O46w==
-X-Forwarded-Encrypted: i=1; AJvYcCVXHW8V/5OwwD0+5qDueXiiSjMrE7/qxAMlFmkZ+Z87KjQV/jY7iC5qJbJqgQ+4pilhXo5NWgkGBvyQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+5bRIyuTxFte23gDXJfQz8hUu7urFXHs85hzi5yNW+tHSmfbr
-	0WpVTjyHuWHYS3aYICfyuVS7Ei61+sak1q88Nn3wdXvK/t3M4Y+/Deth
-X-Gm-Gg: ASbGncsLzjoCNBlMYNWMWJ9yQh/JbQF+OQ7Xs4sjsjWHxQd8tfNXDrCB5q8++Mv0vkT
-	nZ7tJ7UHGHe7fh4cT55pVbbCJ6xwWsD8lxegnho3+lhwUkyIv5xg2owFth2Tf4xQffqTjlJ1JtM
-	YKh8zY1nvTSHXIrTnmyNHsxGy71kQsDLnlszYT9NoiOCNDv7otDVA5IU5r6+12NtxPHk58LOurT
-	hthtv5CwCzghESeIf7cP8pghEse0uaQRsPk1X7AcolKIMFGho7cvxY8flg+/XRCmfOJ8DGAFXbU
-	fhfSGxH088LHJyTd7EaPXzFSuI040FETVdpUaw+JlaZ/+fbk3FXbvWqnIEZazAu3dGFL7yk/e+O
-	bdq2UEV4uUNaNrcyn9DAsnHZf8Q==
-X-Google-Smtp-Source: AGHT+IHnZijPDedKaSXjvGExCJ5Bp7pMs2ApqYkbSxd1AwGKZxuCUAgkgsahBx5kGvRvP16aCqLHUA==
-X-Received: by 2002:a05:651c:439c:20b0:336:bc68:d29c with SMTP id 38308e7fff4ca-3513a32712emr26510541fa.3.1757920303946;
-        Mon, 15 Sep 2025 00:11:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1757920351; x=1758525151;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BCTGsKnEAhIcIWggtSqgF0UGR2T7jy2XV44IdHUz0qs=;
+        b=L7/hMKTflCOTR5cmgX+bWQgdctPSkb42FvIk6RI/enzIxLmBJG1ZO+imAudk1da4dJ
+         cAjS+S+MRX+fZcsEMDyxP9MGL8cQVipQzxW+H1DX95v4JnlDv973WgyISutGKO52KoyW
+         0x85uz7A0c5ULYZGLdrt1k/+5xX/vGOYQ6Oug839+iYz+3nsgETxHBqMlbiGWo4yCyRu
+         rsLv1ZuHunzxJw9Gy8boLM3Rqq1L4edpBPUGaUhvo8O/4FtvtmYVF2htzsbffS207YSY
+         K1CfJOZlLvERio6hhfsxHeQmlxYmkk73wsPs3Yijyy3zJrnnq6Ij6BN+vhdRD1GCt53v
+         99Dw==
+X-Forwarded-Encrypted: i=1; AJvYcCWCEvnjAC0qyUNDOhP0TQmxQSINrulvQXp+9Uax8VaZ0625t41686WnKF8td6Scsg12KMhuCvE5gtFg@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlDXutfENP54qyxJ+IQNffDv2rOGAOIQT0BTrKoJzgQnBFa5o5
+	4qQohjAvcZXEWuRyZNOy5/Aq/vO1uM4fg2TmObHshxuoLJ3fy2Kn3Ttf
+X-Gm-Gg: ASbGnctBeRk7Gu7MfUoQSfB/THhGsHFKVKN2vG9We5fA9l0CgU55/v9uIBYiQssnztj
+	9B1YKNOfEywW9DgK9WgndGxFYp8Gfc9Naj44DrnUg3bRZldRq9Qxpbvsvr3PUOGKfwW4MSoKICA
+	pJSMGgJhZBrTBdQ5113+s22N4QFVAKCZwEevhs5bMafXgrWkutNhGZIhIryHkzhyzvJE7Xbhm2m
+	6KmLj58LmXUEX9fNnXnv1bFGgjHDkMODZuWlJGJHCHjr/z7ZD3fgG5d1kr7DCTlfUvPtQnkCldN
+	1TGmTDraAm03ejLNaplCL19f9KWgkqtI7QTSnIXWPu/+e5XCRLzhowwIOGZlswatwBDoLFQ5OJ8
+	lwmkrbqIa813OnF9B7tgUJmBO6A==
+X-Google-Smtp-Source: AGHT+IE6viEWBo0Up/kAqkcXMNpwo71/XLp84RYtnhqNjvB3tJoxPxNBcrMFpiOLJW3K15VCZMsb8Q==
+X-Received: by 2002:ac2:4e12:0:b0:55f:4839:d059 with SMTP id 2adb3069b0e04-5704b52f28fmr2676811e87.13.1757920351004;
+        Mon, 15 Sep 2025 00:12:31 -0700 (PDT)
 Received: from mva-rohm ([213.255.186.37])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-34f1b39dca7sm24425461fa.50.2025.09.15.00.11.42
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-56e64dbbf7bsm3284576e87.118.2025.09.15.00.12.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Sep 2025 00:11:42 -0700 (PDT)
-Date: Mon, 15 Sep 2025 10:11:23 +0300
+        Mon, 15 Sep 2025 00:12:30 -0700 (PDT)
+Date: Mon, 15 Sep 2025 10:12:26 +0300
 From: Matti Vaittinen <mazziesaccount@gmail.com>
 To: Jonathan Cameron <jic23@kernel.org>,
 	David Lechner <dlechner@baylibre.com>,
@@ -85,8 +86,9 @@ To: Jonathan Cameron <jic23@kernel.org>,
 Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
 	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v5 0/3] Support ROHM BD79112 ADC
-Message-ID: <20250915-bd79112-v5-0-a74e011a0560@gmail.com>
+Subject: [PATCH v5 1/3] dt-bindings: iio: adc: ROHM BD79112 ADC/GPIO
+Message-ID: <20250915-bd79112-v5-1-a74e011a0560@gmail.com>
+References: <20250915-bd79112-v5-0-a74e011a0560@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -94,147 +96,189 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="8bOBuaMJtlKxByA+"
+	protocol="application/pgp-signature"; boundary="C43v0lf9gbjbyPJ9"
 Content-Disposition: inline
-X-B4-Tracking: v=1; b=H4sIAGO7x2gC/2WOSw7CIABEr2JYC+FbWlfew3SBFFoSKQaQaJveX
- dqVicuXzLyZFSQTnUngclpBNMUlF+YK4nwCelLzaKAbKgOKqcAdwfA+yI4QCjlrFG6lEpgwUNP
- PaKx7H6ZbX9nG4GGeolFHX4diIiJSSCwYFw0aXUZeLUsdV1qH15yvo1fugXTwu29yKYf4OY4Vv
- lv/PxQOMbQttZxJ3qhW/yj6bdu+nc3mlt4AAAA=
-X-Change-ID: 20250910-bd79112-436a087a5013
+In-Reply-To: <20250915-bd79112-v5-0-a74e011a0560@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3740;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3384;
  i=mazziesaccount@gmail.com; h=from:subject:message-id;
- bh=OQts2Lx4+UAW1/ys5F+pD0K4L3rowsIP7nue6xgUq4I=;
- b=owEBbQGS/pANAwAKAXhQN/9N2qHFAcsmYgBox7tkk7XzsSoPjuJX+cHp+q1VsI8zGA/a9G68r
- GfTYVeHw66JATMEAAEKAB0WIQQjH5/zBlvbx8soSFN4UDf/TdqhxQUCaMe7ZAAKCRB4UDf/Tdqh
- xZLcCACVuPI9vlMdaQSh7lRG0eoFHyxnCaGTmey9MGafcZHg8cpHcJheRvHRsDWzgoCkNxmSBVl
- 9VIEZ+bIP3OUcYkEwvr1aryFh+to21v2gvXRtWMHWwnvjdUWr7wcOqBMBVXa97XcR/NhKCILZiQ
- Wv32PsOBlEZl3qs8lnOvJBxb2fb+VaV40J/YitollxrnVxHinDUAXaipS7xdFic8xI9PmyfzhM9
- Yn9pwb+vSWvYND5GF9MFkrvSeB7JO7juHuDTIefc3SzaLcDRCRs5ymzjGrsEFjtsYfRDhYZkB2h
- eC6rFbCoNaI7yy5oG456TZDS+/WPmdkwb5c8TNkKi34Pm+ie
+ bh=q+PdYztni/yNFMmXAS+zMK1I2vs1JpjrImQBvaSjEjs=;
+ b=owEBbQGS/pANAwAKAXhQN/9N2qHFAcsmYgBox7tkCRgoCdUzbqg7cAGhthvGC/OCorK969Rdc
+ hRFUcYJLsiJATMEAAEKAB0WIQQjH5/zBlvbx8soSFN4UDf/TdqhxQUCaMe7ZAAKCRB4UDf/Tdqh
+ xbpXCACnuR9mEhXMBLEsL7UwJtAtO7FmMGxLZM7CN3j8ByXUyhVeeMk8UMbmIrdiq0teEHg2NoC
+ FQr6ZvxqPhuXfBJqL+WobE9Ojsc9MoPFEQJiz+ojzLvy+Vy3ielr0SNbJjbPmxb5wOYyieCWxWW
+ A8MYqVxAmTJDN1sPMMiSweRpHxNlKWx94fbUs90ZKtE7jRL7KzFjqEmGeliFN1pqPR6knbZQF+J
+ HBakCLU0i8OZxUCeyxbk5H5bpkqO4hJgEHyI1FOp1zOfaRG8ySQbNRM4a9p7BBIkzSVu4v2sdtf
+ knZ4QBig1zHu4MMZVmlQX0AJtTV9PYm/L1tlVrp/Dd65LOcI
 X-Developer-Key: i=mazziesaccount@gmail.com; a=openpgp;
  fpr=83351EE69759B11AF0A3107B40497F0C4693EF47
 
 
---8bOBuaMJtlKxByA+
-Content-Type: text/plain; charset=iso-8859-1
+--C43v0lf9gbjbyPJ9
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Support ROHM BD79112 ADC/GPIO
+The ROHM BD79112 is an ADC/GPIO with 32 channels. The channel inputs can
+be used as ADC or GPIO. Using the GPIOs as IRQ sources isn't supported.
 
-The ROHM BD79112 is a 12-bit, 32 channel SAR ADC / GPIO IC. Or, a "Signal
-Monitor Hub IC" as data-sheet describes it.
+The ADC is 12-bit, supporting input voltages up to 5.7V, and separate I/O
+voltage supply. Maximum SPI clock rate is 20 MHz (10 MHz with
+daisy-chain configuration) and maximum sampling rate is 1MSPS.
 
-Data sheet states the maximum sampling rate to be 1 MSPS, but achieving
-this would probably require the SPI and samples to be processed by
-something else but the CPU running Linux. This could work with the "SPI
-offloading" which has recently landed upstream - but I have no HW to test
-this so nothing fancy is implemented here. It's still worth mentioning
-if someone needs the speed and wants to try implementing it :)
+Add a device tree binding document for the ROHM BD79112.
 
-The SPI protocol is slightly peculiar. Accesses are done in 16-bit
-sequences, separated by releasing and re-aquiring the chip-select.
+Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Register write takes 1 such sequence. The 8-bit register data to write,
-is stored in the last 8 bits. The high 8 bits contain register address
-and an I/O-bit which needs to be set for register accesses.
-
-Register read consists of two 16-bit sequences (separated by
-chip-select). First sequence has again the register address and an IO
-bit in the high byte. Additionally, reads must have a 'read bit' set.
-The last 8 bits must be zero. The register data will be carried in the
-last 8 bits of the next 16-bit sequence while high bits in reply are zero.
-
-ADC data reading is similar to register reading except:
- - No R/W bit or I/O bit should be set.
- - Register address is replaced by channel number (0 - 31).
- - Reply data is carried in the 12 low bits (instead of 8 bits) of the
-   reply sequence.
-
-The protocol is implemented using custom regmap read() and write()
-operations.
-
-Other than that, pretty standard device and driver.
-
+---
 Revision history:
- v4 =3D> v5:
- - Minor driver changes
-   - doc
-   - SPI optimization
- - MAINTAINERS and dt-binding unchanged
- - Link to v4: https://lore.kernel.org/r/20250910-bd79112-v4-0-f82f43746a8c=
-@gmail.com
+v4 =3D> :
+ - No changes
 
- v3 =3D> v4:
- - Fix Kconfig dependency (I2C =3D> SPI)
- - Styling as suggested by Andy and Jonathan
- - Moved I/O documentation comment and read/write functions next to each
-   other and tried clarifying the comment
+v3 =3D> v4:
+ - shorten the example by dropping some channels.
 
- v2 =3D> v3:
- - Mostly cosmetic changes to the driver
- - dt-bindings and MAINTAINERS unchanged
-
- v1 =3D> v2:
- - Plenty of fixes to the driver (thanks to reviewers, Andy and David)
- - Add gpio-controller information to the device-tree bindings
-
-See individual patches for more accurate changelog
-
+v1 =3D> v2:
+ - BD79112 can act as a GPIO controller.
 ---
-To: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-To: Nuno S=E1 <nuno.sa@analog.com>
-To: Andy Shevchenko <andy@kernel.org>
-To: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: Conor Dooley <conor+dt@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-iio@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org
-
----
-Matti Vaittinen (3):
-      dt-bindings: iio: adc: ROHM BD79112 ADC/GPIO
-      iio: adc: Support ROHM BD79112 ADC/GPIO
-      MAINTAINERS: Support ROHM BD79112 ADC
-
- .../devicetree/bindings/iio/adc/rohm,bd79112.yaml  | 104 ++++
- MAINTAINERS                                        |   3 +-
- drivers/iio/adc/Kconfig                            |  10 +
- drivers/iio/adc/Makefile                           |   1 +
- drivers/iio/adc/rohm-bd79112.c                     | 550 +++++++++++++++++=
+ .../devicetree/bindings/iio/adc/rohm,bd79112.yaml  | 104 +++++++++++++++++=
 ++++
- 5 files changed, 667 insertions(+), 1 deletion(-)
----
-base-commit: d1487b0b78720b86ec2a2ac7acc683ec90627e5b
-change-id: 20250910-bd79112-436a087a5013
+ 1 file changed, 104 insertions(+)
 
-Best regards,
+diff --git a/Documentation/devicetree/bindings/iio/adc/rohm,bd79112.yaml b/=
+Documentation/devicetree/bindings/iio/adc/rohm,bd79112.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..aa8b07c3fac1096c0d48ec64361=
+263624f2bb9fc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/rohm,bd79112.yaml
+@@ -0,0 +1,104 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/rohm,bd79112.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ROHM BD79112 ADC/GPO
++
++maintainers:
++  - Matti Vaittinen <mazziesaccount@gmail.com>
++
++description: |
++  The ROHM BD79112 is a 12-bit, 32-channel, SAR ADC. ADC input pins can be
++  also configured as general purpose inputs/outputs. SPI should use MODE 3.
++
++properties:
++  compatible:
++    const: rohm,bd79112
++
++  reg:
++    maxItems: 1
++
++  spi-cpha: true
++  spi-cpol: true
++
++  gpio-controller: true
++  "#gpio-cells":
++    const: 2
++
++  vdd-supply: true
++
++  iovdd-supply: true
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++patternProperties:
++  "^channel@([0-9]|[12][0-9]|3[01])$":
++    type: object
++    $ref: /schemas/iio/adc/adc.yaml#
++    description: Represents ADC channel. Omitted channels' inputs are GPIO=
+s.
++
++    properties:
++      reg:
++        description: AIN pin number
++        minimum: 0
++        maximum: 31
++
++    required:
++      - reg
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - iovdd-supply
++  - vdd-supply
++  - spi-cpha
++  - spi-cpol
++
++additionalProperties: false
++
++examples:
++  - |
++    spi {
++        #address-cells =3D <1>;
++        #size-cells =3D <0>;
++        adc: adc@0 {
++            compatible =3D "rohm,bd79112";
++            reg =3D <0x0>;
++
++            spi-cpha;
++            spi-cpol;
++
++            vdd-supply =3D <&dummyreg>;
++            iovdd-supply =3D <&dummyreg>;
++
++            #address-cells =3D <1>;
++            #size-cells =3D <0>;
++
++            gpio-controller;
++            #gpio-cells =3D <2>;
++
++            channel@0 {
++                reg =3D <0>;
++            };
++            channel@1 {
++                reg =3D <1>;
++            };
++            channel@2 {
++                reg =3D <2>;
++            };
++            channel@16 {
++                reg =3D <16>;
++            };
++            channel@20 {
++                reg =3D <20>;
++            };
++        };
++    };
+
 --=20
-Matti Vaittinen <mazziesaccount@gmail.com>
+2.51.0
 
 
---8bOBuaMJtlKxByA+
+--C43v0lf9gbjbyPJ9
 Content-Type: application/pgp-signature; name=signature.asc
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCgAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmjHvBsACgkQeFA3/03a
-ocUijwf/TIWG2Yx/GJYf6+EPN0SAwyp/2z/AebFqy2n2AuYUhZcN/PrFxZp9FEhS
-kk1WSFb50J4z+GbFWLeoHHFGNFhlG81+wZVS7yfZdRsc/SSNqLq/UmjTAo8B8Qjj
-Gbx2v0g4elgDJUF9/Mm/fjramHHN78xamBEay1z7qe09Eg5YtKP3l5F+KIv4Oehx
-w4TOcT5/+utmfJ3lnxdoekSJn6SXPW7M53JvLZ0Wt7q4qdDdvgk/3s3EB9tLZDcg
-KibOB5bkzVWGJpUZOHeVaRTn439GtbOsNDmjE0VuyRnzg261BfVWJ/OW30M9pQ/1
-PU61iNvc6GSx+XS4yeluIh9+Ye2i6w==
-=cHlS
+iQEzBAEBCgAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmjHvFoACgkQeFA3/03a
+ocWJhQf/aLfWbTiT1P8QC0ouMUYc5UR6otQWOr3Q8R8TZWxp32yNu3E2xYUIDEod
+PsZspw7gASfNsoMCU44kvCJcGwqgp9xevprySzPzCz1RDMObi90o+yYGa7RZNujt
+XSPA/GwgCqGLOv+BeXldOiT2NmVNcZTYybC6dMkvk0QKQsboAwnY5Tz2JSNaDUEj
+z9KkjchiGMvg/JyDYZV93bz0TrDPKUCE2iOPXU42WWFJxQU5cwBjWcZI/WnQ96qb
+tANBnEkiHYXrpapuANPxBejKUaYlv6ADFuEFgB1tYkcHr0Tb1GN8PtR0GD1MWr3Q
+PtVfuq7kRBGJ9MuBh8OoQAh1P1GI7w==
+=sn/E
 -----END PGP SIGNATURE-----
 
---8bOBuaMJtlKxByA+--
+--C43v0lf9gbjbyPJ9--
 
