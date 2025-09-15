@@ -1,183 +1,118 @@
-Return-Path: <linux-gpio+bounces-26167-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26169-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 787E4B57BAE
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 14:47:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45E35B57BC1
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 14:48:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BB4DE188618E
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 12:47:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E3FAC17A623
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 12:48:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29ACF2FD1C1;
-	Mon, 15 Sep 2025 12:46:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B1992D63E2;
+	Mon, 15 Sep 2025 12:47:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P5MQNHjd"
+	dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b="mrh2NbHx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sendmail.purelymail.com (sendmail.purelymail.com [34.202.193.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A0030BF53;
-	Mon, 15 Sep 2025 12:46:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D44E30EF87
+	for <linux-gpio@vger.kernel.org>; Mon, 15 Sep 2025 12:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.202.193.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757940362; cv=none; b=DOznAL3x8Qqn4bn0TAG4qgFh5aDhOpCZ/8HJnqB3oiRrei2omokkUePB4Vmx3MW8QyvDyUk6o9oqbHa5HS2WySnTexKRabzFnmOjzo7/2qqBiTZyQXl0vO76gGdrNnA/2KtCTdceH1uOMsLpEADrgJLZqSUGPRXEPFtY+2+H2Xk=
+	t=1757940446; cv=none; b=HMUXux0q66G6LM5QwGZx47b1Iq09D5P4ajwKN8LeqJ/YeuVSPtCMth/HJQ0AeIJ84qPcEznP4MLOqXS4a8UvNNsHjRbl1BjlV4hGmbaDm6txlfGJDa106AOdLezzoSvqqRQF/5NxTcYrlyxlaaqQD3NzTmxLVct1+SAa+tmBCuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757940362; c=relaxed/simple;
-	bh=BNNYoYpkBHTO9cpmUyT6nQRRrUm5Of6d7v3BDEpFFU4=;
-	h=Content-Type:Date:Message-Id:From:To:Subject:Cc:References:
-	 In-Reply-To; b=bQ7rB4WZGgXa0SYDWjvzGNY3pGZ9MCEfGb2Azjm4bCrIiqLPJVwbkSM9GEvFvMC3I2+MXk3YrBmNTxf0UorNh1FavxOv3mutflDFjpI8OnKXljw//RYD+s2QDlOwIqsIa1gXQrJwe1x2vAeb9faHvA3cTtrxitne7UM7aGlgMYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P5MQNHjd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A7B9C4CEF1;
-	Mon, 15 Sep 2025 12:46:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757940362;
-	bh=BNNYoYpkBHTO9cpmUyT6nQRRrUm5Of6d7v3BDEpFFU4=;
-	h=Date:From:To:Subject:Cc:References:In-Reply-To:From;
-	b=P5MQNHjdJOR5OvJ2seL9fNaXLlcWGaiKyZi6zDxypyw2W59qIZyeDLkNYYkRcwAfx
-	 YVfCzRNxSYdK9dRclEKMCbWxHfe5vM9u4Phd8LR6GeD0LQ9mRSyHLbD812YZ+EUalj
-	 a+f4aAP5uEn0IQs46QKp5fQ9/IP3U2JKi6i34zTB++GhmJd7z0NkCu5YQapAbH6eev
-	 vgfsiT0TR8NJcy94zbNNStasbKd+28YOJtnR0ZQ42KEZSzDPVqzSNVrfRqgE/cejaZ
-	 FsPmE4okkwbYujW8ISwyubXxYnp+Da7R7oto/toJ+Ir+krtFNPP1/s7B7b9EH5BvVk
-	 S/jkQ3yHVBvyA==
-Content-Type: multipart/signed;
- boundary=b738722ffd0679501c74392f15a62318d558d5578d88a795dfcc1186f5e5;
- micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Mon, 15 Sep 2025 14:45:58 +0200
-Message-Id: <DCTDUJO0PS8B.1LD03WTEMNRVP@kernel.org>
-From: "Michael Walle" <mwalle@kernel.org>
-To: "Ioana Ciornei" <ioana.ciornei@nxp.com>, "Rob Herring"
- <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>, "Shawn Guo" <shawnguo@kernel.org>,
- "Lee Jones" <lee@kernel.org>, <devicetree@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/9] gpio: regmap: add the .fixed_direction_output
- configuration parameter
-Cc: "Frank Li" <Frank.Li@nxp.com>
-X-Mailer: aerc 0.16.0
-References: <20250915122354.217720-1-ioana.ciornei@nxp.com>
- <20250915122354.217720-5-ioana.ciornei@nxp.com>
-In-Reply-To: <20250915122354.217720-5-ioana.ciornei@nxp.com>
+	s=arc-20240116; t=1757940446; c=relaxed/simple;
+	bh=nZ7OKo1OumVzkuKry68ZUJeaNsWtdwCoQlST8Zyjk5k=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Hdtl29y7RBD3/BetIz0OIe0b55CKFC0t5EgFlPqSHDc0OrH+/HWAn/y203LS4OtRoJEqdXyY65i8E8iRSgpvHcZPdMWFzrxPpIW6oApq4BfkoeR7eqA9qjJliADbGkecIL583fVIS+GvB2k0YTMk5BdrXellcjIWpYT5bKiMwbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org; spf=pass smtp.mailfrom=mentallysanemainliners.org; dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b=mrh2NbHx; arc=none smtp.client-ip=34.202.193.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mentallysanemainliners.org
+Authentication-Results: purelymail.com; auth=pass
+DKIM-Signature: a=rsa-sha256; b=mrh2NbHx0ApUEq6mOLe51fG0WP5c6GZwIxnZXPh5zzAsiHX28BeTTHgK4ARDvNuM3zf/zMPq4HRMC3XpO4xAcg60zZmrhd4D73R0O6qTK2xTOqGjdn/Na3neNJIc7Z1XO5Ez5yGpdb53j1YGfRfsuGgApfcOG3OnEF8HtyGKirGRuSJetp4bPc1hl69xPPWA72kUWBbFdgmkTdwznUc8BKp/xmu8MZdRTJL+3thPTDtacmBQ+lhUjyTwLTYPAL3ifO/G5HTbl/krO55g6vjoye2ESvMIBz5H+yNZu+sIlioiWii9odijx17Zr3HXxEz6qf+fcK4JXNNuHGIh1U2TKA==; s=purelymail3; d=purelymail.com; v=1; bh=nZ7OKo1OumVzkuKry68ZUJeaNsWtdwCoQlST8Zyjk5k=; h=Feedback-ID:Received:From:Subject:Date:To;
+Feedback-ID: 68247:10037:null:purelymail
+X-Pm-Original-To: linux-gpio@vger.kernel.org
+Received: by smtp.purelymail.com (Purelymail SMTP) with ESMTPSA id 1506483826;
+          (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+          Mon, 15 Sep 2025 12:46:27 +0000 (UTC)
+From: Igor Belwon <igor.belwon@mentallysanemainliners.org>
+Subject: [PATCH v3 0/4] Add support for mt6878 pinctrl
+Date: Mon, 15 Sep 2025 14:46:22 +0200
+Message-Id: <20250915-mt6878-pinctrl-support-v3-0-593cc007d4cf@mentallysanemainliners.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJ4KyGgC/4XNQQ7CIBCF4asY1mKAtoKuvIdxQdtpOwkFAtjYN
+ L27tCs36vKfZL63kAgBIZLrYSEBJozobI7ieCDNoG0PFNvcRDBRsQtTdExnJRX1aJsUDI1P711
+ IVPOWc8lLBl1N8rMP0OFrh++P3APG5MK870x8u/4lJ04ZLbpaqkbpugR1G8EmbcwctYVRozVoI
+ cSTCz3ZNibx4fLyqyuyK6pSFlzromvET3dd1zcjm61oJQEAAA==
+X-Change-ID: 20250908-mt6878-pinctrl-support-a1d117140efb
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Sean Wang <sean.wang@kernel.org>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, 
+ Igor Belwon <igor.belwon@mentallysanemainliners.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1757940385; l=1613;
+ i=igor.belwon@mentallysanemainliners.org; s=20250908;
+ h=from:subject:message-id; bh=nZ7OKo1OumVzkuKry68ZUJeaNsWtdwCoQlST8Zyjk5k=;
+ b=vT5USx8yXGrkJw4bzhrJotrS/vOL8+/o4FILRu/5UGNxjhXiDDrY8dLNbeJwsoMscv99/cDg/
+ xlLNTYlDzbIBG6pVYxyM0/nPSLh2vnIdVsyKZaJ0U31pjsEmSWEw6k5
+X-Developer-Key: i=igor.belwon@mentallysanemainliners.org; a=ed25519;
+ pk=t9Kz6B3jEwJD7YAKcp8XftfEz7SUSlGbrsfFlbrrFwA=
 
---b738722ffd0679501c74392f15a62318d558d5578d88a795dfcc1186f5e5
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+Hi all,
 
-Hi Ioana,
+This patchset adds support for the pin controller found in the MediaTek
+MT6878 SoC. This SoC has 9 pinctrl groups, and 4 EINT controller
+instances.
 
-On Mon Sep 15, 2025 at 2:23 PM CEST, Ioana Ciornei wrote:
-> There are GPIO controllers such as the one present in the LX2160ARDB
-> QIXIS FPGA which have fixed-direction input and output GPIO lines mixed
-> together in a single register. This cannot be modeled using the
-> gpio-regmap as-is since there is no way to present the true direction of
-> a GPIO line.
->
-> In order to make this use case possible, add a new configuration
-> parameter - fixed_direction_output - into the gpio_regmap_config
-> structure. This will enable user drivers to provide a bitmap that
-> represents the fixed direction of the GPIO lines.
+This SoC also uses the new "eh" bit for controlling i2c driving, support
+for which is also added here.
 
-I wonder about the ownership of that allocated memory in the config
-structure (and btw, I guess you leak the memory in your driver) and
-if it's not better and more error proof to allocate and copy the
-bitmap in gpio-regmap too (and maybe use devm_bitmap_alloc()) and
-leave it to the caller to handle the passed bitmap. I.e. it could
-also be on the stack.
+Changes in V3:
+- (Krzysztof) DT binding: Limit gpio-line-names
 
-Otherwise, this looks good.
+Link to V2: https://lore.kernel.org/linux-mediatek/20250914-mt6878-pinctrl-support-v2-0-254731aa3fc2@mentallysanemainliners.org/
 
-> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-> ---
-> Changes in v2:
-> - Add the fixed_direction_output bitmap to the gpio_regmap_config
->
->  drivers/gpio/gpio-regmap.c  | 12 ++++++++++++
->  include/linux/gpio/regmap.h |  2 ++
->  2 files changed, 14 insertions(+)
->
-> diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-> index e8a32dfebdcb..2489768686d3 100644
-> --- a/drivers/gpio/gpio-regmap.c
-> +++ b/drivers/gpio/gpio-regmap.c
-> @@ -31,6 +31,7 @@ struct gpio_regmap {
->  	unsigned int reg_clr_base;
->  	unsigned int reg_dir_in_base;
->  	unsigned int reg_dir_out_base;
-> +	unsigned long *fixed_direction_output;
-> =20
->  	int (*reg_mask_xlate)(struct gpio_regmap *gpio, unsigned int base,
->  			      unsigned int offset, unsigned int *reg,
-> @@ -129,6 +130,16 @@ static int gpio_regmap_get_direction(struct gpio_chi=
-p *chip,
->  	unsigned int base, val, reg, mask;
->  	int invert, ret;
-> =20
-> +	if (offset >=3D chip->ngpio)
-> +		return -EINVAL;
+Kind regards,
+Igor
 
-Not sure this can happen. I tried to look into gpiolib.c but
-couldn't find anything obvious that it can't happen. Maybe Linus or
-Bartosz can comment on that.
+Signed-off-by: Igor Belwon <igor.belwon@mentallysanemainliners.org>
+---
+Igor Belwon (4):
+      dt-bindings: pinctrl: mediatek: Document MT6878 pin controller bindings
+      pinctrl: mediatek: Add debounce times for MT6878
+      pinctrl: mediatek: Add support for MT6878 pinctrl
+      arm64: dts: mediatek: Add MT6878 pinmux macro header file
 
-> +
-> +	if (gpio->fixed_direction_output) {
-> +		if (test_bit(offset, gpio->fixed_direction_output))
-> +			return GPIO_LINE_DIRECTION_OUT;
-> +		else
-> +			return GPIO_LINE_DIRECTION_IN;
-> +	}
-> +
->  	if (gpio->reg_dat_base && !gpio->reg_set_base)
->  		return GPIO_LINE_DIRECTION_IN;
->  	if (gpio->reg_set_base && !gpio->reg_dat_base)
-> @@ -247,6 +258,7 @@ struct gpio_regmap *gpio_regmap_register(const struct=
- gpio_regmap_config *config
->  	gpio->reg_clr_base =3D config->reg_clr_base;
->  	gpio->reg_dir_in_base =3D config->reg_dir_in_base;
->  	gpio->reg_dir_out_base =3D config->reg_dir_out_base;
-> +	gpio->fixed_direction_output =3D config->fixed_direction_output;
-> =20
->  	chip =3D &gpio->gpio_chip;
->  	chip->parent =3D config->parent;
-> diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
-> index c722c67668c6..34c143aca42d 100644
-> --- a/include/linux/gpio/regmap.h
-> +++ b/include/linux/gpio/regmap.h
-> @@ -78,6 +78,8 @@ struct gpio_regmap_config {
->  	int ngpio_per_reg;
->  	struct irq_domain *irq_domain;
-> =20
-> +	unsigned long *fixed_direction_output;
+ .../bindings/pinctrl/mediatek,mt6878-pinctrl.yaml  |  211 ++
+ arch/arm64/boot/dts/mediatek/mt6878-pinfunc.h      | 1201 +++++++++++
+ drivers/pinctrl/mediatek/Kconfig                   |   10 +
+ drivers/pinctrl/mediatek/Makefile                  |    1 +
+ drivers/pinctrl/mediatek/mtk-eint.c                |    5 +
+ drivers/pinctrl/mediatek/mtk-eint.h                |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mt6878.c          | 1478 +++++++++++++
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt6878.h      | 2248 ++++++++++++++++++++
+ 8 files changed, 5155 insertions(+)
+---
+base-commit: 9bee9db994df9f1a2572e3ecd61996fbe9a871b0
+change-id: 20250908-mt6878-pinctrl-support-a1d117140efb
 
-Please add some documentation.
+Best regards,
+-- 
+Igor Belwon <igor.belwon@mentallysanemainliners.org>
 
--michael
-
-> +
->  	int (*reg_mask_xlate)(struct gpio_regmap *gpio, unsigned int base,
->  			      unsigned int offset, unsigned int *reg,
->  			      unsigned int *mask);
-
-
---b738722ffd0679501c74392f15a62318d558d5578d88a795dfcc1186f5e5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCaMgKhhIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQEic87j4CH/g/OQGApkK4RyQeR27/lOz7UgmjxXWviLT24rk7
-HomZpRwCI1WRHKWuke8PKCKR4WSGZcYjAYDBPXI1xnHdn8m/n1TIQChwQTK5HsFI
-3TxEofLzFPbcaU5PkHKQoroE+2VZNlrfg8A=
-=QdL8
------END PGP SIGNATURE-----
-
---b738722ffd0679501c74392f15a62318d558d5578d88a795dfcc1186f5e5--
 
