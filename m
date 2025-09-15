@@ -1,73 +1,79 @@
-Return-Path: <linux-gpio+bounces-26177-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26178-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4408B58113
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 17:44:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49C0FB580F8
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 17:40:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B3D6188855E
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 15:38:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A4DB93A2BA9
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 15:40:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1421657C9F;
-	Mon, 15 Sep 2025 15:37:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3630121771B;
+	Mon, 15 Sep 2025 15:40:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HDWs1Muh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aKz2iEw5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E72B19066B
-	for <linux-gpio@vger.kernel.org>; Mon, 15 Sep 2025 15:37:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA91E2DC786;
+	Mon, 15 Sep 2025 15:40:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757950676; cv=none; b=goN43iuthaRfAAKbfE//FThriHdyKKkYROttz6+pRa/OMRTaymxJiE3SdlCy88lVZR7eSeN7oFpLIlOwic2d3YmxWehiqlEaVBCjOX5eoCIfHR8J7T+pWTzgoH4mWHwz6ZbacyCc5xudcIOZLiV673fTU2fegQ4RMfFG63CvPyI=
+	t=1757950826; cv=none; b=rgEFP8FNL69PvKRtTNm+aIjo2KWQCTXOJhxyo7NvfTxJmj0YjTDfVsk4phOB/HhDa1OD8BJBCb8fpP/5SdZPPwsRweAlcVysVeSgz0scu6DBt2soxbB4Lvyd67qF5fphqkb+MuHPNLeBhSPMed/TchF/GNGezNKRvU5OiYvJ6OA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757950676; c=relaxed/simple;
-	bh=BHTnA/pSz1p9eActp6kGrcSfjSoLyTv3fwQ51kcjV8U=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=KHtBxZIv2YS3BSNmAwJ9TvP7VP0SmkEISfnFWQSHL3OTP1ycYzWgNmkZR4QTDqmXXvz8jMlNSh3v8Gtmf5WUj5XlIZOgIPaJ8qdYTadRCDYNCkkKc4qzfHcby65CfzOeJDWLz/Wz3UD6r3Wj+q8UcVKXCkWKnYoCq86RPU6ZLOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HDWs1Muh; arc=none smtp.client-ip=192.198.163.17
+	s=arc-20240116; t=1757950826; c=relaxed/simple;
+	bh=Pk6D9lV4pLzfRVkOAYasCLtsJzsCxwcDyjYDQJ1hP1w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ef3gYNfrj/zynHzWsYqVFFVUQN/pfFsctfQn06FDG9qNScTiSoYmh17/KN5MrJODFEtczub3y3EbK7pt7YYNmQ3Kx9tv1aUy8ZkvQsoVws0CATWnrPSOrCMoa5PBUAn20V3RC18SFZoAMsi1Cz4xuOF3SWYzj3G9bitVQC6h2Oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aKz2iEw5; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757950675; x=1789486675;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=BHTnA/pSz1p9eActp6kGrcSfjSoLyTv3fwQ51kcjV8U=;
-  b=HDWs1Muh8NGvPoxL57tbkj40ZAgdG9y55gBC65bgeMqO0IJCh8iBkuxA
-   tROTD7kBSl29gusuuYPiLLMsLhxVtBd6qfcAcQOn/IjCuNXB9NDgT1P05
-   +Rm2YTFI6wgkkEsozzbvxy1qSCh3VOgH7IpdJyE4Wv0RkssuDnrGhsKLm
-   rS4RMaMfExTglMOr28VfSwgAhp+TVJ6f+FKPwzItTh3DmK9rhcy2KwEfU
-   kIENUAW7Y62XaEkQBRpeAaljyofHGuQwX3To4FrU5nQHnKTJOwbsdQtBJ
-   cmnFNMxfQVvmzmtrVXNgh8TUU4hDNVbfaxfjxt3wB+prOVMTCjOk6aw4G
-   g==;
-X-CSE-ConnectionGUID: ahOoeqY9SHuUI6vPzLKbsg==
-X-CSE-MsgGUID: EOgFXjTiQrCY5FyQ0H2tvA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11554"; a="60146061"
+  t=1757950824; x=1789486824;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Pk6D9lV4pLzfRVkOAYasCLtsJzsCxwcDyjYDQJ1hP1w=;
+  b=aKz2iEw53TJyz8idJKh4LkNnaWSa3q7WOq1ByJrvfISbk+O/sNISdK5w
+   EiVppuWhm60iXxUohWrvH4rCZczt48qSRxsBmYcamIdBOlWF+V5YKtJHD
+   vRNZxHC490xY5n7hpXMsBfW8TjQQ/A8NGnQj/VqVxDWxC/K9yjHjogbU9
+   o0Uxw+aylqXY9NCnJkPgwIG1iU3+zLIaO1FdvB4XUFJOGV76sbVubiBUC
+   38w5lpD7no0ttj7hUBG0poIT+yxe1Rg7nF3xkDv8iGcBQen8eTK/pS/DT
+   0VfnzyNO7J1aJwBtUpaf+HhLZ6x6z9SLqwC7P35QU/6zPcS69n/VG/F6A
+   w==;
+X-CSE-ConnectionGUID: 6ckpduVYToanCIWcvqiV4w==
+X-CSE-MsgGUID: CcfAJRSpS9OeNer3RfrgLA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11554"; a="59438706"
 X-IronPort-AV: E=Sophos;i="6.18,266,1751266800"; 
-   d="scan'208";a="60146061"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2025 08:37:54 -0700
-X-CSE-ConnectionGUID: JselV95EREOE14Ko92y+QA==
-X-CSE-MsgGUID: RGZg5A86ToiJfJZcQAhI/w==
+   d="scan'208";a="59438706"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2025 08:40:23 -0700
+X-CSE-ConnectionGUID: ykgN3T4NQzyzbAJC8MHMAA==
+X-CSE-MsgGUID: OnnQbopQRVebJyE1w/1B8Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,266,1751266800"; 
-   d="scan'208";a="174223989"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by orviesa009.jf.intel.com with ESMTP; 15 Sep 2025 08:37:53 -0700
-Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 2D8FB94; Mon, 15 Sep 2025 17:37:52 +0200 (CEST)
-Date: Mon, 15 Sep 2025 17:37:52 +0200
+   d="scan'208";a="174750315"
+Received: from smile.fi.intel.com ([10.237.72.51])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2025 08:40:20 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uyBJR-00000003I5V-3wP9;
+	Mon, 15 Sep 2025 18:40:17 +0300
+Date: Mon, 15 Sep 2025 18:40:17 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linux GPIO <linux-gpio@vger.kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
+To: =?iso-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>
+Cc: Mika Westerberg <westeri@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [GIT PULL] intel-gpio for 6.17-1
-Message-ID: <aMgy0K-jpmegAp-d@black.igk.intel.com>
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: acpi: initialize acpi_gpio_info struct
+Message-ID: <aMgzYa-I5SQHaAY2@smile.fi.intel.com>
+References: <20250912-gpiolib-acpi-fix-v1-1-1a41acbffadf@armadeus.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -77,57 +83,22 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250912-gpiolib-acpi-fix-v1-1-1a41acbffadf@armadeus.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi Linux GPIO  maintainers,
+On Fri, Sep 12, 2025 at 10:18:50PM +0200, Sébastien Szymanski wrote:
+> Since commit 7c010d463372 ("gpiolib: acpi: Make sure we fill struct
+> acpi_gpio_info"), uninitialized acpi_gpio_info struct are passed to
+> __acpi_find_gpio() and later in the call stack info->quirks is used in
+> acpi_populate_gpio_lookup. This breaks the i2c_hid_cpi driver:
+> 
+> [   58.122916] i2c_hid_acpi i2c-UNIW0001:00: HID over i2c has not been provided an Int IRQ
+> [   58.123097] i2c_hid_acpi i2c-UNIW0001:00: probe with driver i2c_hid_acpi failed with error -22
+> 
+> Fix this by initializing the acpi_gpio_info pass to __acpi_find_gpio()
 
-This PR contains three fixes for v6.17-rcX, one of which is very important.
-Please, pull.
-
-Thanks,
-
-With Best Regards,
-Andy Shevchenko
-
-The following changes since commit 8f5ae30d69d7543eee0d70083daf4de8fe15d585:
-
-  Linux 6.17-rc1 (2025-08-10 19:41:16 +0300)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v6.17-1
-
-for you to fetch changes up to 19c839a98c731169f06d32e7c9e00c78a0086ebe:
-
-  gpiolib: acpi: initialize acpi_gpio_info struct (2025-09-15 08:55:40 +0200)
-
-----------------------------------------------------------------
-intel-gpio for v6.17-1
-
-* Fix a regression to make GpioInt() by index work again
-* Ingnore spurious wakeups from touchpad on GPD G1619-05
-* Accept debounce from GpioIo() resources
-
-The following is an automated git shortlog grouped by driver:
-
-gpiolib:
- -  acpi: initialize acpi_gpio_info struct
- -  acpi: Ignore touchpad wakeup on GPD G1619-05
- -  acpi: Program debounce when finding GPIO
-
-----------------------------------------------------------------
-Antheas Kapenekakis (1):
-      gpiolib: acpi: Ignore touchpad wakeup on GPD G1619-05
-
-Mario Limonciello (AMD) (1):
-      gpiolib: acpi: Program debounce when finding GPIO
-
-Sébastien Szymanski (1):
-      gpiolib: acpi: initialize acpi_gpio_info struct
-
- drivers/gpio/gpiolib-acpi-core.c   | 11 +++++++++--
- drivers/gpio/gpiolib-acpi-quirks.c | 12 ++++++++++++
- 2 files changed, 21 insertions(+), 2 deletions(-)
+Pushed to my review and testing queue, thanks!
 
 -- 
 With Best Regards,
