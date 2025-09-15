@@ -1,272 +1,124 @@
-Return-Path: <linux-gpio+bounces-26154-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26155-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DAE28B57313
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 10:35:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7A2BB57424
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 11:10:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 83B951881A26
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 08:36:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5D3727A186E
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Sep 2025 09:08:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99B322EAD05;
-	Mon, 15 Sep 2025 08:35:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43BE32E9EC0;
+	Mon, 15 Sep 2025 09:10:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q7+dvvSe"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="fAo2iTxR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D00029D260
-	for <linux-gpio@vger.kernel.org>; Mon, 15 Sep 2025 08:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B96F1F4701
+	for <linux-gpio@vger.kernel.org>; Mon, 15 Sep 2025 09:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757925353; cv=none; b=osfLxDgS7ysMZkCyWZsFgFghvYDZRHNoZtl4cgQCOHUVB6BeC3EOaV+lKwkvjlrdprK5Y2ROLKDVOD4EfkeSwLSkz43bhAIwWLDHM3DkwJKI7bgB7Xvt1zEQRjrz+FXQ4fGRPt8hfbGHtfjwu7E/pE8B0AdVwjEaVI0wH9Nr5CE=
+	t=1757927418; cv=none; b=V9cIhPWZSksnreDoMuFk0Oqeh3xcH9RZcbNBImWxmrQ0IjCulgIRwIyCgx2RYIN1xN6XXVU9AZTSOU4+eHNoMKl+dBErV+U1YlF5DKp94FuX7o8Cv3u7KHWlJrVUq1NYQMuS6k6Eix1KzsAMO70llqPI5HrU9GckKvdlNpiWLoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757925353; c=relaxed/simple;
-	bh=lGEaAAijE6kmtm/u5jiL71cC11FN9bLP6+AImaRq1ao=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ESY7JTtqP3eztaVnXoZHMamGqVf1Xtys0//pWaJnduUN7Mje8LkElWF2TOvyaZgu5SQg/5lQuLVeLVHrf278dx2ByLkBfBIZSWIwE6SoIg7H1o5vMvlwrL55fNGNSUyvlnK7TwER4LNWxIA4rbDOz+aR2D887oGnsIEMNauCEYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q7+dvvSe; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-57263febd12so1255555e87.1
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Sep 2025 01:35:51 -0700 (PDT)
+	s=arc-20240116; t=1757927418; c=relaxed/simple;
+	bh=uiQSyjJBLeC/MEWWFA0joFafr04ol6ZutVaTfVfNm1Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lJdIdGa8lchau5KsJME3AaRYszTp3ADQI+eAZnEjZT11WCdg2lVWzweyNmpnZTy3qrsDxTIwRDbB4AHA67wBRLB0RzLe748vsYeTSo8ukXa6c25pADtyqceRS8rYaz0Kn72r/r+OV+/E79GQ73fozTcDjxtaNBrmjY0t7Vj1XMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=fAo2iTxR; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3c46686d1e6so2747134f8f.3
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Sep 2025 02:10:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757925349; x=1758530149; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sh7TW/Ve4npOGl0ZyWerfFSPimsdKplSnqZUaXacERE=;
-        b=q7+dvvSeAXRyIeEzdV+QHoXEEseAH5/5Gh/U2FAqeyUEmEkc2iC7eOOHC1vDRxhXsy
-         AvdfrVzo8ntUcCxQ2Zy65VYgjYcxYqj1DUp6GtF4J2ftdfyTBPf4TR3BH2W1LXuDcDT6
-         NYK7ibgc88pNLGMMUYWz32vAQLWZgaQuHkzMzTqpqCJ+3emd/ewyApUc2RnG5qR3Io9B
-         aQ/6YZCG/dVgHx4DH+3S6BBNs8p09tG1PceXHyt8H/udHA5vW6VnCUZo8zjXz6ZznShr
-         MIsPxGICnRVPRvSKD4X6J5TUmj7onSXI+w/IPMXcHxOwzZq+nikvlPlAvUxV8tWa6Xzx
-         y9ZQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1757927413; x=1758532213; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4gC48CuIPVAUpIaPPbdHqCEynXZPl0UGj9pzUZ/ahgw=;
+        b=fAo2iTxRWbc/36BZFYDH4zxOzrnY4vmIOGc7cqviboGCYYT6xtZXZLaHZiu/1fQHVm
+         z/pJ9k8993OiP/l3Nv9W0sWG1jnDqAC+XHpFiM6CRFf3BitysgGGj35j6pxr7OHA0TJN
+         h8tUx44aOkn9gnlqLZi7g1wmuNtwnp/wyNi7vRbU8YXNqf5tMohzWrQ6MOzV0o51VIZN
+         Gyb8YgUTC6Vi0BLoKkV3BHW5Ibe2oD2In7mK1R8KyNk2CTqMxjQS2fdm5a1IqU2ajxsh
+         nz+UCLt5F9b1fYXB+6Ql9OkYHcHN1rjn0ECxLOU/niRfySqK03qrYEhPqdeXAsdoKwmL
+         1CFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757925349; x=1758530149;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sh7TW/Ve4npOGl0ZyWerfFSPimsdKplSnqZUaXacERE=;
-        b=BTLbhSeqJtJsc2K5gPB7VASTkeDypDBuQC0N0K+qPM03W/pln8ZsJ2N/S/IgQEb35R
-         SxiQE8werufz9pxdVm/uwf0KAS7q6QJ+lkgsljoRTIt7w6xnke0/zAN57hG2tEdgfFYQ
-         4M5vBGQpnYxL1yle/xBnl6zlIZ32+5Itidg2aSU71MUzoLC4XHgl1qQZKoSkLSwh/1PF
-         TmfTGZLWG3hQ3gejxW7cWUaMaw8Qua75AJFcE93tSMx8anRnbScHDiDfK0hddKKel5t+
-         Ez3tWBgR13qVsFxMwJzGq/W2DekMMsRlHqJchgX3vH6WaKdIxe1kxUiGmqhyvB+kTKA5
-         PCGg==
-X-Forwarded-Encrypted: i=1; AJvYcCXzHPED+Q5Qyjge+/ah2rJI+zjtNx3Vl+K8Z9Kj3jhvwlF531SJIn/H+TpSHgZk14bxJAv9GoXmesxj@vger.kernel.org
-X-Gm-Message-State: AOJu0YydSDoOHxhyqTG7a9Nuu3kHOOoDdZlG7D+KFG0kbx4YQ7ooxHcx
-	IGY5UZ2ripS/utvlr5MDZg4qPNcWY3vo1Ur9B72QtaUeFdx56uBCUDNxK7fkKTcK4VcXB3oJ1ck
-	igZcuEBETCzN4VQ3oMssOJWG5hpNsk261flOWDE9i3g==
-X-Gm-Gg: ASbGncvuR9tSmAGfqkz2d3dA6+DexSqaU9xrVF+X1A4gyKTvFmKyJdFuKfEGF+j04F6
-	lRFnRx0dMxknIdLW3s9AEO7oHii4ek/t16oQ+/HxYtJB0lPhTvXT9Dopk0fkPhx3Sqan3fOcp0J
-	GsSdb/Ig+cqTI4A9mMzTSI0rCvrVJm7sAjW529WO58tQ7IrIrFsXrNacz3jRM0BY0BvEFCy5jye
-	nmm4K+SU86y9QdtCw==
-X-Google-Smtp-Source: AGHT+IELPJH0yiYJRtqNxqiBlJNj2HXfxCwVKTaGQUndbi2n7nTd+Q0uzLmLln2Ahd6RCFrGxTAftvlwA6pCqv4NdTU=
-X-Received: by 2002:a05:6512:3409:b0:55b:73e4:1581 with SMTP id
- 2adb3069b0e04-5705be2353amr3236909e87.3.1757925349439; Mon, 15 Sep 2025
- 01:35:49 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1757927413; x=1758532213;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4gC48CuIPVAUpIaPPbdHqCEynXZPl0UGj9pzUZ/ahgw=;
+        b=ogTVyCx1kHW0j0Xcxf5Y8qJTI83fZTPoTkc3iHLstsMSPd9V8FD4yCfZ4JPO3M5VZd
+         dW7j7n0V9Fuxx3g2DKG/serxZ5f3QdGHoyFPsvITjitHbD39mC+GV7KciMV3JXjHUeRP
+         VeMQ9AwaUu7i0+JhR7x+Z7MavVcdqofMgK+zTUWog8xD57gUR6zRpM+aPvU2LJu+QBZ5
+         kmXdY3Lw8TwdnE6na+UG2zvQ96q6ErkSLtSM1bPY2z6hWNaMCFT16thWkqsuEOcTiAcm
+         205LkJy3lswVkNTNIqaYlMdgZA937A7snxgNPcD2UqWJcWODmmNxZ+dwuZA72YIB1Fgc
+         GRuw==
+X-Forwarded-Encrypted: i=1; AJvYcCVrddO9HsFOzEl3JJxNxNCYuFW0niOAS8mkDzWeloP18JIDxWv4LRXLY7UlP+pTVne8jP4EnQcxh+nx@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ+dqIws58Nsn6BtKupBK1q74gUg+6+3Bw/nBpbIKlB/UOHFr8
+	7f/rmtmfyEJUPky6t/vlmuMSkq+6YMw/jo84LWSBvnqktKHt1dLhzTx8TkNWNEhsH1U=
+X-Gm-Gg: ASbGncsuM5Q6gLz8t6OW+RE3xSxzyoTbScd//GULlayzTLVn0/89Vk9Yx7k4jNMvFI9
+	lmK+vMI5RmV03b+2oQ5wZVK2KiYJhmuMRWbjoE3XEoD9t27+sri2POVzp9PqfIDzl7jXmIfjd6a
+	VJ/zR+v4SPJnobZ7/AlPabOZHPl1DUD7Yz6TGFl3juzayfNAvZIkGWT5pjJw6rirmxNs57lC7zA
+	MT1JnMRBXexO70rpcWCEyX27LQUUKM0r2HyXigAR6TFmKpGBZUBG5hmanpma/T4YIjny3ESI/AT
+	2i0U9GRTVCh3YfszUEh5aCe5hSR3kztwTrSF5ofY1tjVPHMWk1wEPdcMQUydpKGYSqsq1LK7rgZ
+	cqPRAee2TBScNxWa9cse3bk8=
+X-Google-Smtp-Source: AGHT+IF8U9aFuvgybHAns+BSiaqZ/+CjA5sBe4WvlLdR4faa+ocFyZhcYRT82b5ZorzzOtUHEBT2UQ==
+X-Received: by 2002:a05:6000:430c:b0:3e9:d34c:17a0 with SMTP id ffacd0b85a97d-3e9d34c1a24mr3494142f8f.34.1757927413116;
+        Mon, 15 Sep 2025 02:10:13 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:7ea7:8025:6711:b617])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45e04cf2870sm90201145e9.1.2025.09.15.02.10.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Sep 2025 02:10:12 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] gpio: nomadik: fix the debugfs helper stub
+Date: Mon, 15 Sep 2025 11:10:07 +0200
+Message-ID: <20250915091007.28438-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250912060650.2180691-1-gary.yang@cixtech.com>
- <20250912060650.2180691-2-gary.yang@cixtech.com> <CACRpkdYgTjerG5mks_+3sjhKKYtCsFY=1NWhgw_YEuib7gZm3g@mail.gmail.com>
- <TYUPR06MB5876BB28E3C30EEB9BB05997EF15A@TYUPR06MB5876.apcprd06.prod.outlook.com>
-In-Reply-To: <TYUPR06MB5876BB28E3C30EEB9BB05997EF15A@TYUPR06MB5876.apcprd06.prod.outlook.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 15 Sep 2025 10:35:37 +0200
-X-Gm-Features: Ac12FXzmf8LIusbRII3-Fz1NuUc_y68ko5C640f0pew8cVktZo0LvMElNxPe0Sw
-Message-ID: <CACRpkdYKnFAyq8C5h2=5NQ8AU92RmzShNHd6+=21rWednjv-fA@mail.gmail.com>
-Subject: Re: [v2 1/3] pinctrl: cix: Add pin-controller support for sky1
-To: Gary Yang <gary.yang@cixtech.com>
-Cc: "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, 
-	"conor+dt@kernel.org" <conor+dt@kernel.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	cix-kernel-upstream <cix-kernel-upstream@cixtech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 15, 2025 at 9:09=E2=80=AFAM Gary Yang <gary.yang@cixtech.com> w=
-rote:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> > Using a NULL func->name to terminate the array looks a bit dangerous.
->
-> Checking whether this pointer is a null pointer is generally acceptable. =
-A name maps to a mux value.
-> I think that it is safe. Of course, your suggestion is also a good idea. =
-If you think this is not safe, we will
-> change codes as your suggestions.
+Commit ddeb66d2cb10 ("gpio: nomadik: don't print out global GPIO numbers
+in debugfs callbacks") failed to also update the stub of the debugfs
+helper for !CONFIG_DEBUG_FS. Fix the resulting build failure.
 
-It's OK just a suggestion. There are many ways to do this, first fix
-other problems.
+Fixes: ddeb66d2cb10 ("gpio: nomadik: don't print out global GPIO numbers in debugfs callbacks")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202509132232.12viPUPB-lkp@intel.com/
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ include/linux/gpio/gpio-nomadik.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-There are things in the language and the kernel that can help
-you to check boundaries of arrays such as these functions so
-you can't write code that index out of range, e.g.
+diff --git a/include/linux/gpio/gpio-nomadik.h b/include/linux/gpio/gpio-nomadik.h
+index 7ba53b499e16..592a774a53cd 100644
+--- a/include/linux/gpio/gpio-nomadik.h
++++ b/include/linux/gpio/gpio-nomadik.h
+@@ -268,8 +268,7 @@ void nmk_gpio_dbg_show_one(struct seq_file *s, struct pinctrl_dev *pctldev,
+ static inline void nmk_gpio_dbg_show_one(struct seq_file *s,
+ 					 struct pinctrl_dev *pctldev,
+ 					 struct gpio_chip *chip,
+-					 unsigned int offset,
+-					 unsigned int gpio)
++					 unsigned int offset)
+ {
+ }
+ 
+-- 
+2.48.1
 
-+struct sky1_pin_desc {
-+       const struct pinctrl_pin_desc pin;
-+       const struct sky1_function_desc functions[4];
-+};
-+
-+struct sky1_pinctrl_soc_info {
-+       const struct sky1_pin_desc *pins;
-+       unsigned int npins;
-+};
-
-It is possible to use a flexible array with the intrinsic
-__counted by() here, e.g. instead of:
-
-struct sky1_pin_desc {
-     const struct pinctrl_pin_desc pin;
-     const struct sky1_function_desc functions[4];
-
-You can use:
-
-+ size_t nfunctions;
-+ const struct sky1_function_desc functions[] __counted_by(nfunctions);
-
-If you grep counted_by in the kernel you find many other
-examples of how we use this.
-
-But flexible arrays is a bit complicated and dangerous so maybe you
-want to avoid it altogether. Also I'm not sure it works when you put
-things containing a flexible array into another array... I never tried it.
-
-> > Then you can use nfuncs to iterate over the array of function names, an=
-d
-> > define a macro like this:
-> >
-> > #define SKY_PINFUNCTION(_muxval, _functions, _nfunctions)   \
-> > (struct sky1_function_desc) {                                  \
-> >                 .muxval =3D (muxval),                        \
-> >                 .functions =3D (_functions),                    \
-> >                 .nfuncs =3D (_nfunctions),                  \
-> >         }
-> >
-> > And then this:
-> >
-> > +static const struct sky1_pin_desc sky1_pinctrl_s5_pads[] =3D {
-> > > +       {
-> > > +               .pin =3D PINCTRL_PIN(0, "GPIO1"),
-> > > +               .functions =3D {
-> > > +                       [0] =3D {0, "GPIO1"},
-> > > +               },
-> > > +       },
-> > > +       {
-> > > +               .pin =3D PINCTRL_PIN(1, "GPIO2"),
-> > > +               .functions =3D {
-> > > +                       [0] =3D {0, "GPIO2"},
-> > > +               },
-> >
-> > > +       },
-> >
-> > becomes
-> >
-> > static const struct sky1_pin_desc sky1_pinctrl_s5_pads[] =3D {
-> >     SKY_PINFUNCTION(PINCTRL_PIN(0, "GPIO1"),  "GPIO1", 1),
-> >     SKY_PINFUNCTION(PINCTRL_PIN(1, "GPIO2"),  "GPIO2", 1),
-> >
-> > I don't know about using the PINCTRL_PIN() macro here though, can't you=
- just
-> > put in 0, 1...?
-> >
-> > Anyway I think you get the idea.
-> >
->
-> First, let us review the struct sky1_pin_desc, it contains two members, o=
-ne is the struct pinctrl_pin_desc.
->
-> struct pinctrl_pin_desc {
->         unsigned int number;
->         const char *name;
->         void *drv_data;
-> };
->
-> PINCTRL_PIN is used to initialize this struct in kernel. It locates in in=
-clude/linux/pinctrl/pinctrl.h
->
-> #define PINCTRL_PIN(a, b) { .number =3D a, .name =3D b }
->
-> PINCTRL_PIN(0, "GPIO1") defines a pin, its number is 0, its name is "GPIO=
-1".
-
-Ah I saw it wrong, sorry :(
-
-You're right about this of course.
-
-But I think you can still use a macro to define the long pin tables?
-Albeit macros with flexible arguments is a bit hard to write.
-Save it until everything else is working.
-
-> > If this is the implied pattern for this driver, write as a comment to t=
-he above
-> > function that this pin controller place all pins into a single group wi=
-th one pin
-> > and that this is why this works.
-> >
-> > The normal (as can be seen from the pin control documentation
-> > https://docs.kernel.org/driver-api/pin-control.html ) is to group pins,=
- so e.g.
-> >
-> > uart0_rx_tx_grp =3D { pin1, pin2 };
-> > i2c0_sda_scl_grp =3D { pin1, pin2 };
-> >
-> > Then this is combined with functions such as uart0 and i2c0:
-> >
-> > function, group
-> > ("uart0", uart0_rx_tx_grp)
-> > ("i2c0", i2c0_sda_scl_grp)
-> >
-> > Here you see the two pins are used for uart in the first case and for i=
-2c in the
-> > second case, it's the same pins, but members of two different groups, a=
-nd
-> > these groups are then used with a function.
-> >
-> > The possible functions for a group are then defined somewhere so these
-> > settings can be applied.
-> >
-> > Maybe this pattern is something you have in your driver because the cod=
-e was
-> > copied from some other driver which use one group per pin, it's not cer=
-tain
-> > that this is the best layout for the cix SoC so look it over!
->
-> First maybe you ignore that fact the struct sky1_pinctrl_group is differe=
-nt from
-> the struct group_desc. It only saves the config of a pin from dts. it doe=
-sn't include
-> pin function part. As we know, a pin only has a config at the same time. =
-One group map to a pin.
-> The pin function part is included in the struct sky1_function_desc. One p=
-in can map
-> serval functions. There are four functions on sky1. We define the sky1_gp=
-io_functions array.
-> It is used to select the pin functions.
->
-> Second, you are right. the pinctrl driver support new scheme is seldom in=
- kernel. You take mt723 as
-> an example before. Some codes come from the pinctrl driver on MTK. We mod=
-ify them to adopt our platform.
-> If I misunderstand or miss anything, please let me know.
-
-Yes I can see that the driver is based on the MTK driver, my point is that
-make sure you are not following it too closely, because what is good for
-the mtk chips is not necessarily good for the cix chips.
-
-But if you feel convenient with one group per pin and you are convinced
-this is the best for your driver, go ahead with this scheme!
-
-Yours,
-Linus Walleij
 
