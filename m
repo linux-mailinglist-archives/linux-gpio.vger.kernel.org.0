@@ -1,110 +1,105 @@
-Return-Path: <linux-gpio+bounces-26206-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26207-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFA48B5980C
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Sep 2025 15:44:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 46732B599E0
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Sep 2025 16:28:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E248461A45
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Sep 2025 13:44:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4478E4676B7
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Sep 2025 14:22:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91F173191B9;
-	Tue, 16 Sep 2025 13:44:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31425324B1B;
+	Tue, 16 Sep 2025 14:18:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TTS8BzXa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F/W6kloe"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9C52E1EFD;
-	Tue, 16 Sep 2025 13:44:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE40D1A0728;
+	Tue, 16 Sep 2025 14:18:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758030267; cv=none; b=OC0ysiBLUrRFSw5RVZI0+np/BSmghw+hRlTodTaZxiuT4pWXycVIRRiBN+LT+2aajZJoRXOK2C0TZxTQavFX5Tpkc0OpBVy2M7PrFgNpLegVMZyi0S6kmyEhoQYdkS7m1vq1jRwjNLNcI0BMeaNw0MnZ89ATCt57plLn6DBr0Sw=
+	t=1758032288; cv=none; b=qDEjy6Q9xc+CoUBi7QEjqNfF0V6OqQm/DWfagFOv5T6pbv2E8ILPkPjRzmFXVetTU8Yubk4XWBeQBY6Q4apg4kbVsnxiqG28A7kRf+lG7p6agIKN3tHzYvSoLO4BStkwEGli35XMZWBdm8ls8pquOZWlfBARrxCHp7OCdUeJvk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758030267; c=relaxed/simple;
-	bh=PiqUhXW6QToZ6nQDeenBB20ifChYwsOqZj1pkylev8k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C6ns+IndkykldsYbuSFz4vfPRmVDpxyXtzIlcoYXYL//RnOZkV395sH7UQQ3S8CVgGgYqx4Az6sd7oajnrE9D7y8G/816fN/m7Oh/QBAMCTuF+k3hWDR4ETsISguLuLied0b76UV4sLomixNSvqqhV8k/wMJutd6Y5lldZ69QJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TTS8BzXa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09390C4CEEB;
-	Tue, 16 Sep 2025 13:44:21 +0000 (UTC)
+	s=arc-20240116; t=1758032288; c=relaxed/simple;
+	bh=MHGfGuchcAt29gAf8ZZAge+ONTorOmrLa6kSLpgeWZI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=iYnW6BQHeXdUiT41oPhCb4b7oxAyOegeHLWqDZpWSffnmwneiQSZPBUPszvDbwbBk0IZjDgDJt6SVOEn+OQtVG8cmkXeBuqVabHVarmDRhDB6AXwjNUI7QA9xgCeV+ZZvpKAnp/zbge+htqYv8Mn91VMjub2+yMkvBLVcVUNv6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F/W6kloe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C4A3C4CEFC;
+	Tue, 16 Sep 2025 14:17:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758030266;
-	bh=PiqUhXW6QToZ6nQDeenBB20ifChYwsOqZj1pkylev8k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TTS8BzXaWnZ22mESEIXs1e3yx/TuBOHORy3r8nH8bkXlMdUTu5hwLKER1I5fkX912
-	 OLlv33kVMWxsxjhceEwtHFJv7EnxvHC6vRFLUIawEb49hEa9JlLGujuDkNVrNHyKuK
-	 1qYBNu7dS7o7OChnp/5d2lCXTGxzaT/XOdmGdMwd0snMoExH08Ja5eXDivsE9YkSfn
-	 PZsH0VF9jLDM8JVfd0qHM3TTU6hNXmP2r86h7fMHNKcKcwcV1K7u9odEAwu/0nEYEU
-	 aDZsEmqAAdVYdvANj2PYTc07mvpRkt+2eifr7UZZDASyI51n2Zs5YCYKsl5ijq4NdT
-	 vGLPZuPAcX4Ww==
-Date: Tue, 16 Sep 2025 14:44:19 +0100
+	s=k20201202; t=1758032287;
+	bh=MHGfGuchcAt29gAf8ZZAge+ONTorOmrLa6kSLpgeWZI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=F/W6kloe5Ooa5vCU4qDrZO3r1d7KJtj+Gak0Q9Me8sYdmZ1CBp12ReGezCg9qiVIq
+	 3WdX/lPq/AakhJYk4OsmNboW/hypMsRQUOMZBOqhAXdQ2YHSGQScugk282pdoy4C8W
+	 V78jhgk+QUnlPUs2Q6S0LfMLfMoFHmQ98wCc3xx4EaMKWWAaDBMjhJgYpQLukDOaF1
+	 P+P/Y1+1q2fal5LAaK9hmBES3nMwan/jbYnrV+72oiMWJ3zCHHpjM90NEmH8jzzUrM
+	 7vvmSbi+eHXMjSXibDCV1WvG7OpN2r/lGun4yvA3/PjgTD0bJ+XuFF/XMtA/hsXJIx
+	 OCumt0iWlbyyQ==
 From: Lee Jones <lee@kernel.org>
-To: tmyu0@nuvoton.com, linus.walleij@linaro.org, brgl@bgdev.pl,
-	andi.shyti@kernel.org, mkl@pengutronix.de,
-	mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net,
-	jdelvare@suse.com, alexandre.belloni@bootlin.com,
-	a0282524688@gmail.com
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
-	netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org,
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH RESEND v14 0/7] Add Nuvoton NCT6694 MFD drivers
-Message-ID: <20250916134419.GD3585920@google.com>
-References: <20250912091952.1169369-1-a0282524688@gmail.com>
- <175803019322.3799290.6641375066506606941.b4-ty@kernel.org>
+To: Lee Jones <lee@kernel.org>, 
+ Andy Shevchenko <andriy.shevchenko@intel.com>, 
+ Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>, 
+ Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>, 
+ Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
+ =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <legoffic.clement@gmail.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ James Cowgill <james.cowgill@blaize.com>, 
+ Matt Redfearn <matt.redfearn@blaize.com>, 
+ Neil Jones <neil.jones@blaize.com>, 
+ Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>, 
+ Hoan Tran <hoan@os.amperecomputing.com>, Yang Shen <shenyang39@huawei.com>, 
+ Imre Kaloz <kaloz@openwrt.org>, Yinbo Zhu <zhuyinbo@loongson.cn>, 
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Manivannan Sadhasivam <mani@kernel.org>, 
+ Nobuhiro Iwamatsu <nobuhiro.iwamatsu.x90@mail.toshiba>, 
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, imx@lists.linux.dev, 
+ linux-unisoc@lists.infradead.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+In-Reply-To: <20250910-make-compound-literals-normal-again-v1-1-076ee7738a0b@linaro.org>
+References: <20250910-make-compound-literals-normal-again-v1-1-076ee7738a0b@linaro.org>
+Subject: Re: (subset) [PATCH 1/3] mfd: vexpress-sysreg: use more common
+ syntax for compound literals
+Message-Id: <175803227904.3821457.282370095352768515.b4-ty@kernel.org>
+Date: Tue, 16 Sep 2025 15:17:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <175803019322.3799290.6641375066506606941.b4-ty@kernel.org>
+X-Mailer: b4 0.15-dev-c81fc
 
-On Tue, 16 Sep 2025, Lee Jones wrote:
-
-> On Fri, 12 Sep 2025 17:19:45 +0800, a0282524688@gmail.com wrote:
-> > From: Ming Yu <a0282524688@gmail.com>
-> > 
-> > This patch series introduces support for Nuvoton NCT6694, a peripheral
-> > expander based on USB interface. It models the chip as an MFD driver
-> > (1/7), GPIO driver(2/7), I2C Adapter driver(3/7), CANfd driver(4/7),
-> > WDT driver(5/7), HWMON driver(6/7), and RTC driver(7/7).
-> > 
-> > [...]
+On Wed, 10 Sep 2025 09:25:45 +0200, Bartosz Golaszewski wrote:
+> The (typeof(foo)) construct is unusual in the kernel, use a more typical
+> syntax by explicitly spelling out the type.
 > 
-> Applied, thanks!
 > 
-> [1/7] mfd: Add core driver for Nuvoton NCT6694
->       commit: 51dad33ede63618a6b425c650f3042d85e646dac
-> [2/7] gpio: Add Nuvoton NCT6694 GPIO support
->       commit: 611a995e8ae1a52e34abb80ae02800ea100bdf84
-> [3/7] i2c: Add Nuvoton NCT6694 I2C support
->       commit: c5cf27dbaeb6e12ea1703ee896dd4b42e92343aa
-> [4/7] can: Add Nuvoton NCT6694 CANFD support
->       commit: 8a204684d0ffdf8d39c16d70fc6f1000e831ef27
-> [5/7] watchdog: Add Nuvoton NCT6694 WDT support
->       commit: f9d737a7d84ff4c1df4244361e66ddda400678dc
-> [6/7] hwmon: Add Nuvoton NCT6694 HWMON support
->       commit: 197e779d29d87961be12eb6429dda472a843830f
-> [7/7] rtc: Add Nuvoton NCT6694 RTC support
->       commit: d463bb140583609f78f61d48c3dfb6f46c5cb062
 
-Okay, everything applied just fine this time.
+Applied, thanks!
 
-Submitted for build testing, if all is well, I'll submit a PR soon.
+[1/3] mfd: vexpress-sysreg: use more common syntax for compound literals
+      commit: f8cba973e4e51b8a166cbf81f827ff926f64d92e
 
-Note to self: ib-mfd-gpio-hwmon-i2c-can-rtc-watchdog-6.18
-
--- 
+--
 Lee Jones [李琼斯]
+
 
