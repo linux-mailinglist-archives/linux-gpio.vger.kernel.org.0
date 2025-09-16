@@ -1,72 +1,63 @@
-Return-Path: <linux-gpio+bounces-26210-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26211-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEE43B59A7B
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Sep 2025 16:40:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 219B6B59A8D
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Sep 2025 16:42:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 02C131886FB6
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Sep 2025 14:36:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B80F1892511
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Sep 2025 14:39:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD782329F05;
-	Tue, 16 Sep 2025 14:36:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8FD83375B5;
+	Tue, 16 Sep 2025 14:38:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uHKjYWvh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k+Q8lbQv"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E8221E082;
-	Tue, 16 Sep 2025 14:36:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70BE63081AE;
+	Tue, 16 Sep 2025 14:38:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758033362; cv=none; b=unxCLQJCThoi0jI+CS9CY3YUlrlOVoY7cidGSEdNO6sJr7xi6gpv4y+Q9Gles793HLEtaoc3PyVs+fsNMshtsliYGzls61mr1j/dDTmBEpwrDX1ECus6sBW/nMgW+GTpciOYAh+Jqp3o2uM6RKAENbrlxkY9tTfygRf4Qeq2H8c=
+	t=1758033535; cv=none; b=D0Mt/XvXX+2jopZcqBFeFPIbojy87gDczqNeipNMsHT0uar/ovY7Zy2hgwp9dXJTn2VT7w9MWHaNLqaiwCyyagrBWdLXD+hOp2OtRLaLdbx6njpoTf06i6M5tMhNqnZ4pUNEmDdi5/1+3QBAlP/9Zz85L3jxGbjyWoUJBECjZCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758033362; c=relaxed/simple;
-	bh=2Yekq7m436nLZD3oVpFQrhiETKLLC4HMzG6xzqLqNgI=;
+	s=arc-20240116; t=1758033535; c=relaxed/simple;
+	bh=Ph/hIiO+tXjORKxzfu06YoivQsZaFkxYB4pQsUq4gpQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kBoaRf8aBltBQmza2QfKCLsjwiSiu0QRgyR6hw/wvl9E0y0M2bnTQ7zdJAEG1e9EQRb5j/JwmKt+wS9VGr/Iu9IRhLuAffazr1jt+aRS7xRUvYEDBunDNhdJ5Sd7vjlJIgB0mY9kZitxmg8pdENWOgTRUeM3SfOg81ydWtteaZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uHKjYWvh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0929CC4CEEB;
-	Tue, 16 Sep 2025 14:35:56 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=sf9FxGW+yWha84yJlVqeAhNaPs7M0f6OXTtfKHKvX9DOPNJL+DmRR7S3KKm4belqof8AIQi35NAbL/shV+373M7j72bDqqOi+6VnDt9zJ/TjT4xe1UphDNeIhBLZkqLGPM5V751tn9x+i1j5EmqKse+z3Q9W7ePvRCpM/yherv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k+Q8lbQv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C2FAC4CEEB;
+	Tue, 16 Sep 2025 14:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758033362;
-	bh=2Yekq7m436nLZD3oVpFQrhiETKLLC4HMzG6xzqLqNgI=;
+	s=k20201202; t=1758033535;
+	bh=Ph/hIiO+tXjORKxzfu06YoivQsZaFkxYB4pQsUq4gpQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uHKjYWvhHnCRDxk+fwvFkSc+s/fvaSw1NjDnMsW6YlrBJem8RcJrqk5cnyT0seG4P
-	 OVS0/468tfxYzlcR3xQ0hGnx0z9gbeMorv20v/RqvdRvZTxLLMATo1aE3/ZX7DKpQV
-	 dD9fU8KeZ/qJ+Onbyk4QuhCR1ezBHOrndI4jxFqCNgvxYpOLpI2orf4JdoHk1gyt3g
-	 fTdUlUtEftzx/GLqDGOEKSB/urDLuZh1KM1UK3LiG7WS/IOoiA3woUZ+3KRTtNe91u
-	 DnLiuHPegVTn07DrVOWOB75vV/FS1ueL8r/AhsJLzUhK43EiLYYylEOnKhwu/9tTRr
-	 ILl4QpCwbePqg==
-Date: Tue, 16 Sep 2025 15:35:54 +0100
+	b=k+Q8lbQvzfiLPscbR5ZPBPkpIbgIzkAK2T0BtjPuBHrfNmtyNZj/YF2ioJPAu+aqT
+	 k0Fj5O2OQ1MMzl3YYquE394xUYf9bbOTEbgwFoppUmMbqRQKQbQmxJ/af6CuOV+Ct2
+	 sKjZxOjK/W5NMn3Z1o+rQ0FB78oookqGpHcoucoZ1FOPU8LXl8KgBkD25Txo9bfdhL
+	 hkwet2ivAS5IRwptEjYJl735BJoSktrlFCsOILzOWHB/GWz+YtSaHdmKkxx24a9q1e
+	 eT0tDZHSOp3d0yvhUYi3GttGy7WSLJgG1HXn8jer+jI+O1V+vV6aGKuYr5nRGCxCUd
+	 SSSsnYJSBNujA==
+Date: Tue, 16 Sep 2025 15:38:47 +0100
 From: Lee Jones <lee@kernel.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v14 00/10] Add support for MAX7360
-Message-ID: <20250916143554.GE3585920@google.com>
-References: <20250824-mdb-max7360-support-v14-0-435cfda2b1ea@bootlin.com>
- <175803329065.3832522.18087850599111439891.b4-ty@kernel.org>
+To: a0282524688@gmail.com
+Cc: tmyu0@nuvoton.com, linus.walleij@linaro.org, brgl@bgdev.pl,
+	andi.shyti@kernel.org, mkl@pengutronix.de,
+	mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net,
+	jdelvare@suse.com, alexandre.belloni@bootlin.com,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
+	netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH RESEND v14 0/7] Add Nuvoton NCT6694 MFD drivers
+Message-ID: <20250916143847.GF3585920@google.com>
+References: <20250912091952.1169369-1-a0282524688@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -76,49 +67,67 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <175803329065.3832522.18087850599111439891.b4-ty@kernel.org>
+In-Reply-To: <20250912091952.1169369-1-a0282524688@gmail.com>
 
-On Tue, 16 Sep 2025, Lee Jones wrote:
+Enjoy!
 
-> On Sun, 24 Aug 2025 13:57:19 +0200, Mathieu Dubois-Briand wrote:
-> > This series implements a set of drivers allowing to support the Maxim
-> > Integrated MAX7360 device.
-> > 
-> > The MAX7360 is an I2C key-switch and led controller, with following
-> > functionalities:
-> > - Keypad controller for a key matrix of up to 8 rows and 8 columns.
-> > - Rotary encoder support, for a single rotary encoder.
-> > - Up to 8 PWM outputs.
-> > - Up to 8 GPIOs with support for interrupts and 6 GPOs.
-> > 
-> > [...]
-> 
-> Applied, thanks!
-> 
-> [01/10] dt-bindings: mfd: gpio: Add MAX7360
->         commit: aee814458fb98819876442f0261fad0bb9842224
-> [02/10] mfd: Add max7360 support
->         commit: a22ddeef55c4df847d9ac862b6192da774948fe1
-> [03/10] pinctrl: Add MAX7360 pinctrl driver
->         commit: b4b993c0e39436ffb3a9b21cabf62b5df085b2e1
-> [04/10] pwm: max7360: Add MAX7360 PWM support
->         commit: d93a75d94b79ba3e664f7236ee05790e8b1d0e4b
-> [05/10] gpio: regmap: Allow to allocate regmap-irq device
->         commit: 553b75d4bfe9264f631d459fe9996744e0672b0e
-> [06/10] gpio: regmap: Allow to provide init_valid_mask callback
->         commit: 0627b71fa5508ab605b6e9fd74baed40805cfdda
-> [07/10] gpio: max7360: Add MAX7360 gpio support
->         commit: b1a7433d857edb14b993161af9ed1ee98d4c9cee
-> [08/10] input: keyboard: Add support for MAX7360 keypad
->         commit: fa6a23f1c59c67de9160b4acc5a8651ad2106fa8
-> [09/10] input: misc: Add support for MAX7360 rotary
->         commit: 229c15e9a69cb3d6a303a9e20b10fb991b66895d
-> [10/10] MAINTAINERS: Add entry on MAX7360 driver
->         commit: 32d4cedd24ed346edbe063323ed495d685e033df
+The following changes since commit 8f5ae30d69d7543eee0d70083daf4de8fe15d585:
 
-Send for build testing.  If all is well, I'll submit a PR shortly.
+  Linux 6.17-rc1 (2025-08-10 19:41:16 +0300)
 
-Note to self: ib-mfd-gpio-input-pinctrl-pwm-6.18
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-gpio-hwmon-i2c-can-rtc-watchdog-v6.18
+
+for you to fetch changes up to d463bb140583609f78f61d48c3dfb6f46c5cb062:
+
+  rtc: Add Nuvoton NCT6694 RTC support (2025-09-16 14:41:58 +0100)
+
+----------------------------------------------------------------
+Immutable branch between MFD, GPIO, HWMON, I2C, CAN, RTC and Watchdog due for the v6.18 merge window
+
+----------------------------------------------------------------
+Ming Yu (7):
+      mfd: Add core driver for Nuvoton NCT6694
+      gpio: Add Nuvoton NCT6694 GPIO support
+      i2c: Add Nuvoton NCT6694 I2C support
+      can: Add Nuvoton NCT6694 CANFD support
+      watchdog: Add Nuvoton NCT6694 WDT support
+      hwmon: Add Nuvoton NCT6694 HWMON support
+      rtc: Add Nuvoton NCT6694 RTC support
+
+ MAINTAINERS                         |  12 +
+ drivers/gpio/Kconfig                |  12 +
+ drivers/gpio/Makefile               |   1 +
+ drivers/gpio/gpio-nct6694.c         | 499 +++++++++++++++++++
+ drivers/hwmon/Kconfig               |  10 +
+ drivers/hwmon/Makefile              |   1 +
+ drivers/hwmon/nct6694-hwmon.c       | 949 ++++++++++++++++++++++++++++++++++++
+ drivers/i2c/busses/Kconfig          |  10 +
+ drivers/i2c/busses/Makefile         |   1 +
+ drivers/i2c/busses/i2c-nct6694.c    | 196 ++++++++
+ drivers/mfd/Kconfig                 |  15 +
+ drivers/mfd/Makefile                |   2 +
+ drivers/mfd/nct6694.c               | 388 +++++++++++++++
+ drivers/net/can/usb/Kconfig         |  11 +
+ drivers/net/can/usb/Makefile        |   1 +
+ drivers/net/can/usb/nct6694_canfd.c | 832 +++++++++++++++++++++++++++++++
+ drivers/rtc/Kconfig                 |  10 +
+ drivers/rtc/Makefile                |   1 +
+ drivers/rtc/rtc-nct6694.c           | 297 +++++++++++
+ drivers/watchdog/Kconfig            |  11 +
+ drivers/watchdog/Makefile           |   1 +
+ drivers/watchdog/nct6694_wdt.c      | 307 ++++++++++++
+ include/linux/mfd/nct6694.h         | 102 ++++
+ 23 files changed, 3669 insertions(+)
+ create mode 100644 drivers/gpio/gpio-nct6694.c
+ create mode 100644 drivers/hwmon/nct6694-hwmon.c
+ create mode 100644 drivers/i2c/busses/i2c-nct6694.c
+ create mode 100644 drivers/mfd/nct6694.c
+ create mode 100644 drivers/net/can/usb/nct6694_canfd.c
+ create mode 100644 drivers/rtc/rtc-nct6694.c
+ create mode 100644 drivers/watchdog/nct6694_wdt.c
+ create mode 100644 include/linux/mfd/nct6694.h
 
 -- 
 Lee Jones [李琼斯]
