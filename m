@@ -1,151 +1,138 @@
-Return-Path: <linux-gpio+bounces-26337-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26340-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 999E8B85E02
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 18:04:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E73A5B861B3
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 18:51:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E81A81CC07B3
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 15:58:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 52E8C54616F
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 16:51:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E87E0314D1A;
-	Thu, 18 Sep 2025 15:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="phDbi24B"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 960A625393C;
+	Thu, 18 Sep 2025 16:50:46 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A131D314B8F;
-	Thu, 18 Sep 2025 15:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB066221F29;
+	Thu, 18 Sep 2025 16:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758211048; cv=none; b=IpyQvL5sRuK5r/vnwulU/uD4uCHoiX4jvpwXmUmGOTT5ztS4KBWrYyKKj1SKILFCgehoFERXIr7spXJ+iaDpE6ZhGglYVO9MSMWiOrYTcb8uIC1teAYdf9sn11RkMfYeE8jhRUgDySagR5BRvfTmRq0aTJCst9nH1dcY7Pn8kck=
+	t=1758214246; cv=none; b=sG5izBU5y3HzTLIFjUREuq43aGMx7vMB9iLz+RXOq0N4+FcCBRfKvH3fFyZcXg4APXQELIAH6ZPAbUEmlqWFUhErtPZrf3KVr7nM85vFYz+FCt7YrYDvNiRAEzEou5rm6m4ElK9vflqWTRaS6MawSOdIct87aEF6SJxKrwH49JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758211048; c=relaxed/simple;
-	bh=7szmy2OW+pKdnxlLQgL5ZyztXZVlULEeY328f0dD5nM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MU31y+XAc6v6wsaowpgLQFVEW4VM8q07UBYXzxXB5C2mJeS8tQniNMsR3twW6RegNMJdQ/Q1wI8AKCAljtt5awPazND3b3BM4GLGLiNIo7v5bqr0cerTgxiy1QFUfVvX11GvgeIjCoPgxh6NT5qawks35D/WCJss9492AugoByM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=phDbi24B; arc=none smtp.client-ip=185.171.202.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 47C94C003C9;
-	Thu, 18 Sep 2025 15:57:08 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id C8AAF606A8;
-	Thu, 18 Sep 2025 15:57:24 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B467D102F1D0B;
-	Thu, 18 Sep 2025 17:57:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1758211043; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=TxZksMSppeoI1kAjsorjjiU9ZV35lEO/QcgVtoJNdhk=;
-	b=phDbi24B+Am3HE81Qq/HYW6qFlByZ7uAfZgeuWMxFldWNrdNRyQ0Zz2upRDUHbSwCpqTuy
-	vBL5KxbtcXkaKq+rpt8meuUoefi3LQhDnd4/qdIbVQxdLgDPmur11ePGZGoRidCjg6ajLO
-	G7nac19LjQ+C7tZOR5spe+Vc51uSgaXvxrV/D6EDMJAAClWYlkJGtVeTX4/GhRg3IlDKJK
-	0xY6ixodMhtL36QoPnvxcrnRYnrp6t5EXuqLFYCI79znuQPsXAdAu6/2C37dT7O9CfZPUE
-	GEwhxeqCrUYtC8mAt6fjRj77g9PNxd8xmSUqOFGfIWLUCwxkemqhNI0UU2YS8w==
-Date: Thu, 18 Sep 2025 17:57:16 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Hoan Tran
- <hoan@os.amperecomputing.com>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus
- Damm <magnus.damm@gmail.com>, Saravana Kannan <saravanak@google.com>, Serge
- Semin <fancer.lancer@gmail.com>, Phil Edworthy <phil.edworthy@renesas.com>,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Pascal
- Eberhard <pascal.eberhard@se.com>, Miquel Raynal
- <miquel.raynal@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 0/8] gpio: renesas: Add support for GPIO and related
- interrupts in RZ/N1 SoC
-Message-ID: <20250918175716.6c3fd406@bootlin.com>
-In-Reply-To: <20250918-sterilize-malt-b0f182256617@spud>
-References: <20250918104009.94754-1-herve.codina@bootlin.com>
-	<20250918-sterilize-malt-b0f182256617@spud>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1758214246; c=relaxed/simple;
+	bh=OgCnUIlKw1JxR7kjRn4Et9d8YymbVWaWOnW11EryMBs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fi0KP8/PVBszq6V+vjyQW/dATDifikwrxBKcRCUaUYsMPIymVkDLCpyNU1ienEYmT0fzSl9XNyEy4NOUBklVLEgH8sANSyeGuHPSF2ZUEM6VoHmtWt+VXs0gKnLvl7Ti1Vn1kqpy3XnLyP+QsD5N6I1PoXcTf4RceiCJUtFCLZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4cSLY10Mbrz9sfh;
+	Thu, 18 Sep 2025 18:23:33 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id sO3sKZP93SXY; Thu, 18 Sep 2025 18:23:32 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4cSLY06MC6z9sff;
+	Thu, 18 Sep 2025 18:23:32 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id C9AE08B776;
+	Thu, 18 Sep 2025 18:23:32 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id 9SmYjYN9p3HL; Thu, 18 Sep 2025 18:23:32 +0200 (CEST)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 1D1588B767;
+	Thu, 18 Sep 2025 18:23:32 +0200 (CEST)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Qiang Zhao <qiang.zhao@nxp.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v6 0/7] Add support of IRQs to QUICC ENGINE GPIOs
+Date: Thu, 18 Sep 2025 18:23:20 +0200
+Message-ID: <cover.1758212309.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1758212605; l=2729; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=OgCnUIlKw1JxR7kjRn4Et9d8YymbVWaWOnW11EryMBs=; b=kJ17167SdnC2brfs/6ZVeip2FJrVuZWNePg7vhRzccMHLW4xR2hWSncCA8JgOKj0R2u6IENLD yr/kbkEH4dEBRTTs5kh8I0ABfpN+NWO5uki35VvaGdsWBxh54sMSOg9
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
 
-Hi Conor,
+The QUICC Engine provides interrupts for a few I/O ports. This is
+handled via a separate interrupt ID and managed via a triplet of
+dedicated registers hosted by the SoC.
 
-On Thu, 18 Sep 2025 16:37:39 +0100
-Conor Dooley <conor@kernel.org> wrote:
+Implement an interrupt driver for those IRQs then add change
+notification capability to the QUICC ENGINE GPIOs.
 
-> On Thu, Sep 18, 2025 at 12:39:58PM +0200, Herve Codina (Schneider Electric) wrote:
-> > Hi,
-> > 
-> > This series adds support for GPIO and GPIO IRQ mux available in the
-> > RZ/N1 SoCs.
-> > 
-> > The first patches in this series are related to a new helper introduced
-> > to parse an interrupt-map property.
-> >   - patch 1: Introduce the helper (for_each_of_imap_item)
-> >   - patch 2: Add a unittest for the new helper
-> >   - patch 3 and 4: convert existing drivers to use this new helper
-> > 
-> > Patch 4 will conflicts with commit 40c26230a1bf ("irqchip: Use int type
-> > to store negative error codes") available in linux-next.
-> > 
-> > Patch 5 adds support for GPIO (device-tree description)
-> > 
-> > The last patches (6, 7 and 8) of the series are related to GPIO
-> > interrupts and GPIO IRQ multiplexer.
-> > 
-> > In the RZ/N1 SoCs, GPIO interrupts are wired to a GPIO IRQ multiplexer.
-> > 
-> > This multiplexer does nothing but select 8 GPIO IRQ lines out of the 96
-> > available to wire them to the GIC input lines.
-> > 
-> > One upstreaming attempt have been done previously by Phil Edworthy [1]
-> > but the series has never been applied.
-> > 
-> > Based on my understanding, I have fully reworked the driver proposed by
-> > Phil and removed the IRQ domain. Indeed, the device doesn't handle
-> > interrupts. It just routes signals.
-> > 
-> > Also, as an interrupt-map property is used, the driver cannot be
-> > involved as an interrupt controller itself. It is a nexus node.
-> > 
-> > With that in mind,
-> >   - Patch 6 is related to the irq-mux binding.
-> > 
-> >   - Patch 7 introduces the irq-mux driver.
-> >     This driver uses the 'for_each_of_imap_item' helper introduced
-> >     previously. Indeed, the lines routing is defined by the
-> >     interrupt-map property and the driver needs to set registers to
-> >     apply this routing.
-> > 
-> >   - Patch 8 is the RZ/N1 device-tree description update to have the
-> >     support for the GPIO interrupts.
-> > 
-> > [1] https://lore.kernel.org/all/20190219155511.28507-1-phil.edworthy@renesas.com/
-> > 
-> > Best regards,
-> > Hervé  
-> 
-> This whole thing is super interesting to me. I have a gpio irq mux of my
-> own with a driver that is massively more complex than what you have here
-> (it's a full on irqchip driver). I'm definitely gonna have to see if I
-> can ape what you have done here and simplify what I have.
+The number of GPIOs for which interrupts are supported depends on
+the microcontroller:
+- mpc8323 has 10 GPIOS supporting interrupts
+- mpc8360 has 28 GPIOS supporting interrupts
+- mpc8568 has 18 GPIOS supporting interrupts
 
-Glad to see that this is giving some ideas!
+Changes in v6:
+- Changed mask local var to unsigned long instead of u32 to avoid build failure on 64 bits (patch 4)
+- Comments from Rob taken into account except the comment on fsl,<chip>-qe-pario-bank becoming fsl,chip-qe-pario-bank as I don't know what to do.
 
-Best regards,
-Hervé
+Changes in v5:
+- Replaced new DT property "fsl,qe-gpio-irq-mask" by a mask encoded
+in the of_device_id table
+- Converted QE QPIO DT bindings to DT schema
+
+Changes in v4:
+- Removed unused headers
+- Using device_property_read_u32() instead of of_property_read_u32()
+
+Changes in v3:
+- Splited dt-bindings update out of patch "soc: fsl: qe: Add support of IRQ in QE GPIO"
+- Reordered DTS node exemples iaw dts-coding-style.rst
+
+Changes in v2:
+- Fixed warning on PPC64 build (Patch 1)
+- Using devm_kzalloc() instead of kzalloc (Patch 2)
+- Stop using of-mm-gpiochip (New patch 3)
+- Added fsl,qe-gpio-irq-mask propertie in DT binding doc (Patch 4)
+- Fixed problems reported by 'make dt_binding_check' (Patch 5)
+
+Christophe Leroy (7):
+  soc: fsl: qe: Add an interrupt controller for QUICC Engine Ports
+  soc: fsl: qe: Change GPIO driver to a proper platform driver
+  soc: fsl: qe: Drop legacy-of-mm-gpiochip.h header from GPIO driver
+  soc: fsl: qe: Add support of IRQ in QE GPIO
+  dt-bindings: soc: fsl: qe: Add an interrupt controller for QUICC
+    Engine Ports
+  dt-bindings: soc: fsl: qe: Convert QE GPIO to DT schema
+  dt-bindings: soc: fsl: qe: Add support of IRQ in QE GPIO
+
+ .../gpio/fsl,mpc8323-qe-pario-bank.yaml       |  72 ++++++
+ .../soc/fsl/cpm_qe/fsl,qe-ports-ic.yaml       |  58 +++++
+ .../bindings/soc/fsl/cpm_qe/qe/par_io.txt     |  26 +--
+ arch/powerpc/platforms/Kconfig                |   1 -
+ drivers/soc/fsl/qe/Makefile                   |   2 +-
+ drivers/soc/fsl/qe/gpio.c                     | 209 ++++++++++++------
+ drivers/soc/fsl/qe/qe_ports_ic.c              | 156 +++++++++++++
+ 7 files changed, 434 insertions(+), 90 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/fsl,mpc8323-qe-pario-bank.yaml
+ create mode 100644 Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,qe-ports-ic.yaml
+ create mode 100644 drivers/soc/fsl/qe/qe_ports_ic.c
+
+-- 
+2.49.0
+
 
