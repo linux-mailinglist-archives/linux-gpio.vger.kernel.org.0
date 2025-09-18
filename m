@@ -1,51 +1,51 @@
-Return-Path: <linux-gpio+bounces-26342-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26341-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6181DB861D1
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 18:52:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6E3BB861B9
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 18:51:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 48FEE4E0188
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 16:51:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C06EF5469A8
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 16:51:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B297025A359;
-	Thu, 18 Sep 2025 16:50:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01C212566D3;
+	Thu, 18 Sep 2025 16:50:51 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D26CF259C9A;
-	Thu, 18 Sep 2025 16:50:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38DEA24BBFD;
+	Thu, 18 Sep 2025 16:50:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758214254; cv=none; b=a2xhKZffolOwjHM31p4mlJhj/qA1uhkXf4K0uAVIKsrMSUG65o6T+LSRwV5fLx1jHM793nFICu8P1pHrh8Z45LA5ZLXZEGPfEQsSNIpgSoQ1uOt5oXnzgUESgsT26AUMQNh+HADIQ3IwWcCeYTRkciWSRvoFjf5RwBTJ37NZG/g=
+	t=1758214250; cv=none; b=NAEYGjZIfyfP9XEQ2FVCjpj0iKHcH6fDoK25XdZj+gpx36PJN3ht1CRgyd08RbNfY8mZZ0JxJzs1o4UYv/L7OpJlr2A3sk+9eQedpLBo9ugh6wBkYeDCtU+9ZPv0MhONrub+Bb/nWv0HupOhFyW+WHHriPBsM2hQ1wk2MbNy9ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758214254; c=relaxed/simple;
-	bh=ECnVefXmhNl1JmdZzgG8I7sGGtwU4E9wPX7lONyQWKg=;
+	s=arc-20240116; t=1758214250; c=relaxed/simple;
+	bh=LLw9e41r3Nu4RX42WVov9+WnfXYO1+RpidnMUsA7kyA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hXOQI9NDbyRvawc/iljAbTVL5iDa0q0Px4/nP68in7qrisFvWQR0/oiRD9Gwf8AsApaHz3rOPZqQvbNrRuhTWh76urA/7oTzf9ABD7+oBtp2bB5ER5S3t6n/4+r94ZhIHujuCmrlS+qj+ahYUX6NXTQZQRXy8EGoxeOdPSI18kE=
+	 MIME-Version; b=tfZP4TuEwQWiqvw3gMP6Wa//2LrCOQTBdOBcmwW4jJv8HiXVgl9ga/G7PKDX14vWRJPwclF2Dr9RnH+BXnh2bGZeHsegrIzEKPrUKEDvHO2Kw/dWROB6/noeGKc9mWyYPt4avULq9egTIleGhL0Lqp0t9H+LXDszepwy5VGYJuc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
 Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4cSLY550rVz9sfy;
-	Thu, 18 Sep 2025 18:23:37 +0200 (CEST)
+	by localhost (Postfix) with ESMTP id 4cSLY61dgCz9sg4;
+	Thu, 18 Sep 2025 18:23:38 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from pegase2.c-s.fr ([172.26.127.65])
 	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id H8HCMn0Ik6Ho; Thu, 18 Sep 2025 18:23:37 +0200 (CEST)
+	with ESMTP id bWMfx8aSixG3; Thu, 18 Sep 2025 18:23:38 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4cSLY40Gyqz9sft;
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4cSLY45WG2z9sfq;
 	Thu, 18 Sep 2025 18:23:36 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id EC8AC8B778;
-	Thu, 18 Sep 2025 18:23:35 +0200 (CEST)
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id AAACE8B767;
+	Thu, 18 Sep 2025 18:23:36 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
 	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id 4GRJcVK8mL3E; Thu, 18 Sep 2025 18:23:35 +0200 (CEST)
+	with ESMTP id cycSslAEFx8u; Thu, 18 Sep 2025 18:23:36 +0200 (CEST)
 Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 3A2A18B767;
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id EC5308B776;
 	Thu, 18 Sep 2025 18:23:35 +0200 (CEST)
 From: Christophe Leroy <christophe.leroy@csgroup.eu>
 To: Qiang Zhao <qiang.zhao@nxp.com>,
@@ -60,10 +60,10 @@ Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-gpio@vger.kernel.org,
 	devicetree@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v6 4/7] soc: fsl: qe: Add support of IRQ in QE GPIO
-Date: Thu, 18 Sep 2025 18:23:24 +0200
-Message-ID: <9a4d8bc1145f708a5ee6dde24fe2bd85cff006e2.1758212309.git.christophe.leroy@csgroup.eu>
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v6 5/7] dt-bindings: soc: fsl: qe: Add an interrupt controller for QUICC Engine Ports
+Date: Thu, 18 Sep 2025 18:23:25 +0200
+Message-ID: <67987bbf42344398709949cb53e3e8415260ec09.1758212309.git.christophe.leroy@csgroup.eu>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1758212309.git.christophe.leroy@csgroup.eu>
 References: <cover.1758212309.git.christophe.leroy@csgroup.eu>
@@ -73,184 +73,88 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1758212605; l=6045; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=ECnVefXmhNl1JmdZzgG8I7sGGtwU4E9wPX7lONyQWKg=; b=BCYsDj1HWoo7ACd1jnIWD1gvVC+4kIJPnu4mQAebHTYtdnONQI8aBWW2ByUbOLumzvmOVOvo5 7M0NqjAB6jlCtOfaAQF5rhWMlJ2Q2LShqj9FcaDbvVkQV0AVwpz/yil
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1758212605; l=2384; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=LLw9e41r3Nu4RX42WVov9+WnfXYO1+RpidnMUsA7kyA=; b=YDDPEKiP3Ihfi8Pm7o7zYRnNRvlYkYvxNfNQKaJ78/6tLwk/gZeiVWgFd34JlEKpPkQz5YuNm 7q+0fY29QL+CIgPgMa30z7I7M2Y68WpSf6wgo9LrLQ1Iy4lQ7igZ528
 X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
 Content-Transfer-Encoding: 8bit
 
-In the QE, a few GPIOs have an associated IRQ to notify changes.
-Add IRQ support to QE GPIO.
+The QUICC Engine provides interrupts for a few I/O ports. This is
+handled via a separate interrupt ID and managed via a triplet of
+dedicated registers hosted by the SoC.
 
-As not all GPIOs have an associated IRQ, the driver needs to know
-to which GPIO corresponds each provided IRQ. This is provided via
-multiple compatible properties:
+Implement an interrupt driver for it for that those IRQs can then
+be linked to the related GPIOs.
 
-	compatible = "fsl,mpc8323-qe-pario-bank-a"
-	compatible = "fsl,mpc8323-qe-pario-bank-b"
-	compatible = "fsl,mpc8323-qe-pario-bank-c"
-
-	compatible = "fsl,mpc8360-qe-pario-bank-a"
-	compatible = "fsl,mpc8360-qe-pario-bank-b"
-	compatible = "fsl,mpc8360-qe-pario-bank-c"
-	compatible = "fsl,mpc8360-qe-pario-bank-d"
-	compatible = "fsl,mpc8360-qe-pario-bank-e"
-	compatible = "fsl,mpc8360-qe-pario-bank-f"
-	compatible = "fsl,mpc8360-qe-pario-bank-g"
-
-	compatible = "fsl,mpc8568-qe-pario-bank-a"
-	compatible = "fsl,mpc8568-qe-pario-bank-b"
-	compatible = "fsl,mpc8568-qe-pario-bank-c"
-	compatible = "fsl,mpc8568-qe-pario-bank-d"
-	compatible = "fsl,mpc8568-qe-pario-bank-e"
-	compatible = "fsl,mpc8568-qe-pario-bank-f"
-
-When not using IRQ and for banks having no IRQ (like bank D on mpc8323)
-the origin compatible = "fsl,mpc8323-qe-pario-bank" is sufficient.
-
-Here is an exemple for port B of mpc8323 which has IRQs for
-GPIOs PB7, PB9, PB25 and PB27.
-
-	qe_pio_b: gpio-controller@1418 {
-		compatible = "fsl,mpc8323-qe-pario-bank-b";
-		reg = <0x1418 0x18>;
-		interrupts = <4 5 6 7>;
-		interrupt-parent = <&qepic>;
-		gpio-controller;
-		#gpio-cells = <2>;
-	};
-
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
-v6: Changed mask local var to unsigned long instead of u32 to avoid build failure on 64 bits
----
- drivers/soc/fsl/qe/gpio.c | 72 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ .../soc/fsl/cpm_qe/fsl,qe-ports-ic.yaml       | 58 +++++++++++++++++++
+ 1 file changed, 58 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,qe-ports-ic.yaml
 
-diff --git a/drivers/soc/fsl/qe/gpio.c b/drivers/soc/fsl/qe/gpio.c
-index c54154b404df..7a23eb220217 100644
---- a/drivers/soc/fsl/qe/gpio.c
-+++ b/drivers/soc/fsl/qe/gpio.c
-@@ -12,6 +12,7 @@
- #include <linux/spinlock.h>
- #include <linux/err.h>
- #include <linux/io.h>
-+#include <linux/of_irq.h>
- #include <linux/gpio/consumer.h>
- #include <linux/gpio/driver.h>
- #include <linux/slab.h>
-@@ -32,6 +33,8 @@ struct qe_gpio_chip {
- 
- 	/* saved_regs used to restore dedicated functions */
- 	struct qe_pio_regs saved_regs;
+diff --git a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,qe-ports-ic.yaml b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,qe-ports-ic.yaml
+new file mode 100644
+index 000000000000..a356ad8b13f5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,qe-ports-ic.yaml
+@@ -0,0 +1,58 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/soc/fsl/cpm_qe/fsl,qe-ports-ic.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	int irq[QE_PIO_PINS];
- };
- 
- static void qe_gpio_save_regs(struct qe_gpio_chip *qe_gc)
-@@ -135,6 +138,13 @@ static int qe_gpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
- 	return 0;
- }
- 
-+static int qe_gpio_to_irq(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	struct qe_gpio_chip *qe_gc = gpiochip_get_data(gc);
++title: Freescale QUICC Engine I/O Ports Interrupt Controller
 +
-+	return qe_gc->irq[gpio] ? : -ENXIO;
-+}
++maintainers:
++  - Christophe Leroy <christophe.leroy@csgroup.eu>
 +
- struct qe_pin {
- 	/*
- 	 * The qe_gpio_chip name is unfortunate, we should change that to
-@@ -295,6 +305,7 @@ static int qe_gpio_probe(struct platform_device *ofdev)
- 	struct device_node *np = dev->of_node;
- 	struct qe_gpio_chip *qe_gc;
- 	struct gpio_chip *gc;
-+	unsigned long mask;
- 
- 	qe_gc = devm_kzalloc(dev, sizeof(*qe_gc), GFP_KERNEL);
- 	if (!qe_gc)
-@@ -302,6 +313,15 @@ static int qe_gpio_probe(struct platform_device *ofdev)
- 
- 	spin_lock_init(&qe_gc->lock);
- 
-+	mask = (unsigned long)of_device_get_match_data(dev);
-+	if (mask) {
-+		int i, j;
++description:
++  Interrupt controller for the QUICC Engine I/O ports found on some Freescale/NXP PowerQUICC and QorIQ SoCs.
 +
-+		for (i = 0, j = 0; i < ARRAY_SIZE(qe_gc->irq); i++)
-+			if (mask & PIN_MASK(i))
-+				qe_gc->irq[i] = irq_of_parse_and_map(np, j++);
-+	}
++properties:
++  compatible:
++    enum:
++      - fsl,mpc8323-qe-ports-ic
++      - fsl,mpc8360-qe-ports-ic
++      - fsl,mpc8568-qe-ports-ic
 +
- 	gc = &qe_gc->gc;
- 
- 	gc->base = -1;
-@@ -311,6 +331,7 @@ static int qe_gpio_probe(struct platform_device *ofdev)
- 	gc->get = qe_gpio_get;
- 	gc->set = qe_gpio_set;
- 	gc->set_multiple = qe_gpio_set_multiple;
-+	gc->to_irq = qe_gpio_to_irq;
- 	gc->parent = dev;
- 	gc->owner = THIS_MODULE;
- 
-@@ -330,6 +351,57 @@ static int qe_gpio_probe(struct platform_device *ofdev)
- static const struct of_device_id qe_gpio_match[] = {
- 	{
- 		.compatible = "fsl,mpc8323-qe-pario-bank",
-+	}, {
-+		.compatible = "fsl,mpc8323-qe-pario-bank-a",
-+		.data = (void *)(PIN_MASK(8) | PIN_MASK(10) | PIN_MASK(26) | PIN_MASK(28)),
-+	}, {
-+		.compatible = "fsl,mpc8323-qe-pario-bank-b",
-+		.data = (void *)(PIN_MASK(7) | PIN_MASK(9) | PIN_MASK(25) | PIN_MASK(27)),
-+	}, {
-+		.compatible = "fsl,mpc8323-qe-pario-bank-c",
-+		.data = (void *)(PIN_MASK(24) | PIN_MASK(29)),
-+	}, {
-+		.compatible = "fsl,mpc8360-qe-pario-bank-a",
-+		.data = (void *)(PIN_MASK(15) | PIN_MASK(16) | PIN_MASK(29) | PIN_MASK(30)),
-+	}, {
-+		.compatible = "fsl,mpc8360-qe-pario-bank-b",
-+		.data = (void *)(PIN_MASK(3) | PIN_MASK(5) | PIN_MASK(12) | PIN_MASK(13) |
-+				 PIN_MASK(26) | PIN_MASK(27)),
-+	}, {
-+		.compatible = "fsl,mpc8360-qe-pario-bank-c",
-+		.data = (void *)(PIN_MASK(27) | PIN_MASK(28) | PIN_MASK(29)),
-+	}, {
-+		.compatible = "fsl,mpc8360-qe-pario-bank-d",
-+		.data = (void *)(PIN_MASK(12) | PIN_MASK(13) | PIN_MASK(16) | PIN_MASK(17) |
-+				 PIN_MASK(26) | PIN_MASK(27)),
-+	}, {
-+		.compatible = "fsl,mpc8360-qe-pario-bank-e",
-+		.data = (void *)(PIN_MASK(12) | PIN_MASK(13) | PIN_MASK(24) | PIN_MASK(25) |
-+				 PIN_MASK(26) | PIN_MASK(27) | PIN_MASK(31)),
-+	}, {
-+		.compatible = "fsl,mpc8360-qe-pario-bank-f",
-+		.data = (void *)(PIN_MASK(20)),
-+	}, {
-+		.compatible = "fsl,mpc8360-qe-pario-bank-g",
-+		.data = (void *)(PIN_MASK(31)),
-+	}, {
-+		.compatible = "fsl,mpc8568-qe-pario-bank-a",
-+		.data = (void *)(PIN_MASK(22) | PIN_MASK(23)),
-+	}, {
-+		.compatible = "fsl,mpc8568-qe-pario-bank-b",
-+		.data = (void *)(PIN_MASK(12) | PIN_MASK(13) | PIN_MASK(28) | PIN_MASK(29)),
-+	}, {
-+		.compatible = "fsl,mpc8568-qe-pario-bank-c",
-+		.data = (void *)(PIN_MASK(16) | PIN_MASK(17) | PIN_MASK(25) | PIN_MASK(26)),
-+	}, {
-+		.compatible = "fsl,mpc8568-qe-pario-bank-d",
-+		.data = (void *)(PIN_MASK(18) | PIN_MASK(19)),
-+	}, {
-+		.compatible = "fsl,mpc8568-qe-pario-bank-e",
-+		.data = (void *)(PIN_MASK(12) | PIN_MASK(16) | PIN_MASK(30)),
-+	}, {
-+		.compatible = "fsl,mpc8568-qe-pario-bank-f",
-+		.data = (void *)(PIN_MASK(12) | PIN_MASK(16) | PIN_MASK(30)),
- 	},
- 	{},
- };
++  reg:
++    maxItems: 1
++    description: Base address and size of the QE I/O Ports Interrupt Controller registers.
++
++  interrupt-controller: true
++
++  '#address-cells':
++    const: 0
++
++  '#interrupt-cells':
++    const: 1
++
++  interrupts:
++    maxItems: 1
++    description: Interrupt line to which the QE I/O Ports controller is connected.
++
++required:
++  - compatible
++  - reg
++  - interrupt-controller
++  - '#address-cells'
++  - '#interrupt-cells'
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    interrupt-controller@c00 {
++      compatible = "fsl,mpc8323-qe-ports-ic";
++      reg = <0xc00 0x18>;
++      interrupt-controller;
++      #address-cells = <0>;
++      #interrupt-cells = <1>;
++      interrupts = <74 0x8>;
++      interrupt-parent = <&ipic>;
++    };
 -- 
 2.49.0
 
