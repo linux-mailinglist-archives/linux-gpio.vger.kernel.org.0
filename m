@@ -1,74 +1,73 @@
-Return-Path: <linux-gpio+bounces-26329-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26330-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69FF9B858BE
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 17:23:30 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80302B8595A
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 17:27:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 189493B3CA9
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 15:18:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4FAF47B1533
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 15:25:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99FD530CDB0;
-	Thu, 18 Sep 2025 15:18:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB12630F939;
+	Thu, 18 Sep 2025 15:27:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uLi4AGnf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d47hQZzP"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC2922425E;
-	Thu, 18 Sep 2025 15:18:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B6B30F80C;
+	Thu, 18 Sep 2025 15:27:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758208713; cv=none; b=pqezMrWMYN1QBq5RoPsCoOMXE2RJTuduOM+vmclmFdHW8SUe224ap6Ht1vYXcGoefISHJtT3TMWoxzNfQEGQvFYYKJLUtwHhPsaX0LLELaFMakhkfuxsjN6P32uHjv73VYji5G8YLR2wOeQbPGSQ1DOZoXZ2GHxq7Y6ptEy9IAo=
+	t=1758209225; cv=none; b=lyUkgx9eKo9YoOxzTAOLTaCE7TevRXfA5PSmeBrZO87ocBFsyq1zCIPtvVdZpuhyfvAiF4PvzOgkXXwBXAkyB719LiQy3UbpteLasAvTvaUTnwgnIZaP9TMzNPBHyYG1KqdB7SEowINqJLEAZtoY1H/zJomEzNq+eNx54HwD/ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758208713; c=relaxed/simple;
-	bh=T4wS9mTXcpSpv5NeMblAj4UwyO9r3doA7Bdhw2LH3VI=;
+	s=arc-20240116; t=1758209225; c=relaxed/simple;
+	bh=BwqLfcPI4fqGMrRKoHaz7EZY8YKsYs2WAMxp5J73LSM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bBjcA+hLzwamDR8Qxz+zW+D3gPYuOxjy8ibUzhcRM6kwKBd4UesaVHrTwhZpN/EquqkCqdrUTi4AjHD8GI/Pgq2yVpLR0FqUCKj00QAF4iUIaWipgYBjbtudckA3B5+HcoTXf1SfTN2YTGYjVy1sB266xn0B6jxwR3/0BLgcS50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uLi4AGnf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECAE5C4CEE7;
-	Thu, 18 Sep 2025 15:18:27 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=aEYIAPrs0Hmy88n9p1wclR7m+/RFVY+Ok78IP7mOKnvflblr++WOx/EjF56Hb1IETpOgm7CAXQsf1iKPiIQvjYAaGgz4mud03uvst4kgZ6xNwIywffxKux3ksYCOAFH0PhYM0kiKD9yNwdPYw82ggMvHB2ooc0ojCJrB/4pfKCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d47hQZzP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4557DC4CEEB;
+	Thu, 18 Sep 2025 15:27:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758208712;
-	bh=T4wS9mTXcpSpv5NeMblAj4UwyO9r3doA7Bdhw2LH3VI=;
+	s=k20201202; t=1758209225;
+	bh=BwqLfcPI4fqGMrRKoHaz7EZY8YKsYs2WAMxp5J73LSM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uLi4AGnfRF6V6De0JAQgyez9xlUDmOFx461zVUm3XCG3sP4T0+DSxdMQyyFkuOUhV
-	 +Vh0+IHpwVsE1AZMdCz4UjHMuDlwhMrk39tlWhDcGgoEsf0H6LULv5ssc1b5PCpbhd
-	 JdIa4NK88xzdm/0CBrNg88tIE/Fx13gh/UUhVDeR2zvkFOqfwIosu0udNELsXGdBkl
-	 Js0qFWwQZgoA63M3jyhl2eCC8j64ckbBPtWR2RrV6aeDGgTIOkwrsNNEzkg2vc6zCf
-	 TfonVsjS25GolhGQGXBUZ0rgcw0cK/3wgOdylL6W6s1718xsH2XOddKjhMSuq6sr/2
-	 Gdq9xsJAzr/NA==
-Date: Thu, 18 Sep 2025 16:18:25 +0100
+	b=d47hQZzPAIdH5mldPmUZH1IaZjVHNjMIpaGYdWoCs1oLr+6Tcxp9t8bMvuLu9gFEX
+	 lo+6brZG4IkWpzP/S3cUAVOjQrScbGC7Y5uCGuO5+s88oqc+30Jdi+8//okEH01f89
+	 85402JQ0/0K0U8B+w8PhY4YwZO9tf/OcyQhDrxJrllRDoGdR21TGOS6CVkez6ioeSK
+	 cdJjfZ4RiNrrQdljWW2p4sFo8z54nwCL1ALgo06kZasrnpCCTyEIMDiIsw46sVHSZ5
+	 G8Hh7Olv1zI/rjZvF2lSnSidLuI7YJAR81E9GmRs/H3sb7eV2LSCBjRinpLhVS52pO
+	 GwmwKUMIcFF+Q==
+Date: Thu, 18 Sep 2025 16:26:59 +0100
 From: Conor Dooley <conor@kernel.org>
-To: Dang Huynh <dang.huynh@mainlining.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Hoan Tran <hoan@os.amperecomputing.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Sebastian Reichel <sre@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-unisoc@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-rtc@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-pm@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-mmc@vger.kernel.org
-Subject: Re: [PATCH 05/25] dt-bindings: rtc: Add RDA Micro RDA8810PL RTC
-Message-ID: <20250918-unharmed-bloating-8b573513fce6@spud>
-References: <20250917-rda8810pl-drivers-v1-0-74866def1fe3@mainlining.org>
- <20250917-rda8810pl-drivers-v1-5-74866def1fe3@mainlining.org>
- <20250917-contort-sassy-df07fd7515a0@spud>
- <c905fb3ace281280f1ac11c7fbe8e0aa@mainlining.org>
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Phil Edworthy <phil.edworthy@renesas.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	Pascal Eberhard <pascal.eberhard@se.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 6/8] dt-bindings: soc: renesas: Add the Renesas RZ/N1
+ GPIO Interrupt Multiplexer
+Message-ID: <20250918-education-resource-aac71b87e979@spud>
+References: <20250918104009.94754-1-herve.codina@bootlin.com>
+ <20250918104009.94754-7-herve.codina@bootlin.com>
+ <20250918-majestic-mockup-0a0e090db0a7@spud>
+ <20250918171502.411c3527@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -76,93 +75,62 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qnPPSzmWE/KqIUbp"
+	protocol="application/pgp-signature"; boundary="04PZPDVvYnUHAPS9"
 Content-Disposition: inline
-In-Reply-To: <c905fb3ace281280f1ac11c7fbe8e0aa@mainlining.org>
+In-Reply-To: <20250918171502.411c3527@bootlin.com>
 
 
---qnPPSzmWE/KqIUbp
+--04PZPDVvYnUHAPS9
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 18, 2025 at 11:11:10AM +0700, Dang Huynh wrote:
-> On 2025-09-18 03:46, Conor Dooley wrote:
-> > On Wed, Sep 17, 2025 at 03:07:22AM +0700, Dang Huynh wrote:
-> > > Add documentation describing the RTC found in RDA8810PL SoC.
-> > >=20
-> > > Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
-> > > ---
-> > >  .../devicetree/bindings/rtc/rda,8810pl-rtc.yaml    | 30
-> > > ++++++++++++++++++++++
-> > >  1 file changed, 30 insertions(+)
-> > >=20
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/rtc/rda,8810pl-rtc.yaml
-> > > b/Documentation/devicetree/bindings/rtc/rda,8810pl-rtc.yaml
-> > > new file mode 100644
-> > > index 0000000000000000000000000000000000000000..3ceae294921cc3211cd77=
-5d9b3890393196faf82
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/rtc/rda,8810pl-rtc.yaml
-> > > @@ -0,0 +1,30 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/rtc/rda,8810pl-rtc.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: RDA Micro RDA8810PL Real Time Clock
-> > > +
-> > > +maintainers:
-> > > +  - Dang Huynh <dang.huynh@mainlining.org>
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: rda,8810pl-rtc
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> >=20
-> > Your driver implements functions that turn on an alarm irq, but there is
-> > none mentioned here. What's going on there?
-> The RTC doesn't seem to have an AP IRQ associated. I can't find any
-> reference to it on downstream kernel and the docs.
+On Thu, Sep 18, 2025 at 05:15:02PM +0200, Herve Codina wrote:
+> Hi Conor,
 >=20
-> >=20
-> > Additionally, there's no clocks property? For an onboard RTC I'd have
-> > expected there to be a clock sourced outside of the block.
-
-What about the clock?
-
-> >=20
-> > > +
-> > > +additionalProperties: false
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    rtc@1a06000 {
-> > > +      compatible =3D "rda,8810pl-rtc";
-> > > +      reg =3D <0x1a06000 0x1000>;
-> > > +    };
+> On Thu, 18 Sep 2025 16:06:04 +0100
+> Conor Dooley <conor@kernel.org> wrote:
+>=20
+> > On Thu, Sep 18, 2025 at 12:40:04PM +0200, Herve Codina (Schneider Elect=
+ric) wrote:
+> > > On the Renesas RZ/N1 SoC, GPIOs can generate interruptions. Those
+> > > interruption lines are multiplexed by the GPIO Interrupt Multiplexer =
+in
+> > > order to map 32 * 3 GPIO interrupt lines to 8 GIC interrupt lines.
 > > >=20
-> > > --
-> > > 2.51.0
+> > > The GPIO interrupt multiplexer IP does nothing but select 8 GPIO
+> > > IRQ lines out of the 96 available to wire them to the GIC input lines.
+> > >=20
+> > > Signed-off-by: Herve Codina (Schneider Electric) <herve.codina@bootli=
+n.com>
+> > > ---
+> > >  .../soc/renesas/renesas,rzn1-gpioirqmux.yaml  | 87 +++++++++++++++++=
+++
+> > >  1 file changed, 87 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/soc/renesas/ren=
+esas,rzn1-gpioirqmux.yaml =20
+> >=20
+> > This is an interrupt controller, please move it to that subdirectory.
+>=20
+> Not so sure. It is a nexus node. It routes interrupt signals to the
+> interrupt controller (interrupt-map) but it is not an interrupt controller
+> itself.
+>=20
+> I am not sure that it should be moved to the interrupt-controller
+> directory.
 
---qnPPSzmWE/KqIUbp
+Your node name choice disagrees with you!
+
+--04PZPDVvYnUHAPS9
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaMwiwQAKCRB4tDGHoIJi
-0mfkAP9yS2bi4VD6hutTCOIeT3qJB84qFVZONJYP1wnhQwLGeAD8CFxZvCN6Jv4e
-UC/tOu6vHervFswpc7sqlf9k4hh+qQs=
-=wDJV
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaMwkwwAKCRB4tDGHoIJi
+0mK2AQCYPHl4rF871L3zpt0NZtb7tH1ZVhuOQg0+r0MqiY6UyQEA2Dn0unSyWBQs
+L4iJKiNqXKFSDPbUt3IAV/KTVPzZeQY=
+=aBup
 -----END PGP SIGNATURE-----
 
---qnPPSzmWE/KqIUbp--
+--04PZPDVvYnUHAPS9--
 
