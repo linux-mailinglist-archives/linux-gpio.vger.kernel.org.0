@@ -1,53 +1,53 @@
-Return-Path: <linux-gpio+bounces-26319-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26320-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A92BB842BD
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 12:42:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE07BB842CB
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 12:42:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DA2E816B614
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 10:41:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1FDE81739F7
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 10:42:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 637CB2FFDF5;
-	Thu, 18 Sep 2025 10:40:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 744873002B4;
+	Thu, 18 Sep 2025 10:40:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZJAf1huG"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UgEAW4f/"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B3B2FD7B8;
-	Thu, 18 Sep 2025 10:40:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764022FFDFD
+	for <linux-gpio@vger.kernel.org>; Thu, 18 Sep 2025 10:40:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758192044; cv=none; b=KMTZBv0sPOIm2F+kh9ZQZPi1L6WskeqcFeV1ompjwJmHFYdfplcUCCojvPu6P2mrzMQit7I9M4ZOng3kiiJecRWTh3IgEImgDQ5UizNbQz+KRLBW53Xqncw1WTUN1cI9E3yfPAyd7hjMBIe7pL0deJPhn8FFMN6HK5aPi+q6ZXg=
+	t=1758192046; cv=none; b=LS0tH6jeB8fVgRVXSeIDqzepJ9IRsnveIyc8aUlqq7Tbq74xwk9WJpYxQSXwfewsYgIRky551XjIpKMlPRO1aEWuScL7yJah5oPCLQSqitqOwIK1IM4Bl9SqZuRbbSzgReCeLomYBQzmaEMTLhDona+SigdQTs+kDvcbvVk47aU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758192044; c=relaxed/simple;
-	bh=R8Xsmkzx7aOYm1jK65/dyFCdtO4BUsHKP1UuUfcs/ew=;
+	s=arc-20240116; t=1758192046; c=relaxed/simple;
+	bh=dndIw7FY0vB6XNMwaNprdOxuasKUV84FFdOaGqsO3Cc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q8NH3Ft2tmi2dI1DkoQpdEE1pMfKTnX3LKnMMUd6Jm3r6YhTBH3Tjka+ZH7qxeOhEsjXx+RQl8/kGE3BD4C+Q0fd1FIDJdL3QPeum19umurzW2DhUPhKjUNbXVgJnkFa74HeCVV2M3+uIFtiPEV8lbCPhcUy6StPnfa2tojvl9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZJAf1huG; arc=none smtp.client-ip=185.171.202.116
+	 MIME-Version; b=Dr/BNWaKoF12OdWhyOmXtcD5mUMEP/wvYn9esQLXpB23frJXRkf5P53SYBtcnKFk4q3CTF4G4ITFAk0Ansyyb8Lx7MLoLtDv0yK1z1iFuPqISe0oHQOhZSRnOWLdrdneco9gdXP42uZ7nZCeyi9fgc7Dup0cqa9xpLcO0hsFk68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UgEAW4f/; arc=none smtp.client-ip=185.171.202.116
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 181CAC00097;
-	Thu, 18 Sep 2025 10:40:24 +0000 (UTC)
+	by smtpout-04.galae.net (Postfix) with ESMTPS id A794CC0008A;
+	Thu, 18 Sep 2025 10:40:26 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id A81FA6062C;
-	Thu, 18 Sep 2025 10:40:40 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id DECC4102F1D06;
-	Thu, 18 Sep 2025 12:40:37 +0200 (CEST)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 439F26062C;
+	Thu, 18 Sep 2025 10:40:43 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3C55E102F1D07;
+	Thu, 18 Sep 2025 12:40:40 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1758192039; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1758192042; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=K6kewgS5GEy/Q8lFyYhTpZvLBbKsoFjT0ZyUNHYjTdo=;
-	b=ZJAf1huGXR2YOfnuItyX9Wx0KPv8cX2ezVcYUprOCmFHvGma8wYiq8ZLre7FhTIDxoM6bR
-	mdvj7O0yaHX7Dyz4F7zEW1E+4nNKCB833W/iEbtNpiuJurelinsgTG9WHyM7JZ3Db4EIbk
-	IwQjmPb5RBWwVMa2JgiSrkBtdNWvCvy5Ole9TqWWaqk/9RTHNgfKdfoFE3qLp+b5FmIETT
-	w2OGjs9O57XhvfcER+I8fRJgq//0wX7JDdRaPnZSiQeOuH3Zy3knvBs1wMMLPmKpg2c14l
-	SLNyX6Did4U7hIsMBuD5zyivW92eKw9OIc1wiID/An5IT57cleXq0dgjlQZa+A==
+	bh=Oih+z7DRki3/W3NXwG40HAfWX9fZXZjpXuzwRdxWrcw=;
+	b=UgEAW4f/DyoVkm7T2FCcpmZQfQCZzkmGZ/3kOfRLKXS62dP/WdogW9bvMX2iJW5Vcuwilb
+	pEQ+1xWlUg0VvgEjHwiew8iIqLfUm2+K/stJZyqk2+fcJBN2BDWuoVfWRItqnBJQyORVyD
+	Z/9Hv0X5cz92kr8aU9kJ0ruS4aonyjnQX50E6/i/rxeEl7+itRK/kbXmJz8t60tLEP2G5h
+	pjPXGGQEYIngFNH35bS5lFPJSrbqrhiquvNHLOLJYvislrpOGQTqzGPkrrIrml/YhFvgQA
+	bGubzjMFMuRgS4PAbtm4owvfqzM294gjHddUH65hiXSW2rZ/hV5K4bFTKs6Hyw==
 From: "Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Wolfram Sang <wsa+renesas@sang-engineering.com>,
@@ -70,9 +70,9 @@ Cc: Phil Edworthy <phil.edworthy@renesas.com>,
 	Pascal Eberhard <pascal.eberhard@se.com>,
 	Miquel Raynal <miquel.raynal@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v3 6/8] dt-bindings: soc: renesas: Add the Renesas RZ/N1 GPIO Interrupt Multiplexer
-Date: Thu, 18 Sep 2025 12:40:04 +0200
-Message-ID: <20250918104009.94754-7-herve.codina@bootlin.com>
+Subject: [PATCH v3 7/8] soc: renesas: Add support for Renesas RZ/N1 GPIO Interrupt Multiplexer
+Date: Thu, 18 Sep 2025 12:40:05 +0200
+Message-ID: <20250918104009.94754-8-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250918104009.94754-1-herve.codina@bootlin.com>
 References: <20250918104009.94754-1-herve.codina@bootlin.com>
@@ -94,103 +94,160 @@ IRQ lines out of the 96 available to wire them to the GIC input lines.
 
 Signed-off-by: Herve Codina (Schneider Electric) <herve.codina@bootlin.com>
 ---
- .../soc/renesas/renesas,rzn1-gpioirqmux.yaml  | 87 +++++++++++++++++++
- 1 file changed, 87 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/renesas/renesas,rzn1-gpioirqmux.yaml
+ drivers/soc/renesas/Kconfig       |   4 ++
+ drivers/soc/renesas/Makefile      |   1 +
+ drivers/soc/renesas/rzn1_irqmux.c | 110 ++++++++++++++++++++++++++++++
+ 3 files changed, 115 insertions(+)
+ create mode 100644 drivers/soc/renesas/rzn1_irqmux.c
 
-diff --git a/Documentation/devicetree/bindings/soc/renesas/renesas,rzn1-gpioirqmux.yaml b/Documentation/devicetree/bindings/soc/renesas/renesas,rzn1-gpioirqmux.yaml
+diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
+index 719b7f4f376f..0878b6884515 100644
+--- a/drivers/soc/renesas/Kconfig
++++ b/drivers/soc/renesas/Kconfig
+@@ -58,6 +58,7 @@ config ARCH_RZN1
+ 	select PM
+ 	select PM_GENERIC_DOMAINS
+ 	select ARM_AMBA
++	select RZN1_IRQMUX
+ 
+ if ARM && ARCH_RENESAS
+ 
+@@ -447,6 +448,9 @@ config PWC_RZV2M
+ config RST_RCAR
+ 	bool "Reset Controller support for R-Car" if COMPILE_TEST
+ 
++config RZN1_IRQMUX
++	bool "Renesas RZ/N1 GPIO IRQ multiplexer support" if COMPILE_TEST
++
+ config SYSC_RZ
+ 	bool "System controller for RZ SoCs" if COMPILE_TEST
+ 
+diff --git a/drivers/soc/renesas/Makefile b/drivers/soc/renesas/Makefile
+index 3bdcc6a395d5..daa932c7698d 100644
+--- a/drivers/soc/renesas/Makefile
++++ b/drivers/soc/renesas/Makefile
+@@ -14,4 +14,5 @@ obj-$(CONFIG_SYS_R9A09G057)	+= r9a09g057-sys.o
+ # Family
+ obj-$(CONFIG_PWC_RZV2M)		+= pwc-rzv2m.o
+ obj-$(CONFIG_RST_RCAR)		+= rcar-rst.o
++obj-$(CONFIG_RZN1_IRQMUX)		+= rzn1_irqmux.o
+ obj-$(CONFIG_SYSC_RZ)		+= rz-sysc.o
+diff --git a/drivers/soc/renesas/rzn1_irqmux.c b/drivers/soc/renesas/rzn1_irqmux.c
 new file mode 100644
-index 000000000000..21c6b6e1fa9a
+index 000000000000..3855e132c15f
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/renesas/renesas,rzn1-gpioirqmux.yaml
-@@ -0,0 +1,87 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/soc/renesas/renesas,rzn1-gpioirqmux.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/soc/renesas/rzn1_irqmux.c
+@@ -0,0 +1,110 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * RZ/N1 GPIO Interrupt Multiplexer
++ *
++ * Copyright 2025 Schneider Electric
++ * Author: Herve Codina <herve.codina@bootlin.com>
++ */
 +
-+title: Renesas RZ/N1 SoCs GPIO Interrupt Multiplexer
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_irq.h>
++#include <linux/platform_device.h>
 +
-+description: |
-+   The Renesas RZ/N1 GPIO Interrupt Multiplexer multiplexes GPIO interrupt
-+   lines to the interrupt controller available in the SoC.
++#define IRQMUX_MAX_IRQS 8
 +
-+   It selects up to 8 of the 96 GPIO interrupt lines available and connect them
-+   to 8 output interrupt lines.
++static int irqmux_setup(struct device *dev, struct device_node *np, u32 __iomem *regs)
++{
++	struct of_imap_parser imap_parser;
++	struct of_imap_item imap_item;
++	unsigned int index = 0;
++	u32 tmp;
++	int ret;
 +
-+maintainers:
-+  - Herve Codina <herve.codina@bootlin.com>
++	/* We support only #interrupt-cells = <1> and #address-cells = <0> */
++	ret = of_property_read_u32(np, "#interrupt-cells", &tmp);
++	if (ret)
++		return ret;
++	if (tmp != 1)
++		return -EINVAL;
 +
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - renesas,r9a06g032-gpioirqmux
-+      - const: renesas,rzn1-gpioirqmux
++	ret = of_property_read_u32(np, "#address-cells", &tmp);
++	if (ret)
++		return ret;
++	if (tmp != 0)
++		return -EINVAL;
 +
-+  reg:
-+    maxItems: 1
++	ret = of_imap_parser_init(&imap_parser, np, &imap_item);
++	if (ret)
++		return ret;
 +
-+  "#address-cells":
-+    const: 0
++	for_each_of_imap_item(&imap_parser, &imap_item) {
++		/*
++		 * The child #address-cells is 0 (already checked). The first
++		 * value in imap item is the src hwirq.
++		 *
++		 * imap items matches 1:1 the interrupt lines that could
++		 * be configured by registers (same order, same number).
++		 * Configure the related register with the src hwirq retrieved
++		 * from the interrupt-map.
++		 */
++		if (index > IRQMUX_MAX_IRQS) {
++			of_node_put(imap_item.parent_args.np);
++			dev_err(dev, "too much items in interrupt-map\n");
++			return -EINVAL;
++		}
 +
-+  "#interrupt-cells":
-+    const: 1
++		writel(imap_item.child_imap[0], regs + index);
++		index++;
++	}
 +
-+  interrupt-map-mask:
-+    items:
-+      - const: 0x7f
++	return 0;
++}
 +
-+  interrupt-map:
-+    description:
-+      Specifies the mapping from external GPIO interrupt lines to the output
-+      interrupts. The array items have to be ordered with the first item
-+      related to the output line 0 (IRQ 103), the next one to the output line 1
-+      (IRQ 104) and so on up to the output line 8 (IRQ 110).
++static int irqmux_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	u32 __iomem *regs;
++	int nr_irqs;
++	int ret;
 +
-+required:
-+  - compatible
-+  - reg
-+  - "#address-cells"
-+  - "#interrupt-cells"
-+  - interrupt-map-mask
-+  - interrupt-map
++	regs = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(regs))
++		return PTR_ERR(regs);
 +
-+additionalProperties: false
++	nr_irqs = of_irq_count(np);
++	if (nr_irqs < 0)
++		return nr_irqs;
 +
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
++	if (nr_irqs > IRQMUX_MAX_IRQS) {
++		dev_err(dev, "too many output interrupts\n");
++		return -ENOENT;
++	}
 +
-+    gic: interrupt-controller {
-+        interrupt-controller;
-+        #address-cells = <0>;
-+        #interrupt-cells = <3>;
-+    };
++	ret = irqmux_setup(dev, np, regs);
++	if (ret)
++		return dev_err_probe(dev, ret, "failed to setup mux\n");
 +
-+    interrupt-controller@51000480 {
-+        compatible = "renesas,r9a06g032-gpioirqmux", "renesas,rzn1-gpioirqmux";
-+        reg = <0x51000480 0x20>;
-+        #address-cells = <0>;
-+        #interrupt-cells = <1>;
-+        interrupt-map-mask = <0x7f>;
-+        /*
-+         * The child interrupt number is computed using the following formula:
-+         *    gpio_bank * 32 + gpio_number
-+         *
-+         * with:
-+         *    - gpio_bank: The GPIO bank number
-+         *          - 0 for GPIO0A,
-+         *          - 1 for GPIO1A,
-+         *          - 2 for GPIO2A
-+         *    - gpio_number: Number of the gpio in the bank (0..31)
-+         */
-+        interrupt-map =
-+            <32 &gic GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>, /* GPIO1A.0 */
-+            <89 &gic GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>, /* GPIO2A.25 */
-+            <9 &gic GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>; /* GPIO0A.9 */
-+    };
++	return 0;
++}
++
++static const struct of_device_id irqmux_of_match[] = {
++	{ .compatible = "renesas,rzn1-gpioirqmux", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, irq_mux_of_match);
++
++static struct platform_driver irqmux_driver = {
++	.probe = irqmux_probe,
++	.driver = {
++		.name = "rzn1_irqmux",
++		.of_match_table = irqmux_of_match,
++	},
++};
++module_platform_driver(irqmux_driver);
++
++MODULE_AUTHOR("Herve Codina <herve.codina@bootlin.com>");
++MODULE_DESCRIPTION("Renesas RZ/N1 GPIO IRQ Multiplexer Driver");
++MODULE_LICENSE("GPL");
 -- 
 2.51.0
 
