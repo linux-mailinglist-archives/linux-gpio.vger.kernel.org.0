@@ -1,172 +1,196 @@
-Return-Path: <linux-gpio+bounces-26311-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26312-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 932FAB833D6
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 09:00:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1584BB8401D
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 12:17:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A0F113A6A8F
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 07:00:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B46DA1C8213C
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 10:16:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 494362E3AF2;
-	Thu, 18 Sep 2025 07:00:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 591F42F745E;
+	Thu, 18 Sep 2025 10:12:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FD0ZzwnZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f7kGZv1i"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489B32E54D7
-	for <linux-gpio@vger.kernel.org>; Thu, 18 Sep 2025 07:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C36D2F362B
+	for <linux-gpio@vger.kernel.org>; Thu, 18 Sep 2025 10:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758178809; cv=none; b=NkemCNWWiwZbkIQ8XZP7QKgIu21f5e4NYwO6vIqhRoZdRQ9+yLJDJYZnRrQjKNy9B6Oungi+cpw3MMznGb6bs4iqTYyfdwP6WmvB1w78Yppr7xP/SlZLRlL6XhmCdLms7lQ2reIRCConor3F8RBJrkR/jbVUmorUBELRtL6Do2Y=
+	t=1758190368; cv=none; b=KM5wJtXXnuoxAYa5ILG0UnjxZr0LiQiqvmBa4q1BZET3iJJLyJLR8ul9PBuTEj7K6D5DJe7iD+VteLddQM2EUYix3D4r0+MYuAW1QmYwDcdVyYomcZkV8S52Yy2ufRYjrDnm1BsqYMFU6eDXk8Euw9r/2xwCNLW5j6JnIGj96sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758178809; c=relaxed/simple;
-	bh=dMPBMjcsgn8U8Ns064JVZeWP50Bq8MfymrupfdTqn3w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TmPrK8UqD64gzV1LsGcvDH9ivH5mGD5S+oNAKoBjSWEusMIUjeFgo7o0KIWsEjyGZenOLI1WF6FzkVFi9s26aQ1rhENmmyNxUXuOgWAV4kjbyOfPYVc/2QYwEtILVoAYqgIfw4fMjFHVthEH9E2uBq95a39FaemjfhtQda0Rs9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FD0ZzwnZ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58I6qCD0027040
-	for <linux-gpio@vger.kernel.org>; Thu, 18 Sep 2025 07:00:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	kbWfmH/pC1nkCgbZSoU/uA31VLtZW7O3InnzSnNVGIE=; b=FD0ZzwnZ9FI5tSH5
-	60sE1dFrl1ZPrFfJ5uI7jRgaHHl0uWXeRIY+wI0MxAVQ66fP4cGwJKZjyFeMFRtN
-	xB3CDjO6ztTxOWvhK91CiNK9sq0Xtmo0VxWIfJ0Wg194uTKKZsPlXUqtBQUo4GdM
-	dcRuMVQGJmySLA1vQvDdrFcFzvJQ+xUFQaubCSCTxF8sMiQsi0zGXuZdMMPgeFyr
-	ETj4ZRllZguijOkmDS13EQIgYqeI8EB1NbRVA0EiZKntcIGv3KYF8aqaVqK64wmG
-	MyeW2srrKdt7Kc/sKP04VmubzDI7zgCN7AXalJx1vgLW6Btj0Wzx3iKjdHi+2Nv6
-	0QE3EA==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 497v1jb88m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Thu, 18 Sep 2025 07:00:02 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-32e0b001505so617870a91.0
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Sep 2025 00:00:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758178802; x=1758783602;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kbWfmH/pC1nkCgbZSoU/uA31VLtZW7O3InnzSnNVGIE=;
-        b=dsTRs2dJetQLVjnnsHLONqJzC4esc8dUGtoZ0xO10nEyCbk4EYBda9F77N7yyVr2Bm
-         r/moOCQG8UTHFyjHv3yMfzY60B0lpN5eZF2egAq0Pztzo03u0UkZ8wJAxehPsmYcxUpf
-         DlO0nVRdRpfPp3mKb9WhKsnAbZDCMc85eRihMvSMGX3OWW3anEWlShZGd4ZIzy6yyE+y
-         3dgVMV3/dheMKwXXge43DBi4kJ6MZwXOlV1kM7bA4WNtA41Yd+1FNC+V078H1O9BP2B2
-         lF1PrTx+PpYFggAIl03/rivSlpUB3T+x+mLtSmfRauEl3sSgaZSjkrTgDNgrQ9ROudni
-         m75A==
-X-Forwarded-Encrypted: i=1; AJvYcCXVe+t5ck9l9jrPfh+pGvCqFLBOIdaShqSCcI9B9pNQf85UfwwEWciJLA1HZNm/3HSZu24VknSCgPyF@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsV1p2XzwFmkDr6G7lhTGUhIG0quftIMEE/WYqVaJwmyu6yNsv
-	/0kbtITdFodAJ8GVdgDEEUsQtS7sQTK6aYsxT2eB+uT0ZhHwYszKgasOToJCtVGqtSpC81Gtq6t
-	bxL637yEfGnJuQM4fnyTmel84YCzOTNL+06L03Kb93C2bxUqqCpLb86Bhqpki5E1z
-X-Gm-Gg: ASbGnctbmEzUqFXyuTsTCsxx/h9g8LMjPw1p2UyC6KB8/vr4rmDPnL3jFY+KyZStp7D
-	4xNksmd2ApnJdHfPPEKBuoonAl5bdTT4UQRvYlNlDup7xLjwdUcbN88SOgZH0sv/gyPXzHr4Twx
-	7PksQjZGbpA0lEwn5G4lTMLJOZUXvKASHZIu1+6fjRNJvDDq1Kkrgwyrzd9dMZmXsb63q9Gmy0O
-	63GZ3qkjUlel2JigGRnTnGEQ//8mKbU4dmdBqd3j4CTMfJsGLFtXrK6y+zbSu2yGjhF3sxKQ2fU
-	kKVvQdEipDBqut1fia+mXtCJrFLwsd0cZWPpKhpU0tOmld3aWrY98ENkQJBWoU6eO2twHRdBFsF
-	iDHugovldQoPnv3EGHyudgNLnu/gOw8xlfOcB
-X-Received: by 2002:a17:90b:3c8c:b0:32e:3f93:69e2 with SMTP id 98e67ed59e1d1-32ee3ef0806mr5833896a91.13.1758178801461;
-        Thu, 18 Sep 2025 00:00:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGqOU3X6jq0DY1ti5vQYDwFxJTrFdx2WWG+GVUcFRyYIyCcd6DpTKmCSc0wqBeP9DA1iegvZA==
-X-Received: by 2002:a17:90b:3c8c:b0:32e:3f93:69e2 with SMTP id 98e67ed59e1d1-32ee3ef0806mr5833868a91.13.1758178800933;
-        Thu, 18 Sep 2025 00:00:00 -0700 (PDT)
-Received: from [10.133.33.30] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-330607f0deasm1526418a91.23.2025.09.17.23.59.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Sep 2025 00:00:00 -0700 (PDT)
-Message-ID: <e01fd1ed-0b7e-442c-9524-3248a9cb32cf@oss.qualcomm.com>
-Date: Thu, 18 Sep 2025 14:59:54 +0800
+	s=arc-20240116; t=1758190368; c=relaxed/simple;
+	bh=wYBu1srqsac2xDu8HXkR+W1NexgFyAQ7w759hYWUBkk=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=rpVqwiuKxBDhpToxT9OE7o2YawLiUc5BuZSjGlvevVaTBvJNbZDGYCO9mN+hMr6AOk4NOzi3E1rf4d1+KGuqdW0AcbEKW305xbqDYgxeEbyAZnZwkA/SsFswhygaQmYJpomkzA6C5W1WUhdFVZYzcRQM0DuJNsm0QU+eNwZkVW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f7kGZv1i; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758190367; x=1789726367;
+  h=date:from:to:cc:subject:message-id;
+  bh=wYBu1srqsac2xDu8HXkR+W1NexgFyAQ7w759hYWUBkk=;
+  b=f7kGZv1i+rYdPOYvivaRT4sEsKoaJtmhFDawrh1JCq0AHKXtYNGVqWPt
+   JTqyswDDUWt9gHmMKlcw2NpztRRaf0H4y3vnl63KiM843OgbPfBRnlxBF
+   JcSVVjLeeBHQEtXvxP8m+kNWd6sLELiTSF0asvg0RqiYO2BSTn6Nn+BlX
+   9ajY0Z4rJfp3QQrVu9vh1DRbU5oaLtLFsdLn1PJSLG5LB/ObHuJ36/hAv
+   N8GKkhFPJtgPkiOgnAP6h68DPRWkjoW6nm26SLQycDj2QLfTuSGE4InTW
+   KZ88vR13pSv63mWl2fP1SGN4cQ7MgXHfhVUMKTkFUs76HM44RuQa7t44Z
+   Q==;
+X-CSE-ConnectionGUID: gWuWqks/SduP94l+YMVKiA==
+X-CSE-MsgGUID: KjaMRLJ9QbqzNlpL4Ytp1A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11556"; a="60580839"
+X-IronPort-AV: E=Sophos;i="6.18,274,1751266800"; 
+   d="scan'208";a="60580839"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2025 03:12:46 -0700
+X-CSE-ConnectionGUID: Yp0/8ylPT76WZ5fhCpNGqQ==
+X-CSE-MsgGUID: oyKaUVcWTqK85fqyjBVD/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,274,1751266800"; 
+   d="scan'208";a="175075749"
+Received: from lkp-server01.sh.intel.com (HELO 84a20bd60769) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 18 Sep 2025 03:12:45 -0700
+Received: from kbuild by 84a20bd60769 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uzBd3-00036F-33;
+	Thu, 18 Sep 2025 10:12:41 +0000
+Date: Thu, 18 Sep 2025 18:12:17 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ 0b1619c38600fc06c73b1f59c64af0b7df08fc2c
+Message-ID: <202509181811.4Hk5U5ke-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 16/21] ath10k: remove gpio number assignment
-To: Arnd Bergmann <arnd@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
-        Jeff Johnson <jjohnson@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-wireless@vger.kernel.org,
-        ath10k@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250808151822.536879-1-arnd@kernel.org>
- <20250808151822.536879-17-arnd@kernel.org>
-From: Baochen Qiang <baochen.qiang@oss.qualcomm.com>
-Content-Language: en-US
-In-Reply-To: <20250808151822.536879-17-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: V5zReCwIOgAoEpgy7-JpshX7JumN-o3N
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE3MDExMCBTYWx0ZWRfX3ZHrTXu9qRON
- v9MBrvgpX6wlaOn3PuMwwtGmVV+rPT7WuIqOolI14mTP3HoPnWJYTapeFA9ttc9lm7xaBB+zRYn
- +2nfm6L7FDufmFDtlZ+mumuEc1sRVxKpLyXyXVQOlEchsdgtWPwzYC9pe60kVv37l984bEd8cva
- j9leKRZvuvdmX0XVmp6+IKkE2EEBFznadKaz+1jYkCSiE0P6RtntBUfhSeadOUxZjZ10fJ69UsW
- 80+M+0Yj6necdKnWgdUmX3ltzZTbW/9HIybvpezu0ovNrUS2oeXlQenHhF6MyChR6fbyPIcmRMy
- pc18fAa7PeZTvvV0t3DRiFrYu9O+Vaylc/JoDtEYOjiBUXHkjvUDFixycS68N5UjGl5Le+CLhqV
- o2GvjWtE
-X-Authority-Analysis: v=2.4 cv=AeqxH2XG c=1 sm=1 tr=0 ts=68cbadf2 cx=c_pps
- a=vVfyC5vLCtgYJKYeQD43oA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=EUspDBNiAAAA:8 a=uLrbQztoRsBK_tCdPC4A:9
- a=QEXdDO2ut3YA:10 a=rl5im9kqc5Lf4LNbBjHf:22
-X-Proofpoint-GUID: V5zReCwIOgAoEpgy7-JpshX7JumN-o3N
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-17_01,2025-09-18_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 spamscore=0 phishscore=0 suspectscore=0 adultscore=0
- impostorscore=0 priorityscore=1501 bulkscore=0 clxscore=1011
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509170110
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: 0b1619c38600fc06c73b1f59c64af0b7df08fc2c  gpio: nomadik: fix the debugfs helper stub
 
+elapsed time: 1456m
 
-On 8/8/2025 11:18 PM, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> The leds-gpio traditionally takes a global gpio number in its platform
-> data, but the number assigned here is not actually such a number but
-> only meant to be used internally to this driver.
-> 
-> As part of the kernel-wide cleanup of the old gpiolib interfaces, the
-> 'gpio' number field is going away, so to keep ath10k building, move
-> the assignment into a private structure instead.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/net/wireless/ath/ath10k/leds.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/ath/ath10k/leds.c b/drivers/net/wireless/ath/ath10k/leds.c
-> index 9b1d04eb4265..3a6c8111e7c6 100644
-> --- a/drivers/net/wireless/ath/ath10k/leds.c
-> +++ b/drivers/net/wireless/ath/ath10k/leds.c
-> @@ -27,7 +27,7 @@ static int ath10k_leds_set_brightness_blocking(struct led_classdev *led_cdev,
->  		goto out;
->  
->  	ar->leds.gpio_state_pin = (brightness != LED_OFF) ^ led->active_low;
-> -	ath10k_wmi_gpio_output(ar, led->gpio, ar->leds.gpio_state_pin);
-> +	ath10k_wmi_gpio_output(ar, ar->hw_params.led_pin, ar->leds.gpio_state_pin);
->  
->  out:
->  	mutex_unlock(&ar->conf_mutex);
-> @@ -64,7 +64,6 @@ int ath10k_leds_register(struct ath10k *ar)
->  	snprintf(ar->leds.label, sizeof(ar->leds.label), "ath10k-%s",
->  		 wiphy_name(ar->hw->wiphy));
->  	ar->leds.wifi_led.active_low = 1;
-> -	ar->leds.wifi_led.gpio = ar->hw_params.led_pin;
->  	ar->leds.wifi_led.name = ar->leds.label;
->  	ar->leds.wifi_led.default_state = LEDS_GPIO_DEFSTATE_KEEP;
->  
+configs tested: 103
+configs skipped: 4
 
-With 'wifi:' tag added ...
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Reviewed-by: Baochen Qiang <baochen.qiang@oss.qualcomm.com>
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                          axs101_defconfig    gcc-15.1.0
+arc                   randconfig-001-20250917    gcc-8.5.0
+arc                   randconfig-002-20250917    gcc-15.1.0
+arm                               allnoconfig    clang-22
+arm                   milbeaut_m10v_defconfig    clang-19
+arm                       netwinder_defconfig    gcc-15.1.0
+arm                   randconfig-001-20250917    clang-22
+arm                   randconfig-002-20250917    gcc-12.5.0
+arm                   randconfig-003-20250917    gcc-10.5.0
+arm                   randconfig-004-20250917    clang-22
+arm                         s5pv210_defconfig    gcc-15.1.0
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250917    clang-22
+arm64                 randconfig-002-20250917    clang-19
+arm64                 randconfig-003-20250917    gcc-10.5.0
+arm64                 randconfig-004-20250917    clang-22
+csky                              allnoconfig    gcc-15.1.0
+csky                  randconfig-001-20250917    gcc-12.5.0
+csky                  randconfig-002-20250917    gcc-9.5.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-22
+hexagon                          allyesconfig    clang-22
+hexagon               randconfig-001-20250917    clang-22
+hexagon               randconfig-002-20250917    clang-22
+i386        buildonly-randconfig-001-20250917    gcc-14
+i386        buildonly-randconfig-002-20250917    clang-20
+i386        buildonly-randconfig-003-20250917    gcc-14
+i386        buildonly-randconfig-004-20250917    gcc-14
+i386        buildonly-randconfig-005-20250917    gcc-14
+i386        buildonly-randconfig-006-20250917    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-22
+loongarch             randconfig-001-20250917    gcc-15.1.0
+loongarch             randconfig-002-20250917    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                         amcore_defconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                        maltaup_defconfig    clang-22
+mips                           mtx1_defconfig    clang-22
+mips                         rt305x_defconfig    clang-22
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20250917    gcc-11.5.0
+nios2                 randconfig-002-20250917    gcc-8.5.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250917    gcc-14.3.0
+parisc                randconfig-002-20250917    gcc-14.3.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc               randconfig-001-20250917    clang-18
+powerpc               randconfig-002-20250917    clang-22
+powerpc               randconfig-003-20250917    gcc-9.5.0
+powerpc64             randconfig-001-20250917    clang-19
+powerpc64             randconfig-002-20250917    gcc-8.5.0
+riscv                             allnoconfig    gcc-15.1.0
+riscv                 randconfig-001-20250917    gcc-14.3.0
+riscv                 randconfig-002-20250917    clang-22
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-22
+s390                             allyesconfig    gcc-15.1.0
+s390                  randconfig-001-20250917    clang-22
+s390                  randconfig-002-20250917    gcc-8.5.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                    randconfig-001-20250917    gcc-14.3.0
+sh                    randconfig-002-20250917    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250917    gcc-8.5.0
+sparc                 randconfig-002-20250917    gcc-14.3.0
+sparc64               randconfig-001-20250917    gcc-11.5.0
+sparc64               randconfig-002-20250917    gcc-8.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-22
+um                               allyesconfig    gcc-14
+um                    randconfig-001-20250917    gcc-14
+um                    randconfig-002-20250917    gcc-14
+x86_64      buildonly-randconfig-001-20250917    gcc-14
+x86_64      buildonly-randconfig-002-20250917    clang-20
+x86_64      buildonly-randconfig-003-20250917    clang-20
+x86_64      buildonly-randconfig-004-20250917    clang-20
+x86_64      buildonly-randconfig-005-20250917    clang-20
+x86_64      buildonly-randconfig-006-20250917    gcc-12
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250917    gcc-8.5.0
+xtensa                randconfig-002-20250917    gcc-11.5.0
 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
