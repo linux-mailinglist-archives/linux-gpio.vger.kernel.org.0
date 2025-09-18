@@ -1,49 +1,49 @@
-Return-Path: <linux-gpio+bounces-26330-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26331-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80302B8595A
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 17:27:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 245CDB85B07
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 17:40:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4FAF47B1533
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 15:25:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C44DF561259
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 15:39:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB12630F939;
-	Thu, 18 Sep 2025 15:27:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80885311C33;
+	Thu, 18 Sep 2025 15:37:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d47hQZzP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E20hbPfr"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B6B30F80C;
-	Thu, 18 Sep 2025 15:27:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CCD630FC2C;
+	Thu, 18 Sep 2025 15:37:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758209225; cv=none; b=lyUkgx9eKo9YoOxzTAOLTaCE7TevRXfA5PSmeBrZO87ocBFsyq1zCIPtvVdZpuhyfvAiF4PvzOgkXXwBXAkyB719LiQy3UbpteLasAvTvaUTnwgnIZaP9TMzNPBHyYG1KqdB7SEowINqJLEAZtoY1H/zJomEzNq+eNx54HwD/ng=
+	t=1758209866; cv=none; b=k+Hj3+6BmhbRTZXesxOqvJogkqyjXT5vC2S0fxjxKzh6UU8hn/0ALO6A2tv+ECW7pfBCbpLcWCgZyaUwVo5hDcG9X9dtn4bRkmMqX1maTA+Rjj1luOr6njoNg5Mu3UHRSMXyhms4+FFE/q0rIwxPeRHZqeKJ6nE/WzGDa7xFRBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758209225; c=relaxed/simple;
-	bh=BwqLfcPI4fqGMrRKoHaz7EZY8YKsYs2WAMxp5J73LSM=;
+	s=arc-20240116; t=1758209866; c=relaxed/simple;
+	bh=OediWH/XA9a/MvBEFV1pPkqzahcgcSoJbDioj8i6TiE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aEYIAPrs0Hmy88n9p1wclR7m+/RFVY+Ok78IP7mOKnvflblr++WOx/EjF56Hb1IETpOgm7CAXQsf1iKPiIQvjYAaGgz4mud03uvst4kgZ6xNwIywffxKux3ksYCOAFH0PhYM0kiKD9yNwdPYw82ggMvHB2ooc0ojCJrB/4pfKCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d47hQZzP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4557DC4CEEB;
-	Thu, 18 Sep 2025 15:27:01 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=hEeh1RJw3YayVXZxvQV4opsf+u8drTQ1RGcAi7vFrcqp9LSva0JRGGXvqH0ArWOFHyVXSiiLoYyCRLB4SP4fXCJ8t1yqknud+psAi7LXnumUL/sdL6YrxAtKy7k9Z0CkDqBSUdNdAOose8y+e4NMTY5Nhx+CRKRQVA+LH3YUH2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E20hbPfr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0371C4CEE7;
+	Thu, 18 Sep 2025 15:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758209225;
-	bh=BwqLfcPI4fqGMrRKoHaz7EZY8YKsYs2WAMxp5J73LSM=;
+	s=k20201202; t=1758209865;
+	bh=OediWH/XA9a/MvBEFV1pPkqzahcgcSoJbDioj8i6TiE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d47hQZzPAIdH5mldPmUZH1IaZjVHNjMIpaGYdWoCs1oLr+6Tcxp9t8bMvuLu9gFEX
-	 lo+6brZG4IkWpzP/S3cUAVOjQrScbGC7Y5uCGuO5+s88oqc+30Jdi+8//okEH01f89
-	 85402JQ0/0K0U8B+w8PhY4YwZO9tf/OcyQhDrxJrllRDoGdR21TGOS6CVkez6ioeSK
-	 cdJjfZ4RiNrrQdljWW2p4sFo8z54nwCL1ALgo06kZasrnpCCTyEIMDiIsw46sVHSZ5
-	 G8Hh7Olv1zI/rjZvF2lSnSidLuI7YJAR81E9GmRs/H3sb7eV2LSCBjRinpLhVS52pO
-	 GwmwKUMIcFF+Q==
-Date: Thu, 18 Sep 2025 16:26:59 +0100
+	b=E20hbPfr0XSQmhtjd7h+D82bTG8EroeVLd3jxx1V6b6b50Ao7xD322TqypCpajZBG
+	 njMOmDrvmG/5cywM+BlS2WwCnkhLrYMX/ScKvuAtrrX65AC9tMI2b0vBMTNSb9I9PS
+	 tIjNrF7YHvcJqfGIvKChvURWnMT8V4MaSZxxAnrXmLIoddQbHXosBuIdHsdyQQ1259
+	 B1bKYOPUYXddNiodvoxOb5NhbMGxgMG0VW0dpW4xBeFaxOJYbW3LTaBN8PbIATbSdf
+	 Nn1I4IVBpjnNkdBQ7J9KnX9a1Tft81xq97wtCi60hm1ant1k2xL5PeZS+cpYbrAeIg
+	 repNm9GJxT3Ng==
+Date: Thu, 18 Sep 2025 16:37:39 +0100
 From: Conor Dooley <conor@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
+To: "Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Wolfram Sang <wsa+renesas@sang-engineering.com>,
 	Hoan Tran <hoan@os.amperecomputing.com>,
@@ -61,13 +61,10 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Pascal Eberhard <pascal.eberhard@se.com>,
 	Miquel Raynal <miquel.raynal@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 6/8] dt-bindings: soc: renesas: Add the Renesas RZ/N1
- GPIO Interrupt Multiplexer
-Message-ID: <20250918-education-resource-aac71b87e979@spud>
+Subject: Re: [PATCH v3 0/8] gpio: renesas: Add support for GPIO and related
+ interrupts in RZ/N1 SoC
+Message-ID: <20250918-sterilize-malt-b0f182256617@spud>
 References: <20250918104009.94754-1-herve.codina@bootlin.com>
- <20250918104009.94754-7-herve.codina@bootlin.com>
- <20250918-majestic-mockup-0a0e090db0a7@spud>
- <20250918171502.411c3527@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -75,62 +72,85 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="04PZPDVvYnUHAPS9"
+	protocol="application/pgp-signature"; boundary="tzSyCJd6sK53Da2+"
 Content-Disposition: inline
-In-Reply-To: <20250918171502.411c3527@bootlin.com>
+In-Reply-To: <20250918104009.94754-1-herve.codina@bootlin.com>
 
 
---04PZPDVvYnUHAPS9
-Content-Type: text/plain; charset=us-ascii
+--tzSyCJd6sK53Da2+
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 18, 2025 at 05:15:02PM +0200, Herve Codina wrote:
-> Hi Conor,
+On Thu, Sep 18, 2025 at 12:39:58PM +0200, Herve Codina (Schneider Electric)=
+ wrote:
+> Hi,
 >=20
-> On Thu, 18 Sep 2025 16:06:04 +0100
-> Conor Dooley <conor@kernel.org> wrote:
+> This series adds support for GPIO and GPIO IRQ mux available in the
+> RZ/N1 SoCs.
 >=20
-> > On Thu, Sep 18, 2025 at 12:40:04PM +0200, Herve Codina (Schneider Elect=
-ric) wrote:
-> > > On the Renesas RZ/N1 SoC, GPIOs can generate interruptions. Those
-> > > interruption lines are multiplexed by the GPIO Interrupt Multiplexer =
-in
-> > > order to map 32 * 3 GPIO interrupt lines to 8 GIC interrupt lines.
-> > >=20
-> > > The GPIO interrupt multiplexer IP does nothing but select 8 GPIO
-> > > IRQ lines out of the 96 available to wire them to the GIC input lines.
-> > >=20
-> > > Signed-off-by: Herve Codina (Schneider Electric) <herve.codina@bootli=
-n.com>
-> > > ---
-> > >  .../soc/renesas/renesas,rzn1-gpioirqmux.yaml  | 87 +++++++++++++++++=
-++
-> > >  1 file changed, 87 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/soc/renesas/ren=
-esas,rzn1-gpioirqmux.yaml =20
-> >=20
-> > This is an interrupt controller, please move it to that subdirectory.
+> The first patches in this series are related to a new helper introduced
+> to parse an interrupt-map property.
+>   - patch 1: Introduce the helper (for_each_of_imap_item)
+>   - patch 2: Add a unittest for the new helper
+>   - patch 3 and 4: convert existing drivers to use this new helper
 >=20
-> Not so sure. It is a nexus node. It routes interrupt signals to the
-> interrupt controller (interrupt-map) but it is not an interrupt controller
-> itself.
+> Patch 4 will conflicts with commit 40c26230a1bf ("irqchip: Use int type
+> to store negative error codes") available in linux-next.
 >=20
-> I am not sure that it should be moved to the interrupt-controller
-> directory.
+> Patch 5 adds support for GPIO (device-tree description)
+>=20
+> The last patches (6, 7 and 8) of the series are related to GPIO
+> interrupts and GPIO IRQ multiplexer.
+>=20
+> In the RZ/N1 SoCs, GPIO interrupts are wired to a GPIO IRQ multiplexer.
+>=20
+> This multiplexer does nothing but select 8 GPIO IRQ lines out of the 96
+> available to wire them to the GIC input lines.
+>=20
+> One upstreaming attempt have been done previously by Phil Edworthy [1]
+> but the series has never been applied.
+>=20
+> Based on my understanding, I have fully reworked the driver proposed by
+> Phil and removed the IRQ domain. Indeed, the device doesn't handle
+> interrupts. It just routes signals.
+>=20
+> Also, as an interrupt-map property is used, the driver cannot be
+> involved as an interrupt controller itself. It is a nexus node.
+>=20
+> With that in mind,
+>   - Patch 6 is related to the irq-mux binding.
+>=20
+>   - Patch 7 introduces the irq-mux driver.
+>     This driver uses the 'for_each_of_imap_item' helper introduced
+>     previously. Indeed, the lines routing is defined by the
+>     interrupt-map property and the driver needs to set registers to
+>     apply this routing.
+>=20
+>   - Patch 8 is the RZ/N1 device-tree description update to have the
+>     support for the GPIO interrupts.
+>=20
+> [1] https://lore.kernel.org/all/20190219155511.28507-1-phil.edworthy@rene=
+sas.com/
+>=20
+> Best regards,
+> Herv=E9
 
-Your node name choice disagrees with you!
+This whole thing is super interesting to me. I have a gpio irq mux of my
+own with a driver that is massively more complex than what you have here
+(it's a full on irqchip driver). I'm definitely gonna have to see if I
+can ape what you have done here and simplify what I have.
 
---04PZPDVvYnUHAPS9
+--tzSyCJd6sK53Da2+
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaMwkwwAKCRB4tDGHoIJi
-0mK2AQCYPHl4rF871L3zpt0NZtb7tH1ZVhuOQg0+r0MqiY6UyQEA2Dn0unSyWBQs
-L4iJKiNqXKFSDPbUt3IAV/KTVPzZeQY=
-=aBup
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaMwnQwAKCRB4tDGHoIJi
+0j34AQC3P0PuxZC2SxFiex/qr+Yf8kgGuHRjI8JYavUXsV5SGQEA1yVu2nM9t/8F
+CEKEQSi23yuWnP9bmfB6IKEfvv/rlww=
+=q8VI
 -----END PGP SIGNATURE-----
 
---04PZPDVvYnUHAPS9--
+--tzSyCJd6sK53Da2+--
 
