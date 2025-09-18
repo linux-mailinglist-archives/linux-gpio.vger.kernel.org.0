@@ -1,239 +1,153 @@
-Return-Path: <linux-gpio+bounces-26346-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26347-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86184B866D9
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 20:35:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14AAFB866F3
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 20:42:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 524AB189C69F
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 18:36:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D72D15887A6
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Sep 2025 18:42:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF4782D248C;
-	Thu, 18 Sep 2025 18:35:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AA932D3A93;
+	Thu, 18 Sep 2025 18:42:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MQMvyfT+"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KH28pdFF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9935F29A9CD
-	for <linux-gpio@vger.kernel.org>; Thu, 18 Sep 2025 18:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87CC621B9F6
+	for <linux-gpio@vger.kernel.org>; Thu, 18 Sep 2025 18:42:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758220532; cv=none; b=ggTGWfqUHQ/u6bd7tK0VQy/mHg31HsBFOjFU5/RVMIyIYTrYhA2WsBKUM1RoyU6VPsaLqFskHhNjqI/kdi69nSZEvE2v6zY+2YwASwzFcI1QxzwtolQ6F/SM4ob9Wk6j/5flpxpYNdP2e2PL9Nc+7CIQMcHJQD+2jjOHusio1cA=
+	t=1758220936; cv=none; b=imOxIKzOjgG8MhDN/xstzndR72IYs3rAMxtIAX+cjE6YFGpxW135/g9nqH+FE+vOUlOTBMiHL99qdIP8ERthFlvZC4KXvJSnVyqLAhLqb4zeUeVOOowUNE/RRbhb9yKiwsLsQnd7RfTsxZNaaIzAg1He7uSQ0AMeGAJOWD89I6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758220532; c=relaxed/simple;
-	bh=7JWrZqhhxtwxsKzUS484cYA9BE4S3MG4+Hm4TzvixgE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TIkp4nBKWjIGRidFBABpf5sn9eqWR24HogLUOmSNhO1Ykym0/rPTloHR6jKhJTDhMxSwBKDUCz6bFSw+i6FQbOUrCri16lIi/VAr4Qvpzlk2+Fa4oBuR9fl//b8uz4d5d4EYV2lT2cLRr0bK4OF1aoAwnLSw9wDkIklZ5sHK1PQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MQMvyfT+; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b07883a5feeso244489966b.1
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Sep 2025 11:35:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758220529; x=1758825329; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9DF8mdGy7rQ30a9eWz48AP7z4kPvyfSZCRABtJwRlC0=;
-        b=MQMvyfT+31xh4GtjqMt6G0oQ4ieG03Yk0cpxXjIjDvGJMKGZMBbbLVPxdW7CSIqHSa
-         Ti/I3Wo9KvSoXCQLxKvYr2HsKFdd4tyCFAJ56N6p6FTYjqOwyCV5FF6Ofpf2jhdXHCbS
-         gXWSghAewwgM6v34qLIRwCycGspdyrDlXWEONuSiiIVCLnRa+h+160ZXSh43cgJggUXy
-         1YwaOS5d9nf43A0e3gvjp6VXkoIkIZ5klNja3Hos/Kq+CROhxiiQezRidbE/M907dT3L
-         qCMlwl1nAoNJ4W/cQiJswbsT7VW6wPOffpwxFh4HVZfxjt30QjHSErSrVxufrsoK/d+1
-         v55A==
+	s=arc-20240116; t=1758220936; c=relaxed/simple;
+	bh=po+vLPdEwz+nRrn33wQ6Gz1tHmjdtWHriulevSWkdgs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OIx3xyvHjCSRXmP4xUq3wN+Z2KtwhKdh/5G6TWqiTzp+gg9H7lpILm2XYo3c9RsxFHs/7h7R8OZcT8Z4FRecqsLinJceY1qERsr/O2bPkeWbO5cXuxNDqVV9DCJaKsoZheKmmg1Hps/RcisvrsT4i9ZtZ7NrCjUurioku136nFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KH28pdFF; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58IBHhv9010750
+	for <linux-gpio@vger.kernel.org>; Thu, 18 Sep 2025 18:42:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	nF1fA0zbp7Djqf2UTk7dkerj+IhERcStYJUK4pvZ96Y=; b=KH28pdFFlHijuxsQ
+	Tkqdw1reTQqEDndBc+MUD9qCFuM2XNpbvqD4c2uEhhH2V4OCR919S5v1UB7AQEy5
+	3RlVlVzpTBlZBZONRaTU+84KuVpp9SAY40yGm11mLbRM+bgbzopewjHgb0LbM7Ya
+	FGdvtXNzsSTxKCxYO6qfrRFKwN8VwBRaNcPsdcqePqFsn1WGtNZVRw5MqexVIaE/
+	iARYmzkEdCwMMREiX/9LTzrhlVHScA/zUXa9hLhVecVVL/hE33NyS+UkgoQRZ4Lw
+	tdQryztVonOH63nY8jL4OttMdwwXTOVb/VIThGwyw36RIhVMGDrER0/sPyJn89d8
+	9H/keQ==
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 497fxxyjrp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Thu, 18 Sep 2025 18:42:13 +0000 (GMT)
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-7761dc1b36dso2442247b3a.1
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Sep 2025 11:42:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758220529; x=1758825329;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9DF8mdGy7rQ30a9eWz48AP7z4kPvyfSZCRABtJwRlC0=;
-        b=WarSBvH+pUW708KhtwyASXy/faW0EdlvYEA/pxE9hhzStZ3qcKjZn+4rpd7nNCEfKv
-         culh0shr9yr3LoZkUXIZV6wMXD0QONFondspXaO3sOZvOXWQfGRdmqCZx60+xoZJ6WKI
-         S/C1qk+0NDxckdAk4yMZKDLbO9kcDM8Bzfe3O1tRJ53IzTvGg555f/H+B3FBSmI89lIZ
-         z5qsdZYX6PoXC7m+6VbMUdXCxj2pmmp2tUq2WNoxKItJwKtYReWvOxZQnTHTUVtumUUM
-         qvtgXX/9yHqL/718aRZMf1+X7r3dpZenQ5DJ7F3C5IGwqmeI1sfBNagP5X+yy/rhkB80
-         Hgbg==
-X-Forwarded-Encrypted: i=1; AJvYcCWytdukMeTIVJQKq9Pplt3sgdSR0UglqbOBUKrqIxL6NGoxeD02/tZf0sQvQXA4uz6qUrMY+Y3D1ffd@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzyg9DyC7Jt5gWMfuuPUYApk3kxA3X+RpSYm26qj7jalyI2OdFL
-	HfCRTtTKi+SRxyUfPBoqViNxTJbchh68z0ymWCLJLGB3xAUsU20Q1hCx
-X-Gm-Gg: ASbGnctHhlvRA/S8U8n1UzPw3ThhBq8ugWbUlo8xBvgJL7WxNJVrzQsvTDcCcdYR6v/
-	WtKdR29N4sygT4rhNnsraLKrEiW949C80FL7OsBNrbz1qThABYUYSoPvP9uxQBoOehj5U3c89Pw
-	S86dCCtwkKxcYxGR3UgQ4I3MGFRfpm1355aPh1Oelm+JX46H2oGAsAmKeq725Qe6MkVWRX9PcFe
-	oqTIFvDr0uRHhqueZHb1F5v9kwB2Zxu8iVSm31d9fpK4lA/ZgehdsiPJEW+NoByI2XDQdoge1l5
-	bIxECPETSXmT6xSVLGbhircKk7SEP3+kaQO1MoLeDxcD8iVl1/8bPeweQgA18dpt+O/SHYl3tVM
-	0h0gfBfUeGeNSjFVokCdJ8JL8atxFbAxQZCNnKtk=
-X-Google-Smtp-Source: AGHT+IG+2F9Tdqn75yCUehgh0hWjS/B3B6NaTXRMxweuRMKUwCI/DRvlIaiDT/f+5WUUCMePXP8wBQ==
-X-Received: by 2002:a17:907:728f:b0:b04:9468:4a21 with SMTP id a640c23a62f3a-b24ee6ef486mr25159666b.14.1758220528565;
-        Thu, 18 Sep 2025 11:35:28 -0700 (PDT)
-Received: from localhost ([212.73.77.104])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-b1fcfe88d97sm245887466b.58.2025.09.18.11.35.26
+        d=1e100.net; s=20230601; t=1758220933; x=1758825733;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nF1fA0zbp7Djqf2UTk7dkerj+IhERcStYJUK4pvZ96Y=;
+        b=fD2pfU/9BZ6Qxaz6P/Tv4tB1v95c31g2G+LF8odUXVkCR45NvqiZnoQN9Z2Fu+1Gqp
+         86CLT2ruOiZ9zwTEkU+J6J876Y45tLeT0pFhHnlju6XrRynIQKiIXa6C4/NK7utWXFE+
+         ZF9PXGRrudvjceRvrRidXDqTv7iwU16+CT67nqadKtHWpUi3jnWnD4KpNq/KikuMu3SG
+         SLfs5+2Q8WrdJodAu8bKLpvLSoJI/G3bnnYiRf2Yo4PZLKrE3sJJ1BB4VEx+eMWnbXAA
+         iw4SUduEwR00U3nBetrngHUX463tbQ8USD4mOEAeP0qLIXgiqMo7My6tMw2cLkJw4Qf+
+         Q/XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXMjqlyQtf/wQnZ33FTJ3sGy98AueqZgy6t1Wz42g/O66gqXyGik6d7XTH8Ef51zzxz7Wpkf7n+1QNr@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzbZY8UI1aNiztJ6Bu7T2TZUs1Mz1ztfNQt5ac6ktx6A2mCzq+
+	XmLITzFpgs1snlkReYfVt7WNDK82Nwsp4cXkUjUuRWfKvFIoYnV22BRUnYgnZk65mNsFq4wOx8e
+	EAfy3fMFrTrmGez8vXn5zDh917d9ivWDDFdEwsqZEZeWIvGXmX2ZOePQmmpeQkk1o
+X-Gm-Gg: ASbGncudjfqwdw7BbKzfVYItWQdyVuvhBrauczTlPbX28pwIinO7FLrhGBXr7fp2pGH
+	Ncw44AKld6W1ZDNOtEW0QXFHvonWlWxfykclYNzI3ol9grZRYQv2+Q7gRpG1trd9iMjouM5z18V
+	t/yxwHEOmBOgi26ekOw3F/ZYelA4k+FCxyELVWKc4hOQDQgRBgkF8qtOS0liBYvrtJqHlPocqb4
+	aM+jMt86Y8cFoc9kIQgnUm/vnMew6QxOricfResuH3bMv9yxiVigB5IN8avmXCYqvyhu9zrOqXP
+	n4l0W3mG8Q75ndvl2811C81XPT2hekvJIJuQZyhMOd8rntQ+5UZgkU2TR/7IlmZO5cyDhkCy9Br
+	Y4kCVzf0yZkz2UipiZWY+S6MO2VP6Z3gFnguj
+X-Received: by 2002:a05:6a00:3cc9:b0:776:8b9d:85ad with SMTP id d2e1a72fcca58-77e4e8ae21dmr394529b3a.19.1758220932896;
+        Thu, 18 Sep 2025 11:42:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGzBPxPNDF/BcchRmyd2ICCvlhe8W1SbwWFUAF0xA+HbKxZJwRAh+LwrobiAdxKNso5yJHRKQ==
+X-Received: by 2002:a05:6a00:3cc9:b0:776:8b9d:85ad with SMTP id d2e1a72fcca58-77e4e8ae21dmr394497b3a.19.1758220932404;
+        Thu, 18 Sep 2025 11:42:12 -0700 (PDT)
+Received: from [192.168.1.111] (c-73-202-227-126.hsd1.ca.comcast.net. [73.202.227.126])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-77cfec40601sm3020533b3a.87.2025.09.18.11.42.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Sep 2025 11:35:28 -0700 (PDT)
-From: Askar Safin <safinaskar@gmail.com>
-To: andriy.shevchenko@linux.intel.com
-Cc: Dell.Client.Kernel@dell.com,
-	bartosz.golaszewski@linaro.org,
-	benjamin.tissoires@redhat.com,
-	dmitry.torokhov@gmail.com,
-	linux-acpi@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	regressions@lists.linux.dev,
-	rrangel@chromium.org,
-	safinaskar@zohomail.com,
-	superm1@kernel.org,
-	wse@tuxedocomputers.com
-Subject: Re: [REGRESSION][BISECTED] Dell Precision 7780 wakes up on its own from suspend
-Date: Thu, 18 Sep 2025 21:33:36 +0300
-Message-ID: <20250918183336.5633-1-safinaskar@gmail.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <aKyDB7h7cUBOLbiJ@smile.fi.intel.com>
-References: <aKyDB7h7cUBOLbiJ@smile.fi.intel.com>
+        Thu, 18 Sep 2025 11:42:12 -0700 (PDT)
+Message-ID: <eb3a2ef9-3f93-48be-b6d4-28eeeba84f04@oss.qualcomm.com>
+Date: Thu, 18 Sep 2025 11:42:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 16/21] ath10k: remove gpio number assignment
+To: Vasanthakumar Thiagarajan <quic_vthiagar@quicinc.com>,
+        Arnd Bergmann <arnd@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+        Jeff Johnson <jjohnson@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-wireless@vger.kernel.org,
+        ath10k@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250808151822.536879-1-arnd@kernel.org>
+ <20250808151822.536879-17-arnd@kernel.org>
+ <27c1274c-e021-ba69-175d-a1271c33498b@quicinc.com>
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <27c1274c-e021-ba69-175d-a1271c33498b@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE2MDIwMiBTYWx0ZWRfXyqrPsKOV1KTM
+ BRQBX+h4OiXelreAJLK4zwnxqQ59m0rPpTwPwixZn5gIgwhBI4WpIDorx2OOyB70+howo6Syg/Q
+ 3ucQn1f4tSTOCyMRckBawpM0uXsPMwjqdM3gRxeMe+9XDRt5g1LEfNYtSeN5hEvXPujfeCz1tZx
+ b/6H76h+RAarQ8aSHkINX02lcgqfjeSanVMaS94wbfxOWKChA+4/uyIEHA3DAsp0WQK1agf9TGa
+ R9MHqf3BxqLubfpo1l/C80zyid17QYuQzd9enedxwkEZ75NoxnF2bGNTERGAUsgw7t1F84PD/1J
+ u93IV/nYzkscfmvj9clI4GSP/BAyokU4Bkf7F0LipMnjf/G4Oc/Oov8sH7GCCFhZTrrJYM1YRJd
+ Scukr0yX
+X-Proofpoint-ORIG-GUID: HoGCzZPopot0z3_Yk9YMpVz8lgU5HKkX
+X-Authority-Analysis: v=2.4 cv=KJZaDEFo c=1 sm=1 tr=0 ts=68cc5285 cx=c_pps
+ a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=e70TP3dOR9hTogukJ0528Q==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=FtxLtjK2MU5K6IsP0WQA:9
+ a=QEXdDO2ut3YA:10 a=2VI0MkxyNR6bbpdq8BZq:22
+X-Proofpoint-GUID: HoGCzZPopot0z3_Yk9YMpVz8lgU5HKkX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-18_02,2025-09-18_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 phishscore=0 bulkscore=0 adultscore=0 impostorscore=0
+ suspectscore=0 malwarescore=0 clxscore=1011 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509160202
 
-Andy Shevchenko:
-> In other words we need to enable debug of the pin control subsystem and see
-> what it will print in dmesg.
+On 9/17/2025 10:22 PM, Vasanthakumar Thiagarajan wrote:
+> 
+> 
+> On 8/8/2025 8:48 PM, Arnd Bergmann wrote:
+>> From: Arnd Bergmann <arnd@arndb.de>
+>>
+>> The leds-gpio traditionally takes a global gpio number in its platform
+>> data, but the number assigned here is not actually such a number but
+>> only meant to be used internally to this driver.
+>>
+>> As part of the kernel-wide cleanup of the old gpiolib interfaces, the
+>> 'gpio' number field is going away, so to keep ath10k building, move
+>> the assignment into a private structure instead.
+>>
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> ---
+>>   drivers/net/wireless/ath/ath10k/leds.c | 3 +--
+>>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> wifi tag is missing in the patch title.
+> 
 
-You mean I should enable CONFIG_DEBUG_PINCTRL? Okay, I did this.
-
-So, today I tested everything on fresh kernel, 6.17.0-rc6, without any
-patches.
-
-My config is: https://zerobin.net/?ebecc538f6caa22b#88c2k08G8+cZoMjgU9N/WYy28qQjyBW+/H78ygujZxY=
-It was generated from Debian config using localmodconfig.
-I added few tweaks, in particular I enabled CONFIG_DEBUG_PINCTRL.
-
-# cat /proc/cmdline 
-BOOT_IMAGE=/@rootfs/boot/vmlinuz-6.17.0-rc6 root=UUID=015793d4-ad51-4da7-844b-fcc3bcb13a0b ro rootflags=subvol=@rootfs log_buf_len=4M ignore_loglevel
-
-I run this script:
-https://zerobin.net/?327f3aa3ef7ce845#Ycu017J9YbRga8uGaCKRzsH7J/lB8D4RudpwTll5lbo=
-
-This script runs "rtcwake -s 6 -m mem" multiple times. Sometimes my laptop wakes on timer (because of rtcwake),
-and sometimes it wakes up too early on its own (and this is a bug).
-
-My script did suspend 7 times:
-
-# dmesg | grep s2idle
-[  117.934504] PM: suspend entry (s2idle)
-[  127.141741] PM: suspend entry (s2idle)
-[  131.299554] PM: suspend entry (s2idle)
-[  140.034802] PM: suspend entry (s2idle)
-[  144.592260] PM: suspend entry (s2idle)
-[  154.038621] PM: suspend entry (s2idle)
-[  163.034299] PM: suspend entry (s2idle)
-
-Out of them my laptop woke up on timer 4 times and on its own (i. e. due to bug) 3 times:
-
-# dmesg | grep 'woke up'
-[  126.087936] will-wake: attempt 0: woke up in time
-[  130.248820] will-wake: attempt 1: woke up early
-[  138.988770] will-wake: attempt 2: woke up in time
-[  143.545973] will-wake: attempt 3: woke up early
-[  152.993654] will-wake: attempt 4: woke up in time
-[  161.988956] will-wake: attempt 5: woke up in time
-[  166.329080] will-wake: attempt 6: woke up early
-
-Here is full output of "dmesg --level=debug+":
-https://zerobin.net/?f704a2d56603f4ec#SRrzc2mt2FNNqcltx/ULmtLZRdRH9frdgoODU03AXwE=
-
-/proc/interrupts:
-https://zerobin.net/?b7ba5047ca84ab29#TjMUjkAdhpIuKbnvPpuYyNWa/ilA/ciGKwwSbx6KRFc=
-
-# head -n 1000 /sys/class/dmi/id/*
-==> /sys/class/dmi/id/bios_date <==
-07/15/2025
-
-==> /sys/class/dmi/id/bios_release <==
-1.23
-
-==> /sys/class/dmi/id/bios_vendor <==
-Dell Inc.
-
-==> /sys/class/dmi/id/bios_version <==
-1.23.6
-
-==> /sys/class/dmi/id/board_asset_tag <==
-
-
-==> /sys/class/dmi/id/board_name <==
-0C6JVW
-
-==> /sys/class/dmi/id/board_serial <==
-/JNLHW44/VNCMV0046P029A/
-
-==> /sys/class/dmi/id/board_vendor <==
-Dell Inc.
-
-==> /sys/class/dmi/id/board_version <==
-A00
-
-==> /sys/class/dmi/id/chassis_asset_tag <==
-
-
-==> /sys/class/dmi/id/chassis_serial <==
-JNLHW44
-
-==> /sys/class/dmi/id/chassis_type <==
-10
-
-==> /sys/class/dmi/id/chassis_vendor <==
-Dell Inc.
-
-==> /sys/class/dmi/id/chassis_version <==
-
-
-==> /sys/class/dmi/id/ec_firmware_release <==
-1.18
-
-==> /sys/class/dmi/id/modalias <==
-dmi:bvnDellInc.:bvr1.23.6:bd07/15/2025:br1.23:efr1.18:svnDellInc.:pnPrecision7780:pvr:rvnDellInc.:rn0C6JVW:rvrA00:cvnDellInc.:ct10:cvr:sku0C42:
-
-==> /sys/class/dmi/id/power <==
-head: error reading '/sys/class/dmi/id/power': Is a directory
-
-==> /sys/class/dmi/id/product_family <==
-Precision
-
-==> /sys/class/dmi/id/product_name <==
-Precision 7780
-
-==> /sys/class/dmi/id/product_serial <==
-JNLHW44
-
-==> /sys/class/dmi/id/product_sku <==
-0C42
-
-==> /sys/class/dmi/id/product_uuid <==
-4c4c4544-004e-4c10-8048-cac04f573434
-
-==> /sys/class/dmi/id/product_version <==
-
-
-==> /sys/class/dmi/id/subsystem <==
-head: error reading '/sys/class/dmi/id/subsystem': Is a directory
-
-==> /sys/class/dmi/id/sys_vendor <==
-Dell Inc.
-
-==> /sys/class/dmi/id/uevent <==
-MODALIAS=dmi:bvnDellInc.:bvr1.23.6:bd07/15/2025:br1.23:efr1.18:svnDellInc.:pnPrecision7780:pvr:rvnDellInc.:rn0C6JVW:rvrA00:cvnDellInc.:ct10:cvr:sku0C42:
-
-
-Output of dmidecode:
-https://zerobin.net/?e7783ba3bd93c895#EAVgKSZQrn0aGC6t9a/RKeZpp1/9TAYlDhHMh2lcpfQ=
-
--- 
-Askar Safin
+I'll fix this when I apply the patch
 
