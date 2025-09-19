@@ -1,50 +1,50 @@
-Return-Path: <linux-gpio+bounces-26362-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26363-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 363EEB87ED1
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 07:42:07 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C5A3B88957
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 11:35:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA6B41C83406
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 05:42:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 976457BC41C
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 09:33:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA57A2517AF;
-	Fri, 19 Sep 2025 05:42:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0007330748D;
+	Fri, 19 Sep 2025 09:34:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="dfnG49GD"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="R8FLyzgk"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199E32153D2
-	for <linux-gpio@vger.kernel.org>; Fri, 19 Sep 2025 05:41:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88083307499
+	for <linux-gpio@vger.kernel.org>; Fri, 19 Sep 2025 09:34:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758260521; cv=none; b=XsfwxajX8DrAFZ4JyFTxhEeeRMNjv7TyX5NOhNo3UJGSTBXiZLjUtYq2ij6A9hR4Ib9+YCnjhpwq0fG4lUAJQSPABO2XFTFapyzL8AXWpiskez02Fp8e5pbS5NsPg7Ie9Betv4MR2HEEUNXNrQGfqXBnXB7WK1nrinqO8HOBegE=
+	t=1758274497; cv=none; b=skcjb6CLd0gVIMLjdCwPE37nN2f2vZ1z6QRnKumZrnLnnGT0f2hIC1j018tMk4bXHSl2iIaJTRMyf04ug18XnNIIQAIX6ARh6+DGO3lsMoQ1Wl/oWvdvm0pDKGS+zL4x+7muFi69nKrHnizh/8jqwrtESScMnRkDW6Q6gOQ2wGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758260521; c=relaxed/simple;
-	bh=4q4/rw5mnD3aV6CATtWOIIeUTbmfcdY4ZrTuAkDyrvQ=;
+	s=arc-20240116; t=1758274497; c=relaxed/simple;
+	bh=2BdxvO+LipVZeGNgRKipvDky26JtE7RkzgLeGlqZKQM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KdphNgQEVRiE1okHNKA7Vvmwi+LmRL4bDoSDnznd4qCsFISBlWovMGdDSWxFFVJXWtgp4G93LO/4ogtjQy/v6ghj3+q+9WzsaVcSnZ9hyICXgdvLtqqS6yWGn25MaKsu6PN2I8bjXpzgJZE/ma/j9D7z7ze+FdnxvZ5w8MeCDBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=dfnG49GD; arc=none smtp.client-ip=194.117.254.33
+	 Content-Type:Content-Disposition:In-Reply-To; b=V9gx5hi9kM7y7d7XFwT5ZEBfUaf3WV5Pt/XrODqwteEgbJJng7iKDFn/wUf/UNCwOJYuuKy1TMS/oUWSPveoxPoz0Qh5cXYKia0ubp/W5p3n8G/IUmrUPs0ZfXU/juUfm388wEl+28+o+PViaGo+26Z0iVcSyXwGbUguoN2Lk7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=R8FLyzgk; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=4q4/
-	rw5mnD3aV6CATtWOIIeUTbmfcdY4ZrTuAkDyrvQ=; b=dfnG49GDha8fXT56thxG
-	XT9hTOWvzhhtDVXTQaTEElgu+xxb7CvyzHzWrTOMcp70IxkaYpOQM0Kya1+sr4BV
-	29aJn76ePhww7F5y4DuTxut1uZ9HMR8KjAQM/asoay8F+jUEossNINNzc6+uYhFt
-	EdZShvQgd8QpfhnxATVhItcQeC2ybTVyLUpRZnsI5yyrxFkncIdy4iQ6U2pm5sT5
-	S+/U0hoP5bE5f/VnsWRH4JwZq3FS/3245jK0A1QmojcR5a5/e4J/UES0jN7NWJkq
-	n+BVaxt3CLe/aLjYbMcUHghx0CM3vyqiOzOQRjeT36A0EZ7nVolAIa/tZ81/S2bf
-	Kg==
-Received: (qmail 3787594 invoked from network); 19 Sep 2025 07:41:49 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 19 Sep 2025 07:41:49 +0200
-X-UD-Smtp-Session: l3s3148p1@yJAV7SA//tgujnsa
-Date: Fri, 19 Sep 2025 07:41:47 +0200
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=JncH
+	VkJM8tsT4MR8AdGnli8kK73nfD/36fL18vXO7C0=; b=R8FLyzgkDcm/d4hyYFYW
+	iWvwCAvlNyuEv+CZdMqWnPELgsoJvxV/I2nVjyr4drJ5cbKaJUi4V3nxkkS7IQmK
+	n4jgzYOn00Ew3pKGh16OIQla2fZ5a3L3noNGjnYdhXmVuXFuX5KZ6a6X2i0eSNOV
+	iIGPSC0lB2oYnDaFawb1R9Ga3yNoiOFMc7VyXBTYPZFI1+UKWN3cJL7Cch32feT0
+	7XH4kzHmWTb80hNOqfQzQnb/kPH846mb/EyNZmz0Ktgu5L7av6t5btfJv9JqjUi8
+	60p2VLT+zmmfhY06eUhrZuOVchmC6fL8ejWGC+xNzom7xdCxgpNH2GL+ODJ5hV/R
+	Ww==
+Received: (qmail 3862907 invoked from network); 19 Sep 2025 11:34:51 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 19 Sep 2025 11:34:51 +0200
+X-UD-Smtp-Session: l3s3148p1@rb97LiQ/HpAujns7
+Date: Fri, 19 Sep 2025 11:34:51 +0200
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: "Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>,
@@ -63,10 +63,11 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Pascal Eberhard <pascal.eberhard@se.com>,
 	Miquel Raynal <miquel.raynal@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 0/8] gpio: renesas: Add support for GPIO and related
- interrupts in RZ/N1 SoC
-Message-ID: <aMztGzYMHEPL1GVt@ninjato>
+Subject: Re: [PATCH v3 6/8] dt-bindings: soc: renesas: Add the Renesas RZ/N1
+ GPIO Interrupt Multiplexer
+Message-ID: <aM0ju74JJbjliQAl@ninjato>
 References: <20250918104009.94754-1-herve.codina@bootlin.com>
+ <20250918104009.94754-7-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -74,42 +75,60 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="+NCAvgYw1zCajOLr"
+	protocol="application/pgp-signature"; boundary="JK9kzNSXnbkqaaBc"
 Content-Disposition: inline
-In-Reply-To: <20250918104009.94754-1-herve.codina@bootlin.com>
+In-Reply-To: <20250918104009.94754-7-herve.codina@bootlin.com>
 
 
---+NCAvgYw1zCajOLr
+--JK9kzNSXnbkqaaBc
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
 
-> This series adds support for GPIO and GPIO IRQ mux available in the
-> RZ/N1 SoCs.
+> +  interrupt-map:
+> +    description:
+> +      Specifies the mapping from external GPIO interrupt lines to the output
+> +      interrupts. The array items have to be ordered with the first item
+> +      related to the output line 0 (IRQ 103), the next one to the output line 1
+> +      (IRQ 104) and so on up to the output line 8 (IRQ 110).
 
-I want to test this series today. From a glimpse, I might have some
-comments, so please wait a little before resending.
+maxItems 8?
+
+> +        /*
+> +         * The child interrupt number is computed using the following formula:
+> +         *    gpio_bank * 32 + gpio_number
+> +         *
+> +         * with:
+> +         *    - gpio_bank: The GPIO bank number
+> +         *          - 0 for GPIO0A,
+> +         *          - 1 for GPIO1A,
+> +         *          - 2 for GPIO2A
+> +         *    - gpio_number: Number of the gpio in the bank (0..31)
+> +         */
+
+I wonder if this comment wouldn't be better in the interrupt-map
+description above?
 
 
---+NCAvgYw1zCajOLr
+--JK9kzNSXnbkqaaBc
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmjM7RcACgkQFA3kzBSg
-KbZqVQ//Z+JQrYUTEYKiVUYjRP3/e3VPEoOzJNLrPBAT0k4udThHiHECeEV72V/j
-jQEv/o2rOTQ8/tR9cN4F8ZbBhbA3LmnLDj3msnHZK4t54ZmrG4DFM0shZYNx8F5y
-iHjBIa/YRoC0Fp0udz9PI2yzDgteKNUJ0WiDqEa5R73OHR54Go6VFTunIe3bujMC
-CU5uKDs14GFxU3K43GKJEaqxf+oF2Xc9M0mslmGsCDCuGRkA4gIM04WwUSEqvmHr
-sXj+v0W6rnhNqtmyHu2ndvr8FTjzSF1hL0AUvwfa6y4hL3knb5XQTuTr5774ZdT/
-7wH7m++QJh5YtolMlWvEiGim5+zyBziRyeJxyIm2c164piYWavyfJvJb/vn3KIHM
-IxMuKo1VOt/oL6C5dSrSnlvGAHedRf9sU0Nkja/reAcUcBF/l7RChTUnzEqg0DEf
-OiXFHpUZrFjXRli040DhILDe3UAszFf4DavvOwzkngYl2YGoFchLano7ws5yxBMC
-oa7HL/51xlW7DGgwGm7SHQ5Rx93z/ZJyY8/uB3+RA1nyVBl4C8qYq5CVOiWQrnna
-sWvVwbNly46K613UZdCCw4nlJWQvPR4oxdXIUZZCWRCdDVeF11nzEHbBgzIOGAux
-jHLh1HMewT/wxlue9Nr6dtQJYKa9QMKdD/MhIQzC8+oqgqEFD8A=
-=I+cJ
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmjNI7cACgkQFA3kzBSg
+KbZCcxAAgxPZf4AePiR6qG8VJErIxYZXJ1X3aC0TU9YmDAjfdJjijyML5QKP2j5z
+qz2qBimHfUWZWH66HbxU3ymVo1ruY8SROMQ5RqoORL53KYqQiKI9ewc73F3eIkzf
+eYXHtulP7jMZ8xrKxYV1PNgUhxhgfigEkS5oDzT7oh8azv23JJmDrGbh7Q3EPxqH
+/XCaKwWOlE5MlZVeTWCfhbTW1V86kPxZcjF+41vqIsExpIZZgdD2hYVZphg7r3KM
+Zvby6ndv81+EFMwuhO6DfXX+cKCoPsG3X4V6+zUdpa2ApgtHSbD2dxkF6WgZ6UmQ
+fvLjcqlsyi+JeUOqcPAO/jtY+lqcavocbr58QrqHH0bdWrfhMWjfGiXvPNbeliuv
+mixY07nFnF986HrXWVC4HXpiODeclvaAQFmKV8HoJFeEAahfGMiDqb58wSF3JL50
+n8BV0ipFoW/jMv66UVXRsGnM4EJxakBd5x7mwNbUKXhCLtBqeL3Y75sPe8Qtx3cF
+nCjb86/jsSWz18tiHyr0RAOxEf8GVM3zTj+JBpgf9bJ5xgT/aDeDRDvyqXHph4MO
+pY4PO3CdIkcihfPmyJ0/EBQurc9DPmR3iHNjYReo/GIGaHsEy9RMwCu4zvS3/BfZ
+BhfUkl5WjtB+OKJYSVBqr/DScKbQRk8XVEC7ZKCzrrK7ieWQwuY=
+=mFbO
 -----END PGP SIGNATURE-----
 
---+NCAvgYw1zCajOLr--
+--JK9kzNSXnbkqaaBc--
 
