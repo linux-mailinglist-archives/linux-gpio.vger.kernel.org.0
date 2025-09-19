@@ -1,193 +1,259 @@
-Return-Path: <linux-gpio+bounces-26377-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26378-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1AB9DB89A03
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 15:15:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D13EFB89A67
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 15:26:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D0CE15856A9
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 13:15:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 788011C25B4C
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 13:26:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2289330ACFC;
-	Fri, 19 Sep 2025 13:15:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45EF329BDB9;
+	Fri, 19 Sep 2025 13:26:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Axz3FXF4"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="DD59MhYU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013044.outbound.protection.outlook.com [40.107.159.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139CA20468E;
-	Fri, 19 Sep 2025 13:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758287707; cv=none; b=oTaV8I631pHPMKBTjg7l5qyKZ7LasEf9RCfz3Zo75MbVoz8JHLvQL3YA4aJpGAbJlA90JIVyRed4glwW5HQI2RchBt6FViLSSpabx9ddOm2MENAL7wRs8tcpViN5WrErPYVBmagiILZ3QmQevSiqP89fVjhIPdvF0Ng0ny6fin4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758287707; c=relaxed/simple;
-	bh=4fc6a0O2Ct2ACGyTZVA9k3181Dr2+/nX0D6D+4aFGQA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ahg6ZFBX8URHyQqQkZCVHSM117+XcmXcvTd7CCuc2XhsY/H7/ebITUFDxkLrqHsfL0GdvNQB0Xa5S/XhJucHbp346WVLKTENmWwIxaXIBVmZ/oFUkv11pna4qwFFNZ9w7tneMcnhXaRshpz2TqMyKPf0zY5y/zXmdVfsdmabzGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Axz3FXF4; arc=none smtp.client-ip=185.171.202.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 62F10C8F1C5;
-	Fri, 19 Sep 2025 13:14:45 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id DB47F606A8;
-	Fri, 19 Sep 2025 13:15:01 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B0E50102F17C5;
-	Fri, 19 Sep 2025 15:14:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1758287699; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=zkLSfTCSK30R9rnBMrwgwQurzUY0AzbDvB3qzxOn7Vc=;
-	b=Axz3FXF42lf4Jr7BG20uduI+4cHtaPmCNT+YGAtHgjs2YaI3lAqfOF52VepQXDiDCSqyIW
-	2NNkJIXmbC5KnEdJUJe1VCrwIFmjDyjUQNGaPzY3eIh1cpWzs2SFTCNwOjuKz5CYMr+53u
-	kRWOTUAydDlzosgQ+snn7FdhPrHmyC4XHPzlViUbtTqd4n6eT7LmLXORk/0b8IbhsS49kQ
-	ycXbS/oneOwhVtcHgJ1tKE6kbACHX/HpH+27DGH6VaSlEH0gCb3iCP/XgIOP/5BPP46a7X
-	3wPkVjOTgkkNTnEx6tMUxx0tmQi6qfRmOYVszE+GUbjO1dWCynOvzzBPOwJqAg==
-Date: Fri, 19 Sep 2025 15:14:48 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Hoan Tran
- <hoan@os.amperecomputing.com>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus
- Damm <magnus.damm@gmail.com>, Saravana Kannan <saravanak@google.com>, Serge
- Semin <fancer.lancer@gmail.com>, Phil Edworthy <phil.edworthy@renesas.com>,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Pascal
- Eberhard <pascal.eberhard@se.com>, Miquel Raynal
- <miquel.raynal@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 7/8] soc: renesas: Add support for Renesas RZ/N1 GPIO
- Interrupt Multiplexer
-Message-ID: <20250919151448.14f8719a@bootlin.com>
-In-Reply-To: <aM0lU01x1w2wB3LG@ninjato>
-References: <20250918104009.94754-1-herve.codina@bootlin.com>
-	<20250918104009.94754-8-herve.codina@bootlin.com>
-	<aM0lU01x1w2wB3LG@ninjato>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52952239E8D;
+	Fri, 19 Sep 2025 13:26:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758288372; cv=fail; b=GDnb21VnZgJPVAN7aad/QoV+hMENusu8X5C8quot6Ygk8nMHu01SvmOe2Ca648HNQzvqsj38bsr9gspUFnDIBpPqy6zI5DTp7Ag4L0wPLlInDS3utrj51x3+oa/umG0rHgzhIOlfUOCB86M0aN+F4S7ajIEyYl2/f65WUpywfVQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758288372; c=relaxed/simple;
+	bh=EobsPfmPH0Y0WIzeDqdicuiWz+Mn595KoAYvsBuLkRc=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=HWsWR8DmKr4HGEIOmi+nbnZ/ieKM9UAWISFVjeKNXBiivoYwPXh0rhmPCpqN6u6WldRsqMTXMP1zVqVwDi13aCU3XPXAC5jxoDfSdnqPldrQAAycTNwc1UHnuI3ZyH/agVO5EBQdDL+/XSyqBoDLHcqM5txhLV9C/fhPBqk3LSM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=DD59MhYU; arc=fail smtp.client-ip=40.107.159.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JIq6dhQj/tAgwWNfaSgHeeBkX/tSr1u3xT2tXjRdUQ+wlymqDgYzZebFWoDSO6HARPzO+Jl0zwwgRytMhkm7JnOM9neW1lv36TeBjzbkv9KACc92PJ7qV5Tk4GEARBvrmHq/knySwlOltmEpiIdvj3/3UvHfr4QaMsrv6mSN/GqiVH7JaY2plDOy7yq0oZM6z3dVFotHlIBsJgDK3bFySnb3qQa8whXrDvT70GMkYQREQvc9oXaHTsnnyC9ueWinfOFHPRwsiLxP6QwW36hIhQLbsnDOhKiXUcpvAG/qixwFRzoGCc4bbWCUTn0FjOgn+t0w3yfXVHgZcKpKN96BtA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oW3Ye4A/dL4AxO6rt5U5EbS0T8yE3CBLKfflaPd6Ndk=;
+ b=zB14iQSc3/8GmsUQ1UmvfW+IHhdDDo73diLiG5PbPqzSNBk4BNOZHH4F4g17JjhBrYIHho6b1SJFSdMRhzzyiCTi0+za8X9X3L09RlJSC8aSESXpGai3+TFxQ6RDEmAqTETVPnIxlR6mgDSNQr2WWhtkxxkHavASnZFuIYKaEttXt84CLHPn8BXynVLrzCIQixw50hBlcgQBZhEll9h/ca4k1+BnWazNY8KWKngufjMamvMlM44SKN8cgY67yCAK3bMQ1OL1CJxpcDmfnnv1c2yRAga6AxRZNNWm3Jma8RSIDyvlIz54AEFJbIEb3kinq5TKJ8/klbRHvlYDFsV1iQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oW3Ye4A/dL4AxO6rt5U5EbS0T8yE3CBLKfflaPd6Ndk=;
+ b=DD59MhYUpmk6aKrbvQP1/2ABJKrptgT3hry49XydBfk12jRLZntOMXVsL4QCt8vIEBNZawDsmC/xOPI4lOuspQzkS9hDt/jjMNce8Y3A5lc9Z2fQZswje/Qcv9NTDz7lWcoWfBYAw1hjjdhuyjWtOT2OupLxFK1AnKnMw78d1ApNRfc/8zyoqhyhuZK92pUZ8Q6xIZyHTsrWOOaiJUjl+roJczzNOlnSZwFAmq5H0qvElc65hg67SJhDGxnY52NUXACYagV5famy0Pwj9iXhfangcaf0Zkh2sNnm7JTj+6DP6yKw51Bs025d69oiAFLbw+o0xTng7QZ1WlP8xcVf9w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS8PR04MB8868.eurprd04.prod.outlook.com (2603:10a6:20b:42f::6)
+ by DBBPR04MB7737.eurprd04.prod.outlook.com (2603:10a6:10:1e5::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.16; Fri, 19 Sep
+ 2025 13:26:04 +0000
+Received: from AS8PR04MB8868.eurprd04.prod.outlook.com
+ ([fe80::b7fe:6ce2:5e14:27dc]) by AS8PR04MB8868.eurprd04.prod.outlook.com
+ ([fe80::b7fe:6ce2:5e14:27dc%4]) with mapi id 15.20.9137.015; Fri, 19 Sep 2025
+ 13:26:04 +0000
+From: Ioana Ciornei <ioana.ciornei@nxp.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH v4 00/11] drivers: gpio: and the QIXIS FPGA GPIO controller
+Date: Fri, 19 Sep 2025 16:25:04 +0300
+Message-Id: <20250919132515.1895640-1-ioana.ciornei@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: FR4P281CA0186.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:ca::16) To AS8PR04MB8868.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42f::6)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8868:EE_|DBBPR04MB7737:EE_
+X-MS-Office365-Filtering-Correlation-Id: 69f21e9c-06a0-4372-e318-08ddf780158d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|366016|19092799006|1800799024|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?vxbGYisEAqeWan2quL46FTdbF02c1OHXA58c+fDudHXiwW4t+P7rQO72yXNY?=
+ =?us-ascii?Q?0B9rF08Sm8ontJmDoZQJAZBRWlowXUhB/aiBuyttcyeb2X6csGl+HtrMoLYA?=
+ =?us-ascii?Q?XCaEdInkY1XRzxyvnq8YmyDrVpbadC3rKkesBnNLTBigLbPgtoHfk+9b5C9X?=
+ =?us-ascii?Q?x0fIVOnTZATssvhQCSRxq99VMPR19MqlwoZJmnR0NW4VOyTUcSV76zdTnAAQ?=
+ =?us-ascii?Q?4YfPhzsmp2QmgfGrlvA+DRIEG1U/HUmQnH67wLhm6Vu7Zr9WyecXt6hAXKQa?=
+ =?us-ascii?Q?POaDaGenisBWEgDFjNyh4/mkY4gErrw7kIZf1bgSQETomL8p/W4nqqdRKxcH?=
+ =?us-ascii?Q?/v2bSadJIrv1SkmqdiTmPsxXlhzRNvrJzSsI/PAF5amB0aY3xFSI3i+iMlgl?=
+ =?us-ascii?Q?tOpkcBTHbmxndEqjhjY3LyglNhe0eNV440mKp0FHxRl8hlGBklkD70eiLm/5?=
+ =?us-ascii?Q?/cENpRFy3AK2uX0Jd1VTsRnGcx+w9ZDVPFcRCLxFK1lVto6g9LUbcr9gmk5/?=
+ =?us-ascii?Q?2iZpVoTDHBC+Sc3oMZgzoXEBmtnv4Cl0bXrqHcoUBZbikmKGE7oXPpVUPocJ?=
+ =?us-ascii?Q?aHljVX9inW1loW0LpBsKVMNXHZdGmKWWSZL91Io+MfLyt2u9jaqmOtBIJBB2?=
+ =?us-ascii?Q?3iaDnyJPEWnfmhWKC0r/37DnbBOo5Occm1YLmw8i2B58I7t7HXUqKRaW5O0p?=
+ =?us-ascii?Q?cYcjjC/slpzCj3mgPOfTIvEJ3HyZU/diCjGQw23GfUb2SfUUMtNRTaa/BJbt?=
+ =?us-ascii?Q?+/oY3434Cj0NAB+ea7V3KJxNAqfpVILJbzL0qQzvjjriwskJ9nNOBARGoyBy?=
+ =?us-ascii?Q?DQ9nMh4ctCjN9EpIkZEsYQVceUVAIwciNHuOh/VP0LaR/9m+6uHPV2Tdmdjp?=
+ =?us-ascii?Q?fVj7lmDSmp4MWuidLddw4G6b18cQePTtjTT4gu82jAYTA/twNsZWajlqqpzy?=
+ =?us-ascii?Q?VufDF4DUeZ2TJeXkPg9mffCRJP2qiSJi7p4JpZfyE9rfS6aSwNn2pSszTiWG?=
+ =?us-ascii?Q?Pj/146M8/wZ27i0v3uXDI3NQFOpSJdrp9YFQ4dc2f/YNhxrUe2tjbWqq2o2D?=
+ =?us-ascii?Q?kcttcjyjVix3CCDsMFaBtZlzQ5F6u/oSubIvdjj1CCB7je3jNVR5nmS5pbXQ?=
+ =?us-ascii?Q?WSMHqhw2tybmdYQTG1NsiaCROjENGJmpFxo50fgWGakf2cRcIfsCj4TfxHzt?=
+ =?us-ascii?Q?qmasqVtWPJxIMr3TnwTdAMYUU3JQYqs3rhM1u1wiwqhJcpocujBqurDfIbVg?=
+ =?us-ascii?Q?OEFuhrCx0clwRtpUTwu6NAHw6GM6y3IOL0L0VQPJULM1rwaAqnkeblxnsKTR?=
+ =?us-ascii?Q?koxqL6+ObJCTory7xuD2Xofdi5oRjQy27ixoNSapasP6C36Wxm9FIx9+PteJ?=
+ =?us-ascii?Q?NRDXXh5sMREpqv6isoPi0zxyWGew9dO2BmR/ngIzHurnmsyC1gl0bbDJ2MqR?=
+ =?us-ascii?Q?N6j3lRu3vK8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8868.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(19092799006)(1800799024)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?NiNlQjY7gZZgtOzmQtCmWSZ1TfLoXMt5pDBDuF+S4m3M/qthqXBUFZoeBE/S?=
+ =?us-ascii?Q?n8CU6GT7P8BxQPUkrfcK0+bTqFb0tXrLIvIEVRD1Xr2zIPtryPaakBA8+RHR?=
+ =?us-ascii?Q?VSEa//dIgJ50r99zKquI+v50LI0yCQDWL4KnZzjI6JYLA990hXU3maXE994v?=
+ =?us-ascii?Q?sgOUMa1FmXuq/R+j3md6lD0ZtCTLl+wgEqDsr8mSv8l7rlMLVtkd27GAkGSk?=
+ =?us-ascii?Q?uacsoLkXgHYRTMkbQZo2Vg8GEMWT7ISN5alA3a8hM/D7GbtkXdPhw/W/V4bZ?=
+ =?us-ascii?Q?UW82Z4CpcMyJpm9jnk5jM1Exlksbm2FqREmzvLtDc0QuFtgmkDmD3RbwXbG6?=
+ =?us-ascii?Q?WB3xnEvJ/wYD1mjOMULoB9zyD/bigJQxCuZhYB4Ma042PgiwyDK5zT6oQUYB?=
+ =?us-ascii?Q?qQhBgH2/1tO0ueozY3UczziL7oMek/2oruD6WWKIUJEbLARnDMpKwMO1CEVU?=
+ =?us-ascii?Q?Z/NhtIm2YUobWG2nxcK9o+vIJuXsmGDNHeiwsZlDreVclVXacqY5oKIBc6lU?=
+ =?us-ascii?Q?4mxTV7QjmpVlnGapQMAslzUhTz6cTAPCgbqEdwEeyubTzx4fdd2CREMJm51f?=
+ =?us-ascii?Q?KcBWxLyjNfh4lVM7yLplH8gCKfvWHGO665ZbYaKtiG+slhAY7QD5d8bsYgyS?=
+ =?us-ascii?Q?a6gPGcvMCUq3OYIGCDv2maacUc2tkEesyMdkbARx3gsEXwWrMqG1BZszJNTG?=
+ =?us-ascii?Q?lHFBIuEnmMFQfuhz+z58JQtNxCd07Zhro7zz1sNyS2ZSrjZ/2RFXgUG9c5s4?=
+ =?us-ascii?Q?91SW/Xxo/1roiZ6r5NgWkJodOukKzSVN1xDgUU41cB+ZPUQU450PtgTbodiw?=
+ =?us-ascii?Q?GGg6Au51OXfujMGJa86rWz//dMGV1XRirIoIQZhVTAG4Jz9jUCZlXjvaLJ9G?=
+ =?us-ascii?Q?kLV8hHFXd7QbM/cGHZSNSpLUQ/YbnsybjDICvzMzhzGeY3o9MMgRn/HqBBSV?=
+ =?us-ascii?Q?Cu81tFLGGBjI6JDiN/lrCDwLz4Lkf0hLUv8wEuy/DsAQr4zBj3JloYyDuMAA?=
+ =?us-ascii?Q?ZhaAgskCcu8AN2x0tENhDoijLFO2RCE7ah9ZmNSEtEjZQZu0v/SZ307ZmX3e?=
+ =?us-ascii?Q?OUKKzBzDGYb9LhtoTJNkGkEZobKzLKxn5jWn1VkInRYLkH07whQjUuwdDtgd?=
+ =?us-ascii?Q?limoRGqsjZiW9iHxIXcQ84mcAmryKjq0gI2BWsGtUvtg/paAXlmcuZrppvXp?=
+ =?us-ascii?Q?XUmmLZ/rh8iO9znLnwfk20cp8ygasnionLeOoyhmmujG0iagbHreABwyboEv?=
+ =?us-ascii?Q?4bUCY6WlVLcnT5Th8lkDOxMTq2gGBQaUGGl/pUaDlCjeg8JKG2rNs4T+4nXM?=
+ =?us-ascii?Q?7Xxh23Ktnl8sv7qty1qiHcK0Viu5JK7R0CtrTOT19Sw7tAtf7SOHAESjmRLH?=
+ =?us-ascii?Q?y3EC2SL9DJBv+8tIOjbMYEWQ6ytCCoI96/u22heCuLA0vlJcMSCXJ20mSQP0?=
+ =?us-ascii?Q?5IEH1G+1X60RoRLQlI+1AwATmWocZm1Vutz9hRFERQJA4LNBv/7JVujQxndk?=
+ =?us-ascii?Q?/G/YKvv1FRpDMw4r51yZJrccNU0kGcmgexrPEaK/zskvwjpsgncOQhKEkOBU?=
+ =?us-ascii?Q?NC3/LGL3Y3+sstjSv522GW5Efylj9KWTJlvuOWh7?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 69f21e9c-06a0-4372-e318-08ddf780158d
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8868.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2025 13:26:04.7820
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: V88usYzMESIWEB/iOP1mgNdAxHAVyy6C89WSJpixPLwMSeIaEKuD92ewPX2sEM/UAL5EwQ/PGc7EfyWdzQprOA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7737
 
-Hi Wolfram,
+This patch set adds support for the GPIO controllers on the QIXIS FPGAs
+found on some Layerscape boards such as LX2160ARDB and LS1046AQDS. At
+the same time it describes the SFP+ cages found on these boards, which
+are the users of those GPIO lines.
 
-On Fri, 19 Sep 2025 11:41:39 +0200
-Wolfram Sang <wsa+renesas@sang-engineering.com> wrote:
+Before actually adding the GPIO driver, patches #2 and #3 add and
+describe a new compatible string - fsl,lx2160ardb-fpga - which would be
+used for the QIXIS FPGA found on the LX2160ARDB board. As opposed to the
+other compatible strings found in fsl,fpga-qixis-i2c.yaml, the
+fsl,lx2160ardb-fpga imposes a unit address for its child devices. This
+will be used in the next patches when the gpio controller node will
+define its unit address as the address of its underlying register offset
+inside the FPGA. This requirement is described in the yaml file and it
+only affects the newly added compatible.
 
-> Hi Herve,
-> 
-> > +#define IRQMUX_MAX_IRQS 8
-> > +
-> > +static int irqmux_setup(struct device *dev, struct device_node *np, u32 __iomem *regs)  
-> 
-> The whole driver would benefit from a 'rzn1_irqmux' instead of 'irqmux'
-> prefix, I'd say.
+Moving on to the GPIO subsystem, patch #4 is extending the gpio-regmap
+with the fixed_direction_output bitmap which could be used by user
+drivers to transmit directly the fixed direction of all the GPIO lines.
 
-Agree, I will used the 'rzn1_irqmux' prefix.
+Even though this patch set touches multiple subsytems, each with their
+own tree, I submit everything at once so that we can have a clear
+picture on the overall intention. The hope is that each subsystem can
+pick up the related patches since there is no compile time dependency
+between them.
 
-> 
-> > +	for_each_of_imap_item(&imap_parser, &imap_item) {
-> > +		/*
-> > +		 * The child #address-cells is 0 (already checked). The first
-> > +		 * value in imap item is the src hwirq.
-> > +		 *
-> > +		 * imap items matches 1:1 the interrupt lines that could
-> > +		 * be configured by registers (same order, same number).
-> > +		 * Configure the related register with the src hwirq retrieved
-> > +		 * from the interrupt-map.
-> > +		 */  
-> 
-> I haven't looked into the above for_each_of_imap_item-helper. But
-> wouldn't it be possibleto retrieve the GIC_SPI number as well and use
-> the correct register based on that? That would remove the need of an
-> already sorted interrupt-map.
+Please note that CHECK_DTBS will fail without the following fixup patch.
+https://lore.kernel.org/all/20250912165916.3098215-1-ioana.ciornei@nxp.com/
 
-Hum, this give the knowledge of the GIC interrupt number in the driver itself.
+Changes in v2:
+- 1/9: Used the newly added trivial-gpio.yaml file
+- 1/9: Removed redundant "bindings" from commit title
+- 1/9: Added only one compatible string for the gpio controllers on
+  LX2160ARDB since both registers have the same layout.
+- 2/9: Enforce a unit address on the child gpios nodes (remove the ?)
+- 2/9: Enforce the use of unit addresses by having #address-size and
+  #size-cells only for the newly added fsl,lx2160ardb-fpga compatible
+- 4/9: Add the fixed_direction_output bitmap to the gpio_regmap_config
+- 5/9: Use the newly added .fixed_direction_output bitmap
+  representing the fixed direction of the GPIO lines.
+- 6/9: Use the same compatible string for both GPIO controller nodes.
 
-Not sure that the mapping between the output interrupt line number N (handled
-by register index N) and the GIC interrupt number X should be hardcoded in
-the driver.
+Changes in v3:
+- 2/10: Replace the trivial-gpio reference with an explicit mention of
+  the accepted child gpio compatible.
+- 2/10: Reword the commit message.
+- 2/10: Add the 'else' case to the if statement.
+- 3/10: New patch
+- 5/10: Make a deep copy of the new bitmap.
+- 5/10: Remove the offset check against the ngpio.
+- 5/10: Added documentation for the new config field.
+- 6/10: Remove 'drivers' from the commit title.
+- 6/10: Remove the qixis_cpld_gpio_type enum since its not needed.
+- 6/10: Remove the NULL check for device_get_match_data().
+- 6/10: Use a bitmap declared on the stack as the config field passed to
+  gpio-regmap.
+- 9,10/10: Moved the reg property before address/cells-size.
 
-In my v1 series iteration, I used the 'interrupts' property to provide this
-missing information:
-   interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>, /* line 0 (reg index 0) route to GIC 103 */
-                <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>, /* line 1 (reg index 1) route to GIC 104 */
-                <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>, /* line 2 (reg index 2) route to GIC 105 */
-                ...
+Changes in v4:
+- 2/11: Add an extra paragraph in the commit message to better explain
+  the context.
+- 4/11: New patch.
+- 5/11: Insert the compatible so that the alphabetical order is kept.
+- 6/11: Replace devres bitmap allocation with bitmap_alloc() and
+  bitmap_free().
 
-Base on the interrupts table and the interrupt-map, I deduce the reg index:
-  - From interrupt-map, got a GIC interrupt number
-  - From interrupts table and the GIC interrupt number, got the line/reg index.
+Ioana Ciornei (11):
+  dt-bindings: gpio: add QIXIS FPGA based GPIO controller
+  dt-bindings: fsl,fpga-qixis-i2c: add support for LX2160ARDB FPGA
+  dt-bindings: fsl,fpga-qixis: describe the gpio child node found on
+    LS1046AQDS
+  mfd: simple-mfd-i2c: keep compatible strings in alphabetical order
+  mfd: simple-mfd-i2c: add compatible string for LX2160ARDB
+  gpio: regmap: add the .fixed_direction_output configuration parameter
+  gpio: add QIXIS FPGA GPIO controller
+  arm64: dts: lx2160a-rdb: describe the QIXIS FPGA and two child GPIO
+    controllers
+  arm64: dts: ls1046a-qds: describe the FPGA based GPIO controller
+  arm64: dts: lx2160a-rdb: fully describe the two SFP+ cages
+  arm64: dts: ls1046a-qds: describe the two on-board SFP+ cages
 
-Rob asked to use only interrupt-map and use directly the interrupt-map index as
-the hardware index:
-  https://lore.kernel.org/lkml/20250801111753.382f52ac@bootlin.com/
+ .../bindings/board/fsl,fpga-qixis-i2c.yaml    |  58 ++++++++++
+ .../bindings/board/fsl,fpga-qixis.yaml        |  10 ++
+ .../bindings/gpio/trivial-gpio.yaml           |   2 +
+ .../boot/dts/freescale/fsl-ls1046a-qds.dts    |  52 +++++++++
+ .../boot/dts/freescale/fsl-lx2160a-rdb.dts    |  78 +++++++++++++
+ drivers/gpio/Kconfig                          |   9 ++
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-qixis-fpga.c                | 107 ++++++++++++++++++
+ drivers/gpio/gpio-regmap.c                    |  24 +++-
+ drivers/mfd/simple-mfd-i2c.c                  |   7 +-
+ include/linux/gpio/regmap.h                   |   6 +
+ 11 files changed, 350 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/gpio/gpio-qixis-fpga.c
 
-> 
-> > +		if (index > IRQMUX_MAX_IRQS) {
-> > +			of_node_put(imap_item.parent_args.np);
-> > +			dev_err(dev, "too much items in interrupt-map\n");
-> > +			return -EINVAL;  
-> 
-> -E2BIG? With such a unique errno, we could even drop the dev_err.
+-- 
+2.25.1
 
-Yes sure.
-
-> 
-> > +		}
-> > +
-> > +		writel(imap_item.child_imap[0], regs + index);
-> > +		index++;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int irqmux_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct device_node *np = dev->of_node;
-> > +	u32 __iomem *regs;
-> > +	int nr_irqs;
-> > +	int ret;
-> > +
-> > +	regs = devm_platform_ioremap_resource(pdev, 0);
-> > +	if (IS_ERR(regs))
-> > +		return PTR_ERR(regs);
-> > +
-> > +	nr_irqs = of_irq_count(np);
-> > +	if (nr_irqs < 0)
-> > +		return nr_irqs;
-> > +
-> > +	if (nr_irqs > IRQMUX_MAX_IRQS) {
-> > +		dev_err(dev, "too many output interrupts\n");
-> > +		return -ENOENT;  
-> 
-> -E2BIG? Wait, isn't this the same check twice?
-
-This is not the same check but this one should not be there.
-
-Indeed of_irq_count() counts the number of items available in the
-'interrupts' property. This is not used anymore.
-
-I missed to remove it from v1 to v2 updates (and also from v2 to v3).
-
-The of_irq_count() call and related checks will be remove in the next
-iteration.
-
-Best regards,
-Hervé
 
