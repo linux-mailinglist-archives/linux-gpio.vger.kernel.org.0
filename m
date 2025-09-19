@@ -1,205 +1,123 @@
-Return-Path: <linux-gpio+bounces-26396-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26397-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B82A1B89DA5
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 16:16:03 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37EBDB8A085
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 16:40:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4739A1C832B1
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 14:15:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 701F53A97D1
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 14:40:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 525C831326D;
-	Fri, 19 Sep 2025 14:14:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A01BD30F7E3;
+	Fri, 19 Sep 2025 14:40:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="otQm3Lgj"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="I55mI9xr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9306E227EA8
-	for <linux-gpio@vger.kernel.org>; Fri, 19 Sep 2025 14:14:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC2423BCF3
+	for <linux-gpio@vger.kernel.org>; Fri, 19 Sep 2025 14:40:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758291293; cv=none; b=fnwqcqAowW+OMff0Yz73dgNmK1260JtViWVD45h4tL7dNsBQmnGjzVataYb1Pzo1vYpV8dl1DTQ7Eun+S6ej8nhZjqO7I6EkIoYCf7BypLYy94sNTEiguG3sHbX4oI6Xri5tNWywAy3lQdCt7zNE8dC7BJwGtiFoU8Vnk/cjLhc=
+	t=1758292813; cv=none; b=HKgmuzNl0O6bEwT7cwfqL/eNORLHktt9OUemnHzNrPVMzjVL8FacA8pygbNAOdURNFeJbyoo7LiaXLRlTpcjLYlK7RJ3RaA3OH8ps7eiPjIQDEYmoecAaZ//9OIg8dR3BOIwygUwpfa2aVljxY9oM5q5mTN0luH5uayXHfZm7dM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758291293; c=relaxed/simple;
-	bh=H18JYOxIyEwenlKHPH3Q4sdgZATPQK3L6NM+azc19AE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MeC8YlnVI8bk9drRi9hfyZDMXaOPrdNNE5xhauGa8Acs2kunf4UJwreJslOlhjWFv2WXLFOHkJjQK1ns50KQ0XDzqAwJ8DFc4brVXyDWW8LoUtMZwLN+R27ymFHplcdB9EQEIOri+T/lRONvvlXnqg1bKbE3VT+7PbJ8VVOtSuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=otQm3Lgj; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58JDVA3h032456
-	for <linux-gpio@vger.kernel.org>; Fri, 19 Sep 2025 14:14:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=9EEP86bPrEuFPhyrGPMSKAxoE/r/N527VzL
-	IseJvapk=; b=otQm3LgjLRebVNhPqwJ2r4P4UwvdHcYQW0UiPpHqaB7xzV6HyM9
-	vKzvnzwXzb1wnT0cQiae+vzW+nGogSHtI8Y/yk9twjffddOQV9ORTjnzAgoOYnBY
-	/LIQYPBNpULBHrlS45de4tmaymkz/V9OkN4byh4X/LKbO5/ZxP5CXzUDnJhD7T5r
-	EMMwSNDvPTn0zfqt5u5BGnVIomx8pPNxVUgSwzVlNAy8lipcnaLmC98DrPxTW5iM
-	vKA0+YsKPkjByEDVsFkuU2fv9VS5oanzav6ZORXWagmzJ9x9hHDFo+YawtMmRXyO
-	HETV1gbCN82wR2OYXo0yoi5rOR/IVfupU0w==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 497fxytphr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Fri, 19 Sep 2025 14:14:50 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-32ec67fcb88so1974733a91.3
-        for <linux-gpio@vger.kernel.org>; Fri, 19 Sep 2025 07:14:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758291290; x=1758896090;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9EEP86bPrEuFPhyrGPMSKAxoE/r/N527VzLIseJvapk=;
-        b=Huc3FA5nmi6GtyL5ejZGwmk5WX94NWHf9KuJWI9s7ql72/iTMOazy8dC3C+mCq3cFV
-         Tocccm2d/gUiUuk7Cl8qtfE/Yt2l256htpxTerRVTqo2Hc0CeHbjtIOZ79FXbWK3G+DW
-         z5ebjfRFzWlV8/BOOtR7JqYG5H1qF9Op3X5ZYvQkXKbpswKBQSanL2+bXeK9IMVhwnEJ
-         3+CiRay+bxXRsY8YiQarOWFj0MnhmXribq0zfx7q0Hsop1PGhIbh3aHFGhGAvpD42rxZ
-         /kGBK19r40OHVK2NaXXa/WMjVVtelRHBIdQTrL/72/IHZb4d+eqy8nGW90eGriCW+tWd
-         zLXA==
-X-Forwarded-Encrypted: i=1; AJvYcCWHlFHTnYMwPpX85ZHGvtsSLCpL7XktyFkxEVpEsW4u2XddJf8txZA07OD2a7kwEkj0PaRrEFtu/Z6L@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0KyUKffUhxp4I0CLsyrgkwgamBfM+sqN1UJ1jtDpY02kcngnG
-	AnfxL8rtHgpv6kYCyZ8zFaw6/O8eN0t2OcyAHTb9scRngeQw4glXQBJzHMgRA8ocpCWNSm+EIlu
-	RYvx5w4r2peP3pKuiKS51vAxqJsslDLcxZhe0ZfTdh31cdZOruQdOicuaO40rrpAw
-X-Gm-Gg: ASbGnctVNDYcSub01aZISLULR45HN6GirG9+ovIn4rsmTagPoFJJ5GDoP8s8B2wnlyN
-	QYSXuZWedeMfGJJ9ySx3r70TOiT1v2BlG47+1l38eUVL8DdZZihN/FbZacFzS0djnLJY43VFpTr
-	/z1fwH1bOQ9kuul/uyYmQKPpom3+nPZLg0OIOQnoScIVRtD1uysb/qG+x464FTbDDM7bXhLnSo+
-	7wB761p5AhVzZuFpeRDqJL5PtfIg5WBB0Mx7zsd0+0WAfWBt8sQRS21c8T87RusLEAK6XHNdEEA
-	qV3tvCv/8RkNQcAxTcVZ4YZ/VF7YnQwzK+7Nw/IqEHGkgMBAPINQegIuwO2lU6WZddmXBh4DdM2
-	Yk4vUQoPadB4DxMa7yMgT5WfwRtH5fLZmlYQ8ulOqoUBqiHBmjTp40nVW9L/g
-X-Received: by 2002:a17:903:2341:b0:24c:a269:b6d5 with SMTP id d9443c01a7336-269ba27020bmr50046135ad.0.1758291289603;
-        Fri, 19 Sep 2025 07:14:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGZEoV1JBT8ltcQHOk66+9wxwccfdS5Zcfmesrj8v0ZFx8i90bAAeizJjd/qgTQvGzs2XP4SQ==
-X-Received: by 2002:a17:903:2341:b0:24c:a269:b6d5 with SMTP id d9443c01a7336-269ba27020bmr50045735ad.0.1758291289091;
-        Fri, 19 Sep 2025 07:14:49 -0700 (PDT)
-Received: from hu-pankpati-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2698016d9d5sm56456845ad.53.2025.09.19.07.14.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Sep 2025 07:14:48 -0700 (PDT)
-From: Pankaj Patil <pankaj.patil@oss.qualcomm.com>
-To: andersson@kernel.org, linus.walleij@linaro.org, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: pinctrl: qcom,pmic-gpio: Add GPIO bindings for Glymur PMICs
-Date: Fri, 19 Sep 2025 19:44:40 +0530
-Message-Id: <20250919141440.1068770-1-pankaj.patil@oss.qualcomm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1758292813; c=relaxed/simple;
+	bh=OuJgZQPrT3qPzmfLiDjXnFf/ZhzJWaKiOrvxB6TEg88=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iTH05FMiYt0wONAZC3FWA8dl7o4pCdk4FA39RsJ7QeRfm5ZAO6QIocWREiamhTFzMWVHjQu/nkaPY7KawiBJQ5xRBRGi5J5gbikjpN1zcJMJOZsV1HhN7uFnAOZAbapypQnleM0/tKD3VSy5gQbJB8Sq5T4j8FHhF+cZeQnPuOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=I55mI9xr; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=aMz2
+	qyB22U+lq9dp0GoWHHFUbASxQzpgfP2d3vrLpbs=; b=I55mI9xrPuMdiw8CbUpc
+	UHHLhjyA3VGipimsoNw3xQU23RjmEEwVn568/Y+p5qc1qAbNmmnjT67UvFEVxRCn
+	6Ne84l//s1tgYF6ac4KNCB2uffZefoU/fwXg/vzWuxbAeBg92lwwlZ/QzreaSnSv
+	Q/cVJuEBQWGecnbtodxT5+BN4BfEGtj2jfoJ8pDjAc6IY5T4nJ27oHt8FLJh022C
+	ykx9F2FnLq8fYiusqfCmrCDOBSlqC/bA40aQlnux6JWCfKVtRGcMaHhxlCoTAq8O
+	VO0IzwZ/MDLP+t+gnxFIP8Mzv0BtJzto7+yhCOvtZf2MAQjHiKf3uBjGk/7+wB0l
+	FA==
+Received: (qmail 3950640 invoked from network); 19 Sep 2025 16:40:07 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 19 Sep 2025 16:40:07 +0200
+X-UD-Smtp-Session: l3s3148p1@gFAqcig/VlJtKPID
+Date: Fri, 19 Sep 2025 16:40:06 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Hoan Tran <hoan@os.amperecomputing.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Phil Edworthy <phil.edworthy@renesas.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	Pascal Eberhard <pascal.eberhard@se.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 7/8] soc: renesas: Add support for Renesas RZ/N1 GPIO
+ Interrupt Multiplexer
+Message-ID: <aM1rRuiJH9dlwBjL@shikoro>
+References: <20250918104009.94754-1-herve.codina@bootlin.com>
+ <20250918104009.94754-8-herve.codina@bootlin.com>
+ <aM0lU01x1w2wB3LG@ninjato>
+ <20250919151448.14f8719a@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=e50GSbp/ c=1 sm=1 tr=0 ts=68cd655a cx=c_pps
- a=vVfyC5vLCtgYJKYeQD43oA==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=yJojWOMRYYMA:10 a=EUspDBNiAAAA:8 a=gVt0xI4JxzluFwnjjo4A:9
- a=rl5im9kqc5Lf4LNbBjHf:22
-X-Proofpoint-GUID: r4losYEOm1isEuz3uMmkCD52KKlOZagj
-X-Proofpoint-ORIG-GUID: r4losYEOm1isEuz3uMmkCD52KKlOZagj
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE2MDIwMiBTYWx0ZWRfXz5VbSiFNCoD5
- PMCVqmJrGPh8O14fHeE8T5jZCNIbpL2gAmJ7nllLaPAyQhdOGyNSCCi0G2MKE5OPiFY+yQxAMFt
- Ao1UPmk3J18JE1n5zYyp9EFasWQXZdAaJkHBXcECIM8jXMmQXRqDWAD3TaRHcfPME1RY+gW7/vL
- yWEshQuSOcPzAizJW78XA0mwAq+zP8MuBIx7yw9vPJWVHfdvGSUyn5npPrqatlJWsCkiLog5Nb3
- HE8bg4g6JyKSTp3OlIqhNAMdw7vaINp89BLygC/bvpjSFHVsRoygYUMPMuEFA8qBpKlFn5aUl5X
- tLPlj0Ai1bWLG4q3nXQR5qEI/MEwFHzbbo4tRJsCOUo022iINMra3QJ1Z5CTa/kfNwEEspOoKce
- wua5tU4h
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-19_01,2025-09-19_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 bulkscore=0 clxscore=1015 spamscore=0 priorityscore=1501
- phishscore=0 malwarescore=0 suspectscore=0 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509160202
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="t2Wx4OLguoeAkJCv"
+Content-Disposition: inline
+In-Reply-To: <20250919151448.14f8719a@bootlin.com>
 
-From: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
 
-Update the Qualcomm Technologies, Inc. PMIC GPIO binding documentation
-to include compatible strings for PMK8850, PMH0101, PMH0104, PMH0110
-and PMCX0102 PMICs.
+--t2Wx4OLguoeAkJCv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
-Signed-off-by: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
-Signed-off-by: Pankaj Patil <pankaj.patil@oss.qualcomm.com>
----
- .../bindings/pinctrl/qcom,pmic-gpio.yaml          | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-index 5e6dfcc3fe9b..8ae4489637f3 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-@@ -59,7 +59,11 @@ properties:
-           - qcom,pmc8180-gpio
-           - qcom,pmc8180c-gpio
-           - qcom,pmc8380-gpio
-+          - qcom,pmcx0102-gpio
-           - qcom,pmd8028-gpio
-+          - qcom,pmh0101-gpio
-+          - qcom,pmh0104-gpio
-+          - qcom,pmh0110-gpio
-           - qcom,pmi632-gpio
-           - qcom,pmi8950-gpio
-           - qcom,pmi8994-gpio
-@@ -68,6 +72,7 @@ properties:
-           - qcom,pmiv0104-gpio
-           - qcom,pmk8350-gpio
-           - qcom,pmk8550-gpio
-+          - qcom,pmk8850-gpio
-           - qcom,pmm8155au-gpio
-           - qcom,pmm8654au-gpio
-           - qcom,pmp8074-gpio
-@@ -191,6 +196,8 @@ allOf:
-               - qcom,pm8950-gpio
-               - qcom,pm8953-gpio
-               - qcom,pmi632-gpio
-+              - qcom,pmh0104-gpio
-+              - qcom,pmk8850-gpio
-     then:
-       properties:
-         gpio-line-names:
-@@ -303,6 +310,8 @@ allOf:
-         compatible:
-           contains:
-             enum:
-+              - qcom,pmcx0102-gpio
-+              - qcom,pmh0110-gpio
-               - qcom,pmi8998-gpio
-     then:
-       properties:
-@@ -318,6 +327,7 @@ allOf:
-         compatible:
-           contains:
-             enum:
-+              - qcom,pmh0101-gpio
-               - qcom,pmih0108-gpio
-     then:
-       properties:
-@@ -481,13 +491,18 @@ $defs:
-                  - gpio1-gpio22 for pm8994
-                  - gpio1-gpio26 for pm8998
-                  - gpio1-gpio22 for pma8084
-+                 - gpio1-gpio14 for pmcx0102
-                  - gpio1-gpio4 for pmd8028
-+                 - gpio1-gpio18 for pmh0101
-+                 - gpio1-gpio8 for pmh0104
-+                 - gpio1-gpio14 for pmh0110
-                  - gpio1-gpio8 for pmi632
-                  - gpio1-gpio2 for pmi8950
-                  - gpio1-gpio10 for pmi8994
-                  - gpio1-gpio18 for pmih0108
-                  - gpio1-gpio4 for pmk8350
-                  - gpio1-gpio6 for pmk8550
-+                 - gpio1-gpio8 for pmk8850
-                  - gpio1-gpio10 for pmm8155au
-                  - gpio1-gpio12 for pmm8654au
-                  - gpio1-gpio12 for pmp8074 (holes on gpio1 and gpio12)
--- 
-2.34.1
+> Rob asked to use only interrupt-map and use directly the interrupt-map index as
+> the hardware index:
+>   https://lore.kernel.org/lkml/20250801111753.382f52ac@bootlin.com/
 
+I agree with that. Currently an interrupt-map entry looks like:
+
+	interrupt-map = <0 &gic GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
+
+And the number after GIC_SPI determines the index register, no? Can't we
+simply say 'index = <SPI_nr_from_dt> - 103' incl. some sanity checks?
+
+
+--t2Wx4OLguoeAkJCv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmjNa0IACgkQFA3kzBSg
+Kbbwaw/8CZKfPrxNCc2ATSpkToC1wxq06i0+Ll/FugMGgZywOxXD1l6fLSD1BURl
+Jilvgr1aGzxc0ywLsVk2zDnF/Eb92wqhumR9vmoM5HDC5qHJM23PkMikmUwOshe9
+9Miy0CkZG/k43yTVyr5ygHBVJ7aXOcdrKzgOtgK74x0QjIUeyMhhBhcPTUUjMAKZ
+b4dl8FCM/uPu6rDa3DgB2FJyypJ910/ZXDQH2ANFnZjKiKXz8gnTzXjbrJsx03Yi
+lDwJDNuEadfa9MMpgvbqFSyvulAOhiSYPYfLTqIO9VlJ/FM+zTjY3KKzbnEdbfJo
+7m25RnjEpM6gqVo8I+oM1dPwb/HTh68Btbxf1rgabSbd+bxjlXSyq9NUovjfJBey
+3xdMkhV19hoUrxZcCeKixejRFkYqnHOkRp6qNhWq6m6Tw68PMqgy5JVfsn8r+ZNX
+lj3y9Y0RGYkYsBlZf40x7zZ5Y5O8bRAHQSv5X6htyfFIChERmX3uMVQbDKui9LHL
+Z1FQe+9OTPtRoHmHRvRRIOzy9sua9ufI6+8Anbis+L36+6Jjpfw7jrkYde7L866h
+WCIcYZWleAGPE3kjUZLdRLDzhauDV4nrA50T49x8ZPOCWis6xQsW/U8AWyszeHIr
+/JqTSH0H6nZbLTN0ETyt3la2PWTYOCTuHxyh0s667Llcy8y2MQI=
+=duSE
+-----END PGP SIGNATURE-----
+
+--t2Wx4OLguoeAkJCv--
 
