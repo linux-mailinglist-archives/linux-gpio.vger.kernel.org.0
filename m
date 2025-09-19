@@ -1,126 +1,222 @@
-Return-Path: <linux-gpio+bounces-26392-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26391-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 285E8B89C26
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 15:59:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE1FBB89C1D
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 15:59:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A4E021C8825A
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 14:00:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2EA1617BC81
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 13:59:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ACB5313293;
-	Fri, 19 Sep 2025 13:59:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 239D6313554;
+	Fri, 19 Sep 2025 13:59:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="S8U1p6lk"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="ADzy2CfK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011036.outbound.protection.outlook.com [52.101.70.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D66B313D48;
-	Fri, 19 Sep 2025 13:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758290376; cv=none; b=PoE11hclhN90S/Bl330/c/SDmrHOh6F8hHPZG6Dn+pWY0UqBxwEeWxSZC5x7exK8G5LFLRSY6YLXERwuv7vhw3WLFUx1tnapsFOSCVVH6Gh5Lduvk0IDlecC6JU/aPuRYgE/qsbGMNS6OgMeZ060B4KFHZFKbQf/YlGb7hwygD8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758290376; c=relaxed/simple;
-	bh=rYm7TDSt7m3UIo26WMvRENt6r9Gc+DAQRE/S6hKjId4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kOD5gz5TqzXSHL9TA3hJVbFHKMQC5Ye+RFT8DIbpH1w1PGztVPZAyOrTsE/61AcZ+GGnhn43QEw8smYsoaU8J9sBAQjeJb6phKnT7/1rUrukqtJgqbKcylqjpMTrJ+sbIpls7QbeompGo5LKgq5PUOdGNSgRotFkXgN/n3duKpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=S8U1p6lk; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id E2DB41A0F18;
-	Fri, 19 Sep 2025 13:59:31 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id B6B02606A8;
-	Fri, 19 Sep 2025 13:59:31 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 757D2102F1BCB;
-	Fri, 19 Sep 2025 15:59:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1758290370; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=dWYgA9dXzIHOPv9DWHE+oxQc2sRvSmlPdD1Mhljo75M=;
-	b=S8U1p6lkz1TkcMx0Lx7dsXI7Kddmg+uVELN9GHpySFHyJ2gk1ThiVW0Ya+PpybT6exc9ir
-	wIbyd/ulU+97JOw74n87KFkRy2DwhRKtueVABl1T4qIL8gyh7hWyH5b1zwBUig4Uj5+qF+
-	wBUbg8bHk6dIV4ydjeSwxjXKSMAI/WFc4zzB9bodtyq0MM7BUh6IuYi/AhSiwVZstgnFTo
-	rGoYqdY/RafwrWkZRO3L7Yhavyw4azaKKvM+itxgU5CFgpv9YsidHU9AjU7xbERlbPW6D8
-	PpD1EfNJvk7BY5MFrpomAw46ybV6NP/ps8+UcccH7gEU1RO8YZXoNhbGyVcKTg==
-Date: Fri, 19 Sep 2025 15:59:10 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Hoan Tran
- <hoan@os.amperecomputing.com>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus
- Damm <magnus.damm@gmail.com>, Saravana Kannan <saravanak@google.com>, Serge
- Semin <fancer.lancer@gmail.com>, Phil Edworthy <phil.edworthy@renesas.com>,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Pascal
- Eberhard <pascal.eberhard@se.com>, Miquel Raynal
- <miquel.raynal@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 8/8] ARM: dts: r9a06g032: Add support for GPIO
- interrupts
-Message-ID: <20250919155910.4d106256@bootlin.com>
-In-Reply-To: <aM0llhn054OI9rA8@ninjato>
-References: <20250918104009.94754-1-herve.codina@bootlin.com>
- <20250918104009.94754-9-herve.codina@bootlin.com>
- <aM0llhn054OI9rA8@ninjato>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D60761F7586;
+	Fri, 19 Sep 2025 13:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.36
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758290370; cv=fail; b=vBjYaqhSrFRYYZNEE/0RLEPK3OfusFCDgSQB+L90pFzO0U1AJqQZfBcvGLhxEc5qAMckUwqOE1gCjYnLFbT/dmNrNHJ3xz3raJaFuVs4l8AQusx7Fo3ffHG5SobhHC3HqEAcSLK/JkEaYtoXX4+LsnpfRnXK4PNb5QFEgkkQiQM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758290370; c=relaxed/simple;
+	bh=OYkkY16OJOVGW0rUpL6IGFi/eNV4a9DXxpFoFuj1GvQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=dmvcRiHqCTXRdafZW6gqn4VBYBIC9bKo8sODKUfywbTCZxChHKVEwls+hK5fZbMFgP6ql2kFv3hIM0XuJ5B0tAgQz0TUjSKlk8y2G46cXtF/4zPJ7C/L1Uf5NH431jKNmQhb0RVapkOOpwgAHiyApuxy8lWVNEaV+IduedSY4lA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=ADzy2CfK; arc=fail smtp.client-ip=52.101.70.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vA9UCd93Kw2fvyQOYv8udRwbJkOXRv3MTLgpMQ8L+Hw3bi4/9/H3tbPeAYxg0dF1cB003/OcmtZpIZ9sSN09QXklkh4WC7eCp+ZI1Lz9KIjWFLb7S3ohBgigSBcBSghzPXFfVgRyksAQRXeQpl36VSeaqd44/LpxMIFo4LksucM9Nzyb8ocyQ/bTRvdn0XglvG1lk8+PNLVS1bNK0ctSV/eNUgzMFwzpPOYgDFnm5HJlnhYOuoPn37SYyCai5czsvodD7OWkiZL1E9lXpoJJ8KIqutv2ze9DMQAf/FhOc0jM6iED1fi5ghl2c0gbPS1e4h/TxAe9xwqUf9cLFxgYtQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cKXiWeoyedq+XdIquDaLAuKHriEEIYBGlweFYcgyT5k=;
+ b=q7YK7dyFWw9IM8YaCMRCH4LpN07VNZpV2ZTRTqLu+hxqcRAmSgcvTIi1e59Qyl8zL7gJmOE1va7rWqcDMFXHsclBuSxFzv6AgtOA3MsiNec+75N1C/TNsmhjbjUZCYVjVbtiXjKNla9QckEZ8ffsNY7g51LguVgjAH6sVOZiYO8gLKCb6V4u3Hj3qA7OsdJ74lnesleLyvqw1qKTBNCMxyv78BXIkKvq5a0MNinzPzXghs3kDeUvST0n3FNMaeig0o1ygmyEYhpykESmSjasI5g6O5Hhlv+GzE+sjrvQOB+0Wp3e0h1tAHEY9sXFOVMl/CLv3XMW72IZ8v2xyUpRIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cKXiWeoyedq+XdIquDaLAuKHriEEIYBGlweFYcgyT5k=;
+ b=ADzy2CfK6divR5yIy7pwb0wRNlcgWqALHwulf17BPUzAmATb95kteiDQE689wSPi/GICZpDJh2jQOnUFEjwLEfCBKJ9DedoUtbSXvX06AcMsvTEofIoiO1mWyJnvCSu6L6JXINCU+5tnFTVgnAEuAEc8xWqEI/RUQO5UToA7O1tz7siw1uIGhw+9iGwMHWPJkGuYOgTRYiTiciXAiMntyoVprJS/8mLvrdijP2t1XfiAEntBTf3DfSI669LfmyGZ1DKBhxGWFIoBPenD6E9+16CdJERyp30dr3aRqGXb3GjzFwQ+PKrvqfY8q+X1vUWgeYAWjeS92BAkQuJ9pj4W+w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS8PR04MB8868.eurprd04.prod.outlook.com (2603:10a6:20b:42f::6)
+ by VI2PR04MB11146.eurprd04.prod.outlook.com (2603:10a6:800:298::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.16; Fri, 19 Sep
+ 2025 13:59:23 +0000
+Received: from AS8PR04MB8868.eurprd04.prod.outlook.com
+ ([fe80::b7fe:6ce2:5e14:27dc]) by AS8PR04MB8868.eurprd04.prod.outlook.com
+ ([fe80::b7fe:6ce2:5e14:27dc%4]) with mapi id 15.20.9137.015; Fri, 19 Sep 2025
+ 13:59:23 +0000
+Date: Fri, 19 Sep 2025 16:59:19 +0300
+From: Ioana Ciornei <ioana.ciornei@nxp.com>
+To: Michael Walle <mwalle@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Shawn Guo <shawnguo@kernel.org>, Lee Jones <lee@kernel.org>, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH v4 06/11] gpio: regmap: add the .fixed_direction_output
+ configuration parameter
+Message-ID: <re2izaxwbjp6hcms3cps4l4tfvwaxyt56gkc7ohrftcjizwkwt@jsjjo3b6xrcs>
+References: <20250919132515.1895640-1-ioana.ciornei@nxp.com>
+ <20250919132515.1895640-7-ioana.ciornei@nxp.com>
+ <DCWTIV3281OX.1N3AA8K3T21LY@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DCWTIV3281OX.1N3AA8K3T21LY@kernel.org>
+X-ClientProxiedBy: AS4PR09CA0006.eurprd09.prod.outlook.com
+ (2603:10a6:20b:5e0::16) To AS8PR04MB8868.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42f::6)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8868:EE_|VI2PR04MB11146:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3a2d6202-5280-4620-ad78-08ddf784bcbc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|19092799006;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?t8/sN6ut2xSckiuyXIQuOsX6dKvMgUL8PSYrvlFNKhaledfKHFphRMw5/gzU?=
+ =?us-ascii?Q?N9jL52e57y7XaFuN7XCBpkE20pr+YiUVTUil98MrxVeTS8kVnsFZlg+Ah3CM?=
+ =?us-ascii?Q?8MmMLgsZJT8tqLbO5UQbv+QsNgZlRoVZwSkx39KeQ/mSif4FXaavoaHkMjgb?=
+ =?us-ascii?Q?3eSO60u3E4KoIS0NRqn9ZE9yZYZjoQSjVuJ7S2cpdF5NjZO66fViE6Lwk3bX?=
+ =?us-ascii?Q?0OXlS0rp9NjUKczYAeQo/0iCJlH55lTTMcXgy9Tmy+Jjm+JyCQ/nLYUquz++?=
+ =?us-ascii?Q?IJ1PdfH9JtY26B1deNx4oRlIbPdkPmPoZmuEGuLIuS0sb5JzHHvTDp15hPYt?=
+ =?us-ascii?Q?NbzPl3nvFTYFXkbhTKdhwODC9VpxK39SlSHqdEk0PE7yFxC839a6CwsxHBCD?=
+ =?us-ascii?Q?2ma0jvsbeES2xJdIL6UxAMsSlzZZraEr1NEYIrgFcWv9aYwcHNIgOYAjFJpe?=
+ =?us-ascii?Q?QeW1OKAJNVkG6IRBkV37Gvt0JNWUCGgvBoGqz3Ob4A4t77QfXOAV5rk/t0Uq?=
+ =?us-ascii?Q?/hrjOGU+66dfbCc/8TzDZw9TSqBQZSmNCkJ0EFPEwQbgis2enXHlurMr3YDl?=
+ =?us-ascii?Q?XKTVmal2u1RS1CcRIh0RxUJCKeG6XOiCQ9Gte/uvBfSDPN+mUvX73wh54rCp?=
+ =?us-ascii?Q?kkawjmUFKlVr+OBMthvrSshNmRfOt6JKT7sj2HRmRtCtTzBn33R2wF3gmwTb?=
+ =?us-ascii?Q?6gP86yrmLsyJX5oKg4OObz0lvWxq2eKj1WQ/pnpBTwOtbJtDzkglvkESpjRV?=
+ =?us-ascii?Q?tgUDhgyG1XS+BLwQciVlIIpHN8bwIsCE9Us780EJrNlobf5YKY/28WKVWIal?=
+ =?us-ascii?Q?lYX5zEhoo2P73kvr6scleVmHG3KHQhM7M8pwEH+sIEIsbN8EPOgWsfjluxSj?=
+ =?us-ascii?Q?ngayJDL63I88eN0XpoQl5bnx+y7JaEzB6JXWSQgI7JuwzhBM076bYz7q/vyT?=
+ =?us-ascii?Q?lmLpCieI5GJpIARDNJr0F31HkAbTNGLxpNLBjsNTFedhWJTW0MXPyMKnwMJP?=
+ =?us-ascii?Q?65XuxmG7pBt6tUpw6RE7IwLASZBEocT6wsb1kIj2TsdT2c85TOQKguIRpcSc?=
+ =?us-ascii?Q?r4DaFGb63s7Oh5erLHC+X6vgly3hOtmwi4icsdQXi095kAzr3Vrv+RNhgCyP?=
+ =?us-ascii?Q?nc5U25K9QXLleEPZKCAM6XhHUJPi/JnrGofsooyR0evYxsRoTGMZLOvvtV0M?=
+ =?us-ascii?Q?IbTRGeRiwJM2SX7aHiPaVxCcUAYh6EEByEKpFHcQ9iywDOPv7I6BME2rGVMQ?=
+ =?us-ascii?Q?VIfbPyAESjx7zWkH2hv6sYQwfcC/6zBgpqMHeP5nEVCQU0dXEWSFbiJF2rG0?=
+ =?us-ascii?Q?CgxFnjiGAjlAqDiZkTCG2q9IyKZ2UtbAEmGnG7OMAfrS+LVYYolPhq1Hmfr7?=
+ =?us-ascii?Q?xWoxfTW4zeA6TGdeqNOsgP2f8cZl389Z1v3Jmiy3d8Fw7exwQ2D9TxpDKqGl?=
+ =?us-ascii?Q?bqK+WO5dQg4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8868.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(19092799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?rcLzeu8Z5X0/HzbJn33+QQeH6lL5FYwXoZurSX4pAP5kgoHVTd2Rf4dZqVbc?=
+ =?us-ascii?Q?ArbrODMQk4W08unaZ3h5yIG8JIIzvqODpAP2CyEfDTSZ3YA1DDCQSWOVW4oa?=
+ =?us-ascii?Q?aF0WSSqFgnwLytQx8Neo0ai+rd/VvtGpCw1qE+PC3QxtYlsD7c5EfkX9nSMX?=
+ =?us-ascii?Q?qEK3gGfoQ6LwMsB+sB3bjUz4oRN/hAOy6pNDdIiLKm3/aNeIrAufev14gb7d?=
+ =?us-ascii?Q?zQ6Db9RY4kpy/pyYb744nnzkF2MujdRNIuIk58L3Fn9fgVd9VcIm7gaE91Lu?=
+ =?us-ascii?Q?nEJMP5aSLL1QhNbX2rSiSW7zma5MRfhwQR1ED+7kRYuUPRECoWKD13Czqblr?=
+ =?us-ascii?Q?IUI9s74dyBq6ykPty4oNGCAivllky0Up226p/qf/1JTayrR2c53vnw16AeKj?=
+ =?us-ascii?Q?2x3NxZHf2W6T2/O5iCVysfhDABvkfS7atMQj+QhjdQqHPHVNwCVdmxcQ0RqD?=
+ =?us-ascii?Q?a+ZRTyaykmTjeahg4JcV4AhLAv83Po/1atff4fKoMx75MYU1bklPi6ReW2iW?=
+ =?us-ascii?Q?vgluEfBiczP4WNIblmWqQ+hvZ0x+1HrS3GB5bFs8+f0Ri2iiBnWQ9TX+h0Ba?=
+ =?us-ascii?Q?RuyXbpBG+59DN2ZxB79xj1gu5fmmEmF1F+alI4wTN/ZH5Ocp2+5m4zIDdUbI?=
+ =?us-ascii?Q?wZltiLKCpRmB6OoRuHFhYlEz7OGl01EQPhjOylwj2FOoUUL9+/AczOCE0PyR?=
+ =?us-ascii?Q?Vgix+Sk1xzvPMQICdWCKiTyD3GwDq1/5uoSq1TpMEQ0/B2FcypxCRbphaq/y?=
+ =?us-ascii?Q?Haktcp/2cSZ3wOBIl/Xb1Ce9IH47oNl89OMieUA7+/0aWJN06iNPem/FGgM8?=
+ =?us-ascii?Q?lnbTXFrDLxvBOmFjhEWXKj3URNaUBmqbLE1aHgZotFDY32BhUa7KH7o+g4ep?=
+ =?us-ascii?Q?arlqVyLSv/yioXa6JI3ZnDeOz3YCc46tzX52jTsihIJFXXfUv2bxdBNcITOv?=
+ =?us-ascii?Q?NQ6+o5uO3fsFdVotNbxk4X5vPB06KhRzfUuRVXTIdq+tSiKXyXWqETVMniVe?=
+ =?us-ascii?Q?5j4HYQXKsYx/icrT0FNb+YRqzAXHElYgWAT4dtmxaTEJn/jK87GW+lKapArP?=
+ =?us-ascii?Q?3XO3QNqhFTNYOO3EgFqWM5MDSBzUzHMEf5/bafC5eeqkG+gpjLvV/eOV70ck?=
+ =?us-ascii?Q?qTHmliYFoWDVDD53dRGBWQ+uMeujIfcMzi/NH5YndGSYufaCaSRlkR7Xqt1u?=
+ =?us-ascii?Q?cdeTxwF9NzWJvIxQPRtaUIzrCslH/vrx/+U+MkdCC5mYGTu84b3Gq9qFdJN/?=
+ =?us-ascii?Q?fv3dZ1oL44ap6V50OpGd27XTmNVC18+lEha7k8jtJORvuRq4nfGkIiA3wM1K?=
+ =?us-ascii?Q?0QCKKTCg4zABDUyz3Z85Bl+DQP9zR0x8lApM/8kM+YSH5T1OHqvE8HXPAlpR?=
+ =?us-ascii?Q?i2CIMZhbgojRwDsGWl1sYeWzjzOm9y9zrnSzs+yaRDqDMW7sWB6AY6zQ9pBe?=
+ =?us-ascii?Q?KnTkkU86XfBbBNhngCLkIBA7CzLHI6pkZbZPwAbpGJalw1WAVhGJz3jbDGLX?=
+ =?us-ascii?Q?uETR9eZB8/lPvynOMWP7WUSpEnacdeJkiFRDk2wmOBx1ZuFb3mCPao952+B4?=
+ =?us-ascii?Q?fORCGd6tf9bYMW0dELi97XAeLnkI10iGIqDNnkuU?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a2d6202-5280-4620-ad78-08ddf784bcbc
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8868.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2025 13:59:23.2624
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CV1EylExrdAcYVSnQJqkmpG1L4VLlq72ulckfvdXgLn1WlvdkiSdIFrZyXOqTAP7IBJiAK7/VA7KhEO5nP5RCQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB11146
 
-On Fri, 19 Sep 2025 11:42:46 +0200
-Wolfram Sang <wsa+renesas@sang-engineering.com> wrote:
-
-> > +			/*
-> > +			 * interrupt-map has to be updated according to GPIO
-> > +			 * usage. The order has to be kept. Only the src irq
-> > +			 * (0 field) has to be updated with the needed GPIO
-> > +			 * interrupt number.
-> > +			 */
-> > +			interrupt-map = <0 &gic GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-> > +					<0 &gic GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-> > +					<0 &gic GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
-> > +					<0 &gic GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
-> > +					<0 &gic GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>,
-> > +					<0 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
-> > +					<0 &gic GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
-> > +					<0 &gic GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;  
+On Fri, Sep 19, 2025 at 03:41:00PM +0200, Michael Walle wrote:
+> Hi,
 > 
-> I'd think this should be dropped from the include and added in the board
-> file instead. I did this with my board and it works fine.
+> > @@ -129,6 +130,13 @@ static int gpio_regmap_get_direction(struct gpio_chip *chip,
+> >  	unsigned int base, val, reg, mask;
+> >  	int invert, ret;
+> >  
+> > +	if (gpio->fixed_direction_output) {
+> > +		if (test_bit(offset, gpio->fixed_direction_output))
+> > +			return GPIO_LINE_DIRECTION_OUT;
+> > +		else
+> > +			return GPIO_LINE_DIRECTION_IN;
+> > +	}
+> > +
+> >  	if (gpio->reg_dat_base && !gpio->reg_set_base)
+> >  		return GPIO_LINE_DIRECTION_IN;
+> >  	if (gpio->reg_set_base && !gpio->reg_dat_base)
+> > @@ -277,6 +285,17 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
+> >  			return ERR_PTR(ret);
 > 
+> Not related to your patch, but this line above is wrong. That should
+> be "goto err_free_gpio". Would you mind adding a patch for it? I
+> could do it myself, but it will probably conflict with this series.
+> I'm fine either way (if you do it, don't forget the Fixes: tag).
 
-I can only reduce the table but I need to keep the interrupt-map property.
+If this would be the only change, I would not do a v5. If there are more
+things to change, of course.
 
-'interrupt-map' is a required property. If the board doesn't use any interrupt
-GPIO, its dts has no reason to set the interrupt-map.
+> 
+> >  	}
+> >  
+> > +	if (config->fixed_direction_output) {
+> > +		gpio->fixed_direction_output = bitmap_alloc(chip->ngpio,
+> > +							    GFP_KERNEL);
+> > +		if (!gpio->fixed_direction_output) {
+> > +			ret = -ENOMEM;
+> > +			goto err_free_gpio;
+> > +		}
+> > +		bitmap_copy(gpio->fixed_direction_output,
+> > +			    config->fixed_direction_output, chip->ngpio);
+> > +	}
+> > +
+> >  	/* if not set, assume there is only one register */
+> >  	gpio->ngpio_per_reg = config->ngpio_per_reg;
+> >  	if (!gpio->ngpio_per_reg)
+> > @@ -293,7 +312,7 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
+> >  
+> >  	ret = gpiochip_add_data(chip, gpio);
+> >  	if (ret < 0)
+> > -		goto err_free_gpio;
+> > +		goto err_free_bitmap;
+> 
+> There's also an err_free_gpio jump below, that should also be
+> replaced with err_free_bitmap.
 
-In that case, if I fully remove 'interrupt-map' in the dtsi, dtbs_check
-will not be happy. Indeed, a required property is missing.
+I am a bit confused. With this patch applied there is only one 'goto
+err_free_gpio' in gpio-regmap.c and that's the one added by me above.
 
-Also, having the full table containing the 8 items with the correct GIC
-interrupt number and the correct order could help a user to route the
-GPIO line to one of those 8 items.
+What am I missing?
 
-The '0' field use as interrupt source matches the registers reset value
-of the irq-mux controller.
-
-With that in mind, do you still think that I should reduce this table?
-
-Best regards,
-Hervé
+Ioana
 
