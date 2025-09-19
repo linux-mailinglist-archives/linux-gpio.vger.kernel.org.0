@@ -1,115 +1,151 @@
-Return-Path: <linux-gpio+bounces-26404-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26405-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05585B8AB54
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 19:12:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C561CB8AB69
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 19:14:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A24F83AD271
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 17:12:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7388C3AB642
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 17:14:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBBD1321F48;
-	Fri, 19 Sep 2025 17:12:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA0A6322523;
+	Fri, 19 Sep 2025 17:14:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OFuihWIl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NJXDwZan"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B061231C56E;
-	Fri, 19 Sep 2025 17:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA4C3164D0;
+	Fri, 19 Sep 2025 17:14:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758301952; cv=none; b=fOA23gyG6F95eXHOzCi4ZtK5xYKfPKEuYYd/BWdnT4LDNHI6zFtFh3DS6y9mAyMVPMQgy9bFMi3/hQ0Vtl/iLXFf8LfZZuXnVZHGjG8IKKLPE8g3/gu2XslMyYEMkH2AShxOwR8bG2jmPXp3rhBvRBEzZulLSD0qsGaeJzsPQzI=
+	t=1758302055; cv=none; b=np8zEbzoZWUeDBE76ifImX7HhTYz/JAtRjxXhuxqTb+9rqheYOsZ5pG9wrpXZiH1YoU23kGZd9VKuuQKec/tGCbi83hBefaRpocGGLd2HrcYo+7OELrlyblydXql3BPaRp7Lwg4k8CWtB7HOtg41BWiveu3BBXgZzGuTZM4wsdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758301952; c=relaxed/simple;
-	bh=9zSn6AbzOcblb5x8eCo/HOafd+xnwiEL4+CHNUx7enc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WrgmBTFqnvhAYUZghzKUZonk8E2Zk4RfJzZwRjTUWtbd74DT535ytnk7AujrAjNdGXXfR12L8NCE2z4ZakC6b69lSpEv52/eFKNVQZcpxPR3jIGo+RR/EA+RHGO/82qig0GqOlGryhAX2L59noXaPxWxNmJcMGGwUy806ObJTOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OFuihWIl; arc=none smtp.client-ip=185.171.202.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 24EAFC003E0;
-	Fri, 19 Sep 2025 17:12:11 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id A8487606A8;
-	Fri, 19 Sep 2025 17:12:27 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 83DC7102F1877;
-	Fri, 19 Sep 2025 19:12:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1758301946; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=82kGiflx9+qp0dBT1z2EI39WcJ+hOEaJO//+XgaOsJQ=;
-	b=OFuihWIli3a5pINRtQ+q10zPNS5LkI4Q8B7UybqsLvA1IjVaNmVmthmUxrgGsbVjpQLtKC
-	TLGd59DyV32zNkWR8kRaASvKHmv8IXXXWt9Y+2C8/K4nYkJzrrWbhuICKSg5IZUeJ8XFPc
-	PZOo4M8bG+EIwDyP3zHsH0iLrgJthozTWDGt3oPWPXPpGUja5/ECF0LmJISlRD3aA5Hp1r
-	+qRZW9tIZdOCyUoDehdc1n9B3v4akHQVpdT5yZ+pRFMCtriUaJ7LoPbAxonD6wzUnuaBws
-	kKRrQJ34DHK6ytbRdT1zrnnI/dOEaQMLa16REcbA6nu6pC2NukhR4hlNn6iyig==
-Date: Fri, 19 Sep 2025 19:12:11 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Hoan Tran
- <hoan@os.amperecomputing.com>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus
- Damm <magnus.damm@gmail.com>, Saravana Kannan <saravanak@google.com>, Serge
- Semin <fancer.lancer@gmail.com>, Phil Edworthy <phil.edworthy@renesas.com>,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Pascal
- Eberhard <pascal.eberhard@se.com>, Miquel Raynal
- <miquel.raynal@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 8/8] ARM: dts: r9a06g032: Add support for GPIO
- interrupts
-Message-ID: <20250919191211.0ed4c976@bootlin.com>
-In-Reply-To: <aM1rgY9CCF54c_Pg@shikoro>
-References: <20250918104009.94754-1-herve.codina@bootlin.com>
-	<20250918104009.94754-9-herve.codina@bootlin.com>
-	<aM0llhn054OI9rA8@ninjato>
-	<20250919155910.4d106256@bootlin.com>
-	<aM1rgY9CCF54c_Pg@shikoro>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1758302055; c=relaxed/simple;
+	bh=c0gay8liZZpMxu1wbo/3pb8Be4pbY2davSvmv8BnEJs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eFyldCesqVDM5uY+elyBTvffFHKo/X4gVE5+qFV3VyVZciPkCaRHWzvyBjPfE3DYVIsoqG+g7/7UnbJDklezlnCsG0Q3dra5I5Lje/KiHaon0BSYNZAVrfFNZCBiNolSI4clBwDWjtN0WZcs5xev7p8wUKTbJwDZ9esTRsVW3as=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NJXDwZan; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C52AC4CEF0;
+	Fri, 19 Sep 2025 17:14:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758302054;
+	bh=c0gay8liZZpMxu1wbo/3pb8Be4pbY2davSvmv8BnEJs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NJXDwZanWpXWP5Do08/3QVhVXL89GUZA1HPkV51OYg377z0Fe/444cGrHCuTR10ps
+	 636xFSIKiAgDkhPcrOHt4v0y8xhioVCW3f0tX9YKs9B1N1eXJlK9HUeqoGmrIvJeI4
+	 HujOfz5pAJXJoHujLadevvUFi0MpMNtOTaYiozH/FBMyhbIySWZYClQRhGFvtOS5YN
+	 ZTMXIGjIKRjQjJftN2dCsvpwSsrMIjx76x5SlR95ooFUDC77sYxatB0vdG3qmEY9zJ
+	 fiVREZvmXEBpZeXcFVd+wHrI6W+p37119nsB27BZd7fl8MadCEG/WqqpaTzwx5i8UW
+	 vZau7bct/kD1A==
+Date: Fri, 19 Sep 2025 18:14:09 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Kartik Rajput <kkartik@nvidia.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, thierry.reding@gmail.com,
+	jonathanh@nvidia.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+	devicetree@vger.kernel.org, Prathamesh Shete <pshete@nvidia.com>
+Subject: Re: [PATCH 1/2] dt-bindings: gpio: Add Tegra410 support
+Message-ID: <20250919-undusted-distrust-ff5e2f25cdd5@spud>
+References: <20250919093627.605059-1-kkartik@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="kGXcB5rXmwo+NFQF"
+Content-Disposition: inline
+In-Reply-To: <20250919093627.605059-1-kkartik@nvidia.com>
 
-On Fri, 19 Sep 2025 16:41:05 +0200
-Wolfram Sang <wsa+renesas@sang-engineering.com> wrote:
 
-> > 'interrupt-map' is a required property. If the board doesn't use any interrupt
-> > GPIO, its dts has no reason to set the interrupt-map.  
-> 
-> Why is 'interrupt-map' then a required property? Can we drop it from the
-> requirements?
-> 
+--kGXcB5rXmwo+NFQF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I need to check in details but 'interrupt-map' should be kept required.
-Indeed, irq-mux needs this property to work. It is not an optional one.
+On Fri, Sep 19, 2025 at 03:06:26PM +0530, Kartik Rajput wrote:
+> From: Prathamesh Shete <pshete@nvidia.com>
+>=20
+> Add the port definitions for the main GPIO controller found on
+> Tegra410.
+>=20
+> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+> Signed-off-by: Kartik Rajput <kkartik@nvidia.com>
+> ---
 
-I need to look at the 'make CHECK_DTBS=y' behavior when required property is
-missing in a not enabled node (node with status = "disabled").
+Why are you modifying a binding header for devicetree when the driver
+only appear to grow acpi support?
 
-Also, got some:
-   Warning (interrupts_property): /soc/interrupt-controller@51000480: Missing interrupt-controller or interrupt-map property
+>  include/dt-bindings/gpio/tegra410-gpio.h | 37 ++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 include/dt-bindings/gpio/tegra410-gpio.h
+>=20
+> diff --git a/include/dt-bindings/gpio/tegra410-gpio.h b/include/dt-bindin=
+gs/gpio/tegra410-gpio.h
+> new file mode 100644
+> index 000000000000..e4d042fbacb2
+> --- /dev/null
+> +++ b/include/dt-bindings/gpio/tegra410-gpio.h
+> @@ -0,0 +1,37 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/* Copyright (c) 2025, NVIDIA CORPORATION. All rights reserved. */
+> +
+> +/*
+> + * This header provides constants for the nvidia,tegra410-gpio DT bindin=
+g.
+> + *
+> + * The first cell in Tegra's GPIO specifier is the GPIO ID. The macros b=
+elow
+> + * provide names for this.
+> + *
+> + * The second cell contains standard flag values specified in gpio.h.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_GPIO_TEGRA410_GPIO_H
+> +#define _DT_BINDINGS_GPIO_TEGRA410_GPIO_H
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/* GPIOs implemented by main GPIO controller */
+> +#define TEGRA410_MAIN_GPIO_PORT_A	0
+> +#define TEGRA410_MAIN_GPIO_PORT_B	1
+> +#define TEGRA410_MAIN_GPIO_PORT_C	2
+> +#define TEGRA410_MAIN_GPIO_PORT_D	3
+> +#define TEGRA410_MAIN_GPIO_PORT_E	4
+> +#define TEGRA410_MAIN_GPIO_PORT_I	5
+> +#define TEGRA410_MAIN_GPIO_PORT_J	6
+> +#define TEGRA410_MAIN_GPIO_PORT_K	7
+> +#define TEGRA410_MAIN_GPIO_PORT_L	8
+> +#define TEGRA410_MAIN_GPIO_PORT_M	9
+> +#define TEGRA410_MAIN_GPIO_PORT_N	10
+> +#define TEGRA410_MAIN_GPIO_PORT_P	11
+> +#define TEGRA410_MAIN_GPIO_PORT_Q	12
+> +#define TEGRA410_MAIN_GPIO_PORT_R	13
+> +
+> +#define TEGRA410_MAIN_GPIO(port, offset) \
+> +	((TEGRA410_MAIN_GPIO_PORT_##port * 8) + (offset))
+> +
+> +#endif
+> --=20
+> 2.43.0
+>=20
 
-This could be due to the presence of #interrupt-cells or the node name (not
-sure). As I need to rename the node (Conor's comment), I will see if the
-warning disappear. If the warning is due to #interrupt-cells, I don't think
-that removing #interrupt-cells is the right solution to avoid the warning.
+--kGXcB5rXmwo+NFQF
+Content-Type: application/pgp-signature; name="signature.asc"
 
-That's said, I need to perform some local tries. I will keep you informed.
+-----BEGIN PGP SIGNATURE-----
 
-Best regards
-Hervé 
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaM2PYQAKCRB4tDGHoIJi
+0trLAP9bcGoUEpo7TdiJs3G3/B2yydrsGsY4grCq2LDCik57HQD/dNmzzLduEroE
+XE97oc5867oQXWzTv5RrnFMADaPRVQs=
+=e47o
+-----END PGP SIGNATURE-----
+
+--kGXcB5rXmwo+NFQF--
 
