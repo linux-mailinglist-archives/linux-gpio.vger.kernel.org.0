@@ -1,86 +1,86 @@
-Return-Path: <linux-gpio+bounces-26407-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26408-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CFEFB8AF05
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 20:37:01 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C672B8AF1D
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 20:37:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2EAF11C84B41
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 18:37:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4F35DB619D3
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 18:36:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFBD82571BC;
-	Fri, 19 Sep 2025 18:36:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1222B25D540;
+	Fri, 19 Sep 2025 18:37:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="T7q0S1/5"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="c4cKC4Zj"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53852223702
-	for <linux-gpio@vger.kernel.org>; Fri, 19 Sep 2025 18:36:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE05258ECE
+	for <linux-gpio@vger.kernel.org>; Fri, 19 Sep 2025 18:37:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758307014; cv=none; b=sSvW8t0RH4sbEtRsh1s2OAY9kNZPOklWF+DTIij7LWWwmmRxNGY1oBQFuVT3R/fBUO5tQusZoPd0QpAzV5wk44gVqDQfnvbPrnr+1tzqn2mF06ifsdABpYg3jHYFCHWfs6u0n5NjveSEZTePK1biXi6/sizmc1ifZrPGL495Nwo=
+	t=1758307033; cv=none; b=lmKxOXBOgiNelj8d6YhRYj3gXdIFalpGbxFkrLW+JjiwUC30XM/tGap4OgiXeQ3Qxh5FoQuD21ZGS74XF1janVLu428pe4PPrnjWvTZ+v+W0K1zZrQV583tUNTGwDgtIXmgqgm5GzL3Qo/iuFaLtBxI4/cEbTnA4GiM2Fqop5Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758307014; c=relaxed/simple;
-	bh=IaLYIZc2t4TteSa/Pl69q9ZnKun5P0ZXuMJw+fMVLMc=;
+	s=arc-20240116; t=1758307033; c=relaxed/simple;
+	bh=vdenTXxoa8s2/12E2g0fiU/TBtdx/sD6bwTfn5HWPVo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QDiCIj6c+KxOTTbm9zeZi4q/ciP+FVECQ48mmiWfRMjPY/M41pr1kU/hpP6hSuWqSgacRbT610C47avopsu23coGFJpYnxSqpfemqWRp97SRKIoEK5gT63gI5hrl2/h30mQfIxeU1fT3GTg3d4JS0VYpp7dRvGmEhU4qru3qFEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=T7q0S1/5; arc=none smtp.client-ip=205.220.180.131
+	 Content-Type:Content-Disposition:In-Reply-To; b=N4LXoYikBjMq7EX2zeFhEzQKLEhD14BHPXasgkBSm+8a92uvTzo25wVWaMRaMyxxvpM4N1/Ufzr4dXwYVJmGpAKAexPzzold1QHY/OjUmWGOO8n2VIxXF1/T1aPbiDSbskTR1WNZDziCP6T6Um+0KLNIZNXSIhbQoThgbw7Vwfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=c4cKC4Zj; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58JD6lWN021451
-	for <linux-gpio@vger.kernel.org>; Fri, 19 Sep 2025 18:36:52 GMT
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58JFNKm8018036
+	for <linux-gpio@vger.kernel.org>; Fri, 19 Sep 2025 18:37:11 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=vRz1jj9Fk7FMvLwwInOIipNq
-	laSA7q8QqUGbRTS/cL8=; b=T7q0S1/56oKp3yty86n14aDdpqh/9Z1ndST+684P
-	M2XBtNCbRl+Y5bvzIB0ml05IE2bRW/vvQyB3DpluNUjouIkOiWYFGDdEUJXm5oPm
-	yWhbufNtTvxpjoOgWUOrRlSRFmvIosvpaxA0oEzFhH5Wq8XHfdHBipJ5tzHOmGow
-	YxHsR0LJrAh7hqTmVoQLeK3AtjKvv2VnQThzWUSVNolN9Iiq1EKBy3fwV5T89ppF
-	pymjmt/7ch301Tv4NWMQuyPLQ/f73afpyyF1I0AxtjY+x3tk/Gx8TadDISYMx7fX
-	y9x2ai+Q62BIQCndoS1Vd0saC/kxj07IvK3yvyZ4coBvvQ==
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 497fy5kha2-1
+	:references:subject:to; s=qcppdkim1; bh=FCNiC3U0gjck3y+8a/2C32b3
+	PjUa1PZpZ1J6Sqj7/lk=; b=c4cKC4ZjpxpEehz8rM25Z6+zDsDH97ppXyJqz2V1
+	xBVmy9Hutf2Yc4Ikh7BVP5KDqn2qvml6tsa73rR8fb0LxQfv+lLutURaaVO2lLyh
+	LjgEtmBPzmWsmIuEmXKO6S7eju7HS2flu/DlHMqMpcTO9a3cC74szWIJqZesgSIM
+	Zoy/X9DCeCKTAPe+16HIAYUTgkm9v2tKzahSkif4L5GDR3oPNr3OGfX6LTX0swUm
+	+u2GNIdlh/AudyvM8aYXd21Ob09Uy/VszamPJ2gXJgQ6GMoSlVk+bPCXI+vt9LgV
+	Qh5Jtv1GhKj3GPmc0/C79Ul1Z2wg0VK65LBTAlPjqtZWKA==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4982deg36u-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Fri, 19 Sep 2025 18:36:52 +0000 (GMT)
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4b5f9673e56so44961001cf.3
-        for <linux-gpio@vger.kernel.org>; Fri, 19 Sep 2025 11:36:52 -0700 (PDT)
+	for <linux-gpio@vger.kernel.org>; Fri, 19 Sep 2025 18:37:11 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-78e45d71f05so44153116d6.2
+        for <linux-gpio@vger.kernel.org>; Fri, 19 Sep 2025 11:37:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758307011; x=1758911811;
+        d=1e100.net; s=20230601; t=1758307030; x=1758911830;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vRz1jj9Fk7FMvLwwInOIipNqlaSA7q8QqUGbRTS/cL8=;
-        b=idC6qwt6aWrN/TdxwBVWIwd92il45tL4N4TKKgGwK5rgX4MfLIXyowiRvdovttheZy
-         dDxtcVyNsgvX2ocYp0+UVEstyUtJk9FdHleO1vrpWG8CwkFAvnGxhSmDC1aytJ5HRPdL
-         9vmkKTb2oIn7l5eojqwpqoUHcksgBZGJl962/1e8+fJ7LCzB6flR1ZCoGJHYjuHR3SoG
-         FGrghaHCLuAFqlrOBEuGniLlDndzOw67U0rdGXF/9whcmeGc8MCYrOCIpWaKA9b6P7NZ
-         2qObkK2AMlcDdoTtfyds7TA4/4kFJkjFdz3r8WyhzkU0N+WNOM53mwQv5pRSSdm/VhYi
-         VHYg==
-X-Forwarded-Encrypted: i=1; AJvYcCVwielJEZjfRBQPAiqvky+Ns+W+2DnbwQEikQzPGFA1IRoeRbwnwewig0oe1S+LOFTdWn2Z/EGOGnwO@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuBuS25+AYx9KL1ZyTFPkacJ0PXvJbzlB+qA2gwyByL+2GYbUt
-	HfRsy1y+8uCnMonbRrn0ULxAO/6ur9kCnyc3Zkle6w4YyVGCwRxVumeHh/JWmakMOpJZZgESlRC
-	vdIsSJWzFUtKBq+0njlOomyxSodsmm38XTQXNtImRbqjLr0p8R8LekyyNhw8oy95I
-X-Gm-Gg: ASbGncvmBPELVDsUibJVOwgfUvTaGg0Ia9H0j4Rv5sEk7qTRpqEfgIpG0wCpZSe+kV2
-	6waWpdI+PERMjs0+gZs1jXiN7Ja/Xo7MO9A9vHg9v5VaSsnNlJP1uWq1CR8OLVLYFGv05JeJxvf
-	sPeec/sq6g/h9PscCR6TzkO5uipeOhWwVuPVKtttBjSVFkwZMuR9cm2fVNgkpZHU9dPbA+9mgGB
-	FBzcsSJYagN8DTvUQntOXICzKfCpu46XOGj4aKvZZBTlbSuvAQrswQKKHCks1iNYNaT3mSd33AY
-	wc9rExiQY8oACwe7OeQEJFUDz9uRjVfN3KRdbBXNfRZRkx2ZGkpXHbijgqUbsEawkptYtkGzVmI
-	gsxmVA7S+7/88lkGupyCxh32UTSv0uLHKDzjBRQ2J7iGekTdxLsgu
-X-Received: by 2002:a05:622a:8e:b0:4b6:22c0:28b2 with SMTP id d75a77b69052e-4c06fc17cd2mr44749491cf.35.1758307011181;
-        Fri, 19 Sep 2025 11:36:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG7BZxgFDyOXsNj9/jIpPAudBj4ew/yuL0jMxO3583dHiffWIBP3ZgD++Hgh8WNcx79iLjzSQ==
-X-Received: by 2002:a05:622a:8e:b0:4b6:22c0:28b2 with SMTP id d75a77b69052e-4c06fc17cd2mr44749081cf.35.1758307010702;
-        Fri, 19 Sep 2025 11:36:50 -0700 (PDT)
+        bh=FCNiC3U0gjck3y+8a/2C32b3PjUa1PZpZ1J6Sqj7/lk=;
+        b=X6/6v8qgP54Pc//7vA0T/W1dNKon6Kr/ltsNvBD+qXkCgBElHTRkx1OOdrLYHYN5vP
+         cc7QNTUr6WHQ+Md6eAWLqAg55RGYByQIukK7sBCnB6Utqaf0bYJ+8qe3VEMyfK3pENMY
+         U+N3tKYHuDYGUmrO2RuBjD513a/JnUqtPp2SGBmh/uYBMHCFj0NIhQjLGmo5dJtE66e3
+         8KcOWW76ijCIn8c5KoVQpUU0UF28yJUGJZDk1lghIbvVPqcmq0FuTWWh7VvO6NZysD+R
+         NLrFY/5zynKpEsmeVvlstOnSavXFkprkPh9e/vP9E5uWdfKL/E5nHuz7KzQHtttK7zLy
+         jQgA==
+X-Forwarded-Encrypted: i=1; AJvYcCUrc01zLTDzCOsZCZAaG/KgK/o7QCf48JXzuhcSwZqtv9WtKz/S06fZtVGi3sh4gNrvzun4blf5XMjL@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywh7GI+JKRVOWsovYEUJ+83ZkdPcr0ldRfk1FmOhX3DzgjKpvq7
+	6kLzgIl3v7E18IJPU8XaL3majIgkvj+s0AydgJiw0dtGGK/zHnwGRJ5BPi+IKk4s4mHyMS35sVN
+	NCiFpf1IpQC+nDs3RFOR8NyRz0KmVZPP8A3GCqIUzer4+5e3TYr8tbyNljlCW9VrO
+X-Gm-Gg: ASbGncsbzwWr6NeqwFeftsd0iTE/iA8nb1VqiMhtAOg8CMm0cb8Ji3SfFFr3HUzHliL
+	atAcfFfGq/DIV7ROzAn5tQiB7mw5VQGxAAiW5zaW/qhlYi4yWk4VGBFFCnKZ6UlVb4bQFbh64KB
+	zl/CdRfHJ67l37EGdfYepFwKcbsrrCYDKyV8smqUpvbXrMlfDkhRPdFsJ9OfN29WxRn/YtrQIQ6
+	A+NP66Mae+PYYouUsAViTQRvz5sLSbW7aNF64rVdb11lSL1jWdgICB2LoNlC3oHplnRC6Mr256j
+	vapupcbt3Nvy3ldj0O0huij50YJK2JtDYIQOnGGQHRdwByI38vb6yD4H6ibbPSvAl/XcSBle3vi
+	hiUrUAY+nJbqd/fe6Gl9RwYIS2vHkWsSz+TnMf9G/S7dqGsyGctSW
+X-Received: by 2002:a05:6214:c28:b0:78e:eeba:10a with SMTP id 6a1803df08f44-7990fe399b8mr54957706d6.14.1758307030086;
+        Fri, 19 Sep 2025 11:37:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEMDbCf+deoeMJmP3lrIeWhukQxGShr+KoYFlK2yJcNPGn6VaN9/A5Rars19o2mlw+8QizXag==
+X-Received: by 2002:a05:6214:c28:b0:78e:eeba:10a with SMTP id 6a1803df08f44-7990fe399b8mr54957106d6.14.1758307029417;
+        Fri, 19 Sep 2025 11:37:09 -0700 (PDT)
 Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-361aa4809fasm13689321fa.68.2025.09.19.11.36.49
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-578a90a2040sm1536496e87.95.2025.09.19.11.37.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Sep 2025 11:36:50 -0700 (PDT)
-Date: Fri, 19 Sep 2025 21:36:48 +0300
+        Fri, 19 Sep 2025 11:37:08 -0700 (PDT)
+Date: Fri, 19 Sep 2025 21:37:07 +0300
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 To: Abel Vesa <abel.vesa@linaro.org>
 Cc: Bjorn Andersson <andersson@kernel.org>,
@@ -89,11 +89,11 @@ Cc: Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] pinctrl: qcom: glymur: Fix the gpio and egpio pin
- functions
-Message-ID: <whhmtqfa62q2cstagywz2hesk6t3h3o7hxlcn47gjmodjttm35@lobzyyzv2sxv>
+Subject: Re: [PATCH 1/2] pinctrl: qcom: glymur: Drop unnecessary platform
+ data from match table
+Message-ID: <4o3t43wu4vvza3suzzinzhjc2beign73bbqjq7rq5yoicsdtng@mte5isu7mpja>
 References: <20250919-pinctrl-qcom-glymur-fixes-v1-0-426ea410aa94@linaro.org>
- <20250919-pinctrl-qcom-glymur-fixes-v1-2-426ea410aa94@linaro.org>
+ <20250919-pinctrl-qcom-glymur-fixes-v1-1-426ea410aa94@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -102,44 +102,67 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250919-pinctrl-qcom-glymur-fixes-v1-2-426ea410aa94@linaro.org>
-X-Proofpoint-GUID: SA37THcqNu066aDYM-fW44bp7F9ZJU96
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE2MDIwMiBTYWx0ZWRfX2g2TnZp0ZRQ1
- V0Q4HN6DQBLjRshnzEsTLVWB/d0XQ6CCDyBNMg/dgQrVF/DUVhpfbeE7JxzVbEl0EihVtqlOiuF
- i0fdoe6/1XtRFxueFGz/p00tWYSuN3V3/RI35M5ENv2w7SaM2ciVQ7jciLhdx45gNpnDYOkZs0Y
- RFH00K0T6BVPLOfbpzyYn1pTce00sM95bV6e9kpMhkASUF2xWJ7GCh/LmUbFmTBx6II7fZBtIiQ
- PDlj+hP3sBe599HVCTb4Vc+npwMK/nb3lpPmUZ3VKAHsuZk2Pho/+nQH5Teg/GBuBSz9sP/5yBE
- DBeIjLhZjFrsUn8mofyux5lnqWP6iboYHqmFOA+Gs83zI2BA8xJckKVcUWdQffke6gEpHHZT7sr
- F+N8/r9j
-X-Authority-Analysis: v=2.4 cv=Y+f4sgeN c=1 sm=1 tr=0 ts=68cda2c4 cx=c_pps
- a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=yJojWOMRYYMA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=CQ4xJWP5GyeMjeXyLdoA:9
- a=CjuIK1q_8ugA:10 a=ZXulRonScM0A:10 a=a_PwQJl-kcHnX1M80qC6:22
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: SA37THcqNu066aDYM-fW44bp7F9ZJU96
+In-Reply-To: <20250919-pinctrl-qcom-glymur-fixes-v1-1-426ea410aa94@linaro.org>
+X-Authority-Analysis: v=2.4 cv=YfO95xRf c=1 sm=1 tr=0 ts=68cda2d7 cx=c_pps
+ a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=yJojWOMRYYMA:10 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8 a=nufiSqZimcgdgvCWlIsA:9
+ a=CjuIK1q_8ugA:10 a=1HOtulTD9v-eNWfpl4qZ:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: 6r7njXNWz73owIr4pRleDCrZo1oJTo7s
+X-Proofpoint-ORIG-GUID: 6r7njXNWz73owIr4pRleDCrZo1oJTo7s
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE3MDE4MiBTYWx0ZWRfXwkUC5iTCyH9q
+ nSaI5u/lonMxZH5n9nZhm0ezSR9Mpus76rnuWWINFcccuU1J5ITv85K5nOviQ7D46CVgbriUt3F
+ fiAbzrwLtU3NcTVa6z4/AJav90X4Q0fdKviKzdyqGQ2uF4dZ/SEcemh3F4SStdI2/oy9UN3+hhV
+ 7SirQeI7byLbdxJmZalxgMgybsFPo3neyqXo9QP6fkZ21l3hs09hGMkmnS6PO/BHxKGg7XZszOo
+ IE19vIxC9T6ngIde4OxJ4p15uwYzu+/IvpgOVA8YAc7Ljrvag+OxO4jrQcDDHR8ApEyVilBZMd9
+ b1dPddZCBcqVDcO4uPVQJotJmoARxdX7wiHf+eowifjH86KMn/OTJCF/SrOJowSwLzulDVJrG3w
+ h0d1abD8
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-09-19_02,2025-09-19_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 suspectscore=0 impostorscore=0 phishscore=0 adultscore=0
- malwarescore=0 bulkscore=0 spamscore=0 clxscore=1015 classifier=typeunknown
+ adultscore=0 impostorscore=0 suspectscore=0 clxscore=1015 priorityscore=1501
+ spamscore=0 phishscore=0 malwarescore=0 bulkscore=0 classifier=typeunknown
  authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2507300000 definitions=main-2509160202
+ engine=8.19.0-2507300000 definitions=main-2509170182
 
-On Fri, Sep 19, 2025 at 03:17:12PM +0300, Abel Vesa wrote:
-> Mark the gpio/egpio as GPIO specific pin functions, othewise
-> the pin muxing generic framework will complain about the gpio
-> being already requested by a different owner.
+On Fri, Sep 19, 2025 at 03:17:11PM +0300, Abel Vesa wrote:
+> The platform specific configuration is already passed on to the generic
+> msm probe. So it's useless to exist in the match table next to the
+> compatible. So drop it from match table.
 > 
 > Fixes: 87ebcd8baebf ("pinctrl: qcom: Add glymur pinctrl driver")
-> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-> ---
->  drivers/pinctrl/qcom/pinctrl-glymur.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
+
+No need for this tag.
+
+Other than that:
+
 
 Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
+
+
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> ---
+>  drivers/pinctrl/qcom/pinctrl-glymur.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-glymur.c b/drivers/pinctrl/qcom/pinctrl-glymur.c
+> index 9913f98e953110d32e804c8d210220857583ba46..9781e7fcb3a11c85dbd5497170188e2da051215b 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-glymur.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-glymur.c
+> @@ -1743,7 +1743,7 @@ static const struct msm_pinctrl_soc_data glymur_tlmm = {
+>  };
+>  
+>  static const struct of_device_id glymur_tlmm_of_match[] = {
+> -	{ .compatible = "qcom,glymur-tlmm", .data = &glymur_tlmm },
+> +	{ .compatible = "qcom,glymur-tlmm", },
+>  	{ }
+>  };
+>  
+> 
+> -- 
+> 2.48.1
+> 
 
 -- 
 With best wishes
