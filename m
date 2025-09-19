@@ -1,61 +1,61 @@
-Return-Path: <linux-gpio+bounces-26383-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26384-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D90ABB89A9D
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 15:27:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB5CDB89AB2
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 15:28:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0D9333B24CC
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 13:27:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BADCD7B4DA5
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Sep 2025 13:26:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D307B30C61B;
-	Fri, 19 Sep 2025 13:26:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AFE6313271;
+	Fri, 19 Sep 2025 13:26:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="dxUUxwGD"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="kgPgMMNb"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013044.outbound.protection.outlook.com [40.107.159.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17A23126C2;
-	Fri, 19 Sep 2025 13:26:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27C231283B;
+	Fri, 19 Sep 2025 13:26:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.44
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758288386; cv=fail; b=RewyySrLU0iAvThyKnNAqj7BsktENEcAHAxoruymUeaLyUiBJhXNWG3RJeDN/1nY03ieCKaq/L3j+gfeTnQFA3xG2MT3GnPTUKPUNgiCGzPn2UHrKPJrGPcq18tkklReuR3pY4C9U2csjdoTAw2N8ioXcELqp/GmWo1Zw8BXLUA=
+	t=1758288389; cv=fail; b=GA+TDHb+GOm2hXXinDy4Wn+2kwe7DnOXBgDvJLTtNZas8fYb9KTFvDPlM5ruUwKk1FZhDzMyIC2fF0KHbVf2cxPvUvWlhlrvhaCybJnD5NxLDAZbQqklmqseS/Rg7liGBGzctk5zSxVBb3aqGOZZpptX3cmrrlFVBFY/ZfgiFnQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758288386; c=relaxed/simple;
-	bh=+NNVdJtyZiMIh6eolDJaX0Te6KXr+d35i8MX8gRfPEE=;
+	s=arc-20240116; t=1758288389; c=relaxed/simple;
+	bh=g6uVbOv4pnnrjti39jLeYx2txeg76ngFC3XGK1/iYj4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=himAp/gWXmwQS2wJZVPkJYkYKj/BOQ/kbR92uHapCBQEJ7xt0ipdBbqmuobowEwSvEqW+2bGybHUI3NaxRRDBpRN4qWSrjDmQMbD304COTLFxCBK0oW9PLLE7i/xA3Emb15UfAcXKBzj6tHXHXtlPXr9KH4ziT0YA5NJuH8Oes4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=dxUUxwGD; arc=fail smtp.client-ip=40.107.159.44
+	 Content-Type:MIME-Version; b=EauiTspoK17WCURefDgzhpJ9c/8MoukrHUqeQcZRhK5i5wSYzu0Ka7Gk87vMuzFwi7mS1t1HuruLncwUF4OCpWi6MQgeXrYokC1oFIyWqatZHfSamh1ZyDqTpvm21pfo078Io7MYg/LJFzKRc4BlD87b1ozuMAZIX8PMKBXyel8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=kgPgMMNb; arc=fail smtp.client-ip=40.107.159.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=T3F3h3lnZSlqKcILlErjJapOLWH/wg6aWiOy4pRN3pymC93riJDKqV2X6FwEf+zARWqQDvgNGYswbP9l/6VP541R2In47IVKp8Re87dNcUdCdhkrByBF1DYRv00uLDADhVNEuRSPx89OR0bAgFpaUGBrngSaGLyCqZdUdyPDAymjKY1J7W/ZqYEPRQjItAqKEnPnmoLa3NrKcMWulW83mMuecok0BLjFzNqEAe5oq5EYOkagZPdESpWrcVhbv5v5D8ckYbY0WlRjM0UbrCsuNo2gqQvDlOIWCKl6NwrA5KBoCl7jLpOiVswtHmx12Dinn/atWoWix8w5/WiouDOzAQ==
+ b=xOET1HmShv1JQXak0XprZQs2MIQTTIlddYQI92gtj//pCAp0I4MIu5d0wu61Rg1n4/7kg0wUvRaJ3L36hRk2XymSBQz7bDdFG5XT6N4KlS9ac9a0dO+Q42WyaY0M5FJIueApbJFvR7jpMbOykrTD6j/rq1AWjTbTvj3kvR2QWxGccWfYsH0viV3TF8EDpdfrm+k5dNMwye+xdijmoYxNTk9b8gyy3pReOAseJ4vJ01FVy53DIEe0gV3MCnBb6j0BSuxK1DjRD75Ga3T22w4DertxkpzSxJtPDtQ4Bz+L37o5STxP/uI5j+R7VKbS4RnD8ujFNv5jKlgwARH8R7sAkg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2cH9gUsBLJAIOkObZ+KWLdXbnYFr6CNxnySbEkIyHWs=;
- b=s/hJejwoSQmG4NpP/mWkOj3SvNRfXZTx7dSW0wIiUBC2MJgm9DFo0L5/qV2r9BL/MzKjelRiDnTXf40yN/am/1uLcNqlQj/bLyWRJP6EMw7OljwgFWBHD/SsHEsVktsUfsLYAjFn/M3zM/4h8Eeah2ZRUd+dzx4WMs1c0Bz7CAwE3PSgTKNoLeh9bSAfkSjali2OgnDj9Vg1ChaHvWAmnrn0Fjdt//PLocsDifPu9T2DgkbINa1PaC7+HcnuYLSDEb5yacJW3r7IEQ4s9nQaLXxUwh9BuXbnjNRR/QRxgoHfPmp+bjbZcGGCaoTzmhx7H2dDZPcWkhc/c3k6ZJCdRw==
+ bh=DSufHCEju0Bhkvh2nLX3kZZC0XQ7kgrZ8Qseeq3ltFk=;
+ b=cXbbXyjyUAoSBVGhckOJRQ1r4Y7Oe2rSN/itPnbqzxwO1wx2KvCuj1d50LUpTrw2v0RE9Yqx/V90bhUGOx7DmdMgXRLU9QvKBixwZgJhTMedD/mbfH6MuoK6FK5JLU/qBv/ayCl7sOSfx7yc05KlrOLR/dzmh6Omsa5zF6w/ZIX9KIg/vPtwEJpSMrDWHq7YkefzMYHQWwh0HZwwUuLWbnNatUbb6lUxtcMXjkzTmRnfkiLGDgsdKA9UJh6k2duns3q4hcqaEbUNCmPdPda1CUZ31JbmI2z59fEjHggmQzT02C598PWloyYfMshIpVTLw2UOMIztoSruAM20iiL4Sw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2cH9gUsBLJAIOkObZ+KWLdXbnYFr6CNxnySbEkIyHWs=;
- b=dxUUxwGD9A3B+VE1SfEplKQUQ908SCDQ6aQA/QK/lHZlroddUC7AfsSVcvzrjem9h+wFYle7bSVMc9/yzHEU+uQGDYvdSWeYIDJRQPkGpkdv5A1cQvE/bT/WTOhVcmlZX4AJVD3oySuoj9FkQ3BsXtn6sd4Qv5kZrYMK4UoR6wGxkp5agbX3CdXGKiCkyrnFeOMl/QOlq6HSo+tOxqSUoNvfnlSuotAwQ/9j6E4tjDdyPiE6evoIH2eLgW8j4B5fraXEriNzVbpP5HQdSAD7ln34oo4hJFxTrWEKW741WqNmOwaAon+a2mhVqX47ph4xFA8kjShQe/nyMzwnhqxkxQ==
+ bh=DSufHCEju0Bhkvh2nLX3kZZC0XQ7kgrZ8Qseeq3ltFk=;
+ b=kgPgMMNbWEyT+k5/mDuqzf5ToxSBw/LM8ocGVS8mqj6W4JMlRdLnbJpFbdDjcbhE+aGU7thx4tciWJueeJh/ZQS6JMo4OGTDDLaq8AVtR1IvBaYJKRF+O4q10KV6LsWWqA8DKrEREWyTFtrGvHn0dtxFh4eBk6ds+PUX88sHY9MLHR4L1Mp5XftAme53xFlEvWMHDXHwvDv//31V+QFB4ZwcrlUMLD+OEuRpLiK1WGmrjH4JQ4RH/q1uOoXAt+GjFFab3egY9kqrnUgsldGIlBAJGkzvD5P7+sadaZ8CPVelUWzGigs0krTvOhNp65OtdRl2N1+1ttHhP4fHeWotMA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from AS8PR04MB8868.eurprd04.prod.outlook.com (2603:10a6:20b:42f::6)
  by DBBPR04MB7737.eurprd04.prod.outlook.com (2603:10a6:10:1e5::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.16; Fri, 19 Sep
- 2025 13:26:13 +0000
+ 2025 13:26:16 +0000
 Received: from AS8PR04MB8868.eurprd04.prod.outlook.com
  ([fe80::b7fe:6ce2:5e14:27dc]) by AS8PR04MB8868.eurprd04.prod.outlook.com
  ([fe80::b7fe:6ce2:5e14:27dc%4]) with mapi id 15.20.9137.015; Fri, 19 Sep 2025
- 13:26:13 +0000
+ 13:26:15 +0000
 From: Ioana Ciornei <ioana.ciornei@nxp.com>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -69,16 +69,16 @@ To: Rob Herring <robh@kernel.org>,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Frank Li <Frank.Li@nxp.com>
-Subject: [PATCH v4 05/11] mfd: simple-mfd-i2c: add compatible string for LX2160ARDB
-Date: Fri, 19 Sep 2025 16:25:09 +0300
-Message-Id: <20250919132515.1895640-6-ioana.ciornei@nxp.com>
+Subject: [PATCH v4 06/11] gpio: regmap: add the .fixed_direction_output configuration parameter
+Date: Fri, 19 Sep 2025 16:25:10 +0300
+Message-Id: <20250919132515.1895640-7-ioana.ciornei@nxp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250919132515.1895640-1-ioana.ciornei@nxp.com>
 References: <20250919132515.1895640-1-ioana.ciornei@nxp.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: FR4P281CA0190.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:ca::15) To AS8PR04MB8868.eurprd04.prod.outlook.com
+X-ClientProxiedBy: GV0P278CA0052.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:710:29::21) To AS8PR04MB8868.eurprd04.prod.outlook.com
  (2603:10a6:20b:42f::6)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -88,107 +88,201 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: AS8PR04MB8868:EE_|DBBPR04MB7737:EE_
-X-MS-Office365-Filtering-Correlation-Id: f02bbcd9-f3e2-4731-4983-08ddf7801abe
+X-MS-Office365-Filtering-Correlation-Id: c07a785d-65a8-4ae8-d061-08ddf7801bf2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|7416014|376014|366016|19092799006|1800799024|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?tTvv0qqlp34xVcHCGJ7fur/z12Zh6Rt503/vYSpXcrcIj+5UvfrO4u13Rhq+?=
- =?us-ascii?Q?vY4seiGN6mnLhTiHe0Glwb7rOqxPibxOxUG8fMflahtf7psUa92gVv1s08p7?=
- =?us-ascii?Q?tlK9BWhoEzJotpnkm+VOCNIWMZAJPvpdOd9iMG+who8pTX4qQcBkQMDvtmu0?=
- =?us-ascii?Q?knEsMsyTzT3w5u3IXCWe8dp93V1BEQG/jm5ubBHksUHlQmHGQC6a0rr+m8Vo?=
- =?us-ascii?Q?NKsRNVAbp1R3plG1ZaixxBfDnK51uPx1dbK2v9zdEgKTMOZYGAHoa4bYzaVk?=
- =?us-ascii?Q?2ghhuqdvEKCa3kJ70EJkH6+tU6mUsztuUwjTNqT322y36BpKYTv2S8Gd1n5v?=
- =?us-ascii?Q?OO+vsqezbIb4iW2C7lXlxA7S5xt+/lTXkUEoWbfBfEt9LoIDHGPE/6kXux/u?=
- =?us-ascii?Q?NT9v5aIWb2dIQGVn+KU0uO9mZQPlXT+yQMswdT4lLFkNZp9c3JSpePbwj25h?=
- =?us-ascii?Q?Stbu7xFQlisHPE+yAqenkOjAdbY/q0WFVUjzFvfPG2poqlWAJxAmZLag4oGo?=
- =?us-ascii?Q?sPchFk4vwOpIUilarZmtEqcswvtYs37DvHjWvHWzw6CHfp4YjwpjXFwc1B99?=
- =?us-ascii?Q?7PQBw+NqTGDd3JYZUXdtl3yS1SiVPX1alySfZfAzDREXeXR2knHRwATZbfIg?=
- =?us-ascii?Q?sagtWkaRXYRF5MRP4vkv41gEiNCy9J2xpWGroe7uo/kXWifTSS/jJbjzPBkg?=
- =?us-ascii?Q?KnWFHCZWOeD8Rjo5tUwwz5uSTeJZ2zhDelSJYimcU997MFRWrS28PsZ4eXvt?=
- =?us-ascii?Q?VhyyDUDyvni/Nw5JcpjVVI2hBFjuZX4+pDUpj1PmMze5gAVt2a56zOrt5rSW?=
- =?us-ascii?Q?VX8olMUyOCst8QWq0gz5L6UH00mq2hWV9MYbR8+eikm9WQVXt11KnmnSKh4X?=
- =?us-ascii?Q?+hPeHcyFGmtbggSL6kApHIhzR+QvtmZKiLsn/Wb+A8+3XP+Cn+llNZ9jiGQY?=
- =?us-ascii?Q?mtyZJdSwlFhFJG6iElNAfHRsGFVNLYuJ9KJOAsBuifvAHECEdOhwHHbqKSJO?=
- =?us-ascii?Q?k+R978VAXskLftXs51H85J5utiTnSqtESTaLw+xIaXegObyAjXIutBA/vL9E?=
- =?us-ascii?Q?ijJ3hm9eGqljQ1feA+dTy+I6top1w181t6Ew0qR5swbS70iQtHadlbXBufIo?=
- =?us-ascii?Q?6/AMnDz+yYFXutyhquHjRhDw6BxEpNftXke8eM71Bv1n6Cfy58Gt1Z7r0gDa?=
- =?us-ascii?Q?bTc4+XaF1tT7IwDz0GYWVj2fBorkclf1LdpIHbqHCOKJGUXhKBbSnWd4wbBb?=
- =?us-ascii?Q?T2shTr1AjiqpaB/upJag1LBvWHFeC7Wc6sNNnfj74UNfsxOmBLhoyeHH0yEn?=
- =?us-ascii?Q?lkGlJ+tCHD+ny1m3n0YnvICDB1lTXLEnM942KfVkcquCxtixmA2YNNSAejOp?=
- =?us-ascii?Q?LYHwSvVqIGzhkgf21YkGBqEqVH+rMf4bkB/VYbCuH926cML/5mi1HflsSFbx?=
- =?us-ascii?Q?bpuG/d1yBdmC5Puq7POPp4HSWzdNr4/wUmC+84MAIY6AR+Q6v8txmA=3D=3D?=
+	=?us-ascii?Q?L0sOm0ASZO06Daqug1Wv0oGVJiZS76MOPIlQiOQIcSY2YR+kpwBFjzZ0RkNC?=
+ =?us-ascii?Q?FCRmUpIADfzc712kZ9PBnH8WZXWQ8hiEB5/NJ/ALa8nEU/XeG4jRV/s/grPq?=
+ =?us-ascii?Q?ETvmFf+RBXxtDt9UTHnJanrYb/6SfB8LMp4Nyusu5qG96IdT4Nf02PsXTLyv?=
+ =?us-ascii?Q?e0VpzkYf32+nmxx0wT6umWQTTxiiN+5JDjvfTC3hWIxoRNIRty6ml/OAS+bC?=
+ =?us-ascii?Q?X+5qmnOuwkSUfVumOWz2SwRDZHXp37Q7XgBrtN5spOsl1ei1j/UBDedN6DML?=
+ =?us-ascii?Q?KZw2Phivj32djGUI6D+JtWec/uLADoo7ABielQrupRv/TIO4+Cq26X+Jg+ob?=
+ =?us-ascii?Q?WLvPXt5OwLctYmKa0g5ourJzFkQBYSC+o8UDfWSMy/4VE8GX15qcF8S6jheO?=
+ =?us-ascii?Q?4NcdzYmsR7OL08x0zLkVUTaLWJbzimR7kVCpwV5+dh8uBVtknNpvQSChwwb4?=
+ =?us-ascii?Q?AS2WnM7ieL8lvbOecmNhAL+3B/R1UlzU2Jlxcjw3M5RDuOGDp1q/LI/A3+73?=
+ =?us-ascii?Q?2bLn46HoyemL4RSqoW8/AAZPVJXcdvEh4rrF0McSzjp8dcha7rgcWfo1y8aF?=
+ =?us-ascii?Q?2ySkwXqOi2wqyJpoOA4F/GybnCoy5qSr1uH7EcYfx7TI84DY0I4qP7RVk9pf?=
+ =?us-ascii?Q?9wQ7Ohqk1/QVfA7rleBi90J5ezYxuG4JVQgu5oHKULLpDYQQjPJhuP4bHTSL?=
+ =?us-ascii?Q?EvyLlSplXgC5fFewrRkZXWJNtblCSRm005RCn6VP6tqgVIwqNUlu1K74W5jz?=
+ =?us-ascii?Q?9jGu+dGunWqFRabmAGrmS7dfF3W/5DJg7fv8md/dDDEgXga9znZYtOmQ4HqQ?=
+ =?us-ascii?Q?wvyoBkFLReVTsqp1Yl4Wwf/Viq4+UAMegYmfienuKFOOjF+QT1ZeA+mPHEdV?=
+ =?us-ascii?Q?Iphj+piUKW/lRiECXbTtU75Heeebw0VqQhyPDJFAT+4+b4yHud92lp0al4Pb?=
+ =?us-ascii?Q?3MvB7dG+OJw9N0NkGX1Hzk+2m48IdNLd/vp0GDOWWQuVZMC5wKQZr+MAG3Ax?=
+ =?us-ascii?Q?YD1re0W2ZtNOE+3cVTSFnuU2rPlqYo0VcKU/cE3fqCEBzlI3gh1K6ZanLKti?=
+ =?us-ascii?Q?nCcrLG8iLeoZsebUcOZ6M5kL0vt0xlScWzl9PQISu5+PsZ44WE9h2tSFwyBl?=
+ =?us-ascii?Q?Hm30uVD3Q3l5OJYcUQ5JqKMMaKPsxoY9wFMtYQMctRkCl64fgBhcktk69SLV?=
+ =?us-ascii?Q?5KiFnfcKz/LlQ392LGrkM9+jzYqiTpMetrlxUYH44s5bk0h2vTgPUddKoqhs?=
+ =?us-ascii?Q?OiIeOa0P2E3HtY4hdiVzr9DaSjjWvfXR7bW6KiJQvQ3+i6D3OHceRVJrj6jg?=
+ =?us-ascii?Q?EAlE2oocp71xmxrWYm9k5sV3J1Q1PnzP5OOpL575LdOb8ZZAPWrNbWORiRcy?=
+ =?us-ascii?Q?WogNHK9w7frqKfJLuXTaH0nuZkgZ50+rjXCSD1YmZe4oS+Q9B4O48uk5ONkY?=
+ =?us-ascii?Q?7tv7mGhe+8eMF+yrHqiXUC/YTyzJalZbjxnJesieZOMvQGQhYda1Ow=3D=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8868.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(19092799006)(1800799024)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?mx6HqiouyjlzSzSlW888jFbkIb9o2xzbkmXOgLo1kvOLPOa5YhcgYZiV9vQR?=
- =?us-ascii?Q?rToVSlVo/v/RX7hXtr4pClr3UmsWKe6igIvV9MvyOeoEY3GpxQxnDdA/WFM8?=
- =?us-ascii?Q?WPcXXYqsSG2MZJd3pOW6WTJAQERx5twN9ayZE0lwuTworjMK5Rd8aL9gvxQI?=
- =?us-ascii?Q?99O58rh9cRoFrcorNlARsnXXYgtSvhE+nHyHkpl3xGGmEK8SlZd3/3S6sidk?=
- =?us-ascii?Q?ZTLvbxFq3Z7g7yZaTVSRE7OSgOs/8fdsjXyBpUxLttx3Pf8hvPEcwURv3RMq?=
- =?us-ascii?Q?PDngSIDQHpkc55Tx+kDO+eclZluD3p7ZxbPS/+ku0k6RVHYiVvm4G/9Yfesm?=
- =?us-ascii?Q?UheDRqGiqSsBjhbdvQN5/JzuBJC8Fc5WfiZFUIzGMbr4IhR4dELtqm10HaFv?=
- =?us-ascii?Q?ZVoZnFVyAoSu2Cc4WELmjSdbgjnF2DYWgqsiEle1uzTiI+kvXW7POe7UREIO?=
- =?us-ascii?Q?LBtQPaqdKpah/Qy/lLpUBBc67fTR0cjRiWmbGE8HP5KgUwZ5M2gr9IUIgWuD?=
- =?us-ascii?Q?dqoThrwYMd/hK1HtPm7oqaWHhfwNCJNNBlty8ujKmHoFuOi1vhQeQBUORML9?=
- =?us-ascii?Q?yuZP62aTpVEzoCpJTNwgyadZYMvJACJTmhXcTjpO3Jbk37Due1FHQQdAGD9H?=
- =?us-ascii?Q?UON4XCqRqRix4LGMkLS4PTZKBCfI0c6BRKqVMSokA07dVLAbZXE4iW3862Wl?=
- =?us-ascii?Q?ZbCC0YpVtPs56FQ9VEIRHL/nLNYOfAqhjiiktdZPaSsOHZlWDuWlDSX7XYAY?=
- =?us-ascii?Q?0s1hesHoypGTt1Uh3/UHTyA1Er7ACVDinrbI5kcWsE71m7weHbTRC7eaZ+sH?=
- =?us-ascii?Q?7LmugfyUcDOb+D6x84JPMJE8C65EaorIECfNQR8/qSU1zvNYlCKN5dmhKxQo?=
- =?us-ascii?Q?yHd8IkskYYGJV3oFtuN+uiCGR+k7CTO376HI1BB0pPcSmV7GS9wew37C9PHl?=
- =?us-ascii?Q?80h6vwouXa1xhwii1k90PvBxFm7H85BsYF3aW/AcHdaBuWJBKYLJbZsvgHEr?=
- =?us-ascii?Q?XPiaQDB8EItBpwCERWJBWBbdEaSvxyd+HPun+M+g/ce8BSQ0dGMLvhSHxpGj?=
- =?us-ascii?Q?XlcgE91hAo3syn3f1BV6tevvLvCqAQ4exhV8vAMyznP2ZhiErgCWOqrjkHnf?=
- =?us-ascii?Q?f9+fHffRcyYEgQFWBHcWzqMEJg93qDRK8oEzBPezlH50M+yrK1u8yKwyCXO7?=
- =?us-ascii?Q?5mdXybEH6Tipbwc9MxZuLa0j/3T5o4wbhXnBMHRMEpLr3VHOfh/Zsh4YRjk+?=
- =?us-ascii?Q?70kBp1NDgzy7SomM6KWklrR/bJgL/Oifzhs8mw/7dYboMwvpc7AC72R6KUhX?=
- =?us-ascii?Q?Ld4y3TK080TmGRngFubH3fk7lBI100SKS8wa09SaQg802LHCSYQhzOHsh8F4?=
- =?us-ascii?Q?DhlR9+xK5r5qFEN8usy6shKmmXJF4JZVqEbaOHZov1vAsS7UrHObNrS7vvVQ?=
- =?us-ascii?Q?5LeShnhncCtn2v4Z28HSe6MG4DDxBZeekfm4wskd/LA1WDWzEZQVkKK2I9+0?=
- =?us-ascii?Q?uKS5S909t6sLR+hTLVAkzDQSPmr8Q2B0xZKA1ofFtxFl0x2o4cPqH8K+FHC7?=
- =?us-ascii?Q?+OI+IkWm0TDT3DEZbIxGYx6m0A7gdAD7HszaF/H7?=
+	=?us-ascii?Q?GpkSQrT8UN+vPVXFRHt8EuONIx8yvuFFvlC/byWhYXgIM2NAXJrI5fwPz7id?=
+ =?us-ascii?Q?mh+MZEMdvkRYe8hAbYv26EJXqz+LZYwBf5h1Rr2GBSbve9c0cdGALIYmtt7o?=
+ =?us-ascii?Q?50+j3mz7zIGhHWyZZU1DVzWuldCVMxAAgYsaXvZvPCOnqBVUck88n0Y7qgts?=
+ =?us-ascii?Q?NWVCu4c74Duu3XykuqUs6BISUDIIorKz9rIYC4cinR1XN/UFz2S8Xh21uXU6?=
+ =?us-ascii?Q?kMPabJqBPILbW/4pXdKvi5R1WNpHz6BDLPwI1Wex1fvmt0+E581Q7CTltKKX?=
+ =?us-ascii?Q?98BjK8QvdFhUvcgRnlRFwZfnr7ErEbst3xhAGKcsO1jPQsw0n0mc7/pBu3Vu?=
+ =?us-ascii?Q?+8cF3ZuD8ViLKlGdUUsnAk02/Mmm4Aaq6fYzd5jCztKj6lU9AhBCHvcLDZjW?=
+ =?us-ascii?Q?tQJOYHfd8CTp6LuQ0IqGkZyDJpLQf1byn1AMmWgzJIOp9UD82pthw1k7SpCu?=
+ =?us-ascii?Q?S1nBe3WpWMxEASQdiRUUWli2xQlIz5s9GKefyam2YxZMf7cEigGHtAplAzze?=
+ =?us-ascii?Q?vWKOQWVMiZ8yXXGU2kzZaxXsQNp948utaU+Lpn8hPY5BTCyptEVjib1U2Xb0?=
+ =?us-ascii?Q?weC+2zlJzUv/w+Y1kSVJTkp7kJOJV7fkbg6GZKA5iMZ1p732NbY5WiekO7N7?=
+ =?us-ascii?Q?keqiJVdXXvJrf0eod9QcKRJzy6CIoti9rlj1ybUJlGHMQNriz5MnW/Huvkpt?=
+ =?us-ascii?Q?HqzM0wluhP2lIb9RUgdKZAo7w8htkgNmd4XF6KP1J+7P95wepWpDq55F0VGY?=
+ =?us-ascii?Q?7FfMM8UdFhnFFW+gpZQ/gAJ6xCnSGCkeErdaRVFcRJET6rgmPi1JqihdO8dE?=
+ =?us-ascii?Q?GjIwE6nmBxcuJxPpiA4/X98CituXU/E/NRrw4yCjkMHhRWyp4xhGoWL14TFf?=
+ =?us-ascii?Q?ys47ZvSj2hEJBv4ttglY3trCXalUd9w42lx+TOPXy+WeM4mdfpsqkzT9hLFb?=
+ =?us-ascii?Q?h33yJG3v3+SFeD07tKfIIoYefwLQELqb8AnDhLzY7z9MbfaseF04wpNHxvNz?=
+ =?us-ascii?Q?SUOun8vNqGO9gIBA6rkJ2jAmp1+UNeZjZWnCP0RpGVPAlKYhOJYym74DWW1q?=
+ =?us-ascii?Q?8DkN6ZfSQekQnwDm+3wHFCk/fKkxIBHoUigU8zZUozVo9LwcOZLUQkg3vLrs?=
+ =?us-ascii?Q?frdIwR6WRtV5rueaxr4flIGXgoH3cU9uKcXm9ouaM9yczHKGxJ4ZkfUEYrvc?=
+ =?us-ascii?Q?/PaYJlAalF7b1IytR1oyHImiUETwVLt6rfmAavEKSnxLk5H7Ct4Wh8u56yNL?=
+ =?us-ascii?Q?r+dMfK7uhBl6j11Ga5NFlsVVGjsZVJ4kTTCDSnc6oYyiMiWgkvLOZU7TVFfN?=
+ =?us-ascii?Q?k/vizilQkjTxtfgicvRlffuVAJV6LPNagsJb5cejHv7EfmFw/2ASabGQ5PiU?=
+ =?us-ascii?Q?ec4bfYw4SdZcXclF9dNJq1Gdx+S2o3N9GJ6khADm7RRNKYp2/eTkFsBZSDn4?=
+ =?us-ascii?Q?gyn9vj6PZ4g8acy4KlkH0of/vyj/r9ay8AUYp/PA3zrqNUY3L4foWw8klC5z?=
+ =?us-ascii?Q?6axmpZLdsylHDfkRIX75HCsn2aO/xYFfB5Se6UbibZ/Zjxq/guixNEEuQS9R?=
+ =?us-ascii?Q?DNo9+93CDZeg1C2cx9n/Dj+CEZp7dpndh0yaK12Q?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f02bbcd9-f3e2-4731-4983-08ddf7801abe
+X-MS-Exchange-CrossTenant-Network-Message-Id: c07a785d-65a8-4ae8-d061-08ddf7801bf2
 X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8868.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2025 13:26:13.4053
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2025 13:26:15.4785
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: e/XphdTbxgxyR/VVU425vh+PYxLhJLV33xVatX77/29y6BBXkELRmG2gsVeVXXso856/MSWyMZYKDWPWC04Kqg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: tyUug1Zh9fX8VKsRwgl59NGBgSbw8hz3hCHsus25xY9B3QpIN5t7yXojIPFWXgq0Xo7N/fwxL6rxfNKSZthIag==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7737
 
-Extend the list of supported devices with the QIXIS FPGA found on the
-LX2160ARDB board.
+There are GPIO controllers such as the one present in the LX2160ARDB
+QIXIS FPGA which have fixed-direction input and output GPIO lines mixed
+together in a single register. This cannot be modeled using the
+gpio-regmap as-is since there is no way to present the true direction of
+a GPIO line.
+
+In order to make this use case possible, add a new configuration
+parameter - fixed_direction_output - into the gpio_regmap_config
+structure. This will enable user drivers to provide a bitmap that
+represents the fixed direction of the GPIO lines.
 
 Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 ---
 Changes in v2:
-- none
+- Add the fixed_direction_output bitmap to the gpio_regmap_config
 Changes in v3:
-- none
+- Make a deep copy of the new bitmap.
+- Remove the offset check against the ngpio.
+- Added documentation for the new config field.
 Changes in v4:
-- Insert the compatible so that the alphabetical order is kept.
+- Replace devres bitmap allocation with bitmap_alloc() and
+  bitmap_free().
 
- drivers/mfd/simple-mfd-i2c.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpio/gpio-regmap.c  | 24 +++++++++++++++++++++++-
+ include/linux/gpio/regmap.h |  6 ++++++
+ 2 files changed, 29 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/simple-mfd-i2c.c b/drivers/mfd/simple-mfd-i2c.c
-index 0cca7a9044cd..0a607a1e3ca1 100644
---- a/drivers/mfd/simple-mfd-i2c.c
-+++ b/drivers/mfd/simple-mfd-i2c.c
-@@ -112,6 +112,7 @@ static const struct simple_mfd_data spacemit_p1 = {
- static const struct of_device_id simple_mfd_i2c_of_match[] = {
- 	{ .compatible = "fsl,ls1028aqds-fpga" },
- 	{ .compatible = "fsl,lx2160aqds-fpga" },
-+	{ .compatible = "fsl,lx2160ardb-fpga" },
- 	{ .compatible = "kontron,sl28cpld" },
- 	{ .compatible = "maxim,max5970", .data = &maxim_max5970},
- 	{ .compatible = "maxim,max5978", .data = &maxim_max5970},
+diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
+index e8a32dfebdcb..eaffd76adc56 100644
+--- a/drivers/gpio/gpio-regmap.c
++++ b/drivers/gpio/gpio-regmap.c
+@@ -31,6 +31,7 @@ struct gpio_regmap {
+ 	unsigned int reg_clr_base;
+ 	unsigned int reg_dir_in_base;
+ 	unsigned int reg_dir_out_base;
++	unsigned long *fixed_direction_output;
+ 
+ 	int (*reg_mask_xlate)(struct gpio_regmap *gpio, unsigned int base,
+ 			      unsigned int offset, unsigned int *reg,
+@@ -129,6 +130,13 @@ static int gpio_regmap_get_direction(struct gpio_chip *chip,
+ 	unsigned int base, val, reg, mask;
+ 	int invert, ret;
+ 
++	if (gpio->fixed_direction_output) {
++		if (test_bit(offset, gpio->fixed_direction_output))
++			return GPIO_LINE_DIRECTION_OUT;
++		else
++			return GPIO_LINE_DIRECTION_IN;
++	}
++
+ 	if (gpio->reg_dat_base && !gpio->reg_set_base)
+ 		return GPIO_LINE_DIRECTION_IN;
+ 	if (gpio->reg_set_base && !gpio->reg_dat_base)
+@@ -277,6 +285,17 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
+ 			return ERR_PTR(ret);
+ 	}
+ 
++	if (config->fixed_direction_output) {
++		gpio->fixed_direction_output = bitmap_alloc(chip->ngpio,
++							    GFP_KERNEL);
++		if (!gpio->fixed_direction_output) {
++			ret = -ENOMEM;
++			goto err_free_gpio;
++		}
++		bitmap_copy(gpio->fixed_direction_output,
++			    config->fixed_direction_output, chip->ngpio);
++	}
++
+ 	/* if not set, assume there is only one register */
+ 	gpio->ngpio_per_reg = config->ngpio_per_reg;
+ 	if (!gpio->ngpio_per_reg)
+@@ -293,7 +312,7 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
+ 
+ 	ret = gpiochip_add_data(chip, gpio);
+ 	if (ret < 0)
+-		goto err_free_gpio;
++		goto err_free_bitmap;
+ 
+ 	if (config->irq_domain) {
+ 		ret = gpiochip_irqchip_add_domain(chip, config->irq_domain);
+@@ -305,6 +324,8 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
+ 
+ err_remove_gpiochip:
+ 	gpiochip_remove(chip);
++err_free_bitmap:
++	bitmap_free(gpio->fixed_direction_output);
+ err_free_gpio:
+ 	kfree(gpio);
+ 	return ERR_PTR(ret);
+@@ -318,6 +339,7 @@ EXPORT_SYMBOL_GPL(gpio_regmap_register);
+ void gpio_regmap_unregister(struct gpio_regmap *gpio)
+ {
+ 	gpiochip_remove(&gpio->gpio_chip);
++	bitmap_free(gpio->fixed_direction_output);
+ 	kfree(gpio);
+ }
+ EXPORT_SYMBOL_GPL(gpio_regmap_unregister);
+diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
+index c722c67668c6..8d3d595bfdd3 100644
+--- a/include/linux/gpio/regmap.h
++++ b/include/linux/gpio/regmap.h
+@@ -37,6 +37,10 @@ struct regmap;
+  *			offset to a register/bitmask pair. If not
+  *			given the default gpio_regmap_simple_xlate()
+  *			is used.
++ * @fixed_direction_output:
++ *			(Optional) Bitmap representing the fixed direction of
++ *			the GPIO lines. Useful when there are GPIO lines with a
++ *			fixed direction mixed together in the same register.
+  * @drvdata:		(Optional) Pointer to driver specific data which is
+  *			not used by gpio-remap but is provided "as is" to the
+  *			driver callback(s).
+@@ -78,6 +82,8 @@ struct gpio_regmap_config {
+ 	int ngpio_per_reg;
+ 	struct irq_domain *irq_domain;
+ 
++	unsigned long *fixed_direction_output;
++
+ 	int (*reg_mask_xlate)(struct gpio_regmap *gpio, unsigned int base,
+ 			      unsigned int offset, unsigned int *reg,
+ 			      unsigned int *mask);
 -- 
 2.25.1
 
