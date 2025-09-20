@@ -1,147 +1,130 @@
-Return-Path: <linux-gpio+bounces-26416-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26417-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0868B8C12D
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Sep 2025 08:50:44 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54BA6B8D07F
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Sep 2025 22:10:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1603D7A5D41
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Sep 2025 06:49:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9C9DD7A2886
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Sep 2025 20:08:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 955352EAD13;
-	Sat, 20 Sep 2025 06:50:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5809F274671;
+	Sat, 20 Sep 2025 20:10:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="Mu0WT1kU";
-	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="sb2pc5UT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CzlsEfcc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FBE03D6F;
-	Sat, 20 Sep 2025 06:50:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CCC273803;
+	Sat, 20 Sep 2025 20:09:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758351034; cv=none; b=etyPG6bG7utYNA6Gp/GMq49/ExhFATKLIx3agLJSh+fc9Wb14YMejPd0ybbZz+m0cn+pdG5qJTSk4y7U3zQikqCxxsnEr603c1Myz2Qw9yX6TnjnFy5mnoIUwycoGVp9llesglZ3UesgKdqIFI2NMbsu9fdd+v3Ufxyh2BQjklo=
+	t=1758399000; cv=none; b=mFH91syG8srQSjt4x8RZB+L46+AGs6fbHGFij3T+3sSuSF6WEu7JgqNpvuA3dhffP3/krlNzrQoc+zPBnH+8BQTBP4nPLma9iXMogXja5z7knJK386ekSdWfMs90h50vduF0xZIQuDDh+oBN1Dztxt1i2P3yB/1t7mWyJzPgSdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758351034; c=relaxed/simple;
-	bh=MjWkIR76I1fTlnqtv2BmHI0tJUeHTaAgBYhO8/TTe4M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BR2yb3zRAs8aMWgaedoVL5pIWVZFMpbJcRWo7Xu3+uPaYQnQPoNrczp32qT6avArTLgOnfHJ/aYLwztZYkO94AuZcrKHLk95WbvAT3zygOPPzf8gVMLYhN+SzdF2SKyE0VRU/g0QcbFsnJoDjlPqa68GoPxOWWrEhamq0uvKYSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=Mu0WT1kU; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=sb2pc5UT; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
-DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Subject:To:From:Date; t=1758350983; bh=AW17lv89eSJE61jE0VgMo7I
-	K1f6MgMq0qzbJdrYGhAU=; b=Mu0WT1kUgl5cQlQ5PX2jRN2PMPq/dDr7fRG/j6P0q/F6ULS3KE
-	xoivzs0uuNLw4YbnCqJ/RpZ/PfDofasRt6XK59LmkyQwhHfrYQs5bo3vCn4BfUfSMZCWKBpoxJV
-	vMP/Z2Sr8hc2GauwgD00WGBgzerVfzWAzFlX2DTdBLXVaGuNIxQ6AhMRvo9an2gF8HJZ+IlipSj
-	ZFbt0CEcr+vfPWQLXzlDP1a7ZwX8LCwXd9Zavc+fRk0VUvcp2Vr1vhIGSK2ElWRDGPsIfvXrcrb
-	5MpdxFv/SmLCVSnaS9Ly+kcSIAagZt63ASSYPlG0/PYmKuYDp+HZCucRJi734fkCYdQ==;
-DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Subject:To:From:Date; t=1758350983; bh=AW17lv89eSJE61jE0VgMo7I
-	K1f6MgMq0qzbJdrYGhAU=; b=sb2pc5UTtihwQjvou4NnnaSmANU2soJblZAj9CMKygiR43FHTi
-	g56bTIeDIQPJ5/5lGPQJtPn7nlgAN0FmJpBw==;
-Date: Sat, 20 Sep 2025 13:49:34 +0700
-From: Dang Huynh <dang.huynh@mainlining.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Sebastian Reichel <sre@kernel.org>, Vinod Koul <vkoul@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mmc@vger.kernel.org
-Subject: Re: [PATCH 05/25] dt-bindings: rtc: Add RDA Micro RDA8810PL RTC
-Message-ID: <cr5gkkckxan2b2x23knfwb35a4ulngsp6gguqhcku3z6ghzkcn@cq4krj5qxy3r>
-References: <20250917-rda8810pl-drivers-v1-0-74866def1fe3@mainlining.org>
- <20250917-rda8810pl-drivers-v1-5-74866def1fe3@mainlining.org>
- <20250917-contort-sassy-df07fd7515a0@spud>
- <c905fb3ace281280f1ac11c7fbe8e0aa@mainlining.org>
- <20250918-unharmed-bloating-8b573513fce6@spud>
+	s=arc-20240116; t=1758399000; c=relaxed/simple;
+	bh=qUxZfacXHGMxn2bdLfok8t/9VFvH3pGux5faHIK2zbY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tBmUEdYqWOgB/k6+XhB6isGJTkM833V4198wAfCktRU19460nwj/r+qmFzhoOBVAc46ea/ahMco0Hf9JnwC65IV03SR05D6fbUWdOv40npGzqL9IUUS6v7wQMCSVi1KC2UcSL4AHUbwwX0/zMxapnl/1jR2ZeREaXuTBwJJrb1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CzlsEfcc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B625C4CEEB;
+	Sat, 20 Sep 2025 20:09:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758398999;
+	bh=qUxZfacXHGMxn2bdLfok8t/9VFvH3pGux5faHIK2zbY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CzlsEfccXgZ9RkFJBhvhbjU6yNlfWA1pHpX1wlWnMDn6QetaagziT5e3ooIAaYSWM
+	 dl30wDE9yjHXf3yDWwBiIAwQsf1iGdkkYye85Of+gSuv7I+F8tJ5cg3mxTBnG8WEad
+	 AjIwyNTaVSA9qFrYFknfCZeVmU9ndm1ZwSR7DqLVrfPft3Ai5IQ6fiGAYLGlzr/sty
+	 h39DZpegIAMI5CQaVuD3AWneaNP6AdI9OS9o1a4iAvMFSD3iGKEifyfAgi74xNqfpN
+	 JEuEJ4YiuJns64tuSOOPM5pe2NbWMp3M4lfOlellNQ8ltv4uwV5eD/C/MLlV7fowQ1
+	 ZvEYMLLM0fOPg==
+From: Hans de Goede <hansg@kernel.org>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: Hans de Goede <hansg@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH v2] gpiolib: Extend software-node support to support secondary software-nodes
+Date: Sat, 20 Sep 2025 22:09:55 +0200
+Message-ID: <20250920200955.20403-1-hansg@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250918-unharmed-bloating-8b573513fce6@spud>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Sep 18, 2025 at 04:18:25PM +0100, Conor Dooley wrote:
-> On Thu, Sep 18, 2025 at 11:11:10AM +0700, Dang Huynh wrote:
-> > On 2025-09-18 03:46, Conor Dooley wrote:
-> > > On Wed, Sep 17, 2025 at 03:07:22AM +0700, Dang Huynh wrote:
-> > > > Add documentation describing the RTC found in RDA8810PL SoC.
-> > > > 
-> > > > Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
-> > > > ---
-> > > >  .../devicetree/bindings/rtc/rda,8810pl-rtc.yaml    | 30
-> > > > ++++++++++++++++++++++
-> > > >  1 file changed, 30 insertions(+)
-> > > > 
-> > > > diff --git
-> > > > a/Documentation/devicetree/bindings/rtc/rda,8810pl-rtc.yaml
-> > > > b/Documentation/devicetree/bindings/rtc/rda,8810pl-rtc.yaml
-> > > > new file mode 100644
-> > > > index 0000000000000000000000000000000000000000..3ceae294921cc3211cd775d9b3890393196faf82
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/rtc/rda,8810pl-rtc.yaml
-> > > > @@ -0,0 +1,30 @@
-> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/rtc/rda,8810pl-rtc.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: RDA Micro RDA8810PL Real Time Clock
-> > > > +
-> > > > +maintainers:
-> > > > +  - Dang Huynh <dang.huynh@mainlining.org>
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    const: rda,8810pl-rtc
-> > > > +
-> > > > +  reg:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +required:
-> > > > +  - compatible
-> > > > +  - reg
-> > > 
-> > > Your driver implements functions that turn on an alarm irq, but there is
-> > > none mentioned here. What's going on there?
-> > The RTC doesn't seem to have an AP IRQ associated. I can't find any
-> > reference to it on downstream kernel and the docs.
-> > 
-> > > 
-> > > Additionally, there's no clocks property? For an onboard RTC I'd have
-> > > expected there to be a clock sourced outside of the block.
-> 
-> What about the clock?
-I'll fix this in v2.
+When a software-node gets added to a device which already has another
+fwnode as primary node it will become the secondary fwnode for that
+device.
 
-> 
-> > > 
-> > > > +
-> > > > +additionalProperties: false
-> > > > +
-> > > > +examples:
-> > > > +  - |
-> > > > +    rtc@1a06000 {
-> > > > +      compatible = "rda,8810pl-rtc";
-> > > > +      reg = <0x1a06000 0x1000>;
-> > > > +    };
-> > > > 
-> > > > --
-> > > > 2.51.0
+Currently if a software-node with GPIO properties ends up as the secondary
+fwnode then gpiod_find_by_fwnode() will fail to find the GPIOs.
 
+Add a new gpiod_fwnode_lookup() helper which falls back to calling
+gpiod_find_by_fwnode() with the secondary fwnode if the GPIO was not
+found in the primary fwnode.
+
+Fixes: e7f9ff5dc90c ("gpiolib: add support for software nodes")
+Cc: stable@vger.kernel.org
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Hans de Goede <hansg@kernel.org>
+---
+Changes in v2:
+- Add a new gpiod_fwnode_lookup() helper instead of putting the secondary
+  fwnode check inside gpiod_find_by_fwnode()
+---
+ drivers/gpio/gpiolib.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 0d2b470a252e..74d54513730a 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -4604,6 +4604,23 @@ static struct gpio_desc *gpiod_find_by_fwnode(struct fwnode_handle *fwnode,
+ 	return desc;
+ }
+ 
++static struct gpio_desc *gpiod_fwnode_lookup(struct fwnode_handle *fwnode,
++					     struct device *consumer,
++					     const char *con_id,
++					     unsigned int idx,
++					     enum gpiod_flags *flags,
++					     unsigned long *lookupflags)
++{
++	struct gpio_desc *desc;
++
++	desc = gpiod_find_by_fwnode(fwnode, consumer, con_id, idx, flags, lookupflags);
++	if (gpiod_not_found(desc) && !IS_ERR_OR_NULL(fwnode))
++		desc = gpiod_find_by_fwnode(fwnode->secondary, consumer, con_id,
++					    idx, flags, lookupflags);
++
++	return desc;
++}
++
+ struct gpio_desc *gpiod_find_and_request(struct device *consumer,
+ 					 struct fwnode_handle *fwnode,
+ 					 const char *con_id,
+@@ -4622,8 +4639,8 @@ struct gpio_desc *gpiod_find_and_request(struct device *consumer,
+ 	int ret = 0;
+ 
+ 	scoped_guard(srcu, &gpio_devices_srcu) {
+-		desc = gpiod_find_by_fwnode(fwnode, consumer, con_id, idx,
+-					    &flags, &lookupflags);
++		desc = gpiod_fwnode_lookup(fwnode, consumer, con_id, idx,
++					   &flags, &lookupflags);
+ 		if (gpiod_not_found(desc) && platform_lookup_allowed) {
+ 			/*
+ 			 * Either we are not using DT or ACPI, or their lookup
+-- 
+2.51.0
 
 
