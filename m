@@ -1,75 +1,147 @@
-Return-Path: <linux-gpio+bounces-26415-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26416-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C96AB8BFF7
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Sep 2025 07:45:07 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0868B8C12D
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Sep 2025 08:50:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CC99EA02370
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Sep 2025 05:45:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1603D7A5D41
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Sep 2025 06:49:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9B24235360;
-	Sat, 20 Sep 2025 05:44:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 955352EAD13;
+	Sat, 20 Sep 2025 06:50:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cGpfmWnd"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="Mu0WT1kU";
+	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="sb2pc5UT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7FD3770B;
-	Sat, 20 Sep 2025 05:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FBE03D6F;
+	Sat, 20 Sep 2025 06:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758347099; cv=none; b=S631VLu2DasskeT7jvDbH/FQuFgMUJGAfliQcuvCDa8/KUlkDsnLzsft3R8zauc+Jm0vPd5D369oaV4aOYIl6qBuMH3mSakrXhO+PR4Fl7NijsmdW1kz076t2/BEM2PRq4EuyFRL+FERbNjNtJ9+c+38ENxjyAB0has+WwsgjZ8=
+	t=1758351034; cv=none; b=etyPG6bG7utYNA6Gp/GMq49/ExhFATKLIx3agLJSh+fc9Wb14YMejPd0ybbZz+m0cn+pdG5qJTSk4y7U3zQikqCxxsnEr603c1Myz2Qw9yX6TnjnFy5mnoIUwycoGVp9llesglZ3UesgKdqIFI2NMbsu9fdd+v3Ufxyh2BQjklo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758347099; c=relaxed/simple;
-	bh=rTQs86DAm2tZv18wSt1opDcS3zS26ZYKcrgH0Yd9fmQ=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=CS397kouhAuM1v/g+nzE2IpCDV6PUma2m6/2dMU+U4N6UR1O3zr9kNkgi98yyiTqxuAbGAtZFefW9uPrSQ+Ab0XQAc6xtJweZ/qHDC8zqOE3dvQBuy7JiQqOhrhepP+xORz71j58PJ9v5bey/riBStMqWBSXddeQLIejEv/ClsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cGpfmWnd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E65DAC4CEEB;
-	Sat, 20 Sep 2025 05:44:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758347099;
-	bh=rTQs86DAm2tZv18wSt1opDcS3zS26ZYKcrgH0Yd9fmQ=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=cGpfmWndf5HUwxCZa9NfrgZLcoIsJ1CoQN4e4qsm1oNoisRq5jF4TsDewMKr7ZKCt
-	 BRwsS8tjb7XQ77Kb621epmaGTL4+1moxlokJq2zHDuAqWuKV3uZevwYaIZ2/S/QSon
-	 VU/jcHBIzQPMcj9+QtNL7/J5MhNBQW23rGy/Mr04Ry6BHNcrL7hresy+qXbOQB0sgZ
-	 zHN4R2a5UjaO8XY1zRrKhJY5WOqZ2SMoUZDw4I/c1ifITPAtfsxZ+fI8Yn/Nz2bEX+
-	 PFwfA8QOwzN1IQfJ66+Gr+sjjSSgXd+vX5cCY2sDxug1EAPfviYAuzbrQbisb5x+yI
-	 HI/u24mCsYofA==
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1758351034; c=relaxed/simple;
+	bh=MjWkIR76I1fTlnqtv2BmHI0tJUeHTaAgBYhO8/TTe4M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BR2yb3zRAs8aMWgaedoVL5pIWVZFMpbJcRWo7Xu3+uPaYQnQPoNrczp32qT6avArTLgOnfHJ/aYLwztZYkO94AuZcrKHLk95WbvAT3zygOPPzf8gVMLYhN+SzdF2SKyE0VRU/g0QcbFsnJoDjlPqa68GoPxOWWrEhamq0uvKYSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=Mu0WT1kU; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=sb2pc5UT; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1758350983; bh=AW17lv89eSJE61jE0VgMo7I
+	K1f6MgMq0qzbJdrYGhAU=; b=Mu0WT1kUgl5cQlQ5PX2jRN2PMPq/dDr7fRG/j6P0q/F6ULS3KE
+	xoivzs0uuNLw4YbnCqJ/RpZ/PfDofasRt6XK59LmkyQwhHfrYQs5bo3vCn4BfUfSMZCWKBpoxJV
+	vMP/Z2Sr8hc2GauwgD00WGBgzerVfzWAzFlX2DTdBLXVaGuNIxQ6AhMRvo9an2gF8HJZ+IlipSj
+	ZFbt0CEcr+vfPWQLXzlDP1a7ZwX8LCwXd9Zavc+fRk0VUvcp2Vr1vhIGSK2ElWRDGPsIfvXrcrb
+	5MpdxFv/SmLCVSnaS9Ly+kcSIAagZt63ASSYPlG0/PYmKuYDp+HZCucRJi734fkCYdQ==;
+DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1758350983; bh=AW17lv89eSJE61jE0VgMo7I
+	K1f6MgMq0qzbJdrYGhAU=; b=sb2pc5UTtihwQjvou4NnnaSmANU2soJblZAj9CMKygiR43FHTi
+	g56bTIeDIQPJ5/5lGPQJtPn7nlgAN0FmJpBw==;
+Date: Sat, 20 Sep 2025 13:49:34 +0700
+From: Dang Huynh <dang.huynh@mainlining.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Sebastian Reichel <sre@kernel.org>, Vinod Koul <vkoul@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mmc@vger.kernel.org
+Subject: Re: [PATCH 05/25] dt-bindings: rtc: Add RDA Micro RDA8810PL RTC
+Message-ID: <cr5gkkckxan2b2x23knfwb35a4ulngsp6gguqhcku3z6ghzkcn@cq4krj5qxy3r>
+References: <20250917-rda8810pl-drivers-v1-0-74866def1fe3@mainlining.org>
+ <20250917-rda8810pl-drivers-v1-5-74866def1fe3@mainlining.org>
+ <20250917-contort-sassy-df07fd7515a0@spud>
+ <c905fb3ace281280f1ac11c7fbe8e0aa@mainlining.org>
+ <20250918-unharmed-bloating-8b573513fce6@spud>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250826-mtk-dtb-warnings-v3-1-20e89886a20e@collabora.com>
-References: <20250826-mtk-dtb-warnings-v3-0-20e89886a20e@collabora.com> <20250826-mtk-dtb-warnings-v3-1-20e89886a20e@collabora.com>
-Subject: Re: [PATCH v3 1/6] dt-bindings: clock: mediatek: Add power-domains property
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org, Julien Massot <julien.massot@collabora.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Chen-Yu Tsai <wenst@chromium.org>, Conor Dooley <conor+dt@kernel.org>, Enric Balletbo i Serra <eballetbo@kernel.org>, Eugen Hristev <eugen.hristev@linaro.org>, Ikjoon Jang <ikjn@chromium.org>, Julien Massot <jmassot@collabora.com>, Julien Massot <julien.massot@collabora.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Sean Wang <sean.wang@kernel.org>, Weiyi Lu <weiyi.lu@mediatek.com>, kernel@collabora.com
-Date: Fri, 19 Sep 2025 22:44:58 -0700
-Message-ID: <175834709805.4354.2882057128826835319@lazor>
-User-Agent: alot/0.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250918-unharmed-bloating-8b573513fce6@spud>
 
-Quoting Julien Massot (2025-08-26 00:39:34)
-> The mt8183-mfgcfg node uses a power domain in its device tree node.
-> To prevent schema validation warnings, add the optional `power-domains`
-> property to the binding schema for mediatek syscon clocks.
->=20
-> Fixes: 1781f2c46180 ("arm64: dts: mediatek: mt8183: Add power-domains pro=
-perity to mfgcfg")
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
-ora.com>
-> Signed-off-by: Julien Massot <julien.massot@collabora.com>
-> ---
+On Thu, Sep 18, 2025 at 04:18:25PM +0100, Conor Dooley wrote:
+> On Thu, Sep 18, 2025 at 11:11:10AM +0700, Dang Huynh wrote:
+> > On 2025-09-18 03:46, Conor Dooley wrote:
+> > > On Wed, Sep 17, 2025 at 03:07:22AM +0700, Dang Huynh wrote:
+> > > > Add documentation describing the RTC found in RDA8810PL SoC.
+> > > > 
+> > > > Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
+> > > > ---
+> > > >  .../devicetree/bindings/rtc/rda,8810pl-rtc.yaml    | 30
+> > > > ++++++++++++++++++++++
+> > > >  1 file changed, 30 insertions(+)
+> > > > 
+> > > > diff --git
+> > > > a/Documentation/devicetree/bindings/rtc/rda,8810pl-rtc.yaml
+> > > > b/Documentation/devicetree/bindings/rtc/rda,8810pl-rtc.yaml
+> > > > new file mode 100644
+> > > > index 0000000000000000000000000000000000000000..3ceae294921cc3211cd775d9b3890393196faf82
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/rtc/rda,8810pl-rtc.yaml
+> > > > @@ -0,0 +1,30 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/rtc/rda,8810pl-rtc.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: RDA Micro RDA8810PL Real Time Clock
+> > > > +
+> > > > +maintainers:
+> > > > +  - Dang Huynh <dang.huynh@mainlining.org>
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    const: rda,8810pl-rtc
+> > > > +
+> > > > +  reg:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +required:
+> > > > +  - compatible
+> > > > +  - reg
+> > > 
+> > > Your driver implements functions that turn on an alarm irq, but there is
+> > > none mentioned here. What's going on there?
+> > The RTC doesn't seem to have an AP IRQ associated. I can't find any
+> > reference to it on downstream kernel and the docs.
+> > 
+> > > 
+> > > Additionally, there's no clocks property? For an onboard RTC I'd have
+> > > expected there to be a clock sourced outside of the block.
+> 
+> What about the clock?
+I'll fix this in v2.
 
-Applied to clk-next
+> 
+> > > 
+> > > > +
+> > > > +additionalProperties: false
+> > > > +
+> > > > +examples:
+> > > > +  - |
+> > > > +    rtc@1a06000 {
+> > > > +      compatible = "rda,8810pl-rtc";
+> > > > +      reg = <0x1a06000 0x1000>;
+> > > > +    };
+> > > > 
+> > > > --
+> > > > 2.51.0
+
+
 
