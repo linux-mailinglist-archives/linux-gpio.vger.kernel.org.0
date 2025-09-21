@@ -1,146 +1,170 @@
-Return-Path: <linux-gpio+bounces-26428-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26429-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F39CB8D9C5
-	for <lists+linux-gpio@lfdr.de>; Sun, 21 Sep 2025 13:16:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CBB1B8DB8B
+	for <lists+linux-gpio@lfdr.de>; Sun, 21 Sep 2025 15:00:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2CE513BB199
-	for <lists+linux-gpio@lfdr.de>; Sun, 21 Sep 2025 11:16:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A42D3A3B31
+	for <lists+linux-gpio@lfdr.de>; Sun, 21 Sep 2025 13:00:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8810025C81E;
-	Sun, 21 Sep 2025 11:16:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9976C2D130A;
+	Sun, 21 Sep 2025 13:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ShU0zxMN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DC9625A645;
-	Sun, 21 Sep 2025 11:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C960145FE0;
+	Sun, 21 Sep 2025 13:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758453380; cv=none; b=QuBYi3FxDdXJsjda5EcJm86lO/uPcsXUNE/buUwB3epLGlkxGMf4+Is0ULTLf5T6zvX42ZERjqKthaLlIBe/iQmwPGzOt0i17HMqoFeoe14eFglFtAxrjusat/NVCSUlznSH3xoNCQxn61oMEB+XQGzdQht32EWoCwo/sFZxWEI=
+	t=1758459613; cv=none; b=haAJfFYP+EOSUdy0WP5Nohg5OLpocK9oY+f4FlA6jxEana8JbKl+v93eKse/Iu7lsSnY71NabJO+C7jXXY+3C44LEz52m7x5oGvdDmolcJcUwHOSRY8DPULiRgTNA/+mCiVuMzpCeArZbFOrkLh0apoCkp8TX2R7C8Eycu04v4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758453380; c=relaxed/simple;
-	bh=UpbXyrQ0blJ7h0PCDJ/49mnrDbFLigC2UUCMRuB29Wg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VhrTkk1vgMsM9x3kiYGvE+XUgad493ZvT4b3KlqXony4q/DTa1oPb8MIM6XRMzmXkHCTC53gPcz44uOoSkcaHw3KoZNkexKxMI8eFPY5GyG9+zI0mbH8g4AYdzkYwIkohnXDTkKgvtjFT2RnqYuYM83laM/XbMN1jzc38Z+raqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: uLH8IYV8QQSu/zBPYuGRPA==
-X-CSE-MsgGUID: /unLjb6tTUWq3IsNVoP2zw==
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 21 Sep 2025 20:16:08 +0900
-Received: from localhost.localdomain (unknown [10.226.92.3])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 0EF6E40061AE;
-	Sun, 21 Sep 2025 20:16:05 +0900 (JST)
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>,
-	linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Biju Das <biju.das.au@gmail.com>
-Subject: [PATCH v4 2/2] pinctrl: renesas: rzg2l: Drop the unnecessary pin configurations
-Date: Sun, 21 Sep 2025 12:15:53 +0100
-Message-ID: <20250921111557.103069-3-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250921111557.103069-1-biju.das.jz@bp.renesas.com>
-References: <20250921111557.103069-1-biju.das.jz@bp.renesas.com>
+	s=arc-20240116; t=1758459613; c=relaxed/simple;
+	bh=hwGtzhPS1LT4OXFcGagFJgwnbLp6pqdMH96CIJJngB8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l6Z9I8rgtYcJtbxF3dbBytEW31eA3czfCG3RGEzYEvZHq7v3rJbaKnV0s2XzyxIMC5PwJqA5LfbxGAHSfeFtutPy6EFaxrX3Y9JKVUcGQeEIFvesuw1M3JcY+ZSjJLYfxOztttyJB7wE1nOisffaIBsdXxB8yXQ4qbWDtMn3aho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ShU0zxMN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39A40C4CEE7;
+	Sun, 21 Sep 2025 13:00:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758459612;
+	bh=hwGtzhPS1LT4OXFcGagFJgwnbLp6pqdMH96CIJJngB8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ShU0zxMNOMFa2FfRFbAaihO1SRyZEUJq+km+Prgkfrh3xgYYBXTg1IcRx+53PtGMq
+	 ewVbNVsdQzj0pgkYG/IKPD2EKXLsQZTKDXNhxmLR3DsHd2i3dPmevkOvieftSJa6b0
+	 YpsfD6BCiDtegsZeibjpm6gMGI4W6WHO9qFc0ZTyUwNHnCnTJdPIGnbDFKOyjUHG68
+	 nxVcEpPlRKREf5BVzhgdbuK0JjlZ95vDG6wXzig2MjtjINi8yKLtwdmkxuQjpxezQa
+	 YC1l79gUWB3BTkG5iJBTZw10XJCP4qAWqmeFBtyKieH/OlgDO5lw35PcIc4JyANDS3
+	 Q01X+lF8XojmA==
+Message-ID: <d8e90507-49d1-4afa-a71a-ceacf5f89f82@kernel.org>
+Date: Sun, 21 Sep 2025 15:00:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] gpiolib: Extend software-node support to support
+ secondary software-nodes
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+ linux-acpi@vger.kernel.org, stable@vger.kernel.org
+References: <20250920200955.20403-1-hansg@kernel.org>
+ <w7twypwesy4t5qkcupjqyqzcdh2soahqpa35rqeajzh2syhtra@6trjploaie6g>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <w7twypwesy4t5qkcupjqyqzcdh2soahqpa35rqeajzh2syhtra@6trjploaie6g>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-There is no need to reconfigure the pin if the pin's configuration values
-are same as the reset values. E.g.: PS0 pin configuration for NMI function
-is PMC = 1 and PFC = 0 and is same as that of reset values. Currently the
-code is first setting it to GPIO HI-Z state and then again reconfiguring
-to NMI function leading to spurious IRQ. Drop the unnecessary pin
-configurations from the driver.
+On 20-Sep-25 11:27 PM, Dmitry Torokhov wrote:
+> On Sat, Sep 20, 2025 at 10:09:55PM +0200, Hans de Goede wrote:
+>> When a software-node gets added to a device which already has another
+>> fwnode as primary node it will become the secondary fwnode for that
+>> device.
+>>
+>> Currently if a software-node with GPIO properties ends up as the secondary
+>> fwnode then gpiod_find_by_fwnode() will fail to find the GPIOs.
+>>
+>> Add a new gpiod_fwnode_lookup() helper which falls back to calling
+>> gpiod_find_by_fwnode() with the secondary fwnode if the GPIO was not
+>> found in the primary fwnode.
+>>
+>> Fixes: e7f9ff5dc90c ("gpiolib: add support for software nodes")
+>> Cc: stable@vger.kernel.org
+>> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>> Signed-off-by: Hans de Goede <hansg@kernel.org>
+> 
+> Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> 
+>> ---
+>> Changes in v2:
+>> - Add a new gpiod_fwnode_lookup() helper instead of putting the secondary
+>>   fwnode check inside gpiod_find_by_fwnode()
+>> ---
+>>  drivers/gpio/gpiolib.c | 21 +++++++++++++++++++--
+>>  1 file changed, 19 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+>> index 0d2b470a252e..74d54513730a 100644
+>> --- a/drivers/gpio/gpiolib.c
+>> +++ b/drivers/gpio/gpiolib.c
+>> @@ -4604,6 +4604,23 @@ static struct gpio_desc *gpiod_find_by_fwnode(struct fwnode_handle *fwnode,
+>>  	return desc;
+>>  }
+>>  
+>> +static struct gpio_desc *gpiod_fwnode_lookup(struct fwnode_handle *fwnode,
+>> +					     struct device *consumer,
+>> +					     const char *con_id,
+>> +					     unsigned int idx,
+>> +					     enum gpiod_flags *flags,
+>> +					     unsigned long *lookupflags)
+>> +{
+>> +	struct gpio_desc *desc;
+>> +
+>> +	desc = gpiod_find_by_fwnode(fwnode, consumer, con_id, idx, flags, lookupflags);
+>> +	if (gpiod_not_found(desc) && !IS_ERR_OR_NULL(fwnode))
+>> +		desc = gpiod_find_by_fwnode(fwnode->secondary, consumer, con_id,
+>> +					    idx, flags, lookupflags);
+>> +
+>> +	return desc;
+> 
+> Bikeshedding for later. Maybe do it like this in case we can have more
+> than 2 nodes at some point?
+> 
+>         do {
+> 		desc = gpiod_find_by_fwnode(fwnode, consumer, con_id, idx, flags, lookupflags);
+> 		if (!gpiod_not_found(desc))
+> 			return desc;
+> 
+> 		fwnode = fwnode->secondary;
+> 	} while (!IS_ERR_OR_NULL(fwnode));
+> 
+> 	return ERR_PTR(-ENOENT);
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-v3->v4:
- * No change.
-v2->v3:
- * Dropped extra space before the == operator.
- * Moved spinlock acquire before reading pfc value.
- * Make sure it is configured for function in PMC register for
-   skipping GPIO switch.
-v1->v2:
- * Updated commit header and description.
- * Added check in rzg2l_pinctrl_set_pfc_mode() to avoid unnecessary
-   configuration
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+At a minimum this would need to a regular while () {} loop then,
+the initial fwnode may also be NULL and we don't want to deref that.
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 94cb77949f59..5ae8d28199d5 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -541,7 +541,11 @@ static void rzg2l_pinctrl_set_pfc_mode(struct rzg2l_pinctrl *pctrl,
- 				       u8 pin, u8 off, u8 func)
- {
- 	unsigned long flags;
--	u32 reg;
-+	u32 reg, pfc;
-+
-+	pfc = readl(pctrl->base + PFC(off));
-+	if (((pfc >> (pin * 4)) & PFC_MASK)  == func)
-+		return;
- 
- 	spin_lock_irqsave(&pctrl->lock, flags);
- 
-@@ -557,9 +561,8 @@ static void rzg2l_pinctrl_set_pfc_mode(struct rzg2l_pinctrl *pctrl,
- 	writeb(reg & ~BIT(pin), pctrl->base + PMC(off));
- 
- 	/* Select Pin function mode with PFC register */
--	reg = readl(pctrl->base + PFC(off));
--	reg &= ~(PFC_MASK << (pin * 4));
--	writel(reg | (func << (pin * 4)), pctrl->base + PFC(off));
-+	pfc &= ~(PFC_MASK << (pin * 4));
-+	writel(pfc | (func << (pin * 4)), pctrl->base + PFC(off));
- 
- 	/* Switch to Peripheral pin function with PMC register */
- 	reg = readb(pctrl->base + PMC(off));
-@@ -3117,11 +3120,18 @@ static void rzg2l_pinctrl_pm_setup_pfc(struct rzg2l_pinctrl *pctrl)
- 		pm = readw(pctrl->base + PM(off));
- 		for_each_set_bit(pin, &pinmap, max_pin) {
- 			struct rzg2l_pinctrl_reg_cache *cache = pctrl->cache;
-+			u32 pfc_val, pfc_mask;
- 
- 			/* Nothing to do if PFC was not configured before. */
- 			if (!(cache->pmc[port] & BIT(pin)))
- 				continue;
- 
-+			pfc_val = readl(pctrl->base + PFC(off));
-+			pfc_mask = PFC_MASK << (pin * 4);
-+			/* Nothing to do if reset value of the pin is same as cached value */
-+			if ((cache->pfc[port] & pfc_mask) == (pfc_val & pfc_mask))
-+				continue;
-+
- 			/* Set pin to 'Non-use (Hi-Z input protection)' */
- 			pm &= ~(PM_MASK << (pin * 2));
- 			writew(pm, pctrl->base + PM(off));
-@@ -3131,8 +3141,8 @@ static void rzg2l_pinctrl_pm_setup_pfc(struct rzg2l_pinctrl *pctrl)
- 			writeb(pmc, pctrl->base + PMC(off));
- 
- 			/* Select Pin function mode. */
--			pfc &= ~(PFC_MASK << (pin * 4));
--			pfc |= (cache->pfc[port] & (PFC_MASK << (pin * 4)));
-+			pfc &= ~pfc_mask;
-+			pfc |= (cache->pfc[port] & pfc_mask);
- 			writel(pfc, pctrl->base + PFC(off));
- 
- 			/* Switch to Peripheral pin function. */
--- 
-2.43.0
+Andy did mention turning the fwnode-s into a regular linked-list
+in the future, but I think that would be using <linux/list.h> then,
+replacing the secondary pointer with a list head ?
+
+Regards,
+
+Hans
+
+
+
+
+
+
+> 
+>> +}
+>> +
+>>  struct gpio_desc *gpiod_find_and_request(struct device *consumer,
+>>  					 struct fwnode_handle *fwnode,
+>>  					 const char *con_id,
+>> @@ -4622,8 +4639,8 @@ struct gpio_desc *gpiod_find_and_request(struct device *consumer,
+>>  	int ret = 0;
+>>  
+>>  	scoped_guard(srcu, &gpio_devices_srcu) {
+>> -		desc = gpiod_find_by_fwnode(fwnode, consumer, con_id, idx,
+>> -					    &flags, &lookupflags);
+>> +		desc = gpiod_fwnode_lookup(fwnode, consumer, con_id, idx,
+>> +					   &flags, &lookupflags);
+>>  		if (gpiod_not_found(desc) && platform_lookup_allowed) {
+>>  			/*
+>>  			 * Either we are not using DT or ACPI, or their lookup
+> 
+> Thanks.
+> 
 
 
