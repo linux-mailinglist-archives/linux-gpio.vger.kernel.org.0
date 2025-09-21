@@ -1,170 +1,76 @@
-Return-Path: <linux-gpio+bounces-26429-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26430-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CBB1B8DB8B
-	for <lists+linux-gpio@lfdr.de>; Sun, 21 Sep 2025 15:00:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04B3FB8DEE6
+	for <lists+linux-gpio@lfdr.de>; Sun, 21 Sep 2025 18:12:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A42D3A3B31
-	for <lists+linux-gpio@lfdr.de>; Sun, 21 Sep 2025 13:00:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B48F16A1C0
+	for <lists+linux-gpio@lfdr.de>; Sun, 21 Sep 2025 16:11:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9976C2D130A;
-	Sun, 21 Sep 2025 13:00:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DD1D27146B;
+	Sun, 21 Sep 2025 16:08:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ShU0zxMN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TZO+l66m"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C960145FE0;
-	Sun, 21 Sep 2025 13:00:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7883E211A09;
+	Sun, 21 Sep 2025 16:08:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758459613; cv=none; b=haAJfFYP+EOSUdy0WP5Nohg5OLpocK9oY+f4FlA6jxEana8JbKl+v93eKse/Iu7lsSnY71NabJO+C7jXXY+3C44LEz52m7x5oGvdDmolcJcUwHOSRY8DPULiRgTNA/+mCiVuMzpCeArZbFOrkLh0apoCkp8TX2R7C8Eycu04v4A=
+	t=1758470915; cv=none; b=TUR4mQ25/crnJCRFRxYThsb+kw+DRuOscwQm6m34iaGdWZP05Ta/k0RpAfLrzw91Moe3PuEexV6GKJFB2FcmbRqpEkMgNqGCnq7kMcsdjLqYGDOqyKgCqWfe5Fg9X9ktsDQKGxzlxlC1IPNUQCOVaAbPSmGW+VtBPFyojqpftok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758459613; c=relaxed/simple;
-	bh=hwGtzhPS1LT4OXFcGagFJgwnbLp6pqdMH96CIJJngB8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l6Z9I8rgtYcJtbxF3dbBytEW31eA3czfCG3RGEzYEvZHq7v3rJbaKnV0s2XzyxIMC5PwJqA5LfbxGAHSfeFtutPy6EFaxrX3Y9JKVUcGQeEIFvesuw1M3JcY+ZSjJLYfxOztttyJB7wE1nOisffaIBsdXxB8yXQ4qbWDtMn3aho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ShU0zxMN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39A40C4CEE7;
-	Sun, 21 Sep 2025 13:00:11 +0000 (UTC)
+	s=arc-20240116; t=1758470915; c=relaxed/simple;
+	bh=bjgVhndVUFUWDh9Kli3/1k8OQLzpscDz8f8evH9FF0I=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=SUBbS1jSwfyriM91Lz5Wzgg24GvQD0V5daITiu14nox10ibNV/2TRlr4ncBG/UEnAqH9XSEGMJR1AfNqV1+esyrqR7IIjAagFGmsC3EzYK5xmduuRQFU5kFePf/eNPl3MuW6jWDadsDAI4tumV0hdZzW8I5ICvDf+XlH023yrZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TZO+l66m; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEED8C4CEE7;
+	Sun, 21 Sep 2025 16:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758459612;
-	bh=hwGtzhPS1LT4OXFcGagFJgwnbLp6pqdMH96CIJJngB8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ShU0zxMNOMFa2FfRFbAaihO1SRyZEUJq+km+Prgkfrh3xgYYBXTg1IcRx+53PtGMq
-	 ewVbNVsdQzj0pgkYG/IKPD2EKXLsQZTKDXNhxmLR3DsHd2i3dPmevkOvieftSJa6b0
-	 YpsfD6BCiDtegsZeibjpm6gMGI4W6WHO9qFc0ZTyUwNHnCnTJdPIGnbDFKOyjUHG68
-	 nxVcEpPlRKREf5BVzhgdbuK0JjlZ95vDG6wXzig2MjtjINi8yKLtwdmkxuQjpxezQa
-	 YC1l79gUWB3BTkG5iJBTZw10XJCP4qAWqmeFBtyKieH/OlgDO5lw35PcIc4JyANDS3
-	 Q01X+lF8XojmA==
-Message-ID: <d8e90507-49d1-4afa-a71a-ceacf5f89f82@kernel.org>
-Date: Sun, 21 Sep 2025 15:00:09 +0200
+	s=k20201202; t=1758470915;
+	bh=bjgVhndVUFUWDh9Kli3/1k8OQLzpscDz8f8evH9FF0I=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=TZO+l66md5y3YCmXc+ANR/7ZQQnj+9xH3xUYAKm16jr1VgmO7nbmA17BrgK/cp/1I
+	 ErAp9eU0l0ULWifGJSR8G6K31HdIhbPHRzPZCzoYVkURF0xm+t9Lp0IEZSKtUhv5To
+	 NZu/9IYg7jMI23EOHyqP+9Yf1aKiJVOzv4il1R+7W1e64H8azKP5cKmPz00VBgcjHS
+	 PM9ECn8MePHnkI7w4wRHfNxe5xMJ2h3rKfz6GeQ9giQ6ATo5gVf/vbqE+0BUftKaap
+	 6gENrL80OHsZU6jBLMOv2yTsyFq8PwSbbvOqjz6w5EsEXkHMQfXyVbT4c+pXfINbKa
+	 C6DAc9QudVGqg==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] gpiolib: Extend software-node support to support
- secondary software-nodes
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
- linux-acpi@vger.kernel.org, stable@vger.kernel.org
-References: <20250920200955.20403-1-hansg@kernel.org>
- <w7twypwesy4t5qkcupjqyqzcdh2soahqpa35rqeajzh2syhtra@6trjploaie6g>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <w7twypwesy4t5qkcupjqyqzcdh2soahqpa35rqeajzh2syhtra@6trjploaie6g>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250828-dt-apple-t6020-v1-25-507ba4c4b98e@jannau.net>
+References: <20250828-dt-apple-t6020-v1-0-507ba4c4b98e@jannau.net> <20250828-dt-apple-t6020-v1-25-507ba4c4b98e@jannau.net>
+Subject: Re: [PATCH 25/37] clk: clk-apple-nco: Add "apple,t8103-nco" compatible
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, iommu@lists.linux.dev, linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-bluetooth@vger.kernel.org, linux-wireless@vger.kernel.org, linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-clk@vger.kernel.org, dmaengine@vger.kernel.org, linux-sound@vger.kernel.org, linux-spi@vger.kernel.org, linux-nvme@lists.infradead.org, Janne Grunau <j@jannau.net>
+To: Alyssa Rosenzweig <alyssa@rosenzweig.io>, Andi Shyti <andi.shyti@kernel.org>, Christoph Hellwig <hch@lst.de>, Conor Dooley <conor+dt@kernel.org>, David Airlie <airlied@gmail.com>, Guenter Roeck <linux@roeck-us.net>, Hector Martin <marcan@marcan.st>, Janne Grunau <j@jannau.net>, Jaroslav Kysela <perex@perex.cz>, Jassi Brar <jassisinghbrar@gmail.com>, Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>, Johannes Berg <johannes@sipsolutions.net>, Keith Busch <kbusch@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Marc Zyngier <maz@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, Mark Brown <broonie@kernel.org>, Mark Kettenis <kettenis@openbsd.org>, Martin =?utf-8?q?Povi=C5=A1er?= <povik+lin@cutebit.org>, Maxime Ripard <mripard@kernel.org>, Michael Turquette <
+ mturquette@baylibre.com>, Neal Gompa <neal@gompa.dev>, Rafael J. Wysocki <rafael@kernel.org>, Rob Herring <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Sagi Grimberg <sagi@grimberg.me>, Sasha Finkelstein <fnkl.kernel@gmail.com>, Simona Vetter <simona@ffwll.ch>, Sven Peter <sven@kernel.org>, Takashi Iwai <tiwai@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Thomas Zimmermann <tzimmermann@suse.de>, Ulf Hansson <ulf.hansson@linaro.org>, Uwe =?utf-8?q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Vinod Koul <vkoul@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Will Deacon <will@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, van Spriel <arend@broadcom.com>
+Date: Sun, 21 Sep 2025 09:08:33 -0700
+Message-ID: <175847091343.4354.2623772725149192827@lazor>
+User-Agent: alot/0.11
 
-On 20-Sep-25 11:27 PM, Dmitry Torokhov wrote:
-> On Sat, Sep 20, 2025 at 10:09:55PM +0200, Hans de Goede wrote:
->> When a software-node gets added to a device which already has another
->> fwnode as primary node it will become the secondary fwnode for that
->> device.
->>
->> Currently if a software-node with GPIO properties ends up as the secondary
->> fwnode then gpiod_find_by_fwnode() will fail to find the GPIOs.
->>
->> Add a new gpiod_fwnode_lookup() helper which falls back to calling
->> gpiod_find_by_fwnode() with the secondary fwnode if the GPIO was not
->> found in the primary fwnode.
->>
->> Fixes: e7f9ff5dc90c ("gpiolib: add support for software nodes")
->> Cc: stable@vger.kernel.org
->> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->> Signed-off-by: Hans de Goede <hansg@kernel.org>
-> 
-> Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> 
->> ---
->> Changes in v2:
->> - Add a new gpiod_fwnode_lookup() helper instead of putting the secondary
->>   fwnode check inside gpiod_find_by_fwnode()
->> ---
->>  drivers/gpio/gpiolib.c | 21 +++++++++++++++++++--
->>  1 file changed, 19 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
->> index 0d2b470a252e..74d54513730a 100644
->> --- a/drivers/gpio/gpiolib.c
->> +++ b/drivers/gpio/gpiolib.c
->> @@ -4604,6 +4604,23 @@ static struct gpio_desc *gpiod_find_by_fwnode(struct fwnode_handle *fwnode,
->>  	return desc;
->>  }
->>  
->> +static struct gpio_desc *gpiod_fwnode_lookup(struct fwnode_handle *fwnode,
->> +					     struct device *consumer,
->> +					     const char *con_id,
->> +					     unsigned int idx,
->> +					     enum gpiod_flags *flags,
->> +					     unsigned long *lookupflags)
->> +{
->> +	struct gpio_desc *desc;
->> +
->> +	desc = gpiod_find_by_fwnode(fwnode, consumer, con_id, idx, flags, lookupflags);
->> +	if (gpiod_not_found(desc) && !IS_ERR_OR_NULL(fwnode))
->> +		desc = gpiod_find_by_fwnode(fwnode->secondary, consumer, con_id,
->> +					    idx, flags, lookupflags);
->> +
->> +	return desc;
-> 
-> Bikeshedding for later. Maybe do it like this in case we can have more
-> than 2 nodes at some point?
-> 
->         do {
-> 		desc = gpiod_find_by_fwnode(fwnode, consumer, con_id, idx, flags, lookupflags);
-> 		if (!gpiod_not_found(desc))
-> 			return desc;
-> 
-> 		fwnode = fwnode->secondary;
-> 	} while (!IS_ERR_OR_NULL(fwnode));
-> 
-> 	return ERR_PTR(-ENOENT);
+Quoting Janne Grunau (2025-08-28 07:01:44)
+> After discussion with the devicetree maintainers we agreed to not extend
+> lists with the generic compatible "apple,nco" anymore [1]. Use
+> "apple,t8103-nco" as base compatible as it is the SoC the driver and
+> bindings were written for.
+>=20
+> [1]: https://lore.kernel.org/asahi/12ab93b7-1fc2-4ce0-926e-c8141cfe81bf@k=
+ernel.org/
+>=20
+> Signed-off-by: Janne Grunau <j@jannau.net>
+> ---
 
-At a minimum this would need to a regular while () {} loop then,
-the initial fwnode may also be NULL and we don't want to deref that.
-
-Andy did mention turning the fwnode-s into a regular linked-list
-in the future, but I think that would be using <linux/list.h> then,
-replacing the secondary pointer with a list head ?
-
-Regards,
-
-Hans
-
-
-
-
-
-
-> 
->> +}
->> +
->>  struct gpio_desc *gpiod_find_and_request(struct device *consumer,
->>  					 struct fwnode_handle *fwnode,
->>  					 const char *con_id,
->> @@ -4622,8 +4639,8 @@ struct gpio_desc *gpiod_find_and_request(struct device *consumer,
->>  	int ret = 0;
->>  
->>  	scoped_guard(srcu, &gpio_devices_srcu) {
->> -		desc = gpiod_find_by_fwnode(fwnode, consumer, con_id, idx,
->> -					    &flags, &lookupflags);
->> +		desc = gpiod_fwnode_lookup(fwnode, consumer, con_id, idx,
->> +					   &flags, &lookupflags);
->>  		if (gpiod_not_found(desc) && platform_lookup_allowed) {
->>  			/*
->>  			 * Either we are not using DT or ACPI, or their lookup
-> 
-> Thanks.
-> 
-
+Acked-by: Stephen Boyd <sboyd@kernel.org>
 
