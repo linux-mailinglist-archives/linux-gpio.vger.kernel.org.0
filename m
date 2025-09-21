@@ -1,58 +1,56 @@
-Return-Path: <linux-gpio+bounces-26421-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26422-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E82F7B8D39F
-	for <lists+linux-gpio@lfdr.de>; Sun, 21 Sep 2025 04:39:57 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25D91B8D3AD
+	for <lists+linux-gpio@lfdr.de>; Sun, 21 Sep 2025 04:41:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A91C1484C64
-	for <lists+linux-gpio@lfdr.de>; Sun, 21 Sep 2025 02:39:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2DC5E7AF7DA
+	for <lists+linux-gpio@lfdr.de>; Sun, 21 Sep 2025 02:39:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DB081F8BD6;
-	Sun, 21 Sep 2025 02:39:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2A791F91E3;
+	Sun, 21 Sep 2025 02:41:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AH7mqy+H"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qlaHzz6W"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F4D1F3BBB;
-	Sun, 21 Sep 2025 02:39:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7375DB672;
+	Sun, 21 Sep 2025 02:41:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758422392; cv=none; b=aQTQ6tqcO86hcnClHxCtEqfDsrPDGpgOGQ7fitMyDJZMu1Gl6qlrsrQDbq8XYfP5XH6RMbvjSIuwL8ePsiGm+eV7zHIvASUJ6bPvtmZ7dZMInBZ78NX/Z77Rwrl7QJwl4k0JaxLnp5FyqWlFXoY93yBVpqgNM9fZjbw9tv60NOs=
+	t=1758422470; cv=none; b=aU9H2A2r+xLs2eIuN0E8GTdmG+c6RN1PxKQs0KrezVtMAZH6F252lGa1fElBe+oh0SHKFnO1kwVe1w27pB//Y+2w/bhY0hYKJ/Xc56RWM/HQoRwfkSpx4hHZrGiU24LerV4bCfjbr0v5vO1ZYk8LEWoaozbVgNGXkvHjNq9WpdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758422392; c=relaxed/simple;
-	bh=uc1KX+cVmv+/7e4DU2Xpwh2GQ8SrMs+GVn0BJDIqaSc=;
+	s=arc-20240116; t=1758422470; c=relaxed/simple;
+	bh=WHVI3zam98eCtwHQ4w4qHUBottfzJI0Bz/jC+FZPTM4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fzR98TnswQNTDfXZk1WxJNTMyYF7zK3z6hpli+3/rgWMCGqY1pDnVzdRCmWdy/0fGc1wJMtzRQBf0wMls+GTp+jIOpU1BW40lBlmuCmglWUui2rTqkd65DWxbzztD/4fo5Ew7kkPyTPuzhyIc1rPun/aJpyXVVeRDJiqU5KR1UA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AH7mqy+H; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E56DC4CEEB;
-	Sun, 21 Sep 2025 02:39:51 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=cx5afn6NvGyTiP4qyDjmxTJPDt9JUPC2Qh/8ZPVrbdKG2WrTTi/EGV4Ksy8glIjF/1jAExDafkYJtcQHi6B1VDh9jpQUQZ6/lXVQMvLf06uAGeCD4hYBVDYUgwDeDvP+3JSDTmJ1W6KYQBO0TocHJoTEcrGUt74ghy+wMZkL3GY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qlaHzz6W; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63D7FC4CEEB;
+	Sun, 21 Sep 2025 02:41:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758422392;
-	bh=uc1KX+cVmv+/7e4DU2Xpwh2GQ8SrMs+GVn0BJDIqaSc=;
+	s=k20201202; t=1758422470;
+	bh=WHVI3zam98eCtwHQ4w4qHUBottfzJI0Bz/jC+FZPTM4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AH7mqy+Hitk41NDuErDTuoS+RamEUpOAavap8DHjj5OrxYM7rRJjCING4NKw9/eVR
-	 cyPilEshP+YgwX2wFqkFStj053NMxIPjGPcqzc5in/NSBTslMr6SHNRmvnuLQGjvOl
-	 8/sbkXtGMWNesE9il/zh3owaUEQxKVLkuX2bFMDUUXtQtDefAl0XuLx9wTfF0NwuWQ
-	 WngGdYQHHNi90pN3x7jR62PuKQtqG5oftlMk/IW6wheFjxUoEf8LieVjIdRS7a0Ls+
-	 oJeK+cP+AfJsSlONdl/VFxZVmzoOkoHS3YqD0DaKjDuksYzZJ+pvAJZQZwxGEBudWS
-	 mmQIfY96oAO2Q==
-Date: Sat, 20 Sep 2025 21:39:49 -0500
+	b=qlaHzz6WDu05CaJSeVBF54HsisQIp2JfKEm2gouk6LmpTpRlemIkU7J6YrwlwFEuj
+	 6MP1f3jqyytXZYXKF++ISIWnnp6BMzSlROxlFaAas6F/HfOuk4NWI8jbkQGNaEsqxK
+	 Wi4JNYUe11iOEYF8Af9oNfk3O1dhaokROBYT9wLaCI6sRVaMBOLySpSYVIuD8JBASB
+	 aofJ61EBW25V45gQOaa5mDLiFrP2qeojyGoCea3x3mfkVOj2iy3W9Iit3KftQ/EXg7
+	 MEV/7CROoiSO3NtcEFrkEVx9y44NTzOhBjOerSPwNPreFlaEV54rJWuYsGv2wqhEhy
+	 UDK5f4JKAlcCg==
+Date: Sat, 20 Sep 2025 21:41:07 -0500
 From: Bjorn Andersson <andersson@kernel.org>
-To: Kamal Wadhwa <kamal.wadhwa@oss.qualcomm.com>
-Cc: Stephen Boyd <sboyd@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>, 
-	Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
-Subject: Re: [PATCH 2/3] pinctrl: qcom: spmi-gpio: Add PMCX0102, PMK8850 &
- PMH01XX PMICs support
-Message-ID: <7sso6x5tkrnpihczkfxush2jax3hq5q456ftidzbumlbrwzgph@dws6xkfsbwcr>
-References: <20250920-glymur-spmi-v8-gpio-driver-v1-0-23df93b7818a@oss.qualcomm.com>
- <20250920-glymur-spmi-v8-gpio-driver-v1-2-23df93b7818a@oss.qualcomm.com>
+To: Pankaj Patil <pankaj.patil@oss.qualcomm.com>
+Cc: linus.walleij@linaro.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,pmic-gpio: Add GPIO bindings
+ for Glymur PMICs
+Message-ID: <mp2elkdhqg2fsmvebwbxbxr5jyasfpzi4b5kbfxkjjxv433thc@7codfe5sp7pv>
+References: <20250919141440.1068770-1-pankaj.patil@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -61,58 +59,102 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250920-glymur-spmi-v8-gpio-driver-v1-2-23df93b7818a@oss.qualcomm.com>
+In-Reply-To: <20250919141440.1068770-1-pankaj.patil@oss.qualcomm.com>
 
-On Sat, Sep 20, 2025 at 01:30:10AM +0530, Kamal Wadhwa wrote:
-> From: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
+On Fri, Sep 19, 2025 at 07:44:40PM +0530, Pankaj Patil wrote:
+> From: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
+
+This doesn't match the first signed-off-by.
+
 > 
-> Add support for PMCX0102, PMH0101, PMH0104, PMH0110 and PMK8850 PMIC
-> GPIOs with adding appropriate compatible strings.
+> Update the Qualcomm Technologies, Inc. PMIC GPIO binding documentation
+> to include compatible strings for PMK8850, PMH0101, PMH0104, PMH0110
+> and PMCX0102 PMICs.
 > 
 
-This patch (and patch 3) doesn't seem to actually have a dependency on
-patch 1 in this series, so it would have been better to be send in a
-separate series.
+Looks good, but this should be sent together with the related driver
+change.
 
-I do however believe this patch should have been sent together with
-https://lore.kernel.org/all/20250919141440.1068770-1-pankaj.patil@oss.qualcomm.com/ 
-
-Regards,
+Thank you,
 Bjorn
 
 > Signed-off-by: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
 > Signed-off-by: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
-> Signed-off-by: Kamal Wadhwa <kamal.wadhwa@oss.qualcomm.com>
+> Signed-off-by: Pankaj Patil <pankaj.patil@oss.qualcomm.com>
 > ---
->  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  .../bindings/pinctrl/qcom,pmic-gpio.yaml          | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 > 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> index 485b68cc93f8edac07c15aad50ff5c9c7894d8bc..c4f7d2d7a017684cd9c0d0850cb8d998668b543e 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> @@ -1239,7 +1239,11 @@ static const struct of_device_id pmic_gpio_of_match[] = {
->  	{ .compatible = "qcom,pm8998-gpio", .data = (void *) 26 },
->  	{ .compatible = "qcom,pma8084-gpio", .data = (void *) 22 },
->  	{ .compatible = "qcom,pmc8380-gpio", .data = (void *) 10 },
-> +	{ .compatible = "qcom,pmcx0102-gpio", .data = (void *)14 },
->  	{ .compatible = "qcom,pmd8028-gpio", .data = (void *) 4 },
-> +	{ .compatible = "qcom,pmh0101-gpio", .data = (void *)18 },
-> +	{ .compatible = "qcom,pmh0104-gpio", .data = (void *)8 },
-> +	{ .compatible = "qcom,pmh0110-gpio", .data = (void *)14 },
->  	{ .compatible = "qcom,pmi632-gpio", .data = (void *) 8 },
->  	{ .compatible = "qcom,pmi8950-gpio", .data = (void *) 2 },
->  	{ .compatible = "qcom,pmi8994-gpio", .data = (void *) 10 },
-> @@ -1248,6 +1252,7 @@ static const struct of_device_id pmic_gpio_of_match[] = {
->  	{ .compatible = "qcom,pmiv0104-gpio", .data = (void *) 10 },
->  	{ .compatible = "qcom,pmk8350-gpio", .data = (void *) 4 },
->  	{ .compatible = "qcom,pmk8550-gpio", .data = (void *) 6 },
-> +	{ .compatible = "qcom,pmk8850-gpio", .data = (void *)8 },
->  	{ .compatible = "qcom,pmm8155au-gpio", .data = (void *) 10 },
->  	{ .compatible = "qcom,pmm8654au-gpio", .data = (void *) 12 },
->  	/* pmp8074 has 12 GPIOs with holes on 1 and 12 */
-> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+> index 5e6dfcc3fe9b..8ae4489637f3 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+> @@ -59,7 +59,11 @@ properties:
+>            - qcom,pmc8180-gpio
+>            - qcom,pmc8180c-gpio
+>            - qcom,pmc8380-gpio
+> +          - qcom,pmcx0102-gpio
+>            - qcom,pmd8028-gpio
+> +          - qcom,pmh0101-gpio
+> +          - qcom,pmh0104-gpio
+> +          - qcom,pmh0110-gpio
+>            - qcom,pmi632-gpio
+>            - qcom,pmi8950-gpio
+>            - qcom,pmi8994-gpio
+> @@ -68,6 +72,7 @@ properties:
+>            - qcom,pmiv0104-gpio
+>            - qcom,pmk8350-gpio
+>            - qcom,pmk8550-gpio
+> +          - qcom,pmk8850-gpio
+>            - qcom,pmm8155au-gpio
+>            - qcom,pmm8654au-gpio
+>            - qcom,pmp8074-gpio
+> @@ -191,6 +196,8 @@ allOf:
+>                - qcom,pm8950-gpio
+>                - qcom,pm8953-gpio
+>                - qcom,pmi632-gpio
+> +              - qcom,pmh0104-gpio
+> +              - qcom,pmk8850-gpio
+>      then:
+>        properties:
+>          gpio-line-names:
+> @@ -303,6 +310,8 @@ allOf:
+>          compatible:
+>            contains:
+>              enum:
+> +              - qcom,pmcx0102-gpio
+> +              - qcom,pmh0110-gpio
+>                - qcom,pmi8998-gpio
+>      then:
+>        properties:
+> @@ -318,6 +327,7 @@ allOf:
+>          compatible:
+>            contains:
+>              enum:
+> +              - qcom,pmh0101-gpio
+>                - qcom,pmih0108-gpio
+>      then:
+>        properties:
+> @@ -481,13 +491,18 @@ $defs:
+>                   - gpio1-gpio22 for pm8994
+>                   - gpio1-gpio26 for pm8998
+>                   - gpio1-gpio22 for pma8084
+> +                 - gpio1-gpio14 for pmcx0102
+>                   - gpio1-gpio4 for pmd8028
+> +                 - gpio1-gpio18 for pmh0101
+> +                 - gpio1-gpio8 for pmh0104
+> +                 - gpio1-gpio14 for pmh0110
+>                   - gpio1-gpio8 for pmi632
+>                   - gpio1-gpio2 for pmi8950
+>                   - gpio1-gpio10 for pmi8994
+>                   - gpio1-gpio18 for pmih0108
+>                   - gpio1-gpio4 for pmk8350
+>                   - gpio1-gpio6 for pmk8550
+> +                 - gpio1-gpio8 for pmk8850
+>                   - gpio1-gpio10 for pmm8155au
+>                   - gpio1-gpio12 for pmm8654au
+>                   - gpio1-gpio12 for pmp8074 (holes on gpio1 and gpio12)
 > -- 
-> 2.25.1
+> 2.34.1
 > 
 
