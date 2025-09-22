@@ -1,116 +1,133 @@
-Return-Path: <linux-gpio+bounces-26451-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26452-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68D38B91583
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Sep 2025 15:15:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D376B91608
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Sep 2025 15:21:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 62F55423F85
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Sep 2025 13:15:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 097B61885EC6
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Sep 2025 13:21:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1AE730F92F;
-	Mon, 22 Sep 2025 13:13:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A19628D839;
+	Mon, 22 Sep 2025 13:21:11 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A699F30C612
-	for <linux-gpio@vger.kernel.org>; Mon, 22 Sep 2025 13:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B43D28E571
+	for <linux-gpio@vger.kernel.org>; Mon, 22 Sep 2025 13:21:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758546807; cv=none; b=qK2I4peCqXePzGBonhPalkm/+RcNPwUMmZxoVCl483t09Q6rPQKeSAq2xAZs8TLJPgDgCbh3mUoVpARxkpETMDE/yDvRh3agrWMMXMpCbnCkcat8yeMSYkK6DIs23L7nPN6LEqkowYRx2+Cv4YSAJ0jNGI5CfbZCQifkmXFxQhM=
+	t=1758547271; cv=none; b=uA4tg9hsWwkDa4XAe5Hdvhi6X06SsLtAay9UMSfwvLS5QCPKtVg5NvD993f7XQk/urVa3i4l9VebqvJu/a53zFR3af/GXo1VmJNiSChn/dCHQG4ic8n7vnPuHoWaG9Vm19qcyfnL4QoCkazFBm9P5Pw5B+ywMFh5gTvlLI5PPVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758546807; c=relaxed/simple;
-	bh=S/6XpFBr1IRtyZO8OA/cwmZ4o5NgtKwVhHfKm6CI0Iw=;
+	s=arc-20240116; t=1758547271; c=relaxed/simple;
+	bh=twHi5A9x4cQ/6G+wv9NhTj7Vvql2JLIedMZaL1HDcCs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lij43oxNK0Fs2xtJlK5aeZVbBI8vPVOjeXoeGCC8cITikTm+POpSs6RLN8KY6wPdhhAjpHMjnJ5H6CKUOXmw05CnOlQFn2UNvbeJzfxwDWRngfAZNzKvHUQnbVejsj8pvJ1goNUj/zZkWPlxtzF5Y2evsXXlEYiULWWU82PzYy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.50
+	 To:Cc:Content-Type; b=Jxf5EwxfugsfghkYYuCYvY5zl6IW9pSnQAczjfifbWuhj4vwedLiMcBHBQ6BWw2ArONGwheqll2Gu/w0jk8+I892CJl3oczum9k73j4ulIfEXbdFYU083BhdViOTeXDR4jQYkM8TQVm06+QEe+i2KUoYod+JkfB5w3aZOQ3sDHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-58574b47548so1037405137.1
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Sep 2025 06:13:25 -0700 (PDT)
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-54a9482f832so1517314e0c.1
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Sep 2025 06:21:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758546804; x=1759151604;
+        d=1e100.net; s=20230601; t=1758547268; x=1759152068;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Nutag0WU4swh2Ttkj8YGMxVYoDLOFgxz3Bs9L8eyAiI=;
-        b=hCDh49ynUKuf7ey1m1Yr/c88d5toKdBixaNHZob+UON21L7AMaJdeHXsE3vxivF5lF
-         HP3c2a4ZDA8SAHlSFqSsKfR6zdxDqRvd+lT1lTwXkJkKBzzKFlXHMrQTnPS48w5Bx5L8
-         gd2BamahvDP2G/strYmP9sQ8FfsyYLdY8vZsy1yooUqhO12X/aRisJngbovy0B2qorkv
-         R+Zw+E4zIZHOUA66yHRoM/H7/GROTxjX+Y+gtkTB1EWxNWOoBb//iO+S022pPuAY2caX
-         PutLTSxypWpFo3hiNcJi/+ZnFqP4GEr2GGwPJQEa4iJUGmW7gSMl30xzG6gPHuNmd0Rm
-         tCCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUlqEBkhCIjx9rdTFh5HL2lAsHax5fML+A89wE+p4flgKS/zn6dPIObZ6NluT6h7SKPbmkO+wi+qs8m@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMnWYZfZddI8wDMF5vfeI7QK3mU1kqZV2crdffLlD5Xc3UKSEp
-	CxddaUatszZ+xyCIKt85dVYbVvFM90NdntwMXbbgkaF2LBi3ZrWQxTXZ9+prtwT2
-X-Gm-Gg: ASbGncvzjIk2gKzMyBLhfZ7o9l5TyDkKJO+E/M0PPrOuhYJRDks26z1AEkWLUHy+j2K
-	QD/9OjNbdmSoyxvwNqv9TSKmMmxAQp3M4w9aJ05sxpnA4L+JDa3Oemt7HRCyCOrPQcxrZK1pb9s
-	cLbpBSQP9VV0YqogD9r0obzKacP9NkJGB7zc9gSXktmLeRV1CvkBNJbms2k4CWBuCNC2HWMk8T7
-	kIR7ydaAD0AwHf5jEgWpaQwfnJ8UMeZ4XRRJGSrlLWJo2oDpBa7pvbcBC6dAs8TLt3SZIkD1wsO
-	66IYInMEAe+z4ykLMMu1Y7upBh/oHuZpaOGAiNn8JOuqUWoOuIcmgk7JdBDBYZD7uMUP5qtqeYZ
-	TKdgX6+u4B8WLyzDAJ6RD0LC0lh3QFGOGfSCaZr/0lR8xG2h/gWR4uNo5eZGNWy/PXDv622Q=
-X-Google-Smtp-Source: AGHT+IGl70K8hxE4QkIXFVy5FAVJ7G84+oPd1/9urLyhxQzBUsSLhvkiymvW9jED3ubbSy7/TcQtuw==
-X-Received: by 2002:a05:6102:578e:b0:59b:ecd8:c0d6 with SMTP id ada2fe7eead31-59becf74cb4mr1737138137.9.1758546804128;
-        Mon, 22 Sep 2025 06:13:24 -0700 (PDT)
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8f31bef21bbsm1072809241.13.2025.09.22.06.13.23
+        bh=7oT2yfLN/4pYPbEtz7ZQcc5Ja0yXs/qEChj5LREg+X4=;
+        b=GLuBI72Gl+ihvUtcI6IAfCJbl1GXONMPqaYbpicLkzr2mmBIOBMthPB4pNl1+xhs8F
+         Skebk/rF6eqYWeGl/9ftBVgM8yway3JQfr4jqYi52tATr88KYl0rRDl50Kjw/Dxv3thg
+         w9F+GCwPrAmTaAa9hAZ2UCqYJdvyP/7X8AFFWihWteS5MXGfsac8gTxBwNWd9mDmqBbT
+         C5Bf5P9YJk+6TgPoHnAvod09KC9J8rdmifDi2yEN3sNU5ehXXQlrwfdxSEO7LAfrXG04
+         bctIa/iHcixipwNh5vy18gnJWc+rnIy1EFzBoLsKH25LL1vY3p9AxgJdDoxH1rwvjUKz
+         uwSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXJapFSy/VWK3yPunUc1TK5HqqzhhfCwegg9xhjQvtcSBamRkW9rJ0gacCIMT7FKGZvSH6SUTdMbTwY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy260A/73YaYy0zF+7ECrdRopXlSQyeiMnylBJy+Uwy+nfao6mY
+	d/HX/z9bzWXfQlbKAGPlfcd37+yF0UsT2kHgF47gvlcyZ1iOQXBg8ol3Wbb+A7mQ
+X-Gm-Gg: ASbGncvM6Nr8LaPZEshd1/eN11UYNApLhGHHU37dCc19bQi5bGJmUt4iF/hsN+RTTZ8
+	tY8CG2dxyAOkHB5BAl77EYoKW3HlzG/Nsf+c9vSs6lIkmVQHRm+wswCXZFhLqTMJLICOQS72cB1
+	PbC6n4Gm6Rn5Id8l7LmdKgMgxk3xOCSKAUR7LOMDK0GPAh94HIhfL7B89v2z4FAiqyiMO0JsL/I
+	nKUnCAQyM2Dqw2ymodnVfRmC6bfd05zVBubhltUdHm3VR6STzsjAWMQTVf9liazntwbEk5IoSfv
+	oI5W02MSMl5GI2N9hlh8zP78rV7DhsDNIivxDCTO0Ipi6NdIQsMfbCH8qWx/mNzlF8qwKd3UKlG
+	iYOU0LJxrNMkryA2zfeu1UkYnd+iD/FffUnFGCzyut2r91NQ/cI7eBqUx4T0QSR7/5mliwHQ=
+X-Google-Smtp-Source: AGHT+IGISTTqrSs4yOWuRVmUTQSi/seFwXtlZc9cA1KMPBJmmZR9L23KkLzwKz5EjAjVgjpyKFSHZg==
+X-Received: by 2002:a05:6122:1348:b0:535:e35d:49f4 with SMTP id 71dfb90a1353d-54a83894c5cmr4010023e0c.11.1758547267824;
+        Mon, 22 Sep 2025 06:21:07 -0700 (PDT)
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-54a7275991asm2698533e0c.9.2025.09.22.06.21.07
         for <linux-gpio@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Sep 2025 06:13:23 -0700 (PDT)
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-8e401b11bfaso1562272241.3
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Sep 2025 06:13:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVGi5IytdOS/WJ2s1ZIZfL98QbZ3HJMv44/BgQgV4AyPd8EjfacTUUPR14/gW/nDP3JS4/foSORlpXf@vger.kernel.org
-X-Received: by 2002:a05:6102:6a85:b0:519:534a:6c22 with SMTP id
- ada2fe7eead31-588f802c452mr2930268137.32.1758546803126; Mon, 22 Sep 2025
- 06:13:23 -0700 (PDT)
+        Mon, 22 Sep 2025 06:21:07 -0700 (PDT)
+Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-50f8bf5c518so3307438137.3
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Sep 2025 06:21:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW1aPmCgOxSUilQtDqUp0OBRW9kIR5IGv6k0EBM6m6aXOzwsxF7uWymPjFasuHsLh4dPQr945qUvqrh@vger.kernel.org
+X-Received: by 2002:a05:6102:d8c:b0:521:ed06:1fc7 with SMTP id
+ ada2fe7eead31-588bb9bf4c8mr3821613137.0.1758547267049; Mon, 22 Sep 2025
+ 06:21:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250921111557.103069-1-biju.das.jz@bp.renesas.com> <20250921111557.103069-2-biju.das.jz@bp.renesas.com>
-In-Reply-To: <20250921111557.103069-2-biju.das.jz@bp.renesas.com>
+References: <20250921111557.103069-1-biju.das.jz@bp.renesas.com> <20250921111557.103069-3-biju.das.jz@bp.renesas.com>
+In-Reply-To: <20250921111557.103069-3-biju.das.jz@bp.renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 22 Sep 2025 15:13:11 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVCMPkh+D9G1rNJmhnyqOV3Ya5jb_VKjZEdVjysEqFVUw@mail.gmail.com>
-X-Gm-Features: AS18NWAuG6KhnMhrzu9_2fL0vDBhmEtSyA2voBsifQw3rX27cbvUkygACfbs8sY
-Message-ID: <CAMuHMdVCMPkh+D9G1rNJmhnyqOV3Ya5jb_VKjZEdVjysEqFVUw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] pinctrl: renesas: rzg2l: Fix PMC restore
+Date: Mon, 22 Sep 2025 15:20:55 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWtpv325awR06pFA+_EHh5GZ90K6OEf5S6Wkg+_89uRBQ@mail.gmail.com>
+X-Gm-Features: AS18NWDdF71ys-sJ9xzdE3pXCvKO4zAavWIwsnrvZsEZ2kjh3SpCcOFmdVkNVPA
+Message-ID: <CAMuHMdWtpv325awR06pFA+_EHh5GZ90K6OEf5S6Wkg+_89uRBQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] pinctrl: renesas: rzg2l: Drop the unnecessary pin configurations
 To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, 
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
 	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Biju Das <biju.das.au@gmail.com>
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, Biju Das <biju.das.au@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 
 Hi Biju,
 
-Thanks for your patch!
-
 On Sun, 21 Sept 2025 at 13:16, Biju Das <biju.das.jz@bp.renesas.com> wrote:
-> The PMC restore needs unlocking the register using PWPR register.
+> There is no need to reconfigure the pin if the pin's configuration values
+> are same as the reset values. E.g.: PS0 pin configuration for NMI function
+> is PMC = 1 and PFC = 0 and is same as that of reset values. Currently the
+> code is first setting it to GPIO HI-Z state and then again reconfiguring
+> to NMI function leading to spurious IRQ. Drop the unnecessary pin
+> configurations from the driver.
 >
-> Fixes: 14c32dc1f63d ("pinctrl: renesas: rzg2l: Add function pointer for PFC register locking")
-
-I would rather say:
-
-    Fixes: ede014cd1ea6422d ("pinctrl: renesas: rzg2l: Add function
-pointer for PMC register write")
-
-as that is the (later) commit that should have converted the direct
-write to an indirect call.  However, both commits prepare for the
-advent of RZ/V2H support, and the actual issue cannot be experienced
-before commit 9bd95ac86e700ab8 ("pinctrl: renesas: rzg2l: Add support
-for RZ/V2H SoC").
-
 > Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> ---
+> v3->v4:
+>  * No change.
+> v2->v3:
+>  * Dropped extra space before the == operator.
+>  * Moved spinlock acquire before reading pfc value.
+>  * Make sure it is configured for function in PMC register for
+>    skipping GPIO switch.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl for v6.19.
+Thanks for the update!
+
+
+> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> @@ -541,7 +541,11 @@ static void rzg2l_pinctrl_set_pfc_mode(struct rzg2l_pinctrl *pctrl,
+>                                        u8 pin, u8 off, u8 func)
+>  {
+>         unsigned long flags;
+> -       u32 reg;
+> +       u32 reg, pfc;
+> +
+> +       pfc = readl(pctrl->base + PFC(off));
+> +       if (((pfc >> (pin * 4)) & PFC_MASK)  == func)
+> +               return;
+>
+>         spin_lock_irqsave(&pctrl->lock, flags);
+>
+
+Looks like you accidentally switched back to the code from v2?
+Shall I take v3 instead?
+Thanks!
 
 Gr{oetje,eeting}s,
 
