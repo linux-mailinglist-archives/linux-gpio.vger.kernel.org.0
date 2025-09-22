@@ -1,119 +1,137 @@
-Return-Path: <linux-gpio+bounces-26495-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26496-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFF92B91F65
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Sep 2025 17:35:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC2C7B91F50
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Sep 2025 17:34:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 482AD427A0A
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Sep 2025 15:34:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B559E2A35DB
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Sep 2025 15:34:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 596552E9721;
-	Mon, 22 Sep 2025 15:33:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05AA12E7F02;
+	Mon, 22 Sep 2025 15:33:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="EbcZ8RqS"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Vyhse1P0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 310402E92B3
-	for <linux-gpio@vger.kernel.org>; Mon, 22 Sep 2025 15:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6712E7BA7
+	for <linux-gpio@vger.kernel.org>; Mon, 22 Sep 2025 15:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758555219; cv=none; b=a6yJqb16OqNJltS7HJSJnXN39aZvbmtzMGhPKyLvXDVI7AO8OEHqBLxQJ2akdBbtlQtcKGTvBHpW5psgxr+FfmFg21sdqpslnYNdaYlJfA2LJAHsjTBbT0teBANT/Tf5Ow+NkuCYaOB/mBq/38EMgKm3p7xvHIAQThP6Ys/DH4s=
+	t=1758555234; cv=none; b=snkHZfgDtJ1y5YHd0RK1bsGRB9KdAxMcDUFfFoiSHIZJUqF5pCnSZeB5y1kms9QkJKzFZahrTkYHjnJIhT6KT9B0d5Z1AqwqfDo6+kIEI54dQs93OIdVS8S2R3uk9px8T665uo4IQKuEhdQjRxnrIonxFM1HE5AqCLf/61WR6b8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758555219; c=relaxed/simple;
-	bh=9GDSk+7eMD2m4olz8yNUDHsfzJO5iPrhK7AiGouP2SQ=;
+	s=arc-20240116; t=1758555234; c=relaxed/simple;
+	bh=ojYCHT6pXa+exxltZgESY7Zvtrqth85NG5vUjQjg5a0=;
 	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a1f04txMb22nPZ0N0Sn8p46Rxa4JSXbwLos5weDZ8uKqtdNRNO1pLXeLskq80jcoSY6gzpBAKHiy3NcXBJmK5SfKV4YPR1hupHQdsTpJVCrWmMYSaYHiB4CbPFKeHfzSu4Oud8Qj4uSmb13jTpZNS04xD2/AZ1Dvch4Bjpm3vXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=EbcZ8RqS; arc=none smtp.client-ip=209.85.167.44
+	 To:Cc:Content-Type; b=PnGbCNks9weUFX4DofmQrwvXzHdscdxslkzPrSlFUfpe6Z/gyYu18vv03LYUcPC0tRlBxw2qiY0cRhe5zCsSNdmtpg13AgVW+nKdwB/MhaE13hglPdVcQZaG66lZ2jPqb8JZQhFJkCQjF4WLP36rgXe9x9xUqSQb8AeFxf87bGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Vyhse1P0; arc=none smtp.client-ip=209.85.208.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-57da66e0dc9so1509737e87.0
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Sep 2025 08:33:36 -0700 (PDT)
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-36295d53a10so36476681fa.0
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Sep 2025 08:33:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1758555215; x=1759160015; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9GDSk+7eMD2m4olz8yNUDHsfzJO5iPrhK7AiGouP2SQ=;
-        b=EbcZ8RqS4mvV5MmSP0RIRTEncBjwbZHP744uU278APuleIi9lH8l/VbXf+kqOevmgM
-         SHzScm36ygXeXwUT11qNhOeXs6KR+Ugfegk7vO2eSCUzSd9WAwSEgHXGrtwyeeAojEaZ
-         dEkjj5GImdttddn7cX6K7yZxi2MBkN2M+ht1N7M1qh3I37jt7FaIPCtsdYqnS+IyMNQ7
-         973Ir883NnIApSuoAYxUsmJ0FLrm2fRP69vDPz6LKdAihXiuVoMTByn7skf1VqU4wdqt
-         cwyTeqQVSzis4elHj9vFijnySwYUIgvHqESIgC7Cgl8zSA+QOS8jHCx0lxEQWuFjwalZ
-         FPig==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1758555231; x=1759160031; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:references
+         :mime-version:in-reply-to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ojYCHT6pXa+exxltZgESY7Zvtrqth85NG5vUjQjg5a0=;
+        b=Vyhse1P08xdAwVF7IUBO0VE3gPqvNZiaHJFiTnrslHL8S32Gsj7co/6LECCPjweuNX
+         3iKWmCXFMXGmTJYsJcciVK01yJKMS1D+ZPTH/Rj6qsyKbGkckSFFJZfhezG4wtO5/Kvq
+         /h0DlyMKdyY/3z70kAxMsAZUgqCyk3Xss7D0bRx4ipkHy72/5I3BOWItzv8VAlEZ5lq3
+         /Mf0Xqqj0I6W4mhm2CXlZEXeaZqJj9bgvno7tYYK2tkuhuNdO4lNg+GsKe4DTFyxsybU
+         dr+k20oK3Yza0CfhMhTtYd17ErVHFEE9SQjL3yV98V3O9UHS7RzdlcuQKQ7KZWsmDaFn
+         7XaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758555215; x=1759160015;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9GDSk+7eMD2m4olz8yNUDHsfzJO5iPrhK7AiGouP2SQ=;
-        b=r3NZMo89Vv8hTUvrXJ4SJigWaaT6v9C/osf7yzODZ2ZYnS4UQA8ItyfKNUOUBSu4vv
-         RH3sGoUcDy8BqfTt6jYBbQsvid0jhhA5Z/SPH4eRNVSsVksfgZQpdlWZCutztp4Y6TG/
-         s45KB6L1LkBOkt0e57F1QRvh4w2PM6RTlfjAtw6YxM5Ck3IasIvV68RdyZ6rMzuUhVqs
-         YclJYaCA2I/WkjuSnZH5BCIOjQTWlA3nlpSxsB8+Ti2/i1HOogCJEd1BqO+JcS7DC42Y
-         DJR4OX/HMejCWIXV4KMslTkF3a+KR3rVwWxO3MAtawl2zkDexT2rbsVMjqCFk6pnIoa7
-         wnHg==
-X-Forwarded-Encrypted: i=1; AJvYcCUhpvncFoLTusGu39GEzRgNKYVlPBDmmmKjRkVo9BiYGEUSRzTlnFxOE1yZcNayOFU0vpbMbTuOkLXt@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwCAXRHkvnfHulLYLpysDRwac201uMBFhN9pIxWcvwzG/U0L7n
-	jnqX7kvtofDkfELpt1FN8nhsK/j5FSIFp2O8k7oGa/ULR3U1Ct2yaAf2tHYBCZSlipu+E/nf7JO
-	PfOzhAelBWKvfnGj5zquNsKq6S8755vBdIkm8oNe1Wg==
-X-Gm-Gg: ASbGnctxf0Bm013Uwl11MTm9AnJGIyxDjQFwSiXfS0rPX6sqwoFRsBLE/VStVqgH9/q
-	LvLpV8BSkqYD0UW8VbZUTX7rsvkcIwJI2JaN+b6t7ja/dKA13lWq+32vilMjseY/fzI2focN1yZ
-	+BJiugg1wyA9by63OltUdYCQ8sNKeJXI12JIOZ3XfOBFU6GJ295LNZ9sfXlQmkG1avpp/hz7/P8
-	kn2pU1ObYcxg7C6M6rKU3XmBiW3iLYFSZIJ/g==
-X-Google-Smtp-Source: AGHT+IGlZY4kCJWeN5dqXhMVz0wVth63k88LkQRY0NMxqg5N9plQEniHvw0FL0I709EW4Ka6RI0ByvFRASCxDMR0/MQ=
-X-Received: by 2002:a05:6512:799:b0:55f:49ab:884a with SMTP id
- 2adb3069b0e04-579e1f43c06mr3621448e87.21.1758555215241; Mon, 22 Sep 2025
- 08:33:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1758555231; x=1759160031;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:references
+         :mime-version:in-reply-to:from:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ojYCHT6pXa+exxltZgESY7Zvtrqth85NG5vUjQjg5a0=;
+        b=djkHgXeC/YAWsq6vkuZLhAPO95lohUeUF8jdm90uWI58Ln8ACOQXMRoFSmStx+uuQN
+         DWKEjd2V1TJhWOr9vxGnxql4+tqaNLWvYiT6B0HkvLMvYkPfkNx3y6fm9F8Lqhc8tBFz
+         x6196LsOb6s+XmN+PjeTZ+8vpXN3ke0tXKsVLyupadQo8K8XXnXuFarHrGnrcaLjj8Bx
+         5aHOP0R5uN10tBHuXao4zFeK+Zdd6L/w2hneHO7sS4S9GKst8Vv4bf5iLpPRxBruyGEz
+         +2SlFt/zHwrIw0o0GgTV0BiEKs5lr48zGuO+SQRJmQQPPFqDopYgcv3Ddq0xXAYqGb3r
+         Hl4A==
+X-Forwarded-Encrypted: i=1; AJvYcCWui8TS2R9GnBVjtNGtiGCi5bKZB0BrKklNMyRoubyCp6+bUr1mNRz2Y3AcG9jJmmVM+R0IxHH+h2T7@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIAFEFq2Y8N/GilhaKwFDnFdGbj4K2c1kPUXwyRDWLqSMcxaG0
+	IjS36s9E/MpMZVFGHJS+E0nmxPPZOOvEOa03WqRa9L9y8lEBUZrVy1wLObRayIak5YRl2x8EdTi
+	C7gGE524taD++2eidFNhiydm362ZcYi5i6AapDb/pwQ==
+X-Gm-Gg: ASbGncvKC99JWEDBcxrNrrxNqvzW6HfACs45Ts0q4ekE0deCxBMOPjQxHLn5jtznw+I
+	eYQOVva4VniOvqcWpuZSTPeHPQRzkvgVuRUdWOQWbrcL8JJ7V9twzhfVW5PemmF+bwqigBGTD6Z
+	jBSro84eXgBUx96FH+FiNI7In+fvOb/Nl2mvi/qRP65WpX6sZ7AzcSNfndLO+QBn4p2+pZzr2S1
+	s2fMXCm4BOllTNOQesSISDjczubbjCiqjTVGg==
+X-Google-Smtp-Source: AGHT+IEaxzAg/HmbDrrm3iNmazyaqrQDYYZPj2rvNhR9IFx4P5LS5+Mzvc1t7Vk0Fk6HmKT8D4/HKt9kzkmiJNQ9aDI=
+X-Received: by 2002:a05:651c:23c6:20b0:332:1de5:c513 with SMTP id
+ 38308e7fff4ca-36413f129c2mr36067881fa.4.1758555231093; Mon, 22 Sep 2025
+ 08:33:51 -0700 (PDT)
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 22 Sep 2025 18:33:33 +0300
+ HTTPREST; Mon, 22 Sep 2025 18:33:49 +0300
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 22 Sep 2025 18:33:33 +0300
+ HTTPREST; Mon, 22 Sep 2025 18:33:49 +0300
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-In-Reply-To: <20250922152640.154092-9-herve.codina@bootlin.com>
+In-Reply-To: <20250922173145.4d4dbb2f@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250922152640.154092-1-herve.codina@bootlin.com> <20250922152640.154092-9-herve.codina@bootlin.com>
-Date: Mon, 22 Sep 2025 18:33:33 +0300
-X-Gm-Features: AS18NWCFatxNFArvnh5SmkTj0DfmC7GBtzmB19TRGxTfynwgSMsjCS139sdcpWc
-Message-ID: <CAMRc=Mfh_6kfreC6WNFvFE2X5RZmuHfuVQK+GQ2q6Df-4kJXCQ@mail.gmail.com>
-Subject: Re: [PATCH v4 8/8] ARM: dts: r9a06g032: Add support for GPIO interrupts
-To: "Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>
-Cc: Phil Edworthy <phil.edworthy@renesas.com>, linux-gpio@vger.kernel.org, 
+References: <20250918104009.94754-1-herve.codina@bootlin.com>
+ <20250918104009.94754-6-herve.codina@bootlin.com> <CAMRc=Mf9OB03FXEpSXG8XeJhtd7MkwJTH=rY11SBb9SazCMqJw@mail.gmail.com>
+ <20250922173145.4d4dbb2f@bootlin.com>
+Date: Mon, 22 Sep 2025 18:33:49 +0300
+X-Gm-Features: AS18NWAxwgYw0JIB0GARrV9RmnofX0awI5c9l6TU71Tk5COkBcCbFGmDIfXMzbU
+Message-ID: <CAMRc=MeLDe+o6dWkFCv6zc7ubcXicWdw4FA_A2p519OC4SH2BA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/8] ARM: dts: r9a06g032: Add GPIO controllers
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Hoan Tran <hoan@os.amperecomputing.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Saravana Kannan <saravanak@google.com>, Serge Semin <fancer.lancer@gmail.com>, 
+	Phil Edworthy <phil.edworthy@renesas.com>, linux-gpio@vger.kernel.org, 
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-renesas-soc@vger.kernel.org, Pascal Eberhard <pascal.eberhard@se.com>, 
 	Miquel Raynal <miquel.raynal@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Hoan Tran <hoan@os.amperecomputing.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Saravana Kannan <saravanak@google.com>, Serge Semin <fancer.lancer@gmail.com>
+	Bartosz Golaszewski <brgl@bgdev.pl>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 22 Sep 2025 17:26:39 +0200, "Herve Codina (Schneider
-Electric)" <herve.codina@bootlin.com> said:
-> In the RZ/N1 SoC, the GPIO interrupts are multiplexed using the GPIO
-> Interrupt Multiplexer.
+On Mon, 22 Sep 2025 17:31:45 +0200, Herve Codina
+<herve.codina@bootlin.com> said:
+> Hi Bartosz,
 >
-> Add the multiplexer node and connect GPIO interrupt lines to the
-> multiplexer.
+> On Mon, 22 Sep 2025 16:22:14 +0200
+> Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
-> The interrupt-map available in the multiplexer node has to be updated in
-> dts files depending on the GPIO usage. Indeed, the usage of an interrupt
-> for a GPIO is board dependent.
+>> On Thu, Sep 18, 2025 at 12:40=E2=80=AFPM Herve Codina (Schneider Electri=
+c)
+>> <herve.codina@bootlin.com> wrote:
+>> >
+>> > Add GPIO controllers (Synosys DesignWare IPs) available in the
+>> > r9a06g032 (RZ/N1D) SoC.
+>> >
+>> > Signed-off-by: Herve Codina (Schneider Electric) <herve.codina@bootlin=
+.com>
+>> > Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>> > Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>> > ---
+>>
+>> Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Up to 8 GPIOs can be used as an interrupt line (one per multiplexer
-> output interrupt).
+> I have just sent the v4 iteration.
 >
-> Signed-off-by: Herve Codina (Schneider Electric) <herve.codina@bootlin.com>
-> ---
+> This patch has not been modified in v4.
+>
+> Can you add your 'Reviewed-by' in the v4 series?
+>
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Sure, done.
+
+Bart
 
