@@ -1,139 +1,126 @@
-Return-Path: <linux-gpio+bounces-26436-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26437-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3B2EB8E53D
-	for <lists+linux-gpio@lfdr.de>; Sun, 21 Sep 2025 22:26:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10A0BB8F7BB
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Sep 2025 10:25:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6EF1F3BEB0E
-	for <lists+linux-gpio@lfdr.de>; Sun, 21 Sep 2025 20:26:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C5CA33AB4D2
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Sep 2025 08:25:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC88228CF5F;
-	Sun, 21 Sep 2025 20:26:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A5B12FDC25;
+	Mon, 22 Sep 2025 08:25:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c4eB9xT7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Tqte4F4C"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11232367D1
-	for <linux-gpio@vger.kernel.org>; Sun, 21 Sep 2025 20:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 692FD522F
+	for <linux-gpio@vger.kernel.org>; Mon, 22 Sep 2025 08:25:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758486392; cv=none; b=LWCQcykjXa7k5oJj3jRmv7r46yOmT4xF2ZC+JcD/GUf/kJtWe6LSJelEzEvmlEHZ+u4Gw+DThVnVPWGRpqLj7uRdmHNQ/9F75mhDh0jPnOSW4qXrMY2gDYVIHQC9qiEjz7Yg3h8EcNLeneoeOYrGEI2CWAHW3u7P+Hi8w1AQ2NI=
+	t=1758529504; cv=none; b=McZhoy4bS0Nc/ZWXhT6STyu0DCEyD2kDkzZmC0JGMx3BUy0N5eJrP8DnA7mTqatKn2jT8ONcAJVqU2E5iGEvdiw4Q0HFDMzmbeZjiQOw6n82SJNDltIrJu9k+gPdc0/HqDpgE23/YROxAYxqOoNHMGdOuyc1ObbqwKTmNAR5OeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758486392; c=relaxed/simple;
-	bh=gka5bKFW2cHv0ZLSZ7B/QH8eA3YDoxbmOhwKKVhGU40=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UhGPpH9tW03UWgfiHtnLz1Y0fLK961RKLmmKPgIRGHTG3ZS/yYMBalFL+SDwdHRLbHBX+wdkZaOyaf1KsGox9ALb1j4NkLg3DWndC5m5cit0t8MGt4yj9KgHVRpe33XrKWN6VtMw+C2DaZt9RR9AsCagnpjGkWMox54WrVU7UNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c4eB9xT7; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b0787fdb137so559917966b.0
-        for <linux-gpio@vger.kernel.org>; Sun, 21 Sep 2025 13:26:30 -0700 (PDT)
+	s=arc-20240116; t=1758529504; c=relaxed/simple;
+	bh=FI+DYlQeMCnVCtyvCkdDPT1bCDTDmrXBPgGdRm2ofEc=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=mlPLv4bvbTEJuepcKfNC2c5jBnBFQ8D46ap2sLZQuSa2CYgFg+odUgXLSuWUyO28RGjZbnGMp3jIpdGZF2dcW6E9u8K1AlCZ9CpEyDhOY7VS+x4iAvUeGwqQhbX0cWpCC4Bx66Cd0OeLB2trhtrffB6hGjR9X9ZsBIY0z+3WbjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Tqte4F4C; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-3696f1d5102so11732211fa.3
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Sep 2025 01:25:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758486389; x=1759091189; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6w1uUC+fzd5RSRP1ifN1bHpVu6vu0MYSCszxUPTV56A=;
-        b=c4eB9xT7FVW3MmNDaExO5Zn7IcBZiagj3xMoby9q9msP1t7RoxWNR8q51VuR3SvEVq
-         PM9G6qxxc7BK+EGwwPtts9aSr5Ft6ZlpXjpyA0WI02xBhMwIsM/Un+uTtBGZZsMzJzZ6
-         +m0q+L7Ezbv7X2FGNd51E1w5Kt1S7aLXsxeuurceh5LNZlWEo0p14kJp4X2Bk+bMfq35
-         sc9W95XF+ugnu7+SoWpnT1t96cBNniv54nOMXQg8RWuR2FCrOfah+oLYBTswcPFgMWZc
-         U6pKunY/LtfY3EKx9MCEanadjBlOZEq5wUWj8NJTppvUJknyTcDaGkI7EGe0GtBEx+1q
-         jISw==
+        d=linaro.org; s=google; t=1758529500; x=1759134300; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=z8vx204SZWcSKU5Lh/a3VR6IC2ZtKNAfPJgRIQob+wo=;
+        b=Tqte4F4CSznfxMR2B5FSW/woltlVfWYQ/rzegnV6Ar4zpnC3x+6H+zAny8rHDep2PF
+         LHbPoSrXsuMF+4wURWG9lgSFF9AE3d7zUbyzKSFkjeHMz4Fp+4GZgjWYBHq6YtNyBCVR
+         LqB+nftlszE60XAmXCUQ1wtXM+LuCcUATjmUDAzUiY0rnaFiel+vF26S4cF5gBcuoFvJ
+         mWzEJkccbjgLF3k3FdkayGS4hIU02VfEgmCen3KZCL/KhqltcK3HIyRrZrRTln8Nsw9C
+         Fo358G6NRQ2P61AKZuBextBLG6c39zioaudhX5FajadGk4f1JGXSzVW6KnzQlLrDlEMT
+         33vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758486389; x=1759091189;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6w1uUC+fzd5RSRP1ifN1bHpVu6vu0MYSCszxUPTV56A=;
-        b=laqCWCh9dGrHeZdn24MVRB9TPUm1USHWA0IjaO1Q4yJ8kbmppoNrzCd/kIOG5CbLXV
-         7M8gqE+C/bIa407xBU0iNiT1UF2rZljHRC++byj1RpjYIH8JXTly3fxjLDNKWTxA/4we
-         X66qb20IxVXzi9WjWBdr5gJiZ2nfi37lYBReJYy9XfjGfufyE5d9roZEsnXm0CQ2zYqq
-         3SghVDpMVZOzktEwcAz1PP3rJ3R9UQ+2gA+Z9W1I9fNkRH6cRx7j1FERMB3B9PsU2hrH
-         4wY1UtrFL+p4+QcTfXSYmcYOyRTtrBlb0LAlRtv6aaWBdeU6SR+jj4OATd+bvySy+HJr
-         I/bg==
-X-Forwarded-Encrypted: i=1; AJvYcCWTQ6k2sYEMwTGLMqvX80ABbyNWvgPQ17Qa/q4Zu57tiXD/fTDRJBbTxZK2nUHgiennuMJssvESMkQK@vger.kernel.org
-X-Gm-Message-State: AOJu0YyruQhXn0LIyeGsxaB0reihB6XUXfh/usrjD3q1wkqus+Cv2lAo
-	M2CEE4GTf1OkXTx39Eeye9ZGK0NBKGoKNjI8KQ/b/k+XMHOhh7TT3qcOiwUlVEbDIvr7qXFHdQ3
-	yyBMl6p3cPkhCg4cXAZoE9fs9Zvv5Vtc=
-X-Gm-Gg: ASbGncsMd603HQ/OO+I2KYA3/SQxYdpFIJ6oAjgLcjKtvYQ8mXXBvNwuIvx0MexmWfx
-	PR396137FAhpuxGxqCLXCmsuURJ2kfUEzJ/RPMAq5S8Dl4k5p1F7xHZV3VcItdJOJw2DPSvzgcN
-	FE6/5PNMtDTnDRli/vv72Z1Y08lSsnCNGMNztJ/ReEiqSeKb7/G94RZEuUOVJ+zNd0CnRAgz8XU
-	SHKnuY=
-X-Google-Smtp-Source: AGHT+IF+x1qG5m/7YpKbUllg6jANfb1pA8Bj2oy/e8nNAFxVGPMtNlfo7K0pnij41IW9pVmeCBnwxf9u27zs5M2RfwE=
-X-Received: by 2002:a17:907:741:b0:b0e:cb5a:3dc9 with SMTP id
- a640c23a62f3a-b24ed97e846mr936786966b.8.1758486388984; Sun, 21 Sep 2025
- 13:26:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1758529500; x=1759134300;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=z8vx204SZWcSKU5Lh/a3VR6IC2ZtKNAfPJgRIQob+wo=;
+        b=lBX1GVmYuOi9Pt3CjAKW2pXicIDk29exLxXZdNygbWJLknsQiUZgW0sZM3ASGPIFW4
+         8YQ5eM88BVvt7qc5Tt2T+KQ3ca38RnXYRKRAn10n+kz7jbjINqS93FqpYJHPhbBizVA2
+         AupmGdM4jJaPRUkkRZUfM5No+638E/nDTezDDD/K/J5zrk7yvaTRggtQS9HDvSr1SBt5
+         95X3mdTCyFe3tPJYJr+0PgoepfgJIvFIKtlFvKMNgJdQzCOws+DJ8npWrJjoP3/WdY9e
+         WFoAAxdpe3jTxMtDjyIBBc5ee05IWxUDduhmX69wCYKNrLZ5g3urV7iWH2kRnGW45L5B
+         TCRQ==
+X-Gm-Message-State: AOJu0Yx4ri+SiW2z/GDrtd9di6kfdy1HWP1ElnPMOnDDNvgZQtgG7ymB
+	UU1M8ioIrhIWse5FZpYs+Hn41o9NfwS9mkRoLnWQdzX7LTEOFEjVLtRt0Q/Ythc3iu1c07l48jv
+	y8LD2hPnVtpPB4YicoBZgNP7g9b3Z0Pgp6JAvy2wILA==
+X-Gm-Gg: ASbGnculJ7/qiJ+VRs9dRBLISY8cXGSexeLXtjgaI3v3eEBrjNbWdCu/sMxPcav7fvZ
+	Jul53q7AmJByOTckimuEfyzeJnUxnMIxori3tkbQgcZC6cla1/NYQb/yWpimrX7GHcR8YtGfD+a
+	XBeiH86wurkIKOpSzeYGDdVAuX/JpiUdHFjCDhU2oxLCf+4zJuKmJ58vcEKWQv+pcUANHDlXWLj
+	HQkRMaeX+IoinZ71A==
+X-Google-Smtp-Source: AGHT+IHOLIPWnUusHHlSms67BlSXcHKiGUu89SIAIoeowSC9Fe8u0MrYAaOSGnZlhAqeChyO1xMSuRaRysiP29McDfM=
+X-Received: by 2002:a05:651c:1501:b0:336:bcfc:a422 with SMTP id
+ 38308e7fff4ca-3641afb75a9mr42439151fa.26.1758529500441; Mon, 22 Sep 2025
+ 01:25:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250920201200.20611-1-hansg@kernel.org> <6d9e13e9-1e93-4e39-bfd1-56e4d25c007f@kernel.org>
- <CAHp75Vf-MMcVGDt5xAMB94N866jZROQPKpvu5dZ-nCEPA9j-pg@mail.gmail.com> <f40ab4a5-1b17-4022-9539-37e470b7a175@kernel.org>
-In-Reply-To: <f40ab4a5-1b17-4022-9539-37e470b7a175@kernel.org>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sun, 21 Sep 2025 23:25:52 +0300
-X-Gm-Features: AS18NWCHxLhQYf5FvuBq3VuISPNUQRlCd8-oqVvlkccsxjdBicCTMbzlcdEWgvE
-Message-ID: <CAHp75VfaRcQOLjrd_pVK4XYPRN_4yM=acyVsOKThV3oMw1fB0g@mail.gmail.com>
-Subject: Re: [PATCH 6.17 REGRESSION FIX] gpiolib: acpi: Make set debounce
- errors non fatal
-To: Hans de Goede <hansg@kernel.org>
-Cc: "Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, stable@vger.kernel.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 22 Sep 2025 10:24:49 +0200
+X-Gm-Features: AS18NWDYeUjgy-jqzWPWzQmyQ8AQMjpuT9A_9VkG_l_vN7XRtNSQvzsMFhRnhe4
+Message-ID: <CACRpkdaY7qoN0r9zx4uKS8U3LS8-Zt2=omH8RhmcHV9F+jM1XQ@mail.gmail.com>
+Subject: [GIT PULL] late pin control fixes for v6.17
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, 
+	Ansuel Smith <ansuelsmth@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Sep 21, 2025 at 11:11=E2=80=AFPM Hans de Goede <hansg@kernel.org> w=
-rote:
-> On 21-Sep-25 9:03 PM, Andy Shevchenko wrote:
-> > On Sun, Sep 21, 2025 at 9:09=E2=80=AFPM Mario Limonciello (AMD) (kernel=
-.org)
-> > <superm1@kernel.org> wrote:
-> >> On 9/20/2025 3:12 PM, Hans de Goede wrote:
+Hi Linus,
 
-...
+here are two late pin control fixes.
 
-> >> Looks pretty much identical now to what I sent in my v3 and that Andy
-> >> had requested we change to make it fatal [1].
-> >>
-> >> Where is this bad GPIO value coming from?  It's in the GpioInt()
-> >> declaration?  If so, should the driver actually be supporting this?
-> >
-> > Since it's in acpi_find_gpio() it's about any GPIO resource type.
-> > Sorry, it seems I missed this fact. I was under the impression that v4
-> > was done only for the GpioInt() case. With this being said, the
-> > GpioIo() should not be fatal (it's already proven by cases in the wild
-> > that sometimes given values there are unsupported by HW), but
-> > GpioInt() in my opinion needs a justification to become non-fatal.
->
-> GpioInt() debounce setting not succeeding already is non fatal in
-> the acpi_request_own_gpiod() case, which is used for ACPI events
-> (_AEI resources) and that exact use-case is why it was made non-fatal,
-> so no this is not only about GpioIo() resources. See commit
-> cef0d022f553 ("gpiolib: acpi: Make set-debounce-timeout failures non
-> fatal")
->
-> IOW we need set debounce failures to be non-fatal for both the GpioIo
-> and GpioInt cases and this fix is correct as is.
+Both for the Airhoa driver (routers, OpenWrt).
 
-Okay, since it doesn't change the state of affairs with for
-acpi_dev_gpio_irq_wake_get_by(), it's fair enough to get it as is.
-Mario, do you agree with Hans' explanations?
+Please pull them in!
 
-> It is very likely too late to fix this *regression* for 6.17.0, please
-> queue this up for merging ASAP so that we can get a fix added to 6.17.1
+Yours,
+Linus Walleij
 
+The following changes since commit 76eeb9b8de9880ca38696b2fb56ac45ac0a25c6c:
 
---=20
-With Best Regards,
-Andy Shevchenko
+  Linux 6.17-rc5 (2025-09-07 14:22:57 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v6.17-3
+
+for you to fetch changes up to a061e739d36220c002da8b2429d5f16f637eb59a:
+
+  pinctrl: airoha: fix wrong MDIO function bitmaks (2025-09-08 23:01:19 +0200)
+
+----------------------------------------------------------------
+Pin control fixes for v6.17:
+
+These are two small driver fixes for the Airhoa driver.
+
+- Correct a PHY LED mux value so the PHY LED will
+  blink as it should.
+
+- Fix the MDIO function bitmasks, working around a
+  HW bug to force-enable the MDIO pins.
+
+----------------------------------------------------------------
+Christian Marangi (2):
+      pinctrl: airoha: fix wrong PHY LED mux value for LED1 GPIO46
+      pinctrl: airoha: fix wrong MDIO function bitmaks
+
+ drivers/pinctrl/mediatek/pinctrl-airoha.c | 31 +++++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
 
