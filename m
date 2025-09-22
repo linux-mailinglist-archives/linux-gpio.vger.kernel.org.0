@@ -1,79 +1,177 @@
-Return-Path: <linux-gpio+bounces-26509-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26510-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 341EAB928B4
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Sep 2025 20:04:59 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72C3CB928CB
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Sep 2025 20:07:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1361A18875AD
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Sep 2025 18:05:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BEED12A59DF
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Sep 2025 18:07:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C358131691E;
-	Mon, 22 Sep 2025 18:04:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C24F5318129;
+	Mon, 22 Sep 2025 18:07:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uVYlM5e/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AkkCzNfQ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF81289824;
-	Mon, 22 Sep 2025 18:04:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6619F2848AC;
+	Mon, 22 Sep 2025 18:07:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758564292; cv=none; b=tFr/47I8Uw3185iGs0vN8TT8SlMOG1PjUpHN8t93jwsjYQAqwTTm9vgkvbA5T9FwFRSrkANtNi+0JgeU9kun+/U2gseF0jWK0HcWFcfVzj6Nzpdu68vyFt6AtmDscOyopbS7MkRcsxVFx0vBUNWcyb2sk4w4WJqtEMA55FFoU70=
+	t=1758564447; cv=none; b=oTaEfDhRxybahYk/Mzl1qoYOlPiM33zGyuAvU59VITSmkW3iyFpas44wPGPAdwOFNGLHDDttQl7vFEngDtJI7HRCszB8BzRBt0Q587c9CMnxcIxviejDAqE4IaaYN/1ky6Jd0Vvxal6LmhnMmLgju9yjj1SfDH73qJwRWftP5qI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758564292; c=relaxed/simple;
-	bh=C9Ufhab19sDYaiUr+xR+vcICFdED+LHF9Y9g6/8ueoo=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=LyBkwcwenc7MdtzeDEq7A09FHunSBf0oB2Tm7ojQc2E4ti8fstFdVY5lU6FJKls2AG8IU0FhEKOF7DOZcO7o5w0trlvbvrpTDJwtznd5/yH4ypEo507+i0H0nS8qwVH9ndE9FNKnyi3GIbBFulhRC4QKVsEJht6JB2Nl35iZRDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uVYlM5e/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22586C4CEF0;
-	Mon, 22 Sep 2025 18:04:52 +0000 (UTC)
+	s=arc-20240116; t=1758564447; c=relaxed/simple;
+	bh=uvFzp2Q14YjjdsHkQgT7CFuazmFvDLyKCqHiCKbWrcE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j3eWK953FwzgB48BnTMMcoF+2fMk7+zDdZdcc/RJolnZ9/rVwCSegmc1ujcz+v7Hh5qcGJzWCvmI5Y6g4GHCrDhaVYqeQQ7lAw3H40m8LhcrYRwL6QFKPax5Eq4pnsSv/fTCTzoAHikCa66I0N2kOtZybOlD4JZ+3zkP9+GANDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AkkCzNfQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAD3BC4CEF0;
+	Mon, 22 Sep 2025 18:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758564292;
-	bh=C9Ufhab19sDYaiUr+xR+vcICFdED+LHF9Y9g6/8ueoo=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=uVYlM5e/PRhVlQhgzeK7vGUSWr4Rve2R5l2SbVIfzDf0adpKfiy3CK1u4WJWz/SJz
-	 3tNVHl4TvDLX4gM8AdprTaAgFVJYzUUh7KaXAZE7nQ3KT2ObxGkmQK1UIqBsSO15Yp
-	 sY+x86vYiZFy5iReYdWVRjgZdWBK/BGdaJ5Qq2EapAmIF1kigTslY3K8FgxxIH2xNf
-	 uoRh2WfEMHDik85J+6wyIrs0bCt0pc5EMlrHUTFnBxdXPDjWvajMnRWTwG9Bhx9T3N
-	 6eK3sFfTJgIp7hFOaO2Ivs14rqy09N1UAVAAkzrmdwU8ixL5m5iqSVAzHFxDk1Bova
-	 AHj4cCo+yAfag==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB7DB39D0C20;
-	Mon, 22 Sep 2025 18:04:50 +0000 (UTC)
-Subject: Re: [GIT PULL] late pin control fixes for v6.17
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdaY7qoN0r9zx4uKS8U3LS8-Zt2=omH8RhmcHV9F+jM1XQ@mail.gmail.com>
-References: <CACRpkdaY7qoN0r9zx4uKS8U3LS8-Zt2=omH8RhmcHV9F+jM1XQ@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdaY7qoN0r9zx4uKS8U3LS8-Zt2=omH8RhmcHV9F+jM1XQ@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.17-3
-X-PR-Tracked-Commit-Id: a061e739d36220c002da8b2429d5f16f637eb59a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 33468b56f4e2d55be4b49dab92daddf5e28cc14b
-Message-Id: <175856428943.1104153.11352910011999524544.pr-tracker-bot@kernel.org>
-Date: Mon, 22 Sep 2025 18:04:49 +0000
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Ansuel Smith <ansuelsmth@gmail.com>
+	s=k20201202; t=1758564444;
+	bh=uvFzp2Q14YjjdsHkQgT7CFuazmFvDLyKCqHiCKbWrcE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AkkCzNfQlFnNHoT0PW4A22QavOcXGiyeLD9hFyfqgJ8lFo6UfGrKnHUJylulMERvX
+	 UodvRMGEnuH64H6MsefEB+0TkuJtBBkEr10LNkA9OlO5PQSlJkkKnryRJcKY6LLI8O
+	 8xz3KqsD7DGUuOuI5WzfpLn6ZcLlVuHQA5D/dLYV5e09f2scM3b6Ba4YEjzfckzJBK
+	 /Zn5l3LqyWkTUEV2YnZxSMpf7NOJPhfD/DQ0DAaFxYYWJLA+i0F6fKw/ZGF5AMrvjA
+	 0s0HF+1CYjXZsHOHE2J6PyCg10ax0ZWXIlfoWmVlkFf95TMD/IByeWE6jWwn/TINMi
+	 g0wad6B7rqGCQ==
+Date: Mon, 22 Sep 2025 13:07:23 -0500
+From: Rob Herring <robh@kernel.org>
+To: Dang Huynh <dang.huynh@mainlining.org>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-unisoc@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-mmc@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 03/10] dt-bindings: dma: Add RDA IFC DMA
+Message-ID: <20250922180723.GA547468-robh@kernel.org>
+References: <20250919-rda8810pl-mmc-v1-0-d4f08a05ba4d@mainlining.org>
+ <20250919-rda8810pl-mmc-v1-3-d4f08a05ba4d@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250919-rda8810pl-mmc-v1-3-d4f08a05ba4d@mainlining.org>
 
-The pull request you sent on Mon, 22 Sep 2025 10:24:49 +0200:
+On Fri, Sep 19, 2025 at 01:48:43AM +0700, Dang Huynh wrote:
+> The Intelligent Flow Controller (IFC) is a scatter/gather DMA
+> controller.
+> 
+> Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
+> ---
+>  Documentation/devicetree/bindings/dma/rda,ifc.yaml | 45 ++++++++++++++++++++++
+>  include/dt-bindings/dma/rda-ifc.h                  | 28 ++++++++++++++
+>  2 files changed, 73 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/rda,ifc.yaml b/Documentation/devicetree/bindings/dma/rda,ifc.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..323e1e87cee09cfc7b64bf44bef61e4d1e91afa5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/rda,ifc.yaml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/rda,ifc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: RDA Intelligent Flow Controller (IFC)
+> +
+> +maintainers:
+> +  - Dang Huynh <dang.huynh@mainlining.org>
+> +
+> +description: |
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.17-3
+Don't need '|'.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/33468b56f4e2d55be4b49dab92daddf5e28cc14b
+> +  RDA IFC is a DMA controller, it only supports scatter/gather lists.
+> +
+> +allOf:
+> +  - $ref: dma-controller.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - rda,8810pl-ifc
+> +      - const: rda,ifc
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#dma-cells":
+> +    const: 1
+> +    description:
+> +      The cell corresponding to DMA request ID
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    dma-controller@f0000 {
+> +      compatible = "rda,8810pl-ifc", "rda,ifc";
+> +      reg = <0xf0000 0x1000>;
+> +      #dma-cells = <1>;
+> +    };
+> diff --git a/include/dt-bindings/dma/rda-ifc.h b/include/dt-bindings/dma/rda-ifc.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..af4bae0542aa71690351e2406d0945a61eff72c1
+> --- /dev/null
+> +++ b/include/dt-bindings/dma/rda-ifc.h
+> @@ -0,0 +1,28 @@
+> +/* SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause */
+> +
+> +#ifndef __DT_BINDINGS_DMA_RDA_IFC_H__
+> +#define __DT_BINDINGS_DMA_RDA_IFC_H__
+> +
+> +#define IFC_UART1_TX		0
+> +#define IFC_UART1_RX		1
+> +#define IFC_UART2_TX		2
+> +#define IFC_UART2_RX		3
+> +#define IFC_SPI1_TX		4
+> +#define IFC_SPI1_RX		5
+> +#define IFC_SPI2_TX		6
+> +#define IFC_SPI2_RX		7
+> +#define IFC_SPI3_TX		8
+> +#define IFC_SPI3_RX		9
+> +#define IFC_SDMMC1_TX		10
+> +#define IFC_SDMMC1_RX		11
+> +#define IFC_SDMMC2_TX		12
+> +#define IFC_SDMMC2_RX		13
+> +#define IFC_SDMMC3_TX		14
+> +#define IFC_SDMMC3_RX		15
+> +#define IFC_NFSC_TX		16
+> +#define IFC_NFSC_RX		17
+> +#define IFC_UART3_TX		18
+> +#define IFC_UART3_RX		19
+> +#define IFC_NO_REQUEST		20
 
-Thank you!
+These numbers are defined by the h/w (like IRQ numbers)? If so, drop the 
+header. We don't do headers for h/w numbers.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Rob
 
