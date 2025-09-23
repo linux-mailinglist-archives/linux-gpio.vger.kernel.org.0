@@ -1,124 +1,90 @@
-Return-Path: <linux-gpio+bounces-26524-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26528-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65EBAB960D3
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 15:45:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 211BEB96541
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 16:40:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 27E032A7196
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 13:45:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DE2B5189070E
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 14:37:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 829E314A0BC;
-	Tue, 23 Sep 2025 13:45:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AEFB21D011;
+	Tue, 23 Sep 2025 14:37:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=csh.rit.edu header.i=@csh.rit.edu header.b="UI6w2SwM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YyunBIKi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from greygoose-centos7.csh.rit.edu (greygoose-centos7.csh.rit.edu [129.21.49.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507D2502BE;
-	Tue, 23 Sep 2025 13:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.21.49.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61CD1EE7B7;
+	Tue, 23 Sep 2025 14:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758635120; cv=none; b=pxopxxS3pjVGRUXuRv97gW+qZCZ0EMh4p322CG8x9fh4o3xhIwX0J9EiIFEdOvjUTFQmeXkbTaUfl90s+Wo2ZRaXcLPm8sazeZ++RSpZL82THPFLOPskDFdpmpgv6KSsRueMeDfH2Crr5Q4gp4MjshTl/VKy+M5eoCSbPFLYQdA=
+	t=1758638229; cv=none; b=lBeLvlBu0fMROMYRRHNAcE50KSYGt8GputMmquQg7lI6IktBvzQV2BnuvSY5X1ogfJ838M9znHB0H4VL0Hk+qPGNcfHQoNIqocf/ZWzBRRaEDBfretqlbq5gShAL70mlL2oxmvmNpyvWWJJakiVw67rD0JRU+oj2ew30HMsZfvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758635120; c=relaxed/simple;
-	bh=nCeFeVA4pL9oPGT7fpO54wydFjIjRupZuAJ6lm1we8E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EKEP4fvHP38QyGWMmwpqVflCmoCzUPxnBJYqUVWfi2qwAD/pCfAaF3XTKTFrGhdruHGX0O/hXOQOBAiFI7hfuSGUEwpqWD8emCluLjNgOBT9t2qyq06wkW5cs8HPu8Ow8qxKo1e69eJ3mQz7iPS4uc3VUaLeum9JhIvcIYKDuVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csh.rit.edu; spf=pass smtp.mailfrom=csh.rit.edu; dkim=pass (1024-bit key) header.d=csh.rit.edu header.i=@csh.rit.edu header.b=UI6w2SwM; arc=none smtp.client-ip=129.21.49.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csh.rit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csh.rit.edu
-Received: from localhost (localhost [127.0.0.1])
-	by greygoose-centos7.csh.rit.edu (Postfix) with ESMTP id 1D7604153CBF;
-	Tue, 23 Sep 2025 09:35:34 -0400 (EDT)
-Authentication-Results: mail.csh.rit.edu (amavisd-new);
- dkim=pass (1024-bit key) reason="pass (just generated, assumed good)"
- header.d=csh.rit.edu
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=csh.rit.edu; h=
-	content-transfer-encoding:mime-version:references:in-reply-to
-	:x-mailer:message-id:date:date:subject:subject:from:from
-	:received:received; s=mail; t=1758634529; x=1760448930; bh=nCeFe
-	VA4pL9oPGT7fpO54wydFjIjRupZuAJ6lm1we8E=; b=UI6w2SwM5IYBokB0MSc8x
-	vuS0A0vVwxlBgBe06lKKZTR+WGt5jWq8dAj7AFMAvQKgDC1dfqhewjecRPx589Kb
-	RDYxmYeQPHH/m0p2Gs65xy8XQfh8qLua2XT0Z7P6R71ypzXfOi40jhYiQ8mIdXvF
-	76Vlh8vN44pj93OoXzhIYo=
-X-Virus-Scanned: amavisd-new at csh.rit.edu
-Received: from greygoose-centos7.csh.rit.edu ([127.0.0.1])
- by localhost (mail.csh.rit.edu [127.0.0.1]) (amavisd-new, port 10026)
- with ESMTP id KILom8okMSYy; Tue, 23 Sep 2025 09:35:29 -0400 (EDT)
-Received: from ada.csh.rit.edu (ada.csh.rit.edu [129.21.49.156])
-	by greygoose-centos7.csh.rit.edu (Postfix) with ESMTP id 028FB4117322;
-	Tue, 23 Sep 2025 09:35:23 -0400 (EDT)
-From: Mary Strodl <mstrodl@csh.rit.edu>
-To: linux-kernel@vger.kernel.org
-Cc: linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	linux-gpio@vger.kernel.org,
-	Mary Strodl <mstrodl@csh.rit.edu>
-Subject: [PATCH v2 3/3] gpio: mpsse: support bryx radio interface kit
-Date: Tue, 23 Sep 2025 09:33:04 -0400
-Message-ID: <20250923133304.273529-4-mstrodl@csh.rit.edu>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250923133304.273529-1-mstrodl@csh.rit.edu>
-References: <20250923133304.273529-1-mstrodl@csh.rit.edu>
+	s=arc-20240116; t=1758638229; c=relaxed/simple;
+	bh=q2LUE1tbWJErcoRmks/z7EI8Qn93WkmAb2uHaEnm6uc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mcjCeO8xJTai5nM3RiWwtHEZ3WzsAcEKMYBmEAyBsgOz3Q/6+x4ithyPSn+dHD4SBJc0S5Q+WsD/+4MnSc6dHQ0Qohr1nDISmywJZHjQRW04T/ivWafsyaqGGl3dx+VWBHfMPMUh+hD0E7ay1+zdPN/D1CAMtHQvvW3rB1471aE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YyunBIKi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4BCAC4CEF5;
+	Tue, 23 Sep 2025 14:37:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758638228;
+	bh=q2LUE1tbWJErcoRmks/z7EI8Qn93WkmAb2uHaEnm6uc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YyunBIKiEsq42Mhh7s405JBkwY5YqmL0CVnP4IjpdOjkBL3CsYmDU3hNlXGiUWlHF
+	 fr+KIDCvgLrE6/gmcQCNonnHNzyf1phXt5/zkKYP1JkZaIiAcEAn7qgdAGJ8xdixJC
+	 Sd7WQ73pQIKUR4WSPeXgcOafwejI0GZHOtiDo1xzFHdhLPC1UCl3MGCtDJoDYRkfNk
+	 ms4T5j+SNSZ+wEOZ0zUmTvCjadYXtU5b0KTrsLu5pTpkQ/+Ra51rmv+xHiHryYvrlF
+	 alelBPbV5wMVH+yCH0RmZ5E6o+1FE/r+qjVOY0M0ADFbKtNITvvYjaRqdgrOxMgxnL
+	 NlP8LhazRJdEA==
+Date: Tue, 23 Sep 2025 09:37:06 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Ioana Ciornei <ioana.ciornei@nxp.com>
+Cc: Conor Dooley <conor+dt@kernel.org>, Michael Walle <mwalle@kernel.org>,
+	devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Lee Jones <lee@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Frank Li <Frank.Li@nxp.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 03/12] dt-bindings: fsl,fpga-qixis: describe the gpio
+ child node found on LS1046AQDS
+Message-ID: <175863819103.3194626.3121186874199604555.robh@kernel.org>
+References: <20250922142427.3310221-1-ioana.ciornei@nxp.com>
+ <20250922142427.3310221-4-ioana.ciornei@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250922142427.3310221-4-ioana.ciornei@nxp.com>
 
-This device is powered by an FT232H, which is very similar to the
-FT2232H this driver was written for. The key difference is it has only
-one MPSSE instead of two. As a result, it presents only one USB
-interface to the system, which conveniently "just works" out of the box
-with this driver.
 
-The brik exposes only two GPIO lines which are hardware limited to only
-be useful in one direction. As a result, I've restricted things on the
-driver side to refuse to configure any other lines.
+On Mon, 22 Sep 2025 17:24:18 +0300, Ioana Ciornei wrote:
+> Extend the list of accepted child nodes with the QIXIS FPGA based GPIO
+> controller and explicitly list its compatible string
+> fsl,ls1046aqds-fpga-gpio-stat-pres2 as the only one accepted.
+> 
+> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+> ---
+> Changes in v3:
+> - new patch
+> Changes in v4:
+> - none
+> Changes in v5:
+> - none
+> 
+>  .../devicetree/bindings/board/fsl,fpga-qixis.yaml      | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
 
-This device, unlike the sealevel device I wrote this driver for
-originally, is hotpluggable, which makes for all sorts of weird
-edgecases. I've tried my best to stress-test the parts that could go
-wrong, but given the new usecase, more heads taking a critical look at
-the teardown and synchronization bits on the driver as a whole would be
-appreciated.
-
-Signed-off-by: Mary Strodl <mstrodl@csh.rit.edu>
----
- drivers/gpio/gpio-mpsse.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/drivers/gpio/gpio-mpsse.c b/drivers/gpio/gpio-mpsse.c
-index ad464914a19b..bef82685ea5f 100644
---- a/drivers/gpio/gpio-mpsse.c
-+++ b/drivers/gpio/gpio-mpsse.c
-@@ -66,8 +66,19 @@ struct mpsse_quirk {
- 	unsigned long dir_out;            /* Bitmask of valid output pins */
- };
-=20
-+static struct mpsse_quirk bryx_brik_quirk =3D {
-+	.names =3D {
-+		[3] =3D "Push to Talk",
-+		[5] =3D "Channel Activity",
-+	},
-+	.dir_out =3D ~BIT(3),	/* Push to Talk     */
-+	.dir_in  =3D ~BIT(5),	/* Channel Activity */
-+};
-+
- static const struct usb_device_id gpio_mpsse_table[] =3D {
- 	{ USB_DEVICE(0x0c52, 0xa064) },   /* SeaLevel Systems, Inc. */
-+	{ USB_DEVICE(0x0403, 0x6988),     /* FTDI, assigned to Bryx */
-+	  .driver_info =3D (kernel_ulong_t)&bryx_brik_quirk},
- 	{ }                               /* Terminating entry */
- };
-=20
---=20
-2.47.0
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
 
