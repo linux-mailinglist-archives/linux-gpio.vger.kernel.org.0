@@ -1,90 +1,115 @@
-Return-Path: <linux-gpio+bounces-26528-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26529-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 211BEB96541
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 16:40:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7E15B97213
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 19:54:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DE2B5189070E
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 14:37:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DEE5A4A8316
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 17:53:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AEFB21D011;
-	Tue, 23 Sep 2025 14:37:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YyunBIKi"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BBAF2DF13D;
+	Tue, 23 Sep 2025 17:50:24 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61CD1EE7B7;
-	Tue, 23 Sep 2025 14:37:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F06EC29B228;
+	Tue, 23 Sep 2025 17:50:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758638229; cv=none; b=lBeLvlBu0fMROMYRRHNAcE50KSYGt8GputMmquQg7lI6IktBvzQV2BnuvSY5X1ogfJ838M9znHB0H4VL0Hk+qPGNcfHQoNIqocf/ZWzBRRaEDBfretqlbq5gShAL70mlL2oxmvmNpyvWWJJakiVw67rD0JRU+oj2ew30HMsZfvc=
+	t=1758649823; cv=none; b=NrhuN53nZzFVPDUHSghfrT8dXDqtcnnYfrR0iMZ6XPo5xRWYLjYtzWhprqorIFcin9snXrw3Si8UfC2Q4x9qPDTb+KnzBwQzqAkmOUOPve77vTaxCghxw5X9yn0MgVUv4N0lpaDOamNf5EP5ZIq2W7An2m2UKh16dl82qGolfKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758638229; c=relaxed/simple;
-	bh=q2LUE1tbWJErcoRmks/z7EI8Qn93WkmAb2uHaEnm6uc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mcjCeO8xJTai5nM3RiWwtHEZ3WzsAcEKMYBmEAyBsgOz3Q/6+x4ithyPSn+dHD4SBJc0S5Q+WsD/+4MnSc6dHQ0Qohr1nDISmywJZHjQRW04T/ivWafsyaqGGl3dx+VWBHfMPMUh+hD0E7ay1+zdPN/D1CAMtHQvvW3rB1471aE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YyunBIKi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4BCAC4CEF5;
-	Tue, 23 Sep 2025 14:37:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758638228;
-	bh=q2LUE1tbWJErcoRmks/z7EI8Qn93WkmAb2uHaEnm6uc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YyunBIKiEsq42Mhh7s405JBkwY5YqmL0CVnP4IjpdOjkBL3CsYmDU3hNlXGiUWlHF
-	 fr+KIDCvgLrE6/gmcQCNonnHNzyf1phXt5/zkKYP1JkZaIiAcEAn7qgdAGJ8xdixJC
-	 Sd7WQ73pQIKUR4WSPeXgcOafwejI0GZHOtiDo1xzFHdhLPC1UCl3MGCtDJoDYRkfNk
-	 ms4T5j+SNSZ+wEOZ0zUmTvCjadYXtU5b0KTrsLu5pTpkQ/+Ra51rmv+xHiHryYvrlF
-	 alelBPbV5wMVH+yCH0RmZ5E6o+1FE/r+qjVOY0M0ADFbKtNITvvYjaRqdgrOxMgxnL
-	 NlP8LhazRJdEA==
-Date: Tue, 23 Sep 2025 09:37:06 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Ioana Ciornei <ioana.ciornei@nxp.com>
-Cc: Conor Dooley <conor+dt@kernel.org>, Michael Walle <mwalle@kernel.org>,
-	devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Lee Jones <lee@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Frank Li <Frank.Li@nxp.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 03/12] dt-bindings: fsl,fpga-qixis: describe the gpio
- child node found on LS1046AQDS
-Message-ID: <175863819103.3194626.3121186874199604555.robh@kernel.org>
-References: <20250922142427.3310221-1-ioana.ciornei@nxp.com>
- <20250922142427.3310221-4-ioana.ciornei@nxp.com>
+	s=arc-20240116; t=1758649823; c=relaxed/simple;
+	bh=3MzZor+wv1b+LtEEulN63K5j/gISYaHE/QyOscIN/2Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WWnr3KwCimlJb06q6q3ZsHgrA7sqpHwgef/hE6k7NKM2pVKsmhCMOJ04pDUj4q3Kq2RIy7b+FfrdgsAKpFvAGbZR8XsnqBMuyHBYS1X3YC7sUz9R56k1yXdSJTvInYXO2ggxkGxV44FFbcJzOTuXT/aYD8e8oQJilemp/rpTi6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+X-CSE-ConnectionGUID: Z3Gm9Z44RTCrZpFLzthbPQ==
+X-CSE-MsgGUID: wYlBcxyoS2W7tt2kT0jCyg==
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 24 Sep 2025 02:50:19 +0900
+Received: from demon-pc.localdomain (unknown [10.226.93.64])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 904CF403D61D;
+	Wed, 24 Sep 2025 02:50:17 +0900 (JST)
+From: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
+To: 
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
+Subject: [PATCH] pinctrl: renesas: rzg2l: remove extra semicolons
+Date: Tue, 23 Sep 2025 20:49:50 +0300
+Message-ID: <20250923174951.1136259-1-cosmin-gabriel.tanislav.xa@renesas.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250922142427.3310221-4-ioana.ciornei@nxp.com>
+Content-Transfer-Encoding: 8bit
 
+Semicolons after end of function braces are unnecessary, remove them.
 
-On Mon, 22 Sep 2025 17:24:18 +0300, Ioana Ciornei wrote:
-> Extend the list of accepted child nodes with the QIXIS FPGA based GPIO
-> controller and explicitly list its compatible string
-> fsl,ls1046aqds-fpga-gpio-stat-pres2 as the only one accepted.
-> 
-> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-> ---
-> Changes in v3:
-> - new patch
-> Changes in v4:
-> - none
-> Changes in v5:
-> - none
-> 
->  .../devicetree/bindings/board/fsl,fpga-qixis.yaml      | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
+Signed-off-by: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
+---
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+index f524af6f586f..51b7e4291ff4 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+@@ -568,7 +568,7 @@ static void rzg2l_pinctrl_set_pfc_mode(struct rzg2l_pinctrl *pctrl,
+ 	pctrl->data->pwpr_pfc_lock_unlock(pctrl, true);
+ 
+ 	spin_unlock_irqrestore(&pctrl->lock, flags);
+-};
++}
+ 
+ static int rzg2l_pinctrl_set_mux(struct pinctrl_dev *pctldev,
+ 				 unsigned int func_selector,
+@@ -608,7 +608,7 @@ static int rzg2l_pinctrl_set_mux(struct pinctrl_dev *pctldev,
+ 	}
+ 
+ 	return 0;
+-};
++}
+ 
+ static int rzg2l_map_add_config(struct pinctrl_map *map,
+ 				const char *group_or_pin,
+@@ -1413,7 +1413,7 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
+ 	*config = pinconf_to_config_packed(param, arg);
+ 
+ 	return 0;
+-};
++}
+ 
+ static int rzg2l_pinctrl_pinconf_set(struct pinctrl_dev *pctldev,
+ 				     unsigned int _pin,
+@@ -1613,7 +1613,7 @@ static int rzg2l_pinctrl_pinconf_group_set(struct pinctrl_dev *pctldev,
+ 	}
+ 
+ 	return 0;
+-};
++}
+ 
+ static int rzg2l_pinctrl_pinconf_group_get(struct pinctrl_dev *pctldev,
+ 					   unsigned int group,
+@@ -1640,7 +1640,7 @@ static int rzg2l_pinctrl_pinconf_group_get(struct pinctrl_dev *pctldev,
+ 	}
+ 
+ 	return 0;
+-};
++}
+ 
+ static const struct pinctrl_ops rzg2l_pinctrl_pctlops = {
+ 	.get_groups_count = pinctrl_generic_get_group_count,
+-- 
+2.51.0
 
 
