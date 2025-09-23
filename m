@@ -1,104 +1,190 @@
-Return-Path: <linux-gpio+bounces-26522-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26523-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C076FB94F6C
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 10:21:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B976DB9556E
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 11:55:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 89871485A09
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 08:21:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 81F37171499
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 09:55:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD6BA31A546;
-	Tue, 23 Sep 2025 08:20:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEA65321264;
+	Tue, 23 Sep 2025 09:55:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mc11K5lt"
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="haF24h/w"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f65.google.com (mail-ed1-f65.google.com [209.85.208.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A4D3101A3;
-	Tue, 23 Sep 2025 08:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E348130F943
+	for <linux-gpio@vger.kernel.org>; Tue, 23 Sep 2025 09:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758615657; cv=none; b=QG2vWf0KWU+xz/lNhnONPysltUqRMgdYMQ+IqCNjFiuMLU7R1s0BCrDDKXmPvk5PQP6ql1E22Ic43rnKHTvucRMeavHGtPdCWa5OSuXxl/ocNGZe3O4QZbxWrXBGePc4iq98x2DCP5pe7I3jwk8ApY2zYDVm2IIR7OQqRQRlVY8=
+	t=1758621346; cv=none; b=TyI3lw7yydMYYYg8RNhVQ9EZOxf/b1303PtkWtnB4yRsP1XQVh5vd7SqIUlOiIA085IAv6rMUStOAMpzZ5/NE4Zlg7n578Up1urKh78PGFS8NSoQobSvHn27ansPMipQ0PZk88+6vNBClQyoEPbi1vA06bo2SbY3hCtfqvaMbl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758615657; c=relaxed/simple;
-	bh=tLyEr0eopslnhvUtyjtuRFQIrXOLW5XzwF8sJa4Av/c=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=I4yspmzfqK2eXIeygN7hsG5JtQgfnqvmCwFj9H30VxuNj7rsLw3olednAVSgCcybgA6l/saK0YOtoxtD8sSfhESE/vZkynsxFlNNkB36oF1vobJGEYlqAT3W5VOIN7lxES5m6cbXdHrj3+I6zLJ1jfIwx7srCFDzeAEBqTQrOig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mc11K5lt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11ED1C4CEF5;
-	Tue, 23 Sep 2025 08:20:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758615657;
-	bh=tLyEr0eopslnhvUtyjtuRFQIrXOLW5XzwF8sJa4Av/c=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=mc11K5ltk2vLIQk8oIcDAhetyfcZnX+9Kegch7h2CgmRfHn+xfIuhjcHvQx+CAJ5p
-	 nMGdub0BWOLmQ/e1e7VcOmkcWT2EWmlqPx6bj1b/XCnX2naW5N7QxMU+6CfeWZC0DL
-	 YmY4zct5FGRtzCjzxAAiYfB+TB09Soli2Zb+NfxqLFZj4AQHNVvOBUdOrUtJEpAGRq
-	 y2XvU3LYYmdSSGooeMtjvVA+Ht1XK6k2eKf72pYz+x/A3WU9Qjc1XUS4iDGjU/hU+T
-	 1CZYlYK6EmlNnG8EfSC35iCONqNR82rAm3Gp7GrZpiN0P/RonKnE8ixPtDQ92y0d1i
-	 MaXAcDI2kewLA==
-From: Mark Brown <broonie@kernel.org>
-To: linux-kernel@vger.kernel.org, 
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Lixu Zhang <lixu.zhang@intel.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Andi Shyti <andi.shyti@kernel.org>, 
- Alexander Usyskin <alexander.usyskin@intel.com>, 
- Arnd Bergmann <arnd@arndb.de>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-gpio@vger.kernel.org, 
- linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, 
- linux-usb@vger.kernel.org
-In-Reply-To: <20250922120632.10460-1-sakari.ailus@linux.intel.com>
-References: <20250922120632.10460-1-sakari.ailus@linux.intel.com>
-Subject: Re: (subset) [PATCH 1/5] usb: misc: ljca: Remove Wentong's e-mail
- address
-Message-Id: <175861565278.978616.15497621660014386014.b4-ty@kernel.org>
-Date: Tue, 23 Sep 2025 10:20:52 +0200
+	s=arc-20240116; t=1758621346; c=relaxed/simple;
+	bh=e5NOGt0T1QOZxsKIPNmxZjkQ42IMvdnLCXJEh6LT0RM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=untaQqx9lj1UI4Ei4DMp8KS9oIkdwKI+sTH6lkLHHrNuJEYbmcOShzu3rlbMwSdCZgKHcUDQ5tcNrDJBp7d85ms6RSe/useiafXUCRYZYmljEsCR7XG17p6wBe0TIwx4ISjE8rKKrnLNR0WDuxPuk7m80/HQ4CR29I1w1IUGSUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=haF24h/w; arc=none smtp.client-ip=209.85.208.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+Received: by mail-ed1-f65.google.com with SMTP id 4fb4d7f45d1cf-61cc281171cso8624982a12.0
+        for <linux-gpio@vger.kernel.org>; Tue, 23 Sep 2025 02:55:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1758621342; x=1759226142; darn=vger.kernel.org;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rJ4iR0ikwChD7GAZnfT4r7240QnDqgcDQ/DHGsIuO5k=;
+        b=haF24h/wrJPNnq2IKcLfxamIIVmyfAVz3ySeeAziwS96OL1SeDhCIiqlWF4E2eueiU
+         LZ5vfILTwTTJ1dO5nZ695CDsD9TcarihFxjCNVZoN/0Hg1p/KZp3RtTg3mBoGFqvLps8
+         ynI+pIUhDGeN7hRVvGDpJ2rrD49kkb2sLEdnV6ZXa1ot+QLkkK6uwsOnmmMlMKeQBRhf
+         D67J3hRYOEtpm0x06YWsPhuTCdDDJtcdxZcF5QRV9Y0f00uEAlaY9Dq5VhAe/q/qfic2
+         XarCYdkmAmP+trDiAHj5wC6oqYBOxwi8e4Z8SZhW98xkhA3fE4UnWWZGbcW4yD8tG+DQ
+         ZOEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758621342; x=1759226142;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rJ4iR0ikwChD7GAZnfT4r7240QnDqgcDQ/DHGsIuO5k=;
+        b=cSUAg1aqRpm+E/NXjPsD2MlNmFxpDXhvxg8vlhjgff5jsknl6bcm4RHsQfdOme/t+5
+         FwCK/nT7pe3RGIPWjalavNXuAYWboEo2d5K/KYpk6JUwGevSU6rNA1DREy7Td4ep55rn
+         rNzmIJAJHlA+iSqEIOuxSDnKgbTTQE2vkkCjiYK76su8ZUK9rRFfYHnWnnw0ix3IEaWf
+         Ehh3UJSftKS+c/xNZpaTib3Tcsei0gPFx9jRBQS9lr2WZrYP5uJ8M1hoVT4YRPGv8jcT
+         heCCii1pwTwfcMmS8wbTCXeKTN6PHq9TL/vDg1VDHIHVobBYscXGRPh8yLgf1PjWlew9
+         gyww==
+X-Forwarded-Encrypted: i=1; AJvYcCU0Ymg0eoFZ4KZCA7sagDVEAcvQX1215voQJjo81qK9fnW6wTQE8ENlzM6g9VmdlTRcvDiCRLpbMxDb@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOCRrsEcvnnrgrx9EBkmKfdNS+vYCMPWnBPN3dD12CwW9ASnDA
+	ILICwG4uAyCZxgzbOOJhtxXjR5ErXo7FImqkAKYWpNht9EapCwibROBT2t/wFvSbOuM=
+X-Gm-Gg: ASbGncsuXKD4Rv+rjjUdcgaQlrVYmGxoYiN4GgcH7/8YNbi27vuEpY71CENuScOK655
+	zqTHhSaqHUWghLjE/th+5/VzSOC2snA0ezCuNyRkJMu1QzFFKbSiHobq/Bi3yjY8/haAbHKFsTK
+	1XQJUwXkGFEoUYFFwA/len/s629jkrKtt/bxcWSsWb6zc99xtikoGnlI/IAZT/o6x6k7fpOZ/ES
+	9Vjf5UHGpwLiIopkVDcXpA1ydxwyz4w6WSdXAZeY7KdO/1y4WqkPChe4oGwOkwVhcPNP4VfQFgc
+	00hvrUu8dag+W0jSi3IeukGYreQDBMdlYXrh9gfC28FpFbGpRdSM1r7ZnilJVLrgG/8MLz33j2e
+	s+DIbaaTWOyWfwig+VL8n4UoeCZqedbes9ETBuXeDg+n3poI2C0HO9qno/DcyV/qrSMjb
+X-Google-Smtp-Source: AGHT+IF4qTxhg5Hb9sQ/tJAzBa4Ees7FfG50FOAI9GBuf35fyxLYwKPlFRuv+uHkCbA78L9NSJbk0w==
+X-Received: by 2002:a05:6402:4389:b0:634:4e0:8360 with SMTP id 4fb4d7f45d1cf-6346779a012mr1708846a12.2.1758621342052;
+        Tue, 23 Sep 2025 02:55:42 -0700 (PDT)
+Received: from localhost (144-178-202-139.static.ef-service.nl. [144.178.202.139])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-62fa5cfa6f2sm10771105a12.6.2025.09.23.02.55.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Sep 2025 02:55:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-a9b2a
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 23 Sep 2025 11:55:41 +0200
+Message-Id: <DD038IVOWESM.24X3EZZXH3UE@fairphone.com>
+To: "Pavel Machek" <pavel@ucw.cz>, <barnabas.czeman@mainlining.org>
+Cc: "Bjorn Andersson" <andersson@kernel.org>, "Michael Turquette"
+ <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>, "Rob Herring"
+ <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, "Stephan Gerhold" <stephan@gerhold.net>,
+ =?utf-8?q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, "Linus Walleij"
+ <linus.walleij@linaro.org>, "Lee Jones" <lee@kernel.org>, "Joerg Roedel"
+ <joro@8bytes.org>, "Will Deacon" <will@kernel.org>, "Robin Murphy"
+ <robin.murphy@arm.com>, "Konrad Dybcio" <konradybcio@kernel.org>, "Sean
+ Paul" <sean@poorly.run>, "Abhinav Kumar" <quic_abhinavk@quicinc.com>,
+ "Marijn Suijten" <marijn.suijten@somainline.org>, "David Airlie"
+ <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>, "Dmitry Baryshkov"
+ <lumag@kernel.org>, "Adam Skladowski" <a_skl39@protonmail.com>, "Sireesh
+ Kodali" <sireeshkodali@protonmail.com>, "Rob Clark"
+ <robin.clark@oss.qualcomm.com>, "Abhinav Kumar" <abhinav.kumar@linux.dev>,
+ "Jessica Zhang" <jessica.zhang@oss.qualcomm.com>, "Srinivas Kandagatla"
+ <srini@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+ <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+ <iommu@lists.linux.dev>, <dri-devel@lists.freedesktop.org>,
+ <freedreno@lists.freedesktop.org>, <phone-devel@vger.kernel.org>,
+ <~postmarketos/upstreaming@lists.sr.ht>, <linux@mainlining.org>, "Konrad
+ Dybcio" <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v7 6/6] arm64: dts: qcom: Add Xiaomi Redmi 3S
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <20250831-msm8937-v7-0-232a9fb19ab7@mainlining.org>
+ <20250831-msm8937-v7-6-232a9fb19ab7@mainlining.org>
+ <aNGLPdmOyh/pfroq@duo.ucw.cz>
+ <97ee369f6ffbe42c72c57ebd72887b23@mainlining.org>
+ <aNJKniJ46YuUsbQ+@duo.ucw.cz>
+In-Reply-To: <aNJKniJ46YuUsbQ+@duo.ucw.cz>
 
-On Mon, 22 Sep 2025 15:06:28 +0300, Sakari Ailus wrote:
-> Wentong's e-mail address no longer works, remove it.
-> 
-> 
+Hi Pavel and Barnabas,
 
-Applied to
+On Tue Sep 23, 2025 at 9:22 AM CEST, Pavel Machek wrote:
+> Hi!
+>> > Hi!
+>> >=20
+>> > > +	led-controller@45 {
+>> > > +		compatible =3D "awinic,aw2013";
+>> > > +		reg =3D <0x45>;
+>> > > +		#address-cells =3D <1>;
+>> > > +		#size-cells =3D <0>;
+>> > > +
+>> > > +		vcc-supply =3D <&pm8937_l10>;
+>> > > +		vio-supply =3D <&pm8937_l5>;
+>> > > +
+>> > > +		led@0 {
+>> > > +			reg =3D <0>;
+>> > > +			function =3D LED_FUNCTION_STATUS;
+>> > > +			led-max-microamp =3D <5000>;
+>> > > +			color =3D <LED_COLOR_ID_RED>;
+>> > > +		};
+>> > > +
+>> > > +		led@1 {
+>> > > +			reg =3D <1>;
+>> > > +			function =3D LED_FUNCTION_STATUS;
+>> > > +			led-max-microamp =3D <5000>;
+>> > > +			color =3D <LED_COLOR_ID_GREEN>;
+>> > > +		};
+>> > > +
+>> > > +		led@2 {
+>> > > +			reg =3D <2>;
+>> > > +			function =3D LED_FUNCTION_STATUS;
+>> > > +			led-max-microamp =3D <5000>;
+>> > > +			color =3D <LED_COLOR_ID_BLUE>;
+>> > > +		};
+>> > > +	};
+>> > > +};
+>> >=20
+>> > That's single, 3-color LED, right? Please see LED multicolor support.
+>> As far as i know aw2013 driver does not have multicolor support.
+>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree=
+/Documentation/devicetree/bindings/leds/leds-aw2013.yaml
+>
+> I believe that needs to be fixed before more bugs are added on top to
+> work around that problem...
+>
+> ...and before that bug is cemented in the ABI.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+Honestly I don't think it's reasonable to expect people contributing dts
+to then first start patching existing LED drivers and adding support for
+x y or z to it, and block dts addition on that.
 
-Thanks!
+At least in postmarketOS the user space components we have (e.g.
+feedbackd) detect the LED things (and most others) automatically since
+various devices have various different setups. So once/if aw2013 gets
+multicolor support, the dts can be updated without problems.
 
-[4/5] spi: ljca: Remove Wentong's e-mail address
-      commit: 878702702dbbd933a5da601c75b8e58eadeec311
+Sure, maybe today changing something on the N900 which would change
+sysfs paths is not the best idea because people will probably have 10+
+years of random shell scripts lying around, but nowadays we usually have
+better ways of abstraction that can handle that.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+Regards
+Luca
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+>
+> Best regards,
+> 								Pavel
 
 
