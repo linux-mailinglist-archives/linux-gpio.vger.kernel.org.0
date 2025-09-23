@@ -1,130 +1,89 @@
-Return-Path: <linux-gpio+bounces-26534-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26535-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3A63B97BF3
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Sep 2025 00:42:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8AAEBB97E82
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Sep 2025 02:35:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7B3B52A5A1D
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 22:42:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D33FA4A75AB
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Sep 2025 00:35:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 205F83043C9;
-	Tue, 23 Sep 2025 22:42:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AC0B196C7C;
+	Wed, 24 Sep 2025 00:35:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xZLE7mrC"
+	dkim=pass (1024-bit key) header.d=maguitec.com.mx header.i=@maguitec.com.mx header.b="ZjVMbgV8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-g3-154.zohomail360.com (sender4-g3-154.zohomail360.com [136.143.188.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8F742065
-	for <linux-gpio@vger.kernel.org>; Tue, 23 Sep 2025 22:42:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758667321; cv=none; b=eYFiKndn4bpXFquLE/vBTelmE2m0e2fQhqP7MX+Yf1BpSxA19s7PtLeE3ZYtFG54o2ItPGJo2GAkf+rrfUHRzu4N2RR2OcenUqUGG8re9yaqRfU7fBrU5rzq9SgpDMB0v7WfWb/3oVo3VoPFQiVLuT+cxEY+tZx0UYUg8T3y0xg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758667321; c=relaxed/simple;
-	bh=6SWHpC7XT0boWgdfna8gc+pG3x0qlvgKa0qIbsC+iC4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dvT+pPbP8vuSpJOjL6OrmshZEjSIa+0kJLWVUoiunq5zQxgL50NPNiCkd6R2jb+H5wG2IOrwjtVxhNdvVj02qZxNtn/q3FQ+eOd1T91kWUxw77NFIjyRfACC5tP1bfmfeQaK1y4Jdu6RInGYbltxbFLxGm25yOCUeIbQ/Rvb13I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xZLE7mrC; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-578ecc56235so1420530e87.0
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Sep 2025 15:42:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1758667318; x=1759272118; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6SWHpC7XT0boWgdfna8gc+pG3x0qlvgKa0qIbsC+iC4=;
-        b=xZLE7mrCYYRk50mOsKeJMVdlzC9EjUH7yp+MsQSd3p1ilHA4L1G9Zq+axJC+4nSoel
-         AbdHn3ZgeNcF6vx7VNan+SwkgaAorcMRsZs5pcOYRrHIiocMCwwtJY86ZeMUIsE86ugc
-         27IgtAR7KFSGcIm0jFcPwdZttx6XuTYwME8hnPwmlbVW7cBfCc7QJKjoq/DngNqmbjdy
-         wf9mhswgbShUZO59M8wMIKjWuNXeDI2y3KlAOJUlsAHGtlUPq+7IVbduUo7PYQ8SrEGT
-         8qdDGjcLESKKhtkE/vqsLOZ1CXuI0EAjzhkSePGJg2P+oSdQ53BvTjYRRDk61Fon4K6K
-         FI4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758667318; x=1759272118;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6SWHpC7XT0boWgdfna8gc+pG3x0qlvgKa0qIbsC+iC4=;
-        b=nsWKFaB+in31WXQAkStH925sCknTr1kfqGjAOVGcUxm4Grp7VPsT6yRRIB5TQ8bQ9Y
-         clSAADxTlCqkG7y8oOOLI8696FgIUwMFAOdRrmPa8THRnqyZQ/9M6gYgufdWrR22/EID
-         6GGBoVT68emmf1I+cdnRiYbQDmN4Z69wYWwyIsqZDXTl6Rt0ZitqdJ3wGMCX9+eXCH+h
-         4W8uawyUTHohi+QC2rzyv5N80U+A5YyUgeimleyvjlCpZxKeiGfbpHcPnHccI92ae2Ne
-         N+R+M9XWiRDiOJJ9/iToCvpMICr5BdHRlBZ+WQXVV0aNumBCg8731VLF13W9XPh5jHKM
-         XYCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVISnv7iiB2V+r6fSKLmQplMnmpRSXRZOVuwLQv+5NHAgb1J64DOVNhkuhYhZGgoBSi3wllLty8Vsb@vger.kernel.org
-X-Gm-Message-State: AOJu0YykdOJy6fHrWkCSm5WL6P9P0TUTqQ6i2hDiYoGM0lt8pt2L6uk3
-	bSy6XgowmCqUtdbuvxMuJz6uAIT/GMs9r94hkBENMCFmGDQiLeiz8pKNnJuYo3c+EJzE7U+30VE
-	f8PocMFqgA/ZUNFF/giV1jgyMpL/z3s1JlL1ayZWMOA==
-X-Gm-Gg: ASbGnctSnOiJRmoWlUXgOwtJoR8gKEFd80BEEclm1Zb21r/4jyX6PjEcXoK44s/mhGq
-	qqMDQv7umWAewTtVBolPrGBcG+uEXGTr+oTqQ/Ld0/rdkFMdsbyZgS3j6pC2ea9t+p+GmdKfDY6
-	DOex0uALX6tK4OHVZ87HAeOdC5tlsaeJ5F++0St8Mzd09Ccyv1zwjGQQO413/dl5LzPHt8awhwx
-	AeI2sw=
-X-Google-Smtp-Source: AGHT+IG99GeGJ6EJmRFtaCX57MxbFFNDKEJDSpjz4IOp4Xv1ApJ9GNzknCU6gn3AgKwY56E7tlVN9VixGw0iGQWzSiA=
-X-Received: by 2002:a05:6512:4007:b0:57a:7be2:21e4 with SMTP id
- 2adb3069b0e04-5807051c520mr1245993e87.9.1758667317970; Tue, 23 Sep 2025
- 15:41:57 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0661188000
+	for <linux-gpio@vger.kernel.org>; Wed, 24 Sep 2025 00:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.154
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758674103; cv=pass; b=sYlWQSBTNx1AMs7v7IuP8xSbvwXCZ46IRIbZFv1w4Pv/WOGng8awV29gjdAbVAUfNkKtfQcUyh1Le8kVxb/1GtCU9u1rtGNcNk5EnYFQJ6VWymkq3UC+VN8utvFXnugcwxYmCJ5z3FATz6DXJi1bIUbTzxvdvs72lHUnwLqNpGg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758674103; c=relaxed/simple;
+	bh=y4+DUrum8S2Ayr54uad0DHPuoYvpGN25WFjSpUY9njM=;
+	h=Date:From:To:Message-ID:Subject:MIME-Version:Content-Type; b=ZZqxNgP5v32vl2WYEqYNXh3psyLTUnEwBJZhrKyY7WFd4VBZvu4t4Fl1lNX7a8pN/pf3FSCr1UsvwzrXdcpN1obcwzBCmlFgK5bSrR/7u+niC9+M8vD44kkSrGxhpLC0PP1KFoB3n0iSjT/2bLFOGeT33AF0qXJem/gzT+5EQnc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maguitec.com.mx; spf=pass smtp.mailfrom=bounce-zem.maguitec.com.mx; dkim=pass (1024-bit key) header.d=maguitec.com.mx header.i=@maguitec.com.mx header.b=ZjVMbgV8; arc=pass smtp.client-ip=136.143.188.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maguitec.com.mx
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bounce-zem.maguitec.com.mx
+ARC-Seal: i=1; a=rsa-sha256; t=1758674101; cv=none; 
+	d=us.zohomail360.com; s=zohoarc; 
+	b=IB5I7+ZM8LfOULAQQYvPgw9vRBga/B1//a5Okkl6hYQEzJNpNkxE5gurL834FZI8FIjqWaNKLnXXARR1sAb3yz1ay+F9j34XhbKDISPOsVu6fPrD712aNn1lsBJWCW6GYiSx17cqjuIqqRl3q1po9nS9bExM3X+vwLhA24nbSo0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=us.zohomail360.com; s=zohoarc; 
+	t=1758674101; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:MIME-Version:Message-ID:Reply-To:Reply-To:Subject:Subject:To:To:Message-Id:Cc; 
+	bh=y4+DUrum8S2Ayr54uad0DHPuoYvpGN25WFjSpUY9njM=; 
+	b=NPskrAqNcK09cZ6PpWHcit6EKqhTQAUooU4GvW4c0G98pDBbgsI+G1B/VxYcUnb6N+ETV182Ub26lvf4JQp9bQNR+8riCSG30oSqxOga7XSgOy02dXcK+RMLjOXyMbJmDFyLOejCAaDpl5jVDGkq1cZhNybXTNoRzovdUm+NOQs=
+ARC-Authentication-Results: i=1; mx.us.zohomail360.com;
+	dkim=pass  header.i=maguitec.com.mx;
+	spf=pass  smtp.mailfrom=investorrelations+9a721110-98d8-11f0-ace3-525400721611_vt1@bounce-zem.maguitec.com.mx;
+	dmarc=pass header.from=<investorrelations@maguitec.com.mx>
+Received: by mx.zohomail.com with SMTPS id 1758671653201644.9215294372963;
+	Tue, 23 Sep 2025 16:54:13 -0700 (PDT)
+DKIM-Signature: a=rsa-sha256; b=ZjVMbgV8X1Y4CFo/njhmW9jhh4hEOqWrFrPMPyb5o6N+Pk3HDxglJGIMDjtrWxYDBNYfe0XpV+RdBqkwe5aqHv4rsBnHnVaZSJoCBWS1ztApt//kNNf7K6zrAi1MlZpAvgHwsFBjqS9iur8CFn8dDD8+1UDz7JICNK5dvrZlvBs=; c=relaxed/relaxed; s=15205840; d=maguitec.com.mx; v=1; bh=y4+DUrum8S2Ayr54uad0DHPuoYvpGN25WFjSpUY9njM=; h=date:from:reply-to:to:message-id:subject:mime-version:content-type:content-transfer-encoding:date:from:reply-to:to:message-id:subject;
+Date: Tue, 23 Sep 2025 16:54:13 -0700 (PDT)
+From: Al Sayyid Sultan <investorrelations@maguitec.com.mx>
+Reply-To: investorrelations@alhaitham-investment.ae
+To: linux-gpio@vger.kernel.org
+Message-ID: <2d6f.1aedd99b146bc1ac.m1.9a721110-98d8-11f0-ace3-525400721611.19978ffc4a1@bounce-zem.maguitec.com.mx>
+Subject: Thematic Funds Letter Of Intent
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250910-make-compound-literals-normal-again-v1-0-076ee7738a0b@linaro.org>
- <20250910-make-compound-literals-normal-again-v1-2-076ee7738a0b@linaro.org>
-In-Reply-To: <20250910-make-compound-literals-normal-again-v1-2-076ee7738a0b@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 24 Sep 2025 00:41:46 +0200
-X-Gm-Features: AS18NWA87kQOtTQ-6Uw89hDflE_WXMd3ykrYMsrH2sWDsx3-k27OaCZ6EKQ1YIY
-Message-ID: <CACRpkdY8AN5vRQEt=3QzdFdPkvx0FLiv7QmwZ=eqZBSn9sUtng@mail.gmail.com>
-Subject: Re: [PATCH 2/3] pinctrl: use more common syntax for compound literals
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Lee Jones <lee@kernel.org>, Andy Shevchenko <andriy.shevchenko@intel.com>, 
-	Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Avi Fishman <avifishman70@gmail.com>, 
-	Tomer Maimon <tmaimon77@gmail.com>, Tali Perry <tali.perry1@gmail.com>, 
-	Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, 
-	Benjamin Fair <benjaminfair@google.com>, =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
-	=?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <legoffic.clement@gmail.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	James Cowgill <james.cowgill@blaize.com>, Matt Redfearn <matt.redfearn@blaize.com>, 
-	Neil Jones <neil.jones@blaize.com>, 
-	Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>, Hoan Tran <hoan@os.amperecomputing.com>, 
-	Yang Shen <shenyang39@huawei.com>, Imre Kaloz <kaloz@openwrt.org>, 
-	Yinbo Zhu <zhuyinbo@loongson.cn>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Nobuhiro Iwamatsu <nobuhiro.iwamatsu.x90@mail.toshiba>, Ray Jui <rjui@broadcom.com>, 
-	Scott Branden <sbranden@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, imx@lists.linux.dev, 
-	linux-unisoc@lists.infradead.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+	charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
+content-transfer-encoding-Orig: quoted-printable
+content-type-Orig: text/plain;\r\n\tcharset="utf-8"
+Original-Envelope-Id: 2d6f.1aedd99b146bc1ac.m1.9a721110-98d8-11f0-ace3-525400721611.19978ffc4a1
+X-JID: 2d6f.1aedd99b146bc1ac.s1.9a721110-98d8-11f0-ace3-525400721611.19978ffc4a1
+TM-MAIL-JID: 2d6f.1aedd99b146bc1ac.m1.9a721110-98d8-11f0-ace3-525400721611.19978ffc4a1
+X-App-Message-ID: 2d6f.1aedd99b146bc1ac.m1.9a721110-98d8-11f0-ace3-525400721611.19978ffc4a1
+X-Report-Abuse: <abuse+2d6f.1aedd99b146bc1ac.m1.9a721110-98d8-11f0-ace3-525400721611.19978ffc4a1@zeptomail.com>
+X-ZohoMailClient: External
 
-On Wed, Sep 10, 2025 at 9:25=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+To: linux-gpio@vger.kernel.org
+Date: 24-09-2025
+Thematic Funds Letter Of Intent
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> The (typeof(foo)) construct is unusual in the kernel, use a more typical
-> syntax by explicitly spelling out the type.
->
-> Link: https://lore.kernel.org/all/20250909-gpio-mmio-gpio-conv-part4-v1-1=
-3-9f723dc3524a@linaro.org/
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+It's a pleasure to connect with you
 
-Patch applied.
+Having been referred to your investment by my team, we would be=20
+honored to review your available investment projects for onward=20
+referral to my principal investors who can allocate capital for=20
+the financing of it.
 
-Yours,
-Linus Walleij
+kindly advise at your convenience
+
+Best Regards,
+
+Respectfully,
+Al Sayyid Sultan Yarub Al Busaidi
+Director
 
