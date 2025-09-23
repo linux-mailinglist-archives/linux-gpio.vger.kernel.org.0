@@ -1,147 +1,128 @@
-Return-Path: <linux-gpio+bounces-26516-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26517-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0520B94238
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 05:45:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B3F6B94A0A
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 08:56:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A0DE618A664C
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 03:46:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D67443BA92F
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 06:56:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4663257829;
-	Tue, 23 Sep 2025 03:45:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5090330E84A;
+	Tue, 23 Sep 2025 06:56:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="sRjl/jZp";
-	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="9iEveaNr"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="baVXzgA3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7247CAD24;
-	Tue, 23 Sep 2025 03:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FCAB25DB0A
+	for <linux-gpio@vger.kernel.org>; Tue, 23 Sep 2025 06:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758599150; cv=none; b=DiEgG/QxptoUILQf7LdeYU4iZJH6uREsVjMvxN1URBPav7igCAEyXisRxl/oClv9gxawt+oAgVEj+MYxsaU/b5Q0Bd5+mOB7Pjo5WeAutKA5lVPqqRH2c9DX+7JyqFjg6Fw0zLrhHCPVS6qS84OMQNefcdd708VyPA4xdYglqwM=
+	t=1758610585; cv=none; b=tn9RtVJyEJ5YDG/maQYBAI39uWt++rmAAuxrbu+Xzz4zqiU8BEnPLufkNKyPNdCJF9mt8y4aSYloDBpnIdEAUGkvtNoS13M/Km0xGveHjf3BBk+2GTVlSc92A6b++EPdP8LiV0UhbzZH8+yJB8e8ocpurZMyjj0Q53lvjcevlzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758599150; c=relaxed/simple;
-	bh=4CMWPtu95SpMo8DXVgcYovl8qzxoxMuizAwDQxBKMCU=;
+	s=arc-20240116; t=1758610585; c=relaxed/simple;
+	bh=Q1JgOVWrgfnpXgIZeXWfz4VzvMC4tAbZhSpeEIsa6UA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZYboDyGOGn7NU8j1A0pDBNpWwcUMVhnXcdti9wOuB/p+TsfaL3zcWskxpaoLyIdzGCYe7uGdWWP4SmEnqMYIIFRVOD34dd2DePi+91QSBbQKE+Fto+eOUPZAhdlU7o9HGDCgGJSTJgDKgb/BbKgIMYANhyXC4czmsXhSN01c7to=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=sRjl/jZp; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=9iEveaNr; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
-DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Subject:To:From:Date; t=1758598846; bh=RBI2aJbB7n590+KcwgaegrR
-	fg5lM30jDW0OwGnQmBL8=; b=sRjl/jZpgu8H2CCD/bvJRFr84ayFxOWFDfefDY/9M3pPOybi5w
-	lN8kDaTaV+lvXaJWoXtRLjvYQ72ke1vagpeRzkLmj9xzTdjaUUtLIcp6kNbjDTXNuUvfRjvQBGt
-	Woc9cSOZGQZHgEaNee3rLueQ/MPOLBaxqT6muqnh0yj3vVswnT4V4BGRyE4Ws2+y357MwxLDDXc
-	5zFTwjV430W2yYKhlLvSxm38QBj54ZvsJjZT1yH1zbZBRM+RcSMjtjl+He7bYMNL0vx57AC8lhu
-	0O7vO1yhF2z5AGLZyIb+D6gLV+qf+KpGapgbQ6XnOJl9oKC0A7w8P/AWbWb8IuVnPSw==;
-DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Subject:To:From:Date; t=1758598846; bh=RBI2aJbB7n590+KcwgaegrR
-	fg5lM30jDW0OwGnQmBL8=; b=9iEveaNrpfx+7EskGD80aKFQggG9+eDi7M/DmfHYjY9si7U0fL
-	1IgSpCtPfNEbyOVBCakFKmaRd5+VgsDV4/Ag==;
-Date: Tue, 23 Sep 2025 10:40:37 +0700
-From: Dang Huynh <dang.huynh@mainlining.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
-	dmaengine@vger.kernel.org, linux-mmc@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH 00/10] RDA8810PL SD/MMC support
-Message-ID: <2wwi3ktbcuyp7y7mqplndvawagae5hdhcx3hn375kycoqtows6@xcww2237rxpe>
-References: <20250919-rda8810pl-mmc-v1-0-d4f08a05ba4d@mainlining.org>
- <CAMRc=Mc4hO1LDumxAfkB1W6miTJXR1NUVAKBVarkwiF2yGvSLA@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Es9JKdKNz02Ezv6H1lT5pqkXDLCT9uBo0eEe8eVfAAzLf+M73El7HURNEwppBCXrQjkKltOL/bchJJpmaIhJNAOU6YJGJNiwgpUwgRlj9c4Oo8y02T512GfwAoh7OJfJxZ5IpCBz8TRhWSw1VlKURbGIgg4qnyn48+BsVyqWg7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=baVXzgA3; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=Q1Jg
+	OVWrgfnpXgIZeXWfz4VzvMC4tAbZhSpeEIsa6UA=; b=baVXzgA3gNuJRgNUduCT
+	9YLAh8ao3jJ4T8cLsmn+INWGot11qAUosE9al7r+2vHxEHf1iIFaX7bt7SMgQiu8
+	Uuo/UA5AIq7jQItsKC97WWxNK5Om8tZHAY2eUTzaaKlev0kiKa2lePNUh1Fs09dE
+	njAyluDzD13VmPy4sxNUGZ/9wbjZK/p+k1wDFsL/iMJBwB7EoxAlosKYDrj47NMQ
+	N16pFj+DMCceGAUjTmo/YJ1ok65CfjxH+sSRD00UAf2hkc4hWQ1YG+OXe0dYC1hI
+	AIL5PkmSTXpLw2RT0AO+B4yj5cfnH5MufMOSNFfl6A4ESHTPULdp3eR5mk+C7Z9C
+	Og==
+Received: (qmail 1004437 invoked from network); 23 Sep 2025 08:56:18 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 23 Sep 2025 08:56:18 +0200
+X-UD-Smtp-Session: l3s3148p1@Rv/NbnI/LtggAwDPXwQHAL/S9V79e5yL
+Date: Tue, 23 Sep 2025 08:56:17 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: "Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Hoan Tran <hoan@os.amperecomputing.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Phil Edworthy <phil.edworthy@renesas.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	Pascal Eberhard <pascal.eberhard@se.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 4/8] irqchip/renesas-rza1: Use for_each_of_imap_item
+ iterator
+Message-ID: <aNJEkd9C2bDrowHP@shikoro>
+References: <20250922152640.154092-1-herve.codina@bootlin.com>
+ <20250922152640.154092-5-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="TIDIkyJ3Gg25L3Jq"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mc4hO1LDumxAfkB1W6miTJXR1NUVAKBVarkwiF2yGvSLA@mail.gmail.com>
+In-Reply-To: <20250922152640.154092-5-herve.codina@bootlin.com>
 
-On Mon, Sep 22, 2025 at 04:17:05PM +0200, Bartosz Golaszewski wrote:
-> On Thu, Sep 18, 2025 at 8:49 PM Dang Huynh via B4 Relay
-> <devnull+dang.huynh.mainlining.org@kernel.org> wrote:
-> >
-> > This patch series aims to add SDMMC driver and various drivers required
-> > for SDMMC controller to function.
-> >
-> > This also fixed a bug where all the GPIO switched from INPUT to OUTPUT
-> > after the GPIO driver probed or by reading the GPIO debugfs.
-> >
-> > This patch series is a split from [1] to ease the maintainers.
-> >
-> 
-> This is still targeting at least 4 subsystems and isn't making the
-> merging any easier. Are there any build-time dependencies here? If
-> not, then split it further into small chunks targeting individual
-> subsystems and the relevant ARM SoC tree.
-The MMC driver depends on both the clock and the DMA driver.
 
-> 
-> Bartosz
-> 
-> > Tested on Orange Pi 2G-IOT using a Buildroot environment.
-> >
-> > [1]: https://lore.kernel.org/all/20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org/
-> >
-> > Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
-> > ---
-> > Dang Huynh (10):
-> >       dt-bindings: gpio: rda: Make interrupts optional
-> >       dt-bindings: clock: Add RDA Micro RDA8810PL clock/reset controller
-> >       dt-bindings: dma: Add RDA IFC DMA
-> >       dt-bindings: mmc: Add RDA SDMMC controller
-> >       gpio: rda: Make IRQ optional
-> >       gpio: rda: Make direction register unreadable
-> >       clk: Add Clock and Reset Driver for RDA Micro RDA8810PL SoC
-> >       dmaengine: Add RDA IFC driver
-> >       mmc: host: Add RDA Micro SD/MMC driver
-> >       ARM: dts: unisoc: rda8810pl: Add SDMMC controllers
-> >
-> >  .../bindings/clock/rda,8810pl-apsyscon.yaml        |  43 ++
-> >  Documentation/devicetree/bindings/dma/rda,ifc.yaml |  45 ++
-> >  .../devicetree/bindings/gpio/gpio-rda.yaml         |   3 -
-> >  Documentation/devicetree/bindings/mmc/rda,mmc.yaml |  92 +++
-> >  MAINTAINERS                                        |  18 +
-> >  .../boot/dts/unisoc/rda8810pl-orangepi-2g-iot.dts  |  20 +
-> >  .../arm/boot/dts/unisoc/rda8810pl-orangepi-i96.dts |  20 +
-> >  arch/arm/boot/dts/unisoc/rda8810pl.dtsi            |  47 +-
-> >  drivers/clk/Kconfig                                |   1 +
-> >  drivers/clk/Makefile                               |   1 +
-> >  drivers/clk/rda/Kconfig                            |  14 +
-> >  drivers/clk/rda/Makefile                           |   2 +
-> >  drivers/clk/rda/clk-rda8810.c                      | 769 +++++++++++++++++++
-> >  drivers/dma/Kconfig                                |  10 +
-> >  drivers/dma/Makefile                               |   1 +
-> >  drivers/dma/rda-ifc.c                              | 450 +++++++++++
-> >  drivers/gpio/gpio-rda.c                            |   4 +-
-> >  drivers/mmc/host/Kconfig                           |  12 +
-> >  drivers/mmc/host/Makefile                          |   1 +
-> >  drivers/mmc/host/rda-mmc.c                         | 853 +++++++++++++++++++++
-> >  include/dt-bindings/clock/rda,8810pl-apclk.h       |  70 ++
-> >  include/dt-bindings/dma/rda-ifc.h                  |  28 +
-> >  22 files changed, 2495 insertions(+), 9 deletions(-)
-> > ---
-> > base-commit: ae2d20002576d2893ecaff25db3d7ef9190ac0b6
-> > change-id: 20250918-rda8810pl-mmc-3f33b83c313d
-> >
-> > Best regards,
-> > --
-> > Dang Huynh <dang.huynh@mainlining.org>
-> >
-> >
+--TIDIkyJ3Gg25L3Jq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Sep 22, 2025 at 05:26:35PM +0200, Herve Codina (Schneider Electric)=
+ wrote:
+> The renesas-rza1 driver parses the interrupt-map property. It does it
+> using open code.
+>=20
+> Recently for_each_of_imap_item iterator has been introduce to help
+> drivers in this parsing.
+>=20
+> Convert the renesas-rza1 driver to use the for_each_of_imap_item
+> iterator instead of open code.
+>=20
+> Signed-off-by: Herve Codina (Schneider Electric) <herve.codina@bootlin.co=
+m>
+
+SW6 on my Genmai board still delivers irqs via rza1-irqc, so:
+
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+
+--TIDIkyJ3Gg25L3Jq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmjSRI0ACgkQFA3kzBSg
+KbY/FxAAlVLFGL6AfVEsCD/oIUfVYSIxAjWEEjVSx/Le5JffJO2Ft1SgnZ9rH8ji
+J1cpy3LuqstvKKD3u/BqrCMZRGjP/l+7iw6g/OSdetuKHf/VpDHpO47xD2LAZzBV
+Y0t0YvhLDN7phe1AfpkL3fVEbLRFX5/h+AcyP9mDReCJqwzV3cs7TDkbfMwbM1L9
++nQ5/4zodr/wkG/jdoMTCR9Acw6rCTFExxy1ay2GbyOponId39hkBneZYpTS/QTZ
+61b5ISD7aoEKu2CU4m32xOdNyep0bWjzgGlnSKl3KXpbKnpxSLvjbUTgBG/LTgXp
+gaBN0qNtqzh47Uzhy1pNjjC9mT/PTkbMg/wHp6bSBV7uMwgvodtT5JXaiGalWKhg
+SRGkvwUEOzRyVcF+07lBd23dP7QCMwkRc6vcI9VwlDQohnGQckIi+/9m2TnKzRtN
+H/TGXeC8oqQYgEgi3JuVY280LOfV0wOnGVe0by48mji6njHcc8PafrkFxExU3JFW
+Yexm+lUlqcVH6CzrGAJItO0aiUEZdeWjCGERIdPaU07M8LXIDbrLfqJkdVQdVief
+NglHPzKbAtsMzRKCXzUZUcVgW2pD06BhBtBOY8vGBroGGQr6NcZCd+B6PpYhHuaX
+DXDsLGKaG5modPfTEoUDF0i0M17lYLe5Cis6icEVXXMK/7EpVG0=
+=YWOY
+-----END PGP SIGNATURE-----
+
+--TIDIkyJ3Gg25L3Jq--
 
