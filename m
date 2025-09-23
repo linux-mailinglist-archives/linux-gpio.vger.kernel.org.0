@@ -1,158 +1,122 @@
-Return-Path: <linux-gpio+bounces-26530-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26531-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBAEFB97731
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 22:08:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 947B2B97962
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 23:37:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A40B417D88F
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 20:08:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C43201B23181
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 21:37:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D274301716;
-	Tue, 23 Sep 2025 20:07:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C7DF30C622;
+	Tue, 23 Sep 2025 21:37:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKtjZSg3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a55I2Dre"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63792EBDE0
-	for <linux-gpio@vger.kernel.org>; Tue, 23 Sep 2025 20:07:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D9578F58;
+	Tue, 23 Sep 2025 21:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758658073; cv=none; b=NyBXfIAlNZi24MFwUjXlnxJPpAlulAdfySbzCL9H5XGeQHuF56l9JZLSCri3R9g66jJedlZo6+Bjwjm5u1C4B+8EMoWvMlGanTtzIMXiJczJcyvsfOh5xIUiV6j/xCtnPF9M2yNnGMRtcUMUvzsrjLsuirBUj3pkhRjGodcSdFc=
+	t=1758663443; cv=none; b=hWaQILhlsNLMI/aSUs7rgYf5LeeOUdCgygitarhcwgC+fMUdA11wBXIiUVKc7iEQlg2fdPcGQflYHCgFwSLZOqoPHsv+Bet4OBpROKLAeqPpI5qEoz67SIUtmz0u2x7WOxt8WfpoRkJImHyEYS1tQ/W0XRG42xe7LqjMik1KW0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758658073; c=relaxed/simple;
-	bh=nzaKuqsMqLk0KaI+44dGF9OBhPL2+uKhnAeHRpKUN7o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KAso9opJj4ZOpljoVue88QGT1tySLo8j+csEfRzYMPJydwMB/o4pUcZ9QTiWOLzUetwOKl8tqb6V2KDHMmJG4C2I+Udj5soCuACLScOogu++dXnKIwiw0ljmSx0+uA5oYV3j53J1NaVJRD3vpWTOeTLdDCP4qBY9ctTSirpKHsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cKtjZSg3; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-4257f2b59ffso1495305ab.1
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Sep 2025 13:07:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758658070; x=1759262870; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JntGQxmTraCNs5OrsUIV5JQo1eR5sot8ORA2vuz4yOY=;
-        b=cKtjZSg3ekFzarxMwZtpp2vAAV/VzhFxinYwyabX0dR97DNAH9urvWpqjs6QNAJjHK
-         uppkZ8eyK92KbNXlr5txpA2c3tZ1fC2jDQHBvgM7u76Hy1x7D2BTL8pCoZVeMyZt6WIx
-         Z1M6MC8WcEmTGkZVG4KuW0fWsP9Ss7rU4dH3uWcO3sQUREJc+3oUWFK5EM89PRepl365
-         0NILiXBVHL8++gixXq43lnR492mC0j7zN/AZ8emVlv6HzvBXX4ePNdlaUd3VLPwFJXJ3
-         p8gQ4fFMIlorekA6w7BQdTAA4goBlEKCuDcaR6JNJ8Znzz+2BmivcF7SB0E0NkvH5Qk6
-         ufKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758658070; x=1759262870;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JntGQxmTraCNs5OrsUIV5JQo1eR5sot8ORA2vuz4yOY=;
-        b=K63ummGeNzhaAz8hyy0HqUA2IjNyx91pxWd1lJZ84ewvaYeMaOFYuD3PsPhPdHtblZ
-         cC0mUq/j4Ppi/a+K4hD4U2VGL/UJhGydncBaUDoNseWbxhP6woAMN4ghEtOcRRqvfzPm
-         a5UjINvtUCLbSZttU7UuHgOqmh94pKFMXFzQxYCuMPZ2+CK5aTdybt+TpP9krwBuEWll
-         dYispce8Aek8IhEwL75HxmNo1ElmcRQYd9qubtKehIxBnb2gOGYX1/UdXs/k9RQbZsjS
-         h8KLTpJ+6NjINp0NcSsqChID/b+6HjBAssaIzrBzvDqyW8dyXv4SfBF0bvR4c4c+NGim
-         Gw4w==
-X-Gm-Message-State: AOJu0Yw5E9/J3/4lBBXp80UgEth+SxJIZ76MilYI7PtsT+H1E9eIrq4X
-	ekZXGBZrd9o662XHh78l9REhVFm5zktvCgMXHBBqbfpImYwr1mP+F/Nf1uG/kA==
-X-Gm-Gg: ASbGncva1ski4Ti7ss5JwyUHGlFWKlDIjECDlgUS2uTyUbJUrAu8LM5lLBRUS5MSRIG
-	AsL7l/8AAdvbd+Q8nOhwdxDw2eEhIAdLGPedLDDoQnnjL2qiEYtQXpR+55sOGnRFrJldk8hCpE6
-	+3ULqf+vtfA/gIRcAlBi/Tp4A8IHN0T6/V60I3xAUobyosPZ1s3fQq+fc6YKCd8BxnOIbNOtWPS
-	NmNAeHeCTLovw36NMWwVdZsLrl9zn3cuIPyo192wS2aEneJpnnfikEVJNyidZhbqjmSTyUoJYYw
-	ZJHibk5Ysk53KzdiPsutUymkBS1/WmmsOll/EnhtN8TvAMsBXkPBHKS19K9PhcQF6S3OfjXlMEW
-	A3KcIpHzMyM8v0oI+Tj0CBvlOuj4KtT+DjlXziUkG5ekjW+Tn7wO+Ufrjfq8Wu6XJyXIk
-X-Google-Smtp-Source: AGHT+IGtMuvF6gMX/ZK7myVxXqm5z1feRe7uJdaBagVwspalYsnZ3BsOhvLfFvYe562lJgB2AjtPiA==
-X-Received: by 2002:a05:6e02:1a26:b0:424:805a:be98 with SMTP id e9e14a558f8ab-425823160ecmr54412245ab.9.1758658070484;
-        Tue, 23 Sep 2025 13:07:50 -0700 (PDT)
-Received: from vfazio4.xes-mad.com (syn-024-177-130-178.biz.spectrum.com. [24.177.130.178])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-42449436acesm72976515ab.0.2025.09.23.13.07.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Sep 2025 13:07:50 -0700 (PDT)
-From: Vincent Fazio <vfazio@gmail.com>
-To: linux-gpio@vger.kernel.org
-Cc: vfazio@xes-inc.com,
-	Vincent Fazio <vfazio@gmail.com>
-Subject: [libgpiod][PATCH] bindings: python: generate wheels for CPython 3.14
-Date: Tue, 23 Sep 2025 15:07:37 -0500
-Message-ID: <20250923200737.3177136-1-vfazio@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1758663443; c=relaxed/simple;
+	bh=AmT7pTT/bQK4h7VloFIIhchliPgyZojTf54MF0QHREo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DigyDuCykUZUYuYfeuzzwtc5v4QSCTd1qLSLUqhXnzEb8fr460UozrZD93NDsb0+MV9eaTDc0ptjoyGD7tncUBCz52g92l26QKenYgiqUY/0/JhQORtsKCcb1vrMj/2XowCnxGPHJGTY/TbFuc0/nFBpYC7UKilW/qr34WUH2gI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a55I2Dre; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EE44C4CEF5;
+	Tue, 23 Sep 2025 21:37:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758663443;
+	bh=AmT7pTT/bQK4h7VloFIIhchliPgyZojTf54MF0QHREo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a55I2Drexre9bmk9zOM6IHzQLXlQLZh5HwWP9Px8aa/1hUS7J58IX7JJ3YDzCuSEM
+	 PAS3UJCrtAIueVROmkX4i4/LE8CnJ4xggv/HzM6XkXuZUCxXuwrOA/v6g8Y2f0uku/
+	 f0ijwgCPwX5/BC3M3TGHhGSBZsK1PD0rxU7lsZr5CX9FWDXzMlOrlUQMTXiYaxcO0D
+	 skyJYWG9BJlwnI2a0btE2FNr6ra9N0dWRB6zll1TTr5tpxaUDyhp6C6gLAYOk8Mmtl
+	 jxKtO5V+Vycuwt7yWcI4UnHje3zc3L22NfIckDsJKK8yanMDnkXkmCavEDVeL+Tcsl
+	 68jmOmlZAVZmQ==
+Date: Tue, 23 Sep 2025 16:37:21 -0500
+From: Rob Herring <robh@kernel.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-mediatek@lists.infradead.org, herbert@gondor.apana.org.au,
+	davem@davemloft.net, krzk+dt@kernel.org, conor+dt@kernel.org,
+	chunkuang.hu@kernel.org, p.zabel@pengutronix.de, airlied@gmail.com,
+	simona@ffwll.ch, maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org, tzimmermann@suse.de, jassisinghbrar@gmail.com,
+	mchehab@kernel.org, matthias.bgg@gmail.com,
+	chunfeng.yun@mediatek.com, vkoul@kernel.org, kishon@kernel.org,
+	sean.wang@kernel.org, linus.walleij@linaro.org, lgirdwood@gmail.com,
+	broonie@kernel.org, andersson@kernel.org,
+	mathieu.poirier@linaro.org, daniel.lezcano@linaro.org,
+	tglx@linutronix.de, atenart@kernel.org, jitao.shi@mediatek.com,
+	ck.hu@mediatek.com, houlong.wei@mediatek.com,
+	kyrie.wu@mediatek.corp-partner.google.com, andy.teng@mediatek.com,
+	tinghan.shen@mediatek.com, jiaxin.yu@mediatek.com,
+	shane.chien@mediatek.com, olivia.wen@mediatek.com,
+	granquet@baylibre.com, eugen.hristev@linaro.org, arnd@arndb.de,
+	sam.shih@mediatek.com, jieyy.yang@mediatek.com,
+	frank-w@public-files.de, mwalle@kernel.org, fparent@baylibre.com,
+	linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH 00/38] MediaTek devicetree/bindings warnings sanitization
+Message-ID: <20250923213721.GA91441-robh@kernel.org>
+References: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250724083914.61351-1-angelogioacchino.delregno@collabora.com>
 
-Update cibuildwheel to add support for generating 3.14 wheels.
+On Thu, Jul 24, 2025 at 10:38:36AM +0200, AngeloGioacchino Del Regno wrote:
+> As Rob pointed out, MediaTek devicetrees are *poor* in the dtbs_check
+> tests, and got an infinite load of warnings.
+> 
+> This series starts attacking this situation.
+> 
+> I didn't really count how many warnings I have resolved - it's a lot
+> of them anyway - and I think that this is a good start in any case.
+> 
+> More will come, but I'll be on a long holiday soon, so not from me
+> (or anyway not before I come back anyway), but most probably from
+> someone else (in August...!).
+> 
+> Cheers!
+> Angelo
+> 
+> AngeloGioacchino Del Regno (38):
+>   dt-bindings: display: mediatek: dpi: Allow specifying resets
+>   dt-bindings: display: mediatek,dp: Allow DisplayPort AUX bus
+>   dt-bindings: mailbox: mediatek,gce-mailbox: Make clock-names optional
+>   ASoC: dt-bindings: mt8192-afe-pcm: Fix clocks and clock-names
+>   dt-bindings: crypto: inside-secure,safexcel: Mandate only ring IRQs
+>   dt-bindings: timer: mediatek: Add compatible for MT6795 GP Timer
+>   dt-bindings: pinctrl: mediatek,mt7622-pinctrl: Add missing pwm_ch7_2
+>   dt-bindings: pinctrl: mediatek,mt7622-pinctrl: Add missing base reg
+>   dt-bindings: pinctrl: mt6779: Allow common MediaTek pinctrl node names
+>   dt-bindings: regulator: mediatek,mt6332-regulator: Add missing
+>     compatible
+>   dt-bindings: regulator: mediatek,mt6331: Fix various regulator names
+>   dt-bindings: regulator: mediatek,mt6331: Add missing compatible
+>   dt-bindings: remoteproc: mediatek: Remove l1tcm MMIO from MT8188 dual
+>   dt-bindings: media: mediatek,mt8195-jpeg: Allow range number in node
+>     address
+>   dt-bindings: phy: mediatek,hdmi-phy: Fix clock output names for MT8195
 
-Configuration options for cibuildwheel have been moved to pyproject.toml
-to keep it in line with other tools used by the bindings.
+As we are close to the merge window, I applied patches 1, 3, 6, 7, 8, 
+10, 11, 12 and 14.
 
-The configuration has been updated to skip generating free-threaded
-wheels since the bindings do not support free-threaded builds [0] and
-cibuildwheel generates them by default starting with CPython3.14 [1].
-
-[0]: https://github.com/brgl/libgpiod/issues/117
-[1]: https://github.com/pypa/cibuildwheel/pull/2503
-
-Closes: https://github.com/brgl/libgpiod/issues/138
-Signed-off-by: Vincent Fazio <vfazio@gmail.com>
----
-Testing was performed on CPython 3.14.0-rc2 for manylinux wheels and rc3
-for musllinux wheels. Some test evidence is in the closing issue [0].
-
-[0]: https://github.com/brgl/libgpiod/issues/138#issuecomment-3320487586
----
- bindings/python/generate_pypi_artifacts.sh | 6 ++----
- bindings/python/pyproject.toml             | 6 ++++++
- 2 files changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/bindings/python/generate_pypi_artifacts.sh b/bindings/python/generate_pypi_artifacts.sh
-index d5dbd31..d36c606 100755
---- a/bindings/python/generate_pypi_artifacts.sh
-+++ b/bindings/python/generate_pypi_artifacts.sh
-@@ -108,14 +108,12 @@ python3 -m "${venv_module}" .venv
- venv_python="${temp_dir}/.venv/bin/python"
- 
- # Install build dependencies
--${venv_python} -m pip install build==1.2.2.post1 cibuildwheel==2.21.3
-+${venv_python} -m pip install build==1.3.0 cibuildwheel==3.2.0
- 
- LIBGPIOD_VERSION=${src_version} ${venv_python} -m build --sdist --outdir ./dist "${source_dir}"
- sdist=$(find ./dist -name '*.tar.gz')
- 
--# Target only CPython and X86_64 + AArch64 Linux wheels unless specified otherwise via environment variables
--CIBW_BUILD=${CIBW_BUILD:-"cp*"} CIBW_ARCHS=${CIBW_ARCHS:-"x86_64,aarch64"} \
--	${venv_python} -m cibuildwheel --platform linux "${sdist}" --output-dir dist/
-+${venv_python} -m cibuildwheel --platform linux "${sdist}" --output-dir dist/
- 
- if [ "${force}" -eq 1 ]; then
- 	printf "\nRemoving files from %s/dist/\n" "${output_dir}"
-diff --git a/bindings/python/pyproject.toml b/bindings/python/pyproject.toml
-index 3217412..45d50ae 100644
---- a/bindings/python/pyproject.toml
-+++ b/bindings/python/pyproject.toml
-@@ -27,6 +27,7 @@ classifiers = [
-   "Programming Language :: Python :: 3.11",
-   "Programming Language :: Python :: 3.12",
-   "Programming Language :: Python :: 3.13",
-+  "Programming Language :: Python :: 3.14",
- ]
- 
- [project.urls]
-@@ -80,3 +81,8 @@ ignore=[
- "gpiod/__init__.py" = ["F403", "F405"]  # ignore warnings about star imports
- "tests/__main__.py" = ["F403"]
- "tests/**.py" = ["F841"]  # ignore warnings about unused variables
-+
-+[tool.cibuildwheel]
-+build = "cp*"
-+skip = "cp31?t-*"  # Do not build free-threaded wheels
-+archs = ["x86_64", "aarch64"]
--- 
-2.43.0
-
+Rob
 
