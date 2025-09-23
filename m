@@ -1,128 +1,164 @@
-Return-Path: <linux-gpio+bounces-26517-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26518-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B3F6B94A0A
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 08:56:30 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18D38B94BED
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 09:22:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D67443BA92F
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 06:56:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9BF737A6F9E
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Sep 2025 07:20:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5090330E84A;
-	Tue, 23 Sep 2025 06:56:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78505311979;
+	Tue, 23 Sep 2025 07:22:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="baVXzgA3"
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="sTTBQf/a"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FCAB25DB0A
-	for <linux-gpio@vger.kernel.org>; Tue, 23 Sep 2025 06:56:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4C631158A;
+	Tue, 23 Sep 2025 07:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758610585; cv=none; b=tn9RtVJyEJ5YDG/maQYBAI39uWt++rmAAuxrbu+Xzz4zqiU8BEnPLufkNKyPNdCJF9mt8y4aSYloDBpnIdEAUGkvtNoS13M/Km0xGveHjf3BBk+2GTVlSc92A6b++EPdP8LiV0UhbzZH8+yJB8e8ocpurZMyjj0Q53lvjcevlzA=
+	t=1758612133; cv=none; b=IUWaBoK94Ccq0EW1te+N+1ny6S+wJ6664fa+MrZoab0ljtRxQx4tWohCaYZwOAeJs+UL5tRa7EZ9D1K8K2qu9inYN7t+i8z4Yo9ZvgWjrthWCdwBUYQBENbqqE3aVyf8bxyzG5vsPketDQWmVb18wUJoLvve1Z/1BxRWFThnM+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758610585; c=relaxed/simple;
-	bh=Q1JgOVWrgfnpXgIZeXWfz4VzvMC4tAbZhSpeEIsa6UA=;
+	s=arc-20240116; t=1758612133; c=relaxed/simple;
+	bh=UXWIhJQT0UWxMfY/+J9fpbJB9h4hs4LLSoJ3ohNFBv0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Es9JKdKNz02Ezv6H1lT5pqkXDLCT9uBo0eEe8eVfAAzLf+M73El7HURNEwppBCXrQjkKltOL/bchJJpmaIhJNAOU6YJGJNiwgpUwgRlj9c4Oo8y02T512GfwAoh7OJfJxZ5IpCBz8TRhWSw1VlKURbGIgg4qnyn48+BsVyqWg7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=baVXzgA3; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=Q1Jg
-	OVWrgfnpXgIZeXWfz4VzvMC4tAbZhSpeEIsa6UA=; b=baVXzgA3gNuJRgNUduCT
-	9YLAh8ao3jJ4T8cLsmn+INWGot11qAUosE9al7r+2vHxEHf1iIFaX7bt7SMgQiu8
-	Uuo/UA5AIq7jQItsKC97WWxNK5Om8tZHAY2eUTzaaKlev0kiKa2lePNUh1Fs09dE
-	njAyluDzD13VmPy4sxNUGZ/9wbjZK/p+k1wDFsL/iMJBwB7EoxAlosKYDrj47NMQ
-	N16pFj+DMCceGAUjTmo/YJ1ok65CfjxH+sSRD00UAf2hkc4hWQ1YG+OXe0dYC1hI
-	AIL5PkmSTXpLw2RT0AO+B4yj5cfnH5MufMOSNFfl6A4ESHTPULdp3eR5mk+C7Z9C
-	Og==
-Received: (qmail 1004437 invoked from network); 23 Sep 2025 08:56:18 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 23 Sep 2025 08:56:18 +0200
-X-UD-Smtp-Session: l3s3148p1@Rv/NbnI/LtggAwDPXwQHAL/S9V79e5yL
-Date: Tue, 23 Sep 2025 08:56:17 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: "Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Hoan Tran <hoan@os.amperecomputing.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=smcRhb2ZtNw0nYSwmiN8CWyg2+6olJtj2jOFEaPQd49rMSfP7utWJO+Z/AD0sZVj+N21Idylc+9xH4YxDjcdTJH295CosSjiZxYq6XfES6FmQKNHZzuoyS7lgIsnRtW5mirur3QNZKBNI4gdD3QJ9EDvv7xHEOfRILcT3yKridw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=sTTBQf/a; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 0CBDD1C01D7; Tue, 23 Sep 2025 09:22:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1758612127;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hwzWkQrBN4TucShSte7+gBBGke3z5o+Bkhkg05nMEo4=;
+	b=sTTBQf/a2nzDFGyFnuAvY+ZoWD8Hosb9TzAxDaZiDAvOEHBXFt2Ry+MnJvCHTHajjKDe30
+	+6esiaJNy6v6yDUz49gjYVaUeMw3Eoiy4/0gLL1s/YKgW31/ZpI0TrH8W7O7EFLug/Kc3m
+	TK/E85C8luh+gvffde677ZQ3AhTp++0=
+Date: Tue, 23 Sep 2025 09:22:06 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: barnabas.czeman@mainlining.org
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Phil Edworthy <phil.edworthy@renesas.com>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	Pascal Eberhard <pascal.eberhard@se.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 4/8] irqchip/renesas-rza1: Use for_each_of_imap_item
- iterator
-Message-ID: <aNJEkd9C2bDrowHP@shikoro>
-References: <20250922152640.154092-1-herve.codina@bootlin.com>
- <20250922152640.154092-5-herve.codina@bootlin.com>
+	Stephan Gerhold <stephan@gerhold.net>,
+	Otto =?iso-8859-1?Q?Pfl=FCger?= <otto.pflueger@abscue.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Lee Jones <lee@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Konrad Dybcio <konradybcio@kernel.org>, Sean Paul <sean@poorly.run>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Adam Skladowski <a_skl39@protonmail.com>,
+	Sireesh Kodali <sireeshkodali@protonmail.com>,
+	Rob Clark <robin.clark@oss.qualcomm.com>,
+	Abhinav Kumar <abhinav.kumar@linux.dev>,
+	Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, iommu@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+	linux@mainlining.org,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v7 6/6] arm64: dts: qcom: Add Xiaomi Redmi 3S
+Message-ID: <aNJKniJ46YuUsbQ+@duo.ucw.cz>
+References: <20250831-msm8937-v7-0-232a9fb19ab7@mainlining.org>
+ <20250831-msm8937-v7-6-232a9fb19ab7@mainlining.org>
+ <aNGLPdmOyh/pfroq@duo.ucw.cz>
+ <97ee369f6ffbe42c72c57ebd72887b23@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="TIDIkyJ3Gg25L3Jq"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="iO6C/R28FEPs1Luw"
 Content-Disposition: inline
-In-Reply-To: <20250922152640.154092-5-herve.codina@bootlin.com>
+In-Reply-To: <97ee369f6ffbe42c72c57ebd72887b23@mainlining.org>
 
 
---TIDIkyJ3Gg25L3Jq
+--iO6C/R28FEPs1Luw
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 22, 2025 at 05:26:35PM +0200, Herve Codina (Schneider Electric)=
- wrote:
-> The renesas-rza1 driver parses the interrupt-map property. It does it
-> using open code.
->=20
-> Recently for_each_of_imap_item iterator has been introduce to help
-> drivers in this parsing.
->=20
-> Convert the renesas-rza1 driver to use the for_each_of_imap_item
-> iterator instead of open code.
->=20
-> Signed-off-by: Herve Codina (Schneider Electric) <herve.codina@bootlin.co=
-m>
+Hi!
+> > Hi!
+> >=20
+> > > +	led-controller@45 {
+> > > +		compatible =3D "awinic,aw2013";
+> > > +		reg =3D <0x45>;
+> > > +		#address-cells =3D <1>;
+> > > +		#size-cells =3D <0>;
+> > > +
+> > > +		vcc-supply =3D <&pm8937_l10>;
+> > > +		vio-supply =3D <&pm8937_l5>;
+> > > +
+> > > +		led@0 {
+> > > +			reg =3D <0>;
+> > > +			function =3D LED_FUNCTION_STATUS;
+> > > +			led-max-microamp =3D <5000>;
+> > > +			color =3D <LED_COLOR_ID_RED>;
+> > > +		};
+> > > +
+> > > +		led@1 {
+> > > +			reg =3D <1>;
+> > > +			function =3D LED_FUNCTION_STATUS;
+> > > +			led-max-microamp =3D <5000>;
+> > > +			color =3D <LED_COLOR_ID_GREEN>;
+> > > +		};
+> > > +
+> > > +		led@2 {
+> > > +			reg =3D <2>;
+> > > +			function =3D LED_FUNCTION_STATUS;
+> > > +			led-max-microamp =3D <5000>;
+> > > +			color =3D <LED_COLOR_ID_BLUE>;
+> > > +		};
+> > > +	};
+> > > +};
+> >=20
+> > That's single, 3-color LED, right? Please see LED multicolor support.
+> As far as i know aw2013 driver does not have multicolor support.
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/=
+Documentation/devicetree/bindings/leds/leds-aw2013.yaml
 
-SW6 on my Genmai board still delivers irqs via rza1-irqc, so:
+I believe that needs to be fixed before more bugs are added on top to
+work around that problem...
 
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+=2E..and before that bug is cemented in the ABI.
 
+Best regards,
+								Pavel
+--=20
+I don't work for Nazis and criminals, and neither should you.
+Boycott Putin, Trump, Netanyahu and Musk!
 
---TIDIkyJ3Gg25L3Jq
+--iO6C/R28FEPs1Luw
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmjSRI0ACgkQFA3kzBSg
-KbY/FxAAlVLFGL6AfVEsCD/oIUfVYSIxAjWEEjVSx/Le5JffJO2Ft1SgnZ9rH8ji
-J1cpy3LuqstvKKD3u/BqrCMZRGjP/l+7iw6g/OSdetuKHf/VpDHpO47xD2LAZzBV
-Y0t0YvhLDN7phe1AfpkL3fVEbLRFX5/h+AcyP9mDReCJqwzV3cs7TDkbfMwbM1L9
-+nQ5/4zodr/wkG/jdoMTCR9Acw6rCTFExxy1ay2GbyOponId39hkBneZYpTS/QTZ
-61b5ISD7aoEKu2CU4m32xOdNyep0bWjzgGlnSKl3KXpbKnpxSLvjbUTgBG/LTgXp
-gaBN0qNtqzh47Uzhy1pNjjC9mT/PTkbMg/wHp6bSBV7uMwgvodtT5JXaiGalWKhg
-SRGkvwUEOzRyVcF+07lBd23dP7QCMwkRc6vcI9VwlDQohnGQckIi+/9m2TnKzRtN
-H/TGXeC8oqQYgEgi3JuVY280LOfV0wOnGVe0by48mji6njHcc8PafrkFxExU3JFW
-Yexm+lUlqcVH6CzrGAJItO0aiUEZdeWjCGERIdPaU07M8LXIDbrLfqJkdVQdVief
-NglHPzKbAtsMzRKCXzUZUcVgW2pD06BhBtBOY8vGBroGGQr6NcZCd+B6PpYhHuaX
-DXDsLGKaG5modPfTEoUDF0i0M17lYLe5Cis6icEVXXMK/7EpVG0=
-=YWOY
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaNJKngAKCRAw5/Bqldv6
+8rwwAKCAEqvmxyif1M2EfR+OkPL1Yc+kKACfXIQxtdTTJxoVlwLVcRR2GW3coKg=
+=tPlv
 -----END PGP SIGNATURE-----
 
---TIDIkyJ3Gg25L3Jq--
+--iO6C/R28FEPs1Luw--
 
