@@ -1,167 +1,133 @@
-Return-Path: <linux-gpio+bounces-26558-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26559-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 488A8B9B8AA
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Sep 2025 20:42:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9112AB9B94C
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Sep 2025 20:58:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B4F5B4E1F21
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Sep 2025 18:41:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 21BE77A19E2
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Sep 2025 18:57:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 724AC3191D0;
-	Wed, 24 Sep 2025 18:41:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE05131A55B;
+	Wed, 24 Sep 2025 18:58:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="PATM6Mun"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="nonZE0uV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C8931771B
-	for <linux-gpio@vger.kernel.org>; Wed, 24 Sep 2025 18:41:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C150C31691C
+	for <linux-gpio@vger.kernel.org>; Wed, 24 Sep 2025 18:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758739294; cv=none; b=AxC2ufEdoUsFwmbXYJMBheAANrIj14OuWn3A22Q8RJzetAWNY7XD5o8b4eG/WO+0TUs9phWI3Cpbm4r6bGO94AiKJ8f6cInsGQXfRVesFCRykmwU9oNTG0RjStZy4p6+FNgZXLvT4/cbOcnp45NkaDCiSJ3AX9+gzuEIVQHhXR0=
+	t=1758740310; cv=none; b=qjksHdkzQb9Nr8T9PqxRQl58O8+ouBbpuUrzDCqkHDfriDS0s7yTdLFB130x+OOFTQy9oGauKDSbhaLa1Eo3D4dbt9CvcQAB+7hNAvlLsiq6lXVT6m0wYdsOXlCeEAs33SwWpqNishC6gHxoXtfpjykk0gaurx7J/zjMOfPYxIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758739294; c=relaxed/simple;
-	bh=AmtVRRJ1jDNsgzknhAmzKa0wOzllfT760U23kBlxD+M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rxvAvr/9lgVmYBnSmQ/1eocxvZB3uIPUDQhz0ePpC7S7Thb/PEjOcx6dRQgNiLAHBmZXxASiZqVj9qOn1iYlLndN6QU/9sd+aKTgiKLGxueDd2oKwSUbAZOdp1Kjh4LBqj/7cIFiww/yNWiAOvYbqJr5tMpGDQ5oMSLe4ifMw6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=PATM6Mun; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=+/I1
-	ab4olDmDZGHkFb/TQwI1UB8ySlew2Es2bhyLFxc=; b=PATM6MunPPhQrDkXlA25
-	6VcLtNz5L6k6gV4cHOpLAqoYi324j5/ewZlnrXU3FSQ5AnzLu/aKcTuw8juOZ1I6
-	UqhizFzH3f7WitkIJhx9OGq2vBfe6efaUzCMamNCDIn945n41H7Cub1LVbpfmhN7
-	3pJ/CEv1xOo81DrULWfegDEHWxurwj5ZfRPutZhirkMsRbUXaFuUyckFdoqtaYmW
-	pkSuvpXzrM2nQzuqtah9mv7RZFWlpUmRGvjw59XD0Q9nAhQE8WFyGUOQvsN1nflh
-	3YPLpEbhlC5H0A1QJ3rD11xTs0jQfwC2WLkZeZ/sIqw0xbd5TCTlKvIU3nfrNgmN
-	EA==
-Received: (qmail 1587696 invoked from network); 24 Sep 2025 20:41:21 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 24 Sep 2025 20:41:21 +0200
-X-UD-Smtp-Session: l3s3148p1@TSMiZpA/OIoujntL
-Date: Wed, 24 Sep 2025 20:41:20 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: "Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Hoan Tran <hoan@os.amperecomputing.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Phil Edworthy <phil.edworthy@renesas.com>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	Pascal Eberhard <pascal.eberhard@se.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 7/8] soc: renesas: Add support for Renesas RZ/N1 GPIO
- Interrupt Multiplexer
-Message-ID: <aNQ7UOniYss92EIS@ninjato>
-References: <20250922152640.154092-1-herve.codina@bootlin.com>
- <20250922152640.154092-8-herve.codina@bootlin.com>
+	s=arc-20240116; t=1758740310; c=relaxed/simple;
+	bh=Tvms9S2u+WWs1aqmeVPw1ZH+QcXa67JBCDgXQqcL1Nc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KgQMQbE3zDlIlwBJ4aYCzBN1sJS+Reipq0eSLSI135ztf91nfm/su3/3Zvxd8HZgxO8CSHdKOeRtH7uQGJcRURUv5F2vvygIK5QGJKdUKEjuCDg6nXrJGt4aeR9IeTmkiJcSGtBlw/rkp08/lhribXvz2ho6mI7Ver5WA/s9vpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=nonZE0uV; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-57d8ff3944dso94452e87.3
+        for <linux-gpio@vger.kernel.org>; Wed, 24 Sep 2025 11:58:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1758740307; x=1759345107; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Tvms9S2u+WWs1aqmeVPw1ZH+QcXa67JBCDgXQqcL1Nc=;
+        b=nonZE0uVLQny5TOOi+KqIwped2yLEoydhjl/vCnV6UWHVCXFBQtsStcpMjfcSHmYws
+         ndawyzrdlnsaFp4fBQZJM1CBnKMv0/qy6aJ9VV2wTAWd3UlrQnQlcHYXtVBgDT3c3eQg
+         O19EoSwhA5vvdo/gxkbqulZRyLZC2GpCmDfsmqwAtSRsYNNMT9mZpBw38M1Vw90RX8ch
+         MUmoQaU/Rd+WSIdCP04amGm5rSNRySj+N9pYWZ9BN/p61WWNsqfBDq8vTcuLs0h0ycxV
+         8E0YIYD6U4psQRPtOX+qP1E4P3YMeSGZz9Cajxk2R3nq2FlpLF3FRcV5W55LbRJipTg/
+         ZMUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758740307; x=1759345107;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Tvms9S2u+WWs1aqmeVPw1ZH+QcXa67JBCDgXQqcL1Nc=;
+        b=JWpPaALD+KhT+0YIAGH/OqEcGHNoHJGPRRYEnal+GR530/p/Qw3wNNgAPab31ccOkg
+         7znIq/cmyaVc8EXu7vGYgf3c2Zf+ehzm4zi3Ixo1vl6JM+Y2PfoD8x/Tbj/0pUiSLv65
+         KoPKAme2zP+E5iBcAB8XgjqW9OZiBAcCVzDdcVufr+LXMjkHKxYr23jr3MX/KJvXFFFT
+         wJuWyIDAhxyRfEHSL3a5JzZUvKQ6IyMt8jHOHGmNDjG81e84QJXg5F1mo4swVIxpwNrM
+         GKrypp+7I2k0He5P1aI0WUdHit+BccvUE7g0NhzeVz+XDKYz4Y6jqJa58Zpzf0zUOwLo
+         mMfg==
+X-Forwarded-Encrypted: i=1; AJvYcCXmotiuHnyVbDn95Q8pp6uFgvIvZs8uLrH1Dvvfsvf/wncGnagvvGQc+Yi0L83PNITGcVh+r1e8h47M@vger.kernel.org
+X-Gm-Message-State: AOJu0YxI+fKFYMBT6qeDuuoc6f7JDVGAC53/PrVDjvwiPU6aYQtr4FpI
+	vt++Aj600sVMozj7kOjFJ7Y/k37GYmDCsw3631KXn8Fhoo6cyM//Fwz9WwdV2j1zBODz0/0cTQH
+	wKRvbrImtKi4Hw7UtBsHl08ojpECnoBg1Fsf4vtQ2CA==
+X-Gm-Gg: ASbGnctdMlPfXxn9Et0tE4mPxoOgamrS/EZ6601TfvBo7aucKjFLXQQjJ6Apsyrf3x+
+	RSPpri5B9LbZV90sGWFk6YN2VAVrBsgWnsn9wngDRKVV6vjjOT3E3gyZB+Eg+MJsXOSQd1nA669
+	Yh3KOzCd25zIxuxeDxSp+tBwynmsnHsuuk74efbRNXBaKYxE/F/t+TN6wvd175oSKE46t1BDBc4
+	zFJ9s85gVIc4io2fXmBPfDULrTZ0p0UYoiLRd4=
+X-Google-Smtp-Source: AGHT+IG80v30cYAxmqw0nWtuIX67T8j0+pyB3RqSVPJrA4Q3f2yx4NJvYOML7KmCJ9NDodn7hTwpeLEpVOpaBNNnZoU=
+X-Received: by 2002:a05:6512:1389:b0:55f:572e:2417 with SMTP id
+ 2adb3069b0e04-582d4442054mr147305e87.56.1758740306748; Wed, 24 Sep 2025
+ 11:58:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="sPDzEL5A/+tREXwg"
-Content-Disposition: inline
-In-Reply-To: <20250922152640.154092-8-herve.codina@bootlin.com>
-
-
---sPDzEL5A/+tREXwg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org> <hyzzrjn7jzo3tt3oyg7azijouawe3zopfjzq6zfhoo6e6z2m4t@ssl5vl4g557e>
+In-Reply-To: <hyzzrjn7jzo3tt3oyg7azijouawe3zopfjzq6zfhoo6e6z2m4t@ssl5vl4g557e>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 24 Sep 2025 20:58:14 +0200
+X-Gm-Features: AS18NWB3RTCRDB9znJ75efLzXjjUdrkYJL4LszylIzL1olaMxdJPlHwCWt0jx1k
+Message-ID: <CAMRc=McVc2aYFX-DKjtNNNs0eZLcq_jahR+_q3EP1T352XhP+Q@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/9] gpio: improve support for shared GPIOs
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Herve,
+On Wed, Sep 24, 2025 at 8:25=E2=80=AFPM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> Hi Bartosz,
+>
+> On Wed, Sep 24, 2025 at 04:51:28PM +0200, Bartosz Golaszewski wrote:
+> > Here's a functional RFC for improving the handling of shared GPIOs in
+> > linux.
+> >
 
-On Mon, Sep 22, 2025 at 05:26:38PM +0200, Herve Codina (Schneider Electric)=
- wrote:
-> On the Renesas RZ/N1 SoC, GPIOs can generate interruptions. Those
-> interruption lines are multiplexed by the GPIO Interrupt Multiplexer in
-> order to map 32 * 3 GPIO interrupt lines to 8 GIC interrupt lines.
->=20
-> The GPIO interrupt multiplexer IP does nothing but select 8 GPIO
-> IRQ lines out of the 96 available to wire them to the GIC input lines.
->=20
-> Signed-off-by: Herve Codina (Schneider Electric) <herve.codina@bootlin.co=
-m>
+[snip]
 
-Thanks for improving the driver and removing the requirement of a fixed
-ordering!
+> >
+> > The practical use-case for this are the powerdown GPIOs shared by
+> > speakers on Qualcomm db845c platform, however I have also extensively
+> > tested it using gpio-virtuser on arm64 qemu with various DT
+> > configurations.
+>
+> How is this different from the existing gpio-backed regulator/supply?
+> IMO GPIOs are naturally exclusive-use resources (in cases when you need
+> to control them, not simply read their state), and when there is a need
+> to share them there are more appropriate abstractions that are built on
+> top of GPIOs...
+>
 
-> +static u32 rzn1_irqmux_output_lines[] =3D {
+I think you have never been on the receiving end of Krzysztof's wrath
+when trying to model a simple shared pin as a nonexistent reset
+provider or a fixed regulator in device-tree. :)
 
-const?
+Unless you mean some other abstractions I am missing.
 
-> +	103, 104, 105, 106, 107, 108, 109, 110
-> +};
-
-=2E..
-
-> +	for (i =3D 0; i < ARRAY_SIZE(rzn1_irqmux_output_lines); i++) {
-> +		if (parent_args->args[1] =3D=3D rzn1_irqmux_output_lines[i])
-> +			return i;
-> +	}
-
-Do we want a check here if the index has already been used in cases of
-an improper 'interrupt-map'? I'd think it would be nice to have but I
-would also not really require it.
-
-=2E..
-
-> +	ret =3D rzn1_irqmux_setup(dev, np, regs);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "failed to setup mux\n");
-> +
-> +	return 0;
-
-Maybe just
-
-	return rzn1_irqmux_setup(dev, np, regs);
-
-The driver core will report a failed probe already.
-
-It still works, so:
-
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-
-Happy hacking,
-
-   Wolfram
-
-
---sPDzEL5A/+tREXwg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmjUO0wACgkQFA3kzBSg
-Kbb7sg/9FlraWenace/wEziJTaN0z5SDtlFavT/tff2xkVPYo/YHX2RD+UF+eP3v
-7KsuMhwUUnLUsY5I1m76gFwa7iwZpY7ADInuWm3oyR79pUvsCUkdK6bCzHyqGZow
-3ITIkEPIVBAjDnGO+tmaXk9WdbpfxwUTbPYhKDxa1f/szLqf0uvDWmmSb3RoQZE5
-r9EBKV9modMar30ppBO6rk1F268MNB/mNGNNS6hqfGYROzHirS7trjP7+8+zSuMX
-idjZzgLdfO2QyWYwcfBCqz6i3LbqWk7HnG02vm4r1MhgMv3Nzi2WKu9MV7NRPh6w
-12JgK8xECSKisTYDJ+paD/ALarKM9tvZ4PI63MMzscCatrLvILLW9nH7EouSjnKc
-RDBhRElN6LSwQidhRLcF1KgKKMmL3AvPvbk8L0Ywjq+ziJ2qpaDWKMr+f2pLylS4
-Wy0X1Owdu/1fTSrjmgrksEqA1nIEAOvjjtJQW/MyjF+KzrnrlpBXlWUtjzinf893
-CeHqKzRiWue0rbjsPfW5CLmbfuqkn5k5+TnjPclMNnFmZAv3hIYdeGYxZ/JwaaVm
-eKoCp9FYTemfmqdeLjZp0FGBcnsvHx+wyzxb+YCI/ypJJyB94x7ikmawUgLmFPfm
-FR93LoSrFnEV8wg9hrPKn/RTwb3U9k4j9pRuAkSZQe4KnzhLWkg=
-=mmQN
------END PGP SIGNATURE-----
-
---sPDzEL5A/+tREXwg--
+Bartosz
 
