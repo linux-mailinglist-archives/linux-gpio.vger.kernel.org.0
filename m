@@ -1,132 +1,226 @@
-Return-Path: <linux-gpio+bounces-26561-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26562-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42CFCB9C4CD
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Sep 2025 23:48:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5777B9C5CF
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Sep 2025 00:32:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6AA491BC2E55
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Sep 2025 21:49:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 00CE7324032
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Sep 2025 22:32:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C052F286D76;
-	Wed, 24 Sep 2025 21:48:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 318C525F784;
+	Wed, 24 Sep 2025 22:32:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="H1LgXzaN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KIWdwdJP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8019D26CE17
-	for <linux-gpio@vger.kernel.org>; Wed, 24 Sep 2025 21:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC09B27B4E8;
+	Wed, 24 Sep 2025 22:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758750525; cv=none; b=EKReYCBJNLSgyNxeT9WchR2xMaW/V2hwYLV6XhBh9Gj5Za/ntMyFRKq6RDypP7YEzGTOsD05fH+WZBFpfcD63LVMsWkgY8NZ4gqJMbR+/ez1Hs22rl3NqeGovvT8mRA3cti/O2bWManGU9JajBf/r6rEJHBLAnEWy+1yYxXhYyE=
+	t=1758753132; cv=none; b=C4rjnSRRGZtqY28HWjgYnKL93HiiqKu9lGaJIoKcOGC12B2Pvnhk9Iolk6FmDsmiH90VVb23LeaitAGsyfVMWBgMfIhL8eGGfaOFMzWgwv1VznNLG16flm+XRsC7H8YO0CvFpgJ5Jrzx53++FOyJwNeoyfJXWqKSYEJce/f7I8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758750525; c=relaxed/simple;
-	bh=aE05OVLTPmqhXmuWSJP7DGx8docC8xqiHGoDzUsPDyo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lbu5WUn1VCT6WAjbStc4veI1fthfNGPGTauPjQiT7JfqhK4bh/rvEuXCPaQJNYG+P2AWr9MgXJBdJC68O8j2nrJj4hqWU1YNVVJeHq2dcwFXJWOXmA+3i8EvTXYHzX58Ct6v3QLExmQaMU0qdMymcCzM+LFckxxYnwGIiyQ+itA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=H1LgXzaN; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=Sd+w
-	mIZ22PON20TAEBc1B2ghCmV0byKiM0bDhr9fIoA=; b=H1LgXzaN0Gla79rJu83C
-	1ULDX42H6uWXMkzrD2+evEaZykaKTEv2tl/+33dqdWOygqY7J42e9/kZViV0hBbk
-	C1/7Y0v5eE8l2udX0J+owfxIcmepS1ipdPfDVLNoQXipYvsDH4dQ8tqnoLEtwViU
-	dhIP1ODk6hCdKywo72ON0SDarPx/GmsR+cc58GJDdLRanS3c8RKJfnkRZytcOpHy
-	ydkiv6Nif87GaH5GeZWXndg1AQRXus+wwztArU5tXSeoq86oANz/J4IG7JbYlH14
-	5Te3lLG4qwHpH2geyPmsO/PuqIk2H0Znj9NmdMly1R8ASXb0O5CWms3X2l+SOdPq
-	VA==
-Received: (qmail 1627587 invoked from network); 24 Sep 2025 23:48:41 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 24 Sep 2025 23:48:41 +0200
-X-UD-Smtp-Session: l3s3148p1@UXkNBJM/VLAujntL
-Date: Wed, 24 Sep 2025 23:48:40 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: "Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Hoan Tran <hoan@os.amperecomputing.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	s=arc-20240116; t=1758753132; c=relaxed/simple;
+	bh=vcpmBitnTv4R56a3+OiUjc9+LnarzpY2vQKN626n8Q4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nwx8GoXHpmltnNhU9HxS0+Q8TpdcrhgPZAbY8WA7YKAoPdDH2iDFIh2ltaQ17YRM7a7mJXiucW7dDVv7rRKM2bg1h6MDENzrVw0cVv3Ad+3y/i5gZjeu3s/Wugckxao7kKr6piP4r7u+D3ZcUkPOZgdf6zYOaPN/ywXZ2hrHJaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KIWdwdJP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76F08C4CEE7;
+	Wed, 24 Sep 2025 22:32:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758753131;
+	bh=vcpmBitnTv4R56a3+OiUjc9+LnarzpY2vQKN626n8Q4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KIWdwdJPwVGAKFCfudJKON7MSkfhTu5Aiz7A/Qc0URzC6h09VTd/FujOGd7hIoF6A
+	 pOsbNhX50YBKh6K4p8jPx0veUPiTlFuDlZPA24IUMlsTEwQ+wjsCRDB8KE2atOhvwE
+	 jSAf6p8xV09QrNnYB21+lTHQZRMN7U+KJFkwmJrKHWniDRPTIyR0nU0xl4JEY+lf2U
+	 3pDR+BtohhltrXohDVaRluJkWjOVZkDb/BwYbk0mC1q5mzHw6SOJi+pp6gFEAkIVa6
+	 VflDDV8AUCuBLJDF928wkJNA6xkyNIy4hnNcK5id1dvm4ue4KXHkQD0TRvC7pZ+BzU
+	 GMZx9swc91hBw==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Phil Edworthy <phil.edworthy@renesas.com>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	Pascal Eberhard <pascal.eberhard@se.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 8/8] ARM: dts: r9a06g032: Add support for GPIO
- interrupts
-Message-ID: <aNRnOFTvaThW-CJE@shikoro>
-References: <20250922152640.154092-1-herve.codina@bootlin.com>
- <20250922152640.154092-9-herve.codina@bootlin.com>
+	Antoine Tenart <atenart@kernel.org>,
+	Jisheng Zhang <jszhang@kernel.org>
+Cc: linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: pinctrl: Convert Marvell Berlin pinctrl to DT schema
+Date: Wed, 24 Sep 2025 17:31:59 -0500
+Message-ID: <20250924223201.2952988-1-robh@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="oA4k4Hyef5iRiZPB"
-Content-Disposition: inline
-In-Reply-To: <20250922152640.154092-9-herve.codina@bootlin.com>
+Content-Transfer-Encoding: 8bit
 
+Convert the Marvell/Synaptics Berlin pinctrl binding to DT schema
+format. The "reg" property was not documented for the newer SoCs.
+Otherwise, it's a straight-forward conversion.
 
---oA4k4Hyef5iRiZPB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+With this Berlin is warning free on arm64.
+---
+ .../bindings/pinctrl/berlin,pinctrl.txt       | 47 ----------
+ .../pinctrl/marvell,berlin2-soc-pinctrl.yaml  | 86 +++++++++++++++++++
+ 2 files changed, 86 insertions(+), 47 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/berlin,pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,berlin2-soc-pinctrl.yaml
 
+diff --git a/Documentation/devicetree/bindings/pinctrl/berlin,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/berlin,pinctrl.txt
+deleted file mode 100644
+index 0a2d5516e1f3..000000000000
+--- a/Documentation/devicetree/bindings/pinctrl/berlin,pinctrl.txt
++++ /dev/null
+@@ -1,47 +0,0 @@
+-* Pin-controller driver for the Marvell Berlin SoCs
+-
+-Pin control registers are part of both chip controller and system
+-controller register sets. Pin controller nodes should be a sub-node of
+-either the chip controller or system controller node. The pins
+-controlled are organized in groups, so no actual pin information is
+-needed.
+-
+-A pin-controller node should contain subnodes representing the pin group
+-configurations, one per function. Each subnode has the group name and
+-the muxing function used.
+-
+-Be aware the Marvell Berlin datasheets use the keyword 'mode' for what
+-is called a 'function' in the pin-controller subsystem.
+-
+-Required properties:
+-- compatible: should be one of:
+-	"marvell,berlin2-soc-pinctrl",
+-	"marvell,berlin2-system-pinctrl",
+-	"marvell,berlin2cd-soc-pinctrl",
+-	"marvell,berlin2cd-system-pinctrl",
+-	"marvell,berlin2q-soc-pinctrl",
+-	"marvell,berlin2q-system-pinctrl",
+-	"marvell,berlin4ct-avio-pinctrl",
+-	"marvell,berlin4ct-soc-pinctrl",
+-	"marvell,berlin4ct-system-pinctrl",
+-	"syna,as370-soc-pinctrl"
+-
+-Required subnode-properties:
+-- groups: a list of strings describing the group names.
+-- function: a string describing the function used to mux the groups.
+-
+-Example:
+-
+-sys_pinctrl: pin-controller {
+-	compatible = "marvell,berlin2q-system-pinctrl";
+-
+-	uart0_pmux: uart0-pmux {
+-		groups = "GSM12";
+-		function = "uart0";
+-	};
+-};
+-
+-&uart0 {
+-	pinctrl-0 = <&uart0_pmux>;
+-	pinctrl-names = "default";
+-};
+diff --git a/Documentation/devicetree/bindings/pinctrl/marvell,berlin2-soc-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/marvell,berlin2-soc-pinctrl.yaml
+new file mode 100644
+index 000000000000..6ace3bf5433b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/marvell,berlin2-soc-pinctrl.yaml
+@@ -0,0 +1,86 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/marvell,berlin2-soc-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Marvell Berlin pin-controller driver
++
++maintainers:
++  - Antoine Tenart <atenart@kernel.org>
++  - Jisheng Zhang <jszhang@kernel.org>
++
++description: >
++  Pin control registers are part of both chip controller and system controller
++  register sets. Pin controller nodes should be a sub-node of either the chip
++  controller or system controller node. The pins controlled are organized in
++  groups, so no actual pin information is needed.
++
++  A pin-controller node should contain subnodes representing the pin group
++  configurations, one per function. Each subnode has the group name and the
++  muxing function used.
++
++  Be aware the Marvell Berlin datasheets use the keyword 'mode' for what is
++  called a 'function' in the pin-controller subsystem.
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - marvell,berlin2-soc-pinctrl
++          - marvell,berlin2-system-pinctrl
++          - marvell,berlin2cd-soc-pinctrl
++          - marvell,berlin2cd-system-pinctrl
++          - marvell,berlin2q-soc-pinctrl
++          - marvell,berlin2q-system-pinctrl
++          - marvell,berlin4ct-avio-pinctrl
++          - marvell,berlin4ct-soc-pinctrl
++          - marvell,berlin4ct-system-pinctrl
++          - syna,as370-soc-pinctrl
++
++  reg:
++    maxItems: 1
++
++additionalProperties:
++  description: Pin group configuration subnodes.
++  type: object
++  $ref: /schemas/pinctrl/pinmux-node.yaml#
++  additionalProperties: false
++
++  properties:
++    groups:
++      description: List of pin group names.
++      $ref: /schemas/types.yaml#/definitions/string-array
++
++    function:
++      description: Function used to mux the group.
++      $ref: /schemas/types.yaml#/definitions/string
++
++  required:
++    - groups
++    - function
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - marvell,berlin4ct-avio-pinctrl
++              - marvell,berlin4ct-soc-pinctrl
++              - marvell,berlin4ct-system-pinctrl
++              - syna,as370-soc-pinctrl
++    then:
++      required:
++        - reg
++
++examples:
++  - |
++    pinctrl {
++        compatible = "marvell,berlin2q-system-pinctrl";
++
++        uart0-pmux {
++            groups = "GSM12";
++            function = "uart0";
++        };
++    };
+-- 
+2.51.0
 
-> +			/*
-> +			 * interrupt-map has to be updated according to GPIO
-> +			 * usage. The src irq (0 field) has to be updated with
-> +			 * the needed GPIO interrupt number.
-> +			 * More items can be added (up to 8). Those items must
-> +			 * define one GIC interrupt line among 103 to 110.
-> +			 */
-> +			interrupt-map = <0 &gic GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-
-Okay, so my main concern here was that we setup some "random" default
-mapping for each board. Which is not true because this node is disabled
-by default. So, maybe we could rephrase the paragraph like
-
-/*
- * Example mapping entry. Board DTs need to overwrite 'interrupt-map'
- * with their specific mapping. Check the irqmux binding documentation
- * for details.
- */
-
-? I will see if I can provide a useful board addition for the DB400
-boards...
-
-
---oA4k4Hyef5iRiZPB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmjUZzMACgkQFA3kzBSg
-KbZDWw/+LIaZhl2ByaLjrNPnnLEpJsF6SPa2bCt/qWEa+M+GcWNL1EEi4e1wQBiR
-17inwvsmdCWn89uISn7xnbZiSOwGleG0czZZuJ8C6cdJr5Fja8uyG6xmmDFrsry+
-3lvewd2LoyWjvpH4lgflQNgyEmdrX4eOAbCerjpWNj8VwVJoyR1M0ocgA6eYB7c9
-MFb8eZhFw1i94IPvu0quRllCTU4bLLR/V2EAGNtKIIgnDtTULA17Uy8/V0coLxVI
-bM+wa5LHu+AsK1cmmj6IMEtgS0Y85icRuasZKydP5GFcbKIlQjSACAi6LwMLOpJi
-AiODOhnW7O/VKEMfuxquz4vEjJq5EmBoNv8WvBfzuhKwUClRYAWVFet3nZDF5knj
-BbXyd+nxx95o1QhCikrCgUns2XgCcLQotv4aLkAhGdpWvw13yJEbcm2VpVgvXRJ7
-z0+SyP5ocEMFMZDPZkdEirj3yEwDIqWn3gxMkEFCvQ8fpZ+yU910A5Oapby0iKX5
-FCPHAW1bgi5udUpewhnavxzJuKCDP8H+89OrnZ5uRyHvoZrUOez56c+Fj81HZH2+
-bmGc9SJSCJNerb0o3VvMkygH5EEmqHtTtwVQl4p8iXNktH7c5efPUd2fJxvsZ0ew
-5VYePdwIK5f40wkupqLJLW7pE5KwgbHKY4tUF58HK3vWAeiy24w=
-=v8Q/
------END PGP SIGNATURE-----
-
---oA4k4Hyef5iRiZPB--
 
