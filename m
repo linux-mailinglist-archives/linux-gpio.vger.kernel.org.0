@@ -1,89 +1,130 @@
-Return-Path: <linux-gpio+bounces-26535-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26536-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8AAEBB97E82
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Sep 2025 02:35:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 313A0B98B33
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Sep 2025 09:54:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D33FA4A75AB
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Sep 2025 00:35:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4F7451B20CD8
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Sep 2025 07:54:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AC0B196C7C;
-	Wed, 24 Sep 2025 00:35:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A74428980A;
+	Wed, 24 Sep 2025 07:51:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maguitec.com.mx header.i=@maguitec.com.mx header.b="ZjVMbgV8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F+2UMnRp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from sender4-g3-154.zohomail360.com (sender4-g3-154.zohomail360.com [136.143.188.154])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0661188000
-	for <linux-gpio@vger.kernel.org>; Wed, 24 Sep 2025 00:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.154
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758674103; cv=pass; b=sYlWQSBTNx1AMs7v7IuP8xSbvwXCZ46IRIbZFv1w4Pv/WOGng8awV29gjdAbVAUfNkKtfQcUyh1Le8kVxb/1GtCU9u1rtGNcNk5EnYFQJ6VWymkq3UC+VN8utvFXnugcwxYmCJ5z3FATz6DXJi1bIUbTzxvdvs72lHUnwLqNpGg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758674103; c=relaxed/simple;
-	bh=y4+DUrum8S2Ayr54uad0DHPuoYvpGN25WFjSpUY9njM=;
-	h=Date:From:To:Message-ID:Subject:MIME-Version:Content-Type; b=ZZqxNgP5v32vl2WYEqYNXh3psyLTUnEwBJZhrKyY7WFd4VBZvu4t4Fl1lNX7a8pN/pf3FSCr1UsvwzrXdcpN1obcwzBCmlFgK5bSrR/7u+niC9+M8vD44kkSrGxhpLC0PP1KFoB3n0iSjT/2bLFOGeT33AF0qXJem/gzT+5EQnc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maguitec.com.mx; spf=pass smtp.mailfrom=bounce-zem.maguitec.com.mx; dkim=pass (1024-bit key) header.d=maguitec.com.mx header.i=@maguitec.com.mx header.b=ZjVMbgV8; arc=pass smtp.client-ip=136.143.188.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maguitec.com.mx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bounce-zem.maguitec.com.mx
-ARC-Seal: i=1; a=rsa-sha256; t=1758674101; cv=none; 
-	d=us.zohomail360.com; s=zohoarc; 
-	b=IB5I7+ZM8LfOULAQQYvPgw9vRBga/B1//a5Okkl6hYQEzJNpNkxE5gurL834FZI8FIjqWaNKLnXXARR1sAb3yz1ay+F9j34XhbKDISPOsVu6fPrD712aNn1lsBJWCW6GYiSx17cqjuIqqRl3q1po9nS9bExM3X+vwLhA24nbSo0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=us.zohomail360.com; s=zohoarc; 
-	t=1758674101; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:MIME-Version:Message-ID:Reply-To:Reply-To:Subject:Subject:To:To:Message-Id:Cc; 
-	bh=y4+DUrum8S2Ayr54uad0DHPuoYvpGN25WFjSpUY9njM=; 
-	b=NPskrAqNcK09cZ6PpWHcit6EKqhTQAUooU4GvW4c0G98pDBbgsI+G1B/VxYcUnb6N+ETV182Ub26lvf4JQp9bQNR+8riCSG30oSqxOga7XSgOy02dXcK+RMLjOXyMbJmDFyLOejCAaDpl5jVDGkq1cZhNybXTNoRzovdUm+NOQs=
-ARC-Authentication-Results: i=1; mx.us.zohomail360.com;
-	dkim=pass  header.i=maguitec.com.mx;
-	spf=pass  smtp.mailfrom=investorrelations+9a721110-98d8-11f0-ace3-525400721611_vt1@bounce-zem.maguitec.com.mx;
-	dmarc=pass header.from=<investorrelations@maguitec.com.mx>
-Received: by mx.zohomail.com with SMTPS id 1758671653201644.9215294372963;
-	Tue, 23 Sep 2025 16:54:13 -0700 (PDT)
-DKIM-Signature: a=rsa-sha256; b=ZjVMbgV8X1Y4CFo/njhmW9jhh4hEOqWrFrPMPyb5o6N+Pk3HDxglJGIMDjtrWxYDBNYfe0XpV+RdBqkwe5aqHv4rsBnHnVaZSJoCBWS1ztApt//kNNf7K6zrAi1MlZpAvgHwsFBjqS9iur8CFn8dDD8+1UDz7JICNK5dvrZlvBs=; c=relaxed/relaxed; s=15205840; d=maguitec.com.mx; v=1; bh=y4+DUrum8S2Ayr54uad0DHPuoYvpGN25WFjSpUY9njM=; h=date:from:reply-to:to:message-id:subject:mime-version:content-type:content-transfer-encoding:date:from:reply-to:to:message-id:subject;
-Date: Tue, 23 Sep 2025 16:54:13 -0700 (PDT)
-From: Al Sayyid Sultan <investorrelations@maguitec.com.mx>
-Reply-To: investorrelations@alhaitham-investment.ae
-To: linux-gpio@vger.kernel.org
-Message-ID: <2d6f.1aedd99b146bc1ac.m1.9a721110-98d8-11f0-ace3-525400721611.19978ffc4a1@bounce-zem.maguitec.com.mx>
-Subject: Thematic Funds Letter Of Intent
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657272882B4;
+	Wed, 24 Sep 2025 07:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758700318; cv=none; b=OEO+o7kVhlEke0S8ANNfnvb/8S/4tdCouYIVu5PhSiXJtwERjl4bJiLiN6RCu9FbpLfr+rGGmXWl2lOja91C3pH3j7OLFw/eXvEy3/Kclip9qeBCSWFE7VKGn2X7NUrqsDwuGipQuzKMmEzMAqqRpjnvLJ58131iNuXTwbMirp4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758700318; c=relaxed/simple;
+	bh=WaJ2eaaSZ2tDy2dFa7jdgb0wqBaGWrbs7O5Yko8R49k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R0v70aTq8+XsbjMPcQuukkcTP4Fv+5uyAlFbm5iulPSnucfbc2o/F3mXMt9thg9+LqSRw8CkjAriIZo+S5LOSJMDkobuyQPYQYIWCiIE4FXJ3c5DAkcLHAanxlyr7ZhtjECPCTA/tkzxAkpYcW+9SSuVQjMjo0VNdb5bW8Y0ijw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F+2UMnRp; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758700317; x=1790236317;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WaJ2eaaSZ2tDy2dFa7jdgb0wqBaGWrbs7O5Yko8R49k=;
+  b=F+2UMnRpOQnHbx351/hFwZ946uqnWVYNockM3Zi8xEziSJSBLxyjN68V
+   sg63whqJq8kRA8kyoOkLdwjozRS/1pJzdKdAWkpB0ZeC8AWtIwMu1hivu
+   JFxKUVQf4ncEQPc9oKbJnKXR+uzC7PywsZSYRsteSACvx93LNDHG646V5
+   a7hFcuUfI2+8sPCL8ZMc1fHY7ahvJdJCJMT5VYYjaRei+wBgGC+FwRBwT
+   pq2G1h0nQJVvI+RRYIY1bild2iaFn/Hvc1GIH+b/Mz12JC2UcqL2vE61Y
+   6JSUfZ+1v5yO5skDWIP7RrkL2EH3+ftoarmL3IbdXDNTaM0cUwfkmGoZa
+   A==;
+X-CSE-ConnectionGUID: hqTW+WGSRn6b98+pr5qDnA==
+X-CSE-MsgGUID: inN1DGcrRFmBhAgAtJzHyQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11561"; a="86434463"
+X-IronPort-AV: E=Sophos;i="6.18,290,1751266800"; 
+   d="scan'208";a="86434463"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2025 00:51:56 -0700
+X-CSE-ConnectionGUID: QCZxO2UFSX+qBI1JeWQi5w==
+X-CSE-MsgGUID: cO6qki2BQma1KZyRy8F0ZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,290,1751266800"; 
+   d="scan'208";a="176095748"
+Received: from sschumil-mobl2.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.128])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2025 00:51:53 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 4F2DD11F8D0;
+	Wed, 24 Sep 2025 10:51:49 +0300 (EEST)
+Date: Wed, 24 Sep 2025 10:51:49 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, Lixu Zhang <lixu.zhang@intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Alexander Usyskin <alexander.usyskin@intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
+	wentongw@amazon.com
+Subject: Re: [PATCH 1/5] usb: misc: ljca: Remove Wentong's e-mail address
+Message-ID: <aNOjFfQ63UIjMVQb@kekkonen.localdomain>
+References: <20250922120632.10460-1-sakari.ailus@linux.intel.com>
+ <2025092234-magenta-scouting-c3c4@gregkh>
+ <aNF5ahYzteTjq8Iu@kekkonen.localdomain>
+ <2025092246-swiftly-foothold-0c48@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-content-transfer-encoding-Orig: quoted-printable
-content-type-Orig: text/plain;\r\n\tcharset="utf-8"
-Original-Envelope-Id: 2d6f.1aedd99b146bc1ac.m1.9a721110-98d8-11f0-ace3-525400721611.19978ffc4a1
-X-JID: 2d6f.1aedd99b146bc1ac.s1.9a721110-98d8-11f0-ace3-525400721611.19978ffc4a1
-TM-MAIL-JID: 2d6f.1aedd99b146bc1ac.m1.9a721110-98d8-11f0-ace3-525400721611.19978ffc4a1
-X-App-Message-ID: 2d6f.1aedd99b146bc1ac.m1.9a721110-98d8-11f0-ace3-525400721611.19978ffc4a1
-X-Report-Abuse: <abuse+2d6f.1aedd99b146bc1ac.m1.9a721110-98d8-11f0-ace3-525400721611.19978ffc4a1@zeptomail.com>
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025092246-swiftly-foothold-0c48@gregkh>
 
-To: linux-gpio@vger.kernel.org
-Date: 24-09-2025
-Thematic Funds Letter Of Intent
+On Mon, Sep 22, 2025 at 06:48:13PM +0200, Greg Kroah-Hartman wrote:
+> On Mon, Sep 22, 2025 at 07:29:30PM +0300, Sakari Ailus wrote:
+> > Hi Greg,
+> > 
+> > On Mon, Sep 22, 2025 at 02:18:00PM +0200, Greg Kroah-Hartman wrote:
+> > > On Mon, Sep 22, 2025 at 03:06:28PM +0300, Sakari Ailus wrote:
+> > > > Wentong's e-mail address no longer works, remove it.
+> > > > 
+> > > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > > ---
+> > > >  drivers/usb/misc/usb-ljca.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/usb/misc/usb-ljca.c b/drivers/usb/misc/usb-ljca.c
+> > > > index c562630d862c..1846156c0800 100644
+> > > > --- a/drivers/usb/misc/usb-ljca.c
+> > > > +++ b/drivers/usb/misc/usb-ljca.c
+> > > > @@ -891,7 +891,7 @@ static struct usb_driver ljca_driver = {
+> > > >  };
+> > > >  module_usb_driver(ljca_driver);
+> > > >  
+> > > > -MODULE_AUTHOR("Wentong Wu <wentong.wu@intel.com>");
+> > > > +MODULE_AUTHOR("Wentong Wu");
+> > > 
+> > > Is there a new address where they can be reached?  SHouldn't that be
+> > > used instead of just deleting the intel one?
+> > 
+> > I believe Wentong has had plenty of time to update his address. If he still
+> > prefers to do so, he can do that after merging these patches.
+> 
+> I would prefer to get Wentong to send the patches themselves for all of
+> this if at all possible, thanks!
 
-It's a pleasure to connect with you
+Cc Wentong (thanks to Lixu for the address).
 
-Having been referred to your investment by my team, we would be=20
-honored to review your available investment projects for onward=20
-referral to my principal investors who can allocate capital for=20
-the financing of it.
-
-kindly advise at your convenience
-
-Best Regards,
-
-Respectfully,
-Al Sayyid Sultan Yarub Al Busaidi
-Director
+-- 
+Sakari Ailus
 
