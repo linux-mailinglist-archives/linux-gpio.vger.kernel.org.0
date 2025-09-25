@@ -1,71 +1,74 @@
-Return-Path: <linux-gpio+bounces-26572-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26573-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C71E8B9DFAA
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Sep 2025 10:09:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41A22B9DFFC
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Sep 2025 10:12:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 78A5B168EA5
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Sep 2025 08:09:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 501B619C5E94
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Sep 2025 08:12:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FDB426CE2E;
-	Thu, 25 Sep 2025 08:09:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B3AF26F2A7;
+	Thu, 25 Sep 2025 08:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wjUsZWBn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8306926A1B5
-	for <linux-gpio@vger.kernel.org>; Thu, 25 Sep 2025 08:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54E2EAE7
+	for <linux-gpio@vger.kernel.org>; Thu, 25 Sep 2025 08:12:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758787766; cv=none; b=gpkXsJuamRgpp78zxahORXMBMvJ60Ge7EVmFOmmgEDtzeW35Hi0h3JNAWqbzcz0bA0LGEO9i/SGsucHmPXEViBzIz5K3wB+f81dApSjxE1qDPAeLYecllLibQusNy3BM/zdxG/zRZqYd8+Qp/TGEi1gNcsfFxQkTX4ltaF4nn1I=
+	t=1758787927; cv=none; b=sPVR3z4pD92qKgk3m7VXoVQjtcCi2jiAnS0FC1ok4JlEExw9Rw7kxFZaOQf+t1RO9C2hBIBlXFGlblREtI72oHQ//NPk7kJHaTVuOaC/Fnp1L862ix0j/jbYgUIV45Yky+rIWhBAMcOuQzZU64I/HaJp1n0xbO8YZ+pwYqqbyVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758787766; c=relaxed/simple;
-	bh=NdLPCWYGKs4Nnl4f/TPtkkAAU2xiHmYr81MGuS2MbZQ=;
+	s=arc-20240116; t=1758787927; c=relaxed/simple;
+	bh=moVqkNvoC/U4Kiv+fBtM+ZZcVvqGIdKeTYp5d2BfFYE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LV2vsOJraM9RgNCoM9qVVh19gHGWISKo3ORxu4e42OmSbxQTrO7AJ5aLkiXpoFjlYB2CPhtnA3Z1Bqcdy/vX73N6PoMBuJeaZvPefRffryNfp4DVNM3YcHD5XnYwlKEV88vNGPsogtSo5s80HH8WU7bndl1qq/XiocSzlpCAVFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2445806e03cso8938325ad.1
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Sep 2025 01:09:25 -0700 (PDT)
+	 To:Cc:Content-Type; b=fAEWpdZivG5R1p3Z3QNL/Jc9JlOegMCs6BNEOIDV+sHk8xwz4TeC1tIc0Qm8eBK3yzWz7yWwtsRYbEOovoqFk//kfs8CC9JA80ZYcbnw0MY+YW2ZDbIhEoqAGXu/ZgpwiooNVWzgzKiQKynBoDVNaCrbzZbiPn23f2EfjiplKmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wjUsZWBn; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5797c8612b4so883705e87.2
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Sep 2025 01:12:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1758787924; x=1759392724; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pOUEu/+y60hAFjLRRexZAgc5r0XDC4GIpSh+/gdmcBM=;
+        b=wjUsZWBnHlVyDmuevdbz0GLyO8N9XO6scKvQNzppb0MhScpF0TF2Np2m/mh90FxgEv
+         vBRmFE3CCoMb/ftdTBF1JBg/vsKLqS1hZNj1bDy40XqyYQpwomLOBEkRDeOoMt8sfid2
+         d9jWqv+UvMdorC6Fk+OrV8PIdG/N+KtAVZ6eZy8LYUqKiXFoI9Wyy484HcIi51meS+rH
+         BdkCBurw57lVu0RNjagiHaWuJQH/uemaE8ajI5u883GAUiV+WIDkTIOmJpaH6qdqim8c
+         DhSj35YVlaYLPHrSyu4r7L8dlDryb44LNFqEhdjiUMUannBZ20+1Di0lguci9X6FaGYf
+         3IQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758787764; x=1759392564;
+        d=1e100.net; s=20230601; t=1758787924; x=1759392724;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rUcMlfE8b4AOAO2p/aFN45tB3uALYO0TSoBHD4chZzo=;
-        b=KkJKIwvRvuuYkJI2uyGnn/lcWVGew5fxDfKq/VIWkwwoXM/6fPu9JVeppg/ppwRJJf
-         leRWCIrIJpCgzwi59KP7T69Gcr6UjoBWXYIoQrWeEtSdet4/ID0iHpZIMjW2K4nzrWlF
-         lPRsi/dF3TOEuaykbQWwKtlq64Zc+naMrL6csBN4lKKdBeM/ocnI+yRS/5CsdEfVUQq2
-         ngiAlKlPArYSCHtDIyAC98ewOj7LrmYrPyIAk5G3OwFM16WOAV9QPMw7ox8kOXgXNxbU
-         amHbLaOgzuuNqP15QctbpBn9ntr/GKOqCf1ik+iqjcVKaJFh3ZFazAl9JuUav/QygiUr
-         LikQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVoINfk2c9lbDvMRf60SMVWyrZ3N/DmJPzedP/arIF40XEf4ntyuItdm92iJZ5Tykw57CYvjcBoX027@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVOWbC/oeKWYmridEugmzvYWTxQx1xTHIh/mieHYBflKqMrxLk
-	9hNZODuz4K9QHQHUSEEyp/l/Jq8MndEaIP4kWx/L18zEBDDaNEQhCMtyvK8HTdKE
-X-Gm-Gg: ASbGncu7w/qvhPopxBOr/J1uzv2HVHXXo4OsZ5ayMIGTLl5KhCCTgvrg3mtJnGHtn/g
-	/v5ZgyIeKw8nfhezib34By9AHuJ5Yzpecyl7LCPGY6/uOyaR0luyMeBd2wzF2frJ49qS6dUT33m
-	94ZeF7bzLlWDtpuwnz+NsfM0eGxxv+hmdKRt+jRCQA/spkfa28jwlnvmqP6pmOWgxBT1vu+fGu3
-	venwDqu5WOTZPqf+17FSj7vwlt/Ro6fQaqlU2DNB62hn3bCOPD2v+cguTJxjFCYdPA+esMdEbgg
-	xfoIpKB+D10taFffh0cqHk+He+PL6sXAlz17/77SPSoSvDqIxU9ozISs9EjWJmkEZgmov7P15J0
-	7JsvUufmmkNKTXg94b1nXs+Li3dKj8W8LdLZnBTyH+ol0kLN+mHSLMuWnVb9E
-X-Google-Smtp-Source: AGHT+IGwYfMRllcUftSZiNu6jkfnidaN4TVtldbGOSUTwWbOZbteE9An6nf8bgjPxIkQ1CPzU6miPg==
-X-Received: by 2002:a17:903:2343:b0:275:1833:96e5 with SMTP id d9443c01a7336-27ed49d2ca5mr29928365ad.24.1758787764450;
-        Thu, 25 Sep 2025 01:09:24 -0700 (PDT)
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com. [209.85.216.45])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-27ed66cf6e7sm16369205ad.2.2025.09.25.01.09.24
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Sep 2025 01:09:24 -0700 (PDT)
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3306d93e562so777020a91.1
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Sep 2025 01:09:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUq+HSWZjdZv/Nnqn8xznPykpScnzsEu2Wouuwc+tpaMHg6RwPxzmZDy01KHTAW5gQl3NhR50nHEN+N@vger.kernel.org
-X-Received: by 2002:a05:6122:90f:b0:542:2912:664f with SMTP id
- 71dfb90a1353d-54bea2f2d56mr980779e0c.10.1758787332548; Thu, 25 Sep 2025
- 01:02:12 -0700 (PDT)
+        bh=pOUEu/+y60hAFjLRRexZAgc5r0XDC4GIpSh+/gdmcBM=;
+        b=TJb9VS5cF8K+Gb8Kuy39orqcodrTkRhijvIQrJ7aKDD0Hh02vX1SiAmGCxRvgUQXam
+         GUIJIPCsgrGQTIIm4AJma3l2diN/G+cX9B3mCy4mCfyaAdTSLNquMLymRV+Bzfs661Ne
+         iCwD5y3X8Q0sruC4Uzz/Wy2UmPWls71o2TFjZcsHxIQEZruizcT000iV7UfSN2u9SZPR
+         ZT0DsDhBivAjtFG0UoswbdNT2YPHhMXVP36Fv1kCe3ikAq4OibikXAUNbCvgx63wh/51
+         n6wb0a1I/9HvZO+W2je6sK2rGGUL5qedjh1SICnbC+G6mFnKRGvxJC6dMc6QvSdH6Nld
+         d1fA==
+X-Forwarded-Encrypted: i=1; AJvYcCW/B7or0Eg9mlyu8JJgcMUlbhZFQTkftpPnIyl9g/BT87O9KVdpjzyuKXibImQaqllEfdqa6RH1gXdx@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwVu/Hp5jDPSC9cvskFHE5PWkglcd41a3jE4Q2fXJqWEF53QTU
+	2f7vR6iUysw4mXYXUJ4tWdF4vpKB3x9U/MLWVG4txRGHlJ8jyi5fl4gMuZxQJ8LEB1xX0atTHes
+	gcyfut1kSwgXy/PjJEWpFYXY9YDWKMBdfVtwd01w3cw==
+X-Gm-Gg: ASbGncuBadA+Oen9pxn2MHw4LFF860Tyw+Xtgg17GEUL2Dbe07er8MgnxKtg5T+cu67
+	3KilDCuRacv/ZMoahQ1O65mY88oEMLr4FVMXkjDqfB1tLZR6fkgPRak5An1Fi4QQWQgW2SZIk7L
+	HyIJ7PFY77xpvRY4ffXfJ5+VsRYD3KzgFTNuvu+e78K7f+lqIMIIGxGaFZPzRVdYCiGsTjNjFyx
+	YTX6iIzV+tc+ilsEDHTQlQZWm+/34PCk+9Fzw==
+X-Google-Smtp-Source: AGHT+IGJf55i3bv2L8+gmNkmzkA9WiH37A1+UEGPjEgNIhsONYzUjkvXwduJeRWAHBQx5JD4yW8UWOq3aNBoELENYBs=
+X-Received: by 2002:a05:6512:114a:b0:57e:6aef:3ffc with SMTP id
+ 2adb3069b0e04-582d073fab8mr832508e87.4.1758787923677; Thu, 25 Sep 2025
+ 01:12:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -74,15 +77,15 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250910-make-compound-literals-normal-again-v1-0-076ee7738a0b@linaro.org>
  <20250910-make-compound-literals-normal-again-v1-2-076ee7738a0b@linaro.org>
- <CAMuHMdWoEXLTPyQL4kt1OPVbrDDcBdBigqUM7EbNZjZUsSmRHQ@mail.gmail.com> <CAMRc=Mej9fQk-1zYKhPK6aWdptXKvjq28TywRyP+iZExRuX9og@mail.gmail.com>
-In-Reply-To: <CAMRc=Mej9fQk-1zYKhPK6aWdptXKvjq28TywRyP+iZExRuX9og@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 25 Sep 2025 10:02:01 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXgoj+XuKhruEmMpjZignuM9fJLp8NJ0=ZLw8KdFKohsA@mail.gmail.com>
-X-Gm-Features: AS18NWCyYwXSHgwWU9cjWnhwFzyaiaKh315kbRG5kwTsoewxQN_WDT2npG3qPmE
-Message-ID: <CAMuHMdXgoj+XuKhruEmMpjZignuM9fJLp8NJ0=ZLw8KdFKohsA@mail.gmail.com>
+ <CAMuHMdWoEXLTPyQL4kt1OPVbrDDcBdBigqUM7EbNZjZUsSmRHQ@mail.gmail.com>
+ <CAMRc=Mej9fQk-1zYKhPK6aWdptXKvjq28TywRyP+iZExRuX9og@mail.gmail.com> <CAMuHMdXgoj+XuKhruEmMpjZignuM9fJLp8NJ0=ZLw8KdFKohsA@mail.gmail.com>
+In-Reply-To: <CAMuHMdXgoj+XuKhruEmMpjZignuM9fJLp8NJ0=ZLw8KdFKohsA@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 25 Sep 2025 10:11:52 +0200
+X-Gm-Features: AS18NWBR36rLL1CtueiFc1sMJzM_SH_VKHScbJyKloWTmjZnMKzJiRko6sa-obs
+Message-ID: <CAMRc=MeR3iH7cH4aLuN5T+y5FCFyzpR3BBc4chE7CPAy8Ug2gQ@mail.gmail.com>
 Subject: Re: [PATCH 2/3] pinctrl: use more common syntax for compound literals
-To: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
 Cc: Lee Jones <lee@kernel.org>, Andy Shevchenko <andriy.shevchenko@intel.com>, 
 	Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, 
 	Lorenzo Pieralisi <lpieralisi@kernel.org>, Avi Fishman <avifishman70@gmail.com>, 
@@ -110,61 +113,59 @@ Cc: Lee Jones <lee@kernel.org>, Andy Shevchenko <andriy.shevchenko@intel.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Bartosz,
-
-On Thu, 25 Sept 2025 at 09:52, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> On Thu, Sep 25, 2025 at 9:48=E2=80=AFAM Geert Uytterhoeven <geert@linux-m=
-68k.org> wrote:
-> > On Thu, 11 Sept 2025 at 12:02, Bartosz Golaszewski <brgl@bgdev.pl> wrot=
-e:
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > The (typeof(foo)) construct is unusual in the kernel, use a more typi=
-cal
-> > > syntax by explicitly spelling out the type.
-> >
-> > Thanks for your patch, which is now commit da3a88e9656c17a3 ("pinctrl:
-> > use more common syntax for compound literals") in pinctrl/for-next
-> >
-> > > Link: https://lore.kernel.org/all/20250909-gpio-mmio-gpio-conv-part4-=
-v1-13-9f723dc3524a@linaro.org/
-
-This is the origin link to the patch (by you) that started the discussion.
-
-> >
-> > Looks like you (slightly) missed your target. The correct link is:
-> >
-> >     Link: https://lore.kernel.org/aMAP9hAWars0T83r@smile.fi.intel.com
-
-This is the link to the comment (by Andy) that questioned the construct.
-
-> >
-> > > Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu, Sep 25, 2025 at 10:03=E2=80=AFAM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
 >
-> This is a link to the discussion with Andy as per Linus Torvalds'
-> recent request to use the Link: tag to point to actually useful
-> information rather than just the patch's origin. Linus Walleij doesn't
-> use b4 so the origin link you'd normally expect to be added
-> automatically is not there at all. That's probably what caused the
-> confusion.
+> Hi Bartosz,
+>
+> On Thu, 25 Sept 2025 at 09:52, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > On Thu, Sep 25, 2025 at 9:48=E2=80=AFAM Geert Uytterhoeven <geert@linux=
+-m68k.org> wrote:
+> > > On Thu, 11 Sept 2025 at 12:02, Bartosz Golaszewski <brgl@bgdev.pl> wr=
+ote:
+> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > >
+> > > > The (typeof(foo)) construct is unusual in the kernel, use a more ty=
+pical
+> > > > syntax by explicitly spelling out the type.
+> > >
+> > > Thanks for your patch, which is now commit da3a88e9656c17a3 ("pinctrl=
+:
+> > > use more common syntax for compound literals") in pinctrl/for-next
+> > >
+> > > > Link: https://lore.kernel.org/all/20250909-gpio-mmio-gpio-conv-part=
+4-v1-13-9f723dc3524a@linaro.org/
+>
+> This is the origin link to the patch (by you) that started the discussion=
+.
+>
+> > >
+> > > Looks like you (slightly) missed your target. The correct link is:
+> > >
+> > >     Link: https://lore.kernel.org/aMAP9hAWars0T83r@smile.fi.intel.com
+>
+> This is the link to the comment (by Andy) that questioned the construct.
+>
+> > >
+> > > > Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> > > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > This is a link to the discussion with Andy as per Linus Torvalds'
+> > recent request to use the Link: tag to point to actually useful
+> > information rather than just the patch's origin. Linus Walleij doesn't
+> > use b4 so the origin link you'd normally expect to be added
+> > automatically is not there at all. That's probably what caused the
+> > confusion.
+>
+> I know ;-)
+>
+> Given the "Suggested-by: Andy", shouldn't the link point to the email
+> with the actual suggestion?
+>
 
-I know ;-)
+Ah, I didn't realize this is what you meant. I wanted to point to the
+entire discussion and also this is already in Linus' tree so it's up
+to him if he wants to change it.
 
-Given the "Suggested-by: Andy", shouldn't the link point to the email
-with the actual suggestion?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Bartosz
 
