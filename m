@@ -1,78 +1,78 @@
-Return-Path: <linux-gpio+bounces-26592-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26593-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D00B1BA0466
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Sep 2025 17:25:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE501BA0547
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Sep 2025 17:30:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 79DAF381C0F
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Sep 2025 15:20:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 552565E3198
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Sep 2025 15:20:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BC2E30CD8B;
-	Thu, 25 Sep 2025 15:17:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EDAC2E973F;
+	Thu, 25 Sep 2025 15:17:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L8XpQF2d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCxFmuy9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1870830AD00
-	for <linux-gpio@vger.kernel.org>; Thu, 25 Sep 2025 15:17:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BAD305E3A
+	for <linux-gpio@vger.kernel.org>; Thu, 25 Sep 2025 15:17:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758813456; cv=none; b=b3lrrc7h+lsRh2ob81qsVwUZdx12aL9fmrjwqSZ/gcLhZIGas8UES/icnDI+AvufvKJq/Iko0yrQBMTa+NFv2Q+9j7bbRBzffmz6+paks8yKWyIWnoyNXC3jCJ4c8VQyQ194uUxfM0Y7+OlCixuCYDvfgnCcA2rX+Tif4vVWujQ=
+	t=1758813458; cv=none; b=LnkrGlCufeEJ82VL0Trrp8hAOlo9TOem6dKK6RcROfgE1eAPWIym1EDdfeGeyi5FyErav6jkwX922vvVgMCVfqfCg07CCwbHP3exY8Bj9GBfiJynUq0UQHJnIE/QX1y5YeQ6y0+NEsh2QlfaW2vo0IpNogsMYJq/IaUNbJvrtCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758813456; c=relaxed/simple;
-	bh=oogKzOkmRUHqbeJIXHjFVmuliJy7HLFoYw49y22EcBg=;
+	s=arc-20240116; t=1758813458; c=relaxed/simple;
+	bh=J7izVaKPM1ps20wr6OTScdC6fJEWehyUv1o5AkzlcjI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WSgYzPQuyL1gxD+WDgtl1CuJ1VfW7zx0mSMitprw47MBMdxl5/Ou8ElHx10kKCbNdGNslvF9RvgPz6Hi1qGhBIx7COXVnUiC6HA6mx2v71KbWLaPKZ/Sb3i97W+5+g/GdVEigr1bE8XS1yP2WpcP+sgUfv16apEPi4c5I4xmAWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L8XpQF2d; arc=none smtp.client-ip=209.85.167.49
+	 MIME-Version; b=COadTLmFriulkU1e8DUnW/k5AFC22qMLdyNUXC20EiSUCdbwfDrmB/bg4X/DD4lydSDl4Hp/CfwjbXJ0eGFwnjXa54ZwysT0uO325n4PHCRGSgsDaIqToaDIq1vvRTc+DDrgZkUUbTyWyXn3BKGmGP8F2dqW99qBSpz3Z6L/QpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VCxFmuy9; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-57edfeaa05aso1155654e87.0
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Sep 2025 08:17:32 -0700 (PDT)
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5818de29d15so1401117e87.2
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Sep 2025 08:17:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758813451; x=1759418251; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1758813453; x=1759418253; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/FSRFPudzEKyK76m04qsFR3ktGMJkJD3i+v6OWuiw2c=;
-        b=L8XpQF2dMlCDMK4XGshfNH4mVaoLq0ZKekz1kUJ6DUPbLFgIVTGPCrMLayPW3ntelp
-         1JiO3C6n6FPInPd85DKegLhHty3GYARSd3MIRtkC3AxhxpOStC4oTRXcrc8Nkx7SHtaU
-         DFZjb9/esMQul9LyEfem2Wasz5nw9PubvW98nO9/6oJSXmXKBk0PGCsjm6LToZ7mEsUM
-         k8NHbRrT0l5TNPsnuVc5zvaXNat0LZztHXpth5FFWkK3YtOHPzHClnP8hTFg1iBDdUse
-         +Ax23emDarzdCRWdKbkCKSqSJq1QJGUdLkb7gL7Vpn3B9WvVwr6uuHZjrXVn2oorZ5YE
-         RdDQ==
+        bh=C3BqohOGg+vh6fUFPn6hdSt72tlOBF+v0LkjnbZ1rhI=;
+        b=VCxFmuy9fKwOJRFSU/JASyXJ5UL/UCL1eM9+kOGLj9QUfN8scfO5knlbzdYFz3CiUF
+         1KoRm1jBf9tZg2Gtv5zUhXvQ5s8KsYMy+ytFDerborOhX4jYf/wnDTiTtIG5yaf3D3W2
+         SJkXhZo9qDI8yclQSflwogoaDWUwy5bXoBBqqky5E89tyURbSQByyHncC0c/W8DXSxCi
+         FTQ+ICv/c00GevI17Ph2hMIrQTf6gAuEra183m86l9xSyABOfle6MMbZDdzIp+3NCkk9
+         Pk9v02NEu+Xcm3ITNeKXqkr1ZEpW0G6d1icD8suAo8YzHGdj7qcgEqU0eFrVegv9Z8XM
+         rVQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758813451; x=1759418251;
+        d=1e100.net; s=20230601; t=1758813453; x=1759418253;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/FSRFPudzEKyK76m04qsFR3ktGMJkJD3i+v6OWuiw2c=;
-        b=OCLZxC+iofEpv6QvnDmca1fV5xCELD6uPpWLBS7+LPgPsy/4THKqqEDBcZy5aZOXeq
-         kz6ZkApJNwUXet+bA2dRDmIiVQRKV7j7/Om4YDwa24lKRXAoCHO0LKLSkaqpouJ4QfLB
-         1vZ0pMVvJhgm+WkMxAcqsuBy1SZpqpj5kRH9vW9woWPS0LYZzG69S560YHPqCNKmpdC3
-         jESdLnbIuLytCbnghhUliTKEM+vBICNOn9/uQ8lE7eeK6PpR1o/PPZtq58JVeWp42+bz
-         awThwfueXYNXJ/ltlIwU/Y6e0oeadZ6VGgjrd6R4x81iL3xEw9dhPVexq+rSEVbxv+aW
-         Wmng==
-X-Forwarded-Encrypted: i=1; AJvYcCX3JBUgiCHQcFAd0zSSrztyXwZoFJV0swNPdgW2XjqP1qhXN+ymWEPoV7QqUbLyZ3fNO51DWL19+V3y@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYPL7D4H32APrsIsjHDoS751YXFZJxQkVMf9aGfj10Wkb495h7
-	MqBxM+e3kI1yBcWARUhvwx8k9BL4+P8//hdWvhnNCXtQxq+A3BL0jHjI
-X-Gm-Gg: ASbGnctzEIM/2MOjpCOQQfYCzxcNEI9Z7RhHqxvRYlAaaXyEt/W+jGDhJZAijyAho0N
-	vbefMVuenPXY/RoJEWttnA2Ho5sMNdliKVY8Ivza9JpaNK7vg7UAwKcZarZebqeK9BVZ7n+snWI
-	BRhp0sUIXrjOiuFTA/7JOGUus+tA2oGGPRLpbZ2gQ1DJLHMLvqyK302MyvF+TAgNmJIh+pZ51FY
-	yszGSKF+eXF9wWF4SFe5K/NrlnuE0Tl1OpVuGhpbOOXqpfqzqz1Dya7JSxZl9smqnWzaWbH9xIm
-	Q1L4vk/H0Av1dGcgRqdjTXtnJ9i3WZaqnpIJ1a2tDEU1NsTJUIc7KxL/yZm1GNvaeLDKaW70xNe
-	zTDunuMlfKPv2Jg==
-X-Google-Smtp-Source: AGHT+IHRCCPwpFzIrnL2p/TDgPO95O9ITZ5a1oX8XTvwMH7qnlAL6Ra8udUIkuKkerDbTH21ejsiDg==
-X-Received: by 2002:a05:6512:12c8:b0:57b:f151:f321 with SMTP id 2adb3069b0e04-582d0740b32mr1075096e87.2.1758813450809;
-        Thu, 25 Sep 2025 08:17:30 -0700 (PDT)
+        bh=C3BqohOGg+vh6fUFPn6hdSt72tlOBF+v0LkjnbZ1rhI=;
+        b=eP1Kc3F9gpmaFjpNSRAaldvwfqytA7aDsynQRs0NhMcQYwPCAbwEsizWlwDn6qOUjo
+         8dJ8P6vEhF8oKxSSXT1KBC2UqQBLcFCeTm5jmxJp6f5SmZ7wrAzOZV8rE64kxTdc2Lap
+         p594nmdr3cvtj5ZjkLbJRT9DNkwQuVLXWxFDSqybtm6A42UTVQUkDRuWWeoFbDlA0xT7
+         PFKseFO749tTpSanL48RIZG7Azhr3Y/SASnN2EKVPvN5IWRm0vYAKQjVb7lp9EVJ9OiZ
+         yq6J//vCEhssCrYvXgJ+ZNlJnvuGdoYQUuTgI+pHcIwOVc74JO8G/oxsERyy26vOdKzs
+         4V+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWcqI38sLDMtV7QPRReIsDz6Hnn5OwupYM3oHKB7Ogdyfm7P2lvt3A2u1hOfK8j/cyl3rDbOyk9/T7G@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJSsLtSzUn2ndOlUr7kRcYaJKZBpYCXOArOqFy/v2pDWjNhhGc
+	mtbJbmkMcYekXb3HLC0erqHXt4l9nVRYSzmu5BIOU9/2YspMra6wtXQ0
+X-Gm-Gg: ASbGnctWvuiFByoVU1zZyI+1PugUhDvWyuBM8Sqatbjr6H2rw53MnlOo1QZzjM6kYbk
+	KLxGBk+rXzPoQXsBc6ng9RICTj9jtoZGTqr4MGcHRi6b7AG8o1bDgCuWoGR/i6ghwjLCpLAm4oT
+	nHn/wXWwjX+b7jQgubj2lsP7kY/wqEv412OlGW5ru5MRr9j320zMe76c2DD/XDiOeWEOJHzAYXw
+	hPj9fYAZJADKX/SsErjufLwG4xHEAdo4MRH7xW0LKpsvNyFLcLX4NluS0UWLSoEdlb1XbJPWeAn
+	uhbIKLP+Xc3Zv+jH/2780c5OoGmWVn9+vVPJA9JMOdbkn6XBadGKPAmEd8qUnOxzESarnLcneUY
+	7j5z/SIFkAR+0XQ==
+X-Google-Smtp-Source: AGHT+IGK++i2dbsoBub16rSwg8Y61Fa1WoKo+NmQGOT7b2HQy8IsigN1Ldy/HuzqUEX4JSs3hgUwJw==
+X-Received: by 2002:a05:6512:6188:b0:55f:49ab:884a with SMTP id 2adb3069b0e04-582d12fde4dmr1009677e87.21.1758813452520;
+        Thu, 25 Sep 2025 08:17:32 -0700 (PDT)
 Received: from xeon.. ([188.163.112.70])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-58313430496sm870084e87.27.2025.09.25.08.17.29
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-58313430496sm870084e87.27.2025.09.25.08.17.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Sep 2025 08:17:30 -0700 (PDT)
+        Thu, 25 Sep 2025 08:17:32 -0700 (PDT)
 From: Svyatoslav Ryhel <clamor95@gmail.com>
 To: David Airlie <airlied@gmail.com>,
 	Simona Vetter <simona@ffwll.ch>,
@@ -108,9 +108,9 @@ Cc: dri-devel@lists.freedesktop.org,
 	linux-clk@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	linux-staging@lists.linux.dev
-Subject: [PATCH v3 11/22] staging: media: tegra-video: csi: move avdd-dsi-csi-supply from VI to CSI
-Date: Thu, 25 Sep 2025 18:16:37 +0300
-Message-ID: <20250925151648.79510-12-clamor95@gmail.com>
+Subject: [PATCH v3 12/22] arm64: tegra: move avdd-dsi-csi-supply into CSI node
+Date: Thu, 25 Sep 2025 18:16:38 +0300
+Message-ID: <20250925151648.79510-13-clamor95@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250925151648.79510-1-clamor95@gmail.com>
 References: <20250925151648.79510-1-clamor95@gmail.com>
@@ -122,169 +122,48 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The avdd-dsi-csi-supply is CSI power supply not VI, hence move it to
-proper place.
+avdd-dsi-csi-supply belongs in CSI node, not VI.
 
 Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-Tested-by: Luca Ceresoli <luca.ceresoli@bootlin.com> # Tegra20 VIP
-Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Reviewed-by: Mikko Perttunen <mperttunen@nvidia.com>
 ---
- drivers/staging/media/tegra-video/csi.c | 19 ++++++++++++++++++-
- drivers/staging/media/tegra-video/csi.h |  2 ++
- drivers/staging/media/tegra-video/vi.c  | 23 ++---------------------
- drivers/staging/media/tegra-video/vi.h  |  2 --
- 4 files changed, 22 insertions(+), 24 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     | 4 ++--
+ arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/media/tegra-video/csi.c b/drivers/staging/media/tegra-video/csi.c
-index ef5f054b6d49..7d70478a07aa 100644
---- a/drivers/staging/media/tegra-video/csi.c
-+++ b/drivers/staging/media/tegra-video/csi.c
-@@ -710,6 +710,8 @@ static int __maybe_unused csi_runtime_suspend(struct device *dev)
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+index 584461f3a619..4a64fe510f03 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+@@ -20,10 +20,10 @@ dpaux@54040000 {
+ 		vi@54080000 {
+ 			status = "okay";
  
- 	clk_bulk_disable_unprepare(csi->soc->num_clks, csi->clks);
- 
-+	regulator_disable(csi->vdd);
-+
- 	return 0;
- }
- 
-@@ -718,13 +720,23 @@ static int __maybe_unused csi_runtime_resume(struct device *dev)
- 	struct tegra_csi *csi = dev_get_drvdata(dev);
- 	int ret;
- 
-+	ret = regulator_enable(csi->vdd);
-+	if (ret) {
-+		dev_err(dev, "failed to enable VDD supply: %d\n", ret);
-+		return ret;
-+	}
-+
- 	ret = clk_bulk_prepare_enable(csi->soc->num_clks, csi->clks);
- 	if (ret < 0) {
- 		dev_err(csi->dev, "failed to enable clocks: %d\n", ret);
--		return ret;
-+		goto disable_vdd;
- 	}
- 
- 	return 0;
-+
-+disable_vdd:
-+	regulator_disable(csi->vdd);
-+	return ret;
- }
- 
- static int tegra_csi_init(struct host1x_client *client)
-@@ -802,6 +814,11 @@ static int tegra_csi_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	csi->vdd = devm_regulator_get(&pdev->dev, "avdd-dsi-csi");
-+	if (IS_ERR(csi->vdd))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(csi->vdd),
-+				     "failed to get VDD supply");
-+
- 	if (!pdev->dev.pm_domain) {
- 		ret = -ENOENT;
- 		dev_warn(&pdev->dev, "PM domain is not attached: %d\n", ret);
-diff --git a/drivers/staging/media/tegra-video/csi.h b/drivers/staging/media/tegra-video/csi.h
-index 3ed2dbc73ce9..1550defb115a 100644
---- a/drivers/staging/media/tegra-video/csi.h
-+++ b/drivers/staging/media/tegra-video/csi.h
-@@ -137,6 +137,7 @@ struct tegra_csi_soc {
-  * @client: host1x_client struct
-  * @iomem: register base
-  * @clks: clock for CSI and CIL
-+ * @vdd: vdd regulator for CSI hardware, usually avdd_dsi_csi
-  * @soc: pointer to SoC data structure
-  * @ops: csi operations
-  * @csi_chans: list head for CSI channels
-@@ -146,6 +147,7 @@ struct tegra_csi {
- 	struct host1x_client client;
- 	void __iomem *iomem;
- 	struct clk_bulk_data *clks;
-+	struct regulator *vdd;
- 	const struct tegra_csi_soc *soc;
- 	const struct tegra_csi_ops *ops;
- 	struct list_head csi_chans;
-diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
-index 04b538e8b514..70607a3eeee1 100644
---- a/drivers/staging/media/tegra-video/vi.c
-+++ b/drivers/staging/media/tegra-video/vi.c
-@@ -1417,29 +1417,19 @@ static int __maybe_unused vi_runtime_resume(struct device *dev)
- 	struct tegra_vi *vi = dev_get_drvdata(dev);
- 	int ret;
- 
--	ret = regulator_enable(vi->vdd);
--	if (ret) {
--		dev_err(dev, "failed to enable VDD supply: %d\n", ret);
--		return ret;
--	}
+-			avdd-dsi-csi-supply = <&vdd_dsi_csi>;
 -
- 	ret = clk_set_rate(vi->clk, vi->soc->vi_max_clk_hz);
- 	if (ret) {
- 		dev_err(dev, "failed to set vi clock rate: %d\n", ret);
--		goto disable_vdd;
-+		return ret;
- 	}
+ 			csi@838 {
+ 				status = "okay";
++
++				avdd-dsi-csi-supply = <&vdd_dsi_csi>;
+ 			};
+ 		};
  
- 	ret = clk_prepare_enable(vi->clk);
- 	if (ret) {
- 		dev_err(dev, "failed to enable vi clock: %d\n", ret);
--		goto disable_vdd;
-+		return ret;
- 	}
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
+index ec0e84cb83ef..f1d2606d9808 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
+@@ -64,10 +64,10 @@ dpaux@54040000 {
+ 		vi@54080000 {
+ 			status = "okay";
  
- 	return 0;
+-			avdd-dsi-csi-supply = <&vdd_sys_1v2>;
 -
--disable_vdd:
--	regulator_disable(vi->vdd);
--	return ret;
- }
+ 			csi@838 {
+ 				status = "okay";
++
++				avdd-dsi-csi-supply = <&vdd_sys_1v2>;
+ 			};
+ 		};
  
- static int __maybe_unused vi_runtime_suspend(struct device *dev)
-@@ -1448,8 +1438,6 @@ static int __maybe_unused vi_runtime_suspend(struct device *dev)
- 
- 	clk_disable_unprepare(vi->clk);
- 
--	regulator_disable(vi->vdd);
--
- 	return 0;
- }
- 
-@@ -1894,13 +1882,6 @@ static int tegra_vi_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	vi->vdd = devm_regulator_get(&pdev->dev, "avdd-dsi-csi");
--	if (IS_ERR(vi->vdd)) {
--		ret = PTR_ERR(vi->vdd);
--		dev_err(&pdev->dev, "failed to get VDD supply: %d\n", ret);
--		return ret;
--	}
--
- 	if (!pdev->dev.pm_domain) {
- 		ret = -ENOENT;
- 		dev_warn(&pdev->dev, "PM domain is not attached: %d\n", ret);
-diff --git a/drivers/staging/media/tegra-video/vi.h b/drivers/staging/media/tegra-video/vi.h
-index cac0c0d0e225..bfadde8858d4 100644
---- a/drivers/staging/media/tegra-video/vi.h
-+++ b/drivers/staging/media/tegra-video/vi.h
-@@ -94,7 +94,6 @@ struct tegra_vi_soc {
-  * @client: host1x_client struct
-  * @iomem: register base
-  * @clk: main clock for VI block
-- * @vdd: vdd regulator for VI hardware, normally it is avdd_dsi_csi
-  * @soc: pointer to SoC data structure
-  * @ops: vi operations
-  * @vi_chans: list head for VI channels
-@@ -104,7 +103,6 @@ struct tegra_vi {
- 	struct host1x_client client;
- 	void __iomem *iomem;
- 	struct clk *clk;
--	struct regulator *vdd;
- 	const struct tegra_vi_soc *soc;
- 	const struct tegra_vi_ops *ops;
- 	struct list_head vi_chans;
 -- 
 2.48.1
 
