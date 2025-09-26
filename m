@@ -1,200 +1,79 @@
-Return-Path: <linux-gpio+bounces-26637-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26638-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1AC1FBA4B7C
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Sep 2025 18:55:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81391BA51F0
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Sep 2025 22:45:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 56EB31C2280D
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Sep 2025 16:56:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B9B834A5196
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Sep 2025 20:44:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29CD5308F11;
-	Fri, 26 Sep 2025 16:55:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90E2B30CB35;
+	Fri, 26 Sep 2025 20:44:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CNv6s0I1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BPy3yabj"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B917C1D86DC;
-	Fri, 26 Sep 2025 16:55:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3F028CF5E;
+	Fri, 26 Sep 2025 20:44:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758905739; cv=none; b=hu2SRGCwICcxu7lk9j1P2J8/lx5m2b8koqF/kt8W2NTxkm3pkRJhaLoulxegUtuiy+yCNCeb63pmUhj+iTGxfHFqA1vrKDHT4HddZnArR6i63gj9Vvu0UkxnlMCJ6j4nmjPWX94VVzFGcgqwoIoSXjUKHalDq5uEfLTJn7vCAEo=
+	t=1758919471; cv=none; b=T7HmNURuMW5KCy13ehhDuSKSg0z4wXnP3Vk7w8rNKxG6F/flCJs0npq9iKSASErXIPxw5QOt4u1MQxIvaHdVdytrTVT990APZ0bmlZhHmtRk8Ewm+BbzydFcOlGzUrwTB9NAidCT+lZzSPLRoIDX0TIv/OAXpYH5cmnWyBPL5cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758905739; c=relaxed/simple;
-	bh=pI9degLf/+q59D0fv8fpQNooxIH3uWVgpJc8N6uXbW8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Po7lprEah+KxXlbgw9nM1mXcz8PMPfo+4us3M7B2cY9YKS/asZsZBkZa1qz/RbMJ3nemydxOLLmhTlIlh8qfNS9g+KFUlgdaMzn8/mPd2V4nmjMrO3vrTYSb7jAC9rhisO6O1kxa/gMulD5CkglEZvUsT2G25dChWxYGztrWbnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CNv6s0I1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FC4FC4CEF4;
-	Fri, 26 Sep 2025 16:55:35 +0000 (UTC)
+	s=arc-20240116; t=1758919471; c=relaxed/simple;
+	bh=DqrCUOScvurz+ruCyYjjDaSP+g7lWD1kkmSq+3YcbV8=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Vi0o+hkzUFC2Uz1TCbS7aoh5A0us16AkmWR9xSMPeCqP1JIkhyM88l5rgSTEu+aWNNxiIbAk22n1i2EpR9utBmoN8SHo57hEfiDF0KAsrvHJUXwSx19BDSZnIkjafwGywj7hgg4nE1ntom0Fzv56RLSKe+vv4eFkgJUOxy3mqSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BPy3yabj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 325DDC4CEF7;
+	Fri, 26 Sep 2025 20:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758905739;
-	bh=pI9degLf/+q59D0fv8fpQNooxIH3uWVgpJc8N6uXbW8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CNv6s0I15gC3nUFJYvTIXlSI1AxJD9q0u/28WFjydG4s3aEbNDQM3K3dEAdRr8Qla
-	 PGTHbo6NItVKL1HdEqHUpcH0AX5RTvpjlQupbL2ZqDH1NiMdE+fh2d+9FSmAl0ZZmb
-	 AHX7OKP3LK0R3zxOZBgNVoeso3oOI93r0/q/4mjd+wZK/74VLJHj4oYA/VOhmzqrqC
-	 cDUbjat38PeRVT0f5K/x+DemPmO3DWfckHjIFMoZvG9LsOYPlXb8pb2ez9so2nc+B0
-	 PYoPqFpKOQddrXrRA8wlElbjRTHoCZ4MS/Pzh7EfSjgZQyG4VkyQTHRp+RRLhdg45t
-	 iB4QM4Gva7RMQ==
-Date: Fri, 26 Sep 2025 17:55:32 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Hans de Goede <hansg@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>,
-	Hans Verkuil <hverkuil@kernel.org>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev
-Subject: Re: [PATCH v3 07/12] dt-bindings: media: Add usb-camera-module
-Message-ID: <20250926-mute-boil-e75839753526@spud>
-References: <20250926-uvc-orientation-v3-0-6dc2fa5b4220@chromium.org>
- <20250926-uvc-orientation-v3-7-6dc2fa5b4220@chromium.org>
+	s=k20201202; t=1758919471;
+	bh=DqrCUOScvurz+ruCyYjjDaSP+g7lWD1kkmSq+3YcbV8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=BPy3yabjprNr2LRCK+ZzlhjhGDDzYxoE5KWLoUCEy600MW/Ra4ePHgsqi3CcYHXvY
+	 dCxjqjeqSg4cWBfXcclaBPwb6cMSn/D7bAz3o9Ed5/gck3lyFxuF5qjIzOTEPT4G9O
+	 28VavQtvjE4xfAOTL1f2jXVJ1SDChe0DynQmWJmYlfgCJOi6OaeRzh24YrKDvEREnX
+	 Fz226WCNxBdtX8kx0vzUhrWPLKigzWRb1WD4KQSw6W8W0wSuwLCpdVBfYYSUehQyQ/
+	 ZPmslvxtAjqswegLpXG96Z7nmyfh018vdHQ+g4a32cCDgv9MHfkuBzbfAAfLFCJcEy
+	 8Ehrri9e6ZF+g==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADFCA39D0C3F;
+	Fri, 26 Sep 2025 20:44:27 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio fixes for v6.17
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250926100429.40265-1-brgl@bgdev.pl>
+References: <20250926100429.40265-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250926100429.40265-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.17
+X-PR-Tracked-Commit-Id: 3bd44edd6c55828fd4e11cb0efce5b7160bfa2de
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: df2837012f7e29fc80ea673268643ec472ee0e61
+Message-Id: <175891946634.51956.4008604830984718933.pr-tracker-bot@kernel.org>
+Date: Fri, 26 Sep 2025 20:44:26 +0000
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="dvlxf+F9Nk0RUTPP"
-Content-Disposition: inline
-In-Reply-To: <20250926-uvc-orientation-v3-7-6dc2fa5b4220@chromium.org>
 
+The pull request you sent on Fri, 26 Sep 2025 12:04:29 +0200:
 
---dvlxf+F9Nk0RUTPP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.17
 
-On Fri, Sep 26, 2025 at 01:11:31PM +0000, Ricardo Ribalda wrote:
-> For fixed cameras modules the OS needs to know where they are mounted.
-> This information is used to determine if images need to be rotated or
-> not.
->=20
-> ACPI has a property for this purpose, which is parsed by
-> acpi_get_physical_device_location():
-> https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration/Dev=
-ice_Configuration.html#pld-physical-location-of-device
->=20
-> In DT we have similar properties for video-interface-devices called
-> orientation and rotation:
-> Documentation/devicetree/bindings/media/video-interface-devices.yaml
->=20
-> Add a new schema that combines usb/usb-device.yaml and
-> media/video-interface-devices.yaml
->=20
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->  .../bindings/media/usb-camera-module.yaml          | 46 ++++++++++++++++=
-++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 47 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/media/usb-camera-module.ya=
-ml b/Documentation/devicetree/bindings/media/usb-camera-module.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..e4ad6f557b9151751522e49b7=
-2ae6584deb0c7ba
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/usb-camera-module.yaml
-> @@ -0,0 +1,46 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/usb-camera-module.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: USB Camera Module
-> +
-> +maintainers:
-> +  - Ricardo Ribalda <ribalda@chromium.org>
-> +
-> +description: |
-> +  This schema allows for annotating auxiliary information for fixed came=
-ra
-> +  modules. This information enables the system to determine if incoming =
-frames
-> +  require rotation, mirroring, or other transformations. It also describ=
-es the
-> +  module's relationship with other hardware elements, such as flash LEDs=
- or
-> +  Voice Coil Motors (VCMs).
-> +
-> +allOf:
-> +  - $ref: /schemas/usb/usb-device.yaml#
-> +  - $ref: /schemas/media/video-interface-devices.yaml#
-> +
-> +properties:
-> +  reg:
-> +    maxItems: 1
-> +
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/df2837012f7e29fc80ea673268643ec472ee0e61
 
-What actually causes this schema to be applied? Did I miss it getting
-included somewhere?
+Thank you!
 
-> +required:
-> +  - reg
-> +
-> +additionalProperties: true
-> +
-> +examples:
-> +  - |
-> +    usb@11270000 {
-> +        reg =3D <0x11270000 0x1000>;
-> +        interrupts =3D <0x0 0x4e 0x0>;
-> +        #address-cells =3D <1>;
-> +        #size-cells =3D <0>;
-> +
-> +        device@1 {
-> +            compatible =3D "usb123,4567";
-> +            reg =3D <2>;
-> +            orientation =3D <0>;
-> +            rotation =3D <90>;
-> +        };
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ee8cb2db483f6a5e96b62b6f2edd05b1427b69f5..1503502a3aed2625e8ff48845=
-6ccd7305cc74ba7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -26258,6 +26258,7 @@ L:	linux-media@vger.kernel.org
->  S:	Maintained
->  W:	http://www.ideasonboard.org/uvc/
->  T:	git git://linuxtv.org/media.git
-> +F:	Documentation/devicetree/bindings/media/usb-camera-module.yaml
->  F:	Documentation/userspace-api/media/drivers/uvcvideo.rst
->  F:	Documentation/userspace-api/media/v4l/metafmt-uvc-msxu-1-5.rst
->  F:	Documentation/userspace-api/media/v4l/metafmt-uvc.rst
->=20
-> --=20
-> 2.51.0.536.g15c5d4f767-goog
->=20
-
---dvlxf+F9Nk0RUTPP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaNbFhAAKCRB4tDGHoIJi
-0qhdAP49nO2mKsosLHwnekS7EGEufeFAyOly/K0/a5m74rcMVwEAvbMFbwdFzaSM
-DgN8a+gmLLJ+4P89rQ8cIJR4oV+IpwI=
-=/Hob
------END PGP SIGNATURE-----
-
---dvlxf+F9Nk0RUTPP--
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
