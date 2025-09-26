@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-26630-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26631-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD1E3BA440A
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Sep 2025 16:39:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BB0EBA43AE
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Sep 2025 16:35:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 529DF7BF66D
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Sep 2025 14:34:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3BCD15630E6
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Sep 2025 14:35:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72AA221A421;
-	Fri, 26 Sep 2025 14:33:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 881A721E08D;
+	Fri, 26 Sep 2025 14:33:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WUJv/JqQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wo1u6zTe"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A485218ADD;
-	Fri, 26 Sep 2025 14:33:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396A921CC79;
+	Fri, 26 Sep 2025 14:33:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758897212; cv=none; b=fFi4L84gz24zNDcSD9IzVqC+tKwToqMPmA/zJ+VUGMDyzxmkFqPFzo11ZgkJwG+TODILmiyx2Pr2mVQV5JQ0ptXdOKhUvvVCsfnv4Qe58+Pk2ZcZ0IcJcNwdR6TbCcp8t/jQTWzqHwsrMoUf12LTN61aPxoY//Fm2fdH+sI4ofM=
+	t=1758897214; cv=none; b=HLvaXAn0koBNFDtxeiKUBhsktVuK5zsdWl+uhGUwR9bZUx3oxS+Zb36PiF8bF/FiOtPtrLsBQ1yNEvgyMFNCPCIeJhsuhUH+u3YdWMfgzAiBx6csWKLPpMmJYznqav3SvYcWL3VtPj4sF5CzLXGjsy9sw0rz/FgnNKBqQO8WwWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758897212; c=relaxed/simple;
-	bh=cxtJAwcSroUFWX+p132OdjkCtTK4tzieiQjBgjmy2pY=;
+	s=arc-20240116; t=1758897214; c=relaxed/simple;
+	bh=ngk1ZvJx0G1wt33VLB3prZ5qrkv2guaMvCgsiOGDmhk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Y0YeVGpgVfMI9er7mS77gmaz0PZu19ecMiiCff0rOqkNgWqZgM9TizofUAPpVZHXTnjovnxvut7gRtKrgVmhsElkRRHlkCaH/XS9WPXUwy2u3IY3P1KAsSkWE2/ZFeEG7s3Pn0KlnvLd2s955VgftCoTdm2v318tFJ6Ev8smcfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WUJv/JqQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC44BC4CEF7;
-	Fri, 26 Sep 2025 14:33:29 +0000 (UTC)
+	 MIME-Version; b=rZkeknP2ra0FY7CW0KHpalKCO7uLlCdJVLLZtFYJ9zzgFjzsmcgEvwmjniDpTLzT/hdxHWThSoD70lLwP46Q7LW1HLKfMlaLBOwrlqkUX6iWljQlVVLTckVrC7qhm+aa+ADK0otFk8Y+V3JC/LCGLlq/D/zahiMfe3GZydgjBA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wo1u6zTe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25B59C4CEF4;
+	Fri, 26 Sep 2025 14:33:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758897211;
-	bh=cxtJAwcSroUFWX+p132OdjkCtTK4tzieiQjBgjmy2pY=;
+	s=k20201202; t=1758897213;
+	bh=ngk1ZvJx0G1wt33VLB3prZ5qrkv2guaMvCgsiOGDmhk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WUJv/JqQFFSGzDySxaNkF4D1HU2Xa4CqOLWGOCKpGMYY04qrTPbpz8tp3IAtvJk7z
-	 qwcjcIe2nLyDfYUGfmlVc/XEbUGXuJ6ZRP24cXDHy81QLb8ourQSYdHECnipaB852h
-	 4Xitp4WbyQi+gRPmosMNs21r7PEaw5y7ey1RpsiCnuronSCuT7dAXyj+DDMxB4k8Ip
-	 veQVZoagmP0VnwzhIT7k7c9vZn1DZ7MUewvQhh4JS6l0c6wakY7osX9Wq1tJsCHxOs
-	 xceH8+zOP4o5+XFnxcCsjWzwTVqWuwbNF6mPAf90K6G4H39IgUgfcy7u/G1NAUjybl
-	 Bmf/1VxNXcm3g==
+	b=Wo1u6zTedl2nz6pIU/02dnqMH0+MLA9egjqjI8yMpZnEQAz8FdPiwMwLI6WlQNakF
+	 3FJCOjmTcf/UASQHKPDuttgL9+KX/aKpX7DKqh2WGt9Y8k8JLeVW17Rjjo//fEmY4I
+	 mn8KAPy588A8C+jdeJu74wrTjW5MaCQ97MW5yOz6tgflkA+P5E23UCWWDT5Nf/5snB
+	 o5zGIX1C3Ul11DeTjqVTetcU7eByiuVe7UuRBWt/BDXSvv73+Yjq9uGRAtimamAYck
+	 UEyV0jBtMFQ+HJcWkG4mSwH2xfpWbAvnP1yfoRCt03LCLDGNRuSC6YhHiUrQ1e4oav
+	 dm7BMfbJs7dJw==
 From: Conor Dooley <conor@kernel.org>
 To: linus.walleij@linaro.org
 Cc: conor@kernel.org,
@@ -50,9 +50,9 @@ Cc: conor@kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	devicetree@vger.kernel.org
-Subject: [RFC 3/5] pinctrl: add polarfire soc iomux0 pinmux driver
-Date: Fri, 26 Sep 2025 15:33:11 +0100
-Message-ID: <20250926-unshackle-jury-79f701f97e94@spud>
+Subject: [RFC 4/5] pinctrl: add pic64gx "gpio2" pinmux driver
+Date: Fri, 26 Sep 2025 15:33:12 +0100
+Message-ID: <20250926-rut-disown-d32cab17b497@spud>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20250926-manpower-glacial-e9756c82b427@spud>
 References: <20250926-manpower-glacial-e9756c82b427@spud>
@@ -62,75 +62,75 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10112; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=3Ua9rGDiZ78KGESuIEYgHMwQRlK1a6Eq+e6zOrIYK7g=; b=owGbwMvMwCVWscWwfUFT0iXG02pJDBnXlqi+5BLbsLPyjY1wg7nW06e7p30IK7QM+fjw2jaNL /M5Xq9s7ihlYRDjYpAVU2RJvN3XIrX+j8sO5563MHNYmUCGMHBxCsBEBJoZGfblm7Smbt1qa3vU 5my269wLGs7rJWLWeGxwTbpdpN4z5Twjw9L42d9fKF3d8fD48pX38k1s65i+GEpVqR7c/czN+Ky OOh8A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10969; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=5eY/QKf3BTB5TvZmK/rAP8gdhe2ajmpqm/CJwTEOZ68=; b=owGbwMvMwCVWscWwfUFT0iXG02pJDBnXlqjKxHxZUVXysS5dL2b+Bu65qSWVGV+FlwckV1uxH snlDtvcUcrCIMbFICumyJJ4u69Fav0flx3OPW9h5rAygQxh4OIUgIlw9DH8U3ws+/3zVWEW5TX2 pfkmCfMOrl97aMJk702G8/MuqdR7PmJkmN6TpP3/udc3c08j8713PGTnrNlc1/O/YJep0MaZEVe duAA=
 X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
 Content-Transfer-Encoding: 8bit
 
 From: Conor Dooley <conor.dooley@microchip.com>
 
-On Polarfire SoC, iomux0 is responsible for routing functions to either
-MSS (multiprocessor subsystem) IOs or to the FPGA fabric, where they
-can either interface with custom RTL or be routed to the FPGA fabric's
-IOs. Add a driver for it.
+The pic64gx has a second pinmux "downstream" of the iomux0 pinmux. The
+documentation for the SoC provides no name for this device, but it is
+used to swap pins between either GPIO controller #2 or select other
+functions, hence the "gpio2" name. Add a driver for it.
 
 Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- .../microchip,mpfs-mss-top-sysreg.yaml        |   2 +-
+ .../microchip,pic64gx-pinctrl-gpio2.yaml      |   2 +-
  drivers/pinctrl/Kconfig                       |   7 +
  drivers/pinctrl/Makefile                      |   1 +
- drivers/pinctrl/pinctrl-mpfs-iomux0.c         | 252 ++++++++++++++++++
- 4 files changed, 261 insertions(+), 1 deletion(-)
- create mode 100644 drivers/pinctrl/pinctrl-mpfs-iomux0.c
+ drivers/pinctrl/pinctrl-pic64gx-gpio2.c       | 283 ++++++++++++++++++
+ 4 files changed, 292 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/pinctrl/pinctrl-pic64gx-gpio2.c
 
-diff --git a/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-mss-top-sysreg.yaml b/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-mss-top-sysreg.yaml
-index 1b737a3fcd33..cb5784ec5ac5 100644
---- a/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-mss-top-sysreg.yaml
-+++ b/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-mss-top-sysreg.yaml
-@@ -55,7 +55,7 @@ additionalProperties: false
- examples:
-   - |
-     syscon@20002000 {
--      compatible = "microchip,mpfs-mss-top-sysreg", "syscon";
-+      compatible = "microchip,mpfs-mss-top-sysreg", "syscon", "simple-mfd";
-       reg = <0x20002000 0x1000>;
-       #reset-cells = <1>;
-     };
+diff --git a/Documentation/devicetree/bindings/pinctrl/microchip,pic64gx-pinctrl-gpio2.yaml b/Documentation/devicetree/bindings/pinctrl/microchip,pic64gx-pinctrl-gpio2.yaml
+index be7d4b1948dc..6af7b67731d6 100644
+--- a/Documentation/devicetree/bindings/pinctrl/microchip,pic64gx-pinctrl-gpio2.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/microchip,pic64gx-pinctrl-gpio2.yaml
+@@ -16,7 +16,7 @@ description:
+ 
+ properties:
+   compatible:
+-     const: microchip,pic64gx-pinctrl-gpio2
++    const: microchip,pic64gx-pinctrl-gpio2
+ 
+   reg:
+     maxItems: 1
 diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 33db9104df17..f85ccbc2a0e2 100644
+index f85ccbc2a0e2..692eb577ed74 100644
 --- a/drivers/pinctrl/Kconfig
 +++ b/drivers/pinctrl/Kconfig
-@@ -472,6 +472,13 @@ config PINCTRL_PISTACHIO
- 	help
- 	  This support pinctrl and GPIO driver for IMG Pistachio SoC.
+@@ -461,6 +461,13 @@ config PINCTRL_PIC32MZDA
+ 	def_bool y if PIC32MZDA
+ 	select PINCTRL_PIC32
  
-+config PINCTRL_POLARFIRE_SOC
-+	bool "Polarfire SoC pinctrl driver"
++config PINCTRL_PIC64GX
++	bool "pic64gx gpio2 pinctrl driver"
 +	depends on ARCH_MICROCHIP
 +	default y
 +	help
-+	  This selects the pinctrl driver for Microchip Polarfire SoC.
++	  This selects the pinctrl driver for gpio2 on pic64gx.
 +
- config PINCTRL_RK805
- 	tristate "Pinctrl and GPIO driver for RK805 PMIC"
- 	depends on MFD_RK8XX
+ config PINCTRL_PISTACHIO
+ 	bool "IMG Pistachio SoC pinctrl driver"
+ 	depends on OF && (MIPS || COMPILE_TEST)
 diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index ac27e88677d1..8af119804f77 100644
+index 8af119804f77..5493628a9a47 100644
 --- a/drivers/pinctrl/Makefile
 +++ b/drivers/pinctrl/Makefile
-@@ -47,6 +47,7 @@ obj-$(CONFIG_PINCTRL_PALMAS)	+= pinctrl-palmas.o
+@@ -46,6 +46,7 @@ obj-$(CONFIG_PINCTRL_OCELOT)	+= pinctrl-ocelot.o
+ obj-$(CONFIG_PINCTRL_PALMAS)	+= pinctrl-palmas.o
  obj-$(CONFIG_PINCTRL_PEF2256)	+= pinctrl-pef2256.o
  obj-$(CONFIG_PINCTRL_PIC32)	+= pinctrl-pic32.o
++obj-$(CONFIG_PINCTRL_PIC64GX)	+= pinctrl-pic64gx-gpio2.o
  obj-$(CONFIG_PINCTRL_PISTACHIO)	+= pinctrl-pistachio.o
-+obj-$(CONFIG_PINCTRL_POLARFIRE_SOC)	+= pinctrl-mpfs-iomux0.o
+ obj-$(CONFIG_PINCTRL_POLARFIRE_SOC)	+= pinctrl-mpfs-iomux0.o
  obj-$(CONFIG_PINCTRL_RK805)	+= pinctrl-rk805.o
- obj-$(CONFIG_PINCTRL_ROCKCHIP)	+= pinctrl-rockchip.o
- obj-$(CONFIG_PINCTRL_SCMI)	+= pinctrl-scmi.o
-diff --git a/drivers/pinctrl/pinctrl-mpfs-iomux0.c b/drivers/pinctrl/pinctrl-mpfs-iomux0.c
+diff --git a/drivers/pinctrl/pinctrl-pic64gx-gpio2.c b/drivers/pinctrl/pinctrl-pic64gx-gpio2.c
 new file mode 100644
-index 000000000000..93a17c9c299d
+index 000000000000..b0607aad934c
 --- /dev/null
-+++ b/drivers/pinctrl/pinctrl-mpfs-iomux0.c
-@@ -0,0 +1,252 @@
++++ b/drivers/pinctrl/pinctrl-pic64gx-gpio2.c
+@@ -0,0 +1,283 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
 +#include <linux/bitfield.h>
@@ -153,17 +153,25 @@ index 000000000000..93a17c9c299d
 +#include "pinconf.h"
 +#include "pinmux.h"
 +
-+#define MPFS_PINCTRL_DT_FUNC_MASK GENMASK(3, 0);
-+#define MPFS_PINCTRL_DT_PIN_OFFSET 16
++#define PIC64GX_PINCTRL_DT_FUNC_MASK GENMASK(3, 0);
++#define PIC64GX_PINCTRL_DT_PIN_OFFSET 16
 +
-+#define MPFS_PINCTRL_IOMUX0_REG 0x200
++#define PIC64GX_PINMUX_REG 0x0
 +
-+struct mpfs_iomux0_pinctrl_mux_config {
++static const struct regmap_config pic64gx_gpio2_pinctrl_regmap_config = {
++	.reg_bits = 32,
++	.reg_stride = 4,
++	.val_bits = 32,
++	.val_format_endian = REGMAP_ENDIAN_LITTLE,
++	.max_register = 0x0,
++};
++
++struct pic64gx_gpio2_pinctrl_mux_config {
 +	u8 pin;
 +	u32 config;
 +};
 +
-+struct mpfs_iomux0_pinctrl {
++struct pic64gx_gpio2_pinctrl {
 +	struct pinctrl_dev *pctrl;
 +	struct device *dev;
 +	struct regmap *regmap;
@@ -171,26 +179,25 @@ index 000000000000..93a17c9c299d
 +	struct pinctrl_desc desc;
 +};
 +
-+static void mpfs_iomux0_pinctrl_dbg_show(struct pinctrl_dev *pctrl_dev, struct seq_file *seq,
++static void pic64gx_gpio2_pinctrl_dbg_show(struct pinctrl_dev *pctrl_dev, struct seq_file *seq,
 +				  unsigned int pin)
 +{
-+	struct mpfs_iomux0_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctrl_dev);
++	struct pic64gx_gpio2_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctrl_dev);
 +	u32 val;
 +
-+	seq_printf(seq, "reg: %x, pin: %u ", MPFS_PINCTRL_IOMUX0_REG, pin);
++	seq_printf(seq, "reg: %x, pin: %u ", PIC64GX_PINMUX_REG, pin);
 +
-+	regmap_read(pctrl->regmap, MPFS_PINCTRL_IOMUX0_REG, &val);
++	regmap_read(pctrl->regmap, PIC64GX_PINMUX_REG, &val);
 +	val = (val & BIT(pin)) >> pin;
-+
 +	seq_printf(seq, "val: %x\n", val);
 +}
 +
-+static int mpfs_iomux0_pinctrl_dt_node_to_map(struct pinctrl_dev *pctrl_dev, struct device_node *np,
++static int pic64gx_gpio2_pinctrl_dt_node_to_map(struct pinctrl_dev *pctrl_dev, struct device_node *np,
 +					 struct pinctrl_map **maps, unsigned int *num_maps)
 +{
-+	struct mpfs_iomux0_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctrl_dev);
++	struct pic64gx_gpio2_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctrl_dev);
 +	struct device *dev = pctrl->dev;
-+	struct mpfs_iomux0_pinctrl_mux_config *pinmuxs;
++	struct pic64gx_gpio2_pinctrl_mux_config *pinmuxs;
 +	struct pinctrl_map *map;
 +	const char **grpnames;
 +	const char *grpname;
@@ -232,9 +239,9 @@ index 000000000000..93a17c9c299d
 +		if (ret)
 +			return -EINVAL;
 +
-+		pins[i] = config >> MPFS_PINCTRL_DT_PIN_OFFSET;
-+		pinmuxs[i].config = config & MPFS_PINCTRL_DT_FUNC_MASK;
-+		pinmuxs[i].pin = config >> MPFS_PINCTRL_DT_PIN_OFFSET;
++		pins[i] = config >> PIC64GX_PINCTRL_DT_PIN_OFFSET;
++		pinmuxs[i].config = config & PIC64GX_PINCTRL_DT_FUNC_MASK;
++		pinmuxs[i].pin = config >> PIC64GX_PINCTRL_DT_PIN_OFFSET;
 +	}
 +
 +	map->type = PIN_MAP_TYPE_MUX_GROUP;
@@ -257,35 +264,35 @@ index 000000000000..93a17c9c299d
 +	return 0;
 +};
 +
-+static struct pinctrl_ops mpfs_iomux0_pinctrl_ops = {
++static struct pinctrl_ops pic64gx_gpio2_pinctrl_ops = {
 +	.get_groups_count = pinctrl_generic_get_group_count,
 +	.get_group_name	= pinctrl_generic_get_group_name,
 +	.get_group_pins	= pinctrl_generic_get_group_pins,
-+	.pin_dbg_show = mpfs_iomux0_pinctrl_dbg_show,
-+	.dt_node_to_map = mpfs_iomux0_pinctrl_dt_node_to_map,
++	.pin_dbg_show = pic64gx_gpio2_pinctrl_dbg_show,
++	.dt_node_to_map = pic64gx_gpio2_pinctrl_dt_node_to_map,
 +	.dt_free_map = pinctrl_utils_free_map,
 +};
 +
-+static int mpfs_iomux0_pinctrl_set_pin_func(struct mpfs_iomux0_pinctrl *pctrl, u8 pin, u32 config)
++static int pic64gx_gpio2_pinctrl_set_pin_func(struct pic64gx_gpio2_pinctrl *pctrl, u8 pin, u32 config)
 +{
 +	struct device *dev = pctrl->dev;
-+	u32 state;
++	u32 func;
 +
-+	state = config & MPFS_PINCTRL_DT_FUNC_MASK;
-+	state <<= pin;
++	func = config & PIC64GX_PINCTRL_DT_FUNC_MASK;
++	func <<= pin;
 +
-+	dev_dbg(dev, "Setting pin %u reg %x offset %u func %x\n", pin, MPFS_PINCTRL_IOMUX0_REG, pin, state);
++	dev_dbg(dev, "Setting pin %u reg: %x pin %u func %x\n", pin, PIC64GX_PINMUX_REG, pin, func);
 +
-+	regmap_set_bits(pctrl->regmap, MPFS_PINCTRL_IOMUX0_REG, state);
++	regmap_set_bits(pctrl->regmap, PIC64GX_PINMUX_REG, func);
 +
 +	return 0;
 +}
 +
-+static int mpfs_iomux0_pinctrl_set_mux(struct pinctrl_dev *pctrl_dev, unsigned int fsel, unsigned int gsel)
++static int pic64gx_gpio2_pinctrl_set_mux(struct pinctrl_dev *pctrl_dev, unsigned int fsel, unsigned int gsel)
 +{
-+	struct mpfs_iomux0_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctrl_dev);
++	struct pic64gx_gpio2_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctrl_dev);
 +	const struct group_desc *group;
-+	struct mpfs_iomux0_pinctrl_mux_config *configs;
++	struct pic64gx_gpio2_pinctrl_mux_config *configs;
 +	int ret = -EINVAL;
 +
 +	group = pinctrl_generic_get_group(pctrl_dev, gsel);
@@ -298,56 +305,80 @@ index 000000000000..93a17c9c299d
 +		u8 pin = configs[i].pin;
 +		u32 config = configs[i].config;
 +
-+		ret = mpfs_iomux0_pinctrl_set_pin_func(pctrl, pin, config);
++		ret = pic64gx_gpio2_pinctrl_set_pin_func(pctrl, pin, config);
 +	}
 +
 +	return ret;
 +}
 +
-+static const struct pinmux_ops mpfs_iomux0_pinctrl_pinmux_ops = {
++static const struct pinmux_ops pic64gx_gpio2_pinctrl_pinmux_ops = {
 +	.get_functions_count = pinmux_generic_get_function_count,
 +	.get_function_name = pinmux_generic_get_function_name,
 +	.get_function_groups = pinmux_generic_get_function_groups,
-+	.set_mux = mpfs_iomux0_pinctrl_set_mux,
++	.set_mux = pic64gx_gpio2_pinctrl_set_mux,
 +};
 +
-+static const struct pinctrl_pin_desc mpfs_iomux0_pinctrl_pins[] = {
-+	PINCTRL_PIN(0, "spi0"),
-+	PINCTRL_PIN(1, "spi1"),
-+	PINCTRL_PIN(2, "i2c0"),
-+	PINCTRL_PIN(3, "i2c1"),
-+	PINCTRL_PIN(4, "can0"),
-+	PINCTRL_PIN(5, "can1"),
-+	PINCTRL_PIN(6, "qspi"),
-+	PINCTRL_PIN(7, "uart0"),
-+	PINCTRL_PIN(8, "uart1"),
-+	PINCTRL_PIN(9, "uart2"),
-+	PINCTRL_PIN(10, "uart3"),
-+	PINCTRL_PIN(11, "uart4"),
-+	PINCTRL_PIN(12, "mdio0"),
-+	PINCTRL_PIN(13, "mdio1"),
++static const struct pinctrl_pin_desc pic64gx_gpio2_pinctrl_pins[] = {
++	PINCTRL_PIN(0, "gpio2 0"),
++	PINCTRL_PIN(1, "gpio2 1"),
++	PINCTRL_PIN(2, "gpio2 2"),
++	PINCTRL_PIN(3, "gpio2 3"),
++	PINCTRL_PIN(4, "gpio2 4"),
++	PINCTRL_PIN(5, "gpio2 5"),
++	PINCTRL_PIN(6, "gpio2 6"),
++	PINCTRL_PIN(7, "gpio2 7"),
++	PINCTRL_PIN(8, "gpio2 8"),
++	PINCTRL_PIN(9, "gpio2 9"),
++	PINCTRL_PIN(10, "gpio2 10"),
++	PINCTRL_PIN(11, "gpio2 11"),
++	PINCTRL_PIN(12, "gpio2 12"),
++	PINCTRL_PIN(13, "gpio2 13"),
++	PINCTRL_PIN(14, "gpio2 14"),
++	PINCTRL_PIN(15, "gpio2 15"),
++	PINCTRL_PIN(16, "gpio2 16"),
++	PINCTRL_PIN(17, "gpio2 17"),
++	PINCTRL_PIN(18, "gpio2 18"),
++	PINCTRL_PIN(19, "gpio2 19"),
++	PINCTRL_PIN(20, "gpio2 20"),
++	PINCTRL_PIN(21, "gpio2 21"),
++	PINCTRL_PIN(22, "gpio2 22"),
++	PINCTRL_PIN(23, "gpio2 23"),
++	PINCTRL_PIN(24, "gpio2 24"),
++	PINCTRL_PIN(25, "gpio2 25"),
++	PINCTRL_PIN(26, "gpio2 26"),
++	PINCTRL_PIN(27, "gpio2 27"),
++	PINCTRL_PIN(28, "gpio2 28"),
 +
 +};
 +
-+static int mpfs_iomux0_pinctrl_probe(struct platform_device *pdev)
++static int pic64gx_gpio2_pinctrl_probe(struct platform_device *pdev)
 +{
 +	struct device *dev = &pdev->dev;
-+	struct mpfs_iomux0_pinctrl *pctrl;
++	struct pic64gx_gpio2_pinctrl *pctrl;
++	void __iomem *base;
 +	int ret;
 +
 +	pctrl = devm_kzalloc(dev, sizeof(*pctrl), GFP_KERNEL);
 +	if (!pctrl)
 +		return -ENOMEM;
 +
-+	pctrl->regmap = device_node_to_regmap(pdev->dev.parent->of_node);
-+	if (IS_ERR(pctrl->regmap))
-+		dev_err_probe(dev, PTR_ERR(pctrl->regmap), "Failed to find syscon regmap\n");
++	base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(base)) {
++		dev_err(dev, "Failed get resource\n");
++		return PTR_ERR(base);
++	}
++
++	pctrl->regmap = devm_regmap_init_mmio(dev, base, &pic64gx_gpio2_pinctrl_regmap_config);
++	if (IS_ERR(pctrl->regmap)) {
++		dev_err(dev, "Failed to map regmap\n");
++		return PTR_ERR(pctrl->regmap);
++	}
 +
 +	pctrl->desc.name = dev_name(dev);
-+	pctrl->desc.pins = mpfs_iomux0_pinctrl_pins;
-+	pctrl->desc.npins = ARRAY_SIZE(mpfs_iomux0_pinctrl_pins);
-+	pctrl->desc.pctlops = &mpfs_iomux0_pinctrl_ops;
-+	pctrl->desc.pmxops = &mpfs_iomux0_pinctrl_pinmux_ops;
++	pctrl->desc.pins = pic64gx_gpio2_pinctrl_pins;
++	pctrl->desc.npins = ARRAY_SIZE(pic64gx_gpio2_pinctrl_pins);
++	pctrl->desc.pctlops = &pic64gx_gpio2_pinctrl_ops;
++	pctrl->desc.pmxops = &pic64gx_gpio2_pinctrl_pinmux_ops;
 +	pctrl->desc.owner = THIS_MODULE;
 +
 +	pctrl->dev = dev;
@@ -365,23 +396,23 @@ index 000000000000..93a17c9c299d
 +	return 0;
 +}
 +
-+static const struct of_device_id mpfs_iomux0_pinctrl_of_match[] = {
-+	{ .compatible = "microchip,mpfs-pinctrl-iomux0" },
++static const struct of_device_id pic64gx_gpio2_pinctrl_of_match[] = {
++	{ .compatible = "microchip,pic64gx-pinctrl-gpio2" },
 +	{ }
 +};
-+MODULE_DEVICE_TABLE(of, mpfs_iomux0_pinctrl_of_match);
++MODULE_DEVICE_TABLE(of, pic64gx_gpio2_pinctrl_of_match);
 +
-+static struct platform_driver mpfs_iomux0_pinctrl_driver = {
++static struct platform_driver pic64gx_gpio2_pinctrl_driver = {
 +	.driver = {
-+		.name = "mpfs-pinctrl-iomux0",
-+		.of_match_table = mpfs_iomux0_pinctrl_of_match,
++		.name = "pic64gx-pinctrl-gpio2",
++		.of_match_table = pic64gx_gpio2_pinctrl_of_match,
 +	},
-+	.probe = mpfs_iomux0_pinctrl_probe,
++	.probe = pic64gx_gpio2_pinctrl_probe,
 +};
-+module_platform_driver(mpfs_iomux0_pinctrl_driver);
++module_platform_driver(pic64gx_gpio2_pinctrl_driver);
 +
 +MODULE_AUTHOR("Conor Dooley <conor.dooley@microchip.com>");
-+MODULE_DESCRIPTION("Polarfire SoC iomux0 pinctrl driver");
++MODULE_DESCRIPTION("pic64gx gpio2 pinctrl driver");
 +MODULE_LICENSE("GPL");
 -- 
 2.47.3
