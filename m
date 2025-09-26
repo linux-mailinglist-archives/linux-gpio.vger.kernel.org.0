@@ -1,217 +1,200 @@
-Return-Path: <linux-gpio+bounces-26636-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26637-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60988BA43EF
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Sep 2025 16:37:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AC1FBA4B7C
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Sep 2025 18:55:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 66CBF740439
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Sep 2025 14:37:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 56EB31C2280D
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Sep 2025 16:56:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E5311F1317;
-	Fri, 26 Sep 2025 14:36:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29CD5308F11;
+	Fri, 26 Sep 2025 16:55:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="i2sRff4D"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CNv6s0I1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BACA01F1518
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Sep 2025 14:36:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B917C1D86DC;
+	Fri, 26 Sep 2025 16:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758897366; cv=none; b=N1UPFq8NHE4e+CNaiI6rJFXc9YGqyubwJ9Je8xtzuj1MN/gzWOQ9fYHcOHM/laiCjx7p69MzRP8CERzKvwl3Ql0v1iVUZM0LAnZHghSPrrP3XC5/92/qklp4CVevyOygNomO+phCdECzbOlOMmmUOF7W/cHYkmz42I2VGpx2IYQ=
+	t=1758905739; cv=none; b=hu2SRGCwICcxu7lk9j1P2J8/lx5m2b8koqF/kt8W2NTxkm3pkRJhaLoulxegUtuiy+yCNCeb63pmUhj+iTGxfHFqA1vrKDHT4HddZnArR6i63gj9Vvu0UkxnlMCJ6j4nmjPWX94VVzFGcgqwoIoSXjUKHalDq5uEfLTJn7vCAEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758897366; c=relaxed/simple;
-	bh=pMHrie5JTNXkNRBEbOryNO09BHMSzoODaJWxs8KB1tQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dCxr2nmUWYYkXIG16f386hIIWn9FGmFRANnEk7PCp62TQXVI0qYe/HEr8QyukBTvg4FlE0TPZTrVO5WXrG/UKi+4GicH+y8bxkYJn8pdwGZ2Kx/K7oRx9ecBGOD39iR0BbHjBGUWScAyImaBT/pTkfW3AtJLeB4GmlraeBnOmEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=i2sRff4D; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3f44000626bso1474248f8f.3
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Sep 2025 07:36:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1758897360; x=1759502160; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2Yovk5t0UpJ5tpnxfLbMU7evhndE6i8JEyGxHZslUhI=;
-        b=i2sRff4DwL04jOWnAkSgCYnIGHpEQ1XsF8XDsJnbC65SwmzJEU2snEHiI35pYGANFq
-         M4eo3FbRoj01WxnYhkhuoB6DYKT6t5XiDZ5Zc+6GoasGv2dV+GFfWRG1/+YTvfu/TDur
-         G2yJLJOGlvNKwgTDeZ44mjzn94aiSV4J7rjOeGGMJksQqUgNmhB2TXQ3HcAXHVzk6ZhU
-         tj9pBZVEIg/eRY+rSVCXzgpMsjrze620x6NT3/PSpKHU0RAy97KmsSPEIdbUybtZtY30
-         2WuznhAvJ1UXx4LRSaDOv6dhc6x0FEyzmAQf6oCKCPbPdbeWsoFHgKeYz0MbOSWX8R3/
-         lAeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758897360; x=1759502160;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2Yovk5t0UpJ5tpnxfLbMU7evhndE6i8JEyGxHZslUhI=;
-        b=lN3QxXNRBuNMAL/a/Rd53E4EOgVWRdBCVdzhEP/rcwpaeSQSi4oYGr+mpzcwB624/z
-         R9MJTWu7uhnoyshNnwoI+rZ59ICh+PusBiqAHxNRusyEL3jFc3xuYVvqmRRGeLRSVxvL
-         h58VFTE0s6ByfvfhVGgHr1/VhKHwVlKf4BewhVrE8iLfu/0tW+JkGRBnTFrlLSDe5pJV
-         3uakIdHW9VzLukMaDn+ULjjSAt4uY7NlWCAmUY31rwyl12wEOoX2xP/m+puMPRPAlkia
-         gDEHtI3Uzm8AAstEaQJj768XhR2WJlXLYb5OHqXfwUBIyoGAGMk2jWPc8FxlpgYMg5XT
-         0ZCw==
-X-Gm-Message-State: AOJu0Yww0VQptl4VsJRnD8GfNPs9ySzMeohC+7RkigZcmo2Kgb1cNr3d
-	vGqhIzAsBcneGHJ83eNqllngTScF5VLwgweo4sjiNsd7QE2u8o1i2ZPtkY4kVKXwjIc=
-X-Gm-Gg: ASbGncv3DMIrtolY6GBCftMZavKpOaOka3PtzgpWtPXv6IuTJWhjwMzJKAqDIBhrbn7
-	LZPQd0ELFih87Snuf/UM0uMD//Zn+Z9VDYmsNYy96jA21BjJW10YUM1ytF+ywXDLIQZvixCqgj1
-	5/PHmoGkMUmUKLjNIw4aLaUUVzxNu7/QWOBFCNiMl/urOfQANulLDxj6FQdZeMg+G32VbKZdvVI
-	gyCZ5L5iRq0tqreMkr098M8GTsW8b9D5vKeVWnVk8qcoCSGaYYupcdwFI4DCWfATtgtiFIhzXNk
-	3p43cAfsQhjRAsMJ2Zbe7l1vCesj0WY0H0O1nvC4z5VOb0srWe0Tfm+rbp39gJrtFpPh82hfjW2
-	1ygxo3zgCET0PMKja
-X-Google-Smtp-Source: AGHT+IHLNJXj9Yw0HhVztQBEvMB9Ze7C8I9G5OTlMzu+ZW8QDqm1TBYZZmsJ5FwW040mP0JVkMNbug==
-X-Received: by 2002:a05:6000:2503:b0:3ff:17ac:a34c with SMTP id ffacd0b85a97d-40e49e728d5mr7344806f8f.59.1758897360155;
-        Fri, 26 Sep 2025 07:36:00 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:ab15:a65:aecd:6def])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-40fc92491efsm7515317f8f.62.2025.09.26.07.35.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Sep 2025 07:35:59 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 26 Sep 2025 16:35:44 +0200
-Subject: [PATCH libgpiod 3/3] bindings: rust: add examples to the README.md
- in the libgpiod crate
+	s=arc-20240116; t=1758905739; c=relaxed/simple;
+	bh=pI9degLf/+q59D0fv8fpQNooxIH3uWVgpJc8N6uXbW8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Po7lprEah+KxXlbgw9nM1mXcz8PMPfo+4us3M7B2cY9YKS/asZsZBkZa1qz/RbMJ3nemydxOLLmhTlIlh8qfNS9g+KFUlgdaMzn8/mPd2V4nmjMrO3vrTYSb7jAC9rhisO6O1kxa/gMulD5CkglEZvUsT2G25dChWxYGztrWbnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CNv6s0I1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FC4FC4CEF4;
+	Fri, 26 Sep 2025 16:55:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758905739;
+	bh=pI9degLf/+q59D0fv8fpQNooxIH3uWVgpJc8N6uXbW8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CNv6s0I15gC3nUFJYvTIXlSI1AxJD9q0u/28WFjydG4s3aEbNDQM3K3dEAdRr8Qla
+	 PGTHbo6NItVKL1HdEqHUpcH0AX5RTvpjlQupbL2ZqDH1NiMdE+fh2d+9FSmAl0ZZmb
+	 AHX7OKP3LK0R3zxOZBgNVoeso3oOI93r0/q/4mjd+wZK/74VLJHj4oYA/VOhmzqrqC
+	 cDUbjat38PeRVT0f5K/x+DemPmO3DWfckHjIFMoZvG9LsOYPlXb8pb2ez9so2nc+B0
+	 PYoPqFpKOQddrXrRA8wlElbjRTHoCZ4MS/Pzh7EfSjgZQyG4VkyQTHRp+RRLhdg45t
+	 iB4QM4Gva7RMQ==
+Date: Fri, 26 Sep 2025 17:55:32 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Hans de Goede <hansg@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>,
+	Hans Verkuil <hverkuil@kernel.org>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev
+Subject: Re: [PATCH v3 07/12] dt-bindings: media: Add usb-camera-module
+Message-ID: <20250926-mute-boil-e75839753526@spud>
+References: <20250926-uvc-orientation-v3-0-6dc2fa5b4220@chromium.org>
+ <20250926-uvc-orientation-v3-7-6dc2fa5b4220@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250926-rust-release-tweaks-v1-3-beae932eb691@linaro.org>
-References: <20250926-rust-release-tweaks-v1-0-beae932eb691@linaro.org>
-In-Reply-To: <20250926-rust-release-tweaks-v1-0-beae932eb691@linaro.org>
-To: Erik Wierich <erik@riscstar.com>, 
- Viresh Kumar <viresh.kumar@linaro.org>, 
- Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2810;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=qlr8UfWccojd4jodC7v+ju5ZIzqtKyXslRY/ixCt4mE=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBo1qTJp8+OKhYRzBHXD12An9uGVET4NC8ERqpkn
- narRLN5cKuJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaNakyQAKCRARpy6gFHHX
- chWpEADGFD+VxAdJdAcIUHoYDDb9ExTmLrcbRxo+jUxwK0YbD4S7akXFYIWlNhL0gs4VEYJstKo
- JTVTz8qZruv5BxgYIRYCUmbhCc12pERVEWfdAqpFTaw3PXtRPqAx5jWY9PX0LejFZzdurhd0SRb
- nUVETN1sXT0diFSe6RduyiM0NXQVKQJAvJt2xGY7zatOuZzWjKmuklHyHpVWJDfwDezDLxMuotA
- qOmp1EDoVVR1OZudRlAD7eB6V+/b/dJKR7SZP2ajS3v8y15JqJ2tNPihIdd8AfVzAEjSYHwvOYu
- kwEmQQqCanTNX/7LP0yLVik4Nltu0rO1vRO+YFkkqhAyMmkrgHB5SXi79mG17aminkYJKoOOb6p
- gJ+njJJJztceYKdTMxxK5OD3S9feAPURu2bh2TO4ERLe9SUGWtsb1N2jyE2hyklSMfXH29m3Og3
- clfI88V2o5TCtkm1vezO49NRMUBsUKgKxkGJ2OfjJ1KVH6CSql085Y57l02owJ35FEASOIqCxj2
- ABlLbdw++zDMadUobT6dtKuSiyq1DSJ/VqqR5Qv5CXAmRzriG4Ojk8Ed+UytqJG2jV7WSb9CTgo
- DD/PCa1wxzF4gChK+9lmrAFUJP+y+08ahsrporjUot/2IPOvXsXcEIAowfBySEs9OOwLN5yLr/G
- u2kM9jO1z/ZSn+w==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="dvlxf+F9Nk0RUTPP"
+Content-Disposition: inline
+In-Reply-To: <20250926-uvc-orientation-v3-7-6dc2fa5b4220@chromium.org>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Add some code examples to the README.md with the aim of showing how to
-use the bindings on the crates.io landing page for the libgpiod crate.
+--dvlxf+F9Nk0RUTPP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- bindings/rust/libgpiod/README.md | 78 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
+On Fri, Sep 26, 2025 at 01:11:31PM +0000, Ricardo Ribalda wrote:
+> For fixed cameras modules the OS needs to know where they are mounted.
+> This information is used to determine if images need to be rotated or
+> not.
+>=20
+> ACPI has a property for this purpose, which is parsed by
+> acpi_get_physical_device_location():
+> https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration/Dev=
+ice_Configuration.html#pld-physical-location-of-device
+>=20
+> In DT we have similar properties for video-interface-devices called
+> orientation and rotation:
+> Documentation/devicetree/bindings/media/video-interface-devices.yaml
+>=20
+> Add a new schema that combines usb/usb-device.yaml and
+> media/video-interface-devices.yaml
+>=20
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+>  .../bindings/media/usb-camera-module.yaml          | 46 ++++++++++++++++=
+++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 47 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/media/usb-camera-module.ya=
+ml b/Documentation/devicetree/bindings/media/usb-camera-module.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..e4ad6f557b9151751522e49b7=
+2ae6584deb0c7ba
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/usb-camera-module.yaml
+> @@ -0,0 +1,46 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/usb-camera-module.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: USB Camera Module
+> +
+> +maintainers:
+> +  - Ricardo Ribalda <ribalda@chromium.org>
+> +
+> +description: |
+> +  This schema allows for annotating auxiliary information for fixed came=
+ra
+> +  modules. This information enables the system to determine if incoming =
+frames
+> +  require rotation, mirroring, or other transformations. It also describ=
+es the
+> +  module's relationship with other hardware elements, such as flash LEDs=
+ or
+> +  Voice Coil Motors (VCMs).
+> +
+> +allOf:
+> +  - $ref: /schemas/usb/usb-device.yaml#
+> +  - $ref: /schemas/media/video-interface-devices.yaml#
+> +
+> +properties:
+> +  reg:
+> +    maxItems: 1
+> +
 
-diff --git a/bindings/rust/libgpiod/README.md b/bindings/rust/libgpiod/README.md
-index 1ef3743a99c967dca1be15f16bd3f299612bed16..0d764f472abf113d096a0e73b5d21f5790db9137 100644
---- a/bindings/rust/libgpiod/README.md
-+++ b/bindings/rust/libgpiod/README.md
-@@ -31,6 +31,84 @@ versions:
- - `v2_1`: Minimum version of `2.1.x`
- - `vnext`: The upcoming, still unreleased version of the C lib
- 
-+## Examples
-+
-+Get GPIO chip information:
-+
-+```rust
-+let chip = Chip::open(&Path::new("/dev/gpiochip0"))?;
-+let info = chip.info()?;
-+
-+println!("{} [{}] ({} lines)", info.name()?, info.label()?, info.num_lines());
-+```
-+
-+Print GPIO line name:
-+
-+```rust
-+let chip = Chip::open(&Path::new("/dev/gpiochip0"))?;
-+let info = chip.line_info(0)?;
-+let name = info.name().unwrap_or("unnamed");
-+
-+println!("{name}");
-+```
-+
-+Toggle GPIO line output value:
-+
-+```rust
-+let mut settings = line::Settings::new()?;
-+settings
-+    .set_direction(line::Direction::Output)?
-+    .set_output_value(Value::Active)?;
-+
-+let mut line_cfg = line::Config::new()?;
-+line_cfg.add_line_settings(&[line_offset], settings)?;
-+
-+let mut req_cfg = request::Config::new()?;
-+req_cfg.set_consumer("toggle-line-value")?;
-+
-+let chip = Chip::open(&Path::new("/dev/gpiochip0"))?;
-+
-+/* Request with value 1 */
-+let mut req = chip.request_lines(Some(&req_cfg), &line_cfg)?;
-+
-+/* Toggle to value 0 */
-+req.set_value(line_offset, Value::InActive)?;
-+```
-+
-+Read GPIO line event:
-+
-+```rust
-+let mut lsettings = line::Settings::new()?;
-+lsettings
-+    .set_direction(line::Direction::Input)?
-+    .set_edge_detection(Some(line::Edge::Both))?;
-+
-+let mut line_cfg = line::Config::new()?;
-+line_cfg.add_line_settings(&[line_offset], settings)?;
-+
-+let mut req_cfg = request::Config::new()?;
-+req_cfg.set_consumer("toggle-line-value")?;
-+
-+let chip = Chip::open(&Path::new("/dev/gpiochip0"))?;
-+let req = chip.request_lines(Some(&req_cfg), &line_cfg)?;
-+
-+let mut buffer = request::Buffer::new(1)?;
-+
-+loop {
-+    let events = req.read_edge_events(&mut buffer)?;
-+    for event in events {
-+        println!(
-+            "line: {} type: {}",
-+            event.line_offset(),
-+            match event.event_type()? {
-+                EdgeKind::Rising => "Rising",
-+                EdgeKind::Falling => "Falling",
-+            }
-+        );
-+    }
-+}
-+```
-+
- ## License
- 
- This project is licensed under either of
+What actually causes this schema to be applied? Did I miss it getting
+included somewhere?
 
--- 
-2.48.1
+> +required:
+> +  - reg
+> +
+> +additionalProperties: true
+> +
+> +examples:
+> +  - |
+> +    usb@11270000 {
+> +        reg =3D <0x11270000 0x1000>;
+> +        interrupts =3D <0x0 0x4e 0x0>;
+> +        #address-cells =3D <1>;
+> +        #size-cells =3D <0>;
+> +
+> +        device@1 {
+> +            compatible =3D "usb123,4567";
+> +            reg =3D <2>;
+> +            orientation =3D <0>;
+> +            rotation =3D <90>;
+> +        };
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ee8cb2db483f6a5e96b62b6f2edd05b1427b69f5..1503502a3aed2625e8ff48845=
+6ccd7305cc74ba7 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -26258,6 +26258,7 @@ L:	linux-media@vger.kernel.org
+>  S:	Maintained
+>  W:	http://www.ideasonboard.org/uvc/
+>  T:	git git://linuxtv.org/media.git
+> +F:	Documentation/devicetree/bindings/media/usb-camera-module.yaml
+>  F:	Documentation/userspace-api/media/drivers/uvcvideo.rst
+>  F:	Documentation/userspace-api/media/v4l/metafmt-uvc-msxu-1-5.rst
+>  F:	Documentation/userspace-api/media/v4l/metafmt-uvc.rst
+>=20
+> --=20
+> 2.51.0.536.g15c5d4f767-goog
+>=20
 
+--dvlxf+F9Nk0RUTPP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaNbFhAAKCRB4tDGHoIJi
+0qhdAP49nO2mKsosLHwnekS7EGEufeFAyOly/K0/a5m74rcMVwEAvbMFbwdFzaSM
+DgN8a+gmLLJ+4P89rQ8cIJR4oV+IpwI=
+=/Hob
+-----END PGP SIGNATURE-----
+
+--dvlxf+F9Nk0RUTPP--
 
