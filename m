@@ -1,202 +1,116 @@
-Return-Path: <linux-gpio+bounces-26639-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26640-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A455BA58F3
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Sep 2025 06:38:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1219BA591A
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Sep 2025 07:00:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B9E951BC733A
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Sep 2025 04:38:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 081384A3B2C
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Sep 2025 05:00:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FDA42253EF;
-	Sat, 27 Sep 2025 04:38:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80D2E1F3FE9;
+	Sat, 27 Sep 2025 05:00:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vq486mDy"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="iQ9cw2vI";
+	dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="KkS437eX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E54717A310;
-	Sat, 27 Sep 2025 04:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7118834;
+	Sat, 27 Sep 2025 05:00:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758947904; cv=none; b=B9PJun8yW+DdW4TANyR/7ZAHgeEXGM+pDcEIN8XiGD1JKFEj2esauc2axw7NrOkOeCzq4ZCLdqT7IKHQqVcW3RVNrz0vfm89H8OXsLEpmZF19ddxdK+PAxJJKkBtc7D2c7apR9Us12zHp7S5ZxV7jO9YiNi5q+hwxdTKO8CG38Q=
+	t=1758949251; cv=none; b=T2Pn5v8902y7rlJQezwP05342AhNfTS/oah6Qfbf69BS91LXGBdyw2nzjfmYUAiEmLI26Lm5jVgcst8LcHRFZCBomhShn5KiYgPilmpbY6qK15i6/8OOCx3pTUj1aD9lH0pMw1ww93Op0R4vjmky2qOVIpqYHnfTSxYM5mPUq/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758947904; c=relaxed/simple;
-	bh=Ml6qdQ+jE48I66+8v4t80wL43dmskcbpk6RZ6I2w/es=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L0AjTUJVPf0cMPVUUpzoaXPKfciD5R2yHW4VkrPGF+dArGUugyXbjr/LEIXXnvKJcQTZCOxjItxWnYkjiSntS9cC38Xk00O9NItNy/D44m4bgolEmCNRJtO2kOItr+ISGN9UOk7eAdmMiR1Um9+sst5vE8EOZ0JQpMdMgbcq1ZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vq486mDy; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758947903; x=1790483903;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=Ml6qdQ+jE48I66+8v4t80wL43dmskcbpk6RZ6I2w/es=;
-  b=Vq486mDyhEM1jxdEp4zHzu6SoKw4xEXh6NN78qgkDAtzqTafbKLrEh3l
-   E6UDNwHe6zraOoOgISiSykJR3fuRRJQ0snSaqF50wKsXlYiMwniSJoD9v
-   VRwX4N8sgZTmZ1D4/5ixeSnuEQ/KQHmCjPyev/3UB4NLYRbkAN5pNl0uC
-   XnCNbzVebhXk5JgT6Ex10B+XvyiQVLXywVBIPJmE4iem961Phzmh67eGZ
-   IPgCp8DpQIGRnYPoTh1FtnYjpvJ+8uYLFQSkNsFOdAH0TPM7yb1nstePG
-   hWXmlL4NBUYytGSPgZwzwyKfEGF/YcLIBJxeRgqCVv5wex0j/WnyZs2mj
-   w==;
-X-CSE-ConnectionGUID: WjRf+AJKS1m1wuauuf+QyA==
-X-CSE-MsgGUID: f3NOcJD8Qaueir3wn+VaEA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="65089979"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="65089979"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2025 21:38:22 -0700
-X-CSE-ConnectionGUID: jaVL+GgSSR2fZ9qRa2mWhg==
-X-CSE-MsgGUID: 3F0XLbOETBqHwXik2VrKDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,296,1751266800"; 
-   d="scan'208";a="181784248"
-Received: from lkp-server02.sh.intel.com (HELO 84c55410ccf6) ([10.239.97.151])
-  by orviesa003.jf.intel.com with ESMTP; 26 Sep 2025 21:38:14 -0700
-Received: from kbuild by 84c55410ccf6 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1v2MhI-0006nD-0v;
-	Sat, 27 Sep 2025 04:38:12 +0000
-Date: Sat, 27 Sep 2025 12:37:14 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ricardo Ribalda <ribalda@chromium.org>,
-	Hans de Goede <hansg@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>
-Cc: oe-kbuild-all@lists.linux.dev, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev,
-	Ricardo Ribalda <ribalda@chromium.org>
-Subject: Re: [PATCH v3 03/12] media: v4l: fwnode: Support ACPI's _PLD for
- v4l2_fwnode_device_parse
-Message-ID: <202509271249.8fIMriJh-lkp@intel.com>
-References: <20250926-uvc-orientation-v3-3-6dc2fa5b4220@chromium.org>
+	s=arc-20240116; t=1758949251; c=relaxed/simple;
+	bh=DI2L0s38OFZ3kmt5elmBX6ywpaznAAhIuFMkreoguPs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VUzEUrY2V2U4kT78KBv9n/g4lxGzKSX7OEsmWmXnMqr4Gd9ulozoKvChToijkgHeneG7zC3Obzt0aBFhl3lBSY9VO+onCZYN/geoWdfmk2nKBFch6hojs4KBna/+eD2+YZqvFNBZfubb/uoShFcMYPSbEHd0n62f/beIHohEZVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=iQ9cw2vI; dkim=permerror (0-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=KkS437eX; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
+	h=To:Message-Id:Date:Subject:From; t=1758949150; bh=wiywbGUArM2TQ2jnZnO3jhn
+	LS3BT0xyRgYF6NOHEeCA=; b=iQ9cw2vI8QxFct2o8MH27UteoPUKwqq19TixtBcEwsWZGJXIdq
+	W+IWQ6b6ojLpdK0cUC35hXWVxILAlAwTKm4/bbjKZq2zOLIaRHmboo8GLqDLyE5No9sv+4ymC7l
+	xIF9FJ+CZPoa5Laeq15iWmphoRDV5oMClZe+xBcbUVs99YZRKO9VqQD4fBrLnQ53aTbUOEw5gwN
+	DY0KP9dyR/zfc8/gYlrRoZ+QVR95Mw5pXN/UsuegDJj5vonh50vqkVLOckFIF6lCyR+X/UUDkWp
+	dDsClMJdSAZ8sItP75yYspZbwUgBoIl9BcrEQXpbgd/NxtQkOIGOu0I8kW0uWyk1P5w==;
+DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
+	h=To:Message-Id:Date:Subject:From; t=1758949150; bh=wiywbGUArM2TQ2jnZnO3jhn
+	LS3BT0xyRgYF6NOHEeCA=; b=KkS437eXQbphejCILSt2qSlQaxkC4ms05KgUvohaEhHAKPGi8i
+	72CND7y6VRqSAuMbiRKohE9wy+ieZje3FIDg==;
+From: Dang Huynh <dang.huynh@mainlining.org>
+Subject: [PATCH v3 0/3] RDA8810PL GPIO fixes
+Date: Sat, 27 Sep 2025 11:59:05 +0700
+Message-Id: <20250927-rda8810pl-gpio-fix-v3-0-3641cdcf6c1e@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250926-uvc-orientation-v3-3-6dc2fa5b4220@chromium.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABlv12gC/x2MWwqAIBAArxL73YLZQ+sq0YflZgthohCBdPekz
+ xmYyZAoMiWYqgyRbk58+QJtXcF2GO8I2RYGKWQvRtljtEbrRoQTXeALd37QrsOuuk6SIQUlDJG
+ K/qfz8r4fb5qMN2QAAAA=
+X-Change-ID: 20250925-rda8810pl-gpio-fix-db6f7442eae7
+To: Manivannan Sadhasivam <mani@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org, 
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Dang Huynh <dang.huynh@mainlining.org>, 
+ Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1758949147; l=1382;
+ i=dang.huynh@mainlining.org; s=20250917; h=from:subject:message-id;
+ bh=DI2L0s38OFZ3kmt5elmBX6ywpaznAAhIuFMkreoguPs=;
+ b=tEr871K0fXKTRnsUIazo974JxiDPEzxnp6VPDZtrqbXbUKfc9zGsgYwiW2Fea/Jsbw7OWuMQq
+ p89UgMS1Gi+CCcTQXOf4Kd71tWBYkAF6BGp1GlwdVkBgI3ef72ZJr8C
+X-Developer-Key: i=dang.huynh@mainlining.org; a=ed25519;
+ pk=RyzH4CL4YU/ItXYUurA51EVBidfx4lIy8/E4EKRJCUk=
 
-Hi Ricardo,
+This patchset fixes two issues with the RDA GPIO driver:
+- Makes GPIO IRQ optional for modem-handled GPIO block
+- GPIO output direction misbehaviors
 
-kernel test robot noticed the following build errors:
+This change should not affect any existing users of the RDA Micro
+platform.
 
-[auto build test ERROR on afb100a5ea7a13d7e6937dcd3b36b19dc6cc9328]
+This patchset is considered to be a v3, as I did not tag the previous
+patchset as v2 and is a split from both of my v1/v2 patchset.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ricardo-Ribalda/media-uvcvideo-Always-set-default_value/20250926-211524
-base:   afb100a5ea7a13d7e6937dcd3b36b19dc6cc9328
-patch link:    https://lore.kernel.org/r/20250926-uvc-orientation-v3-3-6dc2fa5b4220%40chromium.org
-patch subject: [PATCH v3 03/12] media: v4l: fwnode: Support ACPI's _PLD for v4l2_fwnode_device_parse
-config: arm-randconfig-004-20250927 (https://download.01.org/0day-ci/archive/20250927/202509271249.8fIMriJh-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 10.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250927/202509271249.8fIMriJh-lkp@intel.com/reproduce)
+Changes in v3:
+- Use bidirectional direction register for dirin register which truly
+  fixes the previous issue.
+- Link to v2: https://lore.kernel.org/all/20250919-rda8810pl-mmc-v1-0-d4f08a05ba4d@mainlining.org/
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202509271249.8fIMriJh-lkp@intel.com/
+Changes in v2:
+- Update commit message for "gpio: rda: Make direction register unreadable"
+- Link to v1: https://lore.kernel.org/all/20250917-rda8810pl-drivers-v1-0-74866def1fe3@mainlining.org/
 
-All errors (new ones prefixed by >>):
+Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
+---
+Dang Huynh (3):
+      dt-bindings: gpio: rda: Make interrupts optional
+      gpio: rda: Make IRQ optional
+      gpio: rda: Use bidirectional GPIO register for direction input
 
-   In file included from include/linux/printk.h:623,
-                    from include/asm-generic/bug.h:22,
-                    from arch/arm/include/asm/bug.h:60,
-                    from include/linux/bug.h:5,
-                    from include/linux/thread_info.h:13,
-                    from include/asm-generic/preempt.h:5,
-                    from ./arch/arm/include/generated/asm/preempt.h:1,
-                    from include/linux/preempt.h:79,
-                    from include/linux/spinlock.h:56,
-                    from include/linux/mmzone.h:8,
-                    from include/linux/gfp.h:7,
-                    from include/linux/slab.h:16,
-                    from include/linux/resource_ext.h:11,
-                    from include/linux/acpi.h:13,
-                    from drivers/media/v4l2-core/v4l2-fwnode.c:17:
-   drivers/media/v4l2-core/v4l2-fwnode.c: In function 'v4l2_fwnode_device_parse_acpi':
->> include/linux/acpi.h:1268:26: error: implicit declaration of function '__acpi_handle_debug'; did you mean 'acpi_handle_debug'? [-Werror=implicit-function-declaration]
-    1268 |  _dynamic_func_call(fmt, __acpi_handle_debug,   \
-         |                          ^~~~~~~~~~~~~~~~~~~
-   include/linux/dynamic_debug.h:224:3: note: in definition of macro '__dynamic_func_call_cls'
-     224 |   func(&id, ##__VA_ARGS__);   \
-         |   ^~~~
-   include/linux/dynamic_debug.h:250:2: note: in expansion of macro '_dynamic_func_call_cls'
-     250 |  _dynamic_func_call_cls(_DPRINTK_CLASS_DFLT, fmt, func, ##__VA_ARGS__)
-         |  ^~~~~~~~~~~~~~~~~~~~~~
-   include/linux/acpi.h:1268:2: note: in expansion of macro '_dynamic_func_call'
-    1268 |  _dynamic_func_call(fmt, __acpi_handle_debug,   \
-         |  ^~~~~~~~~~~~~~~~~~
-   drivers/media/v4l2-core/v4l2-fwnode.c:821:3: note: in expansion of macro 'acpi_handle_debug'
-     821 |   acpi_handle_debug(ACPI_HANDLE(dev), "cannot obtain _PLD\n");
-         |   ^~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
+ Documentation/devicetree/bindings/gpio/gpio-rda.yaml | 3 ---
+ drivers/gpio/gpio-rda.c                              | 5 ++---
+ 2 files changed, 2 insertions(+), 6 deletions(-)
+---
+base-commit: 846bd2225ec3cfa8be046655e02b9457ed41973e
+change-id: 20250925-rda8810pl-gpio-fix-db6f7442eae7
 
-
-vim +1268 include/linux/acpi.h
-
-45fef5b88d1f2f Bjørn Mork       2014-05-22  1240  
-fbfddae696572e Toshi Kani       2012-11-21  1241  /*
-fbfddae696572e Toshi Kani       2012-11-21  1242   * acpi_handle_<level>: Print message with ACPI prefix and object path
-fbfddae696572e Toshi Kani       2012-11-21  1243   *
-fbfddae696572e Toshi Kani       2012-11-21  1244   * These interfaces acquire the global namespace mutex to obtain an object
-fbfddae696572e Toshi Kani       2012-11-21  1245   * path.  In interrupt context, it shows the object path as <n/a>.
-fbfddae696572e Toshi Kani       2012-11-21  1246   */
-fbfddae696572e Toshi Kani       2012-11-21  1247  #define acpi_handle_emerg(handle, fmt, ...)				\
-fbfddae696572e Toshi Kani       2012-11-21  1248  	acpi_handle_printk(KERN_EMERG, handle, fmt, ##__VA_ARGS__)
-fbfddae696572e Toshi Kani       2012-11-21  1249  #define acpi_handle_alert(handle, fmt, ...)				\
-fbfddae696572e Toshi Kani       2012-11-21  1250  	acpi_handle_printk(KERN_ALERT, handle, fmt, ##__VA_ARGS__)
-fbfddae696572e Toshi Kani       2012-11-21  1251  #define acpi_handle_crit(handle, fmt, ...)				\
-fbfddae696572e Toshi Kani       2012-11-21  1252  	acpi_handle_printk(KERN_CRIT, handle, fmt, ##__VA_ARGS__)
-fbfddae696572e Toshi Kani       2012-11-21  1253  #define acpi_handle_err(handle, fmt, ...)				\
-fbfddae696572e Toshi Kani       2012-11-21  1254  	acpi_handle_printk(KERN_ERR, handle, fmt, ##__VA_ARGS__)
-fbfddae696572e Toshi Kani       2012-11-21  1255  #define acpi_handle_warn(handle, fmt, ...)				\
-fbfddae696572e Toshi Kani       2012-11-21  1256  	acpi_handle_printk(KERN_WARNING, handle, fmt, ##__VA_ARGS__)
-fbfddae696572e Toshi Kani       2012-11-21  1257  #define acpi_handle_notice(handle, fmt, ...)				\
-fbfddae696572e Toshi Kani       2012-11-21  1258  	acpi_handle_printk(KERN_NOTICE, handle, fmt, ##__VA_ARGS__)
-fbfddae696572e Toshi Kani       2012-11-21  1259  #define acpi_handle_info(handle, fmt, ...)				\
-fbfddae696572e Toshi Kani       2012-11-21  1260  	acpi_handle_printk(KERN_INFO, handle, fmt, ##__VA_ARGS__)
-fbfddae696572e Toshi Kani       2012-11-21  1261  
-45fef5b88d1f2f Bjørn Mork       2014-05-22  1262  #if defined(DEBUG)
-fbfddae696572e Toshi Kani       2012-11-21  1263  #define acpi_handle_debug(handle, fmt, ...)				\
-fbfddae696572e Toshi Kani       2012-11-21  1264  	acpi_handle_printk(KERN_DEBUG, handle, fmt, ##__VA_ARGS__)
-fbfddae696572e Toshi Kani       2012-11-21  1265  #else
-45fef5b88d1f2f Bjørn Mork       2014-05-22  1266  #if defined(CONFIG_DYNAMIC_DEBUG)
-45fef5b88d1f2f Bjørn Mork       2014-05-22  1267  #define acpi_handle_debug(handle, fmt, ...)				\
-f1ebe04f5ba2f4 Rasmus Villemoes 2019-03-07 @1268  	_dynamic_func_call(fmt, __acpi_handle_debug,			\
-f1ebe04f5ba2f4 Rasmus Villemoes 2019-03-07  1269  			   handle, pr_fmt(fmt), ##__VA_ARGS__)
-45fef5b88d1f2f Bjørn Mork       2014-05-22  1270  #else
-fbfddae696572e Toshi Kani       2012-11-21  1271  #define acpi_handle_debug(handle, fmt, ...)				\
-fbfddae696572e Toshi Kani       2012-11-21  1272  ({									\
-fbfddae696572e Toshi Kani       2012-11-21  1273  	if (0)								\
-fbfddae696572e Toshi Kani       2012-11-21  1274  		acpi_handle_printk(KERN_DEBUG, handle, fmt, ##__VA_ARGS__); \
-fbfddae696572e Toshi Kani       2012-11-21  1275  	0;								\
-fbfddae696572e Toshi Kani       2012-11-21  1276  })
-fbfddae696572e Toshi Kani       2012-11-21  1277  #endif
-45fef5b88d1f2f Bjørn Mork       2014-05-22  1278  #endif
-fbfddae696572e Toshi Kani       2012-11-21  1279  
-
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Dang Huynh <dang.huynh@mainlining.org>
+
 
