@@ -1,159 +1,250 @@
-Return-Path: <linux-gpio+bounces-26646-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26647-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C680BA6878
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Sep 2025 07:41:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DB5FABA6EE5
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Sep 2025 12:20:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C8C2C18961A4
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Sep 2025 05:42:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2D5BF189431C
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Sep 2025 10:20:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 927C2299931;
-	Sun, 28 Sep 2025 05:41:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AACC02DCBF2;
+	Sun, 28 Sep 2025 10:20:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gHCenmbi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IqB1B6Wg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8617261B65
-	for <linux-gpio@vger.kernel.org>; Sun, 28 Sep 2025 05:41:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581FD22FE02;
+	Sun, 28 Sep 2025 10:20:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759038092; cv=none; b=gyMHxdDF5JG7H8NILEgJDRtY7TYBdOcuGAsjjUutRIfX9sxQ5Do9I0WfXlyyOoxwEUbpf9W/gIaDxoIi3WTDy50QmEFIvwCfsdzx28FTYgMKIzInI88p4BbAxxOZ/7CNKddrZorNwFPFxUVeljzwEq7naPiox83jZX71da1c34U=
+	t=1759054808; cv=none; b=VL9ft9GcE4gyISz0jFeSF3QnnriO5ZY1yLj6TR3DINT9Effqs9g20Y48IlbEYMQin4MQiIEoWLIZXvAZ/s1JWVBZePObpmOAkRIHsZreEswP5uvFXd8aD1EZ6b3SVlVzPtZuCxA7SbV1U5e+9tl9fzNhYlGyyoQ86PMx+V5bQWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759038092; c=relaxed/simple;
-	bh=S0v1gHURYMdw1yi6PKnRpYcVfrORhPmC76eStiDMp8Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GjhXaKkP5fBThp7oGsdLSq2NZSwQER/WAQGWQ9j/lUvPWTd+e6PvGWIQjEgHwUbtG6M9pjHt01xEz6AvXA1HzPBjisI5vS9hdM5id3mcFo+baVRYbCUVvps6ysEVhOUxpuL2l/0F38iKElSsIrb5WHteL4AN3iRAH6JG7+iKGTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gHCenmbi; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-279e2554c8fso35695145ad.2
-        for <linux-gpio@vger.kernel.org>; Sat, 27 Sep 2025 22:41:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759038089; x=1759642889; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BIwshfVuzFnOMAKrYLI6jEhBWZi5IYNs9VlFFa/dZNM=;
-        b=gHCenmbi+CUm+y9X4UKFg/5Y3cvwV+nJHPkAiWVWC/p1grh5USHHfBcMftMRxVywth
-         iCfsEzXT1mL4NMkMw9eiUVqsKWs8L4MsBcbSg27hDeIOgjnbPJjNZ3Tsn4xl3WBzqMca
-         C+scI0jx06Q0VpW/7l20Q5CK4YIM0UP8Z7nZTz2s6UVheSXPooQMiiylwG3sX5aVH6rg
-         L+Ijtz2lQ2kHLROIDky63xEIQnvsxmhmqxnn21nYP9wJq/e47OtdtuqkWxMvSs9nG2OD
-         v3mws+ZoDlrB5zBt2xHyCxF9Z0wNXdIKexydjwsWQEQzG48EQOxM0WudjtyX5UudxyXQ
-         zEeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759038089; x=1759642889;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BIwshfVuzFnOMAKrYLI6jEhBWZi5IYNs9VlFFa/dZNM=;
-        b=VNw5r4v2tu3KL8yGEKDmzRNJSZRoGtLakz//pfstjmM0XF5kdPl2uQAi1afTn+uvUA
-         Qo78yvybPgLHtn50T4P07ek8xInpxBCUK8lxFJwA896JNZ/EwEaHbnZ/QSQp88I6z0vy
-         ABfcQaxWuwRjk99hvb6dDHbdAPgOQMSpXdJhaXdoLOblxqj5WnY8jKgyNGZfeqT7y9MG
-         b5ux6jwhXxhhjGjw1h/s8yJXDKmBYebu+tWJ75GC5xG2lVfH8B3SIA4vVDjDYjOx0DF3
-         yz9BcQTeMfRh7BqGptzPsUSzzxizxq46fSK1aXb5T3+cuym2qrA2zslyeXMjynR2tMv9
-         TvHA==
-X-Forwarded-Encrypted: i=1; AJvYcCWppe8GBBkJOL/AK7JET5/9+dJNVXulonuxHJFHftZjEl6RcBC7i5wBLaeAk9YAtoBhNHRqTzRb1F6v@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcLQx4NOVKuUuNnn69Dj/BlzCHecSNmOOZ/BtURDih57ixR7sm
-	9wgABNEOn3W8Ttp+pxYPIjJtF6XN6DOBANh7Y21pLyyP1UunvJtcpwSd
-X-Gm-Gg: ASbGncth+ax52ZqNyoySLJh2WIMMlWBI+iMich3wpDj/Hauoh7C2Bxxe1bn5H+klnWs
-	ZAIHWIYL+XT90086GXWY9C/zQb9NHJyTxGIvpNKo5fipcP3jA75lKWbjqABh+z9lzNTGwQ8LME8
-	tbEEGLj/HeGx2Ss5h0lxS5oWv+vNvnQPzChvf0ZEDB5G+lLxG4+FSZCtNPNnqpS0sOsE13pxN/D
-	Mn0H1dZzJ3NGwJdXo+Xe24SCgF0Mu8FULBVynV8rTN8uvu6duAeSR56P5v46kjA4oPQVk/of0p6
-	xgSZN9Q/KJ6ezMW7eIeVLoBa4QXB58HQGUWuV5j1D90iwwUU4/61k+FlpGPeUBag8BYPSVGt4Zk
-	yJlvprPRc0B5QpjejQkrq5QjWWtvj+bPTlAcDAhI2XbO0
-X-Google-Smtp-Source: AGHT+IHgKzmQxn3LYtCYg7KtWdGt8UUYN/QqgIJUJEq3IBbdnq2sdaotugj5GIiwi4pi2voIkLiz3A==
-X-Received: by 2002:a17:902:cf42:b0:267:95ad:8cb8 with SMTP id d9443c01a7336-27ed4a96047mr129802575ad.44.1759038089009;
-        Sat, 27 Sep 2025 22:41:29 -0700 (PDT)
-Received: from fedora ([172.59.161.218])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-27ed67076ffsm94429295ad.39.2025.09.27.22.41.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Sep 2025 22:41:28 -0700 (PDT)
-From: Alex Tran <alex.t.tran@gmail.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alex Tran <alex.t.tran@gmail.com>
-Subject: [PATCH v1] gpio: gpio-grgpio: call request_irq after incrementing the reference count
-Date: Sat, 27 Sep 2025 22:40:19 -0700
-Message-ID: <20250928054019.1189591-1-alex.t.tran@gmail.com>
-X-Mailer: git-send-email 2.51.0
+	s=arc-20240116; t=1759054808; c=relaxed/simple;
+	bh=vK4ndFlqtxsvXqHg2ZJL3Yj6TDbkiLlo5PGDeaNd7Wc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ETncszrjme8kqdosk7Mol+IEOBiiWwitnI9dBlTaH3SsZ2k2Ndy0F5zgi0qA/4/v8ut6umdHc8MnrAO3rXG/GULXj8iqSLzqxh5DkvB/YLhAPStsmIq7CWZs5EpMLpCIhOKVRIboKZMANPDU+naSJ4F9xamjyuVo/LVj/jLStFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IqB1B6Wg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54776C4CEF0;
+	Sun, 28 Sep 2025 10:20:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759054808;
+	bh=vK4ndFlqtxsvXqHg2ZJL3Yj6TDbkiLlo5PGDeaNd7Wc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=IqB1B6WgwgNxNq5zfrH8TZI14/q9llUnEDWdkqibFMVkN80VKbWdIAgK9hJtQvGuR
+	 9MDfM1eh7u/nMVg+/caE3eK0eruPjg6s2YmVY7ZRieq63YgnNaObn0xftjh/Pn67QX
+	 jWl9RYTvfr406XOjo91P7CVhRer7d+GMVlUn+2+sIbglO1Wv4SMovlclmXfN9z4PPQ
+	 4C51YqVju/VsgC0wqlg0BmYM7lqia0R9WDpAJeM2x3RR60gioJwOfHhgXvezCUVtd9
+	 RAEBbfd57T4g3aSn2N3zeJKntjoDORIb3eRq113lh8846bMkD6K+VfIL1sGr3tsAlb
+	 wfvLjfyaXBo6w==
+Date: Sun, 28 Sep 2025 11:19:55 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <michael.hennerich@analog.com>,
+ <nuno.sa@analog.com>, <eblanc@baylibre.com>, <dlechner@baylibre.com>,
+ <andy@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+ <conor+dt@kernel.org>, <corbet@lwn.net>, <marcelo.schmitt1@gmail.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 7/8] dt-bindings: iio: adc: adi,ad4030: Add ADAQ4216
+ and ADAQ4224
+Message-ID: <20250928111955.175680cb@jic23-huawei>
+In-Reply-To: <5dc08b622dac1db561f26034c93910ccff75e965.1758916484.git.marcelo.schmitt@analog.com>
+References: <cover.1758916484.git.marcelo.schmitt@analog.com>
+	<5dc08b622dac1db561f26034c93910ccff75e965.1758916484.git.marcelo.schmitt@analog.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.50; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Remove extraneous dropping of the lock just to call 'request_irq'
-and locking again afterwards. Increment reference count
-before calling 'request_irq'. Rollback reference count if
-'request_irq' fails.
+On Fri, 26 Sep 2025 17:40:47 -0300
+Marcelo Schmitt <marcelo.schmitt@analog.com> wrote:
 
-Signed-off-by: Alex Tran <alex.t.tran@gmail.com>
----
- drivers/gpio/gpio-grgpio.c | 25 ++++++++++++-------------
- 1 file changed, 12 insertions(+), 13 deletions(-)
+> ADAQ4216 and ADAQ4224 are similar to AD4030 except that ADAQ devices have a
+> PGA (programmable gain amplifier) that scales the input signal prior to it
+> reaching the ADC inputs. The PGA is controlled through a couple of pins (A0
+> and A1) that set one of four possible signal gain configurations.
+> 
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> ---
+> Change log v2 -> v3
+> - PGA gain now described in decibels.
+> 
+> The PGA gain is not going to fit well as a channel property because it may
+> affect more than one channel as in AD7191.
+> https://www.analog.com/media/en/technical-documentation/data-sheets/AD7191.pdf
+> 
+> I consulted a very trustworthy source [1, 2] and learned that describing signal
+> gains in decibels is a common practice. I now think it would be ideal to describe
+> these PGA and PGA-like gains with properties in decibel units and this patch
+> is an attempt of doing so. The only problem with this approach is that we end up
+> with negative values when the gain is lower than 1 (the signal is attenuated)
+> and device tree specification doesn't support signed integer types. As the
+> docs being proposed fail dt_binding_check, I guess I have to nack the patch myself.
+> Any chance of dt specification eventually support signed integers?
+> Any suggestions appreciated.
+> 
+> [1] https://en.wikipedia.org/wiki/Decibel
+> [2] https://en.wikipedia.org/wiki/Gain_(electronics)
 
-diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
-index 0c0f97fa14fc..18d972fddfac 100644
---- a/drivers/gpio/gpio-grgpio.c
-+++ b/drivers/gpio/gpio-grgpio.c
-@@ -227,6 +227,7 @@ static int grgpio_irq_map(struct irq_domain *d, unsigned int irq,
- 	struct grgpio_priv *priv = d->host_data;
- 	struct grgpio_lirq *lirq;
- 	struct grgpio_uirq *uirq;
-+	bool needs_req = false;
- 	unsigned long flags;
- 	int offset = hwirq;
- 	int ret = 0;
-@@ -242,30 +243,28 @@ static int grgpio_irq_map(struct irq_domain *d, unsigned int irq,
- 		irq, offset);
- 
- 	gpio_generic_chip_lock_irqsave(&priv->chip, flags);
--
--	/* Request underlying irq if not already requested */
- 	lirq->irq = irq;
- 	uirq = &priv->uirqs[lirq->index];
--	if (uirq->refcnt == 0) {
--		/*
--		 * FIXME: This is not how locking works at all, you can't just
--		 * release the lock for a moment to do something that can't
--		 * sleep...
--		 */
--		gpio_generic_chip_unlock_irqrestore(&priv->chip, flags);
-+	needs_req = (uirq->refcnt == 0);
-+	uirq->refcnt++;
-+	gpio_generic_chip_unlock_irqrestore(&priv->chip, flags);
-+
-+	/* Request underlying irq if not already requested */
-+	if (needs_req) {
- 		ret = request_irq(uirq->uirq, grgpio_irq_handler, 0,
- 				  dev_name(priv->dev), priv);
- 		if (ret) {
- 			dev_err(priv->dev,
- 				"Could not request underlying irq %d\n",
- 				uirq->uirq);
-+
-+			// rollback
-+			gpio_generic_chip_lock_irqsave(&priv->chip, flags);
-+			uirq->refcnt--;
-+			gpio_generic_chip_unlock_irqrestore(&priv->chip, flags);
- 			return ret;
- 		}
--		gpio_generic_chip_lock_irqsave(&priv->chip, flags);
- 	}
--	uirq->refcnt++;
--
--	gpio_generic_chip_unlock_irqrestore(&priv->chip, flags);
- 
- 	/* Setup irq  */
- 	irq_set_chip_data(irq, priv);
--- 
-2.51.0
+I still wonder if the better way to describe this is to ignore that it
+has anything to do with PGA as such and instead describe the pin strapping.
+
+DT folk, is there an existing way to do that? My grep skills are failing to
+spot one.
+
+We've papered over this for a long time in various IIO drivers by controlling
+directly what the pin strap controls with weird and wonderful device specific
+bindings. I wonder if we can't have a gpio driver + binding that rejects all
+config and just lets us check the current state of an output pin.  Kind of a
+fixed mode regulator equivalent for gpios.
+
++CC Linus, Bartosz and gpio list.
+
+> 
+> Thanks,
+> Marcelo
+> 
+>  .../bindings/iio/adc/adi,ad4030.yaml          | 84 +++++++++++++++++--
+>  1 file changed, 79 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4030.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4030.yaml
+> index 564b6f67a96e..20462fa6c39d 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad4030.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4030.yaml
+> @@ -19,6 +19,8 @@ description: |
+>    * https://www.analog.com/media/en/technical-documentation/data-sheets/ad4030-24-4032-24.pdf
+>    * https://www.analog.com/media/en/technical-documentation/data-sheets/ad4630-24_ad4632-24.pdf
+>    * https://www.analog.com/media/en/technical-documentation/data-sheets/ad4630-16-4632-16.pdf
+> +  * https://www.analog.com/media/en/technical-documentation/data-sheets/adaq4216.pdf
+> +  * https://www.analog.com/media/en/technical-documentation/data-sheets/adaq4224.pdf
+>  
+>  $ref: /schemas/spi/spi-peripheral-props.yaml#
+>  
+> @@ -31,6 +33,8 @@ properties:
+>        - adi,ad4630-24
+>        - adi,ad4632-16
+>        - adi,ad4632-24
+> +      - adi,adaq4216
+> +      - adi,adaq4224
+>  
+>    reg:
+>      maxItems: 1
+> @@ -54,6 +58,14 @@ properties:
+>      description:
+>        Internal buffered Reference. Used when ref-supply is not connected.
+>  
+> +  vddh-supply:
+> +    description:
+> +      PGIA Positive Power Supply.
+> +
+> +  vdd-fda-supply:
+> +    description:
+> +      FDA Positive Power Supply.
+> +
+>    cnv-gpios:
+>      description:
+>        The Convert Input (CNV). It initiates the sampling conversions.
+> @@ -64,6 +76,26 @@ properties:
+>        The Reset Input (/RST). Used for asynchronous device reset.
+>      maxItems: 1
+>  
+> +  pga-gpios:
+> +    description:
+> +      A0 and A1 pins for gain selection. For devices that have PGA configuration
+> +      input pins, pga-gpios should be defined if adi,gain-milli is absent.
+> +    minItems: 2
+> +    maxItems: 2
+> +
+> +  adi,pga-gain-db:
+> +    description: |
+> +      Should be present if PGA control inputs are pin-strapped. The values
+> +      specify the rounded decibel gain calculated from the voltage gain.
+> +      Possible values:
+> +      -10 (A1=0, A0=0), (1/3 V/V gain)
+> +      -5 (A1=0, A0=1), (5/9 V/V gain)
+> +      7 (A1=1, A0=0), (20/9 V/V gain)
+> +      16 (A1=1, A0=1), (20/3 V/V gain)
+> +      If defined, pga-gpios must be absent.
+> +    enum: [-10, -5, 7, 16]
+> +    default: -10
+> +
+>    pwms:
+>      description: PWM signal connected to the CNV pin.
+>      maxItems: 1
+> @@ -86,11 +118,33 @@ required:
+>    - vio-supply
+>    - cnv-gpios
+>  
+> -oneOf:
+> -  - required:
+> -      - ref-supply
+> -  - required:
+> -      - refin-supply
+> +allOf:
+> +  - oneOf:
+> +      - required:
+> +          - ref-supply
+> +      - required:
+> +          - refin-supply
+> +  # ADAQ devices require a gain property to indicate how hardware PGA is set
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            pattern: ^adi,adaq
+> +    then:
+> +      allOf:
+> +        - required: [vddh-supply, vdd-fda-supply]
+> +          properties:
+> +            ref-supply: false
+> +        - oneOf:
+> +            - required:
+> +                - adi,pga-value
+> +            - required:
+> +                - pga-gpios
+> +    else:
+> +      properties:
+> +        adi,pga-value: false
+> +        pga-gpios: false
+> +
+>  
+>  unevaluatedProperties: false
+>  
+> @@ -114,3 +168,23 @@ examples:
+>              reset-gpios = <&gpio0 1 GPIO_ACTIVE_LOW>;
+>          };
+>      };
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    spi {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        adc@0 {
+> +            compatible = "adi,adaq4216";
+> +            reg = <0>;
+> +            spi-max-frequency = <80000000>;
+> +            vdd-5v-supply = <&supply_5V>;
+> +            vdd-1v8-supply = <&supply_1_8V>;
+> +            vio-supply = <&supply_1_8V>;
+> +            ref-supply = <&supply_5V>;
+> +            cnv-gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
+> +            reset-gpios = <&gpio0 1 GPIO_ACTIVE_LOW>;
+> +            adi,pga-gain-db = <-5>;
+> +        };
+> +    };
+> +...
 
 
