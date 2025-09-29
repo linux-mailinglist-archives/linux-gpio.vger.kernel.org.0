@@ -1,218 +1,273 @@
-Return-Path: <linux-gpio+bounces-26665-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26666-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83FB9BA9FDC
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Sep 2025 18:16:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B86FDBAA61B
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Sep 2025 20:49:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3005D1C1B7A
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Sep 2025 16:16:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1B33E192357C
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Sep 2025 18:49:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E13B30AAB0;
-	Mon, 29 Sep 2025 16:16:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E20AD235045;
+	Mon, 29 Sep 2025 18:49:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="D569lMdd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DmLQPoLf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16FF78F39
-	for <linux-gpio@vger.kernel.org>; Mon, 29 Sep 2025 16:16:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829912032D;
+	Mon, 29 Sep 2025 18:49:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759162586; cv=none; b=BafqGQGEqvn7xQjQ8CLu5kfRzmOg7EISO4RhW1X8QWoe013Mnc64XkMiyQqkg3t8BKukt+U6k0b2jDcViLhZggRdR6BhTzpgAbbjlSoJRpbSlSBM06mrzO6ROvb0zJc6k8O6MoTV2osIJltbyM8pZxpI5mcQ1hhmprqtsh6keQA=
+	t=1759171763; cv=none; b=VQXge/WEZfN52y+fcl0GR/KLxwV2EBaopf1nISwXVt30a5jbkvDRKm+w+ji4AnS9vRGQtVIPh+pmPWnhd9QJ4DF8cvF8sOypRe5fFxr5/kUJzlAwNYSt5LSVLx7GGVWgzj1cSu+415SzgsYgTZp/zWYyNTz4xo5oP+2hV8/pP24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759162586; c=relaxed/simple;
-	bh=UP0zi38iIoysyicUu4wqlIM8wUKsVlWusdH50CB/mrg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NaIaagLvcXqUapSPWYklg40GSdcVJuSpZ3wO/JCZOsqIesM/ryTVWOqtNxeZYOsvcZyuCZuFZWrMdlPNIjwbHwmfif26Ah6iY68KA3Ew6SpB+ldrZBXkz8cv+PuYg41N1gfvrau8jAPQ/zG43eCqKYOrIHn4dWXcOLCatTnNiLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=D569lMdd; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-57bd7f0e5baso4740123e87.3
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Sep 2025 09:16:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1759162582; x=1759767382; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RzkAIyqWbByhbLEusljJFiOftspWJiXeUC9AQt6tH38=;
-        b=D569lMddRMsr87CA2o7/j/HWhUycz/6ITLt4Yq3vAl+Wi5c4NxQszqoFU/e/GZqjAQ
-         uElIPr5Dy4wnOcZo9j4IU0PC89GMSCKXN58cAobhfRYQ2NetTBdIWdSBhwBHX1fYjF/c
-         mwprV5ywntynU4YXzM6YnBNP5gyEoyp0Burz/buh73UcppDrXEV31hUvyBL6/gRjjM6X
-         TsusqLWkfzK7Wu5HGwRH3G6TY58+3FrlhRPdymvZZG6BJfU3El4OMbdPAGJQhD/7hGtN
-         4SBsc5Z2TRfP1DUJUsAD1OCp8JEsXVJNKpRWjeyTZx17agLyCNFPE6h3VVJPOk/0rIEs
-         AViQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759162582; x=1759767382;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RzkAIyqWbByhbLEusljJFiOftspWJiXeUC9AQt6tH38=;
-        b=FzRcTgSxs5LgK099zUzxa0EYVwGN2PCF2gB94psPfM8UVj7iz3SD9JETC3csjRxw3Z
-         q1zVBuh+JK576p/M3SA1+o6jKm2BaL6bmGmD1XpKpMCbDdjSUsT/bjvWZMmX2Fxu895Y
-         9GWMzbXXl3ltfRzOcPcjcLJW22OGLprzcM8VPKdutI5ZrzquoaT0Zbf/KSF82Fv8MdQJ
-         ciQqIBXxB7UVvlr758diwbdHs3Mi4diRfexLYcanPM++YdQYgo0jHpoUEooKLL0Fvm8a
-         EzG37XTcnxRfNSoarup2gMvAwkGem8r8NzQ2wrBdAliFNCVn7CUXtbdn3BMOoLdK6BHW
-         6zNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXEZDZbehsDuTxaNwgMLtK7Gjo0SfZ1rIn6Zot7m0Uv0edUiSkrzh/xm4AEYCFT1xAalBNK6EABb5Pa@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhPDdOx9GxNYNUrpl4XjCRbP/Z8+wCWajvG/SqVKxVTG8Sfi/N
-	wvCSPFoMA5vLXaoklLTx3got02t/2swBp+2CxcIe39vSGuXmJi5jOsUuqCHtvgICoBA/bF+DG28
-	JcaUQGYGKWdDT9s54gHyktLOxWUBymqiIS3ASMke1Rg==
-X-Gm-Gg: ASbGncuTmjn2xXW3fykFYBP6kpNFqlRh0tDdNOcxJZeN6QVAJqjI3SxwoFJsx5C+6rG
-	cgp5Zenf9CW8anwFDsrwC6gE2KHLnfEqvVZB1ciNbOEENivP2gIDZ4zDvT3dAMFYIFoZVNWYR8x
-	uBbhKRmQgCAi3Lu2dM44ce3nVyI8k+KhUAssG1MoRV1XHEmYzYWToahKYJf23zuhcpH0DbGkCWJ
-	0euiDD6bc5cbXPpFQ==
-X-Google-Smtp-Source: AGHT+IFmU3wi4tOnHePsrkLhoeC52jJ7F2ZfQX4guvNO6akL0hF7fNRykrkZGq5tIOtl7Q4G/w4kyGLo4MIueW6zV24=
-X-Received: by 2002:a05:6512:61b1:b0:55f:4bf6:efed with SMTP id
- 2adb3069b0e04-582d092f44dmr4939397e87.1.1759162581685; Mon, 29 Sep 2025
- 09:16:21 -0700 (PDT)
+	s=arc-20240116; t=1759171763; c=relaxed/simple;
+	bh=CIesZg8God6+nurlZmJlDErmkC0T5rSf+vpzR1sIRAU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eh65tXVQhGdmU6/c+XX9HmuR+CyFVU6jIBTQ0cstAZgwTC2fqe7pFc+FS6ZUA1xXK3qKmsBs82zdqOYMqnOA6NlBdLIDy+1tEhri0ezP5z7uf1jqSEP9UlVpwayGo9PSWdTWsl3n3/6wmAQX6ytYZ1oXHb8nrjug1wk+P5+kh7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DmLQPoLf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02A7FC4CEF4;
+	Mon, 29 Sep 2025 18:49:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759171763;
+	bh=CIesZg8God6+nurlZmJlDErmkC0T5rSf+vpzR1sIRAU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DmLQPoLflrWPzRHpNZHaEQ6aDwxh9aYtXgubo4m46HHBDXYVQgDPIOQtOYSXLT0UW
+	 J0cY7HPPczP7uGVH9bcU+tgHh7JtcdZAtZ/6LkN4Q9KJns0kjSKvioKAxNeym0F/RE
+	 7Jaqb/P/p+piz8zOUQLrQ0JqLlFpk0EgPrMLapEl2mTsSX89/OCAF5ICnPviDScM8e
+	 f9N+ovN/nvQY+yVV/VjHhRlzBKhjk8QSuDeMmVdSw/y/HhudxSwo2qdDx8p6luxZWn
+	 r2qXWDt5vxv4e8T8xv12/e34WtpCFymnIXXgYbICoJ1r01KImMcZb8lqAn92hmslwc
+	 qaKj9SwXF+fMQ==
+Date: Mon, 29 Sep 2025 19:49:15 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Rob Herring <robh@kernel.org>, Hans de Goede <hansg@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>,
+	Hans Verkuil <hverkuil@kernel.org>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev
+Subject: Re: [PATCH v3 07/12] dt-bindings: media: Add usb-camera-module
+Message-ID: <20250929-disparate-fidgeting-65c2f7eff236@spud>
+References: <20250926-uvc-orientation-v3-0-6dc2fa5b4220@chromium.org>
+ <20250926-uvc-orientation-v3-7-6dc2fa5b4220@chromium.org>
+ <20250926-mute-boil-e75839753526@spud>
+ <CANiDSCuddqjeDr80xKsZZP7CXu9qB5qqYPoZujNYLcVjK0kKkg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1758916484.git.marcelo.schmitt@analog.com>
- <5dc08b622dac1db561f26034c93910ccff75e965.1758916484.git.marcelo.schmitt@analog.com>
- <20250928111955.175680cb@jic23-huawei> <20250929143132.GA4099970-robh@kernel.org>
-In-Reply-To: <20250929143132.GA4099970-robh@kernel.org>
-From: David Lechner <dlechner@baylibre.com>
-Date: Mon, 29 Sep 2025 18:16:10 +0200
-X-Gm-Features: AS18NWBfQ_PCDi7BrV3nUUthJBlzt7e5fMnLoo96Qy56YiwyIoDz8ZCBE2Bqo2Q
-Message-ID: <CAMknhBHzXLjkbKAjkgRwEps=0YrOgUcdvRpuPRrcPkwfwWo88w@mail.gmail.com>
-Subject: Re: [PATCH v3 7/8] dt-bindings: iio: adc: adi,ad4030: Add ADAQ4216
- and ADAQ4224
-To: Rob Herring <robh@kernel.org>
-Cc: Jonathan Cameron <jic23@kernel.org>, Marcelo Schmitt <marcelo.schmitt@analog.com>, 
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, michael.hennerich@analog.com, 
-	nuno.sa@analog.com, eblanc@baylibre.com, andy@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, corbet@lwn.net, marcelo.schmitt1@gmail.com, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="T7A0TheW4Ey8c64A"
+Content-Disposition: inline
+In-Reply-To: <CANiDSCuddqjeDr80xKsZZP7CXu9qB5qqYPoZujNYLcVjK0kKkg@mail.gmail.com>
+
+
+--T7A0TheW4Ey8c64A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 29, 2025 at 4:31=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
-:
->
-> On Sun, Sep 28, 2025 at 11:19:55AM +0100, Jonathan Cameron wrote:
-> > On Fri, 26 Sep 2025 17:40:47 -0300
-> > Marcelo Schmitt <marcelo.schmitt@analog.com> wrote:
+On Mon, Sep 29, 2025 at 10:30:35AM +0200, Ricardo Ribalda wrote:
+> Hi Conor
+>=20
+> On Fri, 26 Sept 2025 at 18:55, Conor Dooley <conor@kernel.org> wrote:
 > >
-> > > ADAQ4216 and ADAQ4224 are similar to AD4030 except that ADAQ devices =
-have a
-> > > PGA (programmable gain amplifier) that scales the input signal prior =
-to it
-> > > reaching the ADC inputs. The PGA is controlled through a couple of pi=
-ns (A0
-> > > and A1) that set one of four possible signal gain configurations.
+> > On Fri, Sep 26, 2025 at 01:11:31PM +0000, Ricardo Ribalda wrote:
+> > > For fixed cameras modules the OS needs to know where they are mounted.
+> > > This information is used to determine if images need to be rotated or
+> > > not.
 > > >
-> > > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> > > ACPI has a property for this purpose, which is parsed by
+> > > acpi_get_physical_device_location():
+> > > https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration=
+/Device_Configuration.html#pld-physical-location-of-device
+> > >
+> > > In DT we have similar properties for video-interface-devices called
+> > > orientation and rotation:
+> > > Documentation/devicetree/bindings/media/video-interface-devices.yaml
+> > >
+> > > Add a new schema that combines usb/usb-device.yaml and
+> > > media/video-interface-devices.yaml
+> > >
+> > > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 > > > ---
-> > > Change log v2 -> v3
-> > > - PGA gain now described in decibels.
+> > >  .../bindings/media/usb-camera-module.yaml          | 46 ++++++++++++=
+++++++++++
+> > >  MAINTAINERS                                        |  1 +
+> > >  2 files changed, 47 insertions(+)
 > > >
-> > > The PGA gain is not going to fit well as a channel property because i=
-t may
-> > > affect more than one channel as in AD7191.
-> > > https://www.analog.com/media/en/technical-documentation/data-sheets/A=
-D7191.pdf
+> > > diff --git a/Documentation/devicetree/bindings/media/usb-camera-modul=
+e.yaml b/Documentation/devicetree/bindings/media/usb-camera-module.yaml
+> > > new file mode 100644
+> > > index 0000000000000000000000000000000000000000..e4ad6f557b9151751522e=
+49b72ae6584deb0c7ba
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/usb-camera-module.yaml
+> > > @@ -0,0 +1,46 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/media/usb-camera-module.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: USB Camera Module
+> > > +
+> > > +maintainers:
+> > > +  - Ricardo Ribalda <ribalda@chromium.org>
+> > > +
+> > > +description: |
+> > > +  This schema allows for annotating auxiliary information for fixed =
+camera
+> > > +  modules. This information enables the system to determine if incom=
+ing frames
+> > > +  require rotation, mirroring, or other transformations. It also des=
+cribes the
+> > > +  module's relationship with other hardware elements, such as flash =
+LEDs or
+> > > +  Voice Coil Motors (VCMs).
+> > > +
+> > > +allOf:
+> > > +  - $ref: /schemas/usb/usb-device.yaml#
+> > > +  - $ref: /schemas/media/video-interface-devices.yaml#
+> > > +
+> > > +properties:
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> >
+> > What actually causes this schema to be applied? Did I miss it getting
+> > included somewhere?
+>=20
+> I guess your question is why I have not defined the compatible field?
+>=20
+> I tried this change[1] with no luck:
+> /usr/local/google/home/ribalda/work/linux/Documentation/devicetree/bindin=
+gs/media/uvc-camera.example.dtb:
+> device@1 (uvc-camera): compatible: ['uvc-camera'] does not contain
+> items matching the given schema
+>=20
+> I think it failed, because If we add these allOfs as Rob proposed
+> https://lore.kernel.org/all/20250625185608.GA2010256-robh@kernel.org/:
+> ```
+> allOf:
+>   - $ref: /schemas/usb/usb-device.yaml#
+>   - $ref: /schemas/media/video-interface-devices.yaml#
+> ```
+> We cannot (or I do not know how to) have a different compatible than
+> the one from usb-device.yaml
+>=20
+>=20
+> Any suggestion on how to do this properly will be highly appreciated :)
+
+It'd work, I think, if you permitted the pattern from usb-device as a
+fallback compatible. I don't know if that would work for whatever niche
+you're attempting to fill here though.
+
+Probably a Rob question ultimately.
+
+>=20
+> Thanks!
+>=20
+>=20
+>=20
+> [1]
+>=20
+> @@ -21,10 +21,14 @@ allOf:
+>    - $ref: /schemas/media/video-interface-devices.yaml#
+>=20
+>  properties:
+> +  compatible:
+> +    const: uvc-camera
+> +
+>    reg:
+>      maxItems: 1
+>=20
+>  required:
+> +  - compatible
+>    - reg
+>=20
+>  additionalProperties: true
+> @@ -38,8 +42,8 @@ examples:
+>          #size-cells =3D <0>;
+>=20
+>          device@1 {
+> -            compatible =3D "usb123,4567";
+> +           compatible =3D "uvc-camera";
+>              reg =3D <2>;
+>              orientation =3D <0>;
+>              rotation =3D <90>;
+>          };
+>=20
+> >
+> > > +required:
+> > > +  - reg
+> > > +
+> > > +additionalProperties: true
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    usb@11270000 {
+> > > +        reg =3D <0x11270000 0x1000>;
+> > > +        interrupts =3D <0x0 0x4e 0x0>;
+> > > +        #address-cells =3D <1>;
+> > > +        #size-cells =3D <0>;
+> > > +
+> > > +        device@1 {
+> > > +            compatible =3D "usb123,4567";
+> > > +            reg =3D <2>;
+> > > +            orientation =3D <0>;
+> > > +            rotation =3D <90>;
+> > > +        };
+> > > +    };
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index ee8cb2db483f6a5e96b62b6f2edd05b1427b69f5..1503502a3aed2625e8ff4=
+88456ccd7305cc74ba7 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -26258,6 +26258,7 @@ L:    linux-media@vger.kernel.org
+> > >  S:   Maintained
+> > >  W:   http://www.ideasonboard.org/uvc/
+> > >  T:   git git://linuxtv.org/media.git
+> > > +F:   Documentation/devicetree/bindings/media/usb-camera-module.yaml
+> > >  F:   Documentation/userspace-api/media/drivers/uvcvideo.rst
+> > >  F:   Documentation/userspace-api/media/v4l/metafmt-uvc-msxu-1-5.rst
+> > >  F:   Documentation/userspace-api/media/v4l/metafmt-uvc.rst
 > > >
-> > > I consulted a very trustworthy source [1, 2] and learned that describ=
-ing signal
-> > > gains in decibels is a common practice. I now think it would be ideal=
- to describe
-> > > these PGA and PGA-like gains with properties in decibel units and thi=
-s patch
-> > > is an attempt of doing so. The only problem with this approach is tha=
-t we end up
-> > > with negative values when the gain is lower than 1 (the signal is att=
-enuated)
-> > > and device tree specification doesn't support signed integer types. A=
-s the
-> > > docs being proposed fail dt_binding_check, I guess I have to nack the=
- patch myself.
-> > > Any chance of dt specification eventually support signed integers?
-> > > Any suggestions appreciated.
+> > > --
+> > > 2.51.0.536.g15c5d4f767-goog
 > > >
-> > > [1] https://en.wikipedia.org/wiki/Decibel
-> > > [2] https://en.wikipedia.org/wiki/Gain_(electronics)
-> >
-> > I still wonder if the better way to describe this is to ignore that it
-> > has anything to do with PGA as such and instead describe the pin strapp=
-ing.
-> >
-> > DT folk, is there an existing way to do that? My grep skills are failin=
-g to
-> > spot one.
-> >
-> > We've papered over this for a long time in various IIO drivers by contr=
-olling
-> > directly what the pin strap controls with weird and wonderful device sp=
-ecific
-> > bindings. I wonder if we can't have a gpio driver + binding that reject=
-s all
-> > config and just lets us check the current state of an output pin.  Kind=
- of a
-> > fixed mode regulator equivalent for gpios.
->
-> If these are connected to GPIOs, isn't it possible that someone will
-> want to change their value?
->
-> Other than some generic 'pinstrap-gpios' property, I don't see what we'd
-> do here? I don't feel like pin strapping GPIOs is something that we see
-> all that often.
->
-> Rob
+>=20
+>=20
+>=20
+> --
+> Ricardo Ribalda
+>=20
 
-I think the idea is that it is not actually a GPIO, just a hard-wired
-connection. We would want to have a "fixed-gpios" to describe these
-hard-wired connections as GPIOs so that we don't have to write complex
-binding for chip config GPIOs. I've seen configuration pins like on at
-least half a dozed of the ADCs I've been working on/reviewing over the
-last two years (since I got involved in IIO again).
+--T7A0TheW4Ey8c64A
+Content-Type: application/pgp-signature; name="signature.asc"
 
-For example, there might be 4 mode pins, so we would like to just have
-a mode-gpios property. So this could be all 4 connected to GPIOs, all
-4 hard-wired, or a mix.
+-----BEGIN PGP SIGNATURE-----
 
-(The actual bindings would need more thought, but this should give the
-general idea)
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaNrUqwAKCRB4tDGHoIJi
+0mASAP49pwqqfaBzHe/GqEE+pCyOCKLHjQV++1zecT+/WddTgAD/dP2GQvWciVeV
+ngYFC1P2vUnJOUWrondGz3NRTBBB/g0=
+=ew51
+-----END PGP SIGNATURE-----
 
-fixed_gpio: hard-wires {
-    compatible =3D "fixed-gpios";
-    gpio-controller;
-    #gpio-cells =3D <1>;
-};
-
-gpio0: gpio-controller@4000000 {
-    compatible =3D "vendor,soc-gpios";
-    gpio-controller;
-    #gpio-cells =3D <2>;
-};
-
-spi {
-    adc@0 {
-        compatible =3D "vendor,adc";
-        /* All gpios */
-        mode-gpios =3D <&gpio0 0 GPIO_ACTIVE_HIGH>,
-                     <&gpio0 1 GPIO_ACTIVE_HIGH>,
-                     <&gpio0 2 GPIO_ACTIVE_HIGH>,
-                     <&gpio0 3 GPIO_ACTIVE_HIGH>;
-         /* or all hard-wired */
-        mode-gpios =3D <&fixed_gpio 0 GPIO_FIXED_HIGH>,
-                     <&fixed_gpio GPIO_FIXED_HIGH>,
-                     <&fixed_gpio GPIO_FIXED_LOW>,
-                     <&fixed_gpio GPIO_FIXED_LOW>;
-         /* or mixed */
-        mode-gpios =3D <&gpio0 0 GPIO_ACTIVE_HIGH>,
-                     <&gpio0 1 GPIO_ACTIVE_HIGH>,
-                     <&fixed_gpio GPIO_FIXED_LOW>,
-                     <&fixed_gpio GPIO_FIXED_LOW>;
-    };
-};
+--T7A0TheW4Ey8c64A--
 
