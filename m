@@ -1,132 +1,123 @@
-Return-Path: <linux-gpio+bounces-26662-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26663-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C549BA9607
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Sep 2025 15:41:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58C52BA9959
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Sep 2025 16:31:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1E33918917D6
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Sep 2025 13:41:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0FF01169D5C
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Sep 2025 14:31:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01D393074B7;
-	Mon, 29 Sep 2025 13:41:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B94C33093BA;
+	Mon, 29 Sep 2025 14:31:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Yfmrrfy2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ybofpbcx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF74307490
-	for <linux-gpio@vger.kernel.org>; Mon, 29 Sep 2025 13:41:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9A91DD543;
+	Mon, 29 Sep 2025 14:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759153284; cv=none; b=HY3xqxo+ZKRHpwfEMejo2zfGwOx7KhiN5XvbNmQA8J9JPVNBfCcAtJBE4C7NS8NICkQ2u0VgCzhCBD7i49o3+Q1i2jTqQnnDdEWTH71gdSrKy9GbdzHGn91sipywDAalIYrTfTt6qdL4sgVN1lxUq3JQBlDKzwI4nmw1+N5ZUdk=
+	t=1759156294; cv=none; b=C3TwVRyJgwxMlFHzahc3NO3DPE1DBCH9zhO/whpeSw0XxKEzE/1bitNigQpBgukinygeevNvaPm+OtToXO7EJSAn0ALRvE5XNVMUH5nMiKFO8N8mS5bRBNaKOX38ge2z2oDghZ/g+zWgkh6Yp/kUwO1QzLwDgjN4nApZSq6XWC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759153284; c=relaxed/simple;
-	bh=5uahX3/t/qKl+AWu2lHhkUSygd0Oeo7v5srfItKOpo0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uVNV8qKJkN8xfXv/2FjQ9KIj6u9Qpb/TFuYaFdF5iXiqLpXZlhlyV6RhqxKK17cYNfW7+asnkQa3U7+ulNHbm3I5AolLotisjxCte13AehPXd333qWzakaZNNxUtcHIthaBYcpoyxEhT48XuOTKPC+bz9HXGXe9dKTNjFsMUN78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Yfmrrfy2; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-57e03279bfeso6576090e87.0
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Sep 2025 06:41:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1759153281; x=1759758081; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5uahX3/t/qKl+AWu2lHhkUSygd0Oeo7v5srfItKOpo0=;
-        b=Yfmrrfy2+GMnQBf9zFdyVUDEWWBk7u2IspZC66fvQ78A1OHbwndRgBelIasgsZpbpL
-         Myh+TWMFO+toEbK+5IE/UW6n3CRi4rpIoKJho27gz3Yp+1um0S1UYJKGmUzyM3TRVZbX
-         a4W+eNLF1Ep145PoknDbfr0oqYv5FrdInBntIkfrZ48eL2YuJnvPi81RCCPrT32tIbtO
-         Tj/vuH2BUk8mCzL/Z6O9F8NOCgAq9xsg8knlI0Fea5zcpL9O1J9ZKrRG8CvXjpG62Zyw
-         2mDC8jahuA1b67ayY4OTaO82SbTCBPUT4KxWBXuMIpdBMmukJervGKJwOA5gj8OtkR6C
-         3GGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759153281; x=1759758081;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5uahX3/t/qKl+AWu2lHhkUSygd0Oeo7v5srfItKOpo0=;
-        b=EFsz6ZlDfXMDSz+H57/gvxqS9G+M+r6sl06tknjPOAXPUGIB2ugcHpLdDwxPu75swv
-         bSIPGf7QCL2+Po84yHY1vXMkep45zAXyTkmj4ZDTX2qtrPc35wnf/nsnFHLEHwMfgs/D
-         azvHhprk7E9TVdaqwYwQNu0iXMWQp+mN5QWSvHFFIW1ZFwfEfnR7YKMkWc7HrYdLucqx
-         2CZwAbqMaB+SM+lxhjht/TLDEek5NeMDhufNt6JkaRMtRKd6pI3izHb7U8DQHlrOt+aC
-         19LDFbMIBf9WF2s8fTEcx3qBYk/PqCAG0H5r+urWKpVfkIlWmf6ttMwharBmOOEGS7V5
-         Eb4w==
-X-Forwarded-Encrypted: i=1; AJvYcCW28A68dyAy5y4qbXA6Wr6t58HpKsaCN+2zL5OJ8C1DjaC/R8duvvmbunwCRma5Av/GFOmOB8WtZ4b2@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4lB6KUG4oGZ2ijwn4ofBunTiJUePgXdBBTIA8Zc0ioRPqAc8E
-	KYCAt1oisDk9Bxb33aOgMkyYaPyShDRJs88jR8ll8D5DDr3xPKzpGnymOoOww5tUN53rZ5OkjK8
-	mI4jUoDlfZsF5hf2tjwvVlpK1cx6gY2x6YmHvL7/oOA==
-X-Gm-Gg: ASbGnctfHyrezY7w6NAghoDY9hzhAga0D7cjFDUuxOAWE+HlMcnK9jbG60asW7Fso6p
-	sX84Sm4Lby7Lpuo9Q7padvGk3hpzvWXPwl8w+IsFUjADe3MBXo+KWdd4qGtJBq/aTzJSRE6LvXu
-	3XQHcyakYOh9wSZv3RgYBzC+V6EHYohApjj1OshYQzxjlDVMK8tPdlDI9riwqLj8q/uT3h62O7V
-	4hAhigFcNHIlirEgzlB9FQztpVb010swxcwRyA=
-X-Google-Smtp-Source: AGHT+IHVwcUt8n2Dr1HYLUuIj7lg91of8OCj1ZiQGHG98cWyZH+Ddd15Wdp2OohNipHuMRCcT2tzkYcUlRcdG1A1CM8=
-X-Received: by 2002:a05:6512:304b:b0:57e:3273:93a7 with SMTP id
- 2adb3069b0e04-589842801c8mr179708e87.21.1759153281232; Mon, 29 Sep 2025
- 06:41:21 -0700 (PDT)
+	s=arc-20240116; t=1759156294; c=relaxed/simple;
+	bh=sKuqKNpE5dhMtZf1zaC2ZqjURpyd3C7l8Ef/qH3un8E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y/WpLQQAY2VhIgq05GZw/Y5gWPTcD50VG9tKgVWCj9VSMe47LRQ4pPcHW7qa+Ymgbzt0AeqeqnysAAevuinVnpYfLSO5ovUaLudG3N+dsCkGTdx4yLYa4b58I73iZgL6lduSgbMgnROmvHM62Am3hddILF/UFsJMpIwp4REagP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ybofpbcx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68AE4C4CEF4;
+	Mon, 29 Sep 2025 14:31:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759156293;
+	bh=sKuqKNpE5dhMtZf1zaC2ZqjURpyd3C7l8Ef/qH3un8E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ybofpbcx+ejkNvAv75607kTZIE8CUsY9qhrXc/yrJ9X2bu9eV4OnGXQ3TNrOD/y2P
+	 ZTx2iK+hamBmIKKHDaVWhoOTCftImvcznOCK+7AEffOegIkND9rMYBhjXJdQX1r1ZL
+	 0JZPrZuBsBi3OkjiTPDsLn7YSdXtt3i13qbb2sqBLpmyWZ+oVdhkzjg1wkMuDpihUy
+	 6H4hKACxj53QRJs6VTVZG6utz4nyFWuKrwYhNjvjyPwNTkosbGPUWq/6n6pcvlANgh
+	 fQ2kDFeXinDxHted7Q2+zz5VDaq8aUMue0z6xZZqc8r3t6Teq5PIR23t0f4AHQZWzI
+	 MmqWDPc+OcTRw==
+Date: Mon, 29 Sep 2025 09:31:32 -0500
+From: Rob Herring <robh@kernel.org>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	michael.hennerich@analog.com, nuno.sa@analog.com,
+	eblanc@baylibre.com, dlechner@baylibre.com, andy@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, corbet@lwn.net,
+	marcelo.schmitt1@gmail.com,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 7/8] dt-bindings: iio: adc: adi,ad4030: Add ADAQ4216
+ and ADAQ4224
+Message-ID: <20250929143132.GA4099970-robh@kernel.org>
+References: <cover.1758916484.git.marcelo.schmitt@analog.com>
+ <5dc08b622dac1db561f26034c93910ccff75e965.1758916484.git.marcelo.schmitt@analog.com>
+ <20250928111955.175680cb@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250919093627.605059-1-kkartik@nvidia.com> <20250919-undusted-distrust-ff5e2f25cdd5@spud>
- <f6c001af-bfaa-4d1a-8c32-1e2889e78650@nvidia.com>
-In-Reply-To: <f6c001af-bfaa-4d1a-8c32-1e2889e78650@nvidia.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 29 Sep 2025 15:41:08 +0200
-X-Gm-Features: AS18NWAjOCk1Qe6m9A7AF8f5gOU-rIzmkU9f6UFIkGdqyVsyB080HPyzY-M8DlA
-Message-ID: <CAMRc=Mee9JvcOCAqQxcCMBE7gUQWvZaM=wDAfyKTG5bKyZeHTA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: gpio: Add Tegra410 support
-To: Kartik Rajput <kkartik@nvidia.com>
-Cc: Conor Dooley <conor@kernel.org>, linus.walleij@linaro.org, thierry.reding@gmail.com, 
-	jonathanh@nvidia.com, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, 
-	Prathamesh Shete <pshete@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250928111955.175680cb@jic23-huawei>
 
-On Mon, Sep 29, 2025 at 9:24=E2=80=AFAM Kartik Rajput <kkartik@nvidia.com> =
-wrote:
->
-> Hi Conor,
->
-> Thanks for reviewing the patch!
->
-> On 19/09/25 22:44, Conor Dooley wrote:
-> > On Fri, Sep 19, 2025 at 03:06:26PM +0530, Kartik Rajput wrote:
-> >> From: Prathamesh Shete <pshete@nvidia.com>
-> >>
-> >> Add the port definitions for the main GPIO controller found on
-> >> Tegra410.
-> >>
-> >> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
-> >> Signed-off-by: Kartik Rajput <kkartik@nvidia.com>
-> >> ---
-> >
-> > Why are you modifying a binding header for devicetree when the driver
-> > only appear to grow acpi support?
-> >
->
-> Although Tegra410 is ACPI-only and does not require a new compatible stri=
-ng,
-> we chose to add the GPIO port definitions to the DT binding header to sta=
-y
-> consistent with previous Tegra SoCs.
->
-> Thanks,
-> Kartik
->
+On Sun, Sep 28, 2025 at 11:19:55AM +0100, Jonathan Cameron wrote:
+> On Fri, 26 Sep 2025 17:40:47 -0300
+> Marcelo Schmitt <marcelo.schmitt@analog.com> wrote:
+> 
+> > ADAQ4216 and ADAQ4224 are similar to AD4030 except that ADAQ devices have a
+> > PGA (programmable gain amplifier) that scales the input signal prior to it
+> > reaching the ADC inputs. The PGA is controlled through a couple of pins (A0
+> > and A1) that set one of four possible signal gain configurations.
+> > 
+> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> > ---
+> > Change log v2 -> v3
+> > - PGA gain now described in decibels.
+> > 
+> > The PGA gain is not going to fit well as a channel property because it may
+> > affect more than one channel as in AD7191.
+> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7191.pdf
+> > 
+> > I consulted a very trustworthy source [1, 2] and learned that describing signal
+> > gains in decibels is a common practice. I now think it would be ideal to describe
+> > these PGA and PGA-like gains with properties in decibel units and this patch
+> > is an attempt of doing so. The only problem with this approach is that we end up
+> > with negative values when the gain is lower than 1 (the signal is attenuated)
+> > and device tree specification doesn't support signed integer types. As the
+> > docs being proposed fail dt_binding_check, I guess I have to nack the patch myself.
+> > Any chance of dt specification eventually support signed integers?
+> > Any suggestions appreciated.
+> > 
+> > [1] https://en.wikipedia.org/wiki/Decibel
+> > [2] https://en.wikipedia.org/wiki/Gain_(electronics)
+> 
+> I still wonder if the better way to describe this is to ignore that it
+> has anything to do with PGA as such and instead describe the pin strapping.
+> 
+> DT folk, is there an existing way to do that? My grep skills are failing to
+> spot one.
+> 
+> We've papered over this for a long time in various IIO drivers by controlling
+> directly what the pin strap controls with weird and wonderful device specific
+> bindings. I wonder if we can't have a gpio driver + binding that rejects all
+> config and just lets us check the current state of an output pin.  Kind of a
+> fixed mode regulator equivalent for gpios.
 
-Hi!
+If these are connected to GPIOs, isn't it possible that someone will 
+want to change their value?
 
-The kernel policy is not to add symbols nobody is using. Please drop them.
+Other than some generic 'pinstrap-gpios' property, I don't see what we'd 
+do here? I don't feel like pin strapping GPIOs is something that we see 
+all that often.
 
-Bartosz
+Rob
 
