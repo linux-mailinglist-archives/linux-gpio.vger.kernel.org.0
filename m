@@ -1,123 +1,191 @@
-Return-Path: <linux-gpio+bounces-26663-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26664-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58C52BA9959
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Sep 2025 16:31:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C2769BA9D27
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Sep 2025 17:43:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0FF01169D5C
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Sep 2025 14:31:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 71E551753E2
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Sep 2025 15:43:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B94C33093BA;
-	Mon, 29 Sep 2025 14:31:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4428E30BF68;
+	Mon, 29 Sep 2025 15:43:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ybofpbcx"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FCR94bK2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9A91DD543;
-	Mon, 29 Sep 2025 14:31:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90A130BB88
+	for <linux-gpio@vger.kernel.org>; Mon, 29 Sep 2025 15:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759156294; cv=none; b=C3TwVRyJgwxMlFHzahc3NO3DPE1DBCH9zhO/whpeSw0XxKEzE/1bitNigQpBgukinygeevNvaPm+OtToXO7EJSAn0ALRvE5XNVMUH5nMiKFO8N8mS5bRBNaKOX38ge2z2oDghZ/g+zWgkh6Yp/kUwO1QzLwDgjN4nApZSq6XWC4=
+	t=1759160593; cv=none; b=ZqU7uOtIiwkoRNwaIRyHvWb4+pnZ9uPZI9XIfjHm+nq0zAoeoBqbqkkq6ecsVwxhjSjap6iXnAQLeqMME3KD1+zJnxEReuGInI+/xyYUYssEZu0/NrTDqX2u/rO7lT+s8+MDo3CuqBf/AU7M0pWj8sbS9Y5odrHPmvo/7rqpXA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759156294; c=relaxed/simple;
-	bh=sKuqKNpE5dhMtZf1zaC2ZqjURpyd3C7l8Ef/qH3un8E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y/WpLQQAY2VhIgq05GZw/Y5gWPTcD50VG9tKgVWCj9VSMe47LRQ4pPcHW7qa+Ymgbzt0AeqeqnysAAevuinVnpYfLSO5ovUaLudG3N+dsCkGTdx4yLYa4b58I73iZgL6lduSgbMgnROmvHM62Am3hddILF/UFsJMpIwp4REagP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ybofpbcx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68AE4C4CEF4;
-	Mon, 29 Sep 2025 14:31:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759156293;
-	bh=sKuqKNpE5dhMtZf1zaC2ZqjURpyd3C7l8Ef/qH3un8E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ybofpbcx+ejkNvAv75607kTZIE8CUsY9qhrXc/yrJ9X2bu9eV4OnGXQ3TNrOD/y2P
-	 ZTx2iK+hamBmIKKHDaVWhoOTCftImvcznOCK+7AEffOegIkND9rMYBhjXJdQX1r1ZL
-	 0JZPrZuBsBi3OkjiTPDsLn7YSdXtt3i13qbb2sqBLpmyWZ+oVdhkzjg1wkMuDpihUy
-	 6H4hKACxj53QRJs6VTVZG6utz4nyFWuKrwYhNjvjyPwNTkosbGPUWq/6n6pcvlANgh
-	 fQ2kDFeXinDxHted7Q2+zz5VDaq8aUMue0z6xZZqc8r3t6Teq5PIR23t0f4AHQZWzI
-	 MmqWDPc+OcTRw==
-Date: Mon, 29 Sep 2025 09:31:32 -0500
-From: Rob Herring <robh@kernel.org>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	michael.hennerich@analog.com, nuno.sa@analog.com,
-	eblanc@baylibre.com, dlechner@baylibre.com, andy@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, corbet@lwn.net,
-	marcelo.schmitt1@gmail.com,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 7/8] dt-bindings: iio: adc: adi,ad4030: Add ADAQ4216
- and ADAQ4224
-Message-ID: <20250929143132.GA4099970-robh@kernel.org>
-References: <cover.1758916484.git.marcelo.schmitt@analog.com>
- <5dc08b622dac1db561f26034c93910ccff75e965.1758916484.git.marcelo.schmitt@analog.com>
- <20250928111955.175680cb@jic23-huawei>
+	s=arc-20240116; t=1759160593; c=relaxed/simple;
+	bh=5q8LLF4ag2MVwttfhWyI7ecDLzD9/dPboJQ0VHDhT3A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=obHtX7hg+ilaLgLCtZvD52phHFAaSx6nA6LY546BESu8htOkL6Onc5MsLQmoEa4yBksFqfKLdtzABWCY6wXP6MLtmaeV4bu7jKRV9M3VQLOMHQLoyXh2CeOgbtkH9XRQya3rPE6ZAvn/OuxeNum8z1AT86Vwv6OAhG5DNiILkPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FCR94bK2; arc=none smtp.client-ip=185.246.84.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 66F2E1A103B;
+	Mon, 29 Sep 2025 15:43:09 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 3B17B606AE;
+	Mon, 29 Sep 2025 15:43:09 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 9E9D3102F1A0C;
+	Mon, 29 Sep 2025 17:43:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1759160588; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=S1PdaIvO7vK9SB7Z0ERMuEoy98E+U47D3nVJtH+4Aqk=;
+	b=FCR94bK24e1NoOiyF+A/RbIyOW+tTMUG3y4g3og4gWZyyXJaS00FXRsl39dlwRgRIZ/k3J
+	AK+mywa0BxPUY+nCP8IMpGuJ95/GUwJs+cTfjUrCT054gC1lsqpsr4VR9ARrrcD8fX2MaS
+	rbc1p1yzzUEDmIx25+WiAWcBf9q7i3oorfLutoPa3rGXJdTqJRA+1DplYKRG2MRKmzc4/b
+	St12Emjl4h3HuzabkOq9MNbLCJ19bjikzYM0ykLd7aoWBe3I3bFacn4PYd5Cb2wI3ydGg/
+	9fUqOIui11YZn1Aa2IoZiu+Qm638BxPUI/njFLpoL2j73b04aDsJUWBfMkpEbg==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>,  Stephen Boyd
+ <sboyd@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor
+ Dooley <conor+dt@kernel.org>,  Linus Walleij <linus.walleij@linaro.org>,
+  Richard Cochran <richardcochran@gmail.com>,  Gregory CLEMENT
+ <gregory.clement@bootlin.com>,  Marek =?utf-8?Q?Beh=C3=BAn?=
+ <kabel@kernel.org>,
+  linux-clk@vger.kernel.org,  devicetree@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  linux-gpio@vger.kernel.org,
+  netdev@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pinctrl: Convert
+ marvell,armada-3710-(sb|nb)-pinctrl to DT schema
+In-Reply-To: <20250924223528.2956771-1-robh@kernel.org> (Rob Herring's message
+	of "Wed, 24 Sep 2025 17:35:24 -0500")
+References: <20250924223528.2956771-1-robh@kernel.org>
+User-Agent: mu4e 1.12.7; emacs 30.2
+Date: Mon, 29 Sep 2025 17:43:04 +0200
+Message-ID: <87ms6di7sn.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250928111955.175680cb@jic23-huawei>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Sun, Sep 28, 2025 at 11:19:55AM +0100, Jonathan Cameron wrote:
-> On Fri, 26 Sep 2025 17:40:47 -0300
-> Marcelo Schmitt <marcelo.schmitt@analog.com> wrote:
-> 
-> > ADAQ4216 and ADAQ4224 are similar to AD4030 except that ADAQ devices have a
-> > PGA (programmable gain amplifier) that scales the input signal prior to it
-> > reaching the ADC inputs. The PGA is controlled through a couple of pins (A0
-> > and A1) that set one of four possible signal gain configurations.
-> > 
-> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> > ---
-> > Change log v2 -> v3
-> > - PGA gain now described in decibels.
-> > 
-> > The PGA gain is not going to fit well as a channel property because it may
-> > affect more than one channel as in AD7191.
-> > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7191.pdf
-> > 
-> > I consulted a very trustworthy source [1, 2] and learned that describing signal
-> > gains in decibels is a common practice. I now think it would be ideal to describe
-> > these PGA and PGA-like gains with properties in decibel units and this patch
-> > is an attempt of doing so. The only problem with this approach is that we end up
-> > with negative values when the gain is lower than 1 (the signal is attenuated)
-> > and device tree specification doesn't support signed integer types. As the
-> > docs being proposed fail dt_binding_check, I guess I have to nack the patch myself.
-> > Any chance of dt specification eventually support signed integers?
-> > Any suggestions appreciated.
-> > 
-> > [1] https://en.wikipedia.org/wiki/Decibel
-> > [2] https://en.wikipedia.org/wiki/Gain_(electronics)
-> 
-> I still wonder if the better way to describe this is to ignore that it
-> has anything to do with PGA as such and instead describe the pin strapping.
-> 
-> DT folk, is there an existing way to do that? My grep skills are failing to
-> spot one.
-> 
-> We've papered over this for a long time in various IIO drivers by controlling
-> directly what the pin strap controls with weird and wonderful device specific
-> bindings. I wonder if we can't have a gpio driver + binding that rejects all
-> config and just lets us check the current state of an output pin.  Kind of a
-> fixed mode regulator equivalent for gpios.
+On 24/09/2025 at 17:35:24 -05, "Rob Herring (Arm)" <robh@kernel.org> wrote:
 
-If these are connected to GPIOs, isn't it possible that someone will 
-want to change their value?
+> Convert the marvell,armada3710-(sb|nb)-pinctrl binding to DT schema
+> format. The binding includes the "marvell,armada-3700-xtal-clock"
+> subnode which is simple enough to include here.
+>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  .../bindings/clock/armada3700-xtal-clock.txt  |  29 ---
+>  .../marvell,armada-3710-xb-pinctrl.yaml       | 122 +++++++++++
+>  .../pinctrl/marvell,armada-37xx-pinctrl.txt   | 195 ------------------
+>  3 files changed, 122 insertions(+), 224 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/armada3700-xt=
+al-clock.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,arm=
+ada-3710-xb-pinctrl.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,arm=
+ada-37xx-pinctrl.txt
+>
+> diff --git a/Documentation/devicetree/bindings/clock/armada3700-xtal-cloc=
+k.txt b/Documentation/devicetree/bindings/clock/armada3700-xtal-clock.txt
+> deleted file mode 100644
+> index 4c0807f28cfa..000000000000
+> --- a/Documentation/devicetree/bindings/clock/armada3700-xtal-clock.txt
+> +++ /dev/null
+> @@ -1,29 +0,0 @@
+> -* Xtal Clock bindings for Marvell Armada 37xx SoCs
+> -
+> -Marvell Armada 37xx SoCs allow to determine the xtal clock frequencies by
+> -reading the gpio latch register.
+> -
+> -This node must be a subnode of the node exposing the register address
+> -of the GPIO block where the gpio latch is located.
+> -See Documentation/devicetree/bindings/pinctrl/marvell,armada-37xx-pinctr=
+l.txt
+> -
+> -Required properties:
+> -- compatible : shall be one of the following:
+> -	"marvell,armada-3700-xtal-clock"
+> -- #clock-cells : from common clock binding; shall be set to 0
+> -
+> -Optional properties:
+> -- clock-output-names : from common clock binding; allows overwrite defau=
+lt clock
+> -	output names ("xtal")
+> -
+> -Example:
+> -pinctrl_nb: pinctrl-nb@13800 {
+> -	compatible =3D "armada3710-nb-pinctrl", "syscon", "simple-mfd";
+> -	reg =3D <0x13800 0x100>, <0x13C00 0x20>;
+> -
+> -	xtalclk: xtal-clk {
+> -		compatible =3D "marvell,armada-3700-xtal-clock";
+> -		clock-output-names =3D "xtal";
+> -		#clock-cells =3D <0>;
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/pinctrl/marvell,armada-371=
+0-xb-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/marvell,armad=
+a-3710-xb-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..c4d09d8720bd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/marvell,armada-3710-xb-pi=
+nctrl.yaml
+> @@ -0,0 +1,122 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/marvell,armada-3710-xb-pinctr=
+l.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Marvell Armada 37xx SoC pin and gpio controller
+> +
+> +maintainers:
+> +  - Gregory CLEMENT <gregory.clement@bootlin.com>
+> +  - Marek Beh=C3=BAn <kabel@kernel.org>
+> +  - Miquel Raynal <miquel.raynal@bootlin.com>
+> +
+> +description: >
+> +  Each Armada 37xx SoC come with two pin and gpio controller one for the=
+ south
+> +  bridge and the other for the north bridge.
 
-Other than some generic 'pinstrap-gpios' property, I don't see what we'd 
-do here? I don't feel like pin strapping GPIOs is something that we see 
-all that often.
+As I think you'll send a v2 because of the robot complaint, maybe you
+could rephrase a bit to ease the reading:
 
-Rob
+"...two pin/gpio controllers, one for..."
+
+> +
+> +  Inside this set of register the gpio latch allows exposing some config=
+uration
+> +  of the SoC and especially the clock frequency of the xtal. Hence, this=
+ node is
+> +  a represent as syscon allowing sharing the register between multiple h=
+ardware
+
+represented as a?
+
+> +  block.
+
+blocks?
+
+
+The rest looks fine, so:
+
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+
+Thanks,
+Miqu=C3=A8l
 
