@@ -1,133 +1,123 @@
-Return-Path: <linux-gpio+bounces-26667-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26668-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0639BAB801
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Sep 2025 07:33:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3911BABE9A
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Sep 2025 09:54:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5BC601C2609
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Sep 2025 05:33:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8D3C33BFAB8
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Sep 2025 07:54:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BD5F2765C0;
-	Tue, 30 Sep 2025 05:33:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1E392D23A8;
+	Tue, 30 Sep 2025 07:54:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="TI4uSpQw"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="GabZyYet"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D6C276048
-	for <linux-gpio@vger.kernel.org>; Tue, 30 Sep 2025 05:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7A52C0323
+	for <linux-gpio@vger.kernel.org>; Tue, 30 Sep 2025 07:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759210403; cv=none; b=hvP8egOnYedQBWBRLFAHvQmK1OtOO49GSqzSzsnjZ77h5ODHNheGJiu6QcmebFi96uCVPpn8+gNCTsWcDROhV9QH5Ru8k5TXx9eweKaCFRlAAMbgEQCKdwyCuhujYrqla8qMbSOGzwswhy6NzHIZY402lgqKFM+4vq9dtW1pAPw=
+	t=1759218851; cv=none; b=KIC9uQHVdBc27EmGEfyCqnmQe+0daar8s4zhqhlwxHIIwtRFOUtQxkGpHdgOl071DtVdoSma1jBXZopSlPE/+v21zph7BhGpu9Z+dXyZeMEmRfYYcfAM92kttb8yYBGUwE10L9DtCtyuCSHQcefSRqea0papRNQdemDk5Viyh+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759210403; c=relaxed/simple;
-	bh=+zYHcq1PnJGmU//SbV0gpmoJSYNqd+MwGlmrpbux8Rk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ukiCq3T3mJhrCE4LNS+ww/Mw2lErTvwsl0YnKx0BV0qWPtNNAPwhi82ZZ3+5wfZRPgxyJ1Je9OUySK84TTxuexJoDZ2w49WREyddO4JR1UnBVo0O8asqGiKHWdbia2c7Vh9OKt0GbED6D62ydwY3mv0v8NyIkWy2R+T27nCgm4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=TI4uSpQw; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3f0308469a4so3098374f8f.0
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Sep 2025 22:33:20 -0700 (PDT)
+	s=arc-20240116; t=1759218851; c=relaxed/simple;
+	bh=4VdkPXeBH6NP4siPVYvQOBh3a0DG9hIaVZnRYw5ZHIA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BJta/9ELWI7t6CdNdqA1lYl9JP8CG5DjsD7vmMGXvWjfR7QGwGg8ipqHkBjNwfgC2Zf39j1D3cfwOJkUCJf4dFgsj3ErFSqKI/1YBM+2noj00roinEtbNvvESrdHGCGe4d9AxQK1UVdIiZ+bjTfPZl7QfjmjvLMw/etSrXSu+z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=GabZyYet; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3ee130237a8so4012113f8f.0
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Sep 2025 00:54:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1759210399; x=1759815199; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=RcKZSqsNCClUnXNLZ+VWODkqJQUd67st9xIuGAhStQk=;
-        b=TI4uSpQwWfQKYiW1tI6/8kA5Z+W7OMOqi0a4zllk1q8j+84RD0TwN0Du9UKkguXWhO
-         W76z5mPf5mURJ4ve7m6CFUL+1+UsRX1pLFNYCGCwo3SFu01z3wnAa7RMnSU9BICyKlwO
-         ld4kwDoZEKgwKlSsnd9aGwUYu82qT3Iho1o+MtzCQMBzgVs1uqg5u3ukbs5ZPNPGNodb
-         543neIkoKYOqLzvovMx5dWX6W7EHk5etHpXdVKHjH0jlEYrqJXmnvgrsndCmaHc0Xjbr
-         jf9IHBQDX6BUC8KxoEkh0w/TJX3JwqnHOIlLZNgtum8ys1Mb2uOlKF8vBz4ICzOSZsa5
-         OtRQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1759218848; x=1759823648; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DBWvcTyxOaA12NdLYzKitgtgTNT98k7mjj1jzcMRcLI=;
+        b=GabZyYet5NAarQTbdSD3NVgv1QPypsI0J/iWmxnVbBKkNfdE4v8nDR9sEBec2Lh/OY
+         PxAT3k5j6z4DJ92zaqBDdtBh1nT3MzHhtKFqutIg52Y/TogGVEeeayXiCJ3NhJYxbSvg
+         iEuN0Qtnlt0zMA2fpKm9ZGF5DBYm1L445ym4WDUlNNO2V34A3y0waLRRZ8f5NEg4c6/E
+         XdZtFRkUcHceY88KIBZLSgtjKXsB6RQOFmACCNsfU1TzJLFKoHt2RReoBGU1wtJli0Gm
+         gTSkHHLQbSGMSWmdNUhKTGDnQflQo4KqpSEnVlWzJH1qcIBbXsJJQhrbvVbwl4sRi+wu
+         XEdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759210399; x=1759815199;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RcKZSqsNCClUnXNLZ+VWODkqJQUd67st9xIuGAhStQk=;
-        b=ajcmsKKbHyOpLbhArLitl9Y8PKrcllkndMTkoLcttcLY/17lm/gHJOMRd3NpIhHtdo
-         bb8IvOIWjMSYjsYFtHR6pML3s16pvZOxTHOYIBizdVPvWFCNDTXo2HoH4LQUS/FzjQAH
-         X0t3mCYp2cmNY/8AxMh4Fde0tPne6qs4r288yy1PQoFAjJLtGIM3HgULiSkTSBE8bjGo
-         yPfe9cX/TTEV/4VJojT1n7CZtqnMd+/vJf3q3i43Y4T7WHUaRtIL9JzhwhRuZBOjUte+
-         KRZn2tdbrWkBk2kxAkuFlg8TJcvy6d+F9JwxwD5lyDk20HZt8PHf/721F5oFQMsQCrd0
-         dPRA==
-X-Forwarded-Encrypted: i=1; AJvYcCWEuwZEFBHbMROS0yjG5cwFrhR3NcZ7e57KHMSDkKXRvOrJPGZ9zPqO/3xi+npUoeLwpmsTeNKAk/BC@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhLEi3fG5k7fM1Ib2Jj0zKSWaWj8Pi7df0rhNTfj1mtx2wUrWu
-	PwTIwFOU1U41i/+PBhtLlSellv8BB+f0x6q+XG/L+iSOs+nVEBFl0buLz12+YVz2IQE=
-X-Gm-Gg: ASbGncs7DWjPpgECHJUG5o/VVxa82+UTD7j6J/tuaEs9TlM/yrwxHH4bA8l5K+a5x1Z
-	p/4rH/ayhwI2vN17yCASn0KTm+jT15hqtd5kPUE7o2CntU2iJJ0YZuU3/cKHmmyIW0atVKKAssF
-	Yiy69V8sZMOWsvKXik8fx2I7RJVHrjh3JHrWhi8/RzFsdZYl3/1qt5lueFSpY1jXRqXo6kHi1I/
-	T9wjO6aRB/pPQ+JsqZRy3Dq4xLHa0UaLxLVpv5534ZLxtZBmEh0AzsmtInR/g4nrHkVh/upnVr5
-	0EiebBupM7vnk3MWcHllY43s2QuA2Xzrl7H/KMCcATQrjiO4DusOwd0NhiwL2Ske/ITsN9sVpWV
-	2zlV6Fo5eqRF0CdNlJY5pBcUkZEakxYhx9xZnzUHeFVfbi2/cUexQiOM=
-X-Google-Smtp-Source: AGHT+IEkueAS01kFVAoXd3MEH9FbKcaIHwo56QQ73i1m/EjHyO0vo1fWE9up8eTSOW6ZhEmF700+iQ==
-X-Received: by 2002:a05:6000:400a:b0:3e4:957d:d00 with SMTP id ffacd0b85a97d-40e4c2d2576mr17438762f8f.58.1759210399124;
-        Mon, 29 Sep 2025 22:33:19 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.111])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-40fc88b0779sm20750915f8f.58.2025.09.29.22.33.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Sep 2025 22:33:18 -0700 (PDT)
-Message-ID: <2bd09757-cd66-4a2a-8801-0f62dc99b9c8@tuxon.dev>
-Date: Tue, 30 Sep 2025 08:33:15 +0300
+        d=1e100.net; s=20230601; t=1759218848; x=1759823648;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DBWvcTyxOaA12NdLYzKitgtgTNT98k7mjj1jzcMRcLI=;
+        b=v23ilNupfLd3g7CdeakUwx26vvKnX2SMBMsskseC6U1/YIHr+rZl/vYBN4ljkTQQiY
+         mZqCLG2TSEhoayh/C3KzDoR9xzBDXTzJwY6uhkYlWIqkQZ0oImYUwgG0EqLqXd0pHoIM
+         7VxuRJKVMoogiCaWAe9udjeWMJRFa/7qFIrvY+9JioXmXLHP54cDT7fLkNheZaLQ/vLd
+         5y+3tAnNJ+5jPTipoM2e6E2BSpcZtY+9e1drrwfCDLEW3JDtrL7REGw/ImS9BxuROyWF
+         C+uZGa9ZWR6vAjq/wMFKUr4p5v1TfY8l3K/dB4I2Bk0gShGlHFgrY6CnsJImS3IsJm4U
+         kTQA==
+X-Forwarded-Encrypted: i=1; AJvYcCVgqSIIzKeXFRKMH8f5MfEl0hr0aFQUjlpBSxGecXI9XVYsdOsT3gDu+sYFPklrcTAfW3+elJeX6QMD@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyPEGvAq5cxKUHqHmFyBF4FEyQRabVowCbCfbwFvZMWuVE1/8y
+	YXN3NA/gZHQcES54ktlgkD3JajgfGPSPFyPLtb+0MBCefn6VoYJymudjV3rWpNMtaQY=
+X-Gm-Gg: ASbGncswJ2Kwirh+s6XucWAs+fbX3f0V/1CI6nuMAAkOI1U2RsbNQXtFDMgh0vKxOxz
+	DSUXvjkOTSZhO+ZVrmgMh81KpbK8ybdSLcKaOdu9TZRmPL3eHkMAuQaCvdRFJD9aMouvciRA76h
+	Ao1nMqOjZKcUmpPSapJZcnbkICOGCxQCq9tiP63l6E0eTWUwbYXnSQGDiTP2WnvCOYSFJ3tB1wZ
+	RB7n0HPD6cVQK2/0u+ZW7NL+fTLmDgIfxlGRchTBWwLPWkhvlu0hj4WeKZvNMgmrgjhA9v8w4TS
+	cQS+olXPoQ82OSo4MclY+9E3ndUDURHpeTGq+CEdgsjqXTe5EQ94ySa3RvcKkMx0IoLr97Im+rQ
+	4kCXhtlE3/6CLs4F2+vYXglRxN2u/RSR/5uUzngqs9OKp5Z5L90hN05NiSWvN8kbiZyKh+w==
+X-Google-Smtp-Source: AGHT+IH4qjLb3VWmEMpt8mLjEz867avnsvy29FZRpZUOPHC1oBdmuTvrrZSoMsgTy8jZHLKX23S22w==
+X-Received: by 2002:a05:6000:2203:b0:3ea:63d:44ca with SMTP id ffacd0b85a97d-40e4adceb15mr15343331f8f.32.1759218847601;
+        Tue, 30 Sep 2025 00:54:07 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:3817:2e85:8b35:9e8e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e5b63b407sm9321495e9.2.2025.09.30.00.54.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Sep 2025 00:54:06 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Erik Wierich <erik@riscstar.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH libgpiod 0/3] bindings: rust: pre-release tweaks
+Date: Tue, 30 Sep 2025 09:54:05 +0200
+Message-ID: <175921884297.11146.14838684003913613834.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250926-rust-release-tweaks-v1-0-beae932eb691@linaro.org>
+References: <20250926-rust-release-tweaks-v1-0-beae932eb691@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] pinctrl: renesas: rzg2l: Fix ISEL restore on resume
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linus.walleij@linaro.org, biju.das.jz@bp.renesas.com,
- linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, stable@vger.kernel.org
-References: <20250912095308.3603704-1-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdXv1-w0SE7FZy5k3jg2FO-a-RB2w1WB=VM_UFEA9zjWDw@mail.gmail.com>
- <ef82c610-0571-4665-a5d1-07a9ed9fb8d3@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <ef82c610-0571-4665-a5d1-07a9ed9fb8d3@tuxon.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi, Geert,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-On 9/29/25 15:10, Claudiu Beznea wrote:
->> This conflicts with commit d57183d06851bae4 ("pinctrl: renesas: rzg2l:
->> Drop unnecessary pin configurations"), which I have already queued
->> in renesas-drivers/renesas-pinctrl-for-v6.19.  Hence I am replacing
->> the above hunk by:
->>
->>             /* Switching to GPIO is not required if reset value is
->> same as func */
->>             reg = readb(pctrl->base + PMC(off));
->>     -       spin_lock_irqsave(&pctrl->lock, flags);
->>     +       raw_spin_lock_irqsave(&pctrl->lock, flags);
->>             pfc = readl(pctrl->base + PFC(off));
->>             if ((reg & BIT(pin)) && (((pfc >> (pin * 4)) & PFC_MASK) == func)) {
->>     -               spin_unlock_irqrestore(&pctrl->lock, flags);
->>     +               raw_spin_unlock_irqrestore(&pctrl->lock, flags);
->>                     return;
->>             }
->>
->> while applying.
-> This is right. Thank you! I'm going to give it also a try (on actual HW) a
-> bit later. I'll let you know.
 
-Sorry for the delay, all looks good to me (checked on RZ/G3S).
-
-Thank you,
-Claudiu
-
+On Fri, 26 Sep 2025 16:35:41 +0200, Bartosz Golaszewski wrote:
+> Here are some final tweaks before I do the 1.0.0 release of libgpiod
+> rust crates. The first patch completes what I though I already did last
+> time when updating the examples but I must have borked. The second patch
+> just runs `rustfmt --edition 2024` on all source files. Finally the last
+> patch adds some examples to the readme so that the landing page on
+> crates.io already shows how to use the code.
 > 
-> Thank you,
-> Claudiu
+> [...]
 
+Applied, thanks!
+
+[1/3] bindings: rust: complete the unification of exports in examples
+      https://git.kernel.org/brgl/libgpiod/c/e5494942299014784203e6718dba6664cb514958
+[2/3] bindings: rust: update formatting to --edition 2024
+      https://git.kernel.org/brgl/libgpiod/c/d0f1291f4137c7243f44b118ca6ecfe0cd4fd92d
+[3/3] bindings: rust: add examples to the README.md in the libgpiod crate
+      https://git.kernel.org/brgl/libgpiod/c/2eab5e896f7dd8e6ec5bea5070b95f09a2fbbcbb
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
