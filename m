@@ -1,273 +1,133 @@
-Return-Path: <linux-gpio+bounces-26666-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26667-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B86FDBAA61B
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Sep 2025 20:49:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0639BAB801
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Sep 2025 07:33:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1B33E192357C
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Sep 2025 18:49:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5BC601C2609
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Sep 2025 05:33:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E20AD235045;
-	Mon, 29 Sep 2025 18:49:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BD5F2765C0;
+	Tue, 30 Sep 2025 05:33:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DmLQPoLf"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="TI4uSpQw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829912032D;
-	Mon, 29 Sep 2025 18:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D6C276048
+	for <linux-gpio@vger.kernel.org>; Tue, 30 Sep 2025 05:33:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759171763; cv=none; b=VQXge/WEZfN52y+fcl0GR/KLxwV2EBaopf1nISwXVt30a5jbkvDRKm+w+ji4AnS9vRGQtVIPh+pmPWnhd9QJ4DF8cvF8sOypRe5fFxr5/kUJzlAwNYSt5LSVLx7GGVWgzj1cSu+415SzgsYgTZp/zWYyNTz4xo5oP+2hV8/pP24=
+	t=1759210403; cv=none; b=hvP8egOnYedQBWBRLFAHvQmK1OtOO49GSqzSzsnjZ77h5ODHNheGJiu6QcmebFi96uCVPpn8+gNCTsWcDROhV9QH5Ru8k5TXx9eweKaCFRlAAMbgEQCKdwyCuhujYrqla8qMbSOGzwswhy6NzHIZY402lgqKFM+4vq9dtW1pAPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759171763; c=relaxed/simple;
-	bh=CIesZg8God6+nurlZmJlDErmkC0T5rSf+vpzR1sIRAU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eh65tXVQhGdmU6/c+XX9HmuR+CyFVU6jIBTQ0cstAZgwTC2fqe7pFc+FS6ZUA1xXK3qKmsBs82zdqOYMqnOA6NlBdLIDy+1tEhri0ezP5z7uf1jqSEP9UlVpwayGo9PSWdTWsl3n3/6wmAQX6ytYZ1oXHb8nrjug1wk+P5+kh7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DmLQPoLf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02A7FC4CEF4;
-	Mon, 29 Sep 2025 18:49:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759171763;
-	bh=CIesZg8God6+nurlZmJlDErmkC0T5rSf+vpzR1sIRAU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DmLQPoLflrWPzRHpNZHaEQ6aDwxh9aYtXgubo4m46HHBDXYVQgDPIOQtOYSXLT0UW
-	 J0cY7HPPczP7uGVH9bcU+tgHh7JtcdZAtZ/6LkN4Q9KJns0kjSKvioKAxNeym0F/RE
-	 7Jaqb/P/p+piz8zOUQLrQ0JqLlFpk0EgPrMLapEl2mTsSX89/OCAF5ICnPviDScM8e
-	 f9N+ovN/nvQY+yVV/VjHhRlzBKhjk8QSuDeMmVdSw/y/HhudxSwo2qdDx8p6luxZWn
-	 r2qXWDt5vxv4e8T8xv12/e34WtpCFymnIXXgYbICoJ1r01KImMcZb8lqAn92hmslwc
-	 qaKj9SwXF+fMQ==
-Date: Mon, 29 Sep 2025 19:49:15 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Rob Herring <robh@kernel.org>, Hans de Goede <hansg@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>,
-	Hans Verkuil <hverkuil@kernel.org>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev
-Subject: Re: [PATCH v3 07/12] dt-bindings: media: Add usb-camera-module
-Message-ID: <20250929-disparate-fidgeting-65c2f7eff236@spud>
-References: <20250926-uvc-orientation-v3-0-6dc2fa5b4220@chromium.org>
- <20250926-uvc-orientation-v3-7-6dc2fa5b4220@chromium.org>
- <20250926-mute-boil-e75839753526@spud>
- <CANiDSCuddqjeDr80xKsZZP7CXu9qB5qqYPoZujNYLcVjK0kKkg@mail.gmail.com>
+	s=arc-20240116; t=1759210403; c=relaxed/simple;
+	bh=+zYHcq1PnJGmU//SbV0gpmoJSYNqd+MwGlmrpbux8Rk=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ukiCq3T3mJhrCE4LNS+ww/Mw2lErTvwsl0YnKx0BV0qWPtNNAPwhi82ZZ3+5wfZRPgxyJ1Je9OUySK84TTxuexJoDZ2w49WREyddO4JR1UnBVo0O8asqGiKHWdbia2c7Vh9OKt0GbED6D62ydwY3mv0v8NyIkWy2R+T27nCgm4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=TI4uSpQw; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3f0308469a4so3098374f8f.0
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Sep 2025 22:33:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1759210399; x=1759815199; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=RcKZSqsNCClUnXNLZ+VWODkqJQUd67st9xIuGAhStQk=;
+        b=TI4uSpQwWfQKYiW1tI6/8kA5Z+W7OMOqi0a4zllk1q8j+84RD0TwN0Du9UKkguXWhO
+         W76z5mPf5mURJ4ve7m6CFUL+1+UsRX1pLFNYCGCwo3SFu01z3wnAa7RMnSU9BICyKlwO
+         ld4kwDoZEKgwKlSsnd9aGwUYu82qT3Iho1o+MtzCQMBzgVs1uqg5u3ukbs5ZPNPGNodb
+         543neIkoKYOqLzvovMx5dWX6W7EHk5etHpXdVKHjH0jlEYrqJXmnvgrsndCmaHc0Xjbr
+         jf9IHBQDX6BUC8KxoEkh0w/TJX3JwqnHOIlLZNgtum8ys1Mb2uOlKF8vBz4ICzOSZsa5
+         OtRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759210399; x=1759815199;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RcKZSqsNCClUnXNLZ+VWODkqJQUd67st9xIuGAhStQk=;
+        b=ajcmsKKbHyOpLbhArLitl9Y8PKrcllkndMTkoLcttcLY/17lm/gHJOMRd3NpIhHtdo
+         bb8IvOIWjMSYjsYFtHR6pML3s16pvZOxTHOYIBizdVPvWFCNDTXo2HoH4LQUS/FzjQAH
+         X0t3mCYp2cmNY/8AxMh4Fde0tPne6qs4r288yy1PQoFAjJLtGIM3HgULiSkTSBE8bjGo
+         yPfe9cX/TTEV/4VJojT1n7CZtqnMd+/vJf3q3i43Y4T7WHUaRtIL9JzhwhRuZBOjUte+
+         KRZn2tdbrWkBk2kxAkuFlg8TJcvy6d+F9JwxwD5lyDk20HZt8PHf/721F5oFQMsQCrd0
+         dPRA==
+X-Forwarded-Encrypted: i=1; AJvYcCWEuwZEFBHbMROS0yjG5cwFrhR3NcZ7e57KHMSDkKXRvOrJPGZ9zPqO/3xi+npUoeLwpmsTeNKAk/BC@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhLEi3fG5k7fM1Ib2Jj0zKSWaWj8Pi7df0rhNTfj1mtx2wUrWu
+	PwTIwFOU1U41i/+PBhtLlSellv8BB+f0x6q+XG/L+iSOs+nVEBFl0buLz12+YVz2IQE=
+X-Gm-Gg: ASbGncs7DWjPpgECHJUG5o/VVxa82+UTD7j6J/tuaEs9TlM/yrwxHH4bA8l5K+a5x1Z
+	p/4rH/ayhwI2vN17yCASn0KTm+jT15hqtd5kPUE7o2CntU2iJJ0YZuU3/cKHmmyIW0atVKKAssF
+	Yiy69V8sZMOWsvKXik8fx2I7RJVHrjh3JHrWhi8/RzFsdZYl3/1qt5lueFSpY1jXRqXo6kHi1I/
+	T9wjO6aRB/pPQ+JsqZRy3Dq4xLHa0UaLxLVpv5534ZLxtZBmEh0AzsmtInR/g4nrHkVh/upnVr5
+	0EiebBupM7vnk3MWcHllY43s2QuA2Xzrl7H/KMCcATQrjiO4DusOwd0NhiwL2Ske/ITsN9sVpWV
+	2zlV6Fo5eqRF0CdNlJY5pBcUkZEakxYhx9xZnzUHeFVfbi2/cUexQiOM=
+X-Google-Smtp-Source: AGHT+IEkueAS01kFVAoXd3MEH9FbKcaIHwo56QQ73i1m/EjHyO0vo1fWE9up8eTSOW6ZhEmF700+iQ==
+X-Received: by 2002:a05:6000:400a:b0:3e4:957d:d00 with SMTP id ffacd0b85a97d-40e4c2d2576mr17438762f8f.58.1759210399124;
+        Mon, 29 Sep 2025 22:33:19 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.111])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-40fc88b0779sm20750915f8f.58.2025.09.29.22.33.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Sep 2025 22:33:18 -0700 (PDT)
+Message-ID: <2bd09757-cd66-4a2a-8801-0f62dc99b9c8@tuxon.dev>
+Date: Tue, 30 Sep 2025 08:33:15 +0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="T7A0TheW4Ey8c64A"
-Content-Disposition: inline
-In-Reply-To: <CANiDSCuddqjeDr80xKsZZP7CXu9qB5qqYPoZujNYLcVjK0kKkg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] pinctrl: renesas: rzg2l: Fix ISEL restore on resume
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linus.walleij@linaro.org, biju.das.jz@bp.renesas.com,
+ linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, stable@vger.kernel.org
+References: <20250912095308.3603704-1-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdXv1-w0SE7FZy5k3jg2FO-a-RB2w1WB=VM_UFEA9zjWDw@mail.gmail.com>
+ <ef82c610-0571-4665-a5d1-07a9ed9fb8d3@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <ef82c610-0571-4665-a5d1-07a9ed9fb8d3@tuxon.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hi, Geert,
 
---T7A0TheW4Ey8c64A
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 9/29/25 15:10, Claudiu Beznea wrote:
+>> This conflicts with commit d57183d06851bae4 ("pinctrl: renesas: rzg2l:
+>> Drop unnecessary pin configurations"), which I have already queued
+>> in renesas-drivers/renesas-pinctrl-for-v6.19.  Hence I am replacing
+>> the above hunk by:
+>>
+>>             /* Switching to GPIO is not required if reset value is
+>> same as func */
+>>             reg = readb(pctrl->base + PMC(off));
+>>     -       spin_lock_irqsave(&pctrl->lock, flags);
+>>     +       raw_spin_lock_irqsave(&pctrl->lock, flags);
+>>             pfc = readl(pctrl->base + PFC(off));
+>>             if ((reg & BIT(pin)) && (((pfc >> (pin * 4)) & PFC_MASK) == func)) {
+>>     -               spin_unlock_irqrestore(&pctrl->lock, flags);
+>>     +               raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+>>                     return;
+>>             }
+>>
+>> while applying.
+> This is right. Thank you! I'm going to give it also a try (on actual HW) a
+> bit later. I'll let you know.
 
-On Mon, Sep 29, 2025 at 10:30:35AM +0200, Ricardo Ribalda wrote:
-> Hi Conor
->=20
-> On Fri, 26 Sept 2025 at 18:55, Conor Dooley <conor@kernel.org> wrote:
-> >
-> > On Fri, Sep 26, 2025 at 01:11:31PM +0000, Ricardo Ribalda wrote:
-> > > For fixed cameras modules the OS needs to know where they are mounted.
-> > > This information is used to determine if images need to be rotated or
-> > > not.
-> > >
-> > > ACPI has a property for this purpose, which is parsed by
-> > > acpi_get_physical_device_location():
-> > > https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration=
-/Device_Configuration.html#pld-physical-location-of-device
-> > >
-> > > In DT we have similar properties for video-interface-devices called
-> > > orientation and rotation:
-> > > Documentation/devicetree/bindings/media/video-interface-devices.yaml
-> > >
-> > > Add a new schema that combines usb/usb-device.yaml and
-> > > media/video-interface-devices.yaml
-> > >
-> > > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > > ---
-> > >  .../bindings/media/usb-camera-module.yaml          | 46 ++++++++++++=
-++++++++++
-> > >  MAINTAINERS                                        |  1 +
-> > >  2 files changed, 47 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/media/usb-camera-modul=
-e.yaml b/Documentation/devicetree/bindings/media/usb-camera-module.yaml
-> > > new file mode 100644
-> > > index 0000000000000000000000000000000000000000..e4ad6f557b9151751522e=
-49b72ae6584deb0c7ba
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/media/usb-camera-module.yaml
-> > > @@ -0,0 +1,46 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/media/usb-camera-module.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: USB Camera Module
-> > > +
-> > > +maintainers:
-> > > +  - Ricardo Ribalda <ribalda@chromium.org>
-> > > +
-> > > +description: |
-> > > +  This schema allows for annotating auxiliary information for fixed =
-camera
-> > > +  modules. This information enables the system to determine if incom=
-ing frames
-> > > +  require rotation, mirroring, or other transformations. It also des=
-cribes the
-> > > +  module's relationship with other hardware elements, such as flash =
-LEDs or
-> > > +  Voice Coil Motors (VCMs).
-> > > +
-> > > +allOf:
-> > > +  - $ref: /schemas/usb/usb-device.yaml#
-> > > +  - $ref: /schemas/media/video-interface-devices.yaml#
-> > > +
-> > > +properties:
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> >
-> > What actually causes this schema to be applied? Did I miss it getting
-> > included somewhere?
->=20
-> I guess your question is why I have not defined the compatible field?
->=20
-> I tried this change[1] with no luck:
-> /usr/local/google/home/ribalda/work/linux/Documentation/devicetree/bindin=
-gs/media/uvc-camera.example.dtb:
-> device@1 (uvc-camera): compatible: ['uvc-camera'] does not contain
-> items matching the given schema
->=20
-> I think it failed, because If we add these allOfs as Rob proposed
-> https://lore.kernel.org/all/20250625185608.GA2010256-robh@kernel.org/:
-> ```
-> allOf:
->   - $ref: /schemas/usb/usb-device.yaml#
->   - $ref: /schemas/media/video-interface-devices.yaml#
-> ```
-> We cannot (or I do not know how to) have a different compatible than
-> the one from usb-device.yaml
->=20
->=20
-> Any suggestion on how to do this properly will be highly appreciated :)
+Sorry for the delay, all looks good to me (checked on RZ/G3S).
 
-It'd work, I think, if you permitted the pattern from usb-device as a
-fallback compatible. I don't know if that would work for whatever niche
-you're attempting to fill here though.
+Thank you,
+Claudiu
 
-Probably a Rob question ultimately.
+> 
+> Thank you,
+> Claudiu
 
->=20
-> Thanks!
->=20
->=20
->=20
-> [1]
->=20
-> @@ -21,10 +21,14 @@ allOf:
->    - $ref: /schemas/media/video-interface-devices.yaml#
->=20
->  properties:
-> +  compatible:
-> +    const: uvc-camera
-> +
->    reg:
->      maxItems: 1
->=20
->  required:
-> +  - compatible
->    - reg
->=20
->  additionalProperties: true
-> @@ -38,8 +42,8 @@ examples:
->          #size-cells =3D <0>;
->=20
->          device@1 {
-> -            compatible =3D "usb123,4567";
-> +           compatible =3D "uvc-camera";
->              reg =3D <2>;
->              orientation =3D <0>;
->              rotation =3D <90>;
->          };
->=20
-> >
-> > > +required:
-> > > +  - reg
-> > > +
-> > > +additionalProperties: true
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    usb@11270000 {
-> > > +        reg =3D <0x11270000 0x1000>;
-> > > +        interrupts =3D <0x0 0x4e 0x0>;
-> > > +        #address-cells =3D <1>;
-> > > +        #size-cells =3D <0>;
-> > > +
-> > > +        device@1 {
-> > > +            compatible =3D "usb123,4567";
-> > > +            reg =3D <2>;
-> > > +            orientation =3D <0>;
-> > > +            rotation =3D <90>;
-> > > +        };
-> > > +    };
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index ee8cb2db483f6a5e96b62b6f2edd05b1427b69f5..1503502a3aed2625e8ff4=
-88456ccd7305cc74ba7 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -26258,6 +26258,7 @@ L:    linux-media@vger.kernel.org
-> > >  S:   Maintained
-> > >  W:   http://www.ideasonboard.org/uvc/
-> > >  T:   git git://linuxtv.org/media.git
-> > > +F:   Documentation/devicetree/bindings/media/usb-camera-module.yaml
-> > >  F:   Documentation/userspace-api/media/drivers/uvcvideo.rst
-> > >  F:   Documentation/userspace-api/media/v4l/metafmt-uvc-msxu-1-5.rst
-> > >  F:   Documentation/userspace-api/media/v4l/metafmt-uvc.rst
-> > >
-> > > --
-> > > 2.51.0.536.g15c5d4f767-goog
-> > >
->=20
->=20
->=20
-> --
-> Ricardo Ribalda
->=20
-
---T7A0TheW4Ey8c64A
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaNrUqwAKCRB4tDGHoIJi
-0mASAP49pwqqfaBzHe/GqEE+pCyOCKLHjQV++1zecT+/WddTgAD/dP2GQvWciVeV
-ngYFC1P2vUnJOUWrondGz3NRTBBB/g0=
-=ew51
------END PGP SIGNATURE-----
-
---T7A0TheW4Ey8c64A--
 
