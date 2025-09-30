@@ -1,150 +1,274 @@
-Return-Path: <linux-gpio+bounces-26680-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26681-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4DF1BACDA2
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Sep 2025 14:35:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA916BAD40A
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Sep 2025 16:48:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2029B7A204C
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Sep 2025 12:33:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A165C482585
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Sep 2025 14:48:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 455BE2DCF7D;
-	Tue, 30 Sep 2025 12:35:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07BF7306489;
+	Tue, 30 Sep 2025 14:46:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ch91hNZI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jGKwN4Wq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3433C2C11C5
-	for <linux-gpio@vger.kernel.org>; Tue, 30 Sep 2025 12:34:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2D22FFDFC
+	for <linux-gpio@vger.kernel.org>; Tue, 30 Sep 2025 14:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759235701; cv=none; b=XKrMiR65AS/UUraz8kIjKSqv8daTdzAUWm9Sbhan3xgDoqTWBj69x0Xci2fhuhzybzVwnFLL98geElzESdfYlNDMuiRe/n6+mwFUqtrJuOVZrhrmpjSxvWmUt4U/tWqomeKgQc067lrYgI2WQFD7zBEo/K5t93rOGQ4BziTl1vA=
+	t=1759243595; cv=none; b=BYVXHHzXb8mJfBHEUBaGzzMBz+i84lK+yF4OgIjJI16v5lVzVDjDUrCuvkNF5CnLz24t1Mm4LuCGZXotjlB6W5Vf2hKGdtViom7H1vEshbNqmrEcZ0rOA55D+W6ZATYjsS4oaM2v4X2/qBI1SFFzJwDEctrT8/JkygkDbIOoTYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759235701; c=relaxed/simple;
-	bh=hQHCtgoQk3zqFHEz812bCMjEr9bOmzY6j1w2qd3TfmY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i1pk8lTqDhwBQFMh7gBzSKGs4SCrUQkBc8CPzB+sPUwN/uqdvcbx+ks8EQLgTyU6/3CnNRh+AD38lvV64G32C+vzAJH0wkY3fk2vCYhPaBFflUGT3I2Y1yXJ4qOS4Z/AklGXNUkX8c9dmPvnev5uJGvJIW42RZWa0PFSeQ/l1aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ch91hNZI; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-36a6a397477so56861541fa.3
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Sep 2025 05:34:58 -0700 (PDT)
+	s=arc-20240116; t=1759243595; c=relaxed/simple;
+	bh=O3iw2GxXiVKzNYOYE/ZVyGls0+ofp0SaOBPPWCbl0uk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OqegOeE2L7BEJNxMRhw8yaBc/0r8TQi5Z93RNThJMkt0ydOD0nDU3bugS8kSVYz0TDfqaM+2snl0D9dyz1XW0d98q0BReiUg3LnIyzWmW7y9TSEBLnbQd+svEirYa47T4EXXUISil28ItMQB6e4/qQ6WGdJ4BwJhutrUxos7PqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jGKwN4Wq; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b4fb8d3a2dbso4769830a12.3
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Sep 2025 07:46:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1759235697; x=1759840497; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=//xkitOYEIBnBowE0figA5jcXr1QSGKbTFftNJcWdSY=;
-        b=ch91hNZIMmE/fJQQay1+iKdIS28/QXgL1MzZJmcKBZnWpOCyDLyq0s2hD6pAFs8Hx9
-         M3rRLkKePh193MAijdH1+DnvyLQ9u78L5ota2m1O0SoPeIPz5SVV88ZbnhaFyqrNfNxj
-         G47hugYMOQIyyESCZCZDkceXxNmpcYoK1vLxuRXvTu/LSjy281WQ9wJWgVvYh5UznJay
-         6tN6RBNyLWS0qc4rjypAOotwxh8thNeTgzstGt2idiJlInxH4K6m4sl3Lwgm7EUhxHXu
-         CoghBu98adCQiEMuA2WyzBfnTEdx/N9F7ieKeCuTs6pjPqU5syH3KjLJUb9B+DHd+her
-         e1ZQ==
+        d=gmail.com; s=20230601; t=1759243593; x=1759848393; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=gtl9s1x2Ex8u74sVxDhnBYLads9LLhbmtzGZjSOpUpQ=;
+        b=jGKwN4Wqr04Uw3I/UPpwk2A6wvL/X4rgbF4N+0eT9v8tTV2rXSRLKKyvAr2Opx+Tmf
+         Go+jxVBArXWirMiKTsK/THViLlbZrSPd9mgGT+IR2M1pNqz9pdSobv3jVB265vlRnlcD
+         /bYYTtV7rEIDn0Tu8o5m7gAOarMTs94ggrQhiQmDCOScO9U5nuzwCibbwAWhM/9lWyvV
+         vgwzIt2/sP4S8T9JVsrne3J0KC6bGCOW2G7/hQ0ZhIoCFy0q4d1DQdEzrUQxT1a2WJDU
+         36o39lVvpCvfkPNhEydtYt17ePNplFALyQpOe6lbDtBVIwviikaT2PRlaR769tmaMUap
+         Uq4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759235697; x=1759840497;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=//xkitOYEIBnBowE0figA5jcXr1QSGKbTFftNJcWdSY=;
-        b=owbI9RDbaBK4wbY/J85eGuylMZkw+MlWDHojwuqsVdShx1EX0bqg49A6y+ApbrMM4R
-         YkIBLCaisaRAbNvLHWnfsZpjHunBoYBDwg8Ssdzn8QsLnn8kAFP4L4aiMU/ncIef1xna
-         h/F3FPqsVNnp1yFApmUtAiYLaFM71zENJZ8+jTlEZEjVSNSUGhWnBqU7VegCH57J+Mnl
-         MLaVJtTA04AMPjcJzqwDwS29x1v7I8AhSxPrB4jTLWOdAvqE1K5e5cIop6DffIlIlkuY
-         S6TpBtu5cIMehF1X9ifW9JGMGh0+VRBpz63FxXhzRkBFU3NHWBmlRroQl5r6NQP2D3m2
-         FwTg==
-X-Forwarded-Encrypted: i=1; AJvYcCVe9w/+EWe1P12XPBAWGd9tgvVZ6Ux2sbvncgcUPHNh21P/nG6zW1zmzTgb1wlqn3dL23lsGZU5jKLz@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFnPbP92JMiWzOpNiJ2fSgNbn1n84UXFBByVsSNnw/xi2RgGtG
-	6NuAYVuc9e0z/aSJ/h5Zno4xFT/t76NMO4Boh7+SQCIG+KXoTVTZlVKyswPpZUBwxbXp7JPBkAp
-	vwR1qpESV3zW3tjdNLomExLoaEdLNirN9yoHXfxm6Hg==
-X-Gm-Gg: ASbGnct+l6fagkXXhOUEmqY6i5bfjHwlKlsUMTUDpF4Q2rjKm51cnBuiHu4G/Eqr+oi
-	8B1HfXhNyaCyykUy4NhYPJoE7aDY/dlzWrjk+PXWSIW2aY8+xUd6VppAt4NZUzNWOmb53bR+hd3
-	ej6QTSCGlup6BzfkVFb2pOww6vAhb3kEtwcOtoJKrPFVnj+CVjhvDy7/CwdZ96VJsjhMXMnftOU
-	SzrVRyPQFm/dbn0EO5DtHmcbsQfH9nezcSqYsQn+g==
-X-Google-Smtp-Source: AGHT+IFkGyQJTXX+l3/fVG1kpg3S7XkLrTud3tl3gd71kpZbk5gd/flj5ygP5W+NqOo2/jq0RMyArIGv0CKoRXGvQt0=
-X-Received: by 2002:a05:651c:1545:b0:36b:ce19:d853 with SMTP id
- 38308e7fff4ca-36f7ff20073mr53691811fa.45.1759235697194; Tue, 30 Sep 2025
- 05:34:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1759243593; x=1759848393;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gtl9s1x2Ex8u74sVxDhnBYLads9LLhbmtzGZjSOpUpQ=;
+        b=HSHjlE5oeJ/JSp4E3ZJlu2ZsteeO2LlE6CZI3BmU64vtFY6m1vy43IWyC1ariEjwRb
+         6LtdZOpk0VDttpMmhOrpPHAsWTcJqyht44Sf5t2RbGPdRUu4f3uJH00akRF26zeQgHHK
+         TwJl37LnbAvJ+lyKSZHbaCAsVepngRp7sH56NAtBNVa94T0Cz/lcWuYDvJIhAlbLA36F
+         jd39klKQ17VeyPUiQWFq5WNibAUSAFinLdM8ok2dGZXmOgwfVMgAuVxJGx9GzFn1urij
+         0eR3m3/XXzAsX3JOQsAr1gUb1XVdZASuFPLZoHT9hIWVqw+mlH+6coC14v5uGF13APSo
+         2C9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV0Somh4sWj1FtirPOccOO0YUAbWHw/0q3EjyM3oPvuTGx/utp6lx1wzSHJzT3D27o+RHFIMjta4KPF@vger.kernel.org
+X-Gm-Message-State: AOJu0YySimeezdqajKse+tGVejUGH8UpNL5/iwUrsOGTMF1I94ilwlht
+	zR5kWuMG8fVnTg29nozWpHL8PK/KLlZEZzkK6q6/UHI08KN8ashVxOH/
+X-Gm-Gg: ASbGncto8cE0buxuekRUwqNqLxUhYrK17VAOvT+aBeLA3A3NA2qMMmToneWSNwn+wU7
+	8wTDPfRL/2DL1Uot2K3eyMYgX0Iq6nfISeO0xhg0cuhm1EWEQCqJrkZBNYFDEYx3DfeIEVwZgNJ
+	clQ+NIsff8pph8+Tl+XsIEbXah1Uc7KX/V1p5OUkOgFbDKDUVD+c7q7MTVxXguISKW1bCQU39vx
+	veFpW6WQ0a/y98OOUtgy1ghPQlhG9jo/18Y8DSQrVjyDkYKydLGy+/Sibcbhxy9q5q12A5q50r0
+	bXvLfqZqZGC1nSOlLP4iS6Xb6rbmCAyzl9AqGEvAfmiou/2+/JoevKUc3dNIMbEVUFKMCBAIHQi
+	uFht/C0MdY33iRDPi0FktMMi+5k9Roc8gKgLCoon8ekYT3knXEKQELSw=
+X-Google-Smtp-Source: AGHT+IE4hgKlPjRv6CQsulSHO7uaJxWorIuNklCjzaMiGW9OXkndROA3boKX4qKvwUjuv370Yq7hzQ==
+X-Received: by 2002:a17:90b:1647:b0:330:7a32:3290 with SMTP id 98e67ed59e1d1-3342a3471ccmr24460323a91.37.1759243592943;
+        Tue, 30 Sep 2025 07:46:32 -0700 (PDT)
+Received: from localhost ([2804:30c:b65:6a00:ceaa:2ed0:e81e:8f51])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3341bd90367sm20311444a91.5.2025.09.30.07.46.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Sep 2025 07:46:31 -0700 (PDT)
+Date: Tue, 30 Sep 2025 11:47:24 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Rob Herring <robh@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+	Marcelo Schmitt <marcelo.schmitt@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, michael.hennerich@analog.com,
+	nuno.sa@analog.com, eblanc@baylibre.com, andy@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, corbet@lwn.net,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 7/8] dt-bindings: iio: adc: adi,ad4030: Add ADAQ4216
+ and ADAQ4224
+Message-ID: <aNvtfPh2JLdLarE5@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1758916484.git.marcelo.schmitt@analog.com>
+ <5dc08b622dac1db561f26034c93910ccff75e965.1758916484.git.marcelo.schmitt@analog.com>
+ <20250928111955.175680cb@jic23-huawei>
+ <20250929143132.GA4099970-robh@kernel.org>
+ <CAMknhBHzXLjkbKAjkgRwEps=0YrOgUcdvRpuPRrcPkwfwWo88w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250912060650.2180691-1-gary.yang@cixtech.com>
- <20250912060650.2180691-2-gary.yang@cixtech.com> <CACRpkdYgTjerG5mks_+3sjhKKYtCsFY=1NWhgw_YEuib7gZm3g@mail.gmail.com>
- <TYUPR06MB5876BB28E3C30EEB9BB05997EF15A@TYUPR06MB5876.apcprd06.prod.outlook.com>
- <CACRpkdYKnFAyq8C5h2=5NQ8AU92RmzShNHd6+=21rWednjv-fA@mail.gmail.com> <PUZPR06MB5887DA8FE0E128993F11E2B3EF16A@PUZPR06MB5887.apcprd06.prod.outlook.com>
-In-Reply-To: <PUZPR06MB5887DA8FE0E128993F11E2B3EF16A@PUZPR06MB5887.apcprd06.prod.outlook.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 30 Sep 2025 14:34:46 +0200
-X-Gm-Features: AS18NWCe8gc0I9F23q-ySgwePTXWrU-J25uwnqfg_Oxcxpo9nPVmUWN-Gc4LkU0
-Message-ID: <CACRpkdaQYb+tB+a9Q6j3xPq=BHbQV5-3hu3XiJkSU9CGtcHpiA@mail.gmail.com>
-Subject: Re: [v2 1/3] pinctrl: cix: Add pin-controller support for sky1
-To: Gary Yang <gary.yang@cixtech.com>
-Cc: "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, 
-	"conor+dt@kernel.org" <conor+dt@kernel.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	cix-kernel-upstream <cix-kernel-upstream@cixtech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMknhBHzXLjkbKAjkgRwEps=0YrOgUcdvRpuPRrcPkwfwWo88w@mail.gmail.com>
 
-Hi Gary,
-
-thanks for your efforts!
-
-Sorry for taking so much time to respond. I was coding.
-
-On Thu, Sep 18, 2025 at 8:17=E2=80=AFAM Gary Yang <gary.yang@cixtech.com> w=
-rote:
-
-> New scheme with macros has verified ok. I just want to confirm with you b=
-efore submit codes
-
-No need to confirm with me just post it!
-Better one post too much than one too little.
-
-> > But I think you can still use a macro to define the long pin tables?
-> > Albeit macros with flexible arguments is a bit hard to write.
-> > Save it until everything else is working.
+On 09/29, David Lechner wrote:
+> On Mon, Sep 29, 2025 at 4:31 PM Rob Herring <robh@kernel.org> wrote:
 > >
-> In header file:
->
-> struct sky1_pin_desc {
->         const struct pinctrl_pin_desc pin;
->         const char **func_group;
->         unsigned int nfunc;
-> };
->
-> #define SKY_PINFUNCTION(_pin, _func)                            \
->  (struct sky1_pin_desc) {                                        \
->                  .pin =3D _pin,                                    \
->                  .func_group =3D _func##_group,                    \
->                  .nfunc =3D ARRAY_SIZE(_func##_group),             \
->          }
->
-> In C file:
->
-> static const char *gpio1_group[] =3D {"GPIO1"};
-> static const char *gpio2_group[] =3D {"GPIO2"};
->
-> static const struct sky1_pin_desc sky1_pinctrl_s5_pads[] =3D {
->         SKY_PINFUNCTION(PINCTRL_PIN(0, "GPIO1"), gpio1),
->         SKY_PINFUNCTION(PINCTRL_PIN(1, "GPIO2"), gpio2),
->                 .......
-> };
->
-> What's your suggestion? Thanks
+> > On Sun, Sep 28, 2025 at 11:19:55AM +0100, Jonathan Cameron wrote:
+> > > On Fri, 26 Sep 2025 17:40:47 -0300
+> > > Marcelo Schmitt <marcelo.schmitt@analog.com> wrote:
+> > >
+> > > > ADAQ4216 and ADAQ4224 are similar to AD4030 except that ADAQ devices have a
+> > > > PGA (programmable gain amplifier) that scales the input signal prior to it
+> > > > reaching the ADC inputs. The PGA is controlled through a couple of pins (A0
+> > > > and A1) that set one of four possible signal gain configurations.
+> > > >
+> > > > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> > > > ---
+> > > > Change log v2 -> v3
+> > > > - PGA gain now described in decibels.
+> > > >
+> > > > The PGA gain is not going to fit well as a channel property because it may
+> > > > affect more than one channel as in AD7191.
+> > > > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7191.pdf
+> > > >
+> > > > I consulted a very trustworthy source [1, 2] and learned that describing signal
+> > > > gains in decibels is a common practice. I now think it would be ideal to describe
+> > > > these PGA and PGA-like gains with properties in decibel units and this patch
+> > > > is an attempt of doing so. The only problem with this approach is that we end up
+> > > > with negative values when the gain is lower than 1 (the signal is attenuated)
+> > > > and device tree specification doesn't support signed integer types. As the
+> > > > docs being proposed fail dt_binding_check, I guess I have to nack the patch myself.
+> > > > Any chance of dt specification eventually support signed integers?
+> > > > Any suggestions appreciated.
+> > > >
+> > > > [1] https://en.wikipedia.org/wiki/Decibel
+> > > > [2] https://en.wikipedia.org/wiki/Gain_(electronics)
+> > >
+> > > I still wonder if the better way to describe this is to ignore that it
+> > > has anything to do with PGA as such and instead describe the pin strapping.
+> > >
+> > > DT folk, is there an existing way to do that? My grep skills are failing to
+> > > spot one.
+> > >
+> > > We've papered over this for a long time in various IIO drivers by controlling
+> > > directly what the pin strap controls with weird and wonderful device specific
+> > > bindings. I wonder if we can't have a gpio driver + binding that rejects all
+> > > config and just lets us check the current state of an output pin.  Kind of a
+> > > fixed mode regulator equivalent for gpios.
+> >
+> > If these are connected to GPIOs, isn't it possible that someone will
+> > want to change their value?
+> >
+> > Other than some generic 'pinstrap-gpios' property, I don't see what we'd
+> > do here? I don't feel like pin strapping GPIOs is something that we see
+> > all that often.
+> >
+> > Rob
+> 
+> I think the idea is that it is not actually a GPIO, just a hard-wired
+> connection. We would want to have a "fixed-gpios" to describe these
+> hard-wired connections as GPIOs so that we don't have to write complex
+> binding for chip config GPIOs. I've seen configuration pins like on at
+> least half a dozed of the ADCs I've been working on/reviewing over the
+> last two years (since I got involved in IIO again).
 
-It's OK as-is if this is how you want to structure things!
+Yes, the alternative to having GPIOs would be to have pins hard-wired set to a
+specific logic level. And the connection don't need to be to GPIOs. The gain
+pins on the ADC chip can be connected to anything that keeps a constant logic
+level while we capture data from the ADC.
 
-Yours,
-Linus Walleij
+> 
+> For example, there might be 4 mode pins, so we would like to just have
+> a mode-gpios property. So this could be all 4 connected to GPIOs, all
+> 4 hard-wired, or a mix.
+
+Having some pins hard-wired and some connected to GPIOs is possible, but that
+would make things even more complex as each pin on the ADC chip sets a different
+portion of the gain. IMHO, mixed GPIO/hard-wired configuration starts looking
+like over engineering and I haven't been requested for so much configuration
+flexibility. Having either all hard-wired or all connected to GPIOs should be ok.
+
+I'm not familiar with pinctrl dt-bindings, but I was wondering if we could get
+to something similar with pinctrl. Based on some pinctrl bindings, I think
+fixed-level GPIOs could look like the following (for the 4 pin-mode example).
+
+pinctrl0: pincontroller@0 {
+    compatible = "vendor,model-pinctrl";
+
+    all-low-state: some-gpio-pins {
+        pins = "gpio0", "gpio1", "gpio2", "gpio3";
+        function = "gpio";
+        output-low;
+    };
+    all-high-state: some-gpio-pins {
+        pins = "gpio0", "gpio1", "gpio2", "gpio3";
+        function = "gpio";
+        output-high;
+    };
+    most-high-state: some-gpio-pins {
+        pins1 { 
+            pins = "gpio0", "gpio1", "gpio2";
+            function = "gpio";
+            output-high;
+        };
+        pins2 { 
+            pins = "gpio3";
+            function = "gpio";
+            output-low;
+        };
+    };
+};
+spi {
+    adc@0 {
+        compatible = "vendor,adc";
+        /* All gpios */
+        pga-gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>,
+                    <&gpio0 1 GPIO_ACTIVE_HIGH>,
+                    <&gpio0 2 GPIO_ACTIVE_HIGH>,
+                    <&gpio0 3 GPIO_ACTIVE_HIGH>;
+         /* or all hard-wired */
+		pinctrl-names = "minimum-gain", "moderate-gain", "maximum-gain";
+		pinctrl-0 = <&all-low-state>, <&most-high-state>, <&all-high-state>;
+    };
+};
+
+Though, the above is still relying on GPIOs which is not a requirement from
+ADC peripheral perspective. Also, if GPIOs are available, one can just provide
+them through pga-gpios and have full control over the signal gain with the IIO
+driver. It boils down to just telling software what are the logical levels at
+two pins on the ADC chip when GPIOs are not provided.
+
+Thanks,
+Marcelo
+
+> 
+> (The actual bindings would need more thought, but this should give the
+> general idea)
+> 
+> fixed_gpio: hard-wires {
+>     compatible = "fixed-gpios";
+>     gpio-controller;
+>     #gpio-cells = <1>;
+> };
+> 
+> gpio0: gpio-controller@4000000 {
+>     compatible = "vendor,soc-gpios";
+>     gpio-controller;
+>     #gpio-cells = <2>;
+> };
+> 
+> spi {
+>     adc@0 {
+>         compatible = "vendor,adc";
+>         /* All gpios */
+>         mode-gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>,
+>                      <&gpio0 1 GPIO_ACTIVE_HIGH>,
+>                      <&gpio0 2 GPIO_ACTIVE_HIGH>,
+>                      <&gpio0 3 GPIO_ACTIVE_HIGH>;
+>          /* or all hard-wired */
+>         mode-gpios = <&fixed_gpio 0 GPIO_FIXED_HIGH>,
+>                      <&fixed_gpio GPIO_FIXED_HIGH>,
+>                      <&fixed_gpio GPIO_FIXED_LOW>,
+>                      <&fixed_gpio GPIO_FIXED_LOW>;
+>          /* or mixed */
+>         mode-gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>,
+>                      <&gpio0 1 GPIO_ACTIVE_HIGH>,
+>                      <&fixed_gpio GPIO_FIXED_LOW>,
+>                      <&fixed_gpio GPIO_FIXED_LOW>;
+>     };
+> };
 
