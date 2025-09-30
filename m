@@ -1,79 +1,78 @@
-Return-Path: <linux-gpio+bounces-26681-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26682-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA916BAD40A
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Sep 2025 16:48:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C755BAE1D3
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Sep 2025 19:01:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A165C482585
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Sep 2025 14:48:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 47922324BF5
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Sep 2025 17:01:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07BF7306489;
-	Tue, 30 Sep 2025 14:46:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34AAB30AACE;
+	Tue, 30 Sep 2025 17:01:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jGKwN4Wq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bDOOVdKu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2D22FFDFC
-	for <linux-gpio@vger.kernel.org>; Tue, 30 Sep 2025 14:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8EA26A1CF
+	for <linux-gpio@vger.kernel.org>; Tue, 30 Sep 2025 17:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759243595; cv=none; b=BYVXHHzXb8mJfBHEUBaGzzMBz+i84lK+yF4OgIjJI16v5lVzVDjDUrCuvkNF5CnLz24t1Mm4LuCGZXotjlB6W5Vf2hKGdtViom7H1vEshbNqmrEcZ0rOA55D+W6ZATYjsS4oaM2v4X2/qBI1SFFzJwDEctrT8/JkygkDbIOoTYI=
+	t=1759251680; cv=none; b=NRC5qOPRQZ2d/1xZNULHYz0khTMU+1m7m/cTdxUTOh1S8ugHrcXgjHTKiMW9gB8ckZydWZmoImURvha10zv4Zu7Z5PlWQKxiG7hg7aaNFt+f4oovBr+A4fCQVW4PNUycLCy0mPOF48C2zxPpws7GC2wkHiMPP31/XITBzHZoJlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759243595; c=relaxed/simple;
-	bh=O3iw2GxXiVKzNYOYE/ZVyGls0+ofp0SaOBPPWCbl0uk=;
+	s=arc-20240116; t=1759251680; c=relaxed/simple;
+	bh=AmHuuzpem5111casgiRIX7q6S2eHy1ZsEGaomvXBWBc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OqegOeE2L7BEJNxMRhw8yaBc/0r8TQi5Z93RNThJMkt0ydOD0nDU3bugS8kSVYz0TDfqaM+2snl0D9dyz1XW0d98q0BReiUg3LnIyzWmW7y9TSEBLnbQd+svEirYa47T4EXXUISil28ItMQB6e4/qQ6WGdJ4BwJhutrUxos7PqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jGKwN4Wq; arc=none smtp.client-ip=209.85.215.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=tJKA188Xs1x+mdYgWUM78eF9gfMdA5kWcWFb9J0rdbh7lAjTluQjIGkxEgYfd1skAhBFPI0ZEcQNOhdhX4eTEie0YGxrqgHBzs03D3JhEtHNlxuYtWVKw8Bw8kCyKKxq6GebOF6Pa1oJQ7oaxYn6HDZqg5GM9CSDQHEwwhLSiIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bDOOVdKu; arc=none smtp.client-ip=209.85.215.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b4fb8d3a2dbso4769830a12.3
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Sep 2025 07:46:33 -0700 (PDT)
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b5526b7c54eso3832395a12.0
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Sep 2025 10:01:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759243593; x=1759848393; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=gtl9s1x2Ex8u74sVxDhnBYLads9LLhbmtzGZjSOpUpQ=;
-        b=jGKwN4Wqr04Uw3I/UPpwk2A6wvL/X4rgbF4N+0eT9v8tTV2rXSRLKKyvAr2Opx+Tmf
-         Go+jxVBArXWirMiKTsK/THViLlbZrSPd9mgGT+IR2M1pNqz9pdSobv3jVB265vlRnlcD
-         /bYYTtV7rEIDn0Tu8o5m7gAOarMTs94ggrQhiQmDCOScO9U5nuzwCibbwAWhM/9lWyvV
-         vgwzIt2/sP4S8T9JVsrne3J0KC6bGCOW2G7/hQ0ZhIoCFy0q4d1DQdEzrUQxT1a2WJDU
-         36o39lVvpCvfkPNhEydtYt17ePNplFALyQpOe6lbDtBVIwviikaT2PRlaR769tmaMUap
-         Uq4w==
+        d=gmail.com; s=20230601; t=1759251677; x=1759856477; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7Qn5VqRWJrpHDhx/xNpBlaLWgEArGVytxgRrr8Ys9no=;
+        b=bDOOVdKukdiUsInRLL7W1Mr6ucwZPG0GVJ9putQ/fM8dB38/e4znvgFd8TqWdPOWv7
+         BkASLLEnQeFq+XOOQdBnVo9SiMm3cq4HzJ76ZdqA2O/vA32XeO03ELa0lNFJO53IQ/yX
+         YZM2YnBIUmufFZ0YLh1lphgiEQtMMcMW3NJO50GhlAxvWXQ9O417oWxylwiivmiBQ+uM
+         xm5QOfpmFwMsfD0hSlU9O4ytHgUQOFB/KIFUkhR7dNVoFFg5YfdZUiGx2MPuhozQWSjd
+         sJk4b+/kPzLR+ZIW6iJwSdjI+5oBC6lhIFYZylIynEqutbXMFgtwNpLlh7P6e7WbVeaR
+         Og/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759243593; x=1759848393;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gtl9s1x2Ex8u74sVxDhnBYLads9LLhbmtzGZjSOpUpQ=;
-        b=HSHjlE5oeJ/JSp4E3ZJlu2ZsteeO2LlE6CZI3BmU64vtFY6m1vy43IWyC1ariEjwRb
-         6LtdZOpk0VDttpMmhOrpPHAsWTcJqyht44Sf5t2RbGPdRUu4f3uJH00akRF26zeQgHHK
-         TwJl37LnbAvJ+lyKSZHbaCAsVepngRp7sH56NAtBNVa94T0Cz/lcWuYDvJIhAlbLA36F
-         jd39klKQ17VeyPUiQWFq5WNibAUSAFinLdM8ok2dGZXmOgwfVMgAuVxJGx9GzFn1urij
-         0eR3m3/XXzAsX3JOQsAr1gUb1XVdZASuFPLZoHT9hIWVqw+mlH+6coC14v5uGF13APSo
-         2C9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV0Somh4sWj1FtirPOccOO0YUAbWHw/0q3EjyM3oPvuTGx/utp6lx1wzSHJzT3D27o+RHFIMjta4KPF@vger.kernel.org
-X-Gm-Message-State: AOJu0YySimeezdqajKse+tGVejUGH8UpNL5/iwUrsOGTMF1I94ilwlht
-	zR5kWuMG8fVnTg29nozWpHL8PK/KLlZEZzkK6q6/UHI08KN8ashVxOH/
-X-Gm-Gg: ASbGncto8cE0buxuekRUwqNqLxUhYrK17VAOvT+aBeLA3A3NA2qMMmToneWSNwn+wU7
-	8wTDPfRL/2DL1Uot2K3eyMYgX0Iq6nfISeO0xhg0cuhm1EWEQCqJrkZBNYFDEYx3DfeIEVwZgNJ
-	clQ+NIsff8pph8+Tl+XsIEbXah1Uc7KX/V1p5OUkOgFbDKDUVD+c7q7MTVxXguISKW1bCQU39vx
-	veFpW6WQ0a/y98OOUtgy1ghPQlhG9jo/18Y8DSQrVjyDkYKydLGy+/Sibcbhxy9q5q12A5q50r0
-	bXvLfqZqZGC1nSOlLP4iS6Xb6rbmCAyzl9AqGEvAfmiou/2+/JoevKUc3dNIMbEVUFKMCBAIHQi
-	uFht/C0MdY33iRDPi0FktMMi+5k9Roc8gKgLCoon8ekYT3knXEKQELSw=
-X-Google-Smtp-Source: AGHT+IE4hgKlPjRv6CQsulSHO7uaJxWorIuNklCjzaMiGW9OXkndROA3boKX4qKvwUjuv370Yq7hzQ==
-X-Received: by 2002:a17:90b:1647:b0:330:7a32:3290 with SMTP id 98e67ed59e1d1-3342a3471ccmr24460323a91.37.1759243592943;
-        Tue, 30 Sep 2025 07:46:32 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1759251677; x=1759856477;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7Qn5VqRWJrpHDhx/xNpBlaLWgEArGVytxgRrr8Ys9no=;
+        b=P7De4nh4B+ig/BQd6Dgz7H3s0eClI7kOLdlAQz3yVFRhH/q/ERq2ch+yaNwNuhaNKG
+         oiRKNweZX5tiJgvYcu9MTx3naTSEKhYwm90WWbtiQocBbPOQjn+Go2XLLDxMyy9PkXrN
+         rZ6ibBRwnIyjLixpK2e2DnasdJhPWRX1w14RS5Djf6UwL/h0Hmap8gOf87lw5VZweBKu
+         m4gnIweJvq8fE8UDdsDzUZTxkCCgPPNgLnQDjUz6vusMZIwdnyd4PL0demIDkZxcrDyl
+         orrl6Fv24IsGtNIJ9ZOnjTiMrhlw+6yzRFxF+So/h3DaAcrgV2DXpfS79ZMK8bSezRNI
+         kDhA==
+X-Forwarded-Encrypted: i=1; AJvYcCUlgVPJfPJlUjzS6xnQ2jn7/YtE/OqQ8duWMUC/Tw6qQGNFE0oWpvHLjl9Iqz1HRN7Fwt+aAR6ivH1z@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHhO5KB5PBVePjybDaae2z/+x4kkN+FKT3ept6U0YVGWti/vhp
+	i68pswD70p3FjZ3fRpnI6ta+BKQkOhfNuzQPGQ7mXPGleXKfJhm0AFOd
+X-Gm-Gg: ASbGncsGCMztBlYVLlLt8nOacImuEVp05mhMqce1JAn9yfAZP7G6PKtyhkI+U+V2aGk
+	gIQjGcoCc4FQMZHEmhGrcEYOYmDNIV3nDM19KHa6KI5Ep5+dJQjyeFUx4yRAUn3h7wNp9oBDavN
+	JxQ/SwndlletEtpiRLeob0MS5KxqVn//4vDvPGYpnXL01uveYhMRkxcToGK9urUNKaZiHNZTeXh
+	uusiiHtzcifEyTh+//tf4XWvekn9LS2NDwbWljutCuk28GZhRWxwrntmKhMCbZrQS0p7iT1tmp7
+	qfAg8IDt/T14K3xgDv2aX5FvnZYcaRgBwsrPE9dHoMkRpKS8Bx+2doJLmIDXXHisTiNujeKRM01
+	bfEDdL5D/PTf8IzuKTsfPtclBdsgXIZPellYuSaRnMXlA7ULKSIRyT7vBiKyLjZIvOQ==
+X-Google-Smtp-Source: AGHT+IGy446EO1dFvrwF+hn4zw2/euRdjV/W41f6FxDTzzbhNgbS5i0TkYtI/qkAdJxguBsSMF5Bfg==
+X-Received: by 2002:a17:90b:4ad1:b0:334:18f9:8008 with SMTP id 98e67ed59e1d1-339a6e28289mr264935a91.8.1759251677221;
+        Tue, 30 Sep 2025 10:01:17 -0700 (PDT)
 Received: from localhost ([2804:30c:b65:6a00:ceaa:2ed0:e81e:8f51])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3341bd90367sm20311444a91.5.2025.09.30.07.46.31
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3399ce47d7csm974066a91.10.2025.09.30.10.01.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Sep 2025 07:46:31 -0700 (PDT)
-Date: Tue, 30 Sep 2025 11:47:24 -0300
+        Tue, 30 Sep 2025 10:01:16 -0700 (PDT)
+Date: Tue, 30 Sep 2025 14:02:08 -0300
 From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
 To: David Lechner <dlechner@baylibre.com>
 Cc: Rob Herring <robh@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
@@ -87,188 +86,63 @@ Cc: Rob Herring <robh@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
 Subject: Re: [PATCH v3 7/8] dt-bindings: iio: adc: adi,ad4030: Add ADAQ4216
  and ADAQ4224
-Message-ID: <aNvtfPh2JLdLarE5@debian-BULLSEYE-live-builder-AMD64>
+Message-ID: <aNwNEHHZ4RXyz92r@debian-BULLSEYE-live-builder-AMD64>
 References: <cover.1758916484.git.marcelo.schmitt@analog.com>
  <5dc08b622dac1db561f26034c93910ccff75e965.1758916484.git.marcelo.schmitt@analog.com>
  <20250928111955.175680cb@jic23-huawei>
  <20250929143132.GA4099970-robh@kernel.org>
  <CAMknhBHzXLjkbKAjkgRwEps=0YrOgUcdvRpuPRrcPkwfwWo88w@mail.gmail.com>
+ <aNvtfPh2JLdLarE5@debian-BULLSEYE-live-builder-AMD64>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMknhBHzXLjkbKAjkgRwEps=0YrOgUcdvRpuPRrcPkwfwWo88w@mail.gmail.com>
+In-Reply-To: <aNvtfPh2JLdLarE5@debian-BULLSEYE-live-builder-AMD64>
 
-On 09/29, David Lechner wrote:
-> On Mon, Sep 29, 2025 at 4:31 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Sun, Sep 28, 2025 at 11:19:55AM +0100, Jonathan Cameron wrote:
-> > > On Fri, 26 Sep 2025 17:40:47 -0300
-> > > Marcelo Schmitt <marcelo.schmitt@analog.com> wrote:
-> > >
-> > > > ADAQ4216 and ADAQ4224 are similar to AD4030 except that ADAQ devices have a
-> > > > PGA (programmable gain amplifier) that scales the input signal prior to it
-> > > > reaching the ADC inputs. The PGA is controlled through a couple of pins (A0
-> > > > and A1) that set one of four possible signal gain configurations.
+...
+> > > > > ADAQ4216 and ADAQ4224 are similar to AD4030 except that ADAQ devices have a
+> > > > > PGA (programmable gain amplifier) that scales the input signal prior to it
+> > > > > reaching the ADC inputs. The PGA is controlled through a couple of pins (A0
+> > > > > and A1) that set one of four possible signal gain configurations.
+> > > > >
+> > > > > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> > > > > ---
+> > > > > Change log v2 -> v3
+> > > > > - PGA gain now described in decibels.
+> > > > >
+> > > > > The PGA gain is not going to fit well as a channel property because it may
+> > > > > affect more than one channel as in AD7191.
+> > > > > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7191.pdf
+> > > > >
+> > > > > I consulted a very trustworthy source [1, 2] and learned that describing signal
+> > > > > gains in decibels is a common practice. I now think it would be ideal to describe
+> > > > > these PGA and PGA-like gains with properties in decibel units and this patch
+> > > > > is an attempt of doing so. The only problem with this approach is that we end up
+> > > > > with negative values when the gain is lower than 1 (the signal is attenuated)
+> > > > > and device tree specification doesn't support signed integer types. As the
+> > > > > docs being proposed fail dt_binding_check, I guess I have to nack the patch myself.
+> > > > > Any chance of dt specification eventually support signed integers?
+> > > > > Any suggestions appreciated.
+> > > > >
+> > > > > [1] https://en.wikipedia.org/wiki/Decibel
+> > > > > [2] https://en.wikipedia.org/wiki/Gain_(electronics)
 > > > >
-> > > > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> > > > ---
-> > > > Change log v2 -> v3
-> > > > - PGA gain now described in decibels.
-> > > >
-> > > > The PGA gain is not going to fit well as a channel property because it may
-> > > > affect more than one channel as in AD7191.
-> > > > https://www.analog.com/media/en/technical-documentation/data-sheets/AD7191.pdf
-> > > >
-> > > > I consulted a very trustworthy source [1, 2] and learned that describing signal
-> > > > gains in decibels is a common practice. I now think it would be ideal to describe
-> > > > these PGA and PGA-like gains with properties in decibel units and this patch
-> > > > is an attempt of doing so. The only problem with this approach is that we end up
-> > > > with negative values when the gain is lower than 1 (the signal is attenuated)
-> > > > and device tree specification doesn't support signed integer types. As the
-> > > > docs being proposed fail dt_binding_check, I guess I have to nack the patch myself.
-> > > > Any chance of dt specification eventually support signed integers?
-> > > > Any suggestions appreciated.
-> > > >
-> > > > [1] https://en.wikipedia.org/wiki/Decibel
-> > > > [2] https://en.wikipedia.org/wiki/Gain_(electronics)
-> > >
-> > > I still wonder if the better way to describe this is to ignore that it
-> > > has anything to do with PGA as such and instead describe the pin strapping.
-> > >
-> > > DT folk, is there an existing way to do that? My grep skills are failing to
-> > > spot one.
-> > >
-> > > We've papered over this for a long time in various IIO drivers by controlling
-> > > directly what the pin strap controls with weird and wonderful device specific
-> > > bindings. I wonder if we can't have a gpio driver + binding that rejects all
-> > > config and just lets us check the current state of an output pin.  Kind of a
-> > > fixed mode regulator equivalent for gpios.
-> >
-> > If these are connected to GPIOs, isn't it possible that someone will
-> > want to change their value?
-> >
-> > Other than some generic 'pinstrap-gpios' property, I don't see what we'd
-> > do here? I don't feel like pin strapping GPIOs is something that we see
-> > all that often.
-> >
-> > Rob
+...
 > 
-> I think the idea is that it is not actually a GPIO, just a hard-wired
-> connection. We would want to have a "fixed-gpios" to describe these
-> hard-wired connections as GPIOs so that we don't have to write complex
-> binding for chip config GPIOs. I've seen configuration pins like on at
-> least half a dozed of the ADCs I've been working on/reviewing over the
-> last two years (since I got involved in IIO again).
-
-Yes, the alternative to having GPIOs would be to have pins hard-wired set to a
-specific logic level. And the connection don't need to be to GPIOs. The gain
-pins on the ADC chip can be connected to anything that keeps a constant logic
-level while we capture data from the ADC.
-
+> Though, the above is still relying on GPIOs which is not a requirement from
+> ADC peripheral perspective. Also, if GPIOs are available, one can just provide
+> them through pga-gpios and have full control over the signal gain with the IIO
+> driver. It boils down to just telling software what are the logical levels at
+> two pins on the ADC chip when GPIOs are not provided.
 > 
-> For example, there might be 4 mode pins, so we would like to just have
-> a mode-gpios property. So this could be all 4 connected to GPIOs, all
-> 4 hard-wired, or a mix.
-
-Having some pins hard-wired and some connected to GPIOs is possible, but that
-would make things even more complex as each pin on the ADC chip sets a different
-portion of the gain. IMHO, mixed GPIO/hard-wired configuration starts looking
-like over engineering and I haven't been requested for so much configuration
-flexibility. Having either all hard-wired or all connected to GPIOs should be ok.
-
-I'm not familiar with pinctrl dt-bindings, but I was wondering if we could get
-to something similar with pinctrl. Based on some pinctrl bindings, I think
-fixed-level GPIOs could look like the following (for the 4 pin-mode example).
-
-pinctrl0: pincontroller@0 {
-    compatible = "vendor,model-pinctrl";
-
-    all-low-state: some-gpio-pins {
-        pins = "gpio0", "gpio1", "gpio2", "gpio3";
-        function = "gpio";
-        output-low;
-    };
-    all-high-state: some-gpio-pins {
-        pins = "gpio0", "gpio1", "gpio2", "gpio3";
-        function = "gpio";
-        output-high;
-    };
-    most-high-state: some-gpio-pins {
-        pins1 { 
-            pins = "gpio0", "gpio1", "gpio2";
-            function = "gpio";
-            output-high;
-        };
-        pins2 { 
-            pins = "gpio3";
-            function = "gpio";
-            output-low;
-        };
-    };
-};
-spi {
-    adc@0 {
-        compatible = "vendor,adc";
-        /* All gpios */
-        pga-gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>,
-                    <&gpio0 1 GPIO_ACTIVE_HIGH>,
-                    <&gpio0 2 GPIO_ACTIVE_HIGH>,
-                    <&gpio0 3 GPIO_ACTIVE_HIGH>;
-         /* or all hard-wired */
-		pinctrl-names = "minimum-gain", "moderate-gain", "maximum-gain";
-		pinctrl-0 = <&all-low-state>, <&most-high-state>, <&all-high-state>;
-    };
-};
-
-Though, the above is still relying on GPIOs which is not a requirement from
-ADC peripheral perspective. Also, if GPIOs are available, one can just provide
-them through pga-gpios and have full control over the signal gain with the IIO
-driver. It boils down to just telling software what are the logical levels at
-two pins on the ADC chip when GPIOs are not provided.
-
-Thanks,
-Marcelo
-
-> 
-> (The actual bindings would need more thought, but this should give the
-> general idea)
-> 
-> fixed_gpio: hard-wires {
->     compatible = "fixed-gpios";
->     gpio-controller;
->     #gpio-cells = <1>;
-> };
-> 
-> gpio0: gpio-controller@4000000 {
->     compatible = "vendor,soc-gpios";
->     gpio-controller;
->     #gpio-cells = <2>;
-> };
-> 
-> spi {
->     adc@0 {
->         compatible = "vendor,adc";
->         /* All gpios */
->         mode-gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>,
->                      <&gpio0 1 GPIO_ACTIVE_HIGH>,
->                      <&gpio0 2 GPIO_ACTIVE_HIGH>,
->                      <&gpio0 3 GPIO_ACTIVE_HIGH>;
->          /* or all hard-wired */
->         mode-gpios = <&fixed_gpio 0 GPIO_FIXED_HIGH>,
->                      <&fixed_gpio GPIO_FIXED_HIGH>,
->                      <&fixed_gpio GPIO_FIXED_LOW>,
->                      <&fixed_gpio GPIO_FIXED_LOW>;
->          /* or mixed */
->         mode-gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>,
->                      <&gpio0 1 GPIO_ACTIVE_HIGH>,
->                      <&fixed_gpio GPIO_FIXED_LOW>,
->                      <&fixed_gpio GPIO_FIXED_LOW>;
->     };
-> };
+Though, as mentioned, the state of A0 and A1 pins defines a certain gain applied
+to ADC input signal. Because signal gains seem to be usually described in decibels,
+the proposed dt-binding allows to provide the gain value in decibels and then
+software figures out what A0 and A1 logical levels are from the provided decibels.
+The actual levels of A0 and A1 then have to be set according to the provided
+decibel gain.
 
