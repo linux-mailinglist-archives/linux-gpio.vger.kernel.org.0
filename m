@@ -1,101 +1,136 @@
-Return-Path: <linux-gpio+bounces-26711-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26712-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFECFBAFFD1
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Oct 2025 12:21:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3701DBB0105
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Oct 2025 12:53:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6A529170064
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Oct 2025 10:21:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C821B1940E32
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Oct 2025 10:53:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D3262BE053;
-	Wed,  1 Oct 2025 10:21:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E69C22C0F95;
+	Wed,  1 Oct 2025 10:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="blYrOHjJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C93A1B0420;
-	Wed,  1 Oct 2025 10:21:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 004E72C08DF
+	for <linux-gpio@vger.kernel.org>; Wed,  1 Oct 2025 10:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759314091; cv=none; b=UsJ45I2B3amXcqjyBI1BY8HkG0OHVfGOE8mRbA43mPoLjJHB8td0ZLzb9WJ6WlGWwvAkQkUiU4GZVoSaAxBzF9kKJfNGuIQ3b102s/JKHzp75Y1QFktdM30CMbcRXx5cRWpvsxuzcypLxih3wcPblRnUiYz83cekU8ye1OCr2wo=
+	t=1759316002; cv=none; b=haOanLSYeYByt867F8qbad6oojH9HaH7C1e96yeg1AhnmkqRrQERC8pJzLGbJhnQv8vR75o4hd37tES8rHCwihzyuFBUR2xEz3p/reS7DJG+AA/H2nDaebsqEZQYznkHeQn5IFrm4Y609aMy/GPG7rojBCCuQS85r0TALNWZLFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759314091; c=relaxed/simple;
-	bh=ODeNv/xSjUtbdZAeBsFlGuryHUWRemRcqjm8xDajy7E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dylHR7wnLcAZvpRQmsJqAtq9FGcz21KK6pkgDWwZDUw5QODIkDNR7tFKFEJIMMF6RTGLJryCqTRCU4Gw9yPf6Dd178KA6K+u21oBRXNpqZ1rAiaoQTvOqZbL4ZKrTsPxE8ZoCJCQdcXAM9Yq4j+OU9YG5w5DKcreL9sCMCXnRoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-	by vmicros1.altlinux.org (Postfix) with ESMTP id 7418972C8CC;
-	Wed,  1 Oct 2025 13:11:48 +0300 (MSK)
-Received: by imap.altlinux.org (Postfix, from userid 705)
-	id 6C02E36D070F; Wed,  1 Oct 2025 13:11:48 +0300 (MSK)
-Date: Wed, 1 Oct 2025 13:11:48 +0300
-From: Michael Shigorin <mike@altlinux.org>
-To: Michael Shigorin <mike@altlinux.ru>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Tor Vic <torvic9@mailbox.org>, Kexy Biscuit <kexybiscuit@aosc.io>,
-	jeffbai@aosc.io, gregkh@linuxfoundation.org, wangyuli@uniontech.com,
-	aospan@netup.ru, conor.dooley@microchip.com,
-	ddrokosov@sberdevices.ru, dmaengine@vger.kernel.org,
-	dushistov@mail.ru, fancer.lancer@gmail.com, geert@linux-m68k.org,
-	hoan@os.amperecomputing.com, ink@jurassic.park.msu.ru,
-	linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, linux-ide@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-spi@vger.kernel.org, manivannan.sadhasivam@linaro.org,
-	mattst88@gmail.com, netdev@vger.kernel.org, nikita@trvn.ru,
-	ntb@lists.linux.dev, patches@lists.linux.dev,
-	richard.henderson@linaro.org, s.shtylyov@omp.ru, serjk@netup.ru,
-	shc_work@mail.ru, tsbogend@alpha.franken.de, v.georgiev@metrotek.ru,
-	wsa+renesas@sang-engineering.com, xeb@mail.ru
-Subject: Re: what about CoC? (was: [PATCH] Revert "MAINTAINERS: Remove some
- entries due to various compliance requirements.")
-Message-ID: <20251001101148.GA30625@imap.altlinux.org>
-References: <a08dc31ab773604d8f206ba005dc4c7a@aosc.io>
- <20241023080935.2945-2-kexybiscuit@aosc.io>
- <124c1b03-24c9-4f19-99a9-6eb2241406c2@mailbox.org>
- <CAHk-=whNGNVnYHHSXUAsWds_MoZ-iEgRMQMxZZ0z-jY4uHT+Gg@mail.gmail.com>
- <20241024095339.GA32487@imap.altlinux.org>
+	s=arc-20240116; t=1759316002; c=relaxed/simple;
+	bh=iRFBrL9jShE7DNB6IrQqexRe01xpLtZNZRY5DpG098k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hf8P+do5X30QSQGLwvzI/NcbGElVrxt6MYVqOk2a2c0bDAdUh6zlOaCiwHT4pINFHLwu2lQoLost+rOOyofPQPqZ9SGBU2452a2KMzTpmUobdmeAsfGIoEPIxIBF5ZgTu+iNbA7L8kuY3qbNkaLN4r4tdkotpXyHSDx7PQXEkII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=blYrOHjJ; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-3652d7800a8so54751191fa.0
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Oct 2025 03:53:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1759315998; x=1759920798; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UXaRvd/Tl3m+OCCyeRNRvJ/5mgQ4gfksuRE7c8W+vks=;
+        b=blYrOHjJ8Xv9hvrnjWXmR7AYvuEPqDvq55kOBz173UptwSMHu+MwAvpp3FQTzRpSPn
+         5AC98TBpFOdRUTe8w/J/Now1xyCYyxT27eL7voDXd9TCjSgaoqCVf1rwua5Tm4rw/XDY
+         8PN/8UW9e4kG8a1G3nchpZjpCybGIOUn7vYeUMd9yBARwr4148CEXvCt+PlzOWbvlwwC
+         o2PFHH5NWyN2O5Wxa4jSYk+eMHwZeETesrtUea1KrpsLa3JkDMXK9TgpmWjf6Gwz1Qux
+         U546VBbuVtREaQ2oeCryLodpiblOSi8kUVxs37AXD7K5zuwJVqA3P3CZiqi5gvrRG6uP
+         t1yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759315998; x=1759920798;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UXaRvd/Tl3m+OCCyeRNRvJ/5mgQ4gfksuRE7c8W+vks=;
+        b=wrAnxVjIyK31wPxgRa6ZD1/UUatHQg/gtdY212f+sviPxOb1pRzKRS9hCHpFQ/Eyyf
+         jOd5wtwGWpgjO61O/RFUwl29ul4rhWlsmBTCD+oSbpLRzWEVt6hjCmJAdRLnoU+dshs7
+         JtI08Bwsq+paEXYy+sqioz732IV1xtQIt60EFC5a95h2dBeyQcRbN4JzdK1VVRH2YEwm
+         l9mVDBUL7M7tNImzpb2As8fVapkuzUgiSSD6QLl4LRMR5VL9IvBMIpLlR26xrSlLBl8K
+         7IIO8YWmyVn5TRclfbfa3v3hEEnfL9BHHPNZiazWucUQLmfOG8eopOESCAylEtyGwqXR
+         AeyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWdUmDtInP0sSKLz1sGxE6VPaFmOZ9xAMAzeBq/Ax873gNg9iqLiMI9hEjZMVccs6VFAxeBSunt9JBg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3sP6mvOiPPIpRxFQ8RJBbfTf801MyuN2EK/lC5EDGThonZhHS
+	xyfdxdB7t0Bi8pvcnrAldQHzv4v7hv+Vk7YY/wVDUjG2uBJ+uyY55RAx/ScBRicSYs/aXEtKj3t
+	ZDtEM3x4CL5G2IwmuLZJaZEnZdZ4T7bL71pDI+Kwrzg==
+X-Gm-Gg: ASbGncvvb6Ctv2kOfOvHSbLpd0dI1fMQnzcON9QML85qLgy5FWD2rA1Cd58eIaoKY2g
+	s/eKIxSysi04k9Oehvj029hSEo0iQy/mliAXUzDqwiYa+EeZRQSeIgOUOii7BE0aawy/2Z4Hg9M
+	jGxAgjVgaP6Et7zkD/BWoTp/2Y/5Fagoo1KzBGofWqthZDfpCFA0jXYegq3AOQf19Q7plDxkQse
+	ZgAgJDJMWWeKpZS5/cLkVoKchFzZwY=
+X-Google-Smtp-Source: AGHT+IHNsDtiUQt/i2npQARVssi0DJ3+LBTFoSnvhtZVkK/xmqXN8oNQNgTvZTXOiQqw4WqXcNYRSxbiHzvdCA73Ztc=
+X-Received: by 2002:a2e:a7c1:0:b0:372:9fd0:8c40 with SMTP id
+ 38308e7fff4ca-373a740495dmr7206011fa.31.1759315998524; Wed, 01 Oct 2025
+ 03:53:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241024095339.GA32487@imap.altlinux.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org> <CACRpkdYcVtJjRHRJ8GgeU7rZDuyaJKu0vgcknb7DsHPjZGKGuA@mail.gmail.com>
+In-Reply-To: <CACRpkdYcVtJjRHRJ8GgeU7rZDuyaJKu0vgcknb7DsHPjZGKGuA@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 1 Oct 2025 12:53:07 +0200
+X-Gm-Features: AS18NWD2nrQaAyXYNX4TJo-95Uw5nXLztXmSEl4xWN8QeMmA2KtvYABQ1GxMrZg
+Message-ID: <CACRpkda-ZvrAC4bNLnA+ao0Y8-Nd_-b89N6HU10hhEdaOUYAjw@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/9] gpio: improve support for shared GPIOs
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 24, 2024 at 12:53:39PM +0300, I wrote
-> It's not about the patch but rather about the attitude;
-> Documentation/process/code-of-conduct-interpretation.rst:
-> 
-> "regardless of ... ethnicity, ... nationality, ... race"
-> "Focusing on what is best for the community"
-> 
-> "Examples of unacceptable behavior ... insulting/derogatory
-> comments ... Public or private harassment"
-> 
-> Get back to single-standard integrity for yor own's sake.
+Replying to self so Bartosz don't have to tell me off...
 
-Glad to hear that ESR thinks -- and speaks! -- in a similar vein.
+On Wed, Oct 1, 2025 at 10:49=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
 
-I believe that Linus -- whose daughter has been basically
-kidnapped mentally[1][2] by the same hypicrites who speak "love"
-but groom real hate -- has his own merits to rise against those.
+> and every GPIO access on every system will be proxied
+> and then this better be fast.
 
-But it does take leadership and guts in a "modern" world.
+What about I read the code before I talk :/
 
-[1] http://reddit.com/r/linux/comments/9go8cp/linus_torvalds_daughter_has_signed_the/ [del, heh]
-[2] http://unz.com/isteve/and-they-came-for-somebody-who-actually-gets-things-done-linus-torvalds/
+Inspecting patch 4/9 it is clear that only GPIOs that actually
+need to be proxied are proxied.
 
--- 
-Michael Shigorin
-http://t.me/anna_news
+> Two things come to mind, and I bet you have thought of
+> them already:
+>
+> 1. Footprint: all systems using regulators will now have
+>    to compile in all this code as well.
+
+This still holds. It could be a concern if it's a lot of code.
+
+> 2. Performance, I didn't quite get it if every GPIO on the
+>   system will be proxied through a layer of indirection
+>   if you select HAVE_SHARED_GPIOS
+>   but that would not be good, since some users are in
+>   fastpath such as IRQ handlers, and the old way of
+>   sharing GPIOs would just affect pins that are actually
+>   shared.
+
+It is clear from patch 4/9 that this only affects GPIOs
+that are actually shared, and those tend to not be
+performance-critical so this concern is moot.
+
+Yours,
+Linus Walleij
 
