@@ -1,74 +1,74 @@
-Return-Path: <linux-gpio+bounces-26708-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26709-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D4A9BAFA96
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Oct 2025 10:37:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0B62BAFB72
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Oct 2025 10:46:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 40F544A3BFC
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Oct 2025 08:37:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 24842188FA6B
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Oct 2025 08:47:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A8CB28489B;
-	Wed,  1 Oct 2025 08:36:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8670B1C28E;
+	Wed,  1 Oct 2025 08:46:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y2JbSdkq"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DUkVxDJM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0D5283FF7
-	for <linux-gpio@vger.kernel.org>; Wed,  1 Oct 2025 08:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B92222565
+	for <linux-gpio@vger.kernel.org>; Wed,  1 Oct 2025 08:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759307816; cv=none; b=EL4QamjXMRwnCyCB0O8ZtF1eo0qjTluOt4o7Zun1Cg6JwfbmUtSWb/0hAwC3Aqr1jiBP7QDnRsGd5xwSrA7uSGLJmAhJWoR1v2nra6likC6S0YLShQK7iWc84rGtm+u/wfRzpQwEPYsb3fKOtBufB56uPaXYIdGFlS3oGMs7oCg=
+	t=1759308399; cv=none; b=KqSdMq7sjNROu9n81ASixVDEd0kzb2H0Nh5cfgWTdIuiLP05zzaRgQTyCA5R3/ZMJpNM9mz0ohSlgJUp3urjUm+f24sf3zoi/8wFsIPKtEFp9NnDALwI2q4b5XSdk/7pALNpycJ94H8qKhbOTPthk/GjZsV6noO+mYhULe2hXmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759307816; c=relaxed/simple;
-	bh=gzIdYM+jt7Tm5Uc0vWk+e7hcdztHdOIk7pXCG5DPn00=;
+	s=arc-20240116; t=1759308399; c=relaxed/simple;
+	bh=8D0lPsjedL+kyXW7Dr+b8bXHNiYNOO4VOFO0oJ6yKL8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uL0d0uuSjE0w9k3tkgRwNRwpaBvYJHlwqltqG4iELRe6uBBFr8SYVYRLIACU1WrJ4CZQ/O3ALD+Dwa9l8dBMG3IsnxUMsPurmQPFsg5t2WjrpjKOmkC88/+nt5R0V+s/DDd2tI5nsB0c3NPQOS/0DIcUjNZuv3QOeuas7I1nVOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y2JbSdkq; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-371e4858f74so8910091fa.1
-        for <linux-gpio@vger.kernel.org>; Wed, 01 Oct 2025 01:36:54 -0700 (PDT)
+	 To:Cc:Content-Type; b=kJseDoqu6aqrPrq5LRhBMm1tDM4azilNL+1+6pNtWY49Wr9tvpJIUuhfsBwfBwTZ2oo48/qi2VDF3q0GHSWJt/JAZ459zzg2xniUUa+owvO2yHWHxkY0nbvdlWc9LLhX3mBMDMuY4MNLQF0+BcB8OMGS6X+37UAfo/D/D9+w5wE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DUkVxDJM; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-586883eb9fbso4566008e87.1
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Oct 2025 01:46:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1759307813; x=1759912613; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1759308396; x=1759913196; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gzIdYM+jt7Tm5Uc0vWk+e7hcdztHdOIk7pXCG5DPn00=;
-        b=y2JbSdkqXAxPLb82GvTI/Xyw8K79t4O8sinKKsLGUgqsg/Y9Q1d6cx0rdBgSvyxNW1
-         4KUb382KzJwnGy0g8zCLZGv3xhxQMwaOiYJeB1zCBkYcHluGNz1lixRzaogjK4YgBRab
-         QeJZL3vZawXKgflzGQFyCBq76JcTqjpvYiT6eOJe6X24vocdzM61rRoCMD2P8o4eYCbh
-         ZxLoaAoqSAtLB9gurHNPFNHahBgKULjl/SdTij57T3Ri0s4yP9WNn1Faihls5ScaUL0+
-         FImiA0xjK0vPmPsj3V0LhDHbAODSqY5vM1nI7/D2iNpjfqSAgD/XD/YSWmKFfh1gTCyO
-         XQsQ==
+        bh=8D0lPsjedL+kyXW7Dr+b8bXHNiYNOO4VOFO0oJ6yKL8=;
+        b=DUkVxDJMjtSd7JQTplxvjXnLL5GY+6orOou1AZZ0x9DtcMzEXZlDDUO5+eaD501CUS
+         mWP3Q6Meo0Uj6Tm0E1RFkDgOph56cUABDKiKZp5Puu4pYuNRnEA6VhMZSPzA5BtD6xcu
+         gRaulkg2Et3G9SRp+cvL3yvghxsJG2pzn60aqXgtyBLGv5sUvqvrGCicylQZzXRbDn8Q
+         2UNv76kAcKAGkcDPbK3+CaMGeEfi6M70Ghen8FHS9PX8q3wyzSfrrzz2tOGSpIhATlQM
+         2wVFLE+1pXs7exuilmjKhe6wQ68O4uZs8ShdL162BqVZ9AYXdCfKVxaI/NAtogJ9skVY
+         qtpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759307813; x=1759912613;
+        d=1e100.net; s=20230601; t=1759308396; x=1759913196;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gzIdYM+jt7Tm5Uc0vWk+e7hcdztHdOIk7pXCG5DPn00=;
-        b=hTdyoxiMBds6sYOgAcrZsySe4kaWWYdlZKLpCk4Bq+i08+jT5OnkXYWCSFOqoKqV4u
-         V9hAyzjjci90oOLt5W9Mt70zGo/uJlWSzZrw2Bo5IhSXN0nQzbIwoQLW+OWkAKMpidtb
-         23l+jiDP5mZzv0lVbQ/gUAyMe+GljVfMyfZnNgRInGUMx3F+PNpy5bY/VxFGj1ocu3lU
-         tPMewL22AfeJqFKbmFlGgQMVXx4Ro35xw23jLTbRHCKtMg3e9re7riWyQyCEtyYugDxY
-         3u+/oWf8i+Fl4E28NFmsIjmsaPK6oLFkpovowS0Yb9DMZmtMZ1Jk3ju/wp/Zkyz7YyqI
-         Aj+g==
-X-Forwarded-Encrypted: i=1; AJvYcCVLMWLo5C1ySbmk51Dac8uP54jLTqhOfN6uOWRA66fxi8eMiIOZh49Na0mfCJUHWPUSNuCIzW6Nz2dY@vger.kernel.org
-X-Gm-Message-State: AOJu0Yww7NgH8wqlYUUk2/Z2UkrSsaV7zY1OYe4xIETDlVAUIx9faIwf
-	0Bx/d07Pcrztn2XlbG+00cJfVw20Ad9O2wtIKRjj0GVcv5IsBVyLtx0ZFj3Vzg/UB5WsOmbzAKw
-	T+AoVdXCOdj1z+99kGWaQcehEKyxoZKEaRH0sBJ5q0w==
-X-Gm-Gg: ASbGnctZU1nslWFLl9bTlczVJHviCfcn4M9gHheYe1Ge6dWWvyeHiyglDzI6RjNHnNw
-	uX4edwgKl5LM8+OXRN9kwWUXaHTFmxFt4R/wI9AwlDiRY09dD7gCjVEPSgzzXgNNRUApgXaMqOw
-	8nq8mxwZaU7DCL9H3da6hunsfWRBYmhNMSaRBchPQ02ZrPrGnZ3huvRTKuFAZpeiNWRxzJMAL2m
-	tX7KeFf6rPkj6pKpqtPHD1xKzxNVb/qjOtNEhRjug==
-X-Google-Smtp-Source: AGHT+IGR364l0fZkqCbX1kIjKIvYDxXIcwBHw+lqJUfFGXSzirJ8uNvUMS79/HggJOLuN/qEVcxWH5dtrV9+RyqdghU=
-X-Received: by 2002:a05:651c:210c:b0:357:ccfc:64ac with SMTP id
- 38308e7fff4ca-372fa205204mr25896051fa.4.1759307812626; Wed, 01 Oct 2025
- 01:36:52 -0700 (PDT)
+        bh=8D0lPsjedL+kyXW7Dr+b8bXHNiYNOO4VOFO0oJ6yKL8=;
+        b=BtkwhbjdvQINdUsVTMOD1JYQcQVcaAxCs6Nq8vMx82aBgih06HdNiwKRytC5VVBb+7
+         4m0ZSJ6vRWX+ZJbYpj6WfBYxM7YmI3hNdYvHoP3hTmqE9kXqEoRNOjvzo9bcr3+KgA8i
+         4kZ1Hb/o3KhRNKmghdKbQ7B4qDSmSNUpCgGsnj3H5IHwv+xxk5mgSb5LPZoXUOf9NwFn
+         O24BV7dFjO7Gs6EFXbTEO012saJOtVXrlZsH3j2iAZRgbSQrZKL/8jj2OwCKg5jcFAt2
+         /4G96rklC/HS9zI2slQNjdkFj47VU8V8jgCXRtvwwH55If1YcRs2kHWrOG9olPI4F7Tj
+         XlBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUkrzTR2+upZssKA1oLR9NXtDUJ8AiaVgnJh2HyMaPMffQ1Oxk56rQl3dsM7Q7w1L3VRWFA4bxDClsl@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzes9WhH/7aRlS3WajHFBHwKjVzSFwK6LkWZDZNPR+sUl9g7s61
+	rIH8MREsykBI1qXF2NfrbqkFahThGNl+ngcam0CvYMHjnBpRKcRSmYCyxXFrcCpN5HN+GsdisyB
+	eE8bsjk2J1t+prr59cmyXeqFblpkeC1YERK8W71M+PmWy069cMZrcOck=
+X-Gm-Gg: ASbGncufmJ4CqDnpnE+w+WXy7GNzj01IRnoy9xQEo2rqZXnmxzbFvbpo6lg8BeA8KOL
+	xuYr+/mVCMnR1/h0QYgdCU7+m6GH4TnnT9d2hfELFoRb7KKty7Vf2EYH1H/xG6nbOokTwsnC3WP
+	b1/mF4n3wGgWF93akRyyBYkCIFXrUCnnoqJP8ylBypWY7bIX6vEzvlxNAQ0M50vy4pO2ruLmNko
+	3mRfTlkasPpEoP1CzpUr60KBf5/XVe86ndlQD8Z3rMcdGJzitA4hWPGky84XRI=
+X-Google-Smtp-Source: AGHT+IFOdBqQ3obnIdTm7ru0JPzklPYFIUGqCI693FKE/9RlmuM5kKhUigWL4UNHwLKwqtrOVDs8F+QH4ORLFYFhoak=
+X-Received: by 2002:a05:6512:ea7:b0:57a:6d7d:dd7b with SMTP id
+ 2adb3069b0e04-58af9eadd86mr760851e87.8.1759308395621; Wed, 01 Oct 2025
+ 01:46:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -77,14 +77,15 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250910-make-compound-literals-normal-again-v1-0-076ee7738a0b@linaro.org>
  <20250910-make-compound-literals-normal-again-v1-2-076ee7738a0b@linaro.org>
- <CAMuHMdWoEXLTPyQL4kt1OPVbrDDcBdBigqUM7EbNZjZUsSmRHQ@mail.gmail.com> <CAMRc=Mej9fQk-1zYKhPK6aWdptXKvjq28TywRyP+iZExRuX9og@mail.gmail.com>
-In-Reply-To: <CAMRc=Mej9fQk-1zYKhPK6aWdptXKvjq28TywRyP+iZExRuX9og@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 1 Oct 2025 10:36:40 +0200
-X-Gm-Features: AS18NWDoMdvnOzF6_wDEnr52XVC2ihE3QCB2mnLOoQUz_n36xv-rRAEh7yvMfRw
-Message-ID: <CACRpkdbo88o1g_VCp0+C9hfi1VQkP99x2Mnkw_DTctBEtVAa_g@mail.gmail.com>
+ <CAMuHMdWoEXLTPyQL4kt1OPVbrDDcBdBigqUM7EbNZjZUsSmRHQ@mail.gmail.com>
+ <CAMRc=Mej9fQk-1zYKhPK6aWdptXKvjq28TywRyP+iZExRuX9og@mail.gmail.com> <CACRpkdbo88o1g_VCp0+C9hfi1VQkP99x2Mnkw_DTctBEtVAa_g@mail.gmail.com>
+In-Reply-To: <CACRpkdbo88o1g_VCp0+C9hfi1VQkP99x2Mnkw_DTctBEtVAa_g@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 1 Oct 2025 10:46:22 +0200
+X-Gm-Features: AS18NWC0XlksXBppS2yCvWpBaDAShYUzQK0jJOB31RgrqudBkZ0MvZktkc5Xz8w
+Message-ID: <CAMRc=Mf4kv03+cfB7up==PUJyxHH6U3hHF3q6iKYZWVOZamSTg@mail.gmail.com>
 Subject: Re: [PATCH 2/3] pinctrl: use more common syntax for compound literals
-To: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>
 Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Lee Jones <lee@kernel.org>, 
 	Andy Shevchenko <andriy.shevchenko@intel.com>, Liviu Dudau <liviu.dudau@arm.com>, 
 	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
@@ -112,25 +113,35 @@ Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Lee Jones <lee@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 25, 2025 at 9:52=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+On Wed, Oct 1, 2025 at 10:36=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
+>
+> On Thu, Sep 25, 2025 at 9:52=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
+>
+> > This is a link to the discussion with Andy as per Linus Torvalds'
+> > recent request to use the Link: tag to point to actually useful
+> > information rather than just the patch's origin. Linus Walleij doesn't
+> > use b4 so the origin link you'd normally expect to be added
+> > automatically is not there at all. That's probably what caused the
+> > confusion.
+>
+> What? I use b4 for everything, I don't know what gave you
+> that impression....
+>
 
-> This is a link to the discussion with Andy as per Linus Torvalds'
-> recent request to use the Link: tag to point to actually useful
-> information rather than just the patch's origin. Linus Walleij doesn't
-> use b4 so the origin link you'd normally expect to be added
-> automatically is not there at all. That's probably what caused the
-> confusion.
+Ah, sorry for this. I assumed the lack of Link is due to no b4. Should
+have looked at git log first.
 
-What? I use b4 for everything, I don't know what gave you
-that impression....
+> I have however removed the automated Link: tags generated from magic
+> gitconfig hooks as requested by Torvalds in v6.17-rc5:
+> https://lwn.net/Articles/1037069/
+>
+> This is also mentioned in my pin control pull request from yesterday.
+>
 
-I have however removed the automated Link: tags generated from magic
-gitconfig hooks as requested by Torvalds in v6.17-rc5:
-https://lwn.net/Articles/1037069/
+So it is a policy after all and not a "please"? Let me remove the hooks the=
+n...
 
-This is also mentioned in my pin control pull request from yesterday.
-
-Yours,
-Linus Walleij
+Bart
 
