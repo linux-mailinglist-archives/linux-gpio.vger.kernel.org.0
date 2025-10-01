@@ -1,143 +1,178 @@
-Return-Path: <linux-gpio+bounces-26685-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26686-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9F15BAEB97
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Oct 2025 01:00:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 293CABAEE90
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Oct 2025 02:45:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E8FC07A62F4
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Sep 2025 22:58:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D2F5A3A7BE8
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Oct 2025 00:45:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FD9A2571DD;
-	Tue, 30 Sep 2025 23:00:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B83C213E6D;
+	Wed,  1 Oct 2025 00:45:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S31i/LCt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dlmwr6dN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C2E2459D7
-	for <linux-gpio@vger.kernel.org>; Tue, 30 Sep 2025 23:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB38F1F4CBF;
+	Wed,  1 Oct 2025 00:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759273217; cv=none; b=HUDLeJDWlLsjre+kT7kByP18McuwBuZu1+KYrBud6M5T+3lP/cBkPjZ/bRQqFVn9gUjMUPAMBgljDpiOtUKSheVO0TQR6/Lk+kmVzIqEYt71v+cOIv8iIdeqOu50auf+8m0uByKw6stODQAQU9uhH8O1n8WfsadDQibbCYVPvgI=
+	t=1759279503; cv=none; b=otKK6T3Mbu04jwoZ8jWURq1nJ3f74r1s+gU8rifl5PjBtS5XdIzaR8O+HOOfuDNIM4LWfU79O4IDdeH13nP0ECqdtAI12SfWC4mZI17KIi0qskG7ukw/RVsiCq9XidPJ/r+6IbcK/Plpg/0WcxUUhFg77zIaeFqznXKtVe0SsD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759273217; c=relaxed/simple;
-	bh=0JAdTX9kSCI0ZL2lixlSV2aTjK1FwSvpdQJXgYHkgA8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mmnKEkk514vuuzWBNCebGg0Z5mxh2ioYP+dRcKw+T8uO64YWuhujkuqzwh41kw7XWr4fiTnYyVK0cRBpd2XrmSJr7K1gYRDnk6kFRm3yoT+JKCHZ0GL0K/9t4HuvI+8XGlZtAka04GSzOwbsjYtRYD6/6Ox0U18t3jPini2BtNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=S31i/LCt; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-57dfd0b6cd7so8203415e87.0
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Sep 2025 16:00:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1759273212; x=1759878012; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YNGpoJ5D1HDARLkPTC0Il8tsGPxqsMJo0AN7zBWkLI0=;
-        b=S31i/LCte32fAC5JKpz4CSTkJ7tadDLjIngdsdFR0nKDFcnmWKB2uxbjY+uWyfeuQx
-         7vuCrzkydDTd8o6JtxmTiYEQK4Ocmxhl8PcX2HsD3nDPAEw67NV6DF8DplxQnccZabL2
-         ioJkc1BiogXLwFDOM0UsQ7otBAaVFIIBI8UlHMtaPoDxyrxJjuKPjyB3uAH+vWW2OTGh
-         xCEhlDCX75P/BAP9VhPc6pcs593xJkgpvTJCqWz8FZNEAV9SKFd+wHOJDXKv446mUYi0
-         WBSxwY3CWEHUzuluEAlq+ScbPBD5zqEthRCxah5dWLKs4X6H9UO4IgyLn9EBXP6f5xen
-         fRRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759273212; x=1759878012;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YNGpoJ5D1HDARLkPTC0Il8tsGPxqsMJo0AN7zBWkLI0=;
-        b=X2RtdFxJuS/tqwtFdqGCk9zfErquBh0pJfErUMcVfuFi7fcJO70tWC3NP+yVzKg8gT
-         NAg563tn6gDBNjlZ5HucftYYLP2p517d0IkEWbX9MHKRwRnjUU/1ZyZY5lZABauuCJ/p
-         aa7sp7L6M0/mKoj37B/JzKHkGiTgoiqD5GBNAqOf1pPqkZQpRDYBrBpNXyugtskKW/dW
-         SdZNUg2PoIZ5/6jZpAVNHR/vEn+Riu+T5ZHk5LP9kup2oD3kEGEztilkkCewLDJqPt2w
-         wkOmkY4mGcRKYGbHtamwBrDx2aYYEfPRVtkSNgpuwh6lCeWKHpcX+bMLMZm/QEwHPSmD
-         PyTg==
-X-Forwarded-Encrypted: i=1; AJvYcCX0SC0D3bMxbk29PZj0eIXHZwp4bw8R9rySp7LjoBroTcgX4SI2ZrTyvPZ4Oe1kfMtSatC7aMQBWKfB@vger.kernel.org
-X-Gm-Message-State: AOJu0YytV+rCM8gty2yxfB+DYMZUjHRkwCtFBWv/g0oXT6Md9ZZNKVQ4
-	qtxyM1gkhFT2vqIkwwV/I1QYdHczKrRiFdojTvJ6nK7BCUk0cWSQA7FScmVJo4I6ekIb/VaJr0A
-	UzCWhORQMs4gIizC6WtrmFIu3r43GTodbp8izKI6Mtg==
-X-Gm-Gg: ASbGncvr4Lie5Q8YfXZasyWzdwUm6ZeUh1CiN0FQvHLL/3YmE8uJu5qb/7nfN0LEspX
-	rTglGhvnMLsMOoSqZJlHiCtHHZ/MtAq9v9xhMZyVNOyeOF6RudfsfZi6gKose410BVnp1JxLasr
-	W6cvh5F3WmzdaKsl5yDggwwcp0oG2EkotHH6VTUv5r6ReL6j3dQApulM6IZmK6VLRmoOq+wmvxk
-	fmW9kwSBjQmI7BrCuD5TSH8jAF1/kc=
-X-Google-Smtp-Source: AGHT+IEVz6f2f6ubGL1NAHbArQuJx21btrHT6IMUIR8tJN8YYNQAnJBbiclaELxhNdFbCs8p1UkBI5RhBN5Vzj3bgbs=
-X-Received: by 2002:a05:6512:b05:b0:57d:d62e:b212 with SMTP id
- 2adb3069b0e04-58af9f4b755mr335472e87.38.1759273212293; Tue, 30 Sep 2025
- 16:00:12 -0700 (PDT)
+	s=arc-20240116; t=1759279503; c=relaxed/simple;
+	bh=tphxb6DI5+DwhHBI73v7hYTP6GVyWqcs3Q7BvKryrmA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nHDIwk9o/T81j9YB+foDr4TAgh/J5TzbUKvb62p+aCxXXnollF7lCU5qzuIymFTKc2OJwyBjxWKaI3XyukSBp+choIJlEi67cjkYhdTkA70F8fKy6PuQ+8IV6RYa2kwNLHDukENL3c1nIEKC0ehpt/f8ii9OubI8nUpjMv2IIRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dlmwr6dN; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1759279501; x=1790815501;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=tphxb6DI5+DwhHBI73v7hYTP6GVyWqcs3Q7BvKryrmA=;
+  b=dlmwr6dN4X0H3ltv/heoS9MtGXbF3UWSLRziR99/md8XmWytq3AxsEt0
+   a63zsQb3zq2Qp0/kFmbdqSasKn6OaWFPgM7kd6nNRUYOq+zoWfVPJxEM0
+   nj05GthN/e03w8cFyCexZAUlem194Z7AXeTdqkalV/olEIbh+TotSKvRa
+   /yzQcTJcTCEQGmW6eC5UOLvks4KhI0MQPSBxIYOfSLGcDsBk+1HheD3sj
+   r8m+9jRPXf2MVitB8haLWVrifWXgr+JmEWBlVceu9YRLVwkpGW2aapZl1
+   UtFYITByEf0KCM8wWWJHZJr1QbbTaLQYcpV3WoNGgNJVg48sLAeztXZNL
+   A==;
+X-CSE-ConnectionGUID: SDuH6xGITkuCDEZJEYc/tw==
+X-CSE-MsgGUID: EPHKIM26RlGiexbmnZz30g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11569"; a="86995095"
+X-IronPort-AV: E=Sophos;i="6.18,305,1751266800"; 
+   d="scan'208";a="86995095"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2025 17:45:01 -0700
+X-CSE-ConnectionGUID: DLZQLaqsScmamOqEfRPxUw==
+X-CSE-MsgGUID: K75oPXxHTEWVRq5WeL5BKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,305,1751266800"; 
+   d="scan'208";a="209609693"
+Received: from lkp-server01.sh.intel.com (HELO 2f2a1232a4e4) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 30 Sep 2025 17:44:58 -0700
+Received: from kbuild by 2f2a1232a4e4 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1v3kxi-0002b5-30;
+	Wed, 01 Oct 2025 00:44:54 +0000
+Date: Wed, 1 Oct 2025 08:44:05 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	William Zhang <william.zhang@broadcom.com>,
+	Anand Gore <anand.gore@broadcom.com>,
+	Kursad Oney <kursad.oney@broadcom.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 6/6] pinctrl: bcm: bcmbca: Add support for BCM6846
+Message-ID: <202510010811.0pbFyQ24-lkp@intel.com>
+References: <20250930-bcmbca-pinctrl-v1-6-73218459a094@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250922142427.3310221-1-ioana.ciornei@nxp.com> <20250922142427.3310221-9-ioana.ciornei@nxp.com>
-In-Reply-To: <20250922142427.3310221-9-ioana.ciornei@nxp.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 1 Oct 2025 01:00:01 +0200
-X-Gm-Features: AS18NWDno9w3YJfSDGfd27SZbITIyFHNn9tKwshGM3VINLqos-LcWggqf3IrU68
-Message-ID: <CACRpkdYBz2Ly20N92w1FCZFOs6GONzEHi8ZsVg_HAUNExh071A@mail.gmail.com>
-Subject: Re: [PATCH v5 08/12] gpio: add QIXIS FPGA GPIO controller
-To: Ioana Ciornei <ioana.ciornei@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Shawn Guo <shawnguo@kernel.org>, 
-	Michael Walle <mwalle@kernel.org>, Lee Jones <lee@kernel.org>, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Frank Li <Frank.Li@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250930-bcmbca-pinctrl-v1-6-73218459a094@linaro.org>
 
-Hi Ioana,
+Hi Linus,
 
-thanks for your patch!
+kernel test robot noticed the following build warnings:
 
-On Mon, Sep 22, 2025 at 4:24=E2=80=AFPM Ioana Ciornei <ioana.ciornei@nxp.co=
-m> wrote:
+[auto build test WARNING on 8f5ae30d69d7543eee0d70083daf4de8fe15d585]
 
-> Add support for the GPIO controller found on some QIXIS FPGAs in
-> Layerscape boards such as LX2160ARDB and LS1046AQDS. This driver is
-> using gpio-regmap.
->
-> A GPIO controller has a maximum of 8 lines (all found in the same
-> register). Even within the same controller, the GPIO lines' direction is
-> fixed, which mean that both input and output lines are found in the same
-> register. This is why the driver also passed to gpio-regmap the newly
-> added .fixed_direction_output bitmap to represent the true direction of
-> the lines.
->
-> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
-(...)
-> +++ b/drivers/gpio/Kconfig
-> @@ -1986,6 +1986,15 @@ config GPIO_LATCH
->           Say yes here to enable a driver for GPIO multiplexers based on =
-latches
->           connected to other GPIOs.
->
-> +config GPIO_QIXIS_FPGA
-> +       tristate "NXP QIXIS FPGA GPIO support"
-> +       depends on MFD_SIMPLE_MFD_I2C || COMPILE_TEST
-> +       select GPIO_REGMAP
-> +       help
-> +         This enables support for the GPIOs found in the QIXIS FPGA whic=
-h is
-> +         integrated on some NXP Layerscape boards such as LX2160ARDB and
-> +         LS1046AQDS.
-> +
->  config GPIO_MOCKUP
->         tristate "GPIO Testing Driver (DEPRECATED)"
->         select IRQ_SIM
+url:    https://github.com/intel-lab-lkp/linux/commits/Linus-Walleij/pinctrl-bcm-Rename-bcm4908-to-bcmbca/20250930-200534
+base:   8f5ae30d69d7543eee0d70083daf4de8fe15d585
+patch link:    https://lore.kernel.org/r/20250930-bcmbca-pinctrl-v1-6-73218459a094%40linaro.org
+patch subject: [PATCH 6/6] pinctrl: bcm: bcmbca: Add support for BCM6846
+config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20251001/202510010811.0pbFyQ24-lkp@intel.com/config)
+compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 39f292ffa13d7ca0d1edff27ac8fd55024bb4d19)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251001/202510010811.0pbFyQ24-lkp@intel.com/reproduce)
 
-Why is this menu entry among the virtual GPIO drivers?
-Move it under the MFD menu where it should be, please.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202510010811.0pbFyQ24-lkp@intel.com/
 
-With this fixed:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+All warnings (new ones prefixed by >>):
 
-Yours,
-Linus Walleij
+   In file included from <built-in>:3:
+   In file included from include/linux/compiler_types.h:171:
+   include/linux/compiler-clang.h:28:9: warning: '__SANITIZE_ADDRESS__' macro redefined [-Wmacro-redefined]
+      28 | #define __SANITIZE_ADDRESS__
+         |         ^
+   <built-in>:371:9: note: previous definition is here
+     371 | #define __SANITIZE_ADDRESS__ 1
+         |         ^
+>> drivers/pinctrl/bcm/pinctrl-bcmbca.c:527:27: warning: unused variable 'bcm6846_spis_groups' [-Wunused-const-variable]
+     527 | static const char * const bcm6846_spis_groups[] = {
+         |                           ^~~~~~~~~~~~~~~~~~~
+   2 warnings generated.
+
+
+vim +/bcm6846_spis_groups +527 drivers/pinctrl/bcm/pinctrl-bcmbca.c
+
+   499	
+   500	static const char * const bcm6846_led_0_groups[] = { "led_0_grp_a", "led_0_grp_b" };
+   501	static const char * const bcm6846_led_1_groups[] = { "led_1_grp_a", "led_1_grp_b" };
+   502	static const char * const bcm6846_led_2_groups[] = { "led_2_grp_a", "led_2_grp_b" };
+   503	static const char * const bcm6846_led_3_groups[] = { "led_3_grp_a", "led_3_grp_b" };
+   504	static const char * const bcm6846_led_4_groups[] = { "led_4_grp_a", "led_4_grp_b" };
+   505	static const char * const bcm6846_led_5_groups[] = { "led_5_grp_a", "led_5_grp_b" };
+   506	static const char * const bcm6846_led_6_groups[] = { "led_6_grp_a", "led_6_grp_b" };
+   507	static const char * const bcm6846_led_7_groups[] = { "led_7_grp_a", "led_7_grp_b" };
+   508	static const char * const bcm6846_led_8_groups[] = { "led_8_grp_a", "led_8_grp_b" };
+   509	static const char * const bcm6846_led_9_groups[] = { "led_9_grp_a", "led_9_grp_b" };
+   510	static const char * const bcm6846_led_10_groups[] = { "led_10_grp_a", "led_10_grp_b" };
+   511	static const char * const bcm6846_led_11_groups[] = { "led_11_grp_a", "led_11_grp_b" };
+   512	static const char * const bcm6846_led_12_groups[] = { "led_12_grp_a", "led_12_grp_b" };
+   513	static const char * const bcm6846_led_13_groups[] = { "led_13_grp" };
+   514	static const char * const bcm6846_led_14_groups[] = { "led_14_grp" };
+   515	static const char * const bcm6846_led_15_groups[] = { "led_15_grp" };
+   516	static const char * const bcm6846_led_16_groups[] = { "led_16_grp" };
+   517	static const char * const bcm6846_led_17_groups[] = { "led_17_grp" };
+   518	static const char * const bcm6846_ser_led_groups[] = { "ser_led_grp_a", "ser_led_grp_b" };
+   519	/* We use these three groups with the NAND function to get as many pins as we want */
+   520	static const char * const bcm6846_nand_groups[] = { "nand_ctrl_grp", "nand_data_grp", "nand_wp_grp" };
+   521	static const char * const bcm6846_emmc_groups[] = { "emmc_ctrl_grp" };
+   522	/* Activate SPIM with "spim_grp" and then as many selects as used with "spim_ssN_grp" groups */
+   523	static const char * const bcm6846_spim_groups[] = {
+   524		"spim_grp_a", "spim_ss0_grp_a",	"spim_ss1_grp_a", "spim_ss2_grp_a", "spim_ss3_grp_a",
+   525		"spim_grp_b", "spim_ss0_grp_b",	"spim_ss1_grp_b", "spim_ss2_grp_b", "spim_ss3_grp_b",
+   526		"spim_grp_c", "spim_ss0_grp_c",	"spim_ss1_grp_c" };
+ > 527	static const char * const bcm6846_spis_groups[] = {
+   528		"spis_grp_a", "spim_ss_grp_a",
+   529		"spis_grp_b", "spis_ss_grp_b" };
+   530	static const char * const bcm6846_usb0_pwr_groups[] = { "usb0_pwr_grp" };
+   531	static const char * const bcm6846_usb1_pwr_groups[] = { "usb1_pwr_grp" };
+   532	static const char * const bcm6846_i2c_groups[] = { "i2c_grp" };
+   533	static const char * const bcm6846_rgmii_groups[] = { "rgmii_grp", "rgmii_rx_ok_grp", "rgmii_start_stop_grp" };
+   534	static const char * const bcm6846_mii_groups[] = { "mii_grp" };
+   535	static const char * const bcm6846_signal_detect_groups[] = { "signal_detect_grp_a", "signal_detect_grp_b" };
+   536	static const char * const bcm6846_one_sec_pls_groups[] = { "one_sec_pls_grp_a", "one_sec_pls_grp_b" };
+   537	static const char * const bcm6846_rogue_onu_groups[] = { "rogue_onu_grp_a", "rogue_onu_grp_b" };
+   538	static const char * const bcm6846_wan_groups[] = { "wan_mdio_grp", "wan_nco_grp",
+   539		"wan_early_txen_grp_a", "wan_early_txen_grp_b", "wan_nco_1pps_sig_grp_a", "wan_nco_1pps_sig_grp_b" };
+   540	static const char * const bcm6846_uart0_groups[] = { "uart0_grp" };
+   541	static const char * const bcm6846_uart2_groups[] = { "uart2_grp" };
+   542	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
