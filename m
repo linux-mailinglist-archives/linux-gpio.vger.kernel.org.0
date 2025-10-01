@@ -1,201 +1,128 @@
-Return-Path: <linux-gpio+bounces-26735-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26736-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58BBDBB1630
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Oct 2025 19:45:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 16B20BB182D
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Oct 2025 20:36:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0AC491C2B60
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Oct 2025 17:45:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9171B1924755
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Oct 2025 18:36:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD4F8257452;
-	Wed,  1 Oct 2025 17:45:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D85A42D593A;
+	Wed,  1 Oct 2025 18:36:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b="Zq1MQMGC"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="D/cUU05Z"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5902A34BA32;
-	Wed,  1 Oct 2025 17:45:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759340702; cv=pass; b=QYZynxUTy0d3yOh49karyZDtU0avnV+Rr0ECAbvBCsh/alHvnw9+63OZwKJFVWSxVad6i7iJUn7gOP4bzPkj9kIUn1J+pi2qZLljIjaJqfCB0/DQm7CybMBXcYRS8EeyJ7ZLL/R84Ig7rfS6rAK1+OBsCFBbClNWttUCupMUHms=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759340702; c=relaxed/simple;
-	bh=cGe1oAHQps6sWQkh8tJxvi8xrynPeTmPvml+2PK70t8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TdYpRdo+9vXIq3C0RVnitn8/hsC/n/MvFedds7UuDbQuXSsdRyKIdVpyZS2nx/JvAQ9uY58pJhIyvDfq0hQh8i3dDYbzD+G5MUO+o7VQ896T4sffO9/5CKApU2jNEoVwLcfk/M2qMekDBmUTcNrJG8nnmPmu1HcmUDKktKpuydg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b=Zq1MQMGC; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1759340639; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Dv6ghvPHN7AGcU7+5CH3htq5hdDmi012lRE1Inj162ECXRJK3bG7GZb2hch25vig+ys1DfSf76h7uYavSU8+G0S7pNV1/57GmOFCYV4UoLXjOrUdBf9Bcc3+DaSa0/FVyM4rE2flHWLhezO4odVFNnMgoOxGJF3aLdx4UykSz2w=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1759340639; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=X1qxdtwKIY3V1sCLiuzk767gsjs7kipJUMmkwVcO3FY=; 
-	b=M5kvq5PRgWWIKyuHZiYxwdKRTjrzhGm8MfWV+UY6CZ0LMDoAChPzow/dWnFR8wpxmqRLUqef1+LJq8Tot1uKQh4BOgu08K+nronjQEP5Y+3vy451a+ijiH9DhzVWTxWGlHIIhKsnr4mcrtZSAWNugM6fUbqr0ctWqyzbXxNx9/k=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=ariel.dalessandro@collabora.com;
-	dmarc=pass header.from=<ariel.dalessandro@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1759340639;
-	s=zohomail; d=collabora.com; i=ariel.dalessandro@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=X1qxdtwKIY3V1sCLiuzk767gsjs7kipJUMmkwVcO3FY=;
-	b=Zq1MQMGCGotD+rJbqQrTxX/7xwW2aTNQNC9HTL3C/QxltTLuE2sT+80pYH/52OLd
-	JqbrTO6RJaj2HBl1EanausCyXQYMtT+QAMSZj+dz+D2xbW7MsrDAqwRIgPgmsaMlI8X
-	H8JNEVAWFHpRoctoROmUczLCT7TTMRhhFLbChWQg=
-Received: by mx.zohomail.com with SMTPS id 1759340637638418.15942640933406;
-	Wed, 1 Oct 2025 10:43:57 -0700 (PDT)
-Message-ID: <4eda73fc-76cb-4ac1-8b6c-d0f1c1117905@collabora.com>
-Date: Wed, 1 Oct 2025 14:43:40 -0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3D14C9D
+	for <linux-gpio@vger.kernel.org>; Wed,  1 Oct 2025 18:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759343784; cv=none; b=D+BFRJ86geG2B8FB+yGzRkbXsEUms1in4+XhAvzn/B5c5MVaPrUG1nQotLjEqNFX/nLbhCq9p/DssA8sfCmXwTruFMtkeGWet4XDwv+Xs9NFiej+4cmEnkJFlMuHFOgsXH/MbgQuyTczC89XEKZkIDYJ2e04+XPmLjwCnK/lCbk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759343784; c=relaxed/simple;
+	bh=UIxAQDQJMbN9Nt33/FwttLDE3FgEeI/xim5z6CvYRRU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OTVIXVP2yd2jCV8ZLHwfoIvxyHdNGJH92l+6szKhUyHKom3mMINYIJRmglIemqG17rguto4QieCXy42LmJquZgE6nb5560BzPQDH9Wm05cTRQy+nBoe+wWLgfbl5/stea53GQdr/LUkjXZPu6GC8pr5snpgyceU2rkjBMfS9sG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=D/cUU05Z; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-62fca216e4aso281658a12.0
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Oct 2025 11:36:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1759343780; x=1759948580; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=4i25jEK4dntxz2BKGOtfgS0CLdgFA+0hjJfJ87nVXJE=;
+        b=D/cUU05ZVup433G2gMP5xn5NKci7k8nl8HafZzvcFEIfj3Aecd+pmCP80mW6wW5mj8
+         DoxeHWKHuz+h+bIep7Lg3OwcfQ/ua/oA/3vn/KYCSmHPvgeBtQi2QyIZYwTaeZ+SZF+D
+         IZ7CjkZG94Wit2e1T/+tnHv39ApDn8WK0Rdi8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759343780; x=1759948580;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4i25jEK4dntxz2BKGOtfgS0CLdgFA+0hjJfJ87nVXJE=;
+        b=iiJiHAfjkLx8rpBWrZRazZ11uqtwQaCR5yCk9PtQYEA0RTxI2JGsN/vfRIJSkoj6G8
+         8IjjltdyJ52lKWH2NHv/L2nWZxzniMA8HGzEimVzlAwrfOc82IVbpQcyVlp3o8VjNthA
+         fyxapjnGNMLK08jds+XXH7BpvPm5FE7kUOEvUOnjInYkIKEohu6B7uYNWnT+GGC5mfdT
+         PZ44sBKuTJWBX9tWfmOIu8R/AxuCR+0Tpq0urXyHVHxIZVruY4V/7VzAygYfrX76MBnS
+         MHo3D58IWcaNUKBGkd6GCHZPWXAAJaz/aR9jOrYpmuSO+PsIjJyfPdY3Y/OiOIJloNV6
+         aTVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+I0UD4Zy1G0Tdf6SHpXdYcb3Rpm7RWDIh2r3yrca3ZYIgiY5d1W45mClGsZn4q80NsRQmPS9Koayd@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8nMjYf37v+bG6y1OooUs+bcjgCTisI9l+wRqxfR8WMIpjtyQg
+	fcgjgXz35cb7j9nFa067nsNYCUDTKAMARzbYhF92tfCN/9X6eUSqPxq6AXr0YWVCONbPRyoFgWj
+	BWaqPgIc=
+X-Gm-Gg: ASbGnctmMgscN3V+Z9HUug+/D/aNwjOAANr2Mmd3wKAEOIiaGaFcoOBM1JFNfV/tNI7
+	Bv8t3yVVqgnueg30elg0pJGUEZKa4aaFGqhRn963e7v7OPF1q8StEiFVoYQx+24txVQ9/F/OHXJ
+	rCyCd5j7pdyJzdXntykevB6AHCbPrqm1DOV/TpXyA5UGtpxe/iQoN3BvxUzTCviT8XCy6oITQKo
+	Krhf6kDwLWcPlttJ3TbRwa7Rd0y/hXW+nl9NAMiEnoGh9WykzCKtAUXBKknPHnpirfPvWqxT6vQ
+	tZE8ZGUSWFKJKqec8r+e9cfSgWRV6DJbsCBhZvOYkMndY21LIAnk8IVkLhCnGs5O04msQvQt8MF
+	dT/iWMt2TWvrtt2YXmnWJIU831LdiFFvCV5OFffevsoj/SFRcxDaxKiNYO7/tFJjPe/m5mrBJlh
+	YHkFDYDuAuJTAMRV9WK32s
+X-Google-Smtp-Source: AGHT+IEe3bFHO2bfg8wmB/jPp+YpY7vNHJBXhdd657fdpwffdrJXZcIyoyBgH9ur0F8PEUgfReWMyQ==
+X-Received: by 2002:a05:6402:1e95:b0:62e:ebb4:e6e0 with SMTP id 4fb4d7f45d1cf-6376aae08b7mr667093a12.1.1759343780250;
+        Wed, 01 Oct 2025 11:36:20 -0700 (PDT)
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6378811f14bsm259498a12.45.2025.10.01.11.36.19
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Oct 2025 11:36:19 -0700 (PDT)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-634cef434beso2565368a12.1
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Oct 2025 11:36:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUD6Y9TNhcjqfa35kDpgUIZY1tHwlin3CezW5OczqdTCFUEUhtLdhoaFko1jWhkaeg21nAehRl62jVN@vger.kernel.org
+X-Received: by 2002:a17:906:c10a:b0:afe:159:14b1 with SMTP id
+ a640c23a62f3a-b4859e7d413mr78539466b.9.1759343779157; Wed, 01 Oct 2025
+ 11:36:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 09/12] dt-bindings: regulator: Convert Dialog DA9211
- Regulators to DT schema
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- airlied@gmail.com, amergnat@baylibre.com, andrew+netdev@lunn.ch,
- andrew-ct.chen@mediatek.com, broonie@kernel.org, chunkuang.hu@kernel.org,
- conor+dt@kernel.org, davem@davemloft.net, dmitry.torokhov@gmail.com,
- edumazet@google.com, flora.fu@mediatek.com, heiko@sntech.de,
- houlong.wei@mediatek.com, jeesw@melfas.com, kernel@collabora.com,
- krzk+dt@kernel.org, kuba@kernel.org, lgirdwood@gmail.com,
- linus.walleij@linaro.org, louisalexis.eyraud@collabora.com,
- luiz.dentz@gmail.com, maarten.lankhorst@linux.intel.com,
- marcel@holtmann.org, matthias.bgg@gmail.com, mchehab@kernel.org,
- minghsiu.tsai@mediatek.com, mripard@kernel.org, p.zabel@pengutronix.de,
- pabeni@redhat.com, robh@kernel.org, sean.wang@kernel.org, simona@ffwll.ch,
- support.opensource@diasemi.com, tiffany.lin@mediatek.com,
- tzimmermann@suse.de, yunfei.dong@mediatek.com
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-arm-kernel@lists.infradead.org, linux-bluetooth@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-mediatek@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-sound@vger.kernel.org, netdev@vger.kernel.org
-References: <20250911151001.108744-1-ariel.dalessandro@collabora.com>
- <20250911151001.108744-10-ariel.dalessandro@collabora.com>
- <990cc068-adc9-473a-b4c7-9113583cb83c@collabora.com>
-Content-Language: en-US
-From: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
-In-Reply-To: <990cc068-adc9-473a-b4c7-9113583cb83c@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+References: <20250929094107.34633-1-brgl@bgdev.pl>
+In-Reply-To: <20250929094107.34633-1-brgl@bgdev.pl>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 1 Oct 2025 11:36:03 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whnmvjsan9Y=LcV0encJungD451VkdqYAKrRpk6YyA6-w@mail.gmail.com>
+X-Gm-Features: AS18NWCnkZF8pjj6PmEycUScBzOCrNuVV1Up2k2QPgdQ6BQ6UKmqAtm2ll7h4oI
+Message-ID: <CAHk-=whnmvjsan9Y=LcV0encJungD451VkdqYAKrRpk6YyA6-w@mail.gmail.com>
+Subject: Re: [GIT PULL] gpio updates for v6.18-rc1
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Angelo,
+On Mon, 29 Sept 2025 at 02:41, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> Here's the PR containing the GPIO updates for this merge window. There are
+> two new drivers and support for more models in existing ones.
 
-On 9/12/25 5:11 AM, AngeloGioacchino Del Regno wrote:
-> Il 11/09/25 17:09, Ariel D'Alessandro ha scritto:
->> Convert the existing text-based DT bindings for Dialog Semiconductor 
->> DA9211
->> Voltage Regulators family to a DT schema. Examples are simplified, as 
->> these
->> are all equal.
->>
->> Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
->> ---
->>   .../devicetree/bindings/regulator/da9211.txt  | 205 ------------------
->>   .../bindings/regulator/dlg,da9211.yaml        | 104 +++++++++
->>   2 files changed, 104 insertions(+), 205 deletions(-)
->>   delete mode 100644 Documentation/devicetree/bindings/regulator/ 
->> da9211.txt
->>   create mode 100644 Documentation/devicetree/bindings/regulator/ 
->> dlg,da9211.yaml
->>
-> 
-> ..snip..
-> 
->> diff --git a/Documentation/devicetree/bindings/regulator/ 
->> dlg,da9211.yaml b/Documentation/devicetree/bindings/regulator/ 
->> dlg,da9211.yaml
->> new file mode 100644
->> index 0000000000000..9d5e25bc3872c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/regulator/dlg,da9211.yaml
->> @@ -0,0 +1,104 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/regulator/dlg,da9211.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title:
->> +  Dialog Semiconductor DA9211/DA9212/DA9213/DA9223/DA9214/DA9224/ 
->> DA9215/DA9225
->> +  Voltage Regulator
-> 
-> Dialog Semiconductor DA9211-9215, DA9223-9225 Voltage Regulators
-> 
-> Better? :-)
+This appears to not have been build-tested AT ALL.
 
-Much better, thanks! Will fix in v3.
+> - allow building gpio-stmpe as a module
 
-> 
->> +
->> +maintainers:
->> +  - Ariel D'Alessandro <ariel.dalessandro@collabora.com>
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - dlg,da9211
->> +      - dlg,da9212
->> +      - dlg,da9213
->> +      - dlg,da9214
->> +      - dlg,da9215
->> +      - dlg,da9223
->> +      - dlg,da9224
->> +      - dlg,da9225
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  regulators:
->> +    type: object
->> +    additionalProperties: false
->> +    description:
->> +      List of regulators provided by the device
->> +
->> +    patternProperties:
->> +      "^BUCK([AB])$":
->> +        type: object
->> +        $ref: regulator.yaml#
->> +        unevaluatedProperties: false
->> +        description: |
-> 
-> Please drop the vertical bar | from all descriptions
+This causes build errors:
 
-Ack. Fixed in v3.
+  ERROR: modpost: missing MODULE_LICENSE() in drivers/mfd/stmpe-i2c.o
+  ERROR: modpost: missing MODULE_LICENSE() in drivers/mfd/stmpe-spi.o
 
-> 
-> after which,
-> 
-> Reviewed-by: AngeloGioacchino Del Regno 
-> <angelogioacchino.delregno@collabora.com>
+because while the main core stmpe.c driver got an added
 
-Thanks a lot!
+  MODULE_LICENSE("GPL");
 
-Regards,
+when it was turned into a modular build, the SPI and i2c modules did not.
 
--- 
-Ariel D'Alessandro
-Software Engineer
+It's trivial to fix, but I should not be in the situation where I have
+to fix it, and I should not be getting pull requests that don't even
+build under trivial configurations.
 
-Collabora Ltd.
-Platinum Building, St John's Innovation Park, Cambridge CB4 0DS, UK 
-Registered in England & Wales, no. 5513718
+How the hell did this happen? Where was the basic build testing?
 
+                            Linus
 
