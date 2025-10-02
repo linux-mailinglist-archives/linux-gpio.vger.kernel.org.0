@@ -1,79 +1,91 @@
-Return-Path: <linux-gpio+bounces-26743-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26744-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51464BB2088
-	for <lists+linux-gpio@lfdr.de>; Thu, 02 Oct 2025 01:01:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68E8CBB225F
+	for <lists+linux-gpio@lfdr.de>; Thu, 02 Oct 2025 02:26:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB57F3B40C2
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Oct 2025 23:01:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D5C72188E532
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Oct 2025 00:26:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DDA225A2A7;
-	Wed,  1 Oct 2025 23:00:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32A8E3A1CD;
+	Thu,  2 Oct 2025 00:26:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ujvUE6u+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YsDIHMxc"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE24FC1D;
-	Wed,  1 Oct 2025 23:00:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76C55227;
+	Thu,  2 Oct 2025 00:26:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759359621; cv=none; b=PI59MfbgzmbvFCGX8pHRvu5umbzMlVXCTbSyR5hvP9yL0VtinUtlI77+yiz6fnwgKBxF2t8Jg9ytoY8tawjTmIcauSOeIXLvLH5fEM9y/N28tkcn/QAqaCUx7xtW+SlxB/0GmL8WxDh3DJFAN7FpoYReN8rYOdWJKoW+B1HqfjY=
+	t=1759364762; cv=none; b=lLvv9X/Yk/dQpIehx37ZC+X6wvU/u4XKwrY/K3a0VwihPX9Ca0EsaEpsbev0/0g+xjusqqQFMr38k/AbK39avP/8TUsxs3wjCE7b/Z+9BKBfcX2jW1P8iij3MXdvwayEyJ9/NVwneZUf3LzxP9Lsnuxva9NnNjcJQT8gBDNvzfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759359621; c=relaxed/simple;
-	bh=n9k8mcT3rZH5Tdth6Tkm/7zWUpcfOfZYeXAilqHJOTo=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=H1RGmeJRdSpKiXRPpdmxf/qcKyzQZcAlctsQ7hZhL6fUFq29p0395mAWdoGCf0Kfq0YMESi/5mt2o+gUBGgXYY6ufDRfLGpg2YoP5VF8cVBmSO6B0C+bS9B1NgZThZgM2APIy/nksCfiYNGIUtJFyQuFKUeqM7cQE1YrGfE6y+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ujvUE6u+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D16CAC4CEF1;
-	Wed,  1 Oct 2025 23:00:20 +0000 (UTC)
+	s=arc-20240116; t=1759364762; c=relaxed/simple;
+	bh=JJD6gJF3RGM77Q2Z++4jBpZovnitTGcnRBrM8p0153E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CvIkkygJ7teCJ2E51Ydq7aWjHcBOLpUFv5WJUrs8vUVpYrMmSk++aFu13HhuwSp7lznS5iWkCvQzFyAEdOVi5tkRcuAtniYIR9of3Sl8z+eqG0SF/15blBS3qElmdkgLFXrm0WLA0u1y8lLHjPkyuU3eBTX6aoq0+Asmov2E6tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YsDIHMxc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2074C4CEF1;
+	Thu,  2 Oct 2025 00:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759359620;
-	bh=n9k8mcT3rZH5Tdth6Tkm/7zWUpcfOfZYeXAilqHJOTo=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=ujvUE6u+b4BT3zvMIAabP2h1HE/6GVOMyt5Y1XhhhluZInF2VO+05F3tlcTZJaEdK
-	 ihKHiIAucq0stoiVwlOBCNOwjAZIIU6SgUkZhOjun7zihx5ZQkoEXRV4+zZDi3aWZs
-	 h3JfsS6yxv3pITd4lSunM59C1yUP+Y4QqVixyEXj1BHCleT1vuPUQERASlA+X5zctZ
-	 xkUM2XDAwirupD9fJzcwdZfk98doH4mTEPIImnpM9HP3i2+TrFy0nyXDP7rwKEGFFC
-	 fsIWF/6nzpyvJpdhcJfkv9SXzkloB092JiqWbpDKuyUFK6Iv7HAIEIq8DWYTeclg2G
-	 Dm9SBwBLfK71w==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 712BF39EF947;
-	Wed,  1 Oct 2025 23:00:14 +0000 (UTC)
-Subject: Re: [GIT PULL] pin control bulk changes for v6.18
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkda=9Q0akFMxAK3HeL74jbJ=+poVZq2Xom9jJr-2rOxe+A@mail.gmail.com>
-References: <CACRpkda=9Q0akFMxAK3HeL74jbJ=+poVZq2Xom9jJr-2rOxe+A@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkda=9Q0akFMxAK3HeL74jbJ=+poVZq2Xom9jJr-2rOxe+A@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.18-1
-X-PR-Tracked-Commit-Id: da3a88e9656c17a34daf49c9acc6d85f73b4d3d9
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5fb024931949f3475260c84a0e4b0997af9c5530
-Message-Id: <175935961296.2651312.2071907389887219961.pr-tracker-bot@kernel.org>
-Date: Wed, 01 Oct 2025 23:00:12 +0000
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+	s=k20201202; t=1759364761;
+	bh=JJD6gJF3RGM77Q2Z++4jBpZovnitTGcnRBrM8p0153E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YsDIHMxcTVgi4f1Slpf+4bGSc0jWtf5C4Gh2ByVar6pr7ksJvl15/2znFb0VPc3Xj
+	 DeVjeXy5ljjI88UYRX3O8aNPHwlJBP1drQKCj3NmadQCKD/LGi5rKDuc/2yn0hMIvQ
+	 ID476OQz3UECkSFc4/keOpSEoLW4LpIq9CB29RQLX/qTh5WnO5WiQNKlrbFwgGh+7E
+	 N6CYgJsqYnIS/rhJvR4wQ1Edfm525jYorRmXgiMhzwlnFlxF8YNFqdRw90Iv4bsg6z
+	 GV8gbQS1q/Ks8W8L2FOffNL1dMGXn9qd1owEIIFdF9FHvdDgjW5DvJcGn/i8d4OFSt
+	 nfamSb5Icz0og==
+Date: Wed, 1 Oct 2025 19:25:59 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Kamal Wadhwa <kamal.wadhwa@oss.qualcomm.com>
+Cc: Conor Dooley <conor+dt@kernel.org>,
+	Pankaj Patil <pankaj.patil@oss.qualcomm.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-gpio@vger.kernel.org,
+	Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>,
+	devicetree@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: qcom,pmic-gpio: Add GPIO
+ bindings for Glymur PMICs
+Message-ID: <175936475902.2672174.11147610989550494810.robh@kernel.org>
+References: <20250924-glymur-pinctrl-driver-v2-0-11bef014a778@oss.qualcomm.com>
+ <20250924-glymur-pinctrl-driver-v2-1-11bef014a778@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250924-glymur-pinctrl-driver-v2-1-11bef014a778@oss.qualcomm.com>
 
-The pull request you sent on Tue, 30 Sep 2025 20:48:10 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.18-1
+On Wed, 24 Sep 2025 22:31:02 +0530, Kamal Wadhwa wrote:
+> From: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
+> 
+> Update the Qualcomm Technologies, Inc. PMIC GPIO binding documentation
+> to include compatible strings for PMK8850, PMH0101, PMH0104, PMH0110
+> and PMCX0102 PMICs.
+> 
+> Signed-off-by: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
+> Signed-off-by: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
+> Signed-off-by: Pankaj Patil <pankaj.patil@oss.qualcomm.com>
+> Signed-off-by: Kamal Wadhwa <kamal.wadhwa@oss.qualcomm.com>
+> ---
+>  .../devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml       | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5fb024931949f3475260c84a0e4b0997af9c5530
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
 
