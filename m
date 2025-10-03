@@ -1,56 +1,56 @@
-Return-Path: <linux-gpio+bounces-26796-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26798-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id B71E6BB8007
-	for <lists+linux-gpio@lfdr.de>; Fri, 03 Oct 2025 21:51:05 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65249BB8015
+	for <lists+linux-gpio@lfdr.de>; Fri, 03 Oct 2025 21:51:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9ACCB4E48FC
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Oct 2025 19:51:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 37528189CD1E
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Oct 2025 19:51:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2A4C221F26;
-	Fri,  3 Oct 2025 19:50:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 166E1285CB6;
+	Fri,  3 Oct 2025 19:51:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=csh.rit.edu header.i=@csh.rit.edu header.b="whT5XZTw"
+	dkim=pass (1024-bit key) header.d=csh.rit.edu header.i=@csh.rit.edu header.b="wH1ylrX8"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from greygoose-centos7.csh.rit.edu (greygoose-centos7.csh.rit.edu [129.21.49.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844CF1E9B0D;
-	Fri,  3 Oct 2025 19:50:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC8323D7ED;
+	Fri,  3 Oct 2025 19:51:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.21.49.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759521058; cv=none; b=ZqpBMFJVaOHDQOSvSHPZoDlEui4SpXEO1b/LmyOUjphDZs0zq0s+GNn4BVwaueUTaaIh+QWsE+BtV8b6px2L6KjT7GABTQn8RGJAk36PFkblU6swl+NJIvxFf7IbGuKQn9Zz/V17z7iQdeduSv9kiB2ocLpLj93J6PN1EGA/i0I=
+	t=1759521061; cv=none; b=ap1o+giqjvzqzGhZQBOJm8O71N12Gk7xTkwiE4zdeHd8Zil5Z3tzXE13n0nPFPL+vYqAfdFshNbxY6de8LI+GEp7W06XYXdM8PjJ862ejctitM9XNGqcT1H13/yXjrEky7JUVDBXhuhoErHBRrCUfrrCS+eT7DJ7+XmjSFH1pMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759521058; c=relaxed/simple;
-	bh=1xlz6XW3MDo7CFtWuaJYHNqWsZEBDJTD9OSUaOtzdio=;
+	s=arc-20240116; t=1759521061; c=relaxed/simple;
+	bh=IdZUXQ1kAYel5Ps7qraYpDsu0qapYodw/hF+yl76/gQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C/Qfj7g+EuzmZFMs/ICV9nQXDghpjM90PatQUANkx7VEhw7O/I/P0eOMI8IE90nx0g/JVCkqVN2A/tM0bXmnOiKC6DKNVJ9QlLGJ0271rTXJeVx5oX1+8+QYomtwIahfJqBPwNwGXaS24OVF/JaC7pkUx8010QmQ8Qpq4WDuum4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csh.rit.edu; spf=pass smtp.mailfrom=csh.rit.edu; dkim=pass (1024-bit key) header.d=csh.rit.edu header.i=@csh.rit.edu header.b=whT5XZTw; arc=none smtp.client-ip=129.21.49.170
+	 MIME-Version; b=kWEVO8yILXrwYFIFHBlGeBerBbjdM23D0jHYVe6H0BTwPnMUYR5MP+cVGrvcvS3EfwQ1PG+j0LDFLFdOfmNkvw2P5yGigvfT1RQtCVN2IlOXnZ3aFoIk6l2v4UcvujXQV64czUXVmhyXAoeclsRK7D6xHpmt70h8mfqBuEM9Kr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csh.rit.edu; spf=pass smtp.mailfrom=csh.rit.edu; dkim=pass (1024-bit key) header.d=csh.rit.edu header.i=@csh.rit.edu header.b=wH1ylrX8; arc=none smtp.client-ip=129.21.49.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csh.rit.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csh.rit.edu
 Received: from localhost (localhost [127.0.0.1])
-	by greygoose-centos7.csh.rit.edu (Postfix) with ESMTP id AF5C34153CBF;
-	Fri,  3 Oct 2025 15:50:55 -0400 (EDT)
+	by greygoose-centos7.csh.rit.edu (Postfix) with ESMTP id 777C24133836;
+	Fri,  3 Oct 2025 15:50:59 -0400 (EDT)
 Authentication-Results: mail.csh.rit.edu (amavisd-new);
  dkim=pass (1024-bit key) reason="pass (just generated, assumed good)"
  header.d=csh.rit.edu
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=csh.rit.edu; h=
 	content-transfer-encoding:mime-version:references:in-reply-to
 	:x-mailer:message-id:date:date:subject:subject:from:from
-	:received:received; s=mail; t=1759521050; x=1761335451; bh=1xlz6
-	XW3MDo7CFtWuaJYHNqWsZEBDJTD9OSUaOtzdio=; b=whT5XZTwEX3s/2hPy1bk8
-	Ibv1x1SamTvUtPuqsaOGw8JdMP4wqLJvgi7YkiXUoxp/YDvCzSbOIoIzhm1tVXyN
-	x4dA6iVNQCsBCB96wgRe+4n0WzV4vzGFcfk6iWBxpAWJ/lOx1ZQTuq+67ctZCB4k
-	z8R1PHrKS/3mIy9Q+uNGII=
+	:received:received; s=mail; t=1759521054; x=1761335455; bh=IdZUX
+	Q1kAYel5Ps7qraYpDsu0qapYodw/hF+yl76/gQ=; b=wH1ylrX8SKn9cVkY7OH4C
+	eEoflFTbHrT0RV+XAKRVfuDOgNf86zDQ2fwvpQoC0MlXxeaQn6DAwGnyLQPd3vOP
+	WGAjTDGIMw/la8ziJMoLQvA2152RHvisdN8Pz6qHzKeMcrvisPUJ+eOeG/SR0aEZ
+	vKtVcElSsQ5ylU0H7ZVuVc=
 X-Virus-Scanned: amavisd-new at csh.rit.edu
 Received: from greygoose-centos7.csh.rit.edu ([127.0.0.1])
  by localhost (mail.csh.rit.edu [127.0.0.1]) (amavisd-new, port 10026)
- with ESMTP id VfPrUGAqT6TF; Fri,  3 Oct 2025 15:50:50 -0400 (EDT)
+ with ESMTP id Ae7gHBsv88HC; Fri,  3 Oct 2025 15:50:54 -0400 (EDT)
 Received: from ada.csh.rit.edu (ada.csh.rit.edu [129.21.49.156])
-	by greygoose-centos7.csh.rit.edu (Postfix) with ESMTP id 6BF0741517D8;
+	by greygoose-centos7.csh.rit.edu (Postfix) with ESMTP id 7FCD64153CBD;
 	Fri,  3 Oct 2025 15:50:44 -0400 (EDT)
 From: Mary Strodl <mstrodl@csh.rit.edu>
 To: linux-kernel@vger.kernel.org
@@ -60,9 +60,9 @@ Cc: tzungbi@kernel.org,
 	brgl@bgdev.pl,
 	linux-gpio@vger.kernel.org,
 	Mary Strodl <mstrodl@csh.rit.edu>
-Subject: [PATCH v4 3/4] gpio: mpsse: add quirk support
-Date: Fri,  3 Oct 2025 15:50:35 -0400
-Message-ID: <20251003195036.3935245-4-mstrodl@csh.rit.edu>
+Subject: [PATCH v4 4/4] gpio: mpsse: support bryx radio interface kit
+Date: Fri,  3 Oct 2025 15:50:36 -0400
+Message-ID: <20251003195036.3935245-5-mstrodl@csh.rit.edu>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20251003195036.3935245-1-mstrodl@csh.rit.edu>
 References: <20251003195036.3935245-1-mstrodl@csh.rit.edu>
@@ -74,246 +74,52 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Builds out a facility for specifying compatible lines directions and
-labels for MPSSE-based devices.
+This device is powered by an FT232H, which is very similar to the
+FT2232H this driver was written for. The key difference is it has only
+one MPSSE instead of two. As a result, it presents only one USB
+interface to the system, which conveniently "just works" out of the box
+with this driver.
 
-* dir_in/out are bitmask of lines that can go in/out. 1 means
-  compatible, 0 means incompatible.
-* names is an array of line names which will be exposed to userspace.
+The brik exposes only two GPIO lines which are hardware limited to only
+be useful in one direction. As a result, I've restricted things on the
+driver side to refuse to configure any other lines.
 
-Also changes the chip label format to include some more useful
-information about the device to help identify it from userspace.
+This device, unlike the sealevel device I wrote this driver for
+originally, is hotpluggable, which makes for all sorts of weird
+edgecases. I've tried my best to stress-test the parts that could go
+wrong, but given the new usecase, more heads taking a critical look at
+the teardown and synchronization bits on the driver as a whole would be
+appreciated.
 
 Signed-off-by: Mary Strodl <mstrodl@csh.rit.edu>
 ---
- drivers/gpio/gpio-mpsse.c | 109 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 106 insertions(+), 3 deletions(-)
+ drivers/gpio/gpio-mpsse.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/drivers/gpio/gpio-mpsse.c b/drivers/gpio/gpio-mpsse.c
-index 6ec940f6b371..5ca00dd51a63 100644
+index 5ca00dd51a63..ace652ba4df1 100644
 --- a/drivers/gpio/gpio-mpsse.c
 +++ b/drivers/gpio/gpio-mpsse.c
-@@ -29,6 +29,9 @@ struct mpsse_priv {
- 	u8 gpio_outputs[2];	     /* Output states for GPIOs [L, H] */
- 	u8 gpio_dir[2];		     /* Directions for GPIOs [L, H] */
-=20
-+	unsigned long dir_in;        /* Bitmask of valid input pins  */
-+	unsigned long dir_out;       /* Bitmask of valid output pins */
-+
- 	u8 *bulk_in_buf;	     /* Extra recv buffer to grab status bytes */
-=20
- 	struct usb_endpoint_descriptor *bulk_in;
-@@ -54,6 +57,14 @@ struct bulk_desc {
- 	int timeout;
+@@ -65,8 +65,19 @@ struct mpsse_quirk {
+ 	unsigned long dir_out;            /* Bitmask of valid output pins */
  };
 =20
-+#define MPSSE_NGPIO 16
-+
-+struct mpsse_quirk {
-+	const char   *names[MPSSE_NGPIO]; /* Pin names, if applicable     */
-+	unsigned long dir_in;             /* Bitmask of valid input pins  */
-+	unsigned long dir_out;            /* Bitmask of valid output pins */
++static struct mpsse_quirk bryx_brik_quirk =3D {
++	.names =3D {
++		[3] =3D "Push to Talk",
++		[5] =3D "Channel Activity",
++	},
++	.dir_out =3D BIT(3),	/* Push to Talk     */
++	.dir_in  =3D BIT(5),	/* Channel Activity */
 +};
 +
  static const struct usb_device_id gpio_mpsse_table[] =3D {
  	{ USB_DEVICE(0x0c52, 0xa064) },   /* SeaLevel Systems, Inc. */
++	{ USB_DEVICE(0x0403, 0x6988),     /* FTDI, assigned to Bryx */
++	  .driver_info =3D (kernel_ulong_t)&bryx_brik_quirk},
  	{ }                               /* Terminating entry */
-@@ -171,6 +182,32 @@ static int gpio_mpsse_get_bank(struct mpsse_priv *pr=
-iv, u8 bank)
- 	return buf;
- }
+ };
 =20
-+static int mpsse_ensure_supported(struct gpio_chip *chip,
-+				  unsigned long mask, int direction)
-+{
-+	unsigned long supported, unsupported;
-+	char *type =3D "input";
-+	struct mpsse_priv *priv =3D gpiochip_get_data(chip);
-+
-+	supported =3D priv->dir_in;
-+	if (direction =3D=3D GPIO_LINE_DIRECTION_OUT) {
-+		supported =3D priv->dir_out;
-+		type =3D "output";
-+	}
-+
-+	/* An invalid bit was in the provided mask */
-+	unsupported =3D mask & ~supported;
-+	if (unsupported) {
-+		dev_err(&priv->udev->dev,
-+			"mpsse: GPIO %lu doesn't support %s\n",
-+			find_first_bit(&unsupported, sizeof(unsupported) * 8),
-+			type);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
- static int gpio_mpsse_set_multiple(struct gpio_chip *chip, unsigned long=
- *mask,
- 				   unsigned long *bits)
- {
-@@ -178,6 +215,10 @@ static int gpio_mpsse_set_multiple(struct gpio_chip =
-*chip, unsigned long *mask,
- 	int ret;
- 	struct mpsse_priv *priv =3D gpiochip_get_data(chip);
-=20
-+	ret =3D mpsse_ensure_supported(chip, *mask, GPIO_LINE_DIRECTION_OUT);
-+	if (ret)
-+		return ret;
-+
- 	guard(mutex)(&priv->io_mutex);
- 	for_each_set_clump8(i, bank_mask, mask, chip->ngpio) {
- 		bank =3D i / 8;
-@@ -205,6 +246,10 @@ static int gpio_mpsse_get_multiple(struct gpio_chip =
-*chip, unsigned long *mask,
- 	int ret;
- 	struct mpsse_priv *priv =3D gpiochip_get_data(chip);
-=20
-+	ret =3D mpsse_ensure_supported(chip, *mask, GPIO_LINE_DIRECTION_IN);
-+	if (ret)
-+		return ret;
-+
- 	guard(mutex)(&priv->io_mutex);
- 	for_each_set_clump8(i, bank_mask, mask, chip->ngpio) {
- 		bank =3D i / 8;
-@@ -253,10 +298,15 @@ static int gpio_mpsse_gpio_set(struct gpio_chip *ch=
-ip, unsigned int offset,
- static int gpio_mpsse_direction_output(struct gpio_chip *chip,
- 				       unsigned int offset, int value)
- {
-+	int ret;
- 	struct mpsse_priv *priv =3D gpiochip_get_data(chip);
- 	int bank =3D (offset & 8) >> 3;
- 	int bank_offset =3D offset & 7;
-=20
-+	ret =3D mpsse_ensure_supported(chip, BIT(offset), GPIO_LINE_DIRECTION_O=
-UT);
-+	if (ret)
-+		return ret;
-+
- 	scoped_guard(mutex, &priv->io_mutex)
- 		priv->gpio_dir[bank] |=3D BIT(bank_offset);
-=20
-@@ -266,10 +316,15 @@ static int gpio_mpsse_direction_output(struct gpio_=
-chip *chip,
- static int gpio_mpsse_direction_input(struct gpio_chip *chip,
- 				      unsigned int offset)
- {
-+	int ret;
- 	struct mpsse_priv *priv =3D gpiochip_get_data(chip);
- 	int bank =3D (offset & 8) >> 3;
- 	int bank_offset =3D offset & 7;
-=20
-+	ret =3D mpsse_ensure_supported(chip, BIT(offset), GPIO_LINE_DIRECTION_I=
-N);
-+	if (ret)
-+		return ret;
-+
- 	guard(mutex)(&priv->io_mutex);
- 	priv->gpio_dir[bank] &=3D ~BIT(bank_offset);
-=20
-@@ -482,18 +537,49 @@ static void gpio_mpsse_ida_remove(void *data)
- 	ida_free(&gpio_mpsse_ida, priv->id);
- }
-=20
-+static int mpsse_init_valid_mask(struct gpio_chip *chip,
-+				 unsigned long *valid_mask,
-+				 unsigned int ngpios)
-+{
-+	struct mpsse_priv *priv =3D gpiochip_get_data(chip);
-+
-+	if (WARN_ON(priv =3D=3D NULL))
-+		return -ENODEV;
-+
-+	*valid_mask =3D priv->dir_in | priv->dir_out;
-+
-+	return 0;
-+}
-+
-+static void mpsse_irq_init_valid_mask(struct gpio_chip *chip,
-+				      unsigned long *valid_mask,
-+				      unsigned int ngpios)
-+{
-+	struct mpsse_priv *priv =3D gpiochip_get_data(chip);
-+
-+	if (WARN_ON(priv =3D=3D NULL))
-+		return;
-+
-+	/* Can only use IRQ on input capable pins */
-+	*valid_mask =3D priv->dir_in;
-+}
-+
- static int gpio_mpsse_probe(struct usb_interface *interface,
- 			    const struct usb_device_id *id)
- {
- 	struct mpsse_priv *priv;
- 	struct device *dev;
-+	char *serial;
- 	int err;
-+	struct mpsse_quirk *quirk =3D (void *)id->driver_info;
-=20
- 	dev =3D &interface->dev;
- 	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
-=20
-+	INIT_LIST_HEAD(&priv->workers);
-+
- 	priv->udev =3D usb_get_dev(interface_to_usbdev(interface));
- 	priv->intf =3D interface;
- 	priv->intf_id =3D interface->cur_altsetting->desc.bInterfaceNumber;
-@@ -520,9 +606,15 @@ static int gpio_mpsse_probe(struct usb_interface *in=
-terface,
-=20
- 	raw_spin_lock_init(&priv->irq_spin);
-=20
-+	serial =3D priv->udev->serial;
-+	if (!serial)
-+		serial =3D "NONE";
-+
- 	priv->gpio.label =3D devm_kasprintf(dev, GFP_KERNEL,
--					  "gpio-mpsse.%d.%d",
--					  priv->id, priv->intf_id);
-+					  "MPSSE%04x:%04x.%d.%d.%s",
-+					  id->idVendor, id->idProduct,
-+					  priv->intf_id, priv->id,
-+					  serial);
- 	if (!priv->gpio.label)
- 		return -ENOMEM;
-=20
-@@ -536,10 +628,20 @@ static int gpio_mpsse_probe(struct usb_interface *i=
-nterface,
- 	priv->gpio.get_multiple =3D gpio_mpsse_get_multiple;
- 	priv->gpio.set_multiple =3D gpio_mpsse_set_multiple;
- 	priv->gpio.base =3D -1;
--	priv->gpio.ngpio =3D 16;
-+	priv->gpio.ngpio =3D MPSSE_NGPIO;
- 	priv->gpio.offset =3D priv->intf_id * priv->gpio.ngpio;
- 	priv->gpio.can_sleep =3D 1;
-=20
-+	if (quirk) {
-+		priv->dir_out =3D quirk->dir_out;
-+		priv->dir_in =3D quirk->dir_in;
-+		priv->gpio.names =3D quirk->names;
-+		priv->gpio.init_valid_mask =3D mpsse_init_valid_mask;
-+	} else {
-+		priv->dir_in =3D U16_MAX;
-+		priv->dir_out =3D U16_MAX;
-+	}
-+
- 	err =3D usb_find_common_endpoints(interface->cur_altsetting,
- 					&priv->bulk_in, &priv->bulk_out,
- 					NULL, NULL);
-@@ -578,6 +680,7 @@ static int gpio_mpsse_probe(struct usb_interface *int=
-erface,
- 	priv->gpio.irq.parents =3D NULL;
- 	priv->gpio.irq.default_type =3D IRQ_TYPE_NONE;
- 	priv->gpio.irq.handler =3D handle_simple_irq;
-+	priv->gpio.irq.init_valid_mask =3D mpsse_irq_init_valid_mask;
-=20
- 	err =3D devm_gpiochip_add_data(dev, &priv->gpio, priv);
- 	if (err)
 --=20
 2.47.0
 
