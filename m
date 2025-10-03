@@ -1,133 +1,105 @@
-Return-Path: <linux-gpio+bounces-26780-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26781-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47BCFBB64F0
-	for <lists+linux-gpio@lfdr.de>; Fri, 03 Oct 2025 11:06:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52355BB67ED
+	for <lists+linux-gpio@lfdr.de>; Fri, 03 Oct 2025 12:55:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E8047344C2A
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Oct 2025 09:06:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BB78C423DD7
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Oct 2025 10:55:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4926F287513;
-	Fri,  3 Oct 2025 09:05:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AC992EB5C6;
+	Fri,  3 Oct 2025 10:55:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dnzQGQut"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Dt+2do/4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494811D88D0;
-	Fri,  3 Oct 2025 09:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353652EAB89
+	for <linux-gpio@vger.kernel.org>; Fri,  3 Oct 2025 10:55:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759482357; cv=none; b=b2Q+gjf98gg0Ah8JPmGhFL6y5+lybreEFRPksRVEUWxEvGE8/kjW8YjvD0tMpSvDULQyOlxMlWDtQ2l+CZKhwOviBIABzzaCkMGIoT6WMDsLPpLIxlVZZgRCsOCYprGfY+LO+hL+pOm+g9ogCHQ4ONdrJytaGCl26W3gc7SHAxo=
+	t=1759488909; cv=none; b=h2UIeCjJ8DBS8vXj9bJtIeRWaxdKjazraWLueFQkuDkSyfshDmcy56aOmZblHR0hyEv+rRwm7GCKV1FUZDw/+6EmhvB7kzaaPnvpeW+vBay132wGXdDODWonWIjTkauDF1M5x7Bd3kZflTpBsdlJhryEGn0MPDZWPUiAW703V2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759482357; c=relaxed/simple;
-	bh=gefohxcrzzZYm62J79ROCkH82ZOaQJuYWgzpKFjrufs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p9KSAEMW7gr4m2mTUcCuX1l5tGoLVRezplAzdXECfWUTCuz7hVUECxw3wu+MITXE0dqGdPQ3oOoXSSYoNhf3Mdgs+aJJn3xTwTKIZbrfmk/GJKcZSooozNMbO4+g1u9MMICl0XfLOwEDFdfr7qXQrOOpOFr2hyxPt5oOewP57zQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dnzQGQut; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759482355; x=1791018355;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gefohxcrzzZYm62J79ROCkH82ZOaQJuYWgzpKFjrufs=;
-  b=dnzQGQutnYFySwt3sp/l3OlnPP69A5Bqk2ThX3mPcTdZljaXiUQhCSZL
-   pAYsWLu30qE/VkOcLLtBTZWUhpNYqTrsajbMcolM8RJviY4uGWhaKtsXO
-   CL52eDdZ8NbBW1Al/X15lRKmASV/pW3Tn8I5RmotRcv9HHvBfcX/H+aji
-   9t1wFlIPjG+mBJnYNKUv131ieQGmOUf96h0eWHM1Rq6baofPEGRaQPcyh
-   VZpcf/2j2Y355g3YlrCWMbUvJwGrnUcfbv6W11dqh5B6moR4K61LXWYVq
-   IahdCmY9ESOjHUHvvZ96J6Gdu7+NHjHcYdhSZzB1GjZzU2vY1AndE9Bp7
-   A==;
-X-CSE-ConnectionGUID: OQRvaHHnQEO9wplcqjJYNw==
-X-CSE-MsgGUID: WSziOiixQMmmqqTfnZPDSw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11570"; a="60801143"
-X-IronPort-AV: E=Sophos;i="6.18,312,1751266800"; 
-   d="scan'208";a="60801143"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2025 02:05:53 -0700
-X-CSE-ConnectionGUID: 26GSf5U+SGeo9v4Gz4X99g==
-X-CSE-MsgGUID: NgK0KKJgTxaTXa84cPwZrA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,312,1751266800"; 
-   d="scan'208";a="210227998"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa001.fm.intel.com with ESMTP; 03 Oct 2025 02:05:51 -0700
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id 6B68395; Fri, 03 Oct 2025 11:05:50 +0200 (CEST)
-Date: Fri, 3 Oct 2025 11:05:50 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Markus Probst <markus.probst@posteo.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Mika Westerberg <westeri@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: of: make it possible to reference gpios probed in
- acpi in device tree
-Message-ID: <20251003090550.GC2912318@black.igk.intel.com>
-References: <20251002215759.1836706-1-markus.probst@posteo.de>
- <20251003045431.GA2912318@black.igk.intel.com>
- <940aad63e18a1415983a9b8f5e206f26a84c0299.camel@posteo.de>
+	s=arc-20240116; t=1759488909; c=relaxed/simple;
+	bh=cAECDx1sSxxHnbecn6VuOU03juzMj+AYiQE0DPv5YUE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ElVaPf7bPj2CNp/WnBT5oOM6UtQbuheFrMnlxi8gusSTpQJcW6SsflCIrdd75YsptA6bmMdj82k4M+Q0v24kXQYd71cKepmIQbvJ6zVtdnoQ+BoH2yxj8jCJLtUypidI+w3EWb7vKwPN2S/+mcPNYtUnhEdn/hKGHGin/2k6GY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Dt+2do/4; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-57f1b88354eso2038322e87.1
+        for <linux-gpio@vger.kernel.org>; Fri, 03 Oct 2025 03:55:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1759488905; x=1760093705; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cAECDx1sSxxHnbecn6VuOU03juzMj+AYiQE0DPv5YUE=;
+        b=Dt+2do/46SGcsGlqutC2Q/beezSoVs9eXPKN5p4FKJxnCrCkMHXrFEv1Pa0koWb1E0
+         E3ylkTaRcOxyh6BZxHlh+rP9wzmHFm1G7KxB2fVhYuaG6x589AbsxP6vxrSvRrS5vR3x
+         oh+kBAzL3k6rz1y8rRZi7VMcbKuVRc1z+QRe+tJJLeZqIC9jEIj7LCWdNXNjAjOzm/XE
+         B48aP0YzfnBskXW5Xy5JNslpK4lkwWyMtGGcWHydOubqHA2wHw/iGjFPnS7pZMs01azt
+         Y3V8rr5hGGRgUITB7xI4DWDkwDg/eR1PARpPsg1VkjP+gdv+dyCsyGIPFtgoclSivWzQ
+         pDbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759488905; x=1760093705;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cAECDx1sSxxHnbecn6VuOU03juzMj+AYiQE0DPv5YUE=;
+        b=VMLnYKqZo7p0NHfHFCdGCo9qSs9XNf/bw1CrLkNJPAYbZifz82W+wXH6GJ1mc6O6mu
+         HAORszDlAcrtjvnC9xxq1wDyQ0n0868u6rVZlKxXleVtndI+O7YmYGomCTaxmqBWWH8Y
+         CRA40ha0sJrWaWtsh+agWuKshqXS517r0JIuWJ45ysbd+hfEmRGV/y84a8p4IUJE5/ef
+         JMwYmqpGm4oN0wy97gUqdboeh33BYA9CF3vphcac6hkjuUgrJKaIOXcuIDxvPoLuTgJ+
+         toaeMO9K3cbpNZ6Yv5sGhAm6pD0TmXLzY/6KF2ttvQPm3b1n4mhHJtG4PGFRJP4+FveZ
+         uzRA==
+X-Forwarded-Encrypted: i=1; AJvYcCUqP3FteoxCj5LA8ZycARCudZrvxswonZQ3RFoQ3HXJQFANF3Qadj/xGDQ/1hLtIm+v/AmgSGhKYroZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJGWxqyh8ZedKYxnrQZLsQazCLUJ6fxSk5svpTDf8EUovlSYIC
+	tdcjY2go+nAM2GF1m4ugrFv0WxQzhI+dCMn0XxNtuLxf7UcNxPSBoMKEvVSUby28pOJPEIpxip3
+	yd5BVj3ZnMau1hl9QWALQ3FSZgWdwO4fZ64vJApEPKg==
+X-Gm-Gg: ASbGnctfGBxJZ+gEPxIevn5eTknqzwu0ybCjj9mVrfG/ujoDcu+Z0YASagNvknjLePi
+	6NCnYgXXnAD1BSEqk3g2H44MRJwutDAFSw4lRAnhtHFeOZz7S2XHouqY504zx85Y1JXUb0OMB/l
+	Ar+Btw9clqwSlbofF/wyHoO84b5TMJpDRZ8xCjgqy3EC6+qThyKqwEFhc5CmoauCq0PX4Ot1Ut9
+	O4p3LRM4MowTY5UwkxR/YvEy7jGHEp1zUQOisK1NsGftZGxXLgoZnxrrQi8hQ==
+X-Google-Smtp-Source: AGHT+IGo1Glv8ZcBFFkRNiPBtLkYhJhSKCGq1mD+OwgNLadjXj8hOaQai5wx3gNPSSCbTSSPaFVxfKegSNtXTCiWc44=
+X-Received: by 2002:a05:6512:b96:b0:57d:8870:e96a with SMTP id
+ 2adb3069b0e04-58cbc2a5121mr956262e87.43.1759488904866; Fri, 03 Oct 2025
+ 03:55:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <940aad63e18a1415983a9b8f5e206f26a84c0299.camel@posteo.de>
+References: <20250924-knp-tlmm-v1-0-acabb59ae48c@oss.qualcomm.com> <20250924-knp-tlmm-v1-2-acabb59ae48c@oss.qualcomm.com>
+In-Reply-To: <20250924-knp-tlmm-v1-2-acabb59ae48c@oss.qualcomm.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 3 Oct 2025 12:54:52 +0200
+X-Gm-Features: AS18NWD5PiAgE6Z0yAwhzxIEi8uvGvV7o02AtdVmxa4WxKd4BMM2EBFXwJajs9U
+Message-ID: <CAMRc=MdaT-ZSep-VYBUvS29XPje2FF4EvCfuUrXUUE1+8bGTaQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: qcom: add the tlmm driver for Kaanapali platforms
+To: Jingyi Wang <jingyi.wang@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	aiqun.yu@oss.qualcomm.com, tingwei.zhang@oss.qualcomm.com, 
+	trilok.soni@oss.qualcomm.com, yijie.yang@oss.qualcomm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 03, 2025 at 08:44:12AM +0000, Markus Probst wrote:
-> On Fri, 2025-10-03 at 06:54 +0200, Mika Westerberg wrote:
-> > Hi,
-> > 
-> > On Thu, Oct 02, 2025 at 09:58:05PM +0000, Markus Probst wrote:
-> > > sometimes it is necessary to use both acpi and device tree to
-> > > declare
-> > > devices. Not every gpio device driver which has an acpi_match_table
-> > > has
-> > > an of_match table (e.g. amd-pinctrl). Furthermore gpio is an device
-> > > which
-> > > can't be easily disabled in acpi and then redeclared in device
-> > > tree, as
-> > > it often gets used by other devices declared in acpi (e.g. via
-> > > GpioInt or
-> > > GpioIo). Thus a disable of acpi and migration to device tree is not
-> > > always
-> > > possible or very time consuming, while acpi by itself is very
-> > > limited and
-> > > not always sufficient. This won't affect most configurations, as
-> > > most of
-> > > the time either CONFIG_ACPI or CONFIG_OF gets enabled, not both.
-> > 
-> > Can you provide a real example where this kind of mixup can happen?
-> In my specific usecase for the Synology DS923+, there are gpios for
-> powering the usb vbus on (powered down by default), also for powering
-> on sata disks. (defining a fixed-regulator for the usb vbus for
-> example)
+On Thu, Sep 25, 2025 at 1:18=E2=80=AFAM Jingyi Wang
+<jingyi.wang@oss.qualcomm.com> wrote:
+>
+> Add support for Kaanapali TLMM configuration and control via the pinctrl
+> framework.
+>
+> Signed-off-by: Jingyi Wang <jingyi.wang@oss.qualcomm.com>
+> ---
 
-Okay regulators are Power Resources in ACPI.
-
-> > The
-> > ACPI ID PRP0001 specifically was added to allow using DT bindings in
-> > ACPI
-> > based systems.
-> Hmm, would requiring patching of the acpi tables. Not sure if it would
-> work with the fixed-regulator though, as it uses dev->of_node instead
-> of dev->fwnode. I will try to see if I can make it work this way.
-
-I think you can do this by using SSDT overlays instead of patching the
-tables:
-
-https://docs.kernel.org/admin-guide/acpi/ssdt-overlays.html
-
-There is configfs interface too.
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
