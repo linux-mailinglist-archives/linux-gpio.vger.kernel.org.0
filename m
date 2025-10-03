@@ -1,108 +1,121 @@
-Return-Path: <linux-gpio+bounces-26775-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26776-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DFE2BB6268
-	for <lists+linux-gpio@lfdr.de>; Fri, 03 Oct 2025 09:14:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E14D5BB6357
+	for <lists+linux-gpio@lfdr.de>; Fri, 03 Oct 2025 10:03:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0DF044E15C8
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Oct 2025 07:14:48 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6845D4E3973
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Oct 2025 08:03:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4C1D2376FC;
-	Fri,  3 Oct 2025 07:14:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6640D2641EE;
+	Fri,  3 Oct 2025 08:03:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aLyCd2oV"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="anGi7FIe"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A20231832
-	for <linux-gpio@vger.kernel.org>; Fri,  3 Oct 2025 07:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09DF235063
+	for <linux-gpio@vger.kernel.org>; Fri,  3 Oct 2025 08:03:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759475681; cv=none; b=Kth8ZgINiwNXHIhIvsl+anzXVt0LpiUTYKlalA3iC2zhjImJRNeyL+mL29g6olela3XYWoW3Zhu19jVOxhueWqGuFYqy/4EY/hHUj9+w18rX0c6csvsW8aIN7cSF2P58hs0H2BqqXQujaVKIYK31LHfrFDN/ydzV0D4A8oMDFnI=
+	t=1759478613; cv=none; b=WQBIhbiz6m+PL1qK7dU3Pd2vWBuyo9dnsCkq8Ji5Gv+RgcxBfWVILt0YwcPmcW9BI/L4LG8j9A4ICRdc6NKoF6uA6TQ23/nNjQVLzYTx+XOIYM1UHr1ZGB78I8CeOHMj//108/kl3FL5PBH1L3Vlfi/j+npaIOSiFztrWjZ9Ngc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759475681; c=relaxed/simple;
-	bh=e1mankBQsqTlkT/47qns+yAsg9e8OdnU7wK4bL7Cxj8=;
+	s=arc-20240116; t=1759478613; c=relaxed/simple;
+	bh=Tn6OdQEr8XVdAqEx3+HNvbieAPgE9iCGbOGXxcvqocc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PqR8jTl7/qvbF7UlHMACUhdgxmnjpYgfAa8rMUykLgUMLEwrGtyrxGyKOj17CPBydV/zZajKCweFBHoWq/sw2tPhGM7YAHhVDGQytDXpo1ecdB393ZjUyE+VzRGoT2Qje5hcFrcwoU9xTwvGRiXvoLPOZM99l/4C8KlvYR2C+yY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aLyCd2oV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36BCFC4AF09
-	for <linux-gpio@vger.kernel.org>; Fri,  3 Oct 2025 07:14:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759475681;
-	bh=e1mankBQsqTlkT/47qns+yAsg9e8OdnU7wK4bL7Cxj8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=aLyCd2oVtf2DcvfOJky91OkbzYlTEZi1+DlTuOEtGFTSN6icVr5TpD9iqHaqkBNYs
-	 E4VYNcX4Kospmj+YXNOe16UjGYD5aUko9tdw8AMqg1J6xhoM8ybrgpsbHZ6QkA9yqC
-	 enViwZ961D4vu2LVAiscUieKVf/WBx12lQMN2bJqMBdeIPw0ycdD/p/fafvc7vOXTX
-	 HI0dftFRNzD/CmLVRANCgxlCxRgR+68Z6CId37VTehPUE05Qq5hz7GepsdEZsKKFnp
-	 QgyU/pTm7EEOHtgKkyea+BgZZQqckVrFrwvQrotljSRBNM6c6iRnil7HRKMj8Z3yLo
-	 JgDg8qXm8dfHA==
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b5526b7c54eso1280092a12.0
-        for <linux-gpio@vger.kernel.org>; Fri, 03 Oct 2025 00:14:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXZEb8ooIKuoNAE/wrI2zRC2VmXhh4Jh0Do/CTy2doYr8h8GDntK7uwuWLmVQkjggpkKl0dTPj07zck@vger.kernel.org
-X-Gm-Message-State: AOJu0YwK0BcOZWYsg/RgqswGvo3FF1VmE8G45OCNdSxBxHYCH6lgI6KM
-	w/4S8ZOoflGYy9VPeuvqTQN498/zp+d7wWHovGELrGe31aZdKHtfVrSu279KJJ/37RjskFpeKD2
-	O5NybVFf/oYUbmB4nB6i1va7dK1FUqOg=
-X-Google-Smtp-Source: AGHT+IFi1G5SGzoCfQoYo09oOXzVchVUQnwqXoK2qsgzd7cvdMuGwR0SLJFyyWeKdqGyWBExudnAw/kwmPrFyMTs9Xo=
-X-Received: by 2002:a17:902:e78e:b0:269:8059:83ab with SMTP id
- d9443c01a7336-28e9a6639dfmr21972375ad.51.1759475680482; Fri, 03 Oct 2025
- 00:14:40 -0700 (PDT)
+	 To:Cc:Content-Type; b=UPNjnOc29estny0zVov/Sih0BKdgm5IePxOK0fam7fn9JR5QfywOX1t9tgvDQBnR2MKQJIEHM94s1N+/z4VytueK2BAETg2I2Sq6VCmUc6bgBK1bD1kUAs6sPFM2b8SR0mMDZAklefRuz/htT24aBSbq1GGoekgo+QkWUHxRMg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=anGi7FIe; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-36a6a39752bso21235801fa.0
+        for <linux-gpio@vger.kernel.org>; Fri, 03 Oct 2025 01:03:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1759478609; x=1760083409; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Tn6OdQEr8XVdAqEx3+HNvbieAPgE9iCGbOGXxcvqocc=;
+        b=anGi7FIeHk3rhZ/71lHGwH6BHBNm2Mr9ymqRKp3iSsnzYKi+4Hx6524fKGjCtupHHr
+         9v2+KbJge8rndvU4sT6zMcIgrqMevaGlA577wK++Siyb546laVFqq6xRd9OfWeslwAZq
+         6expFd7kzFGzvBgnlfbu+eiT6QrQ1SuQ+HdNojiWHp3OZlkLPnYba8qG+K8ZBB71XOSE
+         cUh1MYzD+uxwCJ4tZY/aI+IxylWDA/auEPGiqQqfQ+ybkLmY+aAcGkxweyMrClMF4Ohu
+         YCB9WpPFzAmA6KHvYxYjeyOAGKgCtfjsI5Nn8Chi3zfCrYJyM4b8MTon1oNKBlhRhFBw
+         7JDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759478609; x=1760083409;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Tn6OdQEr8XVdAqEx3+HNvbieAPgE9iCGbOGXxcvqocc=;
+        b=NEUfU/bwVWKT/EZWyYpAqp+CUwl3ejahJ/TU1MYatYYvCGCOGyYQeL1UinRB3IHxZp
+         W3VaKtBLzEX1UgPv5FO1u5btP+1ZSeAquVXzTVErCLwEjlj8tZ7JGRXcxO9kd9pYga/j
+         t5JNvcp58tnEqtkPXUKcjBg92854vKUJLw+rz6ttzprVjSO6za7JN6sa3SfYDOlAnNEy
+         2FjTubAZfaL/eLPC37uH4oam5Ih0l5bDec/N7t7oN6gXYizNa1pISpsRPOOeUaUMa8qL
+         7+HSLd2wMSXjGaQw2gcVHQw7rU7yu4fYx/7aVJKixd+FgOGlhzvWy/Ol7jfmf8qfzCkk
+         Mo8g==
+X-Forwarded-Encrypted: i=1; AJvYcCXH8Ay6JuLTWiLTAAzmFnD1wH7uVL6g76X4vwh/BmF0pwEoCw/65pK8xL3BumxXDA8CxVXKwSXCSn/B@vger.kernel.org
+X-Gm-Message-State: AOJu0YxozesGfQMRJSfq+9sAcNpsU5ps3ZIphNjoKEpbOBM+69wc7ZQx
+	vk85F2VnSO+hiq1IK+40HzrLYOdICj890jPqijda+7sHLmvj8QJHpaL7REN40Wbdx3WPt+839KX
+	7nXyfV/p8eivPyqpwDa9pQWRVQ+8vhejUhKVlpFwX+g==
+X-Gm-Gg: ASbGnctE7jM15WJnd3G4STZ4UFL3gsfJ8Xse+sR/60GZugc3Xr/1Stnnzhuut5tv3a1
+	qHkBf0TTHF0dFkER6ZtDHm/Tk56nhfUPDNaI1sXBgcAw/QVmPxH4r9hyn4f1soJORCXawKEMn+z
+	sVKYoikkZSXoQ8vA99sNFyGbfpoPjdsnkJtGvxMaGto82AbeXJLRU2H4oi4BtG5rICZfZgHg7FZ
+	GTKZH6dYfXIwFuJhb3f6g6H37T898E3vw9pt/X+8yddpkr1Ey34bamT0bQzubaFZF9Aias6
+X-Google-Smtp-Source: AGHT+IFyQ5SUlbaZKyC2n/giNpyOPrAzduQsXL67RzSc+/XD7ohW54+y3L1jWlwiS/5sdocrcIvEn67wqltom/d/bVU=
+X-Received: by 2002:a2e:bc8c:0:b0:337:e5fc:d2d with SMTP id
+ 38308e7fff4ca-374c37eb3f8mr6316451fa.24.1759478608652; Fri, 03 Oct 2025
+ 01:03:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250901054234epcas5p1e4b34b6ccb304b0306b1fe616edda9e2@epcas5p1.samsung.com>
- <20250901051926.59970-1-ravi.patel@samsung.com> <CAJKOXPe7Hn0qwg8jDMg4KoF-n4kziLQnvAx9vbNKEcS_KjzEdw@mail.gmail.com>
- <000001dc3428$dc2990c0$947cb240$@samsung.com>
-In-Reply-To: <000001dc3428$dc2990c0$947cb240$@samsung.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Date: Fri, 3 Oct 2025 16:14:28 +0900
-X-Gmail-Original-Message-ID: <CAJKOXPft4eHTbA6qPA2MzyKZPhcxGUbJmfR3ykPaGuXRvacnEw@mail.gmail.com>
-X-Gm-Features: AS18NWBorturPBW47S-AOdo4x9Et0GYnS5dR5FsCvXZoQdPFULPyyy5QFJ7b8vw
-Message-ID: <CAJKOXPft4eHTbA6qPA2MzyKZPhcxGUbJmfR3ykPaGuXRvacnEw@mail.gmail.com>
-Subject: Re: [PATCH v4 0/6] Add support for the Axis ARTPEC-8 SoC
-To: Ravi Patel <ravi.patel@samsung.com>
-Cc: jesper.nilsson@axis.com, mturquette@baylibre.com, sboyd@kernel.org, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	s.nawrocki@samsung.com, cw00.choi@samsung.com, alim.akhtar@samsung.com, 
-	linus.walleij@linaro.org, tomasz.figa@gmail.com, catalin.marinas@arm.com, 
-	will@kernel.org, arnd@arndb.de, ksk4725@coasia.com, kenkim@coasia.com, 
-	pjsin865@coasia.com, gwk1013@coasia.com, hgkim05@coasia.com, 
-	mingyoungbo@coasia.com, smn1196@coasia.com, shradha.t@samsung.com, 
-	inbaraj.e@samsung.com, swathi.ks@samsung.com, hrishikesh.d@samsung.com, 
-	dj76.yang@samsung.com, hypmean.kim@samsung.com, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
-	linux-arm-kernel@axis.com, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
+References: <20251002215759.1836706-1-markus.probst@posteo.de>
+In-Reply-To: <20251002215759.1836706-1-markus.probst@posteo.de>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 3 Oct 2025 10:03:16 +0200
+X-Gm-Features: AS18NWAb_UicKSU3Hkbg1b38gS-dxjPWCSbdeYjPWZM22VcaOTqo95Y1mZFMQ6U
+Message-ID: <CAMRc=Me3VLbmRksbrHmOdw8NxN7sxXjeuNFb9=6DzE=uLn0oAA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: of: make it possible to reference gpios probed in
+ acpi in device tree
+To: Markus Probst <markus.probst@posteo.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mika Westerberg <westeri@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-gpio@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 3 Oct 2025 at 14:45, Ravi Patel <ravi.patel@samsung.com> wrote:
+On Thu, Oct 2, 2025 at 11:58=E2=80=AFPM Markus Probst <markus.probst@posteo=
+.de> wrote:
 >
-> Hi Krzysztof,
->
-> The dt-bindings patch was merged earlier in v3 series (https://lore.kernel.org/linux-samsung-soc/175664688891.195158.13270877080433356384.b4-ty@linaro.org/ on 31st August)
-> into respective maintainer repo.
-> Then I have been asked to drop the applied v3 patches and send rebased v4 series (https://lore.kernel.org/linux-samsung-soc/15508cb4-843c-42d1-8854-5eabd79ca0df@kernel.org/)
->
-> Since the 4 patches from v3 series has been already merged, I have not the mentioned dependency while sending remaining v4 patches considering
-> It is going to same maintainer repo and it will be applied in sequence.
->
-> For future patches (like artpec-9), I will mention the dependency even it is merged in same repo.
->
+> sometimes it is necessary to use both acpi and device tree to declare
 
-I know what happened, so no need to explain that. Single maintainer
-repo doesn't matter, it's irrelevant and you mentioning it means you
-didn't read the maintainer soc profiles I asked. You still don't get
-the problem about what happened, at least judging by above expansion,
-and this means you will repeat the same mistakes.
+This is a rather controversial change so "sometimes" is not convincing
+me. I would like to see a user of this added in upstream to consider
+it.
 
-I will not proceed with further artpec patches until you really
-understand how the process works, through existing documentation.
-Please do your homework, to reduce the workload on maintainers.
+> devices. Not every gpio device driver which has an acpi_match_table has
+> an of_match table (e.g. amd-pinctrl). Furthermore gpio is an device which
+
+What is the use-case here because I'm unable to wrap my head around
+it? Referencing devices described in ACPI from DT? How would the
+associated DT source look like?
+
+Bart
+
+> can't be easily disabled in acpi and then redeclared in device tree, as
+> it often gets used by other devices declared in acpi (e.g. via GpioInt or
+> GpioIo). Thus a disable of acpi and migration to device tree is not alway=
+s
+> possible or very time consuming, while acpi by itself is very limited and
+> not always sufficient. This won't affect most configurations, as most of
+> the time either CONFIG_ACPI or CONFIG_OF gets enabled, not both.
+>
+> Signed-off-by: Markus Probst <markus.probst@posteo.de>
+> ---
 
