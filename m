@@ -1,121 +1,190 @@
-Return-Path: <linux-gpio+bounces-26773-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26774-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0CE5BB5EE4
-	for <lists+linux-gpio@lfdr.de>; Fri, 03 Oct 2025 06:54:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 69E7ABB5F5B
+	for <lists+linux-gpio@lfdr.de>; Fri, 03 Oct 2025 07:45:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A7DE54E3FCC
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Oct 2025 04:54:42 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8C94D4E4FE8
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Oct 2025 05:45:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DF061EA7DF;
-	Fri,  3 Oct 2025 04:54:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B744AA920;
+	Fri,  3 Oct 2025 05:45:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AzLBbP1A"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qhNIOAvP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320161547EE;
-	Fri,  3 Oct 2025 04:54:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC44A202C5C
+	for <linux-gpio@vger.kernel.org>; Fri,  3 Oct 2025 05:45:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759467278; cv=none; b=V0WrE8m0kjDgl+P/EafzDImaTcgbMQMyH9B49iRYuV0SVS+6bRA/GyioxqT5I3mFkMjddRz7mse8BrXGhXKfK/K3cd5ue9jWIeBWvbZXbJ+5hkaFuWxalLG8wmZXN5zx3hgGF0A8g7Lmh2MZHTcoKPMlq8dd+L0tzeq32O8gR+s=
+	t=1759470309; cv=none; b=Z4Fs3GPOcuSL5X47gKUQVDOyHHtNkr10bta3YlS654UEnFWN74VtkYkNaHSp0C53uxUb45zEj/HM4GJoInyU08OxdculBpa1mY2ZDlKZMcVVlSSdPtKXsTDBEhVw+FncyjF5Km/vnYfUVzaptfFD3qqnO90nzlOjteoxMGuNJnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759467278; c=relaxed/simple;
-	bh=fVzDhdiuZ0I8KofZ1ITv4SgXW0yFAeLo9kX/WXd7/ZI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yl0+uIYc0W1O1lBkjgy8XUfuBqKf9jHZXP9kDW+WtPpEXR/fSlNxV4+3xTb5Xe3UPoJ92ahMVP1wFbYJrmQUIUnlQTKQy154X7JOJ665y/FQ1Qbc578CSMtiThAXWHWt8MvNMHD+Aj1UpbzVWAin8mmU5Ys7ToEwlvf2LEx315s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AzLBbP1A; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759467276; x=1791003276;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fVzDhdiuZ0I8KofZ1ITv4SgXW0yFAeLo9kX/WXd7/ZI=;
-  b=AzLBbP1AMvYBQYMaQYnL3QhGQXsOuNXF/OL3lKdlDsLnizFpZHs92aFj
-   NrVNYSHMyDofMXDweKLKUITCP2G33/bdJW4Mma+5wY3ucYB1B27EsdSd5
-   aLNObmv7qFtvGanKCeNqvdqFR5ZoDyu7BT9Oe68bKEN4gFFYw8dns/f3q
-   GY6FdHUkn9Zk9P43V5l+2tm7aXgtfTHgV3ciEwDKJ99UFmD5XFKggLGxO
-   tqEjeHB05Px3HlYaW+KNQFwc/l2eOvC7wh7qFj34gdq83BTJaMddXXCCq
-   rGBSOmrGAVzC0o1Bz4tbjO8X9RF5xu2/Wf+dWgBESo01Xbxi6ICebgyj5
-   Q==;
-X-CSE-ConnectionGUID: JkUeY+C/QIaKwzmPhq6Pfg==
-X-CSE-MsgGUID: HTfCcecOTLe8ZEtcjKMIkg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11570"; a="64367267"
-X-IronPort-AV: E=Sophos;i="6.18,311,1751266800"; 
-   d="scan'208";a="64367267"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2025 21:54:35 -0700
-X-CSE-ConnectionGUID: onFewDEASoqT3LdBmm/MCg==
-X-CSE-MsgGUID: 356vVtU/QwipN43w7XVtcw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,311,1751266800"; 
-   d="scan'208";a="209886780"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by orviesa002.jf.intel.com with ESMTP; 02 Oct 2025 21:54:33 -0700
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id E2AAC95; Fri, 03 Oct 2025 06:54:31 +0200 (CEST)
-Date: Fri, 3 Oct 2025 06:54:31 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Markus Probst <markus.probst@posteo.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Mika Westerberg <westeri@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: of: make it possible to reference gpios probed in
- acpi in device tree
-Message-ID: <20251003045431.GA2912318@black.igk.intel.com>
-References: <20251002215759.1836706-1-markus.probst@posteo.de>
+	s=arc-20240116; t=1759470309; c=relaxed/simple;
+	bh=z6SlgDCFOBi9h8Zr7L2vlVB4Qa0jU3GPw7jT23nrerc=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=X9VWZXPgkX+2YbP8TelyDxHgckzIhUfvxK6bNj9kD1cwCl0k07Tum2ISnl6rcDIZ62B/TFCB+tzPEKVxZ9C3ehT5TSacxF1z+HjJPXKt16nml4xZCwedoqrgob0KlRh/fVnRPUH0dmg+YtVV9ac+Qz2sCt/MP3nRq4T4B//CDyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=qhNIOAvP; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20251003054503epoutp023cc11231dbfe51e365be7e823ca6f355~q5OtU88e42278222782epoutp02y
+	for <linux-gpio@vger.kernel.org>; Fri,  3 Oct 2025 05:45:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20251003054503epoutp023cc11231dbfe51e365be7e823ca6f355~q5OtU88e42278222782epoutp02y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1759470303;
+	bh=z6SlgDCFOBi9h8Zr7L2vlVB4Qa0jU3GPw7jT23nrerc=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=qhNIOAvPx6uoDmXmCwXxj95uNjHaogCl3At7rjuiK+JWfgK9h8VrxSVOiU3sbyb0L
+	 Q+exqebSpMvX+0OGrQ9/YD0NbLP9zB56J6LiXykWijBTKN3Q5CcqJe1Ec7KTNy08+5
+	 gvewGiE7y978nIop2sKmDL6fB/ScDQ9s48tWpY/Q=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
+	20251003054502epcas5p147f4ac05e859f93ced29739c9dd6db1b~q5OsU5Zyx2599925999epcas5p1B;
+	Fri,  3 Oct 2025 05:45:02 +0000 (GMT)
+Received: from epcas5p1.samsung.com (unknown [182.195.38.91]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4cdHgK5jwVz6B9m7; Fri,  3 Oct
+	2025 05:45:01 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20251003054501epcas5p17ec2255ee66f0ea533b8dc9a058e33e9~q5Oq8U0mF2736927369epcas5p12;
+	Fri,  3 Oct 2025 05:45:01 +0000 (GMT)
+Received: from FDSFTE411 (unknown [107.122.81.184]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20251003054456epsmtip1431a24308d04a35b90a24f8eb7b752a2~q5Omvl53I2540725407epsmtip16;
+	Fri,  3 Oct 2025 05:44:56 +0000 (GMT)
+From: "Ravi Patel" <ravi.patel@samsung.com>
+To: "'Krzysztof Kozlowski'" <krzk@kernel.org>
+Cc: <jesper.nilsson@axis.com>, <mturquette@baylibre.com>,
+	<sboyd@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <s.nawrocki@samsung.com>, <cw00.choi@samsung.com>,
+	<alim.akhtar@samsung.com>, <linus.walleij@linaro.org>,
+	<tomasz.figa@gmail.com>, <catalin.marinas@arm.com>, <will@kernel.org>,
+	<arnd@arndb.de>, <ksk4725@coasia.com>, <kenkim@coasia.com>,
+	<pjsin865@coasia.com>, <gwk1013@coasia.com>, <hgkim05@coasia.com>,
+	<mingyoungbo@coasia.com>, <smn1196@coasia.com>, <shradha.t@samsung.com>,
+	<inbaraj.e@samsung.com>, <swathi.ks@samsung.com>,
+	<hrishikesh.d@samsung.com>, <dj76.yang@samsung.com>,
+	<hypmean.kim@samsung.com>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
+	<linux-arm-kernel@axis.com>, <devicetree@vger.kernel.org>,
+	<linux-gpio@vger.kernel.org>
+In-Reply-To: <CAJKOXPe7Hn0qwg8jDMg4KoF-n4kziLQnvAx9vbNKEcS_KjzEdw@mail.gmail.com>
+Subject: RE: [PATCH v4 0/6] Add support for the Axis ARTPEC-8 SoC
+Date: Fri, 3 Oct 2025 11:14:55 +0530
+Message-ID: <000001dc3428$dc2990c0$947cb240$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20251002215759.1836706-1-markus.probst@posteo.de>
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQKKMINb5ygeSmhM7iNuat0EV5IHsAIgbsJhATIDr/2zOVZ1wA==
+Content-Language: en-in
+X-CMS-MailID: 20251003054501epcas5p17ec2255ee66f0ea533b8dc9a058e33e9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-541,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250901054234epcas5p1e4b34b6ccb304b0306b1fe616edda9e2
+References: <CGME20250901054234epcas5p1e4b34b6ccb304b0306b1fe616edda9e2@epcas5p1.samsung.com>
+	<20250901051926.59970-1-ravi.patel@samsung.com>
+	<CAJKOXPe7Hn0qwg8jDMg4KoF-n4kziLQnvAx9vbNKEcS_KjzEdw@mail.gmail.com>
 
-Hi,
+Hi Krzysztof,
 
-On Thu, Oct 02, 2025 at 09:58:05PM +0000, Markus Probst wrote:
-> sometimes it is necessary to use both acpi and device tree to declare
-> devices. Not every gpio device driver which has an acpi_match_table has
-> an of_match table (e.g. amd-pinctrl). Furthermore gpio is an device which
-> can't be easily disabled in acpi and then redeclared in device tree, as
-> it often gets used by other devices declared in acpi (e.g. via GpioInt or
-> GpioIo). Thus a disable of acpi and migration to device tree is not always
-> possible or very time consuming, while acpi by itself is very limited and
-> not always sufficient. This won't affect most configurations, as most of
-> the time either CONFIG_ACPI or CONFIG_OF gets enabled, not both.
+The dt-bindings patch was merged earlier in v3 series (https://lore.kernel.=
+org/linux-samsung-soc/175664688891.195158.13270877080433356384.b4-ty=40lina=
+ro.org/ on 31st August)
+into respective maintainer repo.=20
+Then I have been asked to drop the applied v3 patches and send rebased v4 s=
+eries (https://lore.kernel.org/linux-samsung-soc/15508cb4-843c-42d1-8854-5e=
+abd79ca0df=40kernel.org/)
 
-Can you provide a real example where this kind of mixup can happen? The
-ACPI ID PRP0001 specifically was added to allow using DT bindings in ACPI
-based systems.
+Since the 4 patches from v3 series has been already merged, I have not the =
+mentioned dependency while sending remaining v4 patches considering
+It is going to same maintainer repo and it will be applied in sequence.
 
-Regarding the patch, please spell gpio -> GPIO, acpi ACPI and so on.
+For future patches (like artpec-9), I will mention the dependency even it i=
+s merged in same repo.
 
-> Signed-off-by: Markus Probst <markus.probst@posteo.de>
-> ---
->  drivers/gpio/gpiolib-of.c | 241 +++++++++++++++++++++++---------------
->  1 file changed, 145 insertions(+), 96 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-> index 37ab78243fab..c472b86148b3 100644
-> --- a/drivers/gpio/gpiolib-of.c
-> +++ b/drivers/gpio/gpiolib-of.c
-> @@ -18,6 +18,7 @@
->  #include <linux/pinctrl/pinctrl.h>
->  #include <linux/slab.h>
->  #include <linux/string.h>
-> +#include <linux/acpi.h>
+Thanks,
+Ravi
 
-I'm not really sure if this is good idea to be honest.
+> -----Original Message-----
+> From: Krzysztof Kozlowski <krzk=40kernel.org>
+> Sent: 02 October 2025 12:10
+> To: Ravi Patel <ravi.patel=40samsung.com>
+> Cc: jesper.nilsson=40axis.com; mturquette=40baylibre.com; sboyd=40kernel.=
+org; robh=40kernel.org; krzk+dt=40kernel.org;
+> conor+dt=40kernel.org; s.nawrocki=40samsung.com; cw00.choi=40samsung.com;=
+ alim.akhtar=40samsung.com; linus.walleij=40linaro.org;
+> tomasz.figa=40gmail.com; catalin.marinas=40arm.com; will=40kernel.org; ar=
+nd=40arndb.de; ksk4725=40coasia.com; kenkim=40coasia.com;
+> pjsin865=40coasia.com; gwk1013=40coasia.com; hgkim05=40coasia.com; mingyo=
+ungbo=40coasia.com; smn1196=40coasia.com;
+> shradha.t=40samsung.com; inbaraj.e=40samsung.com; swathi.ks=40samsung.com=
+; hrishikesh.d=40samsung.com;
+> dj76.yang=40samsung.com; hypmean.kim=40samsung.com; linux-kernel=40vger.k=
+ernel.org; linux-arm-kernel=40lists.infradead.org; linux-
+> samsung-soc=40vger.kernel.org; linux-arm-kernel=40axis.com; devicetree=40=
+vger.kernel.org; linux-gpio=40vger.kernel.org
+> Subject: Re: =5BPATCH v4 0/6=5D Add support for the Axis ARTPEC-8 SoC
+>=20
+> On Mon, 1 Sept 2025 at 14:42, Ravi Patel <ravi.patel=40samsung.com> wrote=
+:
+> >
+> > Add basic support for the Axis ARTPEC-8 SoC which contains
+> > quad-core Cortex-A53 CPU and other several IPs. This SoC is an
+> > Axis-designed chipset used in surveillance camera products such as
+> > the AXIS Q1656-LE and AXIS Q3538-LVE.
+> >
+> > This ARTPEC-8 SoC has a variety of Samsung-specific IP blocks and
+> > Axis-specific IP blocks and SoC is manufactured by Samsung Foundry.
+> >
+> > List of Samsung-provided IPs:
+> > - UART
+> > - Ethernet (Vendor: Synopsys)
+> > - SDIO
+> > - SPI
+> > - HSI2C
+> > - I2S
+> > - CMU (Clock Management Unit)
+> > - Pinctrl (GPIO)
+> > - PCIe (Vendor: Synopsys)
+> > - USB (Vendor: Synopsys)
+> >
+> > List of Axis-provided IPs:
+> > - VIP (Image Sensor Processing IP)
+> > - VPP (Video Post Processing)
+> > - GPU
+> > - CDC (Video Encoder)
+> >
+> > This patch series includes below changes:
+> > - CMU (Clock Management Unit) driver and its bindings
+> > - GPIO pinctrl configuration and its bindings
+> > - Basic Device Tree for ARTPEC-8 SoC and boards
+> >
+>=20
+> Pretty useless cover letter since it doesn't say the damn most
+> important thing : dependency=21
+>=20
+> So this went unnoticed and now mainline (Linus tree) is affected. See
+> Linus rant on soc pull request
+>=20
+> I'm very disappointed, actually mostly on me that I picked this up.
+> Your future patches, need to improve quality and probably you need to
+> go back to how Git works and how maintainer trees are organized. Read
+> carefully, really carefully please maintainer profile .
+>=20
+> I'll be putting artpec 9 on hold, till you confirm what was wrong here
+> and how are you going to fix it in the future.
+
 
