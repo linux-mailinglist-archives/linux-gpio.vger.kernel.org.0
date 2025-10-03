@@ -1,170 +1,191 @@
-Return-Path: <linux-gpio+bounces-26778-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26779-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DC88BB6415
-	for <lists+linux-gpio@lfdr.de>; Fri, 03 Oct 2025 10:44:22 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DDABBB644B
+	for <lists+linux-gpio@lfdr.de>; Fri, 03 Oct 2025 10:51:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 01E713B225D
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Oct 2025 08:44:21 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id C19F7344A4B
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Oct 2025 08:51:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C383A26F2BC;
-	Fri,  3 Oct 2025 08:44:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0526C276059;
+	Fri,  3 Oct 2025 08:51:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="QbTbxKwF"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="m8AHGWe8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B26A11C1ADB
-	for <linux-gpio@vger.kernel.org>; Fri,  3 Oct 2025 08:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244EF267729
+	for <linux-gpio@vger.kernel.org>; Fri,  3 Oct 2025 08:51:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759481056; cv=none; b=LzkxwH92cQ/B3Q9U/ODuk9DqscZPHyq/t3f7i/a0AZhnbNIAhi2keq78gedMaiSZVwquXCX1G/8WuaSHLJOB8NeGfO+8UZdR3WfW0WVoD/uPJ1pxlYkRkTQnuOPMs1RvrcPb9E2gRKeMAanSG77O06jZRkNqjzxPGrGBmcEAZjE=
+	t=1759481506; cv=none; b=a+CtXxM+mJBSh+B8s0eIrAo4cIbRTTPRrqyNQamrRGObgCJxiFka8hRh1uzG0hjUS4cIISIhzxcsEf6IZGZyIoR0p5cw4LxCi8zP8NEKmJK4sIdkMK8j00izn77aOoPfnfn56QSnU+zLDAOyb6Ra3amktK38+t3/x6xbGvfO+xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759481056; c=relaxed/simple;
-	bh=gDmLNlBn7QFC1Dnl0Qfod3cP1ocPLcIYdIyxP3+GMW4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YjFmCtKd42feDfBTodI2jj5w4Cl5/orUJLr+4XRKJbIQNmyRgw0OztkbIU4lKVQjNHFz+IInlYOHYZoOdpti8osmckvl3A5lO87p0MbCLLoEO0GKNamhkwlOMRUiho1HbQ9Eo4TWswSDR3ilnwqcCm8PNMIH7ljyU9iPIpxYOuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=QbTbxKwF; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 0049A240101
-	for <linux-gpio@vger.kernel.org>; Fri,  3 Oct 2025 10:44:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de; s=2017;
-	t=1759481053; bh=gDmLNlBn7QFC1Dnl0Qfod3cP1ocPLcIYdIyxP3+GMW4=;
-	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version:Autocrypt:OpenPGP:From;
-	b=QbTbxKwFQcvxLykltBBTykoPpcOVJqAbgG5wY9ohv/zCSB2xrJ4yUwP22oMYflwoY
-	 qm3pAZQqN2raqbPTKG5EdGCGAewXFyKbbP7wW3AzsRjitQtv/XV6Fi/X0ER7PtHwSe
-	 HGiytfpIz6T6ldoo7ea5TQ7X8vdaQc0x9voVFjkMzZ+KFvtreRDh3uoRUY+5C6ZKn5
-	 n5AcJ4NaLY2TC9mw0DXMLXZUjV6x7FMPm0vf9OL5tJ4qMKf+ezij27vK2Et2rxZRp8
-	 Qv/k6JbLkD4JPcbpFZAenheF797bSSHHevhPipYoQhYRp2G9DSHIV0iA20Al+3Td8C
-	 GoYqAsfsyWBJQ==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4cdMf40vQqz9rxR;
-	Fri,  3 Oct 2025 10:44:11 +0200 (CEST)
-Message-ID: <940aad63e18a1415983a9b8f5e206f26a84c0299.camel@posteo.de>
-Subject: Re: [PATCH] gpio: of: make it possible to reference gpios probed in
- acpi in device tree
-From: Markus Probst <markus.probst@posteo.de>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
-	 <brgl@bgdev.pl>, Mika Westerberg <westeri@kernel.org>, Andy Shevchenko
-	 <andriy.shevchenko@linux.intel.com>, linux-gpio@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Fri, 03 Oct 2025 08:44:12 +0000
-In-Reply-To: <20251003045431.GA2912318@black.igk.intel.com>
-References: <20251002215759.1836706-1-markus.probst@posteo.de>
-	 <20251003045431.GA2912318@black.igk.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1759481506; c=relaxed/simple;
+	bh=x2XT9zcVh7kzpD0X4tRTqt0/foxsWPu3XNzZKS/xTCM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MGUCsXeHORWH0qq1ldxY4ArW5jGdAMrpwFvkYw8vEBCjqq/4UX5UlGlIaXRrLPr/hu9Bn/QBP86Tm2HdqnHOzfE9fMjSYeceyHH7NgUkim99gguJjYRKg3ChVo4P5qxXbAjjyy/rQiD6V6eA+MvQS/0zv5QbpD7tqnr1uC2szVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=m8AHGWe8; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-367874aeeacso20643981fa.1
+        for <linux-gpio@vger.kernel.org>; Fri, 03 Oct 2025 01:51:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1759481503; x=1760086303; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YmsmH87Q3nsWkYHojOW1pGLDSq47SZ4os0x3/+bAd08=;
+        b=m8AHGWe8HvKSi7+9lYUVf2aMm16iHSkGGiFtwoQNHZgfx+2da1ua5h4lsvrCEf3kgT
+         8aO9ZQO+vP/KFj1w5aOcM10ArD2WvZX57bmNXwMYsd4keYfskgHkwNlGPRVW69h6jZ4e
+         ddWQFbDOkoTUggQpqzHA436NhCQtWOtsbb6uYYqIP7gOij2WqKzM+NiCav1naoZQyYsk
+         QK1J4iKhXr/o9ClW4mdqRfuzhpIWaaLqpaMhXTDoAd+ZZ//dpSj70i5qxPzn2oDwZG9N
+         CIXyAMx8DeOJBEU1Mfs+FTo744x58MqMlX620xpIEyKPJwJY7YqCGxFkA8/IOyt7bOSi
+         oHRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759481503; x=1760086303;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YmsmH87Q3nsWkYHojOW1pGLDSq47SZ4os0x3/+bAd08=;
+        b=ULgcADF7+rXnLG3C77bnV8gknHbqRg/8SbSLwj6nNVFFheXbglf8QJPbkvCMoeWsqP
+         2fZdvHi4Tg1Ovg8hkdYzFv9m93Yj7xxD05pWWNsHXdxBwYnmPXmsiClTNoLLxhLL/8+J
+         Wra0j8hHs8p6HmQ3tOx6UO6mkX1NWZ1v7APM+lKwaeWlrmLq/s6LnZiTo5SuoQZ44Qpp
+         ft3hPPre5lWoG+CqpEaT05LD/6lC8NFGZPAnHEVo0bWBuOzFsfQkYXvJyihm1Z6MWUBX
+         /dNR8tdfZT3xmhNm7gIelIp4jD7W4A3u6zQPu7iBFbykppnA/WGhgTXTgoRvsuGFk6Gs
+         iIRA==
+X-Forwarded-Encrypted: i=1; AJvYcCUNtvSI4cAdj4/sENnH4XB6Bb4H1TsVf6ay3qW0JSaAN+aKTU6EcWn5hdTUpsNnhpJVihzk1Boheva+@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaHdSFxq1PRMAzJaVTn/CyIzhSWTvHwdgh9o7Rz0HrJFjd0Dxf
+	k0tyUZiSFq66eo565AdOYOPOAsp2YB/vS6xpj1XBKLBqVS2FqRvrEgYicUbcaYZwvyey8raoe9t
+	KUCj1CMvdneM6hoGZYejeQ/o7qrPk6bTmT4rAODrIQQ==
+X-Gm-Gg: ASbGncvl3Kjz7rPiwniJ+aPTWKUyFt7IQp0ntsoeEFLKMyiGGSVZ2f152Brm3uUN3+z
+	S96MauadfeaTlnp75ifKTQM6hhFcjfnXfw7+8QPrl2SvRVvWRqQOdQuyoWC6I/f5WLpbGa0gnlL
+	/XHEwsHRnjSE1X5X+ax/n83lQQOaGD44AOYpMTPtRgDwKzMZCJoyr/R9V59JJFlkjn0EGOupwPR
+	38fFkZwswnmUDJGXQDCyQQ1OQ0uljLjdPEONaEpNZI9fZ80NLDhRvH+ssj42g==
+X-Google-Smtp-Source: AGHT+IGpVFhYHvvmq0k22AePxJXM3wxZnhvCRYnHq9Pngg2NH46casC/4XWUD4nLAbqyQDtuHaatgzMh2vzh8d67flE=
+X-Received: by 2002:a05:651c:12c1:b0:332:3562:9734 with SMTP id
+ 38308e7fff4ca-374c36c07f2mr6231941fa.8.1759481503006; Fri, 03 Oct 2025
+ 01:51:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Autocrypt: addr=markus.probst@posteo.de; prefer-encrypt=mutual;
-  keydata=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
-  aBeNN4ijKZchBXHPgVx+YtWRHfcm4l8=
-OpenPGP: url=https://posteo.de/keys/markus.probst@posteo.de.asc; preference=encrypt
+References: <20251002215759.1836706-1-markus.probst@posteo.de>
+ <CAMRc=Me3VLbmRksbrHmOdw8NxN7sxXjeuNFb9=6DzE=uLn0oAA@mail.gmail.com> <7f4057f25594ac3b50993a739af76b7b1430ee6a.camel@posteo.de>
+In-Reply-To: <7f4057f25594ac3b50993a739af76b7b1430ee6a.camel@posteo.de>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 3 Oct 2025 10:51:31 +0200
+X-Gm-Features: AS18NWCIhQoF-dv9QcLF1nIcoukTH-eCETtxxDfQif9_jQZhzC3c7G8RkGTaXOE
+Message-ID: <CAMRc=McioBjF3WCBu0ezzuL+JJTiEpF2fz1YpbToRpijpHfAEg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: of: make it possible to reference gpios probed in
+ acpi in device tree
+To: Markus Probst <markus.probst@posteo.de>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mika Westerberg <westeri@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-gpio@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2025-10-03 at 06:54 +0200, Mika Westerberg wrote:
-> Hi,
->=20
-> On Thu, Oct 02, 2025 at 09:58:05PM +0000, Markus Probst wrote:
-> > sometimes it is necessary to use both acpi and device tree to
-> > declare
-> > devices. Not every gpio device driver which has an acpi_match_table
-> > has
-> > an of_match table (e.g. amd-pinctrl). Furthermore gpio is an device
-> > which
-> > can't be easily disabled in acpi and then redeclared in device
-> > tree, as
-> > it often gets used by other devices declared in acpi (e.g. via
-> > GpioInt or
-> > GpioIo). Thus a disable of acpi and migration to device tree is not
-> > always
-> > possible or very time consuming, while acpi by itself is very
-> > limited and
-> > not always sufficient. This won't affect most configurations, as
-> > most of
-> > the time either CONFIG_ACPI or CONFIG_OF gets enabled, not both.
->=20
-> Can you provide a real example where this kind of mixup can happen?
-In my specific usecase for the Synology DS923+, there are gpios for
-powering the usb vbus on (powered down by default), also for powering
-on sata disks. (defining a fixed-regulator for the usb vbus for
-example)
-> The
-> ACPI ID PRP0001 specifically was added to allow using DT bindings in
-> ACPI
-> based systems.
-Hmm, would requiring patching of the acpi tables. Not sure if it would
-work with the fixed-regulator though, as it uses dev->of_node instead
-of dev->fwnode. I will try to see if I can make it work this way.
+On Fri, Oct 3, 2025 at 10:40=E2=80=AFAM Markus Probst <markus.probst@posteo=
+.de> wrote:
+>
+> On Fri, 2025-10-03 at 10:03 +0200, Bartosz Golaszewski wrote:
+> > On Thu, Oct 2, 2025 at 11:58=E2=80=AFPM Markus Probst
+> > <markus.probst@posteo.de> wrote:
+> > >
+> > > sometimes it is necessary to use both acpi and device tree to
+> > > declare
+> >
+> > This is a rather controversial change so "sometimes" is not
+> > convincing
+> > me. I would like to see a user of this added in upstream to consider
+> > it.
+> >
+> > > devices. Not every gpio device driver which has an acpi_match_table
+> > > has
+> > > an of_match table (e.g. amd-pinctrl). Furthermore gpio is an device
+> > > which
+> >
+> > What is the use-case here because I'm unable to wrap my head around
+> > it? Referencing devices described in ACPI from DT? How would the
+> > associated DT source look like?
+> In my specific usecase for the Synology DS923+, there are gpios for
+> powering the usb vbus on (powered down by default), also for powering
+> on sata disks. An example for a regulator defined in DT using a gpio in
+> ACPI (in this case controlling the power of on of the usb ports):
+>
+>         gpio: gpio-controller@fed81500 {
+>                 acpi-path =3D "\\_SB_.GPIO";
+>                 #gpio-cells =3D <2>;
+>         };
+>
+>         vbus1_regulator: fixedregulator@0 {
+>                 compatible =3D "regulator-fixed";
+>                 regulator-name =3D "vbus1_regulator";
+>                 regulator-min-microvolt =3D <5000000>;
+>                 regulator-max-microvolt =3D <5000000>;
+>                 gpio =3D <&gpio 0x2a 0x01>;
+>         };
+>
+> - Markus Probst
+> >
 
->=20
-> Regarding the patch, please spell gpio -> GPIO, acpi ACPI and so on.
->=20
-> > Signed-off-by: Markus Probst <markus.probst@posteo.de>
-> > ---
-> > =C2=A0drivers/gpio/gpiolib-of.c | 241 +++++++++++++++++++++++----------=
--
-> > ----
-> > =C2=A01 file changed, 145 insertions(+), 96 deletions(-)
-> >=20
-> > diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-> > index 37ab78243fab..c472b86148b3 100644
-> > --- a/drivers/gpio/gpiolib-of.c
-> > +++ b/drivers/gpio/gpiolib-of.c
-> > @@ -18,6 +18,7 @@
-> > =C2=A0#include <linux/pinctrl/pinctrl.h>
-> > =C2=A0#include <linux/slab.h>
-> > =C2=A0#include <linux/string.h>
-> > +#include <linux/acpi.h>
->=20
-> I'm not really sure if this is good idea to be honest.
+Krzysztof: Could you please look at this and chime in? Does this make any s=
+ense?
+
+> > Bart
+> >
+> > > can't be easily disabled in acpi and then redeclared in device
+> > > tree, as
+> > > it often gets used by other devices declared in acpi (e.g. via
+> > > GpioInt or
+> > > GpioIo). Thus a disable of acpi and migration to device tree is not
+> > > always
+> > > possible or very time consuming, while acpi by itself is very
+> > > limited and
+> > > not always sufficient. This won't affect most configurations, as
+> > > most of
+> > > the time either CONFIG_ACPI or CONFIG_OF gets enabled, not both.
+> > >
+> > > Signed-off-by: Markus Probst <markus.probst@posteo.de>
+> > > ---
+> > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >=
+ > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > =
+> > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >=
+ > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > =
+> > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >=
+ > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > =
+> > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >=
+ > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > =
+> > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >=
+ > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > =
+> > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >=
+ > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > =
+> > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >=
+ > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > =
+> > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >=
+ > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > =
+> > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >=
+ > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > =
+> > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >=
+ > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > =
+> > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >=
+ > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > =
+> > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >=
+ > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > =
+> > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >=
+ > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > =
+> > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >=
+ > > > > > > > > > >
+
+[snip]
+
+What happened here with your mailer?
+
+Bart
 
