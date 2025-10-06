@@ -1,81 +1,81 @@
-Return-Path: <linux-gpio+bounces-26814-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26815-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06E65BBDDCC
-	for <lists+linux-gpio@lfdr.de>; Mon, 06 Oct 2025 13:28:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 749E6BBDDC9
+	for <lists+linux-gpio@lfdr.de>; Mon, 06 Oct 2025 13:28:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BAC854EBBC0
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Oct 2025 11:28:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2CB021884AA1
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Oct 2025 11:28:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AAD31E1A3D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C84E826C3B0;
 	Mon,  6 Oct 2025 11:28:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="KrWyeGx7"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="fcuuqbOc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 197F8233155
-	for <linux-gpio@vger.kernel.org>; Mon,  6 Oct 2025 11:28:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C289826B96A
+	for <linux-gpio@vger.kernel.org>; Mon,  6 Oct 2025 11:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759750086; cv=none; b=uHq+Tr8TQsGgJWCNNuYMnPzcuikVDL9VQF2Rue2oM0lYLWh98aZf6FkPJry9MhSvQdF2DGQxbmCg58/orWhS+rDZPEvL+y7QEvH28eKijEDoy8tLyEvPbe3zwvEskMg6O/Q/EoNqLIIk5VrRAllju2hAcLnAoANXbzTq/Zg0C1c=
+	t=1759750087; cv=none; b=ezuhhomZaBrJh+WdhPL7Hg+cSNQoSTwWKvG9GjUPEOPwKu7NfWwEPrDVFW3iCjkkR2wivS2l1abVPjRH7WaKa1gNHI4AGjMZwEuu+wjdGChPLUOgAG0e551BmpD8NLIbYSJEmdXx++oKfCJKq+v90JQHGsu/nYxs31FN0Tcz3ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759750086; c=relaxed/simple;
-	bh=/d/Aj394saDjf8ZKZply0mVabxbwUCFvrMHspWpCQ0M=;
+	s=arc-20240116; t=1759750087; c=relaxed/simple;
+	bh=QHF2yECTx+14f0+wycw104Dat/J556ngFHy70sVevcE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=n1QUgqjpEwWb6juMTAXBmIgFi3WnkkJVtn/Pw1k628EfYYA4kQzo57ErvihQv7J8CvIEF+5MoY6BruxT2rJBJb2uL01yI7LINF4lPUsEdb1ixjA/zsmqQbqkPWpDgoEvj6Nb15MI9/9lEBod9wXkoTR0fMRJI3qVgjeFNd0orP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=KrWyeGx7; arc=none smtp.client-ip=209.85.221.49
+	 In-Reply-To:To:Cc; b=gEd3ySB8FccjQFjGCnL+XKeXhTpPdUI3x4jmkdMnOvWCDBe/pBVX2Pl0EcqchwlxSDoYwdRNLn8T3A3jMtyKgR+hl3ag6ljR7MGv9iwFUNsdusO2V8H7DWJ++iLF1wHYQihNl6Iy3KVNOcH7vRkmlE3+Ob4ZVSp6AC9n/pI/2y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=fcuuqbOc; arc=none smtp.client-ip=209.85.221.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3ee130237a8so3214115f8f.0
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Oct 2025 04:28:04 -0700 (PDT)
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3fc36b99e92so4083355f8f.0
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Oct 2025 04:28:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1759750083; x=1760354883; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1759750084; x=1760354884; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Onbh0NBd+W0cW/s14N4bH0blIyY0xCCFGNbjWx9C1c8=;
-        b=KrWyeGx7FGK/G7FkFXmNgveaSyfzjUbZUnMJ1EzK/zkkpqJ4pP4HJzJ3qGRtfaUe47
-         0LBxPoLLj7OpKCCEcsz04R7twVjo4Sm+pRr+QkWRbRvKrWbogBPr2Fud3N2Lfjq7BNTv
-         h5LnGNrav6095D533c7hspnvXJ1oUQFlfunfEhapZ3HB6eFTDemHiPp4I2uAIdWhrHjI
-         A6FVMS+lYEoCl2i3DLyLrY5D7TK04U/38kxa3JtegwKliWgOA5JAgVOxh+0h2enHNN9P
-         OdosYQYpbmIIkRIf+jtCYB4vJBjjeoKDbe/FVzaT2QenKOY3XDHomtvAZpLwavq6AdJ8
-         IegQ==
+        bh=CTgA63gPXp7Uoi5c3II+BP/dXMI5ITwHGF7SBtFOZkQ=;
+        b=fcuuqbOcqt7o5VFvY0EKf8igPkYYaW5H5ksox9hlyYX0ksK+uLMSvxSZGjtOc0hG+Y
+         +n0mDue+44pANVeTJ7O0UyGSRGVrp7+gyef+OWAw9DOd1qi79GWJnbDfi8mCKx3cAPMu
+         Sw1uQWfR5bAjAQjnQEatS01vUY6KTltOZj5+jb2L9qq46NEUMxjKSGSap1ddzSOLrPT1
+         C0A2Y57J6uS5rbmvNJrTa07Lx3TA4dlwxAe6tFAd0ikrDR4Ucp+ytX1aGz5kkyJIl42U
+         wg2cLLiVNQHZ/es+5d1ZUpo3OO4bbMnGNT7czKWI5X4A1kvgPWQ2IVWpqTNGTJVed6go
+         Ma4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759750083; x=1760354883;
+        d=1e100.net; s=20230601; t=1759750084; x=1760354884;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Onbh0NBd+W0cW/s14N4bH0blIyY0xCCFGNbjWx9C1c8=;
-        b=mafQ5j3uMHbVAzHZ8Vodw8FXnyhqUGcR2kTW63pjhxegDJcBCXqTf/dcu9quk3XWqX
-         AYroJL0m2aimr2oLUSUvw4yapgtRJyX7qyOj8P0gbHUunnaCPrzkHH+ndKj1OHH9HCVd
-         bXiU8e80LcUYV65Af8vCpvfDtXGeEUW2z6esrxrQPTnrTlzHVwU6SuX5jy1tBYElNzOt
-         q9r9vPfx4YmPUt48g/S2qxCSGVRpyhIrbrVNTLMchTC8vLA2pVLscPQQg2L4p2rjREnA
-         pFepu4dwUycgYPgRcIC0bM4nptI5K5LE/ZwlupVjtagm64MZeW1+sce52SjvEHEwTYih
-         0upg==
-X-Gm-Message-State: AOJu0YzDNyTQSfhA5BYD0C2+WSouiCe04bHyy9GsBQHGSKzd/N+gcSAg
-	PKW2yyKfWASUpToak7poOF5IsAfc0r9M8wWsEoEjS6c13aOZjxPNn2rGmsnI2nJS7Y0=
-X-Gm-Gg: ASbGncthDFaUqMnfG7ZvQi3DptlM6E12Cb7Ify2tKdGwp0ioUwVpmRnDqa5loDJy5EQ
-	wnZEEdsxAgITwwHtD4IOpEhwxumh6TOJwuGN0LwLttopzeUnxVTCLw4k+g+WUn2jfceoVwLMy8n
-	TC8pODaOxC+fpgodbKyXDzEDwLr9OzdF7qj0UXsBqGrBfwWbaXwiOZjs37maBH8aw8LaYV8jtth
-	JcamPw5KK+IthGemB3cH0T4C05yKvVv4w4jUwl6ST/40bE1LPiYeYDGb6SjSlGMxNuecATzFaUB
-	/q57a6y9PiUy9Qt0uVKXAhCoWlc3RAoFnn9pfAQmmsNvmpCIHk96mftx0FsU49nvNt9RdXG8E32
-	rVeMaLgWqrW8PbecjmnmK60xXOB8FcKQia60FW/mXiZQ5vueNYOho
-X-Google-Smtp-Source: AGHT+IGQjUoM5Z7mz66y1j+3Q4b6m43oM6/xxCRA63OZYy7qynZoAFat/+qyHdqId3Ugo+O35dg1RQ==
-X-Received: by 2002:a05:6000:420d:b0:425:7e38:419f with SMTP id ffacd0b85a97d-4257e3841c4mr1141667f8f.16.1759750083048;
-        Mon, 06 Oct 2025 04:28:03 -0700 (PDT)
+        bh=CTgA63gPXp7Uoi5c3II+BP/dXMI5ITwHGF7SBtFOZkQ=;
+        b=AVKu7IknHFYFr0MULfRbeN62hrXQ/ipKNiFAI55Yrfn4N2SM4JobFOGabMAccJ5pUa
+         M+0XoiQVXfHhOjW1hYZ+pjmlqfZKUSubczzquJCLZD8rOmks6cNe1LTdZm/nfoaZ17L+
+         uwz7Yh56O8bMN/QaNFpT+Mjcj4Toev03BO5bhTbsg0AKXKnTBFLOCOUmBwvgaga07gRj
+         lDOzYqpJ+9ZzQviw1AGHTnzCxdgOWdq0BvCYCcAdbM69Tf7lStMK03erMBF+X1fMFEoc
+         1f//IFcdfM6hRPOvzhuzWStPT8Ce5dcOB3dGsQ2xFUoBerK3uMUNOunu09TeafCCqpj8
+         Hz9g==
+X-Gm-Message-State: AOJu0YxcxqS6kJNw0fu2CTkE2hzJQUNDZAK+5XQxS5gBXtlvjMTGP7ZX
+	EBQUAWo9TPHK1tI01oSkgJyizm/A/+LOse0A2WLfmcWIyGBbU7YAKU8bOxroeTEJowc=
+X-Gm-Gg: ASbGncsRW9I/auIrP9H7iPjZsgihIgQU6Pxk6Dd9u8O2WQtB8EyRluKzqwOOwLF0Sie
+	RIwG8NZc/3tdvFrbp9O2nlR9R/R71nyqI1uHZImTdcNzDUx4v1dBveBb3lmKPhksWTGLgqXBdEo
+	8XjBUg3coALQhzfMnnG9JIKZN9dRjQV8LCIuKphWaWexmlVouK3687Iz8XfRv3xNC6S+kohv17f
+	gnc3CdQyeHMHwcX3LJJtVkJHWfq4EZNNfhten1loulHJjJVNs9YmwZ+/VwEWjGoaeAnuTvjiT1H
+	CAdREGfR9jQyhGFSz93V2tZIYZV+RUnN/RVRKUqTp/xrD2Q3CpSpS4OpTrBXcllC+dn3CeODfIN
+	50T9u9KK4oim9ZeFb97oc/Ys8l28p1rdUGtKWbktv1g==
+X-Google-Smtp-Source: AGHT+IFEumsnrAI1gLbB55Cmfo1ewXqINPzZdyhmg0JPsPocpwombj7TKB9HBg5CNavvnhPtqNHpEA==
+X-Received: by 2002:a05:6000:605:b0:3dc:1473:17fb with SMTP id ffacd0b85a97d-4255d2ca79fmr9459351f8f.20.1759750084007;
+        Mon, 06 Oct 2025 04:28:04 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:ed2b:276f:1a72:aac0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4255d8f017esm21078167f8f.47.2025.10.06.04.28.01
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4255d8f017esm21078167f8f.47.2025.10.06.04.28.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Oct 2025 04:28:01 -0700 (PDT)
+        Mon, 06 Oct 2025 04:28:03 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 06 Oct 2025 13:27:47 +0200
-Subject: [PATCH libgpiod 2/7] tests: gpiosim: don't allow clearing hogs on
- active devices
+Date: Mon, 06 Oct 2025 13:27:48 +0200
+Subject: [PATCH libgpiod 3/7] tests: gpiosim: selftests: shrink the
+ self-test code
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -84,7 +84,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251006-gpiosim-valid-lines-v1-2-b399373e90a9@linaro.org>
+Message-Id: <20251006-gpiosim-valid-lines-v1-3-b399373e90a9@linaro.org>
 References: <20251006-gpiosim-valid-lines-v1-0-b399373e90a9@linaro.org>
 In-Reply-To: <20251006-gpiosim-valid-lines-v1-0-b399373e90a9@linaro.org>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -92,49 +92,256 @@ To: Linus Walleij <linus.walleij@linaro.org>,
 Cc: linux-gpio@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=847;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6396;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=2/dWsynaEkrqT1U7fX4k7TpLTG7yFtbo8Avi7Fewt0o=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBo46e+547sNbpqqeOz+jW9+mQhX+gIXlFt988/E
- BoO4KsK/eWJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaOOnvgAKCRARpy6gFHHX
- cjEmD/430V/QvLS2ZnCa4iCRmS8OwvO/8TlLwzsqpgpgxUA8IbsHsMWkxJCcwp4usORdu8sdPPO
- hm6bIk6/YpWYMMp+4I99s6AHfVTHUjD8qLHDa0UVzwFZG/iQC+pwvOwpwPODS4BklASGHTWsSCw
- lts9p0aRJXy7COcsP2bS7youfWdF3mA1xBwOxp0fICp7pqCJwUr8mTvoWm8UBvTildcYcR8tzBU
- j+AgIO2tJkHiDuzL8adytNt7Bx+V+xZW4THu04EdGZzUzQOcPKM2/6COhjCtPouhk7WvosfmIXD
- vbf9Xs27BvH4xXHKv05MQqRfpPLn/ypW5gsR6x3tt3Qk9lxFTSy2dq/SRAXWyQjqrzkBUfNUCnI
- RrqAaKIvW44KrOXYH6b4nf2jnI01UYzzRcEurlOlUWP5Eyao3Uwu9wmY71uMwjjqtDYKVoJLGmc
- saNrYtMs4zZJOQHgLeFkOiXLYxP8q7SuFdCFaI8fs4ozF4779LZzyYbK/2CWgp7R+D3QYiyPn31
- vS+/gydIN0tutgWwfhINw76AwoTiKgrMIVMjm0KzYMrLK0+/Rh4TvZuGx3yLGk3dF1TbwOG5HVO
- m1yrM6c2uQnu3Qj68aXGCesp2/Uh+TCD71p4D8tVEQSf1U+LboSnKktBg4XpY4ZCepKs7slkpD3
- mU0YZ9UzaXAhbIg==
+ bh=pxNGN2JAAzSHxbecxGrkPwuuMt88Jfm9lAAXRLrzNns=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBo46e+3jWkCSu4NPF+tQmA1I4tGgW9GgSKghL4O
+ NifEbPWFe6JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaOOnvgAKCRARpy6gFHHX
+ cuFzD/90c6vhOceNn32hug2wOOwJiu4NSVeLxfJHhCts4sCqvDUct0v4tGxz1fvxsqoiuvK4ryA
+ gQ5mlpXSLuRaG8nZ+WYPLYvfCUvSAMXVZ46Sah4X4hn1vXjmq8mG7+dqz+oFf7wuSUS4uJzTRAn
+ y6Fugo4qoG7QQ7X+mirdghbClMx1OAeUKLGjWHJ0NTmR/HnUQtgVBhS/Sys6K+xnJu/G9OhDCa1
+ CDofYedjh8aw3PqD4D97EctkZJKBz6QzxnBjo13lIjwX75BIW3RJKBj1O9SdFms2dW+5WA6OomN
+ 8alyp9l3eiZL23v4hCvwEpQssaotEfJ9Ba0MG1riccZw941Y/zoFGU9rz+iufNZRIW0OQ85UGu9
+ BqHl0/Kzr2y0ZfXiesXSpzZs6grWUCpXWY4AdGUSjqcRkpTQr3rYLnJQDMR+mLJ+PM5bAd3Jc7t
+ DElVfRWaujt8VAOU9FvgRC3Qm9RymAbGVGhFISmfS832qhFwxoLPXvH9d80GIEOsKcVbDIPfQR7
+ qac/uNyxEJ0b1AvFT1dwuhkOx17cJAOqmIV2ydIVH1MJgSmU20FATeTzyqSYwXGEX6a3T74P6GX
+ CHqbO428+5hcEkEoLf7z/VWYEiBF5AhfKyXD5JwB/J0MIONipX4EOynMCL36hNG3znSRgr3Evaj
+ gI8dRG8yD5a5vmw==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Check if the GPIO device is pending in gpiosim_bank_clear_hog() before
-actually trying to remove the hog directory.
+Most tests failures end with a perror() print and an exit(1) so wrap it
+in a helper function and a macro and shrink the code.
 
-Fixes: a2f6e8cd3540 ("libgpiosim: new library for controlling the gpio-sim module")
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- tests/gpiosim/gpiosim.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tests/gpiosim/gpiosim-selftest.c | 112 ++++++++++++++-------------------------
+ 1 file changed, 39 insertions(+), 73 deletions(-)
 
-diff --git a/tests/gpiosim/gpiosim.c b/tests/gpiosim/gpiosim.c
-index 81bfd574817a1259f6b30dab52051a907414fd83..d48257534b887c8e9694afce80894a895379e1f1 100644
---- a/tests/gpiosim/gpiosim.c
-+++ b/tests/gpiosim/gpiosim.c
-@@ -1116,6 +1116,9 @@ GPIOSIM_API int gpiosim_bank_clear_hog(struct gpiosim_bank *bank,
- 				       unsigned int offset)
+diff --git a/tests/gpiosim/gpiosim-selftest.c b/tests/gpiosim/gpiosim-selftest.c
+index a8c460dd6abdd98e7558ef81a5a6828d02d1a410..749974b974a5b24205477bacee29e1b5df64668e 100644
+--- a/tests/gpiosim/gpiosim-selftest.c
++++ b/tests/gpiosim/gpiosim-selftest.c
+@@ -6,7 +6,8 @@
+ 
+ #include "gpiosim.h"
+ 
+-#define UNUSED __attribute__((unused))
++#define UNUSED		__attribute__((unused))
++#define NORETURN	__attribute__((noreturn))
+ 
+ static const char *const line_names[] = {
+ 	"foo",
+@@ -16,111 +17,89 @@ static const char *const line_names[] = {
+ 	"barfoo",
+ };
+ 
++static NORETURN void die(const char *msg)
++{
++	perror(msg);
++	exit(EXIT_FAILURE);
++}
++
++#define expect_or_die(_cond, _msg) \
++	do { \
++		if (!(_cond)) \
++			die(_msg); \
++	} while (0)
++
+ int main(int argc UNUSED, char **argv UNUSED)
  {
- 	char buf[64];
-+	
-+	if (!dev_check_pending(bank->dev))
-+		return -1;
+ 	struct gpiosim_bank *bank0, *bank1;
+ 	struct gpiosim_dev *dev;
+ 	struct gpiosim_ctx *ctx;
++	enum gpiosim_pull pull;
++	enum gpiosim_value val;
+ 	int ret, i;
  
- 	snprintf(buf, sizeof(buf), "line%u/hog", offset);
+ 	printf("Creating gpiosim context\n");
  
+ 	ctx = gpiosim_ctx_new();
+-	if (!ctx) {
+-		perror("unable to create the gpios-sim context");
+-		return EXIT_FAILURE;
+-	}
++	expect_or_die(ctx, "unable to create the gpios-sim context");
+ 
+ 	printf("Creating a chip\n");
+ 
+ 	dev = gpiosim_dev_new(ctx);
+-	if (!dev) {
+-		perror("Unable to create a chip");
+-		return EXIT_FAILURE;
+-	}
++	expect_or_die(dev, "Unable to create a chip");
+ 
+ 	printf("Creating a bank\n");
+ 
+ 	bank0 = gpiosim_bank_new(dev);
+-	if (!bank0) {
+-		perror("Unable to create a bank");
+-		return EXIT_FAILURE;
+-	}
++	expect_or_die(bank0, "Unable to create a bank");
+ 
+ 	printf("Creating a second bank\n");
+ 
+ 	bank1 = gpiosim_bank_new(dev);
+-	if (!bank1) {
+-		perror("Unable to create a bank");
+-		return EXIT_FAILURE;
+-	}
++	expect_or_die(bank1, "Unable to create a bank");
+ 
+ 	printf("Setting the label of bank #2 to foobar\n");
+ 
+ 	ret = gpiosim_bank_set_label(bank1, "foobar");
+-	if (ret) {
+-		perror("Unable to set the label of bank #2");
+-		return EXIT_FAILURE;
+-	}
++	expect_or_die(ret == 0, "Unable to set the label of bank #2");
+ 
+ 	printf("Setting the number of lines in bank #1 to 16\n");
+ 
+ 	ret = gpiosim_bank_set_num_lines(bank0, 16);
+-	if (ret) {
+-		perror("Unable to set the number of lines");
+-		return EXIT_FAILURE;
+-	}
++	expect_or_die(ret == 0, "Unable to set the number of lines");
+ 
+ 	printf("Setting the number of lines in bank #2 to 8\n");
+ 
+ 	ret = gpiosim_bank_set_num_lines(bank1, 8);
+-	if (ret) {
+-		perror("Unable to set the number of lines");
+-		return EXIT_FAILURE;
+-	}
++	expect_or_die(ret == 0, "Unable to set the number of lines");
+ 
+ 	printf("Setting names for some lines in bank #1\n");
+ 
+ 	for (i = 0; i < 5; i++) {
+ 		ret = gpiosim_bank_set_line_name(bank0, i, line_names[i]);
+-		if (ret) {
+-			perror("Unable to set line names");
+-			return EXIT_FAILURE;
+-		}
++		expect_or_die(ret == 0, "Unable to set line names");
+ 	}
+ 
+ 	printf("Hog a line on bank #2\n");
+ 
+ 	ret = gpiosim_bank_hog_line(bank1, 3, "xyz",
+ 				    GPIOSIM_DIRECTION_OUTPUT_HIGH);
+-	if (ret) {
+-		perror("Unable to hog a line");
+-		return EXIT_FAILURE;
+-	}
++	expect_or_die(ret == 0, "Unable to hog a line");
+ 
+ 	printf("Enabling the GPIO device\n");
+ 
+ 	ret = gpiosim_dev_enable(dev);
+-	if (ret) {
+-		perror("Unable to enable the device");
+-		return EXIT_FAILURE;
+-	}
++	expect_or_die(ret == 0, "Unable to enable the device");
+ 
+ 	printf("Setting the pull of a single line to pull-up\n");
+ 
+ 	ret = gpiosim_bank_set_pull(bank0, 6, GPIOSIM_PULL_UP);
+-	if (ret) {
+-		perror("Unable to set the pull");
+-		return EXIT_FAILURE;
+-	}
++	expect_or_die(ret == 0, "Unable to set the pull");
+ 
+ 	printf("Reading the pull back\n");
+ 
+ 	ret = gpiosim_bank_get_pull(bank0, 6);
+-	if (ret < 0) {
+-		perror("Unable to read the pull");
+-		return EXIT_FAILURE;
+-	}
++	expect_or_die(ret >= 0, "Unable to read the pull");
+ 
+ 	if (ret != GPIOSIM_PULL_UP) {
+ 		fprintf(stderr, "Invalid pull value read\n");
+@@ -129,13 +108,10 @@ int main(int argc UNUSED, char **argv UNUSED)
+ 
+ 	printf("Reading the value\n");
+ 
+-	ret = gpiosim_bank_get_value(bank0, 6);
+-	if (ret < 0) {
+-		perror("Unable to read the value");
+-		return EXIT_FAILURE;
+-	}
++	val = gpiosim_bank_get_value(bank0, 6);
++	expect_or_die(val != GPIOSIM_VALUE_ERROR, "Unable to read the value");
+ 
+-	if (ret != GPIOSIM_VALUE_ACTIVE) {
++	if (val != GPIOSIM_VALUE_ACTIVE) {
+ 		fprintf(stderr, "Invalid value read\n");
+ 		return EXIT_FAILURE;
+ 	}
+@@ -143,28 +119,19 @@ int main(int argc UNUSED, char **argv UNUSED)
+ 	printf("Disabling the GPIO device\n");
+ 
+ 	ret = gpiosim_dev_disable(dev);
+-	if (ret) {
+-		perror("Error while disabling the device");
+-		return EXIT_FAILURE;
+-	}
++	expect_or_die(ret == 0, "Error while disabling the device");
+ 
+ 	printf("Re-enabling the GPIO device\n");
+ 
+ 	ret = gpiosim_dev_enable(dev);
+-	if (ret) {
+-		perror("Unable to re-enable the device");
+-		return EXIT_FAILURE;
+-	}
++	expect_or_die(ret == 0, "Unable to re-enable the device");
+ 
+ 	printf("Checking the pull has been reset\n");
+ 
+-	ret = gpiosim_bank_get_pull(bank0, 6);
+-	if (ret < 0) {
+-		perror("Unable to read the pull");
+-		return EXIT_FAILURE;
+-	}
++	pull = gpiosim_bank_get_pull(bank0, 6);
++	expect_or_die(pull != GPIOSIM_PULL_ERROR, "Unable to read the pull");
+ 
+-	if (ret != GPIOSIM_PULL_DOWN) {
++	if (pull != GPIOSIM_PULL_DOWN) {
+ 		fprintf(stderr, "Invalid pull value read\n");
+ 		return EXIT_FAILURE;
+ 	}
+@@ -172,15 +139,14 @@ int main(int argc UNUSED, char **argv UNUSED)
+ 	printf("Re-disabling the device\n");
+ 
+ 	ret = gpiosim_dev_disable(dev);
+-	if (ret) {
+-		perror("Error while re-disabling the device");
+-		return EXIT_FAILURE;
+-	}
++	expect_or_die(ret == 0, "Error while re-disabling the device");
+ 
+ 	gpiosim_bank_unref(bank1);
+ 	gpiosim_bank_unref(bank0);
+ 	gpiosim_dev_unref(dev);
+ 	gpiosim_ctx_unref(ctx);
+ 
++	printf("ALL TESTS OK\n");
++
+ 	return EXIT_SUCCESS;
+ }
 
 -- 
 2.48.1
