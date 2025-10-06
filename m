@@ -1,31 +1,31 @@
-Return-Path: <linux-gpio+bounces-26836-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26837-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8C2CBBE77F
-	for <lists+linux-gpio@lfdr.de>; Mon, 06 Oct 2025 17:20:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AD416BBE78C
+	for <lists+linux-gpio@lfdr.de>; Mon, 06 Oct 2025 17:20:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 00B4F3BDF4A
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Oct 2025 15:20:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 06D503B8983
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Oct 2025 15:20:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C7372D6E4F;
-	Mon,  6 Oct 2025 15:20:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3275C2D6E4F;
+	Mon,  6 Oct 2025 15:20:44 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD32196C7C
-	for <linux-gpio@vger.kernel.org>; Mon,  6 Oct 2025 15:20:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBC327FD44
+	for <linux-gpio@vger.kernel.org>; Mon,  6 Oct 2025 15:20:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759764008; cv=none; b=QZ8wvr0ORGhjvtVVs+Ofp0MzCXqB6Ad39M+eQ1LPlCcRQBaQvqDMkepu8rSnPvMnXA2YS/7aQx9KKaDBPymgwh3Gmb1fMJcWJyWgk0k+GshwZRXc6OWjx2hKGsHgE/THZfQmun3nqkNwA4mI7pXeRaPOn632PVzys4GOlVO5QOU=
+	t=1759764044; cv=none; b=iycxqrnmfyYn6BQ1soRygw82c0nIJ8cMKR24PNrhkdpy3rXwZ3GOh19UA/i+vyCc+5NI3M5NVFmKuF3YH/jeN7q3kshaTejQyoZJRksoaJ1m/tZNBTi/DudZfFef3yWYPiMb3A2cJswB+jXpL7p7qhjNV+enXE3s+G2/2esE2Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759764008; c=relaxed/simple;
-	bh=nt6EudYMp3xYvVKECpHlYySFvcdOrLQvMt3e2mjhQj8=;
+	s=arc-20240116; t=1759764044; c=relaxed/simple;
+	bh=6hToGOFXXAg1wy2SZROJ2/S2Yw28zFL9TM4bTt277Ho=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YDhx/vvbtmHSqXAyr06q9FDFOSNwKCLiaVZW17sOekbPfJS/SVp4W6gJNIaZWjtIbCSxUdKx54fhp1jTFmfFx9HT00gsOUCbfWEG2SwYsXMfEXociMuo4jVxBFy6T8H946zrcVwzrduGeoQ10+D4Lk5aJceQF6j9Yy+qqBmDNgw=
+	 Content-Type:MIME-Version; b=nraLUshMxRBROUNfTijwA8rb715fCQQ5X1+GvQVIl24V5ZZ+7h5a8CyI0shYKYoPy7d1CSQQ1nx+1qjabuu6adj6RqwyJ6nHjGrOPg/9Up/zN0fRCj61I1r29AVyQIvT4dXA9MlFzm1dgHZ6gpz3bLgjOBIo2Xy8So4QPRfeEIA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -33,20 +33,19 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <p.zabel@pengutronix.de>)
-	id 1v5n05-0008Ce-1r; Mon, 06 Oct 2025 17:19:45 +0200
+	id 1v5n0r-0008P0-5o; Mon, 06 Oct 2025 17:20:33 +0200
 Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <p.zabel@pengutronix.de>)
-	id 1v5n04-002Fjr-0B;
-	Mon, 06 Oct 2025 17:19:44 +0200
+	id 1v5n0q-002Fjx-26;
+	Mon, 06 Oct 2025 17:20:32 +0200
 Received: from pza by lupine with local (Exim 4.98.2)
 	(envelope-from <p.zabel@pengutronix.de>)
-	id 1v5n03-00000000C9V-44XM;
-	Mon, 06 Oct 2025 17:19:43 +0200
-Message-ID: <95bbec130437846d4b902ce4161ccf0f33c26c59.camel@pengutronix.de>
-Subject: Re: [PATCH 7/9] reset: make the provider of reset-gpios the parent
- of the reset device
+	id 1v5n0q-00000000CG1-2Ml9;
+	Mon, 06 Oct 2025 17:20:32 +0200
+Message-ID: <c3faa8981b942cdaa99a0c232e670aa9dddcebda.camel@pengutronix.de>
+Subject: Re: [PATCH 6/9] reset: order includes alphabetically in reset/core.c
 From: Philipp Zabel <p.zabel@pengutronix.de>
 To: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij	
  <linus.walleij@linaro.org>, Andy Shevchenko
@@ -58,10 +57,10 @@ To: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-acpi@vger.kernel.org, Bartosz Golaszewski
  <bartosz.golaszewski@linaro.org>
-Date: Mon, 06 Oct 2025 17:19:43 +0200
-In-Reply-To: <20251006-reset-gpios-swnodes-v1-7-6d3325b9af42@linaro.org>
+Date: Mon, 06 Oct 2025 17:20:32 +0200
+In-Reply-To: <20251006-reset-gpios-swnodes-v1-6-6d3325b9af42@linaro.org>
 References: <20251006-reset-gpios-swnodes-v1-0-6d3325b9af42@linaro.org>
-	 <20251006-reset-gpios-swnodes-v1-7-6d3325b9af42@linaro.org>
+	 <20251006-reset-gpios-swnodes-v1-6-6d3325b9af42@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.56.1-1 
@@ -76,85 +75,15 @@ X-SA-Exim-Mail-From: p.zabel@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-Hi Bartosz,
-
 On Mo, 2025-10-06 at 15:00 +0200, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >=20
-> Auxiliary devices really do need a parent so ahead of converting the
-> reset-gpios driver to registering on the auxiliary bus, make the GPIO
-> device that provides the reset GPIO the parent of the reset-gpio device.
-> To that end move the lookup of the GPIO device by fwnode to the
-> beginning of __reset_add_reset_gpio_device() which has the added benefor
-
-Typo: benefit.
-
-> of bailing out earlier, before allocating resources for the virtual
-> device, if the chip is not up yet.
+> For better readability and easier maintenance order the includes
+> alphabetically.
 >=20
 > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  drivers/reset/core.c | 18 ++++++++++--------
->  1 file changed, 10 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-> index 5a696e2dbcc224a633e2b321da53b7bc699cb5f3..ad85ddc8dd9fcf8b512cb0916=
-8586e0afca257f1 100644
-> --- a/drivers/reset/core.c
-> +++ b/drivers/reset/core.c
-> @@ -849,11 +849,11 @@ static void __reset_control_put_internal(struct res=
-et_control *rstc)
->  	kref_put(&rstc->refcnt, __reset_control_release);
->  }
-> =20
-> -static int __reset_add_reset_gpio_lookup(int id, struct device_node *np,
-> +static int __reset_add_reset_gpio_lookup(struct gpio_device *gdev, int i=
-d,
-> +					 struct device_node *np,
->  					 unsigned int gpio,
->  					 unsigned int of_flags)
->  {
-> -	const struct fwnode_handle *fwnode =3D of_fwnode_handle(np);
->  	unsigned int lookup_flags;
->  	const char *label_tmp;
-> =20
-> @@ -868,10 +868,6 @@ static int __reset_add_reset_gpio_lookup(int id, str=
-uct device_node *np,
->  		return -EINVAL;
->  	}
-> =20
-> -	struct gpio_device *gdev __free(gpio_device_put) =3D gpio_device_find_b=
-y_fwnode(fwnode);
-> -	if (!gdev)
-> -		return -EPROBE_DEFER;
-> -
->  	label_tmp =3D gpio_device_get_label(gdev);
 
-This is the only remaining use of gdev in
-__reset_add_reset_gpio_lookup().
-It would make sense to move this as well and only pass the label.
-
-Given that all this is removed in patch 9, this is not super important.
-
->  	if (!label_tmp)
->  		return -EINVAL;
-> @@ -919,6 +915,11 @@ static int __reset_add_reset_gpio_device(const struc=
-t of_phandle_args *args)
->  	if (args->args_count !=3D 2)
->  		return -ENOENT;
-> =20
-> +	struct gpio_device *gdev __free(gpio_device_put) =3D
-> +		gpio_device_find_by_fwnode(of_fwnode_handle(args->np));
-
-We are mixing cleanup helpers with gotos in this function, which the
-documentation in cleanup.h explicitly advises against.
-
-I know the current code is already guilty, but could you take this
-opportunity to prepend a patch that splits the part under guard() into
-a separate function?
-
-I'd also move this block after the lockdep_assert_not_held() below.
-
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
 regards
 Philipp
