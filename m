@@ -1,278 +1,162 @@
-Return-Path: <linux-gpio+bounces-26810-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26811-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6141BBD7E3
-	for <lists+linux-gpio@lfdr.de>; Mon, 06 Oct 2025 11:48:03 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5C11BBDA95
+	for <lists+linux-gpio@lfdr.de>; Mon, 06 Oct 2025 12:18:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 635121891E9C
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Oct 2025 09:48:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7A8573B87C6
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Oct 2025 10:18:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63C07205E3B;
-	Mon,  6 Oct 2025 09:47:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24AA11F582C;
+	Mon,  6 Oct 2025 10:18:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pUyd3KOf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DCnGb2sH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37189126C05
-	for <linux-gpio@vger.kernel.org>; Mon,  6 Oct 2025 09:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427721CF96
+	for <linux-gpio@vger.kernel.org>; Mon,  6 Oct 2025 10:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759744076; cv=none; b=q+flOGL5dqbGPzGw0vXhqmQI/Y8cbWpVoXWEcRGbLYW4C5BItbM2zA8RzzLb/BH8cwG7RZ8mjGBbJhrkxU0VVbfHXLWsnW9neihHk4IGgyiy/oukajzKBW3r3qS8tRUK2izud4kEWD6pTpg3ksUUJfibhb13JJRkGA/x2CVQllY=
+	t=1759745922; cv=none; b=a/UMpAaMZmVArDirrm6eWezokuTdq55c3M/o4p9ffpPQBLoes6hY79OowLOIqgh5GZdXtFBazg32Yh3r9K+xV29SdsXe+gEAzT/v+kvOxGVUAjZho+XOUNwK19+bEeqEWSf36MZmfRDa6PXbmMsynffYpzWthCu5RXxK5YmuZVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759744076; c=relaxed/simple;
-	bh=NVc36TGbNflxbPQDRRl0haz/TUVlsWdECo1JWukAVH8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ErBmgGU7kwZzoFzznfDb5dxFJ2CsW1hz+LsbBUdhDfKebd1bdPx9Y1sqMKFMNqsb+XSJJBlVGqrS2TgoniKySQFDbj1vwTMLurFy5cTaxDELIjYFw3tM4s+km5sPPTg17ftpQ7mViPMEPpfmv6hdOMIa90wQInzFlT4RFgVQTHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pUyd3KOf; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-62fca216e4aso11344237a12.0
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Oct 2025 02:47:53 -0700 (PDT)
+	s=arc-20240116; t=1759745922; c=relaxed/simple;
+	bh=c8jgQD0fBWlSgKyeYFjHvB34q+vXTIrChfhGf3wnwrI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g7Z9gYiqO3ZDnQBK4cFcxobzHOUMb3BmWWPIPBCkNDDdg96X5AAvqMUKkrVg+isCFaGL+Tz1TbnimCdheuvRWarhZ5LCTzywXbCHitNKGOLefuhcUCQP//8KtsPhuPkVg384IH7/AA4DDpQqoG94tTix6hHd0GJKaZwFufJ5TgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DCnGb2sH; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-36ba647ac9fso38273721fa.0
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Oct 2025 03:18:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1759744072; x=1760348872; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NVc36TGbNflxbPQDRRl0haz/TUVlsWdECo1JWukAVH8=;
-        b=pUyd3KOf/ViqPgLWXTuDX6y5+iT3/e1CzssaJt/0S5qJ7h0NuM+qMuOqhlmV2TceoV
-         PSYCTE/FTbbGNMmAnB3UAudtb27GqkvXy81HmaZ91PkbpedDA8WDLrWvjCnyWtasnVCi
-         JxbbTRUWzMDNvNQoHqvpHQ7xKCZpq3Q9NmYO76PGjQt+0e2Q5UlnJrGAYSZQqg0zeILK
-         QoHGOSOMhoivtPtL4WlxEckSC8On0qEScBVFsWqmQ7G+V1NRycsXUcXucJol6bpa8VM+
-         oCLcj72Xo6FXcORA0cxXDJAFSQSO9m0Vb/grqt9ir3Yz7fBj3LBzaAGeHpVzwIUtGbLM
-         8qRg==
+        d=gmail.com; s=20230601; t=1759745919; x=1760350719; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R7ID9c6ife7EDvKhFFDHKe/ahl2zK6jAoYk9pzxb+kU=;
+        b=DCnGb2sHxADWkASivXlgvv5x6+BHBS8BLJau7PQXL1WWVeiPJhNHYxzqwnPpIpKqtN
+         gEYHhq3rDGMl0WTqcyjDZR2VEmEs0OK1PtmZVy6ikbClgvK642P6mrjp8e1qQUcJcURj
+         PUWq8UPLQZplhLt5POJaKRJpOeDLHZ+0muxV4wCrUewMhiO9t0HfYn6FCewtbvgGJn9i
+         UgOOuSgMo+pi7B1PH4hrWYmEHt62LQMjcdQoxH6ZadjXr+u3lJzA/5RCcmOFxFJ/bEfY
+         KIWOndmBrw2zY3eYohG59hRpkpEhLedDU9RpznUL4eZ3KaPD4Y7HvugD5RR/Yo3O+FqL
+         nIQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759744072; x=1760348872;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NVc36TGbNflxbPQDRRl0haz/TUVlsWdECo1JWukAVH8=;
-        b=CyrJFpI1zXsZRQA8nHfnp7erltnDJRyhpBgZejpRqLxb+HLuUxtILYSAIdcqe+TVIA
-         Dhapp9NbgcXkRCH91qK0FovJi11eZLEnP0x1qDv4fv+E3NIrGDa5Tl1ikqEsRljWABN/
-         asKxjLdHzfqdWBNHM2nxI2QCYDofSsuJ8yz5agyEDbK5NdiczggYl3F9CguIyMlKFiR8
-         XEdrWd321/E/HxN3M2/6neESxTlRoxv9ihrOgaWWiHtjpwYZZJUxiJWWgUCxBJ/iMEnd
-         oNndaRqgzOe3mmJes07o1MUJeBHmudozp0SrAeRgHZmmbwiZTNQ797de/qQy31Y/lqeR
-         Gn+g==
-X-Forwarded-Encrypted: i=1; AJvYcCV0A8mOowcdpTg5ox7Fxa91UGuvVpqD+0pQLG6gPcmIM5YdikyentEqBvRhSSWHV75v95yo7ZL1Gr46@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyyk/cbhVF9X38xpckYLi3WZv39BpJPpSrmZRxSydbIYEhC4kQ2
-	LweYkVvWtVbLWoMa+BtCJIdPHp89unmeKTl5s9S6bXj0XqUJnWbINhgDJqHVgsVgw28=
-X-Gm-Gg: ASbGncsPqXEM+mTCw8i8oWQIkzoMKh10OYrRk2BH6Y2fXBYe4+kblmE3sc0fDB75k8v
-	iQI9kWvpasX2KTRu6EJrOJZ4kpilFHebtMrbLDZkaSuB0jlCTecO5eqCK3gXlvbtQ4AFfC6Pg7B
-	9XfbDEyzMlY1BFTofXGWo8Zh8CCqB85R/rzCvC6YEXDzMsz+hlK9Y0CRB1Z7l5GCDjYEPbKG5S8
-	dC//3m7OEDuZHGzkcfBIQ8Jeu0IZGmQ1VgLRCRkHywTaRG4/Dk+8624yBhkv/OAtLCCBawI6JIE
-	XSBoa3mPYsaLaq9RycYbiQusc3uKNxFsqK9nbZXyp+7xVXvc42on8Y5aPFnkQdrJGtUNVESnCcb
-	VFBtX3BYENp7Wi9VTOqKoE9EnWk01DooSHP3Oy+X2z8yvL4uGr/erPg==
-X-Google-Smtp-Source: AGHT+IFtzyuEM86nDZ1afipZ9gjtIoBXDJIw39RxT9KiIYyBACUqX8txUSjLeqwb6sRvJD4CXeYSfA==
-X-Received: by 2002:a05:6402:13d6:b0:636:6e11:2fd1 with SMTP id 4fb4d7f45d1cf-638fcb65499mr14959712a12.4.1759744072376;
-        Mon, 06 Oct 2025 02:47:52 -0700 (PDT)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6378811f14bsm9884430a12.45.2025.10.06.02.47.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Oct 2025 02:47:51 -0700 (PDT)
-Message-ID: <a4834c957f518d9f172b5a2dd0b8cd34980c7653.camel@linaro.org>
-Subject: Re: [PATCH v2 02/17] regulator: dt-bindings: add s2mpg10-pmic
- regulators
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
-  Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>,  Lee Jones <lee@kernel.org>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski	 <brgl@bgdev.pl>, Peter
- Griffin <peter.griffin@linaro.org>, Will McVicker	
- <willmcvicker@google.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Date: Mon, 06 Oct 2025 10:47:50 +0100
-In-Reply-To: <20250611-statuesque-dolphin-of-felicity-6fbf54@kuoka>
-References: <20250606-s2mpg1x-regulators-v2-0-b03feffd2621@linaro.org>
-	 <20250606-s2mpg1x-regulators-v2-2-b03feffd2621@linaro.org>
-	 <20250611-statuesque-dolphin-of-felicity-6fbf54@kuoka>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-2 
+        d=1e100.net; s=20230601; t=1759745919; x=1760350719;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R7ID9c6ife7EDvKhFFDHKe/ahl2zK6jAoYk9pzxb+kU=;
+        b=OJ8MBL8p5yahIAuxP/4fIupy/QVZyTRJdVM50CUQg1l2TZH6OfDfOrNnFk1wzM6FOR
+         qAOvVlrxTO3FQlzKRpIIB9SwY3pXTKfWLPdAcyDAuRmsagtZy9VxKRgJbvxiG7jKr9Qz
+         NTiI64rnhdAzD1UzlweK27rRDwheLrcFnrvpe78OozZP8gLag27yQiLCiY5ZfR1bIzjT
+         ltq8wY34zKUJwCab+M80rc71tDZhi0gDbTxvAFlPZl8NtcM+GDECu2N0QCdFk8iZ6U4r
+         ddgPPyZZCHSDcBC1SOYkKIHaQOS6Y+PrrRN2q10JzmJ+SyKNtdbW0IdfmyLD3cakfaCE
+         pJ0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV2mIpgc97+ZHrrjM9uppbRpiBp97QXE9FFCZy2fSozqX69WwibutMOGF6Q1zDKRkNxWc7xrXF1vUa3@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1nKhzrc4/XYjR3pTlAGYjrnF6uEMSIXMW+wDZH+GbmlKCcUDM
+	c5f+0umQG76QuKpSWfW04C/OS59FTLKWvsYRs6JC/x9ewJkCtNOaY5WoN3MRgEyh/A+enoQ9ZFt
+	pwymmyIvVj5bCGRYg5Tyt9Rrs8yP5y9U=
+X-Gm-Gg: ASbGncut/N3YZcjCVypCpco77DZx75ApC8E4wEWcogJNFrGJf9CvKW2zx9WpbC0afmZ
+	CIZiZ3o1hrlErtoLDUeq1bROSnAcJ1xThyNcQNjlbr8mjfTwDRXZRbNwmDgwxLKvw0ynpWJX96B
+	8rpJ50jTPxuZMCfoJkNwUklTVrGBPI8tjssdKJjaeXpVYfLtjbRWNhi1aW9+/k2gK6pG/O3lxyl
+	aJoUq1vu+xETd7zGQDwzpNzZs7wVq1OK9HNydZsRw==
+X-Google-Smtp-Source: AGHT+IE5kaHCIQREur6bwR0bcHEnRu7SQVkT+R3gtQ45outMOheLGCbPhNJYJvMP5sZWse3tEcZGx68vveQoJHqgIRQ=
+X-Received: by 2002:a05:651c:41c5:20b0:375:d8c8:fe2e with SMTP id
+ 38308e7fff4ca-375d8c8fe4bmr11011501fa.26.1759745919117; Mon, 06 Oct 2025
+ 03:18:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20251006074934.27180-1-bigunclemax@gmail.com> <5af22765-b428-468a-8cc4-cddc561f4a50@topic.nl>
+In-Reply-To: <5af22765-b428-468a-8cc4-cddc561f4a50@topic.nl>
+From: Maxim Kiselev <bigunclemax@gmail.com>
+Date: Mon, 6 Oct 2025 13:18:27 +0300
+X-Gm-Features: AS18NWCxpXLgGFshs6THaQMHxUB8v_2QruCcnFk2Etv3mFTL-4uOqZFs6ytn27U
+Message-ID: <CALHCpMj=-N5kToZ7kKbzrpeoMM=Ky+_=J=JnwDmBVRx1OPgxhg@mail.gmail.com>
+Subject: Re: [PATCH v1] pinctrl: mcp23s08: Reset all output latches to default
+ at probe
+To: Mike Looijmans <mike.looijmans@topic.nl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Krzysztof,
+Hi
 
-On Wed, 2025-06-11 at 10:55 +0200, Krzysztof Kozlowski wrote:
-> On Fri, Jun 06, 2025 at 04:02:58PM GMT, Andr=C3=A9 Draszik wrote:
-> > The S2MPG10 PMIC is a Power Management IC for mobile applications with
-> > buck converters, various LDOs, power meters, RTC, clock outputs, and
-> > additional GPIO interfaces.
-> >=20
-> > It has 10 buck and 31 LDO rails. Several of these can either be
-> > controlled via software or via external signals, e.g. input pins
-> > connected to a main processor's GPIO pins.
-> >=20
-> > Add documentation related to the regulator (buck & ldo) parts like
-> > devicetree definitions, regulator naming patterns, and additional
-> > properties.
-> >=20
-> > S2MPG10 is typically used as the main-PMIC together with an S2MPG11
-> > PMIC in a main/sub configuration, hence the datasheet and the binding
-> > both suffix the rails with an 'm'.
-> >=20
-> > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-> >=20
-> > ---
-> > v2:
-> > - drop | (literal style mark) from samsung,ext-control-gpios
-> > =C2=A0 description
-> > ---
-> > =C2=A0.../regulator/samsung,s2mpg10-regulator.yaml=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 | 147 +++++++++++++++++++++
-> > =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
-> > =C2=A0.../regulator/samsung,s2mpg10-regulator.h=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 48 +++++++
-> > =C2=A03 files changed, 196 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/regulator/samsung,s2mpg1=
-0-regulator.yaml
-> > b/Documentation/devicetree/bindings/regulator/samsung,s2mpg10-regulator=
-.yaml
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..82f2b06205e9bdb15cf90b1=
-e896fe52c335c52c4
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/regulator/samsung,s2mpg10-regul=
-ator.yaml
-> > @@ -0,0 +1,147 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/regulator/samsung,s2mpg10-regulator=
-.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Samsung S2MPG10 Power Management IC regulators
-> > +
-> > +maintainers:
-> > +=C2=A0 - Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-> > +
-> > +description: |
-> > +=C2=A0 This is part of the device tree bindings for the S2MG10 Power M=
-anagement IC
-> > +=C2=A0 (PMIC).
-> > +
-> > +=C2=A0 The S2MPG10 PMIC provides 10 buck and 31 LDO regulators.
-> > +
-> > +=C2=A0 See also Documentation/devicetree/bindings/mfd/samsung,s2mps11.=
-yaml for
-> > +=C2=A0 additional information and example.
-> > +
-> > +definitions:
-> > +=C2=A0 s2mpg10-ext-control:
-> > +=C2=A0=C2=A0=C2=A0 properties:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 samsung,ext-control:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 description: |
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 These rails can=
- be controlled via one of several possible external
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (hardware) sign=
-als. If so, this property configures the signal the PMIC
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 should monitor.=
- For S2MPG10 rails where external control is possible other
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 than ldo20m, th=
-e following values generally corresponding to the
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 respective on-c=
-hip pin are valid:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 0=
- # S2MPG10_PCTRLSEL_ON - always on
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 1=
- # S2MPG10_PCTRLSEL_PWREN - PWREN pin
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 2=
- # S2MPG10_PCTRLSEL_PWREN_TRG - PWREN_TRG bit in MIMICKING_CTRL
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 3=
- # S2MPG10_PCTRLSEL_PWREN_MIF - PWREN_MIF pin
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 4=
- # S2MPG10_PCTRLSEL_PWREN_MIF_TRG - PWREN_MIF_TRG bit in MIMICKING_CTRL
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 5=
- # S2MPG10_PCTRLSEL_AP_ACTIVE_N - ~AP_ACTIVE_N pin
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 6=
- # S2MPG10_PCTRLSEL_AP_ACTIVE_N_TRG - ~AP_ACTIVE_N_TRG bit in MIMICKING_CTR=
-L
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 7=
- # S2MPG10_PCTRLSEL_CPUCL1_EN - CPUCL1_EN pin
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 8=
- # S2MPG10_PCTRLSEL_CPUCL1_EN2 - CPUCL1_EN & PWREN pins
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 9=
- # S2MPG10_PCTRLSEL_CPUCL2_EN - CPUCL2_EN pin
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 1=
-0 # S2MPG10_PCTRLSEL_CPUCL2_EN2 - CPUCL2_E2 & PWREN pins
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 1=
-1 # S2MPG10_PCTRLSEL_TPU_EN - TPU_EN pin
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 1=
-2 # S2MPG10_PCTRLSEL_TPU_EN2 - TPU_EN & ~AP_ACTIVE_N pins
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 1=
-3 # S2MPG10_PCTRLSEL_TCXO_ON - TCXO_ON pin
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 1=
-4 # S2MPG10_PCTRLSEL_TCXO_ON2 - TCXO_ON & ~AP_ACTIVE_N pins
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 For S2MPG10 ldo=
-20m, the following values are valid
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 0=
- # S2MPG10_PCTRLSEL_LDO20M_ON - always on
->=20
-> No, use standard regulator properties - regulator-always-on
->=20
->=20
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 1=
- # S2MPG10_PCTRLSEL_LDO20M_EN_SFR - VLDO20M_EN & LDO20M_SFR
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 2=
- # S2MPG10_PCTRLSEL_LDO20M_EN - VLDO20M_EN pin
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 3=
- # S2MPG10_PCTRLSEL_LDO20M_SFR - LDO20M_SFR in LDO_CTRL1 register
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 4=
- # S2MPG10_PCTRLSEL_LDO20M_OFF - disable
->=20
-> I don't think we allowed such property in the past.
-
-I've done some more investigation now - the reason we need to configure
-control of rails via signals (i.e. input pin on S2MPG1x) is that the PMU
-and power domains in particular control at least some of them.
-
-As an example, power domain g3d disable toggles an output pin on GS101,
-which is connected to the G3D_EN pin on S2MPG1x on Pixel. The regulator
-driver needs to configure all the G3D-related-PMIC rails to react to this
-signal. There a) is a large amount of flexibility as to which rail should
-react to which signal, and b) the bootloader doesn't configure (all of)
-them.
-
-Therefore, we need to be able to specify which rail should be controlled
-by which signal, both in DT and in the driver.
-
-The alternative would be do add explicit (driver-based) regulator control
-for each power domain, rather than having the PMU handle this. Such an
-approach appears suboptimal, because after all that's what the PMU is for.
-
-Additionally, there are sequencing requirements on enabling/disabling rails
-and when using the signals, the PMIC will ensure they're followed, whereas
-a driver would have to duplicate that information and could get it a) wrong=
+=D0=BF=D0=BD, 6 =D0=BE=D0=BA=D1=82. 2025=E2=80=AF=D0=B3. =D0=B2 11:04, Mike=
+ Looijmans <mike.looijmans@topic.nl>:
+>
+> On 06-10-2025 09:49, bigunclemax@gmail.com wrote:
+> > From: "Maksim Kiselev" <bigunclemax@gmail.com>
+> >
+> > It appears that resetting only the direction register is not sufficient=
 ,
-b) would use more CPU cycles due to additional code, and c) leave the rail
-on for longer than necessarily due to timer resolution.
+> > it's also necessary to reset the OLAT register to its default values.
+> >
+> > Otherwise, the following situation can occur:
+> >
+> > If a pin was configured as OUT=3D1 before driver probe(Ex: IODIR=3D1,IO=
+LAT=3D1),
+> > then after loading the MCP driver, the cache will be populated from
+> > reg_defaults with IOLAT=3D0 (while the actual value in the chip is 1).
+> > A subsequent setting OUT=3D0 will fail because
+> > mcp_update_bits(mcp, MCP_OLAT, ...) calls regmap_update_bits(),
+> > which will check that the value to be set (0) matches the cached value =
+(0)
+> > and thus skip writing actual value to the MCP chip.
+>
+> Maybe it's be better to fix the underlying issue: This driver should not =
+be
+> using a pre-populated regmap cache. Unless it performs a hard reset, the
+> driver has no way of knowing what the initial values are, it should just =
+read
+> them from the chip.
+>
 
-Also, it might not work in all cases, e.g. if the PMU disables the rail for
-the CPU, the Linux driver can not afterwards disable the PMIC rail anymore,
-leaving it unnecessarily enabled. Equally, the Linux driver can not disable
-the rail before turning off the power domain, as once the rail is off, the
-CPU/Linux can not execute any further code.
+I agree with you here, thought about it, but consider such a change
+too radical :)
 
+Okay, I'll remove the reg_defaults in the second version.
 
-Hope the above justifies the introduction of this property :-)
-
-
-Cheers,
-Andre'
+> >
+> > To avoid this, the OLAT register must be explicitly reset at probe.
+> >
+> > Fixes: 3ede3f8b4b4b ("pinctrl: mcp23s08: Reset all pins to input at pro=
+be")
+> > Signed-off-by: Maksim Kiselev <bigunclemax@gmail.com>
+> > ---
+> >   drivers/pinctrl/pinctrl-mcp23s08.c | 5 +++++
+> >   1 file changed, 5 insertions(+)
+> >
+> > diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinct=
+rl-mcp23s08.c
+> > index 78ff7930649d..23af441aa468 100644
+> > --- a/drivers/pinctrl/pinctrl-mcp23s08.c
+> > +++ b/drivers/pinctrl/pinctrl-mcp23s08.c
+> > @@ -622,6 +622,11 @@ int mcp23s08_probe_one(struct mcp23s08 *mcp, struc=
+t device *dev,
+> >       if (ret < 0)
+> >               return ret;
+> >
+> > +     /* Also reset all out latches to default values */
+> > +     ret =3D mcp_write(mcp, MCP_OLAT, 0x0);
+> > +     if (ret < 0)
+> > +             return ret;
+> > +
+> >       /* verify MCP_IOCON.SEQOP =3D 0, so sequential reads work,
+> >        * and MCP_IOCON.HAEN =3D 1, so we work with all chips.
+> >        */
+>
+> Mike.
+>
+>
+>
 
