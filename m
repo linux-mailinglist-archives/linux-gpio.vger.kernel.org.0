@@ -1,162 +1,144 @@
-Return-Path: <linux-gpio+bounces-26811-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26812-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5C11BBDA95
-	for <lists+linux-gpio@lfdr.de>; Mon, 06 Oct 2025 12:18:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 035E6BBDDC3
+	for <lists+linux-gpio@lfdr.de>; Mon, 06 Oct 2025 13:28:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7A8573B87C6
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Oct 2025 10:18:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A6A5F3B328A
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Oct 2025 11:28:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24AA11F582C;
-	Mon,  6 Oct 2025 10:18:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7451F26C399;
+	Mon,  6 Oct 2025 11:28:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DCnGb2sH"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="cMWj78wA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427721CF96
-	for <linux-gpio@vger.kernel.org>; Mon,  6 Oct 2025 10:18:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1D326B96A
+	for <linux-gpio@vger.kernel.org>; Mon,  6 Oct 2025 11:28:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759745922; cv=none; b=a/UMpAaMZmVArDirrm6eWezokuTdq55c3M/o4p9ffpPQBLoes6hY79OowLOIqgh5GZdXtFBazg32Yh3r9K+xV29SdsXe+gEAzT/v+kvOxGVUAjZho+XOUNwK19+bEeqEWSf36MZmfRDa6PXbmMsynffYpzWthCu5RXxK5YmuZVY=
+	t=1759750085; cv=none; b=Ga7/ZBiX793LuXrLC3e234WqVYIln2ko+MSFJI3+i3oVnHB4R0Ubo4cf0tqW8WH899IwxZOgZVeK6IYeI4Qsl0VnTWq0M60YvxrmNA3ERxabNDvSzeR+EAoeHesgZaNICO4qyz0EWvfy8PQtGnTBTXLkj991961+vWyLH/b6rDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759745922; c=relaxed/simple;
-	bh=c8jgQD0fBWlSgKyeYFjHvB34q+vXTIrChfhGf3wnwrI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g7Z9gYiqO3ZDnQBK4cFcxobzHOUMb3BmWWPIPBCkNDDdg96X5AAvqMUKkrVg+isCFaGL+Tz1TbnimCdheuvRWarhZ5LCTzywXbCHitNKGOLefuhcUCQP//8KtsPhuPkVg384IH7/AA4DDpQqoG94tTix6hHd0GJKaZwFufJ5TgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DCnGb2sH; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-36ba647ac9fso38273721fa.0
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Oct 2025 03:18:41 -0700 (PDT)
+	s=arc-20240116; t=1759750085; c=relaxed/simple;
+	bh=PTghvdcN7Rm2Xi8LjpyETL48quuDa/EhCTSCXd5alwY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=pgL4B3cWMlVuISiBkcLIz422HaWiJ0fIFQPB+fZ0OU02yH7fV2Yw3LnoWEW0VXT6TST4dC9B3vTNOQCzIvA28CKpgJHEOAV0MF15yhUL4M3+fAneGPcfsTBx8WpH1rbkdq+VER3jri4tI2Rt6YnEtD6lHcB2D1mFMB5666jye9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=cMWj78wA; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-421b93ee372so2225349f8f.2
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Oct 2025 04:28:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759745919; x=1760350719; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R7ID9c6ife7EDvKhFFDHKe/ahl2zK6jAoYk9pzxb+kU=;
-        b=DCnGb2sHxADWkASivXlgvv5x6+BHBS8BLJau7PQXL1WWVeiPJhNHYxzqwnPpIpKqtN
-         gEYHhq3rDGMl0WTqcyjDZR2VEmEs0OK1PtmZVy6ikbClgvK642P6mrjp8e1qQUcJcURj
-         PUWq8UPLQZplhLt5POJaKRJpOeDLHZ+0muxV4wCrUewMhiO9t0HfYn6FCewtbvgGJn9i
-         UgOOuSgMo+pi7B1PH4hrWYmEHt62LQMjcdQoxH6ZadjXr+u3lJzA/5RCcmOFxFJ/bEfY
-         KIWOndmBrw2zY3eYohG59hRpkpEhLedDU9RpznUL4eZ3KaPD4Y7HvugD5RR/Yo3O+FqL
-         nIQQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1759750080; x=1760354880; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gA4RXGap/OesRcpuV1u7RzSvxPuJOYavsm+cPLgLGK8=;
+        b=cMWj78wAkit9SCqUXXf+sLpnHU9VM8UmIMy6ljMRQMA+nZD4+CniySFveJ4q9zHtQA
+         R9o1ca4QBApxhAV/4o7yBkxQfUBsYB+VUxlnI7ogbGc/HcRTa2XPZD/0ABQSWdJugJkF
+         db2USXBIDxY9rYnBPzlkKXPMzQa/ENt+txcI1zgquWlt8CsEsqekLQ9B5nrDWQkfAk3E
+         okHZgWXbMKBlqQvvbBOJT7WG+sx9wShmcWwIhMO1NQiwDGnPlRZvNgGdmFjtnJZwsQSl
+         f2OZWxOn8ozsWe5aDzhm36XE6mHB3SWkOb8sGpZUXU+10mal8KLoxZa1MtVf8V6CiCSB
+         PgXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759745919; x=1760350719;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=R7ID9c6ife7EDvKhFFDHKe/ahl2zK6jAoYk9pzxb+kU=;
-        b=OJ8MBL8p5yahIAuxP/4fIupy/QVZyTRJdVM50CUQg1l2TZH6OfDfOrNnFk1wzM6FOR
-         qAOvVlrxTO3FQlzKRpIIB9SwY3pXTKfWLPdAcyDAuRmsagtZy9VxKRgJbvxiG7jKr9Qz
-         NTiI64rnhdAzD1UzlweK27rRDwheLrcFnrvpe78OozZP8gLag27yQiLCiY5ZfR1bIzjT
-         ltq8wY34zKUJwCab+M80rc71tDZhi0gDbTxvAFlPZl8NtcM+GDECu2N0QCdFk8iZ6U4r
-         ddgPPyZZCHSDcBC1SOYkKIHaQOS6Y+PrrRN2q10JzmJ+SyKNtdbW0IdfmyLD3cakfaCE
-         pJ0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV2mIpgc97+ZHrrjM9uppbRpiBp97QXE9FFCZy2fSozqX69WwibutMOGF6Q1zDKRkNxWc7xrXF1vUa3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1nKhzrc4/XYjR3pTlAGYjrnF6uEMSIXMW+wDZH+GbmlKCcUDM
-	c5f+0umQG76QuKpSWfW04C/OS59FTLKWvsYRs6JC/x9ewJkCtNOaY5WoN3MRgEyh/A+enoQ9ZFt
-	pwymmyIvVj5bCGRYg5Tyt9Rrs8yP5y9U=
-X-Gm-Gg: ASbGncut/N3YZcjCVypCpco77DZx75ApC8E4wEWcogJNFrGJf9CvKW2zx9WpbC0afmZ
-	CIZiZ3o1hrlErtoLDUeq1bROSnAcJ1xThyNcQNjlbr8mjfTwDRXZRbNwmDgwxLKvw0ynpWJX96B
-	8rpJ50jTPxuZMCfoJkNwUklTVrGBPI8tjssdKJjaeXpVYfLtjbRWNhi1aW9+/k2gK6pG/O3lxyl
-	aJoUq1vu+xETd7zGQDwzpNzZs7wVq1OK9HNydZsRw==
-X-Google-Smtp-Source: AGHT+IE5kaHCIQREur6bwR0bcHEnRu7SQVkT+R3gtQ45outMOheLGCbPhNJYJvMP5sZWse3tEcZGx68vveQoJHqgIRQ=
-X-Received: by 2002:a05:651c:41c5:20b0:375:d8c8:fe2e with SMTP id
- 38308e7fff4ca-375d8c8fe4bmr11011501fa.26.1759745919117; Mon, 06 Oct 2025
- 03:18:39 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1759750080; x=1760354880;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gA4RXGap/OesRcpuV1u7RzSvxPuJOYavsm+cPLgLGK8=;
+        b=mPgDBQWTO4SuKsWI2PvlOpzFoG+ch/p2JF/kdoJ/0DM1n4FnK6kYuY+bpKqiyTMuUr
+         YvCaMof+8gUc4N6AX3bqeycRdlzISxQIooCRivd6N2k8Qp+kw5w3QqAqhjShrwWAEIvn
+         ikHMBs4plyLdV8M2oA0BNAfT2UrSOyhZkxwOHQQthCZazlaiiszojFzkuciPiFgzfdAg
+         Tfg6O4q2z0wQp5ceSjTAWFfIlePwMUXZI1oqcTDanw/8lePZq5oDh9U25brTI2lX9aSi
+         jZW7bvWdH3ckAfyn4l0f/neSNUJaaZemVN7WjvtGBHvqGzvaceed2q8+l21yJ0UaAW5q
+         Loiw==
+X-Gm-Message-State: AOJu0Yyt7UUC0MhUJDLNq5ufReSBIBo2OeJPZF9nbvWn07NtSakqY45J
+	9QlZ0emIr2lTn5UPzF0dUaw+yMZbnCkcCFRHg3JJuDoH/zOg+qbtCqeANhNbnA9Y0oU=
+X-Gm-Gg: ASbGncu7qyqqxB62O80luYXtwWg4g48kW5k2zkHCIjWRQlr/VXDmN8Qor/NS+vFmFAD
+	RSNPG0Gb5QK8ZpTlNEsV8ONc6pK+AWxRDZVi7VqWTp1GgIbsu+iLcAU5pxQS/6fhbcHGBIBEbm+
+	yEu4ULhuVrN1KndkECiiffWH9rKw6PSYjhodGK90pofvI+ZaB11Ld00cyTCArzsOc0no8L17NOz
+	zo/2QowM4aqRdVBi7Glk6fHuQAT2pJrlqxla6NEqntdB9cFa4q9ISzz9e4GAm4CkNw9TtITF7WP
+	lTKl3lp5bODZV42gSgtyWMyrJwuoS3x5bmw7JelFWy75yek/31igTz4fEok1d/9/MHyQdkIdthD
+	c+afv/r2oqUG3WtyoW+k+5lcn9WjLeywh+HD/2O939iiiBAddenUcpJ0pcusRzhU=
+X-Google-Smtp-Source: AGHT+IFDwZhjkYsYtm/ByxDf1qVt0YcgJhSWWkUByEvcm7nfxTW+EIJvSRXcqYRtuqiWqXKgY+t5DQ==
+X-Received: by 2002:a05:6000:2401:b0:3ea:e0fd:28e8 with SMTP id ffacd0b85a97d-4256719e9c6mr7077313f8f.32.1759750080245;
+        Mon, 06 Oct 2025 04:28:00 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:ed2b:276f:1a72:aac0])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4255d8f017esm21078167f8f.47.2025.10.06.04.27.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Oct 2025 04:27:59 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH libgpiod 0/7] tests: update libgpiosim tests and add a uAPI
+ test case for valid lines
+Date: Mon, 06 Oct 2025 13:27:45 +0200
+Message-Id: <20251006-gpiosim-valid-lines-v1-0-b399373e90a9@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251006074934.27180-1-bigunclemax@gmail.com> <5af22765-b428-468a-8cc4-cddc561f4a50@topic.nl>
-In-Reply-To: <5af22765-b428-468a-8cc4-cddc561f4a50@topic.nl>
-From: Maxim Kiselev <bigunclemax@gmail.com>
-Date: Mon, 6 Oct 2025 13:18:27 +0300
-X-Gm-Features: AS18NWCxpXLgGFshs6THaQMHxUB8v_2QruCcnFk2Etv3mFTL-4uOqZFs6ytn27U
-Message-ID: <CALHCpMj=-N5kToZ7kKbzrpeoMM=Ky+_=J=JnwDmBVRx1OPgxhg@mail.gmail.com>
-Subject: Re: [PATCH v1] pinctrl: mcp23s08: Reset all output latches to default
- at probe
-To: Mike Looijmans <mike.looijmans@topic.nl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALGn42gC/x3MQQqDMBBG4avIrB2Ioq32KuLCdEb7QxolAyKId
+ zft8i2+d5Jpghq9ipOS7jCsMUdVFvT+THFRhuSm2tWt613Dy4bV8OV9ChAOiGrcPf3cPaSVvvK
+ U5ZZ0xvG/DhTgf0ZovK4b/5ozJ28AAAA=
+X-Change-ID: 20250904-gpiosim-valid-lines-87bf86d5d91b
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Kent Gibson <warthog618@gmail.com>
+Cc: linux-gpio@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1388;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=PTghvdcN7Rm2Xi8LjpyETL48quuDa/EhCTSCXd5alwY=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBo46e2zf28ySu36WLlYVUnxapIPcigGXLqnfK5q
+ FFVhrEdG8CJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaOOntgAKCRARpy6gFHHX
+ co0nD/4miB4YRRTMv9luttri2BGuqFOExYVVS9ta/1QYztv4tdW97whrMHCcBaRlzfvtd5tUQYf
+ 2VZ5o3LyitgVjXkqCJfPJKSZaL8Ymr8XGel9NNfw0wsk+IWJe2VbvOBJQKIC2xnUJbX+24btb1n
+ HBfGc6/BexhJjAT5d8wpMLGfDcwaFiCi++NrpcgXG9PjL9lQ4beUYu3KN0rR+RpWeHMK5taSgcx
+ /5IX+eHoWihoe02FFlD7nU44ZyyJ59xSWf/j3QTb6TzjzHY2mfl5mYoKBXdc8dIoEodsGfgMBDb
+ uys2NzgiizKTp6tCXZf8dX8ER3tdohhY183K/h1LhPYHDJmcFuw7mwVxVR66GoX7Q/oBjqXj9Ta
+ ZLeJgwhk6OrfwjYDego5hNixuPaG+k2zBao89Df3j8Nqty7FdXVBOXY4ZSly1QZrrj7gpI0ilp/
+ ETvkpzrHZIblDGbny88y4LMsZYrYLYpIl2aMcuzFqsegNQRF6I+r3KGTAhx31XjVKF4J0LYsUHK
+ cirurN2IdkKPM+gmv1GhK+12jHeukBrPgEesudY6wdwj/CnIJcQiPz/WHLUjahbe78RJ2s6R1TO
+ JZgGy+sMIekjogWLcdKE1bjtynDXd3rcbTKnozS463nrdwHBKdpwbv9YjtfhJS6T+1G0wB6dO3T
+ PeRfEwLxSyDjntA==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-Hi
+This series fixes a couple minor bugs in tests, reworks the libgpiosim
+selftests a bit, adds support for using the new feature of the gpio-sim
+module that is marking GPIO lines as valid/invalid and finally adds a
+test-case for validating the correct kernel behavior with invalid lines.
 
-=D0=BF=D0=BD, 6 =D0=BE=D0=BA=D1=82. 2025=E2=80=AF=D0=B3. =D0=B2 11:04, Mike=
- Looijmans <mike.looijmans@topic.nl>:
->
-> On 06-10-2025 09:49, bigunclemax@gmail.com wrote:
-> > From: "Maksim Kiselev" <bigunclemax@gmail.com>
-> >
-> > It appears that resetting only the direction register is not sufficient=
-,
-> > it's also necessary to reset the OLAT register to its default values.
-> >
-> > Otherwise, the following situation can occur:
-> >
-> > If a pin was configured as OUT=3D1 before driver probe(Ex: IODIR=3D1,IO=
-LAT=3D1),
-> > then after loading the MCP driver, the cache will be populated from
-> > reg_defaults with IOLAT=3D0 (while the actual value in the chip is 1).
-> > A subsequent setting OUT=3D0 will fail because
-> > mcp_update_bits(mcp, MCP_OLAT, ...) calls regmap_update_bits(),
-> > which will check that the value to be set (0) matches the cached value =
-(0)
-> > and thus skip writing actual value to the MCP chip.
->
-> Maybe it's be better to fix the underlying issue: This driver should not =
-be
-> using a pre-populated regmap cache. Unless it performs a hard reset, the
-> driver has no way of knowing what the initial values are, it should just =
-read
-> them from the chip.
->
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (7):
+      tests: harness: use correct type to capture a boolean retval
+      tests: gpiosim: don't allow clearing hogs on active devices
+      tests: gpiosim: selftests: shrink the self-test code
+      tests: gpiosim: selftests: add more test cases
+      tests: gpiosim: provide gpiosim_bank_set_line_valid()
+      tests: harness: support setting invalid lines
+      tests: add a test case for checking invalid lines
 
-I agree with you here, thought about it, but consider such a change
-too radical :)
+ tests/gpiosim-glib/gpiosim-glib.c |  48 ++++++++++++++-
+ tests/gpiosim/gpiosim-selftest.c  | 126 ++++++++++++++++----------------------
+ tests/gpiosim/gpiosim.c           |  23 ++++++-
+ tests/gpiosim/gpiosim.h           |   2 +
+ tests/harness/gpiod-test.c        |   4 +-
+ tests/tests-kernel-uapi.c         |  29 +++++++++
+ 6 files changed, 155 insertions(+), 77 deletions(-)
+---
+base-commit: 727d07ee53493219a339ffe7c65512eb85548e6f
+change-id: 20250904-gpiosim-valid-lines-87bf86d5d91b
 
-Okay, I'll remove the reg_defaults in the second version.
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> >
-> > To avoid this, the OLAT register must be explicitly reset at probe.
-> >
-> > Fixes: 3ede3f8b4b4b ("pinctrl: mcp23s08: Reset all pins to input at pro=
-be")
-> > Signed-off-by: Maksim Kiselev <bigunclemax@gmail.com>
-> > ---
-> >   drivers/pinctrl/pinctrl-mcp23s08.c | 5 +++++
-> >   1 file changed, 5 insertions(+)
-> >
-> > diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinct=
-rl-mcp23s08.c
-> > index 78ff7930649d..23af441aa468 100644
-> > --- a/drivers/pinctrl/pinctrl-mcp23s08.c
-> > +++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-> > @@ -622,6 +622,11 @@ int mcp23s08_probe_one(struct mcp23s08 *mcp, struc=
-t device *dev,
-> >       if (ret < 0)
-> >               return ret;
-> >
-> > +     /* Also reset all out latches to default values */
-> > +     ret =3D mcp_write(mcp, MCP_OLAT, 0x0);
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> >       /* verify MCP_IOCON.SEQOP =3D 0, so sequential reads work,
-> >        * and MCP_IOCON.HAEN =3D 1, so we work with all chips.
-> >        */
->
-> Mike.
->
->
->
 
