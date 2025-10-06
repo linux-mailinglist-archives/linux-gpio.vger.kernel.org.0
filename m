@@ -1,113 +1,123 @@
-Return-Path: <linux-gpio+bounces-26822-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26823-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CBB6BBE020
-	for <lists+linux-gpio@lfdr.de>; Mon, 06 Oct 2025 14:19:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47D5FBBE053
+	for <lists+linux-gpio@lfdr.de>; Mon, 06 Oct 2025 14:26:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F404A1894107
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Oct 2025 12:20:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DAF563AA3F9
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Oct 2025 12:26:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E0D027D782;
-	Mon,  6 Oct 2025 12:19:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40CD527EC80;
+	Mon,  6 Oct 2025 12:26:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ngQAkhFm"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="sbW/vY1u"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF11B2905;
-	Mon,  6 Oct 2025 12:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B7A7080D
+	for <linux-gpio@vger.kernel.org>; Mon,  6 Oct 2025 12:26:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759753178; cv=none; b=FRvzM+pS2pP30KE49+cFcd+lsXiJP9RfpwrmwzxxkUr8N8X2hHEZ0qRaWIRrjJ+PEg6NBBjo+nRme5FIDnOHgHYOvjKCk5jEhYz40W0Ng5dM3nrZ4E/Bcc7DQVGvBPzoLzv9X2LBgYzSDsB5rNyTxQMS43D+C2GFKAh2Liyy2Ak=
+	t=1759753573; cv=none; b=mD+dSnDFVQCJyD3H8+GkzAwytkSk10/ukRh7W7tgTqLpREn9kHKzOVPTqlDb4QB3Km1UVnG3R6vsJEl11MCyaO5M/hmVVrWocO15mJS5Tt/eEX3r/flWkptr7kZIUxQZ+D1zj3QFv297uYf2LTvBfdH9tmaosJH4DmACPCCIAf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759753178; c=relaxed/simple;
-	bh=Z6wafg2QwsuXq7WoC2lKdb5ppvY0nwE7Df6gak0UIg0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=opkBSvkJHP+Wtd1VNUQgPhJ9zHcuP1zRGXGVZrAqsIXCWf+5+KvwUuH6+xD04iFIwMchi5Saci4y6r5jVGYwKKKu7/rbEM5jTlmAtJbYGS3bQPWk0PiDy2nsem4SnC4wON2uF5gvBSUPjj/Z2NeZY0i8e+LaNaMT7MiKUyxpmT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ngQAkhFm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F1A3C4CEF5;
-	Mon,  6 Oct 2025 12:19:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759753178;
-	bh=Z6wafg2QwsuXq7WoC2lKdb5ppvY0nwE7Df6gak0UIg0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ngQAkhFmSP7SRB8JHkFxUzhtWlW+1qWIuECHxF3MXxp5gU2xRgmAkpgP3n/108fJe
-	 rmql6SeToRQUUT+XF1V4Auu/v6ksjdgv1m+sh3mv2cJtkJjJDkWT9dPqp/6MAj8DK8
-	 N7I+7Vdntgdi7bRLJMM9wdJN2b1CK14wO49xipehkGx92x9ZZsnhW8HZyn9rdomtyX
-	 d95EiRQI8ql1VheLGGjA8hp6/srzJBNW0egkVx2/QatYxJoUiW4GKZLkiyr5h6ve7H
-	 ZmXDsfJj7aUW4V/fitw3HouVkkSzSlCNUVIqn6ElUydSnhB6i8t6psEO7/Y9rC8yFj
-	 8Lvv6gnWCgH6g==
-Date: Mon, 6 Oct 2025 13:19:30 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Srinivas Kandagatla <srini@kernel.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>,
-	Mika Westerberg <westeri@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH RFC 0/9] gpio: improve support for shared GPIOs
-Message-ID: <5550fc25-b571-489c-9855-5a9b08822c0e@sirena.org.uk>
-References: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org>
- <0b402bba-0399-4f93-873e-890a78570ff7@kernel.org>
+	s=arc-20240116; t=1759753573; c=relaxed/simple;
+	bh=aJAxV0DXmn2LgUCBrsOfoJYmaS+Re342ogdmnSt6f/4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OUCj80f8SkDMcZrCbPZr47Q3CTw4IwfssvSSXSbjXq63hrEVRPR2gbHIHM6FPq8+fs9NulKSxqbji8ImAeeaWyzmJKtNdCr7mdUer6n8cG+4AhfnkVyeV6GLdDN8LSGOL12NvLLoL3SbpI/9UFSn2maK8vSrfeCLRBxM24nooTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=sbW/vY1u; arc=none smtp.client-ip=185.246.85.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 9B65E4E40F14;
+	Mon,  6 Oct 2025 12:26:06 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 65D4A606B7;
+	Mon,  6 Oct 2025 12:26:06 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A4758102F1D4B;
+	Mon,  6 Oct 2025 14:26:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1759753565; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=wCnZA8kvYSPcXtNsyFMJbNUyCCd3snTlmczPLmygMCg=;
+	b=sbW/vY1u1RkWyACl0riy5zRZ5R0p5L3yNOfry3SyyEefdC1QPWamynIXRMYuykyv69Z/75
+	ie1PhoZkJhk2KeWtTvK0Xd5L5N5RnIaFgORigyMsX5/1JvMxnNER9slH3ogpKbs5pIbf/R
+	34+umwoPtvrrDAQmZl02x4bOT/YBZXfmCgGrzBYy1ODpZx/xoLMRd+CC6TOAcbEOc+bi+f
+	pTvY+08EVH4+LGVwCGl4RatBdwyEbfnfMYI48IeMc8BjQU4nulm8Y0ISVuAn8CbzIq9TS3
+	/rFIypb2vHtRhv2gby406Z9+f7wI5C93cZi8YneQUgFAZu9+ngtudh9JcmjbZg==
+Message-ID: <1003b65c-7b4f-422c-a720-9f84e5642b1d@bootlin.com>
+Date: Mon, 6 Oct 2025 14:26:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="TVznfU2XOoE/mFMu"
-Content-Disposition: inline
-In-Reply-To: <0b402bba-0399-4f93-873e-890a78570ff7@kernel.org>
-X-Cookie: You must be present to win.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] gpio: aggregator: restore the set_config operation
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel test robot <oliver.sang@intel.com>
+References: <20250929-gpio-aggregator-fix-set-config-callback-v1-1-39046e1da609@bootlin.com>
+ <CAMuHMdX5HXx2HSAHP-H1EEKO-csBku_cMm-OaacE7GZLXwBxOg@mail.gmail.com>
+ <4db46e2b-47c4-4c81-a36f-8b195b090d2f@bootlin.com>
+ <7a35f0b5-5cb3-4ab1-81b5-394d2b794f77@bootlin.com>
+ <CAMuHMdU_3Wfzq_qc9odGYtSAsMMOgww90qyH+GN4eQ7cxJMG+g@mail.gmail.com>
+Content-Language: en-US
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <CAMuHMdU_3Wfzq_qc9odGYtSAsMMOgww90qyH+GN4eQ7cxJMG+g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Last-TLS-Session-Version: TLSv1.3
 
+On 10/6/25 9:42 AM, Geert Uytterhoeven wrote:
+> Hi Thomas,
+> 
+> On Fri, 3 Oct 2025 at 16:30, Thomas Richard <thomas.richard@bootlin.com> wrote:
+>> On 10/3/25 3:59 PM, Thomas Richard wrote:
+>>>> Is there any specific reason why you are doing this unconditionally,
+>>>> instead of only when any of its parents support .set_config(), like
+>>>> was done before?
+>>>>
+>>> My idea was: it will be handled by the core, so the if statement is not
+>>> needed. But if we conditionally add the operation we can save some time
+>>> in case there is no chip supporting set_config().
+>>
+>> I just remembered the true reason why I'm doing this unconditionally.
+>>
+>> The user of the forwarder can override GPIO operations like I do in the
+>> pinctrl-upboard driver [1].
+>> And now we can add/remove GPIO desc at runtime, if set_config() is set
+>> conditionally in gpiochip_fwd_desc_add() it will override the custom
+>> set_config() operation.
+>> So the only solution is to set the set_config() operation
+>> unconditionally in devm_gpiochip_fwd_alloc().
+> 
+> OK, that makes sense, so
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> I do find this overriding a bit fragile.
+> And in theory, such a driver could override chip->can_sleep to false,
+> which might be overwritten again by gpiochip_fwd_desc_add()...
 
---TVznfU2XOoE/mFMu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes, I agree.
+Maybe we should not export gpiochip_fwd_get_gpiochip() so it will not be
+possible to get the gpio_chip and override some properties. And we add
+some helpers to override the GPIO operations. I can make a try.
 
-On Sat, Oct 04, 2025 at 02:31:16PM +0100, Srinivas Kandagatla wrote:
+Regards,
 
-> Isn't the main issue here is about not using a correct framework around
-> to the gpios that driver uses. ex: the codec usecase that you are
-> refering in this is using gpio to reset the line, instead of using a
-> proper gpio-reset control. same with some of the gpio-muxes. the problem
-> is fixed once such direct users of gpio are move their correct frameworks.
+Thomas
 
-It's common to have GPIO controls for other things, mutes for example.
-
---TVznfU2XOoE/mFMu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmjjs9EACgkQJNaLcl1U
-h9B7ygf+Nk+FdgamUTpfwmlLaO+GIiuF8L1iwF53ymUmyUQHcvWpf2IMsk5oIfBB
-EsMVkL2c77ZuLy5ehS6ywdt8irgeG3DZt4aMI9UqYvHwsoN5IgsIcFKc6DV6wNZN
-kYVD53ZLD3hJGlY40sYdcZ/gJPnChAFHPgXCTqXtZPAFauDxrgY6MP6cD5W7sJpI
-brFXuZ2OUQr76vPSpOm3cfSbWSIiV1wInqr5yqxcmtBkhFJJ7+3d/veBKClywuvV
-hfIGxgwx3mNhUbhJQZcbxecrN3+3gb7UM/lf+eNjNWveK+EfF+EW6fHl8FzL7Gpn
-i83NmntXGVFA8LF57NmHwnjt6rJrHA==
-=4eQ9
------END PGP SIGNATURE-----
-
---TVznfU2XOoE/mFMu--
+-- 
+Thomas Richard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
