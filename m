@@ -1,123 +1,91 @@
-Return-Path: <linux-gpio+bounces-26807-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26808-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FBD0BBD693
-	for <lists+linux-gpio@lfdr.de>; Mon, 06 Oct 2025 11:09:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56703BBD778
+	for <lists+linux-gpio@lfdr.de>; Mon, 06 Oct 2025 11:39:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ED03618928EB
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Oct 2025 09:09:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 151663B2993
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Oct 2025 09:39:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94538264A8E;
-	Mon,  6 Oct 2025 09:09:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8016C946C;
+	Mon,  6 Oct 2025 09:38:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jfhYAq9E"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="FfB/DOix"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70CE22745C
-	for <linux-gpio@vger.kernel.org>; Mon,  6 Oct 2025 09:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC381F131A;
+	Mon,  6 Oct 2025 09:38:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759741757; cv=none; b=WWNCLEpbGXa2LbZ+vKL0tQ6L/tWyUs5o3bYbpQF5K1p21OmpFkZTEQC4mEn9S5n6ZAparDx7LEQ8WPCIA/DrPn4+W2DlSsRGRI7PMkkXGU+whErh8/uhm8OTXWYLo5o5IcLckU7nm0YhGviKJ2F5hkdRwzhb2cTmsf9FhNqsI7k=
+	t=1759743538; cv=none; b=mXcSvsVfV86YjfEsjQXR4aLoJ7BPXZ+J2CN6dGZiRQqyPU89OWk0LknunewfqmJKb0E4BhU4tY3aDasp8UcOOT1dp3VpSx0WvELCigkGFlteybZP2QJf7ZF8LFS9Fbx23VV367wErr2As619PJFZcDAfMkJTMKk7qA+UPXROrz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759741757; c=relaxed/simple;
-	bh=YUML59aU/N3+IbVvbU/UOdKZI3EV60PQbP6/evD74E8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UXr9mwyM0g/OMlimoMbKOr9grtb02PZ3Lmk3AAiPkI1UrOP0XWHQB0IH6E8YzkPt8iBtmYEbt4Uvbwc6Mdy8AcjfP4ddlP8UKli6+A8QMvGh31qZIbiwqNZSdTZbOkV26Nhv/dD+tDKdsc7rFh3Mcw1TQLNq8w1+9T3o2l+hd0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jfhYAq9E; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-36295d53a10so40913661fa.0
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Oct 2025 02:09:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1759741753; x=1760346553; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EsBznNRluYQ7XuvPEjh0UKcnKpWDk6R9qa4Tp3O4MNE=;
-        b=jfhYAq9E3u5E83TByg1dhbbqEhesDPLoXiQCuaCLHLi8287LudI6vTh3A9XYZuDt47
-         RKCrLFVCQe3b7j+xfyltX0ogCkZcFEybopo2MXgoYz2WUBKCadbG/K0toJHUn7kpTtni
-         IscJQ68inR01E7bLAEnH4Od0pR++k4AVwpdNVe+piMAbT2vZJUXSuV5wbEYspwDbDQR0
-         AimawTEtcr1Wesi5wPsbOZUtXFRjwoS6r1Ye0O93gLIFu1NEk4gYqAr3EM0c91tK2bv1
-         MP0rmf2Kwhb59+YcoIfTS/EF48XwUBqTCT6FXPeI9JOVhoy27gm1WrfkldN+4ANMe7Bn
-         bP3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759741753; x=1760346553;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EsBznNRluYQ7XuvPEjh0UKcnKpWDk6R9qa4Tp3O4MNE=;
-        b=iYU1m+TQyU1r9JTqt5LLu/HsXCagOJaHzmggljWldPbLP6/a0puPapbCfb6Xdr0zfD
-         qLT/qiwbB+SzVpz+Y+aeXqXQF5cA5o44o6Tp4L6chB/dj52IYaygl6Bym2xL/2r6vR4F
-         l1gsdTN3G76tDjDyjESxSluChhGBoV7Syx9Ng0wxRyExz42uwOw9wO2gns185IwuMODN
-         jyJ6LJqUjP7SPrP+D+MORt/WC+FYBiYzR7SHZnm5mdrr/jKxJsfQI1MjjMt3+Ix76N/c
-         4cbAlFQ2b3tOp0m5McI5T19xmO6zLTdI4HNhxlKRnQ5gP2+BHNBQhBwzRH8QTLmd25V/
-         Xr1A==
-X-Forwarded-Encrypted: i=1; AJvYcCW+lgMppQ5v2rFufZDYSXekgNrqRqXdWkU/VeGkGYEHmjALNYbmm/vOEZSzH1RICuNMfPWaQpkpwX65@vger.kernel.org
-X-Gm-Message-State: AOJu0YzicbZDW9V3h2ysYsGm1IvCnCbPxapdwEB9OGzH9QMT0Npku1qE
-	Wp0Ahht3+gNAyQHzfDMOJJkgcWx9Jb3E5QayDiigR1Evv3zi09LzGJSCWsthODUYjpKerumRTco
-	8paez+skNhTf/5fe5P6ofJrmdmfH26bYTLZWynsACuQ==
-X-Gm-Gg: ASbGnctEdGgUf83g4nzx7DASSbTizXJl5Qlw6zW87/vUdRNzCpukL7i8b1vuqpyWRz7
-	gLQ3tvozikuf/etTON1wgTOal7WGcbn1m8vlYlWrB5QmzfrnfDQqkMdh2dWplNcc9eZckqnGdkG
-	E+Yba/MEWlpPOxq95K8II5Jw1hqiiRE+okjCh9lkYXW83fpQbdr/pjF3/nfCktJNJvR30VtWFyZ
-	0oQnatVz+mD/5F8hrsBTMjEAQurUlfhP3YDT4juYUVnEg==
-X-Google-Smtp-Source: AGHT+IGlucg01F+gb3JV6UjaZGrg0qXUJn2hTGyuFhNh31irV0HP9JR68bNyp4NxLCV5GwGDBXfCTDqBJRwt7Mkau9Q=
-X-Received: by 2002:a2e:b888:0:b0:36c:7a86:1a96 with SMTP id
- 38308e7fff4ca-374c37956d3mr29939701fa.24.1759741753468; Mon, 06 Oct 2025
- 02:09:13 -0700 (PDT)
+	s=arc-20240116; t=1759743538; c=relaxed/simple;
+	bh=hscnZUUxLtA7mtlzePy0AkMC7fr7x+NOSL1u/YrwjI0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tj330FMOizYWJUXEfbzhG+Shv7sHYGh99BA0EIwOzf7R7W8FzNvpTnsm90BN/R9rw576E/EMCVRouhkmVFSZvq3WmvQr8iQdFOl/Ig29Xz8OD6aXL3BGxKuVU1Dr1tWZdt6tdYPJyrEeW1zWNpSuX0J5tXHgVTjk2s16sjX90uM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=FfB/DOix; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1759743534;
+	bh=hscnZUUxLtA7mtlzePy0AkMC7fr7x+NOSL1u/YrwjI0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FfB/DOixx8HLns5gxS3GWfSeqUHQh9Zn+MOChQtuYcKtwwGAeKMu/J+xyBmVsS26U
+	 BK2HVTT3DrrIQKYiRu0IOq+dILLssOqQNvJJfPeCmVNsbHbeBZUjF7hDHQ1Aab8NGk
+	 PkRXUpJ1+nIQhApB038PH4umro2D+cD+stTvT1TgtIWga8vPkaYn2CBQ7sSgw5OYZZ
+	 xD7v9KOhhBGQsC8xlRECre44Ljm4tTlLe3FHI0wK5v/JSyaMabVqrTY53Uv4ezwP2f
+	 6vBguUeMMAm+XojFDoiOA8/oWP0Hh2UL3K8jQimxt4GGn8X1XghOolIyjjkuPSA4Zb
+	 DvEmPozR5YjqQ==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 534CD17E0071;
+	Mon,  6 Oct 2025 11:38:54 +0200 (CEST)
+Message-ID: <1347051d-187c-4aa5-a4af-cfd8b275f066@collabora.com>
+Date: Mon, 6 Oct 2025 11:38:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251003195036.3935245-1-mstrodl@csh.rit.edu>
-In-Reply-To: <20251003195036.3935245-1-mstrodl@csh.rit.edu>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 6 Oct 2025 11:09:02 +0200
-X-Gm-Features: AS18NWDqVOHajWvTpaoMD2IvfKZq9S42szEEmT-kwKD0sXmmuanfWWpIkK5NWH0
-Message-ID: <CACRpkdZpFvzu+UFkQjCLO20P0V=QOY6dC9O15LP3LJx6NuifWA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/4] gpio: mpsse: add support for bryx brik
-To: Mary Strodl <mstrodl@csh.rit.edu>
-Cc: linux-kernel@vger.kernel.org, tzungbi@kernel.org, dan.carpenter@linaro.org, 
-	brgl@bgdev.pl, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pinctrl: mediatek: mt8196: align register base names to
+ dt-bindings ones
+To: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>,
+ Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Cathy Xu <ot_cathy.xu@mediatek.com>, Guodong Liu <guodong.liu@mediatek.com>
+Cc: kernel@collabora.com, linux-mediatek@lists.infradead.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20251003-fix-mt8196-pinctrl-regnames-v1-1-4d22031140f0@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20251003-fix-mt8196-pinctrl-regnames-v1-1-4d22031140f0@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Mary,
+Il 03/10/25 16:00, Louis-Alexis Eyraud ha scritto:
+> The mt8196-pinctrl driver requires to probe that a device tree uses
+> in the device node the same names than mt8196_pinctrl_register_base_names
+> array. But they are not matching the required ones in the
+> "mediatek,mt8196-pinctrl" dt-bindings, leading to possible dtbs check
+> issues.
+> So, align all mt8196_pinctrl_register_base_names entries on dt-bindings
+> ones.
+> 
+> Fixes: f7a29377c253 ("pinctrl: mediatek: Add pinctrl driver on mt8196")
+> Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
 
-thanks for your patches!
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-On Fri, Oct 3, 2025 at 9:50=E2=80=AFPM Mary Strodl <mstrodl@csh.rit.edu> wr=
-ote:
 
-> The locking changes probably should be backported even though the actual
-> device isn't hotpluggable. If this isn't the right avenue for introducing
-> those fixes and it should be sent as a separate patch first, let me know
-> and it can be structured that way instead.
-
-It's fine.
-
-If it doesn't have real-world regressions right now it can just be
-applied for next, if it has implications on deployed systems, they
-should be tagged for stable@vger.kernel.org.
-
-If you have some idea about that it will help Bartosz to choose
-whether this goes into fixes or stable when he applies it.
-
-> Mary Strodl (4):
->   gpio: mpsse: propagate error from direction_input
->   gpio: mpsse: ensure worker is torn down
->   gpio: mpsse: add quirk support
->   gpio: mpsse: support bryx radio interface kit
-
-The series:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
 
