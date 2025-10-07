@@ -1,122 +1,125 @@
-Return-Path: <linux-gpio+bounces-26875-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26876-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48D8BBC1770
-	for <lists+linux-gpio@lfdr.de>; Tue, 07 Oct 2025 15:18:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 087A8BC1779
+	for <lists+linux-gpio@lfdr.de>; Tue, 07 Oct 2025 15:18:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id C94A034ED77
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Oct 2025 13:18:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0326419A29E6
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Oct 2025 13:19:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F15362E0935;
-	Tue,  7 Oct 2025 13:18:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 590B02DC32A;
+	Tue,  7 Oct 2025 13:18:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u/OPe73Y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PDt1HBFF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E6D2D9497;
-	Tue,  7 Oct 2025 13:18:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C93A1DF982
+	for <linux-gpio@vger.kernel.org>; Tue,  7 Oct 2025 13:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759843091; cv=none; b=R3aK3IpWBmb2kM5q4LlQkbaRQ23P/+emKrosTNLjgbFb9UnIRBnlCmCvyvjRehqZQF3tO4Tm+RkWoSKuBpZrQe8nNEC5CZkwmau2QCi6Jm9DH9pcoI1JclZtbU9KlOlYzf/sqVSGwelNtbY1u3sg2WzpPVjj4AuQ07xxRIbPSyU=
+	t=1759843134; cv=none; b=AwNth2oLqhOpfuwAwYtc0WgIpJqre4kL74SbU/P1DltaGJa7b2D9E60Z7UgDvlm+erSfv3HNMCkQHVkHzdzP785xJ6ViO8L3Ie9pa0FBZZotiEZfNHEEucS8MOpS09HsLWREZhstJmSPAzjngujEP6mDezC+Ynu8arPkcQuP0Hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759843091; c=relaxed/simple;
-	bh=ROB3wlEWOzXAJwBh1qm1R6lseFVqsndr6PEwvgYDBYU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ghZ/INxScrZdejhQIcpfiEV1N78MUQ2wZ+kbQtfBXjB3WfTKXNXtgDLHzLWkUQ4zRc3VOQt4qAtn98WKj2rbxHJBWsyfkunhzttGER8wreIZWlKyi/favMPd2FIfkPOxLhAuh8wsYx3WOPQiwCPw/9O3rXFRovhytzDyxtH4F0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u/OPe73Y; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0654C4CEF1;
-	Tue,  7 Oct 2025 13:18:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759843091;
-	bh=ROB3wlEWOzXAJwBh1qm1R6lseFVqsndr6PEwvgYDBYU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u/OPe73Yuq+jYwS/iZhhQZMiPxNGXAkDbDfIouyky571NFqTqJSkk9IhCRB9s/Ntu
-	 U+l7EgZNGiFtvrWn9PdJoN40o10zPvgl5MlBmtIsvvbNI/qI6hEpkyGaVli6AfcKlR
-	 OAdTydJl+rEyYRa2YMrd6mVstlbhVxkQ/857uFGby+IIoHcsCTBRaD101Mpoo8D51o
-	 hIxqCC+EodZ10aCeIPQCElFA74nuyD7+SXLgUCpP8Q52KYSL4qhbDZ2qrILE2JyRwi
-	 3n7HaYZweb6M9CgaWiOgxaplPRgJVhG4bWp2qKTWPt6FlfIKD9Ssv56c4h9iypq/dj
-	 OnphxE7Wb4o3w==
-Date: Tue, 7 Oct 2025 14:18:01 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>,
-	Mika Westerberg <westeri@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH RFC 0/9] gpio: improve support for shared GPIOs
-Message-ID: <a9a4f33f-b6c5-4c25-8321-7b08a2afb8a0@sirena.org.uk>
-References: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org>
- <0b402bba-0399-4f93-873e-890a78570ff7@kernel.org>
- <CAMRc=MfwEHGV-HZQURR3JNg1HatAeWO17qbRmkWUXTSBWj5jSg@mail.gmail.com>
- <80347dcf-419b-489e-9b0e-d901fbacc71a@kernel.org>
- <CAMRc=McaZV=tUkzDGMYxXqkuEYw_KasKcv8QGdjw709UYZuGhg@mail.gmail.com>
+	s=arc-20240116; t=1759843134; c=relaxed/simple;
+	bh=BSqoMya0AJUlmlWcX8U+e7/UMGEzq1d9TAX/x/1XsmA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ZzUSRqXFOB8urP+g36qu/GeYwPfS6dnDKXQbjaboYosJhskIvkdEfSDLpBHapqDty9he2UZzoE155gPQequoExiCXqV0bW7BkpgYV4R4k6zIZhFUKorxz5tUsb/95xzNHGm8wlr1V8ursFLD8KCMhzOEHWG8CHMUGEd0nCBz3p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PDt1HBFF; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-58afb2f42e3so7461739e87.2
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Oct 2025 06:18:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1759843130; x=1760447930; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ajbHWTHE9uQYw3vfR8RbF+tNtVDiIRA70g0ujJyyOWo=;
+        b=PDt1HBFFv2czRewptBV0j5bUHIAcIGaTxMNe8PcdoiI3h/wrLepVM0gNP5SPrXIO98
+         J9GiJVzwmI0lP4DskKB4zh22baCzKjtuVqDS1kv1dydgzbZcknN7QfdqoNhwQSsPDnty
+         7pIsxxfCh7zjCTI6gHYuraHpCgueMBBzxMg+S0QzpzTpqul4czBQngCjQpLAIQ2WsR+h
+         66CdS9yEFUd9OmWo1+02dB5rxOfIIGG0rnBdCaHpftHs8AGqYHO1IE3+4fBzSdeV4iG7
+         eiQOEI95hG9Rygl0mXTHHxvM23SJEwSxRU4LpJ/dGol7SWbbqVtWI61YRo8ZkI/M7doj
+         dlYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759843130; x=1760447930;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ajbHWTHE9uQYw3vfR8RbF+tNtVDiIRA70g0ujJyyOWo=;
+        b=Ef9lTPfii0TSbyPEq9ktnKfWUcRn6pTbKNYkDZACESwKX4U9YvxHFLgHBFvFM6BzF2
+         /RdEWp2SkX+t/X+vRqvl3ib2lca3IbfueQkNdRHb4rBbulC6aT6eOacnw2gvKv/VlXjo
+         hbEK6/y5gJjCB9LALJOaNEKdNdPzXdveez2cLwDcSyDH043w1u9n1CI/ItmcRkV9LrLL
+         lX3nRq1Fk+jMm7ZIh/QJnytzw7j01OZCjPCNqpk2PkFr9Y8MdLpou6IDwE5lOZumpQgM
+         MCe53MvuE7dNnGoHYW7EeK3/Y5xvq4JdEVz+16qhndGXhLCNZNUMtQyOFi0xjpRkFnii
+         /03A==
+X-Gm-Message-State: AOJu0YznrK/sPML9EkF25vOXmzDonhOcrMeSCLi9Q5kt9R0ZiQ+Ez0oM
+	+46BvB0XOFV5QBHOFOVq3bAc/CCW7KI1raPdYuksRSUyBZ7PKOj6sd0mbXRHIF3OZ7k=
+X-Gm-Gg: ASbGncuRjvjzxi6fsMlHXzQ/DzJm/1WlAf12afKwYIvCj9V5Vu6QqyeGex8b8wTtyGV
+	IV0shBGVMk6bQrOmOMK0bPsFIkWU8cz8a7gLLhDkT8TAJC8uBEtNtXlxRSzIks7KX9zEq8pKrYy
+	XNx5jMDPp4I6zmTSnB0DYz/kmcCjIi/gAUJrOaRH2c7q5dImgkW0lKzdyP6oF14f5TvqaHo5xX2
+	IPV7Y5whzsAHlKa9TLsKyvywqDvtSN+Giqp0lWWVjWOLBZwUluG04+wkMGhHrHJgSnSV0OpkPZv
+	FY33hzzjk28Sbn3TUOd5eXHX3/RQPsNBgRNSxp8s6hbRrDNRtsBZwM792P+XIBxJZDJJ/KrNe6I
+	3mUwSjU5zAaxXFtcWJkpUC7cQH78gdlDWZH+3o4pnYUHAvs0nfcm6FhHCaMBmZQ==
+X-Google-Smtp-Source: AGHT+IHDv3Zjlc8YEk/MOaGe0FXf0zsPzQjoGH1NOeEiNlTVYYPWdc+1Ii90bcMEt0vtg05NcLYPyg==
+X-Received: by 2002:a05:6512:10cd:b0:57d:9f0b:fd4b with SMTP id 2adb3069b0e04-58cb956b7f3mr4828529e87.6.1759843130367;
+        Tue, 07 Oct 2025 06:18:50 -0700 (PDT)
+Received: from [192.168.1.140] ([85.235.12.238])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-58b011a9154sm6082460e87.115.2025.10.07.06.18.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Oct 2025 06:18:50 -0700 (PDT)
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 07 Oct 2025 15:18:50 +0200
+Subject: [PATCH] pinctrl: Demote subsystem banner message
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="+soYglqC22/n5wEt"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=McaZV=tUkzDGMYxXqkuEYw_KasKcv8QGdjw709UYZuGhg@mail.gmail.com>
-X-Cookie: Teachers have class.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20251007-pinctrl-drop-advert-v1-1-df16410680af@linaro.org>
+X-B4-Tracking: v=1; b=H4sIADkT5WgC/x3MMQqAMAxA0atIZgNtsYheRRzERA1IW9Iignh3i
+ +Mb/n8gswpnGJsHlC/JEkOFbRtYjyXsjELV4Izz1pgek4S16ImkMeFCF2tBstYb6pwfOge1TMq
+ b3P91mt/3A9Vnj4tlAAAA
+X-Change-ID: 20251007-pinctrl-drop-advert-d1150d425942
+To: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>
+X-Mailer: b4 0.14.2
 
+There is no reason to print any "hello world" from pin control
+unless (maybe) if we are debugging.
 
---+soYglqC22/n5wEt
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Drop the banner.
 
-On Tue, Oct 07, 2025 at 03:13:29PM +0200, Bartosz Golaszewski wrote:
-> On Mon, Oct 6, 2025 at 11:55=E2=80=AFPM Srinivas Kandagatla <srini@kernel=
-=2Eorg> wrote:
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/pinctrl/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > Yes, these codec drivers are due to be moved to use reset-gpios.
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index c5dbf4e9db84424ae9ceb90ed3681341654d1871..157510157d47aad96b459abf68cc0e4eed957f2d 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -2416,7 +2416,7 @@ EXPORT_SYMBOL_GPL(devm_pinctrl_unregister);
+ 
+ static int __init pinctrl_init(void)
+ {
+-	pr_info("initialized pinctrl subsystem\n");
++	pr_debug("initialized pinctrl subsystem\n");
+ 	pinctrl_init_debugfs();
+ 	return 0;
+ }
 
-=2E..
+---
+base-commit: c746c3b5169831d7fb032a1051d8b45592ae8d78
+change-id: 20251007-pinctrl-drop-advert-d1150d425942
 
-> anything. And what about shared pins other than reset? 'dc-gpios' for
-> display, other 'powerdown' instances, 'enable-gpios', all kinds of
-> uncommon names like: `dlg,cs`, `wlf,ldo2ena`, `speaker-enable`,
-> `maxim,enable`? It's not likely we will create a separate abstraction
+Best regards,
+-- 
+Linus Walleij <linus.walleij@linaro.org>
 
-Many of which, crucially, don't actually reset the device.
-
---+soYglqC22/n5wEt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmjlEwkACgkQJNaLcl1U
-h9CCzQf7Bncfs5WXAs3r5vAGgmMUJo/gZu8vwflStoT02OjudlAyN52XX/Ddf3z5
-QXLXvR2X8rQdiG44lFaOVpNKFPMwEaBSOPqnfw6xC6iaC0r00qkfq1wnmCluy8Uc
-GH8fRxQaZSl25laa2GBST1WJsH912QI3fWlhqEtgUl5/zY2VnVz/QNdFFS1TwL0+
-SE6hw0hdTJL8UJSFQumw7FohV7A80u+3V3Xs3rvOJKnaOFEPLfOQdWw9/TZi0UuE
-q1lPaj7gmq1VEgxDdPSIHzzZv3fSQQCtP+1MTi+oQ8LMxElcnPOny0c4stKH0P9T
-bNI4srPGEXT8UtZkh8pXTJMNrRKmMA==
-=2iBf
------END PGP SIGNATURE-----
-
---+soYglqC22/n5wEt--
 
