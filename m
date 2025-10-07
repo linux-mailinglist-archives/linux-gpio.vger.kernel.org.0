@@ -1,159 +1,148 @@
-Return-Path: <linux-gpio+bounces-26870-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26871-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE4CFBC0C22
-	for <lists+linux-gpio@lfdr.de>; Tue, 07 Oct 2025 10:44:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 034ACBC15D9
+	for <lists+linux-gpio@lfdr.de>; Tue, 07 Oct 2025 14:29:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DEDA43A2D24
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Oct 2025 08:40:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C1C9A1894598
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Oct 2025 12:29:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39CC82E3376;
-	Tue,  7 Oct 2025 08:35:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5E642DEA6E;
+	Tue,  7 Oct 2025 12:29:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VTCUXA1+"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LdleBcLE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B672DBF47
-	for <linux-gpio@vger.kernel.org>; Tue,  7 Oct 2025 08:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E48892DCBEB
+	for <linux-gpio@vger.kernel.org>; Tue,  7 Oct 2025 12:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759826125; cv=none; b=S+70oOFl3yn2XLlGOAQ+DarIV5vyAbRZqzY7MNCy/quCkdm6VAE7EyybuG8T2YWAzlxJMMK5X03cAk8bZxFJG14Op19OEuLl+TFYLZbZjnnKvgeq483wydr3rTgrrSBpgW6+IE+J5YAxfDt2Qz5OcFmTrVhDPYzkIkCpsxVtdB4=
+	t=1759840158; cv=none; b=FLG0tMutSpfU20lk9rQhsRdzXr1Lw3hIrwY+MQeMuuJE80uEV2zlG1LKpJacCoVMaI1szF7SqDh60ZXsBK5xSPDv5bZDFby9pcp6kbdUGeJ44SPeLJuaQYAJRuM7RDfcMyE5o5XF+OhrOJQ1NOR5aS6aRM7IfL1ifSg1Y19/KHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759826125; c=relaxed/simple;
-	bh=ZHDZ/62yyQM2WpcdFkqxEjcI8DLW3Glqgwz1/vt5I0o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DJkvIiRJRgT3DE9zae4eki48YYrGt4Fpyv+whPWMI8IdrCBrySlUSTlADYwGRj78s5OrRkR5ZlpoVM/KFTz9w2m0zrTtp+rteeJavra1WwRChwiBrr4yKpdnuIOg0nc+ARjtfB//UNc+F8P5vEBc9cmdIUhoqssCAlD47hgG1x0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VTCUXA1+; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-57b8fc6097fso7885900e87.1
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Oct 2025 01:35:24 -0700 (PDT)
+	s=arc-20240116; t=1759840158; c=relaxed/simple;
+	bh=EnIFXZqKjMmu46oO94pEByawVJ8hwocGBr4EM7AEbYM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C5MlY6JdzrAMUHUsCEIBw+6aLdd306/2+yI91UmZwDAzo91nZtntoVnSRo3TZAVqvfLlwmQqZjxcu2wU/x0LIFAGVCyVp36eVM3L3I5Nc0di2WNNvKQhRg+xN6sKNC3gOUwa0mtK0Cmsqz9HcAScraUh6gQ0IVqQQ/c3VmFMkfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LdleBcLE; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-57edfeaa05aso7408145e87.0
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Oct 2025 05:29:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759826122; x=1760430922; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lA2K8SX41xRVhtx0TGelIGFHrpKngX8UyetIiKY/xmk=;
-        b=VTCUXA1+FaEj7a+2/oVxdnJNo3BnF/OqvSgUf1HOaNGCamMJjXyoGVmmIX0DegCvvn
-         EaIib6u4cM+JuIk4JXcwxC/7+fL0Y18rEHChyr0tFnZ3FhvkDxSCUjX0crvSNwpsTvGm
-         sNlUswMSOHz7LRZmE7+BUMnlB5TuDl468/P/8DPaRclpP7zY1B5or4B/CyMB8iw2W3VY
-         vfyCB9crDrkUDflJccFbw/HWcM1WyQG+XVVXRlivYuVhJw8DyRJQT4fWDw137MTA+ghK
-         on3iUUeq3DGc5ZcmsG8bd5s7snk2+xkHIQUQu2QRPJs4Aog2RCualAfCDR9Q7tAMS0iD
-         T4qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759826122; x=1760430922;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1759840154; x=1760444954; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lA2K8SX41xRVhtx0TGelIGFHrpKngX8UyetIiKY/xmk=;
-        b=O743pFNDomSJt1XVQqbWAg2X83kYmJ66UL53GS+YquHy9wAU+GHp0DC0zAbiDB4iMR
-         +a0eC8c2RN6SIkythyWTo7YkMb2xi8WDcM3iI2v4dvUQn9orooGyk/syVzVuGo9TGDiw
-         uixM/edWGd+l2N7FKyG9ruLWJ/Pj/n/HA588sK1DkLmdOaoHBB3g4/uEz696KQkUzAUX
-         pDz4S28VPBMi3aaHqw+6Q3MUlGoi3cgQ243xQ7AQZabbJhYoC96cMLeQq0rOT+BYykP6
-         NiArz4AH5/M0gJjUU0Imj86HrEFeCdOl8Rv1IsKLCp8pAXD3gmTLDFB2jI/8CpJfDxCC
-         zIkA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+1nskPiKXl+ifHFczKfobkxMkLH2l75K1C/6OWO0lY/sGHT3Q1C+QdKYEa73I4y068aqgkgLn/6Kv@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTEqAasoUFgvMetazCs4frOblSNDNI4QGc4avFf5/EsLwfFPxw
-	VOl7u85KujfeN7dtA24kDJUfAa04HuKn5WmS9kaxyOL2lfrJNXqymBMA
-X-Gm-Gg: ASbGncvA6TVLKcfdqzzpztqA61kijq/QuoKWg5R9pjb+8cVudK+tV1qkj+Ufl7mo2JI
-	8aFWI4d96SWLYVQP1dAs3IrWdU/eMprt/jm4AR6sutQd0F9DJ7zAF6YURjGhzAojJtbyKLjiZJK
-	Zd73Z0n/1p8GG5EOlm+McPlGmYRLv0B4Xw5JkiMso/csG06kdfl564pY1MpneSj5Fn9SSkw2onf
-	9o6KOIL4Ukr6eHrPmZ9d6S2FJmZhL+8lsFpU+v/qIYyY4yGw6YnV+Giqs3z45z8UvAD0Ytz1Gw5
-	PKCsSiNgTkc1VjJLYnWafjGNWp9W25Ggt+2LGcp88eEAUDRKyeE6oJhC6hN9oc3KFbvA5cvMmjF
-	CuBFozxhJh1Pm7tn2J8OuoVcMrVN43txlEqd/B3sDvgD+c/UXCu5JAKES+u7PLkBh
-X-Google-Smtp-Source: AGHT+IHWvQFZoM0ayT5AgPXGKHGCCpp31nPy7gmVdN+F8yj0NL32bKU7cfG819gEXcZcLzrJj4brIQ==
-X-Received: by 2002:a05:6512:104b:b0:578:ed03:7b87 with SMTP id 2adb3069b0e04-58cbb4416a6mr4798688e87.33.1759826122219;
-        Tue, 07 Oct 2025 01:35:22 -0700 (PDT)
-Received: from mva-rohm ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-58b0112462esm5893790e87.3.2025.10.07.01.35.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Oct 2025 01:35:20 -0700 (PDT)
-Date: Tue, 7 Oct 2025 11:35:17 +0300
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Andreas Kemnade <andreas@kemnade.info>, linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [RFC PATCH 13/13] MAINTAINERS: Add ROHM BD72720 PMIC
-Message-ID: <e413de5850eba28be024f642a4a7ec26c197662e.1759824376.git.mazziesaccount@gmail.com>
-References: <cover.1759824376.git.mazziesaccount@gmail.com>
+        bh=EnIFXZqKjMmu46oO94pEByawVJ8hwocGBr4EM7AEbYM=;
+        b=LdleBcLEXMPxkGZZ4IH7OHM1RCEfGKmTVWJ7BemZ0ohKWk3OZepLgJvzL2xrSFg4iW
+         CH9OqqPR5znp1hzBs1NwrthbL8u9+PG0T5BZ3zcpfTsOtAYzDaU7qkEbOC1HKo1NPJ7d
+         BuUkAPFGSIqB66oOCyrgods7ODqHz2NvVn2LTnCJU6Y+sdpB740semCvRU3NHwZcPnOM
+         J7LqBsetSjjrQJB/xYTgdog+u9uwGlaEy3wS+YasHk3chLzB0brWBFz6xB4bgPMQiu50
+         QGjKVnRLaFQIWA2hfnFCQ89dwUAJL41fACPNVmbBoEbTPq9oDn2VIh+wl/x1aGZWmHwk
+         GwUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759840154; x=1760444954;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EnIFXZqKjMmu46oO94pEByawVJ8hwocGBr4EM7AEbYM=;
+        b=WvWqgQ+Mx3jZOW0HG0jclokkb8FpKvUI1XhQDEzPB4nNpaPcPQxRP2qgp600FKlMB+
+         eHsZsC+avZK8TkRy9CB+0E3TlGiPmqRyL3OPnEx1j2nWwpbfrye9OWSmDSn2ggnVWumy
+         bEypmyImXzIsCJpjJwjNK5udYRqpSsCeIgqhhPxglOorWx85jVVhu7pPhdf+aC8ACFu1
+         Mx0dKfdnqXwUo6fTz8oyVQjn9qPrYLH3iZhnjqc61NxjSIoj7MW43FGggtdYkrxwPXOK
+         LDWaDC53uoaF1p1y+NygoHzbi5qrBNXjbtFsK1Ku/pyo4gd260e5Opu94d+GmXJHkx4v
+         PfzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUdFxPmEbDp9b3lA6sQoHdFx5v4JAkCgniV9Rq/6RF+SRynfIelqVFvIZIRHX4mTojVf2hV8Gqdglho@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVCDPoHe/RHVC5CG8xZtvjrPgxjdm0WRWPhTg82mVvOtumascg
+	bnnPkuRCQkQaWXh/Sq519FhklVgUQUmZNd+UwKX6XBrePf85sqd2h5mQDteLIDqD+iWdTf1/kHR
+	r2NvDI2+OQMByLCyr/2CVItOPEQW8DNfUV8eALeRzog==
+X-Gm-Gg: ASbGncsKSU4iZ9YntYFteI1XQgOu+YDh+4w/ysynpki8GUiJ6NGJQcI9dEQO36VkVxn
+	im3Xt4324zXxgXm96WoM0gTitTCy+4M6wPanQi0LBJYblNeMrmHAcFvNSAUHKqhjZEHPVGyIUAQ
+	uwz9OVZZY3BzVoCJ+FHG3SSedpPvHWGwGhA/GVRh6cQMHnslojcRSFBJQZcsKLGJPKTlLaSpXS3
+	1W/xL48lfFpmxIZoEuSvXVT16emxhfEwm8XjwI4AecXpBDGnOcVnJJQ6p0wpJ4=
+X-Google-Smtp-Source: AGHT+IFvEXq4IGvOkBEwLnkFzMNYQoqXWta+MRuNZ6zy5QIvEZlr/9df2gaJ9h0Z2yhh4+vKPvuKBvTOlCdfwhpYHf8=
+X-Received: by 2002:a05:6512:3e2a:b0:55f:6fb4:e084 with SMTP id
+ 2adb3069b0e04-58cbc776474mr4804386e87.50.1759840153971; Tue, 07 Oct 2025
+ 05:29:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="SlztX/me0LjlXKoG"
-Content-Disposition: inline
-In-Reply-To: <cover.1759824376.git.mazziesaccount@gmail.com>
-
-
---SlztX/me0LjlXKoG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org>
+ <hyzzrjn7jzo3tt3oyg7azijouawe3zopfjzq6zfhoo6e6z2m4t@ssl5vl4g557e>
+ <zk4ea5cibrkp4vttuy4evrqybf76b3nop5lnyck4ws4nyf2yc4@ghj2eyswsoow>
+ <CAMRc=MdWmO4wvX6zpzN0-LZF1pF5Y2=sS8fBwr=CKMGWHg+shA@mail.gmail.com> <rfr5cou6jr7wmtxixfgjxhnda6yywlsxsei7md7ne3qge7r3gk@xv6n5pvcjzrm>
+In-Reply-To: <rfr5cou6jr7wmtxixfgjxhnda6yywlsxsei7md7ne3qge7r3gk@xv6n5pvcjzrm>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 7 Oct 2025 14:29:01 +0200
+X-Gm-Features: AS18NWAtiT9xc4AHDK2XxNjFXsHbeG0TTtUUuLHamMaXYLyXs_iBH5F444RGyw8
+Message-ID: <CAMRc=Me9Td5G9qZV8A98XkGROKw1D2UeQHpFzt8uApF8995MZw@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/9] gpio: improve support for shared GPIOs
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Kees Cook <kees@kernel.org>, 
+	Mika Westerberg <westeri@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Add the ROHM BD72720 PMIC driver files to be maintained by undersigned.
+On Tue, Oct 7, 2025 at 12:09=E2=80=AFAM Manivannan Sadhasivam <mani@kernel.=
+org> wrote:
+>
+> > >
+> > > Not always... For something like shared reset line, consumers request=
+ the line
+> > > as GPIO and expect gpiolib to do resource manangement.
+> > >
+> >
+> > They could use the reset API and it would implicitly create a virtual
+> > device that requests the reset GPIO and controls its enable count.
+> > Except that some devices also do a specific reset sequence with delays
+> > etc. That would require some additional logic in reset-gpio.
+> >
+>
+> I was referring to the PCIe PERST# line, for which the 'reset-gpios' prop=
+erty
+> already exist in the schema. Now, you want me to model this simple GPIO a=
+s a
+> fake reset controller and use it the PCIe Bridge nodes through 'resets'
+> property?
+>
 
-Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+No, not at all. It's just that a shared `reset-gpios` property is
+pretty common and Krzysztof implemented the reset-gpio driver[1] to
+address it. Drivers that request a reset control via the OF interface
+will notice that there's no `resets` property but if there's a
+`reset-gpios`, the reset core will create a virtual device binding to
+the reset-gpio driver which requests the GPIO in question (once!) and
+registers with the reset subsystem providing shared reset control to
+users. Basically the abstraction Srini mentioned minus any reset
+sequence.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 21ec42d93ee4..3afd9cb978cf 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -21940,6 +21940,7 @@ S:	Supported
- F:	drivers/clk/clk-bd718x7.c
- F:	drivers/gpio/gpio-bd71815.c
- F:	drivers/gpio/gpio-bd71828.c
-+F:	drivers/gpio/gpio-bd72720.c
- F:	drivers/mfd/rohm-bd71828.c
- F:	drivers/mfd/rohm-bd718x7.c
- F:	drivers/mfd/rohm-bd9576.c
-@@ -21956,6 +21957,7 @@ F:	drivers/watchdog/bd96801_wdt.c
- F:	include/linux/mfd/rohm-bd71815.h
- F:	include/linux/mfd/rohm-bd71828.h
- F:	include/linux/mfd/rohm-bd718x7.h
-+F:	include/linux/mfd/rohm-bd72720.h
- F:	include/linux/mfd/rohm-bd957x.h
- F:	include/linux/mfd/rohm-bd96801.h
- F:	include/linux/mfd/rohm-bd96802.h
---=20
-2.51.0
+That only happens if the driver uses the reset API. If you go with the
+GPIOLIB then none of this matters. I definitely don't want to change
+the existing DT sources either but I want to find out if the code in
+this series is suitable (with some modifications) for supporting the
+PERST# line or if the logic behind it is more complex and possibly
+requires separate, more fine-grained handling.
 
+Bartosz
 
---SlztX/me0LjlXKoG
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmjk0MUACgkQeFA3/03a
-ocURTAgAu6dnmWP/JjZcJMWGUn+hYLg15qVmjQNYJoLBcZtaNezTwNj9uXTJeGp4
-aF3xpHcZtryUyaerjRHwCYmHkyab19+2EgxtORp2dmdqVhsb/bvOcyuNLz2sFfOS
-eDFFRQadRdLwYbi0wx2lhHqfh9/HXUqYQjBwWSaIidlhU5sjVXlsOQYFlkOv/aZe
-E3h6QunJQxBavA27oVpucRouBOxpGzFLt80PyB3LwH1j2+PRN2ugZiW90TDmFZNl
-e8/nPHDTqoF5T3VyxAXleGRLyrfnF8d+VsTF3R6rj7aQCv2jOw2aHoI96AJAjZgO
-DUZUp9dgZicc5YzSzYQmOfchxX1dJg==
-=phW3
------END PGP SIGNATURE-----
-
---SlztX/me0LjlXKoG--
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/drivers/reset/reset-gpio.c
 
