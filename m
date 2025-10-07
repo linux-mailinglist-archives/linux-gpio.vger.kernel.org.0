@@ -1,114 +1,173 @@
-Return-Path: <linux-gpio+bounces-26846-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26847-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE93ABBFA33
-	for <lists+linux-gpio@lfdr.de>; Tue, 07 Oct 2025 00:09:22 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B491BBFE9A
+	for <lists+linux-gpio@lfdr.de>; Tue, 07 Oct 2025 03:14:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 535053C1D99
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Oct 2025 22:09:14 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 08A0C4E7519
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Oct 2025 01:14:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B979D1DFDB8;
-	Mon,  6 Oct 2025 22:09:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A5251E5710;
+	Tue,  7 Oct 2025 01:14:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OadGq4OT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lm7amN5j"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B283C17;
-	Mon,  6 Oct 2025 22:09:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29D313AF2;
+	Tue,  7 Oct 2025 01:14:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759788549; cv=none; b=Bzk+ueul2dTIUrjRwMJZBiHjNlb/rVZCtBLgYm7rd1pJAJJDzvzzjox0nOPTT7VYNo3ki5u/lRl2/qFOuqoOu8PDRtbEOLekAvPJBLsq76UNGG0jR8gZOMslkiYTRm1WxZeYi+VsvzysyLbJ81nB9gw/c+mQKgUKxmQsFRvQlLs=
+	t=1759799661; cv=none; b=lEX15J2vda5K5Q20ImEmbQPeL7KduiQxbcuslYcxKQYSDffdDkum+mRQq397qI+ocIDtKS5X0vwpHD2kXZ/ERVYDUn5JkhG7AsdAP5JKxVyTzaI/3wU7udu5ze54ZTuLUeGZ8J6gBfaX/7BlFXbec64txovmfbQ5gBkSRaAXhsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759788549; c=relaxed/simple;
-	bh=HwUN7J8ArjHOInDdcpqRzu7gnAEX4XfnbmUq6Y2Ey+0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PGuRgc2li3AVlFRLU+juZdl2FOOwQ4WpjGYEMwQCdh3kiAZLxbXYBgIyPZTy+Be2rvmjxqd1i0PLam2iU6HcOjlpLk3Q/qTdjhXRxRSq8gE9EOXZGoTlwAbk7iPrJ4IHKYY1RMETcViSUhZ1URcBWx3Tdkr3D4y/CNZh37bdqgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OadGq4OT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A569FC4CEF5;
-	Mon,  6 Oct 2025 22:09:07 +0000 (UTC)
+	s=arc-20240116; t=1759799661; c=relaxed/simple;
+	bh=tbDITsoSGRPsOcqxA2EA0aJKGkYbrUNq2vw4X1lzn0Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ahBKuMdF5iFJnRb+b4T2SOF85wQIKjuhkCC/M6IVlROVJ8tOGxWW0HzsXS+VEFBfsdsW1Inr3OZt0gWCjwZRDr+pB61ZQNwvyt9XN06uwQpwlUeS1ncDvaYURfu1pJ/ifKvTEv+14r0G7JUev75fge8Q3R3BQyzacX8AlFarDOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lm7amN5j; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EF47C4CEF5;
+	Tue,  7 Oct 2025 01:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759788548;
-	bh=HwUN7J8ArjHOInDdcpqRzu7gnAEX4XfnbmUq6Y2Ey+0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OadGq4OTA3RaVEV5z0R+a2vo8JhA0rY/4gwcSliNnqiGvKEaC6en4KpK3lQIE5r5C
-	 9BDESevRDb5QPgUdzajGh9H4oclojsoUntXwDy2qVmjzJ7S+Ci5zAiXseQ3s8byF1u
-	 Vizrr++wLQsWdhF3Ymz3zmpWxrcsovG8aoWHo25KGyM9Mbz39aNzwn2VIfaNaHA9pE
-	 b3Ygaa1ca+/BULJ33M62ORf0IFYxn1x+xSgVvbCANPBxP1PA09IfbI3xHSZ43qnoZq
-	 RzOhyVjVXhiN1+rANDljbbRtwkLlBD+4jFZmv8QPG58xaSp8+PWYrifUn3D9iJBn7o
-	 +dQMGmfQmR9ng==
-Date: Mon, 6 Oct 2025 15:09:06 -0700
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Saravana Kannan <saravanak@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andy@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH RFC 0/9] gpio: improve support for shared GPIOs
-Message-ID: <rfr5cou6jr7wmtxixfgjxhnda6yywlsxsei7md7ne3qge7r3gk@xv6n5pvcjzrm>
-References: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org>
- <hyzzrjn7jzo3tt3oyg7azijouawe3zopfjzq6zfhoo6e6z2m4t@ssl5vl4g557e>
- <zk4ea5cibrkp4vttuy4evrqybf76b3nop5lnyck4ws4nyf2yc4@ghj2eyswsoow>
- <CAMRc=MdWmO4wvX6zpzN0-LZF1pF5Y2=sS8fBwr=CKMGWHg+shA@mail.gmail.com>
+	s=k20201202; t=1759799660;
+	bh=tbDITsoSGRPsOcqxA2EA0aJKGkYbrUNq2vw4X1lzn0Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Lm7amN5jZqGrJfdHU0CYEuMWQAqOEwQWcIkhsC1/7VzOJr8BjiR3c9a9lnUXrTEMJ
+	 dbfeNuRpp5IraUmdKT61Vm6sjIlHMM1Fv4VcXQUYiHjaNUUGvJzoMfU+rdh5ULAn9q
+	 /J701I6poJWBR6NvuYPcLOIGpYz8bkx8zmLvAXETzefgv940gNL6Teibz4Z8Inf409
+	 D0chOh+GdkVouMBEqQmMujs3KWcw54bVT3oeoNoW6a84ZZ/E3HUqDVVtrPSjCLuOly
+	 dUkcPxIGZTz08Y3OcjqDRZ/M3wMlPNUa+iqJEqTki2z6Bv5+KFlndhW+HZNNTAUEVa
+	 Kkswn4B0bSnSQ==
+Message-ID: <64dd0bab-6036-4e06-aff5-b0f86a167ada@kernel.org>
+Date: Tue, 7 Oct 2025 10:14:14 +0900
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] gpio: of: make it possible to reference gpios probed in
+ acpi in device tree
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+ Markus Probst <markus.probst@posteo.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Mika Westerberg <westeri@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20251002215759.1836706-1-markus.probst@posteo.de>
+ <CAMRc=Me3VLbmRksbrHmOdw8NxN7sxXjeuNFb9=6DzE=uLn0oAA@mail.gmail.com>
+ <7f4057f25594ac3b50993a739af76b7b1430ee6a.camel@posteo.de>
+ <CAMRc=McioBjF3WCBu0ezzuL+JJTiEpF2fz1YpbToRpijpHfAEg@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <CAMRc=McioBjF3WCBu0ezzuL+JJTiEpF2fz1YpbToRpijpHfAEg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdWmO4wvX6zpzN0-LZF1pF5Y2=sS8fBwr=CKMGWHg+shA@mail.gmail.com>
 
-On Mon, Oct 06, 2025 at 06:10:59PM +0200, Bartosz Golaszewski wrote:
-> On Mon, Oct 6, 2025 at 5:43 PM Manivannan Sadhasivam <mani@kernel.org> wrote:
-> >
-> > On Wed, Sep 24, 2025 at 11:25:12AM -0700, Dmitry Torokhov wrote:
-> > > Hi Bartosz,
-> > >
-> > > >
-> > > > The practical use-case for this are the powerdown GPIOs shared by
-> > > > speakers on Qualcomm db845c platform, however I have also extensively
-> > > > tested it using gpio-virtuser on arm64 qemu with various DT
-> > > > configurations.
-> > >
-> > > How is this different from the existing gpio-backed regulator/supply?
-> > > IMO GPIOs are naturally exclusive-use resources (in cases when you need
-> > > to control them, not simply read their state), and when there is a need
-> > > to share them there are more appropriate abstractions that are built on
-> > > top of GPIOs...
-> > >
-> >
-> > Not always... For something like shared reset line, consumers request the line
-> > as GPIO and expect gpiolib to do resource manangement.
-> >
+On 03/10/2025 17:51, Bartosz Golaszewski wrote:
+> On Fri, Oct 3, 2025 at 10:40 AM Markus Probst <markus.probst@posteo.de> wrote:
+>>
+>> On Fri, 2025-10-03 at 10:03 +0200, Bartosz Golaszewski wrote:
+>>> On Thu, Oct 2, 2025 at 11:58 PM Markus Probst
+>>> <markus.probst@posteo.de> wrote:
+>>>>
+>>>> sometimes it is necessary to use both acpi and device tree to
+>>>> declare
+>>>
+>>> This is a rather controversial change so "sometimes" is not
+>>> convincing
+>>> me. I would like to see a user of this added in upstream to consider
+>>> it.
+>>>
+>>>> devices. Not every gpio device driver which has an acpi_match_table
+>>>> has
+>>>> an of_match table (e.g. amd-pinctrl). Furthermore gpio is an device
+>>>> which
+>>>
+>>> What is the use-case here because I'm unable to wrap my head around
+>>> it? Referencing devices described in ACPI from DT? How would the
+>>> associated DT source look like?
+>> In my specific usecase for the Synology DS923+, there are gpios for
+>> powering the usb vbus on (powered down by default), also for powering
+>> on sata disks. An example for a regulator defined in DT using a gpio in
+>> ACPI (in this case controlling the power of on of the usb ports):
+>>
+>>         gpio: gpio-controller@fed81500 {
+>>                 acpi-path = "\\_SB_.GPIO";
+>>                 #gpio-cells = <2>;
+>>         };
+>>
+>>         vbus1_regulator: fixedregulator@0 {
+>>                 compatible = "regulator-fixed";
+>>                 regulator-name = "vbus1_regulator";
+>>                 regulator-min-microvolt = <5000000>;
+>>                 regulator-max-microvolt = <5000000>;
+>>                 gpio = <&gpio 0x2a 0x01>;
+>>         };
+>>
+>> - Markus Probst
+>>>
 > 
-> They could use the reset API and it would implicitly create a virtual
-> device that requests the reset GPIO and controls its enable count.
-> Except that some devices also do a specific reset sequence with delays
-> etc. That would require some additional logic in reset-gpio.
-> 
+> Krzysztof: Could you please look at this and chime in? Does this make any sense?
 
-I was referring to the PCIe PERST# line, for which the 'reset-gpios' property
-already exist in the schema. Now, you want me to model this simple GPIO as a
-fake reset controller and use it the PCIe Bridge nodes through 'resets'
-property?
 
-- Mani
+There is no such property as acpi-path and I don't see here any ABI
+being documented. Nothing in dtschema, either. Nothing in DT spec. I
+also did not receive this patch. Actually - nothing from
+markus.probst@posteo.de in mail mailbox.
 
--- 
-மணிவண்ணன் சதாசிவம்
+So no clue what is this about, but if you want to use undocumented
+property then obviously no.
+
+
+Best regards,
+Krzysztof
 
