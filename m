@@ -1,78 +1,78 @@
-Return-Path: <linux-gpio+bounces-26906-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26907-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C53FCBC3AED
-	for <lists+linux-gpio@lfdr.de>; Wed, 08 Oct 2025 09:37:49 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA214BC3B1D
+	for <lists+linux-gpio@lfdr.de>; Wed, 08 Oct 2025 09:38:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A07903B5C3A
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Oct 2025 07:37:32 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7B2DF4F8972
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Oct 2025 07:37:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C22982F3612;
-	Wed,  8 Oct 2025 07:31:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18D872FBDF1;
+	Wed,  8 Oct 2025 07:31:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lz5ji5s+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tin0ufH3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38E32FBDF8
-	for <linux-gpio@vger.kernel.org>; Wed,  8 Oct 2025 07:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAFD42FC016
+	for <linux-gpio@vger.kernel.org>; Wed,  8 Oct 2025 07:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759908716; cv=none; b=kzeknoZqY+YEQeeT6vrKZnT92oB5qu+XIx3Arz6WFTs/ip8flEVZJGAKiX0Z7N5IS8zV725Ha/la1bBENC4HzhoAW1hYYbZSbOXeH052oJq5GypbkqBS15VJABEoQ/SluRE9fCvSM5JV1KihdfkdVC6J+4oQmDcXGLiO8ytktso=
+	t=1759908718; cv=none; b=N26PjQHzC5nIh7WdXNxo79Ze71IbV4CPI8fivPfkz/pSLI5xx2jt8QI9Cf+6b5U5gpZyozykajjD5jBbrtXKLgN0rlHzmn/IBmJ40Ai26dW/T4FEH3BXX1CE43uPhIEnKo0h8bQi9JtHn+HSAlLq+/WlpdBgEXis4tYRloaGA7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759908716; c=relaxed/simple;
-	bh=c2pf6RUA6JS/iU2qUlSvT28AQiDs7K4PthlzccZwX40=;
+	s=arc-20240116; t=1759908718; c=relaxed/simple;
+	bh=iiHfTmqTpfmKU38rkhczSgtC8/xhyV+ts8JmJCC3QqE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RYK7wv475MohBMhrXWqewPexQdD3docJQz0WfVjxUMQ7FEQJ5jBK0mNsvQwHkP1EQIYRPmgmKOaqgPzKr9KNAu+mZOalvN8UaCI94ycgtAEgbUk6lK2CpFqa+O8GrbAcNyWnpNEg8aWi1I2PKG1yl8HATmse3sb3V388XgK9MuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lz5ji5s+; arc=none smtp.client-ip=209.85.167.52
+	 MIME-Version; b=uaz9adkJwcXQJfz9mIrdU5lN7xQxpRzR2xRfRSwDpj1UZyp4vp2cTQUJRgbPz50vQ0N9DsKpCgg+lByTTRZj/zwF49BHI2Y/oLaZAM+dcYOfqrBCgYSNDno7gahXlQfq959TR34wz50mFtiPZvf68AiGQIj3UJONDcWUPwO7Tkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tin0ufH3; arc=none smtp.client-ip=209.85.167.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-57edfeaa05aso8453805e87.0
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Oct 2025 00:31:52 -0700 (PDT)
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-57a604fecb4so9085866e87.1
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Oct 2025 00:31:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759908711; x=1760513511; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1759908712; x=1760513512; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=M4Sd98a7JjnJau3gJskbN1AlGmAjhGwkl8sNjJesON0=;
-        b=lz5ji5s+16C1x0LUOCyBrXXOcjxWbymnh8kSnSKaZk6tufTLNHTAL685jyCrdWyi5t
-         GmDld4D9/NDixRSYDjRyj0Q0XwLi3wRzqi1537pZomhywmBApPy/FnejIKO0HcUZyq28
-         rZQHzhw30PD0brmpPkQR+MAkP4VOe9O9Z7vL/rvKoHRkpbz2BDQZHDuV7st7XmlRTNpa
-         CQBonfxVW4EJdVGU/Q6sR4x9BeJFmwnQX4O3Ge/eRKytR3OXu9DfmIWRH8Bho+FcS3wj
-         QKNKSKfMv+Fb+W5pKeJdqiUQ8sWUrkRcvz2ioS0NVVuRchkK2unEkKbA+Hb+/p0pVLO1
-         f78A==
+        bh=ihAxrvGeeqbDGS2s2nWoaKnfeN+9tvG68aYZNvqbzNU=;
+        b=Tin0ufH3HoWUW+4fy9yfVmADSrO5zIl6I/OfDFntMk7Dz3OnhCacE0jGZChjrWAC+U
+         nsy9i6YJJDZCpRwSXroV4OT1+rceGLCu6JEHXcEB//YJVZel7ApWr2WPNyEsETk8W8ic
+         xyD5gwPrE/5Igs5Cyfi4rWAs8Xs/UlApTKJWZ1l/99AO8luaUk9UB1Lv0ndHj3EbnK1u
+         buUwpV/Yqxtl9WXbyA7mxxFh3jb4NxztAGsOb9jl1ciscI7hfx8csu/mkF6Hs+dBjDPl
+         e3olL+xWa5+Qbo11UHikaD0hrTQq7Kewv6h2FZCb0Bk8ljK/X1zenTJ0MflbrbI1oLuP
+         waKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759908711; x=1760513511;
+        d=1e100.net; s=20230601; t=1759908712; x=1760513512;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=M4Sd98a7JjnJau3gJskbN1AlGmAjhGwkl8sNjJesON0=;
-        b=AsHUtgI1KpTSljNQUJWHTTgj1Y9JwuFww5cgAihyNOFWyuvUjvgLv+IaqQStJ54VRd
-         TIcbNDnGJG99Oz0mJFqiem90rvryRaENW569x1dI92DWDT2yrz9kvMDYacBKvWdDSzOY
-         hU3jIsl+0FY2gHtO5nW2lUCzqKj8OPX+VefX+zFIMpJsMgGPDE7FLwOYXRivO0eGRvBU
-         HsMH/Sx5y6B5HJmkAqIZMmDuBdGFWf7RKjLpJXE+nHr08ytGJnQ7SaEipwRgyMzzZTIE
-         mlK2zvlQhnhZTvc8evIHtABD6O+YxmGzTP4CoHvGFaXn+7umtB2A+ywwwrCxln7iLt1O
-         7JLw==
-X-Forwarded-Encrypted: i=1; AJvYcCXfa/Oo68dRAj2MIbo+xIiUzak82pMFxTNfZ/s7mZ6yzxL2UgQJmLxcTxGbKQ0CP7N3EWBruT752/gB@vger.kernel.org
-X-Gm-Message-State: AOJu0YwT9+yRJw4TbSob2pYtqjlSTmZ5HECGyzRw88CH92LI6Zqbpj6v
-	Ns6nTmhqXx87AqHzLzBH2aaaYKOWBpF8dU/gOTiJZwAEmC217GYmjfoS
-X-Gm-Gg: ASbGncuD3uXB9rCvSsXgom91RDMh5QcBWoIz7X3rCqG0nJG2psWBLnLJUYHmf7dCFkE
-	Qg7eBnimqTPe9PGkmazIrnHnFyP8KtcL6dWds7LuYKDVZ6aC9Nzm6AcQ3HopRhEO21HvZ0F8DNH
-	gHJFNoIWUNS4i3IzLNgpGKYiCh5aBjbRGZUESabSlGV4uN2ymTaZm70w9PHA/CMk67jn6W7Usnq
-	SMBS4aHERfjmJWh3JOQhVfkZ/nOYnVfDF2pt8P+XdQzeNNNS/BoF8clDOwMlbcM99ZQ1mQarK6U
-	dlkn2/50sCi0hYbYNP6yjnvSIp7767QXSbXAQPvIVJ+GqDEjYREBf5HkDBGjSY6/lDakbOJb7Ig
-	WbcVpN4mP0faIeCkP2IvHR7YtqaSRGW+yTQt4fg==
-X-Google-Smtp-Source: AGHT+IG6FlNISKtPx2gRqF9MdRRkmvlkKIifRDzcNapSupdgygQ65tibf3VBpyfWyT/MoNFC/LyfEg==
-X-Received: by 2002:a05:6512:1055:b0:590:5995:6dda with SMTP id 2adb3069b0e04-5906d896c12mr674942e87.7.1759908710509;
-        Wed, 08 Oct 2025 00:31:50 -0700 (PDT)
+        bh=ihAxrvGeeqbDGS2s2nWoaKnfeN+9tvG68aYZNvqbzNU=;
+        b=s1FUCGGllq0iC83OT6KoqLeAS3jkvLNtPOWuH6VYCiS5Eg/rowE0aEK3NyUwF6S4Lj
+         H0Z8s+YPIEQMy2teC3BKuvuzbMvNo0gDcLQVKl/A6ZzDkS9lFeW5OTw8A1iPkTTPJhP/
+         xb6v5Z3mIMZ0vnxOzlWfPiHCU4wEORoGYhUUpb6lWrhJ8nenFRzsIJwW62KVHoWGMHRZ
+         oTOjKRTmuD4cDaMkDMp7lFlxWOB6IxzsqzSN17cfB5rVdd+nO95ogWcCmnF5W3H86m3J
+         gIEYRMUWe2X7P0/IZckWZPMWBNuZtzvVTXQSVrGHicLI/RMD/yjYaKmuV2ctwC6cmu06
+         0pmw==
+X-Forwarded-Encrypted: i=1; AJvYcCX03o42IjUASAsQU1njaJ0IeSMdvONQ7MDjV9ocyAEjK+NtKVbB+O4UmNA5TCoIvG33E4Gon1cB1llk@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCXaRfdb6ytG9OLEOOrwX+XRtWN4xhFfP+ngiEzmA7XaN5oNXD
+	wP7y72leXgLd3+8+ut4H6aGQs6o17JUXViI6jAICGCrhfjP6QRNwd3o/
+X-Gm-Gg: ASbGncs3dxgrYVW8lyXQSGUYwaHj5muk/3TEPY8g6rPDJ70fI2LxWro3XBEZAw2sBT2
+	9I8mvTjOyH7r3z2qh+sNiYmw3xRA6u8zT5pydp0775osjZD16CHyPdY/ADfZiTJ+/ba2SQ1NCtG
+	EH+Tz1+Ij8lxcFt9LrniAuz+QqgLYQsxpdpTRBg+0lhCtoCsEoDDswQyZlQbjBPQF98d/Xeq15C
+	v42rtjTdjhpg28KLfOO+qwHTQcUPShLVm9x3TQHLLm3L8fjpgRHmZVey5iTBdLjFjsKFDHybhO+
+	QbdiFDuZMuDgjNj55qTddz12m6q4t3oecyiYA86v0Be45oEWcMEMzXZ/4S9AO5/CfbasaYHUd8i
+	VWFCixYLO1jw4KpodBh8HXFhZ2sH/e5XNeBbZSQ==
+X-Google-Smtp-Source: AGHT+IHLfcoP/CF+9Jgh7CWd/VCkL/1kWm6zkDko2dBTHVx0gAsAz99mKegLte9a4Cyd6nve7U60ng==
+X-Received: by 2002:a05:6512:3d0d:b0:57f:492:3263 with SMTP id 2adb3069b0e04-5906d87b37cmr670856e87.1.1759908712166;
+        Wed, 08 Oct 2025 00:31:52 -0700 (PDT)
 Received: from xeon.. ([188.163.112.70])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-58b0118d22bsm6911016e87.85.2025.10.08.00.31.49
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-58b0118d22bsm6911016e87.85.2025.10.08.00.31.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Oct 2025 00:31:50 -0700 (PDT)
+        Wed, 08 Oct 2025 00:31:51 -0700 (PDT)
 From: Svyatoslav Ryhel <clamor95@gmail.com>
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Maxime Ripard <mripard@kernel.org>,
@@ -108,9 +108,9 @@ Cc: dri-devel@lists.freedesktop.org,
 	linux-clk@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	linux-staging@lists.linux.dev
-Subject: [PATCH v4 22/24] dt-bindings: display: tegra: document Tegra20 and Tegra30 CSI
-Date: Wed,  8 Oct 2025 10:30:44 +0300
-Message-ID: <20251008073046.23231-23-clamor95@gmail.com>
+Subject: [PATCH v4 23/24] ARM: tegra: add CSI nodes for Tegra20 and Tegra30
+Date: Wed,  8 Oct 2025 10:30:45 +0300
+Message-ID: <20251008073046.23231-24-clamor95@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20251008073046.23231-1-clamor95@gmail.com>
 References: <20251008073046.23231-1-clamor95@gmail.com>
@@ -122,162 +122,93 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Document CSI HW block found in Tegra20 and Tegra30 SoC.
-
-The #nvidia,mipi-calibrate-cells is not an introduction of property, such
-property already exists in nvidia,tegra114-mipi.yaml and is used in
-multiple device trees. In case of Tegra30 and Tegra20 CSI block combines
-mipi calibration function and CSI function, in Tegra114+ mipi calibration
-got a dedicated hardware block which is already supported. This property
-here is used to align with mipi-calibration logic used by Tegra114+.
+Add CSI node to Tegra20 and Tegra30 device trees.
 
 Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
 ---
- .../display/tegra/nvidia,tegra20-csi.yaml     | 135 ++++++++++++++++++
- 1 file changed, 135 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-csi.yaml
+ arch/arm/boot/dts/nvidia/tegra20.dtsi | 19 ++++++++++++++++++-
+ arch/arm/boot/dts/nvidia/tegra30.dtsi | 24 ++++++++++++++++++++++--
+ 2 files changed, 40 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-csi.yaml b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-csi.yaml
-new file mode 100644
-index 000000000000..817b3097846b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-csi.yaml
-@@ -0,0 +1,135 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/tegra/nvidia,tegra20-csi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm/boot/dts/nvidia/tegra20.dtsi b/arch/arm/boot/dts/nvidia/tegra20.dtsi
+index 6ae07b316c8a..5cdbf1246cf8 100644
+--- a/arch/arm/boot/dts/nvidia/tegra20.dtsi
++++ b/arch/arm/boot/dts/nvidia/tegra20.dtsi
+@@ -64,7 +64,7 @@ mpe@54040000 {
+ 
+ 		vi@54080000 {
+ 			compatible = "nvidia,tegra20-vi";
+-			reg = <0x54080000 0x00040000>;
++			reg = <0x54080000 0x00000800>;
+ 			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&tegra_car TEGRA20_CLK_VI>;
+ 			resets = <&tegra_car 20>;
+@@ -72,6 +72,23 @@ vi@54080000 {
+ 			power-domains = <&pd_venc>;
+ 			operating-points-v2 = <&vi_dvfs_opp_table>;
+ 			status = "disabled";
 +
-+title: NVIDIA Tegra20 CSI controller
++			#address-cells = <1>;
++			#size-cells = <1>;
 +
-+maintainers:
-+  - Svyatoslav Ryhel <clamor95@gmail.com>
++			ranges = <0x0 0x54080000 0x4000>;
 +
-+properties:
-+  compatible:
-+    enum:
-+      - nvidia,tegra20-csi
-+      - nvidia,tegra30-csi
++			csi: csi@800 {
++				compatible = "nvidia,tegra20-csi";
++				reg = <0x800 0x200>;
++				clocks = <&tegra_car TEGRA20_CLK_CSI>;
++				power-domains = <&pd_venc>;
++				#nvidia,mipi-calibrate-cells = <1>;
++				status = "disabled";
 +
-+  reg:
-+    maxItems: 1
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
+ 		};
+ 
+ 		epp@540c0000 {
+diff --git a/arch/arm/boot/dts/nvidia/tegra30.dtsi b/arch/arm/boot/dts/nvidia/tegra30.dtsi
+index 20b3248d4d2f..be752a245a55 100644
+--- a/arch/arm/boot/dts/nvidia/tegra30.dtsi
++++ b/arch/arm/boot/dts/nvidia/tegra30.dtsi
+@@ -150,8 +150,8 @@ mpe@54040000 {
+ 		};
+ 
+ 		vi@54080000 {
+-			compatible = "nvidia,tegra30-vi";
+-			reg = <0x54080000 0x00040000>;
++			compatible = "nvidia,tegra30-vi", "nvidia,tegra20-vi";
++			reg = <0x54080000 0x00000800>;
+ 			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&tegra_car TEGRA30_CLK_VI>;
+ 			resets = <&tegra_car 20>;
+@@ -162,6 +162,26 @@ vi@54080000 {
+ 			iommus = <&mc TEGRA_SWGROUP_VI>;
+ 
+ 			status = "disabled";
 +
-+  clocks: true
-+  clock-names: true
++			#address-cells = <1>;
++			#size-cells = <1>;
 +
-+  avdd-dsi-csi-supply:
-+    description: DSI/CSI power supply. Must supply 1.2 V.
++			ranges = <0x0 0x54080000 0x4000>;
 +
-+  power-domains:
-+    maxItems: 1
++			csi: csi@800 {
++				compatible = "nvidia,tegra30-csi";
++				reg = <0x800 0x200>;
++				clocks = <&tegra_car TEGRA30_CLK_CSI>,
++					 <&tegra_car TEGRA30_CLK_CSIA_PAD>,
++					 <&tegra_car TEGRA30_CLK_CSIB_PAD>;
++				clock-names = "csi", "csia-pad", "csib-pad";
++				power-domains = <&pd_venc>;
++				#nvidia,mipi-calibrate-cells = <1>;
++				status = "disabled";
 +
-+  "#nvidia,mipi-calibrate-cells":
-+    description:
-+      The number of cells in a MIPI calibration specifier. Should be 1.
-+      The single cell specifies an id of the pad that need to be
-+      calibrated for a given device. Valid pad ids for receiver would be
-+      0 for CSI-A; 1 for CSI-B; 2 for DSI-A and 3 for DSI-B.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    const: 1
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+patternProperties:
-+  "^channel@[0-1]$":
-+    type: object
-+    description: channel 0 represents CSI-A and 1 represents CSI-B
-+    additionalProperties: false
-+
-+    properties:
-+      reg:
-+        maximum: 1
-+
-+      nvidia,mipi-calibrate:
-+        description: Should contain a phandle and a specifier specifying
-+          which pad is used by this CSI channel and needs to be calibrated.
-+        $ref: /schemas/types.yaml#/definitions/phandle-array
-+
-+      "#address-cells":
-+        const: 1
-+
-+      "#size-cells":
-+        const: 0
-+
-+      port@0:
-+        $ref: /schemas/graph.yaml#/$defs/port-base
-+        unevaluatedProperties: false
-+        description: port receiving the video stream from the sensor
-+
-+        properties:
-+          endpoint:
-+            $ref: /schemas/media/video-interfaces.yaml#
-+            unevaluatedProperties: false
-+
-+            required:
-+              - data-lanes
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: port sending the video stream to the VI
-+
-+    required:
-+      - reg
-+      - "#address-cells"
-+      - "#size-cells"
-+      - port@0
-+      - port@1
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - nvidia,tegra20-csi
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: module clock
-+
-+        clock-names: false
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - nvidia,tegra30-csi
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: module clock
-+            - description: PAD A clock
-+            - description: PAD B clock
-+
-+        clock-names:
-+          items:
-+            - const: csi
-+            - const: csia-pad
-+            - const: csib-pad
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - power-domains
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+# see nvidia,tegra20-vi.yaml for an example
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
+ 		};
+ 
+ 		epp@540c0000 {
 -- 
 2.48.1
 
