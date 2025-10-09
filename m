@@ -1,116 +1,131 @@
-Return-Path: <linux-gpio+bounces-26926-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26927-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B752BC85C4
-	for <lists+linux-gpio@lfdr.de>; Thu, 09 Oct 2025 11:49:19 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07647BC8674
+	for <lists+linux-gpio@lfdr.de>; Thu, 09 Oct 2025 12:07:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E96563B4C12
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Oct 2025 09:49:17 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 872C34E6CED
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Oct 2025 10:07:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA3BA2D321A;
-	Thu,  9 Oct 2025 09:49:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46AE52D73B9;
+	Thu,  9 Oct 2025 10:07:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HdOsIVZo"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="BSWel78a"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6425E155C88;
-	Thu,  9 Oct 2025 09:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 391A41EF36B
+	for <linux-gpio@vger.kernel.org>; Thu,  9 Oct 2025 10:07:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760003355; cv=none; b=sbK+lTAwHG994TDJrtqYKrb3spWBCOrHXVpiZynwRtM0kocKv6D2762BiykjgcAX5FsDaudt0hkXEa4yp/tH32dMCwxFk6n5/+zwhVWRyd03Pe6ZDC88afvtGqY37we11zIRqx984owZ7YrysGRRiam56Yqm4ic4fQp4XOxCrLk=
+	t=1760004437; cv=none; b=Y8xIOKOJtSYSfyk2k5rcrvPfTjk/h5EjNv2eNflkn7NmQqoT0dYHijPO/D14E8c6o0qiGAcTvAaxvILO9xQXzWzfN8hILQvISduG58wxTLv9VitRiP7RULELFlZqcE0xHBWmx5yHUxNYkrMUZadQXx8tm3n/Kma2qiymFVUMBzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760003355; c=relaxed/simple;
-	bh=qWz+XzUlBtbzZaeMsG7iTfJpGKTGcvhMLsxOvEOnQiM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FiAveyGDstlmB2Z6r+Ej2b8mLjKDv6qmyJZz01jbBHTXpEaIJHjydZw7vN60ZAGgoDe+ZJDXndnvLBlTCdzzgsKEJT3dXCC9QgA7BZzfRGfiVTthN3TuJiizNV5kJ0rq1xYHfPbhl6YVHCe2rDV1TtiPjb+KUuAT7iKXOvh92iY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HdOsIVZo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93A06C4CEE7;
-	Thu,  9 Oct 2025 09:49:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760003353;
-	bh=qWz+XzUlBtbzZaeMsG7iTfJpGKTGcvhMLsxOvEOnQiM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HdOsIVZomY/ZJeK5vQptAXTWAfsc7xZAbkE4jBhroRXloCj+xpAIZNDHG9WEZopLN
-	 MYMIczFMzn3Yn85zN3ZADtFlCu4ynMNK6grKTOAh/n/RTPcIhcCKuVUyNpayWdRslE
-	 dzPAXdaqnyqDoxbJx0qyW0PTO5lJKLY2ONRM+6CdeeLd/e030sW+8Xc8QzPhsIJfWo
-	 lS4TnSteBGhE2EkBLnOhWjCeBTmcHqzIqmUBlzI++7axKBVJZC6MFAXTQSkOj9OtKH
-	 6lqOXOTq3/HZ8QUoM2DL9t1HXg1ac7u6/9KSVyfie/aonZ9lQsaWufrumR0ET4IxZY
-	 4SyBS1IYd3mLw==
-From: William Breathitt Gray <wbg@kernel.org>
-To: Mark Cave-Ayland <mark.caveayland@nutanix.com>
-Cc: William Breathitt Gray <wbg@kernel.org>,
-	mwalle@kernel.org,
-	linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	andriy.shevchenko@linux.intel.com,
-	broonie@kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: gpio: gpio-pci-idio-16 regression after LTS upgrade
-Date: Thu,  9 Oct 2025 18:49:03 +0900
-Message-ID: <20251009094905.223456-1-wbg@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <df4857cb-daae-4428-bd93-5878564624c5@nutanix.com>
-References: 
+	s=arc-20240116; t=1760004437; c=relaxed/simple;
+	bh=Z6fCQhdk3dr0h5KNJ6z6nOfj/2NAXHn2Z28Tx2ssQSM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cm33g+SID/tTUMpvtym3KZifLhOi6oC4Vvyur8yU+p/PbxpNgLzgtoXhYvk8CY/MlXIrURlZBPDpLPqD/VUGMmY8+jhmMrqz6+5ZJV3ZpQM0yx9WNx+3G+xEayjCB+bq0oX/8wDwv1pH0EG7uNzfLBExpqFpzw61xHjkTFEyCHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=BSWel78a; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-57db15eeb11so936467e87.2
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Oct 2025 03:07:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1760004433; x=1760609233; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qTdm+WQN/IArP6uzK/anYh69/F3/JcJMhmnKnGbESXs=;
+        b=BSWel78aY2+7NF9UHBh+KZ2IHaDit0m57yLyD6pSgnOEwEcnESWe1u45jgVgDAmlj7
+         XJrhvA0M7+ELzQZwfYk6ZzC4Z1f2AAeAzevBCTXYxqT+/AYb0v4sCW1Yw+C9HndcHUGI
+         aNi1G2k9l82tG0sqrqhf5nhDmUUag3lLat4nMT41GknPfPdWIP2oBNTrCFtJzaknvsgD
+         pZHQHaeJpoe8qiGGaywiBZDInA210UoR/h60Oj/aIk4vjx04pjUrGJO+BjvC0rZsaR9L
+         tXWEerokmsrSbkiLd9b3uhlP/jeT1cDGQ5dskd+8QIa4DSRbLIsN5pRO+0vToiXNebtO
+         p8HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760004433; x=1760609233;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qTdm+WQN/IArP6uzK/anYh69/F3/JcJMhmnKnGbESXs=;
+        b=i1tvx/d0wLUa7DSGt9n4XqzwchYVxo5Hls6fi2YWdfWoFllSlS+4AcQVDcX8NzAAb9
+         FbXA9Qrhqq6J3uQj9UZQrHtZxDMwDVAu+Q4WAHe7uKEdy3vdddOnp/QH21P2pHOJln2b
+         sQFU6XtKHLNjcrBgaKAuWFlyQn1LfETTYdU0VlOO73mLkwmoaKkpW4iw+Wdxq1U+Ng4U
+         Vsn9yOdBrpdiukBxhkipCZvxTgo/TnHdZQNBu8AZaB3SXJl6blzaxcvnE529IKKCI7aR
+         GWHOGgQtktyYxwTq1urhCCklXDfneCi2kXZGS4dhV0HrBG8X9cv4wDDKfCvW8n+VicKD
+         sZeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUNEsP54stXUoEtn+9aEAVzWwYfjlR6bB0tcmW4sijZMgBhJK70S3GaveK3g2zf/p0iH5BDR/9EowI5@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHtMzpJuePFmlx4edy4+kC7n/2wJAP/eVpNvRF2o1UdXftEgYV
+	g86EAet6bNbJNjpufeIkwfThOrxT+4rPXLoWFCm61THkxX/f+Tfl4uKcWPgbcFztl+8mc54e9nP
+	52Nzc8ZRnMIuDPcei8jgor+vt+lvIf7uwrGZ2Fa/EEQ==
+X-Gm-Gg: ASbGncuJv/uyt0Ogo39BRgf43wzWXgq3zIFGyqlxV7qbF9JHulNKkZHidVu+GmGYJDz
+	HSUvoJX4XB0R+t0u61WVcTFtJqAdpqIkLGXgiMoPSBsB6imMJeOWtZ+V98VDJ4i4Vn/scWtfwdl
+	6eqpyJc9qbd2u+eWx5cU7ppXl72d9a6DfIl5LcyNM8y3AYUCDrdjLdcKZQyvDLRzks0zm4/0FTW
+	i+eJkXUFFkT2LMXspStM2zvT4ssA7abV9MHKzVEaSRf1iPiJR9FcspZSGUGgoJnKE/bhfQF
+X-Google-Smtp-Source: AGHT+IGDdNeze8LYJjC0w9X4/tmvn9bfTMHPkMojDzQaWsGrmkgUhXZlakYkQXFLaJe1+0eSO9i7NPOD2qru7Dz+8yg=
+X-Received: by 2002:a05:6512:3e03:b0:55f:6c08:a15a with SMTP id
+ 2adb3069b0e04-5906d8efa49mr2043976e87.32.1760004433205; Thu, 09 Oct 2025
+ 03:07:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2173; i=wbg@kernel.org; h=from:subject; bh=qWz+XzUlBtbzZaeMsG7iTfJpGKTGcvhMLsxOvEOnQiM=; b=owGbwMvMwCW21SPs1D4hZW3G02pJDBnPW343dpm/2u33NeDjzBAT/jzhCrUDijpPU/hM+F+Zf /5RGT61o5SFQYyLQVZMkaXX/OzdB5dUNX68mL8NZg4rE8gQBi5OAZiItxrDb7bHuVM0uDX9V59Y 0FS6ucZu8poCzpRUf4UqzYnZ1yIWZjH8U0ja/+tigDL/D5/3Ca1/pI6fO+LJHcsqKnXxq9m3pDl FLAA=
-X-Developer-Key: i=wbg@kernel.org; a=openpgp; fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
-Content-Transfer-Encoding: 8bit
+References: <20250806091531.109861-1-stefano.manni@gmail.com>
+ <CAMRc=MdfjuSSsD=LWDpUroyf+fxC7jQrJDtZJtmj_YiQYQjAuw@mail.gmail.com> <JZ0U3T.53FSIQ97H39F1@gmail.com>
+In-Reply-To: <JZ0U3T.53FSIQ97H39F1@gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 9 Oct 2025 12:06:59 +0200
+X-Gm-Features: AS18NWDTzj0xfRlNNs2NBR-OnxUMd1ZPijaWjphbF82EwZLOrH-PY_ZJVlG7jvQ
+Message-ID: <CAMRc=Me6cRLPsz9-DLMyFXVn8AXExWRP4fwHaN3=8HuHR6+VGg@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: pisosr: read ngpios as U32
+To: Stefano Manni <stefano.manni@gmail.com>
+Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 09, 2025 at 10:05:58AM +0100, Mark Cave-Ayland wrote:
-> On 07/10/2025 09:16, William Breathitt Gray wrote:
-> > So the intention I had with gpio-idio-16 was to provide reg_dat_base and
-> > reg_set_base to define the input and output bases, and then
-> > reg_mask_xlate would do the translation between input and outputs. I
-> > think this design is allowed by gpio-regmap, is it not Michael?
+On Wed, Oct 8, 2025 at 11:28=E2=80=AFPM Stefano Manni <stefano.manni@gmail.=
+com> wrote:
+>
+>
+>
+> On lun, ago 11 2025 at 09:56:51 +02:00:00, Bartosz Golaszewski
+> <brgl@bgdev.pl> wrote:
+> > On Wed, Aug 6, 2025 at 9:17=E2=80=AFAM Stefano Manni
+> > <stefano.manni@gmail.com> wrote:
+> >>
+> >>  If of_property_read_u16() is used instead the value read
+> >>  is always zero.
+> >>
 > >
-> > In theory, gpio_regmap_get_direction should call gpio->reg_mask_xlate()
-> > which is mapped to idio_16_reg_mask_xlate(), and thus set reg and mask
-> > which then is evaluated at the end of gpio_regmap_get_direction() to
-> > determine which direction to return.
+> > Please state more clearly what the problem is. This sentence is quite
+> > garbled,
+>
+>
+> the value returned by of_property_read_u16() is always zero, if
+> of_property_read_u32()
+> is used instead , then the returned value is the right one contained in
+> the dts.
+>
+
+So please put this into the commit message.
+
 > >
-> > Is it possible idio_16_reg_mask_xlate() is returning the wrong values
-> > for reg and mask?
+> > If you're touching this, can you switch to using generic device
+> > properties instead?
 > >
-> > William Breathitt Gray
-> 
-> The only logic around .reg_dat_base and .reg_set_base in
-> gpio_regmap_get_direction() is this:
-> 
-> 	if (gpio->reg_dat_base && !gpio->reg_set_base)
-> 		return GPIO_LINE_DIRECTION_IN;
-> 	if (gpio->reg_set_base && !gpio->reg_dat_base)
-> 		return GPIO_LINE_DIRECTION_OUT;
-> 
-> Otherwise it attempts to use .reg_dir_out_base and .reg_dir_in_base
-> which are not set for gpio-idio-16 because the GPIO directions are fixed
-> and not controlled via a data-direction register. And as these are not
-> set, gpio_regmap_get_direction() returns -ENOTSUPP.
-> 
-> Were you thinking that gpio_regmap_get_direction() should have some
-> additional direction logic if both .reg_dat_base and .reg_set_base are
-> set, based upon their comparative values?
+>
+> what do you mean with "generic device properties"?
+>
 
-Ah you're right, I misunderstood the logic in gpio_regmap_get_direction.
-So essentially the problem is that gpio-idio-16 has no way of indicating
-the direction of its I/O because it's mixed.
+Functions that allow to read properties through the fwnode associated
+with a device bound to a driver. In this case:
+device_property_read_u32().
 
-The IDIO-16 series lacks a direction setting register, so I think the
-proper solution is as you suggest: add support for a get_direction
-callback to struct gpio_regmap_config in the same vein as the existing
-reg_mask_xlate callback. Then in gpio_regmap_register you can set
-gpio->get_direction = config->get_direction in the same way
-config->reg_mask_xlate is handled.
-
-William Breathitt Gray
+Bart
 
