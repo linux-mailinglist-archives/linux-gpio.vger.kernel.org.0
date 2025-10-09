@@ -1,84 +1,84 @@
-Return-Path: <linux-gpio+bounces-26938-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26939-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 655B7BC9329
-	for <lists+linux-gpio@lfdr.de>; Thu, 09 Oct 2025 15:06:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DFD0BC932C
+	for <lists+linux-gpio@lfdr.de>; Thu, 09 Oct 2025 15:06:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 17A433AFF33
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B1AB73A1C53
 	for <lists+linux-gpio@lfdr.de>; Thu,  9 Oct 2025 13:05:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CFAF2E6CB3;
-	Thu,  9 Oct 2025 13:05:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 312BF2E7182;
+	Thu,  9 Oct 2025 13:05:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ST36b5pk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YSA97B44"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A3E2E2F13
-	for <linux-gpio@vger.kernel.org>; Thu,  9 Oct 2025 13:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617D52E6CD4
+	for <linux-gpio@vger.kernel.org>; Thu,  9 Oct 2025 13:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760015145; cv=none; b=r0p3I4dt5oAxrHMM7iGEeHB+BVBQ5OKqFRmU4p4GyhNAxxiYICcGUXXF7TRAmFTX8BJbwKCRaYTUiPc8olQG/3upFRN/8y1+1cEwfvJPJna01eL3KwXmVnSueY3hwgzYDP+YQavPY0o9kPRhN2PUi5bvGXxzH6yKoW0cFkrSDE0=
+	t=1760015146; cv=none; b=LT2aYZ1CyLdZ71t4Rcjawl8CUn8JWp+ccSowR3DvMIpouJbDMUPZ7iWwSYw0Ju1qTwh1qFPOnBw0/W7gzQ1BJMwAlO9MCvLeEAKgGblZgxvmwNBBQrOwXXkCiG7DBOS6bWVNtUNK9C7V+wnZFf7vPzFbmvR4PpppYUhEHndM/LA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760015145; c=relaxed/simple;
-	bh=oWe02YK/08pzbyo4cTXCLFhY5RfDiv4oi+3VI+f5x3c=;
+	s=arc-20240116; t=1760015146; c=relaxed/simple;
+	bh=5HjPqta6TKF7mQu4/3Mz/6CdX3vM2rwOprp+ht0QMKM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Qpwm+R/WJVzDzA92oBs3L8yo40AS8PDcDbk32tuEEyxJcRs5B6IngDmU5C5abiBZz0tsU0Uk8vO3zqSoehUl8zrTLL2WolFgVOUriIbt6xv7/aUuKAOe1nEvWjjX984lgLJFKyAYOkJqn4vfgXUlRtCxpHKRrauh6C7bJsvXIeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ST36b5pk; arc=none smtp.client-ip=209.85.166.177
+	 MIME-Version; b=IH5qmym4zyzr3c4YJuhhFSPSaOiTb1p0z5mEq17qHjz6SUBLFu4Utxlmhv4msTVjwg/uN0PevEatiSh4Qw7ppyEhJ2mp7tmMHMNiSZzDBQ9Krn00vZcjQYDiT9UMoUtfBZGp47gN3t+i0/X3GO3j/+oJuMKpgXmGauxiFCR39V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YSA97B44; arc=none smtp.client-ip=209.85.166.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-425911e5661so3460115ab.1
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Oct 2025 06:05:43 -0700 (PDT)
+Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-93bccd4901aso94193139f.2
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Oct 2025 06:05:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1760015143; x=1760619943; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ANc6gR5jI7mX3fNCIaNhv3vV533lnniHiwuEIm6qmhw=;
-        b=ST36b5pkGZMPhpquRp9/HP1fi0CKGBnLRrEGRXx+aKlKD6BsapnjAfaqCHjWn/dm/E
-         tt7zx0ridjFzCvybFRiaxnu0n/mQlhKw6YKRliSSh1sQ0OH37X71i8mjQ1+3iwFOIZ/s
-         fl5awc4L9PiVLnHZ5ZUZy1BEeUd5/KgjicAus/e/xlxDGS57wZ8rH+bVqsAk78d3vEm8
-         t8BDS+OdgHguMCvD4V0KCjqTwc7G3GOdqrmbyP6mjMb8SOvizN+uA1NSa6qWkQ3FR3+3
-         vWuZvug7JbU0SfgZ23LJs1uTpbfuN4XJNf0rVXy1+TJ82l2rLgS8RlW5RihvHW+2DMGu
-         f5Tw==
+        bh=Csxm3O/IBAWNoG+uWVHpaABVxVngKlIBHxbhBCrVHO8=;
+        b=YSA97B440GQHDM5MGzlJslZGYDGbozvLPyxsAWBOu0631wsj3pW30vuNC4ynvJjzWx
+         Aj3hl0aoQhkDyH1/zb3oBecLW/lfMbNdSmV+iuAbUebEtyScj4lmg3n2h0StXhnfJuva
+         VH1jEafGzqHfZ5CBbQAk0/YuopbO0NoQ+DRW8Vsk4gqXWUFeeHKiDPy7jbDTtHIrZQhL
+         Up4bzdhRk47Dv+LvGKWqZlMTEig6xa/d/5uqEwe2m2/h6H2ulYQ0ju54/brofP3CgVoC
+         9ZvVetf0ueReOTgv4XixNJ9GA+PIupPme/7XGElNS1mtrPlZOtHmiODSKcLvvobpHrYH
+         ut/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1760015143; x=1760619943;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ANc6gR5jI7mX3fNCIaNhv3vV533lnniHiwuEIm6qmhw=;
-        b=DOu1rQZA9c1GMbgqTMslscFxGv73nSJAssb7sKNxpevHAXWNY3Lo4OeSl2iq6zKyCN
-         FbGIQtLJW+y3fpCA9M+rKO3U2g1QlWsKjKC+RtZuV/dEBcT8i4KHARtQe88dgdQAQ3hB
-         nBmH+TeMxIdxg7m/t9sE7R/vq4gzQpLntlDEujvh4Se1JzDH3Qg64bgINyuTLKdlbFyY
-         LSaohfAoJa8lARHEdwEuk7lsEYw8zT0yWAxLldG68PEyHZ4sRK7QXgFXrUVM6lOUmqg5
-         k5ppjoJlhurkYx0HqrKw9f53hvc1LsCdOQ/aUkRRhRV2dZLgjgkMdJUa5ajUmUo6KhW4
-         MuQw==
-X-Gm-Message-State: AOJu0YxzgE4byWRkJ7X6WOApTPBveQ0ZdivWYiSH2cBkWVd1s2FNdEeS
-	lSfXbxdHLEV+AC02JZqky7cM+EhlLCRD6veO5wQsdh/pJELpyzW+SaFHiYyLPoaL
-X-Gm-Gg: ASbGncsBfs1wXhWo5jmqWMswfq8k/X66h2l6ATPs5baJiDs82yFp2B3+svIwxzgT3Kc
-	mxNIY21Oqcc/VutoKiWGCNPf1MfBbtF6uAyxEHF9zP1M8WKh9JJQTPt77GUDeqdv13KWcaqfH5h
-	ykcUBvC9sCVBVi+Npscd4EgnhJsIvfDiPSMvrTTGEycMG8SxnUGFAfSYCUvq/r6ysYVE+VpM+3J
-	t4ocBBNXezXxfAht4zpifOspyHpHBIF8o8jSDDJWKg8iT2Fhzkg1Rzz8iHYvTwS2SpwXskkx8na
-	a4MQ6IBr35IHvhTzgwIfuI4Z/Yhse0qH+tRA/N7yf8lFOxOZCECrbqXg2/ay5DDBaHJwQTuBqsl
-	k0kugkm2FPzbGeqnnh9/wFG4g1+gROJnJR55KHTT2EhbYVslzyZsDZZUpXy23Cw==
-X-Google-Smtp-Source: AGHT+IEnUYP5ZgHdxwba+TFyJaOAzmBzZmYqQQEQ274qUxF699jSG7uqKQguyWexTUD0ToRBg4h2Rw==
-X-Received: by 2002:a05:6e02:b24:b0:42e:d74:7252 with SMTP id e9e14a558f8ab-42f8740e748mr64862475ab.31.1760015142425;
-        Thu, 09 Oct 2025 06:05:42 -0700 (PDT)
+        bh=Csxm3O/IBAWNoG+uWVHpaABVxVngKlIBHxbhBCrVHO8=;
+        b=AjgZ3GD7H7PJ5zhic42sApMqlYKZxpA4xaglRFLj2BiDgl88cseUtEj98eKd9jK5/f
+         amMvkHOCNzfqvN89u6Ulp7C1wjRDaIOYZb/fdYMVjMF1xHPs4CfwzFU9H2/r0ptKAV/t
+         3CfgDmEjARemO5iZg4v5g4olAzipVaHPOClU9Mj/vXUbBtidRvDPydKTCmmu4nOJfK4s
+         m7IsQ6Taubu8kZwRe0sdd0lxfq1N3NRRK93RxrxIKR+yL1VZR46yA5gYOq/kttYs/zWL
+         LFeQeIJCGBD1bFeAtxYftWsHnQCY38fr6KAsJd9aYIphz5A5i1NyUgn7HKLfoEzjIoEp
+         jEkw==
+X-Gm-Message-State: AOJu0YyH9lLEpo3lP8fo5IdUgv5jE3Mitw9W7m3hufb7wfQwA0dTX7nT
+	gXvBeldC1fossCNz/P7Tp9Gn6SPiwWUq55ngD73+++ZOus6Rm7FLg1HLUHU5qRpu
+X-Gm-Gg: ASbGncv9wSZd6A+nx+eWfgNL04l5abVdSCoC0JtybqFCGLDgSwNDC2xHqSnKKaO1AA2
+	bNAPn4lP+OKRqSSIDCnjsuOUxrdpprdXyKR9v/AV+eFQ2Nh/rxuaRo5jrXIgCAnJl5kvLDtdyVw
+	PFwQNGiUbqTBvgqeVKq0Q0QEGMcBXhcE/a5QpZaBnmfeqbPcjC0UjLz9uRmnD56UvWXlBKoXGKK
+	eEpzt7NeEfVGsnuqOSHjOIm2f5DSfIcPvtMwHi2mAJM/sFuYf4r15jEwBBmtd5IACFuMNQF3QAr
+	3N2rvcxnhEQjASLiq6b2Ms8g1zPvG5KV7jcGL4KoZ1d+yzTXLG9SxDMu9e3rEf7D64mDlGH/yMb
+	YlQBnb8fIoo7/yQnyGyFqEhu/qqM1t8iLt4A4k1OziTUWdwyk0f8=
+X-Google-Smtp-Source: AGHT+IEr9U6tDPvbUgqUsGqSN36Qh1drY74o0xMgqnbqaFX9Hi8TV41+f52kA+stRQUm7gFqg95kJw==
+X-Received: by 2002:a05:6e02:b24:b0:42f:8b0f:bad2 with SMTP id e9e14a558f8ab-42f8b0fbfdemr66578475ab.10.1760015143052;
+        Thu, 09 Oct 2025 06:05:43 -0700 (PDT)
 Received: from vfazio4.xes-mad.com ([162.248.234.4])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-57b5ec07cf7sm7899137173.52.2025.10.09.06.05.41
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-57b5ec07cf7sm7899137173.52.2025.10.09.06.05.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Oct 2025 06:05:41 -0700 (PDT)
+        Thu, 09 Oct 2025 06:05:42 -0700 (PDT)
 From: Vincent Fazio <vfazio@gmail.com>
 To: linux-gpio@vger.kernel.org
 Cc: vfazio@xes-inc.com,
 	Vincent Fazio <vfazio@gmail.com>
-Subject: [libgpiod][PATCH 5/9] bindings: python: chip: check mapped_output_values membership once
-Date: Thu,  9 Oct 2025 08:05:11 -0500
-Message-ID: <20251009130516.3729433-6-vfazio@gmail.com>
+Subject: [libgpiod][PATCH 6/9] bindings: python: line_request: ignore invalid line names in reconfigure_lines
+Date: Thu,  9 Oct 2025 08:05:12 -0500
+Message-ID: <20251009130516.3729433-7-vfazio@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251009130516.3729433-1-vfazio@gmail.com>
 References: <20251009130516.3729433-1-vfazio@gmail.com>
@@ -90,47 +90,83 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Simplify looking up mapped output values by providing a default value to
-dict.get instead of checking for membership in the dict and then
-fetching the value subsequently.
+Previously, calling `reconfigure_lines` with line identifiers that were
+not included in the original request produced different behaviors
+depending on the identifier type.
 
-While hashing and lookup is fast, it's unnecessary overhead.
+If the identifier was an integer, it would be silently ignored.
+
+If the identifier was a string, it would raise a `ValueError`.
+
+To be consistent, invalid line names are now silently ignored.
 
 Signed-off-by: Vincent Fazio <vfazio@gmail.com>
 ---
- bindings/python/gpiod/chip.py | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ bindings/python/gpiod/line_request.py       | 19 +++++++++++--------
+ bindings/python/tests/tests_line_request.py | 13 +++++++++++++
+ 2 files changed, 24 insertions(+), 8 deletions(-)
 
-diff --git a/bindings/python/gpiod/chip.py b/bindings/python/gpiod/chip.py
-index 1f4a9bd..2e66018 100644
---- a/bindings/python/gpiod/chip.py
-+++ b/bindings/python/gpiod/chip.py
-@@ -269,13 +269,12 @@ class Chip:
-         line_cfg = _ext.LineConfig()
- 
-         # If we have global output values - map line names to offsets
-+        mapped_output_values = None
-         if output_values:
-             mapped_output_values = {
-                 self.line_offset_from_id(line): value
-                 for line, value in output_values.items()
-             }
+diff --git a/bindings/python/gpiod/line_request.py b/bindings/python/gpiod/line_request.py
+index c0798b5..629df3c 100644
+--- a/bindings/python/gpiod/line_request.py
++++ b/bindings/python/gpiod/line_request.py
+@@ -94,12 +94,9 @@ class LineRequest:
+     def _line_to_offset(self, line: Union[int, str]) -> int:
+         if isinstance(line, int):
+             return line
 -        else:
--            mapped_output_values = None
+-            _line: Union[int, None]
+-            if (_line := self._name_map.get(line)) is None:
+-                raise ValueError(f"unknown line name: {line}")
+-            else:
+-                return _line
++        if (_line := self._name_map.get(line)) is None:
++            raise ValueError(f"unknown line name: {line}")
++        return _line
  
-         name_map = dict()
-         requested_lines = list()
-@@ -299,9 +298,7 @@ class Chip:
-             # list for later.
-             if mapped_output_values:
-                 global_output_values.append(
--                    mapped_output_values[offset]
--                    if offset in mapped_output_values
--                    else Value.INACTIVE
-+                    mapped_output_values.get(offset, Value.INACTIVE)
-                 )
+     def get_values(
+         self, lines: Optional[Iterable[Union[int, str]]] = None
+@@ -174,8 +171,14 @@ class LineRequest:
+         line_settings = {}
  
-             if isinstance(line, str):
+         for line, settings in config_iter(config):
+-            offset = self._line_to_offset(line)
+-            line_settings[offset] = settings
++            try:
++                offset = self._line_to_offset(line)
++                line_settings[offset] = settings
++            except ValueError:
++                # _line_to_offset will raise a ValueError when it encounters
++                # an unrecognized line name. Ignore these like we do offsets
++                # that were not in the original request.
++                pass
+ 
+         for offset in self.offsets:
+             settings = line_settings.get(offset) or LineSettings()
+diff --git a/bindings/python/tests/tests_line_request.py b/bindings/python/tests/tests_line_request.py
+index 217c299..66e9e8d 100644
+--- a/bindings/python/tests/tests_line_request.py
++++ b/bindings/python/tests/tests_line_request.py
+@@ -596,6 +596,19 @@ class ReconfigureRequestedLines(TestCase):
+         info = self.chip.get_line_info(2)
+         self.assertEqual(info.direction, Direction.INPUT)
+ 
++    def test_reconfigure_extra_names(self) -> None:
++        info = self.chip.get_line_info(2)
++        self.assertEqual(info.direction, Direction.OUTPUT)
++        self.req.reconfigure_lines(
++            {
++                (0, 2, "foo", "baz", "buzz"): gpiod.LineSettings(
++                    direction=Direction.INPUT
++                )
++            }
++        )
++        info = self.chip.get_line_info(2)
++        self.assertEqual(info.direction, Direction.INPUT)
++
+ 
+ class ReleasedLineRequestCannotBeUsed(TestCase):
+     def test_using_released_line_request(self) -> None:
 -- 
 2.43.0
 
