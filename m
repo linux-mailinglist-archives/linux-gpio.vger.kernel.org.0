@@ -1,84 +1,84 @@
-Return-Path: <linux-gpio+bounces-26936-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26937-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C145BC9314
-	for <lists+linux-gpio@lfdr.de>; Thu, 09 Oct 2025 15:05:52 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 875C1BC931A
+	for <lists+linux-gpio@lfdr.de>; Thu, 09 Oct 2025 15:06:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E54E19E8217
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Oct 2025 13:06:14 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B1B744FA51D
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Oct 2025 13:05:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 873E52E6CDA;
-	Thu,  9 Oct 2025 13:05:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6ABF2E7160;
+	Thu,  9 Oct 2025 13:05:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OqlfJKi3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WIlns6IL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F972E2F13
-	for <linux-gpio@vger.kernel.org>; Thu,  9 Oct 2025 13:05:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D7C2E62BF
+	for <linux-gpio@vger.kernel.org>; Thu,  9 Oct 2025 13:05:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760015143; cv=none; b=BalHlRCwGBwQk2PxVn7kHCl1KZRyxpG4Ijtt+zd8f6XZer3CZj4xIslQdQMYFQvS4qh4ZTuSy91I58H8sDRi75B5NZS2FDexoGgVu+QoCsi8Pk4j29TfsYYD+iwvON66VKdM37E5U0vW2oLeZsyJSS4BkE+NaAGzRHA3+w19a2Q=
+	t=1760015144; cv=none; b=LPE0Ril02KFE0cYh5cwuSvDpkVQSZwxagOpvbKUwn4HdDAjMngsdmb1HFBhAVPaIiRs29d7PXGylXOC41DxP65cZ5G8VbW5428WaEnK3sQJbN9+UZw9F3B3FMcwAiSk8KQB53b5Ig4wfgwZUDi768DUlycuTbtfrNxpuvgBOEJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760015143; c=relaxed/simple;
-	bh=XQ/yGjbgdK52N4aWcQHNgRGJYz6oVtITah9NkMLLxII=;
+	s=arc-20240116; t=1760015144; c=relaxed/simple;
+	bh=eq2fhu2buBAaD9fbqHJ8I2zRrArWY4GYZkTI9sNtUr4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TDF0qJVfWSKC8F9tuZ+iK0ZkRrrJwrbyTflJPQVtEoaiwjKJ/PBbhx5peLxype9pnUYkMGWYQ9Fm1m2SsDp2inJVrkUkEGlmIPJVJdQpF9sz0NGBVUbzgSKr5aLy+rtauZy86uUQ8W0yax1eXLe1xMKqlZlNbKM54sI6ReJdn8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OqlfJKi3; arc=none smtp.client-ip=209.85.166.41
+	 MIME-Version; b=fc7Q/O1kkMgWiLXFqKZajKCwOGYTvOtsydVZ0TvhLcGJ8frmbZeDN4tMb/kxw4CzHPFr2pSix7WEj/yKrkvrD/Sc0celKKv5FSq0tC/3CM+nr9qYo/Kz6px39ztEDGlGfPDqHOF5yDIdwYZtkbxMECB4a9V5Ohnn+sQM5BDwObM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WIlns6IL; arc=none smtp.client-ip=209.85.166.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-938bf212b72so32039039f.1
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Oct 2025 06:05:41 -0700 (PDT)
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-42f94689e73so4260735ab.0
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Oct 2025 06:05:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760015141; x=1760619941; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1760015142; x=1760619942; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zGRohN7p2xqxULshMrdlgGrxhdD/uas7NTDYGgpGDSU=;
-        b=OqlfJKi3kneClcQYFHSWti8AoaAoZmHqFfOTdueK3f3BD9K2l8jYro0VrIDIbBzWyk
-         qvxhDjcNj9Jr+d2zMkA15MWkjGQtwEp5V1OYzhktYHy3f/PjRzjuVXp239cO7RE18Hju
-         9EMEtkrNfXgBU8PCBChIua/zVFCJL3JkEYu/feVWobxxBevr8R2gOpZx8ozsXKwAjjqs
-         RZ/EKyyekTg/JX+2P8nc6Ho8L4wfsjd3I8vY7Gf3DVL7BCB5P/bCxmYAhKBmZtnju0In
-         CpsQTnHkcy7KHTBnHU5n27RALSNf1UU0YIX60QkRZWBslI80X5dSiBZBtjwrJsvrSw8X
-         4M6A==
+        bh=yZHku2IAANm3wSbNT6uuDWG0PR35PxfnJVzGrxoHHwI=;
+        b=WIlns6ILczGO9qYVFff4XZgN1utGHADY6UN1K/MXQNWe0QKSlpX/mAupEF0AZzVtbN
+         RSOdSdpZX/tQSzwz9qB3B/r402b8GZswiRHW5NJ58/d0kG90CLXTh0jZDQBkwbR7V2Sj
+         ph34dyy4RCnxJ7wMfWyEjE6L7EO+zjd6+AkOuIBx1m9ZMiCnlYniCpuLxvguZO7oWXgD
+         TN0npg+epVQ94ANUsWY/i2IkessNWWcKy+CJdi5BtzJ4ktljaoqr+XnjEZ93V+E8VQGD
+         fr8SqvKKZEszpQdj9Z4yE+G3VSSKsZe1I88KhMH8rBbx4B1oUItp7PW3dnaXnsPHVe3x
+         BzNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760015141; x=1760619941;
+        d=1e100.net; s=20230601; t=1760015142; x=1760619942;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zGRohN7p2xqxULshMrdlgGrxhdD/uas7NTDYGgpGDSU=;
-        b=E5IyaSW25LvdqM0ACDz9fCJkQ6oVjj3Q8P5C2jf94fcDf3lvsS//7UvGT8cwPNpcry
-         F9CJsGURfLFJX8FE0FG1l6xd8lyWlR1CJvSoktA0WCVIBZd4Qm5OnjdW1vpWvCm/hFHp
-         /bQTZcljG4+HFGDLnnHoa+DObwx+C3mYdktR6N6NTdOLHW8DLcoxpExslPhjMmPVCr+n
-         HCyjC4ZTroow8CRrAdZM1gv1UFyIjzq3/GoHQeVS0UWvl4jhFdpMb3RKjLvKefflcaoQ
-         hWsZwdewVa0OkgSbPLvuTk5bg4AtePblWe/poQTDl2L1zJKV+jNSr8kHHSjVkIb97lO8
-         X0EA==
-X-Gm-Message-State: AOJu0YwRaiHQQ+NPutkpap69Xbd2rGXESBD25Q8JWYV8YzhLHzp3Abah
-	iRqREwGJY/LzAOrfDDiAi2a8Vp9BehaIALwSH9eyyZs/PP6oWt+5oo4cBr0qA6NR
-X-Gm-Gg: ASbGncuL7Dy9mLwpgPe+vLD3LsVp8ZLVg1G2bfOnk/QxksQBK1A67fjm5iA0IwVEjOp
-	2dqj4St9Wdro34HymOn5wShjGK5LIvFSNVRUICYlZPbBD6ieqvctoZfwh5+pZdnuRLVUy0fUbg8
-	WpNSJ9nIplDixd26CSHQNuZnHqYzAhKSxuczKhAcYJncoGAjk8mib+YLHPb3DjW6RyASjGEl117
-	MkNtqXkPJcFY5LQiB3j+SuH02MKZFqQnXz/pCpzVEpGnnjHdPrFOl8RvJYvXECGnGqw3osVXM/C
-	qKRI7Ai9by6aOV2m7W6ACmDwvJ18VeLE57Q1RaBpkP1Z7LWWk084g7uiOdil4outwCotURjuUk7
-	NC10A3tkiWjRhGce2Np8BNqjoe2J4DiXihptnH7BaL7ZSKVcz144=
-X-Google-Smtp-Source: AGHT+IH3fwCEv9ReqNR0ksaNYrpSId8Tnvtx0l0k5c4FJiG1KSk3/mDd7A00p6lVp976eW/tVsEiJw==
-X-Received: by 2002:a05:6602:6b12:b0:8e0:f662:69e6 with SMTP id ca18e2360f4ac-93bd196079dmr780467639f.11.1760015140542;
-        Thu, 09 Oct 2025 06:05:40 -0700 (PDT)
+        bh=yZHku2IAANm3wSbNT6uuDWG0PR35PxfnJVzGrxoHHwI=;
+        b=NCc1Cu/brSXfljdEQEaKc2N6AfqJaU2WI78vz72nJfuy+jnW43xd3Fa9+Bmgkjwg+C
+         gLCXIpBAD73Gc7x2u9F0Dj/UMzGPPf8Q5YxnrQbejD7q+5btOKhxrKYqU81unu4Z6AIc
+         RWNiNP6VVHW+DXa/5qXj8wyobVVp9AnHEjO8MUy9XJm3GDMdhNK1j37OLHknUyq1QhQV
+         0maKvjANHIrayziDivJF4ZbQgyzpH6uS65Wnr0ktriu8mIxfangtTof44XozgyX+HwnH
+         MEe8YFkhbt/Aqe7hMs4ilGDlmqKP0y3D6IsN/9YS7LYT0XagrX+ZS/oVK5tKTouDNIuy
+         QSKA==
+X-Gm-Message-State: AOJu0YxW7Rf03qMpzAiKqMDU8imK3JS8sin4jQitpfBGKsChunjsedFc
+	lYvPt7DO2XJTUaT1wx2FGHfqygUZAi20Z6II5jRxqyX/cX1XbjS0CPXwHj8fx2ln
+X-Gm-Gg: ASbGncuw6+z+fF3wNPJ4ZkaF1tTLGkL7uN6SJWlDfhJFKJQ4wGdl9Tc/4bk4cgjDqgz
+	e8efDX+IrXvkSUqeXYqpipYVVkGnDT8Gi7rUERL9t/6uh3/2HTDB/HXpGRYfMJiTLZVf9BRegCx
+	1L5pvrnWAZF6mPFZeP6TpyOCnqQhN/XdyKVaNVLjp/VpjYbfUFgglQhB7JweyKDRmPa7QZr0uim
+	HI4At+MC8gNM150kmXNkL3n49pGQH0qn7a1giNtaK7RfOKk3IbKXxRqu+FvVYFtbsfCWzQSuX4l
+	5ksH6BRS2LI7CL/YJ9dpiNgXsvgGduF0GdZfGy4N8PuJohkcT37tmd7YOHpJSNiPdPGCdUqhXxQ
+	Bn+S3L60ORGMVfvt/R2NPrgCx1uoPJ5xQ7eNBtA+m+zuHcqQSVgTdydj5sQHehg==
+X-Google-Smtp-Source: AGHT+IGSu4uPbLXULIt12INKaCI/KVLdYGY9aaK+x3Ki40fKAX7btmrxSsOOueCF+gSFG6XmYYguPA==
+X-Received: by 2002:a05:6e02:2783:b0:424:866:ec6d with SMTP id e9e14a558f8ab-42f8736d251mr70775125ab.12.1760015141453;
+        Thu, 09 Oct 2025 06:05:41 -0700 (PDT)
 Received: from vfazio4.xes-mad.com ([162.248.234.4])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-57b5ec07cf7sm7899137173.52.2025.10.09.06.05.39
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-57b5ec07cf7sm7899137173.52.2025.10.09.06.05.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 09 Oct 2025 06:05:40 -0700 (PDT)
 From: Vincent Fazio <vfazio@gmail.com>
 To: linux-gpio@vger.kernel.org
 Cc: vfazio@xes-inc.com,
 	Vincent Fazio <vfazio@gmail.com>
-Subject: [libgpiod][PATCH 3/9] bindings: python: chip: track requested lines when enumerating
-Date: Thu,  9 Oct 2025 08:05:09 -0500
-Message-ID: <20251009130516.3729433-4-vfazio@gmail.com>
+Subject: [libgpiod][PATCH 4/9] bindings: python: chip: simplify duplicate checking
+Date: Thu,  9 Oct 2025 08:05:10 -0500
+Message-ID: <20251009130516.3729433-5-vfazio@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251009130516.3729433-1-vfazio@gmail.com>
 References: <20251009130516.3729433-1-vfazio@gmail.com>
@@ -90,60 +90,87 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Previously, an offset map was maintained to lookup the name used to
-request a line so that a list could be generated that reflected the
-identifier used to request a given line.
+Previously, a check was performed to prevent requests that included
+duplicative lines.
 
-For example, if a config looked like {0: None, ("foo", "bar"): None}, the
-LineRequest.lines property would contain [0, "foo", "bar"].
+While this provided quick feedback on erroneous requests, it penalized
+callers that had a good config due to the over head of iterating the
+config multiple times.
 
-Now, the line identifier is tracked in request order as the config
-object is iterated to avoid maintaining an offset map.
+Now, duplicate check is performed as the config object is iterated.
 
 Signed-off-by: Vincent Fazio <vfazio@gmail.com>
 ---
- bindings/python/gpiod/chip.py | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ bindings/python/gpiod/chip.py | 31 +++++++------------------------
+ 1 file changed, 7 insertions(+), 24 deletions(-)
 
 diff --git a/bindings/python/gpiod/chip.py b/bindings/python/gpiod/chip.py
-index ba2877d..23662ef 100644
+index 23662ef..1f4a9bd 100644
 --- a/bindings/python/gpiod/chip.py
 +++ b/bindings/python/gpiod/chip.py
-@@ -302,7 +302,7 @@ class Chip:
-             mapped_output_values = None
+@@ -3,7 +3,6 @@
  
+ from __future__ import annotations
+ 
+-from collections import Counter
+ from errno import ENOENT
+ from typing import TYPE_CHECKING, Optional, Union, cast
+ 
+@@ -236,20 +235,6 @@ class Chip:
+         self._check_closed()
+         return cast("_ext.Chip", self._chip).read_info_event()
+ 
+-    def _resolve_config_keys_to_offsets(
+-        self,
+-        config_keys: Iterable[Union[Iterable[Union[int, str]], int, str]],
+-    ) -> list[int]:
+-        offsets: list[int] = list()
+-        for key in config_keys:
+-            # perform strict int/str check since str is also Iterable
+-            if isinstance(key, (int, str)):
+-                offsets.append(self.line_offset_from_id(key))
+-            else:  # key is an iterable with multiple IDs to resolve
+-                for item in key:
+-                    offsets.append(self.line_offset_from_id(item))
+-        return offsets
+-
+     def request_lines(
+         self,
+         config: dict[
+@@ -283,15 +268,6 @@ class Chip:
+ 
+         line_cfg = _ext.LineConfig()
+ 
+-        # Sanitize lines - don't allow offset repetitions or offset-name conflicts.
+-        for offset, count in Counter(
+-            self._resolve_config_keys_to_offsets(config.keys())
+-        ).items():
+-            if count != 1:
+-                raise ValueError(
+-                    f"line must be configured exactly once - offset {offset} repeats"
+-                )
+-
+         # If we have global output values - map line names to offsets
+         if output_values:
+             mapped_output_values = {
+@@ -304,11 +280,18 @@ class Chip:
          name_map = dict()
--        offset_map = dict()
-+        requested_lines = list()
+         requested_lines = list()
          global_output_values = list()
++        seen_offsets = set()
  
          for line, settings in config_iter(config):
-@@ -310,6 +310,7 @@ class Chip:
+             offsets = list()
  
              offset = self.line_offset_from_id(line)
++            # don't allow offset repetitions or offset-name conflicts.
++            if offset in seen_offsets:
++                raise ValueError(
++                    f"line must be configured exactly once - offset {offset} repeats"
++                )
++            seen_offsets.add(offset)
              offsets.append(offset)
-+            requested_lines.append(line)
- 
-             # If there's a global output value for this offset, store it in the
-             # list for later.
-@@ -322,7 +323,6 @@ class Chip:
- 
-             if isinstance(line, str):
-                 name_map[line] = offset
--                offset_map[offset] = line
- 
-             line_cfg.add_line_settings(
-                 offsets, _line_settings_to_ext(settings or LineSettings())
-@@ -340,9 +340,7 @@ class Chip:
-         request._offsets = req_internal.offsets
-         request._name_map = name_map
- 
--        request._lines = [
--            offset_map[off] if off in offset_map else off for off in request.offsets
--        ]
-+        request._lines = requested_lines
- 
-         return request
+             requested_lines.append(line)
  
 -- 
 2.43.0
