@@ -1,73 +1,73 @@
-Return-Path: <linux-gpio+bounces-26934-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26935-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2EC1BC9326
-	for <lists+linux-gpio@lfdr.de>; Thu, 09 Oct 2025 15:06:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 853DBBC9311
+	for <lists+linux-gpio@lfdr.de>; Thu, 09 Oct 2025 15:05:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9FEA23C3164
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Oct 2025 13:05:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B768F19E82ED
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Oct 2025 13:06:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1978B2E6CBE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3A2F2E6CD5;
 	Thu,  9 Oct 2025 13:05:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jh9SYmDL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ty6mUU2V"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4328A2D6E53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26EAD2E62BF
 	for <linux-gpio@vger.kernel.org>; Thu,  9 Oct 2025 13:05:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760015141; cv=none; b=isXxusRBrJjcR66VJq55tm174iZBXaS+odrKkyzs6hxU+xlHZegN1cUp6vcQeYwMKu89GGTGPmZx8xD0ZNXMFof40M3fe4PHLv94vdkMgvcMaGI60arFpPLklHLN2B/MFaums25Nw2rRYFsttNpoaxDGLEGCUN7qzOlKIh75Fjs=
+	t=1760015142; cv=none; b=MHwfMHEo3BBv5XsTlODp/Zdu7I/VI5uMdg8vs/gVUf4FhX4ZMGYtZMX+gB84tHWor8z5MLWqEzcbmA7qJxy4rqIGyyZX0/iSVKSJx5Ri1+P31KgIKIrqYUMxwRu8+pEVWZuFkMw2/r/Fa4wR2p6tuoapc3N6PybzfyC6qtd4eww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760015141; c=relaxed/simple;
-	bh=LhWSL2R7RdHGQSqWxi4RfdJwLQ4gt6mlK2tVINdKNHM=;
+	s=arc-20240116; t=1760015142; c=relaxed/simple;
+	bh=ca7XIHbmd4Q3/1Y0X8Oc446z4wg/RnNWxNC/A0PPoqM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bdMyM1h8/q3gXH9+VayyHihtwPwS76z0KZN6AoEf+Ysopk4hLrXrgqUvHKBFjh8uCeFTXPI6qtgQ9JylrF3gq1fZP85RbQdZn3yNSD7ZVwVVFeL5H+KEyQ8DzjTb18hNzjRtphVzbCz9NC3ubKNOmXhc7zYchgkwL95fj91mwZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jh9SYmDL; arc=none smtp.client-ip=209.85.166.51
+	 MIME-Version; b=DMbio9dF9sQG2LagvYZ3LsQmRUTol+3mSaYFxoEW/lt591U/3oA3Hg5ztTb4Tn/yvDmf3hj3ldm80Yf0+U6OO9Mef++S3+1TnGQ7KP7JWwfqOgfhrE8ZKW3ZyHaMTFHSKj8DwAB+MY8w7jl8KNTyLq/z1aPu20lpeQSVYS2v5lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ty6mUU2V; arc=none smtp.client-ip=209.85.166.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-92c781fd73aso87574939f.1
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-92c4adc8bfeso92125739f.0
         for <linux-gpio@vger.kernel.org>; Thu, 09 Oct 2025 06:05:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760015139; x=1760619939; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1760015140; x=1760619940; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pXEWaN12dy7Y/W20U4zbrMK0ZsL1cxzWh6/oEKrvn3Q=;
-        b=jh9SYmDLg6Mg6EENDnjXRHUnv6D3QDeqhng7aNuh7gxmkLiR/vmCmC0ARCmyCFTxri
-         a62ApJFtSdd+9kmqqpdqsEmfJF50nw1QKk6bWUlOvzXpcSJLLFnHagjcDvR43BBSs8RL
-         5jW6TCnQLM01tP3fYN3HibibAWqJA/Qc25/nr3uGD46lFLf4BuyviK4mCOnRv6Li4Ay5
-         IzNoM/sWZHRIva6VglFK2dicB8A82c7dNv/UOWzuDuB7TvnDL3Cz0dlhjuOuUF9LuyJa
-         +vybUpjTm9Z1uJXpiAuiXKLDSl7BduGRmV9nWto2avGf0OKYqdfgtWIflB2zXTGVayPy
-         SM5A==
+        bh=N7EKALmjUrzY5HEv6xGnLW05yNQAoJuiLeg0XXfjaiE=;
+        b=Ty6mUU2VJ2B4Cz+6ysUiQnZmc6LF6RzYLNsey/NqB4NkLTKSV2GCGsHwPkxcCjJCTy
+         FtWKOc2X4s2OQoSRomIfEIDoTc8NhFxWUgXelKrBsTFpb2Qzxhna4uAz0+I5IVqQzuOL
+         n05D27lbSjcTf1R7p3gsZ5JyORzU3aHWZ91xDXWuKZN6RJhl1PdvUhG0Waf9jQb8tm7o
+         SAbI3fl5sHGIHTHSPSYJOhHmUgPjSg6Ov90XF77s1GgTjFLeOuxnFQaXjXTC3NMKUjX9
+         PlzOiZvKaIJ7CtQDGS8Nu4yJcTMtN2BwIHrHBZUHLtncbju2nEVjZw7aopitZ55U+ImE
+         bHAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760015139; x=1760619939;
+        d=1e100.net; s=20230601; t=1760015140; x=1760619940;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pXEWaN12dy7Y/W20U4zbrMK0ZsL1cxzWh6/oEKrvn3Q=;
-        b=v2Khz43IDskERDwmlfE7ALvZ15fQ7ThiiNbcQT9CnmCszKeJcgJWraDxBAxmpCx4MP
-         xfYnZkc5hWf31wb24DnAUgiJ/FIZfSNSbC073lXp4hRoQPKaAOnBkv7+KamyX7K8ZVuX
-         gpRDDLaEdbPNm4T/fiMmf+xwW+wTEkxxtV13Kf7p+LgpRGIOyu/Jp4D84m7UHz/8bO9X
-         xmoSO6tk2fzL7tjGJNnR7Dmh6W/HxKu87Vr+md9J62pK5/lGt3rSIdZohC/VzB1sNi4y
-         A52YwWGlfeu30maM9iXscKsb9UGxOEHXTwaKcEibfirTkb14Y1iTBMiZfbCmRInLyLiK
-         bhHg==
-X-Gm-Message-State: AOJu0YwsnjjMti5NlBH4IDXOFyB8TjiuMq1rUoasQVUTX7Qkscl5GiK0
-	0ytmtDBYTXCcGdBOc8AEJjNlbkxpEtHLporK5PBLgHUh650Y/u+pSvxBLBAaGLWO
-X-Gm-Gg: ASbGncv9MJaSN8y2LbyR8b1o7ImB8uzwpI6qCTmL/OppzSS+FYtpEnZe60naHM41OM2
-	7sE6drbLpQboN7p3fQYj1jFWjoKFx4TEQhIE/ZFRhShaF9Lcj9Ka8A7HvVXpiSWgMnJtitcw6ix
-	jMR6qTlJnTsFARLI+10jkgq0tPEGkv7yriLvZjOVLPGB94AAkEabEn9ThOQfo8BcTsHfE77GqGb
-	7rFMFXuaDYr3So1VJLozrwQA8i0cL4xA6vqLcpTcbdX75CxyfOrNfvxK0khyJBMQzhv4qjYza2t
-	SoASzqMvtBxFCSSz3y9HjySjM81NnCVFAoCn0hpK2F3bqw9Fb2gmYl2oeezTA/RdPkocWBtQDql
-	0VRWebcFQmUueSj2KUjkkx3xPrcnzMia5wlLrR/eTwN8hssPBilU=
-X-Google-Smtp-Source: AGHT+IG0TAUlsKyGwRWfNMXdy+ZBwReHyJIMTI9G11wrDKckgPf0GLLu2VYQ+xzEShyKcy/F8zWNUA==
-X-Received: by 2002:a05:6602:341c:b0:93b:d70e:68bf with SMTP id ca18e2360f4ac-93bd70e6b04mr625910539f.8.1760015138634;
-        Thu, 09 Oct 2025 06:05:38 -0700 (PDT)
+        bh=N7EKALmjUrzY5HEv6xGnLW05yNQAoJuiLeg0XXfjaiE=;
+        b=HUp7P+nwOl/1W0o2b2yM6vXcfNAwjwiKCTb80gbEwfk34TxvyBuaK4+Y/421/gUzvN
+         nYcFrRMoI4cxdVoyNWUqO3q8GEi/pns3/+pwGzj/pHbjd+Ek/EvEMANYPOKmNn7lkUYZ
+         6SuD1Is3dyR4SQMUqH+DQhaWgtyE+YkRIbswjFhXf019DYFSYoxRAkuJ8u38pROywz8Q
+         JmTyQHM3h6ltktZxFUkTIrHIhwsvQfBy7n8ypkGM7qb3gbx5L2NzAVGKJ4JzJMNXDtGe
+         lQKHNAP8aEngFrjFSNK5HVMzDREiLQluiedG/h2MDQh18OPUjNmaByi/x4v0Vd58eeDq
+         AkTg==
+X-Gm-Message-State: AOJu0YwdG2iarhgtz+CZiu/aupq3P3hi49HeBLpdetPDJoTk3gqywnW1
+	729sNmLf6cuRffw1Z+145hmKx3cGu5W/RR0t2DOtF33CcZXR+X2k0j4RfszZSRKq
+X-Gm-Gg: ASbGnctF9Y+cxddBdt9DFZoQFt94njnfOwNt7HQjgttWuaecV/Frg5F6Wc5hLj12IBp
+	U2nKHnjdX1fXrFBcagECS2FkUSQvdXyw/+6/c/siCEyxGOGSZoXTVUf7IGyI+/6ET7XGSu+TuG2
+	PU37gRAHsCM5eVYKxRm62I7ZnbCaSNMtEUm3kSs3f3+hn3NxEnkZgNdEK4DWMBhxLevvJ0H9lRy
+	pjXuA6hRV2MH/2OlC3qXzDahYMIfjeiXjlHDf9c7+ijzvdUcU4hj2i7WzIagnIvsS5mjEap/5NV
+	Evc7IlR+mZxjRnYeGXElkQZxVA48o7LhEiqBYSGCvCnxMeAljzAEAT3Lh1ti84gFLUxTu4Ux8cT
+	PBjGU3nRaAYtXCFHX+OlT26ghh0Fj8MLxA2+ZOxW7vfAyxPErJRY=
+X-Google-Smtp-Source: AGHT+IHSlELTj5b3VtndMTrL/jHmRUvrGZfU95mqT4/tTvw5GxjPxCwQb3NPPX/oiIP2VTGYoZUc3g==
+X-Received: by 2002:a05:6602:3425:b0:936:7fd5:b8be with SMTP id ca18e2360f4ac-93bd1960bdbmr831469439f.13.1760015139633;
+        Thu, 09 Oct 2025 06:05:39 -0700 (PDT)
 Received: from vfazio4.xes-mad.com ([162.248.234.4])
         by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-57b5ec07cf7sm7899137173.52.2025.10.09.06.05.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
@@ -76,9 +76,9 @@ From: Vincent Fazio <vfazio@gmail.com>
 To: linux-gpio@vger.kernel.org
 Cc: vfazio@xes-inc.com,
 	Vincent Fazio <vfazio@gmail.com>
-Subject: [libgpiod][PATCH 1/9] bindings: python: make config iteration consistent
-Date: Thu,  9 Oct 2025 08:05:07 -0500
-Message-ID: <20251009130516.3729433-2-vfazio@gmail.com>
+Subject: [libgpiod][PATCH 2/9] bindings: python: remove unused attribute from LineRequest
+Date: Thu,  9 Oct 2025 08:05:08 -0500
+Message-ID: <20251009130516.3729433-3-vfazio@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251009130516.3729433-1-vfazio@gmail.com>
 References: <20251009130516.3729433-1-vfazio@gmail.com>
@@ -90,148 +90,40 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Previously, Chip.request_lines and LineRequest.reconfigure_lines
-iterated over a config object but did so in subtly different ways.
-
-Create a generator that iterates over a config object and returns line +
-settings pairs. Update the aforementioned functions to use the generator
-to consolidate and condense code.
+The _offset_map attribute was a map of offset -> line name. Values were
+only inserted when a line was requested via name. As this map is never
+utilized, remove it.
 
 Signed-off-by: Vincent Fazio <vfazio@gmail.com>
 ---
- bindings/python/gpiod/_internal.py    | 22 ++++++++++++++--
- bindings/python/gpiod/chip.py         | 38 ++++++++++++---------------
- bindings/python/gpiod/line_request.py | 12 +++------
- 3 files changed, 41 insertions(+), 31 deletions(-)
+ bindings/python/gpiod/chip.py         | 1 -
+ bindings/python/gpiod/line_request.py | 1 -
+ 2 files changed, 2 deletions(-)
 
-diff --git a/bindings/python/gpiod/_internal.py b/bindings/python/gpiod/_internal.py
-index 37f6661..ee15796 100644
---- a/bindings/python/gpiod/_internal.py
-+++ b/bindings/python/gpiod/_internal.py
-@@ -1,11 +1,18 @@
- # SPDX-License-Identifier: LGPL-2.1-or-later
- # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
- 
-+from __future__ import annotations
-+
- from datetime import timedelta
- from select import select
--from typing import Optional, Union
-+from typing import TYPE_CHECKING, Optional, Union
-+
-+if TYPE_CHECKING:
-+    from collections.abc import Generator, Iterable
-+
-+    from .line_settings import LineSettings
- 
--__all__ = ["poll_fd"]
-+__all__ = ["poll_fd", "config_iter"]
- 
- 
- def poll_fd(fd: int, timeout: Optional[Union[timedelta, float]] = None) -> bool:
-@@ -17,3 +24,14 @@ def poll_fd(fd: int, timeout: Optional[Union[timedelta, float]] = None) -> bool:
- 
-     readable, _, _ = select([fd], [], [], sec)
-     return True if fd in readable else False
-+
-+
-+def config_iter(
-+    config: dict[Union[Iterable[Union[int, str]], int, str], Optional[LineSettings]],
-+) -> Generator[tuple[Union[int, str], Optional[LineSettings]]]:
-+    for key, settings in config.items():
-+        if isinstance(key, int) or isinstance(key, str):
-+            yield key, settings
-+        else:
-+            for subkey in key:
-+                yield subkey, settings
 diff --git a/bindings/python/gpiod/chip.py b/bindings/python/gpiod/chip.py
-index 169488a..9f38ab7 100644
+index 9f38ab7..ba2877d 100644
 --- a/bindings/python/gpiod/chip.py
 +++ b/bindings/python/gpiod/chip.py
-@@ -8,7 +8,7 @@ from errno import ENOENT
- from typing import TYPE_CHECKING, Optional, Union, cast
+@@ -339,7 +339,6 @@ class Chip:
+         request._chip_name = req_internal.chip_name
+         request._offsets = req_internal.offsets
+         request._name_map = name_map
+-        request._offset_map = offset_map
  
- from . import _ext
--from ._internal import poll_fd
-+from ._internal import config_iter, poll_fd
- from .exception import ChipClosedError
- from .line import Value
- from .line_request import LineRequest
-@@ -305,28 +305,24 @@ class Chip:
-         offset_map = dict()
-         global_output_values = list()
- 
--        for lines, settings in config.items():
-+        for line, settings in config_iter(config):
-             offsets = list()
- 
--            if isinstance(lines, int) or isinstance(lines, str):
--                lines = (lines,)
--
--            for line in lines:
--                offset = self.line_offset_from_id(line)
--                offsets.append(offset)
--
--                # If there's a global output value for this offset, store it in the
--                # list for later.
--                if mapped_output_values:
--                    global_output_values.append(
--                        mapped_output_values[offset]
--                        if offset in mapped_output_values
--                        else Value.INACTIVE
--                    )
--
--                if isinstance(line, str):
--                    name_map[line] = offset
--                    offset_map[offset] = line
-+            offset = self.line_offset_from_id(line)
-+            offsets.append(offset)
-+
-+            # If there's a global output value for this offset, store it in the
-+            # list for later.
-+            if mapped_output_values:
-+                global_output_values.append(
-+                    mapped_output_values[offset]
-+                    if offset in mapped_output_values
-+                    else Value.INACTIVE
-+                )
-+
-+            if isinstance(line, str):
-+                name_map[line] = offset
-+                offset_map[offset] = line
- 
-             line_cfg.add_line_settings(
-                 offsets, _line_settings_to_ext(settings or LineSettings())
+         request._lines = [
+             offset_map[off] if off in offset_map else off for off in request.offsets
 diff --git a/bindings/python/gpiod/line_request.py b/bindings/python/gpiod/line_request.py
-index 69f86f6..7956e54 100644
+index 7956e54..c0798b5 100644
 --- a/bindings/python/gpiod/line_request.py
 +++ b/bindings/python/gpiod/line_request.py
-@@ -6,7 +6,7 @@ from __future__ import annotations
- from typing import TYPE_CHECKING, Optional, Union, cast
+@@ -36,7 +36,6 @@ class LineRequest:
+         self._chip_name: str
+         self._offsets: list[int]
+         self._name_map: dict[str, int]
+-        self._offset_map: dict[int, str]
+         self._lines: list[Union[int, str]]
  
- from . import _ext
--from ._internal import poll_fd
-+from ._internal import config_iter, poll_fd
- from .exception import RequestReleasedError
- from .line_settings import LineSettings, _line_settings_to_ext
- 
-@@ -174,13 +174,9 @@ class LineRequest:
-         line_cfg = _ext.LineConfig()
-         line_settings = {}
- 
--        for lines, settings in config.items():
--            if isinstance(lines, int) or isinstance(lines, str):
--                lines = [lines]
--
--            for line in lines:
--                offset = self._line_to_offset(line)
--                line_settings[offset] = settings
-+        for line, settings in config_iter(config):
-+            offset = self._line_to_offset(line)
-+            line_settings[offset] = settings
- 
-         for offset in self.offsets:
-             settings = line_settings.get(offset) or LineSettings()
+     def __bool__(self) -> bool:
 -- 
 2.43.0
 
