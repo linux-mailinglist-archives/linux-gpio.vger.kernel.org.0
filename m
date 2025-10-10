@@ -1,92 +1,96 @@
-Return-Path: <linux-gpio+bounces-26963-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26964-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD346BCC57B
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Oct 2025 11:29:50 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id E28C7BCC587
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Oct 2025 11:30:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 31EBE3547B1
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Oct 2025 09:29:50 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9B7A04EB28A
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Oct 2025 09:30:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2143C26B77B;
-	Fri, 10 Oct 2025 09:29:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA65926F2BB;
+	Fri, 10 Oct 2025 09:29:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="hUAOJjAs"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="m6MhXl15"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011029.outbound.protection.outlook.com [40.107.208.29])
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011001.outbound.protection.outlook.com [40.93.194.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FABE137932;
-	Fri, 10 Oct 2025 09:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2F5137932;
+	Fri, 10 Oct 2025 09:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.1
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760088583; cv=fail; b=DkzyMJ8oL5mrMbzzu7I0jnJKICEDqUV3VBOqUvb8rH9HDgwYpsB9vcOdg7vgekG/Kj4JY7KzuxEj8RpH2I8ka5AEKm2/CXdIUpyqZAdkJCE3SfoVxmmwH3EHI+6CiFio6GCk+B+adClkstH2TqLPkK59EKAb0AcAG7YPCzFhXts=
+	t=1760088591; cv=fail; b=DPSZJVhFVdqrLPkh/I36hMTXARNyc/DB2Hzs8HSSZ0sIjdMwrs/YIuZzTSCBtTpXJLuhUiLK9cHaB79MnGvDg1p00VSxoFzttCnAN8C/LMTKQf+3Vy7rRhnb1V1SMdrtI2vP94NEu4pKrnqlCiqxGrY2m0gxBqOqFtZaAunC86c=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760088583; c=relaxed/simple;
-	bh=MzccJtzennFQRQwxrXNo5Bt0nCxAdZ1JlYACNydkXDk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=B4cy7/qjPl39QgBPAF2vaotQxx5MAJLhP/cXp1kvgHyTV6bWw5yH543bvVTNq18+m95XPF2WLqvo1IWMjTTzKAMKcUUEu2PAYlmdsdKuF9iu+5gCl3JT3WNMjJCpDdprzLo0Dl/RbxCx5y3SCHpDXMGZk6R5LmthiFJ9mWD0ejg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=hUAOJjAs; arc=fail smtp.client-ip=40.107.208.29
+	s=arc-20240116; t=1760088591; c=relaxed/simple;
+	bh=9xjC0Dg1nopyG11ZOf881MGahNGeH3zeEaRkAfBhNlY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AEfqEYoB7I+1g4+gYZWiydr4Lf6fRAZbP59fbW7dTwwhpDRDA/3xW73xKeAxLeFQ12OYcoE4VxlezrsQagmqmKCME+2J2+nIof+1HXY/tV4QUaZVhUgqA7H8St0YVjMlibJ0LZY0QjZiQVKRYJcXYvUqUluphqZ1khl5aQQSWEM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=m6MhXl15; arc=fail smtp.client-ip=40.93.194.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=x+4c/GQw63QiZbi4sP6JNbk9yQMOD59Xxz0CR6EwF/91ErHY13qrrkapNg4ymWW5P6UHY7uei61atnerfFvAKLOcYU/tq4NDe9sOiWX1a6Ypp/6LhMrg2H/zvuOvOtFeby5ojqhc3eYvKV7bYaAPkmO558EhZni1nFVOdXtO3vl//tnTFKETVYSrASC1Ba2D20K4X6XmVR42kg0zPzz7sR5wt48sWxnTBd03l7pYUJkYo98l597EVbsI660Rus0EIs+uAUFtLEQe4qO/HL5ZL5urjWxjAIifeS1PC6XVglPeoBX7E8nBxguFK6qhQsx8b670Hurd73KNcIv6SrLxzA==
+ b=ro0J2Aw2z1E4mGzGIPhhQA6cGHzfZgvtHzbVA9uyB+3sdXMXKEr1TBBqOS5aqwhJBbkraqni4KihhmHtoVo0s0C17+Rz/AVs712Zv4IZ5emUEmsRjPDI4OVvn24qzWE15CDw7EUjR/i6l6ItD7n+WZVHFnD2Lga7djf3vXOL0aTMM4HFlyvTQbVtbOH+yj296Prh0NVgUKtrq7UMK2075KgsqngGADZwt2T+I4k5nt+OZ+8eLDU57R3kG+KJzScqwJaiA2wYK9UkipvaIeHEmlxaMcvdUV9NEloW9FIP4tcDcr48TJQdSYmp+CbfY+ggQBeMhcAzokNf2kwLVbbNcg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+1zF+XtlU7bHK7jrN7q6y/LPioD36/XH8eUji8/u3Xk=;
- b=hhwovVYureR4AQqKn78vqQcrgAAbhFEq5BHFrx3hMS8hTcnEhvtOh+4EsBkR+I8uzznxWGET/mRzm9Bm5d1fmm20+wcJGL01NZAvTediIyArlEnw0iuglxZlkZ3HlOyoB8GLztr3nO/89DhqtMrzxBi/df0EmQui8xbVRiOsNOxlsDl1yQ1l0xFu8tzPM36iwH5KMTprJULSAndMfku0LFMw2F6u8a8+HH4Bi1wp6+2G+07E5e/9M1KSGDwzZCvAAVPEetExGgRDSUp4Mb60dvfTxFvtL1Qz6A9V/8JX+rxlDFqPOPVRG2hpYpsFICdh/UBrIG2EXKykzN15qH8moA==
+ bh=XTqmzdvVrAd8b5lArqlt6eEMMe/5Vg7LOZG9u4WQsGM=;
+ b=RlS3av+ygEyCPRuEYrubCvQH8WjAdjDcBcxCfjsrXEYzhQGHBifPyipTleysn6Q6j1S5w8Cg1IK42DLS2EamWl6tciVzGOcvwBybEOB4EMVHVrEv+JxUqt5VhKWttL9K4U/rfZbmV4LnklhETY3p2QxPgfAk7Knryqg7eFX+6UO0UKc22de4h0u3z5bJR1FZ7Bil+Ivme5lsZ/yrsQb8eJWYR8bsBhRO0ELiCaddBe/YA64AnXNYsLUsXj3Hdl+CjDpAqMvfppEO6fF9v+Di5fhGyamBEMcff0uPFhmJR1MB7jEG0TBWaORp5bzFYf7OZp3ndGo0JckSnsXxDork0w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=linaro.org smtp.mailfrom=nvidia.com;
+ 216.228.117.160) smtp.rcpttodomain=linaro.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+1zF+XtlU7bHK7jrN7q6y/LPioD36/XH8eUji8/u3Xk=;
- b=hUAOJjAsn+K4bmDwkBsxmQv2kdGyQxKyz7v4Gd5VDx/nmZ476c3hKFNFj+3MzvO4jGdGO9dVxjf+XSE811sRWb2TFhB/U87XNs8CLHlsIZT0rx6wpka71DcGJSqsr9QwdiRa5dTIrgexU74IQLxR/ODfkBvU+eDs7/07N3zEdSSNrGfsQfTZ9rPd3bok55dpsSEup5ikeF4S/pxyq2lcDpteYFcmjqVr2W+iZjbRw7seKdoYTB0d+TnalI53gcBwehBj/l2XTvV4kflSX2nDCA++hz5eAXki/wbXXeNNwTU+4nD7eC9OhxEzhjdEL8SRyh/sbp0EYTVdE9gAbnmF9w==
-Received: from BL1PR13CA0313.namprd13.prod.outlook.com (2603:10b6:208:2c1::18)
- by MW6PR12MB8898.namprd12.prod.outlook.com (2603:10b6:303:246::8) with
+ bh=XTqmzdvVrAd8b5lArqlt6eEMMe/5Vg7LOZG9u4WQsGM=;
+ b=m6MhXl15krPW6RfnfUEN3XLsbsoBe6gVNCTjoJ2iWyJ1tBkHC8eaSxSMwvqQOB4kAeJ9sxp67UOCn71j8pEzDapYpDmeIdxWg6LP/qL71JRowOIvL2iTY6okP7nwXVEEfMve/Vlz1SCEoGUBNrIxWChDUtQ+VAk/bpwJOxyPxd4QVa4RZvCtZuLjqiWTd7wJ81uUUnLDOjdbMN1WXjoyd08GYgIy3EvZJjRLjaC6O6C2G8fbD92H94N6PbJZmmzQCKHF5yOdJcxCeq81A5lpnbVGyf5wvfzcDl+8KtMsc58c1T6UWKr550jMJnl9JJ2XxhjHoFuscB8fqOraMti+QQ==
+Received: from PH7P223CA0006.NAMP223.PROD.OUTLOOK.COM (2603:10b6:510:338::27)
+ by BL3PR12MB6572.namprd12.prod.outlook.com (2603:10b6:208:38f::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9203.10; Fri, 10 Oct
- 2025 09:29:34 +0000
-Received: from BL6PEPF0001AB74.namprd02.prod.outlook.com
- (2603:10b6:208:2c1:cafe::9f) by BL1PR13CA0313.outlook.office365.com
- (2603:10b6:208:2c1::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9203.9 via Frontend Transport; Fri,
- 10 Oct 2025 09:29:34 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ 2025 09:29:39 +0000
+Received: from SN1PEPF00036F3F.namprd05.prod.outlook.com
+ (2603:10b6:510:338:cafe::cd) by PH7P223CA0006.outlook.office365.com
+ (2603:10b6:510:338::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9203.10 via Frontend Transport; Fri,
+ 10 Oct 2025 09:29:39 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- BL6PEPF0001AB74.mail.protection.outlook.com (10.167.242.167) with Microsoft
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ SN1PEPF00036F3F.mail.protection.outlook.com (10.167.248.23) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9203.9 via Frontend Transport; Fri, 10 Oct 2025 09:29:34 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 10 Oct
- 2025 02:29:19 -0700
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.9203.9 via Frontend Transport; Fri, 10 Oct 2025 09:29:39 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.34; Fri, 10 Oct
+ 2025 02:29:23 -0700
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Fri, 10 Oct
- 2025 02:29:19 -0700
+ 2025 02:29:22 -0700
 Received: from kkartik-desktop.nvidia.com (10.127.8.13) by mail.nvidia.com
  (10.129.68.6) with Microsoft SMTP Server id 15.2.2562.20 via Frontend
- Transport; Fri, 10 Oct 2025 02:29:16 -0700
+ Transport; Fri, 10 Oct 2025 02:29:19 -0700
 From: Kartik Rajput <kkartik@nvidia.com>
 To: <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <thierry.reding@gmail.com>,
 	<jonathanh@nvidia.com>, <linux-kernel@vger.kernel.org>,
 	<linux-gpio@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
 	<devicetree@vger.kernel.org>
-CC: Kartik Rajput <kkartik@nvidia.com>
-Subject: [PATCH v3 1/2] gpio: tegra186: Use generic macro for port definitions
-Date: Fri, 10 Oct 2025 14:59:12 +0530
-Message-ID: <20251010092913.711906-1-kkartik@nvidia.com>
+CC: Prathamesh Shete <pshete@nvidia.com>, Nathan Hartman
+	<nhartman@nvidia.com>, Kartik Rajput <kkartik@nvidia.com>
+Subject: [PATCH v3 2/2] gpio: tegra186: Add support for Tegra410
+Date: Fri, 10 Oct 2025 14:59:13 +0530
+Message-ID: <20251010092913.711906-2-kkartik@nvidia.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20251010092913.711906-1-kkartik@nvidia.com>
+References: <20251010092913.711906-1-kkartik@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -98,220 +102,193 @@ Content-Type: text/plain
 X-NV-OnPremToCloud: ExternallySecured
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB74:EE_|MW6PR12MB8898:EE_
-X-MS-Office365-Filtering-Correlation-Id: d465aa8b-949a-4422-9ede-08de07df864a
+X-MS-TrafficTypeDiagnostic: SN1PEPF00036F3F:EE_|BL3PR12MB6572:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3f22b76a-fe48-49e4-d363-08de07df890e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|1800799024|36860700013;
+	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?4I7f+IZ7Bs/rq9QQMBNkBqN1BeXP2qPhxU0ZjPPHgXVtEufJ2XnK3vea24D0?=
- =?us-ascii?Q?tiriN7oQtpICAUSa3vbeKyZglp8zEO3ABi+ws2y66ekIV9BBBba7Dy2ARYM2?=
- =?us-ascii?Q?RE+vexoyOk/0ADB6gI94fWXRhSgMDMGWI5RgLs4WFeRhz+ARf+SlCCtu29Og?=
- =?us-ascii?Q?JYembWlLLtVz3SPnbBjUPKlHl5fzoT4vytpCnrFT+aycfmMwONG6dGCyvklD?=
- =?us-ascii?Q?S/x2qYNcYwucLMtpxaH4JbPil5zHcGu8DslvzkEvxZsBaOVfpxlOaJVlEwRk?=
- =?us-ascii?Q?+ByFC6YAHhQtAlp0bgZsRM8Wif9yWbdK4NpOjMm7BSjoyYhDoVKTYjIMYizc?=
- =?us-ascii?Q?2A46ObaxSpdv3TsjxJ9Y+nm1pUUCjXHoirlyOTVoXmkr7o70mMRVd++LiaI6?=
- =?us-ascii?Q?7y3KggyAhX9vGein+aOwlUDfa/MMgCoVYFGLRyFKB+E1/XWRyPpdE8Hmh/tP?=
- =?us-ascii?Q?2qbuVzFYijYVfsuhaWj3Zd/1Dt4ijEMn8YKpOhN4Uck6HlkPZUgbhSD7Vf+J?=
- =?us-ascii?Q?2aLIujE85U5aSj8TlpBvMbH2uXRM4v6ic96eFr6/vqiRXCcPqdUyyI9WmqUb?=
- =?us-ascii?Q?5vuI11sXnd9F3PIZLjefUNx6NEo7tLK5BeoUfd19FUxWAlvyhXYhuNPZYXwU?=
- =?us-ascii?Q?UUzL4zP4Pwrxh4Mx70zanTAuZSALJTq6So5nhLTYAR89ZpDRPeobQQtevZHQ?=
- =?us-ascii?Q?dRC0ZcoCwYRTms+HfIzwiXwbw1eRFbTzuileas495M6Mctlh4eQjUGTrgYYi?=
- =?us-ascii?Q?H+NldvRCZC+cU0Rn7fDKNSbiVJKG8fmtJO2Zz6mVSGC/vfwF/j3OqrnaTtFW?=
- =?us-ascii?Q?gFG/U+Sbde9sjKYKixAzPy6o2b5AnAYJ4G4D8WY4OP13YGXrz4JoiExl52dg?=
- =?us-ascii?Q?UldjP2b+eCWbQBzaz/LF1NUazti5HiJZwnsXxefLstoe20LbhneK5wc4ixuG?=
- =?us-ascii?Q?5VFIYTNVlYyQI8hlNQGFDORXpKhiJpiy7K/KbjwDXw3CJufIy8Ke0IJmkg66?=
- =?us-ascii?Q?YKIlXvZWdnJHZ2nJ45VIjoXypKqzYCSYxHqtbhuvBY0clSNX5EZ4weq1NZaZ?=
- =?us-ascii?Q?K6XXf21/cYBpdLD2594q4qg0bAe8oK6kzE4ukAbIGpNF37PxizV48wD5EdCd?=
- =?us-ascii?Q?/LHQcaPQ5khLH5KHAf94/+Yb/nYea99pT+KUeAk0vAoJwaOwL97AJZfy/4xH?=
- =?us-ascii?Q?0pSB0xr1MBsFoJrMYCVui72wGxMPdwihoIlXH2Enk/llkJcsZCgMKDQXAtLV?=
- =?us-ascii?Q?tbAjup3AM2QOGAIf6Ncu9jNABn0kPcLqOH9PtwtITVVgIALy2AKVXV81pY+X?=
- =?us-ascii?Q?+xMITTg6y7dv6mFffIRCid8ag6Mk2cj4nq/BM7l/ZoXa+aBebVXXGz4D9H7g?=
- =?us-ascii?Q?FE0cKaGrClWSagi3hWsmhHjOZF112SeM8XSXOTjD0ThIOdYqnXsbM9mKt1RK?=
- =?us-ascii?Q?Q0RaGM6nDaMRjs35+/1iShEHEfDLvKwryK7x0Q3cDsqXQnsu4RhKrSIJ1LN6?=
- =?us-ascii?Q?+A/sIYpENBWg4SYy9aiFTUlYO5ihDooNvlgofL6rDnbvoIU+7qbMhC/l1FhY?=
- =?us-ascii?Q?/nNz8mUxe46au2uMDXs=3D?=
+	=?us-ascii?Q?n4eT7J1ySMoRZaa/9WLyhZ/WX9n4MynYSEwjh3VTdgtmytffcVj5KhfvwjXb?=
+ =?us-ascii?Q?J+//ml5rmwTsL18a73/x6oQzlRIs0rc94Nxd/n1O2i01GumOUSkmp3dANhZg?=
+ =?us-ascii?Q?h7JdqEw19WZ8wIfZlmTmRmylxhsUg1MYQtI6fhvM9iRJxMVfzGmfFRYZ0vFS?=
+ =?us-ascii?Q?5q9nqAyszSj5ZL9oQr4If+KncvfpogrmIMv/e8+wa7g9JCHwslZJRnpSJtSf?=
+ =?us-ascii?Q?KT3d+0jL/O96Q3dp29Ls7LRHfq8l/1eha37WPwWb+gn7NXNA567ESSy60giE?=
+ =?us-ascii?Q?P7H8fJF2FsDBIBAPaQINcDM419y+zLmMg9BkOFNu+z6K3u/mxnGXZqkLQMgi?=
+ =?us-ascii?Q?hZ+G8wsxvdX/gw1qC+qFm1bSHrWV9Gc89wao2n9zpEmpGUvd0V9LPs836O9l?=
+ =?us-ascii?Q?TX8N25ziaMcuqgN7KQhGjPz7BVLILbXlQRwsErJsrddW1ggAIsSQeP8NXtwH?=
+ =?us-ascii?Q?Z1AH2+As4fS8uZned8eaYczPvRmZoCIoqASBTNBYbQVCZKNtPMHMxPoN9fNx?=
+ =?us-ascii?Q?cpTq/qIigzEfYxoLIHrBG4Y7wHcG+TKWnb/hmVwheuuVsZhMws0PuGF9tdf1?=
+ =?us-ascii?Q?GulijFBeAcPRo/jeUI0KtJ0EO96/N20KAQMZX9ZmilDfGPPTEpDk4Lcokfjp?=
+ =?us-ascii?Q?6zgw2ZBH2WEdvhtiN1N2M7ZF74URBGd5dcOGFmKDaHsKui0TkhlATK2+/M8h?=
+ =?us-ascii?Q?ELznLjW4yluKunlfYLFbpDKokMNYFPRMbDvgWxCyCzAqT+unq+98lp+JetJf?=
+ =?us-ascii?Q?B7cy6KOE14d3aPYUIIjZdLz/YIqhIFFKdFcs+HtfUUzJ3hCxX+coDeWvix3M?=
+ =?us-ascii?Q?ml2kE7jAyD/EIcQ0ydfdK6zFzMsZJfQ6GA0y9lp/4n1vFQCvwS1dkUqXNpya?=
+ =?us-ascii?Q?O4mA1gyx/gfIFgvyQ15G6o4S26UpvsVUv18unItpp9s7yVdz0D+biWr7feNs?=
+ =?us-ascii?Q?8RXMOM1mhPN1GYJcbkV3yS7h6ofq37p4a0dgjaICtxmb2bribaHTM5u0fF5Z?=
+ =?us-ascii?Q?ZrhVjng4gTGto5kwf/xlSY49VSrYbGr3E5YTNGgoX865oCXxl/of8QqpGlJP?=
+ =?us-ascii?Q?/241JhfjzEaCKrz6VfEmUM1TIw+/Ukl4SkRcJPm9ygxCgsyZmH51+UuSmuVY?=
+ =?us-ascii?Q?USwjtmsYNZBP7WwhTih1J1qBezGZ57a7n1incUe/QzcWwGu9Q561qo/fjdxa?=
+ =?us-ascii?Q?ILQxFxkyKLx+DkZoA2izAMDZQ/s4wrhn8wLnhexj1pLWAhrEgWyrRd753AHg?=
+ =?us-ascii?Q?wfj8OqRXRjgXQBUc2hJvn/bvfPwOKernss+c3OWY2fMnDcJtxVUsN2AIvYfx?=
+ =?us-ascii?Q?Oh5Ou2XSdvapnhuDq5OpewL0OZeVadP84XD9xZXoliNam2ThW5SViFs5XfrG?=
+ =?us-ascii?Q?3yO4SBOvGo90PJpUEmV/WmtQFbf/2wj+BRfAFCG3wTVSEuWbzJTD8vbH0Ia4?=
+ =?us-ascii?Q?sPiyoiE9pzeOVBS/aTW6lMNR78QOLLn0A1H3vKzXfdCSZuGHVagemszvNA59?=
+ =?us-ascii?Q?8qeLWpB/SSNQ/8a/obcvdk9l7gLDqt8A1agV/cU3Wx70H5Tvr2T57fOxPGmD?=
+ =?us-ascii?Q?Turrm9yEqmUiU++0a08=3D?=
 X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2025 09:29:34.3389
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2025 09:29:39.0246
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d465aa8b-949a-4422-9ede-08de07df864a
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f22b76a-fe48-49e4-d363-08de07df890e
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB74.namprd02.prod.outlook.com
+	SN1PEPF00036F3F.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8898
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6572
 
-Introduce a generic macro TEGRA_GPIO_PORT to define SoC specific
-ports macros. This simplifies the code and avoids unnecessary
-duplication.
+From: Prathamesh Shete <pshete@nvidia.com>
 
-Suggested-by: Jon Hunter <jonathanh@nvidia.com>
+Extend the existing Tegra186 GPIO controller driver with support for
+the GPIO controller found on Tegra410. Tegra410 supports two GPIO
+controllers referred to as 'COMPUTE' and 'SYSTEM'.
+
+Co-developed-by: Nathan Hartman <nhartman@nvidia.com>
+Signed-off-by: Nathan Hartman <nhartman@nvidia.com>
+Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
 Signed-off-by: Kartik Rajput <kkartik@nvidia.com>
 ---
- drivers/gpio/gpio-tegra186.c | 87 +++++++++++-------------------------
- 1 file changed, 25 insertions(+), 62 deletions(-)
+v2 -> v3:
+        * Add a generic TEGRA_GPIO_PORT macro and use it to define
+          TEGRA410_COMPUTE_GPIO_PORT and TEGRA410_SYSTEM_GPIO_PORT.
+v1 -> v2:
+        * Move Tegra410 GPIO Ports definition to gpio-tegra186.c
+        * Rename Tegra410 Main GPIO as System GPIO.
+        * Add Compute GPIOs.
+        * Update ACPI IDs.
+        * Set instance ID as 0 for SYSTEM and COMPUTE GPIOs.
+        * Added Nathan as co-author for adding compute GPIO support
+          and renaming MAIN GPIOs as SYSTEM GPIOs.
+---
+ drivers/gpio/gpio-tegra186.c | 82 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 81 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
-index 4d3db6e06eeb..7ea541d6d537 100644
+index 7ea541d6d537..c6ebe29f9cf1 100644
 --- a/drivers/gpio/gpio-tegra186.c
 +++ b/drivers/gpio/gpio-tegra186.c
-@@ -1002,14 +1002,17 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
- 	return devm_gpiochip_add_data(&pdev->dev, &gpio->gpio, gpio);
- }
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (c) 2016-2022 NVIDIA Corporation
++ * Copyright (c) 2016-2025 NVIDIA Corporation
+  *
+  * Author: Thierry Reding <treding@nvidia.com>
+  *	   Dipen Patel <dpatel@nvidia.com>
+@@ -69,6 +69,36 @@
  
--#define TEGRA186_MAIN_GPIO_PORT(_name, _bank, _port, _pins)	\
--	[TEGRA186_MAIN_GPIO_PORT_##_name] = {			\
--		.name = #_name,					\
--		.bank = _bank,					\
--		.port = _port,					\
--		.pins = _pins,					\
-+#define TEGRA_GPIO_PORT(_prefix, _name, _bank, _port, _pins) \
-+	[_prefix##_GPIO_PORT_##_name] = { \
-+		.name = #_name, \
-+		.bank = _bank, \
-+		.port = _port, \
-+		.pins = _pins, \
- 	}
+ #define TEGRA186_GPIO_INTERRUPT_STATUS(x) (0x100 + (x) * 4)
  
-+#define TEGRA186_MAIN_GPIO_PORT(_name, _bank, _port, _pins) \
-+	TEGRA_GPIO_PORT(TEGRA186_MAIN, _name, _bank, _port, _pins)
++/* Tegra410 GPIOs implemented by the COMPUTE GPIO controller */
++#define TEGRA410_COMPUTE_GPIO_PORT_A 0
++#define TEGRA410_COMPUTE_GPIO_PORT_B 1
++#define TEGRA410_COMPUTE_GPIO_PORT_C 2
++#define TEGRA410_COMPUTE_GPIO_PORT_D 3
++#define TEGRA410_COMPUTE_GPIO_PORT_E 4
 +
- static const struct tegra_gpio_port tegra186_main_ports[] = {
- 	TEGRA186_MAIN_GPIO_PORT( A, 2, 0, 7),
- 	TEGRA186_MAIN_GPIO_PORT( B, 3, 0, 7),
-@@ -1045,13 +1048,8 @@ static const struct tegra_gpio_soc tegra186_main_soc = {
- 	.has_vm_support = false,
- };
- 
--#define TEGRA186_AON_GPIO_PORT(_name, _bank, _port, _pins)	\
--	[TEGRA186_AON_GPIO_PORT_##_name] = {			\
--		.name = #_name,					\
--		.bank = _bank,					\
--		.port = _port,					\
--		.pins = _pins,					\
--	}
-+#define TEGRA186_AON_GPIO_PORT(_name, _bank, _port, _pins) \
-+	TEGRA_GPIO_PORT(TEGRA186_AON, _name, _bank, _port, _pins)
- 
- static const struct tegra_gpio_port tegra186_aon_ports[] = {
- 	TEGRA186_AON_GPIO_PORT( S, 0, 1, 5),
-@@ -1073,13 +1071,8 @@ static const struct tegra_gpio_soc tegra186_aon_soc = {
- 	.has_vm_support = false,
- };
- 
--#define TEGRA194_MAIN_GPIO_PORT(_name, _bank, _port, _pins)	\
--	[TEGRA194_MAIN_GPIO_PORT_##_name] = {			\
--		.name = #_name,					\
--		.bank = _bank,					\
--		.port = _port,					\
--		.pins = _pins,					\
--	}
-+#define TEGRA194_MAIN_GPIO_PORT(_name, _bank, _port, _pins) \
-+	TEGRA_GPIO_PORT(TEGRA194_MAIN, _name, _bank, _port, _pins)
- 
- static const struct tegra_gpio_port tegra194_main_ports[] = {
- 	TEGRA194_MAIN_GPIO_PORT( A, 1, 2, 8),
-@@ -1129,13 +1122,8 @@ static const struct tegra_gpio_soc tegra194_main_soc = {
++#define TEGRA410_COMPUTE_GPIO(port, offset) \
++	((TEGRA410_COMPUTE_GPIO_PORT_##port * 8) + (offset))
++
++/* Tegra410 GPIOs implemented by the SYSTEM GPIO controller */
++#define TEGRA410_SYSTEM_GPIO_PORT_A 0
++#define TEGRA410_SYSTEM_GPIO_PORT_B 1
++#define TEGRA410_SYSTEM_GPIO_PORT_C 2
++#define TEGRA410_SYSTEM_GPIO_PORT_D 3
++#define TEGRA410_SYSTEM_GPIO_PORT_E 4
++#define TEGRA410_SYSTEM_GPIO_PORT_I 5
++#define TEGRA410_SYSTEM_GPIO_PORT_J 6
++#define TEGRA410_SYSTEM_GPIO_PORT_K 7
++#define TEGRA410_SYSTEM_GPIO_PORT_L 8
++#define TEGRA410_SYSTEM_GPIO_PORT_M 9
++#define TEGRA410_SYSTEM_GPIO_PORT_N 10
++#define TEGRA410_SYSTEM_GPIO_PORT_P 11
++#define TEGRA410_SYSTEM_GPIO_PORT_Q 12
++#define TEGRA410_SYSTEM_GPIO_PORT_R 13
++#define TEGRA410_SYSTEM_GPIO_PORT_V 14
++
++#define TEGRA410_SYSTEM_GPIO(port, offset) \
++	((TEGRA410_SYSTEM_GPIO_PORT_##port * 8) + (offset))
++
+ struct tegra_gpio_port {
+ 	const char *name;
+ 	unsigned int bank;
+@@ -1267,6 +1297,54 @@ static const struct tegra_gpio_soc tegra256_main_soc = {
  	.has_vm_support = true,
  };
  
--#define TEGRA194_AON_GPIO_PORT(_name, _bank, _port, _pins)	\
--	[TEGRA194_AON_GPIO_PORT_##_name] = {			\
--		.name = #_name,					\
--		.bank = _bank,					\
--		.port = _port,					\
--		.pins = _pins,					\
--	}
-+#define TEGRA194_AON_GPIO_PORT(_name, _bank, _port, _pins) \
-+	TEGRA_GPIO_PORT(TEGRA194_AON, _name, _bank, _port, _pins)
- 
- static const struct tegra_gpio_port tegra194_aon_ports[] = {
- 	TEGRA194_AON_GPIO_PORT(AA, 0, 3, 8),
-@@ -1155,13 +1143,8 @@ static const struct tegra_gpio_soc tegra194_aon_soc = {
- 	.has_vm_support = false,
++#define TEGRA410_COMPUTE_GPIO_PORT(_name, _bank, _port, _pins)	\
++	TEGRA_GPIO_PORT(TEGRA410_COMPUTE, _name, _bank, _port, _pins)
++
++static const struct tegra_gpio_port tegra410_compute_ports[] = {
++	TEGRA410_COMPUTE_GPIO_PORT(A, 0, 0, 3),
++	TEGRA410_COMPUTE_GPIO_PORT(B, 1, 0, 8),
++	TEGRA410_COMPUTE_GPIO_PORT(C, 1, 1, 3),
++	TEGRA410_COMPUTE_GPIO_PORT(D, 2, 0, 8),
++	TEGRA410_COMPUTE_GPIO_PORT(E, 2, 1, 8),
++};
++
++static const struct tegra_gpio_soc tegra410_compute_soc = {
++	.num_ports = ARRAY_SIZE(tegra410_compute_ports),
++	.ports = tegra410_compute_ports,
++	.name = "tegra410-gpio-compute",
++	.num_irqs_per_bank = 8,
++	.instance = 0,
++};
++
++#define TEGRA410_SYSTEM_GPIO_PORT(_name, _bank, _port, _pins)	\
++	TEGRA_GPIO_PORT(TEGRA410_SYSTEM, _name, _bank, _port, _pins)
++
++static const struct tegra_gpio_port tegra410_system_ports[] = {
++	TEGRA410_SYSTEM_GPIO_PORT(A, 0, 0, 7),
++	TEGRA410_SYSTEM_GPIO_PORT(B, 0, 1, 8),
++	TEGRA410_SYSTEM_GPIO_PORT(C, 0, 2, 8),
++	TEGRA410_SYSTEM_GPIO_PORT(D, 0, 3, 8),
++	TEGRA410_SYSTEM_GPIO_PORT(E, 0, 4, 6),
++	TEGRA410_SYSTEM_GPIO_PORT(I, 1, 0, 8),
++	TEGRA410_SYSTEM_GPIO_PORT(J, 1, 1, 7),
++	TEGRA410_SYSTEM_GPIO_PORT(K, 1, 2, 7),
++	TEGRA410_SYSTEM_GPIO_PORT(L, 1, 3, 7),
++	TEGRA410_SYSTEM_GPIO_PORT(M, 2, 0, 7),
++	TEGRA410_SYSTEM_GPIO_PORT(N, 2, 1, 6),
++	TEGRA410_SYSTEM_GPIO_PORT(P, 2, 2, 8),
++	TEGRA410_SYSTEM_GPIO_PORT(Q, 2, 3, 3),
++	TEGRA410_SYSTEM_GPIO_PORT(R, 2, 4, 2),
++	TEGRA410_SYSTEM_GPIO_PORT(V, 1, 4, 2),
++};
++
++static const struct tegra_gpio_soc tegra410_system_soc = {
++	.num_ports = ARRAY_SIZE(tegra410_system_ports),
++	.ports = tegra410_system_ports,
++	.name = "tegra410-gpio-system",
++	.num_irqs_per_bank = 8,
++	.instance = 0,
++};
++
+ static const struct of_device_id tegra186_gpio_of_match[] = {
+ 	{
+ 		.compatible = "nvidia,tegra186-gpio",
+@@ -1302,6 +1380,8 @@ static const struct acpi_device_id  tegra186_gpio_acpi_match[] = {
+ 	{ .id = "NVDA0408", .driver_data = (kernel_ulong_t)&tegra194_aon_soc },
+ 	{ .id = "NVDA0508", .driver_data = (kernel_ulong_t)&tegra241_main_soc },
+ 	{ .id = "NVDA0608", .driver_data = (kernel_ulong_t)&tegra241_aon_soc },
++	{ .id = "NVDA0708", .driver_data = (kernel_ulong_t)&tegra410_compute_soc },
++	{ .id = "NVDA0808", .driver_data = (kernel_ulong_t)&tegra410_system_soc },
+ 	{}
  };
- 
--#define TEGRA234_MAIN_GPIO_PORT(_name, _bank, _port, _pins)	\
--	[TEGRA234_MAIN_GPIO_PORT_##_name] = {			\
--		.name = #_name,					\
--		.bank = _bank,					\
--		.port = _port,					\
--		.pins = _pins,					\
--	}
-+#define TEGRA234_MAIN_GPIO_PORT(_name, _bank, _port, _pins) \
-+	TEGRA_GPIO_PORT(TEGRA234_MAIN, _name, _bank, _port, _pins)
- 
- static const struct tegra_gpio_port tegra234_main_ports[] = {
- 	TEGRA234_MAIN_GPIO_PORT( A, 0, 0, 8),
-@@ -1200,13 +1183,8 @@ static const struct tegra_gpio_soc tegra234_main_soc = {
- 	.has_vm_support = true,
- };
- 
--#define TEGRA234_AON_GPIO_PORT(_name, _bank, _port, _pins)	\
--	[TEGRA234_AON_GPIO_PORT_##_name] = {			\
--		.name = #_name,					\
--		.bank = _bank,					\
--		.port = _port,					\
--		.pins = _pins,					\
--	}
-+#define TEGRA234_AON_GPIO_PORT(_name, _bank, _port, _pins) \
-+	TEGRA_GPIO_PORT(TEGRA234_AON, _name, _bank, _port, _pins)
- 
- static const struct tegra_gpio_port tegra234_aon_ports[] = {
- 	TEGRA234_AON_GPIO_PORT(AA, 0, 4, 8),
-@@ -1227,13 +1205,8 @@ static const struct tegra_gpio_soc tegra234_aon_soc = {
- 	.has_vm_support = false,
- };
- 
--#define TEGRA241_MAIN_GPIO_PORT(_name, _bank, _port, _pins)	\
--	[TEGRA241_MAIN_GPIO_PORT_##_name] = {			\
--		.name = #_name,					\
--		.bank = _bank,					\
--		.port = _port,					\
--		.pins = _pins,					\
--	}
-+#define TEGRA241_MAIN_GPIO_PORT(_name, _bank, _port, _pins) \
-+	TEGRA_GPIO_PORT(TEGRA241_MAIN, _name, _bank, _port, _pins)
- 
- static const struct tegra_gpio_port tegra241_main_ports[] = {
- 	TEGRA241_MAIN_GPIO_PORT(A, 0, 0, 8),
-@@ -1258,13 +1231,8 @@ static const struct tegra_gpio_soc tegra241_main_soc = {
- 	.has_vm_support = false,
- };
- 
--#define TEGRA241_AON_GPIO_PORT(_name, _bank, _port, _pins)	\
--	[TEGRA241_AON_GPIO_PORT_##_name] = {			\
--		.name = #_name,					\
--		.bank = _bank,					\
--		.port = _port,					\
--		.pins = _pins,					\
--	}
-+#define TEGRA241_AON_GPIO_PORT(_name, _bank, _port, _pins) \
-+	TEGRA_GPIO_PORT(TEGRA241_AON, _name, _bank, _port, _pins)
- 
- static const struct tegra_gpio_port tegra241_aon_ports[] = {
- 	TEGRA241_AON_GPIO_PORT(AA, 0, 0, 8),
-@@ -1280,13 +1248,8 @@ static const struct tegra_gpio_soc tegra241_aon_soc = {
- 	.has_vm_support = false,
- };
- 
--#define TEGRA256_MAIN_GPIO_PORT(_name, _bank, _port, _pins)	\
--	[TEGRA256_MAIN_GPIO_PORT_##_name] = {			\
--		.name = #_name,					\
--		.bank = _bank,					\
--		.port = _port,					\
--		.pins = _pins,					\
--	}
-+#define TEGRA256_MAIN_GPIO_PORT(_name, _bank, _port, _pins) \
-+	TEGRA_GPIO_PORT(TEGRA256_MAIN, _name, _bank, _port, _pins)
- 
- static const struct tegra_gpio_port tegra256_main_ports[] = {
- 	TEGRA256_MAIN_GPIO_PORT(A, 0, 0, 8),
+ MODULE_DEVICE_TABLE(acpi, tegra186_gpio_acpi_match);
 -- 
 2.43.0
 
