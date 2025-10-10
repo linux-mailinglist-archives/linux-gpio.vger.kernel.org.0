@@ -1,341 +1,157 @@
-Return-Path: <linux-gpio+bounces-26974-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26975-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A62BBCCD61
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Oct 2025 14:09:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A44CBCCE64
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Oct 2025 14:30:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A6FB24E8C71
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Oct 2025 12:09:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C7E723C3676
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Oct 2025 12:30:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C70172ED174;
-	Fri, 10 Oct 2025 12:09:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61F1E2EF64F;
+	Fri, 10 Oct 2025 12:29:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BDgROrDJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DRZMrdRV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77120288CA3
-	for <linux-gpio@vger.kernel.org>; Fri, 10 Oct 2025 12:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357C42EF662
+	for <linux-gpio@vger.kernel.org>; Fri, 10 Oct 2025 12:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760098153; cv=none; b=bEa6MZqW8UO2a3bT5cIWzekJDWzDT912HGpBGqdJYn/XLPhxUjZa0+Ep2gvYuwwsmEmj1eTSDOSfnP9yCLcQDFejtADQhbVdV8BKHhr1wtfzbzMK0qT0xhOo3Zf8NYC9Nl8/TloU1ay6953T1YJAzl+D9EEsJSnNj5qRKouo2P4=
+	t=1760099384; cv=none; b=PH/y5x5r6+dyMPIV91nD3UHy27p5OH3Mtk16uwBhvK/c4JesptbfN8bQAVvS73NLE6aZSqwjJxvgPRMhOV4QJz+VAVtb9GX58pvE7fcG/KCp5DSQUSB3X0zLbnuV86AdjOch+6u4K6NiG36GqrEpkd220csW6GaahgWs7tz9taw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760098153; c=relaxed/simple;
-	bh=s9qnktjcv8VtwzZYiATpyxkv376jOmaSks+JF/0i/yY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fTOuKd8NPp9LCwbWYcQrh0xv0I5jeF4XxwB8J2FtQKAqrR/mIYyIlvvQXpFbxB8rr4ufwT5CIL1MTMM2G5ds/p+/Hy2czgimL6V4RqtoYaNqaX5b0CHIjKR/jxW/fm/8PnVa3x824qQlNlp27vAuO77zM1Jl0+UM1fdZ2yzJG1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BDgROrDJ; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-57f1b88354eso2173346e87.1
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Oct 2025 05:09:11 -0700 (PDT)
+	s=arc-20240116; t=1760099384; c=relaxed/simple;
+	bh=m1wtM/Q36F3ke3zT/mN2EGUWRd5HFQIpRI6HpOMa2zE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=Qme9sYuVTL7O3tbm885I+QkWCF7/BLO3LnqNzPzMI/E5/Lsoax0uDPjzwogx+graen0DuKxUAoDHq2UtUV2Y7eH4u2QFgOIcIuj8s5EeWNgDYKAvMVs4FsfN15131ZnW94VNhaIyECzsCs+AqCFrmb7hRbsGMjlmAufq86da4Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DRZMrdRV; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-46e52279279so14246915e9.3
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Oct 2025 05:29:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760098149; x=1760702949; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=G4ZKKJF1rgzzv66FdFdHNcRihXsO8tluLNbeNizMoJ0=;
-        b=BDgROrDJCwQLBWwJMnmyPI9kmMOnBhP3p+7BnpJgZFRfRd0hn/HcnNQSxPUIWQxbgm
-         FRRzAOlZQVCirsVD6TP5nK9RXUEl0BNDK3w9BUwrrJTjKP/j5/HbNz3xIthLbe/vkgcd
-         2XQHpMgMcxsolJA6rQ7adMQWC6zA3pNBLe+rrBGWK6vtSkztG1b8emBhATglNijni+R8
-         zFPVmllzVWL6L9GJvboZRyg5WUKOaQ3lyJkfQVOgXyM4qDn55wRGD080qsfUjOeTj5em
-         vF6+8dMFFJRBKAKGu1Kop2HJ7scmYesnNH0XaFliYnnQ55eXdJR1lcAnhX35mSb+C710
-         VgNg==
+        d=linaro.org; s=google; t=1760099379; x=1760704179; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vYMGQwZbrkqXXfmRn4FZdpSz5oqSucZM1pi40huO1ec=;
+        b=DRZMrdRV+Z7AOt2j3NT/pgUP4UzEXdxIMgHs7HJiAigBN8Yr//Fyi5ghKZLVI0KMr3
+         vhCnf9VSuH+vryIkrv2rC77HULFvgki0QuED2mD4cExxEc4h6sOCOlofOLHEWg46sCRp
+         TGl5nPoI67IHz+TmR/v4ARQo5MlUbtD+aWLjOHCWE9BfM5aht7ia+Cg9j819ea6TVC1o
+         czF5uB7FK2+9iFgyoVe+MsvdILYnaANCXdbrKZXzaAgXtUAO9QWymKObPF1Mk/xLsMRB
+         wI9JFgvUOf5z3i0PDsOlgmoyFA+o00csP/DY6IYojpg99CeZ0QjSoJtdDu3+vZ5UT+GK
+         Rwrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760098149; x=1760702949;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=G4ZKKJF1rgzzv66FdFdHNcRihXsO8tluLNbeNizMoJ0=;
-        b=tX9On3MVv8S2ZBkzK1natx/2U79UnhmUcm9zls/NZvQlqdTfnvnyZowxPDLyX//LJc
-         vl/7Vhr7enjgHJs5qxW9IM+SeSHNSiq/gyFqd4kA0IAf/KzjTDvN2JtSIu9OV2mU+djS
-         lbPDKOAK3N0cc/EjYZhHQvq9jX0hWY3xm7f0EZ1JyJ/FjYY5XCYvTWghzim9heW/yfEx
-         b3lncH6+x1V/Tw7EFRGpUczzVFArJnv57QdBkkRa5i239F5q+SzOvlFSAsp3LSpDbW8i
-         z6VPUzBukMm0Nzh+05t262q3ZKbrqXm0+LCI3uIwcMcpWl7JrfVkB5/7FAArpsrhLHzh
-         jVRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUalvdsDiK2btKfarzxJd1XZhgmvKbifVu5geEM158fBN+Kgy1oL8ldYIhvCYcYU4dLkdkkTIOGuCEc@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyQlbeKIc8NlEcSasiqP/oBuF+0V9lZrbZQFaXjR8ZnEoIOnvx
-	yCwiraGsMFuCIYWRGO1RwXbmFZTgU5+tzr0vgOrFAT2rflhdptVczkek
-X-Gm-Gg: ASbGnctaFZcjL1BfMGPwpWbHOvU+ydU+/spJaH8e0U/qdKFROFeD0NMcSydtrqFRCP0
-	4JOKlTDZIRKq4ypLYfa2L8VeBSfpudZMs/xZB+v4gERkLpT1My1EL+Re+oqw/rW1cFZ2iCBOh/d
-	suL94D/KPPvBvKtjnUJg8qmlT7ZzMHwwP8mjlvoQzgv7mzu92UzUn4dhsznpqefVnaXHxLJDEe8
-	+P+HdCDNHiOYGMCYy/2z3wxzZaDaQIVFpKfJWQbgugxKfC2R/sB6/pwOKxDJckySvKZ3yZCxvaj
-	JHqL7eEEAhMoVtEKz+waUbOJYpni1AQiN2q88bWOZyRITgt3qXn46eMsEK2HQJLodq9mMmb6S2R
-	MZl13XAPoOdbGaZAMWE6JZB6dxURUxN0BhPdEc2+wwEor2O8hUZsR4rH3+wbys5ZFryPmcPFBf6
-	NMNQSF7q6na6BgmGN4k1oyQaH1auxEu63WSg==
-X-Google-Smtp-Source: AGHT+IH3knEaO7uQwDSiykr6b7dNy3NcVzjxL7nST2lJTVdnkH3+ref73CXvsxpJUFDrDoKyyQ0hew==
-X-Received: by 2002:a05:651c:435c:20b0:376:3a83:428d with SMTP id 38308e7fff4ca-3763a8353e9mr2470301fa.48.1760098149101;
-        Fri, 10 Oct 2025 05:09:09 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59088577836sm820546e87.100.2025.10.10.05.09.07
+        d=1e100.net; s=20230601; t=1760099379; x=1760704179;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=vYMGQwZbrkqXXfmRn4FZdpSz5oqSucZM1pi40huO1ec=;
+        b=KoAcf3lc03WEeRI4rQUHCJhWbsKmpHb3B3j38+hhqkm5seWzAtsk+nX2iRy1nSZfDB
+         ULO7mM7X9Q9lxIISXy57fUNFk3F18fvMr45J/ceOwmpmsuIEsuZX3FzhNopx8k+d4YuQ
+         yWA6tbD4G4wYKSwShk6D/h1rzcNCWjp+U3Tdv665DBpn8c+7RucEXxZ1lYhjnhUm99Gl
+         ZhrNjWFnjuuinjQysV1kkLrcrSoaYDBhvqDdlY5w8sXJQzrHPzGIR45p7HJTOmcfprmA
+         6Rl2hDwLHH5/KLPi0R64VR0vmSunWe1hV2s/BR0PBQsSgsvlq/SEa/qNmbp2t2lCOXIG
+         wbWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWLlKX+qA9ykP97R3qB5M1DIBAPJYj4O+BSJw4Z74kYArTFOF0EICwhncKLZ61UCMf4xhx1DKleLIuu@vger.kernel.org
+X-Gm-Message-State: AOJu0YySbq+LPvnW8kGYdE862A9c/npOxKRXzvS381YEyWmlMFUAPjQR
+	eHN1A/7nvaDJBbfKPSsU53gB6ZJNFhLQU/Yz92bBZ0vzOuKWaczI6mpJHYX3hWwXZg8=
+X-Gm-Gg: ASbGncvZp6v7u6KjvxbUjMJ5v0N9U2vNlHTQ7wKLltreLeneFTLH9bsYaCxfaz/3+JH
+	oPdyR82hH81ULizQa+3TQwzjftujfiNMe1w1EZ/sD9JT70ZeWo7t5XtvATieJDlgPPYteF2ZqGm
+	AD4n4qHmnQYD6PjfB8MOFBhuxxeHbHMuQY8h+zVatKlv8PNKMiSgJ+hdE0ZR1jKrT604XuAlK4l
+	RE04pBQEwotclNw7bmiSIv2Tk6tDk/HYbdFCo5Ke3r6R0bFHVlOQKo0dmQXxc6M3UFv1p/HBQgj
+	uGLhNlB4Umy5LzerOg3yIqDFvDPrLuEUFiAlB+uPvTwKVSZ+bkQ/ShHBNHgdSsFTLSEikCCvThY
+	wDpbNp93Oc0jXwg2x7qx0GsvxVNqWKZaCOhSrT5I4LtiP/TOULO0e/WG6sN/+QuAy5weaxhg=
+X-Google-Smtp-Source: AGHT+IGoFKx9FL3rwMgBVIjzsX+nvkrUpEkSRitHHR0xBr1fRpbwIRCWVFTLZ13CTdC6I1m0m5CVFw==
+X-Received: by 2002:a05:600c:34c2:b0:46e:21c8:ad37 with SMTP id 5b1f17b1804b1-46fa9b06d3dmr72900375e9.25.1760099379460;
+        Fri, 10 Oct 2025 05:29:39 -0700 (PDT)
+Received: from localhost (054722ac.skybroadband.com. [5.71.34.172])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46fab3e3520sm62462795e9.2.2025.10.10.05.29.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Oct 2025 05:09:08 -0700 (PDT)
-Message-ID: <8ea507eb-f78c-4a16-882b-112e277fa1b6@gmail.com>
-Date: Fri, 10 Oct 2025 15:09:07 +0300
+        Fri, 10 Oct 2025 05:29:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 06/13] mfd: bd71828: Support ROHM BD72720
-To: Lee Jones <lee@kernel.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Andreas Kemnade <andreas@kemnade.info>,
- linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-gpio@vger.kernel.org
-References: <cover.1759824376.git.mazziesaccount@gmail.com>
- <93142a80d90a0ac80b27090d0c83914675aad94d.1759824376.git.mazziesaccount@gmail.com>
- <20251009161847.GE2890766@google.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20251009161847.GE2890766@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 10 Oct 2025 13:29:38 +0100
+Message-Id: <DDEN5NSLDIHD.C1IELQW0VOG3@linaro.org>
+From: "Alexey Klimov" <alexey.klimov@linaro.org>
+To: "Konrad Dybcio" <konrad.dybcio@oss.qualcomm.com>, "Bjorn Andersson"
+ <andersson@kernel.org>, "Linus Walleij" <linus.walleij@linaro.org>, "Rob
+ Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, "Konrad Dybcio"
+ <konradybcio@kernel.org>, "Srinivas Kandagatla" <srini@kernel.org>
+Cc: "Dmitry Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>,
+ <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-sound@vger.kernel.org>
+Subject: Re: [PATCH v2 3/4] arm64: dts: qcom: qcm2290: add LPASS LPI pin
+ controller
+X-Mailer: aerc 0.20.1
+References: <20251007-rb1_hdmi_audio-v2-0-821b6a705e4c@linaro.org>
+ <20251007-rb1_hdmi_audio-v2-3-821b6a705e4c@linaro.org>
+ <b6223af9-2d9e-4ccd-b297-79f63167242b@oss.qualcomm.com>
+In-Reply-To: <b6223af9-2d9e-4ccd-b297-79f63167242b@oss.qualcomm.com>
 
-Hi deee Ho Lee,
-
-And Thanks for the review!
-
-On 09/10/2025 19:18, Lee Jones wrote:
-> On Tue, 07 Oct 2025, Matti Vaittinen wrote:
-> 
->> The ROHM BD72720 is a power management IC which continues the BD71828
->> family of PMICs. Similarly to the BD71815 and BD71828, the BD72720
->> integrates regulators, charger, RTC, clock gate and GPIOs.
->>
->> The main difference to the earlier PMICs is that the BD72720 has two
->> different I2C slave addresses. In addition to the registers behind the
->> 'main I2C address', most of the charger (and to some extent LED) control
->> is done via registers behind a 'secondary I2C slave address', 0x4c.
->>
->> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
->>
+On Tue Oct 7, 2025 at 1:39 PM BST, Konrad Dybcio wrote:
+> On 10/7/25 4:03 AM, Alexey Klimov wrote:
+>> Add the Low Power Audio SubSystem Low Power Island (LPASS LPI) pin
+>> controller device node required for audio subsystem on Qualcomm
+>> QRB2210 RB1. QRB2210 is based on qcm2290 which is based on sm6115.
+>>=20
+>> While at this, also add description of lpi_i2s2 pins (active state)
+>> required for audio playback via HDMI/I2S.
+>>=20
+>> Cc: Srinivas Kandagatla <srini@kernel.org>
+>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
 >> ---
->> Note: This patch depends on the series: "power: supply: add charger for
->> BD71828" by Andreas:
->> https://lore.kernel.org/all/20250918-bd71828-charger-v5-0-851164839c28@kemnade.info/
->>
->> There are some new variants being planned. Most notably, the BD73900
->> should be almost identical to the BD72720 - for everything else except
->> the charger block.
->> ---
+>
+> [...]
+>
+>> +			lpi_i2s2_active: lpi-i2s2-active-state {
+>> +				data-pins {
+>> +					pins =3D "gpio12";
+>> +					function =3D "i2s2_data";
+>> +					bias-disable;
+>> +					drive-strength =3D <8>;
+>> +					output-high;
+>
+> I.. doubt output-high is what you want?
 
-// snip
+Why? Or is it because of some in-kernel gpiod?
 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arc=
+h/arm64/boot/dts/qcom/sm4250.dtsi#n66
+
+>> +				};
 >> +
->> +static struct regmap *bd72720_secondary_regmap;
-> 
-> Dynamically allocate this and add it to .platform_data once it's
-> populated.
-> 
-
-This can be done but I suppose it's unnecessary churn. This driver does 
-not (at the moment) support more than one instance of the PMIC anyways. 
-(The button data is not alloacted).
-
-This is not really a problem as typically there is only 1 of these PMICs 
-to be controlled.
-
-// snip
-
->>   
->> +/*
->> + * The BD72720 is an odd beast in that it contains two separate sets of
->> + * registers, both starting from address 0x0. The twist is that these "pages"
->> + * are behind different I2C slave addresses. Most of the registers are behind
->> + * a slave address 0x4b, which will be used as the "main" address for this
->> + * device.
->> + * Most of the charger related registers are located behind slave address 0x4c.
->> + * It is tempting to push the dealing with the charger registers and the extra
->> + * 0x4c device in power-supply driver - but perhaps it's better for the sake of
->> + * the cleaner re-use to deal with setting up all of the regmaps here.
->> + * Furthermore, the LED stuff may need access to both of these devices.
->> + */
->> +#define BD72720_SECONDARY_I2C_SLAVE 0x4c
->> +static const struct regmap_range bd72720_volatile_ranges_4b[] = {
->> +	{
->> +		/* RESETSRC1 and 2 are write '1' to clear */
->> +		.range_min = BD72720_REG_RESETSRC_1,
->> +		.range_max = BD72720_REG_RESETSRC_2,
-> 
-> regmap_reg_range()?
-
-Ah, thanks. Out of the curiosity - do you know why this macro is written 
-on lowercase?
-
-// snip
->> +static int bd72720_set_type_config(unsigned int **buf, unsigned int type,
->> +				   const struct regmap_irq *irq_data,
->> +				   int idx, void *irq_drv_data)
->> +{
->> +	const struct regmap_irq_type *t = &irq_data->type;
+>> +				sck-pins {
+>> +					pins =3D "gpio10";
+>> +					function =3D "i2s2_clk";
+>> +					bias-disable;
+>> +					drive-strength =3D <8>;
+>> +					output-high;
+>> +				};
 >> +
->> +	/*
->> +	 * The regmap IRQ ecpects IRQ_TYPE_EDGE_BOTH to be written to register
->> +	 * as logical OR of the type_falling_val and type_rising_val. This is
->> +	 * not how the BD72720 implements this configuration, hence we need
->> +	 * to handle this specific case separately.
->> +	 */
->> +	if (type == IRQ_TYPE_EDGE_BOTH) {
->> +		buf[0][idx] &= ~t->type_reg_mask;
->> +		buf[0][idx] |= BD72720_GPIO_IRQ_TYPE_BOTH;
->> +
->> +		return 0;
->> +	}
->> +
->> +	return regmap_irq_set_type_config_simple(buf, type, irq_data, idx,
->> +						 irq_drv_data);
-> 
-> Use 100-chars to avoid these pointless wraps please.
+>> +				ws-pins {
+>> +					pins =3D "gpio11";
+>
+> Please re-sort pin entries by the gpio index
+>
+> https://docs.kernel.org/devicetree/bindings/dts-coding-style.html#order-o=
+f-nodes
 
-gnarl. I think we have discussed this before :)
-I would love to keep the lines short - closer to 80 chars - because that 
-way I can fit 3 terminals on my screen. All the years spent staring at 
-the monitor are taking their toll, and my vision isn't as good as it 
-used to be. Frightening thing being that it seems I will only need to 
-increase the font in the future :/
+Ok.
 
-Well, sure the lines can be split if you feel strongly about it - but I 
-have a real reason (other than the usual - "they have always been like 
-that") to try keep them short...
-
->> +}
->> +
->>   static const struct regmap_irq_chip bd71828_irq_chip = {
->>   	.name = "bd71828_irq",
->>   	.main_status = BD71828_REG_INT_MAIN,
->> @@ -465,6 +814,28 @@ static const struct regmap_irq_chip bd71815_irq_chip = {
->>   	.irq_reg_stride = 1,
->>   };
->>   
->> +static const unsigned int bd72720_irq_type_base = BD72720_REG_GPIO1_CTRL;
-> 
-> This makes it look like a global variable, which I am allergic to.
-> 
-> Perhaps make it clear that this is a single element static array instead.
-
-Ok. Just a comment will do?
-
->> +static const struct regmap_irq_chip bd72720_irq_chip = {
->> +	.name = "bd72720_irq",
->> +	.main_status = BD72720_REG_INT_LVL1_STAT,
->> +	.irqs = &bd72720_irqs[0],
->> +	.num_irqs = ARRAY_SIZE(bd72720_irqs),
->> +	.status_base = BD72720_REG_INT_PS1_STAT,
->> +	.unmask_base = BD72720_REG_INT_PS1_EN,
->> +	.config_base = &bd72720_irq_type_base,
->> +	.num_config_bases = 1,
->> +	.num_config_regs = 2,
->> +	.set_type_config = bd72720_set_type_config,
->> +	.ack_base = BD72720_REG_INT_PS1_STAT,
->> +	.init_ack_masked = true,
->> +	.num_regs = 12,
->> +	.num_main_regs = 1,
->> +	.sub_reg_offsets = &bd72720_sub_irq_offsets[0],
->> +	.num_main_status_bits = 8,
->> +	.irq_reg_stride = 1,
->> +};
->> +
->>   static int set_clk_mode(struct device *dev, struct regmap *regmap,
->>   			int clkmode_reg)
->>   {
->> @@ -511,6 +882,25 @@ static void bd71828_remove_poweroff(void *data)
->>   	pm_power_off = NULL;
->>   }
->>   
->> +static int bd72720_get_secondary_regmap(struct i2c_client *i2c,
-> 
-> Does this 'secondary' have a specific purpose or a better name?
-
-I am not entirely sure. When I asked this from the designers they just 
-told me that they needed more than 255 registers so they added another 
-slave address... (I'm not sure what would have been wrong with using a 
-page register). So, I assume they just placed stuff that didn't fit in 
-first 255 register there. But yeah, it looks like most of the registers 
-there are related to the charger. So, perhaps it isn't completely 
-misleading to use "charger regmap"? The data-sheet seems to be just 
-using "Register map 1" and "Register map 2" in the tables listing these 
-registers. I kind of like using something which maps easily to the 
-data-sheet, but I really have no strong opinion on this.
-
->> +					const struct mfd_cell *mfd, int cells)
->> +{
-
-// snip
-
->> diff --git a/include/linux/mfd/rohm-bd72720.h b/include/linux/mfd/rohm-bd72720.h
->> new file mode 100644
->> index 000000000000..856a6962b1b2
->> --- /dev/null
->> +++ b/include/linux/mfd/rohm-bd72720.h
->> @@ -0,0 +1,632 @@
->> +/* SPDX-License-Identifier: GPL-2.0-or-later */
->> +/*
->> + * Copyright 2024 ROHM Semiconductors.
-> 
-> Seems odd to introduce a new file with an old date.
-
-I originally wrote this last year :) I can it update though. Thanks.
-
-> 
->> + *
->> + * Author: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
->> + */
->> +
->> +#ifndef _MFD_BD72720_H
->> +#define _MFD_BD72720_H
->> +
->> +#include <linux/regmap.h>
->> +
->> +enum {
->> +	BD72720_BUCK1,
->> +	BD72720_BUCK2,
->> +	BD72720_BUCK3,
->> +	BD72720_BUCK4,
->> +	BD72720_BUCK5,
->> +	BD72720_BUCK6,
->> +	BD72720_BUCK7,
->> +	BD72720_BUCK8,
->> +	BD72720_BUCK9,
->> +	BD72720_BUCK10,
->> +	BD72720_BUCK11,
->> +	BD72720_LDO1,
->> +	BD72720_LDO2,
->> +	BD72720_LDO3,
->> +	BD72720_LDO4,
->> +	BD72720_LDO5,
->> +	BD72720_LDO6,
->> +	BD72720_LDO7,
->> +	BD72720_LDO8,
->> +	BD72720_LDO9,
->> +	BD72720_LDO10,
->> +	BD72720_LDO11,
->> +	BD72720_REGULATOR_AMOUNT,
->> +};
->> +
->> +/* BD72720 interrupts */
->> +#define BD72720_INT_LONGPUSH_MASK BIT(0)
-> 
-> Tab out the values please.
-
-Ok, sure.
-
-Ps.
-I do really appreciate you going through RFCs :) Kudos!
-
-Yours,
-	-- Matti
+Thanks,
+Alexey.
 
 
