@@ -1,132 +1,118 @@
-Return-Path: <linux-gpio+bounces-26966-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26967-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63E05BCC6F8
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Oct 2025 11:50:03 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 417ADBCC6FE
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Oct 2025 11:51:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2D3864E237A
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Oct 2025 09:50:02 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id DE1CA355154
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Oct 2025 09:51:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E95EE2ED161;
-	Fri, 10 Oct 2025 09:49:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 877DD2ED165;
+	Fri, 10 Oct 2025 09:51:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="hO4xoOJL"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="P5QB2VXa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4A32ECE9A
-	for <linux-gpio@vger.kernel.org>; Fri, 10 Oct 2025 09:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C5820A5EA
+	for <linux-gpio@vger.kernel.org>; Fri, 10 Oct 2025 09:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760089798; cv=none; b=BPbOj+t+jnWYHkE93UxoKNiDbFSSVsTVpK3XLvWAEoDJDkjYiXfYeRdeaii1q1lgPjrWIpvN2eEDSXbZsHgCwc9AKHHO+SVXXTFCtTvcF9KYuyNaI4GFH7p2r9J+Wtx2N2on++IRIHPx2wRUP/NK+wyVFEjhrHoMVBL9C4Iw0CU=
+	t=1760089882; cv=none; b=Bt2ray2hjCD5rm2j8aZlMWjls7KdELvzb4KKWWEGmyQKaFtSsGhpDFAC1thZXQv02zH0wGIq/xt3B6g9DoIvQmZcW7wxC/1A9rH00w6fvJL9aQqLE0Kir9u637TzrwIOauLzFc/CRKs80FfD0jjuJMptS3egkJYGTE/h3/ViJd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760089798; c=relaxed/simple;
-	bh=5GymtkM45oHIV0WjFahj7ss/IavDFdPPMM/8OfQYuBU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BtsIpoRSzyMx1HSrbv2+BfHTDn9viP+t7pt6LbdBpGeLwJ+qjOHp5v3oFSAWMQ6y3W7wT3uz1bR26lnp4GE4nP9WIxc6hRjJexo1oGUu8ZtU+hqUCYGpb/sZWZtVrAVOBZNRg5pS4nms0+mSCQwOke48nm//zedpbdz53q7SMBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=hO4xoOJL; arc=none smtp.client-ip=209.85.128.51
+	s=arc-20240116; t=1760089882; c=relaxed/simple;
+	bh=OmgslN6j215XFNiy0z2/LnV6M7r7p6MLhJ/p4mhhJZ0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=imgYb4Y9G+1xqLzdpqbKo9dWuK7YlbCy8Xy5tYzud+Np+uoBJ4iWCwxaf0uyzKbucLCkC791Ywgecim9nscU2ITEG4VFqGh6lLgCtVhhbgm8nT7/y55OGhH11UPFowsAUSKKRk8QFx1B6iI2iDp8HkfoNJvYn1gG9I433s0v+Xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=P5QB2VXa; arc=none smtp.client-ip=209.85.167.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-46e42fa08e4so18539005e9.3
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Oct 2025 02:49:56 -0700 (PDT)
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-578ecc56235so1629156e87.0
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Oct 2025 02:51:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1760089795; x=1760694595; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1878e2qm+M3xSoED0XQ/A+N2QJY9QZbPdyRDb1mj3GE=;
-        b=hO4xoOJLKmFiOQJ0yljGEvfWFzifW18WnhFUasA8FE5ZWhmEqY1dmOi99zKmShPsel
-         5nw/xgQowIpL3Ll4NAGnTj/M+qB08x8cQHVoMwvHsNc6Bw2TGSD1g/ne/hKTogy2oYFh
-         a5NGylZBQ0+3wJ5UHMaoF3nmERHGe8JlmYL2GSx8BCIlN0tNlFuvJSHirHIQPq8gEOXd
-         eNUURBv9UBW3rGIlk+d/qWhedreIJP1EHfk2sPmglE+7I6W5u4vTp7e0RsjTr/+aCnJR
-         w4KsbPE1/dr2X6nmYYr4ndhJul2/0SsK4592c/WVV9IyyCqpxJRMY+sfLpQ4rzsiHzup
-         DvUw==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1760089878; x=1760694678; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OmgslN6j215XFNiy0z2/LnV6M7r7p6MLhJ/p4mhhJZ0=;
+        b=P5QB2VXa1uW30ckHKRzO81eF52HCbUy5CF6jc3NP5xV35rEDOhBYEBGAZCGJ5Z63t7
+         74tcu5AW1e0Uq/pTUOcMP82q1PzDJn6saQtwKB7gEU2ReTApvy6xfkiJYUErLwIcpdFA
+         4kUFgKvnuc7fS2f8qOyPU+E+vkQu7U3THWgPtPurEOhof3Z37hoFhrx5cYSzoczpJtBW
+         yqhvRpAJs2eHUtfB+lliC6wLew+pQc5mFMbBsJZoShon6kupA8wIUZ045EP9ejDfeQia
+         XdNcxnN3t64FklJYypa09Ojj/jxVkRIV6YbDVFxm+SRupmV7ickNTI7eo6SXSFjHnlMK
+         E1fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760089795; x=1760694595;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1878e2qm+M3xSoED0XQ/A+N2QJY9QZbPdyRDb1mj3GE=;
-        b=wYioG/NRDodHDYL1fMUg6KylR62EA9muy936cq0mjGPcSoAfcX3+40MkLFYqYjn9/J
-         yfXkk9MphYdIolvFyX/qu5ePHzGW6aa21ikSiVMrGqc9Rsg+IjQuqfpbrp0B/GW86Ids
-         2s9K1LjcN6LM5A+QplgRuapgBR2MiYrMctIxRFaKh6Q7LqsWVnSI8IEy4Q5s6T/tUnZN
-         zGCfjLhaZwnu3GpGb5oa4GEt7UR+LVJxuPT47fPi6TkT0qmhYE9iHDOU/VF/+CsnnPam
-         3s+CKOLbo0Vf8jhmNld1UsnHvPdXquLzKhzvMHiRVBY537A4XEoJlzV1E/qptrIt7d1V
-         cCAw==
-X-Gm-Message-State: AOJu0YzA1f2FnRtPzCvFwbDTPB2NjDxCwRjXBa1+0xl92FvB8kVhQ6Rm
-	C5ndbneNDZxX/eccnSzOPJO39mA3fXlbTPauKrtQvakClTht63H3rAeRJ4dS4XDvtv/m5W9Pdq3
-	rqS12asSG9Q==
-X-Gm-Gg: ASbGncuAXpsJCXIiahKF5OfW2sY4g4Tl+gN9qnSuZh7tkhWefj7YVrHusFtnr4pCROa
-	6dps+aEYK/AtHyJjv9APzZRYyptLNXJOGM0CULQ7spwuOYScp0lTyRIR+AgZCXb33Psj3IHu/GA
-	b4mI1B5BaH7SYp8cbFPuGFzOcRywmr4PRTS8ug2+uZN/psg2mgMYvvLjudO64khVajbj0TFBIZP
-	oRqRhE7SLFAJa30Yrh20DGQOEnSBruU1wu8fMHd5wIBasoUwuFhksEVnZbnOwmOSfr/CYbnOKep
-	PiXCv1Laj828AnsqfJGPPhrC/VcH+fivCUto9GPUMiXE0ZkZPHph8KlbeObi//iHUKiBheLWizO
-	T93t8cSzWSwxJ0KwksHCEqmKvpkO1HjaGfhinh0n6/RxVznFds8nW
-X-Google-Smtp-Source: AGHT+IF9TX+zSFUGkCzJWV8htWP0V7wbnNV9yUmTViaEaZIhfv7aOIkz51eWLXmJZPjFatumO1VkMw==
-X-Received: by 2002:a05:600c:3acb:b0:46e:2801:84aa with SMTP id 5b1f17b1804b1-46fa9a21caamr62365755e9.0.1760089794488;
-        Fri, 10 Oct 2025 02:49:54 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:d1c1:43d4:ab99:c8a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46fab3cc939sm57436035e9.1.2025.10.10.02.49.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Oct 2025 02:49:53 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Vincent Fazio <vfazio@xes-inc.com>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Vincent Fazio <vfazio@gmail.com>
-Subject: [PATCH] tests: gpiosim: revert minimum kernel version back to v5.17.4
-Date: Fri, 10 Oct 2025 11:49:51 +0200
-Message-ID: <20251010094951.18927-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.48.1
+        d=1e100.net; s=20230601; t=1760089878; x=1760694678;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OmgslN6j215XFNiy0z2/LnV6M7r7p6MLhJ/p4mhhJZ0=;
+        b=AuvUOzTs+RhBy7x7tWL+hV7aWEhw8vUZJMj/YJHtZwJ2TvMz/w93RFCjaQTiSryTsP
+         IyPKV6C2bsNW2Bs19hWEmnVT2PU/umhUkPYuunZ37bvZst45vgBZzc0e5tgLGqNTj5IH
+         RrQEcZoOmJarAjs7oWHauqtpP6RDvKtsUvTiwQL8LvPPgV/ZmfEGmJjQvTxZQtrvOwJc
+         Mrd1xJDRroi1y2ksKWsaNxo7EncUFWOv+j5B84RoJnVrgrD911nvEvvUiswdZpFqwnsK
+         OrD7qOOjccVl6KijvwuUmPt/1MlsJbi5ctlpAgr+AviQOAo9P9h0Rhd84TRAls3g1KZ0
+         H/KA==
+X-Gm-Message-State: AOJu0Yx7OXs9fCOb3cx13mgnhlQUX0ZzBqHU49i580cnS2H4TBUUJ07K
+	Sn8QiKqODZe6Um26LNQi7wRNzKjBi1wO+RozPZjN2sCvgkEsNVxniEIAsK0d/4v+P9kJeiXxxYH
+	CQahlLxs8Vj9G3+3pKUFZFeV4qJUMBZ/GpHHdjUma/Q==
+X-Gm-Gg: ASbGncuEfy7eUxmdhaqMyZ/wW7p1wlZtAQyh77V1YXys7bngmtc3BBs6oRU+mYrXMAT
+	0AkhJO9Lyu4s7rBoOaRuRmvbZ1Mj0Xm4j15Sx5zSreOzr4BaOVcM8VyBwr/cN4aKBWi1l2BPTmi
+	luYKi5UfB61hy1gKVIk2HSPF75/Laicl3ZTuedowLOy09e2ci15Xo90z18e5U1/5UTd2OBV1IG+
+	scTfrEUNcjpIGeMMRnyKQap9+FXKXOBZ42BGk3UiLgljT4tC0vA1V+XHwEY+jhjdwg=
+X-Google-Smtp-Source: AGHT+IFO3/0swfa2H+se3Xpr7tKVfl1REWjyI43fxLIAYWM9hS2WlCrGftwL7AS4Clz4XMWnfnTaaFGfvopDQc9Fl3Y=
+X-Received: by 2002:a05:6512:b82:b0:578:f613:ed9c with SMTP id
+ 2adb3069b0e04-5906dae5c0emr3434100e87.43.1760089878136; Fri, 10 Oct 2025
+ 02:51:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251010094951.18927-1-brgl@bgdev.pl>
+In-Reply-To: <20251010094951.18927-1-brgl@bgdev.pl>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 10 Oct 2025 11:51:06 +0200
+X-Gm-Features: AS18NWB98qycykRffchMGQL8oj6dBLc5kTHzHSmfyUp2cSZqzDFORcIxrmFxrbI
+Message-ID: <CAMRc=MeVbj5oUG3U2JuSSjA6nS6+EkRZmSg2579NuPCjFiws4Q@mail.gmail.com>
+Subject: Re: [PATCH] tests: gpiosim: revert minimum kernel version back to v5.17.4
+To: Vincent Fazio <vfazio@xes-inc.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Vincent Fazio <vfazio@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Fri, Oct 10, 2025 at 11:49=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Commit b4009e2e6715 ("tests: gpiosim: provide
+> gpiosim_bank_set_line_valid()") added support for marking simulated GPIO
+> lines as valid/invalid using a new attribute of the kernel configfs
+> interface of the gpio-sim module. In the process it bumped the minimum
+> kernel version required to use it to v6.17 where this feature first
+> appeared. The test cases we added later only appear in gpiod-test which
+> is the test suite for the core C library. However with the kernel
+> version change in libgpiosim other test suites have also seen their
+> minimum kernel versions implicitly increase.
+>
+> Since the libgpiosim library will simply return an error in the event
+> that the attribute in question doesn't exist when the new function is
+> called, we can revert the required kernel version to what it was before
+> and allow just the individual test suites to bump their respective
+> minimums separately.
+>
+> Reported-by: Vincent Fazio <vfazio@gmail.com>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
 
-Commit b4009e2e6715 ("tests: gpiosim: provide
-gpiosim_bank_set_line_valid()") added support for marking simulated GPIO
-lines as valid/invalid using a new attribute of the kernel configfs
-interface of the gpio-sim module. In the process it bumped the minimum
-kernel version required to use it to v6.17 where this feature first
-appeared. The test cases we added later only appear in gpiod-test which
-is the test suite for the core C library. However with the kernel
-version change in libgpiosim other test suites have also seen their
-minimum kernel versions implicitly increase.
+Ah, I forgot the tag but this is for libgpiod.
 
-Since the libgpiosim library will simply return an error in the event
-that the attribute in question doesn't exist when the new function is
-called, we can revert the required kernel version to what it was before
-and allow just the individual test suites to bump their respective
-minimums separately.
-
-Reported-by: Vincent Fazio <vfazio@gmail.com>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- tests/gpiosim/gpiosim.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tests/gpiosim/gpiosim.c b/tests/gpiosim/gpiosim.c
-index 0d7859f..449dfbe 100644
---- a/tests/gpiosim/gpiosim.c
-+++ b/tests/gpiosim/gpiosim.c
-@@ -24,7 +24,7 @@
- 
- #define GPIOSIM_API		__attribute__((visibility("default")))
- #define UNUSED			__attribute__((unused))
--#define MIN_KERNEL_VERSION	KERNEL_VERSION(6, 17, 0)
-+#define MIN_KERNEL_VERSION	KERNEL_VERSION(5, 17, 4)
- 
- static pthread_mutex_t id_lock = PTHREAD_MUTEX_INITIALIZER;
- static pthread_once_t id_init_once = PTHREAD_ONCE_INIT;
--- 
-2.48.1
-
+Bart
 
