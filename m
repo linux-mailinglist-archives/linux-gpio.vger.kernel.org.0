@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-26977-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26978-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E3CABCCE88
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Oct 2025 14:32:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3428ABCCED1
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Oct 2025 14:35:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 705871A645EC
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Oct 2025 12:32:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 669001A6652F
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Oct 2025 12:36:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4D372848BA;
-	Fri, 10 Oct 2025 12:32:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95686289E30;
+	Fri, 10 Oct 2025 12:35:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q19Ci3d2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uvkfIfB/"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75719748F;
-	Fri, 10 Oct 2025 12:32:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4438A748F;
+	Fri, 10 Oct 2025 12:35:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760099533; cv=none; b=A0FTQsjSUldBljigCv9KtZ5B6v+RRdYOQlXuQB4CncuXJxaUOhtu62vov1pxBBMI1zVxrsMR+XLlTggkaAjPIA6Z2UJEKU2U/G6ZTtlWtwS7sWugXrM47bZFSp/95WIRBCEqjn56KKiMdB3/JFfGRweccB2XpbKQeE7gXiv/isc=
+	t=1760099753; cv=none; b=gvfV3Soj557WhcmwyNKuBV6Rp4aazS9IKzMFhOQjy/XytxSLdcTHfrY79jUk/z4zKb0OFN2TZsMFxuXmwWAYbfRXO7CHBG+peMlWiFGz7WEtpLJJgvnxBX33cRmQbdDcy8w5GMKjKIwjUvXY2Cn75ozEQ7vQh8kQB9Tc3kVr9lU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760099533; c=relaxed/simple;
-	bh=h4IyewEJ2G0uOimKmF8vzglO/qOPNzWPmoP6feZDVys=;
+	s=arc-20240116; t=1760099753; c=relaxed/simple;
+	bh=qtzxoW2WXZmA8H9nR2VTDc8rWft9XW5Mu6J0sQeyMK4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tC/m6z2PQAoffXK/yCjL9bLlre56Bjib7TISP8As5hY36Bj7Ma9nC4hnzRQPHC/lvj1+paLBr86zOToYp0ekMG5LEsmIm5cq3HWuJ+dsilZSrgEqCsbABJP7YpjKG5qzesVBIQVmrY4eCz7a2YTLGfphiJbv/EQHLnCRQty7R4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q19Ci3d2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3F6BC4CEF1;
-	Fri, 10 Oct 2025 12:32:07 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=fD8rV6h55XpFw7f/ATyD85WzrjXBfYlg+bFSMiUlgu8xRil45hGFBvmpJTISkeEwZN3jVce1qzEdcnLWD8uerFGguVvGP2SSlwaag9QmS9cpsZz76JXIfEUZ41mYN9jlQ+Cxd2rzTLY6cGxEBlRyZDYfxhI9kZwPFp+4A5dgVqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uvkfIfB/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D79D9C4CEF1;
+	Fri, 10 Oct 2025 12:35:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760099533;
-	bh=h4IyewEJ2G0uOimKmF8vzglO/qOPNzWPmoP6feZDVys=;
+	s=k20201202; t=1760099752;
+	bh=qtzxoW2WXZmA8H9nR2VTDc8rWft9XW5Mu6J0sQeyMK4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Q19Ci3d2MaEcf+nS1/+cA1pL/uwtGhQPvqaXqTUVaSP5AEbbFAWfh7RXlDC55W+zo
-	 AhWvnoQwwmsxbw+pxT1wmZLlBdujAR4vBmT9Rumq/TdMPWsUZEutopOY2kbwBJ/FYt
-	 C4Ox4GMUmV1JTUwWwvRGKUUl78u0VouG35IVgq5750bwwclmpRMwutiUv0TuGMiKCr
-	 oR8FHAQRsrTfiydM/kets4uzcFs9dRBiflBo8nBLoNvaWhjkmd5j1nfI2r7gWsFHBh
-	 bn8lP083x48PF3KHWhHG3VmY8ZWUI0xeic19/HdcIrbd/MMLM8Xh9zmeuUfjfBbB47
-	 KQnUBj5zia66w==
-Message-ID: <5bb3e836-9555-49bd-bd0c-a2649efe7db9@kernel.org>
-Date: Fri, 10 Oct 2025 14:32:05 +0200
+	b=uvkfIfB/7mj6engFnO6zPHc7jOHojfCkx5Ece6zuw65/741Elrkt5AuGT5f9NvoEj
+	 Qfl1XGJ2a+JNjkYKW3pD3juND/05xoHmxEJ1ITsFRaik8tIuOfRp+nm6hSSgTMFKk6
+	 4YL8q0alzVpf4fEY9V1AEKGO1PFIELFWjHUtbMwvbIUemlU5PyE8CgLGoim+AIR4P8
+	 j2Y5I7lyOg4aceDGyu7+oqzVn1TI8Vf5OzVISclurkOn9cLBKoxLOl1DaFkB4nRE2I
+	 rxfxznOg2aYeVDAWXI5FkfTF/0Kw6yzMoULZPl14kHEgEWYS4KH+4RR2IXLQjfyuXF
+	 ZI1SA2kseNZiQ==
+Message-ID: <5f263730-497e-43e1-9970-dbfda29576e1@kernel.org>
+Date: Fri, 10 Oct 2025 14:35:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/3] dt-bindings: pinctrl: samsung: add exynos8890
- compatible
+Subject: Re: [PATCH v1 0/3] pinctrl: samsung: add exynos8890 SoC pinctrl
 To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
  Sylwester Nawrocki <s.nawrocki@samsung.com>,
  Alim Akhtar <alim.akhtar@samsung.com>,
@@ -61,7 +60,6 @@ Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
  linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-kernel@vger.kernel.org
 References: <20250914114457.2610013-1-ivo.ivanov.ivanov1@gmail.com>
- <20250914114457.2610013-2-ivo.ivanov.ivanov1@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -107,18 +105,17 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250914114457.2610013-2-ivo.ivanov.ivanov1@gmail.com>
+In-Reply-To: <20250914114457.2610013-1-ivo.ivanov.ivanov1@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 14/09/2025 13:44, Ivaylo Ivanov wrote:
-> Document the pinctrl compatible for the exynos8890 SoC. Let the
-> driver handle our clocks for pinctrl as well.
+> Hey folks,
 > 
-> Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-> ---
+> This patchset adds pinctrl support for the exynos8890 SoC.
+> 
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Applied, but will be pushed to the next after the merge window.
 
 Best regards,
 Krzysztof
