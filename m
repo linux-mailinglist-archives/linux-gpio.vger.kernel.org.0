@@ -1,203 +1,163 @@
-Return-Path: <linux-gpio+bounces-26987-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26988-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4112FBCEABC
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Oct 2025 00:06:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 57F8DBCEE31
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Oct 2025 03:45:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6F5413B5260
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Oct 2025 22:05:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0EA793E8484
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Oct 2025 01:45:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B660C271468;
-	Fri, 10 Oct 2025 22:05:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3CC1136351;
+	Sat, 11 Oct 2025 01:44:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXFvQZDf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q4zKOOYv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7198E270EBC
-	for <linux-gpio@vger.kernel.org>; Fri, 10 Oct 2025 22:05:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D85148850;
+	Sat, 11 Oct 2025 01:44:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760133923; cv=none; b=PFLpRTgIR/q97QER6eluo4DRteJOlbAt5ntKSJkh/dICt8d7N82AEzzxvIT1o/eKrtCNNCO+asgEX6eeX3koiqYy6FlVgXFFO+NULnenxJPDF8N83LqpvmZUhiSabL+gK7F4IxwiXRn1M4HXM8vOov5abB8sSYw0+7bw6l0wX0k=
+	t=1760147099; cv=none; b=qeGSlTd6Lf3Lobtcs7Va8DoJWmIiWleZasSyQ5w9rwY/1eIF6jNVqZRAkG0epgTmdaWE3lAgDw5wX13LYxY7xldjKh/6L+JgDmPGSCQ39a/RUM265RFTcPsHr7oc5d1P12OOHKxqfjz1apN/BSMweSnPk7uPTimY0/Cmu/R/9YE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760133923; c=relaxed/simple;
-	bh=ULkcu+ErWUDnM+0yG/yzCIlYRGPz4NooEguavSIe4VI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hk/4Zse/CTa1XTMYDGlABdjNFyAllWqaf7wUcTAE50EDN5a+DVuGUFsocqGXKloGDvEvX9vdrIv+wagEohchpvsaqelgi/Zz2vbczncyCn/pZTQ8rjZL0IKqVcEfuzFFibBBvnct8R/mwtQ4hgxvcSJWO7ntNMITSrC+K4617XQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXFvQZDf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3025C4CEF1
-	for <linux-gpio@vger.kernel.org>; Fri, 10 Oct 2025 22:05:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760133923;
-	bh=ULkcu+ErWUDnM+0yG/yzCIlYRGPz4NooEguavSIe4VI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=cXFvQZDfKZKuMOWPXWwo5sAbHsXRngQx4XelvT4OStXTta54VjWlGwArne+mKJRWq
-	 swRkt8p0BVB3LdauXXYmtKD9XT7T1IAeqGirAJkiLqJm3vol5B0T04D7oxu7T+6z4C
-	 RLWJVNTVmQXEnIkFeRNIDm/dI1VQi58YEtpHJPkBJ0vGNuCxjTLKOPVmiJObgaRawq
-	 Qqj4RtheXUoL9kgI93wg37Ng3a5HMBiuPO8VDFxOrHGGoUD5MZ+UXsb2MmS2eRPJ3N
-	 cBlmnh9ibZ9x97xWPvvw8IYQtRr5Tn4/63J9nAOxhB6nHGMhQL2hLOLXTugJ8pdLov
-	 Zsawn9t7yJWwg==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b3d80891c6cso543702366b.1
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Oct 2025 15:05:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXvNjNAt44w/EB6QV3On2C7lnvzqVPQc9HZItjUOOPRrUJJHUrjuG2iUnlIVoNoKoqXfFaFiJrYfALm@vger.kernel.org
-X-Gm-Message-State: AOJu0YyB8cT0YbO0pDE35BYyDIdgKSClW3hFyi7gNCOq5aPYpN9nW8Wz
-	8WUYOq+n3/Bz0yJVy553ycPQRWL6a932bD+C1dgoyOgzZAuwiLkFu5QmBxDdZeoGq4DNHRVLLq5
-	2uXUHao8aLMJFiQmq5bVuh3P3MqFohw==
-X-Google-Smtp-Source: AGHT+IFuxZcfGuyDGnYvmRipLMVeDwsutLoA5afsi1To0UHAb/F8Wkp4QQcADLcPiJYb4k/lngw3miLIFLMhQgfvXPY=
-X-Received: by 2002:a17:907:7213:b0:b38:49a6:583a with SMTP id
- a640c23a62f3a-b50bf2bcc2amr1295183566b.23.1760133920590; Fri, 10 Oct 2025
- 15:05:20 -0700 (PDT)
+	s=arc-20240116; t=1760147099; c=relaxed/simple;
+	bh=/bQg4XYN/VovXgBh/08m6D9aPhrDbsZ8VtYXirz0fbc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EHCQLC/jTFoucKAwWu/pqGPbCI2gTvlQ/Fy+VFjD+GMJosl1KMDwNS+afRFDM34tdJddZrAUq2vRTKXxVJvp1VdaxV3puTa1FxX2RzYE2UD+K/J17nUyNMo8W/tPGmdKkF2sccT+CRLb1IB2zXmMJm0QelRJ/gJMW/gACKqdbtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q4zKOOYv; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760147098; x=1791683098;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/bQg4XYN/VovXgBh/08m6D9aPhrDbsZ8VtYXirz0fbc=;
+  b=Q4zKOOYvnuyYw/EKj9grtVmwXQ/QV4aK/vgSDiOKMotMcQUSwIzG06DB
+   kio4Kymlfgdd9j9QMiNrqYKtS/98A1He0jzTAa2mIiKmWuVMru+vYHW3P
+   n2tnL350m4YevHoh1gM1Chag5rO4PzG1WxFa7jQTOEG3LCy/3TNZAOCdA
+   Rdnl9+MkajNApuIbZYHYAyOJIg5IE3sObwoBmstgoYbt7YprHdE7peckc
+   i6DMsgQnU5NTp8dqchLgSKTl8ruZEXWx6Sxa1EnhzPiUT82IvV7HSuiGe
+   zeELxNGWZGbyk7MPEfIQI0LyOoasokKxG5NHykV1YHV4Ru6J6VIDdc8eS
+   Q==;
+X-CSE-ConnectionGUID: ToJQ88ZFTf2sZqhObSR2EA==
+X-CSE-MsgGUID: 5OmWwhfnTqKWPxMi3wpFnA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11578"; a="61399377"
+X-IronPort-AV: E=Sophos;i="6.19,220,1754982000"; 
+   d="scan'208";a="61399377"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2025 18:44:57 -0700
+X-CSE-ConnectionGUID: 3obdzLB0Rd+Ap+7tCig8Cw==
+X-CSE-MsgGUID: noIfFSMPTtGCHB3Stmar0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,220,1754982000"; 
+   d="scan'208";a="211761163"
+Received: from lkp-server01.sh.intel.com (HELO 6a630e8620ab) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 10 Oct 2025 18:44:54 -0700
+Received: from kbuild by 6a630e8620ab with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1v7OfD-0003Ot-39;
+	Sat, 11 Oct 2025 01:44:51 +0000
+Date: Sat, 11 Oct 2025 09:43:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: Vaibhav Gupta <vaibhavgupta40@gmail.com>, Michael Buesch <m@bues.ch>
+Cc: oe-kbuild-all@lists.linux.dev, Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] driver: gpio-bt8xx: use generic PCI PM
+Message-ID: <202510110924.dUQeeRV6-lkp@intel.com>
+References: <20251010105338.664564-1-vaibhavgupta40@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250811163749.47028-2-ziyao@disroot.org> <20250811163749.47028-3-ziyao@disroot.org>
- <20250818175827.GA1507697-robh@kernel.org> <aKRh8M0szWKfpPF9@pie>
-In-Reply-To: <aKRh8M0szWKfpPF9@pie>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 10 Oct 2025 17:05:09 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+8U75kYFADTNnMONxrLy9H7YHukXNdtPpp20yG-HEyng@mail.gmail.com>
-X-Gm-Features: AS18NWBAJg1X1PNJxas_Z_phPDWL6QAMLHfZflRShgSUFengE_WoLreRmG5ombg
-Message-ID: <CAL_Jsq+8U75kYFADTNnMONxrLy9H7YHukXNdtPpp20yG-HEyng@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-binding: pinctrl: Document Loongson 2K0300 pin controller
-To: Yao Zi <ziyao@disroot.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, Mingcong Bai <jeffbai@aosc.io>, 
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251010105338.664564-1-vaibhavgupta40@gmail.com>
 
-On Tue, Aug 19, 2025 at 6:37=E2=80=AFAM Yao Zi <ziyao@disroot.org> wrote:
->
-> On Mon, Aug 18, 2025 at 12:58:27PM -0500, Rob Herring wrote:
-> > On Mon, Aug 11, 2025 at 04:37:48PM +0000, Yao Zi wrote:
-> > > The pincontroller integarted in Loongson 2K0300 is able to configure
-> > > function multiplexing for all the pins. It could also configure drive
-> > > strength on basis of functions, which means all pins set to the same
-> > > function share drive-strength setting. Drive-strength configuration
-> > > isn't available for all functions, either.
-> > >
-> > > This binding utilizes two levels of subnodes, where the outer represe=
-nts
-> > > function and the inner represents groups. Drive-strength is allowed i=
-n
-> > > the outer since it's shared among all groups configured to the functi=
-on.
-> > >
-> > > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > > ---
-> > >  .../pinctrl/loongson,ls2k0300-pinctrl.yaml    | 92 +++++++++++++++++=
-++
-> > >  MAINTAINERS                                   |  6 ++
-> > >  2 files changed, 98 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/loongso=
-n,ls2k0300-pinctrl.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pinctrl/loongson,ls2k0=
-300-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k0=
-300-pinctrl.yaml
-> > > new file mode 100644
-> > > index 000000000000..cbd74cb45342
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k0300-pin=
-ctrl.yaml
-> > > @@ -0,0 +1,92 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/pinctrl/loongson,ls2k0300-pinctrl=
-.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Loongson-2K0300 SoC Pinctrl Controller
-> > > +
-> > > +maintainers:
-> > > +  - Yao Zi <ziyao@disroot.org>
-> > > +
-> > > +allOf:
-> > > +  - $ref: pinctrl.yaml#
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: loongson,ls2k0300-pinctrl
-> > > +
-> > > +  reg:
-> > > +    items:
-> > > +      - description: Pin function-multiplexing configuration registe=
-rs
-> > > +      - description: Pin drive-strength configuration registers
-> > > +
-> > > +  reg-names:
-> > > +    items:
-> > > +      - const: mux
-> > > +      - const: drive
-> > > +
-> > > +patternProperties:
-> > > +  '^func-':
-> > > +    type: object
-> > > +
-> > > +    $ref: pincfg-node.yaml#
-> > > +
-> > > +    properties:
-> > > +      drive-strength:
-> > > +        description:
-> > > +          Maximum sink or source current as defined in pincfg-node.y=
-aml. Note
-> > > +          that drive strength could only be configured on function b=
-asis, i.e.,
-> > > +          all pins multiplexed to the same function share the same
-> > > +          configuration.
-> > > +
-> > > +          This could only be configured for several functions, inclu=
-ding jtag,
-> > > +          dvo, uart, gmac, sdio, spi, i2s, timer, usb and emmc.
-> > > +        enum: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-> >
-> > How do you know what pin this drive strength corresponds to without any
-> > other properties? Node names generally aren't important, so you
-> > shouldn't be using that.
->
-> Thanks for the hint... yes I'm matching the node name to identify
-> functions in this revision of driver. Could I introduce a "function"
-> property to the outer node for identification of the function?
+Hi Vaibhav,
 
-Yes, that should be defined somewhere.
+kernel test robot noticed the following build errors:
 
-> > > +
-> > > +    additionalProperties: false
-> > > +
-> > > +    patternProperties:
-> > > +      '-pins$':
-> > > +        type: object
-> > > +        $ref: pinmux-node.yaml#
-> >
-> > Generally the pin config and muxing are in 1 node if you can control
-> > both.
->
-> On 2K0300, drive-strength could only be configured for each function,
-> not each pin, i.e. all pins configured to the same function share the
-> same drive-strength configuration.
->
-> Putting the driver-strength property in the outer node describes the
-> situation: a property in the outer node is function-specific and shared
-> between all groups (represented by inner nodes) configured to this
-> function.
->
-> Do you think it's better to move pin config (the driver-strength
-> property) to the inner node in this case? If so, should the new
-> "function" property for identifying functions reliably be in the inner
-> node or the outer node? Thanks for your explanation,
+[auto build test ERROR on brgl/gpio/for-next]
+[also build test ERROR on linus/master v6.17 next-20251010]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I don't know. I'll defer to Linus on this one who is more familiar
-with the variations of h/w out there.
+url:    https://github.com/intel-lab-lkp/linux/commits/Vaibhav-Gupta/driver-gpio-bt8xx-use-generic-PCI-PM/20251010-185625
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+patch link:    https://lore.kernel.org/r/20251010105338.664564-1-vaibhavgupta40%40gmail.com
+patch subject: [PATCH v1] driver: gpio-bt8xx: use generic PCI PM
+config: loongarch-randconfig-002-20251011 (https://download.01.org/0day-ci/archive/20251011/202510110924.dUQeeRV6-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 12.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251011/202510110924.dUQeeRV6-lkp@intel.com/reproduce)
 
-Rob
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202510110924.dUQeeRV6-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/gpio/gpio-bt8xx.c: In function 'bt8xxgpio_suspend':
+>> drivers/gpio/gpio-bt8xx.c:233:19: error: 'struct bt8xxgpio' has no member named 'saved_outen'
+     233 |                 bg->saved_outen = bgread(BT848_GPIO_OUT_EN);
+         |                   ^~
+>> drivers/gpio/gpio-bt8xx.c:234:19: error: 'struct bt8xxgpio' has no member named 'saved_data'
+     234 |                 bg->saved_data = bgread(BT848_GPIO_DATA);
+         |                   ^~
+   drivers/gpio/gpio-bt8xx.c: In function 'bt8xxgpio_resume':
+   drivers/gpio/gpio-bt8xx.c:254:19: error: 'struct bt8xxgpio' has no member named 'saved_outen'
+     254 |         bgwrite(bg->saved_outen, BT848_GPIO_OUT_EN);
+         |                   ^~
+   drivers/gpio/gpio-bt8xx.c:61:41: note: in definition of macro 'bgwrite'
+      61 | #define bgwrite(dat, adr)       writel((dat), bg->mmio+(adr))
+         |                                         ^~~
+   drivers/gpio/gpio-bt8xx.c:255:19: error: 'struct bt8xxgpio' has no member named 'saved_data'
+     255 |         bgwrite(bg->saved_data & bg->saved_outen,
+         |                   ^~
+   drivers/gpio/gpio-bt8xx.c:61:41: note: in definition of macro 'bgwrite'
+      61 | #define bgwrite(dat, adr)       writel((dat), bg->mmio+(adr))
+         |                                         ^~~
+   drivers/gpio/gpio-bt8xx.c:255:36: error: 'struct bt8xxgpio' has no member named 'saved_outen'
+     255 |         bgwrite(bg->saved_data & bg->saved_outen,
+         |                                    ^~
+   drivers/gpio/gpio-bt8xx.c:61:41: note: in definition of macro 'bgwrite'
+      61 | #define bgwrite(dat, adr)       writel((dat), bg->mmio+(adr))
+         |                                         ^~~
+
+
+vim +233 drivers/gpio/gpio-bt8xx.c
+
+ff1d5c2f0268f4 drivers/gpio/bt8xxgpio.c  Michael Buesch      2008-07-25  226  
+2213c7a2cb81b2 drivers/gpio/gpio-bt8xx.c Vaibhav Gupta       2025-10-10  227  static int __maybe_unused bt8xxgpio_suspend(struct device *dev)
+ff1d5c2f0268f4 drivers/gpio/bt8xxgpio.c  Michael Buesch      2008-07-25  228  {
+2213c7a2cb81b2 drivers/gpio/gpio-bt8xx.c Vaibhav Gupta       2025-10-10  229  	struct pci_dev *pdev = to_pci_dev(dev);
+ff1d5c2f0268f4 drivers/gpio/bt8xxgpio.c  Michael Buesch      2008-07-25  230  	struct bt8xxgpio *bg = pci_get_drvdata(pdev);
+ff1d5c2f0268f4 drivers/gpio/bt8xxgpio.c  Michael Buesch      2008-07-25  231  
+b9a557d05a7dde drivers/gpio/gpio-bt8xx.c Bartosz Golaszewski 2025-03-10  232  	scoped_guard(spinlock_irqsave, &bg->lock) {
+ff1d5c2f0268f4 drivers/gpio/bt8xxgpio.c  Michael Buesch      2008-07-25 @233  		bg->saved_outen = bgread(BT848_GPIO_OUT_EN);
+ff1d5c2f0268f4 drivers/gpio/bt8xxgpio.c  Michael Buesch      2008-07-25 @234  		bg->saved_data = bgread(BT848_GPIO_DATA);
+ff1d5c2f0268f4 drivers/gpio/bt8xxgpio.c  Michael Buesch      2008-07-25  235  
+ff1d5c2f0268f4 drivers/gpio/bt8xxgpio.c  Michael Buesch      2008-07-25  236  		bgwrite(0, BT848_INT_MASK);
+ff1d5c2f0268f4 drivers/gpio/bt8xxgpio.c  Michael Buesch      2008-07-25  237  		bgwrite(~0x0, BT848_INT_STAT);
+ff1d5c2f0268f4 drivers/gpio/bt8xxgpio.c  Michael Buesch      2008-07-25  238  		bgwrite(0x0, BT848_GPIO_OUT_EN);
+b9a557d05a7dde drivers/gpio/gpio-bt8xx.c Bartosz Golaszewski 2025-03-10  239  	}
+ff1d5c2f0268f4 drivers/gpio/bt8xxgpio.c  Michael Buesch      2008-07-25  240  
+ff1d5c2f0268f4 drivers/gpio/bt8xxgpio.c  Michael Buesch      2008-07-25  241  	return 0;
+ff1d5c2f0268f4 drivers/gpio/bt8xxgpio.c  Michael Buesch      2008-07-25  242  }
+ff1d5c2f0268f4 drivers/gpio/bt8xxgpio.c  Michael Buesch      2008-07-25  243  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
