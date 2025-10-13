@@ -1,105 +1,132 @@
-Return-Path: <linux-gpio+bounces-27006-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27007-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1481CBD24E2
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 11:32:22 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68EE4BD2561
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 11:42:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F0C5D1897EF7
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 09:32:44 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E19A93497CE
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 09:42:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F23EA2FDC36;
-	Mon, 13 Oct 2025 09:32:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF3472FE047;
+	Mon, 13 Oct 2025 09:41:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="oWA4MZYB"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Xe7fN3zu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E85426FA6E;
-	Mon, 13 Oct 2025 09:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B524926290
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Oct 2025 09:41:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760347933; cv=none; b=Pu7AsyvCNph0infX43xej2MiOkwMYUpP9HAVvd+/GwpbEm4DruoAfkrYHeQt2mYh48FYgV9Z7V3nRk8J42njWWjfKnwb9U1KUHSgHRrK5Pyoj8CVQlXYjtrIGW+OKkQxqcfxKOCkm/fwJ4/4gw0WdXAFD779uWCEcdqayko1owE=
+	t=1760348519; cv=none; b=qeZHD9J7b/NGFMyHrxGUHNTXOgKx5MLdzA3/Mva5pzAJmHp6QiXO3MDCnCRQ+vQx4BEU6yPzk2F250ZgtzQsp6ZTcxrpgA/DhHSnE/nvrgfk1nYuGUmCLltjNQ+q38jLIYAh7dHROzAGGYFab9mb6GAkVPUMsJy2RmJRnK8HQ8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760347933; c=relaxed/simple;
-	bh=gJp0KJN5JsnAs44g7Qv8Flla0ZPEoI3EDaHQ5Ie/TbE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=k0xlnvWSFIQMbsaJVUSTxv164vYJINudf7s2yyyltz+5D5ep6LiO1er8EaqcgOOVCCJleNtTzJRPFIsmB8vcxdxNGQWNA4RZ8qvYVUKJjNvcJn9vJf9eAbQqSMTUqlU4Idx1MzvKSj63HLsv2jEm69ACWZAIuBau151YVcOMEag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=oWA4MZYB; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1760347927;
-	bh=gJp0KJN5JsnAs44g7Qv8Flla0ZPEoI3EDaHQ5Ie/TbE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=oWA4MZYBiGExivnYMXUDxTPU+xKdquwfvIIDwrBYfG+KGl9zWe9TAn80ESph/rNit
-	 +wn9QGLV+81ZMhtsp9Mq1T0uxX3r2eInBu0BCsFGY2M9ZBE8fnwTonMf2Bt+HufGpZ
-	 UHqRfvVxkV/Cet+U/y+oqGUxKMJTamPfdtk2SOuh+QZfAV6JxaHjGnTYA5VfbPfeWn
-	 QzvQtrbMTRUSijnDknZ0Nl+HzQ56kRKoL9z2/r1BQNjyv/AYqzKXOQAAcXypfxozmQ
-	 WfQWASb+hJiB264YsedQBiHVjcGBbhEZrnnLKGurpispFL+zUGJ9Fo7qGUBWM3JObN
-	 CTu6ShfYITw+w==
-Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 847BF17E0023;
-	Mon, 13 Oct 2025 11:32:05 +0200 (CEST)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: kernel@collabora.com, Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, Ikjoon Jang <ikjn@chromium.org>, 
- Enric Balletbo i Serra <eballetbo@kernel.org>, 
- Chen-Yu Tsai <wenst@chromium.org>, Weiyi Lu <weiyi.lu@mediatek.com>, 
- Eugen Hristev <eugen.hristev@linaro.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Julien Massot <jmassot@collabora.com>, Sean Wang <sean.wang@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Julien Massot <julien.massot@collabora.com>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, linux-sound@vger.kernel.org, 
- linux-gpio@vger.kernel.org
-In-Reply-To: <20250826-mtk-dtb-warnings-v3-0-20e89886a20e@collabora.com>
-References: <20250826-mtk-dtb-warnings-v3-0-20e89886a20e@collabora.com>
-Subject: Re: (subset) [PATCH v3 0/6] MediaTek devicetree/bindings warnings
- sanitization second round
-Message-Id: <176034792547.20821.16275876241287095581.b4-ty@collabora.com>
-Date: Mon, 13 Oct 2025 11:32:05 +0200
+	s=arc-20240116; t=1760348519; c=relaxed/simple;
+	bh=7OS6r0QXUdcNugcyHhSXlvIAJ1AcOpyHg7bGDGAZEH8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IuGXcdOqklOlR55F2ybRr8QkvpNh4U93jNGP9EPkCaZsd5WWEdzH3RijiM08B6TQSJACaIlH3VWx4qVy2BSsiLZis1wJRdYIFAKWqFvUJzg1LKND/uZ/4pW6rBEQMf8H4i/ManlTt6NFkPwCKLVi/mvGHQKzYtO/o4v2OyocLKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Xe7fN3zu; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-57b7c83cc78so4031902e87.1
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Oct 2025 02:41:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1760348516; x=1760953316; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Kzyn5HR4B+RyFj646ROarW3G5ceUJxiCmvsRF8Iv79k=;
+        b=Xe7fN3zuenFQemPe1dDbIEgxV4gatd567o8sEtWNzxmpS/WHeyhZVXnR6ML8/WPi4A
+         1Nf+JYOBMJE3HzPteaLRNsiqC6yOTXEp0if6yRl9iCKLYh4JyDBrFkjyWCVcVlub0fh6
+         XN8pLnTOc1QYTdpz3XVhTYoDinAO/pUoi+ED3i1qGHgVtgzUxPkaq2FdpTa+4DLmtOz5
+         6YgfgH9JdG9hg3dkklLTK38wMJKjpfgEJnhR5XktB4/VqkfVs9gSCJe0gj8WLSMz4SIt
+         ddbBhm7DmCt156KGorlPJ4uT7lJUaWsc+SZeZsPfl3kK3ctg4Cexrmj+KewGkZwAGmPv
+         f4QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760348516; x=1760953316;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Kzyn5HR4B+RyFj646ROarW3G5ceUJxiCmvsRF8Iv79k=;
+        b=NZw/pGl/CFvZDFkAnEralkNg4kTV2+BHzUUsVepCj+JTvlqzp44D5exvlpTf+Wd+Xd
+         BOY0JZ9dCeqJmCqWWPaSXRV1ESLbvr9T/8cJIO059eDsheUlLWGbpzyC0aHgHx9sWGmC
+         teBbVJkkiL3AXDhZy0zfTuZ4uTq8USi2TaHTcMITqK9IALhCAEhP83Fm3TDGXU/LUIoc
+         wMwHhcQngM21qyhWUcC9n7KenyHU/9IqlLPlaeKRU1NbS8PDYq9rIlTLw9aZoXkMr+ku
+         IisXezuU6YseeiYeWuTR/ESrpH418qu9Vywu0IWHA8HtItGg3cYi71XyAm48LAKh2O4S
+         iQhw==
+X-Forwarded-Encrypted: i=1; AJvYcCXrpmBofyFIPAOGbpVN4IbLVSgJQjAqVWPrisFGfhYeMR3Xn4Xx+O5ReGRWgIAyN0w9nT2TX8/3pqVz@vger.kernel.org
+X-Gm-Message-State: AOJu0YycvlsnQKHUKlCmji2Tn2kRBfLwSWaJP/9YmW401vC0JqFxXSuV
+	eDyJBK2zUdj9h2r4ubSVD+uGsms1Ui5cafd6k0c8+wyXcORjJamldmhG3NPqm9o+bEIELXAGccP
+	6nanowy4/jmfPVSmKpGeCD0iyWRhuEucyUxsx+G18tQ==
+X-Gm-Gg: ASbGncsnVUX6yI7TmXzWoicih+u6jUir6YK8bfXM9p5OI7Y/ORu3SVCZ8Vi3aPj8sWR
+	h3RiYVDsS8jtde3rFZI2qDCNcQE5dkE/xcGJJOtUSyZ9zdjTqncleemCOC9UclVVOLwCC+2StIO
+	aEYbqSCqT7bnaeKiP1a7TeTKzO/kzIJuN6/ZuBC/Or/nU51ETs3TQpxf2w8fr0S6irtaWG+J/0k
+	zMWDopNk8mA4enE5QCVjphRQmSqXykOTp8vUKa2+uMdA7KZ9KZyWSQKYg==
+X-Google-Smtp-Source: AGHT+IEo2A2Q2VJMSBIH17uG06uyhaJ8OWT77uhilmx6FtBE+5N5iob0Ed/oF7xMbtYrws+KR2BR//E+D1FZ0z6K/go=
+X-Received: by 2002:a05:6512:224d:b0:57d:cdb4:5b94 with SMTP id
+ 2adb3069b0e04-5905e2024e5mr7442241e87.11.1760348515946; Mon, 13 Oct 2025
+ 02:41:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3
+References: <20251010105338.664564-1-vaibhavgupta40@gmail.com>
+ <202510110924.dUQeeRV6-lkp@intel.com> <20251011122612.4fa7c97a@barney> <aOpAO7j0Uyo6FPcu@gmail.com>
+In-Reply-To: <aOpAO7j0Uyo6FPcu@gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 13 Oct 2025 11:41:43 +0200
+X-Gm-Features: AS18NWAxbYdqmNzUcHN6qByywYTVDrUPwmo1A34-f5zcgyydo35rhG25EAcst_4
+Message-ID: <CAMRc=Me2ABQUXVeHyfsDR-etyT9mdX-kqxfQDnh3msfZiS6ccQ@mail.gmail.com>
+Subject: Re: [PATCH v1] driver: gpio-bt8xx: use generic PCI PM
+To: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc: =?UTF-8?Q?Michael_B=C3=BCsch?= <mb@bues.ch>, 
+	kernel test robot <lkp@intel.com>, oe-kbuild-all@lists.linux.dev, 
+	Bjorn Helgaas <helgaas@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 26 Aug 2025 09:39:33 +0200, Julien Massot wrote:
-> This patch series continues the effort to address Device Tree validation
-> warnings for MediaTek platforms, with a focus on MT8183. It follows the
-> initial cleanup series by Angelo
-> (https://www.spinics.net/lists/kernel/msg5780177.html).
-> 
-> The patches in this set eliminate several of the remaining warnings by
-> improving or converting DT bindings to DT schema, adding missing properties,
-> and updating device tree files accordingly.
-> 
-> [...]
+On Sat, Oct 11, 2025 at 1:32=E2=80=AFPM Vaibhav Gupta <vaibhavgupta40@gmail=
+.com> wrote:
+>
+> On Sat, Oct 11, 2025 at 12:26:12PM +0200, Michael B=C3=BCsch wrote:
+> > On Sat, 11 Oct 2025 09:43:54 +0800
+> > kernel test robot <lkp@intel.com> wrote:
+> >
+> > > Hi Vaibhav,
+> > >
+> > > kernel test robot noticed the following build errors:
+> >
+> > >    drivers/gpio/gpio-bt8xx.c: In function 'bt8xxgpio_suspend':
+> > > >> drivers/gpio/gpio-bt8xx.c:233:19: error: 'struct bt8xxgpio' has no=
+ member named 'saved_outen'
+> > >      233 |                 bg->saved_outen =3D bgread(BT848_GPIO_OUT_=
+EN);
+> > >          |                   ^~
+> >
+> >
+> > It looks like the
+> > #ifdef CONFIG_PM
+> > must be removed from struct bt8xxgpio definition.
+> >
+> > --
+> > Michael B=C3=BCsch
+> > https://bues.ch/
+>
+> Hello Michael,
+>
+> Ah yes, this macro somehow got overlooked by me. I will send a v2.
+> Thanks for the review!
+>
+> Regards,
+> Vaibhav
 
-Applied to v6.18-next/dts64, thanks!
+While at it: the subject should be: "gpio: bt8xx: ..."
 
-[4/6] arm64: dts: mt8183: Rename nodes to match audiosys DT schema
-      commit: 872fa3ea0c0e4602e4775d0fbe84ed3d6aa60e67
-
-Cheers,
-Angelo
-
-
+Bart
 
