@@ -1,119 +1,127 @@
-Return-Path: <linux-gpio+bounces-27036-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27037-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDFC3BD325A
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 15:12:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02570BD32B2
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 15:19:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 8AD8034C0C2
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 13:12:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 37CD83C6524
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 13:19:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C48F62F5A37;
-	Mon, 13 Oct 2025 13:12:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9825A29D289;
+	Mon, 13 Oct 2025 13:19:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ymHa93Am"
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="yPRCbj3w"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B854C9D
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Oct 2025 13:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B108A1FDA;
+	Mon, 13 Oct 2025 13:19:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760361155; cv=none; b=BR2a9ZVkcAqAVYmCXd2RLIt7hTZDRTJNlIdzWkPZKQj3Nr5DdlPfj5bVkwDxOu0V4ty0K8LPma19KLSqo8OjcpC1yiLT0drWQrSd7/NkdeXcRFUm+egN7RZWKNt+8NHZMbOIAoAglf11yDLxggb9mGj4y/V7DoEigALNDeoNDIY=
+	t=1760361559; cv=none; b=tB65P+t61kuxRcbFzyPvONoPIAqd4SqpJ6HBQt95aEDe/ZsfYFb23fBJLRNyimWZx28WcLTUx0T86CA+wShzVAdnraIfMWXeBYzx2d4+FFZuoLd50tFDlFGPke3p9dwzlOOgc0DXRWzwQiPBuOWLz+SADPwV5yKxAvP3FjMLiJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760361155; c=relaxed/simple;
-	bh=cx8c00vvcYciQmbGZm3+AuToOvX/AiPHnZpUc62RD4E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pHQt4Ai7sfKoVpi2ICBe/AxPOJHw4v5LhJoPW2BApWecNdGfw1VpvcmUY/nNc5D4XRvXPyJN3OYD4szNjfSsF72cuOcxGmlFb6KPa2DQicLBozT81eO4mM2K/XSmfRkjTuDSS+gxq4KbkQ3wMbtNx1BKmnLzBHwcAic34VaDsDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ymHa93Am; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-57ea78e0618so4870686e87.0
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Oct 2025 06:12:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1760361152; x=1760965952; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cx8c00vvcYciQmbGZm3+AuToOvX/AiPHnZpUc62RD4E=;
-        b=ymHa93AmOHyeoIONqnse0WzUIiaL5YmZCK/9aCdAoMvu94TZJBsUKdt0NIgfIFaFRi
-         ZT2Lb5nA4r9lgLM4hea1nolQBO4mlbMqnELea+rszXep+RF5/G/lLhreR94Raxh9Osge
-         6TCkbRieIDbrgA6J69IlwVFBGToALIZo5yx6CdpeSqqA46h1Nn86HUgJQIiWzVEuolUd
-         K6FvR7OK6rnPlCGmQdvbhkA9ynaibN2eVTiNS98MNquhhH2lQV2fk7LiE9aY7o8hB1Sd
-         MU3MsWtrgnPKCDkmYpGWSgbVNwZnNgjtCvV++qflS0q0pyGq5XLvv6FmMHN+5at7stfb
-         6F0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760361152; x=1760965952;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cx8c00vvcYciQmbGZm3+AuToOvX/AiPHnZpUc62RD4E=;
-        b=kLoDHQgzyZ/6p2vDJlJxcOAHT063wUxaOgZapyL6+0CfCK8MS8Le32+8NWN6nAL08b
-         ElQ/GUlpZC9D7Yb22505itYxA5pNZ1ku5S3FAp1eKIdUP2gmq5I1nFQH7tZTUyYmaUBx
-         h3Q17CT5TjzSJuR0RP9uUKrTsdRSbDMg+5wZrfVX8l1+VvfcFph0GSWH6whwl1aYgLFk
-         Zuf3R7/ygMo6xn6VYpjRTwhM3CqbGVq6A0avf6uw05wzenItONvM6NldV23YpIOLNu2h
-         A5jYmJWjtisg3TyzaSmy/oQcFgT/1CTItpB9zpeXo7N8GweV7ORXl3EjpGmSCA/qA+x0
-         +mkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVqDSwcQDVvrgpi5km/JZwt6ywzzfVelwi7VedlmIcSMVRCOxc4LNtxB0VnSoFINsaIjk+jEp10SE/Y@vger.kernel.org
-X-Gm-Message-State: AOJu0YydrRjKEcsJ9Tp1a4wwKsh5vDP+u3g0oRXspAGwfjURmm/5q4oO
-	6K7rROtAH52D6/Zlu+yMbyztc/rJIIgAH8FS2nDZDAESyP4L4os5glxoUMrWX3rAl6LF+jf20lY
-	eC9/DI5Q2LfON6Xdna/rovP+EL0BrIY1c/GRprTR22Q==
-X-Gm-Gg: ASbGncuLVN1cftrgkhamWdL44As1HJqK81Ege3XB7ZaIBt4XaU41fW0N0wV9Q7mSmuR
-	kj/Ljv0pjCs5qc+yDdVbR5edWvUOEpjRId++8AB6RpCt4vkYFaoyLHgWGWMcb88zvRHHJ2E6Yga
-	53RcIt1T5jAGmLvSciRhmN9WlZBtQ/vKe9xRVJ0lSrn3UW7FwODSIH0PrHvZ9WutobaFzJ7aKhj
-	7BQ95KNyqatW0qklOVqx1XXvg9KNSzz4kNoHVxA
-X-Google-Smtp-Source: AGHT+IFy7QQZzDisxgLU7RQiHqmGLbp9GU/ko5TeFOP01cdLTHtzWG4syZZ8PgjrdKymxne7+Wg23WBWjWeGpiwOdDo=
-X-Received: by 2002:a05:651c:4394:20b0:376:45a3:27c4 with SMTP id
- 38308e7fff4ca-37645a32d2dmr19705401fa.5.1760361151675; Mon, 13 Oct 2025
- 06:12:31 -0700 (PDT)
+	s=arc-20240116; t=1760361559; c=relaxed/simple;
+	bh=b+tLPeMD1Z5B1winxVP0fpDzZ4Ft1DgcmZYnxUfJFCU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=g0qvyUYZSDw6kiKEKWATmi1y64bQ7Y4DmPC9432WmwxxDjnQH+DAjrq4cbl37Cyg4jhMhQPdO0LI+cAkWozZzQbYbnxXB5csZpDNsKcxmsuf/t/tHD+TlX3lhIPZ0apxiuiZB9AsKAJuqtEWQjXjQO2M/xw2TPZvoEqNbEf+ya8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=yPRCbj3w; arc=none smtp.client-ip=178.238.236.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=References:In-Reply-To:Cc:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=cpFL1cZfIfuJbSy7oDZfLNOPydM7RMbiykjJfKLFtHQ=; b=yPRCbj3w+JzG2CxEWEcVvcjBza
+	hkRNX7lqUR5By+Cmgf8/uqmkX24qVNgDoa3x8PbKuUv6UjeNsOJxDSx5yciVVNZbfExnzKfJI0GGT
+	Y7hg2WN5XBcJqLyWQPP04Ru9M8Z0eepchHT+D9spikwHkELmqnNxbvbAAJyz7NPDJ+jybyHA+8wku
+	2pRjIZ9FPfgP+6ywNrFskufsFV4Jh0uSzKcEN8P88dFmNqBAIqhkpHAKzwboeFW3JLXmJcqmYy+cG
+	sABRGdGAF7n1+NvMYbqvXXcvveoBG/Th5A3Bo1FqRKmvIir+JuI0nOIKMoUdfGX99g4uIhFDS6MK/
+	XROuw62A==;
+Date: Mon, 13 Oct 2025 15:19:00 +0200
+From: Andreas Kemnade <andreas@kemnade.info>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Lee Jones <lee@kernel.org>, Matti Vaittinen
+ <matti.vaittinen@fi.rohmeurope.com>, Pavel Machek <pavel@kernel.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, Liam
+ Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Linus
+ Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+Subject: Re: [RFC PATCH 06/13] mfd: bd71828: Support ROHM BD72720
+Message-ID: <20251013151900.3e4cc69f@kemnade.info>
+In-Reply-To: <d2295506-bf70-4142-8537-0fdf9cb04a30@gmail.com>
+References: <cover.1759824376.git.mazziesaccount@gmail.com>
+	<93142a80d90a0ac80b27090d0c83914675aad94d.1759824376.git.mazziesaccount@gmail.com>
+	<20251009161847.GE2890766@google.com>
+	<8ea507eb-f78c-4a16-882b-112e277fa1b6@gmail.com>
+	<20251010150317.07bfdbe8@kemnade.info>
+	<d2295506-bf70-4142-8537-0fdf9cb04a30@gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; aarch64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251008073046.23231-1-clamor95@gmail.com> <20251008073046.23231-2-clamor95@gmail.com>
-In-Reply-To: <20251008073046.23231-2-clamor95@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 13 Oct 2025 15:12:20 +0200
-X-Gm-Features: AS18NWB0Tr61DfHtPSZqpJT6vjMUO75ud5f5_b3M4zNOdVsqYQjTLusmQxbBsw4
-Message-ID: <CACRpkda3o55N2m=H+RA2p0r598KBLv6bbbin76Uu5Sy44qCLig@mail.gmail.com>
-Subject: Re: [PATCH v4 01/24] pinctrl: tegra20: register csus_mux clock
-To: Svyatoslav Ryhel <clamor95@gmail.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Sowjanya Komatineni <skomatineni@nvidia.com>, 
-	Luca Ceresoli <luca.ceresoli@bootlin.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Mikko Perttunen <mperttunen@nvidia.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?Q?Jonas_Schw=C3=B6bel?= <jonasschwoebel@yahoo.de>, 
-	Dmitry Osipenko <digetx@gmail.com>, Charan Pedumuru <charan.pedumuru@gmail.com>, 
-	Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>, Aaron Kling <webgeek1234@gmail.com>, 
-	Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-staging@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Oct 8, 2025 at 9:31=E2=80=AFAM Svyatoslav Ryhel <clamor95@gmail.com=
-> wrote:
+On Mon, 13 Oct 2025 12:27:33 +0300
+Matti Vaittinen <mazziesaccount@gmail.com> wrote:
 
-> Add csus_mux for further use as the csus clock parent, similar to how the
-> cdev1 and cdev2 muxes are utilized. Additionally, constify the cdev paren=
-t
-> name lists to resolve checkpatch warnings.
->
-> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+> Hi Andreas!
+> 
+> First of all, thanks for taking a look at this!
+> 
+> On 10/10/2025 16:03, Andreas Kemnade wrote:
+> > On Fri, 10 Oct 2025 15:09:07 +0300
+> > Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+> >   
+> >>>> +static int bd72720_get_secondary_regmap(struct i2c_client *i2c,  
+> >>>
+> >>> Does this 'secondary' have a specific purpose or a better name?  
+> >>
+> >> I am not entirely sure. When I asked this from the designers they just
+> >> told me that they needed more than 255 registers so they added another
+> >> slave address... (I'm not sure what would have been wrong with using a
+> >> page register). So, I assume they just placed stuff that didn't fit in
+> >> first 255 register there. But yeah, it looks like most of the registers
+> >> there are related to the charger. So, perhaps it isn't completely
+> >> misleading to use "charger regmap"? The data-sheet seems to be just
+> >> using "Register map 1" and "Register map 2" in the tables listing these
+> >> registers. I kind of like using something which maps easily to the
+> >> data-sheet, but I really have no strong opinion on this.  
+> > 
+> > just another idea: What about one regmap with custom functions covering
+> > both these adresses? Maybe that could even be added to the regmap
+> > functionality, maybe with a 0x100 offset for the second range.
+> > That way the rest of the code only needs to real with one regmap
+> > and properly defined registers.  
+> 
+> Interesting idea.
+> 
+> I suppose you mean something like implementing custom remap_read() and 
+> regmap_write() - which would practically select the I2C adapter to use 
+> based on the register address - and then doing same thing as the 
+> regmap_i2c_smbus_i2c_write() / regmap_i2c_smbus_i2c_read() do?
+> 
+> I suppose this would mean duplicating the functionality provided by the 
+> regmap_i2c_smbus_i2c_write() and the regmap_i2c_smbus_i2c_read(), which 
+> are static. It'd also mean we'll lose the 1 to 1 mapping between the 
+> register addresses in driver and addresses in the data-sheet. I agree 
+> this wouldn't be such a huge thing if we used offset like 0x100 though.
+> 
+Well, you could also stack regmaps like ntxec.c is doing (but there
+for some very weird reason). That would avoid duplicating code.
 
-This patch looks like it can be applied independently from the rest,
-can I get a review from Thierry or someone else at nVidia so I
-can just apply it?
+I have no strong opinion here.
 
-Yours,
-Linus Walleij
+Regards,
+Andreas
 
