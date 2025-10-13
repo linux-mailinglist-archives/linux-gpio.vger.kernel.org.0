@@ -1,113 +1,113 @@
-Return-Path: <linux-gpio+bounces-27024-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27025-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29358BD2B9A
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 13:08:31 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id E29DBBD2BB8
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 13:09:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DCCE23B3A7B
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 11:08:29 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id ACF9B4F10A8
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 11:09:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B65A259CBD;
-	Mon, 13 Oct 2025 11:08:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3B6C2FE075;
+	Mon, 13 Oct 2025 11:09:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uAE7f6P2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o3ofcFc+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7061E1F541E
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Oct 2025 11:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3BFF4C85
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Oct 2025 11:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760353704; cv=none; b=GzQoDLESAP6a+Vzr+jY9ea4kHZ0DHSCUfLP6eSvH8haQHExJIhW0Fkf6bvl6ycWuujEQv6FUUNq0Q6pOoAFC6cw2vl1z5EJu82Y2qNBGoOWaHw5w38FfPcE3whN28f2YyLyD60E0sQ34GaBRs7bpA0ILrpmsi0hnQRDI2yqfMUk=
+	t=1760353766; cv=none; b=q+7Urm27VrFBraXZE6VBk3LbLE6rlU5iTtbqY2knjh2S/HsUgQ6TcBtGy+Pfb5CsQ4gg/Tr2YR5VcA5BpPDh/O9UCLNZDKyzTHgsElN1G/Kpul2uKyngPI0lhW4ga6OMmuYl7Bf0Wrb4ZK9OOX8Hnl3xA84ZLrkpUXAZZ4rISd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760353704; c=relaxed/simple;
-	bh=ypTR+U6CbcsupTqnlW9WC9v+pxZ9wGorAvOqUL63jvE=;
+	s=arc-20240116; t=1760353766; c=relaxed/simple;
+	bh=MpT6hXn4aVzifNN3nBALGbtn4EidYShjvQJLlFyRGLc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RVAE7oOx1bjyBoEpIPtNip28IQxI98rS9U29EtzSHDeWL0zyCa6ab+X0bXOLVZf5g9WA2r+bG3ue2vGs6cdN9JGZVgQIh/y/h+z2VULmTlGl62qSC4MN9yzWNCIDVRdOSGNjTgmw7N3htvkz9x3Pf8wm0ZjvygK/mFEk0vtoDw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uAE7f6P2; arc=none smtp.client-ip=209.85.208.176
+	 To:Cc:Content-Type; b=nMEN7mWPenV+XYLgHhsW/xYMymYQZHToSZMv9OhD/ROKv/q+Q+OYsQUFNVhyGpcMcKKVVT3qUB+dYcK4p4/lSNEqMcjXWorfrdjz2iyBDqehtlXyFG2JlNwT7eflrxvudmaPn2dnbHSCVoD7ZVn2S+oAQE0bavQySGQV16/Gq0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o3ofcFc+; arc=none smtp.client-ip=209.85.208.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-3612c38b902so36773971fa.2
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Oct 2025 04:08:22 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-363cb0cd8a1so46284351fa.2
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Oct 2025 04:09:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1760353700; x=1760958500; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1760353763; x=1760958563; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ypTR+U6CbcsupTqnlW9WC9v+pxZ9wGorAvOqUL63jvE=;
-        b=uAE7f6P2eWrSqwTH62pVZLLZvZJTXn17x/Lx2NAB6Ll5/0CYeVZM/SME/xR5PWAGwm
-         Dq7H4ApUlspcLKqTnpbm6Lnu5GW3tSoy2934trOHMgg7fvk5qEJ7CooFTb6pJ1Br/8c7
-         oTzYCAPoTpQRQhdXlccU+jxQ85sjp4rlz9uBClq5c3gXURM73QXfzkXKEWDHzYbbg4BE
-         pIVyqOwQA3kVujILuA/vJFYo98nj5CMJywwLkdZZwrBTI8i0lA0WlP0He8on2rrRg1NN
-         WlXallAQTlMmaCJNe4o8dzt40Zl6uGmQdrbzm34qeeDtRmjhTNjFzsoaA3YZUXAkG/wD
-         EdtA==
+        bh=MpT6hXn4aVzifNN3nBALGbtn4EidYShjvQJLlFyRGLc=;
+        b=o3ofcFc+DdvBgK8rkMPM9JgYFKADSjoIfLneIiwLYNztzbRn4ynCGA8FXmTFrhbC0x
+         ubpvDNhqJfyfEAyeyqrijPBwNIwax7Uu4nzhsRIPd+C1ttg5y/x/8QomgNuWmptXZZAC
+         1jidbbhefQYUF48fJWnJYjH9MIPblQww8c4V8fZOHhFxmKJkAsN+9/JNrCULJQPwxURZ
+         7k2IywOvJ72gJa2fBwEesr6iqhBCym2xWn/OemzH2palSMXygjz8iUEVPKIQTcSRUIVp
+         YEGgRPCieDFKGLXq9ohGRXKe1IcKT/YiuUWD0KcaTXq8Dkb2al7rwvP1txrs8qKHmvjR
+         hBHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760353700; x=1760958500;
+        d=1e100.net; s=20230601; t=1760353763; x=1760958563;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ypTR+U6CbcsupTqnlW9WC9v+pxZ9wGorAvOqUL63jvE=;
-        b=lYaufdNH8t3Dm7DoiDLqwbS3Ga/qfmN++BiM5N5iBzhVQ52+0SZwU1Hv1LgdzjIydn
-         ENcZOj5L61u75iqMtPi4gkaGwji/bVnx/tec9ZoGOwbe/0+jTa95NY5WbpPahEib0jH7
-         gXZzMgIpp3Yaf4fFHh9VRW+lk3B+t/M7mAv9R1mf2ZyFlsS0vc/ILDV3jHpYS1mpX20v
-         bV4fTO5Fm9uRss9muDoUU1i/QsQqyuefXalNO0sfYy9IOnRmkDb3PkKccvRdrtl6AyaA
-         H2hUNLkCqeNkMkkeIVyde3ZyPrcvdMYu0ikrDnIzzNj9JM4B6H6MvReQmvrxtmTXRlYQ
-         jbKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVG95YwKCzW7MNM85B262n6cE0ZO6ZLP5VZeFgLJ4kSnMNNT8DCDpluXyr116qVq0FmEuaApD8Guhv+@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEiUrsY5BG2p4UcrcAkIPhx9w0ZbNnHuwCwY3UCzG4ijvkJKiC
-	A0ML35wvqy+yTu+iGM8yTlzQkDms3rWEiZZYFL+2zUOcwyyKooWomQ7bmEtb90aJP+AygE/tfD8
-	ZssRub5GOPKa8rw/da7LU5ZiTa/fdxK0+l7CJWI0O7g==
-X-Gm-Gg: ASbGncuqckb/QPCGunFZusQ1gw44JmMwQBu6C9yi6xtPhw8GZToyor97rPzXW1aCvBp
-	xKssTrGeX08SYhoMzd0XyTZpLf2dCG8CFeokOEbFCoD0S4NxM1yplYmy4KORwC9dfNFG07bZyP4
-	qXHoJVj/tNFsbRLjBY9iDCRFgpNW2qqEXDRrgc2LkCVkwOjqnctoT2tEh/iQxKsg9WYmeBININj
-	SLDT5g67c4puECqN0DywQQpgndXQA==
-X-Google-Smtp-Source: AGHT+IHtdCLd+4uJh0pbUlnFA7Qzu/sxrXL4iOF6wbwTfZv7XTlOSlg+VqyDSfbt690MZKi6vF6Z3aq6/nvgRVaOgQc=
-X-Received: by 2002:a05:651c:546:b0:372:9f0c:2158 with SMTP id
- 38308e7fff4ca-37609d927d0mr46661901fa.16.1760353700507; Mon, 13 Oct 2025
- 04:08:20 -0700 (PDT)
+        bh=MpT6hXn4aVzifNN3nBALGbtn4EidYShjvQJLlFyRGLc=;
+        b=hlkB0WiBI1EHSRjATol1WA/JKAQkflaq4maco8cB9JjoFQZOIX4nL8BjwU8aAnZVmJ
+         EOHzbiD3dfOEh7F6tQQBXIdsmQPI7j5huynyYMr76OaWaupwoMFwVowkMfJGA4tNfB0x
+         tiYJeZzwRdvesQUwGzxsCCdTBMI/+6V3P/WNlCL+S6Z9CGlRzlGuKvRzx/XTdd0X0+5+
+         agYP7aE6TrkOAw3mvuoEiSI9DOVs0o3yDn1MaRDxdkkNt2mGJhDNBQ4MFiT3OIc0CUmW
+         jAQqAJdzBcv3B6+/PgDRQQ0WiN9I6NruxPwOcKM6LjgEPXCfv9h8k21dNq/JhDosw1SV
+         HtQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXzuVhYoiHAU7A9KPlMGIusvgkk4M2WJI6fr0lEs/LW+ZuX0xeka1jNsXhNgEBIecfScMy9qhTZw83v@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOaC/HhMz5jIcCInZSlb7cdD+wSBwc5UxoaJcx7qdIsdc0YoLR
+	n2w+phOPxqq508bD4n8o+NIdGKnC00T1NwdWajPkgfz2ZU1K7+7+hsXH1OHp1U157h/nVW2G7dY
+	XyMyvSpdO2p2njhOxCub74YrIwCUn72Cz6vc/jY7Fqg==
+X-Gm-Gg: ASbGncvlV9l5/AST+w6YjCtq7hxFtXwS7O8Xub3GGpRGHZxUg5Uf+oN9337AQXMCrd4
+	IJdhYDPm17082RjFP/CzuFr3A9ueUrzmoeDBbtHc8NvMXOrhArbRo/qx7BdN0cORsgmsiVxdpxt
+	51mmMyLRdencwTwGdlpZa8/QetcuA6BqW7Go728Y1uvtZj+YwabEVcH2T7mCwVuWnskb/UPyNDD
+	C46v6eQCwqstlwT4SJoLoNAe4ihaA==
+X-Google-Smtp-Source: AGHT+IHyxiqyIG1018vg7vc+mtcW6A59E8yUiwGYRJGG9KxCKw5fvAqslGiUqpn1l8NdSfenK2sicsLNKavqouk3DRw=
+X-Received: by 2002:a2e:b8c1:0:b0:365:6b40:8656 with SMTP id
+ 38308e7fff4ca-37609eb8857mr54723711fa.35.1760353762857; Mon, 13 Oct 2025
+ 04:09:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251003-fix-mt8196-pinctrl-regnames-v1-1-4d22031140f0@collabora.com>
-In-Reply-To: <20251003-fix-mt8196-pinctrl-regnames-v1-1-4d22031140f0@collabora.com>
+References: <20251003-fix-mt8189-pinctrl-regnames-v1-1-408a2531b127@collabora.com>
+In-Reply-To: <20251003-fix-mt8189-pinctrl-regnames-v1-1-408a2531b127@collabora.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 13 Oct 2025 13:08:09 +0200
-X-Gm-Features: AS18NWCm49dSzl3HawLMJssUJLSTrG4CpecVW6MUgTtkI6_u-J70Cy8bMmd9g7s
-Message-ID: <CACRpkdZvJ3jvoxi4H-PL307up1nrvL5hNAtWTrwZGwNW+i8Lyg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mediatek: mt8196: align register base names to
+Date: Mon, 13 Oct 2025 13:09:11 +0200
+X-Gm-Features: AS18NWCBPX6jrMPcN6UDT2y68ZZSKL5gcB8CFxgIkLczrmPbcNs-ikNBr_vqb3g
+Message-ID: <CACRpkda_BUvjBsrjG33mg-xV2_X6UACUPKRQMF0k8c76fSoS3w@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: mediatek: mt8189: align register base names to
  dt-bindings ones
 To: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
 Cc: Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Cathy Xu <ot_cathy.xu@mediatek.com>, Guodong Liu <guodong.liu@mediatek.com>, 
-	kernel@collabora.com, linux-mediatek@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
+	Cathy Xu <ot_cathy.xu@mediatek.com>, kernel@collabora.com, 
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 3, 2025 at 4:01=E2=80=AFPM Louis-Alexis Eyraud
+On Fri, Oct 3, 2025 at 3:50=E2=80=AFPM Louis-Alexis Eyraud
 <louisalexis.eyraud@collabora.com> wrote:
 
-> The mt8196-pinctrl driver requires to probe that a device tree uses
-> in the device node the same names than mt8196_pinctrl_register_base_names
+> The mt8189-pinctrl driver requires to probe that a device tree uses
+> in the device node the same names than mt8189_pinctrl_register_base_names
 > array. But they are not matching the required ones in the
-> "mediatek,mt8196-pinctrl" dt-bindings, leading to possible dtbs check
-> issues.
-> So, align all mt8196_pinctrl_register_base_names entries on dt-bindings
-> ones.
+> "mediatek,mt8189-pinctrl" dt-bindings, leading to possible dtbs check
+> issues. The mt8189_pinctrl_register_base_names entry order is also
+> different.
+> So, align all mt8189_pinctrl_register_base_names entry names and order
+> on dt-bindings.
 >
-> Fixes: f7a29377c253 ("pinctrl: mediatek: Add pinctrl driver on mt8196")
+> Fixes: a3fe1324c3c5 ("pinctrl: mediatek: Add pinctrl driver for mt8189")
 > Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
 
-Patch applied for fixes.
+Patch applied for fixes!
 
 Yours,
 Linus Walleij
