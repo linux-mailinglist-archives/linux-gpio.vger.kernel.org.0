@@ -1,104 +1,125 @@
-Return-Path: <linux-gpio+bounces-26996-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-26997-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0FFDCBD037C
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Oct 2025 16:23:09 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CC02BD0FBC
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 02:22:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3A423BD8E8
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Oct 2025 14:23:07 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DB4794E12E9
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 00:22:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 455EF284B36;
-	Sun, 12 Oct 2025 14:22:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 627A419D071;
+	Mon, 13 Oct 2025 00:22:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FQG8gDDi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rOjzvtUw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECEA8273D67;
-	Sun, 12 Oct 2025 14:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B969C10942
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Oct 2025 00:22:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760278977; cv=none; b=AYpZvgaW+h1EZouqOJz8FXDC9oUQV42s1CrDJ1aQoh8PvHGAhLiX/YIZTkhp0CQ8nSEsJa0zuYGR5Ez+VVArB3ipQ4RCJA1b78vz9aF0lU32PhXPtS5nj+fpPn/SZHe+n4GHY0fdUxSE+QMpfEKyIdqCrKktR2hOm2hjwNTvcFc=
+	t=1760314961; cv=none; b=gng+uxU5JFt5x+RSWDUCw5CsxjvE3CWoml/5mcRU9uYcku6EmYn9MAdp5Gyv9nZ0GmzezUSDxyLeD+O2f9KXYcLdJAm9imctGZ2H0UNrdP6cWBk6p93zhaqr6dew/2B7+CL5+69z255pdtRGQtf4b8qnSIxdYuHnNDKKonX/RGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760278977; c=relaxed/simple;
-	bh=HmnRAkQ+zRAK8S84K74JOIRe6qz5Ds0mGnszGt6B6gY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=duTw6av3mlprklisci4kFGau3wjkHqrew3ugFmzicOyIaA9OHV5adASJLbCdXkrNxx5uOF2g5PChil6OvIM4viBozOsIj52ojitvseutu4aRoU+95f2Z4UkdhvBqpYuUJIFqY5R/hkDp7T9G6Zud9GjV6XllRRtpieua7j7eOQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FQG8gDDi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66C20C4CEE7;
-	Sun, 12 Oct 2025 14:22:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760278976;
-	bh=HmnRAkQ+zRAK8S84K74JOIRe6qz5Ds0mGnszGt6B6gY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FQG8gDDi0hhwl5Z0eDe0GFYszZe3053O8EQAQhDPwQJgjdW5r9vC+0rd4Yxqn+Gq+
-	 UTEqguq9/zsBcuymiPfrJw7cEa/YCnWYO56ysivHX9rRH9dCrYo4qDZ1HIy5L3+P2p
-	 ZRb3XCiUh7FW4mE6TnOrfu+3pHLrLHZDcnYVRbXBbnkX9gG/tzF57lw29j2TfcTTNX
-	 1GxJ1QeHXh8yFzhQGinSTbz8M8RF99ssVUWTjmJWnKAc/z9re35P/XavFNtTLbVdwl
-	 se91miZu9pzonr6xwVR0Xul2X6qWsLJDtoBvspMIpVafnlPIMcCarYcYMsutFZBmh7
-	 b9HhFqdRoOg0Q==
-From: William Breathitt Gray <wbg@kernel.org>
-To: Mark Cave-Ayland <mark.caveayland@nutanix.com>
-Cc: William Breathitt Gray <wbg@kernel.org>,
-	linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	andriy.shevchenko@linux.intel.com,
-	mwalle@kernel.org,
-	broonie@kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: gpio: gpio-pci-idio-16 regression after LTS upgrade
-Date: Sun, 12 Oct 2025 23:22:14 +0900
-Message-ID: <20251012142216.72248-1-wbg@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <9b0375fd-235f-4ee1-a7fa-daca296ef6bf@nutanix.com>
-References: 
+	s=arc-20240116; t=1760314961; c=relaxed/simple;
+	bh=+dTERHXHwlz9Q3on1s7pnMr9sQk3vgyQfbNftxESlcE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=slpSS1BQkk/SgXTLuQCDzPFvxvI3TYdE1Uv41nbbLm9bIKIM6OIQBnjPKnoiSpBtXVfVhasEbiUCDfUQNEX1A5vUyOGotVJUxlN70w6rCqRSdaZbetoBZzC2ESPinvvTC0mQnpBVBQqbYM/8HqrLLONLTJmaJDFUvkC9YGQE3OY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rOjzvtUw; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-26808b24a00so5451875ad.1
+        for <linux-gpio@vger.kernel.org>; Sun, 12 Oct 2025 17:22:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1760314959; x=1760919759; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UVqRhIZigralax4KbuXiwcZcRbWu9Ae0Ahc/RkKiB+M=;
+        b=rOjzvtUwp/yh9Kh5vxsDTCOVN1ux7BeMhZj/iu2ZIEnG2yKMWynzfeKQxi2boBYZfo
+         iP2Pf1lS60xMi8jpDyGch6iZwU9MEF44nvhQfNGgfA0G/Dwp3ttyk3EDLU+acZ6exYtH
+         4aVdXAeCAmtF0lxf9aByTpE9GktHtboLp9G+sm8Kv8bwhpBU28rX2W/DbnEtjugt6Quv
+         63sMOKRUEWSP+fekAEhzeMk4TD8gUZ3qMPo8pNBfc+pZV62k9cmtEF0mbuy8Qm6CcZbP
+         2oh/hvaInb/P+yP99xor92f38GTeiLu9588d/tvNTrl09qY19pbRy0eWaKfLk7JIIw9B
+         I4SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760314959; x=1760919759;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UVqRhIZigralax4KbuXiwcZcRbWu9Ae0Ahc/RkKiB+M=;
+        b=DRbK9Q9CVLnbl0IW3q0rrNqf2J0MwZDBbn6K43azehgAb3UiG3N1RyC5wo1PTyVser
+         V6VbAA53gVKC4uLJh3O319pgu5vGMShbkYUTor9aR0FXlHPBxLb/pOTMSXG2cPfLQ+Pv
+         hn4T6X2NJjAXtfE9XDYHRlWUGKlnn/RRALiXsAmBCiejLPqQ/erMS9DA9UU9wkbNfwh8
+         oJfg3BsNzK+VxStfOGi1gm2wRHdXXkHN/PEzIaoLygfBNvnrtp+GSgZy79ntTq4jp16g
+         3XKCCm+g/B25wHeFJkC2wSEl0gBHZH74OpQxf5OWTGEhftQ+38ZsZn8/mwA5Gt/Z0lTf
+         xlNA==
+X-Forwarded-Encrypted: i=1; AJvYcCWk/LDr2dz465HAChJwJONd5b3Epd6KJ6+Aqf3p41fbYMizvpdUAiZX8bKDDtbG2Tp8AvIpXL4zUgeo@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWiMio4oji2Dj1CnJege0mPSR6nhvkDoXJCqhmUlM0uzQ0KEuV
+	8IPwnf9beOpxAn3/zlFQmaTzFH+nCnTRCPOnZO6MsA1HEtLjJrMFwvLET6CUfDEWGKQ=
+X-Gm-Gg: ASbGnctAkCbRkqgDKCV7l7jdpDNdgjrt79A6na6yQXDOUzqCLRfj3rSzRb0atPmTSgn
+	RvowMmXTL7zMEZC3Dk3JcrhCG4hJeZQftK+6I9gBtT37U1Qt7+LGdhA2adldfVs1gFlKFHSZYnO
+	ax9Nl3DA5AYxJqcxe6wPnutrk5U8ONz0mz4ZdH1IIdrbtQrfq94nKWZijxFWHxomasokmRziF8Z
+	BLRdrQRau1ZI3T9kVmIgqcvOQ5qN7KrXU+0T5ACcYSEI/pZLWDxdD9EdM4sa/qpAk3Vv09TSv3c
+	tioEHjbKX48kHnvnYBD68a1/7O30EJJRSDlFOL+KtyoO8Y1pCPvrOrkNf2hMxWilAYNFkI/xde4
+	rAhUnwLSv7nK4QFtT1DeZp53CUgtibHhm0H62M6VKeIn3EoB3Ib00VqRodNTSILfgd1HJ0iA=
+X-Google-Smtp-Source: AGHT+IFK4ci2TGNbmqypL/3bygm/UTzER4LfBfP1yAru/4qRR98/cUW50Jp7i5jycMDRBEjIp5poiQ==
+X-Received: by 2002:a17:902:c404:b0:277:c230:bfca with SMTP id d9443c01a7336-290273e17bfmr142190255ad.4.1760314959008;
+        Sun, 12 Oct 2025 17:22:39 -0700 (PDT)
+Received: from [127.0.1.1] ([121.134.152.93])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29034f05bcasm115840285ad.84.2025.10.12.17.22.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Oct 2025 17:22:38 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, 
+ Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250914114457.2610013-1-ivo.ivanov.ivanov1@gmail.com>
+References: <20250914114457.2610013-1-ivo.ivanov.ivanov1@gmail.com>
+Subject: Re: [PATCH v1 0/3] pinctrl: samsung: add exynos8890 SoC pinctrl
+Message-Id: <176031495194.9871.10054397457165667570.b4-ty@linaro.org>
+Date: Mon, 13 Oct 2025 02:22:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1460; i=wbg@kernel.org; h=from:subject; bh=HmnRAkQ+zRAK8S84K74JOIRe6qz5Ds0mGnszGt6B6gY=; b=owGbwMvMwCW21SPs1D4hZW3G02pJDBmvd1ZY7Av5v/nhESPm23r8S//G5SvsSEjPYtxmJCjr8 jngG1tyRykLgxgXg6yYIkuv+dm7Dy6pavx4MX8bzBxWJpAhDFycAjCRc9sY/nBKGVw9kO1t8zG7 qXa61EXLfuETXjvSO78ZTO9k8/NeeY3hv8fHw3ofxOal9PVcct1dfyn9u+qa3n931+U9ZBUr+G+ /ihUA
-X-Developer-Key: i=wbg@kernel.org; a=openpgp; fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3
 
-On Mon, Oct 06, 2025 at 09:37:14AM +0100, Mark Cave-Ayland wrote:
-> After some more debugging I was able to determine that the failure was
-> due to the regmap cache failing initialisation in
-> drivers/base/regmap/regcache-flat.c::regcache_flat_init() because
-> max_register wasn't set on the regmap. I was able to fix that fairly
-> easily with this:
+
+On Sun, 14 Sep 2025 14:44:54 +0300, Ivaylo Ivanov wrote:
+> Hey folks,
 > 
+> This patchset adds pinctrl support for the exynos8890 SoC.
 > 
-> diff --git a/drivers/gpio/gpio-pci-idio-16.c
-> b/drivers/gpio/gpio-pci-idio-16.c
-> index 44c0a21b1d1d..55be571b5cca 100644
-> --- a/drivers/gpio/gpio-pci-idio-16.c
-> +++ b/drivers/gpio/gpio-pci-idio-16.c
-> @@ -41,6 +41,7 @@ static const struct regmap_config
-> idio_16_regmap_config = {
->          .reg_stride = 1,
->          .val_bits = 8,
->          .io_port = true,
-> +  .max_register = 0x7,
->          .wr_table = &idio_16_wr_table,
->          .rd_table = &idio_16_rd_table,
->          .volatile_table = &idio_16_rd_table,
+> Best regards,
+> Ivaylo
+> 
+> [...]
 
-This particular failure is separate from the get_direction issue
-discovered after. It would be good to have this fix as its own patch so
-we can keep each solution dedicated to their respective failures and
-streamline any necessary backports to the stable trees.
+Applied, thanks!
 
-I have some travel scheduled in the next couple days, but I can
-probably get a patch series addressing both issues ready by the end of
-the week. I'll also CC the stable mailing list so we can get the fixes
-picked up for the LTS kernel they are affecting.
+[1/3] dt-bindings: pinctrl: samsung: add exynos8890 compatible
+      https://git.kernel.org/pinctrl/samsung/c/9be3b7bb7ddd4e8ed466f41c6f43de34424aeb8c
+[2/3] dt-bindings: pinctrl: samsung: add exynos8890-wakeup-eint compatible
+      https://git.kernel.org/pinctrl/samsung/c/f416d35e6522f0c08d4e866e5d6930bfd504e645
+[3/3] pinctrl: samsung: add exynos8890 SoC pinctrl configuration
+      https://git.kernel.org/pinctrl/samsung/c/5b6b7d39cee69373dc61ca22164d616e4faf60c6
 
-William Breathitt Gray
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
 
