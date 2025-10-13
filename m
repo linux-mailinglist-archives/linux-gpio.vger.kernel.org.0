@@ -1,138 +1,110 @@
-Return-Path: <linux-gpio+bounces-27040-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27041-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDF09BD32F4
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 15:24:09 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E6B4BD333F
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 15:28:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A4A23B42C6
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 13:22:37 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 29C3C34443A
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 13:28:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1401336124;
-	Mon, 13 Oct 2025 13:22:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D19E30649B;
+	Mon, 13 Oct 2025 13:28:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MlWNxiPs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gv9plx17"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C8325487C
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Oct 2025 13:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8912FF642
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Oct 2025 13:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760361754; cv=none; b=WlJNTlUc/ylpPh2rbX80Btyrvt2iqTFPSzMsrQUQmlmV0j2Jc5cH3I5A0hkmhaGSCNM6ycM5+3euVCPHqdl7yxfZ3rWYHNkzwX/qi+TR1DQLTIwIHaXQfFqI76OTkhLyhTIjBeJF4xJ7FKMfUoOJWm1fHCzlEbTR2zdcKrQ6YQM=
+	t=1760362092; cv=none; b=qN7z+LQtceIoj2IQEBx+BqeKpPY1QjavjVNwMy4++EGf3aH9lptQjKLxU/O+Sw2pE7RnZCGbWeNBeyeqT9k/+cr88fn+dlrGBkyTmmBeGSoS5LJrauAtHftyzSAxED4/3pI+iYff2DIcL8GkuZFBIL9FTievlzHno1WqQWPNqjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760361754; c=relaxed/simple;
-	bh=sdzCugawJR5yomrCcleyfBYzimfdjcRqs5/JBcSkuHA=;
+	s=arc-20240116; t=1760362092; c=relaxed/simple;
+	bh=TCpcJBzt3HXWbE0TqPgkXkphc3fKiTL00tff0CRSHVQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kCjci82cCApb4+obGZa6Z17gVXYEdxBVx63aOaIKlTMai+B7y7IFP9FlBlBdaowqOC5tI8oHFUgoeaVXTFakrlItmgeL9K6V9VQaoDe9u7n/nWZ8GoVDUeMMasgsOivHWXdb9yhc6lht0KM/CS1K9HqTVUX0j/VEtxsNujs1uGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MlWNxiPs; arc=none smtp.client-ip=209.85.208.169
+	 To:Cc:Content-Type; b=kQlAosBseaF6EPZIj+iQHaac6evV40t/xTCVADMOj5N9qCRLxE1bdqn0tjmGBWkzGxILHZ+xJ/NNgeTLvGEFcfoPBWexeG9lMNe194xbQg8BzIeMhJgaZmLxhJPGqE5Vb/ql/iPjKkOZbaF3mbjT4EmnULLh0Xt0lAJpbF7qPR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gv9plx17; arc=none smtp.client-ip=209.85.208.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-37634d352dfso29137741fa.3
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Oct 2025 06:22:32 -0700 (PDT)
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-36295d53a10so33497461fa.0
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Oct 2025 06:28:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1760361751; x=1760966551; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1760362089; x=1760966889; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sdzCugawJR5yomrCcleyfBYzimfdjcRqs5/JBcSkuHA=;
-        b=MlWNxiPsjoo0T5LCyUP28n37DcOLAOTwWD+DpAzc/pTf5m45ZZ3AZ+Buo+GB8bIglc
-         Lgp1k2WnYYKkQg0OUYXBeLtf0rlQnQa/c6kqICN0/Mg+62isn5k1eH0C5V42RNo8uU/2
-         O89YIu9wvAAKaDjCQQJNow//HTUopI7KCxkDecV+++eQlWZBjgH9mvfFON/bs/djnRjw
-         m5qJzRJDkcrlOw83nb1kBM7KZe8soPgcJAyJPooExhtnXEdJ4beRh3tnwrLrx2ffZ6Kd
-         04fvOXjhohsZtsSaXsVNpdE5zD3blxtpUIzgN1pkPK3g9JvciggUbR3G/n/FjrgHEjXl
-         0LMg==
+        bh=TCpcJBzt3HXWbE0TqPgkXkphc3fKiTL00tff0CRSHVQ=;
+        b=gv9plx17pEiS+EkBGJpZ/SyeAHmUfIlBigKhPUbxCyqRcCoeXIjPdp+hY2aXZQ3Eex
+         G46nxphidg3ABVP7Uv+V6wlrtMdi45WHRewTnMkQ8kdwvQrkKN9CdAEO7BIWMraV8OMn
+         TqxBLz9tkl9kakYhOGU4+j2FlT8Wk4f9Bb8S2ExlnTKEHhia4zFDJttMyuus4xT3NQI4
+         +RXh7W1tpPFpC3r2zNwOtxBuQ0LPPrsy8Rc56YigshKDETudRTyF3L3nuG0wJK4mYc9I
+         c6qLbVaF0T/samWllup0AvOSa4XgPwuWMOG/J2dxJbQJb/rOmvFrZkfzQv0jUx9c6GXU
+         NLSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760361751; x=1760966551;
+        d=1e100.net; s=20230601; t=1760362089; x=1760966889;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sdzCugawJR5yomrCcleyfBYzimfdjcRqs5/JBcSkuHA=;
-        b=muraZJRe4Z6MT0+ulcwgkOW2I5YSK3oTWx96TD6YQjx7uu+lKMMfDby1W7sqSJgHKE
-         A1Ybh9x0XQfLaUFnjPJThersRK6yYVmWJvEtuN+zY2b81Ebi6odQAHDR1hVa7PGlE2Pp
-         LWN+oVenrS82ex+B3/FcTd61X8VqN7HN30lo4vnnN7QZOR5A5QKmYh02KKwi0oZ+CXwF
-         0Qw9IM162U9RTopcKFBk2x1Hx4I28zDVSJ6SswJEoIi2kl57u6mvGYWsgcgNCksuzPeL
-         zrUK4TxxRhp6uGeoXKJpx5m6GrYX116sYFnSk+ZQfFM/YbTFm1ihnrRd0AJwy0Xq39tX
-         y6DQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUvqTBorRvDfwZMtQZN/ubSR11Rq0TLj7CpGPnFDuyCv3V2GsVG10cpnOAfYwm6+PCFNrUP/wN2XTOz@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxot25g3cN0FifXgjXi7UChp9a8SNzHuKyVzwDPSi+RfQlT0VjF
-	2hC4+lFta2ixqJmu9m6GMOHvwYcT2vN0dj8trO37y0ZNtxWsK1lFdFcFObkQCAugUoQS0Rtn8qE
-	DTgOOr00LoXb/6NCsJ0l9PTsUi5TBOCMJVtj0PI3aLg==
-X-Gm-Gg: ASbGnctYYnhBJ6l+V/GjKkW+J4KyB2kUqRlkkhupUEmHBDhboX8LzKnkC5y5qQ7EWNL
-	u+lpdda8dpnCc3VTas30ifeKhIWw6PYvxZR71WnUqkUJyEQrJ4XYWZGMFxvedIUNxedC6ud5n15
-	7jeTp0XpnmVta9dAhL4InE/fMIYdFOv2yQ73f/F3o5QTvbi35XaxExX6mYV2RfRpTCBANJBQPVY
-	kZ8bH7bA/csSw8t/tRyTqxdVyPYm7KzbhbrNzZJ
-X-Google-Smtp-Source: AGHT+IFD3AIgRgN4jBUJbpK34gX4OpQi2/Ld3YOLcJ6oyzzxV171xkOqcylCUzBUtIlA/UWCtsK+8RrigJBOPn6Q18s=
-X-Received: by 2002:a05:651c:990:b0:371:fb14:39bb with SMTP id
- 38308e7fff4ca-37609d72cc1mr56226121fa.16.1760361750851; Mon, 13 Oct 2025
- 06:22:30 -0700 (PDT)
+        bh=TCpcJBzt3HXWbE0TqPgkXkphc3fKiTL00tff0CRSHVQ=;
+        b=wamUZvaFxu/wyUVAxJ99I8pgyusJGe5rf6eeURVtZioDzsgqRrrgMq8lvAuBRrdlih
+         IVKls2c//VnDsW9lmGMVa17NWD9dtWn1XgUFq6uP4oprhL/zKE5ans4rqTRTqd5Qd5Ix
+         34JFk6kNTn6zj05XYf2aqH3Btyk4XyGP0u8dKsr8CHFvlSv0XYPKJ/+xTKvsOeJubSXz
+         CeP2lu3MKYzQsWwjdAeOTHEw/rnMcvib/ONgXpd55vJ5JlSzyDZoIcIEEknipSMomlVH
+         YbBL266Ccs0ywlsg2PVOykHoobrU1OTCi9PsbA80/D5dNmTEiIyUaseoTp/0+MAFKF9b
+         Q0rg==
+X-Forwarded-Encrypted: i=1; AJvYcCWb0vNA0OfKg/sGKxt0HYT+Rimbh7G+e3Voe5JtrgzGuvtRy3K+LnG7Z5+E9QRRfdcrGaJ01doWSbfV@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWTuy3pWUFc+tz0rt7g8kKLxK0cg2KA5JJJXLv/8pUVwgnjRdL
+	mEUqPPDZ4Ay+0+32FdoVCU9AnoK66ZBbKr6lxjUa2FdH8SPcTewy3rwH7nUhyefPnrLxYlrCl1X
+	mVofGZpRqJ4yPREBhyApTvQ3gxSmOwcXTtxtO+yLfiw==
+X-Gm-Gg: ASbGnctQKazKPnDWd7g1q5YdHCQa8rITO11lU/NOdqshuSJzIX55o9n4ILdi3hawk2Q
+	Tks/XOaS5oSo/F9uFaMinm5fXfL5AhkNFfzBZlZ0sq1g3Isi6CKlOgFnJrysG9yvMXWWkjRkS1M
+	BaVBz7FwfPQKQwrP5cOPktt9+/qf3ffb29SQkXggN998CBsjApJquwl/dJZHwI5booz4hvO3DXm
+	sKkdxQve4lL61u1q2zgXvlsIlXOlQ==
+X-Google-Smtp-Source: AGHT+IEuC3uWreohj3S+OBKmbdTWmAhPpTphQzDPpWDlJpvqlnw78r/6/iGnmmf8C9Fpr4YtuqStpXMM8FvmbRHGKAY=
+X-Received: by 2002:a05:651c:1992:b0:336:72be:3339 with SMTP id
+ 38308e7fff4ca-37609e64b9dmr56919791fa.28.1760362088862; Mon, 13 Oct 2025
+ 06:28:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251009132651.649099-2-bigunclemax@gmail.com>
-In-Reply-To: <20251009132651.649099-2-bigunclemax@gmail.com>
+References: <20250926-manpower-glacial-e9756c82b427@spud> <CACRpkdYXh2MCs=vAif7BpxfYVRuDTkYYNwpV2t=J_ZRW+N4Vyg@mail.gmail.com>
+ <20251001-unfreeze-ludicrous-9d744548bf65@spud> <20251009-amendable-trimming-da31551d730b@spud>
+In-Reply-To: <20251009-amendable-trimming-da31551d730b@spud>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 13 Oct 2025 15:22:19 +0200
-X-Gm-Features: AS18NWBjzabyAo7Iwc_ab_T7t7lGvRr7MIu3O5SMdfRGHuDa0E6rCvILh5I1Oh4
-Message-ID: <CACRpkdb4HDhN6G9JSe093jeBe4__jCFz_+r1grUbHwEr4Gt1hQ@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: mcp23s08: delete regmap reg_defaults to avoid
- cache sync issues
-To: bigunclemax@gmail.com, Dmitry Mastykin <mastichi@gmail.com>, 
-	Evgenii Shatokhin <e.shatokhin@yadro.com>, Arturas Moskvinas <arturas.moskvinas@gmail.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andreas Kaessens <akaessens@gmail.com>, 
-	Zou Wei <zou_wei@huawei.com>, Radim Pavlik <radim.pavlik@tbs-biometrics.com>
-Cc: Mike Looijmans <mike.looijmans@topic.nl>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Mon, 13 Oct 2025 15:27:57 +0200
+X-Gm-Features: AS18NWCthi_sQuhnDEU35_vHT-Z7ycwcOA1ZjAB9Zqs6xKIeB40fACBw2G4Dpcw
+Message-ID: <CACRpkdYssH8zObJTUH2VVB7FrVFmJUd+Ea7etTGbicQgkuU=CA@mail.gmail.com>
+Subject: Re: [RFC 0/5] microchip mpfs/pic64gx pinctrl questions
+To: Conor Dooley <conor@kernel.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Maksim,
+On Thu, Oct 9, 2025 at 5:55=E2=80=AFPM Conor Dooley <conor@kernel.org> wrot=
+e:
 
-thanks for your patch!
+> So, what I ended up doing is moving the "gpio2" stuff to use
+> functions/groups as your gemini stuff does, so each function contains
+> one group containing all the pins it needs - except for the gpio
+> function which contains analogues for each of the function's groups.
 
-On Thu, Oct 9, 2025 at 3:29=E2=80=AFPM <bigunclemax@gmail.com> wrote:
->
-> From: Maksim Kiselev <bigunclemax@gmail.com>
->
-> The probe function does not guarantee that chip registers are in their
-> default state. Thus using reg_defaults for regmap is incorrect.
->
-> For example, the chip may have already been configured by the bootloader
-> before the Linux driver loads, or the mcp might not have a reset at all
-> and not reset a state between reboots.
->
-> In such cases, using reg_defaults leads to the cache values diverging
-> from the actual registers values in the chip.
->
-> Previous attempts to fix consequences of this issue were made in
-> 'commit 3ede3f8b4b4b ("pinctrl: mcp23s08: Reset all pins to input at
-> probe")', but this is insufficient. The OLAT register reset is also
-> required. And there's still potential for new issues arising due to cache
-> desynchronization of other registers.
->
-> Therefore, remove reg_defaults entirely to eliminate the root cause
-> of these problems.
->
-> Also remove the force reset all pins to input at probe as it is no longer
-> required.
->
-> Link: https://lore.kernel.org/all/20251006074934.27180-1-bigunclemax@gmai=
-l.com/
-> Suggested-by: Mike Looijmans <mike.looijmans@topic.nl>
-> Signed-off-by: Maksim Kiselev <bigunclemax@gmail.com>
-
-I would surely like to see some Tested-by on this patch because
-this driver has *many* users.
-
-I added some people to the To: line who recently made changes to this
-driver, maybe they can test.
+I don't know exactly what you mean by this, but if it entails any
+entanglement of the GPIO function with another function, then
+there is the recent patch from Bartosz in commit
+11aa02d6a9c222260490f952d041dec6d7f16a92
+which makes it possible to give the pin control framework
+an awareness of what a GPIO function is by reading hardware
+properties, and that it is sometimes separate from other functions.
 
 Yours,
 Linus Walleij
