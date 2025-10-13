@@ -1,87 +1,87 @@
-Return-Path: <linux-gpio+bounces-27031-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27032-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47F9BBD307A
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 14:46:11 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B868BD31B5
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 14:55:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1163B4E22BB
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 12:46:10 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E29D14F1AF3
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 12:55:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4904DDF72;
-	Mon, 13 Oct 2025 12:46:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA9052ECEB9;
+	Mon, 13 Oct 2025 12:55:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aHP6RLDw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Okjf1fVl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D12252910
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Oct 2025 12:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B512F2E2DC4
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Oct 2025 12:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760359566; cv=none; b=V6OSUDx2ayC0KihML9u1Qn5i83190n8pUUorZxc8PV6k9YEkyZeWK6lWsPyNFhoDwndQAQk2d1UO4FusIOQrKz1WdfdVZ32TiEeZiYWzTlYT1YUeOraqQ0zCV2OUydTuqrLLywtaCZBaBVkH0esElkn/KXYgdY8ovqQS7PVrb/A=
+	t=1760360105; cv=none; b=MQxD/Hr/Yg4VCgQgXJMOL3qOPX1kaQdxWx7kzNp741wldrYLTZ4dXeU5suuGVd526bFYHnwtiMVQb6ucQJ4/4gGNHuzgk7wraXIx9ipzl0/dz56bC+WdHVO+10D5bwLsW7gSy65ApnJnpIfBkiG0FCxPb5pSaWnJza3+o3jZV70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760359566; c=relaxed/simple;
-	bh=JpkIi/+vhaU0BNI9/P+j1qfp8E4UfRVJu5ZcRjrM5jA=;
+	s=arc-20240116; t=1760360105; c=relaxed/simple;
+	bh=zt5hEVCNrevPsGcQxcV2hsOEGoKsyrOWbNv+dHo88K0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oIIoIlso0EHaRLShrpcUJv/Ykjl4u5Ul9OfPjE/gMG7XZ4Yh+fCgLi/3t9AupNNBDLuguU89TWrFCnQFxfKCo5P/McQjARCDIiXm729U9nUQKKHFyBIEjTp2iT4UG8ejK5SpXTAPcuwTXjIO1Ry+GfA+kboHkpSl26aG8BG5rcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aHP6RLDw; arc=none smtp.client-ip=209.85.208.176
+	 To:Cc:Content-Type; b=TrzmLSNnq8fhLV1TasPDELxEzQ/5YtjWPH/7VAODb4Zbm8EaOv3XMkX8s9KkXSklClzSUFX6gzjdgB5O4CHGweTSh3nlr67DCkvIQ5CPzt0apC0LK7kMZeG197nu0zTxZ4WIH0T0JQRlQV9DISYpfkaWAV0KQsVSvostNoMZmcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Okjf1fVl; arc=none smtp.client-ip=209.85.208.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-376466f1280so16519351fa.0
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Oct 2025 05:46:03 -0700 (PDT)
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-3682ac7f33fso48271831fa.0
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Oct 2025 05:55:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1760359562; x=1760964362; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1760360101; x=1760964901; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yr0CAioySbg+winRW7SfP2+jGITybsbqsD8lEteT+kw=;
-        b=aHP6RLDwb0UG2uPMFu+XHDG3kF+N7eCxd/Ka/asDGgCNbHTIKKuXZSEMQW63BQP5+J
-         3Fm3A8yjdNcygmUxPD0dxoBPCRBFCkdQHaIHUNd4JKIu+KlodAf2i8fNXSdsx5WDnfUQ
-         ibmWCNbjVfzi9LjChJ/HBXACzVLhWJH7YUypITyzjf0ewOmsgJ1zqTN8R9EHXOK83hvD
-         QmEMqLweAgmok12WakNdVjOBQA6AzLEZsHo21wM1PmKh9XgpqQ5RjHHgH7vp5z1TaZDQ
-         rWTBZfkyh3L4Spo0aXEFXaJTzAY8C1DU3xjrjlpMIs4U5bxeHGSh+dxJj+9aIbcz2kr6
-         XNVQ==
+        bh=zt5hEVCNrevPsGcQxcV2hsOEGoKsyrOWbNv+dHo88K0=;
+        b=Okjf1fVloCuwHYEltROxYnd2pFlknVZ7B7amVFMf0TvT29v/ZiaAu6yGqj5UhRkVsn
+         ldb1ZANPVDzhdk/9R+GUouwe+TNHn+3l0DK3VyNfmWYTMntT0PHCCSd69gP4bNqIRdwg
+         vsqql6iGaU5+sQMlqO+LgXskAmil8/7G41ybn9gB10A0EhvSmglVy/1d2tvwzF3eRqnc
+         6vGgrM89ZkpYHBlb76aFnODpgWdWmx41QDNzf/VQ3itHnWcyyaGOK/iwp/ZVlKvU98Pm
+         2iw4Wd5j4GFnUQCt8OQqkyENvX2EtsDnsjQ/GuWzUeGWpeLQ8ll73tc2PHzwjCYtNlK0
+         jF6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760359562; x=1760964362;
+        d=1e100.net; s=20230601; t=1760360101; x=1760964901;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yr0CAioySbg+winRW7SfP2+jGITybsbqsD8lEteT+kw=;
-        b=fxNHQAf97+OM63KjyZvNwQnWvJiVp/iBNwQifIgLi9WCJe19rLjnaJQu6gf8aSOM/5
-         b6EJby9IeiguE0pqDspazVwZRts/OrlYBMzI2TePKyhz4oUOapHRE6WK8xfioMTntxQN
-         VP2RAPMu/Vf9+1Rft8g9TRGtYe20TMZ/8ZAz9OU1e/okVIl4T6np10FEBKhLDuBLo3/G
-         op8oIdiDsaLmVvFpU/g8oOgM5M5XVca+m4BI7hybKQNyi4X6SPrRTKk90th7jXajtOl1
-         jJvEuIVpJIYf+whigewxagsl5iepMS544gwNIfjEJAncnl9UtnxUUECiEQG78sjOHZdJ
-         /kJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUi3+2PNykBPG5z2AbxizjhuMtxYgHLKWWQQN2/qBOovJLDxTYs+YTSAhNNR98n+PRnzqwArL2S4Toh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzg1FF6nT13HFjxtXhCg+6PkuQ4+Oter8oxr2fT/wNPVPusZIaf
-	tMFgvO4rcKLwFkoLt021xUR4558vf4keBwO9+Rf17pl5SYsYyo8DQfVuylYHkuQkCc7KIElShYG
-	WeVWj7JPxbbyUW+ox0oiyBAXcrf402+4j99KqvVk9pg==
-X-Gm-Gg: ASbGnctH6hWHl0dCjXjN0C7vQEz4RldedVKESsWNoEMthOjAhgGb7Pk5aCxycI+DQEg
-	znm44CFe69aKnssimsS45TJrXRIoDTNW0nlS9nr367BX+hHo8PjP7ZbPp4cftkoiVRLgw6gmj/p
-	DzIIJTtoIArfmBJD3JJfurL9Co21McYp764N/SKTi/+HTazJX71xNZzwlu+YsLYMPoJx9PIgaw2
-	cJgotuKD2jOvIMz3xkWoRiqSg3n+2XNqT4R7mw9
-X-Google-Smtp-Source: AGHT+IECEgvwWZ6twWsaItTnYS8HV/K8Xbz+foZN6OXGOnnvuhf5OIE7J2dBzITkBTeCj2Oicn8ol15+IVgCGD9o8F8=
-X-Received: by 2002:a2e:9a10:0:b0:36a:a401:628a with SMTP id
- 38308e7fff4ca-37609cf85d9mr54890731fa.6.1760359562017; Mon, 13 Oct 2025
- 05:46:02 -0700 (PDT)
+        bh=zt5hEVCNrevPsGcQxcV2hsOEGoKsyrOWbNv+dHo88K0=;
+        b=hg95WhWHaM6luGxc66Icev097h4wiV8qwQ4N5a69Dtz5Q5toNMPDiIvdhbPUO5byIn
+         ESdWuhNd0q7VP1vLVODu76P3/tFVxCeK5lYLWxm+B30vF+w62MDP557PIPREshYAiNJJ
+         +uExEm8F1uiPgGTOxW8/PAiZB5Ii7lMeUGk8bry3abp+PZnNTJcTTQTmWgMYUVFnyRgr
+         sCuuWAKPAENkLt2W7LET6qnTvxJeS8JzK3FSXbSEuBxF0CzdZWBFIuTpYzQHVwYdKWZQ
+         L/eRb1DVclsze7kbQ44QFK0I7xDv0VSyduBooNnjFj3+WAbTEEXr25x0w23xaZXtSLip
+         qmHg==
+X-Forwarded-Encrypted: i=1; AJvYcCWV5DmZm6p/+gdqYlGqPfrrj6m8YJ+3PFv04z6q6uvKkcyR+Fgn+Tx8VWjhLjkdu5Qt9udmlfxsn1GO@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCRYMqPAtUImQq0N+jGtXeulauJpLa+PWsj5sCAW72upOEXDxK
+	76wdsGk6YKa3DbQJmUuiB8HavkwgKlaYKah8NGbFNeN0WmrGN3ppJ+TrEt2xE36owdEmfrwZ6Sw
+	IxOXTrI+arDvcA0qCdvW2iBthgoEid8lbwVKm1UrmiAA5znk4vsfx
+X-Gm-Gg: ASbGncvnw9T8f57xPxgV0yDBM5k5/q0lJ8BLsq9g2Tg2W0eRu4E6mFUgjwAxZtraWmq
+	Us8Km/Ix0R6/o/gt/DgiSEmj9x3yNgPGAs0YFchNn0Ii+l9uNjWmvcVcoPtFGqvnIhjlCyEItlJ
+	lCHjIRcFg9/IacrivfNwwpdmw1x6pXV3anrRhx60A5b+yTFT6zSDEkkUXOUjFAlCbNQfiiIJifK
+	+vIcdsb+SQ1cVYea0N9xr2OnKZaCatt/u+bAAUI
+X-Google-Smtp-Source: AGHT+IEMJbNvilXOpoOIRQel6Q25owiZoIco1Kl5SF8iRX9hi7hR5hiR4i5XlKv+PrII6XXrbQ676HBjigByg+VgGMM=
+X-Received: by 2002:a2e:b88e:0:b0:36c:2899:7a33 with SMTP id
+ 38308e7fff4ca-3760a29e503mr52205261fa.5.1760360100831; Mon, 13 Oct 2025
+ 05:55:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1759824376.git.mazziesaccount@gmail.com> <19d537f9920cae5fa849b649e5bc42ba0b8e52f8.1759824376.git.mazziesaccount@gmail.com>
-In-Reply-To: <19d537f9920cae5fa849b649e5bc42ba0b8e52f8.1759824376.git.mazziesaccount@gmail.com>
+References: <cover.1759824376.git.mazziesaccount@gmail.com> <ed65074dbedaf2b503d789b38bd9710926d08a55.1759824376.git.mazziesaccount@gmail.com>
+In-Reply-To: <ed65074dbedaf2b503d789b38bd9710926d08a55.1759824376.git.mazziesaccount@gmail.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 13 Oct 2025 14:45:50 +0200
-X-Gm-Features: AS18NWBXkMvQX4UMEqrcFAQn-COI9GhJKLnUY40gmxEPa8GpJstGMsxg8s5ctP8
-Message-ID: <CACRpkdbHBQQnnTUrUzOrYxzQKCzDyy8aNK7w8OEFz-ic8ic1FQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 03/13] dt-bindings: power: supply: BD72720 managed battery
+Date: Mon, 13 Oct 2025 14:54:49 +0200
+X-Gm-Features: AS18NWAwGCk0eH0iAHoOmmcayEjfv4yeRrMRzIvsPRl7tRPyzzsktlv39DuLW9c
+Message-ID: <CACRpkdZSiZ_74Ar+tRzVSwRW=6XoUpODyxqZDFyrc-0pcHkaPg@mail.gmail.com>
+Subject: Re: [RFC PATCH 09/13] gpio: Support ROHM BD72720 gpios
 To: Matti Vaittinen <mazziesaccount@gmail.com>
 Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lee Jones <lee@kernel.org>, 
 	Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -93,127 +93,35 @@ Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lee Jones <lee@kernel.o
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Matti,
-
-thanks for your patch!
-
-On Tue, Oct 7, 2025 at 10:33=E2=80=AFAM Matti Vaittinen
+On Tue, Oct 7, 2025 at 10:34=E2=80=AFAM Matti Vaittinen
 <mazziesaccount@gmail.com> wrote:
 
-> The BD72720 PMIC has a battery charger + coulomb counter block. These
-> can be used to manage charging of a lithium-ion battery and to do fuel
-> gauging.
+> The ROHM BD72720 has 6 pins which may be configured as GPIOs. The
+> GPIO1 ... GPIO5 and EPDEN pins. The configuration is done to OTP at the
+> manufacturing, and it can't be read at runtime. The device-tree is
+> required to tell the software which of the pins are used as GPIOs.
 >
-> ROHM has developed a so called "zero-correction" -algotihm to improve
-
-algorithm?
-
-> the fuel-gauging accuracy close to the point where battery is depleted.
-> This relies on battery specific "VDR" tables, which are measured from
-> the battery, and which describe the voltage drop rate. More thorough
-> explanation about the "zero correction" and "VDR" parameters is here:
-> https://lore.kernel.org/all/676253b9-ff69-7891-1f26-a8b5bb5a421b@fi.rohme=
-urope.com/
+> Keep the pin mapping static regardless the OTP. This way the user-space
+> can always access the BASE+N for GPIO(N+1) (N =3D 0 to 4), and BASE + 5
+> for the EPDEN pin. Do this by setting always the number of GPIOs to 6,
+> and by using the valid-mask to invalidate the pins which aren't configure=
+d
+> as GPIOs.
 >
-> Document the VDR zero-correction specific battery properties used by the
-> BD72720 and some other ROHM chargers.
+> First two pins can be set to be either input or output by OTP. Direction
+> can't be changed by software. Rest of the pins can be set as outputs
+> only. All of the pins support generating interrupts.
+>
+> Support the Input/Output state getting/setting and the output mode
+> configuration (open-drain/push-pull).
 >
 > Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
 
-> The parameters are describing the battery voltage drop rates - so they
-> are properties of the battery, not the charger. Thus they do not belong
-> in the charger node.
+Nice use of valid-mask here!
+I don't know about the special pin binding but the driver
+looks good.
 
-Right!
-
-> The right place for them is the battery node, which is described by the
-> generic "battery.yaml". I was not comfortable with adding these
-> properties to the generic battery.yaml because they are:
->   - Meaningful only for those charger drivers which have the VDR
->     algorithm implemented. (And even though the algorithm is not charger
->     specific, AFAICS, it is currently only used by some ROHM PMIC
->     drivers).
->   - Technique of measuring the VDR tables for a battery is not widely
->     known. AFAICS, only folks at ROHM are measuring those for some
->     customer products. We do have those tables available for some of the
->     products though (Kobo?).
-
-It would be sad if we later on have to convert it to a standard property
-because it turns out to be wider used than we know.
-
-But I buy your reasoning!
-
-> +properties:
-> +  rohm,voltage-vdr-thresh-microvolt:
-> +    description: Threshold for starting the VDR correction
-> +
-> +  rohm,volt-drop-soc:
-> +    description: Table of capacity values matching the values in VDR tab=
-les.
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-
-Which unit is this? Seems to be capacity in % *10?
-
-> +  rohm,volt-drop-high-temp-microvolt:
-> +    description: VDR table for high temperature
-> +
-> +  rohm,volt-drop-normal-temp-microvolt:
-> +    description: VDR table for normal temperature
-> +
-> +  rohm,volt-drop-low-temp-microvolt:
-> +    description: VDR table for low temperature
-> +
-> +  rohm,volt-drop-very-low-temp-microvolt:
-> +    description: VDR table for very low temperature
-
-Doesn't the four last properties require to be defined as uint32-array?
-
-> +        rohm,volt-drop-soc =3D <1000 1000 950 900 850 800 750 700 650 60=
-0 550 500
-> +          450 400 350 300 250 200 150 100 50 00 (-50)>;
-
-This one makes a lot of sense.
-
-> +        rohm,volt-drop-high-temp-microvolt =3D  <100 100 102 104 106 109=
- 114 124
-> +          117 107 107 109 112 116 117 108 109 109 108 109 122 126 130>;
-> +
-> +        rohm,volt-drop-normal-temp-microvolt =3D <100 100 102 105 98 100=
- 105 102
-> +          101 99 98 100 103 105 109 117 111 109 110 114 128 141 154>;
-> +
-> +        rohm,volt-drop-low-temp-microvolt =3D <100 100 98 107 112 114 11=
-8 118 112
-> +          108 108 110 111 113 117 123 131 144 157 181 220 283 399>;
-> +
-> +        rohm,volt-drop-very-low-temp-microvolt =3D <86 86 105 109 114 11=
-0 115 115
-> +          110 108 110 112 114 118 124 134 136 160 177 201 241 322 403>;
-
-I would have expected something like this, to avoid the a bit fuzzy definit=
-ions
-of high, normal, low and very low temperature either:
-
-Provide an array of temperatures in millicentigrades (I just guessed
-these temperatures, you will know the real ones!):
-
-rohm,vold-drop-temperatures-millicelsius =3D <500, 250, 100, (-50)>;
-rohm,volt-drop-microvolt-0 =3D <...>;
-rohm,volt-drop-microvolt-1 =3D <...>;
-rohm,volt-drop-microvolt-2 =3D <...>;
-rohm,volt-drop-microvolt-3 =3D <...>;
-
-Where each array correspond to the temperature, or if you wanna
-go all-out custom:
-
-rohm,volt-drop-50-celsius-microvolt =3D <...>;
-(...)
-
-So we get the actual temperature in there one way or the other.
-
-> +        rohm,voltage-vdr-thresh-microvolt =3D <4150000>;
-
-This property seems to be missing from the bindings?
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
