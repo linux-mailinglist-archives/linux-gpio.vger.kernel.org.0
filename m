@@ -1,161 +1,105 @@
-Return-Path: <linux-gpio+bounces-27005-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27006-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA045BD2497
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 11:27:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1481CBD24E2
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 11:32:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 3B54834974E
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 09:27:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F0C5D1897EF7
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 09:32:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C4E82FD7D5;
-	Mon, 13 Oct 2025 09:27:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F23EA2FDC36;
+	Mon, 13 Oct 2025 09:32:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jWZ/5+Sl"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="oWA4MZYB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D0B2FD7A7
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Oct 2025 09:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E85426FA6E;
+	Mon, 13 Oct 2025 09:32:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760347659; cv=none; b=Is8nXuklf+ox2pvl40LtTWD0K4/4ScANQVSq5/QueWBbRVDBrkHhgl+kGOaqeanCRl9WFfKe5jfburbuxS1kLrtLyB0NnmTKAmEWzvprGUpomzXAEFCmm61XTBGhqQq+XbdxXWpQRz1CcZY8ccRRnZ47HCC2f6KeSKLtY4uJATI=
+	t=1760347933; cv=none; b=Pu7AsyvCNph0infX43xej2MiOkwMYUpP9HAVvd+/GwpbEm4DruoAfkrYHeQt2mYh48FYgV9Z7V3nRk8J42njWWjfKnwb9U1KUHSgHRrK5Pyoj8CVQlXYjtrIGW+OKkQxqcfxKOCkm/fwJ4/4gw0WdXAFD779uWCEcdqayko1owE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760347659; c=relaxed/simple;
-	bh=Vnu9qF1W+mtePyJT46244Xk0nYQav+1PFrImO+uiBpI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eMdFf44JBlEVQ+QlwFVwYpX9vrOt1B97FSh2w4dn6P/ZREBAD9vIp5DJnyfUVpbO9mKQ0XfT1fvhK4L2VFl/T8owZWoknU5R42lZHmItSUQRW7yLES9jp8bs9q9ZJ0s1ixFCwwQGX3T+GMo3e3WIErwzkM9CbgZgZanvFYfH4TA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jWZ/5+Sl; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-57edfeaa05aso4582881e87.0
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Oct 2025 02:27:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760347656; x=1760952456; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TSTsG2geMiXZZ54sKPHqUYbwVwZADjPORMJscfDPZgg=;
-        b=jWZ/5+SljpEk8QizK6qM0TG2OT6docRYqUXFzt+x95jYvOnNrmmT7zioksz6h8wUEG
-         QJWTj/SExgnOGFXuyQiBZXsR73urnrb84UOTMd8t/GNhcUsfmUSeGGGkXQIs0X+o6CAh
-         NECFMEmve/PvMzAc5HpXqlitNn9BEbaMbDPb9rxE5SA5aAnCmkb6I+Lc04sPG7dJlz30
-         o6M5AygU50aC/Yr9rbBZnyfGujoZVyuF+57VMEPM687PTKWTz9pZLPVNmpLdsD4pd9e+
-         J9QFDE2plJzI5eOg9tU3z9QkKDyaI+pcJEzRADffESa6n9ENzDtNN0q/5wo1Q571lvnp
-         pWnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760347656; x=1760952456;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TSTsG2geMiXZZ54sKPHqUYbwVwZADjPORMJscfDPZgg=;
-        b=Hupfva7RVNulNEcTJFCKnOMiQhn5+J7XGA59BjTxmFDtloBPvg9YLFeQU/gKaH4837
-         Rz50t++vQG7w+b9QHFirdatYDTMM1QPQ7/sJWg39slzVD5/toC3KWhA2+Y5xMy0JLoUe
-         GbxXyu3VtRhjYjBk0MgCpJNCCZya4Q7DXhaJ2lgTzFMKHPi01BvRcxg5O75GlOMN1f2l
-         KkbtLrHMuqUOVvV/VjW0t1wNavxdjQzKRVR4l6ytGy5Fz3o4SSLijI2yGrglyP/iwlmw
-         GQtudYok7sNRMLXJ9z8WOGqAHJwlsNDO2dNBzxGncaYPmuJjQFeePsN1xt8JJBZRf0kN
-         xhcg==
-X-Forwarded-Encrypted: i=1; AJvYcCX1FYLabshRsFJUAiCDFvUm17TAaDtoi6Mej9SmhkgnegBTyUcPwhnOn/U/Ww4u+lQbNdNymOYBvnAp@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZPcXopW+z5m+y7nM7Zw+PY3zNETfTC4sMInGGRAOevjRLV2SW
-	FzfqoJVImv4JSCETXsjeUtTAivdCynRlAT0bKzd42IvGm8qcv1g41wzo
-X-Gm-Gg: ASbGnctCk+iO4INnmGOZ/Mg3JhjUmR3xmtKNPndId/LTr8NzIkPbBiWw9ZBDgnf7ifN
-	1iJLyo5Qy8hDxkLhqs++FO/PVzNYS3SBL8BTfIhnMPEUP9O4ohIinhyjcOFbtyzW6aKMNj8tSkK
-	PBUWjnXZw5U/n65Rsly+5A1+rwvYhrPo7BOSHsAgQTswYPGuQf8riQCACsiGqCei4CiA86TXDDb
-	5MBNBl2UoH0VuwPwRv9fSp1rstNq+rL8QfredClAWz+ZishgamiUvvBBl+zF/4E62zJwWB8TEtG
-	7gHGberS9JQF2h1SSUW7IujZarjwvM9nJgjjinRDTVjdUKIFcHBCRCBeYzGiaLYw5Sn2Sl/CQwA
-	xuwIa+n6Lb9GY7d0iWfPEgqTc/BhG2VGyMdHuz48UADzz1y8BBkxjKa7eYqLG29+AGbwBCv/0UR
-	MmD3VdYW/JISkOLfohjbrl8+Mal23VL+Wa5A==
-X-Google-Smtp-Source: AGHT+IEqb5UWThw0zJL0ngTJbT7pv4o6411sYhb14KLtxUGEsvK5SpnsWbVBznfiz/L/V7BnIrIUsw==
-X-Received: by 2002:a05:6512:3b9a:b0:57f:6da2:6a1a with SMTP id 2adb3069b0e04-5906db01c1emr5500852e87.48.1760347655259;
-        Mon, 13 Oct 2025 02:27:35 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59088577c1bsm3920293e87.106.2025.10.13.02.27.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Oct 2025 02:27:34 -0700 (PDT)
-Message-ID: <d2295506-bf70-4142-8537-0fdf9cb04a30@gmail.com>
-Date: Mon, 13 Oct 2025 12:27:33 +0300
+	s=arc-20240116; t=1760347933; c=relaxed/simple;
+	bh=gJp0KJN5JsnAs44g7Qv8Flla0ZPEoI3EDaHQ5Ie/TbE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=k0xlnvWSFIQMbsaJVUSTxv164vYJINudf7s2yyyltz+5D5ep6LiO1er8EaqcgOOVCCJleNtTzJRPFIsmB8vcxdxNGQWNA4RZ8qvYVUKJjNvcJn9vJf9eAbQqSMTUqlU4Idx1MzvKSj63HLsv2jEm69ACWZAIuBau151YVcOMEag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=oWA4MZYB; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1760347927;
+	bh=gJp0KJN5JsnAs44g7Qv8Flla0ZPEoI3EDaHQ5Ie/TbE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=oWA4MZYBiGExivnYMXUDxTPU+xKdquwfvIIDwrBYfG+KGl9zWe9TAn80ESph/rNit
+	 +wn9QGLV+81ZMhtsp9Mq1T0uxX3r2eInBu0BCsFGY2M9ZBE8fnwTonMf2Bt+HufGpZ
+	 UHqRfvVxkV/Cet+U/y+oqGUxKMJTamPfdtk2SOuh+QZfAV6JxaHjGnTYA5VfbPfeWn
+	 QzvQtrbMTRUSijnDknZ0Nl+HzQ56kRKoL9z2/r1BQNjyv/AYqzKXOQAAcXypfxozmQ
+	 WfQWASb+hJiB264YsedQBiHVjcGBbhEZrnnLKGurpispFL+zUGJ9Fo7qGUBWM3JObN
+	 CTu6ShfYITw+w==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 847BF17E0023;
+	Mon, 13 Oct 2025 11:32:05 +0200 (CEST)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: kernel@collabora.com, Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, Ikjoon Jang <ikjn@chromium.org>, 
+ Enric Balletbo i Serra <eballetbo@kernel.org>, 
+ Chen-Yu Tsai <wenst@chromium.org>, Weiyi Lu <weiyi.lu@mediatek.com>, 
+ Eugen Hristev <eugen.hristev@linaro.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Julien Massot <jmassot@collabora.com>, Sean Wang <sean.wang@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Julien Massot <julien.massot@collabora.com>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-sound@vger.kernel.org, 
+ linux-gpio@vger.kernel.org
+In-Reply-To: <20250826-mtk-dtb-warnings-v3-0-20e89886a20e@collabora.com>
+References: <20250826-mtk-dtb-warnings-v3-0-20e89886a20e@collabora.com>
+Subject: Re: (subset) [PATCH v3 0/6] MediaTek devicetree/bindings warnings
+ sanitization second round
+Message-Id: <176034792547.20821.16275876241287095581.b4-ty@collabora.com>
+Date: Mon, 13 Oct 2025 11:32:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 06/13] mfd: bd71828: Support ROHM BD72720
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: Lee Jones <lee@kernel.org>,
- Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-gpio@vger.kernel.org
-References: <cover.1759824376.git.mazziesaccount@gmail.com>
- <93142a80d90a0ac80b27090d0c83914675aad94d.1759824376.git.mazziesaccount@gmail.com>
- <20251009161847.GE2890766@google.com>
- <8ea507eb-f78c-4a16-882b-112e277fa1b6@gmail.com>
- <20251010150317.07bfdbe8@kemnade.info>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20251010150317.07bfdbe8@kemnade.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3
 
-Hi Andreas!
-
-First of all, thanks for taking a look at this!
-
-On 10/10/2025 16:03, Andreas Kemnade wrote:
-> On Fri, 10 Oct 2025 15:09:07 +0300
-> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+On Tue, 26 Aug 2025 09:39:33 +0200, Julien Massot wrote:
+> This patch series continues the effort to address Device Tree validation
+> warnings for MediaTek platforms, with a focus on MT8183. It follows the
+> initial cleanup series by Angelo
+> (https://www.spinics.net/lists/kernel/msg5780177.html).
 > 
->>>> +static int bd72720_get_secondary_regmap(struct i2c_client *i2c,
->>>
->>> Does this 'secondary' have a specific purpose or a better name?
->>
->> I am not entirely sure. When I asked this from the designers they just
->> told me that they needed more than 255 registers so they added another
->> slave address... (I'm not sure what would have been wrong with using a
->> page register). So, I assume they just placed stuff that didn't fit in
->> first 255 register there. But yeah, it looks like most of the registers
->> there are related to the charger. So, perhaps it isn't completely
->> misleading to use "charger regmap"? The data-sheet seems to be just
->> using "Register map 1" and "Register map 2" in the tables listing these
->> registers. I kind of like using something which maps easily to the
->> data-sheet, but I really have no strong opinion on this.
+> The patches in this set eliminate several of the remaining warnings by
+> improving or converting DT bindings to DT schema, adding missing properties,
+> and updating device tree files accordingly.
 > 
-> just another idea: What about one regmap with custom functions covering
-> both these adresses? Maybe that could even be added to the regmap
-> functionality, maybe with a 0x100 offset for the second range.
-> That way the rest of the code only needs to real with one regmap
-> and properly defined registers.
+> [...]
 
-Interesting idea.
+Applied to v6.18-next/dts64, thanks!
 
-I suppose you mean something like implementing custom remap_read() and 
-regmap_write() - which would practically select the I2C adapter to use 
-based on the register address - and then doing same thing as the 
-regmap_i2c_smbus_i2c_write() / regmap_i2c_smbus_i2c_read() do?
+[4/6] arm64: dts: mt8183: Rename nodes to match audiosys DT schema
+      commit: 872fa3ea0c0e4602e4775d0fbe84ed3d6aa60e67
 
-I suppose this would mean duplicating the functionality provided by the 
-regmap_i2c_smbus_i2c_write() and the regmap_i2c_smbus_i2c_read(), which 
-are static. It'd also mean we'll lose the 1 to 1 mapping between the 
-register addresses in driver and addresses in the data-sheet. I agree 
-this wouldn't be such a huge thing if we used offset like 0x100 though.
+Cheers,
+Angelo
 
-I am still leaning towards using two different regmaps though, as it 
-seems like a more 'standard' solution. I assume people are more familiar 
-with providing platform data to "MFD sub drivers" than custom regmaps 
-accessing different I2C slave addresses.
 
-But yeah, thanks for this suggestion! It opened up some completely new 
-paths in my brains! :)
-
-Yours,
-	-- Matti
 
