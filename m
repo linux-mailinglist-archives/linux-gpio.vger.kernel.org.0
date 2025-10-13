@@ -1,386 +1,185 @@
-Return-Path: <linux-gpio+bounces-27047-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27048-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC439BD534A
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 18:49:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D8810BD58F3
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 19:43:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0C1A554823A
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 16:09:51 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 93AAA4E59D2
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 17:43:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1FDD30AAB3;
-	Mon, 13 Oct 2025 15:53:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA568304BDD;
+	Mon, 13 Oct 2025 17:43:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="e2jGZahp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LNTYQE1L"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010040.outbound.protection.outlook.com [52.101.84.40])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101A325B663;
-	Mon, 13 Oct 2025 15:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760370831; cv=fail; b=DJGljqxApza8JimVHYrxGmbf0zhNRr+tNju+NJzPjxQiICwbJMG8DhzQ5tJjujxRlZicuF2xkQamrO9yqIK9rfFlRih2V6iCTIVwNBBXmxLiM83NTzbCtp5nAEqTlzo/G0Anr9GIUIns4SE3mAlDevZc2dX5LlXomCo/jRevi5g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760370831; c=relaxed/simple;
-	bh=C9mkc0n5SrYTVe7Bqdzec+ulRE1gVFtdnw6Rb+YHz88=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=trjYvDvnh1FR4TGIygzTgXmLMuZTvgmGp/cUrK4hvFL3T8qgRet7BCMu1ovr1VZDHOvARH0gOLQHOQXGe5b/VRiclUlmqWGbSCNgNvt1+T1x4EXtGron84WnRPYcQ4Wlgn6HDTbstIqHBwwXhHGOgM8NMXIMv6z0Aqie11Abf6o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=e2jGZahp; arc=fail smtp.client-ip=52.101.84.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Swle5RTNYcnx8lVU+26rf0kk5aQJZdGGzvAcfTxM6EMm+5/34IouT0Tdyb2/0LG0uESb4UAWbXUJibvbuH6ox5hXoh7bndei4SL2pPVRzw/6RXuOgGP+OWgDZ/mgQnJCIqmO9NTuV1MFk1+yLWz29lz7RARYYRYcYdrznQ1uY64LCxP/RRbDQaMOf2JaCJFndj8JCatQMfcvZAgz2TqCdZ4y8x/eBFszHMW02hTAZYmzInY0SFBTZyM6bHlsU30Dd25DVGkgZnpdJK4Z3YvmL0wRcw1ZbLS25yeloK5Lp6RnRZYf7bRIH5qO+BU239E8eA6XH6pz1yE+fKOuBWuvTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BbPbfc0aVm5bNp2C/i2ms303pAKpS70GwpEy5Rz9+xY=;
- b=NyfeNzJCyQDcu2KOAelYIUhauzNmVzPq783WbOwKDnGByI66FOFGHufOVeebKrDedYMRZcj2L5vjRh83S94Pj7tGNald4vM7k5o9HjuzlIrNZB4K8ayCtv9tgPfycxYmgRjZa4hrGEMhYi/qbXtMm1Bn4eQ6ugCDy6lse5rpuDGeQGMH4s3LfP88Nad3wwkVTaNaJjQFnMER+vEASaaGPTaIetYAfO27GUv5eeTTknBonBycypatlOBmwyg4CD9clY7N/6tG2SH9tK7Jhp6sXgtD3aRPRDLE4GKJMIkF1DT+WMlSEyg48dzViFfucx3l2M2ld52suWtQc2tr9J68Ew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BbPbfc0aVm5bNp2C/i2ms303pAKpS70GwpEy5Rz9+xY=;
- b=e2jGZahp1J26ryF5c7YKiBAXm2S3uuNNwB7MdIR9gjhCTc/cwTYMcWLBO8HRoZDfWddwhQspiNtEnj9b3pHg1RVp2Wt5ghxDGHL+rhXuhDtWz4rNjQVUyTd9yqXt9eGuh8/83gvyT+P4S3WUCjX5BgUCFNX99hAUQqEhBRkslyPUpWU2STxthb2qLlbIeqGYw5nCB39xOHdxgWhA0WJljn6K/uFbQLhw/RAL0yBMqhqlgNXP3BZA63MI9vFJ8YKLj/ke3puoFEe9VoehxqW9u8536b65phKclqZCG3oieQxW3psugvOgMldWIGVDSWzsndAoH3Hhuv/MjEDVAHnESQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AS4PR04MB9621.eurprd04.prod.outlook.com (2603:10a6:20b:4ff::22)
- by DU2PR04MB8583.eurprd04.prod.outlook.com (2603:10a6:10:2da::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9203.12; Mon, 13 Oct
- 2025 15:53:45 +0000
-Received: from AS4PR04MB9621.eurprd04.prod.outlook.com
- ([fe80::a84d:82bf:a9ff:171e]) by AS4PR04MB9621.eurprd04.prod.outlook.com
- ([fe80::a84d:82bf:a9ff:171e%4]) with mapi id 15.20.9203.009; Mon, 13 Oct 2025
- 15:53:45 +0000
-Date: Mon, 13 Oct 2025 11:53:32 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Sowjanya Komatineni <skomatineni@nvidia.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Prashant Gaikwad <pgaikwad@nvidia.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Mikko Perttunen <mperttunen@nvidia.com>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841311A23A0;
+	Mon, 13 Oct 2025 17:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760377401; cv=none; b=bkZ3sBQJ+RM/00r7CvmYPd93Z2IQRnNY+Wxo/eCt9D2oTLwdzkZWmOxTa2uXkdEyUAAAvdHXYVFxYsswui1GUqDVYSau9EnWu1OOKE8KPifjAVl41PkwoJDKEveBTbn1vRfDaKT330W19bkoqYEL6LBuO1x9eTV8Zd6Bw16bqqg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760377401; c=relaxed/simple;
+	bh=92eLS7nQDkQePuTk6XG7WUpALuT+NugTK701bsG49lE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=VA7VtK8hiN8vXUi8wn22EvHxVigQrrBS3dZ+CQw7IUvBCb7f7FJsvieSoqgmlmZMtlo6RAIixIShIIRnToXAd1+FyeHjkLIpE5LxHfzakWmhjjMFObsp199zJvFj21JceLCujLIgMS14psDnYgKTWz6DvhUsiij/t698/qwDiU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LNTYQE1L; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBE53C4CEE7;
+	Mon, 13 Oct 2025 17:43:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760377401;
+	bh=92eLS7nQDkQePuTk6XG7WUpALuT+NugTK701bsG49lE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=LNTYQE1LFfH5+mtWVA6RAfr8ViJR7HLKQYsCaY4Q91+CYJu4hvVPFjra2tuiMaMZg
+	 4J5JGeefPyY82AuxEE1jjOZww3WluN5XqL2L2tGtfDd2CTeK47J3TSf+whPMWeA27Y
+	 iyCUsKjpOAUUdqGSPz6bGDUDszhV48yPLgrzB9xLuQJ/b9P/hhGorEtbdQ/CX6P/cW
+	 rzogJl+IVilQpYwPmBAU+0oQgmDCXVguZojpQ+ylT+fJcRJTa14Gj0CKBYZohvB8YP
+	 380ql89m7LWcoqkJeSKsOLzSjlqzPFv5jtT3j6WlYuZMnyNaqmWXZd38fVT4LxwCMt
+	 GMV9JCbbwG1Rg==
+Date: Mon, 13 Oct 2025 12:43:19 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc: Michael Buesch <m@bues.ch>, Bartosz Golaszewski <brgl@bgdev.pl>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jonas =?iso-8859-1?Q?Schw=F6bel?= <jonasschwoebel@yahoo.de>,
-	Dmitry Osipenko <digetx@gmail.com>,
-	Charan Pedumuru <charan.pedumuru@gmail.com>,
-	Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>,
-	Aaron Kling <webgeek1234@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-staging@lists.linux.dev
-Subject: Re: [PATCH v4 22/24] dt-bindings: display: tegra: document Tegra20
- and Tegra30 CSI
-Message-ID: <aO0gfGn+F6iQBaP/@lizhi-Precision-Tower-5810>
-References: <20251008073046.23231-1-clamor95@gmail.com>
- <20251008073046.23231-23-clamor95@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251008073046.23231-23-clamor95@gmail.com>
-X-ClientProxiedBy: PH7PR03CA0004.namprd03.prod.outlook.com
- (2603:10b6:510:339::30) To AS4PR04MB9621.eurprd04.prod.outlook.com
- (2603:10a6:20b:4ff::22)
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] gpio: bt8xx: use generic PCI PM
+Message-ID: <20251013174319.GA847155@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS4PR04MB9621:EE_|DU2PR04MB8583:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4401d476-0d78-40a7-a706-08de0a70b08e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|19092799006|52116014|7416014|376014|7053199007|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?kiCEUJAbPH+Dts8qcAuLgBl8IVLJcrUYEuL0FZ6v1mLGBwLdWN9PV94xEeRf?=
- =?us-ascii?Q?aYUNSEo6oUxKifOXZOTWvKGJ+QVQYbBnUcOyQbkjRy7yFj4KR3/k7rUdqu+U?=
- =?us-ascii?Q?HjY//ksmpzQVhx278uDinsUYolbdFSAeCU0GxzKxrUS9O1swfvUpHqTVNb+Z?=
- =?us-ascii?Q?4X0YZLXYX7e42/oG2SUGxI3k22d2NPlvrk+j+/YfZFY8RVBAFFgeDA9AahsW?=
- =?us-ascii?Q?qDm9MMHi3CZ8JbAuZscw1AKz9oxuvKlkUAtCEIrcTyce/5Q6kxaoEjhkmJh8?=
- =?us-ascii?Q?aJt00+k6c/Loyjq8GnsQAZu5MhDUlz937KjcG3sx44knJgqUQlkkzm/2Colr?=
- =?us-ascii?Q?UG7Ng7A3AUjIVuRkM+w9zI977nzEeKS9XfG59fR+552FfGtQxWzYkpwP1fJd?=
- =?us-ascii?Q?1+t0yDZvleE3Mm5i0GYO0LPDstlxURbpGF1RxTx4cwchAVltGv1fRhvwUgfy?=
- =?us-ascii?Q?25WA9oMK5+4azNkBvHu2pyaeCF9dBrskHr+tCVDbVQovTpZ6q5XgvCBjjArE?=
- =?us-ascii?Q?JtOSv+8o0TK3vsCxHj2npDAhfJ5XVcyoGonCBxrsGMartjNa3noBuKpIhdDY?=
- =?us-ascii?Q?fZKQ1JJRQC2aF3u6A5MkR3OJx6VtxjOMzDogDuzdGHFvud/DnVeDIcxJLxSo?=
- =?us-ascii?Q?AxwT05lB9agv3IbgE7adAt9JmRX/r1k9T6bayq7jQUunbjqmhXFUE5Pjcv26?=
- =?us-ascii?Q?+ScQfkEJM4Dld2aJVmdChCBhh5R6yHe6bf/vTbGQouIElpwhubGTsUemuAyt?=
- =?us-ascii?Q?S2l1aKjsoyGa5NCVbO7LuZr25npKlFwKlZiJqYhhAdKnDeeHSfi8h4VzgCPk?=
- =?us-ascii?Q?4rWhmZzNmKixIZOdk6E+Yzg6tcRuWzfwcYylu+2V6IRQD+9fhhh+OlbbwgSk?=
- =?us-ascii?Q?PmpSrDcoFO+qrBnn4Ese6ShdowJhddw0rN7TnfqXVEJxae3wIOujO6j0h4AH?=
- =?us-ascii?Q?6eSrbXpldFxwA/HbS68KrnAawZJbq/dsu+n/n5ycHycbDTidzRKbAXket7LG?=
- =?us-ascii?Q?L2e+WdLdABpFQURg5uqvyaS+AsS4PiRGT3DI58udtoSEdRHvOEOvIpA/4w0g?=
- =?us-ascii?Q?DN7VtuWoON32hSvNScexYnKWXmeNmwov8iByoEfuuMgsm9rffyJZ1GnTOtej?=
- =?us-ascii?Q?wjb5IKjD+wb3RgN4VoPCFzqjATHmSD3ckPuS83DCjYPsqM4Ziv9Qb/6IXKSr?=
- =?us-ascii?Q?AaPjC62VKPskYgxChEbESkSwIt1aLXOb/PtWeWhIl/SoiI7c6mf9l1Zbd9FP?=
- =?us-ascii?Q?SR/Y4aDTB8cJtKOCzR2sW7EyxpqOQDFAvdF1XFi6SdK5ogtSXdz0tiFLIwtL?=
- =?us-ascii?Q?pb5Ar8UuXHr1uysFYe2jAh3UNgeR+ZT5c3gMz6+pCWIce2KHEce4ua5IdQsg?=
- =?us-ascii?Q?+fZhJU4tEnKGdNLz2QN8FDtVV/SManKZaGNTrt4DEHatCl+argEkQxwRdQbL?=
- =?us-ascii?Q?tOLgqYLel97Z5QHhIH4b9g08l1POjsW/cWKvSGzfOUPiirkcpDzDZw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9621.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(19092799006)(52116014)(7416014)(376014)(7053199007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?P+jiQ+UtGH3Au+oSlTgBkXxXW8q+jaRrfhJN0UNWRaqydhu7xpYRL5NYnigF?=
- =?us-ascii?Q?5ZHp24N/DeBXqTh8dtPyROEIIlosIc3F4UQIF4oVDEQeN6JxcdkVeMXFg49d?=
- =?us-ascii?Q?PpsG2hx+UpEOhF6EuNON/76jK9owMHSqmR4+auhMtpPMiHzVnN5yur52DieR?=
- =?us-ascii?Q?+rrJtJ9YI9kYmevu1xyDUltUnWzNDlsrSyjaGWaozKQws8xOD7a7G6NnqasC?=
- =?us-ascii?Q?WBbJmwCfow+sL2wBVjcGp+IDmqyFA5NSkdq2hb7K8IdjrEKKMIL+DVVVnp4l?=
- =?us-ascii?Q?J3wpc3PzCX31+wdYpbndhx4SVwum8datzGXLqrnvWO1ZK2TbtoWpiDHxHs0Z?=
- =?us-ascii?Q?geTrmY1W2V3bBRmxBkstvL6xqfk8XtjWclhRx9ZCRaUSBqiayj/XcWp8IQMg?=
- =?us-ascii?Q?gCKC+ayZ3yVxKA3Qq7fABZQsIay0Ww+WxzEFQnMQtG2Qc73f0rKMokqgaFmy?=
- =?us-ascii?Q?QAhRaHWOhDAmCCyNv/MZ2Glzw3vQzy3kNOIv6ULBsWULIr1YPe+CCuXb92wz?=
- =?us-ascii?Q?R6objkLzqihlDu4fGh39qX4jCjUp040QkPfNNDsfBuIkqwjJ95cIgO7RHAg5?=
- =?us-ascii?Q?whq0GsTuNHy1FbiybiX3/yZlmzQOp8Zu0dNfh0+bsPs/VUyryUcsrg/Z0xs3?=
- =?us-ascii?Q?ktPNI1DZuRbaWsx3cyOut6EvWavBuOHPzLrwKhbZDvEENb2uLedP9qsdamVA?=
- =?us-ascii?Q?04UzMey/07v9y18R59mJRMII8KV+wznXicLLCGAozLieA/EKGqAbywkZpur2?=
- =?us-ascii?Q?C6NRP4nS0iobGJ5v9SiHkWnyH2BPMOp4cd8Z5RZvQlPFb1eaDCjMLzneTbKw?=
- =?us-ascii?Q?uUJhsnaEdg3aXLeMNDHM/Sa1xrrhpSGVXyvUXIsdyHEJDUPdqJGLyCu/9+/T?=
- =?us-ascii?Q?pHZ2eKbfw9nMqc5pywH2dDJz1A2C8OEGa2Pzbq5WxUA2O6ojHWNtQtzIznUb?=
- =?us-ascii?Q?4w1LOq3L4sL5HZtcId+QVg0pDkQ3TdC51omf28bm22JjW2Tfn1gYWcu+ElTq?=
- =?us-ascii?Q?BSkHnMRgB32BjgL+LMShtPbY8kavXqIYMmU7dP/CZx8fbSxz+dLZ7kjBJd6j?=
- =?us-ascii?Q?QN3LXN/lUWPSwkCx4XSuspTUiG+Ot9d97LSW2rg3IWBC9ggqp2Cyid7SdKyX?=
- =?us-ascii?Q?z6SugOP2zxKb3hY+LU/D1gAkTYb4xZlgkyLTehQy4EI2/sYQKns1PQkHw+mM?=
- =?us-ascii?Q?CM8bvr1A3B7Ux2THuVNI6hu7SIJMPhjGBP6DtzxNUizl5fFr3wewN6bq85Vi?=
- =?us-ascii?Q?JjR/1EvtFFUn0zh9sfGfrKEp0dEQazU5EwSWtAAyi7Djhg6oFWeVJ/Z78z9e?=
- =?us-ascii?Q?DOKn/VvxzCvbYiCooCxXc/UWqQ9Z0pV1Ma9fT4N7UvVzIX0w7Gq65d4RFsHG?=
- =?us-ascii?Q?NJCOqtuydhA4I5kkZLi7nyXGFZQcsnINBlcVenRt3Hu7bgjLu9BsG6ADi1uV?=
- =?us-ascii?Q?PIhKUgyAWr2FTpDdi2OB3a8wlMyXnD2hK6+bON21WqjwntDs62HmvjNbIcae?=
- =?us-ascii?Q?RMSWuibum0FxHppLjYhL+TzO/GIJ7uTo76Ww5Qp2T7iyyeYD0Wiz8nNDGMAU?=
- =?us-ascii?Q?GyU98H1QGGy0P6qjA2TYWJVsEZoyXBg9ksZ67zxW?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4401d476-0d78-40a7-a706-08de0a70b08e
-X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9621.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Oct 2025 15:53:44.9843
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JlBjdPSydaaxZDWVN0UGYiTC0xfL+XC6dyPwtZ4+FFxo58EHRbk8CuAQN9F8naQJrSovkk8WCPVn/Xg9Q7QYfg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8583
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251013155303.1103235-1-vaibhavgupta40@gmail.com>
 
-On Wed, Oct 08, 2025 at 10:30:44AM +0300, Svyatoslav Ryhel wrote:
-> Document CSI HW block found in Tegra20 and Tegra30 SoC.
->
-> The #nvidia,mipi-calibrate-cells is not an introduction of property, such
-> property already exists in nvidia,tegra114-mipi.yaml and is used in
-> multiple device trees. In case of Tegra30 and Tegra20 CSI block combines
-> mipi calibration function and CSI function, in Tegra114+ mipi calibration
-> got a dedicated hardware block which is already supported. This property
-> here is used to align with mipi-calibration logic used by Tegra114+.
->
-> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+On Mon, Oct 13, 2025 at 03:52:59PM +0000, Vaibhav Gupta wrote:
+> Switch to the new generic PCI power management framework and remove legacy
+> callbacks like .suspend() and .resume(). With the generic framework, the
+> standard PCI related work like:
+> 	- pci_save/restore_state()
+> 	- pci_enable/disable_device()
+> 	- pci_set_power_state()
+> is handled by the PCI core and this driver should implement only gpio-bt8xx
+> specific operations in its respective callback functions.
+
+Tiny nits:
+
+s/use generic PCI PM/use generic power management/  # subject; not PCI
+s/new generic PCI power/generic power management/   # no longer "new" :)
+
+> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 > ---
->  .../display/tegra/nvidia,tegra20-csi.yaml     | 135 ++++++++++++++++++
->  1 file changed, 135 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-csi.yaml
->
-> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-csi.yaml b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-csi.yaml
-> new file mode 100644
-> index 000000000000..817b3097846b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-csi.yaml
-> @@ -0,0 +1,135 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/tegra/nvidia,tegra20-csi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NVIDIA Tegra20 CSI controller
-> +
-> +maintainers:
-> +  - Svyatoslav Ryhel <clamor95@gmail.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - nvidia,tegra20-csi
-> +      - nvidia,tegra30-csi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks: true
+>  drivers/gpio/gpio-bt8xx.c | 29 +++++++----------------------
+>  1 file changed, 7 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-bt8xx.c b/drivers/gpio/gpio-bt8xx.c
+> index 05401da03ca3..70b49c385b43 100644
+> --- a/drivers/gpio/gpio-bt8xx.c
+> +++ b/drivers/gpio/gpio-bt8xx.c
+> @@ -52,10 +52,8 @@ struct bt8xxgpio {
+>  	struct pci_dev *pdev;
+>  	struct gpio_chip gpio;
+>  
+> -#ifdef CONFIG_PM
+>  	u32 saved_outen;
+>  	u32 saved_data;
+> -#endif
+>  };
+>  
+>  #define bgwrite(dat, adr)	writel((dat), bg->mmio+(adr))
+> @@ -224,9 +222,9 @@ static void bt8xxgpio_remove(struct pci_dev *pdev)
+>  	pci_disable_device(pdev);
+>  }
+>  
+> -#ifdef CONFIG_PM
+> -static int bt8xxgpio_suspend(struct pci_dev *pdev, pm_message_t state)
+> +static int __maybe_unused bt8xxgpio_suspend(struct device *dev)
 
-Need limit how many clocks needs
+I think __maybe_unused is unnecessary because of this path:
 
-clocks:
-  maxItems: <?>
+  DEFINE_SIMPLE_DEV_PM_OPS
+    _DEFINE_DEV_PM_OPS
+      SYSTEM_SLEEP_PM_OPS
+        pm_sleep_ptr
+	  PTR_IF(IS_ENABLED(CONFIG_PM_SLEEP), (_ptr))
 
-> +  clock-names: true
+Detailed explanation here:
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/util_macros.h?id=v6.17#n86
 
-Need provide exact list, I saw you provide list at if branch, but here
-need provide numbers limitations.
+>  {
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+>  	struct bt8xxgpio *bg = pci_get_drvdata(pdev);
+>  
+>  	scoped_guard(spinlock_irqsave, &bg->lock) {
 
-clock-names:
-  maxItems: 3
-  minItems: 1
+Unrelated to this patch, but it's not clear to me why bg->lock is
+needed here (or maybe anywhere).
 
-> +
-> +  avdd-dsi-csi-supply:
-> +    description: DSI/CSI power supply. Must supply 1.2 V.
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  "#nvidia,mipi-calibrate-cells":
-> +    description:
-> +      The number of cells in a MIPI calibration specifier. Should be 1.
-> +      The single cell specifies an id of the pad that need to be
-> +      calibrated for a given device. Valid pad ids for receiver would be
-> +      0 for CSI-A; 1 for CSI-B; 2 for DSI-A and 3 for DSI-B.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    const: 1
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +patternProperties:
-> +  "^channel@[0-1]$":
-> +    type: object
-> +    description: channel 0 represents CSI-A and 1 represents CSI-B
-> +    additionalProperties: false
-> +
-> +    properties:
-> +      reg:
-> +        maximum: 1
-> +
-> +      nvidia,mipi-calibrate:
-> +        description: Should contain a phandle and a specifier specifying
-> +          which pad is used by this CSI channel and needs to be calibrated.
-> +        $ref: /schemas/types.yaml#/definitions/phandle-array
-> +
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
-> +      port@0:
-> +        $ref: /schemas/graph.yaml#/$defs/port-base
-> +        unevaluatedProperties: false
-> +        description: port receiving the video stream from the sensor
-> +
-> +        properties:
-> +          endpoint:
-> +            $ref: /schemas/media/video-interfaces.yaml#
-> +            unevaluatedProperties: false
-> +
-> +            required:
-> +              - data-lanes
-> +
-> +      port@1:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: port sending the video stream to the VI
+  $ git grep -l "static int.*_suspend" drivers/gpio | wc -l
+  26
+  $ git grep -W "static int.*_suspend" drivers/gpio | grep lock | grep -v unlock | wc -l
 
-The other systems looks, put port@<n> under ports.
+It looks like only about 8 of the 26 gpio drivers that implement
+.suspend() protect it with a lock.  I would expect a lock to be needed
+in all of them or none of them.
 
-ports {
-  port@0
-  ...
-  port@1
-  ...
-}
-
-
+> @@ -238,23 +236,13 @@ static int bt8xxgpio_suspend(struct pci_dev *pdev, pm_message_t state)
+>  		bgwrite(0x0, BT848_GPIO_OUT_EN);
+>  	}
+>  
+> -	pci_save_state(pdev);
+> -	pci_disable_device(pdev);
+> -	pci_set_power_state(pdev, pci_choose_state(pdev, state));
+> -
+>  	return 0;
+>  }
+>  
+> -static int bt8xxgpio_resume(struct pci_dev *pdev)
+> +static int __maybe_unused bt8xxgpio_resume(struct device *dev)
+>  {
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+>  	struct bt8xxgpio *bg = pci_get_drvdata(pdev);
+> -	int err;
+> -
+> -	pci_set_power_state(pdev, PCI_D0);
+> -	err = pci_enable_device(pdev);
+> -	if (err)
+> -		return err;
+> -	pci_restore_state(pdev);
+>  
+>  	guard(spinlock_irqsave)(&bg->lock);
+>  
+> @@ -267,10 +255,8 @@ static int bt8xxgpio_resume(struct pci_dev *pdev)
+>  
+>  	return 0;
+>  }
+> -#else
+> -#define bt8xxgpio_suspend NULL
+> -#define bt8xxgpio_resume NULL
+> -#endif /* CONFIG_PM */
 > +
-> +    required:
-> +      - reg
-> +      - "#address-cells"
-> +      - "#size-cells"
-> +      - port@0
-> +      - port@1
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - nvidia,tegra20-csi
-> +    then:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: module clock
-> +
-> +        clock-names: false
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - nvidia,tegra30-csi
-> +    then:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: module clock
-> +            - description: PAD A clock
-> +            - description: PAD B clock
-> +
-> +        clock-names:
-> +          items:
-> +            - const: csi
-> +            - const: csia-pad
-> +            - const: csib-pad
-
-This is new binding
-
-at top
-
-clock-names
-  items:
-    - const: csi
-    - const: csia-pad
-    - const: csib-pad
-  minItems: 1
-
-
-here, just limit number
-
-  clock-names:
-    minItems: 3
-
-Frank
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - power-domains
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +# see nvidia,tegra20-vi.yaml for an example
-> --
-> 2.48.1
->
+> +static DEFINE_SIMPLE_DEV_PM_OPS(bt8xxgpio_pm_ops, bt8xxgpio_suspend, bt8xxgpio_resume);
+>  
+>  static const struct pci_device_id bt8xxgpio_pci_tbl[] = {
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_BROOKTREE, PCI_DEVICE_ID_BT848) },
+> @@ -286,8 +272,7 @@ static struct pci_driver bt8xxgpio_pci_driver = {
+>  	.id_table	= bt8xxgpio_pci_tbl,
+>  	.probe		= bt8xxgpio_probe,
+>  	.remove		= bt8xxgpio_remove,
+> -	.suspend	= bt8xxgpio_suspend,
+> -	.resume		= bt8xxgpio_resume,
+> +	.driver.pm	= &bt8xxgpio_pm_ops,
+>  };
+>  
+>  module_pci_driver(bt8xxgpio_pci_driver);
+> -- 
+> 2.51.0
+> 
 
