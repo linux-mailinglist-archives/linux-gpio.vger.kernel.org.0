@@ -1,59 +1,57 @@
-Return-Path: <linux-gpio+bounces-27050-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27051-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EEBCBD5E56
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 21:12:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 676D1BD5E5D
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 21:12:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 270ED18A788A
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 19:12:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AF6B518A78BE
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Oct 2025 19:13:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8C5A2D97A0;
-	Mon, 13 Oct 2025 19:12:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5835C2D9EEC;
+	Mon, 13 Oct 2025 19:12:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LINwk7qk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tQxeIkPH"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7512D8767;
-	Mon, 13 Oct 2025 19:12:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF952D9792;
+	Mon, 13 Oct 2025 19:12:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760382743; cv=none; b=S9XsLaRuQJQ2RA/gXAFf+1f6lY+IQKGCN1V+8/c4dUAN6aPh9URkdHpLDMG8KfHugt6dZD3g24ztLJrWti84LeBGQ21FmjZG6kPN6MrYw1YBGyRRjrT6L1ok4PIp0B6nrE3ssUvGA086fSJlmJb3RLeiVrRbDyIq0urSs+PAt4g=
+	t=1760382751; cv=none; b=rUNsA+mtGmDAjPZD3GJ8tpahIINpvWO0d1OZb6UDgkasoLzEEfIDz6KUpFSQ9NFZoBS2w0PzKmbcQCsemxT1qHmV1AMr4WqQ/AmvGFFV4TVI0SZ+9ibFcpiDo6wBOdyzm7Qr4pas9FFYNyWXAXPIsuLa3zWrmDeuljQ6bPSSKF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760382743; c=relaxed/simple;
-	bh=2M4CuLMTEcUM2eeETAWneoK1kT0IzbWvcH+Ur98DQzQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y6VR8oUZfVzvnQIz2xPPdsATf6nisoYJuIvuS/H9CrdKwqysIeoezJlN0gPZjp1NLoZtU2rinv6TZi3m7vI+EKey8J4iPMZW/kOeoBhFNDGyUdygvBTs9im8S1xK31AQqElsNg2QJ1Pf0e+lMNRhymVvZgEkoWflo5xlsx852pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LINwk7qk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0EC4C4CEE7;
-	Mon, 13 Oct 2025 19:12:22 +0000 (UTC)
+	s=arc-20240116; t=1760382751; c=relaxed/simple;
+	bh=/EYExUXDtVFgP52wPhqUrGddLcwzoWlva+3f/b9NpCo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bw117FsbrKBW2a4dsH8F0nb6rHZ5B5ctP8A67mcl5W6R6x1pa2WAiduPQ2Zd/zA1dkzDHCBdp5VXpazqPtB8G2222var6E9ZzZKoV/t+XSANkVQWBkSP9Il95lZkwsEgh/rmfCokdSYU5LHN/1JD+8dQ/KbcpYXxDPp9xjvSgbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tQxeIkPH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BAEBC4CEF8;
+	Mon, 13 Oct 2025 19:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760382743;
-	bh=2M4CuLMTEcUM2eeETAWneoK1kT0IzbWvcH+Ur98DQzQ=;
+	s=k20201202; t=1760382750;
+	bh=/EYExUXDtVFgP52wPhqUrGddLcwzoWlva+3f/b9NpCo=;
 	h=From:To:Cc:Subject:Date:From;
-	b=LINwk7qkK6YTnF460rlVosebFJdv97mAUncbOhGNXybgJCvoCDO0K58RTw0ZI+9Q9
-	 owqwKQqSPRAJVMB0SRUXEO54IU76fv27fJ0HXxe3BWh2ZJayi0TppDArGet5HahTS2
-	 jhMaUO7cMTvDeoTYImCCvJ7fACk/sF875AJNjOxYcCrlc/KJYYesS33ubRhWzIzsLI
-	 pkIye/8KHETv1XeqvPf3+fUtV64lfdHUu2lCgtZvAj28OSaW1LTJfBCzTm95+63uDz
-	 6IO2dpKbkhCAkhbunQKoeg172D49JaTucaT98DBJePB7BKBk33vj8IfOw4K4oxkhuV
-	 WNCmPUq4AwBsg==
+	b=tQxeIkPHMH2FiuRniUFXF2xGtphIvEcflYe6VgFT/6xWMHU2IpWmHQ8QmiXatAQxQ
+	 0PMrejXowPwXljQUq3P/5SmaJfors2hntkt3nciStgBEQQQBdwX66hP5BFVnSSZla/
+	 Kd6Ur0otl+FnNrsYgZuhv8BBhuJjcjL4axJNmnNhHM7Ec2cfdqGTdHyzM4tPNJPMgm
+	 UdofJOGj2+36YTfsJ8rrqgdGLdPjwonSc6sgKCfghRAHiZPqB/nlCGE9On/RZMNt2m
+	 bgtzOE9pnPWLoVyhs4gmFZCSaQ/607g2Ozvota0S2SWPZcOKeueWSGsn4zMrCopAf9
+	 C+oiw7c8ZkxSA==
 From: "Rob Herring (Arm)" <robh@kernel.org>
-To: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
+To: Linus Walleij <linus.walleij@linaro.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-actions@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>
+Cc: linux-gpio@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: pinctrl: Convert actions,s900-pinctrl to DT schema
-Date: Mon, 13 Oct 2025 14:12:16 -0500
-Message-ID: <20251013191218.4136673-1-robh@kernel.org>
+Subject: [PATCH] dt-bindings: pinctrl: Convert brcm,ns2-pinmux to DT schema
+Date: Mon, 13 Oct 2025 14:12:25 -0500
+Message-ID: <20251013191226.4137995-1-robh@kernel.org>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -63,450 +61,240 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the actions,s900-pinctrl binding to DT schema format. It's a
+Convert the brcm,ns2-pinmux binding to DT schema format. It's a
 straight-forward conversion.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../bindings/pinctrl/actions,s900-pinctrl.txt | 204 ----------------
- .../pinctrl/actions,s900-pinctrl.yaml         | 219 ++++++++++++++++++
- 2 files changed, 219 insertions(+), 204 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.yaml
+ .../bindings/pinctrl/brcm,ns2-pinmux.txt      | 102 ----------------
+ .../bindings/pinctrl/brcm,ns2-pinmux.yaml     | 111 ++++++++++++++++++
+ 2 files changed, 111 insertions(+), 102 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,ns2-pinmux.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,ns2-pinmux.yaml
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.txt
+diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,ns2-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/brcm,ns2-pinmux.txt
 deleted file mode 100644
-index 81b58dddd3ed..000000000000
---- a/Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.txt
+index 40e0a9a19525..000000000000
+--- a/Documentation/devicetree/bindings/pinctrl/brcm,ns2-pinmux.txt
 +++ /dev/null
-@@ -1,204 +0,0 @@
--Actions Semi S900 Pin Controller
+@@ -1,102 +0,0 @@
+-Broadcom Northstar2 IOMUX Controller
 -
--This binding describes the pin controller found in the S900 SoC.
+-The Northstar2 IOMUX controller supports group based mux configuration. There
+-are some individual pins that support modifying the pinconf parameters.
 -
--Required Properties:
+-Required properties:
 -
--- compatible:   Should be "actions,s900-pinctrl"
--- reg:          Should contain the register base address and size of
--                the pin controller.
--- clocks:       phandle of the clock feeding the pin controller
--- gpio-controller: Marks the device node as a GPIO controller.
--- gpio-ranges: Specifies the mapping between gpio controller and
--               pin-controller pins.
--- #gpio-cells: Should be two. The first cell is the gpio pin number
--               and the second cell is used for optional parameters.
--- interrupt-controller: Marks the device node as an interrupt controller.
--- #interrupt-cells: Specifies the number of cells needed to encode an
--                    interrupt.  Shall be set to 2.  The first cell
--                    defines the interrupt number, the second encodes
--                    the trigger flags described in
--                    bindings/interrupt-controller/interrupts.txt
--- interrupts: The interrupt outputs from the controller. There is one GPIO
--              interrupt per GPIO bank. The number of interrupts listed depends
--              on the number of GPIO banks on the SoC. The interrupts must be
--              ordered by bank, starting with bank 0.
+-- compatible:
+-    Must be "brcm,ns2-pinmux"
 -
--Please refer to pinctrl-bindings.txt in this directory for details of the
--common pinctrl bindings used by client devices, including the meaning of the
--phrase "pin configuration node".
+-- reg:
+-    Define the base and range of the I/O address space that contains the
+-    Northstar2 IOMUX and pin configuration registers.
 -
--The pin configuration nodes act as a container for an arbitrary number of
--subnodes. Each of these subnodes represents some desired configuration for a
--pin, a group, or a list of pins or groups. This configuration can include the
--mux function to select on those group(s), and various pin configuration
--parameters, such as pull-up, drive strength, etc.
+-Properties in sub nodes:
 -
--PIN CONFIGURATION NODES:
+-- function:
+-    The mux function to select
 -
--The name of each subnode is not important; all subnodes should be enumerated
--and processed purely based on their content.
+-- groups:
+-    The list of groups to select with a given function
 -
--Each subnode only affects those parameters that are explicitly listed. In
--other words, a subnode that lists a mux function but no pin configuration
--parameters implies no information about any pin configuration parameters.
--Similarly, a pin subnode that describes a pullup parameter implies no
--information about e.g. the mux function.
+-- pins:
+-    List of pin names to change configuration
 -
--Pinmux functions are available only for the pin groups while pinconf
--parameters are available for both pin groups and individual pins.
+-The generic properties bias-disable, bias-pull-down, bias-pull-up,
+-drive-strength, slew-rate, input-enable, input-disable are supported
+-for some individual pins listed at the end.
 -
--The following generic properties as defined in pinctrl-bindings.txt are valid
--to specify in a pin configuration subnode:
+-For more details, refer to
+-Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
 -
--Required Properties:
+-For example:
 -
--- pins:           An array of strings, each string containing the name of a pin.
--                  These pins are used for selecting the pull control and schmitt
--                  trigger parameters. The following are the list of pins
--                  available:
+-	pinctrl: pinctrl@6501d130 {
+-		compatible = "brcm,ns2-pinmux";
+-		reg = <0x6501d130 0x08>,
+-		      <0x660a0028 0x04>,
+-		      <0x660009b0 0x40>;
 -
--                  eth_txd0, eth_txd1, eth_txen, eth_rxer, eth_crs_dv,
--                  eth_rxd1, eth_rxd0, eth_ref_clk, eth_mdc, eth_mdio,
--                  sirq0, sirq1, sirq2, i2s_d0, i2s_bclk0, i2s_lrclk0,
--                  i2s_mclk0, i2s_d1, i2s_bclk1, i2s_lrclk1, i2s_mclk1,
--                  pcm1_in, pcm1_clk, pcm1_sync, pcm1_out, eram_a5,
--                  eram_a6, eram_a7, eram_a8, eram_a9, eram_a10, eram_a11,
--                  lvds_oep, lvds_oen, lvds_odp, lvds_odn, lvds_ocp,
--                  lvds_ocn, lvds_obp, lvds_obn, lvds_oap, lvds_oan,
--                  lvds_eep, lvds_een, lvds_edp, lvds_edn, lvds_ecp,
--                  lvds_ecn, lvds_ebp, lvds_ebn, lvds_eap, lvds_ean,
--                  sd0_d0, sd0_d1, sd0_d2, sd0_d3, sd1_d0, sd1_d1,
--                  sd1_d2, sd1_d3, sd0_cmd, sd0_clk, sd1_cmd, sd1_clk,
--                  spi0_sclk, spi0_ss, spi0_miso, spi0_mosi, uart0_rx,
--                  uart0_tx, uart2_rx, uart2_tx, uart2_rtsb, uart2_ctsb,
--                  uart3_rx, uart3_tx, uart3_rtsb, uart3_ctsb, uart4_rx,
--                  uart4_tx, i2c0_sclk, i2c0_sdata, i2c1_sclk, i2c1_sdata,
--                  i2c2_sclk, i2c2_sdata, csi0_dn0, csi0_dp0, csi0_dn1,
--                  csi0_dp1, csi0_cn, csi0_cp, csi0_dn2, csi0_dp2, csi0_dn3,
--                  csi0_dp3, dsi_dp3, dsi_dn3, dsi_dp1, dsi_dn1, dsi_cp,
--                  dsi_cn, dsi_dp0, dsi_dn0, dsi_dp2, dsi_dn2, sensor0_pclk,
--                  csi1_dn0,csi1_dp0,csi1_dn1, csi1_dp1, csi1_cn, csi1_cp,
--                  sensor0_ckout, nand0_d0, nand0_d1, nand0_d2, nand0_d3,
--                  nand0_d4, nand0_d5, nand0_d6, nand0_d7, nand0_dqs,
--                  nand0_dqsn, nand0_ale, nand0_cle, nand0_ceb0, nand0_ceb1,
--                  nand0_ceb2, nand0_ceb3, nand1_d0, nand1_d1, nand1_d2,
--                  nand1_d3, nand1_d4, nand1_d5, nand1_d6, nand1_d7, nand1_dqs,
--                  nand1_dqsn, nand1_ale, nand1_cle, nand1_ceb0, nand1_ceb1,
--                  nand1_ceb2, nand1_ceb3, sgpio0, sgpio1, sgpio2, sgpio3
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&nand_sel>, <&uart3_rx>, <&sdio0_d4>;
 -
--- groups:         An array of strings, each string containing the name of a pin
--                  group. These pin groups are used for selecting the pinmux
--                  functions.
+-		/* Select nand function */
+-		nand_sel: nand_sel {
+-			function = "nand";
+-			groups = "nand_grp";
+-		};
 -
--                  lvds_oxx_uart4_mfp, rmii_mdc_mfp, rmii_mdio_mfp, sirq0_mfp,
--                  sirq1_mfp, rmii_txd0_mfp, rmii_txd1_mfp, rmii_txen_mfp,
--                  rmii_rxer_mfp, rmii_crs_dv_mfp, rmii_rxd1_mfp, rmii_rxd0_mfp,
--                  rmii_ref_clk_mfp, i2s_d0_mfp, i2s_d1_mfp, i2s_lr_m_clk0_mfp,
--                  i2s_bclk0_mfp, i2s_bclk1_mclk1_mfp, pcm1_in_out_mfp,
--                  pcm1_clk_mfp, pcm1_sync_mfp, eram_a5_mfp, eram_a6_mfp,
--                  eram_a7_mfp, eram_a8_mfp, eram_a9_mfp, eram_a10_mfp,
--                  eram_a11_mfp, lvds_oep_odn_mfp, lvds_ocp_obn_mfp,
--                  lvds_oap_oan_mfp, lvds_e_mfp, spi0_sclk_mosi_mfp, spi0_ss_mfp,
--                  spi0_miso_mfp, uart2_rtsb_mfp, uart2_ctsb_mfp, uart3_rtsb_mfp,
--                  uart3_ctsb_mfp, sd0_d0_mfp, sd0_d1_mfp, sd0_d2_d3_mfp,
--                  sd1_d0_d3_mfp, sd0_cmd_mfp, sd0_clk_mfp, sd1_cmd_clk_mfp,
--                  uart0_rx_mfp, nand0_d0_ceb3_mfp, uart0_tx_mfp, i2c0_mfp,
--                  csi0_cn_cp_mfp, csi0_dn0_dp3_mfp, csi1_dn0_cp_mfp,
--                  dsi_dp3_dn1_mfp, dsi_cp_dn0_mfp, dsi_dp2_dn2_mfp,
--                  nand1_d0_ceb1_mfp, nand1_ceb3_mfp, nand1_ceb0_mfp,
--                  csi1_dn0_dp0_mfp, uart4_rx_tx_mfp
+-		/* Pull up the uart3 rx pin */
+-		uart3_rx: uart3_rx {
+-			pins = "uart3_sin";
+-			bias-pull-up;
+-		};
+-
+-		/* Set the drive strength of sdio d4 pin */
+-		sdio0_d4: sdio0_d4 {
+-			pins = "sdio0_data4";
+-			drive-strength = <8>;
+-		};
+-	};
+-
+-List of supported functions and groups in Northstar2:
+-
+-"nand": "nand_grp"
+-
+-"nor": "nor_data_grp", "nor_adv_grp", "nor_addr_0_3_grp", "nor_addr_4_5_grp",
+-	"nor_addr_6_7_grp", "nor_addr_8_9_grp", "nor_addr_10_11_grp",
+-	"nor_addr_12_15_grp"
+-
+-"gpio": "gpio_0_1_grp", "gpio_2_5_grp", "gpio_6_7_grp", "gpio_8_9_grp",
+-	"gpio_10_11_grp", "gpio_12_13_grp", "gpio_14_17_grp", "gpio_18_19_grp",
+-	"gpio_20_21_grp", "gpio_22_23_grp", "gpio_24_25_grp", "gpio_26_27_grp",
+-	"gpio_28_29_grp", "gpio_30_31_grp"
+-
+-"pcie": "pcie_ab1_clk_wak_grp", "pcie_a3_clk_wak_grp", "pcie_b3_clk_wak_grp",
+-	"pcie_b2_clk_wak_grp", "pcie_a2_clk_wak_grp"
+-
+-"uart0": "uart0_modem_grp", "uart0_rts_cts_grp", "uart0_in_out_grp"
+-
+-"uart1": "uart1_ext_clk_grp", "uart1_dcd_dsr_grp", "uart1_ri_dtr_grp",
+-	"uart1_rts_cts_grp", "uart1_in_out_grp"
+-
+-"uart2": "uart2_rts_cts_grp"
+-
+-"pwm": "pwm_0_grp", "pwm_1_grp", "pwm_2_grp", "pwm_3_grp"
 -
 -
--                  These pin groups are used for selecting the drive strength
--                  parameters.
+-List of pins that support pinconf parameters:
 -
--                  sgpio3_drv, sgpio2_drv, sgpio1_drv, sgpio0_drv,
--                  rmii_tx_d0_d1_drv, rmii_txen_rxer_drv, rmii_crs_dv_drv,
--                  rmii_rx_d1_d0_drv, rmii_ref_clk_drv, rmii_mdc_mdio_drv,
--                  sirq_0_1_drv, sirq2_drv, i2s_d0_d1_drv, i2s_lr_m_clk0_drv,
--                  i2s_blk1_mclk1_drv, pcm1_in_out_drv, lvds_oap_oan_drv,
--                  lvds_oep_odn_drv, lvds_ocp_obn_drv, lvds_e_drv, sd0_d3_d0_drv,
--                  sd1_d3_d0_drv, sd0_sd1_cmd_clk_drv, spi0_sclk_mosi_drv,
--                  spi0_ss_miso_drv, uart0_rx_tx_drv, uart4_rx_tx_drv, uart2_drv,
--                  uart3_drv, i2c0_drv, i2c1_drv, i2c2_drv, sensor0_drv
--
--                  These pin groups are used for selecting the slew rate
--                  parameters.
--
--                  sgpio3_sr, sgpio2_sr, sgpio1_sr, sgpio0_sr, rmii_tx_d0_d1_sr,
--                  rmii_txen_rxer_sr, rmii_crs_dv_sr, rmii_rx_d1_d0_sr,
--                  rmii_ref_clk_sr, rmii_mdc_mdio_sr, sirq_0_1_sr, sirq2_sr,
--                  i2s_do_d1_sr, i2s_lr_m_clk0_sr, i2s_bclk0_mclk1_sr,
--                  pcm1_in_out_sr, sd1_d3_d0_sr, sd0_sd1_clk_cmd_sr,
--                  spi0_sclk_mosi_sr, spi0_ss_miso_sr, uart0_rx_tx_sr,
--                  uart4_rx_tx_sr, uart2_sr, uart3_sr, i2c0_sr, i2c1_sr, i2c2_sr,
--                  sensor0_sr
--
--- function:       An array of strings, each string containing the name of the
--                  pinmux functions. These functions can only be selected by
--                  the corresponding pin groups. The following are the list of
--                  pinmux functions available:
--
--                  eram, eth_rmii, eth_smii, spi0, spi1, spi2, spi3, sens0,
--                  uart0, uart1, uart2, uart3, uart4, uart5, uart6, i2s0, i2s1,
--                  pcm0, pcm1, jtag, pwm0, pwm1, pwm2, pwm3, pwm4, pwm5, sd0,
--                  sd1, sd2, sd3, i2c0, i2c1, i2c2, i2c3, i2c4, i2c5, lvds,
--                  usb30, usb20, gpu, mipi_csi0, mipi_csi1, mipi_dsi, nand0,
--                  nand1, spdif, sirq0, sirq1, sirq2
--
--Optional Properties:
--
--- bias-bus-hold:  No arguments. The specified pins should retain the previous
--                  state value.
--- bias-high-impedance: No arguments. The specified pins should be configured
--                  as high impedance.
--- bias-pull-down: No arguments. The specified pins should be configured as
--                  pull down.
--- bias-pull-up:   No arguments. The specified pins should be configured as
--                  pull up.
--- input-schmitt-enable: No arguments: Enable schmitt trigger for the specified
--                  pins
--- input-schmitt-disable: No arguments: Disable schmitt trigger for the specified
--                  pins
--- slew-rate:      Integer. Sets slew rate for the specified pins.
--                  Valid values are:
--                  <0>  - Slow
--                  <1>  - Fast
--- drive-strength: Integer. Selects the drive strength for the specified
--                  pins in mA.
--                  Valid values are:
--                  <2>
--                  <4>
--                  <8>
--                  <12>
--
--Example:
--
--          pinctrl: pinctrl@e01b0000 {
--                  compatible = "actions,s900-pinctrl";
--                  reg = <0x0 0xe01b0000 0x0 0x1000>;
--                  clocks = <&cmu CLK_GPIO>;
--                  gpio-controller;
--                  gpio-ranges = <&pinctrl 0 0 146>;
--                  #gpio-cells = <2>;
--                  interrupt-controller;
--                  #interrupt-cells = <2>;
--                  interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
--                               <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
--                               <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
--                               <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
--                               <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
--                               <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
--
--                  uart2-default: uart2-default {
--                          pinmux {
--                                  groups = "lvds_oep_odn_mfp";
--                                  function = "uart2";
--                          };
--                          pinconf {
--                                  groups = "lvds_oep_odn_drv";
--                                  drive-strength = <12>;
--                          };
--                  };
--          };
-diff --git a/Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.yaml
+-"qspi_wp", "qspi_hold", "qspi_cs", "qspi_sck", "uart3_sin", "uart3_sout",
+-"qspi_mosi", "qspi_miso", "spi0_fss", "spi0_rxd", "spi0_txd", "spi0_sck",
+-"spi1_fss", "spi1_rxd", "spi1_txd", "spi1_sck", "sdio0_data7",
+-"sdio0_emmc_rst", "sdio0_led_on", "sdio0_wp", "sdio0_data3", "sdio0_data4",
+-"sdio0_data5", "sdio0_data6", "sdio0_cmd", "sdio0_data0", "sdio0_data1",
+-"sdio0_data2", "sdio1_led_on", "sdio1_wp", "sdio0_cd_l", "sdio0_clk",
+-"sdio1_data5", "sdio1_data6", "sdio1_data7", "sdio1_emmc_rst", "sdio1_data1",
+-"sdio1_data2", "sdio1_data3", "sdio1_data4", "sdio1_cd_l", "sdio1_clk",
+-"sdio1_cmd", "sdio1_data0", "ext_mdio_0", "ext_mdc_0", "usb3_p1_vbus_ppc",
+-"usb3_p1_overcurrent", "usb3_p0_vbus_ppc", "usb3_p0_overcurrent",
+-"usb2_presence_indication", "usb2_vbus_present", "usb2_vbus_ppc",
+-"usb2_overcurrent", "sata_led1", "sata_led0"
+diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,ns2-pinmux.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,ns2-pinmux.yaml
 new file mode 100644
-index 000000000000..5c7b9f13226d
+index 000000000000..1de23c06fa49
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.yaml
-@@ -0,0 +1,219 @@
++++ b/Documentation/devicetree/bindings/pinctrl/brcm,ns2-pinmux.yaml
+@@ -0,0 +1,111 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/pinctrl/actions,s900-pinctrl.yaml#
++$id: http://devicetree.org/schemas/pinctrl/brcm,ns2-pinmux.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Actions Semi S900 Pin Controller
++title: Broadcom Northstar2 IOMUX Controller
 +
 +maintainers:
-+  - Manivannan Sadhasivam <mani@kernel.org>
++  - Ray Jui <rjui@broadcom.com>
++  - Scott Branden <sbranden@broadcom.com>
 +
 +properties:
 +  compatible:
-+    const: actions,s900-pinctrl
++    const: brcm,ns2-pinmux
 +
 +  reg:
-+    maxItems: 1
++    maxItems: 3
 +
-+  interrupts:
-+    maxItems: 6
-+    description: The interrupt outputs from the controller. There is one GPIO
-+      interrupt per GPIO bank. The number of interrupts listed depends on the
-+      number of GPIO banks on the SoC. The interrupts must be ordered by bank,
-+      starting with bank 0.
++additionalProperties:
++  description: Pin group node properties
++  type: object
++  allOf:
++    - $ref: /schemas/pinctrl/pincfg-node.yaml#
++    - $ref: /schemas/pinctrl/pinmux-node.yaml#
++  additionalProperties: false
 +
-+  interrupt-controller: true
++  properties:
++    function:
++      description: The mux function to select
++      $ref: /schemas/types.yaml#/definitions/string
 +
-+  "#interrupt-cells":
-+    const: 2
++    groups:
++      items:
++        enum: [
++          nand_grp, nor_data_grp, nor_adv_grp, nor_addr_0_3_grp,
++          nor_addr_4_5_grp, nor_addr_6_7_grp, nor_addr_8_9_grp,
++          nor_addr_10_11_grp, nor_addr_12_15_grp, gpio_0_1_grp, gpio_2_5_grp,
++          gpio_6_7_grp, gpio_8_9_grp, gpio_10_11_grp, gpio_12_13_grp,
++          gpio_14_17_grp, gpio_18_19_grp, gpio_20_21_grp, gpio_22_23_grp,
++          gpio_24_25_grp, gpio_26_27_grp, gpio_28_29_grp, gpio_30_31_grp,
++          pcie_ab1_clk_wak_grp, pcie_a3_clk_wak_grp, pcie_b3_clk_wak_grp,
++          pcie_b2_clk_wak_grp, pcie_a2_clk_wak_grp, uart0_modem_grp,
++          uart0_rts_cts_grp, uart0_in_out_grp, uart1_ext_clk_grp,
++          uart1_dcd_dsr_grp, uart1_ri_dtr_grp, uart1_rts_cts_grp,
++          uart1_in_out_grp, uart2_rts_cts_grp, pwm_0_grp, pwm_1_grp, pwm_2_grp,
++          pwm_3_grp
++        ]
 +
-+  clocks:
-+    maxItems: 1
++    pins:
++      items:
++        enum: [
++          qspi_wp, qspi_hold, qspi_cs, qspi_sck, uart3_sin, uart3_sout,
++          qspi_mosi, qspi_miso, spi0_fss, spi0_rxd, spi0_txd, spi0_sck,
++          spi1_fss, spi1_rxd, spi1_txd, spi1_sck, sdio0_data7, sdio0_emmc_rst,
++          sdio0_led_on, sdio0_wp, sdio0_data3, sdio0_data4, sdio0_data5,
++          sdio0_data6, sdio0_cmd, sdio0_data0, sdio0_data1, sdio0_data2,
++          sdio1_led_on, sdio1_wp, sdio0_cd_l, sdio0_clk, sdio1_data5,
++          sdio1_data6, sdio1_data7, sdio1_emmc_rst, sdio1_data1, sdio1_data2,
++          sdio1_data3, sdio1_data4, sdio1_cd_l, sdio1_clk, sdio1_cmd,
++          sdio1_data0, ext_mdio_0, ext_mdc_0, usb3_p1_vbus_ppc,
++          usb3_p1_overcurrent, usb3_p0_vbus_ppc, usb3_p0_overcurrent,
++          usb2_presence_indication, usb2_vbus_present, usb2_vbus_ppc,
++          usb2_overcurrent, sata_led1, sata_led0
++        ]
 +
-+  gpio-controller: true
++    bias-disable: true
++    bias-pull-down: true
++    bias-pull-up: true
++    drive-strength: true
++    slew-rate: true
++    input-enable: true
++    input-disable: true
 +
-+  gpio-line-names:
-+    maxItems: 146
-+
-+  gpio-ranges: true
-+
-+  "#gpio-cells":
-+    const: 2
++  oneOf:
++    - required:
++        - groups
++        - function
++    - required:
++        - pins
 +
 +required:
 +  - compatible
 +  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - clocks
-+  - gpio-controller
-+  - gpio-ranges
-+  - "#gpio-cells"
-+
-+additionalProperties:
-+  type: object
-+  description: Pin configuration subnode
-+  additionalProperties: false
-+
-+  properties:
-+    pinmux:
-+      type: object
-+      description: Pin mux configuration
-+      $ref: /schemas/pinctrl/pinmux-node.yaml#
-+      additionalProperties: false
-+
-+      properties:
-+        groups:
-+          items:
-+            enum: [
-+              lvds_oxx_uart4_mfp, rmii_mdc_mfp, rmii_mdio_mfp, sirq0_mfp,
-+              sirq1_mfp, rmii_txd0_mfp, rmii_txd1_mfp, rmii_txen_mfp,
-+              rmii_rxer_mfp, rmii_crs_dv_mfp, rmii_rxd1_mfp, rmii_rxd0_mfp,
-+              rmii_ref_clk_mfp, i2s_d0_mfp, i2s_d1_mfp, i2s_lr_m_clk0_mfp,
-+              i2s_bclk0_mfp, i2s_bclk1_mclk1_mfp, pcm1_in_out_mfp, pcm1_clk_mfp,
-+              pcm1_sync_mfp, eram_a5_mfp, eram_a6_mfp, eram_a7_mfp, eram_a8_mfp,
-+              eram_a9_mfp, eram_a10_mfp, eram_a11_mfp, lvds_oep_odn_mfp,
-+              lvds_ocp_obn_mfp, lvds_oap_oan_mfp, lvds_e_mfp,
-+              spi0_sclk_mosi_mfp, spi0_ss_mfp, spi0_miso_mfp, uart2_rtsb_mfp,
-+              uart2_ctsb_mfp, uart3_rtsb_mfp, uart3_ctsb_mfp, sd0_d0_mfp,
-+              sd0_d1_mfp, sd0_d2_d3_mfp, sd1_d0_d3_mfp, sd0_cmd_mfp,
-+              sd0_clk_mfp, sd1_cmd_clk_mfp, uart0_rx_mfp, nand0_d0_ceb3_mfp,
-+              uart0_tx_mfp, i2c0_mfp, csi0_cn_cp_mfp, csi0_dn0_dp3_mfp,
-+              csi1_dn0_cp_mfp, dsi_dp3_dn1_mfp, dsi_cp_dn0_mfp, dsi_dp2_dn2_mfp,
-+              nand1_d0_ceb1_mfp, nand1_ceb3_mfp, nand1_ceb0_mfp,
-+              csi1_dn0_dp0_mfp, uart4_rx_tx_mfp
-+            ]
-+
-+        function:
-+          items:
-+            enum: [
-+              eram, eth_rmii, eth_smii, spi0, spi1, spi2, spi3, sens0,
-+              uart0, uart1, uart2, uart3, uart4, uart5, uart6, i2s0, i2s1,
-+              pcm0, pcm1, jtag, pwm0, pwm1, pwm2, pwm3, pwm4, pwm5, sd0,
-+              sd1, sd2, sd3, i2c0, i2c1, i2c2, i2c3, i2c4, i2c5, lvds,
-+              usb30, usb20, gpu, mipi_csi0, mipi_csi1, mipi_dsi, nand0,
-+              nand1, spdif, sirq0, sirq1, sirq2
-+            ]
-+
-+      required:
-+        - groups
-+        - function
-+
-+    pinconf:
-+      type: object
-+      description: Pin configuration parameters
-+      allOf:
-+        - $ref: /schemas/pinctrl/pincfg-node.yaml#
-+        - $ref: /schemas/pinctrl/pinmux-node.yaml#
-+
-+      additionalProperties: false
-+
-+      properties:
-+        groups:
-+          items:
-+            enum: [
-+              # pin groups for drive strength
-+              sgpio3_drv, sgpio2_drv, sgpio1_drv, sgpio0_drv, rmii_tx_d0_d1_drv,
-+              rmii_txen_rxer_drv, rmii_crs_dv_drv, rmii_rx_d1_d0_drv,
-+              rmii_ref_clk_drv, rmii_mdc_mdio_drv, sirq_0_1_drv, sirq2_drv,
-+              i2s_d0_d1_drv, i2s_lr_m_clk0_drv, i2s_blk1_mclk1_drv,
-+              pcm1_in_out_drv, lvds_oap_oan_drv, lvds_oep_odn_drv,
-+              lvds_ocp_obn_drv, lvds_e_drv, sd0_d3_d0_drv, sd1_d3_d0_drv,
-+              sd0_sd1_cmd_clk_drv, spi0_sclk_mosi_drv, spi0_ss_miso_drv,
-+              uart0_rx_tx_drv, uart4_rx_tx_drv, uart2_drv, uart3_drv, i2c0_drv,
-+              i2c1_drv, i2c2_drv, sensor0_drv,
-+              # pin groups for slew rate
-+              sgpio3_sr, sgpio2_sr, sgpio1_sr, sgpio0_sr, rmii_tx_d0_d1_sr,
-+              rmii_txen_rxer_sr, rmii_crs_dv_sr, rmii_rx_d1_d0_sr,
-+              rmii_ref_clk_sr, rmii_mdc_mdio_sr, sirq_0_1_sr, sirq2_sr,
-+              i2s_do_d1_sr, i2s_lr_m_clk0_sr, i2s_bclk0_mclk1_sr,
-+              pcm1_in_out_sr, sd1_d3_d0_sr, sd0_sd1_clk_cmd_sr,
-+              spi0_sclk_mosi_sr, spi0_ss_miso_sr, uart0_rx_tx_sr,
-+              uart4_rx_tx_sr, uart2_sr, uart3_sr, i2c0_sr, i2c1_sr, i2c2_sr,
-+              sensor0_sr
-+            ]
-+
-+        pins:
-+          items:
-+            enum: [
-+              eth_txd0, eth_txd1, eth_txen, eth_rxer, eth_crs_dv, eth_rxd1,
-+              eth_rxd0, eth_ref_clk, eth_mdc, eth_mdio, sirq0, sirq1, sirq2,
-+              i2s_d0, i2s_bclk0, i2s_lrclk0, i2s_mclk0, i2s_d1, i2s_bclk1,
-+              i2s_lrclk1, i2s_mclk1, pcm1_in, pcm1_clk, pcm1_sync, pcm1_out,
-+              eram_a5, eram_a6, eram_a7, eram_a8, eram_a9, eram_a10, eram_a11,
-+              lvds_oep, lvds_oen, lvds_odp, lvds_odn, lvds_ocp, lvds_ocn,
-+              lvds_obp, lvds_obn, lvds_oap, lvds_oan, lvds_eep, lvds_een,
-+              lvds_edp, lvds_edn, lvds_ecp, lvds_ecn, lvds_ebp, lvds_ebn,
-+              lvds_eap, lvds_ean, sd0_d0, sd0_d1, sd0_d2, sd0_d3, sd1_d0,
-+              sd1_d1, sd1_d2, sd1_d3, sd0_cmd, sd0_clk, sd1_cmd, sd1_clk,
-+              spi0_sclk, spi0_ss, spi0_miso, spi0_mosi, uart0_rx, uart0_tx,
-+              uart2_rx, uart2_tx, uart2_rtsb, uart2_ctsb, uart3_rx, uart3_tx,
-+              uart3_rtsb, uart3_ctsb, uart4_rx, uart4_tx, i2c0_sclk, i2c0_sdata,
-+              i2c1_sclk, i2c1_sdata, i2c2_sclk, i2c2_sdata, csi0_dn0, csi0_dp0,
-+              csi0_dn1, csi0_dp1, csi0_cn, csi0_cp, csi0_dn2, csi0_dp2,
-+              csi0_dn3, csi0_dp3, dsi_dp3, dsi_dn3, dsi_dp1, dsi_dn1, dsi_cp,
-+              dsi_cn, dsi_dp0, dsi_dn0, dsi_dp2, dsi_dn2, sensor0_pclk,
-+              csi1_dn0, csi1_dp0, csi1_dn1, csi1_dp1, csi1_cn, csi1_cp,
-+              sensor0_ckout, nand0_d0, nand0_d1, nand0_d2, nand0_d3, nand0_d4,
-+              nand0_d5, nand0_d6, nand0_d7, nand0_dqs, nand0_dqsn, nand0_ale,
-+              nand0_cle, nand0_ceb0, nand0_ceb1, nand0_ceb2, nand0_ceb3,
-+              nand1_d0, nand1_d1, nand1_d2, nand1_d3, nand1_d4, nand1_d5,
-+              nand1_d6, nand1_d7, nand1_dqs, nand1_dqsn, nand1_ale, nand1_cle,
-+              nand1_ceb0, nand1_ceb1, nand1_ceb2, nand1_ceb3, sgpio0, sgpio1,
-+              sgpio2, sgpio3
-+            ]
-+
-+        bias-bus-hold: true
-+        bias-high-impedance: true
-+
-+        bias-pull-down:
-+          type: boolean
-+
-+        bias-pull-up:
-+          type: boolean
-+
-+        input-schmitt-enable: true
-+        input-schmitt-disable: true
-+        slew-rate: true
-+        drive-strength: true
-+
-+      oneOf:
-+        - required:
-+            - groups
-+        - required:
-+            - pins
 +
 +examples:
 +  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    pinctrl@6501d130 {
++        compatible = "brcm,ns2-pinmux";
++        reg = <0x6501d130 0x08>,
++              <0x660a0028 0x04>,
++              <0x660009b0 0x40>;
 +
-+    pinctrl: pinctrl@e01b0000 {
-+        compatible = "actions,s900-pinctrl";
-+        reg = <0xe01b0000 0x1000>;
-+        clocks = <&cmu 1>;
-+        gpio-controller;
-+        gpio-ranges = <&pinctrl 0 0 146>;
-+        #gpio-cells = <2>;
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
-+        interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++        /* Select nand function */
++        nand-sel {
++            function = "nand";
++            groups = "nand_grp";
++        };
 +
-+        uart2-default {
-+            pinmux {
-+                groups = "lvds_oep_odn_mfp";
-+                function = "uart2";
-+            };
++        /* Pull up the uart3 rx pin */
++        uart3-rx {
++            pins = "uart3_sin";
++            bias-pull-up;
++        };
 +
-+            pinconf {
-+                groups = "lvds_oep_odn_drv";
-+                drive-strength = <12>;
-+            };
++        /* Set the drive strength of sdio d4 pin */
++        sdio0-d4 {
++            pins = "sdio0_data4";
++            drive-strength = <8>;
 +        };
 +    };
 -- 
