@@ -1,183 +1,126 @@
-Return-Path: <linux-gpio+bounces-27082-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27083-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD49DBD946F
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 14:12:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A3B4BD97C3
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 14:59:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 5A78935333A
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 12:12:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B6671927AC6
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 12:59:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5A2F312822;
-	Tue, 14 Oct 2025 12:12:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B745E313E26;
+	Tue, 14 Oct 2025 12:58:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nGoHvT9i"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HD+nY9Ki"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-yx1-f41.google.com (mail-yx1-f41.google.com [74.125.224.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214A2312823
-	for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 12:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55AC313E06
+	for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 12:58:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760443924; cv=none; b=m/ejjaOJ3qxc/RoYbvOp3i1t7a3g4Fvc+0aBhni8Ln81Oal/2MwUfVBdiiWJCjymgZ47mu4DjDEgvHAa+ZELwV90mb0WJFSKhkY5fczTBadBIGKP/3HIFBrZzKW+8JP+zkkr8Bk/py3DhBhCy82iBRttHwJU9T64ZfrPFwS0jFQ=
+	t=1760446726; cv=none; b=Wl0yiuxFqoW/Ptsfi3zN4qaAFOXnolKqJ816+yyxiguRAnIxsEFR0nOdkGs/f24kPqq0m9W2eWYLOOwCueeXQfCg3oE337lpdiN2nXSbi0X+swLyaD3Dzmb8Crr5gJXO/6pICFW1Q1AcCf0aQG5yJLHKsQf50lXgWAyeqEl75oQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760443924; c=relaxed/simple;
-	bh=vv6SCZXUdjxEguAATuwGq3R/PnOOppUOkjoieyZK+QQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bcP8XZpijcaxtxHrCQPsD1pZO9ZTK9Bq+I5REL3T09FzvXFJVNzaWTsap4v0bBEMrhpIZF2nbygMrfXlhR2IozYwMd0gTjc3WUdfGi1emYiqAlBlreD4ni7pOmDpU61Tyh1Rvc/TwBPA2DRZ7aDFuHE9YVeSUjUJh71a0FUBBlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nGoHvT9i; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-36a6a397477so53568091fa.3
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 05:12:01 -0700 (PDT)
+	s=arc-20240116; t=1760446726; c=relaxed/simple;
+	bh=ERKaxZi856JIVKreXO7sribpAgoWkWL8cPcVypMRmHo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MenBvHJ5egod0jwoWBrNmUdHN/pLKarATQ5eNo5ImT5C8WdzrTT0+pmYukdgiacD0kDj6OgGNZTvWcD8M745lxHYW80ktQpJteLPCY78OJj5qTkZnCUFoOpP8lG5JHiTx9RmYj+A4bEVseUmypRdUNWCWEs6+3pS7PqUdX8moW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HD+nY9Ki; arc=none smtp.client-ip=74.125.224.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yx1-f41.google.com with SMTP id 956f58d0204a3-635c9db8a16so5042149d50.0
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 05:58:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760443919; x=1761048719; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=19UY8Ondjgi9nEDc4X9WWhtcIr4QTybVkR2WGWv5OR0=;
-        b=nGoHvT9imkjXZP7O1ZAgzncMDDkL/jFwW2yzfWA4NYcYhYRp71DfzoOyUsa0wn8SyE
-         a58ks1YfrrUw3k+vP6yAWeeWlT16lPYRxRV14nQ50VIh1yJScO45ivD2fS/z02tv4XpW
-         7VgKLU8p+c4+m9FUY9dbOE1nTZZNd+7Hc1bdMlBUyTi+C7Kb5J70X4T7Vfy0UI/EcXHg
-         CA0mt+MBaB6zixHfnk6NEaxqsEkIkvs/y/g2xIYeJ2g3kVqwNZdWq+NS0U1hh91t0PDD
-         23cFquPMzol1o/8a7CVYGbslIUM1elKwdlIhtL17DynnP7VC013CwwCHOZg3zrRYnXPw
-         r5TQ==
+        d=linaro.org; s=google; t=1760446723; x=1761051523; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ERKaxZi856JIVKreXO7sribpAgoWkWL8cPcVypMRmHo=;
+        b=HD+nY9Ki9ZCU+ZBbai3sK4TlP+Gj4PeD5IBvNbVgmRwrXEMP1rH1Kq7Wd2U4DC9ql2
+         mmbSs/sedO+Z+pqNh178iwTUljJhUPXdoP+VQFu2ruyAZTpafom4Dgb3i9C7kLT30HMb
+         nugdcECozBZLP8w6AumLU59dnaaYGy11Vk23pFabxvZWzNmDF8nOoZlM5WedT3ES7DKS
+         D/cB7mXIddWy/q7Wje43ITkR6khfIHEjDiCwmec977cTp60w5mWUdbX6XXjhJUkrWeWO
+         j4ESkWjq0mWBEgaoWoQnKZzyhE+qXTM8zA+qwVIdhoT3qqyvhnb1qjF3AFb5czRRY0iT
+         BJBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760443919; x=1761048719;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=19UY8Ondjgi9nEDc4X9WWhtcIr4QTybVkR2WGWv5OR0=;
-        b=r/SHPh2253Ih4uhDrQ1uapzMVrN9LIVMu94h+BZje5bnipWq9DZGn8n0WWoWdd3pN9
-         L1IOuR0+JZWVpvbUbF2wbNtVCUwBY6P7GROtDTOTihPPXE+O16vGnDzhxpzPMyD+lvKg
-         GU5vkz7V3Tr6IaTTeTTYpyGGJETaMRetplM/hsQ1KVDvy8UJHob8Q5c0Jb8YEwXseDhS
-         rA4iZcg2M7hebNjqb0OANVcF0DHGq8qmVhWQzR4+tlLZr6ny3piEwvhhVVcsUGk4NnxG
-         la/BAhVFreiA9e3gpx5AkLhUotuU2kE5yWwYlL0CguFOeEzJGZjb3OZxakfAMGOxUoj2
-         0BIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVAb7ScRTGTYJ8sVVTQTclhj0tBUSFjMTq/mapWrnhc5LpQir2wyUeJAxow7Ij3zUW3gWZVpEBp5t5o@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLRYgNOW1HnozENB82YAPCWtFRtQVSahWGj34fho7z+bAZHWa4
-	XrPlSm2Xf85m3+WWVAh7AdLyNJ4tklRq9Zy4wws4FggfQUTnrzB/F+nO
-X-Gm-Gg: ASbGnctIVnpUQJ+c5whHU8ZfOGgDYYrOGXMhTyJ29+EEGiLl3TPHFNKQARjI7qzY0Fh
-	nJdn6hRMgXf568xjBu8AW/nRIub74QZi8QBZGb//HWFW93GC9rW8jQToFIBK7ErEvhQ14WX85M6
-	1fp/qOVGT6L7hm9hLEhkZr95RVu/lTfzfV3Xl6hoUEbrIK6DG/WIYA1TqKk5H+c3zbkVdQXItCh
-	T8iNgaKxWqqRngjbcoh0MoaGVgPobJ6renXG0Z48TaTAO+/AHp6klaLjnzESI+zTaooJtZSQatJ
-	zhXDavAkNnxQgHOQLkTtdyU4QdlFsyU33JNlZfm8rvpD1fDNSJfcQe3HmOTRXQKCsUCXnJvnvjH
-	2/UOJUDo2eGqt2aqHZv38Iylunqgx2t/D6wliDsmNRBagxV4w3YB6fzI0ojsdx5A8eggyDh5ouh
-	n031gcKfoSPM9AYF7Lc4VhXyruMUHdMLaqdQ==
-X-Google-Smtp-Source: AGHT+IGW8zh9AOgyW7nkUtmNQqz6PJovnO6f6RGpy2I05ufukYy7iqHPI6QQtLY8F4LP884y1HCvzg==
-X-Received: by 2002:a2e:be1d:0:b0:373:a537:6a00 with SMTP id 38308e7fff4ca-37609ea4554mr56777981fa.30.1760443919151;
-        Tue, 14 Oct 2025 05:11:59 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3762ea3b31bsm39258931fa.47.2025.10.14.05.11.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Oct 2025 05:11:57 -0700 (PDT)
-Message-ID: <cac4222e-1f66-40e1-abf8-7d4661d43bbf@gmail.com>
-Date: Tue, 14 Oct 2025 15:11:56 +0300
+        d=1e100.net; s=20230601; t=1760446723; x=1761051523;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ERKaxZi856JIVKreXO7sribpAgoWkWL8cPcVypMRmHo=;
+        b=e9ks36uX8UW4xDE08FehNvruBp/2XT0HYUdNjPD//KU8xuHoJwQPgIgcuxK4uALrKA
+         HAPZqaEgI1QeCgWmXDvR5m3eHOvsDA/j8rWSILEon8teSs6nQcifdfyLuHxl/7SDDxe2
+         d9957L9qTZo8PgEZRat776pjtyFbRIZNL/UnkwEHhj+PS1J0RZNhoEFn9QQJNxM3Uiz6
+         vV7DoBNOLw65J5+92345pPZRQNm9EPy3hD+jjqNhW5UXVryaRmPgm40NHJPHXZ9tCxwY
+         PrQa1seOYOqjkq9wY9UEAKqigjM9cA+aYmTFaX44kOhcx9doS6kcJS0Tp2WhRcR1ZtGC
+         svHA==
+X-Forwarded-Encrypted: i=1; AJvYcCWezT3Os4IxFJ153+QxtBwpr3dUxWlNhFctNHed36fSD49krk1Otd/eFYHLmbGc2iPevpAyIYe2hLyp@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpCId5djTPCkR/2lHTmn3XW2Nj+eCT5g13kiCWYkCOyvxrQ+fQ
+	4zqY621EDWIT9z0ruAi1FJStFstb/GqJR7FZHZ3nt/UuNH+s+UwT1/F/eL1qpAW1isy5+A4tjVg
+	TkVOI66AaAL4W5Swy1Sr0KD2NyQuLAYIuuu4peGh0Xg==
+X-Gm-Gg: ASbGncs7hhff4c5XVk9vXtkoYP7gMQPfLdCZPHBbyo+XE0Kbmuk7oQcoSAhi/XXRnlC
+	9Yc6veWqmIg2OJ72datKoJ//19cya70LP3BZre5/yUH7uiU/zjiVC1x3Tve/uVThUNz6K0tBHMy
+	s6C9Gx778l+NohBy0EWIBNs3lePJykIXCMgLGhA2lF7GytY+CaoMMDWOBZYxX/n1B9m8o2OcF1z
+	bdGMgyiEMY3g7ZZYyDBKfo+xoQWKw==
+X-Google-Smtp-Source: AGHT+IG7Kofwx6n9tYMDxUa5Z04wJalhfP6YJEHLa4yTiQQEa2UVqFp3ownpK3FKUhmGBn3Yg5tzw6HGtBhEHg9/vxk=
+X-Received: by 2002:a53:ba8d:0:b0:63d:24f9:5332 with SMTP id
+ 956f58d0204a3-63d24f953d8mr775113d50.55.1760446723523; Tue, 14 Oct 2025
+ 05:58:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 04/13] dt-bindings: mfd: ROHM BD72720
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andreas Kemnade <andreas@kemnade.info>,
- linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-gpio@vger.kernel.org
 References: <cover.1759824376.git.mazziesaccount@gmail.com>
  <fe1f4a0947c864496f4eeec8eef806afcf6094a4.1759824376.git.mazziesaccount@gmail.com>
- <CACRpkdZnoMvYBXN7b6dw+uPs=f1WXr9wX-0VF1c1qd-rq+17LQ@mail.gmail.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <CACRpkdZnoMvYBXN7b6dw+uPs=f1WXr9wX-0VF1c1qd-rq+17LQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+ <CACRpkdZnoMvYBXN7b6dw+uPs=f1WXr9wX-0VF1c1qd-rq+17LQ@mail.gmail.com> <cac4222e-1f66-40e1-abf8-7d4661d43bbf@gmail.com>
+In-Reply-To: <cac4222e-1f66-40e1-abf8-7d4661d43bbf@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 14 Oct 2025 14:58:28 +0200
+X-Gm-Features: AS18NWAzYGkVtZF2eWYQ8i62TI7iWUixyj6KHyQnG8bjFDuI6exLbunxibrSSZs
+Message-ID: <CACRpkdbOKNPFxNJM-r+HdnfKYisWJrQXvG21EL9w4UQVP74D5A@mail.gmail.com>
+Subject: Re: [RFC PATCH 04/13] dt-bindings: mfd: ROHM BD72720
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lee Jones <lee@kernel.org>, 
+	Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Andreas Kemnade <andreas@kemnade.info>, linux-leds@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 13/10/2025 15:58, Linus Walleij wrote:
-> Hi Matti,
-> 
-> thanks for your patch!
+On Tue, Oct 14, 2025 at 2:11=E2=80=AFPM Matti Vaittinen
+<mazziesaccount@gmail.com> wrote:
 
-Thank You for taking the time to review of this RFC!
+> > These are a bit idiomatic, not using the actual framework for such
+> > things (pin control) BUT: they are on the other hand crystal
+> > clear for an integrator working with this device tree, and only
+> > four pins so why over-engineer it. I am fine
+> > with them if the DT people are.
+>
+> I kind of like to emphasize the fact that this is not really a pin-mux
+> in a traditional sense. We can't change the routing after OTP is
+> written. As such, it more resembles "wiring" of the signal inside the
+> PMIC, and this property is not a control but tells us how the signal is
+> wired. But yeah, let's see what others think of it.
 
-> On Tue, Oct 7, 2025 at 10:33 AM Matti Vaittinen
-> <mazziesaccount@gmail.com> wrote:
-> 
->> +  rohm,pin-dvs0:
->> +    $ref: /schemas/types.yaml#/definitions/string
->> +    description:
->> +      BD72720 has 4 different OTP options to determine the use of dvs0-pin.
->> +      OTP0 - regulator RUN state control.
->> +      OTP1 - GPI.
->> +      OTP2 - GPO.
->> +      OTP3 - Power sequencer output.
->> +      This property specifies the use of the pin.
->> +    enum:
->> +      - dvs-input
->> +      - gpi
->> +      - gpo
->> +
->> +  rohm,pin-dvs1:
->> +    $ref: /schemas/types.yaml#/definitions/string
->> +    description:
->> +      see rohm,pin-dvs0
->> +    enum:
->> +      - dvs-input
->> +      - gpi
->> +      - gpo
->> +
->> +  rohm,pin-exten0:
->> +    $ref: /schemas/types.yaml#/definitions/string
->> +    description: BD72720 has an OTP option to use exten0-pin for different
->> +      purposes. Set this property accrdingly.
-> 
-> accordingly?
-> 
->> +    const: gpo
->> +
->> +  rohm,pin-exten1:
->> +    $ref: /schemas/types.yaml#/definitions/string
->> +    description: BD72720 has an OTP option to use exten1-pin for different
->> +      purposes. Set this property accrdingly.
-> 
-> accordingly?
-> 
->> +    const: gpo
->> +
->> +  rohm,pin-fault_b:
->> +    $ref: /schemas/types.yaml#/definitions/string
->> +    description: BD72720 has an OTP option to use fault_b-pin for different
->> +      purposes. Set this property accrdingly.
-> 
-> accordingly?
+Just that the muxing is controlled by OTP and not by runtime
+software doesn't make it not pinmux. It is, because it is
+(one time) PROGRAMMED to a certain purpose. In a factory,
+nevertheless.
 
-Gah. Well spotted, thanks!
+But the pin control muxing subsystem is designed for muxing
+that is controlled by software at runtime, and as such, indeed
+not a good fit.
 
-> 
->> +    const: gpo
-> 
-> These are a bit idiomatic, not using the actual framework for such
-> things (pin control) BUT: they are on the other hand crystal
-> clear for an integrator working with this device tree, and only
-> four pins so why over-engineer it. I am fine
-> with them if the DT people are.
-
-I kind of like to emphasize the fact that this is not really a pin-mux 
-in a traditional sense. We can't change the routing after OTP is 
-written. As such, it more resembles "wiring" of the signal inside the 
-PMIC, and this property is not a control but tells us how the signal is 
-wired. But yeah, let's see what others think of it.
+Let's go with this!
 
 Yours,
-	-- Matti
+Linus Walleij
 
