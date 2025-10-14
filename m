@@ -1,143 +1,142 @@
-Return-Path: <linux-gpio+bounces-27084-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27087-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC9F4BD9B18
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 15:25:28 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D11DBD9CE0
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 15:48:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 29E9C3B1DC6
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 13:22:30 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id EBC3A4E75B8
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 13:48:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8174316192;
-	Tue, 14 Oct 2025 13:20:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 131992D248E;
+	Tue, 14 Oct 2025 13:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=csh.rit.edu header.i=@csh.rit.edu header.b="m7C3ouxH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from greygoose-centos7.csh.rit.edu (greygoose-centos7.csh.rit.edu [129.21.49.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3489E316189
-	for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 13:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034C521E0BB;
+	Tue, 14 Oct 2025 13:48:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.21.49.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760448001; cv=none; b=kGaHfxE2p3zBgPp0mN1pUVnc3f8RoqFGaMRi3V3X2hMqFEH05BFqVnBq7y1tk0BUIyoBwqcFIds+wbmxZCPpuBGk/VzHcM10onHZB/3/J89BfPK9IlwZWGqMA3aA1pFU/JV5ClkaxlO4YoWt99kHbMHqKDM/JTM7L2txVhVOtjk=
+	t=1760449699; cv=none; b=TSDwoRvqa1wNdwutPJ6qoMTLIV5teAnEpXEiNhabcc19UM5TybGIibhsFlJNTFgLDsTGHxWRIW30Titjz6UdD2gm3VCbDembTvjZXDW2HtRsXFKzh90uEgbTrZyh6faeWNI87kWvO9TyP2zPUBmc2PtnEZrTswjAfirXkzSyFwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760448001; c=relaxed/simple;
-	bh=aSDd+KL4NOTNpSwWZ1vV1gh67WYD6fXPWRozSjlK8ZE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tP2IsMfN+RLS+m3ubm5dGs2Wx1JdZIJW1Fp49haG269QEQQgBnUTO47qm5bjp6VRiruZnEJV1HAuDB3VeYcdwv9DgNBa4XRmpedqaVVS1V+pynTMnfpZHDDahGoFt+8+lfDw18sV8tWa/2G6J6ewzaPHDDqfWi7JWyUNlJo05m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-8fea25727a9so1357655241.1
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 06:19:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760447999; x=1761052799;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Njz6v4Ye7icNa6eer5LCY0z/OUSx/xsBh5FobUmXyGU=;
-        b=bc98RcQ7s66iIwXuzBBEyfXYzYFjJZoM09af1W5WP0bgsMU1SeYuk8z9GDFROriN5c
-         aKkUa3e43A0FLpbhwRpuLO5GStOAVUF6WRjhQCUTM8oCZEw5JJMEOazhLlT+KjKJ11qr
-         qJPkdS7a8ll0kEGHcSsXAkpacYeNH/bJHRnAVpPy9nVn5H1DayXF95wN93ZEE8svMI8e
-         VSf7iQAb1PVxIlxDffWWZkUYg8NJF68/rW+mw+MyRGR1NOSloPFoL0WI7t+Jj5WnUxT8
-         FS0Qo+EpruFUsefZxUOZS6povsdx64raugprEe+oh4ZaUcbZF3+FrGglROvchAe7iA1g
-         vtcw==
-X-Forwarded-Encrypted: i=1; AJvYcCXRPyI2fMbzQZhx7JgMwojGB1ZCiT7DYRE2R0TBs59rbOmSLxjJk9f9Sn5HU9Gy67DwkcU/zFT3flxc@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlXaiCfiZ5BYrqN5a43oAv/BOZtpsxZV12G7kaSrEOAT+AN1wY
-	86IHhR5V5lIlViuPzPce3+XK6JOp48stuuM2t4K7wqhK8jbI0Ifs44IHVCL0R8uk
-X-Gm-Gg: ASbGncth43DQ0bRdangEtsvqDQc2wkrOYuPeNFBdc30QUzB+XM8peLUaYIth4B8A82o
-	T/0S2Jg1vBwNldigBrXme/Q2huw24yhWaSRRdKkBLIxjhe34QA3IYWDsG/ypL/NmuxIM6fJauc/
-	ziqJ+e2mc8SwIkVDbwBwz80LI9K4G4ACA3cvDfQOmokzvmQ6UgncAu3ZAA+BoGhM52WyChR4KgM
-	FScDBVlcjzhC/X6ZrZndq0tnHPgd27WIUiE/XSkm4tX0SJQUSLnY9Cyk4Ejor6K8Fv8QWQCxtQZ
-	k1wnUBoUmd3EOP86Iff1Q3folPS9Rqu2fRjOJDJPygfEQPDcC0Lnr02zo6jBeHUtvjfwk1Hv4gB
-	EbeYO4B+iM+OmMzCt7nJ651Bkyx4uG5gMmVAeDnFD8i/N4v6EF0DI/7Pe9lCkqrGU5qMdcnzBKz
-	tbYng6N0A=
-X-Google-Smtp-Source: AGHT+IFmi8KhDkD8l2b0Z655D6syJOXjHz4cEtQPiKjwADbS5nYmzLVT4nwlnZqwqNbMtkgefzo6Rg==
-X-Received: by 2002:a05:6102:32c1:b0:54e:76ce:8fb5 with SMTP id ada2fe7eead31-5d5e2271ac7mr8092206137.9.1760447998751;
-        Tue, 14 Oct 2025 06:19:58 -0700 (PDT)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-5d5fc716413sm4222635137.6.2025.10.14.06.19.58
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Oct 2025 06:19:58 -0700 (PDT)
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-5d758dba570so115003137.2
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 06:19:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVpQI0RqPGs9fI8Y+VUM5kIiXNg0hRuztcQ4p7kt0KxKKyAzsHPVvBe88CZX49ESIECgjrc4Cevh1xB@vger.kernel.org
-X-Received: by 2002:a05:6102:6ca:b0:5d5:f6ae:38de with SMTP id
- ada2fe7eead31-5d5f6ae3c7cmr5745861137.41.1760447998299; Tue, 14 Oct 2025
- 06:19:58 -0700 (PDT)
+	s=arc-20240116; t=1760449699; c=relaxed/simple;
+	bh=kKMHc9fhQOefpK92tuGFzHHBaODYcCQ7jI6gHccpTHs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DKFXOn/LOpQoBcWykren0d4f7ATXzKfurXHlO/kmhyHWGk7QvDi+S7Hh7HO8SrQEK3MH+xrCc3YNz9bw0RQLJa8/+1FDWBO7C1Ats8goEe39o/R7JcMwWtU1IDlBKkiJIfePfW7W3JyEA/mc+xm3up3ZCZU1LBr1OpbojXOm1Pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csh.rit.edu; spf=pass smtp.mailfrom=csh.rit.edu; dkim=pass (1024-bit key) header.d=csh.rit.edu header.i=@csh.rit.edu header.b=m7C3ouxH; arc=none smtp.client-ip=129.21.49.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csh.rit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csh.rit.edu
+Received: from localhost (localhost [127.0.0.1])
+	by greygoose-centos7.csh.rit.edu (Postfix) with ESMTP id EA95C4063919;
+	Tue, 14 Oct 2025 09:41:00 -0400 (EDT)
+Authentication-Results: mail.csh.rit.edu (amavisd-new);
+ dkim=pass (1024-bit key) reason="pass (just generated, assumed good)"
+ header.d=csh.rit.edu
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=csh.rit.edu; h=
+	content-transfer-encoding:mime-version:x-mailer:message-id:date
+	:date:subject:subject:from:from:received:received; s=mail; t=
+	1760449256; x=1762263657; bh=kKMHc9fhQOefpK92tuGFzHHBaODYcCQ7jI6
+	gHccpTHs=; b=m7C3ouxHWIkVlfC4x8h3eXRUxK3vjoVkxas8TgX8luB7tu+CmVo
+	7kLOc6Gon8CZIsNfV1bBkiDBWTWHm4jicAD278QomSn8D25qeFD2eEjxiOGaKdjo
+	NbFGFQLKORvmEa2LhkL/+8AWLWZSo3CtviFQu+kW3qTEQMcu7zNFOhw4=
+X-Virus-Scanned: amavisd-new at csh.rit.edu
+Received: from greygoose-centos7.csh.rit.edu ([127.0.0.1])
+ by localhost (mail.csh.rit.edu [127.0.0.1]) (amavisd-new, port 10026)
+ with ESMTP id KmUT8b1dRWM7; Tue, 14 Oct 2025 09:40:56 -0400 (EDT)
+Received: from ada.csh.rit.edu (ada.csh.rit.edu [129.21.49.156])
+	by greygoose-centos7.csh.rit.edu (Postfix) with ESMTP id 3538B400A7CC;
+	Tue, 14 Oct 2025 09:40:56 -0400 (EDT)
+From: Mary Strodl <mstrodl@csh.rit.edu>
+To: linux-kernel@vger.kernel.org
+Cc: tzungbi@kernel.org,
+	dan.carpenter@linaro.org,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	linux-gpio@vger.kernel.org,
+	Mary Strodl <mstrodl@csh.rit.edu>
+Subject: [PATCH v5 0/4] gpio: mpsse: add support for bryx brik
+Date: Tue, 14 Oct 2025 09:35:26 -0400
+Message-ID: <20251014133530.3592716-1-mstrodl@csh.rit.edu>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250918104009.94754-1-herve.codina@bootlin.com> <20250918104009.94754-8-herve.codina@bootlin.com>
-In-Reply-To: <20250918104009.94754-8-herve.codina@bootlin.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 14 Oct 2025 15:19:46 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWNErzjfqXXgJZOn2viPYmGeuJekY_WLDeK6vzYZzdJmA@mail.gmail.com>
-X-Gm-Features: AS18NWCbANtqchYIwTz4iekVik6u-ZIED4wJm4rfdVFvh3ZW_Tu4x1cmyNlu-78
-Message-ID: <CAMuHMdWNErzjfqXXgJZOn2viPYmGeuJekY_WLDeK6vzYZzdJmA@mail.gmail.com>
-Subject: Re: [PATCH v3 7/8] soc: renesas: Add support for Renesas RZ/N1 GPIO
- Interrupt Multiplexer
-To: "Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Hoan Tran <hoan@os.amperecomputing.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Saravana Kannan <saravanak@google.com>, Serge Semin <fancer.lancer@gmail.com>, 
-	Phil Edworthy <phil.edworthy@renesas.com>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, Pascal Eberhard <pascal.eberhard@se.com>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Herv=C3=A9,
+Hey all,
 
-On Thu, 18 Sept 2025 at 12:40, Herve Codina (Schneider Electric)
-<herve.codina@bootlin.com> wrote:
-> On the Renesas RZ/N1 SoC, GPIOs can generate interruptions. Those
-> interruption lines are multiplexed by the GPIO Interrupt Multiplexer in
-> order to map 32 * 3 GPIO interrupt lines to 8 GIC interrupt lines.
->
-> The GPIO interrupt multiplexer IP does nothing but select 8 GPIO
-> IRQ lines out of the 96 available to wire them to the GIC input lines.
->
-> Signed-off-by: Herve Codina (Schneider Electric) <herve.codina@bootlin.co=
-m>
+This series adds support for the Bryx Radio Interface Kit to the gpio-mps=
+se
+driver
 
-Thanks for your patch!
+Here are some of the major differences compared to the sealevel device th=
+is
+driver currently supports:
+* Uses an FT232HL chip instead of FT2232HL (this is easy, just populates =
+as
+  only one interface rather than two)
+* There are only two exposed GPIO lines, and each is hardware restricted =
+to
+  a particular direction.
+* This is an external device, therefore hotpluggable. This caused me to
+  discover the race condition in the polling worker teradown, which
+  accounts for the bulk of the changes.
 
-> --- /dev/null
-> +++ b/drivers/soc/renesas/rzn1_irqmux.c
+Other than the locking changes, this series also adds a generic "quirk"
+system like I have seen in similar drivers for providing device-specific
+line labels and direction restrictions. This should enable easier
+integration of new devices in the future.
 
-> +static const struct of_device_id irqmux_of_match[] =3D {
-> +       { .compatible =3D "renesas,rzn1-gpioirqmux", },
-> +       { /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, irq_mux_of_match);
-                           ^^^^^^^^^^^^^^^^
-                           irqmux_of_match
+Lastly, I changed the device label format to expose useful device
+information like the device serial number, vid, and pid to userspace. If
+there is a better way to get this information (perhaps through udev?), I'=
+m
+all ears.
 
-Interestingly, this built fine for me before, presumably until commit
-5ab23c7923a1d2ae ("modpost: Create modalias for builtin modules")
-in v6.18-rc1.
+I also noticed a little bug where gpio_mpsse_direction_input wasn't
+actually propagating errors, so I have a quick fix for that too.
 
-Gr{oetje,eeting}s,
+Changes since v4:
+* Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
+* Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-                        Geert
+Changes since v3:
+* Refactor supported line quirk logic (1 is supported now)
+
+Changes since v2:
+* No more RCU, just use a spinlock to protect the stuff that matters
+* Now using _safe variants of list iteration helpers where appropriate
+* Use GFP_NOWAIT kmalloc flag
+* Move repeated code into new gpio_mpsse_stop_all_except method
+* Move little bugfix for direction_input error propagation into its own
+  patch
+
+Changes since v1:
+* Break out into separate patches
+* Fix RCU/concurrency soundness mistakes I noticed (list add/del were not
+  protected by a lock, so now there is a separate spin lock, which we can
+  use in irq context)
+* Use guards for rcu read locks
+
+Let me know what you think!
+
+Mary Strodl (4):
+  gpio: mpsse: propagate error from direction_input
+  gpio: mpsse: ensure worker is torn down
+  gpio: mpsse: add quirk support
+  gpio: mpsse: support bryx radio interface kit
+
+ drivers/gpio/gpio-mpsse.c | 229 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 217 insertions(+), 12 deletions(-)
 
 --=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+2.47.0
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
 
