@@ -1,87 +1,87 @@
-Return-Path: <linux-gpio+bounces-27063-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27064-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3E76BD826B
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 10:23:49 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E7E9BD8362
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 10:37:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6E4B03E8770
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 08:23:24 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 084C04E4BEA
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 08:37:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BDDC30F920;
-	Tue, 14 Oct 2025 08:23:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9F2030F95D;
+	Tue, 14 Oct 2025 08:37:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d5F/ktAF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jc40JBjZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yx1-f47.google.com (mail-yx1-f47.google.com [74.125.224.47])
+Received: from mail-yx1-f52.google.com (mail-yx1-f52.google.com [74.125.224.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297D430F551
-	for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 08:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E341189F43
+	for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 08:37:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760430201; cv=none; b=KgAtOTMK7V269Lf7JJNuhBiEViN/Z1wPEEcgXvQDBaqNT5gKm3DWtQelqPrk1jLtidve5kRnPfDHc4ickajxYmFiH9CZCvyHkR00GW7AkjiaWZ+L72ZbZg2snen+ZvhYmPaR3bBqcqumfw4OjHefXq04/eZ6T1ThEUnmua/4jXc=
+	t=1760431048; cv=none; b=bPEBONpv5DwNtC8GUcaFmw+Q0IvYqlBQAJC78/MjmqO36JbsYX4fwJeO/PyLTd5w0P9jZyGrSoU8/1Xa9QseXlhW8pAQ/A0qTRhSXbnT1+1MThq4ThyWovDwq68euVYXZnP645VyYuc/UV/1T5un9gD3GbEI46Gte7hc10iC2vE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760430201; c=relaxed/simple;
-	bh=QpLLN7omLU7FVeu70pu6uFOP+AtOBErrgm75t8rLSRw=;
+	s=arc-20240116; t=1760431048; c=relaxed/simple;
+	bh=YDFEfrGJRIl/si0UuJt8TjY5k4mRyPv0QSQBT7wHajk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NmndY+RgJOVAUDlbhJLEt2tLfJPPXFxF1DbilLO6RY8fs3stTUZEUkR/W0WEHeX0IgRJ3FgQdZfbJTciTdz0Ca5grajOjku4GbR5ueJv4qQiqtGaPP49aS3x+oajbHMXrmbvmxhVlyn8w0imtQLYjwxkcMPXQIASHzfkCB4PcUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=d5F/ktAF; arc=none smtp.client-ip=74.125.224.47
+	 To:Cc:Content-Type; b=CFCjlfAg0H5CQbwuVv0VVlVTer9B3ZH/Ayuxh8vH8ZQmq6vHP1q378Dmc+Xgc8vfyViKnJeNPpyAJ5sTGybLYpoQeChGaYFE2WqhOFce/ebCvKGaB4cC9pXj4/raxPYGeo4WjKGtpE5ZZ3vrtK14k9vRGL7HYL34Xuz5hhMg24A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jc40JBjZ; arc=none smtp.client-ip=74.125.224.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yx1-f47.google.com with SMTP id 956f58d0204a3-633bca5451cso5023928d50.1
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 01:23:19 -0700 (PDT)
+Received: by mail-yx1-f52.google.com with SMTP id 956f58d0204a3-635401a8f5aso5772382d50.1
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 01:37:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1760430199; x=1761034999; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1760431046; x=1761035846; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Y9TclHM+FlxL8k/EdZlfp0sKQpkcWovBD/evGnk/JRY=;
-        b=d5F/ktAFXiAlca/nL4hv1iOe9/I8zrpQX5eD+YjxQvMcYsXB3gO0yt6NdWCwZZ1Q8f
-         YGm/uQWNq9Z302yY+mMQLJSQTzyTGw64d4voZuBwYDnLfJjZ/9ZYGSzDaRVh1Oihsyvh
-         8oKbrs+cvUN7M5292eAW5DZCwfjbkCyQXaGP/YhGeWcgOw4qkwYQ815xURYyl2yt/suN
-         XZtcl4QSVC7UHy9+ml8+wKOZ5EGmBnY0j9EpKCpNTrYcnDyF2qc766x2kqReFaBw0Zo7
-         yOZp27Y1L9JGsiD2XKQhRQdoRk8SF2q0YzB3vHEjTo0/lrv5Tv+y87v8+kcC5qHSnvJ0
-         5IcA==
+        bh=mB4qV/168U7fLfDDqZVPDjG7BTgjigqZ4ZKms2t42lE=;
+        b=jc40JBjZtEHV8PZQr3tuqvwEhcuE3cnMuVnsApsgOVj2npmxkwoN2jyGbSfTBDiUxx
+         DowBBWWeUn08U5qBd6d/oBFICSW3gHPMwOrpr4/0UZ8r2VucSGhjk6kExp2n40BT4y7e
+         lV5w/dujKvaDL1viuuVfokP/oqQ8HaVwVhVLYcjRWnGlIzZfjZmGH1eC/dGvv9HzHdRi
+         sJ3dnv6R0ueJkpjBahWNHHG6U1pvlgstoMWD3grJsl1P7v+LuQ6v6XuTzVByX5/mGEWq
+         43o1sE8mrnJtGqPhMtgo2aWFlZHxCjHL03qy8zyoNbs3cFhACU+SoyQrX7jOigs+aa2g
+         dnEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760430199; x=1761034999;
+        d=1e100.net; s=20230601; t=1760431046; x=1761035846;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Y9TclHM+FlxL8k/EdZlfp0sKQpkcWovBD/evGnk/JRY=;
-        b=xO0IAkuO9Qiiuxqd54xiOH1jUTiGrojxza80b9Cy7Z81mNcL9wMMs1NMtcBvXJJ3uf
-         ax/uOP1fSjc+vK6nTokrlLhgcEnXKgP/2DhuXb1/4jFkC1rQ9LeScqMbepXewzfxP03I
-         CchvJqOT+rhoWzqo+ffJ0u51cRWRSGzSRihUU8tuFvgymYFHTPFS+daEa+cbYVWV5MZj
-         KcfPDzRfCDBPte2tGSmMr65en7rKQN+/Rv5sVVFViGzUtVUzZyoOTwqYPjiykPmShP37
-         dzfa1l/My44tG9uFYLmo+w85QwJ3UgA8HOrzM9TIjQeS4BfYhSI2uVnWOtnX+NBXIMWC
-         jAqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXRxVrmTc8X01ri54k4IU004FE5qgQMsetGyDDE5xMATLg8II3StXmkhiKUzT8u6HDExgkfjWPPv2FJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YweAO8eDbByqpSmn9Ud7x57eFz9+lROM3FgQwjcXWnTqoL6+bAP
-	HJRXwCarIcD7a/7s44eLOzG2AR6Z0Iy7vU7occOSTPH/r9+qjWu7sGgruCDUTDhyYZSFWxXNZqv
-	A0AvmJYTcLFl7PButkr3kmi1gHKulx7aXHb3e3WiWmxLsBoYhHtsKyGU=
-X-Gm-Gg: ASbGnctCiPBeETbGdzxW/GJPiVNlytHfHYYG61VmOfrkrQpi4IaCCskaJjijVAcUBPQ
-	VGr/7nt0DfkvUVS9QqjH3W+CU726QeI9pWchg7HlvZLywEAi8UEYP46Z+wbb0zg6xAAFRhD8Nvw
-	lDyKx9nbQ8BUTRiKrSuEJEU1hbzQCC6vbyIypJqZagvLbHmd6vhGqTC3CZN825i5iCFV5tv/Nhw
-	I3nYiAAG2Nxz0SJYOg5XTBLQjEHaUwLuugZ78ZS
-X-Google-Smtp-Source: AGHT+IGUPFI5jCPwxpBaBsUtA4t105DOhgNvQsDGVLBIPQELjrZFFsrZcl9lsa37EFuLVIbBf5ZvE7ZH81SU0iQy1BA=
-X-Received: by 2002:a05:690e:424d:b0:5fc:5d98:3478 with SMTP id
- 956f58d0204a3-63ccb7fabcfmr16158005d50.7.1760430198919; Tue, 14 Oct 2025
- 01:23:18 -0700 (PDT)
+        bh=mB4qV/168U7fLfDDqZVPDjG7BTgjigqZ4ZKms2t42lE=;
+        b=XoXL1PWTQYJHAl9+DIwbXQmd5VDJY0kM4LsfrZESkTgVc+rR06N1UCHHPmhRG/l4ty
+         xAC1y6fpjUk6PeLEdKBYShGH9NjOMduj0WjYRpLpDFOiZjJCnLmoBwcriLpEICyk/3Rn
+         /9ubBg/9CDTCLC1kC1RF1Ve9PfNlXaZmdXUb8lBASgqNj7kACvgpHP7vtn4cq7BtgJqj
+         vqaSqBALkdOJSro8zFEOJJ1cG6I5FhGhWGmGm6iO5J7iNDjrJiDZ63CWShTirhqHjuuk
+         xMrAPuwt4mDW+CynmspyO+W9XL6CaPxVWHFrnLN5Zuw1zhfME6B+8g/+R/Z06poeNP2c
+         oKOA==
+X-Forwarded-Encrypted: i=1; AJvYcCX+nK9stDWxm3KE+FbY6kPjEm8tOlrxvRBIRpASUFifWnQ+jk+SFHY3md/FyxMARKaghuIYMlHYuYFG@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpJ1PncqyNx11Q+CDrq5IDxcjTUTxpqKJSPYXiVXJ945/Xq81n
+	FJjV4TlLJyLDb4/jh96lnVI29LxUUW4GCuQO2g6W1iql8YQKMh/lVdI9gwwIrw76myCJ4YlD0AY
+	pNEewdjochM68fp7UMwgCfebjrhv+kvzJJgNUx4jf9g==
+X-Gm-Gg: ASbGncuIG6BVCz7Gq71lOLm3tTw9muWC8Xmnc8zUfpyaN15Imz/xpBoOdxkB0B2pPvg
+	IeagzPc6YCNZFr6rUG3u22UEOMs2ux7WYOKxyYWyAmQJ3LBv31jNDE76vbjyQLT7GsG8Unn8Ha6
+	7n0SR0t4vX1GPLX1UOjogBZggKaKEreCXISs6Y7ibOvy5zXB5zuK9xv2k2VfM+Cjy970rBmgbGu
+	ouaMZOkk46vg8NlRwjOAQw71gcXjQ==
+X-Google-Smtp-Source: AGHT+IG+8mwf4OKlBn3bot7TGE30F1MEjsH7uhQxMIRdy8a3JAvRH98VqQB1DV6PJ+zZ+6RTxRH4cDuvVp1uxAB4hMQ=
+X-Received: by 2002:a05:690e:d53:b0:63c:f5a6:f2df with SMTP id
+ 956f58d0204a3-63cf5a7084bmr9159568d50.65.1760431045879; Tue, 14 Oct 2025
+ 01:37:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251009223501.570949-1-jelonek.jonas@gmail.com> <20251009223501.570949-2-jelonek.jonas@gmail.com>
-In-Reply-To: <20251009223501.570949-2-jelonek.jonas@gmail.com>
+References: <20251009223501.570949-1-jelonek.jonas@gmail.com> <20251009223501.570949-3-jelonek.jonas@gmail.com>
+In-Reply-To: <20251009223501.570949-3-jelonek.jonas@gmail.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 14 Oct 2025 10:23:06 +0200
-X-Gm-Features: AS18NWBS0RiqVLOn6OGw-S2jkVsKedTw5UCNSQ2_7gUR2ne-WB-LpCsCs8TF6SE
-Message-ID: <CACRpkdb6bTFbTtNsO59GXFa9eMK9x=+BGK5Vx4bKv62wxiSpiw@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 1/2] dt-bindings: gpio: add gpio-split controller
+Date: Tue, 14 Oct 2025 10:37:10 +0200
+X-Gm-Features: AS18NWB-ELwnK9aucNPJedRVrl-QBK4yCisLJagx64N2Yi5AbtMlX8tcPZYUnlA
+Message-ID: <CACRpkdbCw1Agnsy-aYPs+2PhQDFjj+=VjmGQBmxuCUfwRuWkfw@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 2/2] gpio: add gpio-split driver
 To: Jonas Jelonek <jelonek.jonas@gmail.com>, Peter Rosin <peda@axentia.se>, 
 	Geert Uytterhoeven <geert+renesas@glider.be>
 Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
@@ -94,78 +94,92 @@ Hi Jonas,
 
 thanks for your patch!
 
-Including Peter Rosin (the gpio-mux author) and Geert Uytterhoeven
-on this review, as they have worked with similar stuff. Please include
-them on future postings. The result definitely need Peters ack before
-we can merge it.
+overall I like the idea and I think we definitely need
+something like this.
 
 On Fri, Oct 10, 2025 at 12:35=E2=80=AFAM Jonas Jelonek <jelonek.jonas@gmail=
 .com> wrote:
 
-> Add dt-schema for a virtual gpio-split controller which exposes virtual
-> GPIOs for a shared GPIO controlled by a multiplexer, e.g. a gpio-mux.
+> Add a new driver which allows to split a physical GPIO into multiple
+> virtual GPIOs by using a multiplexer.
 >
-> The gpio-split controller is a gpio-controller, thus has mostly the same
-> semantics. However, it requires a mux-control to be specified upon which
-> it will operate.
+> For now, this doesn't support advanced features like IRQs, just normal
+> IN and OUT functionality of GPIOs.
+>
+> This can help in various usecases. One practical case is the special
+> hardware design of the Realtek-based XS1930-10 switch from Zyxel. It
+> features two SFP+ ports/cages whose signals are wired to directly to the
+> switch SoC. Although Realtek SoCs are short on GPIOs, there are usually
+> enough the fit the SFP signals without any hacks.
+>
+> However, Zyxel did some weird design and connected RX_LOS, MOD_ABS and
+> TX_FAULT of one SFP cage onto a single GPIO line controlled by a
+> multiplexer (the same for the other SFP cage). The single multiplexer
+> controls the lines for both SFP and depending on the state, the
+> designated 'signal GPIO lines' are connected to one of the three SFP
+> signals.
+>
+> Because the SFP core/driver doesn't support multiplexer but needs single
+> GPIOs for each of the signals, this driver fills the gap between both.
+> It registers a gpio_chip, provides multiple virtual GPIOs and sets the
+> backing multiplexer accordingly.
 >
 > Signed-off-by: Jonas Jelonek <jelonek.jonas@gmail.com>
 
-So if I understand it correctly this models a 1-to-many input-only
-GPIO multiplexer, we need an illustration such as
+This can be made easier these days, reusing the
+forwarder library. I think! Check if I'm right.
+Make sure you use kernel v6.18-rc1 as a
+baseline for your next patch iteration.
 
-        +----- A
-IN     /
-<-----o------- B
-    / |\
-    | | +----- C
-    | |  \
-    | |   +--- D
-    | |
-   M1 M0
+select GPIO_AGGREGATOR
 
-MUX CONTROL
+#include <linux/gpio/forwarder.h>
 
- M1 M0   INPUT
-  0  0   A
-  0  1   B
-  1  0   C
-  1  1   D
+Look into this driver for an example of forwarding
+GPIO lines:
+drivers/pinctrl/pinctrl-upboard.c
 
-Is this correct? In that case include something like this
-verbatim in the bindings (feel free to copy/modify this)
-as it makes it much easier to understand what is going on.
+See
+commit dca2f73cf19fedd7bc38fa6a0eb50fea63cd0214
 
-That's a very minimal example of a way to turn 3 GPIO
-lines into 4 GPIO lines, which is a bit crazy but I'm not
-the one to tell vendors what to do :D
+Now that is a pin controller so it contains a lot of
+irrelevant stuff. Focus on the forwarding part.
 
-> +  mux-controls:
-> +    maxItems: 1
+This part is maybe the most interesting:
 
-So this needs a description, it is a phandle to the
-gpio multiplexer (reference /schemas/mux/gpio-mux.yaml
-explicitly!) used by the splitter.
+        fwd =3D devm_gpiochip_fwd_alloc(dev, pctrl->pctrl_data->ngpio);
 
-You should also in the same patch add an example to
-/schemas/mux/gpio-mux.yaml showing how this is used
-to muliplex GPIOs so people find this new usecase easily.
+Here ngpio will be 1 for your usecase.
 
-> +  shared-gpio:
-> +    description:
-> +      GPIO that is shared by the virtual GPIOs and controlled via the mu=
-x.
+        if (IS_ERR(fwd))
+                return dev_err_probe(dev, PTR_ERR(fwd), "Failed to
+allocate the gpiochip forwarder\n");
 
-So this one is shared one-to-many, and I think the bindings
-overall makes sense.
+        chip =3D gpiochip_fwd_get_gpiochip(fwd);
+        chip->request =3D upboard_gpio_request;
+        chip->free =3D upboard_gpio_free;
+        chip->get_direction =3D upboard_gpio_get_direction;
+        chip->direction_output =3D upboard_gpio_direction_output;
+        chip->direction_input =3D upboard_gpio_direction_input;
 
-Maybe "gpio-split" is a bit ambiguous?
-We have io-channel-mux, so what about "gpio-line-mux"
-simply?
+        ret =3D gpiochip_fwd_register(fwd, pctrl);
+        if (ret)
+                return dev_err_probe(dev, ret, "Failed to register the
+gpiochip forwarder\n");
 
-The fact that GPIO lines are used to do the muxing is just
-a detail since a mux is an abstract concept, it could have
-just as well been muxed with some I2C device for example.
+As you can see you can override request/free/get_direction etc.
+
+In this case you probably don't want to override these functions,
+but instead override chip->get and chip->set so that these set
+the mux (and delay a bit?) before reading/writing the line.
+
+->get_multiple and ->set_multiple seems hard to implement
+and should probably be overridden with functions returning
+an error.
+
+> +++ b/drivers/gpio/gpio-split.c
+
+As mentioned I would call this gpio-line-mux.c
 
 Yours,
 Linus Walleij
