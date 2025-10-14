@@ -1,60 +1,61 @@
-Return-Path: <linux-gpio+bounces-27120-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27119-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BD91BDA803
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 17:54:30 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8597FBDA881
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 17:59:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BB05E3ABB16
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 15:54:28 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 411A1502926
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 15:58:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 647033019AB;
-	Tue, 14 Oct 2025 15:54:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 324FF3016EA;
+	Tue, 14 Oct 2025 15:56:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="KQgyqrFI"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="M97Uzs4w"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013032.outbound.protection.outlook.com [40.107.159.32])
+Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013004.outbound.protection.outlook.com [52.101.72.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5E33019A8;
-	Tue, 14 Oct 2025 15:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1667E3019A6;
+	Tue, 14 Oct 2025 15:54:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.4
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760457260; cv=fail; b=ry6vs4bozZ5FNgc3kKWa4X8x4O9rLLCaYDI+SAED4pvck78KhtT0YkFODxVP/rTHjArj+Ja83KAhHosW6vQjzqRI6kyan2oJI3TWbAEN72zx/Fqe7UOkt40XHh1xbaGhSRMojOaLFU8qBRKB6GaWgJ/dVCkdLf0ccEx7Wxzm8mQ=
+	t=1760457259; cv=fail; b=UQ+XnRF5ZMEnffda+9ftMfmgFbPAgreyGnMpNMDbK0wDdH0lrxe51Y4FiAwSBfS+ZWBsqoM633doBqDG6z/3NG1WEc1jk8qBauXqc9OwxFhtN+Lp7q/372p+ePQX2co1FqXuSy6Iv0y2fUYG4VM7gQUByprMG+tOljaMBeePQM8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760457260; c=relaxed/simple;
-	bh=ck2j86CoJgQ1My/N+cjlyYqbkKYATiZ31qZe5/oTwxs=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=PyL2FGVQV1WVc9ccHKsY7igvLOUlnw/ld1PT6a58Ya86iL2Ru2JysoSvdra56IqFTDocqAUdYHUxKEoh3hNtZN5BubqlddeG7WDG4/zfG40agga8nleWNIiWJhZaf8MkMKAqw1P3iMgGLxD6vscSuzF5A+RmRCI/8VW1uxSS7Rw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=KQgyqrFI; arc=fail smtp.client-ip=40.107.159.32
+	s=arc-20240116; t=1760457259; c=relaxed/simple;
+	bh=sPSRxTDlsSAcb4w5mfrYQTQMx41H8paSohh4cZg62EI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=f2diSdrWQSEbKQDfQqponEEZfi9i23S1OTvUFaKtNxIa1xn+BMos6QZLfD4y1pe+5Dl2Mr7rYCr4Ytf/FGvMKHZ6oI/0Jcy6r/bUEPLojlTRlaoMLtHVyL3GdSEAJSwxSLPAIURYALl0jnQohLsd7cSZ4tKvpTugv1p/ux83QpU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=M97Uzs4w; arc=fail smtp.client-ip=52.101.72.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dW54GbOG7h+IKa/KkS51CNUq/WhRQnBlZ12HjOOQI1MZrX3XEyr32XEOwBZlQ43eIEZLHbUu1QxAGFnJucUkHmmS+KAFHvOMDdkL2nefbPMBGVEb8SHHfCFmKRv6XCxm4KMGH0i73g1Nof1aNvnI8BGxAsGVwTIYVODgp42at7xGx9HVET5jfDKJSvVQlYTHOTyJ050KF0ubAMxTPJyWIrQpmZNftvEWprwhTALunXS6KAeZPkxbigD5H+YdNu5vsvz2MhSrbIbsfSeOefSL2MhfMa1kkxQRyQPadyjx49D6pZQS0KE9+0u3+RXmz6n6kkzYDftZilDztHCFIZmC4w==
+ b=yOsQq0EiGGSkgncSFEeA6dyzW602H7k6Vdz1VEIUyobJ0WatWksjPYfcBSV4OuhSEU0JYMeeSvqdiQekYE8sVPifhV9fICUjP38eWP63DrL9GjlfyxfA0Y36DyWiIBtrqrLG2CfCQkRfNi/Il2R4YWawJUcRRY5WvFaswOHlQdLGJcG3RKpgmybpsokJXWBeOltQ367mEDUGCSRac2B7ph7gt5ZB4mwQGqs1zNH9dO4TnEDcQqBojTpEN7qTfUu7Z/QYIRRGhJo4tu4CRRW5FFGkiWDu8otqhlVk8TV14BkE+zPj3JVf4fKifWsk15y4giD47f/MjQEF89QggKjlgA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mxqoc14qIYbIKxurVgXkkKao33LSKfa+uiogQUbZGD4=;
- b=TcC+js5Ap+5yNckAv4m/kgQvgHWlknLTa4aZOXfqszYdf6dEUq9FINGeEO0z39MhSaLJUMl40c/i4AXx35Tt8qDy+i9jvsiXdRf+cBOhHz+4uiFLQ89T4z52FOLm1hNuhoJxIsLDEflFZBCeiY/6JlVvodON6I6NW8BJL+WCG8BLvl1/afRiwd0KTaj5UzBnuG8VnTyK6TKvJrWwbzISmf3ei3sTCqAqu6dF9XmvzWScRjlbOAGG/tvj65oz6cv22Hqlg6RZnTyKJ53XGR+iS9oK2lfyV6HSO0ccAE6iqWTyx+C3+M6/SO5OrB2VF5aPQNjRUSikQH6qMhb6tG3UbQ==
+ bh=pKEF/CD2Vq4A7A9F84fPZo4yPQC4CnwgacB87WWv5ak=;
+ b=m9Qcp3COUbNr/ZpCryVAXxzXxqlq0EYdPdIi5vq31N2LOMVVtYpfLaV7yE5o/yyzQXsAj0kLl/c71ui/4ttSTghu9YC0WWnY/TxksAKoLO1elrwdiIyxX2sGg1OdeYkMtrakcvdWOxnG3CKNckH8Dm+zqtxZsrtGigLEe+Qe6FSBRKzHCBBFnv+RLaKLcIk8pLjFGdljdNfICBtca+176U9EWxmWA57Py/1N3665HccayqNrOdEjwYbcBYqBjm2cUOZCpd6HEv4P/Sp6tNYWPK3J4XO2m1GpXdJbzvsLuCiFqS7L+AK7tU+ZtCCEbbaKHwYWEEVTw0vHlAzMhYXaww==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mxqoc14qIYbIKxurVgXkkKao33LSKfa+uiogQUbZGD4=;
- b=KQgyqrFIdWtwVMei3HemNrzkQAlyi+elhhena+MO+TSS/aJIr2qGvcr3j8etN8otAEUn9Ia+49UDgXZnnMU/BPn/J4MsLN9SllXSGmkHvmrRmVjcLxi7/Rou3qMOuCoOnsfmD/k/wpmIfj4lqIjXYYUhO8UYAxDPt5INCBQqHa/vYX6YaEBFnzccfLT81iuYgDs7WCghpkCeGAcyfyVeVHvtCgcMkZzrGE7ZZH+9cclqwkmTKU1m04FewukHBT9LWSphLCBZpkWj3YXLZHMrOtANjK9M8A5Fp1cvJF2FGsqSpak8ViHC0DGMBq0ungHfkY1nivUw9pmvJPukq648EA==
+ bh=pKEF/CD2Vq4A7A9F84fPZo4yPQC4CnwgacB87WWv5ak=;
+ b=M97Uzs4wQ3QeVutxsydD0DJ6HPXDie/+VsyMLSpfWXx+o+HJC1rhnKdifyaz8ztfSVMEE332hmTnCF/VnGZR5yqGCdU3lRxA96oiRIK028Wohn9+U46IFiuwGMfFJRddKRn9LqOlA3Bkr1PNxBj9Hn7dPRMgsMDETXkEW2i+6vX4/knPRx4PPrEMvVwOvquPYMML9UDGTMz+TBP/AXaZNGIF5/f/ZVf5JqTm1Xc45JjG4mHo6ACVLHjWf64pSfQkmtAPogmIdrXtmC8EvU+3fGxZVlR2j6fVmDBdC0ZlBbw1J75KNDOxnSbJLirLhSBMKn0RLqOqVy+C6d7zKoEL6A==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from AS8PR04MB8868.eurprd04.prod.outlook.com (2603:10a6:20b:42f::6)
- by GVXPR04MB9927.eurprd04.prod.outlook.com (2603:10a6:150:118::22) with
+ by PAXPR04MB9185.eurprd04.prod.outlook.com (2603:10a6:102:231::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9203.13; Tue, 14 Oct
- 2025 15:54:08 +0000
+ 2025 15:54:10 +0000
 Received: from AS8PR04MB8868.eurprd04.prod.outlook.com
  ([fe80::b7fe:6ce2:5e14:27dc]) by AS8PR04MB8868.eurprd04.prod.outlook.com
  ([fe80::b7fe:6ce2:5e14:27dc%4]) with mapi id 15.20.9203.009; Tue, 14 Oct 2025
- 15:54:08 +0000
+ 15:54:10 +0000
 From: Ioana Ciornei <ioana.ciornei@nxp.com>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -66,15 +67,18 @@ To: Rob Herring <robh@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Frank Li <Frank.Li@nxp.com>
-Subject: [PATCH v6 0/9] drivers: gpio: and the QIXIS FPGA GPIO controller
-Date: Tue, 14 Oct 2025 18:53:49 +0300
-Message-Id: <20251014155358.3885805-1-ioana.ciornei@nxp.com>
+Cc: Frank Li <Frank.Li@nxp.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v6 1/9] dt-bindings: gpio: add QIXIS FPGA based GPIO controller
+Date: Tue, 14 Oct 2025 18:53:50 +0300
+Message-Id: <20251014155358.3885805-2-ioana.ciornei@nxp.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20251014155358.3885805-1-ioana.ciornei@nxp.com>
+References: <20251014155358.3885805-1-ioana.ciornei@nxp.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: AM0PR04CA0130.eurprd04.prod.outlook.com
- (2603:10a6:208:55::35) To AS8PR04MB8868.eurprd04.prod.outlook.com
+X-ClientProxiedBy: AM0PR04CA0112.eurprd04.prod.outlook.com
+ (2603:10a6:208:55::17) To AS8PR04MB8868.eurprd04.prod.outlook.com
  (2603:10a6:20b:42f::6)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -83,180 +87,127 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8868:EE_|GVXPR04MB9927:EE_
-X-MS-Office365-Filtering-Correlation-Id: c9f19f26-cb17-47c5-a471-08de0b39e8dc
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8868:EE_|PAXPR04MB9185:EE_
+X-MS-Office365-Filtering-Correlation-Id: d7719533-c3ec-43fb-b59e-08de0b39e9d8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|19092799006|376014|7416014|921020;
+	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|19092799006|921020|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?L9SU6273UNNWwCetERLH0blPUkn9eHNEtztBHvnzvWfqBAqk+idJtQqWuEc4?=
- =?us-ascii?Q?5f0Mq7F+eQf/zfsKXsm/7W7poxycUyzFZjrN5G6Gv0DLhoivjlEFgJKinGQ7?=
- =?us-ascii?Q?7hZlVhKMxw/5XXVw4fL1qTcSG1lIdVV+ZqfEj/F7mvOfJ0CTnaAXEtQHEmQz?=
- =?us-ascii?Q?UNPgyzWCkFmibyVyK34vDkZa91zjW+wzapVb0bedFDS0c42rSG39QXjDzVU7?=
- =?us-ascii?Q?cDzbqlshNunHMT0AO68MEjKRKDE+BIHK1gpiertDUWMegFaI9Uugz6zp7sap?=
- =?us-ascii?Q?RiYJxJlNEPW7In4zaggtOMqs09GOuEtTAmCBMORIbQLJO9HKgoCFHDL1RITI?=
- =?us-ascii?Q?olLwzoWlKU7o4l0+iIIX7sItBdBUk8Hj/dZuZe4cTQE0GPVcuyGxokhWSHul?=
- =?us-ascii?Q?OCSioxJsdZj5cx/DV7+f6KUcAy/frg3LUpNYit5BsFyGB//8n4KEG2LXQmLU?=
- =?us-ascii?Q?l8kNMek7OKDGSNVGBevG1h+koW2IBferHMeA7YAjbfWnCAA78XBBGrZ9+Jv6?=
- =?us-ascii?Q?DhOsndQmqKOxBT9/FUwi2I001WvbeTK354zVHgCGAKTajf1lJ7FvSBfxuKya?=
- =?us-ascii?Q?F4dkqqT8EO2Ii/N3nfUapsPKRS//FUZlFIxIGaNjYsunHcLPsgHH/+wgYuWc?=
- =?us-ascii?Q?5EcQGjtP7ZzAqeU0zcWV6VJyd9H1l97Wmi9yo7ALmZ40l+53JQ8LwH0hTXzf?=
- =?us-ascii?Q?BQghImGbLfXljl5+709hUUUL6deIazw7MIq6+eC6Jg+Byow92uMNrvM7MjBs?=
- =?us-ascii?Q?z0hFYLt/WeHBnJNLcId9tvKyne1fXrVusKXxS6vGOmwvCHTh5sgUKjT+ArBs?=
- =?us-ascii?Q?o/s/iwt0bERgw9icoqGe7i49b/dQKRgFKYCjMxuoaiV2eyd9ua9Duu1tDB0q?=
- =?us-ascii?Q?DA2QFlZcx0BbvuzlhtEEDknPpmHO0xVtuRukkEsLZggRa1sUsg9XC3JV9Tuv?=
- =?us-ascii?Q?HqAO+rcyMfvqF8HNBin81VBihG7cWMA2TEcYK20tn6jf0HZ2P6J5RZ05o+PI?=
- =?us-ascii?Q?XL0pNZSSyG4SKO4DfaU7gDP6x8uwKhSVtUvItVaZDL0dXs6NYyCmvU7c2EJ/?=
- =?us-ascii?Q?tAxq4zGY2o/nh1zasWJ8QXw0ZZV1Ot8d6O9R4hhckDKDn2YSc3xG3KcCvk94?=
- =?us-ascii?Q?/EtcRGeUgD/LJlVhhzBSYuimG/CyVRP+mDpcsQPxtrX7yxWcyvMP12K0WUVd?=
- =?us-ascii?Q?DAHNVSDLcELI84zFMMEDc8et9w4WOETCyF8pAGSuGooEjzMG8aKk8GmcNdKe?=
- =?us-ascii?Q?bO3goPK0OX8BZ4kHlILEr7Me8JMXC+p1hO7p2ihUdhZcMCrB/jQ8sqvPNoSH?=
- =?us-ascii?Q?izh4jy7G5NXRaQLjdElMF3TicnWUDhz/UxvcW92xwB55MnFWDOKEfVPax7UU?=
- =?us-ascii?Q?u+2kuS16pmseosy8W6Mjvrfh0NGhftcecXtE7vMITdqqEvAi012xxp+NKElR?=
- =?us-ascii?Q?Vw7y+DvZEB68PYKbtTAZGYDHGKMcAqvzI9PMqQZiaESUdh4e1lcvLY2QhK76?=
- =?us-ascii?Q?b6SpCXBXC9T9HME=3D?=
+	=?us-ascii?Q?kugROTE6eSPawcZRIYqbDD125Zor09BH+GFHaVCKDdRodCesxFlPBgL6+y2G?=
+ =?us-ascii?Q?LJs/BxnPtIysZcBhzD6SjLGfRY07P6ZChcxefPb82NeL3bDAWKRNlqgwc8I4?=
+ =?us-ascii?Q?vOEHSZPlOAvMZXMDn/JInfOXLrAaWro0kz9ThAb8pJLPZV8yaVAbAbYUfC7h?=
+ =?us-ascii?Q?eW+Iz3q/fTJwJ6lB7meI6Hp14OKYnjhgcbOoTzeGYBhceJJQLfG0t+ajBTsU?=
+ =?us-ascii?Q?7kosYvwab5bxnP7OVxBNv0wXJD2toZzdQgx+3EDl8sj6iD5n7F7FOTBmnXNK?=
+ =?us-ascii?Q?imy+Lgb0FBlt5PNc7mvdDt85sS1BgQkkFoHxfnotKluHNdkBkSy8AqPHDXVM?=
+ =?us-ascii?Q?gBhJvyQMYqUnfoq60vhQn1D/lM8KXPfSAATAM1XMc9dtAqCzJcW4tXYpOXSM?=
+ =?us-ascii?Q?MaWVzB6CFDazZsDRgwmlywr3r9lSQn/CNuDPWg7LLzpzv1KfUP/72pt2o+ON?=
+ =?us-ascii?Q?CtwTAmZHijGdMnf+DZAnYBlBd8Z/D+kAgQIlfXXfxRH6A6cG7upStRq+cWcW?=
+ =?us-ascii?Q?a/lRlQR9QGjWQTnryzqcj4TvxzcpcvM1hD/oNrfPaok4hySwLmBYB7DIUhyZ?=
+ =?us-ascii?Q?54teU0Olfjjb29N15iyS5A0uD4Hwqp12kTkPVAlFQYuJ6iAP7O0QcHMyaaOE?=
+ =?us-ascii?Q?0exWCzvdR6EF+ob5CI8Sd/OQ+ewcY+7C/FtfdqIWA+MJ8hFohXJayrKNm8S4?=
+ =?us-ascii?Q?ThFPZDB6qYpIzuZsKYp/J5fehYsmomigAPE5+rYeoxJzwNUtooDzmKodNUZq?=
+ =?us-ascii?Q?v+kcUEGNb2XlT3x/iBYB2LNZ/z962Atx6H3L8oEeiYcUjGfguRmagr411TVL?=
+ =?us-ascii?Q?cmz9/r6KkY1Fg2W7nKHsnlpqTXGz+okOCx34GeDgbm5GPuVmF4oKyZyLadNW?=
+ =?us-ascii?Q?3n7+675aG/UgCv7JnZChD2by/jh/IJ3zxAR5U5bsDu0XANaq/NxBvtcMztIP?=
+ =?us-ascii?Q?PVSzwH37Kqg0sp98/6Oejw62NVu6PG0gCaxpijyKQSfNiQFhvdv3bLKlBkzk?=
+ =?us-ascii?Q?W07H9HqIQdWeb2MAYFUydg81iDV4zrFRoQmhRYXEN8Yw4gApQrfcWKmcz8+y?=
+ =?us-ascii?Q?xLpTrNKHfHmCRdnZa9w4qI1D+LSsj+r0lYayMKV0CXBl4TRRmAB2mBOdeaju?=
+ =?us-ascii?Q?qht9QWtZReFfb+CHIoeX0E5H+VdLMzfcABecAF3Msi3V0fBWvNHCmvqqLnGZ?=
+ =?us-ascii?Q?mHtrOZ3L4cu9N6PoDFB/3fcH06OXPJ19vsHrIxr7p6BJWL7kAzPtHVRzP0uf?=
+ =?us-ascii?Q?K/X0tfU67e6Ortco5ZtymvlderDtfvav8i7B97PFmNoC8j+x26MU3aL2yelz?=
+ =?us-ascii?Q?P1HnI0ZQ1LOSPoIWhjsogBRSHV0WfY65H2/FdM8VTbFTWfIe6y3iWjt7Dbyq?=
+ =?us-ascii?Q?t27sLD+a95nwIkzLfDfq5yg7aXDS5Ht7t/LjmTpCmYnQRQxwwG1w6Nx/ARjk?=
+ =?us-ascii?Q?MO0/7wdmU+5as1yXxmovU/vi84Z5UqsxJdcEtX4LeLDhM8d7jXA1gsI0SMLW?=
+ =?us-ascii?Q?kHtOYAYFfiK668g=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8868.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(19092799006)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8868.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(19092799006)(921020)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?t0iPurcwm5FjExz6DD69khEYC2LGKhx2biJYNBiB2RKNZ6l+WwynRo13Tnkp?=
- =?us-ascii?Q?6pkaOsA1u3k3+Hk54E11FdQaZaO8Fq1e9AWZUiYNwF0tN7jI6MxR681oVnoB?=
- =?us-ascii?Q?dfWg7kDDh/YWGdhUz3/bZ1SC4Lv5dxepxAT91i3ByAybmO1aJPGee1XYM56M?=
- =?us-ascii?Q?Fjxb9Ah+9rqhZ3PNCTGdhGPLREbH426K4cxozksvAsgzgCkOp/rhxqhyD0R1?=
- =?us-ascii?Q?yl3+V/TKIsiGoIr1djoNb+K8/mBywLk8Z5Knzay+6y83MDzHwF4S5MmCzgGI?=
- =?us-ascii?Q?LdPtpcg4NYiKyd/Sri4Ij0cL700tPpJ8TRWNOeDaJyGHbTIPVC79jb1AAi02?=
- =?us-ascii?Q?gsFs+K81hFODJk/2a+gsLKsXRUS/m6MFnyVrd6/LUJCAPpKtXMWumQj+xXd/?=
- =?us-ascii?Q?qyNbIOr5beaTi20W/gnuVJDTVf/psCCfBkw3S4AVP1NkqtDQKyBDpwVjPbRD?=
- =?us-ascii?Q?5gTUFFpft/rEi5/LbDIiAtBe4sNuDeU5boow7mh7wh2kuPTvTR5sKJYhrddX?=
- =?us-ascii?Q?w7sThXq2Q/YgPMNcg+6q+Oiw3PrMzlg5N9MRCTErYReHSGZs6RLvRTbUcoC3?=
- =?us-ascii?Q?GjE0Lzo/OlOPChHyHw+eftHwqy8MPyNL6z9wQS2RnGvbBCEjw4bvDFHvzipU?=
- =?us-ascii?Q?30v377fuCuWoXILtLvgkrLCw13mzRiCB+aHFn74laksHSSA0nMuJLPuH82Eu?=
- =?us-ascii?Q?/d8Qzp/tZjh71pn1cH1RK91X/NyvvpLXAXiFOUvVq8bnMaRgba0TD7dD2Qla?=
- =?us-ascii?Q?If36Aj85CA5xDw+PKn07GWm4JgqyECzCK0KIBfnGBZKR4k1aqelnQPleBMJC?=
- =?us-ascii?Q?9p3sqDG353qjmUem9YhAcRyb+SQoZtdxm1vY2hIdM1HJYLqhYGa0N2hBrKYP?=
- =?us-ascii?Q?5l0uHVIvSl6COx+JEW03A3VtARVgJlyHZZjMffaopruzpkfNijAHW5HP4Okq?=
- =?us-ascii?Q?VMHmM2pdr3QarEnS+iNm/OFcysfL2DD+qEwDp1rPgkVF28wHtimDDvnR0/Uq?=
- =?us-ascii?Q?6r/0TkwIXpGgnb36WFGv1ZcuSOsQmGEYmUJOWpxDeAaAbfd2fQN7Ltr34AKX?=
- =?us-ascii?Q?Hh+x1fm7uK5vS5DeuuUwWADKghvgNI5D3Xawk0fkZLPkh7ydX173fV5wa71w?=
- =?us-ascii?Q?dlKpIN9UgeeNCYJlAkYJTm2hM46yyDWz9z+N+qGgFpkwES4/PFWZQWtUYJy4?=
- =?us-ascii?Q?fGS701Q7fMI9vK/yHgUIhE09o0rdVosh1R37+viulVFsTzcpV090EHfnUd8X?=
- =?us-ascii?Q?M0o7UdZ9O02nBt+XUxreC5ynOk/N5v8JHKS8CUDI56P3tRcjnw6qS2Cbehya?=
- =?us-ascii?Q?P4xfY11Wotwx4r4cPlSAEKTWVInJCtCZvY9YAiWn+jmHayG0XBXUpEC7tZ6s?=
- =?us-ascii?Q?zNkYawBWICJVqwxRWa2ja1gJr7cAEvkEwwapLO75wCINMoVuLVzMxBeS0UNp?=
- =?us-ascii?Q?/YNV7OcsUa1azr2QIOhjRs91a0WDrFHozUwFoMFZEfhqco2QoXudKVtslLUB?=
- =?us-ascii?Q?2zyOP2Gexgrbs6EBczmWQSUCH9EUO/rU5eiUGyzeEKvG8aSQsBhxuJwVnkGp?=
- =?us-ascii?Q?m/zRu/ASfXVD8M+d8JLUI9AYlZhTCIyD4TamlLQF?=
+	=?us-ascii?Q?2sfRakmojdYlM7lWGfU0Q6e5cUYLFHft61ksXeUWF14rc8alO63p8Tujso5q?=
+ =?us-ascii?Q?EUtsXpaNqbPHK32YcldmYlGUZ1WHxbeFlwJM6bpkMKuUgnOxmREK57wSQEYd?=
+ =?us-ascii?Q?J1bUOiqCbpH2qcpIMbgUbQLMs23YsPEtW44THXmGDNkHobMBof9NGoyvVyMW?=
+ =?us-ascii?Q?BxidAnYvLLc9/78y2tWq5HrsNWApLbcQO5FnFbqYQ/69viRUdfJU7nwMYGke?=
+ =?us-ascii?Q?IyH3F3HiCvI8YSPPE3xw9wtbvzsvMVyv7dfbZ/i8xntu/BCpnyMi5uM1hzyA?=
+ =?us-ascii?Q?xthPmK35H0cmmP3VQB8WB3voSqV4BPuntjjBWGs5Ag8yeM5kIUKh+gPH7a1j?=
+ =?us-ascii?Q?IN6TdOfuFnfhk1t5Pf5x8Srch3T+TUadriYlTRDfQqnbRs1sRTaD7GzMjlYY?=
+ =?us-ascii?Q?BjwUF83qr9IybOGATP9fp7pIZfaOYLuq6X5LZXjgXOtyM5vT/0cDxKRODV+k?=
+ =?us-ascii?Q?BMNHiKuzjruvDfIcQcHVTZQZqSo7N7OV+igQx099b9T3vURL9BWJR/li1479?=
+ =?us-ascii?Q?Kzazsueu6g4TbaVZt/jashgR74d/W61P5xv04Y7e8tmBSX8uAlXLNPJWyuEf?=
+ =?us-ascii?Q?DAfx7yMiUaH4tAPofGPQf5ol3n/0zhSuW7cHJ1pBEK9CWesWBhvvca7Gmfa7?=
+ =?us-ascii?Q?MNLXT1uSLJIIgwHAwkfhAWFuK5zWXFtZzoXu6OIJ6AfQxI9p5Gup4G83+aNO?=
+ =?us-ascii?Q?Og/8l19r5uFuJ+Dp7CR7ieQBv9wJvHwiFx1FSKsKiPYmju2RIoXn6q8hDONW?=
+ =?us-ascii?Q?0pQWowNViTMNFcn54OmhRYUeeGFf8YMKq1Xi0x1hZL0Myl+LST7akXd2zFfN?=
+ =?us-ascii?Q?J3uLkPXzrXzuiNaY0RxY5hg92mORDxbJM6TQjtDlaKDFr1P8gSF3c3sUict2?=
+ =?us-ascii?Q?8ubgxwBvm2DThN6S6PfhD3hs7htPD0ikiMM/aXHXGvkO8yt3rwaF2iWqNyD7?=
+ =?us-ascii?Q?tNKPCh1SJXQ05umAUURKBFXV8Es6mw0U7R8TH190aWcjijtntI5a2ZEwOVXJ?=
+ =?us-ascii?Q?JLkCsZ6tMYGe/EQLOz1LZNvlhDR7GjBsNrQpVPWu/q5Hl67J84hNBd00DxM4?=
+ =?us-ascii?Q?oMKUW4KdzRTvaQp51tuLH2RZenvDz8Ngm4z1wBgk9mVMv6svf/5Yq4vHwGph?=
+ =?us-ascii?Q?13ajsQxap1GANDRjLMbF1M1icpRM9JapW/aXsxtKfm8MNxaUoomg15vYW1Hw?=
+ =?us-ascii?Q?ClTzLo8/djowhL5t2xE75IWNCAUKITa8sxZe0XhiSI7ILNkFHhCMPjABDMxu?=
+ =?us-ascii?Q?vxny2mraxMrAjZc7yiNBJOFqpHb+kpC1WPDzi5X5AHCNLFSDNHu2ZpFgk5CJ?=
+ =?us-ascii?Q?9j9aoCNmFfs6ViplepTvxY1K0BMfhOovuIJrREr/nL1jxhAYJ4R3Q56B6Qdd?=
+ =?us-ascii?Q?TkRGuPylGbt7HZxeAiCTfi3picQx33LUsKdCVbOeOqlUbntjmHq4QSi7dni5?=
+ =?us-ascii?Q?Va5f4Tp3fliK4MMPE1SiDD9wPOCSfGeV17fkdQZdh1aOkk2UKHBdwTSfZH24?=
+ =?us-ascii?Q?wY53HSUbBtGDGC0J8LHqQGxsxBGQ4JX/BxE3H/9coeg/bxapUECCZIJhvC4H?=
+ =?us-ascii?Q?oKFwSUYaP3O7vttc7PdIyV/TeA8BLPUUKov82FY3?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c9f19f26-cb17-47c5-a471-08de0b39e8dc
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7719533-c3ec-43fb-b59e-08de0b39e9d8
 X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8868.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2025 15:54:08.2937
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2025 15:54:10.1360
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RZdxUUB/9FAeffMNJnDh8JYVAkuy3MOmule6YWDr0Ec3mmYMz6VnDQVEC0WONc390swWCO4wLuunoBmlqaKcqw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB9927
+X-MS-Exchange-CrossTenant-UserPrincipalName: K/4i+BLhsKEWox3OWKbxpd8C3fPsd/BmWXmp8pVe+71JKTP/b/hEK2vgF/XaUoMXuoRqM+00wxT8SbNusLeaCg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9185
 
-This patch set adds support for the GPIO controllers on the QIXIS FPGAs
-found on some Layerscape boards such as LX2160ARDB and LS1046AQDS. At
-the same time it describes the SFP+ cages found on these boards, which
-are the users of those GPIO lines.
+Add a device tree binding for the QIXIS FPGA based GPIO controller.
+Depending on the board, the QIXIS FPGA exposes registers which act as a
+GPIO controller, each with 8 GPIO lines of fixed direction.
 
-Before actually adding the GPIO driver, patches #2 and #3 add and
-describe a new compatible string - fsl,lx2160ardb-fpga - which would be
-used for the QIXIS FPGA found on the LX2160ARDB board. As opposed to the
-other compatible strings found in fsl,fpga-qixis-i2c.yaml, the
-fsl,lx2160ardb-fpga imposes a unit address for its child devices. This
-will be used in the next patches when the gpio controller node will
-define its unit address as the address of its underlying register offset
-inside the FPGA. This requirement is described in the yaml file and it
-only affects the newly added compatible.
+Since each QIXIS FPGA layout has its particularities, add a separate
+compatible string for each board/GPIO register combination supported.
 
-Moving on to the GPIO subsystem, patch #4 is extending the gpio-regmap
-with the fixed_direction_output bitmap which could be used by user
-drivers to transmit directly the fixed direction of all the GPIO lines.
+Since these GPIO controllers are trivial, make use of the newly added
+trivial-gpio.yaml file instead of creating an entirely new one.
 
-Even though this patch set touches multiple subsytems, each with their
-own tree, I submit everything at once so that we can have a clear
-picture on the overall intention. The hope is that each subsystem can
-pick up the related patches since there is no compile time dependency
-between them.
-
+Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
 Changes in v2:
-- 1/9: Used the newly added trivial-gpio.yaml file
-- 1/9: Removed redundant "bindings" from commit title
-- 1/9: Added only one compatible string for the gpio controllers on
+- Used the newly added trivial-gpio.yaml file
+- Removed redundant "bindings" from commit title
+- Added only one compatible string for the gpio controllers on
   LX2160ARDB since both registers have the same layout.
-- 2/9: Enforce a unit address on the child gpios nodes (remove the ?)
-- 2/9: Enforce the use of unit addresses by having #address-size and
-  #size-cells only for the newly added fsl,lx2160ardb-fpga compatible
-- 4/9: Add the fixed_direction_output bitmap to the gpio_regmap_config
-- 5/9: Use the newly added .fixed_direction_output bitmap
-  representing the fixed direction of the GPIO lines.
-- 6/9: Use the same compatible string for both GPIO controller nodes.
-
 Changes in v3:
-- 2/10: Replace the trivial-gpio reference with an explicit mention of
-  the accepted child gpio compatible.
-- 2/10: Reword the commit message.
-- 2/10: Add the 'else' case to the if statement.
-- 3/10: New patch
-- 5/10: Make a deep copy of the new bitmap.
-- 5/10: Remove the offset check against the ngpio.
-- 5/10: Added documentation for the new config field.
-- 6/10: Remove 'drivers' from the commit title.
-- 6/10: Remove the qixis_cpld_gpio_type enum since its not needed.
-- 6/10: Remove the NULL check for device_get_match_data().
-- 6/10: Use a bitmap declared on the stack as the config field passed to
-  gpio-regmap.
-- 9,10/10: Moved the reg property before address/cells-size.
-
+- none
 Changes in v4:
-- 2/11: Add an extra paragraph in the commit message to better explain
-  the context.
-- 4/11: New patch.
-- 5/11: Insert the compatible so that the alphabetical order is kept.
-- 6/11: Replace devres bitmap allocation with bitmap_alloc() and
-  bitmap_free().
-
+- none
 Changes in v5:
-- 6/12: New patch. Fix a memory leak.
-- 7/12: Rebased on top of latest linux-next, change the extra goto
-  statement.
-
+- none
 Changes in v6:
-- 5/9: Moved the Kconfig option for the QIXIS GPIO controller under the
-  MFD menu
-- Removed the patches that were already accepted from v5
+- none
 
-Ioana Ciornei (9):
-  dt-bindings: gpio: add QIXIS FPGA based GPIO controller
-  dt-bindings: fsl,fpga-qixis-i2c: add support for LX2160ARDB FPGA
-  dt-bindings: fsl,fpga-qixis: describe the gpio child node found on
-    LS1046AQDS
-  gpio: regmap: add the .fixed_direction_output configuration parameter
-  gpio: add QIXIS FPGA GPIO controller
-  arm64: dts: lx2160a-rdb: describe the QIXIS FPGA and two child GPIO
-    controllers
-  arm64: dts: ls1046a-qds: describe the FPGA based GPIO controller
-  arm64: dts: lx2160a-rdb: fully describe the two SFP+ cages
-  arm64: dts: ls1046a-qds: describe the two on-board SFP+ cages
+ Documentation/devicetree/bindings/gpio/trivial-gpio.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
- .../bindings/board/fsl,fpga-qixis-i2c.yaml    |  58 ++++++++++
- .../bindings/board/fsl,fpga-qixis.yaml        |  10 ++
- .../bindings/gpio/trivial-gpio.yaml           |   2 +
- .../boot/dts/freescale/fsl-ls1046a-qds.dts    |  52 +++++++++
- .../boot/dts/freescale/fsl-lx2160a-rdb.dts    |  78 +++++++++++++
- drivers/gpio/Kconfig                          |   9 ++
- drivers/gpio/Makefile                         |   1 +
- drivers/gpio/gpio-qixis-fpga.c                | 107 ++++++++++++++++++
- drivers/gpio/gpio-regmap.c                    |  26 ++++-
- include/linux/gpio/regmap.h                   |   5 +
- 10 files changed, 346 insertions(+), 2 deletions(-)
- create mode 100644 drivers/gpio/gpio-qixis-fpga.c
-
+diff --git a/Documentation/devicetree/bindings/gpio/trivial-gpio.yaml b/Documentation/devicetree/bindings/gpio/trivial-gpio.yaml
+index c994177de940..3f4bbd57fc52 100644
+--- a/Documentation/devicetree/bindings/gpio/trivial-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/trivial-gpio.yaml
+@@ -22,6 +22,8 @@ properties:
+           - cznic,moxtet-gpio
+           - dlg,slg7xl45106
+           - fcs,fxl6408
++          - fsl,ls1046aqds-fpga-gpio-stat-pres2
++          - fsl,lx2160ardb-fpga-gpio-sfp
+           - gateworks,pld-gpio
+           - ibm,ppc4xx-gpio
+           - loongson,ls1x-gpio
 -- 
 2.25.1
 
