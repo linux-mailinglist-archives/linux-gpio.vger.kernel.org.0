@@ -1,176 +1,128 @@
-Return-Path: <linux-gpio+bounces-27074-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27075-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E3E6BD8DBC
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 12:59:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4260ABD8E10
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 13:03:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8AF3B1924C4F
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 11:00:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9F9DD1924596
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 11:04:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26B7F2FDC50;
-	Tue, 14 Oct 2025 10:57:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 503AC2DC768;
+	Tue, 14 Oct 2025 11:03:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m0ypyxAb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qgx6USgk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD702FD7DD
-	for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 10:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0145428CF49
+	for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 11:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760439449; cv=none; b=ggFpAkGbrnSgQ9F4K3bsvHT0NAb435QwknqLr5KTLrXgF+IxD6C6Y2m0RVuHtxTQUbBhufOiG7LJoiha9ZP8vkuVmLVuZIuEEdBoWXcUqUEbCXX6BB4gnAc9MyRsFS/ejDZoVrb73Fx03tTzyukydgNvCNIXKS748g5vrztCdmg=
+	t=1760439823; cv=none; b=ecokOLJV9ECoJ1TE/GT8OrR7YjwFp/zJeifn70qp92y7r80xHgmdLmSZQZHbia/ssRB0JekdzQtyqSetkKv6FwWLePL9elczqYwQWQNN92zu2jz0mEDfIg6NWXMrk9K1NJ56TZC07j+1iEImQ/cJo6D0vQPLNHtfwN8PfodknXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760439449; c=relaxed/simple;
-	bh=h0H6MhygcHpVeEe3ayRJhd0DlNHjer2rMmDiK65tgNg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bXA5XyMlPN6g/xB7nmig7DpJj+OtcJUAweuOMhtW8AP0WbTNsLzEi8L1HCS1zySqfUiNYy9/rIB7FjXeUpMPvsk1OckuTvnjSOCi9kAe16JmXyv6ktQs7OFWnai1MJImPy16oFe2dfUECFAhFhQIsPRLaDc16T05SURQV0piGss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m0ypyxAb; arc=none smtp.client-ip=209.85.128.180
+	s=arc-20240116; t=1760439823; c=relaxed/simple;
+	bh=fFAnhXo8LRmHKzhsEh1qaQDrn1OVe0MrFACIWbw+AYQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Gf+oy0vVJ+aWEqDCR9+/amR0CFKIcWbC6zkm5eUsy6KkBu3YXYTDM0Bzxxkm2v4gfUwL/v/45P0LZuegFu+AaLEHTSJIoiaDHjKZgGvMMoJrCXunwF/IFS3bt02Q08WGJbXB/lurpb9yjhyMo06/wI7JdbIaUI6GVB7moJulHZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Qgx6USgk; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-7815092cd22so4160647b3.2
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 03:57:27 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-3696f1d5102so49390471fa.3
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 04:03:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1760439447; x=1761044247; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bGzolF9q1IpbbklG5j2EadJMhIpSSosnmlJzCW1vwdk=;
-        b=m0ypyxAbUMaX9Ll9fkB6zUZwxACK80pNkvk8W8aSq6klfbFdR1Pi64xS9xDt3zEIlz
-         hwnj/nVKxt/m4/mDJ4wcpQd3g6FpDkhEexyr3/auHxcidcB/eoHcCfD7vvoxOOpghRQy
-         RJLqHE4W/pRCH8IwKO9G01qOCMqcvC8C4nMaihkPL18aj4XJhmAzo356bP1oj03BKQlv
-         O5UyNQwo24nM+MkmV5N07yDdTgVRs1JhxYfvMBuWg2o5YZNgi8Jeq2+elY29l2xHF64j
-         veOIn1VrVrDWZmyLZEfHz9k1wzC+Mkk3Bbz1YSFA2oI71xvAElvPWBY4WMhaFgDv47LD
-         txxA==
+        d=linaro.org; s=google; t=1760439819; x=1761044619; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aSBg21KwaCQJ3ZbWcTvLnMC5cG6OCieo4NGID6bXT7c=;
+        b=Qgx6USgkHScpJj/vUwls46bIalX+blcmqp5RXaBWuvwaB67Z5662i7McnHn9m6qeN3
+         XE81tWq2TLZj3XkUCKTevD/F6iNRFgMVqbZvVrSF6R6REQOLFH3e/T6/teue2R3iTbvs
+         qRJ92v75dONUbgvg43/jL/V7uOJ7CxtBLg/Pvh8Q+uQ6CAktzioCnQNxImzJ03wlUQDj
+         Rh32suneS8JvPvnaHlL/OBc5mN4uOjo0ylMO4Pms66z5gmGU+zATFVS5tEQ8xDla3hPl
+         ppvXGFTtxs8XMYDRNs6ixuqB99FcuxLmsMsOw5UwrVjd0A/j7GEuDxa1sIoTcvYIV2nf
+         KKCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760439447; x=1761044247;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bGzolF9q1IpbbklG5j2EadJMhIpSSosnmlJzCW1vwdk=;
-        b=Ddza1eXzxAwn+dc0gfsNjzoafavcAEZokrSa28Ey9PQMTTp0FUuIp8KQakg4Z8+ClF
-         fk2uPKp1zb57WWRinLpr2QcE2t4yXeJGiXtIwW3lGfb672JuKq20zwnS/wR+MccCCrUA
-         BxwpnznMLCYRfPxBmzAVAwPJF4ivqj/w3R1Z6CXDdSkxfp77HdPSqne1+wgAn2TQkIPa
-         ZLmsnDPfcfivk30YxOWsyOlwWT2CsxeOUI8DKhBLYSJizZRQGcEf7eKSq6dRkF+LeROK
-         v8TT59IyRBpRYmT8yFPui2nXRvT9fxN9KqDmR/7izrhJeq+RroS99y4sBQAvH0ejbksK
-         4skw==
-X-Forwarded-Encrypted: i=1; AJvYcCVsHAsfssvVWj6o6cLRch5eIgEe/i6w4TsZr0we/tMVDtPYWPC81e3V4W0upx/in4yAodWrpc+f+ODS@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQA4UA//aZkR/CpNe3f0ATU7k9M7coYd1lA/4tEe0PMNlYEj0j
-	cgUYNJRoaoBXxlQ/tjDHQTGX2Qtly2ranYuO+PbZTvl56kxrsTUpkkJS/xwmpW3nv9W47Tdxa4L
-	dW0mTQ5sxDYcWHFsNqR+/Hb3ReyIuny6loMZFT8EPNA==
-X-Gm-Gg: ASbGncs0TucaI1wraa8R6H9c5P2cQ/U4CL/a+g+3UXtqQqsPHCHWxPhMNx0Ivk6SPaD
-	thmzDSlZltPMoustDqY4mz8doa4pAvziZIwn472SpLROjTcwDSmWtlC+NwKU0fUHEwrNPBLn2N4
-	T7y7IFKX00zTP9xz0B3LQGN/gPJ27jnYfdxKwsqkmEUeNhANZCz6WuwyFNme+KcWcldlKwWB/4l
-	zWIVDXmhvZVZmsOjhDyW1Hm8E82pPZv7sRPlA4z
-X-Google-Smtp-Source: AGHT+IEgeGSPp5tZrYwz7LuhOGgC2QQoV6jKld35rrrEDILk6KVu5XlJczlMevH7xUUTupvZG733g6Xg/DOqB7cpoSI=
-X-Received: by 2002:a53:d649:0:b0:636:d3f9:6418 with SMTP id
- 956f58d0204a3-63ccb864da8mr16445847d50.22.1760439446953; Tue, 14 Oct 2025
- 03:57:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1760439819; x=1761044619;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aSBg21KwaCQJ3ZbWcTvLnMC5cG6OCieo4NGID6bXT7c=;
+        b=mE+v1R7I8yFQGYKxgelHKjuI3Ue1keZlw+dVFnJ+QZrMAxO3B1wS40Y8tpeGfVQ7tt
+         FdEZ5xnp8tnIikxWixDYXdOKgu4m6Pk91xlJVR3fmBAjoOfilC77m5+pAfRZBlK41vHn
+         oeHVRyWJZpMAbMTAEdMymv5x2gLR8HLqWGRQttX1G5UWp7zIj2/LALr9bQbRF4Up9nQn
+         0VrvyOKEEtyBlx+H1EhWeuBhfD0tNwNCJYwx5y1xjI1uzJ4vqHNsdPpe9r1nJMnNYOfW
+         9rMaBW0xUb3BHftM+rOs2PnvRvwqA7hQ3HMyxCDmyxsdjP5nU/fqeHqoMz+zDWgrhW/z
+         SBLg==
+X-Gm-Message-State: AOJu0Yy4UDEejND6hsPpYUv2RUHqvMCG0GAQJREf299BNGNf9LC9b9Rc
+	uzYCJycZRjHA9i/EAO+ki4fe8M8CUgUr9m6GsTgUH89O/cx5xJTeTapsW+N8UV18157P1BAxftI
+	z+Xra
+X-Gm-Gg: ASbGncuT5yCMd/ZC7N+KbNMjF9MlNjApckrnFPgSSKxelUJIIEXsmstRYoNMDD2thMH
+	VaDF9jGbUatAousOFIjl9+N2pTN2HnhS5Gg6VvZhfjESi8ud/Xu/6EXnjOH/08uhgNLkZOGFqjJ
+	sv47Y3uyD2+WgGYPxWLz5hmZW4nsQsqe1Coq9JP0zIMpLYAzBv3lMhTK2f9S6k6r/tl79ixLz2D
+	8O46d3sYQ3DW9uKiDfYY1DdCaqntdnrSVtuPE5iqZ+jf5lPRItHVypHCIOb3ZtQfxgGWLtjkH7R
+	SCp5ozIWGz2+FqSdMpYW736cLflzRVAAcWX4/oDHyDZfmmR5dYc2yMBVzyzRz7skTjAOPDITOPO
+	vf+My8i+IJx/Syc2Mg+aSxm7OA3qzWC6q/3kfP6CJ8ynUZ5q73MY9PxClfoA69lDTxUY=
+X-Google-Smtp-Source: AGHT+IH2ijczAGlMkdcVtHMhumPMxN+nEhW+VcsNQy8hdGNG4AwUjqMGXaDoEc2u6oyTt50kuBGjaA==
+X-Received: by 2002:a05:651c:1586:b0:355:b3ec:11e2 with SMTP id 38308e7fff4ca-37609c9caddmr69355191fa.8.1760439818882;
+        Tue, 14 Oct 2025 04:03:38 -0700 (PDT)
+Received: from [192.168.1.140] ([85.235.12.238])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3762e7b4cddsm39992521fa.19.2025.10.14.04.03.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Oct 2025 04:03:21 -0700 (PDT)
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 14 Oct 2025 13:03:21 +0200
+Subject: [PATCH] pinctrl: pinmux: Add missing .function_is_gpio kerneldoc
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251014015712.2922237-1-gary.yang@cixtech.com> <20251014015712.2922237-3-gary.yang@cixtech.com>
-In-Reply-To: <20251014015712.2922237-3-gary.yang@cixtech.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 14 Oct 2025 12:57:11 +0200
-X-Gm-Features: AS18NWAM1tuEn3mlDY7wbHC5_VT-EX1J8T4IWs4ITMBNmXaEI1pGIgOsxThjx3c
-Message-ID: <CACRpkdaXW-BFM=HvqLiSY-Mkmhso2ETmkZzOX328aSadUEBdSQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] pinctrl: cix: Add pin-controller support for sky1
-To: Gary Yang <gary.yang@cixtech.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	cix-kernel-upstream@cixtech.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20251014-function-is-gpio-kerneldoc-v1-1-4e6940a2b37f@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAPgt7mgC/x2MSQqAMAwAvyI5G7BFD/oV8dAl1aC00qoI4t8NM
+ qeBYR4olJkKDNUDmS4unKKIqitwi4kzIXtx0I3uVKNaDGd0h0TIBeedE66UI20+OdS9FXzorTY
+ ggz1T4Pufj9P7fiIDPm9sAAAA
+X-Change-ID: 20251014-function-is-gpio-kerneldoc-29b9b9df9b2a
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+X-Mailer: b4 0.14.2
 
-Hi Gary,
+This callback was undocumented, add the docs.
 
-this looks very nice, as long as we finish the bindings we can
-soon merge this I hope.
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ include/linux/pinctrl/pinmux.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Some small comments!
+diff --git a/include/linux/pinctrl/pinmux.h b/include/linux/pinctrl/pinmux.h
+index 6db6c3e1ccc2249d4b4204e6fc19bf7b4397cc81..d2da7169b767609682e66700411051e20ba3fed2 100644
+--- a/include/linux/pinctrl/pinmux.h
++++ b/include/linux/pinctrl/pinmux.h
+@@ -35,6 +35,13 @@ struct pinctrl_gpio_range;
+  *	name can be used with the generic @pinctrl_ops to retrieve the
+  *	actual pins affected. The applicable groups will be returned in
+  *	@groups and the number of groups in @num_groups
++ * @function_is_gpio: determine, preferably by reading hardware register states
++ *	if the indicates function selector passed corresponds to the GPIO
++ *	function which can also be used by the accelerared GPIO functions
++ *	@gpio_request_enable, @gpio_disable_free and @gpio_set_direction.
++ *	When the pin control core can properly determine if a function is a
++ *	GPIO function, it is much easier to use the @strict mode on the pin
++ *	controller and avoid confusing set-ups.
+  * @set_mux: enable a certain muxing function with a certain pin group. The
+  *	driver does not need to figure out whether enabling this function
+  *	conflicts some other use of the pins in that group, such collisions
 
-On Tue, Oct 14, 2025 at 3:57=E2=80=AFAM Gary Yang <gary.yang@cixtech.com> w=
-rote:
+---
+base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
+change-id: 20251014-function-is-gpio-kerneldoc-29b9b9df9b2a
 
+Best regards,
+-- 
+Linus Walleij <linus.walleij@linaro.org>
 
-> There are two pin-controllers on Cix Sky1 platform.
-> one is used under S0 state, the other is used under S0 and S5 state.
->
-> Signed-off-by: Gary Yang <gary.yang@cixtech.com>
-(...)
-
-> +config PINCTRL_SKY1
-> +       tristate "Cix Sky1 pinctrl driver"
-> +       depends on ARCH_CIX
-
-Maybe depends on ARCH_CIX || COMPILE_TEST so we
-get some compile testing in the test farms and also a test
-on the rest of the dependencies.
-
-(Makes the bots complain so we can fix all such things!)
-
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_address.h>
-> +#include <linux/pinctrl/machine.h>
-
-Do you really need <linux/pinctrl/machine.h>?
-
-Another thing you might want to consider is whether the
-designware GPIO will use this pin controller as
-"back-end" for the GPIOs using gpio-ranges in the
-GPIO controller nodes, for example (I just made this up):
-
-gpio-ranges =3D <&pinctrl1 0 20 10>, <&pinctrl2 10 50 20>;
-
-Then you might want to implement the GPIO
-accelerator operations in struct pinmux_ops, i.e. these:
-
- * @gpio_request_enable: requests and enables GPIO on a certain pin.
- *      Implement this only if you can mux every pin individually as GPIO. =
-The
- *      affected GPIO range is passed along with an offset(pin number) into=
- that
- *      specific GPIO range - function selectors and pin groups are orthogo=
-nal
- *      to this, the core will however make sure the pins do not collide.
- * @gpio_disable_free: free up GPIO muxing on a certain pin, the reverse of
- *      @gpio_request_enable
- * @gpio_set_direction: Since controllers may need different configurations
- *      depending on whether the GPIO is configured as input or output,
- *      a direction selector function may be implemented as a backing
- *      to the GPIO controllers that need pin muxing.
- * @strict: do not allow simultaneous use of the same pin for GPIO and anot=
-her
- *      function. Check both gpio_owner and mux_owner strictly before appro=
-ving
- *      the pin request.
-
-And nowadays it is also worth considering using:
-
-        bool (*function_is_gpio) (struct pinctrl_dev *pctldev,
-                                  unsigned int selector);
-
-To make the pinctrl core awara of a certain function selector being the
-GPIO function (which makes the accelerated functions work much better
-with the strict mode).
-
-This can all be added later in separate patches, but this is a good time
-to make sure nothing stands in the way of doing this.
-
-Yours,
-Linus Walleij
 
