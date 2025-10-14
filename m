@@ -1,569 +1,106 @@
-Return-Path: <linux-gpio+bounces-27067-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27068-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41DE9BD8BDF
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 12:23:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1344BD8C36
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 12:27:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 84DA64F5062
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 10:23:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1130D19223F5
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 10:27:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4F822F659C;
-	Tue, 14 Oct 2025 10:23:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56D2A2F7471;
+	Tue, 14 Oct 2025 10:27:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wsp+xi37"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jVA9EFLq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yx1-f44.google.com (mail-yx1-f44.google.com [74.125.224.44])
+Received: from mail-yx1-f51.google.com (mail-yx1-f51.google.com [74.125.224.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309972F1FC8
-	for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 10:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D332EAB60
+	for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 10:27:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760437407; cv=none; b=VvAQawAPt7mNZbJSz4CK5CMwnJ7sw4sd84bO5gv6JfqIIblrP55DuPTTqOrZi283NuQLjDaOPfTx/2kkIaYbEeth5rieDnnhWOh0Joxuk7Ocwf32T6v4klENzQ2sH8o49acaIXECKWfX3fceOX8j3+BJ7Syk/rDOfP/Ox2M58vA=
+	t=1760437636; cv=none; b=iKnxg6RnQEwIE6jZP0K3wQ4OACDG53UHJDh6bexVgs+8KJZt+z74rYPquqZn9yJ8NTQIYIuXdb3oR9zHeDLFMbg23wwR1fDjVUjMqTH99+Zhm+lY1C9PKzXkyQV9w1ESUKsPFdECEuP8ldhcbF9KS/VGjJ7/N88Sw+PGQCPiVRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760437407; c=relaxed/simple;
-	bh=HBeoLSxpTUhB5k5FsVkrCIB6ViDWGKvUTXafr91NmxU=;
+	s=arc-20240116; t=1760437636; c=relaxed/simple;
+	bh=FuJsik7+DaCaes12yTPDuIvuNgtexRYCMaqyKI8Uvik=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SwvXzh48P+d4uJtvi5A1m1yHGdj0PG7WyjypAVlhnpXPg0IML8hVEVGkj1RXL8Q4Gz5PyCrV+rScjmhElVV3DJsgdjfRgK9i6+5r1NFKws9l0YZtfrQEENLgs0XFh2eZ1uv/HlfAcOme4r1NUGEHlPBP5RXTyMDGPxY0hYVy2Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wsp+xi37; arc=none smtp.client-ip=74.125.224.44
+	 To:Cc:Content-Type; b=Ve5ayPK6QKgVQ9PrSXnXG29f6u/SXLZ3778y7dNL3yBWw/DPbzDK35hTQLnXZ+TezQPwizSbQLX08Ntb/XPt7Ke5HJ4tWVavqTzIvhVcVz3POT7YAX6voixavcHIHe24kc/W6w40luXIqp5T26iEvDkc78uC+z477O9ScT03E3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jVA9EFLq; arc=none smtp.client-ip=74.125.224.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-63cf0df1abbso3431905d50.2
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 03:23:25 -0700 (PDT)
+Received: by mail-yx1-f51.google.com with SMTP id 956f58d0204a3-63bc1aeb427so5239219d50.3
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 03:27:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1760437404; x=1761042204; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1760437633; x=1761042433; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0NSrWOSqSz9iedx0CTd4FBgAAcUOjskBzS2cIVqq5D4=;
-        b=wsp+xi37UYTi8l5a1JzKzq22tfgPsi8wJ+rUabCdC1uw0rzTsorG1NElfng4FXqkVn
-         kSVaRv1rs2ux5mEKCju/LvpWvuF4WiqjBC+tWNumSG10RxrT6mtRtykfDkUMXiFIfhhj
-         Ren8BkTj5hYLnq1Q+ttCCI+QZ4wio/sLVAGKAF6NsE16EeRQ3NamYXmwrMvdneR1RCWD
-         fGlmNXccxiyDbbogDHt88nIPtT4sNi5AFQ9xnDS0l+eyvRt1vnZVBPsAWVCvhZbVoYa2
-         95MmZWiDNX8kish8JFxUdEGujB2DG/cxejRG+yoPWcHZaEl0vM5p0S78PPFaRT+tpw7I
-         k+ug==
+        bh=FuJsik7+DaCaes12yTPDuIvuNgtexRYCMaqyKI8Uvik=;
+        b=jVA9EFLqLylN+My41k3vukyz7b4vyEyKBghyjfDP1XGWv7FwHNrprsXYottmnY6L9b
+         /sMDe0gkqBBfaUQDg0wjaBmu1Dywh9uq+w+kEJw8S71SlStshBt2SaKZAupoiNHi9z/i
+         SAav+knsbGy92kn3K/O9kzglii8SaDIhb6VFy8kLZLHRY9DVWR69q36wrJNjO0lqIzdR
+         rDyMIod8KPVgnmRXHrwu566bdjUQ8JKqChGMaaiFIBDQKo4hOsKsdwDEEXVz/9+i26zp
+         3swLe1lsjJp6pYzMRyrzDDX58SBwcoyjezmuuhfpW7PTI5rUEJ7yA78VNJkh2WtJ5XUR
+         F5Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760437404; x=1761042204;
+        d=1e100.net; s=20230601; t=1760437633; x=1761042433;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0NSrWOSqSz9iedx0CTd4FBgAAcUOjskBzS2cIVqq5D4=;
-        b=QArDwTVVYm3Qr28aMlrADApgLq8LfYeezrl4Sb8OdRmuZYNp7VJVuD9wrJQUAElCs/
-         Dczrk9HKCFkEkl3yBDjfmZakb1thjDv/rIZxixLqs5/Tp2iupcd2XppuomIOYVDApEtC
-         70OWItqMm1DbNB4txtp3WXM205kDCc9NuS/NyZTqqwGsgiMs+Uebkj24IJTNw+33MkKZ
-         /0O1gROFsLy0Qa04bLEVDHIn9wOp2Fvb2NSNMYP23Gw7Kfkyp6L+boL4pCNtW5gR8mVJ
-         E8WLW9PjTRA85bVxw26jp+QMMdRmttyZYdeYHZBNeUi73qa18nl50eS8mXTW5PWBe4/c
-         0s2g==
-X-Forwarded-Encrypted: i=1; AJvYcCV/pzwpfvdBD+xC8ljcICxIA7aP2AtOiTQv0CcFD6lzeS+27vSxj078mWJv3ID38Z/VzX8tsgt4s/NW@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzep5OkinZ7+bXYeCDs0xh8m0hzdavlVW835E2X0Bu+HWsXH17m
-	60DvUFew7cdvJ6c6iV1VkcKn3+Y/OapQqyPM1eWDFC3ytZ7lqgcfegrcxSlYhascY/3HL34mlxy
-	V7/RiVe7S1f73VCiRxuxAykTariXtJgz6JCFn6/mnDw==
-X-Gm-Gg: ASbGncu51IwOqqCgfEBuSy6FQQgU1FhZgUi3q564OD02mRu5ZWLn65CQuSBLQptkVbG
-	ypEmVQ7V/9RiLQEC52+PXzTEVvceyewwezWnMKqGWz5XcL8FQQhIBeC7x4F+dq3JfY7rrgZbhWD
-	Vll/q2FYdDyrfbDDfL0dTl3VYpeKtxiABuX4lkpp6iE0OXPZu0vCnSi26Ki4HoXyOFqpgAlcRZK
-	v15XCJbhuI5eBPOUrmy7r7OtmDmoQ==
-X-Google-Smtp-Source: AGHT+IGX7pWJReynN7jgaMlmfnmPBVJaIc8aQG0hFCcA9poFMAny2m2Orf6s2pNDMLHxkaG9c0y1HL8Su4Eo2yMxogY=
-X-Received: by 2002:a53:ac49:0:b0:63c:e72f:d354 with SMTP id
- 956f58d0204a3-63ce72fd63cmr12181584d50.22.1760437404038; Tue, 14 Oct 2025
- 03:23:24 -0700 (PDT)
+        bh=FuJsik7+DaCaes12yTPDuIvuNgtexRYCMaqyKI8Uvik=;
+        b=OwVsnp+ehipyIh74ZririAiY5XSInflWPveH/DhLNY9rAaTCFTka8uXbL7jsbqBESW
+         7mHgkyi8Didlee0+A5lcvkXh/iYJ3mDuLPzH5snktwvfaK9+WjPs2+AUU+HbF/pn+hmA
+         i1MR/thZS76wisl3mtIDdLeUsgYv5iYyqJPVO3G6tiUFnXrU5+k5bC+1LnUlR4kDPOW1
+         757WbmtDaSST6/LVHIAJEjnZ3aA4fG6mfwYEpaiPN3FYz9ZeURuhZJS7fJS9WNLu9py7
+         in9NM5x0Dase5aj5gFbDjAQGMsGTzgmDpWWQ+2OLQpk6kUGKRK98CSjnmVy1+Hj9fPzI
+         XqVw==
+X-Forwarded-Encrypted: i=1; AJvYcCUW83ck0wFCg8RpekOmE6EjAEZeot5zfmgYxXsOYSp1xlLVw4bldPxuPWK/e1oCArgARPY1QaY6b0F1@vger.kernel.org
+X-Gm-Message-State: AOJu0YyO5aZKL8ED0FmGqhByNLilYKSk105Sh+JAOs7c0EunqBu1gw0S
+	YMIMyl6WgIMmL4kYkoYmz8iPZ+z/0QVQv64wXpFEkyc0RaHK6dSM2u+b2Z6fx1ymupEY7LgB5G4
+	w39I2Bc91aws8Aba5EIGG4n0c384HxNPMoUPGTw3HTA==
+X-Gm-Gg: ASbGncsGVsrVXi95IKz3Nk7vRv06xFMMPPfwbNRMeU6AuJiMFKERS8nZkOqtimpshEm
+	IDfgl02ij2aZmg8HkbpM01gTIYJUmMcxRBJod8OpqcH6sAGNI0CP0JDktQR/v79pX6B9Cg/RoKe
+	HJ/9qHP5cClo1Bu5RzsbPUuz+O4KWfzQEHbokES+DimTp3M+WuiKykT7m6ViqURP42oiZAE/Z98
+	1nqob/cJKC7WaTQHxUem5eW58iRg9ZZ5BTuFZ4N
+X-Google-Smtp-Source: AGHT+IHRa7bXy75d6i5HUlj+9IP+1DUMfQrZzPZg6R5BkfVxXhAtjPDhZHETMjFkN6BqO4iP3O0kBA7vwFOQ0olQU/k=
+X-Received: by 2002:a53:bacd:0:b0:63c:f5a7:410 with SMTP id
+ 956f58d0204a3-63cf5a70a0cmr7264391d50.68.1760437633382; Tue, 14 Oct 2025
+ 03:27:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <tencent_DAD6E4E85F79FDC4DF2878B03940CA337108@qq.com>
-In-Reply-To: <tencent_DAD6E4E85F79FDC4DF2878B03940CA337108@qq.com>
+References: <20250926-manpower-glacial-e9756c82b427@spud> <20250926-unshackle-jury-79f701f97e94@spud>
+ <CACRpkdZ5RCcaNJB_3ufAgpDtdJBKfOVrMbJVAQWaVSOkY0-XNQ@mail.gmail.com>
+ <CACRpkdZo=c0BnSLm=FKRMNYKEaPAHBgtfhD9txhPofts4ApDkw@mail.gmail.com>
+ <20251001-backless-cattle-a98db634d7f0@spud> <CACRpkdaEsa5gSpGxWG8xudMePt12nZaZRCRrW5Bf5JQ0f1K9Zw@mail.gmail.com>
+ <20251013-spoiling-halogen-4e56c4bc83dd@spud>
+In-Reply-To: <20251013-spoiling-halogen-4e56c4bc83dd@spud>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 14 Oct 2025 12:23:07 +0200
-X-Gm-Features: AS18NWCoMb5XDlmenFa0xGITZP61fGGQfLpt-glaoPxcSHEPwEjlMrE6klD2W9U
-Message-ID: <CACRpkda833CiwA+ihMLm6zzTFsoCMFoesbAVrW7EMA0-vGFTFQ@mail.gmail.com>
-Subject: Re: [PATCH] power: supply: Add SC8541 charger drivers
-To: 1647395606@qq.com
-Cc: sre@kernel.org, brgl@bgdev.pl, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	wangwenqiang <wenqiang.wang@faiot.com>
+Date: Tue, 14 Oct 2025 12:27:00 +0200
+X-Gm-Features: AS18NWDCJqq6gcxVuwM3A6vHvRI5wTTMGMwzTKaykc-ECTJ_Ys6bz0-AI8XqdpM
+Message-ID: <CACRpkdaPJuRUdQDWY+o91YEvh1Kmt8TTeBzjOoLYeAef92MGkQ@mail.gmail.com>
+Subject: Re: [RFC 3/5] pinctrl: add polarfire soc iomux0 pinmux driver
+To: Conor Dooley <conor@kernel.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Wang,
+On Mon, Oct 13, 2025 at 1:42=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
+te:
 
-thanks for your patch!
+> I'll send my v2 on tomorrow probably, and we can talk about what exact
+> changes should be made there?
 
-On Mon, Oct 13, 2025 at 10:54=E2=80=AFAM <1647395606@qq.com> wrote:
-
-> From: wangwenqiang <wenqiang.wang@faiot.com>
->
-> The SC8541 is a charger pump from South Chip.
-> By adjusting the voltage difference between the input and output terminal=
-s,
-> it can achieve a maximum charging current of 8A.
-> It has been verified that this driver can operate normally on the Qualcom=
-m QCS615 platform.
->
-> Signed-off-by: wangwenqiang <wenqiang.wang@faiot.com>
-
-(...)
-> +#include <linux/gpio.h>
-
-Don't use this legacy API, include <linux/gpio/consumer.h> if you need
-to use GPIO lines and use GPIO descriptors.
-
-> +#include <linux/i2c.h>
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/module.h>
-> +#include <linux/power_supply.h>
-> +#include <linux/slab.h>
-> +#include <linux/kernel.h>
-> +#include <linux/sched.h>
-> +#include <linux/kthread.h>
-
-Are you using sched.h and thread.h really?
-You are using threaded interrupt handlers but that is
-not coming from this file but interrupt.h.
-
-> +#include <linux/delay.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_gpio.h>
-
-Don't use this legacy API either, use <linux/gpio/consumer.h>
-
-> +#include <linux/err.h>
-> +#include <linux/regulator/driver.h>
-> +#include <linux/regulator/of_regulator.h>
-> +#include <linux/regulator/machine.h>
-
-I don't think you're defining regulator machines either.
-
-> +#include <linux/debugfs.h>
-> +#include <linux/bitops.h>
-> +#include <linux/math64.h>
-> +#include <linux/regmap.h>
-
-Please go over the includes and make sure you only include the ones
-you really need.
-
-> +#define SC8541_DRV_VERSION              "1.0.0_G"
-
-I would just drop this, we don't use these kind of strings much these days.
-
-> +struct flag_bit {
-> +    int notify;
-> +    int mask;
-> +    char *name;
-> +};
-> +
-> +struct intr_flag {
-> +    int reg;
-> +    int len;
-> +    struct flag_bit bit[8];
-> +};
-
-Are these things such as notify, mask, reg, len really int?
-Aren't they better as u32?
-
-> +struct reg_range {
-> +    u32 min;
-> +    u32 max;
-> +    u32 step;
-> +    u32 offset;
-> +    const u32 *table;
-> +    u16 num_table;
-> +    bool round_up;
-> +};
-
-Here is some nice use of proper types!
-
-> +static const struct regmap_config sc8541_regmap_config =3D {
-> +    .reg_bits =3D 8,
-> +    .val_bits =3D 8,
-> +
-> +    .max_register =3D SC8541_REGMAX,
-> +};
-
-Nice use of regmap.
-
-> +struct sc8541_chip {
-> +    struct device *dev;
-> +    struct i2c_client *client;
-> +    struct regmap *regmap;
-> +    struct regmap_field *rmap_fields[F_MAX_FIELDS];
-> +
-> +    struct sc8541_cfg_e cfg;
-> +    int irq_gpio;
-> +    int irq;
-> +
-> +    int mode;
-> +
-> +    bool charge_enabled;
-> +    int usb_present;
-> +    int vbus_volt;
-> +    int ibus_curr;
-> +    int vbat_volt;
-> +    int ibat_curr;
-> +    int die_temp;
-
-Can all of these really be negative? Otherwise use unsigned int.
-I guess the die_temp should be int because it could be negative.
-
-> +/********************COMMON API***********************/
-
-Drop these headers, we can see it is a common API anyway.
-
-> +__maybe_unused static u8 val2reg(enum sc8541_reg_range id, u32 val)
-> +{
-> +    int i;
-> +    u8 reg;
-> +    const struct reg_range *range =3D &sc8541_reg_range[id];
-> +
-> +    if (!range)
-> +       return val;
-> +
-> +    if (range->table) {
-> +       if (val <=3D range->table[0])
-> +           return 0;
-> +       for (i =3D 1; i < range->num_table - 1; i++) {
-> +           if (val =3D=3D range->table[i])
-> +               return i;
-> +           if (val > range->table[i] &&
-> +               val < range->table[i + 1])
-> +               return range->round_up ? i + 1 : i;
-> +       }
-> +       return range->num_table - 1;
-> +    }
-> +    if (val <=3D range->min)
-> +       reg =3D 0;
-> +    else if (val >=3D range->max)
-> +       reg =3D (range->max - range->offset) / range->step;
-> +    else if (range->round_up)
-> +       reg =3D (val - range->offset) / range->step + 1;
-> +    else
-> +       reg =3D (val - range->offset) / range->step;
-> +    return reg;
-> +}
-
-Add some description of what the function is doing, it's hard
-to understand, kerneldoc please.
-
-> +__maybe_unused static u32 reg2val(enum sc8541_reg_range id, u8 reg)
-> +{
-> +    const struct reg_range *range =3D &sc8541_reg_range[id];
-> +
-> +    if (!range)
-> +       return reg;
-> +    return range->table ? range->table[reg] :
-> +                 range->offset + range->step * reg;
-> +}
-
-Same here.
-
-> +static int sc8541_field_read(struct sc8541_chip *sc,
-> +               enum sc8541_fields field_id, int *val)
-> +{
-> +    int ret;
-> +
-> +    ret =3D regmap_field_read(sc->rmap_fields[field_id], val);
-> +    if (ret < 0) {
-> +       dev_err(sc->dev, "sc8541 read field %d fail: %d\n", field_id, ret=
-);
-> +    }
-> +
-> +    return ret;
-> +}
-> +
-> +static int sc8541_field_write(struct sc8541_chip *sc,
-> +               enum sc8541_fields field_id, int val)
-> +{
-> +    int ret;
-> +
-> +    ret =3D regmap_field_write(sc->rmap_fields[field_id], val);
-> +    if (ret < 0) {
-> +       dev_err(sc->dev, "sc8541 read field %d fail: %d\n", field_id, ret=
-);
-> +    }
-> +
-> +    return ret;
-> +}
-> +
-> +static int sc8541_read_block(struct sc8541_chip *sc,
-> +               int reg, uint8_t *val, int len)
-> +{
-> +    int ret;
-> +
-> +    ret =3D regmap_bulk_read(sc->regmap, reg, val, len);
-> +    if (ret < 0) {
-> +       dev_err(sc->dev, "sc8541 read %02x block failed %d\n", reg, ret);
-> +    }
-> +
-> +    return ret;
-> +}
-
-Does these three indirections really but you something? You just need to
-handle the returned ret once more in the code. Isn't it better to just use
-regmap_* field etc directly and report errors in the code.
-
-> +__maybe_unused static int sc8541_reg_reset(struct sc8541_chip *sc)
-> +{
-> +    return sc8541_field_write(sc, REG_RST, 1);
-> +}
-> +
-> +__maybe_unused static int sc8541_dump_reg(struct sc8541_chip *sc)
-> +{
-> +    int ret;
-> +    int i;
-> +    int val;
-> +
-> +    for (i =3D 0; i <=3D SC8541_REGMAX; i++) {
-> +       ret =3D regmap_read(sc->regmap, i, &val);
-> +       dev_err(sc->dev, "%s reg[0x%02x] =3D 0x%02x\n",
-> +               __func__, i, val);
-> +    }
-> +
-> +    return ret;
-> +}
-> +
-> +__maybe_unused static int sc8541_enable_charge(struct sc8541_chip *sc, b=
-ool en)
-> +{
-> +    int ret;
-> +
-> +    dev_info(sc->dev, "%s:%d", __func__, en);
-> +
-> +    ret =3D sc8541_field_write(sc, CHG_EN, !!en);
-> +
-> +    return ret;
-> +}
-> +
-> +
-> +__maybe_unused static int sc8541_check_charge_enabled(struct sc8541_chip=
- *sc, bool *enabled)
-> +{
-> +    int ret, val;
-> +
-> +    ret =3D sc8541_field_read(sc, CP_SWITCHING_STAT, &val);
-> +
-> +    *enabled =3D (bool)val;
-> +
-> +    dev_info(sc->dev, "%s:%d", __func__, val);
-> +
-> +    return ret;
-> +}
-> +
-> +__maybe_unused static int sc8541_get_status(struct sc8541_chip *sc, uint=
-32_t *status)
-> +{
-> +    int ret, val;
-> +    *status =3D 0;
-> +
-> +    ret =3D sc8541_field_read(sc, VBUS_ERRORHI_STAT, &val);
-> +    if (ret < 0) {
-> +       dev_err(sc->dev, "%s fail to read VBUS_ERRORHI_STAT(%d)\n", __fun=
-c__, ret);
-> +       return ret;
-> +    }
-> +    if (val !=3D 0)
-> +       *status |=3D BIT(ERROR_VBUS_HIGH);
-> +
-> +    ret =3D sc8541_field_read(sc, VBUS_ERRORLO_STAT, &val);
-> +    if (ret < 0) {
-> +       dev_err(sc->dev, "%s fail to read VBUS_ERRORLO_STAT(%d)\n", __fun=
-c__, ret);
-> +       return ret;
-> +    }
-> +    if (val !=3D 0)
-> +       *status |=3D BIT(ERROR_VBUS_LOW);
-> +
-> +
-> +    return ret;
-> +
-> +}
-> +
-> +__maybe_unused static int sc8541_enable_adc(struct sc8541_chip *sc, bool=
- en)
-> +{
-> +    dev_info(sc->dev, "%s:%d", __func__, en);
-> +    return sc8541_field_write(sc, ADC_EN, !!en);
-> +}
-> +
-> +__maybe_unused static int sc8541_set_adc_scanrate(struct sc8541_chip *sc=
-, bool oneshot)
-> +{
-> +    dev_info(sc->dev, "%s:%d", __func__, oneshot);
-> +    return sc8541_field_write(sc, ADC_RATE, !!oneshot);
-> +}
-
-This overuse of __maybe_unused means you are potentially
-compiling in a lot of crap that will not be used.
-
-Consider using static inline in a .h file instead, then they will
-just not be compiled if not used.
-
-> +__maybe_unused static int sc8541_disable_vbusovp_alarm(struct sc8541_chi=
-p *sc, bool en)
-> +{
-> +    int ret;
-> +
-> +    dev_info(sc->dev, "%s:%d", __func__, en);
-
-Convert all these to dev_debug() to not litter the log.
-
-> +
-> +    ret =3D sc8541_field_write(sc, VBUS_OVP_ALM_DIS, !!en);
-> +
-> +    return ret;
-> +}
-
-This kind of functions also look like unnecessary indirection to me
-but at least rewrite them like this:
-
-return sc8541_field_write(sc, VBUS_OVP_ALM_DIS, !!en);
-
-and it saves you 4-5 lines of code in each functions ince you don't
-need to declare ret and return it on a separate line.
-
-> +static int mtk_sc8541_set_vbusovp(struct charger_device *chg_dev, u32 uV=
-)
-> +{
-> +    struct sc8541_chip *sc =3D charger_get_data(chg_dev);
-> +    int mv;
-> +
-> +    mv =3D uV / 1000;
-
-If this is coming from an IIO ADC you can use the existing prescaler
-in IIO instead.
-
-ret =3D iio_read_channel_processed_scale(adc_main_charger_v,
-                                                       &vch, 1000);
-
-Otherwise, maybe your ADC  *should* be an IIO device, hm?
-
-> +static int mtk_sc8541_get_adc(struct charger_device *chg_dev, enum adc_c=
-hannel chan,
-> +                         int *min, int *max)
-> +{
-> +    struct sc8541_chip *sc =3D charger_get_data(chg_dev);
-> +
-> +    sc8541_get_adc_data(sc, to_sc8541_adc(chan), max);
-> +
-> +    if (chan !=3D ADC_CHANNEL_TEMP_JC)
-> +       *max =3D *max * 1000;
-> +
-> +    if (min !=3D max)
-> +               *min =3D *max;
-> +
-> +    return 0;
-> +}
-> +
-> +static int mtk_sc8541_get_adc_accuracy(struct charger_device *chg_dev,
-> +                                  enum adc_channel chan, int *min, int *=
-max)
-> +{
-> +    *min =3D *max =3D sc8541_adc_accuracy_tbl[to_sc8541_adc(chan)];
-> +    return 0;
-> +}
-
-Yeah this looks like this part of the driver should be in
-drivers/iio/adc/*
-
-> +static int sc8541_register_interrupt(struct sc8541_chip *sc)
-> +{
-> +    int ret;
-> +
-> +    if (gpio_is_valid(sc->irq_gpio)) {
-> +       ret =3D gpio_request_one(sc->irq_gpio, GPIOF_IN, "sc8541_irq");
-> +       if (ret) {
-> +            dev_err(sc->dev, "failed to request sc8541_irq\n");
-> +           return -EINVAL;
-> +       }
-> +       sc->irq =3D gpio_to_irq(sc->irq_gpio);
-> +       if (sc->irq < 0) {
-> +            dev_err(sc->dev, "failed to gpio_to_irq\n");
-> +           return -EINVAL;
-> +       }
-
-NACK do not use these old GPIO APIs.
-
-Use devm_gpiod_get() instead.
-
-Just grep in the kernel for many good examples of how to
-do this:
-
-struct gpio_desc *gd =3D devm_gpiod_get(dev, "irq", GPIOD_IN);
-int irq =3D gpiod_to_irq(gd);
-(etc)
-
-> +    if (sc->irq) {
-> +       ret =3D devm_request_threaded_irq(&sc->client->dev, sc->irq,
-> +               NULL, sc8541_irq_handler,
-> +               IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-> +               sc8541_irq_name[sc->mode], sc);
-> +
-> +       if (ret < 0) {
-> +            dev_err(sc->dev, "request irq for irq=3D%d failed, ret =3D%d=
-\n",
-> +                           sc->irq, ret);
-> +           return ret;
-> +       }
-> +       enable_irq_wake(sc->irq);
-
-It's nice that you use threaded IRQs with oneshot!
-
-> +static int sc8541_set_work_mode(struct sc8541_chip *sc, int mode)
-> +{
-> +    sc->mode =3D mode;
-> +
-> +    dev_err(sc->dev, "work mode is %s\n", sc->mode =3D=3D SC8541_STANDAL=
-ONE
-> +       ? "standalone" : (sc->mode =3D=3D SC8541_MASTER ? "master" : "sla=
-ve"));
-
-Why is this dev_err()?
-
-It's not an error.
-
-> +#ifdef CONFIG_PM_SLEEP
-> +static int sc8541_suspend(struct device *dev)
-> +{
-> +    struct sc8541_chip *sc =3D dev_get_drvdata(dev);
-> +
-> +    dev_info(sc->dev, "Suspend successfully!");
-> +    if (device_may_wakeup(dev))
-> +       enable_irq_wake(sc->irq);
-> +    disable_irq(sc->irq);
-> +
-> +    return 0;
-> +}
-> +static int sc8541_resume(struct device *dev)
-> +{
-> +    struct sc8541_chip *sc =3D dev_get_drvdata(dev);
-> +
-> +    dev_info(sc->dev, "Resume successfully!");
-> +    if (device_may_wakeup(dev))
-> +       disable_irq_wake(sc->irq);
-> +    enable_irq(sc->irq);
-> +
-> +    return 0;
-> +}
-> +
-> +static const struct dev_pm_ops sc8541_pm =3D {
-> +    SET_SYSTEM_SLEEP_PM_OPS(sc8541_suspend, sc8541_resume)
-> +};
-> +#endif
-
-IIRC there is a new API for this, look through recent changes to the
-kernel concerning PM ops. I don't think you need the #ifdefs anymore.
-
-> +MODULE_DESCRIPTION("SC SC8541 Driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("South Chip <Aiden-yu@southchip.com>");
-
-I think this is supposed to be a real person, not a function, can you
-put in your own name and mail instead?
+Sounds like a deal, I try to go with the IETF motto "rough consensus and
+running code" when it comes to pin control.
 
 Yours,
 Linus Walleij
