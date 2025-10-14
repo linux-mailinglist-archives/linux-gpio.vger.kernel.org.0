@@ -1,349 +1,570 @@
-Return-Path: <linux-gpio+bounces-27066-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27067-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70C87BD8BAF
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 12:22:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 41DE9BD8BDF
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 12:23:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C4E484F9E83
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 10:21:53 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 84DA64F5062
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 10:23:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DB352F83DB;
-	Tue, 14 Oct 2025 10:21:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4F822F659C;
+	Tue, 14 Oct 2025 10:23:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W74b8hGb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wsp+xi37"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f44.google.com (mail-yx1-f44.google.com [74.125.224.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 410852E3B03
-	for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 10:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309972F1FC8
+	for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 10:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760437280; cv=none; b=OUp2ITJ6E6vZIfYioxRhK1H6iJZjc615UV/MoONINBNf9oXUJutpHFZInVEbG28DR7A97sVJjNb0+kGYoHRwSBXni79Sq206IJ2cvAVcHop+0lGHSTGYGOeH6gF87FXKVWlnR3PbmbFZXbnu7CXvVL+eT/jACCxsIzI3k61LkrU=
+	t=1760437407; cv=none; b=VvAQawAPt7mNZbJSz4CK5CMwnJ7sw4sd84bO5gv6JfqIIblrP55DuPTTqOrZi283NuQLjDaOPfTx/2kkIaYbEeth5rieDnnhWOh0Joxuk7Ocwf32T6v4klENzQ2sH8o49acaIXECKWfX3fceOX8j3+BJ7Syk/rDOfP/Ox2M58vA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760437280; c=relaxed/simple;
-	bh=8EM9uM1KislucKFDHDhDR7FIqZqME+hZzDpP6dbyHnI=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=FctbESCizbkcXT5OT4QV5/MO3PYHghRO1mwgMtepdeRPzAJpdydh4xqnZ1C+D/eAjqbu0Iyytd/cflWe7xiteNRSewNxSlR1vfz9KxDRoSbsZXyWATxyok+XMJE6tZgb/7IQJb55NE7JnojpOY1fMvSUfjBVTySbmb/CnOJLvUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W74b8hGb; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760437278; x=1791973278;
-  h=date:from:to:cc:subject:message-id;
-  bh=8EM9uM1KislucKFDHDhDR7FIqZqME+hZzDpP6dbyHnI=;
-  b=W74b8hGbfkgH/nNIO++A5s6ZRI/rsfdJv/rzCEqxuelABrf99t93AUF9
-   jExbNH4R4fqs0vu+D9VX+oGJmPoCX6VMq3qNvehT58HxNDR2RmTQXHAuD
-   lZ7WHZQUlF3DusBd+JZOn615rb399opAirB1pDeiX3hZWceLnr+GbXTqE
-   ymX1WBRVdd96e/VeyxkBQztnxZjQ6ZPAdJ+K+0Uw5W6+mk6tw7jGHlOjy
-   T4I5dxbA9tNGX7BikPYBTfKa+q/xvfpvru2j8qmxvcmpyMgIS3gPcxHtE
-   LRiSWaTSoXwVRRh1MExzSSef9w59NCfa/YiYxDbWHu3Reo8xgsANW0DLo
-   g==;
-X-CSE-ConnectionGUID: 8cPbg0xhTO6lFD2ZLR1P9w==
-X-CSE-MsgGUID: VutDqM+mSQmLbxDBeEN34g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11581"; a="88055043"
-X-IronPort-AV: E=Sophos;i="6.19,227,1754982000"; 
-   d="scan'208";a="88055043"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 03:21:18 -0700
-X-CSE-ConnectionGUID: bi/6K0LWQwy7yV+unuYduw==
-X-CSE-MsgGUID: hl68D0QKQD2MJDrc+TtPvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,227,1754982000"; 
-   d="scan'208";a="181653918"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by orviesa007.jf.intel.com with ESMTP; 14 Oct 2025 03:21:16 -0700
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1v8c9Z-0002eZ-1U;
-	Tue, 14 Oct 2025 10:21:13 +0000
-Date: Tue, 14 Oct 2025 18:20:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- 4906c17150cc2b949e0c6076190c7d467bb22767
-Message-ID: <202510141847.KwAP4WRn-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1760437407; c=relaxed/simple;
+	bh=HBeoLSxpTUhB5k5FsVkrCIB6ViDWGKvUTXafr91NmxU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SwvXzh48P+d4uJtvi5A1m1yHGdj0PG7WyjypAVlhnpXPg0IML8hVEVGkj1RXL8Q4Gz5PyCrV+rScjmhElVV3DJsgdjfRgK9i6+5r1NFKws9l0YZtfrQEENLgs0XFh2eZ1uv/HlfAcOme4r1NUGEHlPBP5RXTyMDGPxY0hYVy2Tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wsp+xi37; arc=none smtp.client-ip=74.125.224.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-63cf0df1abbso3431905d50.2
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 03:23:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1760437404; x=1761042204; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0NSrWOSqSz9iedx0CTd4FBgAAcUOjskBzS2cIVqq5D4=;
+        b=wsp+xi37UYTi8l5a1JzKzq22tfgPsi8wJ+rUabCdC1uw0rzTsorG1NElfng4FXqkVn
+         kSVaRv1rs2ux5mEKCju/LvpWvuF4WiqjBC+tWNumSG10RxrT6mtRtykfDkUMXiFIfhhj
+         Ren8BkTj5hYLnq1Q+ttCCI+QZ4wio/sLVAGKAF6NsE16EeRQ3NamYXmwrMvdneR1RCWD
+         fGlmNXccxiyDbbogDHt88nIPtT4sNi5AFQ9xnDS0l+eyvRt1vnZVBPsAWVCvhZbVoYa2
+         95MmZWiDNX8kish8JFxUdEGujB2DG/cxejRG+yoPWcHZaEl0vM5p0S78PPFaRT+tpw7I
+         k+ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760437404; x=1761042204;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0NSrWOSqSz9iedx0CTd4FBgAAcUOjskBzS2cIVqq5D4=;
+        b=QArDwTVVYm3Qr28aMlrADApgLq8LfYeezrl4Sb8OdRmuZYNp7VJVuD9wrJQUAElCs/
+         Dczrk9HKCFkEkl3yBDjfmZakb1thjDv/rIZxixLqs5/Tp2iupcd2XppuomIOYVDApEtC
+         70OWItqMm1DbNB4txtp3WXM205kDCc9NuS/NyZTqqwGsgiMs+Uebkj24IJTNw+33MkKZ
+         /0O1gROFsLy0Qa04bLEVDHIn9wOp2Fvb2NSNMYP23Gw7Kfkyp6L+boL4pCNtW5gR8mVJ
+         E8WLW9PjTRA85bVxw26jp+QMMdRmttyZYdeYHZBNeUi73qa18nl50eS8mXTW5PWBe4/c
+         0s2g==
+X-Forwarded-Encrypted: i=1; AJvYcCV/pzwpfvdBD+xC8ljcICxIA7aP2AtOiTQv0CcFD6lzeS+27vSxj078mWJv3ID38Z/VzX8tsgt4s/NW@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzep5OkinZ7+bXYeCDs0xh8m0hzdavlVW835E2X0Bu+HWsXH17m
+	60DvUFew7cdvJ6c6iV1VkcKn3+Y/OapQqyPM1eWDFC3ytZ7lqgcfegrcxSlYhascY/3HL34mlxy
+	V7/RiVe7S1f73VCiRxuxAykTariXtJgz6JCFn6/mnDw==
+X-Gm-Gg: ASbGncu51IwOqqCgfEBuSy6FQQgU1FhZgUi3q564OD02mRu5ZWLn65CQuSBLQptkVbG
+	ypEmVQ7V/9RiLQEC52+PXzTEVvceyewwezWnMKqGWz5XcL8FQQhIBeC7x4F+dq3JfY7rrgZbhWD
+	Vll/q2FYdDyrfbDDfL0dTl3VYpeKtxiABuX4lkpp6iE0OXPZu0vCnSi26Ki4HoXyOFqpgAlcRZK
+	v15XCJbhuI5eBPOUrmy7r7OtmDmoQ==
+X-Google-Smtp-Source: AGHT+IGX7pWJReynN7jgaMlmfnmPBVJaIc8aQG0hFCcA9poFMAny2m2Orf6s2pNDMLHxkaG9c0y1HL8Su4Eo2yMxogY=
+X-Received: by 2002:a53:ac49:0:b0:63c:e72f:d354 with SMTP id
+ 956f58d0204a3-63ce72fd63cmr12181584d50.22.1760437404038; Tue, 14 Oct 2025
+ 03:23:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <tencent_DAD6E4E85F79FDC4DF2878B03940CA337108@qq.com>
+In-Reply-To: <tencent_DAD6E4E85F79FDC4DF2878B03940CA337108@qq.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 14 Oct 2025 12:23:07 +0200
+X-Gm-Features: AS18NWCoMb5XDlmenFa0xGITZP61fGGQfLpt-glaoPxcSHEPwEjlMrE6klD2W9U
+Message-ID: <CACRpkda833CiwA+ihMLm6zzTFsoCMFoesbAVrW7EMA0-vGFTFQ@mail.gmail.com>
+Subject: Re: [PATCH] power: supply: Add SC8541 charger drivers
+To: 1647395606@qq.com
+Cc: sre@kernel.org, brgl@bgdev.pl, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	wangwenqiang <wenqiang.wang@faiot.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 4906c17150cc2b949e0c6076190c7d467bb22767  Merge branch 'devel' into for-next
+Hi Wang,
 
-elapsed time: 1223m
+thanks for your patch!
 
-configs tested: 256
-configs skipped: 5
+On Mon, Oct 13, 2025 at 10:54=E2=80=AFAM <1647395606@qq.com> wrote:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> From: wangwenqiang <wenqiang.wang@faiot.com>
+>
+> The SC8541 is a charger pump from South Chip.
+> By adjusting the voltage difference between the input and output terminal=
+s,
+> it can achieve a maximum charging current of 8A.
+> It has been verified that this driver can operate normally on the Qualcom=
+m QCS615 platform.
+>
+> Signed-off-by: wangwenqiang <wenqiang.wang@faiot.com>
 
-tested configs:
-alpha                             allnoconfig    clang-22
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    clang-19
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    clang-19
-arc                              allmodconfig    clang-19
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    clang-22
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    clang-19
-arc                              allyesconfig    gcc-15.1.0
-arc                                 defconfig    clang-19
-arc                   randconfig-001-20251014    clang-16
-arc                   randconfig-001-20251014    gcc-15.1.0
-arc                   randconfig-002-20251014    clang-16
-arc                   randconfig-002-20251014    gcc-8.5.0
-arm                              allmodconfig    clang-19
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    clang-19
-arm                              allyesconfig    gcc-15.1.0
-arm                                 defconfig    clang-19
-arm                   milbeaut_m10v_defconfig    gcc-15.1.0
-arm                        multi_v5_defconfig    gcc-15.1.0
-arm                   randconfig-001-20251014    clang-16
-arm                   randconfig-001-20251014    gcc-15.1.0
-arm                   randconfig-002-20251014    clang-16
-arm                   randconfig-002-20251014    gcc-13.4.0
-arm                   randconfig-003-20251014    clang-16
-arm                   randconfig-004-20251014    clang-16
-arm                   randconfig-004-20251014    gcc-8.5.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    clang-22
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    clang-19
-arm64                 randconfig-001-20251014    clang-16
-arm64                 randconfig-001-20251014    gcc-9.5.0
-arm64                 randconfig-002-20251014    clang-16
-arm64                 randconfig-002-20251014    gcc-10.5.0
-arm64                 randconfig-003-20251014    clang-16
-arm64                 randconfig-003-20251014    gcc-14.3.0
-arm64                 randconfig-004-20251014    clang-16
-arm64                 randconfig-004-20251014    gcc-14.3.0
-csky                              allnoconfig    clang-22
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    clang-19
-csky                  randconfig-001-20251014    gcc-15.1.0
-csky                  randconfig-001-20251014    gcc-8.5.0
-csky                  randconfig-002-20251014    gcc-13.4.0
-csky                  randconfig-002-20251014    gcc-8.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                          allmodconfig    clang-19
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-19
-hexagon                          allyesconfig    clang-22
-hexagon                             defconfig    clang-19
-hexagon               randconfig-001-20251014    clang-22
-hexagon               randconfig-001-20251014    gcc-8.5.0
-hexagon               randconfig-002-20251014    clang-22
-hexagon               randconfig-002-20251014    gcc-8.5.0
-i386                             allmodconfig    clang-20
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    clang-20
-i386                              allnoconfig    gcc-14
-i386                             allyesconfig    clang-20
-i386                             allyesconfig    gcc-14
-i386        buildonly-randconfig-001-20251013    gcc-13
-i386        buildonly-randconfig-001-20251014    gcc-14
-i386        buildonly-randconfig-002-20251013    clang-20
-i386        buildonly-randconfig-002-20251014    gcc-14
-i386        buildonly-randconfig-003-20251013    gcc-14
-i386        buildonly-randconfig-003-20251014    gcc-14
-i386        buildonly-randconfig-004-20251013    clang-20
-i386        buildonly-randconfig-004-20251014    gcc-14
-i386        buildonly-randconfig-005-20251013    gcc-14
-i386        buildonly-randconfig-005-20251014    gcc-14
-i386        buildonly-randconfig-006-20251013    gcc-14
-i386        buildonly-randconfig-006-20251014    gcc-14
-i386                                defconfig    clang-20
-i386                  randconfig-001-20251014    clang-20
-i386                  randconfig-002-20251014    clang-20
-i386                  randconfig-003-20251014    clang-20
-i386                  randconfig-004-20251014    clang-20
-i386                  randconfig-005-20251014    clang-20
-i386                  randconfig-006-20251014    clang-20
-i386                  randconfig-007-20251014    clang-20
-i386                  randconfig-011-20251014    gcc-14
-i386                  randconfig-012-20251014    gcc-14
-i386                  randconfig-013-20251014    gcc-14
-i386                  randconfig-014-20251014    gcc-14
-i386                  randconfig-015-20251014    gcc-14
-i386                  randconfig-016-20251014    gcc-14
-i386                  randconfig-017-20251014    gcc-14
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20251014    clang-18
-loongarch             randconfig-001-20251014    gcc-8.5.0
-loongarch             randconfig-002-20251014    gcc-15.1.0
-loongarch             randconfig-002-20251014    gcc-8.5.0
-m68k                             allmodconfig    clang-19
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    clang-19
-m68k                             allyesconfig    gcc-15.1.0
-m68k                                defconfig    clang-19
-microblaze                       allmodconfig    clang-19
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    clang-19
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                          ath79_defconfig    gcc-15.1.0
-mips                   sb1250_swarm_defconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                             allnoconfig    gcc-15.1.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20251014    gcc-11.5.0
-nios2                 randconfig-001-20251014    gcc-8.5.0
-nios2                 randconfig-002-20251014    gcc-8.5.0
-openrisc                          allnoconfig    clang-22
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-14
-parisc                           alldefconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    clang-22
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                generic-64bit_defconfig    gcc-15.1.0
-parisc                randconfig-001-20251014    gcc-11.5.0
-parisc                randconfig-001-20251014    gcc-8.5.0
-parisc                randconfig-002-20251014    gcc-8.5.0
-parisc                randconfig-002-20251014    gcc-9.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    clang-22
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-22
-powerpc                          allyesconfig    gcc-15.1.0
-powerpc               randconfig-001-20251014    gcc-8.5.0
-powerpc               randconfig-001-20251014    gcc-9.5.0
-powerpc               randconfig-002-20251014    clang-22
-powerpc               randconfig-002-20251014    gcc-8.5.0
-powerpc               randconfig-003-20251014    gcc-14.3.0
-powerpc               randconfig-003-20251014    gcc-8.5.0
-powerpc                     redwood_defconfig    gcc-15.1.0
-powerpc                     tqm8540_defconfig    gcc-15.1.0
-powerpc64             randconfig-001-20251014    gcc-8.5.0
-powerpc64             randconfig-002-20251014    gcc-8.5.0
-powerpc64             randconfig-003-20251014    gcc-8.5.0
-riscv                            allmodconfig    clang-22
-riscv                            allmodconfig    gcc-15.1.0
-riscv                             allnoconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                            allyesconfig    gcc-15.1.0
-riscv                               defconfig    clang-22
-riscv                               defconfig    gcc-14
-riscv                 randconfig-001-20251013    clang-22
-riscv                 randconfig-001-20251014    gcc-10.5.0
-riscv                 randconfig-002-20251013    clang-22
-riscv                 randconfig-002-20251014    gcc-10.5.0
-s390                             allmodconfig    clang-18
-s390                             allmodconfig    gcc-15.1.0
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    gcc-14
-s390                  randconfig-001-20251013    gcc-8.5.0
-s390                  randconfig-001-20251014    gcc-10.5.0
-s390                  randconfig-002-20251013    clang-22
-s390                  randconfig-002-20251014    gcc-10.5.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                         apsh4a3a_defconfig    gcc-15.1.0
-sh                                  defconfig    gcc-14
-sh                        dreamcast_defconfig    gcc-15.1.0
-sh                            hp6xx_defconfig    gcc-15.1.0
-sh                    randconfig-001-20251013    gcc-10.5.0
-sh                    randconfig-001-20251014    gcc-10.5.0
-sh                    randconfig-002-20251013    gcc-15.1.0
-sh                    randconfig-002-20251014    gcc-10.5.0
-sh                          sdk7786_defconfig    gcc-15.1.0
-sh                           se7724_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20251013    gcc-8.5.0
-sparc                 randconfig-001-20251014    gcc-10.5.0
-sparc                 randconfig-002-20251013    gcc-8.5.0
-sparc                 randconfig-002-20251014    gcc-10.5.0
-sparc64                             defconfig    gcc-14
-sparc64               randconfig-001-20251013    clang-20
-sparc64               randconfig-001-20251014    gcc-10.5.0
-sparc64               randconfig-002-20251013    gcc-14.3.0
-sparc64               randconfig-002-20251014    gcc-10.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    clang-19
-um                               allyesconfig    gcc-14
-um                                  defconfig    gcc-14
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20251013    gcc-14
-um                    randconfig-001-20251014    gcc-10.5.0
-um                    randconfig-002-20251013    gcc-14
-um                    randconfig-002-20251014    gcc-10.5.0
-um                           x86_64_defconfig    gcc-14
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20251013    gcc-13
-x86_64      buildonly-randconfig-001-20251014    gcc-14
-x86_64      buildonly-randconfig-002-20251013    clang-20
-x86_64      buildonly-randconfig-002-20251014    gcc-14
-x86_64      buildonly-randconfig-003-20251013    clang-20
-x86_64      buildonly-randconfig-003-20251014    gcc-14
-x86_64      buildonly-randconfig-004-20251013    gcc-14
-x86_64      buildonly-randconfig-004-20251014    gcc-14
-x86_64      buildonly-randconfig-005-20251013    clang-20
-x86_64      buildonly-randconfig-005-20251014    gcc-14
-x86_64      buildonly-randconfig-006-20251013    clang-20
-x86_64      buildonly-randconfig-006-20251014    gcc-14
-x86_64                              defconfig    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20251014    gcc-14
-x86_64                randconfig-002-20251014    gcc-14
-x86_64                randconfig-003-20251014    gcc-14
-x86_64                randconfig-004-20251014    gcc-14
-x86_64                randconfig-005-20251014    gcc-14
-x86_64                randconfig-006-20251014    gcc-14
-x86_64                randconfig-007-20251014    gcc-14
-x86_64                randconfig-008-20251014    gcc-14
-x86_64                randconfig-071-20251014    gcc-14
-x86_64                randconfig-072-20251014    gcc-14
-x86_64                randconfig-073-20251014    gcc-14
-x86_64                randconfig-074-20251014    gcc-14
-x86_64                randconfig-075-20251014    gcc-14
-x86_64                randconfig-076-20251014    gcc-14
-x86_64                randconfig-077-20251014    gcc-14
-x86_64                randconfig-078-20251014    gcc-14
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-14
-x86_64                          rhel-9.4-func    clang-20
-x86_64                    rhel-9.4-kselftests    clang-20
-x86_64                         rhel-9.4-kunit    gcc-14
-x86_64                           rhel-9.4-ltp    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20251013    gcc-11.5.0
-xtensa                randconfig-001-20251014    gcc-10.5.0
-xtensa                randconfig-002-20251013    gcc-11.5.0
-xtensa                randconfig-002-20251014    gcc-10.5.0
-xtensa                         virt_defconfig    gcc-15.1.0
+(...)
+> +#include <linux/gpio.h>
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Don't use this legacy API, include <linux/gpio/consumer.h> if you need
+to use GPIO lines and use GPIO descriptors.
+
+> +#include <linux/i2c.h>
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/power_supply.h>
+> +#include <linux/slab.h>
+> +#include <linux/kernel.h>
+> +#include <linux/sched.h>
+> +#include <linux/kthread.h>
+
+Are you using sched.h and thread.h really?
+You are using threaded interrupt handlers but that is
+not coming from this file but interrupt.h.
+
+> +#include <linux/delay.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_gpio.h>
+
+Don't use this legacy API either, use <linux/gpio/consumer.h>
+
+> +#include <linux/err.h>
+> +#include <linux/regulator/driver.h>
+> +#include <linux/regulator/of_regulator.h>
+> +#include <linux/regulator/machine.h>
+
+I don't think you're defining regulator machines either.
+
+> +#include <linux/debugfs.h>
+> +#include <linux/bitops.h>
+> +#include <linux/math64.h>
+> +#include <linux/regmap.h>
+
+Please go over the includes and make sure you only include the ones
+you really need.
+
+> +#define SC8541_DRV_VERSION              "1.0.0_G"
+
+I would just drop this, we don't use these kind of strings much these days.
+
+> +struct flag_bit {
+> +    int notify;
+> +    int mask;
+> +    char *name;
+> +};
+> +
+> +struct intr_flag {
+> +    int reg;
+> +    int len;
+> +    struct flag_bit bit[8];
+> +};
+
+Are these things such as notify, mask, reg, len really int?
+Aren't they better as u32?
+
+> +struct reg_range {
+> +    u32 min;
+> +    u32 max;
+> +    u32 step;
+> +    u32 offset;
+> +    const u32 *table;
+> +    u16 num_table;
+> +    bool round_up;
+> +};
+
+Here is some nice use of proper types!
+
+> +static const struct regmap_config sc8541_regmap_config =3D {
+> +    .reg_bits =3D 8,
+> +    .val_bits =3D 8,
+> +
+> +    .max_register =3D SC8541_REGMAX,
+> +};
+
+Nice use of regmap.
+
+> +struct sc8541_chip {
+> +    struct device *dev;
+> +    struct i2c_client *client;
+> +    struct regmap *regmap;
+> +    struct regmap_field *rmap_fields[F_MAX_FIELDS];
+> +
+> +    struct sc8541_cfg_e cfg;
+> +    int irq_gpio;
+> +    int irq;
+> +
+> +    int mode;
+> +
+> +    bool charge_enabled;
+> +    int usb_present;
+> +    int vbus_volt;
+> +    int ibus_curr;
+> +    int vbat_volt;
+> +    int ibat_curr;
+> +    int die_temp;
+
+Can all of these really be negative? Otherwise use unsigned int.
+I guess the die_temp should be int because it could be negative.
+
+> +/********************COMMON API***********************/
+
+Drop these headers, we can see it is a common API anyway.
+
+> +__maybe_unused static u8 val2reg(enum sc8541_reg_range id, u32 val)
+> +{
+> +    int i;
+> +    u8 reg;
+> +    const struct reg_range *range =3D &sc8541_reg_range[id];
+> +
+> +    if (!range)
+> +       return val;
+> +
+> +    if (range->table) {
+> +       if (val <=3D range->table[0])
+> +           return 0;
+> +       for (i =3D 1; i < range->num_table - 1; i++) {
+> +           if (val =3D=3D range->table[i])
+> +               return i;
+> +           if (val > range->table[i] &&
+> +               val < range->table[i + 1])
+> +               return range->round_up ? i + 1 : i;
+> +       }
+> +       return range->num_table - 1;
+> +    }
+> +    if (val <=3D range->min)
+> +       reg =3D 0;
+> +    else if (val >=3D range->max)
+> +       reg =3D (range->max - range->offset) / range->step;
+> +    else if (range->round_up)
+> +       reg =3D (val - range->offset) / range->step + 1;
+> +    else
+> +       reg =3D (val - range->offset) / range->step;
+> +    return reg;
+> +}
+
+Add some description of what the function is doing, it's hard
+to understand, kerneldoc please.
+
+> +__maybe_unused static u32 reg2val(enum sc8541_reg_range id, u8 reg)
+> +{
+> +    const struct reg_range *range =3D &sc8541_reg_range[id];
+> +
+> +    if (!range)
+> +       return reg;
+> +    return range->table ? range->table[reg] :
+> +                 range->offset + range->step * reg;
+> +}
+
+Same here.
+
+> +static int sc8541_field_read(struct sc8541_chip *sc,
+> +               enum sc8541_fields field_id, int *val)
+> +{
+> +    int ret;
+> +
+> +    ret =3D regmap_field_read(sc->rmap_fields[field_id], val);
+> +    if (ret < 0) {
+> +       dev_err(sc->dev, "sc8541 read field %d fail: %d\n", field_id, ret=
+);
+> +    }
+> +
+> +    return ret;
+> +}
+> +
+> +static int sc8541_field_write(struct sc8541_chip *sc,
+> +               enum sc8541_fields field_id, int val)
+> +{
+> +    int ret;
+> +
+> +    ret =3D regmap_field_write(sc->rmap_fields[field_id], val);
+> +    if (ret < 0) {
+> +       dev_err(sc->dev, "sc8541 read field %d fail: %d\n", field_id, ret=
+);
+> +    }
+> +
+> +    return ret;
+> +}
+> +
+> +static int sc8541_read_block(struct sc8541_chip *sc,
+> +               int reg, uint8_t *val, int len)
+> +{
+> +    int ret;
+> +
+> +    ret =3D regmap_bulk_read(sc->regmap, reg, val, len);
+> +    if (ret < 0) {
+> +       dev_err(sc->dev, "sc8541 read %02x block failed %d\n", reg, ret);
+> +    }
+> +
+> +    return ret;
+> +}
+
+Does these three indirections really but you something? You just need to
+handle the returned ret once more in the code. Isn't it better to just use
+regmap_* field etc directly and report errors in the code.
+
+> +__maybe_unused static int sc8541_reg_reset(struct sc8541_chip *sc)
+> +{
+> +    return sc8541_field_write(sc, REG_RST, 1);
+> +}
+> +
+> +__maybe_unused static int sc8541_dump_reg(struct sc8541_chip *sc)
+> +{
+> +    int ret;
+> +    int i;
+> +    int val;
+> +
+> +    for (i =3D 0; i <=3D SC8541_REGMAX; i++) {
+> +       ret =3D regmap_read(sc->regmap, i, &val);
+> +       dev_err(sc->dev, "%s reg[0x%02x] =3D 0x%02x\n",
+> +               __func__, i, val);
+> +    }
+> +
+> +    return ret;
+> +}
+> +
+> +__maybe_unused static int sc8541_enable_charge(struct sc8541_chip *sc, b=
+ool en)
+> +{
+> +    int ret;
+> +
+> +    dev_info(sc->dev, "%s:%d", __func__, en);
+> +
+> +    ret =3D sc8541_field_write(sc, CHG_EN, !!en);
+> +
+> +    return ret;
+> +}
+> +
+> +
+> +__maybe_unused static int sc8541_check_charge_enabled(struct sc8541_chip=
+ *sc, bool *enabled)
+> +{
+> +    int ret, val;
+> +
+> +    ret =3D sc8541_field_read(sc, CP_SWITCHING_STAT, &val);
+> +
+> +    *enabled =3D (bool)val;
+> +
+> +    dev_info(sc->dev, "%s:%d", __func__, val);
+> +
+> +    return ret;
+> +}
+> +
+> +__maybe_unused static int sc8541_get_status(struct sc8541_chip *sc, uint=
+32_t *status)
+> +{
+> +    int ret, val;
+> +    *status =3D 0;
+> +
+> +    ret =3D sc8541_field_read(sc, VBUS_ERRORHI_STAT, &val);
+> +    if (ret < 0) {
+> +       dev_err(sc->dev, "%s fail to read VBUS_ERRORHI_STAT(%d)\n", __fun=
+c__, ret);
+> +       return ret;
+> +    }
+> +    if (val !=3D 0)
+> +       *status |=3D BIT(ERROR_VBUS_HIGH);
+> +
+> +    ret =3D sc8541_field_read(sc, VBUS_ERRORLO_STAT, &val);
+> +    if (ret < 0) {
+> +       dev_err(sc->dev, "%s fail to read VBUS_ERRORLO_STAT(%d)\n", __fun=
+c__, ret);
+> +       return ret;
+> +    }
+> +    if (val !=3D 0)
+> +       *status |=3D BIT(ERROR_VBUS_LOW);
+> +
+> +
+> +    return ret;
+> +
+> +}
+> +
+> +__maybe_unused static int sc8541_enable_adc(struct sc8541_chip *sc, bool=
+ en)
+> +{
+> +    dev_info(sc->dev, "%s:%d", __func__, en);
+> +    return sc8541_field_write(sc, ADC_EN, !!en);
+> +}
+> +
+> +__maybe_unused static int sc8541_set_adc_scanrate(struct sc8541_chip *sc=
+, bool oneshot)
+> +{
+> +    dev_info(sc->dev, "%s:%d", __func__, oneshot);
+> +    return sc8541_field_write(sc, ADC_RATE, !!oneshot);
+> +}
+
+This overuse of __maybe_unused means you are potentially
+compiling in a lot of crap that will not be used.
+
+Consider using static inline in a .h file instead, then they will
+just not be compiled if not used.
+
+> +__maybe_unused static int sc8541_disable_vbusovp_alarm(struct sc8541_chi=
+p *sc, bool en)
+> +{
+> +    int ret;
+> +
+> +    dev_info(sc->dev, "%s:%d", __func__, en);
+
+Convert all these to dev_debug() to not litter the log.
+
+> +
+> +    ret =3D sc8541_field_write(sc, VBUS_OVP_ALM_DIS, !!en);
+> +
+> +    return ret;
+> +}
+
+This kind of functions also look like unnecessary indirection to me
+but at least rewrite them like this:
+
+return sc8541_field_write(sc, VBUS_OVP_ALM_DIS, !!en);
+
+and it saves you 4-5 lines of code in each functions ince you don't
+need to declare ret and return it on a separate line.
+
+> +static int mtk_sc8541_set_vbusovp(struct charger_device *chg_dev, u32 uV=
+)
+> +{
+> +    struct sc8541_chip *sc =3D charger_get_data(chg_dev);
+> +    int mv;
+> +
+> +    mv =3D uV / 1000;
+
+If this is coming from an IIO ADC you can use the existing prescaler
+in IIO instead.
+
+ret =3D iio_read_channel_processed_scale(adc_main_charger_v,
+                                                       &vch, 1000);
+
+Otherwise, maybe your ADC  *should* be an IIO device, hm?
+
+> +static int mtk_sc8541_get_adc(struct charger_device *chg_dev, enum adc_c=
+hannel chan,
+> +                         int *min, int *max)
+> +{
+> +    struct sc8541_chip *sc =3D charger_get_data(chg_dev);
+> +
+> +    sc8541_get_adc_data(sc, to_sc8541_adc(chan), max);
+> +
+> +    if (chan !=3D ADC_CHANNEL_TEMP_JC)
+> +       *max =3D *max * 1000;
+> +
+> +    if (min !=3D max)
+> +               *min =3D *max;
+> +
+> +    return 0;
+> +}
+> +
+> +static int mtk_sc8541_get_adc_accuracy(struct charger_device *chg_dev,
+> +                                  enum adc_channel chan, int *min, int *=
+max)
+> +{
+> +    *min =3D *max =3D sc8541_adc_accuracy_tbl[to_sc8541_adc(chan)];
+> +    return 0;
+> +}
+
+Yeah this looks like this part of the driver should be in
+drivers/iio/adc/*
+
+> +static int sc8541_register_interrupt(struct sc8541_chip *sc)
+> +{
+> +    int ret;
+> +
+> +    if (gpio_is_valid(sc->irq_gpio)) {
+> +       ret =3D gpio_request_one(sc->irq_gpio, GPIOF_IN, "sc8541_irq");
+> +       if (ret) {
+> +            dev_err(sc->dev, "failed to request sc8541_irq\n");
+> +           return -EINVAL;
+> +       }
+> +       sc->irq =3D gpio_to_irq(sc->irq_gpio);
+> +       if (sc->irq < 0) {
+> +            dev_err(sc->dev, "failed to gpio_to_irq\n");
+> +           return -EINVAL;
+> +       }
+
+NACK do not use these old GPIO APIs.
+
+Use devm_gpiod_get() instead.
+
+Just grep in the kernel for many good examples of how to
+do this:
+
+struct gpio_desc *gd =3D devm_gpiod_get(dev, "irq", GPIOD_IN);
+int irq =3D gpiod_to_irq(gd);
+(etc)
+
+> +    if (sc->irq) {
+> +       ret =3D devm_request_threaded_irq(&sc->client->dev, sc->irq,
+> +               NULL, sc8541_irq_handler,
+> +               IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+> +               sc8541_irq_name[sc->mode], sc);
+> +
+> +       if (ret < 0) {
+> +            dev_err(sc->dev, "request irq for irq=3D%d failed, ret =3D%d=
+\n",
+> +                           sc->irq, ret);
+> +           return ret;
+> +       }
+> +       enable_irq_wake(sc->irq);
+
+It's nice that you use threaded IRQs with oneshot!
+
+> +static int sc8541_set_work_mode(struct sc8541_chip *sc, int mode)
+> +{
+> +    sc->mode =3D mode;
+> +
+> +    dev_err(sc->dev, "work mode is %s\n", sc->mode =3D=3D SC8541_STANDAL=
+ONE
+> +       ? "standalone" : (sc->mode =3D=3D SC8541_MASTER ? "master" : "sla=
+ve"));
+
+Why is this dev_err()?
+
+It's not an error.
+
+> +#ifdef CONFIG_PM_SLEEP
+> +static int sc8541_suspend(struct device *dev)
+> +{
+> +    struct sc8541_chip *sc =3D dev_get_drvdata(dev);
+> +
+> +    dev_info(sc->dev, "Suspend successfully!");
+> +    if (device_may_wakeup(dev))
+> +       enable_irq_wake(sc->irq);
+> +    disable_irq(sc->irq);
+> +
+> +    return 0;
+> +}
+> +static int sc8541_resume(struct device *dev)
+> +{
+> +    struct sc8541_chip *sc =3D dev_get_drvdata(dev);
+> +
+> +    dev_info(sc->dev, "Resume successfully!");
+> +    if (device_may_wakeup(dev))
+> +       disable_irq_wake(sc->irq);
+> +    enable_irq(sc->irq);
+> +
+> +    return 0;
+> +}
+> +
+> +static const struct dev_pm_ops sc8541_pm =3D {
+> +    SET_SYSTEM_SLEEP_PM_OPS(sc8541_suspend, sc8541_resume)
+> +};
+> +#endif
+
+IIRC there is a new API for this, look through recent changes to the
+kernel concerning PM ops. I don't think you need the #ifdefs anymore.
+
+> +MODULE_DESCRIPTION("SC SC8541 Driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("South Chip <Aiden-yu@southchip.com>");
+
+I think this is supposed to be a real person, not a function, can you
+put in your own name and mail instead?
+
+Yours,
+Linus Walleij
 
