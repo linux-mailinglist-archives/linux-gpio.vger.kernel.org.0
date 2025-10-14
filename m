@@ -1,82 +1,83 @@
-Return-Path: <linux-gpio+bounces-27103-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27094-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EF9FBD9F4C
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 16:19:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A2EE8BD9E0A
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 16:06:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 68D8A1926DDB
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 14:19:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C5E60192375E
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 14:06:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C7C526C39E;
-	Tue, 14 Oct 2025 14:19:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ADAA31578E;
+	Tue, 14 Oct 2025 14:05:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="V/sCWUXQ"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="keLp4VnY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF49926D4C2;
-	Tue, 14 Oct 2025 14:19:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6665F314B7C;
+	Tue, 14 Oct 2025 14:05:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=91.207.212.93
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760451560; cv=fail; b=PhYFCSW6RkqyeSblovGcx9BQNI746WcE59//ezCDrfQO+ZaRP5E3a4ugtevCwdZraDzCxPAxKAlcjAWwnABW32UMbSKSV0qw464OyOc+2OWqz8NkJEucGO5uo4aN0kHqalgqmIm6F7ph2injsdjuKhus+gdt0Yz7jqKZwTQUx8w=
+	t=1760450729; cv=fail; b=fGraY64pbaORmu2dqC8l7ISa6ApVWqSYapclgfBCUlysFgvAWY6T7wVu+GA4OVyRWJ1Npd1CQLHs0hJl4wPvsps09uYnIFozrS3vq7q3M5/ehE6odlSafMgdmO/ssWl4Gdi9aFq1bMtXdXmWVV2ThjdsP+oJYclHDjK5KTycOL0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760451560; c=relaxed/simple;
-	bh=IrxDBIq6xw4bqzQQp/XCvnbMT0e8gHzlizLHKsGPpYI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Oxt1bMa0Q98qc8Yx9gxEwY9KMFPDRaLOawHhYJFa7BjbX84oMISr/KkYRKY1aPnSXPm2Hl0Y03FNUs8EuSO+Gj+F3Rieuisl8X7cvRmfoeaxkFJzaJ4wfUk8bJyO8Uyt2E+VmtB8s0khy/D1t30jGW4xWPDDoV8rloyhqxSxI/8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=V/sCWUXQ; arc=fail smtp.client-ip=185.132.182.106
+	s=arc-20240116; t=1760450729; c=relaxed/simple;
+	bh=5iV7BKrurl3pryP9eS9ZuIyC73nLmZHSYlNffLJ2u4U=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FtT7bjm0F8g7G2Amn8IjUK8fiLpgI8XqZ1isuU8XJrXntMYl4Rcvo5FJ8loRLqe+CV71QEQuj+8jbAM56bFcB7oECeuNcf4cWKKuGx3aDNv9zwM+hmy1w6LjXrYuk81HsiNGxP9gK696AAohhNYHf5flio0uP8OFa7yVDtartQY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=keLp4VnY; arc=fail smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59ED3mIY010293;
-	Tue, 14 Oct 2025 16:04:59 +0200
-Received: from du2pr03cu002.outbound.protection.outlook.com (mail-northeuropeazon11011014.outbound.protection.outlook.com [52.101.65.14])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 49r0t02af2-1
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59ECua4a003506;
+	Tue, 14 Oct 2025 16:05:00 +0200
+Received: from osppr02cu001.outbound.protection.outlook.com (mail-norwayeastazon11013044.outbound.protection.outlook.com [40.107.159.44])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 49qfbtc8j0-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 Oct 2025 16:04:59 +0200 (MEST)
+	Tue, 14 Oct 2025 16:05:00 +0200 (MEST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XiGR0BVTd/FSaUExt8sO9c0HXANdFT1pJw6K0eE4qfG9g8aRrxugCpIbBx0eAajXjJwbmAN8S39alryevrl7jjaN0wwWAbCsOri8mCDUuYo4u1UpzqFFvfANl/+OzlppBOMEjB6+u8JeKtYgo8hkV4IPjNax/GNIZKGcU2Wia0FKwLzgxZTDpqgK/d24ViXpi8nLRzZwjSzBL83zN6WXy0kuFzK+uJB0uwk/dpxK74EuVppsy/kfVq+DVyj/8rCrQ+hgMKdZVf7VcJDObCRcTvapCc8Ggf+f4ybQ7pMoWNAo70tqEO9DFs0INfKuSXeuYs/LLEZl2+h+2xTrpBV4Pg==
+ b=QHFmvtbBtdbmL7sLtAUbwKPfa8YGCQ5xqQH6G54erfO76RRxB+9QjSYCqAHxw2x7QesWhfZNeJljsdiElA/ducJWhAHeAlhNu7Yi+FFHT+JvLIZGBf9xNwtA43E/t07V+CZgkF/+PW77kBD93s0S6dBTGJ1/4sQBqZrlvKeAGzOztnPD6oUF4sgeC1n2SULF127iEm5tCJFWYCYjMLnFyWftW0ycoqUWZ/uav7yoAV0aTODNu6Pp3i0r5wsj+0OgiDFRiPKNk0W0YO2SQplPI0ah73qLaubDQJYvGpnhfWjgFBzxYpI/g8QzhQPUmEF2CUPvL75sP1nalAV+AyhzOA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1G9+wnjhIVtNe13hJ1+5cFOYjo5CKFm6Kn2wD28mvWM=;
- b=Nk42bhr4DYsk2oBHWETvWOCcnNIocYDjiX2zE5ZSPjCuGujdnDoyPoA4AyxGBKrkkkz8zYPUNaJggCwbUGH5QRE6nSAEwWQCymrRUZul/HWE5rOS26Lon5zW+bT/1ZB9Y7DdE7iFQng1WVbMVA1yq7kAu+4rByFky2NtORBbJPKm1h01cru21xEyWMzIFgqsom4d4Lw67rtUmd/duL8YPlKkIqbK+P5IkK4Jt9K3t/tbYtpgMI4eMWRRWa5r2pkn++vUH155odrAMxtAUq9x5KwwwXsWEWQ8eVTpM+0Y+cqFiqVTKKGIYWqqlf542B1bNV9f/hOi8gMFwnU59ZjekQ==
+ bh=yLtmss8g3YYvSxgvm4yzb6UjqZ6hnLIVxWr+eh4zo+w=;
+ b=HqUu68QlYZmVNvSZQkH7s0jkQ2uRuoER2R+OYHnq4gL4b6zFbfHAc729wrXdWE0jO74wBn3UP1PKsnNUB+j5yGsnAfIOE68yzkldHPY3Mn+6Gl7AuCwgOgvK+pWODYyKI8VY0yBeXwjAz06yAbNsgjjxwWHcNdu/JpDv06Z1zu1hDD288K7wsWV/iIjddWgwqyW0ggl4v35+8l0mfMG1ttFtv1d+G3thVRpvbsyZrrUp7ipd2/54vttlOJPzwKC+U4zOej0Tx5GQXucc4lwbh1wK39gzi3NBqTawg2kf9wooSoL0kPVrGV8ajGBuwBMSUlsnUQP5LdIUIJ2J3e32xA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 164.130.1.43) smtp.rcpttodomain=linaro.org smtp.mailfrom=foss.st.com;
+ 164.130.1.44) smtp.rcpttodomain=linaro.org smtp.mailfrom=foss.st.com;
  dmarc=fail (p=none sp=none pct=100) action=none header.from=foss.st.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1G9+wnjhIVtNe13hJ1+5cFOYjo5CKFm6Kn2wD28mvWM=;
- b=V/sCWUXQViFPI62WRJDGKkC9sZnoIrrP3deAk25rLQkaXzciAJ6yotGBG/GTJtek9pzvideG2/DdX5ANmqIElBDE5KG4I8q61SdnqAaHW4ChGAzbX85Tc+RirfKis6ZWhF8F5YRZ9eHCf9Qlu/qxDo68hvLW7PzN/E7ms8yok6hOnb3tEzS4/Y/avKZI1au7RKXaD1sIworAUFnPZfUZ0b+qOhENSxXFALDi5JOYtWGdOHka6IXj0wbqPxYwzn/+qgnaK5Z5dEr8QEsB08mUA+BKXdxmSe3eau36H4iQ2CARbonaHrEH8Ml8VA2nb9cNtlWsUH4RgN0LUkfdUWhACA==
-Received: from AS4PR09CA0030.eurprd09.prod.outlook.com (2603:10a6:20b:5d4::20)
- by AS2PR10MB7322.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:606::19) with
+ bh=yLtmss8g3YYvSxgvm4yzb6UjqZ6hnLIVxWr+eh4zo+w=;
+ b=keLp4VnYr+HFJ7heIzIu8Q0ye9scf9Sws+Xk9U0CNe/kxxQ0aCqwIXKPzWUvFlXICSUzSg7E52UyXVBitPQNmT3uTkC8A+FjbY9umsjAPLmGt0y1EeM1fI/RkWSGzcXivhuePUj3H9oYeuLZmUooOMh3F1dk6CrFgzWooRVV/oteZI/HIciP3pT7aPGuPNIvb6R+hxN5b/5Q+7PmkboprgqX8V7sTcAHBLmknQ2xoeETPHHmFR8rALT23I9IiOgEoslT8wopaPck/1Y3h6YW7kS6K/zF/AEvggX+t8bK+bTKf3Romhks9/s5nZGR4kw1pA5vK1FXqm7y24hZCsghgQ==
+Received: from AS4P250CA0023.EURP250.PROD.OUTLOOK.COM (2603:10a6:20b:5e3::11)
+ by VI1PR10MB3566.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:800:131::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.9; Tue, 14 Oct
- 2025 14:04:57 +0000
-Received: from AM4PEPF00027A5E.eurprd04.prod.outlook.com
- (2603:10a6:20b:5d4:cafe::2e) by AS4PR09CA0030.outlook.office365.com
- (2603:10a6:20b:5d4::20) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9228.10 via Frontend Transport; Tue,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9203.13; Tue, 14 Oct
+ 2025 14:04:58 +0000
+Received: from AM4PEPF00027A67.eurprd04.prod.outlook.com
+ (2603:10a6:20b:5e3:cafe::36) by AS4P250CA0023.outlook.office365.com
+ (2603:10a6:20b:5e3::11) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9228.9 via Frontend Transport; Tue,
  14 Oct 2025 14:04:57 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 164.130.1.43)
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 164.130.1.44)
  smtp.mailfrom=foss.st.com; dkim=none (message not signed)
  header.d=none;dmarc=fail action=none header.from=foss.st.com;
 Received-SPF: Fail (protection.outlook.com: domain of foss.st.com does not
- designate 164.130.1.43 as permitted sender) receiver=protection.outlook.com;
- client-ip=164.130.1.43; helo=smtpO365.st.com;
-Received: from smtpO365.st.com (164.130.1.43) by
- AM4PEPF00027A5E.mail.protection.outlook.com (10.167.16.72) with Microsoft
+ designate 164.130.1.44 as permitted sender) receiver=protection.outlook.com;
+ client-ip=164.130.1.44; helo=smtpO365.st.com;
+Received: from smtpO365.st.com (164.130.1.44) by
+ AM4PEPF00027A67.mail.protection.outlook.com (10.167.16.84) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9228.7 via Frontend Transport; Tue, 14 Oct 2025 14:04:56 +0000
+ 15.20.9228.7 via Frontend Transport; Tue, 14 Oct 2025 14:04:57 +0000
 Received: from SHFDAG1NODE1.st.com (10.75.129.69) by smtpO365.st.com
- (10.250.44.66) with Microsoft SMTP Server (version=TLS1_2,
+ (10.250.44.67) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.57; Tue, 14 Oct
- 2025 16:02:34 +0200
+ 2025 15:57:52 +0200
 Received: from localhost (10.48.86.11) by SHFDAG1NODE1.st.com (10.75.129.69)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.57; Tue, 14 Oct
@@ -98,10 +99,12 @@ CC: Antonio Borneo <antonio.borneo@foss.st.com>,
         Fabien Dessenne
 	<fabien.dessenne@foss.st.com>,
         Valentin Caron <valentin.caron@foss.st.com>
-Subject: [PATCH v3 00/10] pinctrl: stm32: Support I/O synchronization
-Date: Tue, 14 Oct 2025 16:04:41 +0200
-Message-ID: <20251014140451.1009969-1-antonio.borneo@foss.st.com>
+Subject: [PATCH v3 01/10] pinctrl: pinconf-generic: Add properties 'skew-delay-{in,out}put'
+Date: Tue, 14 Oct 2025 16:04:42 +0200
+Message-ID: <20251014140451.1009969-2-antonio.borneo@foss.st.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20251014140451.1009969-1-antonio.borneo@foss.st.com>
+References: <20251014140451.1009969-1-antonio.borneo@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -114,129 +117,141 @@ X-ClientProxiedBy: SAFCAS1NODE1.st.com (10.75.90.11) To SHFDAG1NODE1.st.com
  (10.75.129.69)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM4PEPF00027A5E:EE_|AS2PR10MB7322:EE_
-X-MS-Office365-Filtering-Correlation-Id: dc783edf-1989-4c41-eca1-08de0b2aa802
+X-MS-TrafficTypeDiagnostic: AM4PEPF00027A67:EE_|VI1PR10MB3566:EE_
+X-MS-Office365-Filtering-Correlation-Id: c1667dfd-5a8d-4043-1573-08de0b2aa861
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|82310400026|36860700013|921020;
+	BCL:0;ARA:13230040|36860700013|376014|7416014|1800799024|82310400026|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?36cJd8N1p1BMqMcr278K9VnYfZH9me6A1qWuswNC86muEDKVyuEyQy2bu9ut?=
- =?us-ascii?Q?J80BnNJ6HdQPbiz7FafqgMKa1ea4X7RqXLEPEsMLnrcHPEo8PSn/OdoG/uum?=
- =?us-ascii?Q?IY3rEJB26RTQOykn6K5YEjj+yapP8hSlq7fWlThYbcXJo/zg86a0KVZHWf+4?=
- =?us-ascii?Q?coB/O6+VdqnjQu7K7ccZ3jTHiokIxl0m18FS/XEz0ZzBoLWdKlKAm69tOPHZ?=
- =?us-ascii?Q?4RjQOhtjbzyOs+TU0slCnLQG0Ce8Xkvn/ylwasPqFI98VGXP6+QqSqLG39cc?=
- =?us-ascii?Q?P15LDLuupjh+1u2H+0eSizdSqFP6XFA0m591MkNPROt9K6mQzULwNW/Xjgob?=
- =?us-ascii?Q?3LcMhfZlNKKgVDUtfh6QQMc7scdoYxvnoGitVty3qk81BOFp++MPjn1Eu/Gy?=
- =?us-ascii?Q?DqvwZE36/7JDSLR5EkZsQf89E3OlXUGPBFsopaM03vf0LE8qvXRWxAsXLrKw?=
- =?us-ascii?Q?0puYgP0yjM2uX5+jBqwb/KpApsDiqTbPa1Kn0BO8Trgw2cd5G6UsXd4LTyug?=
- =?us-ascii?Q?UmDvLM23/UHrX8yzFR8F5EyVIGaoILR2XDOBjTCbpjR8nAtoUqcAw37gKyUb?=
- =?us-ascii?Q?HpRqSjHE5iRuILvBN1cYkk6qlM+Md53xONNXy6ki2Np1Hqg8CVk9uycNeGhX?=
- =?us-ascii?Q?zbT35bbT7e8fy/vw3awRSi31OcQRk6n3O0BFpwiM7cwCzgsfnWwyfu68M/MJ?=
- =?us-ascii?Q?U1aO2yXqeYDkNdpzzTtpxXUlBHjFUXyK5+UQSh2CzdgapN7eczms+HDHQeRn?=
- =?us-ascii?Q?WSPLGjWLq+hvmabbyFuIskxHyHhirhqFKXdVOdhInnjb6vJ224+7NAbpYf39?=
- =?us-ascii?Q?a0iE64gD7WWxSpvObh+9I0wejc0NvDdHWLWgw4nKYj+ru0NeIEGAbB5qqz9N?=
- =?us-ascii?Q?J9AVY85fWoR1t0lrBC0AU8BTv4bHAm2f37tARTakznQJcHRqXSDfC0FQR4dI?=
- =?us-ascii?Q?4S13CEgLye3U+Fy8OmYncfGHR7WAegsI3z5dGECf7Zn8A1De6f48HTaqf2mN?=
- =?us-ascii?Q?ll8VyG9ASJf6QQhrq/8Dl6nsY5kLcXCSmTGIP4DvNtg6k+Qmrh/MiVEX0PRX?=
- =?us-ascii?Q?nsW4aLe5aexnvi7IqPjPJ5AplLff29SQDbyR1IISuCRxGOKSQNR5YTWUX502?=
- =?us-ascii?Q?isw1HLlk4yM5xRh9LZdUSHvQTR9Amn2UjPa1yhxVgN3+MCi2zoSnh6Myw5H4?=
- =?us-ascii?Q?D4y0oIfcsqML/DuGeJdZRvuDordjv/m1QejeCWToCo6CAWrHaTdsTCsZzrFn?=
- =?us-ascii?Q?VPvnPGoNcZuKHuq0FBrKRwFH+BVgsn2WO+Rx1V7DWz+fsoWnZ2PoBtjLpEa7?=
- =?us-ascii?Q?1O6YFTE2wbx0kV3ZzOQ/q4bfHwCmYm+nSRmDmFBsnhST2EhbQ0uM0/pk0HAW?=
- =?us-ascii?Q?JWEEFpq351mMXKRt3DXaGMyhP4h+AkfWeT7rzk4gYS1s4VUjzEheVTwnSKwX?=
- =?us-ascii?Q?EseMo7YqSOSzSatPXaBwY8COcW9nO1yDStSKUnDiKekm+shIRElYdM606Rt5?=
- =?us-ascii?Q?CBuogSPANfb+atQHpn3GJU/NQCH9F25oVthytfp/nV40VS+jwGfS27UKP1gV?=
- =?us-ascii?Q?5+9nc4PouZhj2/Ogaeqf2mTwaTJYbGaYD6rI2c+q?=
+	=?us-ascii?Q?HpNMssQuTcDg8LukvRbPrDXv6FHVV47s5L3D12qJ/rm/kCFNt1YNc8nHa4s8?=
+ =?us-ascii?Q?88GM5Ct5Q4ITlN5sOfvf5sk5lTtBlmPdQpfH2+mQU5u4/Uguh3o/x4OA8Y+O?=
+ =?us-ascii?Q?cgBNXJ7HbZkpHEdGvNRo/kfoM5MmzuWcH/vX5lnjJE8hygQqbDWcrSqMK3Dd?=
+ =?us-ascii?Q?7krxG9UV5j94O6q8kHzoIGAOFQsgdWeDi/9vBhSpd5pW6rFTQvAuARaaEK56?=
+ =?us-ascii?Q?15JIbFuMtO4T1XIYoJZZoFZbnJfQD7IAG27oe2TrE6+ZSuZiaxDebNl6Vzof?=
+ =?us-ascii?Q?Ck403RJF2hrVoV/Kbt+ib9cR2eZ19K1/uZSi/b1K31uSRC9rsROT8Gf6QZKq?=
+ =?us-ascii?Q?IJzjlisp5GueYoEw0d/1skkuOitftQcoC4quNcAFuuUyT12UktCsmaDwCvk1?=
+ =?us-ascii?Q?0hYrgfX73cb7pumJtZPBYst+ukgDYupJeegr3TNK6jX6KSXgQyjvMX7NvCYu?=
+ =?us-ascii?Q?UGGuMXzyKVyp2NGFEG/50H+1hHWUAY7yJLMjcgrp+iPnvjRi4s8slM7RMFdc?=
+ =?us-ascii?Q?2n8e672BmEnRaiD6WJvwFZ/j4iREaaHRaLljcgLPJYf5PkaZ+uy+O1pVp4Hb?=
+ =?us-ascii?Q?NJQL36KtGO1i9rQlZFa5PYq5YxWTLnFkreGiZsRBy/Adfmyvc4FmsTKN7vgl?=
+ =?us-ascii?Q?9gnyThPACK2wi9fIN+lPpnJWbTrcTys8jw5yvi3s/vpqGUzA0QjDwOW9DEHs?=
+ =?us-ascii?Q?0mvlkAQBlTZ6VAktfWn7lvaEXjUSHrhz1JjJhZUL1mIl+knbgvW7u8DSvCoU?=
+ =?us-ascii?Q?JsDtMTgRfERAcHuJNbGUdBBSrlDu32XA6d1E+avn8FzWj6MGuUcHNIqdqhnV?=
+ =?us-ascii?Q?rTpqhMCKHYnz05rLwvzn7lEFIIlFkQDT+gAe7MkLeN/BQ3BS7vvf2GbxMRYP?=
+ =?us-ascii?Q?KRrOrUhpP3uE/I6/12tZaZeCvT/rZKQl0y4pk2MH6vKksXyPeWJ4cfteq52d?=
+ =?us-ascii?Q?jI84MBw/HI2MFz7NaeR0I+P9FQj/h/igiS7ftI32hYjfQDpSGb0ukvh0x/rc?=
+ =?us-ascii?Q?UcuurHGLlTuClZkwKVSSvmSqNgUGIEOAJpbayZj5smkFpg9U3RSXjDOMNSQf?=
+ =?us-ascii?Q?v3gKl0/VBXSJF4fJ4XMDWKfHuuGJePE+chro30/dj3/2c99NTf+imhrgXZXX?=
+ =?us-ascii?Q?QqVDkIqeGmhAGzQQdmzbTkswQV7RDmNWHBBVKvf1cixo7z8YYeuzQ6mfl6oQ?=
+ =?us-ascii?Q?p6n6dCOmk5vrR2mzI/UPhYlOVp/cXRHjwOoqEosgnS6Ek+KpmqtmtCQvU20l?=
+ =?us-ascii?Q?orCr1gv06EKIw7VZ7n0QAQz9Iix3ncNRf3scIWG5kv2f7vwPTf97ZQeGR8WK?=
+ =?us-ascii?Q?IL1S/ChimHsa1w/9HxQLFGbVnELoV7oSq/JSl3ihO7QK8zqtUyib4lfS86Gg?=
+ =?us-ascii?Q?l/lcd4Ba3QP4fiQ61y7R+leB7Iw5XFIS9TLpL4uewg2A6np3ROV8GJDsdVjL?=
+ =?us-ascii?Q?KU4rl7qu2cm5wXxtksnwwCAe4VFYSRJxUho9/H2m3GCK9j+COW30YaEY2FFf?=
+ =?us-ascii?Q?hWaBBwcABnY3TuHoldnIjssk/Qom6P5DyrQFzpSzeCnWNfvC/Ae7a2IG9Vld?=
+ =?us-ascii?Q?F6KqoblULZwDjOVTX3sgTM7vlDDAzG48Hm8dioFm?=
 X-Forefront-Antispam-Report:
-	CIP:164.130.1.43;CTRY:IT;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:smtpO365.st.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(82310400026)(36860700013)(921020);DIR:OUT;SFP:1101;
+	CIP:164.130.1.44;CTRY:IT;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:smtpO365.st.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(7416014)(1800799024)(82310400026)(921020);DIR:OUT;SFP:1101;
 X-OriginatorOrg: foss.st.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2025 14:04:56.7352
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2025 14:04:57.3468
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc783edf-1989-4c41-eca1-08de0b2aa802
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1667dfd-5a8d-4043-1573-08de0b2aa861
 X-MS-Exchange-CrossTenant-Id: 75e027c9-20d5-47d5-b82f-77d7cd041e8f
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=75e027c9-20d5-47d5-b82f-77d7cd041e8f;Ip=[164.130.1.43];Helo=[smtpO365.st.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=75e027c9-20d5-47d5-b82f-77d7cd041e8f;Ip=[164.130.1.44];Helo=[smtpO365.st.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	AM4PEPF00027A5E.eurprd04.prod.outlook.com
+	AM4PEPF00027A67.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR10MB7322
-X-Proofpoint-GUID: Q465c8YRqbP50l8xS5boMoL9pFsKVAnY
-X-Proofpoint-ORIG-GUID: Q465c8YRqbP50l8xS5boMoL9pFsKVAnY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDExMDEzMyBTYWx0ZWRfX0FxZv2ZLDXtZ
- ZdfT/LzTtRajHMhSd+p7NNdf7DYMjDp9ytqefKXU6TLAUMFdWkirHz014NozWJWVZCUzFMmgqwD
- 8rlOOJ/cHR6xVNCfvsRZh5YMVSX98AjQZhd+PW0tqXqLm3LZA8cTjiCmiyswq0S3/9SOOHmRV1q
- QJCWhw0zaehEdLl4Kijg9IqvPKk7R5QnZ/vgd5DcbhVgk4ODG1lyAYl4hNp2dygwpPcI0vXBNKV
- H8/5dsot7sIBkjPJmTRp7DPppjIhkkQfcVWo1a21uzZvTNeeQGsQjSRv5PLg5vk1ByCazxLSgtT
- xmcYNhmiNQGkwgmAIzo1yCJOvWK5nxzbiugFAKjpIL8Qexei6rvF9x7QlzMP0enQdh3to7dxasN
- SW+X7TusFBTS62eSHAciKCSRr61WUQ==
-X-Authority-Analysis: v=2.4 cv=dY6NHHXe c=1 sm=1 tr=0 ts=68ee588b cx=c_pps
- a=pOr88aQqtRPe188Gsff7+w==:117 a=peP7VJn1Wk7OJvVWh4ABVQ==:17
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB3566
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDExMDAxOCBTYWx0ZWRfX2FS1osIM+74G
+ lT0tTLyoH6YxvoPJcRYClHUxsykgkbwxKKNzq1roBtC2RxOVm1tLD7eVbcqsImFf+hgDhZ+H6Iz
+ LuxWuLWZnS+wEfUmi0Eg5nRyYz3daDPniRBud4LQdkqkwIMrGpgxR6EO/iH2tyGHYC5K3zUIX/Y
+ xRPqu7LdTi+yfWvVQiks37sqCRw/3vN6YhbfJKXcZpXChkRDiTrSDDIKFf++AlcGs21u9dq7snx
+ c6hfmvFLAW3azoBaF5LoI8b2uM98FQG84VSkFmj+1YB+jjfOjx92uZH7tT9/xQlL816OhsL4e94
+ i2/qGAslfWKxaGsojU+TTXmvxMzMYtup5SelxwWX1AAfuUvRizfGdQd18KtrVSX71wrLvcaCDr+
+ 2omDcBOsGOnvjvHH6DAlclElFbpGUQ==
+X-Authority-Analysis: v=2.4 cv=Jun8bc4C c=1 sm=1 tr=0 ts=68ee588c cx=c_pps
+ a=XAY7+HngwFVe3IvMTNpLPg==:117 a=Tm9wYGWyy1fMlzdxM1lUeQ==:17
  a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=y9YUpebZf6kA:10 a=x6icFKpwvdMA:10
  a=s63m1ICgrNkA:10 a=KrXZwBdWH7kA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=8b9GpE9nAAAA:8 a=YQQ0Qr8HmseqwsnO7Y4A:9
- a=T3LWEMljR5ZiDmsYVIUa:22 a=cPQSjfK2_nFv0Q5t_7PE:22
+ a=8b9GpE9nAAAA:8 a=w25x4uixzSbVIWrOvq4A:9 a=T3LWEMljR5ZiDmsYVIUa:22
+ a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-GUID: Jpzqk71z0Wg3ut8Hf_l-T3ySZpANfpBN
+X-Proofpoint-ORIG-GUID: Jpzqk71z0Wg3ut8Hf_l-T3ySZpANfpBN
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-10-14_03,2025-10-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0
- clxscore=1015 impostorscore=0 spamscore=0 adultscore=0 lowpriorityscore=0
- malwarescore=0 phishscore=0 suspectscore=0 priorityscore=1501
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0
+ clxscore=1015 bulkscore=0 priorityscore=1501 phishscore=0 spamscore=0
+ malwarescore=0 impostorscore=0 suspectscore=0 lowpriorityscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510110133
+ reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510110018
 
-This v3 is a subset of the v1, split-out to simplify the review.
-The old patches concerned in v1 where 05/14, 06/14 and 07/14.
+Add the properties 'skew-delay-input' and 'skew-delay-output' to
+the generic parameters used for parsing DT files. This allows to
+specify the independent skew delay value for the two directions.
+This enables drivers that use the generic pin configuration to get
+the value passed through these new properties.
 
-This subset:
-- introduces the generic pinctrl properties "skew-delay-input" and
-  "skew-delay-output", as suggested by Linus Walleij;
-- applies some cleanup to STM32 pinctrl driver to simplify the following
-  commits in the series;
-- adds support for the I/O synchronization in STM32 pinctrl driver and
-  bindings;
-- updates the DT for STM32MP25 pinctrl to use the new properties.
+Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
+---
+ drivers/pinctrl/pinconf-generic.c       |  4 ++++
+ include/linux/pinctrl/pinconf-generic.h | 12 ++++++++++++
+ 2 files changed, 16 insertions(+)
 
-Changes v2 -> v3:
-- rebased on v6.18-rc1;
-- replace "skew-delay-direction" with "skew-delay-input" and
-  "skew-delay-output";
-- use generic properties from pincfg-node.yaml in dt-bindings;
-- add the new properties to the new node eth1 in DT.
-
-Changes v1 -> v2 subset:
-- rebased on v6.17-rc1;
-- replace ST property "st,io-delay" with generic "skew-delay";
-- replace ST property "st,io-delay-path" with generic "skew-delay-direction";
-- collapse the other ST property in a single "st,io-sync";
-- Link to v1: https://lore.kernel.org/lkml/20241022155658.1647350-1-antonio.borneo@foss.st.com/
-
-
-
-Antonio Borneo (10):
-  pinctrl: pinconf-generic: Add properties 'skew-delay-{in,out}put'
-  dt-bindings: pincfg-node: Add properties 'skew-delay-{in,out}put'
-  pinctrl: stm32: Rework stm32_pconf_parse_conf()
-  pinctrl: stm32: Simplify handling of backup pin status
-  pinctrl: stm32: Drop useless spinlock save and restore
-  pinctrl: stm32: Avoid keeping a bool value in a u32 variable
-  pinctrl: stm32: Support I/O synchronization parameters
-  dt-bindings: pinctrl: stm32: Use properties from pincfg-node.yaml
-  dt-bindings: pinctrl: stm32: Support I/O synchronization parameters
-  arm64: dts: st: Add I/O sync to eth pinctrl in stm32mp25-pinctrl.dtsi
-
- .../bindings/pinctrl/pincfg-node.yaml         |  22 ++
- .../bindings/pinctrl/st,stm32-pinctrl.yaml    | 123 ++++++-
- arch/arm64/boot/dts/st/stm32mp25-pinctrl.dtsi |   4 +
- drivers/pinctrl/pinconf-generic.c             |   4 +
- drivers/pinctrl/stm32/pinctrl-stm32.c         | 345 ++++++++++++++----
- drivers/pinctrl/stm32/pinctrl-stm32.h         |   1 +
- drivers/pinctrl/stm32/pinctrl-stm32mp257.c    |   2 +
- include/linux/pinctrl/pinconf-generic.h       |  12 +
- 8 files changed, 421 insertions(+), 92 deletions(-)
-
-
-base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
+diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
+index 5de6ff62c69bd..8caec29e40a7c 100644
+--- a/drivers/pinctrl/pinconf-generic.c
++++ b/drivers/pinctrl/pinconf-generic.c
+@@ -54,6 +54,8 @@ static const struct pin_config_item conf_items[] = {
+ 	PCONFDUMP(PIN_CONFIG_SLEEP_HARDWARE_STATE, "sleep hardware state", NULL, false),
+ 	PCONFDUMP(PIN_CONFIG_SLEW_RATE, "slew rate", NULL, true),
+ 	PCONFDUMP(PIN_CONFIG_SKEW_DELAY, "skew delay", NULL, true),
++	PCONFDUMP(PIN_CONFIG_SKEW_DELAY_INPUT, "input skew delay", NULL, true),
++	PCONFDUMP(PIN_CONFIG_SKEW_DELAY_OUTPUT, "output skew delay", NULL, true),
+ };
+ 
+ static void pinconf_generic_dump_one(struct pinctrl_dev *pctldev,
+@@ -190,6 +192,8 @@ static const struct pinconf_generic_params dt_params[] = {
+ 	{ "sleep-hardware-state", PIN_CONFIG_SLEEP_HARDWARE_STATE, 0 },
+ 	{ "slew-rate", PIN_CONFIG_SLEW_RATE, 0 },
+ 	{ "skew-delay", PIN_CONFIG_SKEW_DELAY, 0 },
++	{ "skew-delay-input", PIN_CONFIG_SKEW_DELAY_INPUT, 0 },
++	{ "skew-delay-output", PIN_CONFIG_SKEW_DELAY_OUTPUT, 0 },
+ };
+ 
+ /**
+diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
+index d9245ecec71dc..6ef0b343f3424 100644
+--- a/include/linux/pinctrl/pinconf-generic.h
++++ b/include/linux/pinctrl/pinconf-generic.h
+@@ -112,6 +112,16 @@ struct pinctrl_map;
+  *	or latch delay (on outputs) this parameter (in a custom format)
+  *	specifies the clock skew or latch delay. It typically controls how
+  *	many double inverters are put in front of the line.
++ * @PIN_CONFIG_SKEW_DELAY_INPUT: if the pin has independent values for the
++ *	programmable skew rate (on inputs) and latch delay (on outputs), then
++ *	this parameter (in a custom format) specifies the clock skew only. It
++ *	typically controls how many double inverters are put in front of the
++ *	line.
++ * @PIN_CONFIG_SKEW_DELAY_OUPUT: if the pin has independent values for the
++ *	programmable skew rate (on inputs) and latch delay (on outputs), then
++ *	this parameter (in a custom format) specifies the latch delay only. It
++ *	typically controls how many double inverters are put in front of the
++ *	line.
+  * @PIN_CONFIG_SLEEP_HARDWARE_STATE: indicate this is sleep related state.
+  * @PIN_CONFIG_SLEW_RATE: if the pin can select slew rate, the argument to
+  *	this parameter (on a custom format) tells the driver which alternative
+@@ -147,6 +157,8 @@ enum pin_config_param {
+ 	PIN_CONFIG_PERSIST_STATE,
+ 	PIN_CONFIG_POWER_SOURCE,
+ 	PIN_CONFIG_SKEW_DELAY,
++	PIN_CONFIG_SKEW_DELAY_INPUT,
++	PIN_CONFIG_SKEW_DELAY_OUTPUT,
+ 	PIN_CONFIG_SLEEP_HARDWARE_STATE,
+ 	PIN_CONFIG_SLEW_RATE,
+ 	PIN_CONFIG_END = 0x7F,
 -- 
 2.34.1
 
