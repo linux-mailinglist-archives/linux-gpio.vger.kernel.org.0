@@ -1,176 +1,130 @@
-Return-Path: <linux-gpio+bounces-27139-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27140-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6049BDB183
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 21:41:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BB43DBDB2E4
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 22:14:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 073903E88AB
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 19:40:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 759DE541688
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 20:14:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAC642D12EB;
-	Tue, 14 Oct 2025 19:39:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 368033054EF;
+	Tue, 14 Oct 2025 20:14:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qSLN5Hq5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mc3xoKx4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 519562D0C69;
-	Tue, 14 Oct 2025 19:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3764C30594F
+	for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 20:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760470799; cv=none; b=DkrsnvGU3OogcrRhfOcpiue5MUwpLCUX8cTcf2CWnJWcy9l50+xLyHnHayQjgqH4XpeOGFZZ1BG++wkrVFNX1UNUBYvWdL6tAZIyjhEYZvpHWL6t84EE1g5KJWH8ePO5zh7ZZ7pk6IK19oT2flJdBGuzy6Ak8dvzEYsU8iQo5Kg=
+	t=1760472845; cv=none; b=BUsYURJEr6krdh05VHyyBQi5eK5q+OYPEO5pMhvVT5IrSUrJTJYwnAPLXH7ZXMdxdMw7bcDZ/PrdGgHv9YB5WXFVYoe4+iP1KH3WwbZDoabABcLQZhwRAdqFa877RmMZ/2QbkcGxifsldE6QoxM8qLpNJzc23bJpMogezZEZaQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760470799; c=relaxed/simple;
-	bh=O5H/YsuZs738YLiu8CU7UPY57QeILHiPa3/g7uk/1NA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EWiUntwiIpKoLDDne8Al82qmKNbaHOi5KnhSzR03qHQs+dmjESkR//bx0TUoiEX+PBk8CC/x6XzgvQVigzuTaMnXar5tWjWCDwoAopgyIUgelR8Hx/8S1eCH9Ppi3vqnHnkU3lzKBz7KQvieznSAsoPj53lK1eI3vq0+cYv/pyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qSLN5Hq5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4D77C4CEE7;
-	Tue, 14 Oct 2025 19:39:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760470798;
-	bh=O5H/YsuZs738YLiu8CU7UPY57QeILHiPa3/g7uk/1NA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qSLN5Hq5qQqaeRoRL4S6gw3Nbz3N+rvUZnaplautiXAX6nefXQTlvHDiCM4jO2Dxb
-	 S5IWLDMMJS9ZSDIPTK2YHsMHutYxBoAxatnzI97AnabTbrkTEaHRYgBKH3RArkCPjA
-	 SGFbcnTfbjB+mobrDoGdydj5sZ46yN146NH3xWbjQh6Qn+RVITJ0r3LT5vF/AzLt87
-	 gynvyfmfcWo5W1W1MTFLphm4t6YzZgdpKL3klZ1aRsYzb4eOXtKkah5YRJ8iNyId4f
-	 ZSXSMipjbBH6H0BhQjiPO8XHU97HxkESsQBDiI++fx+agiP7s158V8c2zSbVpfhUlc
-	 NdnPq0J/RJgsA==
-Date: Tue, 14 Oct 2025 20:39:53 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Antonio Borneo <antonio.borneo@foss.st.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Roullier <christophe.roullier@foss.st.com>,
-	Fabien Dessenne <fabien.dessenne@foss.st.com>,
-	Valentin Caron <valentin.caron@foss.st.com>
-Subject: Re: [PATCH v3 02/10] dt-bindings: pincfg-node: Add properties
- 'skew-delay-{in,out}put'
-Message-ID: <20251014-water-gown-11558c4eabe7@spud>
-References: <20251014140451.1009969-1-antonio.borneo@foss.st.com>
- <20251014140451.1009969-3-antonio.borneo@foss.st.com>
- <20251014-barbecue-crewman-717fe614daa6@spud>
- <CACRpkdZT20cdH+G6Gjw8PopAkir+gGgMtRR4pkjnXFrmDkdfog@mail.gmail.com>
+	s=arc-20240116; t=1760472845; c=relaxed/simple;
+	bh=4SjEPEjlWep5gU3J6a93orAuWUCgYWFpGeMwqORKnmc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NJguMrHAPN6bD1DXjFE4MT/zZc2FOLR2Dzs17ib6RdCLZVbmq+eEKKKLKMRPpd+qvDsl1u9f0gPd0q9em7ShRFxBfVohpQZtG6qBZ+mDfH/tyjRqVMLt4KNDCXuTLlg8uXjeWCqmAw0HVQ0TA8jaqE1kIrNLkDSnRWfZXPVtz5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Mc3xoKx4; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-3637d6e9923so52501731fa.3
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 13:14:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1760472841; x=1761077641; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jRL7yP55FZsuArjzHnzTt8bkESp9r+xQAl9w62GS3Mk=;
+        b=Mc3xoKx4lEehWzQDHoTU+UXsbFg/vtl31qNH64lbPz/u1e/TEmdDATCsVoDH0bOTsa
+         9pEJWzCs+UOgeRmMjQOFC9/APu8+If1m4tnVpF73SnE2/Ik9OAvYz3Z1aqKjeEW5pcni
+         K/1S26gIwSihR0YvJ01vr69j3OSEHQ57qiw5xu8HNvMCU8h5wRn6X9hMO1nrR4+qt2pa
+         yPa6YpUIxjHiBpErq7e+XzGCyrKL5QyN4b+1iKMu3vCaNCI60nkW9gFH0kHCtk3fCpNe
+         afzz2Bb4V/WSYbyd8Dn/x9I8nBopQiCcdwCI56w8BySF2fIyD7mSHB/zjrCYPbqs6oCU
+         +/ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760472841; x=1761077641;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jRL7yP55FZsuArjzHnzTt8bkESp9r+xQAl9w62GS3Mk=;
+        b=W6q0/DWXEGumWGr7cjkCaZ6C6ZgFUt6ZlCuqIvLHZVub01eckLCg/XKza4jXkdOzZI
+         YLKLzaobk4a4Pfhq+cU2kxuXQLcwEdGpqg3tDpSuIo1/rtODrNYopBI0ED6jMRgeO0Z3
+         XUNOdXuwU6isvxyzP8l73oDcRBoQ3tSba8on13ActiM1e8bnn67jRu2zKbpmWQBMXM+A
+         3N/gY34oX+hUOIGuli3IB9ye34lYs0jjjO4mTtET16GKacW7bJhSVcQDkDBeuoQ/YQXD
+         Ys1MY9MtKghh5L2YCgbr7NkpuLRzcx7xwExPK2xjqgQ4lk4JT3awo0LvFBXGelRvWSdY
+         w8og==
+X-Forwarded-Encrypted: i=1; AJvYcCWOE6JHF9YOBHt9kxbxuBqCek3EZigAJ9mO2s9BH0izNvbY74LpJlJYVcJZ9IN8Q3evSZQwS8YsaaLV@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+XAWcdViXcvv0/C+93bMWN/DQM1monhjtk7PBfzMSnrEn51ve
+	S4ryNVvQhfpgyyhPlfUZVZHvSvUrsAs4jrxCWDNatm1OqdIi0rwaD/ZbkNyeYsAkF+pL1JYqmWN
+	EUSyuMOGIxu8jelaQxVs/EgC3lmxSpAqUsi0XSfq6jA==
+X-Gm-Gg: ASbGncufpVENcZmOWEpeLEosx8v3IZ/mow5FqDqMdM/LIF6EpHgTjJdCEUYoz4LlVBD
+	8iSsRLtGRsrrkmD4cBvWK6yggwde2L06gKioCSW79JV4K33XWCri+ahT7epN8ZXnn/v27g8y0Z+
+	i5nTu4bAeSXMBKj5ROLB8I3L5+AF9kXuj5ZLTqICidlnoHV7f0rluU78bTQWDG9N4UtpG2Vld0X
+	JQWiSf/ciX9GKTrtj/FBMgbrzczVlb8Bc7NLtOp
+X-Google-Smtp-Source: AGHT+IG+c/RQZD+0BVP0nLHNcQQpCHhF3SSDuV5EMqiXVv1DgN4Em2i5iNrVkDIsVxWl80rtbzj95RlgyVMuiFXBe08=
+X-Received: by 2002:a05:651c:4344:10b0:376:3b32:ad9c with SMTP id
+ 38308e7fff4ca-3763b32b732mr39537411fa.23.1760472841322; Tue, 14 Oct 2025
+ 13:14:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="DnZFP0H7yz35f5cB"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZT20cdH+G6Gjw8PopAkir+gGgMtRR4pkjnXFrmDkdfog@mail.gmail.com>
-
-
---DnZFP0H7yz35f5cB
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20250922152640.154092-1-herve.codina@bootlin.com>
+ <20250922152640.154092-8-herve.codina@bootlin.com> <CACRpkdZPURiag1cUQZ319_QA83u+qOCSRALxpe10_+cTcevy+Q@mail.gmail.com>
+ <20251001174205.71a08017@bootlin.com> <CACRpkdZ1qg6ecA5DyVEGUHQxLh0SnC=GC5JZdevT99YVWU0ypA@mail.gmail.com>
+ <aO5ekPxeg7tdFlHi@shikoro>
+In-Reply-To: <aO5ekPxeg7tdFlHi@shikoro>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 14 Oct 2025 22:13:50 +0200
+X-Gm-Features: AS18NWASZOxDjvevo6edLy771RxyP0LAmvYlJlH8qS2O9u5M72Qx7DPeuUj90bc
+Message-ID: <CACRpkdacJCp8aCCrCAzD5F=_K3g25t_8kZGzaEoXMBnhY8hkzA@mail.gmail.com>
+Subject: Re: [PATCH v4 7/8] soc: renesas: Add support for Renesas RZ/N1 GPIO
+ Interrupt Multiplexer
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Herve Codina <herve.codina@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Hoan Tran <hoan@os.amperecomputing.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Saravana Kannan <saravanak@google.com>, Serge Semin <fancer.lancer@gmail.com>, 
+	Phil Edworthy <phil.edworthy@renesas.com>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, Pascal Eberhard <pascal.eberhard@se.com>, 
+	Miquel Raynal <miquel.raynal@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 14, 2025 at 09:33:14PM +0200, Linus Walleij wrote:
-> On Tue, Oct 14, 2025 at 8:04=E2=80=AFPM Conor Dooley <conor@kernel.org> w=
-rote:
-> > On Tue, Oct 14, 2025 at 04:04:43PM +0200, Antonio Borneo wrote:
->=20
-> > > +  skew-delay-input:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +    description:
-> > > +      this affects the expected clock skew on input pins.
-> > > +      Typically indicates how many double-inverters are used to
-> > > +      delay the signal.
-> >
-> > This property seems to be temporal, I would expect to see a unit of time
-> > mentioned here, otherwise it'll totally inconsistent in use between
-> > devices, and also a standard unit suffix in the property name.
-> > pw-bot: changes-requested
->=20
-> Don't blame the messenger, the existing property skew-delay
-> says:
->=20
->   skew-delay:
->     $ref: /schemas/types.yaml#/definitions/uint32
->     description:
->       this affects the expected clock skew on input pins
->       and the delay before latching a value to an output
->       pin. Typically indicates how many double-inverters are
->       used to delay the signal.
->=20
-> This in turn comes from the original
-> Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> document, which in turn comes from this commit:
->=20
-> commit e0e1e39de490a2d9b8a173363ccf2415ddada871
-> Author: Linus Walleij <linus.walleij@linaro.org>
-> Date:   Sat Oct 28 15:37:17 2017 +0200
->=20
->     pinctrl: Add skew-delay pin config and bindings
->=20
->     Some pin controllers (such as the Gemini) can control the
->     expected clock skew and output delay on certain pins with a
->     sub-nanosecond granularity. This is typically done by shunting
->     in a number of double inverters in front of or behind the pin.
->     Make it possible to configure this with a generic binding.
->=20
->     Cc: devicetree@vger.kernel.org
->     Acked-by: Rob Herring <robh@kernel.org>
->     Acked-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
->     Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
->=20
-> So by legacy skew-delay is a custom format, usually the number of
-> (double) inverters.
+On Tue, Oct 14, 2025 at 4:30=E2=80=AFPM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
 
-Yeah, I actually noticed this after sending the mail. But as you say
-below, the new properties can be done with a unit etc
+> Because the HW design kind of suggests it, I'd think. The GPIO
+> controller is a standard Synopsis one ("snps,dw-apb-gpio") without any
+> extras. The GPIOMUX (which is extra) is according to the docs part of
+> the system controller with a dedicated set of registers. Luckily,
+> self-contained and not mangled with other functionality.
 
->=20
-> I don't recall the reason for this way of defining things, but one reason
-> could be that the skew-delay incurred by two inverters is very
-> dependent on the production node of the silicon, and can be
-> nanoseconds or picoseconds, these days mostly picoseconds.
-> Example: Documentation/devicetree/bindings/net/adi,adin.yaml
->=20
-> Antonio, what do you say? Do you have the actual skew picosecond
-> values for the different settings so we could define this as
->=20
-> skew-delay-input-ps:
-> skew-delay-output-ps:
->=20
-> and translate it to the right register values in the driver?
+Aha I see. If this is so tightly coupled with the Synopsis
+designware GPIO then it should be mentioned in the commit
+I guess. Also:
 
-The patch for the specific binding does have values in units of seconds
-assigned to each register value, so I think this should be doable.
+config RZN1_IRQMUX
+       bool "Renesas RZ/N1 GPIO IRQ multiplexer support" if COMPILE_TEST
 
->=20
-> If we have the proper data this could be a good time to add this
-> ISO unit to these two props.
->=20
-> Yours,
-> Linus Walleij
++      depends on GPIO_DWAPB || COMPILE_TEST
 
---DnZFP0H7yz35f5cB
-Content-Type: application/pgp-signature; name="signature.asc"
+?
 
------BEGIN PGP SIGNATURE-----
+I understand that it is convenient to make this a separate driver.
 
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaO6nCQAKCRB4tDGHoIJi
-0qLlAP9810SKsRFfc73sjXKlJV1iLRHPiWHn2M7TKwMkhNAhNQEAoJHsRqsTrOZv
-DEfxbqgGD+nWjS0Kv0p8dpJZC6EYfw4=
-=BzPH
------END PGP SIGNATURE-----
+I'm not sure it is the right thing to do, but it's no a hill I want to
+die on so if everyone else thinks I'm wrong, I can just shut up
+about it, it's not like this driver is a big obstacle or anything.
 
---DnZFP0H7yz35f5cB--
+Yours,
+Linus Walleij
 
