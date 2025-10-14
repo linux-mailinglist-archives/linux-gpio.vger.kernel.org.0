@@ -1,55 +1,55 @@
-Return-Path: <linux-gpio+bounces-27055-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27057-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A82CBD705E
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 03:57:38 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2632CBD706D
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 03:58:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9C79B4F0A0C
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 01:57:29 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0C3A84E0282
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Oct 2025 01:57:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CFE1273D75;
-	Tue, 14 Oct 2025 01:57:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D396B28751B;
+	Tue, 14 Oct 2025 01:57:22 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023132.outbound.protection.outlook.com [40.107.44.132])
+Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022096.outbound.protection.outlook.com [52.101.126.96])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F21515A8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2630520E03F;
 	Tue, 14 Oct 2025 01:57:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.132
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.96
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760407041; cv=fail; b=gAmWxvTGCL0iRLlkl6V7/n146wItZaHc2pDV7fg3+dJBci45pqFlraNSEELnpncKQ6l5T7pPtrs+BUWVjl0J9ixFz1HTukppA3zGBZDQiKZduMrSv3I6vtrgfQm1ECE3XsoNlRoJQtYAvmMTZUTnbaRBz/E+zYKX6PQnMBo1Jks=
+	t=1760407042; cv=fail; b=aI74nL2ZHPLMba0ICRguQcCR89pQrt5YAdEvnaFUZzAIDoUzzLuKnkRv36gPywiL5074fQXPIpSrlHQgci5sfA5XBxSI+Guw0MCkGOwe5qHwQSD9Y9/d8X5Kjpg7IBHlYsANflDTP0HukKAMqGCr8BnWu4ByS+ifYBVDZKfeKw0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760407041; c=relaxed/simple;
-	bh=4PJ4C/3c+oP4xoOIxq5CFijsafx0Eg00IsSpZHYqdJg=;
+	s=arc-20240116; t=1760407042; c=relaxed/simple;
+	bh=oT+0ESgJ4JpmWax+uDczlae2yHfnOvyVk7gQ0Jygp3U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g9SPO1s8r7CEY/xvX0+8lh5RN8R2a9pmRKZ8h7cMxqA6DI07n3aotl7MUS9TG2b+OmpfdDH6bR0LA4PVrT02X63AgScW/q3Q8rHog2FBQqtSl9g+88HHz7agfhaJ3CZBIc6cX355xbTlv7uuPg129hC/aIYnZah6Gf5Z0wn9+9Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.44.132
+	 MIME-Version:Content-Type; b=pGn+QOJYIbkuxiAm0XIA/Uz3YtogGED54PklGSOIuJCuJWcHKe88o69ouKrHU36wBrofpD6f6VWV9qHONA/kzs/GWyhtaLDPSV6XMxmT+hrcSblVwhDBuNfjspJsNq/BE3dAsV2d5TDqej768ZSXMs59poPu6n7kpIcsC9Pyq5w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.126.96
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GfksZWY++dRvqbgsmS30eNHFzwrDDttDsQY+h7IoASEBTy+DOZDkGH2JiOndwZcGam/VttOCEJsnp2/ygLdLmhoATQ2lhQpQSpd9LPMqEHa5DEGw+h0z/9bRCG+d9CnCwDqE9ySW6fU14VlbbPRgAxfesoxsFPNPaSzemjgED8TkhLqY0fxIJnUSUfPulr1fjJgLfHg0qC+PhnlzPJANPzg9FUf2TKI04s+JWwMdjSiBhiWlKRrIRFqWmymfTbWfJ20KsmxADhtV5z3gE9sHPprIsIAwS6/2sxdDaFFqdxYer9Q3407/UZI8Njrwit3uio+LwogofGqkIrcqMjpOEA==
+ b=HhCKyXDasryGZXmmp/bXNlvmdHG7cJpt42LTuFYSaM4qNB/zJNo7GcXma3Em7kTKcOZsVrL8DVPGsyVxIUbK/EnVW9ybJB1haRB/sRMtOyFPOK9kSq40nPQsTUlbN7ERxD50/6IPyKfxhWpYzNfVHTFhaTW0jKhGp12WjH2i5mlxxwiQFCwqHjmH6/xkzim0TAmbyNJc+DKIZzZiUE6QxM8Lxhm+NY0ZRvZTeVPZmSBhzUJiWSMcsmXFksaK4fQRuSy2LT0B/icHaRd5hPEpmOORl3Aogff/RLV9VSCx9WOrh+tr6yu/dqyuZ3sLWPI+C2AOwIw8vQSpNxxlsUCERQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=clek1x6Iy6G1/88+JOkQu9bdOrr+hZIwEbs/+5g42N4=;
- b=H6ySERfp9P7+SLv/fSue1fdiCqHrmRam0K72c8ix9cXMrEEkcX00cskWDZRVgL4PkM0+Jbe3xlII6dJ1fBNcvs68RkGI8M5BWnCT4d6lsnfmzc40FwbVpdsRkU6M49uVMQJD9psttrNOCWnADfXgR3bA7LcGDZMOlAMG4QQL6qk6xHu2ghdQhKDgeAZlPCbnhrimtHIwISWbEF6RUKROsInRRY2y3YrOz1bIdsEyrGD8vrOrsP2wxWtDOH7B7Cbm2lOTnIyHXPCyYyQGAZ9hfXF889AT9MD6rCAE/riljQTvWxVW7Dlq80oE6nnsGg6ZMFk8Y9o5hRZIhUpUjwBM5A==
+ bh=dcS+4Q1Jlb78yXoQv0BR4xKCq+1IbVqn8l1qCuNYyzo=;
+ b=F9hS60uswLXdsyuf1yVnACch3xpCmd5wxGMVH8GQ4Ih+3ZBFht86Ls2i+Kn2lnMU7CcVs2788af0XXBFr+XZWTeO17d60skKhxemBm1oFWRUBNVuwY19ekW6rFDh1EDwjha0rHkWxHeaMj/PeWODcoLVOCQkELW8PkGgxU5s/vQn227dTN+Wvor61kUKTC9tUKL1OXzLpHrJ+Stqr8p4PZ5If0mcnNz9t4wNppUo2gjiNJ3EVYrQQxFmdbVS8X3ffsGW8EEyRRkxaA30A9zmf6Rs3YTDPe8N8U7OUCbER6rGY5mtcmq3gJN40U55akYdzld/ADJTh2FUmQS0niM7QA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  222.71.101.198) smtp.rcpttodomain=cixtech.com smtp.mailfrom=cixtech.com;
  dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
  not signed); arc=none (0)
-Received: from SG2PR01CA0112.apcprd01.prod.exchangelabs.com
- (2603:1096:4:40::16) by SG2PR06MB5105.apcprd06.prod.outlook.com
- (2603:1096:4:1c8::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9203.12; Tue, 14 Oct
+Received: from SI1PR02CA0008.apcprd02.prod.outlook.com (2603:1096:4:1f7::14)
+ by SE1PPF93ED7187F.apcprd06.prod.outlook.com (2603:1096:108:1::420) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9203.11; Tue, 14 Oct
  2025 01:57:13 +0000
-Received: from SG2PEPF000B66CE.apcprd03.prod.outlook.com
- (2603:1096:4:40:cafe::9e) by SG2PR01CA0112.outlook.office365.com
- (2603:1096:4:40::16) with Microsoft SMTP Server (version=TLS1_3,
+Received: from SG1PEPF000082E5.apcprd02.prod.outlook.com
+ (2603:1096:4:1f7:cafe::9b) by SI1PR02CA0008.outlook.office365.com
+ (2603:1096:4:1f7::14) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.9203.13 via Frontend Transport; Tue,
- 14 Oct 2025 01:56:48 +0000
+ 14 Oct 2025 01:57:12 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
  smtp.mailfrom=cixtech.com; dkim=none (message not signed)
  header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
@@ -57,11 +57,11 @@ Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
  222.71.101.198 as permitted sender) receiver=protection.outlook.com;
  client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
 Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- SG2PEPF000B66CE.mail.protection.outlook.com (10.167.240.21) with Microsoft
+ SG1PEPF000082E5.mail.protection.outlook.com (10.167.240.8) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
  15.20.9228.7 via Frontend Transport; Tue, 14 Oct 2025 01:57:12 +0000
 Received: from localhost.localdomain (unknown [172.16.64.196])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 6B94D40A5A9E;
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 7244640A5BDA;
 	Tue, 14 Oct 2025 09:57:12 +0800 (CST)
 From: Gary Yang <gary.yang@cixtech.com>
 To: linus.walleij@linaro.org,
@@ -74,9 +74,9 @@ Cc: linux-gpio@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	cix-kernel-upstream@cixtech.com,
 	Gary Yang <gary.yang@cixtech.com>
-Subject: [PATCH v3 2/3] pinctrl: cix: Add pin-controller support for sky1
-Date: Tue, 14 Oct 2025 09:57:11 +0800
-Message-ID: <20251014015712.2922237-3-gary.yang@cixtech.com>
+Subject: [PATCH v3 3/3] arm64: dts: cix: Add pinctrl nodes for sky1
+Date: Tue, 14 Oct 2025 09:57:12 +0800
+Message-ID: <20251014015712.2922237-4-gary.yang@cixtech.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20251014015712.2922237-1-gary.yang@cixtech.com>
 References: <20251014015712.2922237-1-gary.yang@cixtech.com>
@@ -89,1311 +89,566 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CE:EE_|SG2PR06MB5105:EE_
+X-MS-TrafficTypeDiagnostic: SG1PEPF000082E5:EE_|SE1PPF93ED7187F:EE_
 Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: ed7ac14a-440f-4423-53ff-08de0ac4fe6f
+X-MS-Office365-Filtering-Correlation-Id: 90d79d86-496d-479b-11dc-08de0ac4fe6b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
+	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?6lGk/lcPqwFIwqsdeWY/qXV4iynGXR/Z2GutpwP91Pi3A0ii5iIDAC7+bsLU?=
- =?us-ascii?Q?G6GJIJEcXAHN4JAXf298Ci868bZJTpQzdIK1nEpivGuww37RtlsqbOWomV7I?=
- =?us-ascii?Q?XhuexglcUvU7CXh+//bkkYDyYaU275YJdg0N2q1m873CMOT9eL0aj+T/2aPY?=
- =?us-ascii?Q?tnflVIHnwXzXlQu8KipUj3uJ403jEZO7RUQtExAAjm7bfHVx02BCStiun5BZ?=
- =?us-ascii?Q?ObW9ntyfaoJoptpeBx6zZgmnXp+umDrjjM1W/WLVNxLSVSOsOSgrf3FeicXB?=
- =?us-ascii?Q?M9OueNbmJ2ISu0rLPs6FpnO4z9gD4Gog39xLiY7zz7hlvtSqSzr8ANcWBLQt?=
- =?us-ascii?Q?493+WIy8mAnsZfUL6xpRQ8MKoHahm0keCZwXz05VVKCJs66ABv1OfXPHT9Gy?=
- =?us-ascii?Q?HzNOVFxarqgESkFxX3NELweU48cCCO2lvqmMPb2jjvTl4+cajTB3UQuAdgEZ?=
- =?us-ascii?Q?DQ9KCYwyw8kTQDuz8qaxfeaa+Tgjjos+AzyxEeQTLMX9lhgpHONjodjqTiez?=
- =?us-ascii?Q?9GSvxK5gS6pxE7p3HTcrBTVpy8f4Fn4Xp9qyfTPBySf9t0DOvTiK4wzS3dLO?=
- =?us-ascii?Q?Prx/DhB6ooXbSfOlGgOxyUOzHW7GiYBD+Q1ELQmyZE2BzthPc0fA/qhTcGyc?=
- =?us-ascii?Q?FUPucbuTEj8nEmVdXjbZym0+WRUNJlhwZMF/ecJhiUN+sDYyID6wRAxD/26y?=
- =?us-ascii?Q?EbqwAPcwCDe2m7H4Ny10aoMpHM1TVswlSs5G44TAZ1in5xWApmR3PcCxPgOv?=
- =?us-ascii?Q?1zXhdNBB2jW88LNtrRRRD6TSth6hCE8VfBn5qnTB4Oo+w3SJuxTEML+7eKtI?=
- =?us-ascii?Q?NQZnxUbRj7k086MS/TJeIFGlwtj4Tanpm4C0yZEyvjyM1sNMHDLEvHIXbci1?=
- =?us-ascii?Q?U6F7DPiYP2j9cCq0dKbNBKwnO1AxoVFH0Z0+t+aFXQyFNkv4j7u8vUq59DpJ?=
- =?us-ascii?Q?Z3OZHxf3eOTE+M/kcrQvl6Gz/66MAwcU+iIEkdZbX3nFYNS5mll7CbVmTeg9?=
- =?us-ascii?Q?Zu5Bej8OrMS7xG1HjCsRyylEdm9kg9s4lereHDb89sxGA3SdvLsdTrdZ7Lrw?=
- =?us-ascii?Q?Ef6CifQgbGLhKphK/UzLdjPW0JSSQec1bWMQ9yLmSATVH3vjNIInl4YcfQKn?=
- =?us-ascii?Q?148LmJjEwo5Ty57Fyqoc9X/qOsAsLknDDB3U+U7IspW83SLmbIHZV4rQR8KT?=
- =?us-ascii?Q?k98QRxIdseyf+t0aFILMqsbyAZRZy0UMi3wkSccEC+JBnIKpbbiFvjn+OKzp?=
- =?us-ascii?Q?4O5nW+qED0lCozYO5AGkzsFBmYWoTvLezFLrsFo1/6aDLSmNXEpmsjE3KfHY?=
- =?us-ascii?Q?w4HCFwJA5qO9amHdlhILAsrEWiPFwa42N+ovSwS6OyXXRfT+SbL+75ucacwx?=
- =?us-ascii?Q?bUNLUTi7DyZN0tvmUtEKA7CVURX9TNi2UPq7Tb5XAGpxkY5v6kVcJTsOjFrn?=
- =?us-ascii?Q?BJjnRFDCqIdyrpXI+iMUSLKCkq13D/JcXTEkQzpKc6IV4936L/HhtQyzWpu0?=
- =?us-ascii?Q?is2wINTQvtOvBdSW7XY+765ujWQ4UlUpsHyFi+ABIpJSJZ9hwlD4sKVXe/RP?=
- =?us-ascii?Q?q4EJUKV3Cq8bNeB1UhU=3D?=
+	=?us-ascii?Q?q3ePgGhr2onhE+zCRU8VRcp/2B6NzUuUdt6W/iDEmV0BMroq3Hto5GiIWhnc?=
+ =?us-ascii?Q?Pxs41pv6gRd7rXXs0yKdLzpe2CySfdRBtIAgV4cMj2AWWBcwqn8IknvswCI+?=
+ =?us-ascii?Q?kTbq8zm0CzhmP/L8FnopFmKRC2i6NOgaWE3nMc9DTRY8t1c59BUR68l1gHH0?=
+ =?us-ascii?Q?0A07skUlH0um6sEb+KKUozqC+2B+9vQLsvHl/MINx/eMYVqSAPNbwkZFovXi?=
+ =?us-ascii?Q?gg6HWxGTYx7QcZNMP7DjFO4giR26w3jZXn6ZYQcu+SLWcto0OThUdSuUubQP?=
+ =?us-ascii?Q?Svh+xIeVJbOi/6fPGjXVypTpv+02bRo5Us0dYqKPsHzEzq0YgsW5IhYrzkyB?=
+ =?us-ascii?Q?yFx2c3H6EUkgjx2+UFkX57/nzIsbSkO42okF/x4xzAeeNOjzvHTiB4rLBZOy?=
+ =?us-ascii?Q?MF5a8iJgqCvk0OQInm5QGPMgWuOnedJm7ZyJLClqrKO3n2U88hpMeVmZutTl?=
+ =?us-ascii?Q?2hmPa7fNhFyPJeeSqK7rHPxRFEZf6IgoGSPXk+0JH6w6UHlLrrbMxssUsqMQ?=
+ =?us-ascii?Q?/2VW9HprQrlJwi6lA20ERgNcXTzVM/+unF6SyCN4ktPna4uPleK9R2PAuTG3?=
+ =?us-ascii?Q?WKksykrIxHiZ8S2F9yZJEa7QvesJcSf4xa7k0ZI+hPaksvEtLzhCwjKhJHm7?=
+ =?us-ascii?Q?cEsndXVerIBp/iAyrKez0BYi8gwHyzZUA82FWsrcSgbmGSahlrtVkLRnSHyG?=
+ =?us-ascii?Q?eqS/sQvgTlCCI1O28dCETphb4tMUXHOZgL5+YYorL1M/KDyYDGc5MCakehcK?=
+ =?us-ascii?Q?JtD5UW/nRvyOVpZryjJM8WE1QTsk5rGYxfaw5XTUw+Fu1/L49WPKHP0yAOtr?=
+ =?us-ascii?Q?bHuD5AksuUzVBfwhZc7BuqVJ+U95SZ609eAWIkB+QOA1chz+HpveV0pQ04U8?=
+ =?us-ascii?Q?DgplEvm/6R4w1CFViDg5OIplvHlcj707V6R8NaU94biIX6/xRN/ghmiHwEGY?=
+ =?us-ascii?Q?DaUCmx8YBdSUUhu6AK5PLkP1lavszftLtko8xfCffG95wmt4U8I9bSYLW/m1?=
+ =?us-ascii?Q?jiavMF7rUIa0h9l7XCXLWCo5vUwyNxnsbd/XByGCKzZZykc1jeX9dDHIb011?=
+ =?us-ascii?Q?FiZ+MUnX/AE2UmYRgBCa6qX4JDkXW/GFeEdCckFRh9LnektHVu4QvM6TtW6H?=
+ =?us-ascii?Q?A9hL9lEP/4LDuIyYHdf0OJbD42IZjHO1kiuWE6aZPwnElOU5eTURSuYe5q02?=
+ =?us-ascii?Q?boRKtZMgMbNU5KfrZrnQGzlCt6WJXHmIRp65TmQErjiypNf05Uv6UpF8WZ0m?=
+ =?us-ascii?Q?JDO8lsLPV7PpmzDrbisg0q/JFjNt8sFjUqB/hl6APE5Pv84bbceAYoav8p54?=
+ =?us-ascii?Q?o/qESvp3pjpJkIWLkkfAKEriBy2qP5Qccck7+5mi1C0sftM2yMGwQQ1EnGAc?=
+ =?us-ascii?Q?YtyWJGvk8HMvGDJtyNC2BC8RzTumV3JMjwcs9a/SedrLh+9mYDKBD+IKOazy?=
+ =?us-ascii?Q?I+E7fiE3ab3ZN10SBwnnQd64fForR2ryY+XVac2sIbUc6qVUBHt7ZxcM+LF0?=
+ =?us-ascii?Q?Z8f9+171EL5Ftr13kUtSNIWPtbAsBY9VoNJVgkM1qgGpirUpTfjqXxrBHAav?=
+ =?us-ascii?Q?EKVEvUzcPZ5IY6XtzxQ=3D?=
 X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1102;
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1102;
 X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2025 01:57:12.9934
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2025 01:57:12.9688
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed7ac14a-440f-4423-53ff-08de0ac4fe6f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90d79d86-496d-479b-11dc-08de0ac4fe6b
 X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SG2PEPF000B66CE.apcprd03.prod.outlook.com
+	SG1PEPF000082E5.apcprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR06MB5105
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SE1PPF93ED7187F
 
-There are two pin-controllers on Cix Sky1 platform.
-one is used under S0 state, the other is used under S0 and S5 state.
+Add the pin-controller nodes for Sky1 platform.
 
 Signed-off-by: Gary Yang <gary.yang@cixtech.com>
 ---
- drivers/pinctrl/Kconfig                 |   1 +
- drivers/pinctrl/Makefile                |   1 +
- drivers/pinctrl/cix/Kconfig             |  14 +
- drivers/pinctrl/cix/Makefile            |   4 +
- drivers/pinctrl/cix/pinctrl-sky1-base.c | 558 +++++++++++++++++++++++
- drivers/pinctrl/cix/pinctrl-sky1.c      | 559 ++++++++++++++++++++++++
- drivers/pinctrl/cix/pinctrl-sky1.h      |  48 ++
- 7 files changed, 1185 insertions(+)
- create mode 100644 drivers/pinctrl/cix/Kconfig
- create mode 100644 drivers/pinctrl/cix/Makefile
- create mode 100644 drivers/pinctrl/cix/pinctrl-sky1-base.c
- create mode 100644 drivers/pinctrl/cix/pinctrl-sky1.c
- create mode 100644 drivers/pinctrl/cix/pinctrl-sky1.h
+ arch/arm64/boot/dts/cix/sky1-orion-o6.dts |  32 ++
+ arch/arm64/boot/dts/cix/sky1-pinfunc.h    | 417 ++++++++++++++++++++++
+ arch/arm64/boot/dts/cix/sky1.dtsi         |  10 +
+ 3 files changed, 459 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/cix/sky1-pinfunc.h
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index ddd11668457c..a5b7177be115 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -653,6 +653,7 @@ source "drivers/pinctrl/aspeed/Kconfig"
- source "drivers/pinctrl/bcm/Kconfig"
- source "drivers/pinctrl/berlin/Kconfig"
- source "drivers/pinctrl/cirrus/Kconfig"
-+source "drivers/pinctrl/cix/Kconfig"
- source "drivers/pinctrl/freescale/Kconfig"
- source "drivers/pinctrl/intel/Kconfig"
- source "drivers/pinctrl/mediatek/Kconfig"
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index 909ab89a56d2..8f353fc38e0e 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -67,6 +67,7 @@ obj-$(CONFIG_ARCH_ASPEED)	+= aspeed/
- obj-y				+= bcm/
- obj-$(CONFIG_PINCTRL_BERLIN)	+= berlin/
- obj-y				+= cirrus/
-+obj-y				+= cix/
- obj-y				+= freescale/
- obj-$(CONFIG_X86)		+= intel/
- obj-y				+= mediatek/
-diff --git a/drivers/pinctrl/cix/Kconfig b/drivers/pinctrl/cix/Kconfig
+diff --git a/arch/arm64/boot/dts/cix/sky1-orion-o6.dts b/arch/arm64/boot/dts/cix/sky1-orion-o6.dts
+index d74964d53c3b..a35a15471a1d 100644
+--- a/arch/arm64/boot/dts/cix/sky1-orion-o6.dts
++++ b/arch/arm64/boot/dts/cix/sky1-orion-o6.dts
+@@ -7,6 +7,8 @@
+ /dts-v1/;
+ 
+ #include "sky1.dtsi"
++#include "sky1-pinfunc.h"
++
+ / {
+ 	model = "Radxa Orion O6";
+ 	compatible = "radxa,orion-o6", "cix,sky1";
+@@ -34,6 +36,36 @@ linux,cma {
+ 
+ };
+ 
++&iomuxc {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hog>;
++
++	pinctrl_hog: hog-pins {
++		pins {
++			pinmux = <CIX_PAD_GPIO144_FUNC_GPIO144>,
++				<CIX_PAD_GPIO145_FUNC_GPIO145>,
++				<CIX_PAD_GPIO146_FUNC_GPIO146>,
++				<CIX_PAD_GPIO147_FUNC_GPIO147>;
++			bias-pull-down;
++			drive-strength = <DS_LEVEL4>;
++		};
++	};
++};
++
++&iomuxc_s5 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hog_s5>;
++
++	pinctrl_hog_s5: hog-s5-pins {
++		pins {
++			pinmux = <CIX_PAD_GPIO014_FUNC_GPIO014>;
++			bias-pull-up;
++			drive-strength = <DS_LEVEL4>;
++
++		};
++	};
++};
++
+ &uart2 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/cix/sky1-pinfunc.h b/arch/arm64/boot/dts/cix/sky1-pinfunc.h
 new file mode 100644
-index 000000000000..42e064b6e7a2
+index 000000000000..bb2815903cb8
 --- /dev/null
-+++ b/drivers/pinctrl/cix/Kconfig
-@@ -0,0 +1,14 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+config PINCTRL_SKY1_BASE
-+	tristate
-+	select GENERIC_PINCTRL_GROUPS
-+	select GENERIC_PINMUX_FUNCTIONS
-+	select GENERIC_PINCONF
-+	select REGMAP
-+
-+config PINCTRL_SKY1
-+	tristate "Cix Sky1 pinctrl driver"
-+	depends on ARCH_CIX
-+	select PINCTRL_SKY1_BASE
-+	help
-+	  Say Y here to enable the sky1 pinctrl driver
-diff --git a/drivers/pinctrl/cix/Makefile b/drivers/pinctrl/cix/Makefile
-new file mode 100644
-index 000000000000..22685d6a107b
---- /dev/null
-+++ b/drivers/pinctrl/cix/Makefile
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Cix Sky1 pin control drivers
-+obj-$(CONFIG_PINCTRL_SKY1_BASE)	+= pinctrl-sky1-base.o
-+obj-$(CONFIG_PINCTRL_SKY1)	+= pinctrl-sky1.o
-diff --git a/drivers/pinctrl/cix/pinctrl-sky1-base.c b/drivers/pinctrl/cix/pinctrl-sky1-base.c
-new file mode 100644
-index 000000000000..5ce5c40c8d54
---- /dev/null
-+++ b/drivers/pinctrl/cix/pinctrl-sky1-base.c
-@@ -0,0 +1,558 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// Author: Jerry Zhu <Jerry.Zhu@cixtech.com>
-+// Author: Gary Yang <gary.yang@cixtech.com>
-+
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_address.h>
-+#include <linux/pinctrl/machine.h>
-+#include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinmux.h>
-+#include <linux/platform_device.h>
-+#include <linux/seq_file.h>
-+#include <linux/slab.h>
-+
-+#include "../core.h"
-+#include "../pinconf.h"
-+#include "../pinctrl-utils.h"
-+#include "../pinmux.h"
-+#include "pinctrl-sky1.h"
-+
-+#define SKY1_PIN_SIZE		(4)
-+#define SKY1_MUX_MASK		GENMASK(8, 7)
-+#define SKY1_MUX_SHIFT		(7)
-+#define SKY1_PULLCONF_MASK	GENMASK(6, 5)
-+#define SKY1_PULLUP_BIT		(6)
-+#define SKY1_PULLDN_BIT		(5)
-+#define SKY1_DS_MASK		GENMASK(3, 0)
-+
-+#define CIX_PIN_NO_SHIFT	(8)
-+#define CIX_PIN_FUN_MASK	GENMASK(1, 0)
-+#define CIX_GET_PIN_NO(x)	((x) >> CIX_PIN_NO_SHIFT)
-+#define CIX_GET_PIN_FUNC(x)	((x) & CIX_PIN_FUN_MASK)
-+
-+static const char * const sky1_gpio_functions[] = {
-+	"func0", "func1", "func2", "func3",
-+};
-+
-+static bool sky1_pctrl_is_function_valid(struct sky1_pinctrl *spctl,
-+		u32 pin_num, u32 fnum)
-+{
-+	int i;
-+
-+	for (i = 0; i < spctl->info->npins; i++) {
-+		const struct sky1_pin_desc *pin = spctl->info->pins + i;
-+
-+		if (pin->pin.number == pin_num) {
-+			if (fnum < pin->nfunc)
-+				return true;
-+
-+			break;
-+		}
-+	}
-+
-+	return false;
-+}
-+
-+static int sky1_pctrl_dt_node_to_map_func(struct sky1_pinctrl *spctl,
-+		u32 pin, u32 fnum, struct sky1_pinctrl_group *grp,
-+		struct pinctrl_map **map, unsigned int *reserved_maps,
-+		unsigned int *num_maps)
-+{
-+	bool ret;
-+
-+	if (*num_maps == *reserved_maps)
-+		return -ENOSPC;
-+
-+	(*map)[*num_maps].type = PIN_MAP_TYPE_MUX_GROUP;
-+	(*map)[*num_maps].data.mux.group = grp->name;
-+
-+	ret = sky1_pctrl_is_function_valid(spctl, pin, fnum);
-+	if (!ret) {
-+		dev_err(spctl->dev, "invalid function %d on pin %d .\n",
-+				fnum, pin);
-+		return -EINVAL;
-+	}
-+
-+	(*map)[*num_maps].data.mux.function = sky1_gpio_functions[fnum];
-+	(*num_maps)++;
-+
-+	return 0;
-+}
-+
-+static struct sky1_pinctrl_group *
-+sky1_pctrl_find_group_by_pin(struct sky1_pinctrl *spctl, u32 pin)
-+{
-+	int i;
-+
-+	for (i = 0; i < spctl->info->npins; i++) {
-+		struct sky1_pinctrl_group *grp =
-+			(struct sky1_pinctrl_group *)spctl->groups + i;
-+
-+		if (grp->pin == pin)
-+			return grp;
-+	}
-+
-+	return NULL;
-+}
-+
-+static int sky1_pctrl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
-+				      struct device_node *node,
-+				      struct pinctrl_map **map,
-+				      unsigned int *reserved_maps,
-+				      unsigned int *num_maps)
-+{
-+	struct property *pins;
-+	u32 pinfunc, pin, func;
-+	int num_pins, num_funcs, maps_per_pin;
-+	unsigned long *configs;
-+	unsigned int num_configs;
-+	bool has_config = false;
-+	int i, err;
-+	unsigned int reserve = 0;
-+	struct sky1_pinctrl_group *grp;
-+	struct sky1_pinctrl *spctl = pinctrl_dev_get_drvdata(pctldev);
-+
-+	pins = of_find_property(node, "pinmux", NULL);
-+	if (!pins) {
-+		dev_err(spctl->dev, "missing pins property in node %pOFn .\n",
-+				node);
-+		return -EINVAL;
-+	}
-+
-+	err = pinconf_generic_parse_dt_config(node, pctldev, &configs,
-+		&num_configs);
-+	if (err)
-+		return err;
-+
-+	if (num_configs)
-+		has_config = true;
-+
-+	num_pins = pins->length / sizeof(u32);
-+	num_funcs = num_pins;
-+	maps_per_pin = 0;
-+	if (num_funcs)
-+		maps_per_pin++;
-+	if (has_config && num_pins >= 1)
-+		maps_per_pin++;
-+
-+	if (!num_pins || !maps_per_pin) {
-+		err = -EINVAL;
-+		goto exit;
-+	}
-+
-+	reserve = num_pins * maps_per_pin;
-+
-+	err = pinctrl_utils_reserve_map(pctldev, map,
-+			reserved_maps, num_maps, reserve);
-+	if (err < 0)
-+		goto exit;
-+
-+	for (i = 0; i < num_pins; i++) {
-+		err = of_property_read_u32_index(node, "pinmux",
-+				i, &pinfunc);
-+		if (err)
-+			goto exit;
-+
-+		pin = CIX_GET_PIN_NO(pinfunc);
-+		func = CIX_GET_PIN_FUNC(pinfunc);
-+		pctldev->num_functions = ARRAY_SIZE(sky1_gpio_functions);
-+
-+		if (pin >= pctldev->desc->npins ||
-+			func >= pctldev->num_functions) {
-+			dev_err(spctl->dev, "invalid pins value.\n");
-+			err = -EINVAL;
-+			goto exit;
-+		}
-+
-+		grp = sky1_pctrl_find_group_by_pin(spctl, pin);
-+		if (!grp) {
-+			dev_err(spctl->dev, "unable to match pin %d to group\n",
-+					pin);
-+			err = -EINVAL;
-+			goto exit;
-+		}
-+
-+		err = sky1_pctrl_dt_node_to_map_func(spctl, pin, func, grp,
-+				map, reserved_maps, num_maps);
-+		if (err < 0)
-+			goto exit;
-+
-+		if (has_config) {
-+			err = pinctrl_utils_add_map_configs(pctldev, map,
-+					reserved_maps, num_maps, grp->name,
-+					configs, num_configs,
-+					PIN_MAP_TYPE_CONFIGS_GROUP);
-+			if (err < 0)
-+				goto exit;
-+		}
-+	}
-+
-+	err = 0;
-+
-+exit:
-+	kfree(configs);
-+	return err;
-+}
-+
-+static int sky1_pctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
-+				 struct device_node *np_config,
-+				 struct pinctrl_map **map, unsigned int *num_maps)
-+{
-+	unsigned int reserved_maps;
-+	int ret;
-+
-+	*map = NULL;
-+	*num_maps = 0;
-+	reserved_maps = 0;
-+
-+	for_each_child_of_node_scoped(np_config, np) {
-+		ret = sky1_pctrl_dt_subnode_to_map(pctldev, np, map,
-+				&reserved_maps, num_maps);
-+		if (ret < 0) {
-+			pinctrl_utils_free_map(pctldev, *map, *num_maps);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void sky1_dt_free_map(struct pinctrl_dev *pctldev,
-+			     struct pinctrl_map *map,
-+			     unsigned int num_maps)
-+{
-+	kfree(map);
-+}
-+
-+static int sky1_pctrl_get_groups_count(struct pinctrl_dev *pctldev)
-+{
-+	struct sky1_pinctrl *spctl = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return spctl->info->npins;
-+}
-+
-+static const char *sky1_pctrl_get_group_name(struct pinctrl_dev *pctldev,
-+					      unsigned int group)
-+{
-+	struct sky1_pinctrl *spctl = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return spctl->groups[group].name;
-+}
-+
-+static int sky1_pctrl_get_group_pins(struct pinctrl_dev *pctldev,
-+				      unsigned int group,
-+				      const unsigned int **pins,
-+				      unsigned int *num_pins)
-+{
-+	struct sky1_pinctrl *spctl = pinctrl_dev_get_drvdata(pctldev);
-+
-+	*pins = (unsigned int *)&spctl->groups[group].pin;
-+	*num_pins = 1;
-+
-+	return 0;
-+}
-+
-+static void sky1_pin_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
-+		   unsigned int offset)
-+{
-+	seq_printf(s, "%s", dev_name(pctldev->dev));
-+}
-+
-+static const struct pinctrl_ops sky1_pctrl_ops = {
-+	.dt_node_to_map = sky1_pctrl_dt_node_to_map,
-+	.dt_free_map = sky1_dt_free_map,
-+	.get_groups_count = sky1_pctrl_get_groups_count,
-+	.get_group_name = sky1_pctrl_get_group_name,
-+	.get_group_pins = sky1_pctrl_get_group_pins,
-+	.pin_dbg_show = sky1_pin_dbg_show,
-+};
-+
-+static int sky1_pmx_set_one_pin(struct sky1_pinctrl *spctl,
-+				    unsigned int pin, unsigned char muxval)
-+{
-+	u32 reg_val;
-+	u32 *pin_reg;
-+
-+	pin_reg = spctl->base + pin * SKY1_PIN_SIZE;
-+	reg_val = readl(pin_reg);
-+	reg_val &= ~SKY1_MUX_MASK;
-+	reg_val |= muxval << SKY1_MUX_SHIFT;
-+	writel(reg_val, pin_reg);
-+
-+	dev_dbg(spctl->dev, "write: offset 0x%x val 0x%x\n",
-+		pin * SKY1_PIN_SIZE, reg_val);
-+	return 0;
-+}
-+
-+static int sky1_pmx_set_mux(struct pinctrl_dev *pctldev,
-+			    unsigned int function,
-+			    unsigned int group)
-+{
-+	bool ret;
-+	struct sky1_pinctrl *spctl = pinctrl_dev_get_drvdata(pctldev);
-+	struct sky1_pinctrl_group *g =
-+		(struct sky1_pinctrl_group *)spctl->groups + group;
-+
-+	ret = sky1_pctrl_is_function_valid(spctl, g->pin, function);
-+	if (!ret) {
-+		dev_err(spctl->dev, "invalid function %d on group %d .\n",
-+				function, group);
-+		return -EINVAL;
-+	}
-+
-+	sky1_pmx_set_one_pin(spctl, g->pin, function);
-+	return 0;
-+}
-+
-+static int sky1_pmx_get_funcs_cnt(struct pinctrl_dev *pctldev)
-+{
-+	return ARRAY_SIZE(sky1_gpio_functions);
-+}
-+
-+static const char *sky1_pmx_get_func_name(struct pinctrl_dev *pctldev,
-+					   unsigned int selector)
-+{
-+	return sky1_gpio_functions[selector];
-+}
-+
-+static int sky1_pmx_get_func_groups(struct pinctrl_dev *pctldev,
-+				     unsigned int function,
-+				     const char * const **groups,
-+				     unsigned int * const num_groups)
-+{
-+	struct sky1_pinctrl *spctl = pinctrl_dev_get_drvdata(pctldev);
-+	const struct sky1_pinctrl_soc_info *info = spctl->info;
-+
-+	*groups = spctl->grp_names;
-+	*num_groups = info->npins;
-+
-+	return 0;
-+}
-+
-+static const struct pinmux_ops sky1_pmx_ops = {
-+	.get_functions_count = sky1_pmx_get_funcs_cnt,
-+	.get_function_groups = sky1_pmx_get_func_groups,
-+	.get_function_name = sky1_pmx_get_func_name,
-+	.set_mux = sky1_pmx_set_mux,
-+};
-+
-+static int sky1_pconf_set_pull_select(struct sky1_pinctrl *spctl,
-+		unsigned int pin, bool enable, bool isup)
-+{
-+	u32 reg_val, reg_pullsel = 0;
-+	u32 *pin_reg;
-+
-+	pin_reg = spctl->base + pin * SKY1_PIN_SIZE;
-+	reg_val = readl(pin_reg);
-+	reg_val &= ~SKY1_PULLCONF_MASK;
-+
-+	if (!enable)
-+		goto update;
-+
-+	if (isup)
-+		reg_pullsel = BIT(SKY1_PULLUP_BIT);
-+	else
-+		reg_pullsel = BIT(SKY1_PULLDN_BIT);
-+
-+update:
-+	reg_val |= reg_pullsel;
-+	writel(reg_val, pin_reg);
-+
-+	dev_dbg(spctl->dev, "write: offset 0x%x val 0x%x\n",
-+		pin * SKY1_PIN_SIZE, reg_val);
-+	return 0;
-+}
-+
-+static int sky1_pconf_set_driving(struct sky1_pinctrl *spctl,
-+		unsigned int pin, unsigned char driving)
-+{
-+	unsigned int reg_val;
-+	u32 *pin_reg;
-+
-+	if (pin >= spctl->info->npins)
-+		return -EINVAL;
-+
-+	pin_reg = spctl->base + pin * SKY1_PIN_SIZE;
-+	reg_val = readl(pin_reg);
-+	reg_val &= ~SKY1_DS_MASK;
-+	reg_val |= (driving & SKY1_DS_MASK);
-+	writel(reg_val, pin_reg);
-+
-+	dev_dbg(spctl->dev, "write: offset 0x%x val 0x%x\n",
-+		pin * SKY1_PIN_SIZE, reg_val);
-+
-+	return 0;
-+}
-+
-+static int sky1_pconf_parse_conf(struct pinctrl_dev *pctldev,
-+		unsigned int pin, enum pin_config_param param,
-+		enum pin_config_param arg)
-+{
-+	int ret = 0;
-+	struct sky1_pinctrl *spctl = pinctrl_dev_get_drvdata(pctldev);
-+
-+	switch (param) {
-+	case PIN_CONFIG_BIAS_DISABLE:
-+		ret = sky1_pconf_set_pull_select(spctl, pin, false, false);
-+		break;
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		ret = sky1_pconf_set_pull_select(spctl, pin, true, true);
-+		break;
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+		ret = sky1_pconf_set_pull_select(spctl, pin, true, false);
-+		break;
-+	case PIN_CONFIG_DRIVE_STRENGTH:
-+		ret = sky1_pconf_set_driving(spctl, pin, arg);
-+		break;
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+static int sky1_pconf_group_get(struct pinctrl_dev *pctldev,
-+				 unsigned int group,
-+				 unsigned long *config)
-+{
-+	struct sky1_pinctrl *spctl = pinctrl_dev_get_drvdata(pctldev);
-+	struct sky1_pinctrl_group *g = &spctl->groups[group];
-+
-+	*config = g->config;
-+
-+	return 0;
-+}
-+
-+static int sky1_pconf_group_set(struct pinctrl_dev *pctldev, unsigned int group,
-+				 unsigned long *configs, unsigned int num_configs)
-+{
-+	struct sky1_pinctrl *spctl = pinctrl_dev_get_drvdata(pctldev);
-+	struct sky1_pinctrl_group *g = &spctl->groups[group];
-+	int i, ret;
-+
-+	for (i = 0; i < num_configs; i++) {
-+		ret = sky1_pconf_parse_conf(pctldev, g->pin,
-+			pinconf_to_config_param(configs[i]),
-+			pinconf_to_config_argument(configs[i]));
-+		if (ret < 0)
-+			return ret;
-+
-+		g->config = configs[i];
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct pinconf_ops sky1_pinconf_ops = {
-+	.pin_config_group_get	= sky1_pconf_group_get,
-+	.pin_config_group_set	= sky1_pconf_group_set,
-+};
-+
-+static int sky1_pctrl_build_state(struct platform_device *pdev)
-+{
-+	struct sky1_pinctrl *spctl = platform_get_drvdata(pdev);
-+	const struct sky1_pinctrl_soc_info *info = spctl->info;
-+	int i;
-+
-+	/* Allocate groups */
-+	spctl->groups = devm_kcalloc(&pdev->dev, info->npins,
-+				    sizeof(*spctl->groups), GFP_KERNEL);
-+	if (!spctl->groups)
-+		return -ENOMEM;
-+
-+	/* We assume that one pin is one group, use pin name as group name. */
-+	spctl->grp_names = devm_kcalloc(&pdev->dev, info->npins,
-+				       sizeof(*spctl->grp_names), GFP_KERNEL);
-+	if (!spctl->grp_names)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < info->npins; i++) {
-+		const struct sky1_pin_desc *pin = spctl->info->pins + i;
-+		struct sky1_pinctrl_group *group =
-+			(struct sky1_pinctrl_group *)spctl->groups + i;
-+
-+		group->name = pin->pin.name;
-+		group->pin = pin->pin.number;
-+		spctl->grp_names[i] = pin->pin.name;
-+	}
-+
-+	return 0;
-+}
-+
-+int sky1_base_pinctrl_probe(struct platform_device *pdev,
-+		      const struct sky1_pinctrl_soc_info *info)
-+{
-+	struct pinctrl_desc *sky1_pinctrl_desc;
-+	struct sky1_pinctrl *spctl;
-+	struct pinctrl_pin_desc *pins;
-+	int ret, i;
-+
-+	if (!info || !info->pins || !info->npins) {
-+		dev_err(&pdev->dev, "wrong pinctrl info\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Create state holders etc for this driver */
-+	spctl = devm_kzalloc(&pdev->dev, sizeof(*spctl), GFP_KERNEL);
-+	if (!spctl)
-+		return -ENOMEM;
-+
-+	spctl->info = info;
-+	platform_set_drvdata(pdev, spctl);
-+
-+	spctl->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(spctl->base))
-+		return PTR_ERR(spctl->base);
-+
-+	sky1_pinctrl_desc = devm_kzalloc(&pdev->dev, sizeof(*sky1_pinctrl_desc),
-+					GFP_KERNEL);
-+	if (!sky1_pinctrl_desc)
-+		return -ENOMEM;
-+
-+	pins = devm_kcalloc(&pdev->dev, info->npins, sizeof(*pins),
-+			    GFP_KERNEL);
-+	if (!pins)
-+		return -ENOMEM;
-+	for (i = 0; i < info->npins; i++)
-+		pins[i] = info->pins[i].pin;
-+
-+	ret = sky1_pctrl_build_state(pdev);
-+	if (ret)
-+		return ret;
-+
-+	sky1_pinctrl_desc->name = dev_name(&pdev->dev);
-+	sky1_pinctrl_desc->pins = pins;
-+	sky1_pinctrl_desc->npins = info->npins;
-+	sky1_pinctrl_desc->pctlops = &sky1_pctrl_ops;
-+	sky1_pinctrl_desc->pmxops = &sky1_pmx_ops;
-+	sky1_pinctrl_desc->confops = &sky1_pinconf_ops;
-+	sky1_pinctrl_desc->owner = THIS_MODULE;
-+	spctl->dev = &pdev->dev;
-+	ret = devm_pinctrl_register_and_init(&pdev->dev,
-+					     sky1_pinctrl_desc, spctl,
-+					     &spctl->pctl);
-+	if (ret) {
-+		dev_err(&pdev->dev, "could not register SKY1 pinctrl driver\n");
-+		return ret;
-+	}
-+
-+	pinctrl_provide_dummies();
-+	dev_dbg(&pdev->dev, "initialized SKY1 pinctrl driver\n");
-+
-+	return pinctrl_enable(spctl->pctl);
-+}
-+EXPORT_SYMBOL_GPL(sky1_base_pinctrl_probe);
-+
-+
-+MODULE_AUTHOR("Jerry Zhu <Jerry.Zhu@cixtech.com>");
-+MODULE_DESCRIPTION("Cix SKy1 pinctrl base driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/pinctrl/cix/pinctrl-sky1.c b/drivers/pinctrl/cix/pinctrl-sky1.c
-new file mode 100644
-index 000000000000..7864c66593c6
---- /dev/null
-+++ b/drivers/pinctrl/cix/pinctrl-sky1.c
-@@ -0,0 +1,559 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Author: Jerry Zhu <Jerry.Zhu@cixtech.com>
-+// Author: Gary Yang <gary.yang@cixtech.com>
-+
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/platform_device.h>
-+#include "linux/stddef.h"
-+
-+#include "../core.h"
-+#include "pinctrl-sky1.h"
-+
-+/* Pad names for the s5 domain pinmux subsystem */
-+static const char * const gpio1_group[] = {"GPIO1"};
-+static const char * const gpio2_group[] = {"GPIO2"};
-+static const char * const gpio3_group[] = {"GPIO3"};
-+static const char * const gpio4_group[] = {"GPIO4"};
-+static const char * const gpio5_group[] = {"GPIO5"};
-+static const char * const gpio6_group[] = {"GPIO6"};
-+static const char * const gpio7_group[] = {"GPIO7"};
-+static const char * const gpio8_group[] = {"GPIO8"};
-+static const char * const gpio9_group[] = {"GPIO9"};
-+static const char * const gpio10_group[] = {"GPIO10"};
-+static const char * const gpio11_group[] = {"GPIO11"};
-+static const char * const gpio12_group[] = {"GPIO12"};
-+static const char * const gpio13_group[] = {"GPIO13"};
-+static const char * const gpio14_group[] = {"GPIO14"};
-+static const char * const rsmrst_group[] = { };
-+static const char * const srst_group[] = { };
-+static const char * const slp_s3_group[] = { };
-+static const char * const slp_s5_group[] = { };
-+static const char * const pwrgd_group[] = { };
-+static const char * const pwrok_group[] = { };
-+static const char * const pwrbtn_group[] = { };
-+static const char * const ddrio_gate_group[] = { };
-+static const char * const jtag_gpio_group[] = { };
-+static const char * const jtag_tck_group[] = { };
-+static const char * const jtag_tdi_group[] = { };
-+static const char * const jtag_tdo_group[] = { };
-+static const char * const tms_group[] = { };
-+static const char * const trsl_group[] = { };
-+static const char * const sfi_i2c0_scl_group[] = {"SFI_I2C0_SCL",
-+					"SFI_I3C0_SCL"};
-+static const char * const sfi_i2c0_sda_group[] = {"SFI_I2C0_SDA",
-+					"SFI_I3C0_SDA"};
-+static const char * const sfi_i2c1_scl_group[] = {"SFI_I2C1_SCL",
-+					"SFI_I3C1_SCL", "SFI_SPI_CS0"};
-+static const char * const sfi_i2c1_sda_group[] = {"SFI_I2C1_SDA",
-+					"SFI_I3C1_SDA", "SFI_SPI_CS1"};
-+static const char * const sfi_gpio0_group[] = {"GPIO15", "SFI_SPI_SCK",
-+					"SFI_GPIO0"};
-+static const char * const sfi_gpio1_group[] = {"GPIO16", "SFI_SPI_MOSI",
-+					"SFI_GPIO1"};
-+static const char * const sfi_gpio2_group[] = {"GPIO17", "SFI_SPI_MISO",
-+					"SFI_GPIO2"};
-+static const char * const gpio18_group[] = {"SFI_GPIO3", "GPIO18"};
-+static const char * const gpio19_group[] = {"SFI_GPIO4", "GPIO19"};
-+static const char * const gpio20_group[] = {"SFI_GPIO5", "GPIO20"};
-+static const char * const gpio21_group[] = {"SFI_GPIO6", "GPIO21"};
-+static const char * const gpio22_group[] = {"SFI_GPIO7", "GPIO22"};
-+static const char * const gpio23_group[] = {"SFI_GPIO8", "GPIO23",
-+				"SFI_I3C0_PUR_EN_L"};
-+static const char * const gpio24_group[] = {"SFI_GPIO9", "GPIO24",
-+				"SFI_I3C1_PUR_EN_L"};
-+static const char * const spi1_miso_group[] = {"SPI1_MISO", "GPIO25"};
-+static const char * const spi1_cs0_group[] = {"SPI1_CS0", "GPIO26"};
-+static const char * const spi1_cs1_group[] = {"SPI1_CS1", "GPIO27"};
-+static const char * const spi1_mosi_group[] = {"SPI1_MOSI", "GPIO28"};
-+static const char * const spi1_clk_group[] = {"SPI1_CLK", "GPIO29"};
-+static const char * const gpio30_group[] = {"GPIO30", "USB_0C0_L"};
-+static const char * const gpio31_group[] = {"GPIO31", "USB_0C1_L"};
-+static const char * const gpio32_group[] = {"GPIO32", "USB_0C2_L"};
-+static const char * const gpio33_group[] = {"GPIO33", "USB_0C3_L"};
-+static const char * const gpio34_group[] = {"GPIO34", "USB_0C4_L"};
-+static const char * const gpio35_group[] = {"GPIO35", "USB_0C5_L"};
-+static const char * const gpio36_group[] = {"GPIO36", "USB_0C6_L"};
-+static const char * const gpio37_group[] = {"GPIO37", "USB_0C7_L"};
-+static const char * const gpio38_group[] = {"GPIO38", "USB_0C8_L"};
-+static const char * const gpio39_group[] = {"GPIO39", "USB_0C9_L"};
-+static const char * const gpio40_group[] = {"GPIO40", "USB_DRIVE_VBUS0"};
-+static const char * const gpio41_group[] = {"GPIO41", "USB_DRIVE_VBUS4"};
-+static const char * const gpio42_group[] = {"GPIO42", "USB_DRIVE_VBUS5"};
-+static const char * const se_qspi_clk_group[] = {"SE_QSPI_CLK", "QSPI_CLK"};
-+static const char * const se_qspi_cs_group[] = {"SE_QSPI_CS_L", "QSPI_CS_L"};
-+static const char * const se_qspi_data0_group[] = {"SE_QSPI_DATA0",
-+					"QSPI_DATA0"};
-+static const char * const se_qspi_data1_group[] = {"SE_QSPI_DATA1",
-+					"QSPI_DATA1"};
-+static const char * const se_qspi_data2_group[] = {"SE_QSPI_DATA2",
-+					"QSPI_DATA2"};
-+static const char * const se_qspi_data3_group[] = {"SE_QSPI_DATA3",
-+					"QSPI_DATA3"};
-+static const struct sky1_pin_desc sky1_pinctrl_s5_pads[] = {
-+	SKY_PINFUNCTION(PINCTRL_PIN(0, "GPIO1"), gpio1),
-+	SKY_PINFUNCTION(PINCTRL_PIN(1, "GPIO2"), gpio2),
-+	SKY_PINFUNCTION(PINCTRL_PIN(2, "GPIO3"), gpio3),
-+	SKY_PINFUNCTION(PINCTRL_PIN(3, "GPIO4"), gpio4),
-+	SKY_PINFUNCTION(PINCTRL_PIN(4, "GPIO5"), gpio5),
-+	SKY_PINFUNCTION(PINCTRL_PIN(5, "GPIO6"), gpio6),
-+	SKY_PINFUNCTION(PINCTRL_PIN(6, "GPIO7"), gpio7),
-+	SKY_PINFUNCTION(PINCTRL_PIN(7, "GPIO8"), gpio8),
-+	SKY_PINFUNCTION(PINCTRL_PIN(8, "GPIO9"), gpio9),
-+	SKY_PINFUNCTION(PINCTRL_PIN(9, "GPIO10"), gpio10),
-+	SKY_PINFUNCTION(PINCTRL_PIN(10, "GPIO11"), gpio11),
-+	SKY_PINFUNCTION(PINCTRL_PIN(11, "GPIO12"), gpio12),
-+	SKY_PINFUNCTION(PINCTRL_PIN(12, "GPIO13"), gpio13),
-+	SKY_PINFUNCTION(PINCTRL_PIN(13, "GPIO14"), gpio14),
-+	SKY_PINFUNCTION(PINCTRL_PIN(14, "RSMRST_L"), rsmrst),
-+	SKY_PINFUNCTION(PINCTRL_PIN(15, "SRST_L"), srst),
-+	SKY_PINFUNCTION(PINCTRL_PIN(16, "SLP_S3_L"), slp_s3),
-+	SKY_PINFUNCTION(PINCTRL_PIN(17, "SLP_S5_L"), slp_s5),
-+	SKY_PINFUNCTION(PINCTRL_PIN(18, "PWRGD"), pwrgd),
-+	SKY_PINFUNCTION(PINCTRL_PIN(19, "PWROK"), pwrok),
-+	SKY_PINFUNCTION(PINCTRL_PIN(20, "PWRBTN_L"), pwrbtn),
-+	SKY_PINFUNCTION(PINCTRL_PIN(21, "VDD_DDRIO_GATE"), ddrio_gate),
-+	SKY_PINFUNCTION(PINCTRL_PIN(22, "JTAG_GPIO_L"), jtag_gpio),
-+	SKY_PINFUNCTION(PINCTRL_PIN(23, "JTAG_TCK"), jtag_tck),
-+	SKY_PINFUNCTION(PINCTRL_PIN(24, "JTAG_TDI"), jtag_tdi),
-+	SKY_PINFUNCTION(PINCTRL_PIN(25, "JTAG_TDO"), jtag_tdo),
-+	SKY_PINFUNCTION(PINCTRL_PIN(26, "TMS"), tms),
-+	SKY_PINFUNCTION(PINCTRL_PIN(27, "TRSL_L"), trsl),
-+	SKY_PINFUNCTION(PINCTRL_PIN(28, "SFI_I2C0_SCL"), sfi_i2c0_scl),
-+	SKY_PINFUNCTION(PINCTRL_PIN(29, "SFI_I2C0_SDA"), sfi_i2c0_sda),
-+	SKY_PINFUNCTION(PINCTRL_PIN(30, "SFI_I2C1_SCL"), sfi_i2c1_scl),
-+	SKY_PINFUNCTION(PINCTRL_PIN(31, "SFI_I2C1_SDA"), sfi_i2c1_sda),
-+	SKY_PINFUNCTION(PINCTRL_PIN(32, "SFI_GPIO0"), sfi_gpio0),
-+	SKY_PINFUNCTION(PINCTRL_PIN(33, "SFI_GPIO1"), sfi_gpio1),
-+	SKY_PINFUNCTION(PINCTRL_PIN(34, "SFI_GPIO2"), sfi_gpio2),
-+	SKY_PINFUNCTION(PINCTRL_PIN(35, "GPIO18"), gpio18),
-+	SKY_PINFUNCTION(PINCTRL_PIN(36, "GPIO19"), gpio19),
-+	SKY_PINFUNCTION(PINCTRL_PIN(37, "GPIO20"), gpio20),
-+	SKY_PINFUNCTION(PINCTRL_PIN(38, "GPIO21"), gpio21),
-+	SKY_PINFUNCTION(PINCTRL_PIN(39, "GPIO22"), gpio22),
-+	SKY_PINFUNCTION(PINCTRL_PIN(40, "GPIO23"), gpio23),
-+	SKY_PINFUNCTION(PINCTRL_PIN(41, "GPIO24"), gpio24),
-+	SKY_PINFUNCTION(PINCTRL_PIN(42, "SPI1_MISO"), spi1_miso),
-+	SKY_PINFUNCTION(PINCTRL_PIN(43, "SPI1_CS0"), spi1_cs0),
-+	SKY_PINFUNCTION(PINCTRL_PIN(44, "SPI1_CS1"), spi1_cs1),
-+	SKY_PINFUNCTION(PINCTRL_PIN(45, "SPI1_MOSI"), spi1_mosi),
-+	SKY_PINFUNCTION(PINCTRL_PIN(46, "SPI1_CLK"), spi1_clk),
-+	SKY_PINFUNCTION(PINCTRL_PIN(47, "GPIO30"), gpio30),
-+	SKY_PINFUNCTION(PINCTRL_PIN(48, "GPIO31"), gpio31),
-+	SKY_PINFUNCTION(PINCTRL_PIN(49, "GPIO32"), gpio32),
-+	SKY_PINFUNCTION(PINCTRL_PIN(50, "GPIO33"), gpio33),
-+	SKY_PINFUNCTION(PINCTRL_PIN(51, "GPIO34"), gpio34),
-+	SKY_PINFUNCTION(PINCTRL_PIN(52, "GPIO35"), gpio35),
-+	SKY_PINFUNCTION(PINCTRL_PIN(53, "GPIO36"), gpio36),
-+	SKY_PINFUNCTION(PINCTRL_PIN(54, "GPIO37"), gpio37),
-+	SKY_PINFUNCTION(PINCTRL_PIN(55, "GPIO38"), gpio38),
-+	SKY_PINFUNCTION(PINCTRL_PIN(56, "GPIO39"), gpio39),
-+	SKY_PINFUNCTION(PINCTRL_PIN(57, "GPIO40"), gpio40),
-+	SKY_PINFUNCTION(PINCTRL_PIN(58, "GPIO41"), gpio41),
-+	SKY_PINFUNCTION(PINCTRL_PIN(59, "GPIO42"), gpio42),
-+	SKY_PINFUNCTION(PINCTRL_PIN(60, "SE_QSPI_CLK"), se_qspi_clk),
-+	SKY_PINFUNCTION(PINCTRL_PIN(61, "SE_QSPI_CS_L"), se_qspi_cs),
-+	SKY_PINFUNCTION(PINCTRL_PIN(62, "SE_QSPI_DATA0"), se_qspi_data0),
-+	SKY_PINFUNCTION(PINCTRL_PIN(63, "SE_QSPI_DATA1"), se_qspi_data1),
-+	SKY_PINFUNCTION(PINCTRL_PIN(64, "SE_QSPI_DATA2"), se_qspi_data2),
-+	SKY_PINFUNCTION(PINCTRL_PIN(65, "SE_QSPI_DATA3"), se_qspi_data3),
-+};
-+
-+/* Pad names for the s0 domain pinmux subsystem */
-+static const char * const gpio43_group[] = {"GPIO43"};
-+static const char * const gpio44_group[] = {"GPIO44"};
-+static const char * const gpio45_group[] = {"GPIO45"};
-+static const char * const gpio46_group[] = {"GPIO46"};
-+static const char * const reset_in_group[] = { };
-+static const char * const plt_reset_group[] = { };
-+static const char * const thermtrip_group[] = { };
-+static const char * const prochot_group[] = { };
-+static const char * const pm_i2c0_clk_group[] = { };
-+static const char * const pm_i2c0_data_group[] = { };
-+static const char * const pm_i2c1_clk_group[] = { };
-+static const char * const pm_i2c1_data_group[] = { };
-+static const char * const pm_i2c2_clk_group[] = { };
-+static const char * const pm_i2c2_data_group[] = { };
-+static const char * const pm_i2c3_clk_group[] = { };
-+static const char * const pm_i2c3_data_group[] = { };
-+static const char * const strap0_group[] = { };
-+static const char * const strap1_group[] = { };
-+static const char * const dp2_digon_group[] = {"DP2_DIGON"};
-+static const char * const dp2_blon_group[] = {"DP2_BLON"};
-+static const char * const dp2_vary_bl_group[] = {"DP2_VARY_BL"};
-+static const char * const i2c7_scl_group[] = {"I2C7_SCL"};
-+static const char * const i2c7_sda_group[] = {"I2C7_SDA"};
-+static const char * const uart6_csu_se_txd_group[] = { };
-+static const char * const clk_req1_group[] = { };
-+static const char * const clk_req3_group[] = { };
-+static const char * const i2c5_scl_group[] = {"I2C5_SCL", "GPIO47"};
-+static const char * const i2c5_sda_group[] = {"I2C5_SDA", "GPIO48"};
-+static const char * const i2c6_scl_group[] = {"I2C6_SCL", "GPIO49"};
-+static const char * const i2c6_sda_group[] = {"I2C6_SDA", "GPIO50"};
-+static const char * const i2c0_scl_group[] = {"I2C0_SCL", "GPIO51"};
-+static const char * const i2c0_sda_group[] = {"I2C0_SDA", "GPIO52"};
-+static const char * const i2c1_scl_group[] = {"I2C1_SCL", "GPIO53"};
-+static const char * const i2c1_sda_group[] = {"I2C1_SDA", "GPIO54"};
-+static const char * const i2c2_scl_group[] = {"I2C2_SCL", "I3C0_SCL",
-+					"GPIO55"};
-+static const char * const i2c2_sda_group[] = {"I2C2_SDA", "I3C0_SDA",
-+					"GPIO56"};
-+static const char * const gpio57_group[] = {"GPIO57", "I3C0_PUR_EN_L"};
-+static const char * const i2c3_scl_group[] = {"I2C3_SCL", "I3C1_SCL",
-+					"GPIO58"};
-+static const char * const i2c3_sda_group[] = {"I2C3_SDA", "I3C1_SDA",
-+					"GPIO59"};
-+static const char * const gpio60_group[] = {"GPIO60", "I3C1_PUR_EN_L"};
-+static const char * const i2c4_scl_group[] = {"I2C4_SCL", "GPIO61"};
-+static const char * const i2c4_sda_group[] = {"I2C4_SDA", "GPIO62"};
-+static const char * const hda_bitclk_group[] = {"HDA_BITCLK", "I2S0_SCK",
-+				"I2S9_RSCK_DBG"};
-+static const char * const hda_rst_group[] = {"HDA_RST_L", "I2S0_DATA_IN",
-+				"I2S9_DATA_IN_DBG"};
-+static const char * const hda_sdin0_group[] = {"HDA_SDIN0", "I2S0_MCLK",
-+				"I2S9_TSCK_DBG"};
-+static const char * const hda_sdout0_group[] = {"HDA_SDOUT0", "I2S0_DATA_OUT",
-+				"I2S9_TWS_DBG"};
-+static const char * const hda_sync_group[] = {"HDA_SYNC", "I2S0_WS",
-+				"I2S9_RWS_DBG"};
-+static const char * const hda_sdin1_group[] = {"HDA_SDIN1", "GPIO63",
-+				"I2S9_DATA_IN1_DBG"};
-+static const char * const hda_sdout1_group[] = {"HDA_SDOUT1", "GPIO64",
-+				"I2S9_DATA_OUT0_DBG"};
-+static const char * const i2s1_mclk_group[] = {"I2S1_MCLK", "GPIO65"};
-+static const char * const i2s1_sck_group[] = {"I2S1_SCK", "GPIO66"};
-+static const char * const i2s1_ws_group[] = {"I2S1_WS", "GPIO67"};
-+static const char * const i2s1_data_in_group[] = {"I2S1_DATA_IN", "GPIO68"};
-+static const char * const i2s1_data_out_group[] = {"I2S1_DATA_OUT", "GPIO69"};
-+static const char * const i2s2_mck_group[] = {"I2S2_MCLK", "GPIO70"};
-+static const char * const i2s2_rsck_group[] = {"I2S2_RSCK", "GPIO71",
-+				"I2S5_RSCK_DBG", "I2S6_RSCK_DBG"};
-+static const char * const i2s2_rws_group[] = {"I2S2_RWS", "GPIO72",
-+				"I2S5_RWS_DBG", "I2S6_RWS_DBG"};
-+static const char * const i2s2_tsck_group[] = {"I2S2_TSCK", "GPIO73",
-+				"I2S5_TSCK_DBG", "I2S6_TSCK_DBG"};
-+static const char * const i2s2_tws_group[] = {"I2S2_TWS", "GPIO74",
-+				"I2S5_TWS_DBG", "I2S6_TWS_DBG"};
-+static const char * const i2s2_data_in0_group[] = {"I2S2_DATA_IN0", "GPIO75",
-+				"I2S5_DATA_IN0_DBG", "I2S6_DATA_IN0_DBG"};
-+static const char * const i2s2_data_in1_group[] = {"I2S2_DATA_IN1", "GPIO76",
-+				"I2S5_DATA_IN1_DBG", "I2S6_DATA_IN1_DBG"};
-+static const char * const i2s2_data_out0_group[] = {"I2S2_DATA_OUT0", "GPIO77",
-+				"I2S5_DATA_OUT0_DBG", "I2S6_DATA_OUT0_DBG"};
-+static const char * const i2s2_data_out1_group[] = {"I2S2_DATA_OUT1", "GPIO78",
-+				"I2S5_DATA_OUT1_DBG", "I2S6_DATA_OUT1_DBG"};
-+static const char * const i2s2_data_out2_group[] = {"I2S2_DATA_OUT2",
-+				"GPIO79"};
-+static const char * const i2s2_data_out3_group[] = {"I2S2_DATA_OUT3", "GPIO80",
-+				"I2S9_DATA_OUT1_DBG"};
-+static const char * const i2s3_mclk_group[] = {"I2S3_MCLK", "GPIO81"};
-+static const char * const i2s3_rsck_group[] = {"I2S3_RSCK", "GPIO82",
-+				"I2S7_RSCK_DBG", "I2S8_RSCK_DBG"};
-+static const char * const i2s3_rws_group[] = {"I2S3_RWS", "GPIO83",
-+				"I2S7_RWS_DBG", "I2S8_RWS_DBG"};
-+static const char * const i2s3_tsck_group[] = {"I2S3_TSCK", "GPIO84",
-+				"I2S7_TSCK_DBG", "I2S8_TSCK_DBG"};
-+static const char * const i2s3_tws_group[] = {"I2S3_TWS", "GPIO85",
-+				"I2S7_TWS_DBG", "I2S8_TWS_DBG"};
-+static const char * const i2s3_data_in0_group[] = {"I2S3_DATA_IN0", "GPIO86",
-+				"I2S7_DATA_IN0_DBG", "I2S8_DATA_IN0_DBG"};
-+static const char * const i2s3_data_in1_group[] = {"I2S3_DATA_IN1", "GPIO87",
-+				"I2S7_DATA_IN1_DBG", "I2S8_DATA_IN1_DBG"};
-+static const char * const i2s3_data_out0_group[] = {"I2S3_DATA_OUT0", "GPIO88",
-+				"I2S7_DATA_OUT0_DBG", "I2S8_DATA_OUT0_DBG"};
-+static const char * const i2s3_data_out1_group[] = {"I2S3_DATA_OUT1", "GPIO89",
-+				"I2S7_DATA_OUT1_DBG", "I2S8_DATA_OUT1_DBG"};
-+static const char * const gpio90_group[] = {"GPIO90", "I2S4_MCLK_LB"};
-+static const char * const gpio91_group[] = {"GPIO91", "I2S4_SCK_LB"};
-+static const char * const gpio92_group[] = {"GPIO92", "I2S4_WS_LB"};
-+static const char * const gpio93_group[] = {"GPIO93", "I2S4_DATA_IN_LB"};
-+static const char * const gpio94_group[] = {"GPIO94", "I2S4_DATA_OUT_LB"};
-+static const char * const uart0_txd_group[] = {"UART0_TXD", "PWM0", "GPIO95"};
-+static const char * const uart0_rxd_group[] = {"UART0_RXD", "PWM1", "GPIO96"};
-+static const char * const uart0_cts_group[] = {"UART0_CTS", "FAN_OUT2",
-+				"GPIO97"};
-+static const char * const uart0_rts_group[] = {"UART0_RTS", "FAN_TACH2",
-+				"GPIO98"};
-+static const char * const uart1_txd_group[] = {"UART1_TXD", "FAN_OUT0",
-+				"GPIO99"};
-+static const char * const uart1_rxd_group[] = {"UART1_RXD", "FAN_TACH0",
-+				"GPIO100"};
-+static const char * const uart1_cts_group[] = {"UART1_CTS", "FAN_OUT1",
-+				"GPIO101"};
-+static const char * const uart1_rts_group[] = {"UART1_RTS", "FAN_TACH1",
-+				"GPIO102"};
-+static const char * const uart2_txd_group[] = {"UART2_TXD", "GPIO103"};
-+static const char * const uart2_rxd_group[] = {"UART2_RXD", "GPIO104"};
-+static const char * const uart3_txd_group[] = {"UART3_TXD", "GPIO105"};
-+static const char * const uart3_rxd_group[] = {"UART3_RXD", "GPIO106"};
-+static const char * const uart3_cts_group[] = {"UART3_CTS", "GPIO107",
-+				"TRIGIN0"};
-+static const char * const uart3_rts_group[] = {"UART3_RTS", "GPIO108",
-+				"TRIGIN1"};
-+static const char * const uart4_csu_pm_txd_group[] = {"UART4_CSU_PM_TXD",
-+				"GPIO109"};
-+static const char * const uart4_csu_pm_rxd_group[] = {"UART4_CSU_PM_RXD",
-+				"GPIO110"};
-+static const char * const uart5_csu_se_txd_group[] = {"UART5_CSU_SE_TXD",
-+				"GPIO111"};
-+static const char * const uart5_csu_se_rxd_group[] = {"UART5_CSU_SE_RXD",
-+				"GPIO112"};
-+static const char * const uart6_csu_se_rxd_group[] = {"UART6_CSU_SE_RXD",
-+				"GPIO113"};
-+static const char * const clk_req0_group[] = {"CLK_REQ0_L", "GPIO114"};
-+static const char * const clk_req2_group[] = {"CLK_REQ2_L", "GPIO115"};
-+static const char * const clk_req4_group[] = {"CLK_REQ4_L", "GPIO116"};
-+static const char * const csi0_mclk0_group[] = {"CSI0_MCLK0", "GPIO117"};
-+static const char * const csi0_mclk1_group[] = {"CSI0_MCLK1", "GPIO118"};
-+static const char * const csi1_mclk0_group[] = {"CSI1_MCLK0", "GPIO119"};
-+static const char * const csi1_mclk1_group[] = {"CSI1_MCLK1", "GPIO120"};
-+static const char * const gpio121_group[] = {"GPIO121", "GMAC0_REFCLK_25M"};
-+static const char * const gpio122_group[] = {"GPIO122", "GMAC0_TX_CTL"};
-+static const char * const gpio123_group[] = {"GPIO123", "GMAC0_TXD0"};
-+static const char * const gpio124_group[] = {"GPIO124", "GMAC0_TXD1"};
-+static const char * const gpio125_group[] = {"GPIO125", "GMAC0_TXD2"};
-+static const char * const gpio126_group[] = {"GPIO126", "GMAC0_TXD3"};
-+static const char * const gpio127_group[] = {"GPIO127", "GMAC0_TX_CLK"};
-+static const char * const gpio128_group[] = {"GPIO128", "GMAC0_RX_CTL"};
-+static const char * const gpio129_group[] = {"GPIO129", "GMAC0_RXD0"};
-+static const char * const gpio130_group[] = {"GPIO130", "GMAC0_RXD1"};
-+static const char * const gpio131_group[] = {"GPIO131", "GMAC0_RXD2"};
-+static const char * const gpio132_group[] = {"GPIO132", "GMAC0_RXD3"};
-+static const char * const gpio133_group[] = {"GPIO133", "GMAC0_RX_CLK"};
-+static const char * const gpio134_group[] = {"GPIO134", "GMAC0_MDC"};
-+static const char * const gpio135_group[] = {"GPIO135", "GMAC0_MDIO"};
-+static const char * const gpio136_group[] = {"GPIO136", "GMAC1_REFCLK_25M"};
-+static const char * const gpio137_group[] = {"GPIO137", "GMAC1_TX_CTL"};
-+static const char * const gpio138_group[] = {"GPIO138", "GMAC1_TXD0",
-+				"SPI2_MISO"};
-+static const char * const gpio139_group[] = {"GPIO139", "GMAC1_TXD1",
-+				"SPI2_CS0"};
-+static const char * const gpio140_group[] = {"GPIO140", "GMAC1_TXD2",
-+				"SPI2_CS1"};
-+static const char * const gpio141_group[] = {"GPIO141", "GMAC1_TXD3",
-+				"SPI2_MOSI"};
-+static const char * const gpio142_group[] = {"GPIO142", "GMAC1_TX_CLK",
-+				"SPI2_CLK"};
-+static const char * const gpio143_group[] = {"GPIO143", "GMAC1_RX_CTL"};
-+static const char * const gpio144_group[] = {"GPIO144", "GMAC1_RXD0"};
-+static const char * const gpio145_group[] = {"GPIO145", "GMAC1_RXD1"};
-+static const char * const gpio146_group[] = {"GPIO146", "GMAC1_RXD2"};
-+static const char * const gpio147_group[] = {"GPIO147", "GMAC1_RXD3"};
-+static const char * const gpio148_group[] = {"GPIO148", "GMAC1_RX_CLK"};
-+static const char * const gpio149_group[] = {"GPIO149", "GMAC1_MDC"};
-+static const char * const gpio150_group[] = {"GPIO150", "GMAC1_MDIO"};
-+static const char * const gpio151_group[] = {"GPIO151", "PM_GPIO0"};
-+static const char * const gpio152_group[] = {"GPIO152", "PM_GPIO1"};
-+static const char * const gpio153_group[] = {"GPIO153", "PM_GPIO2"};
-+static const struct sky1_pin_desc sky1_pinctrl_pads[] = {
-+	SKY_PINFUNCTION(PINCTRL_PIN(0, "GPIO43"), gpio43),
-+	SKY_PINFUNCTION(PINCTRL_PIN(1, "GPIO44"), gpio44),
-+	SKY_PINFUNCTION(PINCTRL_PIN(2, "GPIO45"), gpio45),
-+	SKY_PINFUNCTION(PINCTRL_PIN(3, "GPIO46"), gpio46),
-+	SKY_PINFUNCTION(PINCTRL_PIN(4, "RESET_IN_L"), reset_in),
-+	SKY_PINFUNCTION(PINCTRL_PIN(5, "PLT_RESET_L"), plt_reset),
-+	SKY_PINFUNCTION(PINCTRL_PIN(6, "THERMTRIP_L"), thermtrip),
-+	SKY_PINFUNCTION(PINCTRL_PIN(7, "PROCHOT_L"), prochot),
-+	SKY_PINFUNCTION(PINCTRL_PIN(8, "PM_I2C0_CLK"), pm_i2c0_clk),
-+	SKY_PINFUNCTION(PINCTRL_PIN(9, "PM_I2C0_DATA"), pm_i2c0_data),
-+	SKY_PINFUNCTION(PINCTRL_PIN(10, "PM_I2C1_CLK"), pm_i2c1_clk),
-+	SKY_PINFUNCTION(PINCTRL_PIN(11, "PM_I2C1_DATA"), pm_i2c1_data),
-+	SKY_PINFUNCTION(PINCTRL_PIN(12, "PM_I2C2_CLK"), pm_i2c2_clk),
-+	SKY_PINFUNCTION(PINCTRL_PIN(13, "PM_I2C2_DATA"), pm_i2c2_data),
-+	SKY_PINFUNCTION(PINCTRL_PIN(14, "PM_I2C3_CLK"), pm_i2c3_clk),
-+	SKY_PINFUNCTION(PINCTRL_PIN(15, "PM_I2C3_DATA"), pm_i2c3_data),
-+	SKY_PINFUNCTION(PINCTRL_PIN(16, "STRAP0"), strap0),
-+	SKY_PINFUNCTION(PINCTRL_PIN(17, "STRAP1"), strap1),
-+	SKY_PINFUNCTION(PINCTRL_PIN(18, "DP2_DIGON"), dp2_digon),
-+	SKY_PINFUNCTION(PINCTRL_PIN(19, "DP2_BLON"), dp2_blon),
-+	SKY_PINFUNCTION(PINCTRL_PIN(20, "DP2_VARY_BL"), dp2_vary_bl),
-+	SKY_PINFUNCTION(PINCTRL_PIN(21, "I2C7_SCL"), i2c7_scl),
-+	SKY_PINFUNCTION(PINCTRL_PIN(22, "I2C7_SDA"), i2c7_sda),
-+	SKY_PINFUNCTION(PINCTRL_PIN(23, "UART6_CSU_SE_TXD"), uart6_csu_se_txd),
-+	SKY_PINFUNCTION(PINCTRL_PIN(24, "CLK_REQ1_L"), clk_req1),
-+	SKY_PINFUNCTION(PINCTRL_PIN(25, "CLK_REQ3_L"), clk_req3),
-+	SKY_PINFUNCTION(PINCTRL_PIN(26, "I2C5_SCL"), i2c5_scl),
-+	SKY_PINFUNCTION(PINCTRL_PIN(27, "I2C5_SDA"), i2c5_sda),
-+	SKY_PINFUNCTION(PINCTRL_PIN(28, "I2C6_SCL"), i2c6_scl),
-+	SKY_PINFUNCTION(PINCTRL_PIN(29, "I2C6_SDA"), i2c6_sda),
-+	SKY_PINFUNCTION(PINCTRL_PIN(30, "I2C0_CLK"), i2c0_scl),
-+	SKY_PINFUNCTION(PINCTRL_PIN(31, "I2C0_SDA"), i2c0_sda),
-+	SKY_PINFUNCTION(PINCTRL_PIN(32, "I2C1_CLK"), i2c1_scl),
-+	SKY_PINFUNCTION(PINCTRL_PIN(33, "I2C1_SDA"), i2c1_sda),
-+	SKY_PINFUNCTION(PINCTRL_PIN(34, "I2C2_SCL"), i2c2_scl),
-+	SKY_PINFUNCTION(PINCTRL_PIN(35, "I2C2_SDA"), i2c2_sda),
-+	SKY_PINFUNCTION(PINCTRL_PIN(36, "GPIO57"), gpio57),
-+	SKY_PINFUNCTION(PINCTRL_PIN(37, "I2C3_SCL"), i2c3_scl),
-+	SKY_PINFUNCTION(PINCTRL_PIN(38, "I2C3_SDA"), i2c3_sda),
-+	SKY_PINFUNCTION(PINCTRL_PIN(39, "GPIO60"), gpio60),
-+	SKY_PINFUNCTION(PINCTRL_PIN(40, "I2C4_SCL"), i2c4_scl),
-+	SKY_PINFUNCTION(PINCTRL_PIN(41, "I2C4_SDA"), i2c4_sda),
-+	SKY_PINFUNCTION(PINCTRL_PIN(42, "HDA_BITCLK"), hda_bitclk),
-+	SKY_PINFUNCTION(PINCTRL_PIN(43, "HDA_RST_L"), hda_rst),
-+	SKY_PINFUNCTION(PINCTRL_PIN(44, "HDA_SDIN0"), hda_sdin0),
-+	SKY_PINFUNCTION(PINCTRL_PIN(45, "HDA_SDOUT0"), hda_sdout0),
-+	SKY_PINFUNCTION(PINCTRL_PIN(46, "HDA_SYNC"), hda_sync),
-+	SKY_PINFUNCTION(PINCTRL_PIN(47, "HDA_SDIN1"), hda_sdin1),
-+	SKY_PINFUNCTION(PINCTRL_PIN(48, "HDA_SDOUT1"), hda_sdout1),
-+	SKY_PINFUNCTION(PINCTRL_PIN(49, "I2S1_MCLK"), i2s1_mclk),
-+	SKY_PINFUNCTION(PINCTRL_PIN(50, "I2S1_SCK"), i2s1_sck),
-+	SKY_PINFUNCTION(PINCTRL_PIN(51, "I2S1_WS"), i2s1_ws),
-+	SKY_PINFUNCTION(PINCTRL_PIN(52, "I2S1_DATA_IN"), i2s1_data_in),
-+	SKY_PINFUNCTION(PINCTRL_PIN(53, "I2S1_DATA_OUT"), i2s1_data_out),
-+	SKY_PINFUNCTION(PINCTRL_PIN(54, "I2S2_MCLK"), i2s2_mck),
-+	SKY_PINFUNCTION(PINCTRL_PIN(55, "I2S2_RSCK"), i2s2_rsck),
-+	SKY_PINFUNCTION(PINCTRL_PIN(56, "I2S2_RWS"), i2s2_rws),
-+	SKY_PINFUNCTION(PINCTRL_PIN(57, "I2S2_TSCK"), i2s2_tsck),
-+	SKY_PINFUNCTION(PINCTRL_PIN(58, "I2S2_TWS"), i2s2_tws),
-+	SKY_PINFUNCTION(PINCTRL_PIN(59, "I2S2_DATA_IN0"), i2s2_data_in0),
-+	SKY_PINFUNCTION(PINCTRL_PIN(60, "I2S2_DATA_IN1"), i2s2_data_in1),
-+	SKY_PINFUNCTION(PINCTRL_PIN(61, "I2S2_DATA_OUT0"), i2s2_data_out0),
-+	SKY_PINFUNCTION(PINCTRL_PIN(62, "I2S2_DATA_OUT1"), i2s2_data_out1),
-+	SKY_PINFUNCTION(PINCTRL_PIN(63, "I2S2_DATA_OUT2"), i2s2_data_out2),
-+	SKY_PINFUNCTION(PINCTRL_PIN(64, "I2S2_DATA_OUT3"), i2s2_data_out3),
-+	SKY_PINFUNCTION(PINCTRL_PIN(65, "I2S3_MCLK"), i2s3_mclk),
-+	SKY_PINFUNCTION(PINCTRL_PIN(66, "I2S3_RSCK"), i2s3_rsck),
-+	SKY_PINFUNCTION(PINCTRL_PIN(67, "I2S3_RWS"), i2s3_rws),
-+	SKY_PINFUNCTION(PINCTRL_PIN(68, "I2S3_TSCK"), i2s3_tsck),
-+	SKY_PINFUNCTION(PINCTRL_PIN(69, "I2S3_TWS"), i2s3_tws),
-+	SKY_PINFUNCTION(PINCTRL_PIN(70, "I2S3_DATA_IN0"), i2s3_data_in0),
-+	SKY_PINFUNCTION(PINCTRL_PIN(71, "I2S3_DATA_IN1"), i2s3_data_in1),
-+	SKY_PINFUNCTION(PINCTRL_PIN(72, "I2S3_DATA_OUT0"), i2s3_data_out0),
-+	SKY_PINFUNCTION(PINCTRL_PIN(73, "I2S3_DATA_OUT1"), i2s3_data_out1),
-+	SKY_PINFUNCTION(PINCTRL_PIN(74, "GPIO90"), gpio90),
-+	SKY_PINFUNCTION(PINCTRL_PIN(75, "GPIO91"), gpio91),
-+	SKY_PINFUNCTION(PINCTRL_PIN(76, "GPIO92"), gpio92),
-+	SKY_PINFUNCTION(PINCTRL_PIN(77, "GPIO93"), gpio93),
-+	SKY_PINFUNCTION(PINCTRL_PIN(78, "GPIO94"), gpio94),
-+	SKY_PINFUNCTION(PINCTRL_PIN(79, "UART0_TXD"), uart0_txd),
-+	SKY_PINFUNCTION(PINCTRL_PIN(80, "UART0_RXD"), uart0_rxd),
-+	SKY_PINFUNCTION(PINCTRL_PIN(81, "UART0_CTS"), uart0_cts),
-+	SKY_PINFUNCTION(PINCTRL_PIN(82, "UART0_RTS"), uart0_rts),
-+	SKY_PINFUNCTION(PINCTRL_PIN(83, "UART1_TXD"), uart1_txd),
-+	SKY_PINFUNCTION(PINCTRL_PIN(84, "UART1_RXD"), uart1_rxd),
-+	SKY_PINFUNCTION(PINCTRL_PIN(85, "UART1_CTS"), uart1_cts),
-+	SKY_PINFUNCTION(PINCTRL_PIN(86, "UART1_RTS"), uart1_rts),
-+	SKY_PINFUNCTION(PINCTRL_PIN(87, "UART2_TXD"), uart2_txd),
-+	SKY_PINFUNCTION(PINCTRL_PIN(88, "UART2_RXD"), uart2_rxd),
-+	SKY_PINFUNCTION(PINCTRL_PIN(89, "UART3_TXD"), uart3_txd),
-+	SKY_PINFUNCTION(PINCTRL_PIN(90, "UART3_RXD"), uart3_rxd),
-+	SKY_PINFUNCTION(PINCTRL_PIN(91, "UART3_CTS"), uart3_cts),
-+	SKY_PINFUNCTION(PINCTRL_PIN(92, "UART3_RTS"), uart3_rts),
-+	SKY_PINFUNCTION(PINCTRL_PIN(93, "UART4_CSU_PM_TXD"), uart4_csu_pm_txd),
-+	SKY_PINFUNCTION(PINCTRL_PIN(94, "UART4_CSU_PM_RXD"), uart4_csu_pm_rxd),
-+	SKY_PINFUNCTION(PINCTRL_PIN(95, "UART5_CSU_SE_TXD"), uart5_csu_se_txd),
-+	SKY_PINFUNCTION(PINCTRL_PIN(96, "UART5_CSU_SE_RXD"), uart5_csu_se_rxd),
-+	SKY_PINFUNCTION(PINCTRL_PIN(97, "UART6_CSU_SE_RXD"), uart6_csu_se_rxd),
-+	SKY_PINFUNCTION(PINCTRL_PIN(98, "CLK_REQ0_L"), clk_req0),
-+	SKY_PINFUNCTION(PINCTRL_PIN(99, "CLK_REQ2_L"), clk_req2),
-+	SKY_PINFUNCTION(PINCTRL_PIN(100, "CLK_REQ4_L"), clk_req4),
-+	SKY_PINFUNCTION(PINCTRL_PIN(101, "CSI0_MCLK0"), csi0_mclk0),
-+	SKY_PINFUNCTION(PINCTRL_PIN(102, "CSI0_MCLK1"), csi0_mclk1),
-+	SKY_PINFUNCTION(PINCTRL_PIN(103, "CSI1_MCLK0"), csi1_mclk0),
-+	SKY_PINFUNCTION(PINCTRL_PIN(104, "CSI1_MCLK1"), csi1_mclk1),
-+	SKY_PINFUNCTION(PINCTRL_PIN(105, "GPIO121"), gpio121),
-+	SKY_PINFUNCTION(PINCTRL_PIN(106, "GPIO122"), gpio122),
-+	SKY_PINFUNCTION(PINCTRL_PIN(107, "GPIO123"), gpio123),
-+	SKY_PINFUNCTION(PINCTRL_PIN(108, "GPIO124"), gpio124),
-+	SKY_PINFUNCTION(PINCTRL_PIN(109, "GPIO125"), gpio125),
-+	SKY_PINFUNCTION(PINCTRL_PIN(110, "GPIO126"), gpio126),
-+	SKY_PINFUNCTION(PINCTRL_PIN(111, "GPIO127"), gpio127),
-+	SKY_PINFUNCTION(PINCTRL_PIN(112, "GPIO128"), gpio128),
-+	SKY_PINFUNCTION(PINCTRL_PIN(113, "GPIO129"), gpio129),
-+	SKY_PINFUNCTION(PINCTRL_PIN(114, "GPIO130"), gpio130),
-+	SKY_PINFUNCTION(PINCTRL_PIN(115, "GPIO131"), gpio131),
-+	SKY_PINFUNCTION(PINCTRL_PIN(116, "GPIO132"), gpio132),
-+	SKY_PINFUNCTION(PINCTRL_PIN(117, "GPIO133"), gpio133),
-+	SKY_PINFUNCTION(PINCTRL_PIN(118, "GPIO134"), gpio134),
-+	SKY_PINFUNCTION(PINCTRL_PIN(119, "GPIO135"), gpio135),
-+	SKY_PINFUNCTION(PINCTRL_PIN(120, "GPIO136"), gpio136),
-+	SKY_PINFUNCTION(PINCTRL_PIN(121, "GPIO137"), gpio137),
-+	SKY_PINFUNCTION(PINCTRL_PIN(122, "GPIO138"), gpio138),
-+	SKY_PINFUNCTION(PINCTRL_PIN(123, "GPIO139"), gpio139),
-+	SKY_PINFUNCTION(PINCTRL_PIN(124, "GPIO140"), gpio140),
-+	SKY_PINFUNCTION(PINCTRL_PIN(125, "GPIO141"), gpio141),
-+	SKY_PINFUNCTION(PINCTRL_PIN(126, "GPIO142"), gpio142),
-+	SKY_PINFUNCTION(PINCTRL_PIN(127, "GPIO143"), gpio143),
-+	SKY_PINFUNCTION(PINCTRL_PIN(128, "GPIO144"), gpio144),
-+	SKY_PINFUNCTION(PINCTRL_PIN(129, "GPIO145"), gpio145),
-+	SKY_PINFUNCTION(PINCTRL_PIN(130, "GPIO146"), gpio146),
-+	SKY_PINFUNCTION(PINCTRL_PIN(131, "GPIO147"), gpio147),
-+	SKY_PINFUNCTION(PINCTRL_PIN(132, "GPIO148"), gpio148),
-+	SKY_PINFUNCTION(PINCTRL_PIN(133, "GPIO149"), gpio149),
-+	SKY_PINFUNCTION(PINCTRL_PIN(134, "GPIO150"), gpio150),
-+	SKY_PINFUNCTION(PINCTRL_PIN(135, "GPIO151"), gpio151),
-+	SKY_PINFUNCTION(PINCTRL_PIN(136, "GPIO152"), gpio152),
-+	SKY_PINFUNCTION(PINCTRL_PIN(137, "GPIO153"), gpio153),
-+};
-+
-+static const struct sky1_pinctrl_soc_info sky1_pinctrl_s5_info = {
-+	.pins = sky1_pinctrl_s5_pads,
-+	.npins = ARRAY_SIZE(sky1_pinctrl_s5_pads),
-+};
-+
-+static const struct sky1_pinctrl_soc_info sky1_pinctrl_info = {
-+	.pins = sky1_pinctrl_pads,
-+	.npins = ARRAY_SIZE(sky1_pinctrl_pads),
-+};
-+
-+static const struct of_device_id sky1_pinctrl_of_match[] = {
-+	{ .compatible = "cix,sky1-iomuxc-s5", .data = &sky1_pinctrl_s5_info, },
-+	{ .compatible = "cix,sky1-iomuxc", .data = &sky1_pinctrl_info, },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, sky1_pinctrl_of_match);
-+
-+static int __maybe_unused sky1_pinctrl_suspend(struct device *dev)
-+{
-+	struct sky1_pinctrl *spctl = dev_get_drvdata(dev);
-+
-+	return pinctrl_force_sleep(spctl->pctl);
-+}
-+
-+static int __maybe_unused sky1_pinctrl_resume(struct device *dev)
-+{
-+	struct sky1_pinctrl *spctl = dev_get_drvdata(dev);
-+
-+	return pinctrl_force_default(spctl->pctl);
-+}
-+
-+const struct dev_pm_ops sky1_pinctrl_pm_ops = {
-+	SET_LATE_SYSTEM_SLEEP_PM_OPS(sky1_pinctrl_suspend,
-+					sky1_pinctrl_resume)
-+};
-+EXPORT_SYMBOL_GPL(sky1_pinctrl_pm_ops);
-+
-+static int sky1_pinctrl_probe(struct platform_device *pdev)
-+{
-+	const struct sky1_pinctrl_soc_info *pinctrl_info;
-+
-+	pinctrl_info = device_get_match_data(&pdev->dev);
-+	if (!pinctrl_info)
-+		return -ENODEV;
-+
-+	return sky1_base_pinctrl_probe(pdev, pinctrl_info);
-+}
-+
-+static struct platform_driver sky1_pinctrl_driver = {
-+	.driver = {
-+		.name = "sky1-pinctrl",
-+		.of_match_table = sky1_pinctrl_of_match,
-+		.pm = &sky1_pinctrl_pm_ops,
-+	},
-+	.probe = sky1_pinctrl_probe,
-+};
-+
-+static int __init sky1_pinctrl_init(void)
-+{
-+	return platform_driver_register(&sky1_pinctrl_driver);
-+}
-+arch_initcall(sky1_pinctrl_init);
-+
-+MODULE_AUTHOR("Jerry Zhu <Jerry.Zhu@cixtech.com>");
-+MODULE_DESCRIPTION("Cix Sky1 pinctrl driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/pinctrl/cix/pinctrl-sky1.h b/drivers/pinctrl/cix/pinctrl-sky1.h
-new file mode 100644
-index 000000000000..a8b099852965
---- /dev/null
-+++ b/drivers/pinctrl/cix/pinctrl-sky1.h
-@@ -0,0 +1,48 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
++++ b/arch/arm64/boot/dts/cix/sky1-pinfunc.h
+@@ -0,0 +1,417 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
 +/*
-+ * Author: Jerry Zhu <Jerry.Zhu@cixtech.com>
++ * Copyright 2024-2025 Cix Technology Group Co., Ltd.
 + */
 +
-+#ifndef __DRIVERS_PINCTRL_SKY1_H
-+#define __DRIVERS_PINCTRL_SKY1_H
++#ifndef __CIX_SKY1_H
++#define __CIX_SKY1_H
 +
-+struct sky1_pinctrl_group {
-+	const char *name;
-+	unsigned long config;
-+	unsigned int pin;
-+};
++/* s5 pads */
++#define CIX_PAD_GPIO001_FUNC_GPIO001				   (0 << 8 | 0x0)
++#define CIX_PAD_GPIO002_FUNC_GPIO002				   (1 << 8 | 0x0)
++#define CIX_PAD_GPIO003_FUNC_GPIO003				   (2 << 8 | 0x0)
++#define CIX_PAD_GPIO004_FUNC_GPIO004				   (3 << 8 | 0x0)
++#define CIX_PAD_GPIO005_FUNC_GPIO005				   (4 << 8 | 0x0)
++#define CIX_PAD_GPIO006_FUNC_GPIO006				   (5 << 8 | 0x0)
++#define CIX_PAD_GPIO007_FUNC_GPIO007				   (6 << 8 | 0x0)
++#define CIX_PAD_GPIO008_FUNC_GPIO008				   (7 << 8 | 0x0)
++#define CIX_PAD_GPIO009_FUNC_GPIO009				   (8 << 8 | 0x0)
++#define CIX_PAD_GPIO010_FUNC_GPIO010				   (9 << 8 | 0x0)
++#define CIX_PAD_GPIO011_FUNC_GPIO011				   (10 << 8 | 0x0)
++#define CIX_PAD_GPIO012_FUNC_GPIO012				   (11 << 8 | 0x0)
++#define CIX_PAD_GPIO013_FUNC_GPIO013				   (12 << 8 | 0x0)
++#define CIX_PAD_GPIO014_FUNC_GPIO014				   (13 << 8 | 0x0)
++#define CIX_PAD_SFI_I2C0_SCL_FUNC_SFI_I2C0_SCL			   (28 << 8 | 0x0)
++#define CIX_PAD_SFI_I2C0_SCL_FUNC_SFI_I3C0_SCL			   (28 << 8 | 0x1)
++#define CIX_PAD_SFI_I2C0_SDA_FUNC_SFI_I2C0_SDA			   (29 << 8 | 0x0)
++#define CIX_PAD_SFI_I2C0_SDA_FUNC_SFI_I3C0_SDA			   (29 << 8 | 0x1)
++#define CIX_PAD_SFI_I2C1_SCL_FUNC_SFI_I2C1_SCL			   (30 << 8 | 0x0)
++#define CIX_PAD_SFI_I2C1_SCL_FUNC_SFI_I3C1_SCL			   (30 << 8 | 0x1)
++#define CIX_PAD_SFI_I2C1_SCL_FUNC_SFI_SPI_CS0			   (30 << 8 | 0x2)
++#define CIX_PAD_SFI_I2C1_SDA_FUNC_SFI_I2C1_SDA			   (31 << 8 | 0x0)
++#define CIX_PAD_SFI_I2C1_SDA_FUNC_SFI_I3C1_SDA			   (31 << 8 | 0x1)
++#define CIX_PAD_SFI_I2C1_SDA_FUNC_SFI_SPI_CS1			   (31 << 8 | 0x2)
++#define CIX_PAD_SFI_GPIO0_FUNC_GPIO015				   (32 << 8 | 0x0)
++#define CIX_PAD_SFI_GPIO0_FUNC_SFI_SPI_SCK			   (32 << 8 | 0x1)
++#define CIX_PAD_SFI_GPIO0_FUNC_SFI_GPIO0			   (32 << 8 | 0x2)
++#define CIX_PAD_SFI_GPIO1_FUNC_GPIO016				   (33 << 8 | 0x0)
++#define CIX_PAD_SFI_GPIO1_FUNC_SFI_SPI_MOSI			   (33 << 8 | 0x1)
++#define CIX_PAD_SFI_GPIO1_FUNC_SFI_GPIO1			   (33 << 8 | 0x2)
++#define CIX_PAD_SFI_GPIO2_FUNC_GPIO017				   (34 << 8 | 0x0)
++#define CIX_PAD_SFI_GPIO2_FUNC_SFI_SPI_MISO			   (34 << 8 | 0x1)
++#define CIX_PAD_SFI_GPIO2_FUNC_SFI_GPIO2			   (34 << 8 | 0x2)
++#define CIX_PAD_GPIO018_FUNC_SFI_GPIO3				   (35 << 8 | 0x0)
++#define CIX_PAD_GPIO018_FUNC_GPIO018				   (35 << 8 | 0x1)
++#define CIX_PAD_GPIO019_FUNC_SFI_GPIO4				   (36 << 8 | 0x0)
++#define CIX_PAD_GPIO019_FUNC_GPIO019				   (36 << 8 | 0x1)
++#define CIX_PAD_GPIO020_FUNC_SFI_GPIO5				   (37 << 8 | 0x0)
++#define CIX_PAD_GPIO020_FUNC_GPIO020				   (37 << 8 | 0x1)
++#define CIX_PAD_GPIO021_FUNC_SFI_GPIO6				   (38 << 8 | 0x0)
++#define CIX_PAD_GPIO021_FUNC_GPIO021				   (38 << 8 | 0x1)
++#define CIX_PAD_GPIO022_FUNC_SFI_GPIO7				   (39 << 8 | 0x0)
++#define CIX_PAD_GPIO022_FUNC_GPIO022				   (39 << 8 | 0x1)
++#define CIX_PAD_GPIO023_FUNC_SFI_GPIO8				   (40 << 8 | 0x0)
++#define CIX_PAD_GPIO023_FUNC_GPIO023				   (40 << 8 | 0x1)
++#define CIX_PAD_GPIO023_FUNC_SFI_I3C0_PUR_EN_L			   (40 << 8 | 0x2)
++#define CIX_PAD_GPIO024_FUNC_SFI_GPIO9				   (41 << 8 | 0x0)
++#define CIX_PAD_GPIO024_FUNC_GPIO024				   (41 << 8 | 0x1)
++#define CIX_PAD_GPIO024_FUNC_SFI_I3C1_PUR_EN_L			   (41 << 8 | 0x2)
++#define CIX_PAD_SPI1_MISO_FUNC_SPI1_MISO			   (42 << 8 | 0x0)
++#define CIX_PAD_SPI1_MISO_FUNC_GPIO025				   (42 << 8 | 0x1)
++#define CIX_PAD_SPI1_CS0_FUNC_SPI1_CS0				   (43 << 8 | 0x0)
++#define CIX_PAD_SPI1_CS0_FUNC_GPIO026				   (43 << 8 | 0x1)
++#define CIX_PAD_SPI1_CS1_FUNC_SPI1_CS1				   (44 << 8 | 0x0)
++#define CIX_PAD_SPI1_CS1_FUNC_GPIO027				   (44 << 8 | 0x1)
++#define CIX_PAD_SPI1_MOSI_FUNC_SPI1_MOSI			   (45 << 8 | 0x0)
++#define CIX_PAD_SPI1_MOSI_FUNC_GPIO028				   (45 << 8 | 0x1)
++#define CIX_PAD_SPI1_CLK_FUNC_SPI1_CLK				   (46 << 8 | 0x0)
++#define CIX_PAD_SPI1_CLK_FUNC_GPIO029				   (46 << 8 | 0x1)
++#define CIX_PAD_GPIO030_FUNC_GPIO030				   (47 << 8 | 0x0)
++#define CIX_PAD_GPIO030_FUNC_USB_OC0_L				   (47 << 8 | 0x1)
++#define CIX_PAD_GPIO031_FUNC_GPIO031				   (48 << 8 | 0x0)
++#define CIX_PAD_GPIO031_FUNC_USB_OC1_L				   (48 << 8 | 0x1)
++#define CIX_PAD_GPIO032_FUNC_GPIO032				   (49 << 8 | 0x0)
++#define CIX_PAD_GPIO032_FUNC_USB_OC2_L				   (49 << 8 | 0x1)
++#define CIX_PAD_GPIO033_FUNC_GPIO033				   (50 << 8 | 0x0)
++#define CIX_PAD_GPIO033_FUNC_USB_OC3_L				   (50 << 8 | 0x1)
++#define CIX_PAD_GPIO034_FUNC_GPIO034				   (51 << 8 | 0x0)
++#define CIX_PAD_GPIO034_FUNC_USB_OC4_L				   (51 << 8 | 0x1)
++#define CIX_PAD_GPIO035_FUNC_GPIO035				   (52 << 8 | 0x0)
++#define CIX_PAD_GPIO035_FUNC_USB_OC5_L				   (52 << 8 | 0x1)
++#define CIX_PAD_GPIO036_FUNC_GPIO036				   (53 << 8 | 0x0)
++#define CIX_PAD_GPIO036_FUNC_USB_OC6_L				   (53 << 8 | 0x1)
++#define CIX_PAD_GPIO037_FUNC_GPIO037				   (54 << 8 | 0x0)
++#define CIX_PAD_GPIO037_FUNC_USB_OC7_L				   (54 << 8 | 0x1)
++#define CIX_PAD_GPIO038_FUNC_GPIO038				   (55 << 8 | 0x0)
++#define CIX_PAD_GPIO038_FUNC_USB_OC8_L				   (55 << 8 | 0x1)
++#define CIX_PAD_GPIO039_FUNC_GPIO039				   (56 << 8 | 0x0)
++#define CIX_PAD_GPIO039_FUNC_USB_OC9_L				   (56 << 8 | 0x1)
++#define CIX_PAD_GPIO040_FUNC_GPIO040				   (57 << 8 | 0x0)
++#define CIX_PAD_GPIO040_FUNC_USB_DRIVE_VBUS0			   (57 << 8 | 0x1)
++#define CIX_PAD_GPIO041_FUNC_GPIO041				   (58 << 8 | 0x0)
++#define CIX_PAD_GPIO041_FUNC_USB_DRIVE_VBUS4			   (58 << 8 | 0x1)
++#define CIX_PAD_GPIO042_FUNC_GPIO042				   (59 << 8 | 0x0)
++#define CIX_PAD_GPIO042_FUNC_USB_DRIVE_VBUS5			   (59 << 8 | 0x1)
++#define CIX_PAD_SE_QSPI_CLK_FUNC_SE_QSPI_CLK			   (60 << 8 | 0x0)
++#define CIX_PAD_SE_QSPI_CLK_FUNC_QSPI_CLK			   (60 << 8 | 0x1)
++#define CIX_PAD_SE_QSPI_CS_L_FUNC_SE_QSPI_CS_L			   (61 << 8 | 0x0)
++#define CIX_PAD_SE_QSPI_CS_L_FUNC_QSPI_CS_L			   (61 << 8 | 0x1)
++#define CIX_PAD_SE_QSPI_DATA0_FUNC_SE_QSPI_DATA0		   (62 << 8 | 0x0)
++#define CIX_PAD_SE_QSPI_DATA0_FUNC_QSPI_DATA0			   (62 << 8 | 0x1)
++#define CIX_PAD_SE_QSPI_DATA1_FUNC_SE_QSPI_DATA1		   (63 << 8 | 0x0)
++#define CIX_PAD_SE_QSPI_DATA1_FUNC_QSPI_DATA1			   (63 << 8 | 0x1)
++#define CIX_PAD_SE_QSPI_DATA2_FUNC_SE_QSPI_DATA2		   (64 << 8 | 0x0)
++#define CIX_PAD_SE_QSPI_DATA2_FUNC_QSPI_DATA2			   (64 << 8 | 0x1)
++#define CIX_PAD_SE_QSPI_DATA3_FUNC_SE_QSPI_DATA3		   (65 << 8 | 0x0)
++#define CIX_PAD_SE_QSPI_DATA3_FUNC_QSPI_DATA3			   (65 << 8 | 0x1)
++/* s0 pads */
++#define CIX_PAD_GPIO043_FUNC_GPIO043				   (0 << 8 | 0x0)
++#define CIX_PAD_GPIO044_FUNC_GPIO044				   (1 << 8 | 0x0)
++#define CIX_PAD_GPIO045_FUNC_GPIO045				   (2 << 8 | 0x0)
++#define CIX_PAD_GPIO046_FUNC_GPIO046				   (3 << 8 | 0x0)
++#define CIX_PAD_DP2_DIGON_FUNC_DP2_DIGON			   (18 << 8 | 0x0)
++#define CIX_PAD_DP2_BLON_FUNC_DP2_BLON				   (19 << 8 | 0x0)
++#define CIX_PAD_DP2_VARY_BL_FUNC_DP2_VARY_BL			   (20 << 8 | 0x0)
++#define CIX_PAD_I2C7_SCL_FUNC_I2C7_SCL				   (21 << 8 | 0x0)
++#define CIX_PAD_I2C7_SDA_FUNC_I2C7_SDA				   (22 << 8 | 0x0)
++#define CIX_PAD_I2C5_SCL_FUNC_I2C5_SCL				   (26 << 8 | 0x0)
++#define CIX_PAD_I2C5_SCL_FUNC_GPIO047				   (26 << 8 | 0x1)
++#define CIX_PAD_I2C5_SDA_FUNC_I2C5_SDA				   (27 << 8 | 0x0)
++#define CIX_PAD_I2C5_SDA_FUNC_GPIO048				   (27 << 8 | 0x1)
++#define CIX_PAD_I2C6_SCL_FUNC_I2C6_SCL				   (28 << 8 | 0x0)
++#define CIX_PAD_I2C6_SCL_FUNC_GPIO049				   (28 << 8 | 0x1)
++#define CIX_PAD_I2C6_SDA_FUNC_I2C6_SDA				   (29 << 8 | 0x0)
++#define CIX_PAD_I2C6_SDA_FUNC_GPIO050				   (29 << 8 | 0x1)
++#define CIX_PAD_I2C0_CLK_FUNC_I2C0_CLK				   (30 << 8 | 0x0)
++#define CIX_PAD_I2C0_CLK_FUNC_GPIO051				   (30 << 8 | 0x1)
++#define CIX_PAD_I2C0_SDA_FUNC_I2C0_SDA				   (31 << 8 | 0x0)
++#define CIX_PAD_I2C0_SDA_FUNC_GPIO052				   (31 << 8 | 0x1)
++#define CIX_PAD_I2C1_CLK_FUNC_I2C1_CLK				   (32 << 8 | 0x0)
++#define CIX_PAD_I2C1_CLK_FUNC_GPIO053				   (32 << 8 | 0x1)
++#define CIX_PAD_I2C1_SDA_FUNC_I2C1_SDA				   (33 << 8 | 0x0)
++#define CIX_PAD_I2C1_SDA_FUNC_GPIO054				   (33 << 8 | 0x1)
++#define CIX_PAD_I2C2_SCL_FUNC_I2C2_SCL				   (34 << 8 | 0x0)
++#define CIX_PAD_I2C2_SCL_FUNC_I3C0_SCL				   (34 << 8 | 0x1)
++#define CIX_PAD_I2C2_SCL_FUNC_GPIO055				   (34 << 8 | 0x2)
++#define CIX_PAD_I2C2_SDA_FUNC_I2C2_SDA				   (35 << 8 | 0x0)
++#define CIX_PAD_I2C2_SDA_FUNC_I3C0_SDA				   (35 << 8 | 0x1)
++#define CIX_PAD_I2C2_SDA_FUNC_GPIO056				   (35 << 8 | 0x2)
++#define CIX_PAD_GPIO057_FUNC_GPIO057				   (36 << 8 | 0x0)
++#define CIX_PAD_GPIO057_FUNC_I3C0_PUR_EN_L			   (36 << 8 | 0x1)
++#define CIX_PAD_I2C3_CLK_FUNC_I2C3_CLK				   (37 << 8 | 0x0)
++#define CIX_PAD_I2C3_CLK_FUNC_I3C1_CLK				   (37 << 8 | 0x1)
++#define CIX_PAD_I2C3_CLK_FUNC_GPIO058				   (37 << 8 | 0x2)
++#define CIX_PAD_I2C3_SDA_FUNC_I2C3_SDA				   (38 << 8 | 0x0)
++#define CIX_PAD_I2C3_SDA_FUNC_I3C1_SDA				   (38 << 8 | 0x1)
++#define CIX_PAD_I2C3_SDA_FUNC_GPIO059				   (38 << 8 | 0x2)
++#define CIX_PAD_GPIO060_FUNC_GPIO060				   (39 << 8 | 0x0)
++#define CIX_PAD_GPIO060_FUNC_I3C1_PUR_EN_L			   (39 << 8 | 0x1)
++#define CIX_PAD_I2C4_CLK_FUNC_I2C4_CLK				   (40 << 8 | 0x0)
++#define CIX_PAD_I2C4_CLK_FUNC_GPIO061				   (40 << 8 | 0x1)
++#define CIX_PAD_I2C4_SDA_FUNC_I2C4_SDA				   (41 << 8 | 0x0)
++#define CIX_PAD_I2C4_SDA_FUNC_GPIO062				   (41 << 8 | 0x1)
++#define CIX_PAD_HDA_BITCLK_FUNC_HDA_BITCLK			   (42 << 8 | 0x0)
++#define CIX_PAD_HDA_BITCLK_FUNC_I2S0_SCK			   (42 << 8 | 0x1)
++#define CIX_PAD_HDA_BITCLK_FUNC_I2S9_RSCK_DBG			   (42 << 8 | 0x2)
++#define CIX_PAD_HDA_RST_L_FUNC_HDA_RST_L			   (43 << 8 | 0x0)
++#define CIX_PAD_HDA_RST_L_FUNC_I2S0_DATA_IN			   (43 << 8 | 0x1)
++#define CIX_PAD_HDA_RST_L_FUNC_I2S9_DATA_IN0_DBG		   (43 << 8 | 0x2)
++#define CIX_PAD_HDA_SDIN0_FUNC_HDA_SDIN0			   (44 << 8 | 0x0)
++#define CIX_PAD_HDA_SDIN0_FUNC_I2S0_MCLK			   (44 << 8 | 0x1)
++#define CIX_PAD_HDA_SDIN0_FUNC_I2S9_TSCK_DBG			   (44 << 8 | 0x2)
++#define CIX_PAD_HDA_SDOUT0_FUNC_HDA_SDOUT0			   (45 << 8 | 0x0)
++#define CIX_PAD_HDA_SDOUT0_FUNC_I2S0_DATA_OUT			   (45 << 8 | 0x1)
++#define CIX_PAD_HDA_SDOUT0_FUNC_I2S9_TWS_DBG		           (45 << 8 | 0x2)
++#define CIX_PAD_HDA_SYNC_FUNC_HDA_SYNC				   (46 << 8 | 0x0)
++#define CIX_PAD_HDA_SYNC_FUNC_I2S0_WS				   (46 << 8 | 0x1)
++#define CIX_PAD_HDA_SYNC_FUNC_I2S9_RWS_DBG			   (46 << 8 | 0x2)
++#define CIX_PAD_HDA_SDIN1_FUNC_HDA_SDIN1			   (47 << 8 | 0x0)
++#define CIX_PAD_HDA_SDIN1_FUNC_GPIO063				   (47 << 8 | 0x1)
++#define CIX_PAD_HDA_SDIN1_FUNC_I2S9_DATA_IN1_DBG		   (47 << 8 | 0x2)
++#define CIX_PAD_HDA_SDOUT1_FUNC_HDA_SDOUT1			   (48 << 8 | 0x0)
++#define CIX_PAD_HDA_SDOUT1_FUNC_GPIO064				   (48 << 8 | 0x1)
++#define CIX_PAD_HDA_SDOUT1_FUNC_I2S9_DATA_OUT0_DBG		   (48 << 8 | 0x2)
++#define CIX_PAD_I2S1_MCLK_FUNC_I2S1_MCLK			   (49 << 8 | 0x0)
++#define CIX_PAD_I2S1_MCLK_FUNC_GPIO065				   (49 << 8 | 0x1)
++#define CIX_PAD_I2S1_SCK_FUNC_I2S1_SCK				   (50 << 8 | 0x0)
++#define CIX_PAD_I2S1_SCK_FUNC_GPIO066				   (50 << 8 | 0x1)
++#define CIX_PAD_I2S1_WS_FUNC_I2S1_WS				   (51 << 8 | 0x0)
++#define CIX_PAD_I2S1_WS_FUNC_GPIO067				   (51 << 8 | 0x1)
++#define CIX_PAD_I2S1_DATA_IN_FUNC_I2S1_DATA_IN			   (52 << 8 | 0x0)
++#define CIX_PAD_I2S1_DATA_IN_FUNC_GPIO068			   (52 << 8 | 0x1)
++#define CIX_PAD_I2S1_DATA_OUT_FUNC_I2S1_DATA_OUT		   (53 << 8 | 0x0)
++#define CIX_PAD_I2S1_DATA_OUT_FUNC_GPIO069			   (53 << 8 | 0x1)
++#define CIX_PAD_I2S2_MCLK_FUNC_I2S2_MCLK			   (54 << 8 | 0x0)
++#define CIX_PAD_I2S2_MCLK_FUNC_GPIO070				   (54 << 8 | 0x1)
++#define CIX_PAD_I2S2_RSCK_FUNC_I2S2_RSCK			   (55 << 8 | 0x0)
++#define CIX_PAD_I2S2_RSCK_FUNC_GPIO071				   (55 << 8 | 0x1)
++#define CIX_PAD_I2S2_RSCK_FUNC_I2S5_RSCK_DBG			   (55 << 8 | 0x2)
++#define CIX_PAD_I2S2_RSCK_FUNC_I2S6_RSCK_DBG			   (55 << 8 | 0x3)
++#define CIX_PAD_I2S2_RWS_FUNC_I2S2_RWS				   (56 << 8 | 0x0)
++#define CIX_PAD_I2S2_RWS_FUNC_GPIO072				   (56 << 8 | 0x1)
++#define CIX_PAD_I2S2_RWS_FUNC_I2S5_RWS_DBG			   (56 << 8 | 0x2)
++#define CIX_PAD_I2S2_RWS_FUNC_I2S6_RWS_DBG			   (56 << 8 | 0x3)
++#define CIX_PAD_I2S2_TSCK_FUNC_I2S2_TSCK			   (57 << 8 | 0x0)
++#define CIX_PAD_I2S2_TSCK_FUNC_GPIO073				   (57 << 8 | 0x1)
++#define CIX_PAD_I2S2_TSCK_FUNC_I2S5_TSCK_DBG			   (57 << 8 | 0x2)
++#define CIX_PAD_I2S2_TSCK_FUNC_I2S6_TSCK_DBG			   (57 << 8 | 0x3)
++#define CIX_PAD_I2S2_TWS_FUNC_I2S2_TWS				   (58 << 8 | 0x0)
++#define CIX_PAD_I2S2_TWS_FUNC_GPIO074				   (58 << 8 | 0x1)
++#define CIX_PAD_I2S2_TWS_FUNC_I2S5_TWS_DBG			   (58 << 8 | 0x2)
++#define CIX_PAD_I2S2_TWS_FUNC_I2S6_TWS_DBG			   (58 << 8 | 0x3)
++#define CIX_PAD_I2S2_DATA_IN0_FUNC_I2S2_DATA_IN0		   (59 << 8 | 0x0)
++#define CIX_PAD_I2S2_DATA_IN0_FUNC_GPIO075			   (59 << 8 | 0x1)
++#define CIX_PAD_I2S2_DATA_IN0_FUNC_I2S5_DATA_IN0_DBG		   (59 << 8 | 0x2)
++#define CIX_PAD_I2S2_DATA_IN0_FUNC_I2S6_DATA_IN0_DBG		   (59 << 8 | 0x3)
++#define CIX_PAD_I2S2_DATA_IN1_FUNC_I2S2_DATA_IN1		   (60 << 8 | 0x0)
++#define CIX_PAD_I2S2_DATA_IN1_FUNC_GPIO076			   (60 << 8 | 0x1)
++#define CIX_PAD_I2S2_DATA_IN1_FUNC_I2S5_DATA_IN1_DBG		   (60 << 8 | 0x2)
++#define CIX_PAD_I2S2_DATA_IN1_FUNC_I2S6_DATA_IN1_DBG		   (60 << 8 | 0x3)
++#define CIX_PAD_I2S2_DATA_OUT0_FUNC_I2S2_DATA_OUT0		   (61 << 8 | 0x0)
++#define CIX_PAD_I2S2_DATA_OUT0_FUNC_GPIO077			   (61 << 8 | 0x1)
++#define CIX_PAD_I2S2_DATA_OUT0_FUNC_I2S5_DATA_OUT0_DBG		   (61 << 8 | 0x2)
++#define CIX_PAD_I2S2_DATA_OUT0_FUNC_I2S6_DATA_OUT0_DBG		   (61 << 8 | 0x3)
++#define CIX_PAD_I2S2_DATA_OUT1_FUNC_I2S2_DATA_OUT1		   (62 << 8 | 0x0)
++#define CIX_PAD_I2S2_DATA_OUT1_FUNC_GPIO078			   (62 << 8 | 0x1)
++#define CIX_PAD_I2S2_DATA_OUT1_FUNC_I2S5_DATA_OUT1_DBG		   (62 << 8 | 0x2)
++#define CIX_PAD_I2S2_DATA_OUT1_FUNC_I2S6_DATA_OUT1_DBG		   (62 << 8 | 0x3)
++#define CIX_PAD_I2S2_DATA_OUT2_FUNC_I2S2_DATA_OUT2		   (63 << 8 | 0x0)
++#define CIX_PAD_I2S2_DATA_OUT2_FUNC_GPIO079			   (63 << 8 | 0x1)
++#define CIX_PAD_I2S2_DATA_OUT3_FUNC_I2S2_DATA_OUT3		   (64 << 8 | 0x0)
++#define CIX_PAD_I2S2_DATA_OUT3_FUNC_GPIO080			   (64 << 8 | 0x1)
++#define CIX_PAD_I2S2_DATA_OUT3_FUNC_I2S9_DATA_OUT1_DBG		   (64 << 8 | 0x2)
++#define CIX_PAD_I2S3_MCLK_FUNC_I2S3_MCLK			   (65 << 8 | 0x0)
++#define CIX_PAD_I2S3_MCLK_FUNC_GPIO081				   (65 << 8 | 0x1)
++#define CIX_PAD_I2S3_RSCK_FUNC_I2S3_RSCK			   (66 << 8 | 0x0)
++#define CIX_PAD_I2S3_RSCK_FUNC_GPIO082				   (66 << 8 | 0x1)
++#define CIX_PAD_I2S3_RSCK_FUNC_I2S7_RSCK_DBG			   (66 << 8 | 0x2)
++#define CIX_PAD_I2S3_RSCK_FUNC_I2S8_RSCK_DBG			   (66 << 8 | 0x3)
++#define CIX_PAD_I2S3_RWS_FUNC_I2S3_RWS				   (67 << 8 | 0x0)
++#define CIX_PAD_I2S3_RWS_FUNC_GPIO083				   (67 << 8 | 0x1)
++#define CIX_PAD_I2S3_RWS_FUNC_I2S7_RWS_DBG			   (67 << 8 | 0x2)
++#define CIX_PAD_I2S3_RWS_FUNC_I2S8_RWS_DBG			   (67 << 8 | 0x3)
++#define CIX_PAD_I2S3_TSCK_FUNC_I2S3_TSCK			   (68 << 8 | 0x0)
++#define CIX_PAD_I2S3_TSCK_FUNC_GPIO084				   (68 << 8 | 0x1)
++#define CIX_PAD_I2S3_TSCK_FUNC_I2S7_TSCK_DBG			   (68 << 8 | 0x2)
++#define CIX_PAD_I2S3_TSCK_FUNC_I2S8_TSCK_DBG			   (68 << 8 | 0x3)
++#define CIX_PAD_I2S3_TWS_FUNC_I2S3_TWS				   (69 << 8 | 0x0)
++#define CIX_PAD_I2S3_TWS_FUNC_GPIO085				   (69 << 8 | 0x1)
++#define CIX_PAD_I2S3_TWS_FUNC_I2S7_TWS_DBG			   (69 << 8 | 0x2)
++#define CIX_PAD_I2S3_TWS_FUNC_I2S8_TWS_DBG			   (69 << 8 | 0x3)
++#define CIX_PAD_I2S3_DATA_IN0_FUNC_I2S3_DATA_IN0		   (70 << 8 | 0x0)
++#define CIX_PAD_I2S3_DATA_IN0_FUNC_GPIO086			   (70 << 8 | 0x1)
++#define CIX_PAD_I2S3_DATA_IN0_FUNC_I2S7_DATA_IN0_DBG		   (70 << 8 | 0x2)
++#define CIX_PAD_I2S3_DATA_IN0_FUNC_I2S8_DATA_IN0_DBG		   (70 << 8 | 0x3)
++#define CIX_PAD_I2S3_DATA_IN1_FUNC_I2S3_DATA_IN1		   (71 << 8 | 0x0)
++#define CIX_PAD_I2S3_DATA_IN1_FUNC_GPIO087			   (71 << 8 | 0x1)
++#define CIX_PAD_I2S3_DATA_IN1_FUNC_I2S7_DATA_IN1_DBG		   (71 << 8 | 0x2)
++#define CIX_PAD_I2S3_DATA_IN1_FUNC_I2S8_DATA_IN1_DBG		   (71 << 8 | 0x3)
++#define CIX_PAD_I2S3_DATA_OUT0_FUNC_I2S3_DATA_OUT0		   (72 << 8 | 0x0)
++#define CIX_PAD_I2S3_DATA_OUT0_FUNC_GPIO088			   (72 << 8 | 0x1)
++#define CIX_PAD_I2S3_DATA_OUT0_FUNC_I2S7_DATA_OUT0_DBG		   (72 << 8 | 0x2)
++#define CIX_PAD_I2S3_DATA_OUT0_FUNC_I2S8_DATA_OUT0_DBG		   (72 << 8 | 0x3)
++#define CIX_PAD_I2S3_DATA_OUT1_FUNC_I2S3_DATA_OUT1		   (73 << 8 | 0x0)
++#define CIX_PAD_I2S3_DATA_OUT1_FUNC_GPIO089			   (73 << 8 | 0x1)
++#define CIX_PAD_I2S3_DATA_OUT1_FUNC_I2S7_DATA_OUT1_DBG		   (73 << 8 | 0x2)
++#define CIX_PAD_I2S3_DATA_OUT1_FUNC_I2S8_DATA_OUT1_DBG		   (73 << 8 | 0x3)
++#define CIX_PAD_GPIO090_FUNC_GPIO090				   (74 << 8 | 0x0)
++#define CIX_PAD_GPIO090_FUNC_I2S4_MCLK_LB			   (74 << 8 | 0x1)
++#define CIX_PAD_GPIO091_FUNC_GPIO091				   (75 << 8 | 0x0)
++#define CIX_PAD_GPIO091_FUNC_I2S4_SCK_LB			   (75 << 8 | 0x1)
++#define CIX_PAD_GPIO092_FUNC_GPIO092				   (76 << 8 | 0x0)
++#define CIX_PAD_GPIO092_FUNC_I2S4_WS_LB				   (76 << 8 | 0x1)
++#define CIX_PAD_GPIO093_FUNC_GPIO093				   (77 << 8 | 0x0)
++#define CIX_PAD_GPIO093_FUNC_I2S4_DATA_IN_LB			   (77 << 8 | 0x1)
++#define CIX_PAD_GPIO094_FUNC_GPIO094				   (78 << 8 | 0x0)
++#define CIX_PAD_GPIO094_FUNC_I2S4_DATA_OUT_LB			   (78 << 8 | 0x1)
++#define CIX_PAD_UART0_TXD_FUNC_UART0_TXD			   (79 << 8 | 0x0)
++#define CIX_PAD_UART0_TXD_FUNC_PWM0				   (79 << 8 | 0x1)
++#define CIX_PAD_UART0_TXD_FUNC_GPIO095				   (79 << 8 | 0x2)
++#define CIX_PAD_UART0_RXD_FUNC_UART0_RXD			   (80 << 8 | 0x0)
++#define CIX_PAD_UART0_RXD_FUNC_PWM1				   (80 << 8 | 0x1)
++#define CIX_PAD_UART0_RXD_FUNC_GPIO096				   (80 << 8 | 0x2)
++#define CIX_PAD_UART0_CTS_FUNC_UART0_CTS			   (81 << 8 | 0x0)
++#define CIX_PAD_UART0_CTS_FUNC_FAN_OUT2				   (81 << 8 | 0x1)
++#define CIX_PAD_UART0_CTS_FUNC_GPIO097				   (81 << 8 | 0x2)
++#define CIX_PAD_UART0_RTS_FUNC_UART0_RTS			   (82 << 8 | 0x0)
++#define CIX_PAD_UART0_RTS_FUNC_FAN_TACH2			   (82 << 8 | 0x1)
++#define CIX_PAD_UART0_RTS_FUNC_GPIO098				   (82 << 8 | 0x2)
++#define CIX_PAD_UART1_TXD_FUNC_UART1_TXD			   (83 << 8 | 0x0)
++#define CIX_PAD_UART1_TXD_FUNC_FAN_OUT0				   (83 << 8 | 0x1)
++#define CIX_PAD_UART1_TXD_FUNC_GPIO099				   (83 << 8 | 0x2)
++#define CIX_PAD_UART1_RXD_FUNC_UART1_RXD			   (84 << 8 | 0x0)
++#define CIX_PAD_UART1_RXD_FUNC_FAN_TACH0			   (84 << 8 | 0x1)
++#define CIX_PAD_UART1_RXD_FUNC_GPIO100				   (84 << 8 | 0x2)
++#define CIX_PAD_UART1_CTS_FUNC_UART1_CTS			   (85 << 8 | 0x0)
++#define CIX_PAD_UART1_CTS_FUNC_FAN_OUT1				   (85 << 8 | 0x1)
++#define CIX_PAD_UART1_CTS_FUNC_GPIO101				   (85 << 8 | 0x2)
++#define CIX_PAD_UART1_RTS_FUNC_UART1_RTS			   (86 << 8 | 0x0)
++#define CIX_PAD_UART1_RTS_FUNC_FAN_TACH1			   (86 << 8 | 0x1)
++#define CIX_PAD_UART1_RTS_FUNC_GPIO102				   (86 << 8 | 0x2)
++#define CIX_PAD_UART2_TXD_FUNC_UART2_TXD			   (87 << 8 | 0x0)
++#define CIX_PAD_UART2_TXD_FUNC_GPIO103				   (87 << 8 | 0x1)
++#define CIX_PAD_UART2_RXD_FUNC_UART2_RXD			   (88 << 8 | 0x0)
++#define CIX_PAD_UART2_RXD_FUNC_GPIO104				   (88 << 8 | 0x1)
++#define CIX_PAD_UART3_TXD_FUNC_UART3_TXD			   (89 << 8 | 0x0)
++#define CIX_PAD_UART3_TXD_FUNC_GPIO105				   (89 << 8 | 0x1)
++#define CIX_PAD_UART3_RXD_FUNC_UART3_RXD			   (90 << 8 | 0x0)
++#define CIX_PAD_UART3_RXD_FUNC_GPIO106				   (90 << 8 | 0x1)
++#define CIX_PAD_UART3_CTS_FUNC_UART3_CTS			   (91 << 8 | 0x0)
++#define CIX_PAD_UART3_CTS_FUNC_GPIO107				   (91 << 8 | 0x1)
++#define CIX_PAD_UART3_CTS_FUNC_TRIGIN0				   (91 << 8 | 0x2)
++#define CIX_PAD_UART3_RTS_FUNC_UART3_RTS			   (92 << 8 | 0x0)
++#define CIX_PAD_UART3_RTS_FUNC_GPIO108				   (92 << 8 | 0x1)
++#define CIX_PAD_UART3_RTS_FUNC_TRIGIN1				   (92 << 8 | 0x2)
++#define CIX_PAD_UART4_CSU_PM_TXD_FUNC_UART4_CSU_PM_TXD		   (93 << 8 | 0x0)
++#define CIX_PAD_UART4_CSU_PM_TXD_FUNC_GPIO109			   (93 << 8 | 0x1)
++#define CIX_PAD_UART4_CSU_PM_RXD_FUNC_UART4_CSU_PM_RXD		   (94 << 8 | 0x0)
++#define CIX_PAD_UART4_CSU_PM_RXD_FUNC_GPIO110			   (94 << 8 | 0x1)
++#define CIX_PAD_UART5_CSU_SE_TXD_FUNC_UART5_CSU_SE_TXD		   (95 << 8 | 0x0)
++#define CIX_PAD_UART5_CSU_SE_TXD_FUNC_GPIO111			   (95 << 8 | 0x1)
++#define CIX_PAD_UART5_CSU_SE_RXD_FUNC_UART5_CSU_SE_RXD		   (96 << 8 | 0x0)
++#define CIX_PAD_UART5_CSU_SE_RXD_FUNC_GPIO112			   (96 << 8 | 0x1)
++#define CIX_PAD_UART6_CSU_SE_RXD_FUNC_UART6_CSU_SE_RXD		   (97 << 8 | 0x0)
++#define CIX_PAD_UART6_CSU_SE_RXD_FUNC_GPIO113			   (97 << 8 | 0x1)
++#define CIX_PAD_CLK_REQ0_L_FUNC_CLK_REQ0_L			   (98 << 8 | 0x0)
++#define CIX_PAD_CLK_REQ0_L_FUNC_GPIO114				   (98 << 8 | 0x1)
++#define CIX_PAD_CLK_REQ2_L_FUNC_CLK_REQ2_L			   (99 << 8 | 0x0)
++#define CIX_PAD_CLK_REQ2_L_FUNC_GPIO115				   (99 << 8 | 0x1)
++#define CIX_PAD_CLK_REQ4_L_FUNC_CLK_REQ4_L			   (100 << 8 | 0x0)
++#define CIX_PAD_CLK_REQ4_L_FUNC_GPIO116				   (100 << 8 | 0x1)
++#define CIX_PAD_CSI0_MCLK0_FUNC_CSI0_MCLK0			   (101 << 8 | 0x0)
++#define CIX_PAD_CSI0_MCLK0_FUNC_GPIO117				   (101 << 8 | 0x1)
++#define CIX_PAD_CSI0_MCLK1_FUNC_CSI0_MCLK1			   (102 << 8 | 0x0)
++#define CIX_PAD_CSI0_MCLK1_FUNC_GPIO118				   (102 << 8 | 0x1)
++#define CIX_PAD_CSI1_MCLK0_FUNC_CSI1_MCLK0			   (103 << 8 | 0x0)
++#define CIX_PAD_CSI1_MCLK0_FUNC_GPIO119				   (103 << 8 | 0x1)
++#define CIX_PAD_CSI1_MCLK1_FUNC_CSI1_MCLK1			   (104 << 8 | 0x0)
++#define CIX_PAD_CSI1_MCLK1_FUNC_GPIO120				   (104 << 8 | 0x1)
++#define CIX_PAD_GPIO121_FUNC_GPIO121				   (105 << 8 | 0x0)
++#define CIX_PAD_GPIO121_FUNC_GMAC0_REFCLK_25M			   (105 << 8 | 0x1)
++#define CIX_PAD_GPIO122_FUNC_GPIO122				   (106 << 8 | 0x0)
++#define CIX_PAD_GPIO122_FUNC_GMAC0_TX_CTL			   (106 << 8 | 0x1)
++#define CIX_PAD_GPIO123_FUNC_GPIO123				   (107 << 8 | 0x0)
++#define CIX_PAD_GPIO123_FUNC_GMAC0_TXD0				   (107 << 8 | 0x1)
++#define CIX_PAD_GPIO124_FUNC_GPIO124				   (108 << 8 | 0x0)
++#define CIX_PAD_GPIO124_FUNC_GMAC0_TXD1				   (108 << 8 | 0x1)
++#define CIX_PAD_GPIO125_FUNC_GPIO125				   (109 << 8 | 0x0)
++#define CIX_PAD_GPIO125_FUNC_GMAC0_TXD2				   (109 << 8 | 0x1)
++#define CIX_PAD_GPIO126_FUNC_GPIO126				   (110 << 8 | 0x0)
++#define CIX_PAD_GPIO126_FUNC_GMAC0_TXD3				   (110 << 8 | 0x1)
++#define CIX_PAD_GPIO127_FUNC_GPIO127				   (111 << 8 | 0x0)
++#define CIX_PAD_GPIO127_FUNC_GMAC0_TX_CLK			   (111 << 8 | 0x1)
++#define CIX_PAD_GPIO128_FUNC_GPIO128				   (112 << 8 | 0x0)
++#define CIX_PAD_GPIO128_FUNC_GMAC0_RX_CTL			   (112 << 8 | 0x1)
++#define CIX_PAD_GPIO129_FUNC_GPIO129				   (113 << 8 | 0x0)
++#define CIX_PAD_GPIO129_FUNC_GMAC0_RXD0				   (113 << 8 | 0x1)
++#define CIX_PAD_GPIO130_FUNC_GPIO130				   (114 << 8 | 0x0)
++#define CIX_PAD_GPIO130_FUNC_GMAC0_RXD1				   (114 << 8 | 0x1)
++#define CIX_PAD_GPIO131_FUNC_GPIO131				   (115 << 8 | 0x0)
++#define CIX_PAD_GPIO131_FUNC_GMAC0_RXD2				   (115 << 8 | 0x1)
++#define CIX_PAD_GPIO132_FUNC_GPIO132				   (116 << 8 | 0x0)
++#define CIX_PAD_GPIO132_FUNC_GMAC0_RXD3				   (116 << 8 | 0x1)
++#define CIX_PAD_GPIO133_FUNC_GPIO133				   (117 << 8 | 0x0)
++#define CIX_PAD_GPIO133_FUNC_GMAC0_RX_CLK			   (117 << 8 | 0x1)
++#define CIX_PAD_GPIO134_FUNC_GPIO134				   (118 << 8 | 0x0)
++#define CIX_PAD_GPIO134_FUNC_GMAC0_MDC				   (118 << 8 | 0x1)
++#define CIX_PAD_GPIO135_FUNC_GPIO135				   (119 << 8 | 0x0)
++#define CIX_PAD_GPIO135_FUNC_GMAC0_MDIO				   (119 << 8 | 0x1)
++#define CIX_PAD_GPIO136_FUNC_GPIO136				   (120 << 8 | 0x0)
++#define CIX_PAD_GPIO136_FUNC_GMAC1_REFCLK_25M			   (120 << 8 | 0x1)
++#define CIX_PAD_GPIO137_FUNC_GPIO137				   (121 << 8 | 0x0)
++#define CIX_PAD_GPIO137_FUNC_GMAC1_TX_CTL			   (121 << 8 | 0x1)
++#define CIX_PAD_GPIO138_FUNC_GPIO138				   (122 << 8 | 0x0)
++#define CIX_PAD_GPIO138_FUNC_GMAC1_TXD0				   (122 << 8 | 0x1)
++#define CIX_PAD_GPIO138_FUNC_SPI2_MISO				   (122 << 8 | 0x2)
++#define CIX_PAD_GPIO139_FUNC_GPIO139				   (123 << 8 | 0x0)
++#define CIX_PAD_GPIO139_FUNC_GMAC1_TXD1				   (123 << 8 | 0x1)
++#define CIX_PAD_GPIO139_FUNC_SPI2_CS0				   (123 << 8 | 0x2)
++#define CIX_PAD_GPIO140_FUNC_GPIO140				   (124 << 8 | 0x0)
++#define CIX_PAD_GPIO140_FUNC_GMAC1_TXD2				   (124 << 8 | 0x1)
++#define CIX_PAD_GPIO140_FUNC_SPI2_CS1				   (124 << 8 | 0x2)
++#define CIX_PAD_GPIO141_FUNC_GPIO141				   (125 << 8 | 0x0)
++#define CIX_PAD_GPIO141_FUNC_GMAC1_TXD3				   (125 << 8 | 0x1)
++#define CIX_PAD_GPIO141_FUNC_SPI2_MOSI				   (125 << 8 | 0x2)
++#define CIX_PAD_GPIO142_FUNC_GPIO142				   (126 << 8 | 0x0)
++#define CIX_PAD_GPIO142_FUNC_GMAC1_TX_CLK			   (126 << 8 | 0x1)
++#define CIX_PAD_GPIO142_FUNC_SPI2_CLK				   (126 << 8 | 0x2)
++#define CIX_PAD_GPIO143_FUNC_GPIO143				   (127 << 8 | 0x0)
++#define CIX_PAD_GPIO143_FUNC_GMAC1_RX_CTL			   (127 << 8 | 0x1)
++#define CIX_PAD_GPIO144_FUNC_GPIO144				   (128 << 8 | 0x0)
++#define CIX_PAD_GPIO144_FUNC_GMAC1_RXD0				   (128 << 8 | 0x1)
++#define CIX_PAD_GPIO145_FUNC_GPIO145				   (129 << 8 | 0x0)
++#define CIX_PAD_GPIO145_FUNC_GMAC1_RXD1				   (129 << 8 | 0x1)
++#define CIX_PAD_GPIO146_FUNC_GPIO146				   (130 << 8 | 0x0)
++#define CIX_PAD_GPIO146_FUNC_GMAC1_RXD2				   (130 << 8 | 0x1)
++#define CIX_PAD_GPIO147_FUNC_GPIO147				   (131 << 8 | 0x0)
++#define CIX_PAD_GPIO147_FUNC_GMAC1_RXD3				   (131 << 8 | 0x1)
++#define CIX_PAD_GPIO148_FUNC_GPIO148				   (132 << 8 | 0x0)
++#define CIX_PAD_GPIO148_FUNC_GMAC1_RX_CLK			   (132 << 8 | 0x1)
++#define CIX_PAD_GPIO149_FUNC_GPIO149				   (133 << 8 | 0x0)
++#define CIX_PAD_GPIO149_FUNC_GMAC1_MDC				   (133 << 8 | 0x1)
++#define CIX_PAD_GPIO150_FUNC_GPIO150				   (134 << 8 | 0x0)
++#define CIX_PAD_GPIO150_FUNC_GMAC1_MDIO				   (134 << 8 | 0x1)
++#define CIX_PAD_GPIO151_FUNC_GPIO151				   (135 << 8 | 0x0)
++#define CIX_PAD_GPIO151_FUNC_PM_GPIO0				   (135 << 8 | 0x1)
++#define CIX_PAD_GPIO152_FUNC_GPIO152				   (136 << 8 | 0x0)
++#define CIX_PAD_GPIO152_FUNC_PM_GPIO1				   (136 << 8 | 0x1)
++#define CIX_PAD_GPIO153_FUNC_GPIO153				   (137 << 8 | 0x0)
++#define CIX_PAD_GPIO153_FUNC_PM_GPIO2				   (137 << 8 | 0x1)
 +
-+struct sky1_pin_desc {
-+	const struct pinctrl_pin_desc pin;
-+	const char * const *func_group;
-+	unsigned int nfunc;
-+};
++#define DS_LEVEL1	0x1
++#define DS_LEVEL2	0x2
++#define DS_LEVEL3	0x3
++#define DS_LEVEL4	0x4
++#define DS_LEVEL5	0x5
++#define DS_LEVEL6	0x6
++#define DS_LEVEL7	0x7
++#define DS_LEVEL8	0x8
++#define DS_LEVEL9	0x9
++#define DS_LEVEL10	0xa
++#define DS_LEVEL11	0xb
++#define DS_LEVEL12	0xc
++#define DS_LEVEL13	0xd
++#define DS_LEVEL14	0xe
++#define DS_LEVEL15	0xf
 +
-+struct sky1_pinctrl_soc_info {
-+	const struct sky1_pin_desc *pins;
-+	unsigned int npins;
-+};
++#endif
+diff --git a/arch/arm64/boot/dts/cix/sky1.dtsi b/arch/arm64/boot/dts/cix/sky1.dtsi
+index 7dfe7677e649..4c6f25fe797c 100644
+--- a/arch/arm64/boot/dts/cix/sky1.dtsi
++++ b/arch/arm64/boot/dts/cix/sky1.dtsi
+@@ -228,6 +228,11 @@ uart3: serial@40e0000 {
+ 			status = "disabled";
+ 		};
+ 
++		iomuxc: pinctrl@4170000 {
++			compatible = "cix,sky1-iomuxc";
++			reg = <0x0 0x04170000 0x0 0x1000>;
++		};
 +
-+#define SKY_PINFUNCTION(_pin, _func)				\
-+((struct sky1_pin_desc) {					\
-+		.pin = _pin,					\
-+		.func_group = _func##_group,			\
-+		.nfunc = ARRAY_SIZE(_func##_group),		\
-+	})
-+/**
-+ * @dev: a pointer back to containing device
-+ * @base: the offset to the controller in virtual memory
-+ */
-+struct sky1_pinctrl {
-+	struct device *dev;
-+	struct pinctrl_dev *pctl;
-+	void __iomem *base;
-+	const struct sky1_pinctrl_soc_info *info;
-+	struct sky1_pinctrl_group *groups;
-+	const char **grp_names;
-+};
+ 		mbox_ap2se: mailbox@5060000 {
+ 			compatible = "cix,sky1-mbox";
+ 			reg = <0x0 0x05060000 0x0 0x10000>;
+@@ -316,6 +321,11 @@ ppi_partition1: interrupt-partition-1 {
+ 				};
+ 			};
+ 		};
 +
-+int sky1_base_pinctrl_probe(struct platform_device *pdev,
-+			const struct sky1_pinctrl_soc_info *info);
-+
-+#endif /* __DRIVERS_PINCTRL_SKY1_H */
++		iomuxc_s5: pinctrl@16007000 {
++			compatible = "cix,sky1-iomuxc-s5";
++			reg = <0x0 0x16007000 0x0 0x1000>;
++		};
+ 	};
+ 
+ 	timer {
 -- 
 2.49.0
 
