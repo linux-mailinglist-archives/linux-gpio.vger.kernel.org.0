@@ -1,137 +1,121 @@
-Return-Path: <linux-gpio+bounces-27142-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27143-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3A3CBDCB28
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Oct 2025 08:21:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 84219BDCBC5
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Oct 2025 08:30:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CED5F1894F62
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Oct 2025 06:22:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E4FE5192129A
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Oct 2025 06:31:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3ACB30FF28;
-	Wed, 15 Oct 2025 06:21:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E1DE3126BE;
+	Wed, 15 Oct 2025 06:30:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="rePeuf/p"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nAANDeCJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43CC026E16E
-	for <linux-gpio@vger.kernel.org>; Wed, 15 Oct 2025 06:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2153F311C3C
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Oct 2025 06:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760509290; cv=none; b=WwOxlvIfyBjClZ+JUfQ4ANbrd1YgKd15nFtGpSW+8c33rksilleZ+JoJndrpRGX0eWCUqvWXjDLfG+CfxZLeV9xprv+9pXtsgumyp0BNO8Jd1Bpza40dJSFmJEofCOtccFDLszkXoYLR1qg928+dNGJCQsJR36Q+qEbegI8mxzw=
+	t=1760509829; cv=none; b=NZHLtcaeynvoyGYwmgKSK+Gsf70tOAFuHW1c+WfV7+vngGLJHRYKJf1G79SndQmdzrtzseaR+QVe64hnf5oIpTRMyFfQTFEhzdPmq1ubrh2ObL0JieNlBKO7PmlRNwGDPCgOOgCGm2DJZCQeObwkT9ZpXJFhwCJe/METBmvt9rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760509290; c=relaxed/simple;
-	bh=DicfJkkTsiij02qIVcRFiHOl97sEIvQS0/C6n7EV7gQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W2fBkYOxbkkfz9rrDKCXXZPrKcXX6wJzXFteXnoHVi2HBZeXk6rXup5dPEkgTgscXgzvO4U+eEtNNHbNRtHa5E4Kmdfbk/+4C982Y1dcCfOD3OlQSXnlSgu3trpwJRW3bsGZcZ+T88vV5ydRlUtjexEpsyvYx75ZRJ8Vw7vi1/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=rePeuf/p; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 2826E1A13A2;
-	Wed, 15 Oct 2025 06:21:19 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id E634B606F9;
-	Wed, 15 Oct 2025 06:21:18 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 59C5E102F22AA;
-	Wed, 15 Oct 2025 08:21:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1760509277; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=fJomQq7OE3Maiesqwu9sZQP6LCVhewRSpZqk8JBWs78=;
-	b=rePeuf/p5urYuOHJ7Zc4gd2xvA5MR+RBRetK2TQGnYv3G82ImEFQQA1N5ktsEIh14SeIAx
-	9bH4ohXrP0yiFVsi1Qu/mYchA8TM5xuzpWGlDOGT3254tDREKHcnCfElp6LIG2GhcdidM/
-	8TN5kaMTuf3zdluXLUBnzuAYmqEHEMkUQ20/z7ZgBv8/qHHoTfW9IwradnDyX8jG5pS3m1
-	6FKTWFrbIlhVRROiQg6Y54Tc4YLJrMGHCN0V6wLTskGZgeAWH504REFi/k43+yOMVWkaSt
-	wgerD0FWa8rOO2YZWyDQtXlqOxoMSpy++EaoxBNiR/sg9QRdOFQsPXA5/83H5A==
-Date: Wed, 15 Oct 2025 08:21:03 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Hoan Tran
- <hoan@os.amperecomputing.com>, Bartosz Golaszewski <brgl@bgdev.pl>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>,
- Magnus Damm <magnus.damm@gmail.com>, Saravana Kannan
- <saravanak@google.com>, Serge Semin <fancer.lancer@gmail.com>, Phil
- Edworthy <phil.edworthy@renesas.com>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, Pascal Eberhard
- <pascal.eberhard@se.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Thomas
- Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 7/8] soc: renesas: Add support for Renesas RZ/N1 GPIO
- Interrupt Multiplexer
-Message-ID: <20251015082103.7907e019@bootlin.com>
-In-Reply-To: <CACRpkdacJCp8aCCrCAzD5F=_K3g25t_8kZGzaEoXMBnhY8hkzA@mail.gmail.com>
-References: <20250922152640.154092-1-herve.codina@bootlin.com>
-	<20250922152640.154092-8-herve.codina@bootlin.com>
-	<CACRpkdZPURiag1cUQZ319_QA83u+qOCSRALxpe10_+cTcevy+Q@mail.gmail.com>
-	<20251001174205.71a08017@bootlin.com>
-	<CACRpkdZ1qg6ecA5DyVEGUHQxLh0SnC=GC5JZdevT99YVWU0ypA@mail.gmail.com>
-	<aO5ekPxeg7tdFlHi@shikoro>
-	<CACRpkdacJCp8aCCrCAzD5F=_K3g25t_8kZGzaEoXMBnhY8hkzA@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1760509829; c=relaxed/simple;
+	bh=U+QJpInAQJD/UO7rXl6XPQY0ZAlove8LjuD2791XvXw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P/V0VghDs47aOopSlYYeEKJ7SYBc9LMPSA4CJhSrUQmCYHlmMkSK41JEt15dJR0lRf/aIQP5KuYhVBj8yWn2c1dQSuNEImCY9NVYyOCXUwfWneubAWFbRTRQn7h6z68Uuy/xjOMLHHWpm/3OBZDYdpAXwyq/+W6PiTWVYEdBq4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nAANDeCJ; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-3737d09d123so47677241fa.2
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Oct 2025 23:30:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1760509825; x=1761114625; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U+QJpInAQJD/UO7rXl6XPQY0ZAlove8LjuD2791XvXw=;
+        b=nAANDeCJQmapJM4yQy1/KPiB3mk3XqoNeCV8WlFFqb6MowF4ixgB/z5JXPfpNsooke
+         XnL+g6aBlj3aixjQga6x7w7287CwMjp6jffyK3MXTAMrnlMgS9cR1rwQT0vHWdqdCmNo
+         4DrNor8mkAIq5MJ2X5gjKj6tMcWta9qrDJAZnBAnZn6dO+JVEQOWUocalA5usOVnsPF9
+         B7kElg4sZriJ7AitutCLZfxA+UKMGK/5C90hGCKhb5ePSpp9FC680yixxCEV5kjgQEQ0
+         2ycg9egUPeMHz+8gln/LpOdd3WexEsz8JDltWl+vif8ESv1D2HEKXkQd+cXrh+PteE3A
+         l2ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760509825; x=1761114625;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=U+QJpInAQJD/UO7rXl6XPQY0ZAlove8LjuD2791XvXw=;
+        b=enRt6j8rAUnVNHRg6kf3Xj83h5vms8loFxum8OG8WxXEEumPaW2BfPQYNVHfbVdNzb
+         GQvE7UVsHvKiN/SQx0lbyzA+X01bAUfmNGQ7jRzgmMWeJTXW47/0i3l9CZhepeAQ24KF
+         KnJcYahd8E7kCCCywe1L5OPtVG7gzcDOuD2LLGfvR00DsMVnqD593vaHLfnyiZ7AgVqI
+         fuufnnpDOCTMvF+h+V8mqkp2lWeYiAoUj0zD5ELqpYqiigNUc9BBQ02OyC1Hv3G1s9A3
+         3Kcwzp+JZsU7EF95uBrs8CJEKxoCd8TMLNB80EDGBI8lOT+cEIEso0lJwnneAp8x1cq7
+         OmOw==
+X-Forwarded-Encrypted: i=1; AJvYcCWUOFciB+Hs1XjOskmANsrlcyrO4Z3IuA/bD2gXWrLPtLwyilwBvBr2K65E/Za9r7B/MjTu0veg/qWZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpMcFaJaWlDbjp92YfaawVfOciCWkEnOl4o4MKbC7atGIBzdl7
+	KycIOhaf8xHinBnJmT75AgPInhfExRNLx7NVPdT5mjxojnVJsvFeHkTgQOlGln+gTPIcHEf9N0v
+	vjo468o/7BJjqDpeoCCVU9/vGeiyUUjgyEGfjySWDMw==
+X-Gm-Gg: ASbGncvUSdcOU1K4MHjP5nFhTOVKAb+KBTTNu49FY4HbLTztlmks/Zik2T5SyhnLQwB
+	Bfb+E0pQpHqr8AI+/jWtIQOyg/V04sayqVxHGA+86c5s74Y8/BGLUJw38XgQTnccuzhFS+eiGo4
+	OAutt6uF0oIVKnrK1t0CMrpe5wqB9Dyj1vUkkUKMjSpKtzDGm4F9VVgFV3LwoyzZWKCrUfk7fT2
+	yJctDhLsgESuR6p3o40lK1TPYBh56y5QKOy+XL3rZjvuhR8kGg=
+X-Google-Smtp-Source: AGHT+IGUsgryfaHD0rnj3LtJX0svvEnMtTCvHCuJxwMxVB7v78te9kwRaSVyuTsq1gSb0ZAbdHX3z/ggHAOfux8GoC4=
+X-Received: by 2002:a2e:b88e:0:b0:36d:a459:f0c6 with SMTP id
+ 38308e7fff4ca-37609cf2a61mr74137741fa.12.1760509824851; Tue, 14 Oct 2025
+ 23:30:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+References: <20251015060714.67558-1-michael@allwinnertech.com>
+In-Reply-To: <20251015060714.67558-1-michael@allwinnertech.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 15 Oct 2025 08:30:13 +0200
+X-Gm-Features: AS18NWAUhU_Vsd9dzfVXxTibpqYvM8QTjr1kGOPoZF-KY0GMkTVsXhlFFcZV4bU
+Message-ID: <CACRpkdbQH2+AoCVAZf_apQ=uhkbinkHtk60ssB0ODpBZY-gATw@mail.gmail.com>
+Subject: Re: [RESEND] mmc: core: Fix system shutdown hang in mmc_bus_shutdown
+To: Michael Wu <michael@allwinnertech.com>
+Cc: ulf.hansson@linaro.org, brgl@bgdev.pl, adrian.hunter@intel.com, 
+	avri.altman@wdc.com, wsa+renesas@sang-engineering.com, 
+	victor.shih@genesyslogic.com.tw, andy-ld.lu@mediatek.com, 
+	jason.lai@genesyslogic.com.tw, linux-mmc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus, Wolfram,
+Hi Michael,
 
-On Tue, 14 Oct 2025 22:13:50 +0200
-Linus Walleij <linus.walleij@linaro.org> wrote:
+thanks for your patch!
 
-> On Tue, Oct 14, 2025 at 4:30 PM Wolfram Sang
-> <wsa+renesas@sang-engineering.com> wrote:
-> 
-> > Because the HW design kind of suggests it, I'd think. The GPIO
-> > controller is a standard Synopsis one ("snps,dw-apb-gpio") without any
-> > extras. The GPIOMUX (which is extra) is according to the docs part of
-> > the system controller with a dedicated set of registers. Luckily,
-> > self-contained and not mangled with other functionality.  
-> 
-> Aha I see. If this is so tightly coupled with the Synopsis
-> designware GPIO then it should be mentioned in the commit
-> I guess. Also:
-> 
-> config RZN1_IRQMUX
->        bool "Renesas RZ/N1 GPIO IRQ multiplexer support" if COMPILE_TEST
-> 
-> +      depends on GPIO_DWAPB || COMPILE_TEST
-> 
-> ?
-> 
-> I understand that it is convenient to make this a separate driver.
-> 
-> I'm not sure it is the right thing to do, but it's no a hill I want to
-> die on so if everyone else thinks I'm wrong, I can just shut up
-> about it, it's not like this driver is a big obstacle or anything.
-> 
-> Yours,
-> Linus Walleij
+On Wed, Oct 15, 2025 at 8:07=E2=80=AFAM Michael Wu <michael@allwinnertech.c=
+om> wrote:
 
-I don't think the mux should depends on GPIO_DWAPB (the gpio controller).
+> During system shutdown, mmc_bus_shutdown() calls __mmc_stop_host() which
+> uses cancel_delayed_work_sync(). This can block indefinitely if the work
+> queue is stuck, causing the system to hang during shutdown.
+>
+> This patch introduces a new function __mmc_stop_host_no_sync() that skips
+> the synchronous work cancellation, preventing potential shutdown hangs.
+> The function is used in mmc_bus_shutdown() where blocking is not
+> acceptable during system shutdown.
+>
+> Changes:
+> - Add __mmc_stop_host_no_sync() function that avoids cancel_delayed_work_=
+sync()
 
-Also, several gpio controller instances are connected to the mux.
+Why is this function prefixed with __two underscores? The
+__mmc_stop_host is named like that because there is another
+function with the same name, but here is no mmc_stop_host_no_sync()
+so just name it without underscores.
 
-The 96 GPIOs connected to the mux come from 3 GPIO controller instances (32
-gpios per instance). I don't think it makes sense to have the mux handled by
-the gpio driver itself. It could have make sense if 3 muxes were available,
-one per gpio controller but this is not the case.
-
-As Wolfram said, the mux is an hardware component really outside of the
-GPIO controller IPs.
-
-Best regards,
-Hervé
+Yours,
+Linus Walleij
 
