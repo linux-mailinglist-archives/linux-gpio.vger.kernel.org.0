@@ -1,54 +1,54 @@
-Return-Path: <linux-gpio+bounces-27177-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27178-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F662BDDD3A
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Oct 2025 11:41:51 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6900DBDE534
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Oct 2025 13:49:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B57613B44E0
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Oct 2025 09:41:48 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 156E535766C
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Oct 2025 11:49:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF11031A56C;
-	Wed, 15 Oct 2025 09:41:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF568322DB5;
+	Wed, 15 Oct 2025 11:48:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="D2PIHTdX"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="24QDWAP1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52D0224B1F;
-	Wed, 15 Oct 2025 09:41:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707B1322DAA;
+	Wed, 15 Oct 2025 11:48:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760521303; cv=none; b=Zq+EMh1CZUdc7+kh3T3mPSmcDo1+XCL6a9gHlgyKgminBfP4vv5SnI03zTsi3RHJcTcqSkAwvqj9o9k5zX9LS7XG3gpHGZoGdPtwnE6G97mUU93qcZX6qZLQ8NjylbHP09Bn9oaOX/h3Qctdgg647VeI6csdPxJ4hiDsJGsa//w=
+	t=1760528938; cv=none; b=nmUHTFMUlV8+D1nHH+K5QGlzEDjLHJuih0rEmzo5LjvPivTJ7ZdK2eKEe9Lclp01VIPXdDm7Iehcm7+8fDxt5pHjXzuMBJCcin0zyWV5vtTUkJMO3j9AAKsa4/b56uo4xnQmL26yuLz2u3ilpDZtigwXveeRMeRVtF3S4zjD+WE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760521303; c=relaxed/simple;
-	bh=5YzxXCYObJKOXfwxRNxk+wo7CJS2/C6bXiLRNvc0AyY=;
+	s=arc-20240116; t=1760528938; c=relaxed/simple;
+	bh=5xkKQaCJcLNKjjAggEjnjUaHxOikgF03tyhL/q4hdLA=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HYhNwHcaElMfqsAH8gsQQqegvVDitxNJ95a/k98Q7cdLO6bLOpXTRjVPkyko2ODBZRwSzJPsweTL4THY0523XFUOgtWxRogb1rWrJec8dhpw64D4vKIw4BkzyIElj2ajb/2C1R85/SY/LreRZwH4XM1OUo7EeEGhpvE9Rgo9LL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=D2PIHTdX; arc=none smtp.client-ip=185.246.85.4
+	 MIME-Version:Content-Type; b=A3etAgBusAPb4ZVh+lF1pwhYnYG3NeubwpY7EMqvNXM/lj0c80CF93JDLgvva60DX7LzJB/KKuWmPsYkXOUbc4Hg42uOd98zjbcN+hTIPUVYr4WcNDirSmHVvl2YYGBoB2hnmkSddpfDpL/8pDjK5Do9rYnGlQa2QzItMfcGsP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=24QDWAP1; arc=none smtp.client-ip=185.246.84.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id C025D4E410C7;
-	Wed, 15 Oct 2025 09:41:39 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id CB4881A13CD;
+	Wed, 15 Oct 2025 11:48:52 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 91505606F9;
-	Wed, 15 Oct 2025 09:41:39 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 228E7102F22B3;
-	Wed, 15 Oct 2025 11:41:27 +0200 (CEST)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 9CEBF606F9;
+	Wed, 15 Oct 2025 11:48:52 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C41D9102F22B7;
+	Wed, 15 Oct 2025 13:48:41 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1760521298; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	t=1760528931; h=from:subject:date:message-id:to:cc:mime-version:content-type:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=Urj62ugiM4MPFeNQ8KRlo+atG/UL8MNqNf3RQefG98s=;
-	b=D2PIHTdXlLnuTkFHWEiRapTiyQLldZDNrbdspT58WG6dTsSF/DUs3mapyEJIFOgK5L2Ier
-	f/qsS4b2Cxj9Z7iw3LfKatY+0e+ugX5+j4Rv2WiAkDRQVPCcHnkrbR9stFffHNhlHT5b+u
-	J9CPpKyDUcAK0m08LKRdrzWWhxzT+hzaXMjm8JvOVKp5vkhKc6M1c6pl6KljzF5EtkZiiZ
-	GbEZcbnX5JfFVi8B/4g8SmZGIrXPPPlp93hczpsUhPz1JpyTtghgpQFuwCEw1p033RADyW
-	lByP02OYa/wf8sZTufsTVgOXJq2gwiaVGg2Uf4zHdkjw9F/rEUrpfEHTB+Sr2Q==
-Date: Wed, 15 Oct 2025 11:41:26 +0200
+	bh=q2qoYp02/jZuYlfxVRjrpV1dQgL3PSlbw/Em+FLVpf4=;
+	b=24QDWAP1A1lGjyfEDs5xwM2YU5G0VB4komtmvS3SROem458VxFSnTBkz+AvZagMZPyRtXC
+	9LvHXjBfv4OObeqmp1YJE3F4s2KP37uSiS38soVDWNvSTdKTRhgE9SIrupD+qN2OBfQSa4
+	QBGFhNoFPddsTVuOXTSIsiyMANfhnimB9QuoeQBa5g+DOvLd0pnRBn5Nt0N0v1Rc1/E20K
+	sHpcXdaZ0MXrCxGp4P8t1/N3XJeiVJzlDU3wdAf8HKOFoIPqb+TR3Z06oiaMiaPQmn7wwC
+	clBVZ8Cy+gqzeKpb968crH5T7hTYRnVckcKNJ9J5UDGY2npS57KLruSRv80mLQ==
+Date: Wed, 15 Oct 2025 13:48:39 +0200
 From: Herve Codina <herve.codina@bootlin.com>
 To: Wolfram Sang <wsa+renesas@sang-engineering.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Hoan Tran
@@ -63,13 +63,13 @@ Cc: Thomas Gleixner <tglx@linutronix.de>, Hoan Tran
  Eberhard <pascal.eberhard@se.com>, Miquel Raynal
  <miquel.raynal@bootlin.com>, Thomas Petazzoni
  <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 8/8] ARM: dts: r9a06g032: Add support for GPIO
- interrupts
-Message-ID: <20251015114126.4df207b1@bootlin.com>
-In-Reply-To: <aNRnOFTvaThW-CJE@shikoro>
+Subject: Re: [PATCH v4 7/8] soc: renesas: Add support for Renesas RZ/N1 GPIO
+ Interrupt Multiplexer
+Message-ID: <20251015134839.1b71fe28@bootlin.com>
+In-Reply-To: <aNQ7UOniYss92EIS@ninjato>
 References: <20250922152640.154092-1-herve.codina@bootlin.com>
-	<20250922152640.154092-9-herve.codina@bootlin.com>
-	<aNRnOFTvaThW-CJE@shikoro>
+	<20250922152640.154092-8-herve.codina@bootlin.com>
+	<aNQ7UOniYss92EIS@ninjato>
 Organization: Bootlin
 X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
@@ -84,34 +84,73 @@ X-Last-TLS-Session-Version: TLSv1.3
 
 Hi Wolfram,
 
-On Wed, 24 Sep 2025 23:48:40 +0200
+On Wed, 24 Sep 2025 20:41:20 +0200
 Wolfram Sang <wsa+renesas@sang-engineering.com> wrote:
 
-> > +			/*
-> > +			 * interrupt-map has to be updated according to GPIO
-> > +			 * usage. The src irq (0 field) has to be updated with
-> > +			 * the needed GPIO interrupt number.
-> > +			 * More items can be added (up to 8). Those items must
-> > +			 * define one GIC interrupt line among 103 to 110.
-> > +			 */
-> > +			interrupt-map = <0 &gic GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;  
+> Hi Herve,
 > 
-> Okay, so my main concern here was that we setup some "random" default
-> mapping for each board. Which is not true because this node is disabled
-> by default. So, maybe we could rephrase the paragraph like
+> On Mon, Sep 22, 2025 at 05:26:38PM +0200, Herve Codina (Schneider Electric) wrote:
+> > On the Renesas RZ/N1 SoC, GPIOs can generate interruptions. Those
+> > interruption lines are multiplexed by the GPIO Interrupt Multiplexer in
+> > order to map 32 * 3 GPIO interrupt lines to 8 GIC interrupt lines.
+> > 
+> > The GPIO interrupt multiplexer IP does nothing but select 8 GPIO
+> > IRQ lines out of the 96 available to wire them to the GIC input lines.
+> > 
+> > Signed-off-by: Herve Codina (Schneider Electric) <herve.codina@bootlin.com>  
 > 
-> /*
->  * Example mapping entry. Board DTs need to overwrite 'interrupt-map'
->  * with their specific mapping. Check the irqmux binding documentation
->  * for details.
->  */
+> Thanks for improving the driver and removing the requirement of a fixed
+> ordering!
+> 
+> > +static u32 rzn1_irqmux_output_lines[] = {  
+> 
+> const?
 
-Will be updated in next iteration.
+Yes, will be added in the next iteration.
 
 > 
-> ? I will see if I can provide a useful board addition for the DB400
-> boards...
+> > +	103, 104, 105, 106, 107, 108, 109, 110
+> > +};  
 > 
+> ...
+> 
+> > +	for (i = 0; i < ARRAY_SIZE(rzn1_irqmux_output_lines); i++) {
+> > +		if (parent_args->args[1] == rzn1_irqmux_output_lines[i])
+> > +			return i;
+> > +	}  
+> 
+> Do we want a check here if the index has already been used in cases of
+> an improper 'interrupt-map'? I'd think it would be nice to have but I
+> would also not really require it.
+
+Agree, it will be a good improvement.
+
+I will add this check in the next iteration.
+
+> 
+> ...
+> 
+> > +	ret = rzn1_irqmux_setup(dev, np, regs);
+> > +	if (ret)
+> > +		return dev_err_probe(dev, ret, "failed to setup mux\n");
+> > +
+> > +	return 0;  
+> 
+> Maybe just
+> 
+> 	return rzn1_irqmux_setup(dev, np, regs);
+> 
+> The driver core will report a failed probe already.
+
+Yes
+
+> 
+> It still works, so:
+> 
+> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+With update planned (new check for already been used indexes), a
+re-test will be probably needed.
 
 Best regards,
 Hervé
