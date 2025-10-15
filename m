@@ -1,133 +1,116 @@
-Return-Path: <linux-gpio+bounces-27182-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27183-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2DA61BDF1A6
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Oct 2025 16:36:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9375EBDF4CA
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Oct 2025 17:16:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F31DA3AC74E
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Oct 2025 14:36:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C7ED91885C2A
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Oct 2025 15:16:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C394283C89;
-	Wed, 15 Oct 2025 14:35:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3687A2FAC1D;
+	Wed, 15 Oct 2025 15:16:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V1u6Wi/b"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="SH7IAli9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EECA26CE06;
-	Wed, 15 Oct 2025 14:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A68B5464F
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Oct 2025 15:16:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760538959; cv=none; b=KTHO16OHkbuLI7DDa7di1bxtyHdBHMbDy5jhrlI2A213qS086nQ5jnszwWatymMBwtZb9Qu9fERYxymkHhO/P33rYon96JMOl6ugAq7CQsKDLtMRLhqnSnQUchB1Co8wEl7a1cbGMPr+tkOe81m7nYeWkAZ1xcGC33YxvcIrlxw=
+	t=1760541371; cv=none; b=Op3qxUhIULPtD95J7BgKhQKAMG6OungCVS8pgSGbDD8+2Y4AEJojCEKPK5eMv4AzUHQ12ZluFs8msqdFOFI8EbrWy+Q9o+yqj8DYAS+pIKDurDMTmi7uC61V8JzpeJkPoA0gU29xD3oOggotFyyGukMBxepNEF1fnp29urljGQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760538959; c=relaxed/simple;
-	bh=CQlnQCZTcQjCMg9gXM5j/h/j9QBEe/QKt7u0yZHQbQE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sT9o8iBFCHRD7JTgw2W3c4M0XjLK8dO3AMkoNOsSdw2SBRCB9qEGgjpJ8FiDqPM/ZJVJosf3Wi2SWb/oErarjg+p4jOtZ3KihbFet0NclwQ83O53hDpBO1SceT+yW0sur3GYBWzv4EUXOxmdMwkaVysyOKeUIBdAZl1QSifgCUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V1u6Wi/b; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5A66C4CEF8;
-	Wed, 15 Oct 2025 14:35:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760538958;
-	bh=CQlnQCZTcQjCMg9gXM5j/h/j9QBEe/QKt7u0yZHQbQE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V1u6Wi/bA8yzs2VzytUSKwlOdJY627sho9aV934PlC9av+KzwXYa2BrrFU9y6Ptwo
-	 J+TUilM0Y8GtatWIY8ATBQIDQwY9kOqNlj344/MlQSTKbJywS1GziAxbxbP9w61X+9
-	 A3TSqCq6Yo5Tf/TYyPlYvL0pajqjSFWDamK27jsbDrPDxmEqidk9uRAslM99epdfbh
-	 dERs70VvRyfwG7Lez+yG8I2jkm1DQgffLXYES6OtZBxrEGN9KBqYSIg0MKAAG1/igN
-	 GjfCspVtrmiKyau0OERse5FwxKji55mnzZwUn3IZ5zfNdpuPYNhdc8/qQS79azJjVh
-	 Pxjs2x59J2QEQ==
-Date: Wed, 15 Oct 2025 15:35:53 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Antonio Borneo <antonio.borneo@foss.st.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Roullier <christophe.roullier@foss.st.com>,
-	Fabien Dessenne <fabien.dessenne@foss.st.com>,
-	Valentin Caron <valentin.caron@foss.st.com>
-Subject: Re: [PATCH v3 09/10] dt-bindings: pinctrl: stm32: Support I/O
- synchronization parameters
-Message-ID: <20251015-headstand-impulse-95aa736e7633@spud>
-References: <20251014140451.1009969-1-antonio.borneo@foss.st.com>
- <20251014140451.1009969-10-antonio.borneo@foss.st.com>
- <20251014-affection-voltage-8b1764273a06@spud>
- <b4eca95eaa0e6f27fc07479d5eab2131d20eb270.camel@foss.st.com>
+	s=arc-20240116; t=1760541371; c=relaxed/simple;
+	bh=uCgt805cHRK5qUGajx+3IfAQ3/pisK3BcFy2PmB4M4s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tRY5J0sikEvG7lNAUL2E0Wc3ctoCEp5qhIuEnPJmDxtXdSh9iJbCFlHLM1HqWpSXJeEx/c6JsFJJZovCfFAypI/SgIpiCyDFVv+zM6eG3A1eeltA6jACNPzPrvc4gxAkgAAuoUVjfPlladTWegvSSTEnya7vmHFLvxukV9tSCbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=SH7IAli9; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-47106fc51faso6887685e9.0
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Oct 2025 08:16:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1760541367; x=1761146167; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=leA4p5KdGzuUByIONtOKgx/UtP5+WR5VhZskIIy7wo0=;
+        b=SH7IAli9zwgkbmF1lewCVBrKn0gsDmudtGWSI4A/+GewKyYigDXkTgc6KGnNtw+f0I
+         Bg/189W+tQI40xqcFiyINBYCA+SMlXxDAQuHLO8XCKPVyNhHctKQdRYgrjz1xwkrzRXn
+         20FpZXAGIQvwpoBUV6YFAyFDANN5hUUca16Cy4AfaTjVDy6vWSriu81gJlbn43cIa64m
+         Uaixe1QmBofX+rMu0MMBk+5PEfKMoKsZ5rUwcjO7Kz5oj6me5SjyjL0yE9edjXmOuh9x
+         d/Cr5tXudANBl1EaBYRbT+aJzHC4iV6bk0+HbYZCGOdC38BzALmcYIokQPu24WYchYC4
+         xHRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760541367; x=1761146167;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=leA4p5KdGzuUByIONtOKgx/UtP5+WR5VhZskIIy7wo0=;
+        b=KzPQxF9ghw2UC0aIXKyke6mkcbCZhueozwfeIOKr0FYYknbDu14qDI3s3x6wmzYyqh
+         0dmWoNEZUhSqbVPoYyI1ySSuDXmKpFF1PCEvALePRvPHMXi5/vRrnPaDXW5w4LHHYhrg
+         B5ZJaLBihd0GFfQmhbI3bJLqnLT2BYabbq3PIDNfdc5kM+1KUwkaDoKRXZJZPboGkYcs
+         6IG0wvkVcR3u1njhSzcc3fW9izNURjJDaLgxIth1E4DmlxOWpLQ+RXHBdrm2F9X7Rqex
+         avIWaxRcOA6JmVhA9ynG6Mj4wxgqEixg/v6vt1XiTnIbU0UlKNmlJ4Z/9r8n1nfSELBK
+         H4bA==
+X-Gm-Message-State: AOJu0Yz3h2RtOuaKQQhC8daj6PXaGTuehzTHDC21MJ8UtmqHgS1s4eXa
+	mApucNvQqyPAa+uBFggcLJ6OGdcm7aYTh0MMTb1sOoIYbjkFBpiAWqrSv4KlYV1Bv+U=
+X-Gm-Gg: ASbGncvxkwNls4pB4LTGEYQgaHUAlUiZ1s7nROFCKaIkMPr/z7l0qsJtwMm73XBgLbs
+	JMd6f09hltAfkBfzIw2Wastaj+JvffGM5bIH5cSzFj/ogt44YnjMaCqipVYZT+M+okazrcXLkde
+	AHlNJ0J23LovGFv9JC2jsXR5/XZ+5EJL/sCiAys9rVxZlhOaKh6tZOh+xfM8Px8vVDOX8Lojv6a
+	p1fqccGV3/8qbDDn0ToqMFTzu3AUV8NSUUqP6Oo6+P1AjhcEkE3R/TztLzjEaJVrQLvmwh/RYQO
+	DWeU+uK52J269eBwTw1aCNuxHK1APcXNevAQoK+/liHNnOi6c7aSTParB9B7pLbDYK7Ol7LgUzr
+	udyakibWcf1DGw3AYkpBda8ZKJmD2QhHagvOl673dnly9Uu8qlQrT
+X-Google-Smtp-Source: AGHT+IFobeSqnmbUBNUK5N3Z6RnbXKgGRPhiEdaBCRGo2rpUCq2z1ZjchQMQ0dd2uRi1a1GL0TkZiA==
+X-Received: by 2002:a05:600c:4745:b0:46d:cfc9:1d0f with SMTP id 5b1f17b1804b1-46fa9af30e5mr229761485e9.19.1760541366622;
+        Wed, 15 Oct 2025 08:16:06 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:9ef5:841b:1380:f197])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47101c0371csm32994155e9.7.2025.10.15.08.16.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Oct 2025 08:16:06 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] gpio: latch: remove unneeded include
+Date: Wed, 15 Oct 2025 17:16:05 +0200
+Message-ID: <20251015151605.71203-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="RrT1Ouiw7gUB6N03"
-Content-Disposition: inline
-In-Reply-To: <b4eca95eaa0e6f27fc07479d5eab2131d20eb270.camel@foss.st.com>
+Content-Transfer-Encoding: 8bit
 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
---RrT1Ouiw7gUB6N03
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This driver no longer uses any GPIOLIB internal symbols. We can drop the
+gpiolib.h include.
 
-On Wed, Oct 15, 2025 at 02:56:56PM +0200, Antonio Borneo wrote:
-> On Tue, 2025-10-14 at 19:10 +0100, Conor Dooley wrote:
-> > On Tue, Oct 14, 2025 at 04:04:50PM +0200, Antonio Borneo wrote:
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpio-latch.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-> >=20
-> > > +
-> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 st,io-sync:
-> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 description: |
-> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 IO synchronization through r=
-e-sampling or inversion
-> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 0: data or clock GPIO pass-t=
-hrough
-> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 1: clock GPIO inverted
-> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 2: data GPIO re-sampled on c=
-lock rising edge
-> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 3: data GPIO re-sampled on c=
-lock falling edge
-> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 4: data GPIO re-sampled on b=
-oth clock edges
-> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 $ref: /schemas/types.yaml#/definit=
-ions/uint32
-> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 enum: [0, 1, 2, 3, 4]
-> >=20
-> > I really don't like this kinds of properties that lead to "random"
-> > numbers in devicetree. I'd much rather see a string list here.
->=20
-> Agree!
-> I just need to figure out some reasonably short but still meaningful
-> string for them.
+diff --git a/drivers/gpio/gpio-latch.c b/drivers/gpio/gpio-latch.c
+index c64aaa896766..452a9ce61488 100644
+--- a/drivers/gpio/gpio-latch.c
++++ b/drivers/gpio/gpio-latch.c
+@@ -48,8 +48,6 @@
+ #include <linux/property.h>
+ #include <linux/delay.h>
+ 
+-#include "gpiolib.h"
+-
+ struct gpio_latch_priv {
+ 	struct gpio_chip gc;
+ 	struct gpio_descs *clk_gpios;
+-- 
+2.48.1
 
-pass-through
-inverted
-rising-edge
-falling-edge
-both-edges
-
-perhaps?
-
---RrT1Ouiw7gUB6N03
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaO+xRgAKCRB4tDGHoIJi
-0lfAAP9Wmew99Hvt1yhCWck5hvyNjlO7jQxH+64gBF5XK6BLXgEAjBA58Y45RCl0
-7cO7Pj2cMcMbSBMMf8uhGjNZlOnz5Qs=
-=XBKe
------END PGP SIGNATURE-----
-
---RrT1Ouiw7gUB6N03--
 
