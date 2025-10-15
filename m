@@ -1,343 +1,508 @@
-Return-Path: <linux-gpio+bounces-27144-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27145-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61D9EBDCD37
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Oct 2025 09:09:26 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14774BDCD9E
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Oct 2025 09:15:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6986C3E028D
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Oct 2025 07:09:16 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id EA3444E6B0C
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Oct 2025 07:15:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8236520B7EE;
-	Wed, 15 Oct 2025 07:09:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D188331352B;
+	Wed, 15 Oct 2025 07:15:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fJEldf6s"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="zlqpXhXG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A3D29BDBC;
-	Wed, 15 Oct 2025 07:09:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760512152; cv=fail; b=JGFiaCgyB8gpPOdhaIPGEhNeC9TBGqU98xUptOQzVSGzgTVy5H/vGPLKaPtflDNFxhXa4LpaE72Vscb5R2/jMDmrKNXRMpPoEHW+JtsgtBPi2OxxFnCWAfRhevBRMf+RNkefLnbou4D7cZGtWYphiD/HjXHreCQ8lNDBGoPoCUM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760512152; c=relaxed/simple;
-	bh=YPn2oIGUuqEqHwCFqih6LW0OlrJwXEU0athYGfLZWes=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=I0Z298l5jQEm1wE+B1/oEwKHBSW6KMOqVjoGs+vtqab0RVdEjIrQEIgFYK32sQBVEmaJW5Q7jNVEhBvP68NnAFH0eESscohEXCFiYf1IZW7Fhtnu2KDnFHtg56AqzhIriR1/ui5sIQRTfF1rZ86OXzlP6vEoWAV5YtXqLYjjN38=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fJEldf6s; arc=fail smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760512150; x=1792048150;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=YPn2oIGUuqEqHwCFqih6LW0OlrJwXEU0athYGfLZWes=;
-  b=fJEldf6sx9EChBw6QQ7WuWXZx+9smk8/lmFnY6xCSROZfy8LY4fLHLrf
-   Qq2iboR9/VjnjwNab9TFAhar9Cmk/XpDT/t940vle8eelkdMsyRQmTt+K
-   pqsxVRmeRJoWO/SaMPa41r0/Qm9ypGojgAbBgWNetJQAtyKYcQZAb1KJM
-   2o16adi2abqF+YIXYD+ifvRbRtRQp1vXv5pGr+1SZF252zslQkzJKef5J
-   9sXDkJJuq2Q0nRaZNcw6h14QX+aGbZmNfZIYMy92ebhD+eBj5dIdxAKQ6
-   p5h+FmrXWSx8/IAeYprOtlbltL2Pw1ywMtFJiSWVfBpnYoWXGcjmQA8qA
-   Q==;
-X-CSE-ConnectionGUID: Htrs9d1aSmK5QPENIgBZ+Q==
-X-CSE-MsgGUID: ii8G8J0MRnSDSM5k5pYL0Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="80311730"
-X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
-   d="scan'208";a="80311730"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 00:09:10 -0700
-X-CSE-ConnectionGUID: 1a+IDKrJQQqzT2vDJQ/6kA==
-X-CSE-MsgGUID: 0tgama1YQj2o/yJTTgljwA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
-   d="scan'208";a="181770786"
-Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2025 00:09:09 -0700
-Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
- fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Wed, 15 Oct 2025 00:09:09 -0700
-Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
- FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27 via Frontend Transport; Wed, 15 Oct 2025 00:09:09 -0700
-Received: from DM1PR04CU001.outbound.protection.outlook.com (52.101.61.4) by
- edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Wed, 15 Oct 2025 00:09:08 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sQ3eQJeEC+M9nT1vUbCSeb8PMvwYCZZ6oYjbDQvx/yw5wF2SnRrvFu5bJBlw2oyfy7ZsyWvwejZQu7whUI54/dwlrE9roPG/rfPytPIuHVtrJ7PEZ/E8w894esSs+SOSskcGyUAs+gNp/sL49tpGUS72BjMSrdbtCgXzsGrjFg6vhH1yG/f/t6gpLgHbxp5RMnTt9UvCz9K7qoLeF/9ASlheb24K7TeXxSHcwrDXri3RJrP6oOujGIhznDgPenXl3QgERWVqC33fANpgUf/Z6niwAAEgdQP+ZknJOrY0x6HP3DwHWUm9fbQqawD2fOEd9QiMgjqg+bjixuyXczKJkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TyXfCOSzlxgVM0pnG+MS6Yx+UgRL5S9LHLni/dqeJfg=;
- b=PTmVmIxNttrT+ol7bEIRJowgHFl7ABpBlcCCdAC7bGuzoqwPuSGWobiiaNsnaboWCNixiCmr82j4a8Sx9b62549uMuR8LnQ74qe8B6RpRzaWkB4yYpyk65HtZ5VBqGk7giKETSM3VKuhGTBHnZtfUaPkGRRDf6CM3zCzcAOn7Ycv3w5vLCFg4q0Kao8o4s4pr77kjNh5nsLreCcvMhWPUfBdVmOD0kH+dV7N80jup73YhJRVmFN5pY3VNgr0A/M/oVy53PcB5bQTztvit4oNwvLkixleNAUDNO3UVHVnIuGgBGCfa5JE14YaF9EBJ3aai2vTEpXYFNUNXCXjk7EA2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from IA1PR11MB7198.namprd11.prod.outlook.com (2603:10b6:208:419::15)
- by PH7PR11MB8570.namprd11.prod.outlook.com (2603:10b6:510:2ff::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.10; Wed, 15 Oct
- 2025 07:09:06 +0000
-Received: from IA1PR11MB7198.namprd11.prod.outlook.com
- ([fe80::2c4e:e92a:4fa:a456]) by IA1PR11MB7198.namprd11.prod.outlook.com
- ([fe80::2c4e:e92a:4fa:a456%3]) with mapi id 15.20.9228.010; Wed, 15 Oct 2025
- 07:09:06 +0000
-Message-ID: <9f666390-653d-4834-800d-8997665b6dac@intel.com>
-Date: Wed, 15 Oct 2025 10:09:01 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND] mmc: core: Fix system shutdown hang in mmc_bus_shutdown
-To: Michael Wu <michael@allwinnertech.com>, <ulf.hansson@linaro.org>,
-	<linus.walleij@linaro.org>, <brgl@bgdev.pl>, <avri.altman@wdc.com>,
-	<wsa+renesas@sang-engineering.com>, <victor.shih@genesyslogic.com.tw>,
-	<andy-ld.lu@mediatek.com>
-CC: <jason.lai@genesyslogic.com.tw>, <linux-mmc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-References: <20251015060714.67558-1-michael@allwinnertech.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
- 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
- 4, Domiciled in Helsinki
-In-Reply-To: <20251015060714.67558-1-michael@allwinnertech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DUZPR01CA0007.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:3c3::11) To IA1PR11MB7198.namprd11.prod.outlook.com
- (2603:10b6:208:419::15)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830BB2FF164;
+	Wed, 15 Oct 2025 07:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760512521; cv=none; b=QMA2fpnHTmobKYk5DO160WElZipTJr0Z51cTPoR6VcnnpZzh/xdpHf2mml8k5+aMpr8PX8swesT47eR99l4SM1Wl+B1XIUGX/6aY9giEv/cUE5a7lH4+uz+1Baf9XXpjeAHg+OvTamUt/PQK6L0V6T/BdY5fBn/MoNdTuh02SEI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760512521; c=relaxed/simple;
+	bh=tHBL8LZQ/EzxCXyj4Rc5BBYpjFDtYhbliv5BSEcWpUY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ROejG08p+6UwZnzspKhVgei7mjs37Vf/zhApMC2AJk5p4a0VDkkJmTIKwL+PyvnW8/p34Z87hf6aYGeP07HD+a7hZpjYyZhQtmUgHLLmtOOzLptrufU4ovQHVdDV499X8zS8M1ZnNLo0rPOLxCiWmoQQ1NlX5IAZzTNPLUqdymo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=zlqpXhXG; arc=none smtp.client-ip=185.171.202.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 7B852C09FA9;
+	Wed, 15 Oct 2025 07:14:56 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 62371606F9;
+	Wed, 15 Oct 2025 07:15:15 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2B4E7102F22AF;
+	Wed, 15 Oct 2025 09:14:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1760512513; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=3j60UDCwsR+fx7dgGrkveclozQFJiothgCwXrWCeZ/Y=;
+	b=zlqpXhXGF42GZ/lA/4uYP53YSSloszkjeYT4xh7RfHT9miTqIJdGrh0yMpPMsFDCMffSh/
+	krak6VQp10Bg9KxMIfb1nodOuz2bnRSTbPT19jBrX7Vaa24qGRY3MAeK4apukHjfPf0KXS
+	P7oTsGuPzNiy5RrDCeiZ1wXWTCvmrqJKka3DMzKd2DsT4AdfyZx2DslcwxY1twu/iiRTps
+	AyB67kGJnLx5WpV4L7oIS3FzKn+oN8VEjG934SHa7MPJXZHcWyW++MQG5EvdoExjVN/wEm
+	1o3I4irjoA6bnsYBSzPPJenH2Zj+3BJSV3GhX/sLzTMxEF2JPBTzWX1wOpQKAQ==
+From: Herve Codina <herve.codina@bootlin.com>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Mark Brown <broonie@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Len Brown <lenb@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Wolfram Sang <wsa@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	patches@opensource.cirrus.com,
+	linux-gpio@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-spi@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH v4 00/29] lan966x pci device: Add support for SFPs
+Date: Wed, 15 Oct 2025 09:13:47 +0200
+Message-ID: <20251015071420.1173068-1-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR11MB7198:EE_|PH7PR11MB8570:EE_
-X-MS-Office365-Filtering-Correlation-Id: 41a25a0d-1f29-4ff8-ced5-08de0bb9ba59
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?VTBiYzJHSW90WVFoQ2czbSt2YXFzaHdnK2s4aTNFa0lCbG9nbFFmWWZkTzZz?=
- =?utf-8?B?WjF3V0xHOUxCQUt6a0FnTk9iVVBwYXZnREI2Y2t0NStwaUJyY2hLSUVyQkJn?=
- =?utf-8?B?c0pCbkZKRTlpbWlvNXdLVjM1cG90ZVdYT3dITEhNUlVIZVRQT0xiSVRWekpj?=
- =?utf-8?B?aS9SZ044RXVzeEp2SWhzZ3BpemNEbDhtaGtFamt6T2pzRENndTJPdVN4UHBj?=
- =?utf-8?B?VlNTbS9OaHVFQVVSRHZYOS85UDMzK0RXbWFlWEZFQnVqK3VtU3luck42R1ZJ?=
- =?utf-8?B?SU9BVTZiaHh4T1RoUDkwTmRCV3gxbmQzYXFZa1B4UUwzajUycks4aFl5emJo?=
- =?utf-8?B?cDRiUHh5Wlg2ZDVISGxKT3YvY0hOTWdJM3dpdURXS3NPdDlFUmlaKzZVOWpG?=
- =?utf-8?B?bzVpUUF1YjQ4TG1OaUtKOVVLYmoycERKUTVaYTMwS2hWQSs5V0hvTlJ6SHMw?=
- =?utf-8?B?SkJjVnVKZDdlcU9oYXZBYklteWRpZjROZ2kyS2ZWYXgyUWl5Z0s0Y2NmSkVz?=
- =?utf-8?B?TzVFeHNZVFZSN213NXVzNSs3ZGNnZU5LRTVSeTFPQVpRL3k1UDJyRkJhclhv?=
- =?utf-8?B?d1JvWDVuZTk1Ymk1RldiTkR1SDhRZDMwbFA3NERwd3c3MVNocG94ZjJERVZL?=
- =?utf-8?B?RFBpL2gvd1RTYkU5a2lsRFRadVU1M3NIYVdqYXZ6ZUVXd013WjYzQVZZdDZV?=
- =?utf-8?B?b0lRSDFDMWVTaUhtVkxicjM2ektuMjJVRXJ0SXNNMTN1N1gzdVRVUFA5bEM2?=
- =?utf-8?B?aU1UZmZpcTk4eGp6N2tLTWI4cXgyL3ErYnFCNEJYbno3dzhJMEgzejRPSjM1?=
- =?utf-8?B?YTFsMHF6WUQ2V1RtMXBuOEFYSDdidXJtbnRZWkNQSFJCWWlpYzBNa3EvbUtz?=
- =?utf-8?B?TUI4RFNCeEkyZGxRdlFPRVc5WHppeVFzZnZTdklKNjFYQ1ZobURMbnp5TEFX?=
- =?utf-8?B?SzROQnE3SWVlZEcxNlBHNlNuUy94bnY3SXM3VkY2NEJxTGpnZElwcjd5M1dv?=
- =?utf-8?B?ZkNCaUN2M0JYN3FxZ1dxeW5mZ2xJdUExaW1hL0NORy9nczFOY2lzVE1reWp6?=
- =?utf-8?B?aTl6b2tJbWZpczQxcmlOMzlhZ0o1aUxXWVJ0cnE5RXM2TkwxaU1CdGFkeVo3?=
- =?utf-8?B?RkJQL1o1ck1JOEtQZDA4TkZuU1BMQ1BVWllWbTc2b0F0TXlmSHV4eEJTR21a?=
- =?utf-8?B?bk5UTmpST0ZDeWNnYm1CZ0RaZGx1dlFQdWQ5M2Q2WFBXalFvUyt4T3JUczJB?=
- =?utf-8?B?eVRxN2x5ejVSdFJpYmtQSkQyTG1lK2ZEUDJNNjYxL0R1K3RncWRyNlhnclNx?=
- =?utf-8?B?TlVXUVRKa1h6dHdNMXpXREszZURPa3g0RklYQld1M2t4ampSQWRua3ZpWHlv?=
- =?utf-8?B?TXRiUGJLbTFkWkdTRFllQXA3OXpkL1hnUXRIZHZjaXFBQ2NpYThWSmU5bUht?=
- =?utf-8?B?YklEY2thRnUyMGc1NHZGMHQvSGVhVndLQ1paenIvblliU2FGa0hzeHYzY0h3?=
- =?utf-8?B?WElGVVd3Q3JmaTQ4QUVjM00yejE0UHA2ZFhWRkdhNnlaSDVVeTNLUWhxRFRq?=
- =?utf-8?B?OFdBREZRcVM2dlorKy9VWElIUi92b2djYXM0azcxR1ZBb040WkYzaWZGbTgw?=
- =?utf-8?B?ZjRaQlhWVGh1dlVzaXVxQUtBc3plVktJWE50S1Bma1NsMjQ5RjdvTDEyakky?=
- =?utf-8?B?dTkrTWFRWEdRMGxYVktMYnVmaWRGUlYzU21BaXdUOGNwMDNVajZrN00zVm50?=
- =?utf-8?B?THdSY0NGS0NIdWJ2WStRd0ZTZmJMQnFuOXhqQ21Tb0dIZ3k4cWxNdEg4OGFw?=
- =?utf-8?B?NmdBclJaMzFOeWlRWGg3ZklqRUppeWZ3dlNkUUJVOWpUWXRNZ200TmFIcWhF?=
- =?utf-8?B?MWRUTnQ4d0s3WHJzRkJEa1h2Z3dHTEVhUElNamRod2dBVEVIZE1pZjhRdHAr?=
- =?utf-8?Q?sSCqVag/oAJsjLwPn1bJ42gjY8U8fYi/?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB7198.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZWhBSWdId1duNEMybklXNVNZZ1YxYzdKM2EzSHd2ZmZac0VKQlUyazZHQWdG?=
- =?utf-8?B?UTF3UDd0Q1VJS2QyWDBhUWpDYmQxTVVsQTdnd0wzS1dUVGtBbGFNK1hNZHlp?=
- =?utf-8?B?dnFaMCtHOWREQkEyZDZnSWI5R09ISGxhMGZDK1dpd1NwaUZtaWJwMktqeEJ6?=
- =?utf-8?B?Q0lXcUZLOTEzQ1ZWV21idytoNHY4anVmcUh2RW94bEQ2bFVkcTNObENCSkZE?=
- =?utf-8?B?RHhiK0tVZVRWUURIRzN4cGthanNsaDcrbjFVeXVmSklTaUxCckM2SFZ1Mzl0?=
- =?utf-8?B?UVZTZ2U5VFpOTTQ5dGpNeHBoSTE0bnE5VEIzMGhBZkpZWDlKTzNMYUtwYnRq?=
- =?utf-8?B?TkpMRENNeGV0eDZyaTFLTHlDem5kQmd5MXRRQ3FubnEwdG9URS8xL3dyWC9q?=
- =?utf-8?B?THhudEN3UXJiMjZFQk5RbTlueWFlNjl4ZU1rR0cyY0VYdFdZT0lMdVd3dW5G?=
- =?utf-8?B?dUxCeFVuS3dKNEViSlZQZ3krdEo2M1JoYkZtSStCdUxzdHBBdkhkVnNCY2xi?=
- =?utf-8?B?alRNVWZPWmRka0ZxWGdINWorUFI1YVlZdG1URlZBbExsR296dTJtM0ZnalR4?=
- =?utf-8?B?WkFQTWhmNDR1NWJJbHJoWlFyKzRSZXE2eDRMZDhEOHBDMWpHYlZ2YmRmWUZK?=
- =?utf-8?B?RUZlQ2tTSVN1OVhabmFzMmxYdmxncUpHT1lTM3RJNTN3eVVDNElyWFhaVENL?=
- =?utf-8?B?bC9ZOHBJSzJlN2pvUDhwSW5xeGhDQmJaT3VHRWFDeGZxUVNRYW4vd3FxK1dL?=
- =?utf-8?B?eXVkdElSOVhwRTZjc0RwUzZ2MVEwVkhZVCtjUSthTTJGUThXWTNHZW5FWTZo?=
- =?utf-8?B?SitmU3dnWUNyTnBzOEdXKzdoK2tFeGFtVmhJbFhJN1QyL0haY214TEgvbFNS?=
- =?utf-8?B?ZnZsU1U2VjZXWXdqUnFjODQ3SjVtSWduUnR2d3hodUFZNW9BUmdVUjQ4a0o4?=
- =?utf-8?B?VjRMajJPUDRmVitCREViTVVpbEQ2bzNqbDlmWkZudVJubTFvNWhVZVVHcC9n?=
- =?utf-8?B?d2ozSDRpRStOTkxWTlpDelJyMVpCNU1iVkFTcmlTbElNZ0dUSU55b1c0TThN?=
- =?utf-8?B?bUlQNnFCRTZXaENJeXJKZ243VFFIbXFkZTBqZHdUc24zYVBGNWp4ellGZHRp?=
- =?utf-8?B?Z0pzN0FVWEFLa2FJZzE2VWZvUktUcEFoZXM4UXptYlI3ZDVPa0tuK2FzVnJ6?=
- =?utf-8?B?V2lzSWkrTUc5RlZYN1NlZkRQNnBDOUVWd0F3T2JLbHVncDFzRnZMbnFsa1FW?=
- =?utf-8?B?bGk4NnNaTFNOcVJMQWw5Tm02ZDhiY0dVUFpXSVloUGp4a3RMNnpWTjVoWHhT?=
- =?utf-8?B?Z0haa0p0T1ZQN29LdzJWeUwycmlxRjVwQldMVFBiWGlzSVp4aUNBQ3FxQ1l5?=
- =?utf-8?B?Mlc0eTJ6SVFJdVV5VG1oN0VVVHZiNlMwSEkrenJEamRLemdXU3hmTjgxUGRX?=
- =?utf-8?B?RlpQenVMaUxZUTBUT1E2dUwvN3Y4NkpwYVl2all4aTJ2SDlSUWpYRUVJSnRo?=
- =?utf-8?B?OWxLZjJWZ0xSTjRSeUZoYUNIQzZWM1FqV1RiYVcxWStCSGtaR05sNFRONmdT?=
- =?utf-8?B?MGNvTGtMMUVWMzNKdE44QjBVR2JaU09qc2pMYTQxQXlYU29RUXhHZERzNzc5?=
- =?utf-8?B?QS9SNTZaQmJWV1RKWmJic3FzeWgzNDJxWEhKZ2FzUDU4L2pqN2FDN20zU2kv?=
- =?utf-8?B?MmtGUlBVT1BzNVNKSXVpdGFFdEg5dXl4anNkam9kSWFzeUJ5NnFzRm1BbHBt?=
- =?utf-8?B?VFNtS3RIeFJoWkNMYzFqSEV3MnM2bUhHUWZnOGxOTC9JSEl3eVpNUHNROThS?=
- =?utf-8?B?K3pBN0poZGR4M2JjZndtUnJtOFBGQ1k3bU5kaGxrVUNTMGlGT0h5Y2ZTc3pj?=
- =?utf-8?B?SUlXTDV2NkdMS1VkRGh3RVVSVTRwSmVFdDFRd0lOVVBycld5emE2SU5TQTRI?=
- =?utf-8?B?QkJHTHgwVnovaTRqYS8rUEJ6cmxKOEU3b1dmaUFlRS9YWXJxbWdvYU1GWUFl?=
- =?utf-8?B?aU56cmMvdkV5OVdXMjNhUXFCVi8weWZFdWdzVkpkNDNrVzdvems4cXVaUXBS?=
- =?utf-8?B?SFE5Q2lEcHlMcEdSRkdENW9RMEZ6OGl3UXZNaTFXekRCVjcvZ3VsL0hBaUp2?=
- =?utf-8?B?dksyZWFZa1JJcXhIaWpGd2RnREpXQzJNN0hpcWg1MlJIbER4TTRxdWlNMi9M?=
- =?utf-8?B?VlE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41a25a0d-1f29-4ff8-ced5-08de0bb9ba59
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB7198.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2025 07:09:06.0657
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hUfOZeLQPfM26Xmo7b2CF2MA41ctfKrwhd2aS2Cf6etqkhNwB1mooFvoZgTB+AGpSDu0iMj8j7VhghlHjXPSOA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB8570
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On 15/10/2025 09:07, Michael Wu wrote:
-> During system shutdown, mmc_bus_shutdown() calls __mmc_stop_host() which
-> uses cancel_delayed_work_sync(). This can block indefinitely if the work
-> queue is stuck, causing the system to hang during shutdown.
-> 
-> This patch introduces a new function __mmc_stop_host_no_sync() that skips
-> the synchronous work cancellation, preventing potential shutdown hangs.
+Hi,
 
-mmc core must ensure there are no ongoing operations racing with shutdown.
-Leaving the work running does not look like it would achieve that.
+This series add support for SFPs ports available on the LAN966x PCI
+device. In order to have the SFPs supported, additional devices are
+needed such as clock controller and I2C.
 
-Perhaps it can be cancelled earlier?  There seems to be a "reboot" notifier
-associated with shutdown, refer reboot_notifier_list and
-register_reboot_notifier().  Note, in that case, it is also necessary to
-ensure nothing can queue the work again.
+As a reminder, the LAN966x PCI device driver use a device-tree overlay
+to describe devices available on the PCI board. Adding support for SFPs
+ports consists in adding more devices in the already existing
+device-tree overlay.
 
-> The function is used in mmc_bus_shutdown() where blocking is not
-> acceptable during system shutdown.
-> 
-> Changes:
-> - Add __mmc_stop_host_no_sync() function that avoids cancel_delayed_work_sync()
-> - Update mmc_bus_shutdown() to use the new non-blocking function
-> - Keep the original __mmc_stop_host() unchanged for normal operation
-> 
-> This ensures graceful system shutdown while maintaining existing
-> functionality for regular MMC host operations.
-> 
-> stack information when an error occurs:
-> INFO: task init:1 blocked for more than 720 seconds.
->       Tainted: G           OE     5.15.185-android13-8-00043-gd00fb6bce7ed-ab13792018 #1
-> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> task:init            state:D stack:    0 pid:    1 ppid:     0 flags:0x04000008
-> Call trace:
->  __switch_to+0x234/0x470
->  __schedule+0x694/0xb8c
->  schedule+0x150/0x254
->  schedule_timeout+0x48/0x138
->  wait_for_common+0x144/0x308
->  __flush_work+0x3d8/0x508
->  __cancel_work_timer+0x120/0x2e8
->  mmc_bus_shutdown+0x90/0x158
->  device_shutdown+0x204/0x434
->  kernel_restart+0x54/0x220
->  kernel_restart+0x0/0x220
->  invoke_syscall+0x60/0x150
->  el0_svc_common+0xb8/0xf8
->  do_el0_svc+0x28/0x98
->  el0_svc+0x24/0x84
->  el0t_64_sync_handler+0x88/0xec
->  el0t_64_sync+0x1b8/0x1bc
-> INFO: task kworker/1:1:73 blocked for more than 721 seconds.
->       Tainted: G           OE     5.15.185-android13-8-00043-gd00fb6bce7ed-ab13792018 #1
-> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> task:kworker/1:1     state:D stack:    0 pid:   73 ppid:     2 flags:0x00000008
-> Workqueue: events_freezable mmc_rescan.cfi_jt
-> Call trace:
->  __switch_to+0x234/0x470
->  __schedule+0x694/0xb8c
->  schedule+0x150/0x254
->  schedule_preempt_disabled+0x2c/0x4c
->  __mutex_lock+0x360/0xb00
->  __mutex_lock_slowpath+0x18/0x28
->  mutex_lock+0x48/0x12c
->  device_del+0x48/0x8d0
->  mmc_remove_card+0x128/0x158
->  mmc_sdio_remove+0x190/0x1ac
->  mmc_sdio_detect+0x7c/0x118
->  mmc_rescan+0xe8/0x42c
->  process_one_work+0x248/0x55c
->  worker_thread+0x3b0/0x740
->  kthread+0x168/0x1dc
->  ret_from_fork+0x10/0x20
-> 
-> Signed-off-by: Michael Wu <michael@allwinnertech.com>
-> ---
->  drivers/mmc/core/bus.c  |  2 +-
->  drivers/mmc/core/core.c | 14 ++++++++++++++
->  drivers/mmc/core/core.h |  1 +
->  3 files changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/core/bus.c b/drivers/mmc/core/bus.c
-> index 1cf64e0952fbe..6ff6fcb4c6f27 100644
-> --- a/drivers/mmc/core/bus.c
-> +++ b/drivers/mmc/core/bus.c
-> @@ -149,7 +149,7 @@ static void mmc_bus_shutdown(struct device *dev)
->  	if (dev->driver && drv->shutdown)
->  		drv->shutdown(card);
->  
-> -	__mmc_stop_host(host);
-> +	__mmc_stop_host_no_sync(host);
->  
->  	if (host->bus_ops->shutdown) {
->  		ret = host->bus_ops->shutdown(host);
-> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-> index a0e2dce704343..2d75ad26f84a9 100644
-> --- a/drivers/mmc/core/core.c
-> +++ b/drivers/mmc/core/core.c
-> @@ -2336,6 +2336,20 @@ void __mmc_stop_host(struct mmc_host *host)
->  	cancel_delayed_work_sync(&host->detect);
->  }
->  
-> +void __mmc_stop_host_no_sync(struct mmc_host *host)
-> +{
-> +	if (host->rescan_disable)
-> +		return;
-> +
-> +	if (host->slot.cd_irq >= 0) {
-> +		mmc_gpio_set_cd_wake(host, false);
-> +		disable_irq(host->slot.cd_irq);
-> +	}
-> +
-> +	host->rescan_disable = 1;
-> +	/* Skip cancel_delayed_work_sync to avoid potential blocking */
-> +}
-> +
->  void mmc_stop_host(struct mmc_host *host)
->  {
->  	__mmc_stop_host(host);
-> diff --git a/drivers/mmc/core/core.h b/drivers/mmc/core/core.h
-> index 622085cd766f9..eb59a61717357 100644
-> --- a/drivers/mmc/core/core.h
-> +++ b/drivers/mmc/core/core.h
-> @@ -71,6 +71,7 @@ static inline void mmc_delay(unsigned int ms)
->  void mmc_rescan(struct work_struct *work);
->  void mmc_start_host(struct mmc_host *host);
->  void __mmc_stop_host(struct mmc_host *host);
-> +void __mmc_stop_host_no_sync(struct mmc_host *host);
->  void mmc_stop_host(struct mmc_host *host);
->  
->  void _mmc_detect_change(struct mmc_host *host, unsigned long delay,
+With those devices added, the device-tree overlay is more complex and
+some consumer/supplier relationship are needed in order to remove
+devices in correct order when the LAN966x PCI driver is removed.
+
+Those links are typically provided by fw_devlink and we faced some
+issues with fw_devlink and overlays.
+
+This series gives the big picture related to the SFPs support from
+fixing issues to adding new devices. Of course, it can be split if
+needed.
+
+The first part of the series (patch 1, 2 and 3) fixes fw_devlink when it
+is used with overlay. Patches 1 and 3 were previously sent by Saravana
+[0]. I just rebased them on top of v6.18-rc1 and added patch 2 in order
+to take into account feedback received on the series sent by Saravana.
+
+Those modification were not sufficient in our case and so, on top of
+that, patches 4 to 7 fix some more issues related to fw_devlink.
+
+Patches 8 to 13 introduce and use fw_devlink_set_device() in already
+existing code.
+
+Patches 14 and 15 are related also to fw_devlink but specific to PCI and
+the device-tree nodes created during enumeration.
+
+Patches 16, 17 and 18 are related fw_devlink too but specific to I2C
+muxes. Patches purpose is to correctly set a link between an adapter
+supplier and its consumer. Indeed, an i2c mux adapter's parent is not
+the i2c mux supplier but the adapter the i2c mux is connected to. Adding
+a new link between the adapter supplier involved when i2c muxes are used
+avoid a freeze observed during device removal.
+
+Patch 19 adds support for fw_delink on x86. fw_devlink is needed to have
+the consumer/supplier relationship between devices in order to ensure a
+correct device removal order. Adding fw_devlink support for x86 has been
+tried in the past but was reverted [1] because it broke some systems.
+Instead of enabling fw_devlink on *all* x86 system, enable it on *all*
+x86 except on those where it leads to issue.
+
+Patches 20 and 21 allow to build clock and i2c controller used by the
+LAN966x PCI device when the LAN966x PCI device is enabled.
+
+Patches 22 to 26 are specific to the LAN966x. They touch the current
+dtso, split it in dtsi/dtso files, rename the dtso and improve the
+driver to allow easier support for other boards.
+
+The next patch (patch 27) update the LAN966x device-tree overlay itself
+to have the SPF ports and devices they depends on described.
+
+The last two patches (patches 28 and 29) sort the existing drivers in
+the needed driver list available in the Kconfig help and add new drivers
+in this list keep the list up to date with the devices described in the
+device-tree overlay.
+
+We believe some items from the above list can be merged separately, with
+no build dependencies. We expect:
+
+ - Patches 1 to 7 to be taken by driver core maintainers
+
+ - Patches 8 to 13 to be taken by driver core maintainers
+
+ - Patches 14 and 15 to be taken by driver core or PCI maintainers
+  (depend on patch 8)
+
+ - Patches 16 to 18 to be taken by I2C maintainers
+
+ - Patch 19 to be taken by driver core or OF maintainers
+
+ - Patch 20 to be taken by clock maintainers
+
+ - Patch 21 to be taken by I2C maintainers
+
+ - Patches 22 to 29 to be taken by misc maintainers
+
+Once again, this series gives the big picture and can be split if
+needed. Let me know.
+
+[0] https://lore.kernel.org/lkml/20240411235623.1260061-1-saravanak@google.com/
+[1] https://lore.kernel.org/lkml/3c1f2473-92ad-bfc4-258e-a5a08ad73dd0@web.de/
+
+Compare to previous iteration, this v4 series mainly:
+ - Introduce simple-platform-bus driver instead of modifying the
+   simple-bus driver (modifying the simple-bus driver could lead to
+   regressions).
+ - Use some device-tree properties to filter out x86 systems that do not
+   support fw_devlink instead of using kconfig symbols.
+ - Add '{Reviewed,Acked}-by'
+
+Best regards,
+Hervé
+
+Changes:
+
+v3 -> v4
+  v3: https://lore.kernel.org/lkml/20250613134817.681832-1-herve.codina@bootlin.com/
+
+  - Patch 1:
+    No change
+
+  - Patch 2:
+    Update and fix conflicts. Indeed, since v3 iteration
+    get_dev_from_fwnode() has been moved to device.h and used by
+    pmdomain/core.c.
+
+  - Patch 3:
+    remove '#define get_device_from_fwnode()'
+
+  - Patch 4:
+    Fix conflict (rebase v6.17-rc6)
+    Add 'Reviewed-by: Rafael J. Wysocki'
+    Add 'Reviewed-by: Saravana Kannan'
+
+  - Patch 5 (new in v4):
+    Introduce simple-platform-bus (binding)
+
+  - Patch 6 (5 in v3):
+    Rework patch and introduce simple-platform-bus
+
+  - Patch 7: (new)
+    Use simple-platform-bus in LAN966x
+
+  - Patch 8 (6 in v3):
+    - No change
+
+  - Patch 9 and 10 (7 and 8 in v3):
+    Add 'Reviewed-by: Andy Shevchenko'
+
+  - Patch 11 and 12 (9 and 10 in v3):
+    Add 'Reviewed-by: Dave Jiang'
+
+  - Patch 13 (11 in v3):
+    Add 'Reviewed-by: Andy Shevchenko'
+
+  - Patch 12 in v3:
+    Patch removed.
+    Adding __private tag in fwnode.dev is going to be handled in a
+    dedicated series. Indeed a test robot reported an issue and more
+    patches are needed (I have missed fwnode.dev users in several part
+    in the kernel).
+
+  - Patch 14 and 15 (13 and 14 in v3):
+    No change
+
+  - Patch 16 (14 in v3):
+    Add 'Reviewed-by: Andi Shyti'
+
+  - Patch 17 and 18 (16 and 17 in v3):
+    No change
+
+  - Patch 19 (18 in v3):
+    Filter out support for fw_devlink on x86 based on some device-tree
+    properties.
+    Rewrite commit changelog
+    Remove 'Reviewed-by: Andy Shevchenko' (significant modification)
+
+  - Patch 20 (19 in v3):
+    Add 'Acked-by: Stephen Boyd'
+
+  - Patch 21 (20 in v3):
+    Fix conflict (rebase v6.18-rc1)
+
+  - Patches 22 to 24 (21 to 23 in v3):
+    No change
+
+  - Patch 25 (24 in v3):
+    Fix conflict (rebase v6.18-rc1)
+    Add 'Acked-by: Bjorn Helgaas'
+
+  - Patches 26 to 29 (25 to 28 in v3):
+    No change
+
+v2 -> v3
+  v2: https://lore.kernel.org/all/20250507071315.394857-1-herve.codina@bootlin.com/
+
+  - Patch 1:
+    Add 'Acked-by: Mark Brown'
+
+  - Patch 2 and 3:
+    No changes
+
+  - Patch 4:
+    Rewrite the WARN_ON() condition to avoid an additional 'if'
+
+  - Patch 5:
+    Fix typos in commit log
+    Update a comment
+    Remove the unneeded check before calling of_platform_depopulate()
+
+  - Patches 6 to 11:
+    No changes
+
+  - Patch 12 (new in v3)
+    Tag the fwnode dev member as private
+
+  - Patch 13 (12 in v2)
+    Fix a typo in the commit log
+
+  - Patches 14 to 16 (13 to 15 in v2)
+    No changes
+
+  - Patch 17 (16 in v2)
+    Check parent_physdev for NULL
+
+  - Patch 18 (17 in v2)
+    Capitalize "Link:"
+    Add 'Reviewed-by: Andy Shevchenko'
+
+  - Patch 19 (18 in v2)
+    No changes
+
+  - Patch 20 (19 in v2)
+    Add 'Acked-by: Andi Shyti'
+
+  - Patch 21 (20 in v2)
+    No changes
+
+  - Patch 22 (21 in v2)
+    Add 'Reviewed-by: Andrew Lunn'
+
+  - Patch 23 (22 in v2)
+    Add 'Reviewed-by: Andrew Lunn'
+
+  - Patch 24 (new in v3)
+    Introduce PCI_DEVICE_ID_EFAR_LAN9662, the LAN966x PCI device ID
+
+  - Patch 25 (23 in v2)
+    Add 'Reviewed-by: Andrew Lunn'
+    Use PCI_DEVICE_DATA() with PCI_DEVICE_ID_EFAR_LAN9662 instead of
+    PCI_VDEVICE()
+
+  - Patch 26 to 28 (24 to 26 in v2)
+    No changes
+
+v1 -> v2
+  v1: https://lore.kernel.org/lkml/20250407145546.270683-1-herve.codina@bootlin.com/
+
+  - Patch 1 and 3
+    Remove 'From' tag from the commit log
+
+  - Patch 2
+    Add 'Reviewed-by: Andy Shevchenko'
+    Add 'Reviewed-by: Saravana Kannan'
+    Add 'Reviewed-by: Luca Ceresoli'
+
+  - Patch 4 and 5
+    No changes
+
+  - Patch 6 (new in v2)
+    Introduce fw_devlink_set_device()
+
+  - Patch 7 (new in v2)
+    Use existing device_set_node() helper.
+
+  - Patch 8 to 11 (new in v2)
+    Use fw_devlink_set_device() in existing code.
+
+  - Patch 12 (6 in v1)
+    Use fw_devlink_add_device()
+
+  - Patch 13 (7 in v1)
+    No changes
+
+  - Patch 14 (8 in v1)
+    Update commit log
+    Use 'physdev' instead of 'supplier'
+    Minor fixes in i2c_get_adapter_physdev() kdoc
+
+  - Patch 15 and 16 (9 and 10 in v1)
+    Use 'physdev' instead of 'supplier' (commit log, title and code)
+
+  - Patch 17 (11 in v2)
+    Enable fw_devlink on x86 only if PCI_DYNAMIC_OF_NODES is enabled.
+    Rework commit log.
+
+  - Patch 18, 19 and 20 (12, 13 and 14 in v1)
+    No changes
+
+  - Patch 21 (new in v2)
+    Split dtso in dtsi/dtso
+
+  - Patch 22 (new in v2)
+    Rename lan966x_pci.dtso using the specific board name
+
+  - Patch 23 (new in v2)
+    Improve the driver introducing board specific data to ease support
+    for other boards (avoid the direct dtbo reference in the function
+    loading the dtbo).
+
+  - Patch 24 (15 in v1)
+    Refactor due to dtso split in dtsi/dtso
+
+  - Patch 25 (new in v2)
+    Sort exist driver list in Kconfig help
+
+  - Patch 26 (16 in v1)
+    Keep alphanumeric order for new drivers added in Kconfig help
+
+Herve Codina (27):
+  driver core: Rename get_dev_from_fwnode() wrapper to
+    get_device_from_fwnode()
+  driver core: Avoid warning when removing a device while its supplier
+    is unbinding
+  dt-bindings: bus: Add simple-platform-bus
+  bus: Introduce simple-platorm-bus
+  misc: lan966x_pci: Use simple-platform-bus
+  driver core: fw_devlink: Introduce fw_devlink_set_device()
+  drivers: core: Use fw_devlink_set_device()
+  pinctrl: cs42l43: Use fw_devlink_set_device()
+  cxl/test: Use device_set_node()
+  cxl/test: Use fw_devlink_set_device()
+  PCI: of: Use fw_devlink_set_device()
+  PCI: of: Set fwnode device of newly created PCI device nodes
+  PCI: of: Remove fwnode_dev_initialized() call for a PCI root bridge
+    node
+  i2c: core: Introduce i2c_get_adapter_physdev()
+  i2c: mux: Set adapter physical device
+  i2c: mux: Create missing devlink between mux and adapter physical
+    device
+  of: property: Allow fw_devlink device-tree on x86
+  clk: lan966x: Add MCHP_LAN966X_PCI dependency
+  i2c: busses: at91: Add MCHP_LAN966X_PCI dependency
+  misc: lan966x_pci: Fix dtso nodes ordering
+  misc: lan966x_pci: Split dtso in dtsi/dtso
+  misc: lan966x_pci: Rename lan966x_pci.dtso to
+    lan966x_evb_lan9662_nic.dtso
+  PCI: Add Microchip LAN9662 PCI Device ID
+  misc: lan966x_pci: Introduce board specific data
+  misc: lan966x_pci: Add dtsi/dtso nodes in order to support SFPs
+  misc: lan966x_pci: Sort the drivers list in Kconfig help
+  misc: lan966x_pci: Add drivers needed to support SFPs in Kconfig help
+
+Saravana Kannan (2):
+  Revert "treewide: Fix probing of devices in DT overlays"
+  of: dynamic: Fix overlayed devices not probing because of fw_devlink
+
+ .../bindings/bus/simple-platform-bus.yaml     |  50 +++++
+ MAINTAINERS                                   |   3 +-
+ drivers/base/core.c                           |  99 +++++++---
+ drivers/bus/imx-weim.c                        |   6 -
+ drivers/bus/simple-pm-bus.c                   |  37 ++++
+ drivers/clk/Kconfig                           |   2 +-
+ drivers/i2c/busses/Kconfig                    |   2 +-
+ drivers/i2c/i2c-core-base.c                   |  16 ++
+ drivers/i2c/i2c-core-of.c                     |   5 -
+ drivers/i2c/i2c-mux.c                         |  26 +++
+ drivers/misc/Kconfig                          |  11 +-
+ drivers/misc/Makefile                         |   2 +-
+ drivers/misc/lan966x_evb_lan9662_nic.dtso     | 167 +++++++++++++++++
+ drivers/misc/lan966x_pci.c                    |  30 ++-
+ drivers/misc/lan966x_pci.dtsi                 | 172 +++++++++++++++++
+ drivers/misc/lan966x_pci.dtso                 | 177 ------------------
+ drivers/of/dynamic.c                          |   1 -
+ drivers/of/overlay.c                          |  15 ++
+ drivers/of/platform.c                         |   5 -
+ drivers/of/property.c                         |  31 ++-
+ drivers/pci/of.c                              |  10 +-
+ drivers/pci/quirks.c                          |   2 +-
+ drivers/pinctrl/cirrus/pinctrl-cs42l43.c      |   2 +-
+ drivers/pmdomain/core.c                       |   4 +-
+ drivers/spi/spi.c                             |   5 -
+ include/linux/device.h                        |   2 +-
+ include/linux/fwnode.h                        |   7 +
+ include/linux/i2c.h                           |   3 +
+ include/linux/pci_ids.h                       |   1 +
+ tools/testing/cxl/test/cxl.c                  |   4 +-
+ 30 files changed, 652 insertions(+), 245 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/bus/simple-platform-bus.yaml
+ create mode 100644 drivers/misc/lan966x_evb_lan9662_nic.dtso
+ create mode 100644 drivers/misc/lan966x_pci.dtsi
+ delete mode 100644 drivers/misc/lan966x_pci.dtso
+
+-- 
+2.51.0
 
 
