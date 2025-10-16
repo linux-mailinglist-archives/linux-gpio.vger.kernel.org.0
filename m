@@ -1,92 +1,95 @@
-Return-Path: <linux-gpio+bounces-27207-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27208-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77BD1BE3EA2
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 16:31:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C6FD2BE3ED8
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 16:35:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CD6E53B93A9
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 14:30:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D5133BD1B8
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 14:34:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3802C33CEBB;
-	Thu, 16 Oct 2025 14:30:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D23E2AD11;
+	Thu, 16 Oct 2025 14:34:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="A7SnySTK"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="AWv458Cb"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3318B31328A
-	for <linux-gpio@vger.kernel.org>; Thu, 16 Oct 2025 14:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 722561527B4
+	for <linux-gpio@vger.kernel.org>; Thu, 16 Oct 2025 14:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760625028; cv=none; b=G4dU3GYhzJom7CS4APoUomcmVY7+DQUEaxNh+q/BOxKO5v/hIuUsHI1mxMHxSk9KbhMZ28YsmGZTwzQ8IPZpgxFhvWX4QcTA7jYypYRLkfEqOI4douMPn5XSjmv6zNCjlZ9XTlpJPkoFDTxsVyeoICutfh4luxe9xjneC3nED2w=
+	t=1760625278; cv=none; b=riPsNWS6JSTvGVVEftgeNbILo1h9J28rEj/4JU7PnNT0cGJLAZlOSADkbEPD2IzOpUt+G+BSWu9Po9UNYCGgwBLQIBUzuidiVitVr8sq6qbKqEde63zwQqYPm0pNPU41SZZfjTCBXsjKii/R1BieFAGrtuiTFOf9TQljAuMH6nA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760625028; c=relaxed/simple;
-	bh=T0IcD58X1Kbm9j/Mmnqjb35nYoD5ZL5E/cjiyrGur2c=;
+	s=arc-20240116; t=1760625278; c=relaxed/simple;
+	bh=JSthpwSFeIt4qjS3RetjbUcoI5Cc07pvY5ek65QVrc0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DoMCPH84SEuPCtLUBR6517pZagDbdI89KddeqPhEUN7vhbKpuzHBIVDOxFBRk7fxdPvyV8MfZ1pp9bBhDUGEHbrvk18VN7Pv+wUiYPo2jZ0/HHoeukabWm+fnzyS0ohsLqObep2QaoS69kGvvCbyIysIVcE0XoEZj1WIrqhw/A4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=A7SnySTK; arc=none smtp.client-ip=209.85.128.44
+	 MIME-Version:Content-Type; b=KW1Fclao0z1+uXfEPlCTGHSJ3EumlYKbL+asXtwXLWu+pBHpfooBelMIlCbivIdWOr7o8xhHE3yVq54HU8a+/p/5jwhhnvkMMXCRer1mAlLL+dYGW8KtrlkTODcS81Q8/Nuk0LSLz34S3U1PBBCmy0+V0CQ5SMfzahuYNUyJyTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=AWv458Cb; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-46e542196c7so13214715e9.0
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Oct 2025 07:30:25 -0700 (PDT)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-47114a40161so6689755e9.3
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Oct 2025 07:34:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1760625024; x=1761229824; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1760625275; x=1761230075; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=64Z2itRYroa1p/U2gj/hs15ONohF5cg9NpwZeAottIE=;
-        b=A7SnySTKeiPFyqPEhqm/eoQhv1G8kH667sm44GSGkAxPPA+AlI4k6XPKNgDiLiu7Bv
-         E9xdkVUo+DojngyxeVyFXA+Cx5x2K3XPysh5vQlE18ezXzWXYv0skh6BdCoLdnPXGxIg
-         qsMfD12KjY44fEpbbcgEeokVY3ONS5hbyJYo+TqYtGBf2NGwgIA9ll66YotDzWJQS0bE
-         +yCrlXSkInjwTTUTHJLUhZ5B0B6/NqtxhZ5VCIAJ4lY0OwRyupoPDfgXTpV/zrwFkROs
-         XvdF58j6e3pgFGdJKMr0C+ASSYIvfQuMVgGpa4BKqWhgJdkKfGC1+kXGh8yz4TWcSM19
-         ufcA==
+        bh=n8VSC6HDGAFC0rsKl6H0hRnSmQPRXnaQjH3ssPLdIg4=;
+        b=AWv458CbmaSFhbVunBi3Qm0QI+eKZoA6tcLWJwVzkC7ecL+SG9sBONWEcIlf3TdU/u
+         e1hKQuBDz5TkWmVO8dhJM8wSocP6TbnmuuNM5x86pq3nTjoxgBxmhCfaxeNk2nw5fRrU
+         Q21Ake2fpBZFMLkzfolyIFatlNswwkd25+76lLDLWncFGhgxVU2+m7twGsB5AKukpn8t
+         uwGLoMvgKo0n2JCmg03JN0NJPVjhHd4EwxP7hu0pC2B1A0qoTa9vBh3toSa+pDZSi/nH
+         6OuC5dRUKQTK/eBJ2AgXNgH32kEpWYZ/FEAxlTOBUToDexe2nvP3XWUrJAFZJH+poA0G
+         MNHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760625024; x=1761229824;
+        d=1e100.net; s=20230601; t=1760625275; x=1761230075;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=64Z2itRYroa1p/U2gj/hs15ONohF5cg9NpwZeAottIE=;
-        b=dfnp0KMsEejgA5R2N6On9nknROJH4sVsrepzXm5NGQ5eKDATkoIBCsXHZydITyBLWe
-         e+yj8DAMu3lmrGW/sH+qEKcp7ihpGKTbL3V28CmSRZYv4cBe3KXnwbCiV7f6GccW3Kxm
-         Y+3nrnpIRaOJdmQOkCi5734m+f50Af2qcbs/flGeEMtk4Q/qhNtMVxYoVjqfjVzAsU/7
-         2dXjBv9fYEY1G9z7rLpwaPQ5J8/LK2g8o2ctPctLXOXl2qcQREaJ3uS5NSq4YD2UZyH2
-         tNsBwJrorgPDM5XOFyeMX6/9/jx7GN+Afb0u9zmciQM2Tq+Xe/6PaxiXGAnTw6tjyAVJ
-         2Jng==
-X-Forwarded-Encrypted: i=1; AJvYcCUbsN13KnTMTzU+1lM1LGWqfmclCexbpuxscq3i8hY97t8Ft35k5T1eyCf6P45G9vAZk4sb3ZvnYdXU@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3MsElWH3LW/UGF6YtSdswbxOeit9nciceA9Zjx0gqT6p4HWIL
-	tm9VANSu18R2ikFPXDLJIp5MqbEl2myU7M/y0bcHs/rhJo0/MoV+PBejQZb7PjlpiKo=
-X-Gm-Gg: ASbGnctL+EJ+eOlmMcy4zUhBhUfk4guqVm3MhEzwgb4/DLC+Kk4I4QqcXXMp46KjI9p
-	1JtM8VHbdEZ7CFMiDltdhDLwnhi/ynaE0j2aQr43oopYXrsiG1xOrgtLufgiZBOnaA8UXJS79+G
-	1hSKKidoCTeoQDgUGrU5F/YvhpIpAMDtYxLcpQ2b0frL9g8SBBQ/WvAj2tYXR7pDUHg3lPs1v9p
-	6cZwKT5+Y6M81Sx9+69DhcEJk15hxWzDs3JVJEBKOeMcHVu1z7TEEpEJFKKv+BNyrIai2Y/xApq
-	Lr5kALMeqXWZuIG86AIOWuSnrCPRpD3jIYslQuwOEsuZoQF+oR/YJd7GmlRFFIXp3+awV9ZCTal
-	Htq1McCDfNUyGKg3JJQ0NDgBGnrOUhg4nJq17ex1Ic6wQsI+BOYETPZbk0mIEW7GBfduHF+pfcP
-	ChYX3Tkiy/Ap0=
-X-Google-Smtp-Source: AGHT+IGq3NRRypW29ee0XCD9JMY2kHnXLbqeGs8o31qrq9QzhF2mvpDXcOW40RfB5yhA9DpJg0uqCA==
-X-Received: by 2002:a05:600c:4793:b0:471:ea1:a460 with SMTP id 5b1f17b1804b1-4710ea1a4e3mr12346405e9.11.1760625024040;
-        Thu, 16 Oct 2025 07:30:24 -0700 (PDT)
+        bh=n8VSC6HDGAFC0rsKl6H0hRnSmQPRXnaQjH3ssPLdIg4=;
+        b=TM+EWiQ4JJOUBaaU13YdDaaMPePd0V+hTnKlvT0l0spxRSYHDw348Wca/dYMycG8UO
+         Hn6xsT1/7uQQGiTUmUHpneb/jSt6ChhMXxq+tiBsRMJ1Fzo3AlUScIZQkpOYPTcqny71
+         nsq7gUL8jOD128rkcriPZ4xsN0jTOfTxJCl9AqcciFBsaY4Fjm4RNLOMWtDgKCZh30Xo
+         M8R8Me92YBJWX0uO9ulq9zTJrpG90jOKuynnT64fpS+V7A45bii5OZmmT0+EB13z6hlW
+         dkEr5ClqOaMMcfO1QjWlwBOrh8LwK3wMFlc5fzh9FeMhVAuRGUzFfMvKstvWCwGV0rEz
+         uIvg==
+X-Forwarded-Encrypted: i=1; AJvYcCXITaXN4g5ZOmwo6SbvSEoID8oglOF7Kp9BndqYRI7jgWrqSLNR84YzLwLaDJF/MpPAw84xMitYrIJv@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLYveyTPZWg7T40KR0FOpWfUUZkmx/3BqeQLtfFDg8PpKMTfi4
+	KMA0FzgID7CvWzLERHAdBQR20ivBG3W0cdAYYN+YCU76VkqjHsXYQ1Ir+KoQAWMqk4Y=
+X-Gm-Gg: ASbGncsuBtn6wMChqd3+8e7PXysU9RJa6QCDHTjzAYIL/4F3sjH4k4fA+X/9e86pr/B
+	++LYvVmmNMTUQE6wZvkESl5se3j2AMWuPnnrTXSsGVZSqyHoHcVjSLJbv4hTeV+nf4k9oJxGKuf
+	h/QKaBKgjsHma2GuIX1/4idj0qbbXUr5LIO0VqMm11qgpNIQORAP2kAdg2e0NPqedrJ+qeS1uNP
+	boNrDb7QZk0ok+ICI0Ikz8zyDOmpt7YMRUXZbGUMExza9Sx35MB2oY/LhnqxQnDDJR/GfYym4Ql
+	z44nCKnidE192d64CNr98MuP8Okst8LUQonP6JJzWyI5ldZTg8AsWzyxGDxiU5VBVl8OyDL58z1
+	xVRb5fiC2Eb4332e7SYUs+VWo8WHlx6rgfBRuuWI+qSc98IbRz/MXYb7QDRlcVAqWm1r3umvEwg
+	k5
+X-Google-Smtp-Source: AGHT+IEusEzaVicmxlY/Bc63Mh+VhAak/hlhi5KMymhMgpxHo61SLm5W0znXGnRmWrEOUVcPV6djjw==
+X-Received: by 2002:a05:600c:548c:b0:46f:b42e:e39f with SMTP id 5b1f17b1804b1-4711791d96cmr1368045e9.40.1760625274796;
+        Thu, 16 Oct 2025 07:34:34 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:ef97:57cb:86cb:f7c4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-471144d1765sm41639815e9.17.2025.10.16.07.30.22
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-426ce5e10e8sm35163314f8f.39.2025.10.16.07.34.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Oct 2025 07:30:23 -0700 (PDT)
+        Thu, 16 Oct 2025 07:34:33 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-gpio@vger.kernel.org,
+To: linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	thierry.reding@gmail.com,
+	jonathanh@nvidia.com,
 	linux-kernel@vger.kernel.org,
-	Francesco Lavra <flavra@baylibre.com>
+	linux-gpio@vger.kernel.org,
+	linux-tegra@vger.kernel.org,
+	Kartik Rajput <kkartik@nvidia.com>
 Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] gpio: pca953x: enable latch only on edge-triggered inputs
-Date: Thu, 16 Oct 2025 16:30:21 +0200
-Message-ID: <176062495388.120857.13832123622797460794.b4-ty@linaro.org>
+Subject: Re: [PATCH v4 1/2] gpio: tegra186: Use generic macro for port definitions
+Date: Thu, 16 Oct 2025 16:34:31 +0200
+Message-ID: <176062526760.121245.6881501236201475416.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20251008104309.794273-1-flavra@baylibre.com>
-References: <20251008104309.794273-1-flavra@baylibre.com>
+In-Reply-To: <20251010101331.712553-1-kkartik@nvidia.com>
+References: <20251010101331.712553-1-kkartik@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -99,31 +102,19 @@ Content-Transfer-Encoding: 8bit
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On Wed, 08 Oct 2025 12:43:09 +0200, Francesco Lavra wrote:
-> The latched input feature of the pca953x GPIO controller is useful
-> when an input is configured to trigger interrupts on rising or
-> falling edges, because it allows retrieving which edge type caused
-> a given interrupt even if the pin state changes again before the
-> interrupt handler has a chance to run. But for level-triggered
-> interrupts, reading the latched input state can cause an active
-> interrupt condition to be missed, e.g. if an active-low signal (for
-> which an IRQ_TYPE_LEVEL_LOW interrupt has been configured) triggers
-> an interrupt when switching to the inactive state, but then becomes
-> active again before the interrupt handler has a chance to run: in
-> this case, if the interrupt handler reads the latched input state,
-> it will wrongly assume that the interrupt is not pending.
-> Fix the above issue by enabling the latch only on edge-triggered
-> inputs, instead of all interrupt-enabled inputs.
+On Fri, 10 Oct 2025 15:43:30 +0530, Kartik Rajput wrote:
+> Introduce a generic macro TEGRA_GPIO_PORT to define SoC specific
+> ports macros. This simplifies the code and avoids unnecessary
+> duplication.
 > 
-> [...]
+> 
 
-Due to the potential impact, I will not send it for fixes just yet but
-I'm willing to give it a spin in linux-next and see if anyone complains.
+Applied, thanks!
 
-I've queued it for v6.19.
-
-[1/1] gpio: pca953x: enable latch only on edge-triggered inputs
-      https://git.kernel.org/brgl/linux/c/9f0fa1801fe4503eb119a4523a59a494768fda5d
+[1/2] gpio: tegra186: Use generic macro for port definitions
+      https://git.kernel.org/brgl/linux/c/f75db6f7f907c10bf4d45a6cfdae03bb1b631841
+[2/2] gpio: tegra186: Add support for Tegra410
+      https://git.kernel.org/brgl/linux/c/9631a10083d843b57b371d406235e2f2a3e49285
 
 Best regards,
 -- 
