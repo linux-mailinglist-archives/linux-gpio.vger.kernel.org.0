@@ -1,113 +1,193 @@
-Return-Path: <linux-gpio+bounces-27217-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27218-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCEB2BE4784
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 18:09:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F3CFABE49BB
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 18:36:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C782E50918D
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 16:07:15 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C73D44E3913
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 16:36:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 603FC32D0F2;
-	Thu, 16 Oct 2025 16:07:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 542B72E2DF4;
+	Thu, 16 Oct 2025 16:36:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BnUKw1Bs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KwU6O+Yh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA0232D0DB
-	for <linux-gpio@vger.kernel.org>; Thu, 16 Oct 2025 16:07:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51CE232D0CA
+	for <linux-gpio@vger.kernel.org>; Thu, 16 Oct 2025 16:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760630832; cv=none; b=cGIo5GplVcI0TeEaEX+6LsCAD2Z+GfL0PO7ni/CRQT8kQf7O+ZkkF+Oa6OrwQXGzX32ORGofgOGoeQ4/QNv6/Q59PSHAAa5E6wroE8crpZWRAOdru0A+lb2QSDQy8hV5ATrqiyGn2eDawNRNNdamQFkdguo3TAK12Td6YZy9mgM=
+	t=1760632589; cv=none; b=VzQZC1lAZq995D9rntabIKN11vEi7W0Pxz6hzxzM55TflsAThz8UE1UopPyyy/RFqvvkt5vq2o/vitRB3cjTlDZiGdPo/M3x+B6awYxVnAwNveFr8DjkheqZ5OnZp9sI6J0TDteKVlI1gG1UqmaiBdTeMv/bkrI2CdPsKqrMzMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760630832; c=relaxed/simple;
-	bh=Vjr9YRqSTqtgmJiKQ524agy+ATb2FxOdcZqgwssjAqI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RK7LZ7O9LGw2D/R+7TRid7VSMVykPaMkasrSPBEt0jiVWAF6yj6vk/9kxCCvtnwi+Tm5SnjMhF7r9osOjGs0yoGM1HyZjadmqmCvP8p6OGpnzV/KrI1cQGdVXGhRYcx7gbTpUtVp8+6A0kH1NbuM3ZTlxjVaRc7/FHZNf0SK2Sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BnUKw1Bs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1DBDC116C6
-	for <linux-gpio@vger.kernel.org>; Thu, 16 Oct 2025 16:07:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760630831;
-	bh=Vjr9YRqSTqtgmJiKQ524agy+ATb2FxOdcZqgwssjAqI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BnUKw1BsIgKNfgjiQKOCCdP7+2sAITiVggeYA4bvzkmo9/dnOfQRX8i28JjI7nkXq
-	 RMVQvw5oHEex4GknBxHrcvo76GRBOF75qnA762q8AcKfifzqH2N8rsY8CzlyFx3ukd
-	 WLL7Z29LnYU5WpFV0tvRZ+eVq94WlEspx4JpStQMp42ejREk0LdvaK1AthG6ImDve/
-	 H2ceQQfLOMEw2/bOT3CREXPKc45UAGHEVMWOJ1k+4PkB+DF0sudp0lq73xHACcdDMg
-	 uxadb1Dx9xPL5SC8diIOTtrW6LsVsgDeuYQmfqeAAtq1uwn39xEu2ohGbpYtmK5aVg
-	 x/MPmQ4DkDSeg==
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b457d93c155so129076566b.1
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Oct 2025 09:07:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWbtIvyJ0X9NYO2df3UYBDX0jlvnxYlAVPVljwyfE8jzOGKgre+pEDh6X3WIFZRfTGAmY7JxioVU9+Z@vger.kernel.org
-X-Gm-Message-State: AOJu0YxISDOPMy45a9+pH/M/ZQS+k839iSPHRODOo3gYz3amB6s2lvo4
-	NTJyJt4fg7MawAPRtkn/CUrrPnnuQBWKHvWj5w7aOqNIdVlm3/5QkhmeKCHCcnkO8z9eHroYtX+
-	jWBIdlk9J5r7tCWWJPMYtZWe/2d9gFQ==
-X-Google-Smtp-Source: AGHT+IEwUNFtjfemC+H8YbxetDx+/1UO/8iQ2gyCTnZPC0wHrc6i2JvE1D+ajYJoJm5ZfKz4z3qtGvXJ7TTBCQJq2aU=
-X-Received: by 2002:a17:907:1c85:b0:b3e:5f20:888d with SMTP id
- a640c23a62f3a-b647304516amr61378866b.27.1760630830062; Thu, 16 Oct 2025
- 09:07:10 -0700 (PDT)
+	s=arc-20240116; t=1760632589; c=relaxed/simple;
+	bh=nGCl7r6sYsaGETR4dVzN/n0l3F0TLdlzghQngtVVq74=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=k77Y4uAjkrXzC0qc0kCZsostaddc2y2/2TFE3l/uEYmjL7i1fAGgPx+Vh05REkYF/N8aS0Dxkp2uaG92U97Dg5Ac2F5S4lYZN5FNoV+i2q+/5dbNbdKjAXGliHx3MwiblvVT6q23NfjhamqYxJuX0cXO6hP7hbBLKnFmGe7PWTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KwU6O+Yh; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-47100eae3e5so9522715e9.1
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Oct 2025 09:36:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760632586; x=1761237386; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7iudVjJpy0o1qbrH2KXL6hDXBUJ+8wFir9fAarOxkEk=;
+        b=KwU6O+YhrBIAwRHCp27ktNITvPnkvTrRrgD68Ih8qXzO9MZ6SQgzPdVbqE+DhTrxNR
+         nlOw850giqRSf1Z0JG2Hqn1yz+gsYwywmbYeUvMhrS/DnlJUJHtypk/VNYihwpIg16B5
+         ameq2t4kj4JQ8LI56wIQ772vPTeQBCHOAy+7vXsGeyMNaZOc06F2FM5Plxh6H676TzPg
+         JAgJHki4s81CbNhMla0/4W/2ZTdMd4ZcsCDa/PftuJKfz0GubwABezglI1pfGSOXeZTa
+         WbliN7BxRNpA6uA43nOKQ42hDMInvIa0dnsEm1DZ752cnIY4YnP9c/cqgTzmTn2WTbpD
+         fZvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760632586; x=1761237386;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7iudVjJpy0o1qbrH2KXL6hDXBUJ+8wFir9fAarOxkEk=;
+        b=eX6d5ECtkArJMKowvgOnAEfVtMNHxq622zNAd9oq2RQBop5xqSgeFsveIFkeWUbn64
+         s+UCjyi6q6iKvthbHvn34G5gD6craJYNMQT4sNJajgp/KM55VFmSdkX6b8DFSYyoi6sS
+         ST8+19MD6asbS9PaKpsfqLzyE1CXcq7EIVcVZX+qN6nkNUFWA235Ffv/Zk9OznMg0hPs
+         LAhTYSP4nZgJXvTRifTbQV0ZOrVAvn5v+wMgGE33d1AfwJj/zUJml8EeoW8rm8kcSscK
+         PvTFuyHaS5s2Snz6gXhqoYuW24dz40g5iWF2iHU4Fsl+q6eE/teGSfIHxvvbVUZ6+N9q
+         dxxA==
+X-Forwarded-Encrypted: i=1; AJvYcCVJc/uGQrmK6N3EQ+BwvR0Xq00oo8ng8XiLDrIr2Hl6tIWV6JJ6T+1kRGTlYS519FK8k3p4kifMWZB0@vger.kernel.org
+X-Gm-Message-State: AOJu0YxW3xCfQDQMV+evBOgDIb6M04ZMNrKHYW96Hpl+T7N+Y7PA0CXd
+	KeVOWby3oSOSXZZj1mmAyTACUI1CbQtfmG/CTYmF4NX4Pg7nyZe04zrt20Bm9Q==
+X-Gm-Gg: ASbGncuym4HV7n4CHFlMNv3eyqL/naB2iqhBhYQK7lNDam/ECoM7aQkyZWHCsqDQvRc
+	cd+79O2PKDdI2jve341AV3xaatftWmayxk0/kh36sflwRHmmAojLUX/bKoqNYmSQZOZqLeOxyQN
+	Txr9qrN+3TGFXBQg9rx4zp5rffIqiHjZV+l4pmD1pn8Qkax/LFkWxvDHMzlhYzAk/2vGULOwt86
+	8U7ybbV7kDwITU8bhcegUvaOUSG+4qbNyxe7kSzyi2lQ7TJ7M3x5WoR9aBiwJgmEIiFkTGl7jOn
+	Y4GwTXNGgp6/lYmjEpHau6vBrQWW6ul3Zy6s6iFwWBVBe+N7XqhmrwOuLu2g7pbvUkt8Rt500fD
+	T37gWu2bc2cz/NcQ/DrFZOlN69TsYAvZBjr4Ms5P4sN9Q0zduKKYWJN87Oumhh9E9fXy6xoEEnp
+	IyUGgtZFZke2J8FaHRmJPrskkI
+X-Google-Smtp-Source: AGHT+IExtADAqu4uX1pzMIJkBxPq+LfqHR/0r27r2uz36uYKe2cyn2W6w1F9x0DZ69c3Zjnu/ghXbQ==
+X-Received: by 2002:a05:600c:34d1:b0:46e:394b:4991 with SMTP id 5b1f17b1804b1-47117876f30mr4328605e9.11.1760632585339;
+        Thu, 16 Oct 2025 09:36:25 -0700 (PDT)
+Received: from dev-linux.homserver.local ([51.154.248.208])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47114444b06sm38388325e9.12.2025.10.16.09.36.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Oct 2025 09:36:24 -0700 (PDT)
+From: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To: Michael Buesch <m@bues.ch>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6] gpio: bt8xx: use generic power management
+Date: Thu, 16 Oct 2025 16:36:13 +0000
+Message-ID: <20251016163618.1355923-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251013174319.GA847155@bhelgaas>
+References: <20251013174319.GA847155@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251015232015.846282-1-robh@kernel.org> <aPERZ/IpjAhD2sen@lizhi-Precision-Tower-5810>
-In-Reply-To: <aPERZ/IpjAhD2sen@lizhi-Precision-Tower-5810>
-From: Rob Herring <robh@kernel.org>
-Date: Thu, 16 Oct 2025 11:06:58 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJCCBHp6vMvXdh39hpdiMg-3Kr3uB7KMFauCfYM7rYSWQ@mail.gmail.com>
-X-Gm-Features: AS18NWCmaqStDDMgrLFaOkte03G1gDmgUst_qjRWdTXsAn_QVmilmfjOPWrs-c4
-Message-ID: <CAL_JsqJCCBHp6vMvXdh39hpdiMg-3Kr3uB7KMFauCfYM7rYSWQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Fix inconsistent quoting
-To: Frank Li <Frank.li@nxp.com>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Stephen Boyd <sboyd@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
-	Jassi Brar <jassisinghbrar@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Lee Jones <lee@kernel.org>, Joel Stanley <joel@jms.id.au>, 
-	Andrew Jeffery <andrew@codeconstruct.com.au>, Andrew Lunn <andrew@lunn.ch>, 
-	Vladimir Oltean <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Daire McNamara <daire.mcnamara@microchip.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Florian Fainelli <f.fainelli@gmail.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-iio@vger.kernel.org, linux-media@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-phy@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Oct 16, 2025 at 10:38=E2=80=AFAM Frank Li <Frank.li@nxp.com> wrote:
->
-> On Wed, Oct 15, 2025 at 06:16:24PM -0500, Rob Herring (Arm) wrote:
-> > yamllint has gained a new check which checks for inconsistent quoting
-> > (mixed " and ' quotes within a file). Fix all the cases yamllint found
-> > so we can enable the check (once the check is in a release). Use
-> > whichever quoting is dominate in the file.
->
-> Can we simple require only use one of " or ' to let everyone follow easil=
-y?
-> support both " or ' is unneccessary options.
+Switch to the generic PCI power management framework and remove legacy
+callbacks like .suspend() and .resume(). With the generic framework, the
+standard PCI related work like:
+	- pci_save/restore_state()
+	- pci_enable/disable_device()
+	- pci_set_power_state()
+is handled by the PCI core and this driver should implement only gpio-bt8xx
+specific operations in its respective callback functions.
 
-I don't really care to fix 915 files. And don't send 100s of patches
-for me to review either. Given we've got 5200 total, it's a good
-chance folks will copy the preferred style.
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/gpio/gpio-bt8xx.c | 30 ++++++++----------------------
+ 1 file changed, 8 insertions(+), 22 deletions(-)
 
-Rob
+diff --git a/drivers/gpio/gpio-bt8xx.c b/drivers/gpio/gpio-bt8xx.c
+index 05401da03ca3..324eeb77dbd5 100644
+--- a/drivers/gpio/gpio-bt8xx.c
++++ b/drivers/gpio/gpio-bt8xx.c
+@@ -52,10 +52,8 @@ struct bt8xxgpio {
+ 	struct pci_dev *pdev;
+ 	struct gpio_chip gpio;
+ 
+-#ifdef CONFIG_PM
+ 	u32 saved_outen;
+ 	u32 saved_data;
+-#endif
+ };
+ 
+ #define bgwrite(dat, adr)	writel((dat), bg->mmio+(adr))
+@@ -224,9 +222,10 @@ static void bt8xxgpio_remove(struct pci_dev *pdev)
+ 	pci_disable_device(pdev);
+ }
+ 
+-#ifdef CONFIG_PM
+-static int bt8xxgpio_suspend(struct pci_dev *pdev, pm_message_t state)
++
++static int bt8xxgpio_suspend(struct device *dev)
+ {
++	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct bt8xxgpio *bg = pci_get_drvdata(pdev);
+ 
+ 	scoped_guard(spinlock_irqsave, &bg->lock) {
+@@ -238,23 +237,13 @@ static int bt8xxgpio_suspend(struct pci_dev *pdev, pm_message_t state)
+ 		bgwrite(0x0, BT848_GPIO_OUT_EN);
+ 	}
+ 
+-	pci_save_state(pdev);
+-	pci_disable_device(pdev);
+-	pci_set_power_state(pdev, pci_choose_state(pdev, state));
+-
+ 	return 0;
+ }
+ 
+-static int bt8xxgpio_resume(struct pci_dev *pdev)
++static int bt8xxgpio_resume(struct device *dev)
+ {
++	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct bt8xxgpio *bg = pci_get_drvdata(pdev);
+-	int err;
+-
+-	pci_set_power_state(pdev, PCI_D0);
+-	err = pci_enable_device(pdev);
+-	if (err)
+-		return err;
+-	pci_restore_state(pdev);
+ 
+ 	guard(spinlock_irqsave)(&bg->lock);
+ 
+@@ -267,10 +256,8 @@ static int bt8xxgpio_resume(struct pci_dev *pdev)
+ 
+ 	return 0;
+ }
+-#else
+-#define bt8xxgpio_suspend NULL
+-#define bt8xxgpio_resume NULL
+-#endif /* CONFIG_PM */
++
++static DEFINE_SIMPLE_DEV_PM_OPS(bt8xxgpio_pm_ops, bt8xxgpio_suspend, bt8xxgpio_resume);
+ 
+ static const struct pci_device_id bt8xxgpio_pci_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_BROOKTREE, PCI_DEVICE_ID_BT848) },
+@@ -286,8 +273,7 @@ static struct pci_driver bt8xxgpio_pci_driver = {
+ 	.id_table	= bt8xxgpio_pci_tbl,
+ 	.probe		= bt8xxgpio_probe,
+ 	.remove		= bt8xxgpio_remove,
+-	.suspend	= bt8xxgpio_suspend,
+-	.resume		= bt8xxgpio_resume,
++	.driver.pm	= &bt8xxgpio_pm_ops,
+ };
+ 
+ module_pci_driver(bt8xxgpio_pci_driver);
+-- 
+2.51.0
+
 
