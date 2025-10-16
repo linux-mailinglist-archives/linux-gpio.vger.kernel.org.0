@@ -1,129 +1,126 @@
-Return-Path: <linux-gpio+bounces-27198-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27199-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27A1FBE263B
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 11:29:36 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2280DBE2A58
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 12:08:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D13EB4821BA
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 09:29:34 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 18FA734E15E
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 10:08:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64402317702;
-	Thu, 16 Oct 2025 09:29:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E21231A81B;
+	Thu, 16 Oct 2025 09:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="oDSP6PkF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616052D3A7B
-	for <linux-gpio@vger.kernel.org>; Thu, 16 Oct 2025 09:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9384217A2EC
+	for <linux-gpio@vger.kernel.org>; Thu, 16 Oct 2025 09:59:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760606972; cv=none; b=crPdQNYWhjUyWulmPqXCKkZ69iLHIZL7KRPDnGGxAJd43JHAjYOrGYGH79Y96giumo7WHrNfIPS/hbOOYDLj2auxfdwgA1uL0c2jnzIViOKN/MxOFFLOJ7Xwy7h6VGA34fmMlsW9pCdG93cAQduNjRY30aaTFLh5tttfrw90CQE=
+	t=1760608756; cv=none; b=lS0qcg0hUegTikepVFjmyH8HcPlvelQpJ4bmYBfNyXtSowy3Iayt4DS4QvzhLK1XowPukHj/GE9y0hvbyeljNKS40BsVx0zMIp0gyVxzYFlMmAkFyfVGbcl8pl/7Yt/rBk3LyhXfnVjh7YJYO1V3U+wAZ3rrwzCR1ofImApUMyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760606972; c=relaxed/simple;
-	bh=Ez7NT2vHc734831I0RchIRgOMqhlQSU8jAEHdZQpfHo=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=OFufIADUZJ/hJBgr7VFODn+0MwXP1+9AAokdKi65QboARO8HVpkaVUxLikih3twjJG90+KVMyypL6nOxMqadadkZg6ARJL4+uHGyMdSGpsqwZq8bRGk0XR8mtmjoXWvQ7othbyn3iLrQrjjPHEtolH+HbmasEmGz/a9R/YAKyMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from [192.168.2.104] (213.87.135.100) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Thu, 16 Oct
- 2025 12:29:05 +0300
-Message-ID: <b0a06d38-74ea-4454-8b84-80f70442b8df@omp.ru>
-Date: Thu, 16 Oct 2025 12:29:05 +0300
+	s=arc-20240116; t=1760608756; c=relaxed/simple;
+	bh=VFAiGQJPqKboPo94EhJ0/7mKVlQFc2hTIDTrYUmRE1A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eV9OIspqNFqYL1X2beg+vk5kDf5ZteG7WL1fKUR3fEvPEDcToVMOoBDtq3QYSCMIyeOZ1P+3WAMED2SoOPUluycQtVfkBH30k+UcaNUPPkLXB8amlEdsOValekAp6mgIjr2jG+7W/kArCGBjPn4ZWPCUIWNnZ8CkSMo5tOFgjDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=oDSP6PkF; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-591c74fd958so719575e87.3
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Oct 2025 02:59:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1760608753; x=1761213553; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vu9z05PojAySjuSCHEJIz8974laOBmhnnWHve0OaPVc=;
+        b=oDSP6PkFGX8uQZ5VQEwcwjtoN8oO49u6w72RhUlF49FIsP3eapJtzYCLOFAQepG96S
+         XT719O8olxKOtejJg1AEZvgJdkifdOBPqRsSoimp4gDe0sFpAmJaNfBT2Ma+NUap056C
+         OG2Da6HucME1ZaT64lFC3Y+nTx9SHP29+poJrvmKqd7pNkEJy7goh0sOTeDyVjmikwqV
+         niYk/t2/mOFOchl5ZhEGF/hon8J538Vb5t0pKrHAUjJwjvxQes0cRMPv6X3ghpuLZjby
+         DGzrXW1jBjCxBhebzL2mKe8hD7f6dnblvLo93VnLBvtIyYcyIAufdE9rEz8sNeXoHJrP
+         fQOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760608753; x=1761213553;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vu9z05PojAySjuSCHEJIz8974laOBmhnnWHve0OaPVc=;
+        b=tVfxA0jvKeFfqQmmLrWy9kShwDbxzkLR4T84TNDbRB9uEMQDktG6l/63djZal58OhX
+         dKI7ChvVfK2HWoYsBzGI6MDDZEBdr6ejRZ83FmKaCFfXsEWCdb/C22gj5tB/nKKPB4oR
+         /RraLJRpwX+O5x6NVJv6XZqInQpZJt2c1qGZgOeEPqNajthgxHJm40Nxr07wjxlaJQFV
+         Q6dmXP7bVTArBxpFFU/DmZxiEDj81kl5j4zHztaYEHDMOv/OyV9GFsrLzjaqXPfoQbNO
+         In3Jib5Wd3r2A0rWa794aR/nQoxv++ziHEXYTaReM58k3EVhhKHNhB93z6tRltPzZJwT
+         sKKA==
+X-Forwarded-Encrypted: i=1; AJvYcCWskgge/hpvos3888jmFawaF14OkpW8FgaheKJhmM7cfYGZyyXboTU35m11Ynr7ullW+siB4SgcQx8n@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSoyLfv6DmQfC9OnTsdpw8AvYqgpMeeMZDfrxub3Dltkoxwv/W
+	7V8bmN6KsHKgrEvaPVRV3EIA4VYFWrxoiCk5oZPwjM81rTrktGmEQpxvioaLxSLUoJ2ZUginbIg
+	dwVUjkvvNIePfr+XqAtpCXUiuakXrACZ7Ln7fA0IErA==
+X-Gm-Gg: ASbGncvtHTfNTtaazdZhaju5iko55JbGTJg2PRDt3zTXgBfgjsKPyY1nwiMYdgVtQGf
+	pY/sxNUuaWVuS2qg/wJDB9Lmx/etNUbYXEGnh98S+QWBAyEEKyi08Jx6Iq8wI9UdAiB1RQUtIK9
+	tDkw77RCzCo02KfJxqMggPqkx5F1f9NA2ZYVSzocNUJ2BdbRsITRTFfBAYI8L5dIRBRsVn1zyYS
+	aVvpwktukY0lvOZWeuviqruTDl+GF8RMaBA2hhjdOrGQxjG/srkEGBl5cSlcI8YB+0pfc9nQY4M
+	BJPxZnYxouSBJzhl
+X-Google-Smtp-Source: AGHT+IE44Pe/lNFjVwo5dvfl5OexZywAB5coMkbyKb7gQx6NnwL7+kNNAtUDNiJeEwtWT2LMbH90I1pPilstPuxVwAU=
+X-Received: by 2002:a05:6512:1095:b0:58b:75:8fbc with SMTP id
+ 2adb3069b0e04-5906dd8ef00mr9529664e87.50.1760608752524; Thu, 16 Oct 2025
+ 02:59:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Subject: Re: [PATCH] pinctrl: rockchip: fix NULL ptr deref in
- rockchip_pinctrl_parse_groups()
-To: Linus Walleij <linus.walleij@linaro.org>
-CC: Heiko Stuebner <heiko@sntech.de>, <linux-gpio@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-rockchip@lists.infradead.org>
-References: <179c9e8c-8760-41e6-aad7-7a128df60984@omp.ru>
- <CACRpkdbzEmZN=-FPvax4z_iq7u6pHyHGJ213QtpxqFL98-Ou5Q@mail.gmail.com>
-Content-Language: en-US
-Organization: Open Mobile Platform
-In-Reply-To: <CACRpkdbzEmZN=-FPvax4z_iq7u6pHyHGJ213QtpxqFL98-Ou5Q@mail.gmail.com>
+References: <20251016003631.3912523-1-samuel.holland@sifive.com>
+In-Reply-To: <20251016003631.3912523-1-samuel.holland@sifive.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 16 Oct 2025 11:59:00 +0200
+X-Gm-Features: AS18NWAtcYEK6c9DgJvJzyhAb88b9a1Ukmn-vsoKJrJZwtHDLluVjdni2Gu7gpw
+Message-ID: <CAMRc=MdUrm8fNRHcpAgNubJ+AM=iyThMe0hLLRd1vni8xbf2=Q@mail.gmail.com>
+Subject: Re: [PATCH] gpio: sifive: Support module autoloading
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Paul Walmsley <pjw@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 10/16/2025 09:13:52
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 19
-X-KSE-AntiSpam-Info: Lua profiles 197127 [Oct 16 2025]
-X-KSE-AntiSpam-Info: Version: 6.1.1.11
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 71 0.3.71
- ee78c3da48e828d2b9b16d6d0b31328b8b240a3c
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_arrow_text}
-X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.135.100 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.135.100 in (user)
- dbl.spamhaus.org}
-X-KSE-AntiSpam-Info:
-	omp.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2
-X-KSE-AntiSpam-Info: {Tracking_ip_hunter}
-X-KSE-AntiSpam-Info: {Tracking_References_header_contains_several_msgids}
-X-KSE-AntiSpam-Info: FromAlignment: s
-X-KSE-AntiSpam-Info: ApMailHostAddress: 213.87.135.100
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 19
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 10/16/2025 09:16:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 10/16/2025 4:29:00 AM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+Content-Transfer-Encoding: quoted-printable
 
-On 9/8/25 3:59 PM, Linus Walleij wrote:
-[...]
+On Thu, Oct 16, 2025 at 2:36=E2=80=AFAM Samuel Holland
+<samuel.holland@sifive.com> wrote:
+>
+> Add MODULE_DEVICE_TABLE() so the driver module can be loaded
+> automatically based on a compatible string alias.
+>
+> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+> ---
+>
+>  drivers/gpio/gpio-sifive.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
+> index 94ef2efbd14f..e9a992cd4b9c 100644
+> --- a/drivers/gpio/gpio-sifive.c
+> +++ b/drivers/gpio/gpio-sifive.c
+> @@ -260,6 +260,7 @@ static const struct of_device_id sifive_gpio_match[] =
+=3D {
+>         { .compatible =3D "sifive,fu540-c000-gpio" },
+>         { },
+>  };
+> +MODULE_DEVICE_TABLE(of, sifive_gpio_match);
+>
+>  static struct platform_driver sifive_gpio_driver =3D {
+>         .probe          =3D sifive_gpio_probe,
+> --
+> 2.47.2
 
->> In the Rockchip driver, rockchip_pinctrl_parse_groups() assumes that the
->> "rockchip,pins" property will always be present in the DT node it parses
->> and so doesn't check the result of of_get_property() for NULL. If the DT
->> passed to the kernel happens to have such property missing, then we will
->> get a kernel oops when the pointer is dereferenced in the *for* loop just
->> a few lines after the call.  I think it's better to play safe by checking
->> the list variable for NULL (and reporting error if so), like we check the
->> size variable for validity further down...
->>
->> Found by Linux Verification Center (linuxtesting.org) with the Svace static
->> analysis tool.
->>
->> Fixes: d3e5116119bd ("pinctrl: add pinctrl driver for Rockchip SoCs")
->> Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
-> 
-> Patch applied!
+It looks like it should have been part of commit 6b4c76ded358 ("gpio:
+sifive: Allow building the driver as a module") in the first place. If
+that's the case, would you mind resending with a Fixes: and Cc: stable
+tags?
 
-   Where? I'm not seeing it in any Linus' tree... :-/
-
-> Yours,
-> Linus Walleij
-
-MBR, Sergey
-
+Bart
 
