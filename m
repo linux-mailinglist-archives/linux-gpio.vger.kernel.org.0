@@ -1,126 +1,146 @@
-Return-Path: <linux-gpio+bounces-27210-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27211-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC0A6BE4053
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 16:52:48 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F58ABE42BB
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 17:18:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C94425E31C7
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 14:50:08 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C7F74508091
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 15:16:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8346534AB0E;
-	Thu, 16 Oct 2025 14:48:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2AD43469F2;
+	Thu, 16 Oct 2025 15:16:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="MywwBi5l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ll4RLxDA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B51B346A0C
-	for <linux-gpio@vger.kernel.org>; Thu, 16 Oct 2025 14:48:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBFA19E81F
+	for <linux-gpio@vger.kernel.org>; Thu, 16 Oct 2025 15:16:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760626125; cv=none; b=VSIT6W0Abd360/ibdOlvhkHM7NuUZrciaDD1wGrT4vhVAYWpylukbyaN6w0A9/SHum79Ot/C8ZTfl14f7WAi5kmOjkJoirJhiNY1dMsyg8XVRYe1975NK0WgCfBdR7lGRReWg2JhGJSwidU9ZPGXDcrkJOGbZwqQk7yeyx7Q5rQ=
+	t=1760627787; cv=none; b=J+g9Hqcx9AvBjl9aIR6wLqa+ab5DQvwTg9JjXfwbrFJfCrgEy7+WWVD6Yxv1y2RsXjFvU3cAAkJOb6jtlZeIICze69EUo+ZkA6UbeXoRq6Daiip3o4AQ2178shu6V8pZcuKeRNSOLoi81V8OTiH81VC8j7LeOB2fzEVQi6pNsyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760626125; c=relaxed/simple;
-	bh=fEYTH53YDZJZ8C2Er8bOzHta7ybr+V5+FzGrUdlcHBA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j/m4ltsvsLC0PvPp1AY40I0PWVV5IfFYMYSVtrwSPA+wf1HYG+WBKdA3wJAR1wAWW7JnLQJWQIWTNUVMsjYXDf7OrbmrmMFB1R34QOxMypr9e4hh9TmH8cQFK7P73+v6e+Nx9Rb2tpr97/JIMC1yjeosV3BBdfY2BUl58yT+u9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=MywwBi5l; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-4060b4b1200so756662f8f.3
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Oct 2025 07:48:36 -0700 (PDT)
+	s=arc-20240116; t=1760627787; c=relaxed/simple;
+	bh=wcfBHmd6UI5Ee2LDKTIUZ3jBqohaEOc9j2+snQ6rucI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uH88CilxkBgIl2+FRTDuLceJ9YC43ql4BHa6/k8zvHYiIHImQ5kkWjZojQXurSY7qv17RbXngHT27tHmWtQeSFOACEjNbpSbx+ApSu53qzt8wW7tncpqYfR9xOGGydpZGsFdqkcZ6FHSLv3fSc276lfB3m+tkOYR6s3YMtC8ALw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ll4RLxDA; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-afcb7ae6ed0so144124666b.3
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Oct 2025 08:16:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1760626114; x=1761230914; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=il5/r0fmHwvIVU3+4q4zkfdvIMAREkRpbu6Q9Q7Tig4=;
-        b=MywwBi5lmsOrpsCmmOV7nsIsxLrHGlTjFrIL4fvXm1GqGyoTm843ZETfE08u+w1whG
-         Pd6itPgMW/hVeJSiobWZt4ZB/69aeq4PnEAvH0W5wWV9I++qCvK0hclteTx8rPbg0li/
-         UECLKcUbJ6bsohZ9z0fC3GOby2FZtqSQVJOF76rdw9zc5NqUSlNHBUNrvu7aNdgfZP6L
-         71UD1mDeKkrNLRX/brgQqU6sXugpZl+YIhHoSzEZkol3xU1yzH+ThXGULoSOvzBH049j
-         wkgpLSoN4VA8Be25FHV1XILDwwuuyX486uJl6aWr3dkUEPrU1gdBFNPEOq6NuZppdUNu
-         iiJg==
+        d=gmail.com; s=20230601; t=1760627784; x=1761232584; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+GMHzyWxIQdB2FcnGDsVo98f9mvKfQ0tZi6sM1VRpVw=;
+        b=ll4RLxDAj0FVXCLpmb0Hy92wpkTF+tM1aJ4Hph33IeRmerp1ZGixggCCVv1QYgMbmi
+         M/O4cBLWnNfZ91OhZzTHwaBP25UPrLsewfV6wE5Qc/OsRf6sKs7BqxNu1JYpSFrF4FMP
+         mdGbLp02Q1svctTmrUsS5qyfrRPVmfNf4bgjlm8yH3EWWILdj6LqCkzMfxUtwcuYGycA
+         fDSB7rSPCWvlxb7Q0ClsbBuK5AAAJtz9fDUKQ8tfkcjLOK94xQI916au5lMGWiFbJzuK
+         zFFny+iT9Eb4UI6VBbJ/pBCt+S450nk9b0/PbTPmDSDpxb9Dcclq0Hfy+Jqje0cL7ZSO
+         KlBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760626114; x=1761230914;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=il5/r0fmHwvIVU3+4q4zkfdvIMAREkRpbu6Q9Q7Tig4=;
-        b=COcYGl/3AqfsPEFU/O1Sk8d6KDeKTF685VA9DH9FGumPE11e/mkeHRDXcn3seX2ndJ
-         jEQzBQX+rtRsSub2Z2CdSDPOu18/X8fmcC4LmGRBvzvWlegO8CcBN0Z2cQaWb9MzW+6L
-         zfW4PXANj3hlNzkcCpBMQ3oDxJbthw+eXhmdK4Gyj558oEy1zO5G8RwfpcmEYPeuX6B1
-         /NESA6wexx5i2h9G2OuEmlEewGDUzyJGg4AeYeV+nWIaVrAEsb0j9Vig+Q07tVAxAMBV
-         XY/TbuZd6qNpcsluGHHwOaBUPCnVC/YtB6xo1cb8AHWCls33li9WgwugV8J8oedpiRtF
-         qPBA==
-X-Forwarded-Encrypted: i=1; AJvYcCXQTpXr2jN3vy18JWNg2QEJfQIhZidtUVwD4oWJuDvPlGubJzRfjQac233apYSVfC8qsaTabknnGgtz@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3nL6MofrALqWb7JPFQ1IZpBQzoEld/4cOppKturtJwUmMiLYi
-	BQX5Y98PxbjaRRA0Wc4qG+N1S5XwrpHpnANXIwZCxzZEfboU/85hkLfLreu3xUDUtVA=
-X-Gm-Gg: ASbGncswazFdIR9CV/Hz62lcSQExKaJX2I8FP0MBmxVv2nWXzxfXZNm9+J5BnsZAm62
-	dSCw19YNXaTwSm31vhN+4j1yrLNGFqfvrLaLFCehrdFduB0J5dfeHhfh90P6MAe/I+s/V+K0Ap+
-	A9sk4Nun6dgR4xLx/pZsspJ1nEhen034hgUBqqB7QXZ6NXqTaQq/Dvp4R25n7R2SbYZaqlLg+T1
-	EY4liAP/Ez+lJLM3ZZVsKnGjEzLJGbFhTBRmSDSixhA++sRjNuk46FySm3EmLbg9AA0Y7LLQONS
-	tslNRGCscaG+g0noRUeHgut7flymtyKzsNx8uOVBBTMJrjIPvpfDFsGlRwQDFH2rGo2IJXkSiSP
-	dn+MMoU0y3mjK0McloVjKkZy8ULTooTCiBBd1xeLpINhv2e5JdSFktsAUYPjlN8avwPaTVwI95L
-	Y3vw==
-X-Google-Smtp-Source: AGHT+IGU+UUv23rPnRMVt1yR35zGCx+QFDbX2GlDTl3HK/z3KL4fSupr6QTfss0me53/F+Mqd2QUFg==
-X-Received: by 2002:a5d:588f:0:b0:425:8591:8f5b with SMTP id ffacd0b85a97d-42704da4b6amr311746f8f.59.1760626114003;
-        Thu, 16 Oct 2025 07:48:34 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:ef97:57cb:86cb:f7c4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-426e6f03a76sm19507158f8f.36.2025.10.16.07.48.22
+        d=1e100.net; s=20230601; t=1760627784; x=1761232584;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+GMHzyWxIQdB2FcnGDsVo98f9mvKfQ0tZi6sM1VRpVw=;
+        b=idouTHotJUgxrnOyakeICnAYPo5T1JC1CTzN1/RIO/tpNaFfukUS/1701N/jns2xi8
+         l5VnsAaqVev8lc0e03eClboo6197EhWHcFyXYMf9Cptj9SR6cvV8a8SpPok+3l58oBKo
+         s1DO6dFi+34qfGCQi7nt9lVvwBwEFaInDw4pGCwtqvaCUmVi+FuqcUYS7FmZkUsEo8+b
+         ShalZB/xEvg4mCOF19jowykZK7PxpvXWvkfoPke54VqG35DNJyKx33Yj2E0DmYq1rWvr
+         phCIRp4qjdvAdYIHX8xeI370vwqNcKmopJHKxWyWliztGmtj8PGYDnidsDCqdaUMscCl
+         9VpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUTkl20CbOVjqL3FNbzw69I0M0V6mq7UAqQxg3JFF+gZkU+tKSKyB30hHWH3LwM9otgBFS9JWjwwg4k@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbDOct5y6K0bBd6UD2ZYOQRNgGzP8EXcRtQac6hLBzuvwOJd1L
+	EkENRDVemDowdXPWmGPoRQc3pVfwEOwFng63xHbLE2BioKAqOFA1PM19
+X-Gm-Gg: ASbGncuxGa3kVxaaByvIPAvXZpHRhg2NoyP2v4Z/Kc5FbVfZrzh+g7RAf0M0unRUCYq
+	ypi+KgNXCqKHNAkZCRpJPllLUTNO/hUqAzMzzlC34AwfK2qce8F4NAEoLBYkOUbhnT3fBiPwh+Q
+	2V1yfQXyqP8hX3nJtzvxbvhO+VU6P+TB4SlIt912H90XqwSAbcFm506gMOloSIw8oG6sa6+dM6M
+	S6S3bEziSKi9QUkSv7h3+rlRBq/2gBl17TKQlP4vFJ1WY4N3RBWSh4vKi42skoAiiSTO6d0tBYX
+	Jj50i7E0bCOl5k+//uyrX+pW0QatZzmnu6crz0tcfdcYQJYS7op3Av/y/cnZJ3EGmySp2/gKB+2
+	wxH1Eb38Fx9cUFfpdMLq5StP86ikULkSUnbT0/dhbu7cWOgI2ZBlV3IkZnOOGoJLMb9u8/36sXJ
+	B0uJdKMZca4oTzswgFdF01WbM1vKeZsRb7HlQ+3TAr/jD8ZJUEBT1+ItlZWXEBBwSTRgbpB248q
+	Q==
+X-Google-Smtp-Source: AGHT+IEUnMRpJptAyqDQKCXnI29t4Gj4evz9uABzOpOdIG6VCD9oWY5iTASgKePBY093qoWb66U4sQ==
+X-Received: by 2002:a17:907:2d06:b0:b40:cfe9:ed2c with SMTP id a640c23a62f3a-b64769cd245mr26276666b.64.1760627784283;
+        Thu, 16 Oct 2025 08:16:24 -0700 (PDT)
+Received: from orome (p200300e41f28f500f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:f500:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b5ccccb51fesm532883366b.44.2025.10.16.08.16.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Oct 2025 07:48:23 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	John Crispin <john@phrozen.org>
-Subject: Re: [PATCH 1/2] gpio: mm-lantiq: Drop legacy-of-mm-gpiochip.h header from GPIO driver
-Date: Thu, 16 Oct 2025 16:48:21 +0200
-Message-ID: <176062606134.122017.14455806740339775356.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <c7415e2870b3bd9109f95bab3784d48e708e30e6.1760360638.git.christophe.leroy@csgroup.eu>
-References: <c7415e2870b3bd9109f95bab3784d48e708e30e6.1760360638.git.christophe.leroy@csgroup.eu>
+        Thu, 16 Oct 2025 08:16:23 -0700 (PDT)
+Date: Thu, 16 Oct 2025 17:16:21 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: webgeek1234@gmail.com
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] arm64: tegra: Add Tegra186 pin controllers
+Message-ID: <qkyzlnni5nqykck4org4vgxzju6v6iha6fulgguutxuhf7zozc@awyches7ozox>
+References: <20250812-tegra186-pinctrl-v3-0-115714eeecb1@gmail.com>
+ <20250812-tegra186-pinctrl-v3-3-115714eeecb1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xpwhjuenbephr6ly"
+Content-Disposition: inline
+In-Reply-To: <20250812-tegra186-pinctrl-v3-3-115714eeecb1@gmail.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
+--xpwhjuenbephr6ly
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 3/3] arm64: tegra: Add Tegra186 pin controllers
+MIME-Version: 1.0
 
-On Mon, 13 Oct 2025 15:07:14 +0200, Christophe Leroy wrote:
-> Remove legacy-of-mm-gpiochip.h header file. The above mentioned
-> file provides an OF API that's deprecated. There is no agnostic
-> alternatives to it and we have to open code the logic which was
-> hidden behind of_mm_gpiochip_add_data(). Note, most of the GPIO
-> drivers are using their own labeling schemas and resource retrieval
-> that only a few may gain of the code deduplication, so whenever
-> alternative is appear we can move drivers again to use that one.
-> 
-> [...]
+On Tue, Aug 12, 2025 at 04:24:42PM -0500, Aaron Kling via B4 Relay wrote:
+> From: Aaron Kling <webgeek1234@gmail.com>
+>=20
+> Add the device tree nodes for the MAIN and AON pin controllers found on
+> the Tegra186 family of SoCs.
+>=20
+> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> ---
+>  arch/arm64/boot/dts/nvidia/tegra186.dtsi |  12 ++
+>  drivers/pinctrl/tegra/pinctrl-tegra186.c | 207 +++++++++++++++++++++++++=
++++++-
+>  2 files changed, 213 insertions(+), 6 deletions(-)
 
-Awesome work! Thanks for doing it, we really need to keep getting rid of all
-these legacy intefaces. Queued for v6.19.
+Applied, thanks.
 
-[1/2] gpio: mm-lantiq: Drop legacy-of-mm-gpiochip.h header from GPIO driver
-      https://git.kernel.org/brgl/linux/c/8d0d46da40c878d082b92771355faba8036aecc7
-[2/2] gpiolib: of: Get rid of <linux/gpio/legacy-of-mm-gpiochip.h>
-      https://git.kernel.org/brgl/linux/c/eba11116f39533d2e38cc5898014f2c95f32d23a
+Thierry
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+--xpwhjuenbephr6ly
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmjxDEUACgkQ3SOs138+
+s6E1FQ/9Emy2fSHqfWOx1mLl7fFhFiPgIbO/7b6K4ogiYAUJPPgObu9dQKwRZYcT
+y3WxvaYz9orL2R8f9wssQTfeCjiNcxs/9KX63v4K0A8UTAZ6IFU+jwzcuswQ0ZHX
+CLEl1zQnPnzbderf2Ay7rTbxUaOt+D9yDXjmpgm5zGOdGEPCibFaPC8RTbx+5Wy2
+rqztgmgQ4lHhBuVKGfjrfaVttYLrwfv2cV4pvZiyD+o5ekRgQqUqn6vrKbv81edG
+/RYqWHc1p/ylM/ff5oJKbSVEOIVHkdfFB6vREUZHcb5j8CFhXKojdp46dWRNzyKu
+ZobImewQyLDYmny2ci3uCZRZHuohBOHofyND1oPBuzA7seFGAmH41hNWzQD6mbuK
+8FU07VkQyz/S2vEOGb2yyeEnnzNLLSPmiJRXCO7Ld/voGIwAr5UpGdZKhcTn0MHG
+Djt+P8cRy0x5FppjlIT/YqPlhWFKiovlRJ9SSlMtnVyPMz8P+c4wC77uMtQoGodW
+3QkeqNwPVxDsN0pnUFb24DepLbCoOdRAknomjXbbTiRyzwyhCBoJ1y+C8fBNXzjM
+Ndo0FiyUNf712YVBRTtj/Kd44VxC6z0G7kChlUxo1ja4WTI5IZQYxDxoZttn0Nss
+07AJ9/Yu4hGCO60Ut6sY34UshXe//dGNnuaxvrMEbG3DwjD8uEo=
+=+p2n
+-----END PGP SIGNATURE-----
+
+--xpwhjuenbephr6ly--
 
