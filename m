@@ -1,168 +1,136 @@
-Return-Path: <linux-gpio+bounces-27220-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27221-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4FB9BE4A68
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 18:42:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D92C6BE4DEB
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 19:37:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4EDD64FA15C
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 16:41:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9938B5E025A
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 17:37:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 854CB32AACB;
-	Thu, 16 Oct 2025 16:41:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kt+JWI8J"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38BC4217648;
+	Thu, 16 Oct 2025 17:37:12 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376262DEA9E;
-	Thu, 16 Oct 2025 16:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 568E917C21E;
+	Thu, 16 Oct 2025 17:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760632885; cv=none; b=AMam6uSFa64zXUsJ8NOIk6qtGk0L2BiUMbHtVmt0p9Yw4e7rChSuogM9EaXXIE2wqul8fAS/txS1N53l6pXVkJpInXPH0+VoJV8IW0+f8oGFeJkPp9dfGXL11nkqC5ZV35Ef1zU2bq8tZ4j0i0/KflEZQV2BcMG7tOhQOqwvJoE=
+	t=1760636232; cv=none; b=gKm7V/3nvUluG7TtT3RYYFsfsSIcHM028ohkioxJzyctSjN99zBej1R4AEKTtvGBNFkm5J6rwPi+vtmH2G5e0MggIiaieeG01tutwUxzU0+Iu+fYhWjQDWciND/pptyYb2c1PXX/sm9BTkNsrPzin1sWVf/g2gy0q2xay4/aArE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760632885; c=relaxed/simple;
-	bh=IbSqzMhYdlbV68FwRqfdNa92zx5pPJVeMmzUDWHgwuE=;
+	s=arc-20240116; t=1760636232; c=relaxed/simple;
+	bh=qOiSbtIWgSkWN5+X5Zp/HcrCX9ktoXzUjhHVqIPAuJQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GHQlKgjL2YQ175av2P48tC+Z7Jdt2hn3YLnKCZamAGAZc5sGsnC40eYZu3oD70W5++0lWTEh3AMoW/b6mbJBGaqec5f2L/pkZCqLcQ0iIaH0htaqDKeZXyw/qz6lrG1pAtmglYcIcn/XIxnv2JsFgKk2lxEGKcNcFmbB5z1/Td4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kt+JWI8J; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D924C4CEF1;
-	Thu, 16 Oct 2025 16:41:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760632884;
-	bh=IbSqzMhYdlbV68FwRqfdNa92zx5pPJVeMmzUDWHgwuE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kt+JWI8JVliy5vV9qaxbOw6SoV6YE658FWqFxQhFrRAkUq/DzOhIBXCRDZUpDF0cU
-	 m5eTsScchLpWnrN6bS9h8E2FqnKCuHV9buVyefHeqO5bdsqa/yb5QkMK0vvHeUU7Ab
-	 dETJMK7qXwJuDRN2vBW4D7ypUc1JNM3Oc61M2qeR/ycOoedLDjmOEg2z+M+5O1S5u/
-	 dEl56e5sX0bxoJB86h6at39+IAM1HqMni35nUj4ZEh1FiN0D5Z9VVxrwHCsxe0PnaW
-	 orx6GzBFL5Qdo6qIkSlhZ81wG00rvZnR6OHPDb5z2rkIo12bJrTR6pjE6oDU5Vd3i8
-	 qqbgijwKUC7Aw==
-Date: Thu, 16 Oct 2025 17:41:19 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: renesas,r9a09g077: Document
- pin configuration properties
-Message-ID: <20251016-dimmed-affidavit-90bae7e162aa@spud>
-References: <20251014191121.368475-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20251014191121.368475-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=oLi+igXkDMV1jS7Zd+byq9CQo49NyvfhnFPexyXtAQtioDzNqvB18faMQuB7F8TlPmxTbl19+UTcWS/UC/LmLeN8Qp/8Jvd3MnjfHDwi4rUSRgZrET/Vkadqyg2/ddPZrmi7GtLIXYKpujv4D7c7oGh/SAb54Jr3NJIn2yBrSrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D355B1596;
+	Thu, 16 Oct 2025 10:37:01 -0700 (PDT)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DEFF83F66E;
+	Thu, 16 Oct 2025 10:37:08 -0700 (PDT)
+Date: Thu, 16 Oct 2025 18:36:54 +0100
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
+Cc: arm-scmi@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: pinctrl-scmi: Support for pin-only mode when groups are
+ unavailable
+Message-ID: <aPEtEnd3kG_pxWPf@pluto>
+References: <0c4bc190-7049-4753-b88e-479a3ff584fc@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4cp+vOoEUFgObXur"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251014191121.368475-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0c4bc190-7049-4753-b88e-479a3ff584fc@oss.nxp.com>
 
+On Thu, Oct 16, 2025 at 07:05:21PM +0300, Ciprian Marian Costea wrote:
+> Hello,
+> 
 
---4cp+vOoEUFgObXur
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[CC: <linus.walleij@linaro.org>]
 
-On Tue, Oct 14, 2025 at 08:11:20PM +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->=20
-> Document the pin configuration properties supported by the RZ/T2H pinctrl
-> driver. The RZ/T2H SoC supports configuring various electrical properties
-> through the DRCTLm (I/O Buffer Function Switching) registers.
->=20
-> Add documentation for the following standard properties:
-> - bias-disable, bias-pull-up, bias-pull-down: Control internal
->   pull-up/pull-down resistors (3 options: no pull, pull-up, pull-down)
-> - input-schmitt-enable, input-schmitt-disable: Control Schmitt trigger
->   input
-> - slew-rate: Control output slew rate (2 options: slow/fast)
->=20
-> Add documentation for the custom property:
-> - renesas,drive-strength: Control output drive strength using discrete
->   levels (0-3) representing low, medium, high, and ultra high strength.
->   This custom property is needed because the hardware uses fixed discrete
->   levels rather than configurable milliamp values.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  .../bindings/pinctrl/renesas,r9a09g077-pinctrl.yaml | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g077-=
-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g077-=
-pinctrl.yaml
-> index 36d665971484..9085d5cfb1c8 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g077-pinctrl=
-=2Eyaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g077-pinctrl=
-=2Eyaml
-> @@ -72,6 +72,19 @@ definitions:
->        input: true
->        input-enable: true
->        output-enable: true
-> +      bias-disable: true
-> +      bias-pull-down: true
-> +      bias-pull-up: true
-> +      input-schmitt-enable: true
-> +      input-schmitt-disable: true
-> +      slew-rate:
-> +        enum: [0, 1]
+Hi Ciprian,
 
-What are the meanings of "0" and "1" for slew rate? Why isn't this given
-as the actual rates? The docs surely give more detail than just "slow"
-and "fast".
+I will have a better look at this in the coming days ...
 
-> +      renesas,drive-strength:
-> +        description:
-> +          Drive strength configuration value. Valid values are 0 to 3, r=
-epresenting
-> +          increasing drive strength from low, medium, high and ultra hig=
-h.
+...but I think, in the meantime, better if we CC also the PINCTRL
+Maintainer Linus Walleij that helped us reviewing also this driver from the
+PINCTRL subsystem perspective....
 
-I see what you wrote in the commit message, but I don't really get why
-you need a custom property. I would imagine most devices only have some
-some small set of "fixed discrete levels", yet manage with milli- or
-micro-amps fine. Converting from mA to register values in a driver is
-not difficult, and I figure the documentation for the device probably
-doesn't just give vague strengths like "medium" or "ultra high", but
-probably provides currents?
+> 
+> I’m currently exploring a solution to improve the 'pinctrl-scmi' [1] driver
+> so it can better support SCMI platforms that only provide individual pin
+> control. At the moment, the driver handles only group-based operations,
+> which means platforms without pin groups run into limitations.
 
-I dunno, I am just confused by the need to shove register values into
-these properties, rather than using the actual units.
+...ok
 
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        enum: [0, 1, 2, 3]
->      oneOf:
->        - required: [pinmux]
->        - required: [pins]
-> --=20
-> 2.43.0
->=20
+> 
+> According to the SCMI v4.0 specification (section 3.11.2.8), both
+> group-based and per-pin control modes should be supported. However, on
+> pin-only platforms, the current implementation cannot enumerate groups,
+> configure pinmux, or assign functions per pin. This results in probe
+> failures and '-EINVAL' errors when trying to configure non-existent groups.
+> 
 
---4cp+vOoEUFgObXur
-Content-Type: application/pgp-signature; name="signature.asc"
+...indeed
 
------BEGIN PGP SIGNATURE-----
+> I haven’t seen any work in this area yet, but if nothing is in progress, I’d
+> like to propose an approach that keeps compatibility with the existing Linux
+> pinctrl framework while adding per-pin support. The idea is to detect
 
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaPEgLwAKCRB4tDGHoIJi
-0lx0AP4jyo97e3Zk8i4jkScPF1zzQ+X4TFA664bvdfYVRxX59gD/RY89usrIDvLh
-Di5RCQNiqFuaDUjmLZtmBFgY6FmqQQk=
-=xYR1
------END PGP SIGNATURE-----
+...nothing planned or requested as of now that I know...so feel free to propose
+your improvements...becasue it is easier to discuss in front of a series :P
 
---4cp+vOoEUFgObXur--
+Cheers,
+Cristian
+
+> whether the platform supports groups or pins-only during probe, and when
+> groups are missing, create virtual groups from the DT pin specifications.
+> This would allow us to reuse the existing group-based logic while enabling
+> per-pin muxing.
+> 
+> For example, a DTS node could look like this:
+> 
+> uart_pins: uart-pins {
+>     pins = <10 11>;      /* SCMI pin IDs */
+>     functions = <2 3>;   /* Per-pin function IDs: UART_TX, UART_RX */
+> };
+> 
+> or:
+> 
+> uart_pins: uart-pins {
+>     pins = <10 11>;      /* SCMI pin IDs */
+>     function = <2>;      /* Same function for all pins */
+> };
+> 
+> To make this work, the driver would need to:
+>   - Detect capabilities during probe (groups vs pins-only). Can be
+> implemented via 'pinctrl_ops->count_get()'.
+>   - Create virtual groups when groups are unsupported.
+>   - Add per-pin mux/config operations by introducing a 'pin_mux_set()'
+> callback in the SCMI core, since currently only group-based 'mux_set' is
+> implemented.
+> 
+> I’d really appreciate your thoughts on whether this direction makes sense
+> and if there’s anything I should consider before starting.
+> Thanks a lot for your time and guidance!
+> 
+> [1]
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pinctrl/pinctrl-scmi.c
+> 
+> Best Regards,
+> Ciprian Costea
 
