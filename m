@@ -1,146 +1,221 @@
-Return-Path: <linux-gpio+bounces-27211-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27212-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F58ABE42BB
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 17:18:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5615ABE4393
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 17:28:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C7F74508091
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 15:16:33 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4C97E4F4BB1
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Oct 2025 15:28:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2AD43469F2;
-	Thu, 16 Oct 2025 15:16:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27BEC346A1A;
+	Thu, 16 Oct 2025 15:27:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ll4RLxDA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RZczjY8P"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBFA19E81F
-	for <linux-gpio@vger.kernel.org>; Thu, 16 Oct 2025 15:16:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C71C7212542;
+	Thu, 16 Oct 2025 15:27:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760627787; cv=none; b=J+g9Hqcx9AvBjl9aIR6wLqa+ab5DQvwTg9JjXfwbrFJfCrgEy7+WWVD6Yxv1y2RsXjFvU3cAAkJOb6jtlZeIICze69EUo+ZkA6UbeXoRq6Daiip3o4AQ2178shu6V8pZcuKeRNSOLoi81V8OTiH81VC8j7LeOB2fzEVQi6pNsyI=
+	t=1760628474; cv=none; b=WMFcOw4dELV676ymq1Y8iu0SdZAwyzY/J7IFoD+EhtQVzvDziYRiPfoNw5DqZ3kSsJg2iGFUL0chPRJx/3gC0NLCK7ZPdRzGDKZ1UAEjW5SJrNqiXPRP2c/N3+yCLO2UAe6+kHI6YKEByc48rgHit0ivFKo6hxFJOoY6SfyE6aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760627787; c=relaxed/simple;
-	bh=wcfBHmd6UI5Ee2LDKTIUZ3jBqohaEOc9j2+snQ6rucI=;
+	s=arc-20240116; t=1760628474; c=relaxed/simple;
+	bh=Q/HWaD+Cm1k2FvqHSaHj4us9kKwWTCjTyyYVe2cQN/8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uH88CilxkBgIl2+FRTDuLceJ9YC43ql4BHa6/k8zvHYiIHImQ5kkWjZojQXurSY7qv17RbXngHT27tHmWtQeSFOACEjNbpSbx+ApSu53qzt8wW7tncpqYfR9xOGGydpZGsFdqkcZ6FHSLv3fSc276lfB3m+tkOYR6s3YMtC8ALw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ll4RLxDA; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-afcb7ae6ed0so144124666b.3
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Oct 2025 08:16:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760627784; x=1761232584; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+GMHzyWxIQdB2FcnGDsVo98f9mvKfQ0tZi6sM1VRpVw=;
-        b=ll4RLxDAj0FVXCLpmb0Hy92wpkTF+tM1aJ4Hph33IeRmerp1ZGixggCCVv1QYgMbmi
-         M/O4cBLWnNfZ91OhZzTHwaBP25UPrLsewfV6wE5Qc/OsRf6sKs7BqxNu1JYpSFrF4FMP
-         mdGbLp02Q1svctTmrUsS5qyfrRPVmfNf4bgjlm8yH3EWWILdj6LqCkzMfxUtwcuYGycA
-         fDSB7rSPCWvlxb7Q0ClsbBuK5AAAJtz9fDUKQ8tfkcjLOK94xQI916au5lMGWiFbJzuK
-         zFFny+iT9Eb4UI6VBbJ/pBCt+S450nk9b0/PbTPmDSDpxb9Dcclq0Hfy+Jqje0cL7ZSO
-         KlBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760627784; x=1761232584;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+GMHzyWxIQdB2FcnGDsVo98f9mvKfQ0tZi6sM1VRpVw=;
-        b=idouTHotJUgxrnOyakeICnAYPo5T1JC1CTzN1/RIO/tpNaFfukUS/1701N/jns2xi8
-         l5VnsAaqVev8lc0e03eClboo6197EhWHcFyXYMf9Cptj9SR6cvV8a8SpPok+3l58oBKo
-         s1DO6dFi+34qfGCQi7nt9lVvwBwEFaInDw4pGCwtqvaCUmVi+FuqcUYS7FmZkUsEo8+b
-         ShalZB/xEvg4mCOF19jowykZK7PxpvXWvkfoPke54VqG35DNJyKx33Yj2E0DmYq1rWvr
-         phCIRp4qjdvAdYIHX8xeI370vwqNcKmopJHKxWyWliztGmtj8PGYDnidsDCqdaUMscCl
-         9VpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUTkl20CbOVjqL3FNbzw69I0M0V6mq7UAqQxg3JFF+gZkU+tKSKyB30hHWH3LwM9otgBFS9JWjwwg4k@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbDOct5y6K0bBd6UD2ZYOQRNgGzP8EXcRtQac6hLBzuvwOJd1L
-	EkENRDVemDowdXPWmGPoRQc3pVfwEOwFng63xHbLE2BioKAqOFA1PM19
-X-Gm-Gg: ASbGncuxGa3kVxaaByvIPAvXZpHRhg2NoyP2v4Z/Kc5FbVfZrzh+g7RAf0M0unRUCYq
-	ypi+KgNXCqKHNAkZCRpJPllLUTNO/hUqAzMzzlC34AwfK2qce8F4NAEoLBYkOUbhnT3fBiPwh+Q
-	2V1yfQXyqP8hX3nJtzvxbvhO+VU6P+TB4SlIt912H90XqwSAbcFm506gMOloSIw8oG6sa6+dM6M
-	S6S3bEziSKi9QUkSv7h3+rlRBq/2gBl17TKQlP4vFJ1WY4N3RBWSh4vKi42skoAiiSTO6d0tBYX
-	Jj50i7E0bCOl5k+//uyrX+pW0QatZzmnu6crz0tcfdcYQJYS7op3Av/y/cnZJ3EGmySp2/gKB+2
-	wxH1Eb38Fx9cUFfpdMLq5StP86ikULkSUnbT0/dhbu7cWOgI2ZBlV3IkZnOOGoJLMb9u8/36sXJ
-	B0uJdKMZca4oTzswgFdF01WbM1vKeZsRb7HlQ+3TAr/jD8ZJUEBT1+ItlZWXEBBwSTRgbpB248q
-	Q==
-X-Google-Smtp-Source: AGHT+IEUnMRpJptAyqDQKCXnI29t4Gj4evz9uABzOpOdIG6VCD9oWY5iTASgKePBY093qoWb66U4sQ==
-X-Received: by 2002:a17:907:2d06:b0:b40:cfe9:ed2c with SMTP id a640c23a62f3a-b64769cd245mr26276666b.64.1760627784283;
-        Thu, 16 Oct 2025 08:16:24 -0700 (PDT)
-Received: from orome (p200300e41f28f500f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:f500:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b5ccccb51fesm532883366b.44.2025.10.16.08.16.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Oct 2025 08:16:23 -0700 (PDT)
-Date: Thu, 16 Oct 2025 17:16:21 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-To: webgeek1234@gmail.com
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] arm64: tegra: Add Tegra186 pin controllers
-Message-ID: <qkyzlnni5nqykck4org4vgxzju6v6iha6fulgguutxuhf7zozc@awyches7ozox>
-References: <20250812-tegra186-pinctrl-v3-0-115714eeecb1@gmail.com>
- <20250812-tegra186-pinctrl-v3-3-115714eeecb1@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=HCcqglCwftdcicI/wG/9b4HgNXGI3rv5eF3dESF2p/QVMzQkZ/0F8Ju65jHo54N+ZY+/CsCyRZsmBmQn41AfOiN13+9670yBWVdzP9MsprYDQMvO1jPcTbXZUqej4+dJ8kyJgHYKr6Ej/drEMFVj9lU4rsfaSUbjLfewAfZNlEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RZczjY8P; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0EF8C4CEFB;
+	Thu, 16 Oct 2025 15:27:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760628474;
+	bh=Q/HWaD+Cm1k2FvqHSaHj4us9kKwWTCjTyyYVe2cQN/8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RZczjY8PAPUR65NODg0Xv5A+weHeZu0CXQADdIL3St/Ncjy4MenkFAGAoeyZPgHbt
+	 +nzUcDcfaPa/kZk57EXSlo3HPRTx13NeijCuSiqSuLvEIh+arNEpSFheX7joGESlS9
+	 lijYBN5NbYz9rfpGF1q38V/U9tz5Muvky7fP/aUvF8o1WhXjWq5nk9lGXkHAydqTYe
+	 b4PJ79E0KswuKRsutuC/FpomCeKN36MmRrF9w1Dg5OuTDolxKv5ObbRqkqEzhPnzFK
+	 2uWvjiVtfJH6HwPm3e5SgfEJgdmc7mCtmOJnD2/KSlpyDr0YAlAGnl+p7PtvCmvtav
+	 r1OowkX02LnpA==
+Date: Thu, 16 Oct 2025 16:27:49 +0100
+From: Lee Jones <lee@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andreas Kemnade <andreas@kemnade.info>, linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [RFC PATCH 06/13] mfd: bd71828: Support ROHM BD72720
+Message-ID: <20251016152749.GA9735@google.com>
+References: <cover.1759824376.git.mazziesaccount@gmail.com>
+ <93142a80d90a0ac80b27090d0c83914675aad94d.1759824376.git.mazziesaccount@gmail.com>
+ <20251009161847.GE2890766@google.com>
+ <8ea507eb-f78c-4a16-882b-112e277fa1b6@gmail.com>
+ <20251010144515.GI2988639@google.com>
+ <CANhJrGMEN0QRLoBzntVnaYgfFDyre=Yfw-dNdmi226p6pnpgHw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="xpwhjuenbephr6ly"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250812-tegra186-pinctrl-v3-3-115714eeecb1@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANhJrGMEN0QRLoBzntVnaYgfFDyre=Yfw-dNdmi226p6pnpgHw@mail.gmail.com>
 
+On Mon, 13 Oct 2025, Matti Vaittinen wrote:
 
---xpwhjuenbephr6ly
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 3/3] arm64: tegra: Add Tegra186 pin controllers
-MIME-Version: 1.0
+> pe 10.10.2025 klo 17.45 Lee Jones (lee@kernel.org) kirjoitti:
+> >
+> > On Fri, 10 Oct 2025, Matti Vaittinen wrote:
+> >
+> > > Hi deee Ho Lee,
+> > >
+> > > And Thanks for the review!
+> > >
+> > > On 09/10/2025 19:18, Lee Jones wrote:
+> > > > On Tue, 07 Oct 2025, Matti Vaittinen wrote:
+> > > >
+> > > > > The ROHM BD72720 is a power management IC which continues the BD71828
+> > > > > family of PMICs. Similarly to the BD71815 and BD71828, the BD72720
+> > > > > integrates regulators, charger, RTC, clock gate and GPIOs.
+> > > > >
+> > > > > The main difference to the earlier PMICs is that the BD72720 has two
+> > > > > different I2C slave addresses. In addition to the registers behind the
+> > > > > 'main I2C address', most of the charger (and to some extent LED) control
+> > > > > is done via registers behind a 'secondary I2C slave address', 0x4c.
+> > > > >
+> > > > > Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> 
+> // snip
+> 
+> > > > > +
+> > > > > +static struct regmap *bd72720_secondary_regmap;
+> > > >
+> > > > Dynamically allocate this and add it to .platform_data once it's
+> > > > populated.
+> > > >
+> > >
+> > > This can be done but I suppose it's unnecessary churn. This driver does not
+> > > (at the moment) support more than one instance of the PMIC anyways. (The
+> > > button data is not alloacted).
+> > >
+> > > This is not really a problem as typically there is only 1 of these PMICs to
+> > > be controlled.
+> >
+> > I'd take a few lines of extra code over a globally defined variable any
+> > day of the week.
+> 
+> Even though that'll require us to drop the const from the
+> bd72720_mfd_cells MFD cell array? Which, in turn, will probably
+> require us to drop the const from the MFD cell pointer in probe as
+> well. Additionally, this will require us to skim through the MFD cell
+> array in probe, so we locate the power cell, adding one more spot for
+> errors. I think this is quite a cost just a princible of dropping a
+> global, which is accessed from one function only. I'd definitely agree
+> if it was driver data which gets used in a variety of functions, but
+> here we really just need a memory location for a pointer so MFD can
+> copy it when kicking the 'sub drivers'. Do you think you can still
+> reconsider?
 
-On Tue, Aug 12, 2025 at 04:24:42PM -0500, Aaron Kling via B4 Relay wrote:
-> From: Aaron Kling <webgeek1234@gmail.com>
->=20
-> Add the device tree nodes for the MAIN and AON pin controllers found on
-> the Tegra186 family of SoCs.
->=20
-> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> ---
->  arch/arm64/boot/dts/nvidia/tegra186.dtsi |  12 ++
->  drivers/pinctrl/tegra/pinctrl-tegra186.c | 207 +++++++++++++++++++++++++=
-+++++-
->  2 files changed, 213 insertions(+), 6 deletions(-)
+If the data isn't ready, it shouldn't be in static / const structures.
 
-Applied, thanks.
+You're attempting to statically declare dynamic data *shudder*, using
+global variables *double-shudder*!
 
-Thierry
+> >
+> > > // snip
+> > >
+> > > > > +/*
+> > > > > + * The BD72720 is an odd beast in that it contains two separate sets of
+> > > > > + * registers, both starting from address 0x0. The twist is that these "pages"
+> > > > > + * are behind different I2C slave addresses. Most of the registers are behind
+> > > > > + * a slave address 0x4b, which will be used as the "main" address for this
+> > > > > + * device.
+> > > > > + * Most of the charger related registers are located behind slave address 0x4c.
+> > > > > + * It is tempting to push the dealing with the charger registers and the extra
+> > > > > + * 0x4c device in power-supply driver - but perhaps it's better for the sake of
+> > > > > + * the cleaner re-use to deal with setting up all of the regmaps here.
+> > > > > + * Furthermore, the LED stuff may need access to both of these devices.
+> > > > > + */
+> > > > > +#define BD72720_SECONDARY_I2C_SLAVE 0x4c
+> > > > > +static const struct regmap_range bd72720_volatile_ranges_4b[] = {
+> > > > > + {
+> > > > > +         /* RESETSRC1 and 2 are write '1' to clear */
+> > > > > +         .range_min = BD72720_REG_RESETSRC_1,
+> > > > > +         .range_max = BD72720_REG_RESETSRC_2,
+> > > >
+> > > > regmap_reg_range()?
+> > >
+> > > Ah, thanks. Out of the curiosity - do you know why this macro is written on
+> > > lowercase?
+> >
+> > Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> > Signed-off-by: Mark Brown <broonie@linaro.org>
+> >
+> > =:-)
+> 
+> Yeah. I just thought that maybe you knew :)
+> 
+> >
+> > > // snip
+> > > > > +static int bd72720_set_type_config(unsigned int **buf, unsigned int type,
+> > > > > +                            const struct regmap_irq *irq_data,
+> > > > > +                            int idx, void *irq_drv_data)
+> > > > > +{
+> > > > > + const struct regmap_irq_type *t = &irq_data->type;
+> > > > > +
+> > > > > + /*
+> > > > > +  * The regmap IRQ ecpects IRQ_TYPE_EDGE_BOTH to be written to register
+> > > > > +  * as logical OR of the type_falling_val and type_rising_val. This is
+> > > > > +  * not how the BD72720 implements this configuration, hence we need
+> > > > > +  * to handle this specific case separately.
+> > > > > +  */
+> > > > > + if (type == IRQ_TYPE_EDGE_BOTH) {
+> > > > > +         buf[0][idx] &= ~t->type_reg_mask;
+> > > > > +         buf[0][idx] |= BD72720_GPIO_IRQ_TYPE_BOTH;
+> > > > > +
+> > > > > +         return 0;
+> > > > > + }
+> > > > > +
+> > > > > + return regmap_irq_set_type_config_simple(buf, type, irq_data, idx,
+> > > > > +                                          irq_drv_data);
+> > > >
+> > > > Use 100-chars to avoid these pointless wraps please.
+> > >
+> > > gnarl. I think we have discussed this before :)
+> > > I would love to keep the lines short - closer to 80 chars - because that way
+> > > I can fit 3 terminals on my screen. All the years spent staring at the
+> > > monitor are taking their toll, and my vision isn't as good as it used to be.
+> > > Frightening thing being that it seems I will only need to increase the font
+> > > in the future :/
+> > >
+> > > Well, sure the lines can be split if you feel strongly about it - but I have
+> > > a real reason (other than the usual - "they have always been like that") to
+> > > try keep them short...
+> >
+> > Welcome to the year 2000 when 32" monitors are super affordable.
+> 
+> I know. But work rooms where I can fit larger table aren't. Not even
+> in Finland which should have plenty of space. And my table is really
+> packed.
 
---xpwhjuenbephr6ly
-Content-Type: application/pgp-signature; name="signature.asc"
+*facepalm*  =:-)
 
------BEGIN PGP SIGNATURE-----
+I wouldn't swap out my 32" monitor now if you paid me!
 
-iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmjxDEUACgkQ3SOs138+
-s6E1FQ/9Emy2fSHqfWOx1mLl7fFhFiPgIbO/7b6K4ogiYAUJPPgObu9dQKwRZYcT
-y3WxvaYz9orL2R8f9wssQTfeCjiNcxs/9KX63v4K0A8UTAZ6IFU+jwzcuswQ0ZHX
-CLEl1zQnPnzbderf2Ay7rTbxUaOt+D9yDXjmpgm5zGOdGEPCibFaPC8RTbx+5Wy2
-rqztgmgQ4lHhBuVKGfjrfaVttYLrwfv2cV4pvZiyD+o5ekRgQqUqn6vrKbv81edG
-/RYqWHc1p/ylM/ff5oJKbSVEOIVHkdfFB6vREUZHcb5j8CFhXKojdp46dWRNzyKu
-ZobImewQyLDYmny2ci3uCZRZHuohBOHofyND1oPBuzA7seFGAmH41hNWzQD6mbuK
-8FU07VkQyz/S2vEOGb2yyeEnnzNLLSPmiJRXCO7Ld/voGIwAr5UpGdZKhcTn0MHG
-Djt+P8cRy0x5FppjlIT/YqPlhWFKiovlRJ9SSlMtnVyPMz8P+c4wC77uMtQoGodW
-3QkeqNwPVxDsN0pnUFb24DepLbCoOdRAknomjXbbTiRyzwyhCBoJ1y+C8fBNXzjM
-Ndo0FiyUNf712YVBRTtj/Kd44VxC6z0G7kChlUxo1ja4WTI5IZQYxDxoZttn0Nss
-07AJ9/Yu4hGCO60Ut6sY34UshXe//dGNnuaxvrMEbG3DwjD8uEo=
-=+p2n
------END PGP SIGNATURE-----
-
---xpwhjuenbephr6ly--
+-- 
+Lee Jones [李琼斯]
 
