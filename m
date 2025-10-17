@@ -1,201 +1,188 @@
-Return-Path: <linux-gpio+bounces-27257-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27258-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11F54BEAC9B
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 18:37:22 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8775BEB109
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 19:27:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 62DF31AA7A5E
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 16:37:45 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A71444E3B28
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 17:27:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5027E2BEC42;
-	Fri, 17 Oct 2025 16:37:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0D443064A1;
+	Fri, 17 Oct 2025 17:27:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gBrR57zW"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="lKX+h+at"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 410C62BEC5F
-	for <linux-gpio@vger.kernel.org>; Fri, 17 Oct 2025 16:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE5B2F8BC0
+	for <linux-gpio@vger.kernel.org>; Fri, 17 Oct 2025 17:27:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760719035; cv=none; b=kGcWGRmVA/kMtuY5ZuMwUufdfdqNAAh/6MwcSPdogmwXwWjgjsU6QU2n4fH5t2XkYZzRUg+AET4ytTO4DLLGN6QBduW4dvkgdIaYnuybjQCxgVgTMz6JyancJPEQ63KvkHh++aGXppOMQ0J0RxH6DMpzeFxXu+P8EMvwdkR76SU=
+	t=1760722027; cv=none; b=nKVaJngd1JR7v4TmYfhMs0RxreybxC9QjqhKjhYKBu0L1jjpMQIxyqefzwOJowGFYPgdhkDt/WJnGUlsh9qTTRecidglW6Yw2fLsVGS1rr2yxSvH3xaUc2rBHoBw+oNgtWIHvjxN/jUWZJ+fKNY2PUrJ3nSU5IKOBJCxQwSe+OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760719035; c=relaxed/simple;
-	bh=K5dh/21yz367t5636zz5BS+SRG5wCokC8YohqZIkQhQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y53yz5ejN7gPoZ2w0JOCiBLwpJXZwktPj4bG83qDAPpkXCUM6EWrKRru49ZvtMn2IZ0GRcOqyuH+xowLJ7Bwd6ayFTr92JS+MRwdw+mUwDAZ3MrWccpPQOL3cYbYO1Z38gOu3fADkKdB3UxMmpmzoyXFX0BHhLTnF2CuNvt3mQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gBrR57zW; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-81efcad9c90so38179976d6.0
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Oct 2025 09:37:13 -0700 (PDT)
+	s=arc-20240116; t=1760722027; c=relaxed/simple;
+	bh=hDi+5M2k5Ml1K9ClJ80BwZv3vRmscPjpCQVBDoPQMTA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W3djk3BMfsPSndtzZMdtTeTk0ywR5/UpOWV1hg9O6zkzAWUylkbS3b3U/Oleqrm4YBSquFb+9TpQqhXRJ6tP+lZ1I3HPpzbjxJKgIUnkkKCrf6hQkgTVy3hKm72d8pFsAw9k9sDYTOdvtnhbd9aMYVM7LX0EXmcDHxKb+Def6Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=lKX+h+at; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-58afb2f42e3so2566510e87.2
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Oct 2025 10:27:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760719032; x=1761323832; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lZqTIsgME323ZkO31yyQWUQxJPAMGciP0ot1SYinmXM=;
-        b=gBrR57zWpXm2w/7blqiasX6rmV7vMOXlvxZj17ty4WRF2XnRnvCdJtbZv+TCRnKfEx
-         dJRlYjhECXVkQ9Q1HIXqpT24ZGQzQyQsiU9ADp3KCRFJ3G7mv1AiaubTgOpTRR3QJiZ3
-         nL5TZx6sR9W1Vxti398bZwYcjYqIqFXg7IwscFtEsLL6pqzhaQpJbypNsFnFKem58Lnt
-         vDxezsCzssRFdXkEHo2TWlwIp5pluD9Qrl4KdwvuiuR/eE1k/nRL5SkfuLiqgxJrKVTe
-         CXGLcSwa1vOVG6qTZzmTOJQt6xSCdBQTV/aXP+AmQChG2FjRoFtd4Y80fXd9rDh0uUM7
-         a6Ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760719032; x=1761323832;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1760722023; x=1761326823; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lZqTIsgME323ZkO31yyQWUQxJPAMGciP0ot1SYinmXM=;
-        b=VT/2cRdaGrPjKVxEpHTmoanrKQ71jfx08oZNn+07T3CP6cTdEDVBQ7ztD3xdQ15LdP
-         uu9oC2vUoKFK76HIox5YeSG+wlVJwJwN98QY0rqRU4gVuMTgWZKpdWdfS+4I0HCh3zPC
-         lQFFEIeoao7pBJAUMLtpDe8/Y8nPqaj/bNofPdbkh+nL9I5ePStsGCoGuMMBw1YSJSa6
-         ZOfUOyAYMtSd7soxhbABhf/nIUiWTDTC8V06zkxK4ccGTZyhT81jVPyzWEWUy97hRTDc
-         Qx/HRxWJ659ZbU4H3aPqydZ70i3vD2hQZ9gm8WgZD0zLcjL4beZDhlcRcy4quO+v0Z6R
-         xOkA==
-X-Forwarded-Encrypted: i=1; AJvYcCXAtRLyH5BETNTRi988h/Y8WycrXnXw6TST3u3p7j5JIPACLy70JEda1o0wY2SvkEXZHDLORVHHtKHv@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCy4rzKF86oYZUd7MqG/G1XoEXF3OP7z3xEP7oObw3HsiWNN9l
-	0AHgt07kXBHHXAnCaTTe+vC0JI1creM4wctIgeI5N9KJTYepZxACgPJQ
-X-Gm-Gg: ASbGncviA5KbtZMTcrKAH4WITGS1qpATXqBd/WY9Vqywrnii+PcZzgmCB6EhkkP8L9W
-	wIDJzG0k9jLVIjalhFLAzQsv7l2SOD2NCyFKGf6FtO4hXin5E/PnqHmTt47q8QkrBg6k15qUn6d
-	ObEnPWz/Uu5xvQ9hpeCLCHmLnUwh1pHh05ASNw3A8w9uGaC/PSDmbVhn3lgPe865fbc/h+m1biw
-	yz+UnOTmoH992KNRPfuBYTyo1uM7kIUTvjsOnQkwmzUCpHVzDaLPHzMejVrzg3P5m49LT9IDrMf
-	v1RsHDW6rjVEewCVsq/H4kULHKPF1EEiK2K6LuBZXxKnLiuhWaYdaUFC5Yo0D8+6cUMB3L8HygI
-	GQfrV+MT25Mzm7jPMA6BBWVD+bCYZwAZq/s5lgfwmW88Ntvye39wP4RJXNIf1yX1Q3CkGlVw/ct
-	wQP7C6EME=
-X-Google-Smtp-Source: AGHT+IEBLNSjsT2f6SbTw5aTPGakjHLdlQrL5hue+DxfPG8mzc3zrpMssrggDkT+31HrLygOdkrpIg==
-X-Received: by 2002:ad4:594b:0:b0:87c:2920:5730 with SMTP id 6a1803df08f44-87c29205b08mr24398926d6.40.1760719031704;
-        Fri, 17 Oct 2025 09:37:11 -0700 (PDT)
-Received: from localhost ([12.22.141.131])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-87d02d91324sm1575686d6.65.2025.10.17.09.37.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Oct 2025 09:37:11 -0700 (PDT)
-Date: Fri, 17 Oct 2025 12:37:09 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	David Miller <davem@davemloft.net>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Crt Mori <cmo@melexis.com>, Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Shan-Chun Hung <schung@nuvoton.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Jakub Kicinski <kuba@kernel.org>, Alex Elder <elder@ieee.org>,
-	David Laight <david.laight.linux@gmail.com>,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	Jason Baron <jbaron@akamai.com>, Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Kim Seer Paller <kimseer.paller@analog.com>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Richard Genoud <richard.genoud@bootlin.com>,
-	Cosmin Tanislav <demonsingur@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Jianping Shen <Jianping.Shen@de.bosch.com>,
-	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-edac@vger.kernel.org, qat-linux@intel.com,
-	linux-gpio@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-	linux-iio@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/4] bitfield: Drop underscores from macro parameters
-Message-ID: <aPJwtZSMgZLDzxH8@yury>
-References: <cover.1760696560.git.geert+renesas@glider.be>
- <792d176149bc4ffde2a7b78062388dc2466c23ca.1760696560.git.geert+renesas@glider.be>
+        bh=hDi+5M2k5Ml1K9ClJ80BwZv3vRmscPjpCQVBDoPQMTA=;
+        b=lKX+h+atSh/zaXOsjLobaX21WkHh58ezfi30YgGOQdUKbp0BMeje339NJHne/5JMpb
+         YIQSpjti8Jk9IQtAFdG2RCTJJxhovDl1cz5E0hqXu+QLthicuZP7UIJqrTxTI1nxO99d
+         h0GgieTf2XB6l9hyEtR/5HUZt9LXSqyXyXKZZIMMkAkcRaED+uGG6oCV5q8RqVU11CzR
+         s67o4QsV6DFjfOz4GvfhAJJj1Ej2X8+R38CigDfA0AdAMcOVbxoVpkOlv03gZ0js3XX0
+         ARvLnfLwCBpAwSTmmA+CYGgVz2Vy5mI9uejbpvOojiZewL/ejZ6fHbxrjFPrfhUk7PTa
+         P8bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760722023; x=1761326823;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hDi+5M2k5Ml1K9ClJ80BwZv3vRmscPjpCQVBDoPQMTA=;
+        b=eWgO5mLX9jENEdM7VZQuLmt/SjMzurrs0Krw1siLhMIOOnnC5WELxzjrWWbIPGkxg1
+         W4vvvM4NcKizyI5nlkrsk2EO4EX9N/RLVelA/GSBP3n56o6pu/M24nguKacznsFUx+Vq
+         ZsOZtpBtqHcooYXHshB15+PkgDvT5DE94nsyaDFuTbyztOZe6QpjFl40lp+PeeosSepD
+         vBOZvk6435VqNHZu6nA+j7Utn1saf+un70VSt+Isz/sV9NfzKyPxZ3rCW3gxQl3+RjzM
+         sGJxv2Wjej+F3GkXO0ftlnQAYSvhvH3VynnM2vAoOSi3CEOligjUhBbnS/mKSitLdzc/
+         9Q4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXGfXzQPeyVBOXH1RThBnkj41PiB6YvzMISfwDGfuDdVkeKSkfBEt53jR9Yp+q9cevDCcETM+MgD/Z9@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoyePVTrKwJ6hoPiXWg+TBbFe2mzVOOwvjQEY+8o+luu99w/Zl
+	Ziz2qTnsiNqFIYCbsgDl/OjgbhArF4yXTFpGHy4xZDo4d3R3GUqjd8aIgwBlEkH2mOcvsl3/K+6
+	HoeBEqWOgnex7MnSs89eOPWKVYohoFJJfOFHCI5kZvXAzDQAlLnrsHF9X5Q==
+X-Gm-Gg: ASbGnctPZwscNhXSRB/NYIF0R1VXSBhke1eVUyk9GoBlBK8844TtnHysJ1MFvG0/HbU
+	rPP+LpTfGO9Jae5a80K80decQ/bDi3yxyMiUaXzAmumy+0G9BUaw+THPxUlP/tLKMlUMbV3GozJ
+	bxRBUKPATLYzI2so/cH+V5zpFWM+m40sP3qmAns25Wr3DW/VzqFpBVGqGmy8ZFDIryvpXrpRMJl
+	zgvUy+bL8zxiq72HMa19KrTnKR4K7CRMcAVrdh/u8ntYIbpMCIy4eGT16NMGGEYfSaEqs0CWUot
+	1QEoPF3B00u0l+tgtZNXVWq/Nwg=
+X-Google-Smtp-Source: AGHT+IEnROQjyiNXa20y9fdKGDuy8cXUgGRQbjpjaM5VjMNNuXFx1RyY7/MYDJo1ov+PfI5vPHyhYoMIz6wqTgC382I=
+X-Received: by 2002:a05:6512:3b96:b0:58a:f7e0:7284 with SMTP id
+ 2adb3069b0e04-591d84fed59mr1542688e87.13.1760722022961; Fri, 17 Oct 2025
+ 10:27:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <792d176149bc4ffde2a7b78062388dc2466c23ca.1760696560.git.geert+renesas@glider.be>
+References: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org>
+In-Reply-To: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 17 Oct 2025 19:26:51 +0200
+X-Gm-Features: AS18NWBvQScHzFXgOzgmGaLsZFy2d0XcQpPFsgGo-dqtoYRGPaRXMw7LL4aRoyw
+Message-ID: <CAMRc=Me4Fh5pDOF8Z2XY4MG_DYqPRN+UJh_BzKvmULL96wciYw@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/9] gpio: improve support for shared GPIOs
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Mark Brown <broonie@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Srinivas Kandagatla <srini@kernel.org>, 
+	Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andy@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Will Deacon <will@kernel.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 17, 2025 at 12:54:09PM +0200, Geert Uytterhoeven wrote:
-> There is no need to prefix macro parameters with underscores.
-> Remove the underscores.
-> 
-> Suggested-by: David Laight <david.laight.linux@gmail.com>
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v4:
->   - Update recently introduced FIELD_MODIFY() macro,
-> 
-> v3:
->   - New.
-> ---
->  include/linux/bitfield.h | 106 +++++++++++++++++++--------------------
->  1 file changed, 53 insertions(+), 53 deletions(-)
-> 
-> diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
-> index 5355f8f806a97974..7ff817bdae19b468 100644
-> --- a/include/linux/bitfield.h
-> +++ b/include/linux/bitfield.h
-> @@ -60,68 +60,68 @@
->  
->  #define __bf_cast_unsigned(type, x)	((__unsigned_scalar_typeof(type))(x))
->  
-> -#define __BF_FIELD_CHECK(_mask, _reg, _val, _pfx)			\
-> +#define __BF_FIELD_CHECK(mask, reg, val, pfx)				\
->  	({								\
-> -		BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask),		\
-> -				 _pfx "mask is not constant");		\
-> -		BUILD_BUG_ON_MSG((_mask) == 0, _pfx "mask is zero");	\
-> -		BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?		\
-> -				 ~((_mask) >> __bf_shf(_mask)) &	\
-> -					(0 + (_val)) : 0,		\
-> -				 _pfx "value too large for the field"); \
-> -		BUILD_BUG_ON_MSG(__bf_cast_unsigned(_mask, _mask) >	\
-> -				 __bf_cast_unsigned(_reg, ~0ull),	\
-> -				 _pfx "type of reg too small for mask"); \
-> -		__BUILD_BUG_ON_NOT_POWER_OF_2((_mask) +			\
-> -					      (1ULL << __bf_shf(_mask))); \
-> +		BUILD_BUG_ON_MSG(!__builtin_constant_p(mask),		\
-> +				 pfx "mask is not constant");		\
-> +		BUILD_BUG_ON_MSG((mask) == 0, pfx "mask is zero");	\
-> +		BUILD_BUG_ON_MSG(__builtin_constant_p(val) ?		\
-> +				 ~((mask) >> __bf_shf(mask)) &	\
-> +					(0 + (val)) : 0,		\
-> +				 pfx "value too large for the field"); \
-> +		BUILD_BUG_ON_MSG(__bf_cast_unsigned(mask, mask) >	\
-> +				 __bf_cast_unsigned(reg, ~0ull),	\
-> +				 pfx "type of reg too small for mask"); \
-> +		__BUILD_BUG_ON_NOT_POWER_OF_2((mask) +			\
-> +					      (1ULL << __bf_shf(mask))); \
->  	})
+On Wed, Sep 24, 2025 at 4:51=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+>
+> Here's a functional RFC for improving the handling of shared GPIOs in
+> linux.
+>
+> Problem statement: GPIOs are implemented as a strictly exclusive
+> resource in the kernel but there are lots of platforms on which single
+> pin is shared by multiple devices which don't communicate so need some
+> way of properly sharing access to a GPIO. What we have now is the
+> GPIOD_FLAGS_BIT_NONEXCLUSIVE flag which was introduced as a hack and
+> doesn't do any locking or arbitration of access - it literally just hand
+> the same GPIO descriptor to all interested users.
+>
+> The proposed solution is composed of three major parts: the high-level,
+> shared GPIO proxy driver that arbitrates access to the shared pin and
+> exposes a regular GPIO chip interface to consumers, a low-level shared
+> GPIOLIB module that scans firmware nodes and creates auxiliary devices
+> that attach to the proxy driver and finally a set of core GPIOLIB
+> changes that plug the former into the GPIO lookup path.
+>
+> The changes are implemented in a way that allows to seamlessly compile
+> out any code related to sharing GPIOs for systems that don't need it.
+>
+> The practical use-case for this are the powerdown GPIOs shared by
+> speakers on Qualcomm db845c platform, however I have also extensively
+> tested it using gpio-virtuser on arm64 qemu with various DT
+> configurations.
+>
+> I'm Cc'ing some people that may help with reviewing/be interested in
+> this: OF maintainers (because the main target are OF systems initially),
+> Mark Brown because most users of GPIOD_FLAGS_BIT_NONEXCLUSIVE live
+> in audio or regulator drivers and one of the goals of this series is
+> dropping the hand-crafted GPIO enable counting via struct
+> regulator_enable_gpio in regulator core), Andy and Mika because I'd like
+> to also cover ACPI (even though I don't know about any ACPI platform that
+> would need this at the moment, I think it makes sense to make the
+> solution complete), Dmitry (same thing but for software nodes), Mani
+> (because you have a somewhat related use-case for the PERST# signal and
+> I'd like to hear your input on whether this is something you can use or
+> maybe it needs a separate, implicit gpio-perst driver similar to what
+> Krzysztof did for reset-gpios) and Greg (because I mentioned this to you
+> last week in person and I also use the auxiliary bus for the proxy
+> devices).
+>
+> First patch in the series is a bugfix targetting stable, I'm surprised
+> nobody noticed the lockdep splat yet. The second adds a library function
+> I use in a later patch. All remaining patches implement or use the
+> shared GPIO support.
+>
 
-Hi Geert,
+Mark,
 
-Thanks for the series!
+I was working on extending this series with patches that make the
+regulator subsystem aware of shared GPIOs managed by GPIOLIB. I admit
+that after our previous discussions I was under the impression that
+the regulator core not only manages the enable count of the underlying
+non-exclusive GPIOs but also emits the relevant
+REGULATOR_EVENT_ENABLE/DISABLE notifications for GPIO-driven
+regulators when the physical pin actually gets enabled/disabled
+respectively.
 
-I agree that underscored parameters are excessive. But fixing them has
-a side effect of wiping the history, which is a bad thing.
+Upon a closer inspection it turns out that this is not the case - the
+ENABLE/DISABLE events are emitted when the *logical* regulator is
+enabled/disabled even if this does not involve a change in the state
+of the shared pin.
 
-I would prefer to save a history over following a rule that seemingly
-is not written down. Let's keep this untouched for now, and if there
-will be a need to move the code, we can drop underscores as well.
+Example: the tlv320aic3x.c codec driver may use a fixed regulator that
+uses a shared GPIO pin. The regulator in question may get disabled but
+its GPIO might not change state as it's still enabled by a different
+regulator. The driver will still see the disable event and put the
+codec in reset.
 
-Meanwhile you (and David) can propose a corresponding rule in
-coding-style.rst and a checkpatch warning. That way we at least will
-stop merging a new code of that style.
+I'm not saying this behavior is incorrect, I'm just mentioning it as I
+thought that there's a need for some GPIO descriptor notifier that
+allows to signal the actual change in value to users but it doesn't
+seem to be the case if we just want to maintain the current behavior.
+The only change we need to support the existing NONEXCLUSIVE flag and
+the new shared GPIOs at the same time - until we convert all users -
+is providing gpiod_is_shared() and just making regulator core skip the
+descriptor comparison and referencing via struct regulator_enable_gpio
+if it sees that a GPIO descriptor is shared.
 
-Thanks,
-Yury
+I will post a v2 early next week.
+
+Bartosz
 
