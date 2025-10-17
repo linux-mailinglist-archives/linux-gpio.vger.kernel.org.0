@@ -1,233 +1,185 @@
-Return-Path: <linux-gpio+bounces-27250-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27251-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D25BBE9EBB
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 17:33:29 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id DCAB2BEA2D5
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 17:49:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 56481585C33
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 15:20:29 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D3CDC5850E7
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 15:36:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3630336EC3;
-	Fri, 17 Oct 2025 15:19:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E6E9332EDB;
+	Fri, 17 Oct 2025 15:34:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DBJGnQw2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d4h0h4Uk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537EB335093;
-	Fri, 17 Oct 2025 15:19:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529B8332901
+	for <linux-gpio@vger.kernel.org>; Fri, 17 Oct 2025 15:34:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760714355; cv=none; b=SQVlofZQNeyhvW6KN4vA0futUeZKq/ISyNHTjYk06nyVQwdGyZCG7xCQqd9RXJuZcaTHajfPH+D5RatfL32OrPk/gpc5Ss92pkfODZIy9+TVwZjyyfC44a+Lj8k73gWmsFUcZYhezfIoEuJ3Oq36K6/qjBcIhcS0r52OnAQDnpI=
+	t=1760715267; cv=none; b=LaXyEVG0+4E7axAa/QG67vuwGuyNAYL6ig4731o1OgKnOwZZ4S3oxt6REu218FDdHTpkAjh8UisNxbqivvBpSNtuTLL3tvdSRpOyjUZEyyRxgbi7IXGORfaBaUYPkXj0Ejr1Pg9M+8s6b77cw9D+mg1sKB/0nZ2f8WALN7sCEQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760714355; c=relaxed/simple;
-	bh=Jkoxv5jBiXwh3/Xam1mL3Rb7nwPNp22HhVGe+o5k1sY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lT+SAjbmhvUnXrEbcrnYhlbKwuzmp3aLg2hDmd54zgIipX3/Gso+63olqogeHhotWviM6iXqDqJSoZ/8/iNUVB9qoY2optZRxuFQOdxLlJ64Ij6XUpCvvcrLH1prSrxuM9GmR43kPdOce00cKbxeMCsrXzgpnWyFOioZdOnRvX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DBJGnQw2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98656C4CEE7;
-	Fri, 17 Oct 2025 15:19:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760714355;
-	bh=Jkoxv5jBiXwh3/Xam1mL3Rb7nwPNp22HhVGe+o5k1sY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=DBJGnQw29zw6lCVTKtpBhIgSG7SMX4VZD9MlmLUEPUBMWipU3K8+xfy/xqlmxz8Qi
-	 mLxaq5V5Z7Et2fOTaRuUiiEspXQRrhIZZJ9xRqScULqTAgvTGjzSlFIQWaMNs3MR+A
-	 dKeaol6kFcz4lkdW7DFiMk5bbpEA1Dgh/SH6u6TIXDXdKDqoochxfVVvitpFaYDKlL
-	 bULb536qkalBIUpX9fU7Dk2QB8zCg/3nMjXL1nlc2Ddg/ayrRE+8/4gAavHoyhpk1Y
-	 0fREHXWYLfsbUhrNzXSgnVS+UpYAnpmQOfquXa1v8/EjnKyNDqrbCpraPpvMaG8lGT
-	 yY3YmE4+sr2qw==
-Date: Fri, 17 Oct 2025 08:19:12 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre
- Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea
- <claudiu.beznea@tuxon.dev>, Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, David Miller
- <davem@davemloft.net>, Linus Walleij <linus.walleij@linaro.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery
- <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>, Jonathan Cameron
- <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Jacky Huang
- <ychuang3@nuvoton.com>, Shan-Chun Hung <schung@nuvoton.com>, Yury Norov
- <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Johannes
- Berg <johannes@sipsolutions.net>, Alex Elder <elder@ieee.org>, David Laight
- <david.laight.linux@gmail.com>, Vincent Mailhol
- <mailhol.vincent@wanadoo.fr>, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
- linux-crypto@vger.kernel.org, qat-linux@intel.com,
- linux-gpio@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
- linux-iio@vger.kernel.org, linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH treewide v3 2/4] bitfield: Add non-constant
- field_{prep,get}() helpers
-Message-ID: <20251017081912.2ad26705@kernel.org>
-In-Reply-To: <2d30e5ffe70ce35f952b7d497d2959391fbf0580.1739540679.git.geert+renesas@glider.be>
-References: <cover.1739540679.git.geert+renesas@glider.be>
-	<2d30e5ffe70ce35f952b7d497d2959391fbf0580.1739540679.git.geert+renesas@glider.be>
+	s=arc-20240116; t=1760715267; c=relaxed/simple;
+	bh=UTHjW/toYsIDFb60IqVuORUHKF64xvgXUjf946jP9sk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BZuy10+X9iTP9CzvujvxI5IdDfJDK87Vl074KLfTYUqevH5XuBiQt3xaldL2exdgrLU38lpM+ePIbg08/NqdxdY1mH+OTwqUPLV/YpCgBcbBQ/pR0cqDCypGir4f+ObhnYCY55XTtJLs5M9ZzdNORN12jjRGd9UF1653meM/aog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d4h0h4Uk; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-427060bc0f5so458714f8f.3
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Oct 2025 08:34:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760715264; x=1761320064; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=favt1IDI3QNdxE7vKo/4IJP+8NRTOtxfK/UHHLad8Y4=;
+        b=d4h0h4UkQUBi9RG84ziDxhlIlsh3UxB7sn9MR7Yj6W3bbda/QIgbac9Nxjc/PKohD6
+         OUfpeEO2D9/VbtZquhIw0u3j/oyBvlYMN5TvwKJBBw064OEmk6YJiddpsAk2KZV/Dcty
+         Sr04ODUnmqod/jqWfeYdeefjGE6NhMxOyfKuZnzhXhnm6wHt9VBMuPuh6YUGcSffY7vn
+         o4MmEpGYsKQJAoAowELN6harvqe3BvL5v37+1nQ7QgJZESDGGd8Z+4n0M4CpB6njudCz
+         iUeig9cBju+kKMttbtS1dpexh15pnseMLKqEeA4ZERcEplzCLQNQwMmJfzjOc5pYTz5M
+         juYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760715264; x=1761320064;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=favt1IDI3QNdxE7vKo/4IJP+8NRTOtxfK/UHHLad8Y4=;
+        b=nIhJfa4qr5mhsDYp/ltnQdJ/pkreERqBrFSuqd30Ip/Hj5XCqvuQz4CdTKMts6Ck7x
+         HNkw4qGAlDj23Dg8BFWipuyVFSGQJ/9ihGf08p3WSfxf56EsLgzJVZPiNXbp+ViSE3WQ
+         G4qUL/uGU9d+SKv85SiCj6Eppe/1/IdqmNS9wHgBuEp3ENcQfczN1II9nGqSoo+e9o9n
+         o66iCqcQcZHunCGcWepwXZ+nKHfQEDPxEgVnemWRcDEzBKTZeRjfM0WsJnr0fsHfu4Yu
+         cm3mJt2ZkTZun6GIrhAltcNts7nro1zyiXHOHiFDKDXquntu+5fcwMXxoidgrcfkE2Mp
+         ueRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUux2GL6F2fmRPIC+QWtU58VRDU6u/90Gi2OzBjpGSpXIx7NEDMm/utbw9AbGT8CUOzC0fT+T8D6cIx@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfHNga0gHMD+cLvGjBEjK2d9quD9n7NIXs9OIy3cIIzBLPvEy1
+	MFVbjgKXF9Kd9ju6Zf1foXaZ7lkiMx6JX6Pz7Rhsb6VXDuwJQkf5UInRw+54SDjlwyllH8G41Kw
+	fxUKCjBfAhWpAnFVD2TITYXsS3s8Rj4g=
+X-Gm-Gg: ASbGnctfHbXIfE9Ndzcjtz6/p/D1mYVCdTtnGjWuMvDRDyvzPJ4p1uCI3Hf+SI6T1zr
+	DibUvRnLW2ot20oXZGd9A3ymxfwjhtFfUruJS8rfFWC+32xCZR+b0g91T5MVLuj/S8HqycEsVad
+	YZJ/7uoaruEOyHT6SjHsUdKW55si2vsTJ1bRLy4Ji1ZnAhEfrBys6Xi10S6asNdf8vkv3XsanvJ
+	8UtpzNGiLjsPtso8vKwCW/paY82RWxHcj2F31WPDVm0tbfthkhyccemPm8BFg==
+X-Google-Smtp-Source: AGHT+IHfpHgBVmETg3KYRZoAGy7Gg8QhvZwh2b+3jlFtVYjceIivbm2b7FrweI3TQHdE8Iw08/NlAQfWRcgPGmGMoFI=
+X-Received: by 2002:a05:6000:4313:b0:3d7:2284:b20 with SMTP id
+ ffacd0b85a97d-42704d9cf76mr3237097f8f.3.1760715263625; Fri, 17 Oct 2025
+ 08:34:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20251014191121.368475-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20251014191121.368475-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <20251016-dimmed-affidavit-90bae7e162aa@spud>
+In-Reply-To: <20251016-dimmed-affidavit-90bae7e162aa@spud>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Fri, 17 Oct 2025 16:33:56 +0100
+X-Gm-Features: AS18NWBguR9F654YWkASexXoMxk8B54Vyccl4usuxCXhdtptJoKlKHlfL85bFOo
+Message-ID: <CA+V-a8un1cF=acNjG=79_v7oaR8gzBQ+3z1As8AqrJnOnk-OUw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: renesas,r9a09g077: Document pin
+ configuration properties
+To: Conor Dooley <conor@kernel.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 14 Feb 2025 14:55:51 +0100 Geert Uytterhoeven wrote:
-> The existing FIELD_{GET,PREP}() macros are limited to compile-time
-> constants.  However, it is very common to prepare or extract bitfield
-> elements where the bitfield mask is not a compile-time constant.
-> 
-> To avoid this limitation, the AT91 clock driver and several other
-> drivers already have their own non-const field_{prep,get}() macros.
-> Make them available for general use by consolidating them in
-> <linux/bitfield.h>, and improve them slightly:
->   1. Avoid evaluating macro parameters more than once,
->   2. Replace "ffs() - 1" by "__ffs()",
->   3. Support 64-bit use on 32-bit architectures.
-> 
-> This is deliberately not merged into the existing FIELD_{GET,PREP}()
-> macros, as people expressed the desire to keep stricter variants for
-> increased safety, or for performance critical paths.
+Hi Conor,
 
-We already have helpers for this, please just don't know they exist :/
+Thank you for the review.
 
-The "const" version of the helpers are specifically defined to work
-on masks generated with BIT() and GENMASK(). If the mask is not
-constant we should expect it to have a well defined width.
+On Thu, Oct 16, 2025 at 5:41=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
+te:
+>
+> On Tue, Oct 14, 2025 at 08:11:20PM +0100, Prabhakar wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Document the pin configuration properties supported by the RZ/T2H pinct=
+rl
+> > driver. The RZ/T2H SoC supports configuring various electrical properti=
+es
+> > through the DRCTLm (I/O Buffer Function Switching) registers.
+> >
+> > Add documentation for the following standard properties:
+> > - bias-disable, bias-pull-up, bias-pull-down: Control internal
+> >   pull-up/pull-down resistors (3 options: no pull, pull-up, pull-down)
+> > - input-schmitt-enable, input-schmitt-disable: Control Schmitt trigger
+> >   input
+> > - slew-rate: Control output slew rate (2 options: slow/fast)
+> >
+> > Add documentation for the custom property:
+> > - renesas,drive-strength: Control output drive strength using discrete
+> >   levels (0-3) representing low, medium, high, and ultra high strength.
+> >   This custom property is needed because the hardware uses fixed discre=
+te
+> >   levels rather than configurable milliamp values.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  .../bindings/pinctrl/renesas,r9a09g077-pinctrl.yaml | 13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g07=
+7-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g07=
+7-pinctrl.yaml
+> > index 36d665971484..9085d5cfb1c8 100644
+> > --- a/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g077-pinct=
+rl.yaml
+> > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g077-pinct=
+rl.yaml
+> > @@ -72,6 +72,19 @@ definitions:
+> >        input: true
+> >        input-enable: true
+> >        output-enable: true
+> > +      bias-disable: true
+> > +      bias-pull-down: true
+> > +      bias-pull-up: true
+> > +      input-schmitt-enable: true
+> > +      input-schmitt-disable: true
+> > +      slew-rate:
+> > +        enum: [0, 1]
+>
+> What are the meanings of "0" and "1" for slew rate? Why isn't this given
+I'll add a description for it (0 =3D slow, 1 =3D fast) and the same values
+are programmed in the register to configure the slew rate.
 
-I strongly prefer that we do this instead and convert the users to
-the fixed-width version:
+> as the actual rates? The docs surely give more detail than just "slow"
+> and "fast".
+You mean to represent slew-rate in some sort of a unit?
 
----->8----------------
+>
+> > +      renesas,drive-strength:
+> > +        description:
+> > +          Drive strength configuration value. Valid values are 0 to 3,=
+ representing
+> > +          increasing drive strength from low, medium, high and ultra h=
+igh.
+>
+> I see what you wrote in the commit message, but I don't really get why
+> you need a custom property. I would imagine most devices only have some
+> some small set of "fixed discrete levels", yet manage with milli- or
+> micro-amps fine. Converting from mA to register values in a driver is
+> not difficult, and I figure the documentation for the device probably
+> doesn't just give vague strengths like "medium" or "ultra high", but
+> probably provides currents?
+>
+> I dunno, I am just confused by the need to shove register values into
+> these properties, rather than using the actual units.
+>
+I'm checking this with the HW team. I'll get back on this once I have
+some feedback.
 
-Subject: bitfield: open code the fixed-width non-const helpers so that people see them
-
-There is a number of useful helpers defined in bitfield.h but
-they are mostly invisible to the reader because they are all
-generated by macros. Open code the 32b versions (which are
-most commonly used) to give developers a chance to discover them.
-
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
----
- include/linux/bitfield.h | 82 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 81 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
-index 5355f8f806a9..0356e535f37d 100644
---- a/include/linux/bitfield.h
-+++ b/include/linux/bitfield.h
-@@ -173,6 +173,11 @@
- 		*(_reg_p) |= (((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask));	\
- 	})
- 
-+/* Non-constant, fixed-width helpers follow
-+ * Open code u32 and le32 versions for documentation / visibility,
-+ * be32 and other widths exist but are generated using macroes.
-+ */
-+
- extern void __compiletime_error("value doesn't fit into mask")
- __field_overflow(void);
- extern void __compiletime_error("bad bitfield mask")
-@@ -188,6 +193,81 @@ static __always_inline u64 field_mask(u64 field)
- 	return field / field_multiplier(field);
- }
- #define field_max(field)	((typeof(field))field_mask(field))
-+
-+/**
-+ * u32_encode_bits() - prepare a u32 bitfield element (non-const)
-+ * @v: value to put in the field
-+ * @field: shifted mask defining the field's length and position
-+ *
-+ * Equivalent of FIELD_PREP() for u32, field does not have to be constant.
-+ *
-+ * Note that the helper is available for other field widths (generated below).
-+ */
-+static __always_inline __u32 u32_encode_bits(u32 v, u32 field)
-+{
-+	if (__builtin_constant_p(v) && (v & ~field_mask(field)))
-+		__field_overflow();
-+	return ((v & field_mask(field)) * field_multiplier(field));
-+}
-+
-+/**
-+ * u32_replace_bits() - change a u32 bitfield element (non-const)
-+ * @old: old u32 value to modify
-+ * @val: value to put in the field
-+ * @field: shifted mask defining the field's length and position
-+ *
-+ * Remove the current contents of the @field in @old and set it to @new.
-+ *
-+ * Note that the helper is available for other field widths (generated below).
-+ */
-+static __always_inline __u32 u32_replace_bits(__u32 old, u32 val, u32 field)
-+{
-+	return (old & ~(field)) | u32_encode_bits(val, field);
-+}
-+
-+/**
-+ * u32_get_bits() - get u32 bitfield element (non-const)
-+ * @v: value to extract the field from
-+ * @field: shifted mask defining the field's length and position
-+ *
-+ * Extract the value of the field and shift it down.
-+ *
-+ * Note that the helper is available for other field widths (generated below).
-+ */
-+static __always_inline u32 u32_get_bits(__u32 v, u32 field)
-+{
-+	return ((v) & field) / field_multiplier(field);
-+}
-+
-+static __always_inline void u32p_replace_bits(__u32 *p, u32 val, u32 field)
-+{
-+	*p = (*p & ~(field)) | u32_encode_bits(val, field);
-+}
-+
-+static __always_inline __le32 le32_encode_bits(u32 v, u32 field)
-+{
-+	if (__builtin_constant_p(v) && (v & ~field_mask(field)))
-+		__field_overflow();
-+	return cpu_to_le32((v & field_mask(field)) * field_multiplier(field));
-+}
-+
-+static __always_inline __le32 le32_replace_bits(__le32 old, u32 val, u32 field)
-+{
-+	return (old & ~cpu_to_le32(field)) | le32_encode_bits(val, field);
-+}
-+
-+static __always_inline void le32p_replace_bits(__le32 *p, u32 val, u32 field)
-+{
-+	*p = (*p & ~cpu_to_le32(field)) | le32_encode_bits(val, field);
-+}
-+
-+static __always_inline u32 le32_get_bits(__le32 v, u32 field)
-+{
-+	return (le32_to_cpu(v) & field) / field_multiplier(field);
-+}
-+
-+/* Auto-generate bit ops for other field width and endian combination */
-+
- #define ____MAKE_OP(type,base,to,from)					\
- static __always_inline __##type __must_check type##_encode_bits(base v, base field)	\
- {									\
-@@ -215,7 +295,7 @@ static __always_inline base __must_check type##_get_bits(__##type v, base field)
- 	____MAKE_OP(u##size,u##size,,)
- ____MAKE_OP(u8,u8,,)
- __MAKE_OP(16)
--__MAKE_OP(32)
-+____MAKE_OP(be32,u32,cpu_to_be32,be32_to_cpu) /* Other 32b types open coded */
- __MAKE_OP(64)
- #undef __MAKE_OP
- #undef ____MAKE_OP
--- 
-2.51.0
-
+Cheers,
+Prabhakar
 
