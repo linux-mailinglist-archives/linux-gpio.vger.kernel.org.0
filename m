@@ -1,187 +1,257 @@
-Return-Path: <linux-gpio+bounces-27253-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27252-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF0F3BEA30B
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 17:50:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D42FBBEA8FD
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 18:15:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9953B1894FB3
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 15:46:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A6A41946287
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 15:42:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CC8A1A0728;
-	Fri, 17 Oct 2025 15:45:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7EEF330B2F;
+	Fri, 17 Oct 2025 15:41:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X0KTt603"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FrvJnbGG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E3C330B0D;
-	Fri, 17 Oct 2025 15:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02D8330B0F
+	for <linux-gpio@vger.kernel.org>; Fri, 17 Oct 2025 15:41:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760715948; cv=none; b=YLuLYD0wmy0Qajw+9vgOx2kq+MfhSCZD5//abyBJIjXSKknNfercZXaADg+BruygjhqVRnWsMgg6K7pHoWlHQZ7dfGRQMhrFj27wG7bda49HFkkEAmLBavIgi6+4vEaHUvU2+AUmFqNOlnS1KKG15/CvyrX2xMEiaTbiBwuGygg=
+	t=1760715688; cv=none; b=O1+3N077NpEvm8i3jTg2HVz960mF+5sVetJTzix8kOc2N8qU0nK+pS7zHlXpvpwdRikTT4xgi1rSVIYTij9HJSoUTLVzvbFmjp1q0MymfHymO7mkPsjQadrrma8gs2AhO28nhXhGmrHkhJPfdxnHZ+J0OVha7O5EnBc0MbMi5W4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760715948; c=relaxed/simple;
-	bh=e40RiWetjsxLvkNuwYGmbCfc+JdkI+evIoSOLsfzX5E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=evr+/Gf00xFS0v+It682cXzMGoCPwZw0E9whfgpedENqHJESt9Fi+4rVMjXCGMmlFMTV2tNEHg2GBKFYCFvt9jebLF9D9DiIBmrVwgPlCRMmi+rdo+P70jHs/wBDj/7XXHkZTPnjQ/Y5cuH9ucGVebloL9X0lFeZXTVPJVmSkkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X0KTt603; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B41AC4CEFE;
-	Fri, 17 Oct 2025 15:45:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760715947;
-	bh=e40RiWetjsxLvkNuwYGmbCfc+JdkI+evIoSOLsfzX5E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X0KTt603Yf31FFgAAhASvEZ2oNQ58Cji9gxknQ4KWZAlwFKi3LL31v8VC6QOHOAj+
-	 M6gtZL8qw7AEBY6RAvHQjLJW281SB4TIovX0ilHly2zJL4syQ8wjekpq3K7tmPwbGb
-	 aIQKYsncha82wYQiSq6tQdMJtbTYAqC2eQWi2T8vv99nvjvI1WzSx/L5EQmAvAvkhQ
-	 YRF91VJNtvzVCXjm8hcac6oT8qz5yUP3tI04KEl66zMMTvB3jOBOUOTK5VYumvXI29
-	 h2yiEUPE0IamV2CAT3s7TE4as1f205bSvXF+R8EGxR0ciekXaZ31B7LiWNgOgOGwOc
-	 L9hp0005Z0WCA==
-Date: Fri, 17 Oct 2025 16:45:43 +0100
-From: Conor Dooley <conor@kernel.org>
-To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: renesas,r9a09g077: Document
- pin configuration properties
-Message-ID: <20251017-anthem-duplicity-c96e4253d986@spud>
-References: <20251014191121.368475-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20251014191121.368475-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20251016-dimmed-affidavit-90bae7e162aa@spud>
- <CA+V-a8un1cF=acNjG=79_v7oaR8gzBQ+3z1As8AqrJnOnk-OUw@mail.gmail.com>
+	s=arc-20240116; t=1760715688; c=relaxed/simple;
+	bh=07FfYMvTYB5Vt/Ee+8p1RhzPkHSPCQDsAu33o360zFY=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Hh76TvoO/NkQM07BuVhiURiyisvm5PbtppSm9qQsXgyO5uecgZ+1xeDm4UTV8d09/HXeoVoP+or9qeWPnQzczicptYjZznjFg2ffBmxO5/jzJmBUiU2nPVoYeFOGdNxMOraY85wc5jjyzxR6l5x3YG/9fLCD8Z8UPo+7VHqx8cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FrvJnbGG; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760715686; x=1792251686;
+  h=date:from:to:cc:subject:message-id;
+  bh=07FfYMvTYB5Vt/Ee+8p1RhzPkHSPCQDsAu33o360zFY=;
+  b=FrvJnbGGJgVg4m/502sVJ2YUneYkjPekOzlWJPV4lc26itgKE6rIsc9u
+   t02YReSki/aStq/EZQB0f3iY8pcIceoqnLU47Yl3xx3x+RnJRvU/TCHhe
+   zCPRDp6dFDTfGEsL8Powt+q9ODDgHRrmIT2C4rb9F63fedDR9vQpDe5VL
+   9ValXMbwlbvw+utiO1T4HftuTQzThrP5uaFGlVWbVLj2/VaKh4uoM/Lf1
+   jQfUfhRkSzUbjULAlCMHmqXNNIpxc3H7CCcCHThhQ9FBZ8zqTV+fiMz7J
+   QhQ202h5iF+G4igcXwtjx21qzbWqsq3Hl/EJtNyAxiWoBJmDhkuh+82FW
+   Q==;
+X-CSE-ConnectionGUID: E3/hmzzxTtSofihl58j1PA==
+X-CSE-MsgGUID: HTT/n1kuScaGiZ81jP3PvQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11585"; a="62832163"
+X-IronPort-AV: E=Sophos;i="6.19,236,1754982000"; 
+   d="scan'208";a="62832163"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2025 08:41:26 -0700
+X-CSE-ConnectionGUID: 22IC3TPATMyNqwGAnCP1Fg==
+X-CSE-MsgGUID: AsvVezHfQ/eD9Nem1K/xpg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,236,1754982000"; 
+   d="scan'208";a="213728829"
+Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
+  by fmviesa001.fm.intel.com with ESMTP; 17 Oct 2025 08:41:25 -0700
+Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1v9ma3-0006qF-00;
+	Fri, 17 Oct 2025 15:41:23 +0000
+Date: Fri, 17 Oct 2025 23:41:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ eba11116f39533d2e38cc5898014f2c95f32d23a
+Message-ID: <202510172357.nkXMC1Cx-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="E/tp+y/c9Usv3Xlg"
-Content-Disposition: inline
-In-Reply-To: <CA+V-a8un1cF=acNjG=79_v7oaR8gzBQ+3z1As8AqrJnOnk-OUw@mail.gmail.com>
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: eba11116f39533d2e38cc5898014f2c95f32d23a  gpiolib: of: Get rid of <linux/gpio/legacy-of-mm-gpiochip.h>
 
---E/tp+y/c9Usv3Xlg
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+elapsed time: 1449m
 
-On Fri, Oct 17, 2025 at 04:33:56PM +0100, Lad, Prabhakar wrote:
-> Hi Conor,
->=20
-> Thank you for the review.
->=20
-> On Thu, Oct 16, 2025 at 5:41=E2=80=AFPM Conor Dooley <conor@kernel.org> w=
-rote:
-> >
-> > On Tue, Oct 14, 2025 at 08:11:20PM +0100, Prabhakar wrote:
-> > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > >
-> > > Document the pin configuration properties supported by the RZ/T2H pin=
-ctrl
-> > > driver. The RZ/T2H SoC supports configuring various electrical proper=
-ties
-> > > through the DRCTLm (I/O Buffer Function Switching) registers.
-> > >
-> > > Add documentation for the following standard properties:
-> > > - bias-disable, bias-pull-up, bias-pull-down: Control internal
-> > >   pull-up/pull-down resistors (3 options: no pull, pull-up, pull-down)
-> > > - input-schmitt-enable, input-schmitt-disable: Control Schmitt trigger
-> > >   input
-> > > - slew-rate: Control output slew rate (2 options: slow/fast)
-> > >
-> > > Add documentation for the custom property:
-> > > - renesas,drive-strength: Control output drive strength using discrete
-> > >   levels (0-3) representing low, medium, high, and ultra high strengt=
-h.
-> > >   This custom property is needed because the hardware uses fixed disc=
-rete
-> > >   levels rather than configurable milliamp values.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > ---
-> > >  .../bindings/pinctrl/renesas,r9a09g077-pinctrl.yaml | 13 +++++++++++=
-++
-> > >  1 file changed, 13 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g=
-077-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g=
-077-pinctrl.yaml
-> > > index 36d665971484..9085d5cfb1c8 100644
-> > > --- a/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g077-pin=
-ctrl.yaml
-> > > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g077-pin=
-ctrl.yaml
-> > > @@ -72,6 +72,19 @@ definitions:
-> > >        input: true
-> > >        input-enable: true
-> > >        output-enable: true
-> > > +      bias-disable: true
-> > > +      bias-pull-down: true
-> > > +      bias-pull-up: true
-> > > +      input-schmitt-enable: true
-> > > +      input-schmitt-disable: true
-> > > +      slew-rate:
-> > > +        enum: [0, 1]
-> >
-> > What are the meanings of "0" and "1" for slew rate? Why isn't this given
-> I'll add a description for it (0 =3D slow, 1 =3D fast) and the same values
-> are programmed in the register to configure the slew rate.
->=20
-> > as the actual rates? The docs surely give more detail than just "slow"
-> > and "fast".
-> You mean to represent slew-rate in some sort of a unit?
+configs tested: 164
+configs skipped: 4
 
-Usually slew-rate is measured in a unit derived from volts per second.
-What rates do "slow" and "fast" actually represent?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> > > +      renesas,drive-strength:
-> > > +        description:
-> > > +          Drive strength configuration value. Valid values are 0 to =
-3, representing
-> > > +          increasing drive strength from low, medium, high and ultra=
- high.
-> >
-> > I see what you wrote in the commit message, but I don't really get why
-> > you need a custom property. I would imagine most devices only have some
-> > some small set of "fixed discrete levels", yet manage with milli- or
-> > micro-amps fine. Converting from mA to register values in a driver is
-> > not difficult, and I figure the documentation for the device probably
-> > doesn't just give vague strengths like "medium" or "ultra high", but
-> > probably provides currents?
-> >
-> > I dunno, I am just confused by the need to shove register values into
-> > these properties, rather than using the actual units.
-> >
-> I'm checking this with the HW team. I'll get back on this once I have
-> some feedback.
->=20
-> Cheers,
-> Prabhakar
+tested configs:
+alpha                             allnoconfig    clang-22
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+arc                               allnoconfig    clang-22
+arc                               allnoconfig    gcc-15.1.0
+arc                   randconfig-001-20251017    clang-22
+arc                   randconfig-001-20251017    gcc-8.5.0
+arc                   randconfig-002-20251017    clang-22
+arc                   randconfig-002-20251017    gcc-11.5.0
+arm                               allnoconfig    clang-22
+arm                   randconfig-001-20251017    clang-22
+arm                   randconfig-001-20251017    gcc-15.1.0
+arm                   randconfig-002-20251017    clang-22
+arm                   randconfig-003-20251017    clang-22
+arm                   randconfig-004-20251017    clang-22
+arm                         wpcm450_defconfig    gcc-15.1.0
+arm64                             allnoconfig    clang-22
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20251017    clang-20
+arm64                 randconfig-001-20251017    clang-22
+arm64                 randconfig-002-20251017    clang-22
+arm64                 randconfig-003-20251017    clang-22
+arm64                 randconfig-003-20251017    gcc-15.1.0
+arm64                 randconfig-004-20251017    clang-22
+csky                              allnoconfig    clang-22
+csky                              allnoconfig    gcc-15.1.0
+csky                  randconfig-001-20251017    gcc-15.1.0
+csky                  randconfig-002-20251017    gcc-10.5.0
+csky                  randconfig-002-20251017    gcc-15.1.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-22
+hexagon                          allyesconfig    clang-22
+hexagon               randconfig-001-20251017    clang-22
+hexagon               randconfig-001-20251017    gcc-15.1.0
+hexagon               randconfig-002-20251017    clang-22
+hexagon               randconfig-002-20251017    gcc-15.1.0
+i386        buildonly-randconfig-001-20251017    clang-20
+i386        buildonly-randconfig-002-20251017    clang-20
+i386        buildonly-randconfig-003-20251017    clang-20
+i386        buildonly-randconfig-004-20251017    clang-20
+i386        buildonly-randconfig-005-20251017    clang-20
+i386        buildonly-randconfig-006-20251017    clang-20
+i386                  randconfig-001-20251017    clang-20
+i386                  randconfig-002-20251017    clang-20
+i386                  randconfig-003-20251017    clang-20
+i386                  randconfig-004-20251017    clang-20
+i386                  randconfig-005-20251017    clang-20
+i386                  randconfig-006-20251017    clang-20
+i386                  randconfig-007-20251017    clang-20
+i386                  randconfig-011-20251017    gcc-12
+i386                  randconfig-012-20251017    gcc-12
+i386                  randconfig-013-20251017    gcc-12
+i386                  randconfig-014-20251017    gcc-12
+i386                  randconfig-015-20251017    gcc-12
+i386                  randconfig-016-20251017    gcc-12
+i386                  randconfig-017-20251017    gcc-12
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-22
+loongarch             randconfig-001-20251017    gcc-13.4.0
+loongarch             randconfig-001-20251017    gcc-15.1.0
+loongarch             randconfig-002-20251017    clang-18
+loongarch             randconfig-002-20251017    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                       rbtx49xx_defconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20251017    gcc-15.1.0
+nios2                 randconfig-001-20251017    gcc-8.5.0
+nios2                 randconfig-002-20251017    gcc-15.1.0
+nios2                 randconfig-002-20251017    gcc-8.5.0
+openrisc                          allnoconfig    clang-22
+openrisc                          allnoconfig    gcc-15.1.0
+parisc                            allnoconfig    clang-22
+parisc                            allnoconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                generic-32bit_defconfig    gcc-15.1.0
+parisc                randconfig-001-20251017    gcc-12.5.0
+parisc                randconfig-001-20251017    gcc-15.1.0
+parisc                randconfig-002-20251017    gcc-15.1.0
+parisc                randconfig-002-20251017    gcc-8.5.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                           allnoconfig    clang-22
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                     ep8248e_defconfig    gcc-15.1.0
+powerpc               randconfig-001-20251017    gcc-14.3.0
+powerpc               randconfig-001-20251017    gcc-15.1.0
+powerpc               randconfig-002-20251017    clang-22
+powerpc               randconfig-002-20251017    gcc-15.1.0
+powerpc               randconfig-003-20251017    gcc-11.5.0
+powerpc               randconfig-003-20251017    gcc-15.1.0
+powerpc64             randconfig-001-20251017    clang-20
+powerpc64             randconfig-001-20251017    gcc-15.1.0
+powerpc64             randconfig-002-20251017    gcc-15.1.0
+powerpc64             randconfig-003-20251017    gcc-15.1.0
+riscv                             allnoconfig    clang-22
+riscv                             allnoconfig    gcc-15.1.0
+riscv                 randconfig-001-20251017    clang-22
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-22
+s390                             allyesconfig    gcc-15.1.0
+s390                  randconfig-001-20251017    clang-22
+s390                  randconfig-002-20251017    gcc-8.5.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                ecovec24-romimage_defconfig    gcc-15.1.0
+sh                 kfr2r09-romimage_defconfig    gcc-15.1.0
+sh                    randconfig-001-20251017    gcc-14.3.0
+sh                    randconfig-002-20251017    gcc-15.1.0
+sh                   sh7770_generic_defconfig    gcc-15.1.0
+sh                            titan_defconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20251017    gcc-12.5.0
+sparc                 randconfig-002-20251017    gcc-8.5.0
+sparc64               randconfig-001-20251017    gcc-14.3.0
+sparc64               randconfig-002-20251017    clang-20
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-22
+um                               allyesconfig    gcc-14
+um                    randconfig-001-20251017    gcc-14
+um                    randconfig-002-20251017    clang-22
+x86_64                            allnoconfig    clang-20
+x86_64      buildonly-randconfig-001-20251017    clang-20
+x86_64      buildonly-randconfig-001-20251017    gcc-14
+x86_64      buildonly-randconfig-002-20251017    clang-20
+x86_64      buildonly-randconfig-002-20251017    gcc-14
+x86_64      buildonly-randconfig-003-20251017    clang-20
+x86_64      buildonly-randconfig-004-20251017    clang-20
+x86_64      buildonly-randconfig-004-20251017    gcc-14
+x86_64      buildonly-randconfig-005-20251017    clang-20
+x86_64      buildonly-randconfig-006-20251017    clang-20
+x86_64                              defconfig    gcc-14
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20251017    gcc-14
+x86_64                randconfig-002-20251017    gcc-14
+x86_64                randconfig-003-20251017    gcc-14
+x86_64                randconfig-004-20251017    gcc-14
+x86_64                randconfig-005-20251017    gcc-14
+x86_64                randconfig-006-20251017    gcc-14
+x86_64                randconfig-007-20251017    gcc-14
+x86_64                randconfig-008-20251017    gcc-14
+x86_64                randconfig-071-20251017    clang-20
+x86_64                randconfig-072-20251017    clang-20
+x86_64                randconfig-073-20251017    clang-20
+x86_64                randconfig-074-20251017    clang-20
+x86_64                randconfig-075-20251017    clang-20
+x86_64                randconfig-076-20251017    clang-20
+x86_64                randconfig-077-20251017    clang-20
+x86_64                randconfig-078-20251017    clang-20
+x86_64                               rhel-9.4    clang-20
+x86_64                          rhel-9.4-func    clang-20
+x86_64                    rhel-9.4-kselftests    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20251017    gcc-12.5.0
+xtensa                randconfig-002-20251017    gcc-9.5.0
 
---E/tp+y/c9Usv3Xlg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaPJkpgAKCRB4tDGHoIJi
-0s3MAP9YizOciJUJl7rtAmgZ0KBowiJDC/FYFB0FeHTK47UjkQEA8ndu2smIcIZJ
-nOSy5kNBMpmDRVIhroG4JLyImSz1Bg0=
-=VFiF
------END PGP SIGNATURE-----
-
---E/tp+y/c9Usv3Xlg--
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
