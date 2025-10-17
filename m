@@ -1,257 +1,191 @@
-Return-Path: <linux-gpio+bounces-27252-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27256-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D42FBBEA8FD
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 18:15:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5839ABEA7EC
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 18:09:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A6A41946287
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 15:42:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 50F9118896A9
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 16:07:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7EEF330B2F;
-	Fri, 17 Oct 2025 15:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FrvJnbGG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68974251795;
+	Fri, 17 Oct 2025 16:07:15 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02D8330B0F
-	for <linux-gpio@vger.kernel.org>; Fri, 17 Oct 2025 15:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA27230BE9
+	for <linux-gpio@vger.kernel.org>; Fri, 17 Oct 2025 16:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760715688; cv=none; b=O1+3N077NpEvm8i3jTg2HVz960mF+5sVetJTzix8kOc2N8qU0nK+pS7zHlXpvpwdRikTT4xgi1rSVIYTij9HJSoUTLVzvbFmjp1q0MymfHymO7mkPsjQadrrma8gs2AhO28nhXhGmrHkhJPfdxnHZ+J0OVha7O5EnBc0MbMi5W4=
+	t=1760717235; cv=none; b=mUbgf9eRPrk+v4tpniygJ+BpJrEAet+c+LjuERRUmBhAsHOu0P2fpsxjb7k1B6o0dV9QTnY+pYTJl29DzqCfVx4w/c8H469iPGvPPq6WCOfrxNcb6R9OF93/eQQu8jFzoDK37Tro9/5mWHsQea0PDNEo2IRX2b8u4gOdu/i7o0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760715688; c=relaxed/simple;
-	bh=07FfYMvTYB5Vt/Ee+8p1RhzPkHSPCQDsAu33o360zFY=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=Hh76TvoO/NkQM07BuVhiURiyisvm5PbtppSm9qQsXgyO5uecgZ+1xeDm4UTV8d09/HXeoVoP+or9qeWPnQzczicptYjZznjFg2ffBmxO5/jzJmBUiU2nPVoYeFOGdNxMOraY85wc5jjyzxR6l5x3YG/9fLCD8Z8UPo+7VHqx8cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FrvJnbGG; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760715686; x=1792251686;
-  h=date:from:to:cc:subject:message-id;
-  bh=07FfYMvTYB5Vt/Ee+8p1RhzPkHSPCQDsAu33o360zFY=;
-  b=FrvJnbGGJgVg4m/502sVJ2YUneYkjPekOzlWJPV4lc26itgKE6rIsc9u
-   t02YReSki/aStq/EZQB0f3iY8pcIceoqnLU47Yl3xx3x+RnJRvU/TCHhe
-   zCPRDp6dFDTfGEsL8Powt+q9ODDgHRrmIT2C4rb9F63fedDR9vQpDe5VL
-   9ValXMbwlbvw+utiO1T4HftuTQzThrP5uaFGlVWbVLj2/VaKh4uoM/Lf1
-   jQfUfhRkSzUbjULAlCMHmqXNNIpxc3H7CCcCHThhQ9FBZ8zqTV+fiMz7J
-   QhQ202h5iF+G4igcXwtjx21qzbWqsq3Hl/EJtNyAxiWoBJmDhkuh+82FW
-   Q==;
-X-CSE-ConnectionGUID: E3/hmzzxTtSofihl58j1PA==
-X-CSE-MsgGUID: HTT/n1kuScaGiZ81jP3PvQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11585"; a="62832163"
-X-IronPort-AV: E=Sophos;i="6.19,236,1754982000"; 
-   d="scan'208";a="62832163"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2025 08:41:26 -0700
-X-CSE-ConnectionGUID: 22IC3TPATMyNqwGAnCP1Fg==
-X-CSE-MsgGUID: AsvVezHfQ/eD9Nem1K/xpg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,236,1754982000"; 
-   d="scan'208";a="213728829"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by fmviesa001.fm.intel.com with ESMTP; 17 Oct 2025 08:41:25 -0700
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1v9ma3-0006qF-00;
-	Fri, 17 Oct 2025 15:41:23 +0000
-Date: Fri, 17 Oct 2025 23:41:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- eba11116f39533d2e38cc5898014f2c95f32d23a
-Message-ID: <202510172357.nkXMC1Cx-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1760717235; c=relaxed/simple;
+	bh=5UuF/HjwkQMRQp3toEpBUcYrHBj825aq+Tc6Itk11zY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sn75zUOIn2Qn+rE53ciPA0IJK5MKhJFf0/R8AwNlIY3slLu+OTxnWnVPZBq9CLHiC616Rkh97ZkidRV9kcvx059OzSKXXsru16KAp7YV2jyPKwP4aKRdeXvR+gX+8qgVaN5cKzjNQVhmBpvSM9kHTxH3m4F6bx6F/K3Q2xoAdeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-74572fb94b3so1420400a34.2
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Oct 2025 09:07:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760717232; x=1761322032;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=D4mf9FdrvOGmLornKgNki0gXD9BcM6SCmzEl3gfV4Zs=;
+        b=TN4/HUeoOgx/lNvn9NTC3n3FT1G14Tvvu3f84UF8z2ppDXMfFfnXerxrqjfBGXCCjl
+         jOwYiygBgtjM/5sNSoNFqebUNVhA+NBb/YhnB5fwac0P8ApRen+WBEAmhwXEyYKDmm/+
+         bfYtCJRdmBw826COW4Od30e+33MEbQOqPh3nOGHrloyMHsM7OzwYut/R6u43jexBUdoz
+         TiNEc9c5BXLboXm77EZGp9+LoWl0VLgoghDAYw38wBQ/yNiyl6789jyeE49WA+ApbcaG
+         fzw1zYCU0/f5EiPOVBBEYLBytH/w2ARcULZOOhCk4xGXNs+EZe+iaM5cBroWB752OJ3q
+         Ts0w==
+X-Forwarded-Encrypted: i=1; AJvYcCUC8cDtwYoS9e6OZPmwqnynACXQm3MHEx8SrdRgBXZO41y/rkyaE5gseai9iVyr0YnOwybRcpSUxWTw@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxvcbT+soFulc7+n3Oyl0+gGsoDLU4IZB4Y/VQk1iyi87Wywmn
+	nvS0wN2j1MQJ/9eEohmY2iZeb5IpitQuEiSYZh30opLm4vcC3+b9jdO+o8W91KS0
+X-Gm-Gg: ASbGncuC07fZlysxQsEnKFILt4johByLodmiqFIDLOD9gVVkuQcU6yIDRItswZN5BTb
+	kc8d09v95jl5hB1UJMySW9E0SEAtpiUPLUKqqArD843e6vffs4rkDusj3jlrR4YsTxzYf0IvdNG
+	D+NUcx2z6eq1y7MJjUtFOH+XBEPw0/gIXJaeP5UnAEqyLEiwRE+WrKKTMmu82Qnl2sKzJJ+edoo
+	wUDQm8J+c22nXaGznEpbJ6Ol9idRrTfOTp+SPlw1YA6mo8L4nsohIcAY+JnmqZL+I6So2JsRwTe
+	04/oV0/CP1/6U8cuMTSx/V/wtE9HdJy/DcX9akuJ13ZOQdwzAvCwy066p77BU+DCdnUSDKeBnHf
+	I7YNFO/2FltnpQ0OPCg9Y64Ib7yCDre+y7SuacDUdcmSHYCswdVMMbAg8qDJefdiy78CskeT3Ep
+	gvsw+LKQlyP6y9vdDL/bhGEs4q2lob/xgc4FtYGsIy+1irIDSgB25y2VBwwgU=
+X-Google-Smtp-Source: AGHT+IEuCf1ZZUTdWcg9FBFIMen8jlWLJTnisk8oeMzg7DtMpGmr7f0o4X1V0tzy62kqvzclT+RdBw==
+X-Received: by 2002:a05:6808:308b:b0:441:8f74:fc1 with SMTP id 5614622812f47-443a31bd78fmr1907602b6e.62.1760717232096;
+        Fri, 17 Oct 2025 09:07:12 -0700 (PDT)
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com. [209.85.160.53])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-442005a28d5sm1317126b6e.3.2025.10.17.09.07.11
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Oct 2025 09:07:11 -0700 (PDT)
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-3c9859913d0so787739fac.0
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Oct 2025 09:07:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXiRnAhVsrcxRuAoP7J0UbdOrijncb4Hm+lX1xeuz/qwsS4E9lFKA7lt05OM6lXWENTveBw0erDI5OI@vger.kernel.org
+X-Received: by 2002:a05:6102:40c6:10b0:5d7:dec6:389a with SMTP id
+ ada2fe7eead31-5d7dec64177mr1309355137.9.1760716852567; Fri, 17 Oct 2025
+ 09:00:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <cover.1739540679.git.geert+renesas@glider.be> <2d30e5ffe70ce35f952b7d497d2959391fbf0580.1739540679.git.geert+renesas@glider.be>
+ <20251017081912.2ad26705@kernel.org>
+In-Reply-To: <20251017081912.2ad26705@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 17 Oct 2025 18:00:41 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVS5KmVkv_pmc+R-EXik-Z1_7nuiHM=vm1Cu8v91wmLBQ@mail.gmail.com>
+X-Gm-Features: AS18NWD4CQztq7yi6j63q-9XtnW0otWo2wOw8z0_Fp7R-6z_qrlZWB5IqFYEbBg
+Message-ID: <CAMuHMdVS5KmVkv_pmc+R-EXik-Z1_7nuiHM=vm1Cu8v91wmLBQ@mail.gmail.com>
+Subject: Re: [PATCH treewide v3 2/4] bitfield: Add non-constant
+ field_{prep,get}() helpers
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	David Miller <davem@davemloft.net>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>, 
+	Andrew Jeffery <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>, 
+	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Jacky Huang <ychuang3@nuvoton.com>, 
+	Shan-Chun Hung <schung@nuvoton.com>, Yury Norov <yury.norov@gmail.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, Alex Elder <elder@ieee.org>, 
+	David Laight <david.laight.linux@gmail.com>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
+	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-renesas-soc@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	qat-linux@intel.com, linux-gpio@vger.kernel.org, 
+	linux-aspeed@lists.ozlabs.org, linux-iio@vger.kernel.org, 
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: eba11116f39533d2e38cc5898014f2c95f32d23a  gpiolib: of: Get rid of <linux/gpio/legacy-of-mm-gpiochip.h>
+Hi Jakub,
 
-elapsed time: 1449m
+On Fri, 17 Oct 2025 at 17:19, Jakub Kicinski <kuba@kernel.org> wrote:
+> On Fri, 14 Feb 2025 14:55:51 +0100 Geert Uytterhoeven wrote:
+> > The existing FIELD_{GET,PREP}() macros are limited to compile-time
+> > constants.  However, it is very common to prepare or extract bitfield
+> > elements where the bitfield mask is not a compile-time constant.
+> >
+> > To avoid this limitation, the AT91 clock driver and several other
+> > drivers already have their own non-const field_{prep,get}() macros.
+> > Make them available for general use by consolidating them in
+> > <linux/bitfield.h>, and improve them slightly:
+> >   1. Avoid evaluating macro parameters more than once,
+> >   2. Replace "ffs() - 1" by "__ffs()",
+> >   3. Support 64-bit use on 32-bit architectures.
+> >
+> > This is deliberately not merged into the existing FIELD_{GET,PREP}()
+> > macros, as people expressed the desire to keep stricter variants for
+> > increased safety, or for performance critical paths.
+>
+> We already have helpers for this, please just don't know they exist :/
+>
+> The "const" version of the helpers are specifically defined to work
+> on masks generated with BIT() and GENMASK(). If the mask is not
+> constant we should expect it to have a well defined width.
+>
+> I strongly prefer that we do this instead and convert the users to
+> the fixed-width version:
+>
+> ---->8----------------
+>
+> Subject: bitfield: open code the fixed-width non-const helpers so that people see them
+>
+> There is a number of useful helpers defined in bitfield.h but
+> they are mostly invisible to the reader because they are all
+> generated by macros. Open code the 32b versions (which are
+> most commonly used) to give developers a chance to discover them.
+>
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 
-configs tested: 164
-configs skipped: 4
+Thanks, but this is more or less the same code which you suggested
+before [1], and to which I just replied[2] after looking at the
+generated assembler output on various architectures.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> @@ -188,6 +193,81 @@ static __always_inline u64 field_mask(u64 field)
+>         return field / field_multiplier(field);
+>  }
+>  #define field_max(field)       ((typeof(field))field_mask(field))
+> +
+> +/**
+> + * u32_encode_bits() - prepare a u32 bitfield element (non-const)
+> + * @v: value to put in the field
+> + * @field: shifted mask defining the field's length and position
+> + *
+> + * Equivalent of FIELD_PREP() for u32, field does not have to be constant.
+> + *
+> + * Note that the helper is available for other field widths (generated below).
+> + */
+> +static __always_inline __u32 u32_encode_bits(u32 v, u32 field)
+> +{
+> +       if (__builtin_constant_p(v) && (v & ~field_mask(field)))
+> +               __field_overflow();
+> +       return ((v & field_mask(field)) * field_multiplier(field));
 
-tested configs:
-alpha                             allnoconfig    clang-22
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                               allnoconfig    clang-22
-arc                               allnoconfig    gcc-15.1.0
-arc                   randconfig-001-20251017    clang-22
-arc                   randconfig-001-20251017    gcc-8.5.0
-arc                   randconfig-002-20251017    clang-22
-arc                   randconfig-002-20251017    gcc-11.5.0
-arm                               allnoconfig    clang-22
-arm                   randconfig-001-20251017    clang-22
-arm                   randconfig-001-20251017    gcc-15.1.0
-arm                   randconfig-002-20251017    clang-22
-arm                   randconfig-003-20251017    clang-22
-arm                   randconfig-004-20251017    clang-22
-arm                         wpcm450_defconfig    gcc-15.1.0
-arm64                             allnoconfig    clang-22
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20251017    clang-20
-arm64                 randconfig-001-20251017    clang-22
-arm64                 randconfig-002-20251017    clang-22
-arm64                 randconfig-003-20251017    clang-22
-arm64                 randconfig-003-20251017    gcc-15.1.0
-arm64                 randconfig-004-20251017    clang-22
-csky                              allnoconfig    clang-22
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20251017    gcc-15.1.0
-csky                  randconfig-002-20251017    gcc-10.5.0
-csky                  randconfig-002-20251017    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon               randconfig-001-20251017    clang-22
-hexagon               randconfig-001-20251017    gcc-15.1.0
-hexagon               randconfig-002-20251017    clang-22
-hexagon               randconfig-002-20251017    gcc-15.1.0
-i386        buildonly-randconfig-001-20251017    clang-20
-i386        buildonly-randconfig-002-20251017    clang-20
-i386        buildonly-randconfig-003-20251017    clang-20
-i386        buildonly-randconfig-004-20251017    clang-20
-i386        buildonly-randconfig-005-20251017    clang-20
-i386        buildonly-randconfig-006-20251017    clang-20
-i386                  randconfig-001-20251017    clang-20
-i386                  randconfig-002-20251017    clang-20
-i386                  randconfig-003-20251017    clang-20
-i386                  randconfig-004-20251017    clang-20
-i386                  randconfig-005-20251017    clang-20
-i386                  randconfig-006-20251017    clang-20
-i386                  randconfig-007-20251017    clang-20
-i386                  randconfig-011-20251017    gcc-12
-i386                  randconfig-012-20251017    gcc-12
-i386                  randconfig-013-20251017    gcc-12
-i386                  randconfig-014-20251017    gcc-12
-i386                  randconfig-015-20251017    gcc-12
-i386                  randconfig-016-20251017    gcc-12
-i386                  randconfig-017-20251017    gcc-12
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch             randconfig-001-20251017    gcc-13.4.0
-loongarch             randconfig-001-20251017    gcc-15.1.0
-loongarch             randconfig-002-20251017    clang-18
-loongarch             randconfig-002-20251017    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                       rbtx49xx_defconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20251017    gcc-15.1.0
-nios2                 randconfig-001-20251017    gcc-8.5.0
-nios2                 randconfig-002-20251017    gcc-15.1.0
-nios2                 randconfig-002-20251017    gcc-8.5.0
-openrisc                          allnoconfig    clang-22
-openrisc                          allnoconfig    gcc-15.1.0
-parisc                            allnoconfig    clang-22
-parisc                            allnoconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                generic-32bit_defconfig    gcc-15.1.0
-parisc                randconfig-001-20251017    gcc-12.5.0
-parisc                randconfig-001-20251017    gcc-15.1.0
-parisc                randconfig-002-20251017    gcc-15.1.0
-parisc                randconfig-002-20251017    gcc-8.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                           allnoconfig    clang-22
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                     ep8248e_defconfig    gcc-15.1.0
-powerpc               randconfig-001-20251017    gcc-14.3.0
-powerpc               randconfig-001-20251017    gcc-15.1.0
-powerpc               randconfig-002-20251017    clang-22
-powerpc               randconfig-002-20251017    gcc-15.1.0
-powerpc               randconfig-003-20251017    gcc-11.5.0
-powerpc               randconfig-003-20251017    gcc-15.1.0
-powerpc64             randconfig-001-20251017    clang-20
-powerpc64             randconfig-001-20251017    gcc-15.1.0
-powerpc64             randconfig-002-20251017    gcc-15.1.0
-powerpc64             randconfig-003-20251017    gcc-15.1.0
-riscv                             allnoconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                 randconfig-001-20251017    clang-22
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                  randconfig-001-20251017    clang-22
-s390                  randconfig-002-20251017    gcc-8.5.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                ecovec24-romimage_defconfig    gcc-15.1.0
-sh                 kfr2r09-romimage_defconfig    gcc-15.1.0
-sh                    randconfig-001-20251017    gcc-14.3.0
-sh                    randconfig-002-20251017    gcc-15.1.0
-sh                   sh7770_generic_defconfig    gcc-15.1.0
-sh                            titan_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20251017    gcc-12.5.0
-sparc                 randconfig-002-20251017    gcc-8.5.0
-sparc64               randconfig-001-20251017    gcc-14.3.0
-sparc64               randconfig-002-20251017    clang-20
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                    randconfig-001-20251017    gcc-14
-um                    randconfig-002-20251017    clang-22
-x86_64                            allnoconfig    clang-20
-x86_64      buildonly-randconfig-001-20251017    clang-20
-x86_64      buildonly-randconfig-001-20251017    gcc-14
-x86_64      buildonly-randconfig-002-20251017    clang-20
-x86_64      buildonly-randconfig-002-20251017    gcc-14
-x86_64      buildonly-randconfig-003-20251017    clang-20
-x86_64      buildonly-randconfig-004-20251017    clang-20
-x86_64      buildonly-randconfig-004-20251017    gcc-14
-x86_64      buildonly-randconfig-005-20251017    clang-20
-x86_64      buildonly-randconfig-006-20251017    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20251017    gcc-14
-x86_64                randconfig-002-20251017    gcc-14
-x86_64                randconfig-003-20251017    gcc-14
-x86_64                randconfig-004-20251017    gcc-14
-x86_64                randconfig-005-20251017    gcc-14
-x86_64                randconfig-006-20251017    gcc-14
-x86_64                randconfig-007-20251017    gcc-14
-x86_64                randconfig-008-20251017    gcc-14
-x86_64                randconfig-071-20251017    clang-20
-x86_64                randconfig-072-20251017    clang-20
-x86_64                randconfig-073-20251017    clang-20
-x86_64                randconfig-074-20251017    clang-20
-x86_64                randconfig-075-20251017    clang-20
-x86_64                randconfig-076-20251017    clang-20
-x86_64                randconfig-077-20251017    clang-20
-x86_64                randconfig-078-20251017    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                          rhel-9.4-func    clang-20
-x86_64                    rhel-9.4-kselftests    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20251017    gcc-12.5.0
-xtensa                randconfig-002-20251017    gcc-9.5.0
+Unfortunately gcc emits actual divisions or __*div*() calls, and
+multiplications in the non-constant case.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+So I don't think this is suitable as-is.
+
+> +}
+
+[1] https://lore.kernel.org/all/20250214073402.0129e259@kernel.org
+[2] https://lore.kernel.org/all/CAMuHMdU+0HGG22FbO3wNmXtbUm9RhTopYrGghF6UrkFu-iww2A@mail.gmail.com
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
