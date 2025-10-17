@@ -1,83 +1,61 @@
-Return-Path: <linux-gpio+bounces-27232-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27233-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71E29BE6B18
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 08:33:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A28CBE6B9C
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 08:39:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67C64627EE6
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 06:26:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 49A3E626294
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 06:31:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3E1730F53F;
-	Fri, 17 Oct 2025 06:26:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D71730DEBF;
+	Fri, 17 Oct 2025 06:31:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="k15RyFdy"
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="Dk4+OInX"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B2981720;
-	Fri, 17 Oct 2025 06:26:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF424225A23;
+	Fri, 17 Oct 2025 06:31:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760682388; cv=none; b=OSTKSAvKn3x15ye2+qauWIHcj446IJFODmhNmBMfHcKQmy1326QOoiKWwhXHafmsgqsedcG2FxpJ4bUVJQcATGW12vCp36vhDJFZuoTNYDmUnfn1zGmXOJpx9Ip10jz4aRgm0q4bOnioh+B/LhDxh7WwvWGQIc+mXy+p0XyCZ9M=
+	t=1760682669; cv=none; b=ADNBaz0AAMfoyFuuio+LX+rDU+De4iU/ZIutuRSHSVVLWKKqvbZFAm2kKjQiwSSF61jCF+vqkFHNY1+Xb5ZQOvgtsPyPSKISbGPTl7+/o4zKg6NmCwn4FwWMboUobSSOKOfc6EOtBPf3MldFqJ129qOSivpw+yniJTjccDI478c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760682388; c=relaxed/simple;
-	bh=Xim6qWFGZ+WXmsN/CH8emkwIniPHErnqJeZArc8D40Q=;
+	s=arc-20240116; t=1760682669; c=relaxed/simple;
+	bh=R2shE/vXKGK6XxDN3EEo6pLrsf8hO3g7K+H5vR1Pf/s=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tzNqBAOo1OwO1ETrn6K0I4hy0+4yj0gG9yXoM61zUBcFbCjV4pbDol+Xow9oNSxtKAESXro1pd3jboHmctXkyr04MqgAArDLnfuLw/x9CicaWTOtjWgRnIrkZmhB3b76QOrTrw7s11r6CcDKqAlYHi2tnoZwxvm/ZB3K/XUd4+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=k15RyFdy; arc=none smtp.client-ip=203.29.241.158
+	 Content-Type:MIME-Version; b=lWiCqWVNTvruQJaB4D/hX2L+KVY06OoxP3CPVZOou2qg3rkLX//jvf8X9euzkiD4M3Dmz2oYrOiYmyOExgXKtISJzwE+4N6FO5LFuM9I1js1CScWmBfSB0aZO+KjowOUEB78mh7vNkBIzyy35rWzTjKDtinI118PiXlkxg1sd5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=Dk4+OInX; arc=none smtp.client-ip=203.29.241.158
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1760682385;
-	bh=Xim6qWFGZ+WXmsN/CH8emkwIniPHErnqJeZArc8D40Q=;
+	d=codeconstruct.com.au; s=2022a; t=1760682665;
+	bh=R2shE/vXKGK6XxDN3EEo6pLrsf8hO3g7K+H5vR1Pf/s=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=k15RyFdyVoJeYb08mMxu9adUujB7QSVw0G8fEYvyrO1hC267ta5tTk7xCiorfMzFY
-	 dcaqex8C4Z/PhhZbi/JLLMBLfbHE4sg+dE8wShuqba2NgcTLaL/LisqwJ4qBj84rYP
-	 ILfzVe5i4ngO6+IFyR6aj+1FiHo2d1OVgetdauhjzGJZj60QekvzgKyD8T/0X6yqFA
-	 ciQK0hoEQTN3K3XPo02a5DmhUlAhRcpoR2xO2CUGfUQszFmaWu8tV3NdoCFO8xah4l
-	 XJsNP2GCSaOrHjLJwB8oNVjnU6+k5yO5U52I/inTnecgBf7vDqohqdobpbimsbuRh5
-	 eaq60xEt/THHw==
+	b=Dk4+OInXAebpYC/bzwaUKlZrUu+oraR1IiDv+GhH4Mik82X6l/EHqwhdYdFxD9lS0
+	 H+TA+9KK7XG+lWKRHkOfhbhccYhMO/vlmRMGoyECB2cZnr7tHhtXeomcWBWbtuiOzd
+	 /I8OiuN/Z/11Xuf4ieP6u3hLXesAtSBQNlYnTerFZxB5pU+gzmRa+x4m8Fii+4QyRk
+	 CQGqhD5RtxSG1+dRp0BsXlTX/4hTFZmONsvz2dL/xTMMaVAzPpwQyTDuU7RxSDWoGo
+	 L/xyI0U5DRd/uGP52+/BEBWYYTl1v8B+K0pRZfy+HO+O9cCdGeayhbVpTu4QXDnu/9
+	 xLwecaSHHTRLA==
 Received: from [192.168.68.113] (unknown [180.150.112.213])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 539D56477A;
-	Fri, 17 Oct 2025 14:26:20 +0800 (AWST)
-Message-ID: <23813eab1406130dfdb6b63615fe1c1b4b634e29.camel@codeconstruct.com.au>
-Subject: Re: [PATCH] dt-bindings: Fix inconsistent quoting
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 26EAE77272;
+	Fri, 17 Oct 2025 14:31:05 +0800 (AWST)
+Message-ID: <b63b53521d44c1b765cccd3f9f03d7f778b7984c.camel@codeconstruct.com.au>
+Subject: Re: [PATCH 0/3] gpio: aspeed: remove the "gpiolib.h" include
 From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: "Rob Herring (Arm)" <robh@kernel.org>, Krzysztof Kozlowski	
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Stephen Boyd	
- <sboyd@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Linus
- Walleij	 <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Shawn Guo	 <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>, Nuno
- =?ISO-8859-1?Q?S=E1?=	 <nuno.sa@analog.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich	 <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Andy Shevchenko <andy@kernel.org>,
- Jassi Brar <jassisinghbrar@gmail.com>, Mauro Carvalho Chehab	
- <mchehab@kernel.org>, Lee Jones <lee@kernel.org>, Joel Stanley
- <joel@jms.id.au>,  Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean
- <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>,  Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>,  Daire McNamara <daire.mcnamara@microchip.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof
- =?UTF-8?Q?Wilczy=C5=84ski?=	 <kwilczynski@kernel.org>, Manivannan
- Sadhasivam <mani@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Vinod
- Koul <vkoul@kernel.org>, Kishon Vijay Abraham I	 <kishon@kernel.org>, Bjorn
- Andersson <andersson@kernel.org>, Geert Uytterhoeven	
- <geert+renesas@glider.be>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea
- <claudiu.beznea@tuxon.dev>, Florian Fainelli	 <f.fainelli@gmail.com>, Tony
- Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org, 
-	linux-media@vger.kernel.org, netdev@vger.kernel.org,
- linux-pci@vger.kernel.org, 	linux-phy@lists.infradead.org
-Date: Fri, 17 Oct 2025 16:56:19 +1030
-In-Reply-To: <20251015232015.846282-1-robh@kernel.org>
-References: <20251015232015.846282-1-robh@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij
+	 <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>, Kent Gibson
+	 <warthog618@gmail.com>
+Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Bartosz
+ Golaszewski	 <bartosz.golaszewski@linaro.org>
+Date: Fri, 17 Oct 2025 17:01:04 +1030
+In-Reply-To: <20251016-aspeed-gpiolib-include-v1-0-31201c06d124@linaro.org>
+References: <20251016-aspeed-gpiolib-include-v1-0-31201c06d124@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.56.1-1 
@@ -88,36 +66,16 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2025-10-15 at 18:16 -0500, Rob Herring (Arm) wrote:
-> yamllint has gained a new check which checks for inconsistent quoting
-> (mixed " and ' quotes within a file). Fix all the cases yamllint found
-> so we can enable the check (once the check is in a release). Use
-> whichever quoting is dominate in the file.
+On Thu, 2025-10-16 at 11:09 +0200, Bartosz Golaszewski wrote:
+> gpiolib.h is a header internal to the GPIO core. Drivers should not
+> include them. gpio-aspeed only needs to be able to determine the
+> hardware offset of the GPIO given the descriptor. Expose the relevant
+> symbol in the consumer header which allows us to stop pulling in the
+> private one.
 >=20
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
-> =C2=A0.../arm/altera/socfpga-clk-manager.yaml=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 4 ++--
-> =C2=A0.../bindings/clock/nvidia,tegra124-car.yaml=C2=A0=C2=A0 |=C2=A0 8 +=
-+++----
-> =C2=A0.../bindings/clock/nvidia,tegra20-car.yaml=C2=A0=C2=A0=C2=A0 |=C2=
-=A0 6 +++---
-> =C2=A0.../devicetree/bindings/gpio/gpio-mxs.yaml=C2=A0=C2=A0=C2=A0 |=C2=
-=A0 9 +++++----
-> =C2=A0.../bindings/gpio/snps,dw-apb-gpio.yaml=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 4 ++--
-> =C2=A0.../bindings/iio/temperature/adi,ltc2983.yaml | 20 +++++++++-------=
----
-> =C2=A0.../mailbox/qcom,apcs-kpss-global.yaml=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 | 16 +++++++--------
-> =C2=A0.../mailbox/xlnx,zynqmp-ipi-mailbox.yaml=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0 2 +-
-> =C2=A0.../bindings/media/fsl,imx6q-vdoa.yaml=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> =C2=A0.../devicetree/bindings/mfd/aspeed-lpc.yaml=C2=A0=C2=A0 |=C2=A0 4 +=
-+--
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-For aspeed-lpc.yaml:
+For the series:
 
-Acked-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
 
