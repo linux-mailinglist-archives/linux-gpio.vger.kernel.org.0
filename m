@@ -1,140 +1,195 @@
-Return-Path: <linux-gpio+bounces-27234-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27236-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DA7BBE6E5E
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 09:12:38 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1E42BE7001
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 09:47:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C02623A1FF8
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 07:12:36 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6F5AC504D35
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Oct 2025 07:47:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2468A3112C6;
-	Fri, 17 Oct 2025 07:12:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="FyWsD4Uw"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3D952566DD;
+	Fri, 17 Oct 2025 07:46:54 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023086.outbound.protection.outlook.com [40.107.44.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A4F310783
-	for <linux-gpio@vger.kernel.org>; Fri, 17 Oct 2025 07:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760685151; cv=none; b=V45aKHGO8B2Q9Y4bOcVQYTEUe7ckkZLXoAxRK1Gq+49fiA/bXsiCIVJvzCUHM5/XPfDIvWSZ19NhE7g9ZnADo+v0JhdTsWNdiZZkXYoDm7HfcJXrSXZT10OORjbA6IO5WZh2uzsbOizyY2UlxdTD578oYbleNcIxVZyxDWnGlbI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760685151; c=relaxed/simple;
-	bh=25YUziEhf9uU4zAhrMwI7Nzd6K8Li1d73QSpIFvWNy0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f0Uv4F8gHihHv0qUqKhSIZpJZbm2K8p/aX64Az4daeuHdUfcMJ4Y81S2cvPlYUf3fu/181h2lUI5PCtA/6aoGAaRPubeyv1OW2mgc6R7R098deHo3HG20n/66d9c/6n+knNwNf76tnwAi1QdvT5B/3WnBmbjvcA7K73vW7NHDHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=FyWsD4Uw; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-586883eb9fbso1957840e87.1
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Oct 2025 00:12:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1760685148; x=1761289948; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=25YUziEhf9uU4zAhrMwI7Nzd6K8Li1d73QSpIFvWNy0=;
-        b=FyWsD4UwUsYXqKuj+6OHL8sM15xUnl/aRGH9KGC3WPoUXNxbmsrZ7Iqhq4UJhqkevj
-         GE2OUwBSaGqqmRen3P/7lAzvmQk1ujQS2MgKFSmW0LOTtrDNNy/mvfuz+l2BBe1tqjB8
-         Mk6weoPuxdW1lCUq1wDyzTAZtdaUWOS8cQscukLNPhnF5WVA0BUcgNGnJS8Mk6hSLvfb
-         QdPWmaOw9xa5INbayYaoIZtZBjhOlUiC9bEkGyL5s/fRAia5z3iVth4YjQ3o4lnlt69p
-         T2hIPhsvo6Q0jRU11R5LtSH8YpZoo80Lr9Wds5SFkmOITF0SLmjxWh+gczBxHHmEnhk2
-         wyJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760685148; x=1761289948;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=25YUziEhf9uU4zAhrMwI7Nzd6K8Li1d73QSpIFvWNy0=;
-        b=sYjkSUJ0lID+Qy1pCD0L1ot1JoefpgXYJDrBZCFKE6guWh05xgsmNKwIYBu9hYm8wa
-         LxSHw2MQm/HAcR6IzPPLJzlYRkyd4HLYfYmAoiBX0XtwQkVQvmtRM33iWxWuNtZMCVBo
-         J/VOPUEjsSHXI6vCv/5UZfvYLdGz8uRN+u3oBxmKtDctOaRR/9zn86zkaebU/f3Hh7Ot
-         VLDLjlPqFfSUNq/SGnjwqcuSJIYt4oLN4kYthjPY94nJtLS4BWvDM9DZqkcVE7iVnDOa
-         B2utMWMV8JGbF+eDD5/w5zveAo8gpqXGJ/BCfbkxFeZDj5u0dFlftXjAQir43wa4TvwF
-         Okfw==
-X-Gm-Message-State: AOJu0Yx/aqTAEGcfl0yectbz6XJvWqIbg4bkvOsypJ4J74PFkUbrJT8m
-	VXmiRh4/5b37qz0fCx2Q2fQXpbrnJmb8aP55TRVb9KHKmRCGMyDO7mjObiGQuLbglbberwJ02lL
-	Ai9nVFNWvQk+if2RL7gOrSHoIA50zSqdrrxdPzzuBXg==
-X-Gm-Gg: ASbGnctq+9le56yY7aCy3J6OA4Ngs1OTJuZjDzffLOz4gMXKAAd0bWP4AHPI60RoM2q
-	PH4NCl4jA3wlhd/HL+ZCDVFdtQ9M/GNpzIZQbDmlcorJStoZAq4+7WW6aTYJPrbVEClyhheRb7E
-	XU+pDwJxSzund7/67NPSEEgVS4uiHuh80asSNGUrQerM4dXz54ecIgn/o6oOD37gH51vGO8lUi1
-	jQyJEJsRS70tkspZL1wdSnuITYgscxZsZCnwsNyRokXeW16O8J86a+/i4WP3W00nxD6KG+pZkLj
-	06R6Q9wrE/Tn7hG774XBP90R3rOYrnP3PxJUgQ==
-X-Google-Smtp-Source: AGHT+IFxsGx5ftXqLpFiYlA84nFq8R9lxAW0hXzt0jnPlbVMKUOA3s65BQF+cV2LW4ytM3YBAr0RQpHCOIZdAc+N9t4=
-X-Received: by 2002:a05:6512:ea8:b0:591:c346:1106 with SMTP id
- 2adb3069b0e04-591d84cee43mr889809e87.9.1760685148094; Fri, 17 Oct 2025
- 00:12:28 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE43A22DFA4;
+	Fri, 17 Oct 2025 07:46:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760687214; cv=fail; b=glRHPfh3jsLS+AuiKeNeNFBqvwSXL81vms+DyM5YER7dIBDbWciYqjmxCEDgMc6LFQjJKoB8JuPNd+qVJ43mr1lTcutZVltJ1jgmz1wFL5uEbXEHYXZ2VAKyuYmHbHSec3w3cWi9JQwPDiPDPO5FfQGfPH8vKiZAdaknUWRhUQk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760687214; c=relaxed/simple;
+	bh=JPG6SSLyC+ESJkrFc7geu05/G7tmErO1dkT1ix/vxSQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hId6n3NB74zzpW8epdw+qYMmlfF6tqSo/o6PS+x5Q4VUmzSTvAZzUpFJG4NpdTqwMiCm99vgB7SA+wSM1xTIzHHzWYyhoPlvEZHPvBFjBUD2XwXP2O8hIDQ4gHOjvrk5pWBvtOyvJ0tDPGwuIBPtEdHALdTI52f2LPDX3jWYFv8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.44.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MefhjDH69cDTBz+cR9FGToLAEaMj++sdAbVtactKzfO6WIb8Q4NUpq6qCPjcvrzQy/Ceywp9xfCyY3uOQShl1ZyhIaL+e72JlajOmjP0J+BUtK8p/Ln4/coyV6GTeCYgd2VnaxeVwavyBz4Rffi19cLvnItIAlcuAS6BvAJk3JUUzjJFqG7Okxe2kZ8slp3ExNy+O7bDe3H6sUzH16sG7uO+jNOTJxTzuOOXuIGTAyxx9JZEbVGPOGFanN047C1v60T5Wwzmmxv9p1DwIOAzkUMKgLYs9trZ25zHW8lLXCzyUo9oYZ+hnLny/hNA7Ex3Xw/D0Hiz2yMXVe6aAA0mUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3tvxCvy53Nd2u9uv4h1/Z8p3w7ai/Crv2fKXgAl5unM=;
+ b=MMpFr3k+eIMxoh3T+w4TaTjCpmaPdLv1SL6aLq2UByd/D+mLY5t+kgXGkeRxdc7XHwuPur2+mjURJXF10rQbwsgP5h/YvWCJDHut4vdW1UHnS170SZhkoYcP07aCUwExWk1jbWpWfUSght8es7bxcySR2Q1UcajKvADuji7iRpAO30xDBPeaTfDP5gZrKTC0QX577z7MB2PRwuEE27PQCgEP3Fjh7xAREag57pxUZGxtHN9tcS1hLzwH/vvsZW+4ly+X/k+EWLyiRZ8dAN9sUEkazQd0iamLVTBjyxg1CBQZNE82C9UBxKOCCix/yunCU0JbfzPTVEmwhhv3pj01PQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=cixtech.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from PSBPR02CA0003.apcprd02.prod.outlook.com (2603:1096:301::13) by
+ TYSPR06MB6315.apcprd06.prod.outlook.com (2603:1096:400:40f::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9228.12; Fri, 17 Oct 2025 07:46:49 +0000
+Received: from TY2PEPF0000AB8A.apcprd03.prod.outlook.com
+ (2603:1096:301:0:cafe::a) by PSBPR02CA0003.outlook.office365.com
+ (2603:1096:301::13) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9228.13 via Frontend Transport; Fri,
+ 17 Oct 2025 07:46:48 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ TY2PEPF0000AB8A.mail.protection.outlook.com (10.167.253.8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9253.7 via Frontend Transport; Fri, 17 Oct 2025 07:46:47 +0000
+Received: from localhost.localdomain (unknown [172.16.64.196])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 838E341C0152;
+	Fri, 17 Oct 2025 15:46:46 +0800 (CST)
+From: Gary Yang <gary.yang@cixtech.com>
+To: linus.walleij@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	cix-kernel-upstream@cixtech.com,
+	Gary Yang <gary.yang@cixtech.com>
+Subject: [PATCH v4 0/3] Add pinctrl support for Sky1
+Date: Fri, 17 Oct 2025 15:46:43 +0800
+Message-ID: <20251017074646.3344924-1-gary.yang@cixtech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251006-reset-gpios-swnodes-v1-0-6d3325b9af42@linaro.org>
-In-Reply-To: <20251006-reset-gpios-swnodes-v1-0-6d3325b9af42@linaro.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 17 Oct 2025 09:12:16 +0200
-X-Gm-Features: AS18NWDblNzpuLCnzeXon3yTi_RZXCYBcRhb_slg09UcNYGLrahNCin0h6f8tMA
-Message-ID: <CAMRc=Me=atAoPSGdTOn32rEHh3djTSVveYg0QYxYdb9yivy5YQ@mail.gmail.com>
-Subject: Re: [PATCH 0/9] reset: rework reset-gpios handling
-To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB8A:EE_|TYSPR06MB6315:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 1e88dfc2-370d-462f-b202-08de0d5153ae
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?j+1UliJsvAyf76joDycBlTR0+ZNISm8udGi1yu/BaSzaoxSUeKzQtNFrI/9L?=
+ =?us-ascii?Q?9bCAcjJOw+s+KvLP8xgwSFy5fP5HFM9+4oW+ZZg98UIOi3eoCp2Z/lyckydR?=
+ =?us-ascii?Q?A3yC1x7i74gFIv2Oc5Q3JVSkb1g9dTcVwMT+KnoBzh/rS/59MPVA6rxWpBgO?=
+ =?us-ascii?Q?jY7yXZ7pQejfOd3+Iq03l/2NaOQe0kTDGxixqOVsW71CR+pkpD9ZQK2Uor6s?=
+ =?us-ascii?Q?u0hmg0IKoZiSAbgTCDN1VBoMlTW3YBKG4uk/Igynnhsa6edJrYV4P1OYBvTd?=
+ =?us-ascii?Q?yvpZANj0t709jtNORdT8SFFJ1yBCNW10ISV+UuzUlQijeF+TvXLyaw19G4Cq?=
+ =?us-ascii?Q?wd5Bp+F2OxlHAJYS7Yi2U6jbK8Qxuf2VhsBIgBhDDS3k6SQvCGJ0iuUYEQQ8?=
+ =?us-ascii?Q?+osNLdqBvOSUb6lbrDEjrX08d2T3hW2JDwSXIp5SMMg8Znv9XhNQibhFZvJZ?=
+ =?us-ascii?Q?fda/RHqnk2h95GD+iLERv8uwQMMCoBCLT22aymisPezQYmLmTr7KHo8306HB?=
+ =?us-ascii?Q?6jIwpLRzdeHeJ7mA0/V2CLrWUxlFeqi0A0rrNl9vzzLI9fvLu06d2/6Xyc5x?=
+ =?us-ascii?Q?eNzKno194CBiyfE07WQFKWQz3DQRi4IZBrkjoJPxS2zNHo/5V3BuW6SwkDSJ?=
+ =?us-ascii?Q?0OucFTiZWEEi+ZUq9o+cVq3Aep0DL4Hxi/Vj0DH8SoM3ICmG28hEsiG4bmxk?=
+ =?us-ascii?Q?H9Eeq5HeISB4zwJbgl/ltvrlpIhXpcfidyhl56PfwfBvF5oifCbjp9Vz2Of9?=
+ =?us-ascii?Q?WE2bJIIzsVCTvKg0Ok5lsrryK7KM0O1QbzKw1VevEahu7rZeRGrAJJ1EKz2n?=
+ =?us-ascii?Q?DmeMZXk7+cbl0nVLZQBan+ODYDxxc2jl2gKD+YaP0X+S/ZBCS0Yz/5s3Chq/?=
+ =?us-ascii?Q?2jdIdwljuSigrpU7ekOeVc+QSSOPnFUdyInIP3E7DDRju3Rc0vu1a1MAB5i+?=
+ =?us-ascii?Q?JDPkcBsBcc63iu6GfacDTeM/VoD619CsB6FCMquB7PJIWoYm+uBOJDdkGXVf?=
+ =?us-ascii?Q?n0klrqNscGSKpScrwpLJQkIv16uxN2uKJJG7cQv9u6g0KCgV+hBk8dAup5qq?=
+ =?us-ascii?Q?fPpoOLcgCojVtpCb4MnYj2WxZqfuuE+nR6KJNyl7X9FDBkswOkc/wjHHK+QP?=
+ =?us-ascii?Q?0qvNsl2r5f3xfU8EuFVoexiD7cFXCNI9dS9TY7Ul/rqq8eF+jgLxw1NAMF1m?=
+ =?us-ascii?Q?1RLKmBy/gq3wqjqgcmMZ6uamD5F89pkhIobj0avXupJRnoDUIGttA+RBKqv0?=
+ =?us-ascii?Q?TmSCiTZo7udWCX4qdAFUcSodi+TFpDlYKTKxWOt/vQrscOAuEHhLxeblOCEL?=
+ =?us-ascii?Q?7XmbbxgqgtfclpSmhuSLlGOb+eF+wL7H9dENINCjrNgjoPBjLMe4jgrc1XL7?=
+ =?us-ascii?Q?9FiRXvCdCyonZRIYlH9H6/qLIj29fRvQrdptLqhteDyvnvfVmn6NrXFfKKIf?=
+ =?us-ascii?Q?Jo5UhFTbg74k5nhELuFkygx6LuBLLNTwjUNCkYjWTPtym+ogPL1dwK90UAuL?=
+ =?us-ascii?Q?GGTNujECEyfdo8FO9GyG483dkVuGL++84iggDDFjqeT35WUk4ewdEsmPHbJQ?=
+ =?us-ascii?Q?Hxo63wC8Mn0jp0M0gWs=3D?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2025 07:46:47.8035
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e88dfc2-370d-462f-b202-08de0d5153ae
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	TY2PEPF0000AB8A.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR06MB6315
 
-On Mon, Oct 6, 2025 at 3:00=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
->
-> Machine GPIO lookup is a nice, if a bit clunky, mechanism when we have
-> absolutely no idea what the GPIO provider is or when it will be created.
-> However in the case of reset-gpios, we not only know if the chip is
-> there - we also already hold a reference to its firmware node.
->
-> In this case using fwnode lookup makes more sense. However, since the
-> reset provider is created dynamically, it doesn't have a corresponding
-> firmware node (in this case: an OF-node). That leaves us with software
-> nodes which currently cannot reference other implementations of the
-> fwnode API, only other struct software_node objects. This is a needless
-> limitation as it's imaginable that a dynamic auxiliary device (with a
-> software node attached) would want to reference a real device with an OF
-> node.
->
-> This series does three things: extends the software node implementation,
-> allowing its properties to reference not only static software nodes but
-> also existing firmware nodes, updates the GPIO property interface to use
-> the reworked swnode macros and finally makes the reset-gpio code the
-> first user by converting the GPIO lookup from machine to swnode.
->
-> Another user of the software node changes in the future could become the
-> shared GPIO modules that's in the works in parallel[1].
->
-> Merging strategy: the series is logically split into three parts: driver
-> core, GPIO and reset respectively. However there are build-time
-> dependencies between all three parts so I suggest the reset tree as the
-> right one to take it upstream with an immutable branch provided to
-> driver core and GPIO.
->
-> [1] https://lore.kernel.org/all/20250924-gpio-shared-v1-0-775e7efeb1a3@li=
-naro.org/
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
+Patch 1: Add dt-binding doc for pinctrl on Sky1
+Patch 2: Add pin-controller driver for sky1
+Patch 3: Add pinctrl nodes for sky1
 
-Are there any comments on the software node part before I respin it
-with Philipp's comments addressed?
+changes for v4:
+- Pass dts build check with below commands:
+make O=$OUTKNL dt_binding_check
+make O=$OUTKNL dt_binding_check DT_SCHEMA_FILES=cix,sky1-pinctrl.yaml
+scripts/checkpatch.pl 000*.patch
+make O=$OUTKNL CHECK_DTBS=y W=1 cix/sky1-orion-o6.dtb
+- support driver_strength = <8> (mA)
+- Fix dt-bindings style
 
-Bartosz
+
+Changes for v3:
+- Pass dts build check with below commands:
+make O=$OUTKNL dt_binding_check
+make O=$OUTKNL dt_binding_check DT_SCHEMA_FILES=cix,sky1-pinctrl.yaml
+scripts/checkpatch.pl 000*.patch
+make O=$OUTKNL CHECK_DTBS=y W=1 cix/sky1-orion-o6.dtb
+- Re-order the patch set, and move dt-bindings to the 1st patch.
+- Refine the pinctrl driver with SKY_PINFUNCTION macro
+- Fix warnings when make dt_binding_check
+
+Changes for v2:
+- restructure the pinctrl driver to support pinmux=<..>
+- redefine pinmux macros
+- move header file from dt-bindings to dts
+- fix the code-style issues
+
+Gary Yang (3):
+  dt-bindings: pinctrl: Add cix,sky1-pinctrl
+  pinctrl: cix: Add pin-controller support for sky1
+  arm64: dts: cix: Add pinctrl nodes for sky1
+
+ .../bindings/pinctrl/cix,sky1-pinctrl.yaml    |  94 +++
+ arch/arm64/boot/dts/cix/sky1-orion-o6.dts     |  32 +
+ arch/arm64/boot/dts/cix/sky1-pinfunc.h        | 418 +++++++++++++
+ arch/arm64/boot/dts/cix/sky1.dtsi             |  10 +
+ drivers/pinctrl/Kconfig                       |   1 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/cix/Kconfig                   |  14 +
+ drivers/pinctrl/cix/Makefile                  |   4 +
+ drivers/pinctrl/cix/pinctrl-sky1-base.c       | 573 ++++++++++++++++++
+ drivers/pinctrl/cix/pinctrl-sky1.c            | 559 +++++++++++++++++
+ drivers/pinctrl/cix/pinctrl-sky1.h            |  48 ++
+ 11 files changed, 1754 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/cix,sky1-pinctrl.yaml
+ create mode 100644 arch/arm64/boot/dts/cix/sky1-pinfunc.h
+ create mode 100644 drivers/pinctrl/cix/Kconfig
+ create mode 100644 drivers/pinctrl/cix/Makefile
+ create mode 100644 drivers/pinctrl/cix/pinctrl-sky1-base.c
+ create mode 100644 drivers/pinctrl/cix/pinctrl-sky1.c
+ create mode 100644 drivers/pinctrl/cix/pinctrl-sky1.h
+
+-- 
+2.49.0
+
 
