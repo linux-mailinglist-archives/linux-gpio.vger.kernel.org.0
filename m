@@ -1,97 +1,98 @@
-Return-Path: <linux-gpio+bounces-27263-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27264-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16AF9BECD6F
-	for <lists+linux-gpio@lfdr.de>; Sat, 18 Oct 2025 12:22:41 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E92ABECDA8
+	for <lists+linux-gpio@lfdr.de>; Sat, 18 Oct 2025 12:44:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B08EE188CB7A
-	for <lists+linux-gpio@lfdr.de>; Sat, 18 Oct 2025 10:23:04 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1B0E64E2754
+	for <lists+linux-gpio@lfdr.de>; Sat, 18 Oct 2025 10:44:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 155BF2F39C2;
-	Sat, 18 Oct 2025 10:22:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B33526F2B8;
+	Sat, 18 Oct 2025 10:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ms29.hinet.net header.i=@ms29.hinet.net header.b="Ln7Q9EUK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail2.mroth.net (mail2.mroth.net [138.201.95.178])
+Received: from cdmsr2.hinet.net (210-65-1-144.hinet-ip.hinet.net [210.65.1.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB36D2F28E2;
-	Sat, 18 Oct 2025 10:22:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=138.201.95.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A3A286D53
+	for <linux-gpio@vger.kernel.org>; Sat, 18 Oct 2025 10:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.65.1.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760782953; cv=none; b=pSDxh7ZC03IEPapojGqEJHZ3yJzIuER2zDK/fcmIoLeQPgPVu+LYYgEwYl6/VhD1hyilIyHGQjv+B//XwKvdrNllhetpQ8Cff2ZQJwTZQVtyOimr/xUgvDvBXCxRjmlTMqkZC3MJbjJpDne4AQOeqIccJsE0qfB2vATrOu2Z+rU=
+	t=1760784287; cv=none; b=gKgs2Edhlhpt24ngXYNoeEtjCUNnQzTE57fSdX4rQ+XtLgWEPnujxnyxM9qWa7bra1Lwe+SKr6ktnVPx8lcDy94MaKvx0njrGmKq6/dJdR19Gvp8eAWtwX4CEq2MPxBCYc4XZrP44gzfuuRN5Mr3k0hMwLLU6dr31+wvzGAmeAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760782953; c=relaxed/simple;
-	bh=erETI8DD7TGV3bXnNGNOcX54bZm+clWFdGy76BY89no=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q7I6JCwRjRLv/MidenyNmE++jpL7q0IyAAh6CojhGE31pvQKW5uPnPpay5PP+x2blviEcLvMHR+8RYTjQ2rnngyuKtQoKh8zEGuO6tvNS5bLlJa2AiNOsCJHQf1SY37v42fZP0rpu6SKeaIW8saoSJ1oyvGiO6fi37xekSDO+V8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mroth.net; spf=pass smtp.mailfrom=mroth.net; arc=none smtp.client-ip=138.201.95.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mroth.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mroth.net
-Received: from pc1.home (unknown [IPv6:2001:9e8:a25b:70f1:365e:50e3:e235:ca15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail2.mroth.net (Postfix) with ESMTPSA id 44D883F2;
-	Sat, 18 Oct 2025 12:14:51 +0200 (CEST)
-From: Michael Roth <mail@mroth.net>
-To: linus.walleij@linaro.org
-Cc: brgl@bgdev.pl,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Michael Roth <mail@mroth.net>
-Subject: [PATCH] gpio: pca953x: clarify log messages about auto increment feature
-Date: Sat, 18 Oct 2025 12:14:04 +0200
-Message-Id: <20251018101404.3630905-1-mail@mroth.net>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1760784287; c=relaxed/simple;
+	bh=ziddJkAt80dhQ7vUMt1a1p8R01Kj9cZHBByeBMjkduM=;
+	h=From:To:Subject:Message-ID:Date:MIME-Version:Content-Type; b=AMlW4AeitZ2ehxLJLlGbpPMHdDIpiCxhONuxwETk+g3DB1ae1uunXNW3kWB954jw0RQYvtaUxBdP6BNB5ZNwRj2Nysdct25xduPbfDceFYciDf4JbtrEmfAxLvVombFEX6FecYjLXnSZlteD9K42cpxGG688wRGfQkWAPpWhWe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ms29.hinet.net; spf=pass smtp.mailfrom=ms29.hinet.net; dkim=pass (1024-bit key) header.d=ms29.hinet.net header.i=@ms29.hinet.net header.b=Ln7Q9EUK; arc=none smtp.client-ip=210.65.1.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ms29.hinet.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ms29.hinet.net
+Received: from cmsr7.hinet.net ([10.199.216.86])
+	by cdmsr2.hinet.net (8.15.2/8.15.2) with ESMTPS id 59IAigwg162721
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO)
+	for <linux-gpio@vger.kernel.org>; Sat, 18 Oct 2025 18:44:43 +0800
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; d=ms29.hinet.net;
+	s=default; t=1760784283; bh=taLTwVb9ntsIXyvgL8tACLdQZzQ=;
+	h=From:To:Subject:Date;
+	b=Ln7Q9EUKSgdwGuKlbViSHCEXG0qpPYVhDCW+PxtLCKK5DCwZ06rpix7T+T7iQ5gvA
+	 qnvK+CuM2z3kXoC2EXX5zVfrSs9YZoVStHyMC57SRJsz0oyhl616YwCsWbEsbqCL4U
+	 pjdZhjAzmEeJQmoKv8Lr7PQGaqpT6OSAI8Bgcj4g=
+Received: from [127.0.0.1] (111-251-7-144.dynamic-ip.hinet.net [111.251.7.144])
+	by cmsr7.hinet.net (8.15.2/8.15.2) with ESMTPS id 59IAbf8S315725
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO)
+	for <linux-gpio@vger.kernel.org>; Sat, 18 Oct 2025 18:39:31 +0800
+From: "Sales - iGTI 373" <Linux-gpio@ms29.hinet.net>
+To: linux-gpio@vger.kernel.org
+Reply-To: "Sales - iGTI." <sales@igti.space>
+Subject: =?UTF-8?B?Rmlyc3QgT3JkZXIgQ29uZmlybWF0aW9uICYgTmV4dCBTdGVwcw==?=
+Message-ID: <21829445-fc42-1980-e9ea-524747989c44@ms29.hinet.net>
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 18 Oct 2025 10:39:30 +0000
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+X-HiNet-Brightmail: Spam
+X-CMAE-Score: 100
+X-CMAE-Analysis: v=2.4 cv=cYdxrWDM c=0 sm=1 tr=0 ts=68f36e64
+	p=ggywIp0tIZrEgnU2bSAA:9 a=3VxGw7kNkDt6hAZW52zp2w==:117 a=IkcTkHD0fZMA:10
+	a=5KLPUuaC_9wA:10
 
-The probe messages currently print "using AI" and "using no AI",
-which can be confusing to users unfamiliar with the datasheet term.
+Hi Linux-gpio,
 
-Clarify these by spelling out "auto increment", which is the meaning
-of the AI bit described in the register map.
+I hope this message finds you well.
 
-No functional change, only clearer log wording and matching comment
-update.
+We are a diversified general trading company with multiple business streams=
+ and affiliated sister companies. While our operations span various sectors=
+, we currently have a strong focus on the resale of general machandise and =
+services on several products to our partners and associates in the UAE and =
+UK.
 
-Signed-off-by: Michael Roth <mail@mroth.net>
----
- drivers/gpio/gpio-pca953x.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Having reviewed your website and product offerings, we are pleased to move =
+forward with our first order. To proceed, we would like to align on the =
+following key details:
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index b46927f55..360c14f69 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -306,7 +306,7 @@ static inline u8 pca953x_get_bit_mask(struct pca953x_chip *chip, unsigned int of
-  *     Interrupt mask register		0x40 + 5 * bank_size	RW
-  *     Interrupt status register	0x40 + 6 * bank_size	R
-  *
-- * - Registers with bit 0x80 set, the AI bit
-+ * - Registers with bit 0x80 set, the AI bit (auto increment)
-  *   The bit is cleared and the registers fall into one of the
-  *   categories above.
-  */
-@@ -1203,10 +1203,10 @@ static int pca953x_probe(struct i2c_client *client)
- 	pca953x_setup_gpio(chip, chip->driver_data & PCA_GPIO_MASK);
- 
- 	if (NBANK(chip) > 2 || PCA_CHIP_TYPE(chip->driver_data) == PCA957X_TYPE) {
--		dev_info(dev, "using AI\n");
-+		dev_info(dev, "using auto increment\n");
- 		regmap_config = &pca953x_ai_i2c_regmap;
- 	} else {
--		dev_info(dev, "using no AI\n");
-+		dev_info(dev, "using no auto increment\n");
- 		regmap_config = &pca953x_i2c_regmap;
- 	}
- 
--- 
-2.34.1
+-Minimum Order Quantity (MOQ)
+-Delivery timelines
+-Payment terms
+-Potential for a long-term partnership
 
+To facilitate this discussion and finalize next steps, we will be sharing a=
+ Zoom meeting invitation shortly.
+
+We look forward to your confirmation and the opportunity to build a =
+mutually beneficial relationship.
+
+Best regards,
+Leo Viera
+Purchasing Director
+sales@igti.space
+iGeneral Trading Co Ltd
+igt.ae - igti.space
 
