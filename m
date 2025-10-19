@@ -1,91 +1,105 @@
-Return-Path: <linux-gpio+bounces-27276-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27277-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B48EBEDCF6
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Oct 2025 01:44:39 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8114CBEE0B3
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Oct 2025 10:33:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B91019A34C5
-	for <lists+linux-gpio@lfdr.de>; Sat, 18 Oct 2025 23:45:02 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 38BB34E1BD7
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Oct 2025 08:33:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 772F7284B26;
-	Sat, 18 Oct 2025 23:44:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0730929D288;
+	Sun, 19 Oct 2025 08:32:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KQMHFoai"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="XzU8En8/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-78.smtpout.orange.fr [80.12.242.78])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E552512E6;
-	Sat, 18 Oct 2025 23:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCAAA146A66;
+	Sun, 19 Oct 2025 08:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760831074; cv=none; b=L5OjxOnba9lFnQazgoeWWgvHfkFSIChyqngIwTqii/cRzoG2qK5p1MYgr71/VpnIAfrH2DOaPegGaL6BCKS0ROyuB6ObAdtnITdUB7stU4oxpNdH1nkycGhdAvWJkxgZu07oaT93/7Xm4KGs/AWDd0bdtYc3slfCaFAYMA7OOBQ=
+	t=1760862778; cv=none; b=WPOpk5pPoaRWNs3v/X2gz0GcIMPbRSMPBzAQmrmG0zHmug0AoD0CIopw+GbzMBD8A7TPKtFbjtIiH54xJsJZK3UueduDkqp/94p56Hkxbvos2Icb3SYOZYJK8HVzpCGh1apaR6MSeWUMgxn7cgCDj6uvsVknFu/1H+nrvlQDLO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760831074; c=relaxed/simple;
-	bh=35VEjtJG+w3mU7d4N1pbsg3mXXmtqZ9kwr9H4K6Izd8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZHNW4hHdTuMpfim5NjgC9MDr66cFMtDIJ03NyH5mTxCZgO033WOBO2vFXobRYry6+kq2PMaQjvSS8raJMUiTsypfFmiClbq8y/txE86RTObk4aL2mqSr+imiNnF/R7mK2Y7tmH5STuN2pXig3pTv1LoeNu1CVM0MqCq3Y2Hq8iY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KQMHFoai; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D6B7C4CEF8;
-	Sat, 18 Oct 2025 23:44:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760831073;
-	bh=35VEjtJG+w3mU7d4N1pbsg3mXXmtqZ9kwr9H4K6Izd8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KQMHFoaiTIgSh+HKLZbQjCPMk1pIIO3E0YcELV/2lZGKfCk3XAwiZDCVFCSR8M1dC
-	 VVkzyYgqqNoJlM5vHz6bIZ/ZrJ+99cgdzJsN618gK3bTgKvOQVzFX/EXBaggMtjTzH
-	 At/I/91lyQs7vrCwlN1+qf+zoFmbAASD9ut6A6hrxyaIzCTQXWsNypQpteL2mABjFa
-	 opNIkvkN7YTIyAs5hWe6r7mAQC8vDg2aSkRX4uzUZwbbUouby7+oaohWXGmjmC5TqU
-	 f71rH5H6RvEEnn24CNcnqN9ZVW7BGRSwO+e/rrjp6AV4lbkZqXx4CN39LZRsXDcD79
-	 VZd8s2TvoKvfQ==
-From: William Breathitt Gray <wbg@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: William Breathitt Gray <wbg@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
+	s=arc-20240116; t=1760862778; c=relaxed/simple;
+	bh=WpX+UrusmdOFu71UogvaT2bAJfzn0AT+XeC5c/lBXkI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tO7McOeoaTkTtXYUbgQ0oN3ZkW9kedla4vgsF4YcFwRpMw9YB/eMSvMMrWHPRTUTeLWUpVDDO0zQOfS7F+kIoNNjsDyg6kk16LSBhr0CtKcl3eKVUjdW7oELo83ySujvspfLyQ4daIzazWi9OoyVl5e35gG1t2YXOnOOXXhNG7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=XzU8En8/; arc=none smtp.client-ip=80.12.242.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from fedora.home ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
+	by smtp.orange.fr with ESMTPA
+	id AOpLvqnmVle4HAOpLvakGs; Sun, 19 Oct 2025 10:31:44 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1760862704;
+	bh=DLuOymrC3C8sEFjkTVXUx2j/qItjdLfaXHfU/fT442Y=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=XzU8En8/8KAteaF2LBJc8Hg8UDIWqtsn8eDIE16UBwoKPK5DzOl2DxOtWPWo50lA2
+	 Vd4/39+Yu5zGJFvNIHmFXGtaTun569JACpt2WGLyVLbn+FK6tvXUdV1xzlVPTqYFGY
+	 keDFlJ58GtvC2Xpcbm1/4g2h+xrQbb5J/QJ0o4+a6g8N6/N+XvFG2WbHZSfOgf8Rf3
+	 B1lN2nJbeus5pg2RURJ8jxuAoptlW3Gd3N4r5fDS1QkIKaTOPWNqsZX95qo1RDtt5h
+	 JrWPG3jciafm3Dyz490TzK7q0wbpnFJG84loAg5hMoxHQhEt0ZqbqiQFU90MVVZI7I
+	 SyM8t4uaIFhPA==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 19 Oct 2025 10:31:44 +0200
+X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Ioana Ciornei <ioana.ciornei@nxp.com>,
-	Mark Brown <broonie@kernel.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mark Cave-Ayland <mark.caveayland@nutanix.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 1/3] gpio: 104-idio-16: Define maximum valid register address offset
-Date: Sun, 19 Oct 2025 08:44:09 +0900
-Message-ID: <20251018234411.34877-1-wbg@kernel.org>
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-pwm@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH] gpio: mvebu: Slightly optimize mvebu_gpio_irq_handler()
+Date: Sun, 19 Oct 2025 10:31:38 +0200
+Message-ID: <7190f5def0489ed3f40435449c86cd7c710e6dd4.1760862679.git.christophe.jaillet@wanadoo.fr>
 X-Mailer: git-send-email 2.51.0
-In-Reply-To: <aPPj22GL56sP1gOK@ashevche-desk.local>
-References: <aPPj22GL56sP1gOK@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=838; i=wbg@kernel.org; h=from:subject; bh=35VEjtJG+w3mU7d4N1pbsg3mXXmtqZ9kwr9H4K6Izd8=; b=owGbwMvMwCW21SPs1D4hZW3G02pJDBlfVF93+yVfjKjO+Rt53+L6wV5u/p9cnC0ekhm1bge+l S+SszXvKGVhEONikBVTZOk1P3v3wSVVjR8v5m+DmcPKBDKEgYtTAC7yl5Fh1Zk/S1ZN4A784+cb qJ68IH1p9rsTfBFtj9PnsTtYhXgnMjL8Mnglc/hl7GmPx1t2BjyYxsSxX73ukPHGJUn7eX7O1Zn PBwA=
-X-Developer-Key: i=wbg@kernel.org; a=openpgp; fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
 Content-Transfer-Encoding: 8bit
 
-On Sat, Oct 18, 2025 at 10:00:43PM +0300, Andy Shevchenko wrote:
-> On Fri, Oct 17, 2025 at 09:58:01AM +0900, William Breathitt Gray wrote:
-> > Attempting to load the 104-idio-16 module fails during regmap
-> > initialization with a return error -EINVAL. This is a result of the
-> > regmap cache failing initialization. Set the idio_16_regmap_config
-> > max_register member to fix this failure.
-> 
-> > Fixes: 2c210c9a34a3 ("gpio: 104-idio-16: Migrate to the regmap API")
-> > Reported-by: Mark Cave-Ayland <mark.caveayland@nutanix.com>
-> > Link: https://lore.kernel.org/r/9b0375fd-235f-4ee1-a7fa-daca296ef6bf@nutanix.com
-> 
-> Link --> Closes ?
+In the main loop of mvebu_gpio_irq_handler() some calls to
+irq_find_mapping() can be saved.
 
-So that link points to a report detailing multiple bugs, but this patch
-only fixes one of those bugs. Is it still appropriate to use Closes in
-this case?
+There is no point to find an irq number before checking if this something
+has to be done.
+By testing first, some calls can be saved.
 
-William Breathitt Gray
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested only.
+---
+ drivers/gpio/gpio-mvebu.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index ac799fced950..22c36b79e249 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -573,11 +573,10 @@ static void mvebu_gpio_irq_handler(struct irq_desc *desc)
+ 	for (i = 0; i < mvchip->chip.ngpio; i++) {
+ 		int irq;
+ 
+-		irq = irq_find_mapping(mvchip->domain, i);
+-
+ 		if (!(cause & BIT(i)))
+ 			continue;
+ 
++		irq = irq_find_mapping(mvchip->domain, i);
+ 		type = irq_get_trigger_type(irq);
+ 		if ((type & IRQ_TYPE_SENSE_MASK) == IRQ_TYPE_EDGE_BOTH) {
+ 			/* Swap polarity (race with GPIO line) */
+-- 
+2.51.0
+
 
