@@ -1,121 +1,164 @@
-Return-Path: <linux-gpio+bounces-27299-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27300-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FD0ABF046F
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 11:44:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E22FEBF06C9
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 12:09:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 344691882029
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 09:44:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9632618A173A
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 10:08:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79E042F7443;
-	Mon, 20 Oct 2025 09:42:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA1142F7ACA;
+	Mon, 20 Oct 2025 10:05:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="IcO943AZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ahVq1qNZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4CE238171
-	for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 09:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8512F5A0B;
+	Mon, 20 Oct 2025 10:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760953331; cv=none; b=ebgfKskeuAaueeB7ijSud8ldm0meRkCWRqPkrUrmOAnpTR1gHw3wE/WhsrbuvASEC6PeSaZe5oc4qdzOWF9/WvxbTRkXhWEn5COXGFi0RVykT9LgRXiu4KHDjPKx/u9DXOtwSEnbm9as/lKPc6ApYj0uchL1ffpPridAleJgejc=
+	t=1760954755; cv=none; b=oAgq5zJim/Pk3beGa4fVYRcpMfaIOKBtfN3XBLoea1eFd7IjRFDOHWWkgeowW8jJgR4k5X5oKJaxnBSvvFeuUvB5US2OtYocOhf/dq8rBGn5Av+cwLZOtWM7rSSi1N88aWLANoiaKqmvFkcznj/jiF/9F0iTy4YzGcI1ctCzeAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760953331; c=relaxed/simple;
-	bh=sjEUaWPd/Jj2ElIhymJE8eOmk6i+S46mwSJsA8AQ+EQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QIDwcWjhbX1uzgPcmB6FZi7MJ87M9AI1/N7yCgVLHwmTPaGvTQ/otkxpjJv/W4dm3zKvj/WqOy2uSCkrevPamheozShfxeNtk7u27KLslXHaUXOgxy/RWoZNW1IEzME9MGZy5HtqAqX5tM7umL0QOlvwq+Jj3p9lTBR+aRgCvKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=IcO943AZ; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-57ea78e0618so4821338e87.0
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 02:42:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1760953326; x=1761558126; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sjEUaWPd/Jj2ElIhymJE8eOmk6i+S46mwSJsA8AQ+EQ=;
-        b=IcO943AZ4slbeY23j1wnDAiVcwPBPLOz6p7nwR3LnKZ0EWyuxZ1NV7vh4gmJ/DIdyO
-         6NBnVnJLgA6olIiUyrFMdxASrH1QtEFiA7r/E1llGQVLoET/fsgSRnAyAnwR8NcWStjO
-         FuT2KFRZGMEzwuOaEhqAI6OZQRNQgcs9YKKrdrTKxlFK2oJm2XQIc6nDLunQhkol1mbb
-         d70GOBwY51A3Hb51gRUwQxAzlPvGos30Z0gp/Sy15aqIdUTTrOReoH1dy+wfcjOsfgCW
-         7aj159DIeTlPLFh0St4Zk1tpfonVqFPLXNmWZp8b1j/WnRZHVRVzd4hwU/lmZADNgoht
-         oLcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760953326; x=1761558126;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sjEUaWPd/Jj2ElIhymJE8eOmk6i+S46mwSJsA8AQ+EQ=;
-        b=bfi0uLpasJtOsIYRP9VhlRlHw/zVEKuKUv++9S3GM1Cn1amIlYR1lhNE++dRSPqPzo
-         v9fPLUu0cDl7HgbKi4F4UVoPN7gqRkHlmJCeeaQCRS2F2GoNxKco8R9uQvuGty1bch34
-         RY8I5vsPH8XuBDlKblfwSZSn66GkptQe0idvqcLSWzwWgwO+qe70sqzpmaLMJeTQijk7
-         dTSVi7OZho2qRu1GiHvY71ZpWXnAHqjS3iJ9gHFWL+/dggxFh2PYYWwGFr6boOHKWwvV
-         fZfZwHMFUn/yiWopjLH9THNiqU3yDGWywtXvVz+VQLjyqV/pARDgxdIl7qsaJFBo2LSJ
-         FyhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX1tOfZNsz28PtQ1KQ36YQDPHF/xeLjJ3ZAzwjt785tjPjrwnaK2FaYW5o+ZJHSETVW7b61IcWZ63OW@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXfm0Wj93Bzmdvxb83tsCtkjobvEclABm7i5xEAsAhotpSplLo
-	XGPUSJV9tuIY329yyMpLJyET+ja17Uzvy4KlvWo5q5Oov02gqkyDb8KOKiG0o37A55fbyzJoK5F
-	JShT/aZEJj8Mj3aZ9OJOhmBX9iKGtymNFewTzp7Rlvg==
-X-Gm-Gg: ASbGnctfM+BKUNdshM2k5Jwq1d6lTKhjsH2U/HTzmeLahcxy01RESYCNwh8EJ78ql52
-	5s6fa7gk16A4ZU+eOUXlBcAvYr5ESthp/1+CNK1gMkngpBE5GPR3Itrh0PlqX94NCMhhxGZNoFQ
-	d8n/2O1QwZ2sv5H8AcALnaM59Zg3Z13zHGl+KfgHSv6+LowmPmvPjuz1QQHvQC/TO4pTsThasY9
-	at4qYxG/IF3m7klRKfk8YJAkU9jydVdhhaQw9vT9guCKKongclXJz0Lj0arwxPz7Rgw8sXIllpP
-	KkVdBp/B9C5cjr4S
-X-Google-Smtp-Source: AGHT+IHY1EdCIXYngUyFFwGvzEW0znpDl77em9pEnOCmJRoroDyoIZB7DiA520ogK1u8lsISe3niq2HVycioLER4ci8=
-X-Received: by 2002:a05:6512:1052:b0:578:ed03:7b70 with SMTP id
- 2adb3069b0e04-591d8589aedmr3757333e87.28.1760953326040; Mon, 20 Oct 2025
- 02:42:06 -0700 (PDT)
+	s=arc-20240116; t=1760954755; c=relaxed/simple;
+	bh=nEmUKNUCmJh39T+JKitYAUPYb5fVZOB6UXkFYmlmPFI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lrwovK6e+h7lXTCVO4NvMhYHXBoVDvj9RD5gwj7WXYxbAsiPbmVRYGttM1EIGIOLMhtaVS9sog5S7yv9DEGUhU49DZCrPTue8kpU4qSFaXZVcYG2TEIrHJplxmcsQaX7f4CbA1uIrzm9WBsNswFAGu19HJ+PguASvHnI73mIkSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ahVq1qNZ; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760954754; x=1792490754;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=nEmUKNUCmJh39T+JKitYAUPYb5fVZOB6UXkFYmlmPFI=;
+  b=ahVq1qNZsJ0Ve2czSV8zFATAEjuH5i5yyOFZR69iWK3OQHnR5E1unN+x
+   F1MOFRAChfGMCfdmIbQGcND9rdVU27rQRkQQMb8COs8yEWLwoAB2RPlTr
+   IeL5AvCuRr8S3vClZXFfklf0j7xwglBsm0SIGQsGVJ2hHRpzYcTqtA8D4
+   l67X1mr5ySWxO0DwbCBIwOwYMDzXWoAjAzUZ8qEqxNzuNZfp4pUnipzV2
+   oTEhH9ofWoeLHWlcg+UK2KNUW9kjAmW3IxrHp0EC5sp0YWbNrRw/FlFok
+   26TQiP97KzoTc7z1PJKU7BNPnAf6rT8+DicP/zxTvg+XjHZIfWpUQSeWR
+   A==;
+X-CSE-ConnectionGUID: xZ5IN7mPSSmZVhtzSQtKVg==
+X-CSE-MsgGUID: hzY28RJJToy1hBx9zZs3Lg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11587"; a="63164800"
+X-IronPort-AV: E=Sophos;i="6.19,242,1754982000"; 
+   d="scan'208";a="63164800"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 03:05:53 -0700
+X-CSE-ConnectionGUID: 1a7cDbxTTG6g0oJTFKlwpg==
+X-CSE-MsgGUID: AkSw/isoQBG/lGi5VdZh3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,242,1754982000"; 
+   d="scan'208";a="183309468"
+Received: from bergbenj-mobl1.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.245.6])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2025 03:05:49 -0700
+Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1vAmlu-00000001Gnk-1nYO;
+	Mon, 20 Oct 2025 13:05:46 +0300
+Date: Mon, 20 Oct 2025 13:05:46 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 3/9] software node: allow referencing firmware nodes
+Message-ID: <aPYJeqFY_9YV9AQn@ashevche-desk.local>
+References: <20251006-reset-gpios-swnodes-v1-0-6d3325b9af42@linaro.org>
+ <20251006-reset-gpios-swnodes-v1-3-6d3325b9af42@linaro.org>
+ <aO1dBgPZfDJTsPfE@smile.fi.intel.com>
+ <CAMRc=MfOoHn+mLRpQBEsC3g5sM=VZBgVffsm68CAXJBHffPxdA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org>
- <CAMRc=Me4Fh5pDOF8Z2XY4MG_DYqPRN+UJh_BzKvmULL96wciYw@mail.gmail.com> <81bda56c-f18b-4bd9-abf9-9da7c2251f42@sirena.org.uk>
-In-Reply-To: <81bda56c-f18b-4bd9-abf9-9da7c2251f42@sirena.org.uk>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 20 Oct 2025 11:41:52 +0200
-X-Gm-Features: AS18NWCTv8z2cF08OaIclAyR6BuSf6xIu18qyroHsfySyW-sq8vo6xUHsWKQB4s
-Message-ID: <CAMRc=MdOCHJEyPxN+-g71ux68=Mt_Q5P9611QO7Q8J9e8UJv_A@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/9] gpio: improve support for shared GPIOs
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Srinivas Kandagatla <srini@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andy@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Will Deacon <will@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MfOoHn+mLRpQBEsC3g5sM=VZBgVffsm68CAXJBHffPxdA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Fri, Oct 17, 2025 at 7:32=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
-te:
->
-> On Fri, Oct 17, 2025 at 07:26:51PM +0200, Bartosz Golaszewski wrote:
->
-> > Upon a closer inspection it turns out that this is not the case - the
-> > ENABLE/DISABLE events are emitted when the *logical* regulator is
-> > enabled/disabled even if this does not involve a change in the state
-> > of the shared pin.
->
-> It really should be the actual physical state change that triggers the
-> event.
+On Mon, Oct 20, 2025 at 10:06:43AM +0200, Bartosz Golaszewski wrote:
+> On Sat, Oct 18, 2025 at 7:34 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Mon, Oct 06, 2025 at 03:00:18PM +0200, Bartosz Golaszewski wrote:
 
-I guess so, but this would require some non-trivial rework of the
-regulator core. We'd need some list of deferred notifications stored
-in memory for when the physical state actually changes.
+...
 
-Bartosz
+> > > +enum software_node_ref_type {
+> > > +     /* References a software node. */
+> > > +     SOFTWARE_NODE_REF_SWNODE = 0,
+> >
+> > I don't see why we need an explicit value here.
+> 
+> It was to make it clear, this is the default value and it's the one
+> used in older code with the legacy macros. I can drop it, it's no big
+> deal.
+
+Usually when we assign a default value(s) in enum, it should be justified.
+The common mistake here (not this case) is to use autoincrement feature
+with some of the values explicitly defined for the enums that reflect the
+HW bits / states, which obviously makes code fragile and easy to break.
+
+> > > +     /* References a firmware node. */
+> > > +     SOFTWARE_NODE_REF_FWNODE,
+> > > +};
+
+...
+
+> > >  /**
+> > >   * struct software_node_ref_args - Reference property with additional arguments
+> > > - * @node: Reference to a software node
+> > > + * @swnode: Reference to a software node
+> > > + * @fwnode: Alternative reference to a firmware node handle
+> > >   * @nargs: Number of elements in @args array
+> > >   * @args: Integer arguments
+> > >   */
+> > >  struct software_node_ref_args {
+> > > -     const struct software_node *node;
+> > > +     enum software_node_ref_type type;
+> > > +     union {
+> > > +             const struct software_node *swnode;
+> > > +             struct fwnode_handle *fwnode;
+> > > +     };
+> >
+> > Can't we always have an fwnode reference?
+> 
+> Unfortunately no. A const struct software_node is not yet a full
+> fwnode, it's just a template that becomes an actual firmware node when
+> it's registered with the swnode framework. However in order to allow
+> creating a graph of software nodes before we register them, we need a
+> way to reference those templates and then look them up internally in
+> swnode code.
+
+Strange that you need this way. The IPU3 bridge driver (that creates a graph of
+fwnodes at run-time for being consumed by the respective parts of v4l2
+framework) IIRC has no such issue. Why your case is different?
+
+> > >       unsigned int nargs;
+> > >       u64 args[NR_FWNODE_REFERENCE_ARGS];
+> > >  };
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
