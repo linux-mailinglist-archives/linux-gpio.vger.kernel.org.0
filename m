@@ -1,128 +1,121 @@
-Return-Path: <linux-gpio+bounces-27298-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27299-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9058BBF0097
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 10:52:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FD0ABF046F
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 11:44:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C34D53BE5C9
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 08:52:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 344691882029
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 09:44:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA8DC2EE263;
-	Mon, 20 Oct 2025 08:52:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79E042F7443;
+	Mon, 20 Oct 2025 09:42:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kte/KPZG"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="IcO943AZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D422EA75C;
-	Mon, 20 Oct 2025 08:52:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4CE238171
+	for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 09:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760950335; cv=none; b=YMab/UQ2YW5iNzMudhp/nXyfjkuu4aOjXM338VlYtz6Ka1dyBjvJjXUfYSibH8SqYLJmUsyD5qN4+w+Dgeh5bC/VncXo9ZjMUBjQ9qPA9cjRsMFuydbGRDRBFOrJ5tbGZR4acuRmrhcUnNYV9vBA5jQ/U3xeAjboZnKSzsla5AM=
+	t=1760953331; cv=none; b=ebgfKskeuAaueeB7ijSud8ldm0meRkCWRqPkrUrmOAnpTR1gHw3wE/WhsrbuvASEC6PeSaZe5oc4qdzOWF9/WvxbTRkXhWEn5COXGFi0RVykT9LgRXiu4KHDjPKx/u9DXOtwSEnbm9as/lKPc6ApYj0uchL1ffpPridAleJgejc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760950335; c=relaxed/simple;
-	bh=EoUVxeSptFcOjrgPFfQZEWOsyUwL1/hLMlc22Yj9G24=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=biocpHKKiQWXGIGRbNWDmwGL19B4pidsaUsA2m1Iz+8pIhYs3WsiSpPBO+Z1yY5zA7/Hl5wJlo/A+WebiAXKPbi+OB9EpbTs9QJZvhisMwQQUGs3WRIXGe0mT1ZLpJ9DwSPsWlxrm5ztsFyrWLTB5Aky7UOHVtOGcuY5DFSEs9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kte/KPZG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52B5AC4CEF9;
-	Mon, 20 Oct 2025 08:52:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760950334;
-	bh=EoUVxeSptFcOjrgPFfQZEWOsyUwL1/hLMlc22Yj9G24=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=kte/KPZGk8PlzHP/nqp16ImYv56FvR2+OMTwexmHCbcrEDcMUn2NURupU9d/+Kkfz
-	 oQW1ZWj78iwGusaJKI/AJvGiNHn+p3kTyNicSq0jyKOpZRdxUVVVqNi7WSfW3gJpCZ
-	 xzyEk5nywWVK6yU/E9WSS532q6kpgDl52ojP5kERVy7qauwE05/O7ttaM2Akx6yWu3
-	 pNeKt3Xiu5Wo9v7ogX2mE8mtTMMZuBmgQJ45piSPtGFV5f1A3sPd5dsP+Vd0+KwqqN
-	 PupVON33uj6bVyyy12MMsqYyWJC5QCr2+ukYZO0U9sQE0Lvg2id2BEYN8C3AD+jVrK
-	 tcEj2GseYg33w==
-From: William Breathitt Gray <wbg@kernel.org>
-Date: Mon, 20 Oct 2025 17:51:46 +0900
-Subject: [PATCH v2 3/3] gpio: idio-16: Define fixed direction of the GPIO
- lines
+	s=arc-20240116; t=1760953331; c=relaxed/simple;
+	bh=sjEUaWPd/Jj2ElIhymJE8eOmk6i+S46mwSJsA8AQ+EQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QIDwcWjhbX1uzgPcmB6FZi7MJ87M9AI1/N7yCgVLHwmTPaGvTQ/otkxpjJv/W4dm3zKvj/WqOy2uSCkrevPamheozShfxeNtk7u27KLslXHaUXOgxy/RWoZNW1IEzME9MGZy5HtqAqX5tM7umL0QOlvwq+Jj3p9lTBR+aRgCvKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=IcO943AZ; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-57ea78e0618so4821338e87.0
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 02:42:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1760953326; x=1761558126; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sjEUaWPd/Jj2ElIhymJE8eOmk6i+S46mwSJsA8AQ+EQ=;
+        b=IcO943AZ4slbeY23j1wnDAiVcwPBPLOz6p7nwR3LnKZ0EWyuxZ1NV7vh4gmJ/DIdyO
+         6NBnVnJLgA6olIiUyrFMdxASrH1QtEFiA7r/E1llGQVLoET/fsgSRnAyAnwR8NcWStjO
+         FuT2KFRZGMEzwuOaEhqAI6OZQRNQgcs9YKKrdrTKxlFK2oJm2XQIc6nDLunQhkol1mbb
+         d70GOBwY51A3Hb51gRUwQxAzlPvGos30Z0gp/Sy15aqIdUTTrOReoH1dy+wfcjOsfgCW
+         7aj159DIeTlPLFh0St4Zk1tpfonVqFPLXNmWZp8b1j/WnRZHVRVzd4hwU/lmZADNgoht
+         oLcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760953326; x=1761558126;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sjEUaWPd/Jj2ElIhymJE8eOmk6i+S46mwSJsA8AQ+EQ=;
+        b=bfi0uLpasJtOsIYRP9VhlRlHw/zVEKuKUv++9S3GM1Cn1amIlYR1lhNE++dRSPqPzo
+         v9fPLUu0cDl7HgbKi4F4UVoPN7gqRkHlmJCeeaQCRS2F2GoNxKco8R9uQvuGty1bch34
+         RY8I5vsPH8XuBDlKblfwSZSn66GkptQe0idvqcLSWzwWgwO+qe70sqzpmaLMJeTQijk7
+         dTSVi7OZho2qRu1GiHvY71ZpWXnAHqjS3iJ9gHFWL+/dggxFh2PYYWwGFr6boOHKWwvV
+         fZfZwHMFUn/yiWopjLH9THNiqU3yDGWywtXvVz+VQLjyqV/pARDgxdIl7qsaJFBo2LSJ
+         FyhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1tOfZNsz28PtQ1KQ36YQDPHF/xeLjJ3ZAzwjt785tjPjrwnaK2FaYW5o+ZJHSETVW7b61IcWZ63OW@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXfm0Wj93Bzmdvxb83tsCtkjobvEclABm7i5xEAsAhotpSplLo
+	XGPUSJV9tuIY329yyMpLJyET+ja17Uzvy4KlvWo5q5Oov02gqkyDb8KOKiG0o37A55fbyzJoK5F
+	JShT/aZEJj8Mj3aZ9OJOhmBX9iKGtymNFewTzp7Rlvg==
+X-Gm-Gg: ASbGnctfM+BKUNdshM2k5Jwq1d6lTKhjsH2U/HTzmeLahcxy01RESYCNwh8EJ78ql52
+	5s6fa7gk16A4ZU+eOUXlBcAvYr5ESthp/1+CNK1gMkngpBE5GPR3Itrh0PlqX94NCMhhxGZNoFQ
+	d8n/2O1QwZ2sv5H8AcALnaM59Zg3Z13zHGl+KfgHSv6+LowmPmvPjuz1QQHvQC/TO4pTsThasY9
+	at4qYxG/IF3m7klRKfk8YJAkU9jydVdhhaQw9vT9guCKKongclXJz0Lj0arwxPz7Rgw8sXIllpP
+	KkVdBp/B9C5cjr4S
+X-Google-Smtp-Source: AGHT+IHY1EdCIXYngUyFFwGvzEW0znpDl77em9pEnOCmJRoroDyoIZB7DiA520ogK1u8lsISe3niq2HVycioLER4ci8=
+X-Received: by 2002:a05:6512:1052:b0:578:ed03:7b70 with SMTP id
+ 2adb3069b0e04-591d8589aedmr3757333e87.28.1760953326040; Mon, 20 Oct 2025
+ 02:42:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251020-fix-gpio-idio-16-regmap-v2-3-ebeb50e93c33@kernel.org>
-References: <20251020-fix-gpio-idio-16-regmap-v2-0-ebeb50e93c33@kernel.org>
-In-Reply-To: <20251020-fix-gpio-idio-16-regmap-v2-0-ebeb50e93c33@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
- Michael Walle <mwalle@kernel.org>, Ioana Ciornei <ioana.ciornei@nxp.com>, 
- Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, William Breathitt Gray <wbg@kernel.org>, 
- Mark Cave-Ayland <mark.caveayland@nutanix.com>, stable@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2018; i=wbg@kernel.org;
- h=from:subject:message-id; bh=EoUVxeSptFcOjrgPFfQZEWOsyUwL1/hLMlc22Yj9G24=;
- b=owGbwMvMwCW21SPs1D4hZW3G02pJDBlff1helOPOnmbtVvKsmaGpcPuW++6+LzP/Zi7btTbm5
- u/bZVP8O0pZGMS4GGTFFFl6zc/efXBJVePHi/nbYOawMoEMYeDiFICJ6Mxh+CtrNC/T7fPhilCL
- t5HGT5q/mE6t1Dj+XupQSEDGczfNEA5Ghpb/pb4Gd9+bbdTjeF51pmJWZMGcS2JyX18trn5cpHM
- wnQkA
-X-Developer-Key: i=wbg@kernel.org; a=openpgp;
- fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
+References: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org>
+ <CAMRc=Me4Fh5pDOF8Z2XY4MG_DYqPRN+UJh_BzKvmULL96wciYw@mail.gmail.com> <81bda56c-f18b-4bd9-abf9-9da7c2251f42@sirena.org.uk>
+In-Reply-To: <81bda56c-f18b-4bd9-abf9-9da7c2251f42@sirena.org.uk>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 20 Oct 2025 11:41:52 +0200
+X-Gm-Features: AS18NWCTv8z2cF08OaIclAyR6BuSf6xIu18qyroHsfySyW-sq8vo6xUHsWKQB4s
+Message-ID: <CAMRc=MdOCHJEyPxN+-g71ux68=Mt_Q5P9611QO7Q8J9e8UJv_A@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/9] gpio: improve support for shared GPIOs
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Srinivas Kandagatla <srini@kernel.org>, 
+	Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andy@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Will Deacon <will@kernel.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The direction of the IDIO-16 GPIO lines is fixed with the first 16 lines
-as output and the remaining 16 lines as input. Set the gpio_config
-fixed_direction_output member to represent the fixed direction of the
-GPIO lines.
+On Fri, Oct 17, 2025 at 7:32=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
+te:
+>
+> On Fri, Oct 17, 2025 at 07:26:51PM +0200, Bartosz Golaszewski wrote:
+>
+> > Upon a closer inspection it turns out that this is not the case - the
+> > ENABLE/DISABLE events are emitted when the *logical* regulator is
+> > enabled/disabled even if this does not involve a change in the state
+> > of the shared pin.
+>
+> It really should be the actual physical state change that triggers the
+> event.
 
-Fixes: db02247827ef ("gpio: idio-16: Migrate to the regmap API")
-Reported-by: Mark Cave-Ayland <mark.caveayland@nutanix.com>
-Closes: https://lore.kernel.org/r/9b0375fd-235f-4ee1-a7fa-daca296ef6bf@nutanix.com
-Suggested-by: Michael Walle <mwalle@kernel.org>
-Cc: stable@vger.kernel.org # ae495810cffe: gpio: regmap: add the .fixed_direction_output configuration parameter
-Cc: stable@vger.kernel.org
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: William Breathitt Gray <wbg@kernel.org>
----
- drivers/gpio/gpio-idio-16.c | 5 +++++
- 1 file changed, 5 insertions(+)
+I guess so, but this would require some non-trivial rework of the
+regulator core. We'd need some list of deferred notifications stored
+in memory for when the physical state actually changes.
 
-diff --git a/drivers/gpio/gpio-idio-16.c b/drivers/gpio/gpio-idio-16.c
-index 0103be977c66bb8d165c1c92123368be6832d120..4fbae6f6a49727df40f2793b42ca207d78ec272b 100644
---- a/drivers/gpio/gpio-idio-16.c
-+++ b/drivers/gpio/gpio-idio-16.c
-@@ -6,6 +6,7 @@
- 
- #define DEFAULT_SYMBOL_NAMESPACE "GPIO_IDIO_16"
- 
-+#include <linux/bitmap.h>
- #include <linux/bits.h>
- #include <linux/device.h>
- #include <linux/err.h>
-@@ -107,6 +108,7 @@ int devm_idio_16_regmap_register(struct device *const dev,
- 	struct idio_16_data *data;
- 	struct regmap_irq_chip *chip;
- 	struct regmap_irq_chip_data *chip_data;
-+	DECLARE_BITMAP(fixed_direction_output, IDIO_16_NGPIO);
- 
- 	if (!config->parent)
- 		return -EINVAL;
-@@ -164,6 +166,9 @@ int devm_idio_16_regmap_register(struct device *const dev,
- 	gpio_config.irq_domain = regmap_irq_get_domain(chip_data);
- 	gpio_config.reg_mask_xlate = idio_16_reg_mask_xlate;
- 
-+	bitmap_from_u64(fixed_direction_output, GENMASK_U64(15, 0));
-+	gpio_config.fixed_direction_output = fixed_direction_output;
-+
- 	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &gpio_config));
- }
- EXPORT_SYMBOL_GPL(devm_idio_16_regmap_register);
-
--- 
-2.51.0
-
+Bartosz
 
