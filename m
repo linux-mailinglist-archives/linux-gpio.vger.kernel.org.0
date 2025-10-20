@@ -1,87 +1,87 @@
-Return-Path: <linux-gpio+bounces-27305-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27306-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35F3DBF11FD
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 14:21:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 880D7BF1672
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 15:01:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B477F3E2C57
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 12:18:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 34E303A6612
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 13:01:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6024E32B996;
-	Mon, 20 Oct 2025 12:13:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CE583191B7;
+	Mon, 20 Oct 2025 13:00:43 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6B33148A1
-	for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 12:13:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880283191AE
+	for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 13:00:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760962423; cv=none; b=LD7ZAmH7j12MtSWrtH7AJmvNlVddMjJSWWKkqDqTAwy6m6A8uFTDrNqnc5rtFamdyX+f+etAO5k7eMqc2NF1HjYFaabyN2RV06jivjyD4IX7WC7pwrXyoLRKW+3XQct8/SOtOJqP5Tv6vNDnkamX0j51zh49PrDO+9/mXrLLwvA=
+	t=1760965243; cv=none; b=lz57nK0b+Tj3DwD9ZCVzolQ8JuNN4SmAn2KeHmPT7IysndiPhFJBRGncFBD9QerSSoN1kW4esqh/1RS3t/cAzca1upFFTyGxi4p7TT25+yX0sziVR/GvzS9bez9PcTkQBr8bokSg9LU9WfGxEUcmbrAvsCKPqPri2TJ/KirYX+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760962423; c=relaxed/simple;
-	bh=zQJyABbFIFRgraIjRfB4Kv0edNHngRx2HTU3PnrqMSo=;
+	s=arc-20240116; t=1760965243; c=relaxed/simple;
+	bh=+BhpvIfdxxZ/aCetXMa1dsKCSF78eaw36kKX1XCRo0U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TneE9tcWlkPE1BAxHVh81ygzVUb4NLWxmLj5h8qfLCT/2e1ZCAdqZlKWfBhP00ZHd2jAURi+JRo1BC39EZphvd3Tikv5ZKmP1PHqC85jAWh1Ii7jbIaA8A0COfHr7CHPDmvUKtVj7VI2O9FcZ9RcN17kai05jKPsGmsQ/fC9Vpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.51
+	 To:Cc:Content-Type; b=EwYejPM39nOPspEFGkgseeKfAhOpSNW4GUATEk7KnueFX0boasxH2OI0MBR5Rn9WD65Fmw8uO089mBCRVVMlPSCZOvcxzJ0QvoBLug11UHEAXCIctXwThSrzSTKAC/HcyD5OVgea/7X1WzljJeEsP/JD5AQwtCnMbYbW0T8auO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-932cf836259so368976241.3
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 05:13:40 -0700 (PDT)
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-54aa4b86b09so1909344e0c.0
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 06:00:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760962419; x=1761567219;
+        d=1e100.net; s=20230601; t=1760965240; x=1761570040;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Pomt2ITXhIHlFit8dq3w5svz3PMdwi8h98cx9ZzxHC0=;
-        b=ZI+W75Obglwm4ci4mfQQsoesAaxPUQkv5N8l7eRnpDyIoPa3s0kH4fGDQ1ztTyTVZt
-         CeKPaSkBXdIL/33kB/Kqz7fmNQXn86GK1NHf6iXw9MlbHUSIdSPYaj0eREcK8t9bP059
-         oHgSYwAkgn+VgEnFvSOpm1pL6pbSxZXpsB9Vf2y0Zvg49AxY1mXTQ1D5e60vQc7fnQpi
-         91yuZCHmoaD2FXjq/7/PuZJOkthDYcMfmp+/1OvM6ObHninGz6P4rmSBP55hEE+3W2m0
-         sIDEDm64UdxUDGYuQqvmPFP+XPrUstXGW+1gGCcv7cQdBvoT7EyyWJdZMtaPEPfMMHZm
-         OM3A==
-X-Forwarded-Encrypted: i=1; AJvYcCXjTvarg14gwNH0bqeqA1MXzu/8BfNwq8skfL4Y2Xq3HBjH9PdxCVobh2NCQJW3r46kVaqJcQn4tr7E@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsMJYRy+i6o+fSPl19UYD7PRMiNxhychKrK15tU/ANb6d4VjNo
-	1o/GK4TTO+iv1q0fbldFNDc4FE/ocnydcYm4wTotxDB3c+8mqi8rCdy314b+m36d
-X-Gm-Gg: ASbGnctQA74OuDsyDY/auTMA/We73/8ppzUZlpIltlAUECJ5qW2bf0FrkkJTHKSR0BQ
-	cfE3IMFMXi0Rg7hOE1EdSGIR2tkq1o+MnIoGSOZKjj2Q+g54Rne3zQiLlrIHcRPRQMpt7eslLkc
-	0fhP6g/7gGgidRnkANikMiSHQlXh2a/3EkWFffsQe3kNgP5002Kjx4a9K2u2i942zMyyYrj/Uci
-	AgICves5G9kBxmRgHREXzrnIaKQ6kwPwjSDlG8jibKOqebatdJLiRVQnN8W91jEgyDEfRColmDY
-	k/FxVk/S1jQVkfupti6xf5XSq1c6FPDbH++ocyvauKS8HNKL8eh5lSORuaJs7PftmxRnWWeqs9s
-	41JAGjPYeM0yn4Jj5v+LGG3amsqdU7WSWojJluL0wsq3rh5gwFfIqMXlZZuCRvkKkGg92rMH9Iy
-	xsWDomxNMidFuKCvn54ZZ5g5RoAWeQJdLeVg2+evltxDTcD2Kl
-X-Google-Smtp-Source: AGHT+IEgVmnJrMSuuPhod2YkGe2BmKE+0Fy8L6hNljl5fVl5bRhk5+4O/MZwKvivPyzwbfwWnX2uqg==
-X-Received: by 2002:a05:6102:2908:b0:5d5:d1ba:439b with SMTP id ada2fe7eead31-5d7dd595e22mr3530573137.11.1760962418873;
-        Mon, 20 Oct 2025 05:13:38 -0700 (PDT)
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com. [209.85.222.53])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-932c3d85760sm2423662241.1.2025.10.20.05.13.37
+        bh=WTAfAvg+E5E0/JeW2qvrB22XDr/x/zemAkA2zC9bvaY=;
+        b=EJqHz4X0P5hpiAywKwkIVRB2R/Z5Hr6MnerTuSUqgSq+u22Woefqf04yjVFtWYLCUx
+         5ECsh4yIBrIkphJ/srDd2eBNkEQ4SzCBT7Qnz0aWrPmlVMJnBFtWWBlOWZTvEj0N2gB9
+         0LEFT9eJXF65qHoYL4QzEr3UvtUX/NAjNGBcLzita6/HbGjEB76RbzEs465gAoK0PqIk
+         7wE/LJvXIOlbMWTC4s/GYY+L78UdMnxfXpoxfJW42Lw4KvvWrmAkSjglzYHKaDtGnAf3
+         7yLfcsNDmNpNMg4xrJ+dYyL8BM6t9D7DcNqeeZp/8EYGy7H5h7ln2znJa3Ce9+ArUule
+         jkug==
+X-Forwarded-Encrypted: i=1; AJvYcCWPhp0d/qCswB/c8NXtjxZpzzIgyv8fiWssWZMQO+y1+xzkDRy4VlkBxZ8Vk/DgbwYxTozGtwJNRozX@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCe5jroGLIPTx6q7voygt0F2PT81UjQqyuy5dE6Lp9GvhSrySk
+	FMRuQ8m0UUAXxoKkgI/9f5DmGFN1G+ExmIR+UFdd5Jnpe4RQXTuQJ/1OWQFzYQqp
+X-Gm-Gg: ASbGnctLxI4llqx1cJ9ELm1+H1O8Cg1rCQiOrOeXSLXV0CfdZqzO1RN2SGHvdcumtd2
+	K91+jjNT5wMGjJfwzsD223qY4jY2SCknUkOXizdwzPyaLbxry+lzdScc/LLzOUuULE4NI4zvFaW
+	+0CRYohAo4JDK1y22m78iM1Kzd7r9X1UJWCtYr+d+ND+sBwh3Z4sQsVEy9O3Gdm4NFp1uXQ+Jjl
+	BRbmMW/CTHzsBPWxZ4IYrAkJrXWxWbbi9BCIUKUjIzAuTwuuJ8oWq4M18HolMJ/r+hvGrqGjAMV
+	RGx+O63H+t6sX4XZSZW5nChBwvqiz0PgHpDG0kTh4xZdFFnKvuDNUdlXRbMVaY+uQQO4ut253nh
+	XwsYNxxAWdW7GFQDLOgifhztGetwtJ3tlLJgw15SqoGzczsZNnZkHNspeTFhYL+MEPKknKjMz8H
+	yoXYcS3K9jW5/a/C/I64NiQdz2CNZUSVM7xSi2qcLMmY6XO7QL
+X-Google-Smtp-Source: AGHT+IGpuBegPzX1gnH44YHBsRZz1FXUoc2DBha2QOChmBQUA9Cq6rmuTgad7DhGhW3CJ4C7WMdQOA==
+X-Received: by 2002:a05:6102:358a:b0:5d3:fed8:f30d with SMTP id ada2fe7eead31-5d7dd5bf452mr3702112137.19.1760965240137;
+        Mon, 20 Oct 2025 06:00:40 -0700 (PDT)
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-5d96c2accf4sm2525477137.15.2025.10.20.06.00.36
         for <linux-gpio@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Oct 2025 05:13:38 -0700 (PDT)
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-932c247fb9aso703605241.2
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 05:13:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVZvhKuGMkDMl1L1/aZRpXLZwzX/aBUGpmgDd2UhlmI1xWx9GjjK+P2L4oRUorwkUXyOKTvqE03veX0@vger.kernel.org
-X-Received: by 2002:a05:6102:50a2:b0:5d5:f6ae:38ca with SMTP id
- ada2fe7eead31-5d7dd6f4c27mr3609494137.41.1760962417639; Mon, 20 Oct 2025
- 05:13:37 -0700 (PDT)
+        Mon, 20 Oct 2025 06:00:37 -0700 (PDT)
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-5b658b006e2so2140411137.0
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 06:00:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUmV9Y030B5n4DJWWpnUwold9yQlNE07vUutKeu0hpw1WcjH0D3K0HUYiEfxJg9E3uR5sI7un1Ft5/4@vger.kernel.org
+X-Received: by 2002:a05:6102:f09:b0:5d5:f6ae:38d1 with SMTP id
+ ada2fe7eead31-5db093f61bfmr207405137.38.1760965235930; Mon, 20 Oct 2025
+ 06:00:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1760696560.git.geert+renesas@glider.be> <792d176149bc4ffde2a7b78062388dc2466c23ca.1760696560.git.geert+renesas@glider.be>
- <aPJwtZSMgZLDzxH8@yury>
-In-Reply-To: <aPJwtZSMgZLDzxH8@yury>
+References: <cover.1760696560.git.geert+renesas@glider.be> <67c1998f144b3a21399672c8e4d58d3884ae2b3c.1760696560.git.geert+renesas@glider.be>
+ <aPKQMdyMO-vrb30X@yury>
+In-Reply-To: <aPKQMdyMO-vrb30X@yury>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 20 Oct 2025 14:13:26 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXCoqZmSqRAfujib=2fk0Ob1FiPYWBj8vMXfuXNoKhfVg@mail.gmail.com>
-X-Gm-Features: AS18NWDS1vbUG4-z_--VlQ3gjSspwjijy0fs8EPqX7O88cWCZQUNQKHTmAYei1k
-Message-ID: <CAMuHMdXCoqZmSqRAfujib=2fk0Ob1FiPYWBj8vMXfuXNoKhfVg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] bitfield: Drop underscores from macro parameters
+Date: Mon, 20 Oct 2025 15:00:24 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXq7xubX4a6SZWcC1HX+_TsKeQigDVQrWvA=js5bhaUiQ@mail.gmail.com>
+X-Gm-Features: AS18NWBop_uORR3NT3_HDoVoJ_Tyxhm-9TufWw0aoroSF1IMR97eq1M8wyRugog
+Message-ID: <CAMuHMdXq7xubX4a6SZWcC1HX+_TsKeQigDVQrWvA=js5bhaUiQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] bitfield: Add non-constant field_{prep,get}() helpers
 To: Yury Norov <yury.norov@gmail.com>
 Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
 	Nicolas Ferre <nicolas.ferre@microchip.com>, 
@@ -105,67 +105,186 @@ Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
 	linux-crypto@vger.kernel.org, linux-edac@vger.kernel.org, qat-linux@intel.com, 
 	linux-gpio@vger.kernel.org, linux-aspeed@lists.ozlabs.org, 
 	linux-iio@vger.kernel.org, linux-sound@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	linux-kernel@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 
 Hi Yury,
 
-On Fri, 17 Oct 2025 at 18:37, Yury Norov <yury.norov@gmail.com> wrote:
-> On Fri, Oct 17, 2025 at 12:54:09PM +0200, Geert Uytterhoeven wrote:
-> > There is no need to prefix macro parameters with underscores.
-> > Remove the underscores.
+On Fri, 17 Oct 2025 at 20:51, Yury Norov <yury.norov@gmail.com> wrote:
+> On Fri, Oct 17, 2025 at 12:54:10PM +0200, Geert Uytterhoeven wrote:
+> > The existing FIELD_{GET,PREP}() macros are limited to compile-time
+> > constants.  However, it is very common to prepare or extract bitfield
+> > elements where the bitfield mask is not a compile-time constant.
 > >
-> > Suggested-by: David Laight <david.laight.linux@gmail.com>
+> > To avoid this limitation, the AT91 clock driver and several other
+> > drivers already have their own non-const field_{prep,get}() macros.
+> > Make them available for general use by consolidating them in
+> > <linux/bitfield.h>, and improve them slightly:
+> >   1. Avoid evaluating macro parameters more than once,
+> >   2. Replace "ffs() - 1" by "__ffs()",
+> >   3. Support 64-bit use on 32-bit architectures.
+> >
+> > This is deliberately not merged into the existing FIELD_{GET,PREP}()
+> > macros, as people expressed the desire to keep stricter variants for
+> > increased safety, or for performance critical paths.
+> >
 > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Acked-by: Crt Mori <cmo@melexis.com>
 > > ---
 > > v4:
-> >   - Update recently introduced FIELD_MODIFY() macro,
+> >   - Add Acked-by,
+> >   - Rebase on top of commit 7c68005a46108ffa ("crypto: qat - relocate
+> >     power management debugfs helper APIs") in v6.17-rc1,
+> >   - Convert more recently introduced upstream copies:
+> >       - drivers/edac/ie31200_edac.c
+> >       - drivers/iio/dac/ad3530r.c
+>
+> Can you split out the part that actually introduces the new API?
+
+Unfortunately not, as that would cause build warnings/failures due
+to conflicting redefinitions.
+That is a reason why I want to apply this patch ASAP: new copies show
+up all the time.
 
 > > --- a/include/linux/bitfield.h
 > > +++ b/include/linux/bitfield.h
-> > @@ -60,68 +60,68 @@
+> > @@ -220,4 +220,40 @@ __MAKE_OP(64)
+> >  #undef __MAKE_OP
+> >  #undef ____MAKE_OP
 > >
-> >  #define __bf_cast_unsigned(type, x)  ((__unsigned_scalar_typeof(type))(x))
-> >
-> > -#define __BF_FIELD_CHECK(_mask, _reg, _val, _pfx)                    \
-> > +#define __BF_FIELD_CHECK(mask, reg, val, pfx)                                \
-> >       ({                                                              \
-> > -             BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask),          \
-> > -                              _pfx "mask is not constant");          \
-> > -             BUILD_BUG_ON_MSG((_mask) == 0, _pfx "mask is zero");    \
-> > -             BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?           \
-> > -                              ~((_mask) >> __bf_shf(_mask)) &        \
-> > -                                     (0 + (_val)) : 0,               \
-> > -                              _pfx "value too large for the field"); \
-> > -             BUILD_BUG_ON_MSG(__bf_cast_unsigned(_mask, _mask) >     \
-> > -                              __bf_cast_unsigned(_reg, ~0ull),       \
-> > -                              _pfx "type of reg too small for mask"); \
-> > -             __BUILD_BUG_ON_NOT_POWER_OF_2((_mask) +                 \
-> > -                                           (1ULL << __bf_shf(_mask))); \
-> > +             BUILD_BUG_ON_MSG(!__builtin_constant_p(mask),           \
-> > +                              pfx "mask is not constant");           \
-> > +             BUILD_BUG_ON_MSG((mask) == 0, pfx "mask is zero");      \
-> > +             BUILD_BUG_ON_MSG(__builtin_constant_p(val) ?            \
-> > +                              ~((mask) >> __bf_shf(mask)) &  \
-> > +                                     (0 + (val)) : 0,                \
-> > +                              pfx "value too large for the field"); \
-> > +             BUILD_BUG_ON_MSG(__bf_cast_unsigned(mask, mask) >       \
-> > +                              __bf_cast_unsigned(reg, ~0ull),        \
-> > +                              pfx "type of reg too small for mask"); \
-> > +             __BUILD_BUG_ON_NOT_POWER_OF_2((mask) +                  \
-> > +                                           (1ULL << __bf_shf(mask))); \
-> >       })
+> > +/**
+> > + * field_prep() - prepare a bitfield element
+> > + * @mask: shifted mask defining the field's length and position
+> > + * @val:  value to put in the field
+> > + *
+> > + * field_prep() masks and shifts up the value.  The result should be
+> > + * combined with other fields of the bitfield using logical OR.
+> > + * Unlike FIELD_PREP(), @mask is not limited to a compile-time constant.
+> > + */
+> > +#define field_prep(mask, val)                                                \
+> > +     ({                                                              \
+> > +             __auto_type __mask = (mask);                            \
+> > +             typeof(mask) __val = (val);                             \
+> > +             unsigned int __shift = sizeof(mask) <= 4 ?              \
+> > +                                    __ffs(__mask) : __ffs64(__mask); \
+> > +             (__val << __shift) & __mask;    \
 >
-> I agree that underscored parameters are excessive. But fixing them has
-> a side effect of wiping the history, which is a bad thing.
->
-> I would prefer to save a history over following a rule that seemingly
-> is not written down. Let's keep this untouched for now, and if there
-> will be a need to move the code, we can drop underscores as well.
+> __ffs(0) is undef. The corresponding comment in
+> include/asm-generic/bitops/__ffs.h explicitly says: "code should check
+> against 0 first".
 
-Fair enough.
-So I assume you are fine with not having underscored parameters in
-new code, like in [PATCH v4 2/4]?
+An all zeroes mask is a bug in the code that calls field_{get,prep}().
+
+> I think mask = 0 is a sign of error here. Can you add a code catching
+> it at compile time, and maybe at runtime too? Something like:
+>
+>  #define __field_prep(mask, val)
+>  ({
+>         unsigned __shift = sizeof(mask) <= 4 ? __ffs(mask) : __ffs64(mask);
+>         (val << __shift) & mask;
+>  })
+>
+>  #define field_prep(mask, val)
+>  ({
+>         unsigned int __shift;
+>         __auto_type __mask = (mask), __ret = 0;
+>         typeof(mask) __val = (val);
+>
+>         BUILD_BUG_ON_ZERO(const_true(mask == 0));
+
+Futile, as code with a constant mask should use FIELD_PREP() instead.
+
+>
+>         if (WARN_ON_ONCE(mask == 0))
+>                 goto out;
+>
+>         __ret = __field_prep(__mask, __val);
+>  out:
+>         ret;
+>  })
+
+Should we penalize all users (this is a macro, thus inlined everywhere)
+to protect against something that is clearly a bug in the caller?
+E.g. do_div() does not check for a zero divisor either.
+
+> > +
+> > +/**
+> > + * field_get() - extract a bitfield element
+> > + * @mask: shifted mask defining the field's length and position
+> > + * @reg:  value of entire bitfield
+> > + *
+> > + * field_get() extracts the field specified by @mask from the
+> > + * bitfield passed in as @reg by masking and shifting it down.
+> > + * Unlike FIELD_GET(), @mask is not limited to a compile-time constant.
+> > + */
+> > +#define field_get(mask, reg)                                         \
+> > +     ({                                                              \
+> > +             __auto_type __mask = (mask);                            \
+> > +             typeof(mask) __reg =  (reg);                            \
+>
+> This would trigger Wconversion warning. Consider
+>         unsigned reg = 0xfff;
+>         field_get(0xf, reg);
+>
+> <source>:6:26: warning: conversion to 'int' from 'unsigned int' may change the sign of the result [-Wsign-conversion]
+>     6 |     typeof(mask) __reg = reg;
+>       |                          ^~~
+>
+> Notice, the __auto_type makes the __mask to be int, while the reg is
+
+Apparently using typeof(mask) has the same "issue"...
+
+> unsigned int. You need to do:
+>
+>         typeof(mask) __reg = (typeof(mask))(reg);
+
+... so the cast is just hiding the issue? Worse, the cast may prevent the
+compiler from flagging other issues, e.g. when accidentally passing
+a pointer for reg.
+
+>
+> Please enable higher warning levels for the next round.
+
+Enabling -Wsign-conversion gives lots of other (false positive?)
+warnings.
+
+> Also, because for numerals __auto_type is int, when char is enough - are
+> you sure that the macro generates the optimal code? User can workaround it
+> with:
+>
+>         field_get((u8)0xf, reg)
+>
+> but it may not be trivial. Can you add an example and explanation please?
+
+These new macros are intended for the case where mask is not a constant.
+So typically it is a variable of type u32 or u64.
+
+> > +             unsigned int __shift = sizeof(mask) <= 4 ?              \
+> > +                                    __ffs(__mask) : __ffs64(__mask); \
+>
+> Can you use BITS_PER_TYPE() here?
+
+Yes, I could use BITS_PER_TYPE(unsigned long) here, to match the
+parameter type of __ffs() (on 64-bit platforms, __ffs() can be used
+unconditionally anyway), at the expense of making the line much longer
+so it has to be split.  Is that worthwhile?
+
+>
+> > +             (__reg & __mask) >> __shift;    \
+> > +     })
+> > +
+>
+> When mask == 0, we shouldn't touch 'val' at all. Consider
+>
+>         field_get(0, get_user(ptr))
+>
+> In this case, evaluating 'reg' is an error, similarly to memcpy().
+
+Again, a zero mask is a bug.
+
+Thanks!
 
 Gr{oetje,eeting}s,
 
