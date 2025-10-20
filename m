@@ -1,118 +1,180 @@
-Return-Path: <linux-gpio+bounces-27304-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27305-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88536BF0F5E
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 13:58:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 35F3DBF11FD
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 14:21:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 492434010D2
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 11:57:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B477F3E2C57
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 12:18:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1E94304BD7;
-	Mon, 20 Oct 2025 11:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b="0gEXgnIY"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6024E32B996;
+	Mon, 20 Oct 2025 12:13:43 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from polaris.svanheule.net (polaris.svanheule.net [84.16.241.116])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8B930FC3B
-	for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 11:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.241.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6B33148A1
+	for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 12:13:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760961416; cv=none; b=nTL/3V2S7p9usHbW5VfKQCxDubCjt/m74cgPptVaDCaFo4AP2LZeMucbmh+6FmJanFhZcuVIMQOdEc8596htB6YeflP47Ml2t+PzEs85A6lIDTx7mHGvf2hWgUzY8u0ISRlyEfke9m+moxZH1mvGMLyx3199sUzd/+n6E/YWnpo=
+	t=1760962423; cv=none; b=LD7ZAmH7j12MtSWrtH7AJmvNlVddMjJSWWKkqDqTAwy6m6A8uFTDrNqnc5rtFamdyX+f+etAO5k7eMqc2NF1HjYFaabyN2RV06jivjyD4IX7WC7pwrXyoLRKW+3XQct8/SOtOJqP5Tv6vNDnkamX0j51zh49PrDO+9/mXrLLwvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760961416; c=relaxed/simple;
-	bh=ZTbA1qfwtTWnDUQYYQBEGnlG6EasH/qpBuqL+ZHu52s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HlFUclxE4Hmkbv8GRFdk2hoDzMe5JZYFrXYsZp/wdap/YFwi7AWCK0b6YfOMOq7QrS8K1CI5/3dLGmS/ox95KrAqdcKYiIBBb63XSTKjO8QjMoixECVXEt4YXlHaVauhqPSUmKAZu6QSLac3gppuP9cMZepA+s6Sx+lSM0aPqsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net; spf=pass smtp.mailfrom=svanheule.net; dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b=0gEXgnIY; arc=none smtp.client-ip=84.16.241.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svanheule.net
-Received: from terra.vega.svanheule.net (2a02-1812-162c-8f00-1e2d-b404-3319-eba8.ip6.access.telenet.be [IPv6:2a02:1812:162c:8f00:1e2d:b404:3319:eba8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sander@svanheule.net)
-	by polaris.svanheule.net (Postfix) with ESMTPSA id C85BF6892EB;
-	Mon, 20 Oct 2025 13:56:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
-	s=mail1707; t=1760961406;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DK3/svln/NWfvJpk3kK/gSDPYhLgNuFCyCVVwQR5cTc=;
-	b=0gEXgnIYO0LcIXcoTDOotM4/yx/qYtb+x670dvp+wGnsUaTaSa+mnv6XJWCPC94vrTnhaE
-	tL4qbWhZkvDERsOaGwuyu7/07rUFTbvSVLhTD5RoVsNM3UslAF1QuUcB5DB9NoW9rbxC1N
-	YjEDClZFzb6NW/0rc2Nu3UK9GvTp0qTbhKVwJ/G1ayLBpARKEZ6/rbzgzxrVSiB5CHq6Vm
-	VxozR9cTJ1BVb6BqXiLmsR7azTpdVacUfAlWmtlGYBc0RBBcjVHUvwN+zc+Cr/ccKHK557
-	4sJfrSCHKkZdlj/mV7zxNApIHY6mz0BH86dabLxmmaJgEVYDWt/e4cJa+PtBYQ==
-From: Sander Vanheule <sander@svanheule.net>
-To: Michael Walle <mwalle@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Sander Vanheule <sander@svanheule.net>
-Subject: [RFC PATCH 2/2] gpio: regmap: Bypass cache for aliased outputs
-Date: Mon, 20 Oct 2025 13:56:36 +0200
-Message-ID: <20251020115636.55417-3-sander@svanheule.net>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251020115636.55417-1-sander@svanheule.net>
-References: <20251020115636.55417-1-sander@svanheule.net>
+	s=arc-20240116; t=1760962423; c=relaxed/simple;
+	bh=zQJyABbFIFRgraIjRfB4Kv0edNHngRx2HTU3PnrqMSo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TneE9tcWlkPE1BAxHVh81ygzVUb4NLWxmLj5h8qfLCT/2e1ZCAdqZlKWfBhP00ZHd2jAURi+JRo1BC39EZphvd3Tikv5ZKmP1PHqC85jAWh1Ii7jbIaA8A0COfHr7CHPDmvUKtVj7VI2O9FcZ9RcN17kai05jKPsGmsQ/fC9Vpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-932cf836259so368976241.3
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 05:13:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760962419; x=1761567219;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Pomt2ITXhIHlFit8dq3w5svz3PMdwi8h98cx9ZzxHC0=;
+        b=ZI+W75Obglwm4ci4mfQQsoesAaxPUQkv5N8l7eRnpDyIoPa3s0kH4fGDQ1ztTyTVZt
+         CeKPaSkBXdIL/33kB/Kqz7fmNQXn86GK1NHf6iXw9MlbHUSIdSPYaj0eREcK8t9bP059
+         oHgSYwAkgn+VgEnFvSOpm1pL6pbSxZXpsB9Vf2y0Zvg49AxY1mXTQ1D5e60vQc7fnQpi
+         91yuZCHmoaD2FXjq/7/PuZJOkthDYcMfmp+/1OvM6ObHninGz6P4rmSBP55hEE+3W2m0
+         sIDEDm64UdxUDGYuQqvmPFP+XPrUstXGW+1gGCcv7cQdBvoT7EyyWJdZMtaPEPfMMHZm
+         OM3A==
+X-Forwarded-Encrypted: i=1; AJvYcCXjTvarg14gwNH0bqeqA1MXzu/8BfNwq8skfL4Y2Xq3HBjH9PdxCVobh2NCQJW3r46kVaqJcQn4tr7E@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsMJYRy+i6o+fSPl19UYD7PRMiNxhychKrK15tU/ANb6d4VjNo
+	1o/GK4TTO+iv1q0fbldFNDc4FE/ocnydcYm4wTotxDB3c+8mqi8rCdy314b+m36d
+X-Gm-Gg: ASbGnctQA74OuDsyDY/auTMA/We73/8ppzUZlpIltlAUECJ5qW2bf0FrkkJTHKSR0BQ
+	cfE3IMFMXi0Rg7hOE1EdSGIR2tkq1o+MnIoGSOZKjj2Q+g54Rne3zQiLlrIHcRPRQMpt7eslLkc
+	0fhP6g/7gGgidRnkANikMiSHQlXh2a/3EkWFffsQe3kNgP5002Kjx4a9K2u2i942zMyyYrj/Uci
+	AgICves5G9kBxmRgHREXzrnIaKQ6kwPwjSDlG8jibKOqebatdJLiRVQnN8W91jEgyDEfRColmDY
+	k/FxVk/S1jQVkfupti6xf5XSq1c6FPDbH++ocyvauKS8HNKL8eh5lSORuaJs7PftmxRnWWeqs9s
+	41JAGjPYeM0yn4Jj5v+LGG3amsqdU7WSWojJluL0wsq3rh5gwFfIqMXlZZuCRvkKkGg92rMH9Iy
+	xsWDomxNMidFuKCvn54ZZ5g5RoAWeQJdLeVg2+evltxDTcD2Kl
+X-Google-Smtp-Source: AGHT+IEgVmnJrMSuuPhod2YkGe2BmKE+0Fy8L6hNljl5fVl5bRhk5+4O/MZwKvivPyzwbfwWnX2uqg==
+X-Received: by 2002:a05:6102:2908:b0:5d5:d1ba:439b with SMTP id ada2fe7eead31-5d7dd595e22mr3530573137.11.1760962418873;
+        Mon, 20 Oct 2025 05:13:38 -0700 (PDT)
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com. [209.85.222.53])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-932c3d85760sm2423662241.1.2025.10.20.05.13.37
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Oct 2025 05:13:38 -0700 (PDT)
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-932c247fb9aso703605241.2
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 05:13:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVZvhKuGMkDMl1L1/aZRpXLZwzX/aBUGpmgDd2UhlmI1xWx9GjjK+P2L4oRUorwkUXyOKTvqE03veX0@vger.kernel.org
+X-Received: by 2002:a05:6102:50a2:b0:5d5:f6ae:38ca with SMTP id
+ ada2fe7eead31-5d7dd6f4c27mr3609494137.41.1760962417639; Mon, 20 Oct 2025
+ 05:13:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1760696560.git.geert+renesas@glider.be> <792d176149bc4ffde2a7b78062388dc2466c23ca.1760696560.git.geert+renesas@glider.be>
+ <aPJwtZSMgZLDzxH8@yury>
+In-Reply-To: <aPJwtZSMgZLDzxH8@yury>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 20 Oct 2025 14:13:26 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXCoqZmSqRAfujib=2fk0Ob1FiPYWBj8vMXfuXNoKhfVg@mail.gmail.com>
+X-Gm-Features: AS18NWDS1vbUG4-z_--VlQ3gjSspwjijy0fs8EPqX7O88cWCZQUNQKHTmAYei1k
+Message-ID: <CAMuHMdXCoqZmSqRAfujib=2fk0Ob1FiPYWBj8vMXfuXNoKhfVg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] bitfield: Drop underscores from macro parameters
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	David Miller <davem@davemloft.net>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>, 
+	Andrew Jeffery <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>, 
+	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Jacky Huang <ychuang3@nuvoton.com>, 
+	Shan-Chun Hung <schung@nuvoton.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, Jakub Kicinski <kuba@kernel.org>, Alex Elder <elder@ieee.org>, 
+	David Laight <david.laight.linux@gmail.com>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
+	Jason Baron <jbaron@akamai.com>, Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Kim Seer Paller <kimseer.paller@analog.com>, 
+	David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Richard Genoud <richard.genoud@bootlin.com>, 
+	Cosmin Tanislav <demonsingur@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Jianping Shen <Jianping.Shen@de.bosch.com>, linux-clk@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-edac@vger.kernel.org, qat-linux@intel.com, 
+	linux-gpio@vger.kernel.org, linux-aspeed@lists.ozlabs.org, 
+	linux-iio@vger.kernel.org, linux-sound@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-GPIO chips often have data input and output registers aliased to the
-same offset. The output register is non-valitile and could in theory be
-cached. The input register however is volatile by nature and hence
-should not be cached, resulting in different requirements for reads and
-writes.
+Hi Yury,
 
-The generic gpiochip implementation stores a shadow value of the pin
-output data, which is updated and written to hardware on output data
-changes. Pin input values are always obtained by reading the aliased
-data register from hardware.
+On Fri, 17 Oct 2025 at 18:37, Yury Norov <yury.norov@gmail.com> wrote:
+> On Fri, Oct 17, 2025 at 12:54:09PM +0200, Geert Uytterhoeven wrote:
+> > There is no need to prefix macro parameters with underscores.
+> > Remove the underscores.
+> >
+> > Suggested-by: David Laight <david.laight.linux@gmail.com>
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> > v4:
+> >   - Update recently introduced FIELD_MODIFY() macro,
 
-For gpio-regmap the output data could be in multiple registers, but we
-can use the regmap cache support to shadow the output values by marking
-the data registers as non-volatile. By using regmap_read_bypassed() we
-can still treat the input values as volatile, irrespective of the regmap
-config. This ensures proper functioning of writing the output register
-with regmap_write_bits(), which will then use and update the cache only
-on data writes, gaining some performance from the cached output values.
+> > --- a/include/linux/bitfield.h
+> > +++ b/include/linux/bitfield.h
+> > @@ -60,68 +60,68 @@
+> >
+> >  #define __bf_cast_unsigned(type, x)  ((__unsigned_scalar_typeof(type))(x))
+> >
+> > -#define __BF_FIELD_CHECK(_mask, _reg, _val, _pfx)                    \
+> > +#define __BF_FIELD_CHECK(mask, reg, val, pfx)                                \
+> >       ({                                                              \
+> > -             BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask),          \
+> > -                              _pfx "mask is not constant");          \
+> > -             BUILD_BUG_ON_MSG((_mask) == 0, _pfx "mask is zero");    \
+> > -             BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?           \
+> > -                              ~((_mask) >> __bf_shf(_mask)) &        \
+> > -                                     (0 + (_val)) : 0,               \
+> > -                              _pfx "value too large for the field"); \
+> > -             BUILD_BUG_ON_MSG(__bf_cast_unsigned(_mask, _mask) >     \
+> > -                              __bf_cast_unsigned(_reg, ~0ull),       \
+> > -                              _pfx "type of reg too small for mask"); \
+> > -             __BUILD_BUG_ON_NOT_POWER_OF_2((_mask) +                 \
+> > -                                           (1ULL << __bf_shf(_mask))); \
+> > +             BUILD_BUG_ON_MSG(!__builtin_constant_p(mask),           \
+> > +                              pfx "mask is not constant");           \
+> > +             BUILD_BUG_ON_MSG((mask) == 0, pfx "mask is zero");      \
+> > +             BUILD_BUG_ON_MSG(__builtin_constant_p(val) ?            \
+> > +                              ~((mask) >> __bf_shf(mask)) &  \
+> > +                                     (0 + (val)) : 0,                \
+> > +                              pfx "value too large for the field"); \
+> > +             BUILD_BUG_ON_MSG(__bf_cast_unsigned(mask, mask) >       \
+> > +                              __bf_cast_unsigned(reg, ~0ull),        \
+> > +                              pfx "type of reg too small for mask"); \
+> > +             __BUILD_BUG_ON_NOT_POWER_OF_2((mask) +                  \
+> > +                                           (1ULL << __bf_shf(mask))); \
+> >       })
+>
+> I agree that underscored parameters are excessive. But fixing them has
+> a side effect of wiping the history, which is a bad thing.
+>
+> I would prefer to save a history over following a rule that seemingly
+> is not written down. Let's keep this untouched for now, and if there
+> will be a need to move the code, we can drop underscores as well.
 
-Signed-off-by: Sander Vanheule <sander@svanheule.net>
----
- drivers/gpio/gpio-regmap.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Fair enough.
+So I assume you are fine with not having underscored parameters in
+new code, like in [PATCH v4 2/4]?
 
-diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-index ba3c19206ccf..afecacf7607f 100644
---- a/drivers/gpio/gpio-regmap.c
-+++ b/drivers/gpio/gpio-regmap.c
-@@ -81,7 +81,11 @@ static int gpio_regmap_get(struct gpio_chip *chip, unsigned int offset)
- 	if (ret)
- 		return ret;
- 
--	ret = regmap_read(gpio->regmap, reg, &val);
-+	/* ensure we don't spoil any register cache with pin input values */
-+	if (gpio->reg_dat_base == gpio->reg_set_base)
-+		ret = regmap_read_bypassed(gpio->regmap, reg, &val);
-+	else
-+		ret = regmap_read(gpio->regmap, reg, &val);
- 	if (ret)
- 		return ret;
- 
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.51.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
