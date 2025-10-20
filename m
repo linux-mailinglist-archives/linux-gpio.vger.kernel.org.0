@@ -1,125 +1,175 @@
-Return-Path: <linux-gpio+bounces-27328-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27329-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5C6FBF3C50
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 23:35:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F516BF3C9B
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 23:51:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 726C1351955
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 21:35:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 035C9427EE9
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 21:51:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD31E2EDD40;
-	Mon, 20 Oct 2025 21:35:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89DDA2EF676;
+	Mon, 20 Oct 2025 21:51:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PE7buZHj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Iqr8XXxg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3CC2DFF28
-	for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 21:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713DF2E7F11
+	for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 21:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760996126; cv=none; b=Sg1O6Y69KYeuTd3uTtyWtDVJGo/YUWmJYX7T0T+oTMp2BeTBcOveboiMTgGtSF8Yo/eK/+b0Lm1ZF3LWmhyERwfw5OMBHTzTeztfsOEfttYzbHo1Dw8Ve6CXi5xxXfzmN5xCbyUd+B702+TG5pYNEX/qzLh/JPwrvXjDGcoWO8A=
+	t=1760997104; cv=none; b=bWFH6gF+5T3WqDynibTtljrzXQcx/tkP1xT847MNFiyRx/sVMDTB4RoKfwlR/qtwhXaPSA3WCuPz30BqGsBJyHqnL5uZEHqndyeTejUAqngfNFC0lUVoDfWPVsadcoOuyDpQG0HsJOuf8x7FuvIpGxXZstHkKpCZ0G/msAVk9SY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760996126; c=relaxed/simple;
-	bh=p+3sYnwm/zVmUqqbZ6Lan1Fe/EeeP/Xr5dbG7CHwG7Y=;
+	s=arc-20240116; t=1760997104; c=relaxed/simple;
+	bh=aX/9JxdC1TRA48rktBau1D7ApsTGPEIpWfYv5Df8iIU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XFrchrl/qfe2wBNl9ZiqtIa+FKN0QrDOv1Z0c9vP0rqxdgnl4qVVhVMwdYeVZ/Lo8NzOvWI/F/Mbe0/CqzFC3aIOzw/RYuWpI+gcAfWrDJQtMSBdBG93akyVC1KBSew5qfElG4qQ7WbcN5WiyYfzp1YhZgbrAPtoPL4CK/sxUDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PE7buZHj; arc=none smtp.client-ip=209.85.128.182
+	 To:Cc:Content-Type; b=mxDLQRJC/6r4OVTJtoSLz/zoqYXUgMb3jMalPHGLqfKsOJZM1IPpFlzTqfubYNsEtSAkvK707wozn237vywu/XH7q0Yg4oCmENr65wFiuNetckIVuELcb1Abx+ZlhsmWWvCeayIQ6W2u0r06Ht4SiHiFSrK9YalQ4piF88S+YKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Iqr8XXxg; arc=none smtp.client-ip=209.85.128.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-784a5f53e60so13113187b3.2
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 14:35:24 -0700 (PDT)
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-7836853a0d6so71171567b3.1
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 14:51:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1760996123; x=1761600923; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1760997101; x=1761601901; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=p+3sYnwm/zVmUqqbZ6Lan1Fe/EeeP/Xr5dbG7CHwG7Y=;
-        b=PE7buZHjoYUMImtbfQNuaX+nnmlXX0XVVE4OhOMIKupSEDMANMsRMetsBK08uqy9At
-         1ukTlNhpTEXQrM8BahxXobWCEbiHW7aWVf1NWaIFS3gablTeWO93iMG4LU1l9+cCvhYH
-         7tPLZf8TCIvYEugcAzJA5ee8dZgQLC2ZY6qu12KFYAw022n6+w2D/bEPPh8qiOB6GmHy
-         nGo9fDaU0220t0tuLMv4f2WWl0fLIrDUMy5DWw2lnePBzMljbpA7pzYa5Ni8uDXxb7Yb
-         +Yn+cMf8PyBX6KFf1okxtiAiwDvRW9AVz1yHmzxK4J9XtSee1T7ifpwWG2hxFnDKzp2Y
-         EPPA==
+        bh=aX/9JxdC1TRA48rktBau1D7ApsTGPEIpWfYv5Df8iIU=;
+        b=Iqr8XXxg9A9KMBZkUGrV445aVZi2OJINE0ZsyknPJVrxS60bpVb/rnh0vZBGMeWgi+
+         5Tg6AHwUat1iL87kkN6dlrVIJBNrVimlrpj2xo7LJvBjiJuSKNGBTq6qybi+j0gbIuaK
+         W2SflEJ9fCaPzd7z1lhp/DK+iT/4scPvD3as1ObyKUSb4wHKjtiFKi2VM62Fd6IcOLkx
+         aYDYxIbvpOGJ4xnpK7AR+0yEbCNJTsVDjsry5bjK3+hUxZ+iqTsZd26ST6YnLECmp8K5
+         DcrF1nR5CbLre+M1mspn6SaZR6SldS4vb8eveiEV4uOPvo58UXRz3UCMSUXadghucz1/
+         E1pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760996123; x=1761600923;
+        d=1e100.net; s=20230601; t=1760997101; x=1761601901;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=p+3sYnwm/zVmUqqbZ6Lan1Fe/EeeP/Xr5dbG7CHwG7Y=;
-        b=Cl6xFiyTH6BAAGNEHCFJB/MRWzSQNabpv68kFptq+fpQAvdoR8OsZRnvQd4sePtU+N
-         muzfI3WounsFITyXRmJyy0tzuCYEGPU24wGX70w6sFs8aW1L1lH7VRGj6vp3/+uVg0ww
-         1ifuhcD/um4Nxw1nvC8evGiLWHEe7rQs7/4b0rSPFoullCNT9sEA+GhtNRACV9+sJfzq
-         Om/Q7XGpBTeWo2Y81HPYHK9ighks8E7ZtOdA+yNH3BeVomBjXngFazkRs7Jx79jjLU5/
-         4RWhXBYz2tifxd5XuCWgd6UaKUqEP1DaZbyyWONblycwDitK9hJ8CQGPUgb6RjbrjaGg
-         wlaA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9NOju2gIABNbtNiyIH0xUl81JhXSy/g9bGYk4mw9nMXOjX/iYlHQKERM9QuqmtwhhE4VpVcIwXFVx@vger.kernel.org
-X-Gm-Message-State: AOJu0YziZzA/hkWLKio465rLdjC3efoizGq3tevRFQvPCGBhgDRzdpOx
-	6QqoqJSe7StaL58/YZrF9ie7AcOfPmx0Xize2fqD8ixaGRkKi38BvX2N8aiJM1FYkh46YNwZtY/
-	xzHC3SiK43F5VMrv4T+Dscce3PrPk/r6fCqLbGaTXNg==
-X-Gm-Gg: ASbGncuQrhmTUjX7hSqpLyCf0vT/5igucILQzFaBg/lhE83aCczhB+XyFNrIdCV/pAf
-	TmAII0t0yky6GAz7mZ6hTzaXiE38xX5wPdMFebhX/KeNaYBO0h9OIpp/57JtFLNDVleSVrYoxpa
-	Ctp8fMhsU4b7qqUQU/B4rEn4knsWmaeyUFgTRNqS55P+QoqdoUczfcnEA76Y/NJUd5CKbjIOy1j
-	c/1ksbjtXW+s8UJf2CGqEYO8v9Au8JEVyQv23soaG9lB5iKxFd3rMCrzyT++oAHKbb2yWs=
-X-Google-Smtp-Source: AGHT+IHcbLV8sjcTUSW/kYKLFIDfgxSVgbG/hCotLfs+E1Yurw11PQwO89zUraRAtmdIvysGYrHzIqa+Gk+I+qbLfMk=
-X-Received: by 2002:a05:690e:408b:b0:63e:221e:bd38 with SMTP id
- 956f58d0204a3-63e221ebe30mr9755360d50.64.1760996123201; Mon, 20 Oct 2025
- 14:35:23 -0700 (PDT)
+        bh=aX/9JxdC1TRA48rktBau1D7ApsTGPEIpWfYv5Df8iIU=;
+        b=EG3oF018WFa1StQ0V9ThjEwfnu2q4R2aWHjdO/2jIVY789FaVBUkpwQEutYrVFAr36
+         5kQyb7m9+6fJX3vf7ALk2LLXJezfp93yBncCrbLoRgqQgNgXUV2Hh7WxqSK6Dv2SC5ka
+         9fuNzDRqX6CfN6ForJpF58DOrjuFH2f/UdLc1G6pFZm+vERds4wfoWh62cE4A42Gv2ur
+         UKltpBD7AEhBYrd8E3yYJbyCL0r8jbobAcWI5dS06gtBz7pljy1yWvNBJtQyFWF0kwk4
+         TZ/FnqzRdkGExhdYH+l/SZMkRBqyd6Uq7s9Mnpey5RCrHWoi5YZEfIjxhMwLrY/mceLP
+         G1xA==
+X-Forwarded-Encrypted: i=1; AJvYcCWRQ2GJwcPFtM7w6z0SNFmZvV4PDYa4iZcWBM2PpwiMa35cBLnTwrgQY5HPsp0TorA2IyVzO1XyJMKO@vger.kernel.org
+X-Gm-Message-State: AOJu0YymBI9Ti8taxGroI7SXYqsY6tRLmSSg+zvtJG6LOArJJzUUqESn
+	IZ1RKFzMePLoAjBbRYMzG95KBI9yPqtDIiOtQfBTNcuMGacBLJPzuYV5zRDmDyObb2BPZPZ/wU/
+	3Xrw24oE+XBIUSJLZD/D3s7rvzRLaJ+8DCqvdnKKPHg==
+X-Gm-Gg: ASbGncvYNi1eIquv36CwehNUMSQWZMzbqp0jOwx44trJq1ej3UWUSVxzk415Oiacvgz
+	/N2MyWnR/QIM45YVqeGIHRJkq+rp9iZ2i+gzmkAWqgzQ0XsyG1T4GznVAORzZ4fyZUXZ2lAO8OB
+	utZaGUbnFs4tIlsR25CIdQLdHnkzngLgWcBHbKUHoX4Kl+BlewXMWzYwwy4lsNTNJkFanVhxwm0
+	To0EgxxD9AypO+PCyAmEFRA26/k1q6gFpuc2CdYgDuEirR8VFs33dqq5RCZ
+X-Google-Smtp-Source: AGHT+IGRaOydtzDQqQLvW6se3/Vk6k+Gd4ZdqugfWoQAiRZ4x3gHuCWHJg7LiPH2eudgGlv8FQTadoN2iFpSXJhpXo4=
+X-Received: by 2002:a05:690e:1487:b0:635:4ed0:5722 with SMTP id
+ 956f58d0204a3-63e16225bf2mr10798873d50.26.1760997101257; Mon, 20 Oct 2025
+ 14:51:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251015232015.846282-1-robh@kernel.org>
-In-Reply-To: <20251015232015.846282-1-robh@kernel.org>
+References: <0c4bc190-7049-4753-b88e-479a3ff584fc@oss.nxp.com> <aPEtEnd3kG_pxWPf@pluto>
+In-Reply-To: <aPEtEnd3kG_pxWPf@pluto>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 20 Oct 2025 23:35:10 +0200
-X-Gm-Features: AS18NWBAzh5HU2QEiT3WGw7lWd7_MVL73oGUD23tlLIja0Rs_422Nhq3kpTmHsU
-Message-ID: <CACRpkdZFXxBY2AopX2bgFGE_nhXmV3YirfRwuo4L6qWzzAC4rg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Fix inconsistent quoting
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Stephen Boyd <sboyd@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
-	Jassi Brar <jassisinghbrar@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Lee Jones <lee@kernel.org>, Joel Stanley <joel@jms.id.au>, 
-	Andrew Jeffery <andrew@codeconstruct.com.au>, Andrew Lunn <andrew@lunn.ch>, 
-	Vladimir Oltean <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Daire McNamara <daire.mcnamara@microchip.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Florian Fainelli <f.fainelli@gmail.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-iio@vger.kernel.org, linux-media@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-phy@lists.infradead.org
+Date: Mon, 20 Oct 2025 23:51:28 +0200
+X-Gm-Features: AS18NWA4FdGF7CF4cd4_wWTv_JtZlgqANoY89SKPmaKzU6AhIdj0GgLszFkIkII
+Message-ID: <CACRpkdYgv1czD-GjcnZvq25TYxjaMpa9VjyzXJ3zVtaFc=cBJg@mail.gmail.com>
+Subject: Re: pinctrl-scmi: Support for pin-only mode when groups are unavailable
+To: Cristian Marussi <cristian.marussi@arm.com>
+Cc: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>, arm-scmi@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 16, 2025 at 1:20=E2=80=AFAM Rob Herring (Arm) <robh@kernel.org>=
- wrote:
+On Thu, Oct 16, 2025 at 7:37=E2=80=AFPM Cristian Marussi
+<cristian.marussi@arm.com> wrote:
+> On Thu, Oct 16, 2025 at 07:05:21PM +0300, Ciprian Marian Costea wrote:
 
-> yamllint has gained a new check which checks for inconsistent quoting
-> (mixed " and ' quotes within a file). Fix all the cases yamllint found
-> so we can enable the check (once the check is in a release). Use
-> whichever quoting is dominate in the file.
->
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> > I=E2=80=99m currently exploring a solution to improve the 'pinctrl-scmi=
+' [1] driver
+> > so it can better support SCMI platforms that only provide individual pi=
+n
+> > control. At the moment, the driver handles only group-based operations,
+> > which means platforms without pin groups run into limitations.
+> >
+> > According to the SCMI v4.0 specification (section 3.11.2.8), both
+> > group-based and per-pin control modes should be supported. However, on
+> > pin-only platforms, the current implementation cannot enumerate groups,
+> > configure pinmux, or assign functions per pin. This results in probe
+> > failures and '-EINVAL' errors when trying to configure non-existent gro=
+ups.
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+First: it is usually not true that no grouping exist. They are usually
+there in the hardware, it is just that the fact that the programming
+reference document document a register for each pin and you just
+cannot see the forest because of all the trees (pins) literally.
+
+I.e. just because pins *can* be controlled individually, this does
+not mean that it is a good idea for the SCMI-back firmware
+to *expose* them as individually controlled.
+
+Example:
+
+Pins 0, 1, 2, 3
+
+Function uart0:
+Poke 0x3 into register A to turn pin 0 into UART RX
+Poke 0x3 into register A+4 to turn pin 1 into UART TX
+Poke 0x3 into register A+8 to turn pin 2 into UART RTS
+Poke 0x3 into register A+12 to turn pin 3 into UART CTS
+
+Some people will see "4 pins with individual controls"
+
+Some people will see "4 pins in a group exposing a UART
+with RX, TX, RTS, CTS" and create a group of these
+4 pins called uart0_grp =3D { 0, 1, 2, 3 }
+
+Now, often RTS and CTS isn't used, so maybe these
+need their own group and the intended use is more like
+uart0_rx_tx =3D {0, 1}
+uart0_rts_cts =3D {2, 3}
+
+Now the usual complaint from the software engineer
+implementing a FW driver or Linux kernel driver is
+"I don't know what use cases and groups are appropriate".
+
+But this complaint is coming from the same company,
+the same legal body, that produced the whole SoC.
+
+And this is not to act as a coherent company.
+
+This is overall a clear symptom of throw-over-the-wall
+engineering.
+https://en.wikipedia.org/wiki/Traditional_engineering
+
+So I would take a step back and talk to some hardware
+engineers about this before proceeding. The SCMI
+exposure of groups and functions look like they do for
+a reason: per-pin muxing is use sometimes by hobbyists
+and consultants to SoC companies who have no direct
+insight to the hardware and cannot really communicate
+with HW engineers.
+
+But for a *firmware* we certainly expect the people writing
+that to have talked to the engineer who designed the
+grouping inherent in the hardware. At least try hard.
+
+Then there is the last resort which I would think twice
+before implementing:
+
+What the Qualcomm driver does is to create a group
+for every single pin, e.g.
+
+gpio0_grp =3D {0}
+gpio1_grp =3D {1}
+....
 
 Yours,
 Linus Walleij
