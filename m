@@ -1,116 +1,100 @@
-Return-Path: <linux-gpio+bounces-27315-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27316-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F41CBF33EE
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 21:40:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FECABF3997
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 23:00:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3E6E1484FE1
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 19:40:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DAB3B18C43F4
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 21:01:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74445331A4F;
-	Mon, 20 Oct 2025 19:40:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F016B2E62DA;
+	Mon, 20 Oct 2025 20:54:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b="DrErvCRb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pvTYGHBN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from polaris.svanheule.net (polaris.svanheule.net [84.16.241.116])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39212D738E
-	for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 19:40:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.241.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20062D948F
+	for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 20:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760989212; cv=none; b=NEbB9QRzVs1yf1Z72rNkOkB3FnnwVYKNIZe+jsxIwuA2+6n51C/Qz925lBN84BJDq/vN3D2/RgP5oVJ/Q3oMYR3buunRiK+z5WaaULKmf4j+NCXSoVqaC2N463E4dSTN9oRwaVrycY2GjxLkqZsz+umlGCzEJ3A2AL4NjEszcnM=
+	t=1760993690; cv=none; b=gGk31nPiouZxum82vYV94rotdR6d7Y2YfnP0Vb2c4+Y7AFp1bLbM0tD722KMhXMoAlhrQxCFEeJnZme7DYbqFqiWHaaaCM6lbuBrfUHyyMyD/7EGjuyxLf9PrZdnonBpDJEQ9W6l8jSgt6Pa0Y+zF+lNHZz6agrqerwWEjqGjT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760989212; c=relaxed/simple;
-	bh=fwOmHCsXzx/Fac0v9yeNlwfuzxzhrZw7Z/eeVgNNziA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NqeGHD9zoBpCKAbL7Csb9JkbO3JjcSnqnw9wMRRBDSDxVXzCxNLE9VfscW0GLZJ0/tk7BdWXkFavFVAq4KOyUYIBnI8HqWuCHwiAuC6wb7CjWgy352IKLgpLlqHwvV2RCi0se9bsfBGTaFVLIg/Q4jVyomEUR4sgzpiMAM55j5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net; spf=pass smtp.mailfrom=svanheule.net; dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b=DrErvCRb; arc=none smtp.client-ip=84.16.241.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svanheule.net
-Received: from [IPv6:2a02:1812:162c:8f00:1e2d:b404:3319:eba8] (2a02-1812-162c-8f00-1e2d-b404-3319-eba8.ip6.access.telenet.be [IPv6:2a02:1812:162c:8f00:1e2d:b404:3319:eba8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sander@svanheule.net)
-	by polaris.svanheule.net (Postfix) with ESMTPSA id 2ECE66895BA;
-	Mon, 20 Oct 2025 21:40:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
-	s=mail1707; t=1760989206;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j17aJCB4WLcY6pIqkY+HxxakA4ilC4679SdKR5qqsDA=;
-	b=DrErvCRbY5XdWSAxr/j6+8Mg9DDf+e4IJu/1ZgwnhHY3Y/i7ZM19vncmTto3nNvjkG663c
-	PLYh9DC1KTsWvJQc51nmnJ9Bp3vHQs2eaYA1c1Of4jBo6unOL4QKQFvoLplT+DL7ulSBMV
-	nczDklR6c42y5LJGeM9VGTEz/fl9beJLH1RgGy4gcrTuapWeO7NrbnCXqWA6PJt60/M+uj
-	/66OaQ8HhxG36KCYNygez8Rs9d2kjTaBzEvjW7vDSrNJRMQWq7DGQ0ZoBzvsuSm30F1UvQ
-	asyl/XF6JCUdmyfjy9B6VJABxySXoeUChD6QP3FuQdsLhh7kU7WJJ7wRnr1RFA==
-Message-ID: <c046ace3d4569405e167db9cc6ede90048dc0450.camel@svanheule.net>
-Subject: Re: [PATCH v2] pinctrl: mcp23s08: delete regmap reg_defaults to
- avoid cache sync issues
-From: Sander Vanheule <sander@svanheule.net>
-To: bigunclemax@gmail.com
-Cc: Mike Looijmans <mike.looijmans@topic.nl>, Linus Walleij	
- <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>
-Date: Mon, 20 Oct 2025 21:40:04 +0200
-In-Reply-To: <20251009132651.649099-2-bigunclemax@gmail.com>
-References: <20251009132651.649099-2-bigunclemax@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+	s=arc-20240116; t=1760993690; c=relaxed/simple;
+	bh=oaK/JWjJE2/SR6SZ6HaM8FD8DZG7Dm8tlaeIPzqqYqo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=slv5P82KVuJDMWgyKe6TtA1QZWEpto6Sfzukms23Jnrdsv9OYPJ63CxwpAHOi+R3qNwfgp1zAK3KGrx3Aa+tVYJT6cRf/YZkcTWkbYTv0JDs9Y5btKl43XcOrUQy7babido4yUW8Fw+AixAlJrbSin7VbwvyX0NNlMT0Do+3HRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pvTYGHBN; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-3737d09d123so46076731fa.2
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 13:54:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1760993687; x=1761598487; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oaK/JWjJE2/SR6SZ6HaM8FD8DZG7Dm8tlaeIPzqqYqo=;
+        b=pvTYGHBNavA0mpjXa+/P3KBUbjykfrfjSEEVqoopT5LNW32rfthDL6nyNud5G35TVh
+         rZgRll+dWN2Bilg6hsXQe9bLyr0HYcKZjLKb5GZdV5GFTw1JLZRuuZj8Wg6267i3mU98
+         L4uvGQZVw0ycKEg5pxQbRrLNATGqbquVFm4pUWYdUXvk5dZSKObPU6O9t2hx5Gs3T+sj
+         FJZGZAUAMfp7hq+FjkOwEFAP06louhQnJ+cIKO/9pDLckEZww5FOqwRozl24Xs7Kj22S
+         reqWSjJy3A4DdZqwsiBIB0dZ/BSCaAwJ3GfsSkCeFbJxmyAN48ZNLPQ8a+cptQPF5+aC
+         0/Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760993687; x=1761598487;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oaK/JWjJE2/SR6SZ6HaM8FD8DZG7Dm8tlaeIPzqqYqo=;
+        b=u4e7xJsznEX7mZCPL7AamOPZF2/0yGqL2vJp6vJ/hSCgv9mtUEWHg1+Krle2hr63zS
+         7S3qncnVvyRCriMkraFS/T6IkGQlrFUHTSePNMYqzsQL0TRNeuHL3tdumAasFkQpeUYC
+         TAE9q4NlTjS6PpsW9EF9YMAINifR6IzBOXVm4ywlG665btZGd5IFLy2/SmNH9tBNxTsr
+         R0f0PbH9B/cUFtS6Dmx+kaieIvfP5Pa8K2zITfysB9nvraWA+ckjMOCP2MCrgaPwm87I
+         Xb5D1B2uRCjwUeOfV5+NazZiEMdg9kL7D4mU97SYbFXo126V3VFpbTeJe/k/cFpSXykS
+         Kx7g==
+X-Gm-Message-State: AOJu0Yx9UY21WDAjMKMkmWDLNsgIL7ALRN+5bTngt2r1AH7HV5WkDCvp
+	Wt7Ni8gFisbiIBndhd8PKCPW99KWTpB9LyfuJE0LVmo8Sx8APXGEk1MsU9IPEfj6N4+Of+DTVEw
+	bBQNBkYZe5FYyezJKtvqXMmL9SxhtW6Cjj4mpzf8lz0ab8s8c6qStQMU=
+X-Gm-Gg: ASbGnctX4JI8jcl2E1H8us9CDAypslyvG5P3zKu/X9mglyttDU+qTi/JGOKsbSoNQmo
+	/yElaD9ggL4goF4CR/BWuC9ZP8IE5mOBn/+R/+mhlKjTOs5aLM87KZQzQJEOLRwBxcHoYybedyt
+	W1VWUxtruJRJ4saJOrtj3DanUQkJau7C29Wlh/t70MOGtDWGOa5CEvJfmQMAP+lDSDLKva0gy2n
+	rVRmDv8eQKC8OyS7mB8vPaSBjZANECM0EBigOy1Hk3WuZRqUNNdIvglpA1HvNh/2fEq+nc=
+X-Google-Smtp-Source: AGHT+IGkEZv0k1l4p/uUPvNH35UjQXjhgT6RSG3voVwHPgqfteBI2zFP1m5yhreJdrfvetvyzUC+Bdrd+G8VOh9IYx4=
+X-Received: by 2002:a2e:a98b:0:b0:376:45a3:27c0 with SMTP id
+ 38308e7fff4ca-37797a14390mr43192591fa.28.1760993686818; Mon, 20 Oct 2025
+ 13:54:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20251014-function-is-gpio-kerneldoc-v1-1-4e6940a2b37f@linaro.org>
+In-Reply-To: <20251014-function-is-gpio-kerneldoc-v1-1-4e6940a2b37f@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 20 Oct 2025 22:54:35 +0200
+X-Gm-Features: AS18NWCYx5oxW2Z3h3Y51rf2absOGahtNH72Bdb3R7MlXZRoFWbtduApQ7K2j8o
+Message-ID: <CACRpkdY9_XK6bpom1KNeALRAYDfZ=JVswTVGhA+gbNLOAs1iWA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: pinmux: Add missing .function_is_gpio kerneldoc
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, Oct 14, 2025 at 1:03=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
 
-On Thu, 2025-10-09 at 16:26 +0300, bigunclemax@gmail.com wrote:
-> From: Maksim Kiselev <bigunclemax@gmail.com>
->=20
-> The probe function does not guarantee that chip registers are in their
-> default state. Thus using reg_defaults for regmap is incorrect.
->=20
-> ---
->=20
-> @@ -82,25 +71,12 @@ const struct regmap_config mcp23x08_regmap =3D {
-> =C2=A0 .reg_stride =3D 1,
-> =C2=A0 .volatile_table =3D &mcp23x08_volatile_table,
-> =C2=A0 .precious_table =3D &mcp23x08_precious_table,
-> - .reg_defaults =3D mcp23x08_defaults,
-> - .num_reg_defaults =3D ARRAY_SIZE(mcp23x08_defaults),
-> =C2=A0 .cache_type =3D REGCACHE_FLAT,
-> =C2=A0 .max_register =3D MCP_OLAT,
-> =C2=A0 .disable_locking =3D true, /* mcp->lock protects the regmap */
+> This callback was undocumented, add the docs.
+>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-As Andy mentioned, the problem you will now have to deal with is that your =
-cache
-is not initialized at all. Unlike the other cache types, REGCACHE_FLAT will
-zero-initialize its cache, perhaps making your cache sync issues worse.
+Fixed the grammar errors pointed out by Alexander and applied.
 
-You have two options to initialize the cache properly:
- * Provide .num_reg_defaults_raw (=3D MCP_OLAT + 1). This will give you a w=
-arning
-   on probe about the cache defaults being initialized from hardware.
- * Switch to another cache type (REGCACHE_MAPLE), which is aware of (in)val=
-id
-   cache entries. regmap will then init the cache on the first access to a
-   register.
-
-You could also combine the two, like the Cypress driver Andy referred to
-(pinctrl-cy8c95x0.c). In that case you get cache loading at init, instead o=
-f at
-first use, but without the risk of missing something.
-
-Best,
-Sander
+Yours,
+Linus Walleij
 
