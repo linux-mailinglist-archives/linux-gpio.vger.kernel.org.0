@@ -1,184 +1,123 @@
-Return-Path: <linux-gpio+bounces-27293-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27294-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17058BEFD4A
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 10:10:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F326DBEFE7D
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 10:24:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C1B923E5F9A
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 08:08:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 12F0D3E6556
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 08:24:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB01E2EA74A;
-	Mon, 20 Oct 2025 08:08:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B457D2EB86E;
+	Mon, 20 Oct 2025 08:24:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TyxiXm/t"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Y15tKSXK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9052EA461;
-	Mon, 20 Oct 2025 08:08:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA89D178372
+	for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 08:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760947694; cv=none; b=CjWede8CL+RXhtPQG6WGg00virU4mVhTWxrZ/AlnLoIkZTi5hjjDirfkcHaEkwcJRw5pSPQyE8yud/voybrZtZcuQhWGbbVta2iwEq92TR7HHenQJfnGjO17xpIMlZKZKGZDQquVUqjGoMMk2vs/Upyhk/kJK8UGhiSEu+oi+is=
+	t=1760948690; cv=none; b=Me21g0dreXdPYkJ1tbBIwopCzfsRSfbHclLUeN/9oKlzlagixn6UcCUwhshzgMq1Kcfw7RA+GnVTT0ptSkhGyagKE/lnJm2G/L+H/1spI0kD+9EY6hisEYj5bkS/NyHDkaJLGrsyBIh8/mVief5MXe/mr1SJ+mFTj/A9nMjpSO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760947694; c=relaxed/simple;
-	bh=2L21Qopfly/U4b9yKtsDB4jlN3j5TDLRZmMl98kJ+LM=;
+	s=arc-20240116; t=1760948690; c=relaxed/simple;
+	bh=9zlHdu1C0OX3LQKq/csViY4KOIK1A0RLur/kX4QaQsQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Pwz6u3zWB7Igk/3qxBWAAIDNkVXXDBWBWSXSx6ESz5fPtshr3QEheR6KVWMU8c+DMaSDHugyummXOv5oBLVnyGjRL3KUbyOl0sOvtQb1FCe/IhMtJP7RzGS01d+3PSMCcQNZlbvnSNXuEdW4+ZTZvo0qK1Uj+ijWdPIb2OJxY24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TyxiXm/t; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 4236D1A153E;
-	Mon, 20 Oct 2025 08:08:10 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 17A74606D5;
-	Mon, 20 Oct 2025 08:08:10 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 1F488102F239E;
-	Mon, 20 Oct 2025 10:08:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1760947685; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=+v8XTZeq0pOdpvOANy27ZmijoxF+wc+fMdKurB1Y/rc=;
-	b=TyxiXm/tltgqYMOJvaHd+RodIIPn8VuM3f4rLSKo98iXzyARLyfVefDl2PW0jGzSNhnd3d
-	zc250nIn4vaayJZYFR3YnL1Vq3M6YUXKRbt3ptC2BM0QRizdA+YFtcn8ttyVRD0mTjKNuz
-	1kjWHvmBSk0YVpKBzTOZs9sl7d7IOmmitLndSosxwx6Ywfw5jcJaqfo83GZ/4FvqyO7M7L
-	oxqx3cgd91CrTmctmk5hzW3CCezO1AUfqW++8y+FIVwO3kryF7Hf5Wejetb6osQQvmWXkk
-	GFnX/4aCeil4dnEi8sKej8r/K/8EPFvUkJYkOh8m2G1aN1RRJeyVKZR5PxqU7g==
-From: "Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Hoan Tran <hoan@os.amperecomputing.com>,
+	 MIME-Version:Content-Type; b=CMCtTZmnyk5fvpA9Oee6FrXnSd2p8MaZuxF8GwkTdCKhELoQDVVuCd0LjGxAShB2Y3Aabk5Hd4bLgIV8WRRXW7DRvCrCV3YGkJ2PjPl0U3yK/1NEwaJyGFjT2kMPb9lk/bolmguVtXOSJFKHNUKjKHxpFbc4rz382drnu0vA5RQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Y15tKSXK; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-471066cfc2aso36840385e9.0
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 01:24:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1760948687; x=1761553487; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vW/AkTk8WlPjo3na4ACa1EYleQcJKdyDIWqp1NdXgKU=;
+        b=Y15tKSXKDmQyX3VZJFUu8f1iVTx6lnd0y0zmsso2ucoAZu6OMaP2ixqT/IZC8e1Kpn
+         tTOSdqS0l797ygAn6hUa9/VO27AXNTYZE+dH8458B5QOvykC8OYtE/FCPhKOP9qcyeLC
+         ZUrhI/fkVY04tErNeJ1+bk/XomgWvE+HY2+4UBPrAVHNdbrYxSjLhEk7KAQYaWuSpoH5
+         7v44T9vXbs+RRQqVMwH0qc8J+aJ3lXVSEuMOkCW1LN5Z+5PvPxNmrvAuVDLM2sQVBoIn
+         UiyyP0cCYmYkciyOLx1jL6QlJuoS8+8KyyzGDkamE7aV7H2MFwcoty+2r8miH+CrRb0u
+         xFxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760948687; x=1761553487;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vW/AkTk8WlPjo3na4ACa1EYleQcJKdyDIWqp1NdXgKU=;
+        b=mplmgXpZxk5qyD2PGgGgJnw/fsv+Eu0f47cOBqR1Y32crVFkhaKMOFPWQwcgIT/wN2
+         wFvpn0yO3mLGoF7uqooVv7sS0pJ6lkYBowfh/pvvs4BgxIjrt2kXDSp6G2b8IGtD+d0s
+         byykIYu7hUGIjJrB2qJvz/c/xyHGJylb4xTB3AO5k6e6GPVTfRvJIMk1NJtSuDAJhcyK
+         +6CUrPE93SyO3WVBOYJ5weSX4XecY35nAjik6LFkLpLMs1mP4ltsn+Fmj0MK4ZdePmyq
+         yiM3aRWGsJ/uY9W57lQNFnZ04Blfp4+4X2iaK3A/OmXnAppoqtZMdR5IFqn1mSFMrEG/
+         jrjw==
+X-Forwarded-Encrypted: i=1; AJvYcCVkVjq/IifZxBIs78oKrLtY/E/DHg3Rk83FezlIJV79O0Z2YeCeIR2ZaZnycbh5xvbvfRLQz9H7c+9X@vger.kernel.org
+X-Gm-Message-State: AOJu0YyieHh5hbsCxVpkmUGyFTque98F9ZK68xWWZiY3l8g3JCNlsZck
+	n39PqBzWApZeMi4Tlhu/ZQmoATHcnPiFdHAoJbsQMbQa/VFIcqMOBFLdelPtzPVsHXs=
+X-Gm-Gg: ASbGncvdVhHaLvR/yWUi/PtG9MwGGcDmNeifLY4SVOy5iUXlYSp+zqvFRVBhvvsxwQg
+	IE9nPUY0jfQan5fwZ1qt1IiJaCY4fltIxHVvj1qswxXIKsylFwVVYp9nUDpWOILM5pldlOc/PCU
+	n2awuY5+yFFfNTpCyTBo/HAhfaVJncttDbK8pGtqL0pPowrV4pw1UWBMWGJvcTRlGf0RlIpAk5k
+	f61ccqe9bV4PxKHy0o1pFWp7M8Q2BPUyJufZNMHkuLWdHl6PImw2ERZ296rLqmjszs7SlsJv6oP
+	02IeRAvrjQZzMzfLtzvRv0l8LEzde2Gfu7uK/MbIAt6ujjmS1Y3R8nyh+WcHGBHpkWusBAZRnWX
+	tMNwtEz6P8NF23WUloR2/YrWXsZVWFcQMmCOn0RTDW8YNs/jww5okzt88W1+tkCYG6cqoKwZyka
+	vZ
+X-Google-Smtp-Source: AGHT+IElbGLyhlp/1ybVdhj0rXNPZOg5gvo0dz1RPUfJES3/ZAsbvfhG1ocMD7SptwzEZ+DrjQdnHg==
+X-Received: by 2002:a05:600c:3512:b0:46e:5b74:4858 with SMTP id 5b1f17b1804b1-47117877122mr69462225e9.13.1760948686986;
+        Mon, 20 Oct 2025 01:24:46 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:5b13:a549:df98:9c00])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-471144b5c29sm220299395e9.12.2025.10.20.01.24.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Oct 2025 01:24:46 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Herve Codina <herve.codina@bootlin.com>
-Cc: Phil Edworthy <phil.edworthy@renesas.com>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Pascal Eberhard <pascal.eberhard@se.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v5 8/8] ARM: dts: r9a06g032: Add support for GPIO interrupts
-Date: Mon, 20 Oct 2025 10:06:44 +0200
-Message-ID: <20251020080648.13452-9-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251020080648.13452-1-herve.codina@bootlin.com>
-References: <20251020080648.13452-1-herve.codina@bootlin.com>
+	kernel-janitors@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] gpio: mvebu: Slightly optimize mvebu_gpio_irq_handler()
+Date: Mon, 20 Oct 2025 10:24:45 +0200
+Message-ID: <176094868222.39929.1582779339210420040.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <7190f5def0489ed3f40435449c86cd7c710e6dd4.1760862679.git.christophe.jaillet@wanadoo.fr>
+References: <7190f5def0489ed3f40435449c86cd7c710e6dd4.1760862679.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
 
-In the RZ/N1 SoC, the GPIO interrupts are multiplexed using the GPIO
-Interrupt Multiplexer.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Add the multiplexer node and connect GPIO interrupt lines to the
-multiplexer.
 
-The interrupt-map available in the multiplexer node has to be updated in
-dts files depending on the GPIO usage. Indeed, the usage of an interrupt
-for a GPIO is board dependent.
+On Sun, 19 Oct 2025 10:31:38 +0200, Christophe JAILLET wrote:
+> In the main loop of mvebu_gpio_irq_handler() some calls to
+> irq_find_mapping() can be saved.
+> 
+> There is no point to find an irq number before checking if this something
+> has to be done.
+> By testing first, some calls can be saved.
+> 
+> [...]
 
-Up to 8 GPIOs can be used as an interrupt line (one per multiplexer
-output interrupt).
+Applied, thanks!
 
-Signed-off-by: Herve Codina (Schneider Electric) <herve.codina@bootlin.com>
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- arch/arm/boot/dts/renesas/r9a06g032.dtsi | 41 ++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+[1/1] gpio: mvebu: Slightly optimize mvebu_gpio_irq_handler()
+      https://git.kernel.org/brgl/linux/c/eb7f1c8415bbbb81f8674a490a5da7c22599a012
 
-diff --git a/arch/arm/boot/dts/renesas/r9a06g032.dtsi b/arch/arm/boot/dts/renesas/r9a06g032.dtsi
-index da977cdd8487..c7196e720c6c 100644
---- a/arch/arm/boot/dts/renesas/r9a06g032.dtsi
-+++ b/arch/arm/boot/dts/renesas/r9a06g032.dtsi
-@@ -534,6 +534,14 @@ gpio0a: gpio-port@0 {
- 				#gpio-cells = <2>;
- 				snps,nr-gpios = <32>;
- 				reg = <0>;
-+
-+				interrupt-controller;
-+				interrupt-parent = <&gpioirqmux>;
-+				interrupts = < 0  1  2  3  4  5  6  7
-+					       8  9 10 11 12 13 14 15
-+					      16 17 18 19 20 21 22 23
-+					      24 25 26 27 28 29 30 31 >;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			/* GPIO0b[0..1]   connected to pins GPIO1..2   */
-@@ -576,6 +584,14 @@ gpio1a: gpio-port@0 {
- 				#gpio-cells = <2>;
- 				snps,nr-gpios = <32>;
- 				reg = <0>;
-+
-+				interrupt-controller;
-+				interrupt-parent = <&gpioirqmux>;
-+				interrupts = < 32 33 34 35 36 37 38 39
-+					       40 41 42 43 44 45 46 47
-+					       48 49 50 51 52 53 54 55
-+					       56 57 58 59 60 61 62 63 >;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			/* GPIO1b[0..1]   connected to pins GPIO55..56 */
-@@ -608,6 +624,14 @@ gpio2a: gpio-port@0 {
- 				#gpio-cells = <2>;
- 				snps,nr-gpios = <32>;
- 				reg = <0>;
-+
-+				interrupt-controller;
-+				interrupt-parent = <&gpioirqmux>;
-+				interrupts = < 64 65 66 67 68 69 70 71
-+					       72 73 74 75 76 77 78 79
-+					       80 81 82 83 84 85 86 87
-+					       88 89 90 91 92 93 94 95 >;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			/* GPIO2b[0..9] connected to pins GPIO160..169 */
-@@ -620,6 +644,23 @@ gpio2b: gpio-port@1 {
- 			};
- 		};
- 
-+		gpioirqmux: interrupt-controller@51000480 {
-+			compatible = "renesas,r9a06g032-gpioirqmux", "renesas,rzn1-gpioirqmux";
-+			reg = <0x51000480 0x20>;
-+			#interrupt-cells = <1>;
-+			#address-cells = <0>;
-+			interrupt-map-mask = <0x7f>;
-+
-+			/*
-+			 * Example mapping entry. Board DTs need to overwrite
-+			 * 'interrupt-map' with their specific mapping. Check
-+			 * the irqmux binding documentation for details.
-+			 */
-+			interrupt-map = <0 &gic GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			status = "disabled";
-+		};
-+
- 		can0: can@52104000 {
- 			compatible = "renesas,r9a06g032-sja1000", "renesas,rzn1-sja1000";
- 			reg = <0x52104000 0x800>;
+Best regards,
 -- 
-2.51.0
-
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
