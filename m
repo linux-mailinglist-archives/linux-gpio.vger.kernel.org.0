@@ -1,198 +1,184 @@
-Return-Path: <linux-gpio+bounces-27291-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27284-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11A43BEFCFF
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 10:08:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51AD0BEFCBA
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 10:07:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8EC3B189D146
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 08:08:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE6F03E02D8
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 08:07:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF6862E9EC9;
-	Mon, 20 Oct 2025 08:07:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FC5B17597;
+	Mon, 20 Oct 2025 08:06:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OuaRBEmw"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ChvmfHxP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA32A2E8E03;
-	Mon, 20 Oct 2025 08:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087351E0DD8
+	for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 08:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760947679; cv=none; b=XQu1oPZ2A+gW+CrfbTVtikk8QYbMqe3buGsug5i7uFcEnzVyFU/UdGvA5fXUo3AIwXzeUKHmj5q2RFJEjo77hcxgcixKfTMW3MgEQDlX/7labOs69E0Og1ZPum8A4XAnSMdSayGOBM8e9Ro8Nxepa9vZx5ErPQ8TF9oHvtH7zkY=
+	t=1760947618; cv=none; b=kPZoD+Cn7skZHiaNAkVQEBJh5SZdoELUiuNkER+Si5VDAOP1SrWnQ4U6hr7bBeqE+3vr1uCrz/9S3kQrbq4oyE3HScBRQtitBn0+2pSeYCwi+haKrqjoz9DI2XGfvEZty+IlGpUv58CQXJiIRSjPlNH54yNcSZyxOxmFzEXsQEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760947679; c=relaxed/simple;
-	bh=uGBLXgnUrlLVjDhuMDNfxA+QGBNAkCfVO4UZ7VlkCus=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UrrmBTaeBAM449Hl5Bdg+z4rmSeirgihXJO4LYxtsgJXorAuRJKZJBy3ojY+pJzs1Dt0pd/HESJZi1EXC/1hXBATYOlsgUEm1oOethxD0igzWMLexujXVyS6sADLILiphEVWKrRImXOVQU8/tvbUR3yCFAmxe+w9P9EJzQM8ZI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OuaRBEmw; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 1B1FC1A153E;
-	Mon, 20 Oct 2025 08:07:56 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id DDFBA606D5;
-	Mon, 20 Oct 2025 08:07:55 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 8F659102F23A5;
-	Mon, 20 Oct 2025 10:07:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1760947670; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=FTceJ1AfG6euN/rxJqPmyPNg4jkFl17k3/UGNUrVjHo=;
-	b=OuaRBEmwVuTzjo4iPDVUxe54HUPVYcBws3w5G3qRBrUSrHTOwgNX7AiDovoT262U4ssG4X
-	X6creKFvGHsbE9zkaV8NSgWwxJyUqdjWfqTWLkUOR9s42w2+uZbfuNfzkiEdoveIsD7pJr
-	VM7RvlXXAV9AUq26BvphwNMzo2KlaauyBHkDddtU/W/4nPiQzUX6oG4SbP3Raa2bxLPLyF
-	HygeRU83Xhublz4WiTYLLOmixCP67X+v8wY3Hg03aWwxn5oftMdxWBy/WxYflsOkPXIB/u
-	+B4Ke405DqfSmz6PFwWZZ2CXwSOOhD4DeyvrEL8f3jhSZTJ9acB+MvLzgWYRRQ==
-From: "Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Hoan Tran <hoan@os.amperecomputing.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Herve Codina <herve.codina@bootlin.com>
-Cc: Phil Edworthy <phil.edworthy@renesas.com>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Pascal Eberhard <pascal.eberhard@se.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v5 6/8] dt-bindings: soc: renesas: Add the Renesas RZ/N1 GPIO Interrupt Multiplexer
-Date: Mon, 20 Oct 2025 10:06:42 +0200
-Message-ID: <20251020080648.13452-7-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251020080648.13452-1-herve.codina@bootlin.com>
-References: <20251020080648.13452-1-herve.codina@bootlin.com>
+	s=arc-20240116; t=1760947618; c=relaxed/simple;
+	bh=2N4OGTa3rtpVqsCUmLw1+yGLYM1aVUWodNNb5rGn3LU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jlwo8PuB/sf35OUnppP+RNDLR8MkD9Iy9qqB1OfEjQr5Y74EattR4HlVJ9Xa92nc+dqyCN2ghdtmyaE5doMV4jV+hha4UBtbpKIKKEHq751XeBHVDLOLAAPlJS8cfbECbj4Pc3IfaPXB5drVinOTbWnBnIYYvUzziaHbo2F56i0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ChvmfHxP; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-57e03279bfeso4633475e87.0
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 01:06:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1760947615; x=1761552415; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Mkm6279T3HUfgpQGhHQv/L3gfBoclYPQErPb1Lc1rZ0=;
+        b=ChvmfHxPcsr5oqTyaxzEOErFjKsRbpf09iwv6M+YbNAHO4edqM0U6qkbAkUwnZZjKU
+         8cQvj2pILIh2k9xopW6vPOWlItutE2bletpShfdMLoFofqlREKbTn/p5Apd5gyAwQgPd
+         yDl0EKvnZ92QivHTJATl0ay1X+UQclLSgTEQv8FWL7IKjQsUAukDS63ZjXQQ3Q+xxbOQ
+         c3lYSMi4BPMQO8+omYkoJ0VV1hdAyPwnBIZpD3p4zP2upW1QT+mxomFglSFH1oCLdAB2
+         xIlW8AauyZvUQ9+HZ/9RlRIE/UXoPUyj7h3t5UEOzK2V383s1k9U1KQD5/LrdEpisnd9
+         bQMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760947615; x=1761552415;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Mkm6279T3HUfgpQGhHQv/L3gfBoclYPQErPb1Lc1rZ0=;
+        b=azSy2JNs6DtpVsu5VvpoF6RNllCiKTjEBmL4OpbfqHMQC2MelQIV92iP3T58av82AE
+         ZYReE+fEugVf8lBcyuc0ngTG8o1Ov62luaoZd3yfZXApUPk1/Iqnt/8Sj25GNLY1FrM3
+         /hcJrgCzofVD5FAHOTAbSCDigRDLmeph2/DkAPt7sqOIZuJfwlhACnhk7qJhSzg5DFoG
+         nlfWTkcIwQNJp4pbElnAfoVC+ZFeXz9O01tK0D6zLcM3uC1Npy8g24Vml6yYmfjygddj
+         aULJOu2Vu9xtaNO6B28qIz+PW2+e955M6essRlM+K5LIrOpeQzYsNYqDZC/0Xp9i5fBH
+         JovQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWO8Jziai70Xzfty8xYCX+q0YyBQi0yhjzHF54kBWLKl1AtlULKtiYxeC9PC+uKTkZtrV+3YNgnQZRV@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPT27isZmWksAt/mRY3Kdub2rUisFE+FnXz0RrQBrVX3oXCq9R
+	oFrXWZ3YDmGjQ8wnSZBgJYuxnU3z3jJMm3bTOnXM4WimvwuBZaHwyVPIx4yMxQeITH6yrtUDLIy
+	TqT8y5aoyazqKOZjdV9mj0yJho7cZKaFDp3wYxdX/mw==
+X-Gm-Gg: ASbGncvavO4/IVGqvJYqedl3cViK3nsLQYG8t2domkiM9v6zLMcAILKk1R4OUFvmjSr
+	KLIb0yJmpL4xbpxra1VK+UcvfXCX7y/1WX3OavHyqmuoNS+M0K7fb19Vy9gmxdLNJ3yur1CO0K5
+	DI7RDC9P4d5i9/dAoV0qM+FrZtGto7bnLbAJ5XhaNbbawa/rqVO1hK0GhJpDboe81p/Icg1hrKu
+	0SwfKlhj+8jou7fz9ZbYhoJ0m1dSy5tG0QTEGzJYruAbDqdlDs129b0HVlh9X7Jlgzu8NQL18iL
+	m7NfSKtKAsrZ9G/fpoTav64MHIM=
+X-Google-Smtp-Source: AGHT+IEnXnRGs3SMCxArSB4fSMudVmkeEhYn3XsDaW2U3rT4w958z2/aG9YTzEXKt0OOPBNno6cCif5OzOylxpizFcw=
+X-Received: by 2002:a05:6512:10cf:b0:57d:cdb4:5b94 with SMTP id
+ 2adb3069b0e04-591d0b42497mr5006809e87.11.1760947614999; Mon, 20 Oct 2025
+ 01:06:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+References: <20251006-reset-gpios-swnodes-v1-0-6d3325b9af42@linaro.org>
+ <20251006-reset-gpios-swnodes-v1-3-6d3325b9af42@linaro.org> <aO1dBgPZfDJTsPfE@smile.fi.intel.com>
+In-Reply-To: <aO1dBgPZfDJTsPfE@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 20 Oct 2025 10:06:43 +0200
+X-Gm-Features: AS18NWAY7ksNch0utlYlmtfhIIguLjMNDdOQUCfuHVJCcKTUxj14rMyFhjwQYVM
+Message-ID: <CAMRc=MfOoHn+mLRpQBEsC3g5sM=VZBgVffsm68CAXJBHffPxdA@mail.gmail.com>
+Subject: Re: [PATCH 3/9] software node: allow referencing firmware nodes
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On the Renesas RZ/N1 SoC, GPIOs can generate interruptions. Those
-interruption lines are multiplexed by the GPIO Interrupt Multiplexer in
-order to map 32 * 3 GPIO interrupt lines to 8 GIC interrupt lines.
+On Sat, Oct 18, 2025 at 7:34=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Oct 06, 2025 at 03:00:18PM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > At the moment software nodes can only reference other software nodes.
+> > This is a limitation for devices created, for instance, on the auxiliar=
+y
+> > bus with a dynamic software node attached which cannot reference device=
+s
+> > the firmware node of which is "real" (as an OF node or otherwise).
+> >
+> > Make it possible for a software node to reference all firmware nodes in
+> > addition to static software nodes. To that end: use a union of differen=
+t
+> > pointers in struct software_node_ref_args and add an enum indicating
+> > what kind of reference given instance of it is. Rework the helper macro=
+s
+> > and deprecate the existing ones whose names don't indicate the referenc=
+e
+> > type.
+> >
+> > Software node graphs remain the same, as in: the remote endpoints still
+> > have to be software nodes.
+>
+> ...
+>
+> > +enum software_node_ref_type {
+> > +     /* References a software node. */
+> > +     SOFTWARE_NODE_REF_SWNODE =3D 0,
+>
+>
+> I don't see why we need an explicit value here.
+>
 
-The GPIO interrupt multiplexer IP does nothing but select 8 GPIO
-IRQ lines out of the 96 available to wire them to the GIC input lines.
+It was to make it clear, this is the default value and it's the one
+used in older code with the legacy macros. I can drop it, it's no big
+deal.
 
-Signed-off-by: Herve Codina (Schneider Electric) <herve.codina@bootlin.com>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
- .../soc/renesas/renesas,rzn1-gpioirqmux.yaml  | 87 +++++++++++++++++++
- 1 file changed, 87 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/renesas/renesas,rzn1-gpioirqmux.yaml
+> > +     /* References a firmware node. */
+> > +     SOFTWARE_NODE_REF_FWNODE,
+> > +};
+>
+> ...
+>
+> >  /**
+> >   * struct software_node_ref_args - Reference property with additional =
+arguments
+> > - * @node: Reference to a software node
+> > + * @swnode: Reference to a software node
+> > + * @fwnode: Alternative reference to a firmware node handle
+> >   * @nargs: Number of elements in @args array
+> >   * @args: Integer arguments
+> >   */
+> >  struct software_node_ref_args {
+> > -     const struct software_node *node;
+> > +     enum software_node_ref_type type;
+> > +     union {
+> > +             const struct software_node *swnode;
+> > +             struct fwnode_handle *fwnode;
+> > +     };
+>
+> Can't we always have an fwnode reference?
+>
 
-diff --git a/Documentation/devicetree/bindings/soc/renesas/renesas,rzn1-gpioirqmux.yaml b/Documentation/devicetree/bindings/soc/renesas/renesas,rzn1-gpioirqmux.yaml
-new file mode 100644
-index 000000000000..1a31c11bc3b4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/renesas/renesas,rzn1-gpioirqmux.yaml
-@@ -0,0 +1,87 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/soc/renesas/renesas,rzn1-gpioirqmux.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas RZ/N1 SoCs GPIO Interrupt Multiplexer
-+
-+description: |
-+   The Renesas RZ/N1 GPIO Interrupt Multiplexer multiplexes GPIO interrupt
-+   lines to the interrupt controller available in the SoC.
-+
-+   It selects up to 8 of the 96 GPIO interrupt lines available and connect them
-+   to 8 output interrupt lines.
-+
-+maintainers:
-+  - Herve Codina <herve.codina@bootlin.com>
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - renesas,r9a06g032-gpioirqmux
-+      - const: renesas,rzn1-gpioirqmux
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#address-cells":
-+    const: 0
-+
-+  "#interrupt-cells":
-+    const: 1
-+
-+  interrupt-map-mask:
-+    items:
-+      - const: 0x7f
-+
-+  interrupt-map:
-+    description: |
-+      Specifies the mapping from external GPIO interrupt lines to the output
-+      interrupts. The array has up to 8 items defining the mapping related to
-+      the output line 0 (GIC 103) up to the output line 7 (GIC 110).
-+
-+      The child interrupt number set in arrays items is computed using the
-+      following formula:
-+          gpio_bank * 32 + gpio_number
-+      with:
-+        - gpio_bank: The GPIO bank number
-+            - 0 for GPIO0A,
-+            - 1 for GPIO1A,
-+            - 2 for GPIO2A
-+        - gpio_number: Number of the gpio in the bank (0..31)
-+    minItems: 1
-+    maxItems: 8
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#address-cells"
-+  - "#interrupt-cells"
-+  - interrupt-map-mask
-+  - interrupt-map
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    gic: interrupt-controller {
-+        interrupt-controller;
-+        #address-cells = <0>;
-+        #interrupt-cells = <3>;
-+    };
-+
-+    interrupt-controller@51000480 {
-+        compatible = "renesas,r9a06g032-gpioirqmux", "renesas,rzn1-gpioirqmux";
-+        reg = <0x51000480 0x20>;
-+        #address-cells = <0>;
-+        #interrupt-cells = <1>;
-+        interrupt-map-mask = <0x7f>;
-+        interrupt-map =
-+            <32 &gic GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>, /* line 0, GPIO1A.0 */
-+            <89 &gic GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>, /* line 1, GPIO2A.25 */
-+            <9 &gic GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>; /* line 3, GPIO0A.9 */
-+    };
--- 
-2.51.0
+Unfortunately no. A const struct software_node is not yet a full
+fwnode, it's just a template that becomes an actual firmware node when
+it's registered with the swnode framework. However in order to allow
+creating a graph of software nodes before we register them, we need a
+way to reference those templates and then look them up internally in
+swnode code.
 
+Bart
+
+> >       unsigned int nargs;
+> >       u64 args[NR_FWNODE_REFERENCE_ARGS];
+> >  };
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
+>
 
