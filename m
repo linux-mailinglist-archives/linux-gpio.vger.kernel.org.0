@@ -1,175 +1,123 @@
-Return-Path: <linux-gpio+bounces-27329-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27330-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F516BF3C9B
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 23:51:48 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA909BF3D42
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 00:09:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 035C9427EE9
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 21:51:47 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 761EB34FDDA
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Oct 2025 22:09:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89DDA2EF676;
-	Mon, 20 Oct 2025 21:51:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDD9B2EF677;
+	Mon, 20 Oct 2025 22:09:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Iqr8XXxg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XCIWYTUS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713DF2E7F11
-	for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 21:51:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88C71DE4F1
+	for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 22:09:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760997104; cv=none; b=bWFH6gF+5T3WqDynibTtljrzXQcx/tkP1xT847MNFiyRx/sVMDTB4RoKfwlR/qtwhXaPSA3WCuPz30BqGsBJyHqnL5uZEHqndyeTejUAqngfNFC0lUVoDfWPVsadcoOuyDpQG0HsJOuf8x7FuvIpGxXZstHkKpCZ0G/msAVk9SY=
+	t=1760998148; cv=none; b=Bscl/X0AlauNCJUlX75AqiMlyb/uGqDxGJYmp9zwPqKmaQoOD7k55+wqNJTOootwmawqcFiqEdjrZpvVoxTR6Q7537i9hdVsjvwUw+0bisCFTtKsjYSOaEAJDQYx2t8R+15bMBbIrGx6JtFJwu5mldcMdSTQ7xWt6ovK4vuA8hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760997104; c=relaxed/simple;
-	bh=aX/9JxdC1TRA48rktBau1D7ApsTGPEIpWfYv5Df8iIU=;
+	s=arc-20240116; t=1760998148; c=relaxed/simple;
+	bh=9fY7BHIO6l8fZDHvCr6Qw6TTiKtPAE9sfEY9svRB3Mk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mxDLQRJC/6r4OVTJtoSLz/zoqYXUgMb3jMalPHGLqfKsOJZM1IPpFlzTqfubYNsEtSAkvK707wozn237vywu/XH7q0Yg4oCmENr65wFiuNetckIVuELcb1Abx+ZlhsmWWvCeayIQ6W2u0r06Ht4SiHiFSrK9YalQ4piF88S+YKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Iqr8XXxg; arc=none smtp.client-ip=209.85.128.170
+	 To:Cc:Content-Type; b=RcbOqQYB9G93SbPG8wDTTzZzsPKgjgcju9AFLTz8YHOYDLN2SfYHyHWqxhGau8hycs8RPTBmNhgwZQNCnrI40PD35DTVYR5CILTNHpiMddU0ZypW7y+4ClTys4bk7VGbZNSM9WZ1GnOBH90vXobstzvz9yQwojzsgDeS8lMlkM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XCIWYTUS; arc=none smtp.client-ip=209.85.208.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-7836853a0d6so71171567b3.1
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 14:51:42 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-375eff817a3so54103481fa.1
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Oct 2025 15:09:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1760997101; x=1761601901; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1760998145; x=1761602945; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aX/9JxdC1TRA48rktBau1D7ApsTGPEIpWfYv5Df8iIU=;
-        b=Iqr8XXxg9A9KMBZkUGrV445aVZi2OJINE0ZsyknPJVrxS60bpVb/rnh0vZBGMeWgi+
-         5Tg6AHwUat1iL87kkN6dlrVIJBNrVimlrpj2xo7LJvBjiJuSKNGBTq6qybi+j0gbIuaK
-         W2SflEJ9fCaPzd7z1lhp/DK+iT/4scPvD3as1ObyKUSb4wHKjtiFKi2VM62Fd6IcOLkx
-         aYDYxIbvpOGJ4xnpK7AR+0yEbCNJTsVDjsry5bjK3+hUxZ+iqTsZd26ST6YnLECmp8K5
-         DcrF1nR5CbLre+M1mspn6SaZR6SldS4vb8eveiEV4uOPvo58UXRz3UCMSUXadghucz1/
-         E1pg==
+        bh=Jou7wl1+eFLqh56mhBKzbuquNRGf4+Mstk8GHncGjYM=;
+        b=XCIWYTUSzm1/OCpBwSBDmX0mcKFNX4QqsxqG9lDNX8iDuUNN+hIuMrFZSZP/75MAh3
+         opDWscjuKde+7NOfDBmRucQRbJqWB3CNCPZy3t4D6I7EUElis/0WoUOhHk2pWMq+2SPi
+         RAhypgPDjyJRxfkyaQ1/99/f6bsduShg4tGIS43IzkTVkD9Cx+eOJ3JVaKLKLocx5ixK
+         WEYIregCr3tVZMJ+W1OpMy0SvDfz+CrNYlukGItxD7WS1INtGaftlSCC5BllbK23tVr9
+         aMl6dy8Slr2ttvpfqSd2M7olAezvGhTzYbLTw2vmbXLOzlvUIMzz1K0Ye1JxRbWFXCGf
+         Jvkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760997101; x=1761601901;
+        d=1e100.net; s=20230601; t=1760998145; x=1761602945;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aX/9JxdC1TRA48rktBau1D7ApsTGPEIpWfYv5Df8iIU=;
-        b=EG3oF018WFa1StQ0V9ThjEwfnu2q4R2aWHjdO/2jIVY789FaVBUkpwQEutYrVFAr36
-         5kQyb7m9+6fJX3vf7ALk2LLXJezfp93yBncCrbLoRgqQgNgXUV2Hh7WxqSK6Dv2SC5ka
-         9fuNzDRqX6CfN6ForJpF58DOrjuFH2f/UdLc1G6pFZm+vERds4wfoWh62cE4A42Gv2ur
-         UKltpBD7AEhBYrd8E3yYJbyCL0r8jbobAcWI5dS06gtBz7pljy1yWvNBJtQyFWF0kwk4
-         TZ/FnqzRdkGExhdYH+l/SZMkRBqyd6Uq7s9Mnpey5RCrHWoi5YZEfIjxhMwLrY/mceLP
-         G1xA==
-X-Forwarded-Encrypted: i=1; AJvYcCWRQ2GJwcPFtM7w6z0SNFmZvV4PDYa4iZcWBM2PpwiMa35cBLnTwrgQY5HPsp0TorA2IyVzO1XyJMKO@vger.kernel.org
-X-Gm-Message-State: AOJu0YymBI9Ti8taxGroI7SXYqsY6tRLmSSg+zvtJG6LOArJJzUUqESn
-	IZ1RKFzMePLoAjBbRYMzG95KBI9yPqtDIiOtQfBTNcuMGacBLJPzuYV5zRDmDyObb2BPZPZ/wU/
-	3Xrw24oE+XBIUSJLZD/D3s7rvzRLaJ+8DCqvdnKKPHg==
-X-Gm-Gg: ASbGncvYNi1eIquv36CwehNUMSQWZMzbqp0jOwx44trJq1ej3UWUSVxzk415Oiacvgz
-	/N2MyWnR/QIM45YVqeGIHRJkq+rp9iZ2i+gzmkAWqgzQ0XsyG1T4GznVAORzZ4fyZUXZ2lAO8OB
-	utZaGUbnFs4tIlsR25CIdQLdHnkzngLgWcBHbKUHoX4Kl+BlewXMWzYwwy4lsNTNJkFanVhxwm0
-	To0EgxxD9AypO+PCyAmEFRA26/k1q6gFpuc2CdYgDuEirR8VFs33dqq5RCZ
-X-Google-Smtp-Source: AGHT+IGRaOydtzDQqQLvW6se3/Vk6k+Gd4ZdqugfWoQAiRZ4x3gHuCWHJg7LiPH2eudgGlv8FQTadoN2iFpSXJhpXo4=
-X-Received: by 2002:a05:690e:1487:b0:635:4ed0:5722 with SMTP id
- 956f58d0204a3-63e16225bf2mr10798873d50.26.1760997101257; Mon, 20 Oct 2025
- 14:51:41 -0700 (PDT)
+        bh=Jou7wl1+eFLqh56mhBKzbuquNRGf4+Mstk8GHncGjYM=;
+        b=Hqe1dUbL3eO20t0DJ4+zRXYV0HmXBf0Nx86j+8LSZwVuuZ4Q3VWu+ffviTANZvA2Be
+         PGAgVP9atvS25P/UVPL07lGkDsTRXsj11HpN3IGnXYWTQo7tf7ClDASdrp8FOlG0UjLp
+         MiutRJJxiJG57irs2kzk1DLZg8XphsTGOWfy2ixOdtfuaHc78CpoUGzBzp5YqnPNury6
+         dBtk38IgfqpHK67FmpS1o7Gg4yDsdAOoDTcfOEPGgMnG+zdfD7oEcmvFYX+Y1gAY+tzt
+         xrDeK46MslnH8qhrpTWoBOFXhhWZkMyUKB0vBfi8RyTxsS5hpw6+zAlunZoENEVuQevY
+         NS6g==
+X-Forwarded-Encrypted: i=1; AJvYcCUUNVUHpXVX95EHsXmlyB/KIvTQE5pDmb/Fx63peFyAJDbwGBKdJ4faRVEMCarKzCW5NVvxMK6vae/6@vger.kernel.org
+X-Gm-Message-State: AOJu0YzC4QRtUcCuw/ZbbRPgCRyYXa48cI9XEieZ4RdKLTiL5vFC82w4
+	6WWni3oRDwIDu0o8wOfRaP1XrWOZO8cOO1Z+xAw+3k2uD4m8jSsCwV1epNZpitIVpImz6SDgrcA
+	WJeq2K4kMVNNFIRE6KcuicIGXiZ3PVpsDJQCtFTszaQ==
+X-Gm-Gg: ASbGncvIKuToLBFndwWYHf617iKh6bggQzf4GUIqKqSR1msMeSGVzGU0K3tpmZUnGl1
+	Q7PK2BLtvQhDcED1NLvF8GyCvVJUrzo6819esW8u71B1SKBnYMEi7puU6lflWrfE2W272S3LcUa
+	reZ/o3ygH3Oga/Ps9r4TGBbiMnPWaFzmw4Wy4K5EuUvbNJ+UjdyvZ3bod/Jkx4tjQk6P2GPiHnJ
+	/q3tWWohaANj3o2ob3c32WBFPxhlRsH09/N+RImnajgTxw9W7xkYrFBDCDJwq+x4QkUtiU=
+X-Google-Smtp-Source: AGHT+IHndeIzowFKyGV77xJrwW3PbYRom9TRTnbQmCDghJkjbT3tIKvOTzTzPAFp9D2embhKwkVO+r8Cc1SJcrX3RR4=
+X-Received: by 2002:a2e:a9a8:0:b0:36a:cdb0:c1f3 with SMTP id
+ 38308e7fff4ca-37797a143b5mr45120621fa.29.1760998144941; Mon, 20 Oct 2025
+ 15:09:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <0c4bc190-7049-4753-b88e-479a3ff584fc@oss.nxp.com> <aPEtEnd3kG_pxWPf@pluto>
-In-Reply-To: <aPEtEnd3kG_pxWPf@pluto>
+References: <20251014140451.1009969-1-antonio.borneo@foss.st.com>
+ <20251014140451.1009969-10-antonio.borneo@foss.st.com> <20251014-affection-voltage-8b1764273a06@spud>
+ <b4eca95eaa0e6f27fc07479d5eab2131d20eb270.camel@foss.st.com>
+ <20251015-headstand-impulse-95aa736e7633@spud> <0826a055f6b2e3e6b50a5961e60d1b57d1d596c6.camel@foss.st.com>
+In-Reply-To: <0826a055f6b2e3e6b50a5961e60d1b57d1d596c6.camel@foss.st.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 20 Oct 2025 23:51:28 +0200
-X-Gm-Features: AS18NWA4FdGF7CF4cd4_wWTv_JtZlgqANoY89SKPmaKzU6AhIdj0GgLszFkIkII
-Message-ID: <CACRpkdYgv1czD-GjcnZvq25TYxjaMpa9VjyzXJ3zVtaFc=cBJg@mail.gmail.com>
-Subject: Re: pinctrl-scmi: Support for pin-only mode when groups are unavailable
-To: Cristian Marussi <cristian.marussi@arm.com>
-Cc: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>, arm-scmi@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>
+Date: Tue, 21 Oct 2025 00:08:53 +0200
+X-Gm-Features: AS18NWB0sT7rk733pb0JBmXxWZ3rsESep7Jo9zTjJKG7duLHdqwxNHX29WRzGYA
+Message-ID: <CACRpkdbeaiNGfOFfVfDNZ=u=4yhCykcdSdHUv-td_DVyr3aWaQ@mail.gmail.com>
+Subject: Re: [PATCH v3 09/10] dt-bindings: pinctrl: stm32: Support I/O
+ synchronization parameters
+To: Antonio Borneo <antonio.borneo@foss.st.com>
+Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, 
+	Christophe Roullier <christophe.roullier@foss.st.com>, 
+	Fabien Dessenne <fabien.dessenne@foss.st.com>, Valentin Caron <valentin.caron@foss.st.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 16, 2025 at 7:37=E2=80=AFPM Cristian Marussi
-<cristian.marussi@arm.com> wrote:
-> On Thu, Oct 16, 2025 at 07:05:21PM +0300, Ciprian Marian Costea wrote:
+On Mon, Oct 20, 2025 at 5:09=E2=80=AFPM Antonio Borneo
+<antonio.borneo@foss.st.com> wrote:
 
-> > I=E2=80=99m currently exploring a solution to improve the 'pinctrl-scmi=
-' [1] driver
-> > so it can better support SCMI platforms that only provide individual pi=
-n
-> > control. At the moment, the driver handles only group-based operations,
-> > which means platforms without pin groups run into limitations.
-> >
-> > According to the SCMI v4.0 specification (section 3.11.2.8), both
-> > group-based and per-pin control modes should be supported. However, on
-> > pin-only platforms, the current implementation cannot enumerate groups,
-> > configure pinmux, or assign functions per pin. This results in probe
-> > failures and '-EINVAL' errors when trying to configure non-existent gro=
-ups.
+> pinconf-generic only accepts positive numeric values for
+> both generic and custom properties in struct pinconf_generic_params.
 
-First: it is usually not true that no grouping exist. They are usually
-there in the hardware, it is just that the fact that the programming
-reference document document a register for each pin and you just
-cannot see the forest because of all the trees (pins) literally.
+Do you need it to support negative values?
+Patches welcome!
 
-I.e. just because pins *can* be controlled individually, this does
-not mean that it is a good idea for the SCMI-back firmware
-to *expose* them as individually controlled.
+> Plus, I haven't found any existing driver that mixes pinconf-generic with
+> custom string values.
 
-Example:
+Maybe I misunderstand, but pinconf_generic_parse_dt_config()
+looks at  pctldev->desc->custom_params and
+pctldev->desc->num_custom_params found in
+struct pinctrl_desc in
+include/linux/pinctrl/pinctrl.h
 
-Pins 0, 1, 2, 3
-
-Function uart0:
-Poke 0x3 into register A to turn pin 0 into UART RX
-Poke 0x3 into register A+4 to turn pin 1 into UART TX
-Poke 0x3 into register A+8 to turn pin 2 into UART RTS
-Poke 0x3 into register A+12 to turn pin 3 into UART CTS
-
-Some people will see "4 pins with individual controls"
-
-Some people will see "4 pins in a group exposing a UART
-with RX, TX, RTS, CTS" and create a group of these
-4 pins called uart0_grp =3D { 0, 1, 2, 3 }
-
-Now, often RTS and CTS isn't used, so maybe these
-need their own group and the intended use is more like
-uart0_rx_tx =3D {0, 1}
-uart0_rts_cts =3D {2, 3}
-
-Now the usual complaint from the software engineer
-implementing a FW driver or Linux kernel driver is
-"I don't know what use cases and groups are appropriate".
-
-But this complaint is coming from the same company,
-the same legal body, that produced the whole SoC.
-
-And this is not to act as a coherent company.
-
-This is overall a clear symptom of throw-over-the-wall
-engineering.
-https://en.wikipedia.org/wiki/Traditional_engineering
-
-So I would take a step back and talk to some hardware
-engineers about this before proceeding. The SCMI
-exposure of groups and functions look like they do for
-a reason: per-pin muxing is use sometimes by hobbyists
-and consultants to SoC companies who have no direct
-insight to the hardware and cannot really communicate
-with HW engineers.
-
-But for a *firmware* we certainly expect the people writing
-that to have talked to the engineer who designed the
-grouping inherent in the hardware. At least try hard.
-
-Then there is the last resort which I would think twice
-before implementing:
-
-What the Qualcomm driver does is to create a group
-for every single pin, e.g.
-
-gpio0_grp =3D {0}
-gpio1_grp =3D {1}
-....
+$ git grep custom_params drivers/pinctrl/
+gives you a list of all drivers using this.
 
 Yours,
 Linus Walleij
