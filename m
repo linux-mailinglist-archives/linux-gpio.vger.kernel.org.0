@@ -1,115 +1,128 @@
-Return-Path: <linux-gpio+bounces-27347-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27348-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0DC4BF55B3
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 10:49:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AF2CBF561F
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 11:00:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 475CA3521C5
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 08:49:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3369318A595D
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 09:00:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA655328633;
-	Tue, 21 Oct 2025 08:49:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A66132AAA6;
+	Tue, 21 Oct 2025 09:00:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ZVvVylep"
+	dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b="QS6xDKom"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from polaris.svanheule.net (polaris.svanheule.net [84.16.241.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D260313539
-	for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 08:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14C6329C76
+	for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 09:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.241.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761036544; cv=none; b=kJzIB903SirDJtbaydHeymrqEBdm4hml/ml1K4JZ5G7/KsvumNreg4NOrfMUb70iHgmuOa+lLP6oRYaY+dkmvH57yVzEdhJFJgD9q1v/i0G5OPCezCrZQkAEQjrHZSBUFtECK1YKqYHzqpbPCSsQoIWV1xOwWYGBVM72BEgwp0U=
+	t=1761037217; cv=none; b=JYMLLNxkkynDKsnZbedUX7GXm8NkMg/enuXay6U36OFp6bqk0OTi6TtVXjtANQnOZ1MSa341D2uuf7/Yh5XzeA5ARLPV+2zwDArrfS6sItGFpZVLLIkMydCOec7NetJDcZooCMOyY2+S7kwtgPZOuPPuip4uXf4f9iy5tZ6951M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761036544; c=relaxed/simple;
-	bh=XPoKmOvkORtTPa9NjvFga22Y6k1YtkHFkJ0SSvV1lJ0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P4dYXXgs0jhfhlPzaVjeIUMYTgB4PrkxbeHEV8geApwIyhX5WkhBKPXZ3OMe8Vt4yaCv1LY2uhomdOTXJl6wljcAAbuuUpYvornwko3OVc0IJcTauajPSxSGo2iMQwAqOX0ymDSjFfhzYS53ccdAYMEJgwOJsh0Rbgthl5ktgIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ZVvVylep; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-591ec0e4b3fso392009e87.2
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 01:49:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761036540; x=1761641340; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UWB7I3uOZH2R37zOj0nUgiboN1KhJcfYPAPWQf++YmE=;
-        b=ZVvVylepYlIRipIxlYJ7M2tQIKLOhLUf4xj3CX7eETpiUVZ/SF2VzA55Wtt9jwm9i7
-         3jlqyQLTYjFlfHGORHSO9eP4oLxhXRzAA95V3mwhyVan97pV2MhOpA15rUv5OlDUgTEv
-         rlxvpB1AapIVPOnzJvdcVZNR/juJDS/c5rVmnS2KoFnr2deH2MWcg6RptvXuX09Ucbr5
-         hyDNxItrTSTaN9aodWlRoZ6kS/kgREKf4M2iLMheUR1Friad90qBZVAZKuz0FeFXeQW1
-         IuYsPkUg4aUfpzQlAlVX7E3+Kp7j3Qc9sFb8qnYVKsCrx1iI5bSoNHusrObEj2/dICws
-         w6Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761036540; x=1761641340;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UWB7I3uOZH2R37zOj0nUgiboN1KhJcfYPAPWQf++YmE=;
-        b=g/0/G7OLWr6m8YZ2/UHzUNwxC8D4YKpIkaitbC6gDc7s/F4AUxK7YjzMYmGs9Erb4t
-         UOyh6dK+JYIYiCpYKVhKUOOg3Tte6XRDwe97/9CrMHutFNJco9KBl7EQc/pO4wp3yURa
-         7Wp4DY+2aDeW9ZGRGgBWzyTfHi+RTt5mx9QMHuzkm3NaVKGPvfieD412qrFmzQGfR8uK
-         bMyRgAyY3ODI/jctBS3FTImFZooIRMVB8pbpBiJbZFxNG6BjEQQiaf0P7V7vXNjRygNt
-         F7YqqWB6XmrMEV7egC3bEtZ5SJVE8UmIyV4iD/25rQw8W+Ip45kFmbu1QOE9Ty53edCL
-         DjgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU4/9qzxfsxfTvvsiFjMeuuEMYhTZC3MZnBW2XEZ6SS4Ys1dYIh1+Jry7FWzd2jXiFTkKc/QOC0z4EA@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+LnRHwPhu+YA3rJEoo02sCCW8nUzZunKxI7iutHO/gQTKYTbd
-	dfTF0mF227iEyIXzIisMvzh6ntJFgnq4gMDVy+5EdCvmTF/31GwdtdiYrSLto92rB4O2Eo0m3wc
-	GKENSWYnCLeRp71hCGpt7FEDPVvJohmLzKDBhY0fYTg==
-X-Gm-Gg: ASbGnctCAX6uXGkRYgY7oqfZ1VCejm75hf/ovWbBwjN4Na218AQO8xkhgmh4wJtYzXg
-	qF6Vj3fSfQIO64M1D7aqpSKWHWJDiGMH7QmolK7vSyGwv+fiXdt8RnsAJgdKoXm9s0hrB3h4B28
-	otQlFbCqaW5iQt4X+TTrth10b3y0KVyg5PHUb35ID9/4y74z8SgXGN+li7Xe48NK/rZp/5Nu/p8
-	cN5pO6f3udvt1iTKra2j2Yl5hg5v6Gso6DTRJefBFDJJ/ynBA3aZN2w+Pt/iKVQEBIziAydBFwO
-	cR1w1h1OVwQdLBWSDiib8E2j/gM=
-X-Google-Smtp-Source: AGHT+IGhse0+b3CMkpG2vCzGWzQdyEVQTxsJwBmPyyMaoRdINy22RkUY/oSul+AvEUV91IDbfefUY9oqSpF1cwaoD0w=
-X-Received: by 2002:a05:6512:23a2:b0:58b:15b:21df with SMTP id
- 2adb3069b0e04-591d8533c83mr6150254e87.32.1761036540599; Tue, 21 Oct 2025
- 01:49:00 -0700 (PDT)
+	s=arc-20240116; t=1761037217; c=relaxed/simple;
+	bh=FY66GgTDOIoB9mS2HFOFn+lKyUzk7ReEJSz06q2JKqM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VO/MXGwzkbV/a3xLGucmPhMlUvQtBaOQtBPOHiN8s1IpCpweKB4QShj1EQfdEd2nIt1gC/rCbDcg7guWC8lcelpwEyQlaJXgOeUIuG321980ZZb13T+d05vSeyQgAFIf0PgCk4r7BLJW1bLQwgt/tUtwoDpCowzHUoez/w5dLxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net; spf=pass smtp.mailfrom=svanheule.net; dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b=QS6xDKom; arc=none smtp.client-ip=84.16.241.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svanheule.net
+Received: from [IPv6:2a02:1812:162c:8f00:1e2d:b404:3319:eba8] (2a02-1812-162c-8f00-1e2d-b404-3319-eba8.ip6.access.telenet.be [IPv6:2a02:1812:162c:8f00:1e2d:b404:3319:eba8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sander@svanheule.net)
+	by polaris.svanheule.net (Postfix) with ESMTPSA id A16C4689CBF;
+	Tue, 21 Oct 2025 11:00:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
+	s=mail1707; t=1761037211;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y986KfT3B0zrxnVKXVm/ZB2eNF2myKB1y4plYJDTzQg=;
+	b=QS6xDKom75MGyfUmlX6mzLCM3Cs1qnQp+Azwij7nq6dDoHz7pifTaSQ1qgzDJFLjD0zQQ5
+	980IHMra3TFwbrXRQ17Qc6OTTn8wHLpaNsJavqoxLwDdmKHi7tzUNfjF2asI6q+BpxGect
+	x2XF0Ck/GQCped4sPOWWyEEzS71IDfKBwcAzGMo9ODW6PtRVnjfWDT6+T7HBGr/r41Fvup
+	Ur7FqEhSsCP1fn9dR1QohdqR1Z2CkvFF8BfaT2edkWSZ45hibf8iBkwRBGtFdUy8S+CYiD
+	8waEN8oIvPqRE3rpnaPjr8R6bBdQCOP7ElF0YWOqQ0qwiICNbCVq2mn0rK39Gg==
+Message-ID: <bfab980197bfd845cce360d2dbd12ef716f8b727.camel@svanheule.net>
+Subject: Re: [RFC PATCH 1/2] gpio: regmap: Force writes for aliased data regs
+From: Sander Vanheule <sander@svanheule.net>
+To: Michael Walle <mwalle@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>,  Bartosz Golaszewski	 <brgl@bgdev.pl>,
+ linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Date: Tue, 21 Oct 2025 11:00:10 +0200
+In-Reply-To: <DDNTQLB5YRM3.39C226E0QO6X9@kernel.org>
+References: <20251020115636.55417-1-sander@svanheule.net>
+	 <20251020115636.55417-2-sander@svanheule.net>
+	 <DDNTQLB5YRM3.39C226E0QO6X9@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251013174319.GA847155@bhelgaas> <20251016163618.1355923-1-vaibhavgupta40@gmail.com>
-In-Reply-To: <20251016163618.1355923-1-vaibhavgupta40@gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 21 Oct 2025 10:48:48 +0200
-X-Gm-Features: AS18NWBHxy0Kh94MMHCmN-r2YbyHV5c_I_gws2Hy0s5QMWm9HV2uo_-7iwXoW2I
-Message-ID: <CAMRc=Mf4FnBoZfdR3gG47te=X53jASzb6MVnUmNw2q1rtUwxzQ@mail.gmail.com>
-Subject: Re: [PATCH v6] gpio: bt8xx: use generic power management
-To: Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Cc: Michael Buesch <m@bues.ch>, Bjorn Helgaas <helgaas@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 16, 2025 at 6:36=E2=80=AFPM Vaibhav Gupta <vaibhavgupta40@gmail=
-.com> wrote:
->
-> Switch to the generic PCI power management framework and remove legacy
-> callbacks like .suspend() and .resume(). With the generic framework, the
-> standard PCI related work like:
->         - pci_save/restore_state()
->         - pci_enable/disable_device()
->         - pci_set_power_state()
-> is handled by the PCI core and this driver should implement only gpio-bt8=
-xx
-> specific operations in its respective callback functions.
->
-> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
-> ---
+Hi Michael,
 
-This says it's a v6 but I have no idea what changed since v1. Please
-provide a changelog for every version when submitting patches.
+On Tue, 2025-10-21 at 09:33 +0200, Michael Walle wrote:
+> > +	/* ignore input values which shadow the old output value */
+> > +	if (gpio->reg_dat_base =3D=3D gpio->reg_set_base)
+> > +		ret =3D regmap_write_bits(gpio->regmap, reg, mask, mask_val);
+> > +	else
+> > +		ret =3D regmap_update_bits(gpio->regmap, reg, mask,
+> > mask_val);
+>=20
+> I wonder if we should just switch to regmap_write_bits() entirely.
 
-Bjorn: does this look good to you?
+It would certainly make the code simpler, but it may impact performance a b=
+it.
+E.g. a bit-banged I2C bus doesn't need to update the output value (only the
+direction), so using regmap_update_bits() saves half the writes when the ou=
+tput
+data register can be properly cached.
 
-Bartosz
+Similar to gpio-mmio.c, gpio-regmap.c could also provide multiple setters, =
+so
+the branch(es) in this call would only occur once at init, to sacrifice cod=
+e
+size for a bit of performance. Feel free to let me know what your preferenc=
+e is,
+otherwise I'll keep the patch as-is.
+
+>=20
+> In patch 2, you've wrote:
+>=20
+> > The generic gpiochip implementation stores a shadow value of the
+> > pin output data, which is updated and written to hardware on output
+> > data changes. Pin input values are always obtained by reading the
+> > aliased data register from hardware.
+>=20
+> I couldn't find that in the code though. But if the gpiolib only
+> updates the output register on changes, the write part in
+> regmap_update_bits() would always occur.
+
+I was referring to bgpio_set(). AFAICT gpiod_direction_input() and
+gpiod_direction_output() call the driver unconditionally, without checking =
+if
+the gpiolib state would change for this pin.
+
+>=20
+> In any case, feel free to add.
+>=20
+> Reviewed-by: Michael Walle <mwalle@kernel.org>
+
+Thanks!
+
+Best,
+Sander
 
