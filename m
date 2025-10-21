@@ -1,114 +1,128 @@
-Return-Path: <linux-gpio+bounces-27393-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27396-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54C4EBF70FD
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 16:26:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5148BF7156
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 16:30:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A7F863A156C
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 14:25:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5280918929C3
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 14:31:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 238BC33DECD;
-	Tue, 21 Oct 2025 14:24:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04B352F60CD;
+	Tue, 21 Oct 2025 14:30:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b="RR2SygYh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X/HycNGm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from polaris.svanheule.net (polaris.svanheule.net [84.16.241.116])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F51A33DEE4
-	for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 14:24:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.241.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBEB5248F7F
+	for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 14:30:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761056680; cv=none; b=UX3sXADzoMPJuQyFmliN4kvhcHOjsqaLZAt/PAt2sWE9VqJMm+DoiY0xC9x3a2/IewtGg7lyR2rNP4m3TqIQE/czkpLWkqlBdPrEqcs0VCbEuPnqXJWjmmnsPZRureuiwiler23up4O7GOVE/JIXTGn3tlFZECb31RBCzouCW5Q=
+	t=1761057037; cv=none; b=ojwcztgFi7pkyL3ax4Sb7wcx8/LZvr54I57kiWyZUTJBVebsY53A7a9WOzHg0nI1KiWGe01VfCCdMSwUea7F1ef2UhAckk18MVfbyiyZ5GOsrVPfIT+M7/MR3VO0QJQ1nqHaloKQ4iXcYCAX7BXCXdCkwrVMwYc3ZE0uy1dhWko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761056680; c=relaxed/simple;
-	bh=Fez7uS8AbScs89gfdW78iX7P7jEs/X0KZa5sFOKAbRo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Odnq88VBR2Vz9wYE1DQQsFzCCqkfmDZn2TGKZReo3pb4MkONo2/p8K0hQSFiRL+upKQu6+7zJqbxntSn/oMuk7hyIZq4if+s0fCFWQSCNs2y+lsbBBmcOWT4EWc03muUsyXIRkAvD3Eg57CNze/eU0bsWNy0p9oPVta8kED0og8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net; spf=pass smtp.mailfrom=svanheule.net; dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b=RR2SygYh; arc=none smtp.client-ip=84.16.241.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svanheule.net
-Received: from terra.vega.svanheule.net (2a02-1812-162c-8f00-1e2d-b404-3319-eba8.ip6.access.telenet.be [IPv6:2a02:1812:162c:8f00:1e2d:b404:3319:eba8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sander@svanheule.net)
-	by polaris.svanheule.net (Postfix) with ESMTPSA id 888CD68A1D3;
-	Tue, 21 Oct 2025 16:24:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
-	s=mail1707; t=1761056674;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Hi27ZSmrR6t0dm+4AwHvX71F/u/ISlzchGx+6AIwVJI=;
-	b=RR2SygYhLgA7AsiICg78fI1XTrOUI9zPfQMoIGqRW5Ex0wbXQgF28cq/dyK8xNeE/Vnp1x
-	Qnqpr3R1rXuykdB0cvpkVO6Y3zyKRj+3o8sIH2O+TvmTUFz5YdNpFi20xcBw03obsoM2Kl
-	Gx24igIctmBhXDveVXSZKpBDGHPqtNdkq48SLS3zxKkY7Xd1hHzgfQo0TQcpTkpMjRdH22
-	mK89xXHgdwkiyRXm2sdoUqybLjGpcT6gA6MN7qBP2/38Kr/wFnGfQPGKTG/SxCG+MS1C11
-	bDCRNcWE5kAzgGRdf7xsdlLsveU2y/OZaBG5BzII8vOFRI1VJ9YQsgih+QHXaQ==
-From: Sander Vanheule <sander@svanheule.net>
-To: Michael Walle <mwalle@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-gpio@vger.kernel.org,
-	Lee Jones <lee@kernel.org>,
-	Pavel Machek <pavel@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Sander Vanheule <sander@svanheule.net>
-Subject: [PATCH v6 8/8] MAINTAINERS: Add RTL8231 MFD driver
-Date: Tue, 21 Oct 2025 16:24:03 +0200
-Message-ID: <20251021142407.307753-9-sander@svanheule.net>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251021142407.307753-1-sander@svanheule.net>
-References: <20251021142407.307753-1-sander@svanheule.net>
+	s=arc-20240116; t=1761057037; c=relaxed/simple;
+	bh=laqZKvY6DcAuH66QuTKteX+XFvj0fHRpIGMYs7CTAAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TLMbSXK1poxji4bA42mXkwyWOQOmWzeKU1KhTIzuO6LSb4kJKJU/UPDmjnWciodBzfIPBPBVT91S/GgfFM90AN7UZK7r9J0QjuKZvBzB+M+FS98lzAXp5Nq4MeCiNeO5rZSlKxNYo2w9oP97OIWLU1FkElS6J23QWs6J+6ELas4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X/HycNGm; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761057036; x=1792593036;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=laqZKvY6DcAuH66QuTKteX+XFvj0fHRpIGMYs7CTAAE=;
+  b=X/HycNGmITovRimfS/Nx7aJKfCqPKfH6mXJBndLJTvCAAFX5KrRIZO0W
+   BgoQ1EOh1xCKfizRehnKhh/0KvJuFRcE/HkUSVYFNyG98ylbwwlp/iuCQ
+   O6viS1WKZm3Rve7q5rCPTsBUB8YN6Ax9jK5C7b3QAYfcd8dfxdB02EykT
+   ArsWp3JyEhXsvHKldMsmUzldeA38Mh9EeQg8vxATlG9JCr3HgiOAd3W1c
+   6MaYS8u4nGBgeoq2ZWsXQKca7/RKQIpUy3efON6Rtfz3BC6835wZI3956
+   mNLhVHnKs3CZVqqxgyYRr+GSRh9002WlfLvVOY82YpCFCzuPTR4pgi04c
+   w==;
+X-CSE-ConnectionGUID: xOKPGK5/Sku3zKpxHT03IA==
+X-CSE-MsgGUID: FEXXcz6cTfWrMbLS2l8asA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="74302820"
+X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
+   d="scan'208";a="74302820"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 07:30:35 -0700
+X-CSE-ConnectionGUID: VR6MvcYQQzWFs/Igsu3P8A==
+X-CSE-MsgGUID: +X4O+1d7SjyCTvzUnUXGGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
+   d="scan'208";a="187872647"
+Received: from fpallare-mobl4.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.245.148])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 07:30:34 -0700
+Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1vBDNf-00000001WED-05Uj;
+	Tue, 21 Oct 2025 17:30:31 +0300
+Date: Tue, 21 Oct 2025 17:30:30 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: kernel test robot <lkp@intel.com>,
+	William Breathitt Gray <wbg@kernel.org>,
+	oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [brgl:gpio/for-current 3/3] drivers/gpio/gpio-idio-16.c:170:20:
+ error: 'struct gpio_regmap_config' has no member named
+ 'fixed_direction_output'
+Message-ID: <aPeZBrlDrQBkMRGL@smile.fi.intel.com>
+References: <202510212126.mVDMC2iC-lkp@intel.com>
+ <CAMRc=MdTffE6Oh_n0AYBEdyccN6-5FffxDZp6u037Yz9Khj-bg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MdTffE6Oh_n0AYBEdyccN6-5FffxDZp6u037Yz9Khj-bg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Add the files associated with the RTL8231 support, and list Sander
-Vanheule (myself) as maintainer.
+On Tue, Oct 21, 2025 at 03:23:12PM +0200, Bartosz Golaszewski wrote:
+> On Tue, Oct 21, 2025 at 3:17 PM kernel test robot <lkp@intel.com> wrote:
+> >
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
+> > head:   0d3f95740ced3acb6171cdec8c5bef336b0cabdb
+> > commit: 0d3f95740ced3acb6171cdec8c5bef336b0cabdb [3/3] gpio: idio-16: Define fixed direction of the GPIO lines
+> > config: x86_64-buildonly-randconfig-005-20251021 (https://download.01.org/0day-ci/archive/20251021/202510212126.mVDMC2iC-lkp@intel.com/config)
+> > compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251021/202510212126.mVDMC2iC-lkp@intel.com/reproduce)
+> >
+> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Closes: https://lore.kernel.org/oe-kbuild-all/202510212126.mVDMC2iC-lkp@intel.com/
+> >
+> > All errors (new ones prefixed by >>):
+> >
+> >    drivers/gpio/gpio-idio-16.c: In function 'devm_idio_16_regmap_register':
+> > >> drivers/gpio/gpio-idio-16.c:170:20: error: 'struct gpio_regmap_config' has no member named 'fixed_direction_output'
+> >      170 |         gpio_config.fixed_direction_output = fixed_direction_output;
+> >          |                    ^
+> >
+> >
+> > vim +170 drivers/gpio/gpio-idio-16.c
+> >
+> 
+> I removed the offending commit from my queue.
 
-Signed-off-by: Sander Vanheule <sander@svanheule.net>
----
- MAINTAINERS | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+I dunno if we call it "offending", but I think this should include
+a prerequisite as it was mentioned in one of the Cc: stable@ lines.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 46126ce2f968..a83c57091a9d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -21630,6 +21630,16 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/watchdog/realtek,otto-wdt.yaml
- F:	drivers/watchdog/realtek_otto_wdt.c
- 
-+REALTEK RTL8231 MFD DRIVER
-+M:	Sander Vanheule <sander@svanheule.net>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/leds/realtek,rtl8231-leds.yaml
-+F:	Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml
-+F:	drivers/leds/leds-rtl8231.c
-+F:	drivers/mfd/rtl8231.c
-+F:	drivers/pinctrl/pinctrl-rtl8231.c
-+F:	include/linux/mfd/rtl8231.h
-+
- REALTEK RTL83xx SMI DSA ROUTER CHIPS
- M:	Linus Walleij <linus.walleij@linaro.org>
- M:	Alvin Šipraga <alsi@bang-olufsen.dk>
 -- 
-2.51.0
+With Best Regards,
+Andy Shevchenko
+
 
 
