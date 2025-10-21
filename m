@@ -1,130 +1,151 @@
-Return-Path: <linux-gpio+bounces-27372-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27373-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0688BF674E
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 14:30:53 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D03CBF67BF
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 14:41:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 630C43BC511
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 12:27:12 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CBD734EE571
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 12:41:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B35C3128D3;
-	Tue, 21 Oct 2025 12:27:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AE4932ED45;
+	Tue, 21 Oct 2025 12:41:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r0/StCo2"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="IXuFI9KG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A7CF9EC
-	for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 12:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FBC432E741
+	for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 12:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761049626; cv=none; b=pGBMc7ogt4XDt/XGvV07B1dwy7n1mmEIYFFTWcKI6E10xwauKLvr4Hig++c12XetiBuWbYk8rk03cAJD89dxvtr4kk7UUdSq3fINdz86NtucT+xlvmZy7C7KKSLD0mHhFahTPT2qBB5+lYGHybl4lJbsRXm6JjpE84kFGbOKMsg=
+	t=1761050463; cv=none; b=N9v53v1bG8YvgpzkPgdfg9H146vKDhzDd7ay5o1KIIol6fv4vlMHEpuxDVAxHaptMipUf+xdGDeVEA0BnC6Apj4nFk1xonOYPtVFbhRn6U401UEmTajVBozhkf+X+tCYBZtlP/QGMkf9EsUcs1nqDpPVkRtEAW9Z0con9JlrrcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761049626; c=relaxed/simple;
-	bh=dRItKHoHeP/Luyk8nQVlzb7QSwUwBxc0c3xCNUrv3pc=;
+	s=arc-20240116; t=1761050463; c=relaxed/simple;
+	bh=yuVQZTDGjvvcPalMUgTg4epkdUaGdD4g6/GxObBxEI0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KYcBHrfmjia7nCJT+IjdkEAsZ5ln6Qa3Y0/fRWurhmMTCGQz/QPZ+l/elNA34AGHGRVOHcABUwaviIIpjrEFOJltceGPcwxO/+NGO6WIrv9Mw1+YYVji0Z0W4wJPm9Nkw3Wv7qCyf+YdDwmej5AYwW4EO+MBh7fVzGDSiqVOGkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r0/StCo2; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-58affa66f2bso6499003e87.1
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 05:27:03 -0700 (PDT)
+	 To:Cc:Content-Type; b=YAIgK9+17jF2pN1RqtMrTsixrCbw7DczcT4YANzpoDt+SqghEopnkfkmd2gYA6v39rvODuVVDGwBmQcsgJ+29prBbCCW+3QXNuG5q5RsF3zHDrFB/v8Cdd4N7FCxAMBCj9/JajaepGM5dSHRFL3PbPIqS5ZPUN7EJT/bAfQjaQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=IXuFI9KG; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-57edfeaa05aso6341735e87.0
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 05:41:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1761049622; x=1761654422; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761050459; x=1761655259; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dRItKHoHeP/Luyk8nQVlzb7QSwUwBxc0c3xCNUrv3pc=;
-        b=r0/StCo2w3u2g1qjxUqJxjSWxI5xD+2jLMCNUc+662zrhY8ojQlsvc87YLoPg9+0mv
-         vGSPc6Mfaf9pIQb0SYY7vnQTqMA+PtHklGv4peBLNWPojybYtB7DZ1GHJK+zto4qW+nk
-         zM4jMCvTfLI8NGdVlaabwuiqyfAc37YBC1ev10xwIMb/9uxOVcxpvHSDeUV2uijW9XBq
-         AWf5vu/jh6UV8nY2PJzJrLzOSVT1AOtQy84LJMidS00cH8TWo5nBp+NAysYtvO+gl+4Z
-         YzG2uhUwyY0caIF87dwG5doNpECRXFJc1Z8/WcL8LDPSeoa781zY/zdm6Mg83S7OL+eK
-         6laQ==
+        bh=NWb3L2HC5GL7gJV88qPeFIZPSp/OKkdc2F2PK/9kqwo=;
+        b=IXuFI9KG4A3E4U5Fibyo6SAZNeh861N5dZ2edgvOUXsjhDgufvCVHz/9zsQZEjK3BW
+         MjdzfFJgfVaycKMJmwOmMDVjWwXkD7nlGV67Jf8zvmtPIwiJnQ2Hi16/68lWT3XbNX0q
+         7UCzdCkaXSC/d6+2uyK1aPWErerdzs6Igm9Tb1vs/sYCNuAVd6bEm8yBMPW3HV7o+6lR
+         oKyQWdMb9O1alofphP99ZmDTFd+Qzv6AnI2dCfLRhj8HNObmEMBPQTn+FgswF+1mdw56
+         trf8UoHLlB9JpJl1xWI4L0iPsJJXVTFXUuRVtCxZ3EA8ysrGASRUvQ/StiZWJHbSyx4X
+         GBuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761049622; x=1761654422;
+        d=1e100.net; s=20230601; t=1761050459; x=1761655259;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dRItKHoHeP/Luyk8nQVlzb7QSwUwBxc0c3xCNUrv3pc=;
-        b=k4an5zk3mKSYjohJkwUPArzLGzGn6qmI5V98bbY99D7d9diYQtulIOTb/rsZifYZeW
-         V3oBgdTcIPDjOF7pRkInT5Lzo8nI15s4glxHpAwOPFOqExNz4AqBv8gxmT7aZn766C8/
-         y+21qFE/toksg5Wz0xxAkHTsnn4QMV49lkHbkYiwMZnwlzXeeCkuaZCIcJbXFqQKF7oe
-         WFUGbvXgjhOzshZFBnilBKFmdc4uiFrGx3j/XO1NLH3C3gb9obIU+1adLh5B9xLk/1PG
-         PkL0OniD7vmaoc+5u0th+H32IsBknhHGBfq2Am1koAtZd6I4cai+ljkjmrpTkHULs6sL
-         riTA==
-X-Forwarded-Encrypted: i=1; AJvYcCW8nVhnbvAR0kqgt3gJk6JGp6L17VG4h0zFLD5gzY289WZ3odgdS6+a3ltmbOkx5UJGuj8TSxAH80hR@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvrERpWWIrXmbLj6aP8blOsVCYc711Yd5jg3JGg0UpJ6/OtNni
-	3rPCK7lXWoLO/elHFfPHVzuHFbuVsViOcmV+iZWVu3t4DvAts050FG3o5Tq2qdj36tOcLpkgAzC
-	pTzXblQe5tIlGSQvzORQyDmTtZNyhsPH+k0tbNgLu+w==
-X-Gm-Gg: ASbGncvT7j8ZHa7jPCgJqf9VdfRcjL+EzNvtKV1cN6f3YUshlcG2KSamK9S66fsKnZy
-	E8tnBH1Ze6XfskxYpU4rcwOml1cgDwCykDINq3ZALbJBrH0M30mAfbUFindzBHr3574QWFToq3S
-	GPAju2YZy5neyrNaq3qcL+VFMHl6dr8+LVV28cJAti7G70CJp3O7bTAcYZop42LRxLPPykEag7V
-	vLZRpRphfVznqyeH+tq01fpYNPXRiT/J0tkQTv+oiu8SxzOGhCcVPPUpT+vdE+7VEN1Bh9ThpYq
-	Y/+mYA==
-X-Google-Smtp-Source: AGHT+IGxlVJN2rvaLyj+Brv4icN7nCu4VjMGW+HovXJOGOXiS4L6UUAPV/sCXKFATKrxTJyz9wkyawu1OYIvSs1RR4k=
-X-Received: by 2002:a05:6512:ba1:b0:591:c8d7:c03b with SMTP id
- 2adb3069b0e04-591d850cf22mr5196408e87.8.1761049621481; Tue, 21 Oct 2025
- 05:27:01 -0700 (PDT)
+        bh=NWb3L2HC5GL7gJV88qPeFIZPSp/OKkdc2F2PK/9kqwo=;
+        b=fmb+J46UO6ji7jgV+3oEa+fSGGwnR8AZN5QB5bnUuHsdlLPUBBDo9H8AI0D3v9eMMG
+         oTfjHIqb0yGlS1W13OOCODLMBOwAPM/5MI+uP3e57qrU/v1xDRlfBBQv49mEA7141aDE
+         qskmBqeSp4sjxlA19f+syINWf8xtZyD8al1yDqJjX9ojbWa7cvt9X4y7FsZzIcQe1bjU
+         aVBGZ4Hlu6WtJGfAvou4M009haoYk6OC/KMPZHeDsA56hU4v69RZfbCdbragf+nJINp3
+         0zmbeZvLy1P3T0WHJA4OlVne9JXu52syNn46p2GwMjaTqxJkuwvmqvLM7j15oDozqqYR
+         biGw==
+X-Forwarded-Encrypted: i=1; AJvYcCXEq8WVxpp5ZbOdFaYcP2p80w+UPzmQCVcHpTa964XCYVVlfg90Ipxo0SUxy3IegCEF3jfLrl1ve+UF@vger.kernel.org
+X-Gm-Message-State: AOJu0YziZ9EE/8r3ni4u48NII9vW0gWfunv8x/9P9d5hakY0Za/PCC94
+	TQAVJy3iobjEuDBIP+Cl/JBHyD4yctCrr9YK28x8jXJZNqrE/J9Mi5v9UxbncaDPl7+gkmm0heM
+	D7iRs9isKsGbehTCoRKjO9O9lgj2Oj3RO4rkDyZUc1w==
+X-Gm-Gg: ASbGncuR1tCyiaZFQieybiKsLnfkIcjbII84+qVKh8Vb9GtZOLQQdZPKO0cfTaZXLPQ
+	+hM83jGMg/Ap56DD+PIzwFIkAgykcVGjOfrmhYjQCQZetby1IwO3Pc+mi98UyRGfHNYK/aW74ph
+	BPfjD0EBOuusIsOnuS4iCQOAXIzCj3Ccj7GscfmO6a+vFYG2b7pa7I1plqA6wfTPCp+T5CHG5si
+	K8KAXq96nfunm+/o3YfZ48d9jAbOzPdaVDTMU7NxaxnOojBLQy8bKKR0PWNhdM9dz1kVrkFVXTz
+	rF17QfAWih7KC7RIs3dIa2tOIlk=
+X-Google-Smtp-Source: AGHT+IHJJi40QO2j+AEEIXG+FSVZbH+WW1DwyjfojmvqVA8OuBIji8cOMNjvhsKfbFVOj/fVZy/UensL3Bqq96jG85U=
+X-Received: by 2002:a05:6512:3b0c:b0:57a:310:66a8 with SMTP id
+ 2adb3069b0e04-591d85773ffmr5098755e87.55.1761050459418; Tue, 21 Oct 2025
+ 05:40:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251014140451.1009969-1-antonio.borneo@foss.st.com>
- <20251014140451.1009969-10-antonio.borneo@foss.st.com> <20251014-affection-voltage-8b1764273a06@spud>
- <b4eca95eaa0e6f27fc07479d5eab2131d20eb270.camel@foss.st.com>
- <20251015-headstand-impulse-95aa736e7633@spud> <0826a055f6b2e3e6b50a5961e60d1b57d1d596c6.camel@foss.st.com>
- <CACRpkdbeaiNGfOFfVfDNZ=u=4yhCykcdSdHUv-td_DVyr3aWaQ@mail.gmail.com> <9dfdf02b7e5a99c515aff3c6528e2d5f70517201.camel@foss.st.com>
-In-Reply-To: <9dfdf02b7e5a99c515aff3c6528e2d5f70517201.camel@foss.st.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 21 Oct 2025 14:26:50 +0200
-X-Gm-Features: AS18NWCW8_rg5qtH2LgaZCS86vARi5jbxP9hbx6C1qjmUJ3MwBUVy8SVIqQU3O4
-Message-ID: <CACRpkdYRUcQLc07o4epJs41BMkweHp+hKr4KQbBeFW1ZNS3RJw@mail.gmail.com>
-Subject: Re: [PATCH v3 09/10] dt-bindings: pinctrl: stm32: Support I/O
- synchronization parameters
-To: Antonio Borneo <antonio.borneo@foss.st.com>
-Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, 
-	Christophe Roullier <christophe.roullier@foss.st.com>, 
-	Fabien Dessenne <fabien.dessenne@foss.st.com>, Valentin Caron <valentin.caron@foss.st.com>
+References: <20251015232015.846282-1-robh@kernel.org>
+In-Reply-To: <20251015232015.846282-1-robh@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 21 Oct 2025 14:40:47 +0200
+X-Gm-Features: AS18NWCQWmhq7gNfZEHIkGW0O-gEdDRZh4gksyliLmXKxwOZhptAVz-Dcd8I0sA
+Message-ID: <CAMRc=Mf++cYPVrFH5_1KggTQi2Tew_MaeHMHSiczkVfM+=Y4rg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Fix inconsistent quoting
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Stephen Boyd <sboyd@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Fabio Estevam <festevam@gmail.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Jonathan Cameron <jic23@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
+	Jassi Brar <jassisinghbrar@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Lee Jones <lee@kernel.org>, Joel Stanley <joel@jms.id.au>, 
+	Andrew Jeffery <andrew@codeconstruct.com.au>, Andrew Lunn <andrew@lunn.ch>, 
+	Vladimir Oltean <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Daire McNamara <daire.mcnamara@microchip.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Florian Fainelli <f.fainelli@gmail.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-iio@vger.kernel.org, linux-media@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-phy@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 21, 2025 at 1:49=E2=80=AFPM Antonio Borneo
-<antonio.borneo@foss.st.com> wrote:
-
-> The issue is that parse_dt_cfg(), called by the above mentioned pinconf_g=
-eneric_parse_dt_config(),
-> only uses of_property_read_u32() to get the value of the property.
-> Conor's proposal for replacing my
-> st,io-sync =3D <0>;
-> with
-> st,io-sync =3D "pass-through";
-> doesn't fit in!
+On Thu, Oct 16, 2025 at 1:20=E2=80=AFAM Rob Herring (Arm) <robh@kernel.org>=
+ wrote:
 >
-> For my use case I'm going to extend parse_dt_cfg() with fwnode_property_m=
-atch_property_string() to extract the index from an array of strings.
-> Then such index would be used for pinconf_to_config_packed().
-> Does this approach look reasonable?
+> yamllint has gained a new check which checks for inconsistent quoting
+> (mixed " and ' quotes within a file). Fix all the cases yamllint found
+> so we can enable the check (once the check is in a release). Use
+> whichever quoting is dominate in the file.
+>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  .../arm/altera/socfpga-clk-manager.yaml       |  4 ++--
+>  .../bindings/clock/nvidia,tegra124-car.yaml   |  8 ++++----
+>  .../bindings/clock/nvidia,tegra20-car.yaml    |  6 +++---
+>  .../devicetree/bindings/gpio/gpio-mxs.yaml    |  9 +++++----
+>  .../bindings/gpio/snps,dw-apb-gpio.yaml       |  4 ++--
+>  .../bindings/iio/temperature/adi,ltc2983.yaml | 20 +++++++++----------
+>  .../mailbox/qcom,apcs-kpss-global.yaml        | 16 +++++++--------
+>  .../mailbox/xlnx,zynqmp-ipi-mailbox.yaml      |  2 +-
+>  .../bindings/media/fsl,imx6q-vdoa.yaml        |  2 +-
+>  .../devicetree/bindings/mfd/aspeed-lpc.yaml   |  4 ++--
+>  .../devicetree/bindings/mfd/ti,twl.yaml       |  4 ++--
+>  .../bindings/net/ethernet-switch.yaml         |  2 +-
+>  .../pci/plda,xpressrich3-axi-common.yaml      |  2 +-
+>  .../bindings/phy/motorola,cpcap-usb-phy.yaml  |  4 ++--
+>  .../pinctrl/microchip,sparx5-sgpio.yaml       | 12 +++++------
+>  .../bindings/pinctrl/qcom,pmic-gpio.yaml      | 10 +++++-----
+>  .../bindings/pinctrl/qcom,pmic-mpp.yaml       |  6 +++---
+>  .../bindings/pinctrl/renesas,pfc.yaml         |  4 ++--
+>  .../bindings/pinctrl/renesas,rza1-ports.yaml  |  2 +-
+>  .../pinctrl/renesas,rzg2l-pinctrl.yaml        |  2 +-
+>  .../pinctrl/renesas,rzv2m-pinctrl.yaml        |  2 +-
+>  .../bindings/power/renesas,sysc-rmobile.yaml  |  4 ++--
+>  .../soc/microchip/atmel,at91rm9200-tcb.yaml   |  8 ++++----
+>  .../soc/tegra/nvidia,tegra20-pmc.yaml         | 12 +++++------
 
-Aha I see the issue.
+For GPIO:
 
-Hard for me to tell how this will play out since you are the first to try t=
-his,
-but it seems like this could work.
-
-Let's see how the code looks!
-
-Yours,
-Linus Walleij
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
