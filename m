@@ -1,34 +1,34 @@
-Return-Path: <linux-gpio+bounces-27387-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27389-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5938FBF70B2
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 16:24:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2176FBF70C3
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 16:24:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 06645355E99
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 14:24:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2E14B189BF0E
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 14:25:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ACE933C500;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0DBE33C52A;
 	Tue, 21 Oct 2025 14:24:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b="a6AU+z9R"
+	dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b="5reUCzt3"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from polaris.svanheule.net (polaris.svanheule.net [84.16.241.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E172D6E67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4A83385A2
 	for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 14:24:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.241.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761056675; cv=none; b=DtVjaUzy8GPCA/ECdoXp5uByrcNm8J55jikQUpP0kKjnIu/gZg2kxDkkjSES3QtqW/zkQYioCuuRMORggRKNZYNtU0Cy06hvkcprMSyek7D9BSvhSuGT8v7Gfo2AqY+xkPdg6oHs9OPloQ2Cnju7NE+rHULuPSFpR1/cr/M5Ec4=
+	t=1761056676; cv=none; b=INKJM+f4EFLjw0Ng6/8MW2rkLnDdM8uDokei+V3IOPDxhO1iWcbQql36y06IFwoe2NmAcDpMjfZEXaRQvLWGVe+6XAHTJJhzWyo0jUQ0+i7hcbGWn6OwDDIMkeZjXscpJfaaEytRLr2YUp6j9njZDwuMQp0f2nK+/AcUaFsPWH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761056675; c=relaxed/simple;
-	bh=bpGpijdjZAR7OyV2uiqmTwCnTxW/nQi49zgcRxMPFb0=;
+	s=arc-20240116; t=1761056676; c=relaxed/simple;
+	bh=mjMBW4Sxdy9jvKWjdvZDhiiRV/EN4mkroKkKBROPKjY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W3gfC3wXWZg/ZiShT0gF/XuhyZod5/N9LDOlczuiH1iKwnQxHkjaI4vESMCk+V/PVNN3kyrJ3K1Fxg+jx8Q1fgZIi2bvbyFam5uZIMlx4GkDePKpv3qw/4Ao4ZUp1GbgVG2mC4ULUGlYk2a4olmYr4bIMMnKtNBKvm6K3X8kJJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net; spf=pass smtp.mailfrom=svanheule.net; dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b=a6AU+z9R; arc=none smtp.client-ip=84.16.241.116
+	 MIME-Version; b=sFnDJ1C/NN2zfa7fhJh0W/kqHO0WMxuZi39pkx0F3afoeCfQxQ2q55eHM33HZjfaORAjOqnu6jxvhySmwwxSgqiEeooTfXNk5n0JMyLgU7YYomKLuqpvxAMqum6R8P5ZfqFToCRkFAm8hjp0JcFwdSfbSxiYj4/Ktd1oOdAHNj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net; spf=pass smtp.mailfrom=svanheule.net; dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b=5reUCzt3; arc=none smtp.client-ip=84.16.241.116
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svanheule.net
 Received: from terra.vega.svanheule.net (2a02-1812-162c-8f00-1e2d-b404-3319-eba8.ip6.access.telenet.be [IPv6:2a02:1812:162c:8f00:1e2d:b404:3319:eba8])
@@ -36,20 +36,20 @@ Received: from terra.vega.svanheule.net (2a02-1812-162c-8f00-1e2d-b404-3319-eba8
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: sander@svanheule.net)
-	by polaris.svanheule.net (Postfix) with ESMTPSA id 5CFF968A1CC;
+	by polaris.svanheule.net (Postfix) with ESMTPSA id C4B3E68A1CD;
 	Tue, 21 Oct 2025 16:24:31 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
-	s=mail1707; t=1761056671;
+	s=mail1707; t=1761056672;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WeM3dHttDCgxcjOT7kFTiod27po3wdP3a4W2ChFB354=;
-	b=a6AU+z9REHJx9dYxBOXXb1Kp0OmUDm54fZ8We2+iBYlwJN9k7DdpNGrZRtWyzSVV9oI6DW
-	cT4AeLCr2aKs2RpybT0qNVeJiQ7KfUy74mUPrjFcoq9F8Ckb/RcfINJus4J2M65/W/6eel
-	GJPy8q3ZOkBXVgxbrhq3JRiXqjeR7tqRuRn4Ztu5gRgMFId1pOQFgd1ujN3ies5YVX1qOH
-	p2KSRRJBgM0CVYF6kljJ9gC9xPA8EKw9bAUYh55D0slcBwLJR783tPYUo2BxJpRJqtWOSO
-	tZfD+vfJpa+EXeNLHiBi01Ws/jM6iCk72CDTY/vraUIEMmr94AB/DxiD+9jiJA==
+	bh=YBL7rt7cVDLBdD6u/8R0OUTQE737shBf+U6nao7w184=;
+	b=5reUCzt3wSy96XoodKBWfC6xC9UwIIZZXqmwANXGxCdEu0yUn7A3EJ84Djpd6pvmB/U787
+	vWlhxoVtLu/zwa7JWau3KnrLYOPgDIgWWb544H1FKwWkM+PgEahNk9jxBvqPLTSbk2vt7A
+	jA6lpF9BKdvh87g6gsn+chQkQFt1dc6wcxHUhzNqMClHljHp8wcaQIqbVUyqGH7ytwUsnC
+	hCVSLnR8gXhqtmAgkeyxA5aCB+sy6wmzZJ5fXVoUMKYpIuZ3LrwnVpDDD6aYYT+qu50wNa
+	oz9z6gs78cNoa0YAwWU+0fAz7oXOKMfb/ka98J+KXaxzMVJN1uBiBWwGXQfKRA==
 From: Sander Vanheule <sander@svanheule.net>
 To: Michael Walle <mwalle@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
@@ -64,9 +64,9 @@ To: Michael Walle <mwalle@kernel.org>,
 	devicetree@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Sander Vanheule <sander@svanheule.net>
-Subject: [PATCH v6 1/8] gpio: regmap: Force writes for aliased data regs
-Date: Tue, 21 Oct 2025 16:23:56 +0200
-Message-ID: <20251021142407.307753-2-sander@svanheule.net>
+Subject: [PATCH v6 2/8] gpio: regmap: Bypass cache for aliased inputs
+Date: Tue, 21 Oct 2025 16:23:57 +0200
+Message-ID: <20251021142407.307753-3-sander@svanheule.net>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251021142407.307753-1-sander@svanheule.net>
 References: <20251021142407.307753-1-sander@svanheule.net>
@@ -78,69 +78,54 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-GPIO chips often have data input and output fields aliased to the same
-offset. Since gpio-regmap performs a value update before the direction
-update (to prevent glitches), a pin currently configured as input may
-cause regmap_update_bits() to not perform a write.
+GPIO chips often have data input and output registers aliased to the
+same offset. The output register is non-valitile and could in theory be
+cached. The input register however is volatile by nature and hence
+should not be cached, resulting in different requirements for reads and
+writes.
 
-This may cause unexpected line states when the current input state
-equals the requested output state:
+The generic gpio chip implementation stores a shadow value of the pin
+output data, which is updated and written to hardware on output data
+changes in bgpio_set(), bgpio_set_set(). Pin input values are always
+obtained by reading the aliased data register from hardware.
 
-        OUT   IN      OUT
-    DIR ''''''\...|.../''''''
-
-    pin ....../'''|'''\......
-             (1) (2) (3)
-
-    1. Line was configurad as out-low, but is reconfigured to input.
-       External logic results in high value.
-    2. Set output value high. regmap_update_bits() sees the value is
-       already high and discards the register write.
-    3. Line is switched to output, maintaining the stale output config
-       (low) instead of the requested config (high).
-
-By switching to regmap_write_bits(), a write of the requested output
-value can be forced, irrespective of the read state. Do this only for
-aliased registers, so the more efficient regmap_update_bits() can still
-be used for distinct registers.
+For gpio-regmap the situation is more complex as the output data could
+be in multiple registers, but we can use the regmap cache to shadow the
+output values when marking the data registers as non-volatile. By using
+regmap_read_bypassed() we can still treat the input values as volatile,
+irrespective of the regmap config. This ensures proper functioning of
+writing the output register with regmap_write_bits(), which will then
+use and update the cache only on data writes, gaining some performance
+from the cached output values.
 
 Signed-off-by: Sander Vanheule <sander@svanheule.net>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Reviewed-by: Michael Walle <mwalle@kernel.org>
+--
+Changes since RFC:
+  - Add review tags
+  - Slightly reworded the commit message
 ---
- drivers/gpio/gpio-regmap.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/gpio/gpio-regmap.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-index ab9e4077fa60..ba3c19206ccf 100644
+index ba3c19206ccf..afecacf7607f 100644
 --- a/drivers/gpio/gpio-regmap.c
 +++ b/drivers/gpio/gpio-regmap.c
-@@ -93,7 +93,7 @@ static int gpio_regmap_set(struct gpio_chip *chip, unsigned int offset,
- {
- 	struct gpio_regmap *gpio = gpiochip_get_data(chip);
- 	unsigned int base = gpio_regmap_addr(gpio->reg_set_base);
--	unsigned int reg, mask;
-+	unsigned int reg, mask, mask_val;
- 	int ret;
- 
- 	ret = gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
-@@ -101,9 +101,15 @@ static int gpio_regmap_set(struct gpio_chip *chip, unsigned int offset,
+@@ -81,7 +81,11 @@ static int gpio_regmap_get(struct gpio_chip *chip, unsigned int offset)
+ 	if (ret)
  		return ret;
  
- 	if (val)
--		ret = regmap_update_bits(gpio->regmap, reg, mask, mask);
-+		mask_val = mask;
- 	else
--		ret = regmap_update_bits(gpio->regmap, reg, mask, 0);
-+		mask_val = 0;
-+
-+	/* ignore input values which shadow the old output value */
+-	ret = regmap_read(gpio->regmap, reg, &val);
++	/* ensure we don't spoil any register cache with pin input values */
 +	if (gpio->reg_dat_base == gpio->reg_set_base)
-+		ret = regmap_write_bits(gpio->regmap, reg, mask, mask_val);
++		ret = regmap_read_bypassed(gpio->regmap, reg, &val);
 +	else
-+		ret = regmap_update_bits(gpio->regmap, reg, mask, mask_val);
++		ret = regmap_read(gpio->regmap, reg, &val);
+ 	if (ret)
+ 		return ret;
  
- 	return ret;
- }
 -- 
 2.51.0
 
