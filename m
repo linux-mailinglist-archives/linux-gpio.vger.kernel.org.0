@@ -1,97 +1,91 @@
-Return-Path: <linux-gpio+bounces-27349-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27351-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CFA4BF5640
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 11:01:55 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46A93BF564F
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 11:02:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 430004E7AD0
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 09:01:54 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E7D953524E8
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 09:02:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8603328B5E;
-	Tue, 21 Oct 2025 09:01:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7780E32AABE;
+	Tue, 21 Oct 2025 09:01:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xx/dlBX4"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="sSxrXbZ2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63C7296BB0
-	for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 09:01:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9513B31DD85
+	for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 09:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761037310; cv=none; b=UvmrjhcJ/HI/DuXTtUok2lAX/t6gbVa9skQ6FY5w/ULbGGH1AWFc3whvVLDV3juOChMbwZt24Fh9btFgQ5JeTA1jGD4okknvooG9/+zXEI5QNVK3hUTYMtgziztHIQaoJyBjOC5ZO4L9Jex9ZkcLzU6AjlD3B/MvfpoA+nYXPFU=
+	t=1761037312; cv=none; b=ESQ1WamOhCah67YsCddxXcT1lpl6Sqgm24cwOwO0GNN4gdvNCwcqvgtEJOCUrrDU7nXEA8Z3GKXJS8175DTpcVjO6UorT+w3ilWUBo/sYbXDKcl/d3UfGjdXiuUaHMB4+VIiHsN//o2Jgy/d5qrb/p2Nk+eg80GCVH2RcpKrjDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761037310; c=relaxed/simple;
-	bh=zo7FMMU21d+H8nlfETeUkJqvTYT9a1KWD14ezWk03WY=;
+	s=arc-20240116; t=1761037312; c=relaxed/simple;
+	bh=szz9PjhinWlosFCtfgUMabH2tGBOEZwddGuYY8agzcs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bclcPoY+hmRSmaNsiawoCHuan1ifKc9DjaXT0V8l/wPRINR6H5I2nnSFkfyyX6v1xk+EZFYJ7/rOKmYue7P/7KRKW9gn7LjeDrMIQ8VA+8dkQCZIZC7oHlrkRMAUJA+m6evnzzutK7yBLZuO9LNFPzrEApbR4d0VmoRBiGsniEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xx/dlBX4; arc=none smtp.client-ip=209.85.128.42
+	 MIME-Version:Content-Type; b=UxaR1gt3H8cOvwuVk7wWhq2iXupECKP7EKASS9ZFAi822qkXh8oikdbQLMFqdcTDTyVNw3z6jHQ0xODTXidHtQGeV59KKIFojDqk59JzUg8NqIvdHiKARVycdBbTtdCOsKFA7qetfnlpxSxDB02zCOUSC0Ou7GZ02HJ8FXr27sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=sSxrXbZ2; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4711f156326so39942785e9.1
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 02:01:48 -0700 (PDT)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-47117f92e32so34699215e9.1
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 02:01:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761037307; x=1761642107; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761037309; x=1761642109; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=a7hM7uckFcu+8xOxYahCnfJuF1kzdKDORaIviV98zX4=;
-        b=xx/dlBX4YBy/SLGIC5Nfkyd54TppNFFjzoJQMIzdaShSUZJzBZKLO3RP/l/ksSjUYe
-         tgBsAxJV4EGJ1CcIrvQajhosZ5dlOkX12NBgY10xa2j2dix+SGShc3wnL1473YlRmAVR
-         AaMq+dPqYYautYYSMQIaf/WUwQ7arGpou5moIrjQX2deVIbkdOMyBkIjlFTIelCzgmj7
-         GN0wn8dc2zcymka1fU/lBcGunuJlpOK1p3X65+4iONUdf/DQ3QpCuZvwHvCLN9vxed53
-         ikb+Vh3TBxfJzZooLCuFKXlJGthbGEABcivyXB8MhOhSnVU6WW7EqDztkmgZLO0/r/rX
-         Je7Q==
+        bh=1TeCc4wabnDNTUm28psVc6W31FsugP3f390k1jrgAp4=;
+        b=sSxrXbZ2mb47J6V5a61JL4qnnH536vvl0WDsEo8lrUl0tuHYYCQj/Vpg6Cj+gVHUJh
+         bK5eX9+7zuLv3/6CPcrwOPrcIcDF7Aw0DNAp4LQ7eciq4vDvnwZo8iTf1KpddjOi+kpi
+         rvx2oEo7A8/c5sOnwhZmUrv06FeV5GjpFrVKke8vXISsDdB0ZDbuwCSA5MDEN5S5/rfr
+         jgZ5x7McOryMlIUmnY5wJzMHFP/D805qAH5jm/SANGU0ALmNi6Pxq+YBsPhi00xAEIUx
+         MDipLRt/5xJ0qnbqT9lWaV2J1LiHCG+bNJZYs5cTfgeEa7anBFiTRM9Q35o9ykDL/rCF
+         RdYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761037307; x=1761642107;
+        d=1e100.net; s=20230601; t=1761037309; x=1761642109;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=a7hM7uckFcu+8xOxYahCnfJuF1kzdKDORaIviV98zX4=;
-        b=ctj/XFvYGMhXCs0Z0T231tFZcgqO+BKfffwmRFJ0ID/XtFSe+ogsnWRXQt1W0xuHXq
-         oPBIzL6551ozBi7h8m8oXQCAAVrYZDmNoiFkOsCn2K4t5858eVIQ9I0mLoI9UDIbwsRe
-         zA7l7+NTWNFivL6kXWby2AWRO6Ru+iv1ADlbqLIB8L81OwExNjz2TEj+uRQYScTo6smN
-         LMtcLBzCck2+ybdN0zKYKeugacfcXXjlzEDW8aux29mU4s20peyBtJe/+NhkWmuGxHCQ
-         Bf7uW0x78Mk5Al780odAC3STkS0oqSpHtWU/BErpA8+Mj80u6UD1iRqsm80PCikxQCUM
-         8GSw==
-X-Forwarded-Encrypted: i=1; AJvYcCXbhpzZE3B1SEoISABm3Sh7kfVfpGG4DPkm0nRbUHDSuB+bAZA5h7lBVqra9CLtyiyiUE64umUlivpR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzx7ZpHbD05vau6O+rxZjFlNKEfKd9rBXotFFGQfo3KzRviAup3
-	ov7z1bND5b8LB3wNCWdk8XelQlEnIpmmYiXy3goyJu3ENebWE0Z6lI4mhTPDttDvukmkfI61G1y
-	E1+MqtpVlsQ==
-X-Gm-Gg: ASbGncvf3LNu2GnyDcXqwhrIdH9XeQ15Wx/cJzQttaD2j4MxBL7Ybiblbf3tqOM+lkZ
-	9cmwiJ9Q6NJvD7eqNepS8qfh7QCzWrqvFef8OnH1HiPIttCHlKeU9gP8TnwWWislsyyotO4yJH+
-	v+gMqMCervDPuKQovrFAhAeZiE738FnKKAXxaeQcKGTV4p9hsfLRrULs1ATk9eXtT2jdo+fQhxT
-	dgJGs9aAFeL5Y5Fol7CzrULEelpolNEyP84J+GajYF9Ex7n035mL405cNCMipfsj2115qzwWnOY
-	3R9DKkRR/vFQRsg1izez2G6g5rHoH1wFcXaJSQdz00sDW0kFbQtEKhVWLMntZwQG3YWnO849PrQ
-	MqG3l3lKzV7S+dWRg0rWIFRvbxLVOf7Z3Ul+fZ+U6gLyJVDylUJQPY2nKtqV9d1ZeTEbQJiubZO
-	ZN7Q==
-X-Google-Smtp-Source: AGHT+IFwaSBjtILyooiRtf1Ykxp9UxcePTyTy4SgHykASPLMYxBKsOoz1/6AxkfVyxkle8GOQXe6Qw==
-X-Received: by 2002:a05:600c:3b22:b0:46e:4704:b01e with SMTP id 5b1f17b1804b1-471178767f4mr119724175e9.8.1761037307000;
-        Tue, 21 Oct 2025 02:01:47 -0700 (PDT)
+        bh=1TeCc4wabnDNTUm28psVc6W31FsugP3f390k1jrgAp4=;
+        b=TdMIlIfnPLcCY/8qHNX3max1vKg56zWju+g38w1y7DSVwWVrK77GqeacFm2efEdqse
+         nSbRtNEZMatUCHi2mzgpD/IyGguoKoZ8BOkfms/JJKu5Ppv679OpNi1zrgvyxnCtceYD
+         E90nKOzrdY4VtBi+JhNNaJ/HsnuPfBzPJixjBrYIWzEuEXlC/eflH6ncl6VRwzma5rme
+         /jTyHXCHVG/8bF0r6v2qkxEtnRJFAh68zAcSFBHvc6Ja5Kwy7iOc+fHEkpaPG9EUOf1g
+         iRMeeujoG+bfE5GHavsXBQbc2zffNcRxf9LvspdZeuGk+bpnuLwuaCOpuMelShfLpa6g
+         +vsw==
+X-Forwarded-Encrypted: i=1; AJvYcCVcs32EIkoAZwtWCkYVgasIcoycmlLUpx3Lw1jGYSbOj04AZRGFrgW4eBFEnkxBHcCqi0Uz7Rz7BJYK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7K03wJ7ctm9120SAbcgkUYmdE5dyZMxGYzr99E8NvLu508Gka
+	P4hpEousRAKC0SZmpR4BSBHC4Qsrj4j120qQtxBKpyK0WQzFKLFCUP4iR+RmZTAE+oY=
+X-Gm-Gg: ASbGnctf9PhQL1N/ZXbeq+xz2rLNlV1l8F59EObrPjVUIEYEeU4wp0dw6Uv0tAyUQXN
+	LDoTxy6lNzYkz6B6xAB7/Btm99wxdXDOCbKrencYw1tLktL452MgIP54AOAcrL41tU0HSK4tzhu
+	ZQJdae2RzzFZodk8879gZXCqYvbo0+ISeLqhsPCqebM5IJzJcPkDTFYzEB1mxmy+UnOfZwRvdve
+	N+qkCAhbjuK7XFLxduUXjb8PAN9oCKTlHZLHAHgRwpn8jQ2ZljDIk8XA2WFaKPDLiPdQmmgJ68w
+	0ZvFCiKUGquX9oVPFcwyFkgj3E8rN/BFtHUpfcw7OSnE7S+016exCVtjYqb1lnLq9qCrkta3ClR
+	h7/5IqMI3zaBcXqilqcWQ0K4fDesTWxfT8XVtqDVFARPSLTswq9jRXIn3WmHi1MQeXjdML4TL98
+	mvOL0o08vKz7LNav3Y4V2EysA=
+X-Google-Smtp-Source: AGHT+IHMsE5J6Bs+G5AtSF92sEFlNjDdhFMO6owKbMYPxNmFN9+p2p/mx4kaXCI9o6w10dVqttxFpw==
+X-Received: by 2002:a05:600c:154b:b0:46f:b42e:edcd with SMTP id 5b1f17b1804b1-47117925d59mr91801885e9.38.1761037308222;
+        Tue, 21 Oct 2025 02:01:48 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:2979:9ff9:6677:97c6])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4715257d972sm191369065e9.1.2025.10.21.02.01.45
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4715257d972sm191369065e9.1.2025.10.21.02.01.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Oct 2025 02:01:46 -0700 (PDT)
+        Tue, 21 Oct 2025 02:01:47 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Linus Walleij <linus.walleij@linaro.org>,
-	Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Kent Gibson <warthog618@gmail.com>,
 	Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] gpio: aspeed: remove the "gpiolib.h" include
-Date: Tue, 21 Oct 2025 11:01:42 +0200
-Message-ID: <176103730245.11215.16894410168920796474.b4-ty@linaro.org>
+Subject: Re: [PATCH] gpio: latch: remove unneeded include
+Date: Tue, 21 Oct 2025 11:01:43 +0200
+Message-ID: <176103730244.11215.11595127566271255643.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20251016-aspeed-gpiolib-include-v1-0-31201c06d124@linaro.org>
-References: <20251016-aspeed-gpiolib-include-v1-0-31201c06d124@linaro.org>
+In-Reply-To: <20251015151605.71203-1-brgl@bgdev.pl>
+References: <20251015151605.71203-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -104,24 +98,16 @@ Content-Transfer-Encoding: 8bit
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On Thu, 16 Oct 2025 11:09:24 +0200, Bartosz Golaszewski wrote:
-> gpiolib.h is a header internal to the GPIO core. Drivers should not
-> include them. gpio-aspeed only needs to be able to determine the
-> hardware offset of the GPIO given the descriptor. Expose the relevant
-> symbol in the consumer header which allows us to stop pulling in the
-> private one.
+On Wed, 15 Oct 2025 17:16:05 +0200, Bartosz Golaszewski wrote:
+> This driver no longer uses any GPIOLIB internal symbols. We can drop the
+> gpiolib.h include.
 > 
 > 
-> [...]
 
 Applied, thanks!
 
-[1/3] gpio: rename gpio_chip_hwgpio() to gpiod_hwgpio()
-      https://git.kernel.org/brgl/linux/c/df900536e85819f6168783d5f6b3908d47811fdd
-[2/3] gpio: export gpiod_hwgpio()
-      https://git.kernel.org/brgl/linux/c/d19f6451c6feefd6537b97efa5f3859681f243cb
-[3/3] gpio: aspeed: remove unneeded include
-      https://git.kernel.org/brgl/linux/c/0efa5b2ca6fa7baab4c523b34cfb9495ec143d61
+[1/1] gpio: latch: remove unneeded include
+      https://git.kernel.org/brgl/linux/c/d09ec3dc7fea7b2f5f5a159470d43cced39e994d
 
 Best regards,
 -- 
