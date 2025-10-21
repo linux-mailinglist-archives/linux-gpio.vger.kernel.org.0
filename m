@@ -1,124 +1,111 @@
-Return-Path: <linux-gpio+bounces-27396-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27397-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5148BF7156
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 16:30:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 977F0BF71EF
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 16:41:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5280918929C3
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 14:31:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0C3EF188B069
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 14:41:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04B352F60CD;
-	Tue, 21 Oct 2025 14:30:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1933333C521;
+	Tue, 21 Oct 2025 14:41:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X/HycNGm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jzvt7HQG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBEB5248F7F
-	for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 14:30:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20EE1332EA5;
+	Tue, 21 Oct 2025 14:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761057037; cv=none; b=ojwcztgFi7pkyL3ax4Sb7wcx8/LZvr54I57kiWyZUTJBVebsY53A7a9WOzHg0nI1KiWGe01VfCCdMSwUea7F1ef2UhAckk18MVfbyiyZ5GOsrVPfIT+M7/MR3VO0QJQ1nqHaloKQ4iXcYCAX7BXCXdCkwrVMwYc3ZE0uy1dhWko=
+	t=1761057676; cv=none; b=ZK+abSjT3fheK6b10unKT4mwrYTxOqKSCkExLJZdhMRFCQrmXQKW7jzp+lMd4tFj35pyF7KJTdbv0OcFqY6zId1ut9VC6VoGEJ8FdLsYTLUfVsNLPj0JHk90eu6z58FJh9773wgQIRNXogP6XkKCNR5YTjRFFzt6LtuDiHiJmLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761057037; c=relaxed/simple;
-	bh=laqZKvY6DcAuH66QuTKteX+XFvj0fHRpIGMYs7CTAAE=;
+	s=arc-20240116; t=1761057676; c=relaxed/simple;
+	bh=TLAonmS28l2Atrks9dB3gf5XsFrnkrzaVmxa1ByY8Vc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TLMbSXK1poxji4bA42mXkwyWOQOmWzeKU1KhTIzuO6LSb4kJKJU/UPDmjnWciodBzfIPBPBVT91S/GgfFM90AN7UZK7r9J0QjuKZvBzB+M+FS98lzAXp5Nq4MeCiNeO5rZSlKxNYo2w9oP97OIWLU1FkElS6J23QWs6J+6ELas4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X/HycNGm; arc=none smtp.client-ip=198.175.65.13
+	 Content-Type:Content-Disposition:In-Reply-To; b=hT68Fj3dszLzeX2rreE4lppEYTOpco4WmxAo/EKzNAr1/3xLPwcM7duBo/oUx0VqjPgEYvUgsb6aGGz1TcZ9dCyjOdxVoxTmXgFcCthU+exQ7yJDdHbQZLy7pnNKyQ9ke1NNV1LAckQ17whG9YFaJqC9XEVlKT/hqqe/uRpWPN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jzvt7HQG; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761057036; x=1792593036;
+  t=1761057675; x=1792593675;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=laqZKvY6DcAuH66QuTKteX+XFvj0fHRpIGMYs7CTAAE=;
-  b=X/HycNGmITovRimfS/Nx7aJKfCqPKfH6mXJBndLJTvCAAFX5KrRIZO0W
-   BgoQ1EOh1xCKfizRehnKhh/0KvJuFRcE/HkUSVYFNyG98ylbwwlp/iuCQ
-   O6viS1WKZm3Rve7q5rCPTsBUB8YN6Ax9jK5C7b3QAYfcd8dfxdB02EykT
-   ArsWp3JyEhXsvHKldMsmUzldeA38Mh9EeQg8vxATlG9JCr3HgiOAd3W1c
-   6MaYS8u4nGBgeoq2ZWsXQKca7/RKQIpUy3efON6Rtfz3BC6835wZI3956
-   mNLhVHnKs3CZVqqxgyYRr+GSRh9002WlfLvVOY82YpCFCzuPTR4pgi04c
-   w==;
-X-CSE-ConnectionGUID: xOKPGK5/Sku3zKpxHT03IA==
-X-CSE-MsgGUID: FEXXcz6cTfWrMbLS2l8asA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="74302820"
+   mime-version:in-reply-to;
+  bh=TLAonmS28l2Atrks9dB3gf5XsFrnkrzaVmxa1ByY8Vc=;
+  b=jzvt7HQGp23/zHkWR3nKJPVPNRbKcScTKYy8qiGExNC84Wc/bHd6Aj4h
+   IZEkxN30Pk5olUYAaAMEbkITu+2eH4gBYCqcReOuctSw8RT3aWkYCbuKB
+   E7SAMP74pEa/SPHPQT4Dt3+jOk8oxjv+etwoaDwNszXob1rnyCr6Hx26o
+   coslEOeQgKAtEUJaf9w8feP6a2luJ1nWMbxJ93T4A2khd116wjtC3WhcH
+   rxA50pA+1lMFAXXpSYkGJXixm5xkVkUy8OPdWRCWdEcj1RiUsvNKJ2OtB
+   ZiZlpP3Dyml+yeoyeTnsg2woOWHDP5FZjZekFLJ7x6+szVyFv4n+D6e6F
+   A==;
+X-CSE-ConnectionGUID: VS339jUhQ2O7U4qYLLBKIw==
+X-CSE-MsgGUID: gRz2t9VqT3qi+SgFTv9FLA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="62215412"
 X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
-   d="scan'208";a="74302820"
+   d="scan'208";a="62215412"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 07:30:35 -0700
-X-CSE-ConnectionGUID: VR6MvcYQQzWFs/Igsu3P8A==
-X-CSE-MsgGUID: +X4O+1d7SjyCTvzUnUXGGQ==
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 07:41:14 -0700
+X-CSE-ConnectionGUID: 0H82ZSkkQD+aXRtbHN36FA==
+X-CSE-MsgGUID: uttA66GNQIegkA2Q52rXFg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
-   d="scan'208";a="187872647"
+   d="scan'208";a="187874725"
 Received: from fpallare-mobl4.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.245.148])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 07:30:34 -0700
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 07:41:12 -0700
 Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1vBDNf-00000001WED-05Uj;
-	Tue, 21 Oct 2025 17:30:31 +0300
-Date: Tue, 21 Oct 2025 17:30:30 +0300
+	id 1vBDXw-00000001WJe-3qP2;
+	Tue, 21 Oct 2025 17:41:08 +0300
+Date: Tue, 21 Oct 2025 17:41:08 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: kernel test robot <lkp@intel.com>,
-	William Breathitt Gray <wbg@kernel.org>,
-	oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+Cc: William Breathitt Gray <wbg@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [brgl:gpio/for-current 3/3] drivers/gpio/gpio-idio-16.c:170:20:
- error: 'struct gpio_regmap_config' has no member named
- 'fixed_direction_output'
-Message-ID: <aPeZBrlDrQBkMRGL@smile.fi.intel.com>
-References: <202510212126.mVDMC2iC-lkp@intel.com>
- <CAMRc=MdTffE6Oh_n0AYBEdyccN6-5FffxDZp6u037Yz9Khj-bg@mail.gmail.com>
+	Michael Walle <mwalle@kernel.org>,
+	Ioana Ciornei <ioana.ciornei@nxp.com>,
+	Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mark Cave-Ayland <mark.caveayland@nutanix.com>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] gpio: idio-16: Define fixed direction of the GPIO
+ lines
+Message-ID: <aPebhGETy_3MIwkf@smile.fi.intel.com>
+References: <20251020-fix-gpio-idio-16-regmap-v2-0-ebeb50e93c33@kernel.org>
+ <20251020-fix-gpio-idio-16-regmap-v2-3-ebeb50e93c33@kernel.org>
+ <CAMRc=MeFZTDk4cgzEJNnkrJOEneFUBLwtKjkpV3-cLSm=xsxNg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdTffE6Oh_n0AYBEdyccN6-5FffxDZp6u037Yz9Khj-bg@mail.gmail.com>
+In-Reply-To: <CAMRc=MeFZTDk4cgzEJNnkrJOEneFUBLwtKjkpV3-cLSm=xsxNg@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
  krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue, Oct 21, 2025 at 03:23:12PM +0200, Bartosz Golaszewski wrote:
-> On Tue, Oct 21, 2025 at 3:17 PM kernel test robot <lkp@intel.com> wrote:
-> >
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-> > head:   0d3f95740ced3acb6171cdec8c5bef336b0cabdb
-> > commit: 0d3f95740ced3acb6171cdec8c5bef336b0cabdb [3/3] gpio: idio-16: Define fixed direction of the GPIO lines
-> > config: x86_64-buildonly-randconfig-005-20251021 (https://download.01.org/0day-ci/archive/20251021/202510212126.mVDMC2iC-lkp@intel.com/config)
-> > compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251021/202510212126.mVDMC2iC-lkp@intel.com/reproduce)
-> >
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202510212126.mVDMC2iC-lkp@intel.com/
-> >
-> > All errors (new ones prefixed by >>):
-> >
-> >    drivers/gpio/gpio-idio-16.c: In function 'devm_idio_16_regmap_register':
-> > >> drivers/gpio/gpio-idio-16.c:170:20: error: 'struct gpio_regmap_config' has no member named 'fixed_direction_output'
-> >      170 |         gpio_config.fixed_direction_output = fixed_direction_output;
-> >          |                    ^
-> >
-> >
-> > vim +170 drivers/gpio/gpio-idio-16.c
-> >
-> 
-> I removed the offending commit from my queue.
+On Tue, Oct 21, 2025 at 09:21:38AM -0400, Bartosz Golaszewski wrote:
+> On Mon, 20 Oct 2025 10:51:46 +0200, William Breathitt Gray
+> <wbg@kernel.org> said:
 
-I dunno if we call it "offending", but I think this should include
-a prerequisite as it was mentioned in one of the Cc: stable@ lines.
+...
+
+> > Cc: stable@vger.kernel.org # ae495810cffe: gpio: regmap: add the .fixed_direction_output configuration parameter
+
+> Turns out, this requires commit ae495810cffe ("gpio: regmap: add the
+> .fixed_direction_output configuration parameter") so I cannot queue it for
+> v6.18. What do you want me to do? Send the first two ones upstream and apply
+> this for v6.19?
+
+Why can't this be pulled from some IB/IT as part of the fix?
 
 -- 
 With Best Regards,
