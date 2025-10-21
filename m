@@ -1,208 +1,191 @@
-Return-Path: <linux-gpio+bounces-27379-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27380-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1BF2BF6B38
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 15:14:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D361CBF6B7B
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 15:17:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B719050392F
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 13:14:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AB958189B5C6
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 13:17:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14886334C13;
-	Tue, 21 Oct 2025 13:14:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED9FA3370F4;
+	Tue, 21 Oct 2025 13:17:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="OHYh3WfO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FjbeW+D0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2826E334C38
-	for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 13:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02DA7212546
+	for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 13:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761052444; cv=none; b=mkWa52f32XvOhZA4/g/DhPH6xjV2eJfg3vQZ/76PWbzUl50Tz/wVq9ls+joQYRrxKl6xJigWmnwzD95vR97+hiX7ZFIvSsBO3YIVHB8BXObXyKTqQDkuuYqRDZS8uZPB9g5Gq2jLebGyXHRWfp2al52FHZr0rrHUoMTt7F6VjKc=
+	t=1761052633; cv=none; b=jqO8VoLOP2u6OIhD6uIf2iehJCamF+W4xJWJrP6nX0bRj3e7RyFhHXewyPO93WFquFYT0R8HKv4WpFh1aXPG0fqlWJU69j0KCe7Gtf4K2qtfVDKsosQmvgg2NsvQrDD+sQyz4IJf4Y/bPAONkjodMqlLmISA2nzycYYgEMnPAgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761052444; c=relaxed/simple;
-	bh=w2i+FxONBXXx3PvM+d1TKTp00ehfZPIgAaTK1j0wkl4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WKrwan8ZBNwx5zXGOJG2nv9LO7h2fB+nudCCf4MaBsLTZEjwb3y9vIp0EFd2ikKa9q0BZultYm8NwUVXKUqTyTyIkrHV+qvvg/sh183gVvDxX6x3WsECI7TeSNT5nKYDlSA6m2JTNZOI3Am9PtViP6vBHT96BBg22tDvVbvRDE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=OHYh3WfO; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59L8PM6B025592
-	for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 13:14:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	1J3FwMBpLhx8fYWCDWyhBCXacIdXPm0xifRPcXHEaJ8=; b=OHYh3WfONtQnQIWN
-	jqNqPFtwtmIP6JuNtltLlO5uECBdbthXS+cv6w0vMPNXrYjgT5OBozJ9FUOWeSF3
-	0vVU4zQyf1ABp5ByavV32Z1Yw8QYcFVMMZQMOgSJA9+/jGsbkhevmCz1xVF5rt9D
-	dmYUdrckZy/8d/BHg5/j5SvzlJqXwBM9xwMWTRywIVniZ9uSD72wA2TWzyVaXldO
-	Tf3ftUzKy/lwH3jKzWcQskpsraeuzVDqItzYJ7YcrrwX54OoOgUSLzxcJ7Gv5yP4
-	6jEIIbojQtWjgzoOTtbed8Dg4M/+TVBqcFR6yV0WtdZDRRRDfkwF+rweUBiPzAld
-	o4uFRA==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 49v1w80u9u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 13:14:01 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-87c146f81cdso145728166d6.1
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 06:14:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761052441; x=1761657241;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1J3FwMBpLhx8fYWCDWyhBCXacIdXPm0xifRPcXHEaJ8=;
-        b=CQRvE784LfP06bF57041MDsfjQmEzeGwjGUk7LydQcdqjZWvxlr9z0uNipsHAFOZJ6
-         LdsDBAc3eXosKk7JaBLwfoiays9KrnOOgdrs69PWUiPYuGUubqBwqVHD5FBIxicu4d1B
-         URA7iQGtVfi9wewDD2w1pQNLuyYk2VF1naKDzfjSg786fTX16eHPzhxY5dmppFgOTnqe
-         gD09NLAwO2N8ez5+9Du44/nvhJl4AA4eoYVf63IcDGsfzGD0JIPQlqMD3CIP1nlhARff
-         Qnmk3iAZ8tLiAqy1UqaH8dZnw8XzpoKIcTuQs/Y+V407ofOnmqvu6IifscZj0+Kuz0Ec
-         5+qg==
-X-Forwarded-Encrypted: i=1; AJvYcCXhUFHACiQwrB0jjfcviFjyEYFUsPS86T4EOyF0BgGOfjXoJIeoxh9I/gvpZht94Z/bCbnibVhjhdhx@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7e4hWrOvJsYsPSKf1H/1RnUBPIj+qoqGp0hVicuCcjTi/27m0
-	ZYh/SK+g6gD1FtiIeQVodmiLaOdTNUZ+2hHejHUh9hQQonAE0Yd/1epEKUZN6+CPiz7UWkrlB3p
-	0xd9NouNJPBXWeFcDGuYhpb1bZqlF6XDUfGxJFmRuyLQfNut7nTzxpfiWYUUb8arZ
-X-Gm-Gg: ASbGncv1AHE8hC65as+3blBMdW3bF1D5xk0+/AinlgnlYJ5L1ao8/E1krXfetyoQwLe
-	uAhf1gCHQBmdalQbH1MrbYN7kzUCO/HJ/a5GvsnvqgiZIJ2cIwP94iVstDdt4zOA1mptjw5k6s+
-	SQhN1MBaXbLD35S8iQpTn2bwqUBDwxSwwnQkOCfBVxCDSVq8mMJFnn5znYgdYoG6u9gsuEXcIxv
-	Q6gY1NO87W2J0A/36MJYjCmw6g3ftFI7fLPzYtSySVyo22Tx44C+bxZmi1BUcpOwkC9lhf2Yq+6
-	vdV2i21Hd5v4chB3gSQY2jA2qEmcC4rgB+R090xh69SEsrYn73CS1J+yDPMoRfP9khg3OovQtG/
-	jV20dz3aIvYySoUsXZCO8dy1WzA==
-X-Received: by 2002:ac8:5fd0:0:b0:4df:a3f1:2b41 with SMTP id d75a77b69052e-4e89d2f2d22mr191979421cf.37.1761052441079;
-        Tue, 21 Oct 2025 06:14:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGMR85aYmO0SlEiPplaQeeABFnTh46S57hFvtLZYcoP7my3aQJA/qcKSdNST7j3T+8HnZ1Sug==
-X-Received: by 2002:ac8:5fd0:0:b0:4df:a3f1:2b41 with SMTP id d75a77b69052e-4e89d2f2d22mr191978891cf.37.1761052440479;
-        Tue, 21 Oct 2025 06:14:00 -0700 (PDT)
-Received: from [192.168.68.121] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-474949e0a3csm18730905e9.0.2025.10.21.06.13.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Oct 2025 06:14:00 -0700 (PDT)
-Message-ID: <450cac8b-598b-4f47-8bf0-43c805038e7c@oss.qualcomm.com>
-Date: Tue, 21 Oct 2025 14:13:57 +0100
+	s=arc-20240116; t=1761052633; c=relaxed/simple;
+	bh=3+gpan3nuVopivzHoJbwotqWryKs3Ox90zEHwsHJUeo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=I6PuPw9Gi4bi95j3bfHtDOiJp9znjaFXwouEpw5iGm7fmmMX7HNFapbZU3btcYR/mErBVPC7cos//B0wzeupycrxvlw3/wfQr/CJT08BWjVedBYMyGN0GjjPxAD++20R20txdvRjPLIJr4o5UMW38DQfhMYfkGnHx6PM6c1bNTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FjbeW+D0; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761052632; x=1792588632;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=3+gpan3nuVopivzHoJbwotqWryKs3Ox90zEHwsHJUeo=;
+  b=FjbeW+D0JPQezCEbCPEPyuXgJjKDLKpvq2iYSD9a7PO6nF0c7FrdI62g
+   o4YN2u6bTU3x00YEEqpl/SKa0grvoFPXA5KFS7QpehCVBNEbZj6XoAMZm
+   NsphK/JTekyY9vx0O8R46buQVtw9GPIFhec4xi3YarPpnvsn/lQs1WVHC
+   D31O9ILem5JEUKQ5gpBsTegO5GjbDh+H1KtJkWfOhgEKerLVqQt28W+if
+   X9DfHzHcizNoIaEfHjJ6g90Y36kpfdA0Tv6auYal5Lr2+XaHnaFKodICt
+   Yetin3B1ZB2/0vTnBuJ8bl/DU2qNEcmo1F1nJ3trg2oolj//otlRqqw4G
+   A==;
+X-CSE-ConnectionGUID: pcegvJ3cRqCaqlY6p59JZg==
+X-CSE-MsgGUID: NDJm2uEOSNmsIsiqjP3oRw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="65793156"
+X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
+   d="scan'208";a="65793156"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 06:17:12 -0700
+X-CSE-ConnectionGUID: T4sMhyXFS7KlrI9TbbRdTQ==
+X-CSE-MsgGUID: S1GlhuXyRXuAH5k172E7VA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
+   d="scan'208";a="187994810"
+Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
+  by fmviesa005.fm.intel.com with ESMTP; 21 Oct 2025 06:17:10 -0700
+Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vBCEd-000Aqf-2M;
+	Tue, 21 Oct 2025 13:17:07 +0000
+Date: Tue, 21 Oct 2025 21:17:00 +0800
+From: kernel test robot <lkp@intel.com>
+To: William Breathitt Gray <wbg@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: [brgl:gpio/for-current 3/3] drivers/gpio/gpio-idio-16.c:170:20:
+ error: 'struct gpio_regmap_config' has no member named
+ 'fixed_direction_output'
+Message-ID: <202510212126.mVDMC2iC-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] arm64: dts: qcom: qcm2290: add LPASS LPI pin
- controller
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Alexey Klimov <alexey.klimov@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Srinivas Kandagatla <srini@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org
-References: <20251007-rb1_hdmi_audio-v2-0-821b6a705e4c@linaro.org>
- <20251007-rb1_hdmi_audio-v2-3-821b6a705e4c@linaro.org>
- <b6223af9-2d9e-4ccd-b297-79f63167242b@oss.qualcomm.com>
- <DDEN5NSLDIHD.C1IELQW0VOG3@linaro.org>
- <zmi5grjg2znxddqzfsdsr35ad5olj3xgwwt6hvkiaynxzm5z33@gsgrdguj563n>
- <DDO0LYS7UTEW.3A9WGTAA5DKVO@linaro.org>
- <56vmqgrjy3je7omzirxnfxtuocebbj356iaew5thgkagi35464@hh34y7efssow>
-Content-Language: en-US
-From: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
-In-Reply-To: <56vmqgrjy3je7omzirxnfxtuocebbj356iaew5thgkagi35464@hh34y7efssow>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE4MDAxNSBTYWx0ZWRfX2r8qRYg2kTd1
- ihpDYVWIIfD3ygjgdPOmnT8+MVAKXTdkdpNpTqjPO6+UJBGWZowxmsc9h5S5afQN8ZxHA4bqhT4
- 6u2XuO6HZbSZWz4zSrSNDuOTBA1dQrzNSxngoDrxwi1ZXHHe+C14Lwt1dmW5WYXEz6Z4ZzrL9g2
- OGI0JyUnH/MbWXH7Bykn+KC868XFK0f8SFVl0259diArR92kp4f8BFkMZVlqqY8wTZw2WLurf4f
- onJUbsTvThFczeIlBWWu7nC+RinG7I2hxY/ond60+8tHLfv3tJwV/c+OhwNP1yTSnVADX+q0iPh
- Gqbkc8QuLTqbmtlqslbiKTgj1Q/dsxp/lvSwDwj4g9sv4F/I7OYhURKM1ugCI+xX2Vf9zM4Rn3U
- UW/EmgXj/jOayMSbLQsEi3Evyj31Jg==
-X-Authority-Analysis: v=2.4 cv=bNUb4f+Z c=1 sm=1 tr=0 ts=68f7871a cx=c_pps
- a=wEM5vcRIz55oU/E2lInRtA==:117 a=ZsC4DHZuhs/kKio7QBcDoQ==:17
- a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=S47CMrjrQcjTfVtel-AA:9 a=QEXdDO2ut3YA:10
- a=OIgjcC2v60KrkQgK7BGD:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: OREp0MLVv6MiKLAn8X5ogR3nxLzzogUg
-X-Proofpoint-ORIG-GUID: OREp0MLVv6MiKLAn8X5ogR3nxLzzogUg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-21_01,2025-10-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 phishscore=0 malwarescore=0 lowpriorityscore=0 clxscore=1011
- priorityscore=1501 suspectscore=0 adultscore=0 spamscore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510180015
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
+head:   0d3f95740ced3acb6171cdec8c5bef336b0cabdb
+commit: 0d3f95740ced3acb6171cdec8c5bef336b0cabdb [3/3] gpio: idio-16: Define fixed direction of the GPIO lines
+config: x86_64-buildonly-randconfig-005-20251021 (https://download.01.org/0day-ci/archive/20251021/202510212126.mVDMC2iC-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251021/202510212126.mVDMC2iC-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202510212126.mVDMC2iC-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/gpio/gpio-idio-16.c: In function 'devm_idio_16_regmap_register':
+>> drivers/gpio/gpio-idio-16.c:170:20: error: 'struct gpio_regmap_config' has no member named 'fixed_direction_output'
+     170 |         gpio_config.fixed_direction_output = fixed_direction_output;
+         |                    ^
 
 
+vim +170 drivers/gpio/gpio-idio-16.c
 
-On 10/21/25 2:03 PM, Dmitry Baryshkov wrote:
-> On Tue, Oct 21, 2025 at 01:56:09PM +0100, Alexey Klimov wrote:
->> On Fri Oct 17, 2025 at 11:42 PM BST, Bjorn Andersson wrote:
->>> On Fri, Oct 10, 2025 at 01:29:38PM +0100, Alexey Klimov wrote:
->>>> On Tue Oct 7, 2025 at 1:39 PM BST, Konrad Dybcio wrote:
->>>>> On 10/7/25 4:03 AM, Alexey Klimov wrote:
->>>>>> Add the Low Power Audio SubSystem Low Power Island (LPASS LPI) pin
->>>>>> controller device node required for audio subsystem on Qualcomm
->>>>>> QRB2210 RB1. QRB2210 is based on qcm2290 which is based on sm6115.
->>>>>>
->>>>>> While at this, also add description of lpi_i2s2 pins (active state)
->>>>>> required for audio playback via HDMI/I2S.
->>>>>>
->>>>>> Cc: Srinivas Kandagatla <srini@kernel.org>
->>>>>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
->>>>>> ---
->>>>>
->>>>> [...]
->>>>>
->>>>>> +			lpi_i2s2_active: lpi-i2s2-active-state {
->>>>>> +				data-pins {
->>>>>> +					pins = "gpio12";
->>>>>> +					function = "i2s2_data";
->>>>>> +					bias-disable;
->>>>>> +					drive-strength = <8>;
->>>>>> +					output-high;
->>>>>
->>>>> I.. doubt output-high is what you want?
->>>>
->>>> Why? Or is it because of some in-kernel gpiod?
->>>>
->>>
->>> What does "output-high" mean for a non-gpio function?
->>
->> This is not efficient. It will be more useful to go straight to
->> the point.
-> 
-> It is efficient. It makes everybody think about it (and ask the same
-> question in future) instead of just depending on maintainers words.
-> 
->> This description of pins was taken from Qualcomm downstream code
->> and the similar patch was applied (see provided URL in the prev email).
-> 
-> And we all know that downstream can be buggy, incomplete, etc.
-> 
->> Back to your question -- does it matter here if it is gpio or non-gpio
->> function?
-> 
-> It does. The I2S data pin is supposed to be toggled in some way by a
-> certain IP core. What would it mean if we program output-high? Will the
-> pin still be toggled (by the function) or stay pulled up (because of the
-> output being programmed)?
-I2S lines are configured in push-pull mode which means that the lines
-are driven high and low actively, am not sure why output-high is needed
-an what it means here as these lines are actively driven by the controller.
+    95	
+    96	/**
+    97	 * devm_idio_16_regmap_register - Register an IDIO-16 GPIO device
+    98	 * @dev:	device that is registering this IDIO-16 GPIO device
+    99	 * @config:	configuration for idio_16_regmap_config
+   100	 *
+   101	 * Registers an IDIO-16 GPIO device. Returns 0 on success and negative error number on failure.
+   102	 */
+   103	int devm_idio_16_regmap_register(struct device *const dev,
+   104					 const struct idio_16_regmap_config *const config)
+   105	{
+   106		struct gpio_regmap_config gpio_config = {};
+   107		int err;
+   108		struct idio_16_data *data;
+   109		struct regmap_irq_chip *chip;
+   110		struct regmap_irq_chip_data *chip_data;
+   111		DECLARE_BITMAP(fixed_direction_output, IDIO_16_NGPIO);
+   112	
+   113		if (!config->parent)
+   114			return -EINVAL;
+   115	
+   116		if (!config->map)
+   117			return -EINVAL;
+   118	
+   119		if (!config->regmap_irqs)
+   120			return -EINVAL;
+   121	
+   122		data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+   123		if (!data)
+   124			return -ENOMEM;
+   125		data->map = config->map;
+   126	
+   127		chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
+   128		if (!chip)
+   129			return -ENOMEM;
+   130	
+   131		chip->name = dev_name(dev);
+   132		chip->status_base = IDIO_16_INTERRUPT_STATUS;
+   133		chip->mask_base = IDIO_16_ENABLE_IRQ;
+   134		chip->ack_base = IDIO_16_CLEAR_INTERRUPT;
+   135		chip->no_status = config->no_status;
+   136		chip->num_regs = 1;
+   137		chip->irqs = config->regmap_irqs;
+   138		chip->num_irqs = config->num_regmap_irqs;
+   139		chip->handle_mask_sync = idio_16_handle_mask_sync;
+   140		chip->irq_drv_data = data;
+   141	
+   142		/* Disable IRQ to prevent spurious interrupts before we're ready */
+   143		err = regmap_write(data->map, IDIO_16_DISABLE_IRQ, 0x00);
+   144		if (err)
+   145			return err;
+   146	
+   147		err = devm_regmap_add_irq_chip(dev, data->map, config->irq, 0, 0, chip, &chip_data);
+   148		if (err)
+   149			return dev_err_probe(dev, err, "IRQ registration failed\n");
+   150	
+   151		if (config->filters) {
+   152			/* Deactivate input filters */
+   153			err = regmap_write(data->map, IDIO_16_DEACTIVATE_INPUT_FILTERS, 0x00);
+   154			if (err)
+   155				return err;
+   156		}
+   157	
+   158		gpio_config.parent = config->parent;
+   159		gpio_config.regmap = data->map;
+   160		gpio_config.ngpio = IDIO_16_NGPIO;
+   161		gpio_config.names = idio_16_names;
+   162		gpio_config.reg_dat_base = GPIO_REGMAP_ADDR(IDIO_16_DAT_BASE);
+   163		gpio_config.reg_set_base = GPIO_REGMAP_ADDR(IDIO_16_DAT_BASE);
+   164		gpio_config.ngpio_per_reg = IDIO_16_NGPIO_PER_REG;
+   165		gpio_config.reg_stride = IDIO_16_REG_STRIDE;
+   166		gpio_config.irq_domain = regmap_irq_get_domain(chip_data);
+   167		gpio_config.reg_mask_xlate = idio_16_reg_mask_xlate;
+   168	
+   169		bitmap_from_u64(fixed_direction_output, GENMASK_U64(15, 0));
+ > 170		gpio_config.fixed_direction_output = fixed_direction_output;
+   171	
+   172		return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &gpio_config));
+   173	}
+   174	EXPORT_SYMBOL_GPL(devm_idio_16_regmap_register);
+   175	
 
-@Alexey, what issues do you see without this?
-
-Am not sure if pinctrl driver even cares about this if we are in alt mode.
-
-
---srini>
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
