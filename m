@@ -1,130 +1,129 @@
-Return-Path: <linux-gpio+bounces-27400-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27401-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAC22BF730C
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 16:55:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DDF9BF73F6
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 17:06:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9791C3552EC
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 14:55:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 098A11895ADD
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 15:03:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3ADB1340A73;
-	Tue, 21 Oct 2025 14:55:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C167341AD8;
+	Tue, 21 Oct 2025 15:02:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Op492MAh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bvWju1/n"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B88234026F;
-	Tue, 21 Oct 2025 14:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EAD128E3F;
+	Tue, 21 Oct 2025 15:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761058512; cv=none; b=VeuB8TKJj8kMuHooGzpc4LfRwD7GBZ+fgya+RWdTD8wpEUyL+k1wfnn0mb1AFol+B3/tocBl4H1SFJXf8mJqNrlz2wkHFrtR3vzcHVe6cpt0RiW/FQGhGUqOQlRehhgLSPSu2MP5Hf3LZKTSTO8O/HNJwHjpnkbvTLUMNQ+qtu0=
+	t=1761058974; cv=none; b=Z3/Tvd25Usg3YKGmAYmrNTbbHHk2BKjMtYoz3JZavC7Kc8H22dc4jXSGPIeFMtG6C3C8beHaI+8NpSQqJKU+wNSiBDHiFETeQC29u1UhDBLYMK+i6zSZ3z/nbd+GjkT2uKMaCPXK+A3I65ZMxVNb3GHwFOW2uRxVvzT/JpxBaZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761058512; c=relaxed/simple;
-	bh=JVsFHDNltly00ia4WGi5anXLqu03Rde3Pkn3mw3Yix4=;
+	s=arc-20240116; t=1761058974; c=relaxed/simple;
+	bh=vhE+RkNn0col2gY895QKZKl2jXFzW3GNmsKSxd/Byyo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MNyV62+ccfI6SqcNVxM+5/zgHHpuZOMOcY9YF2umqCoepS6bHrp+Bq2Vb+2swn62viyD4Fgzerjnn1UMYU0J3m39FESsiOc33tRxdj7/HOMjg2DPDBFvRM6xeA8JS1Dv5iMqV+VJuVH2V9W2/jMnvcdLu57MsuQV3DHHbGVzJeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Op492MAh; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761058511; x=1792594511;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=JVsFHDNltly00ia4WGi5anXLqu03Rde3Pkn3mw3Yix4=;
-  b=Op492MAhM/LOhBUJuZHOv6cxeMqG9LNTaNVce72d8ba7Y/WKCxHuXxYE
-   XHM5F/9nMTW2lNm18ev6LQyymhgf+vWnIN/I1rJONNwNghCRU8Jz3koM6
-   jPEs9XsSNjpGh7vS+NPmV7KWiyXp5zUX/dpxvBQgLu8+J8gFFHXUp6Fzs
-   BA5kJS548jiNQznwD/h9SRHZvof1HhkP3Ud13USW0SEVfVQzzGlB61a93
-   Bj5K4oTmLeps4O/yj3eq3wEub8IwDv04+eNw27Qw2ua1LuuduHt+4y0kL
-   LWuLeKQDBSAQdAAHeceAXHbCdn2eqAjXHlfGpIgt0ptdX7hncGIKVArDh
-   A==;
-X-CSE-ConnectionGUID: 9saDnaPDS5WGKoztMze5WA==
-X-CSE-MsgGUID: fk9ck4QoT8yzY2oY/cCAVg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="62887789"
-X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
-   d="scan'208";a="62887789"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 07:55:10 -0700
-X-CSE-ConnectionGUID: pltd7Bc6QTapEixRzxWiTg==
-X-CSE-MsgGUID: VQE3++B5T1ep91WByBegFw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
-   d="scan'208";a="182814518"
-Received: from fpallare-mobl4.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.245.148])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 07:55:06 -0700
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1vBDlO-00000001WRH-3tcr;
-	Tue, 21 Oct 2025 17:55:02 +0300
-Date: Tue, 21 Oct 2025 17:55:02 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=jE6WZQeLsAIWAS4Yw1peY/3WInXowY5SUkHB0Y6uPm5vGyVPdJPwkIb6ML6tKPfNVilFQgU2t+Wk6giqfxentoJV/C5Ov+Q713aOozpxrLj+N9+o4Vsw5XXrCvscl8SFAAJNBKLhYV7X5NorpbiWoysI+ziEpC5d9HtY5nR1MU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bvWju1/n; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EC4FC4CEFF;
+	Tue, 21 Oct 2025 15:02:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761058974;
+	bh=vhE+RkNn0col2gY895QKZKl2jXFzW3GNmsKSxd/Byyo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bvWju1/n0Y5xoyyQydKo2kwI/JVdRlyvcUHqYfHuYE0YUuQVMuCAwInNLICiPvhcu
+	 3sV84TP+jJTa6etwgVtT33o8fJ91zPJ9YPgQQvF3VqGkRilB89pJ9mZNbbSaol6ZV4
+	 No8vP6j9z8s5boOQTpvv1e1JmAZ5WWAoC+auLqt53ivk/n9TbXFQIuqCaB1eIOHiln
+	 EyFFk/y51ylFnygyqdH3DLPH16uuCYVilvBOUW1HIYGRbclgYK5kfp1mmw+ic8cLpS
+	 Rg2TMqLZ2fCrw4Y06PRqE3sJ3lHLtdDJT2SZRs6Pe3ocrlV8gyX7bZKdP+ygrm6KWe
+	 oAQWDEkRC4XdA==
+Date: Tue, 21 Oct 2025 16:02:46 +0100
+From: Mark Brown <broonie@kernel.org>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>,
+	Mika Westerberg <westeri@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Takashi Iwai <tiwai@suse.com>, Rob Herring <robh@kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 7/9] reset: make the provider of reset-gpios the parent
- of the reset device
-Message-ID: <aPeexuA1nu-7Asws@smile.fi.intel.com>
-References: <20251006-reset-gpios-swnodes-v1-0-6d3325b9af42@linaro.org>
- <20251006-reset-gpios-swnodes-v1-7-6d3325b9af42@linaro.org>
- <95bbec130437846d4b902ce4161ccf0f33c26c59.camel@pengutronix.de>
- <CAMRc=Md_-mO=HqfncD-vJS6XzPJ+aTcBjSjtkxLH_h1=pNjCcg@mail.gmail.com>
- <075a4511a6ae4b047599757d41b559c6b7cf9d0f.camel@pengutronix.de>
- <CAMRc=Md4DUSuwv07EuBVDJbY1Uzezq+TONxyCvLtOHD=iFXrcQ@mail.gmail.com>
- <050d74d7619bdfdf5ca81d8914a2a8836a0d4e2e.camel@pengutronix.de>
- <CAMRc=MfPqRLFHPW988oMry7vVoTgtQHrxxND4=nr_40dOa5owg@mail.gmail.com>
+	Andy Shevchenko <andy@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Will Deacon <will@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH RFC 0/9] gpio: improve support for shared GPIOs
+Message-ID: <0bd2f438-6151-442a-9ce3-77624e74682d@sirena.org.uk>
+References: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org>
+ <CAMRc=Me4Fh5pDOF8Z2XY4MG_DYqPRN+UJh_BzKvmULL96wciYw@mail.gmail.com>
+ <81bda56c-f18b-4bd9-abf9-9da7c2251f42@sirena.org.uk>
+ <CAMRc=MdOCHJEyPxN+-g71ux68=Mt_Q5P9611QO7Q8J9e8UJv_A@mail.gmail.com>
+ <0e1f3a1b-46ab-4eb5-ad05-70784f9b9103@sirena.org.uk>
+ <CAMRc=Md1Ve4hnYQOryYEXG6_HSPJrANrr9gj2FMzCwsD+q5Cuw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Qt72tdmZbvUAwbO2"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Md1Ve4hnYQOryYEXG6_HSPJrANrr9gj2FMzCwsD+q5Cuw@mail.gmail.com>
+X-Cookie: Accordion, n.:
+
+
+--Qt72tdmZbvUAwbO2
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MfPqRLFHPW988oMry7vVoTgtQHrxxND4=nr_40dOa5owg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 21, 2025 at 11:39:41AM +0200, Bartosz Golaszewski wrote:
-> On Tue, Oct 21, 2025 at 11:31 AM Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> > On Di, 2025-10-21 at 11:27 +0200, Bartosz Golaszewski wrote:
+On Tue, Oct 21, 2025 at 04:42:11PM +0200, Bartosz Golaszewski wrote:
+> On Tue, Oct 21, 2025 at 4:08=E2=80=AFPM Mark Brown <broonie@kernel.org> w=
+rote:
 
-[...]
+> > I'm not sure I see the need for deferred notifications?  We'd need to go
+> > round all the users whenever a physical change to the GPIO happens but
+> > it's not clear what we'd need to store beyond the list of users?
 
-> > No need to convert all existing drivers right away, but I'd like to see
-> > a user that benefits from the conversion.
-> >
-> 
-> The first obvious user will be the reset-gpio driver which will see
-> its core code simplified as we won't need to cast between OF and
-> fwnodes.
+> In my mind I was thinking that we only need to send the notifications
+> to users who already enabled/disabled the regulator too but you're
+> right, it seems like a loop over the relevant pins should be enough.
 
-+1 to Bart's work. reset-gpio in current form is useless in all my cases
-(it's OF-centric in 2025! We should not do that in a new code).
+Ah, great - yeah, I'd expect notifications either way just to be on the
+safe side.
 
-More over, conversion to reset-gpio from open coded GPIO APIs is a clear
-regression and I want to NAK all those changes (if any already done) for
-the discrete components that may be used outside of certainly OF-only niche of
-the platforms.
+> In any case: this is outside the scope of this series but I'll see if
+> it's easy enough to add separately.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Yes, definitely outside the scope of the series.  If you do something
+that'd be great but no pressure.
 
+--Qt72tdmZbvUAwbO2
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmj3oJUACgkQJNaLcl1U
+h9CGegf7BpG/mRuGc435GzxtX0o4gZu98cJAOQC0hGm5PC43OR8VmUUNDzOnrcs2
+N7uW4RYBTDDP15v5VZbKmj7iK9tO+zl7/fW3+sRYf3xTeQc7bxwlKUNJefJO7xkG
+Szrgvpv3f5CfFjyq2GRO/b2ydBRiRPknhYT2oJnKBYM63OMUZp7JcXh8kDnEKcOM
+dzFAVsq5V7b1mOpiA+VVS5KaUNEDascKcMqs8o9fX/0mC9kHIN45dY0SrBbB4bBq
+dG2U2nsSW+AhIWsiad8MQzDr0SEVWwVR5HHhduC8bsSCfwUvAgmP1gG6BVagb3SQ
+wQIcYgbHgVh9jYEzddKFCQpgpc0F7Q==
+=PZYy
+-----END PGP SIGNATURE-----
+
+--Qt72tdmZbvUAwbO2--
 
