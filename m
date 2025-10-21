@@ -1,132 +1,125 @@
-Return-Path: <linux-gpio+bounces-27398-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27399-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7831BF7247
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 16:46:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B7F7DBF72C3
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 16:52:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4F69D546C79
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 14:42:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67420485958
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 14:50:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 016B933EB10;
-	Tue, 21 Oct 2025 14:42:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1926133FE33;
+	Tue, 21 Oct 2025 14:49:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="toizFAjN"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="S2q5QIMA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC2433DEF2
-	for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 14:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3414F33FE21
+	for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 14:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761057748; cv=none; b=JyBwdKDA0xllBtf/2VulW6auKp0ZL3s+4R9J0q2YcB4/aJFYbfwOPkDxgCJtOO8iF+gPq5Mwn9NALw29ki6aN1X4MXpiETo6XyAcmbP02vSFV7kvgecVzPqhny0IybYcHgISaLoG65hPWm2UlQxJmKtbFAFpqVcZojhcVD6H49M=
+	t=1761058159; cv=none; b=A1ncfxVqwpv1MGTbRZSwtek0jz8QK1rkUkIxnIfU60tgrz2P5bB/hx565DR+tfL2Ds6uR8w2PYfhRXTFD5CtbNHYwsY76jK0y7nYvNlB5YrFHxHuYk8uMBTwD8fpomJ6kIC/5xhZkxUeg5PkubVag2VpZJHflZjSLRC2+315inI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761057748; c=relaxed/simple;
-	bh=VGc4m4oF+KXusmvdq7HCQy/1KNZxYxwVZz9pTwsoGlI=;
+	s=arc-20240116; t=1761058159; c=relaxed/simple;
+	bh=W2POVoQrYUSZPm1A3yimS9utpyJqHWo6t34zYlrDD9M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=njLz7FMleOASTTXMPdH+EIxaEuYl8T/Lrz4nXq23aMPYos3hiSfNEGn47+wgx7Jw9SLAaZ8joF+8gOJwBrybp53+lY1qLVR5f6HSFzI3AGTrpXJ8KucMMlYEtqxVJIwIIsB/O8YlVN8mkufeGkjAAGkAUJoeuDbI0wviFsNMHAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=toizFAjN; arc=none smtp.client-ip=209.85.167.46
+	 To:Cc:Content-Type; b=XwbWc8MJV1elMe4TOtnR67xnu5DXSRq2sqq7/iHzL2FeIbPhJ82qbCIZxQg2a/WKLz8xzjPKmyn4TKgHCNDyqUkw/IR77+n4j2k/sgMGZhf3bFCkgiuoC5JsmrJVD9NMQytycocOKC+2HBeraBRxIsh4Qk/7Uw8M7C+Opvnc2Rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=S2q5QIMA; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-57dfd0b6cd7so6316719e87.0
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 07:42:26 -0700 (PDT)
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-57f1b88354eso6465141e87.1
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 07:49:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761057745; x=1761662545; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761058156; x=1761662956; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mZCOMUry8QgJDtmQTlzvKx4nzmcRl8rasbY1MAd0sQY=;
-        b=toizFAjNvCxbdmiRGHruks9lNdp+nDZh6F3FBjY+riJ8JqXmbf8qB/h7+Yy/Y+PNIb
-         Y1XHXq4NDJJhOOqfxm/B+jydgEWe/9Uh/MXHDM5RbRe8a7PtdrLX+JiHKn4GDYxrYmWL
-         cOfNr6JwMpieNDY7kHJyV8HRzkNbtyzGmXnDIK4UX1Mw6dUVgzxMELa0T0vA8EOGLNMA
-         jqY7Sjbn7vgOSe5dCIsnGfecudQM+vy7tb3EJjha7NZHtBSmq2u7wekCDL4TLhwGJM5v
-         CpjZSkefszox10VDBWnaazFTX1dxZ0auiMh1zf8/hSGuMYXJbT2JkayM2lXFAhtddoeH
-         jF9A==
+        bh=W2POVoQrYUSZPm1A3yimS9utpyJqHWo6t34zYlrDD9M=;
+        b=S2q5QIMACELbpbw3BFkBp/ESgGRjNmUqDzIVGS32uUicB+JK9ljXMfHmxs+McXOoCU
+         0UP1wC+Is2yy1abPxZmVo7zj5ySOcXaNSgMmJgXyomXLBECmjzEWKM5oPAwdzYi9fta2
+         NwL0jk28BbuRXNHI52s2+e0kxLs9WSvOicja4pvzkMKDYEHpqUlvjmP/j/Tp5bdwoVqp
+         gvUnH8GkCdkNEzuiaeeaj2CqJXHcNKz/V/g44BCf3+M7EYaYPCo/2lIiRDVtiXb61krj
+         4tpMmCZJ88R0GUYlGvuJvRScYHB2M7o+cZfnHyyrORHe1xjmnC6ZVXnSTAdubGslsgqQ
+         8ekg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761057745; x=1761662545;
+        d=1e100.net; s=20230601; t=1761058156; x=1761662956;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mZCOMUry8QgJDtmQTlzvKx4nzmcRl8rasbY1MAd0sQY=;
-        b=XljdeMb4D59tE+olVJfN8IUR3L6/fQQLBQjYO7cvFlFBPTiofOcyVw5n7o4ucO8itK
-         BHfj5H3ca+BKmnfaV4rE+zFQF81/6sbdZJiRuvFrjYimifB8aGC8LPlK1JvRpoAyACyP
-         WCYMyKkzBRxcYwYR8V6VndjMvIToNxY4qDnskfk2pexYjh2cT+vdFntc4C1zbDLi5t6/
-         uM23kxEz+6m+2VxwENefHHHEVzHWeudXVwuTi2i3pJBYMF8nPq6GMLO5euaFsNiWQkWQ
-         B9FbVuDbArlWnmwEVVDlx6+FbKUrwTA2TFYHSmweALJxBsTTk1alJmC5M6KfuwtlLGYa
-         CBpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUeCvSYM4fRow/yRRUW2CfHotLtgkQW026HRnnZSJ5hYiqPJAESAe9Ybm2w9iO0wBnqb+Mz4Brctb03@vger.kernel.org
-X-Gm-Message-State: AOJu0YyREnKdnONpahY6SygwhZHIwWnn0IY35chOxSgu+CfZkNsN8djy
-	RXghWHca1QbF5znEuRGsK/E+J+c3q9kaBviLzdjsoM0d9148yDR30uuX9dckvj++FiJlaA+oj4a
-	ixOywMJLNtMowYqLxIROjCU99EpxES2Y48MTxJ0+Rww==
-X-Gm-Gg: ASbGncsILSpRjJZJS1wbc9l+BIpOLMJehbXomncLFXDud1YRpCijO64WS6crWlRxeYs
-	vvJAfpEp/2XxYr/QYGVTTPDNsQ3jzGA+VxodwNgahRfbk3+O98gkVs//Xgm6kBEyuhOWJZaJIBK
-	GxprcMbwj/ftcKA25Bt32OBoIYKmQRueiG//79cvDY7ng11tYHoMtsynzNi/Hzqt8s6Y4FDqqvF
-	GDiIZQaFyR8jcdXr39L+i7WpFSUo8ZY0buBZ80LYxbAgviDo+/3Q/qjmyVAkJkVPNV4kzD/5AM3
-	qlCtkN3EuumEugUp
-X-Google-Smtp-Source: AGHT+IEAFGsFmUFG/YnJHTCDdPAr/87ZFEb44yMmd6QhcxQ6kY+xN7c3ywaYXlVUOsQLkH0hiixQGCRd64K7uAmIpvc=
-X-Received: by 2002:a05:6512:4014:b0:586:9636:6e4d with SMTP id
- 2adb3069b0e04-591d85622ddmr6106679e87.50.1761057744764; Tue, 21 Oct 2025
- 07:42:24 -0700 (PDT)
+        bh=W2POVoQrYUSZPm1A3yimS9utpyJqHWo6t34zYlrDD9M=;
+        b=eAlmNqh1md/Hhf3CiqXIYYAmmhFLZlVX/lTCumHeoGPiamg5wU3SYZ+EK9KWOddyB/
+         CPLVIEAZYNOPWKtFgLeetV5b81KZI1jptTHAaBVOABRMtH67paJQaWaSt2qwuzI3z3NV
+         L1/MutDrRh4o9W/DWVITyf+eRkASY831itjOU85tbrHfC21BR2Yj9QxefEhssmHnGH1Y
+         SZ4b9wmM0UlLpiUmwwz3so2sdaHQOVOQPl5+aiVe5ogad2lrzjTOyRRUTeDCwI6bW5BD
+         IYZw/Nl38q4U2sssY4CHXBCmf3VfsUaYcbkGA17TgwdqOFHxWqWbvshVDR6BEQKwG8Na
+         3EiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW8TvaeQfKlOClqFWRmhmMZA/J4a8T2hycA0vsWcNlAQTK/Bm05gemdUtquBweC6QOoPDVCFnsa/qrC@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtEo+BWGQTojwwXP6Gqq/lG4Ytbb/NN2I2NkLmBKzgSsltL6Ov
+	BEoEdRGXiVVlRqjtSbzFHGcf0j+zlB0dhdxx6ZpjvdwSoGf+jZ4uE4qdjzw13Sk4LqhoeOzSuAe
+	YTkn4DYnTuN2ItEW7PDqkn1bIcZ+tCoi7VN8MWU/fkg==
+X-Gm-Gg: ASbGncvFCoYTl1lxTQ2M4EjnZplAJ4RqsmpF6OZlmu3Qyg50rLtxPJOrlgeT6H8p720
+	qctdkPLP0bRpPFaIBXeuqgGHljwHMH+Iquu3mjO+Tq+NG1/tS7FMpdmYnCCiboOyR4+smK3KB8u
+	Ct4+kt0Na6d5lNOu5FDDqH3LWBB2+pLCRm12r2/S6tzVAcBuEdDk3Jd1lOjB9qACWM9v6bHKx+D
+	Gab8Hmf5atJFAgi2lXXWui0Jw8ry/mphfhkjhLyGrHMmQwEKqE6YoII8lLQr6v9lpDiepFDBPxu
+	SU3v31cUNve12r5CPNVhjfl+gFo=
+X-Google-Smtp-Source: AGHT+IHHKA/c0dnWyRU1/iLjLRkY7tyq+bIgrghSWb7MxAig1bIW1157IfXsr8EXnJ7WeHo/HrV20fw8YRwsJS23Kmk=
+X-Received: by 2002:a05:6512:3ca6:b0:572:1f0b:5ef3 with SMTP id
+ 2adb3069b0e04-591d84e398dmr4722237e87.11.1761058156385; Tue, 21 Oct 2025
+ 07:49:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org>
- <CAMRc=Me4Fh5pDOF8Z2XY4MG_DYqPRN+UJh_BzKvmULL96wciYw@mail.gmail.com>
- <81bda56c-f18b-4bd9-abf9-9da7c2251f42@sirena.org.uk> <CAMRc=MdOCHJEyPxN+-g71ux68=Mt_Q5P9611QO7Q8J9e8UJv_A@mail.gmail.com>
- <0e1f3a1b-46ab-4eb5-ad05-70784f9b9103@sirena.org.uk>
-In-Reply-To: <0e1f3a1b-46ab-4eb5-ad05-70784f9b9103@sirena.org.uk>
+References: <20251020-fix-gpio-idio-16-regmap-v2-0-ebeb50e93c33@kernel.org>
+ <20251020-fix-gpio-idio-16-regmap-v2-3-ebeb50e93c33@kernel.org>
+ <CAMRc=MeFZTDk4cgzEJNnkrJOEneFUBLwtKjkpV3-cLSm=xsxNg@mail.gmail.com> <aPebhGETy_3MIwkf@smile.fi.intel.com>
+In-Reply-To: <aPebhGETy_3MIwkf@smile.fi.intel.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 21 Oct 2025 16:42:11 +0200
-X-Gm-Features: AS18NWCeEZ0pLB4tS_IEx2MtW9IQz_axw-1Q3NqtyOuzDmGpEP1ZzpOriXTSxmo
-Message-ID: <CAMRc=Md1Ve4hnYQOryYEXG6_HSPJrANrr9gj2FMzCwsD+q5Cuw@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/9] gpio: improve support for shared GPIOs
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Srinivas Kandagatla <srini@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andy@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Will Deacon <will@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Date: Tue, 21 Oct 2025 16:49:05 +0200
+X-Gm-Features: AS18NWBSKJhK7qYwfMnb3aaDS0lyPca9mQ0P-5mXERBibCAphYq6tUO01p7bilc
+Message-ID: <CAMRc=McPP6obWpnd7Y7duJDC=NLAOE7bjFN-iytDJ524nDr9mA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] gpio: idio-16: Define fixed direction of the GPIO lines
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: William Breathitt Gray <wbg@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Michael Walle <mwalle@kernel.org>, 
+	Ioana Ciornei <ioana.ciornei@nxp.com>, Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Mark Cave-Ayland <mark.caveayland@nutanix.com>, 
+	stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 21, 2025 at 4:08=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
-te:
+On Tue, Oct 21, 2025 at 4:41=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> On Mon, Oct 20, 2025 at 11:41:52AM +0200, Bartosz Golaszewski wrote:
-> > On Fri, Oct 17, 2025 at 7:32=E2=80=AFPM Mark Brown <broonie@kernel.org>=
- wrote:
+> On Tue, Oct 21, 2025 at 09:21:38AM -0400, Bartosz Golaszewski wrote:
+> > On Mon, 20 Oct 2025 10:51:46 +0200, William Breathitt Gray
+> > <wbg@kernel.org> said:
 >
-> > > It really should be the actual physical state change that triggers th=
-e
-> > > event.
+> ...
 >
-> > I guess so, but this would require some non-trivial rework of the
-> > regulator core. We'd need some list of deferred notifications stored
-> > in memory for when the physical state actually changes.
+> > > Cc: stable@vger.kernel.org # ae495810cffe: gpio: regmap: add the .fix=
+ed_direction_output configuration parameter
 >
-> I'm not sure I see the need for deferred notifications?  We'd need to go
-> round all the users whenever a physical change to the GPIO happens but
-> it's not clear what we'd need to store beyond the list of users?
+> > Turns out, this requires commit ae495810cffe ("gpio: regmap: add the
+> > .fixed_direction_output configuration parameter") so I cannot queue it =
+for
+> > v6.18. What do you want me to do? Send the first two ones upstream and =
+apply
+> > this for v6.19?
+>
+> Why can't this be pulled from some IB/IT as part of the fix?
+>
 
-In my mind I was thinking that we only need to send the notifications
-to users who already enabled/disabled the regulator too but you're
-right, it seems like a loop over the relevant pins should be enough.
-
-In any case: this is outside the scope of this series but I'll see if
-it's easy enough to add separately.
+These kinds of things should be signalled before applying the patches
+that should go to an immutable branch. I would now have to rebase the
+my for-next branch. Also: the commit in question brings in a new
+feature, not a fix.
 
 Bartosz
 
