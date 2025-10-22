@@ -1,105 +1,188 @@
-Return-Path: <linux-gpio+bounces-27435-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27436-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B5E7BFB558
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 12:12:08 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B365BFBA02
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 13:23:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 73288189E945
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 10:12:08 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2DC065004C9
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 11:23:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF9A4326D55;
-	Wed, 22 Oct 2025 10:10:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE5FA336EFA;
+	Wed, 22 Oct 2025 11:23:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H8gNPWJZ"
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="pqCbupnN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8493254A4;
-	Wed, 22 Oct 2025 10:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3651C32F751;
+	Wed, 22 Oct 2025 11:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761127838; cv=none; b=rPi9kppr1SbL0MTHZL7O1wpEkQUqa2GTtxqiSeJUxtcFfENwduBEP6GHGMJnodHPviONh+q1fvItWtrqOdPYlEac473rLNlmcm0HOv1tGWGPeu69g6cL2E+v99SB844BLnrLOdH07mzIy1N+I3S12am6R46D52lNuwTW27FDy8g=
+	t=1761132229; cv=none; b=m7L7FwEsmcw77qmXhqG1nIxovfwy1ajtui/nIEwICIQkrT+xdM3McOsYnpav9ozAPzgojf/rJGgq9wQ7dp/mwuqFVl92gJKHYYJz0U/rt0WG3of1oxDDpZ7JW9D0TSH7V1i4nLBUN7W5fXzICHj1X2j2L39D6AMQO1ahJI9XNhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761127838; c=relaxed/simple;
-	bh=OUQyFuTsycRdDJyc4s7jio9r2I2Q187UaqN1mLSvjPc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FdcRqWqT3rP0J7F6neBQwXqhNbSfqJvqPLhuyu9MOVYumsx1FxeYuzKFbkd7JGxb/b+q/fLRmxAc8KtHTNZGScjMzIMtZ9b4UQWPk2DkbEB+5m7rheXqq1ObSzb4UqgDrd1FjJImGxdCTmNPCVmHHvBfhOuMEt2uaogHC5gpQjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H8gNPWJZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 653B8C116B1;
-	Wed, 22 Oct 2025 10:10:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761127837;
-	bh=OUQyFuTsycRdDJyc4s7jio9r2I2Q187UaqN1mLSvjPc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=H8gNPWJZQwBKzvcP4FnCj4hHExxhZSd0spquS9jzC8mjck+Ii1bd4jZj6ZyKq6S15
-	 0NnolWXnlgQB3zDO6jUXkQdFuZpCM7uBNA3i15aXr8n3rpLMePClx+GIN1g8MlVZ/z
-	 FjnufKVZBMtHmao34aUXg/4jjFYt1ee9LIKLtyBawyyH6rr5iCNaDahHPJnFV48h1P
-	 ox2wRhdc3DAEUl+3IT8gKetCO0V+6AJU0Ao35+AFyq+pSN29+jk9m3CoPx0cZOEW2v
-	 sR1PqkcAMaITkI+E1LnfvWfyR0IzWtAS6sJCu+IaS/hwL6NDKl6bX8ySzHSuyiP1Pk
-	 LlI2vJgCzqonQ==
-From: Conor Dooley <conor@kernel.org>
-To: linus.walleij@linaro.org
-Cc: conor@kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Rob Herring <robh@kernel.org>,
+	s=arc-20240116; t=1761132229; c=relaxed/simple;
+	bh=Sto90th+ZCJpEnfp/VcT4pT9JuOxd6d1o8AqSToBMrg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=loPT4Qxor/o7F9GLujvoz/2drxL1Oys2W/gLgImbKIT7Z463OWTdk14mKRwRlyN2nDsKX92ijMRoovHUZSxPTR7WAIW9QrIldE+aZEoqBgbkB8SHE0aZZKtdB7SVxaCL8IFwQgusMsE5RHEX1QgO7gvZokNvjWHDnYsZM/jrxhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=pqCbupnN; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 15D481C0088; Wed, 22 Oct 2025 13:23:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1761132225;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lJy21XbWgHp7MjGSXfr0/SiKeaKudWY5JLr70CDGgKg=;
+	b=pqCbupnNygoqjhYdJh+SCZh/oNfOBS94VpWGG/hzyei2HcK3MabOx5SFCwkpVC61xwOs7u
+	kBUNEPVa2OaVIxl0U8f+ElyReralUEauxeyeryR+9Oj0aktXucB7Nk4gKyZZy19G+bIB/Z
+	IPRgNPTEJp/FXhjKBa218zWpoFhtef4=
+Date: Wed, 22 Oct 2025 13:23:44 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: Luca Weiss <luca.weiss@fairphone.com>
+Cc: barnabas.czeman@mainlining.org, Bjorn Andersson <andersson@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Valentina.FernandezAlanis@microchip.com
-Subject: [PATCH v3 5/5] MAINTAINERS: add Microchip RISC-V pinctrl drivers/bindings to entry
-Date: Wed, 22 Oct 2025 11:09:13 +0100
-Message-ID: <20251022-bobbed-ladylike-49a4d9b87c54@spud>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251022-dash-refinance-ac3387657ae4@spud>
-References: <20251022-dash-refinance-ac3387657ae4@spud>
+	Conor Dooley <conor+dt@kernel.org>,
+	Stephan Gerhold <stephan@gerhold.net>,
+	Otto =?iso-8859-1?Q?Pfl=FCger?= <otto.pflueger@abscue.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Lee Jones <lee@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Konrad Dybcio <konradybcio@kernel.org>, Sean Paul <sean@poorly.run>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Adam Skladowski <a_skl39@protonmail.com>,
+	Sireesh Kodali <sireeshkodali@protonmail.com>,
+	Rob Clark <robin.clark@oss.qualcomm.com>,
+	Abhinav Kumar <abhinav.kumar@linux.dev>,
+	Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, iommu@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+	linux@mainlining.org,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v7 6/6] arm64: dts: qcom: Add Xiaomi Redmi 3S
+Message-ID: <aPi+wIY/bUuZl9hv@duo.ucw.cz>
+References: <20250831-msm8937-v7-0-232a9fb19ab7@mainlining.org>
+ <20250831-msm8937-v7-6-232a9fb19ab7@mainlining.org>
+ <aNGLPdmOyh/pfroq@duo.ucw.cz>
+ <97ee369f6ffbe42c72c57ebd72887b23@mainlining.org>
+ <aNJKniJ46YuUsbQ+@duo.ucw.cz>
+ <DD038IVOWESM.24X3EZZXH3UE@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1422; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=yIOJ8zWE39Nk9VFv1VjhPf9MABofVWCX3ryvpaofjMU=; b=owGbwMvMwCVWscWwfUFT0iXG02pJDBk/1sYsL/hY1fCpf1m70F8fvgcn55x9MO/bXWuV7WXn3 q/bE3ZXuqOUhUGMi0FWTJEl8XZfi9T6Py47nHvewsxhZQIZwsDFKQATUfnA8N9R94/9imv9wY+1 NFoebDKZvc1xxmPTc4tvrns166rLFOX7DP8UNv6I3ei7VU9x/b7+6AKvZMWumJ66v1pceZFMz/f GqfEDAA==
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="afFovrNgGG7Vhs2p"
+Content-Disposition: inline
+In-Reply-To: <DD038IVOWESM.24X3EZZXH3UE@fairphone.com>
 
-From: Conor Dooley <conor.dooley@microchip.com>
 
-Add the new gpio2 and iomux0 drivers and bindings to the existing entry
-for Microchip RISC-V devices.
+--afFovrNgGG7Vhs2p
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
- MAINTAINERS | 4 ++++
- 1 file changed, 4 insertions(+)
+Hi!
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 46126ce2f968..5d4825073fcd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22089,6 +22089,8 @@ F:	Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
- F:	Documentation/devicetree/bindings/i2c/microchip,corei2c.yaml
- F:	Documentation/devicetree/bindings/mailbox/microchip,mpfs-mailbox.yaml
- F:	Documentation/devicetree/bindings/net/can/microchip,mpfs-can.yaml
-+F:	Documentation/devicetree/bindings/pinctrl/microchip,mpfs-pinctrl-iomux0.yaml
-+F:	Documentation/devicetree/bindings/pinctrl/microchip,pic64gx-pinctrl-gpio2.yaml
- F:	Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml
- F:	Documentation/devicetree/bindings/riscv/microchip.yaml
- F:	Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-sys-controller.yaml
-@@ -22102,6 +22104,8 @@ F:	drivers/gpio/gpio-mpfs.c
- F:	drivers/i2c/busses/i2c-microchip-corei2c.c
- F:	drivers/mailbox/mailbox-mpfs.c
- F:	drivers/pci/controller/plda/pcie-microchip-host.c
-+F:	drivers/pinctrl/pinctrl-mpfs-iomux0.c
-+F:	drivers/pinctrl/pinctrl-pic64gx-gpio2.c
- F:	drivers/pwm/pwm-microchip-core.c
- F:	drivers/reset/reset-mpfs.c
- F:	drivers/rtc/rtc-mpfs.c
--- 
-2.51.0
+> On Tue Sep 23, 2025 at 9:22 AM CEST, Pavel Machek wrote:
+> > Hi!
+> >> > Hi!
+> >> >=20
+> >> > > +	led-controller@45 {
+> >> > > +		compatible =3D "awinic,aw2013";
+> >> > > +		reg =3D <0x45>;
+> >> > > +		#address-cells =3D <1>;
+> >> > > +		#size-cells =3D <0>;
+> >> > > +
+> >> > > +		vcc-supply =3D <&pm8937_l10>;
+> >> > > +		vio-supply =3D <&pm8937_l5>;
+> >> > > +
+> >> > > +		led@0 {
+> >> > > +			reg =3D <0>;
+> >> > > +			function =3D LED_FUNCTION_STATUS;
+> >> > > +			led-max-microamp =3D <5000>;
+> >> > > +			color =3D <LED_COLOR_ID_RED>;
+> >> > > +		};
+> >> > > +
+> >> > > +		led@1 {
+> >> > > +			reg =3D <1>;
+> >> > > +			function =3D LED_FUNCTION_STATUS;
+> >> > > +			led-max-microamp =3D <5000>;
+> >> > > +			color =3D <LED_COLOR_ID_GREEN>;
+> >> > > +		};
+> >> > > +
+> >> > > +		led@2 {
+> >> > > +			reg =3D <2>;
+> >> > > +			function =3D LED_FUNCTION_STATUS;
+> >> > > +			led-max-microamp =3D <5000>;
+> >> > > +			color =3D <LED_COLOR_ID_BLUE>;
+> >> > > +		};
+> >> > > +	};
+> >> > > +};
+> >> >=20
+> >> > That's single, 3-color LED, right? Please see LED multicolor support.
+> >> As far as i know aw2013 driver does not have multicolor support.
+> >> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tr=
+ee/Documentation/devicetree/bindings/leds/leds-aw2013.yaml
+> >
+> > I believe that needs to be fixed before more bugs are added on top to
+> > work around that problem...
+> >
+> > ...and before that bug is cemented in the ABI.
+>=20
+> Honestly I don't think it's reasonable to expect people contributing dts
+> to then first start patching existing LED drivers and adding support for
+> x y or z to it, and block dts addition on that.
 
+Well, the dts is wrong, it describes three leds when you only have
+one.
+
+> At least in postmarketOS the user space components we have (e.g.
+> feedbackd) detect the LED things (and most others) automatically since
+> various devices have various different setups. So once/if aw2013 gets
+> multicolor support, the dts can be updated without problems.
+
+> Sure, maybe today changing something on the N900 which would change
+> sysfs paths is not the best idea because people will probably have 10+
+> years of random shell scripts lying around, but nowadays we usually have
+> better ways of abstraction that can handle that.
+
+I'm pretty sure someone, somewhere will have shell scripts.
+
+BR,
+							Pavel
+--=20
+I don't work for Nazis and criminals, and neither should you.
+Boycott Putin, Trump, Netanyahu and Musk!
+
+--afFovrNgGG7Vhs2p
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaPi+wAAKCRAw5/Bqldv6
+8k0GAJkB+A1MYLsaFrYi7NQtR20dd9gtSwCfTNIAA7o2+c88KcU2rXh0E4whh1s=
+=m2+z
+-----END PGP SIGNATURE-----
+
+--afFovrNgGG7Vhs2p--
 
