@@ -1,123 +1,155 @@
-Return-Path: <linux-gpio+bounces-27452-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27453-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2091CBFC390
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 15:42:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D1DD0BFC3AB
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 15:43:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 111C562449C
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 13:34:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 830786260CC
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 13:35:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC592346E77;
-	Wed, 22 Oct 2025 13:34:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19BFA347FFF;
+	Wed, 22 Oct 2025 13:34:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDVnjz5j"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gBhLgU/o"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C82347FC9
-	for <linux-gpio@vger.kernel.org>; Wed, 22 Oct 2025 13:34:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8739348869
+	for <linux-gpio@vger.kernel.org>; Wed, 22 Oct 2025 13:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761140049; cv=none; b=nbD8ds7Bwt4NykCaykQiED2LSjWNL7aGqUch99/sGbxnxkWrrFWtrzEdGkoczydYYSI6ydKX10Xu5NUkkCGcchCOA28CxaNWYQoTh8wM+Zoxu8Y2Vilmlw+fGEMXfwFORAhchN+2oB/88dmMGOomEIo3MWnJ3edC/BCrkgjjA7I=
+	t=1761140071; cv=none; b=obp4ZWlvzE+K5ZW7NbcyXYxJ/YMH+1Al9rzUs08zcoXNYvnNmpe2u0qp/52J5gr15KmUfhc/Tz227VKVI3kMkwxwH/xjedyqYMcx2LKrfhSF8im+2l44IRYwj67IrPMtKDH0aEane6jwDNZ5ngpMSu83x5E2DPBbWywzDgPGo74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761140049; c=relaxed/simple;
-	bh=gWtnyZCMZ79lGvtHTyeCn/sxtckldijN3FKie7XpzK4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OKgbLI1w79ss/+0/gBTEimd8kcgL1GHORDFDdEOz2Hihd7ZPGmnNtugFcCSfl2xK52PrupbCZ5f6wrB442t7sAemgPs56ih9wKxICfQpNy0lLJ7Yvz+QtKliHS75Oq18MI2pAfK4m9QlCETPoTf4F1XO1kPDEd5rFhOzBHvI1/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CDVnjz5j; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b5c18993b73so1096977666b.0
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Oct 2025 06:34:07 -0700 (PDT)
+	s=arc-20240116; t=1761140071; c=relaxed/simple;
+	bh=t58k7nuf9fXppT7leLM5wPeiFjCn4yr98+SyB7CjCIg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r1ezxO7MMh+h+meOws+z7ALlBobPZaBkCK3V+7sUBqZLSfcfP1yDH7/awV6XcLWEsQerl7+C39z0IkslxhTyVE2qRPNaDRPXXr3EtOEjH0bZpVAAdKFUTo7PbnO+OLnfjogC3z4jkOJZlhO/EhXCfLY68MP9VNynk6a7NWBLeB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gBhLgU/o; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-427087ee59cso765805f8f.3
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Oct 2025 06:34:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761140046; x=1761744846; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VnDab3MvBR9d06ZmEVci9R2LEo8WZZltTef4oKgMrxE=;
-        b=CDVnjz5jqOsaNOGf/xUBqTdky530gFLOTueh497tFpB3jkwYJP28o/3s45BjwsT3qr
-         lxtZZfaUu9NuRQXrZQus0kZ+fVkvLKEZlTTPAjnn8L1AK83eyuMn7Wafr0Zx2aPo2m7B
-         fOksJ515XZEh3M9ikP0Zi6ABQa5qKlirVffuN9zigqowVSbr8nMHixoqdkvTuY6pM1iV
-         fQGnCgY4EBxF4s+0B7aI6fKEQq3+tw0kG1+xMoUyanJoZ+Fu6ARAN4wIWfTxh39VwOFr
-         Wx5ZbOHMR6GU5w6ATE1Pq8Wi+CVOQETUwWCPGLKBJ6FEJg3fmGgB3Tv6eWF5BzUXgSL9
-         dcRw==
+        d=linaro.org; s=google; t=1761140068; x=1761744868; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rFXbojovxWliJMkNJdsF09HvmueXHOHMsMOPKrCfmZA=;
+        b=gBhLgU/ojivpduN2gcdB3lUg9+9Jw7ht01gSzRJMbpFRrvZ+TsIcl3tzsrQ06XaBYG
+         b/LGE6I5n81903wXqo+Oj8YUcX9v2nTq2N3tkW6GZQpPck8w/Pum/0u/RAJu4722PNgX
+         OOsuBrDMVTccEUBqEflyQojt028JOadAoosJXDH/K6f8MsDlY8PWnKXQXFfQPmBNAMEL
+         aVvi//PoQF0unp1IUDv2llfwZ/pM3QWUMpzFeeS50lXHlD5BtgE+jCq96b1pGGBPcasy
+         OZQkOTuqoW7zZiyVw3/KiA/3NKHozYEDWHNd8RRJKErg7Ik0/uuPM66ay3u9bxalaaxV
+         5fmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761140046; x=1761744846;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VnDab3MvBR9d06ZmEVci9R2LEo8WZZltTef4oKgMrxE=;
-        b=VyhklUFqKxLzCdt0jwkkdYbeKVP9IYOVqQ9JlEgqmY51bKl1nMNmNSS8mcjcTtSBXL
-         +baAuH/tlbhJaSNTMqIhSy/z7PO2qD25+AUz8JSE1UPNjCcmAxqKy4dzs0RtuVtQjEYU
-         F386BBpbq8SeR2rLFB7Kt2vlrctlgkEv3rfBWe/T3ZaaMRWfpIIKOMQ5qDvquv0PS0gN
-         2s+Kd6WDNkI3BFQdzsd2Q42N8gzVq4oH6krULw8BW0+vwWekBYL2MmWNuBRiVgcltaK+
-         rxbkWQsXxjSMQntP9vR83zFdgiSAk65iP3DUHw24xViIVMfhTLNMSsznfp52XRFgOi/4
-         pnzA==
-X-Forwarded-Encrypted: i=1; AJvYcCU67jqow2rR3ZPvdLtpR6SG0+SBvuYH7acZxii62NCIRyKtto2wUXiRdmXhUAy8lYgV7xXA+Ht733ZH@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxg7apLlTpDLiNiwqzo562OnM0X+7PFClW/gHlmMobNzyubgU2N
-	nHLc9n64uMqFS09Dbdd+28tqNQduzJPmA0ZQohGFeKMakYq+lRB4TyUXKKaaEESnquNwpKR+Th9
-	eADf5n6SQuGAPZfqn1td4+JxGETlCaY8=
-X-Gm-Gg: ASbGncvLLu8QE1k8LPqksJbrp8BNM3IQFAgjWHUgiz1NI6hCYUuoY5bVTGsBbrACO29
-	QCgHjMUQcReJFAJPJQwLesZ8oRgoddHwgvM/cuLrnRYySP0dVsgFcSiTBpNbBfOc8VMw7tscwUP
-	yvgwb+eBVxrQDTHkmzf4Nz/2LMYEclGSS6jV0Ov4q0TIqpGvRzBjNbRaMo0qHOXB/tTuEsTk7E6
-	LRSV1kxYg8qsZL61OgI12aj3TtrIICVfulyT0bfpNgnSzWTZXNmrqMKdGIj5J1cKSfBaVeZ
-X-Google-Smtp-Source: AGHT+IF+bGnEQc856DkdZpIAOaRV7nKVJQZfv8gn2VCNIJnjHmyCsahfWQqIidtzCF/ZoRQsNWSOtm7llM7J7h8TBP8=
-X-Received: by 2002:a17:906:7314:b0:b45:420c:81c0 with SMTP id
- a640c23a62f3a-b6474b36a46mr2340985466b.36.1761140045360; Wed, 22 Oct 2025
- 06:34:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1761140068; x=1761744868;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rFXbojovxWliJMkNJdsF09HvmueXHOHMsMOPKrCfmZA=;
+        b=GVSFhz7rx4iufZF0VBwXN/SPu0i55Y9gluD2uvmR8CwvtGFUBKDJ/tAawvUVnGJzpg
+         8K6cneULlZVoVnC7Dgerv7UJk+eSYVwDXTOpBPUFl8b6KYE5U6bT1+KSK+hktyfMPIVv
+         QgB+EnXe2ZMHq4XTcIqIYS/eDozlbkoXIzkrN15fzUFgjQMqIt4oFgFqg8ewJL9BmzEV
+         R/P0Rcw+rk4H+N9LSYFwAyngwK3kiEBoZWXTRkM2LWPUI6+260JLdpSLC0ZpySl+RhTI
+         rn98+rYj74Lg9cZS6O1O1KMKcOgv2mmwYreIK888KzFoBLIquZJZEljIfNUoYxytqBiq
+         Ompw==
+X-Forwarded-Encrypted: i=1; AJvYcCWVA/JAhamyYXq9Tz7M93fwG2baLVm6WgZiNmG5Uzg8LnZ5Ib00ezNnI3V8HKKWgajSAyGjdAiE9NSf@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJSuJ/8J5iCcIoHCLpOurHLC8f2L8TX8kzDFKGDbhvSP8A153Y
+	Jnf6GOMAdysGTUDFkQpaxKAJuQiE8qej3il11t3CFksEBI93JNzUU/IfJYUgwa1MB4Q=
+X-Gm-Gg: ASbGnctZar6cTxOAHUye/EktHo+naqNmwR+DSfaJ16e6HjuIR6ggtZ+4E/HeRWcbCGg
+	Mmr8eBgu6/WWPa5fb21ShoGEEuO5IDdd3wJonfooIYhqE2mOx6eAVetXA85ESS7gKn7WbP+5+za
+	ovchb/0wYJlqD3cdQtQbphCM9vRGzu1c4sZj4spK0jbRV5pxoLIGEIAQqSjZY3ygm5Z90ajAmfD
+	yzeDbbOQCbvjq/BHwfnTTtYrBPuydCv32ltIrfNnMHxZsihKWVKIqfBX32R6vFwT/vVNScYe47E
+	dsaAUnAtoP162/Qp8XfQIUCKgMDHMC0iflg2XepBAw6i5MzDA0/KLrgW41DeNfV4uuMeok8eX06
+	Wbb0mhFySueTrob2e5P2WEIA2h0eHOr5rcM/sNoo7CEggSEAaoBl3jBF6k6Wy0Jq1R9m/kG2ht5
+	RgTYcbckCdBbYcN08EpMzLCQ==
+X-Google-Smtp-Source: AGHT+IEWcnZIaP2wLBKfRqry0HILeS5KfSEJcKKwt34JV4PPLBebPsmgOhwbhA8EkzXLqs8P73MPpA==
+X-Received: by 2002:a5d:55d1:0:b0:426:fff3:5d0c with SMTP id ffacd0b85a97d-4284e531afamr2257012f8f.1.1761140068108;
+        Wed, 22 Oct 2025 06:34:28 -0700 (PDT)
+Received: from kuoka.. ([178.197.219.123])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42855c2fb92sm2981201f8f.46.2025.10.22.06.34.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Oct 2025 06:34:27 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Nobuhiro Iwamatsu <nobuhiro.iwamatsu.x90@mail.toshiba>,
+	Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	stable@vger.kernel.org
+Subject: [PATCH 1/2] dt-bindings: pinctrl: toshiba,visconti: Fix number of items in groups
+Date: Wed, 22 Oct 2025 15:34:26 +0200
+Message-ID: <20251022133425.61988-3-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251022-gpio-shared-v2-0-d34aa1fbdf06@linaro.org> <20251022-gpio-shared-v2-1-d34aa1fbdf06@linaro.org>
-In-Reply-To: <20251022-gpio-shared-v2-1-d34aa1fbdf06@linaro.org>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 22 Oct 2025 16:33:29 +0300
-X-Gm-Features: AS18NWD8eeQXjXIPK4eXDVlSVPojwJxWfrcwXD-jC0yt5VNiNWjvrq9EAmjuWt4
-Message-ID: <CAHp75Vewc2OoD7=eoFtrkPrGRuB9ZGT2vu4Z_wdHZUDZ8igUtw@mail.gmail.com>
-Subject: Re: [PATCH v2 01/10] string: provide strends()
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Oct 22, 2025 at 4:11=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
->
-> Implement a function for checking if a string ends with a different
-> string and add its kunit test cases.
+The "groups" property can hold multiple entries (e.g.
+toshiba/tmpv7708-rm-mbrc.dts file), so allow that by dropping incorrect
+type (pinmux-node.yaml schema already defines that as string-array) and
+adding constraints for items.  This fixes dtbs_check warnings like:
 
-...
+  toshiba/tmpv7708-rm-mbrc.dtb: pinctrl@24190000 (toshiba,tmpv7708-pinctrl):
+    pwm-pins:groups: ['pwm0_gpio16_grp', 'pwm1_gpio17_grp', 'pwm2_gpio18_grp', 'pwm3_gpio19_grp'] is too long
 
-> --- a/include/linux/string.h
-> +++ b/include/linux/string.h
-> @@ -562,4 +562,6 @@ static inline bool strstarts(const char *str, const c=
-har *prefix)
->         return strncmp(str, prefix, strlen(prefix)) =3D=3D 0;
->  }
->
-> +bool strends(const char *str, const char *suffix);
+Fixes: 1825c1fe0057 ("pinctrl: Add DT bindings for Toshiba Visconti TMPV7700 SoC")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ .../pinctrl/toshiba,visconti-pinctrl.yaml     | 26 ++++++++++---------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-Why not static inline as strstarts()?
+diff --git a/Documentation/devicetree/bindings/pinctrl/toshiba,visconti-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/toshiba,visconti-pinctrl.yaml
+index 19d47fd414bc..ce04d2eadec9 100644
+--- a/Documentation/devicetree/bindings/pinctrl/toshiba,visconti-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/toshiba,visconti-pinctrl.yaml
+@@ -50,18 +50,20 @@ patternProperties:
+       groups:
+         description:
+           Name of the pin group to use for the functions.
+-        $ref: /schemas/types.yaml#/definitions/string
+-        enum: [i2c0_grp, i2c1_grp, i2c2_grp, i2c3_grp, i2c4_grp,
+-               i2c5_grp, i2c6_grp, i2c7_grp, i2c8_grp,
+-               spi0_grp, spi0_cs0_grp, spi0_cs1_grp, spi0_cs2_grp,
+-               spi1_grp, spi2_grp, spi3_grp, spi4_grp, spi5_grp, spi6_grp,
+-               uart0_grp, uart1_grp, uart2_grp, uart3_grp,
+-               pwm0_gpio4_grp, pwm0_gpio8_grp, pwm0_gpio12_grp,
+-               pwm0_gpio16_grp, pwm1_gpio5_grp, pwm1_gpio9_grp,
+-               pwm1_gpio13_grp, pwm1_gpio17_grp, pwm2_gpio6_grp,
+-               pwm2_gpio10_grp, pwm2_gpio14_grp, pwm2_gpio18_grp,
+-               pwm3_gpio7_grp, pwm3_gpio11_grp, pwm3_gpio15_grp,
+-               pwm3_gpio19_grp, pcmif_out_grp, pcmif_in_grp]
++        items:
++          enum: [i2c0_grp, i2c1_grp, i2c2_grp, i2c3_grp, i2c4_grp,
++                 i2c5_grp, i2c6_grp, i2c7_grp, i2c8_grp,
++                 spi0_grp, spi0_cs0_grp, spi0_cs1_grp, spi0_cs2_grp,
++                 spi1_grp, spi2_grp, spi3_grp, spi4_grp, spi5_grp, spi6_grp,
++                 uart0_grp, uart1_grp, uart2_grp, uart3_grp,
++                 pwm0_gpio4_grp, pwm0_gpio8_grp, pwm0_gpio12_grp,
++                 pwm0_gpio16_grp, pwm1_gpio5_grp, pwm1_gpio9_grp,
++                 pwm1_gpio13_grp, pwm1_gpio17_grp, pwm2_gpio6_grp,
++                 pwm2_gpio10_grp, pwm2_gpio14_grp, pwm2_gpio18_grp,
++                 pwm3_gpio7_grp, pwm3_gpio11_grp, pwm3_gpio15_grp,
++                 pwm3_gpio19_grp, pcmif_out_grp, pcmif_in_grp]
++        minItems: 1
++        maxItems: 8
+ 
+       drive-strength:
+         enum: [2, 4, 6, 8, 16, 24, 32]
+-- 
+2.48.1
 
---=20
-With Best Regards,
-Andy Shevchenko
 
