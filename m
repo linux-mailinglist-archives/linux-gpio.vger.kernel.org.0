@@ -1,131 +1,170 @@
-Return-Path: <linux-gpio+bounces-27408-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27409-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0D03BF8079
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 20:17:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AF91BF9A38
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 03:47:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2708D4E41F3
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Oct 2025 18:17:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C4D40485A7B
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 01:47:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 943AA34C814;
-	Tue, 21 Oct 2025 18:17:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D94DC20F067;
+	Wed, 22 Oct 2025 01:47:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bZsJhADB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SDJTNDzi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1DD257821
-	for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 18:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46221F3B9E;
+	Wed, 22 Oct 2025 01:47:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761070620; cv=none; b=OKdrTq+JTUGs9QiDZVW7gaeQUMNoV2U2UGM5MKVU0ku5VRTI4uhFmAfzVUTOx90rkhuSZ0IWQ0VkoBeVjPhpjvFECKNAb2DULZ4cida6Gw2dR4rdUTcZ+7Sfg41yi15+SfYMcR8n4mLcAhBD0m2ilsgCDRs0ffgudXlzu2NRk98=
+	t=1761097662; cv=none; b=tQ2iPrYRH+Gyi6IUNYqsmkTC3JyEoyu+LAnJPrcLaPh+oB2Fp8xaxD3S9/KEzL/FTT0SZgjtDigC1RA96D9dwJW7m51rBmFAtFy9jUaG0tyT9JvfXsYVnZ9zsGxhFJ75AY2YFOA6P/5V655vJdQrl3JfjGGNXoehQgv6Yaq2bP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761070620; c=relaxed/simple;
-	bh=kZOWY6JMDDz6tZv9AtSD0B2cuHs83Ph+Lw30vWeNKWw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BSRqXqV6JuyY50u5sH65QYd5DvK6sUcsWAEMyTEcv5LRAmDvBvTmkzA8vudPPccGLFAU25Tg2QJsCDiSjutiDahtw7IHdzfTZwIVLDspJdsKJYD9ciEWlv8dnipYwQtO1C4Gfv7wi0xmf7tmAgjhOeQcBAQTDqM5DNHwp75Q0OA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bZsJhADB; arc=none smtp.client-ip=209.85.221.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f65.google.com with SMTP id ffacd0b85a97d-3ece1102998so5010016f8f.2
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Oct 2025 11:16:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761070617; x=1761675417; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2WcC5Yj4O8iFwcWtj14bHD/J4MzaQs1gHT8i+XN9QYA=;
-        b=bZsJhADBXjsrNeC/WywuowtHzBLHS0Ve7oeJ5fi3lYk4cvN5U8mpKB8Bvk7g0jHqV6
-         +snqgx5118n0Xa04tS9HhyVP7go9LxVtNI8vvc6Of5YJpNNQhfNoB8k3NCmaGcBBLh3F
-         3oK8G+gHtwbUVyaLOn7yXqOjLek+GwGgGXg2RFSdAuDAVeMHI6oLrlE/3maG9M0QknGw
-         I6Sg5byQLiayN7xin2JEVZKgjR1hjGxRFoQzIM8/Hk1fEpw7ndMap9y3yol8w2U+s0qy
-         /M9PRga3Ia69ycGTEhCV8jZiWtj8iyLds69SH34LjzpohBbNT8AMAAhyNar1toagHLRD
-         vzWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761070617; x=1761675417;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2WcC5Yj4O8iFwcWtj14bHD/J4MzaQs1gHT8i+XN9QYA=;
-        b=WVDkuEA6LRF4VW3HE86hxZAzgXCdtl32vBEzQZUoKoIYAbZQi7ZId9rha9Vghty2/j
-         XvNfhjeROkXcT/JL2s9MtchCAhI+MdnPquBoAZRGSfCRGtp/d1/rVFHXj5bUCkPjxKmR
-         nBpYRO2J9wpnyO3QWj1UteaX5fl8GUQscC5avfpo/PcQp9N6R7JG56rM5IhBVzOpaKQb
-         wZ+/aK8z89H+eD1No5kzcgNcxBXILYDMhRvHOb7i2FxRvXn8XO2ANnkBuoDx3QmTUoGw
-         AwPXhj0vK6r4mLFiJoFkQbSnm/IqcI/afHVR0FOE8bQAE7gzrcjuAV7i7wwjv8fH5uae
-         lsig==
-X-Forwarded-Encrypted: i=1; AJvYcCWBUfmFmHTslE6syEuGoyOHfE/+bH0My46kAXfnsxtQj6QOch9t9yyu/096tIrvKPMd34YNnWW6+ebv@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuQi5Bros9HNFaJOyzdaZBFUNK1JO+ZKwr5bmVPcj6cMIB0psV
-	zemuiXhDibLLj/5MTM6bzRFBMCgK2ConsHOTx1lXiMGv9SBFqmrtmj1Q
-X-Gm-Gg: ASbGnct/jxZSL8Gi9R2+8BU2dqsnWRqokVxihdOOPA1WMnh3DmH0FiYmgrZfrMVqSlT
-	5nNb2SCsF2G8tSGOq28xIOOkBLeXcPkeMOWHfraccmJl0CBKenyi13fthoGZsbo4wUpUy1RWDrM
-	MrgG2e+ada+ZEBvd3r0NnyVCFuc93kxo+qGivIxkOICogVz5HiHrzo5SQx7X6pUKaaZJjuCwFOx
-	QWm1rSjU83VOzZIYSXufx7TIi9qdm3420p89C+pClwI/aRYEybA0XqBG9dLAZKz41vwZ1lRrjRW
-	SFIGE6MrDdqUb94vsQD2P/2L4JqSGRNHmKAMHOHmY1oBvw30Y4Finddh8MoOrdrCokeHY9Q1vMU
-	1tIxYY2H+oIjQwV4dPSgnAJCD5CgvxZSYoBDJJH0U43zTuvsx/NaBvMbaF3t3onDwGxYWx+J9nI
-	hVoW9WmYp7DIBbPBgN5XqM8h96316HatE=
-X-Google-Smtp-Source: AGHT+IH8ohr126cVW7kli1cWkoQTKhgJPU//PvVUWOvvxFkw5/xR/ldVcYvGM8kcSFx7OtVljK6Z/g==
-X-Received: by 2002:a05:6000:2089:b0:427:608:c660 with SMTP id ffacd0b85a97d-4270608c8b7mr11681948f8f.59.1761070617066;
-        Tue, 21 Oct 2025 11:16:57 -0700 (PDT)
-Received: from localhost.localdomain ([39.46.217.86])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-475c4369b3esm3936125e9.13.2025.10.21.11.16.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Oct 2025 11:16:56 -0700 (PDT)
-From: Ali Tariq <alitariq45892@gmail.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org
-Cc: Emil Renner Berthing <kernel@esmil.dk>,
-	Hal Feng <hal.feng@starfivetech.com>,
+	s=arc-20240116; t=1761097662; c=relaxed/simple;
+	bh=icObdIfSuL7dHxX4YyPeT+ngbOJTLgO4yM+wSfIaRPA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pNd9aY65AOwUF+XEYHzl8A2SiGbNunciDJ1x346WIkLNCQuD+RNi3qOOe3BWO6e3wzaAsbAt4o3nFh/BT7JO5/EnBduVQGlSP4KM8WvrE4QJ02Jwm2NvR8ZYrRuJvBK8RMkb96muDIIuENoTvdI/52tshTmPtgFQNPxc2tux8qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SDJTNDzi; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761097661; x=1792633661;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=icObdIfSuL7dHxX4YyPeT+ngbOJTLgO4yM+wSfIaRPA=;
+  b=SDJTNDziSVsA3M8+4j2HdQTXjScb05NEPu7oJLT7NLolP9sP3cRTdCeq
+   0EWgx7kQn7sW/b2/bnZBwYS1BAOpUhpYocVPGegicII34h0QcgTw/zlld
+   fUfp3EeScGPg8WcO6AM5k/4K3kYV4l9WhoMoN6kswY7G581bmVaRB6vDp
+   ynz5+vfMFhfj8t9s2OrAA4lvwr/OCO7DpgVUW87odx63qh2kNcZcMFN/K
+   Ck4E8F4nsPthjFxGj1c4odyGEKCjaRaDPgYJjdEr3q5RrlSXJvWLUwq2O
+   i9gLIUv6kq3PS3LOQOs7yr8uIH/zSyEuJfVjcrt327kXEJ/Dr8EFO/yko
+   A==;
+X-CSE-ConnectionGUID: 6Bkgqts+T3az0qw4MpBO3Q==
+X-CSE-MsgGUID: MRM06qL3Rpubj8XThYA1ew==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63332404"
+X-IronPort-AV: E=Sophos;i="6.19,246,1754982000"; 
+   d="scan'208";a="63332404"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 18:47:40 -0700
+X-CSE-ConnectionGUID: E5YXi9HKRUyhbUXzBSLhpg==
+X-CSE-MsgGUID: o30Buig6Rmam2zVLHuRqEg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,246,1754982000"; 
+   d="scan'208";a="188150280"
+Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
+  by fmviesa005.fm.intel.com with ESMTP; 21 Oct 2025 18:47:36 -0700
+Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vBNws-000BuT-2C;
+	Wed, 22 Oct 2025 01:47:34 +0000
+Date: Wed, 22 Oct 2025 09:47:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sander Vanheule <sander@svanheule.net>,
+	Michael Walle <mwalle@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	Ali Tariq <alitariq45892@gmail.com>
-Subject: [PATCH] pinctrl: starfive: use dynamic GPIO base allocation
-Date: Tue, 21 Oct 2025 18:16:30 +0000
-Message-ID: <20251021181631.25442-1-alitariq45892@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	Sander Vanheule <sander@svanheule.net>
+Subject: Re: [PATCH v6 6/8] pinctrl: Add RTL8231 pin control and GPIO support
+Message-ID: <202510220909.HJVE90Ky-lkp@intel.com>
+References: <20251021142407.307753-7-sander@svanheule.net>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251021142407.307753-7-sander@svanheule.net>
 
-The JH7110 pinctrl driver currently sets a static GPIO base number from
-platform data:
+Hi Sander,
 
-  sfp->gc.base = info->gc_base;
+kernel test robot noticed the following build warnings:
 
-Static base assignment is deprecated and results in the following warning:
+[auto build test WARNING on lee-mfd/for-mfd-next]
+[also build test WARNING on lee-mfd/for-mfd-fixes linusw-pinctrl/devel linusw-pinctrl/for-next lee-leds/for-leds-next linus/master v6.18-rc2 next-20251021]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-  gpio gpiochip0: Static allocation of GPIO base is deprecated,
-  use dynamic allocation.
+url:    https://github.com/intel-lab-lkp/linux/commits/Sander-Vanheule/gpio-regmap-Force-writes-for-aliased-data-regs/20251021-222846
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
+patch link:    https://lore.kernel.org/r/20251021142407.307753-7-sander%40svanheule.net
+patch subject: [PATCH v6 6/8] pinctrl: Add RTL8231 pin control and GPIO support
+config: x86_64-randconfig-004-20251022 (https://download.01.org/0day-ci/archive/20251022/202510220909.HJVE90Ky-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251022/202510220909.HJVE90Ky-lkp@intel.com/reproduce)
 
-Set `sfp->gc.base = -1` to let the GPIO core dynamically allocate
-the base number. This removes the warning and aligns the driver
-with current GPIO guidelines.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202510220909.HJVE90Ky-lkp@intel.com/
 
-Tested on VisionFive 2 (JH7110 SoC).
+All warnings (new ones prefixed by >>):
 
-Signed-off-by: Ali Tariq <alitariq45892@gmail.com>
----
- drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>> drivers/pinctrl/pinctrl-rtl8231.c:354:53: warning: cast to 'void *' from smaller integer type 'unsigned int' [-Wint-to-void-pointer-cast]
+     354 |                 err = pinmux_generic_add_pinfunction(pctl, &func, (void *) flag);
+         |                                                                   ^~~~~~~~~~~~~
+   1 warning generated.
 
-diff --git a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
-index 05e3af75b09f..eb5cf8c067d1 100644
---- a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
-+++ b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
-@@ -938,7 +938,7 @@ int jh7110_pinctrl_probe(struct platform_device *pdev)
- 	sfp->gc.set = jh7110_gpio_set;
- 	sfp->gc.set_config = jh7110_gpio_set_config;
- 	sfp->gc.add_pin_ranges = jh7110_gpio_add_pin_ranges;
--	sfp->gc.base = info->gc_base;
-+	sfp->gc.base = -1;
- 	sfp->gc.ngpio = info->ngpios;
- 
- 	jh7110_irq_chip.name = sfp->gc.label;
+
+vim +354 drivers/pinctrl/pinctrl-rtl8231.c
+
+   321	
+   322	static int rtl8231_pinctrl_init_functions(struct pinctrl_dev *pctl,
+   323		const struct pinctrl_desc *pctl_desc)
+   324	{
+   325		struct pinfunction func;
+   326		const char **groups;
+   327		unsigned int f_idx;
+   328		unsigned int flag;
+   329		const char *name;
+   330		unsigned int pin;
+   331		int num_groups;
+   332		int err;
+   333	
+   334		for (f_idx = 0; f_idx < ARRAY_SIZE(rtl8231_pin_functions); f_idx++) {
+   335			name = rtl8231_pin_functions[f_idx].name;
+   336			flag = rtl8231_pin_functions[f_idx].flag;
+   337	
+   338			for (pin = 0, num_groups = 0; pin < pctl_desc->npins; pin++)
+   339				if (rtl8231_pin_data[pin].functions & flag)
+   340					num_groups++;
+   341	
+   342			groups = devm_kcalloc(pctl->dev, num_groups, sizeof(*groups), GFP_KERNEL);
+   343			if (!groups)
+   344				return -ENOMEM;
+   345	
+   346			for (pin = 0, num_groups = 0; pin < pctl_desc->npins; pin++)
+   347				if (rtl8231_pin_data[pin].functions & flag)
+   348					groups[num_groups++] = rtl8231_pins[pin].name;
+   349	
+   350			func = PINCTRL_PINFUNCTION(name, groups, num_groups);
+   351			if (flag == RTL8231_PIN_FUNCTION_GPIO)
+   352				func.flags |= PINFUNCTION_FLAG_GPIO;
+   353	
+ > 354			err = pinmux_generic_add_pinfunction(pctl, &func, (void *) flag);
+   355			if (err < 0)
+   356				return err;
+   357		}
+   358	
+   359		return 0;
+   360	}
+   361	
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
