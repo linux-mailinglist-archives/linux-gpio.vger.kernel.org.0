@@ -1,163 +1,129 @@
-Return-Path: <linux-gpio+bounces-27456-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27457-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE0E7BFC462
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 15:50:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id ED2CDBFC568
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 15:59:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D8B8F661A23
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 13:38:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 886996250B8
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 13:42:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BBDD34846E;
-	Wed, 22 Oct 2025 13:37:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 976CB34C814;
+	Wed, 22 Oct 2025 13:40:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A5Ajyn6i"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vrD7MCFR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17B726ED2A;
-	Wed, 22 Oct 2025 13:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE6634C804
+	for <linux-gpio@vger.kernel.org>; Wed, 22 Oct 2025 13:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761140242; cv=none; b=s6Sw5zMupV3fB/UHPOo/tSOfBamdOKazZCIXLtKoTr8oQM/3Kf5qMYhAee67p/o/QTh6WPAGz/vLGuMVCISBqaLYVB/FDPT5/VWM5tBkVivZqKWFRDbaZT1+jgCinboIbqTJcLmCZLtNNgjjflETUEwHf230t59QvdWMBPv9TS8=
+	t=1761140416; cv=none; b=Y4u4wPYRYhW7m2gz85k5bM4zLZrt3088QpboQZpIAaIRyLvPlaC+q/oPcf1AtaJ+agD2lcrBF1ba/kk3pn+v3kbd1qi216+fDNICvxfRha5+vMhZEHsgFk1Lr+twwR0i14eZ7rGZVSzvmxdLblLj67dZy4vjkVurwUBiazTiSbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761140242; c=relaxed/simple;
-	bh=jbC9Sb3AKdA6ZHnElBfDO40DRbp3oq6m6FxraEOQX40=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O0gfJvjN4iGrcyLi43PLmQ5rXMfQMYw3OA6ZBH906DqbjskomSuhiNThPSPW41UDmJT4EdPMoSIEuQot3QwJxkYLVwGg/T2sTWXuhV9WLnIwY7MBFEW7pf5ps/UitVZrXGMO9u7OeJlTVDuRfO4O86PpmCeac5hAFPUrp3U1vzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A5Ajyn6i; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B6E8C4CEFF;
-	Wed, 22 Oct 2025 13:37:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761140241;
-	bh=jbC9Sb3AKdA6ZHnElBfDO40DRbp3oq6m6FxraEOQX40=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A5Ajyn6iWyJIJYkujtYJ74t7yoFj24fi7EU1MpKPhkjmxN28Zs+MpXR7zqi5v8XiL
-	 S1bvo42iRe/ZHt/eXS/4SNtq/4XUYNJf1Hbx8syyrFTUtWp9xDqVV/7Xg2gfuganaJ
-	 GFK48pAgWzxqGYwPezTwrX9rZaWTMio4hloWs5q9OpOCfNFsJbxPqx/o8jTOeOQUvA
-	 bZQWNgGn1ahuiJTUX5rGWGDBOSurvNR6PX7LmKGOmgpSaRZ+W5W1yBxPAuXxpS38w9
-	 aAhdUKTSP3tqY2IPxQaYXMKJoZ9D61JgmypQgUcnMOne8pcEY3jlKBAnSlWKBPO3E3
-	 p7wz8Jfq9pp/g==
-From: Hans de Goede <hansg@kernel.org>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: Hans de Goede <hansg@kernel.org>,
-	linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	stable@vger.kernel.org,
-	Mario Limonciello <superm1@kernel.org>
-Subject: [REGRESSION FIX resend 1/1] gpiolib: acpi: Make set debounce errors non fatal
-Date: Wed, 22 Oct 2025 15:37:15 +0200
-Message-ID: <20251022133715.331241-2-hansg@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251022133715.331241-1-hansg@kernel.org>
-References: <20251022133715.331241-1-hansg@kernel.org>
+	s=arc-20240116; t=1761140416; c=relaxed/simple;
+	bh=orIYgaMNJClTUKA2Pj42SRVGg9kx4atmkKO79VfJkGQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ov0QQmaY1Iqi/aM20HLG9bLrWtadqaIwDq/Zy6U0kWX0VdZMShc3c+oLKar/4TvzVpbXn2GUKdiLWEbwI802gGBfXd+tYwqdImNI+dS3x5G4zpsSdKU2An3zcZTGNrJwlCmsAaY+tM0jeNEZr7CxD7UKU41SwGTH2Lf7qu9E4ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vrD7MCFR; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-591c9934e0cso7694330e87.0
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Oct 2025 06:40:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761140412; x=1761745212; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E9Gx1TCR16ehe+RsUpMtumgWDjpXuT38xi+HNgTYzlg=;
+        b=vrD7MCFR5TiQfiyQ4b02oUQqocgr2+soVZ1doqOvsLFk21dlz6ansHvxpg/DOmiPM0
+         Ts1epqVzsKPTxIZEgTAPG9E2iwlz02J7DaqDODW1db/2njFkQJbarS6Levwn4DB2q6gi
+         ohXRYq70x90qVfc11r+1GmB1lxZfg+Ml8RL/1e+MdroVDnsqQDagTA7w4x/luiWwUnb6
+         Kb7fsbnaZGMqIEhPMYWYXn3oxcCxsfcUswJGBDLQkWp63WfpuWv1mjLkguanLZJD6xVq
+         x7Q3AK/upmP1LgDrkGUPeyKJLmxAtJs6N38B9cckdbfVEdtCoqnHqdg6YYIUcJ+3qH+O
+         t6tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761140412; x=1761745212;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E9Gx1TCR16ehe+RsUpMtumgWDjpXuT38xi+HNgTYzlg=;
+        b=AZ6rSgwnLpr/mGXxTA1ZYcdMbFOeuJGshpRE0DGtAAWTNPrxFQBBFKQhzn2SZeIf16
+         K661s01WMXQGihvJk1ovoLeu1crn/tT21pNraQ3ZUhHSCn1DkovsnkSCSX28wVgoR7ep
+         xA+wRCZpqauavzp42Edduly2C4sAE3E4baKK3Nkouddz2Yw5ITQ1hA3fwCmFVCJjFQ5c
+         R/u6v2NfMJABZ7ORktfYPgqb5gNYK5mIYBLXZAWaGDCgs/CyKmXt/2DFELLsP/mK6rjz
+         Rz/HVAFl3YFo0LfaK6RnXu96e5aZcShoatYK3sftamFXgq6spL/tE9lvsQ3tQdVd3jvn
+         Iy/w==
+X-Forwarded-Encrypted: i=1; AJvYcCWLaKyojA4OFoGQAYTTd0vNeA1JxdTq9QcM0y/SuNOfODzcm7atu/2K+97mY5wpCsCs0GQyiALpeZPN@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBWryLYDxNsY9nzSuSDgNbwqPctfSLHH4Fz22QBWgfMvbNQQDM
+	TDP5UTx9rx8kH8gg+vDdRfEDYle+Wga3FJsqE12hazKC9LDpRihWTzqAJknGQFWAUI8PZFcsyHu
+	z/s3y8adoGcMHBKDbJzlU84cCatOuI9N9ajSWrNh6Hg==
+X-Gm-Gg: ASbGncs5o8FSEgXJ7QO4Vvvcd/6H+RkJ5Sq+e+jRIGRHFpR9SGiN24eQyIGxm0QJq5N
+	m3qA2zx+rLIfZxmS81n5FEQnCeSR6dRV6J9gKvZP0zA6ikH55KlE9X1eNOecq1E4v271kzv11iO
+	fEuBmTUEF4nrYOFBjl2gyv/djD4JuOpWm6W8HgTdLbgEqdaoCWWTR/72llh/8iLjNS4G9MzqYU0
+	yq/7epV5MGQqp7yYERSJIzxNwLdHigBcP+xNa+5k/K2wC+ubzr/bqlOh2UZoCECQZXNHGt/dLZs
+	+l8NUmr5FpG9I/iN8073/BSUmzQ=
+X-Google-Smtp-Source: AGHT+IEKqm8lYyfETbDHoX6GlVAlvBKAEAKibR9/ZUGF9ZkgmvVU7aDY+sPQ7pncE4VQkSkH1+uh5CHDb76NK4aZXko=
+X-Received: by 2002:a05:6512:694:b0:57a:1846:df77 with SMTP id
+ 2adb3069b0e04-591d8550fa0mr6598936e87.40.1761140412394; Wed, 22 Oct 2025
+ 06:40:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251022-gpio-shared-v2-0-d34aa1fbdf06@linaro.org>
+ <20251022-gpio-shared-v2-1-d34aa1fbdf06@linaro.org> <CAHp75Vewc2OoD7=eoFtrkPrGRuB9ZGT2vu4Z_wdHZUDZ8igUtw@mail.gmail.com>
+In-Reply-To: <CAHp75Vewc2OoD7=eoFtrkPrGRuB9ZGT2vu4Z_wdHZUDZ8igUtw@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 22 Oct 2025 15:40:00 +0200
+X-Gm-Features: AS18NWC2AFr1HYLKJbD6SJ_gfPPZz3lolA3TRfFJfK8fopnOG8MhqaQPJHZTguM
+Message-ID: <CAMRc=Mf_qfFzWqy6ND+YDuXcv5NOYiRTo9QY76V719PqJBMxPA@mail.gmail.com>
+Subject: Re: [PATCH v2 01/10] string: provide strends()
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Commit 16c07342b542 ("gpiolib: acpi: Program debounce when finding GPIO")
-adds a gpio_set_debounce_timeout() call to acpi_find_gpio() and makes
-acpi_find_gpio() fail if this fails.
+On Wed, Oct 22, 2025 at 3:34=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Wed, Oct 22, 2025 at 4:11=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
+> >
+> > Implement a function for checking if a string ends with a different
+> > string and add its kunit test cases.
+>
+> ...
+>
+> > --- a/include/linux/string.h
+> > +++ b/include/linux/string.h
+> > @@ -562,4 +562,6 @@ static inline bool strstarts(const char *str, const=
+ char *prefix)
+> >         return strncmp(str, prefix, strlen(prefix)) =3D=3D 0;
+> >  }
+> >
+> > +bool strends(const char *str, const char *suffix);
+>
+> Why not static inline as strstarts()?
+>
 
-But gpio_set_debounce_timeout() failing is a somewhat normal occurrence,
-since not all debounce values are supported on all GPIO/pinctrl chips.
+Because it's not a oneliner.
 
-Making this an error for example break getting the card-detect GPIO for
-the micro-sd slot found on many Bay Trail tablets, breaking support for
-the micro-sd slot on these tablets.
-
-acpi_request_own_gpiod() already treats gpio_set_debounce_timeout()
-failures as non-fatal, just warning about them.
-
-Add a acpi_gpio_set_debounce_timeout() helper which wraps
-gpio_set_debounce_timeout() and warns on failures and replace both existing
-gpio_set_debounce_timeout() calls with the helper.
-
-Since the helper only warns on failures this fixes the card-detect issue.
-
-Fixes: 16c07342b542 ("gpiolib: acpi: Program debounce when finding GPIO")
-Cc: stable@vger.kernel.org
-Cc: Mario Limonciello <superm1@kernel.org>
-Signed-off-by: Hans de Goede <hansg@kernel.org>
----
- drivers/gpio/gpiolib-acpi-core.c | 27 +++++++++++++++------------
- 1 file changed, 15 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-acpi-core.c b/drivers/gpio/gpiolib-acpi-core.c
-index 284e762d92c4..67c4c38afb86 100644
---- a/drivers/gpio/gpiolib-acpi-core.c
-+++ b/drivers/gpio/gpiolib-acpi-core.c
-@@ -291,6 +291,19 @@ acpi_gpio_to_gpiod_flags(const struct acpi_resource_gpio *agpio, int polarity)
- 	return GPIOD_ASIS;
- }
- 
-+static void acpi_gpio_set_debounce_timeout(struct gpio_desc *desc,
-+					   unsigned int acpi_debounce)
-+{
-+	int ret;
-+
-+	/* ACPI uses hundredths of milliseconds units */
-+	acpi_debounce *= 10;
-+	ret = gpio_set_debounce_timeout(desc, acpi_debounce);
-+	if (ret)
-+		gpiod_warn(desc, "Failed to set debounce-timeout %u: %d\n",
-+			   acpi_debounce, ret);
-+}
-+
- static struct gpio_desc *acpi_request_own_gpiod(struct gpio_chip *chip,
- 						struct acpi_resource_gpio *agpio,
- 						unsigned int index,
-@@ -300,18 +313,12 @@ static struct gpio_desc *acpi_request_own_gpiod(struct gpio_chip *chip,
- 	enum gpiod_flags flags = acpi_gpio_to_gpiod_flags(agpio, polarity);
- 	unsigned int pin = agpio->pin_table[index];
- 	struct gpio_desc *desc;
--	int ret;
- 
- 	desc = gpiochip_request_own_desc(chip, pin, label, polarity, flags);
- 	if (IS_ERR(desc))
- 		return desc;
- 
--	/* ACPI uses hundredths of milliseconds units */
--	ret = gpio_set_debounce_timeout(desc, agpio->debounce_timeout * 10);
--	if (ret)
--		dev_warn(chip->parent,
--			 "Failed to set debounce-timeout for pin 0x%04X, err %d\n",
--			 pin, ret);
-+	acpi_gpio_set_debounce_timeout(desc, agpio->debounce_timeout);
- 
- 	return desc;
- }
-@@ -944,7 +951,6 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
- 	bool can_fallback = acpi_can_fallback_to_crs(adev, con_id);
- 	struct acpi_gpio_info info = {};
- 	struct gpio_desc *desc;
--	int ret;
- 
- 	desc = __acpi_find_gpio(fwnode, con_id, idx, can_fallback, &info);
- 	if (IS_ERR(desc))
-@@ -959,10 +965,7 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
- 	acpi_gpio_update_gpiod_flags(dflags, &info);
- 	acpi_gpio_update_gpiod_lookup_flags(lookupflags, &info);
- 
--	/* ACPI uses hundredths of milliseconds units */
--	ret = gpio_set_debounce_timeout(desc, info.debounce * 10);
--	if (ret)
--		return ERR_PTR(ret);
-+	acpi_gpio_set_debounce_timeout(desc, info.debounce);
- 
- 	return desc;
- }
--- 
-2.51.0
-
+Bartosz
 
