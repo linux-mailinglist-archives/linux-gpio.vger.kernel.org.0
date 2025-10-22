@@ -1,203 +1,182 @@
-Return-Path: <linux-gpio+bounces-27481-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27482-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EC70BFD40D
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 18:35:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AA521BFD66B
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 18:55:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C95161888DA3
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 16:32:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C0B511890DEE
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 16:54:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DDE635B14B;
-	Wed, 22 Oct 2025 16:12:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E905286D40;
+	Wed, 22 Oct 2025 16:52:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KtRD/+oP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lEv1KweE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179AB35B148;
-	Wed, 22 Oct 2025 16:12:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED8DE2701D9
+	for <linux-gpio@vger.kernel.org>; Wed, 22 Oct 2025 16:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761149529; cv=none; b=XHsCYC71t3jfV9o1OT1ZvmWpI86VSxQy+c7x2+RCI9meL9GkxWFrCHK37+qqYUYVQYGouMx6piTXFjqN/1srs1rlmUalAu8ZGw3NSlXTd8RGQJohA1i8R8EPlWmmxW0VYNx8Z6SSVYcO3nTzX7dYxBVo6Hhqjk+hs+mPNB4GMlo=
+	t=1761151949; cv=none; b=UMzig/jeTRihpWRo5dlRXFjhukiXnevO7g1eSkpZHdvB6IqtgdXaOO+dX1o+FdNSXveJE0QkF/UOyo6tgNUQVzM/xLqW2BUihuUjFLoaklnVWLxvu5fIpAMleJ6Pp8xAMx8zUIeusdduDm6RSvsNuHIQD2fLV0QPW1P0qKP/92Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761149529; c=relaxed/simple;
-	bh=IaRshFLfVcx/emGoPV1f+QYE4VS3CjYShnZJTxeFLog=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V0ZAgARK1vHcTp+6uZdHzZqkJiUaRv84osn3GTnbLBLfwP7WTjL2DEFJtLMprsUeQVO0fOlW5EFSX4X92+eGTGsGINzuLoL01gi4mMIwq+HnwR1XoW9I3iTYFIRLCU3TKuOaRtCeyR09zkuCwQuWWg3oPtv/pv4lisHO7NxlaQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KtRD/+oP; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761149527; x=1792685527;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=IaRshFLfVcx/emGoPV1f+QYE4VS3CjYShnZJTxeFLog=;
-  b=KtRD/+oPEX6e4H8O4aXKy7N/UwmwDK7/moUSkmezbYXHQbWqnlgqgvLT
-   rimkXun03rEnKarcaYCQIc3TFmjRKI0uGtQ1ktCTRtkgfpbwvDh7xKQhS
-   cOJmXlIwVOJypEtK8JciLglShc5iKgI0k9Zv6yHs+R6w2UB7SGLTRbfm1
-   rM5yCFD2mo6qOsmwbgSXyLRrBv8iQJbiyqaVLrHFHg8j5Vi8Z92qwA9J6
-   X8NjuqogJWbazATVdWd96Abm2vJY8HIEg1tYSmI44BnUiP4/uHey69+il
-   z14Ojf4rF1KDOw4hIthguBW1BeBLj1axmBu+4sbuqHdu8a3/dy8v9CDBq
-   A==;
-X-CSE-ConnectionGUID: c3u/WTaoQx2Hwph3C8ym3g==
-X-CSE-MsgGUID: u3jPCo/DSKaKjSvAorJckA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63211270"
-X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
-   d="scan'208";a="63211270"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 09:12:05 -0700
-X-CSE-ConnectionGUID: aYLLBjbMSyuYEeaxbXLYaw==
-X-CSE-MsgGUID: +gVc5kqQSNWrVGu6XV4sMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
-   d="scan'208";a="183962211"
-Received: from cpetruta-mobl1.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.244.83])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 09:12:02 -0700
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1vBbRO-00000001jnj-2bzi;
-	Wed, 22 Oct 2025 19:11:58 +0300
-Date: Wed, 22 Oct 2025 19:11:58 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 7/9] reset: make the provider of reset-gpios the parent
- of the reset device
-Message-ID: <aPkCTgaqPHaTsFDH@smile.fi.intel.com>
-References: <075a4511a6ae4b047599757d41b559c6b7cf9d0f.camel@pengutronix.de>
- <CAMRc=Md4DUSuwv07EuBVDJbY1Uzezq+TONxyCvLtOHD=iFXrcQ@mail.gmail.com>
- <050d74d7619bdfdf5ca81d8914a2a8836a0d4e2e.camel@pengutronix.de>
- <CAMRc=MfPqRLFHPW988oMry7vVoTgtQHrxxND4=nr_40dOa5owg@mail.gmail.com>
- <aPeexuA1nu-7Asws@smile.fi.intel.com>
- <aPegyVyONkPWRgi9@smile.fi.intel.com>
- <CAMRc=McPpFEmg7dpfiYWJaPR4yMynOaU5Hp37E7rTzWSCNxBuA@mail.gmail.com>
- <aPerDcMFdbWecGEv@smile.fi.intel.com>
- <804b4b8cf23444fe5dc9400ac1de3a738a77e09e.camel@pengutronix.de>
- <CAMRc=Md-KuNp1o6GLA0WTbknbN-qtt8YJqy5fJs0P0EyE7KY3Q@mail.gmail.com>
+	s=arc-20240116; t=1761151949; c=relaxed/simple;
+	bh=k1lox5HCPqKeslKTFtUQDp54wxWlGvYzkemwVt7zj5A=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=H1VpB3q3hMd2LGIhKIHKlVVaFtXiQv+Iy0a+PtcV1FAvQHmFdMxONLkGvL875t18VydRKOakpWddWZLXo8TdfD6a2t6P2KxQZtjTYlBE12Z9yECHdG2cXpnlBDijo58M5T7azS2hZwKX9hrYArtG5hxjMv7e2XXYEkkyWz7TEwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lEv1KweE; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3f0ae439b56so4933985f8f.3
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Oct 2025 09:52:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1761151945; x=1761756745; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=37XacdJ9gFpbky/Uw+xLJQSiuMj+QNcWOMBwNotXM/U=;
+        b=lEv1KweEBDKg9u7eYdVo0a1ZFQFmbcAZxo7jZ0qD0H7f3XM8YtOkhmwLLwT3U3VVbc
+         UFZs3OhHe8ShNYy7060ykLAN+D4w8ttIf24L4/7wKYRSdyRrxi5tyfIkOEjZpbwdqAe7
+         Lp3/wPxXPQLkpMO+GPSERkp/cMwNhHiEGIHhQ1qWLufeG5GJRSRR6J9kZe/wVvchy4zN
+         LTvXYrvtHuu6Ozoa1seu+cF3fp60DIR+T+kyj/O7aWk4pz1ChGyOpGxOVZcDBssNVime
+         juh8jDl+jAWm7GcZZAfYNAbPkSwxrQT9VWfM0Dqel4SU9TlcrDkaZw8YRJzpgIHKJGss
+         1BDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761151945; x=1761756745;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=37XacdJ9gFpbky/Uw+xLJQSiuMj+QNcWOMBwNotXM/U=;
+        b=k85WrdutmeV52JRJBoCuFvp18xgJfni5Og4xaovVB0hHREpNd8ce+jc9fTyx1k/l63
+         Rlo+RddEB1JEC6GG3n35iuKLcOuK5bw7TGvypfTQdbmQNyWPWnTCqEE9HV6UoWVHdyY6
+         8lMv88DuMM5lEf8vHhLoBU4Lt0q/rvfKRGOJ/IOD43Sb8dD75DCt4lZSch7Dve5YzNlu
+         lZOTJRTg5BY8/9tuWphd5RsKC8qX7e9QMWpNkymbGRxWMbzhxKSeK16SaJ4hbQEU6FqS
+         8EDDvqyZ4SHFwTrFGLrBL5eLgDGlBAa1hVJi4/AkX66BuJnrrFnmE2iTf4tl144ygq/k
+         143Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXBa2t0ZkIHCtXwezCPYkAGI5aCrfXN/yyv9kskA6jumIOALuZwsuG96lgCbYtVdhVkirmpmN08v13f@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTgXf5Jqzozz0R1bCybIsg9D/DBiGIMdRTNvWRVc2Ma1whrqXq
+	SivCb5J+CKVp+7kQbKWCxQ2kaczk09KfVm3Cs5Cja8TcZMBMIAxkRFP5Jq5xPO5VGzo=
+X-Gm-Gg: ASbGncvBfmoz0Ft/JQQu9NeSzhsBOnv+ifwoxrj2+nMTxVyMLgIVpjBjRrFAu8BIWVZ
+	blBySENz+vUbfDLvwAKKvl97isyCVSysnawEMTVaejyWCKw+wO1FupPlTy3E6ZQSq9PekZrHjWB
+	YneAzbKeAgcpxpKZvidRH6n0MmVn8FEbJgdVILxZE0qtqPQ79dceGBYIJzZAKoVl3fATi/IOpid
+	+3iLzwv1Iz2lhFmSUMLXbpHjxyYJDOOw2hEZ4aEu+hYDhNExc7pKs+iVltP57JHrExZwLXRSty0
+	5shaH7twl8rkJNCzNyMT8XVYHKefpqcMc9B/4gTkvdX9iMT3MUwQoLHYp7KU4l3tb4Tgd3JsaNf
+	vjsS8A9WLn+OkGBdrFIPmL0XEwftayZ+KaMRb6CSI0gpVdta3cTeEphEYbcW7bhcysYwMjy1LvS
+	C7p1dQl8gMxe+MMJA=
+X-Google-Smtp-Source: AGHT+IGFOe7mdI2kEMdRKUAfbbhGpFj/a5aNDnUXnkpzyrx/acBYIYP5vLTNIADhuJOIFJaea5le2Q==
+X-Received: by 2002:a05:6000:400a:b0:425:769e:515a with SMTP id ffacd0b85a97d-42704d9e8f7mr16851522f8f.42.1761151945204;
+        Wed, 22 Oct 2025 09:52:25 -0700 (PDT)
+Received: from localhost ([2a02:c7c:7259:a00:11f4:2b3f:7c5a:5c10])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-427f00ce3aesm26307158f8f.48.2025.10.22.09.52.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Oct 2025 09:52:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Md-KuNp1o6GLA0WTbknbN-qtt8YJqy5fJs0P0EyE7KY3Q@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 22 Oct 2025 17:52:23 +0100
+Message-Id: <DDP09DUCGNDL.24UBAKUA640NO@linaro.org>
+Cc: "Bjorn Andersson" <andersson@kernel.org>, "Konrad Dybcio"
+ <konrad.dybcio@oss.qualcomm.com>, "Linus Walleij"
+ <linus.walleij@linaro.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Konrad Dybcio" <konradybcio@kernel.org>, "Srinivas Kandagatla"
+ <srini@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-sound@vger.kernel.org>
+Subject: Re: [PATCH v2 3/4] arm64: dts: qcom: qcm2290: add LPASS LPI pin
+ controller
+From: "Alexey Klimov" <alexey.klimov@linaro.org>
+To: "Srinivas Kandagatla" <srinivas.kandagatla@oss.qualcomm.com>, "Dmitry
+ Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>
+X-Mailer: aerc 0.20.0
+References: <20251007-rb1_hdmi_audio-v2-0-821b6a705e4c@linaro.org>
+ <20251007-rb1_hdmi_audio-v2-3-821b6a705e4c@linaro.org>
+ <b6223af9-2d9e-4ccd-b297-79f63167242b@oss.qualcomm.com>
+ <DDEN5NSLDIHD.C1IELQW0VOG3@linaro.org>
+ <zmi5grjg2znxddqzfsdsr35ad5olj3xgwwt6hvkiaynxzm5z33@gsgrdguj563n>
+ <DDO0LYS7UTEW.3A9WGTAA5DKVO@linaro.org>
+ <56vmqgrjy3je7omzirxnfxtuocebbj356iaew5thgkagi35464@hh34y7efssow>
+ <450cac8b-598b-4f47-8bf0-43c805038e7c@oss.qualcomm.com>
+In-Reply-To: <450cac8b-598b-4f47-8bf0-43c805038e7c@oss.qualcomm.com>
 
-On Wed, Oct 22, 2025 at 02:17:53PM +0200, Bartosz Golaszewski wrote:
-> On Wed, Oct 22, 2025 at 10:39 AM Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> > On Di, 2025-10-21 at 18:47 +0300, Andy Shevchenko wrote:
-> > > On Tue, Oct 21, 2025 at 05:23:33PM +0200, Bartosz Golaszewski wrote:
-> > > > On Tue, Oct 21, 2025 at 5:03 PM Andy Shevchenko
-> > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > On Tue, Oct 21, 2025 at 05:55:02PM +0300, Andy Shevchenko wrote:
-> > > > > > On Tue, Oct 21, 2025 at 11:39:41AM +0200, Bartosz Golaszewski wrote:
-> > > > > > > On Tue, Oct 21, 2025 at 11:31 AM Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> > > > > > > > On Di, 2025-10-21 at 11:27 +0200, Bartosz Golaszewski wrote:
+On Tue Oct 21, 2025 at 2:13 PM BST, Srinivas Kandagatla wrote:
+>
+>
+> On 10/21/25 2:03 PM, Dmitry Baryshkov wrote:
+>> On Tue, Oct 21, 2025 at 01:56:09PM +0100, Alexey Klimov wrote:
+>>> On Fri Oct 17, 2025 at 11:42 PM BST, Bjorn Andersson wrote:
+>>>> On Fri, Oct 10, 2025 at 01:29:38PM +0100, Alexey Klimov wrote:
+>>>>> On Tue Oct 7, 2025 at 1:39 PM BST, Konrad Dybcio wrote:
+>>>>>> On 10/7/25 4:03 AM, Alexey Klimov wrote:
+>>>>>>> Add the Low Power Audio SubSystem Low Power Island (LPASS LPI) pin
+>>>>>>> controller device node required for audio subsystem on Qualcomm
+>>>>>>> QRB2210 RB1. QRB2210 is based on qcm2290 which is based on sm6115.
+>>>>>>>
+>>>>>>> While at this, also add description of lpi_i2s2 pins (active state)
+>>>>>>> required for audio playback via HDMI/I2S.
+>>>>>>>
+>>>>>>> Cc: Srinivas Kandagatla <srini@kernel.org>
+>>>>>>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+>>>>>>> ---
+>>>>>>
+>>>>>> [...]
+>>>>>>
+>>>>>>> +			lpi_i2s2_active: lpi-i2s2-active-state {
+>>>>>>> +				data-pins {
+>>>>>>> +					pins =3D "gpio12";
+>>>>>>> +					function =3D "i2s2_data";
+>>>>>>> +					bias-disable;
+>>>>>>> +					drive-strength =3D <8>;
+>>>>>>> +					output-high;
+>>>>>>
+>>>>>> I.. doubt output-high is what you want?
+>>>>>
+>>>>> Why? Or is it because of some in-kernel gpiod?
+>>>>>
+>>>>
+>>>> What does "output-high" mean for a non-gpio function?
+>>>
+>>> This is not efficient. It will be more useful to go straight to
+>>> the point.
+>>=20
+>> It is efficient. It makes everybody think about it (and ask the same
+>> question in future) instead of just depending on maintainers words.
+>>=20
+>>> This description of pins was taken from Qualcomm downstream code
+>>> and the similar patch was applied (see provided URL in the prev email).
+>>=20
+>> And we all know that downstream can be buggy, incomplete, etc.
+>>=20
+>>> Back to your question -- does it matter here if it is gpio or non-gpio
+>>> function?
+>>=20
+>> It does. The I2S data pin is supposed to be toggled in some way by a
+>> certain IP core. What would it mean if we program output-high? Will the
+>> pin still be toggled (by the function) or stay pulled up (because of the
+>> output being programmed)?
+> I2S lines are configured in push-pull mode which means that the lines
+> are driven high and low actively, am not sure why output-high is needed
+> an what it means here as these lines are actively driven by the controlle=
+r.
+>
+> @Alexey, what issues do you see without this?
+>
+> Am not sure if pinctrl driver even cares about this if we are in alt mode=
+.
 
-[...]
+No issues. Not sure why the problem (if it exists) wasn't reported or
+fixed, say, for sm4250.
 
-> > > > > > > > No need to convert all existing drivers right away, but I'd like to see
-> > > > > > > > a user that benefits from the conversion.
-> > > > > > > >
-> > > > > > >
-> > > > > > > The first obvious user will be the reset-gpio driver which will see
-> > > > > > > its core code simplified as we won't need to cast between OF and
-> > > > > > > fwnodes.
-> > > > > >
-> > > > > > +1 to Bart's work. reset-gpio in current form is useless in all my cases
-> > > > > > (it's OF-centric in 2025! We should not do that in a new code).
-> > > > > >
-> > > > > > More over, conversion to reset-gpio from open coded GPIO APIs is a clear
-> > > > > > regression and I want to NAK all those changes (if any already done) for
-> > > > > > the discrete components that may be used outside of certainly OF-only niche of
-> > > > > > the platforms.
-> > > > >
-> > > > > To be clear, the conversion that's done while reset-gpio is kept OF-centric.
-> > > > > I'm in favour of using it, but we need to make it agnostic.
-> > > >
-> > > > As of now, the whole reset framework is completely OF-centric, I don't
-> > > > know what good blocking any such conversions would bring? I intend to
-> > > > convert the reset core but not individual drivers.
-> > >
-> > > Blocking making new regressions?
-> > >
-> > > Otherwise as long as reset framework and reset-gpio are agnostic, I'm pretty
-> > > much fine with the idea and conversion.
-> >
-> > I think we might be talking about different "conversions" and different
-> > "blocking" here?
-> >
-> > 1) Conversion of the reset core from of_node to fwnode.
-> > 2) Conversion of reset controller drivers from of_node to fwnode.
-> > 3) Conversion of consumer drivers from gpiod to reset_control API.
-> >
-> > My understanding is:
-> >
-> > Bartosz would like to convert the reset core to fwnode (1) but not
-> > convert all the individual reset controller drivers (2). He doesn't
-> > like blocking (1) - this statement was partially in reaction to me
-> > bringing up a previous attempt that didn't go through.
-> >
-> > Andy would like to block consumer driver conversions from gpiod to
-> > reset_control API (3) while the reset-gpio driver only works on OF
-> > platforms.
-> >
-> > Please correct me if and where I misunderstood.
-> 
-> I think Andy is afraid that people will convert drivers that are used
-> in the fwnode world to reset-gpio which only works with OF. I don't
-> think that anyone's trying to do it though.
-
-You are both right about my worries and there is of course the case.
-https://patch.msgid.link/1720009575-11677-1-git-send-email-shengjiu.wang@nxp.com
-
-The mentioned change should be reverted.
-
-And this was just found by a couple of minutes of `git log --grep`. I am pretty
-sure there are handful of a such wrong patches.
-
-Compare to https://patch.msgid.link/20250815172353.2430981-3-mohammad.rafi.shaik@oss.qualcomm.com
-which is done correctly (it doesn't  break old functionality on non-OF platforms).
-
-> > I think fwnode conversion of the reset controller framework core is a
-> > good idea, I'd just like to see a use case accompanying the conversion.
-> > It seems like enabling the reset-gpio driver to be used on non-OF
-> > platforms could be that. Andy, do you have an actual case in mind?
-> 
-> I'd say converting the reset core to fwnode has merits on its own. We
-> should typically use the highest available abstraction layer (which is
-> fwnode in this case) unless we absolutely have no choice (for
-> instance: using some very OF-specific APIs).
-> 
-> That being said: the reset-gpio driver will be able to work with any
-> firmware node once we do the conversion which is a good first
-> use-case.
-
-+1, as I already mentioned I am in favour of this change.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Thanks,
+Alexey
 
 
