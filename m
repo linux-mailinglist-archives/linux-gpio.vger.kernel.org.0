@@ -1,126 +1,132 @@
-Return-Path: <linux-gpio+bounces-27424-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27425-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33E2DBFADF9
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 10:24:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49B09BFADFF
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 10:24:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0F95556246E
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 08:24:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 13E1E18871AF
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 08:25:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A54630504C;
-	Wed, 22 Oct 2025 08:24:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8818B3081BA;
+	Wed, 22 Oct 2025 08:24:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b="ZW4uF3y5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IjjLcyQW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from polaris.svanheule.net (polaris.svanheule.net [84.16.241.116])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBE5307ADA
-	for <linux-gpio@vger.kernel.org>; Wed, 22 Oct 2025 08:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.241.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A731B301009;
+	Wed, 22 Oct 2025 08:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761121451; cv=none; b=ShhOw+s3HD2VItOY5G023KCUBApYDtmy2X6tmXkO2OVZ8wS0VAkhWEEd95Pgwjcmwkz9b36OOXj7p9SYmwp6p6Wbd6k1ZvuXVq0AT1HOUbHx49QxORQxvk7xSyPxBaWz1WWwn5BVIpiYL84p6YqDoB7rybRgbWjaA6gk/5VgITQ=
+	t=1761121484; cv=none; b=L2Qp5TF0VYk+U1jxu5CY+WeLRgyOOgwLcNzNFkSa5jcsBjDFhOYU53GA/Zqy8FIH0cPXE31wCBv743IAkBtY7Kx33PhZIW0uTR7Och7UloSnsjGQh2Aifw4j21gLSUsW8vBHWnbSD2MJxqV1yd+n4Rc28fqqEi9TamiWr2KXZ9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761121451; c=relaxed/simple;
-	bh=cVLAI8TidoafTBGuNFYDV/STwV4in9pD95DRKnSWSMk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MX9aUdDrf8ZI9ada9BruvCI4NV8fn+zL8Fd2yfYwSCIsQHz1QuSVNqdbRR52TeOYRNNBiWMLnJRAbch7UR86aiW6tWdhucISY5+OxL3mNhdMx6NssmIC34JNf8FYg4BoHhcF01ZRxvELqVsLQ0/7VFZAKBaHhlZtHFRWXfQUcq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net; spf=pass smtp.mailfrom=svanheule.net; dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b=ZW4uF3y5; arc=none smtp.client-ip=84.16.241.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svanheule.net
-Received: from [172.28.172.2] (ptr-94-109-117-102.dyn.orange.be [94.109.117.102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sander@svanheule.net)
-	by polaris.svanheule.net (Postfix) with ESMTPSA id D88AA68B189;
-	Wed, 22 Oct 2025 10:24:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
-	s=mail1707; t=1761121447;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cVLAI8TidoafTBGuNFYDV/STwV4in9pD95DRKnSWSMk=;
-	b=ZW4uF3y5R7fcDgf9PaMVfeZt4x0p/ZgPa0U+r6M87BR8FT7cpWGQ/EaZz1WWU3GokV37HE
-	cURMdW0WJniFNpUlbSgmAbhZPiJc6n1II7TPE3Kt1hCIAxYNLYSxYxboPmQPKi4UFPi7Kl
-	42oxNcoq0BQGaq2MNWu/X8bQZYC2wpc5Yjamjfp+ptfaSDucrIQTxE6tNvSIsb1ZUu/bBo
-	cK2l3HTFdODeNW1l4C6logie0WdX/J4GKYuu7cC3jhMtp+5x2j4u37D4XY/OU0lXkUL290
-	YjFlv751+dTC0Sii866FsiXjs/hHWEWMUQG+ZEtSLOzYucUKC07uN5Ciq2Wi4g==
-Message-ID: <e6d95d91b68a86b748008f69dcc495796b61843e.camel@svanheule.net>
-Subject: Re: [PATCH v6 6/8] pinctrl: Add RTL8231 pin control and GPIO support
-From: Sander Vanheule <sander@svanheule.net>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Michael Walle <mwalle@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	linux-gpio@vger.kernel.org, Lee Jones <lee@kernel.org>, Pavel Machek
-	 <pavel@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Wed, 22 Oct 2025 10:24:04 +0200
-In-Reply-To: <CACRpkdYde+=85f6Zfz40bMwOxSE-bszHzvBhQwC+G-E2CZr3Lg@mail.gmail.com>
-References: <20251021142407.307753-1-sander@svanheule.net>
-	 <20251021142407.307753-7-sander@svanheule.net>
-	 <CACRpkdYde+=85f6Zfz40bMwOxSE-bszHzvBhQwC+G-E2CZr3Lg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+	s=arc-20240116; t=1761121484; c=relaxed/simple;
+	bh=0MA+pvW9JpdyKb2w7RB/0iFUtNCC+s+C0k3q4FUgWqc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kE1QSp5l8G6VT1VCaJxGbE0vE26l7lRvejfz/hJ/C4IX0Zk5cAx5luPGHwlBMgrGoKX/TN0+rIY/Aae3UtUKCDRbKy/dZMrc2MNbeb86WLesUazUKrSfZcVOjgwnzzoLoR2qvBiyyGygzziIfvkKvekWspWK34rNua1i0ifZ0CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IjjLcyQW; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761121482; x=1792657482;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=0MA+pvW9JpdyKb2w7RB/0iFUtNCC+s+C0k3q4FUgWqc=;
+  b=IjjLcyQWXTSIi9a2dlzc3znuCDMLdtbprX7buSopIHtVyTmvRrxAD/x6
+   howpOCfBwsAeTGugJ09usKF6zjvKMIKrf/l143u9VXQ9xnha+xDKXQ7I6
+   WjTOgs62u8u1qR6QFMupipZvYRpVJnGZwWHTmDWOQSCQfacqiyBw27Uzm
+   N8vYpQhmGpHvC04RzMGDvKyiYD5MELL4LomPM+iYpQcfQMkscMmtk3Vvk
+   GYhf1QM1cZqH5kD8oYiB1JnOJ7v5sQe5+YBVWoXyWt6qvtkN7uVhzyjhv
+   hLwYJYWs9iNxMiC5KfmtqjBYDXewcckaYXPrQIOci7NinqpfyRhOfLhvs
+   g==;
+X-CSE-ConnectionGUID: 5tJxio1DSqOGK5bwJHW92w==
+X-CSE-MsgGUID: UQe0f+rVS+uUy6yD4o5moQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="66903138"
+X-IronPort-AV: E=Sophos;i="6.19,246,1754982000"; 
+   d="scan'208";a="66903138"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 01:24:41 -0700
+X-CSE-ConnectionGUID: 7BMp7UBUR6qfRmC9wyB+uw==
+X-CSE-MsgGUID: I1XokCh4RpihsAS6kJBSSQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,246,1754982000"; 
+   d="scan'208";a="183021001"
+Received: from egrumbac-mobl6.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.28])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 01:24:38 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 71E3411F87B;
+	Wed, 22 Oct 2025 11:24:35 +0300 (EEST)
+Date: Wed, 22 Oct 2025 11:24:35 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 1/9] software node: read the reference args via the
+ fwnode API
+Message-ID: <aPiUwzpunM2FGXhX@kekkonen.localdomain>
+References: <20251006-reset-gpios-swnodes-v1-0-6d3325b9af42@linaro.org>
+ <20251006-reset-gpios-swnodes-v1-1-6d3325b9af42@linaro.org>
+ <aO1bkraNrvHeTQxE@smile.fi.intel.com>
+ <CAMRc=Mc0E33JTettxsCEPf+K5FZ4-JOUX6tF1xq2QGr2gD0vLw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mc0E33JTettxsCEPf+K5FZ4-JOUX6tF1xq2QGr2gD0vLw@mail.gmail.com>
 
-Hi Linus,
+Hi Bartosz,
 
-On Wed, 2025-10-22 at 09:42 +0200, Linus Walleij wrote:
-> Hi Sander,
->=20
-> thanks for your patch!
->=20
-> Overall this driver looks very good and well designed, using the
-> right abstractions and everything.
+On Wed, Oct 22, 2025 at 09:51:44AM +0200, Bartosz Golaszewski wrote:
+> On Sat, Oct 18, 2025 at 7:35 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Mon, Oct 06, 2025 at 03:00:16PM +0200, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > Once we allow software nodes to reference all kinds of firmware nodes,
+> > > the refnode here will no longer necessarily be a software node so read
+> > > its proprties going through its fwnode implementation.
+> >
+> > This needs a comment in the code.
+> >
+> 
+> Honestly after a second glance, I disagree. Literally a few lines before we do:
+> 
+> refnode = software_node_fwnode(ref->node);
+> 
+> We know very well what refnode is here and why we should use fwnode
+> API. If anything, the previous use of direct property routines was
+> unusual. A comment would be redundant as the code is self-describing,
+> what do you even want me to write there?
 
-Thanks!
+Given that the only way the three implementations of fwnode have interacted
+in the past has been via the secondary pointer (for software nodes) and
+that this will continue to be an exception, I'd also add a comment. E.g.
 
-> The build bots are complaining but I think you will have fixed that
-> in no time.
+	/* ref->node may be non-software node fwnode */
 
-Indeed, I reproduced it on a UM build and resolved it by changing the under=
-lying type for
-enum rtl8231_pin_function to uintptr_t.
+-- 
+Kind regards,
 
-Additionally, this showed that I was missing CONFIG_GPIOLIB, so PINCTRL_RTL=
-8231 now
-selects that as well.
-
->=20
-> Just one minor comment:
->=20
-> On Tue, Oct 21, 2025 at 4:24=E2=80=AFPM Sander Vanheule <sander@svanheule=
-.net> wrote:
->=20
-> > This driver implements the GPIO and pin muxing features provided by the
-> > RTL8231. The device should be instantiated as an MFD child, where the
-> > parent device has already configured the regmap used for register
-> > access.
->=20
-> This is Realtek, right?
->=20
-> > =C2=A0drivers/pinctrl/pinctrl-rtl8231.c | 538 +++++++++++++++++++++++++=
-+++++
->=20
-> Should we put the driver in
-> drivers/pinctrl/realtek/*?
-
-Like you noticed, this is for an external chip, so I also decided to not mo=
-ve it to that
-directory.
-
-Best,
-Sander
+Sakari Ailus
 
