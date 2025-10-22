@@ -1,188 +1,203 @@
-Return-Path: <linux-gpio+bounces-27436-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27437-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B365BFBA02
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 13:23:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98776BFBCF8
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 14:18:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2DC065004C9
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 11:23:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B7DF188BB2D
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 12:18:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE5FA336EFA;
-	Wed, 22 Oct 2025 11:23:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0E6E341660;
+	Wed, 22 Oct 2025 12:18:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="pqCbupnN"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xAv5oXoK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3651C32F751;
-	Wed, 22 Oct 2025 11:23:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6707340A5D
+	for <linux-gpio@vger.kernel.org>; Wed, 22 Oct 2025 12:18:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761132229; cv=none; b=m7L7FwEsmcw77qmXhqG1nIxovfwy1ajtui/nIEwICIQkrT+xdM3McOsYnpav9ozAPzgojf/rJGgq9wQ7dp/mwuqFVl92gJKHYYJz0U/rt0WG3of1oxDDpZ7JW9D0TSH7V1i4nLBUN7W5fXzICHj1X2j2L39D6AMQO1ahJI9XNhc=
+	t=1761135489; cv=none; b=hUGEWsrfzVi8c8CMiyq9g6higFcHuE/ZzpOF1xvAoiMNJPMfkzHTnvqCwFaByi7PU4jkFWEjq8puyiYfgaA4JPuO53Cmyg66inmZ98yVzy8lfW/JO4dJSa6PC2CsP6phlSYSfIrYinsQualdoyaKwW8v2rik5XIjlX8xtY5h7y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761132229; c=relaxed/simple;
-	bh=Sto90th+ZCJpEnfp/VcT4pT9JuOxd6d1o8AqSToBMrg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=loPT4Qxor/o7F9GLujvoz/2drxL1Oys2W/gLgImbKIT7Z463OWTdk14mKRwRlyN2nDsKX92ijMRoovHUZSxPTR7WAIW9QrIldE+aZEoqBgbkB8SHE0aZZKtdB7SVxaCL8IFwQgusMsE5RHEX1QgO7gvZokNvjWHDnYsZM/jrxhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=pqCbupnN; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 15D481C0088; Wed, 22 Oct 2025 13:23:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1761132225;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lJy21XbWgHp7MjGSXfr0/SiKeaKudWY5JLr70CDGgKg=;
-	b=pqCbupnNygoqjhYdJh+SCZh/oNfOBS94VpWGG/hzyei2HcK3MabOx5SFCwkpVC61xwOs7u
-	kBUNEPVa2OaVIxl0U8f+ElyReralUEauxeyeryR+9Oj0aktXucB7Nk4gKyZZy19G+bIB/Z
-	IPRgNPTEJp/FXhjKBa218zWpoFhtef4=
-Date: Wed, 22 Oct 2025 13:23:44 +0200
-From: Pavel Machek <pavel@ucw.cz>
-To: Luca Weiss <luca.weiss@fairphone.com>
-Cc: barnabas.czeman@mainlining.org, Bjorn Andersson <andersson@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Stephan Gerhold <stephan@gerhold.net>,
-	Otto =?iso-8859-1?Q?Pfl=FCger?= <otto.pflueger@abscue.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Lee Jones <lee@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Konrad Dybcio <konradybcio@kernel.org>, Sean Paul <sean@poorly.run>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Adam Skladowski <a_skl39@protonmail.com>,
-	Sireesh Kodali <sireeshkodali@protonmail.com>,
-	Rob Clark <robin.clark@oss.qualcomm.com>,
-	Abhinav Kumar <abhinav.kumar@linux.dev>,
-	Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, iommu@lists.linux.dev,
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-	phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-	linux@mainlining.org,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v7 6/6] arm64: dts: qcom: Add Xiaomi Redmi 3S
-Message-ID: <aPi+wIY/bUuZl9hv@duo.ucw.cz>
-References: <20250831-msm8937-v7-0-232a9fb19ab7@mainlining.org>
- <20250831-msm8937-v7-6-232a9fb19ab7@mainlining.org>
- <aNGLPdmOyh/pfroq@duo.ucw.cz>
- <97ee369f6ffbe42c72c57ebd72887b23@mainlining.org>
- <aNJKniJ46YuUsbQ+@duo.ucw.cz>
- <DD038IVOWESM.24X3EZZXH3UE@fairphone.com>
+	s=arc-20240116; t=1761135489; c=relaxed/simple;
+	bh=WBrGicdJ7vJmFD7ULLVAtRjwv/BXxswDEpGZGdImK50=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aKoL4RyXTvohwcamFkuJ/RuuoXEpV2r30K1rwCFhfFOUNiGz7WK5Ws97HaPqseGqipk3x4UQFmS6sMpYWxpsM2whNGph896yzeqW8DrcPlzKlwlkWQ83axqFNLd8rgeympEcyeh+QJK18/HAiuM3p9m5YUTf8q/B4vSoHDMzYEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xAv5oXoK; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-592f29e273bso277312e87.0
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Oct 2025 05:18:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761135486; x=1761740286; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WBrGicdJ7vJmFD7ULLVAtRjwv/BXxswDEpGZGdImK50=;
+        b=xAv5oXoKfbVVGAdLjEvtVPWEgV3x5Pvth28fyWj8XT99aP3h1JGqI53/ETWjYdhM22
+         AEUlAVuEK6kO90RcDw8uvYpsiTJ+1haXJu059RYWMFhCpGOO63zgJg0A59NfgjicHi79
+         8aQfMB6RqnoVOMB5gkSc/rg/amESUiBVaFuM1pp29pi0VHBbFGCnftpmUtsJlEKeKBju
+         iP33FyuJbRP1SJZ68JzrDBgW9YomyAkR2RkmvMv1dzSuYfTUTjZoUfB2uvambnnaJrsr
+         1jPDBQJ/mSWTMUhITVVBuV457GRLUQQ3OqJa+KMZBiwjaziPAHyNXutnsc1O6IgXGSoE
+         4yDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761135486; x=1761740286;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WBrGicdJ7vJmFD7ULLVAtRjwv/BXxswDEpGZGdImK50=;
+        b=qFWEsKwOAJcf9QLP20zEUePPaDeYDb/CJniP90/8LHQ7YQJg9XV27bfe6hjDVnOj4c
+         3euyzuLau2i9tFohBvAKT7grFy37hMIMRy2sIo2IehIVuHqNr74myPOeqMMBfA27rvg7
+         OCacJNMdgvYuRlIlhpWtFFoDVF7fCUJUOk64f0JdBge9pkgJcAu/YDX0j8ZLrmfjdqDs
+         DDurYQHvXhmA0agaYohf5whV2TilONrFiDej7IGzOLiKQZF7778hzg49O9K8hpSIGYb/
+         w0SDo7He+7zrVvxxkZrklqzJyS7GN54eD9Wxmn88BuXfz7HUu6+3PHd2Hu5rLwuSVRqg
+         qrGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW5Ht49Xey21+xqK546UrLDWzHRF4El26eTzsYMe8Am5KWxbev3CjQUQ4cga1c9Mxn4cwbtK3bCxNhg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyjn7VdRYltL7zU2ycuWPRRDZ+R6mk20B5fT1i00sIRbmggDm7B
+	FFT73Godco6OppsjALfkMXC7JYsE923lwm3aE229I2chqO3Ckxg0Z9iqnz3135DH/3mboMD3yEc
+	Tawg4PQbJhUi5p6J39hhhryjQ5rg9/Amyy4mNFW5CKw==
+X-Gm-Gg: ASbGncu4GD0PffYwVz7wfC+/HX7G8O1hnjoB6rKI9Zn4/mjwEAHUfMhcVf/Bl6cv+wV
+	48R3q7OGz4tdDFzbElIXH3rHyB2XxEm/Jnqab5bxhUxqBqYF4uhnKZ1gIixT5p2+cU51mU36Oe2
+	/V038TVj1ZYj3xnopTwFyR1MImzUwKYyiUS0TjsIcENBx9Nxp22pyuWMvp/KGY0tiyO2Aih534A
+	SHBSsNx4i4NThoKhI/jiPP42RWroMdczDb7c9vOaXo2hfo5NpCIPt4Nf+7uze3Q16aNbhkzTsCi
+	oehaCTkiKpBbzEeb
+X-Google-Smtp-Source: AGHT+IHdFjD1upF60QNrKQiPHb0EuLyjig0EXitYcomcOh2LTKy2vCTOo5wwpoP3zGRv3ACq4Fw6m6AiGSWjUoYZbaI=
+X-Received: by 2002:a05:6512:1115:b0:591:c2f8:9a5a with SMTP id
+ 2adb3069b0e04-591d8595e35mr6051681e87.35.1761135485542; Wed, 22 Oct 2025
+ 05:18:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="afFovrNgGG7Vhs2p"
-Content-Disposition: inline
-In-Reply-To: <DD038IVOWESM.24X3EZZXH3UE@fairphone.com>
-
-
---afFovrNgGG7Vhs2p
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20251006-reset-gpios-swnodes-v1-7-6d3325b9af42@linaro.org>
+ <95bbec130437846d4b902ce4161ccf0f33c26c59.camel@pengutronix.de>
+ <CAMRc=Md_-mO=HqfncD-vJS6XzPJ+aTcBjSjtkxLH_h1=pNjCcg@mail.gmail.com>
+ <075a4511a6ae4b047599757d41b559c6b7cf9d0f.camel@pengutronix.de>
+ <CAMRc=Md4DUSuwv07EuBVDJbY1Uzezq+TONxyCvLtOHD=iFXrcQ@mail.gmail.com>
+ <050d74d7619bdfdf5ca81d8914a2a8836a0d4e2e.camel@pengutronix.de>
+ <CAMRc=MfPqRLFHPW988oMry7vVoTgtQHrxxND4=nr_40dOa5owg@mail.gmail.com>
+ <aPeexuA1nu-7Asws@smile.fi.intel.com> <aPegyVyONkPWRgi9@smile.fi.intel.com>
+ <CAMRc=McPpFEmg7dpfiYWJaPR4yMynOaU5Hp37E7rTzWSCNxBuA@mail.gmail.com>
+ <aPerDcMFdbWecGEv@smile.fi.intel.com> <804b4b8cf23444fe5dc9400ac1de3a738a77e09e.camel@pengutronix.de>
+In-Reply-To: <804b4b8cf23444fe5dc9400ac1de3a738a77e09e.camel@pengutronix.de>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 22 Oct 2025 14:17:53 +0200
+X-Gm-Features: AS18NWCQ7ANfnKQl00uAA5vEojJxMGPQi1isAnxjQuec18eN_PhBUMwxJKrcpO8
+Message-ID: <CAMRc=Md-KuNp1o6GLA0WTbknbN-qtt8YJqy5fJs0P0EyE7KY3Q@mail.gmail.com>
+Subject: Re: [PATCH 7/9] reset: make the provider of reset-gpios the parent of
+ the reset device
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
-
-> On Tue Sep 23, 2025 at 9:22 AM CEST, Pavel Machek wrote:
-> > Hi!
-> >> > Hi!
-> >> >=20
-> >> > > +	led-controller@45 {
-> >> > > +		compatible =3D "awinic,aw2013";
-> >> > > +		reg =3D <0x45>;
-> >> > > +		#address-cells =3D <1>;
-> >> > > +		#size-cells =3D <0>;
-> >> > > +
-> >> > > +		vcc-supply =3D <&pm8937_l10>;
-> >> > > +		vio-supply =3D <&pm8937_l5>;
-> >> > > +
-> >> > > +		led@0 {
-> >> > > +			reg =3D <0>;
-> >> > > +			function =3D LED_FUNCTION_STATUS;
-> >> > > +			led-max-microamp =3D <5000>;
-> >> > > +			color =3D <LED_COLOR_ID_RED>;
-> >> > > +		};
-> >> > > +
-> >> > > +		led@1 {
-> >> > > +			reg =3D <1>;
-> >> > > +			function =3D LED_FUNCTION_STATUS;
-> >> > > +			led-max-microamp =3D <5000>;
-> >> > > +			color =3D <LED_COLOR_ID_GREEN>;
-> >> > > +		};
-> >> > > +
-> >> > > +		led@2 {
-> >> > > +			reg =3D <2>;
-> >> > > +			function =3D LED_FUNCTION_STATUS;
-> >> > > +			led-max-microamp =3D <5000>;
-> >> > > +			color =3D <LED_COLOR_ID_BLUE>;
-> >> > > +		};
-> >> > > +	};
-> >> > > +};
-> >> >=20
-> >> > That's single, 3-color LED, right? Please see LED multicolor support.
-> >> As far as i know aw2013 driver does not have multicolor support.
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tr=
-ee/Documentation/devicetree/bindings/leds/leds-aw2013.yaml
+On Wed, Oct 22, 2025 at 10:39=E2=80=AFAM Philipp Zabel <p.zabel@pengutronix=
+.de> wrote:
+>
+> On Di, 2025-10-21 at 18:47 +0300, Andy Shevchenko wrote:
+> > On Tue, Oct 21, 2025 at 05:23:33PM +0200, Bartosz Golaszewski wrote:
+> > > On Tue, Oct 21, 2025 at 5:03=E2=80=AFPM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Tue, Oct 21, 2025 at 05:55:02PM +0300, Andy Shevchenko wrote:
+> > > > > On Tue, Oct 21, 2025 at 11:39:41AM +0200, Bartosz Golaszewski wro=
+te:
+> > > > > > On Tue, Oct 21, 2025 at 11:31=E2=80=AFAM Philipp Zabel <p.zabel=
+@pengutronix.de> wrote:
+> > > > > > > On Di, 2025-10-21 at 11:27 +0200, Bartosz Golaszewski wrote:
 > >
-> > I believe that needs to be fixed before more bugs are added on top to
-> > work around that problem...
+> > [...]
 > >
-> > ...and before that bug is cemented in the ABI.
->=20
-> Honestly I don't think it's reasonable to expect people contributing dts
-> to then first start patching existing LED drivers and adding support for
-> x y or z to it, and block dts addition on that.
+> > > > > > > No need to convert all existing drivers right away, but I'd l=
+ike to see
+> > > > > > > a user that benefits from the conversion.
+> > > > > > >
+> > > > > >
+> > > > > > The first obvious user will be the reset-gpio driver which will=
+ see
+> > > > > > its core code simplified as we won't need to cast between OF an=
+d
+> > > > > > fwnodes.
+> > > > >
+> > > > > +1 to Bart's work. reset-gpio in current form is useless in all m=
+y cases
+> > > > > (it's OF-centric in 2025! We should not do that in a new code).
+> > > > >
+> > > > > More over, conversion to reset-gpio from open coded GPIO APIs is =
+a clear
+> > > > > regression and I want to NAK all those changes (if any already do=
+ne) for
+> > > > > the discrete components that may be used outside of certainly OF-=
+only niche of
+> > > > > the platforms.
+> > > >
+> > > > To be clear, the conversion that's done while reset-gpio is kept OF=
+-centric.
+> > > > I'm in favour of using it, but we need to make it agnostic.
+> > >
+> > > As of now, the whole reset framework is completely OF-centric, I don'=
+t
+> > > know what good blocking any such conversions would bring? I intend to
+> > > convert the reset core but not individual drivers.
+> >
+> > Blocking making new regressions?
+> >
+> > Otherwise as long as reset framework and reset-gpio are agnostic, I'm p=
+retty
+> > much fine with the idea and conversion.
+>
+> I think we might be talking about different "conversions" and different
+> "blocking" here?
+>
+> 1) Conversion of the reset core from of_node to fwnode.
+> 2) Conversion of reset controller drivers from of_node to fwnode.
+> 3) Conversion of consumer drivers from gpiod to reset_control API.
+>
+> My understanding is:
+>
+> Bartosz would like to convert the reset core to fwnode (1) but not
+> convert all the individual reset controller drivers (2). He doesn't
+> like blocking (1) - this statement was partially in reaction to me
+> bringing up a previous attempt that didn't go through.
+>
+> Andy would like to block consumer driver conversions from gpiod to
+> reset_control API (3) while the reset-gpio driver only works on OF
+> platforms.
+>
+> Please correct me if and where I misunderstood.
+>
 
-Well, the dts is wrong, it describes three leds when you only have
-one.
+I think Andy is afraid that people will convert drivers that are used
+in the fwnode world to reset-gpio which only works with OF. I don't
+think that anyone's trying to do it though.
 
-> At least in postmarketOS the user space components we have (e.g.
-> feedbackd) detect the LED things (and most others) automatically since
-> various devices have various different setups. So once/if aw2013 gets
-> multicolor support, the dts can be updated without problems.
+> I think fwnode conversion of the reset controller framework core is a
+> good idea, I'd just like to see a use case accompanying the conversion.
+> It seems like enabling the reset-gpio driver to be used on non-OF
+> platforms could be that. Andy, do you have an actual case in mind?
+>
 
-> Sure, maybe today changing something on the N900 which would change
-> sysfs paths is not the best idea because people will probably have 10+
-> years of random shell scripts lying around, but nowadays we usually have
-> better ways of abstraction that can handle that.
+I'd say converting the reset core to fwnode has merits on its own. We
+should typically use the highest available abstraction layer (which is
+fwnode in this case) unless we absolutely have no choice (for
+instance: using some very OF-specific APIs).
 
-I'm pretty sure someone, somewhere will have shell scripts.
+That being said: the reset-gpio driver will be able to work with any
+firmware node once we do the conversion which is a good first
+use-case.
 
-BR,
-							Pavel
---=20
-I don't work for Nazis and criminals, and neither should you.
-Boycott Putin, Trump, Netanyahu and Musk!
-
---afFovrNgGG7Vhs2p
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaPi+wAAKCRAw5/Bqldv6
-8k0GAJkB+A1MYLsaFrYi7NQtR20dd9gtSwCfTNIAA7o2+c88KcU2rXh0E4whh1s=
-=m2+z
------END PGP SIGNATURE-----
-
---afFovrNgGG7Vhs2p--
+Bartosz
 
