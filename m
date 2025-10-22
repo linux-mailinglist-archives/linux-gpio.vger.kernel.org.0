@@ -1,323 +1,113 @@
-Return-Path: <linux-gpio+bounces-27479-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27480-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA9FCBFCF7C
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 17:51:01 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06016BFD02B
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 18:04:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 91EBB18C2655
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 15:51:25 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A69CD4EBFA5
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 16:04:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C2C52459C9;
-	Wed, 22 Oct 2025 15:50:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A17126E71E;
+	Wed, 22 Oct 2025 16:04:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PDDu7gNP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jU1KtPQ3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58A8246778
-	for <linux-gpio@vger.kernel.org>; Wed, 22 Oct 2025 15:50:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA4E26E6E8
+	for <linux-gpio@vger.kernel.org>; Wed, 22 Oct 2025 16:04:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761148253; cv=none; b=dz6j/zoDknhdqsKj6Okk5m/IQ/reLoVPHSPKkDHRkFc+mXYb/N6hYgcYcE2NtgXRpNKXbEug2tRTjdTRdxN6yL+EhUZZgkRba9QI6XbrpdgIx1JX+nfOdZmCT0xYbE+jP2EMAxby5/CF6IWmVDEiCJiI5GmrD/yj34yYptNJri0=
+	t=1761149056; cv=none; b=caU7sVOocf0l8lzR3vHXIY0d5hpCTWwRhaErnMqNn7dVcnp8MM3uNFbTl6DX6Ys7gDGhSm5i7W98ThKz7vzHr6ZIydm9C7hxUnnSHZe3M6utJMF+6MQ9IgE4eJHSXMBUeWR46P3/tzw+kmRFRLkm9PVnRjqld4c3gGZLDgnc/uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761148253; c=relaxed/simple;
-	bh=QB4SfuURmF0iWUdw/nwKqx87mibMXzZNnU/tV+VTflc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fM9n9UeeFxLaDTHJ8bqs2NTFuq1xlyy0GkPTKLrz+GWbEJRIcbE3qILto+UYJzKfGLimdciVzKUGAd6eSSCM78Ptj1DJwujR3XzQzV+bOEV7yhaHeM8zt37r1EohknVHSaDvRcCUmjHpHPqKsM6tm1rNXH9geTG2+CZK48Zp5Ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PDDu7gNP; arc=none smtp.client-ip=209.85.222.171
+	s=arc-20240116; t=1761149056; c=relaxed/simple;
+	bh=e9dloVwz2IYLCTd6/6lhRQqbdp+a/HD6E3cwzE0aIoo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hK51jGMDl5JRRugtiaBiz9YcruupMq8d+5YPeVe7CzKlMV20hSPaq9cq7GKQlxbFCpbc1tUpJRV4DxTq3my4KA+Z1Ewy03fVqmQDbQ8YP29yqtoNzOMbXrIo2eW1w8o8P3PesIoWDmM8KTIo8sdhrM9waGkwz5njxg1yJY8LCFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jU1KtPQ3; arc=none smtp.client-ip=209.85.166.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-892d1443e48so940098685a.0
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Oct 2025 08:50:49 -0700 (PDT)
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-93bccd4901aso583875039f.2
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Oct 2025 09:04:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761148249; x=1761753049; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=M3oPL/TT2sCXS1NwLSM7rbWcVKVCBogVovmIALCF75E=;
-        b=PDDu7gNP+RCUzIQmZOQJK1qv35WyTpVYbtLZLmFSfywQDTG5R3T5gN41I7crHWRj2K
-         b5VQS09X5/96bxNUOMrO6FjixFoSqkFBkS3Ouv8k9MR6zr3GxbH/6moBzM3yEYPgD3jM
-         L4Q0xRTW6vh4ZfEIMEGVsqsk014lbD46/iUfRaUYt0vvuJHUXILq7NRkrnlsZLYCYre9
-         a2hXNyjBpCzoIJ+Nxhfai7xYyEZMrGzcM3kQZ/inOcx0EcPYqg+4Bi3mTFtogn8/Qqch
-         d8TFrDD11/JDwYgCmLgalmJB+MNlNKUbqqs0EzUk83DeDRFZUW61uSqjNo3UsEcspc+o
-         t+uw==
+        d=gmail.com; s=20230601; t=1761149053; x=1761753853; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zv7xh+mMIOvIqIsx9A3Dp8OJORRCn3/CUdVaBarbmo4=;
+        b=jU1KtPQ3QiLN3BpNrav1RdeCUJKAEndrVzKm+I4fmTjURsfXNpP5rcrRr86VxyUTMb
+         W+2JKPEc6zS3EhO55bdYxszy524B5u6L8fXBnIPsUCyetPN6Pzt7zb85hIBd0PVTp3ny
+         GNmybC8CpLT2Qcs9oLuokvXKna+HOspvMjDEJ0BkMAb6zc3P7uzioGNKhegxJ39yC4+H
+         TPDohy2Z5JuKtawWBHZnbJM4HwkUZUPkKvbVYnrro8MG5UsFQIR6R7ccqzj0No+cCNuu
+         l4q9q2KxJTjIpuDU7IVOh3773LzGlvOuV31GZzdcsrZ30JjGn1Rh2JgZcqCN3aoT00Lz
+         Elpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761148249; x=1761753049;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M3oPL/TT2sCXS1NwLSM7rbWcVKVCBogVovmIALCF75E=;
-        b=kXfp8JArJ1hsgu5VWARzHE7EoCR8SmtYgoCCjR0N2Gi/MGmKbBhX1Wj5Ms42FbPoNV
-         vSTR2j6yWoUeUz/iibUAj1O3zBOJysjkbxF2luORtMGTa1qPA5uXzeScB6rPbQOwy/ck
-         VPchCv3NWB7torBrXN7hL8W1A++SkskMK+wvUukgPd/TNDMw6N3nYh1xAnkts0ID/2hS
-         +L2dRFWc40nQm4xosi5oT557QbXpxCG7z4FOp9It42dsECWbexVQOwbItVdLyhOqZNPx
-         YA+swbH06tmveMGXZdP1RyneW145OBuznR1Iqudn+PDkIZt7M0MZUXoedVtSehMrvCc2
-         ifoA==
-X-Forwarded-Encrypted: i=1; AJvYcCVVetTWSEqT23PttGRY4aJ3tRJcwQ2jWdObB5Hg1NiYITvpg2or2pp4VuHjn05ioIaxZtNY0bwfsxDb@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMHBbs5K/bKSrFOmzM3oylWKwBHj7gdPvrHN4iLBHI1eAfKsst
-	ZfYb4mUiYKstSt2YK01x8AaEbyZuRTnkBHrjtPnuAXj5BfC6DUf8Q85+
-X-Gm-Gg: ASbGnct+Tq4sYvJq1RF+FctFYeJY6seyWyuZ0O2nLnNGXlgpD4B3cvGh4+xz337zDb/
-	UK6ikRETvwPr2fVlr0Vz31CR7ZZXg0jNB7y/SutQewbOpwBmxWNacOkywR6HTl40MjqucFVbevl
-	BDrza7nx1rnXYIIIUPRNB9WBWddPuLAjheU5aYGOUs0HsYmP8zzPozYLthQ3Hkc8AFTvNhcK7rH
-	DmvQgMiLiSYd2GJ97n092d3nmvgKdIpXiu54suANgyzb/UaoWC3ALzF7jCKSR6UvWUz2afUVyZw
-	WUJ78m0vnU3dTVyFBrhDltZUQhSAZtjof18CN5/+g+F/GWUsmQ1Q4OTUrhQ6cu0oirDH2D/MIln
-	z2PTcbasifXI6f8ch/2aPVcGH05qPb7QBsQe7GDHtpbxPQlIAENdxuSUQdFhRrNG/+6bc2st1tN
-	lTa6jS/bE=
-X-Google-Smtp-Source: AGHT+IFhU1/qxPcwG4iditd/DSbX/hwAr8IdRWU46wkqo60rCt6GN/oHrv/6ROXraOwUylmwPpHHaA==
-X-Received: by 2002:a05:620a:1984:b0:84f:f3bb:e464 with SMTP id af79cd13be357-8906fd1953cmr2828961185a.50.1761148248418;
-        Wed, 22 Oct 2025 08:50:48 -0700 (PDT)
-Received: from localhost ([12.22.141.131])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-891cd098328sm1000034585a.17.2025.10.22.08.50.47
+        d=1e100.net; s=20230601; t=1761149053; x=1761753853;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zv7xh+mMIOvIqIsx9A3Dp8OJORRCn3/CUdVaBarbmo4=;
+        b=GcQi6D8ILJa1dET0fCGsx6dlLbCtlU+K8cUe6nvHFN5njxb4s2wD8M2wBODk0SIZuE
+         C0VXt0lGHOhkRyPmZ4bd8r7npDYtG8n0LCoTJNgAc6e87mBar0i+XOP3GY4NVddIUe8E
+         xT2asDJ1J6y1rJR2rzV+QyLdGRZWpdCFkdUiHF/j2M3RnJzVKTaMA5p4QPZ1mA+OJLdG
+         YTv9oM72FYJvJNENi2hvEFG/3WNJWwyyOREqrmsoKiCmr57EDdPzs6BvQLtoxdqcDkbw
+         yD2WONIGbdq98ispgbPsvWcjRSzudwVdLbifbT8eFx9yY9XXPExWdpHQKHICfrsybGo5
+         RBDg==
+X-Gm-Message-State: AOJu0YzcXdnfYVz3qHBm2fkjFravAqsjN9oaK6AbRt7KjWVj+RRv/Lqv
+	ePop51k6dv9PPOoEoJlD4IrUKbQaBuG5G26YDqsSpYPkTxVfl2i9utHdae2uWfD4
+X-Gm-Gg: ASbGnctkNMwRmSy8WMeQPcnQ4FsCVyPPfBF3ao79H6QfVUGE8+PjkjSTamy87Qkmxay
+	MonvRZAGF7mEgihIkhCBfJzz7+5OfBVk9VU6OCgTgWXND1HT8QTk9Dtjr5+s/LpWahPg6K89sjv
+	ync2LE+AqNODbvw1ZSBP92KQVE3D/mra9+y4iaNwyKol+hmyZ3edzr5oJfscsyjBelkw2s6mPfi
+	5lKwGpwzVhOzAbFrJqmoDI+MSdax3oxL+ZQidXdSQwxjk/oAoEC376N0UUJ9u9x01fhrC+va4+m
+	coRo9rMwKejYf2foTcn+xh39YRpcSqTxMxW45eHPgtTptaFwWyIMkhh1iQmjqysumCcJxacNd49
+	4wfsQIit0pv24xdV+r2WcmIpCG0cCKXUnd93BLjQgVIE7pPBxrGaN+fHSuQD0sXXo0XmFHm1eDm
+	pI5Wi82vuwKCKyAcQ=
+X-Google-Smtp-Source: AGHT+IF7wvwmavBx66O4FlEtqqca1ZVv0vUMOFv8M6F+5B9pFOBKPDh0w/6tSa01KRCL+9SJXaqhMA==
+X-Received: by 2002:a05:6e02:1523:b0:430:a973:7e53 with SMTP id e9e14a558f8ab-430c5294ff1mr272741435ab.21.1761149053456;
+        Wed, 22 Oct 2025 09:04:13 -0700 (PDT)
+Received: from vfazio4.xes-mad.com ([162.248.234.4])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5a8a9629c16sm5201282173.27.2025.10.22.09.04.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Oct 2025 08:50:47 -0700 (PDT)
-Date: Wed, 22 Oct 2025 11:50:46 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	David Miller <davem@davemloft.net>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Crt Mori <cmo@melexis.com>, Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Shan-Chun Hung <schung@nuvoton.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Jakub Kicinski <kuba@kernel.org>, Alex Elder <elder@ieee.org>,
-	David Laight <david.laight.linux@gmail.com>,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	Jason Baron <jbaron@akamai.com>, Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Kim Seer Paller <kimseer.paller@analog.com>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Richard Genoud <richard.genoud@bootlin.com>,
-	Cosmin Tanislav <demonsingur@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Jianping Shen <Jianping.Shen@de.bosch.com>,
-	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-edac@vger.kernel.org, qat-linux@intel.com,
-	linux-gpio@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-	linux-iio@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v4 2/4] bitfield: Add non-constant field_{prep,get}()
- helpers
-Message-ID: <aPj9Tu75OFenm7U0@yury>
-References: <cover.1760696560.git.geert+renesas@glider.be>
- <67c1998f144b3a21399672c8e4d58d3884ae2b3c.1760696560.git.geert+renesas@glider.be>
- <aPKQMdyMO-vrb30X@yury>
- <CAMuHMdXq7xubX4a6SZWcC1HX+_TsKeQigDVQrWvA=js5bhaUiQ@mail.gmail.com>
- <aPhbhQEWAel4aD9t@yury>
- <CAMuHMdUOX=ToDU_44fHrqKWUtee1LKpgisfTKOe4R33er9g+DA@mail.gmail.com>
+        Wed, 22 Oct 2025 09:04:13 -0700 (PDT)
+From: Vincent Fazio <vfazio@gmail.com>
+To: linux-gpio@vger.kernel.org
+Cc: vfazio@xes-inc.com,
+	Vincent Fazio <vfazio@gmail.com>
+Subject: [libgpiod][PATCH] bindings: python: bump cibuildwheel to 3.2.1
+Date: Wed, 22 Oct 2025 11:04:06 -0500
+Message-ID: <20251022160406.1810450-1-vfazio@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUOX=ToDU_44fHrqKWUtee1LKpgisfTKOe4R33er9g+DA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Oct 22, 2025 at 12:01:37PM +0200, Geert Uytterhoeven wrote:
-> Hi Yury,
-> 
-> On Wed, 22 Oct 2025 at 06:20, Yury Norov <yury.norov@gmail.com> wrote:
-> > On Mon, Oct 20, 2025 at 03:00:24PM +0200, Geert Uytterhoeven wrote:
-> > > On Fri, 17 Oct 2025 at 20:51, Yury Norov <yury.norov@gmail.com> wrote:
-> > > > On Fri, Oct 17, 2025 at 12:54:10PM +0200, Geert Uytterhoeven wrote:
-> > > > > The existing FIELD_{GET,PREP}() macros are limited to compile-time
-> > > > > constants.  However, it is very common to prepare or extract bitfield
-> > > > > elements where the bitfield mask is not a compile-time constant.
-> > > > >
-> > > > > To avoid this limitation, the AT91 clock driver and several other
-> > > > > drivers already have their own non-const field_{prep,get}() macros.
-> > > > > Make them available for general use by consolidating them in
-> > > > > <linux/bitfield.h>, and improve them slightly:
-> > > > >   1. Avoid evaluating macro parameters more than once,
-> > > > >   2. Replace "ffs() - 1" by "__ffs()",
-> > > > >   3. Support 64-bit use on 32-bit architectures.
-> > > > >
-> > > > > This is deliberately not merged into the existing FIELD_{GET,PREP}()
-> > > > > macros, as people expressed the desire to keep stricter variants for
-> > > > > increased safety, or for performance critical paths.
-> > > > >
-> > > > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > > > Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > > > > Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > > > Acked-by: Crt Mori <cmo@melexis.com>
-> > > > > ---
-> > > > > v4:
-> > > > >   - Add Acked-by,
-> > > > >   - Rebase on top of commit 7c68005a46108ffa ("crypto: qat - relocate
-> > > > >     power management debugfs helper APIs") in v6.17-rc1,
-> > > > >   - Convert more recently introduced upstream copies:
-> > > > >       - drivers/edac/ie31200_edac.c
-> > > > >       - drivers/iio/dac/ad3530r.c
-> > > >
-> > > > Can you split out the part that actually introduces the new API?
-> > >
-> > > Unfortunately not, as that would cause build warnings/failures due
-> > > to conflicting redefinitions.
-> > > That is a reason why I want to apply this patch ASAP: new copies show
-> > > up all the time.
-> >
-> > In a preparation patch, for each driver:
-> >
-> >  +#ifndef field_prep
-> >  #define field_prep() ...
-> >  +#endif
-> >
-> > Or simply
-> >
-> >  +#undef field_prep
-> >  #define field_prep() ...
-> >
-> > Then add the generic field_prep() in a separate patch. Then you can drop
-> > ifdefery in the drivers.
-> >
-> > Yeah, more patches, but the result is cleaner.
-> 
-> And we need 3 kernel releases, as the addition of the macros to
-> the header file now has a hard dependency on adding the #undefs?
-> Unless I still apply all of them to an immutable branch, but then what
-> is the point?
+Version 3.2.1 uses images CPython 3.14.0 final instead of 3.14.0-rc3.
 
-Not sure what do you mean. You can do it in a single series, and you
-don't need and should not split the series across releases. Consider
-my recent cpumask_next_wrap() rework as an example:
+Signed-off-by: Vincent Fazio <vfazio@gmail.com>
+---
+ bindings/python/generate_pypi_artifacts.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-https://lore.kernel.org/all/20250128164646.4009-1-yury.norov@gmail.com/
-
-1. #1-4 switch kernel users to alternative functions;
-2. #5 deprecates cpumask_next_wrap(), making sure it's a pure renaming,
-   i.e. no-op.
-3. #6 introduces the new nice implementation. It's the core-only patch,
-   no drivers are touched.
-4. #7-12 switch the rest of codebase from old version to new.
-5. #13 drops deprecated old function.
-
-This is the most common scheme. In you case you can cut the corners.
-
-The goals here are:
-
- - keep core patches free of non-core code;
- - switch drivers to the new functionality one-by-one in sake of
-   bisectability.
+diff --git a/bindings/python/generate_pypi_artifacts.sh b/bindings/python/generate_pypi_artifacts.sh
+index d36c606..22dad9f 100755
+--- a/bindings/python/generate_pypi_artifacts.sh
++++ b/bindings/python/generate_pypi_artifacts.sh
+@@ -108,7 +108,7 @@ python3 -m "${venv_module}" .venv
+ venv_python="${temp_dir}/.venv/bin/python"
  
-> > > > > --- a/include/linux/bitfield.h
-> > > > > +++ b/include/linux/bitfield.h
-> > > > > @@ -220,4 +220,40 @@ __MAKE_OP(64)
-> > > > >  #undef __MAKE_OP
-> > > > >  #undef ____MAKE_OP
-> > > > >
-> > > > > +/**
-> > > > > + * field_prep() - prepare a bitfield element
-> > > > > + * @mask: shifted mask defining the field's length and position
-> > > > > + * @val:  value to put in the field
-> > > > > + *
-> > > > > + * field_prep() masks and shifts up the value.  The result should be
-> > > > > + * combined with other fields of the bitfield using logical OR.
-> > > > > + * Unlike FIELD_PREP(), @mask is not limited to a compile-time constant.
-> > > > > + */
-> > > > > +#define field_prep(mask, val)                                                \
-> > > > > +     ({                                                              \
-> > > > > +             __auto_type __mask = (mask);                            \
-> > > > > +             typeof(mask) __val = (val);                             \
-> > > > > +             unsigned int __shift = sizeof(mask) <= 4 ?              \
-> > > > > +                                    __ffs(__mask) : __ffs64(__mask); \
-> > > > > +             (__val << __shift) & __mask;    \
-> > > >
-> > > > __ffs(0) is undef. The corresponding comment in
-> > > > include/asm-generic/bitops/__ffs.h explicitly says: "code should check
-> > > > against 0 first".
-> > >
-> > > An all zeroes mask is a bug in the code that calls field_{get,prep}().
-> >
-> > It's a bug in FIELD_GET() - for sure. Because it's enforced in
-> > __BF_FIELD_CHECK(). field_get() doesn't enforce it, doesn't even
-> > mention that in the comment.
-> >
-> > I'm not fully convinced that empty runtime mask should be a bug.
-> 
-> Getting (and using) data from nowhere is a bug.
-> Storing data where there is no space to store is also a bug.
-> 
-> I will add a comment.
-> 
-> > Consider memcpy(dst, src, 0). This is a no-op, but not a bug as
-> > soon as the pointers are valid. If you _think_ it's a bug - please
-> > enforce it.
-> 
-> memcpy() with a fixed size of zero is probably a bug.
-> memcpy() with a variable size is usually used to copy "as much as is
-> needed", so zero is usually not a bug.
-
-5 lines above you say: "Getting (and using) data from nowhere is a bug".
-Now you're saying: "so zero is usually not a bug". So, is it a bug or
-not?
-
-Consider this example:
-        
-        unsigned a = field_get(mask, get_user(ptr));
-
-Conceptually it's the same as per-bit copy_from_user().
-
-The copy_from_user 
-1. allows size == 0;
-2. does not dereference pointers in that case, i.e. doesn't call
-   get_user().
-
-Can we make sure that field_get() provides the same guarantees?
+ # Install build dependencies
+-${venv_python} -m pip install build==1.3.0 cibuildwheel==3.2.0
++${venv_python} -m pip install build==1.3.0 cibuildwheel==3.2.1
  
-> > > > I think mask = 0 is a sign of error here. Can you add a code catching
-> > > > it at compile time, and maybe at runtime too? Something like:
-> > > >
-> > > >  #define __field_prep(mask, val)
-> > > >  ({
-> > > >         unsigned __shift = sizeof(mask) <= 4 ? __ffs(mask) : __ffs64(mask);
-> > > >         (val << __shift) & mask;
-> > > >  })
-> > > >
-> > > >  #define field_prep(mask, val)
-> > > >  ({
-> > > >         unsigned int __shift;
-> > > >         __auto_type __mask = (mask), __ret = 0;
-> > > >         typeof(mask) __val = (val);
-> > > >
-> > > >         BUILD_BUG_ON_ZERO(const_true(mask == 0));
-> > >
-> > > Futile, as code with a constant mask should use FIELD_PREP() instead.
-> >
-> > It's a weak argument. Sometimes compiler is smart enough to realize
-> > that something is a constant, while people won't. Sometimes code gets
-> > refactored. Sometimes people build complex expressions that should
-> > work both in run-time and compile time cases. Sometimes variables are
-> > compile- or run-time depending on config (nr_cpu_ids is an example).
-> >
-> > The field_prep() must handle const case just as good as capitalized
-> > version does.
-> 
-> OK, I will add the (build-time) check.
+ LIBGPIOD_VERSION=${src_version} ${venv_python} -m build --sdist --outdir ./dist "${source_dir}"
+ sdist=$(find ./dist -name '*.tar.gz')
+-- 
+2.43.0
 
-If mask is compile-time, you can wire field_prep() to FIELD_PREP(), so
-it will do the work for you.
- 
-Thanks,
-Yury
 
