@@ -1,159 +1,133 @@
-Return-Path: <linux-gpio+bounces-27493-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27494-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8069BFDF3B
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 21:00:04 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43DC1BFE095
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 21:29:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 434A23A7E2D
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 19:00:01 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 315C54F1C89
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Oct 2025 19:29:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D12A134EF0F;
-	Wed, 22 Oct 2025 18:59:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3571D345CD7;
+	Wed, 22 Oct 2025 19:29:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kEyT5Lhy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mNuFRWDq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD88244693;
-	Wed, 22 Oct 2025 18:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E382D2D0C60;
+	Wed, 22 Oct 2025 19:29:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761159598; cv=none; b=sG32XxoRsdGXiJe1x+g0Fo3O8dz1lTHI7ADHTVj1heFrIbAzjHDhxh5+6zhy3Na6gdz+ACHYi2ZtgwWj41dzk/CfYW5MmSRM1YCPhJ3GaTPOVItquX6Da8iiRZmtUcVK3qLhyqXksRcVPP3tNajGkJPv/BkbV01TRd11iBLRav0=
+	t=1761161343; cv=none; b=MNwzyoMcTh0/84zy+UmCrA4V8zwU+WxhNw7otf6SOOSPjQHsO6q661qRLbqjIHuWXUjZyR6SHyraLXKvHUAGCUP/omskjMN/xr6tx+wY2rXEqPtnIhjBVANPSyHFjXzx0093eVvYZRE7XiyuATvoQ4MRhv0oB41F1j5P+K0g3zQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761159598; c=relaxed/simple;
-	bh=MinJ1GkLy+Eime5i9wQsvq/rKJ8XV5DdSawYauX9FEw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gJuLplet5N5g/6wPiUiikhB47lmTLIvpLABzt1ZHBbru9LhcR6tJUFV34Bnhxe4A05uNOpZAWXtQgfmW+deaABpX7uhBeleTEh0VjC8s4JsvtElVRRwgpQV+Wlw3u6m7/FA6ZCn5DmkXA3wvyPzVV9ogtLMC/RZcaAdJu88Aftg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kEyT5Lhy; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761159596; x=1792695596;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MinJ1GkLy+Eime5i9wQsvq/rKJ8XV5DdSawYauX9FEw=;
-  b=kEyT5Lhyc2e5KqSjSQ13j9hzOqq97iKqRfms01u8bycDcHA1dz3BIAdl
-   d7cou0zHDfEkOxFundtOvMpVCl+K8NfFSSbjxW5rDvNjAeNUVH6jbm9of
-   ER7nnmUvsb8rDa+lU4tU8SIGT0JO9oTfY3LU3HUrvBxLAsz+DrRoTRaEm
-   NKVgZHBAIO6NqEFkPhMJjx9gWcRfVjDCVY1rKm5HS/kiIQkmPg4g3bIff
-   xpzzEjnza13XtUaIemjASLi9y+Lzd61v5jo4vU5auay7bCsMP3WxyaTmM
-   Tng52m0a+/sce1+4BvIJjbJWdpDB1pQ8zrejhs1TPKnr2M7I6mGls7HUU
-   A==;
-X-CSE-ConnectionGUID: knb/JTX/QrqvazRB8WU68g==
-X-CSE-MsgGUID: g4Wh8iZ5TzCwk+Xmm3CAwA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="73988876"
-X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
-   d="scan'208";a="73988876"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 11:59:55 -0700
-X-CSE-ConnectionGUID: D+qrq3KYRamGQEPF8aVIbg==
-X-CSE-MsgGUID: JUqagp/tTm67t7nD5iqU0A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,247,1754982000"; 
-   d="scan'208";a="184342022"
-Received: from cpetruta-mobl1.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.244.83])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 11:59:52 -0700
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1vBe3p-00000001lqD-3K7M;
-	Wed, 22 Oct 2025 21:59:49 +0300
-Date: Wed, 22 Oct 2025 21:59:49 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1761161343; c=relaxed/simple;
+	bh=Lk87Tl3X+1V3xXjGvglO78i8JsEe3q1T37XhvhQwFrI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=iNpjkrzfnBtGstcTu8x/atTfA2w17Dba12YMt6GZH55G2Vdtdk3gtPCGaXu7YOWuvFbEWsYSe/5dfLssL0c90X1UO8wnH0bkVMaUBm4PttAeAu5l87h/Dy50OTRHzS2fQt7qWQRK/st1ZViSnimw9QaRli8Q+vjZuU1HFtBnjEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mNuFRWDq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A00CC4CEE7;
+	Wed, 22 Oct 2025 19:29:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761161342;
+	bh=Lk87Tl3X+1V3xXjGvglO78i8JsEe3q1T37XhvhQwFrI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=mNuFRWDqYGFT/cpFs1DIsVNPKhFNcJiBkDXEJtrysruR0V/m5KWCkUqMqVnxPn571
+	 10J2tP6bN3swzFO4U8UY/pbrFHU1iiRy6M4KxitVhesK+v3n1WOV890p/HtzLrufSf
+	 xO6FE/sBfILOcch4l8PmsTQsEVwljD64q7PGh4gBQDs/BmNw38F6E8KcxvbvewCnuo
+	 0/hHSpI7a37skqF6+Qlwe+kqvXDZeshzUK/qxNVT3+pnFiShEo0qjUiQYIjt/ngoT/
+	 0cBT7ctM+bvfvSXf20tJtG7r7e1srLr9aCNiAfexG49OGDZ2fqJ6bmEAaabU1RIBng
+	 +A1nfPE+ABD8A==
+Date: Wed, 22 Oct 2025 14:29:01 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 3/9] software node: allow referencing firmware nodes
-Message-ID: <aPkppRTFKFxqAxKp@smile.fi.intel.com>
-References: <20251022-reset-gpios-swnodes-v2-0-69088530291b@linaro.org>
- <20251022-reset-gpios-swnodes-v2-3-69088530291b@linaro.org>
+Cc: Vaibhav Gupta <vaibhavgupta40@gmail.com>, Michael Buesch <m@bues.ch>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6] gpio: bt8xx: use generic power management
+Message-ID: <20251022192901.GA1265216@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251022-reset-gpios-swnodes-v2-3-69088530291b@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mf4FnBoZfdR3gG47te=X53jASzb6MVnUmNw2q1rtUwxzQ@mail.gmail.com>
 
-On Wed, Oct 22, 2025 at 03:41:02PM +0200, Bartosz Golaszewski wrote:
+On Tue, Oct 21, 2025 at 10:48:48AM +0200, Bartosz Golaszewski wrote:
+> On Thu, Oct 16, 2025 at 6:36 PM Vaibhav Gupta <vaibhavgupta40@gmail.com> wrote:
+> >
+> > Switch to the generic PCI power management framework and remove legacy
+> > callbacks like .suspend() and .resume(). With the generic framework, the
+> > standard PCI related work like:
+> >         - pci_save/restore_state()
+> >         - pci_enable/disable_device()
+> >         - pci_set_power_state()
+> > is handled by the PCI core and this driver should implement only gpio-bt8xx
+> > specific operations in its respective callback functions.
+> >
+> > Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+> > ---
 > 
-> At the moment software nodes can only reference other software nodes.
-> This is a limitation for devices created, for instance, on the auxiliary
-> bus with a dynamic software node attached which cannot reference devices
-> the firmware node of which is "real" (as an OF node or otherwise).
+> This says it's a v6 but I have no idea what changed since v1. Please
+> provide a changelog for every version when submitting patches.
 > 
-> Make it possible for a software node to reference all firmware nodes in
-> addition to static software nodes. To that end: use a union of different
+> Bjorn: does this look good to you?
 
-Still union?
+Yes, it looks good to me.
 
-> pointers in struct software_node_ref_args and add an enum indicating
-> what kind of reference given instance of it is. Rework the helper macros
-> and deprecate the existing ones whose names don't indicate the reference
-> type.
+Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
 
-> Software node graphs remain the same, as in: the remote endpoints still
-> have to be software nodes.
+FWIW, here's the diff from v1 to v6.  Mostly just iterating on
+compile warning nits:
 
-...
-
-> -	refnode = software_node_fwnode(ref->node);
-
-> -	if (!refnode)
-> -		return -ENOENT;
-
-Why is this being dropped?
-
-> +	if (ref->swnode)
-> +		refnode = software_node_fwnode(ref->swnode);
-> +	else if (ref->fwnode)
-> +		refnode = ref->fwnode;
-> +	else
-> +		return -EINVAL;
->  
-
-...
-
-> -#define SOFTWARE_NODE_REFERENCE(_ref_, ...)			\
-> +#define __SOFTWARE_NODE_REF(_ref, _type, _node, ...)		\
->  (const struct software_node_ref_args) {				\
-> -	.node = _ref_,						\
-> +	._node = _ref,						\
->  	.nargs = COUNT_ARGS(__VA_ARGS__),			\
->  	.args = { __VA_ARGS__ },				\
->  }
->  
-> +#define SOFTWARE_NODE_REF_SWNODE(_ref, ...)			\
-> +	__SOFTWARE_NODE_REF(_ref, SOFTWARE_NODE_REF_SWNODE,	\
-> +			    swnode, __VA_ARGS__)
-> +
-> +#define SOFTWARE_NODE_REF_FWNODE(_ref, ...)			\
-> +	__SOFTWARE_NODE_REF(_ref, SOFTWARE_NODE_REF_FWNODE,	\
-> +			    fwnode, __VA_ARGS__)
-
-I do not see a point of making these three instead of two direct ones.
-But I have no strong objection either.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+diff --git a/drivers/gpio/gpio-bt8xx.c b/drivers/gpio/gpio-bt8xx.c
+index e8d0c67bb618..324eeb77dbd5 100644
+--- a/drivers/gpio/gpio-bt8xx.c
++++ b/drivers/gpio/gpio-bt8xx.c
+@@ -52,10 +52,8 @@ struct bt8xxgpio {
+ 	struct pci_dev *pdev;
+ 	struct gpio_chip gpio;
+ 
+-#ifdef CONFIG_PM
+ 	u32 saved_outen;
+ 	u32 saved_data;
+-#endif
+ };
+ 
+ #define bgwrite(dat, adr)	writel((dat), bg->mmio+(adr))
+@@ -224,7 +222,8 @@ static void bt8xxgpio_remove(struct pci_dev *pdev)
+ 	pci_disable_device(pdev);
+ }
+ 
+-static int __maybe_unused bt8xxgpio_suspend(struct device *dev)
++
++static int bt8xxgpio_suspend(struct device *dev)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct bt8xxgpio *bg = pci_get_drvdata(pdev);
+@@ -241,7 +240,7 @@ static int __maybe_unused bt8xxgpio_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int __maybe_unused bt8xxgpio_resume(struct device *dev)
++static int bt8xxgpio_resume(struct device *dev)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct bt8xxgpio *bg = pci_get_drvdata(pdev);
+@@ -258,7 +257,7 @@ static int __maybe_unused bt8xxgpio_resume(struct device *dev)
+ 	return 0;
+ }
+ 
+-static SIMPLE_DEV_PM_OPS(bt8xxgpio_pm_ops, bt8xxgpio_suspend, bt8xxgpio_resume);
++static DEFINE_SIMPLE_DEV_PM_OPS(bt8xxgpio_pm_ops, bt8xxgpio_suspend, bt8xxgpio_resume);
+ 
+ static const struct pci_device_id bt8xxgpio_pci_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_BROOKTREE, PCI_DEVICE_ID_BT848) },
 
