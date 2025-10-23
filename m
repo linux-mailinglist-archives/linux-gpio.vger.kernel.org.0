@@ -1,113 +1,144 @@
-Return-Path: <linux-gpio+bounces-27516-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27517-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 058C2C00A9A
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 13:15:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 132FFC00B7F
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 13:29:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B7E6A505366
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 11:14:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C19C33A6F46
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 11:29:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2986630C633;
-	Thu, 23 Oct 2025 11:13:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0F1130DD23;
+	Thu, 23 Oct 2025 11:29:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f/9otqDC"
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="pvQeROGz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5BD30BF6A
-	for <linux-gpio@vger.kernel.org>; Thu, 23 Oct 2025 11:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C636A1C4A24
+	for <linux-gpio@vger.kernel.org>; Thu, 23 Oct 2025 11:29:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761217982; cv=none; b=gqyp7NKVm9UU0iX/l1Ze7xbu9O/ZodpYEs/id4Rkb/DCgnCasycur4zU94LPIm2e/CjdVImTplLDlsDVHMTcUQYO7TrGViy+VZwRHsE7u1LAAcMcI4nhIkTYXFaHMkufkaglSMw4vXPQWckP6gafvWbc3on4MdGxMlzamKv2gf4=
+	t=1761218956; cv=none; b=Pjw/uZvfeNSijmOJxQJgvHGX6BR01zxQpTfyE99/GSKrlzXEHJHFF5qQU3bu6UCfw2qlfJ8zclE7Jdl6sB1XEDI8zMAv7Vnxo2N9Ng8maOVjhtEOPyJhQFWmvB+aOiZi041KWs8WzIMS3/5fSTXHVBsXnykqWOLOWdCXFTcrB1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761217982; c=relaxed/simple;
-	bh=VSofXPKltqSzfUAWfolhUYjZILc/jZGqF+OMoYUXiPg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kSJT6AnLcpZHp+8/Q9XV43vmDp1GN0ke9A6/CaQygQql8ys4Kx70hBAWDAjgmnubq7AqFk4z2PGp8AJxCQ9eZaacNz5e0SXaNWS8pD84lBTjuHP31ErVwavaKvEvBYirXBGoDIogQKCo1rSPzKKrAdxyOCtLpi/ankSzzD6pek8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f/9otqDC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96D08C113D0
-	for <linux-gpio@vger.kernel.org>; Thu, 23 Oct 2025 11:13:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761217982;
-	bh=VSofXPKltqSzfUAWfolhUYjZILc/jZGqF+OMoYUXiPg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=f/9otqDCFyr/bE8MPe6ch3MwaJ1kyi5Kq9EIZzV9+hO+1AqinNOOZIBZfpxkZRBqx
-	 bptX2Z7iZb5DDWZPoMUACkW/5EdPelk3FYviPAFMHF+r1xSgv+FD44cW5wPzUX7Vyc
-	 UPCAoHqzRafCo4j3+dqcrjFjn6PVF/Z7dw9lvFYJ6AmGmD8inamXBApCsgijcdvu3k
-	 yXw1KqlJ3tglPWS5WMKmaV+7TnJPTBD6NZi4BjsttO4YmL8W2P0xo+qTjb1yXtETSh
-	 XAnPXhkXsJd8nEoZ9xMO9tYn/xk0twYm9keODkjt+L08SGR9DeHjrO2bSqxLW2ppEq
-	 Fk5NvYeEA7B8Q==
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b6d2f5c0e8eso153796666b.3
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Oct 2025 04:13:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWVB8yTUn9apQNKdEBpl27qeMwD2E5B8q7Jz3pDBxjd1SVI/d1F8dicbtSErLsyxINfi4O74YdXrPm/@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnaksuKgE2z8KDsPFNXdhiTDJAYDZ7+5r9fBg/qcqvsl0bzmoS
-	Z9q4dOQDqxU3B6DR2lWmMajYGBWe9DIv5uDxtHPZwleKrV7pUCGnljXPOUCh1rcH1lcI143PxZ9
-	zDj4re3z1sBt6N0khcTuDbBbluq9Rig==
-X-Google-Smtp-Source: AGHT+IHXTXK9Inhzp31f6w2tfR0eGiG69ffpyx6TLgXjLoQig5J/jMOVgrMAnyrlyG50AeAs4SS7Rb45JstbYWrnInk=
-X-Received: by 2002:a17:907:9690:b0:b46:8bad:6970 with SMTP id
- a640c23a62f3a-b6d51c05e68mr217698766b.36.1761217981126; Thu, 23 Oct 2025
- 04:13:01 -0700 (PDT)
+	s=arc-20240116; t=1761218956; c=relaxed/simple;
+	bh=4tNYoJDwF0/wx0jPRfQTkKqeS3tnPo3AhUeXGnL0Ej8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HKBwYIn2Pl8qwmmci+2IJAqFNQii7qBhrGTbJXqglxxJ/gT2h+voM59+Zoz+sxOTN6PPxIBUUaUhyA1jMqDqS/Wml/tJ5JZPPMOSeWewfjdE65egkbg51SSt14ZOvE+HoniOQuq9NtjZ0LWLwIyQKALaBk6hdetrtMHeHZTtxQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=pvQeROGz; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b5c18993b73so128795766b.0
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Oct 2025 04:29:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1761218953; x=1761823753; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4voNGJwy4uPurf5C4fKMLyqLWdAHXhDGEDNTRqvDsgM=;
+        b=pvQeROGzJwv+RBH0ctmaoOKxt7HDF0UQ09ABiJtiSeMRE9YOfIbFaQynKN9keN4TWK
+         xu8I1Z8QSAcE+OoL+iLiXVNiMLhzEPUnXIoJ12W9tkX6OfBUtrkNvJtn9NvZaNfe5wG0
+         v+Qmh6U2bRZuHdIjEiCmM+pwaKQpdJyoEY6xuRNZFYi4ZiySMPoEtX5p86nvAEFADySh
+         /soGr7iLi6BNGEV641kt7smGCRVmz7lQ0egAl+c3PioEWkTjPmBkXK/KYz7I6iivPn+e
+         NpFjjUlLzsahLKXHLbyjShg3CT4bHdCTMePRg8Jb/r4lsrQr7mxdV5xEKDeMhXE4YD/2
+         OzvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761218953; x=1761823753;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4voNGJwy4uPurf5C4fKMLyqLWdAHXhDGEDNTRqvDsgM=;
+        b=h7UIpUW8sQBaDuB7TlhUk5Yc4i3Pw3Tgg0PVLCo2x8ZSxc2J5DpTLn8OZopY42Z/GV
+         2D0EZQGMP287o4cRiKw9K7hmQ0YMlw/PQUEE2vPvSeedZ5nvhhxtE/58evnGRhajeQMD
+         KQ0ygTMno9HlyfLSlk+k1Cb7qte6jWXH+Ktte1KJF8he21rYcsH/igKCM0hr3+G9mg00
+         icJBjaqFanVmffUD7odBIq92Yz5xgA+THpIcln7mbPrXJD/EHc+J+iZJR0X5MI9KMhoI
+         2vqLH0HojSaNDQ5v79t8U5QeAkij8dk9OBb5N1TYBUcMRgVB4GjZMsehPZixpK//epu6
+         QRXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUiya1kdy8bie0mOa7Nz+QOKc5buQW+BkwcrmTO/Qr8EdIPHS5kanVxFfPvoBLEb+dScV8SbaFi9UGs@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6kWJwShvkKNjcFlIsf0NErM0Q9ZYTQWUKU41s3CVqxkSB+5rN
+	cG6DedfjivGUDnQieLKXlzT7StpojmIvQz/5WwrEOx1RA2IDcfqR7TtTW1kfP95aqas=
+X-Gm-Gg: ASbGncvUX7osjGUZ0Q223qkOWB6QV/aNbcjiAfUAkVWVkc4nh3YOrCA+gw5VLa5a7Ic
+	tGxhQ9D6bthKuAvlQe9U6lHAdcs0/D823l6pJ4lWk/kBwxqWx2s4a6lDtX+vGLGBHLgd2L+7geE
+	WBRGEqv7oJ3skuC3g4hew1/PP7nCiuixDa3KJcVIXxCYhznN9gtFJJ+y4z9eJD94cPhJSrFThU5
+	xIofSnsPwUlN1Up8xswLTSC23PD2JNgA4GdIppRR6fYhThaYuYX9+RKZ9waRgtaDWjmHgvTisZr
+	wqwMcIHqF2MIE2+oY83AVIqHy86UDOHczS5YJ/eUoSVc7VoBMZKpDN/h8WWX5JNIhXAz6e+capQ
+	/INZKo2VOEw19GTl4u4hGIaMdC8rO4YztDnxQgf0F0CyZM5yBEe5itkT1EuBfUtO7TKRBiMH8P9
+	1MiyAmesIeLEhFHEjgwt9f68fnFwr83caXIjuG5FBn0dDxygeGtljRKU7LYeasqUvLX4E=
+X-Google-Smtp-Source: AGHT+IECuZRfvC6DsxsoSIoN/FRzObiQXkQqEr8AieICgpNtydyGGfERAFJq1G/Ji9HjhKlMsrkuow==
+X-Received: by 2002:a17:907:25cc:b0:b40:c49b:710 with SMTP id a640c23a62f3a-b6475129316mr2600919966b.47.1761218953159;
+        Thu, 23 Oct 2025 04:29:13 -0700 (PDT)
+Received: from [192.168.178.36] (046124199085.public.t-mobile.at. [46.124.199.85])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-63e3ebb328esm1439098a12.5.2025.10.23.04.29.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Oct 2025 04:29:12 -0700 (PDT)
+From: Luca Weiss <luca.weiss@fairphone.com>
+Subject: [PATCH v3 0/2] Add support for PMIV0104 PMIC
+Date: Thu, 23 Oct 2025 13:29:00 +0200
+Message-Id: <20251023-sm7635-pmiv0104-v3-0-27f1c417376d@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251022165509.3917655-2-robh@kernel.org> <87ms5iqf5b.fsf@bootlin.com>
-In-Reply-To: <87ms5iqf5b.fsf@bootlin.com>
-From: Rob Herring <robh@kernel.org>
-Date: Thu, 23 Oct 2025 06:12:48 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqL+DY4j62m3_BVjC7_o9Hbx4a54UORDNBC+Pg0YAQCO+w@mail.gmail.com>
-X-Gm-Features: AWmQ_bmtPaFimucwq25igSrk9S_iboFzoF-uoqSjxWerG3P5s9m5XHzlE7aUD-4
-Message-ID: <CAL_JsqL+DY4j62m3_BVjC7_o9Hbx4a54UORDNBC+Pg0YAQCO+w@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: arm: Convert Marvell CP110 System
- Controller to DT schema
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, 
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Richard Cochran <richardcochran@gmail.com>, linux-arm-kernel@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHwR+mgC/2XOTQ6CMBAF4KuQrq2ZttBSVt7DuAA6yCz4scVGY
+ 7i7FU1MdPkmed+bBwvoCQOrsgfzGCnQNKagdhlr+3o8IyeXMpMgC9ASeBiMVgWfB4ogIOcqr7W
+ xVhlnHUut2WNHt008nt7Z4+Wa4OV9ZE0dkLfTMNBSZSPeFv7CBUjFXoWewjL5+/ZRFFvjM178j
+ UfBgevSydK0eaMVHLqa/NxPI+7TwuZF+TUM2H9DJgObTpSlLdA5/Wus6/oE1o0O+ScBAAA=
+X-Change-ID: 20250620-sm7635-pmiv0104-34a679937d9d
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Luca Weiss <luca.weiss@fairphone.com>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ Krzysztof Kozlowski <krzk@kernel.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1761218951; l=1037;
+ i=luca.weiss@fairphone.com; s=20250611; h=from:subject:message-id;
+ bh=4tNYoJDwF0/wx0jPRfQTkKqeS3tnPo3AhUeXGnL0Ej8=;
+ b=8Wu8WfcRnpZQY/U1SXdjMJiHfvT8LiSoB16gF8CF9qniIK1EBl1krQqg/zzCYc+nmMRyv6gES
+ 5ErVok5bWjBBoxA/8zCh4f+x4zVRxJAj7O71kZ5mU1W2VQdTUjGMb1x
+X-Developer-Key: i=luca.weiss@fairphone.com; a=ed25519;
+ pk=O1aw+AAust5lEmgrNJ1Bs7PTY0fEsJm+mdkjExA69q8=
 
-On Thu, Oct 23, 2025 at 1:57=E2=80=AFAM Miquel Raynal <miquel.raynal@bootli=
-n.com> wrote:
->
-> Hi Rob,
->
-> > Convert the Marvell CP110 System Controller binding to DT schema
-> > format.
-> >
-> > There's not any specific compatible for the whole block which is a
-> > separate problem, so just the child nodes are documented. Only the
-> > pinctrl and clock child nodes need to be converted as the GPIO node
-> > already has a schema.
-> >
-> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
->
-> [...]
->
-> > +  "#clock-cells":
-> > +    const: 2
-> > +    description: >
->
-> I am surprised you prefer a description to a constraint expressed with
-> yaml. Yet, I am totally fine with it.
+The PMIV0104 PMIC is used in conjuction with the Milos SoC. Add binding
+docs, GPIO support and the devicetree description for it.
 
-I don't, but no one has come up with a way to put constraints here and
-then apply them to 'clocks' properties as appropriate.
+Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+---
+Changes in v3:
+- Resend, drop applied patches
+- Link to v2: https://lore.kernel.org/r/20250709-sm7635-pmiv0104-v2-0-ebf18895edd6@fairphone.com
 
->
-> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Changes in v2:
+- Update commit messages to mention Milos instead of SM7635
+- Add critical thermal trip
+- Pick up tags
+- Link to v1: https://lore.kernel.org/r/20250625-sm7635-pmiv0104-v1-0-68d287c4b630@fairphone.com
 
-Thanks.
+---
+Luca Weiss (2):
+      dt-bindings: mfd: qcom,spmi-pmic: Document PMIV0104
+      arm64: dts: qcom: Add PMIV0104 PMIC
 
-Rob
+ .../devicetree/bindings/mfd/qcom,spmi-pmic.yaml    |  1 +
+ arch/arm64/boot/dts/qcom/pmiv0104.dtsi             | 73 ++++++++++++++++++++++
+ 2 files changed, 74 insertions(+)
+---
+base-commit: a92c761bcac3d5042559107fa7679470727a4bcb
+change-id: 20250620-sm7635-pmiv0104-34a679937d9d
+
+Best regards,
+-- 
+Luca Weiss <luca.weiss@fairphone.com>
+
 
