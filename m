@@ -1,109 +1,108 @@
-Return-Path: <linux-gpio+bounces-27512-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27513-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id B10F2C000EA
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 11:01:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77CFBC00153
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 11:04:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 40BC34E5C46
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 09:01:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 314833A555D
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 09:04:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5E941624C5;
-	Thu, 23 Oct 2025 09:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="UNzBVhdK"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6BC32FC00F;
+	Thu, 23 Oct 2025 09:04:03 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F56527467B
-	for <linux-gpio@vger.kernel.org>; Thu, 23 Oct 2025 09:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D4482F9D89
+	for <linux-gpio@vger.kernel.org>; Thu, 23 Oct 2025 09:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761210078; cv=none; b=GXMtXtLFS4A1kh9kauvfGILWQnJXM5XifQC2kZnc+1GZqnUmSbr3WNpuMwdEUFn2ugyEiffgrN2n4nwR5Wi/X/8+j1xgdnZdKadSSOH3MH/5Up1EKA0ytH+MEtub1FNv7cWXuWBpwsWhfumkOkVy9eNJCw/iiRUf/RKTwHifq/0=
+	t=1761210243; cv=none; b=MOWl7AC0sCp+t9GmTz3rfUqhtcN2FLpA/tbL//eqNBgDkkNGKtJZCPSdMwcEu3+MfGpjRScnXsNTbJ7+w/yY8Q8SZmnI8kJBL7EzVrRDy+xSCfJtDnURuKlYOND48xqqmuWLIl/G2GNCG302dZVKM6OHaCV/4OgVgi5EW/RYvYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761210078; c=relaxed/simple;
-	bh=sOonaS0zVyHkZru4pIOIWEeCPiF1hPOs/eX1sB4hPdc=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gM1cEXP3Sx4aAIEPw7JXs4Yx1DGFSs5KpHi7ir92Vvhxj6niQUS6MkjRuKxiWt16MnGSdetpUzyhQGS/F1kNazQttxXFchZIorsejdJtnFOq/KAsI7b1EO6jMj+JE2cIQcYK9IHAEUDVgS5pFX4bY4C5lhX5dtiU+Yhhy0Vk+So=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=UNzBVhdK; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-592ee9a16adso921356e87.0
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Oct 2025 02:01:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761210075; x=1761814875; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vxTAvgxcr3RQekcyM7RJbXJ1bhcULry0eoTvyMBlhLI=;
-        b=UNzBVhdKj6cyYk7MMTkfS84g9lBK4Jr5u4EwvxW7w2hk2YW/nfv+wVmyhHUPLdtxYH
-         7qcXn9HbP93OQHBmSCuwp3wzUv4sa2pepUeSBpCPOhcGLnhu82enndB0Oct03J3Tpo1h
-         7dTWWMA79U4H+DHESBMC4w/lr8J+lhL03XLyCFLdkjbuoOJ5YFURV1qXi9IEN9S6G+Yg
-         phykBI8qmU+tG+a8St6e69ahOI3ZJgUGuKi6qj1Xfj+k+nfO/cGqyo4sjGyPmXQ/1W58
-         zdC2H0/9kyodasJo7Jc8BcK2mVzJH3oBNAMSyyo8SvsE1Iqx7NHbTS7Xl2+avwLNVUIj
-         5GQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761210075; x=1761814875;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vxTAvgxcr3RQekcyM7RJbXJ1bhcULry0eoTvyMBlhLI=;
-        b=kt6mGPNfRf0VUisgK2dVjuQaYy0VTrXNZs8tL2kjJWbotoGOF4cfFPbgrhMppFggZo
-         lrJE9kRa+aDEUHBD3AE5ezxpGA8/BpyIFl4KNSSaQMhffGMFaCvwEekDp/LT9v6+5pYj
-         FlCVmUCMdJIDYty5d34UhCfJwqIMol4el4c/kH4qdlw2/5/6woaRn1k8an8nu15X71TB
-         lEZh2pGqGcItp3ulRimKoaX8PUPx5+4FgUdCS4sWfnzl4fD3u1+5FpEKXnhqIunJQhEE
-         gl7zYfcJP0P0EVuolYarRhqPpFkcbzhGzjztt1ACGL16JIYPt3ZGGa3sRvDe1QPnOluT
-         sPag==
-X-Gm-Message-State: AOJu0Yx/cvrRgn94AiSuaEWs+2mn3MBhed/RyauA236vizc5fb7Z5KgG
-	5v/WclG9NJKo3FQfArqZ2FcPyCbu3flRhhGasSEWpvaIMjwN3fMi6XxSBD+9rkQXvIWlczX8dE+
-	Z4BsJ4ka8wGuf0xWHLKJQKtp4NVtd2Y9RPZv/zwRsQg==
-X-Gm-Gg: ASbGncsgQW635BNq83f440hPmYqLH2oJc3KK0Qgj+TcwmJ/uIvkuRpVtkmJ4rRkVrLv
-	ukENfD7xAzRpwV02YWdQZH7JUYIahEd7IKZaQKaMU05kohjY4Q6qwpflJwCjTrWY4SNTvrcgE4s
-	Wq054VEViu4KTTB9o5zpoLnaBELIfjpBg9gDSE/VS7cItkz7IUtfxOJipfk8Hd/pK29yItZcKBL
-	jfzUj7qbUDQ53+dJjoXBzv7jgZgxuK1kAwQzx26gVNqoLej8b04VAAp7de7+KidSF2fcrrlUDZx
-	c0rCwznQA1CxQ0bL2yFGgl3HSCiyDY8oRxEx
-X-Google-Smtp-Source: AGHT+IEI4wJt38DG8TB4VZgiQ0ZzvBLeGaNvQT9RHM+HyEQpEQe6hKaVo1PAVM+qmQ/V2QKOeptZQMmWPbzIWrFebzU=
-X-Received: by 2002:a05:6512:220f:b0:55f:4b01:30ab with SMTP id
- 2adb3069b0e04-591d8451946mr7993264e87.0.1761210074768; Thu, 23 Oct 2025
- 02:01:14 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 23 Oct 2025 09:01:13 +0000
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 23 Oct 2025 09:01:13 +0000
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-In-Reply-To: <20251022-function-is-gpio-kerneldoc-v3-1-7f6930bebb2b@linaro.org>
+	s=arc-20240116; t=1761210243; c=relaxed/simple;
+	bh=PFkHdeqKWBWNHtX7ClfEdNao8WapB20TpcHP9aN05os=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OPk5aJDbXbYESMPGhuj2GGqoFY5/3t09xWbVthKpaV+J1C6mPDgdcqyfhKotiHRDR7Krg0fTot3sCY3ukI1Nk2azfLh8EbTMLIiJwtCZJIB7pLrDgHdragAuP7cMAEd68YEn3Her+3xFVCWuwUle+0EQtVcmMGVMXfPyBV6Z3Uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.45])
+	by gateway (Coremail) with SMTP id _____8DxLvB+7_lo9K4ZAA--.55303S3;
+	Thu, 23 Oct 2025 17:03:58 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.45])
+	by front1 (Coremail) with SMTP id qMiowJCxocJ77_loER4DAQ--.41176S2;
+	Thu, 23 Oct 2025 17:03:56 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Yinbo Zhu <zhuyinbo@loongson.cn>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-gpio@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Hongliang Wang <wanghongliang@loongson.cn>
+Subject: [PATCH] gpio: loongson-64bit: Switch to dynamic allocate GPIO base in byte mode
+Date: Thu, 23 Oct 2025 17:03:46 +0800
+Message-ID: <20251023090346.1995894-1-zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251022-function-is-gpio-kerneldoc-v3-1-7f6930bebb2b@linaro.org>
-Date: Thu, 23 Oct 2025 09:01:13 +0000
-X-Gm-Features: AS18NWBN6FRmY75muewbiBJigx0hp1Yn7-ef4Mzcdrd2T13aZkf4ruCBW68KD4Y
-Message-ID: <CAMRc=Mct27g2DovHn6vV+Ovu1WusH0zZtEjSCdSq7zkrhKjtdQ@mail.gmail.com>
-Subject: Re: [PATCH v3] pinctrl: pinmux: Add missing .function_is_gpio kerneldoc
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxocJ77_loER4DAQ--.41176S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgEECGj5w5EEYQAAsp
+X-Coremail-Antispam: 1Uk129KBj9xXoW7Jr1rZw4UtFyUXF4rCF4rZwc_yoWkGwc_uF
+	1IvF4rJryUAFnFva43Za4SkryIvr4ku3WFkFnIq393Xas0qwn8uryUur13Wry7Zr15Zryr
+	u3y8uryxAr1fGosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbVkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
+	oVCq3wAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa02
+	0Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1l
+	Yx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrw
+	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWU
+	AwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
+	AFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xII
+	jxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4
+	A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI
+	43ZEXa7IU8q2NtUUUUU==
 
-On Wed, 22 Oct 2025 15:23:42 +0200, Linus Walleij
-<linus.walleij@linaro.org> said:
-> This callback was undocumented, add the docs.
->
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> Changes in v3:
-> - Still managed to leave a speling error in there, I don't believe it.
-> - Link to v2: https://lore.kernel.org/r/20251022-function-is-gpio-kerneldoc-v2-1-e1f200a94c5f@linaro.org
->
-> Changes in v2:
-> - Think over how this function is actually used and make the docs
->   more useful.
-> - Fix grammar and words.
-> - Link to v1: https://lore.kernel.org/r/20251014-function-is-gpio-kerneldoc-v1-1-4e6940a2b37f@linaro.org
-> ---
+gpiolib want to get completely rid of static gpiobase allocation, so
+switch to dynamic allocate GPIO base in byte mode, also can avoid
+warning message:
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+[1.529974] gpio gpiochip0: Static allocation of GPIO base is deprecated,
+use dynamic allocation.
+
+Reported-by: Hongliang Wang <wanghongliang@loongson.cn>
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+---
+ drivers/gpio/gpio-loongson-64bit.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loongson-64bit.c
+index 02f181cb219e..d4e291b275f0 100644
+--- a/drivers/gpio/gpio-loongson-64bit.c
++++ b/drivers/gpio/gpio-loongson-64bit.c
+@@ -312,6 +312,7 @@ static int loongson_gpio_init(struct platform_device *pdev, struct loongson_gpio
+ 		lgpio->chip.gc.direction_output = loongson_gpio_direction_output;
+ 		lgpio->chip.gc.set = loongson_gpio_set;
+ 		lgpio->chip.gc.parent = &pdev->dev;
++		lgpio->chip.gc.base = -1;
+ 		spin_lock_init(&lgpio->lock);
+ 	}
+ 
+
+base-commit: d5376026f9269601e239545e2ec4aea0cc62bf2a
+-- 
+2.47.3
+
 
