@@ -1,156 +1,147 @@
-Return-Path: <linux-gpio+bounces-27527-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27528-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A114C00FAC
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 14:07:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 565E7C0110A
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 14:18:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6B0A935A390
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 12:07:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 070F119A0ED7
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 12:18:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FD7D265621;
-	Thu, 23 Oct 2025 12:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zudtGHkq"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C287331326F;
+	Thu, 23 Oct 2025 12:18:26 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-yx1-f49.google.com (mail-yx1-f49.google.com [74.125.224.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0658A30BF6F
-	for <linux-gpio@vger.kernel.org>; Thu, 23 Oct 2025 12:07:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38DC930F7F7
+	for <linux-gpio@vger.kernel.org>; Thu, 23 Oct 2025 12:18:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761221233; cv=none; b=aGYCCDaJ2gx+S0vNUxzuRC9r9OFJc2QAsZI33vTZ7y/8RwEb6J9wo9WrZEwIEqVOCNRWw4h19UM4hVXZohBN2338rlsLcZLiL6W+NGTwGfL2ZjzeGB3//7c1bkBclNMbcdZZmghgzo8LSzVqjd6fHvFKed1t5lNOTkAlHUF1O0E=
+	t=1761221905; cv=none; b=gN5ktgOvzryRqr1BiSjKivFY3A6xaAreUv8w6+PixMotTYfgMPH2jWqUUOYESb2UhmrUnwqN/5nyDlNEbdS23/oThb55p7T8UhVfo+k5+obip5ISQ2dl/bGLRdNOhRu+WSq9OQMs2XW3q5f9gcc3uZbAIsg78/7hu9nmePUeNtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761221233; c=relaxed/simple;
-	bh=qTa5v9/v5NbPlSDL/Vo/i3ec1YqZV/ko+X0VaKXMkmE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JCpTn6BZEpD5XSowsq2Gvv6fagZeSWTPKjIa9l5liaYGFAvF1kp9N3nQxzvJs0TiddxUlAquvQF88uepg5Of63oBc9sftJ0a1jnJyyZHUTqygK6GUttRkPz9G/6OUdR6EwxXIYk1ur6AjxvPwAZiR/6kNEOAbqhf1XJqOCLOJ3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zudtGHkq; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-592f1988a2dso1546089e87.0
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Oct 2025 05:07:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761221230; x=1761826030; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3wSA08yxMybYC5Sv+/SAZaVGIbJoxksVKnqMBUGns0I=;
-        b=zudtGHkqtGDOCft8CWbiG8DWh9t75wzehbch30bcjMPMNYoIyxqyo2Tb1sX2HR41jx
-         bmT3KEjA9wi3hxgY6gfuAAoH83pq0n43edyUk3G6uJzi6bbW16LLde0jFvHPn1HYTFJK
-         jTfK2MPXPJzdN6e5ZZF9dS6vcx9jIo4MXRYYC9bWkM7Y8t4znUMQ5fVsaXiktN5vaeLI
-         DnbVDbMyuDuMpBoRHaQRgvxianI+OaSUpThARg1iszA6Uha6tsO2IupXh0kjnztzdFJB
-         0Uvp+k3zD4QKXHom8EVqJJizQwsjAHVZXpn6Pie0EFNjKk8PGdSyGMUBmSLNu5UlBPsQ
-         b0WQ==
+	s=arc-20240116; t=1761221905; c=relaxed/simple;
+	bh=6UnI/G5uFXvZM3QYOrlOsy8lHW3iy4QXrl32Cyvdw+A=;
+	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cfg68v+tDk2LAm6dn3RzQJqSG2sgwlqOJj51BmC9MQlb3LKGm4L71AUb2owleaguxbk5oF3aIcA/47dOLV+Fc/nu6EcDh5H29U8L9Yo7AE1glVxshoYZAKAwhe4omotpOA9XAwQ8CZEIlPxhzhryKbaXb8c15kFZTmnatzKTW9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=esmil.dk; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=74.125.224.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=esmil.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yx1-f49.google.com with SMTP id 956f58d0204a3-63e3568f90dso753793d50.0
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Oct 2025 05:18:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761221230; x=1761826030;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3wSA08yxMybYC5Sv+/SAZaVGIbJoxksVKnqMBUGns0I=;
-        b=tJQ1ZT+zn4HWN35FwiKtg7gOl7fRwj2jaYW2tPV6l8+4EN82L8anBEcabhMq9h4c64
-         aPKhZshSkZxzKg1PueEvwOLmy0CFE3UtPIsQUNakzcMyoVArmUUL3p4o/siiTdrInLoL
-         MwuVbkfT94Nb03+sWZADgu8tyuHd0LPzOQEi2TooAiF/Pe/u+6rtvLVHq3h4hPHBq6Je
-         pOlfij39jtBLT9vrz8XVjn2sD9NbkMjFh9myALoRCOlQUuvTHQEpauUpWZK15XwtXQuz
-         hejndWZyr0FakJAAI+aMcKqgX61P8NAqTOH53d5QkP8lSATDZwokTTPyaDlJd9p8SB9z
-         JIzw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7dCBEg3EDPTdbjE1PRg6dHO6ULQ2w17NJnvf0yobPXTS/LX6GKzWNok1mgdh7RD6bA8SdfqaAQo7d@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIEuqx6au8genJ8vilA5oDEzeA8V2dEX0i2/KvMBEd+tHlEBR6
-	1xCyo77fZ7eZTFtQbNXqTdnDppIzrXfmkdd91UuZfobxJo9wxx1sQKvpXlQVnFqVmYarcwrAm3F
-	q1WX3pF8YcFvPFcq7F5fN3o+e/VhM5laPwox4r4bR4A==
-X-Gm-Gg: ASbGncsFbdvYV4Y7t7di5lb6N7CuheUeiKJHub2sss8+JxZ9OTvsdn9u+JUywCAYD3a
-	tUuqTvLc4Zzy6PJtz6vfs7w1IhRRphoRJ9rViXqkp2Yg4ileEr+HwP5XQaeR4ZoDmTpd99CQTIF
-	mQAQGg0iiCznyIInbL4XRTLwqeouMyzkrN48i/vW3aKE3Vhjx9i9qcXTP3i6ZdavMhqa/LGMl1d
-	NY43QWtN4rdlW6zey9QXFgu/cmdBtrnCegs7JwQYkud3crGFDjPlEzoLEkIts1wp4d7I3rPfmqA
-	pO2NE5b1XmlMwXneIAfRx0LQ0B2CTzHPPOQg
-X-Google-Smtp-Source: AGHT+IEyVOm5IBklELoMZatdcICtobl7Ib94Uu3o+Ml+3GyBIHju56j9a5TbEHU5whXAfI1PuPwpWcnLKVQT/DRXSys=
-X-Received: by 2002:a05:6512:3d2a:b0:591:d84c:205b with SMTP id
- 2adb3069b0e04-592dc04d33emr2335180e87.16.1761221230008; Thu, 23 Oct 2025
- 05:07:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1761221898; x=1761826698;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:user-agent
+         :from:references:in-reply-to:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=4fF/fwVg7UrUpgvaNoDLtEEeEL936gX4ttsHTSYttVM=;
+        b=TXliZlhldtppC7Gs5BeF8eDenPNW/snYsPnLXlXPI7bwgRqopeMjLcMCOu6InpBQnP
+         Ydvz1kpk9o8rhYS1122RdNYk9qE9HZKjY5jlJHSy8bSyAbVvu1obZePV1aAita9OPBXA
+         F3TSTUhezAGfNnJnzaOkBI/d1OoI+g2CdgapZDx47V8yUjkbFR58Lh2eD09VXhPXx28L
+         cCro+jSjjXSiHajDAbwTI/OHupo9DJKFaDg+8tOTrWm8h3AJ+tufemLmdw5DXgWTI/B+
+         WJhgim+TiT/vKmXXULKBpkreUU0aZa5xdrXWn4KHBgUbVek3acn/1xoPUJOG/uRE+utP
+         1mdA==
+X-Forwarded-Encrypted: i=1; AJvYcCVuWOdApqDUtvrddTbfVRM0QD90/dGTragG3bwGBbgLG+ltRq8khsxHL8H4D+0Oyh0FaHlWRUF0Pryc@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTbSnI+oo2qk6aQhvgkMqszOaW30JUPGJ1UoqdgV9RosjtriIZ
+	SJLs49LyEngTylpglVnSqyRrb+Lx2OtyeT+L5xxcm1+IqhFcR0HOprN6xQfWH5cUuIkjtwZQxoU
+	yAoP8h7YGZ018mnG/XMGvRCPV4ldzxt8=
+X-Gm-Gg: ASbGncsFD9PJZ8u6f2yLY0s4RrXE+Hkrkn9ip9gVB48OzGXx0F9h1Bq/HmO3KApjICJ
+	/pCw5L59naqSICHpPBd4wwAF3sKmLJKC/ciMSmqrdZfBR6yHiCFFek7q/MIFRzbBUVPeBDcVyIo
+	Oy7Zy1V76d//W4sR1xdYEGdlNJf5/Kvsc8duwx5H9vXc5v7LdtlgWRoMp/AcsV5Zn0Mq1Zm9rfa
+	RrThzTuMEgD6pwVuFTmmE41EFBjw6mP8IFFNt11lV6dyCDa1w/kkwe1NBo09hthTJ00KA==
+X-Google-Smtp-Source: AGHT+IEC3QHhYBZSQQPhFBXYj6WYUOW1grD9uZTJNUw3bPCmSjtWE4zRxeVpvsKcNBIq63CnLwvpseCqNRb/wfa8wBw=
+X-Received: by 2002:a05:690e:1502:b0:62f:c634:4b3f with SMTP id
+ 956f58d0204a3-63f377cd99amr1469290d50.7.1761221898433; Thu, 23 Oct 2025
+ 05:18:18 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 23 Oct 2025 05:18:16 -0700
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 23 Oct 2025 05:18:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251021142407.307753-1-sander@svanheule.net> <20251021142407.307753-3-sander@svanheule.net>
-In-Reply-To: <20251021142407.307753-3-sander@svanheule.net>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 23 Oct 2025 14:06:58 +0200
-X-Gm-Features: AS18NWAEFusL3Hp-4sM_SAS38ZnVOKKGvo81QZWmsgYdmYixwwiWHBeVWLH-c6c
-Message-ID: <CAMRc=Mevt+h-zjU2hmbTOjuTB=xQZN7O=FtdM0v=680VNiAKTg@mail.gmail.com>
-Subject: Re: [PATCH v6 2/8] gpio: regmap: Bypass cache for aliased inputs
-To: Sander Vanheule <sander@svanheule.net>
-Cc: Michael Walle <mwalle@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-gpio@vger.kernel.org, Lee Jones <lee@kernel.org>, 
-	Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-leds@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <CAMRc=Mc9e4P9vCt79yR1Jt5_2wxUngqAR_m1AxG=nbz=Cr3BjQ@mail.gmail.com>
+References: <20251021181631.25442-1-alitariq45892@gmail.com> <CAMRc=Mc9e4P9vCt79yR1Jt5_2wxUngqAR_m1AxG=nbz=Cr3BjQ@mail.gmail.com>
+From: Emil Renner Berthing <kernel@esmil.dk>
+User-Agent: alot/0.0.0
+Date: Thu, 23 Oct 2025 05:18:16 -0700
+X-Gm-Features: AS18NWC-riM2AFKbkUWAzUi3IEgdY1Ce6EbhwvllAw7hGVDS1TddtOVJTTQLTxk
+Message-ID: <CANBLGcygpsp=R5gM7NeuVO-JG1yfQJ_0dhnFfL1ud=291cJZAQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: starfive: use dynamic GPIO base allocation
+To: Ali Tariq <alitariq45892@gmail.com>, Hal Feng <hal.feng@starfivetech.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 21, 2025 at 4:24=E2=80=AFPM Sander Vanheule <sander@svanheule.n=
-et> wrote:
->
-> GPIO chips often have data input and output registers aliased to the
-> same offset. The output register is non-valitile and could in theory be
-> cached. The input register however is volatile by nature and hence
-> should not be cached, resulting in different requirements for reads and
-> writes.
->
-> The generic gpio chip implementation stores a shadow value of the pin
-> output data, which is updated and written to hardware on output data
-> changes in bgpio_set(), bgpio_set_set(). Pin input values are always
-> obtained by reading the aliased data register from hardware.
->
-> For gpio-regmap the situation is more complex as the output data could
-> be in multiple registers, but we can use the regmap cache to shadow the
-> output values when marking the data registers as non-volatile. By using
-> regmap_read_bypassed() we can still treat the input values as volatile,
-> irrespective of the regmap config. This ensures proper functioning of
-> writing the output register with regmap_write_bits(), which will then
-> use and update the cache only on data writes, gaining some performance
-> from the cached output values.
->
-> Signed-off-by: Sander Vanheule <sander@svanheule.net>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Reviewed-by: Michael Walle <mwalle@kernel.org>
-> --
-> Changes since RFC:
->   - Add review tags
->   - Slightly reworded the commit message
+Hi Ali,
 
-Nit: changelog should not be part of the commit message, I dropped it.
+Quoting Bartosz Golaszewski (2025-10-22 09:23:37)
+> On Tue, Oct 21, 2025 at 8:17=E2=80=AFPM Ali Tariq <alitariq45892@gmail.co=
+m> wrote:
+> >
+> > The JH7110 pinctrl driver currently sets a static GPIO base number from
+> > platform data:
+> >
+> >   sfp->gc.base =3D info->gc_base;
+> >
+> > Static base assignment is deprecated and results in the following warni=
+ng:
+> >
+> >   gpio gpiochip0: Static allocation of GPIO base is deprecated,
+> >   use dynamic allocation.
+> >
+> > Set `sfp->gc.base =3D -1` to let the GPIO core dynamically allocate
+> > the base number. This removes the warning and aligns the driver
+> > with current GPIO guidelines.
+> >
+> > Tested on VisionFive 2 (JH7110 SoC).
+> >
+> > Signed-off-by: Ali Tariq <alitariq45892@gmail.com>
+> > ---
+> >  drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c b/drive=
+rs/pinctrl/starfive/pinctrl-starfive-jh7110.c
+> > index 05e3af75b09f..eb5cf8c067d1 100644
+> > --- a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
+> > +++ b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
+> > @@ -938,7 +938,7 @@ int jh7110_pinctrl_probe(struct platform_device *pd=
+ev)
+> >         sfp->gc.set =3D jh7110_gpio_set;
+> >         sfp->gc.set_config =3D jh7110_gpio_set_config;
+> >         sfp->gc.add_pin_ranges =3D jh7110_gpio_add_pin_ranges;
+> > -       sfp->gc.base =3D info->gc_base;
+> > +       sfp->gc.base =3D -1;
+> >         sfp->gc.ngpio =3D info->ngpios;
+> >
+> >         jh7110_irq_chip.name =3D sfp->gc.label;
+> > --
+> > 2.43.0
+> >
+> >
+>
+> That's a NACK until you also remove JH7110_AON_GC_BASE and
+> JH7110_SYS_GC_BASE assignments after explaining why they are no longer
+> needed.
 
-Bart
+Thanks for your patch, cleaning this up. As Bartosz said you'd want to clea=
+n up
+the now unused defines and the gc_base member of struct jh7110_pinctrl_soc_=
+info
+too though.
 
-> ---
->  drivers/gpio/gpio-regmap.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-> index ba3c19206ccf..afecacf7607f 100644
-> --- a/drivers/gpio/gpio-regmap.c
-> +++ b/drivers/gpio/gpio-regmap.c
-> @@ -81,7 +81,11 @@ static int gpio_regmap_get(struct gpio_chip *chip, uns=
-igned int offset)
->         if (ret)
->                 return ret;
->
-> -       ret =3D regmap_read(gpio->regmap, reg, &val);
-> +       /* ensure we don't spoil any register cache with pin input values=
- */
-> +       if (gpio->reg_dat_base =3D=3D gpio->reg_set_base)
-> +               ret =3D regmap_read_bypassed(gpio->regmap, reg, &val);
-> +       else
-> +               ret =3D regmap_read(gpio->regmap, reg, &val);
->         if (ret)
->                 return ret;
->
-> --
-> 2.51.0
->
+As for why this is no longer needed, I don't think it was ever needed. It j=
+ust
+slipped through review unfortunately. Hal should be able to explain why if
+that's not the case.
+
+/Emil
 
