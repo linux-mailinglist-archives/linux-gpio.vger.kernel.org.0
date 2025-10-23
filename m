@@ -1,87 +1,87 @@
-Return-Path: <linux-gpio+bounces-27549-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27538-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAFC7C01758
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 15:37:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B408BC01762
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 15:37:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5DDF13A28D1
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 13:36:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3FB1F1885466
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 13:34:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 530C232AAA8;
-	Thu, 23 Oct 2025 13:28:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0970E33DEF1;
+	Thu, 23 Oct 2025 13:27:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="EWddmuO3"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="bBZ6zbSM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60668328B68;
-	Thu, 23 Oct 2025 13:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AFF3195FE;
+	Thu, 23 Oct 2025 13:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=91.207.212.93
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761226085; cv=fail; b=CoAQKX04RfiSIdg87iaQjSP2c4N0kxAqXLuv9cbVjMTI8gvVA4kdAT1xOTW2nS+oFy6lphWvIcKMs7ryjcfSOI7Ru5oeS2Su4gRBgYz35mNc2RTrgyw7X+Nk6rbzf7zOpvzhRTuCAvb2m9ljT758Ky0WJKQwo0XTeUmB9uPDEoE=
+	t=1761226045; cv=fail; b=Jz2+3oa+7ZcjIvLz79HXPrdDydX31TxBmp3nhcfMxxyl1bIUNK46zssMo9/QmP0YqdGh5eeHRZWUMjrjWRhkNKGg/In1xpI9pTr9H2/m30zMnwlQeRDKMDto8axTLZQ4c0jeLyjXxqh1Y4GEbAwdzUMTERplxjhIUyVLBONhPTk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761226085; c=relaxed/simple;
-	bh=FtHuMcELrLv9gYiO/2OWBTreXMbWkUWvtmZntD7RZt8=;
+	s=arc-20240116; t=1761226045; c=relaxed/simple;
+	bh=A2/6MUKyHm1Aj5/TbeygwPWiqSMZr0MsustJSdhAl4M=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FHRbA2hY1x7SgfBOglN9jXvZqAqA1HoG0w3yMcbtoJ6GWQl3bO4uaesXwfefKw8Q5kkgbXxA7Yu88182ZI9VU1rsYXEvkD0mSggy66FEyYKFdPsXg1GhQbyW4LlcQcJ+fGnA/wJ5VffesveVhXUaa+ayrMxEV71wTOnTnnt7QiI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=EWddmuO3; arc=fail smtp.client-ip=185.132.182.106
+	 MIME-Version:Content-Type; b=BjwStjW9F7Zl7tZm/aNsNxqI/9oP8+7ZP/8MUrct3TBxys/5/U4iMvFYqn5OV7dWhhvCUo/jzLNtFP3YkN0ilFQ/wenlz/f+suQ92crsoHk0H4pbZif33OwHsB56we2TGsxcspaf60EXcO/vg6/MXZsDsFTFP3xVZgDn0FY3HlE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=bBZ6zbSM; arc=fail smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59NCnw1c007459;
-	Thu, 23 Oct 2025 15:27:11 +0200
-Received: from du2pr03cu002.outbound.protection.outlook.com (mail-northeuropeazon11011052.outbound.protection.outlook.com [52.101.65.52])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 49xvcxp5vr-1
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59NC9GgM023949;
+	Thu, 23 Oct 2025 15:27:10 +0200
+Received: from gvxpr05cu001.outbound.protection.outlook.com (mail-swedencentralazon11013043.outbound.protection.outlook.com [52.101.83.43])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 49xwe4nm9h-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 Oct 2025 15:27:11 +0200 (MEST)
+	Thu, 23 Oct 2025 15:27:10 +0200 (MEST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Z06V/wEYBxoSZLxMd8CS5pkxc9+kJM12oCMzD/CW036gn0eEOwc/0TSTjLORZnCqr58pIpMuJq33ckRKear2qr4zrUNBqIiJGVIAVyH8Wd9tXj8ohA8ZG1yFpUNeR+Y+zl/BlJ9pYQ9KIbsj4rqqICTsYXKptzpd3mmNuaMlvdvGm0l7W8h5YhviGvOMjfKh449egbMbN3AmL8Gl8gVA1mQ2N5v0+uQ8W1dwADGbQZchBWuDg2VllizerexEXltUsOlyxil3he7aFWjGAicA7tsicQq3uOJW4IZ0KBOr5cxv4AX8owymzcyICROQZITney0a6cKeciHNHCmMA1p50A==
+ b=TPBAc77ICA1OlkqwV0IDtf0LXzvWNgZIZt37fh0ucvfyejG7Pg8efRll4Ot8wYzHjU5tWs+jLiR/c/i+FH5Sf6ksOQtdTMYmqwVERl6cqb1MdcblGH6VU8oMHukVg1yo/+OnpIDl0kxFRUyl9+Oww3f5Ht4MjajbEX2sWGpAyKvOIvVpcxehn7M35n6QTNddG9Go3iGFLhOh3E/h6wTNPL4LEHOdxHAZaQgoWpIhOZDhTUq25AkhxjLD/3YidqV19frjFRpkZ/PLn9j25dtl6jkAXDlnvisRmZeEwBFZtLNu4I1R1mDoJNEjI431KlvPKDtncuWhcE2BPCaHNJHK+Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QI8nDgPijWs72g7HB24wSBD/kpul0FZmWjlS8Es+JpI=;
- b=btH4DRkT9GJnlT8ZWed4n/K1adj2rbCAowtXskAVqYDmNir1pclX++dk289ZTyZP10xsdh+gWHiXyMoi0Cz9jDfXOlVukncJvtWmk4wmTpV61lfQswAiiuHcm5GVBh/cYoJcVE1aGi8xyPiCo/LB+hWTc96q6m5Qq+lNrSNaOMvBbdgp7gE13UbOE8x9K+Siep3ueVIjWCNBe54r6mXiZMW7ykv/T6Yge92ZkJk0oo2rBySgzScFnyLcqpByFjkXDFijKmGfKl39FMRvn3OihBmb9J9636j9Jdr/0cl4nGqKKn9E2plpVts2z7EGo2fJHvYVjtmrtNUo0NId6IRfEA==
+ bh=NrYHauC4QxgT2nBCX1xK8/FVtxibYbw9qair9KIoW/U=;
+ b=G6YKkw6GPQ2EgHbD3Dyz09r5qPAKxpQfn1SrbsNl07usQ8b242pUYm00nZgpye7yPQYhc/EJ47gg5480/xTwyTdh+nYwJ0neKRnNpzq/cI46HK+3uSeTp7m4T55rqWemQBWg9lVeZXzltZTk0oPjRiloDz1hsu+dYWMPPGKr8fjQbm3pdTuwnR4ztdBet9Q6a4K1Yq3XIbtjs7AcS2/bOHRV68Odt9B5SuGSz35zH/0YIu8F8HOlPnBh1EwQKAFIwGFy/tR4zoHInWyhX0dgo5JXuh3SluCcg1AaunO1ccGhd7QlbFLyW6k4RPkkbpNsxQUKnTOI8oXjDKPXRo4TDg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 164.130.1.43) smtp.rcpttodomain=linaro.org smtp.mailfrom=foss.st.com;
+ 164.130.1.44) smtp.rcpttodomain=linaro.org smtp.mailfrom=foss.st.com;
  dmarc=fail (p=none sp=none pct=100) action=none header.from=foss.st.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QI8nDgPijWs72g7HB24wSBD/kpul0FZmWjlS8Es+JpI=;
- b=EWddmuO3NLqe42R7yshBGP2ZILJfuPF+en/Skb1mms8v3VjGhO68pt1uJVBwGui181PAHA3djcHx2N76G+Kf9BIcZNEet6V1yZ1AHz17fclK66UwmFS/1nZyKVPHvLAD0Nre+1XRjEGar1QcSEh3d9WdotoLuCWkIaHSnhL3Ac2+8qkKyMgCEIWFc2bw1UpY/EJS/nKJwRkJfnBvlGl7OiBFmYysPKzAEav9VZqAxPqI/RWMfAyBRistsKWfvuwtbuV9RD5NB6fpdI0t23EZWKi+eA7XnPbagKmD6hunAkVeNgKJP3f2DLFneo6eYjP3u/IJSzM4N68epEky1a/kLw==
-Received: from DB9PR05CA0011.eurprd05.prod.outlook.com (2603:10a6:10:1da::16)
- by DB8PR10MB3308.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:113::15) with
+ bh=NrYHauC4QxgT2nBCX1xK8/FVtxibYbw9qair9KIoW/U=;
+ b=bBZ6zbSMTTTD5m7s6Pi6dWpbXGZXEyHfmnyuOJhGN1bgJFDtjcegRfkArON4eNzBJXS3uDGoO4kzSdU0cOw/NEGdk5RBRGSgPfapm5y1WNWQlTwmHmNInjv+KSex8pL4m1LlMKoQyWwhdJSp37/F9z5XaLbibVZDChhi8668d55oPyEv3Rvo11dZG+eqACm6Nxwwz/ka13fAgaxYuquBmPgHMP5YlaxCFievcRFfmXfkY1dHhqj93FV2DdwoG8Z2bEUaaPKAhTo+LANwMaop/wbPqFHFSjvxZG6t/7Wd7ee7YBTd7oq+zdqiXIArfNprGQuBYLGWNz1ZsJX/gKnI0Q==
+Received: from AS4P191CA0030.EURP191.PROD.OUTLOOK.COM (2603:10a6:20b:5d9::16)
+ by AS8PR10MB7969.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:569::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.17; Thu, 23 Oct
- 2025 13:27:07 +0000
-Received: from DU2PEPF00028D13.eurprd03.prod.outlook.com
- (2603:10a6:10:1da:cafe::f6) by DB9PR05CA0011.outlook.office365.com
- (2603:10a6:10:1da::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9253.12 via Frontend Transport; Thu,
- 23 Oct 2025 13:27:02 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 164.130.1.43)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.12; Thu, 23 Oct
+ 2025 13:27:08 +0000
+Received: from AM4PEPF00025F9A.EURPRD83.prod.outlook.com
+ (2603:10a6:20b:5d9:cafe::ea) by AS4P191CA0030.outlook.office365.com
+ (2603:10a6:20b:5d9::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9253.13 via Frontend Transport; Thu,
+ 23 Oct 2025 13:27:04 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 164.130.1.44)
  smtp.mailfrom=foss.st.com; dkim=none (message not signed)
  header.d=none;dmarc=fail action=none header.from=foss.st.com;
 Received-SPF: Fail (protection.outlook.com: domain of foss.st.com does not
- designate 164.130.1.43 as permitted sender) receiver=protection.outlook.com;
- client-ip=164.130.1.43; helo=smtpO365.st.com;
-Received: from smtpO365.st.com (164.130.1.43) by
- DU2PEPF00028D13.mail.protection.outlook.com (10.167.242.27) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9253.7 via Frontend Transport; Thu, 23 Oct 2025 13:27:06 +0000
+ designate 164.130.1.44 as permitted sender) receiver=protection.outlook.com;
+ client-ip=164.130.1.44; helo=smtpO365.st.com;
+Received: from smtpO365.st.com (164.130.1.44) by
+ AM4PEPF00025F9A.mail.protection.outlook.com (10.167.16.9) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9275.0 via Frontend Transport; Thu, 23 Oct 2025 13:27:05 +0000
 Received: from SHFDAG1NODE1.st.com (10.75.129.69) by smtpO365.st.com
- (10.250.44.66) with Microsoft SMTP Server (version=TLS1_2,
+ (10.250.44.67) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.57; Thu, 23 Oct
- 2025 15:24:40 +0200
+ 2025 15:20:08 +0200
 Received: from localhost (10.48.86.11) by SHFDAG1NODE1.st.com (10.75.129.69)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.57; Thu, 23 Oct
- 2025 15:27:04 +0200
+ 2025 15:27:05 +0200
 From: Antonio Borneo <antonio.borneo@foss.st.com>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -99,9 +99,9 @@ CC: Antonio Borneo <antonio.borneo@foss.st.com>,
         Fabien Dessenne
 	<fabien.dessenne@foss.st.com>,
         Valentin Caron <valentin.caron@foss.st.com>
-Subject: [PATCH v4 01/12] pinctrl: pinconf-generic: Fix minor typos in comments
-Date: Thu, 23 Oct 2025 15:26:49 +0200
-Message-ID: <20251023132700.1199871-2-antonio.borneo@foss.st.com>
+Subject: [PATCH v4 02/12] pinctrl: pinconf-generic: Handle string values for generic properties
+Date: Thu, 23 Oct 2025 15:26:50 +0200
+Message-ID: <20251023132700.1199871-3-antonio.borneo@foss.st.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251023132700.1199871-1-antonio.borneo@foss.st.com>
 References: <20251023132700.1199871-1-antonio.borneo@foss.st.com>
@@ -117,107 +117,236 @@ X-ClientProxiedBy: SAFCAS1NODE2.st.com (10.75.90.13) To SHFDAG1NODE1.st.com
  (10.75.129.69)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PEPF00028D13:EE_|DB8PR10MB3308:EE_
-X-MS-Office365-Filtering-Correlation-Id: 78834f76-b292-42cd-c806-08de1237dcc8
+X-MS-TrafficTypeDiagnostic: AM4PEPF00025F9A:EE_|AS8PR10MB7969:EE_
+X-MS-Office365-Filtering-Correlation-Id: d64ccd0d-63c8-4b78-c439-08de1237dc40
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|7416014|1800799024|376014|921020;
+	BCL:0;ARA:13230040|1800799024|82310400026|7416014|376014|36860700013|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?AMojw9BeStcwVHwmm0qemw/OIdKYEMKq4K2PN3rHv6oIoQ2O9vYwLtjxCnml?=
- =?us-ascii?Q?tbjIxM43YtmNmmtlOTsNadaNblqYLEpdZqd8GZVY02u6vaY88YRTXZeqGahK?=
- =?us-ascii?Q?aJjjPyITm7MXTQ2HrwOixeor4frjN5FUs1D2sOkfBV+6qC7i6HZTUOMJzZ5v?=
- =?us-ascii?Q?cGE4obROST9lcri0QClEakygqIqywQc5Ca35j6aBAKXY3fmuf3uWmLsAJ1O4?=
- =?us-ascii?Q?fHFFgxeAR9WR0I3GJ3YZUyEUNo5Dl0RY5yUl92sePbBUhVcyWEXcUIjYfTdF?=
- =?us-ascii?Q?krTu8KlN8oLXyOrUgDABuOFNEKBruV+A+s2eqXfUbsrxThKmQv+32IuktFkx?=
- =?us-ascii?Q?QETo3qLb24O+Y+0vLon4SPs6RKIzyf8Gy9G7vbNCmowTF32sF+EjddSxNhTX?=
- =?us-ascii?Q?nCPgLcnypbBfhSaPW1PaUcX2sggsrgm6MftPayDvVaV45ldxG7uawv0qTjCv?=
- =?us-ascii?Q?G7KxHwxlNKBsJ2xhl7FntLzl5vEg77AqGbQZ15CIyajcv6AcTpEu9/miqGmZ?=
- =?us-ascii?Q?zSg9SIim6WCU/c17h052fjxzqBYh/5riHX1DVdtGeHIL6p1siY37/8/7iufI?=
- =?us-ascii?Q?sYyU3APOjHf3l5KRsKix/VQR+Bqo/QIgFCENjVdyCFR6YAElOZuvNyADnzY8?=
- =?us-ascii?Q?AKiOabvhHQFe9yUaRBN33xS0oBjieMXEA56/n7kGkfaS8zu7dOXXeAh8XyKP?=
- =?us-ascii?Q?v7dLLUKPNHiBAMCWoO78SxkhvnQ9vlh6LCjMDFqpTkp9Sj/A1Wv12hKt3OjK?=
- =?us-ascii?Q?pYHkenGCWdZvjpGu4ftf0QZaFepvwbBMOlZNyIvDzP2uv1SMrKIHKes4ObMS?=
- =?us-ascii?Q?8ayAH6Acgo5aoQw9W9f/yLuT7fzWOinK4+eqidApBrIqd5aQ0KIqbM/W7Tzm?=
- =?us-ascii?Q?eqeuK03X5x6oYPbDdQEeGDSa7Mn4cGThmCTGHKdFFVN3cBeD7GrOKc0RaEIM?=
- =?us-ascii?Q?TSuqCdzQA0Ce+LvxFD7e4hvaSypQYvZNwx4NQCTq3sxn5KyQUgu/VUC0axbO?=
- =?us-ascii?Q?H9LsAm2eFl4Vlp+EOgMkIC/HUdB2gZD/UrOiFyx948CcwsVX7rFCZnWwm29j?=
- =?us-ascii?Q?QdpnPZHtdOruigdTemSgd31AXbcaUwKenBEPjzUCrAU9x52NPgNYHiXXdkxp?=
- =?us-ascii?Q?Z6BPrTgGozY9ACF2m8XL7Bjy9dIVmedKEmSC7LUMdKlHgd3Ns6UuQIYqDru0?=
- =?us-ascii?Q?h5CBeuAw7q++c6PmSIPB/EtcqeIxw5vn2mZUEsoUvMFMd5WtPRjyrs5gptTC?=
- =?us-ascii?Q?dEwkT+7dDsVFZTo/TBMhG8gRly+pmhPhc7QC8wr24H8GXkEXQYi09IoN12nP?=
- =?us-ascii?Q?0s+NVX3/QGKbJsDCfpjbnpGTCt0m1sGBmOzsUeg1f3U0uorTwIxBITKJ2NxN?=
- =?us-ascii?Q?lOj3Nskm0KXsJAKim/Zs6zFn4ufBWUL01WOPUk+Z/STMrtRMl/bDv1AFRICk?=
- =?us-ascii?Q?0Iq4nJWRg2A2Yqwwan2gwc1ug+TTwcU5DJcLg01q/98zM9s5doN0UCc7+Jmn?=
- =?us-ascii?Q?7Bbu4nipoRJ3cZrZPTqZ1TgNk7QkuJnlPWPVN8ptaEz6rvKYUKS02JBmFvAj?=
- =?us-ascii?Q?fVMe5SZLwa89INwhgCXlloZMGIDPr9rGN4+nFoop?=
+	=?us-ascii?Q?LM8OO4+kL6rP1Zzq3mCOKP3vJq5SUTFVjfXTZz2OC/Z8NHBI0VvqiRbaNAfE?=
+ =?us-ascii?Q?qgCvOWClsO2nIXNEDfVHd9kZ1BstxqeJ7rn6w28KPSjP1gryxHtIOofh4noJ?=
+ =?us-ascii?Q?mxht9kmB18yKcbY09OsY/GqMealdtvhtpVo2BgWbpHKhmTNnrIak13JKJOXi?=
+ =?us-ascii?Q?uO26P5LQe2ix5u/bQsNdP/4pPQSNhLB0lRX1jpYpFXgMWS+q7Db7ivPk7ikc?=
+ =?us-ascii?Q?9q2EgtvLFVVqwrrAUgDj95u4fJ6HIgCBU0inSJ+1ebTaTnWu4ISQXcc+Jomt?=
+ =?us-ascii?Q?aDFVag3zmHQJcSg+2D4wJTVhaQkyQpuDkfsEMOH+Oa3fel75FoAh5bAGF+LX?=
+ =?us-ascii?Q?J+v9aZ3teCHKz4OangPhvwomjd+u/AMtc/G18n/LzuDbxlqy5N1+BaolAGiJ?=
+ =?us-ascii?Q?avNvK54pVXVxvsnqoBzsDWEmjCnJAnNFeKugkIKSJA7yctTQx3ysvWpERoqu?=
+ =?us-ascii?Q?DjjDh7Qk8Y/IU2fjfZUkLUG+9C6X77/iszlrkTTz3uaTXTru2xbcygA4Kh3P?=
+ =?us-ascii?Q?thwlTII7uiYAre7DCpnxvzcByISFi0gi9wb4ii5A9WPto/h2Cdrg7E1Ue8Qi?=
+ =?us-ascii?Q?fhYAHjqg8hkb0SQCibgUsZhmSD8MN40B/nGOyHzAN3a8R9bO7dUrwnT8Wmac?=
+ =?us-ascii?Q?dEzfgdxGYhkPZKaGJbJjGpdlLU3fInqrw70SxBPOi9ZaOXTktO7t3h2f4mgH?=
+ =?us-ascii?Q?42DFBsrzGIqLbSr+toAvCK4k6b59GJ3c99NH5RH3UsisBJQnqMIVPhFN/SKe?=
+ =?us-ascii?Q?L4CGlAFrRgu+/4mqN43iFFnDgXhiwMPnBenKSQRHQHyT6iaMgvyriIDCsN/g?=
+ =?us-ascii?Q?PjIImR32KyxLGeEbd0uMXfjpH7Le0WDlgTDA8o07qikuCeZmfFBIMy3OvpGE?=
+ =?us-ascii?Q?AcHzmnlCb8cnZ6LHIQYpnjxUOLVbX7yz+TAHmH9TiPPG4l+YilchDeETXpca?=
+ =?us-ascii?Q?lMa7Gkh3I1ISKGIdC5i26v1Eqkccrq0Si4Ictb6GSZsSpdbzYy4DK8Vy2T+M?=
+ =?us-ascii?Q?lqu/tRpKqkK7jpkWU6yQWiPy3XKHLlEonfejwRBYRVBEqeNUAnfJqNPt57ed?=
+ =?us-ascii?Q?M9jkDMnSMUbh10Parlhksuy0jlGTefafny7G81WP8ynEbwecmgI+FE+UciCP?=
+ =?us-ascii?Q?0Ekm1xq6ZtvNuPYnswo35/IKyeH2OWdAabS7UpvXPKK5N0OtidNxZPXHd3EY?=
+ =?us-ascii?Q?6P88PJeZ5VPuQ0HJiLENuEFboQjR4kdU2jRqxdLHM2XZPdBl3YXq+GwYDySc?=
+ =?us-ascii?Q?AJ/lYKw5oERLaoo56/6lZ13/g7K0ijTPgUIMahOHsGHAMUOrVYpZo5uNBdu8?=
+ =?us-ascii?Q?/Jxz9qmHeR46h4cnqrsO2liXw4K8dspOEqD8fEQ04t762XC85DYGPfjunTUJ?=
+ =?us-ascii?Q?/xSzWe66b72RmtEbijsLFeMVNBZjZ/V7A3fpu4OMOkhBVlRbzZhSaHzKggDd?=
+ =?us-ascii?Q?DD2R3jAVTXwSnR2DWmv4J2hyIqg3O/pPgYxbCS1okCMi20k3CltUTvVE/1JF?=
+ =?us-ascii?Q?WdO4M3EaLUUIBooJRagIOyNI0dv8OQF2HdfIp3aMReIGqY+STR5iKP1c5AgT?=
+ =?us-ascii?Q?sYgcbZ6dzd5yHIDeSB2S4Y0XtNEjfJUCpD8BolGq?=
 X-Forefront-Antispam-Report:
-	CIP:164.130.1.43;CTRY:IT;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:smtpO365.st.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(7416014)(1800799024)(376014)(921020);DIR:OUT;SFP:1101;
+	CIP:164.130.1.44;CTRY:IT;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:smtpO365.st.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(7416014)(376014)(36860700013)(921020);DIR:OUT;SFP:1101;
 X-OriginatorOrg: foss.st.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2025 13:27:06.8731
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2025 13:27:05.9783
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78834f76-b292-42cd-c806-08de1237dcc8
+X-MS-Exchange-CrossTenant-Network-Message-Id: d64ccd0d-63c8-4b78-c439-08de1237dc40
 X-MS-Exchange-CrossTenant-Id: 75e027c9-20d5-47d5-b82f-77d7cd041e8f
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=75e027c9-20d5-47d5-b82f-77d7cd041e8f;Ip=[164.130.1.43];Helo=[smtpO365.st.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=75e027c9-20d5-47d5-b82f-77d7cd041e8f;Ip=[164.130.1.44];Helo=[smtpO365.st.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	DU2PEPF00028D13.eurprd03.prod.outlook.com
+	AM4PEPF00025F9A.EURPRD83.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3308
-X-Proofpoint-GUID: 2M_AwfDwI1oWYJtUd9pReEARipWnDpKr
-X-Proofpoint-ORIG-GUID: 2M_AwfDwI1oWYJtUd9pReEARipWnDpKr
-X-Authority-Analysis: v=2.4 cv=RoTI7SmK c=1 sm=1 tr=0 ts=68fa2d2f cx=c_pps
- a=t+Agv/4bEvHkrKSCpahcKA==:117 a=peP7VJn1Wk7OJvVWh4ABVQ==:17
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR10MB7969
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDIyMDA4MyBTYWx0ZWRfX3r02CqTzi5Xg
+ v9AvAxkS7WYAYZWJFVeINEj0zvuP5ChjzkVjh/+lf5c2KGOBYV9+LaLzGlf+uHRfZCM/WFPdDZi
+ 9b/jNYmNUvtVCZ3CR3ZAMdn65Ds717aSi0l1dWmBEYGAHAfwDz1dJqUtgi9+ljpCa0mw+yOBk/z
+ g+gLg31vVZ9C9kdx17oaYQbRkzezBml70NBh53niMtXWZLqRm7sCr25/8ImD/huVAsua4fXWESb
+ FiczIa1Mn84B1X0vLMs7bq3fhRv2zbsq2aalQtyCkbk2fOMJMbNx7jkPl8bc7bripD1E+uQsg/5
+ CrLBPzov3JKCDldAbeTV4wHN4Wk4Vwwpk2nYbvUR9WJzq5B7WqEXmU+BB/Ei9+AjeBBmnCLTmFu
+ HgVIHXPQ7GexVlYr8qmfkI9WggARFQ==
+X-Proofpoint-ORIG-GUID: 8aBccV6e8ZJh6pdBpwqzQbdkTHlydf6-
+X-Authority-Analysis: v=2.4 cv=HsJ72kTS c=1 sm=1 tr=0 ts=68fa2d2e cx=c_pps
+ a=siRb+Px2ILhIpkBuM5jyjw==:117 a=Tm9wYGWyy1fMlzdxM1lUeQ==:17
  a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=y9YUpebZf6kA:10 a=x6icFKpwvdMA:10
  a=s63m1ICgrNkA:10 a=KrXZwBdWH7kA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=8b9GpE9nAAAA:8 a=GcLWqdTLnVYnHUTHeZEA:9 a=T3LWEMljR5ZiDmsYVIUa:22
+ a=8b9GpE9nAAAA:8 a=h_VNhpXTB0uJSYwUu5MA:9 a=T3LWEMljR5ZiDmsYVIUa:22
  a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDIyMDA3MyBTYWx0ZWRfX8GlJE45GBt/D
- y02SARTcYsNREfFlapX1HMhdlrV63qOeXHBefflF7XOwsMSPIe5gqm8ksCC/p9zl4M8DO3odlXK
- svVbi9jWSG8OOk+cRC26lEPjDw7mpE2FNGAuAYyaZIzj/biDCEgYGr38yN/YSkTFl0B4ZqXiYis
- 4z5w9jhUAzzODN+lL9jTg4VT4fHja4xAIEet67xTUZscnzodnLw8fJ8YacLf7IYHThJB+btQj4K
- BywgG/C1Fr1qv8mHKckBL3gBb9ZVRhDVsAgxBwWm5Eta8TaLTUXhbCio0l8ijAJ1JFOrGRo/SxS
- yTz9B3svkOlCy+mbcUr3hQ2z4gTU9MrMIvag15EwyyTZhGvTZlGP9+3WnhTLcf6yqdD1iWZ/HFb
- qoEuxGz/RQ9y4XqPu/p+LVXTWJddUw==
+X-Proofpoint-GUID: 8aBccV6e8ZJh6pdBpwqzQbdkTHlydf6-
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-10-23_01,2025-10-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0
- lowpriorityscore=0 impostorscore=0 clxscore=1015 malwarescore=0
- suspectscore=0 spamscore=0 priorityscore=1501 bulkscore=0 phishscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0
+ priorityscore=1501 impostorscore=0 malwarescore=0 lowpriorityscore=0
+ bulkscore=0 phishscore=0 clxscore=1015 adultscore=0 spamscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510220073
+ reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510220083
 
-s/specyfying/specifying/
-s/propertity/property/
+Allow a generic pinconf property to specify its argument as one of
+the strings in a match list.
+Convert the matching string to an integer value using the index in
+the list, then keep using this value in the generic pinconf code.
 
 Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
 ---
- drivers/pinctrl/pinconf-generic.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pinctrl/pinconf-generic.c       | 57 ++++++++++++++++++-------
+ include/linux/pinctrl/pinconf-generic.h | 11 ++++-
+ 2 files changed, 50 insertions(+), 18 deletions(-)
 
 diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
-index 5de6ff62c69bd..e3d10bbcdaebc 100644
+index e3d10bbcdaebc..72906d71ae1a2 100644
 --- a/drivers/pinctrl/pinconf-generic.c
 +++ b/drivers/pinctrl/pinconf-generic.c
-@@ -104,7 +104,7 @@ static void pinconf_generic_dump_one(struct pinctrl_dev *pctldev,
-  * @pctldev:	Pincontrol device
-  * @s:		File to print to
-  * @gname:	Group name specifying pins
-- * @pin:	Pin number specyfying pin
-+ * @pin:	Pin number specifying pin
-  *
-  * Print the pinconf configuration for the requested pin(s) to @s. Pins can be
-  * specified either by pin using @pin or by group using @gname. Only one needs
-@@ -242,7 +242,7 @@ static void parse_dt_cfg(struct device_node *np,
-  * @pmux: array with pin mux value entries
-  * @npins: number of pins
-  *
-- * pinmux propertity: mux value [0,7]bits and pin identity [8,31]bits.
-+ * pinmux property: mux value [0,7]bits and pin identity [8,31]bits.
+@@ -65,11 +65,12 @@ static void pinconf_generic_dump_one(struct pinctrl_dev *pctldev,
+ 	int i;
+ 
+ 	for (i = 0; i < nitems; i++) {
++		const struct pin_config_item *item = &items[i];
+ 		unsigned long config;
+ 		int ret;
+ 
+ 		/* We want to check out this parameter */
+-		config = pinconf_to_config_packed(items[i].param, 0);
++		config = pinconf_to_config_packed(item->param, 0);
+ 		if (gname)
+ 			ret = pin_config_group_get(dev_name(pctldev->dev),
+ 						   gname, &config);
+@@ -86,15 +87,22 @@ static void pinconf_generic_dump_one(struct pinctrl_dev *pctldev,
+ 		if (*print_sep)
+ 			seq_puts(s, ", ");
+ 		*print_sep = 1;
+-		seq_puts(s, items[i].display);
++		seq_puts(s, item->display);
+ 		/* Print unit if available */
+-		if (items[i].has_arg) {
++		if (item->has_arg) {
+ 			u32 val = pinconf_to_config_argument(config);
+ 
+-			if (items[i].format)
+-				seq_printf(s, " (%u %s)", val, items[i].format);
++			if (item->format)
++				seq_printf(s, " (%u %s)", val, item->format);
+ 			else
+ 				seq_printf(s, " (0x%x)", val);
++
++			if (item->values && item->num_values) {
++				if (val < item->num_values)
++					seq_printf(s, " \"%s\"", item->values[val]);
++				else
++					seq_puts(s, " \"(unknown)\"");
++			}
+ 		}
+ 	}
+ }
+@@ -205,10 +213,10 @@ static const struct pinconf_generic_params dt_params[] = {
+  * @ncfg. @ncfg is updated to reflect the number of entries after parsing. @cfg
+  * needs to have enough memory allocated to hold all possible entries.
   */
- int pinconf_generic_parse_dt_pinmux(struct device_node *np, struct device *dev,
- 				    unsigned int **pid, unsigned int **pmux,
+-static void parse_dt_cfg(struct device_node *np,
+-			 const struct pinconf_generic_params *params,
+-			 unsigned int count, unsigned long *cfg,
+-			 unsigned int *ncfg)
++static int parse_dt_cfg(struct device_node *np,
++			const struct pinconf_generic_params *params,
++			unsigned int count, unsigned long *cfg,
++			unsigned int *ncfg)
+ {
+ 	int i;
+ 
+@@ -217,7 +225,19 @@ static void parse_dt_cfg(struct device_node *np,
+ 		int ret;
+ 		const struct pinconf_generic_params *par = &params[i];
+ 
+-		ret = of_property_read_u32(np, par->property, &val);
++		if (par->values && par->num_values) {
++			ret = fwnode_property_match_property_string(of_fwnode_handle(np),
++								    par->property,
++								    par->values, par->num_values);
++			if (ret == -ENOENT)
++				return ret;
++			if (ret >= 0) {
++				val = ret;
++				ret = 0;
++			}
++		} else {
++			ret = of_property_read_u32(np, par->property, &val);
++		}
+ 
+ 		/* property not found */
+ 		if (ret == -EINVAL)
+@@ -231,6 +251,8 @@ static void parse_dt_cfg(struct device_node *np,
+ 		cfg[*ncfg] = pinconf_to_config_packed(par->param, val);
+ 		(*ncfg)++;
+ 	}
++
++	return 0;
+ }
+ 
+ /**
+@@ -323,13 +345,16 @@ int pinconf_generic_parse_dt_config(struct device_node *np,
+ 	if (!cfg)
+ 		return -ENOMEM;
+ 
+-	parse_dt_cfg(np, dt_params, ARRAY_SIZE(dt_params), cfg, &ncfg);
++	ret = parse_dt_cfg(np, dt_params, ARRAY_SIZE(dt_params), cfg, &ncfg);
++	if (ret)
++		return ret;
+ 	if (pctldev && pctldev->desc->num_custom_params &&
+-		pctldev->desc->custom_params)
+-		parse_dt_cfg(np, pctldev->desc->custom_params,
+-			     pctldev->desc->num_custom_params, cfg, &ncfg);
+-
+-	ret = 0;
++		pctldev->desc->custom_params) {
++		ret = parse_dt_cfg(np, pctldev->desc->custom_params,
++				   pctldev->desc->num_custom_params, cfg, &ncfg);
++		if (ret)
++			return ret;
++	}
+ 
+ 	/* no configs found at all */
+ 	if (ncfg == 0) {
+diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
+index d9245ecec71dc..f82add5d3302d 100644
+--- a/include/linux/pinctrl/pinconf-generic.h
++++ b/include/linux/pinctrl/pinconf-generic.h
+@@ -181,21 +181,28 @@ static inline unsigned long pinconf_to_config_packed(enum pin_config_param param
+ 	return PIN_CONF_PACKED(param, argument);
+ }
+ 
+-#define PCONFDUMP(a, b, c, d) {					\
+-	.param = a, .display = b, .format = c, .has_arg = d	\
++#define PCONFDUMP_WITH_VALUES(a, b, c, d, e, f) {		\
++	.param = a, .display = b, .format = c, .has_arg = d,	\
++	.values = e, .num_values = f				\
+ 	}
+ 
++#define PCONFDUMP(a, b, c, d)	PCONFDUMP_WITH_VALUES(a, b, c, d, NULL, 0)
++
+ struct pin_config_item {
+ 	const enum pin_config_param param;
+ 	const char * const display;
+ 	const char * const format;
+ 	bool has_arg;
++	const char * const *values;
++	size_t num_values;
+ };
+ 
+ struct pinconf_generic_params {
+ 	const char * const property;
+ 	enum pin_config_param param;
+ 	u32 default_value;
++	const char * const *values;
++	size_t num_values;
+ };
+ 
+ int pinconf_generic_dt_subnode_to_map(struct pinctrl_dev *pctldev,
 -- 
 2.34.1
 
