@@ -1,105 +1,174 @@
-Return-Path: <linux-gpio+bounces-27563-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27564-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4F49C02B46
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 19:18:07 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01739C030A3
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 20:42:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 586CD1A650D3
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 17:17:36 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id CA3F035AA2E
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 18:42:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A0CD347BB7;
-	Thu, 23 Oct 2025 17:16:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A71692820A9;
+	Thu, 23 Oct 2025 18:42:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LrpkYfcJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZlEhJnah"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01969346797;
-	Thu, 23 Oct 2025 17:16:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6077E2571D4;
+	Thu, 23 Oct 2025 18:42:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761239764; cv=none; b=UMLXGvTJqcZIlnfp1WqEc/UWCJZCUywxF8ewHxHSeET7SkW+vlWSa2yzDQOJrca0yd2KPgWUzqDGS6ccmWWrlOFAeaRA4TEpaxh/yGHFqNsfLmaHQWxNalVtl+B7TpHeL17ojLzXMYoPVraoU6YoKQyK7HH6kMCTzBKsQ8QV8js=
+	t=1761244944; cv=none; b=cdo8+af80bYvvjVRX94SbbkUmVLXZWas3MgbNksUJ7OycbX03WrAGqjWdx48rxiKAHsgPBjmFkd0nDhaohjn36bo1JQANHghrXXuFSHAWjnGx5UqGeZcqCpD8i9WomeypeQUIzApUmekwXjYHcg/r7PeJ4o0RGBPOVLyzVfrCMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761239764; c=relaxed/simple;
-	bh=OUQyFuTsycRdDJyc4s7jio9r2I2Q187UaqN1mLSvjPc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fgz7ZcJAHiI+mgHW2rkx20mBMEu4z4D7v3xXsPSv4dVkmlMzftg9HtT3CKXxULzJZKVK52WcR/ixArR3DegeCqt2ZoRjeMIvY5At+3lCHB2zdwcmmWImKHGEi/kX8L8SORAXIh/2g4soF2npEx4UOY7LE1YCr2Udk0x1ZuCrvgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LrpkYfcJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DFD4C116B1;
-	Thu, 23 Oct 2025 17:16:01 +0000 (UTC)
+	s=arc-20240116; t=1761244944; c=relaxed/simple;
+	bh=7cg1XT3E5PgSjEeikeZ9kqIVrBH3X8dSeokFRv7rNPU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cgeOWHIjJ70o7smL/8NljHR7gmeePX3034cRj0GnmPl6KMokCST7ME2K96WAfj4tH45thcHPFevZlUy0n3kufe5OhxIwT7NFlBCBdbR6RftjY2PH6Bu3deLZAyfddtGVxzN5FQcU/CkddSKN8y10Zc7C5g4yVkb0aGvwPZ/+gJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZlEhJnah; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C92E7C4CEE7;
+	Thu, 23 Oct 2025 18:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761239763;
-	bh=OUQyFuTsycRdDJyc4s7jio9r2I2Q187UaqN1mLSvjPc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LrpkYfcJ0XaHZv+npKsnZvpSxmMXlkAuGd+5ayAAY78rw2S+aliNApv3vf3RgLbiT
-	 nlf6ZhOhblexQzwhPrzuWdpng4OjFsM0opsXhzOo+gMcEwB0SPV9g2uLhE1wCUpnwA
-	 qZKzcGNHQCwHlU3PyZA8BmbnXvzyoC9yWjeKw7qbJRXBg//ZBMjA8ZH9XtWgm66ca0
-	 digOVgEszw1qgAI1nfJb/FntE/UGpDhqUsuVZxZXMXN5rnWcrrbGMJ69FcdJ/yJuQc
-	 jLZzdGfCdn4RbC/qtNc0VeGdPrUm0z4ka/8CTq3RcM/qdRysbGaJRqQgzh75/FIaXF
-	 fKQoLhwUuHxkw==
+	s=k20201202; t=1761244943;
+	bh=7cg1XT3E5PgSjEeikeZ9kqIVrBH3X8dSeokFRv7rNPU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZlEhJnahRlAztC+puvhNXPiKdE2U1thO894TnL/x3rf2GRYv8es3HLzcXaT/T8T/Q
+	 LXKexrtFE8vvdJW+VtDlR7HcrG+5wIJPi/t1z6Xyi7Y35lzCnXM/MJMGgdOKHxSqFH
+	 A/Kv+OLOenPYYFhx9dRrrEVmBbqqmP3i0TNJZLmSj/SMj7SMeXUoHrLdyB2PM9hadp
+	 rrXKAC8Ln68DcI1Gf0gjjOF7g4Mxsmf+yOY7/BnMZx+iQ+xbrIB2zp7jYWHhChk/gt
+	 NGxYQt8IvsITdpgWeVmYdHQp0BnhpKxcvKYnVEJ6nGg5zJ/yPRJOlu99ZphVd9h12k
+	 OcQQuMSbDdYVA==
+Date: Thu, 23 Oct 2025 19:42:18 +0100
 From: Conor Dooley <conor@kernel.org>
-To: linus.walleij@linaro.org
-Cc: conor@kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Rob Herring <robh@kernel.org>,
+To: Antonio Borneo <antonio.borneo@foss.st.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Valentina.FernandezAlanis@microchip.com
-Subject: [PATCH v4 5/5] MAINTAINERS: add Microchip RISC-V pinctrl drivers/bindings to entry
-Date: Thu, 23 Oct 2025 18:15:01 +0100
-Message-ID: <20251023-footing-tiger-61835aac1321@spud>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251023-stopwatch-cough-47d5497be5aa@spud>
-References: <20251023-stopwatch-cough-47d5497be5aa@spud>
+	Conor Dooley <conor+dt@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	Christophe Roullier <christophe.roullier@foss.st.com>,
+	Fabien Dessenne <fabien.dessenne@foss.st.com>,
+	Valentin Caron <valentin.caron@foss.st.com>
+Subject: Re: [PATCH v4 10/12] dt-bindings: pinctrl: stm32: Use properties
+ from pincfg-node.yaml
+Message-ID: <20251023-twice-brisket-fb7a3f439a13@spud>
+References: <20251023132700.1199871-1-antonio.borneo@foss.st.com>
+ <20251023132700.1199871-11-antonio.borneo@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1422; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=yIOJ8zWE39Nk9VFv1VjhPf9MABofVWCX3ryvpaofjMU=; b=owGbwMvMwCVWscWwfUFT0iXG02pJDBm/kibuXMJzncUhek3nqunTeZ/tW/7Cco/N6qoXwSebD vO216rN7yhlYRDjYpAVU2RJvN3XIrX+j8sO5563MHNYmUCGMHBxCsBEtDYxMnwSurz6WtQy7U6p 0NZgy5x5v9nln++rPbH4P3f3tAcyVdsYGS45vVjkevW18xc3Z6VFsm9mvnJsjMp84LVa5GL4m40 x9uwA
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="bU1dAtIe/+VxJvoH"
+Content-Disposition: inline
+In-Reply-To: <20251023132700.1199871-11-antonio.borneo@foss.st.com>
 
-From: Conor Dooley <conor.dooley@microchip.com>
 
-Add the new gpio2 and iomux0 drivers and bindings to the existing entry
-for Microchip RISC-V devices.
+--bU1dAtIe/+VxJvoH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
- MAINTAINERS | 4 ++++
- 1 file changed, 4 insertions(+)
+On Thu, Oct 23, 2025 at 03:26:58PM +0200, Antonio Borneo wrote:
+> Don't re-declare the standard pincfg properties; take them from
+> the default schema.
+>=20
+> Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 46126ce2f968..5d4825073fcd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22089,6 +22089,8 @@ F:	Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
- F:	Documentation/devicetree/bindings/i2c/microchip,corei2c.yaml
- F:	Documentation/devicetree/bindings/mailbox/microchip,mpfs-mailbox.yaml
- F:	Documentation/devicetree/bindings/net/can/microchip,mpfs-can.yaml
-+F:	Documentation/devicetree/bindings/pinctrl/microchip,mpfs-pinctrl-iomux0.yaml
-+F:	Documentation/devicetree/bindings/pinctrl/microchip,pic64gx-pinctrl-gpio2.yaml
- F:	Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml
- F:	Documentation/devicetree/bindings/riscv/microchip.yaml
- F:	Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-sys-controller.yaml
-@@ -22102,6 +22104,8 @@ F:	drivers/gpio/gpio-mpfs.c
- F:	drivers/i2c/busses/i2c-microchip-corei2c.c
- F:	drivers/mailbox/mailbox-mpfs.c
- F:	drivers/pci/controller/plda/pcie-microchip-host.c
-+F:	drivers/pinctrl/pinctrl-mpfs-iomux0.c
-+F:	drivers/pinctrl/pinctrl-pic64gx-gpio2.c
- F:	drivers/pwm/pwm-microchip-core.c
- F:	drivers/reset/reset-mpfs.c
- F:	drivers/rtc/rtc-mpfs.c
--- 
-2.51.0
+I acked this one in v3:
+https://lore.kernel.org/all/20251014-privatize-unnerving-bb26a0626276@spud/
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+pw-bot: not-applicable
 
+> ---
+>  .../bindings/pinctrl/st,stm32-pinctrl.yaml    | 27 ++++++++-----------
+>  1 file changed, 11 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.y=
+aml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+> index 961161c2ab62b..27c0dd7a8df01 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+> @@ -151,6 +151,8 @@ patternProperties:
+>            pinctrl group available on the machine. Each subnode will list=
+ the
+>            pins it needs, and how they should be configured, with regard =
+to muxer
+>            configuration, pullups, drive, output high/low and output spee=
+d.
+> +        $ref: /schemas/pinctrl/pincfg-node.yaml
+> +
+>          properties:
+>            pinmux:
+>              $ref: /schemas/types.yaml#/definitions/uint32-array
+> @@ -195,26 +197,19 @@ patternProperties:
+>                            pinmux =3D <STM32_PINMUX('A', 9, RSVD)>;
+>                 };
+> =20
+> -          bias-disable:
+> -            type: boolean
+> +          bias-disable: true
+> =20
+> -          bias-pull-down:
+> -            type: boolean
+> +          bias-pull-down: true
+> =20
+> -          bias-pull-up:
+> -            type: boolean
+> +          bias-pull-up: true
+> =20
+> -          drive-push-pull:
+> -            type: boolean
+> +          drive-push-pull: true
+> =20
+> -          drive-open-drain:
+> -            type: boolean
+> +          drive-open-drain: true
+> =20
+> -          output-low:
+> -            type: boolean
+> +          output-low: true
+> =20
+> -          output-high:
+> -            type: boolean
+> +          output-high: true
+> =20
+>            slew-rate:
+>              description: |
+> @@ -222,8 +217,8 @@ patternProperties:
+>                1: Medium speed
+>                2: Fast speed
+>                3: High speed
+> -            $ref: /schemas/types.yaml#/definitions/uint32
+> -            enum: [0, 1, 2, 3]
+> +            minimum: 0
+> +            maximum: 3
+> =20
+>          required:
+>            - pinmux
+> --=20
+> 2.34.1
+>=20
+
+--bU1dAtIe/+VxJvoH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaPp3CgAKCRB4tDGHoIJi
+0tg3AQD8bWKk/YfN5ZMpkKgIGbTc19jQ0QsVxpdvLl3aEu+5XgEAs6z0D7RrT691
+W6QkYi0onTlPEu0LmNwdPXMp2aDCAQM=
+=954d
+-----END PGP SIGNATURE-----
+
+--bU1dAtIe/+VxJvoH--
 
