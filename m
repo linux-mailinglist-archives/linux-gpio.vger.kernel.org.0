@@ -1,121 +1,124 @@
-Return-Path: <linux-gpio+bounces-27504-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27505-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05D18BFFBFA
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 09:58:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BBAEBFFC10
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 10:00:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E8B5E18869F6
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 07:58:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 66EFC189C099
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Oct 2025 08:00:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DE3F2E040E;
-	Thu, 23 Oct 2025 07:58:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CE8D2E285C;
+	Thu, 23 Oct 2025 07:59:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jTvZwyCl"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="GOsCqLSp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FEF2E040C
-	for <linux-gpio@vger.kernel.org>; Thu, 23 Oct 2025 07:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C16F2E285B
+	for <linux-gpio@vger.kernel.org>; Thu, 23 Oct 2025 07:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761206301; cv=none; b=YcroMdVFKGsP2Kf4nHtEA6Oo51cu2M81OF/btFdUHSk0uygwZG2TwT7rO/qmIA8J2OsDJIiUvCCchCiVQBKJbyOBhXxLGJrTQAvHcMQ9IdneFDiPSL3Q6qZOKXGzNDVDyyKrogmBufLmyrpX8cwTl+XvMAME4SQTZ2FjYdEs2FY=
+	t=1761206392; cv=none; b=TuNYF3OJ74SW9qzqlfRIldWMy06mbM8br2GX3D4ETADFYoBJ3t9L7DeipyrEps5xArdqwq+b/Rm3cCvl2XVznOR759SwoWq5rO6gmPpm0mlsRu5qjzAg1bFPjyVz2YiZ5umO1vyg3ZT0xI766EB6/N+a2uSJa+eBiqtlYIDzQq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761206301; c=relaxed/simple;
-	bh=V56wDzpr+FK/urAryAZ1emGQhQ+cHHyjui2JOXvsrfg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oKv1A6FQQFD6QdrPKtv4EauPecU9uHmo8FryX9qg4hfSIq97CnsksQjXoFlJs7QPw7KEMBzCjjRB3ARSYMIFUOnJnRpaaXIDr/R7fCEUIipetwMGssMBCJkoMRtOR6AHC+GAnCJMoz3B5HoFuN4l1xPQVAHel77dAR2iowDTo0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jTvZwyCl; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-471b80b994bso6375445e9.3
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Oct 2025 00:58:19 -0700 (PDT)
+	s=arc-20240116; t=1761206392; c=relaxed/simple;
+	bh=+SpyXxRkftlNGmLUWNB3Rcdg3zyaCMYWurX6VO02fTc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PZ9wcCVG+RJCVfZnc6fnmXqR/qwXogNiaeuDPHHFAhi7XGFCURd3vGC3FF8GFEz4MQv+vA52fXVJPB541S+WkvXbLyGfhMZ6rqeWOB7+vldGtEQXxfJclHPywUwFf/ZwmZXOuVqOCIhQRRdY1Yi81IEYSyzAEjm0+p9P31tmmqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=GOsCqLSp; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-475c696ab23so2431955e9.1
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Oct 2025 00:59:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761206297; x=1761811097; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fQ7/jSo7tNBTZd/AumHePa99ISr2zgcjojKglbLQ6TA=;
-        b=jTvZwyClULm7JNOQbvohcgc+Ox6/EfQnpbVqjWcw5LgYqakW2Z/vSh3IRmvFnPcZJX
-         l/5OzDs1lpDTTqZir/bksuonHsme3i3vXyu8PqpgK3bF+thTKVRlh/EE4cLbYBEQdGee
-         9pNs5ValN2XoGlFrWkpKqtJMiRRhBdsuNo+MvwagPwfhttQTv7VdVUJYVylVOm8C4tlk
-         CjqENXEfFjyIBlscVldhWV3un2fukIdz7RzR2Q/q26Ncw/XC0aJBVv5u5MHgB2GDBUJX
-         0tUTbigcz23BZm+dGfy7OPvkbAsfPiVFVYaTcTZmn6IxG+FjNxsYW0+9f/lu0J3UjNXV
-         aLkA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761206389; x=1761811189; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g5LFle24C4lX4/lX8LsiFnLh/vNITYUjWURDn9xN210=;
+        b=GOsCqLSpNrZkVzeKwwv0ivG0JN+EMZYfsgSnlDcY3rknELlPurWfx+Kj0BsdJrbun5
+         W9r2BgELyouZndPzwMeQLU4f47DEqVcfI+0Wm0N+vMSVgG/TOhROhvMrTFAy29odCfAw
+         4A1shlcMIxybJDMN8CGapZH/D+SYoasiyU2Lj8o+1VXWvj/wf8+m1WYkBL0lCwOLOA1Y
+         9J/xl72VjjOkqTzK7mN55ovaOmPXV1KL3EXz414km6mO6hBkTdoBvb1gED77YwiNEy9H
+         C+/delPUtw1TbZfqMULRQMhwVsjwoFv6LFFgctIARzNKYory4XjbquRNEcZpp3Wudv96
+         Nnlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761206297; x=1761811097;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fQ7/jSo7tNBTZd/AumHePa99ISr2zgcjojKglbLQ6TA=;
-        b=buXHV01D94qaFozpgjQm2FGcCQoRwsGYz5wxqhndJau/KXEUQymcf2jP1ytdhY5vMT
-         YflWNj7LO26ontxVZw3yAjqvVPsrQoI0EEGQksZQeyjwwwSC3xRtxea8esIoDC14hJWv
-         UHe4y5GS4qoLZJ5Fe/9tdn3a6NdDV+0pAHNDYplDjaz8N5os/oDIt1BnWybvMlYBPHvk
-         /i4EPbQWFpaROZ3E8ZZLz5V/IcJZh/xD/ArHnTKzsz94/OmefuM45dCTSfiioSfgq1cP
-         oPxDW0VJjStjP5tUq90DJ3FM44pFR2LSYOK8aPIO5afPCkLPlNCJBz3JjpsgO9Kuh/Hg
-         to9g==
-X-Forwarded-Encrypted: i=1; AJvYcCUgeHQ0fLHIeEn75MFxAz/mBTtJhqqWwpDRfBv9xyFDEaYCdcuGTyuMWO32dusRF5cg1qDmgkBVr2uc@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcBaEvzeb8AVwr92k5YGsSYq7fgpHia+qWTW3iV4uAIs/kNT+8
-	EcnWKmpOiSFs/qp/X/fqmhs7YRgEpS22PnrdfvRuQ6zQHCLW/UpJ1tiF
-X-Gm-Gg: ASbGnctixSa85arPR/OiDbcgvvJep2C+0jR9xibFRoxfiIfm8ZtATGOyBH7Nbty36BD
-	yBCUgwlXNG9AVkTevESq+Mn4azz5m+4ScCGunQ7nHTcficYh76zImPGZvlzV0DElZOQb9bOLwaN
-	FCRRVL7rABdTmheuocQWfb8su5M4ucy28qGs2vI3zyBBi/dJ24xbCWX3AiVc8C8MZC0NADM1L72
-	UeBb2zQLXZwyru5o+uYpctK4+blCk4qdEXrbeB/cvpVEs9oHiUhUFoxMns5MSoW1AOaNUIUJ1zC
-	ixBh9Ox4UKnuk6hOIrZUJpSBAdt+cZqkb2L52tnJop62ntjv2yfDhjk5Wj+ifd/cGadgajmHSku
-	nv/HLilGMIvZtgRr7RYZxT7bqZ5JKbmpWsxE1ymi3VKXca9Oede5gXH7oR3DHnI/mKRpjUZ6nar
-	J+1oRfuDJ004gHsD/VSnkVnwKh
-X-Google-Smtp-Source: AGHT+IH1MMAfSJxCVNQWeVW46sI3k3nHOhskn/OU83kIm3TVkiWr3RGyFq8Jge1vnvirJ7cC5+EzHw==
-X-Received: by 2002:a05:600c:444d:b0:46d:45e:3514 with SMTP id 5b1f17b1804b1-471178b13c6mr160678435e9.17.1761206297352;
-        Thu, 23 Oct 2025 00:58:17 -0700 (PDT)
-Received: from gmail.com ([51.154.250.126])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-475caf2f3bbsm22103695e9.16.2025.10.23.00.58.16
+        d=1e100.net; s=20230601; t=1761206389; x=1761811189;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=g5LFle24C4lX4/lX8LsiFnLh/vNITYUjWURDn9xN210=;
+        b=VEYJCMmXy53JrUi4CDeSpnhRl0At5zLv618/YQ73JBxAjujpCFJmgwXWTltCjbtuoI
+         eraxwfUODyXADbwf0tlZiM9KZxLpyThorRJaacUYn9b4d6+t/rZk0HrPrwh4AHdlDGLT
+         Wmmzvem+XUrFV7J4xU1t9OOa+/DhTjJiNNe9D7BTir8ueTBkfUNyRjkFvXf2pXwEcCtb
+         YitdwZmQksY/vyy0xvL4o/KQkT6J4FQEcFtrLASsqahT6HOu0C0yURori4FJqyjxlWdA
+         noC/s0lKDStrD+hWzXpyaubjUDOc2Zg2TAXUGFOCswUjhs7zfRtoA+zDmkI2yVDUjjAC
+         lRXA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0Ke0+mkWoGrxqf22sGK264m+7JWQiCavbUHcM0hh1RVc/Xw8EJ7a1n8UaI2G4CoTfyXspP1yu7uup@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy80IEq+JUlBKNBWnX/z59sBlrc9DLXI9P5+4rgW6HTRyYKHQQ4
+	q61ab2InM1FbY4XpeGcp94pWPJRm9/rfC491XJPwvLUMwAGlwHIpOmnYiNoVT6B+ltY=
+X-Gm-Gg: ASbGncseVRMzNls1ZQbxn0j2zlE4OEV8ONOWwuntxucpgNkHVX+WvFQCZdKKWCBLK6+
+	xFh1QDg2kas4SPNKb6T7sWqxB3/ClDWJqM02K5C6DIN0nD9lIFUvSP+ZpAeRdx4oM3Qja3yLszL
+	DwRr2MzEIGOmZ7PPGOz8ujUK+38SZnlZBWdSkWTTTxNz1/QOhaCsMJhQcn6jIQr6IZ4vM56wRCK
+	zAdb0OEsJIZJ8myzPCc6/3CxEmbNXYYzdRuOkypyKGYd2XPcQNqFa53NQ1nUv1xhhyRx+OyaKBm
+	GHRSLNNw3LcK026TWqzMPsJtEks4NBu4T31egAx6GU+yJrCW3kmPLO0R9ufPEI2Ejw7GmXNEHms
+	NslhepqSWAVA/RmN3kiV6K62Vk01Fe6+kPDGDLweHIyMJGVh2RSKQWYolTQs6kt7/FnfiyZ12mc
+	yY3srnDzZCXmN+TF4k97ETsw==
+X-Google-Smtp-Source: AGHT+IFw8DrAsP2ujJ1z9Xf51elPbfYymJObtmKWyxRCkb7tIajC9Z0M/MWJkVISOmNQ3AsjztV93g==
+X-Received: by 2002:a05:600c:190b:b0:471:a96:d1b6 with SMTP id 5b1f17b1804b1-47117874dc2mr176361195e9.7.1761206388338;
+        Thu, 23 Oct 2025 00:59:48 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:1b4:e02e:c538:6feb])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-475caea0468sm22931325e9.8.2025.10.23.00.59.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Oct 2025 00:58:17 -0700 (PDT)
-Date: Thu, 23 Oct 2025 07:58:16 +0000
-From: Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Michael Buesch <m@bues.ch>,
+        Thu, 23 Oct 2025 00:59:47 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Michael Buesch <m@bues.ch>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v6] gpio: bt8xx: use generic power management
-Message-ID: <aPngGCKnyFheybg_@gmail.com>
-References: <CAMRc=Mf4FnBoZfdR3gG47te=X53jASzb6MVnUmNw2q1rtUwxzQ@mail.gmail.com>
- <20251022192901.GA1265216@bhelgaas>
- <aPneCYtkbxWp4Hox@gmail.com>
- <CAMRc=MdbHqMJv4otgG0Cwc1KcK2WbL4JL0Q75PRqv8582yexyg@mail.gmail.com>
+Date: Thu, 23 Oct 2025 09:59:46 +0200
+Message-ID: <176120638405.24462.15473867139996562246.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20251016163618.1355923-1-vaibhavgupta40@gmail.com>
+References: <20251013174319.GA847155@bhelgaas> <20251016163618.1355923-1-vaibhavgupta40@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdbHqMJv4otgG0Cwc1KcK2WbL4JL0Q75PRqv8582yexyg@mail.gmail.com>
 
-On Thu, Oct 23, 2025 at 09:55:39AM +0200, Bartosz Golaszewski wrote:
-> On Thu, Oct 23, 2025 at 9:49 AM Vaibhav Gupta <vaibhavgupta40@gmail.com> wrote:
-> >
-> > Hello Bjorn!
-> > Thanks for the review and mentioning the diff between v1 and v6.
-> >
-> > Hey Randy!
-> > Please let me know if the diff mentioned by Bjorn is enough or should I send a
-> > new patch-mail describing the v1-v6 diff?
-> >
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+
+On Thu, 16 Oct 2025 16:36:13 +0000, Vaibhav Gupta wrote:
+> Switch to the generic PCI power management framework and remove legacy
+> callbacks like .suspend() and .resume(). With the generic framework, the
+> standard PCI related work like:
+> 	- pci_save/restore_state()
+> 	- pci_enable/disable_device()
+> 	- pci_set_power_state()
+> is handled by the PCI core and this driver should implement only gpio-bt8xx
+> specific operations in its respective callback functions.
 > 
-> Yes, it's enough, I could have looked it up myself but I shouldn't
-> have to. Please, next time just list changes under each new iteration.
-> Preferably just use b4, it helps with version management.
-> 
-> Bart
+> [...]
 
-Noted. My patches will be more clear from next time. Thanks for the reviews and
-comments.
+Applied, thanks!
 
-- Vaibhav
+[1/1] gpio: bt8xx: use generic power management
+      https://git.kernel.org/brgl/linux/c/d5376026f9269601e239545e2ec4aea0cc62bf2a
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
