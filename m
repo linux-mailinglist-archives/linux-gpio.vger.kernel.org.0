@@ -1,145 +1,196 @@
-Return-Path: <linux-gpio+bounces-27576-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27575-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35354C04AE5
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 09:21:17 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0040CC04ADF
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 09:21:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id ADB8C35BFFB
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 07:21:16 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DF8194FF1E9
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 07:20:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 305122D248E;
-	Fri, 24 Oct 2025 07:17:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CA0A2C3266;
+	Fri, 24 Oct 2025 07:17:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Hh/LIHH9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JrEMO138"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DEFC2D0C83
-	for <linux-gpio@vger.kernel.org>; Fri, 24 Oct 2025 07:17:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0CD32C0285;
+	Fri, 24 Oct 2025 07:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761290259; cv=none; b=VoUJt3YQX0JH7QqcY8Gwu01txmxeceLQhHhCXrnWfikB4cM/D+1Ky3E3TiwCDBvKygvo3Z9PGf78cgKlmsFcqqjWgwtKLLwyZw4PCLwWLcfiqW35QJ/AITnso6xCH/hnMrEvZJvnZ6MjmdSY1PsPFF6dWa7Nc//QLTa3vK2TJP4=
+	t=1761290252; cv=none; b=Mf98F0QrIFfm7G6Ll+kBvN8e8BUvaKgHQUlISXjo0ybsLKMC1sOuy4CT/nuupPKTATETvgZL/3ib2Gv5k5LAGbDpJzALkDEoi7EFnH8TujMAYrnb5XXSMXkXqaKVQbvc6/njWx7ODUSejlRJm7x2daFr9HocSyV7DFvyLQRTYjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761290259; c=relaxed/simple;
-	bh=h6tvnK0ig57jTEdAxnPvo8iEQOCIPVB7NO7ABROSJlE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SoclV+byKLCsEelUQoc+wniyiTR7Nl+dwDCpk2FXOtWL5rtO0WX4UErv2IAm2oGx4OIl2FtTZhXF63kErhPyjO/43h8rf1Z6hTsUsPkfKlG6JR9QJeL7sPCZOvdTnP5NoByAD766q2ad/2vyoMimC4FEjDtgOTNgNfg10uOMeAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Hh/LIHH9; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-57a292a3a4bso2203257e87.3
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Oct 2025 00:17:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761290256; x=1761895056; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=50RoFCtoYdtNhCcZXh1N26BbF9N2TRDC7n9nR8KK4ck=;
-        b=Hh/LIHH9EWP9SMo1Wz5KepCOsj7UOc1jBMW/MX6ohDd4KTQmQ17vieVR1zojgB00jV
-         leZ+sb2JWjQFdJJmM37l2QezEFlulxaqMmBR2GSYsSsp0p693NgdZDJXXm2ehejLOKye
-         b2bInW90ScSf4wTuC3I2s5/uUwW++tX3mHiiFo3oPdIfSMU0WxzkLxm43ynRWlPDxl+e
-         Fiz2NuoghtjzM9Z+X9p7mkDU6Z1ig0auZFNWMIjHHDmA2YlorVgaghfazAQfnkSd36dQ
-         F2tHDJsAeofrFad3Km5PEDWF1X+kDkTmxnSUySyupWSrMUOxBGRxwqGJUSdfiygmWBwr
-         de6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761290256; x=1761895056;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=50RoFCtoYdtNhCcZXh1N26BbF9N2TRDC7n9nR8KK4ck=;
-        b=wnmSGj5jTnX8cZWiGM3r49etSdVjRzOHlGeagMr1yWbk69kaka8TANl3TUIo8WPp8Q
-         jEk0hbNFPcWZWfX1TaFZA4fSWV0DvmQ5dCGixUDztJOCq66ELTUJIkA1M+RzuY6HkvAN
-         hhWSozRbpFI7e+kLeR7etO1haR6VLULcwV45j5NTPUHUosgpL4fsyvhaFdlUdBbWSDyi
-         JjZb5VF27iRCpELN9utSNh7dqkL1e+13RfByvA82T9zOye/3dBt9EoP6s9RCgKLVUTXK
-         vV2v6PLJTQM21mhCH+QHB2IJmArdwiBmqRkke5NPzm5Z9HxGQb2FdNKBrQHEUITSVmmK
-         tDKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUMjtXfsD5r005PrHdovBJeSnpWgfymJUxgE9hGCmMCGyjOpeTD0wQr1rYwlsBTvvUzVhk27XtdqaKd@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxj/vfOdNAqVUrBCXc9ooQnXrNnE6mIjYpdPXEcpRrTISNGOZdU
-	RhcLUi4kHatWUSWH1ibTyZmpzKKs34KyXR4wV8MZmIgnZiitfJ7lJjnRxzs9IiEOb+bWGel3jYx
-	2LG8DMalB1jUWbjIeivJoVOaQmH62QxV9W+9rAy/NWg==
-X-Gm-Gg: ASbGncuaBW/JaTEf7Dcs3JP7omdMtTKXVadoRV0yofwYyiOYIb7sQdxRib1QzwIB7rf
-	i3/ff2QRfWKuoBwgr0fkmFzyMtQDAPEJXr1DTqh4/MwAKFdWd6ECmbDcfzIQTV+IdgAzrF5Dla5
-	WUljA3VAMSeHWIbfE1jwvT+TOUaZ+bJZDFhc/CNUHvy0wI84WbN9LCt8vN/8j7tTvkgHOdQe+xD
-	EzoFyKDCkpuqxOzDdcb6RzBHWb7B52wkliJ7pdAO3npsFXY0p9SKozwJCFpBrb/CwU+ByWPM0qs
-	VdLTKuR6PkSnkt4=
-X-Google-Smtp-Source: AGHT+IE8neVFu8ZIN5sSXL6tieYxgR9sJA/fT6BQfIeVNgFTWlxgxkEp21AyvSf43DhGoh14lH1c87nKZ36hn82BpM4=
-X-Received: by 2002:a05:6512:3c89:b0:592:f727:3209 with SMTP id
- 2adb3069b0e04-592f72732cbmr1678539e87.37.1761290256485; Fri, 24 Oct 2025
- 00:17:36 -0700 (PDT)
+	s=arc-20240116; t=1761290252; c=relaxed/simple;
+	bh=rMGxKZ0Ruy3iCUh4rd6b4PVfetuW2zT8H06yJpAOPnw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TfJwG8Y4G6eJwjIDn2GEIX/fViXOFdIrCg6o1HgVxEhQwx4D+L7jul349HooCM1jfGR1Tr15p0AkWglxTAJfWkMYAeTR4CDNuDzg9AVdQwFkem2tLrUssffCG8iIDR0GtZ0sTcAYyTimpQYZdJy4WmxotQDaw8kTbyCa9Fxp92M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JrEMO138; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761290251; x=1792826251;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=rMGxKZ0Ruy3iCUh4rd6b4PVfetuW2zT8H06yJpAOPnw=;
+  b=JrEMO138lMJ00P6AZRdNEhIWTHqtWe2O4Of1/J/A1oUaUrQBwItdCNjK
+   x7OO0KAi9jQViQBYtBKEaqj/Ekfb/B0nzdlMhXQYldlu2A6ObOiioguDJ
+   tj32ZiEwt4uyCIlEF1RCGegqeKrvPQJEHOQC5iSZIJ7rhw/R4z8p9jf2k
+   hHnY9H9Mx/L31yx+1AES1fk/6ilj0/OXF6iMncszOzZgn1P1XND5WRPsF
+   azPgyzSboP7S9FosM7Bp60b5fx8IvXe59i2HxgDrT+dgwmTPapFqibVW1
+   O8SrcSkK0bOe3BSz3qqbiIRfPf6rYVbm1r3bpI61OrEQO2b2P4ExE1FPe
+   g==;
+X-CSE-ConnectionGUID: B78pzK3rTZ2K9h6E15lBTw==
+X-CSE-MsgGUID: w7bxsZh/QlKV5FYTiVZ5cg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="62499268"
+X-IronPort-AV: E=Sophos;i="6.19,251,1754982000"; 
+   d="scan'208";a="62499268"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2025 00:17:30 -0700
+X-CSE-ConnectionGUID: 6dbO8RbwThiKWhQmjgGvLg==
+X-CSE-MsgGUID: Ro2zwlh4RQa3GJViwyA9Wg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,251,1754982000"; 
+   d="scan'208";a="189488248"
+Received: from carterle-desk.ger.corp.intel.com (HELO [10.245.246.211]) ([10.245.246.211])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2025 00:17:21 -0700
+Message-ID: <db05003c-8ac5-49da-b0ce-e0b668f49caf@linux.intel.com>
+Date: Fri, 24 Oct 2025 10:17:28 +0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251022-reset-gpios-swnodes-v2-0-69088530291b@linaro.org>
- <20251022-reset-gpios-swnodes-v2-4-69088530291b@linaro.org> <aPkmDWJEKrjlMPnD@smile.fi.intel.com>
-In-Reply-To: <aPkmDWJEKrjlMPnD@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 24 Oct 2025 09:17:25 +0200
-X-Gm-Features: AS18NWChfhu5HfalO-BdlmyskcwYb0ZO_M2N7vcsZ7y2nHqTFlEjipwk5PGstwk
-Message-ID: <CAMRc=MeNNGXy6aAanLnbWFYJiK65dvm_HyjCDS1=LZ4RiA4GAA@mail.gmail.com>
-Subject: Re: [PATCH v2 4/9] gpio: swnode: don't use the swnode's name as the
- key for GPIO lookup
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/10] gpio: improve support for shared GPIOs
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>,
+ Mika Westerberg <westeri@kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Saravana Kannan <saravanak@google.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Andy Shevchenko <andy@kernel.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20251022-gpio-shared-v2-0-d34aa1fbdf06@linaro.org>
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <20251022-gpio-shared-v2-0-d34aa1fbdf06@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Oct 22, 2025 at 8:44=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Wed, Oct 22, 2025 at 03:41:03PM +0200, Bartosz Golaszewski wrote:
-> >
-> > Looking up a GPIO controller by label that is the name of the software
-> > node is wonky at best - the GPIO controller driver is free to set
-> > a different label than the name of its firmware node. We're already bei=
-ng
-> > passed a firmware node handle attached to the GPIO device to
-> > swnode_get_gpio_device() so use it instead for a more precise lookup.
->
-> ...
->
-> >  static struct gpio_device *swnode_get_gpio_device(struct fwnode_handle=
- *fwnode)
-> >  {
-> > +     struct gpio_device *gdev __free(gpio_device_put) =3D
-> > +                                     gpio_device_find_by_fwnode(fwnode=
-);
-> > +     if (!gdev)
-> > +             return ERR_PTR(-EPROBE_DEFER);
-> >
-> >       /*
-> >        * Check for a special node that identifies undefined GPIOs, this=
- is
-> >        * primarily used as a key for internal chip selects in SPI bindi=
-ngs.
-> >        */
-> >       if (IS_ENABLED(CONFIG_GPIO_SWNODE_UNDEFINED) &&
-> > +         !strcmp(fwnode_get_name(fwnode), GPIOLIB_SWNODE_UNDEFINED_NAM=
-E))
-> >               return ERR_PTR(-ENOENT);
->
-> Now we might get EPROBE_DEREF for the cases when previously it was ENOENT=
-.
-> Why is this not a problem? (I haven't found the answer neither in the com=
-ment
-> above, nor in the commit message)
->
 
-Yeah, maybe it should only change the last part from looking up by
-label to looking up by fwnode and leave the previous checks in place.
 
-Bart
+On 22/10/2025 16:10, Bartosz Golaszewski wrote:
+> Problem statement: GPIOs are implemented as a strictly exclusive
+> resource in the kernel but there are lots of platforms on which single
+> pin is shared by multiple devices which don't communicate so need some
+> way of properly sharing access to a GPIO. What we have now is the
+> GPIOD_FLAGS_BIT_NONEXCLUSIVE flag which was introduced as a hack and
+> doesn't do any locking or arbitration of access - it literally just hand
+> the same GPIO descriptor to all interested users.
+
+I had few stabs on this in the past, all got somehow derailed, one
+example was:
+https://lkml.org/lkml/2019/10/30/311
+
+> The proposed solution is composed of three major parts: the high-level,
+> shared GPIO proxy driver that arbitrates access to the shared pin and
+> exposes a regular GPIO chip interface to consumers, a low-level shared
+> GPIOLIB module that scans firmware nodes and creates auxiliary devices
+> that attach to the proxy driver and finally a set of core GPIOLIB
+> changes that plug the former into the GPIO lookup path.
+> 
+> The changes are implemented in a way that allows to seamlessly compile
+> out any code related to sharing GPIOs for systems that don't need it.
+> 
+> The practical use-case for this are the powerdown GPIOs shared by
+> speakers on Qualcomm db845c platform, however I have also extensively
+> tested it using gpio-virtuser on arm64 qemu with various DT
+> configurations.
+> 
+> I'm Cc'ing some people that may help with reviewing/be interested in
+> this: OF maintainers (because the main target are OF systems initially),
+> Mark Brown because most users of GPIOD_FLAGS_BIT_NONEXCLUSIVE live
+> in audio or regulator drivers and one of the goals of this series is
+> dropping the hand-crafted GPIO enable counting via struct
+> regulator_enable_gpio in regulator core), Andy and Mika because I'd like
+> to also cover ACPI (even though I don't know about any ACPI platform that
+> would need this at the moment, I think it makes sense to make the
+> solution complete), Dmitry (same thing but for software nodes), Mani
+> (because you have a somewhat related use-case for the PERST# signal and
+> I'd like to hear your input on whether this is something you can use or
+> maybe it needs a separate, implicit gpio-perst driver similar to what
+> Krzysztof did for reset-gpios) and Greg (because I mentioned this to you
+> last week in person and I also use the auxiliary bus for the proxy
+> devices).
+> 
+> Merging strategy: patches 1-6 should go through the GPIO tree and then
+> ARM-SoC, ASoC and regulator trees can pull these changes from an
+> immutable branch and apply the remaining patches.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+> Changes in v2:
+> - Fix a memory leak in error path in gpiolib-shared
+> - Drop the gpio-wcd934x fix that already went upstream
+> - Free resources used during scanning by GPIOs that turned out to be
+>   unique
+> - Rework the OF property scanning
+> - Add patches making the regulator subsystem aware of shared GPIOs
+>   managed by GPIOLIB
+> - Link to v1: https://lore.kernel.org/r/20250924-gpio-shared-v1-0-775e7efeb1a3@linaro.org
+> 
+> ---
+> Bartosz Golaszewski (10):
+>       string: provide strends()
+>       gpiolib: define GPIOD_FLAG_SHARED
+>       gpiolib: implement low-level, shared GPIO support
+>       gpio: shared-proxy: implement the shared GPIO proxy driver
+>       gpiolib: support shared GPIOs in core subsystem code
+>       gpio: provide gpiod_is_shared()
+>       arm64: select HAVE_SHARED_GPIOS for ARCH_QCOM
+>       ASoC: wsa881x: drop GPIOD_FLAGS_BIT_NONEXCLUSIVE flag from GPIO lookup
+>       ASoC: wsa883x: drop GPIOD_FLAGS_BIT_NONEXCLUSIVE flag from GPIO lookup
+>       regulator: make the subsystem aware of shared GPIOs
+> 
+>  arch/arm64/Kconfig.platforms     |   1 +
+>  drivers/gpio/Kconfig             |  17 ++
+>  drivers/gpio/Makefile            |   2 +
+>  drivers/gpio/gpio-shared-proxy.c | 329 ++++++++++++++++++++++++
+>  drivers/gpio/gpiolib-shared.c    | 530 +++++++++++++++++++++++++++++++++++++++
+>  drivers/gpio/gpiolib-shared.h    |  71 ++++++
+>  drivers/gpio/gpiolib.c           |  70 +++++-
+>  drivers/gpio/gpiolib.h           |   2 +
+>  drivers/regulator/core.c         |   8 +
+>  include/linux/gpio/consumer.h    |   9 +
+>  include/linux/string.h           |   2 +
+>  lib/string.c                     |  19 ++
+>  lib/tests/string_kunit.c         |  13 +
+>  sound/soc/codecs/wsa881x.c       |   3 +-
+>  sound/soc/codecs/wsa883x.c       |   7 +-
+>  15 files changed, 1067 insertions(+), 16 deletions(-)
+> ---
+> base-commit: 304d18863e6e62a8f2d0350ce0a59596e2e42768
+> change-id: 20250908-gpio-shared-67ec352884b6
+> 
+> Best regards,
+
+-- 
+Péter
+
 
