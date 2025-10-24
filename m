@@ -1,129 +1,220 @@
-Return-Path: <linux-gpio+bounces-27577-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27578-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E960C04B24
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 09:23:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A25E6C04B64
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 09:27:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7382B1B829FD
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 07:23:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D7794006A3
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 07:24:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5160B2E0B68;
-	Fri, 24 Oct 2025 07:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="do0n/H+0"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D93529B8DC;
+	Fri, 24 Oct 2025 07:24:41 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB44B2DEA71
-	for <linux-gpio@vger.kernel.org>; Fri, 24 Oct 2025 07:20:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3ACC2BCF45
+	for <linux-gpio@vger.kernel.org>; Fri, 24 Oct 2025 07:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761290455; cv=none; b=fqdxSOeunmbn+Mblj3HDITAIHi+6el7t5a6wlcf/6TNnTo1bduCnSKXLGu9Ydh4DQMUmNFVqZjSO6wecA2de4hzRl3hK9CsZpj4Ejnu49OEU7gxB6m1OldkhEWgdT2nSD+TgAxA7JVWcct/lk/Zqxz/Lxre2WBOgLYdC1ACLgS0=
+	t=1761290681; cv=none; b=plW8p8BcRDFVH4anS0e4EF5R2jRC4i6j16FXdJm7NVz2kJPyD0KlxtCqyR33U48LfU6sH1GfKt8La5cGCHfsvIBJ8rkQReRZTdP+DRe7eq88bk8acP8LcOXcq16xrfHAGW1cDSl7Bb6GQ32NL2la1oE2z5FxxXkg+C2NeW0ojF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761290455; c=relaxed/simple;
-	bh=CR+8roHK+/LDuQ73yW6ockKv+8Mv8IDa0Xrtz7eQhq0=;
+	s=arc-20240116; t=1761290681; c=relaxed/simple;
+	bh=TYYDo+7DxkUKjmm+P+3sxJh+gjqzjUwg71o/dX7xBWQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lDlwFqbEc/wH89ns0gZ3zK7QOI1wBdkcj/RD5MOPQZeLYQ9PAYnRal1v5AGLIiGxfP2naM/lqCDFCWGdwFtbTTeE39+41/JSSbnyzA+scj818QaGSF1kdfIQpOKp2hdxxZayWGZCQr7bAwJELhGjHm4iQnI2+sYEQLDfSNDXNXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=do0n/H+0; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-57bb7ee3142so2028405e87.0
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Oct 2025 00:20:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761290451; x=1761895251; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CR+8roHK+/LDuQ73yW6ockKv+8Mv8IDa0Xrtz7eQhq0=;
-        b=do0n/H+0YBdSMkTq7sBSXWn2/iExuSH4K0sIPxL9iTSfguBIyMA23Lt0sQVhm0PSy0
-         0xOcYCLnv24GEMyEVQXR6ARjMO7Mu8VwfZzGGYTd2CkQ7DgrYJBnTyT8tXGIFBZcd+2z
-         /7Aupadl9J7Add8zraBmNJfaTmayqpTtIQYwASfQ+2z9NaRvc8O2BOMxiTcgGNNatDjn
-         aTy/UOiUjqg1hTXOt2qLk0r2MeMWkvJxIiPlV9sv20AD3ZIonIu05vFTjISc4bFpTg6o
-         fjK97f4HJYjgLkswp9aaoSnhY2zJs1fHeFRj/b/czuWD1FFNJTn+X9mHV6UEvyS/RjPm
-         4qIg==
+	 To:Cc:Content-Type; b=oRE1YsfewHJywjdD/seF4zpXgbG+xVXU8QNBciLKT6f73PV1GFCkIE2UjcIQlF5CD39wAi93JeEoNnhY2gnenG9ehOins/diiHVMhIzrXW2muAWbkgCArFy+43GzKgCG+aDxA2/sYbiSyObfipQpy43Orb6zUoXlr+PS5oE+kJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-551b9d94603so547902e0c.1
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Oct 2025 00:24:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761290451; x=1761895251;
+        d=1e100.net; s=20230601; t=1761290678; x=1761895478;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CR+8roHK+/LDuQ73yW6ockKv+8Mv8IDa0Xrtz7eQhq0=;
-        b=QalR9QOYGOJAGwiddTpwk46mjUFhE4fw+VDpAAYu1EOpxMcf/PwefhW+o/eH6kAwkt
-         7NoqjZEucCeUu9wyAxm2kIKI50/mapirvLsa1M4Z0oSfpVccxCklevbS71BihtxFoYJu
-         7Eh0KI7zuo+He1sVfG5AqT6aHpskUHS/H623bAmAUkJOXg0B+Bz9a7H5xuzQc92Ysx+E
-         Tq3o+aAsA+fiEz5r/xYn3dgPSZskEf9WZXMJiCTqhZraOKC5dFutha5rf/KH4qLAjPQs
-         9urjrZVVDVsdfB3ncH4JY/htbdiapd9okCM4wwEhuselGBepUmusHdjL8MDu1AG2/L84
-         4bnw==
-X-Forwarded-Encrypted: i=1; AJvYcCVASYxajQHtUENgRY6r1ZhU6mWjvzfzg9ugDZXYgx1jX2Yb8jgbCN7oVpS0/AwV9stGPNBOT1TcejrD@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCGeH/wdqxak8VerSmsomBjifDZR0W4pwbTH6ALm3cOokZcs18
-	Q9neTKkvEWjt7UDq/LpoMjt3rqqvbRji+HXHReEXV6TTwVmLTUEWyUZH4/X9/bmoElYxpN5A92n
-	vhCN+9X77Zijl3/iENWi48rPy7vPeYxuRRSoswnvNqQ==
-X-Gm-Gg: ASbGnctxXYv0l+F4ZJ2DuGV2qc4fw1iu7rS0/5hs/5NJgaz2x5XxCaIKG3DqLzN5832
-	HS75WABum4cY/t3xR+kA0W2RR6MMS1m/8pj2io6L68HCT2SxtxR022B1Bn2TY4VRpA37rcsAeDl
-	pu6z4AIdot3Yxg7uTMK2UEMCvDNO2dlkYEt3TxehtbRTYriCo/U8smVo9Pr3D0/2d4+n7Qld1eR
-	77U1D0Ycx/j4eVB9b9fo0qmiGBT3soeWOmUtCGHe/DLD7NadiFAB39lkT/5dfD5APNDs2ifisbF
-	9ssRzhNfe3eqrnjgJyao9BbU3g==
-X-Google-Smtp-Source: AGHT+IH0zdKNAnAn0HY8zeCAL8aa1oecPklr3WTZJPyPQRrZZ9JAeaLToU97/5gWoSWPOCpiqMgKR7gX6TBItcaDYYE=
-X-Received: by 2002:a05:6512:220e:b0:592:f5f9:f5a9 with SMTP id
- 2adb3069b0e04-592f5f9f709mr1849794e87.36.1761290451029; Fri, 24 Oct 2025
- 00:20:51 -0700 (PDT)
+        bh=O3WV+VoszRFKObS+2w1jR5z8x4F6hvRxXouyKsJGXVw=;
+        b=ws5aMt8A7dQ6tFg2gXajcotOz/lTofCsOcFQVi7JZFy7woEsf1CmfZy2WOUXEj/8Yt
+         do9knyj6DZIBkVN3kaf4D1U/VcAvg7czBZB/+QEzst0yEbDSJv8rzOP9/eod/osbaycL
+         ynSa8PZCOluYb0/gwqAfAq2CRty2HsjSBzqBFpACEJRyCGYKp9+XnT0ESrA9A3UBNqkp
+         wVsBFeNxyTGoELYv3917gkxa4veUS46YpLnFCrx2nFFYU8THCu1vcFFcAdK+2zPL48+S
+         RnO+BhUXAPTvpRW1Jx1Cq7lnU85ls0/a9i96xnCtmhrE4JVPIyQghXqwm1S5CqbIPVR1
+         CbCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUDcdDVu9iX/RmfJIEwat3FrUE3Mk/eyRxRNyP4aP0ZqX9aX419YFNGb7rSgFKYQ3qY/A+LHScR8mUa@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHSGIM6gVTkIIiYDs02haCTPxQ4tzS3j6uDwLcr6+0doiBbX9Y
+	uxIrGZQZIqHK3rcfRC0ybecayM5zFSUozTt2SA0LdQgBuLU8n2/A4Uy/zDZgw5ig
+X-Gm-Gg: ASbGncttIkpHf7+DONUTcYeSOMACYHfzNk626ODme1pX+reKOvVcRxotCSYXEmoNUUn
+	si17GKD7MmLF3QDYSvvC7EtzBzD5zycxz5GR0TgiRoUhZuq/cT0mDNzXJFtkFum//RMsBUos3vr
+	AQaoVq0IpWH2+ua1N5B+6hO+eTvMfBsgGh9Cuu/hM4LXhfiIVVMSRQdFZxi7JRggFQREKasJqd5
+	KrYRQjbc2989UT/hpASfZo30qDMdFIp9V7itVnPwrzSuEgy+m+tirkK60tq3F4MrvGWezCj6WRo
+	h0wf0HEoVsNDj76eECkl8kA0Lpe3/pMRoW97jEVlzrbf8aaSukBAqAiZZ0bBp71B+pBFiDa5ebB
+	QCXBUp+hTRq69zniNf1ronnyuxQbaBiW5tFk081go5jaFaGP5M9AQuE4BiNYgw67+V3WR7p8Peo
+	OzXWZqsVvaOngNAHlAepcUWXGEtRivUc9SOB6a37ZVoVI8KPSk
+X-Google-Smtp-Source: AGHT+IEmBoGJKXr3mUH7VkJaKN+GLafrPR+AGQpK9051Dtgu+Z/qBq/dXgLYpdA7JbTMIgacYSJdZg==
+X-Received: by 2002:a05:6122:4147:b0:54c:da0:f709 with SMTP id 71dfb90a1353d-557ceac3fa9mr305786e0c.13.1761290677671;
+        Fri, 24 Oct 2025 00:24:37 -0700 (PDT)
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-557bd8e5e87sm1791575e0c.11.2025.10.24.00.24.37
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Oct 2025 00:24:37 -0700 (PDT)
+Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-5db374c282dso488109137.0
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Oct 2025 00:24:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXVdDY4Zv1mzG57jFXBijhvffGZEAcNKZYXm7Ny/9OXc0nyYBLzZ+95vbzvHJyb4CO9lKsShrm7pwKQ@vger.kernel.org
+X-Received: by 2002:a05:6102:3581:b0:5d7:dec5:a464 with SMTP id
+ ada2fe7eead31-5db3f8bbd6dmr232329137.10.1761290676888; Fri, 24 Oct 2025
+ 00:24:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251022-gpio-shared-v2-0-d34aa1fbdf06@linaro.org> <db05003c-8ac5-49da-b0ce-e0b668f49caf@linux.intel.com>
-In-Reply-To: <db05003c-8ac5-49da-b0ce-e0b668f49caf@linux.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 24 Oct 2025 09:20:39 +0200
-X-Gm-Features: AS18NWBFHHtshqZfLTmGnpCECipG6SuC-vURJ7Hpik3InZgpuKVx4aYTO-AzQUA
-Message-ID: <CAMRc=MdWjyTyJh5zfE5qncO8ABn7QSuV1CUZXa+cSMjWoXUrNA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/10] gpio: improve support for shared GPIOs
-To: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
-Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20251020080648.13452-1-herve.codina@bootlin.com>
+ <20251020080648.13452-8-herve.codina@bootlin.com> <CAMuHMdV03D_3b_JA2vzW4tE_QbkkT1bN1dm+zLLLX24oDHMj0Q@mail.gmail.com>
+ <20251022150339.4c48649e@bootlin.com> <CAMuHMdWY=FbO6YG1jrd0OWfrpPpBzrqmBVcWnw7TnnsKPGgr8A@mail.gmail.com>
+ <20251023152048.0e70a362@bootlin.com>
+In-Reply-To: <20251023152048.0e70a362@bootlin.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 24 Oct 2025 09:24:25 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdX=_6MGgti2NEL6FaChBhefFLBdjeam5Zts3+Yf-Ps3Gg@mail.gmail.com>
+X-Gm-Features: AWmQ_bkc6C0U89yGzgj449WFrjiYqIBguZky57fXbpHAfhiWelGeFgRG-a9YogQ
+Message-ID: <CAMuHMdX=_6MGgti2NEL6FaChBhefFLBdjeam5Zts3+Yf-Ps3Gg@mail.gmail.com>
+Subject: Re: [PATCH v5 7/8] soc: renesas: Add support for Renesas RZ/N1 GPIO
+ Interrupt Multiplexer
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Hoan Tran <hoan@os.amperecomputing.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Saravana Kannan <saravanak@google.com>, 
+	Serge Semin <fancer.lancer@gmail.com>, Phil Edworthy <phil.edworthy@renesas.com>, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Pascal Eberhard <pascal.eberhard@se.com>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 24, 2025 at 9:17=E2=80=AFAM P=C3=A9ter Ujfalusi
-<peter.ujfalusi@linux.intel.com> wrote:
->
->
->
-> On 22/10/2025 16:10, Bartosz Golaszewski wrote:
-> > Problem statement: GPIOs are implemented as a strictly exclusive
-> > resource in the kernel but there are lots of platforms on which single
-> > pin is shared by multiple devices which don't communicate so need some
-> > way of properly sharing access to a GPIO. What we have now is the
-> > GPIOD_FLAGS_BIT_NONEXCLUSIVE flag which was introduced as a hack and
-> > doesn't do any locking or arbitration of access - it literally just han=
-d
-> > the same GPIO descriptor to all interested users.
->
-> I had few stabs on this in the past, all got somehow derailed, one
-> example was:
-> https://lkml.org/lkml/2019/10/30/311
->
+Hi Herv=C3=A9,
 
-The main issue I see with this approach is adding an actual device
-node for the shared GPIO which is now not accepted in DT bindings. We
-only create nodes for actual HW components. All the information is
-already in the device-tree, we just need to scan it which is what I'm
-trying to do here.
+On Thu, 23 Oct 2025 at 15:21, Herve Codina <herve.codina@bootlin.com> wrote=
+:
+> On Thu, 23 Oct 2025 13:30:53 +0200
+> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > I have in mind a use case that can lead to a non-contiguous mapping.
+> > >
+> > > The RZ/N1 SoC embeds a Cortex-M3 CPU. This CPU can use GPIOs and
+> > > some of them for interrupt purpose. In that case, those GPIOs have
+> > > to be routed to the interrupt line expected by the Cortex-M3.
+> > >
+> > > And so, we have some interrupts reserved for CPUs running Linux and
+> > > some others for the Cortex-M3.
+> > >
+> > > Among those reserved interrupts may some are not used.
+> > >
+> > > for instance:
+> > >   Interrupt 103, 102: Reserved and used by Linux
+> > >   Interrupt 103: Reserved for Linux but not used -> Hole in the mappi=
+ng
+> > >   Interrupt 104: Reserved and used my Cortex-M3 (need to be routed by=
+ Linux)
+> >
+> > 102 does not seem to  be correct?
+>
+> My bad, my example was wrong.
+>    Interrupt 103, 104: Reserved and used by Linux
+>    Interrupt 105: Reserved for Linux but not used -> Hole in the mapping
+>    Interrupt 106: Reserved and used my Cortex-M3 (need to be routed by Li=
+nux)
 
-Bartosz
+OK, much better!
+
+> > > I don't know if this use case is relevant but I think we should be to=
+o restrictive
+> > > on the mapping and so accept holes.
+> > >
+> > > With that in mind, I let you confirm that you still prefer to have a =
+mapping
+> > > without any holes. A future patch to support that is always possible.
+> >
+> > While that would indeed be a non-discontiguous mapping, I do not see ho=
+w
+> > it is related to rzn1_irqmux_output_lines[] in the driver.  That array
+> > would still contain the same contiguous values 103..110, right?
+>
+> The array rzn1_irqmux_output_lines is still contiguous yes but the mappin=
+g
+> defined in irq-map property no.
+>
+> Looking back again at your proposal, indeed I can remove the following lo=
+op:
+>         for (i =3D 0; i < output_lines_count; i++) {
+>                if (parent_args->args[1] =3D=3D output_lines[i])
+>                        return i;
+>         }
+>
+> With just
+>         if (parent_args->args[1] >=3D RZN1_IRQMUX_SPI_BASE &&
+>             parent_args->args[1] < RZN1_IRQMUX_SPI_BASE + RZN1_IRQMUX_NUM=
+_IRQS) {
+>                 return parent_args->args[1] - RZN1_IRQMUX_SPI_BASE;
+>
+>         dev_err(dev, "Invalid GIC interrupt %u\n", parent_args->args[1]);
+>         return -EINVAL;
+
+Good. I like simpler code ;-)
+
+BTW, please invert the logic, i.e. bail out early in case of error.
+
+> > Sorry, I haven't been following the development of this driver that
+> > closely (RZ/N1 is completely different from e.g. R-Car, and I never
+> > had access to an RZ/N1 platform), so perhaps I am missing something.
+> > Why does the user have to specify an interrupt-map in DT? Can't the
+> > driver create the mapping dynamically, based actual usage of the
+> > GPIOs? I.e. the first 8 GPIOs that ask for interrupt functionality
+> > receive it, and are mapped to an available GIC interrupt?
+> > I believe this is how rzg2l-irqc works, mapping up to 32 GPIO interrupt=
+s
+> > to 32 GIC (TINT) interrupts.
+>
+> I think the main difference with rzg2l-irqc is that the RZ/N1 irq mux is
+> clearly not an interrupt controller.
+>
+> It is just a mux with 96 inputs (GPIO lines coming from several GPIO
+> controller) and 8 outputs (connected to the GIC).
+>
+> It is represented as an interrupt nexus node and has an interrupt-map pro=
+perty.
+> to describe the routing.
+>
+> The interrupt-map property cannot be dynamically created.
+>
+> Also, the routing is necessary even if the related GPIO is not used by Li=
+nux.
+> This GPIO can be used as a GPIO input interrupt line by the Cortex M3.
+>
+> If the irq mux driver performs the routing only on Linux GPIO usage, it w=
+ill
+> not route GPIOs depending on Cortex M3 internal usage.
+
+Thanks, makes sense!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
