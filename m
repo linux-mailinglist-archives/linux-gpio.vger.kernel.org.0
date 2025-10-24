@@ -1,136 +1,85 @@
-Return-Path: <linux-gpio+bounces-27590-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27591-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38793C06DA0
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 17:03:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A995C06ED9
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 17:20:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 253FF400FEF
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 15:01:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8E8173B5AD3
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 15:17:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42761322DD1;
-	Fri, 24 Oct 2025 15:01:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76B42326D6D;
+	Fri, 24 Oct 2025 15:17:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eapkqcC3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fnidcWJf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E594304980
-	for <linux-gpio@vger.kernel.org>; Fri, 24 Oct 2025 15:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B07E3093D3;
+	Fri, 24 Oct 2025 15:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761318075; cv=none; b=Olthx2h0QJ8JJkfbH7+5UVLbPxwiXPQDnUhA2Ws5msNmUZKrgkOX4ck3rKcaaFy5H5u+TJ4w5iw0NjmevVuewz2wJweJEP0bP/8K73yOUcr52gBsvfzwt8kt0DEX1bk1XQzkyTB/GXOp0GU0dojAkg95Ah92F7N3yLLclIdQTlc=
+	t=1761319053; cv=none; b=bQeA8G9d6Dmha2cvJmE5Mq+x8WPzByjSN2+RHGCfeW8+k3CsEhjay4H2hn6RiPmTxH9cr16NrbjfMCm43n5zjNcCL6WVxFfj98BzLUJt9pQQqPHkZ8Ce3oWnK7pxP6lQrDbzPhBeuQbHPjysZKtptbZfXHlunNUBk7g1o3pnYQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761318075; c=relaxed/simple;
-	bh=Ipd+fJKM54dwFhjqVqY2/vt0B0gPimIr32J295wlB+M=;
+	s=arc-20240116; t=1761319053; c=relaxed/simple;
+	bh=RNj00qgzBnBj+fWK9DQNur4wUMvK1F1KP/Ib1c7V6fQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QZk2/7lvHAt827TA98jSOHaRjBFH7YvvAMnOC+GdyEw7S7saZTmnox/q+SU2TENwOHMGwFSqZMQlEIHLU1vJHeK1a7/13Ol+u55LTgD0MWxXZRrMCHr6+y9dPDBd7aGQYej+xAiIKcZ/eqfSYIEHtFsUVD2mtV8Kx5olrUiOTFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eapkqcC3; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b6cf07258e3so1708889a12.0
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Oct 2025 08:01:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1761318071; x=1761922871; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ipd+fJKM54dwFhjqVqY2/vt0B0gPimIr32J295wlB+M=;
-        b=eapkqcC3gDLEE0fjFzXqlUpmKvq26CySDN96HJfNC9kv7HhsNAtnUBRYeLKEIXbAn8
-         YpOyEvQjCfQqLXG+3AqChnWMtVXL/diT3BurH2Zn/GeJulkqZMzRJpiuxH87jI6ypO4A
-         oHiC2s2yTaPotu4xCvggyAwl+uMapNTq8fzLTNMT2P9YgB5b8+VnRU74JGrCCXUQ3K48
-         ujKlTu6HCge7RYxJ6Fa1VzZehJHT1IwzdKhr+ZX4bOX+Ax97uIeYdwgv7jmgUUZs4ZsA
-         /QWidY+fOpUplPG7CXpWIjQHF7bKNjHU1npOH6gc5sgpAxtau9u2Gj35C3JziPlBeVJE
-         jmHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761318071; x=1761922871;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ipd+fJKM54dwFhjqVqY2/vt0B0gPimIr32J295wlB+M=;
-        b=BBHeIk3QOUjVGbPQHIQzcsmM/CnbRLlkK47W2DyVfPRoKLV4IAoK5dlOKxlfDcjNE/
-         YX/TOQflQpCV+ivyBiyOobSHqlW6Dn5BuWAe9UU0yazvMkNoDspZHVWreOdgXjFA0sZ8
-         /DA+eHEygu7k5hoEQgXsuqDWeuSY464DaKOEKGg6U4ygVanETA75ubuzGPWL86JeIoYo
-         Mo/0wrLiyqj3PRCEEM3SbpP9UqebKORNtIO6DFFGL2Q3Sliw3ackdwiFEGEpZi4reRsh
-         HDRrggZA15GBVuPXr8K6z62Lms2go6AYiXBHxZ9oREEaI280eHKY55KOhhK/QTpOGPuD
-         NzvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUjpaCWuu43JbRr8t7diroD/a88Kx7n57/Kt3aRHs0IMmjMr2QXDRk5Zye8RoXDpkN8JQ4rp1c+9eb+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1c2/6Fpo7vdwk+OPntxcWuK6UDMkYZD6pS/cMCXcq8QQzlTZ/
-	SEXVCLbAIR5mEqiV+n+a9OYf54/1e6Ym3DoSrJgiGD/Y1FF59caCUoaajt6WPubAb30=
-X-Gm-Gg: ASbGncst441ORyt4A5dWjIgYIAYMyZUPYdCoTBnFfCSjnv0dnaoTllRnaQ0cFWI4qxu
-	hcAw9Cu2HZIH4Gl0534M13lxr0o1cqdIv3HUPos8zLD51MexfhPHUTPiDBUeaxJQMMWz3L5aqJO
-	35NIlItez062cGZGDVVesM8ZSoJmMBsR2cGt6T1gzZmKWRQj01MHY/Z+pLvULmFJzbMt6HF0y8k
-	nR3vk5f2yPw9d8QINYowRMhcqr7M941sEFzuBZwVv4/NLf5nX/uBpTX0129OYoR37hnEmMTdA8h
-	mcJ5MbucJNhmihf7fwc+ojSqdI4LCPNmhikeUuTEUrhVMeRWZ94bz97wq1hk9jQWkoV0TsWoIFT
-	aklgg1I5t2gF44CCaCPu0gtb4J1mmkYdznZEXmpgPRuZsuU1ckZ3E6trt6pBzolMqZIInBFq8te
-	yubZg=
-X-Google-Smtp-Source: AGHT+IHuDfyfb1rJHT8ZJBZDENWXEuZEgoATFw7kevTr6Wui6O5rdZfaFJ1o7hmkdy/EeXDSX0H8pg==
-X-Received: by 2002:a17:903:8c6:b0:28d:18fb:bb93 with SMTP id d9443c01a7336-290c9c8968cmr381787975ad.7.1761318070419;
-        Fri, 24 Oct 2025 08:01:10 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:c4aa:f655:2dba:5bb5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2946e0f3794sm59537715ad.88.2025.10.24.08.01.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Oct 2025 08:01:09 -0700 (PDT)
-Date: Fri, 24 Oct 2025 09:01:05 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Robert Foss <rfoss@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Georgi Djakov <djakov@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Joerg Roedel <joro@8bytes.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Olivia Mackall <olivia@selenic.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=qSPcveR0H1MfDVBKv9msNk8D2M0QP8k8k/3rLXWyGTnOMuu518KcnYespCuH5r/SX/gX7uUIbvrUHPSg5k7zXj0IhpHt3cZAMVsfhSwYYio1WaeGLE6tKTPqzp5FOiRgJIur4Dl2gPCkSZHXQJKNodypDnHSCnrgmfXMqPAlF1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fnidcWJf; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761319051; x=1792855051;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RNj00qgzBnBj+fWK9DQNur4wUMvK1F1KP/Ib1c7V6fQ=;
+  b=fnidcWJfpjH8xqg6sXlOjorweRSGj1Kxj9dhvrIqBI5I5VnohhwJVDhK
+   hyHc/EJ+B+fc6hyGFuhjPXBM2FVTOUxrBTOhtoO4jA7LM1aDF5eyrnHpY
+   BPYmOT6+Rj4kF3UOcyDmIw3XlY5fGqagmx2llUk8hpHUKb6dRaoO4t8HJ
+   DKAmHezskJdtrj6fgFYGjNwjZ2jkde34qBsSjyGrvNy9VBPKD+silwhfv
+   xX0UGASPgjl0xi/eZrvzkHivBvI95UUM+gKM96/KU84Wv5qQEAIkSLr8d
+   4uBJ+OBCjO4L6IylMBLH5y/cnUwFeixT6X2CBXRqaoZGntDz38/AuyzH7
+   w==;
+X-CSE-ConnectionGUID: wfjd4SPVSueCATyrx9f5AA==
+X-CSE-MsgGUID: VkQoLETwSkWLtdFcqMLCoA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="73790716"
+X-IronPort-AV: E=Sophos;i="6.19,252,1754982000"; 
+   d="scan'208";a="73790716"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2025 08:17:30 -0700
+X-CSE-ConnectionGUID: UlODLOwjQkyrdeMABv4F1A==
+X-CSE-MsgGUID: OVoN73+USM+HxLAtG1WNFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,252,1754982000"; 
+   d="scan'208";a="184828576"
+Received: from egrumbac-mobl6.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.134])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2025 08:17:27 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 9CF5B120A92;
+	Fri, 24 Oct 2025 18:17:23 +0300 (EEST)
+Date: Fri, 24 Oct 2025 18:17:23 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-pm@vger.kernel.org, iommu@lists.linux.dev,
-	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
-	netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Remove extra blank lines
-Message-ID: <aPuUseub-Z60hrOx@p14s>
-References: <20251023143957.2899600-1-robh@kernel.org>
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2 3/9] software node: allow referencing firmware nodes
+Message-ID: <aPuYg0ws8Q2sp7Wv@kekkonen.localdomain>
+References: <20251022-reset-gpios-swnodes-v2-0-69088530291b@linaro.org>
+ <20251022-reset-gpios-swnodes-v2-3-69088530291b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -139,7 +88,154 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251023143957.2899600-1-robh@kernel.org>
+In-Reply-To: <20251022-reset-gpios-swnodes-v2-3-69088530291b@linaro.org>
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org> # remoteproc
+Hi Bartosz,
+
+On Wed, Oct 22, 2025 at 03:41:02PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> At the moment software nodes can only reference other software nodes.
+> This is a limitation for devices created, for instance, on the auxiliary
+> bus with a dynamic software node attached which cannot reference devices
+> the firmware node of which is "real" (as an OF node or otherwise).
+
+That's not entirely true: you can add a software node as a secondary to an
+existing OF or ACPI fwnode. This has not been used widely and it's not very
+convenient to set up.
+
+Additional properties in ACPI or OF nodes will still need the secondary
+node, after these patches.
+
+> 
+> Make it possible for a software node to reference all firmware nodes in
+> addition to static software nodes. To that end: use a union of different
+> pointers in struct software_node_ref_args and add an enum indicating
+> what kind of reference given instance of it is. Rework the helper macros
+> and deprecate the existing ones whose names don't indicate the reference
+> type.
+> 
+> Software node graphs remain the same, as in: the remote endpoints still
+> have to be software nodes.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/base/swnode.c    | 14 ++++++++++----
+>  include/linux/property.h | 40 +++++++++++++++++++++++++++++++++-------
+>  2 files changed, 43 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+> index b7c3926b67be72671ba4e4c442b3acca80688cf7..d08b914c07691336540cdf1dfbd77a697e7b4521 100644
+> --- a/drivers/base/swnode.c
+> +++ b/drivers/base/swnode.c
+> @@ -535,9 +535,12 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
+>  	ref_array = prop->pointer;
+>  	ref = &ref_array[index];
+>  
+> -	refnode = software_node_fwnode(ref->node);
+> -	if (!refnode)
+> -		return -ENOENT;
+> +	if (ref->swnode)
+> +		refnode = software_node_fwnode(ref->swnode);
+> +	else if (ref->fwnode)
+> +		refnode = ref->fwnode;
+> +	else
+> +		return -EINVAL;
+>  
+>  	if (nargs_prop) {
+>  		error = fwnode_property_read_u32(refnode, nargs_prop,
+> @@ -634,7 +637,10 @@ software_node_graph_get_remote_endpoint(const struct fwnode_handle *fwnode)
+>  
+>  	ref = prop->pointer;
+>  
+> -	return software_node_get(software_node_fwnode(ref[0].node));
+> +	if (!ref->swnode)
+> +		return NULL;
+> +
+> +	return software_node_get(software_node_fwnode(ref[0].swnode));
+>  }
+>  
+>  static struct fwnode_handle *
+> diff --git a/include/linux/property.h b/include/linux/property.h
+> index 50b26589dd70d1756f3b8644255c24a011e2617c..52e784a3dfd4c93cee8b35e1cef5e0600639ecc5 100644
+> --- a/include/linux/property.h
+> +++ b/include/linux/property.h
+> @@ -355,23 +355,37 @@ struct software_node;
+>  
+>  /**
+>   * struct software_node_ref_args - Reference property with additional arguments
+> - * @node: Reference to a software node
+> + * @swnode: Reference to a software node
+> + * @fwnode: Alternative reference to a firmware node handle
+>   * @nargs: Number of elements in @args array
+>   * @args: Integer arguments
+>   */
+>  struct software_node_ref_args {
+> -	const struct software_node *node;
+> +	const struct software_node *swnode;
+> +	struct fwnode_handle *fwnode;
+>  	unsigned int nargs;
+>  	u64 args[NR_FWNODE_REFERENCE_ARGS];
+>  };
+>  
+> -#define SOFTWARE_NODE_REFERENCE(_ref_, ...)			\
+> +#define __SOFTWARE_NODE_REF(_ref, _type, _node, ...)		\
+>  (const struct software_node_ref_args) {				\
+> -	.node = _ref_,						\
+> +	._node = _ref,						\
+>  	.nargs = COUNT_ARGS(__VA_ARGS__),			\
+>  	.args = { __VA_ARGS__ },				\
+>  }
+>  
+> +#define SOFTWARE_NODE_REF_SWNODE(_ref, ...)			\
+> +	__SOFTWARE_NODE_REF(_ref, SOFTWARE_NODE_REF_SWNODE,	\
+> +			    swnode, __VA_ARGS__)
+> +
+> +#define SOFTWARE_NODE_REF_FWNODE(_ref, ...)			\
+> +	__SOFTWARE_NODE_REF(_ref, SOFTWARE_NODE_REF_FWNODE,	\
+> +			    fwnode, __VA_ARGS__)
+> +
+> +/* DEPRECATED, use SOFTWARE_NODE_REF_SWNODE() instead. */
+> +#define SOFTWARE_NODE_REFERENCE(_ref, ...)			\
+> +	SOFTWARE_NODE_REF_SWNODE(_ref, __VA_ARGS__)
+> +
+>  /**
+>   * struct property_entry - "Built-in" device property representation.
+>   * @name: Name of the property.
+> @@ -463,14 +477,26 @@ struct property_entry {
+>  #define PROPERTY_ENTRY_STRING(_name_, _val_)				\
+>  	__PROPERTY_ENTRY_ELEMENT(_name_, str, STRING, _val_)
+>  
+> -#define PROPERTY_ENTRY_REF(_name_, _ref_, ...)				\
+> +#define __PROPERTY_ENTRY_REF(_type, _name, _ref, ...)			\
+>  (struct property_entry) {						\
+> -	.name = _name_,							\
+> +	.name = _name,							\
+>  	.length = sizeof(struct software_node_ref_args),		\
+>  	.type = DEV_PROP_REF,						\
+> -	{ .pointer = &SOFTWARE_NODE_REFERENCE(_ref_, ##__VA_ARGS__), },	\
+> +	{ .pointer = &_type(_ref, ##__VA_ARGS__), },			\
+>  }
+>  
+> +#define PROPERTY_ENTRY_REF_SWNODE(_name, _ref, ...)			\
+> +	__PROPERTY_ENTRY_REF(SOFTWARE_NODE_REF_SWNODE,			\
+> +			     _name, _ref, __VA_ARGS__)
+> +
+> +#define PROPERTY_ENTRY_REF_FWNODE(_name, _ref, ...)			\
+> +	__PROPERTY_ENTRY_REF(SOFTWARE_NODE_REF_FWNODE,			\
+> +			    _name, _ref, __VA_ARGS__)
+> +
+> +/* DEPRECATED, use PROPERTY_ENTRY_REF_SWNODE() instead. */
+> +#define PROPERTY_ENTRY_REF(_name, _ref, ...)				\
+> +	PROPERTY_ENTRY_REF_SWNODE(_name, _ref, __VA_ARGS__)
+> +
+>  #define PROPERTY_ENTRY_BOOL(_name_)		\
+>  (struct property_entry) {			\
+>  	.name = _name_,				\
+> 
+
+-- 
+Regards,
+
+Sakari Ailus
 
