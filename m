@@ -1,104 +1,157 @@
-Return-Path: <linux-gpio+bounces-27583-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27584-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9C61C05952
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 12:30:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22C15C06267
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 14:03:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 3D7E535BC56
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 10:30:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CACDF1C00C05
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 12:04:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C25B3101B5;
-	Fri, 24 Oct 2025 10:30:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6315931327E;
+	Fri, 24 Oct 2025 12:03:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l/d2Y+U8"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="FAr0OUgF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D65A72C08C5;
-	Fri, 24 Oct 2025 10:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DECC2AE90
+	for <linux-gpio@vger.kernel.org>; Fri, 24 Oct 2025 12:03:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761301843; cv=none; b=WqszXQ8Y1GDhUpTUg/4Blg8h60kIOww2lHd7bdc1E5ECjLi8LEM9hShjyATOBDbKwo7ObuBo6lNVlH1Pn3aHzwn3zx3999FjBRwTzxlOKoFCew6LNvvc7Y5CQrPHfPO6S83gYCcNTy9zDD3g3bN1XJDkiBR0yyOz3t4GtdNYIOY=
+	t=1761307413; cv=none; b=dmcYDxpwQAo53UrlIeQcsmN3bo7uXYw1L6qOGiMdk14bgV/lzFUIqBJuQLI218UsU3o7Gi6Z1JrXulrCqK8iiRImFIYnX0wh6KhLBVm91f2ABn1MgK+yXuVsfpgZvgqCk6bZaZuutF1ldlpnGFh8urriiONqhfY0oI4vUbx+5sQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761301843; c=relaxed/simple;
-	bh=xjBMkmI+qsDoGp9ZiRzBUp/jILZSgk47twlvE8podR4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V3tLwzIjbKeEYPSi2uB1jC8xElcJElsFUQBW+bL3lag82L5dWdGogO0j2ND7PJNmpxax1BRahWTKnVW+FwatlmBO0j0TZaCR8rUzoFUPWoMS+UDuM5Akun5De4LI/orJEy7f4PX/+EC41MlB1w3ZYxwADrK6fwIjDdmBSK+BABM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l/d2Y+U8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E75CC4CEF1;
-	Fri, 24 Oct 2025 10:30:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761301842;
-	bh=xjBMkmI+qsDoGp9ZiRzBUp/jILZSgk47twlvE8podR4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=l/d2Y+U8bQs8VF+XsPwC/lo+bxBE0j4eWS6VDHNCD/dOyGEFM7pOVi7s1xB8wyT1F
-	 jv0kcNfIyneAU7DFc2XMuu8oHJ2C93dqlydWRrXYT3RCBqDbolkiQ18EsFfqCwzdIT
-	 F0FJ+u2jbBRNARJVywQ0ZMr1PM6LZQ50TTD9W4llmkHp0cxkQM8R7YTAZNZuhKj472
-	 K02nhKLn9f/Q1d19EUPlbhQT59235yFCKn8XDWmWaJOjbnUv34C0E0GbdT7yY2B8c1
-	 q4jVSAnw+7Qfl9JCs14YGXOOwUUitTY/lsolUgoznKOAtNMsr23PjYx6i1nIOnN4f/
-	 YsZZGbsmS20jw==
-Date: Fri, 24 Oct 2025 12:30:37 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
-	Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Guenter Roeck <linux@roeck-us.net>, 
-	Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Georgi Djakov <djakov@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Joerg Roedel <joro@8bytes.org>, Jassi Brar <jassisinghbrar@gmail.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	Mathieu Poirier <mathieu.poirier@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Olivia Mackall <olivia@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-pm@vger.kernel.org, iommu@lists.linux.dev, linux-media@vger.kernel.org, 
-	linux-mtd@lists.infradead.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, linux-pwm@vger.kernel.org, 
-	linux-remoteproc@vger.kernel.org, linux-crypto@vger.kernel.org, linux-sound@vger.kernel.org, 
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Remove extra blank lines
-Message-ID: <fncqrwr6pi3ttxkf44hncy35ogxqdvql52hdcycq4yakbkeose@gv6lxr6a4uri>
-References: <20251023143957.2899600-1-robh@kernel.org>
+	s=arc-20240116; t=1761307413; c=relaxed/simple;
+	bh=Men9/wmG/ZUUgBBI72/KEQEc4VGPzum8/bYIlfv7Ops=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=svE/wLYqfpUT5HFyys8szYUXcbUEbnOrvL8Ang9o4TljyiQdDPIW1X0xxvdZOqFvU4T+YZMtcoSbLdHZmtLhHUA5QMMXWiE0Ffi+LaDFav4yvnQ1ja5cazjmMreEqX4vmA6F8XWZDRJySqA9rv0KAX8Q7ztC2GBbQSq4uF4as4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=FAr0OUgF; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3f0ae439b56so990217f8f.3
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Oct 2025 05:03:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761307409; x=1761912209; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mPV5ihUnHr8u4lnMxWNUS59GCM6jDnONUSLo0YK3wR4=;
+        b=FAr0OUgFlkAkDbdHemYPcLFoMPCHOolddCr7AeeC9ZGHjtXklnrXvzHrgcj8u69sQ+
+         F9/5HaUrJ3XTJkO9HpTyMHzA5pxAVgAXVhYHIc/fLniv4BuUGsJQHw8RhcqrUNsKQ2zt
+         trARhMm0lXTEdn54YFdtGNGoTsbCNUVsc5VYzBAO1Z3bYSSHmNoW81Ol8wB2QtIaNl6g
+         ZQoi5ux5wCVm+CLZV7JendX2wf8OOs2k6jznTSOXsesuSpn40MwZEpmMkiKjUnkC0mCp
+         oP2QXrcOLfZTNg38dZRi2IO374wdLH16pjQxY3O8xMkmK07r4XVvZ2xxVlBrYSghGKSe
+         kf8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761307409; x=1761912209;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mPV5ihUnHr8u4lnMxWNUS59GCM6jDnONUSLo0YK3wR4=;
+        b=A3KSFg+UET71y1SUISfHNifjZtPOm+wE9rRKtQlrUwNKPaAgRxq6/gMGODZfsbcVDU
+         E9uiBLQnil2IgB2tcQQ4N1BYB9vcRAsw8dA4z6QT72O9cbhJBqG5HELXmMo78ChCq1bm
+         hK7cYh2xJO6awp5A+DMOj2Sz3iy4T3SiJpr/T+8Yfv47KmXZZMHeM+Wkfp7qL35tEovd
+         7bndiOrowLBGnlqFTM2+eBbV3P22EoYJ9DQJphTUDEETj6osq74orc0DA+HEbors7cx+
+         OgKk69CiXgsDC+DJZfysJPcZcDsj62OB6Ii5/is05IibiEnc74o+3QN30Pvk6eeRVSCy
+         +rNA==
+X-Forwarded-Encrypted: i=1; AJvYcCW5CEz7BQo3IJY0ELFNKr5wJRMGwEsk5sescwTtalN3GNZTk66M7HCS+JbHknYAoj+iyB6uF7GbEake@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCmzOKtuQpFDVppmsf3Y/k1TPNXDFxIamYMIF7pXP0XSP4ED3T
+	nOr1ZVLmRbAnSd1zs0S90KAs2hA28G+E3jt3J6Fklfi3Axb+ehnQn4hk1ZrLt83IRDM=
+X-Gm-Gg: ASbGncuUwMtvehKGHd8f/DvVK6OJsG5nPVw38IgeIMVn8KBtVfxwBB1D2zPHHzDz38r
+	rH6eT8dBb8d4xDz+pqBADVwefvPzmRoqgzPjyF5wM8WN0bTTQeW079KKihe2UbZEJNjx3GEjyAk
+	b8Ek61JgqGg2FEyNMIGOLdVV9h6WZL8zR5/UUT37+2o/UWVE9IGenUJ4Yv55lHFp1Jnrf39NnHi
+	ZIzt0Wa+NSuss5ACJNN7J7a4nc+OVfxpDgONZouvtUH1thhCM1BAPHDA23Xz+MkeuWb5OYY79SO
+	7AVpUGJemypK/eZNCwHOeLO9NiW8ct1hRsq4AuRFDefymdfYKAz1RSU+r9uHzBKZNzNY3QJTElb
+	THedNsnGGy2XUXfYFSsFGyiLRXrnD2pkUUgQwa7RRyzFkriBQ4W//Rb/nOn5DV2ryOfwgc9N2l1
+	Q=
+X-Google-Smtp-Source: AGHT+IHzLJMr2J1r+wANIYV3joHu+TXVlgpo7zfV0xKNG+Ayhr2mf56CMgyvBQhzNYKPRT/tLgXu/w==
+X-Received: by 2002:a05:6000:26d1:b0:427:45f:ee2a with SMTP id ffacd0b85a97d-42704d49857mr16223381f8f.9.1761307409258;
+        Fri, 24 Oct 2025 05:03:29 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:7ac7:4d3b:a7b2:b32])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429898ec1dfsm9094123f8f.43.2025.10.24.05.03.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Oct 2025 05:03:28 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio fixes for v6.18-rc3
+Date: Fri, 24 Oct 2025 14:03:26 +0200
+Message-ID: <20251024120326.48028-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251023143957.2899600-1-robh@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-Hi Rob,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-On Thu, Oct 23, 2025 at 09:37:56AM -0500, Rob Herring (Arm) wrote:
-> Generally at most 1 blank line is the standard style for DT schema
-> files. Remove the few cases with more than 1 so that the yamllint check
-> for this can be enabled.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+Linus,
 
-Acked-by: Andi Shyti <andi.shyti@kernel.org>
+Please pull the following set of GPIO driver and ACPI fixes for the next
+RC. Commit 00aaae60faf5 ("gpio: regmap: add the .fixed_direction_output
+configuration parameter") is technically a small new feature but it's
+required by commit 2ba5772e530f ("gpio: idio-16: Define fixed direction
+of the GPIO lines") which fixes a reported regression in LTS.
 
 Thanks,
-Andi
+Bartosz
+
+The following changes since commit 211ddde0823f1442e4ad052a2f30f050145ccada:
+
+  Linux 6.18-rc2 (2025-10-19 15:19:16 -1000)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-fixes-for-v6.18-rc3
+
+for you to fetch changes up to 4c4e6ea4a120cc5ab58e437c6ba123cbfc357d45:
+
+  gpio: ljca: Fix duplicated IRQ mapping (2025-10-23 14:30:11 +0200)
+
+----------------------------------------------------------------
+gpio fixes for v6.18-rc3
+
+- fix regressions in regmap cache initialization in gpio-104-idio-16 and
+  gpio-pci-idio-16
+- configure first 16 GPIO lines of the IDIO-16 as fixed outputs
+- fix duplicated IRQ mapping that can lead to an RCU stall in gpio-ljca
+- fix printf formatters passed to dev_err() and make failure to set
+  debounce period non fatal
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      gpiolib: acpi: Use %pe when passing an error pointer to dev_err()
+
+Bartosz Golaszewski (1):
+      Merge tag 'intel-gpio-v6.18-1' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel into gpio/for-current
+
+Hans de Goede (1):
+      gpiolib: acpi: Make set debounce errors non fatal
+
+Haotian Zhang (1):
+      gpio: ljca: Fix duplicated IRQ mapping
+
+Ioana Ciornei (1):
+      gpio: regmap: add the .fixed_direction_output configuration parameter
+
+William Breathitt Gray (3):
+      gpio: 104-idio-16: Define maximum valid register address offset
+      gpio: pci-idio-16: Define maximum valid register address offset
+      gpio: idio-16: Define fixed direction of the GPIO lines
+
+ drivers/gpio/gpio-104-idio-16.c  |  1 +
+ drivers/gpio/gpio-idio-16.c      |  5 +++++
+ drivers/gpio/gpio-ljca.c         | 14 +++-----------
+ drivers/gpio/gpio-pci-idio-16.c  |  1 +
+ drivers/gpio/gpio-regmap.c       | 26 ++++++++++++++++++++++++--
+ drivers/gpio/gpiolib-acpi-core.c | 31 +++++++++++++++++--------------
+ include/linux/gpio/regmap.h      |  5 +++++
+ 7 files changed, 56 insertions(+), 27 deletions(-)
 
