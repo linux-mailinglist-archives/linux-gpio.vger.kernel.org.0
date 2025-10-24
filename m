@@ -1,154 +1,137 @@
-Return-Path: <linux-gpio+bounces-27579-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27580-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B42FC04BB7
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 09:32:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD593C04E35
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 09:58:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8407B3AA27F
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 07:32:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 90776189F411
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 07:57:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A8F32E36F3;
-	Fri, 24 Oct 2025 07:32:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F2042FB612;
+	Fri, 24 Oct 2025 07:56:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eY4dbEO7"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="v3iF3RAP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBE12E2DDE;
-	Fri, 24 Oct 2025 07:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E702F9C37
+	for <linux-gpio@vger.kernel.org>; Fri, 24 Oct 2025 07:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761291148; cv=none; b=TwF0rCJ/cSo5ixo+7BQOizVB8tvKKyAN1EZ+HELZtGVVNKUBXH987v3mnTNiGV9CjMGMA07P00QVfOaYxG4SuhvtrziIev1wM7ZTu4gSlo6fGYQ2jJls9jszi8SanQLRDkGnYG3nGlB7txuczo3gRS6mJNRo6+GDY5P1Mg8znQs=
+	t=1761292584; cv=none; b=cZgZ8CZ5w8x7jStIlNZs2G+OrKeu03Tz+px9wjz3xcDA57OGGQ0TkynlNWyGGTSUU9ikFxAhK6VGFURMNlquvbZ5FQWGQ4mOIHr3Std+D/U+J/oJZG8KVXz0mOcSqgebA9bXxACYogGqLc/XOu106zEnoTMiUokXPbI+d9/HQQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761291148; c=relaxed/simple;
-	bh=eaxooXoJIwmcd0CEY30Yd6if/sFPAp16VRbJcMq8Keg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pmhkkh27ift2dbi5J98WTO5PoYFrpDyWsBCcKVSfXWupx12doMsIPIukpOYSYt9VjMTtHgfukxsLV1g+VJor/XIWM7RgPvaqxJO1I4oCQtHoeTUh+MO4mnq+2hMzUAFVX5ASk+NZ6ViZgmiCWc7EfjExVT5V3gqTKvvtTEx3pFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eY4dbEO7; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761291146; x=1792827146;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=eaxooXoJIwmcd0CEY30Yd6if/sFPAp16VRbJcMq8Keg=;
-  b=eY4dbEO74W450/Ez2dA4g9bEDUe+w+AJZLABZTlG5tIWYxLF6AmvXsab
-   SI/JDMUadw08V+ZoBKipLbJs9hbnGA40WMjOitfScxKshJALYG67td73M
-   iLY7fqWCs3VCki/CGWBbvlX7Pnf1kRnpe+dmAHBoSl1OpGnzGgjg881D0
-   Dleg78ba0xJTkv2zcMFnayly6+WTsa8iUgLobjm+IXLTzD5Re0RQ8fr1D
-   IhlYPj0xQmDoyXHbHszsUUS+6ZnXaCFI/eI7HcrJIPSp6L6Nslgpmrw6p
-   RyiK64yz+OxDbHBJFw+iys5eNYkc7mhESzrCG8lB8rPeNo2sb/jx/fD60
-   g==;
-X-CSE-ConnectionGUID: sBWESiJxRcyP4VYZMJHFnw==
-X-CSE-MsgGUID: 3N+xhSP7QY2j009NtO+H7Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="63394483"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="63394483"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2025 00:32:25 -0700
-X-CSE-ConnectionGUID: yNWj9OsXSROF0TUUq8ct3g==
-X-CSE-MsgGUID: zkApki+9SzmjUPgtZniraQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,251,1754982000"; 
-   d="scan'208";a="189491561"
-Received: from carterle-desk.ger.corp.intel.com (HELO [10.245.246.211]) ([10.245.246.211])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2025 00:32:18 -0700
-Message-ID: <3907f4ea-31c2-42fb-b4ff-a6952874a9bb@linux.intel.com>
-Date: Fri, 24 Oct 2025 10:32:25 +0300
+	s=arc-20240116; t=1761292584; c=relaxed/simple;
+	bh=nxy0zWX1h247nPbsMpYtj4rqvQKsZpsdIsqOdaa3i18=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BwO27n5ZyxEji8ugZUy2t8CcIcSexEN52SPne8Z4mNGP14PKuvjauXrCfT87wQidZX26fNpglGwAb8dHdLqQT/IHcwEkUkoghopJOpjeJStvkN1JAHdM/MWB81h4NghXdpo46cqQ8UNJ6u57n3Vq9BltNV88UZYOuzsRFPDnAAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=v3iF3RAP; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-57bd482dfd2so1887509e87.2
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Oct 2025 00:56:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761292579; x=1761897379; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nxy0zWX1h247nPbsMpYtj4rqvQKsZpsdIsqOdaa3i18=;
+        b=v3iF3RAPDCb1elFqO0VtoWQu+fW6ymU7UCcKEvvmYKNYTD2ooJnLd6jMbuJoUoN+Dn
+         48jC0TXcnzK7hHI8l7XLLufqE40irxcJ4vQUvDf4zdOy47noMAAYnUg6+rKFE7kuW8KB
+         USll7/Aewk1bIvHRDatF6iZ+ivUhLjYhiJEJEaA/t1MN12k63JvJ8Z2BqetAPfCPpfzc
+         bXyJLqDmaG/v2uSkzQNDFkhtLwjQdE/QsFWa4lokn+PvuaNQ6Zeenb8G29xaiiFXP0S7
+         FDqWxQyTvlalR9tZ8BC9oRxHctw1PO5qfa50RYj0lq81NdRESC/gWmdIjcg72jvCS2fV
+         wJ4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761292579; x=1761897379;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nxy0zWX1h247nPbsMpYtj4rqvQKsZpsdIsqOdaa3i18=;
+        b=Y/1iMVRm7vlUwPCstsZOmTOJxeqbhhec2qFgQSVsnKhhfBJTpisEEOGNcupOnL546R
+         oizG9YTC4ydHo7BDu2B/YL8AWbyMwfgwkRw/qFHp30oLEmEe4Zhd9OPhWk8S2ThyKnh9
+         T0ZFAuaboUr+rqm3ZYFriA7fQQAaGCnvvW5yZzLokRVUhhB8kx99OCMdII0HBO9vgzD7
+         EU4QPPL/msLHOke846qzMfkSmo0k2U4zJrhTyCCDEZ15ZK5ZXMcvLjZ4xpgPnaOWS8vR
+         0vrfFqBsIbL8NVKg6GWwGBlNYqCBLLQM4gnrKAhM9A0H7/dxGekOjtq/CuFbA9CPihhU
+         /7bA==
+X-Forwarded-Encrypted: i=1; AJvYcCXuh5EVSK1Os0ZHetk1DVwLUbN8hC8/1ZHQlMCHzECos4JnE0mFk2F6EgX7ceI7dQZojI62oUbSEG/O@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBgOEiWVNM2TZNJ9i7yvbIcqatBqBg2e54OGWFvJ9c7yyasWGC
+	/1TtWu+pkjUZnIn7aqknS0uDbsHskIuH/+aMNqt1xtq9qnuQRB55gSJoDRJcYZLnarh+vT9pz0g
+	WvVVZHUYbb2OFL06ph2oWrQ97jKwcfEtcViF9E63txw==
+X-Gm-Gg: ASbGncu+Qw6m5p1IHuCiRHZ5hi+myGgZFAXQqUy9XYUIobHyts9d5uaLDxjvVkSk2dS
+	PZMBkzoqmTUPiJaUqv4GJ1vyeh2/VsbltsYRgDz7eeHphW8jumihk0QSBa0dpO+PHPg2EOBmGBn
+	+EP5gfo9qIMoSG9FqCMhbMUXpgMeMOVLUKf0GxXdgySbgZGgUZobDD8NxMBRmqTpjq/tuk7nvY/
+	2ACL7KoqVi6k/unK/PTpBdDJB7yVNU03S47KvGA+D3raMfDcVYirQHqYRN98W6IVa2yjpURnUOj
+	buBRiEdXAjaH588=
+X-Google-Smtp-Source: AGHT+IHSnXZ/gyOux7cXwXN4jLtleYFyXBIE1/V6t/jovl+yJ4b+HMb04wimJ5i7xVzENgmv7b2GUJ2i/5ONH7mEpKM=
+X-Received: by 2002:a05:6512:130c:b0:586:83e2:2295 with SMTP id
+ 2adb3069b0e04-591d85525f5mr9376212e87.45.1761292578695; Fri, 24 Oct 2025
+ 00:56:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/10] gpio: improve support for shared GPIOs
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Saravana Kannan <saravanak@google.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Andy Shevchenko <andy@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org,
- linux-arm-msm@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20251022-gpio-shared-v2-0-d34aa1fbdf06@linaro.org>
- <db05003c-8ac5-49da-b0ce-e0b668f49caf@linux.intel.com>
- <CAMRc=MdWjyTyJh5zfE5qncO8ABn7QSuV1CUZXa+cSMjWoXUrNA@mail.gmail.com>
-From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <CAMRc=MdWjyTyJh5zfE5qncO8ABn7QSuV1CUZXa+cSMjWoXUrNA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20251023143957.2899600-1-robh@kernel.org>
+In-Reply-To: <20251023143957.2899600-1-robh@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 24 Oct 2025 09:56:07 +0200
+X-Gm-Features: AS18NWBwXS6t25LKJEi_UKqvj6YhljrcGI4AFOhItyKPndeRwhvu3EmnTJe9vDc
+Message-ID: <CAMRc=MdE=1cPDPQwPQA6mdBkbXF2pG=oQ_oR_YuasGzaPDsKtg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Remove extra blank lines
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>, 
+	Vinod Koul <vkoul@kernel.org>, Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>, 
+	Guenter Roeck <linux@roeck-us.net>, Andi Shyti <andi.shyti@kernel.org>, 
+	Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Georgi Djakov <djakov@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Joerg Roedel <joro@8bytes.org>, 
+	Jassi Brar <jassisinghbrar@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Lee Jones <lee@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Mark Brown <broonie@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Olivia Mackall <olivia@selenic.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, 
+	dmaengine@vger.kernel.org, linux-fpga@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-input@vger.kernel.org, linux-pm@vger.kernel.org, iommu@lists.linux.dev, 
+	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org, 
+	netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, 
+	linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-sound@vger.kernel.org, 
+	linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Oct 23, 2025 at 4:40=E2=80=AFPM Rob Herring (Arm) <robh@kernel.org>=
+ wrote:
+>
+> Generally at most 1 blank line is the standard style for DT schema
+> files. Remove the few cases with more than 1 so that the yamllint check
+> for this can be enabled.
+>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
 
+For GPIO:
 
-On 24/10/2025 10:20, Bartosz Golaszewski wrote:
-> On Fri, Oct 24, 2025 at 9:17 AM Péter Ujfalusi
-> <peter.ujfalusi@linux.intel.com> wrote:
->>
->>
->>
->> On 22/10/2025 16:10, Bartosz Golaszewski wrote:
->>> Problem statement: GPIOs are implemented as a strictly exclusive
->>> resource in the kernel but there are lots of platforms on which single
->>> pin is shared by multiple devices which don't communicate so need some
->>> way of properly sharing access to a GPIO. What we have now is the
->>> GPIOD_FLAGS_BIT_NONEXCLUSIVE flag which was introduced as a hack and
->>> doesn't do any locking or arbitration of access - it literally just hand
->>> the same GPIO descriptor to all interested users.
->>
->> I had few stabs on this in the past, all got somehow derailed, one
->> example was:
->> https://lkml.org/lkml/2019/10/30/311
->>
-> 
-> The main issue I see with this approach is adding an actual device
-> node for the shared GPIO which is now not accepted in DT bindings. We
-> only create nodes for actual HW components.
-
-Right, that policy came later, true.
-
-All the information is
-> already in the device-tree, we just need to scan it which is what I'm
-> trying to do here.
-
-I had a prototype later without the sofware-node which worked for the
-use case I had, but over the years I dropped it, it was a bit of hassle
-to roll it for nothing.
-
-One can argue that the shared-gpio node is describing the solder blob
-where the GPIO line is split and routed to two different component.
-With the approach one can handle cases where the level is inverted by a
-passive component for one of the device for example - unfortunately I
-have seen such a board marvel as well.
-
-The device's binding will tell _how_ it expects the GPIO's active level,
-which might or might not match with the real level of the GPIO line and
-if one of the device's branch have an inverter, that is going to be
-interesting to work out in conjunction with the other devices non
-inverted 'direct' line to the same GPIO.
-
-Never the less, it is great that someone is trying to get this supported!
-
-> 
-> Bartosz
-
--- 
-Péter
-
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
