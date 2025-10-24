@@ -1,47 +1,47 @@
-Return-Path: <linux-gpio+bounces-27593-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27594-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92B13C070E0
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 17:46:57 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC99FC070EC
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 17:47:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3152E189E71F
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 15:46:54 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2870A5074FD
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Oct 2025 15:46:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCF9732B997;
-	Fri, 24 Oct 2025 15:46:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 424C832E72C;
+	Fri, 24 Oct 2025 15:46:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MKRl59ZM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FED6PRF0"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B911DC994;
-	Fri, 24 Oct 2025 15:46:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D53632BF26;
+	Fri, 24 Oct 2025 15:46:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761320783; cv=none; b=X8KD5/faBY8epF3b47LAMSAnWK2LqxGagYqt9y9gkRDPi+22ChD0zb1OIdkPbl5yXF9SyozP4Pt57utSdo+2AZjReNy99RoAo09hdE+/PGmOxEyQbWlSOpiQCdJciDv6pQgrBW3zXsqH8mpGW1eMER8ozFYrgdC5hexvjnc5rg4=
+	t=1761320806; cv=none; b=E0K4mOKRbbm4maYy5ra8Is3+owjPItrTbCQ6jjW8iJvs8vVJzaCdZn3ql2OqUaru1zj4gM8IG26zA+rFHcZ3eeY+6mFy/5bkNiV3a7OwimBSsvUXa9FLPbODL1bf3e5g00LCUQkpMf/VCwsM5Q0HihOPADr7G3tP2hZXP6WsXGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761320783; c=relaxed/simple;
-	bh=9PHQQmN7U58dEYd/jGpL7q3Dd+5cmWnn8PKw2g9U1rE=;
+	s=arc-20240116; t=1761320806; c=relaxed/simple;
+	bh=zvtebLkkuQCoQo0QjrHJUw9NfExlupM4hl8VmlJ0P1U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sw54C/mZUHM5jPEVHIWEncsBLcddqO/L8YzC6IZJCxRxhFvk2W8oEAlEUgy2JyoMAIvBmbsS3TOGlxNqyZoLpki4TEUkUSo090tbFEBXXqMH50sTxbAkxflqPe0QjMHW/Hpk/bN+sXso/Lh9A2qniel7UfTxz71z2x+W6xjb9UU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MKRl59ZM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45F18C4CEF1;
-	Fri, 24 Oct 2025 15:46:22 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=ARYCLTfwD1oSJFaMAKX5meuTovdwHCJ+qj+ibQRD7qcmlQD4NpoAKpew+lR5pFTKD14oi5zlrvRFzaSQ5HpRj7+2pBBXgxIj1uSPvVE+S/S+pbO5hLLwho0rAZ6OVasMELsBcXSfiamZg6c+3L+xSioJZl1iVEKDS6enVx67qqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FED6PRF0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E90DC4CEF5;
+	Fri, 24 Oct 2025 15:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761320782;
-	bh=9PHQQmN7U58dEYd/jGpL7q3Dd+5cmWnn8PKw2g9U1rE=;
+	s=k20201202; t=1761320806;
+	bh=zvtebLkkuQCoQo0QjrHJUw9NfExlupM4hl8VmlJ0P1U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MKRl59ZM8rvoik8ee2+FejsEO+8k2Pws6sZbZJr3HGruy4UjMw41/4LjEEaTlAZdZ
-	 2eYiUbjTZaC5lG3bVsFWss/d75BmaJRrEc2cxa0JfrHKJAK+dXzB73AGN6GRkrYRhJ
-	 eGcfcCCYwaC57ghc6HookvgrtC+jZF35r70CBLf3kvLcg5vx77KspeXbW/k5Alz8JS
-	 bpUIWd+d4T+CBs1nd2DClhQNuP9MG5OHfR74Ozy2Of2Fl49kJrMrtEHffrnxWVyfqU
-	 6AbtxMu0tElxF4Op0ohB5nlsSYTM3xDSrn0S83C6eDdFcVAnVxBzgZRRqF59rmINZs
-	 uRU9qJZc/Wy2w==
-Date: Fri, 24 Oct 2025 16:46:18 +0100
+	b=FED6PRF0FA8+nlr/HlLEfF43LNsWs0QIg8r/QjIBGhoIAyWihajGtMu0JKKWtHxH+
+	 e4l7iiKcQU+oZMoYTX6dCA5qpzH5rEQKZdCBstaCvvkbC8me+bU1z/V6p0Rczkme19
+	 /EG1ohoCeUdv/6oTg1PqcAa/0QLo/m9IEM79oa975Go0Nnozw7KyQCSGgobvUrTI0Y
+	 0Fia0LJIiS7mtkKd0S+zwSwXFcuHQ7AQ0J4Mj/IwldDvhmC8HuHKx3Rd8m/rzwTWmS
+	 cU5yDaAzGhK9wzlOnfIFNWiR7JtgMor9H36djMVo8ZGVJeyxJ9y5D/9t7+AhqhhjZY
+	 0coJmUKg1gQDw==
+Date: Fri, 24 Oct 2025 16:46:43 +0100
 From: Mark Brown <broonie@kernel.org>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>,
@@ -64,11 +64,11 @@ Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>,
 	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 08/10] ASoC: wsa881x: drop
+Subject: Re: [PATCH v2 09/10] ASoC: wsa883x: drop
  GPIOD_FLAGS_BIT_NONEXCLUSIVE flag from GPIO lookup
-Message-ID: <aPufSoALA--iJeVn@finisterre.sirena.org.uk>
+Message-ID: <aPufYwKl9tO-CpYA@finisterre.sirena.org.uk>
 References: <20251022-gpio-shared-v2-0-d34aa1fbdf06@linaro.org>
- <20251022-gpio-shared-v2-8-d34aa1fbdf06@linaro.org>
+ <20251022-gpio-shared-v2-9-d34aa1fbdf06@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -76,18 +76,18 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wsyROlqG9veSnDyd"
+	protocol="application/pgp-signature"; boundary="ZBvVvXfbmyXlx32a"
 Content-Disposition: inline
-In-Reply-To: <20251022-gpio-shared-v2-8-d34aa1fbdf06@linaro.org>
+In-Reply-To: <20251022-gpio-shared-v2-9-d34aa1fbdf06@linaro.org>
 X-Cookie: If in doubt, mumble.
 
 
---wsyROlqG9veSnDyd
+--ZBvVvXfbmyXlx32a
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 22, 2025 at 03:10:47PM +0200, Bartosz Golaszewski wrote:
+On Wed, Oct 22, 2025 at 03:10:48PM +0200, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >=20
 > This driver is only used on Qualcomm platforms which now select
@@ -95,20 +95,20 @@ On Wed, Oct 22, 2025 at 03:10:47PM +0200, Bartosz Golaszewski wrote:
 
 Acked-by: Mark Brown <broonie@kernel.org>
 
---wsyROlqG9veSnDyd
+--ZBvVvXfbmyXlx32a
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmj7n0kACgkQJNaLcl1U
-h9A69wf/QahGbiw/YMV7UmAmFOQctvV/QPY8gXkwyoIILpibLbN8jzinWqQcLI4Y
-de3G0ouRnd6psYaxcoqdvmoSgcFRvdM3NH8egptFL4ZcJgKcrgLfh5Xv7oxXLTTe
-SSW6pYCv1+7tTttECErVE9y3UlTCj4iBgWeOkyUcidGg3iWSWDRXQMEhTD0CbxRx
-vHHHv4MincZyu88gM3aqZP001FrXnlAk3mh5tZ/qDntF6x+7EdBfTeZDs05SxXhM
-RwatgXTeynPOhxRrK05leI9bTXzkv5OOcNXU5Zt9AKhP4XvPHIBQp85TKA4fbvAT
-nUmf4H4/9/7OUkguARLdScin2yPciA==
-=5Wuo
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmj7n2IACgkQJNaLcl1U
+h9D+zAf/bHPneBO59HMxvTqSA7qwe5d18hYIFoClJQyzpVYO40IIpgW7KGAMyuSJ
+ZN1w2OW/c17eYWwNHthbQsypcLB2T0myY672FEjYBtli0WV2DInFSDYi+lTu4oEF
+0dMt2bGGyXwEWZDwqrM2BNcGPd/4hdQMOnmTntTKz6zDvh33yMozXDdFJegd3x+e
+x4y0BpGe1AOPFOTjqg823dFa4EY8i1BWOEj77aR4YmFtAad83mxxxZtB2PwfYDhd
+fs3g4W4JTr+6zGsi9KvGsyN9Dzl7uU72wOJZphF4YJe/WW+Ngmy927zfloUeLrth
+EGmRsRYyBdElapMKBv9y1Il+ub7mcQ==
+=zYnL
 -----END PGP SIGNATURE-----
 
---wsyROlqG9veSnDyd--
+--ZBvVvXfbmyXlx32a--
 
