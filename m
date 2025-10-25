@@ -1,291 +1,136 @@
-Return-Path: <linux-gpio+bounces-27608-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27609-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0655C09725
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Oct 2025 18:27:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 69C89C0A06C
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Oct 2025 23:29:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CD19B3AC952
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Oct 2025 16:22:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 54D711A658C7
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Oct 2025 21:29:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9670306B3C;
-	Sat, 25 Oct 2025 16:18:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20A6F28D8ED;
+	Sat, 25 Oct 2025 21:29:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eiv/itaA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P4NujWDt"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E383304BB8;
-	Sat, 25 Oct 2025 16:18:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E006A259CA5
+	for <linux-gpio@vger.kernel.org>; Sat, 25 Oct 2025 21:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761409117; cv=none; b=smSkMJ/dGzJnqe+1uS7ATBaC/QBXhYF8I2rs90jrXnnQpzbWSjwpP7LYkBEmjNG42XYX2jrh0Rh6Q7yuoU32CyRNCVe2XRGNwtNhAITk+C+e4NvlgJsVJK/XHQBPaFYjTl8RpHB8o8HUuCousjCHeDgfBZFGrXQSXZJ+L45YXGU=
+	t=1761427759; cv=none; b=pbsG75z+G/3XCKATHwZOeJmD96aLYxoDRG1EoaWQoZOnoXsrZgcYzWLymwtdZp0GB3q9yw39YjmWxUkzAX/ybZBm+Uo1LQ7PGuMbsaZq4KA/dR/wA2EqrY/p5ejENcV0BaVAwl29J2WktmEjNkqIiUDtsMLv9qto667/RJlmVFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761409117; c=relaxed/simple;
-	bh=MqWjGTemgYbJk4aKJXikLaSuGnhNkeFWTQuYp2fq9qA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n90mTiVhZm6kkG+ETbT0vPKJwflIz7yxewyo+EvsPYvcQWpsb9h8cqvL6mJV5P8WVhFSkwE7ylNAog6SlmhZr1YfwYj+WrEDOLVXKkQx3CtABjtZ6uoE9zhvaM5D3Xp5h9q8fUSBHhGiIiXdm/RslGEoV84gyptKIoWorbHrkCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eiv/itaA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1AB5C4CEF5;
-	Sat, 25 Oct 2025 16:18:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761409117;
-	bh=MqWjGTemgYbJk4aKJXikLaSuGnhNkeFWTQuYp2fq9qA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Eiv/itaAJz4Z24KXEuDNoVqMeDLruzhZEDGOz90JGYBoDVW5ULH5W23kcwcK+SK4A
-	 nreaZsjdwvz/5o0mgVYeDC956spgFGMqFL4QsxzCWbPyUmHCXnlGTWUNA34KRdxmRQ
-	 n/VWA1+i98TO3F0/1Fqn1loXyiouIfli+yfgSLDQhYvCD34YTlKhb8qgZlXNfAZlof
-	 qiJ6xIA6VwSM1sIPSO4ijfrkI3+UrBAU8A2QMod3zkrhZIWJtnFkkoZWp1GTI/PCok
-	 rpdEUoGb9tlqJONxiTPyQGSnLWNghvu0NHSSk0o1t+UVIw1c9LtnoFPS+Dsdu4CsSJ
-	 FG7OwXmRhUTDg==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Mohammad Rafi Shaik <quic_mohs@quicinc.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>,
-	Mark Brown <broonie@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	srini@kernel.org,
-	p.zabel@pengutronix.de,
-	linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	linux-sound@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.17] ASoC: codecs: wsa883x: Handle shared reset GPIO for WSA883x speakers
-Date: Sat, 25 Oct 2025 11:57:16 -0400
-Message-ID: <20251025160905.3857885-205-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251025160905.3857885-1-sashal@kernel.org>
-References: <20251025160905.3857885-1-sashal@kernel.org>
+	s=arc-20240116; t=1761427759; c=relaxed/simple;
+	bh=MmMICD0aG5zYZqdyrqj3OoNO5kVn/Kex+T/2Hpjw7YY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AIg060a9ZER8ShH3x+5a4PWpE05d57KOnrJ5OKW7eYJUwzZ/9mrVirk/Fpiii92ATdspb0gW5pCN/hGHKt93uW4SbBKMclj61zf/MAVC02+re46ltT7Iltu/tOKPSq4Id4nA3SKEvNNZaBnvmxYT+D84G91hVE6BVU1LwR5LYYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P4NujWDt; arc=none smtp.client-ip=209.85.221.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f67.google.com with SMTP id ffacd0b85a97d-427091cd4fdso1957669f8f.1
+        for <linux-gpio@vger.kernel.org>; Sat, 25 Oct 2025 14:29:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761427755; x=1762032555; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Tiad/+1cEvbbx15ctckUrIUdNeCP0XY3zN8XtK7zXJ4=;
+        b=P4NujWDtttW+YbfhbKYygjWazHF+f8LSGKE6jI69DUfWCg2aq4/FcED+qlrn5F3CIx
+         79XUwJNrwuj4EiNgn1b1GFLcLzLaLIbLIY7MVKrAFDd78nxy46I99BsWnezB8GHXyPw+
+         wOIMaZriBNWfyKo9zpkztPgNXHhcQB0LQ+lFJXZUXmHjfc9IugqGHqg/x2msh0YU+Cop
+         alt+KQyNXrCmQBqjviMdnrlwgwiE3HbCqwHI0ZfnFlqujezNhjsV5xWZ5UUoM63DiLa4
+         Ed8i21XHEA1+iLww9n9Lc52kZN9Xu44WE0cah0UGkAiLCeWVOE97a03Oi266rUzvu683
+         cP3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761427755; x=1762032555;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Tiad/+1cEvbbx15ctckUrIUdNeCP0XY3zN8XtK7zXJ4=;
+        b=tmj7C039kVAPXGfA53fOpSO0XFtN4zEZShCyECZt8j91g8XFYmmbrTzb/fRB7ii4nk
+         Yi16nL+5r0u9fmh06UxSKQnVERWPpArjTSK6QnwqNTkaw/81TsQuVPq38+QXGk3nssWm
+         OdZibZhPy6E8u3kUAGT7NPwvfexM8sMhi4vNIIbFZX7hczsrlrguOaWr4Mh6VwbnJkcu
+         iSUMk4/WCxwQBJR7Cy0nbWuwspLMluL291uhZu2pn6pGMvTIR/TJH3v2SI9kddWmeZ84
+         dakmnQncNVAkaXumuZ50g6H0WfKtnUsJSGQ8taxhTwptano0GKFGALu8wGsOAZYRPBSl
+         gVig==
+X-Forwarded-Encrypted: i=1; AJvYcCUzFAnxA3Ej+MMZKYTja0cewXsiqx0VOwkoI4vm4GmYAlLxz93wBsHUIQfbW1C+7NBMnRBM4FOg7/hZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNagm4vOjmKgvPFanLuVbTjWQgb7fERaE1hetQxVSk8oLSaykH
+	n4ZRL/XaQxhstVrJfPUwVtNfezYfq2CZL6havW2ugC3YnFwdARXMyuvr
+X-Gm-Gg: ASbGncuybz1l4tNEAbYkJc2cy8x2lQ1rpRkoV5AsPIZUsKAz/JEoNB09jRlg3Ph5BLb
+	/Exdi2SCQyQDgETZEbkY7+ByNhR3ZSIay3XXdMHhcy3u0lSn8Hh8dpRkzCmc9NnCEpTZBRtIBiW
+	beWYIfyZM/CUghEcrPZA77s9mzzkq20tj8wTMMxwmmCViSnqXu8NzrtcWSeDrN3U0UrHP7NK7SD
+	zXGmQ5iblv1g26px7xfak6KhcO0ZFD3YjCb5HsIYjn7ArLMYTGq7zwVb093lEIvJzHrfqDM43wx
+	kXWwbdDMOWAowAvY8k8/ovTRIT9AR+hE03wmLQmhS5RhfKBfCE7/dQxJGJSkFgSwHNKfWDGlQnr
+	DC7g1Pa+ZDZdSXb0Eej5o2ixxJjHhQ45TjuKBd2i/Kj4lWI0M8Z7QHobg7fh2P0e3XdBL6H6YmZ
+	SESzeyI18=
+X-Google-Smtp-Source: AGHT+IFR9xPlXCmUBASW/ik5a6VeudIrPkWWyQ4aeDva1FfLdoVVStcvOXzPLBYNJFCvHVp+roFOgQ==
+X-Received: by 2002:a05:6000:1a8c:b0:428:55c3:ced6 with SMTP id ffacd0b85a97d-42855c3d3f3mr10555869f8f.18.1761427754791;
+        Sat, 25 Oct 2025 14:29:14 -0700 (PDT)
+Received: from [192.168.10.22] ([39.46.217.86])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429952e3201sm5395009f8f.47.2025.10.25.14.29.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 25 Oct 2025 14:29:14 -0700 (PDT)
+Message-ID: <0881d989-c1f7-484f-a5e6-aee47ee5c5d6@gmail.com>
+Date: Sun, 26 Oct 2025 02:29:11 +0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.17.5
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] pinctrl: starfive: use dynamic GPIO base allocation
+To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc: hal.feng@starfivetech.com, linus.walleij@linaro.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Bartosz Golaszewski <brgl@bgdev.pl>
+References: <CANBLGcygpsp=R5gM7NeuVO-JG1yfQJ_0dhnFfL1ud=291cJZAQ@mail.gmail.com>
+ <20251024143353.71753-1-alitariq45892@gmail.com>
+ <CAJM55Z-SrU1Mk4xUZTgey-zArYAvtpftTwGBb_VEb0zL3L1EPw@mail.gmail.com>
+Content-Language: en-US
+From: Ali Tariq <alitariq45892@gmail.com>
+In-Reply-To: <CAJM55Z-SrU1Mk4xUZTgey-zArYAvtpftTwGBb_VEb0zL3L1EPw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+Hi Emil,
 
-[ Upstream commit cf65182247761f7993737b710afe8c781699356b ]
+Thanks for the review and feedback.
 
-On some Qualcomm platforms such as QCS6490-RB3Gen2, the multiple
-WSA8830/WSA8835 speaker amplifiers share a common reset (shutdown) GPIO.
+Quoting Emil Renner Berthing:
+ > 1) The justification for why this is no longer needed should be in 
+the commit
+ > message, and not just in a random thread that will soon be forgotten.
 
-To handle such scenario, use the reset controller framework and its
-"reset-gpio" driver to handle such case. This allows proper handling
-of all WSA883x speaker amplifiers on QCS6490-RB3Gen2 board.
+My apologies for the confusion. I did add the removal of unused 
+variables as a bullet point in the v2 changelog (which is in the email 
+body), but I failed to include the necessary justification for this 
+removal in the main commit message itself.
 
-Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
-Link: https://patch.msgid.link/20250815172353.2430981-3-mohammad.rafi.shaik@oss.qualcomm.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
+You are correct, the justification for removing `gc_base` and associated 
+macros (because we now use `sfp->gc.base = -1` for dynamic allocation) 
+belongs in the permanent commit message.
 
-LLM Generated explanations, may be completely bogus:
+I will update the v2 commit message to clearly state the removal of 
+macros and unused definitions (before "Signed-off-by") in the v3 submission.
 
-YES
+Quoting Emil Renner Berthing:
+ > 2) Please don't send new revisions as replies. Start a new mail thread.
 
-- What it fixes
-  - Addresses real functional issues on platforms where multiple WSA883x
-    amplifiers share a single shutdown/reset line (e.g.,
-    QCS6490-RB3Gen2). Using a plain GPIO per-device does not coordinate
-    shared users; one instance toggling the line can inadvertently reset
-    others. The patch switches to the reset controller framework with
-    the reset‑gpio backend to handle shared lines correctly.
+Understood. I will send the next revision as a new thread.
 
-- Scope and minimality
-  - Single-file, localized change in `sound/soc/codecs/wsa883x.c`.
-  - No ABI or architectural changes; strictly startup/shutdown control
-    path in probe.
-  - Optional feature: falls back to existing `powerdown-gpios` behavior
-    if no reset controller is provided, keeping backward compatibility.
+Quoting Emil Renner Berthing:
+ > The code changes look good though, so once that is fixed you can add
+ >
+ > Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 
-- Specific code changes and rationale
-  - Adds reset framework usage
-    - Include added: `#include <linux/reset.h>` in
-      `sound/soc/codecs/wsa883x.c`.
-    - Private data gains an optional reset handle: `struct reset_control
-      *sd_reset;` alongside the existing `sd_n` GPIO
-      (sound/soc/codecs/wsa883x.c:462).
-  - Centralized assert/deassert helpers
-    - New helpers `wsa883x_reset_assert()` and
-      `wsa883x_reset_deassert()` switch between
-      `reset_control_assert/deassert()` and
-      `gpiod_direction_output(sd_n, 1/0)` depending on whether a reset
-      control is present.
-  - Robust resource acquisition with graceful fallback
-    - New `wsa883x_get_reset()` first tries
-      `devm_reset_control_get_optional_shared(dev, NULL)` and, if none,
-      falls back to the existing `devm_gpiod_get_optional(dev,
-      "powerdown", ...)` path. This keeps old DTs working while enabling
-      shared-reset handling when “resets”/“reset-gpios” is used.
-  - Safer cleanup on errors/unbind
-    - In `wsa883x_probe()`, instead of manually asserting the GPIO only
-      on regmap-init failure (previous code:
-      `gpiod_direction_output(wsa883x->sd_n, 1)` in the error path at
-      sound/soc/codecs/wsa883x.c:1579–1585), the patch calls
-      `wsa883x_reset_deassert(wsa883x)` to bring the device out of
-      reset, then registers `devm_add_action_or_reset(dev,
-      wsa883x_reset_assert, wsa883x)`. This guarantees the reset is
-      asserted on any probe failure or device removal, mirroring the
-      established pattern used in other codecs.
-  - Probe flow changes (localized, low risk)
-    - Replaces the hardwired GPIO bring-up:
-      - Old: acquire `powerdown-gpios` then
-        `gpiod_direction_output(sd_n, 0)` to deassert
-        (sound/soc/codecs/wsa883x.c:1572–1575, 1561–1568).
-      - New: `wsa883x_get_reset()` and `wsa883x_reset_deassert()` with
-        `devm_add_action_or_reset` to ensure deterministic cleanup.
-        Functionally equivalent for non-shared setups, but robust for
-        shared lines.
+Understood. I will include your Reviewed-by tag in the v3 patch.
 
-- Precedent and consistency
-  - The WSA884x codec already uses the same reset-controller-with-
-    fallback pattern (e.g., `sound/soc/codecs/wsa884x.c:1999–2060`),
-    demonstrating the approach is accepted upstream and low risk. This
-    change brings WSA883x in line with WSA884x.
+Thanks again for the review!
 
-- Backport risk assessment
-  - Small, contained, and backwards compatible: if no reset controller,
-    code behaves as before with the `powerdown-gpios` line.
-  - No behavioral change to runtime PM/audio paths; only reset/powerdown
-    handling in probe/cleanup is touched.
-  - No dependencies beyond standard reset framework and `reset-gpio`,
-    both present in stable series; the driver already builds with reset
-    APIs (used elsewhere in tree).
-  - Documentation note: current 6.17 binding for WSA883x
-    (`Documentation/devicetree/bindings/sound/qcom,wsa883x.yaml`) lists
-    `powerdown-gpios`, not `reset-gpios`/`resets`. Functionally this is
-    fine (fallback keeps working), but if boards want to use shared
-    reset via reset-gpio, a binding backport (to allow `reset-gpios` or
-    `resets`) may be desirable to avoid dtbs_check warnings. This is
-    documentation-only and does not affect runtime.
-
-- Stable criteria
-  - Fixes a real platform issue (shared reset handling) affecting users.
-  - No new features to the audio path; no architectural refactor.
-  - Very low regression risk, self-contained, and aligns with existing
-    patterns in sibling drivers.
-  - While there is no explicit “Fixes:” or “Cc: stable”, the change
-    clearly improves correctness on affected hardware with minimal
-    impact elsewhere, making it a good stable candidate.
-
- sound/soc/codecs/wsa883x.c | 57 ++++++++++++++++++++++++++++++++------
- 1 file changed, 49 insertions(+), 8 deletions(-)
-
-diff --git a/sound/soc/codecs/wsa883x.c b/sound/soc/codecs/wsa883x.c
-index 188363b03b937..ca4520ade79aa 100644
---- a/sound/soc/codecs/wsa883x.c
-+++ b/sound/soc/codecs/wsa883x.c
-@@ -14,6 +14,7 @@
- #include <linux/printk.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/reset.h>
- #include <linux/slab.h>
- #include <linux/soundwire/sdw.h>
- #include <linux/soundwire/sdw_registers.h>
-@@ -468,6 +469,7 @@ struct wsa883x_priv {
- 	struct sdw_stream_runtime *sruntime;
- 	struct sdw_port_config port_config[WSA883X_MAX_SWR_PORTS];
- 	struct gpio_desc *sd_n;
-+	struct reset_control *sd_reset;
- 	bool port_prepared[WSA883X_MAX_SWR_PORTS];
- 	bool port_enable[WSA883X_MAX_SWR_PORTS];
- 	int active_ports;
-@@ -1546,6 +1548,46 @@ static const struct hwmon_chip_info wsa883x_hwmon_chip_info = {
- 	.info	= wsa883x_hwmon_info,
- };
- 
-+static void wsa883x_reset_assert(void *data)
-+{
-+	struct wsa883x_priv *wsa883x = data;
-+
-+	if (wsa883x->sd_reset)
-+		reset_control_assert(wsa883x->sd_reset);
-+	else
-+		gpiod_direction_output(wsa883x->sd_n, 1);
-+}
-+
-+static void wsa883x_reset_deassert(struct wsa883x_priv *wsa883x)
-+{
-+	if (wsa883x->sd_reset)
-+		reset_control_deassert(wsa883x->sd_reset);
-+	else
-+		gpiod_direction_output(wsa883x->sd_n, 0);
-+}
-+
-+static int wsa883x_get_reset(struct device *dev, struct wsa883x_priv *wsa883x)
-+{
-+	wsa883x->sd_reset = devm_reset_control_get_optional_shared(dev, NULL);
-+	if (IS_ERR(wsa883x->sd_reset))
-+		return dev_err_probe(dev, PTR_ERR(wsa883x->sd_reset),
-+				     "Failed to get reset\n");
-+	/*
-+	 * if sd_reset: NULL, so use the backwards compatible way for powerdown-gpios,
-+	 * which does not handle sharing GPIO properly.
-+	 */
-+	if (!wsa883x->sd_reset) {
-+		wsa883x->sd_n = devm_gpiod_get_optional(dev, "powerdown",
-+							GPIOD_FLAGS_BIT_NONEXCLUSIVE |
-+							GPIOD_OUT_HIGH);
-+		if (IS_ERR(wsa883x->sd_n))
-+			return dev_err_probe(dev, PTR_ERR(wsa883x->sd_n),
-+					     "Shutdown Control GPIO not found\n");
-+	}
-+
-+	return 0;
-+}
-+
- static int wsa883x_probe(struct sdw_slave *pdev,
- 			 const struct sdw_device_id *id)
- {
-@@ -1566,13 +1608,9 @@ static int wsa883x_probe(struct sdw_slave *pdev,
- 	if (ret)
- 		return dev_err_probe(dev, ret, "Failed to enable vdd regulator\n");
- 
--	wsa883x->sd_n = devm_gpiod_get_optional(dev, "powerdown",
--						GPIOD_FLAGS_BIT_NONEXCLUSIVE | GPIOD_OUT_HIGH);
--	if (IS_ERR(wsa883x->sd_n)) {
--		ret = dev_err_probe(dev, PTR_ERR(wsa883x->sd_n),
--				    "Shutdown Control GPIO not found\n");
-+	ret = wsa883x_get_reset(dev, wsa883x);
-+	if (ret)
- 		goto err;
--	}
- 
- 	dev_set_drvdata(dev, wsa883x);
- 	wsa883x->slave = pdev;
-@@ -1595,11 +1633,14 @@ static int wsa883x_probe(struct sdw_slave *pdev,
- 	pdev->prop.simple_clk_stop_capable = true;
- 	pdev->prop.sink_dpn_prop = wsa_sink_dpn_prop;
- 	pdev->prop.scp_int1_mask = SDW_SCP_INT1_BUS_CLASH | SDW_SCP_INT1_PARITY;
--	gpiod_direction_output(wsa883x->sd_n, 0);
-+
-+	wsa883x_reset_deassert(wsa883x);
-+	ret = devm_add_action_or_reset(dev, wsa883x_reset_assert, wsa883x);
-+	if (ret)
-+		return ret;
- 
- 	wsa883x->regmap = devm_regmap_init_sdw(pdev, &wsa883x_regmap_config);
- 	if (IS_ERR(wsa883x->regmap)) {
--		gpiod_direction_output(wsa883x->sd_n, 1);
- 		ret = dev_err_probe(dev, PTR_ERR(wsa883x->regmap),
- 				    "regmap_init failed\n");
- 		goto err;
--- 
-2.51.0
-
+-Ali
 
