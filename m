@@ -1,60 +1,64 @@
-Return-Path: <linux-gpio+bounces-27607-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27608-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFBE3C096A1
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Oct 2025 18:25:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0655C09725
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Oct 2025 18:27:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 082784F1485
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Oct 2025 16:16:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CD19B3AC952
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Oct 2025 16:22:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 747C13043CA;
-	Sat, 25 Oct 2025 16:14:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9670306B3C;
+	Sat, 25 Oct 2025 16:18:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T1QSACSE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eiv/itaA"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6DF304963;
-	Sat, 25 Oct 2025 16:14:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E383304BB8;
+	Sat, 25 Oct 2025 16:18:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761408894; cv=none; b=MHeWf5WiM8J7C01j0sd3x0VpADbotA0byNAk+fn2LttiUpz2qBi0m8R6Xol5+vOGzOO6/jRczWWjSPzdhnuzPAG8YwVGoASP368KAx/RGbOAM4EuoxMyOonTLeDpckCjDyUjP+ovLnO1378sqX2bOjuT/Im0bJroBlFlKRMLyGQ=
+	t=1761409117; cv=none; b=smSkMJ/dGzJnqe+1uS7ATBaC/QBXhYF8I2rs90jrXnnQpzbWSjwpP7LYkBEmjNG42XYX2jrh0Rh6Q7yuoU32CyRNCVe2XRGNwtNhAITk+C+e4NvlgJsVJK/XHQBPaFYjTl8RpHB8o8HUuCousjCHeDgfBZFGrXQSXZJ+L45YXGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761408894; c=relaxed/simple;
-	bh=Q14Kb12jbMwWRLMErDN4yu+E8BEZvnucMPRiscpAUjk=;
+	s=arc-20240116; t=1761409117; c=relaxed/simple;
+	bh=MqWjGTemgYbJk4aKJXikLaSuGnhNkeFWTQuYp2fq9qA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AD8SiELFgeheLlY6AYRZWN8i8ijikI8Uxd38c/I+I1b54QZwYHnuUheA8KMAG3psVoBF5dz4Vwy1InjvohgLirEd5cvTj8VJRO1G/pEl/PH43B6Svvx0KSFjYUttikscW63VNyj6QCt00xbG7pUO+Vm49gM5yR3fJg41ytSZNFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T1QSACSE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED6A6C4CEFB;
-	Sat, 25 Oct 2025 16:14:52 +0000 (UTC)
+	 MIME-Version:Content-Type; b=n90mTiVhZm6kkG+ETbT0vPKJwflIz7yxewyo+EvsPYvcQWpsb9h8cqvL6mJV5P8WVhFSkwE7ylNAog6SlmhZr1YfwYj+WrEDOLVXKkQx3CtABjtZ6uoE9zhvaM5D3Xp5h9q8fUSBHhGiIiXdm/RslGEoV84gyptKIoWorbHrkCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eiv/itaA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1AB5C4CEF5;
+	Sat, 25 Oct 2025 16:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761408894;
-	bh=Q14Kb12jbMwWRLMErDN4yu+E8BEZvnucMPRiscpAUjk=;
+	s=k20201202; t=1761409117;
+	bh=MqWjGTemgYbJk4aKJXikLaSuGnhNkeFWTQuYp2fq9qA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=T1QSACSEh/M90p4Y50YEQNZAmLJtJmye7D3UnP99rTIdGkw/6L1QJDfDxM6La057Y
-	 eNRSomVmZt483w0uOGRLQNE8mfyXX4QhFSJRf+yXK4xZQygoN5FLG4wZSSdpPNFPgf
-	 0CkUQRqefKUQ35Fo7jHjIV7iewXy5yRGgS4X98LWO146kOjG7vDEGZpgkNC7nC7piE
-	 R1HbyWecqPXJ9Ifr/hPEKUUFlbikrh5TtQ0H3UxGNF9R5nbjvXDU3te9KFfxRA6w6e
-	 b3MxrV5L9CtkmBFQy6qjRCP3CMmz7cuVsfoCKd4w6k20AnJY3u3THpoL8plMh29WxV
-	 IILWGrp6p+MVA==
+	b=Eiv/itaAJz4Z24KXEuDNoVqMeDLruzhZEDGOz90JGYBoDVW5ULH5W23kcwcK+SK4A
+	 nreaZsjdwvz/5o0mgVYeDC956spgFGMqFL4QsxzCWbPyUmHCXnlGTWUNA34KRdxmRQ
+	 n/VWA1+i98TO3F0/1Fqn1loXyiouIfli+yfgSLDQhYvCD34YTlKhb8qgZlXNfAZlof
+	 qiJ6xIA6VwSM1sIPSO4ijfrkI3+UrBAU8A2QMod3zkrhZIWJtnFkkoZWp1GTI/PCok
+	 rpdEUoGb9tlqJONxiTPyQGSnLWNghvu0NHSSk0o1t+UVIw1c9LtnoFPS+Dsdu4CsSJ
+	 FG7OwXmRhUTDg==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Hans Verkuil <hverkuil+cisco@kernel.org>,
+Cc: Mohammad Rafi Shaik <quic_mohs@quicinc.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	mchehab@kernel.org,
+	srini@kernel.org,
+	p.zabel@pengutronix.de,
 	linus.walleij@linaro.org,
 	brgl@bgdev.pl,
-	linux-media@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.17-5.15] media: em28xx: add special case for legacy gpiolib interface
-Date: Sat, 25 Oct 2025 11:55:49 -0400
-Message-ID: <20251025160905.3857885-118-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.17] ASoC: codecs: wsa883x: Handle shared reset GPIO for WSA883x speakers
+Date: Sat, 25 Oct 2025 11:57:16 -0400
+Message-ID: <20251025160905.3857885-205-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251025160905.3857885-1-sashal@kernel.org>
 References: <20251025160905.3857885-1-sashal@kernel.org>
@@ -70,19 +74,22 @@ X-stable-base: Linux 6.17.5
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
 
-[ Upstream commit d5d299e7e7f6b4ead31383d4abffca34e4296df0 ]
+[ Upstream commit cf65182247761f7993737b710afe8c781699356b ]
 
-The em28xx driver uses the old-style gpio_request_one() interface to
-switch the lna on the PCTV 290E card.
+On some Qualcomm platforms such as QCS6490-RB3Gen2, the multiple
+WSA8830/WSA8835 speaker amplifiers share a common reset (shutdown) GPIO.
 
-This interface is becoming optional and should no longer be called by
-portable drivers. As I could not figure out an obvious replacement,
-select the new GPIOLIB_LEGACY symbol as a workaround.
+To handle such scenario, use the reset controller framework and its
+"reset-gpio" driver to handle such case. This allows proper handling
+of all WSA883x speaker amplifiers on QCS6490-RB3Gen2 board.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Hans Verkuil <hverkuil+cisco@kernel.org>
+Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
+Link: https://patch.msgid.link/20250815172353.2430981-3-mohammad.rafi.shaik@oss.qualcomm.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
@@ -90,95 +97,194 @@ LLM Generated explanations, may be completely bogus:
 
 YES
 
-- What it fixes: Prevents build breakage when `GPIOLIB=y` but the legacy
-  GPIO consumer API is disabled. `gpio_request_one()` is only declared
-  when `CONFIG_GPIOLIB_LEGACY` is enabled (see
-  `include/linux/gpio.h:88`), so compiling code guarded only by
-  `CONFIG_GPIOLIB` fails if legacy support is off.
+- What it fixes
+  - Addresses real functional issues on platforms where multiple WSA883x
+    amplifiers share a single shutdown/reset line (e.g.,
+    QCS6490-RB3Gen2). Using a plain GPIO per-device does not coordinate
+    shared users; one instance toggling the line can inadvertently reset
+    others. The patch switches to the reset controller framework with
+    the reset‑gpio backend to handle shared lines correctly.
 
-- Code changes (small and contained):
-  - Guards updated to match the actual availability of
-    `gpio_request_one()`:
-    - `drivers/media/usb/em28xx/em28xx-dvb.c:730` switches `#ifdef
-      CONFIG_GPIOLIB` to `#ifdef CONFIG_GPIOLIB_LEGACY` in
-      `em28xx_pctv_290e_set_lna()`, so the legacy-only API is used only
-      when the legacy interface is present.
-    - `drivers/media/usb/em28xx/em28xx-dvb.c:1708` does the same in
-      `em28xx_dvb_init()` where the LNA is enabled on init for the PCTV
-      290E.
-  - Kconfig ensures the legacy API is pulled in when this driver
-    configuration requires it:
-    - `drivers/media/usb/em28xx/Kconfig:71` adds `select GPIOLIB_LEGACY
-      if GPIOLIB && DVB_CXD2820R`.
+- Scope and minimality
+  - Single-file, localized change in `sound/soc/codecs/wsa883x.c`.
+  - No ABI or architectural changes; strictly startup/shutdown control
+    path in probe.
+  - Optional feature: falls back to existing `powerdown-gpios` behavior
+    if no reset controller is provided, keeping backward compatibility.
 
-- Behavior and scope:
-  - If `GPIOLIB_LEGACY` is available, functionality is unchanged: the
-    driver still toggles the LNA via `gpio_request_one()` and frees it.
-  - If `GPIOLIB=y` but `GPIOLIB_LEGACY=n`, the code now cleanly compiles
-    and falls back to a warning and no-op in
-    `em28xx_pctv_290e_set_lna()` (see `drivers/media/usb/em28xx/em28xx-
-    dvb.c:750`), avoiding a build error.
-  - The Kconfig `select` line actively keeps legacy enabled for this
-    combo, preserving LNA control where it mattered before.
+- Specific code changes and rationale
+  - Adds reset framework usage
+    - Include added: `#include <linux/reset.h>` in
+      `sound/soc/codecs/wsa883x.c`.
+    - Private data gains an optional reset handle: `struct reset_control
+      *sd_reset;` alongside the existing `sd_n` GPIO
+      (sound/soc/codecs/wsa883x.c:462).
+  - Centralized assert/deassert helpers
+    - New helpers `wsa883x_reset_assert()` and
+      `wsa883x_reset_deassert()` switch between
+      `reset_control_assert/deassert()` and
+      `gpiod_direction_output(sd_n, 1/0)` depending on whether a reset
+      control is present.
+  - Robust resource acquisition with graceful fallback
+    - New `wsa883x_get_reset()` first tries
+      `devm_reset_control_get_optional_shared(dev, NULL)` and, if none,
+      falls back to the existing `devm_gpiod_get_optional(dev,
+      "powerdown", ...)` path. This keeps old DTs working while enabling
+      shared-reset handling when “resets”/“reset-gpios” is used.
+  - Safer cleanup on errors/unbind
+    - In `wsa883x_probe()`, instead of manually asserting the GPIO only
+      on regmap-init failure (previous code:
+      `gpiod_direction_output(wsa883x->sd_n, 1)` in the error path at
+      sound/soc/codecs/wsa883x.c:1579–1585), the patch calls
+      `wsa883x_reset_deassert(wsa883x)` to bring the device out of
+      reset, then registers `devm_add_action_or_reset(dev,
+      wsa883x_reset_assert, wsa883x)`. This guarantees the reset is
+      asserted on any probe failure or device removal, mirroring the
+      established pattern used in other codecs.
+  - Probe flow changes (localized, low risk)
+    - Replaces the hardwired GPIO bring-up:
+      - Old: acquire `powerdown-gpios` then
+        `gpiod_direction_output(sd_n, 0)` to deassert
+        (sound/soc/codecs/wsa883x.c:1572–1575, 1561–1568).
+      - New: `wsa883x_get_reset()` and `wsa883x_reset_deassert()` with
+        `devm_add_action_or_reset` to ensure deterministic cleanup.
+        Functionally equivalent for non-shared setups, but robust for
+        shared lines.
 
-- Risk assessment:
-  - No architectural changes; purely Kconfig and preprocessor guards.
-  - Touches only the em28xx media USB driver and its Kconfig.
-  - Aligns with the tree-wide pattern where `gpio_request_one()` and
-    friends are guarded by `CONFIG_GPIOLIB_LEGACY` (e.g.,
-    `include/linux/gpio.h:88`, multiple existing users throughout the
-    tree).
-  - Minimal regression risk; at worst, adds the tiny legacy gpiolib-
-    legacy code when selected by Kconfig.
+- Precedent and consistency
+  - The WSA884x codec already uses the same reset-controller-with-
+    fallback pattern (e.g., `sound/soc/codecs/wsa884x.c:1999–2060`),
+    demonstrating the approach is accepted upstream and low risk. This
+    change brings WSA883x in line with WSA884x.
 
-- Stable criteria fit:
-  - Fixes a real user-facing problem (build failure in valid configs).
-  - Small, targeted, and low risk.
-  - No new features; purely compatibility/build fix.
+- Backport risk assessment
+  - Small, contained, and backwards compatible: if no reset controller,
+    code behaves as before with the `powerdown-gpios` line.
+  - No behavioral change to runtime PM/audio paths; only reset/powerdown
+    handling in probe/cleanup is touched.
+  - No dependencies beyond standard reset framework and `reset-gpio`,
+    both present in stable series; the driver already builds with reset
+    APIs (used elsewhere in tree).
+  - Documentation note: current 6.17 binding for WSA883x
+    (`Documentation/devicetree/bindings/sound/qcom,wsa883x.yaml`) lists
+    `powerdown-gpios`, not `reset-gpios`/`resets`. Functionally this is
+    fine (fallback keeps working), but if boards want to use shared
+    reset via reset-gpio, a binding backport (to allow `reset-gpios` or
+    `resets`) may be desirable to avoid dtbs_check warnings. This is
+    documentation-only and does not affect runtime.
 
-Note: Backport is relevant for stable series where
-`CONFIG_GPIOLIB_LEGACY` exists and can be disabled. Older stable series
-lacking this symbol won’t need (or may not accept) the Kconfig/guard
-changes.
+- Stable criteria
+  - Fixes a real platform issue (shared reset handling) affecting users.
+  - No new features to the audio path; no architectural refactor.
+  - Very low regression risk, self-contained, and aligns with existing
+    patterns in sibling drivers.
+  - While there is no explicit “Fixes:” or “Cc: stable”, the change
+    clearly improves correctness on affected hardware with minimal
+    impact elsewhere, making it a good stable candidate.
 
- drivers/media/usb/em28xx/Kconfig      | 1 +
- drivers/media/usb/em28xx/em28xx-dvb.c | 4 ++--
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ sound/soc/codecs/wsa883x.c | 57 ++++++++++++++++++++++++++++++++------
+ 1 file changed, 49 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/media/usb/em28xx/Kconfig b/drivers/media/usb/em28xx/Kconfig
-index cb61fd6cc6c61..3122d4bdfc596 100644
---- a/drivers/media/usb/em28xx/Kconfig
-+++ b/drivers/media/usb/em28xx/Kconfig
-@@ -68,6 +68,7 @@ config VIDEO_EM28XX_DVB
- 	select MEDIA_TUNER_XC5000 if MEDIA_SUBDRV_AUTOSELECT
- 	select MEDIA_TUNER_MT2060 if MEDIA_SUBDRV_AUTOSELECT
- 	select DVB_MXL692 if MEDIA_SUBDRV_AUTOSELECT
-+	select GPIOLIB_LEGACY if GPIOLIB && DVB_CXD2820R
- 	help
- 	  This adds support for DVB cards based on the
- 	  Empiatech em28xx chips.
-diff --git a/drivers/media/usb/em28xx/em28xx-dvb.c b/drivers/media/usb/em28xx/em28xx-dvb.c
-index 9fce59979e3bd..b94f5c70ab750 100644
---- a/drivers/media/usb/em28xx/em28xx-dvb.c
-+++ b/drivers/media/usb/em28xx/em28xx-dvb.c
-@@ -727,7 +727,7 @@ static int em28xx_pctv_290e_set_lna(struct dvb_frontend *fe)
- 	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
- 	struct em28xx_i2c_bus *i2c_bus = fe->dvb->priv;
- 	struct em28xx *dev = i2c_bus->dev;
--#ifdef CONFIG_GPIOLIB
-+#ifdef CONFIG_GPIOLIB_LEGACY
- 	struct em28xx_dvb *dvb = dev->dvb;
- 	int ret;
- 	unsigned long flags;
-@@ -1705,7 +1705,7 @@ static int em28xx_dvb_init(struct em28xx *dev)
- 				goto out_free;
- 			}
+diff --git a/sound/soc/codecs/wsa883x.c b/sound/soc/codecs/wsa883x.c
+index 188363b03b937..ca4520ade79aa 100644
+--- a/sound/soc/codecs/wsa883x.c
++++ b/sound/soc/codecs/wsa883x.c
+@@ -14,6 +14,7 @@
+ #include <linux/printk.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
++#include <linux/reset.h>
+ #include <linux/slab.h>
+ #include <linux/soundwire/sdw.h>
+ #include <linux/soundwire/sdw_registers.h>
+@@ -468,6 +469,7 @@ struct wsa883x_priv {
+ 	struct sdw_stream_runtime *sruntime;
+ 	struct sdw_port_config port_config[WSA883X_MAX_SWR_PORTS];
+ 	struct gpio_desc *sd_n;
++	struct reset_control *sd_reset;
+ 	bool port_prepared[WSA883X_MAX_SWR_PORTS];
+ 	bool port_enable[WSA883X_MAX_SWR_PORTS];
+ 	int active_ports;
+@@ -1546,6 +1548,46 @@ static const struct hwmon_chip_info wsa883x_hwmon_chip_info = {
+ 	.info	= wsa883x_hwmon_info,
+ };
  
--#ifdef CONFIG_GPIOLIB
-+#ifdef CONFIG_GPIOLIB_LEGACY
- 			/* enable LNA for DVB-T, DVB-T2 and DVB-C */
- 			result = gpio_request_one(dvb->lna_gpio,
- 						  GPIOF_OUT_INIT_LOW, NULL);
++static void wsa883x_reset_assert(void *data)
++{
++	struct wsa883x_priv *wsa883x = data;
++
++	if (wsa883x->sd_reset)
++		reset_control_assert(wsa883x->sd_reset);
++	else
++		gpiod_direction_output(wsa883x->sd_n, 1);
++}
++
++static void wsa883x_reset_deassert(struct wsa883x_priv *wsa883x)
++{
++	if (wsa883x->sd_reset)
++		reset_control_deassert(wsa883x->sd_reset);
++	else
++		gpiod_direction_output(wsa883x->sd_n, 0);
++}
++
++static int wsa883x_get_reset(struct device *dev, struct wsa883x_priv *wsa883x)
++{
++	wsa883x->sd_reset = devm_reset_control_get_optional_shared(dev, NULL);
++	if (IS_ERR(wsa883x->sd_reset))
++		return dev_err_probe(dev, PTR_ERR(wsa883x->sd_reset),
++				     "Failed to get reset\n");
++	/*
++	 * if sd_reset: NULL, so use the backwards compatible way for powerdown-gpios,
++	 * which does not handle sharing GPIO properly.
++	 */
++	if (!wsa883x->sd_reset) {
++		wsa883x->sd_n = devm_gpiod_get_optional(dev, "powerdown",
++							GPIOD_FLAGS_BIT_NONEXCLUSIVE |
++							GPIOD_OUT_HIGH);
++		if (IS_ERR(wsa883x->sd_n))
++			return dev_err_probe(dev, PTR_ERR(wsa883x->sd_n),
++					     "Shutdown Control GPIO not found\n");
++	}
++
++	return 0;
++}
++
+ static int wsa883x_probe(struct sdw_slave *pdev,
+ 			 const struct sdw_device_id *id)
+ {
+@@ -1566,13 +1608,9 @@ static int wsa883x_probe(struct sdw_slave *pdev,
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "Failed to enable vdd regulator\n");
+ 
+-	wsa883x->sd_n = devm_gpiod_get_optional(dev, "powerdown",
+-						GPIOD_FLAGS_BIT_NONEXCLUSIVE | GPIOD_OUT_HIGH);
+-	if (IS_ERR(wsa883x->sd_n)) {
+-		ret = dev_err_probe(dev, PTR_ERR(wsa883x->sd_n),
+-				    "Shutdown Control GPIO not found\n");
++	ret = wsa883x_get_reset(dev, wsa883x);
++	if (ret)
+ 		goto err;
+-	}
+ 
+ 	dev_set_drvdata(dev, wsa883x);
+ 	wsa883x->slave = pdev;
+@@ -1595,11 +1633,14 @@ static int wsa883x_probe(struct sdw_slave *pdev,
+ 	pdev->prop.simple_clk_stop_capable = true;
+ 	pdev->prop.sink_dpn_prop = wsa_sink_dpn_prop;
+ 	pdev->prop.scp_int1_mask = SDW_SCP_INT1_BUS_CLASH | SDW_SCP_INT1_PARITY;
+-	gpiod_direction_output(wsa883x->sd_n, 0);
++
++	wsa883x_reset_deassert(wsa883x);
++	ret = devm_add_action_or_reset(dev, wsa883x_reset_assert, wsa883x);
++	if (ret)
++		return ret;
+ 
+ 	wsa883x->regmap = devm_regmap_init_sdw(pdev, &wsa883x_regmap_config);
+ 	if (IS_ERR(wsa883x->regmap)) {
+-		gpiod_direction_output(wsa883x->sd_n, 1);
+ 		ret = dev_err_probe(dev, PTR_ERR(wsa883x->regmap),
+ 				    "regmap_init failed\n");
+ 		goto err;
 -- 
 2.51.0
 
