@@ -1,181 +1,167 @@
-Return-Path: <linux-gpio+bounces-27616-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27617-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE1F2C0B506
-	for <lists+linux-gpio@lfdr.de>; Sun, 26 Oct 2025 23:04:28 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C692C0B705
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 00:18:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DAA4C189ED06
-	for <lists+linux-gpio@lfdr.de>; Sun, 26 Oct 2025 22:04:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 277B73A4CBB
+	for <lists+linux-gpio@lfdr.de>; Sun, 26 Oct 2025 23:18:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A95C81F12F8;
-	Sun, 26 Oct 2025 22:04:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 938A33009F8;
+	Sun, 26 Oct 2025 23:18:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sN7N3bqe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K8rRVLUl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57ACD224FA;
-	Sun, 26 Oct 2025 22:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA802417C2
+	for <linux-gpio@vger.kernel.org>; Sun, 26 Oct 2025 23:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761516262; cv=none; b=UAMxx5W6mrohtF4zwx6Okl4n+si2FBkUMKpmLykSPR7nhB4GJg1G1lx8RAch5296cMfMUxvb6uIRJNYLfR3GnXKQoWv3JtL3Vb114vkvCVLJaDSGQzdu9nLPchsf/32phSl1BAXqRKWXFacxdsiKYFCIHzeqzdd9egngP7pbtKg=
+	t=1761520702; cv=none; b=Fvw5bMWH2nM7o4gThfED5Rq7OcudVZnpPgC5c99Y1qHPKqqXAMm118qfVGU/eKizNlgMUEaR5fZ1aSATNY9IOQA3ALULe3VSHCQfl8RUXPBsIkrUvuf4I5aTibySHAsixmlv/jyByUT5cGL56kzeoQmGBZnPIOLLWMfj/nEAdaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761516262; c=relaxed/simple;
-	bh=PdErI+I/U0Fxg8DPcXpq+cld1psA4QSdRuJETGHdBeE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=abAxDNa6jMNO/zRo6Zo8CP9CW59F7Tkdwm+G0kKbSFGbVNOfkbrc/CCSTHCXoi+UyVyS97h+4y9Y8lonP6FUMoonzSBAulHScarcobqPZXCuGpTbpXICFP8L7Sue2/EYLDtdSCHUhRVTWLp7CSKP2d9aP8T+/5rncCz+lOpKFdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sN7N3bqe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E087AC4CEE7;
-	Sun, 26 Oct 2025 22:04:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761516262;
-	bh=PdErI+I/U0Fxg8DPcXpq+cld1psA4QSdRuJETGHdBeE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sN7N3bqe8s4o0FnO+R360fkOQWJgC/k8RAkUcJcC+attu+8qX4PzkT3gnGcIiPg2l
-	 2hi6hYN3PkHrGyIG5XVvF4zpQqcpL1TRPT4bGh3iR2pfiEVkyUYYrLJeaGaz5bNVlL
-	 T3Txp9muq5lnODRoto/+hA/v50P+INRHOOAc1tqBpX9icRZa0dzhmTKYba45UwrV6Z
-	 B8j4Sc2OemWylnWCerF8jZ7D5fbY4tcwNNANAEohMWgU21pOLLOKSxuFAd59xlvyI9
-	 RH/BKzMq9/XW+/K9agOxO6sPO71v2ToMAWst2a19QKaO+BL5DGonxE1X4iQQMxHFx7
-	 6GqcK804SR13w==
-Date: Sun, 26 Oct 2025 17:04:20 -0500
-From: Rob Herring <robh@kernel.org>
-To: Sander Vanheule <sander@svanheule.net>
-Cc: Michael Walle <mwalle@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	s=arc-20240116; t=1761520702; c=relaxed/simple;
+	bh=JHsEeE3pg+pk93bhI32FeDi8yrKJtA+0+klnpUJJiVk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mOSymurBiOuYGTMX261o7M2+gt0yyL0rdTwc5gGzlfQe0hJk6EFNjinheHZ1Xxtu/A10KsAknSxZT3Mxnne1r6J5EzOmMu1I7vTgYs+7Xpgg5Zb/shltOs3+UYRV4IRE03nUQG/yji0o3YrLDjJiPfYfoYGSCVUbJliV2+NwvnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K8rRVLUl; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-63c4b41b38cso8771982a12.3
+        for <linux-gpio@vger.kernel.org>; Sun, 26 Oct 2025 16:18:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761520699; x=1762125499; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0DocXilQpznXlXdgq/uQ2JTbyqpF07pq6DJZ7s3t7nQ=;
+        b=K8rRVLUlwfko0Ie6r4lXMPmpm8sabUXHMyr+9AahR+tAW1+FtXWD9PLmi3PaeA83/v
+         DKEMI5q+rMGgtyzpmbtFDlNKsscusm8V7xXcbNLPXUHR+1L9CxZB8MlEQyCN5ivE9Re/
+         /up75cwZOLQsmniAmBOvQoDLzfTTHSJ+ri9jcNxPh/yFKQpihljsN3tZ5+5RxY9SUbKR
+         FWYrFMU9wjKQ6yRBGFmSLhKAO2OfsqlD4NHegxjoqSu3gsW1fJ5AKvhgYH1R2tCQqn75
+         CLCXtJn/NJEmuAs12unqTkbtNzzbMbTVlFSh4SIHNeM9rLum9Vd5dRgxu6CekCAb5MAf
+         nQGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761520699; x=1762125499;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0DocXilQpznXlXdgq/uQ2JTbyqpF07pq6DJZ7s3t7nQ=;
+        b=ZbdW+PvcUFZPHO+lXhUuybmL+DidfG+S0wOUHr68kBR6ZFRb+3evalS0ohHc/KCiUL
+         XVJJjWzcFM/k37tKfffYv+D137htfw76stHlLxWb7DRxQVMaQUJsLMhJcSk9hA7HtZKV
+         ms6CLbyASpLa/7ZoyJN+qIN9/oSnEYB2bkeArmeH7m/TbnjVt3+HK+9IVFV4gukQj9PO
+         GkzjHSZk+ZaqWohusT/mWcxG+29iTCjBJC3/uzR2YYi4aXcFYO9lZBrfQYCob4ldPRtD
+         6SZEdanVhrRA9tZRuaipizR7x4/twcKj0wftv0N8U6g7VKtGFtY7oCZboTk696i6WQVR
+         gFkA==
+X-Gm-Message-State: AOJu0YyDXlnK1Yh6lkDVyyTbMWlmNhz4AaBxgMWlYX5/w+ceAgVar5m+
+	HETkOGYEi7akumGLgf8BatUe1nPsI8fhT+w5h/lIPXvdktLkoVejbQrH
+X-Gm-Gg: ASbGncsFOXzho/hd4vlpYoO2oniLTMQ6WujZHtJALFuhGPAp8PQi79N7sluzopXU3NV
+	u83GKGmss/yYOdBdUlvuvo6+n6JuJbi6owsoWeDNjzXL99sAYeMnCVgDI4t8soCO+Kd1pPXLYK+
+	sufmvkmxJFkm659HNaJTsA2TuhXOH4j0IYwVrksnqK7zRd7xFZ7cMCZTQlpyOZ1+3pJeZI/0f+3
+	v1JzQlQoKpcTeBTvqg6ud1pjtK092CA7Umi29TyrLMvfa46NHE64pHQlDJKYZlj1hfmjX/e2hVk
+	vYf5v7haPeV7ZiqY+VgIgF6KBpkqt4u8IG+dhtU1yx/Hu9JR3nvV72B4xcGCGO6IhnCxxHB6To4
+	ngCHRt1pj3Hly/UchsNjcsK6GTL0sldioRwS1Yv1YEZvlEhCId+/zggIUXDguNe0Ag73wbSMT48
+	QepRk=
+X-Google-Smtp-Source: AGHT+IHmSbbl2y8sC1EHLXiOU46A1OkkBC+CvSb7Cdnfsyi6aRrsfPGnDWUyfaHNDA19Cl6oaDIzyg==
+X-Received: by 2002:a05:6402:210a:b0:615:6a10:f048 with SMTP id 4fb4d7f45d1cf-63e3e597e23mr12696707a12.33.1761520698712;
+        Sun, 26 Oct 2025 16:18:18 -0700 (PDT)
+Received: from builder.. ([2001:9e8:f109:5716:be24:11ff:fe30:5d85])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-63e7ef82865sm4847379a12.9.2025.10.26.16.18.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Oct 2025 16:18:18 -0700 (PDT)
+From: Jonas Jelonek <jelonek.jonas@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 4/8] dt-bindings: mfd: Binding for RTL8231
-Message-ID: <20251026220420.GA3008050-robh@kernel.org>
-References: <20251021142407.307753-1-sander@svanheule.net>
- <20251021142407.307753-5-sander@svanheule.net>
+	Conor Dooley <conor+dt@kernel.org>,
+	Peter Rosin <peda@axentia.se>,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jonas Jelonek <jelonek.jonas@gmail.com>
+Subject: [PATCH v2 0/2] add gpio-line-mux
+Date: Sun, 26 Oct 2025 23:17:52 +0000
+Message-ID: <20251026231754.2368904-1-jelonek.jonas@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251021142407.307753-5-sander@svanheule.net>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Oct 21, 2025 at 04:23:59PM +0200, Sander Vanheule wrote:
-> Add a binding description for the Realtek RTL8231, a GPIO and LED
-> expander chip commonly used in ethernet switches based on a Realtek
-> switch SoC. These chips can be addressed via an MDIO or SMI bus, or used
-> as a plain 36-bit shift register.
-> 
-> This binding only describes the feature set provided by the MDIO/SMI
-> configuration, and covers the GPIO, PWM, and pin control properties. The
-> LED properties are defined in a separate binding.
-> 
-> Signed-off-by: Sander Vanheule <sander@svanheule.net>
-> ---
->  .../bindings/mfd/realtek,rtl8231.yaml         | 189 ++++++++++++++++++
->  1 file changed, 189 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml b/Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml
-> new file mode 100644
-> index 000000000000..25135917d3f2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml
-> @@ -0,0 +1,189 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/realtek,rtl8231.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Realtek RTL8231 GPIO and LED expander.
-> +
-> +maintainers:
-> +  - Sander Vanheule <sander@svanheule.net>
-> +
-> +description: |
-> +  The RTL8231 is a GPIO and LED expander chip, providing up to 37 GPIOs, up to
-> +  88 LEDs, and up to one PWM output. This device is frequently used alongside
-> +  Realtek switch SoCs, to provide additional I/O capabilities.
-> +
-> +  To manage the RTL8231's features, its strapping pins can be used to configure
-> +  it in one of three modes: shift register, MDIO device, or SMI device. The
-> +  shift register mode does not need special support. In MDIO or SMI mode, most
-> +  pins can be configured as a GPIO output or LED matrix scan line/column. One
-> +  pin can be used as PWM output.
-> +
-> +  The GPIO, PWM, and pin control are part of the main node. LED support is
-> +  configured as a sub-node.
-> +
-> +properties:
-> +  compatible:
-> +    const: realtek,rtl8231
-> +
-> +  reg:
-> +    description: MDIO or SMI device address.
-> +    maxItems: 1
-> +
-> +  # GPIO support
-> +  gpio-controller: true
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +    description: |
+This proposes a new type of virtual GPIO controller and corresponding
+driver to provide a 1-to-many mapping between virtual GPIOs and a single
+real GPIO in combination with a multiplexer. Existing drivers apparently
+do not serve the purpose for what I need.
 
-Drop '|' here and elsewhere with no formatting.
+I came across an issue with a switch device from Zyxel which has two
+SFP+ cages. Most similar switches either wire up the SFP signals
+(RX_LOS, MOD_ABS, TX_FAULT, TX_DISABLE) directly to the SoC (if it has
+enough GPIOs) or two a GPIO expander (for which a driver usually
+exists). However, Zyxel decided to do it differently in the following
+way:
+  The signals RX_LOS, MOD_ABS and TX_FAULT share a single GPIO line to
+  the SoC. Which one is actually connected to that GPIO line at a time
+  is controlled by a separate multiplexer, a GPIO multiplexer in this
+  case (which uses two other GPIOs). Only the TX_DISABLE is separate.
 
-> +      The first cell is the pin number and the second cell is used to specify
-> +      the GPIO active state.
-> +
-> +  gpio-ranges:
-> +    description: |
-> +      Must reference itself, and provide a zero-based mapping for 37 pins.
-> +    maxItems: 1
-> +
-> +  # Pin muxing and configuration
-> +  drive-strength:
-> +    description: |
-> +      Common drive strength used for all GPIO output pins, must be 4mA or 8mA.
-> +      On reset, this value will default to 8mA.
-> +    enum: [4, 8]
-> +
-> +  # LED scanning matrix
-> +  led-controller:
-> +    $ref: ../leds/realtek,rtl8231-leds.yaml#
-> +
-> +  # PWM output
-> +  "#pwm-cells":
-> +    description: |
-> +      Twos cells with PWM index (must be 0) and PWM frequency in Hz. To use
-> +      the PWM output, gpio35 must be muxed to its 'pwm' function. Valid
-> +      frequency values for consumers are 1200, 1600, 2000, 2400, 2800, 3200,
-> +      4000, and 4800.
-> +    const: 2
-> +
-> +patternProperties:
-> +  "-pins$":
-> +    type: object
-> +    $ref: ../pinctrl/pinmux-node.yaml#
-> +
-> +    properties:
-> +      pins:
-> +        items:
-> +          enum: [gpio0, gpio1, gpio2, gpio3, gpio4, gpio5, gpio6, gpio7,
-> +                 gpio8, gpio9, gpio10, gpio11, gpio12, gpio13, gpio14, gpio15,
-> +                 gpio16, gpio17, gpio18, gpio19, gpio20, gpio21, gpio22, gpio23,
-> +                 gpio24, gpio25, gpio26, gpio27, gpio28, gpio29, gpio30, gpio31,
-> +                 gpio32, gpio33, gpio34, gpio35, gpio36]
-> +        minItems: 1
-> +        maxItems: 37
+The SFP core/driver doesn't seem to support such a usecase for now, for
+each signal one needs to specify a separate GPIO like:
 
-blank line
+  los-gpio = <&gpio0 0 GPIO_ACTIVE_HIGH>;
+  mod-def0-gpio = <&gpio0 1 GPIO_ACTIVE_LOW>;
+  ...
 
-Other than those nits, looks good.
+But for my device, I actually need to directly specify multiplexing
+behavior in the SFP node or provide a mux-controller with 'mux-control'.
 
-Rob
+To fill this gap, I created a dt-schema and a working driver which
+exactly does what is needed. It takes a phandle to a mux-controller and
+the 'shared' gpio, and provides several virtual GPIOs based on the
+gpio-line-mux-states property.
+
+This virtual gpio-controller can then be referenced in the '-gpio'
+properties of the SFP node (or other nodes depending on the usecase) as
+usual and do not require any modification to the SFP core/driver.
+
+---
+Changelog:
+
+v2: - as requested by Linus:
+      - renamed from 'gpio-split' to 'gpio-line-mux'
+      - added better description and examples to DT bindings
+    - simplified driver
+    - added missing parts to DT bindings
+    - dropped RFC tag
+    - renamed patchset
+
+Link to v1 (in case it isn't linked properly due to changed title):
+https://lore.kernel.org/linux-gpio/20251009223501.570949-1-jelonek.jonas@gmail.com/
+
+---
+Jonas Jelonek (2):
+  dt-bindings: gpio: add gpio-line-mux controller
+  gpio: add gpio-line-mux driver
+
+ .../bindings/gpio/gpio-line-mux.yaml          | 108 ++++++++++
+ .../devicetree/bindings/mux/gpio-mux.yaml     |  30 +++
+ MAINTAINERS                                   |   6 +
+ drivers/gpio/Kconfig                          |  10 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-line-mux.c                  | 194 ++++++++++++++++++
+ 6 files changed, 349 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-line-mux.yaml
+ create mode 100644 drivers/gpio/gpio-line-mux.c
+
+
+base-commit: 897396b418d1720aac39585b208aada708b5b433
+-- 
+2.48.1
+
 
