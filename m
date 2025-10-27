@@ -1,183 +1,130 @@
-Return-Path: <linux-gpio+bounces-27673-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27674-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3848AC0DA02
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 13:42:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E051C0DDEF
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 14:10:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A448B1885450
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 12:40:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 77987422DC8
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 13:03:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAA8230F803;
-	Mon, 27 Oct 2025 12:38:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AF3F27CCEE;
+	Mon, 27 Oct 2025 13:02:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kXq9dojZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fwFg2t9S"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6EF30E0FC;
-	Mon, 27 Oct 2025 12:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC2424A05D
+	for <linux-gpio@vger.kernel.org>; Mon, 27 Oct 2025 13:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761568715; cv=none; b=Zhlx44KTvPJJLGO+EWEDZH9p1fHkoXHT/1diD01YTwaQQGHFRGGk306v+rGj1igUgEqmw4P+4F194RIlDeDYuofnVjlNbNKuWcRa32xaTah9VJXd63OkGN9wA4B0+GbgZRjxokhVFGEJwupd0pgCqL1YcIY6qXYrXBEjkYnQihI=
+	t=1761570135; cv=none; b=Zs+49WBN0iKHCeHqIu8F4xtDMPUKtoS168zD+WrwtX02SYN/8JCwEjGaT8980hplzVf6hpaEUGWRWvDrQ2I30MLNmLZ9qwg925V6j0EpLhNM7tALhXkPhH4xXaS3bXyBcnyVN2RQb2V/siyfhBkWFE4KWJz25Z6XGe2AE+ykmdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761568715; c=relaxed/simple;
-	bh=t9hkT+4zAAhz5+o+QG2fo27oXgveTo7i7m6LBWKxhfs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jrna2hW5QJ4pUN0ePixO6rbux1+jCdbpVSq4EHvnyOBjeYHhwzggc4MomA7YfsLQgmByZxBpgI4gYPwPzJ9pAmCeGBEQhwS6uDu64Dwm4DGBd6cpgpQsA2sFgAoLpYOQ7SZhwrp9jnGJASZ1JNsiSDiG96FdNA+jvBqJ1Clq824=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kXq9dojZ; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 2CA211A16B1;
-	Mon, 27 Oct 2025 12:38:32 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id F2B756062C;
-	Mon, 27 Oct 2025 12:38:31 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 49FD9102F24FC;
-	Mon, 27 Oct 2025 13:38:24 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1761568710; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=LIcovSWKnBA+L7voLcFHvTGbDw/RTZnlp4fA0bZ/QEc=;
-	b=kXq9dojZmGm6Ef0a7GVd/BQliyMkvrAcJiCiXAw9LT8hdLsHlV5tISKRqILw5M8Rzfmm1b
-	c1C536eyX14TLOfkOG+71IXH8VlV4qjgrpmoU8J1GbXUDjk+LN5PDq47kWgLfOZfj3shPw
-	Uu/iiMcrr4GsRAIbG7C/VEiFAwxi5URrh/XciNr1PEYjufdGC+gBqrRVPPCPDYKW0UUE+Y
-	sRf8GjhF7ceb/UsmPTgY1lKovKdb3qutucuN0MSxBcyBG5/JYXaGo/pglf2QW1+mliuzJq
-	OtDAUk/qiv+3XpIKnXAQ0DVrZWEMG7VAwFCaw3hMY+0pbsarUiCIQGyS9xVxwA==
-Date: Mon, 27 Oct 2025 13:38:19 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andreas Kemnade <andreas@kemnade.info>, linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v2 12/15] rtc: bd70528: Support BD72720 rtc
-Message-ID: <202510271238195ef3bdfb@mail.local>
-References: <cover.1761564043.git.mazziesaccount@gmail.com>
- <380ea1fdbb94a796418e8f463c6a9436001d572d.1761564043.git.mazziesaccount@gmail.com>
+	s=arc-20240116; t=1761570135; c=relaxed/simple;
+	bh=1bB7L68kzJayTBvOhwCV/SjorHR+hB0GqpWfqKFMQiY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CiOMgAE0Zjkp1DjKAdijViDuzgbnmFZmX9sWqjKe/ljXe3bDHD4zRIBnnVlh++pJ0Bn4sNLL1htYLn2vUBkZzBRUMp+keZRvQMtFoI/cDYaIyedrPSQGj2mCsy54HFWqdfonR/6rujA0mpUceVlDCzw8PQqAkikQlEGxbArmpZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fwFg2t9S; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-375eff817a3so48884851fa.1
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Oct 2025 06:02:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761570130; x=1762174930; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pxCTtcPsN8230LeCJx3j5DlRF4pEORPX1pABk9GNfEI=;
+        b=fwFg2t9SG/sQuwHr+iOuOpC3wwIySvcp88EAW5Qw6/Py2Yfu/2U3pqbMMiloyGL1yn
+         G9+B5zMpSpXM4hzVroUx7nDp4F1WdWzgZg3/FxjVAiX/Cn2Qg5zLHAX0lZEjldlbL2p3
+         sByH1SDT+v5XdZLtuZLBrns3GsT6co610lr6RHkGvnsXR3xhPpteK5/q/8y+qpLRVKv9
+         tqxel4Y+g408wgC2IBHHrud94bIMJraSCJnK06sYsrH0aUCYiyPkLl3PKUu3WFvxd7fU
+         BmmnRXhLT5m0u7X26zANng3rEGNz/8K0OXYPDigWUZrtMZdikTBFGHkLk6rpt4Ib2ehe
+         kBBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761570130; x=1762174930;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pxCTtcPsN8230LeCJx3j5DlRF4pEORPX1pABk9GNfEI=;
+        b=FH5RA5rmwNDOLOyGm3FYWYqDCQbvPOyAe4ZMoT5jpEKS8KXc17ruh8R0o/oEe4BoZ7
+         JyzX5tGSoinZ65F+YxQikkMiCQoh+A739M6i2VR8WO/z6yyQUyhxXNEd8aPxof2ur47z
+         M9ij86PFYXZOQBDwBdX1QlQWM4IAazZJgiElXrlKE+2u2cwisFw7bvwC38wLX0RIN5f+
+         KI4fAoH//qumKdjuTAXjRSRvwf6bXSp+8E8dI09MO30gCe1JCX7reoFhbMIWhdh1y0fI
+         j3TtAMwZqafe69gUf8UV6qomqNeisKW2YtwL5MCXSl4Fzl47Yj/C7sU7moCCzRkfIRVI
+         HnkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW9WO0LiXDXMVir3lFDAKo7GWV0ZE5hfRFzn1pRbXZiDY1iR6lMTDJiYcp3AkC7q01Fz2ryjHtK9D04@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzW89liHgqLSTnKN7ruCJ1tJtX9FrT97MacVQ5WN4M8UXchg9p
+	6u83aAXzkC8P1lwT0WKOJTco61AwGTR0+nYqmz+o58Zpk6hlvYzKDT+M
+X-Gm-Gg: ASbGncvGUsywH97MB0u+TbflmG0LYChULS3/VLdqBAz0xmxVijxiJ9FWrPamOgNNiS3
+	kUyu7z68NFn+GRdqbDBD1JlOtuBxSdYvgARmammWTVXoL2fslCcuxhvsE4H5UW8MwuToOlN6GWx
+	aQApuW6ADRSvtVEjTxpmANrYzwJ+kUC2nfBvBkh6Kmf6GiY/Ww8r7kiw4H/mB/gpIKFqSem5RGN
+	OmhTgK0ZDX8paEJ4WhIhppDjIkbviIKT+TCVdEYdhSFu0X/ZXrXdSScbSMMHgROcwL/MJ/mPTRR
+	2aAEX9S9R1rahBAV3QZTgn68Rt4bANxAU3/SS9ueBOb550Fv80IqGZTuBlRf4fLXslmXiMOMk7X
+	ii+w7b/HXL0zwVZITPBEXHqyEA7jpvSyd/ATDdZ+ThWqZvAcfhaoVFUdPvhjbC1wXokL+//hHGC
+	LV63TI8Wg+pUX6COxxI8hntm3mpWaS8BHRw8lXffkzAtLvK7/aLE3FcLk0iia4vEtM5eXq
+X-Google-Smtp-Source: AGHT+IEl/ogSJ08y9LQ2dV4OaLLEyD6Fjj0ThgIRaIYYP5R3v0fiFqlQt8CBQpsPUF3Equew6ssOkw==
+X-Received: by 2002:a2e:b893:0:b0:36c:f6:a4e1 with SMTP id 38308e7fff4ca-377978c6d84mr104935861fa.14.1761570129393;
+        Mon, 27 Oct 2025 06:02:09 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-378ee0d0028sm19860371fa.35.2025.10.27.06.02.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Oct 2025 06:02:08 -0700 (PDT)
+Message-ID: <a74c9c52-7c39-4c66-bdcf-0fb9e1b8f77c@gmail.com>
+Date: Mon, 27 Oct 2025 15:02:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <380ea1fdbb94a796418e8f463c6a9436001d572d.1761564043.git.mazziesaccount@gmail.com>
-X-Last-TLS-Session-Version: TLSv1.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 12/15] rtc: bd70528: Support BD72720 rtc
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andreas Kemnade <andreas@kemnade.info>,
+ linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-rtc@vger.kernel.org
+References: <cover.1761564043.git.mazziesaccount@gmail.com>
+ <380ea1fdbb94a796418e8f463c6a9436001d572d.1761564043.git.mazziesaccount@gmail.com>
+ <202510271238195ef3bdfb@mail.local>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <202510271238195ef3bdfb@mail.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 27/10/2025 13:47:51+0200, Matti Vaittinen wrote:
-> The BD72720 has similar RTC block as a few other ROHM PMICs.
+On 27/10/2025 14:38, Alexandre Belloni wrote:
+> On 27/10/2025 13:47:51+0200, Matti Vaittinen wrote:
+>> The BD72720 has similar RTC block as a few other ROHM PMICs.
+>>
+>> Add support for BD72720 RTC.
+>>
+>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+>>
 > 
-> Add support for BD72720 RTC.
+> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 > 
-> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-> 
+> Note that we didn't get 07/15 that adds linux/mfd/rohm-bd72720.h which
+> this patch depends on.
 
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Thanks for the heads-up Alexandre!
 
-Note that we didn't get 07/15 that adds linux/mfd/rohm-bd72720.h which
-this patch depends on.
+For some reason the SMTP server seems to be blocking the 7/15 :/ I will 
+try to figure out a way to send it :(
 
-> ---
-> Revision history:
->  RFCv1 =>:
->  - No changes
-> ---
->  drivers/rtc/Kconfig       |  3 ++-
->  drivers/rtc/rtc-bd70528.c | 21 ++++++++++++++-------
->  2 files changed, 16 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> index 2933c41c77c8..418f6c28847a 100644
-> --- a/drivers/rtc/Kconfig
-> +++ b/drivers/rtc/Kconfig
-> @@ -561,7 +561,8 @@ config RTC_DRV_BD70528
->  	depends on MFD_ROHM_BD71828
->  	help
->  	  If you say Y here you will get support for the RTC
-> -	  block on ROHM BD71815 and BD71828 Power Management IC.
-> +	  block on ROHM BD71815, BD71828 and BD72720 Power
-> +	  Management ICs.
->  
->  	  This driver can also be built as a module. If so, the module
->  	  will be called rtc-bd70528.
-> diff --git a/drivers/rtc/rtc-bd70528.c b/drivers/rtc/rtc-bd70528.c
-> index 954ac4ef53e8..4c8599761b2e 100644
-> --- a/drivers/rtc/rtc-bd70528.c
-> +++ b/drivers/rtc/rtc-bd70528.c
-> @@ -7,6 +7,7 @@
->  #include <linux/bcd.h>
->  #include <linux/mfd/rohm-bd71815.h>
->  #include <linux/mfd/rohm-bd71828.h>
-> +#include <linux/mfd/rohm-bd72720.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
-> @@ -262,13 +263,13 @@ static int bd70528_probe(struct platform_device *pdev)
->  
->  		/*
->  		 * See also BD718XX_ALM_EN_OFFSET:
-> -		 * This works for BD71828 and BD71815 as they have same offset
-> -		 * between ALM0 start and ALM0_MASK. If new ICs are to be
-> -		 * added this requires proper check as ALM0_MASK is not located
-> -		 * at the end of ALM0 block - but after all ALM blocks so if
-> -		 * amount of ALMs differ the offset to enable/disable is likely
-> -		 * to be incorrect and enable/disable must be given as own
-> -		 * reg address here.
-> +		 * This works for BD71828, BD71815, and BD72720 as they all
-> +		 * have same offset between the ALM0 start and the ALM0_MASK.
-> +		 * If new ICs are to be added this requires proper check as
-> +		 * the  ALM0_MASK is not located at the end of ALM0 block -
-> +		 * but after all ALM blocks. If amount of ALMs differ, the
-> +		 * offset to enable/disable is likely to be incorrect and
-> +		 * enable/disable must be given as own reg address here.
->  		 */
->  		bd_rtc->bd718xx_alm_block_start = BD71815_REG_RTC_ALM_START;
->  		hour_reg = BD71815_REG_HOUR;
-> @@ -278,6 +279,11 @@ static int bd70528_probe(struct platform_device *pdev)
->  		bd_rtc->bd718xx_alm_block_start = BD71828_REG_RTC_ALM_START;
->  		hour_reg = BD71828_REG_RTC_HOUR;
->  		break;
-> +	case ROHM_CHIP_TYPE_BD72720:
-> +		bd_rtc->reg_time_start = BD72720_REG_RTC_START;
-> +		bd_rtc->bd718xx_alm_block_start = BD72720_REG_RTC_ALM_START;
-> +		hour_reg = BD72720_REG_RTC_HOUR;
-> +		break;
->  	default:
->  		dev_err(&pdev->dev, "Unknown chip\n");
->  		return -ENOENT;
-> @@ -337,6 +343,7 @@ static int bd70528_probe(struct platform_device *pdev)
->  static const struct platform_device_id bd718x7_rtc_id[] = {
->  	{ "bd71828-rtc", ROHM_CHIP_TYPE_BD71828 },
->  	{ "bd71815-rtc", ROHM_CHIP_TYPE_BD71815 },
-> +	{ "bd72720-rtc", ROHM_CHIP_TYPE_BD72720 },
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(platform, bd718x7_rtc_id);
-> -- 
-> 2.51.0
-> 
-
-
-
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Yours,
+	-- Matti
 
