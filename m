@@ -1,130 +1,138 @@
-Return-Path: <linux-gpio+bounces-27674-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27676-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E051C0DDEF
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 14:10:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A76B1C0E058
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 14:29:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 77987422DC8
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 13:03:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 79217189C0B0
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 13:29:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AF3F27CCEE;
-	Mon, 27 Oct 2025 13:02:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A48BE2D77F5;
+	Mon, 27 Oct 2025 13:28:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fwFg2t9S"
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="kHzZfJeq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxout3.routing.net (mxout3.routing.net [134.0.28.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC2424A05D
-	for <linux-gpio@vger.kernel.org>; Mon, 27 Oct 2025 13:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85D9829AB02;
+	Mon, 27 Oct 2025 13:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761570135; cv=none; b=Zs+49WBN0iKHCeHqIu8F4xtDMPUKtoS168zD+WrwtX02SYN/8JCwEjGaT8980hplzVf6hpaEUGWRWvDrQ2I30MLNmLZ9qwg925V6j0EpLhNM7tALhXkPhH4xXaS3bXyBcnyVN2RQb2V/siyfhBkWFE4KWJz25Z6XGe2AE+ykmdY=
+	t=1761571716; cv=none; b=brGIhRpKcyMs5QMOkNiwMlHmLQ7O+X/RYNZrmyPE2MrkH8XBwpwpp/RMQdL/obdnNloE/Ndyq7Tx0Dy1ag5fWsqhOSej5z7oVsT05ciVmhhRNt9BFrxiJoSe8VN+jv5msLlv1XYn7/ic/bUxjsnSvUyUyy8xMY6izPBRqV1quZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761570135; c=relaxed/simple;
-	bh=1bB7L68kzJayTBvOhwCV/SjorHR+hB0GqpWfqKFMQiY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CiOMgAE0Zjkp1DjKAdijViDuzgbnmFZmX9sWqjKe/ljXe3bDHD4zRIBnnVlh++pJ0Bn4sNLL1htYLn2vUBkZzBRUMp+keZRvQMtFoI/cDYaIyedrPSQGj2mCsy54HFWqdfonR/6rujA0mpUceVlDCzw8PQqAkikQlEGxbArmpZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fwFg2t9S; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-375eff817a3so48884851fa.1
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Oct 2025 06:02:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761570130; x=1762174930; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pxCTtcPsN8230LeCJx3j5DlRF4pEORPX1pABk9GNfEI=;
-        b=fwFg2t9SG/sQuwHr+iOuOpC3wwIySvcp88EAW5Qw6/Py2Yfu/2U3pqbMMiloyGL1yn
-         G9+B5zMpSpXM4hzVroUx7nDp4F1WdWzgZg3/FxjVAiX/Cn2Qg5zLHAX0lZEjldlbL2p3
-         sByH1SDT+v5XdZLtuZLBrns3GsT6co610lr6RHkGvnsXR3xhPpteK5/q/8y+qpLRVKv9
-         tqxel4Y+g408wgC2IBHHrud94bIMJraSCJnK06sYsrH0aUCYiyPkLl3PKUu3WFvxd7fU
-         BmmnRXhLT5m0u7X26zANng3rEGNz/8K0OXYPDigWUZrtMZdikTBFGHkLk6rpt4Ib2ehe
-         kBBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761570130; x=1762174930;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pxCTtcPsN8230LeCJx3j5DlRF4pEORPX1pABk9GNfEI=;
-        b=FH5RA5rmwNDOLOyGm3FYWYqDCQbvPOyAe4ZMoT5jpEKS8KXc17ruh8R0o/oEe4BoZ7
-         JyzX5tGSoinZ65F+YxQikkMiCQoh+A739M6i2VR8WO/z6yyQUyhxXNEd8aPxof2ur47z
-         M9ij86PFYXZOQBDwBdX1QlQWM4IAazZJgiElXrlKE+2u2cwisFw7bvwC38wLX0RIN5f+
-         KI4fAoH//qumKdjuTAXjRSRvwf6bXSp+8E8dI09MO30gCe1JCX7reoFhbMIWhdh1y0fI
-         j3TtAMwZqafe69gUf8UV6qomqNeisKW2YtwL5MCXSl4Fzl47Yj/C7sU7moCCzRkfIRVI
-         HnkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW9WO0LiXDXMVir3lFDAKo7GWV0ZE5hfRFzn1pRbXZiDY1iR6lMTDJiYcp3AkC7q01Fz2ryjHtK9D04@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzW89liHgqLSTnKN7ruCJ1tJtX9FrT97MacVQ5WN4M8UXchg9p
-	6u83aAXzkC8P1lwT0WKOJTco61AwGTR0+nYqmz+o58Zpk6hlvYzKDT+M
-X-Gm-Gg: ASbGncvGUsywH97MB0u+TbflmG0LYChULS3/VLdqBAz0xmxVijxiJ9FWrPamOgNNiS3
-	kUyu7z68NFn+GRdqbDBD1JlOtuBxSdYvgARmammWTVXoL2fslCcuxhvsE4H5UW8MwuToOlN6GWx
-	aQApuW6ADRSvtVEjTxpmANrYzwJ+kUC2nfBvBkh6Kmf6GiY/Ww8r7kiw4H/mB/gpIKFqSem5RGN
-	OmhTgK0ZDX8paEJ4WhIhppDjIkbviIKT+TCVdEYdhSFu0X/ZXrXdSScbSMMHgROcwL/MJ/mPTRR
-	2aAEX9S9R1rahBAV3QZTgn68Rt4bANxAU3/SS9ueBOb550Fv80IqGZTuBlRf4fLXslmXiMOMk7X
-	ii+w7b/HXL0zwVZITPBEXHqyEA7jpvSyd/ATDdZ+ThWqZvAcfhaoVFUdPvhjbC1wXokL+//hHGC
-	LV63TI8Wg+pUX6COxxI8hntm3mpWaS8BHRw8lXffkzAtLvK7/aLE3FcLk0iia4vEtM5eXq
-X-Google-Smtp-Source: AGHT+IEl/ogSJ08y9LQ2dV4OaLLEyD6Fjj0ThgIRaIYYP5R3v0fiFqlQt8CBQpsPUF3Equew6ssOkw==
-X-Received: by 2002:a2e:b893:0:b0:36c:f6:a4e1 with SMTP id 38308e7fff4ca-377978c6d84mr104935861fa.14.1761570129393;
-        Mon, 27 Oct 2025 06:02:09 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-378ee0d0028sm19860371fa.35.2025.10.27.06.02.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Oct 2025 06:02:08 -0700 (PDT)
-Message-ID: <a74c9c52-7c39-4c66-bdcf-0fb9e1b8f77c@gmail.com>
-Date: Mon, 27 Oct 2025 15:02:07 +0200
+	s=arc-20240116; t=1761571716; c=relaxed/simple;
+	bh=YjBDF/wx7NN4L1PBVliWqmKWyk7U+JcPjYG87YopiaI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EAu9B20n1i/llHHHDViqmcuI6ko7QGwYlyHd8mhKQlQ0odOhz5FaqG/vyu34ezKnNph+1+pkCtDiFRjpxKuRXIAne958Hm+IAdD1/24ilQKJf07q8I5z/npamBxq4V5ZsmRqRZVvTUQu89A1WO2D2IfGE0fjGFwEQChSDUA8gzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=kHzZfJeq; arc=none smtp.client-ip=134.0.28.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
+Received: from mxbulk.masterlogin.de (unknown [192.168.10.85])
+	by mxout3.routing.net (Postfix) with ESMTP id 12DDC6078A;
+	Mon, 27 Oct 2025 13:28:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+	s=routing; t=1761571706;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=f1kY+fBa9dU4TqUw2YdISaAyQViHpP6uEOBBRMAaqh4=;
+	b=kHzZfJeqi6kxY1PtuPPOrDzx6NyR9siEcJhx/gwE693U7eJnrjJlEVKjsh34FfX2R3lE2N
+	BZtlTH6mXH02Qxvrm+4RR+nFpDrS6YRyAVui12l+TOsXz5dcnmb//lHFL4C6598Ol/b0Uv
+	g8dBoFcfZ5MAJ70OZKhz1zfFTEjwS3k=
+Received: from frank-u24.. (fttx-pool-217.61.159.158.bambit.de [217.61.159.158])
+	by mxbulk.masterlogin.de (Postfix) with ESMTPSA id D08E31226C0;
+	Mon, 27 Oct 2025 13:28:25 +0000 (UTC)
+From: Frank Wunderlich <linux@fw-web.de>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Frank Wunderlich <frank-w@public-files.de>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH v1 0/6] Add Bananapi R4 Pro support
+Date: Mon, 27 Oct 2025 14:28:10 +0100
+Message-ID: <20251027132817.212534-1-linux@fw-web.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 12/15] rtc: bd70528: Support BD72720 rtc
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andreas Kemnade <andreas@kemnade.info>,
- linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-rtc@vger.kernel.org
-References: <cover.1761564043.git.mazziesaccount@gmail.com>
- <380ea1fdbb94a796418e8f463c6a9436001d572d.1761564043.git.mazziesaccount@gmail.com>
- <202510271238195ef3bdfb@mail.local>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <202510271238195ef3bdfb@mail.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 27/10/2025 14:38, Alexandre Belloni wrote:
-> On 27/10/2025 13:47:51+0200, Matti Vaittinen wrote:
->> The BD72720 has similar RTC block as a few other ROHM PMICs.
->>
->> Add support for BD72720 RTC.
->>
->> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
->>
-> 
-> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> 
-> Note that we didn't get 07/15 that adds linux/mfd/rohm-bd72720.h which
-> this patch depends on.
+From: Frank Wunderlich <frank-w@public-files.de>
 
-Thanks for the heads-up Alexandre!
+BananaPi R4 Pro is a MT7988A based board which exists in 2 different
+hardware versions:
 
-For some reason the SMTP server seems to be blocking the 7/15 :/ I will 
-try to figure out a way to send it :(
+- 4E: 4 GB RAM and using internal 2.5G Phy for WAN-Combo
+- 8X: 8 GB RAM and 2x Aeonsemi AS21010P 10G phys
 
-Yours,
-	-- Matti
+common parts:
+
+- MediaTek MT7988A Quad-core Arm Corex-A73,1.8GHz processor
+- 8GB eMMC flash
+- 256MB SPI-NAND Flash
+- Micro SD card slot
+- 1x 10G SFP+ WAN
+- 1x 10G SFP+ LAN
+- 4x 2.5G RJ45 LAN (MxL86252C)
+- 1x 1G RJ45 LAN (MT7988 internal switch)
+- 2x miniPCIe slots with PCIe3.0 2lane interface for Wi-Fi NIC
+- 2x M.2 M-KEY slots with PCIe3.0 1lane interface for NVME SSD
+- 3x M.2 B-KEY slots with USB3.2 for 5G Module (PCIe shared with key-m)
+- 1x USB3.2 slot
+- 1x USB2.0 slot
+- 1x USB TypeC Debug Console
+- 2x13 PIN Header for expanding application
+
+official product information:
+https://docs.banana-pi.org/en/BPI-R4_Pro/BananaPi_BPI-R4_Pro
+
+The PCIe is per default in key-m state and can be changed to key-b with
+the pcie-overlays.
+
+Frank Wunderlich (6):
+  dt-bindings: pinctrl: mt7988: allow gpio-hogs
+  dt-bindings: arm: mediatek: add BPI-R4 Pro board
+  arm64: dts: mediatek: mt7988a: Add label for ssusb0
+  arm64: dts: mt7988: Add devicetree for BananaPi R4 Pro
+  arm64: dts: mediatek: mt7988a-bpi-r4-pro: add PCIe overlays
+  arm64: dts: mediatek: mt7988a-bpi-r4pro: Add mmc overlays
+
+ .../devicetree/bindings/arm/mediatek.yaml     |   6 +
+ .../pinctrl/mediatek,mt7988-pinctrl.yaml      |   5 +
+ arch/arm64/boot/dts/mediatek/Makefile         |   8 +
+ .../mt7988a-bananapi-bpi-r4-pro-4e.dts        |  16 +
+ .../mt7988a-bananapi-bpi-r4-pro-8x.dts        |  16 +
+ .../mt7988a-bananapi-bpi-r4-pro-cn15.dtso     |  20 +
+ .../mt7988a-bananapi-bpi-r4-pro-cn18.dtso     |  20 +
+ .../mt7988a-bananapi-bpi-r4-pro-emmc.dtso     |  33 ++
+ .../mt7988a-bananapi-bpi-r4-pro-sd.dtso       |  31 +
+ .../mediatek/mt7988a-bananapi-bpi-r4-pro.dtsi | 559 ++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt7988a.dtsi     |   2 +-
+ 11 files changed, 715 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-pro-4e.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-pro-8x.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-pro-cn15.dtso
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-pro-cn18.dtso
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-pro-emmc.dtso
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-pro-sd.dtso
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-pro.dtsi
+
+-- 
+2.43.0
+
 
