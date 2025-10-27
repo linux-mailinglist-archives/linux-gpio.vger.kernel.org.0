@@ -1,157 +1,110 @@
-Return-Path: <linux-gpio+bounces-27661-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27662-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 417C7C0D623
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 13:04:57 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4E80C0D707
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 13:14:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 39BDA1890E3C
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 12:05:11 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D4D504ECFB5
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 12:14:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0104B2EC57C;
-	Mon, 27 Oct 2025 12:04:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0988B3009F1;
+	Mon, 27 Oct 2025 12:14:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U+QgGaWi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LVFbo6i0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5EE136E37
-	for <linux-gpio@vger.kernel.org>; Mon, 27 Oct 2025 12:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDB2EEAB;
+	Mon, 27 Oct 2025 12:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761566681; cv=none; b=AJFvQPc5aQlYAzC1I3CU0F2TahnUadax+KOW+7YBhQkXtr67AJ8yvMZdh3OXGRf6STq0P22r8uMA4kWq07TvXIsGApV4lHdOcMmvgT0fG5DVA/GqJnVWibFCcMP2mLFiRdTADJVEf6ExGkPFtJhLKRSEvecKVf58BSP/yNScuj8=
+	t=1761567268; cv=none; b=gtlsnLAihHoYdm5mnZg7jm7wdBdfXuQiSdfcR7A4jgXD4lnpM2HUudWsf+dv1LsAtVk60sgZM/f03rULUAlLsCvHi94tNdaAQspuQvS6oDjqfU/ikjFEjMR0b3QSx857frudb5boCiss3V4HYlwT48BudepLRnE+oqQeCfAeLw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761566681; c=relaxed/simple;
-	bh=16kcW1vwy0bkn+TiQg3w/ZY6ygpWEmFvU/+qcKQlcXA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RFZmUcdtSHdBEovGejw3q1/tB3enytP4j49Gck1SxAyXaasGjbIgvjmaSsfsLCoueuS3T9g2o+stU4V2s7F9eMxLZuMEUxw6sfr/tRVL7gg9V5sjHd3wkt+HubXPxMQ6hCbC5M/OOKyHxWj/Du79xAGgElD1YWR3ni8iNwLxN5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U+QgGaWi; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-3637d6e9923so44440451fa.3
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Oct 2025 05:04:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761566678; x=1762171478; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6g9H7PF7mEVi0u1u3dpEiWwxRgH9FFCM/t0Z2Ioht4U=;
-        b=U+QgGaWipwhSDSZBaLqk+vinjEjElxpsH/gfesBUraYOl3hsB0YNSebfzZvXaAshFc
-         +SzmQPZ1B25zm5cNnE0huWuSNjMFtPQ2JlLtyQq2++FCCnjqGpIxHA9yljFxNiunOZdT
-         G2T4ByRqrx6VS3Ucn82WqIQJuWjW4lK1kkGpAx0olL0iB3jaiVzamKdcics4tUDkCpqA
-         dlBSufPWH65FQnnx3EvAem69l3Y3Kbe6ttTuZcO1S4L3hJGUpmQrP1KY9jOzJ01UoHSU
-         ITLsqnNbRQd/bvggZv25sytrUE1p2fjgDJsx8+tW5lIdLTigswG4cE1hmTgsgBsT8hRe
-         HUqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761566678; x=1762171478;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6g9H7PF7mEVi0u1u3dpEiWwxRgH9FFCM/t0Z2Ioht4U=;
-        b=bOteURbjkRNlCpY2oJ9fGCc6M6StAQQrfdpdkmjA7A5eHGNGuTniMpRvqdWZMciYBx
-         P6CHSG6QnZXAcXR4mI4KKIoA2xSMKKizg2wCFF0rlyAHlz7msoWwEz73qU+dc+WvTWgD
-         O8hihjSRkfDDHrRRyocHxPD/9tC/QFv7l1BirKzYc5N2WHvKoBi4ho7SDW7tV0GDt6PP
-         pG/Uq0D+fGf8JcYrwX98sssmSJOzeqeDKLR4vwuwE4IsrYPkM2IAigQbgMKxccUa+KHz
-         lT4DQSDuWTnv6Xzb30lNAmYRREFa28deVSUhqpXVFWVzdPtb8UhK+p1z78lg6BR0Bxxr
-         ojNg==
-X-Gm-Message-State: AOJu0YzcRIZBumXm9D9MAyuuv59hKLwb7MkqhcVQlEVXToGlr7NpLVtr
-	odiffA24IAt7Ro5tTk64qEjnJxJXaIjN+y7ni5kGnE8H1RKZjNleBVoKuwnRp5cejk3abeXp0v7
-	fRtltpWYBAA2CuAVVy/cRnOgnSVtCzAw=
-X-Gm-Gg: ASbGncvaHn1tfNgP5LsrMW9/c/2hn74KWcpDucOMWpcl6LqtO/OeXXszs2+20RdaXHt
-	bipMFx81fy3QSDLN/+O8Y0JObJsKehc770gUZW7aEYdC6FiL3Bi/QqOVonS6050bGAoUuG0t6Ra
-	HVo4GY4eWKeV6iK1u6vmzY6D4yr9ZxXyZ6rwfnLYx7SHPCnmw4J+L5dlxdKeMG9bYHqby4AZl7c
-	0qBX3jW7q5EasuwUPOWZ9XBmrGknj314T8BCFBzf+JelP/RLc+vv16rMpAX
-X-Google-Smtp-Source: AGHT+IHeM6o+1NeH7y9elXAOqGuDEbIOBj2Dz9Q7y4BEyDykBU6XK3Lhc7JnFNNSaJY5YrPw3A/CGhC8oI8H4vQXi+k=
-X-Received: by 2002:a05:651c:983:b0:337:e697:c9aa with SMTP id
- 38308e7fff4ca-378d6cc598dmr38773831fa.15.1761566677862; Mon, 27 Oct 2025
- 05:04:37 -0700 (PDT)
+	s=arc-20240116; t=1761567268; c=relaxed/simple;
+	bh=rWHdHSJPVLgMn3etblo03n9fmEXg8Q3LI4UBHrXAqeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ljx86qHU0TtHlw2dxbCM6bVb9wQEIdzWFRe1LPN5Xv/abCQpgnavuX8k9PQyxjDlm6nhUkuUov8jXE8Xh3dOhmHMu6BynzKLloSC6U8ygODoGSfNuw1Evn3bGh64yb/1hNvelukuqGDXO5cBEj4m9llxzhaXzsn+tb4gUcq5Dbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LVFbo6i0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DF80C4CEF1;
+	Mon, 27 Oct 2025 12:14:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761567268;
+	bh=rWHdHSJPVLgMn3etblo03n9fmEXg8Q3LI4UBHrXAqeU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LVFbo6i0j8oUWrOC68//sH6s67P3CS8SShwRk1eyPZOI7fZ8dKHEN+el+eCGZH426
+	 /SvlLPhf48fwtfjRMFPs3tsBVc6ES6/P7rckdD/WvDk9+G9dz35Db+G6031yEmjUy5
+	 EqHHJvE5nAnM24ht3FoM+X+sfmwZtHu0l48tdWvefHMndQMNwoMKH+MVXdGccnAruQ
+	 MvPhWh/8oxl7KP9n4xbWYYagRxRBtBJVVomhkI0qtbfZ85Tb/W+ndI0wRWSACsmIv3
+	 XAiSeyclFV6nDNr0XcTKDFETTGsEWbOlYAlG9kpG/JEeVCZ+UUSntUrBNiZlA2h7hv
+	 6b2naZCEO9G3w==
+Date: Mon, 27 Oct 2025 12:14:18 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v2 08/15] regulator: bd71828: rename IC specific entities
+Message-ID: <c4bdf649-0623-4529-b8e9-43d6701f0111@sirena.org.uk>
+References: <cover.1761564043.git.mazziesaccount@gmail.com>
+ <aa2b31267e6cc93bad4c823ef1ba07ba43efd572.1761564043.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251027104746.282351-1-bigunclemax@gmail.com> <aP9cSArwCdvPZff3@smile.fi.intel.com>
-In-Reply-To: <aP9cSArwCdvPZff3@smile.fi.intel.com>
-From: Maxim Kiselev <bigunclemax@gmail.com>
-Date: Mon, 27 Oct 2025 15:04:25 +0300
-X-Gm-Features: AWmQ_blw3uLCth3OfrIpO6fLuc77YQYKuRcZ3MAWpV9Ij1-dgaYnXNaj9BJMSfk
-Message-ID: <CALHCpMjy=J7PNuDBPGOWzf35pmTAzw846DabGuHjN8nn3CftCA@mail.gmail.com>
-Subject: Re: [PATCH v3] pinctrl: mcp23s08: init reg_defaults from HW at probe
- and switch cache type
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-gpio@vger.kernel.org, akaessens@gmail.com, 
-	arturas.moskvinas@gmail.com, e.shatokhin@yadro.com, linus.walleij@linaro.org, 
-	linux-kernel@vger.kernel.org, mastichi@gmail.com, mike.looijmans@topic.nl, 
-	radim.pavlik@tbs-biometrics.com, u.kleine-koenig@pengutronix.de, 
-	zou_wei@huawei.com, Sander Vanheule <sander@svanheule.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi !
-
-=D0=BF=D0=BD, 27 =D0=BE=D0=BA=D1=82. 2025=E2=80=AF=D0=B3. =D0=B2 14:49, And=
-y Shevchenko
-<andriy.shevchenko@linux.intel.com>:
->
-> On Mon, Oct 27, 2025 at 01:46:26PM +0300, bigunclemax@gmail.com wrote:
-> >
-> > The probe function does not guarantee that chip registers are in their
-> > default state. Thus using reg_defaults for regmap is incorrect.
-> >
-> > For example, the chip may have already been configured by the bootloade=
-r
-> > before the Linux driver loads, or the mcp might not have a reset at all
-> > and not reset a state between reboots.
-> >
-> > In such cases, using reg_defaults leads to the cache values diverging
-> > from the actual registers values in the chip.
-> >
-> > Previous attempts to fix consequences of this issue were made in
-> > 'commit 3ede3f8b4b4b ("pinctrl: mcp23s08: Reset all pins to input at
-> > probe")', but this is insufficient. The OLAT register reset is also
-> > required. And there's still potential for new issues arising due to cac=
-he
-> > desynchronization of other registers.
-> >
-> > Therefore, remove reg_defaults and provide num_reg_defaults_raw. In tha=
-t
-> > case the cache defaults being initialized from hardware.
-> >
-> > Also switch cache type to REGCACHE_MAPLE, which is aware of (in)valid
-> > cache entries.
-> >
-> > And remove the force reset all pins to input at probe as it is no longe=
-r
-> > required.
->
-> > ---
->
-> No changelog? No need to resend, just reply with the missing piece.
-
-Sorry, my bad.
-
-Changelog:
-v3:
- - changed cache type from REGCACHE_FLAT to REGCACHE_MAPLE
- - added .num_reg_defaults_raw to init regs cache from HW at probe
-
-v2:
- - rollback v1 changes
- - dropped .reg_defaults of mcp23x regmaps
- - dropped reset all pins to input at probe (commit 3ede3f8b4b4b)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="IGal/9MH6MaJjMWW"
+Content-Disposition: inline
+In-Reply-To: <aa2b31267e6cc93bad4c823ef1ba07ba43efd572.1761564043.git.mazziesaccount@gmail.com>
+X-Cookie: How do I get HOME?
 
 
->
-> >  drivers/pinctrl/pinctrl-mcp23s08.c | 40 +++---------------------------
-> >  1 file changed, 4 insertions(+), 36 deletions(-)
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+--IGal/9MH6MaJjMWW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Oct 27, 2025 at 01:46:57PM +0200, Matti Vaittinen wrote:
+> The new ROHM BD72720 PMIC has similarities with the BD71828. It makes
+> sense to support the regulator control for both PMICs using the same
+> driver. It is often more clear to have the IC specific functions and
+> globals named starting with the chip-name. So, as a preparatory step,
+> prefix the BD71828 specific functions and globals with the bd71828.
+
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--IGal/9MH6MaJjMWW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmj/YhkACgkQJNaLcl1U
+h9Af5Af6Ax86Rk1w2Lm8l+WtM+HeqNG9SJTaC/xDAlF9R/wpX008syrILJMQXVEF
+BaXHf+QKJMvTFJeM3pSzKKdQ5NJmoPKlUtKiXSNBhceZGLet2eXw/MuqNR4nRmFC
+2iVksMbfY+P3YPg8ebdn6Zf1icxTngM1raSOPPQMeVAMDt+6MLxdKYbg0I+DMhG1
+Xp9Nz99ObSw5UinFmo7l2ZLaXsNnkQ8jRV4rS2C5uTV0vszr0Op+ym/9KAyLs+N/
+TVnbQ7H+84sRYeLEg/4JIzYyW7tDlg7EerOaP75F9MstIULAFDDZaHRVtVlAKxPV
+BSxxGZyJlVVu6loQH4yvZQimzgUWBQ==
+=lhBS
+-----END PGP SIGNATURE-----
+
+--IGal/9MH6MaJjMWW--
 
