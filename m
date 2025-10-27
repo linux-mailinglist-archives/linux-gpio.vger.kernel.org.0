@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-27715-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27716-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76A0AC10785
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 20:06:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F271CC10843
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 20:08:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E4751A25363
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 19:02:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 03BBE566F3F
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 19:03:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DD8B32C326;
-	Mon, 27 Oct 2025 18:57:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 662422F8BD1;
+	Mon, 27 Oct 2025 18:58:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LJt81xZX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+cHlvQ2"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB14032D7DA;
-	Mon, 27 Oct 2025 18:57:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76EDC32F768;
+	Mon, 27 Oct 2025 18:58:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761591477; cv=none; b=cEwzZl+Cnoi1+2WWfi1hZJD6MGVPfRmAYAkNy+yWB7Wl24H4kkkS+2UNflKsywYNwXOYmlXek7xQYdHrfveXuK9WHbVcQjN9aqA0+S9DhHx6tkSj40fbF3K6cu1UWNmScdfxLnarw5vCQ9wIbbUi821aRmjrOZiliO1f/MVpD/c=
+	t=1761591509; cv=none; b=ZKOvpkdStuIxCa0gBNg42v8o08mRlbGJGfQMp9fzGI5E7E5K57euPQ+Vv/mjsbCAljze1TXYEKq2+z8JCOPBaK7284CzFrbZzUyYq3EuZB3eer7gjAAjgjKRXk6PZ9QBRxO4YbcUSjjGCQAsBM3igGiNAFvgVYO4buJ7PyJgkxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761591477; c=relaxed/simple;
-	bh=6jgS8F5y4zhBcgzwqpuJF3p5VuMmvRw0HGPgrCP+CYI=;
+	s=arc-20240116; t=1761591509; c=relaxed/simple;
+	bh=KokesvZHTOYQVYRu9cUCVazcgroa5wNFAdW6lFmynfU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jWvPXkZeYRBix1/zXViQLAA0DiJtQQTGSKnigb1UKfsq9quWwnLM0eXoNAQgS/XWCAtZOQvxYareWUI9DRh2Ce4rHKAvcpEiiZsnDy9ckvF093vuO5sieipuy8z8seB1oe9PZ1ylM3NsrbrRiH6Q98Y5gosp5dFqWizAlbHuvyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LJt81xZX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20A3BC113D0;
-	Mon, 27 Oct 2025 18:57:52 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=OFer0TBXtkN0+3Cns63Lu9HGXYnzPEeVBqmuBumbBGPqhue8fOr4MCzQUleosd0DGwAyKhNXQdQPWNh/2+7XHNAEL4DN0UXGl5cd75854L7SBhomOg+I3JnfBDoOLs4BFyw0tRoy5JmaMEC1yDa9d+TEyaCoU+MpVfQJ7oh432s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+cHlvQ2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2FAEC4CEFD;
+	Mon, 27 Oct 2025 18:58:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761591476;
-	bh=6jgS8F5y4zhBcgzwqpuJF3p5VuMmvRw0HGPgrCP+CYI=;
+	s=k20201202; t=1761591509;
+	bh=KokesvZHTOYQVYRu9cUCVazcgroa5wNFAdW6lFmynfU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LJt81xZXcMjevgKlU+bTjCMfNWtWI2aJZ/xH+0Zy9Ei3kv2UaBgnUvULu1zM8AT5p
-	 HVWE9/l2BnjoO3fFb198vpNTaQBsBWqnniAiHnVKdWTHLCrHSWEHexwAUXEtYKVt6l
-	 o0T2HuQTUKtFvJjcLP77cWIOBQVVHYZQOCtHQLE01Gjr1/umNNdiXnSKV8kCatjuVe
-	 gXSMIQ3XYOQ19+yqzH5BYjyyolyU+qN4phveFu4lXlsNVhreitVN/25cI2IBV/e/Dn
-	 NsIvVWbf7jLX3/6nhXDetsMCHttMIjKxwQdiPFEz6Ch7y+2eGTeeKZHOYnhK0wJ4u9
-	 PJ1b1cPxD9h0g==
-Message-ID: <644bfb1f-81a7-4554-ac9a-3f2516fdc280@kernel.org>
-Date: Mon, 27 Oct 2025 19:57:51 +0100
+	b=o+cHlvQ2JfWjnvTt2kdqYgthP/vlrcpy4gAoTrRDCW6CGk913gZrYcilQZRo4N93K
+	 E8Z8+3SRvCMaxywSn1AA+I9RRNIQQsJFUWyCU1zqOX0eeGJPMoSi9EmgES+uo0dcBl
+	 uTIoP008ffuWVmUHWzFviljVEec5rAg4nq2J+Gc0hMzvaVPJgPTu4RdaYh7HkeFSa1
+	 ekIWFRrhQJOwCupAPCMXOGyhwjYC85fudYK6ecB1ik7/B0Xk6R/HOr/+SOYvUT5p6G
+	 aGFG4KrdBdaQfE5Se9OsjStC+Vl2kkxb5tvAY83qfatnoSBecArg2oYiSvonhag9Dy
+	 z1/gD7v3rrntw==
+Message-ID: <35504988-448e-4a5c-8ea6-769c06117c01@kernel.org>
+Date: Mon, 27 Oct 2025 19:58:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/6] dt-bindings: arm: mediatek: add BPI-R4 Pro board
+Subject: Re: [PATCH v1 3/6] arm64: dts: mediatek: mt7988a: Add label for
+ ssusb0
 To: Frank Wunderlich <linux@fw-web.de>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
@@ -62,7 +63,7 @@ Cc: Frank Wunderlich <frank-w@public-files.de>,
  linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-mediatek@lists.infradead.org
 References: <20251027132817.212534-1-linux@fw-web.de>
- <20251027132817.212534-3-linux@fw-web.de>
+ <20251027132817.212534-4-linux@fw-web.de>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -108,21 +109,19 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20251027132817.212534-3-linux@fw-web.de>
+In-Reply-To: <20251027132817.212534-4-linux@fw-web.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 27/10/2025 14:28, Frank Wunderlich wrote:
 > From: Frank Wunderlich <frank-w@public-files.de>
 > 
-> Add compatibles for Bananapi R4 Pro boards.
-> 
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> ---
+> Add label for ssusb0 node which is used for BPI-R4-Pro.
 
+This makes no sense on its own. We do not add labels because they have 0
+impact.
 
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Please drop or squash.
 
 Best regards,
 Krzysztof
