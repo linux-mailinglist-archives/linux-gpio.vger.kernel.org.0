@@ -1,126 +1,130 @@
-Return-Path: <linux-gpio+bounces-27740-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27741-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7A42C11B96
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 23:34:33 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64329C11BE4
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 23:35:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 99CDC562C61
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 22:34:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6FB321A289D9
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 22:36:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10FC232C320;
-	Mon, 27 Oct 2025 22:34:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C125132E722;
+	Mon, 27 Oct 2025 22:34:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b5q5hdt1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LOK6cmVf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D1F2F12A0
-	for <linux-gpio@vger.kernel.org>; Mon, 27 Oct 2025 22:34:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B452E54BC;
+	Mon, 27 Oct 2025 22:34:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761604462; cv=none; b=kBS2//i+H0WO2CeO3vlI/HHzzLkEvH5aYHswTAXdOY7phvfwGW+xPaNZDnv4SxG+qXlCzrh24lceC8yPi2s+L+2ZTxLj6+OUfeLn7UzfdDYNIFsRSyd+9UmbWV6mxSzflJqFz5MOIjpsT+HJNf7HYMGqGpSpO0QuOgU81VK1yU8=
+	t=1761604493; cv=none; b=jmKmeXp2dA5Vcp5ionfTPb1V/5NPXbPafgeOXFXrS92oInjJ4G2sLQrfMvl9V7pYFZDsVVCzRSASRJokUI7bH5U0+ezOz04qAQSsaDC7iJMU6ayD0DQmYkEvAjqrqsw4l6agqwTdxOw+FasqE98Vi426x0BAFKD6qd6lqS4o3YQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761604462; c=relaxed/simple;
-	bh=6FK4Cywp2kPqN6IZB7Pn8a9qrx5ElGyAJ2bbf8tmYpc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Lsl9VgrOjGuebvBAYTQIfV1SBjuhdREVYW9uXG0QlBlM9KexwVdMuJaVKxIuM/9Qe77srro/f7+pOMsI55EDTeuGrgCZ7KeE7pq2VOXR9N/gXEW4n4ZT6jeEszCOBf1bWkyjVYu0Tn1pRdGPo3NHoVWI11CxaEL3Ide9fjojCDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b5q5hdt1; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-784826b775aso59198717b3.2
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Oct 2025 15:34:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1761604460; x=1762209260; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6FK4Cywp2kPqN6IZB7Pn8a9qrx5ElGyAJ2bbf8tmYpc=;
-        b=b5q5hdt1cL9wVjYbAkH1AYKzJIgDa5TsWEjX8dyjivJOfapORAREYYvKyA/iPWm2tj
-         jdLTg/5lfN55rkoJPgsEVGdUUKXpnBalcjBCv9TtrNcFVVjF7GtDNvgnSNmVkkIaYPXX
-         hpudTMw0ZlFb0tm9eSu2JnJQUikJ6zvK8L86g2qIJIf79h3o34sKAoMSgGLTUlqpgwX3
-         1TlTTn4jYV6lUjIyYNmvhByncI+JbC3ej7P1WNKFYhjzWg0Nrp8AEllBjroEKywayMr6
-         C7hDksahGiwpPgmSCsPbroAyx8bvOirouB7KbQG7gjXbTgpmTH4QdM/Hwct/DAefQ9No
-         nbvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761604460; x=1762209260;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6FK4Cywp2kPqN6IZB7Pn8a9qrx5ElGyAJ2bbf8tmYpc=;
-        b=YpYx9d75Jd7yiWcqlx+l9Jg9hr8DDi2yNjDQIebYGMduJEkKMTW9NzJTjNSJgS6tTx
-         2+pJilOPQEc7w+QkCuKrrp1LWud0huJIPEzMJCdGYmYJwTSVwT/VO4ZzcIuqTf8rzImp
-         0zQgxlNXJetum1HwG77AOLPV7Pn44Tdivyv9av3nOmoIvSMLpcY562DtRDXKQpUHIUY5
-         STozTcRpHiIi3hFjSmR2V+Oxz4GfGhY317Y499lRyg7xij9fb1xPoTaBhH1tLUkby3yL
-         RzL+1XHDtzG93D9CWUcJ8KtgjLKTDRjH3xbGi3L5/7KeJfUozR8k+5TEE8J3wYSLZ5lP
-         otgA==
-X-Forwarded-Encrypted: i=1; AJvYcCV8qx6OOxxX9YGm7HWyxGRFyCC50cbSmvS1tcEMZxIKitKAfjHs1f6xUdvr0b4JON2W0uIvcTIkU+39@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFi4UtE78teX7Nqi/XVmD1vOGmOmiqEKDUj68NzHo3pvfYfxmq
-	atou0IszTCQyHDw6ozvDqLoibVdD2iJCtEZp1DhBkFezPf+SCkc5YENl4sqD/FWHNhnBkfGyiBi
-	64RAsdwemXjmHb7nK/R4t20FFC7YLdZrj3lYkUL1V4g==
-X-Gm-Gg: ASbGncu0QXazrvdiCObOQoHZKpFdVxlF/p5dh6QbaEouZW2Hv8ODk1gtevYLjgypk0S
-	FVGm7NrwlI4+2aCuULtMgn9raXWj1oSFm0/dDhDHhXcxa5+5AGddifDw+A5dpeJ/BxTz3BgwmUc
-	c7e4z+4qdqCSQjUE5TS/ScU4TWbz5x00dJ/JCjoycx73fZ2+s+KZzezgRxmZ6KbSWZRkr7EQJS3
-	Bi88otnIiYJ/M5biTx/osf3u8dEGllHOzs+nhDvtrAAKPtmq2ZrRucgkOrt
-X-Google-Smtp-Source: AGHT+IHFxrQwcIAfHl/EDjyJgU4+jEXTaSyjinBJCcTfFFs/TuXmdRuhxaYs6OB/9vERDl+26CgqDxFOu0ooMCeyJi8=
-X-Received: by 2002:a05:690c:a00e:b0:781:1c1a:98f0 with SMTP id
- 00721157ae682-78617e5fb66mr12794187b3.18.1761604459817; Mon, 27 Oct 2025
- 15:34:19 -0700 (PDT)
+	s=arc-20240116; t=1761604493; c=relaxed/simple;
+	bh=+K1KqNSFjEqsZ6MriQT0b2DMEnTu05BP2udtDaFfjnA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HmIyPmaSb8pT3/UvcV6f34j1cT97lrzgIm2V4wAMjtHT1RmF8Q16Es9Ere3fpO4JRwEwpgBGDka2HR62HPqc09WlDpUvGCtRihRZAj5kEakwQ1KDYm0l1c6GIH4QDfB/MOVwXdpOFGaanssY7aM1KknLrF4KPQmg2isX4P8Pg8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LOK6cmVf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 175F2C19421;
+	Mon, 27 Oct 2025 22:34:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761604493;
+	bh=+K1KqNSFjEqsZ6MriQT0b2DMEnTu05BP2udtDaFfjnA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=LOK6cmVf1BQ02otHtC3zXB5I3pw/JVh0gj3xZoU4TeAvFzdJbsiItBVIG1Da1rRSw
+	 AtIcwTZqDVJXIDtZZ1spcXlko2yYDzrqYfMMlQWvipzsemZZzTY2g1hI8C7t95SyQF
+	 UT4gMtaqQWCNA89OTkKLaNJBJbCLqhobaPTQHJTrP8hi2207GFzxDPYq8SZPHTCELz
+	 kSlVCc0gKw6ZTHS+YahtYrxRO3hgTMdku/n87YO88CzymThBOrYJfmklDyVj/rhK01
+	 BimNfGv3aw2A3R/4sx/TIUNbbeozGucSk1FKIqhQov8GZfnjn9cA3sBxxU4622tuJU
+	 s+tHjx81KtkVA==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Stephan Gerhold <stephan@gerhold.net>,
+	=?UTF-8?q?Otto=20Pfl=C3=BCger?= <otto.pflueger@abscue.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Lee Jones <lee@kernel.org>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Rob Clark <robin.clark@oss.qualcomm.com>,
+	Abhinav Kumar <abhinav.kumar@linux.dev>,
+	Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+	Robert Marko <robimarko@gmail.com>,
+	Adam Skladowski <a_skl39@protonmail.com>,
+	Sireesh Kodali <sireeshkodali@protonmail.com>,
+	Das Srinagesh <quic_gurus@quicinc.com>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	=?UTF-8?q?Barnab=C3=A1s=20Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
+Cc: linux-arm-msm@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	iommu@lists.linux.dev,
+	dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org,
+	phone-devel@vger.kernel.org,
+	~postmarketos/upstreaming@lists.sr.ht,
+	linux@mainlining.org,
+	Dang Huynh <danct12@riseup.net>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v10 0/3] Initial support of MSM8937 and Xiaomi Redmi 3S
+Date: Mon, 27 Oct 2025 17:36:46 -0500
+Message-ID: <176160465234.73268.17064439770048270449.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251014-msm8937-v10-0-b3e8da82e968@mainlining.org>
+References: <20251014-msm8937-v10-0-b3e8da82e968@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1761564043.git.mazziesaccount@gmail.com> <e8d0273bcf0ac67382e17c40be87d345e28ac06c.1761564043.git.mazziesaccount@gmail.com>
-In-Reply-To: <e8d0273bcf0ac67382e17c40be87d345e28ac06c.1761564043.git.mazziesaccount@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 27 Oct 2025 23:34:05 +0100
-X-Gm-Features: AWmQ_bmCeM1hCEpCcloBtHCP-z98b1djEaHpBG8dS_Pa6X6P_LL8sPGseuESUz4
-Message-ID: <CACRpkdbfjqbmy5EbLApee3p9TEsEzBKOcGMrbspeWxqUc_niiw@mail.gmail.com>
-Subject: Re: [PATCH v2 03/15] dt-bindings: power: supply: BD72720 managed battery
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lee Jones <lee@kernel.org>, 
-	Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Andreas Kemnade <andreas@kemnade.info>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-leds@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 27, 2025 at 12:45=E2=80=AFPM Matti Vaittinen
-<mazziesaccount@gmail.com> wrote:
 
-> The BD72720 PMIC has a battery charger + coulomb counter block. These
-> can be used to manage charging of a lithium-ion battery and to do fuel
-> gauging.
->
-> ROHM has developed a so called "zero-correction" -algorithm to improve
-> the fuel-gauging accuracy close to the point where battery is depleted.
-> This relies on battery specific "VDR" tables, which are measured from
-> the battery, and which describe the voltage drop rate. More thorough
-> explanation about the "zero correction" and "VDR" parameters is here:
-> https://lore.kernel.org/all/676253b9-ff69-7891-1f26-a8b5bb5a421b@fi.rohme=
-urope.com/
->
-> Document the VDR zero-correction specific battery properties used by the
-> BD72720 and some other ROHM chargers.
->
-> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+On Tue, 14 Oct 2025 16:04:23 +0200, Barnabás Czémán wrote:
+> This patch series add initial support for MSM8937 SoC
+> and Xiaomi Redmi 3S (land).
+> 
+> The series is extending the MSM8917 gcc and pinctrl drivers
+> because they are sibling SoCs.
+> MSM8937 have 4 more A53 cores and have one more dsi port then
+> MSM8917.
+> It implements little-big architecture and uses Adreno 505.
+> 
+> [...]
 
-From my PoV this looks good, and makes it easy for engineers
-to read the DTS file and understand what is going on, so after
-addressing Rob's final comments you can add:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Applied, thanks!
 
-Yours,
-Linus Walleij
+[1/3] arm64: dts: qcom: Add initial support for MSM8937
+      commit: a829f6f2e8a727409d2b896bff244d33ef21fe29
+[2/3] dt-bindings: arm: qcom: Add Xiaomi Redmi 3S
+      commit: 1a614267281fa477b7d1eeb7b225f106161eb739
+[3/3] arm64: dts: qcom: Add Xiaomi Redmi 3S
+      commit: 2144f6d57d8ef8b0c73bd97d8e5f2783e67afc35
+
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
 
