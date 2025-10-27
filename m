@@ -1,87 +1,88 @@
-Return-Path: <linux-gpio+bounces-27728-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27729-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 603A7C119C4
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 23:05:10 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2CB6C119F7
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 23:10:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4EB404ECF49
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 22:05:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D5D3460A54
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 22:10:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB9702FE057;
-	Mon, 27 Oct 2025 22:05:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DE7232A3C3;
+	Mon, 27 Oct 2025 22:10:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AY1Ok+NS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BY5MOK84"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE11C2D7DC3
-	for <linux-gpio@vger.kernel.org>; Mon, 27 Oct 2025 22:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2376932779D
+	for <linux-gpio@vger.kernel.org>; Mon, 27 Oct 2025 22:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761602704; cv=none; b=tKzmLzl5axyYJ1cGsWiYss/0HQPti5VlHUECfmsJ3JrotWSjvnBO+pTUCTrQNWj5E/FZQ55Fw4M6dpallC+x2vJzleaxe9m8L1HFQV587nm6fqtxy9qAZ1EqBy0E7X1cHY+yBCxuL+SVXUCaidzppXIOrguWtTOd0st1Cl/q7nY=
+	t=1761603024; cv=none; b=YftMzdcwdF0Wbc9oU5hig8QBBEYuuhM/GlQ82mPN0t3XMIks2CT0Yq9qTnYyXM0D2Bcohmwfea7BFXCSSlogdpBoM5tkbhOxB/vN/d5rs6KYJ4/sobkzlTY7ZvMHfGI7QInWSJlRoKKJEa8OjUcmk7MliYuRQSmXfQufwZ5DTxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761602704; c=relaxed/simple;
-	bh=881iDkPEZh85ObsSmrMAZ48Htve0Wj9g+gfovyJ15uM=;
+	s=arc-20240116; t=1761603024; c=relaxed/simple;
+	bh=P83isQ2gvRt7wdmXJ1hdjP2SDCiz+lwtL0Vt91PBpcs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HxdRG+oTzALfZQCCrrGIbJJfHb5rwIEVRcHhnv8hpZ8vATmq8XHCbTXD7ZrD3AydvItQtyctjqIPhsV++U/RvA4YUz/PzQDxkDpDBYer/3R51DRYXt+83sjN6jTWhW0HrOwh1nEOnEjAlDlBtIgOBDEY4YbsdnHTyBoL3GVec+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AY1Ok+NS; arc=none smtp.client-ip=209.85.208.177
+	 To:Cc:Content-Type; b=Nqv/99RQ+SYsa04BYX66IZOxD2vLaxVaQG2SYa9yaCga24wK0mCyJ7cF2v+6unt0KnKpOXrLuRaVhAQASvdzt8QSjnj6F4pEjBuuEjqGUEWd8PqNO/nbo3JI68ersxhzJrPEjAHdheo/eO26ZzEg2TYNce4RopCsOv4t48s6y10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BY5MOK84; arc=none smtp.client-ip=209.85.208.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-378e8d10494so40607971fa.2
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Oct 2025 15:05:02 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-378e603f7e4so43240601fa.0
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Oct 2025 15:10:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1761602701; x=1762207501; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1761603021; x=1762207821; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=881iDkPEZh85ObsSmrMAZ48Htve0Wj9g+gfovyJ15uM=;
-        b=AY1Ok+NSj05rf5B6Qk9YA4ZHIYVjoSO1m2vXDJeJK5UNKe9mRGKsXW5EnjQ0+JwY6L
-         bInfp+u8gcsWJtvLp6SYv5te/smbG06Hrx7cLF85ElCL1bWXT+uTCn2Emih0ODIR7t5x
-         HBLmm0G33Xx1mX8/lmv2UH6YLP6fZytuQTv/frdf3MnQz/QHmHrt64Q4OKtAeUiMcezu
-         L15qNzUqKfgFWdeS37d+PdpwXF/5wVxbb4ohDQ3FbZjiZQrnXPF2TR+NQX126RWOO054
-         7y+dcqJ0DhZBbZ+k2auEkaEG2j0cyzAOyMEnGX8Qpw21DUJCAz4NXickpHwIsoEl0lXr
-         +NXA==
+        bh=P83isQ2gvRt7wdmXJ1hdjP2SDCiz+lwtL0Vt91PBpcs=;
+        b=BY5MOK84JV+tPp4DbFoSzBG5q5ivc9OWdzGlhRyFq6toPkMeFB7YP8cGA3rUJsMJaJ
+         /3pypQxKD+nmoymHtdSSH5yi8foznYAlEP9mN9sWWpci5B/dUJudtlIt1bqXf66VXUxZ
+         aHv/dLRRY4j4tPZrhM9WgYO2Bxu3j+LF8X1HRPYsy/1wlTGHq3c+HBTtKVQizXZS6QJi
+         M7DNWExbXCfa8477wN2uLooqQ4dDZg3gfhGUCaFGIaqk7qwkOnfI/lzznH3PHavGYJjp
+         EdhUflwhlY4+na9Robb22e8mW8Q5BUWyahRPZlvMknVqFGhndgjPI4ZVSLczaJzbYlOG
+         HLjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761602701; x=1762207501;
+        d=1e100.net; s=20230601; t=1761603021; x=1762207821;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=881iDkPEZh85ObsSmrMAZ48Htve0Wj9g+gfovyJ15uM=;
-        b=fWBoCGBx7eGgkLDkMypMBGV+IcymP6M5GMkyt212iqcft2mokIbh3WbRYO1PTRO02G
-         h5qpXQiBSsnZlsNQYPJaFTTTTpEZoy9NsJdLrgIMrsE59nE+Rm+qhkxL37yRWRN24X5u
-         00quo/DHlz42laL6xhAyR7wUoNnObPTMgyhru0OaBNyuEu1f5ZCDBycoVNnFSI0Gr9iU
-         e2uJSMS4qcldkXAnRxYOZsU+IinU9GEaRqF5Cdq2dFRkoiPsy/vO4Tff9X75EszmCw0s
-         JURyM96ye8XfFGY5G++w/Z0lkQ8c0faG8LH4269PuR9EIq9xDJygTLmdqdBQaQAuIyKq
-         cizg==
-X-Forwarded-Encrypted: i=1; AJvYcCXhOYDs43z7oP/+xLxFDQJv66YPlodoDnIKhdqoIHWCQbD5QOoJ4uQcRMWXZob+njKra71U07ckEQwF@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJs4qnJv1xs0UpMff03IJNdS5tgso3WsET6Z7E8AFA0BLkMS5B
-	/jjUqGqsblXCrN+42P9JsYECeU/nilf1TTxwjRp32YEsgDLhKEO3q8gdaynJS6FO11rtAD8MoU4
-	TZCbg4kNdXfLFV02BWNvS4W/GrtJBxmuKMICtS5Phlw==
-X-Gm-Gg: ASbGnctgg3OOmGCx8Qxb8hvPf7Gxt1QP2hkUE5voDDzB/G9qmt/hmTwnFMKGbiadMh1
-	QtBz+SaShSt8KfLj/U2wMJsi8sa1vnnm/SWNBNmeiZt/MBzs6wVMqLsMzVQ+dRCHbhvy0e/8Gb3
-	gB2emujP7BhrRiOBU2/UNgnkhrByFM7IBSDpz+op99YOHKb3x1xgap0upZC4U8aS0f3fTu5gAEl
-	bAWOimYfrkTbJSyzIuI89PbnJZ2+Qx3P3t8GDVLke9ZSoN7ng91WIZ2fs0+iXc7TKiZ2w4=
-X-Google-Smtp-Source: AGHT+IHoUF4RHiTK1ixTbcpPhI4tBBI8uNgdSo0LDy74WVyTiTCN+lBwjm/Roz3VFn6Yvs6CWMINeSQ/2LwI3eIrZ6o=
-X-Received: by 2002:a2e:ac13:0:b0:378:d757:d307 with SMTP id
- 38308e7fff4ca-379076bc3a7mr3168981fa.11.1761602701023; Mon, 27 Oct 2025
- 15:05:01 -0700 (PDT)
+        bh=P83isQ2gvRt7wdmXJ1hdjP2SDCiz+lwtL0Vt91PBpcs=;
+        b=lCv9QSp5T3qy0nb3GEA6h1UqInm6rQozpP62l/ace3l4eRf6kkfN5RJF1wmK3ax8vL
+         SvtYOClKlZGDxcuJvdOs0VOtHkmjae7tofUUy+mT6GFwF+X6hZBvAntLdI8CSEhqIi8e
+         tyGt3T3+TppgW8P+TsrhZVeESUeH4WbStJ11qY09fDoxtsgmjshX4Nfa74K3N7O1oMux
+         QTNIRGpUXeUkD/XsIcmi1VNIV3LP3nDV6M5QhuIPWrs8qQ+j3vDBKFrUjwHwKFdBDkgr
+         UlGphWldqPQKTwPn2ZmvsE5uuM1Yx7VRXgZTEQJjAGoyz0sobrEZL4WmVhZd40G4Y1d6
+         05sQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSsL2YOwpFvEyAtKQe9F7YD+9+G6Q/1bK+yOA7lwZ8xMCO3fx2PyaU8ztIYELJIlQh1MWkesEBHPgc@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8E1lAql/lU2py5/NSJ9M2tyv5ZQzfD3JcvoGTESWnDT/890wQ
+	YaCl7naOCQVRerd7eOuofgUaMaD5mLoguZmeqBRcw4m6BIyQkdmnbgW1awXuehaNh89wZfo2RBw
+	j5vpR/gYK3HSTmqhJqPjqd8lvJg1DRaNhS5cuTmzP9rqvGBsKI5wlvUM=
+X-Gm-Gg: ASbGnctfPeJFBn67dRmjvYRCUH5Is+t60V+Skwr9spU7IxV+d/cupiQ6YKODSgKhXsk
+	5gIpxpYgiqRRK6Ip5EE11CuxZ5EaAPijjHT6raEs9wDHz5VavEiimPcKg85DuCMMn3v/Ux27ZEh
+	4ix/lRC3JF8bD3NVc6qrzCffnZ0Ef0VkSMtOW66z6FMLf64xgpvlu2HDMkDBy50ZRWFpEMQsY+P
+	f9m98cR2QFotCnXudrii7s88VM4U3gdVu66dtdPw99Kb15649XseczSwSd/a+D1YWLabS8=
+X-Google-Smtp-Source: AGHT+IG9eaDbYlt05Z9zFZohfCDZwr4gqNsotaN2JZ8jVtyJSZnzH8ZzP5hqxntC1aSKIIT+xacG9uS/M37uyI9DBCI=
+X-Received: by 2002:a05:651c:43c8:10b0:372:9992:1b0 with SMTP id
+ 38308e7fff4ca-3790774ba26mr3083561fa.31.1761603021254; Mon, 27 Oct 2025
+ 15:10:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251023132700.1199871-1-antonio.borneo@foss.st.com> <20251023132700.1199871-2-antonio.borneo@foss.st.com>
-In-Reply-To: <20251023132700.1199871-2-antonio.borneo@foss.st.com>
+References: <20251023132700.1199871-1-antonio.borneo@foss.st.com> <20251023132700.1199871-3-antonio.borneo@foss.st.com>
+In-Reply-To: <20251023132700.1199871-3-antonio.borneo@foss.st.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 27 Oct 2025 23:04:49 +0100
-X-Gm-Features: AWmQ_bkqvtHBv2ihzMqbHUb5leNu-ZCVXzL1Rr2PRCeRlwPcmd2dgcjDCOHd-pw
-Message-ID: <CACRpkdYUt3mZX_KjFps_BSRQVrPcn70SrwEJGKRQUjHq3VXcDw@mail.gmail.com>
-Subject: Re: [PATCH v4 01/12] pinctrl: pinconf-generic: Fix minor typos in comments
+Date: Mon, 27 Oct 2025 23:10:10 +0100
+X-Gm-Features: AWmQ_bm5etBIx2qF76UfEPLiy1Nl6j4OjIJVT1wJCcuvidRKmWwIeYmy15zR_II
+Message-ID: <CACRpkdbitTgbd+DcdTNYeuHMuSeMQMx5PQbZ=qsFxCPU1ZFugA@mail.gmail.com>
+Subject: Re: [PATCH v4 02/12] pinctrl: pinconf-generic: Handle string values
+ for generic properties
 To: Antonio Borneo <antonio.borneo@foss.st.com>
 Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
 	Conor Dooley <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
@@ -97,12 +98,16 @@ Content-Transfer-Encoding: quoted-printable
 On Thu, Oct 23, 2025 at 3:27=E2=80=AFPM Antonio Borneo
 <antonio.borneo@foss.st.com> wrote:
 
-> s/specyfying/specifying/
-> s/propertity/property/
+> Allow a generic pinconf property to specify its argument as one of
+> the strings in a match list.
+> Convert the matching string to an integer value using the index in
+> the list, then keep using this value in the generic pinconf code.
 >
 > Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
 
-Patch applied!
+Patch applied, I had a hard time to follow the patch fully and unsure
+if we should add some docs as well? But let's toss it in there and see
+if it works.
 
 Yours,
 Linus Walleij
