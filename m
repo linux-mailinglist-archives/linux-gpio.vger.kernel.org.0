@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-27714-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27715-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 233E1C10786
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 20:06:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76A0AC10785
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 20:06:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C9D39502635
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 19:02:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E4751A25363
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 19:02:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30A7F32C93E;
-	Mon, 27 Oct 2025 18:57:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DD8B32C326;
+	Mon, 27 Oct 2025 18:57:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BjNllmRq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LJt81xZX"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15FB31D75B;
-	Mon, 27 Oct 2025 18:57:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB14032D7DA;
+	Mon, 27 Oct 2025 18:57:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761591457; cv=none; b=A9Ago0MKrfA1zsYbcNOgqq57HvCVO9QO6f22fObdiPXVXkTQ94SLr0ef9QMjYekU9onjHHZgHSrWQPTbK4zhrD/2PNuGqfiZbcbNBSLTDau5Ox1Azhne4COyePFy7wvhIl6bgaNZ6kQNomBBjxmJ/8llHHOiofSSHJJVqLoj5jw=
+	t=1761591477; cv=none; b=cEwzZl+Cnoi1+2WWfi1hZJD6MGVPfRmAYAkNy+yWB7Wl24H4kkkS+2UNflKsywYNwXOYmlXek7xQYdHrfveXuK9WHbVcQjN9aqA0+S9DhHx6tkSj40fbF3K6cu1UWNmScdfxLnarw5vCQ9wIbbUi821aRmjrOZiliO1f/MVpD/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761591457; c=relaxed/simple;
-	bh=FBh02DAJ7nUjsN3Y/wn69pqWdFqyYXyPMjwO6WMVnKU=;
+	s=arc-20240116; t=1761591477; c=relaxed/simple;
+	bh=6jgS8F5y4zhBcgzwqpuJF3p5VuMmvRw0HGPgrCP+CYI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p77jVctUCpWu89eSfntDoSVBRfnU5FILObesBgA2vbCQahW5s4tsnyNI60rbw6CUBBGryXcANPuqzueFg5qRrJYEOKYJorslW/SB0lEd6lJLu3fEc2ZzH7fYvKp3BxGvaQMdp1eH4AOcZvYzPm66Me4vwinNaBeHXJKi2WOnZ0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BjNllmRq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49FFFC4CEFD;
-	Mon, 27 Oct 2025 18:57:34 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=jWvPXkZeYRBix1/zXViQLAA0DiJtQQTGSKnigb1UKfsq9quWwnLM0eXoNAQgS/XWCAtZOQvxYareWUI9DRh2Ce4rHKAvcpEiiZsnDy9ckvF093vuO5sieipuy8z8seB1oe9PZ1ylM3NsrbrRiH6Q98Y5gosp5dFqWizAlbHuvyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LJt81xZX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20A3BC113D0;
+	Mon, 27 Oct 2025 18:57:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761591457;
-	bh=FBh02DAJ7nUjsN3Y/wn69pqWdFqyYXyPMjwO6WMVnKU=;
+	s=k20201202; t=1761591476;
+	bh=6jgS8F5y4zhBcgzwqpuJF3p5VuMmvRw0HGPgrCP+CYI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BjNllmRq+yfdJLO0cbkU7zTbCjRCyzJTlkdV6C3VsadXIFRCOhdwHqfg9aIXq65IH
-	 g4c6h4LTfpjh9el1Wvrb1Chj5xml3obGS8biIZrMa51d4QvoXIOl5Oo80FyQBMyn9D
-	 HNVEinj8wpAE/pGmCYsT/Clr86pdENNXltkQu10cmbITjQeZxzf4/4HNEy/ghjg7iq
-	 Lwo9lnjl1MsFZmTsaIsmD3Zy1d+Scw/nJJ1m/05YYn2H+9loF8WxNpA2MW++m7R1k4
-	 e0XprMCeChty8N//kNqOMtxCiecXlgGCFmbV7GJQtaF5n2ZF0HFfNpNXnR4u/eiPrK
-	 p7KnOy2H0cYUQ==
-Message-ID: <defbd8f9-15ea-4d3e-91fc-02e5ff79be82@kernel.org>
-Date: Mon, 27 Oct 2025 19:57:32 +0100
+	b=LJt81xZXcMjevgKlU+bTjCMfNWtWI2aJZ/xH+0Zy9Ei3kv2UaBgnUvULu1zM8AT5p
+	 HVWE9/l2BnjoO3fFb198vpNTaQBsBWqnniAiHnVKdWTHLCrHSWEHexwAUXEtYKVt6l
+	 o0T2HuQTUKtFvJjcLP77cWIOBQVVHYZQOCtHQLE01Gjr1/umNNdiXnSKV8kCatjuVe
+	 gXSMIQ3XYOQ19+yqzH5BYjyyolyU+qN4phveFu4lXlsNVhreitVN/25cI2IBV/e/Dn
+	 NsIvVWbf7jLX3/6nhXDetsMCHttMIjKxwQdiPFEz6Ch7y+2eGTeeKZHOYnhK0wJ4u9
+	 PJ1b1cPxD9h0g==
+Message-ID: <644bfb1f-81a7-4554-ac9a-3f2516fdc280@kernel.org>
+Date: Mon, 27 Oct 2025 19:57:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/6] dt-bindings: pinctrl: mt7988: allow gpio-hogs
+Subject: Re: [PATCH v1 2/6] dt-bindings: arm: mediatek: add BPI-R4 Pro board
 To: Frank Wunderlich <linux@fw-web.de>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
@@ -62,7 +62,7 @@ Cc: Frank Wunderlich <frank-w@public-files.de>,
  linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-mediatek@lists.infradead.org
 References: <20251027132817.212534-1-linux@fw-web.de>
- <20251027132817.212534-2-linux@fw-web.de>
+ <20251027132817.212534-3-linux@fw-web.de>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -108,20 +108,17 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20251027132817.212534-2-linux@fw-web.de>
+In-Reply-To: <20251027132817.212534-3-linux@fw-web.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 27/10/2025 14:28, Frank Wunderlich wrote:
 > From: Frank Wunderlich <frank-w@public-files.de>
 > 
-> Allow gpio-hogs in pinctrl node for switching pcie on Bananapi R4 Pro.
+> Add compatibles for Bananapi R4 Pro boards.
 > 
 > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 > ---
->  .../devicetree/bindings/pinctrl/mediatek,mt7988-pinctrl.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
 
 
 
