@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-27716-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27717-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F271CC10843
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 20:08:35 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 079AEC10882
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 20:09:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 03BBE566F3F
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 19:03:02 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 01BCA505622
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 19:04:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 662422F8BD1;
-	Mon, 27 Oct 2025 18:58:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1C1A33343B;
+	Mon, 27 Oct 2025 18:59:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+cHlvQ2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJgIJchW"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76EDC32F768;
-	Mon, 27 Oct 2025 18:58:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58442332EC9;
+	Mon, 27 Oct 2025 18:59:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761591509; cv=none; b=ZKOvpkdStuIxCa0gBNg42v8o08mRlbGJGfQMp9fzGI5E7E5K57euPQ+Vv/mjsbCAljze1TXYEKq2+z8JCOPBaK7284CzFrbZzUyYq3EuZB3eer7gjAAjgjKRXk6PZ9QBRxO4YbcUSjjGCQAsBM3igGiNAFvgVYO4buJ7PyJgkxQ=
+	t=1761591586; cv=none; b=UCGDtabUdlnonvNxN6c0hXiXN/LKPhXa2LmeYMfjAnD5ZhmLxhTOzeyTqaDVTSwdiauXCPwkh5Urp03jq9Cwg9DOohxVnNng6k/IeZl/b3b7yW9a9dxe41Mao0tKp1DyA9gFmSkbyty8H1eq/sIWkkqoaPHWck4pWigtjQfGWSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761591509; c=relaxed/simple;
-	bh=KokesvZHTOYQVYRu9cUCVazcgroa5wNFAdW6lFmynfU=;
+	s=arc-20240116; t=1761591586; c=relaxed/simple;
+	bh=KhgvbrvaBrtsnsIalrn68qZxPcbhrZCYUVd0ZLBgFNU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OFer0TBXtkN0+3Cns63Lu9HGXYnzPEeVBqmuBumbBGPqhue8fOr4MCzQUleosd0DGwAyKhNXQdQPWNh/2+7XHNAEL4DN0UXGl5cd75854L7SBhomOg+I3JnfBDoOLs4BFyw0tRoy5JmaMEC1yDa9d+TEyaCoU+MpVfQJ7oh432s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+cHlvQ2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2FAEC4CEFD;
-	Mon, 27 Oct 2025 18:58:25 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=bxmSN70tt1j/iHB9WxhApTP5BlTtotGF5L8bMHKlEd5Q1i9h9GDEygwcsc3YNbeSqae5CUfRJ1VwsHJUz5xsVjr1ggJMb7TU0LHYbUJ0mwZoM6uvfZ8pEXF6pD30oJKWBYF7OtJ62FwUqWVBvfMRX3Ud/wyJmUex2cjpf8iwooQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJgIJchW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB671C113D0;
+	Mon, 27 Oct 2025 18:59:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761591509;
-	bh=KokesvZHTOYQVYRu9cUCVazcgroa5wNFAdW6lFmynfU=;
+	s=k20201202; t=1761591586;
+	bh=KhgvbrvaBrtsnsIalrn68qZxPcbhrZCYUVd0ZLBgFNU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=o+cHlvQ2JfWjnvTt2kdqYgthP/vlrcpy4gAoTrRDCW6CGk913gZrYcilQZRo4N93K
-	 E8Z8+3SRvCMaxywSn1AA+I9RRNIQQsJFUWyCU1zqOX0eeGJPMoSi9EmgES+uo0dcBl
-	 uTIoP008ffuWVmUHWzFviljVEec5rAg4nq2J+Gc0hMzvaVPJgPTu4RdaYh7HkeFSa1
-	 ekIWFRrhQJOwCupAPCMXOGyhwjYC85fudYK6ecB1ik7/B0Xk6R/HOr/+SOYvUT5p6G
-	 aGFG4KrdBdaQfE5Se9OsjStC+Vl2kkxb5tvAY83qfatnoSBecArg2oYiSvonhag9Dy
-	 z1/gD7v3rrntw==
-Message-ID: <35504988-448e-4a5c-8ea6-769c06117c01@kernel.org>
-Date: Mon, 27 Oct 2025 19:58:23 +0100
+	b=UJgIJchWLCw7535j6aGg49tYl7XoYbpvFXON5wSny0BF+yHlwyoEh4bnYpaVGBxJi
+	 xPfl/usGdCdtIpnevYAuXWZqVDORWKF/OHcwVTuubvyDZL47aUPeH0btM/Uz3rQkry
+	 ORuJl02JZbK9lE/yXmpXcrihwiX8evARxvb3sBlHhyWd8tzFb98hEy6w1OUpYbUzsr
+	 UNWx64wHBzOoDjYEzLXF1O+pTZcxl3OG+Td3UlU0sGgjzRDtPJ0f9oQAH25/HkgTGO
+	 WSJsmIS8xJDN6KG8EwHmXzYr6zhq4KuArDiG5H7WQTYBpUQmiNONu44PFi0y85bksr
+	 RHy9jEYokobYw==
+Message-ID: <b6d51f3c-bf53-475e-ab2e-7346283fd881@kernel.org>
+Date: Mon, 27 Oct 2025 19:59:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/6] arm64: dts: mediatek: mt7988a: Add label for
- ssusb0
+Subject: Re: [PATCH v1 4/6] arm64: dts: mt7988: Add devicetree for BananaPi R4
+ Pro
 To: Frank Wunderlich <linux@fw-web.de>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
@@ -63,7 +63,7 @@ Cc: Frank Wunderlich <frank-w@public-files.de>,
  linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-mediatek@lists.infradead.org
 References: <20251027132817.212534-1-linux@fw-web.de>
- <20251027132817.212534-4-linux@fw-web.de>
+ <20251027132817.212534-5-linux@fw-web.de>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -109,19 +109,37 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20251027132817.212534-4-linux@fw-web.de>
+In-Reply-To: <20251027132817.212534-5-linux@fw-web.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 27/10/2025 14:28, Frank Wunderlich wrote:
-> From: Frank Wunderlich <frank-w@public-files.de>
-> 
-> Add label for ssusb0 node which is used for BPI-R4-Pro.
+> +
+> +/ {
+> +	aliases {
+> +		ethernet0 = &gmac0;
+> +		i2c0 = &i2c0;
+> +		i2c1 = &i2c1;
+> +		i2c2 = &i2c2;
+> +		/* PCA9548 (0-0070) provides 4 i2c channels */
+> +		i2c3 = &imux0;
+> +		i2c4 = &imux1_sfp1;
+> +		i2c5 = &imux2_sfp2;
+> +		i2c6 = &imux3_wifi;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = &serial0;
+> +		bootargs = "console=ttyS0,115200n1 \
 
-This makes no sense on its own. We do not add labels because they have 0
-impact.
+Drop, stdout-path is for that.
 
-Please drop or squash.
+> +			    earlycon=uart8250,mmio32,0x11000000";
+
+earlycon is debugging, not for mainline usage, so also drop.
+
+> +	};
+> +
 
 Best regards,
 Krzysztof
