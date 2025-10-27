@@ -1,455 +1,116 @@
-Return-Path: <linux-gpio+bounces-27724-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27725-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97412C118F6
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 22:29:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 279D2C11970
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 22:57:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2291D568029
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 21:27:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0FFFE189C8B1
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 21:57:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42A5232B999;
-	Mon, 27 Oct 2025 21:27:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC578314D19;
+	Mon, 27 Oct 2025 21:57:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E6S8EENe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BlVpWzoo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C9531D378;
-	Mon, 27 Oct 2025 21:27:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD6E830F93D
+	for <linux-gpio@vger.kernel.org>; Mon, 27 Oct 2025 21:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761600461; cv=none; b=saTiP56q96V88XwdZuMYfUeU+xKdYbp0oAySGtb2gWDhNRjVU2tPLJJ8+ZZYtDxYrDd/UfNOE4ekCNaP+vYtfYwATUuGnrqlVqEsgTvYxyPX9OQA8AQw6DElSQDh8kPSnIazQSpqJUXEU1kE4cErCjmPDa/sj/Dm4sZ/k31noEA=
+	t=1761602231; cv=none; b=Z6fkOak3wLmbQCpeoM+pF079zuHGMsoKTMTUKHGjMS23tmkyvIbGo3yTS9J6mGKByPn0vkEoqllG5VLQmb5FnE6sNQrgrype9c5ggpx1pX50pMAcCOkrIZ549dIbZTSYtcCX2tVCvNNN1aYv4WKGFGos3Yb7SKyDGOZYCwBN4o4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761600461; c=relaxed/simple;
-	bh=X6pkdu0tJ794P0POvorV12Or0aSlCL4ApK90UQHYZlo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W1o21DcDSLsvKpBa+o2ZTlstT5uwDgKUSsW8we5wQP24EtoWr0uuSgXlQy0iwPgULMLybiXfxMV31XLKlKdyQ3nuY7PC18w2FtzxiuBRBrpbmeUbq1ny0xIbGSYXBeoqbqNdReVkxlTDOR5Dh1yd+EIt9Ei2H4RhHnpc8uFmPms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E6S8EENe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F098C4CEF1;
-	Mon, 27 Oct 2025 21:27:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761600460;
-	bh=X6pkdu0tJ794P0POvorV12Or0aSlCL4ApK90UQHYZlo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=E6S8EENeEKg6GAmdQ0ZWzGAfFNvPGJAa+xtvfmIfepALcEwm+MKi4uiQdhGXrgsvT
-	 JhLcuz81GgGQYTdqYvmxvdkZiTkP4wr/jIdZbPzZRSGBri4pP7VjRqz/ZbUkM0iCa+
-	 otZ+G8ONrFs8HEwyqghqyp1ef24BhXqk7zSc9PlGvEer/KImMB4vIkXoTSbvx58GdL
-	 PPWXBT/DAUZi6mPUOBRt1v1M/yLH9GNoLEpOpCpcQev0TWFKRjF9/AubCjxG+4+CDY
-	 KAa7KP9+jnAU7iq7EpsVVm/3ySoEySPpW5kFMfS7pDVc5sDkN/2F4DWmh9P23kWewF
-	 DxquAntfXDwdA==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>
-Cc: linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: pinctrl: Convert sprd,sc9860-pinctrl to DT schema
-Date: Mon, 27 Oct 2025 16:26:41 -0500
-Message-ID: <20251027212642.1710144-2-robh@kernel.org>
-X-Mailer: git-send-email 2.51.0
+	s=arc-20240116; t=1761602231; c=relaxed/simple;
+	bh=uzn59MLbFi/gXQcmwNKcLTbahfjA0CxJvaROiMoRzOo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kWdp5kj7VFrgMhhPPP3nw+RtrQ4cK13Y0M2DeOhk39GMggKPmxzIyQHObl1pqGKGPY0Th38RqJu8P/PDe9O/ncPxyMdMDsOGyOwjPJkyUCPrYUddV70gOX56h5pIfz+uJBl1vuNBoOM2RHe+Us9xwmNzn1ZykzxXRWAtc8O3S4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BlVpWzoo; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-362e291924aso43110361fa.1
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Oct 2025 14:57:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1761602228; x=1762207028; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0HsbPG1hM4cDOntTcBmV/JBGBT4YKc3N+I+tTErEYG4=;
+        b=BlVpWzoouqoZFjnFj9d0RFZNURDXt/jj+N38Tx92AD5sfPL6kPzMCNlPFwHVa4CceT
+         PuwkIYX9jKb2+26YeKUxiG2D0AgsHvUVVknLZrp2ixiRxLj3p+zDhoZCEswRpUC3S91T
+         7QbH05IwTFSYKl9UTn8zrsOW06Evf4yYurnPXESvn/t8oyZ0hR7TSDZbXWwThnJPz8Oi
+         Fh4Iqs++cdQjm44dlwHAUIQRb2LYof6ENm+ZwrilwNhbxrRhjNvsqvJuJ50phiSAzB/T
+         JYxBGW0HieRTXts3JY7z20kyUU4+661VVXdcVOQaU2AMzaRBABtOIGKjaI29IPs+mCVz
+         7yow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761602228; x=1762207028;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0HsbPG1hM4cDOntTcBmV/JBGBT4YKc3N+I+tTErEYG4=;
+        b=O/qyFztzKGd0gfnZgjUqnN2E+/eJ27bQr46Qe6ohiFAI5E9bjPFX2bOM84IS9Q+EVU
+         cvx4Dh8T+o5RhjFXs24KYTxb1S7ULBj50VXeXqlMcV1yGJimarwrsS/1q73mQFjEEdip
+         6WBf3qNxEAeP1/v8uSF6xPmx9MssZcDbJs6g6gj9hcxZiykL3t1JXB6qFsFTGykNPT+E
+         TrW4QfgL5vTElnDXrE17Bj5j4NUFB3OaKEceDXFKNWMcYNWlD8bVImtxxR52ioAKhTjm
+         vs7RNJiVKR5ZKPGKFNdLaeEUbSE8fgzWKvFBT/qQXP+lbRhK6JDzZg2YKgNYtc9dKjbK
+         Qlcg==
+X-Forwarded-Encrypted: i=1; AJvYcCXx+d0m+GA3V166qzRNYGWrmnCt6+LdzMNyvILMujJglhIf8RL0zN9zPRBFT5SQrbd0B2oTHvoUyGCR@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpXHDCacidMvdyOksrgYDouMrHWJy/cpvbrhnHDnUxIGZySfAg
+	4Tu+8xqRul6JVIp05FbXbJtu4QvZrTUR+NTOR58Fn2cEyRVEr9R8inBOeqydwI/3K5y5DP7+nCZ
+	VTcvJF3T7rOJDtXv8wd9c+ptTkl9xAVpy6TkX7MgB3w==
+X-Gm-Gg: ASbGncs8yCorByJM/J4pbKN0YgWqNHEMOsbLaRB5mhAIqXzao3SEz09nfbZ+umGDCsI
+	8A9F0lRn1ojJGHFAtRTtgA7uUOaqlorgIsR9x4vmThv6ozoz/bkTSX+1fgoDfVZvGrBYJv2pE2W
+	93eWRut8G0aH5mksNyC2T6bTAPEcetm5pgUmHAyZpLX+EPaaIZU/c8DtA55kD6zlIRL2t7cciG0
+	m8w/iq6uzfeWq0T3ydOVtkib5BsKTfU4VMsDEWVvgBDe2iJTPRyfur7N3LcxKQVtAt6JE0=
+X-Google-Smtp-Source: AGHT+IEjLIfgc64R5us95+fFPO8BWmx3IOi8cmIKmJ8GeDaDyGf81wbf02WQ2hQUkaBk66OHmS0+B2OIi4naaYvPItc=
+X-Received: by 2002:a05:651c:4356:10b0:36b:631e:2aee with SMTP id
+ 38308e7fff4ca-379076daf0cmr3058091fa.21.1761602227957; Mon, 27 Oct 2025
+ 14:57:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251021070410.3585997-1-gary.yang@cixtech.com>
+In-Reply-To: <20251021070410.3585997-1-gary.yang@cixtech.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 27 Oct 2025 22:56:56 +0100
+X-Gm-Features: AWmQ_bm-rkyY9e4T7v9WO6_vxIZ23JzEk1iQHKpy0OXLbJlzhTYiKf9B8Mvl6g8
+Message-ID: <CACRpkdZAaEim0yJLkXNctJA0jBFj7LGyTGVvy7_mMf5G+vUWOQ@mail.gmail.com>
+Subject: Re: [PATCH v5 0/3] Add pinctrl support for Sky1
+To: Gary Yang <gary.yang@cixtech.com>, Peter Chen <peter.chen@cixtech.com>, 
+	Fugang Duan <fugang.duan@cixtech.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	cix-kernel-upstream@cixtech.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Convert the sprd,sc9860-pinctrl binding to DT schema format. What's
-valid for the the sleep mode child nodes wasn't well defined. The schema
-is based on the example (as there's no .dts with pin states) and the
-driver's register definitions.
+Hi Gary,
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
-With this, all the pinctrl bindings used on arm64 are converted!
+On Tue, Oct 21, 2025 at 9:04=E2=80=AFAM Gary Yang <gary.yang@cixtech.com> w=
+rote:
 
- .../bindings/pinctrl/sprd,pinctrl.txt         |  83 --------
- .../bindings/pinctrl/sprd,sc9860-pinctrl.txt  |  70 ------
- .../bindings/pinctrl/sprd,sc9860-pinctrl.yaml | 199 ++++++++++++++++++
- 3 files changed, 199 insertions(+), 153 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/sprd,pinctrl.txt
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/sprd,sc9860-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/sprd,sc9860-pinctrl.yaml
+> Gary Yang (3):
+>   dt-bindings: pinctrl: Add cix,sky1-pinctrl
+>   pinctrl: cix: Add pin-controller support for sky1
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/sprd,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/sprd,pinctrl.txt
-deleted file mode 100644
-index 779b8ef0f6e6..000000000000
---- a/Documentation/devicetree/bindings/pinctrl/sprd,pinctrl.txt
-+++ /dev/null
-@@ -1,83 +0,0 @@
--* Spreadtrum Pin Controller
--
--The Spreadtrum pin controller are organized in 3 blocks (types).
--
--The first block comprises some global control registers, and each
--register contains several bit fields with one bit or several bits
--to configure for some global common configuration, such as domain
--pad driving level, system control select and so on ("domain pad
--driving level": One pin can output 3.0v or 1.8v, depending on the
--related domain pad driving selection, if the related domain pad
--select 3.0v, then the pin can output 3.0v. "system control" is used
--to choose one function (like: UART0) for which system, since we
--have several systems (AP/CP/CM4) on one SoC.).
--
--There are too much various configuration that we can not list all
--of them, so we can not make every Spreadtrum-special configuration
--as one generic configuration, and maybe it will add more strange
--global configuration in future. Then we add one "sprd,control" to
--set these various global control configuration, and we need use
--magic number for this property.
--
--Moreover we recognise every fields comprising one bit or several
--bits in one global control register as one pin, thus we should
--record every pin's bit offset, bit width and register offset to
--configure this field (pin).
--
--The second block comprises some common registers which have unified
--register definition, and each register described one pin is used
--to configure the pin sleep mode, function select and sleep related
--configuration.
--
--Now we have 4 systems for sleep mode on SC9860 SoC: AP system,
--PUBCP system, TGLDSP system and AGDSP system. And the pin sleep
--related configuration are:
--- input-enable
--- input-disable
--- output-high
--- output-low
--- bias-pull-up
--- bias-pull-down
--
--In some situation we need set the pin sleep mode and pin sleep related
--configuration, to set the pin sleep related configuration automatically
--by hardware when the system specified by sleep mode goes into deep
--sleep mode. For example, if we set the pin sleep mode as PUBCP_SLEEP
--and set the pin sleep related configuration as "input-enable", which
--means when PUBCP system goes into deep sleep mode, this pin will be set
--input enable automatically.
--
--Moreover we can not use the "sleep" state, since some systems (like:
--PUBCP system) do not run linux kernel OS (only AP system run linux
--kernel on SC9860 platform), then we can not select "sleep" state
--when the PUBCP system goes into deep sleep mode. Thus we introduce
--"sprd,sleep-mode" property to set pin sleep mode.
--
--The last block comprises some misc registers which also have unified
--register definition, and each register described one pin is used to
--configure drive strength, pull up/down and so on. Especially for pull
--up, we have two kind pull up resistor: 20K and 4.7K.
--
--Required properties for Spreadtrum pin controller:
--- compatible: "sprd,<soc>-pinctrl"
--  Please refer to each sprd,<soc>-pinctrl.txt binding doc for supported SoCs.
--- reg: The register address of pin controller device.
--- pins : An array of pin names.
--
--Optional properties:
--- function: Specified the function name.
--- drive-strength: Drive strength in mA.
--- input-schmitt-disable: Enable schmitt-trigger mode.
--- input-schmitt-enable: Disable schmitt-trigger mode.
--- bias-disable: Disable pin bias.
--- bias-pull-down: Pull down on pin.
--- bias-pull-up: Pull up on pin.
--- input-enable: Enable pin input.
--- input-disable: Enable pin output.
--- output-high: Set the pin as an output level high.
--- output-low: Set the pin as an output level low.
--- sleep-hardware-state: Indicate these configs in this state are sleep related.
--- sprd,control: Control values referring to databook for global control pins.
--- sprd,sleep-mode: Sleep mode selection.
--
--Please refer to each sprd,<soc>-pinctrl.txt binding doc for supported values.
-diff --git a/Documentation/devicetree/bindings/pinctrl/sprd,sc9860-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/sprd,sc9860-pinctrl.txt
-deleted file mode 100644
-index 5a628333d52f..000000000000
---- a/Documentation/devicetree/bindings/pinctrl/sprd,sc9860-pinctrl.txt
-+++ /dev/null
-@@ -1,70 +0,0 @@
--* Spreadtrum SC9860 Pin Controller
--
--Please refer to sprd,pinctrl.txt in this directory for common binding part
--and usage.
--
--Required properties:
--- compatible: Must be "sprd,sc9860-pinctrl".
--- reg: The register address of pin controller device.
--- pins : An array of strings, each string containing the name of a pin.
--
--Optional properties:
--- function: A string containing the name of the function, values must be
--  one of: "func1", "func2", "func3" and "func4".
--- drive-strength: Drive strength in mA. Supported values: 2, 4, 6, 8, 10,
--  12, 14, 16, 20, 21, 24, 25, 27, 29, 31 and 33.
--- input-schmitt-disable: Enable schmitt-trigger mode.
--- input-schmitt-enable: Disable schmitt-trigger mode.
--- bias-disable: Disable pin bias.
--- bias-pull-down: Pull down on pin.
--- bias-pull-up: Pull up on pin. Supported values: 20000 for pull-up resistor
--  is 20K and 4700 for pull-up resistor is 4.7K.
--- input-enable: Enable pin input.
--- input-disable: Enable pin output.
--- output-high: Set the pin as an output level high.
--- output-low: Set the pin as an output level low.
--- sleep-hardware-state: Indicate these configs in this state are sleep related.
--- sprd,control: Control values referring to databook for global control pins.
--- sprd,sleep-mode: Choose the pin sleep mode, and supported values are:
--  AP_SLEEP, PUBCP_SLEEP, TGLDSP_SLEEP and AGDSP_SLEEP.
--
--Pin sleep mode definition:
--enum pin_sleep_mode {
--	AP_SLEEP = BIT(0),
--	PUBCP_SLEEP = BIT(1),
--	TGLDSP_SLEEP = BIT(2),
--	AGDSP_SLEEP = BIT(3),
--};
--
--Example:
--pin_controller: pinctrl@402a0000 {
--	compatible = "sprd,sc9860-pinctrl";
--	reg = <0x402a0000 0x10000>;
--
--	grp1: sd0 {
--		pins = "SC9860_VIO_SD2_IRTE", "SC9860_VIO_SD0_IRTE";
--		sprd,control = <0x1>;
--	};
--
--	grp2: rfctl_33 {
--		pins = "SC9860_RFCTL33";
--		function = "func2";
--		sprd,sleep-mode = <AP_SLEEP | PUBCP_SLEEP>;
--		grp2_sleep_mode: rfctl_33_sleep {
--			pins = "SC9860_RFCTL33";
--			sleep-hardware-state;
--			output-low;
--		}
--	};
--
--	grp3: rfctl_misc_20 {
--		pins = "SC9860_RFCTL20_MISC";
--		drive-strength = <10>;
--		bias-pull-up = <4700>;
--		grp3_sleep_mode: rfctl_misc_sleep {
--			pins = "SC9860_RFCTL20_MISC";
--			sleep-hardware-state;
--			bias-pull-up;
--		}
--	};
--};
-diff --git a/Documentation/devicetree/bindings/pinctrl/sprd,sc9860-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/sprd,sc9860-pinctrl.yaml
-new file mode 100644
-index 000000000000..59d23eb8aa97
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/sprd,sc9860-pinctrl.yaml
-@@ -0,0 +1,199 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/sprd,sc9860-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Spreadtrum SC9860 Pin Controller
-+
-+maintainers:
-+  - Baolin Wang <baolin.wang@linux.alibaba.com>
-+
-+description: >
-+  The Spreadtrum pin controller are organized in 3 blocks (types).
-+
-+  The first block comprises some global control registers, and each
-+  register contains several bit fields with one bit or several bits
-+  to configure for some global common configuration, such as domain
-+  pad driving level, system control select and so on ("domain pad
-+  driving level": One pin can output 3.0v or 1.8v, depending on the
-+  related domain pad driving selection, if the related domain pad
-+  select 3.0v, then the pin can output 3.0v. "system control" is used
-+  to choose one function (like: UART0) for which system, since we
-+  have several systems (AP/CP/CM4) on one SoC.).
-+
-+  There are too much various configuration that we can not list all
-+  of them, so we can not make every Spreadtrum-special configuration
-+  as one generic configuration, and maybe it will add more strange
-+  global configuration in future. Then we add one "sprd,control" to
-+  set these various global control configuration, and we need use
-+  magic number for this property.
-+
-+  Moreover we recognize every fields comprising one bit or several
-+  bits in one global control register as one pin, thus we should
-+  record every pin's bit offset, bit width and register offset to
-+  configure this field (pin).
-+
-+  The second block comprises some common registers which have unified
-+  register definition, and each register described one pin is used
-+  to configure the pin sleep mode, function select and sleep related
-+  configuration.
-+
-+  Now we have 4 systems for sleep mode on SC9860 SoC: AP system,
-+  PUBCP system, TGLDSP system and AGDSP system. And the pin sleep
-+  related configuration are:
-+    - input-enable
-+    - input-disable
-+    - output-high
-+    - output-low
-+    - bias-pull-up
-+    - bias-pull-down
-+
-+  In some situation we need set the pin sleep mode and pin sleep related
-+  configuration, to set the pin sleep related configuration automatically
-+  by hardware when the system specified by sleep mode goes into deep
-+  sleep mode. For example, if we set the pin sleep mode as PUBCP_SLEEP
-+  and set the pin sleep related configuration as "input-enable", which
-+  means when PUBCP system goes into deep sleep mode, this pin will be set
-+  input enable automatically.
-+
-+  Moreover we can not use the "sleep" state, since some systems (like:
-+  PUBCP system) do not run linux kernel OS (only AP system run linux
-+  kernel on SC9860 platform), then we can not select "sleep" state
-+  when the PUBCP system goes into deep sleep mode. Thus we introduce
-+  "sprd,sleep-mode" property to set pin sleep mode.
-+
-+  The last block comprises some misc registers which also have unified
-+  register definition, and each register described one pin is used to
-+  configure drive strength, pull up/down and so on. Especially for pull
-+  up, we have two kind pull up resistor: 20K and 4.7K.
-+
-+properties:
-+  compatible:
-+    const: sprd,sc9860-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+additionalProperties:
-+  $ref: '#/$defs/pin-node'
-+  unevaluatedProperties: false
-+
-+  properties:
-+    function:
-+      description: Function to assign to the pins.
-+      enum:
-+        - func1
-+        - func2
-+        - func3
-+        - func4
-+
-+    drive-strength:
-+      description: Drive strength in mA.
-+      $ref: /schemas/types.yaml#/definitions/uint32
-+      enum: [2, 4, 6, 8, 10, 12, 14, 16, 20, 21, 24, 25, 27, 29, 31, 33]
-+
-+    input-schmitt-disable: true
-+
-+    input-schmitt-enable: true
-+
-+    bias-pull-up:
-+      enum: [20000, 4700]
-+
-+    sprd,sleep-mode:
-+      description: Pin sleep mode selection.
-+      $ref: /schemas/types.yaml#/definitions/uint32
-+      maximum: 0x1f
-+
-+    sprd,control:
-+      description: Control values referring to databook for global control pins.
-+      $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  patternProperties:
-+    'sleep$':
-+      $ref: '#/$defs/pin-node'
-+      unevaluatedProperties: false
-+
-+      properties:
-+        bias-pull-up:
-+          type: boolean
-+
-+        sleep-hardware-state:
-+          description: Indicate these configs in sleep related state.
-+          type: boolean
-+
-+$defs:
-+  pin-node:
-+    type: object
-+    allOf:
-+      - $ref: /schemas/pinctrl/pincfg-node.yaml#
-+      - $ref: /schemas/pinctrl/pinmux-node.yaml#
-+
-+    properties:
-+      pins:
-+        description: Names of pins to configure.
-+        $ref: /schemas/types.yaml#/definitions/string-array
-+
-+      bias-disable:
-+        description: Disable pin bias.
-+        type: boolean
-+
-+      bias-pull-down:
-+        description: Pull down on pin.
-+        type: boolean
-+
-+      bias-pull-up: true
-+
-+      input-enable:
-+        description: Enable pin input.
-+        type: boolean
-+
-+      input-disable:
-+        description: Enable pin output.
-+        type: boolean
-+
-+      output-high:
-+        description: Set the pin as an output level high.
-+        type: boolean
-+
-+      output-low:
-+        description: Set the pin as an output level low.
-+        type: boolean
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    pin_controller: pinctrl@402a0000 {
-+        compatible = "sprd,sc9860-pinctrl";
-+        reg = <0x402a0000 0x10000>;
-+
-+        grp1: sd0 {
-+            pins = "SC9860_VIO_SD2_IRTE", "SC9860_VIO_SD0_IRTE";
-+            sprd,control = <0x1>;
-+        };
-+
-+        grp2: rfctl_33 {
-+            pins = "SC9860_RFCTL33";
-+            function = "func2";
-+            sprd,sleep-mode = <3>;
-+            grp2_sleep_mode: rfctl_33_sleep {
-+                pins = "SC9860_RFCTL33";
-+                sleep-hardware-state;
-+                output-low;
-+            };
-+        };
-+
-+        grp3: rfctl_misc_20 {
-+            pins = "SC9860_RFCTL20_MISC";
-+            drive-strength = <10>;
-+            bias-pull-up = <4700>;
-+            grp3_sleep_mode: rfctl_misc_sleep {
-+                pins = "SC9860_RFCTL20_MISC";
-+                sleep-hardware-state;
-+                bias-pull-up;
-+            };
-+        };
-+    };
--- 
-2.51.0
+Patches 1 & 2 applied to the pin control tree for v6.19!
 
+>   arm64: dts: cix: Add pinctrl nodes for sky1
+
+This third patch should be applied to the SoC tree, Peter Chen or
+Fugang Duan takes care of that I think? Not sure.
+
+Good work with the pin controller, now is a good time to just
+go on from here and fix the GPIO controllers using the pin
+controller as back-end too :)
+
+Yours,
+Linus Walleij
 
