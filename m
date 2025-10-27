@@ -1,148 +1,155 @@
-Return-Path: <linux-gpio+bounces-27631-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27632-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 541DAC0CA53
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 10:27:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB9DFC0CD92
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 11:03:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8CD114F2FA2
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 09:25:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EA18E4059C8
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Oct 2025 10:00:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2C972ED871;
-	Mon, 27 Oct 2025 09:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="bpHDlK+e";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="z5kx0sue"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D86032F6922;
+	Mon, 27 Oct 2025 09:58:29 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4892C2F068F;
-	Mon, 27 Oct 2025 09:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F3C2F6912;
+	Mon, 27 Oct 2025 09:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761557113; cv=none; b=fcIQhbzUyfAbE45BMqIBJx34aXZTTJGvW1hcfRt7eYAocVLcJW+LpjbCvUEF2fRjMA9TEv8/2yRhKw/Lr3goo9KGoEQbsrkeKRNipHFb8xEmr9jYT2diotI1Kwam7bFmcJmqH+nRHpchXKviPCsmUiJzB+mtQ8rFAW+mceMDdjc=
+	t=1761559109; cv=none; b=ODJ2FzDKKsOP7ALFuG56h42MH7egOfWWCBJ0kUGxHd9H4bWuBAsNw3IJDQBopAZcSrHNLoBlzpk8CCQa16mjyUVE1tvrSjIJ8iZ/gV+ix8hTCU6CQxxObEJSPNsWuu+78xT57f0gUaUf8iqQpZBG354vLkpZzYNWtfQuGQpTqB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761557113; c=relaxed/simple;
-	bh=2kNSuTrjCgbC9sjJyzFtLI/aV32xV70+Q2oAydZo2tU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=KdAuatOw0Tnp+daZsEcs/UX9+JIOph2BT1snxMJHnFCA4KK2L6A+EkNoxwUHLWPlRn6AUjrxlIxhbFIlGjndDRvmBFuE9AxAkWFdqc5w77PaeRncWV7oTaPKFPPKx5DNdcWgIgd7TPUXGDDuSuG9Q37qdulpWwe8qWw0iCDyQk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=bpHDlK+e; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=z5kx0sue; arc=none smtp.client-ip=202.12.124.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id 3F80B1D0019D;
-	Mon, 27 Oct 2025 05:25:09 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Mon, 27 Oct 2025 05:25:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1761557109;
-	 x=1761643509; bh=ZYSCNPujoeIiPWnOTZjTYJpArRoI/1XTQNC5cifNrY8=; b=
-	bpHDlK+e2BQpLKdubW02HncVR8ATSomqcnFO5m8zqXyhyzDX+V//nziPsVsdKugs
-	UEFPnjzGiFq/wUnVjOoj88jCACHeD13Y4bzQs1OaRHujmeVvXLk3i8WM8GUAp9BS
-	+pcQ1G5denRN/zapsqmHaqZIkjk5+fNjTPoSEULCai0GyhB8Q7rtM5c5cbc2CXHw
-	YLQJB9B3/Dyg3BU/PYo2SnsIbWQib2wXBMsPlsBzFjEt7FLWsWju/WWiW7OJBR+t
-	dlNFl/h7tZYhJij4nHn/3HPdGKJsc/KSQqAErLEbwMDo06vbTPianmx1/H+gGJyM
-	uXZySzwLiCuvPumZ8ZjsRg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1761557109; x=
-	1761643509; bh=ZYSCNPujoeIiPWnOTZjTYJpArRoI/1XTQNC5cifNrY8=; b=z
-	5kx0sueU92/8ZB4Y1+So2NtvVpd0RzT2/XFY+8G/TKAC+r2oPNuM82UaE5Ozdd1Q
-	qgGAw1zsBzn3xhBDEKi4Mi6NkHEzL5YyWx6qUqXGSL3PhhBhgRyyRPHDmBZtciFh
-	wvKkmS++NeqHyABuyOqUVInsT023Z/y72Q8U8MKs9eQWBsw54NA7FszK/idpVSB0
-	Or3JjQK7l8Eth8wIck/tLfoeINdS+FepoDUW6Vevjg5CjtSTk9QeAzs3KmdTkFLm
-	KQZ6w1/u9rRtx98HYNY6y9oDOEXrjju+9nELa1yd4G0EpoxQUKVRUt/RsTEW3/w9
-	CZEeKiy+7BpSPbwz8X8aQ==
-X-ME-Sender: <xms:dDr_aAAspsxFdYagS9g1uY1_gt0AqI7hkzJ0edM5kLjVNtoz9Qs7zA>
-    <xme:dDr_aNWP19nnB0b_J1ShTguNywZN876J9nNYijDVy4et8vff34CsVHzIGFHqwVyAO
-    GE2IkMZDcxXfXiTLcdAEsERlbS7lIkLrcV-XHJXyA4D7zuMOb6Webg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduheejiedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
-    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhht
-    pdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehhvhgvrhhkuh
-    hilhdotghishgtoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgthhgvhhgrsges
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgrshhhrghlsehkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgt
-    phhtthhopehprghttghhvghssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoh
-    eplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
-    lhhinhhugidqmhgvughirgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    hsthgrsghlvgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:dDr_aLhPGMKNkWUV57WN_ZtZ6siWhauizoBDd04LyzGN40gVDc00hQ>
-    <xmx:dDr_aLFCDro3aQH8HctY4QY7R0N-cS02TwnM2aIpZE-aayb3Yq_D4w>
-    <xmx:dDr_aFtDR13vGNTG08ovVXCQnjvUzeRLvpcGthbD3Umkxk2GVHZ8vQ>
-    <xmx:dDr_aEfnwZiTSSB8NYUfZGnZpSl5_V0vKg4-2YsSxqNU5uogejvZFw>
-    <xmx:dTr_aMbpvIiTl54Oox5j49mvDHVSx9YSoTLNP_RaZipaHXJwD-7k63X4>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id BE7C1700054; Mon, 27 Oct 2025 05:25:08 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1761559109; c=relaxed/simple;
+	bh=ZZvIoXDvB0DM5S6wMoQa8dODqnh/re+vlbtNAybD1GY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=U+a0vl/8cl9lUKszCzVPYdvt81RAF2L94IS691E1cf7okNaUJOjRtyJCK4aD/Cum7mAJdKxIwS0ZVVV86nC1g2rceop7ZUwD7P6PentA2b48WB3B+frheujzYxsLc55zvPwVog3GbD/6gPAxiOZtA6XJz9qkGhOs7zsP4ZTBl4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Mon, 27 Oct
+ 2025 17:58:25 +0800
+Received: from mail.aspeedtech.com (192.168.10.13) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Mon, 27 Oct 2025 17:58:25 +0800
+From: Jacky Chou <jacky_chou@aspeedtech.com>
+To: <lpieralisi@kernel.org>, <kwilczynski@kernel.org>, <mani@kernel.org>,
+	<robh@kernel.org>, <bhelgaas@google.com>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <joel@jms.id.au>, <andrew@codeconstruct.com.au>,
+	<vkoul@kernel.org>, <kishon@kernel.org>, <linus.walleij@linaro.org>,
+	<p.zabel@pengutronix.de>, <linux-aspeed@lists.ozlabs.org>,
+	<linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-phy@lists.infradead.org>, <openbmc@lists.ozlabs.org>,
+	<linux-gpio@vger.kernel.org>
+CC: <jacky_chou@aspeedtech.com>
+Subject: [PATCH v4 0/9] Add ASPEED PCIe Root Complex support
+Date: Mon, 27 Oct 2025 17:58:16 +0800
+Message-ID: <20251027095825.181161-1-jacky_chou@aspeedtech.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AcW5hAlZpVq3
-Date: Mon, 27 Oct 2025 10:24:47 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Sasha Levin" <sashal@kernel.org>, patches@lists.linux.dev,
- stable@vger.kernel.org
-Cc: "Hans Verkuil" <hverkuil+cisco@kernel.org>,
- "Mauro Carvalho Chehab" <mchehab@kernel.org>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>, linux-media@vger.kernel.org,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Message-Id: <d08ad8bb-d94a-41c7-8bfd-9c4e8c054785@app.fastmail.com>
-In-Reply-To: <20251025160905.3857885-118-sashal@kernel.org>
-References: <20251025160905.3857885-1-sashal@kernel.org>
- <20251025160905.3857885-118-sashal@kernel.org>
-Subject: Re: [PATCH AUTOSEL 6.17-5.15] media: em28xx: add special case for legacy
- gpiolib interface
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
 
-On Sat, Oct 25, 2025, at 17:55, Sasha Levin wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> [ Upstream commit d5d299e7e7f6b4ead31383d4abffca34e4296df0 ]
->
-> The em28xx driver uses the old-style gpio_request_one() interface to
-> switch the lna on the PCTV 290E card.
->
-> This interface is becoming optional and should no longer be called by
-> portable drivers. As I could not figure out an obvious replacement,
-> select the new GPIOLIB_LEGACY symbol as a workaround.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Hans Verkuil <hverkuil+cisco@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->
-> LLM Generated explanations, may be completely bogus:
->
-> YES
->
-> - What it fixes: Prevents build breakage when `GPIOLIB=y` but the legacy
->   GPIO consumer API is disabled. `gpio_request_one()` is only declared
->   when `CONFIG_GPIOLIB_LEGACY` is enabled (see
->   `include/linux/gpio.h:88`), so compiling code guarded only by
->   `CONFIG_GPIOLIB` fails if legacy support is off.
+This patch series adds support for the ASPEED PCIe Root Complex,
+including device tree bindings, pinctrl support, and the PCIe host controller
+driver. The patches introduce the necessary device tree nodes, pinmux groups,
+and driver implementation to enable PCIe functionality on ASPEED platforms.
+Currently, the ASPEED PCIe Root Complex only supports a single port.
 
-It's not needed for stable and has no effect in 6.17. This is
-only a preparation for a later change.
+Summary of changes:
+- Add device tree binding documents for ASPEED PCIe PHY, PCIe Config, and PCIe RC
+- Update MAINTAINERS for new bindings and driver
+- Add PCIe RC node and PERST control pin to aspeed-g6 device tree
+- Implement ASPEED PCIe PHY driver
+- Implement ASPEED PCIe Root Complex host controller driver
 
-         Arnd
+This series has been tested on AST2600/AST2700 platforms and enables PCIe device
+enumeration and operation.
+
+Jacky Chou (9):
+  dt-bindings: phy: aspeed: Add ASPEED PCIe PHY
+  dt-bindings: PCI: Add ASPEED PCIe RC support
+  dt-bindings: pinctrl: aspeed,ast2600-pinctrl: Add PCIe RC PERST# group
+  ARM: dts: aspeed-g6: Add AST2600 PCIe RC PERST#
+  ARM: dts: aspeed-g6: Add PCIe RC and PCIe PHY node
+  PHY: aspeed: Add ASPEED PCIe PHY driver
+  PCI: Add FMT, TYPE and CPL status definition for TLP header
+  PCI: aspeed: Add ASPEED PCIe RC driver
+  MAINTAINERS: Add ASPEED PCIe RC driver
+
+ .../bindings/pci/aspeed,ast2600-pcie.yaml     |  168 +++
+ .../bindings/phy/aspeed,ast2600-pcie-phy.yaml |   42 +
+ .../pinctrl/aspeed,ast2600-pinctrl.yaml       |    2 +
+ MAINTAINERS                                   |   11 +
+ .../boot/dts/aspeed/aspeed-g6-pinctrl.dtsi    |    5 +
+ arch/arm/boot/dts/aspeed/aspeed-g6.dtsi       |   54 +
+ drivers/pci/controller/Kconfig                |   16 +
+ drivers/pci/controller/Makefile               |    1 +
+ drivers/pci/controller/pcie-aspeed.c          | 1122 +++++++++++++++++
+ drivers/pci/pci.h                             |   15 +
+ drivers/phy/Kconfig                           |    1 +
+ drivers/phy/Makefile                          |    1 +
+ drivers/phy/aspeed/Kconfig                    |   15 +
+ drivers/phy/aspeed/Makefile                   |    2 +
+ drivers/phy/aspeed/phy-aspeed-pcie.c          |  209 +++
+ 15 files changed, 1664 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/aspeed,ast2600-pcie.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/aspeed,ast2600-pcie-phy.yaml
+ create mode 100644 drivers/pci/controller/pcie-aspeed.c
+ create mode 100644 drivers/phy/aspeed/Kconfig
+ create mode 100644 drivers/phy/aspeed/Makefile
+ create mode 100644 drivers/phy/aspeed/phy-aspeed-pcie.c
+
+---
+v4:
+ - Remove aspeed,ast2700-pcie-cfg.yaml
+ - Add more descriptions for AST2600 PCIe RC in aspeed,ast2600-pcie.yaml
+ - Change interrupt-controller to legacy-interrupt-controller in yaml
+   and dtsi
+ - Remove msi-parent property in yaml and dtsi
+ - Modify the bus range to starting from 0x00 in aspeed-g6.dtsi
+ - Fixed the typo on MODULE_DEVICE_TABLE() in phy-aspeed-pcie.c
+ - Add PCIE_CPL_STS_SUCCESS definition in pci/pci.h
+ - Add prefix ASPEED_ for register definition in RC driver
+ - Add a flag to indicate clear msi status twice for AST2700 workaround
+ - Remove getting domain number
+ - Remove scanning AST2600 HOST bridge on device number 0
+ - Remove all codes about CONFIG_PCI_MSI
+ - Get root but number from resouce list by IORESOURCE_BUS
+ - Change module_platform_driver to builtin_platform_driver
+v3:
+ - Add ASPEED PCIe PHY driver
+ - Remove the aspeed,pciecfg property from AST2600 RC node, merged into RC node
+ - Update the binding doc for aspeed,ast2700-pcie-cfg to reflect the changes
+ - Update the binding doc for aspeed,ast2600-pcie to reflect the changes
+ - Update the binding doc for aspeed,ast2600-pinctrl to reflect the changes
+ - Update the device tree source to reflect the changes
+ - Adjusted the use of mutex in RC drivers to use GRAND
+ - Updated from reviewer comments
+
+v2:
+ - Moved ASPEED PCIe PHY yaml binding to `soc/aspeed` directory and
+   changed it as syscon
+ - Added `MAINTAINERS` entry for the new PCIe RC driver
+ - Updated device tree bindings to reflect the new structure
+ - Refactored configuration read and write functions to main bus and
+   child bus ops
+ - Refactored initialization to implement multiple ports support
+ - Added PCIe FMT and TYPE definitions for TLP header in
+   `include/uapi/linux/pci_regs.h`
+ - Updated from reviewer comments
+---
+
+-- 
+2.34.1
+
 
