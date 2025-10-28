@@ -1,109 +1,164 @@
-Return-Path: <linux-gpio+bounces-27757-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27758-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 707B5C13966
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 09:45:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9665BC13A3D
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 09:56:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 290564E4FBA
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 08:45:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 971D03BE464
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 08:52:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C201F209F43;
-	Tue, 28 Oct 2025 08:45:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE5232D9ED1;
+	Tue, 28 Oct 2025 08:52:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="X0nD8Ef8"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="fj/WnG8/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6144C98;
-	Tue, 28 Oct 2025 08:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43042D948D
+	for <linux-gpio@vger.kernel.org>; Tue, 28 Oct 2025 08:52:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761641137; cv=none; b=llBuZHFQPVTaCBN5wgT2zg361RHVwEbnHNegrNNY/zow33XXJikJZc+rAnQOtpZhmTMFa1aoaBV3QPP4RlCWyizvTN9ujCEQQuEUoHstx7mQ4CEnPbpBxvOZFLR/HXNUpb0MU4khHCLOKZEBpXxKgsQs/YQikzEMH1LF8tuj4u8=
+	t=1761641552; cv=none; b=A2ADJV4yxX2pU8+E+JF+P8LYtcNrxqRsStoqHaGyWW8FNibux1L5tHrQ4r1RpKbuYBIsmKyJ86ecfdx+aD9qBRF84oxo9Z9l5HanX1oHrifvB4OhU1Iqxdw4E51eqsxEl9kny+gM0+HnKOBBiz5xOU4XlLzEkQa4IiIWO/j2I3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761641137; c=relaxed/simple;
-	bh=AzfMJnxDlLOurBkOwjsFhj7GPFZLhxcijnAWsYYiWpE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q+zU9VDbl2vpsCmI82JVzQciI0OLAaxWUfjinIm6bHnwCnPqw5IkcGMkYz5t2hA25Fcz13AkZmPjd+Jnvgq0AUwEd1UWunlrUAuHtjTLaP8mea2dmQl0Y4galOPRtOdfQlQ1Ek0aTzl6SK/FTQfKYERASkdDFR5iY/lcan1+Vj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=X0nD8Ef8; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1761641133;
-	bh=AzfMJnxDlLOurBkOwjsFhj7GPFZLhxcijnAWsYYiWpE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=X0nD8Ef80li5RM/i0fesne7rsefbId77wgY5dQqPZ/+p46Npgi57Ixd6Clyo7K2En
-	 w+WmhFsu8DfyMvJLLF0/CYBB2aHJGFT7o1tpkjytMnM+rEGd/EiS0pd7gH01iUwkjv
-	 cKAjWSdV3D7EUoM8L83giRV2z4BxkTCeCxfMGOBU7jZ6YDL4d3Vq+YSU2molrl250P
-	 Jrxgx608OPhy4RzzFhSiSQedfHWcqDSH9xkZUoxaM+DZ6GrB92cPEvvLezPZRfphOM
-	 KHdPeOmFbZflKFvYSe4CpHUzQrV26EWCq+Pw1al9OBUwAo0dU6sx14lbpD7NVdwXYa
-	 +d+5i9L2Oxwwg==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id F070F17E126B;
-	Tue, 28 Oct 2025 09:45:32 +0100 (CET)
-Message-ID: <39602d94-7f2e-42b1-a77e-1d5a3e032277@collabora.com>
-Date: Tue, 28 Oct 2025 09:45:32 +0100
+	s=arc-20240116; t=1761641552; c=relaxed/simple;
+	bh=Rci8oK8g4zQX2fXCwbMzzvTNYmicOZcufc/ud9MB8Lg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eQnKh0IyzJvqEqkizwwgW6udXmhYp9bHbYNZNPIdpDBOM7b8YA/aAVLRqomZSPhQZuuccCiJs0E2KO7KWFip78tVuE1ya3bMJMTeCwqEXP3zbvbjSAU90CK8EJcZtY1PdSrmRJvKh4PjIuoTBq7Xc9jbXFw1bPciemqyXEQR3q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=fj/WnG8/; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=7Y8M
+	a93sO96jbEi35vGpFMXIrwy6YnCZ8/pm8+7MgN0=; b=fj/WnG8/Mbcjl86+qfhN
+	b+DXh2/PrlnWcDTG+LhX/SEGUOyRJggDaesoz/BpDZgR3cvdV92O+g1amZt/KHVx
+	Gc38fp0AH886YeT5JF3NBKyGS4qxQ4jfz6OmZQHQcfDjtA+z/wZ1fD9Hc9nBA7Qf
+	6PdQ3tdyv649uILJX/vi3eMnOGPfXRyC0VIZUJ2WUixCbGm1/hQAvaZPftPSJxl6
+	4DMW6ZWI/uvsif31BOkBjxDWnSB85/d/Aa53q08jrk1gUd1zQ+VIa+Tt/z2Xuxjs
+	jqIZ6SdEHh7YauQV0lAf+GarFlMDtkwLHF6LS7LEfPPAhXRJUK0TN/Jkeb7V5D5u
+	EQ==
+Received: (qmail 3942912 invoked from network); 28 Oct 2025 09:52:20 +0100
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 28 Oct 2025 09:52:20 +0100
+X-UD-Smtp-Session: l3s3148p1@0ZIzIjRCTLwujnsk
+Date: Tue, 28 Oct 2025 09:52:19 +0100
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: "Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Hoan Tran <hoan@os.amperecomputing.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Phil Edworthy <phil.edworthy@renesas.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	Pascal Eberhard <pascal.eberhard@se.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v6 7/8] soc: renesas: Add support for Renesas RZ/N1 GPIO
+ Interrupt Multiplexer
+Message-ID: <aQCEQ0tye4vwb4Ej@ninjato>
+References: <20251027123601.77216-1-herve.codina@bootlin.com>
+ <20251027123601.77216-8-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/6] arm64: dts: mediatek: mt7988a: Add label for
- ssusb0
-To: frank-w@public-files.de, Krzysztof Kozlowski <krzk@kernel.org>,
- Frank Wunderlich <linux@fw-web.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Sean Wang <sean.wang@mediatek.com>, Daniel Golle <daniel@makrotopia.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20251027132817.212534-1-linux@fw-web.de>
- <20251027132817.212534-4-linux@fw-web.de>
- <35504988-448e-4a5c-8ea6-769c06117c01@kernel.org>
- <F6FAB95A-9FF2-416C-B50A-C2B1808FC5FF@public-files.de>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <F6FAB95A-9FF2-416C-B50A-C2B1808FC5FF@public-files.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="TfyCGKJsqzK7IN+Z"
+Content-Disposition: inline
+In-Reply-To: <20251027123601.77216-8-herve.codina@bootlin.com>
 
-Il 27/10/25 20:04, Frank Wunderlich ha scritto:
-> Am 27. Oktober 2025 19:58:23 MEZ schrieb Krzysztof Kozlowski <krzk@kernel.org>:
->> On 27/10/2025 14:28, Frank Wunderlich wrote:
->>> From: Frank Wunderlich <frank-w@public-files.de>
->>>
->>> Add label for ssusb0 node which is used for BPI-R4-Pro.
->>
->> This makes no sense on its own. We do not add labels because they have 0
->> impact.
->>
->> Please drop or squash.
-> 
-> Thank you for the review.
-> 
-> I reference this label in part 4 and tried to separate
-> changes in soc dtsi and board layer.
-> But of course i can squash this to part 4.
-> 
->> Best regards,
->> Krzysztof
-> 
-> 
-> regards Frank
 
-Yes, please squash this to the patch where you actually use the label.
+--TfyCGKJsqzK7IN+Z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cheers,
-Angelo
+Hi Herve,
+
+On Mon, Oct 27, 2025 at 01:35:59PM +0100, Herve Codina (Schneider Electric)=
+ wrote:
+> On the Renesas RZ/N1 SoC, GPIOs can generate interruptions. Those
+> interruption lines are multiplexed by the GPIO Interrupt Multiplexer in
+> order to map 32 * 3 GPIO interrupt lines to 8 GIC interrupt lines.
+>=20
+> The GPIO interrupt multiplexer IP does nothing but select 8 GPIO
+> IRQ lines out of the 96 available to wire them to the GIC input lines.
+>=20
+> Signed-off-by: Herve Codina (Schneider Electric) <herve.codina@bootlin.co=
+m>
+
+Good news first:
+
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+I can access GPIO LEDs on my board and PHY interrupts also work.
+
+> +	if (parent_args->args[1] < RZN1_IRQMUX_GIC_SPI_BASE ||
+> +	    parent_args->args[1] >=3D RZN1_IRQMUX_GIC_SPI_BASE + RZN1_IRQMUX_NU=
+M_OUTPUTS) {
+> +		dev_err(dev, "Invalid GIC interrupt %u\n", parent_args->args[1]);
+> +		return -EINVAL;
+> +	}
+
+I really like this solution. I think I suggested it before but can't
+recall the details. And it is not worth digging it up again. Looks good,
+works, perfect.
+
+=2E..
+
+> +static int rzn1_irqmux_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct device_node *np =3D dev->of_node;
+> +	u32 __iomem *regs;
+> +
+> +	regs =3D devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(regs))
+> +		return PTR_ERR(regs);
+> +
+> +	return rzn1_irqmux_setup(dev, np, regs);
+
+The only super minor thing is that we could fold rzn1_irqmux_setup()
+into probe() according to my taste. But I am also fine as is. Looking
+really forward to see this series finally going upstream.
+
+Thanks again for your work on this!
+
+   Wolfram
+
+
+--TfyCGKJsqzK7IN+Z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmkAhDwACgkQFA3kzBSg
+KbZzBQ//dGfSzYjCMDbqSzzH9rp46J9h2ioOYhbgHqWSa38bRcLKNqtJ3hjpmnzi
+1qEPdSqdnxRgAxmV+B13czpT5Q9pUE+FFdaQ5vlU8B1fZlKNjj+mDP2Xo8/5KPb9
+NcPffqNgK3xqpoGHlYtv6j5/vJY1epinvXe8iqUyAilBToEfQwu1vapRm6jQQwb6
+3UeEjfhBrQloIdStvOMnys8NNs/o2ghxzbsWK38CWS1YN9erq3yCAgNqh+4Dlwif
+Y4Yqe4kQe8+SW2MZpeZvDX0MhMVFHRZSOBhOKG95YK+cijImA2bxooyr3LN4zZj1
+R2Cf1fdDWEhB3O2HqRWCArfYTAbYksYINMuJV/wt87RKx+zANXwwmSie+5f4rBja
+B0rXX2HxClE7NlDdVa6fF/3kK//BQ+nvuUwUvePJHNqYdgOwn6VlxSeaSPui/065
+su6hY1fupvJOVoEZBJ0ykj9W3/BLs+jkh3rfbBJ6un+JhZ2kIuzo5/v1pZGuUTIT
+grpCvlDXFVozNXGhjaUfXG4KmkPchidQ+0bcx3m/AaG5f5jJFnJ1H4xUZIRGC/LJ
+vbsFaJxZ/NgPjOOB9f4PQEWAL2anKeoH/YkKPkeF0OBGQ3YZq+XbT5c6QL7MdMGe
+wWBWmlyDmnlRLBy5Srs3KtrbUpq2qnCiURddjIeG7ZEJq173gLc=
+=o45b
+-----END PGP SIGNATURE-----
+
+--TfyCGKJsqzK7IN+Z--
 
