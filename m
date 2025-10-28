@@ -1,199 +1,175 @@
-Return-Path: <linux-gpio+bounces-27771-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27772-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5752AC15BDE
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 17:19:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C6A6C1618D
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 18:17:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 473E5422E83
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 16:14:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BBCAF1B28290
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 17:14:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B64934573C;
-	Tue, 28 Oct 2025 16:13:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8A2A34AB1E;
+	Tue, 28 Oct 2025 17:13:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HtMDbF8r";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ytJTULRp";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HtMDbF8r";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ytJTULRp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GHWgETQ1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779CA345751
-	for <linux-gpio@vger.kernel.org>; Tue, 28 Oct 2025 16:13:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A7234321B;
+	Tue, 28 Oct 2025 17:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761668027; cv=none; b=es7F2cJaUeNnBAZnYrFo8RJp36Rk65AP9rTNJIEj3RL7/yShTWoSyXojkvb/gv2KEY5RDg3uJhDeFhjGYb7Z3RfPSRvvXTrktHSRvwDT8Dff24S4tx4wIOSSHQ77LrMNBRvGyaIm1MQdl/1DwXz+coE79ygmu/M5HXv7OJKsl7g=
+	t=1761671614; cv=none; b=EvOMDtgS5X0tiCCAQucb0/fXgzZzz+HgKeF0ybXeUXU71icwWSuH7Q2VzTrJV2Mzz9ntwC9vFxTVGgtzrGJmk/BaizMdJ055Y6jiRI8K5581BgkAbrq11unO5KnPXJcCas5kv+2T9HlZO1EUconzNT8YB0d31oEFsiYpO3HIhc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761668027; c=relaxed/simple;
-	bh=t3buJ2ysQkdol3q5rs3qBMfbIGRLgldMKJXCive1rt8=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZRi0Qq1YXIHqznnA2xKaqnLBbLFyoskGqxt9u5IDYHWfZYODEG4UTvQjlV6RvfoWV2crqpLra7JaudFfupZjhJJ/4d3OAocup3BUyjGwhvWxSDNSW1FQJAo3TmsANBGRcjUGWpgkDHVkPZikVEN/HQoQV7vECff6iyAMOmBQaKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HtMDbF8r; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ytJTULRp; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HtMDbF8r; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ytJTULRp; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 71D431F46E;
-	Tue, 28 Oct 2025 16:13:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1761668022; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aIkfaA109e058juxrbARLnbhnw+30Zzst1672lVORwA=;
-	b=HtMDbF8r2wRWDGifnv9gYxSNAhmS0ojzB1YP8QtBcy8ubsAT3ZsONof3Bhi32jnCH/lw5z
-	Hq6v+a16uHNBw7YVLG0EXbD607lh+hXWEV2szjXMyw6CmEW2DhnqmsfmuG+WL6eiBIJi6S
-	EIT708Ji0KWfCPRQ6wSJTudLeMIbq9Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1761668022;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aIkfaA109e058juxrbARLnbhnw+30Zzst1672lVORwA=;
-	b=ytJTULRp9UW/jr9bzPTDO3cAAmBQor2fn8ie0J+jiQytAqY1LFwxRRsg/XxfPqgAg/w4Xj
-	zB2K4ve4Da2VOpCw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1761668022; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aIkfaA109e058juxrbARLnbhnw+30Zzst1672lVORwA=;
-	b=HtMDbF8r2wRWDGifnv9gYxSNAhmS0ojzB1YP8QtBcy8ubsAT3ZsONof3Bhi32jnCH/lw5z
-	Hq6v+a16uHNBw7YVLG0EXbD607lh+hXWEV2szjXMyw6CmEW2DhnqmsfmuG+WL6eiBIJi6S
-	EIT708Ji0KWfCPRQ6wSJTudLeMIbq9Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1761668022;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aIkfaA109e058juxrbARLnbhnw+30Zzst1672lVORwA=;
-	b=ytJTULRp9UW/jr9bzPTDO3cAAmBQor2fn8ie0J+jiQytAqY1LFwxRRsg/XxfPqgAg/w4Xj
-	zB2K4ve4Da2VOpCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 22B2113A7D;
-	Tue, 28 Oct 2025 16:13:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id h0gZB7XrAGm0CAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 28 Oct 2025 16:13:41 +0000
-Date: Tue, 28 Oct 2025 17:13:40 +0100
-Message-ID: <87ms5bf1hn.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Michael Turquette <mturquette@baylibre.com>,	Stephen Boyd
- <sboyd@kernel.org>,	Nicolas Ferre <nicolas.ferre@microchip.com>,	Alexandre
- Belloni <alexandre.belloni@bootlin.com>,	Claudiu Beznea
- <claudiu.beznea@tuxon.dev>,	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,	David Miller
- <davem@davemloft.net>,	Linus Walleij <linus.walleij@linaro.org>,	Bartosz
- Golaszewski <brgl@bgdev.pl>,	Joel Stanley <joel@jms.id.au>,	Andrew Jeffery
- <andrew@codeconstruct.com.au>,	Crt Mori <cmo@melexis.com>,	Jonathan Cameron
- <jic23@kernel.org>,	Lars-Peter Clausen <lars@metafoo.de>,	Jacky Huang
- <ychuang3@nuvoton.com>,	Shan-Chun Hung <schung@nuvoton.com>,	Yury Norov
- <yury.norov@gmail.com>,	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Jaroslav Kysela <perex@perex.cz>,	Takashi Iwai <tiwai@suse.com>,	Johannes
- Berg <johannes@sipsolutions.net>,	Jakub Kicinski <kuba@kernel.org>,	Alex
- Elder <elder@ieee.org>,	David Laight <david.laight.linux@gmail.com>,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,	Jason Baron
- <jbaron@akamai.com>,	Borislav Petkov <bp@alien8.de>,	Tony Luck
- <tony.luck@intel.com>,	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Kim Seer Paller <kimseer.paller@analog.com>,	David Lechner
- <dlechner@baylibre.com>,	Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,	Richard Genoud
- <richard.genoud@bootlin.com>,	Cosmin Tanislav <demonsingur@gmail.com>,	Biju
- Das <biju.das.jz@bp.renesas.com>,	Jianping Shen
- <Jianping.Shen@de.bosch.com>,	linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,	linux-renesas-soc@vger.kernel.org,
-	linux-crypto@vger.kernel.org,	linux-edac@vger.kernel.org,
-	qat-linux@intel.com,	linux-gpio@vger.kernel.org,
-	linux-aspeed@lists.ozlabs.org,	linux-iio@vger.kernel.org,
-	linux-sound@vger.kernel.org,	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 20/23] ALSA: usb-audio: Convert to common field_{get,prep}() helpers
-In-Reply-To: <91f957d8857d64df9eae33824203cc770b0182b3.1761588465.git.geert+renesas@glider.be>
-References: <cover.1761588465.git.geert+renesas@glider.be>
-	<91f957d8857d64df9eae33824203cc770b0182b3.1761588465.git.geert+renesas@glider.be>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	s=arc-20240116; t=1761671614; c=relaxed/simple;
+	bh=+cenkb0yL5U6fkb9PXEJLOZBBfbIw/K5JcCnxUVgehI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=B315AAY8RW3CzJNNTcI7jrQftfdSb3ZKK5CwS3lwldZA4XvAO9crSJ7xZ9Yo+ra9p8IprJy/5F/n9GUQYc0UE+/d5Eap4SRewRQuLdSHAIUJsQbi0p4W10xk8Xqiq5iaaFtDtPR2RCG051LXD8Xd/skABKtfUAq6IDPn+Cc55cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GHWgETQ1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B658BC4CEE7;
+	Tue, 28 Oct 2025 17:13:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761671611;
+	bh=+cenkb0yL5U6fkb9PXEJLOZBBfbIw/K5JcCnxUVgehI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=GHWgETQ1RNiG4NgBjVLnhJH9atMiVJdloWNMv11jPg99tyK+rmBwAzqK9hTb4gVhT
+	 2ZtFnJKwxLI4s2Q1P8yhoci5coU0j5l4vn2zCzKepsIfscxlIj7Zu5fXo/n3/KWGIz
+	 hHMqKbrGfsuMHEa9JXdVniJNLDuD3aTag4FRYpY8MZC7Tdt+1tj5Isr/dt42Ncc8NJ
+	 sH4jdipg5MKIr6H7mirxdjLBByUiKYKRocaUoLgV9TRC+GCZAmUas2q83NjwZJ561i
+	 7CYd2BuJMIACVxarC+376c/AlA60uR1HFbp6n2bx39j1c/IyYibnP+f7s04InfotSN
+	 hUMwQm5MxpCww==
+Date: Tue, 28 Oct 2025 12:13:30 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
+	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
+	vkoul@kernel.org, kishon@kernel.org, linus.walleij@linaro.org,
+	p.zabel@pengutronix.de, linux-aspeed@lists.ozlabs.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-phy@lists.infradead.org, openbmc@lists.ozlabs.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 8/9] PCI: aspeed: Add ASPEED PCIe RC driver
+Message-ID: <20251028171330.GA1506282@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spamd-Result: default: False [-1.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[renesas];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,wanadoo.fr];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[baylibre.com,kernel.org,microchip.com,bootlin.com,tuxon.dev,intel.com,gondor.apana.org.au,davemloft.net,linaro.org,bgdev.pl,jms.id.au,codeconstruct.com.au,melexis.com,metafoo.de,nuvoton.com,gmail.com,rasmusvillemoes.dk,perex.cz,suse.com,sipsolutions.net,ieee.org,wanadoo.fr,akamai.com,alien8.de,analog.com,bp.renesas.com,de.bosch.com,vger.kernel.org,lists.infradead.org,lists.ozlabs.org];
-	R_RATELIMIT(0.00)[to_ip_from(RLr5uiezb5xkkwytzfr8x566qh)];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[50];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email]
-X-Spam-Flag: NO
-X-Spam-Score: -1.80
-X-Spam-Level: 
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251027095825.181161-9-jacky_chou@aspeedtech.com>
 
-On Mon, 27 Oct 2025 19:41:54 +0100,
-Geert Uytterhoeven wrote:
-> 
-> Drop the driver-specific field_get() and field_prep() macros, in favor
-> of the globally available variants from <linux/bitfield.h>.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v5:
->   - Extracted from "bitfield: Add non-constant field_{prep,get}()
->     helpers".
-> ---
->  sound/usb/mixer_quirks.c | 6 ------
->  1 file changed, 6 deletions(-)
-> 
-> diff --git a/sound/usb/mixer_quirks.c b/sound/usb/mixer_quirks.c
-> index 713a8498b975e1ac..6eee89cbc0867f2b 100644
-> --- a/sound/usb/mixer_quirks.c
-> +++ b/sound/usb/mixer_quirks.c
-> @@ -3311,12 +3311,6 @@ static int snd_bbfpro_controls_create(struct usb_mixer_interface *mixer)
->  #define RME_DIGIFACE_REGISTER(reg, mask) (((reg) << 16) | (mask))
->  #define RME_DIGIFACE_INVERT BIT(31)
->  
-> -/* Nonconst helpers */
-> -#undef field_get
-> -#define field_get(_mask, _reg) (((_reg) & (_mask)) >> (ffs(_mask) - 1))
-> -#undef field_prep
-> -#define field_prep(_mask, _val) (((_val) << (ffs(_mask) - 1)) & (_mask))
-> -
->  static int snd_rme_digiface_write_reg(struct snd_kcontrol *kcontrol, int item, u16 mask, u16 val)
->  {
->  	struct usb_mixer_elem_list *list = snd_kcontrol_chip(kcontrol);
+On Mon, Oct 27, 2025 at 05:58:24PM +0800, Jacky Chou wrote:
+> Introduce PCIe Root Complex driver for ASPEED SoCs. Support RC
+> initialization, reset, clock, IRQ domain, and MSI domain setup.
+> Implement platform-specific setup and register configuration for
+> ASPEED. And provide PCI config space read/write and INTx/MSI
+> interrupt handling.
 
-Acked-by: Takashi Iwai <tiwai@suse.de>
+> +config PCIE_ASPEED
+> +	bool "ASPEED PCIe controller"
+> +	depends on ARCH_ASPEED || COMPILE_TEST
+> +	depends on OF
+> +	depends on PCI_MSI
+> +	select IRQ_MSI_LIB
+> +	help
+> +	  Enable this option to support the PCIe controller found on ASPEED
+> +	  SoCs.
+> +
+> +	  This driver provides initialization and management for PCIe
+> +	  Root Complex functionality, including interrupt and MSI support.
 
+Maybe "INTx and MSI support", since MSI is an interrupt?
 
-thanks,
+> +/* Complete status */
 
-Takashi
+"Completion"
 
+> +static int aspeed_ast2700_ahb_remap_to_bar(struct aspeed_pcie *pcie)
+> +{
+> +	struct resource_entry *win, *tmp;
+> +	struct pci_host_bridge *bridge = pcie->host;
+> +
+> +	/* Configure AHB remapping to BAR on AST27x0.
+> +	 * The BAR region is HW-fixed in AST27x0, these BARs will be filled
+> +	 * in the ranges of pcie node in DT.
+> +	 */
+
+I don't understand what "HW-fixed" means here.  It looks like you're
+writing host bridge window addresses (that came from DT) to the
+hardware.  That sounds like they're not actually "fixed" but
+programmable.
+
+Host bridge windows are not BARs themselves.  Mem space for devices
+below the host bridge is allocated from the windows, and the addresses
+are programmed into BARs of those downstream devices.
+
+Multi-line comment style:
+
+  /*
+   * Configure ...
+   */
+
+Wrap to fill 78 columns, or add blank lines between paragraphs.
+
+> +	resource_list_for_each_entry_safe(win, tmp, &bridge->windows) {
+> +		struct resource *res = win->res;
+> +
+> +		if (resource_type(res) == IORESOURCE_MEM &&
+> +		    !(res->flags & IORESOURCE_MEM_64)) {
+> +			writel(ASPEED_REMAP_BAR_BASE(res->start),
+> +			       pcie->reg + ASPEED_H2X_REMAP_DIRECT_ADDR);
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	return -ENODEV;
+> +}
+> +
+> +static int aspeed_ast2700_setup(struct platform_device *pdev)
+> +{
+> +	struct aspeed_pcie *pcie = platform_get_drvdata(pdev);
+> +	struct device *dev = pcie->dev;
+> +	int ret;
+> +
+> +	pcie->cfg = syscon_regmap_lookup_by_phandle(dev->of_node,
+> +						    "aspeed,pciecfg");
+> +	if (IS_ERR(pcie->cfg))
+> +		return dev_err_probe(dev, PTR_ERR(pcie->cfg),
+> +				     "failed to map pciecfg base\n");
+> +
+> +	regmap_update_bits(pcie->cfg, ASPEED_SCU_60,
+> +			   ASPEED_RC_E2M_PATH_EN | ASPEED_RC_H2XS_PATH_EN |
+> +			   ASPEED_RC_H2XD_PATH_EN | ASPEED_RC_H2XX_PATH_EN |
+> +			   ASPEED_RC_UPSTREAM_MEM_EN,
+> +			   ASPEED_RC_E2M_PATH_EN | ASPEED_RC_H2XS_PATH_EN |
+> +			   ASPEED_RC_H2XD_PATH_EN | ASPEED_RC_H2XX_PATH_EN |
+> +			   ASPEED_RC_UPSTREAM_MEM_EN);
+> +	regmap_write(pcie->cfg, ASPEED_SCU_64,
+> +		     ASPEED_RC0_DECODE_DMA_BASE(0) |
+> +		     ASPEED_RC0_DECODE_DMA_LIMIT(0xff) |
+> +		     ASPEED_RC1_DECODE_DMA_BASE(0) |
+> +		     ASPEED_RC1_DECODE_DMA_LIMIT(0xff));
+> +	regmap_write(pcie->cfg, ASPEED_SCU_70, ASPEED_DISABLE_EP_FUNC);
+> +
+> +	aspeed_host_reset(pcie);
+> +
+> +	writel(0, pcie->reg + ASPEED_H2X_CTRL);
+> +	writel(ASPEED_H2X_BRIDGE_EN | ASPEED_H2X_BRIDGE_DIRECT_EN,
+> +	       pcie->reg + ASPEED_H2X_CTRL);
+> +
+> +	ret = aspeed_ast2700_ahb_remap_to_bar(pcie);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "failed to assign BAR\n");
+
+This is not assigning *BARs*.  A host bridge doesn't have BARs in the
+PCI spec sense.  It might have programmable address ranges, but the
+host bridge is not itself a PCI device, so its programmability is
+device specific.
 
