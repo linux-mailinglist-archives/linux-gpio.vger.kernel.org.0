@@ -1,144 +1,76 @@
-Return-Path: <linux-gpio+bounces-27753-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27754-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9C4CC1330C
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 07:39:30 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55735C13652
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 08:55:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A38EC583F7E
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 06:39:25 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9ED0F50636B
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 07:53:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B766C2C0F8E;
-	Tue, 28 Oct 2025 06:39:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DB1E2641C6;
+	Tue, 28 Oct 2025 07:53:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+D/2g1Y"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KJ9GAhwG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D7C2BE024
-	for <linux-gpio@vger.kernel.org>; Tue, 28 Oct 2025 06:39:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02EBD86337;
+	Tue, 28 Oct 2025 07:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761633561; cv=none; b=fW+f16EbVUUlOrxzkhM0Ur6jwCUM1Uq3k/C4WasAYq/9FYmOhDZcGSJ6qREPP8ajyKjKarHzW4IygteHFnpHaUwJhkz/QeRlBbvqNBjSvVCOuVZEUOYdNrLfKQBG1gaZmL6FYmyjnXbkTZZU7nw5s83qo0YjbMI2t5Go6aLuL7g=
+	t=1761637986; cv=none; b=mfG/8hNMoCVLPANtaD9/zYxotu/JKzKLJ8ZEXIFm1RR1aFHk9Cf1AFGEhISxVd7BjSaCHxgt0z0YU4ZKZwRyk4ywZAaiF+DVZmw0ffLYnPMUNG9V/iCy3Pc7oCjtWzKQEE+gZqMbAjdrBT8IX3N1KLVF+tI+Z6uQ902j1rUJPNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761633561; c=relaxed/simple;
-	bh=oe8UGTsyZQU+Sb6o4knYJm/Nl+RnNUK56OH6fcAsM64=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CZtzggoN01ig6bOjYWEeOZ+haYE0yCadJOnXf7vSeqR1q4MRQTCyjxPX0lum+1VddnaOsyWCEKKnjdG4VKU6buhLKnLvmBanNkiGfaHGQ+DorHHook/eqEnsfkbebfqR7qB8ZfCH/i6vh0eW5rm77RLCqw5Jexauh7iy2a3kPs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T+D/2g1Y; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-378f010bf18so27445441fa.1
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Oct 2025 23:39:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761633558; x=1762238358; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=o2NHp9DtfBxd6wakLEvsBSL0E8nIoGL8qMdT+jYFy9w=;
-        b=T+D/2g1YRWTe3hvcE6dzlW/v7H7zmsCuzU4PeToa71WdgD5U/gfl6VOqTMxwotTjow
-         sCXyzAruCgyhUpxXWKp1rtFdo83yEFxedHO305txU/NYFxqfBqkCgc4aISU1QtjjKzf/
-         H/ANG1sxpXpAtYR3rCJtXW8V1xMAvtI1BF3sNgW97zA4wHqIsOeuScWQkGFcEGG4U9Xa
-         E7jEWWZyDAqQmxpxfh+t/8Ufp0nVLgE9RXnVuhiUvGKtK0Rn8kOxo++RufEezI+tDRBy
-         RE/Rs0OA18VTS/KlBxm6gF8W92mwUpzogHFLtbaL/aFvAIyXx1asxi0vuBAOe+q3Zid0
-         vG8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761633558; x=1762238358;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o2NHp9DtfBxd6wakLEvsBSL0E8nIoGL8qMdT+jYFy9w=;
-        b=j5zP+ruRNVdNO/lvBUpNWMXxXhuEpg1YQcTUdPR7wnkPMEy7u8OcZQVWud0s1n8Opo
-         T5iwf+wrBO/uxj4/1/qnNtxFjf0hekme1mU8H+vk/UzjDqe0qnmVzKw8CE6aHefCGQk5
-         WaicSPX7JLgiDzP9Ly+oBIZZ12eEi5U5NKm/JukaVv+Y0WwHYCt19uoa/eeo6ktWt5KH
-         ph4RZY7VJmDHDrOnHkjNf5pp4me4UtPJ51LuDYPKDMbIT1CKYtadYX4Q+B1Cb3IE1ywc
-         BTs/Ty+zngD4E9mSLUws4JNeoVESVURcEet51hjUQKh7HyNBpNAHRC8R8O7+BjwoskL8
-         uYuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXleFOLnTVGcU90O2/1QXS+OKZx/oWH8J9es7vaEjGIcUmkigNlSxU2S+VrzAyTbMe7WvQRJ8v4AGTl@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfdID2TE5RJaYrxac1sflY9iMvwATjVk/sB5MxmwmC4UrwSi9o
-	7oh+jp6xUjE2SDJJCMgOYAVUjlKLQQWo0+p3icbCw9GCDjW6XDwVM+ef
-X-Gm-Gg: ASbGncvUlx+pYL6dX/gGACdjebJLL21djUOgumz/5fDzhATFqsSB7DL8EXyXbeSI3TW
-	8q6TP6miwX4s5jrwnOIFGfSerHl3aJAI8S+ITlvbiAEvqkAU80EarBMDFUZlz47sV/3lbacPrrf
-	0F/BaIYqYRs5fc5VRiL55Pg0Pgfj38VANdTviqWExStYhocOInNhMj06Y+eiHCH0cwqmhVE0Piz
-	n9plnmIcTe8GPmfoHI31oqGOE78KGN9Bfic8DHz5t0vMeBIMko3tEja8ckP4teVlrGS5aBSlC2F
-	Y1L+PGbvqmj/I7n4hwfLZVuLC44bBjtuMuemFj2og8ZZD85DQqHudtR/kxqYwJ8XEdsLAUbugr0
-	l8W4wWtmoMZLV+FHJ7zm6oasmOaDgxEcNJSjRFwcbV2N9yNwC1SaWgPAJ/4PuJXusAQ7nKuZu8W
-	ZqDWfS7aHID90Jpq9KIRozpjZTuFALLy3XjbSX1hGonxsIFQ8ZCStLBv7Y1w==
-X-Google-Smtp-Source: AGHT+IHynrA8gmQbmSsLhwg1ZIot0gtNKrvR9BYrLAUuDbg/4/iyYf4/D5eEEzFU8nZaoyRtB4Zbkg==
-X-Received: by 2002:a05:651c:2228:b0:376:3933:1d89 with SMTP id 38308e7fff4ca-37907cbd1ecmr6519691fa.24.1761633557353;
-        Mon, 27 Oct 2025 23:39:17 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-378ee092282sm26491101fa.5.2025.10.27.23.39.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Oct 2025 23:39:16 -0700 (PDT)
-Message-ID: <3cd3996a-a9da-494c-b92f-a03a73d403e5@gmail.com>
-Date: Tue, 28 Oct 2025 08:39:15 +0200
+	s=arc-20240116; t=1761637986; c=relaxed/simple;
+	bh=yCeW08scrr2ACBo1vbxVy1YcULpnUDlueJqIMQ2qt7E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jajI0eYEtX5KSKgj6ZP1GiJmvsR3cPUkLEj5bQplLsjYkULLgfraAgyh+T5YcEtlmhBXtuBQKDmAYddtMe1fG3LvaFaAUQVLQHQOp6GMxpFHtx+jh3f+OS6ImPgRliUGj/24UA71797kSgsHcs+L7neA5/xSEViuEkaJEmZC/kI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KJ9GAhwG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEAB9C113D0;
+	Tue, 28 Oct 2025 07:53:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761637984;
+	bh=yCeW08scrr2ACBo1vbxVy1YcULpnUDlueJqIMQ2qt7E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KJ9GAhwGQiUOpcjuOp1NuWsZ3BZtwb4Eri9cttZxeRuZUm14FV9fzvpPkqAD/YJ4R
+	 2YsxmfjFSooPJ8j/dKdWTQp9CEysFOjZruputzlsYvAdBjwOi+lJWEIiz+GI8fTmze
+	 T8gOxlLywka3cT/6t1L/5aAu3EL+FsjmPEVXF80Y2eZcEdZYK9bTI+UgQmBRwe/RSC
+	 p3Sm/0khowvPb07B5bgjZSydbQnzzhWG252l2CkCmzXu6NXTv814h5FfLwhF7lZXbv
+	 e0zs3EsjocEpcO7ND3rFjhfG51I/1I7EgOtDRN3NbM4QPCNbT4BTKGaLmISZHWak+p
+	 XhqHrydapfx2g==
+Date: Tue, 28 Oct 2025 08:53:01 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org, 
+	robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	joel@jms.id.au, andrew@codeconstruct.com.au, vkoul@kernel.org, kishon@kernel.org, 
+	linus.walleij@linaro.org, p.zabel@pengutronix.de, linux-aspeed@lists.ozlabs.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, openbmc@lists.ozlabs.org, 
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 4/9] ARM: dts: aspeed-g6: Add AST2600 PCIe RC PERST#
+Message-ID: <20251028-witty-nickel-pig-5bd4bc@kuoka>
+References: <20251027095825.181161-1-jacky_chou@aspeedtech.com>
+ <20251027095825.181161-5-jacky_chou@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/15] Support ROHM BD72720 PMIC
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andreas Kemnade <andreas@kemnade.info>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-rtc@vger.kernel.org
-References: <cover.1761564043.git.mazziesaccount@gmail.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <cover.1761564043.git.mazziesaccount@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251027095825.181161-5-jacky_chou@aspeedtech.com>
 
-On 27/10/2025 13:44, Matti Vaittinen wrote:
-> The ROHM BD72720 is a new power management IC for portable, battery
-> powered devices. It integrates 10 BUCKs and 11 LDOs, RTC, charger, LEDs,
-> GPIOs and a clock gate. To me the BD72720 seems like a successor to the
-> BD71828 and BD71815 PMICs.
-> 
-> This series depends on the series: "[PATCH v5 0/3] power: supply: add
-> charger for BD71828":
-> https://lore.kernel.org/all/20250918-bd71828-charger-v5-0-851164839c28@kemnade.info/
-> sent by Andreas. The power-supplly and MAINTAINERs patches (2/3 and 3/3)
-> from that serties aren't merged yet.
-> 
-> Revision history:
->    RFCv1 => v2:
->    - Drop RFC status
->    - Use stacked regmaps to hide secondary map from the sub-drivers
->    - Quite a few styling fixes and improvements as suggested by
->      reviewers. More accurate changelog in individual patches.
->    - Link to v1:
->      https://lore.kernel.org/all/cover.1759824376.git.mazziesaccount@gmail.com/
+On Mon, Oct 27, 2025 at 05:58:20PM +0800, Jacky Chou wrote:
+> Add pinctrl support for PCIe RC PERST#.
 
-As Alexandre pointed out, the 07/15 (MFD) patch was missing from the 
-series. For some reason, google's SMTP severs refused from sending it 
-with the recipient list used for all other patches, with just: "Status: 
-5.7.1". After several retries I had to give-up yesterday.
+This is part of PCI commit. Makes no sense on its own.
 
-Today I managed to get it through, after I dropped every direct CC 
-address, leaving only the lists. No idea what is happening :(
+Best regards,
+Krzysztof
 
-Anyways, it's in the lore for the interested:
-https://lore.kernel.org/all/4c964cef46a396209052aa4194d08fc03f989647.1761564043.git.mazziesaccount@gmail.com/
-
-I will in any case re-spin the series with suggested changes - so 
-hopefully I can get the v3 sent correctly to all the recipients :/
-
-Yours,
-	-- Matti
 
