@@ -1,167 +1,144 @@
-Return-Path: <linux-gpio+bounces-27752-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27753-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 787FAC1316D
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 07:13:58 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9C4CC1330C
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 07:39:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id CF2583512F9
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 06:13:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A38EC583F7E
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 06:39:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 807F429E10B;
-	Tue, 28 Oct 2025 06:13:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B766C2C0F8E;
+	Tue, 28 Oct 2025 06:39:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+D/2g1Y"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023101.outbound.protection.outlook.com [52.101.127.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E026B29CB4D;
-	Tue, 28 Oct 2025 06:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.101
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761632033; cv=fail; b=bDP+J3bF1KVRj5XC78zq98rksKVRQfIgApxh/93eivFA4hNhoWpJcMMwR4KiZlgbwnDZx266nD3/0dLK1EeEEOxAwiCs5xghA8jlzLhvvUkaiKd2B23rPkAwCz/+SEmxKGcb0qB4gzpsDynUx4G9J1e2j/PePgcThZrPzMyc72w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761632033; c=relaxed/simple;
-	bh=tMRb7vwOnMxMe6NU13bqrSJPNeohsVTOAwxjlZRC7y4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Sv9XZotCguNuXmgOTX/+eDYWladtaBJPN3ZSNsFme/Yu9qYMeipFlXHePxenKej30Dlh9MWL2B/o4L1fX0ouXNJ8coGdKeGj3bH1ywwO/zOmrGmowm6GGeHb03TN+aI041q9WdDMYOzbXmr2uEs0D3o1MuHteCLBAjTqwkSFJkg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.127.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=m5Bq51TQVWZ21n/+8Tv/BwWi/C/5IxKqq+NHGsMU0aIa2iJ0T5NSyp6X+zOek9eIgGf49vjvPWZ+HUjyhZRpvmSR8CYZ0WCx3P6fr9abZmhSD5fSbbMMECUYzbQxJQPcTXUfAziBM9HBYvkkJbCrJwSnzKLT0gdZhujqfXD/A6oJJnObuZ/xZr6t0EnozGZaVZtv0V4RJWvVIMJNKTt/ZfxSuIrmg+cJL89pHur6i1ZW8lw22vALQ8ViO2WStxP3qRUGtVjGcyO8zQNhbcVrk0LFP0K1SZbeSrLDCX5sxVjmh+6Haq5w4K1UoQifISoaQh4ArLiv5QvoPNBcPwKAEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5Iejxv9Gr2idrK8Z1eYw0jd3gqjl02BkBgc+md6e5+0=;
- b=mwilTIO8L+AOJiLx2715yOcfLJWHCGzk9/sXl74beUuvGJetZj7ODt4MtMUp+VGTYUbMQ27523cyn3T53CDVa+VQ4YVZYjT7q5hj3tXN8Xq+6CL/qw3748iYhs+r3sw1TUveVv6NPdWRe105avLUFKauenmyDKdrhMZ0bkYgbBy1y0l3ZcEnfw1QP6dmzr8DZx9eVCDnd9kTsJWG1qUm+yOWsBxuCRqdErZO2k6bTnK2x+GY+kEo2eX+1cFzTXhOnIFLB4cxAhxtWjjq7cy8O15sXs4I2wf1Q5D80CYiJ46REHfNcdjlDxIN0isfq4Bj4DM3TqIoiCqQ7z6i6FBSOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=canb.auug.org.au smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from SG2PR04CA0171.apcprd04.prod.outlook.com (2603:1096:4::33) by
- SEYPR06MB7995.apcprd06.prod.outlook.com (2603:1096:101:2d0::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9253.18; Tue, 28 Oct 2025 06:13:48 +0000
-Received: from SG2PEPF000B66CC.apcprd03.prod.outlook.com
- (2603:1096:4:0:cafe::4a) by SG2PR04CA0171.outlook.office365.com
- (2603:1096:4::33) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9253.19 via Frontend Transport; Tue,
- 28 Oct 2025 06:13:49 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- SG2PEPF000B66CC.mail.protection.outlook.com (10.167.240.25) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9275.10 via Frontend Transport; Tue, 28 Oct 2025 06:13:46 +0000
-Received: from localhost.localdomain (unknown [172.16.64.196])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 8EE2E40A5A13;
-	Tue, 28 Oct 2025 14:13:45 +0800 (CST)
-From: Gary Yang <gary.yang@cixtech.com>
-To: linus.walleij@linaro.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	cix-kernel-upstream@cixtech.com,
-	sfr@canb.auug.org.au,
-	Gary Yang <gary.yang@cixtech.com>
-Subject: [PATCH] Pinctrl: core: export pinctrl_provide_dummies() to fix build error
-Date: Tue, 28 Oct 2025 14:13:45 +0800
-Message-ID: <20251028061345.3885632-1-gary.yang@cixtech.com>
-X-Mailer: git-send-email 2.49.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D7C2BE024
+	for <linux-gpio@vger.kernel.org>; Tue, 28 Oct 2025 06:39:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761633561; cv=none; b=fW+f16EbVUUlOrxzkhM0Ur6jwCUM1Uq3k/C4WasAYq/9FYmOhDZcGSJ6qREPP8ajyKjKarHzW4IygteHFnpHaUwJhkz/QeRlBbvqNBjSvVCOuVZEUOYdNrLfKQBG1gaZmL6FYmyjnXbkTZZU7nw5s83qo0YjbMI2t5Go6aLuL7g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761633561; c=relaxed/simple;
+	bh=oe8UGTsyZQU+Sb6o4knYJm/Nl+RnNUK56OH6fcAsM64=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CZtzggoN01ig6bOjYWEeOZ+haYE0yCadJOnXf7vSeqR1q4MRQTCyjxPX0lum+1VddnaOsyWCEKKnjdG4VKU6buhLKnLvmBanNkiGfaHGQ+DorHHook/eqEnsfkbebfqR7qB8ZfCH/i6vh0eW5rm77RLCqw5Jexauh7iy2a3kPs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T+D/2g1Y; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-378f010bf18so27445441fa.1
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Oct 2025 23:39:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761633558; x=1762238358; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=o2NHp9DtfBxd6wakLEvsBSL0E8nIoGL8qMdT+jYFy9w=;
+        b=T+D/2g1YRWTe3hvcE6dzlW/v7H7zmsCuzU4PeToa71WdgD5U/gfl6VOqTMxwotTjow
+         sCXyzAruCgyhUpxXWKp1rtFdo83yEFxedHO305txU/NYFxqfBqkCgc4aISU1QtjjKzf/
+         H/ANG1sxpXpAtYR3rCJtXW8V1xMAvtI1BF3sNgW97zA4wHqIsOeuScWQkGFcEGG4U9Xa
+         E7jEWWZyDAqQmxpxfh+t/8Ufp0nVLgE9RXnVuhiUvGKtK0Rn8kOxo++RufEezI+tDRBy
+         RE/Rs0OA18VTS/KlBxm6gF8W92mwUpzogHFLtbaL/aFvAIyXx1asxi0vuBAOe+q3Zid0
+         vG8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761633558; x=1762238358;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o2NHp9DtfBxd6wakLEvsBSL0E8nIoGL8qMdT+jYFy9w=;
+        b=j5zP+ruRNVdNO/lvBUpNWMXxXhuEpg1YQcTUdPR7wnkPMEy7u8OcZQVWud0s1n8Opo
+         T5iwf+wrBO/uxj4/1/qnNtxFjf0hekme1mU8H+vk/UzjDqe0qnmVzKw8CE6aHefCGQk5
+         WaicSPX7JLgiDzP9Ly+oBIZZ12eEi5U5NKm/JukaVv+Y0WwHYCt19uoa/eeo6ktWt5KH
+         ph4RZY7VJmDHDrOnHkjNf5pp4me4UtPJ51LuDYPKDMbIT1CKYtadYX4Q+B1Cb3IE1ywc
+         BTs/Ty+zngD4E9mSLUws4JNeoVESVURcEet51hjUQKh7HyNBpNAHRC8R8O7+BjwoskL8
+         uYuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXleFOLnTVGcU90O2/1QXS+OKZx/oWH8J9es7vaEjGIcUmkigNlSxU2S+VrzAyTbMe7WvQRJ8v4AGTl@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfdID2TE5RJaYrxac1sflY9iMvwATjVk/sB5MxmwmC4UrwSi9o
+	7oh+jp6xUjE2SDJJCMgOYAVUjlKLQQWo0+p3icbCw9GCDjW6XDwVM+ef
+X-Gm-Gg: ASbGncvUlx+pYL6dX/gGACdjebJLL21djUOgumz/5fDzhATFqsSB7DL8EXyXbeSI3TW
+	8q6TP6miwX4s5jrwnOIFGfSerHl3aJAI8S+ITlvbiAEvqkAU80EarBMDFUZlz47sV/3lbacPrrf
+	0F/BaIYqYRs5fc5VRiL55Pg0Pgfj38VANdTviqWExStYhocOInNhMj06Y+eiHCH0cwqmhVE0Piz
+	n9plnmIcTe8GPmfoHI31oqGOE78KGN9Bfic8DHz5t0vMeBIMko3tEja8ckP4teVlrGS5aBSlC2F
+	Y1L+PGbvqmj/I7n4hwfLZVuLC44bBjtuMuemFj2og8ZZD85DQqHudtR/kxqYwJ8XEdsLAUbugr0
+	l8W4wWtmoMZLV+FHJ7zm6oasmOaDgxEcNJSjRFwcbV2N9yNwC1SaWgPAJ/4PuJXusAQ7nKuZu8W
+	ZqDWfS7aHID90Jpq9KIRozpjZTuFALLy3XjbSX1hGonxsIFQ8ZCStLBv7Y1w==
+X-Google-Smtp-Source: AGHT+IHynrA8gmQbmSsLhwg1ZIot0gtNKrvR9BYrLAUuDbg/4/iyYf4/D5eEEzFU8nZaoyRtB4Zbkg==
+X-Received: by 2002:a05:651c:2228:b0:376:3933:1d89 with SMTP id 38308e7fff4ca-37907cbd1ecmr6519691fa.24.1761633557353;
+        Mon, 27 Oct 2025 23:39:17 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-378ee092282sm26491101fa.5.2025.10.27.23.39.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Oct 2025 23:39:16 -0700 (PDT)
+Message-ID: <3cd3996a-a9da-494c-b92f-a03a73d403e5@gmail.com>
+Date: Tue, 28 Oct 2025 08:39:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CC:EE_|SEYPR06MB7995:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: cb72fdf5-c086-4b01-45f0-08de15e9276d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?FS1pXUg2YH7OfIjKVnhGVR9rBxQJGeqL6WYxCezMzYYiI/o2PcP4kGXfx6sj?=
- =?us-ascii?Q?v9DM89Cnv6c7qeUNO+mE4wIQUXALYSM25x2r6npVAIUgNftJPslAVbskzPEn?=
- =?us-ascii?Q?vZFDcIXGBJNUTOPymUpd5SW/+bK8hIbfIz/MeLsm5ZO2pVRA12R/bEkJaApI?=
- =?us-ascii?Q?JrLEAM17J1DzMlA4trCdCKTJ4vD/cFCkkBOnhirdHJNDiSmsHWicvn+Vj3JG?=
- =?us-ascii?Q?dg6bT4MdM+cMp84pMPrTgsz7RA/Kxb6exgk9J2b4VL06nSRJYWdPFO9FlEUn?=
- =?us-ascii?Q?0bPoVy4RsW5gN5IAX/DMS4I5yT07nEQwqCLo6kBDBRzJKP5iE72h0XC0LD//?=
- =?us-ascii?Q?Kwu2veKp/iEzbyQbFVYHLPTEKP7H38imSSW+l6SW2BTUASQ+Kh2YHneJrHBj?=
- =?us-ascii?Q?QwLA/y+AYApz2D/FPZz3L/a3vHTiGujLmlTYFMhGQ7rgjGtbKbjypx8HRioV?=
- =?us-ascii?Q?gjLjJrMXfGc+rz4LbSk4kwL9mEXIXxrH5kAhUpAIII4SdO8an8+aDDIYtGwY?=
- =?us-ascii?Q?aKxQExd2mcwokhkZTXpwjzTVexQD5vunho9oFF67GWzbLW2hy3fj8FzmIyL4?=
- =?us-ascii?Q?uL0UUzsUXwD57GU7lF3/YG+n/5G1rHP9gFcxSz+/ydQFl8Tcj1L0aMHXoLT5?=
- =?us-ascii?Q?9gQuUDfoXeq+VB4L7arngZYYGDsuFOyxLO/2YYE3CH914ppnYmNf3aw2YzMI?=
- =?us-ascii?Q?o2HQzsvfI2rNJaX/JaNr0VSNOiUu2zR+H/DZsDmCdtKW4fDYvdbath11lo28?=
- =?us-ascii?Q?ctHi7LZRr/YHn8YFYl9mOAkU655n77lQjiGmY7O1xq5o50hRKikqI1wwYc27?=
- =?us-ascii?Q?8AdOzVPcvVlN2RZ75Ub0a/LOl50FeyMCSxmnDJeOjjWvbFvl+5InK1Ql6ku/?=
- =?us-ascii?Q?6OaCxQc2h+325rF/RlepNjMZaVwQlNIst7TyV7LO85z9j5LgC/663e8MSvDl?=
- =?us-ascii?Q?mOewmOkSKNFITI2NiNKUrP3ine9SWsHCepZ5bplSKTlUWAVVUzrVSQ2p5iSU?=
- =?us-ascii?Q?+KpQS+3tKLvkryTzWaW7Qi2ParYYO2nPMY/ZtfhmKDt8IrfCS2zv7c5mUinZ?=
- =?us-ascii?Q?bsxmUYhCfTqKhFyMRyZ/pk3gR/tO2VbGD74WPbr1bR7FLGO+WJN8OQiDc/qW?=
- =?us-ascii?Q?GcxVME+IPnlgJxpz4WlB2YoridVR8DMr+dYBxTaEDoc6tpMZl++pZUujkLcM?=
- =?us-ascii?Q?GnNejqTQ+74QvJ5tRwMjaUA7ZQI5RVJIxrho3hGSwc1fLDzXukCmtrzqCyK4?=
- =?us-ascii?Q?QJokPJtYF11dsVf27sZgk+gpUe0di62RHn1uOM5d2KrEd2GWruZlzfWJ7NLI?=
- =?us-ascii?Q?Cwp3jpRUt14MmUKh2R0S2m+Z8SrZ0W3tjMWrY6f91JXk+ugMbKgfDqmoYthQ?=
- =?us-ascii?Q?6Zy1KAFcZlPD7MoFet+F0It0leypXuELDFgTuOTD/oq6j6jtWBRlRWsX3Woi?=
- =?us-ascii?Q?2R0zrUtf7iR45G3eQJ+WDDQbntRmUdNtCFOPkvYjAPYPPcMVN5YGrydq+yla?=
- =?us-ascii?Q?GbgubOWcDFtcnBHtpFe8v4TgdEgHEiijYKgj447nWEEXcaZqRWoiw7b1G+yf?=
- =?us-ascii?Q?0FQNU+Fhy4wbk1b05zU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2025 06:13:46.4510
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb72fdf5-c086-4b01-45f0-08de15e9276d
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SG2PEPF000B66CC.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB7995
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/15] Support ROHM BD72720 PMIC
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andreas Kemnade <andreas@kemnade.info>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-rtc@vger.kernel.org
+References: <cover.1761564043.git.mazziesaccount@gmail.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <cover.1761564043.git.mazziesaccount@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-If a pinctrl driver uses pinctrl_provide_dummies() interface, and
+On 27/10/2025 13:44, Matti Vaittinen wrote:
+> The ROHM BD72720 is a new power management IC for portable, battery
+> powered devices. It integrates 10 BUCKs and 11 LDOs, RTC, charger, LEDs,
+> GPIOs and a clock gate. To me the BD72720 seems like a successor to the
+> BD71828 and BD71815 PMICs.
+> 
+> This series depends on the series: "[PATCH v5 0/3] power: supply: add
+> charger for BD71828":
+> https://lore.kernel.org/all/20250918-bd71828-charger-v5-0-851164839c28@kemnade.info/
+> sent by Andreas. The power-supplly and MAINTAINERs patches (2/3 and 3/3)
+> from that serties aren't merged yet.
+> 
+> Revision history:
+>    RFCv1 => v2:
+>    - Drop RFC status
+>    - Use stacked regmaps to hide secondary map from the sub-drivers
+>    - Quite a few styling fixes and improvements as suggested by
+>      reviewers. More accurate changelog in individual patches.
+>    - Link to v1:
+>      https://lore.kernel.org/all/cover.1759824376.git.mazziesaccount@gmail.com/
 
-is built as a module, then an error occur as follow:
+As Alexandre pointed out, the 07/15 (MFD) patch was missing from the 
+series. For some reason, google's SMTP severs refused from sending it 
+with the recipient list used for all other patches, with just: "Status: 
+5.7.1". After several retries I had to give-up yesterday.
 
-ERROR: modpost: "pinctrl_provide_dummies" [drivers/pinctrl/cix/pinctrl-sky1-base.ko] undefined!
-make[2]: *** [scripts/Makefile.modpost:147: Module.symvers] Error 1
-make[1]: *** [/home/gary/workspace/upstream/kernel_upstream/Makefile:1960: modpost] Error 2
-make: *** [Makefile:248: __sub-make] Error 2
+Today I managed to get it through, after I dropped every direct CC 
+address, leaving only the lists. No idea what is happening :(
 
-Signed-off-by: Gary Yang <gary.yang@cixtech.com>
----
- drivers/pinctrl/core.c | 1 +
- 1 file changed, 1 insertion(+)
+Anyways, it's in the lore for the interested:
+https://lore.kernel.org/all/4c964cef46a396209052aa4194d08fc03f989647.1761564043.git.mazziesaccount@gmail.com/
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index c5dbf4e9db84..acf4a86fb5cd 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -70,6 +70,7 @@ void pinctrl_provide_dummies(void)
- {
- 	pinctrl_dummy_state = true;
- }
-+EXPORT_SYMBOL_GPL(pinctrl_provide_dummies);
- 
- const char *pinctrl_dev_get_name(struct pinctrl_dev *pctldev)
- {
--- 
-2.49.0
+I will in any case re-spin the series with suggested changes - so 
+hopefully I can get the v3 sent correctly to all the recipients :/
 
+Yours,
+	-- Matti
 
