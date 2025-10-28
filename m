@@ -1,133 +1,122 @@
-Return-Path: <linux-gpio+bounces-27762-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27763-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4469CC13EC0
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 10:53:00 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id C440FC13EC9
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 10:53:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 82AD44F6F75
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 09:49:34 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 49A9B4E43AF
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 09:50:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A2FC2FF675;
-	Tue, 28 Oct 2025 09:49:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 249FB3016F8;
+	Tue, 28 Oct 2025 09:50:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pCcYzrY2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Boa0le8U"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E5E254B1F
-	for <linux-gpio@vger.kernel.org>; Tue, 28 Oct 2025 09:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305A02D839A
+	for <linux-gpio@vger.kernel.org>; Tue, 28 Oct 2025 09:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761644970; cv=none; b=cC3byylkNFr5QQ5I+Pt/Sqpxu3E7bxceyJ21jZHFtH5NgwkW2oB72eZWdYw4qDMtk7iihjGKnIqVwlnoYaj3XmLwB77wK3iR5Vy1BVzcDnz3A6yxQkg8BhQgYaPZomaxCov+sZn9K4XvDDR4yw4axuHaIMUXHT0CAWCmz88fmyg=
+	t=1761645014; cv=none; b=h+nTwev6rnch3rg9+r2HZLQJW9J9DxG7jOXsf6cQwGlm/NbmqfK2vL6B4J4A3JMhLrLz/IbgfLtvaqUXA3Fos9IJ+CBh0c0nIt21YWIXlE8WvdKWMHpH8rKoDo1wq3+Q1KvW7AHN4CXv/BPiTfUa9Mb40+Pn/CMqv9EVZQMZ2/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761644970; c=relaxed/simple;
-	bh=HlMVZKXiPzGH3vjUzbrHUAJiXnZQ1VgM01/9Vdi26wI=;
+	s=arc-20240116; t=1761645014; c=relaxed/simple;
+	bh=tmDSIyiMjLOS6FNqDMNTo7i77Y8KzxKQl8j6kjAwCZc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mRcgomu7TCdsmloDkVl0C9xcXX/RXRRGOjUgnwGlBYNNNS9zgL5oFRFZAHtHF/vJF+krjt1zsrZjiPpumvahMfCyTH//QmFbPRF1CeH1/Q+B5TjyrZbKL5w4FD77D8bo/Vg0I/kNsTW7O5MgtYmAP1ysvG/QBDuXaO0hH4CAXOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pCcYzrY2; arc=none smtp.client-ip=209.85.208.171
+	 To:Cc:Content-Type; b=EEkB/A5A9T62yHJ5FnCmoJKXnhn3kk0dpIjlcVqTNmG404gD2DFUXrxPVvVoak+8RnkHAT63yMPChEgLsbZ00XxQyCmDX7dpp7RRi7eq08hU0GGmzEgfqNm3+NEQvXMqp1xmKeisNKj4Dju+aDm/NDA0RZVAj1u9vgGUDIv183s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Boa0le8U; arc=none smtp.client-ip=209.85.167.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-36295d53a10so48215051fa.0
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Oct 2025 02:49:27 -0700 (PDT)
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-591c9934e0cso8312378e87.0
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Oct 2025 02:50:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1761644966; x=1762249766; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1761645011; x=1762249811; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ag4RpPho5sULiazlXNA0y7JZ5ZSjgCMfktnwGNRil1A=;
-        b=pCcYzrY2BYJR/brdApua61ctxRqWSAtLKy3QXsOAwyXt6gAjlXZArmM88EkobQa6sn
-         O/h+w3tIXuSDdQVv5EJgw/KaUNd2eFU+bFdU5A5CobIs+vBCn4MkWOftPYDo0ATAFGbs
-         Q9JnuXugAICH1u4ajaNbW4dB2dMj+W6ulmKzsUswUB3Tje6bGLT8sGSNmi8qO3hLg9xV
-         ChF5ax57sraW5kAUmxycnwwXcsbiRLD+LiYwyFQDr6jKvosHoFUqABoX4zHHUmg37QUn
-         PtXQqti6AfUDhbcavqjH1YVYVfQw6sLAiY6W0u1+OyPZK7VRlZhCLqb9y9W8lXE3M05S
-         m+Bg==
+        bh=tmDSIyiMjLOS6FNqDMNTo7i77Y8KzxKQl8j6kjAwCZc=;
+        b=Boa0le8UkZNqBDBjPXJKdWx/2/cJoVf1XBCA4PQ9QTG+xaY/mj1iJVVf70MZw4szCb
+         4Yx4H9wPsY8wkJK3zOZskLCZ5uR7GQh9htSu5/4ktQS24RDeCkhYXnI3pVuEhTAlupnc
+         4sVVMKfSnikM1u+UGhpiA0cWVkZhNrZVgfSVD6sBiZ6+dhObQP0zdF6XS+NvEeCSVJRM
+         E9UXaooUkutkH+Wgbr+5WKjCjhtK65aqIPFkoYjMNIMRWpX0hVkPCGSbuL6NJ6tpmAnI
+         fljB54KPycwuJd+t/9vz8FdKGWdhIfsDaseguPpbzfRXAz4EMTxDs0iyN+610pdFWbMP
+         sCpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761644966; x=1762249766;
+        d=1e100.net; s=20230601; t=1761645011; x=1762249811;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ag4RpPho5sULiazlXNA0y7JZ5ZSjgCMfktnwGNRil1A=;
-        b=s6BFv4o0bCO9ngoiF6XOESd9/p3isEnC3W5sPsyb5SOMPTUH9itqAfbyCXCeSieeCO
-         412SxkH2NJt6jiuym0oRMpwzEd3GZBVbc6wo59nj4Un3dt/t93jGa6HyQhYU5WTVQe8F
-         9544fkMdFePdXNzKnaosiiVVoRI63kIEaVutkHVBM2t+BYCM3urPioZVumoyywXyZOXx
-         scK5mj8t+z+qR4SKi6SakHkrA2sF/fCsSc/wqpn/V2j233WqvhkWd/625QmvE6oYPIGB
-         bpmPPbuu8tXNUfGnEP2B1RzAU6HYPq3/A0xJfimRjhN5uH73CoJhr5+Ba5m1stXPM0pU
-         18Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCUqV66mBqMmow+U19uBlmhsI4sQF2ZzpGt1h19O/wxXWiTAuEF47QjT+moYMJnWvdSWtyFi1+4LA9QO@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd5VSLpQYq8TAT3RLs6ycDBW3pby/hV1Hk86Zz5uPu9xq9yAPe
-	xEu2lbZN6SV9TugucBcBWUidRE7sI6DeIMlvz154v+X61xhCZSH7HAorZOc8dAe9cnMu4aX66lE
-	XpuENGgidVWxJd0vXxyhwzmwdFXP7HMYcuTbTOwtjZA==
-X-Gm-Gg: ASbGncvh855HIXjdy4xR78J4+hbxplawsvm2VcR93HN8o5YDOonYQABdSoRM8deo6Mw
-	pO3KGbfdVCx2K0ZFHiy+OI8eOxA2TBh7pMl6SPeilqykqPmvbUKDbvzP1cMgT4fnNJPhFMtgbXO
-	etoM9L8warVOmDWVWYN0TM8Gz2TuXWe7u9whIVBcSl1QuKR0GuJAx1F9+O87Jr3lAHfWyfdscje
-	L/978914kUqCL6Du15G0kZqyBbmkdUzVa892R555a4fww0gDhyGXJs2UKA8
-X-Google-Smtp-Source: AGHT+IHLnbuiTb17yCojPLzTfDTPTsYUvPEhpjzcDmPys9LqE0Vi78zD5Ee5nCAV3CJXyUjTEm0Hy+cMggR26FQ+KH8=
-X-Received: by 2002:a05:651c:254e:20b0:378:e8d1:117 with SMTP id
- 38308e7fff4ca-379076aa8b7mr6977841fa.11.1761644966332; Tue, 28 Oct 2025
- 02:49:26 -0700 (PDT)
+        bh=tmDSIyiMjLOS6FNqDMNTo7i77Y8KzxKQl8j6kjAwCZc=;
+        b=WvWTyu0F0qIWTiRLjUGE4oTvqXURXk3A2EYavYo5UDWFax40XfIoCnMZtbcNReJ39C
+         5ARcVxIw7k2i6ZCGk4oq1Wk1EXPWRCHCwbg1HqL8gRfC4r02efDDTZvRwHogUSoQI6+w
+         fF6yqm4RFS9vSkGhkxwqkYMfjat25Dj4Alk4QmONU1RLTqcsRoebnAcSQ8yZEiU3Woix
+         LnykAZTJuGJUf6vQ2UvqURsF6lZoR7VZ+FdunDMUqNdhg8b4cbsiNS5SEAY27pD0EJBE
+         S4osc506QSi3lTcR11K+My8qtk0/czeofmwl80R/zLaf2hnSHrIElQIru3Y75bovMxtu
+         huxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWtj6UeAWeQwjSU8e5vzBm8U6oxrUAohwKgJ6eUCvvl5xsO7yoU6KtjCwKQz09JRwrSQPOXM1StRBY0@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjotMtJ1VXg6IvSDro7JF6XobbhwhQuMSd3iWHwTmvkAU9Z5Z/
+	0CFV4WGkbfN+Rm6JNzQpb1au++HvDVF3aXum8wjZhYG8IgmsqzmR07UhXTycWTbQtx+7aRrnkO9
+	9CSAV/FBsTJAi87k9w6TN+NihmnP/G8jdaNjhdL79Ug==
+X-Gm-Gg: ASbGnculByZRFXTDX7/rFC/iyX9yVQndEuAM1k7CyUnVMzyCU9/Tb10aIofOPsGTMx0
+	CH7zSZTBvD347aGFfhQy6l6GikgZDIRv5NttoDwb7rWxeEFH783lkK1wuxVFD1GQs/p1vVBSG6x
+	ngYIDEFnx+a6D1W6N/PIjP2aA3HknF9WnnHikRBPYEnji6/AGJZeMSvNWx8j0oRDXMd+gvCY+L3
+	fKtH37Y6qInoiRMTMWTkIcFq60yWoV32XRaL9manxx2JjTwY70/jd8pKynlgu9HCCm+VBA=
+X-Google-Smtp-Source: AGHT+IHu10ZcVMp1t6exa1PSxkHFxphXG1r4t9C5bsmjcMdzTg/t9I8b6zTS7ONgJ3VxrVunoD4N4GDJPwxaS7n75Xw=
+X-Received: by 2002:a05:6512:3f15:b0:592:f521:2334 with SMTP id
+ 2adb3069b0e04-5930e993ec9mr1158884e87.8.1761645011316; Tue, 28 Oct 2025
+ 02:50:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251028061345.3885632-1-gary.yang@cixtech.com>
-In-Reply-To: <20251028061345.3885632-1-gary.yang@cixtech.com>
+References: <20251022165509.3917655-2-robh@kernel.org> <CACRpkdYioyktQ5is6TJnkgX=MHk2-zf-XO-gx6sKcST2GABNiA@mail.gmail.com>
+ <CAL_JsqJh=ccCR_TR2sgMJJ9ChkBC4zx0d0s_imGjHNt0Mbp=Bg@mail.gmail.com>
+In-Reply-To: <CAL_JsqJh=ccCR_TR2sgMJJ9ChkBC4zx0d0s_imGjHNt0Mbp=Bg@mail.gmail.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 28 Oct 2025 10:49:15 +0100
-X-Gm-Features: AWmQ_bmvf5Ur8d5O7ggkU8MMUQcJO6q9gUJ2SA5XsMYb2o4yAVo6574UPA09OxU
-Message-ID: <CACRpkdYdQa4=4JvBWJcRv0X_A0PnkQpZQQ8NTPzF0ntdt9qX=A@mail.gmail.com>
-Subject: Re: [PATCH] Pinctrl: core: export pinctrl_provide_dummies() to fix
- build error
-To: Gary Yang <gary.yang@cixtech.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	cix-kernel-upstream@cixtech.com, sfr@canb.auug.org.au
+Date: Tue, 28 Oct 2025 10:49:59 +0100
+X-Gm-Features: AWmQ_bk9HCEe5H9YQN8PNyspfsZbmH034UWjFM55zKwIU8N8qdRalyjCgv2QCTw
+Message-ID: <CACRpkdY0+0UTkpXurB3E1Skce+Kcbti9-Z_2-d-f4yM-HuK_Dw@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: arm: Convert Marvell CP110 System
+ Controller to DT schema
+To: Rob Herring <robh@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, 
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Richard Cochran <richardcochran@gmail.com>, 
+	Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, netdev@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 28, 2025 at 7:13=E2=80=AFAM Gary Yang <gary.yang@cixtech.com> w=
-rote:
-
-> If a pinctrl driver uses pinctrl_provide_dummies() interface, and
+On Tue, Oct 28, 2025 at 12:26=E2=80=AFAM Rob Herring <robh@kernel.org> wrot=
+e:
+> On Mon, Oct 27, 2025 at 4:58=E2=80=AFPM Linus Walleij <linus.walleij@lina=
+ro.org> wrote:
+> > On Wed, Oct 22, 2025 at 6:56=E2=80=AFPM Rob Herring (Arm) <robh@kernel.=
+org> wrote:
+> >
+> > > Convert the Marvell CP110 System Controller binding to DT schema
+> > > format.
+> > >
+> > > There's not any specific compatible for the whole block which is a
+> > > separate problem, so just the child nodes are documented. Only the
+> > > pinctrl and clock child nodes need to be converted as the GPIO node
+> > > already has a schema.
+> > >
+> > > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> >
+> > Patch applied!
 >
-> is built as a module, then an error occur as follow:
->
-> ERROR: modpost: "pinctrl_provide_dummies" [drivers/pinctrl/cix/pinctrl-sk=
-y1-base.ko] undefined!
-> make[2]: *** [scripts/Makefile.modpost:147: Module.symvers] Error 1
-> make[1]: *** [/home/gary/workspace/upstream/kernel_upstream/Makefile:1960=
-: modpost] Error 2
-> make: *** [Makefile:248: __sub-make] Error 2
->
-> Signed-off-by: Gary Yang <gary.yang@cixtech.com>
+> I already applied as it is clock and pinctrl.
 
-I just deleted the call to pinctrl_provide_dummies() from the SKY1
-driver instead, because I didn't understand it.
-
-But if you need it, put it in a series with this patch based on the latest
-devel and an explanation why it is needed.
-
-The only other driver that use it is the Renesas driver and it uses
-it like this:
-
-        /* Enable dummy states for those platforms without pinctrl support =
-*/
-        if (!of_have_populated_dt())
-                pinctrl_provide_dummies();
-
-I don't understand why you would need this? The SKY1 has pinctrl
-support after this patch I think and since the arch code in arm64
-requires DT, it seems fine. But maybe this is for ACPI boots or
-something like that, so you would have this driver but there would
-not be any device tree?
-
-Just explain it in a patch and we can add it back.
+Yeah I saw, I dropped it now!
 
 Yours,
 Linus Walleij
