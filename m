@@ -1,226 +1,365 @@
-Return-Path: <linux-gpio+bounces-27760-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27761-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68054C13BFE
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 10:16:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 716A9C13E90
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 10:50:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E6A5A1888068
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 09:16:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3885B58437B
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 09:46:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BAFD2FE58E;
-	Tue, 28 Oct 2025 09:15:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20DF6277035;
+	Tue, 28 Oct 2025 09:46:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n9zCCMZw"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XSurtNpm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164D22FBE01;
-	Tue, 28 Oct 2025 09:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B271130170C
+	for <linux-gpio@vger.kernel.org>; Tue, 28 Oct 2025 09:46:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761642954; cv=none; b=JphqEp6s8gJ1imcrfcaJMbdGU9IpojAr6Zl9B0+SEzqlnrWKeUM1LwmiMo6taD3RfDv3uZnKaq+OOMAWZJjxRfK2gxliBs/loZj2IktkVPMiZFxNFGOnq34oJMRxey7REctgbXmy8B9uRdCWK9p3mykw7Tvdpzvvm3+lmlUrrrY=
+	t=1761644780; cv=none; b=a26+09CN3TBZmuXNf1MvPvKH59LDUtjIE8rRLb5fTUTjwDsQwsNxbFkoRoYc2D1Jx1whSd3FBd1GqxdqBdknwQjz02LIjqyeKkAv4RUsWpt4aEF1hzoFRvz+tWA48hxmm04kzYa+a0wBoZbCiog6Wusr22IjR7ofR/Kh6Me473w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761642954; c=relaxed/simple;
-	bh=W+e7hOA/Qjutz+64AuQHJm7aMHFQ0pGvnRZi62DxLWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VUSwDFt2dzmyySb2DknIwK0ua9T0c4DtaUGygjUrlkdvRq0TO7QoZvncRsUb5we5dsteMqoVLNnz+2XD66iAghI09m7ZgXHVgOpJr3DBq2Qmx/DkoOphxi4aYGAo7rzqQSRTL9xWHdouRWdv961gzIQLPKd2BwzTZXBBWhkuMgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n9zCCMZw; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761642953; x=1793178953;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=W+e7hOA/Qjutz+64AuQHJm7aMHFQ0pGvnRZi62DxLWw=;
-  b=n9zCCMZwpg7yYXyQJ5E/5p47j5fHaSQ647GdkYOOeFBZZSJnCcrIXnyy
-   haMQSSmaLZC/6OLfz824/Iq5bCjKZdh342K8gOUGjoPuHB7aXIagn3DF5
-   UpO73MarRvl2ojoBytnTqNygNL3S5SPRAI2/ZbcPa27tUHag+YeKlGkEv
-   3k649awmHNtz8t0u1KCtUekGqxjkzFxy1BbHRrgeiPCmyHhBIzz6zivTf
-   Wq162eQBu+homhgDJUTeCpuY+49B2pM4vOhV+m6ZDm3Udgb7tadRY4ItN
-   3i/erWOQt3cOlglNmXJNBUUv9+AnfP/sQNHrMrYVrFlyKPKovPBMJZfz1
-   Q==;
-X-CSE-ConnectionGUID: KpoiZD8QRAqjDACwTVDHTg==
-X-CSE-MsgGUID: Dy3LcW3aSDamFIjGD5X4Ng==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="74024500"
-X-IronPort-AV: E=Sophos;i="6.19,261,1754982000"; 
-   d="scan'208";a="74024500"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 02:15:52 -0700
-X-CSE-ConnectionGUID: HnXMTj+ZTTS4uXqyEjc08g==
-X-CSE-MsgGUID: 6qzZimyUSheG9U+2/VGM3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,261,1754982000"; 
-   d="scan'208";a="185624057"
-Received: from dalessan-mobl3.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.244.136])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 02:15:41 -0700
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1vDfnk-00000003GRk-3M7B;
-	Tue, 28 Oct 2025 11:15:36 +0200
-Date: Tue, 28 Oct 2025 11:15:36 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	David Miller <davem@davemloft.net>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Crt Mori <cmo@melexis.com>, Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Shan-Chun Hung <schung@nuvoton.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Jakub Kicinski <kuba@kernel.org>, Alex Elder <elder@ieee.org>,
-	David Laight <david.laight.linux@gmail.com>,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	Jason Baron <jbaron@akamai.com>, Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Kim Seer Paller <kimseer.paller@analog.com>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Richard Genoud <richard.genoud@bootlin.com>,
-	Cosmin Tanislav <demonsingur@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Jianping Shen <Jianping.Shen@de.bosch.com>,
-	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-edac@vger.kernel.org, qat-linux@intel.com,
-	linux-gpio@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-	linux-iio@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v5 11/23] bitfield: Add non-constant field_{prep,get}()
- helpers
-Message-ID: <aQCJuADNYTzdbPQJ@smile.fi.intel.com>
-References: <cover.1761588465.git.geert+renesas@glider.be>
- <bf68a22ce5be93bb2ea0a0c53071433814401ff9.1761588465.git.geert+renesas@glider.be>
+	s=arc-20240116; t=1761644780; c=relaxed/simple;
+	bh=OT2+jFI/YLcUsa+0OyKU16yFnU1E6S0GNBybbl27ZT0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sFRMN/yd1s8YYuB2AeinGn4YoTQxPMaedYApJsZo3QR471KFmUZeYCPubB8YC7L0wIOvTrBdsk2ziZUhrJ5HFxG6Ik1cBsNKDdIMfcDshfpr5Oi6lans547WhOMKNgvI5DZ+53jyM5s1GjhYqme5+X08nJHOl50rSlEePnXJJ0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XSurtNpm; arc=none smtp.client-ip=185.171.202.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 949CBC0C408;
+	Tue, 28 Oct 2025 09:45:55 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id C8C88606AB;
+	Tue, 28 Oct 2025 09:46:15 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E9C3A102F7D13;
+	Tue, 28 Oct 2025 10:46:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1761644775; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=qrmD6ydD+NSerYcuNmCUq7TCcf6nIj8tuamajs7tnRE=;
+	b=XSurtNpmjqi+tgymRylUbFuEGodNKUhy71rlYfRqeL7dxe15nk5bupWzG2L0QqvN6PiFUr
+	bUnCiHNUpDAUH4eoQh4HjvVGCeOm6Bgf+drAaI2QTuZFlcuhg/7Mj7eh71zm6FfOjDlRKs
+	oVAIdjeXa9dUvFeLayXGWPjFMY67cI5o4Xfy8LzVhKr6DZhOb3Gnn+PhPLKjsAN0oXYRIe
+	+BShfCe69u6ySdotRSLAPKzdMbriwtIzl1jbP6Wzras+ZhS6dAoC9h5cxI1e1Pt7yI9wNZ
+	5+oVozseiuktHBH+BRpt0n27Obj4NlJvDN0+WzZ1685ByX7rIIRg56MlphuudA==
+Message-ID: <50646b88-5746-4665-8085-09e394aa291f@bootlin.com>
+Date: Tue, 28 Oct 2025 10:45:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bf68a22ce5be93bb2ea0a0c53071433814401ff9.1761588465.git.geert+renesas@glider.be>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] gpio: add gpio-line-mux driver
+To: Jonas Jelonek <jelonek.jonas@gmail.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Peter Rosin <peda@axentia.se>,
+ Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20251026231754.2368904-1-jelonek.jonas@gmail.com>
+ <20251026231754.2368904-3-jelonek.jonas@gmail.com>
+Content-Language: en-US
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <20251026231754.2368904-3-jelonek.jonas@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Mon, Oct 27, 2025 at 07:41:45PM +0100, Geert Uytterhoeven wrote:
-> The existing FIELD_{GET,PREP}() macros are limited to compile-time
-> constants.  However, it is very common to prepare or extract bitfield
-> elements where the bitfield mask is not a compile-time constant.
+Hi Jonas,
+
+Linus mentioned gpio forwarder in the previous iteration, this caught my
+attention. So I had a look to your series.
+
+On 10/27/25 12:17 AM, Jonas Jelonek wrote:
+> Add a new driver which provides a 1-to-many mapping for a single real
+> GPIO using a multiplexer. Each virtual GPIO corresponds to a multiplexer
+> state which, if set for the multiplexer, connects the real GPIO to the
+> corresponding virtual GPIO.
 > 
-> To avoid this limitation, the AT91 clock driver and several other
-> drivers already have their own non-const field_{prep,get}() macros.
-> Make them available for general use by adding them to
-> <linux/bitfield.h>, and improve them slightly:
->   1. Avoid evaluating macro parameters more than once,
->   2. Replace "ffs() - 1" by "__ffs()",
->   3. Support 64-bit use on 32-bit architectures,
->   4. Wire field_{get,prep}() to FIELD_{GET,PREP}() when mask is
->      actually constant.
+> For now, this doesn't support advanced features like IRQs, just normal
+> IN and OUT functionality of GPIOs.
 > 
-> This is deliberately not merged into the existing FIELD_{GET,PREP}()
-> macros, as people expressed the desire to keep stricter variants for
-> increased safety, or for performance critical paths.
-
-Some comments below, but FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-after addressing them.
-
-...
-
-> +#define __field_prep(mask, val)						\
-> +	({								\
-> +		__auto_type __mask = (mask);				\
-> +		typeof(mask) __val = (val);				\
-> +		unsigned int __shift = BITS_PER_TYPE(mask) <= 32 ?	\
-> +				       __ffs(__mask) : __ffs64(__mask);	\
-> +		(__val << __shift) & __mask;	\
-
-Unaligned \
-
-> +	})
+> This can help in various usecases. One practical case is the special
+> hardware design of the Realtek-based XS1930-10 switch from Zyxel. It
+> features two SFP+ ports/cages whose signals are wired to directly to the
+> switch SoC. Although Realtek SoCs are short on GPIOs, there are usually
+> enough the fit the SFP signals without any hacks.
+> 
+> However, Zyxel did some weird design and connected RX_LOS, MOD_ABS and
+> TX_FAULT of one SFP cage onto a single GPIO line controlled by a
+> multiplexer (the same for the other SFP cage). The single multiplexer
+> controls the lines for both SFP and depending on the state, the
+> designated 'signal GPIO lines' are connected to one of the three SFP
+> signals.
+> 
+> Because the SFP core/driver doesn't support multiplexer but needs single
+> GPIOs for each of the signals, this driver fills the gap between both.
+> It registers a gpio_chip, provides multiple virtual GPIOs and sets the
+> backing multiplexer accordingly.
+> 
+> Signed-off-by: Jonas Jelonek <jelonek.jonas@gmail.com>
+> ---
+>  MAINTAINERS                  |   6 ++
+>  drivers/gpio/Kconfig         |  10 ++
+>  drivers/gpio/Makefile        |   1 +
+>  drivers/gpio/gpio-line-mux.c | 194 +++++++++++++++++++++++++++++++++++
+>  4 files changed, 211 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-line-mux.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 46126ce2f968..4d75253fe451 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10647,6 +10647,12 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.yaml
+>  F:	drivers/media/rc/gpio-ir-tx.c
+>  
+> +GPIO LINE MUX
+> +M:	Jonas Jelonek <jelonek.jonas@gmail.com>
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/gpio/gpio-line-mux.yaml
+> +F:	drivers/gpio/gpio-line-mux.c
 > +
-> +#define __field_get(mask, reg)						\
-> +	({								\
-> +		__auto_type __mask = (mask);				\
-> +		typeof(mask) __reg =  (reg);				\
-> +		unsigned int __shift = BITS_PER_TYPE(mask) <= 32 ?	\
-> +				       __ffs(__mask) : __ffs64(__mask);	\
-> +		(__reg & __mask) >> __shift;	\
+>  GPIO MOCKUP DRIVER
+>  M:	Bamvor Jian Zhang <bamv2005@gmail.com>
+>  L:	linux-gpio@vger.kernel.org
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index ce237398fa00..93695b86a955 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -1986,6 +1986,16 @@ config GPIO_LATCH
+>  	  Say yes here to enable a driver for GPIO multiplexers based on latches
+>  	  connected to other GPIOs.
+>  
+> +config GPIO_LINE_MUX
+> +	tristate "GPIO line mux driver"
+> +	depends on OF_GPIO
+> +	select GPIO_AGGREGATOR
 
-Ditto.
+You don't need GPIO_AGGREGATOR.
 
-> +	})
-
-> +/**
-> + * field_prep() - prepare a bitfield element
-> + * @mask: shifted mask defining the field's length and position, must be
-> + *        non-zero
-> + * @val:  value to put in the field
+> +	select MULTIPLEXER
+> +	help
+> +	  Say Y here to support the GPIO line mux, which can provide virtual
+> +	  GPIOs backed by a shared real GPIO and a multiplexer in a 1-to-many
+> +	  fashion.
+> +
+>  config GPIO_MOCKUP
+>  	tristate "GPIO Testing Driver (DEPRECATED)"
+>  	select IRQ_SIM
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index ee260a0809d3..6caee52b0356 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -89,6 +89,7 @@ obj-$(CONFIG_GPIO_IXP4XX)		+= gpio-ixp4xx.o
+>  obj-$(CONFIG_GPIO_JANZ_TTL)		+= gpio-janz-ttl.o
+>  obj-$(CONFIG_GPIO_KEMPLD)		+= gpio-kempld.o
+>  obj-$(CONFIG_GPIO_LATCH)		+= gpio-latch.o
+> +obj-$(CONFIG_GPIO_LINE_MUX)		+= gpio-line-mux.o
+>  obj-$(CONFIG_GPIO_LJCA) 		+= gpio-ljca.o
+>  obj-$(CONFIG_GPIO_LOGICVC)		+= gpio-logicvc.o
+>  obj-$(CONFIG_GPIO_LOONGSON1)		+= gpio-loongson1.o
+> diff --git a/drivers/gpio/gpio-line-mux.c b/drivers/gpio/gpio-line-mux.c
+> new file mode 100644
+> index 000000000000..a367e8f585c6
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-line-mux.c
+> @@ -0,0 +1,194 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * GPIO line mux which acts as virtual gpiochip and provides a 1-to-many
+> + * mapping between virtual GPIOs and a real GPIO + multiplexer. 
 > + *
-> + * field_prep() masks and shifts up the value.  The result should be
-> + * combined with other fields of the bitfield using logical OR.
-> + * Unlike FIELD_PREP(), @mask is not limited to a compile-time constant.
-> + * Typical usage patterns are a value stored in a table, or calculated by
-> + * shifting a constant by a variable number of bits.
-> + * If you want to ensure that @mask is a compile-time constant, please use
-> + * FIELD_PREP() directly instead.
-
-Shouldn't it have Return section as well?
-
+> + * Copyright (c) 2025 Jonas Jelonek <jelonek.jonas@gmail.com>
 > + */
-> +#define field_prep(mask, val)						\
-> +	(__builtin_constant_p(mask) ? FIELD_PREP(mask, val)		\
-> +				    : __field_prep(mask, val))
+> +
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/mutex.h>
+> +#include <linux/mux/consumer.h>
+> +#include <linux/mux/driver.h>
+> +#include <linux/platform_device.h>
+> +
+> +struct gpio_lmux {
+> +	struct gpio_chip gc;
+> +	struct mux_control *mux;
+> +	struct device *dev;
 
-Personally I would give it a single line (but it's up to you, folks).
+not used
 
 > +
-> +/**
-> + * field_get() - extract a bitfield element
-> + * @mask: shifted mask defining the field's length and position, must be
-> + *        non-zero
-> + * @reg:  value of entire bitfield
-> + *
-> + * field_get() extracts the field specified by @mask from the
-> + * bitfield passed in as @reg by masking and shifting it down.
-> + * Unlike FIELD_GET(), @mask is not limited to a compile-time constant.
-> + * Typical usage patterns are a value stored in a table, or calculated by
-> + * shifting a constant by a variable number of bits.
-> + * If you want to ensure that @mask is a compile-time constant, please use
-> + * FIELD_GET() directly instead.
+> +	struct mutex lock;
+> +
+> +	struct gpio_desc *shared_gpio;
+> +	/* dynamically sized, must be last */
+> +	unsigned int gpio_mux_states[];
+> +};
+> +
+> +DEFINE_GUARD(gpio_lmux, struct gpio_lmux *, mutex_lock(&_T->lock), mutex_unlock(&_T->lock))
+> +
+> +static int gpio_lmux_gpio_get(struct gpio_chip *gc, unsigned int offset)
+> +{
+> +	struct gpio_lmux *glm = (struct gpio_lmux *)gpiochip_get_data(gc);
+> +	int ret;
+> +
+> +	if (offset > gc->ngpio)
+> +		return -EINVAL;
+> +
+> +	guard(gpio_lmux)(glm);
+> +
+> +	ret = mux_control_select(glm->mux, glm->gpio_mux_states[offset]);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = gpiod_get_raw_value_cansleep(glm->shared_gpio);
 
-Ditto.
+Why ignoring ACTIVE_LOW status ?
+And cansleep depends on your shared_gpio line, maybe it is not the case.
 
-> + */
-> +#define field_get(mask, reg)						\
-> +	(__builtin_constant_p(mask) ? FIELD_GET(mask, reg)		\
-> +				    : __field_get(mask, reg))
+> +	mux_control_deselect(glm->mux);
+> +	return ret;
+> +}
+> +
 
-As per above.
+[...]
 
--- 
-With Best Regards,
-Andy Shevchenko
+> +
+> +static int gpio_lmux_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct gpio_lmux *glm;
+> +	unsigned int ngpio, size;
+> +	int ret;
 
+nitpick: reverse xmas tree
 
+> +
+> +	ngpio = device_property_count_u32(dev, "gpio-line-mux-states");
+> +	if (!ngpio)
+> +		return -EINVAL;
+> +
+> +	size = sizeof(*glm) + (sizeof(unsigned int) * ngpio);
+
+use struct_size() macro
+
+> +	glm = devm_kzalloc(dev, size, GFP_KERNEL);
+> +	if (!glm)
+> +		return -ENOMEM;
+> +
+> +	mutex_init(&glm->lock);
+> +
+> +	glm->dev = dev;
+> +	glm->gc.base = -1;
+> +	glm->gc.can_sleep = true;
+
+depends on your shared_gpio line. Use gpiod_cansleep() like in the
+gpio-aggregator driver to know if your shared_gpio can sleep.
+
+> +	glm->gc.fwnode = dev_fwnode(dev);
+> +	glm->gc.label = "gpio-line-mux";
+
+dev_name() ?
+
+> +	glm->gc.ngpio = ngpio;
+> +	glm->gc.owner = THIS_MODULE;
+> +	glm->gc.parent = dev;
+> +
+> +	glm->gc.get = gpio_lmux_gpio_get;
+> +	glm->gc.set = gpio_lmux_gpio_set;
+> +	glm->gc.get_direction = gpio_lmux_gpio_get_direction;
+> +	glm->gc.direction_input = gpio_lmux_gpio_direction_input;
+> +	glm->gc.direction_output = gpio_lmux_gpio_direction_output;
+> +
+> +	glm->mux = devm_mux_control_get(dev, NULL);
+> +	if (IS_ERR(glm->mux)) {
+> +		if (PTR_ERR(glm->mux) == -EPROBE_DEFER) {
+> +			dev_err(dev, "mux-controller not ready, deferring probe\n");
+> +			return -EPROBE_DEFER;
+> +		}
+> +
+> +		dev_err(dev, "could not get mux-controller\n");
+> +		return PTR_ERR(glm->mux);
+> +	}
+
+You can replace the if statement by:
+
+if (IS_ERR(glm->mux))
+	return dev_err_probe(dev, PTR_ERR(glm->mux), "could not ...");
+
+> +
+> +	glm->shared_gpio = devm_gpiod_get(dev, "shared", GPIOD_ASIS);
+> +	if (IS_ERR(glm->shared_gpio)) {
+> +		dev_err(dev, "could not get shared-gpio\n");
+> +		return PTR_ERR(glm->shared_gpio);
+> +	}
+
+ditto
+
+> +
+> +	ret = device_property_read_u32_array(dev, "gpio-line-mux-states",
+> +					     &glm->gpio_mux_states[0], ngpio);
+> +	if (ret) {
+> +		dev_err(dev, "could not get mux states\n");
+> +		return ret;
+> +	}
+
+ditto
+
+> +		
+> +	ret = devm_gpiochip_add_data(dev, &glm->gc, glm);
+> +	if (ret) {
+> +		dev_err(dev, "failed to add gpiochip: %d\n", ret);
+> +		return ret;
+> +	}
+
+ditto
+
+> +
+> +	dev_info(dev, "providing %u virtual GPIOs for real GPIO %u\n", ngpio,
+> +		 desc_to_gpio(glm->shared_gpio));
+
+No logs if device probes successfully
+
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id gpio_lmux_of_match[] = {
+> +	{ .compatible = "gpio-line-mux" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, gpio_lmux_of_match);
+> +
+> +static struct platform_driver gpio_lmux_driver = {
+> +	.driver = {
+> +		.name = "gpio-line-mux",
+> +		.of_match_table = gpio_lmux_of_match,
+> +	},
+> +	.probe = gpio_lmux_probe,
+> +};
+> +module_platform_driver(gpio_lmux_driver);
+> +
+> +MODULE_AUTHOR("Jonas Jelonek <jelonek.jonas@gmail.com>");
+> +MODULE_DESCRIPTION("GPIO line mux driver");
+> +MODULE_LICENSE("GPL");
+
+The advantage of the forwarder is that it handles if the shared GPIO is
+sleeping or not.
+But I think the forwarder shall have ngpio, not 1. You will have to add
+ngpio times the same GPIO desc. Also unsupported operations shall be unset.
+So I don't really know if it shall be used in this case.
+
+Best Regards,
+
+Thomas
 
