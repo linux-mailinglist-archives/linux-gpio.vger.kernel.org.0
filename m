@@ -1,112 +1,155 @@
-Return-Path: <linux-gpio+bounces-27765-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27766-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61B11C14171
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 11:25:13 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C347C14F72
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 14:49:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B1C83AC436
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 10:23:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 360DE1A65211
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 13:47:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D38EE302168;
-	Tue, 28 Oct 2025 10:23:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32F12223DCF;
+	Tue, 28 Oct 2025 13:46:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nK6B7cYK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HyngrGjL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53A22FF675
-	for <linux-gpio@vger.kernel.org>; Tue, 28 Oct 2025 10:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D929B1FE45A;
+	Tue, 28 Oct 2025 13:46:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761646988; cv=none; b=c3uXAMVQucwWNnuEPJ0pXKB/4bkB1MR9bhyF17RaMPRegH9k+g+x8SK0AlaM9sQlPQ0+EdnX09MhgphKGlgMufb+mOGL9ZPbZS2I1y2kuWOOlHkxezvioEZyt17RTvLNxMONrzCImCMW2bl0R829fW3tuyMqtfTRMdVeoXmvOF8=
+	t=1761659206; cv=none; b=Gg5sY+R+CYxeHEZ9ErRL0XGtMebZHCYwTuCFLoI/gRuxCLIC7WWtdT2WuLFB5virbNVpaLGKnFPzqWbWTd5hoyQKbMQyA6EXf55giYGMpD/nT9SK42pclsTu3T8TBKPvlM+eq3iOWutIc6PuO/G7cJlURA1XgAWgSHNchwIfKJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761646988; c=relaxed/simple;
-	bh=+jYHO2zNNdgUJXuN8ugHExdRSw1IDTNhRJAWZCcSHBE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KcVQd68aEENsFDiSdUEfrUhRQujJJtMIHIJ3pWRz+oihmiHgsbuTRjDNfViRSdbt13VW4/B3iEx2t8gyL3IAubdgiOz+dG4V/qrLxJYdin3rRIcx9sy9gbEuuRNiB0ExJuxOmTOQSbnzrJ3x5GJNS7+jiygzZ5QbQmwP4NozIuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nK6B7cYK; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 568D31A16F9;
-	Tue, 28 Oct 2025 10:22:40 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 29ADA606AB;
-	Tue, 28 Oct 2025 10:22:40 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 793401179B966;
-	Tue, 28 Oct 2025 11:22:37 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1761646959; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:content-language:in-reply-to:references;
-	bh=pqtOZsRtH9DHGRp6LR0r+HDjzdovCcKVPZfJ3ZtDVJY=;
-	b=nK6B7cYKJ8nuSOGm8w0gYH5wDdp25LHCaubantKLWhuFoVISMm8EGXquu74Kb946JMhzA6
-	8f+ZDjnPAWAtaDrwF8uwJ3lUb/DfTRkGRWB22/glf005AU2F4Tv11IIQq3NFtfEqs1da6s
-	loVmktq3OPX7tamdJC5q4xkSS8y7C4Mlp1JpOkRQ2brRrD6MgkdH4jnFiF4y76qcbSX6DW
-	psf5paisErJ4C2IbAgrJck42vG1sVny6XXWhZM6L2f89LxmMMPZtL/on8kUOJx9LM1oE7r
-	FizfJrf66JrdTB9hV2VkDwLRnHHwjKBbcP2yP249y/blS8qO6YIbCf46e5QcRg==
-Message-ID: <ce3f0f1a-9cb3-4721-9774-0b73f461a6e9@bootlin.com>
-Date: Tue, 28 Oct 2025 11:22:28 +0100
+	s=arc-20240116; t=1761659206; c=relaxed/simple;
+	bh=gHTXG47ZT83HtioVGkOdOgeWLg99afniblJgeCrheGk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ey9yq7A9MC5AZzaN5Nm84nFwIq0iy/DaIVX4lrpUtpalMj/31FbFvIQ9VAIVrlGQg7YfPDOsR7Sla4Ny+rmKdVULOz4JyrqmtluubS9kd+b+1baFyjPN/YU35a4ahfWUC2YmfqtZvueT3T7KBXWZbqYOIWo4gvpfpeoDpYPpH/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HyngrGjL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4601DC116C6;
+	Tue, 28 Oct 2025 13:46:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761659205;
+	bh=gHTXG47ZT83HtioVGkOdOgeWLg99afniblJgeCrheGk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=HyngrGjLb54dCOStOExNIW8Y0NWfQzBXP7/lfZg2CrXY7+IMVLq42u0PG+z1cEhOL
+	 M9rvJLEAEy7zeEAWnuV/unlMTMS3/MUsv0ix70sVbD2swTqZWjJ73oXB/FnRpo6ibM
+	 5estbSa3g/FRLspY7MtCd9VANbOrV9/5esg2D/G+7NIUhmjdRsQO8xY/aVRcPYRGXb
+	 X/UIMn6YkUr50ydC9753IDyWw8dnp67i7nUJy9ediQGszIl+HEj5mZ17iKfEPbiCQI
+	 yV1LFP3RB+1kFvEmWfqvRVyp0cXJ70Zaz3/Whr5ecoe3Wqctp9aXbfY9yaLyAIIFK6
+	 M+094b4nEUMzQ==
+Date: Tue, 28 Oct 2025 08:46:44 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
+	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
+	vkoul@kernel.org, kishon@kernel.org, linus.walleij@linaro.org,
+	p.zabel@pengutronix.de, linux-aspeed@lists.ozlabs.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-phy@lists.infradead.org, openbmc@lists.ozlabs.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 2/9] dt-bindings: PCI: Add ASPEED PCIe RC support
+Message-ID: <20251028134644.GA1506590@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] gpio: add gpio-line-mux driver
-To: Peter Rosin <peda@axentia.se>, Jonas Jelonek <jelonek.jonas@gmail.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20251026231754.2368904-1-jelonek.jonas@gmail.com>
- <20251026231754.2368904-3-jelonek.jonas@gmail.com>
- <50646b88-5746-4665-8085-09e394aa291f@bootlin.com>
- <db36ee25-8a1e-f95c-4ac9-867379a1a5e3@axentia.se>
-Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <db36ee25-8a1e-f95c-4ac9-867379a1a5e3@axentia.se>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251027095825.181161-3-jacky_chou@aspeedtech.com>
 
-Hi Peter,
+On Mon, Oct 27, 2025 at 05:58:18PM +0800, Jacky Chou wrote:
+> ASPEED AST2600 provides one PCIe RC for Gen2 and AST2700 provides three
+> PCIe RC for two Gen4 and one Gen2. All of these RCs have just one root
+> port to connect to PCIe device. And also have Mem, I/O access, legacy
+> interrupt and MSI.
 
-On 10/28/25 11:09 AM, Peter Rosin wrote:
-> Hi!
-> 
-> 2025-10-28 at 10:45, Thomas Richard wrote:
->> On 10/27/25 12:17 AM, Jonas Jelonek wrote:
->>> +	ret = mux_control_select(glm->mux, glm->gpio_mux_states[offset]);
->>> +	if (ret < 0)
->>> +		return ret;
->>> +
->>> +	ret = gpiod_get_raw_value_cansleep(glm->shared_gpio);
->>
->> Why ignoring ACTIVE_LOW status ?
->> And cansleep depends on your shared_gpio line, maybe it is not the case.
->>
->>> +	mux_control_deselect(glm->mux);
-> 
-> *snip*
-> 
->>> +	glm->gc.can_sleep = true;
->>
->> depends on your shared_gpio line.
-> 
-> Does it? In this case, the gpio will always need to be able to
-> sleep, since mux_control_select() may sleep. Or, what am I
-> missing?
+> +description:
+> +  The ASPEED PCIe Root Complex controller provides PCI Express Root Complex
+> +  functionality for ASPEED SoCs, such as the AST2600 and AST2700.
+> +  This controller enables connectivity to PCIe endpoint devices, supporting
+> +  memory and I/O windows, MSI and legacy interrupts, and integration with
+> +  the SoC's clock, reset, and pinctrl subsystems. On AST2600, the PCIe Root
+> +  Port device number is always 8.
 
-Oh yes you're right, I forgot the mux part.
+s/legacy/INTx/
 
-Best Regards,
-Thomas
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - aspeed,ast2600-pcie
+> +      - aspeed,ast2700-pcie
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  ranges:
+> +    minItems: 2
+> +    maxItems: 2
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: IntX and MSI interrupt
 
+s/IntX/INTx/
+
+> +    pcie0: pcie@1e770000 {
+> +      compatible = "aspeed,ast2600-pcie";
+> +      device_type = "pci";
+> +      reg = <0x1e770000 0x100>;
+> +      #address-cells = <3>;
+> +      #size-cells = <2>;
+> +      interrupts = <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
+> +      bus-range = <0x00 0xff>;
+> +
+> +      ranges = <0x01000000 0x0 0x00018000 0x00018000 0x0 0x00008000
+> +                0x02000000 0x0 0x60000000 0x60000000 0x0 0x20000000>;
+> +
+> +      resets = <&syscon ASPEED_RESET_H2X>;
+> +      reset-names = "h2x";
+> +      pinctrl-0 = <&pinctrl_pcierc1_default>;
+> +      pinctrl-names = "default";
+> +
+> +      #interrupt-cells = <1>;
+> +      msi-controller;
+> +
+> +      aspeed,ahbc = <&ahbc>;
+> +
+> +      interrupt-map-mask = <0 0 0 7>;
+> +      interrupt-map = <0 0 0 1 &pcie_intc0 0>,
+> +                      <0 0 0 2 &pcie_intc0 1>,
+> +                      <0 0 0 3 &pcie_intc0 2>,
+> +                      <0 0 0 4 &pcie_intc0 3>;
+> +      legacy-interrupt-controller {
+> +        interrupt-controller;
+> +        #address-cells = <0>;
+> +        #interrupt-cells = <1>;
+> +      };
+
+IIUC, Rob says there's no need for a separate interrupt-controller
+stanza and it can be directly in the host bridge [1].
+
+I think that does make interrupt-map a little more verbose because the
+parent unit address will use the host bridge #address-cells (3)
+instead of the interrupt controller #address-cells (0), e.g., this
+from [2]:
+
+  pcie@10e40000 {
+      compatible = "renesas,r9a08g045-pcie";
+      #address-cells = <3>;
+      #interrupt-cells = <1>;
+      interrupt-map = <0 0 0 1 &pcie 0 0 0 0>, /* INTA */
+                      <0 0 0 2 &pcie 0 0 0 1>, /* INTB */
+                      <0 0 0 3 &pcie 0 0 0 2>, /* INTC */
+                      <0 0 0 4 &pcie 0 0 0 3>; /* INTD */
+
+[1] https://lore.kernel.org/linux-pci/20250509204905.GA4080349-robh@kernel.org/
+[2] https://lore.kernel.org/linux-pci/20251007133657.390523-2-claudiu.beznea.uj@bp.renesas.com/
 
