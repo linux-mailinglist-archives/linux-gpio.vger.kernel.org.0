@@ -1,155 +1,150 @@
-Return-Path: <linux-gpio+bounces-27766-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27767-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C347C14F72
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 14:49:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F772C1528B
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 15:26:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 360DE1A65211
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 13:47:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 64EC2462B6B
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Oct 2025 14:20:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32F12223DCF;
-	Tue, 28 Oct 2025 13:46:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E1983375A6;
+	Tue, 28 Oct 2025 14:20:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HyngrGjL"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="uIBa1ecY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D929B1FE45A;
-	Tue, 28 Oct 2025 13:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2CB335BAD
+	for <linux-gpio@vger.kernel.org>; Tue, 28 Oct 2025 14:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761659206; cv=none; b=Gg5sY+R+CYxeHEZ9ErRL0XGtMebZHCYwTuCFLoI/gRuxCLIC7WWtdT2WuLFB5virbNVpaLGKnFPzqWbWTd5hoyQKbMQyA6EXf55giYGMpD/nT9SK42pclsTu3T8TBKPvlM+eq3iOWutIc6PuO/G7cJlURA1XgAWgSHNchwIfKJs=
+	t=1761661231; cv=none; b=gcUsiX8OlUZVYyBjkwT/G4UloYDcalYXg5wlXi5H38m+KjRxH20k9ZR11I1NnDcHExW8rbWLpEHZ8IA7Vt0YnxW5Hc+PjNAu/N7lwx6MT1M7AQZDIfl3jDHf9JOYdliXjDQzRGPfkoO0sAJDN9/WOmpHXtb/oUePTH3ovoLJQp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761659206; c=relaxed/simple;
-	bh=gHTXG47ZT83HtioVGkOdOgeWLg99afniblJgeCrheGk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ey9yq7A9MC5AZzaN5Nm84nFwIq0iy/DaIVX4lrpUtpalMj/31FbFvIQ9VAIVrlGQg7YfPDOsR7Sla4Ny+rmKdVULOz4JyrqmtluubS9kd+b+1baFyjPN/YU35a4ahfWUC2YmfqtZvueT3T7KBXWZbqYOIWo4gvpfpeoDpYPpH/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HyngrGjL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4601DC116C6;
-	Tue, 28 Oct 2025 13:46:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761659205;
-	bh=gHTXG47ZT83HtioVGkOdOgeWLg99afniblJgeCrheGk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=HyngrGjLb54dCOStOExNIW8Y0NWfQzBXP7/lfZg2CrXY7+IMVLq42u0PG+z1cEhOL
-	 M9rvJLEAEy7zeEAWnuV/unlMTMS3/MUsv0ix70sVbD2swTqZWjJ73oXB/FnRpo6ibM
-	 5estbSa3g/FRLspY7MtCd9VANbOrV9/5esg2D/G+7NIUhmjdRsQO8xY/aVRcPYRGXb
-	 X/UIMn6YkUr50ydC9753IDyWw8dnp67i7nUJy9ediQGszIl+HEj5mZ17iKfEPbiCQI
-	 yV1LFP3RB+1kFvEmWfqvRVyp0cXJ70Zaz3/Whr5ecoe3Wqctp9aXbfY9yaLyAIIFK6
-	 M+094b4nEUMzQ==
-Date: Tue, 28 Oct 2025 08:46:44 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
-	robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
-	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
-	vkoul@kernel.org, kishon@kernel.org, linus.walleij@linaro.org,
-	p.zabel@pengutronix.de, linux-aspeed@lists.ozlabs.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-phy@lists.infradead.org, openbmc@lists.ozlabs.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 2/9] dt-bindings: PCI: Add ASPEED PCIe RC support
-Message-ID: <20251028134644.GA1506590@bhelgaas>
+	s=arc-20240116; t=1761661231; c=relaxed/simple;
+	bh=pP8FTV47DQsaScTl4AKuec/C6HsHLvvn5JrdlNFvXF8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GYOTip4yiq69BQ0MDlUYEnry0zv2kBKD3EkyYfee0KrRa/6ARrVcxaEIYmN871sZqTxIJYscKLetGWJ7otVgKLQElGFdvnGrq6rO1BS9RbO9xCJiggRc+pBPQtLgCC8UwPtzoagWdngs9l7ueJJ+Cz6XGtg/DWExp9pAQ0jOgSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=uIBa1ecY; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-376466f1280so90823281fa.0
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Oct 2025 07:20:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761661227; x=1762266027; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sOmSiTMyA8cqAorOzkSzQ5xujNoDEMVqXsbHnkkNM1c=;
+        b=uIBa1ecYcS0SjQasgAEKQr/pVNdcH2s+vv+Ivq8X+TvJlZm3PK4XkoOKj+ySjsss6V
+         0g8VjUJ/7QVvEAWpyHMqMetwZu3/zoN1N9yyXtB0KFxrE/rVPaA1Wla9t4UuOGIAw/wn
+         tLvnxdxSdn4y9ZLZkoqvs3/uknC8cTF+ohyHp0eXubW+fJwQrXlNVOsgxyt8mMbBy66D
+         1uC4SKbYh7kSu4m2DIPdoiKVO+xnGkWcrG1i+y3Uwm1SYSS1wzr0PjgOSFofFE0v8Jnx
+         uh6w6swnMKwZGoMtYXUS13Dhkpdcfv4aAkZJJYWpnhecHmYQWvg4zllIFHM+xQPboquJ
+         uIow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761661227; x=1762266027;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sOmSiTMyA8cqAorOzkSzQ5xujNoDEMVqXsbHnkkNM1c=;
+        b=FKcBc1MBgVeHJZVP4bK25Ag3P3cZHUaQk7PHuYCFRDa+gGcZsAkJt2nT16Ud7FMY61
+         NGuLpn8k43M14KRK0F4qGPFn8hAlz58Ethkq3KraVeBEHZXXATZtTJsvAm+tZzRPB3uM
+         tah/QnXSX8klLIYS5//cBv+s46Vz9Cz2WohtdfJoxKWhvhtQn6K6dtujRjXCcBGEruWc
+         Z9t8+IO1oqR322Ga4jbDsathlpCOEyT4LaU/5talFi3bo09NnlTQg6FDI3LSHqOhk5O+
+         7HTFbHJRrUg4zYmi5GqxidlRqhvonDk4JzCnTK+V/n8tpDn3pVUZhuTuPUO/X4uunr4n
+         E93w==
+X-Forwarded-Encrypted: i=1; AJvYcCUo1w7meMjJfVyWk+RvA9jp4+6dO01GyOJEHQKJGHDTO/7AT7BNX5zsUktMI1sF0yLnqQQuMJeyoFyw@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMfJnRPITVe+r3YQKyFuG8bU7BQZUAq5QHUE6nEL931FTUHVJZ
+	qdvfmx4wXjV+1TqsI7LdXHxGiA1+xaDrsT6fEIi4PnwX79nOoD6+3Mv+TJpYfplPxreyXIMr72G
+	YKcOBxG1Oe8ZuUdGSYAgxCDKGLFQw2XWCyiPCB1mVCg==
+X-Gm-Gg: ASbGncuo53IB/9ExO5n6PAMdkT8ZEzC6NQP6lbe8WwvSX/wliN6wo+c6uuw4i0OE7R3
+	Gl17FPx09HDWkJC0+kGkQfT5gw8mWQbDYxC6Xt+/yTx73j7uxZR9zrf+A9umK7W5IMTwJ3wOvsq
+	t6woJcYk0Ps0p+h20QW+8AeFLGIyW7HNeUeSR11lxQYk0penauRB1u5Rubn5TAaUUfBlwZ+xH/v
+	ixsc6Sigq1cMF70lWkIakB7dPPDWbhLkLmkwd027AsfeoTbpZwes8q1lYQAB0oiK1s2FTuKqI4F
+	ZsXMnEXR4YOkEnBK0TCMCgMgNBY=
+X-Google-Smtp-Source: AGHT+IEa9/49xzFtkrl2WuFSbF2nGR0Ee3sa2JYGGK47IcVnnhS7gaKd3pqPtDHg3v3/2iaUnvbb9dKc2W6cTL8KA/s=
+X-Received: by 2002:a05:651c:2354:10b0:351:62e3:95d6 with SMTP id
+ 38308e7fff4ca-3790773c607mr10303011fa.28.1761661226962; Tue, 28 Oct 2025
+ 07:20:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251027095825.181161-3-jacky_chou@aspeedtech.com>
+References: <cover.1761588465.git.geert+renesas@glider.be> <76ac5587c5ff3aae3c23f7b41e2f3eacb32ebd21.1761588465.git.geert+renesas@glider.be>
+In-Reply-To: <76ac5587c5ff3aae3c23f7b41e2f3eacb32ebd21.1761588465.git.geert+renesas@glider.be>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 28 Oct 2025 15:20:13 +0100
+X-Gm-Features: AWmQ_bkGEmC8OCwW4QksGegCfgNPPWl_EjVB0knvBjv-hfBoqYq6hENcwtWJ0QE
+Message-ID: <CAMRc=MdcH-56_cJ7oDUhHRsJRnDqbss5ET-3yGrBffGmEK_ieQ@mail.gmail.com>
+Subject: Re: [PATCH v5 04/23] gpio: aspeed: #undef field_{get,prep}() before
+ local definition
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	David Miller <davem@davemloft.net>, Linus Walleij <linus.walleij@linaro.org>, 
+	Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>, 
+	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Jacky Huang <ychuang3@nuvoton.com>, 
+	Shan-Chun Hung <schung@nuvoton.com>, Yury Norov <yury.norov@gmail.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, Jakub Kicinski <kuba@kernel.org>, Alex Elder <elder@ieee.org>, 
+	David Laight <david.laight.linux@gmail.com>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
+	Jason Baron <jbaron@akamai.com>, Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Kim Seer Paller <kimseer.paller@analog.com>, 
+	David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Richard Genoud <richard.genoud@bootlin.com>, 
+	Cosmin Tanislav <demonsingur@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Jianping Shen <Jianping.Shen@de.bosch.com>, linux-clk@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-edac@vger.kernel.org, qat-linux@intel.com, 
+	linux-gpio@vger.kernel.org, linux-aspeed@lists.ozlabs.org, 
+	linux-iio@vger.kernel.org, linux-sound@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 27, 2025 at 05:58:18PM +0800, Jacky Chou wrote:
-> ASPEED AST2600 provides one PCIe RC for Gen2 and AST2700 provides three
-> PCIe RC for two Gen4 and one Gen2. All of these RCs have just one root
-> port to connect to PCIe device. And also have Mem, I/O access, legacy
-> interrupt and MSI.
+On Mon, Oct 27, 2025 at 7:42=E2=80=AFPM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+>
+> Prepare for the advent of globally available common field_get() and
+> field_prep() macros by undefining the symbols before defining local
+> variants.  This prevents redefinition warnings from the C preprocessor
+> when introducing the common macros later.
+>
+> Suggested-by: Yury Norov <yury.norov@gmail.com>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> --
+> v5:
+>   - New.
+> ---
+>  drivers/gpio/gpio-aspeed.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
+> index 7953a9c4e36d7550..ef4ccaf74a5b379e 100644
+> --- a/drivers/gpio/gpio-aspeed.c
+> +++ b/drivers/gpio/gpio-aspeed.c
+> @@ -32,7 +32,9 @@
+>  #include "gpiolib.h"
+>
+>  /* Non-constant mask variant of FIELD_GET() and FIELD_PREP() */
+> +#undef field_get
+>  #define field_get(_mask, _reg) (((_reg) & (_mask)) >> (ffs(_mask) - 1))
+> +#undef field_prep
+>  #define field_prep(_mask, _val)        (((_val) << (ffs(_mask) - 1)) & (=
+_mask))
+>
+>  #define GPIO_G7_IRQ_STS_BASE 0x100
+> --
+> 2.43.0
+>
 
-> +description:
-> +  The ASPEED PCIe Root Complex controller provides PCI Express Root Complex
-> +  functionality for ASPEED SoCs, such as the AST2600 and AST2700.
-> +  This controller enables connectivity to PCIe endpoint devices, supporting
-> +  memory and I/O windows, MSI and legacy interrupts, and integration with
-> +  the SoC's clock, reset, and pinctrl subsystems. On AST2600, the PCIe Root
-> +  Port device number is always 8.
-
-s/legacy/INTx/
-
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - aspeed,ast2600-pcie
-> +      - aspeed,ast2700-pcie
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  ranges:
-> +    minItems: 2
-> +    maxItems: 2
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: IntX and MSI interrupt
-
-s/IntX/INTx/
-
-> +    pcie0: pcie@1e770000 {
-> +      compatible = "aspeed,ast2600-pcie";
-> +      device_type = "pci";
-> +      reg = <0x1e770000 0x100>;
-> +      #address-cells = <3>;
-> +      #size-cells = <2>;
-> +      interrupts = <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
-> +      bus-range = <0x00 0xff>;
-> +
-> +      ranges = <0x01000000 0x0 0x00018000 0x00018000 0x0 0x00008000
-> +                0x02000000 0x0 0x60000000 0x60000000 0x0 0x20000000>;
-> +
-> +      resets = <&syscon ASPEED_RESET_H2X>;
-> +      reset-names = "h2x";
-> +      pinctrl-0 = <&pinctrl_pcierc1_default>;
-> +      pinctrl-names = "default";
-> +
-> +      #interrupt-cells = <1>;
-> +      msi-controller;
-> +
-> +      aspeed,ahbc = <&ahbc>;
-> +
-> +      interrupt-map-mask = <0 0 0 7>;
-> +      interrupt-map = <0 0 0 1 &pcie_intc0 0>,
-> +                      <0 0 0 2 &pcie_intc0 1>,
-> +                      <0 0 0 3 &pcie_intc0 2>,
-> +                      <0 0 0 4 &pcie_intc0 3>;
-> +      legacy-interrupt-controller {
-> +        interrupt-controller;
-> +        #address-cells = <0>;
-> +        #interrupt-cells = <1>;
-> +      };
-
-IIUC, Rob says there's no need for a separate interrupt-controller
-stanza and it can be directly in the host bridge [1].
-
-I think that does make interrupt-map a little more verbose because the
-parent unit address will use the host bridge #address-cells (3)
-instead of the interrupt controller #address-cells (0), e.g., this
-from [2]:
-
-  pcie@10e40000 {
-      compatible = "renesas,r9a08g045-pcie";
-      #address-cells = <3>;
-      #interrupt-cells = <1>;
-      interrupt-map = <0 0 0 1 &pcie 0 0 0 0>, /* INTA */
-                      <0 0 0 2 &pcie 0 0 0 1>, /* INTB */
-                      <0 0 0 3 &pcie 0 0 0 2>, /* INTC */
-                      <0 0 0 4 &pcie 0 0 0 3>; /* INTD */
-
-[1] https://lore.kernel.org/linux-pci/20250509204905.GA4080349-robh@kernel.org/
-[2] https://lore.kernel.org/linux-pci/20251007133657.390523-2-claudiu.beznea.uj@bp.renesas.com/
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
