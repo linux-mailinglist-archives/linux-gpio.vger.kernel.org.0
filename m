@@ -1,116 +1,183 @@
-Return-Path: <linux-gpio+bounces-27783-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27784-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FC76C18813
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 07:41:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55717C19298
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 09:47:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8884C56566E
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 06:32:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9FFE3406BB3
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 08:36:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06F43303A27;
-	Wed, 29 Oct 2025 06:32:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2CCB3101A2;
+	Wed, 29 Oct 2025 08:36:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHGiotsU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dsbg2gGK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549F72DF150
-	for <linux-gpio@vger.kernel.org>; Wed, 29 Oct 2025 06:32:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5452C1917F1;
+	Wed, 29 Oct 2025 08:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761719563; cv=none; b=EvZxId6UtxB76AO+VoUlpIjNYkIt5BCnVZPuMSxM3/92kyJQQzKFWiE4Ff81zW79UKA93PaIwQ3hGIuBFQJQ2EDayZzib3xRLIi5+wiWcZ0YMaos7Q9YsASOtatyQeSaheya8jMq8R9Lssqb8SavS35bGSJyO0CqK4Vi8KfD9Wo=
+	t=1761726987; cv=none; b=Ou2b/G5Skei4vqyJavxkK8pyBqLqc2dfrEeKU0XHYMOFUcpp0uBcw7a7y7b48qWD1mPeMJim/g8Byx3paNL9hWC/jne/fXtVsJMPe+VsI0xEADcLT7Fj7lqdbjYdNPoO6tAYXtijfF7LJp8jXDjtY+tCId535AO1SP+oKv7jhp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761719563; c=relaxed/simple;
-	bh=8fqX1yNSZKPOAEeYYcZLsQwxSr8mhllePdhz+qlw4hc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GtOpj3E2+iz+ThA637B8G2waQXSypnuxJEkNlMNeiOU92MJfqP1BK0exPiRrdcvDoh6L5aM632vRy4X/WbjN2Fb/tgfqGgNasPEsYYqwdSY8G5zhNBPFPc3e2bmxonp+DIsEYaqpkB7OhP7gY+tDf4kTwzMFQ0pB4PgnYHaPWM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EHGiotsU; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-33bc2178d6aso5032458a91.0
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Oct 2025 23:32:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761719561; x=1762324361; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8fqX1yNSZKPOAEeYYcZLsQwxSr8mhllePdhz+qlw4hc=;
-        b=EHGiotsUp2Abm7ooDXmMwop+Qir+8ydQKxShv4MhnIxUXdq1DxH1gd296PswilMPbP
-         CoSI2TzlIqcooeg0IBwB2RSV+aQLcGoofxoBjFVHI7wmakawJF3Z0dWzTl9XaVniDC3z
-         P9qlp/fn+gi5u2GMBB8K6WgCdRy1hrxelrTiE3rTahKzEx5o4dDYhzWrU3IpbaN9oJ2c
-         e2QM8BIT+HrgKxU75AYMkftALXw/jk9Y3VgzPkl0ihg/vYbrj0QR0IAzTMgQytXMILn8
-         tRaWBRNFSZ4WllpbZs+b1xPHbCpu4woDtx4Z3AFzXZev1a3KXGw4sJ3X6nI3Js28PQN9
-         T8fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761719561; x=1762324361;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8fqX1yNSZKPOAEeYYcZLsQwxSr8mhllePdhz+qlw4hc=;
-        b=GVNs1u1O3ezdvY3K5BJMoCE81a6j2YaA/E55BT48bp8hnZFp6dLxQoYILYwariZr84
-         5TUe6k/m1e+18IH5J+eeWJQc0Qv94Zvm69+Pu1DT9qTVOoBsr2GbnB5VZZBkmN4xAhOe
-         ef9NUWJPE+v/5NmzurLC/sUkwEjq7s6Z8cMzqbZS28vHodHhNf0Ls0nR4/8EynaLOA9a
-         OfPM7deNQ5OwKoXjTuS2B707jvNojzYKyso8DKiU9so6ZA20GMfkfP08dcQF24vpMn/Y
-         mQb7+kV7mkcnfj+F/25zbc6X7Ifxxz1VmRYICiwfZauMS2PDx4oJfr+kcnS2OLZTknE6
-         5Ygw==
-X-Forwarded-Encrypted: i=1; AJvYcCVETcxkYZmjo9DRPvXgHt2Pt4F7gp5PZgiKuTSsWG4qucVO2s4aq3JtNDsCVxXyiSEBKpjMDdNDYZTe@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0qvxIw/H/9998BiTEVV2f0txoot5XOMz5OFeGY9qDTJOTg5Uz
-	QsiUuaehcixrNPATpcGqzn4lKGL3Ub7ZAAzclm2wq+aJlGMRWsdPA6z3Z0Tp0nI0+yx9dXF/GfV
-	vfrzSgoqcp7G+Iw118xCnjZYfr/gD9oc=
-X-Gm-Gg: ASbGncutx5FoyZCE1CPe9TNVSc1l1hSUkQxZYcMnohAYwPo8w1F7efX9IusQAg2xybw
-	I0hCvog2f4tVdWWNAfN5nh9CrXMp99uFsjBnqQ2o9p4fXl/Oc23nk0CV9PFvjO3ihDzHIGS/n9m
-	i+JKQcWB+OTMyxJZgyrR+P0de0Qhi587+zlewt4LQQnuAPFNC/UMurdogFlGxs7Tl5VgnMFjKYL
-	m3iStHS8dH/jc+ZPeaRIsOB0k3KB3GEKQ/Aowplkbct9J4lXngVb5KgIjZCJ0SLnWzeDVX94A==
-X-Google-Smtp-Source: AGHT+IFFVo3TxCbMkZ5UI77sKbgoDsW97wn27M6ulWZD7oeWngePKzAxdda7IduW8N2Ts8l3ViDHxq6u4X6dWfeQ2as=
-X-Received: by 2002:a17:90b:586c:b0:339:a323:30fe with SMTP id
- 98e67ed59e1d1-3403a15c2eemr2084010a91.14.1761719561334; Tue, 28 Oct 2025
- 23:32:41 -0700 (PDT)
+	s=arc-20240116; t=1761726987; c=relaxed/simple;
+	bh=huIK+iwaXtZ6g/UnJVOko6NspswsXyUtdXvuesD5DJg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OoPw84/tNiBIkaSWnjQA5nD9nQtP0VwjQyxFok4hKRJvydWkAzVeI0rnXgyDYx1IOGXVebqiNT3PbJC1IodX1xdh/TuDD/Oix8ksooJXkDevaNI7oHJwWCIAbg8SrqnGb3T+eeXk7keeQRCXH30vcoXk5QHgHBTqWM8Q6BhmEx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dsbg2gGK; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761726986; x=1793262986;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=huIK+iwaXtZ6g/UnJVOko6NspswsXyUtdXvuesD5DJg=;
+  b=dsbg2gGKhimEjq8sQfsG+2X8lpdR8ZEjRg34y+5v57bQ9YyxpBwR9j9N
+   5Hubb5mkZqh+u/6HlDzSQ9Y/Ri48IxAIXIWUmjg42UCdr8tOCjG+h7H0D
+   17DnC/+1eMp44ajmHVihA5rYD7Lez7x34X4Zdl9vKxgEb3vh2JllWvYZE
+   vw8sPEJmNm9zp46Wk9usKFJ7Z+r+r1NfaUkpu6dinGi/vlAHI0hO38Z2a
+   /RzO698UJFju114QmenbdLFZ6tpTjWxYgpvvR6/qlNkHkGCr9VH0HuTqA
+   9Qq4spcj80f6d4lZybO+FUabaEpoxB7xKQcQ0RUGfrkl1lukg4KU1yBC7
+   w==;
+X-CSE-ConnectionGUID: gfG9RZSnRDiXyhzcpyMrSg==
+X-CSE-MsgGUID: Q62JaQshRPm8Hscvn5tLtA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="63744528"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="63744528"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 01:36:25 -0700
+X-CSE-ConnectionGUID: X//ub2ABSbWSUni2qFujxA==
+X-CSE-MsgGUID: Xa64sinjQyWcXJJhfXNm9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,263,1754982000"; 
+   d="scan'208";a="185291251"
+Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.244.248])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 01:36:23 -0700
+Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1vE1fI-00000003YWb-08DS;
+	Wed, 29 Oct 2025 10:36:20 +0200
+Date: Wed, 29 Oct 2025 10:36:19 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl,
+	platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] platform/x86/intel: Introduce Intel Elkhart Lake
+ PSE I/O
+Message-ID: <aQHSA6TtCAVGDRNo@smile.fi.intel.com>
+References: <20251029062050.4160517-1-raag.jadav@intel.com>
+ <20251029062050.4160517-2-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1761564043.git.mazziesaccount@gmail.com>
- <b13b733e7e0fba05652f49f727412fed9e0ceb02.1761564043.git.mazziesaccount@gmail.com>
- <20251029-adamant-mamba-of-patience-cddb65@kuoka> <a81fba66-adf0-440f-96e1-bf3a83d504d8@gmail.com>
-In-Reply-To: <a81fba66-adf0-440f-96e1-bf3a83d504d8@gmail.com>
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-Date: Wed, 29 Oct 2025 08:32:30 +0200
-X-Gm-Features: AWmQ_bmRIxkt0_0lmeBnGc_3ozd43KhfedH0KHXGki9EADGblZUmvI-2tDAdlfI
-Message-ID: <CANhJrGOpH2=h4M5MPM2XwVf0DqfM+5SSvK3Rse7+UaoDyvkUsA@mail.gmail.com>
-Subject: Re: [PATCH v2 02/15] dt-bindings: Add trickle-charge upper limit
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lee Jones <lee@kernel.org>, 
-	Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Andreas Kemnade <andreas@kemnade.info>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251029062050.4160517-2-raag.jadav@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-ke 29.10.2025 klo 8.22 Matti Vaittinen (mazziesaccount@gmail.com) kirjoitti:
->
-> On 29/10/2025 08:03, Krzysztof Kozlowski wrote:
-> > On Mon, Oct 27, 2025 at 01:45:05PM +0200, Matti Vaittinen wrote:
-> >> Some of the chargers for lithium-ion batteries use a trickle-charging as
-> >> a first charging phase for very empty batteries, to "wake-up" the battery.
-> >
->This is already reflected by existing bindings:
-> trickle-charge-current-microamp, Please, see:
-> bbcecd1b9335 ("dt-bindings: Add trickle-charge upper limit")
->
-Sorry, wrong commit! It should have been the
-e3420b49949c ("dt-bindings: battery: add new battery parameters")
-as you found out.
+On Wed, Oct 29, 2025 at 11:50:49AM +0530, Raag Jadav wrote:
+> Intel Elkhart Lake Programmable Service Engine (PSE) includes two PCI
+> devices that expose two different capabilities of GPIO and Timed I/O
+> as a single PCI function through shared MMIO with below layout.
+> 
+> GPIO: 0x0000 - 0x1000
+> TIO:  0x1000 - 0x2000
+> 
+> This driver enumerates the PCI parent device and creates auxiliary child
+> devices for these capabilities. The actual functionalities are provided
+> by their respective auxiliary drivers.
 
-(Just a clarification for anyone reading this thread)
+...
+
+> +#include <linux/auxiliary_bus.h>
+> +#include <linux/dev_printk.h>
+> +#include <linux/device/devres.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/gfp_types.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/pci.h>
+> +#include <linux/sizes.h>
+> +#include <linux/slab.h>
+> +#include <linux/types.h>
+
+> +#define EHL_PSE_IO_DEV_OFFSET	SZ_4K
+> +#define EHL_PSE_IO_DEV_SIZE	SZ_4K
+
+Not sure if SZ_4K is a good idea for the _OFFSET, the _SIZE is fine. Also why
+do we need two? If the devices are of the same size, we don't need to have a
+separate offset.
+
+...
+
+> +static int ehl_pse_io_dev_add(struct pci_dev *pci, const char *name, int idx)
+> +{
+> +	struct auxiliary_device *aux_dev;
+> +	struct device *dev = &pci->dev;
+> +	struct ehl_pse_io_dev *io_dev;
+> +	resource_size_t start;
+> +	int ret;
+> +
+> +	io_dev = kzalloc(sizeof(*io_dev), GFP_KERNEL);
+> +	if (!io_dev)
+> +		return -ENOMEM;
+
+Why devm_kzalloc() can't be used? I don't see if the device lifetime is anyhow
+different to this object. Am I wrong?
+
+> +	start = pci_resource_start(pci, 0);
+> +	io_dev->irq = pci_irq_vector(pci, idx);
+> +	io_dev->mem = DEFINE_RES_MEM(start + (EHL_PSE_IO_DEV_OFFSET * idx), EHL_PSE_IO_DEV_SIZE);
+> +
+> +	aux_dev = &io_dev->aux_dev;
+> +	aux_dev->name = name;
+> +	aux_dev->id = (pci_domain_nr(pci->bus) << 16) | pci_dev_id(pci);
+> +	aux_dev->dev.parent = dev;
+> +	aux_dev->dev.release = ehl_pse_io_dev_release;
+> +
+> +	ret = auxiliary_device_init(aux_dev);
+> +	if (ret)
+> +		goto free_io_dev;
+> +
+> +	ret = __auxiliary_device_add(aux_dev, dev->driver->name);
+
+Hmm... Is it okay to use double underscored variant? Only a single driver uses
+this so far... Care to elaborate?
+
+> +	if (ret)
+> +		goto uninit_aux_dev;
+> +
+> +	return 0;
+> +
+> +uninit_aux_dev:
+> +	/* io_dev will be freed with the put_device() and .release sequence */
+
+Right...
+
+> +	auxiliary_device_uninit(aux_dev);
+> +free_io_dev:
+> +	kfree(io_dev);
+
+...and this is a double free, correct?
+
+> +	return ret;
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
