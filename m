@@ -1,60 +1,61 @@
-Return-Path: <linux-gpio+bounces-27850-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27851-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31208C1D15C
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 20:58:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E7BAC1D15F
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 20:58:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3F7DB1895DDB
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 19:58:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C4291899FF1
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 19:58:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3878535BDA5;
-	Wed, 29 Oct 2025 19:57:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57F8936335E;
+	Wed, 29 Oct 2025 19:57:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="hjbDq9eo"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="oGboZKKK"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012004.outbound.protection.outlook.com [52.101.66.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30F1358D14;
-	Wed, 29 Oct 2025 19:57:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF7635A156;
+	Wed, 29 Oct 2025 19:57:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.4
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761767831; cv=fail; b=oCdUeP+aQ/oRfncGc2iIX9hqCEo/UrwZ4bwpcghXNOqIKcfi/vsM8B9h3ZclaJTRLXKt3rSFHh1QivcyazvudlkeLKjW5OUKwECe5dy4aRVE3HSg8lfsdxk/5Hn3+GkX8klq+ude9E5atxCVLyzpprz7caqE4Pkz7uGWIuAJq4g=
+	t=1761767834; cv=fail; b=lpM4jj/dzUk0u+q7Sp3Xm9SEhoLJ2zq6Ex5f3rqEroQAIQ0LI1rPEtHUW+sYS3F8lwHqugE5TFx2lF/SLxoSmddZ9E8ZN4pt3NPyhvkBJbeh96gdK7vgYy9DzSVNglPBEsLHCNpsywsUb3xFnglSIsbB+jFM1Aw3IueIc9+pnug=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761767831; c=relaxed/simple;
-	bh=JKeYL6MxQeCwHFLn9B6gYagm5+6HZ4atTBWySmFxQeY=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=nXqATeuv2utz49ofzGAOIT//WLi+CNgLAGlxm+kw74J7DptBqbATz9cj9ujxEyd1txDL5f0s5JswZ6KkPhvJTUiXohiy/Dfsr1uR8nA7k2/YfLlAuxbLGc7Ce8D4t+0bmYdBJnmYXHdpKNaS3kQ14bb3uUsp6mSlQCHiHwi5i/A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=hjbDq9eo; arc=fail smtp.client-ip=52.101.66.4
+	s=arc-20240116; t=1761767834; c=relaxed/simple;
+	bh=dJvN3PVdWTU0uEkXZDJ6LK2XGCjZQ/LHcxCeyghw8qs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=LKfQ6YNiemh9/9gKia1GrJODpZmM73gfEUDZicLNCckZtB9UruL1ssoGyj+pGLtZJ1qRWP5dTBD+elxgxuybYpoxhAG3uAAZAueHoUcvBuTS4SfcC43cU3nS5TSVs6Xz3+F3Z6mTOBT81U74hFc0B2b8jsLnH8fYfIDqwdFirHw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=oGboZKKK; arc=fail smtp.client-ip=52.101.66.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kxWj25xQHJ/llfZWSjQcuvZxkeFIjKx+Bche9jxFoyd9Ugdi0/IfBigocnAq4mTAJYVeOpB4rsIbmTuaMN4nDVFc/kJ4GXVgdzxcYDE7C9SLdz/gFwi4f1PU5ojNEbeI80k3LQgHesqu+e/uSwvn9nz+Xfcq1Q2VM7JAdG7pFOcsUfljnDIxlcb/LSUB5U19X885wpnbXBli2Rco2ylSMiQCozUpsR5IRKsh/AikVqxAEVyZdKXzh/7kBtpPZmXogEu/mW+NMiF3c9ee5EoYAoyftcqHr1knk0gnd6OJNsCXAz9BxsplGZFH+Ay57Rtm9INxkGbPAyYilgFQu/l8Dw==
+ b=cY3UqLtUYPARqDXV9uiAu/cveX/zLQe7cDmmXfzCWk+RFWjMt10jr4kw7Ftkuoy3Mtc9AN9Nq/HEYGcpMnai7YnO5D9StPa57MUNljUN7i9i3iQ1ssDZFy9Jiu0Bouh9Eecy3p90VZiQl6jhY5FLYuVQgKNqkHh76qQCcctWpcDyajwmwXzmHbGqDirDsPhvGc7xooIPZXWrPowZXVb6e6imny7ioLpRI0uPV1baaOsSYzqaZ1WUXgU/iKxXG2EPWJSGaTSs4kPRPFdQxfoUQu59GC5JcAE5T3nQaPxrkTHJ7qLGbZR9gAujJ1CGf9hMpHLOtqEVcLrVAZ21gT8h0Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hXcFjJr0XpCqiQHNOo00oQQTrLG53cmUdxqEpJFfpv4=;
- b=NTB/sCNsgkAam0N8BOiyfPELRE2uAXF2Kvtacu3/7jGEgI8pBsenJy4g/FtVCO0q9VGu6doGcpLiQKz9cEB3Aqh7D36K+7DNe0tc2HFxy23tQ53Ru2S4Lh1se0HRNXO7qTaCzaQGXxZDSPEP+Dxp1kJmG/d1Lc/p+HWuAUWLC5R1dUNJUiAn3QXsjiAIfX3D42iq9K4Mpocbt2HoTofC6qrpW9sMhx27MX25GEMUROE02fiXadkWneSM0sG2bctbTwQ2ReAjRFN3LMSgUvl0Us04CH5OygvNLIxPaucXbbmqw+0fkkBj+HPszuAe0kbzlg9ZR2VRl6ojO6n+iDZ0Rg==
+ bh=K9Zqh2PoVASX1qQmYJ5tb0TRXoIF1kP9kIekkcjS+ZA=;
+ b=iI620+nFI0Du8GV5fgSzTBBMzn11mGyPXjyUqGci1QGGuejmh2SuVN+5AYPf2TG/E/vvo2QyPTbls5Upsoa9z48PnUxm2s5TdmwvOmJ2v75FYK4gMfzTT92LdLefsD9SJ+xFvcR6DYjUOlPm8OYGqK8lH3bETlAt595cM6Y8Hb//9i5NKwDuNTtV0VAHMt82PanJ5MK3586tMO4ZQEX5KRfoFRQ+YlZT7VMTh3T/Y0deBnBJu2TYS5ZqqQR8h8UMn7iF28iUPD1RoZ1p2v6YKNA6TZaiHXSfwH3soL0lG5cPfs1qONZaLQeeT5H1fAQIPb1idCiWedTkc6QUC5ICnQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hXcFjJr0XpCqiQHNOo00oQQTrLG53cmUdxqEpJFfpv4=;
- b=hjbDq9eoAtra4S9RYGmUKbMGZU1OUht8YmRbggx9ic3Ta+EyrWPIQJ4kPBF/X7klgDUwH/ukTiADAlp7+QCwbhBO3+yVSQ89Pyub19EFRW9DcVUPGm7MF0KRi97RO7ynwtkY205U+RJTwCxSymKDlvKhbhYVVgJtZ9r50T96PmIjjJZ5wc1CRbxZZhi8Rr5d4VKNBscCr4J1R1CbWytqNG0z12mDst+5UvvpwFukIY2Svku1oAo47mcyzxxlp9M0N53Oxq6aV4p/hDRrzsIfgLgbdrvfhYk/CSb05GUThuTTzMn5nr1yIUP0MN0FZAmKA6n5TUjYC3aMLGSK019QFg==
+ bh=K9Zqh2PoVASX1qQmYJ5tb0TRXoIF1kP9kIekkcjS+ZA=;
+ b=oGboZKKKStugsceC4tFYbf2PzwX7UVOSfgDvQaDmbIk66OBq3w3y+EsPiOMWFs2C3SSUVsOMcSX/jui/kzOR7zqQX8KZAeSlFlvvjlZQcdSSftMEnYKKawi12ZDV7BW0i4h28ZtZ026v6bMpIH4Ij9dhln+mI+ey4j1a3gSb2IJjRvIcWN1/3aqUVi7c/PN+eAW6iXP/g0kUrP4fYiifSi+cz87LbwMYEfmttlHPFx9fP6nczDKTVNG/aosOyPesQ+xX7xwpgqHIqHptmgYpHAMKEMVgz8kGqUaNV2IMo0fQmPIvKWTm88V0Cao6EuS4TduEu+Lf4JtgColTl29VtQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PAXPR04MB9185.eurprd04.prod.outlook.com (2603:10a6:102:231::11)
  by GV2PR04MB11687.eurprd04.prod.outlook.com (2603:10a6:150:2a6::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.20; Wed, 29 Oct
- 2025 19:57:05 +0000
+ 2025 19:57:10 +0000
 Received: from PAXPR04MB9185.eurprd04.prod.outlook.com
  ([fe80::21bf:975e:f24d:1612]) by PAXPR04MB9185.eurprd04.prod.outlook.com
  ([fe80::21bf:975e:f24d:1612%5]) with mapi id 15.20.9253.018; Wed, 29 Oct 2025
- 19:57:04 +0000
+ 19:57:10 +0000
 From: Shenwei Wang <shenwei.wang@nxp.com>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -76,17 +77,17 @@ Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
 	devicetree@vger.kernel.org,
 	imx@lists.linux.dev,
 	linux-imx@nxp.com,
-	Shenwei Wang <shenwei.wang@nxp.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
-Subject: [PATCH v4 0/5] Enable Remote GPIO over RPMSG on i.MX Platform
-Date: Wed, 29 Oct 2025 14:56:14 -0500
-Message-ID: <20251029195619.152869-1-shenwei.wang@nxp.com>
+	Shenwei Wang <shenwei.wang@nxp.com>
+Subject: [PATCH v4 1/5] dt-bindings: remoteproc: imx_rproc: Add "rpmsg" subnode support
+Date: Wed, 29 Oct 2025 14:56:15 -0500
+Message-ID: <20251029195619.152869-2-shenwei.wang@nxp.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20251029195619.152869-1-shenwei.wang@nxp.com>
+References: <20251029195619.152869-1-shenwei.wang@nxp.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR13CA0207.namprd13.prod.outlook.com
- (2603:10b6:a03:2c3::32) To PAXPR04MB9185.eurprd04.prod.outlook.com
+X-ClientProxiedBy: BYAPR02CA0012.namprd02.prod.outlook.com
+ (2603:10b6:a02:ee::25) To PAXPR04MB9185.eurprd04.prod.outlook.com
  (2603:10a6:102:231::11)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -96,130 +97,243 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PAXPR04MB9185:EE_|GV2PR04MB11687:EE_
-X-MS-Office365-Filtering-Correlation-Id: dc192997-d4d2-4145-1c65-08de17255559
+X-MS-Office365-Filtering-Correlation-Id: afed3f9e-1e9e-459e-48e7-08de17255891
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|52116014|376014|1800799024|19092799006|38350700014|921020|7053199007;
+	BCL:0;ARA:13230040|366016|7416014|52116014|376014|1800799024|19092799006|38350700014|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?4sqsnerHNSsjMsyvZbMQKWCpGAS0RitPQsGefV3yamGg1H2TxLveUtENXzhs?=
- =?us-ascii?Q?oUhwrHp6izl2DrsKPF00KMeAzeiA2qY8QPNlfh0rDp47Hd9rd+MBLb4encQ5?=
- =?us-ascii?Q?4EjErMBarYQB041ejxxa1bIgYZe5z2ISWsqhY+QUqrWgr3GYTQq22DzCtFBX?=
- =?us-ascii?Q?iaTfK3j9m3kq/O2ViDCEowE/YoKw0RkBmgjSnrg3A/+4I97VzbUL+e1ldxwe?=
- =?us-ascii?Q?Ntfb2Dvk/yFPZ7LwcoyGevcBrySQNj+l1Lzy85HJBdg1cnSsOyPiwevzh4tJ?=
- =?us-ascii?Q?mN3+TsuRQlG2K9vPs/evTqRl9zh6ZyygwJPtvw1hxOsbwjc7aWGnpZHYHrtg?=
- =?us-ascii?Q?Fn82ufJq3xMxsCVWdn9jkz6yCwq75lTf02lrlzuiLsKcEQ2Es/TZqO5D7G98?=
- =?us-ascii?Q?9okvZPwsj1wtM/YGCANHnO092LXBQ6KEK2ElY5vF3YA62BRPga+6mrsaa+4e?=
- =?us-ascii?Q?33oMQaoiYtVSOqBAWbe8ol+XhVb2+41BSWYUBHTvsBT5uaYUev+kIAkchkuJ?=
- =?us-ascii?Q?yEF8eZVRPVEZ9Dt6vlv49zNEN/hFOlSUYaYEC5JmkBiv+Dx64/rD6lGhVKc8?=
- =?us-ascii?Q?PIPZXQ0CInNHFzOpdXvbPs84ojNaSoXssYzBbOmXQWqOqzp6phn3dbSrhdRf?=
- =?us-ascii?Q?glYp8FwE5P0dDhG9FEuWr7fx+C6x1xJWvj8P9hWvdjSCYqAbY4usQdjDE/J9?=
- =?us-ascii?Q?HLieOTOkjN6j9AKSHrpFUJv72Qbx1iaIsKIK+RZKTvI78T2mj+kyFHQ/WeOd?=
- =?us-ascii?Q?U4tzWdYQ1lUBI10WKdEpvjPfccWzD3KEtY8L6gIhR5ZjvxyGnLINBJA5CAuv?=
- =?us-ascii?Q?NNkXkeAmvemrsDQDf8MdgU6JA+LB85DRi8ZJigY9wWbWA5KJqJZQN9i3MpvO?=
- =?us-ascii?Q?X2ImJf3K284T//gnjMHVpkRb4rXLztj9wR5Jjot0KSiXhm0qD09E0Sk2ik0C?=
- =?us-ascii?Q?DdEU8FehXjjJjLvlfQPtTz2WW5pSrtJjd2glOiNpv3KXin1qxCdDQ3BYe9YF?=
- =?us-ascii?Q?WoDoyeknxo52YialiFAOG8nOVac/wtz5K7L9Goii8t3nEsvRoyWT9EG47THU?=
- =?us-ascii?Q?stCQYWofRN9UXRfu5dKcNnByCF67gKogRDIP5HAsAgc5YM2P/lPePaXH2FNZ?=
- =?us-ascii?Q?SugGXNh2MwG9KN/SBjWZx6zt6S1hhXMmlnAyx0j6/jP44YGPuNppX71RFIOB?=
- =?us-ascii?Q?TVmVzFV6AArvfIxc8iAmVkljoGOwxdrI9Unuc+ocsdq7PBtHFsXE4eclrUG8?=
- =?us-ascii?Q?MK4uDz8LyWVUEkJxLe0938UFj8LQ2GSc99l8OILt285PtMQm0XB+d20QcVEG?=
- =?us-ascii?Q?G4XWcI4YKHO/d+gd2XZpLhISXjKvrr7j2j2fPg1DKN9nAFtTt0q5MbqXgpzc?=
- =?us-ascii?Q?KPeqLY5vvPVQinCwpWIKRDi8Lu6FPlX5zstN1gRwQmMhBQQ+4F83ii+vYLi/?=
- =?us-ascii?Q?7jClXFMZcjS0+PhiwHsV4iOW1oS3bouiWpeZZmLMF54KCTfs+mki2XSbcWMP?=
- =?us-ascii?Q?8ZW/K0q2WZddJG/qxI/98ygrjIdglTqSeREY?=
+	=?us-ascii?Q?Ui78yXKLmTCCFS+XvCc/oNEwZHSycHY7qV4rKs+urWVWJW1Pf3s5DP7XE4D+?=
+ =?us-ascii?Q?Zt1kJtmLyklgDAWPliDD99fwrhkTfA0nMjy7a0pd0TXAHAF8Y695g2uvvPJp?=
+ =?us-ascii?Q?MatLi9nbvnlsvAFUt2D2jiJ0lB9jJO/TiPwbnLGyJ6q4XdJwhpPeRjMuTSFT?=
+ =?us-ascii?Q?UcA4ePOK4sB+zjoXduiWuVChYSuL89eBVBosXINgRTrKocChq9LILM45AUVJ?=
+ =?us-ascii?Q?4w3HSXQ9VcItB5cQLMn28/rTYHITJ89Phf8MSGnsyIV1yvjzyRPhWR2lK0ZA?=
+ =?us-ascii?Q?zAL0BtVLN2gVIMvpczkq7m6iByb8GaYOU/VT5XVJMsj/48aNOm9D7fetEX3K?=
+ =?us-ascii?Q?ufTmLRTceBrUOeMXOJDpMLhg235BmDUN5ELIkJXmvsfEa6t5GWYzwexg2tPe?=
+ =?us-ascii?Q?6bi68bB2oNOfxK/3b/aeaW5P5rhIJ9JaxXH1cyAjskdJUMStu2qsRt8bJrZ/?=
+ =?us-ascii?Q?+Ol3f+6PDlcqMA2qEp/B2PRHlL6S6bUNpP6g36iI8uTG5WUxjLy6X/oPf4Na?=
+ =?us-ascii?Q?jNbwEAlxtews4QZtFMdA2SPIRnEWVAPSgWRRW8M+oloCVNbm10dNVaPOcVuh?=
+ =?us-ascii?Q?3xKTobVg52kFAMzAHaYERDYEX8ezQ0ll+NKoblHeTiLmK9ErWWiFoX7hI0O/?=
+ =?us-ascii?Q?61xM6i8PN50nVAcgj3YYo9HbEUHiqST47hF/F4EnuSPYSHzKJIFW9jxdNvch?=
+ =?us-ascii?Q?VbN4b/MWCXgHzH19ctgP+lgI4gb4+m56Q0c1Z3113IPVa5oG9bVFkLxMP1bC?=
+ =?us-ascii?Q?uAngcTMqPem0uJ2ez1VHouzHIurMNA2Z1H3buD+hwn1A0t+GVnt/45yCfTyA?=
+ =?us-ascii?Q?HBwtJf2y3xI/mNuVs7jy1DIhLFKDaLpJhwIx/2tOawZYKyR15Ez0ZNR8cVlH?=
+ =?us-ascii?Q?Wjtw6ByMmxvsKuTAhy07+RiFT2hAQoOBZQmxVU2hnG6iRI/74/0TlQ2oDiTt?=
+ =?us-ascii?Q?fq8w+TUX+YfoD8XqDS3N5hqRMCgPcjkCY939F6AbdQ5lOWjrfOxDQ7RGl8K2?=
+ =?us-ascii?Q?vt7p1+un9O9tKXNpcgfpScBDnkxveeSbuWWkZgszz8KcpdjcgeTg32qeYpbC?=
+ =?us-ascii?Q?swZFi5Tl/JXtIOIYQ/NfWo9kRmLBK/rMico8d8YCgzqM6Yipz+6QOrqG1fIQ?=
+ =?us-ascii?Q?FFbqUAw4KzGQwgrA/qMP+WPMJLXMHW1hwQgKB3lN5/VZj1VSFgMuo7HtwzHQ?=
+ =?us-ascii?Q?WS4zijsZv/rIu+v7IJImkY2yjGdD2A8dLochAvS2xRHq5DRJrURWYhSTgGR8?=
+ =?us-ascii?Q?f/9Fm65cHtklZRL3xhnCD+sh2/Tlmph9zrOtgehkSybRc+8bcO4FkrUilLFY?=
+ =?us-ascii?Q?13EUuoi6ZzBfb4XhxF2nV7kNzUBA/yGDEuJaHB+OXw+ysAz9fvZDtTM5dND8?=
+ =?us-ascii?Q?lmwtmItDY/SsSErtbRoUNCCtun4UW2k29riFV3143QKvYukQrXqJHq1pa822?=
+ =?us-ascii?Q?X2I1CkX0F+3OBp4U9aKdUNqoorzPwhtiMcLeJCMnsA972XMSb6Op2K+KyU2s?=
+ =?us-ascii?Q?hboLq1BQxgNlx8chhpdNxg54FR4N8SamfHU6gvL39xoMy+pIXCA93VBtag?=
+ =?us-ascii?Q?=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9185.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(52116014)(376014)(1800799024)(19092799006)(38350700014)(921020)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9185.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(52116014)(376014)(1800799024)(19092799006)(38350700014)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?lE9Eef9cAaIrL1I9BWOlEAIlzk7s2bCTRrJ1uLci9vwNqO7SdKbu3aA8AWl5?=
- =?us-ascii?Q?zxtEKFlLGb2/MIazrsD8sSPXsUQeh3rtILAe8OlBtybEnyv36n0wFltL7azJ?=
- =?us-ascii?Q?oKu6o+LeGkl9AFjXtbeXQZbCKe7B5xlUPBr/YDsHr5kSiw1dTOsCAKkD1E+D?=
- =?us-ascii?Q?ikGWgXwnFOkpM+5mD6SdRP2rEIhAXLNbpUntcXGJ/NCGjJe372sSDFUxEYPS?=
- =?us-ascii?Q?CijnUo6kLh0ZuMkA8RTG7WRv+aUks65DitZpuV20sVYz+N62w/uNE7GxAAep?=
- =?us-ascii?Q?ukj9nbgITv3lZtgN0evkvjy9Y33F0lmLoXU1GecVoDgcUGBd64BEAbgvmfgl?=
- =?us-ascii?Q?zUeyjj8hm3XLZNbJV4ykqwd+KrKT6jpMt/cyWAEmwoyISZ/R+exz3IXgI7Cu?=
- =?us-ascii?Q?ZtlIwB/DnOTfAAQIpl6TDnXF+Ez+3z7rlobWhjlMssZNiX23+x2nkF3+tBlP?=
- =?us-ascii?Q?eIqjyjCwwdBAjZ/y9HcRrTAx9xl7gnmrkFjnZroTCrH0ecMpHlGBpHJS/m8g?=
- =?us-ascii?Q?lA2P0+4CA9vbb9brBA0weuT1a5bRrAvBRVjU0JajQcWuIhRo24feF0Trk5ad?=
- =?us-ascii?Q?yrwacN+UgSODXZmoUR6Z9ts8FsXVh5kbzNtsJRjEpbEPzNojh1RRQ4yilSfT?=
- =?us-ascii?Q?ALxq4trhIib0Ex2GYzQm+aCzfYXhI0otJJb04aWCyoFcihN4SLBy3mzpOqLa?=
- =?us-ascii?Q?BWFgnTi2LkV/x9Xr1wz0QX7G6FVylm6w0AFHDAfvTIlXMxIqIEmMBOEI/X62?=
- =?us-ascii?Q?BsCsKl5NWU0CMMS4EC/GWuGQ4bPQHB93KbxkBdXMm9+ZdVdfv+FVormlYDQu?=
- =?us-ascii?Q?o0C0ZS2wDSUHs/DbW9DuHg2QlGAKXxswbC10rHq/O7Df54JY/uHqIzFE4Vho?=
- =?us-ascii?Q?w2Qxgcb+LBOo+Jc9kMSt5zFOfbuIydWrmig4qVF0sDRpCbObSDPkdH1gTsx8?=
- =?us-ascii?Q?13ZHcdLf+F1c4xttbRhKJ5ZrCdFIxupmnQ4nHNTZwleJXlKnW0KyZtgt++1h?=
- =?us-ascii?Q?sdFoS36/N6ka03usuzyLwrMtTsJwM1WHF1Q0OIKlmTuL135/FVmI1O5vJumu?=
- =?us-ascii?Q?5hYvfPhE5hJZo85diyZTRnqQdXh6u3tBtfwSoiW8zivcMZJuG3z3U9weAFqf?=
- =?us-ascii?Q?Rl6HAJ2U69jZWs7RZaYT4TP2B2ch7VguNVS82upDWyWwci66c1UAsbx68HRb?=
- =?us-ascii?Q?FWstTZj02/+Ck6j0n9r1Dco2xoaNZ72GJtZwAqCS3bkTptjaEqKW2+mBcBze?=
- =?us-ascii?Q?OUElsSqUM9JX8OUrgzfqOSHZ33mK103Q8lcKUYdddHxMimwRvKbRYpQpiBHd?=
- =?us-ascii?Q?EtTsS60S7c0vjn8Rps3XgL+6XYqyJR4hmLtSk+EFO7ebe8zZxpbtVcxCS8FI?=
- =?us-ascii?Q?0NV4jiE7iiHyS3s0dE4o8DpBIFs+h/Q4x9qPvMHOOOxkl051i+g/5yd5Myqy?=
- =?us-ascii?Q?Gpr2CEQl0Xn9mBNYcGzbCDZ7Pb5ummxcRnwN3Qxe4B8OCXJtfTGuwsilJDjZ?=
- =?us-ascii?Q?L4aTWmxklPytN5dsi0chjtkQ72RC38vzEf2eds03Bp1BPj4ZqpxKuC1knNFE?=
- =?us-ascii?Q?xeimuwRHGdmYPWzw5pnSvG/24i69tB0j3HpQW5Aw?=
+	=?us-ascii?Q?NkWi3I8IAHBK6uJPx7o1VJZMT+3YQhnUVh2/rDroDiM5guYykHIpWkSh61/H?=
+ =?us-ascii?Q?QX7pay2bxCeUy8psV4S5l9ooaDLcqjfBDSIgD1K2hPdoAn0tA2UOvYsEMTiS?=
+ =?us-ascii?Q?CiBlHS+N+tTtFbL/XHut7x2BGSivd0e1qmhafNVw0QPw5KEUL5z61VLz9wJ1?=
+ =?us-ascii?Q?RAbh0ugWIIKVXGW8FOC7K4kRWH+/FmGUswpyd6T/KxOj5j7uCeFNLbEKesrj?=
+ =?us-ascii?Q?iA9XVtrOK1ALfAKd67jLiMq6srF5ye2EdS0vshxR22CeNso8+iEQ6PH+IUqc?=
+ =?us-ascii?Q?ejkALEZdik6mRXWlbpTOBV2pxwzIpbnKBPwpsmIP1FGMdQtfePZQQ5Wj8UHA?=
+ =?us-ascii?Q?bJe4M+6lnO8ZRV18uT66lCFRwlsotZGRnmWagDX1XZ7ieta16xXnX3fn42g3?=
+ =?us-ascii?Q?9iGVeUP6oPIbFkYPyahM+WbTLW+bNVdc9X/u7fG9aR/+xHnFzgWGgcr7xnAp?=
+ =?us-ascii?Q?hLUz8kjQ2UtzfsRFaTgrU1qse0iR8XMxQreCWoPhhMl34+POTgeJRu/NgD6f?=
+ =?us-ascii?Q?llTY3kTpt31ndRMyUVuuSlDKFQQGX5Wv5WATprlWN8oe5MP8xpZHJsKngpZQ?=
+ =?us-ascii?Q?q+fpbIbyoqkZgAOv/b/ncpbH+u84PQdXbucIWbM1Gj24TijmFarUhHldyq25?=
+ =?us-ascii?Q?qLPEASYngfhrHyIHmmP+NXuSXaPaU8zs4nd8bHkvne8i7J46v1OdJS1y20Vy?=
+ =?us-ascii?Q?KhcGA9i18rWHkxGBqLVyIbFTTpn1NoJQ6Efpdafvz3rbckUQPPzAjPo6oGHR?=
+ =?us-ascii?Q?uOI48rd6uacXwt3rPD+RvXaKUiVuUPQ/IithTcL13jkv0FLOcgvN4svdgeJ5?=
+ =?us-ascii?Q?YYmxuzVDHgKbF9kacOmEJffzluetC7BDN9oAWYdOJC8C1GJ5KiKxIm1k7IvP?=
+ =?us-ascii?Q?s2IQl/iS+l/pA0ccy6xvTCowMsNlAcBwZb6hSd+jLJyL2LkdD6Spl2EXzTqi?=
+ =?us-ascii?Q?X9dXj+vShrJwOWFBWgA7GK4atF5SYr1kWj9NpbECgrNSOFVXgfopOc64cggC?=
+ =?us-ascii?Q?+CO8yqlV23PxDVs6uEMZ9DUOL0rWipzhYvVzoUJln81ql0mDw91nzojKZiPp?=
+ =?us-ascii?Q?tQ+QFrH2pHoWam+nehyCLEMyE8msFrlSdyBtDuMGr+DbuEAJfMILyhinHgdL?=
+ =?us-ascii?Q?nbcPlvno2jsJhI74bpqKg8HoW2LXiz/a3CK7ExcAl3xJVIB3EF7fhaAWI9oi?=
+ =?us-ascii?Q?wYt3onoCaXHyZo3z8By3NR33bW1XQiDGE/EyKvMShQmoSagzPrWnZmU13Fl9?=
+ =?us-ascii?Q?dG0vHXwmKYMvmhxLueXFJ6jL+J/jDVs+XKTFdQgGzdCGisiue1ZTnnHgXaDl?=
+ =?us-ascii?Q?CFQ9s/Mi2B28hKKkx9U7045i2qqgUoOrnDZ1vP/vUjCxgPaO5RTZbapySMZr?=
+ =?us-ascii?Q?ClXOfrFdqGJ4w4KcxiBxZW2FD+RHaZ+fjRH54tV4TCkhnHRyqFZXLmxNkb22?=
+ =?us-ascii?Q?Pp0EguNpCEV8ATUoXktuKm4CIJB85kdCUcBxgb+fWanL9JhOYijPqaz/zW+Q?=
+ =?us-ascii?Q?b8d15LF9od/u3cgMmI6QeJMDumjw5brbJgtQv929wTRsit+P89rpQf3ljObZ?=
+ =?us-ascii?Q?kUDw2eYT13V9DCiph3YueKYf+tGXNpZ/AAC6eZPg?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc192997-d4d2-4145-1c65-08de17255559
+X-MS-Exchange-CrossTenant-Network-Message-Id: afed3f9e-1e9e-459e-48e7-08de17255891
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9185.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2025 19:57:04.8338
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2025 19:57:10.2434
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EBH9mm9mqG1OwMkw4dbxh8v1L8O++BcSYyEx1oVI5+5z+QstWrRxBdILzNBoB5EtRyF0pk5atGghH0ulH4C60w==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1NtVl7XZLio9X7excCHljCHGvrgdgsiIFl1Nt6wIw4+pRNxvyY9Z2kNK1exk8nH0ac6+pTAi8Vel5aLNjO4XUQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR04MB11687
 
-Support the remote devices on the remote processor via the RPMSG bus on
-i.MX platform.
+Remote processors may announce multiple devices (e.g., I2C, GPIO) over
+an RPMSG channel. These devices may require corresponding device tree
+nodes, especially when acting as providers, to supply phandles for their
+consumers.
 
-Changes in v4:
- - add a documentation to describe the tranport protocol per Andrew's
-   comments.
- - add a new handler to get the gpio direction.
+Define an RPMSG node to work as a container for a group of RPMSG channels
+under the imx_rproc node.
 
-Changes in v3:
- - fix various format issue and return value check per Peng 's review
-   comments.
- - add the logic to also populate the subnodes which are not in the
-   device map per Arnaud's request. (in imx_rproc.c)
- - update the yaml per Frank's review comments.
+Each subnode within "rpmsg" represents an individual RPMSG channel. The
+name of each subnode corresponds to the channel name as defined by the
+remote processor.
 
-Changes in v2:
- - re-implemented the gpio driver per Linus Walleij's feedback by using
-   GPIOLIB_IRQCHIP helper library.
- - fix various format issue per Mathieu/Peng 's review comments.
- - update the yaml doc per Rob's feedback
+All remote devices associated with a given channel are defined as child
+nodes under the corresponding channel node.
 
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
+Signed-off-by: Shenwei Wang <shenwei.wang@nxp.com>
+---
+ .../bindings/remoteproc/fsl,imx-rproc.yaml    | 123 ++++++++++++++++++
+ 1 file changed, 123 insertions(+)
 
-Shenwei Wang (5):
-  dt-bindings: remoteproc: imx_rproc: Add "rpmsg" subnode support
-  remoteproc: imx_rproc: Populate devices under "rpmsg" subnode
-  docs: admin-guide: gpio: rpmsg: gpio over rpmsg bus
-  gpio: imx-rpmsg: add imx-rpmsg GPIO driver
-  arm64: dts: imx8ulp: Add rpmsg node under imx_rproc
-
- Documentation/admin-guide/gpio/gpio-rpmsg.rst | 202 ++++++++
- Documentation/admin-guide/gpio/index.rst      |   1 +
- .../bindings/remoteproc/fsl,imx-rproc.yaml    | 123 +++++
- arch/arm64/boot/dts/freescale/imx8ulp.dtsi    |  27 +
- drivers/gpio/Kconfig                          |  17 +
- drivers/gpio/Makefile                         |   1 +
- drivers/gpio/gpio-imx-rpmsg.c                 | 467 ++++++++++++++++++
- drivers/remoteproc/imx_rproc.c                | 146 ++++++
- include/linux/rpmsg/imx_rpmsg.h               |  48 ++
- 9 files changed, 1032 insertions(+)
- create mode 100644 Documentation/admin-guide/gpio/gpio-rpmsg.rst
- create mode 100644 drivers/gpio/gpio-imx-rpmsg.c
- create mode 100644 include/linux/rpmsg/imx_rpmsg.h
-
---
+diff --git a/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml
+index 57d75acb0b5e..897a16c4f7db 100644
+--- a/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml
++++ b/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml
+@@ -84,6 +84,92 @@ properties:
+       This property is to specify the resource id of the remote processor in SoC
+       which supports SCFW
+ 
++  rpmsg:
++    type: object
++    additionalProperties: false
++    description:
++      Present a group of RPMSG channel devices.
++
++    properties:
++      rpmsg-io-channel:
++        type: object
++        additionalProperties: false
++        properties:
++          '#address-cells':
++            const: 1
++
++          '#size-cells':
++            const: 0
++
++        patternProperties:
++          "gpio@[0-9a-f]+$":
++            type: object
++            unevaluatedProperties: false
++            properties:
++              compatible:
++                enum:
++                  - fsl,imx-rpmsg-gpio
++
++              reg:
++                maxItems: 1
++
++              "#gpio-cells":
++                const: 2
++
++              gpio-controller: true
++
++              interrupt-controller: true
++
++              "#interrupt-cells":
++                const: 2
++
++            required:
++              - compatible
++              - reg
++              - "#gpio-cells"
++              - "#interrupt-cells"
++
++            allOf:
++              - $ref: /schemas/gpio/gpio.yaml#
++              - $ref: /schemas/interrupt-controller.yaml#
++
++        required:
++          - '#address-cells'
++          - '#size-cells'
++
++      rpmsg-i2c-channel:
++        type: object
++        unevaluatedProperties: false
++        properties:
++          '#address-cells':
++            const: 1
++
++          '#size-cells':
++            const: 0
++
++        patternProperties:
++          "i2c@[0-9a-f]+$":
++            type: object
++            unevaluatedProperties: false
++            properties:
++              compatible:
++                enum:
++                  - fsl,imx-rpmsg-i2c
++
++              reg:
++                maxItems: 1
++
++            required:
++              - compatible
++              - reg
++
++            allOf:
++              - $ref: /schemas/i2c/i2c-controller.yaml#
++
++        required:
++          - '#address-cells'
++          - '#size-cells'
++
+ required:
+   - compatible
+ 
+@@ -146,5 +232,42 @@ examples:
+                 &mu 3 1>;
+       memory-region = <&vdev0buffer>, <&vdev0vring0>, <&vdev0vring1>, <&rsc_table>;
+       syscon = <&src>;
++
++      rpmsg {
++        rpmsg-io-channel {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          gpio@0 {
++            compatible = "fsl,imx-rpmsg-gpio";
++            reg = <0>;
++            gpio-controller;
++            #gpio-cells = <2>;
++            #interrupt-cells = <2>;
++            interrupt-controller;
++            interrupt-parent = <&rpmsg_gpioa>;
++          };
++
++          gpio@1 {
++            compatible = "fsl,imx-rpmsg-gpio";
++            reg = <1>;
++            gpio-controller;
++            #gpio-cells = <2>;
++            #interrupt-cells = <2>;
++            interrupt-controller;
++            interrupt-parent = <&rpmsg_gpiob>;
++          };
++        };
++
++        rpmsg-i2c-channel {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          i2c@0 {
++            compatible = "fsl,imx-rpmsg-i2c";
++            reg = <0>;
++          };
++        };
++      };
+     };
+ ...
+-- 
 2.43.0
 
 
