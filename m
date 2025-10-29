@@ -1,112 +1,162 @@
-Return-Path: <linux-gpio+bounces-27831-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27832-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33B30C1B301
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 15:25:42 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B3C1C1AEE7
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 14:50:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DA5274657CA
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 13:32:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4ED181AA7512
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 13:44:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE57B2C028D;
-	Wed, 29 Oct 2025 13:27:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B11CA32570E;
+	Wed, 29 Oct 2025 13:33:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zfwd39Cw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ou1VjCWO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0BC1EF09D
-	for <linux-gpio@vger.kernel.org>; Wed, 29 Oct 2025 13:27:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558EA302161;
+	Wed, 29 Oct 2025 13:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761744462; cv=none; b=I23wqIiszFpp08sEWaVQSGOuIoUPKFXs/dxxz3BcregGtpTgJxitIyisdWnGss/TOW65XgrtlzRebYzUd7XQXTkYuYVk8mpXNWbripKqEAetUVvyjAS44vbuZ151U8ojHtNkwc+U3TaX7ldJHRL7o7efvi9T9GeTHtJoDy0q5Z0=
+	t=1761744826; cv=none; b=BBspC1ngBHAxsZ79Djil4H/CRYgMOf2diltm3E9skpwMVN+8qnzQTXO+nOTt9Eime1pxi/E5uOSb2cJw/VdCDofYoNIo125zZdM1j0ddHaN6bdAa8ZpTC3RoEi6CDwvgJhTyO02+B2yTgu8kddrY4drLEVCPqUCi5BCzN2icuIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761744462; c=relaxed/simple;
-	bh=4jQlm4QL0G/HlPu6AaqVyYXrKj03YxyBn06mrBxHybg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pcFsSpQXr+uRsAI0sgUrOKq7N+GxT7dr56w80kbSJwZTQKH44RPHhmoFdq/Zg1a+xsNArzII7+h8Uo/YWJNy30EQFLIsr18nEipIvk2bpLxZ28iwM7Sgdr6m7ofkmPhnHhYagSpqNbKqboF1twBd9pcQJfquCiWPLgQ6hP/Ba3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zfwd39Cw; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-592fb5d644bso7328077e87.1
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Oct 2025 06:27:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1761744459; x=1762349259; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4jQlm4QL0G/HlPu6AaqVyYXrKj03YxyBn06mrBxHybg=;
-        b=zfwd39CwqfnA3m/tPDkDdoBU6TkYek2sWsR8NAlNhxIC7QNbq7wi6vgWLzylLiE3uB
-         mk9E9tBXFxH5R7Xdl9SAdCxXK3PMbrcgakY2epD6frjbn9rtRcAQEUSoS9EDNhk/OjDj
-         kNPoRSgNt9BJnpMNAOTz8raqmznKBu7DlDPDm25L6XveXjngUUIuBjVzUGQJW8/1eh60
-         eHTH5jK9Qmkmz8+xyTQKaeovTtxhCQT2u4qLipjq3RsVPbpX7EvB4Ug+oJ/Z3fb/ccs5
-         RKBe9KFJyb3aKGNUTXbggu1dslr7QkO+Zm0oZ1LVU6vv18tMs8P1HUjc11IOyzj9Gttn
-         AoBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761744459; x=1762349259;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4jQlm4QL0G/HlPu6AaqVyYXrKj03YxyBn06mrBxHybg=;
-        b=p5jlNFFP2Yi9yxeoIn+5/1Ja840I8nI+YLr13ZHXhivp85JQPvPDFt3RI+k5uK+7iZ
-         32DTZnlLPIdljJLKNTchyccY3i+HtnUU+Qo5Hg++dQdEcyacB2zOu+dh0oPBWuvKa/k1
-         FHQhmE4wUzp9qLLq48WLyf4aXHeQjpWnJB9LmL/382G9304y7s88SB1ee2C+aCHNk0Ut
-         AHgcrIsNRa19g/kFsQqvYGnqFitRfQ8BiMMW8f/6E1q3W6DItKAe4I55+jstnqVnUXQO
-         3fNbacvTyprvmlBkACJgVQGx528phC2HkqdfCGc5vg8MQqyWFiZFMmJ4w7U+PW0t51ZS
-         O2vQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVrRPdIJ7LA71CnX/6EwRKzYL5KINErh7mkOHdAyxIvDRya9ZFYYaYS8pjJhBrkj6p4pZ3QpPxI5u6r@vger.kernel.org
-X-Gm-Message-State: AOJu0YycDXSCog9AfAtOna5Ggp88s9L4hoxCft8dFCSnKs+iOkkrpsdv
-	bsbYxSPgvBaUVeBr0R40Jqq++U9NfoCQHSQeDpj+YNG+L/8nSPsB17AXryCXtYVD1WUD8JOm1Ht
-	Q5cHjiiGYlkVecIJjEKNcJPIL4JGD9Cyydd2iHPeh/g==
-X-Gm-Gg: ASbGncsqCbAAVX/kuyiQ3xngUkaWFIo/R7g1i15mkThch58X3Tw7T2NO9CXP9wmq9Ty
-	SK5pGtZdw+84fJacJm0aOYUgAUQJ3dCLBF58zqWPA8zKMVZBlARPyrv5GqOVz+NIQ1fDq1xJzHI
-	kOWa2b/vGDiIm+UohUrNE3/3m9TYYMq5gO1t6n8j2f4GY8c5/AhG9asTIEqCWF2jgC/0JzrWg+y
-	r2nWHRCiPOMqpNJNRACY7fS4JSZcG5/NiKaqHbpDzpUn5Mo9DsGJCXNgpyzmGJYXvonLsc=
-X-Google-Smtp-Source: AGHT+IHNfCne47Z1eBbRQa58ZTteY04bLS9xhtCisnJoPUShci5UwjCrSgpL8aWwPI1wivqZluOA5wXGysoEwwSDBuM=
-X-Received: by 2002:a05:6512:2284:b0:594:155a:a055 with SMTP id
- 2adb3069b0e04-594155aa157mr499507e87.43.1761744459075; Wed, 29 Oct 2025
- 06:27:39 -0700 (PDT)
+	s=arc-20240116; t=1761744826; c=relaxed/simple;
+	bh=ZHmNvpRE/27NOb0eEnH0tbeTut2ItrA5+TdUUFpGM7k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=blT7SeGxknvoDOgCUWRw1MXmnYjAQPPeXzgTUU0nXX4/0hLbguuFLh/Wn56SI6jAXCRakPuTwh4HzbmDMEWQGe0IQtAtoiTcrvJ1KGr5Kj2hq9JooXH2vKIEOEi2ldh679ICRalEnqSE5AvxfCdykTNe1wwqAIZel9coKGDlFI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ou1VjCWO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 078FAC4CEFF;
+	Wed, 29 Oct 2025 13:33:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761744825;
+	bh=ZHmNvpRE/27NOb0eEnH0tbeTut2ItrA5+TdUUFpGM7k=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ou1VjCWOsp1l3s9vFI6F5hFO11knjGvnOej6wvPkNlcz5O9trZBuWS6cxW8obzWkb
+	 bMx37vdpUgjTmxB1gh1eVoiWHzy9/LiGlSL5LwAwAnGCSci6axkvgrSmx3KVIvRbxQ
+	 IYMNOrwm9nD8i7eRIW/WLbIs7RFi0pynXPTtFmRhO0WpmqOi9pwHNWRfUkMcm59dDr
+	 1DE6Df080zlVN+aRrOSPvvPx/0CyqeYw/EleSE9D7UKDMpMfH4tb3kBC/qRvroBooU
+	 LcYu8vzysBKt0so2mGg1SLT7NK+fR2PoP9EpZlRpeFx4hWkqjS/6m859KMB9Mj428o
+	 8GPcdUi8cgYWQ==
+Message-ID: <b81502cc-d91d-4801-ad72-034c20b1c72a@kernel.org>
+Date: Wed, 29 Oct 2025 14:33:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251029091138.7995-1-brgl@bgdev.pl>
-In-Reply-To: <20251029091138.7995-1-brgl@bgdev.pl>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 29 Oct 2025 14:27:27 +0100
-X-Gm-Features: AWmQ_bkhP4GKHMHamZ9_Sw4YqnmBMd1h4uFCvo1UTXA6q8F0rg4J5dsGaF40x6o
-Message-ID: <CACRpkdYxe9A_xtA62zH=7LOKURQZ+vmObhLidzEn4FvYav2CcQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mm-lantiq: update kernel docs
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 02/15] dt-bindings: Add trickle-charge upper limit
+To: Linus Walleij <linus.walleij@linaro.org>,
+ Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Andreas Kemnade <andreas@kemnade.info>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-rtc@vger.kernel.org
+References: <cover.1761564043.git.mazziesaccount@gmail.com>
+ <b13b733e7e0fba05652f49f727412fed9e0ceb02.1761564043.git.mazziesaccount@gmail.com>
+ <20251029-adamant-mamba-of-patience-cddb65@kuoka>
+ <a81fba66-adf0-440f-96e1-bf3a83d504d8@gmail.com>
+ <CACRpkdZcszMZEU2Wzx8kaoR46ytziqtedmCrsjEL3QOrDtDgzg@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <CACRpkdZcszMZEU2Wzx8kaoR46ytziqtedmCrsjEL3QOrDtDgzg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Oct 29, 2025 at 10:11=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
+On 29/10/2025 14:26, Linus Walleij wrote:
+> On Wed, Oct 29, 2025 at 7:22 AM Matti Vaittinen
+> <mazziesaccount@gmail.com> wrote:
+> 
+>>> But I believe this is wrong. Trickle charging does not switch to
+>>> anything more, there is no fast charging after trickle. You have some
+>>> sort of pre-pre-charging, which is just pre-charging.
+>>
+>> There is trickle, pre and fast-charge phases. Furthermore, the
+>> fast-charge is further divided to CC and CV. Finally, if my memory
+>> serves me well, Linus W did explain me that some chargers use
+>> 'trickle-charging' as a _last_ charging phase for a full battery. Thus
+>> the term 'trickle-charging' is slightly confusing - but it is already
+>> used by the existing bindings...
+>>
+>> https://lore.kernel.org/all/20211116001755.2132036-1-linus.walleij@linaro.org/
+> 
+> I think we need to refer to a textbook or IEEE articles to get this
+> terminology right.
+> 
+> As you say it appears "trickle-charging" is ambiguous.
+> 
+> Maybe what Krzysztof suggest to use: "pre-pre-charging" or
+> "empty-battery-charging" or something like this is needed.
+> 
+> But we really need a trustworthy academic source here.
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Update kernel docs which are now outdated following the conversion to
-> using the modern GPIO provider API.
->
-> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Fixes: 8d0d46da40c8 ("gpio: mm-lantiq: Drop legacy-of-mm-gpiochip.h heade=
-r from GPIO driver")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202510290348.IpSNHCxr-lkp@i=
-ntel.com/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Trickle charging is accurate for both cases - pre-pre and top-off -
+because it just describes very small current. That's why I found it in
+many TI datasheets - mostly for Li-Ion batteries describing Matti's
+case, but also in at least one case for Ni-Mh describing top-off (or
+maintenance).
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+I am fine with the naming, but I want to be clear that this property
+will describe trickle only in case of pre-pre charging. Termination
+voltage simply does not fit the top-off/maintenance mode.
 
-Yours,
-Linus Walleij
+Best regards,
+Krzysztof
 
