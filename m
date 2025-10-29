@@ -1,103 +1,146 @@
-Return-Path: <linux-gpio+bounces-27785-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27786-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id E48ADC193F1
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 09:58:12 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41E58C1953D
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 10:14:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0B1055A059C
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 08:39:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CFCDC3A6334
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 09:11:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E80321917F1;
-	Wed, 29 Oct 2025 08:38:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C17231D751;
+	Wed, 29 Oct 2025 09:11:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Okkb/e3b"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="sNZQQqO3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E02AF314A99;
-	Wed, 29 Oct 2025 08:38:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23FD431BC91
+	for <linux-gpio@vger.kernel.org>; Wed, 29 Oct 2025 09:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761727108; cv=none; b=LZ5sTxvzFTnXsVAbA4LOq3AxbM2beKKcI8fdCYQSM5+ra3VG8HGBCgmiORGyKqm+I6vrBRlzj5HNCnGtKHvmqnhpMV53IRbD8ZN5OWITnLYhPCahQM8zZBu5Gr0Us9DL7r4WgN6/0SsB4uMrewn/b86FTer1hqbdz7wFG949sw0=
+	t=1761729105; cv=none; b=lp0Ey8msH9pR8vnbj+SpPu7MG3susSL0pOwV61umpb11gZxqioamNh9x9b67f+6DQoWhp5H86ZyrAq7q2VZof7QJ8TvfPIbvEg9qOTaELu5VlqSwL+i+agVin63zac9Lx8SZzYHPawUELRwj2XMNi/EMgMLobwrTw5rlLJCjEEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761727108; c=relaxed/simple;
-	bh=wvwdEm0u218gExvhBfmC/icD4ENxVkkXmVu1YZwarMw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lEMNpvceNV36BAk8p+lDRWz6UmJt1YpsV/m7YRl9Q3AJMHniP3UYyLMR66Jr5LDpOaU8wJCI0LSYG6sT6R7TBS70I5WikyQG533wxTEqWUOwVljVIOFxkaP7+txklAhTcdxiGNpeY2nqrG9Ny0b6L1pEWH+8ru1Tr3GgXdY0yE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Okkb/e3b; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761727107; x=1793263107;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wvwdEm0u218gExvhBfmC/icD4ENxVkkXmVu1YZwarMw=;
-  b=Okkb/e3bmAPz37LJy4wyVwUx7rvDGQqUl6VisMtgmPmpsc+s+iUkOExN
-   aukN1lpXGVnsc0MmRNrDweiVDK45rFH/1YmmUYHDdESx0NYmV7J0lCssB
-   X6uY/0rtQ5DPJaIPFk6HXpnYvJTvyfhT0OvZtvYjrtRe2ZiHAR1UV/H+F
-   iawhN449mtIRbeQZTuOvUORbFdl3raSE77VztF2TJ5/VdG9+YMVVrehwQ
-   vY1JptLO700L7LSlYO5at2YGsFDOtLaHRz/JPOXqY6d6iSa8ZsT6tXYaZ
-   M1/o15RWJ30t0cZEeCUV4dmyg5JtOemfnoWSLHhlv6K6YdzsgQfLtXq6w
-   Q==;
-X-CSE-ConnectionGUID: EmSGUsAYSF6SPjkGUtpXoQ==
-X-CSE-MsgGUID: e6aL4Mm+RZ+qCaDJ4Rz5AA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="81261038"
-X-IronPort-AV: E=Sophos;i="6.19,263,1754982000"; 
-   d="scan'208";a="81261038"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 01:38:25 -0700
-X-CSE-ConnectionGUID: RT93aQfqRQGKgfZrGGrcvw==
-X-CSE-MsgGUID: AoxrVOHRQE6dF9C805fbCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,263,1754982000"; 
-   d="scan'208";a="185228224"
-Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.244.248])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 01:38:23 -0700
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1vE1hE-00000003YYL-14pK;
-	Wed, 29 Oct 2025 10:38:20 +0200
-Date: Wed, 29 Oct 2025 10:38:20 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl,
-	platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] gpio: elkhartlake: Convert to auxiliary driver
-Message-ID: <aQHSfEV_VvhBcvEt@smile.fi.intel.com>
-References: <20251029062050.4160517-1-raag.jadav@intel.com>
- <20251029062050.4160517-3-raag.jadav@intel.com>
+	s=arc-20240116; t=1761729105; c=relaxed/simple;
+	bh=v1RlcqU+jzCZ92shMGmfN/CxGCYCmXWYYW9AKLagie8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G1VTkYjIbjPP3bnB9EZBRjhx1/JrnT21cZvvEzScQO9mMwX4vQLctft3AsbNCn2Ibhd23wnWGu12jUCfEZcfSUUspL0H/UqTAp9zKZ/hwmCUzFrwwYACdiW9wZkTEBJ4J7apVJPohjuBi+OiX7hKPvv3FZkD7XF/IMPlBkLmFKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=sNZQQqO3; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-427091cd4fdso4010938f8f.1
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Oct 2025 02:11:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761729101; x=1762333901; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=h7yTOb0DBw1VbIj1gPXYjKXMO6PHiSPU/ZLQwHA7s8I=;
+        b=sNZQQqO3F+ZglloCZfPP7PJSzuKSGkq/5reOBp4lTzUfGKROViFmtSNMGUXDkZ1Wbs
+         D4skoB2nrt2Saw6qShitrbOBQdSb+D1YhKY6mYrgv0qyegvdUMgKNViKoo/S3wObOzAh
+         A//GOEsFBto6G5XacRjnl9HHlQSV9xAvcT8xSxmeVj7dq2uct6EoHBfuK8hYGlAGU662
+         iN30hLCbHYT4iOJCO2iqe7e+jQNt8+TXK3yOl0vI2ZkDsi5iyTnUQRUo2Z3n6/15AmYH
+         o31mRk2BBCh5Jy1clUSpB3mavkn8Nae9tKu8Uki4YzBADLYf/c0mSzGqGcV58fKf+qi7
+         YQTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761729101; x=1762333901;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=h7yTOb0DBw1VbIj1gPXYjKXMO6PHiSPU/ZLQwHA7s8I=;
+        b=E2hs4mtOVQHwhdCOXEDiAxXq/e2DzBsFtqpczf8um6yPTmB8C4Ec8RH11l0JRHe5Yc
+         53rKqZ1DGqGWaFS4uJAmYKkZyR78WJ89Lx5VXUkLB8/T9qYrieR/dNOvCditgKwMnGf9
+         ZEFTTBrBro6Soa8UzgrpU+gJ45Oz2YGuj9onjE74qr3zA+fDa2RCKZ8zCRTWTSzn0gYC
+         sPgg44sCJw07I1l/nw0kzjmmu8VfcawP1NiPP72z7nq+thiwHWmtzofVVHRamFyiWA83
+         WQqcjciiU9ocSxu/D4rab2T0c/GkaQQ635tNMxu9QeCG/I+ZICJ/vpKHbc04NArNLg3q
+         c1tA==
+X-Gm-Message-State: AOJu0Ywe/7g6jCLdkiFRia+RtZ52KOPk4XA3m/dynkCD/7TfcsN1lJaX
+	5DsxAI0amkAUk+7/+dRVQ1RiyK+QiVJuYZLj+MKyfrOK/2lM+8L0dQKwvfIA9o0I/VaxN7Zb3q+
+	MjgV8JhA=
+X-Gm-Gg: ASbGncsj46JnNUJhiHaIxO2P2FIwHSsaDgSP7JXkXeVEQ3Ar+aVG6+Y5SLfGFawvwze
+	dzjGmTkykkoKRc3dRKoaqVdByq+OeEZt+AJFeMgzx0MVsuxsEdvE0i1CfWizhmlns6jukZyboPn
+	4DuuiAKNwtY0MLlzg/7cBwhc50/c423f33NOrnMnwAGuLquiUKK4VpcPsml/xHBZCty/FJHvEQI
+	Ucy0qZ2vnkIGbEtTfZXvA+Ca0cBuTNkeXgeWjlu/StIQRTpTTW9ZqsnJrjM0inp63bOSFkaLEDl
+	uy3B0TaquBL2ih1ZK6NATPMyqaZvJSWOgOY8eqTJnMTF7dZh3YohL200T9HaK3R2BHbrz59HfUS
+	XCiUvfIocEE7yg1DL2V++gBu+jhaFkAE7rd8uQ/eGS4TOfLRT7MhQutGMv16CTh60wy8qlOlAx+
+	h9as5NG++DkQ8=
+X-Google-Smtp-Source: AGHT+IGDyulGoYcyx6jU9Pxepcswwi8toc9gOJoAK0Kv095CCsZqF5B43vi69L++DfHx0JIkYMss0g==
+X-Received: by 2002:a05:6000:2c05:b0:428:55c3:cea8 with SMTP id ffacd0b85a97d-429aefca395mr1382550f8f.50.1761729100844;
+        Wed, 29 Oct 2025 02:11:40 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:69f2:5f2d:9ffc:a805])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4771e196b27sm39871275e9.8.2025.10.29.02.11.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Oct 2025 02:11:40 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] gpio: mm-lantiq: update kernel docs
+Date: Wed, 29 Oct 2025 10:11:38 +0100
+Message-ID: <20251029091138.7995-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251029062050.4160517-3-raag.jadav@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Wed, Oct 29, 2025 at 11:50:50AM +0530, Raag Jadav wrote:
-> Since PCI device should not be abusing platform device, MFD parent to
-> platform child path is no longer being pursued for this driver. Convert
-> it to auxiliary driver, which will be used by EHL PSE auxiliary device.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-This looks fine,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Update kernel docs which are now outdated following the conversion to
+using the modern GPIO provider API.
 
-I believe the idea is to push this via PDx86 tree.
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Fixes: 8d0d46da40c8 ("gpio: mm-lantiq: Drop legacy-of-mm-gpiochip.h header from GPIO driver")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202510290348.IpSNHCxr-lkp@intel.com/
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpio-mm-lantiq.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/gpio/gpio-mm-lantiq.c b/drivers/gpio/gpio-mm-lantiq.c
+index 3d2e24d61475..1bd98c50a459 100644
+--- a/drivers/gpio/gpio-mm-lantiq.c
++++ b/drivers/gpio/gpio-mm-lantiq.c
+@@ -52,8 +52,8 @@ static void ltq_mm_apply(struct ltq_mm *chip)
+ /**
+  * ltq_mm_set() - gpio_chip->set - set gpios.
+  * @gc:     Pointer to gpio_chip device structure.
+- * @gpio:   GPIO signal number.
+- * @val:    Value to be written to specified signal.
++ * @offset: GPIO signal number.
++ * @value:  Value to be written to specified signal.
+  *
+  * Set the shadow value and call ltq_mm_apply. Always returns 0.
+  */
+@@ -73,8 +73,8 @@ static int ltq_mm_set(struct gpio_chip *gc, unsigned int offset, int value)
+ /**
+  * ltq_mm_dir_out() - gpio_chip->dir_out - set gpio direction.
+  * @gc:     Pointer to gpio_chip device structure.
+- * @gpio:   GPIO signal number.
+- * @val:    Value to be written to specified signal.
++ * @offset: GPIO signal number.
++ * @value:  Value to be written to specified signal.
+  *
+  * Same as ltq_mm_set, always returns 0.
+  */
+@@ -85,7 +85,7 @@ static int ltq_mm_dir_out(struct gpio_chip *gc, unsigned offset, int value)
+ 
+ /**
+  * ltq_mm_save_regs() - Set initial values of GPIO pins
+- * @mm_gc: pointer to memory mapped GPIO chip structure
++ * @chip: Pointer to our private data structure.
+  */
+ static void ltq_mm_save_regs(struct ltq_mm *chip)
+ {
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.48.1
 
 
