@@ -1,133 +1,119 @@
-Return-Path: <linux-gpio+bounces-27824-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27825-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F011BC1AF72
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 14:53:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19EC5C1A92A
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 14:15:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0319B586D4F
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 13:03:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 138601A261FD
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 13:07:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E93B32C028D;
-	Wed, 29 Oct 2025 12:51:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DC663469F1;
+	Wed, 29 Oct 2025 12:55:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="PCnagt6o"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C322C0262
-	for <linux-gpio@vger.kernel.org>; Wed, 29 Oct 2025 12:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C92B345CAD
+	for <linux-gpio@vger.kernel.org>; Wed, 29 Oct 2025 12:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761742297; cv=none; b=BgOxJWHktRq/fPDfnfh5r7iEbJ7jzAg1ZOtOS90fcuwvwXOHFaphOly4ERUyiJBt4pSAV9Tz+/0ASibcy+Sz8Pi5tb2VC/enKyhN9yGsZ3MFFg60gQekgvYiBQJf8kqxUav0aLfCzKUn2P1Mk/1lkBARg0Ck2SBj0yWb6hanfmk=
+	t=1761742546; cv=none; b=nLxIQ3qo+TSFmhziYkNS5UycfSWgFsJy72/Amg7xh0HKnrscDJdnqVOVu++DY+zTwW8K1wAncGt6tAa4czVQetKGfjXKCcOHr/EK4L4KSzelXWNm38dfsGHyXtYvGvtquYJ0VqRocBTDP9dtucku8qetJ+4uFDRFZnLrbGVmNq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761742297; c=relaxed/simple;
-	bh=APfDTeJ3GfMW/qDOyoRWE6xVpfg/wTcIb4VWWvexGKU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FYD0IQ0UYF3ZJs8v+Sm5ZET4CmcoTdGfl8HOMD3koWTBkP2uiiVUBJ3CFA3RAxzNXzr9Rd1m75rN1B5EIPCx0dVqRZ0a5WmqW+WGNvB49ArJnCzqRhjDuIYLlc0LJwOhDznmnGGvddY05GEAPZWK3Y/lsIigrr0eYBwrsZsf35c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1vE5dr-0005sp-IP; Wed, 29 Oct 2025 13:51:07 +0100
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1vE5dq-0062hO-0I;
-	Wed, 29 Oct 2025 13:51:06 +0100
-Received: from pza by lupine with local (Exim 4.98.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1vE5dq-000000007zg-02zh;
-	Wed, 29 Oct 2025 13:51:06 +0100
-Message-ID: <06c7a64647ac78cfc5366a073ec12ccddda49572.camel@pengutronix.de>
-Subject: Re: [PATCH v3 03/10] software node: allow referencing firmware nodes
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij	
- <linus.walleij@linaro.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>,  Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus	
- <sakari.ailus@linux.intel.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,  "Rafael J. Wysocki"	 <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Krzysztof Kozlowski	 <krzk@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>
-Date: Wed, 29 Oct 2025 13:51:05 +0100
-In-Reply-To: <20251029-reset-gpios-swnodes-v3-3-638a4cb33201@linaro.org>
-References: <20251029-reset-gpios-swnodes-v3-0-638a4cb33201@linaro.org>
-	 <20251029-reset-gpios-swnodes-v3-3-638a4cb33201@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1-1+deb13u1 
+	s=arc-20240116; t=1761742546; c=relaxed/simple;
+	bh=oaiGrX/ykXacoXQRvoz7NUmAFH9tG2T7WIpf9HIZMgY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YzO8zPGI8BSh5Zqs5BcOBDZAYnS+VBEUygVqWaWOq4YCNN6fBmp2p/5Lm6f/Pz2dPnJ2/M3U0Q1cqhku0v/XFBvYqp26mI1kMSnt6dupM1TGWkEKqHNCz1wSlDfIUV3z2Eu1jcmd6T0FHNFhUiqXlV8b9f4fkd/SVE0sJisYT3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=PCnagt6o; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-57992ba129eso3823531e87.3
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Oct 2025 05:55:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761742543; x=1762347343; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1yNabgZGkHY+Qgm/MWzqFABw0v7t/r2KBAY0H1eEaJs=;
+        b=PCnagt6oQiL4AdoemRErcawzke6rCoqzFAbBiTQSQff6svXZJPF5DEDLbG1QcKIFN8
+         wxsGwp52U1Q3Gecz3c5ge0j6zUIme+WcxReM01eyJXfTb/ubPPNFJOUVJl9Xm1VenbUV
+         t+429G5175sVyO7zBIaeDBZbrzm+3Kya8oIPT6b93eF5HGkN0Z41aFvPegVvnrl4iel3
+         ACw/1PioQhV3lTz2Z4ad/8I4tVTs+BzphLtBUGFFZiJWdKtWjTdDfSs+5lzNDMBVLzAw
+         V+HfowjYGfDX6toSZd1Zu6JLyYlgKhWzkFmtTy3CPNjiN59vb1Hx4Urqr6Q1ivtECp1f
+         RPjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761742543; x=1762347343;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1yNabgZGkHY+Qgm/MWzqFABw0v7t/r2KBAY0H1eEaJs=;
+        b=NezVVHcH4l3Q6LEtzFQ9S1iptrKcSldodOYxOXkaETcNyovwACVcT5JAAXETIlI5M5
+         aZ2jAKEcBL84i10VWe/YTYBTQIXpZy0jKEuxgYP0efdqXpr3+KhU3O/5hd6c6zJlFShf
+         54qs3MdVTeG61EjnAqcjCSB+gvTOgU/mdFjO3Vpz6Df0JdkaD+lNbUKlUxuObUmapXSV
+         i5AcYN1dkSebwYbjNwNSY5cy32g9Aw+ZtF4xK17wTRa01rJs+JaUmYTDchRiagkIS45F
+         YGudY7bk1SzPC1GtvsWj1BxkUdjrps52aE1gRo93B6Kv4kRoXGF6cxJ4R75rimvaamsA
+         fZig==
+X-Forwarded-Encrypted: i=1; AJvYcCUmtqkbPlU5iFlXnVGEWOR3l4jzW/TsFiUnvHrE1Sk66X1gGMU3TqyoIBxSJSXWyXGp8Fl/kMUBrHDp@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9rocKD+3pzSqpZ4/NehK51h7GfXXkATshaxn4Dil7QZqgkqRF
+	7D5CZ31rQgp2fRdbmtELaNB5QVogOwBE92lUME2S5s5hCOw9YNzZ3TAaOt3upog3d8qG0gLSHZ3
+	AhYogAfbqE+OQYH2v3eOZf6zddlkS86fGiOErpNdKiQ==
+X-Gm-Gg: ASbGncvTS1W08cfAhrkZtPVKA5is7QaRPikMRmZrsGZ8ZXKo+NnnqIeVe0byynBTxQq
+	KopuKTFhkCGpRHZXR0YFAOXcmN+dRMluUzm60/Mf/IXAUMuJauiuAafrFblovBCYxdcnsgrDmTo
+	5ydh/BV5sx0t9FnkkeOhRsMbva4F4hFOsVuzmMqtIWuXWkxFYXhT+A7OQXHlprnzi1hTLF0yNEr
+	YVzbQpbQSogdd0tt+oBtvT/XM+h4XwS6HHXWWjUgYZ/2+kZESctSfahgnw9BqgHWzzmz4T7TylU
+	qlo6zpry1T6if8Cg
+X-Google-Smtp-Source: AGHT+IHVSlcZcRFweD/CsA6OtT1TIVhjc5sVUzGgiku4ascUdv/UmnI9MvaJYPGFR/shw1/3ylKd2GmpjO/iAE476gk=
+X-Received: by 2002:a05:6512:3f09:b0:55b:8273:5190 with SMTP id
+ 2adb3069b0e04-59412a3db0amr1107474e87.18.1761742542582; Wed, 29 Oct 2025
+ 05:55:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+References: <20251029-reset-gpios-swnodes-v3-0-638a4cb33201@linaro.org>
+ <20251029-reset-gpios-swnodes-v3-3-638a4cb33201@linaro.org> <06c7a64647ac78cfc5366a073ec12ccddda49572.camel@pengutronix.de>
+In-Reply-To: <06c7a64647ac78cfc5366a073ec12ccddda49572.camel@pengutronix.de>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 29 Oct 2025 13:55:31 +0100
+X-Gm-Features: AWmQ_bluIn90sOwg9DzJfIRKjPB4JCG8HCRF9jGS6ZP4TOd1qCJlUatPTeG_3uY
+Message-ID: <CAMRc=McmA9M6gMzpJ1pgQG2+6gGQ5GgTV6mB_X95WxGCgv861w@mail.gmail.com>
+Subject: Re: [PATCH v3 03/10] software node: allow referencing firmware nodes
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mi, 2025-10-29 at 13:28 +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->=20
-> At the moment software nodes can only reference other software nodes.
-> This is a limitation for devices created, for instance, on the auxiliary
-> bus with a dynamic software node attached which cannot reference devices
-> the firmware node of which is "real" (as an OF node or otherwise).
->=20
-> Make it possible for a software node to reference all firmware nodes in
-> addition to static software nodes. To that end: add a second pointer to
-> struct software_node_ref_args of type struct fwnode_handle. The core
-> swnode code will first check the swnode pointer and if it's NULL, it
-> will assume the fwnode pointer should be set. Rework the helper macros
-> and deprecate the existing ones whose names don't indicate the reference
-> type.
->=20
-> Software node graphs remain the same, as in: the remote endpoints still
-> have to be software nodes.
->=20
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  drivers/base/swnode.c    | 13 +++++++++++--
->  include/linux/property.h | 38 +++++++++++++++++++++++++++++++-------
->  2 files changed, 42 insertions(+), 9 deletions(-)
->=20
-> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-> index b7c3926b67be72671ba4e4c442b3acca80688cf7..8601d1612be31febb6abbbe1f=
-b35228499480c56 100644
-> --- a/drivers/base/swnode.c
-> +++ b/drivers/base/swnode.c
-> @@ -535,7 +535,13 @@ software_node_get_reference_args(const struct fwnode=
-_handle *fwnode,
->  	ref_array =3D prop->pointer;
->  	ref =3D &ref_array[index];
-> =20
-> -	refnode =3D software_node_fwnode(ref->node);
-> +	if (ref->swnode)
-> +		refnode =3D software_node_fwnode(ref->swnode);
+On Wed, Oct 29, 2025 at 1:51=E2=80=AFPM Philipp Zabel <p.zabel@pengutronix.=
+de> wrote:
+>
+> > @@ -535,7 +535,13 @@ software_node_get_reference_args(const struct fwno=
+de_handle *fwnode,
+> >       ref_array =3D prop->pointer;
+> >       ref =3D &ref_array[index];
+> >
+> > -     refnode =3D software_node_fwnode(ref->node);
+> > +     if (ref->swnode)
+> > +             refnode =3D software_node_fwnode(ref->swnode);
+>
+> software_node_fwnode(ref->swnode) never returns NULL if given a non-
+> NULL parameter.
+>
 
-software_node_fwnode(ref->swnode) never returns NULL if given a non-
-NULL parameter.
+That's not true, it *will* return NULL if the software node in
+question has not yet been registered with the fwnode framework.
 
-> +	else if (ref->fwnode)
-> +		refnode =3D ref->fwnode;
-> +	else
-> +		return -EINVAL;
-> +
->  	if (!refnode)
->  		return -ENOENT;
-
-So this check is not needed anymore.
-
-regards
-Philipp
+Bart
 
