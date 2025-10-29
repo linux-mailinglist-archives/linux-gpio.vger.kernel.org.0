@@ -1,201 +1,187 @@
-Return-Path: <linux-gpio+bounces-27780-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27781-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 033E0C18761
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 07:30:08 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1962C18782
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 07:31:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4D03E504C49
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 06:24:10 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9D214564DD1
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 06:25:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D753730FF04;
-	Wed, 29 Oct 2025 06:22:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 364003074B4;
+	Wed, 29 Oct 2025 06:22:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a45BIFTd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RmPWOHLN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C8F30BBB9;
-	Wed, 29 Oct 2025 06:21:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C5C30506A
+	for <linux-gpio@vger.kernel.org>; Wed, 29 Oct 2025 06:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761718921; cv=none; b=qVWgRSwTK9QRtlkW3aZ1pP4JKY1fdIcW0a+ovkWnmRxQZNPch6HGXzLF1/ufRy/lOfbWCZCm6H48PsXUAlzyHqpe3pl4tTN9OdB5ktsJWDOkBNvQGMEOu39eWz6apkGDV6Ce+1weSKMEUwHHrrP+5+HnvSRuDk9Tdso2dqd6ZtQ=
+	t=1761718974; cv=none; b=KRSA2Y3K/65ntEnrSCb8+XkzRqN3dHVbMtslrh9agZt/oCTW+cmYiHIFxcNFLbSFVNFjsFian6kgW6qs8gQy/jNI7lOjfrwA8Jc5/8qSUjjtji+12R/5MySO1Mt7wnjsq1CYYhShQ9O2+PynCCf36zzO32bndj5hC4SD+VaDkKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761718921; c=relaxed/simple;
-	bh=nOGjeszvai6JO5Fsljp6H0j57dlEMS7Fx7Gh6+l2Y1Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ETQSfQu952GiJarMOhUbP5AUKESsvyK15i+58gyzL3Bo+aeWutW9I1tDqI2vJ5zou6lcrorQajCwIBbXqVr1dRzltKAmtDrh2JzoUelS+NMAdkkIUiJ3RgXokRY8EiqsNFNmzdtPEsAMhEJgYozrfle8cbQti7RivnHZuzsfqy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a45BIFTd; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761718919; x=1793254919;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=nOGjeszvai6JO5Fsljp6H0j57dlEMS7Fx7Gh6+l2Y1Q=;
-  b=a45BIFTd/Ua/yd0glw1Pt4LTfOWsKHU4nN62et4TbZiR+hUEb7ZtyO5h
-   6f4oZ/yA7nD7DALcXDkZhubO+mf4ZH/UPy6q8tzBWYN+vguO4zozGKnLw
-   hWi4+mYAU9EQxzf5fClTjPXRjW8Os/wBTYTO8JsWBfZkn1+a6HdZ7xjks
-   NbEi/LMEpXYW6fBp/2AzgEpKQteZLuFBbNm57SJkK8LLoj9J9fwGAotVO
-   5N4HGMuSdoEpZyKJAzU59XwttdbW/WZSV+F7GVaqb3fx9Hy2RmWsuRAyX
-   YldFPWQf0dRTGndseZHWB1uW464CqyK2lWLzhyaxsl+IMwNRDJ8RTG3p+
-   A==;
-X-CSE-ConnectionGUID: VG2a7sB8TcaeEDhMwpRhOQ==
-X-CSE-MsgGUID: HvrzcbL1RlmZj4Sr/06CYg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="66446277"
-X-IronPort-AV: E=Sophos;i="6.19,263,1754982000"; 
-   d="scan'208";a="66446277"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 23:21:58 -0700
-X-CSE-ConnectionGUID: /fdP6DeMSha9MIJ19VgaXA==
-X-CSE-MsgGUID: hlwQ1UgOSGmYJoSk0bU6Kg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,263,1754982000"; 
-   d="scan'208";a="185201123"
-Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
-  by orviesa009.jf.intel.com with ESMTP; 28 Oct 2025 23:21:55 -0700
-From: Raag Jadav <raag.jadav@intel.com>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	andriy.shevchenko@linux.intel.com,
-	linus.walleij@linaro.org,
-	brgl@bgdev.pl
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v1 2/2] gpio: elkhartlake: Convert to auxiliary driver
-Date: Wed, 29 Oct 2025 11:50:50 +0530
-Message-Id: <20251029062050.4160517-3-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20251029062050.4160517-1-raag.jadav@intel.com>
-References: <20251029062050.4160517-1-raag.jadav@intel.com>
+	s=arc-20240116; t=1761718974; c=relaxed/simple;
+	bh=4O+7pwhIGGS1RUIpdH+/fPlWfKqvKw0rWPYTnh4gGvE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bHomJPmbeL7PF9lzNRCyCI4PSXOfI35ZTBF/LV6hFlFuZZLdq6l5FnyduByigH9MnofLHMR22jDiDQU9BXQZfpvz+2EZJKuLEJLK01K50VJPvhzbwkg0w+P7CinAOdF8ZNpeGluzBBtTUZBl9V3lVDwSjVB3jpqEtDW2W2x1PeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RmPWOHLN; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-378e603f7e4so62814151fa.0
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Oct 2025 23:22:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761718969; x=1762323769; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0VW27OesVv2Xc3xIV1cd4ruvQQ3oOkSUpb7LoylGMQM=;
+        b=RmPWOHLN/k1SZE1C1pzZaUFRLoYJ/eZhIZUMYc49u01SncpgT8mOtQNsL2gQDEedfo
+         5CpJnOpxZBO7380lAf+Ol3agJ06sFj6TWqJGxuwGZdZmJsQVcoVByeVKGGcxwbo8uVZX
+         crZ4jmXLSkmGIDznrxFbm0jGmEghzPr/XI4jUmW+ncHaO6lbdFpexiOy7GnQ0Ne1uGko
+         9RhRxUshJQGhSe7JVXD0YRz16Gd7N5SQU6rrhSm7Eaoj4I7aABKqlmQUu5IeQbJrFpPD
+         kXyO7yX2Q7KFZm1ljoQFqLkr7O6kwkJNOasXDZHPJp7nt3tftK9IegqVacOecORCL9rx
+         Ogmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761718969; x=1762323769;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0VW27OesVv2Xc3xIV1cd4ruvQQ3oOkSUpb7LoylGMQM=;
+        b=HLhNVf4L285Zj3XzDP6osjZtz+3p33OULz1Z0UhZsSU3dnQWJlSx+Eny5mW9mgwGeU
+         zdY39GbXvwTANakgbc9LC+Y7TtAob7VnIQtWcunYUPzuTG6MXFx50Mt/cCuE0wKgeycE
+         NOMcLkkOiXWHet0wZEQRTl+a1yndwIKBiRin6vpcyNVcH7HhNjkqNmvMhA4Ie2iFVPDO
+         znqgpIVNdJx8PSq8Let1mCf6nR66a1tOrQMw9/PqciKdzKuShmttextWWiCtz7Cw9wyO
+         tVR6u2UBf6Tj5fH9geSLY03EMXJvz5wRaMZEeGfhfUcUZkrvs2QJxAO/M5Wz7ydvgQuP
+         YiRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUwEfSYhbk5rzmZbYfX1cpjmqeIIH6j6U+jAWt7o/QFopo0WaoPeO2aa6GjCkxQ0RHJpgz9+cOHiwsr@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkRWHP7OcgwCSp+S7BPy7EcPQPWHTHpWIBTkszIcVQBrVRHUAs
+	SZnU2huZn9jbcvmXNZg50iKclRcRdaOo8uycN4eKqbNLoIDgJuugK52C
+X-Gm-Gg: ASbGnctIQKOa/IHRkCh01FMgDcWlABkYQacOEHcqMTFY4EwmqJKoO3cm9QwwbDdBSBn
+	kk7AoLe9o8Y3WRIYIrSpcpxF0GCbgybDNOYx6V/gwkAv644yw5WZ6zi6vo13Ci6qEVt9XxoXDCS
+	GCktvo3JcSYo/OEN+Prshw9QpPHdgT5RTg0gT6Mh3hiAn/jh+bjROdiUaEoRVplJE+OQRcpEjhb
+	6AgwUAch0YJdhVUjL/xfIQoBWri4u70sSL3TvP9pMTlTopte7RyrR9F7KnwpYwXNAfAP5X7HSWa
+	K2Gr6KpNLlVwxDUZzvalhw56itmsNPxTxv0GM38flz1ttqnDmuAl3UnCU/F9LI6lpLLR9kkZgx8
+	W6b59//rfRBs7KjYxw/7oVisi+0G0pbztRQdPA0a1gAnKlRu0fRvUGmLLzTKHOwpcOnZPVCeDtN
+	fyYtuWBnN4ULzISh6hg9GHcLuEpQg08tJ105g+YGIl1hIdz2vgvDOrxOjXAw==
+X-Google-Smtp-Source: AGHT+IGanoJgPw6WF2DjE1gIdmQz7mXfEW+doSVsuxKGJlYO+QYEE07542eS5+8tipXltZ0hgrDYBA==
+X-Received: by 2002:a05:6512:3a8b:b0:591:ce58:1def with SMTP id 2adb3069b0e04-5941286524emr697925e87.2.1761718968884;
+        Tue, 28 Oct 2025 23:22:48 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-593041884c9sm3239104e87.96.2025.10.28.23.22.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Oct 2025 23:22:47 -0700 (PDT)
+Message-ID: <a81fba66-adf0-440f-96e1-bf3a83d504d8@gmail.com>
+Date: Wed, 29 Oct 2025 08:22:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 02/15] dt-bindings: Add trickle-charge upper limit
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andreas Kemnade <andreas@kemnade.info>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-rtc@vger.kernel.org
+References: <cover.1761564043.git.mazziesaccount@gmail.com>
+ <b13b733e7e0fba05652f49f727412fed9e0ceb02.1761564043.git.mazziesaccount@gmail.com>
+ <20251029-adamant-mamba-of-patience-cddb65@kuoka>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20251029-adamant-mamba-of-patience-cddb65@kuoka>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Since PCI device should not be abusing platform device, MFD parent to
-platform child path is no longer being pursued for this driver. Convert
-it to auxiliary driver, which will be used by EHL PSE auxiliary device.
+On 29/10/2025 08:03, Krzysztof Kozlowski wrote:
+> On Mon, Oct 27, 2025 at 01:45:05PM +0200, Matti Vaittinen wrote:
+>> Some of the chargers for lithium-ion batteries use a trickle-charging as
+>> a first charging phase for very empty batteries, to "wake-up" the battery.
+> 
+> In the few cases I was dealing with charging circuits, trickle charging
+> was used in context of top-off charging, so when battery is 100%. It's
+> also documented at Wiki like that:
+> https://en.wikipedia.org/wiki/Trickle_charging
+> 
+>> Trickle-charging is a low current, constant current phase. After the
+>> voltage of the very empty battery has reached an upper limit for
+>> trickle charging, the pre-charge phase is started with a higher current.
+>>
+>> Allow defining the upper limit for trickle charging voltage, after which
+>> the charging should be changed to the pre-charging.
 
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
----
- drivers/gpio/Kconfig            |  2 +-
- drivers/gpio/gpio-elkhartlake.c | 34 ++++++++++++++++-----------------
- 2 files changed, 17 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 7ee3afbc2b05..d4b4451b4696 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1413,7 +1413,7 @@ config HTC_EGPIO
- 
- config GPIO_ELKHARTLAKE
- 	tristate "Intel Elkhart Lake PSE GPIO support"
--	depends on X86 || COMPILE_TEST
-+	depends on INTEL_EHL_PSE_IO
- 	select GPIO_TANGIER
- 	help
- 	  Select this option to enable GPIO support for Intel Elkhart Lake
-diff --git a/drivers/gpio/gpio-elkhartlake.c b/drivers/gpio/gpio-elkhartlake.c
-index 95de52d2cc63..08daf2fc59e6 100644
---- a/drivers/gpio/gpio-elkhartlake.c
-+++ b/drivers/gpio/gpio-elkhartlake.c
-@@ -2,43 +2,42 @@
- /*
-  * Intel Elkhart Lake PSE GPIO driver
-  *
-- * Copyright (c) 2023 Intel Corporation.
-+ * Copyright (c) 2023, 2025 Intel Corporation.
-  *
-  * Authors: Pandith N <pandith.n@intel.com>
-  *          Raag Jadav <raag.jadav@intel.com>
-  */
- 
-+#include <linux/auxiliary_bus.h>
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/module.h>
--#include <linux/platform_device.h>
- #include <linux/pm.h>
- 
-+#include <linux/ehl_pse_io_aux.h>
-+
- #include "gpio-tangier.h"
- 
- /* Each Intel EHL PSE GPIO Controller has 30 GPIO pins */
- #define EHL_PSE_NGPIO		30
- 
--static int ehl_gpio_probe(struct platform_device *pdev)
-+static int ehl_gpio_probe(struct auxiliary_device *aux_dev, const struct auxiliary_device_id *id)
- {
--	struct device *dev = &pdev->dev;
-+	struct ehl_pse_io_dev *io_dev = auxiliary_dev_to_ehl_pse_io_dev(aux_dev);
-+	struct device *dev = &aux_dev->dev;
- 	struct tng_gpio *priv;
--	int irq, ret;
--
--	irq = platform_get_irq(pdev, 0);
--	if (irq < 0)
--		return irq;
-+	int ret;
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
- 
--	priv->reg_base = devm_platform_ioremap_resource(pdev, 0);
-+	priv->reg_base = devm_ioremap_resource(dev, &io_dev->mem);
- 	if (IS_ERR(priv->reg_base))
- 		return PTR_ERR(priv->reg_base);
- 
- 	priv->dev = dev;
--	priv->irq = irq;
-+	priv->irq = io_dev->irq;
- 
- 	priv->info.base = -1;
- 	priv->info.ngpio = EHL_PSE_NGPIO;
-@@ -51,25 +50,24 @@ static int ehl_gpio_probe(struct platform_device *pdev)
- 	if (ret)
- 		return dev_err_probe(dev, ret, "tng_gpio_probe error\n");
- 
--	platform_set_drvdata(pdev, priv);
-+	auxiliary_set_drvdata(aux_dev, priv);
- 	return 0;
- }
- 
--static const struct platform_device_id ehl_gpio_ids[] = {
--	{ "gpio-elkhartlake" },
-+static const struct auxiliary_device_id ehl_gpio_ids[] = {
-+	{ EHL_PSE_IO_NAME "." EHL_PSE_GPIO_NAME },
- 	{ }
- };
--MODULE_DEVICE_TABLE(platform, ehl_gpio_ids);
-+MODULE_DEVICE_TABLE(auxiliary, ehl_gpio_ids);
- 
--static struct platform_driver ehl_gpio_driver = {
-+static struct auxiliary_driver ehl_gpio_driver = {
- 	.driver	= {
--		.name	= "gpio-elkhartlake",
- 		.pm	= pm_sleep_ptr(&tng_gpio_pm_ops),
- 	},
- 	.probe		= ehl_gpio_probe,
- 	.id_table	= ehl_gpio_ids,
- };
--module_platform_driver(ehl_gpio_driver);
-+module_auxiliary_driver(ehl_gpio_driver);
- 
- MODULE_AUTHOR("Pandith N <pandith.n@intel.com>");
- MODULE_AUTHOR("Raag Jadav <raag.jadav@intel.com>");
--- 
-2.34.1
+> pre-charging is the trickle charging, no? Or you want to say that
+> trickle-charging is pre-pre-charging? But then what is pre-charging in
+> this binding?
 
+There are the (usual?) pre-charging and fast-charging phases in the Rohm 
+devices. Furthermore, the fast-charging is divided to constant current 
+and constant voltage phases.
+
+In addition to this, there is a 'trickle-charging' -phase for a very 
+empty battery. This is already reflected by existing bindings:
+trickle-charge-current-microamp, Please, see:
+bbcecd1b9335 ("dt-bindings: Add trickle-charge upper limit")
+
+I also did do some ASCII art for my very first charger driver binding:
+https://elixir.bootlin.com/linux/v6.18-rc1/source/Documentation/devicetree/bindings/power/supply/rohm,bd99954.yaml
+
+Do you think a comment linking to this drawing would help?
+
+> 
+>>
+>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>>
+>> ---
+>> Revision history:
+>>   RFCv1 =>:
+>>   - No changes
+>> ---
+>>   Documentation/devicetree/bindings/power/supply/battery.yaml | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.yaml b/Documentation/devicetree/bindings/power/supply/battery.yaml
+>> index 491488e7b970..66bed24b3dee 100644
+>> --- a/Documentation/devicetree/bindings/power/supply/battery.yaml
+>> +++ b/Documentation/devicetree/bindings/power/supply/battery.yaml
+>> @@ -66,6 +66,9 @@ properties:
+>>     trickle-charge-current-microamp:
+>>       description: current for trickle-charge phase
+>>   
+>> +  tricklecharge-upper-limit-microvolt:
+> 
+> Please keep existing format, look three lines above. trickle-charge-....
+> 
+> But I believe this is wrong. Trickle charging does not switch to
+> anything more, there is no fast charging after trickle. You have some
+> sort of pre-pre-charging, which is just pre-charging.
+
+There is trickle, pre and fast-charge phases. Furthermore, the 
+fast-charge is further divided to CC and CV. Finally, if my memory 
+serves me well, Linus W did explain me that some chargers use 
+'trickle-charging' as a _last_ charging phase for a full battery. Thus 
+the term 'trickle-charging' is slightly confusing - but it is already 
+used by the existing bindings...
+
+https://lore.kernel.org/all/20211116001755.2132036-1-linus.walleij@linaro.org/
+
+
+Yours,
+	-- Matti
 
