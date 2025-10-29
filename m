@@ -1,133 +1,133 @@
-Return-Path: <linux-gpio+bounces-27823-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27824-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F8D2C1A933
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 14:15:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F011BC1AF72
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 14:53:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9C2D5587FC9
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 13:00:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0319B586D4F
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Oct 2025 13:03:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B0A734BA2B;
-	Wed, 29 Oct 2025 12:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="hyjqqwMK"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E93B32C028D;
+	Wed, 29 Oct 2025 12:51:37 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2602134D935
-	for <linux-gpio@vger.kernel.org>; Wed, 29 Oct 2025 12:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C322C0262
+	for <linux-gpio@vger.kernel.org>; Wed, 29 Oct 2025 12:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761741687; cv=none; b=H0Uu08yVSJ7kxxENR6T0E1vzJxT3ApO5a7pvSV8O6rwt1zPHQWNr3oQehW9NL1BuDahyAs9Gy+UNljLrk8NMQUpshye3a/y5wvlgHvPx7IdQgni9db2AHOtIgoM3tTPSbY5pLP/b4/YTOJVa0baOKd22HtXNdB93qU2x1C5dPpo=
+	t=1761742297; cv=none; b=BgOxJWHktRq/fPDfnfh5r7iEbJ7jzAg1ZOtOS90fcuwvwXOHFaphOly4ERUyiJBt4pSAV9Tz+/0ASibcy+Sz8Pi5tb2VC/enKyhN9yGsZ3MFFg60gQekgvYiBQJf8kqxUav0aLfCzKUn2P1Mk/1lkBARg0Ck2SBj0yWb6hanfmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761741687; c=relaxed/simple;
-	bh=4GfXeQTTcxSpcQZ8VLho/amPI/XMfZn1ZR5wbT6W4Qw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kuojMdUBJOdNGzGdwpSAykN71vZwQtHbjLOXC3O5I3Og8xZoVAX6LxSgv9NO2Whk753Mi7VeQ2uFvR+Wz247/ru96ta2+65oRXtEGbqlHZTQz+R2y5uaNZhCsUDsRmPDwmObPSfL6Qp8eq7hRuqH2EJ9pKnYuFqCUWSb9AHLdKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=hyjqqwMK; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-57992ba129eso3800989e87.3
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Oct 2025 05:41:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761741684; x=1762346484; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4GfXeQTTcxSpcQZ8VLho/amPI/XMfZn1ZR5wbT6W4Qw=;
-        b=hyjqqwMKlVbrsrlesNjru6EvotES6SrhMga7FgYCG0XewJxKvoiDPxx2ycrLRo3Lqe
-         IW40iMZQYr0LfAf6nSu/98u2A1l1wfVszqz7PPr1Z3SmTtUoBpSnRXdGf3L8Trs8SzPD
-         vSqunM7aZBP6O0ZpRLA36J4FFq+lBhpESQ8xn4Phlbf/BjTrcsYvHHRjczJAuzdWVTT0
-         xSMl4FkByJ2JulSrmfkn07inXE4sk5ineQaXOonfrrO/3dkTSmjfUTcG5xEWCCdY30RK
-         DJEm2NqnOzr8JM2CVjlNuf8s0E1aPlCyxoHfRPqXH+JJjhF6DdrwcpoC3rzKbnA9pIeU
-         wenw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761741684; x=1762346484;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4GfXeQTTcxSpcQZ8VLho/amPI/XMfZn1ZR5wbT6W4Qw=;
-        b=QQFMbXM+/zXDRB09LKwkOuxOQiM3TFV0DvHqEMLs345AekBntW2phFS84bncekf2XT
-         NtWaz53/JpxhijOYADbg+5JaHLVXk8DHYnApi/MaCU+4/U/KCnZVIGxzXX7K0x0/gs4x
-         BjJC3wq+oGkEiqrK4JgMG2yXWnNs8y3u3lRFSMssb2TchtxE5uEolBTAlJ2PXFmxphw8
-         01R3kzF+Y04W4PosI2TOXnCQsy79db2PFFqfU1HIv6wDo3Iri3HS1FMisUncGAhhEugf
-         gAi1tfl0RK5FxeZrn+mbChzMhx5WcXh5PB0wqUn5MzMEj8xOF4MJ6dEZ3hBMfyQYPZI9
-         Slog==
-X-Forwarded-Encrypted: i=1; AJvYcCXaWPnxyhGwLnoJt0p5Z0oLAfbqQERadhKjzizuDqOKPATRL1RF00C9+pexuUPG9GrBO1bUJDbgPa1c@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZ6FW9mm0DdcPjBliQ/1kYmJdClns2vPjoLF5qkab85KRWd02+
-	zrFZp3VhSwOmnC447SGxJyVRlzhmIveHtg+3KKU4Gxi2wkhNer5ZZ4wLbVlIMb27Qd1KOGlE/IU
-	4Acd1IG3avOVS+pWZwbY2O6e81IAmderKVtr42SJ4Uw==
-X-Gm-Gg: ASbGncuiE8U+4XyFrS5EscPU7+hdHhH769JNxQvG6k+E2Dr53u7CG9Sgvqr86aJUS6B
-	FrZNOUXvkGAe0icBEWtCWSZPU0euBoX2L9vErb1hZgO0/3nhSaE9ByIUh1tIv1DJU6wJt93SLJi
-	dVENUFQWwpsbsFdaAcYVX5c2ALYjo3WDRtFQlcFUe6QJSAn/IWyADW9LPx9MU2WFo5Z86LcValn
-	4CWWWMrlf6RoGyXSg1coF6c2nBvnkNjJXgk1H32H7SM+26PwxhaYjXP6a42hyDNKMAOCuT/khj6
-	Hs9bkCb0biYTWDPB
-X-Google-Smtp-Source: AGHT+IHlRZvbfo/SYNZZ4o30tnBaAGKMcvTAo3NYRcGh1EJ9OHd3AuMhXHkwK8JOue6As+3lLZ2qXnJTw5y6BaOTrIQ=
-X-Received: by 2002:a05:6512:3d05:b0:580:dda2:5318 with SMTP id
- 2adb3069b0e04-59412a36b93mr989969e87.8.1761741684202; Wed, 29 Oct 2025
- 05:41:24 -0700 (PDT)
+	s=arc-20240116; t=1761742297; c=relaxed/simple;
+	bh=APfDTeJ3GfMW/qDOyoRWE6xVpfg/wTcIb4VWWvexGKU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FYD0IQ0UYF3ZJs8v+Sm5ZET4CmcoTdGfl8HOMD3koWTBkP2uiiVUBJ3CFA3RAxzNXzr9Rd1m75rN1B5EIPCx0dVqRZ0a5WmqW+WGNvB49ArJnCzqRhjDuIYLlc0LJwOhDznmnGGvddY05GEAPZWK3Y/lsIigrr0eYBwrsZsf35c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1vE5dr-0005sp-IP; Wed, 29 Oct 2025 13:51:07 +0100
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1vE5dq-0062hO-0I;
+	Wed, 29 Oct 2025 13:51:06 +0100
+Received: from pza by lupine with local (Exim 4.98.2)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1vE5dq-000000007zg-02zh;
+	Wed, 29 Oct 2025 13:51:06 +0100
+Message-ID: <06c7a64647ac78cfc5366a073ec12ccddda49572.camel@pengutronix.de>
+Subject: Re: [PATCH v3 03/10] software node: allow referencing firmware nodes
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij	
+ <linus.walleij@linaro.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>,  Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus	
+ <sakari.ailus@linux.intel.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>,  "Rafael J. Wysocki"	 <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>, Krzysztof Kozlowski	 <krzk@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, Bartosz Golaszewski
+ <bartosz.golaszewski@linaro.org>
+Date: Wed, 29 Oct 2025 13:51:05 +0100
+In-Reply-To: <20251029-reset-gpios-swnodes-v3-3-638a4cb33201@linaro.org>
+References: <20251029-reset-gpios-swnodes-v3-0-638a4cb33201@linaro.org>
+	 <20251029-reset-gpios-swnodes-v3-3-638a4cb33201@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1-1+deb13u1 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251029-gpio-shared-v3-0-71c568acf47c@linaro.org>
- <20251029-gpio-shared-v3-10-71c568acf47c@linaro.org> <aQIAXO1hUrw4Yp9V@smile.fi.intel.com>
-In-Reply-To: <aQIAXO1hUrw4Yp9V@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 29 Oct 2025 13:41:10 +0100
-X-Gm-Features: AWmQ_blYolUjn6HNVFswcXKBY7oowKsMMcCgguiaK5B1Up7lgJHjEAFObXA-S34
-Message-ID: <CAMRc=McT+HinKvajHmBYPcQKoboapAf2E3ErJSP=2jXW9B0omA@mail.gmail.com>
-Subject: Re: [PATCH v3 10/10] regulator: make the subsystem aware of shared GPIOs
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Alexey Klimov <alexey.klimov@linaro.org>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-On Wed, Oct 29, 2025 at 12:54=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
->
-> On Wed, Oct 29, 2025 at 12:20:46PM +0100, Bartosz Golaszewski wrote:
-> >
-> > GPIOLIB is now aware of shared GPIOs and - for platforms where access t=
-o
-> > such pins is managed internally - we don't need to keep track of the
-> > enable count.
-> >
-> > Once all users in the kernel switch to using the new mechanism, we'll b=
-e
-> > able to drop the internal counting of users from the regulator code.
->
-> I am wondering if you took into account the layering violation (or others
-> put it as "transferring of ownership") in the regulator core for the plat=
-form
-> based GPIO regulators? This popped up during the discussion of
-> https://lore.kernel.org/platform-driver-x86/20251024050537.92440-1-qiuwen=
-bo@gnome.org/
->
+On Mi, 2025-10-29 at 13:28 +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>=20
+> At the moment software nodes can only reference other software nodes.
+> This is a limitation for devices created, for instance, on the auxiliary
+> bus with a dynamic software node attached which cannot reference devices
+> the firmware node of which is "real" (as an OF node or otherwise).
+>=20
+> Make it possible for a software node to reference all firmware nodes in
+> addition to static software nodes. To that end: add a second pointer to
+> struct software_node_ref_args of type struct fwnode_handle. The core
+> swnode code will first check the swnode pointer and if it's NULL, it
+> will assume the fwnode pointer should be set. Rework the helper macros
+> and deprecate the existing ones whose names don't indicate the reference
+> type.
+>=20
+> Software node graphs remain the same, as in: the remote endpoints still
+> have to be software nodes.
+>=20
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/base/swnode.c    | 13 +++++++++++--
+>  include/linux/property.h | 38 +++++++++++++++++++++++++++++++-------
+>  2 files changed, 42 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+> index b7c3926b67be72671ba4e4c442b3acca80688cf7..8601d1612be31febb6abbbe1f=
+b35228499480c56 100644
+> --- a/drivers/base/swnode.c
+> +++ b/drivers/base/swnode.c
+> @@ -535,7 +535,13 @@ software_node_get_reference_args(const struct fwnode=
+_handle *fwnode,
+>  	ref_array =3D prop->pointer;
+>  	ref =3D &ref_array[index];
+> =20
+> -	refnode =3D software_node_fwnode(ref->node);
+> +	if (ref->swnode)
+> +		refnode =3D software_node_fwnode(ref->swnode);
 
-I am aware of this weird ownership transfer in regulator but these
-changes don't affect it. The layering is still being violated though.
+software_node_fwnode(ref->swnode) never returns NULL if given a non-
+NULL parameter.
 
-This should be fixed and I've looked into it but it's not trivial so
-it's another big rework for the future.
+> +	else if (ref->fwnode)
+> +		refnode =3D ref->fwnode;
+> +	else
+> +		return -EINVAL;
+> +
+>  	if (!refnode)
+>  		return -ENOENT;
 
-Bart
+So this check is not needed anymore.
+
+regards
+Philipp
 
