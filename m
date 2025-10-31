@@ -1,182 +1,239 @@
-Return-Path: <linux-gpio+bounces-27882-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27883-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5B0FC23EB0
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 Oct 2025 09:52:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F3A08C23FB9
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 Oct 2025 10:02:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 868804E5F3D
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 Oct 2025 08:52:37 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B428E4F1ABD
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 Oct 2025 09:01:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D03F13128BC;
-	Fri, 31 Oct 2025 08:52:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92CAE32E698;
+	Fri, 31 Oct 2025 09:01:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LVppijZ0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0877E2F360C
-	for <linux-gpio@vger.kernel.org>; Fri, 31 Oct 2025 08:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7067032E132
+	for <linux-gpio@vger.kernel.org>; Fri, 31 Oct 2025 09:00:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761900751; cv=none; b=Z4t6tXm6kALC0Z2cNdMfUu2gf8JhbVg3wfQO0qzI8phxZkRkR3oEvdX8zjgKmJrBI7k6omR20TAVH4CXCNrtegoIcJEMqe/LYkjElJVOnrbWvRdWZvXrcZNDJFZ0p/Er5pI+Z5smDh3981un19FDXeHbDLw3csTj/OoMZYDS4cA=
+	t=1761901261; cv=none; b=Lbj9HeS2LrHBTW/G2m/rI6gjvjzoKx4x4rMtNb/Ybpqja8ze4pUx+qvNPKRCStieXLp8K2x6anwani5zSAhO6i934UDNSKHyTt9KCXgG/nrn3bn2onS7a/4/Yr/vFX9Kun4uk61g81HTKTigk+oq4cjjbKb+Dpw7G0xTloTVEZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761900751; c=relaxed/simple;
-	bh=NYbl8HJcgb3R5SVJ9GXGI/Jq2+mOIag8w0HzHBPHPoY=;
+	s=arc-20240116; t=1761901261; c=relaxed/simple;
+	bh=kfJpm0mLG9RdVDLearjYwAtnnJ9GdvDB4BJl81FcoME=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rb5/Jw25iuzlCQ4gY+uzyThvg9j3IHgtZVQi+1W4z+NiP+d1+DkTIMmzTKAnCebU7vaueRmDEpftBs+i/JJPN32KqKz91WRRpq/dl6vFu6vIkaUuqsVLPXv2FWs9XyUbhI5q0aoEy7hxc7O2q12H27w8PhefR7JTu2mJPyDk4yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-932cf836259so944057241.3
-        for <linux-gpio@vger.kernel.org>; Fri, 31 Oct 2025 01:52:29 -0700 (PDT)
+	 To:Cc:Content-Type; b=pANwkjiXBO8Vozn4ZRPI1BDVx7PMo8InfUfvyK8IVhAylpy+PKjfVFC2h8cEC9ctJAu0FgOkotyeBePnUj9ODtK4EfRVbsLISDAnZyJQVAuBmgRfaQaGvhcaAVUGwAmPjfGf/kf3EI39R1r/cW0q6S345IbK0cCcFP3zf9h/DX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LVppijZ0; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-57bd04f2e84so2515927e87.1
+        for <linux-gpio@vger.kernel.org>; Fri, 31 Oct 2025 02:00:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1761901256; x=1762506056; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U2zWXQAb4J66gJtbZXDf79DLTVt9tmjwLAqTV9wFU9Q=;
+        b=LVppijZ0bwV1UeNDdSHBcJd9EMgD9LrVMFS43UPzvOIZftr2Z4K0+RkELCXNIrXuqT
+         98mRxZSsufxOpKzDwLO1ToPsQDaRKnWiF+Gry3IoZuTZUfY6In7qkCLeNzv3jjIKDf2t
+         xPJgkaY0pXusnA+i2bvyuBBkafcjfuxy+QPu1ZlhsAGpGAvMtBv1uM5VHdjITIGKlQRq
+         +IL+G/kBLqXjzoHHTwfw8JmHQRzdPUWwzKCo+G57EotNczvO13gSZ/m7JzYCu4ZGEK0T
+         SnBLunfpWe/pwRkOLWfmeaLnYV7os2ZfIBYy2SDsnyzP35tP8pi6W/nU/bYGC+1ZO+Bi
+         h9FQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761900749; x=1762505549;
+        d=1e100.net; s=20230601; t=1761901256; x=1762506056;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lQVVX5c2GB+a2QgL3UYe6DKU+bmVaydohzEFkpxq/1c=;
-        b=PLYJTDwHU5wRAZV6QojuYGN+60D2DG+WrswtQuateKQ7se1KmVks3nVDggDNO8pXDH
-         g1pxlABcJ4cENDeVh1bsEuIfh7036uyJ0EvBfyKX8lC08qSQtbsCnBoPJHmDBm42Z5h2
-         rT4lVF8GeapKc/+LUmNc2Oiz4tYtDeOn8waQBqGtcslKbfaSj9AyZZo91lVbYZwzGV+7
-         DmHS8xS8awnA5YN4ebF/DZVlnwSkpfzxZWCxVTb7NTCOnw0aE9GcelKChjGgHThGCF7q
-         XwLrOVjtpV44lcjLoySAP990Qrx3UtNX4CaKN3Mw0A0rjT2ZItGIKACaoLRfYMiM1SOy
-         nZbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU8vFdJ7TmLblU6yrtWg/VNCaLPe5ZoISTpmkeFGwKpKePgP8hdkfE1eDXQHWvnBg8rqTPJnwCAa2JP@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywfi0kFmSMi0ILwQhrxrtyAAVTNvfdG5IgsJNRRb09/TDM2kffr
-	G5ot8kynpf+3Hm+DeGy1Kngpb+2xgk9wYrwIQij7nQbtCD0oz0RVlg4Nnc1Js9M9
-X-Gm-Gg: ASbGncuGFv1UejNXxQc4ePO9DleU0VxlNYJiOGKg+ZF7ebN9TsQjG5m6+3H7rpHy+NN
-	12deK90tpkc+WGrKDM4xECPz1zuEmJ4mpjxFnr1jD39fpl/Y8QNh16Zj6NIDMgDLtseaf4jsi4e
-	UKbVuwlyGtPtdVUdaU6Dcoh6d1X4ISXOT4dEUaYosSKUEbhZRhb2xNJ/HgXk5pKJ9niQKmKmyRA
-	HDU33cZhlIYTePgEXTHM0jPkL7jugZexVte3Skt4HLJyis/0QLEQsaRpXzWO5ktFz4T2+LDZYdS
-	luSpjthq4IsbFaAuBe3lSuDy8Sa7X6Yl3zhIxXgx3QdP1XFmYPpj4fz8dv4CfcIdBKvF6H29uMJ
-	c9tcEBIxqBSuG35lvteZTuM3eSbO/gQlJAFMuQgFncM5JwjLU9sL9nL9Z/9lVg0rOS2qdjBy7uB
-	3uBWHwLLGEOBaKy/mxf8490C/7aaUjOthPZmtW7G6MvAipSfLWTwYFlY+agg8=
-X-Google-Smtp-Source: AGHT+IF9XEJpocqULPNBz8Dd++VM1QYxv5r54Qt7NySzq3faUuT9bLmWjXEkpLAUySZ5dW184l4ISQ==
-X-Received: by 2002:a05:6122:298c:b0:556:a54e:f95a with SMTP id 71dfb90a1353d-5593e456afcmr964834e0c.16.1761900748732;
-        Fri, 31 Oct 2025 01:52:28 -0700 (PDT)
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-55944b96e0esm422280e0c.22.2025.10.31.01.52.27
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Oct 2025 01:52:27 -0700 (PDT)
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-89018ea5625so1019571241.0
-        for <linux-gpio@vger.kernel.org>; Fri, 31 Oct 2025 01:52:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUuQbLCLS9Ke4i0D8TLyq4T63tpyuIcwVWy1bbUpxbSR4TW9MX+/CO25ygMju2SEi4/ceRlgnmP0HxZ@vger.kernel.org
-X-Received: by 2002:a05:6102:c13:b0:5d5:f6ae:38c6 with SMTP id
- ada2fe7eead31-5dbb136ecc7mr717064137.37.1761900747573; Fri, 31 Oct 2025
- 01:52:27 -0700 (PDT)
+        bh=U2zWXQAb4J66gJtbZXDf79DLTVt9tmjwLAqTV9wFU9Q=;
+        b=e2fLuAg4yAkxkhubsteWVo6qe0knOk/NmIpqiC42SY9n7x7qQX02++LWrHT4/vmRys
+         uNEjYK2+XKQKSuKvTGhHVELQVWvwy8GZLb/KLa29uKhGZVjIA6V8iEcXCSPV3011virk
+         ZYrDISb7IyvSnwwA9E66RGJLYr6pEfOajfez9yTcCe41mGqRJyux0H3LuB06KId9dyeG
+         r7KeEjA2UIbtnXQhqvk2t2BBv7uD1btfuJWb8NHzJhiE3bkCDPzh3RWScpXKX1AWWHwa
+         f1LDsagSip006BP0PDvBOfOpuMmm1U90dthLJZdNmvK92I8YEIpb+5CtO/25tdKCyrTb
+         u9/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWzwFcASLcoPt7sDPrpQmbfwdvYyOJ7KVXh7BTONp3qh8/xY1vun3binV9Og5++C3j8Yhl93zcotF4D@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzt7gQAXQJ76I81vtgG78s/dFcdgGIO0Qf0yIm1F2wfe8h+ttST
+	EwsYHfoGTnlyLpqNaexOt8/D0OTMk26TSUjHLWJQxduT/JJuLA9ElyTSPWGIaQBSEXJLOk8qmGK
+	iktQy2pC06U2aXRlTIk5WqMhv4OZsnQzRK4LpII7bSw==
+X-Gm-Gg: ASbGncuTju+bhJsxsL6VseKEkz5jx1EDBWo1hK1WMB5Be8aR+4KfeYLFRq4gq5OnJh+
+	LG5It1vowcxUhnj1OhKB3IzEY0ySOB4XNukhwxFYDnO6BrRTrRBHbBddZxU/tkevEcqP4UI2Psg
+	gTja40TYoO/MlQNNzI+4xAXuLsd2WczaC9O7+fXgEd0FXOwsid2jZNBf/kGlnITqF92CJlLB6JH
+	IPJS6oWYRbeAvseWHE1Zrq736f19pofDbwWLVrMT1C+EYOke+GfXO1Fqn9Kh/1j6X0DllOTp+5L
+	sUzVWnqXpvUhWS+G
+X-Google-Smtp-Source: AGHT+IH9CdyA/9CpR4yuZJkUQBQIcmzJf4sYm4WcPQACoUSrA5BoL7natdG3cIpjNxAp+exZosbxpHf54nNaLort178=
+X-Received: by 2002:a05:6512:3e0d:b0:592:f9c6:9736 with SMTP id
+ 2adb3069b0e04-5941d563fdfmr953358e87.56.1761901249206; Fri, 31 Oct 2025
+ 02:00:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251015071420.1173068-1-herve.codina@bootlin.com> <20251015071420.1173068-6-herve.codina@bootlin.com>
-In-Reply-To: <20251015071420.1173068-6-herve.codina@bootlin.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 31 Oct 2025 09:52:16 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVnsWMB24BTFKwggEXKOtqJ96GWZh2Xz+ogocQHM+=+6Q@mail.gmail.com>
-X-Gm-Features: AWmQ_bm5vGlc5XXZic8RvnXrZNNcCRnf0-7M9Km7uh4sqx0Aign1FjKoX2MZmow
-Message-ID: <CAMuHMdVnsWMB24BTFKwggEXKOtqJ96GWZh2Xz+ogocQHM+=+6Q@mail.gmail.com>
-Subject: Re: [PATCH v4 05/29] dt-bindings: bus: Add simple-platform-bus
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+References: <20251029-reset-gpios-swnodes-v3-0-638a4cb33201@linaro.org>
+ <20251029-reset-gpios-swnodes-v3-3-638a4cb33201@linaro.org>
+ <aQMy00pxp7lrIrvh@smile.fi.intel.com> <CAMRc=MdP58d=o7ZL4bAdsaYwzrs6nJo3bhS7Jf1UkDNwPOnAsg@mail.gmail.com>
+ <aQRyFSHWzccTPa3M@smile.fi.intel.com>
+In-Reply-To: <aQRyFSHWzccTPa3M@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 31 Oct 2025 10:00:37 +0100
+X-Gm-Features: AWmQ_bknobk-QJWbVtapIqlH_lufop-oiWv3enLciZJOoLidz7raNrtQVaowNic
+Message-ID: <CAMRc=McT+Q8ZVk9_HTyWd6uS0OoP92E_phwef7CDyDVeNbJCqA@mail.gmail.com>
+Subject: Re: [PATCH v3 03/10] software node: allow referencing firmware nodes
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
-	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Mark Brown <broonie@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
-	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+	Danilo Krummrich <dakr@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Herv=C3=A9,
-
-On Wed, 15 Oct 2025 at 09:17, Herve Codina <herve.codina@bootlin.com> wrote=
-:
-> A Simple Platform Bus is a transparent bus that doesn't need a specific
-> driver to perform operations at bus level.
+On Fri, Oct 31, 2025 at 9:24=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> Similar to simple-bus, a Simple Platform Bus allows to automatically
-> instantiate devices connected to this bus.
+> On Thu, Oct 30, 2025 at 04:17:48AM -0700, Bartosz Golaszewski wrote:
+> > On Thu, 30 Oct 2025 10:41:39 +0100, Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> said:
+> > > On Wed, Oct 29, 2025 at 01:28:37PM +0100, Bartosz Golaszewski wrote:
+> > >>
+> > >> At the moment software nodes can only reference other software nodes=
+.
+> > >> This is a limitation for devices created, for instance, on the auxil=
+iary
+> > >> bus with a dynamic software node attached which cannot reference dev=
+ices
+> > >> the firmware node of which is "real" (as an OF node or otherwise).
+> > >>
+> > >> Make it possible for a software node to reference all firmware nodes=
+ in
+> > >> addition to static software nodes. To that end: add a second pointer=
+ to
+> > >> struct software_node_ref_args of type struct fwnode_handle. The core
+> > >> swnode code will first check the swnode pointer and if it's NULL, it
+> > >> will assume the fwnode pointer should be set. Rework the helper macr=
+os
+> > >> and deprecate the existing ones whose names don't indicate the refer=
+ence
+> > >> type.
+> > >>
+> > >> Software node graphs remain the same, as in: the remote endpoints st=
+ill
+> > >> have to be software nodes.
+> > >
+> > > ...
+> > >
+> > >> -#define SOFTWARE_NODE_REFERENCE(_ref_, ...)                       \
+> > >> +#define __SOFTWARE_NODE_REF(_ref, _node, ...)                     \
+> > >>  (const struct software_node_ref_args) {                           \
+> > >> -  .node =3D _ref_,                                          \
+> > >> +  ._node =3D _ref,                                          \
+> > >>    .nargs =3D COUNT_ARGS(__VA_ARGS__),                       \
+> > >>    .args =3D { __VA_ARGS__ },                                \
+> > >>  }
+> > >
+> > > Okay, looking at this again I think we don't need a new parameter.
+> > > We may check the type of _ref_
+> > > (actually why are the macro parameters got renamed here and elsewhere=
+?)
+> > > and assign the correct one accordingly. I think this is what _Generic=
+()
+> > > is good for.
+> > >
+> >
+> > Oh, that's neat, I would love to use _Generic() here but I honest to go=
+d have
+> > no idea how to make it work. I tried something like:
+> >
+> > #define __SOFTWARE_NODE_REF(_ref, ...)                          \
+> > _Generic(_ref,                                                  \
+> >         const struct software_node *:                           \
+> >                 (const struct software_node_ref_args) {         \
+> >                         .swnode =3D _ref,                         \
+> >                         .nargs =3D COUNT_ARGS(__VA_ARGS__),       \
+> >                         .args =3D { __VA_ARGS__ },                \
+> >                 },                                              \
+> >         struct fwnode_handle *:                                 \
+> >                 (const struct software_node_ref_args) {         \
+> >                         .fwnode =3D _ref,                         \
+> >                         .nargs =3D COUNT_ARGS(__VA_ARGS__),       \
+> >                         .args =3D { __VA_ARGS__ },                \
+> >                 }                                               \
+> >         )
+> >
+> >
+> > But this fails like this:
+> >
+> > In file included from ./include/linux/acpi.h:16,
+> >                  from drivers/reset/core.c:8:
+> > drivers/reset/core.c: In function =E2=80=98__reset_add_reset_gpio_devic=
+e=E2=80=99:
+> > drivers/reset/core.c:958:52: error: initialization of =E2=80=98const st=
+ruct
+> > software_node *=E2=80=99 from incompatible pointer type =E2=80=98struct=
+ fwnode_handle
+> > *=E2=80=99 [-Wincompatible-pointer-types]
+> >   958 |                                                    parent->fwno=
+de,
+> >       |                                                    ^~~~~~
+> > ./include/linux/property.h:374:35: note: in definition of macro
+> > =E2=80=98__SOFTWARE_NODE_REF=E2=80=99
+> >   374 |                         .swnode =3D _ref,                      =
+   \
+> >
+> > So the right branch is not selected. How exactly would you use it here?
 >
-> Those devices are instantiated only by the Simple Platform Bus probe
-> function itself.
+> I believe this is an easy task.
 >
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> But first of all, your series doesn't compile AFAICS:
+>
+> drivers/reset/core.c:981:6: error: variable 'ret' is used uninitialized w=
+henever 'if' condition is true [-Werror,-Wsometimes-uninitialized]
+>   981 |         if (IS_ERR(rgpio_dev->swnode))
+>       |             ^~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/reset/core.c:1001:9: note: uninitialized use occurs here
+>        1001 |         return ret;
+>             |                ^~~
+> drivers/reset/core.c:981:2: note: remove the 'if' if its condition is alw=
+ays false
+>   981 |         if (IS_ERR(rgpio_dev->swnode))
+>       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   982 |                 goto err_put_of_node;
+>       |                 ~~~~~~~~~~~~~~~~~~~~
+> drivers/reset/core.c:905:13: note: initialize the variable 'ret' to silen=
+ce this warning
+>   905 |         int id, ret, lflags;
+>       |                    ^
+>       |                     =3D 0
+> 1 error generated.
+>
 
-Thanks for your patch!
+You're not wrong but for the record: it builds fine for me with
+aarch64-linux-gnu-gcc 14.2 for some reason so I didn't notice it. I'll
+fix it.
 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/bus/simple-platform-bus.yaml
-> @@ -0,0 +1,50 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bus/simple-platform-bus.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Simple Platform Bus
-> +
-> +maintainers:
-> +  - Herve Codina <herve.codina@bootlin.com>
-> +
-> +description: |
-> +  A Simple Platform Bus is a transparent bus that doesn't need a specifi=
-c
-> +  driver to perform operations at bus level.
-> +
-> +  Similar to simple-bus, a Simple Platform Bus allows to automatically
-> +  instantiate devices connected to this bus. Those devices are instantia=
-ted
-> +  only by the Simple Platform Bus probe function itself.
+> So, but to the topic
+>
+> I have applied this and get the only error as per above
+>
+>  (const struct software_node_ref_args) {                                \
+>  -       ._node =3D _ref,                                          \
+>  +       .swnode =3D _Generic(_ref, const struct software_node *: _ref, d=
+efault: NULL), \
+>  +       .fwnode =3D _Generic(_ref, struct fwnode_handle *: _ref, default=
+: NULL), \
+>
 
-So what are the differences with simple-bus? That its children are
-instantiated "only by the Simple Platform Bus probe function itself"?
-If that is the case, in which other places are simple-bus children
-instantiated?
+That works, thanks for the idea.
 
-Do we need properties related to power-management (clocks, power-domains),
-or will we need a "simple-pm-platform-bus" later? ;-)
-
-FTR, I still think we wouldn't have needed the distinction between
-"simple-bus" and "simple-pm-bus"...
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Bartosz
 
