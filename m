@@ -1,158 +1,143 @@
-Return-Path: <linux-gpio+bounces-27907-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27908-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 731E1C25D0A
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 Oct 2025 16:23:16 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 131C4C262A0
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 Oct 2025 17:41:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 97867189AFB9
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 Oct 2025 15:21:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AF105564D4D
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 Oct 2025 16:14:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 569292288F7;
-	Fri, 31 Oct 2025 15:20:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F17792FBDEA;
+	Fri, 31 Oct 2025 16:08:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZXX1Bma9"
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="a/jZfz3n"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EA3D2BFC85;
-	Fri, 31 Oct 2025 15:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C7E2F5A2F;
+	Fri, 31 Oct 2025 16:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761924030; cv=none; b=oaxMhsXHFKLj+8rJ6J8fMzV2CDK2YLyiF2qF+vyAw0+GGdWU5IZ41YPZuxRfW4VOjsb3bLBX9bUbHeqAE+25P5D21ChHagtbz/0O3XElM8gtoe6r8JwZXhALGv3W2Kd6tY709lUDu0z7HxYj4OVEJjmzTXvyejzzspGqUVM3GQs=
+	t=1761926907; cv=none; b=rbZnRRY3srnImhrYFSl+jEQ2k1AB8QozekWGCqRaFcO1CONXfOv4WED8pzS38Tu49ZtCthMQYNmIJEs/y3s187YQ4kJO74oVvOqI3jRpZLgxUVRzID+TtIy8Qi2/qBhxqylV5j6q83acLd2gdFCAt3juH7bco75h+9nU+yxAuGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761924030; c=relaxed/simple;
-	bh=y3b+wUCsWckPBCTPgAZadRRNBEdlpxrfsSHKNnGesNY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IIaBcq2DZFuFNWCJ69Rp0+KvIfpGueRbZrey+b0r4YUEldPX23/cFLYyPXuR7y7OVFEDeUfC36Mk+wy6edhs8knsppObLPKWJzX7olzwvTmKIcm7U2PRpgMev9arNBx8aTv5dw3R4a0H4WpDPy2dAuPOut7Zp8NffcGGgLtXzO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZXX1Bma9; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id E0C101A17AC;
-	Fri, 31 Oct 2025 15:20:25 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 9CDE360710;
-	Fri, 31 Oct 2025 15:20:25 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 067DE11818041;
-	Fri, 31 Oct 2025 16:20:05 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1761924023; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=goHQM/1NASiwEpJFuU+gt1w80LtYcWXr5Gc0K9tmMcc=;
-	b=ZXX1Bma9X3KMNXlEJ6m3KmzgeWaoHvqKZUDGbtyXcyczSWNcqa1WxZl7PaaP3QnmzL9gq4
-	h0YuPlq7t/ag22Qc0RV6DUkEOizZ8aU4YvVAi5tQ0oCrNCN9uTlgnrGvmTf6uzjWAFrc/P
-	iOZon5nGEinDurKqvP8UIygDFPUWAiUqm59zHUbmHyOs3e60XOGs63ifmZhf114mLUKRqK
-	bIKj+JoZJxnMO/w5PK2AbEIM7ADXeVegLKetdhc6qx0E6UYxyvcnSln30z+BZXKje9+TfM
-	AmSNEEcgTn5HJwFcJWmSNYyzhr1jXdHX0RhRB0lSnwspgtNFDoD+bFqnfo/hgQ==
-Date: Fri, 31 Oct 2025 16:20:04 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
- <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
- Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Arnd
- Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, Bjorn
- Helgaas <bhelgaas@google.com>, Charles Keepax
- <ckeepax@opensource.cirrus.com>, Richard Fitzgerald
- <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, Linus
- Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>,
- Mark Brown <broonie@kernel.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, Davidlohr
- Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, Alison Schofield
- <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
- Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, Geert
- Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
- patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 05/29] dt-bindings: bus: Add simple-platform-bus
-Message-ID: <20251031162004.180d5e3f@bootlin.com>
-In-Reply-To: <20251030141448.GA3853761-robh@kernel.org>
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
-	<20251015071420.1173068-6-herve.codina@bootlin.com>
-	<20251030141448.GA3853761-robh@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1761926907; c=relaxed/simple;
+	bh=mtBPiPadsuplpuBAt4fNU1+W1gRT2iMBqw79oldk53o=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hOjdegPHo7x+o8OhwWV6sof0jFCmYgtgiY1G/Vg1COF3DT3FIj/Jyh8qtHw+qqYvbqjrzHwkko8UeLfA13Z3pD09PHRyjKkjYBycOvpU/TBTl7g071mKbV9JBAh2odL1McZugHGVtwxHwUCGRNBfiz6zq9Ifpq57kbcmy1QI1YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=a/jZfz3n; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 59VDvg1x1108539;
+	Fri, 31 Oct 2025 12:08:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=Ua+ji97PiQ5ynhrUnxdzoyocV/1
+	9dvBoIv9057spgt4=; b=a/jZfz3n34NyFnV0lvCNpemEwFFCwrPV6snA3CTMoFG
+	wNgHhEPl70Xj6W2RL+0KsCXuNqgKxEWilc/2AnxOekrJ4rx7NJkRPHl5JKIJhIts
+	8uRzxT3m2vj/IstMXs4HSCidSPY/d5DIXmKD1Wa9fOgyHhsBpifNJNR1wf9k4qIa
+	RJ/+8nd+m1TMrUP+ZBXuBLNflNSqCknGKvIj9gcuk+7dThWlz9zMoOdZ3PAAjCH+
+	bbWucUId0c8ZvKTx4j357NjZhevapGv5tQCYMldW1I6z2wEmM0k6mc76vTLYlkX5
+	2w5BiRvV9KTakeXaZ3PiXcCULKUV4Nh9gepCRTdSkXA==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 4a4p8atwdt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 Oct 2025 12:08:21 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 59VG8KfF064675
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 31 Oct 2025 12:08:20 -0400
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.37; Fri, 31 Oct 2025 12:08:20 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.37; Fri, 31 Oct 2025 12:08:20 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.1748.37 via Frontend
+ Transport; Fri, 31 Oct 2025 12:08:20 -0400
+Received: from Ubuntu.ad.analog.com ([10.32.15.145])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 59VG89rZ006955;
+	Fri, 31 Oct 2025 12:08:11 -0400
+From: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski
+	<brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Subject: [PATCH 0/2] gpio: Add support for ADG1712 quad SPST switch
+Date: Fri, 31 Oct 2025 16:07:03 +0000
+Message-ID: <20251031160710.13343-1-antoniu.miclaus@analog.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Authority-Analysis: v=2.4 cv=R4QO2NRX c=1 sm=1 tr=0 ts=6904def6 cx=c_pps
+ a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=p9Z7yoRph7NKER1LKQcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-ORIG-GUID: m_za6bgTB4Cvd3FGNRdYwR1FsIVlfmNW
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDMxMDE0NSBTYWx0ZWRfX9IsXHg5XbrJc
+ XIJ3MndueIQ1+gcl4ZkobxPXgCRK5hue5teImCut31hn7DbzF8jDONbRuVY9mdjKpZAsMb+4/y1
+ lJYcP4fi21C4WcDr7TWTpVfRzx/0vV9rcdilcphTo90ubnuRrtspbyMbqBVGZr7t0oYNdeqS3ob
+ LOZJ5qgONx2SiZpk0kUUrNgmmzAXYq2tn79PJniGXrEikeNF32eEBZMdXnCTjkHLYDRowfEsmkM
+ epHcE9+oS/gPsD4L1F8nCLusi+0sUWo8mbZPdJd5Y00JQ8OSOBQwMAgeUB/qMRGQNj/hPLSDDm0
+ hAUW5yAUNfKFmANyxf+NIopsU+98NxJAKlo1GLTrz2Uc1PV4edRQSDbEtsKcXrmntmJD/6qG+bd
+ e655EKMRu0N1BH+c44toshWgpPQ6Nw==
+X-Proofpoint-GUID: m_za6bgTB4Cvd3FGNRdYwR1FsIVlfmNW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-10-31_05,2025-10-29_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 adultscore=0 spamscore=0 suspectscore=0 priorityscore=1501
+ clxscore=1011 lowpriorityscore=0 phishscore=0 impostorscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2510310145
 
-Hi Rob,
+This patch series adds support for the Analog Devices ADG1712 quad
+single-pole/single-throw (SPST) switch GPIO driver.
 
-On Thu, 30 Oct 2025 09:14:48 -0500
-Rob Herring <robh@kernel.org> wrote:
+The ADG1712 contains four independent SPST switches and operates with a
+low-voltage single supply range from +1.08V to +5.5V or a low-voltage
+dual supply range from ±1.08V to ±2.75V. Each switch is controlled by
+a dedicated GPIO input pin.
 
-> On Wed, Oct 15, 2025 at 09:13:52AM +0200, Herve Codina wrote:
-> > A Simple Platform Bus is a transparent bus that doesn't need a specific
-> > driver to perform operations at bus level.
-> > 
-> > Similar to simple-bus, a Simple Platform Bus allows to automatically
-> > instantiate devices connected to this bus.
-> > 
-> > Those devices are instantiated only by the Simple Platform Bus probe
-> > function itself.  
-> 
-> Don't let Greg see this... :)
-> 
-> I can't say I'm a fan either. "Platform bus" is a kernel thing, and the 
-> distinction here between the 2 compatibles is certainly a kernel thing.
-> 
-> I think this needs to be solved within the kernel.
+The driver provides a GPIO controller interface where each GPIO line
+controls one of the four independent analog switches on the ADG1712.
+This allows software to dynamically control signal routing through
+the analog switches.
 
-I fully agree with that.
+Patch 1 adds the device tree bindings documentation.
+Patch 2 adds the GPIO driver implementation.
 
-> 
-> What I previously said is define a list of compatibles to not 
-> instantiate the child devices. This would essentially be any case having 
-> a specific compatible and having its own driver. So if someone has 
-> 'compatible = "vendor,not-so-simple-bus", "simple-bus"', when and if 
-> they add a driver for "vendor,not-so-simple-bus", then they have to add 
-> the compatible to the list in the simple-pm-bus driver. I wouldn't 
-> expect this to be a large list. There's only a handful of cases where 
-> "simple-bus" has a more specific compatible. And only a few of those 
-> have a driver. A more general and complicated solution would be making 
-> linux handle 2 (or more) drivers matching a node and picking the driver 
-> with most specific match. That gets complicated with built-in vs. 
-> modules. I'm not sure we really need to solve that problem.
+Antoniu Miclaus (2):
+  dt-bindings: gpio: adg1712: add adg1712 support
+  gpio: adg1712: add driver support
 
-Right. Let discard the "more general and complicated solution" and focus
-on the list of compatible to avoid child devices instantiation.
+ .../devicetree/bindings/gpio/adi,adg1712.yaml |  75 +++++++++
+ drivers/gpio/Kconfig                          |   9 ++
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-adg1712.c                   | 146 ++++++++++++++++++
+ 4 files changed, 231 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/adi,adg1712.yaml
+ create mode 100644 drivers/gpio/gpio-adg1712.c
 
-Do you mean that, for "simple-bus" compatible we should:
- - Remove the recursive device instantiation from of_platform_populate().
- - In simple-bus probe(), check the device we probe against the
-   'no_instantiate_children' list
-      - If it matches, do not instantiate chidren
-      - If it doesn't match instantiate children
+-- 
+2.43.0
 
-Is that correct?
-
-Best regards,
-Hervé
 
