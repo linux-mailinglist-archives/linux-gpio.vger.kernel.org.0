@@ -1,143 +1,169 @@
-Return-Path: <linux-gpio+bounces-27896-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27897-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 802CCC24E50
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 Oct 2025 12:59:48 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94C5CC2506B
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 Oct 2025 13:34:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C8B701A22518
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 Oct 2025 12:00:12 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3B8EC4F3CC8
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 Oct 2025 12:32:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FD5F34844F;
-	Fri, 31 Oct 2025 11:59:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE7BE34A3C1;
+	Fri, 31 Oct 2025 12:32:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TE3YZzT/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lEM92E8z"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F718348445;
-	Fri, 31 Oct 2025 11:59:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B8C338F54;
+	Fri, 31 Oct 2025 12:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761911971; cv=none; b=q4UzlR6PLYFyigmGAlHQRuOJdGvDbxqFwyMOKwlMTM65qjBdK+R685gKaPHSdmE8ft8RyFUQV0RMUajOLvJ+bcf+uM6tJyCdcQOO7lH6ZCxa6PF4yxAxRZ/qhPk+nuOcNvb10O4BBYCGzYx8gs8p/YC4Va1Lq+jhD7WtRBRF1t8=
+	t=1761913930; cv=none; b=O9Y89lelE9QstUt4RiOeQ3eL+0weVCoH/Hg/AgMlabtv+OHs7cD4u4MCqrnS10KS0lg4/g935lylVlREmr3BZXbZuN5JDP2mEYK/8Pse/y09sRCMDpvNeUvRkPsk4nvUOnxmgRw99gEZPtjbTTkiEO+djyTp/NSlQo4MIqfqkl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761911971; c=relaxed/simple;
-	bh=5UoaEdpVLL2NdA+CQijxmw2u67i+mScHjsVkMhIYhCg=;
+	s=arc-20240116; t=1761913930; c=relaxed/simple;
+	bh=vAvTZWxGuxuqYRzWeF+dPsTukeuTCdomYTBSlfcskGI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=niMg8lAPxIDyZ/RY7+ho00WYLlZR0fcE85l/T+6ayZMlXm4zZEcokV/V9AHICKx5tGGEvBp+5zlPC26lWH1abrJaEUBD3TyQn3KA/0GpnaFY6XaXh5X8xQ3B5+6FPSWeRrdOmJGidgTtMD5IrB886vgSCUfVdEtkAHH9l0bh7Gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TE3YZzT/; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=B72sLgQZgRFKfVnTDuQv/qs5bS8yB6H3jZyIYA1JixWTJnH15U7oaO7qZ4xN1T6+HwcBM3rtU+8qrS9fxm0HPLVL6VDhOn3kfVITB/Lax2GzQvHrs8161pCzeDZKZBFCgid0yk0KHx2hcmZkBxwwOe4pu6/YYud3G0WicpjGKeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lEM92E8z; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761911970; x=1793447970;
+  t=1761913927; x=1793449927;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5UoaEdpVLL2NdA+CQijxmw2u67i+mScHjsVkMhIYhCg=;
-  b=TE3YZzT/CCwUFWt0np9TlRsLBwgSXdkejuoWH1GnWx1X0amP4rdwXLMr
-   PKA6t1Wh1kgGE2i8Whs2ZMGCDOavBqIAjUtyQcWVdYEIrTZTW+uPSUcnK
-   6xJGpRz5qCXQvHxdpyx9NAL+rXbZ+204WDkxsYmWSOob5ULvFaNZyYcXm
-   AgL38hHS557HvBLWIdyXCplyYq+EyjeNKvLEbNTEs+3ET+rbkRoXYOGJG
-   UAnMhD+l0rVXFaxp6lpO7ojxhyCxZLVnQUZUrdOcyI+Wsb2EEkYFOqXGR
-   2z8HUspEKF+/nkMpCL0fOfDTT+SLwrvjiQvtx6mrXN+EyO2AkPBQ7er1t
-   A==;
-X-CSE-ConnectionGUID: pp9hEsglQDWHRwCf3IBZ5Q==
-X-CSE-MsgGUID: NVM/QxTPRnCSbQYIkRD5Nw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11598"; a="64170104"
-X-IronPort-AV: E=Sophos;i="6.19,269,1754982000"; 
-   d="scan'208";a="64170104"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 04:59:29 -0700
-X-CSE-ConnectionGUID: I7fU5kdvSxu/0BY7bP+Iag==
-X-CSE-MsgGUID: DMmdcyxFQAeGVXU6xmQtlQ==
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=vAvTZWxGuxuqYRzWeF+dPsTukeuTCdomYTBSlfcskGI=;
+  b=lEM92E8z7PO6kvI8wA1U/JkObZeBvcJuFxTyjjFKfsSkSD0Vy83wntd2
+   1Oe7evCWnEAY2QgR89OitD6/O2OnNf18lInbiiP8oSolSpc+mbXlAnmH2
+   2C78G2n+NCpJ0DJEpTSf4wbyQPqrdhF8wBE0H9jcvsE4u/bAu50jgCdD3
+   zynmT3/PI2tVLBY+teeL0CkgP1do1tnpScGms9Q4+uzv7dVq/5HcYkQy+
+   1w8T0P9oawETXwhGYysr7vKi12vIuGOW8QWpWasv6msB4joNzMqu4sMxQ
+   cFxA7OvL/4qKiqV5MMhh+aupIABw5nXfJaUxg8S9fCjPNyX8GYb+x+Hag
+   w==;
+X-CSE-ConnectionGUID: Gml329+OQSuyGMI9HS1tvw==
+X-CSE-MsgGUID: b1L/cz73Qli1dLTZTtXHHQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="64001045"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="64001045"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 05:32:05 -0700
+X-CSE-ConnectionGUID: imYMsrLsRyC9p//fO6WQxg==
+X-CSE-MsgGUID: 3/0RZUxDQyub/6nfaKcuNQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,269,1754982000"; 
-   d="scan'208";a="190302969"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 04:59:26 -0700
-Date: Fri, 31 Oct 2025 12:59:24 +0100
-From: Raag Jadav <raag.jadav@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl,
-	platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] platform/x86/intel: Introduce Intel Elkhart Lake
- PSE I/O
-Message-ID: <aQSknEvFB_HRjwd-@black.igk.intel.com>
-References: <20251029062050.4160517-1-raag.jadav@intel.com>
- <20251029062050.4160517-2-raag.jadav@intel.com>
- <aQHSA6TtCAVGDRNo@smile.fi.intel.com>
- <aQSCpF8aR1lskaPy@black.igk.intel.com>
- <aQSJJv7d2hllsObY@smile.fi.intel.com>
+   d="scan'208";a="186342409"
+Received: from mgoodin-mobl3.amr.corp.intel.com (HELO ashevche-desk.local) ([10.124.220.66])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2025 05:32:03 -0700
+Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1vEoIP-00000004GCj-28Or;
+	Fri, 31 Oct 2025 14:31:57 +0200
+Date: Fri, 31 Oct 2025 14:31:56 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v3 02/10] software node: increase the reference of the
+ swnode by its fwnode
+Message-ID: <aQSsPIJ26Sx2WqhE@smile.fi.intel.com>
+References: <20251029-reset-gpios-swnodes-v3-0-638a4cb33201@linaro.org>
+ <20251029-reset-gpios-swnodes-v3-2-638a4cb33201@linaro.org>
+ <aQMxNgC9SWQp-yUy@smile.fi.intel.com>
+ <CAMRc=Md=Dcwj0qDu5ysDafjuV0Ud9z2Ky3PQpDzfiKRt2L-HgQ@mail.gmail.com>
+ <aQRztwrOFCWk8IG8@smile.fi.intel.com>
+ <CAMRc=MezQ7RC=ZjiKkMa0qiaKTRXePOKxOCDjjV=-qUYto2jqA@mail.gmail.com>
+ <aQSFDhUp89xul2AP@smile.fi.intel.com>
+ <CAMRc=MdfbbkWBeAgw3G=k7xgSc8TPhZQ56ks9Or9p9Ah-y5YQw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aQSJJv7d2hllsObY@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MdfbbkWBeAgw3G=k7xgSc8TPhZQ56ks9Or9p9Ah-y5YQw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Fri, Oct 31, 2025 at 12:02:14PM +0200, Andy Shevchenko wrote:
-> On Fri, Oct 31, 2025 at 10:34:28AM +0100, Raag Jadav wrote:
-> > On Wed, Oct 29, 2025 at 10:36:19AM +0200, Andy Shevchenko wrote:
-> > > On Wed, Oct 29, 2025 at 11:50:49AM +0530, Raag Jadav wrote:
+On Fri, Oct 31, 2025 at 05:27:10AM -0500, Bartosz Golaszewski wrote:
+> On Fri, 31 Oct 2025 10:44:46 +0100, Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> said:
+> > On Fri, Oct 31, 2025 at 10:03:47AM +0100, Bartosz Golaszewski wrote:
+> >> On Fri, Oct 31, 2025 at 9:30 AM Andy Shevchenko
+> >> <andriy.shevchenko@linux.intel.com> wrote:
+> >> > On Thu, Oct 30, 2025 at 03:33:02AM -0700, Bartosz Golaszewski wrote:
+> >> > > On Thu, 30 Oct 2025 10:34:46 +0100, Andy Shevchenko
+> >> > > <andriy.shevchenko@linux.intel.com> said:
+
+...
+
+> >> > > Andy: the resulting code after patch 3/10 looks like this:
+> >> > >
+> >> > > struct fwnode_handle *refnode;
+> >> > >
+> >> > > (...)
+> >> >
+> >> > Let's say something like below to be put here
+> >> >
+> >> > /*
+> >> >  * The reference in software node may refer to a node of a different type.
+> >> >  * Depending on the type we choose either to use software node directly, or
+> >> >  * delegate that to fwnode API.
+> >> >  */
+> >>
+> >> But this is incorrect: we're not really doing that. We either use the
+> >> firmware node reference directly OR cast the software node to its
+> >> firmware node representation. We ALWAYS use the firmware node API
+> >> below.
+> >>
+> >> This really *is* evident from the code but if it'll make you happy and
+> >> make you sign off on this, I'll add a corrected version.
+> >
+> > The comment should answer to the Q: "Why the heck are we calling fwnode APIs here?"
+> >
+> >> IMO It's completely redundant.
+> >
+> > This is unusual case for swnode API (see other functions, they call directly
+> > the low-level implementation instead of going to a round via fwnode). That's
+> > why I insist on a comment of this piece. It may be obvious for you, but the
+> > unprepared read would be surprised by this inconsistency.
+> >
 > 
-> ...
+> I propose to have the following:
 > 
-> > > > +#define EHL_PSE_IO_DEV_OFFSET	SZ_4K
-> > > > +#define EHL_PSE_IO_DEV_SIZE	SZ_4K
-> > > 
-> > > Not sure if SZ_4K is a good idea for the _OFFSET, the _SIZE is fine. Also why
-> > > do we need two? If the devices are of the same size, we don't need to have a
-> > > separate offset.
-> > 
-> > Yes but they're semantically different, atleast as per DEFINE_RES_MEM().
-> > Either way works for me.
+> +       /*
+> +        * A software node can reference other software nodes or firmware
+> +        * nodes (which are the abstraction layer sitting on top of them).
+> +        * This is done to ensure we can create references to static software
+> +        * nodes before they're registered with the firmware node framework.
+> +        * At the time the reference is being resolved, we expect the swnodes
+> +        * in question to already have been registered and to be backed by
+> +        * a firmware node. This is why we use the fwnode API below to read the
+> +        * relevant properties and bump the reference count.
+> +        */
 > 
-> They are "slices" in the HW, see also my "if the devices..." passage.
-> 
-> If you want to use SZ_* in _OFFSET, I would write it as (1 * SZ_4K) to point
-> out that size constant here is the _unit_ and not the size semantically.
-> Currently the definitions have the same values semantically, but you pointed
-> out that they should not be.
+> This at least adds relevant information on *why* we're using the fwnode API.
 
-Fair. Will consolidate.
+Yes, works for me, thanks!
 
-> > > > +	io_dev = kzalloc(sizeof(*io_dev), GFP_KERNEL);
-> > > > +	if (!io_dev)
-> > > > +		return -ENOMEM;
-> > > 
-> > > Why devm_kzalloc() can't be used? I don't see if the device lifetime is anyhow
-> > > different to this object. Am I wrong?
-> > 
-> > Looks like it but I don't know the code well enough to tell if there're
-> > corner cases, so just following the documented rules. Your call.
-> 
-> Do you expect this to be called in non-probe() contexts? If no --> devm.
-> Otherwise some comments are needed.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Sure.
 
-> > > > +	ret = __auxiliary_device_add(aux_dev, dev->driver->name);
-> > > 
-> > > Hmm... Is it okay to use double underscored variant? Only a single driver uses
-> > > this so far... Care to elaborate?
-> > 
-> > The regular variant uses KBUILD_MODNAME which comes with 'intel' prefix
-> > after commit df7f9acd8646, and with that we overshoot the max id string
-> > length for leaf drivers.
-> 
-> At bare minimum this needs a comment, but I think ideally we need to bump the
-> limit by factor of 2.
-
-Which will probably require a wider discussion, so perhaps let's pursue it
-separately?
-
-Raag
 
