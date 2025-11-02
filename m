@@ -1,97 +1,153 @@
-Return-Path: <linux-gpio+bounces-27929-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27930-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6112C293FA
-	for <lists+linux-gpio@lfdr.de>; Sun, 02 Nov 2025 18:33:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A295C29619
+	for <lists+linux-gpio@lfdr.de>; Sun, 02 Nov 2025 21:12:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C750C4E7DEF
-	for <lists+linux-gpio@lfdr.de>; Sun,  2 Nov 2025 17:33:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 30D403AD285
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Nov 2025 20:12:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 874A62DF122;
-	Sun,  2 Nov 2025 17:33:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F8EB21FF5B;
+	Sun,  2 Nov 2025 20:12:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PDkY6Tm1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZkrogTDT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33EA32DCBF4;
-	Sun,  2 Nov 2025 17:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C916C7E0FF
+	for <linux-gpio@vger.kernel.org>; Sun,  2 Nov 2025 20:12:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762104812; cv=none; b=Xn46mRLhnFXSO7OxvLSQ+rAzqPpcNjzx/KLQv6PBtj7wYYuGGiItFGAXiExxfP0ExZIqulgJgjjNJv22Ztj3bgZJ1OfRjx1MOn7f/RyNCwuhfKlA7Jzqoj/9useis24sYnwEae1jZ2i+hZ1DQWZs7uiO8RNIE/IMIdTWOBEi6/I=
+	t=1762114367; cv=none; b=CNXk/52NIqpCB1h62v+AEA5zogqiaxeHONIy/ysnl3YSOCg1X98Cws+3QfVdnrtymekSnIU6Iw00k+RqQiLtbpO3mmjzsTjoTSyIG9yd+HANeE2z/toe1UaqjhT8Z9pxiD8nLx57YqUPjDLmsOquwsC/V+sGucxWtYgyvu+ra/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762104812; c=relaxed/simple;
-	bh=rNZEtonEvsnwG9knkIy44hyOEBhCUx41mMf+yHH/MxM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qwi162Y0oMYbevbHrapsik2xGRamjj05ZOw9aWm8Kb7Cs15Y55Ns3eLtY3kP3usiwgNYPBdHXST2YQaSmYhYZjqaZhOnpRI71eagmehQ6n8stVCg9OBoddGINH7bnkYhcs5O9HdnKldiM+ND383qVr6QmGSf4PmkjpaiDDtIpcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PDkY6Tm1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91496C4CEF7;
-	Sun,  2 Nov 2025 17:33:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762104811;
-	bh=rNZEtonEvsnwG9knkIy44hyOEBhCUx41mMf+yHH/MxM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PDkY6Tm1Q6aSFi2vy/wLX6Q7v1bsKgjjxwe8mnBOdm6ItooU5NdPjDJIix2hcMBMI
-	 ZtqjmWicOZiZTb/iYS7NUBv0povn3FLfn29dDpiq2aPknvQoHRhzfGFgpJ2d7U3E6X
-	 kWQd7w4zW8zVNzblgxDmFubZwoUEsimyyU79oNBrY+494+CO7jx0VQNlEo9iTEvdh3
-	 CcsgmDGjeQz8oiCJq021Mjuitg4q/zM+SuO80vA/PgHsstiluTc8aIYll0XJvghmwc
-	 gRs8ZCmsf5OR3a9SWQfJuCfuRY04GXyNhaZq6vBgugwnbisnfY+RGUM5/+5KQBNyBe
-	 6Ap0sg6cyT0gA==
-Date: Sun, 2 Nov 2025 11:36:56 -0600
-From: Bjorn Andersson <andersson@kernel.org>
-To: Luca Weiss <luca.weiss@fairphone.com>
-Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Fenglin Wu <quic_fenglinw@quicinc.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, ~postmarketos/upstreaming@lists.sr.ht, 
-	phone-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-leds@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] dt-bindings: mfd: qcom-spmi-pmic: Document PM7550
- PMIC
-Message-ID: <mvqkwezj7nbcvmlhamgukbr5ofddyoyvsbfy2kywylojaqgijz@7uqxm7ajicdd>
-References: <20251023-sm7635-pmxr2230-v3-0-f70466c030fe@fairphone.com>
- <20251023-sm7635-pmxr2230-v3-2-f70466c030fe@fairphone.com>
+	s=arc-20240116; t=1762114367; c=relaxed/simple;
+	bh=vQ70zOQjf6dVyMCSPPI6U5RCv7r28t20uFINZMdYEbw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eJ5kc/RrgbUNEuVPx/dSZrCegKuB8RL2g0RcvwIqBr5ie0OCvzU25VRstFpMCaUC8QZ9DyW3H3TmbUHunmQw/k4/+AgdQHjEnp+0EXinmrSGFJa5i/B0mA3SRHvzg9XC4QxYkiRVDlfFtIQl76EbqAvThQ/FCUGA0kXK5iW25+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZkrogTDT; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3304dd2f119so2778117a91.2
+        for <linux-gpio@vger.kernel.org>; Sun, 02 Nov 2025 12:12:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762114364; x=1762719164; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Fqxd8GSbRVyInLqowSB5ULzNB5fuvN606M77nsm3p08=;
+        b=ZkrogTDT8ZnAO/WAVbFOFStqbQj0f82M6BzcYyJSHBI2N9DFyvCXl2x6hipJJQtiGf
+         85cqS0PEXpbNro2dy99ByoJ7/rnww58tYa105G3bjRV3qEiZvcbYZhgj4sK3kFAySgrd
+         mNqy4M2gjumG7sIgEAm0Bg1xQn7GXFEIbpl7AiYXJS432+flqWfOsmv5n8PHO189lR8T
+         7thrU9/q0pNytaBeBowxjKaxXfQdAuaO0Ju/CgEeFr6HYWC6PGInfBcOd/lc+NglbopD
+         rTVljUcSa85zS21k4lE10XoQqK4AtQOef4fnODOMbYgXkOq5Yf+D9cw2qtIACubsBtul
+         NCSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762114364; x=1762719164;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Fqxd8GSbRVyInLqowSB5ULzNB5fuvN606M77nsm3p08=;
+        b=CIjhOpdFPoLUjIt+510HcDd/M/r8bUUo92XiiETdcMCTKvNH7OkBGLu4lXTpIw5J4H
+         rorAwIraRfkcPb2GIOuMibbc+JsafiIKfvihNvNHjvhIc2CjpPm4ZZxAFsojzwL/4B36
+         g0Hu+LIieri7c7p5Q4NmjHICRzFnggjqK5IsGqqlhEBMRnRgqRRmESp/HPY/6SVErtFM
+         /x2vKnUnZd+D6RG7MfcY18auNKqNoVdYoWAKDQfzow8aJ7QrwijNLvucpKLRl94l3kIu
+         IgErHc/opChQHzFfR1+D5H0f0q8CcKgKhUKuH+ZzJeMUSAwAemtLtjTDgfFN4uAAxosa
+         804g==
+X-Forwarded-Encrypted: i=1; AJvYcCVvyEAmiaOq7tqqiBMGE2/RzjgaCK1OkAlgIkxgxH6uSC0zAufhUXkYmGv+9gAzCqbHnYfnBHSyKXFP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8q3ImXhnmpxxLwVRr19rymd4sqpOP5kaYGiuR822BkhdPWKjZ
+	RI2q+IQ4F6ryA2HWluvRK+GyRfx3UMdn3M/SPsgUxzNtKpElD6UrEJkk3wWrsthZZXOl1Uh8Dmv
+	G+naTUuPmAEnyCwBnFkySebh1qS+PD1ws7ZldIw==
+X-Gm-Gg: ASbGnct+se6IoypDABhWj1KqWyC9uW1fNrtKvdSxyLIHzti1FU/UZiSb77KqU6//ATc
+	rmXmchjOGXrw5BFN2HLiPq2Cn0RQME9SEGHAbSmUk+qXqyA42IzeqLJHg20bdVVtPKjCj3IaNxp
+	1CEVmWF/UOkFgDWqOIOld7moOBh3B4SeNwoEz47mxKuh37+Cck6BvFzM5KY5PQa8EBkWsFtX7pm
+	HMJtxthP1QnZArXgouLl4H5KgfFPlvoxWZyjftRCsZfAdwuH4/RLzjqgy5nHHr4shE/RV1BVbca
+	lD8un5p8hTyDXYvUCnVUFeSC9+NY
+X-Google-Smtp-Source: AGHT+IHXziArp6Fwc3IW8oTuA21TaRtuWLVaUnoj/Nrt7XJBhwyf4bvwfdqUr10ASbu5qVVj+3mWPLSdt0i0Iz+0gWE=
+X-Received: by 2002:a17:90b:2885:b0:340:e8e9:cc76 with SMTP id
+ 98e67ed59e1d1-340e8e9cd0bmr5531518a91.11.1762114363950; Sun, 02 Nov 2025
+ 12:12:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251023-sm7635-pmxr2230-v3-2-f70466c030fe@fairphone.com>
+References: <20250821194710.16043-1-jihed.chaibi.dev@gmail.com>
+In-Reply-To: <20250821194710.16043-1-jihed.chaibi.dev@gmail.com>
+From: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+Date: Sun, 2 Nov 2025 21:12:31 +0100
+X-Gm-Features: AWmQ_bnYDJMb8ZNLbIwTQjuhi9qVx6pKfUX_tadjCSJdooWWkHy06CGTs7XIWPE
+Message-ID: <CANBuOYqaLMV3rvdf=YcWTjiqn2A3h0a-QYM77VJvSJtSDSe9pQ@mail.gmail.com>
+Subject: Re: [PATCH v5] dt-bindings: gpio: ti,twl4030: Correct the schema $id path
+To: linus.walleij@linaro.org, brgl@bgdev.pl
+Cc: krzk+dt@kernel.org, robh@kernel.org, conor+dt@kernel.org, 
+	peter.ujfalusi@gmail.com, lee@kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, shuah@kernel.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, aaro.koskinen@iki.fi, 
+	Andreas Kemnade <andreas@kemnade.info>, khilman@baylibre.com, rogerq@kernel.org, 
+	Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 23, 2025 at 01:32:26PM +0200, Luca Weiss wrote:
-> Document the compatible string for the PM7550 PMIC.
-> 
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
-
-Reviewed-by: Bjorn Andersson <andersson@kernel.org>
-
+On Thu, Aug 21, 2025 at 9:47=E2=80=AFPM Jihed Chaibi <jihed.chaibi.dev@gmai=
+l.com> wrote:
+>
+> The $id for a binding should match its file path. The ti,twl4030-gpio
+> binding is located in the gpio/ subdirectory but was missing this from
+> its $id.
+>
+> Correct the path to follow the standard convention.
+>
+> Fixes: 842dcff8e2d6 ("dt-bindings: gpio: Convert ti,twl4030-gpio to DT sc=
+hema")
+>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+>
 > ---
->  Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
-> index 078a6886f8b1..d0c54ed6df38 100644
-> --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
-> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
-> @@ -43,6 +43,7 @@ properties:
->            - qcom,pm7250b
->            - qcom,pm7550ba
->            - qcom,pm7325
-> +          - qcom,pm7550
->            - qcom,pm8004
->            - qcom,pm8005
->            - qcom,pm8009
-> 
-> -- 
-> 2.51.1
-> 
+> Changes in v5:
+>  - No changes, only added 'Fixes' tag.
+>
+> Changes in v4:
+>  - No changes.
+>  - This patch is split from larger series per maintainer feedback.
+>  - v3 link:
+>     https://lore.kernel.org/all/20250816021523.167049-1-jihed.chaibi.dev@=
+gmail.com/
+>
+> Changes in v3:
+>  - This patch was added to the patch series in v3.
+> ---
+>  Documentation/devicetree/bindings/gpio/ti,twl4030-gpio.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/ti,twl4030-gpio.yaml =
+b/Documentation/devicetree/bindings/gpio/ti,twl4030-gpio.yaml
+> index 5e3e199fd..96d50d14c 100644
+> --- a/Documentation/devicetree/bindings/gpio/ti,twl4030-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/ti,twl4030-gpio.yaml
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>  %YAML 1.2
+>  ---
+> -$id: http://devicetree.org/schemas/ti,twl4030-gpio.yaml#
+> +$id: http://devicetree.org/schemas/gpio/ti,twl4030-gpio.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>
+>  title: TI TWL4030 GPIO controller
+> --
+> 2.39.5
+>
+
+Hi Bartosz, Linus,
+
+Gentle ping on this fix,
+It was reviewed by Krzysztof a couple of months ago. I wonder if it's
+ready to be picked up.
+
+Cheers,
 
