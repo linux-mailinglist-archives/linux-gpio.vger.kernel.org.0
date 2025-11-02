@@ -1,138 +1,100 @@
-Return-Path: <linux-gpio+bounces-27926-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27927-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A5E4C28F48
-	for <lists+linux-gpio@lfdr.de>; Sun, 02 Nov 2025 13:40:38 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D77EC293B1
+	for <lists+linux-gpio@lfdr.de>; Sun, 02 Nov 2025 18:28:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0A6EB3B06F5
-	for <lists+linux-gpio@lfdr.de>; Sun,  2 Nov 2025 12:40:37 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 617EA4E6B79
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Nov 2025 17:28:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F16927FB1F;
-	Sun,  2 Nov 2025 12:40:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B292D2DC777;
+	Sun,  2 Nov 2025 17:28:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pJfZmQna"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VoGdl9ap"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5921D555
-	for <linux-gpio@vger.kernel.org>; Sun,  2 Nov 2025 12:40:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61AED21A459;
+	Sun,  2 Nov 2025 17:28:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762087236; cv=none; b=i19YIuApuHBalcIm+mqvTUEzkpVy27bkv0bnDKOVDPW7L7F7NEBEug5Ix+CDIzEjX8pcL/IPGsu4TtchqKlUMyetwAIJm/gjVr3Sh+Ho5oUXzznigNzUy8aKr8GtflDWyL+PjAzD9cFfp6R6kkcu2QmvfQ3DErGeuLnsx76teD4=
+	t=1762104519; cv=none; b=hs1L4AOuRt6xeXQCQarZfNPyRvUjHzt2i5nyJ4LRnNmZg1qeaGM8k+xQSWZL6fIQ+NlbgIcfEWkY/aFU2nih/l9aCo35keQhGxF6DB14E9TxlrQn604YsbDyjcLlRcGtChpTWbIDnVHDWXCzkBQUQRroasF1/UgQz5qZ4ZItgnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762087236; c=relaxed/simple;
-	bh=Nelf+f4cE/KpgdhbdIrmHKijZX/mGmhSZtP/EDsRUqo=;
-	h=From:Date:MIME-Version:Content-Type:To:Message-ID:Subject; b=tdxfSpeUdV1JaC3/uQ/DpHx7IevJfiUP7BRWomekpVoicdWdQ1+w18qx7rkxHTQ25z9Yci7aWVRr/3amT+OOGRtB+w+UETGIYzotRdJ7Z+cVoeMv/e6kToTvH35QAfHBVdtH0/CYehwP1/8D4qu7aIK+ymxu989uMAtAUfqOUL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pJfZmQna; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9C46C4CEF7
-	for <linux-gpio@vger.kernel.org>; Sun,  2 Nov 2025 12:40:35 +0000 (UTC)
+	s=arc-20240116; t=1762104519; c=relaxed/simple;
+	bh=OcFwHvlXYWH66gsDoECiVrdxJwq5gFiy4jrIhapatU0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K7w5PP2fOmxLIsypbpbgMXJXbWNR2JAwzDtGVKirP7oYH2ivF1TcOdzE07OFFgwFkJWG++3BWbNMaKCRyc3lgD62TjLKOpWgkYz3ADM6lHh3PPD4G1oND+R2RJyW1G2Wcd2xVPtU32zx8HDHrO3AQ0V08bxZOcO+6V5o00erARQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VoGdl9ap; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCAF0C4CEF7;
+	Sun,  2 Nov 2025 17:28:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762087235;
-	bh=Nelf+f4cE/KpgdhbdIrmHKijZX/mGmhSZtP/EDsRUqo=;
-	h=From:Date:To:Subject:From;
-	b=pJfZmQnapp8J4WFoTL8Ttp7phz1L10NiF8fcrwTom3K3BAbYtwysuh9/B1aDCRrpe
-	 TfxPnAthq5h//8aBRtUzprzVbcb0if4C7qRpbrIXh8npmCHtfdwldxnqCZL0zs1ks9
-	 H7tE2D/uiMaPmuIOX6qBuTYRkVJz1fATGBAVTt8i7Q6KaR/YH+YY8AovBcljjVR2rI
-	 mtAvuwOe32x8TwImIQB1w1mVsRSFCCHv4Mm3n5k/j1xmZ0erzomv13/GXTENJJF4UO
-	 IWb1zcXFCz+vJ/RjRFwZFvZ+u1533e/RlLHsnSv+7KRBpLukvNdWzY+bmkQfcoXYpN
-	 rHuXcBASPbBwg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 327293809A00
-	for <linux-gpio@vger.kernel.org>; Sun,  2 Nov 2025 12:40:12 +0000 (UTC)
-From: linux4all via Bugspray Bot <bugbot@kernel.org>
-Date: Sun, 02 Nov 2025 12:40:09 +0000
+	s=k20201202; t=1762104518;
+	bh=OcFwHvlXYWH66gsDoECiVrdxJwq5gFiy4jrIhapatU0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VoGdl9ap/snoiJrAUypQcBLQieAI1kXPRAY5K6/H4I3uKEc0buc5743hmDZLNyBqU
+	 Uw+J7+LiK2od6QFY5rgnanBBLhF1L6urlzd/Irul0fTO2rUAHJfRhE+OGbl7ADTDSF
+	 m8lI7B7kDllFxpjQf+H06vEFf0Lmrxx/5Nq96kXL6uQpZKAxjJKAKc1htLOPvI6wv3
+	 RzKdEBpI7QDygJPs2MvXWpbioN2uQiaO4NU0zlk5tgbPYg/u+cYgpFXWCOP2f7RfZk
+	 1CM1loBJfqr+EyJBi9R0pt54Xqu+eCpntlw1hUTCIyavChXBczD4ra2MowkMwcEnNE
+	 Byy0ZMXdssctw==
+Date: Sun, 2 Nov 2025 11:32:03 -0600
+From: Bjorn Andersson <andersson@kernel.org>
+To: Luca Weiss <luca.weiss@fairphone.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, ~postmarketos/upstreaming@lists.sr.ht, 
+	phone-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: mfd: qcom,spmi-pmic: Document
+ PMIV0104
+Message-ID: <ivfeokfjdtdmdctjpk2ckxdumefj6ff3q2rycbrqwo5ewq4x4k@az7wisyy2xa6>
+References: <20251023-sm7635-pmiv0104-v3-0-27f1c417376d@fairphone.com>
+ <20251023-sm7635-pmiv0104-v3-1-27f1c417376d@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-To: linux-gpio@vger.kernel.org
-Message-ID: <20251102-b220734c0-8824a4f6fe88@bugzilla.kernel.org>
-Subject: amd_gpio AMDI0030:00: iomux not supported
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: GPIO/Pin Control
-X-Mailer: bugspray 0.1-dev
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251023-sm7635-pmiv0104-v3-1-27f1c417376d@fairphone.com>
 
-linux4all writes via Kernel.org Bugzilla:
+On Thu, Oct 23, 2025 at 01:29:01PM +0200, Luca Weiss wrote:
+> Add the PMIV0104 PMIC which is found on e.g. boards with Milos SoCs.
+> 
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
 
-OS: openSuSE Leap 15.3
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
 
-Hardware:
-  Board Info: #2
-    Manufacturer: "ASRock"
-    Product: "A300M-STX"
-    Serial: "M80-CA020800030"
-    Type: 0x0a (Motherboard)
-    Features: 0x09
-  SMBIOS Version: 3.2
-  BIOS Info: #0
-    Vendor: "American Megatrends Inc."
-    Version: "P3.70"
-    Date: "11/02/2020"
-    Start Address: 0xf0000
-    ROM Size: 16384 kB
-    Features: 0x0d03000000013f8b9880
-      PCI supported
-      BIOS flashable
-      BIOS shadowing allowed
-      CD boot supported
-      Selectable boot supported
-      BIOS ROM socketed
-      EDD spec supported
-      1.2MB Floppy supported
-      720kB Floppy supported
-      2.88MB Floppy supported
-      Print Screen supported
-      8042 Keyboard Services supported
-      Serial Services supported
-      Printer Services supported
-      ACPI supported
-      USB Legacy supported
-      BIOS Boot Spec supported
-  Processor Info: #16
-    Socket: "AM4"
-    Socket Type: 0x31 (Other)
-    Socket Status: Populated
-    Type: 0x03 (CPU)
-    Family: 0x6b (Other)
-    Manufacturer: "Advanced Micro Devices, Inc."
-    Version: "AMD Ryzen 5 3400G with Radeon Vega Graphics"
-    Serial: "Unknown"
-    Asset Tag: "Unknown"
-    Part Number: "Unknown"
-    Processor ID: 0x178bfbff00810f81
-    Status: 0x01 (Enabled)
-    Voltage: 1.5 V
-    External Clock: 100 MHz
-    Max. Speed: 4200 MHz
-    Current Speed: 3700 MHz
-    L1 Cache: #13
-    L2 Cache: #14
-    L3 Cache: #15
-  32bit-Memory Error Info: #17
-    Type: 0x03 (OK)
-    Granularity: 0x02 (Unknown)
-    Operation: 0x02 (Unknown)
+Regards,
+Bjorn
 
-dmesg 
-[    0.000000] Linux version 6.17.6-jk (root@Cirrus7) (gcc (SUSE Linux) 12.2.1 20220830 [revision e927d1cf141f221c5a32574bde0913307e140984], GNU ld (GNU Binutils; SUSE Linux Enterprise 15) 2.39.0.20220810-150100.7.40) #1 SMP PREEMPT_DYNAMIC Thu Oct 30 10:35:02 CET 2025
-[    0.000000] Command line: BOOT_IMAGE=/vmlinuz-6.17.6-jk root=/dev/mapper/2Tb-root splash=silent resume=/dev/8Tb/swap quiet mitigations=auto amdgpu.noretry=0 mem_encrypt=off
-
-[    0.384543] io scheduler bfq registered
-[    0.384712] amd_gpio AMDI0030:00: iomux not supported
-[    0.384716] amd_gpio AMDI0030:00: try to register 183 pins ...
-
-View: https://bugzilla.kernel.org/show_bug.cgi?id=220734#c0
-You can reply to this message to join the discussion.
--- 
-Deet-doot-dot, I am a bot.
-Kernel.org Bugzilla (bugspray 0.1-dev)
-
+> ---
+>  Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+> index 078a6886f8b1..c416f25c90d6 100644
+> --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+> @@ -84,6 +84,7 @@ properties:
+>            - qcom,pmi8994
+>            - qcom,pmi8998
+>            - qcom,pmih0108
+> +          - qcom,pmiv0104
+>            - qcom,pmk8002
+>            - qcom,pmk8350
+>            - qcom,pmk8550
+> 
+> -- 
+> 2.51.1
+> 
 
