@@ -1,143 +1,131 @@
-Return-Path: <linux-gpio+bounces-27923-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27924-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id E715EC28D48
-	for <lists+linux-gpio@lfdr.de>; Sun, 02 Nov 2025 11:23:27 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65F3EC28D75
+	for <lists+linux-gpio@lfdr.de>; Sun, 02 Nov 2025 11:43:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 503AE343ABC
-	for <lists+linux-gpio@lfdr.de>; Sun,  2 Nov 2025 10:23:27 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 55AE44E41AA
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Nov 2025 10:43:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4393226ED23;
-	Sun,  2 Nov 2025 10:23:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F958264630;
+	Sun,  2 Nov 2025 10:43:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fyVxCaW3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YojVFjn8"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F326926E71B;
-	Sun,  2 Nov 2025 10:23:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E62534D3BA;
+	Sun,  2 Nov 2025 10:43:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762078984; cv=none; b=r4uoZJm4H2pVBWWT2v/sJ+s35qZjP6yDtXTm1D0eCpY2m+5gpSrZWJiGZ7aDy5zp2okcStSHOWKJ2zdtPcv8cm7gCIi+oS9XTWqgH3PkK6r2mpMX/t/mVQGG6Gs8RlKp79+t0nfsS3JV3OunhsJ+096QfdUnypfG3qbqc3TE7XM=
+	t=1762080222; cv=none; b=sFzI8Z+HtEjM7X8/nqWKH+K4KW/D5eaCFMBBNnJJRJy4BQZSkoGjbePVurm1YsQvWvLG9zwXvb4A9bpC8iiIMM3x3xtpFzpLL4u65KXRG+k6SUZrPlOQIISM4GZW7EjqUMP/1nL4MwDqxh7Wby2FFLAkkIelHaRea+aiE2fRNQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762078984; c=relaxed/simple;
-	bh=Y8hWnynLiqeIN5xdT/N1ihtdP6znADV+s3faGr+WVNM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dMemjT+8T3DtHszCNl44ZIlmU00MD7SG0Ko0J1g0CzEEQdO398OyzoZ0Gm5mPVz6gLUePxCREpXlCxz0ImK6jqowD0m5BgylM9DLod3Gm+OpJsvilE3j5DNm9NR9EslioNaIYmykq224aqVMuCXD8vCTn4LlBrJMNKD2rBpwuV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fyVxCaW3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D6ABC4CEF7;
-	Sun,  2 Nov 2025 10:23:02 +0000 (UTC)
+	s=arc-20240116; t=1762080222; c=relaxed/simple;
+	bh=4u8d6QQgjLsALEyZL0hM355ahA8pgo9Ke2RDvhyV/FU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YcRFsyeTdzBB1FAc1+kdF1Xx7mYh/iBAnsBPke+spVFGtOJ+Gkruz8olYvwD2uH8e2GYs4NZsXIbo78AIOwtQQm3cNGb2fppvj45jwPpY1DtLjJZ7GOsFeR1Wb3QNs7xf/rWr5NNhNsUzTDJb6TmFsmLg1bCJQyC3cXcthsqb3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YojVFjn8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E047CC4CEF7;
+	Sun,  2 Nov 2025 10:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762078983;
-	bh=Y8hWnynLiqeIN5xdT/N1ihtdP6znADV+s3faGr+WVNM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fyVxCaW3JhUooT/8++TfY38faupalwIiZLLNJsWmG/WJUVu8JUWqMFtHcxRhxgXrd
-	 ubJ6QZCiqUeluqy0xUVLtueAy3MEhvhBUwkDgynNFmtFK3l8MJdVYj2P6WEpJTp5jg
-	 F29PAAOp6dUtfD91gZ48JjeUotdZrfBgOE6ik30iaIV2CozZnlJUqkkXnDd3HfKAYv
-	 AxzsMf5rBo1Ks98R40rE5E9XwRC/Jzo5Jhx/xxaPY8EfdhdcztZ9IGQ+3YQNK3oC3G
-	 q7UcbI+88TMXbcRqqcYWs9ekWoyuNXlhiA4/enrMk/cwfz0tBQPYeeV1oTiDrXyHf0
-	 da+DKdUPBrC4w==
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] gpio: fxl6408: Add suspend/resume support
-Date: Sun,  2 Nov 2025 18:05:15 +0800
-Message-ID: <20251102100515.9506-3-jszhang@kernel.org>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20251102100515.9506-1-jszhang@kernel.org>
-References: <20251102100515.9506-1-jszhang@kernel.org>
+	s=k20201202; t=1762080221;
+	bh=4u8d6QQgjLsALEyZL0hM355ahA8pgo9Ke2RDvhyV/FU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=YojVFjn8WsOc90BQ7IjaCvSpawTY/iFM2EPhYDD5dnGWRgy1V9yvL/MEqZ0TtAlR7
+	 bOb/fXVYiil59qXvBq/U3REBPlb5nBkGwDqRIYMBz5I0KEBRnvT5ZEiaYzNyd6y9Zf
+	 5IIUOWr69e6TstOOUFAcseA/Uh3WnpVn2+gfAVjCfVQRnOUA5ypJyOfrOHReuHp7Sg
+	 WGYh/9kMA2mX62kCZYu70IxtgYDcwIcClH+HreNxArWG+BioiWd94cJCtOu6NOrbBI
+	 1yerwBgfvmBsmLmV1VasI237/BiNNQOhrrQMTL8p3/eC2uQh+6fEkO+1LfX3YVL0KT
+	 1QsxP0qktpdJg==
+Date: Sun, 2 Nov 2025 10:43:26 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre
+ Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea
+ <claudiu.beznea@tuxon.dev>, Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, David Miller
+ <davem@davemloft.net>, Linus Walleij <linus.walleij@linaro.org>, Bartosz
+ Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery
+ <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>, Lars-Peter
+ Clausen <lars@metafoo.de>, Jacky Huang <ychuang3@nuvoton.com>, Shan-Chun
+ Hung <schung@nuvoton.com>, Yury Norov <yury.norov@gmail.com>, Rasmus
+ Villemoes <linux@rasmusvillemoes.dk>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Johannes Berg <johannes@sipsolutions.net>,
+ Jakub Kicinski <kuba@kernel.org>, Alex Elder <elder@ieee.org>, David Laight
+ <david.laight.linux@gmail.com>, Vincent Mailhol
+ <mailhol.vincent@wanadoo.fr>, Jason Baron <jbaron@akamai.com>, Borislav
+ Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Kim Seer Paller
+ <kimseer.paller@analog.com>, David Lechner <dlechner@baylibre.com>, Nuno
+ =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Richard Genoud <richard.genoud@bootlin.com>, Cosmin Tanislav
+ <demonsingur@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, Jianping
+ Shen <Jianping.Shen@de.bosch.com>, linux-clk@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linux-edac@vger.kernel.org,
+ qat-linux@intel.com, linux-gpio@vger.kernel.org,
+ linux-aspeed@lists.ozlabs.org, linux-iio@vger.kernel.org,
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next v5 10/23] iio: imu: smi330: #undef
+ field_{get,prep}() before definition
+Message-ID: <20251102104326.0f1db96a@jic23-huawei>
+In-Reply-To: <97549838f28a1bb7861cfb42ee687f832942b13a.1761588465.git.geert+renesas@glider.be>
+References: <cover.1761588465.git.geert+renesas@glider.be>
+	<97549838f28a1bb7861cfb42ee687f832942b13a.1761588465.git.geert+renesas@glider.be>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Currently, during suspend, do nothing; during resume, just sync the
-regmap cache to hw regs.
+On Mon, 27 Oct 2025 19:41:44 +0100
+Geert Uytterhoeven <geert+renesas@glider.be> wrote:
 
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
----
- drivers/gpio/gpio-fxl6408.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+> Prepare for the advent of globally available common field_get() and
+> field_prep() macros by undefining the symbols before defining local
+> variants.  This prevents redefinition warnings from the C preprocessor
+> when introducing the common macros later.
+> 
+> Suggested-by: Yury Norov <yury.norov@gmail.com>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/drivers/gpio/gpio-fxl6408.c b/drivers/gpio/gpio-fxl6408.c
-index ae520305f7a9..805a623ef89c 100644
---- a/drivers/gpio/gpio-fxl6408.c
-+++ b/drivers/gpio/gpio-fxl6408.c
-@@ -43,6 +43,10 @@
- 
- #define FXL6408_NGPIO			8
- 
-+struct fxl6408_chip {
-+	struct regmap *regmap;
-+};
-+
- static const struct regmap_range rd_range[] = {
- 	{ FXL6408_REG_DEVICE_ID, FXL6408_REG_DEVICE_ID },
- 	{ FXL6408_REG_IO_DIR, FXL6408_REG_OUTPUT },
-@@ -105,6 +109,7 @@ static int fxl6408_probe(struct i2c_client *client)
- {
- 	struct device *dev = &client->dev;
- 	struct gpio_desc *reset_gpio;
-+	struct fxl6408_chip *chip;
- 	int ret;
- 	struct gpio_regmap_config gpio_config = {
- 		.parent = dev,
-@@ -115,6 +120,10 @@ static int fxl6408_probe(struct i2c_client *client)
- 		.ngpio_per_reg = FXL6408_NGPIO,
- 	};
- 
-+	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
-+
- 	reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
- 	if (IS_ERR(reset_gpio))
- 		return dev_err_probe(dev, PTR_ERR(reset_gpio), "Failed to get reset gpio\n");
-@@ -128,6 +137,9 @@ static int fxl6408_probe(struct i2c_client *client)
- 	if (ret)
- 		return ret;
- 
-+	chip->regmap = gpio_config.regmap;
-+	i2c_set_clientdata(client, chip);
-+
- 	/* Disable High-Z of outputs, so that our OUTPUT updates actually take effect. */
- 	ret = regmap_write(gpio_config.regmap, FXL6408_REG_OUTPUT_HIGH_Z, 0);
- 	if (ret)
-@@ -136,6 +148,16 @@ static int fxl6408_probe(struct i2c_client *client)
- 	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &gpio_config));
- }
- 
-+static int fxl6408_resume(struct device *dev)
-+{
-+	struct fxl6408_chip *chip = dev_get_drvdata(dev);
-+
-+	regcache_mark_dirty(chip->regmap);
-+	return regcache_sync(chip->regmap);
-+}
-+
-+static DEFINE_SIMPLE_DEV_PM_OPS(fxl6408_pm_ops, NULL, fxl6408_resume);
-+
- static const __maybe_unused struct of_device_id fxl6408_dt_ids[] = {
- 	{ .compatible = "fcs,fxl6408" },
- 	{ }
-@@ -151,6 +173,7 @@ MODULE_DEVICE_TABLE(i2c, fxl6408_id);
- static struct i2c_driver fxl6408_driver = {
- 	.driver = {
- 		.name	= "fxl6408",
-+		.pm	= pm_sleep_ptr(&fxl6408_pm_ops),
- 		.of_match_table = fxl6408_dt_ids,
- 	},
- 	.probe		= fxl6408_probe,
--- 
-2.51.0
+So this is going to make a mess of merging your series given this is
+queued up for next merge window.
+
+I can pick this one up perhaps and we loop back to the replacement of
+these in a future patch?  Or perhaps go instead with a rename
+of these two which is probably nicer in the intermediate state than
+undefs.
+
+> --
+> v5:
+>   - New.
+> ---
+>  drivers/iio/imu/smi330/smi330_core.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/iio/imu/smi330/smi330_core.c b/drivers/iio/imu/smi330/smi330_core.c
+> index d9178725ade3da83..a79964fe68fadf47 100644
+> --- a/drivers/iio/imu/smi330/smi330_core.c
+> +++ b/drivers/iio/imu/smi330/smi330_core.c
+> @@ -68,7 +68,9 @@
+>  #define SMI330_SOFT_RESET_DELAY 2000
+>  
+>  /* Non-constant mask variant of FIELD_GET() and FIELD_PREP() */
+> +#undef field_get
+>  #define field_get(_mask, _reg) (((_reg) & (_mask)) >> (ffs(_mask) - 1))
+> +#undef field_prep
+>  #define field_prep(_mask, _val) (((_val) << (ffs(_mask) - 1)) & (_mask))
+>  
+>  #define SMI330_ACCEL_CHANNEL(_axis) {					\
 
 
