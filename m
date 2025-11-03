@@ -1,108 +1,162 @@
-Return-Path: <linux-gpio+bounces-27952-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27953-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAA13C2AE22
-	for <lists+linux-gpio@lfdr.de>; Mon, 03 Nov 2025 10:57:31 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84D77C2AFB2
+	for <lists+linux-gpio@lfdr.de>; Mon, 03 Nov 2025 11:17:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DFC8F4E99E7
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Nov 2025 09:57:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DA8BE3B38C8
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Nov 2025 10:16:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D1CA2FABE0;
-	Mon,  3 Nov 2025 09:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J0Ok27gP"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE18E2FCBED;
+	Mon,  3 Nov 2025 10:16:38 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0542D063F;
-	Mon,  3 Nov 2025 09:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0044F299937
+	for <linux-gpio@vger.kernel.org>; Mon,  3 Nov 2025 10:16:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762163846; cv=none; b=exSEtwlYLlb7vw3qp/C40L9nXMbqKzAH+H9wjEqSUFGdjTj9p8Ewgb0ogfhrMFsV9ZC06KsJz35+GJ1Z6+LV05obMSAF45evPt1HZlyerl9eyr/AcS2FczOHBnfTbr/yPU0LXccAQgczJKJVWkLG9WtKO6kHMqEq32EU5tgOG4c=
+	t=1762164998; cv=none; b=L4ooSfzsW4FuR7jQTM+p307Lpmw1jQGJeZuEmsWv8ylAOTyKKY2KEVHGlfEQXlHV5c7ctJUP6gTkZogy5KUrkRkV9HtgL0Kq70oD2JbziEu0XtNOdNkPGc+1u5iAQHKCll/NFAdrKv4YVRfXk0z1xOljsu8/AtgWRKs3EtmR5/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762163846; c=relaxed/simple;
-	bh=z/TA5h570uq5vw2oklRA3CJ6CUxs6qCvrPbp4mFTWao=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ss7dLAu8/YAkgPp0BpionxKHgcpDKyHFMXgYuFmXLqauIOH8gw/ne/GkUUDKTTBCYZ5hfp0iLVqTJ8PZ8T1gurvb0IS5vJQhs6mJ8+nEeLsJ5gO/hdwvmGlpPAJYsfh6IwQp+FxJPWeo+mEG6qrJcky4fgPN8ez9vCotXMtv6bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J0Ok27gP; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762163845; x=1793699845;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=z/TA5h570uq5vw2oklRA3CJ6CUxs6qCvrPbp4mFTWao=;
-  b=J0Ok27gPP8liCTV42wd2zjWUN+y3nvLS8tAfYI573Barb1a68djzY+O3
-   dQDEPUM/nt7k/Ybs4ENTDYflxvVP3ZYqyMQu7tOl7VRnOJEOn1UpzTMpS
-   WfFoZrh1s9PuxV3efLYjj7ausBPUfx0WzhpFFxQIz5Sli6Mn77tl4mrYG
-   Lj+WqzrX7VFRMlL/aS74LpqHpgtfCY8pS+3RUBxC+/z5YggioWvrk+4OW
-   wo87uDsWxPJo7LfxrpLSJcBCb7mAqI7OC1EWgdINxLRunc/QzkY9EL0v5
-   dNZ/23LHK3WnrWJZDVUAl8SS1lXnxfTlf0mEUu7e/Hmx8GuPKldNP3BBx
-   g==;
-X-CSE-ConnectionGUID: 55Cy+RWiRa6byVqqM/dNOw==
-X-CSE-MsgGUID: NW4CduB3Rm2rcqAuzU915A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11601"; a="68095540"
-X-IronPort-AV: E=Sophos;i="6.19,275,1754982000"; 
-   d="scan'208";a="68095540"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2025 01:57:24 -0800
-X-CSE-ConnectionGUID: QGUqGttuRmCyRj0lldfMmA==
-X-CSE-MsgGUID: Yswh+lbETFiKTHWBdVCzmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,275,1754982000"; 
-   d="scan'208";a="187142817"
-Received: from smoehrl-linux.amr.corp.intel.com (HELO ashevche-desk.local) ([10.124.220.216])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2025 01:57:21 -0800
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1vFrJL-0000000573P-2Ht0;
-	Mon, 03 Nov 2025 11:57:15 +0200
-Date: Mon, 3 Nov 2025 11:57:14 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v4 06/10] gpio: swnode: update the property definitions
-Message-ID: <aQh8etcksSmStNgz@smile.fi.intel.com>
-References: <20251103-reset-gpios-swnodes-v4-0-6461800b6775@linaro.org>
- <20251103-reset-gpios-swnodes-v4-6-6461800b6775@linaro.org>
+	s=arc-20240116; t=1762164998; c=relaxed/simple;
+	bh=mTHQRbPtXcLW9RC24UimP00dT4bpQ240D8TduWco7Ms=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cyPNwG1hGTDXiY8UbV9U+bXX4ObY+7/tvnYLgoNdL6bO14eANt0TP12hQ8YWnKyjE//dFwNFUdvW5PN+zzhzPW1rzQLa3M1fh0BoWsMILigSNjN4oAzrB69WUmG8k/GzDh2jbslNkGDWrxIrtEO0UGE4xzTUg4h+M7VU9239fKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-340c39ee02dso1509974a91.1
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Nov 2025 02:16:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762164996; x=1762769796;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WN9rH9/69UaI2zM1r1sL3pcOf4U1LH9TZ13cniByZO0=;
+        b=xSd3o94Q2hap/khzptJGO6GUFKAS2AQadnAmzSYyWfY8bU/jselV2JadwXMv8cb//Y
+         lOIAomQj8Q9nTlJPbjZKzouGCJawdov0VfqHmg8Z82qARzG7GHNdVR9lA0lpFGc0BFq1
+         81ZQ0LifyXs6ypAI8jvip4z9xOUctk4O1fgmWjBW/ItNLijfJVZ0Yr061wo6T0bfNQFA
+         5KQ52/5vU1emhNU6DZGE9LReHIjdqFbL3cf51l5tJP0XhEV4MI7yhPqfYmY10iZ1zJOh
+         S/sKHk1DJSXxPwADsvDjXa8iy8jxbuDcvoH3OSSUTMZQgr/4HwUaxk/MJsNlzXzo6G8r
+         KgsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUiJN2NTzcVGzXMiLctk4hAUGc6j0csUIKJefpKPHwCv7KptAUH8X4FdUlUX6HwA0sAQyrv9XbXg2tD@vger.kernel.org
+X-Gm-Message-State: AOJu0YyF5Vfsc/OSDgru5kegMcvRPJaMAKi0iazYfiTppRej0+/nrk9o
+	KeTDXKYVIXooq0fw4c+UakLb6apNHffL/tFpTCjl9cFBwI0aw11GaF3rUIKXyjdS
+X-Gm-Gg: ASbGncv3fkUKD/R0s3R3jut1rrI8ardNVYF11OjuuhbMWiCxAb2M7NH/h5Do8phG5Mq
+	4PSuDA5wgfRjS59mFpz/s8DMQehnZtyO+Myncvsc+nOwML74fHAq5yfuexIf+QIdyWI3Me5IBnG
+	INbYWAFJ+pPMXwMPnxd8OCKmCfsevBrE4y/y10ybijydtBKUr4Sn2xIasC89dwDc8lSzWlwgYKv
+	bJwrzvNBRArRG2BNoF+lvkbDjBfT5s9BOAmbfAfrAWwTfu61ovVyiyV5iXGcx1aIeT5B+z8XovG
+	o75eCwEgpYsL8Pkhb5HAKmmwK6hwujMGtJhHEU6BbiPv89P4FsUhklTF36+P4Lp3dMSf1ln0ySi
+	Nvj1BW8XhZeuC5NM78vJXClLmKc0Z2n+USmF5MOn+YD7/QD54FtjxUOJYFZjgCstq3B5L1J+4CV
+	OCWw6CeKnjmWS1noUDXMzfga0fw+zsDHFd5zva3ViD9wttmnGO9jgPvPmsbjW9sz/5Y6w=
+X-Google-Smtp-Source: AGHT+IEnWnVW9hMN+H9qW2zhZktVzJ4/UC44X6xcfp8DdFnmOeqfn/ulKHnyDDgW8EUGmkeEDfMsCQ==
+X-Received: by 2002:a17:90b:5288:b0:32e:5cba:ae26 with SMTP id 98e67ed59e1d1-340830747a7mr13292554a91.23.1762164995786;
+        Mon, 03 Nov 2025 02:16:35 -0800 (PST)
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com. [209.85.215.181])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34159a15b6fsm498646a91.18.2025.11.03.02.16.35
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Nov 2025 02:16:35 -0800 (PST)
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b608df6d2a0so3876524a12.1
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Nov 2025 02:16:35 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVO+yw+kg0fLbjD+43OfeAlx0OYDxNasWTCVZTc+JQXdE6+FMa73wBHfsw3/LK+ZGSaTJ7XHdFYTHy8@vger.kernel.org
+X-Received: by 2002:a05:6102:418d:b0:5db:f031:84ce with SMTP id
+ ada2fe7eead31-5dbf031902dmr85155137.29.1762164587067; Mon, 03 Nov 2025
+ 02:09:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251103-reset-gpios-swnodes-v4-6-6461800b6775@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <cover.1761588465.git.geert+renesas@glider.be> <97549838f28a1bb7861cfb42ee687f832942b13a.1761588465.git.geert+renesas@glider.be>
+ <20251102104326.0f1db96a@jic23-huawei>
+In-Reply-To: <20251102104326.0f1db96a@jic23-huawei>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 3 Nov 2025 11:09:36 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUkm2hxSW1yeKn8kZkSrosr8V-QTrHKSMkY2CPJ8UH_BQ@mail.gmail.com>
+X-Gm-Features: AWmQ_bmxzzzgoIljXMDy5wJmHF15bg4ZKICGjY8c2_gWom3ME9XAPzMw0ghLXn4
+Message-ID: <CAMuHMdUkm2hxSW1yeKn8kZkSrosr8V-QTrHKSMkY2CPJ8UH_BQ@mail.gmail.com>
+Subject: Re: [PATCH -next v5 10/23] iio: imu: smi330: #undef
+ field_{get,prep}() before definition
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	David Miller <davem@davemloft.net>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>, 
+	Andrew Jeffery <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Jacky Huang <ychuang3@nuvoton.com>, 
+	Shan-Chun Hung <schung@nuvoton.com>, Yury Norov <yury.norov@gmail.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, Jakub Kicinski <kuba@kernel.org>, Alex Elder <elder@ieee.org>, 
+	David Laight <david.laight.linux@gmail.com>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
+	Jason Baron <jbaron@akamai.com>, Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Kim Seer Paller <kimseer.paller@analog.com>, 
+	David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Richard Genoud <richard.genoud@bootlin.com>, 
+	Cosmin Tanislav <demonsingur@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Jianping Shen <Jianping.Shen@de.bosch.com>, linux-clk@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-edac@vger.kernel.org, qat-linux@intel.com, 
+	linux-gpio@vger.kernel.org, linux-aspeed@lists.ozlabs.org, 
+	linux-iio@vger.kernel.org, linux-sound@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Nov 03, 2025 at 10:35:26AM +0100, Bartosz Golaszewski wrote:
-> 
-> Use the recommended macros for creating references to software and
-> firmware nodes attached to GPIO providers.
+Hi Jonathan,
 
-Do we need now this patch at all?
-See comments to the patch 3.
+On Sun, 2 Nov 2025 at 11:43, Jonathan Cameron <jic23@kernel.org> wrote:
+> On Mon, 27 Oct 2025 19:41:44 +0100
+> Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+>
+> > Prepare for the advent of globally available common field_get() and
+> > field_prep() macros by undefining the symbols before defining local
+> > variants.  This prevents redefinition warnings from the C preprocessor
+> > when introducing the common macros later.
+> >
+> > Suggested-by: Yury Norov <yury.norov@gmail.com>
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> So this is going to make a mess of merging your series given this is
+> queued up for next merge window.
+>
+> I can pick this one up perhaps and we loop back to the replacement of
+> these in a future patch?  Or perhaps go instead with a rename
+> of these two which is probably nicer in the intermediate state than
+> undefs.
+
+Renaming would mean a lot of churn.
+Just picking up the #undef patch should be simple and safe? The
+removal of the underf and redef can be done in the next cycle.
+Thanks!
+
+> > --- a/drivers/iio/imu/smi330/smi330_core.c
+> > +++ b/drivers/iio/imu/smi330/smi330_core.c
+> > @@ -68,7 +68,9 @@
+> >  #define SMI330_SOFT_RESET_DELAY 2000
+> >
+> >  /* Non-constant mask variant of FIELD_GET() and FIELD_PREP() */
+> > +#undef field_get
+> >  #define field_get(_mask, _reg) (((_reg) & (_mask)) >> (ffs(_mask) - 1))
+> > +#undef field_prep
+> >  #define field_prep(_mask, _val) (((_val) << (ffs(_mask) - 1)) & (_mask))
+> >
+> >  #define SMI330_ACCEL_CHANNEL(_axis) {                                        \
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
