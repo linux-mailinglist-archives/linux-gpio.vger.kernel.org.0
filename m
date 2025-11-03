@@ -1,82 +1,83 @@
-Return-Path: <linux-gpio+bounces-27979-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27976-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38346C2DD81
-	for <lists+linux-gpio@lfdr.de>; Mon, 03 Nov 2025 20:15:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24D6DC2DD73
+	for <lists+linux-gpio@lfdr.de>; Mon, 03 Nov 2025 20:15:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6E2C14EEC8B
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Nov 2025 19:15:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C161E3B4EB0
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Nov 2025 19:15:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23EBA32570F;
-	Mon,  3 Nov 2025 19:14:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAE1E325488;
+	Mon,  3 Nov 2025 19:14:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ggpNOXEC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VRFun7YI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D1C320CCC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA10321426
 	for <linux-gpio@vger.kernel.org>; Mon,  3 Nov 2025 19:14:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762197296; cv=none; b=GAWtslch/5PsXwa/QOe5NzvNEGm78eJ0r/PIObTfpQiKPOCIuwk2DRXqamPiZlDgy3T6md3vBfBmuP2bas2XiacO6h7zN9pKsACAKB3Qys2lZTwx2I454CqiG/h+79Xyucu0im+FzPH9UQbbVPpCPynQ2yZU8RO9f9zjHZmHyy8=
+	t=1762197294; cv=none; b=F1iiTQtCD07tl6LogU0y/xd2BnnMoCotnIWRvVwDlKgu7PFFVJLC4jnuvDaaRODIDzx7kO8xnWqOIaqHh5zp6n3TTf/u7Y5F0gEfyE7jCXphEb76LxSBlWyTmx+xYfImGaPbzfN2TBg/TFF7cG9iXIvpTawA7OyKCqNVHD1RHDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762197296; c=relaxed/simple;
-	bh=BzOY7xFqFUUnN3PD+Nik686oui3xmNMlf7Dt/c4aSB8=;
+	s=arc-20240116; t=1762197294; c=relaxed/simple;
+	bh=cLBJsaXRCjW8ED7+56uxdLLlUd8ALRghlBAhPAVov44=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uv6u/9OqxOfkVaRfie3I9cfuDOTNSvHbaCSN72tW/Uoh43EF4q6D5ePz5rfpG5Kx/9bEwhi6p3eh9tvJZ5YioAXZSMtbPJKS6Gzs1lWg5O02ND42yC+tqDR1Z5wgpZrhWbc/yVtxb3aAuYnLJ0RuW9RMykodERm0zg9gwGzB2FM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ggpNOXEC; arc=none smtp.client-ip=209.85.218.51
+	 In-Reply-To:To:Cc; b=u89O1cTvLWfgE5lGEuXsF78EHR7L4///Jeo8KzMVYm3B/wf51Y4AlGnd/wBT3LK5iPcol25ism3lJn89V11I0gOeL+mh5/ud30ARLzcTppNfokVxmYqXM7dOmocwB1GxkyNdoul269fOOBN5ZXtTjLZ7bb0qKdxaDkRExSEW32w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VRFun7YI; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-b6d3340dc2aso1181152666b.0
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Nov 2025 11:14:50 -0800 (PST)
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b715064bed6so111984866b.3
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Nov 2025 11:14:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1762197288; x=1762802088; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1762197289; x=1762802089; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=+H9s1G6YtgeqluWZseo7SuZhZNZyldAYEc85O7etNJ0=;
-        b=ggpNOXECDGMlgIwPSzOb8a8yxZJSFajxHfelynNZzMdhgK7O+DPMqu4gpRd0KYqvEE
-         LBJ6yBg/WUXKYJsdj4JRHSmnDkdbjN+OAbQ6MI5qnlQ1eT26KXWyMt8UVWrocqjvLwap
-         jnH5wPh+9HeR3w3pLbqtvyYR5xmZfmSuirbD26TGd+Etd6I7HMmlkdI3D/KBTp/ril/U
-         MYtF7DRdI8WkEi2VmURQDklA+Jk3zfg6nyZiGNibHJp5udV7YdRA30+5WY7H61YmtZl5
-         D+2t+5+BaXxG7gqH1ZGkdtTNjcZGb0/EKR0007qCrRo1Oc3ikzlP5rx/JfBupJaY5/QU
-         +e+g==
+        bh=icN5yYkXgcEYignZ+Xa1ClAR+0DBwP6iwKaUoFu4GLY=;
+        b=VRFun7YIS2I3ggIfibtlAWO0MT2KlFGqgYEhDHxunMlGdyoxV7oQSeTsWu7qVumpvS
+         2QAdSdKwOnGAsrwjvwzy/4LfVt2txV9ixmqRbjSeFB54XQiVEbSvWpg4fwCv2Ru4EAiY
+         SgxLTX2OOmDF3nAbH61XIck+kixvQRNOeg4YdCdO4cKfqbaLIqCEiNl4dNdWcjNMRWoP
+         yLXlZfbmeDwTVpNw0r7P/aAD8tYssHRUvGFtpZfnuiJwLZXgcuDwp3L4sUMAuAgcikAa
+         7St9LvgDBiuv294fEvdkx1by0I10nCEX15MY0tAtbaf6idY20WSfOYkkbTzF2t1fEa6n
+         KZzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762197288; x=1762802088;
+        d=1e100.net; s=20230601; t=1762197289; x=1762802089;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+H9s1G6YtgeqluWZseo7SuZhZNZyldAYEc85O7etNJ0=;
-        b=Sv3s+I5lT3NbY9unfsCvJXNImDbBShU/mmsfvt0YNwBiQxzHjcrgY/Hr6u6Vnmfq9D
-         /tTqUliMMndCrl9y/fqstxQAgDfwdLG9zhTpY7JflHh6kZT6oiD6DP2a+2VORFM3NbdH
-         IA+/gPiLziWj9qoMpBgwfEgIAzj6jlb9wLpi+DRGy1laZhU9sdBSAuMcxa8K6bhim88f
-         FLH5oyz1zhFgkP6WCJcvRRSt8NPAF+wp4MVZ8n1oNEym0gp3sInYRt8F1SbQG7P4rRVu
-         VCGdKZ1v7cbdKOsIdOPAuQnPvR2GKLlP5NhmbBk5Bkdr17OhtTGI/urZX/2b8pStkyDL
-         ScKA==
-X-Forwarded-Encrypted: i=1; AJvYcCX7llqxtPmXnAWvS6AGXhjz7pexCXGTC+Xlj1dQfCkzh8xP602FS6kkc7EVXTSNRLMTKrlkgNfwIkFC@vger.kernel.org
-X-Gm-Message-State: AOJu0YwN2Bj/7UOvyp/nrvbYH0WU0XiXyZeQhuSbn4FFjUIrKDnjLBOR
-	mJsga6QU/frS+A1EPfcwfSm3DBEAVLvjSy263tACWxuTKPDPFcJqoXKemL/0aPwNym8=
-X-Gm-Gg: ASbGncsduPtit21HZynJWonX+zSo+djhzMAbguhyGZuZYweMNfEl0SsrgfgwfAAETZi
-	K2V4bzBn3/ZhPTCnCEzZLKxVV35bIDUWwfAnh432Yhl0OtkmozYgsga4EE5TRuVr7FN0rMHj9gP
-	cFRd55LjXfDBsvKGyjPtTHrZLucAUDwKOKDrbzW6yMUc8ANWo42Cl79OswhFua57tES45Kpamd7
-	JSV1cnIH2VuUpxRNzwPl9PW+t3EAC9LRgAU9QWKtvxVRbnD2dfXayo7FAydtMSfKeA/GTZc/eVJ
-	YMat4zE6eOamFegXkoMDnn5Vve4uwhH5FZJSm8IpN3SZSkYTgH6OaHLPJn7BGS2vj1qhpS5r8gb
-	tVjKdWjZFtHQt2jOI9hgoLjPvP0/KCVdiZI54nBM3xdsF9DIrBTkwDdNcIc/nyi5+in0Bz37f3d
-	QAeJt6P3wbfaCX1In1pkEavTcL4U8GeF/5/rnniurqhBOBHgPs4QrHpVGTdMxfLyve6bFNEKE=
-X-Google-Smtp-Source: AGHT+IHrMiuYLZd0vMCvo+Ek4nTQVztiZC07CKVGfY4NotHksO5aFELwrIdhsXO+9Y0y3M22E4+puQ==
-X-Received: by 2002:a17:906:dc92:b0:b3e:c99b:c77f with SMTP id a640c23a62f3a-b7217387225mr57792566b.24.1762197288276;
+        bh=icN5yYkXgcEYignZ+Xa1ClAR+0DBwP6iwKaUoFu4GLY=;
+        b=Gk2X9LpJDbMUGfI6CDZiMgdvZ6YDBh0lDp2mM1jeJL/C2LeVmETIbg5jArgHQX2PnC
+         SceyPL8CsajuSsEv0Nxsh+H0Ku7YBXPioKVk53HCIj6932146JRcYHHoOi6CS7SoqUjh
+         RQbUvktjVU8o190+SCGLbhSHg1wBIHaL48DC5Ymb/Tg8vXZeSnSEsQZy3GdVq6Kh+TR/
+         osKcFwSpW3Tg19wzRiqGJPlEnN+rMQ2YDLulX5qBVDSueDYdTIlET4oQvzc4DzzcR2J8
+         BdrcWVAPIvQy+yiYR2hhxoBXwzssdJQU0Y1oEmF7RN2G9IYqdJNLezSeGabXb6p4FanK
+         QrzA==
+X-Forwarded-Encrypted: i=1; AJvYcCUMgKk20U+7ItTGy5uZ85Y/vu0uwHhJwON/T3ATOEoAu5HkwPbXdSPWBunySJchTDChlgbR16TaPyFJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvgOmBHRbh3YDYkcsuo9pKRegXBKmHirdsaHR0h0/PqmEK5GoM
+	TXeaEPcUamOkFPYJi6WRtPG2Gwscy9gPgcfnQFBvDUk7XWENKxsCG4BK8ZN5q559/9A=
+X-Gm-Gg: ASbGncuPcT4kWatUiU7+//hTDCCHDbMNxy6bWodR8t6FGM32h12MvMAe2SSjbsH3WOe
+	ENHv8neM9MZTAdf3Qsbz7MfFJXKyN8X+yGgt034Ks06V8Cfw8BQjS8DASHXLEn0pcxFQpuovSHR
+	9H3gxlCAVbLbfhK9W57imLfNvlTOl7t6fEPvR7lQ1bOanyWTem+1ssBNRCIUalIDr1OIx+LbogM
+	rnY2S8y2ACQnrlckcRPX7peR6voBTIqlBZY1TkosmkO6s9A7spgT/L9fDw7CFnJ2uB7/wvF2Fm7
+	gMlSLkAsw8Bht3jjRKzDb2CR8rbRYqE4jBb3SMsDDIVpQwVZonhAASVAxa4CEE9QSDD1P+O2JvX
+	+xtElAY8lyhaPt8dJspW4vrOfSmxYrxrjAqAGr4PryNRSHyfUXMIvuoE4Vpn/EglXBQu290NNgM
+	niQIEUq3n3kBGeK3irnex7V8DRy4pafozyrEJ+XbXT2rF4j6BORA+XyM8pP0ix1wjcpRdTPeI=
+X-Google-Smtp-Source: AGHT+IG5Udj3lRW+AqeTrbpalAuPKgShqrf7tFTaxqWNlY3DqKR8V5lRcyVUxOq5iUJ4O0Pi32zz9A==
+X-Received: by 2002:a17:906:6984:b0:b6d:c44a:b698 with SMTP id a640c23a62f3a-b70704c5a0amr981892566b.40.1762197288829;
         Mon, 03 Nov 2025 11:14:48 -0800 (PST)
 Received: from puffmais2.c.googlers.com (254.48.34.34.bc.googleusercontent.com. [34.34.48.254])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b70b9f29c8asm466765066b.8.2025.11.03.11.14.47
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b70b9f29c8asm466765066b.8.2025.11.03.11.14.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Nov 2025 11:14:47 -0800 (PST)
+        Mon, 03 Nov 2025 11:14:48 -0800 (PST)
 From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Mon, 03 Nov 2025 19:14:49 +0000
-Subject: [PATCH v3 10/20] regulator: add REGULATOR_LINEAR_VRANGE macro
+Date: Mon, 03 Nov 2025 19:14:50 +0000
+Subject: [PATCH v3 11/20] regulator: s2mps11: drop two needless variable
+ initialisations
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -85,7 +86,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20251103-s2mpg1x-regulators-v3-10-b8b96b79e058@linaro.org>
+Message-Id: <20251103-s2mpg1x-regulators-v3-11-b8b96b79e058@linaro.org>
 References: <20251103-s2mpg1x-regulators-v3-0-b8b96b79e058@linaro.org>
 In-Reply-To: <20251103-s2mpg1x-regulators-v3-0-b8b96b79e058@linaro.org>
 To: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
@@ -101,43 +102,32 @@ Cc: Peter Griffin <peter.griffin@linaro.org>,
  =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
 X-Mailer: b4 0.14.2
 
-REGULATOR_LINEAR_VRANGE is similar to REGULATOR_LINEAR_RANGE, but
-allows a more natural declaration of a voltage range for a regulator,
-in that it expects the minimum and maximum values as voltages rather
-than as selectors.
-
-Using voltages arguably makes this macro easier to use by drivers and
-code using it can become easier to read compared to
-REGULATOR_LINEAR_RANGE.
+The initialisations being removed are needless, as both variables are
+being assigned values unconditionally further down. Additionally, doing
+this eager init here might lead to preventing the compiler from issuing
+a warning if a future code change actually forgets to assign a useful
+value in some code path.
 
 Signed-off-by: André Draszik <andre.draszik@linaro.org>
-
 ---
-While this commit doesn't introduce any users, the upcoming s2mpg10 and
-s2mpg11 drivers are using it.
+ drivers/regulator/s2mps11.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-v3:
-- new patch
----
- include/linux/regulator/driver.h | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
-index 978cf593b6624228fe1fd9c2a3e186b53ef172f8..977755db64c6dfaea7246067eab0d9a2971caa01 100644
---- a/include/linux/regulator/driver.h
-+++ b/include/linux/regulator/driver.h
-@@ -53,6 +53,11 @@ enum regulator_detection_severity {
- #define REGULATOR_LINEAR_RANGE(_min_uV, _min_sel, _max_sel, _step_uV)	\
- 	LINEAR_RANGE(_min_uV, _min_sel, _max_sel, _step_uV)
+diff --git a/drivers/regulator/s2mps11.c b/drivers/regulator/s2mps11.c
+index 04ae9c6150bd5ae9dba47b9b3cfcfb62e4698b6d..1f51fbc6c7b6e158f9707c04d9f030b9eee5e842 100644
+--- a/drivers/regulator/s2mps11.c
++++ b/drivers/regulator/s2mps11.c
+@@ -1207,8 +1207,8 @@ static int s2mps11_pmic_probe(struct platform_device *pdev)
+ 	struct sec_pmic_dev *iodev = dev_get_drvdata(pdev->dev.parent);
+ 	struct regulator_config config = { };
+ 	struct s2mps11_info *s2mps11;
+-	unsigned int rdev_num = 0;
+-	int i, ret = 0;
++	unsigned int rdev_num;
++	int i, ret;
+ 	const struct regulator_desc *regulators;
  
-+/* Initialize struct linear_range using voltages, not selectors */
-+#define REGULATOR_LINEAR_VRANGE(_offs_uV, _min_uV, _max_uV, _step_uV)	\
-+	LINEAR_RANGE(_min_uV, ((_min_uV) - (_offs_uV)) / (_step_uV),	\
-+		     ((_max_uV) - (_offs_uV)) / (_step_uV), _step_uV)
-+
- /**
-  * struct regulator_ops - regulator operations.
-  *
+ 	s2mps11 = devm_kzalloc(&pdev->dev, sizeof(struct s2mps11_info),
 
 -- 
 2.51.2.997.g839fc31de9-goog
