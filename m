@@ -1,131 +1,100 @@
-Return-Path: <linux-gpio+bounces-27965-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27966-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90957C2C63E
-	for <lists+linux-gpio@lfdr.de>; Mon, 03 Nov 2025 15:23:42 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22C4AC2C6F5
+	for <lists+linux-gpio@lfdr.de>; Mon, 03 Nov 2025 15:37:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EFDE63BED3A
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Nov 2025 14:14:23 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0059F4E68E9
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Nov 2025 14:37:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CA8C2F7AAE;
-	Mon,  3 Nov 2025 14:14:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ADB228032D;
+	Mon,  3 Nov 2025 14:37:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="0MmbxGZi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TN6Zsljo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6986C19F127
-	for <linux-gpio@vger.kernel.org>; Mon,  3 Nov 2025 14:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76CBD20125F;
+	Mon,  3 Nov 2025 14:37:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762179260; cv=none; b=lrP2P2tG9zgL7dxqGBi5zUZ1NotZVNOaIaoOHkGtup8633icXbcExXLQ83EqhP99lWvTcSRwdbJbwt7Us5xVem6IagAPnKARXLr3j4v8ngRQtBL68rimQ73w5l61xBmWI1zfChbXLvCTdqObcdc+RKfEaOqVkrUlATsfwJPeYWE=
+	t=1762180624; cv=none; b=SCn/ywiNfJ3G2ZwSO+VAZm5vbI3ZPKxbMyNcwl82XFa/plm5aILPMCjeFTwjdeRUZBf4Or+unX16C2SnD0dLZfVeYUzSUZsobhQgn4WzNvhUmWTbHsoMonkuGdRdnc4kclYy+21rLWYz26MHf/aymPnHekqP7qFbajLD7/eYECI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762179260; c=relaxed/simple;
-	bh=qNpCvuLCPjVhSPOY/TTr8xx/nFAJiYYYEoTJa8eEaaI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SaO3QeLZwKiJIztG7xYrAUaj+m2Z9ES/piou0Tqe94BNgb+/vTXs4V6W8DFv8kbNxKgDCpdl3FmjKCajYDIGYM4r86+68BasrX/DMNRD+ltKdCI8C5lH+BVVSHHcZ7dj3x4HvzVvtz0gkbB0bN4+FLa4cG26lx8j0Ml5NHfeM24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=0MmbxGZi; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-471b80b994bso58264655e9.3
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Nov 2025 06:14:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1762179257; x=1762784057; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EoMAIDiy80JlZ2DMoz5nEEW7dOP5ZblOtmfc/TQFMxo=;
-        b=0MmbxGZi13Xt0Gijo4wZKWclxbyoLYC+/bfMtIgewcYC3H3i1Pu0fhPprY5+wPBwyE
-         Q1Sw+Ot18WOUk8PKIgJ/Wv4JDKoStxltKBRHR9KxKuagbcP0pchNeiI7odxE1KFRL+Gz
-         rTEOuqa2YCz/J+OX70vPRv1CEbYS5oUZ6uKNU4C6jEaf1to5W9Hj2LXgxQ1bYDYQDcIe
-         yFq3ZYHIfai2lZiMWWkRCsO7rEP5mOzzyuap0FT3FNuYhVJqMpXArdqAoQXbk6GECMyl
-         qMURQMP4x/NZK4DWe6k5fp4GVDbtYbm6sYee8RtcPYnR9Bu0xWRa5cjcaZw2IQ87kANM
-         g4ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762179257; x=1762784057;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EoMAIDiy80JlZ2DMoz5nEEW7dOP5ZblOtmfc/TQFMxo=;
-        b=BdopctcprzJwC155xfAUI5Rme3eH4v1/cUj1y8dg4K1NFFGFcsxOQRpBmqV2tokYdY
-         nQ2ocI6hn1fgt/gBUsZUKVd+DOSPRUCOnIPVwPX4SvntQ3a8QtpGznTZzRyGMauceDsP
-         ano3smEe1oBZjSL5XLEibKWCUpzh8cLs3U9InJaGD/J56Amd66bkoJQq5UENeH+ha3fp
-         b1yXF4JYb288pKMDdAf85CpE0d3t/2koLd1Jo7IDM5rapdlLJAkx+S+B7lEyrvi/arUA
-         ENbR6rUUKvM6NkgpEqORXvePHQQveSWlWle4fQ+kfDEWzBHLriwKf10En/bgnDgDB8Jt
-         pJlA==
-X-Forwarded-Encrypted: i=1; AJvYcCWb8zDHmecpiY24iDTS+z17hYqbMzwM+NukXId2xoubm/Ml+I/+xpEP6RlqVUXmyjUROPVVaaFBov1q@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQaV84EQK1zzwCpNQzNb48YZ3t0lhaENRQ1db8hrZ8iQoBarWV
-	OB+CWRB2YketqWNFayOiGCEHW0W3k+8ISq27x/lRDpXsFyjH67oxSssDv+8lM2YqS74=
-X-Gm-Gg: ASbGncstP7RIIt4cYHh5kjvY2/IDxUBNYiMuhIMzLSr3BpOWY9+18+QqDf4T6+F1ojF
-	gKH0BGjyHDGxpotX4quvKu/agyrsciJtzY70L9CeyCz+JkAwRvhqMpRnEcRIXmkyLTGR5feWEHU
-	3Vo6ukbKksaMQYPhsQk50QvCmfC0N9HcX8tLvJpjkH6Psx5ao7G+IU5h5Gbz4dyseJjwinwH85N
-	eJWYcd0LKa0l5/okSQ6RHDmjkavOiut918KFksB+Qgj+UgJgSX7XnTWB2eom7NgXPQ9kudvh8iv
-	C7VsNzqEYYFzMkFtF303tXeXfxxJr8+5xBeRM37fhoEzYhfXDVKMHS5D9Hf4KFw3U4RYa3evyW2
-	GghYhMODYjyYxvUO0XcKy/3m17ShTDJwfkhwTY0p2vXQfKbIg2Ym5WpnhU1H5JT+9pUQoPw==
-X-Google-Smtp-Source: AGHT+IHLTxJUWh2BXzgbxjWcAhT+fbvRofGiksQw6Mxx2/kQAdhUW2RWaozukFUQgF4dPtsxkYVg5w==
-X-Received: by 2002:a05:600c:3548:b0:477:171f:65f with SMTP id 5b1f17b1804b1-477308aa6a1mr118209365e9.38.1762179256644;
-        Mon, 03 Nov 2025 06:14:16 -0800 (PST)
-Received: from brgl-uxlite ([2a01:cb1d:dc:7e00:e6eb:2a19:143f:b127])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4772fc52378sm86531405e9.6.2025.11.03.06.14.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Nov 2025 06:14:16 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
+	s=arc-20240116; t=1762180624; c=relaxed/simple;
+	bh=ONESlJrt0B1hJRr7zz4S/UVLdm+/k3OpYpvNjlrv2Qc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CbrDJXlyPVTIsb4ghS0+rv0CwA8eIp7D7p3IW02HDYNbbsUzSO1TjsMYN9UOK/ikpchnhbMCWAICSrsb4z+4HqGvSJ+3YoRiKmthftG5eOVOJwi2Fed69ghe1Q+8KrNdRyvECe9EtDGP0bhQDrINR1PnxMlmu0oiZVOrRznRiYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TN6Zsljo; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762180623; x=1793716623;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ONESlJrt0B1hJRr7zz4S/UVLdm+/k3OpYpvNjlrv2Qc=;
+  b=TN6ZsljoOkfeXfrZrsy2I3/fR8I495qWdq/pwcAjoaMIJ6JCw8VkRDnx
+   //YWTaC4D9xd/de/Q0CrQ1h5jaCseVZpKoU+E+fYuN8AgwnRxl5NQ3JoT
+   zPMu93Uo/XA3tsMfENp468q7s95/3ipDBJCszIRHa9tzQHxggO2AZG4PA
+   moEmzVZCeOKf+1wh7aASTWrWxzzHtyVU4yugjzz68/cJEvtP6UDDm/nMf
+   4Tgm/d/yLIK3oZDfMwmCt/05sI5L7RHp2sm4olWwAmPv3oXKG2VLd1ZYp
+   GJf1MUQoOCuQI00pxmlM/mRsXvUXlPeZ9PgF0Y4/eEVfpP4/31XeDjip3
+   A==;
+X-CSE-ConnectionGUID: zc0Jjt9qSpCdNEOB0asc5g==
+X-CSE-MsgGUID: jyX5/BWpS267DIR/982ZxA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11602"; a="64288690"
+X-IronPort-AV: E=Sophos;i="6.19,276,1754982000"; 
+   d="scan'208";a="64288690"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2025 06:37:01 -0800
+X-CSE-ConnectionGUID: h2uKtdXFRZ6Ir7hHE6kedQ==
+X-CSE-MsgGUID: 4wEuwb8XSS6eMkJFSpaLuA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,276,1754982000"; 
+   d="scan'208";a="192040839"
+Received: from smoehrl-linux.amr.corp.intel.com (HELO ashevche-desk.local) ([10.124.220.216])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2025 06:37:00 -0800
+Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1vFvfz-00000005Axr-2vI2;
+	Mon, 03 Nov 2025 16:36:55 +0200
+Date: Mon, 3 Nov 2025 16:36:54 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Subject: Re: (subset) [PATCH v4 00/10] reset: rework reset-gpios handling
-Date: Mon,  3 Nov 2025 15:14:12 +0100
-Message-ID: <176217924320.53912.4328025839514313502.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251103-reset-gpios-swnodes-v4-0-6461800b6775@linaro.org>
-References: <20251103-reset-gpios-swnodes-v4-0-6461800b6775@linaro.org>
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2] gpiolib: fix invalid pointer access in debugfs
+Message-ID: <aQi-Bs3Aw6T6ejt_@smile.fi.intel.com>
+References: <20251103141132.53471-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251103141132.53471-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Nov 03, 2025 at 03:11:32PM +0100, Bartosz Golaszewski wrote:
 
+> If the memory allocation in gpiolib_seq_start() fails, the s->private
+> field remains uninitialized and is later dereferenced without checking
+> in gpiolib_seq_stop(). Initialize s->private to NULL before calling
+> kzalloc() and check it before dereferencing it.
 
-On Mon, 03 Nov 2025 10:35:20 +0100, Bartosz Golaszewski wrote:
-> Software node maintainers: if this versions is good to go, can you leave
-> your Acks under patches 1-3 and allow Philipp to take it through the
-> reset tree, provided he creates an immutable branch you can pull from
-> for v6.19?
-> 
-> Machine GPIO lookup is a nice, if a bit clunky, mechanism when we have
-> absolutely no idea what the GPIO provider is or when it will be created.
-> However in the case of reset-gpios, we not only know if the chip is
-> there - we also already hold a reference to its firmware node.
-> 
-> [...]
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Applied, thanks!
-
-[04/10] gpio: swnode: don't use the swnode's name as the key for GPIO lookup
-        https://git.kernel.org/brgl/linux/c/e5d527be7e6984882306b49c067f1fec18920735
-
-Best regards,
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+With Best Regards,
+Andy Shevchenko
+
+
 
