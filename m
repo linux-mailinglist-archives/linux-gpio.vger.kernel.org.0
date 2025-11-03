@@ -1,75 +1,90 @@
-Return-Path: <linux-gpio+bounces-27966-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27967-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22C4AC2C6F5
-	for <lists+linux-gpio@lfdr.de>; Mon, 03 Nov 2025 15:37:55 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBDFBC2CB25
+	for <lists+linux-gpio@lfdr.de>; Mon, 03 Nov 2025 16:25:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0059F4E68E9
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Nov 2025 14:37:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DFA1C189DF82
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Nov 2025 15:18:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ADB228032D;
-	Mon,  3 Nov 2025 14:37:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C534F31D73F;
+	Mon,  3 Nov 2025 15:11:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TN6Zsljo"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Gb/b64iU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76CBD20125F;
-	Mon,  3 Nov 2025 14:37:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048A431D36F
+	for <linux-gpio@vger.kernel.org>; Mon,  3 Nov 2025 15:11:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762180624; cv=none; b=SCn/ywiNfJ3G2ZwSO+VAZm5vbI3ZPKxbMyNcwl82XFa/plm5aILPMCjeFTwjdeRUZBf4Or+unX16C2SnD0dLZfVeYUzSUZsobhQgn4WzNvhUmWTbHsoMonkuGdRdnc4kclYy+21rLWYz26MHf/aymPnHekqP7qFbajLD7/eYECI=
+	t=1762182684; cv=none; b=JvP7SST324lnEm6TYRjAB/mpwA5ojfYtlBiNp8CJ8l+ci4x5UuAMD7GW7mzAxb7mKb7sibkK8hps1zeZIkBqi/8avMfSw90JpxofBGr+Gr7vZ1t41C6CLAah1OAqgSIiNNsUB/7Ycdz785dX+DR9OPay2r/m8S2pQQK9EydPpKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762180624; c=relaxed/simple;
-	bh=ONESlJrt0B1hJRr7zz4S/UVLdm+/k3OpYpvNjlrv2Qc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CbrDJXlyPVTIsb4ghS0+rv0CwA8eIp7D7p3IW02HDYNbbsUzSO1TjsMYN9UOK/ikpchnhbMCWAICSrsb4z+4HqGvSJ+3YoRiKmthftG5eOVOJwi2Fed69ghe1Q+8KrNdRyvECe9EtDGP0bhQDrINR1PnxMlmu0oiZVOrRznRiYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TN6Zsljo; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762180623; x=1793716623;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ONESlJrt0B1hJRr7zz4S/UVLdm+/k3OpYpvNjlrv2Qc=;
-  b=TN6ZsljoOkfeXfrZrsy2I3/fR8I495qWdq/pwcAjoaMIJ6JCw8VkRDnx
-   //YWTaC4D9xd/de/Q0CrQ1h5jaCseVZpKoU+E+fYuN8AgwnRxl5NQ3JoT
-   zPMu93Uo/XA3tsMfENp468q7s95/3ipDBJCszIRHa9tzQHxggO2AZG4PA
-   moEmzVZCeOKf+1wh7aASTWrWxzzHtyVU4yugjzz68/cJEvtP6UDDm/nMf
-   4Tgm/d/yLIK3oZDfMwmCt/05sI5L7RHp2sm4olWwAmPv3oXKG2VLd1ZYp
-   GJf1MUQoOCuQI00pxmlM/mRsXvUXlPeZ9PgF0Y4/eEVfpP4/31XeDjip3
-   A==;
-X-CSE-ConnectionGUID: zc0Jjt9qSpCdNEOB0asc5g==
-X-CSE-MsgGUID: jyX5/BWpS267DIR/982ZxA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11602"; a="64288690"
-X-IronPort-AV: E=Sophos;i="6.19,276,1754982000"; 
-   d="scan'208";a="64288690"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2025 06:37:01 -0800
-X-CSE-ConnectionGUID: h2uKtdXFRZ6Ir7hHE6kedQ==
-X-CSE-MsgGUID: 4wEuwb8XSS6eMkJFSpaLuA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,276,1754982000"; 
-   d="scan'208";a="192040839"
-Received: from smoehrl-linux.amr.corp.intel.com (HELO ashevche-desk.local) ([10.124.220.216])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2025 06:37:00 -0800
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1vFvfz-00000005Axr-2vI2;
-	Mon, 03 Nov 2025 16:36:55 +0200
-Date: Mon, 3 Nov 2025 16:36:54 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+	s=arc-20240116; t=1762182684; c=relaxed/simple;
+	bh=ppU8+0KMVjssDLeGA5ZQKn/3oy/3w+zGpv5OB2K4V3k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DMfCDSe4DC52kAvvz5MeDlAz9fJHSNU156ZpcxOlYJSHpaMvww3klOLdAO4jTR6TSgLL8NRB7XMq9LFEi8aHF/sdQvxkSxGAleO400V2B2tc2It9ikzqo+F0juIrwzVkD9BIxkeDMcE7+WicEd0Clw4nzyBoxD0a17/O2BeXR+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Gb/b64iU; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-429c19b5de4so2530085f8f.3
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Nov 2025 07:11:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1762182680; x=1762787480; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DazVAKjsIrcYtXlfdeVBEA2qvrz0reDmGQp37QD+7+U=;
+        b=Gb/b64iU9sw7VSFoVkB5F16FNE5yKfRRDeeDIDeH9s1gYU+9Irvxuvjr9YaCjXvDdW
+         mcrNHchJVA//oe4ZSOpcxKm7jx0NIdAV9DnrNzKBjugd+MZPMhk7Y0vmx2w7YxQAG4eN
+         cQa+glDSTKBRmjyiszLz3BoA4vxgWJWHYqhCK5LiLXcQgCewvOKE7UepFuvK8QR0oaKS
+         fySqzsyKl536O6d5zIRhFFhjVg6krMtNz123HvhP36BnmESiJLv5lzTo43+Ihh1Gw12a
+         c+oX7NR/2nZ10ZChftAWvHM84IlmZ5YP+w41fhbFAG67n4kUrjvEbQ5WxdFEWZ8Qmips
+         co0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762182680; x=1762787480;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DazVAKjsIrcYtXlfdeVBEA2qvrz0reDmGQp37QD+7+U=;
+        b=f48/txzrp0XCcG0KM007hLpvyEKqM2vziJYxXDw2/VRqnPL8F34gpbYf4oFXSZnS8g
+         PGrW+SmshDmi0RK71o3npChmdU+q3OWweXLLDO8xfIXsh+K2sOjYqxX9i6OcEnYMqSnY
+         aqWM74yyEXGzJqVGk3Kgcswa7ROr4Xw+MSu69HtWn89ASqLt+GUj1g8W/F/0u8OD/rnw
+         dAEG9qKvP+BHhtvzB8QcnvibHqDkj00Py/I5RsP/zUX/F8XYUIxY4iA7Gjs4xcMFhoL+
+         PGYJNDPMrQXpqgFfdUdvgybyLdQYsSMDhNjsvX7oUNB5zblHeEGV4ryksPukw0yzfLTI
+         RP1g==
+X-Forwarded-Encrypted: i=1; AJvYcCVQd5ldgasujsKqvGZOg2jKkoSP/fCQzbnEVAejUEtySb/dtEdkpHtz0Y0MnWHCGSKzsbM4sKrmIVR6@vger.kernel.org
+X-Gm-Message-State: AOJu0YzP0Lne/Gkqnbv2g24EH5GoAcInsLQN7nGM38WbCuKpn6T/UrRR
+	CoYjW5hNl0Yq8Zcr52FpTL47vPEOFKu2JwQdEFWKa3MqRaGFPf/Da7UYWQ/m6Q3b3Wg=
+X-Gm-Gg: ASbGncvpLLgOptAaLU48Put6gvj5n00wETw0zcUPlJZtkV0PVVEuZgekiTbqMDUB3J0
+	/vWb5sW+IDCy/ukDzgvYNjE8V8vBX5KNACPzSzzW636BZb9bfq1VFRy5ztYg8AglBNl1+FTSapV
+	Hk6/foEv1hy+GA6bjwQXe03czozs0U5ii1mhkTIKtMeBnYqTjdULAmZnAXHRLfsF/fm5KcpnkAY
+	tm1EapF1UYamyVOtcMDIvLu/QACL0eJp68AV3yL3XrfgQd8A70lcW6y4Tbn7upB/1WNyf5lIS47
+	J06Sw25QuUBtEw1buh2NCq0e4eX9+BX73gNQcbkpt4AWT8JK1HHSbfRvnLhfwQq+OPXO4eU0/Ca
+	W1jb9BzVTcwj5wICoEpj/5xoy6hsT4mCzU+3uIjP8QMWSt695YnY0gwup8nM2Ckv3CLVaxAs=
+X-Google-Smtp-Source: AGHT+IEK9m5S4OyAt+8+jqF9utRaLNjHjz1A1Pnmz56EXWQk8b3s9Aud4E7X4OrR8HH/uvBllI7Qvg==
+X-Received: by 2002:a05:6000:22c7:b0:429:d79f:c86b with SMTP id ffacd0b85a97d-429d79fcb0cmr2028605f8f.58.1762182680270;
+        Mon, 03 Nov 2025 07:11:20 -0800 (PST)
+Received: from brgl-uxlite ([2a01:cb1d:dc:7e00:e6eb:2a19:143f:b127])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429c11182e3sm21317427f8f.11.2025.11.03.07.11.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Nov 2025 07:11:19 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v2] gpiolib: fix invalid pointer access in debugfs
-Message-ID: <aQi-Bs3Aw6T6ejt_@smile.fi.intel.com>
+Date: Mon,  3 Nov 2025 16:11:18 +0100
+Message-ID: <176218266920.62377.10595261785996832493.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251103141132.53471-1-brgl@bgdev.pl>
 References: <20251103141132.53471-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -77,24 +92,26 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251103141132.53471-1-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Nov 03, 2025 at 03:11:32PM +0100, Bartosz Golaszewski wrote:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
+
+On Mon, 03 Nov 2025 15:11:32 +0100, Bartosz Golaszewski wrote:
 > If the memory allocation in gpiolib_seq_start() fails, the s->private
 > field remains uninitialized and is later dereferenced without checking
 > in gpiolib_seq_stop(). Initialize s->private to NULL before calling
 > kzalloc() and check it before dereferencing it.
+> 
+> 
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Applied, thanks!
 
+[1/1] gpiolib: fix invalid pointer access in debugfs
+      https://git.kernel.org/brgl/linux/c/2f6115ad8864cf3f48598f26c74c7c8e5c391919
+
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
