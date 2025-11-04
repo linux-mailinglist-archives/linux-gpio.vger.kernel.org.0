@@ -1,74 +1,61 @@
-Return-Path: <linux-gpio+bounces-27999-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28000-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDB95C2F5EC
-	for <lists+linux-gpio@lfdr.de>; Tue, 04 Nov 2025 06:25:50 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 390BAC2FE70
+	for <lists+linux-gpio@lfdr.de>; Tue, 04 Nov 2025 09:32:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8AB8B4E5C17
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Nov 2025 05:25:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4E21319400B9
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Nov 2025 08:28:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEFD22C029E;
-	Tue,  4 Nov 2025 05:25:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC174306B0D;
+	Tue,  4 Nov 2025 08:26:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TFLBjI6J"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kHTNFFwo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E17E286885;
-	Tue,  4 Nov 2025 05:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D70238C0A;
+	Tue,  4 Nov 2025 08:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762233946; cv=none; b=LCijWon8pEgVGsC+Plpyw16s5Szq8/z72L06JqNsmkD7ZdqqSoP3u2ZCwsyaEdAQAsnkSIbRpLXr8WbkAc5U6PhPlHursFs6fJR1YiDrYHMtqry6aVLEqorvUivDYHj7Ry9dURqHOFNt3NjowE99xkiLnU7udvkL/tQBW+bLHEc=
+	t=1762244809; cv=none; b=Hkf6GFLpVxxO/dGuiJviAL/AeR5L9SbQNKNsbvZsWAUiJnoKvYrkLnLNZI5w8KtSck//DUJRQfv/69CpllM64J+wIBBh0/EK7SGRA+cHnQqQjdq15FvaPvg7w18Te2Pz9ByDFVgFKadnTpCeZV5o6UDHVi14JvYipNzbCR5i1fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762233946; c=relaxed/simple;
-	bh=O9jQ9RG4Snm/WXV0wdgEuzbv7+LCQop7+T+faHf011g=;
+	s=arc-20240116; t=1762244809; c=relaxed/simple;
+	bh=QngsHx6OSbSqgWI2TNR6ndZiCeINsFmjJj+LGU2l0Mg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pSGc8+kGMBzDkeGYuM1WHLRcGiXHzN3YrNYRS5+Xkm0VZtxhXvLEKzjjqZQI/dMxnJn3WbkEWx5+hpul3mxZriV4Mf1lv3H8iKVQROWzlWsNdf3sEqcKXHLstwkpNeccOOJP3jzaJ3u2kE7rcyZdz4CGp/Z0nqF9+Tn2pRitSpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TFLBjI6J; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762233941; x=1793769941;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=O9jQ9RG4Snm/WXV0wdgEuzbv7+LCQop7+T+faHf011g=;
-  b=TFLBjI6JspiAc5Ke5Q16Ui2Ie+V0V4/LsREVxVifnCTUQxRBtjM5ZQA1
-   2TtLKsXwDfkpQGIc11C5cnIqMBu9aOkxEuNrFaODIqC7XCCFUsoQLgvrz
-   rPZVgR5NgOM6Py9ntF37E5jSdGoPX0tW2fO8qqHy821Vk16QXdwynRRZL
-   L3yf8KQgSN+dZTxFaPdAnRp/BYLat/sUq4tHORNS+ZMiSsTjBCktVYngt
-   0NoyTFA0hWpxLo6bXMX4F90UeYNMh8+GCTpKLNYQl+yq/djFE3iX3XwRg
-   oKVfLcjiWgKawQf64XL5kFPA7dtBoNMgQQGLbkDHzZrMU2rA2YqX4cZu0
-   Q==;
-X-CSE-ConnectionGUID: fR6ygbqUSuqX5XXfRSboPQ==
-X-CSE-MsgGUID: ZcHlj/j7SoWlZXnCnDlbDw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11602"; a="64360287"
-X-IronPort-AV: E=Sophos;i="6.19,278,1754982000"; 
-   d="scan'208";a="64360287"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2025 21:25:41 -0800
-X-CSE-ConnectionGUID: Lgh0UUMtQJClmh7XjdmItA==
-X-CSE-MsgGUID: zJSbmmbkQlS4R0vNsh1mSQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,278,1754982000"; 
-   d="scan'208";a="186741457"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa007.fm.intel.com with ESMTP; 03 Nov 2025 21:25:40 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id 19D7B95; Tue, 04 Nov 2025 06:25:39 +0100 (CET)
-Date: Tue, 4 Nov 2025 06:25:39 +0100
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 0/4] pinctrl: intel: Unify error messages
-Message-ID: <20251104052539.GK2912318@black.igk.intel.com>
-References: <20251103200235.712436-1-andriy.shevchenko@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=HlvffEtMRH57SvI86rfYzXNavtx4iPW5wrDJ9PUUnbNmY4Vn3K1gCa9p48B6ocB5l/UVULuOiWMuG4MoEhtkXpRgb8xz2+GrPOpFcxy6TLRNbWkQOsYeqBn0AyS2NBswzESQ8JVjG1U3oY9TFqPua+t185j1BZydynqwf3fJeg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kHTNFFwo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DE83C4CEF7;
+	Tue,  4 Nov 2025 08:26:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762244809;
+	bh=QngsHx6OSbSqgWI2TNR6ndZiCeINsFmjJj+LGU2l0Mg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kHTNFFwopoBoO3ow6ttZSRT3t+xiKykircWNlwOI4gZY6Tlyi5u2syGcnSBhFnq7J
+	 tyr5tTL+Pl66H5dIGnbO+4qf9EG+qDc9Bh/tMCp4nrRGfuIrYn4xyUhfs3/GfQ4qgh
+	 OH+CWNIU/PBJg/JG+wjnANhDsRwayyTX71T1FOhJMHoQDvhslZbEYMWSm6NHHl4mBn
+	 /dJFDNG2EegaAPY3xFh8kXgY/RCm6ogaPIepDHR3Xj6+tu48vvmYDwQ/laq5orhVtb
+	 TZKXKF00uUJbUU8xalVbtp9psDCYjfpK0hWYMdomtUHz1RySVY/9oM+bSdPZFZmx7V
+	 sJmQdjx7aZnRw==
+Date: Tue, 4 Nov 2025 09:26:46 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: =?utf-8?B?QW5kcsOp?= Draszik <andre.draszik@linaro.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, 
+	Will McVicker <willmcvicker@google.com>, kernel-team@android.com, linux-kernel@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 02/20] dt-bindings: mfd: samsung,s2mps11: split
+ s2mpg10 into separate file
+Message-ID: <20251104-armored-vehement-boar-55bde4@kuoka>
+References: <20251103-s2mpg1x-regulators-v3-0-b8b96b79e058@linaro.org>
+ <20251103-s2mpg1x-regulators-v3-2-b8b96b79e058@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -77,21 +64,41 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251103200235.712436-1-andriy.shevchenko@linux.intel.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20251103-s2mpg1x-regulators-v3-2-b8b96b79e058@linaro.org>
 
-On Mon, Nov 03, 2025 at 08:58:27PM +0100, Andy Shevchenko wrote:
-> Unify error messages with help of dev_err_probe(). This brings
-> a common pattern with error code printed as well. While at it,
-> make the text message the same for the same reasons across
-> the Intel pin control drivers.
-> 
-> Andy Shevchenko (4):
->   pinctrl: baytrail: Unify messages with help of dev_err_probe()
->   pinctrl: cherryview: Unify messages with help of dev_err_probe()
->   pinctrl: intel: Unify messages with help of dev_err_probe()
->   pinctrl: tangier: Unify messages with help of dev_err_probe()
+On Mon, Nov 03, 2025 at 07:14:41PM +0000, Andr=C3=A9 Draszik wrote:
+> +properties:
+> +  compatible:
+> +    const: samsung,s2mpg10-pmic
+> +
+> +  clocks:
+> +    $ref: /schemas/clock/samsung,s2mps11.yaml
+> +    description:
+> +      Child node describing clock provider.
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  regulators:
+> +    type: object
+> +    description:
+> +      List of child nodes that specify the regulators.
+> +
+> +  system-power-controller: true
+> +
+> +  wakeup-source: true
+> +
+> +required:
+> +  - compatible
+> +  - interrupts
+> +  - regulators
+> +
+> +additionalProperties: false
 
-For the series,
+You need a complete example here.
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Best regards,
+Krzysztof
+
 
