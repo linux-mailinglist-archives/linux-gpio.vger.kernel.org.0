@@ -1,108 +1,101 @@
-Return-Path: <linux-gpio+bounces-28051-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28049-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BBD2C33181
-	for <lists+linux-gpio@lfdr.de>; Tue, 04 Nov 2025 22:41:29 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 005C1C3318A
+	for <lists+linux-gpio@lfdr.de>; Tue, 04 Nov 2025 22:43:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7A6E2346A38
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Nov 2025 21:41:28 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 517FD4EB57C
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Nov 2025 21:41:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 168A43090D6;
-	Tue,  4 Nov 2025 21:41:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E88F3081D5;
+	Tue,  4 Nov 2025 21:41:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="l7yYbptw";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="L9dn5kfr"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="BM7hfVP5";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="q+GbOyBB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83DE308F1F;
-	Tue,  4 Nov 2025 21:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68B5308F02;
+	Tue,  4 Nov 2025 21:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762292486; cv=none; b=o2ISkKoQ/FGvNEe4dS4RCRvhb9iaqpsSwsYBSVCWpUHxnTDQTOhYLRIuJRwlwW2whrEtq4zvmzRXkunZorcEYDue534oWRUNieCut9SiMl4lqqQjXKa5ER4nEDZSQywrvZcElx8RdVjf8Q1NQL6s0ohbmGEYB5SQHNt6+g5YLVE=
+	t=1762292481; cv=none; b=l+I4N9VOSH88GY9XI2WnlOeo5RPedK82duzCD8x32SYRbVuu9KcVB9XD5HUqhJohjZyMoKNakNIaHM00L8FsWLKW1qqnojCyXPLjzGf10VuIHCmb6PmJXNTJnlzg8kkQ+HRpzRpmMY7AL+9savSc44rRM7DRyRCmvjvmndnVoSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762292486; c=relaxed/simple;
-	bh=11gmXSqpLN3kGK5vTcUD8uyC2O/GOzIeyB28RcB2GLA=;
+	s=arc-20240116; t=1762292481; c=relaxed/simple;
+	bh=g83/bToTOsooBRq9JXS5cOqV82JgHzDfQGzZytyDDbA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X0himLxDGT4HaB6QhBExxuq5KExnQLIF3E7PQ+qnVjBRwF9mrOGobA0UnXdr9Rz3uMsNc52OvW9Sd7QoqjOQn2v2wZUSeYTM3MG0NUNpGhdHARcTnDx83Pi73+uswUQGOJN1TXgnEdviJKO2rnCXHSVCABDcTJqcQHY7wpaT5WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=l7yYbptw; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=L9dn5kfr; arc=none smtp.client-ip=80.241.56.161
+	 In-Reply-To:Content-Type; b=GoWbfxn57CBTjh3OUS3GB7LLtCRFs3EIKw+KLC4Z1j9Vi6/uxF0pWkYvN+y9UXDGk37KG7gJyx1w1LWABFsTlyqd7wJzVYngF6uPYaUotRIQz5Q12X3VXc0NLOHwsr3GF88hqkPw4miFL7yGuZIhWAegGCLF3ibRKEm5fjGSPSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=BM7hfVP5; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=q+GbOyBB; arc=none smtp.client-ip=80.241.56.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4d1MMv2CSJz9tpH;
-	Tue,  4 Nov 2025 22:41:15 +0100 (CET)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4d1MMw269gz9tg0;
+	Tue,  4 Nov 2025 22:41:16 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1762292475;
+	t=1762292476;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MmkBlEC0NAzEk1anfTl4bZTTwlok0JGZTqXgBlFPVzQ=;
-	b=l7yYbptwmjFaBvpfDcNmw4BmyQHz+bkstMK8J8ofYbNk5EVmD19oTyyTbYLZeS0AdUagRm
-	xUab+3m3VkoLeoipTFMrrLg2NTV0fDnbMfFFym2FPMqMG4i0Cn25//qjTA0JmM7i40Dnaa
-	CrQkR78gco2dGTm4o6JQfkhUAImij/QsclJeNYMHvQftJ4xJ6qWgB5Z60uwLKxhwa7gH88
-	Udkshup/YCiA0Q124Wlauz8CdU7bPEUPsxYt3ke6dTt4dIFVzVGgT3didJZBcLQW5b0mDj
-	cum+efrlP6BNv66JmGbWbGRxK/ihKsdTMcqEc77yCTaeEDYhYJw+umWOJg9xNA==
+	bh=z9Go0ZoufZ5BxVDcxkMkj1K68/2rVPtRZobKBTruWCQ=;
+	b=BM7hfVP5GxP3blNuRK0VHhIziymPBFnXLQcb7tT9qFtOPKCss6tHXEP87WE0MXmusRarBp
+	euMg67mlRaPzoh94Gp/bOr7BJ+Ojl9/jCuAd+5QdErUlYzo/3WjxQK0InvzgRQBztgd7yx
+	GUG+WMHem2uMTS66+Irack1ABir89D/ASnUJ2H/dnb4fRZ0Gsjkj0N1ivOR1sMQiiF1f0K
+	BtQOS4q7/OQS5KQdX5ozsqVDX2doLJXdARhedxFFCblTrFRtE8zZrUwGxV8qyiOVrr33MX
+	NiJf7ci+TMcZi3MC81vKmZ88BP5tpAp+G4umzOdFzAY5HQS5Bjjr67ySzI2ppA==
 Authentication-Results: outgoing_mbo_mout;
-	dkim=pass header.d=mailbox.org header.s=mail20150812 header.b=L9dn5kfr;
+	dkim=pass header.d=mailbox.org header.s=mail20150812 header.b=q+GbOyBB;
 	spf=pass (outgoing_mbo_mout: domain of marek.vasut@mailbox.org designates 2001:67c:2050:b231:465::202 as permitted sender) smtp.mailfrom=marek.vasut@mailbox.org
-Message-ID: <97046d21-d594-4fda-943f-153c6b75e963@mailbox.org>
+Message-ID: <ac7b6231-cc61-4a8b-b124-29c822ae5fe7@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1762292473;
+	t=1762292474;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MmkBlEC0NAzEk1anfTl4bZTTwlok0JGZTqXgBlFPVzQ=;
-	b=L9dn5kfr/qBxU3lwhYtMV3jGF4EpglgT3Nm48DXcHv7Pwo2vinWuhx+2hobzsEkk39VcJK
-	BB9lxwJjy2uqEcvWA0x/Av05QlIHZm3jkp1cSrVUUo+XDOvKTExSD8bm5ATGBleQgkK7eu
-	aLklRRq6ZNLr6SMQOwxFpRx3dMoOJQ2mksbtyC8C7VL+CoB5TxTddVlNiRoI8cRI8PibmA
-	7QrNXNAo6MSkBjP5WqqoA9cR1wTkNO5czlUq9uRTLJGBlXDTBQfs50g1o0ZkEn+lyArO8y
-	ObMmgxH8XCG/jE64hF/u6Szq/IVP8C3SdkOXKAdC8wr5D4ZhkoNHYc0r1qFecA==
-Date: Tue, 4 Nov 2025 22:28:16 +0100
+	bh=z9Go0ZoufZ5BxVDcxkMkj1K68/2rVPtRZobKBTruWCQ=;
+	b=q+GbOyBBkHLgTIOoJ9718q2att3sz/UckQ0XuVIGBO5C9LrFDUIi5q9MR9lCLTho31G+pb
+	Vla+XBf+kE6FxsEowbesMQRAxbZrUNS9agG/BPET/5KGRUC9qNMdzLiGgEDg74a79IAuWn
+	hGkMhRYagJqkIVyeuFrP+jmk444vLA2RiWLUtkKe5s5I5YW1pVRBnqgBcD/pozVpCH15gA
+	8o3aqfmDsGXwWJlrmIxTBLC6VkZHNZYjxw902Izy1MVZwXYONQd6ox1ntYpk/pF8wo186z
+	h9SySZaQXYYiso8ORITMiRWVFy28LZch84WX6eM+HpEKb/GAx9s6Y8YpvDwKgg==
+Date: Tue, 4 Nov 2025 22:29:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 4/5] pinctrl: renesas: r8a779h0: Remove CC5_OSCOUT
+Subject: Re: [PATCH 5/5] pinctrl: renesas: r8a779h0: Remove STPWT_EXTFXR
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
  Linus Walleij <linus.walleij@linaro.org>,
  Marek Vasut <marek.vasut+renesas@mailbox.org>
-Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
- huybui2 <huy.bui.wm@renesas.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
 References: <cover.1762274384.git.geert+renesas@glider.be>
- <895bb560467309706931d14aeea0e063ad0e86eb.1762274384.git.geert+renesas@glider.be>
+ <f849fa3b9b516e9dd04b45462b69f52225259480.1762274384.git.geert+renesas@glider.be>
 Content-Language: en-US
 From: Marek Vasut <marek.vasut@mailbox.org>
-In-Reply-To: <895bb560467309706931d14aeea0e063ad0e86eb.1762274384.git.geert+renesas@glider.be>
+In-Reply-To: <f849fa3b9b516e9dd04b45462b69f52225259480.1762274384.git.geert+renesas@glider.be>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-MBO-RS-ID: 4458c7d3fdb519d6b2e
-X-MBO-RS-META: ej9ry7o4axckpp9s5xykx67ys4jpzfyb
-X-Rspamd-Queue-Id: 4d1MMv2CSJz9tpH
+X-MBO-RS-META: sstj4atu1hx85jajkr6jxrpiiwp1kpdg
+X-MBO-RS-ID: 60f14b15e6306fb75e8
+X-Rspamd-Queue-Id: 4d1MMw269gz9tg0
 
 On 11/4/25 5:59 PM, Geert Uytterhoeven wrote:
-> From: huybui2 <huy.bui.wm@renesas.com>
-> 
-> Rev.0.71 of the R-Car V4M Series Hardware User’s Manual removed the
-> "CC5_OSCOUT" signal from the pin control register tables.  As this is
+> Rev.0.81 of the R-Car V4M Series Hardware User’s Manual removed the
+> "STPWT_EXTFXR" signal from the pin control register tables.  As this is
 > further unused in the pin control driver, it can be removed safely.
 > 
-> Signed-off-by: huybui2 <huy.bui.wm@renesas.com>
-
-The real name is 'Huy Bui' instead of huybui2 login name.
-
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Reviewed-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 
-Also, matches U-Boot patch, thanks !
+There is no matching U-Boot patch, nice.
 
