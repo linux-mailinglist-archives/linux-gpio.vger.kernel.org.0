@@ -1,197 +1,97 @@
-Return-Path: <linux-gpio+bounces-27998-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-27999-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44649C2EF17
-	for <lists+linux-gpio@lfdr.de>; Tue, 04 Nov 2025 03:19:23 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDB95C2F5EC
+	for <lists+linux-gpio@lfdr.de>; Tue, 04 Nov 2025 06:25:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D73AB3BA407
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Nov 2025 02:18:19 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8AB8B4E5C17
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Nov 2025 05:25:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A2AC2472B5;
-	Tue,  4 Nov 2025 02:17:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEFD22C029E;
+	Tue,  4 Nov 2025 05:25:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="QV9omP/G"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TFLBjI6J"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-m15595.qiye.163.com (mail-m15595.qiye.163.com [101.71.155.95])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1574823EA8B;
-	Tue,  4 Nov 2025 02:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E17E286885;
+	Tue,  4 Nov 2025 05:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762222674; cv=none; b=kSZr9w2DvMp1GpWRKph4HyzM9ZMaPqqLtWhe/wyf4wYgk/rRULX3r80bKae6VFbQFFmED6OqkBBnzzkfDXbMG1OiK+nUq/iO2QKucO98gq1B03+yu+mjH6j0R4ZcP+uGKMEKUxqhMT/eKasMWyNw0N/5mRZRwnsa53u6nIL0dcU=
+	t=1762233946; cv=none; b=LCijWon8pEgVGsC+Plpyw16s5Szq8/z72L06JqNsmkD7ZdqqSoP3u2ZCwsyaEdAQAsnkSIbRpLXr8WbkAc5U6PhPlHursFs6fJR1YiDrYHMtqry6aVLEqorvUivDYHj7Ry9dURqHOFNt3NjowE99xkiLnU7udvkL/tQBW+bLHEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762222674; c=relaxed/simple;
-	bh=7xwmfrHuOhq9vvpKOE3fa5rGpNCGWmQsZ8sAT7l1hXA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FqDiXc4GcHhsILuygl0pPh4wsBZ2HkrCU7qzJ2FOfVKkRcAxJaHutP51q2zNnBiSYByPJt+jC+KyVbA0kgWLnObtCscFcYbcjAcQFKnI2nxYpSf53uE19UPlmX6b5OtEEOz9f8CicL30xTxptO26SzdcC+f/XPqKzJf3V2OlPrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=QV9omP/G; arc=none smtp.client-ip=101.71.155.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from rockchip.. (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 2842e983c;
-	Tue, 4 Nov 2025 10:12:33 +0800 (GMT+08:00)
-From: Ye Zhang <ye.zhang@rock-chips.com>
-To: Ye Zhang <ye.zhang@rock-chips.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	tao.huang@rock-chips.com
-Subject: [PATCH v1 3/3] pinctrl: rockchip: add rk3506 rmio support
-Date: Tue,  4 Nov 2025 10:12:23 +0800
-Message-Id: <20251104021223.2375116-4-ye.zhang@rock-chips.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20251104021223.2375116-1-ye.zhang@rock-chips.com>
-References: <20251104021223.2375116-1-ye.zhang@rock-chips.com>
+	s=arc-20240116; t=1762233946; c=relaxed/simple;
+	bh=O9jQ9RG4Snm/WXV0wdgEuzbv7+LCQop7+T+faHf011g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pSGc8+kGMBzDkeGYuM1WHLRcGiXHzN3YrNYRS5+Xkm0VZtxhXvLEKzjjqZQI/dMxnJn3WbkEWx5+hpul3mxZriV4Mf1lv3H8iKVQROWzlWsNdf3sEqcKXHLstwkpNeccOOJP3jzaJ3u2kE7rcyZdz4CGp/Z0nqF9+Tn2pRitSpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TFLBjI6J; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762233941; x=1793769941;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=O9jQ9RG4Snm/WXV0wdgEuzbv7+LCQop7+T+faHf011g=;
+  b=TFLBjI6JspiAc5Ke5Q16Ui2Ie+V0V4/LsREVxVifnCTUQxRBtjM5ZQA1
+   2TtLKsXwDfkpQGIc11C5cnIqMBu9aOkxEuNrFaODIqC7XCCFUsoQLgvrz
+   rPZVgR5NgOM6Py9ntF37E5jSdGoPX0tW2fO8qqHy821Vk16QXdwynRRZL
+   L3yf8KQgSN+dZTxFaPdAnRp/BYLat/sUq4tHORNS+ZMiSsTjBCktVYngt
+   0NoyTFA0hWpxLo6bXMX4F90UeYNMh8+GCTpKLNYQl+yq/djFE3iX3XwRg
+   oKVfLcjiWgKawQf64XL5kFPA7dtBoNMgQQGLbkDHzZrMU2rA2YqX4cZu0
+   Q==;
+X-CSE-ConnectionGUID: fR6ygbqUSuqX5XXfRSboPQ==
+X-CSE-MsgGUID: ZcHlj/j7SoWlZXnCnDlbDw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11602"; a="64360287"
+X-IronPort-AV: E=Sophos;i="6.19,278,1754982000"; 
+   d="scan'208";a="64360287"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2025 21:25:41 -0800
+X-CSE-ConnectionGUID: Lgh0UUMtQJClmh7XjdmItA==
+X-CSE-MsgGUID: zJSbmmbkQlS4R0vNsh1mSQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,278,1754982000"; 
+   d="scan'208";a="186741457"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa007.fm.intel.com with ESMTP; 03 Nov 2025 21:25:40 -0800
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id 19D7B95; Tue, 04 Nov 2025 06:25:39 +0100 (CET)
+Date: Tue, 4 Nov 2025 06:25:39 +0100
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 0/4] pinctrl: intel: Unify error messages
+Message-ID: <20251104052539.GK2912318@black.igk.intel.com>
+References: <20251103200235.712436-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9a4ca32c1909d8kunm1bdc99775fc3c87
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUNOH1ZLHh0aQk1DGRgfQ0xWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=QV9omP/GG2etENojjSXRfCCBuTDUDwWS6aHOiRfLpDLS4DvkgkKZWistKcYn4E1PCDF/edawoqSNkS9gZDztDr2gzP2C9UYj0qlM/AEjRDrAsfEQ+1kgU1+NnZtGCtr0wB7yAnwrAuoaTpHxCNc0FICicjRZTRyq0qeGufQavUo=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=6bpdvky3mLqhhxKzpg13DZv9erw7l+ahTifZaliB3Fc=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251103200235.712436-1-andriy.shevchenko@linux.intel.com>
 
-Support rockchip matrix io
+On Mon, Nov 03, 2025 at 08:58:27PM +0100, Andy Shevchenko wrote:
+> Unify error messages with help of dev_err_probe(). This brings
+> a common pattern with error code printed as well. While at it,
+> make the text message the same for the same reasons across
+> the Intel pin control drivers.
+> 
+> Andy Shevchenko (4):
+>   pinctrl: baytrail: Unify messages with help of dev_err_probe()
+>   pinctrl: cherryview: Unify messages with help of dev_err_probe()
+>   pinctrl: intel: Unify messages with help of dev_err_probe()
+>   pinctrl: tangier: Unify messages with help of dev_err_probe()
 
-Signed-off-by: Ye Zhang <ye.zhang@rock-chips.com>
----
- drivers/pinctrl/pinctrl-rockchip.c | 75 ++++++++++++++++++++++++++++++
- drivers/pinctrl/pinctrl-rockchip.h |  1 +
- 2 files changed, 76 insertions(+)
+For the series,
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index e44ef262beec..89ff8d8c7fcc 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -1258,6 +1258,74 @@ static int rockchip_verify_mux(struct rockchip_pin_bank *bank,
- 	return 0;
- }
- 
-+static int rockchip_set_rmio(struct rockchip_pin_bank *bank, int pin, int *mux)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+	struct rockchip_pin_ctrl *ctrl = info->ctrl;
-+	struct regmap *regmap;
-+	int reg, function;
-+	u32 data, rmask;
-+	int ret = 0;
-+	int iomux_num = (pin / 8);
-+	u32 iomux_max, mux_type;
-+
-+	mux_type = bank->iomux[iomux_num].type;
-+	if (mux_type & IOMUX_WIDTH_4BIT)
-+		iomux_max = (1 << 4) - 1;
-+	else if (mux_type & IOMUX_WIDTH_3BIT)
-+		iomux_max = (1 << 3) - 1;
-+	else
-+		iomux_max = (1 << 2) - 1;
-+
-+	if (*mux > iomux_max)
-+		function = *mux - iomux_max;
-+	else
-+		return 0;
-+
-+	switch (ctrl->type) {
-+	case RK3506:
-+		regmap = info->regmap_rmio;
-+		if (bank->bank_num == 0) {
-+			if (pin < 24)
-+				reg = 0x80 + 0x4 * pin;
-+			else
-+				ret = -EINVAL;
-+		} else if (bank->bank_num == 1) {
-+			if (pin >= 9 && pin <= 11)
-+				reg = 0xbc + 0x4 * pin;
-+			else if (pin >= 18 && pin <= 19)
-+				reg = 0xa4 + 0x4 * pin;
-+			else if (pin >= 25 && pin <= 27)
-+				reg = 0x90 + 0x4 * pin;
-+			else
-+				ret = -EINVAL;
-+		} else {
-+			ret = -EINVAL;
-+		}
-+
-+		if (ret) {
-+			dev_err(info->dev,
-+				"rmio unsupported bank_num %d function %d\n",
-+				bank->bank_num, function);
-+
-+			return -EINVAL;
-+		}
-+
-+		rmask = 0x7f007f;
-+		data = 0x7f0000 | function;
-+		*mux = 7;
-+		ret = regmap_update_bits(regmap, reg, rmask, data);
-+		if (ret)
-+			return ret;
-+		break;
-+
-+	default:
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * Set a new mux function for a pin.
-  *
-@@ -1291,6 +1359,10 @@ static int rockchip_set_mux(struct rockchip_pin_bank *bank, int pin, int mux)
- 
- 	dev_dbg(dev, "setting mux of GPIO%d-%d to %d\n", bank->bank_num, pin, mux);
- 
-+	ret = rockchip_set_rmio(bank, pin, &mux);
-+	if (ret)
-+		return ret;
-+
- 	if (bank->iomux[iomux_num].type & IOMUX_SOURCE_PMU)
- 		regmap = info->regmap_pmu;
- 	else if (bank->iomux[iomux_num].type & IOMUX_L_SOURCE_PMU)
-@@ -4247,6 +4319,9 @@ static int rockchip_pinctrl_probe(struct platform_device *pdev)
- 	/* try to find the optional reference to the ioc1 syscon */
- 	info->regmap_ioc1 = syscon_regmap_lookup_by_phandle_optional(np, "rockchip,ioc1");
- 
-+	/* try to find the optional reference to the rmio syscon */
-+	info->regmap_rmio = syscon_regmap_lookup_by_phandle_optional(np, "rockchip,rmio");
-+
- 	ret = rockchip_pinctrl_register(pdev, info);
- 	if (ret)
- 		return ret;
-diff --git a/drivers/pinctrl/pinctrl-rockchip.h b/drivers/pinctrl/pinctrl-rockchip.h
-index 4f4aff42a80a..6d79ccf73b71 100644
---- a/drivers/pinctrl/pinctrl-rockchip.h
-+++ b/drivers/pinctrl/pinctrl-rockchip.h
-@@ -462,6 +462,7 @@ struct rockchip_pinctrl {
- 	struct regmap			*regmap_pull;
- 	struct regmap			*regmap_pmu;
- 	struct regmap			*regmap_ioc1;
-+	struct regmap			*regmap_rmio;
- 	struct device			*dev;
- 	struct rockchip_pin_ctrl	*ctrl;
- 	struct pinctrl_desc		pctl;
--- 
-2.34.1
-
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
