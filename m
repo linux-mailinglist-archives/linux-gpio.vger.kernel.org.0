@@ -1,214 +1,145 @@
-Return-Path: <linux-gpio+bounces-28137-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28140-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64B33C36FD2
-	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 18:13:57 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EEE8C37132
+	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 18:28:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BB94F681D4A
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 16:36:48 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 54F944FDB99
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 17:12:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15D92335579;
-	Wed,  5 Nov 2025 16:36:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E32B132ED39;
+	Wed,  5 Nov 2025 17:12:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UVst2bXx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fEjC20ZU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F48724A069
-	for <linux-gpio@vger.kernel.org>; Wed,  5 Nov 2025 16:36:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B3B3370E8;
+	Wed,  5 Nov 2025 17:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762360594; cv=none; b=md0mDcecPEzvc1I0hJpymVMKdvs76z43w9lhcKTXF0YmkML/t5hHmoAfsY9QUb46EgPSjOzbO+2txi25S9ls0TiTa6eFerur9zuBrqPYL7IXoeJzhQIefhuQBviFAb7VHOO73YkSkV2vpNdud3Rm2pveecQmBmqeNh/um0HIvu4=
+	t=1762362723; cv=none; b=QrxtUDwAi7A3CZsvUd88UPjpOP7ff0vcFwbyU9qhhA0bryI1YGRlNRJlsQXxxAlMdPHWxVvhS8VeRPe4sPGOqAmLfKNrteJVCQuC5cpdOiMp+CPw0ywxuwMwyF1S9MAUqoP7mBYzVDxmIdkA6nFgRsCLuVbFdd99i8ATFLTkrXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762360594; c=relaxed/simple;
-	bh=lB1oiiivUFk0ZDJoQQXW2XHOAkxUVwGf4d1RCAjOPZI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C3wz5PQtHyg/zBCWNleIUeb7Ci3P/AZmj81CefvrS5H9SDYVAI00d7LeioWsNamagvenaFZEOhKJbNGLSroP8XMn/ucGH1cOwRRCFJMgypwL5S2bH59fcQAnS1Tl+sbyYJ8ssX9G/7HjiGUtiHWjAcQ3+DzMU/Yew4xsimGwznc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UVst2bXx; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-47109187c32so36288785e9.2
-        for <linux-gpio@vger.kernel.org>; Wed, 05 Nov 2025 08:36:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762360591; x=1762965391; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fHYj506/4Pr8DL5qCv+wyZzNDXaCmNF2075v0Hd6Ako=;
-        b=UVst2bXxbBO9T6/1vAKMRGa7Xs8UcLSqz4QihlDyH49QFCJoOwRFXzPYtnkmZO+KTk
-         BUzFOEil6dYA4iThnWqmYZuo8iAvBL7PflNl9gl4Q2F33rjtD5TXl711h0xTGw1ae0/P
-         enDa4ZH4zSmIs5YKvkVIyUvhQ1Qs9qFpAWOAGDtFmnu5CUnMtCNW4LEmevDhs6cV/AAo
-         iyMMJkBl54rOStz7fPJaeiltBD/qhX4RNIjcHTgiYsyCkyPWP0v0wCdKZMigpjTsQ2Pq
-         5knamDe/oX5ADVxkSsd7QU1W3bkjLES6fNvVVLlUeaOLqheSd2ObEDSZQgKL6F5pnaq3
-         7BoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762360591; x=1762965391;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fHYj506/4Pr8DL5qCv+wyZzNDXaCmNF2075v0Hd6Ako=;
-        b=gjrGclfZFhOJRqY+uR5x5MPiZkVjYzSfoYD1Wz1zuE3kOF5VFfHnSaU1JU+SBi+Wim
-         klrhXSFVHEi1inKejFIMz8DbVjOZqqaToBhN+zqaPV6avgv46xcK0LaDNnvR5BlmjITU
-         bfN2bIynB2c9slrdtoTRFtSZHHSXI8OdjZCtDRF9m45JsXezX4JSz4WShUZecyryXC/k
-         oCEhKftyaj4yjADq4UwImCvzt3cuH9GbTk1SD9yPdUXyZl7K5sIh1LJ9Z/gf01B7jmIL
-         ofdWyZTTiJRkZgOpDp4c+qq/Y+Nx+LLq1JocyimyTtaB5Y8TJDsrCbTwmgnFFnPX7x1j
-         S+og==
-X-Gm-Message-State: AOJu0YzmgK4KoC0Bp152FFbeJ2cr1Jxp/2CldDINTRTjsnEq3ClqU8tW
-	WQFGyQCLxq5DTgNO5RRhWQ7VGNFITdeIT46/KlbJoSzeGHyDEsXqfoLI
-X-Gm-Gg: ASbGncuJX/f4cdh3TU+InRGLCaV6KazBxQeXyWNcDKNXX0BI/alv6Ihe9fLhq0iP7l8
-	fp2m3NIzj/DoqKQw4U5UBTGa2hX5lGtt4jNDevwZydg1wk5t66YZCshYaZ2lSQuybACuFqm4k/U
-	PlMi5nFhJIJWJ+IFan34zD1ChakndVVdxPoMh9r9YdKLlMwyzGbNcfN4rZJkkRYPBa6IJSOvABs
-	1Kke4yI3BzB/QROxazK6ly85dabYXbMYkRRstm4i2M1E+0HDzIkd6zOTHdEqvVz3CPhNLil1Jm/
-	7X3M4A7rvnTXcknCCFUrSNRQjC7Xwv7y1kmmZlRUQZqebAKDcpPM2vmEZRCZBaAn4FnSQ8KgYLD
-	8RsFYZPB6IcE5MOdqT1xtKnnm03Y0PWsev5iZ7fFGfAzZEAtfOvtIIV9LYWB4/FfWhocRRARhtg
-	m1IjGvICk3h0EabQ==
-X-Google-Smtp-Source: AGHT+IGLGPvP7XURghAJPhqU1JFUqROk92/vfl7A7dK/Bo5oH/GGTIj4CfcCbwnGs5AWe5xeP+xN4w==
-X-Received: by 2002:a05:600c:4e88:b0:477:259c:dbd7 with SMTP id 5b1f17b1804b1-4775cdc56f1mr27738775e9.12.1762360590620;
-        Wed, 05 Nov 2025 08:36:30 -0800 (PST)
-Received: from builder.. ([2001:9e8:f106:5b16:be24:11ff:fe30:5d85])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4775ce3ef38sm57026755e9.17.2025.11.05.08.36.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Nov 2025 08:36:30 -0800 (PST)
-From: Jonas Jelonek <jelonek.jonas@gmail.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Peter Rosin <peda@axentia.se>,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thomas Richard <thomas.richard@bootlin.com>,
-	Jonas Jelonek <jelonek.jonas@gmail.com>
-Subject: [PATCH v5 0/2] add gpio-line-mux
-Date: Wed,  5 Nov 2025 16:36:08 +0000
-Message-ID: <20251105163610.610793-1-jelonek.jonas@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1762362723; c=relaxed/simple;
+	bh=5UhncEhe+SElroFsCLAJcFgCyjkD+L/rkI4vspaLTC8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pU2RQat1H+OIrDsJ2JcPgGBJFrk/skFQQhFGWinXdPitFr7iFhZ3DyO/gOvUl1Ft0zpCbFW6Lz/Ui/NIBu4m1WpUcjVJdoO70/GPBn9Q9A6wcSIPUfrliM2CHoNghiSRG7Fh+h/WiDFSBaneqPesk7uH/q0b+gIDCyJUy8fSS6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fEjC20ZU; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762362722; x=1793898722;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=5UhncEhe+SElroFsCLAJcFgCyjkD+L/rkI4vspaLTC8=;
+  b=fEjC20ZUDIIQ7sCPabzX9oZQcKG0x7+tvy749srNo3tEERlduBwwjQZ9
+   swfCYlgeuz77xymXN1uegOpSD+nwfre0MqFfRQxna4kWBwQG+WZHPylvB
+   IN5ihYXMuPeI8vOX0jpiFDE6Z3hPzBwe0mn9ORdaqFYK0/lTBCb6VRZ2T
+   +Q9JlJu3hzfFRO0CKF/9GJUcJjPllsmTYyYU4vSuceT/kYTpG7AeX0XLK
+   s20kOf8MQXx09oUsWjEtepIpTFASFWpEUW5gznyiJDhuH/iOO4yQVUdC5
+   v9+3ZRitB4fwhvngsv7kIPL2d8DNyL6foPjAOYscBspqihjGAwib/IA4Q
+   Q==;
+X-CSE-ConnectionGUID: ZqNN6CVWSk+YaQtik6Vwmw==
+X-CSE-MsgGUID: IEnyydhuR9y3Q7fTlK+nnQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11604"; a="64399292"
+X-IronPort-AV: E=Sophos;i="6.19,282,1754982000"; 
+   d="scan'208";a="64399292"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 09:12:00 -0800
+X-CSE-ConnectionGUID: nyQeFKReQNOu79JNF6fDVw==
+X-CSE-MsgGUID: Jnj1WAMkQ5aEv/JGATjJEA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,282,1754982000"; 
+   d="scan'208";a="191610143"
+Received: from ldmartin-desk2.corp.intel.com (HELO ashevche-desk.local) ([10.124.221.135])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 09:11:58 -0800
+Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1vGh33-00000005qkR-3ZWl;
+	Wed, 05 Nov 2025 19:11:53 +0200
+Date: Wed, 5 Nov 2025 19:11:52 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 02/10] pinctrl: alderlake: Switch to INTEL_GPP() macro
+Message-ID: <aQuFWBiky4mpbIoM@smile.fi.intel.com>
+References: <20251104145814.1018867-1-andriy.shevchenko@linux.intel.com>
+ <20251104145814.1018867-3-andriy.shevchenko@linux.intel.com>
+ <20251105103122.GL2912318@black.igk.intel.com>
+ <aQs3ls1rKgMOufOn@smile.fi.intel.com>
+ <20251105115041.GM2912318@black.igk.intel.com>
+ <CAHp75VcLNs0EWLED_5Mmr0V3nVoiEdKNpdoqPypy5i5jJCSd1g@mail.gmail.com>
+ <20251105115535.GN2912318@black.igk.intel.com>
+ <aQts5fqrNaEhHQyp@smile.fi.intel.com>
+ <20251105154106.GO2912318@black.igk.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251105154106.GO2912318@black.igk.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-This proposes a new type of virtual GPIO controller and corresponding
-driver to provide a 1-to-many mapping between virtual GPIOs and a single
-real GPIO in combination with a multiplexer. Existing drivers apparently
-do not serve the purpose for what I need.
+On Wed, Nov 05, 2025 at 04:41:06PM +0100, Mika Westerberg wrote:
+> On Wed, Nov 05, 2025 at 05:27:33PM +0200, Andy Shevchenko wrote:
+> > On Wed, Nov 05, 2025 at 12:55:35PM +0100, Mika Westerberg wrote:
+> > > On Wed, Nov 05, 2025 at 01:51:58PM +0200, Andy Shevchenko wrote:
+> > > > On Wed, Nov 5, 2025 at 1:50 PM Mika Westerberg
+> > > > <mika.westerberg@linux.intel.com> wrote:
+> > > > > On Wed, Nov 05, 2025 at 01:40:06PM +0200, Andy Shevchenko wrote:
+> > > > > > On Wed, Nov 05, 2025 at 11:31:22AM +0100, Mika Westerberg wrote:
+> > > > > > > On Tue, Nov 04, 2025 at 03:56:36PM +0100, Andy Shevchenko wrote:
 
-I came across an issue with a switch device from Zyxel which has two
-SFP+ cages. Most similar switches either wire up the SFP signals
-(RX_LOS, MOD_ABS, TX_FAULT, TX_DISABLE) directly to the SoC (if it has
-enough GPIOs) or two a GPIO expander (for which a driver usually
-exists). However, Zyxel decided to do it differently in the following
-way:
-  The signals RX_LOS, MOD_ABS and TX_FAULT share a single GPIO line to
-  the SoC. Which one is actually connected to that GPIO line at a time
-  is controlled by a separate multiplexer, a GPIO multiplexer in this
-  case (which uses two other GPIOs). Only the TX_DISABLE is separate.
+...
 
-The SFP core/driver doesn't seem to support such a usecase for now, for
-each signal one needs to specify a separate GPIO like:
+> > > > > > > > -#define ADL_GPP(r, s, e, g)                              \
+> > > > > > > > - {                                               \
+> > > > > > > > -         .reg_num = (r),                         \
+> > > > > > > > -         .base = (s),                            \
+> > > > > > > > -         .size = ((e) - (s) + 1),                \
+> > > > > > > > -         .gpio_base = (g),                       \
+> > > > > > > > - }
+> > > > > > >
+> > > > > > > I wonder if simply doing this:
+> > > > > > >
+> > > > > > > #define ADL_GPP(r, s, e, g) INTEL_GPP(r, s, e, g)
+> > > > > >
+> > > > > > We can, but it will give a couple of lines in each driver still be left.
+> > > > > > Do you think it's better?
+> > > > >
+> > > > > I think that's better because it is less changed lines but I'm fine either
+> > > > > way.
+> > > > 
+> > > > Okay, I will try it and see how it looks like and then I'll either
+> > > > send a v2 or ask for a tag for this one. Sounds good?
+> > > 
+> > > Yes.
+> > 
+> > After more thinking I guess I want it as is (here in v1). In cases
+> > when we define some parameters differently it will make sense to have
+> > an intermediate definition, but here. Can you give your Ack, please?
+> 
+> Okay sure,
+> 
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-  los-gpio = <&gpio0 0 GPIO_ACTIVE_HIGH>;
-  mod-def0-gpio = <&gpio0 1 GPIO_ACTIVE_LOW>;
-  ...
+Pushed to my review and testing queue, thanks!
 
-But for my device, I actually need to directly specify multiplexing
-behavior in the SFP node or provide a mux-controller with 'mux-controls'.
-
-To fill this gap, I created a dt-schema and a working driver which
-exactly does what is needed. It takes a phandle to a mux-controller and
-the 'shared' gpio, and provides several virtual GPIOs based on the
-gpio-line-mux-states property.
-
-This virtual gpio-controller can then be referenced in the '-gpio'
-properties of the SFP node (or other nodes depending on the usecase) as
-usual and do not require any modification to the SFP core/driver.
-
----
-Changelog:
-
-v5: - renamed "shared" to "muxed" to avoid confusion with Bartosz' work
-    - dropped Reviewed-by of Krzysztof due to binding change
-    - use GPIOD_IN in devm_gpiod_get instead of calling
-      gpiod_direction_input explicitly afterwards
-
-Link to v4:
-https://lore.kernel.org/linux-gpio/20251105103607.393353-1-jelonek.jonas@gmail.com/
-
-v4: - dropped useless cast (as suggested by Thomas)
-    - dropped unneeded locking (as suggested by Peter)
-    - fixed wording in commit message
-    - included Reviewed-by of Krzysztof
-
-Link to v3:
-https://lore.kernel.org/linux-gpio/20251104210021.247476-1-jelonek.jonas@gmail.com/
-
-v3: - fixed dt_binding_check errors in DT schema
-    - as requested by Rob (for DT schema):
-      - removed example from gpio-mux.yaml
-      - added '|' to preserve formatting
-      - 'shared-gpio' --> 'shared-gpios'
-    - general fixes to DT schema
-    - use mux_control_select_delay (as suggested by Peter) with
-      hopefully reasonable delay of 100us
-    - gpiochip ops implementation changes:
-      - drop '.set' implementation (as suggested by Peter)
-      - new '.set' implementation just returning -EOPNOTSUPP
-      - '.direction_output' and '.direction_input' dropped
-      - '.get_direction' returns fixed value for 'input'
-    - direction of shared gpio set to input during probe
-    - as suggested by Thomas
-      - usage of dev_err_probe
-      - further simplifications
-
-    Since the consensus was that this should be input-only,
-    '.direction_output' and '.direction_input' have been dropped
-    completely, as suggested in the docs of struct gpio_chip. '.set' is
-    kept but returns -ENOTSUPP.
-
-    The shared GPIO is set to input during probe, thus '.direction_input'
-    doesn't need to be implemented. '.get_direction' is kept (as
-    suggested in docs of struct gpio_chip) but always returns
-    GPIO_LINE_DIRECTION_IN.
-
-Link to v2:
-https://lore.kernel.org/linux-gpio/20251026231754.2368904-1-jelonek.jonas@gmail.com/
-
-v2: - as requested by Linus:
-      - renamed from 'gpio-split' to 'gpio-line-mux'
-      - added better description and examples to DT bindings
-    - simplified driver
-    - added missing parts to DT bindings
-    - dropped RFC tag
-    - renamed patchset
-
-Link to v1 (in case it isn't linked properly due to changed title):
-https://lore.kernel.org/linux-gpio/20251009223501.570949-1-jelonek.jonas@gmail.com/
-
----
-Jonas Jelonek (2):
-  dt-bindings: gpio: add gpio-line-mux controller
-  gpio: add gpio-line-mux driver
-
- .../bindings/gpio/gpio-line-mux.yaml          | 109 +++++++++++++++
- MAINTAINERS                                   |   6 +
- drivers/gpio/Kconfig                          |   9 ++
- drivers/gpio/Makefile                         |   1 +
- drivers/gpio/gpio-line-mux.c                  | 125 ++++++++++++++++++
- 5 files changed, 250 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-line-mux.yaml
- create mode 100644 drivers/gpio/gpio-line-mux.c
-
-
-base-commit: bac88be0d2a83daf761129828e7ae3c79cc260c2
 -- 
-2.48.1
+With Best Regards,
+Andy Shevchenko
+
 
 
