@@ -1,214 +1,207 @@
-Return-Path: <linux-gpio+bounces-28093-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28094-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1F99C351B4
-	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 11:31:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3B0BC351F6
+	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 11:38:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BE62D188ACB7
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 10:31:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D4AC51921FEE
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 10:37:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64E64302CDC;
-	Wed,  5 Nov 2025 10:31:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D31FA301007;
+	Wed,  5 Nov 2025 10:36:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O/e/sh//"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B2G69+13"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A7F7301007;
-	Wed,  5 Nov 2025 10:31:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE7F330504C
+	for <linux-gpio@vger.kernel.org>; Wed,  5 Nov 2025 10:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762338687; cv=none; b=AuTUJziKZxYTLmYTN/thiYKj+0cW+ddvM+tW5Kwza5R67yYncde2PhcCeTQCvofx0RzyqVRt0kLCgnwmByoc++YN6dIDQz2MfqQDpUGCivXQ+yTRAEy9FmME26iFJ6Y+9kLax+TbgrKRFFGnXM1xWS0abNNq+0+FFc+QjDYWoTs=
+	t=1762338976; cv=none; b=gksxOogcUZbdXxs33xfuTL3w9BnVDuXSsHkL0friSN3ni7ABq8aZjo/7xGHHpAyquM0rt/aNuf0pkhmbEg/rD+LawctlqslOJYgT8LOZx+jzWkLXCCNdQZOvNRCaGzstXBo08Ow1eAhyiHnj6103+Qwzzxpiyfi9Hqy3cMX1NYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762338687; c=relaxed/simple;
-	bh=Vn35hLkwmnD21sGOZtp7Ty/VQ60HoGsF3YK6VqmliLI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JkVUi4W6gbbcPg7a1p8erdWSgdRLF56/KJ+WhsEkSP0IAomnCW1OUYw+/gIwJq0AJo0dhOXcsv/hXkwOvPHqtCMslIQUBeYMrsDrkM/+aEaQgQTbwqMPRtJHWJcD6+TkwOmJlyA0ojPrL3fnEZR9Sco713kaXPQ41Q2tz0gtdFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O/e/sh//; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762338685; x=1793874685;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Vn35hLkwmnD21sGOZtp7Ty/VQ60HoGsF3YK6VqmliLI=;
-  b=O/e/sh//hulmEOst5GzSLh1rfEsAYI6jjmYKyfIeLNaVr+6hxR4l0kaU
-   H7v2ShaqODVtN6BJWmBN6EQDi6lsLm5PdMKM8/sQm04qX/RH+90XvLv5F
-   9S4Ssi9C4dRxll1ibfjaJYJQcV0MAkvYTzFY8uYGSQVC7VSCUQd0AYmc4
-   VN52PGb4tdfFea4b1/vuuAcS7r/XJhEcVK6vfZ+CqeYOk7UTX5JaqPJ8s
-   0IwZYlUgbcCQSxxxpwAkUK2DMGZv+dVSI2B4jqu+O6XgthOa50DS/Gtd9
-   NZMxuGSvG2GY0VNc97TZYPR1c2lJu5t2VVfRpKIRezyd/BJk+5IMTLjfm
-   A==;
-X-CSE-ConnectionGUID: AzBDp94RTkWt4IFHjt1VUg==
-X-CSE-MsgGUID: +B7SDcNnTTeQJadAoh3DFw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11603"; a="64486010"
-X-IronPort-AV: E=Sophos;i="6.19,281,1754982000"; 
-   d="scan'208";a="64486010"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 02:31:25 -0800
-X-CSE-ConnectionGUID: zsw8o8U1Qn2QkxfWw4NeNA==
-X-CSE-MsgGUID: zGieOCinSo2ALkqP8TNdIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,281,1754982000"; 
-   d="scan'208";a="187089686"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa007.fm.intel.com with ESMTP; 05 Nov 2025 02:31:23 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id 569FE95; Wed, 05 Nov 2025 11:31:22 +0100 (CET)
-Date: Wed, 5 Nov 2025 11:31:22 +0100
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 02/10] pinctrl: alderlake: Switch to INTEL_GPP() macro
-Message-ID: <20251105103122.GL2912318@black.igk.intel.com>
-References: <20251104145814.1018867-1-andriy.shevchenko@linux.intel.com>
- <20251104145814.1018867-3-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1762338976; c=relaxed/simple;
+	bh=j8YhRpVNUlc/mZaeKkBiu3lqJvAchICI6GCrOl5eSBg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RbvIS85KtYkresDX+v9nAsF6qFoNamMC9rqwYwxUxo1Zk/NQaZDg7+3FC5qOjhS/tTic1amhoHCNa5ZL77V5SyQEw+st4EnUxGk/m8LiViCrXTsjcoNnz2yM2coGxMVCPwlDDKcDcUYDUuCK42nXzW/0n2tzf4GFVSJj9V/IQQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B2G69+13; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b403bb7843eso391004266b.3
+        for <linux-gpio@vger.kernel.org>; Wed, 05 Nov 2025 02:36:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762338973; x=1762943773; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6VMC9fJlr9Vw6P3ZZbwfnb40nhrC3xmTakO4N1aVRa8=;
+        b=B2G69+13QLCMcm32pGSh1hse4j7WsZRJWodydyCF2Vxv1Gdg07tRivSqHKQGGSTHLr
+         F4bdUwS9IMUOKTAXkyKuyw7XWlMZpltwvnocyVQK11ETNyitM7r02NwKVC7//oSh8tui
+         OFioLD1OOVyeHvpIxAD8lD+0TWzcZsxcwwYEo6UA+NYlmnN1uqMJpfhhdhRY/f4PV030
+         7o4zZFivhPhDnwxpD6+DwU/QLsI727xxC8XjPvxeK7niaCz9fSJM90LHd+ms9Ozoboo6
+         AADhVUhQ50pSxIl4BVoiijR+JkzYHU4MG5DFDosAqVrFlrDBYcRPA4LEnvFPWNHzrlPa
+         rLrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762338973; x=1762943773;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6VMC9fJlr9Vw6P3ZZbwfnb40nhrC3xmTakO4N1aVRa8=;
+        b=C1Fy5uQHg+eUwWaXh4QW3SpGV/3h4fprK8dD2fClV2v2Ouf5pkMVl1XC4S4ZO4a8TB
+         Q31YlyMTs8Hsonr5A4TVTpX2tXtsfE9FNHT2cPFZAkJoE+ZO0j2DFM3Mb3uONxodLAGZ
+         wAcXQ9wkNGdB5wzgFF4ehpHDkQ5I6Hi21ae2Iho63VFkzPnCQ1Zagr0X4RLXGRo3aG6E
+         hGvbN4A+gQx2+p+vw7bB/6gUvnigMVhH1VAU/rxRX6HjzhvXH1ObDZ7O/ZEo+H6bUTWD
+         m7WxIZRd0KIDgwbOTTFRf44jV4xsYB7mymVLKRUs7TN31TkODOuKT6JkG1R/tukUTHFf
+         Mivg==
+X-Gm-Message-State: AOJu0Yz7Y0COfWGxWTLePnaeFzsaTYixWu98rt0q+lAr9frXHB+qXhzf
+	Q1hGyc0Zau+L/H8ulP/vixH9fnTLfw9MIZSwvUOOTOx3hn+5K2V+XYlz
+X-Gm-Gg: ASbGncuwJB+kPPRE1CcFofVqTuzzd/yDyquli6DnkBbJ7eQ7AYcIWOJ/iPMfKAlZuak
+	yimjP0IKOtpSu1J7P/Dm74k4O9Bj1g6vENC2x4A9zoc1TL5QztK28tboWI6TlYXTc2ylqWPMv8w
+	MMw7MOFIfAKV/5rNbK3zYo89yNgV43xTAyqOxbnUEs6zkqbb/GWqOgK0FGB76ePmLSfD6Wy6cpF
+	Iu5aP7rrgvfN6l9xJtiR1YwaTVD1MEQQSx08PQHxQcGF366bi+sHyx5r7AneP3wetY1tgm1PEp/
+	BPd1CP5umaGIOwXBMtzb0S0kpfwdeYg1/Ded1/3d1t+Lv61C9hOEEpdp/78MAr4+qf775do/3s+
+	Mu45Ij4Mdlnu1oPC4jK7D7cSlT4zHXar3u9w6yKS7y3zXRYllACbFfWp/7XujPegmJXuA3Q9IcU
+	cGSLM=
+X-Google-Smtp-Source: AGHT+IGDzT/nsdVBWBo6K2hE/MeANdYpdiJU20yCYipNE4MK/QGUfwCQfPcTIvLiS1uKpMQbf4YHfg==
+X-Received: by 2002:a17:906:b10a:b0:b72:6935:6bac with SMTP id a640c23a62f3a-b72693594ffmr134368666b.49.1762338972716;
+        Wed, 05 Nov 2025 02:36:12 -0800 (PST)
+Received: from builder.. ([2001:9e8:f106:5b16:be24:11ff:fe30:5d85])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b7270b56f18sm83426066b.33.2025.11.05.02.36.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Nov 2025 02:36:12 -0800 (PST)
+From: Jonas Jelonek <jelonek.jonas@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Peter Rosin <peda@axentia.se>,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thomas Richard <thomas.richard@bootlin.com>,
+	Jonas Jelonek <jelonek.jonas@gmail.com>
+Subject: [PATCH v4 0/2] add gpio-line-mux
+Date: Wed,  5 Nov 2025 10:36:04 +0000
+Message-ID: <20251105103607.393353-1-jelonek.jonas@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20251104145814.1018867-3-andriy.shevchenko@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Nov 04, 2025 at 03:56:36PM +0100, Andy Shevchenko wrote:
-> Replace custom macro with the recently defined INTEL_GPP().
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/pinctrl/intel/pinctrl-alderlake.c | 68 ++++++++++-------------
->  1 file changed, 30 insertions(+), 38 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/intel/pinctrl-alderlake.c b/drivers/pinctrl/intel/pinctrl-alderlake.c
-> index 108eac205aa9..7bf1d5c285a0 100644
-> --- a/drivers/pinctrl/intel/pinctrl-alderlake.c
-> +++ b/drivers/pinctrl/intel/pinctrl-alderlake.c
-> @@ -27,14 +27,6 @@
->  #define ADL_S_GPI_IS		0x200
->  #define ADL_S_GPI_IE		0x220
->  
-> -#define ADL_GPP(r, s, e, g)				\
-> -	{						\
-> -		.reg_num = (r),				\
-> -		.base = (s),				\
-> -		.size = ((e) - (s) + 1),		\
-> -		.gpio_base = (g),			\
-> -	}
-> -
+This proposes a new type of virtual GPIO controller and corresponding
+driver to provide a 1-to-many mapping between virtual GPIOs and a single
+real GPIO in combination with a multiplexer. Existing drivers apparently
+do not serve the purpose for what I need.
 
-I wonder if simply doing this:
+I came across an issue with a switch device from Zyxel which has two
+SFP+ cages. Most similar switches either wire up the SFP signals
+(RX_LOS, MOD_ABS, TX_FAULT, TX_DISABLE) directly to the SoC (if it has
+enough GPIOs) or two a GPIO expander (for which a driver usually
+exists). However, Zyxel decided to do it differently in the following
+way:
+  The signals RX_LOS, MOD_ABS and TX_FAULT share a single GPIO line to
+  the SoC. Which one is actually connected to that GPIO line at a time
+  is controlled by a separate multiplexer, a GPIO multiplexer in this
+  case (which uses two other GPIOs). Only the TX_DISABLE is separate.
 
-#define ADL_GPP(r, s, e, g)	INTEL_GPP(r, s, e, g)
+The SFP core/driver doesn't seem to support such a usecase for now, for
+each signal one needs to specify a separate GPIO like:
 
-is better? Then the amount of changes are smaller.
+  los-gpio = <&gpio0 0 GPIO_ACTIVE_HIGH>;
+  mod-def0-gpio = <&gpio0 1 GPIO_ACTIVE_LOW>;
+  ...
 
->  #define ADL_N_COMMUNITY(b, s, e, g)			\
->  	INTEL_COMMUNITY_GPPS(b, s, e, g, ADL_N)
->  
-> @@ -316,28 +308,28 @@ static const struct pinctrl_pin_desc adln_pins[] = {
->  };
->  
->  static const struct intel_padgroup adln_community0_gpps[] = {
-> -	ADL_GPP(0, 0, 25, 0),				/* GPP_B */
-> -	ADL_GPP(1, 26, 41, 32),				/* GPP_T */
-> -	ADL_GPP(2, 42, 66, 64),				/* GPP_A */
-> +	INTEL_GPP(0, 0, 25, 0),				/* GPP_B */
-> +	INTEL_GPP(1, 26, 41, 32),			/* GPP_T */
-> +	INTEL_GPP(2, 42, 66, 64),			/* GPP_A */
->  };
->  
->  static const struct intel_padgroup adln_community1_gpps[] = {
-> -	ADL_GPP(0, 67, 74, 96),				/* GPP_S */
-> -	ADL_GPP(1, 75, 94, 128),			/* GPP_I */
-> -	ADL_GPP(2, 95, 118, 160),			/* GPP_H */
-> -	ADL_GPP(3, 119, 139, 192),			/* GPP_D */
-> -	ADL_GPP(4, 140, 168, 224),			/* vGPIO */
-> +	INTEL_GPP(0, 67, 74, 96),			/* GPP_S */
-> +	INTEL_GPP(1, 75, 94, 128),			/* GPP_I */
-> +	INTEL_GPP(2, 95, 118, 160),			/* GPP_H */
-> +	INTEL_GPP(3, 119, 139, 192),			/* GPP_D */
-> +	INTEL_GPP(4, 140, 168, 224),			/* vGPIO */
->  };
->  
->  static const struct intel_padgroup adln_community4_gpps[] = {
-> -	ADL_GPP(0, 169, 192, 256),			/* GPP_C */
-> -	ADL_GPP(1, 193, 217, 288),			/* GPP_F */
-> -	ADL_GPP(2, 218, 223, INTEL_GPIO_BASE_NOMAP),	/* HVCMOS */
-> -	ADL_GPP(3, 224, 248, 320),			/* GPP_E */
-> +	INTEL_GPP(0, 169, 192, 256),			/* GPP_C */
-> +	INTEL_GPP(1, 193, 217, 288),			/* GPP_F */
-> +	INTEL_GPP(2, 218, 223, INTEL_GPIO_BASE_NOMAP),	/* HVCMOS */
-> +	INTEL_GPP(3, 224, 248, 320),			/* GPP_E */
->  };
->  
->  static const struct intel_padgroup adln_community5_gpps[] = {
-> -	ADL_GPP(0, 249, 256, 352),			/* GPP_R */
-> +	INTEL_GPP(0, 249, 256, 352),			/* GPP_R */
->  };
->  
->  static const struct intel_community adln_communities[] = {
-> @@ -680,35 +672,35 @@ static const struct pinctrl_pin_desc adls_pins[] = {
->  };
->  
->  static const struct intel_padgroup adls_community0_gpps[] = {
-> -	ADL_GPP(0, 0, 24, 0),				/* GPP_I */
-> -	ADL_GPP(1, 25, 47, 32),				/* GPP_R */
-> -	ADL_GPP(2, 48, 59, 64),				/* GPP_J */
-> -	ADL_GPP(3, 60, 86, 96),				/* vGPIO */
-> -	ADL_GPP(4, 87, 94, 128),			/* vGPIO_0 */
-> +	INTEL_GPP(0, 0, 24, 0),				/* GPP_I */
-> +	INTEL_GPP(1, 25, 47, 32),			/* GPP_R */
-> +	INTEL_GPP(2, 48, 59, 64),			/* GPP_J */
-> +	INTEL_GPP(3, 60, 86, 96),			/* vGPIO */
-> +	INTEL_GPP(4, 87, 94, 128),			/* vGPIO_0 */
->  };
->  
->  static const struct intel_padgroup adls_community1_gpps[] = {
-> -	ADL_GPP(0, 95, 118, 160),			/* GPP_B */
-> -	ADL_GPP(1, 119, 126, 192),			/* GPP_G */
-> -	ADL_GPP(2, 127, 150, 224),			/* GPP_H */
-> +	INTEL_GPP(0, 95, 118, 160),			/* GPP_B */
-> +	INTEL_GPP(1, 119, 126, 192),			/* GPP_G */
-> +	INTEL_GPP(2, 127, 150, 224),			/* GPP_H */
->  };
->  
->  static const struct intel_padgroup adls_community3_gpps[] = {
-> -	ADL_GPP(0, 151, 159, INTEL_GPIO_BASE_NOMAP),	/* SPI0 */
-> -	ADL_GPP(1, 160, 175, 256),			/* GPP_A */
-> -	ADL_GPP(2, 176, 199, 288),			/* GPP_C */
-> +	INTEL_GPP(0, 151, 159, INTEL_GPIO_BASE_NOMAP),	/* SPI0 */
-> +	INTEL_GPP(1, 160, 175, 256),			/* GPP_A */
-> +	INTEL_GPP(2, 176, 199, 288),			/* GPP_C */
->  };
->  
->  static const struct intel_padgroup adls_community4_gpps[] = {
-> -	ADL_GPP(0, 200, 207, 320),			/* GPP_S */
-> -	ADL_GPP(1, 208, 230, 352),			/* GPP_E */
-> -	ADL_GPP(2, 231, 245, 384),			/* GPP_K */
-> -	ADL_GPP(3, 246, 269, 416),			/* GPP_F */
-> +	INTEL_GPP(0, 200, 207, 320),			/* GPP_S */
-> +	INTEL_GPP(1, 208, 230, 352),			/* GPP_E */
-> +	INTEL_GPP(2, 231, 245, 384),			/* GPP_K */
-> +	INTEL_GPP(3, 246, 269, 416),			/* GPP_F */
->  };
->  
->  static const struct intel_padgroup adls_community5_gpps[] = {
-> -	ADL_GPP(0, 270, 294, 448),			/* GPP_D */
-> -	ADL_GPP(1, 295, 303, INTEL_GPIO_BASE_NOMAP),	/* JTAG */
-> +	INTEL_GPP(0, 270, 294, 448),			/* GPP_D */
-> +	INTEL_GPP(1, 295, 303, INTEL_GPIO_BASE_NOMAP),	/* JTAG */
->  };
->  
->  static const struct intel_community adls_communities[] = {
-> -- 
-> 2.50.1
+But for my device, I actually need to directly specify multiplexing
+behavior in the SFP node or provide a mux-controller with 'mux-controls'.
+
+To fill this gap, I created a dt-schema and a working driver which
+exactly does what is needed. It takes a phandle to a mux-controller and
+the 'shared' gpio, and provides several virtual GPIOs based on the
+gpio-line-mux-states property.
+
+This virtual gpio-controller can then be referenced in the '-gpio'
+properties of the SFP node (or other nodes depending on the usecase) as
+usual and do not require any modification to the SFP core/driver.
+
+---
+Changelog:
+
+v4: - dropped useless cast (as suggested by Thomas)
+    - dropped unneeded locking (as suggested by Peter)
+    - fixed wording in commit message
+    - included Reviewed-by of Krzysztof
+
+Link to v3:
+https://lore.kernel.org/linux-gpio/20251104210021.247476-1-jelonek.jonas@gmail.com/
+
+v3: - fixed dt_binding_check errors in DT schema
+    - as requested by Rob (for DT schema):
+      - removed example from gpio-mux.yaml
+      - added '|' to preserve formatting
+      - 'shared-gpio' --> 'shared-gpios'
+    - general fixes to DT schema
+    - use mux_control_select_delay (as suggested by Peter) with
+      hopefully reasonable delay of 100us
+    - gpiochip ops implementation changes:
+      - drop '.set' implementation (as suggested by Peter)
+      - new '.set' implementation just returning -EOPNOTSUPP
+      - '.direction_output' and '.direction_input' dropped
+      - '.get_direction' returns fixed value for 'input'
+    - direction of shared gpio set to input during probe
+    - as suggested by Thomas
+      - usage of dev_err_probe
+      - further simplifications
+
+    Since the consensus was that this should be input-only,
+    '.direction_output' and '.direction_input' have been dropped
+    completely, as suggested in the docs of struct gpio_chip. '.set' is
+    kept but returns -ENOTSUPP.
+
+    The shared GPIO is set to input during probe, thus '.direction_input'
+    doesn't need to be implemented. '.get_direction' is kept (as
+    suggested in docs of struct gpio_chip) but always returns
+    GPIO_LINE_DIRECTION_IN.
+
+Link to v2:
+https://lore.kernel.org/linux-gpio/20251026231754.2368904-1-jelonek.jonas@gmail.com/
+
+v2: - as requested by Linus:
+      - renamed from 'gpio-split' to 'gpio-line-mux'
+      - added better description and examples to DT bindings
+    - simplified driver
+    - added missing parts to DT bindings
+    - dropped RFC tag
+    - renamed patchset
+
+Link to v1 (in case it isn't linked properly due to changed title):
+https://lore.kernel.org/linux-gpio/20251009223501.570949-1-jelonek.jonas@gmail.com/
+
+---
+
+Jonas Jelonek (2):
+  dt-bindings: gpio: add gpio-line-mux controller
+  gpio: add gpio-line-mux driver
+
+ .../bindings/gpio/gpio-line-mux.yaml          | 109 +++++++++++++++
+ MAINTAINERS                                   |   6 +
+ drivers/gpio/Kconfig                          |   9 ++
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-line-mux.c                  | 129 ++++++++++++++++++
+ 5 files changed, 254 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-line-mux.yaml
+ create mode 100644 drivers/gpio/gpio-line-mux.c
+
+
+base-commit: bac88be0d2a83daf761129828e7ae3c79cc260c2
+-- 
+2.48.1
+
 
