@@ -1,120 +1,154 @@
-Return-Path: <linux-gpio+bounces-28104-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28105-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C1DBC3565F
-	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 12:39:58 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2C74C356CC
+	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 12:44:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ABA0B1A20887
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 11:39:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2493B560ECD
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 11:40:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D7813101DC;
-	Wed,  5 Nov 2025 11:38:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F4E0310650;
+	Wed,  5 Nov 2025 11:39:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jh99mVay"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CJSB51PU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2152D239B;
-	Wed,  5 Nov 2025 11:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7B6310636
+	for <linux-gpio@vger.kernel.org>; Wed,  5 Nov 2025 11:39:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762342713; cv=none; b=NivAN4t8KkpL4Om/dqx1G0IWIsxMF6GUAsErVivpSujaAQ8mOf/MkAe+BRWTeJmnzKMm5+3Wtj/dYtp0bVPht3fHV0ydkv25pBMjiX5PruKu+wPPazkilZnTigFYZCTCFvReYDijwZtptWxliR5HYkjc0rFuLyyCb4MaLJy5cmo=
+	t=1762342791; cv=none; b=tVBnotDEU/zut6uUSF89EsOu6BQcbvsBIRM0tT/Aptbkewj3zLR19qHCNAjr6bx9zPWM4Gc1xx/VsajFxTGuwHzb0CB2MefHKruI9C2RYKST/ty1PtToiGS7ChK9LvCf4HXI87HPb1FQXeqnLYhtXzuXu9xw+xT+1yIlChK3Tok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762342713; c=relaxed/simple;
-	bh=r1MggjRa5LTArtaThr0VKYwN5EsmTnjnEk6Qf6sztao=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L6EWzq0gd6c+ZTn5xg2egY8QIw01l2QKdCa2qLSdULZPGTCV953isZwpzUcRKCpWicarxvPj7IjCwIZ0w+sv/1FOG3+z31H6Mp1xlKStEXWGubmmD4OV2VknD7gbFA+gRHV59vc9mLA+2RjKTMBzG/xiYxRYYtA7rUe/GKqtZfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jh99mVay; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762342711; x=1793878711;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=r1MggjRa5LTArtaThr0VKYwN5EsmTnjnEk6Qf6sztao=;
-  b=jh99mVayV7bDupmpO74HdlVPAbMyDr1jyYJVnALuT/Bg0FgQAGizEwVe
-   ax5xwpdzwnK3Mx1j0z/smwYUavnReXBmN2rOrVeMH2nq68n2dBfPm4N/6
-   LkcnGJBjpj07zBhsVexONw9iaIwnqiraFhLh2ztCF8akRNn1j0jffutju
-   iQkCBCnsR0TuJBRw+K9YghTTi1JWgiVmnbCtkwLdah2v043pPm882GhXm
-   IXn851xel1CnprW8hNPpjc4f134eQoL378pxZSzUnV5dSaqds+hgIznLh
-   qTkAefnDyWOBp2bj91bT7XougIXtkuQ2E/u/y4m6d2/cHd1/ex1LdutNk
-   w==;
-X-CSE-ConnectionGUID: Ovl0zT8gQLahbWtgL2QFbg==
-X-CSE-MsgGUID: wgwoyk37QWmlV17PRRR0GA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11603"; a="63658960"
-X-IronPort-AV: E=Sophos;i="6.19,281,1754982000"; 
-   d="scan'208";a="63658960"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 03:38:30 -0800
-X-CSE-ConnectionGUID: aDX//h26STOPPRKOXcZhcg==
-X-CSE-MsgGUID: 0bi4mw+RThuqog22QGIMDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,281,1754982000"; 
-   d="scan'208";a="224679250"
-Received: from ldmartin-desk2.corp.intel.com (HELO ashevche-desk.local) ([10.124.221.135])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 03:38:26 -0800
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1vGbqH-00000005lGe-0J8H;
-	Wed, 05 Nov 2025 13:38:21 +0200
-Date: Wed, 5 Nov 2025 13:38:20 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v5 3/8] software node: allow referencing firmware nodes
-Message-ID: <aQs3LJtrYMLPUSwU@smile.fi.intel.com>
-References: <20251105-reset-gpios-swnodes-v5-0-1f67499a8287@linaro.org>
- <20251105-reset-gpios-swnodes-v5-3-1f67499a8287@linaro.org>
+	s=arc-20240116; t=1762342791; c=relaxed/simple;
+	bh=XJnQ8QAutR/Qjzuilm6RbMyIh+omr6OWVKRLZO5Bnf0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nF6FRBjAkh2XJJ8nh7aNjp40ueprsy65i7v62F5P/BFSTPo7bsw02S6XtPj+lcaXC0LmuJ0svtNdtTNJLc7sdqOdOIRlVGoSycY+2EZh4LPiOHKt98YBIbMcV/1xQ/Y5RjAJ6f79+pOsqfafAEkIqGvYI0LVwjXKHsixl1NCWdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CJSB51PU; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-59428d2d975so3558265e87.3
+        for <linux-gpio@vger.kernel.org>; Wed, 05 Nov 2025 03:39:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762342788; x=1762947588; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XFKcDBz895P+pKkilzGMv1j9zQS86el4sifmVfoozzk=;
+        b=CJSB51PUDDIAmXELEChvDo2y27eoe70faA3tbu/iPSRxcznGwDxA4bNg143HX2AY7h
+         6OGa2qZJ2ps5r2LR1uY1uPFiEIH8H8zrwlbmo85b25eyoE02XpPno5Hq12P7LuhwCk1O
+         AzhOd7dtEH/zdfXb7nbzaeQzyYAaewr51fx1+H5AjY8W3Kl0BOuLD5SXeR+Vmn2DTv18
+         xNqJivuHGk0slJeCzmZ6txTYQKgfh9wlTNrQiIKp6MkBqkBELvDcax2vGsyZL/Yhiyyo
+         0UwyKme0BrLCsAaEIC4WGuYf9doozejNTg8izdiv+LZvpkWMA7oSxGmH3YAIz9thlykp
+         fWDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762342788; x=1762947588;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XFKcDBz895P+pKkilzGMv1j9zQS86el4sifmVfoozzk=;
+        b=DWEPdceVHpLoCK7fR3W0VMQKDybGBdGnjdKSBqj4kbtwCapblj+m5X1nNoTKbmLRo3
+         9ttVWr1WsEGSshOMpGXSNAjRREV0I3wEebmyzqvlZkn9FuvWii2GFFGR/DjHbxNY1gfx
+         KDjHHg6THUUeU0EQnrDPkdIkzW1wc9lppKXuXc9ULqNU9w3r7yQg3WrPnglVYuY2ddTi
+         2JALdM5jwenYYYKe9j5dhl5yE8BjWQVaQWEZMOdNpbJFE+vPoH79cpSg9ZIvTi+ths4d
+         PlHm1iC6ZGH0gVhBg7rH20I2S6URnV8s6+Q/C65Vad/12agi3u9+xu1I+BT1B1meVRRK
+         LvsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVjf2pOwIs78SbQeXN7eXFUXwd6miPdsn9KG55PSeP6S36/TrykDdM5TL1mrj4yGcdwFtMF5XfpMbcX@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAwJ9+A71Y9m4udiAa1m6bfQOAgHQdBOGoMsJVavLopgtz4loJ
+	KZlUll6JOFcApsn6a06eHySEIm3kEe93ZoD58TrOY8DyDtyTaTXaUqzI
+X-Gm-Gg: ASbGncske3o4m8j1PwfVCkh3dUQg0rO6RPPCILkwI1EBH+PgapxSXV/92F1rMFui0O3
+	+g/w+OXCJVT6oz/QLlN8VVCfSitRQFw80lMSXnLCauwV/9M45xk99cX1FIBsxWVcXG7vgTTOtuR
+	euKgY32byiAh+i9dNpV6xjTUOv1StBfP5SOMB3fLVbyWtxC+WVJgYzFK5nsnUOsEQ6kCEmq14Ps
+	MJxZOHVnulNhxlQoVzLohqlG3mDYvgtMpvaZabima59p/tu4+HmOHnY72FyAGlw1mRzPxuGejuc
+	be5mBZpDymMD+Rcm5Dy4J77DPb35Zn9J2hJqOSPWcHBm0tKF0FsWEEzhxRVTe77WcCHsFm/UksP
+	ilkxkn89pTBJiNCgmvSjvgj9COFc8gTPl5YYxkAmWQfjOkPmxHN5jtEr9t3j+cr/NHNcMcEh+/O
+	/7u04fMKXHsn1CEZB6VKYVEeIngHCysjNkCFpluM/xnguf676x92VSTlomgg==
+X-Google-Smtp-Source: AGHT+IGG31UsLd4o1FDm3BbiPL0QtqwK8nPiQHx1dRUKJ4gb8AV+HvnhJfY8a3mxdgTF9YlyblMwPQ==
+X-Received: by 2002:a05:6512:1395:b0:592:f8aa:c06 with SMTP id 2adb3069b0e04-5943d7f3f74mr1019404e87.57.1762342787278;
+        Wed, 05 Nov 2025 03:39:47 -0800 (PST)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5943443992fsm1652172e87.60.2025.11.05.03.39.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Nov 2025 03:39:46 -0800 (PST)
+Message-ID: <aa55cba7-1f7a-4c44-a101-cb991387fa55@gmail.com>
+Date: Wed, 5 Nov 2025 13:39:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251105-reset-gpios-swnodes-v5-3-1f67499a8287@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/16] dt-bindings: mfd: ROHM BD72720
+To: "Rob Herring (Arm)" <robh@kernel.org>,
+ Matti Vaittinen <matti.vaittinen@linux.dev>
+Cc: Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ linux-clk@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+ Sebastian Reichel <sre@kernel.org>, Lee Jones <lee@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, linux-rtc@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>,
+ devicetree@vger.kernel.org,
+ Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Pavel Machek <pavel@kernel.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Mark Brown <broonie@kernel.org>,
+ Andreas Kemnade <andreas@kemnade.info>, linux-kernel@vger.kernel.org,
+ linux-leds@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>
+References: <cover.1762327887.git.mazziesaccount@gmail.com>
+ <4c7ea0c83f4bb4af65439a9b8951d50ee705d22c.1762327887.git.mazziesaccount@gmail.com>
+ <176233321210.143104.455177775703669783.robh@kernel.org>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <176233321210.143104.455177775703669783.robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Nov 05, 2025 at 09:47:34AM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 05/11/2025 11:00, Rob Herring (Arm) wrote:
 > 
-> At the moment software nodes can only reference other software nodes.
-> This is a limitation for devices created, for instance, on the auxiliary
-> bus with a dynamic software node attached which cannot reference devices
-> the firmware node of which is "real" (as an OF node or otherwise).
+> On Wed, 05 Nov 2025 09:37:05 +0200, Matti Vaittinen wrote:
+>> From: Matti Vaittinen <mazziesaccount@gmail.com>
+>>
+>> The ROHM BD72720 is a power management IC integrating regulators, GPIOs,
+>> charger, LEDs, RTC and a clock gate.
+>>
+>> Add dt-binding doc for ROHM BD72720.
+>>
+>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+>>
+>> ---
+>> Revision history:
+>>   v2 => v3:
+>>   - Styling
+>>   - Document all pin functions
+>>   - use pattern-properties
+>>   - re-use existing Rsense binding
+>>   - correct the example
+>>
+>>   RFCv1 => v2:
+>>   - Typofixes
+>> ---
+>>   .../bindings/mfd/rohm,bd72720-pmic.yaml       | 273 ++++++++++++++++++
+>>   1 file changed, 273 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd72720-pmic.yaml
+>>
 > 
-> Make it possible for a software node to reference all firmware nodes in
-> addition to static software nodes. To that end: add a second pointer to
-> struct software_node_ref_args of type struct fwnode_handle. The core
-> swnode code will first check the swnode pointer and if it's NULL, it
-> will assume the fwnode pointer should be set.
+> My bot found errors running 'make dt_binding_check' on your patch:
 > 
-> Software node graphs remain the same, as in: the remote endpoints still
-> have to be software nodes.
+> yamllint warnings/errors:
+> 
+> dtschema/dtc warnings/errors:
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/rohm,bd72720-pmic.yaml: Unresolvable reference: /schemas/regulator/rohm,bd77270-regulator.yaml
 
-All my worries have been addressed, thanks.
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Not sure how this slipped through. I'll fix this in next version. Thanks.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Matti Vaittinen
+Linux kernel developer at ROHM Semiconductors
+Oulu Finland
 
-
+~~ When things go utterly wrong vim users can always type :help! ~~
 
