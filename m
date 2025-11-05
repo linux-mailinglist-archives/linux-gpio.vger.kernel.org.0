@@ -1,78 +1,78 @@
-Return-Path: <linux-gpio+bounces-28095-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28096-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 632B6C351FC
-	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 11:38:27 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BE49C35205
+	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 11:39:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9445318873CC
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 10:37:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7EEDC3B5C2B
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 10:37:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B43B3054D6;
-	Wed,  5 Nov 2025 10:36:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A885A305064;
+	Wed,  5 Nov 2025 10:36:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CHHObwFS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cl9moNAX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EEB6305048
-	for <linux-gpio@vger.kernel.org>; Wed,  5 Nov 2025 10:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C75305059
+	for <linux-gpio@vger.kernel.org>; Wed,  5 Nov 2025 10:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762338977; cv=none; b=YZcht3zvQQDiIP3PIGdSMZr7++qLVaDkIbX5eF3tI1DvxHLaEMhrVchYv7RanQW5Q/sm3kwWXDygFVAcnAn61G/FKwijYBDMqxH95Ui2sTtFP8otq+WCwVF2VIlJdlhFklV9SEkeZIW4UnwjCwjWePnVRAzU8Ach/dHB6ccC0Fs=
+	t=1762338978; cv=none; b=jUShkIO7pP75tT64HfGgWIbV82Oe1QtcdkY+hzgxPb/jWViPZfbKDPm5AnJSswTR5T3amX0ArI+CSxx9s6KaYEyR/m5B45SKgd0K/6dBQmqX22qixC2lamdQpgmloKCjR27xFgrCPGMexh/eC0FlDCuUKiSXVMmpZc9ycj6i1hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762338977; c=relaxed/simple;
-	bh=C6xy0EtOkalUzkEAMpfGkzXo2GuppE3z47njnMHkoAw=;
+	s=arc-20240116; t=1762338978; c=relaxed/simple;
+	bh=KDesIfsn2xu6U2CtUzSWMng87iI1n+RYPUP8WaYWAoM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EMOx/nZhkiVZoxvUbLeGbRFuA2IRFT9kA3qUgFuC8Bd0yNC8MWuXH3+SfnRfvxPY8DzyUFRmiadG9dgc+zp55iPr8qMQfFZhzNCUWB7f7hJM5rDMn8Ubg5TFub74yt/n6N5q+cfFEoe71lYtV57fQkgVTIEnq/aikPK7Vl1wRbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CHHObwFS; arc=none smtp.client-ip=209.85.208.46
+	 MIME-Version; b=WuznbGBVTQTKkh+IPPnc8iyGsG+gXedXC8hXxeBoQwGnDwZOKVwxI1Wq8lCjsb3Wmn6gzJw9qLPN+0I1pecGpLdtd1hXpvwkwUYkYgaTK1lq1FnfZDdRHX3OkO4+wbJWxm0BmxDX6msrBRieHLAxaPp+ICG8HVpaMqsUlA60icw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cl9moNAX; arc=none smtp.client-ip=209.85.218.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-640e9f5951aso1252736a12.1
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b3c2c748bc8so811755866b.2
         for <linux-gpio@vger.kernel.org>; Wed, 05 Nov 2025 02:36:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1762338974; x=1762943774; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=z92QCHjJmqiDgUUq96F5qxg80YMYR3erevN8MU3XYkM=;
-        b=CHHObwFS8eWuxXbbIri37J6j4JpDrsXYzPfj2v8p0R5ZXf5nGgAkjoqT4ZTP+ewVX3
-         KEfANSwPHDGzEW0hvyeMJRGcTjGGxe0Cvw/aBXfvfW4+GW5zenYMjxb6omN3WYBh601Z
-         EX/ZuIRXGn0XSX36+9nqjGamhHhahNVmOq6/pe3u+rkRhLNdY6eeJoOcL4zDeBghxghb
-         ui7I2La+KkC3y3KXbqK5KDI4W28/3sLDJg8V3IdfYkMfBGyIX8HE+TuDOf/K9D/zfyV4
-         FDRyuvlYQA6kPKSBeR9nMAM2Jr1nDsctOMrUZ05/uDwQvMZL9Faanepz0oCz4nvvh1f2
-         MpIw==
+        bh=TiWeWU99+P2OBlwtwLukYVoiHCgrNeTiK3bQO2+aHuQ=;
+        b=Cl9moNAXDHNcQpfGIGCc2uow2sveCRVmKwVvl6zBGUGEQu3vMqpWsqmQ4IUmWnOYam
+         s9tWS7yICph/WKP2fx+AwlLgWoUNH+mqvPlJUmVJkt7AXvuXTyzL/TVo4h5YMu7GTvKe
+         J70ZcwHWULdCTl9fAHuSxdlIanWqB01RcvLqfamNgNIRB0inzkQpEbPgE3ZGIQsz6Vjc
+         1MkcZAlm6O9ZxuYgMFgxpo8cW0Lt1eQrcr5nGmriIH6+dUTmAAtev/6I3h+6FszmD9y+
+         8s7CwlmoQPh9t4vMgQItxjXk/C/xWY5J5zi0bVSSJ2U2DcvVSFvo1aoJ3HTXxqKkUe0V
+         YO1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1762338974; x=1762943774;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=z92QCHjJmqiDgUUq96F5qxg80YMYR3erevN8MU3XYkM=;
-        b=UBoVdTnozkpCWcJn+4cEfvMF9JTeNYwCAx6pFLn/KXARDyfZQnb76WLkFc3LeSXuUr
-         Fx1WRcTL7a2pkY3JP+oN4sPeXR9GLBnwdP723GhOm1n1TBohe8PV8IzNn8j0f885ExxK
-         +dMIljm0GDWJ1UOBn9zvLJ5Qriu/ejsBvAasPf0GKYgQOyXL9SX66dlX2uLCzK13qxYd
-         g4wXLzcC7bNyEOvJAGfah7htlqGq5Vf3b3vNvJ6ERmXhJY0zYca+3WHbHeebIC1/5IoH
-         hTIx1uKTsJf8xx+/ZruFA7+M08EGmVtJaSgNFkyDC2Wv7dwOd7BoWJibR8LXnRYGFtvk
-         FqlA==
-X-Gm-Message-State: AOJu0YxgbODD+mGy7OL7PmIQQNFywBwA95c5w1Vi6pLnjn1Y8Ufbu743
-	9jV4OgHWZOpze8b+cKOrpV+H1RLrJgmSHBWYxzjLI7kQQRHKqmVllg8H
-X-Gm-Gg: ASbGncsRnC3xD0jQJ5UQUafIF6JNfxscD2i96DMDFtokpihFDKzpPPyKxwLOt1bzp3p
-	INVFFitosowPB4NRwVJLxrhzkHrB71WEReDmsGfhWluop0itN05j/CItHFeY5OdAIH+0c8ixua5
-	b5+thGJFor9/f13nq3CELPN30BCpyGtS+6iJHKzY5FBO5sae2D2nDlhTxXwxfuwli/B8Dj9rxby
-	EluOLfJGW9oHj1eA1pJaSmUqr391y+Lcsht1vQPot6N2pS1W4y7a8yeOGf0G4PDbYag7w6knJLW
-	lRXk5iUTPfUdPneHiFRZ3F6nZCGBVMIPSO39aBghH2ej4h0KGs+w4G1YAowsUlzR/Djwb8+5yLu
-	0+yKU1L3rdwIOzUp31I85kl8r8KLovIpxpzXWzIxYoWQkPOUnYTiRu0lVtVDQQk+Yj+vVoXu3k3
-	XmPGd6OY8cUwaKvQ==
-X-Google-Smtp-Source: AGHT+IGlV9RahnJjEAp0aThL3WEmwaxZ6MtiPW+SqHleirKp3I6nYlDscxLoLqIQlJkAEr5XQOfmEA==
-X-Received: by 2002:a17:906:4888:b0:b72:6a39:49e6 with SMTP id a640c23a62f3a-b726a394f5cmr151258566b.18.1762338973509;
-        Wed, 05 Nov 2025 02:36:13 -0800 (PST)
+        bh=TiWeWU99+P2OBlwtwLukYVoiHCgrNeTiK3bQO2+aHuQ=;
+        b=KB7NC7glxhGxG2Z/bY0eLCvXx5oIY9un50+V0xApPUFPjrEl+g+KLiy3ER6fS+38/c
+         ftCZlngb80nVISshD4hwXtgUssh5keqlnj8+S/3MCRsLiSa/5CYlW3N1XUvNDeBfqQwO
+         Q6dZoyE5xD9XGKIJwiG1gQKfcUWOL56lsHvfcrd6wl0tw4jHzmXzLTGCFDqeYQhbozr/
+         nY20N5Ja4Vn3gBWF6iyRXe7ERMYW+S7qwvulO6t1eVVAvj2qYNwMmwatXQ+XhCkRWpsv
+         MWsyNspf+kx9X+bknHLAqwIvKTE/5KlKfOo9bCR3LdYFgYIhX6gXCnzueJ6kaQV0dCIh
+         kKwQ==
+X-Gm-Message-State: AOJu0YyeNzPPmo6hd2eRHZ05f5M2+SM81pzWOw+JbPwxV3k/mh/WqCMa
+	VkSoV4gUYpkCJlkEnY4dAcI2uZvgIB7lJV6EuNpoxilhrqQtuYguZS3L
+X-Gm-Gg: ASbGncurg8tGKUw5d4baeHhcwL5PwEqjI8g95qgb1w0d3RwuiZNTX+MwQobIkC2nQUO
+	Li5eb1wgojQp0/O+oZyK95NHDkYuohSeKmoyOUpBEAgqPskTdJw7LJdC1AC0YWZG3nwvIwbIaoq
+	0WfvpiQAn1WqPRb9FSm3vOl+evMVxTnpsCTSc4PFY/eM0zYZu+9BDvRvPD9xTFRACkQ/fQO1Cs6
+	rthTq46TZBJpalk3guAaTZWXAfFt/LX9oCa7doxaUndz+k8Rl4AIxss57m/7ls/90bkupaDThbU
+	I49bXfvbzmFI3RqhKEaidio2yIUfObQiDU2BwejrnIXj8ErFUpOCAlmQf4cPLZc15ygL1nGCbFX
+	LPW8yQhSvas2wffZQ/4D2zgCL4R6Mc6+EHLWaxCTs2Ot7UpY2gFARtfT/Ir9phwG3UXR1zz2zoW
+	iAjxI=
+X-Google-Smtp-Source: AGHT+IEM16NafFW2nC97ok9XEm+53qMVZBe4OIJxe3eLowZZOL6gKamZMEdrt0F28He7dGEhTIoj1g==
+X-Received: by 2002:a17:907:6e89:b0:b70:b1e1:8294 with SMTP id a640c23a62f3a-b7265156582mr234675166b.4.1762338974287;
+        Wed, 05 Nov 2025 02:36:14 -0800 (PST)
 Received: from builder.. ([2001:9e8:f106:5b16:be24:11ff:fe30:5d85])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b7270b56f18sm83426066b.33.2025.11.05.02.36.12
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b7270b56f18sm83426066b.33.2025.11.05.02.36.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Nov 2025 02:36:13 -0800 (PST)
+        Wed, 05 Nov 2025 02:36:14 -0800 (PST)
 From: Jonas Jelonek <jelonek.jonas@gmail.com>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -85,11 +85,10 @@ Cc: linux-gpio@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Thomas Richard <thomas.richard@bootlin.com>,
-	Jonas Jelonek <jelonek.jonas@gmail.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v4 1/2] dt-bindings: gpio: add gpio-line-mux controller
-Date: Wed,  5 Nov 2025 10:36:05 +0000
-Message-ID: <20251105103607.393353-2-jelonek.jonas@gmail.com>
+	Jonas Jelonek <jelonek.jonas@gmail.com>
+Subject: [PATCH v4 2/2] gpio: add gpio-line-mux driver
+Date: Wed,  5 Nov 2025 10:36:06 +0000
+Message-ID: <20251105103607.393353-3-jelonek.jonas@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20251105103607.393353-1-jelonek.jonas@gmail.com>
 References: <20251105103607.393353-1-jelonek.jonas@gmail.com>
@@ -101,135 +100,225 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add dt-schema for a gpio-line-mux controller which exposes virtual
-GPIOs for a shared GPIO controlled by a multiplexer, e.g. a gpio-mux.
+Add a new driver which provides a 1-to-many mapping for a single real
+GPIO using a multiplexer. Each virtual GPIO corresponds to a multiplexer
+state which, if set for the multiplexer, connects the real GPIO to the
+corresponding virtual GPIO.
 
-The gpio-line-mux controller is a gpio-controller, thus has mostly the
-same semantics. However, it requires a mux-control to be specified upon
-which it will operate.
+This can help in various usecases. One practical case is the special
+hardware design of the Realtek-based XS1930-10 switch from Zyxel. It
+features two SFP+ ports/cages whose signals are wired directly to the
+switch SoC. Although Realtek SoCs are short on GPIOs, there are usually
+enough the fit the SFP signals without any hacks.
+
+However, Zyxel did some weird design and connected RX_LOS, MOD_ABS and
+TX_FAULT of one SFP cage onto a single GPIO line controlled by a
+multiplexer (the same for the other SFP cage). The single multiplexer
+controls the lines for both SFP and depending on the state, the
+designated 'signal GPIO lines' are connected to one of the three SFP
+signals.
+
+Because the SFP core/driver doesn't support multiplexer but needs single
+GPIOs for each of the signals, this driver fills the gap between both.
+It registers a gpio_chip, provides multiple virtual GPIOs and sets the
+backing multiplexer accordingly.
+
+Due to several practical issues, this is input-only and doesn't support
+IRQs.
 
 Signed-off-by: Jonas Jelonek <jelonek.jonas@gmail.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- .../bindings/gpio/gpio-line-mux.yaml          | 109 ++++++++++++++++++
- 1 file changed, 109 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-line-mux.yaml
+ MAINTAINERS                  |   6 ++
+ drivers/gpio/Kconfig         |   9 +++
+ drivers/gpio/Makefile        |   1 +
+ drivers/gpio/gpio-line-mux.c | 129 +++++++++++++++++++++++++++++++++++
+ 4 files changed, 145 insertions(+)
+ create mode 100644 drivers/gpio/gpio-line-mux.c
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-line-mux.yaml b/Documentation/devicetree/bindings/gpio/gpio-line-mux.yaml
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3da2c26a796b..66f8706d9b4b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10653,6 +10653,12 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.yaml
+ F:	drivers/media/rc/gpio-ir-tx.c
+ 
++GPIO LINE MUX
++M:	Jonas Jelonek <jelonek.jonas@gmail.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/gpio/gpio-line-mux.yaml
++F:	drivers/gpio/gpio-line-mux.c
++
+ GPIO MOCKUP DRIVER
+ M:	Bamvor Jian Zhang <bamv2005@gmail.com>
+ L:	linux-gpio@vger.kernel.org
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index ce237398fa00..5f8082ae99cc 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1986,6 +1986,15 @@ config GPIO_LATCH
+ 	  Say yes here to enable a driver for GPIO multiplexers based on latches
+ 	  connected to other GPIOs.
+ 
++config GPIO_LINE_MUX
++	tristate "GPIO line mux driver"
++	depends on OF_GPIO
++	select MULTIPLEXER
++	help
++	  Say Y here to support the GPIO line mux, which can provide virtual
++	  GPIOs backed by a shared real GPIO and a multiplexer in a 1-to-many
++	  fashion.
++
+ config GPIO_MOCKUP
+ 	tristate "GPIO Testing Driver (DEPRECATED)"
+ 	select IRQ_SIM
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index ee260a0809d3..6caee52b0356 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -89,6 +89,7 @@ obj-$(CONFIG_GPIO_IXP4XX)		+= gpio-ixp4xx.o
+ obj-$(CONFIG_GPIO_JANZ_TTL)		+= gpio-janz-ttl.o
+ obj-$(CONFIG_GPIO_KEMPLD)		+= gpio-kempld.o
+ obj-$(CONFIG_GPIO_LATCH)		+= gpio-latch.o
++obj-$(CONFIG_GPIO_LINE_MUX)		+= gpio-line-mux.o
+ obj-$(CONFIG_GPIO_LJCA) 		+= gpio-ljca.o
+ obj-$(CONFIG_GPIO_LOGICVC)		+= gpio-logicvc.o
+ obj-$(CONFIG_GPIO_LOONGSON1)		+= gpio-loongson1.o
+diff --git a/drivers/gpio/gpio-line-mux.c b/drivers/gpio/gpio-line-mux.c
 new file mode 100644
-index 000000000000..fb91500fa10f
+index 000000000000..50e351d212b8
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-line-mux.yaml
-@@ -0,0 +1,109 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/gpio-line-mux.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/gpio/gpio-line-mux.c
+@@ -0,0 +1,129 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * GPIO line mux which acts as virtual gpiochip and provides a 1-to-many
++ * mapping between virtual GPIOs and a real GPIO + multiplexer.
++ *
++ * Copyright (c) 2025 Jonas Jelonek <jelonek.jonas@gmail.com>
++ */
 +
-+title: GPIO line mux
++#include <linux/gpio/consumer.h>
++#include <linux/gpio/driver.h>
++#include <linux/mod_devicetable.h>
++#include <linux/mutex.h>
++#include <linux/mux/consumer.h>
++#include <linux/platform_device.h>
 +
-+maintainers:
-+  - Jonas Jelonek <jelonek.jonas@gmail.com>
++#define MUX_SELECT_DELAY_US	100
 +
-+description: |
-+  A GPIO controller to provide virtual GPIOs for a 1-to-many input-only mapping
-+  backed by a single shared GPIO and a multiplexer. A simple illustrated
-+  example is
++struct gpio_lmux {
++	struct gpio_chip gc;
++	struct mux_control *mux;
 +
-+            +----- A
-+    IN     /
-+    <-----o------- B
-+        / |\
-+        | | +----- C
-+        | |  \
-+        | |   +--- D
-+        | |
-+       M1 M0
++	struct gpio_desc *shared_gpio;
++	/* dynamically sized, must be last */
++	unsigned int gpio_mux_states[];
++};
 +
-+    MUX CONTROL
++static int gpio_lmux_gpio_get(struct gpio_chip *gc, unsigned int offset)
++{
++	struct gpio_lmux *glm = gpiochip_get_data(gc);
++	int ret;
 +
-+     M1 M0   IN
-+      0  0   A
-+      0  1   B
-+      1  0   C
-+      1  1   D
++	if (offset > gc->ngpio)
++		return -EINVAL;
 +
-+  This can be used in case a real GPIO is connected to multiple inputs and
-+  controlled by a multiplexer, and another subsystem/driver does not work
-+  directly with the multiplexer subsystem.
++	ret = mux_control_select_delay(glm->mux, glm->gpio_mux_states[offset],
++				       MUX_SELECT_DELAY_US);
++	if (ret < 0)
++		return ret;
 +
-+properties:
-+  compatible:
-+    const: gpio-line-mux
++	ret = gpiod_get_raw_value_cansleep(glm->shared_gpio);
++	mux_control_deselect(glm->mux);
++	return ret;
++}
 +
-+  gpio-controller: true
++static int gpio_lmux_gpio_set(struct gpio_chip *gc, unsigned int offset,
++			      int value)
++{
++	return -EOPNOTSUPP;
++}
 +
-+  "#gpio-cells":
-+    const: 2
++static int gpio_lmux_gpio_get_direction(struct gpio_chip *gc,
++					unsigned int offset)
++{
++	return GPIO_LINE_DIRECTION_IN;
++}
 +
-+  gpio-line-mux-states:
-+    description: Mux states corresponding to the virtual GPIOs.
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
++static int gpio_lmux_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct gpio_lmux *glm;
++	unsigned int ngpio;
++	size_t size;
++	int ret;
 +
-+  gpio-line-names: true
++	ngpio = device_property_count_u32(dev, "gpio-line-mux-states");
++	if (!ngpio)
++		return -EINVAL;
 +
-+  mux-controls:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    maxItems: 1
-+    description:
-+      Phandle to the multiplexer to control access to the GPIOs.
++	size = struct_size(glm, gpio_mux_states, ngpio);
++	glm = devm_kzalloc(dev, size, GFP_KERNEL);
++	if (!glm)
++		return -ENOMEM;
 +
-+  ngpios: false
++	glm->gc.base = -1;
++	glm->gc.can_sleep = true;
++	glm->gc.fwnode = dev_fwnode(dev);
++	glm->gc.label = dev_name(dev);
++	glm->gc.ngpio = ngpio;
++	glm->gc.owner = THIS_MODULE;
++	glm->gc.parent = dev;
 +
-+  shared-gpios:
-+    maxItems: 1
-+    description:
-+      GPIO which is the '1' in 1-to-many and is shared by the virtual GPIOs
-+      and controlled via the mux.
++	glm->gc.get = gpio_lmux_gpio_get;
++	glm->gc.set = gpio_lmux_gpio_set;
++	glm->gc.get_direction = gpio_lmux_gpio_get_direction;
 +
-+required:
-+  - compatible
-+  - gpio-controller
-+  - gpio-line-mux-states
-+  - mux-controls
-+  - shared-gpios
++	glm->mux = devm_mux_control_get(dev, NULL);
++	if (IS_ERR(glm->mux))
++		return dev_err_probe(dev, PTR_ERR(glm->mux),
++				     "could not get mux controller\n");
 +
-+additionalProperties: false
++	glm->shared_gpio = devm_gpiod_get(dev, "shared", GPIOD_ASIS);
++	if (IS_ERR(glm->shared_gpio))
++		return dev_err_probe(dev, PTR_ERR(glm->shared_gpio),
++				     "could not get shared-gpio\n");
 +
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/mux/mux.h>
++	ret = gpiod_direction_input(glm->shared_gpio);
++	if (ret)
++		return dev_err_probe(dev, ret, "could not set shared gpio as input\n");
 +
-+    sfp_gpio_mux: mux-controller-1 {
-+        compatible = "gpio-mux";
-+        mux-gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>,
-+                    <&gpio0 1 GPIO_ACTIVE_HIGH>;
-+        #mux-control-cells = <0>;
-+        idle-state = <MUX_IDLE_AS_IS>;
-+    };
++	ret = device_property_read_u32_array(dev, "gpio-line-mux-states",
++					     &glm->gpio_mux_states[0], ngpio);
++	if (ret)
++		return dev_err_probe(dev, ret, "could not get mux states\n");
 +
-+    sfp1_gpio: sfp-gpio-1 {
-+        compatible = "gpio-line-mux";
-+        gpio-controller;
-+        #gpio-cells = <2>;
++	ret = devm_gpiochip_add_data(dev, &glm->gc, glm);
++	if (ret)
++		return dev_err_probe(dev, ret, "failed to add gpiochip\n");
 +
-+        mux-controls = <&sfp_gpio_mux>;
-+        shared-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
++	return 0;
++}
 +
-+        gpio-line-names = "SFP1_LOS", "SFP1_MOD_ABS", "SFP1_TX_FAULT";
-+        gpio-line-mux-states = <0>, <1>, <3>;
-+    };
++static const struct of_device_id gpio_lmux_of_match[] = {
++	{ .compatible = "gpio-line-mux" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, gpio_lmux_of_match);
 +
-+    sfp1: sfp-p1 {
-+        compatible = "sff,sfp";
++static struct platform_driver gpio_lmux_driver = {
++	.driver = {
++		.name = "gpio-line-mux",
++		.of_match_table = gpio_lmux_of_match,
++	},
++	.probe = gpio_lmux_probe,
++};
++module_platform_driver(gpio_lmux_driver);
 +
-+        i2c-bus = <&sfp1_i2c>;
-+        los-gpios = <&sfp1_gpio 0 GPIO_ACTIVE_HIGH>;
-+        mod-def0-gpios = <&sfp1_gpio 1 GPIO_ACTIVE_LOW>;
-+        tx-fault-gpios = <&sfp1_gpio 2 GPIO_ACTIVE_HIGH>;
-+    };
++MODULE_AUTHOR("Jonas Jelonek <jelonek.jonas@gmail.com>");
++MODULE_DESCRIPTION("GPIO line mux driver");
++MODULE_LICENSE("GPL");
 -- 
 2.48.1
 
