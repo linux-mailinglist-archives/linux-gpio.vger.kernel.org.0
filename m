@@ -1,49 +1,51 @@
-Return-Path: <linux-gpio+bounces-28146-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28143-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CB05C3799F
-	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 20:59:34 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B0D0C378BE
+	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 20:51:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D80331885E58
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 19:59:56 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id ABF2534F658
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 19:51:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 560FE3446DB;
-	Wed,  5 Nov 2025 19:59:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1DE63446A0;
+	Wed,  5 Nov 2025 19:50:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="xTYs1Z8j"
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="PvthaO8x"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mxout4.routing.net (mxout4.routing.net [134.0.28.9])
+Received: from mxout1.routing.net (mxout1.routing.net [134.0.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD70320CD1;
-	Wed,  5 Nov 2025 19:59:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E946D343D9C;
+	Wed,  5 Nov 2025 19:50:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762372764; cv=none; b=B4FSbjv3Oe48SthJHKUKZhTlYRXgjAdCzbSom9Zkjj6dq+Fve0oYD27i+h1VAzAZE3IyYgDezNFgl7BpiiXiIyYfi6KTbgUoxPE8VLv/lzUMrsD4qChHc4f3cqaGnxsoMAAEVHj51/iN00plHMxtgB9UdHdTsWRkUQjkAOkemYQ=
+	t=1762372255; cv=none; b=Us5MgQVn8by/4upNwnd9u24V4Y4X1pbYTMrpB9KMOpR2rGHUP1LEPjkhMmd4RWhjtjjjvXqTxSLfg38cjD4rkJIrMQ0yl+PYsiFA5QwbVskzx/ols+y6bIS5MxVtrJXRfV8IvyMQSwC6MUXs8E3aZkqBK2u/zI8k9aCY2Jz+JXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762372764; c=relaxed/simple;
-	bh=hhTWL807dgjqF+hcdbkl/5iAPXjQhCBQIpD0yAJ1Jr4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dk5M7GMcg7UAJ9+IdMc+gfbOfMQkDVrfNOBkViP20upk1vSSaRCVi8bKT+GzU/gASDOdsaxG2fWcQJpvUzxeKpD/DatHOGzV0LZCWNQ7Tgtd0XMC8Z8PY/F0Gtlx/rrmjeaiEw6KR+efpXzXIGO269vAvMwXVX/qnf+Z+QahFsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=xTYs1Z8j; arc=none smtp.client-ip=134.0.28.9
+	s=arc-20240116; t=1762372255; c=relaxed/simple;
+	bh=BApIC7WC/UGDPeLW7zSedilTChUVgLVE+Zp2wFmqjV0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uUeBISU0+ZNd2SX5KBHBeqQtHF5HEXBmGcweJ9LgDN4RbhFnxI/ftEk4KMJyz8r1z9pOe4IUF8tBcKzTwiORFIHKUEhLAAqDg7Nm8ICoNO0L0agfFCgFkT4nXDAHiloMR90rqw1DIHZYTCPttu9XsXrZwo6N3b7e9O98wPtOogQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=PvthaO8x; arc=none smtp.client-ip=134.0.28.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Received: from mxbulk.masterlogin.de (unknown [192.168.10.85])
-	by mxout4.routing.net (Postfix) with ESMTP id C59E1100877;
-	Wed,  5 Nov 2025 19:50:45 +0000 (UTC)
+	by mxout1.routing.net (Postfix) with ESMTP id 0F7CF3FE64;
+	Wed,  5 Nov 2025 19:50:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
 	s=routing; t=1762372246;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=g2Ea0DWfLKHagtb+f2EQs/oSvtV0KXKnH9D3lP+qtqk=;
-	b=xTYs1Z8jGMhlYKjYZQ2WnHMLz+Tmqzj0EF8hZELlrO8PIzmRT04cW9lps9/jyWKMEPrJDY
-	phLmJmthaXRFro8YH9nDbUxRqpxcAwDW5zfOVJYzmy9Zo8tL+iY3EeerVw5hO3sBP2/u2k
-	9tazsIXtvHaDyv3S1vaFEyxvbP1+928=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sGHvmclXM9H1P2h0/NKYUnu6Tdto8R0Fejc6gXiCl9U=;
+	b=PvthaO8xcw9IhbK8S4BV8rxbncbqKRxoLxJdRfXb9z3+wIUopkR+ur8DFq+DsYWbBH6qRz
+	NtvSjzoCdXwmf+EPLsWhjUJdYleg/9xrBlBbJnB+7tr16OvZh1G42I7Rve6M/BqtAjjtUm
+	FBxCLbqJSI82mBA94c/lOC0fhWvghjg=
 Received: from frank-u24.. (fttx-pool-194.15.81.38.bambit.de [194.15.81.38])
-	by mxbulk.masterlogin.de (Postfix) with ESMTPSA id 8E2581226DD;
+	by mxbulk.masterlogin.de (Postfix) with ESMTPSA id C9147122700;
 	Wed,  5 Nov 2025 19:50:45 +0000 (UTC)
 From: Frank Wunderlich <linux@fw-web.de>
 To: Rob Herring <robh@kernel.org>,
@@ -59,11 +61,15 @@ Cc: Frank Wunderlich <frank-w@public-files.de>,
 	linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH v2 0/5] Add Bananapi R4 Pro support
-Date: Wed,  5 Nov 2025 20:50:00 +0100
-Message-ID: <20251105195007.199229-1-linux@fw-web.de>
+	linux-mediatek@lists.infradead.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	AngeloGioacchino Del Regno <angelogiocchino.delregno@collabora.com>
+Subject: [PATCH v2 1/5] dt-bindings: pinctrl: mt7988: allow gpio-hogs
+Date: Wed,  5 Nov 2025 20:50:01 +0100
+Message-ID: <20251105195007.199229-2-linux@fw-web.de>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20251105195007.199229-1-linux@fw-web.de>
+References: <20251105195007.199229-1-linux@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -74,80 +80,31 @@ Content-Transfer-Encoding: 8bit
 
 From: Frank Wunderlich <frank-w@public-files.de>
 
-BananaPi R4 Pro is a MT7988A based board which exists in 2 different
-hardware versions:
+Allow gpio-hogs in pinctrl node for switching pcie on Bananapi R4 Pro.
 
-- 4E: 4 GB RAM and using internal 2.5G Phy for WAN-Combo
-- 8X: 8 GB RAM and 2x Aeonsemi AS21010P 10G phys
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: AngeloGioacchino Del Regno <angelogiocchino.delregno@collabora.com>
+---
+ .../devicetree/bindings/pinctrl/mediatek,mt7988-pinctrl.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-common parts:
-
-- MediaTek MT7988A Quad-core Arm Corex-A73,1.8GHz processor
-- 8GB eMMC flash
-- 256MB SPI-NAND Flash
-- Micro SD card slot
-- 1x 10G SFP+ WAN
-- 1x 10G SFP+ LAN
-- 4x 2.5G RJ45 LAN (MxL86252C)
-- 1x 1G RJ45 LAN (MT7988 internal switch)
-- 2x miniPCIe slots with PCIe3.0 2lane interface for Wi-Fi NIC
-- 2x M.2 M-KEY slots with PCIe3.0 1lane interface for NVME SSD
-- 3x M.2 B-KEY slots with USB3.2 for 5G Module (PCIe shared with key-m)
-- 1x USB3.2 slot
-- 1x USB2.0 slot
-- 1x USB TypeC Debug Console
-- 2x13 PIN Header for expanding application
-
-official product information:
-https://docs.banana-pi.org/en/BPI-R4_Pro/BananaPi_BPI-R4_Pro
-
-The PCIe is per default in key-m state and can be changed to key-b with
-the pcie-overlays.
-
-changes:
-v2:
-- dropped "dt-bindings: arm: mediatek: add BPI-R4 Pro board" which was
-  applied from v1
-- added new patch "disable 2.5G phy and enable at board layer"
-- squashed "mt7988a: Add label for ssusb0" to r4pro dts commit
-- some updates after angelos review to the r4pro dts commit
-  - fixed buck4 and ldo displayed voltage (cannot be controlled by software)
-    to match schematic
-  - reorder fan after eth node (alphanumeric)
-  - reorder spi-tx after spi-rx (alphanumeric)
-  - follow reg first, then others also for spi-nand partitions
-  - drop 2pg5 phy disabling node (due to new patch disabling by default)
-  - change order of pinctrl (first number than names)
-  - fix commit prefix (mediatek was missing)
-
-Frank Wunderlich (5):
-  dt-bindings: pinctrl: mt7988: allow gpio-hogs
-  arm64: dts: mediatek: mt7988: disable 2.5G phy and enable at board
-    layer
-  arm64: dts: mediatek: mt7988: Add devicetree for BananaPi R4 Pro
-  arm64: dts: mediatek: mt7988a-bpi-r4-pro: add PCIe overlays
-  arm64: dts: mediatek: mt7988a-bpi-r4pro: Add mmc overlays
-
- .../pinctrl/mediatek,mt7988-pinctrl.yaml      |   5 +
- arch/arm64/boot/dts/mediatek/Makefile         |   8 +
- .../mediatek/mt7988a-bananapi-bpi-r4-2g5.dts  |   1 +
- .../mt7988a-bananapi-bpi-r4-pro-4e.dts        |  16 +
- .../mt7988a-bananapi-bpi-r4-pro-8x.dts        |  16 +
- .../mt7988a-bananapi-bpi-r4-pro-cn15.dtso     |  20 +
- .../mt7988a-bananapi-bpi-r4-pro-cn18.dtso     |  20 +
- .../mt7988a-bananapi-bpi-r4-pro-emmc.dtso     |  33 ++
- .../mt7988a-bananapi-bpi-r4-pro-sd.dtso       |  31 +
- .../mediatek/mt7988a-bananapi-bpi-r4-pro.dtsi | 534 ++++++++++++++++++
- arch/arm64/boot/dts/mediatek/mt7988a.dtsi     |   3 +-
- 11 files changed, 686 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-pro-4e.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-pro-8x.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-pro-cn15.dtso
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-pro-cn18.dtso
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-pro-emmc.dtso
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-pro-sd.dtso
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-pro.dtsi
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7988-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7988-pinctrl.yaml
+index 26dfe7e7735a..1f31b520cb43 100644
+--- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7988-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7988-pinctrl.yaml
+@@ -61,6 +61,11 @@ required:
+   - "#gpio-cells"
+ 
+ patternProperties:
++  "-hog(-[0-9]+)?$":
++    type: object
++    required:
++      - gpio-hog
++
+   '-pins$':
+     type: object
+     additionalProperties: false
 -- 
 2.43.0
 
