@@ -1,120 +1,138 @@
-Return-Path: <linux-gpio+bounces-28086-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28087-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8AF59C349A0
-	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 09:54:45 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A79EC34ABE
+	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 10:05:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DC8E118C8FB2
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 08:52:57 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CD0064FC36A
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 09:00:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8ACA2E093E;
-	Wed,  5 Nov 2025 08:51:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D36AF2F068F;
+	Wed,  5 Nov 2025 09:00:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="iaJuOu+L"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/KPLMib"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E982E284A
-	for <linux-gpio@vger.kernel.org>; Wed,  5 Nov 2025 08:51:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F1F2D948F;
+	Wed,  5 Nov 2025 09:00:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762332682; cv=none; b=cLyc9eK9gY0Hk0tdM27k4PrZKpVQ3GcvHGmxvyb/DvhZSrOmp0jj+lUyXYM9iWZpmcMaLlV7jbCHQW9nI48L9q6ehbnsuy56hxN+CHbwRb5bVaFHgQ4L94YNovKbYVYcNvPZjOwxFKvgI6IG7Si4yy7DUX7dvEI66KKVH4G8y+Y=
+	t=1762333214; cv=none; b=VUKYo2ZXWM52f0468T7qTXYE9CPfDHbAV7ub72dd2t8c6bBeDEPWmirj03D+SNMKN3csl+eolWAKGarGoLgdjk/xS5WL1xF6+CMpvt0j6cT2nx+YAa2nxFti4/ftdIqqKkJzkYvcTQMfJCiReYkgQBhUWUUC+82UJtNJZqzOzqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762332682; c=relaxed/simple;
-	bh=MC0E0LFV/xPEYcoJSyRt7YbqwEmoTDhxfkNTbgU/xNw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uTtdNK2QkgrAhn+yF5IUPHQuwkWkpI7r/L5i/B8AzSQ8aPCnvaaayQcbFWeTR67+modCjVgsB1KtehPA86b8wHPNvIagUo5vxBB9WSKiXtcBM86vkDUxq4HA8Lk8/WVP+Ql+pq8H4A1pcC3ovlYRhgyHOOSSNFjKfaax7MK4010=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=iaJuOu+L; arc=none smtp.client-ip=185.246.85.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id DA2D64E41522;
-	Wed,  5 Nov 2025 08:51:12 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id A76EC60693;
-	Wed,  5 Nov 2025 08:51:12 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 6D3F210B51B68;
-	Wed,  5 Nov 2025 09:51:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1762332671; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:content-language:in-reply-to:references;
-	bh=SGMIavh+U2EDQDSS/pNGC+7pHshWF/DndMrY4tOtrpA=;
-	b=iaJuOu+LZNyNp0nQwOmzehXT+PA5/6t0gcb8lUhFw/SUvhokUgLy5MdfKhqNNkGFW0Kw0K
-	OzWIt0wHVi0OB9xXE0uZj5gWwQQV59BaKqBEj6ikBx9hl+B0uCyCWI46NTj6YX25bqyj53
-	W7NF63xJWL6UW/VdYq1NpBwM60bTYchoQQs279XR+rEGIcaByQWWy7jkvYqmHcfcgBtEDr
-	2N8sQukctUzJhwkk6aLLuaNmKf8PnOKsl74FVdHdMVEWi+10e0Ev77CnQfkXZk5JwUh1yd
-	vnOwsa1KAiFXoHR/5laU9iqKPl2cJli+8AB/qo2F07QxG4pNxdNh6rrkZWa9aA==
-Message-ID: <087643b4-7a29-4424-a3b0-b60bbc7c3140@bootlin.com>
-Date: Wed, 5 Nov 2025 09:51:08 +0100
+	s=arc-20240116; t=1762333214; c=relaxed/simple;
+	bh=yKua4EFf/iQ9wqQ49OIZDbWZGZXzrKwgI56kqg8U9bI=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=K6SA7ZJH5J7h8nm6rYCRxDzELqlc57STgrLLN9Oc1H5DmzaH4/qiNAuGtln5GQSyR1NLXCnevvAJtlvHrpVZkaUG02Q9PJ3/bVnVBHf3MqXsE+Hh6JrwkCpG7P3DDvUeRFQB+p3S9skMVxdRfgWRKsRWL1bUuGwCX2nlLQw29Vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/KPLMib; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D79F8C4CEFB;
+	Wed,  5 Nov 2025 09:00:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762333214;
+	bh=yKua4EFf/iQ9wqQ49OIZDbWZGZXzrKwgI56kqg8U9bI=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=A/KPLMibnINLMRVsLQd1DDnNoe1f70o5j/npukAxp624gpaLMEFr1GG5t5Qr6yMG3
+	 4lPC2a/HqEEgJZl5V7ejjH6R1BA7k5VGLp7OQ3vV47Rcr3QX87SdMomgh51/beWmla
+	 KPgFroOOHq8IDKVSwIaWt0YYmgLoFNaO5hsYvp3eUjFDoGBWGbb45v/729t6Kg0xF3
+	 vK/fbHBOfS/NdiBlqUN5uFz7zBwiN+0+gbVc2l22YXjn63HvMcRWjdNQPV+1aiv6qR
+	 Jv1zMzDA75P4njxJqP1ESuKho+8bvsIgWb3CHRTOouEFgIP3VzO2jGSD3O9LDIK9W2
+	 hm4fSJ+7Y7/sA==
+Date: Wed, 05 Nov 2025 03:00:12 -0600
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] gpio: add gpio-line-mux driver
-To: Jonas Jelonek <jelonek.jonas@gmail.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Peter Rosin <peda@axentia.se>,
- Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20251104210021.247476-1-jelonek.jonas@gmail.com>
- <20251104210021.247476-3-jelonek.jonas@gmail.com>
-Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <20251104210021.247476-3-jelonek.jonas@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Last-TLS-Session-Version: TLSv1.3
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+ Lee Jones <lee@kernel.org>, devicetree@vger.kernel.org, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Sebastian Reichel <sre@kernel.org>, Andreas Kemnade <andreas@kemnade.info>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Matti Vaittinen <mazziesaccount@gmail.com>, Stephen Boyd <sboyd@kernel.org>, 
+ Pavel Machek <pavel@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-pm@vger.kernel.org, linux-leds@vger.kernel.org, 
+ Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, 
+ Michael Turquette <mturquette@baylibre.com>, linux-rtc@vger.kernel.org, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+To: Matti Vaittinen <matti.vaittinen@linux.dev>
+In-Reply-To: <48fe6e2642db4484640b173cd71be1b245929122.1762327887.git.mazziesaccount@gmail.com>
+References: <cover.1762327887.git.mazziesaccount@gmail.com>
+ <48fe6e2642db4484640b173cd71be1b245929122.1762327887.git.mazziesaccount@gmail.com>
+Message-Id: <176233320981.143013.4115240062372455834.robh@kernel.org>
+Subject: Re: [PATCH v3 01/16] dt-bindings: regulator: ROHM BD72720
 
-Hi Jonas,
 
-On 11/4/25 10:00 PM, Jonas Jelonek wrote:
-> Add a new driver which provides a 1-to-many mapping for a single real
-> GPIO using a multiplexer. Each virtual GPIO corresponds to a multiplexer
-> state which, if set for the multiplexer, connects the real GPIO to the
-> corresponding virtual GPIO.
+On Wed, 05 Nov 2025 09:35:59 +0200, Matti Vaittinen wrote:
+> From: Matti Vaittinen <mazziesaccount@gmail.com>
+> 
+> The ROHM BD72720 is a new PMIC with 10 BUCk and 11 LDO regulators.
+> 
+> The BD72720 is designed to support using the BUCK10 as a supply for
+> the LDOs 1 to 4. When the BUCK10 is used for this, it can be set to a
+> LDON_HEAD mode. In this mode, the BUCK10 voltage can't be controlled by
+> software, but the voltage is adjusted by PMIC to match the LDO1 .. LDO4
+> voltages with a given offset. Offset can be 50mV .. 300mV and is
+> changeable at 50mV steps.
+> 
+> Add 'ldon-head-microvolt' property to denote a board which is designed
+> to utilize the LDON_HEAD mode.
+> 
+> All other properties are already existing.
+> 
+> Add dt-binding doc for ROHM BD72720 regulators to make it usable.
+> 
+> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> 
+> ---
+> Revision history:
+>  v2 => v3:
+>  - drop unnecessary descriptions
+>  - use microvolts for the 'ldon-head' dt-property
+> 
+>  RFCv1 => v2:
+>  - No changes
+> ---
+>  .../regulator/rohm,bd72720-regulator.yaml     | 149 ++++++++++++++++++
+>  1 file changed, 149 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd72720-regulator.yaml
+> 
 
-[...]
+My bot found errors running 'make dt_binding_check' on your patch:
 
-> +
-> +struct gpio_lmux {
-> +	struct gpio_chip gc;
-> +	struct mux_control *mux;
-> +	struct mutex lock;
-> +
-> +	struct gpio_desc *shared_gpio;
-> +	/* dynamically sized, must be last */
-> +	unsigned int gpio_mux_states[];
-> +};
-> +
-> +DEFINE_GUARD(gpio_lmux, struct gpio_lmux *, mutex_lock(&_T->lock), mutex_unlock(&_T->lock))
+yamllint warnings/errors:
 
-I think you don't need this. A mutex guard is already defined in the
-mutex header file [1].
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/regulator/rohm,bd72720-regulator.yaml: patternProperties:^buck[1-10]$:properties:rohm,ldon-head-microvolt: '$ref' should not be valid under {'const': '$ref'}
+	hint: Standard unit suffix properties don't need a type $ref
+	from schema $id: http://devicetree.org/meta-schemas/core.yaml
 
-So you just have to call:
+doc reference errors (make refcheckdocs):
+Warning: Documentation/devicetree/bindings/regulator/rohm,bd72720-regulator.yaml references a file that doesn't exist: Documentation/devicetree/bindings/mfd/rohm,bd72720-pmic.yaml
+Documentation/devicetree/bindings/regulator/rohm,bd72720-regulator.yaml: Documentation/devicetree/bindings/mfd/rohm,bd72720-pmic.yaml
 
-	guard(mutex)(&glm->lock);
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/48fe6e2642db4484640b173cd71be1b245929122.1762327887.git.mazziesaccount@gmail.com
 
-[1]
-https://elixir.bootlin.com/linux/v6.17.7/source/include/linux/mutex.h#L228
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-> +
-> +static int gpio_lmux_gpio_get(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +	struct gpio_lmux *glm = (struct gpio_lmux *)gpiochip_get_data(gc);
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-useless cast
+pip3 install dtschema --upgrade
 
-Best Regards,
-Thomas
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
 
