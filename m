@@ -1,148 +1,136 @@
-Return-Path: <linux-gpio+bounces-28127-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28128-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BB76C36175
-	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 15:37:35 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id B28D8C36774
+	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 16:49:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id AB17B34EAFB
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 14:37:34 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D3CC2503BEB
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 15:31:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D7B4322C67;
-	Wed,  5 Nov 2025 14:37:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D6BC34D3BD;
+	Wed,  5 Nov 2025 15:28:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nX2gNDxm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iIPDW3Zo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F132FD68F
-	for <linux-gpio@vger.kernel.org>; Wed,  5 Nov 2025 14:37:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B7321CFF6;
+	Wed,  5 Nov 2025 15:27:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762353449; cv=none; b=L/kw2Hc4I2DHwx+pSo+xg19vC5g4cGj2GW6mM1JUHGzEYpTuByJAAkb+HfxmRjujrQvQ5dH6LRD8xddRDpKMQ+WIj8LLEJA/10KjeVz6zm4E8LoOREtzNzUBPm2QouWOiac7UaVlobCyRZj/FueGwMj906hDrlBeJCTc70/iQyE=
+	t=1762356480; cv=none; b=D7P+lSGqPyvHFgCh2CJ3dANgGrGzVGnnIuuOlMKDi7v7OSyS9fJXC9swE6dOCxp4NmAcO+gIwRy1v9EPmrWoAqCOewZwOgQGXAfBd9QcGGRNVvhL8yUPvqkudO+DRK6Oz1i/ECA1Qw9nHxr7xhQt/qWrY+yXbiHCLUhKYGCd0Sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762353449; c=relaxed/simple;
-	bh=edQwmjnwDAbHXoEMvzYqiycGeKsl8E5DajV13S7XI7M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cm/gg32vVCjOFtij7918GMHvMQRC1u3RH5ckGzvEu6OROO+KqEAUoPo7nn0udtSxc6H+NE/dDh1WgwRexg1qOE3IpE7rmbSKD9iz9jwOJ57RvQQfegxjStQPyuvOBiyuO0D0oTYYQz6OIol+DAdCfRVo312TFWRXIVa9vmQTLRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nX2gNDxm; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-47756a07b34so9601965e9.2
-        for <linux-gpio@vger.kernel.org>; Wed, 05 Nov 2025 06:37:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762353446; x=1762958246; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hKd/GpoH2ztdg5nSuoSnCvB2pN5mPOmTjSyftlWEb74=;
-        b=nX2gNDxmYkXQAcjVQMPV8s6h3DVmWUswNVm++dZRNAhvcRGuKB41yiMaXHGVjxzbI+
-         DEDmsM9Y6pBITa1s91TXwkUHVI6x7gHILAiAdMjDO9sS3+9ptEJf0bk6RKBH3csPAdIq
-         fxmS62V+w8mSk9nDEvN1DV1g2qkDCCNA9FZ1ozNavDbFAjXW7o0rgtaCH+hCk2bT7Dgs
-         3+aIvUWZ45JZ86P1lmRs0bWetFCsRuGo5bkDJl1En7wwpEx4yIzf8Q8nkGKXffBoGYCY
-         Qi5k4hXibpaZSOUDvEGgfl22e+pQaavMNNKIQnCrA8g9SD/W0+9QZi0G1xDXBwp5d/sb
-         TyYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762353446; x=1762958246;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hKd/GpoH2ztdg5nSuoSnCvB2pN5mPOmTjSyftlWEb74=;
-        b=e4EQnioF200LFi7nDuN8Y0w6/YTCj8GilSVsCXBmlnjhPLwlUbh/XvmAPPwVkDaBsC
-         L6jZYRVTxoYdEtQJg/g3NI0k/ZVzgKF8gEQZLfqwW9jLIEMjeeb0mIsHSnz2D8Lai5LW
-         xbQ4/1jsnC9dWMwc4mRdVCnOpNmfzqvY4ML7QE/gADYZyRudYcOOtYG2ZKxKGNiCnN3A
-         Jphtyoo4QqCpWmuNQLxeVbIMyfJ8hcApV+AUrRPjMxnuckTzZa1nahT1Qba6Zp+j6KzX
-         X4XPi1N41B1X7I4lDcvoj4EgcoFY392Izn5MBBK5Qot+/be0fwL/f2SlfBXRsnx4Kp98
-         y+1g==
-X-Forwarded-Encrypted: i=1; AJvYcCUC523/JCq1UoENgWlBXvRXxgpwmX5e16pCzV7cUBEAd12eg8elsyg7e4GRjhcwDNy02Htq/RvMbWf+@vger.kernel.org
-X-Gm-Message-State: AOJu0YxG7rAQg5QP8DPkGGWWUeitkxek9sdDo5teYy76FKVBBEihcwHE
-	PjFPpiYKMfIlPMb7fnFeEIpITl3+OL2QRlxrjborRN0KLHfDsxKZb5rgkmODVA==
-X-Gm-Gg: ASbGnctLorPnBq9f6aq3anHcRMVAzXI+Q9d70rNh9R386aLUPzDBcmC6gYQv4LeR6ix
-	E54Nw4PLefDR4dfwqq0tbv8gwExgg7qo2BtPmy+NofWB7+Yd6ypg+WjpSkq3zuhrs31qJY2ZCt8
-	V0nYPleKuAQ+Esrs+LPnQLjebj37nx8GOQvqp5MYhrhHzrkrGTcKzG29h4kOByG0Pdnat98oOCC
-	S+TLUZSMM7cjOMARhy5CrgVtz6lTo5b+S6AsjajOy/5P+R+RmZXGMTxTpZG91JMytYwpwYFYe2R
-	nxeaZNlbPyGPfD/7KAtx/K6CU9sEN6b1IXeDbDojmASVaJE1yv+Tu/dzzgfp5m4hh365dR2EdC/
-	pQQJqtjpCXOEBA9DYRRI75deAObNPZgwjU1EeDD9WZ9DvV5vAfJoEcmMj19O8v2I605Ye4G9Fn8
-	zYAvsmzFEEWx1q3rCu4SKzs8OdBYMxGmkx7ezYq2U61iyPXfJ9SygneqgnKMwiqBm+K1QOOQWv6
-	SE=
-X-Google-Smtp-Source: AGHT+IERQRPbVp/mia5i+e0J+ZNVV5LC5fqpuJ8bxJhknA+ckaj424HY5uFm671+QXbrmv37Ylw0ng==
-X-Received: by 2002:a05:600c:4509:b0:477:55be:f615 with SMTP id 5b1f17b1804b1-4775cdad679mr25746975e9.5.1762353445550;
-        Wed, 05 Nov 2025 06:37:25 -0800 (PST)
-Received: from ?IPV6:2001:9e8:f106:5b01:5cbf:5078:e623:8643? ([2001:9e8:f106:5b01:5cbf:5078:e623:8643])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4775cdc2cfasm52394155e9.2.2025.11.05.06.37.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Nov 2025 06:37:25 -0800 (PST)
-Message-ID: <f589ef1b-4347-4771-802f-992dd0928bc3@gmail.com>
-Date: Wed, 5 Nov 2025 15:37:24 +0100
+	s=arc-20240116; t=1762356480; c=relaxed/simple;
+	bh=mbTlga28qUCVVj27wEcGJhoz+SMneLpcOnAeAYlxULw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=czkC24WLHyxaPRAfUkV5h65ig/JJEve+Elq3IyRoqFQxmt2Xk+WegHBOBmEgJM9zEOv3I1MXBx2f6KRerfGOYmotRKG3UP9hkyEtbmNDP/nizPmRU4rISLWPI+bhjxLoD1RRBzWfnLpooYk+ymhfjfEVSiq3Xjo4ZMnQ7I1h4LM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iIPDW3Zo; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762356478; x=1793892478;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=mbTlga28qUCVVj27wEcGJhoz+SMneLpcOnAeAYlxULw=;
+  b=iIPDW3Zo/4XgCvil5tTe/KhXx8ja1ySdTm+3vO0h1P1XyhJ6B6HYt5lk
+   RnzHnIU3iZhvCAb8AuTiOlXZAQTCyaBp03nn7wyyTjoXjRPayihCIxfyP
+   zqWCnlTYVuZm8nuujjtnMtB/sMH5oT6lZltey7FIbK/Hs8sgekD8aTgNc
+   xJhAbeZqmkaF6j0VQMU2v2r3Qt5xwPUQ28mU3v/TOknBG24iKoeplrvSi
+   8y1TScBI8Nt3l0JViVkD0q3n5JdBC3tIjztyCZNdqYYWmR/csxuyFH20y
+   5ejYI4AjYrQypTiNJ0Oa9WwstXBjtoHvhT2pWYBieoJSBi87flx5nwXLf
+   g==;
+X-CSE-ConnectionGUID: ntMz2CpFRCmaA4z7kcbwEg==
+X-CSE-MsgGUID: 3rSgGDygQESnMAvABQQ5zA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11603"; a="67089815"
+X-IronPort-AV: E=Sophos;i="6.19,282,1754982000"; 
+   d="scan'208";a="67089815"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 07:27:40 -0800
+X-CSE-ConnectionGUID: 4Le2k0x6Q9eo1/p65WAbnA==
+X-CSE-MsgGUID: KLIgVi9nRPCM8ZRXtz8m/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,282,1754982000"; 
+   d="scan'208";a="192654288"
+Received: from ldmartin-desk2.corp.intel.com (HELO ashevche-desk.local) ([10.124.221.135])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 07:27:39 -0800
+Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1vGfQ6-00000005pDF-2qdF;
+	Wed, 05 Nov 2025 17:27:34 +0200
+Date: Wed, 5 Nov 2025 17:27:33 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 02/10] pinctrl: alderlake: Switch to INTEL_GPP() macro
+Message-ID: <aQts5fqrNaEhHQyp@smile.fi.intel.com>
+References: <20251104145814.1018867-1-andriy.shevchenko@linux.intel.com>
+ <20251104145814.1018867-3-andriy.shevchenko@linux.intel.com>
+ <20251105103122.GL2912318@black.igk.intel.com>
+ <aQs3ls1rKgMOufOn@smile.fi.intel.com>
+ <20251105115041.GM2912318@black.igk.intel.com>
+ <CAHp75VcLNs0EWLED_5Mmr0V3nVoiEdKNpdoqPypy5i5jJCSd1g@mail.gmail.com>
+ <20251105115535.GN2912318@black.igk.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] gpio: add gpio-line-mux driver
-Content-Language: en-US
-To: Peter Rosin <peda@axentia.se>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Thomas Richard <thomas.richard@bootlin.com>
-References: <20251105103607.393353-1-jelonek.jonas@gmail.com>
- <20251105103607.393353-3-jelonek.jonas@gmail.com>
- <CAMRc=MdQLN5s+MpkLUF2Ggc4vYo30zOXrA=8qkGmXvu7N3JjeA@mail.gmail.com>
- <12efb5b2-058e-4a9c-a45d-4b1b0ee350e7@gmail.com>
- <CAMRc=MehBmd+-z5PRQ04UTWVFYzn7U4=32kyvDCf4ZQ4iTqXhw@mail.gmail.com>
- <74603667-c77a-e791-d692-34d0201e5968@axentia.se>
-From: Jonas Jelonek <jelonek.jonas@gmail.com>
-In-Reply-To: <74603667-c77a-e791-d692-34d0201e5968@axentia.se>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251105115535.GN2912318@black.igk.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi,
+On Wed, Nov 05, 2025 at 12:55:35PM +0100, Mika Westerberg wrote:
+> On Wed, Nov 05, 2025 at 01:51:58PM +0200, Andy Shevchenko wrote:
+> > On Wed, Nov 5, 2025 at 1:50 PM Mika Westerberg
+> > <mika.westerberg@linux.intel.com> wrote:
+> > > On Wed, Nov 05, 2025 at 01:40:06PM +0200, Andy Shevchenko wrote:
+> > > > On Wed, Nov 05, 2025 at 11:31:22AM +0100, Mika Westerberg wrote:
+> > > > > On Tue, Nov 04, 2025 at 03:56:36PM +0100, Andy Shevchenko wrote:
+> > > > > > Replace custom macro with the recently defined INTEL_GPP().
 
-On 05.11.25 15:19, Peter Rosin wrote:
-> Hi!
->
-> 2025-11-05 at 14:24, Bartosz Golaszewski wrote:
->> Yes, "muxed-gpio" is good. I can change it myself when applying.
->>
->> Bartosz
-> Isn't that the name in the device tree?
->
-> Is
->
-> 	muxed-gpio-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
+...
 
-This would be quite odd and not what I had in mind when I suggested this.
-But I probably didn't express myself good enough.
+> > > > > > -#define ADL_GPP(r, s, e, g)                              \
+> > > > > > - {                                               \
+> > > > > > -         .reg_num = (r),                         \
+> > > > > > -         .base = (s),                            \
+> > > > > > -         .size = ((e) - (s) + 1),                \
+> > > > > > -         .gpio_base = (g),                       \
+> > > > > > - }
+> > > > >
+> > > > > I wonder if simply doing this:
+> > > > >
+> > > > > #define ADL_GPP(r, s, e, g) INTEL_GPP(r, s, e, g)
+> > > >
+> > > > We can, but it will give a couple of lines in each driver still be left.
+> > > > Do you think it's better?
+> > >
+> > > I think that's better because it is less changed lines but I'm fine either
+> > > way.
+> > 
+> > Okay, I will try it and see how it looks like and then I'll either
+> > send a v2 or ask for a tag for this one. Sounds good?
+> 
+> Yes.
 
-> really satisfactory? Can you really make that change as you apply
-> w/o a re-review of the binding?
->
-> Or, are we talking about
->
-> 	glm->shared_gpio = devm_gpiod_get(dev, "muxed", GPIOD_ASIS);
->
-> and
->
-> 	muxed-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
->
-> ?
+After more thinking I guess I want it as is (here in v1). In cases
+when we define some parameters differently it will make sense to have
+an intermediate definition, but here. Can you give your Ack, please?
 
-I'd be fine with this, but as you mentioned, it needs a re-review of the bindings.
-If it's just about the label being used upon GPIO request, I might switch to
-devm_fwnode_gpiod_get_index to explicitly set a different label and keep
-"shared" in the bindings and device tree property?
+-- 
+With Best Regards,
+Andy Shevchenko
 
->
-> Cheers,
-> Peter
 
-Best,
-Jonas
 
