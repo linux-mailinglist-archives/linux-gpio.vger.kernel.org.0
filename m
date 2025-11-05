@@ -1,162 +1,132 @@
-Return-Path: <linux-gpio+bounces-28129-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28130-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1AEEC367E0
-	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 16:53:55 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB9A6C367C7
+	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 16:53:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 84A1B50122D
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 15:37:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B58421A427FD
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 15:42:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 540AB314B6B;
-	Wed,  5 Nov 2025 15:37:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56E2E330D30;
+	Wed,  5 Nov 2025 15:41:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="SfrmACU/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="evZxuxqh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A6A261586
-	for <linux-gpio@vger.kernel.org>; Wed,  5 Nov 2025 15:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363EF329E71;
+	Wed,  5 Nov 2025 15:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762357044; cv=none; b=iq+pCem/6xsVE5WZGKqn295mm8iTgur5YYWp17HetMkRJjnvtKuYbDu9meHPSlckO59i4ILCUB5BeH5p/4wuYUzhEKlz/RrHGThJXfqHPpU07w31VF1XJLBfry2KXv/nwVf4g12E/vqikIXBr8E7uqPd8RWKwcqtVri8e8gt0qk=
+	t=1762357272; cv=none; b=S0PnHkfAxDExrVSffFN2jmoWQJYxDbM5c3yNp/DSvAUZplthRbvxlCJ5pR10T07Hup/kWvTV1Q4yWI3seyMEVAPJ/v736iyiN2qT/zyqtc6Xe/rq4xOtzvatoFYM4OVo8AVZFwFUGzQkuJFdmukbXFzR77LxE90vcMk+DNkfO64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762357044; c=relaxed/simple;
-	bh=tsjWVsRRSjnvoclSRHwK3diHpWnX1Sxoum+6RmQp7f0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=irWiGytDXOWqRQ2GscZhlbyfbMkURmtMjUxDTrYzjpqywYm2Se51qZIZm6Y2k3k1LD3cY+7bcc76DNoLxbF66pxXil1ZxuyYE1E654sJDNk5C2jlbLbbKVbsDWaDBP8fsMrAoQl0KWRHw0oGuZKZSm+9xDc+8LrQ99e4rCe0D5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=SfrmACU/; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-37a3340391cso35480361fa.3
-        for <linux-gpio@vger.kernel.org>; Wed, 05 Nov 2025 07:37:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1762357040; x=1762961840; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KQVK9c2pVcdVjyDwid4GqvWLwTZQh0fbwLctVK8OiSw=;
-        b=SfrmACU/IaruvTLTM/8Y5f58WVjlsUz3ZQgyna9ZhhrN9Ep2dui8B2FZ+RyWkk4534
-         xeO9xYWeF9VW3kGPjgYBfkwbACDJsFm1lCwoKdanOMXQs5ZVhvPW+NBEjwAbxT+iO7EV
-         CrwDDGhFyVYUKPc2haSUD4utdCPJWiWvc0WpNaL9dXl1IUkpVi1iydp/Eb/trQY/3Jug
-         izYn1EY3zvDPy3R8G3sBxQoG4GZ1rsdM1GXfNpz7JSwDopVniUprTcolFZDq6na2KboL
-         RBlpO2YCopdLkL7N5kx57yTRmaV6w/dG2CWOgsUe4x8tl/+JOTHdUcguPtGx+cNwZEdi
-         4dNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762357040; x=1762961840;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KQVK9c2pVcdVjyDwid4GqvWLwTZQh0fbwLctVK8OiSw=;
-        b=uXasK8VxVcE8rwKMzAKk1OD8uuFxPwkySYOF1VMVilb//XiAzul80YCe0k7/XmY0e0
-         04rEmTaDn4s0Eota2r5cQpcmWhi8yaOxSVnYGxKun/fxP0ynse47XnfiVOGenhdepN6/
-         exGt8BP/aS/c9t0oDeJzbWmtU+MZG4LKZFU8vKlxf951Le49wLYO9azK+vHbX/AV473m
-         cvpYA1FRThm4+IcdZ9t+QMyYpG1H0XicWGozn/7+2jSTuediOrsjJQP2tKAK4dBGJYHF
-         wD153TKvLrzBH+66CxdxF2INNxn/t01ds9zaLyF8UnNIy6xvjvLmmWH68lEcvFe3l8y4
-         Lg+g==
-X-Forwarded-Encrypted: i=1; AJvYcCX6cnnTMmn9ksqGScf4Y3AOZptwHRzMw9CDI/oMhDLwRK3FR1eULHV9KvyT0i7cdTEjnQSybQ9xY4Yk@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyv4LPYL7FXryv/mH+fpr7cCS0y7dAnt0TJlhfB7vNRxU6jwUPS
-	pcK5xtf4gZBnwfAmZO1vlas6ZZSKS8m0ysJfqWBN5eKTtSOj9a6EcisrxUyLpasPzqjg0nak6Ir
-	tahba66ztmTkP96XD9v5jiNZ5JRjEUVTibpT9vmj+cg==
-X-Gm-Gg: ASbGncu7NVmDEkWTXZsc2FtQpDFUaOCB1FVpweEYBdU5qhZtIsqLIQvdwMjUfQh6TtK
-	Djt/QJ72LmU+fUhtdqVuZAICk2654SOiMmgHnskx+hWtONbFOGQd8pZHCTwnpT1EJmlmxUFKNzA
-	jqkMqa/krL4XQnlTQrSw+5zT6AnbXD9JkcZud8C1z4FiT/AhVZjDLkesPCOK2abjS+YKRZ3FSyS
-	L3RjHKSpXEVAJSNvRQwtOo1djPaYcHog3eGbiT7/1OsWl2Gv2wW6UH2yYytJOFqlWOX0ft00JAP
-	bqrhz37p7P76jmkc
-X-Google-Smtp-Source: AGHT+IGZLSyHZwdSHoXOFtP2iNbjQMFV/+/RajiafeSS7vcfUC9MhdnV6BD4cJxWmnaWMlh79AK6+5Ypz4lKmcTRIqk=
-X-Received: by 2002:a2e:b88a:0:b0:37a:3412:1415 with SMTP id
- 38308e7fff4ca-37a513d8404mr11832991fa.8.1762357040210; Wed, 05 Nov 2025
- 07:37:20 -0800 (PST)
+	s=arc-20240116; t=1762357272; c=relaxed/simple;
+	bh=ayVanH2nf5p5ZJVigmu4PMeb54wK2Ew69jyWN6t/oUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LX3httRuj0Nk/lUvRr/6h6U2krm4eWdSOSgA+dktxCaua+sKs7kCLjw4tLsjrj0Tc8vOZsULCYfRFdG0DExlBP7t4wlCDqft9SXn/nhokbl4rEDB4vAlxQ8IS/Re9VpDLw4rSOPMTT1mYMhyN9wjXu3Uir+iHoaH0DILFUY23JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=evZxuxqh; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762357270; x=1793893270;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=ayVanH2nf5p5ZJVigmu4PMeb54wK2Ew69jyWN6t/oUA=;
+  b=evZxuxqhylIXyGKwaaCIOo1h9uBAIPIHpFuh8C7gdmciYYBAar4Quiml
+   nshVgWfNmx/sG7sW87FdtGHkN/xxkBHQMqbha0Utl78z1WcE4RbQ5ONp1
+   Ng8VcesnlFxVetQux/QZs1aHCiftk7vTdFYNFpBJ6PPHdz6LDN6+BF6Vl
+   2zv9DpAXYeRmW7+VncAslJXiJhhfkE5+1TAU/2lKNV/QZ2V+NqCbpw8TO
+   EJhWJW7Uzumme5Oq0DYOrRBWrZSR8KcbXhGqZhGE5hKoxZj1Glos7OBXG
+   nY9cZ8W72HNSZ+E8MMvKmDf37wQY0YIRSwcOVjZkAu024AqsUP7ECugdo
+   w==;
+X-CSE-ConnectionGUID: yEtYWY2nQ+ua1Imt2tFhSA==
+X-CSE-MsgGUID: lqHeI26vRHaD3V+duKnmPw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11603"; a="64389740"
+X-IronPort-AV: E=Sophos;i="6.19,282,1754982000"; 
+   d="scan'208";a="64389740"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 07:41:08 -0800
+X-CSE-ConnectionGUID: hi73EwR1TGGZdBu2Nlr8Gg==
+X-CSE-MsgGUID: vx2a1o1FQLSpf4wRdz1gyA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,282,1754982000"; 
+   d="scan'208";a="218131339"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa002.jf.intel.com with ESMTP; 05 Nov 2025 07:41:06 -0800
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id 2A1BB95; Wed, 05 Nov 2025 16:41:06 +0100 (CET)
+Date: Wed, 5 Nov 2025 16:41:06 +0100
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 02/10] pinctrl: alderlake: Switch to INTEL_GPP() macro
+Message-ID: <20251105154106.GO2912318@black.igk.intel.com>
+References: <20251104145814.1018867-1-andriy.shevchenko@linux.intel.com>
+ <20251104145814.1018867-3-andriy.shevchenko@linux.intel.com>
+ <20251105103122.GL2912318@black.igk.intel.com>
+ <aQs3ls1rKgMOufOn@smile.fi.intel.com>
+ <20251105115041.GM2912318@black.igk.intel.com>
+ <CAHp75VcLNs0EWLED_5Mmr0V3nVoiEdKNpdoqPypy5i5jJCSd1g@mail.gmail.com>
+ <20251105115535.GN2912318@black.igk.intel.com>
+ <aQts5fqrNaEhHQyp@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251105103607.393353-1-jelonek.jonas@gmail.com>
- <20251105103607.393353-3-jelonek.jonas@gmail.com> <CAMRc=MdQLN5s+MpkLUF2Ggc4vYo30zOXrA=8qkGmXvu7N3JjeA@mail.gmail.com>
- <12efb5b2-058e-4a9c-a45d-4b1b0ee350e7@gmail.com> <CAMRc=MehBmd+-z5PRQ04UTWVFYzn7U4=32kyvDCf4ZQ4iTqXhw@mail.gmail.com>
- <74603667-c77a-e791-d692-34d0201e5968@axentia.se>
-In-Reply-To: <74603667-c77a-e791-d692-34d0201e5968@axentia.se>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 5 Nov 2025 16:37:08 +0100
-X-Gm-Features: AWmQ_bmO335tsrm3LPxOxIYQ6LeZj7W7E6BVgAdcHPrSnLlU0JTYxziQYjrCYrc
-Message-ID: <CAMRc=MdkkRnwxx3vcMB3duOteQNdC9eb+A1P4GActou=xY9yJQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] gpio: add gpio-line-mux driver
-To: Peter Rosin <peda@axentia.se>
-Cc: Jonas Jelonek <jelonek.jonas@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Thomas Richard <thomas.richard@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aQts5fqrNaEhHQyp@smile.fi.intel.com>
 
-On Wed, Nov 5, 2025 at 3:19=E2=80=AFPM Peter Rosin <peda@axentia.se> wrote:
->
-> Hi!
->
-> 2025-11-05 at 14:24, Bartosz Golaszewski wrote:
-> > On Wed, Nov 5, 2025 at 2:23=E2=80=AFPM Jonas Jelonek <jelonek.jonas@gma=
-il.com> wrote:
-> >>
-> >> Hi Bartosz,
-> >>
-> >> On 05.11.25 14:15, Bartosz Golaszewski wrote:
-> >>> Hi Jonas!
-> >>>
-> >>> This looks good, I'm ready to queue it but I'm afraid the consumer
-> >>> label "shared" will logically conflict with the work I'm doing on the
-> >>> shared GPIO support[1] as the shared GPIOs will appear as proxy
-> >>> devices containing the name "shared". Do you see any problem with
-> >>> changing the label to "gpio-mux"? I can even change it myself when
-> >>> applying.
-> >>
-> >> Another name is fine for me if it conflicts with your work, as long as=
- the name is obvious
-> >> enough. Not sure about "gpio-mux" though. Maybe "muxed-gpio"?. Just le=
-t me know
-> >> what you think and if I should adjust it or you do.
-> >
-> > Yes, "muxed-gpio" is good. I can change it myself when applying.
-> >
-> > Bartosz
->
-> Isn't that the name in the device tree?
->
-> Is
->
->         muxed-gpio-gpios =3D <&gpio0 2 GPIO_ACTIVE_HIGH>;
->
-> really satisfactory? Can you really make that change as you apply
-> w/o a re-review of the binding?
->
+On Wed, Nov 05, 2025 at 05:27:33PM +0200, Andy Shevchenko wrote:
+> On Wed, Nov 05, 2025 at 12:55:35PM +0100, Mika Westerberg wrote:
+> > On Wed, Nov 05, 2025 at 01:51:58PM +0200, Andy Shevchenko wrote:
+> > > On Wed, Nov 5, 2025 at 1:50 PM Mika Westerberg
+> > > <mika.westerberg@linux.intel.com> wrote:
+> > > > On Wed, Nov 05, 2025 at 01:40:06PM +0200, Andy Shevchenko wrote:
+> > > > > On Wed, Nov 05, 2025 at 11:31:22AM +0100, Mika Westerberg wrote:
+> > > > > > On Tue, Nov 04, 2025 at 03:56:36PM +0100, Andy Shevchenko wrote:
+> > > > > > > Replace custom macro with the recently defined INTEL_GPP().
+> 
+> ...
+> 
+> > > > > > > -#define ADL_GPP(r, s, e, g)                              \
+> > > > > > > - {                                               \
+> > > > > > > -         .reg_num = (r),                         \
+> > > > > > > -         .base = (s),                            \
+> > > > > > > -         .size = ((e) - (s) + 1),                \
+> > > > > > > -         .gpio_base = (g),                       \
+> > > > > > > - }
+> > > > > >
+> > > > > > I wonder if simply doing this:
+> > > > > >
+> > > > > > #define ADL_GPP(r, s, e, g) INTEL_GPP(r, s, e, g)
+> > > > >
+> > > > > We can, but it will give a couple of lines in each driver still be left.
+> > > > > Do you think it's better?
+> > > >
+> > > > I think that's better because it is less changed lines but I'm fine either
+> > > > way.
+> > > 
+> > > Okay, I will try it and see how it looks like and then I'll either
+> > > send a v2 or ask for a tag for this one. Sounds good?
+> > 
+> > Yes.
+> 
+> After more thinking I guess I want it as is (here in v1). In cases
+> when we define some parameters differently it will make sense to have
+> an intermediate definition, but here. Can you give your Ack, please?
 
-Ah, that's what you get for revieweing with a fever. :/
+Okay sure,
 
-You're right of course.
-
-And yes, we'd need to modify the bindings.
-
-> Or, are we talking about
->
->         glm->shared_gpio =3D devm_gpiod_get(dev, "muxed", GPIOD_ASIS);
->
-> and
->
->         muxed-gpios =3D <&gpio0 2 GPIO_ACTIVE_HIGH>;
->
-> ?
->
-
-I would make it: glm->muxed_gpio =3D devm_gpiod_get(dev, "muxed", GPIOD_ASI=
-S);
-
-Jonas, could you please send another version with that addressed both
-here and in the bindings?
-
-Bartosz
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
