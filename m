@@ -1,128 +1,202 @@
-Return-Path: <linux-gpio+bounces-28074-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28075-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BCB7C347ED
-	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 09:34:37 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 005B3C34811
+	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 09:37:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 397863ABA82
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 08:34:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B6EE18940F7
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 08:37:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED73C21CC6A;
-	Wed,  5 Nov 2025 08:34:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67BFC2D0602;
+	Wed,  5 Nov 2025 08:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ODSu4f0v"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177971991CB
-	for <linux-gpio@vger.kernel.org>; Wed,  5 Nov 2025 08:34:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CFA222575
+	for <linux-gpio@vger.kernel.org>; Wed,  5 Nov 2025 08:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762331672; cv=none; b=oY0mhVQH9ckc9XPkuXhWMoV7S4ZwrCtNiycnpk09Y6TMu1MLR62oUIhNmMgI+2RQx4k/uakLu8zJdPyoHGQMaNVklLGWt4u99KThLhM7sPSOXJjEBP3L94Y0K6zbUd6qnmSXNAxMNkefzZrnHUJvNsUY1j+PF2kif1adXNxTAvo=
+	t=1762331828; cv=none; b=aNcAbZxQga/x9mudaftB5YRJ41CxLhtqx23JxTwCf8elCL87CM23xGXvs0GSBMYVZovNUxiM84Vbh7M98dnyASObKfWAoQNvQYH6ZuUFDEZjS3MTz+vCHS7kdRCvGTzRMfM2iBx+PTJjyVmcbo7XLaZXOPMZTv4S7HHOn02wze0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762331672; c=relaxed/simple;
-	bh=34nlR0Av3gx3vsNVLYrgniOq7mZCBds1+QKg++zruvk=;
+	s=arc-20240116; t=1762331828; c=relaxed/simple;
+	bh=xR67HqqaineWK1nU1mFeUiJ99qVPU6mI4Zt5EDPJQWI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pJFVAzzjdlLPcWZL5iOV3OXAB9/ipuPALmnLMmO/syrwYx2HDj1hXQvugBm3AFaWNpG6O6T55GcaSVmmyEbKpcu8XK3NU7tsTIksuZ6SdyoAKn/QF3sp1gIqXuxZn6NC+HPl4DPqDGsbT6Lrh7tjRoOQltKJKxNQg3NBzQSGN44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-54aa30f4093so2288254e0c.3
-        for <linux-gpio@vger.kernel.org>; Wed, 05 Nov 2025 00:34:30 -0800 (PST)
+	 To:Cc:Content-Type; b=bMmDVkhw6lvhiDLMSVNgX7e4zXLGZsDGptoleluaRWV3M/ChxnWtaWo29EkCi4PEEJhDJg6mgbka7t8+B9TEAcyhrHmZoIT1fShj2ZnUUT1x2XrgxGkBCKtCOclidOFPZ/ryqQ6OzcgcqGHlmc7ATllJpjHNDzpMvPMd9VF1IBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ODSu4f0v; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-37a2dced861so6192251fa.1
+        for <linux-gpio@vger.kernel.org>; Wed, 05 Nov 2025 00:37:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1762331824; x=1762936624; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mHOJFLp1t8uz0Lsz9qQ9rEc7dvRTR/CUwEhE0XR2fDY=;
+        b=ODSu4f0vsCQh7VXKYMXLwIJecnRMUpt/KhKML7CAlhqQMxs1TQnu6pQhI8o66L4YEU
+         sHwrrnifbJ5acIjE8ti2dqr6vZq0dk/PxJEiUmLG9gBCSxRDsHABFl5VrEjbI+SJ4GyB
+         MQ8tdeml+qsxQwCMHRhCyf3qwkzzDf+SUfzrlg1lyML304Uwn1cQBxGBY59sRxfmL/er
+         4lay+1yDaZ+yMzEXwT0qMMnlTKqADpZAs5NQDPSToH26isuyqJMSVzAnxDdWFGe/2Otr
+         OEFOaAn5VaLasFGgjtFKGpzfHAMZrMaoWD1x6R+KZlqrCTnP5IKyxAISy4a64zWKAQOB
+         tGiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762331670; x=1762936470;
+        d=1e100.net; s=20230601; t=1762331824; x=1762936624;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4WMJlMq4HlepiSD2fmQ9BHOR0R49VU9iznpl8dol4Xc=;
-        b=bqzpgMMD224VrRRIiJxxEpFAYnoeoEGhHqwvrjGGhb6yYloNAGZc58WOhM16RKuBDl
-         F1FZ4GcWnkc9V5x/+ryLS7v0Zd8zxwoht4mU2051SFgZ0pYajSjvWkyJZgB0L8+qlnkG
-         I5Redg8bk0h57PfxQil+lj610isR6ouE66fFhCuxzRPUoCqLNlnTVWnwytSGHADoVJLT
-         GGhXBjfNs0C5/OhQzwm1UKuZP7E8/7vLMjjeVRrmbwlr1qR+QPs/mZ8sTYgeOCFpdCH6
-         dMpe42uEPwdt/xBXYWBMs+J4PtqDZmWHI3kS+ESz2svBQ2ArKLJyRXcptCU6x2iZaH3v
-         0U8g==
-X-Forwarded-Encrypted: i=1; AJvYcCXaMzgoWV3gRlyGQUXT8oCzVWrjBCYVbAkj3Gl8wuIs1go11pn0WusECQjuwan2qOD7+Ysunjq4HrBp@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIga01WDh8IPZyfjK6xJKrzfkLyBIX0XHf3xBuuTDBoJB86kiG
-	utHaPIMTiBBG9FyIgrWsZ7T1dqGNjlmcHtxbZ1TmQyHrw+jftXtv2n2dQAy7lETk
-X-Gm-Gg: ASbGncsropjmb0gEOuBJ90JUEMb+D/SESMnzukhpxDlIteRume0GNThdUNcgLLlV1PZ
-	nhuFZtteTUvEjHu+3zt4bLOUfjCdTM9PS0prA6MJJX+L+PDe6mqdCkPEVIV+jUuSj382l/fjzdn
-	pWBz7MvLdRqB4Ab9W3ERawT6UPCFMXfrvKDwzFmlf1HdwWuZJSNb9ddu7OHE28QeXwNCDceY3hF
-	g7qzfbw3vsRE4X29P4t1qejBsg13q/pUvUSXqtgzaGtW4iax9Db+1K6qLj0oBm2P8rbossU6lvJ
-	yMfQfJMT5IL28jyV5JNJsUOFbvon7tgxOsBNc4NjT1yEBllpAvlniNt1QPgo6wSH0hNNF1kdFSU
-	haKbVkW+HTUhGk4zYyf71lLnb0HTislLAzZLZKaCZ6z1CV1va7N/UttedidpYVEUdiNnteinyt5
-	Nsy6+TUIPJ+Io8UngE3F8an6dcfEa5n2dOqiNzapRyrA==
-X-Google-Smtp-Source: AGHT+IEdKaPIFVePwfpQdS5H14NZ0sqTRAweATIxkM9FbIHQElSQsKqB6lLnwfclhigFwoHGdnYBmw==
-X-Received: by 2002:a05:6122:ca6:b0:559:7394:9c34 with SMTP id 71dfb90a1353d-5598624baa6mr795928e0c.1.1762331669614;
-        Wed, 05 Nov 2025 00:34:29 -0800 (PST)
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-55973c9992csm1978886e0c.19.2025.11.05.00.34.28
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Nov 2025 00:34:29 -0800 (PST)
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-9352519258bso914078241.1
-        for <linux-gpio@vger.kernel.org>; Wed, 05 Nov 2025 00:34:28 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUeiaHXkzWnKQCRynvFXtUEh1ndjTybooOg2OOcD7iKV1EVCjee2Cn/I5A1OXweiaih1+vZRamBoiZv@vger.kernel.org
-X-Received: by 2002:a05:6102:5093:b0:5dd:8819:e687 with SMTP id
- ada2fe7eead31-5dd8923db9cmr660276137.31.1762331668673; Wed, 05 Nov 2025
- 00:34:28 -0800 (PST)
+        bh=mHOJFLp1t8uz0Lsz9qQ9rEc7dvRTR/CUwEhE0XR2fDY=;
+        b=iLMHVe1IkHeDmBuWSQpKRtR4tggDeqN2j4dRJJZLvAuqWruAjK+DkwtSxIxl+Fn4PB
+         JijZ34pcgYbu6fnukJNC719LQdaVb+dr3tpE5gyA+wvdqX9j75/ICk4qb+5qjR2rKVOC
+         fTiSlFvXFyH+k7buquHSfL8NlOQhaiXuMhR2GqqdbJUxgSuPrvPxaffQizXv6BR9eRBA
+         902Vx+vUqFtfmqW41SJ1RLqrv2mB82JvkHl8cgMzCLYo1L1MSR9CdWY77mLVQBaprQo0
+         WvQNkk9Pcj48MPE7vvwUVGK+vLxBiwb2yFlR7W0eSfKzR3WwLOU8qy5eGo9qtn833sp+
+         6e/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUNhesYPLYmXqb9nGryH0Z8r3BXwqdzLmgFE1AhgqYBELu8RXRDCkycptyc+ldqqgOq54BGhpA+lETa@vger.kernel.org
+X-Gm-Message-State: AOJu0YyryhnGUPtx6kr1CGn0WrvaabtiLEB12oKppBpe419yjVxvg0cn
+	hncjKBoVm219TkwkkYHK0elsWnhhAFpl5dFLrajQyG8dJti662+W5QZey5Nwyn8QPSbbwY05qdr
+	y2Why4mGxFHbnz2ODyScP1n5lkWbK4Q3cfJcRottORZTnB/IQXnxbY8QErw==
+X-Gm-Gg: ASbGncu6jhPXIThewb4M/s+DxmUYj90QyBGNDMoPzlXh6uySZX/yAW7QN2p3v1ibSc7
+	SYRkzzd7dckBQsFMJ5vh4H+yo8XRFwSU1B+QK/US+lL14i58F0mQ5KzOIKFXR6bq6ynbpDIWzk0
+	SllkxXhXcPXCzS1GjSeLfghsfypv6sIWZQrIaHfO/bInWvKIuIyPRionTtFrlpvi5Mx73FqcA7q
+	LBMJDxLzONP8K6Gd84c/Dh1F+tqM1usEUbW+UCZarXHLI0wUVe9SNr3WvfOnoLQ6rd+B2QCLWm1
+	m77dxkoEy8hJVEAMi+7U0DvBp5U=
+X-Google-Smtp-Source: AGHT+IEwS9FJDoIyI1ANLrrhoGtmMGkWsCaeKM8aHV9xzA7vPJjZd2MFaNrpSzeGzM2NtOTXhxY2bgRBdfdqZROJ5jc=
+X-Received: by 2002:a05:651c:12c3:b0:37a:4277:86f8 with SMTP id
+ 38308e7fff4ca-37a4e723508mr5936831fa.10.1762331824053; Wed, 05 Nov 2025
+ 00:37:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1762274384.git.geert+renesas@glider.be> <77f9efe5388f2801ace945b7793d4823618eeec8.1762274384.git.geert+renesas@glider.be>
- <c9646952-1789-42eb-b7d9-b12915f77f07@mailbox.org>
-In-Reply-To: <c9646952-1789-42eb-b7d9-b12915f77f07@mailbox.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 5 Nov 2025 09:34:17 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdV_jdCEE_zLfoX0SpfBBFFwFRscQ8tYskTbAK00jJCrTw@mail.gmail.com>
-X-Gm-Features: AWmQ_blsUEYyxkjPzCCn1rrSFlAwZ9Tb7iuHmnTuFch7McN-xfZ4ph4p6lEc3A0
-Message-ID: <CAMuHMdV_jdCEE_zLfoX0SpfBBFFwFRscQ8tYskTbAK00jJCrTw@mail.gmail.com>
-Subject: Re: [PATCH 2/5] pinctrl: renesas: r8a779g0: Remove CC5_OSCOUT
-To: Marek Vasut <marek.vasut@mailbox.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Marek Vasut <marek.vasut+renesas@mailbox.org>, 
-	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	huybui2 <huy.bui.wm@renesas.com>
+References: <e6107389-ce76-66c9-b390-4ce79a19c0d1@duagon.com>
+In-Reply-To: <e6107389-ce76-66c9-b390-4ce79a19c0d1@duagon.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 5 Nov 2025 09:36:52 +0100
+X-Gm-Features: AWmQ_bl8iqNWLm--BTBsodCChq7EXhDAHNdIikJEOtLyoBd2kTAgFryCzLDI8Vk
+Message-ID: <CAMRc=MddjpF_GbJW-n8c9OTnAmMqb=P7NFZXR=3tPSRoHe8Nyw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: menz127: add support for 16Z034 and 16Z037 GPIO controllers
+To: Jose Javier Rodriguez Barbarin <dev-josejavier.rodriguez@duagon.com>
+Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Marek,
-
-On Tue, 4 Nov 2025 at 22:41, Marek Vasut <marek.vasut@mailbox.org> wrote:
-> On 11/4/25 5:59 PM, Geert Uytterhoeven wrote:
-> > From: huybui2 <huy.bui.wm@renesas.com>
-> >
-> > Rev.1.30 of the R-Car V4H Series Hardware User=E2=80=99s Manual removed=
- the
-> > "CC5_OSCOUT" signal from the pin control register tables.  As this is
-> > further unused in the pin control driver, it can be removed safely.
-> >
-> > Signed-off-by: huybui2 <huy.bui.wm@renesas.com>
+On Fri, Oct 31, 2025 at 11:08=E2=80=AFAM Jose Javier Rodriguez Barbarin
+<dev-josejavier.rodriguez@duagon.com> wrote:
 >
-> The real name is 'Huy Bui' instead of huybui2 login name.
+> From 7655a73f3888a5d164d1f287ba1f2989bb2aadd2 Mon Sep 17 00:00:00 2001
+> From: Javier Rodriguez <josejavier.rodriguez@duagon.com>
+> Date: Tue, 28 Oct 2025 17:40:14 +0100
+> Subject: [PATCH] gpio: menz127: add support for 16Z034 and 16Z037 GPIO
+>  controllers
+>
 
-Right, I guess it is appropriate for me to fix that up while applying,
-here and in subsequent patches.
+I don't think you used `git send-email` to send this, did you just
+copy the contents of the generated .patch into the email client?
 
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+> The 16Z034 and 16Z037 are 8 bits GPIO controllers that share the
+> same registers and features of the 16Z127 GPIO controller.
+>
+> Reviewed-by: Felipe Fensen Casado <felipe.jensen@duagon.com>
+> Signed-off-by: Javier Rodriguez <josejavier.rodriguez@duagon.com>
+> ---
+>  drivers/gpio/gpio-menz127.c | 36 ++++++++++++++++++++++++++++++++++--
+>  1 file changed, 34 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-menz127.c b/drivers/gpio/gpio-menz127.c
+> index da2bf9381cc4..ec9228f1e631 100644
+> --- a/drivers/gpio/gpio-menz127.c
+> +++ b/drivers/gpio/gpio-menz127.c
+> @@ -24,6 +24,12 @@
+>  #define MEN_Z127_ODER  0x1C
+>  #define GPIO_TO_DBCNT_REG(gpio)        ((gpio * 4) + 0x80)
+>
+> +
 
-Thanks!
+Stray newline.
 
-Gr{oetje,eeting}s,
+> +/* MEN Z127 supported model ids*/
+> +#define MEN_Z127_ID    0x7f
+> +#define MEN_Z034_ID    0x22
+> +#define MEN_Z037_ID    0x25
+> +
+>  #define MEN_Z127_DB_MIN_US     50
+>  /* 16 bit compare register. Each bit represents 50us */
+>  #define MEN_Z127_DB_MAX_US     (0xffff * MEN_Z127_DB_MIN_US)
+> @@ -36,6 +42,25 @@ struct men_z127_gpio {
+>         struct resource *mem;
+>  };
+>
+> +static int men_z127_lookup_gpio_size(struct mcb_device *mdev,
+> +                                    unsigned long *sz)
+> +{
+> +       switch (mdev->id) {
+> +       case MEN_Z127_ID:
+> +               *sz =3D 4;
+> +               break;
+> +       case MEN_Z034_ID:
+> +       case MEN_Z037_ID:
+> +               *sz =3D 1;
+> +               break;
+> +       default:
+> +               dev_err(&mdev->dev, "no size found for id %d", mdev->id);
+> +               return -EINVAL;
 
-                        Geert
+You can return dev_err_probe() here, it's only used in probe(). But
+TBH probe() is so small I'd just inline this into it.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  static int men_z127_debounce(struct gpio_chip *gc, unsigned gpio,
+>                              unsigned debounce)
+>  {
+> @@ -140,6 +165,7 @@ static int men_z127_probe(struct mcb_device *mdev,
+>         struct men_z127_gpio *men_z127_gpio;
+>         struct device *dev =3D &mdev->dev;
+>         int ret;
+> +       unsigned long sz;
+>
+>         men_z127_gpio =3D devm_kzalloc(dev, sizeof(struct men_z127_gpio),
+>                                      GFP_KERNEL);
+> @@ -163,9 +189,13 @@ static int men_z127_probe(struct mcb_device *mdev,
+>
+>         mcb_set_drvdata(mdev, men_z127_gpio);
+>
+> +       ret =3D men_z127_lookup_gpio_size(mdev, &sz);
+> +       if (ret)
+> +               return ret;
+> +
+>         config =3D (struct gpio_generic_chip_config) {
+>                 .dev =3D &mdev->dev,
+> -               .sz =3D 4,
+> +               .sz =3D sz,
+>                 .dat =3D men_z127_gpio->reg_base + MEN_Z127_PSR,
+>                 .set =3D men_z127_gpio->reg_base + MEN_Z127_CTRL,
+>                 .dirout =3D men_z127_gpio->reg_base + MEN_Z127_GPIODR,
+> @@ -186,7 +216,9 @@ static int men_z127_probe(struct mcb_device *mdev,
+>  }
+>
+>  static const struct mcb_device_id men_z127_ids[] =3D {
+> -       { .device =3D 0x7f },
+> +       { .device =3D MEN_Z127_ID },
+> +       { .device =3D MEN_Z034_ID },
+> +       { .device =3D MEN_Z037_ID },
+>         { }
+>  };
+>  MODULE_DEVICE_TABLE(mcb, men_z127_ids);
+> --
+> 2.51.0
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Bartosz
 
