@@ -1,183 +1,120 @@
-Return-Path: <linux-gpio+bounces-28103-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28104-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47BF3C355A9
-	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 12:28:19 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C1DBC3565F
+	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 12:39:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 09F08565E6B
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 11:22:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ABA0B1A20887
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 11:39:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EA4330F95C;
-	Wed,  5 Nov 2025 11:22:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D7813101DC;
+	Wed,  5 Nov 2025 11:38:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ugo+/H9y"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jh99mVay"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5579030E0D2
-	for <linux-gpio@vger.kernel.org>; Wed,  5 Nov 2025 11:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2152D239B;
+	Wed,  5 Nov 2025 11:38:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762341767; cv=none; b=SrjdwHYPh/OZq3LkZ99s72SCuTcT9M/w4BFnoQ+tjm76CQf9sPceazsp/u+3UUHuKBTorcudNwZvM96nb/+Yb3hZPcOReXDzHnVrKbN7nL0HygIkqhQ5vxt2S/0yuFRXdklIwQ2KdItHdiB7HUHmGMyuAeHKoqZf51YtGDSRMKQ=
+	t=1762342713; cv=none; b=NivAN4t8KkpL4Om/dqx1G0IWIsxMF6GUAsErVivpSujaAQ8mOf/MkAe+BRWTeJmnzKMm5+3Wtj/dYtp0bVPht3fHV0ydkv25pBMjiX5PruKu+wPPazkilZnTigFYZCTCFvReYDijwZtptWxliR5HYkjc0rFuLyyCb4MaLJy5cmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762341767; c=relaxed/simple;
-	bh=Ii9b2rpzXiRDukDeUtY2WS5XvNAk5U97MkCbAXQdp7s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OqEPXp0i1MvFl2dM0mSaj6XajqONjw9bQ32EOrVmo+KAGr52PvO/ZZsKUs29QWAodFeXqPUl4GQGmm7o1+ZnQSOBspH/Afb6UnVjsuEBtGbBj6Zi94+c+R2wGPDFZyRDxxg+zJxSt1J+vdwrjEhpQy6tm0087keqTA/3tA5LfD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ugo+/H9y; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-37a3340391cso32413861fa.3
-        for <linux-gpio@vger.kernel.org>; Wed, 05 Nov 2025 03:22:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762341762; x=1762946562; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Lgjq5frjKtchDAt0hCN8TCDb53mEX1KChcG+cIgj+As=;
-        b=Ugo+/H9y30ONhr7fDfdxbpsqWR3tRjLh+BuyplYG+qinlo2qxVVE4FuU4lqg9t8UmP
-         fVDVTXoFX4dBwApTOCOGf3JNHagxzSd5IcYye46YRifeue4oQvK+rCDY6250s2aOUHg5
-         fWNdaQqGIKnqGL+6iwoCI4B1KwMjvSghMySRVbLo/w8XC1vtrbeE+e8rvaXdbSppm6Pu
-         jwzcMBE7OMaVCmpZm+PQVU/4EMvbFWk7ZoQe404b7k5sOktFJtHcSqzL3FIgWmRkzwO0
-         dAicFKMGSMh+zzlQdFh553R+WyaxAPatOLu++DAI9JeRl9GL5PnvoTJduTUCYgVMQAlm
-         q8Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762341762; x=1762946562;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lgjq5frjKtchDAt0hCN8TCDb53mEX1KChcG+cIgj+As=;
-        b=GhJoTrX7gan/K+lzGPKAxdnQi4jAWV9iRT2tAKBM4GUSf4gFe8+YRecdqX0vigrDo+
-         +ltoNqo+T55D+T5zv80SEKnDwnz7MRSEbUbHD+i/cknlbgR3F1eUcdvTKdiQ67gw9idL
-         z4OkU6uI/qnRrNItVsIZ4fk3hIS7WY2Ns26ze4+tACPg4fEAV0Uku72fGK+78OOmImpF
-         lxKXvw0TuIgsshQ39aSm3+ESpwjVTqwQcRyQn2SCfQ95x2gjwYmDBwb2nDj+T5SaGOdc
-         9bQK2zZxVOeiq/enCJQsyME8XNZe+R+MLztponJa+zTOYArIjYTlAzEk93THTkY0s+66
-         6OWA==
-X-Forwarded-Encrypted: i=1; AJvYcCXdp5cVYocGeP39zAxwMCuxu6yzdpkK7pcZjeSwXqIKKAWOxGDWW9bzGQAOII9V7/kv5Z0EFRmWwdkV@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQHXa3a8poauoAx6Tbt/1P6DGN8T5aOCsuuWu7mvZb3t66YcHZ
-	CyRnBrUzRDiHtUeqiFqvp5YCsS3aNWl4OFvcuxzeJteUGwNkBj0ShrTL
-X-Gm-Gg: ASbGncud6WiJrHauX8GLFUqm0sDRh0OedL6bRhPn/LyDNRgnyfBLYQogLgkgrFU+QPr
-	mNH22xTsmPtQcNLiZUEY0zb3hTxnewMb/vCZTHnhgLnwyWYRnONvlVpkzgixBo9eRFbBzV9RL/e
-	CayOjP88zjno/43annvBqN/4OO2EckTI2kVUFKCairc/GNRL98d7gwN8mNihos92BnKPTA39avE
-	2FNxdLtbsJ336nS0jJP89Su3kGI+OQX56uIuG4TW0DuPn7zBbvsYASMtFCAzmgTm+HxRiQE4Jbi
-	1bZQlPrcM43DoCr7CG0CcdynWe8qIUl08qjJ8SwLK3DZUBfvFX68Pw9hKLxHqrf3nmjmelddDtV
-	nbTUw3AuQlQb72bRPOgXsFGGPi1sRY0hodQWAkqA7Nru6vOXBVaMfvrxQZG0oYrydz4yqFrun5R
-	T8Y2ndb9W+1RQquxAQPwdSUFvAnfvGNMPNc+34H8+IbboqzYWTErOI/XRpdg==
-X-Google-Smtp-Source: AGHT+IHpvSjuUZgOT3CU6iwhd3QH+qr/blJkYgQLVxgzQhufOUjboKrykT4Eu5lvIJTa8VYLu1Svkg==
-X-Received: by 2002:a05:651c:4006:b0:37a:3b04:1a1b with SMTP id 38308e7fff4ca-37a513e604fmr6509411fa.12.1762341762189;
-        Wed, 05 Nov 2025 03:22:42 -0800 (PST)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-37a415c8070sm14290231fa.28.2025.11.05.03.22.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Nov 2025 03:22:41 -0800 (PST)
-Message-ID: <1aedf1a8-ddff-47fd-8afb-dd60dc42e12b@gmail.com>
-Date: Wed, 5 Nov 2025 13:22:40 +0200
+	s=arc-20240116; t=1762342713; c=relaxed/simple;
+	bh=r1MggjRa5LTArtaThr0VKYwN5EsmTnjnEk6Qf6sztao=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L6EWzq0gd6c+ZTn5xg2egY8QIw01l2QKdCa2qLSdULZPGTCV953isZwpzUcRKCpWicarxvPj7IjCwIZ0w+sv/1FOG3+z31H6Mp1xlKStEXWGubmmD4OV2VknD7gbFA+gRHV59vc9mLA+2RjKTMBzG/xiYxRYYtA7rUe/GKqtZfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jh99mVay; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762342711; x=1793878711;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=r1MggjRa5LTArtaThr0VKYwN5EsmTnjnEk6Qf6sztao=;
+  b=jh99mVayV7bDupmpO74HdlVPAbMyDr1jyYJVnALuT/Bg0FgQAGizEwVe
+   ax5xwpdzwnK3Mx1j0z/smwYUavnReXBmN2rOrVeMH2nq68n2dBfPm4N/6
+   LkcnGJBjpj07zBhsVexONw9iaIwnqiraFhLh2ztCF8akRNn1j0jffutju
+   iQkCBCnsR0TuJBRw+K9YghTTi1JWgiVmnbCtkwLdah2v043pPm882GhXm
+   IXn851xel1CnprW8hNPpjc4f134eQoL378pxZSzUnV5dSaqds+hgIznLh
+   qTkAefnDyWOBp2bj91bT7XougIXtkuQ2E/u/y4m6d2/cHd1/ex1LdutNk
+   w==;
+X-CSE-ConnectionGUID: Ovl0zT8gQLahbWtgL2QFbg==
+X-CSE-MsgGUID: wgwoyk37QWmlV17PRRR0GA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11603"; a="63658960"
+X-IronPort-AV: E=Sophos;i="6.19,281,1754982000"; 
+   d="scan'208";a="63658960"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 03:38:30 -0800
+X-CSE-ConnectionGUID: aDX//h26STOPPRKOXcZhcg==
+X-CSE-MsgGUID: 0bi4mw+RThuqog22QGIMDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,281,1754982000"; 
+   d="scan'208";a="224679250"
+Received: from ldmartin-desk2.corp.intel.com (HELO ashevche-desk.local) ([10.124.221.135])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2025 03:38:26 -0800
+Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1vGbqH-00000005lGe-0J8H;
+	Wed, 05 Nov 2025 13:38:21 +0200
+Date: Wed, 5 Nov 2025 13:38:20 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v5 3/8] software node: allow referencing firmware nodes
+Message-ID: <aQs3LJtrYMLPUSwU@smile.fi.intel.com>
+References: <20251105-reset-gpios-swnodes-v5-0-1f67499a8287@linaro.org>
+ <20251105-reset-gpios-swnodes-v5-3-1f67499a8287@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 01/16] dt-bindings: regulator: ROHM BD72720
-To: "Rob Herring (Arm)" <robh@kernel.org>,
- Matti Vaittinen <matti.vaittinen@linux.dev>
-Cc: Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
- Lee Jones <lee@kernel.org>, devicetree@vger.kernel.org,
- Linus Walleij <linus.walleij@linaro.org>, Sebastian Reichel
- <sre@kernel.org>, Andreas Kemnade <andreas@kemnade.info>,
- Bartosz Golaszewski <brgl@bgdev.pl>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Stephen Boyd <sboyd@kernel.org>, Pavel Machek <pavel@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-gpio@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-leds@vger.kernel.org,
- Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Michael Turquette <mturquette@baylibre.com>, linux-rtc@vger.kernel.org,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-References: <cover.1762327887.git.mazziesaccount@gmail.com>
- <48fe6e2642db4484640b173cd71be1b245929122.1762327887.git.mazziesaccount@gmail.com>
- <176233320981.143013.4115240062372455834.robh@kernel.org>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <176233320981.143013.4115240062372455834.robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251105-reset-gpios-swnodes-v5-3-1f67499a8287@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On 05/11/2025 11:00, Rob Herring (Arm) wrote:
+On Wed, Nov 05, 2025 at 09:47:34AM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> On Wed, 05 Nov 2025 09:35:59 +0200, Matti Vaittinen wrote:
->> From: Matti Vaittinen <mazziesaccount@gmail.com>
->>
->> The ROHM BD72720 is a new PMIC with 10 BUCk and 11 LDO regulators.
->>
->> The BD72720 is designed to support using the BUCK10 as a supply for
->> the LDOs 1 to 4. When the BUCK10 is used for this, it can be set to a
->> LDON_HEAD mode. In this mode, the BUCK10 voltage can't be controlled by
->> software, but the voltage is adjusted by PMIC to match the LDO1 .. LDO4
->> voltages with a given offset. Offset can be 50mV .. 300mV and is
->> changeable at 50mV steps.
->>
->> Add 'ldon-head-microvolt' property to denote a board which is designed
->> to utilize the LDON_HEAD mode.
->>
->> All other properties are already existing.
->>
->> Add dt-binding doc for ROHM BD72720 regulators to make it usable.
->>
->> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
->>
->> ---
->> Revision history:
->>   v2 => v3:
->>   - drop unnecessary descriptions
->>   - use microvolts for the 'ldon-head' dt-property
->>
->>   RFCv1 => v2:
->>   - No changes
->> ---
->>   .../regulator/rohm,bd72720-regulator.yaml     | 149 ++++++++++++++++++
->>   1 file changed, 149 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd72720-regulator.yaml
->>
+> At the moment software nodes can only reference other software nodes.
+> This is a limitation for devices created, for instance, on the auxiliary
+> bus with a dynamic software node attached which cannot reference devices
+> the firmware node of which is "real" (as an OF node or otherwise).
 > 
-> My bot found errors running 'make dt_binding_check' on your patch:
+> Make it possible for a software node to reference all firmware nodes in
+> addition to static software nodes. To that end: add a second pointer to
+> struct software_node_ref_args of type struct fwnode_handle. The core
+> swnode code will first check the swnode pointer and if it's NULL, it
+> will assume the fwnode pointer should be set.
 > 
-> yamllint warnings/errors:
-> 
-> dtschema/dtc warnings/errors:
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/regulator/rohm,bd72720-regulator.yaml: patternProperties:^buck[1-10]$:properties:rohm,ldon-head-microvolt: '$ref' should not be valid under {'const': '$ref'}
-> 	hint: Standard unit suffix properties don't need a type $ref
-> 	from schema $id: http://devicetree.org/meta-schemas/core.yaml
+> Software node graphs remain the same, as in: the remote endpoints still
+> have to be software nodes.
 
-Nice! I'm not sure if anyone has said it but these bots are helpful :) I 
-forgot the type to ldon-head when switching from -millivolt to 
--microvolt. I'll address this for the next version.
-
-> doc reference errors (make refcheckdocs):
-
-Thanks for including the make -command to the mail! I didn't even know 
-about 'refcheckdocs' target.
-
-> Warning: Documentation/devicetree/bindings/regulator/rohm,bd72720-regulator.yaml references a file that doesn't exist: Documentation/devicetree/bindings/mfd/rohm,bd72720-pmic.yaml
-> Documentation/devicetree/bindings/regulator/rohm,bd72720-regulator.yaml: Documentation/devicetree/bindings/mfd/rohm,bd72720-pmic.yaml
-
-Hmm. I suppose this is because the MFD binding is added only later in 
-the series(?) I suppose we can't help it because the MFD binding 
-references the regulator binding as well. So, this is kind of a chicken 
-and egg problem?
-
-Yours,
-	-- Matti
+All my worries have been addressed, thanks.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 -- 
-Matti Vaittinen
-Linux kernel developer at ROHM Semiconductors
-Oulu Finland
+With Best Regards,
+Andy Shevchenko
 
-~~ When things go utterly wrong vim users can always type :help! ~~
+
 
