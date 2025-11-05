@@ -1,144 +1,214 @@
-Return-Path: <linux-gpio+bounces-28136-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28137-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85E1BC36FDE
-	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 18:14:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64B33C36FD2
+	for <lists+linux-gpio@lfdr.de>; Wed, 05 Nov 2025 18:13:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 824BF6467AE
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 16:18:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BB94F681D4A
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Nov 2025 16:36:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D2E6343204;
-	Wed,  5 Nov 2025 16:15:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15D92335579;
+	Wed,  5 Nov 2025 16:36:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V1ZDJ0xv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UVst2bXx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D70033F8D4
-	for <linux-gpio@vger.kernel.org>; Wed,  5 Nov 2025 16:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F48724A069
+	for <linux-gpio@vger.kernel.org>; Wed,  5 Nov 2025 16:36:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762359309; cv=none; b=HTxLwTdSuYWD3ASVfpy/57MtRLyoQqn7tduGajt0lVF7KMkLITY3qiMOMeAPorDPvbswX2jP8cIeV5Dm+c5sn24ilUVCQd3E79sZp9uAZrHbvKxHx2KFSjVD3Rf0E0YfFysthwM4gJclkshIkrCtNCX9fvtSWeQ34hiqTEpRbL8=
+	t=1762360594; cv=none; b=md0mDcecPEzvc1I0hJpymVMKdvs76z43w9lhcKTXF0YmkML/t5hHmoAfsY9QUb46EgPSjOzbO+2txi25S9ls0TiTa6eFerur9zuBrqPYL7IXoeJzhQIefhuQBviFAb7VHOO73YkSkV2vpNdud3Rm2pveecQmBmqeNh/um0HIvu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762359309; c=relaxed/simple;
-	bh=uO/6iVYZ1vFXrKMD4kA3PYSBEGhevKLmMat7U8ijANM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=C9A/6ecZLT87iHZ3egs2hQYPFEKUKyQ/XPQGLyZLEOa+oW0NqsBitg3m5qZHUxuO5qCq8tV4SiI2ilEaIXilDrZ7dyeIsbSKbmPdtJ3Bt7yha8huJFO/g9sROOMABEnOdcbmZev2x27Ja49qIzKpEFj/w3GSzQtKZeOEcSdcNn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V1ZDJ0xv; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-640ca678745so5818674a12.2
-        for <linux-gpio@vger.kernel.org>; Wed, 05 Nov 2025 08:15:06 -0800 (PST)
+	s=arc-20240116; t=1762360594; c=relaxed/simple;
+	bh=lB1oiiivUFk0ZDJoQQXW2XHOAkxUVwGf4d1RCAjOPZI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C3wz5PQtHyg/zBCWNleIUeb7Ci3P/AZmj81CefvrS5H9SDYVAI00d7LeioWsNamagvenaFZEOhKJbNGLSroP8XMn/ucGH1cOwRRCFJMgypwL5S2bH59fcQAnS1Tl+sbyYJ8ssX9G/7HjiGUtiHWjAcQ3+DzMU/Yew4xsimGwznc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UVst2bXx; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-47109187c32so36288785e9.2
+        for <linux-gpio@vger.kernel.org>; Wed, 05 Nov 2025 08:36:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1762359305; x=1762964105; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=PW+009+mxrT5Q7b6yvU7pEoFhY6Kftp+LN/SDJfngBw=;
-        b=V1ZDJ0xvb7uRoFrhxUzsIPQlte8MdOkz2Novsgvdv55wo47Ukt/fgjcSmjlWY/lsvC
-         XcqnnhuDP8NgVHCCOv78l9UxIkMfrdRjEyxElJK9TUX2Xb0g1N7v1XafyyGB/JzpoSeb
-         cLmFdgZUMjEjd8euY9cicGuhRfaIgOhSDX6F4MJCoZ/FKodLgpmePVnBQQB1Rc3FpBGy
-         Vr1iAx+UQA8rSz9UYWy9Bq2Ij3BsFxmq4PeALc3ZsCRaJzdLolTvH6k/CWrCAAeg77WD
-         wF1XvZWMBgAQ8RjEA4pyqTEQlxWWWfu/mfHlEWMtlBXDSB1LBihExDRK6dcmSN/sdupe
-         yfig==
+        d=gmail.com; s=20230601; t=1762360591; x=1762965391; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fHYj506/4Pr8DL5qCv+wyZzNDXaCmNF2075v0Hd6Ako=;
+        b=UVst2bXxbBO9T6/1vAKMRGa7Xs8UcLSqz4QihlDyH49QFCJoOwRFXzPYtnkmZO+KTk
+         BUzFOEil6dYA4iThnWqmYZuo8iAvBL7PflNl9gl4Q2F33rjtD5TXl711h0xTGw1ae0/P
+         enDa4ZH4zSmIs5YKvkVIyUvhQ1Qs9qFpAWOAGDtFmnu5CUnMtCNW4LEmevDhs6cV/AAo
+         iyMMJkBl54rOStz7fPJaeiltBD/qhX4RNIjcHTgiYsyCkyPWP0v0wCdKZMigpjTsQ2Pq
+         5knamDe/oX5ADVxkSsd7QU1W3bkjLES6fNvVVLlUeaOLqheSd2ObEDSZQgKL6F5pnaq3
+         7BoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762359305; x=1762964105;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PW+009+mxrT5Q7b6yvU7pEoFhY6Kftp+LN/SDJfngBw=;
-        b=HQAix/syL2fuBNLn1Xm4fJUdSk0T8ANFio++u6piHKiWEB9XG4Z57lyclSAuP6Po5/
-         YZYGsmUlaOkjnDFsoQ47boJmSqO/3r2PTz5VDWxtE4hM1DjFsNQwHE7QraXIeQFb2/Mu
-         Z6TytneW4IGDd4A+xcutVIArtCqkylGHXuWQdxE3Td7X0ITX0bNguu45SkCoAfJOfYiR
-         /k+sI2YuujPTSvnHsAZjxnvOt+pCEPmiYvIyfPNEOsx94jWzDJ7cm3GySwjgvsSBCqQL
-         d5Mli5+DXJYDj7vQlVDzmMVnnPPjdzro/f4SJlR2FMLdaBzlC/7s6GYtD6SlO6UV9J/5
-         x8Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCUCY76qTIlSRCj+NgkLQcePN0EAbspgVR84BnbuFHREhC/YuRJfqZeWt693THr7RVZ3iWGZMCvSjj3S@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZnZnu+uH2s3yLavMXPk2c5HY2wHuhpVPipO4dv/ZDVvYb3bW2
-	qASMM8jTdI65Pw8T74+aSSXLJ+wN3XrSIyAYWpsRApC5iBKSgStvNB2ZCnOR+K8fNyc=
-X-Gm-Gg: ASbGnctOtDsTbuFKCK41IHQGyJrjGaBFqeyv1E0AQ5qi0/DhXKzwq6C/zssJKGjOgBJ
-	9fvAgt5/rdgmFpLjl4Otg37bRSGuy+3Ev7ev0VU8ezZw2vz1Er4va3YvP/M0W4kIwtV820F/Aq2
-	8wa2i0iavK4At59VcEujseK9i5DbZf3zXHI7mWm/RhPkIGA5e7h1IkEj0gVIqWqPBlH6Pyg7dtm
-	ZZhXpJvyRrlnZNXS3lYzK6Sh0ZFLQpogkTt+w/obQHqFv/G8PSR/SB3l0+E2C2blWWkl5D9VbSS
-	SAqy/VycXwqbAoTLAqlHNLy57K6uVV3vXQQEOyFnnIqRy98OTlYDOZwWaOMvzVl+Jc5TSY1vR3/
-	Qxb1T73kdzC/rRLAsR4sAE/ls/pd9a3mM1Wafm9Fpt65RDwmm7A1eJasrzIbYaeXmbHoK1kJbMS
-	+E6/oJkdUzRLYK9uR8wP+pVA==
-X-Google-Smtp-Source: AGHT+IF4JPIePgklGlaLoqm71Bu7ApcoRu6iTmJ5L4gpcRDvE83BvmdQI2sf+Wxgg7a+5Eyn5thE4Q==
-X-Received: by 2002:a05:6402:13cb:b0:640:d0d9:71d3 with SMTP id 4fb4d7f45d1cf-641058a2312mr3606599a12.6.1762359305340;
-        Wed, 05 Nov 2025 08:15:05 -0800 (PST)
-Received: from [172.20.148.133] ([87.213.113.147])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-640e680578esm4923886a12.10.2025.11.05.08.15.02
+        d=1e100.net; s=20230601; t=1762360591; x=1762965391;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fHYj506/4Pr8DL5qCv+wyZzNDXaCmNF2075v0Hd6Ako=;
+        b=gjrGclfZFhOJRqY+uR5x5MPiZkVjYzSfoYD1Wz1zuE3kOF5VFfHnSaU1JU+SBi+Wim
+         klrhXSFVHEi1inKejFIMz8DbVjOZqqaToBhN+zqaPV6avgv46xcK0LaDNnvR5BlmjITU
+         bfN2bIynB2c9slrdtoTRFtSZHHSXI8OdjZCtDRF9m45JsXezX4JSz4WShUZecyryXC/k
+         oCEhKftyaj4yjADq4UwImCvzt3cuH9GbTk1SD9yPdUXyZl7K5sIh1LJ9Z/gf01B7jmIL
+         ofdWyZTTiJRkZgOpDp4c+qq/Y+Nx+LLq1JocyimyTtaB5Y8TJDsrCbTwmgnFFnPX7x1j
+         S+og==
+X-Gm-Message-State: AOJu0YzmgK4KoC0Bp152FFbeJ2cr1Jxp/2CldDINTRTjsnEq3ClqU8tW
+	WQFGyQCLxq5DTgNO5RRhWQ7VGNFITdeIT46/KlbJoSzeGHyDEsXqfoLI
+X-Gm-Gg: ASbGncuJX/f4cdh3TU+InRGLCaV6KazBxQeXyWNcDKNXX0BI/alv6Ihe9fLhq0iP7l8
+	fp2m3NIzj/DoqKQw4U5UBTGa2hX5lGtt4jNDevwZydg1wk5t66YZCshYaZ2lSQuybACuFqm4k/U
+	PlMi5nFhJIJWJ+IFan34zD1ChakndVVdxPoMh9r9YdKLlMwyzGbNcfN4rZJkkRYPBa6IJSOvABs
+	1Kke4yI3BzB/QROxazK6ly85dabYXbMYkRRstm4i2M1E+0HDzIkd6zOTHdEqvVz3CPhNLil1Jm/
+	7X3M4A7rvnTXcknCCFUrSNRQjC7Xwv7y1kmmZlRUQZqebAKDcpPM2vmEZRCZBaAn4FnSQ8KgYLD
+	8RsFYZPB6IcE5MOdqT1xtKnnm03Y0PWsev5iZ7fFGfAzZEAtfOvtIIV9LYWB4/FfWhocRRARhtg
+	m1IjGvICk3h0EabQ==
+X-Google-Smtp-Source: AGHT+IGLGPvP7XURghAJPhqU1JFUqROk92/vfl7A7dK/Bo5oH/GGTIj4CfcCbwnGs5AWe5xeP+xN4w==
+X-Received: by 2002:a05:600c:4e88:b0:477:259c:dbd7 with SMTP id 5b1f17b1804b1-4775cdc56f1mr27738775e9.12.1762360590620;
+        Wed, 05 Nov 2025 08:36:30 -0800 (PST)
+Received: from builder.. ([2001:9e8:f106:5b16:be24:11ff:fe30:5d85])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4775ce3ef38sm57026755e9.17.2025.11.05.08.36.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Nov 2025 08:15:03 -0800 (PST)
-Message-ID: <8f05eb9644d1920f7158c19d769c943fd5dba9a1.camel@linaro.org>
-Subject: Re: [PATCH v3 10/20] regulator: add REGULATOR_LINEAR_VRANGE macro
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
-  Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>,  Lee Jones <lee@kernel.org>, Linus
- Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski	 <brgl@bgdev.pl>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Peter Griffin	
- <peter.griffin@linaro.org>, Will McVicker <willmcvicker@google.com>, 
-	kernel-team@android.com, linux-kernel@vger.kernel.org, 
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Date: Wed, 05 Nov 2025 16:15:02 +0000
-In-Reply-To: <aQoNPvwUCE9PijJ6@finisterre.sirena.org.uk>
-References: <20251103-s2mpg1x-regulators-v3-0-b8b96b79e058@linaro.org>
-	 <20251103-s2mpg1x-regulators-v3-10-b8b96b79e058@linaro.org>
-	 <aQoNPvwUCE9PijJ6@finisterre.sirena.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-2+build3 
+        Wed, 05 Nov 2025 08:36:30 -0800 (PST)
+From: Jonas Jelonek <jelonek.jonas@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Peter Rosin <peda@axentia.se>,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thomas Richard <thomas.richard@bootlin.com>,
+	Jonas Jelonek <jelonek.jonas@gmail.com>
+Subject: [PATCH v5 0/2] add gpio-line-mux
+Date: Wed,  5 Nov 2025 16:36:08 +0000
+Message-ID: <20251105163610.610793-1-jelonek.jonas@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thanks Mark for your review!
+This proposes a new type of virtual GPIO controller and corresponding
+driver to provide a 1-to-many mapping between virtual GPIOs and a single
+real GPIO in combination with a multiplexer. Existing drivers apparently
+do not serve the purpose for what I need.
 
-On Tue, 2025-11-04 at 14:27 +0000, Mark Brown wrote:
-> On Mon, Nov 03, 2025 at 07:14:49PM +0000, Andr=C3=A9 Draszik wrote:
->=20
-> > REGULATOR_LINEAR_VRANGE is similar to REGULATOR_LINEAR_RANGE, but
-> > allows a more natural declaration of a voltage range for a regulator,
-> > in that it expects the minimum and maximum values as voltages rather
-> > than as selectors.
->=20
-> > Using voltages arguably makes this macro easier to use by drivers and
-> > code using it can become easier to read compared to
-> > REGULATOR_LINEAR_RANGE.
->=20
-> It does introduce an additional layer of indirection into the validation
-> that the configuration is correct, the reason we use selectors is that
-> they should map directly onto the register in the datasheet.
+I came across an issue with a switch device from Zyxel which has two
+SFP+ cages. Most similar switches either wire up the SFP signals
+(RX_LOS, MOD_ABS, TX_FAULT, TX_DISABLE) directly to the SoC (if it has
+enough GPIOs) or two a GPIO expander (for which a driver usually
+exists). However, Zyxel decided to do it differently in the following
+way:
+  The signals RX_LOS, MOD_ABS and TX_FAULT share a single GPIO line to
+  the SoC. Which one is actually connected to that GPIO line at a time
+  is controlled by a separate multiplexer, a GPIO multiplexer in this
+  case (which uses two other GPIOs). Only the TX_DISABLE is separate.
 
-My datasheet mentions the range more prominently than the selectors, and as=
- driver
-author I can easily validate both (neither macro does any validation itself=
-). I do
-believe code like this:
+The SFP core/driver doesn't seem to support such a usecase for now, for
+each signal one needs to specify a separate GPIO like:
 
-    REGULATOR_LINEAR_VRANGE(200000, 450000, 1300000, STEP_6_25_MV)
+  los-gpio = <&gpio0 0 GPIO_ACTIVE_HIGH>;
+  mod-def0-gpio = <&gpio0 1 GPIO_ACTIVE_LOW>;
+  ...
 
-looks more meaningful and is more naturally readable than
+But for my device, I actually need to directly specify multiplexing
+behavior in the SFP node or provide a mux-controller with 'mux-controls'.
 
-    REGULATOR_LINEAR_RANGE(450000, 0x28, 0xb0, STEP_6_25_MV)
+To fill this gap, I created a dt-schema and a working driver which
+exactly does what is needed. It takes a phandle to a mux-controller and
+the 'shared' gpio, and provides several virtual GPIOs based on the
+gpio-line-mux-states property.
 
-as it's much easier to see the actual range without doing any additional ca=
-lculations.
-I'd prefer to keep the alternative macro, but will drop this patch if you r=
-eally
-disagree that it adds any value
+This virtual gpio-controller can then be referenced in the '-gpio'
+properties of the SFP node (or other nodes depending on the usecase) as
+usual and do not require any modification to the SFP core/driver.
+
+---
+Changelog:
+
+v5: - renamed "shared" to "muxed" to avoid confusion with Bartosz' work
+    - dropped Reviewed-by of Krzysztof due to binding change
+    - use GPIOD_IN in devm_gpiod_get instead of calling
+      gpiod_direction_input explicitly afterwards
+
+Link to v4:
+https://lore.kernel.org/linux-gpio/20251105103607.393353-1-jelonek.jonas@gmail.com/
+
+v4: - dropped useless cast (as suggested by Thomas)
+    - dropped unneeded locking (as suggested by Peter)
+    - fixed wording in commit message
+    - included Reviewed-by of Krzysztof
+
+Link to v3:
+https://lore.kernel.org/linux-gpio/20251104210021.247476-1-jelonek.jonas@gmail.com/
+
+v3: - fixed dt_binding_check errors in DT schema
+    - as requested by Rob (for DT schema):
+      - removed example from gpio-mux.yaml
+      - added '|' to preserve formatting
+      - 'shared-gpio' --> 'shared-gpios'
+    - general fixes to DT schema
+    - use mux_control_select_delay (as suggested by Peter) with
+      hopefully reasonable delay of 100us
+    - gpiochip ops implementation changes:
+      - drop '.set' implementation (as suggested by Peter)
+      - new '.set' implementation just returning -EOPNOTSUPP
+      - '.direction_output' and '.direction_input' dropped
+      - '.get_direction' returns fixed value for 'input'
+    - direction of shared gpio set to input during probe
+    - as suggested by Thomas
+      - usage of dev_err_probe
+      - further simplifications
+
+    Since the consensus was that this should be input-only,
+    '.direction_output' and '.direction_input' have been dropped
+    completely, as suggested in the docs of struct gpio_chip. '.set' is
+    kept but returns -ENOTSUPP.
+
+    The shared GPIO is set to input during probe, thus '.direction_input'
+    doesn't need to be implemented. '.get_direction' is kept (as
+    suggested in docs of struct gpio_chip) but always returns
+    GPIO_LINE_DIRECTION_IN.
+
+Link to v2:
+https://lore.kernel.org/linux-gpio/20251026231754.2368904-1-jelonek.jonas@gmail.com/
+
+v2: - as requested by Linus:
+      - renamed from 'gpio-split' to 'gpio-line-mux'
+      - added better description and examples to DT bindings
+    - simplified driver
+    - added missing parts to DT bindings
+    - dropped RFC tag
+    - renamed patchset
+
+Link to v1 (in case it isn't linked properly due to changed title):
+https://lore.kernel.org/linux-gpio/20251009223501.570949-1-jelonek.jonas@gmail.com/
+
+---
+Jonas Jelonek (2):
+  dt-bindings: gpio: add gpio-line-mux controller
+  gpio: add gpio-line-mux driver
+
+ .../bindings/gpio/gpio-line-mux.yaml          | 109 +++++++++++++++
+ MAINTAINERS                                   |   6 +
+ drivers/gpio/Kconfig                          |   9 ++
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-line-mux.c                  | 125 ++++++++++++++++++
+ 5 files changed, 250 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-line-mux.yaml
+ create mode 100644 drivers/gpio/gpio-line-mux.c
 
 
-Cheers,
-Andre'
+base-commit: bac88be0d2a83daf761129828e7ae3c79cc260c2
+-- 
+2.48.1
+
 
