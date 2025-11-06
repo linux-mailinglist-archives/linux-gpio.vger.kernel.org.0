@@ -1,79 +1,79 @@
-Return-Path: <linux-gpio+bounces-28230-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28231-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E86EAC3DEA8
-	for <lists+linux-gpio@lfdr.de>; Fri, 07 Nov 2025 00:57:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0ECFEC3DEC7
+	for <lists+linux-gpio@lfdr.de>; Fri, 07 Nov 2025 00:58:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9AF573ADF70
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Nov 2025 23:57:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 74A2E188BB61
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Nov 2025 23:58:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E86643570B6;
-	Thu,  6 Nov 2025 23:57:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40CAB30101E;
+	Thu,  6 Nov 2025 23:57:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kiyd8zx3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UNJO0QdA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF22355811
-	for <linux-gpio@vger.kernel.org>; Thu,  6 Nov 2025 23:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26EE72F7ACA
+	for <linux-gpio@vger.kernel.org>; Thu,  6 Nov 2025 23:57:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762473450; cv=none; b=BHSpyUI4jDyAJxSN2L9fwB5YVdwQZfVVZJ6JJSUA9YcSQZailUhDPcYQO5O4EovgR6Pt+jGYQzvn5EXkQrjW4u6i+9fQy1QgFkELL5pHFDrdbwVr84bUoyLGkrLq2tK2R7rGthGdbPgpYeM/10c6kd57uz95zk2wKe0p5livdwA=
+	t=1762473450; cv=none; b=JnKcwgkJPJZ+bfM128FRDhgxpH5sn5Ldrl92Ruq8EeBzhfj2zEglCAtzKWFEQ3h0dTLYUVMdmwg1V0nnVAtZrCIrqELZXsu14YdnLayI5NG/pI4U4mKhd0rOtrq6Qn24+nQkc/QuSM6V8evLwa0ASLYJndAdkD02KDLwPJItH2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1762473450; c=relaxed/simple;
-	bh=j/wl6TDp+mU3UJLN/PBks9X6QMEPBs4Muqe436wsIdY=;
+	bh=f1PQo4QBL2qwY2C9AqqCdBd1hAsdgl5lCvJysh0udQg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aGyExmT0wQ5ejpmCvzzf+gmIGEIOUGiKSq4TTLtL0OgfMN0nhDjCuziAXKKZZbXn/M5NuNkdTbcDDAvUNAUpgz/HLvH6MR12rzhGjjYmDedWsRok7v6d27omFYfUrAFzwlPaTaklmNJFVE1aFXjHFNgzLg/Ymg0GpYIIFFm7G+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kiyd8zx3; arc=none smtp.client-ip=209.85.128.52
+	 MIME-Version; b=LIMORZxA/Tdy1KU0uSqlfkj50zjei74oYOOiX85nmkUvBZOtyz27WK7BsmIdRG6x8OYcoYZzAwpaw85De5WnIRGvgSCDsjga9nOpZi1lIGagfTDA8S0m8B9LLnlbrjfbXaRe7GNUgK5Cmoc/FscYl9TBplAk9zryInQpFdKO4HA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UNJO0QdA; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4710683a644so1078435e9.0
-        for <linux-gpio@vger.kernel.org>; Thu, 06 Nov 2025 15:57:23 -0800 (PST)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4775ae77516so1877575e9.1
+        for <linux-gpio@vger.kernel.org>; Thu, 06 Nov 2025 15:57:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762473442; x=1763078242; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1762473444; x=1763078244; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rTkcK2RQSdHwCwFi+jloB7ukY3+VfI48ITRyLxnM3ok=;
-        b=Kiyd8zx35W1G7ri2VJFcOf2CvqEyUCFyeA0k4/RFVuf5dm+xoRc5tFPHUnUP1WD6dU
-         m3MMcloiIv36K/04jN26oYVcn5OtftR+qv2r2u1F1NlsFnUmXLlVeThvEymZxwWniSZI
-         0FFsxlHOlp5k1hXI0OsZvl9NyzQLEhiAw4EEQs70Zw5qjqz88iKYebvnrx2WDRYUofn5
-         5chYtyEo+HEwuCXyoACdXGT2i0egVeCe9gjdhq0grJ6M7383/dLNU06KD/m32KUeFDcA
-         Kx37M2Gpfi3K6dP7Ume7VZiVwbt1R4ZD4V5MWOBg3T5CHNmWBiyGqeuaZFlp9CWfSEsG
-         RklQ==
+        bh=48BoF8NaOlBn/uSGyBDir/rc+KJ4BqlhpDGaIy/7loQ=;
+        b=UNJO0QdADtOJ25c/DA3IFypNdGK9mDuGhPMFdDJU6kIqK6XAn6eIezb1+P/sLTA2aH
+         z698QmwuIe2sG09q5llsW+c7Ahcs+KVjoQfvNXHgbld3ntpIm+/bItnBaC8GZhA2Abu0
+         kQ6iZbWGJGkvPgxt6sza13kgkS4R4k0GSpwujS4wdPSu8uuLHH0ifaNBvd9XXz6SHjmO
+         jcs0+LFGKfuXUyBLP5/afBDtP+xhVcxWLQzDD7sijCopVjXrFzugp35nPoTdJAhpBRD9
+         8Wl+c3UM54B74OogC9CD/X4veiW5FS9fGrjFUH0VxWNa8h8OlIDjoRFtnqYY3ILxoO8J
+         KkMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762473442; x=1763078242;
+        d=1e100.net; s=20230601; t=1762473444; x=1763078244;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=rTkcK2RQSdHwCwFi+jloB7ukY3+VfI48ITRyLxnM3ok=;
-        b=oUwuAlAGR6TV3FrPb+WvEoN14of5Rdnlw3IuR3nkeI+lENyoI9L1O9cEhVRrsHIGc7
-         1rpfA6t7OP/+mooc5IRQxtxPIJILKEWJaBTFH1BQ1tYsvVeaCy5shTaNUPSTIil3D93A
-         ZdVQKlI3W3Ugll/VSu+PdgOjMQSN/7RGBarx7MAFdvZTtrWoIf6Qo13OjqcUeJ3MQaFm
-         J31wkAxojUq3Rh5SASd9UxTjCcgNSJh1kpomGuL7sdfG72ZP7DFCk7lItafd35pA6eUF
-         eninULCkzotjezOprMY0Vt4xykH9UDIdh1kr6Ac8hAfivriCBSuXM3Cso0CKupnC6vb/
-         Jpcg==
-X-Forwarded-Encrypted: i=1; AJvYcCVzlPWqZAyznM6y6GjJAYk8K8zG2C7vSUie40DOLOysGg1wZvU4ODh+gTrlUdJshEwIxiW34jUmK5Fh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzi54UMk7nWckdBd7Mw1vDGxkWPeiZGp7Osi9H20TXIQzEBVIwt
-	nfjWSROUZR8s8mU2u1A+msYaY/KE5TckZb8YBgmK0COqYNtpmfcYwabt
-X-Gm-Gg: ASbGncsOPnMn60z4Ym6D63BEYBobtte1ZLOuEOsIgF+52xM372JGEnD0YYeckIw9BbJ
-	XMF3C18xPQs4oR/yiTYy/oV56VUDNBivBXyIFa0ZbJmzgeZnhWPi+C4MnQl5cSZjfdhCdLLcMwn
-	gK+/8qsZC6WCdliardCjk3hXThtifZf/TBgL0i1gB6uGNJHmU+mR/vL9Du+F6A+H9AIgiOvn9h2
-	t6sq57sbc7aANbO16e8gaTL6gzCAIWDlqBMo79j/D1gV8CSTWt5jov7HRBYOlFKCJJiCUuLs32E
-	WFH8/+Lu8RnyIHh2LKRyI/tbfNHw593gJqkMciQPLZnjuj/0/tGptDu/wkm547/+zS0L3jLLIvK
-	VVsnzU+cIUdZU1jKUbjm+EM++DM9AMUjItnSLsqzhVwcPJNBqnsOj/4vFkodwj15LyRww4KofSt
-	WsaKz99gY50iBJ0GqTURo4W+v99nou4A==
-X-Google-Smtp-Source: AGHT+IHvjxOnyRVvRjpNpCUzBWwh3KDbgeH2FzI9ztIg74cu6NGoEZmbeAo1fnqTA/4amOmCvZaeTQ==
-X-Received: by 2002:a05:600c:3b8e:b0:475:f16f:6e10 with SMTP id 5b1f17b1804b1-4776bab8b09mr11673625e9.18.1762473442401;
-        Thu, 06 Nov 2025 15:57:22 -0800 (PST)
+        bh=48BoF8NaOlBn/uSGyBDir/rc+KJ4BqlhpDGaIy/7loQ=;
+        b=OC727XPdrgmhxX0hwdIwtWaJgKOxLfMMCfEDb6Tv7yeFwJVkEOOF3XzquZtYMoKEGw
+         IfAIC7ou97JIi8oK96fD2m1cvPJ9pnOvk8js1yL5b2T6ZMi6xx6Fcvpm3eFu55rO83M0
+         Uu2vfYVt06zQro/rLiOyMo4HFWsxtifQWsOZCVoGUpwVQmgfeisT/qptInjCdkOsEbxH
+         ChVJZyQ0vJ06kZQc2gFd/T3TecFzL12mVzEOY86FvjkHR+iCii47h1BpKiWroqnsVzt2
+         hgikIFt3JLh5eXPPR+dXZgSI0nJ8LgdSKD1LiF5CNImfCpt418iKBEWtXlBOqCMbxBzj
+         B3Yg==
+X-Forwarded-Encrypted: i=1; AJvYcCV1KNEbLmi3VVlZFjIXh+0JR78agJ0QViLlpCXA7uoAaD3S+Pnti4mGKa9zDsKcUT8pm1hVC9yZUR0/@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmO/MYzZGxYgcQEdb5z2AUHxMVU4SbJm6QQt5v56a75oGnjvSQ
+	uF1E7bxaiQ73tftBd7i1BDF7/V0pByE4errp/7ovEOeYIJZh+tn5cnYW
+X-Gm-Gg: ASbGnct043eDc5CFl2U+JvpxeF2iuGOrYCLLRFbONvCO4mfs5fFILjXKkItKbQu+5UW
+	0luET5QmHdYT6snJYfm6cK7GMOdqQoGJKwFA8PTeW47rH3ZT6iUNN+luM1H+X8sluO23eZLy6sw
+	2cAlSyynjkCC77kRYD0zeHp+zEtzZr+18KVPl9YOpO6JBe9wKSC4VgowpzbGOQiPyJ4CzroEUIl
+	S244M8Gx5S/BoN+aWT5FAiBoZ7hQIg4f+jHnDP6hvCssUNPFeWuUnFb1qlCObccIj0MdugbhRuW
+	86mRqnA9kVEQChzYL3adAzVPxkDyZo3nZ6zxmGnR8uqjQX8+v9QIn6BBfiHTxbZYC+tOeXQo3/V
+	OY6dqF2fMBC2QFmBrSMXwNR0XmceYAZLDp4hHU3mgquU7FLoHhv8a8gnbnKV30ke6p0nVswrER7
+	Pae7Ao5Yl0QH8tamcnT8oFu2CzH+1DBA==
+X-Google-Smtp-Source: AGHT+IFzsedTnTbZ6Fd8WEjJ1Vj1aOJB4NwmHqodu5jtk2xl8WgbaEUCKzp6OPGFJllbzQLlnrKeXg==
+X-Received: by 2002:a05:600c:c4ac:b0:459:e398:ed89 with SMTP id 5b1f17b1804b1-4776bc87df4mr8992405e9.1.1762473444216;
+        Thu, 06 Nov 2025 15:57:24 -0800 (PST)
 Received: from Ansuel-XPS24 (93-34-90-37.ip49.fastwebnet.it. [93.34.90.37])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4775cd45466sm129470525e9.0.2025.11.06.15.57.21
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4775cd45466sm129470525e9.0.2025.11.06.15.57.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Nov 2025 15:57:22 -0800 (PST)
+        Thu, 06 Nov 2025 15:57:23 -0800 (PST)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Rob Herring <robh@kernel.org>,
@@ -89,9 +89,9 @@ To: Linus Walleij <linus.walleij@linaro.org>,
 	linux-mediatek@lists.infradead.org,
 	linux-arm-kernel@lists.infradead.org
 Cc: Christian Marangi <ansuelsmth@gmail.com>
-Subject: [PATCH v2 2/5] pinctrl: airoha: convert PHY LED GPIO to macro
-Date: Fri,  7 Nov 2025 00:57:05 +0100
-Message-ID: <20251106235713.1794668-3-ansuelsmth@gmail.com>
+Subject: [PATCH v2 3/5] pinctrl: airoha: convert PWM GPIO to macro
+Date: Fri,  7 Nov 2025 00:57:06 +0100
+Message-ID: <20251106235713.1794668-4-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251106235713.1794668-1-ansuelsmth@gmail.com>
 References: <20251106235713.1794668-1-ansuelsmth@gmail.com>
@@ -103,637 +103,494 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-PHY LED GPIO pinctrl struct definition is very similar across the
-different 4 PHY and 2 LED and it can be generelized to a macro.
+The PWM GPIO struct definition follow the same pattern for every GPIO
+pin hence it can be converted to a macro.
 
-To reduce code size, convert them to a common macro.
+Create 2 macro one for normal mux and one for ext mux and convert all
+the entry to these new macro to reduce code size.
 
 Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
- drivers/pinctrl/mediatek/pinctrl-airoha.c | 588 ++++------------------
- 1 file changed, 100 insertions(+), 488 deletions(-)
+ drivers/pinctrl/mediatek/pinctrl-airoha.c | 465 ++++------------------
+ 1 file changed, 68 insertions(+), 397 deletions(-)
 
 diff --git a/drivers/pinctrl/mediatek/pinctrl-airoha.c b/drivers/pinctrl/mediatek/pinctrl-airoha.c
-index 32e5c1b32d50..cb0edc2a66a1 100644
+index cb0edc2a66a1..f3cf48bdd1f8 100644
 --- a/drivers/pinctrl/mediatek/pinctrl-airoha.c
 +++ b/drivers/pinctrl/mediatek/pinctrl-airoha.c
-@@ -1473,516 +1473,128 @@ static const struct airoha_pinctrl_func_group pwm_func_group[] = {
- 	},
+@@ -1073,404 +1073,75 @@ static const struct airoha_pinctrl_func_group pcie_reset_func_group[] = {
  };
  
-+#define AIROHA_PINCTRL_PHY_LED0(gpio, mux_val, map_mask, map_val)	\
-+	{								\
-+		.name = (gpio),						\
-+		.regmap[0] = {						\
-+			AIROHA_FUNC_MUX,				\
-+			REG_GPIO_2ND_I2C_MODE,				\
-+			(mux_val),					\
-+			(mux_val),					\
-+		},							\
-+		.regmap[1] = {						\
-+			AIROHA_FUNC_MUX,				\
-+			REG_LAN_LED0_MAPPING,				\
-+			(map_mask),					\
-+			(map_val),					\
-+		},							\
-+		.regmap_size = 2,					\
-+	}
+ /* PWM */
++#define AIROHA_PINCTRL_PWM(gpio, mux_val)		\
++	{						\
++		.name = (gpio),				\
++		.regmap[0] = {				\
++			AIROHA_FUNC_PWM_MUX,		\
++			REG_GPIO_FLASH_MODE_CFG,	\
++			(mux_val),			\
++			(mux_val)			\
++		},					\
++		.regmap_size = 1,			\
++	}						\
 +
-+#define AIROHA_PINCTRL_PHY_LED1(gpio, mux_val, map_mask, map_val)	\
-+	{								\
-+		.name = (gpio),						\
-+		.regmap[0] = {						\
-+			AIROHA_FUNC_MUX,				\
-+			REG_GPIO_2ND_I2C_MODE,				\
-+			(mux_val),					\
-+			(mux_val),					\
-+		},							\
-+		.regmap[1] = {						\
-+			AIROHA_FUNC_MUX,				\
-+			REG_LAN_LED1_MAPPING,				\
-+			(map_mask),					\
-+			(map_val),					\
-+		},							\
-+		.regmap_size = 2,					\
-+	}
++#define AIROHA_PINCTRL_PWM_EXT(gpio, mux_val)		\
++	{						\
++		.name = (gpio),				\
++		.regmap[0] = {				\
++			AIROHA_FUNC_PWM_EXT_MUX,	\
++			REG_GPIO_FLASH_MODE_CFG_EXT,	\
++			(mux_val),			\
++			(mux_val)			\
++		},					\
++		.regmap_size = 1,			\
++	}						\
 +
- static const struct airoha_pinctrl_func_group phy1_led0_func_group[] = {
+ static const struct airoha_pinctrl_func_group pwm_func_group[] = {
 -	{
--		.name = "gpio33",
+-		.name = "gpio0",
 -		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN0_LED0_MODE_MASK,
--			GPIO_LAN0_LED0_MODE_MASK
+-			AIROHA_FUNC_PWM_MUX,
+-			REG_GPIO_FLASH_MODE_CFG,
+-			GPIO0_FLASH_MODE_CFG,
+-			GPIO0_FLASH_MODE_CFG
 -		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED0_MAPPING,
--			LAN0_LED_MAPPING_MASK,
--			LAN0_PHY_LED_MAP(0)
--		},
--		.regmap_size = 2,
+-		.regmap_size = 1,
 -	}, {
--		.name = "gpio34",
+-		.name = "gpio1",
 -		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN1_LED0_MODE_MASK,
--			GPIO_LAN1_LED0_MODE_MASK
+-			AIROHA_FUNC_PWM_MUX,
+-			REG_GPIO_FLASH_MODE_CFG,
+-			GPIO1_FLASH_MODE_CFG,
+-			GPIO1_FLASH_MODE_CFG
 -		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED0_MAPPING,
--			LAN1_LED_MAPPING_MASK,
--			LAN1_PHY_LED_MAP(0)
--		},
--		.regmap_size = 2,
+-		.regmap_size = 1,
 -	}, {
--		.name = "gpio35",
+-		.name = "gpio2",
 -		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN2_LED0_MODE_MASK,
--			GPIO_LAN2_LED0_MODE_MASK
+-			AIROHA_FUNC_PWM_MUX,
+-			REG_GPIO_FLASH_MODE_CFG,
+-			GPIO2_FLASH_MODE_CFG,
+-			GPIO2_FLASH_MODE_CFG
 -		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED0_MAPPING,
--			LAN2_LED_MAPPING_MASK,
--			LAN2_PHY_LED_MAP(0)
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio3",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_MUX,
+-			REG_GPIO_FLASH_MODE_CFG,
+-			GPIO3_FLASH_MODE_CFG,
+-			GPIO3_FLASH_MODE_CFG
 -		},
--		.regmap_size = 2,
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio4",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_MUX,
+-			REG_GPIO_FLASH_MODE_CFG,
+-			GPIO4_FLASH_MODE_CFG,
+-			GPIO4_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio5",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_MUX,
+-			REG_GPIO_FLASH_MODE_CFG,
+-			GPIO5_FLASH_MODE_CFG,
+-			GPIO5_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio6",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_MUX,
+-			REG_GPIO_FLASH_MODE_CFG,
+-			GPIO6_FLASH_MODE_CFG,
+-			GPIO6_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio7",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_MUX,
+-			REG_GPIO_FLASH_MODE_CFG,
+-			GPIO7_FLASH_MODE_CFG,
+-			GPIO7_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio8",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_MUX,
+-			REG_GPIO_FLASH_MODE_CFG,
+-			GPIO8_FLASH_MODE_CFG,
+-			GPIO8_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio9",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_MUX,
+-			REG_GPIO_FLASH_MODE_CFG,
+-			GPIO9_FLASH_MODE_CFG,
+-			GPIO9_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio10",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_MUX,
+-			REG_GPIO_FLASH_MODE_CFG,
+-			GPIO10_FLASH_MODE_CFG,
+-			GPIO10_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio11",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_MUX,
+-			REG_GPIO_FLASH_MODE_CFG,
+-			GPIO11_FLASH_MODE_CFG,
+-			GPIO11_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio12",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_MUX,
+-			REG_GPIO_FLASH_MODE_CFG,
+-			GPIO12_FLASH_MODE_CFG,
+-			GPIO12_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio13",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_MUX,
+-			REG_GPIO_FLASH_MODE_CFG,
+-			GPIO13_FLASH_MODE_CFG,
+-			GPIO13_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio14",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_MUX,
+-			REG_GPIO_FLASH_MODE_CFG,
+-			GPIO14_FLASH_MODE_CFG,
+-			GPIO14_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio15",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_MUX,
+-			REG_GPIO_FLASH_MODE_CFG,
+-			GPIO15_FLASH_MODE_CFG,
+-			GPIO15_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio16",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO16_FLASH_MODE_CFG,
+-			GPIO16_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio17",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO17_FLASH_MODE_CFG,
+-			GPIO17_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio18",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO18_FLASH_MODE_CFG,
+-			GPIO18_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio19",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO19_FLASH_MODE_CFG,
+-			GPIO19_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio20",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO20_FLASH_MODE_CFG,
+-			GPIO20_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio21",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO21_FLASH_MODE_CFG,
+-			GPIO21_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio22",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO22_FLASH_MODE_CFG,
+-			GPIO22_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio23",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO23_FLASH_MODE_CFG,
+-			GPIO23_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio24",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO24_FLASH_MODE_CFG,
+-			GPIO24_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio25",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO25_FLASH_MODE_CFG,
+-			GPIO25_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio26",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO26_FLASH_MODE_CFG,
+-			GPIO26_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio27",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO27_FLASH_MODE_CFG,
+-			GPIO27_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio28",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO28_FLASH_MODE_CFG,
+-			GPIO28_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio29",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO29_FLASH_MODE_CFG,
+-			GPIO29_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio30",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO30_FLASH_MODE_CFG,
+-			GPIO30_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio31",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO31_FLASH_MODE_CFG,
+-			GPIO31_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio36",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO36_FLASH_MODE_CFG,
+-			GPIO36_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio37",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO37_FLASH_MODE_CFG,
+-			GPIO37_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio38",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO38_FLASH_MODE_CFG,
+-			GPIO38_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio39",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO39_FLASH_MODE_CFG,
+-			GPIO39_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio40",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO40_FLASH_MODE_CFG,
+-			GPIO40_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio41",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO41_FLASH_MODE_CFG,
+-			GPIO41_FLASH_MODE_CFG
+-		},
+-		.regmap_size = 1,
 -	}, {
 -		.name = "gpio42",
 -		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN3_LED0_MODE_MASK,
--			GPIO_LAN3_LED0_MODE_MASK
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO42_FLASH_MODE_CFG,
+-			GPIO42_FLASH_MODE_CFG
 -		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED0_MAPPING,
--			LAN3_LED_MAPPING_MASK,
--			LAN3_PHY_LED_MAP(0)
--		},
--		.regmap_size = 2,
--	},
-+	AIROHA_PINCTRL_PHY_LED0("gpio33", GPIO_LAN0_LED0_MODE_MASK,
-+				LAN0_LED_MAPPING_MASK, LAN0_PHY_LED_MAP(0)),
-+	AIROHA_PINCTRL_PHY_LED0("gpio34", GPIO_LAN1_LED0_MODE_MASK,
-+				LAN1_LED_MAPPING_MASK, LAN1_PHY_LED_MAP(0)),
-+	AIROHA_PINCTRL_PHY_LED0("gpio35", GPIO_LAN2_LED0_MODE_MASK,
-+				LAN2_LED_MAPPING_MASK, LAN2_PHY_LED_MAP(0)),
-+	AIROHA_PINCTRL_PHY_LED0("gpio42", GPIO_LAN3_LED0_MODE_MASK,
-+				LAN3_LED_MAPPING_MASK, LAN3_PHY_LED_MAP(0)),
- };
- 
- static const struct airoha_pinctrl_func_group phy2_led0_func_group[] = {
--	{
--		.name = "gpio33",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN0_LED0_MODE_MASK,
--			GPIO_LAN0_LED0_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED0_MAPPING,
--			LAN0_LED_MAPPING_MASK,
--			LAN0_PHY_LED_MAP(1)
--		},
--		.regmap_size = 2,
+-		.regmap_size = 1,
 -	}, {
--		.name = "gpio34",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN1_LED0_MODE_MASK,
--			GPIO_LAN1_LED0_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED0_MAPPING,
--			LAN1_LED_MAPPING_MASK,
--			LAN1_PHY_LED_MAP(1)
--		},
--		.regmap_size = 2,
--	}, {
--		.name = "gpio35",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN2_LED0_MODE_MASK,
--			GPIO_LAN2_LED0_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED0_MAPPING,
--			LAN2_LED_MAPPING_MASK,
--			LAN2_PHY_LED_MAP(1)
--		},
--		.regmap_size = 2,
--	}, {
--		.name = "gpio42",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN3_LED0_MODE_MASK,
--			GPIO_LAN3_LED0_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED0_MAPPING,
--			LAN3_LED_MAPPING_MASK,
--			LAN3_PHY_LED_MAP(1)
--		},
--		.regmap_size = 2,
--	},
-+	AIROHA_PINCTRL_PHY_LED0("gpio33", GPIO_LAN0_LED0_MODE_MASK,
-+				LAN0_LED_MAPPING_MASK, LAN0_PHY_LED_MAP(1)),
-+	AIROHA_PINCTRL_PHY_LED0("gpio34", GPIO_LAN1_LED0_MODE_MASK,
-+				LAN1_LED_MAPPING_MASK, LAN1_PHY_LED_MAP(1)),
-+	AIROHA_PINCTRL_PHY_LED0("gpio35", GPIO_LAN2_LED0_MODE_MASK,
-+				LAN2_LED_MAPPING_MASK, LAN2_PHY_LED_MAP(1)),
-+	AIROHA_PINCTRL_PHY_LED0("gpio42", GPIO_LAN3_LED0_MODE_MASK,
-+				LAN3_LED_MAPPING_MASK, LAN3_PHY_LED_MAP(1)),
- };
- 
- static const struct airoha_pinctrl_func_group phy3_led0_func_group[] = {
--	{
--		.name = "gpio33",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN0_LED0_MODE_MASK,
--			GPIO_LAN0_LED0_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED0_MAPPING,
--			LAN0_LED_MAPPING_MASK,
--			LAN0_PHY_LED_MAP(2)
--		},
--		.regmap_size = 2,
--	}, {
--		.name = "gpio34",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN1_LED0_MODE_MASK,
--			GPIO_LAN1_LED0_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED0_MAPPING,
--			LAN1_LED_MAPPING_MASK,
--			LAN1_PHY_LED_MAP(2)
--		},
--		.regmap_size = 2,
--	}, {
--		.name = "gpio35",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN2_LED0_MODE_MASK,
--			GPIO_LAN2_LED0_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED0_MAPPING,
--			LAN2_LED_MAPPING_MASK,
--			LAN2_PHY_LED_MAP(2)
--		},
--		.regmap_size = 2,
--	}, {
--		.name = "gpio42",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN3_LED0_MODE_MASK,
--			GPIO_LAN3_LED0_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED0_MAPPING,
--			LAN3_LED_MAPPING_MASK,
--			LAN3_PHY_LED_MAP(2)
--		},
--		.regmap_size = 2,
--	},
-+	AIROHA_PINCTRL_PHY_LED0("gpio33", GPIO_LAN0_LED0_MODE_MASK,
-+				LAN0_LED_MAPPING_MASK, LAN0_PHY_LED_MAP(2)),
-+	AIROHA_PINCTRL_PHY_LED0("gpio34", GPIO_LAN1_LED0_MODE_MASK,
-+				LAN1_LED_MAPPING_MASK, LAN1_PHY_LED_MAP(2)),
-+	AIROHA_PINCTRL_PHY_LED0("gpio35", GPIO_LAN2_LED0_MODE_MASK,
-+				LAN2_LED_MAPPING_MASK, LAN2_PHY_LED_MAP(2)),
-+	AIROHA_PINCTRL_PHY_LED0("gpio42", GPIO_LAN3_LED0_MODE_MASK,
-+				LAN3_LED_MAPPING_MASK, LAN3_PHY_LED_MAP(2)),
- };
- 
- static const struct airoha_pinctrl_func_group phy4_led0_func_group[] = {
--	{
--		.name = "gpio33",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN0_LED0_MODE_MASK,
--			GPIO_LAN0_LED0_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED0_MAPPING,
--			LAN0_LED_MAPPING_MASK,
--			LAN0_PHY_LED_MAP(3)
--		},
--		.regmap_size = 2,
--	}, {
--		.name = "gpio34",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN1_LED0_MODE_MASK,
--			GPIO_LAN1_LED0_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED0_MAPPING,
--			LAN1_LED_MAPPING_MASK,
--			LAN1_PHY_LED_MAP(3)
--		},
--		.regmap_size = 2,
--	}, {
--		.name = "gpio35",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN2_LED0_MODE_MASK,
--			GPIO_LAN2_LED0_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED0_MAPPING,
--			LAN2_LED_MAPPING_MASK,
--			LAN2_PHY_LED_MAP(3)
--		},
--		.regmap_size = 2,
--	}, {
--		.name = "gpio42",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN3_LED0_MODE_MASK,
--			GPIO_LAN3_LED0_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED0_MAPPING,
--			LAN3_LED_MAPPING_MASK,
--			LAN3_PHY_LED_MAP(3)
--		},
--		.regmap_size = 2,
--	},
-+	AIROHA_PINCTRL_PHY_LED0("gpio33", GPIO_LAN0_LED0_MODE_MASK,
-+				LAN0_LED_MAPPING_MASK, LAN0_PHY_LED_MAP(3)),
-+	AIROHA_PINCTRL_PHY_LED0("gpio34", GPIO_LAN1_LED0_MODE_MASK,
-+				LAN1_LED_MAPPING_MASK, LAN1_PHY_LED_MAP(3)),
-+	AIROHA_PINCTRL_PHY_LED0("gpio35", GPIO_LAN2_LED0_MODE_MASK,
-+				LAN2_LED_MAPPING_MASK, LAN2_PHY_LED_MAP(3)),
-+	AIROHA_PINCTRL_PHY_LED0("gpio42", GPIO_LAN3_LED0_MODE_MASK,
-+				LAN3_LED_MAPPING_MASK, LAN3_PHY_LED_MAP(3)),
- };
- 
- static const struct airoha_pinctrl_func_group phy1_led1_func_group[] = {
--	{
 -		.name = "gpio43",
 -		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN0_LED1_MODE_MASK,
--			GPIO_LAN0_LED1_MODE_MASK
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO43_FLASH_MODE_CFG,
+-			GPIO43_FLASH_MODE_CFG
 -		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED1_MAPPING,
--			LAN0_LED_MAPPING_MASK,
--			LAN0_PHY_LED_MAP(0)
--		},
--		.regmap_size = 2,
+-		.regmap_size = 1,
 -	}, {
 -		.name = "gpio44",
 -		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN1_LED1_MODE_MASK,
--			GPIO_LAN1_LED1_MODE_MASK
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO44_FLASH_MODE_CFG,
+-			GPIO44_FLASH_MODE_CFG
 -		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED1_MAPPING,
--			LAN1_LED_MAPPING_MASK,
--			LAN1_PHY_LED_MAP(0)
--		},
--		.regmap_size = 2,
+-		.regmap_size = 1,
 -	}, {
 -		.name = "gpio45",
 -		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN2_LED1_MODE_MASK,
--			GPIO_LAN2_LED1_MODE_MASK
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO45_FLASH_MODE_CFG,
+-			GPIO45_FLASH_MODE_CFG
 -		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED1_MAPPING,
--			LAN2_LED_MAPPING_MASK,
--			LAN2_PHY_LED_MAP(0)
--		},
--		.regmap_size = 2,
+-		.regmap_size = 1,
 -	}, {
 -		.name = "gpio46",
 -		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN3_LED1_MODE_MASK,
--			GPIO_LAN3_LED1_MODE_MASK
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO46_FLASH_MODE_CFG,
+-			GPIO46_FLASH_MODE_CFG
 -		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED1_MAPPING,
--			LAN3_LED_MAPPING_MASK,
--			LAN3_PHY_LED_MAP(0)
+-		.regmap_size = 1,
+-	}, {
+-		.name = "gpio47",
+-		.regmap[0] = {
+-			AIROHA_FUNC_PWM_EXT_MUX,
+-			REG_GPIO_FLASH_MODE_CFG_EXT,
+-			GPIO47_FLASH_MODE_CFG,
+-			GPIO47_FLASH_MODE_CFG
 -		},
--		.regmap_size = 2,
+-		.regmap_size = 1,
 -	},
-+	AIROHA_PINCTRL_PHY_LED1("gpio43", GPIO_LAN0_LED1_MODE_MASK,
-+				LAN0_LED_MAPPING_MASK, LAN0_PHY_LED_MAP(0)),
-+	AIROHA_PINCTRL_PHY_LED1("gpio44", GPIO_LAN1_LED1_MODE_MASK,
-+				LAN1_LED_MAPPING_MASK, LAN1_PHY_LED_MAP(0)),
-+	AIROHA_PINCTRL_PHY_LED1("gpio45", GPIO_LAN2_LED1_MODE_MASK,
-+				LAN2_LED_MAPPING_MASK, LAN2_PHY_LED_MAP(0)),
-+	AIROHA_PINCTRL_PHY_LED1("gpio46", GPIO_LAN3_LED1_MODE_MASK,
-+				LAN3_LED_MAPPING_MASK, LAN3_PHY_LED_MAP(0)),
++	AIROHA_PINCTRL_PWM("gpio0", GPIO0_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio1", GPIO1_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio2", GPIO2_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio3", GPIO3_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio4", GPIO4_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio5", GPIO5_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio6", GPIO6_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio7", GPIO7_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio8", GPIO8_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio9", GPIO9_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio10", GPIO10_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio11", GPIO11_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio12", GPIO12_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio13", GPIO13_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio14", GPIO14_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio15", GPIO15_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio16", GPIO16_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio17", GPIO17_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio18", GPIO18_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio19", GPIO19_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio20", GPIO20_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio21", GPIO21_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio22", GPIO22_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio23", GPIO23_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio24", GPIO24_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio25", GPIO25_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio26", GPIO26_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio27", GPIO27_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio28", GPIO28_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio29", GPIO29_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio30", GPIO30_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio31", GPIO31_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio36", GPIO36_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio37", GPIO37_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio38", GPIO38_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio39", GPIO39_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio40", GPIO40_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio41", GPIO41_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio42", GPIO42_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio43", GPIO43_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio44", GPIO44_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio45", GPIO45_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio46", GPIO46_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio47", GPIO47_FLASH_MODE_CFG),
  };
  
- static const struct airoha_pinctrl_func_group phy2_led1_func_group[] = {
--	{
--		.name = "gpio43",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN0_LED1_MODE_MASK,
--			GPIO_LAN0_LED1_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED1_MAPPING,
--			LAN0_LED_MAPPING_MASK,
--			LAN0_PHY_LED_MAP(1)
--		},
--		.regmap_size = 2,
--	}, {
--		.name = "gpio44",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN1_LED1_MODE_MASK,
--			GPIO_LAN1_LED1_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED1_MAPPING,
--			LAN1_LED_MAPPING_MASK,
--			LAN1_PHY_LED_MAP(1)
--		},
--		.regmap_size = 2,
--	}, {
--		.name = "gpio45",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN2_LED1_MODE_MASK,
--			GPIO_LAN2_LED1_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED1_MAPPING,
--			LAN2_LED_MAPPING_MASK,
--			LAN2_PHY_LED_MAP(1)
--		},
--		.regmap_size = 2,
--	}, {
--		.name = "gpio46",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN3_LED1_MODE_MASK,
--			GPIO_LAN3_LED1_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED1_MAPPING,
--			LAN3_LED_MAPPING_MASK,
--			LAN3_PHY_LED_MAP(1)
--		},
--		.regmap_size = 2,
--	},
-+	AIROHA_PINCTRL_PHY_LED1("gpio43", GPIO_LAN0_LED1_MODE_MASK,
-+				LAN0_LED_MAPPING_MASK, LAN0_PHY_LED_MAP(1)),
-+	AIROHA_PINCTRL_PHY_LED1("gpio44", GPIO_LAN1_LED1_MODE_MASK,
-+				LAN1_LED_MAPPING_MASK, LAN1_PHY_LED_MAP(1)),
-+	AIROHA_PINCTRL_PHY_LED1("gpio45", GPIO_LAN2_LED1_MODE_MASK,
-+				LAN2_LED_MAPPING_MASK, LAN2_PHY_LED_MAP(1)),
-+	AIROHA_PINCTRL_PHY_LED1("gpio46", GPIO_LAN3_LED1_MODE_MASK,
-+				LAN3_LED_MAPPING_MASK, LAN3_PHY_LED_MAP(1)),
- };
- 
- static const struct airoha_pinctrl_func_group phy3_led1_func_group[] = {
--	{
--		.name = "gpio43",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN0_LED1_MODE_MASK,
--			GPIO_LAN0_LED1_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED1_MAPPING,
--			LAN0_LED_MAPPING_MASK,
--			LAN0_PHY_LED_MAP(2)
--		},
--		.regmap_size = 2,
--	}, {
--		.name = "gpio44",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN1_LED1_MODE_MASK,
--			GPIO_LAN1_LED1_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED1_MAPPING,
--			LAN1_LED_MAPPING_MASK,
--			LAN1_PHY_LED_MAP(2)
--		},
--		.regmap_size = 2,
--	}, {
--		.name = "gpio45",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN2_LED1_MODE_MASK,
--			GPIO_LAN2_LED1_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED1_MAPPING,
--			LAN2_LED_MAPPING_MASK,
--			LAN2_PHY_LED_MAP(2)
--		},
--		.regmap_size = 2,
--	}, {
--		.name = "gpio46",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN3_LED1_MODE_MASK,
--			GPIO_LAN3_LED1_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED1_MAPPING,
--			LAN3_LED_MAPPING_MASK,
--			LAN3_PHY_LED_MAP(2)
--		},
--		.regmap_size = 2,
--	},
-+	AIROHA_PINCTRL_PHY_LED1("gpio43", GPIO_LAN0_LED1_MODE_MASK,
-+				LAN0_LED_MAPPING_MASK, LAN0_PHY_LED_MAP(2)),
-+	AIROHA_PINCTRL_PHY_LED1("gpio44", GPIO_LAN1_LED1_MODE_MASK,
-+				LAN1_LED_MAPPING_MASK, LAN1_PHY_LED_MAP(2)),
-+	AIROHA_PINCTRL_PHY_LED1("gpio45", GPIO_LAN2_LED1_MODE_MASK,
-+				LAN2_LED_MAPPING_MASK, LAN2_PHY_LED_MAP(2)),
-+	AIROHA_PINCTRL_PHY_LED1("gpio46", GPIO_LAN3_LED1_MODE_MASK,
-+				LAN3_LED_MAPPING_MASK, LAN3_PHY_LED_MAP(2)),
- };
- 
- static const struct airoha_pinctrl_func_group phy4_led1_func_group[] = {
--	{
--		.name = "gpio43",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN0_LED1_MODE_MASK,
--			GPIO_LAN0_LED1_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED1_MAPPING,
--			LAN0_LED_MAPPING_MASK,
--			LAN0_PHY_LED_MAP(3)
--		},
--		.regmap_size = 2,
--	}, {
--		.name = "gpio44",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN1_LED1_MODE_MASK,
--			GPIO_LAN1_LED1_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED1_MAPPING,
--			LAN1_LED_MAPPING_MASK,
--			LAN1_PHY_LED_MAP(3)
--		},
--		.regmap_size = 2,
--	}, {
--		.name = "gpio45",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN2_LED1_MODE_MASK,
--			GPIO_LAN2_LED1_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED1_MAPPING,
--			LAN2_LED_MAPPING_MASK,
--			LAN2_PHY_LED_MAP(3)
--		},
--		.regmap_size = 2,
--	}, {
--		.name = "gpio46",
--		.regmap[0] = {
--			AIROHA_FUNC_MUX,
--			REG_GPIO_2ND_I2C_MODE,
--			GPIO_LAN3_LED1_MODE_MASK,
--			GPIO_LAN3_LED1_MODE_MASK
--		},
--		.regmap[1] = {
--			AIROHA_FUNC_MUX,
--			REG_LAN_LED1_MAPPING,
--			LAN3_LED_MAPPING_MASK,
--			LAN3_PHY_LED_MAP(3)
--		},
--		.regmap_size = 2,
--	},
-+	AIROHA_PINCTRL_PHY_LED1("gpio43", GPIO_LAN0_LED1_MODE_MASK,
-+				LAN0_LED_MAPPING_MASK, LAN0_PHY_LED_MAP(2)),
-+	AIROHA_PINCTRL_PHY_LED1("gpio44", GPIO_LAN1_LED1_MODE_MASK,
-+				LAN1_LED_MAPPING_MASK, LAN1_PHY_LED_MAP(2)),
-+	AIROHA_PINCTRL_PHY_LED1("gpio45", GPIO_LAN2_LED1_MODE_MASK,
-+				LAN2_LED_MAPPING_MASK, LAN2_PHY_LED_MAP(2)),
-+	AIROHA_PINCTRL_PHY_LED1("gpio46", GPIO_LAN3_LED1_MODE_MASK,
-+				LAN3_LED_MAPPING_MASK, LAN3_PHY_LED_MAP(2)),
- };
- 
- static const struct airoha_pinctrl_func en7581_pinctrl_funcs[] = {
+ #define AIROHA_PINCTRL_PHY_LED0(gpio, mux_val, map_mask, map_val)	\
 -- 
 2.51.0
 
