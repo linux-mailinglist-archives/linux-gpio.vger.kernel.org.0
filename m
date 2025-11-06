@@ -1,80 +1,81 @@
-Return-Path: <linux-gpio+bounces-28211-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28213-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E703C3C656
-	for <lists+linux-gpio@lfdr.de>; Thu, 06 Nov 2025 17:27:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9246BC3C64A
+	for <lists+linux-gpio@lfdr.de>; Thu, 06 Nov 2025 17:26:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 684985601D5
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Nov 2025 16:22:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A3394188E00B
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Nov 2025 16:23:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1344A34E74E;
-	Thu,  6 Nov 2025 16:16:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9258C34EEFA;
+	Thu,  6 Nov 2025 16:16:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LRyBhmop"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V3AHeMsc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03383303C85
-	for <linux-gpio@vger.kernel.org>; Thu,  6 Nov 2025 16:16:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A3934E765
+	for <linux-gpio@vger.kernel.org>; Thu,  6 Nov 2025 16:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762445799; cv=none; b=Y3Ci0mMA0C5RLEYOGITAn79LhT9teQOQhWnne+4DwvVdZmleSQIg2fI0BcN9reeHtwSZEgY7tkGbGlr4Fs6T0ymcperKYcw7HyOaoXGDiMAp9M7YxxfAcO4Ekkn75HwsdDSLGlA1x6x6DH9yLwTQCEZjwlRSMUQ0Y8ISdDDp4sw=
+	t=1762445804; cv=none; b=T1U6r02R5gptxN/8Wc6PadnZipJziMBmcoHN40m6BDcRxE6xsAV88+e8sgqO1IolNX7AUYucT9Q6ieSd/phOEWHZ1Xkagq+cxP3lOojw8RtA40usY51QLk0Od9sjEW5e7PcNvXHlJlrFih52Cq+ul3niGs4DcyVsQpgXQEE/CyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762445799; c=relaxed/simple;
-	bh=m+62ZdK0Lq7jNUHc6LhXJD8r2Oz0NXj2Wf/sdNqZaZ4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Y5zlcPfWn+5SGZS2DShRYlxhMhSJbIAHg3Gdn17MBf+YIHhFA8N9bJ1LcOaoG9X3wpoWvWFYfoncSd7RsN8mPXqmMG4y0bWiyEb85/IppEaLBBeOSFc5JMk4pSyjuhpRyPjsucQYIhp3Z1OyyJHEWI0t6T7bsMuoBwiR6MRFf4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LRyBhmop; arc=none smtp.client-ip=209.85.208.51
+	s=arc-20240116; t=1762445804; c=relaxed/simple;
+	bh=bV1csp2rWHEChhH2wtc+ipip96VeBDB9QOyjlvKNG/s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=sJ42jzu7G6QS0VSM11TDtuxHx/a7KONkyzktSKKoh+4FzI8gQ7aAOcqOoj6XlKz8o2mKbTELom0bHFx4kI4j40k7E5QBARMOqDNOOeY47WmBeDg2/jZmQkuYLKJz7wexPOFV3STsOo8G5W0D7KH1Ch4RktSOrB1fnX+hUrLr2Kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V3AHeMsc; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-64093f3f7ddso203290a12.1
-        for <linux-gpio@vger.kernel.org>; Thu, 06 Nov 2025 08:16:37 -0800 (PST)
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-633b4861b79so231392a12.1
+        for <linux-gpio@vger.kernel.org>; Thu, 06 Nov 2025 08:16:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1762445796; x=1763050596; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=a/cWESJHLQuQfZBepHMhOg3dPVBwhTpABUd40+CP0cQ=;
-        b=LRyBhmopWy4spnFYHZmVRlmUodonDK0TuQE99e3Qwa2sYiqq2yA8n/q7fyryrUzcXz
-         1rEbYBgOtYrRZNd42GLdJL4IIEe8GZBpkXREWiVYeE4JeMmfCFIMkQqSKI5btjoBJ0Q4
-         u7dsuuRfM5F1QOLvKHGpugDtrNEodcXeUpPiughq9IEsW/kmjbSmYVJGphM3FpvM+lBX
-         WTI5VJsXdAm6lizwt4VVlzIhDghPL08ZkCEyaClOTK00arYedwqIsxGJkPT/l04I0zXx
-         V+TkvqNlnsKUEqG7SIISPHDFcQNhSL0LSjOcITZPXE04VOUJ/JyI5ho6TwV08QdP3MYW
-         6ZMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762445796; x=1763050596;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1762445798; x=1763050598; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=a/cWESJHLQuQfZBepHMhOg3dPVBwhTpABUd40+CP0cQ=;
-        b=ksrWEMDsDwpMKYnMfaC/xJKPldAHqqNO+NFPsaYB8648tv0xB3+f5sq2jZQ5Bsp4bv
-         BJATtCTs+y5pkCWyMKSBwCH6JoGJddlpPE4HtJEtPi33l+SVTIaQSMQhkEiN5cAmzlnZ
-         tHSyJUYaxx5nvEV5JKXOdC38hk/f+C5FH32GK1ZlOugZkLKm0t2UJi68mXTuZ+qtKmKW
-         7f2Fy+0jg5IyoL6N9+P1D+pfLJIyixz9wEFNw5eCla5oiIpE7zhYalEeS6mra/AqMTDA
-         VKlmp16DzriypQ3AmfkCniPSdjLpIqgAlEkGY0z5/9BLcTMpMWEP05028mS9HCX0Gtwp
-         FUuw==
-X-Gm-Message-State: AOJu0YxDSLtLlesMlGPB1fg7WvW1ulZ8YZMq4kzqOexFke40Nyis68oZ
-	gpprinHCeNc4ovsHTluRuFf863w5wAoLhD22Kgh18N15B1wLF5DOe3ANqC9snVmKWN0=
-X-Gm-Gg: ASbGnctSgimwXxU4NeP/foHkVlHrbXPtOF2bgMZnupK4lDSj5tNJFfdPEbwiY/ok6Wx
-	V1ZJYkRNycfZPRYRNOQY/UzXHp39FYXShW0yi8M9FVWgBoj2zHALG1Q6ozRSvqzaJ+g9qbLTmdS
-	hwIiEa9OW4KVuDug3/El0sPyCSC3moPtz8lyvfH6iZZPRL8oRfafH4E1xGspQqMZRz/B+APw0Pd
-	wCwR43F+r9A3vNLcPQEi2Y4EMEnl3z5/wAgXiyHoj0Uk0pXkSqUdsrq6UrMW2Y7xRGAwLy9mTf8
-	wU3R4BEr5ukoZaC7fDj9P9YoNu/H+mViFSLzkDqAifg08d2v1AxHKYBvMHYcpUPdQloYBFOPVOZ
-	iCqRvQ/Nq/mKcV6wXD5NFsQY+cF1UqXKNJDAq6bDDORy4CljmzGlhNgFHlCmSRy/fUN+gWTdNFt
-	zCQLn06ETxLD6KzjA7u4DIyglUZVI=
-X-Google-Smtp-Source: AGHT+IGZyiotRhhgwXYn5kLA9144yJt3CqLXWRIlBplyMOGLmU5g6JzMcGZwLmbbAR1KDnNe/CJBWA==
-X-Received: by 2002:a05:6402:40d5:b0:63b:f26d:2eab with SMTP id 4fb4d7f45d1cf-6410588c64bmr4342221a12.2.1762445796238;
-        Thu, 06 Nov 2025 08:16:36 -0800 (PST)
+        bh=iuhfmQr7uINSDkC4BFuRhNQ4HVMgm7l+cfZeaeFW1fQ=;
+        b=V3AHeMsc8mlt2GLfF+cHOG9j3kVISlP+olnI9TeRS5QqO+4alXKPP1SmlkcvcD8S+G
+         s0hB1CMnejKP9vtvK0ZIg4wVTu5q1+QaIFQJJvQLTpzicF4bG2f1q02kBTutJdAvR5Nt
+         U6LnOzU+U1Vy9veEyYDLIMCbSZL+opfv+2SDdhZL+P/U9N2N/p6ebIMESI4yNWy6poP7
+         D1oK74FJVy0faUWXxTXMT1p0HY+DNtf0jxXKJuqEf01HTNilXrs8G5+fhL4wd+HRM5Xs
+         vORGushxRGUtRRm9Bt14QGgkm/psww1YoNELS/iwFE4MwVM9ZgOsT7RVg1eyMqQ+UmgN
+         4E3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762445798; x=1763050598;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iuhfmQr7uINSDkC4BFuRhNQ4HVMgm7l+cfZeaeFW1fQ=;
+        b=EbyuxZcGTEJxOhbmwRuWxJAYRhQ1guiDEjI3kiwHT3nyWipkKKle9HsDgO7BhXASLd
+         4CmesqlHRb4k+h4MeXbjds8ogdY7mbYQIp406Q1WEBCkenmX14HryJ3CExpOeCGN9+GN
+         ikCRhGFwgjMl5/jrpDTIwR8VogueqL5CsiQg6HPoZDvms3D70kLsDjgm7Qv/97IAqyiz
+         /zkqpmkKZ+XGpyAOP3ooVKr3uVjdgr+Axc+j6MLWtOQYT/fy2Qy8G2ng4N6iwhYv4JRy
+         ipzXg9Csuk6+PX2RShWeVNeuU/lIDukPLYJLqhsTocsFNyf/wWcd+TmpzzcR+Sm6fJVZ
+         DcNQ==
+X-Gm-Message-State: AOJu0YzSBZ8FCXTp429u1vZcBSQJAIgS5ZmG8gzBBHMy8goC5RdWOuNz
+	yyhWqUn+sdJ7OYA/bQ/iT/Z7faD2RhEkfNKjEe2MD2SKkObEr8/NcM6vzuXBYkOOedM=
+X-Gm-Gg: ASbGncvyycF6dSZxQOuiLbqGTruGkexn8NAtU9f1YaXgL+tryy59e+W/3squVPivZ1r
+	HHfrvT51zUcTVwImzkdqKq1/E1BKGBlfQ1BYOBv2ZYvIIcA7T5w5KcEz6zjEpKDbTs07P0WU4FS
+	VMcNSuQsL+iDpLg/kJ7AAIdHI2Ec81Nq7in6eV1mJhV3vF0TxExbiwtwzRs/oVthta3rUgDP6EM
+	do637rYWchYZ8Qt6FH0oTkh7Q3panZ+3ne5KLStRSbAwa30e783Ql6Ol0t+B66vX4rC4BVFQTfS
+	ozrpWP34C1XCLFYVj5RIOvPtAW5h49VUBImvoZHGgxUkP9R5B0FSTgV0UFtbiS493pkx+YRpYrk
+	Z86iJ9wZjes7pWw6VHP9C49tCzWP54b951nh33MFGSo7WXh/2tHaQfVQVz2cOV7l/EV8DfzTgqm
+	j6a5BfHlBp1dGrtNeImXRCQ5zBq+A=
+X-Google-Smtp-Source: AGHT+IGnKjqzbkhuvdWC2zI52BeV7MMIvf9OsVAI4XiKB15JDfOLSX5YIo7aBUdC8ZUdmjSM/iA6Sw==
+X-Received: by 2002:a05:6402:358a:b0:640:be87:a86b with SMTP id 4fb4d7f45d1cf-6411f6b3baamr1693540a12.5.1762445798504;
+        Thu, 06 Nov 2025 08:16:38 -0800 (PST)
 Received: from [127.0.1.1] ([178.197.219.123])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6411f813eabsm2113408a12.11.2025.11.06.08.16.33
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6411f813eabsm2113408a12.11.2025.11.06.08.16.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Nov 2025 08:16:34 -0800 (PST)
+        Thu, 06 Nov 2025 08:16:37 -0800 (PST)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 0/4] gpio: Simplify with of_device_get_match_data()
-Date: Thu, 06 Nov 2025 17:16:24 +0100
-Message-Id: <20251106-gpio-of-match-v1-0-50c7115a045e@linaro.org>
+Date: Thu, 06 Nov 2025 17:16:25 +0100
+Subject: [PATCH 1/4] gpio: tb10x: Drop unused tb10x_set_bits() function
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,10 +84,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIANjJDGkC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1NDQwMz3fSCzHzd/DTd3MSS5AxdI+MkI5PklJQ0AzNjJaCegqLUtMwKsHn
- RsbW1AKFqXdpfAAAA
-X-Change-ID: 20251106-gpio-of-match-23b24cddf063
+Message-Id: <20251106-gpio-of-match-v1-1-50c7115a045e@linaro.org>
+References: <20251106-gpio-of-match-v1-0-50c7115a045e@linaro.org>
+In-Reply-To: <20251106-gpio-of-match-v1-0-50c7115a045e@linaro.org>
 To: Linus Walleij <linus.walleij@linaro.org>, 
  Bartosz Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>, 
  Andrew Jeffery <andrew@codeconstruct.com.au>, 
@@ -98,52 +98,67 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1036;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1295;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=m+62ZdK0Lq7jNUHc6LhXJD8r2Oz0NXj2Wf/sdNqZaZ4=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBpDMnawcy7CZrgSJdmsX8aGdzbZJXfoTmd5wcte
- EXUkZPJykiJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaQzJ2gAKCRDBN2bmhouD
- 1/GKD/sGaVw4KqMnqsuf/Iq4t8i+hgL/3lnY0jK+9SSHdXboQ7EJfgk3Sm6wY52RTR+tUedRqHb
- KgFgHA/5ybPQRwhsYIiMvznFthIaKAJQOyqKUk0EoICVUmcd41lh1MD19gMi8bXpb3tdhoMD0k7
- c/ssi6l4uvZwgGAsZlS5xpcM45nHBvnKd52CJW6DphNkNEcv6mznj9RoO4xwAw2YNkPUXcVyTOG
- /Iz/TKqD3SC4b4ckdDh/LHlBACvBtj9Ouh4a5kchOc7TvE5K8NOCIstjaGA+VYGTt1gRiqOI/+l
- GQhTiL2jKs68Rxvm8cnU/28TKbJq/Bw9/SAaE3R2zYyzd/A1OyqrCHb7kIjtg1T3G4jVK/nX0vG
- UI037XTHkPBuQj9xet8T8YsCEgsT8xyeyDe8LnAmiXykzytmOzkEhUszveFit4ZBFp/JOdCMSpR
- 4ar2NyVFBRiYVufNe3lzr2S4DZPoinPKdKdRJfZ7twvu1E5rN3Ptry9kUlKmFnc6rDTTJA0zGwJ
- wcvX7YTxJiaMdZgmLN0y8Wh9a8s37KEQWrJAWQqcPFFA3o9MwAsGR5QDYRHuagOmkCjj2MmP4QG
- 9giy7q8+4GvJ7VWK3iCZ1y37exP4A7BdriM9cp5obCaixlPiHoWi32+FRChQSaI4HfZ0l4XcZga
- V+lfSKqaELeCsBw==
+ bh=bV1csp2rWHEChhH2wtc+ipip96VeBDB9QOyjlvKNG/s=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBpDMne//1G4nx6sAjk0fip9F0NwApN5hshBoZuD
+ RHWNh/iIoOJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaQzJ3gAKCRDBN2bmhouD
+ 15IED/0XzrXZAYuaXb8FfmaclQ0RY6jfzxQrHGsf/WmuK02ww2efB75Exltpwwtm91fHOTkDU+T
+ d2Kykn+OUAn6bPtd7LG5TSjCDI1tyM+/Nmd1wpAecJLUwG74wFPmu/ofjaxFh7lT6wZihV7lyHt
+ 8YmM+qnYuUolGhcqcfv7MDurJ8J2Bsqpat4m7N5nHOw++bPTo+SUOojVuhOwrXUI+9kKJ7myKLI
+ cKXvLFDL0IOZDKcsJ6iq5nunmneht/iT7YFCKW6+gD1WTJpoziwV/6SXm8XJ6upKBSlnq9KxPSj
+ NJ5fAe4+xkXGcBrd5oN7v7sbLM7FSPVyKlmrmHlv8YD3Vxl/t+0CwfwD/YkXVuUYFGOhPzRq1p1
+ 2eYQ0DqHsM9ulF4ZqHMFaRpLmHwNu1noNDT8MzzuoMNAWW4XN5JJtqeYlHHvlrcSFufrmyWAMpm
+ 5gZv8IPPiJx3Zw/XyFAwIepY+evhUcdg39kj+D/DVwWnTUGrdKgT/OYrpvvcE3Lxa+MjtAD3lji
+ 3DB8a4wIM9Y6xyQDaN3gtz5pxIPJGG+kyoN1ctUWXZlnUPRzzb20y01PoVvuhmiyPqOvVHa4+8O
+ qGOKxXXWJBJOE+bPEc1yIlencBqk4SY4CpcNcxsvQ8A5Av5IswK60aumWzlZL+3v+oM/XHcxZeo
+ xNC7jP93MIRL56Q==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Few simple cleanups, not tested on the hardware.
+tb10x_set_bits() is not referenced anywhere leading to W=1 warning:
 
-Care has to be taken when converting of_match_data() into
-of_device_get_match_data(), because first can check arbitrary
-device_node and the latter checks device's node.  Cases here should be
-safe because of_match_data() uses 'pdev->dev.of_node'.
+  gpio-tb10x.c:59:20: error: unused function 'tb10x_set_bits' [-Werror,-Wunused-function]
 
-Best regards,
-Krzysztof
+After its removal, tb10x_reg_write() becomes unused as well.
 
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
-Krzysztof Kozlowski (4):
-      gpio: tb10x: Drop unused tb10x_set_bits() function
-      gpio: aspeed: Simplify with of_device_get_match_data()
-      gpio: creg-snps: Simplify with of_device_get_match_data()
-      gpio: zynq: Simplify with of_device_get_match_data()
+ drivers/gpio/gpio-tb10x.c | 19 -------------------
+ 1 file changed, 19 deletions(-)
 
- drivers/gpio/gpio-aspeed.c    |  7 ++-----
- drivers/gpio/gpio-creg-snps.c |  4 +---
- drivers/gpio/gpio-tb10x.c     | 19 -------------------
- drivers/gpio/gpio-zynq.c      |  8 +++-----
- 4 files changed, 6 insertions(+), 32 deletions(-)
----
-base-commit: 5892a3d1e4764f041ce756d8f8b321d2c92f653a
-change-id: 20251106-gpio-of-match-23b24cddf063
+diff --git a/drivers/gpio/gpio-tb10x.c b/drivers/gpio/gpio-tb10x.c
+index 09a448ce3eec..3c8fd322a713 100644
+--- a/drivers/gpio/gpio-tb10x.c
++++ b/drivers/gpio/gpio-tb10x.c
+@@ -50,25 +50,6 @@ static inline u32 tb10x_reg_read(struct tb10x_gpio *gpio, unsigned int offs)
+ 	return ioread32(gpio->base + offs);
+ }
+ 
+-static inline void tb10x_reg_write(struct tb10x_gpio *gpio, unsigned int offs,
+-				u32 val)
+-{
+-	iowrite32(val, gpio->base + offs);
+-}
+-
+-static inline void tb10x_set_bits(struct tb10x_gpio *gpio, unsigned int offs,
+-				u32 mask, u32 val)
+-{
+-	u32 r;
+-
+-	guard(gpio_generic_lock_irqsave)(&gpio->chip);
+-
+-	r = tb10x_reg_read(gpio, offs);
+-	r = (r & ~mask) | (val & mask);
+-
+-	tb10x_reg_write(gpio, offs, r);
+-}
+-
+ static int tb10x_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
+ {
+ 	struct tb10x_gpio *tb10x_gpio = gpiochip_get_data(chip);
 
-Best regards,
 -- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+2.48.1
 
 
