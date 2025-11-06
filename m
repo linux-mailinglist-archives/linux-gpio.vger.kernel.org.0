@@ -1,346 +1,175 @@
-Return-Path: <linux-gpio+bounces-28200-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28201-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DA77C3BC58
-	for <lists+linux-gpio@lfdr.de>; Thu, 06 Nov 2025 15:34:38 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A649C3BDB4
+	for <lists+linux-gpio@lfdr.de>; Thu, 06 Nov 2025 15:49:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id DF937351201
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Nov 2025 14:34:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A26E1895C0B
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Nov 2025 14:45:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 911A8344049;
-	Thu,  6 Nov 2025 14:33:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0F673446C2;
+	Thu,  6 Nov 2025 14:44:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="nkvlScTR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fax+zxpM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C3233A02B
-	for <linux-gpio@vger.kernel.org>; Thu,  6 Nov 2025 14:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FFD333452;
+	Thu,  6 Nov 2025 14:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762439581; cv=none; b=EShdBvUM9Wk7behmGYlm7vO020nz/TZrm9wq4X4uqVujKN1Y5SiG8GVX5iiXx0Aeiyp1fTu3ins+B1qzH28vRrz7Py0CjQ6GZCAikr0vJWeaQoai4WfAFhGuVrBw2l+3yC+Fjp2Pq36afX1atU+ebffMTfq3nIKNqe6+uDRpsiA=
+	t=1762440290; cv=none; b=WjRiefYGf7V43Uxq7onSqAGGZQd8FUTLfzZpxVT5qL/h6EcPlJ+2dK0tDZQmrmbTLDfPJlDYpfZmAyrXXHCHtEVA4joCSdrQaE3VwlbZjXvOyl1TaacKru0Qqr4X0yXyz/7uwtq6kcWIfcAqqji7TPg6OpW5q8mtUEAURyfBdmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762439581; c=relaxed/simple;
-	bh=EkDE/RRl4qMOJOD0OLRUX9GMdTma2ZJklCXyTifECNk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LN5IZN0bzpWgyt5Lj9KXUss0vUhMGGQ1nz2z1ynk9qjCHs9U9EJCUyKNkvVGhy9jU2rhwv24TgJWDeqahKrTFHPz64lw6zlrO3clO1Baqn+DTH3Ud5o38zWwmtfM3otsnYf0pq/HwdlkzMopFgftv98jvVNHE3tqNOInfNS/IA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=nkvlScTR; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4775638d819so5355175e9.1
-        for <linux-gpio@vger.kernel.org>; Thu, 06 Nov 2025 06:32:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1762439577; x=1763044377; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CBRf3veqjGbG6h9bzDEg53CibEdBQaqM7ZKj7lD8TRM=;
-        b=nkvlScTRD+gKTlpPAdn/0OCmXug29C7ilQgcG9KXvAPpC8wf0dBthdneI44yy2K+fk
-         pbaYKPMzl1nELw39e3wjx2DOIcOGZeT64hFfAedyVASzYU0KxAbz0YEqa0q8+LJhRhs6
-         Yc5fN9BO+8VU+M0hMQEvS0pheYnxrlMkQu0XdR+SHB9HgTOSOtPpV+KbuSqBnZKV0D4+
-         P2TbVxvuLxRbk1N+LrI54yyePhaFmw3Mt5IDWoMfOCVhd70II/nfXNDFNbEhiDTlGwjv
-         uit2F7rpz5yTUvdsXOJTNQ/vFwMw/Vvi/ICOZUg26eSZKjfOlx3Desgy/f1OAlnbT6+x
-         qxbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762439577; x=1763044377;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CBRf3veqjGbG6h9bzDEg53CibEdBQaqM7ZKj7lD8TRM=;
-        b=EZN16cLG/ZZ4Xsu5nwspVF9U1alP+5cUaOrlBuumph6Z/s7/ZH0KDmwMTBXeh9f0Gp
-         Q4DsCMfV2deYGOL06Tior99Tb6lbXvyPSl7hh52MxDZGl9V/JSbNxNnNAJVqXCk6vhnv
-         AR3CfNX9UiU3cpWqhnJyR9aFS2OmpHq4d6uEnVdpiSXpkFOlwCzii8D1oxVpmI5TPp56
-         Uh8n8b8NKqDgDdDnAlG3GIADfQRlH9IiS8C2k+GiytPfnPRfXz8R1tTvBHdJ3Uamc7wW
-         ymc5S3t25o5ClDjXwRGZAuXCZO8C9M/z5JbUlDk5i2NJ5S51HAzIAXnDq/qEFcGzWMyo
-         bmRA==
-X-Gm-Message-State: AOJu0YwIOlbO5EpzCr4xi6UGzML4kJ4tXXpYGRbgkMbNd2fdx4QE+gvV
-	Y6s2fx1/Yk8U1Yi1i7Fo2MiFguOIMcxcOBcL6eaUHnayFrxkS65NhTWPB1a4oGY6VZg=
-X-Gm-Gg: ASbGnctR6if4eSYZxoQ5dTUE1HW90hCOq0sD2yKe7uyns4qWcru0W7kxr/fc5GvMOGU
-	wPZtjG1PyenLNxJvzlbGE3RkR4sUmftlEZapuh5xHldvAQMwYqNAEEIc1OZ0CHgHJpGTPzIn5nl
-	zJQD1KBdkMUYTHPfjuD3m7H7Foh5OSaHgRDBTCCU3fSIbAAh0qO4l++Ep3UEMdOAK56X5Iv+46Y
-	41lU/OA4nDjZj9svsyiJbM7yEjIwJQuhDEw70xPqejDRowiAv1pC3IyqztCttV2awbQ94W7yoWL
-	yiGYMFtbnbCVR7yy+ExS3OTBSEns9+0zRQF/DftDbpt0Th6Mi6Ajd8IBXbsj2R3JfApoCx8rKx6
-	MhF5gMQH4hdHp8fZNqMQbFmX0RH5ja+dEMyjIou2s56rI6ylBIznsyjtt47mYqZuItmt6gTrmIx
-	YP2ihNL63Q8Q0u7g==
-X-Google-Smtp-Source: AGHT+IHO3UylNl2KGxiz9gPrA6WTwUQSCel+a1JiWOuL3mx9boSALuIzdlOj9fKcjI5KOqgGUztaRQ==
-X-Received: by 2002:a05:600c:348d:b0:46e:5100:326e with SMTP id 5b1f17b1804b1-4775cdf54b9mr51652505e9.23.1762439576626;
-        Thu, 06 Nov 2025 06:32:56 -0800 (PST)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:d9de:4038:a78:acab])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47763de4fb5sm18871515e9.2.2025.11.06.06.32.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Nov 2025 06:32:55 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 06 Nov 2025 15:32:37 +0100
-Subject: [PATCH v6 8/8] reset: gpio: use software nodes to setup the GPIO
- lookup
+	s=arc-20240116; t=1762440290; c=relaxed/simple;
+	bh=CgKPrhlOB1S3JfrLDg6vTp5p6jX2SaUAEva586MhNWo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dBE25pI6piR2UgJDDxuJKFcFtd1u9io4eI4H2pP2NviygEYCl/MOJpaG1e1P+Qzr6LVP2VUDauQdA0T/iWDE3b1KTD4BOe4jeScDk7bzer3QfR5HhATiaau/yclOyb6cz0THp3i871qgs9dSFsH4vd32eZCIucpCjR1073sbrA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fax+zxpM; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762440289; x=1793976289;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=CgKPrhlOB1S3JfrLDg6vTp5p6jX2SaUAEva586MhNWo=;
+  b=fax+zxpMdBxZi35qiqTykfwB6NxjRR0GNIAr01NQb0RVM6mjAnSNDiCH
+   vIa91xikfQjVpGD36bqnHrb+m0Zz3LAPg0IiENMJq01TrcXrorZstpwgF
+   6ev/EQ6JHzEbB44agCHyyZbX3/T8Fi1PdZljmcibvU0bWLKalPJeFJaMr
+   noF4o3RxCwDQbqtKbj1AIMaReTnn6Cdb6NGhUWj0I3au7eAJmLnCD3Rpv
+   QK8o7vzY/fUxouq5OdaRzBXJuQQnoslS7UXfOxZO96NLsKhvPepPa3OZ4
+   EecKtraIzDXm++jWkgA7liwsRrlVEty6aMQ7HHzhQWovKqDOeNKEhb5/J
+   w==;
+X-CSE-ConnectionGUID: X4URzY64S1CYg1oFnFmOFQ==
+X-CSE-MsgGUID: ZU5VHBv8Sk2cO48/r3umPg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="64504252"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="64504252"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2025 06:44:48 -0800
+X-CSE-ConnectionGUID: kvm5eJDVRiSb47UCQQrdxA==
+X-CSE-MsgGUID: 2tiTZfdERMmRL0zFQqehgw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,284,1754982000"; 
+   d="scan'208";a="192819498"
+Received: from abityuts-desk.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.244.224])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2025 06:44:37 -0800
+Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1vH1E0-00000006AO5-06YC;
+	Thu, 06 Nov 2025 16:44:32 +0200
+Date: Thu, 6 Nov 2025 16:44:31 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Yury Norov <yury.norov@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	David Miller <davem@davemloft.net>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Crt Mori <cmo@melexis.com>, Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Jacky Huang <ychuang3@nuvoton.com>,
+	Shan-Chun Hung <schung@nuvoton.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Jakub Kicinski <kuba@kernel.org>, Alex Elder <elder@ieee.org>,
+	David Laight <david.laight.linux@gmail.com>,
+	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+	Jason Baron <jbaron@akamai.com>, Borislav Petkov <bp@alien8.de>,
+	Tony Luck <tony.luck@intel.com>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Kim Seer Paller <kimseer.paller@analog.com>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Richard Genoud <richard.genoud@bootlin.com>,
+	Cosmin Tanislav <demonsingur@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Jianping Shen <Jianping.Shen@de.bosch.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-renesas-soc@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-edac@vger.kernel.org, qat-linux@intel.com,
+	linux-gpio@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+	linux-iio@vger.kernel.org, linux-sound@vger.kernel.org,
+	linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 12/26] bitfield: Add less-checking __FIELD_{GET,PREP}()
+Message-ID: <aQy0T2vUINze_6_q@smile.fi.intel.com>
+References: <cover.1762435376.git.geert+renesas@glider.be>
+ <cfc32f8530d5c0d4a7fb33c482a4bf549f26ec24.1762435376.git.geert+renesas@glider.be>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251106-reset-gpios-swnodes-v6-8-69aa852de9e4@linaro.org>
-References: <20251106-reset-gpios-swnodes-v6-0-69aa852de9e4@linaro.org>
-In-Reply-To: <20251106-reset-gpios-swnodes-v6-0-69aa852de9e4@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Daniel Scally <djrscally@gmail.com>, 
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-acpi@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7011;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=Ao31mIgVUzpFpWDEWy5gl0RAjMbjdGgDZiop4RFld+8=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBpDLGISK9diTWRcRc155/yr0n9uTHC0fqEsEKj1
- hLZNW8R8OOJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaQyxiAAKCRARpy6gFHHX
- ctBqEACEOpOe4DMcGGg/2LAjcBGy/1ZSWig3u5pjB1TpSklhF9Zv7sfHAg7t6MTffVdoBkKP+TU
- UY4lJUvRlngckYoFB0WwZU4toQTLZato+0DR4jWeaNkBIyLMFabaNyxHU55zEyc0OJFE2ucQjvs
- Pe0Ce/IRMl8vMev7Ge1dtcrPXfc6OV5xMfg3U6EuTmeaBQ9QL5yld5QyFRMw7i7jnHU6cu/Bgpb
- 6VY6X2G/f32vDv8xYVQimAWQZlcy+5lGAN+7GVI8a2EWcy6vF9yXp+bvnOhNnlDwZwy7F+PMkx1
- v2FQ7morG3A1o4wVaoU1U4D8Kf8ueh5j0Vu7vzc5g8o0dY2pDDtdqZwKjbZ19OjfOndnNTEkPqJ
- 1FAQE0VP29lV9uu3oowVF2q4qCmAb8refNErjiJmsroLnV8JltEzUv6QXIPBgpe1UJCOAiLFNgI
- cENbRETaGRt2V7PMNNNg6S5kEyYnJnLy0EECi958hPJVK1mwC/IoX2x0IAgaXuthGJUqxdb7oMV
- 9VqAqahRCPWqbr2V+Ntm3gNgAN+dLWwj/ffR/uu7Ynn2v6TjCphxUOSIzKbD4lIIdN4aY5xswy4
- 0DAMqamXrZSn27IxbouxToz+mZKNcuzdX8BRiJlGBXWF5+CeULMDis6x4hX27uF4HZXqNiA6f41
- vpkjJP6iU7XChJw==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cfc32f8530d5c0d4a7fb33c482a4bf549f26ec24.1762435376.git.geert+renesas@glider.be>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu, Nov 06, 2025 at 02:34:00PM +0100, Geert Uytterhoeven wrote:
+> The BUILD_BUG_ON_MSG() check against "~0ull" works only with "unsigned
+> (long) long" _mask types.  For constant masks, that condition is usually
+> met, as GENMASK() yields an UL value.  The few places where the
+> constant mask is stored in an intermediate variable were fixed by
+> changing the variable type to u64 (see e.g. [1] and [2]).
+> 
+> However, for non-constant masks, smaller unsigned types should be valid,
+> too, but currently lead to "result of comparison of constant
+> 18446744073709551615 with expression of type ... is always
+> false"-warnings with clang and W=1.
+> 
+> Hence refactor the __BF_FIELD_CHECK() helper, and factor out
+> __FIELD_{GET,PREP}().  The later lack the single problematic check, but
+> are otherwise identical to FIELD_{GET,PREP}(), and are intended to be
+> used in the fully non-const variants later.
+> 
+> [1] commit 5c667d5a5a3ec166 ("clk: sp7021: Adjust width of _m in
+>     HWM_FIELD_PREP()")
+> [2] commit cfd6fb45cfaf46fa ("crypto: ccree - avoid out-of-range
+>     warnings from clang")
 
-GPIO machine lookup is a nice mechanism for associating GPIOs with
-consumers if we don't know what kind of device the GPIO provider is or
-when it will become available. However in the case of the reset-gpio, we
-are already holding a reference to the device and so can reference its
-firmware node. Let's setup a software node that references the relevant
-GPIO and attach it to the auxiliary device we're creating.
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/reset/core.c | 126 +++++++++++++++++++++++++++++----------------------
- 1 file changed, 73 insertions(+), 53 deletions(-)
+Also can be made as
 
-diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-index cefeff10f6c82f5aef269a6d3a58d9d204ed6b7e..8262879e3f0d9ce67683c6baa00d9eea9e3c3ca3 100644
---- a/drivers/reset/core.c
-+++ b/drivers/reset/core.c
-@@ -14,6 +14,7 @@
- #include <linux/export.h>
- #include <linux/gpio/driver.h>
- #include <linux/gpio/machine.h>
-+#include <linux/gpio/property.h>
- #include <linux/idr.h>
- #include <linux/kernel.h>
- #include <linux/kref.h>
-@@ -77,10 +78,12 @@ struct reset_control_array {
- /**
-  * struct reset_gpio_lookup - lookup key for ad-hoc created reset-gpio devices
-  * @of_args: phandle to the reset controller with all the args like GPIO number
-+ * @swnode: Software node containing the reference to the GPIO provider
-  * @list: list entry for the reset_gpio_lookup_list
-  */
- struct reset_gpio_lookup {
- 	struct of_phandle_args of_args;
-+	struct fwnode_handle *swnode;
- 	struct list_head list;
- };
- 
-@@ -822,52 +825,45 @@ static void __reset_control_put_internal(struct reset_control *rstc)
- 	kref_put(&rstc->refcnt, __reset_control_release);
- }
- 
--static int __reset_add_reset_gpio_lookup(struct gpio_device *gdev, int id,
--					 struct device_node *np,
--					 unsigned int gpio,
--					 unsigned int of_flags)
-+static void reset_gpio_aux_device_release(struct device *dev)
- {
--	unsigned int lookup_flags;
--	const char *label_tmp;
-+	struct auxiliary_device *adev = to_auxiliary_dev(dev);
- 
--	/*
--	 * Later we map GPIO flags between OF and Linux, however not all
--	 * constants from include/dt-bindings/gpio/gpio.h and
--	 * include/linux/gpio/machine.h match each other.
--	 */
--	if (of_flags > GPIO_ACTIVE_LOW) {
--		pr_err("reset-gpio code does not support GPIO flags %u for GPIO %u\n",
--		       of_flags, gpio);
--		return -EINVAL;
-+	kfree(adev);
-+}
-+
-+static int reset_add_gpio_aux_device(struct device *parent,
-+				     struct fwnode_handle *swnode,
-+				     int id, void *pdata)
-+{
-+	struct auxiliary_device *adev;
-+	int ret;
-+
-+	adev = kzalloc(sizeof(*adev), GFP_KERNEL);
-+	if (!adev)
-+		return -ENOMEM;
-+
-+	adev->id = id;
-+	adev->name = "gpio";
-+	adev->dev.parent = parent;
-+	adev->dev.platform_data = pdata;
-+	adev->dev.release = reset_gpio_aux_device_release;
-+	device_set_node(&adev->dev, swnode);
-+
-+	ret = auxiliary_device_init(adev);
-+	if (ret) {
-+		kfree(adev);
-+		return ret;
- 	}
- 
--	label_tmp = gpio_device_get_label(gdev);
--	if (!label_tmp)
--		return -EINVAL;
-+	ret = __auxiliary_device_add(adev, "reset");
-+	if (ret) {
-+		auxiliary_device_uninit(adev);
-+		kfree(adev);
-+		return ret;
-+	}
- 
--	char *label __free(kfree) = kstrdup(label_tmp, GFP_KERNEL);
--	if (!label)
--		return -ENOMEM;
--
--	/* Size: one lookup entry plus sentinel */
--	struct gpiod_lookup_table *lookup __free(kfree) = kzalloc(struct_size(lookup, table, 2),
--								  GFP_KERNEL);
--	if (!lookup)
--		return -ENOMEM;
--
--	lookup->dev_id = kasprintf(GFP_KERNEL, "reset.gpio.%d", id);
--	if (!lookup->dev_id)
--		return -ENOMEM;
--
--	lookup_flags = GPIO_PERSISTENT;
--	lookup_flags |= of_flags & GPIO_ACTIVE_LOW;
--	lookup->table[0] = GPIO_LOOKUP(no_free_ptr(label), gpio, "reset",
--				       lookup_flags);
--
--	/* Not freed on success, because it is persisent subsystem data. */
--	gpiod_add_lookup_table(no_free_ptr(lookup));
--
--	return 0;
-+	return ret;
- }
- 
- /*
-@@ -875,8 +871,10 @@ static int __reset_add_reset_gpio_lookup(struct gpio_device *gdev, int id,
-  */
- static int __reset_add_reset_gpio_device(const struct of_phandle_args *args)
- {
-+	struct property_entry properties[2] = { };
-+	unsigned int offset, of_flags, lflags;
- 	struct reset_gpio_lookup *rgpio_dev;
--	struct auxiliary_device *adev;
-+	struct device *parent;
- 	int id, ret;
- 
- 	/*
-@@ -895,6 +893,23 @@ static int __reset_add_reset_gpio_device(const struct of_phandle_args *args)
- 	 */
- 	lockdep_assert_not_held(&reset_list_mutex);
- 
-+	offset = args->args[0];
-+	of_flags = args->args[1];
-+
-+	/*
-+	 * Later we map GPIO flags between OF and Linux, however not all
-+	 * constants from include/dt-bindings/gpio/gpio.h and
-+	 * include/linux/gpio/machine.h match each other.
-+	 *
-+	 * FIXME: Find a better way of translating OF flags to GPIO lookup
-+	 * flags.
-+	 */
-+	if (of_flags > GPIO_ACTIVE_LOW) {
-+		pr_err("reset-gpio code does not support GPIO flags %u for GPIO %u\n",
-+		       of_flags, offset);
-+		return -EINVAL;
-+	}
-+
- 	struct gpio_device *gdev __free(gpio_device_put) =
- 		gpio_device_find_by_fwnode(of_fwnode_handle(args->np));
- 	if (!gdev)
-@@ -909,6 +924,10 @@ static int __reset_add_reset_gpio_device(const struct of_phandle_args *args)
- 		}
- 	}
- 
-+	lflags = GPIO_PERSISTENT | (of_flags & GPIO_ACTIVE_LOW);
-+	parent = gpio_device_to_device(gdev);
-+	properties[0] = PROPERTY_ENTRY_GPIO("reset-gpios", parent->fwnode, offset, lflags);
-+
- 	id = ida_alloc(&reset_gpio_ida, GFP_KERNEL);
- 	if (id < 0)
- 		return id;
-@@ -920,11 +939,6 @@ static int __reset_add_reset_gpio_device(const struct of_phandle_args *args)
- 		goto err_ida_free;
- 	}
- 
--	ret = __reset_add_reset_gpio_lookup(gdev, id, args->np, args->args[0],
--					    args->args[1]);
--	if (ret < 0)
--		goto err_kfree;
--
- 	rgpio_dev->of_args = *args;
- 	/*
- 	 * We keep the device_node reference, but of_args.np is put at the end
-@@ -932,19 +946,25 @@ static int __reset_add_reset_gpio_device(const struct of_phandle_args *args)
- 	 * Hold reference as long as rgpio_dev memory is valid.
- 	 */
- 	of_node_get(rgpio_dev->of_args.np);
--	adev = auxiliary_device_create(gpio_device_to_device(gdev), "reset",
--				       "gpio", &rgpio_dev->of_args, id);
--	ret = PTR_ERR_OR_ZERO(adev);
-+
-+	rgpio_dev->swnode = fwnode_create_software_node(properties, NULL);
-+	ret = PTR_ERR(rgpio_dev->swnode);
- 	if (ret)
--		goto err_put;
-+		goto err_put_of_node;
-+
-+	ret = reset_add_gpio_aux_device(parent, rgpio_dev->swnode, id,
-+					&rgpio_dev->of_args);
-+	if (ret)
-+		goto err_del_swnode;
- 
- 	list_add(&rgpio_dev->list, &reset_gpio_lookup_list);
- 
- 	return 0;
- 
--err_put:
-+err_del_swnode:
-+	fwnode_remove_software_node(rgpio_dev->swnode);
-+err_put_of_node:
- 	of_node_put(rgpio_dev->of_args.np);
--err_kfree:
- 	kfree(rgpio_dev);
- err_ida_free:
- 	ida_free(&reset_gpio_ida, id);
+Link: https://git.kernel.org/torvalds/c/5c667d5a5a3ec166 [1]
+
+The positive effect that one may click that on Git Web.
+Ideally, of course, would be an additional parses on Git Web kernel.org uses to
+parse that standard "commit ...()" notation to add the respective HREF link.
+
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+...
+
+> +	BUILD_BUG_ON_MSG(__bf_cast_unsigned(mask, mask) >		\
+> +			 __bf_cast_unsigned(reg, ~0ull),		\
+> +			 pfx "type of reg too small for mask")
+
+Perhaps we may convert this (and others?) to static_assert():s at some point?
+
 
 -- 
-2.51.0
+With Best Regards,
+Andy Shevchenko
+
 
 
