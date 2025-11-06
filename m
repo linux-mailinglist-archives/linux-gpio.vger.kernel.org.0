@@ -1,312 +1,440 @@
-Return-Path: <linux-gpio+bounces-28219-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28220-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 659B0C3C7F1
-	for <lists+linux-gpio@lfdr.de>; Thu, 06 Nov 2025 17:39:12 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3182EC3C870
+	for <lists+linux-gpio@lfdr.de>; Thu, 06 Nov 2025 17:42:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B8C7188321A
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Nov 2025 16:34:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6CD954241B3
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Nov 2025 16:36:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8703F34EEFA;
-	Thu,  6 Nov 2025 16:31:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20C7834D4FE;
+	Thu,  6 Nov 2025 16:33:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BBzFCUZ9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dUx7Ii5x"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yx1-f48.google.com (mail-yx1-f48.google.com [74.125.224.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D4634E776
-	for <linux-gpio@vger.kernel.org>; Thu,  6 Nov 2025 16:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F1734D4E1;
+	Thu,  6 Nov 2025 16:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762446714; cv=none; b=tFPrUyPapWGKMVsBY5rfBay6K3MtsOa/mIgzfYOR0EQtOa6NWxN7ug2eGwSL45B9feKyXpVNRI7kG3cj6jA04g0UyO9ELjN+XQqZeR/+3/hmfScayxatCOS/46LoF9hntN8tTsIhy9zCsk0GT4aWduB+lqOCBAz42lnp+aJHIjk=
+	t=1762446802; cv=none; b=Zx25AmkO//9tNW5piy+aGQG+xAAHAIx3vGWqEzpOsyzWXTs1LbqGM7x4cysyI628cEP7t+3c79DcOxuIvdIw7IV+z5b0WYeCGCwZMk85fMLfxEbJ8X1Wj8QmQct/4IObzOh1Dy6fmxQ9zwuApmmKpG2t02k06w8TAyr33GQyw5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762446714; c=relaxed/simple;
-	bh=gZpeaDdMgA4EZA+xmuc5CunjJCGos8JY91Zsp13Ia/Y=;
+	s=arc-20240116; t=1762446802; c=relaxed/simple;
+	bh=NwlmAbeYHld7D0GB0SpygWEv2y4XXsuSm4A+ULELn3k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P1Ex4V8cjWxmKVmSTK6tPRE+8ihHrSr4sYI+wrW+CY0Lz45PNVIHCYbBzR6Pq7tse/gqhXkaAIwlVKuuyYc+xqUP2xndGEsvEaYYymEMQI2PcxCqmtaQIyFn8l8U7i2qh/6NjcSDJC7b5Y5cbTsRiikGnPqqb4XK88nGOFSb+10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BBzFCUZ9; arc=none smtp.client-ip=74.125.224.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-63fbed0f71aso1090661d50.0
-        for <linux-gpio@vger.kernel.org>; Thu, 06 Nov 2025 08:31:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762446711; x=1763051511; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mLV2PDnl4Ik3dMiBcJ6vRzCiNGFzAVWq7I4DrxmSPKg=;
-        b=BBzFCUZ9klIovMxrLDKf0AEhQdmPaaLkdGiTL288rj0fGIr9iv6ugiMZ5LaX9IXg3e
-         NEsYmUCYxI9YQH0TJ+SlPJF43CLL8orJ5aoq2UwEEaRudocQIGfxLI7ZDRLsDQr55H5l
-         of1OvbAOdbkTyabjovfm78lhobzbEHmRAUwf++rBpVU3VlKfnGNPQ114ylm1JumfCOIk
-         P3YHAyVfROWFHawR+a7+f3vErlsnAL01GIvGkZQgnB/m1mYCgbRmY3TQRYb8dU3k3PVB
-         83srIck9JQaRNAVE14W0n8NRAUyWXpo8RrhmNGkUnpYu7qsvJiv6u9UKl5VZSxWL7TVI
-         uTKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762446711; x=1763051511;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mLV2PDnl4Ik3dMiBcJ6vRzCiNGFzAVWq7I4DrxmSPKg=;
-        b=qObqi0Ma7LyJnnw5Jn5cHQQ6SAQJmvtjkDHr+q+7Ey4hfyAb9iME9L0u6zo44pXZ5X
-         2mjqJ/hcQkHy9azizcGTu+IPkBtqQwixln551Wfhq0g7PU/QCBYNx5VBGFWQU3yRufr9
-         kN7t6QwNSFnUcg4MsJ5ZonRNk3UHuMxbH/17KndJ/IZVRFfnTc43JwCCd0i1JbknTZTG
-         87vEO5n/xmJgAFh3isViPd/llM2f2yzZE4/r4EO0KSMa0AkgnhtaXCB2d6/GowxcwMJi
-         nXB9pM/TXAZZ/5/wCE/Y9IfxBCnFhAehdi8NC5E+FnZWssEVJkGDmdOAFLolOux28Mzl
-         lhGw==
-X-Forwarded-Encrypted: i=1; AJvYcCXgXlMHEHBJAMmq9X7m0Zp67z/BEktCJXjTCB1akGlUjQD7tn4tk5vmzNOSuiPsrjVWIT2awaTjgNXo@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUn9L0meYv931mGwQqWkdZbMrPi9MuNoVQcizNhuHxDZTIt7R8
-	QsEGKZldrdaqVD0hy7XCi0bsDqanHSwae5SLU5RIZrcQanTqGfaw3o2O
-X-Gm-Gg: ASbGncv1gr/mgmyj9KvCbXZdMHz5x46o+H2ASYRAWQZl1CjaiZc6NdNo6V9kW6gtQlT
-	otREftvPJkh6oe8jadBVSd09Rqv/uDxkX6zMnAt9VvxzDf9NNmduxo6pdCgufvexdOCiqefNhnI
-	lQj2yGOFBfP+pH9Nv8Eg67ZmeJPrNQWWFC7nBmPOo16fQSnZkJMxF0fkGMxyyMHeDcg3nvNwGk+
-	zXVWJYx5ysxcHzqkm2dhATRYSaZiQBaBNYOCV7M7g6g5lxITyjS7+6GXnexpCjdSzoPyysudOFb
-	4epPvL3LjwNcz9eiYOsG8LJIk3QfKG2/M0RH2C875AFQ4zyufxzpY7oKM6F+wVLm0N4TpbZrAO3
-	PCfllguN5n0H2w+z05uKSlePLab918OVskgusLryRQiWNjn/9tE7OLchanif1OfM57B+JchhaIh
-	KqUVyOMG/X4YsDsKS3d6DVw8nRe1mF6Piw
-X-Google-Smtp-Source: AGHT+IEpqWmkZjuH3DQIeoTdW2YBETsoULiRC/YJVd9G+NTFiGKOkPxXPnseVKzqKGSB50LDoYAi6w==
-X-Received: by 2002:a05:690e:4109:b0:63f:b9d1:b165 with SMTP id 956f58d0204a3-63fd359be98mr4428593d50.50.1762446710597;
-        Thu, 06 Nov 2025 08:31:50 -0800 (PST)
-Received: from localhost (c-73-105-0-253.hsd1.fl.comcast.net. [73.105.0.253])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-640b5d94487sm902855d50.21.2025.11.06.08.31.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Nov 2025 08:31:49 -0800 (PST)
-Date: Thu, 6 Nov 2025 11:31:48 -0500
-From: Yury Norov <yury.norov@gmail.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	David Miller <davem@davemloft.net>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=oe3FvRmgZOUfiwO/0m2xxqRBErLqd4P6IszVi6YAdlZ5rVlG7LjQuMteDUkNIa5BHBp99nEIEOqUCa8o92oVLzaN/WKEpe25wAaiIeB6EY9U3cniCzSA+H5byw8Ll7Y18WJzhCXDyOWVNrIyXXdlm3i2IlwNxVOmJuY92wDw5iA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dUx7Ii5x; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FFAEC116B1;
+	Thu,  6 Nov 2025 16:33:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762446802;
+	bh=NwlmAbeYHld7D0GB0SpygWEv2y4XXsuSm4A+ULELn3k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dUx7Ii5xS7orcx74bqQTwUK7Cbk5860Je1WIzIcWBaO25kKAqBlnXoQGWGz69Zv5P
+	 y8DCJkAUsBgj2sbA0S8UoLcaQB/ATrj80qUPzZoH3VWfP/pPGB4z+ac/72T+rZ5CUW
+	 s5l9xlasjUmqawRE87OGKqftHU6KVOiky28TWzJ0AqXrCgGF/D6i4JwWWPzEBIHUmA
+	 7LTJ27Dr+8epskuieLJgSZTr1jnVa4QdYEVp0/iSei0nUPI420jpD6B1GaCNq2dPtL
+	 fKtgCU+vZJlyNMeyUFGuoxDATo2NI2TFhvjfGJGdK4CMbtoJ2bR1sdkGYLGh4Q9gGR
+	 kFhyP261JG/Cg==
+Date: Thu, 6 Nov 2025 16:33:16 +0000
+From: Lee Jones <lee@kernel.org>
+To: Sander Vanheule <sander@svanheule.net>
+Cc: Michael Walle <mwalle@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Crt Mori <cmo@melexis.com>, Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Shan-Chun Hung <schung@nuvoton.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Jakub Kicinski <kuba@kernel.org>, Alex Elder <elder@ieee.org>,
-	David Laight <david.laight.linux@gmail.com>,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	Jason Baron <jbaron@akamai.com>, Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Kim Seer Paller <kimseer.paller@analog.com>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Richard Genoud <richard.genoud@bootlin.com>,
-	Cosmin Tanislav <demonsingur@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Jianping Shen <Jianping.Shen@de.bosch.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-edac@vger.kernel.org, qat-linux@intel.com,
-	linux-gpio@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-	linux-iio@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH v6 13/26] bitfield: Add non-constant field_{prep,get}()
- helpers
-Message-ID: <aQzNdJFcStVak5jS@yury>
-References: <cover.1762435376.git.geert+renesas@glider.be>
- <62a5058e460129155e4e7539e37140bd0f0d4abc.1762435376.git.geert+renesas@glider.be>
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 5/8] mfd: Add RTL8231 core device
+Message-ID: <20251106163316.GV8064@google.com>
+References: <20251021142407.307753-1-sander@svanheule.net>
+ <20251021142407.307753-6-sander@svanheule.net>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <62a5058e460129155e4e7539e37140bd0f0d4abc.1762435376.git.geert+renesas@glider.be>
+In-Reply-To: <20251021142407.307753-6-sander@svanheule.net>
 
-On Thu, Nov 06, 2025 at 02:34:01PM +0100, Geert Uytterhoeven wrote:
-> The existing FIELD_{GET,PREP}() macros are limited to compile-time
-> constants.  However, it is very common to prepare or extract bitfield
-> elements where the bitfield mask is not a compile-time constant.
+On Tue, 21 Oct 2025, Sander Vanheule wrote:
+
+> The RTL8231 is implemented as an MDIO device, and provides a regmap
+> interface for register access by the core and child devices.
 > 
-> To avoid this limitation, the AT91 clock driver and several other
-> drivers already have their own non-const field_{prep,get}() macros.
-> Make them available for general use by adding them to
-> <linux/bitfield.h>, and improve them slightly:
->   1. Avoid evaluating macro parameters more than once,
->   2. Replace "ffs() - 1" by "__ffs()",
->   3. Support 64-bit use on 32-bit architectures,
->   4. Wire field_{get,prep}() to FIELD_{GET,PREP}() when mask is
->      actually constant.
+> The chip can also be a device on an SMI bus, an I2C-like bus by Realtek.
+> Since kernel support for SMI is limited, and no real-world SMI
+> implementations have been encountered for this device, this is currently
+> unimplemented. The use of the regmap interface should make any future
+> support relatively straightforward.
 > 
-> This is deliberately not merged into the existing FIELD_{GET,PREP}()
-> macros, as people expressed the desire to keep stricter variants for
-> increased safety, or for performance critical paths.
+> After a soft reset, all pins are muxed to GPIO inputs before the pin
+> drivers are enabled. This is done to prevent accidental system resets,
+> when a pin is connected to the main SoC's reset line.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Acked-by: Crt Mori <cmo@melexis.com>
-> Acked-by: Nuno S� <nuno.sa@analog.com>
-> Acked-by: Richard Genoud <richard.genoud@bootlin.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> Signed-off-by: Sander Vanheule <sander@svanheule.net>
 > ---
-> v6:
->   - Align \,
->   - Add Return sections to kerneldoc,
->   - Add Reviewed-by,
->   - Document field_{get,prep} in top comment block,
->   - Use less-checking __FIELD_{GET,PREP}() to avoid build issues with
->     clang and W=1:
->     https://lore.kernel.org/all/202510281335.UpSLYJG9-lkp@intel.com
->     https://lore.kernel.org/all/202510281414.DnejZh4n-lkp@intel.com
->     https://lore.kernel.org/all/202510281304.RK3J3c3t-lkp@intel.com
+>  drivers/mfd/Kconfig         |   9 ++
+>  drivers/mfd/Makefile        |   1 +
+>  drivers/mfd/rtl8231.c       | 193 ++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/rtl8231.h |  71 +++++++++++++
+>  4 files changed, 274 insertions(+)
+>  create mode 100644 drivers/mfd/rtl8231.c
+>  create mode 100644 include/linux/mfd/rtl8231.h
 > 
-> v5:
->   - Add Acked-by,
->   - Split off changes outside <linux/bitfield.h>,
->   - Document that mask must be non-zero,
->   - Document typical usage pattern,
->   - Recommend using FIELD_{PREP,GET}() directly to ensure compile-time
->     constant masks,
->   - Check BITS_PER_TYPE(mask) instead of sizeof(mask),
->   - Wire field_{get,prep}() to FIELD_{GET,PREP}() when mask is
->     constant, to improve type checking.
-> 
-> v4:
->   - Add Acked-by,
->   - Rebase on top of commit 7c68005a46108ffa ("crypto: qat - relocate
->     power management debugfs helper APIs") in v6.17-rc1,
->   - Convert more recently introduced upstream copies:
->       - drivers/edac/ie31200_edac.c
->       - drivers/iio/dac/ad3530r.c
-> 
-> v3:
->   - Add Acked-by,
->   - Drop underscores from macro parameters,
->   - Use __auto_type where possible,
->   - Correctly cast reg to the mask type,
->   - Introduces __val and __reg intermediates to simplify the actual
->     operation,
->   - Drop unneeded parentheses,
->   - Clarify having both FIELD_{GET,PREP}() and field_{get,prep}(),
-> 
-> v2:
->   - Cast val resp. reg to the mask type,
->   - Fix 64-bit use on 32-bit architectures,
->   - Convert new upstream users:
->       - drivers/crypto/intel/qat/qat_common/adf_gen4_pm_debugfs.c
->       - drivers/gpio/gpio-aspeed.c
->       - drivers/iio/temperature/mlx90614.c
->       - drivers/pinctrl/nuvoton/pinctrl-ma35.c
->       - sound/usb/mixer_quirks.c
->   - Convert new user queued in renesas-devel for v6.15:
->       - drivers/soc/renesas/rz-sysc.c
-> ---
->  include/linux/bitfield.h | 59 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
-> 
-> diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
-> index bf8e0ae4b5b41038..f92e18c9629a59c6 100644
-> --- a/include/linux/bitfield.h
-> +++ b/include/linux/bitfield.h
-> @@ -17,6 +17,7 @@
->   * FIELD_{GET,PREP} macros take as first parameter shifted mask
->   * from which they extract the base mask and shift amount.
->   * Mask must be a compilation time constant.
-> + * field_{get,prep} are variants that take a non-const mask.
->   *
->   * Example:
->   *
-> @@ -240,4 +241,62 @@ __MAKE_OP(64)
->  #undef __MAKE_OP
->  #undef ____MAKE_OP
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 6cec1858947b..e13e2df63fee 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1301,6 +1301,15 @@ config MFD_RDC321X
+>  	  southbridge which provides access to GPIOs and Watchdog using the
+>  	  southbridge PCI device configuration space.
 >  
-> +#define __field_prep(mask, val)						\
-> +	({								\
-> +		__auto_type __mask = (mask);				\
-> +		typeof(mask) __val = (val);				\
-
-typeof(__mask), I guess.
-
-> +		unsigned int __shift = BITS_PER_TYPE(mask) <= 32 ?	\
-
-Same here: BITS_PER_TYPE(__mask). BITS_PER_TYPE() doesn't evaluate the
-expression because it is based on sizeof(). But we definitely don't
-want people check it every time they read the code.
-
-No need to send another version for this. I can fix it inplace.
-
-Reviewed-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
-
-> +				       __ffs(__mask) : __ffs64(__mask);	\
-> +		(__val << __shift) & __mask;				\
-> +	})
+> +config MFD_RTL8231
+> +	tristate "Realtek RTL8231 GPIO and LED expander"
+> +	select MFD_CORE
+> +	select REGMAP_MDIO
+> +	help
+> +	  Support for the Realtek RTL8231 GPIO and LED expander.
+> +	  Provides up to 37 GPIOs, 88 LEDs, and one PWM output.
+> +	  When built as a module, this module will be named rtl8231.
 > +
-> +#define __field_get(mask, reg)						\
-> +	({								\
-> +		__auto_type __mask = (mask);				\
-> +		typeof(mask) __reg =  (reg);				\
-> +		unsigned int __shift = BITS_PER_TYPE(mask) <= 32 ?	\
-> +				       __ffs(__mask) : __ffs64(__mask);	\
-> +		(__reg & __mask) >> __shift;				\
-> +	})
+>  config MFD_RT4831
+>  	tristate "Richtek RT4831 four channel WLED and Display Bias Voltage"
+>  	depends on I2C
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 865e9f12faff..ba973382a20f 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -252,6 +252,7 @@ obj-$(CONFIG_MFD_HI6421_PMIC)	+= hi6421-pmic-core.o
+>  obj-$(CONFIG_MFD_HI6421_SPMI)	+= hi6421-spmi-pmic.o
+>  obj-$(CONFIG_MFD_HI655X_PMIC)   += hi655x-pmic.o
+>  obj-$(CONFIG_MFD_DLN2)		+= dln2.o
+> +obj-$(CONFIG_MFD_RTL8231)	+= rtl8231.o
+>  obj-$(CONFIG_MFD_RT4831)	+= rt4831.o
+>  obj-$(CONFIG_MFD_RT5033)	+= rt5033.o
+>  obj-$(CONFIG_MFD_RT5120)	+= rt5120.o
+> diff --git a/drivers/mfd/rtl8231.c b/drivers/mfd/rtl8231.c
+> new file mode 100644
+> index 000000000000..60d4a0feea5c
+> --- /dev/null
+> +++ b/drivers/mfd/rtl8231.c
+> @@ -0,0 +1,193 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
 > +
-> +/**
-> + * field_prep() - prepare a bitfield element
-> + * @mask: shifted mask defining the field's length and position, must be
-> + *        non-zero
-> + * @val:  value to put in the field
-> + *
-> + * Return: field value masked and shifted to its final destination
-> + *
-> + * field_prep() masks and shifts up the value.  The result should be
-> + * combined with other fields of the bitfield using logical OR.
-> + * Unlike FIELD_PREP(), @mask is not limited to a compile-time constant.
-> + * Typical usage patterns are a value stored in a table, or calculated by
-> + * shifting a constant by a variable number of bits.
-> + * If you want to ensure that @mask is a compile-time constant, please use
-> + * FIELD_PREP() directly instead.
+> +#include <linux/bits.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mdio.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/regmap.h>
+
+Alphabetical please.
+
+> +#include <linux/mfd/rtl8231.h>
+> +
+> +static bool rtl8231_volatile_reg(struct device *dev, unsigned int reg)
+> +{
+> +	switch (reg) {
+> +	/*
+> +	 * Registers with self-clearing bits, strapping pin values.
+> +	 * Don't mark the data registers as volatile, since we need
+> +	 * caching for the output values.
+> +	 */
+> +	case RTL8231_REG_FUNC0:
+> +	case RTL8231_REG_FUNC1:
+> +	case RTL8231_REG_PIN_HI_CFG:
+> +	case RTL8231_REG_LED_END:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +static const struct reg_field RTL8231_FIELD_LED_START = REG_FIELD(RTL8231_REG_FUNC0, 1, 1);
+
+Why does this have to be global?
+
+Variables should be lowercase.
+
+> +static const struct mfd_cell rtl8231_cells[] = {
+> +	{
+> +		.name = "rtl8231-pinctrl",
+> +	},
+> +	{
+> +		.name = "rtl8231-leds",
+> +		.of_compatible = "realtek,rtl8231-leds",
+> +	},
+> +};
+
+This is a pretty tenuous MFD!
+
+> +static int rtl8231_soft_reset(struct regmap *map)
+
+s/map/regmap/
+
+> +{
+> +	const unsigned int all_pins_mask = GENMASK(RTL8231_BITS_VAL - 1, 0);
+> +	unsigned int val;
+> +	int err;
+> +
+> +	/* SOFT_RESET bit self-clears when done */
+> +	regmap_write_bits(map, RTL8231_REG_PIN_HI_CFG,
+> +		RTL8231_PIN_HI_CFG_SOFT_RESET, RTL8231_PIN_HI_CFG_SOFT_RESET);
+> +	err = regmap_read_poll_timeout(map, RTL8231_REG_PIN_HI_CFG, val,
+> +		!(val & RTL8231_PIN_HI_CFG_SOFT_RESET), 50, 1000);
+> +	if (err)
+> +		return err;
+
+Do we have to scrunch these calls together?
+
+> +	regcache_mark_dirty(map);
+> +
+> +	/*
+> +	 * Chip reset results in a pin configuration that is a mix of LED and GPIO outputs.
+> +	 * Select GPI functionality for all pins before enabling pin outputs.
+> +	 */
+> +	regmap_write(map, RTL8231_REG_PIN_MODE0, all_pins_mask);
+> +	regmap_write(map, RTL8231_REG_GPIO_DIR0, all_pins_mask);
+> +	regmap_write(map, RTL8231_REG_PIN_MODE1, all_pins_mask);
+> +	regmap_write(map, RTL8231_REG_GPIO_DIR1, all_pins_mask);
+> +	regmap_write(map, RTL8231_REG_PIN_HI_CFG,
+> +		RTL8231_PIN_HI_CFG_MODE_MASK | RTL8231_PIN_HI_CFG_DIR_MASK);
+> +
+> +	return 0;
+> +}
+> +
+> +static int rtl8231_init(struct device *dev, struct regmap *map)
+> +{
+> +	struct regmap_field *led_start;
+> +	unsigned int started;
+> +	unsigned int val;
+
+If this is used for only one thing, it makes sense to use better
+nomenclature that refers to that thing.
+
+> +	int err;
+> +
+> +	err = regmap_read(map, RTL8231_REG_FUNC1, &val);
+> +	if (err) {
+> +		dev_err(dev, "failed to read READY_CODE\n");
+> +		return err;
+> +	}
+> +
+> +	val = FIELD_GET(RTL8231_FUNC1_READY_CODE_MASK, val);
+> +	if (val != RTL8231_FUNC1_READY_CODE_VALUE) {
+> +		dev_err(dev, "RTL8231 not present or ready 0x%x != 0x%x\n",
+> +			val, RTL8231_FUNC1_READY_CODE_VALUE);
+> +		return -ENODEV;
+> +	}
+> +
+> +	led_start = dev_get_drvdata(dev);
+> +	err = regmap_field_read(led_start, &started);
+> +	if (err)
+> +		return err;
+> +
+> +	if (!started) {
+
+Reverse the logic and exit early if 'started'.
+
+> +		err = rtl8231_soft_reset(map);
+> +		if (err)
+> +			return err;
+
+'\n' here.
+
+> +		/* LED_START enables power to output pins, and starts the LED engine */
+> +		err = regmap_field_force_write(led_start, 1);
+> +	}
+> +
+> +	return err;
+> +}
+> +
+> +static const struct regmap_config rtl8231_mdio_regmap_config = {
+> +	.val_bits = RTL8231_BITS_VAL,
+> +	.reg_bits = RTL8231_BITS_REG,
+> +	.volatile_reg = rtl8231_volatile_reg,
+> +	.max_register = RTL8231_REG_COUNT - 1,
+> +	.use_single_read = true,
+> +	.use_single_write = true,
+> +	.reg_format_endian = REGMAP_ENDIAN_BIG,
+> +	.val_format_endian = REGMAP_ENDIAN_BIG,
+> +	/* Cannot use REGCACHE_FLAT because it's not smart enough about cache invalidation  */
+> +	.cache_type = REGCACHE_MAPLE,
+> +};
+> +
+> +static int rtl8231_mdio_probe(struct mdio_device *mdiodev)
+> +{
+> +	struct device *dev = &mdiodev->dev;
+> +	struct regmap_field *led_start;
+> +	struct regmap *map;
+> +	int err;
+> +
+> +	map = devm_regmap_init_mdio(mdiodev, &rtl8231_mdio_regmap_config);
+> +	if (IS_ERR(map)) {
+> +		dev_err(dev, "failed to init regmap\n");
+> +		return PTR_ERR(map);
+> +	}
+> +
+> +	led_start = devm_regmap_field_alloc(dev, map, RTL8231_FIELD_LED_START);
+> +	if (IS_ERR(led_start))
+> +		return PTR_ERR(led_start);
+
+Why do we need to do LED specific actions in the core driver?
+
+> +	dev_set_drvdata(dev, led_start);
+> +
+> +	mdiodev->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
+> +	if (IS_ERR(mdiodev->reset_gpio))
+> +		return PTR_ERR(mdiodev->reset_gpio);
+> +
+> +	device_property_read_u32(dev, "reset-assert-delay", &mdiodev->reset_assert_delay);
+> +	device_property_read_u32(dev, "reset-deassert-delay", &mdiodev->reset_deassert_delay);
+> +
+> +	err = rtl8231_init(dev, map);
+> +	if (err)
+> +		return err;
+> +
+> +	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, rtl8231_cells,
+> +		ARRAY_SIZE(rtl8231_cells), NULL, 0, NULL);
+
+Odd tabbing.  Please line-up with the '(' like usual.
+
+> +}
+> +
+> +__maybe_unused static int rtl8231_suspend(struct device *dev)
+
+The __maybe_unused comes after the "static int" part.
+
+> +{
+> +	struct regmap_field *led_start = dev_get_drvdata(dev);
+> +
+> +	return regmap_field_force_write(led_start, 0);
+> +}
+> +
+> +__maybe_unused static int rtl8231_resume(struct device *dev)
+> +{
+> +	struct regmap_field *led_start = dev_get_drvdata(dev);
+> +
+> +	return regmap_field_force_write(led_start, 1);
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(rtl8231_pm_ops, rtl8231_suspend, rtl8231_resume);
+> +
+> +static const struct of_device_id rtl8231_of_match[] = {
+> +	{ .compatible = "realtek,rtl8231" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, rtl8231_of_match);
+> +
+> +static struct mdio_driver rtl8231_mdio_driver = {
+> +	.mdiodrv.driver = {
+> +		.name = "rtl8231-expander",
+> +		.of_match_table	= rtl8231_of_match,
+> +		.pm = pm_ptr(&rtl8231_pm_ops),
+> +	},
+> +	.probe = rtl8231_mdio_probe,
+> +};
+> +mdio_module_driver(rtl8231_mdio_driver);
+> +
+> +MODULE_AUTHOR("Sander Vanheule <sander@svanheule.net>");
+> +MODULE_DESCRIPTION("Realtek RTL8231 GPIO and LED expander");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/linux/mfd/rtl8231.h b/include/linux/mfd/rtl8231.h
+> new file mode 100644
+> index 000000000000..003eda3797a3
+> --- /dev/null
+> +++ b/include/linux/mfd/rtl8231.h
+> @@ -0,0 +1,71 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Register definitions the RTL8231 GPIO and LED expander chip
 > + */
-> +#define field_prep(mask, val)						\
-> +	(__builtin_constant_p(mask) ? __FIELD_PREP(mask, val, "field_prep: ") \
-> +				    : __field_prep(mask, val))
 > +
-> +/**
-> + * field_get() - extract a bitfield element
-> + * @mask: shifted mask defining the field's length and position, must be
-> + *        non-zero
-> + * @reg:  value of entire bitfield
-> + *
-> + * Return: extracted field value
-> + *
-> + * field_get() extracts the field specified by @mask from the
-> + * bitfield passed in as @reg by masking and shifting it down.
-> + * Unlike FIELD_GET(), @mask is not limited to a compile-time constant.
-> + * Typical usage patterns are a value stored in a table, or calculated by
-> + * shifting a constant by a variable number of bits.
-> + * If you want to ensure that @mask is a compile-time constant, please use
-> + * FIELD_GET() directly instead.
+> +#ifndef __LINUX_MFD_RTL8231_H
+> +#define __LINUX_MFD_RTL8231_H
+> +
+> +#include <linux/bits.h>
+> +
+> +/*
+> + * Registers addresses are 5 bit, values are 16 bit
+> + * Also define a duplicated range of virtual addresses, to enable
+> + * different read/write behaviour on the GPIO data registers
 > + */
-> +#define field_get(mask, reg)						\
-> +	(__builtin_constant_p(mask) ? __FIELD_GET(mask, reg, "field_get: ") \
-> +				    : __field_get(mask, reg))
+> +#define RTL8231_BITS_VAL		16
+> +#define RTL8231_BITS_REG		5
 > +
->  #endif
+> +/* Chip control */
+> +#define RTL8231_REG_FUNC0		0x00
+> +#define RTL8231_FUNC0_SCAN_MODE		BIT(0)
+> +#define RTL8231_FUNC0_SCAN_SINGLE	0
+> +#define RTL8231_FUNC0_SCAN_BICOLOR	BIT(0)
+> +
+> +#define RTL8231_REG_FUNC1		0x01
+> +#define RTL8231_FUNC1_READY_CODE_VALUE	0x37
+> +#define RTL8231_FUNC1_READY_CODE_MASK	GENMASK(9, 4)
+> +#define RTL8231_FUNC1_DEBOUNCE_MASK	GENMASK(15, 10)
+> +
+> +/* Pin control */
+> +#define RTL8231_REG_PIN_MODE0		0x02
+> +#define RTL8231_REG_PIN_MODE1		0x03
+> +
+> +#define RTL8231_PIN_MODE_LED		0
+> +#define RTL8231_PIN_MODE_GPIO		1
+> +
+> +/* Pin high config: pin and GPIO control for pins 32-26 */
+> +#define RTL8231_REG_PIN_HI_CFG		0x04
+> +#define RTL8231_PIN_HI_CFG_MODE_MASK	GENMASK(4, 0)
+> +#define RTL8231_PIN_HI_CFG_DIR_MASK	GENMASK(9, 5)
+> +#define RTL8231_PIN_HI_CFG_INV_MASK	GENMASK(14, 10)
+> +#define RTL8231_PIN_HI_CFG_SOFT_RESET	BIT(15)
+> +
+> +/* GPIO control registers */
+> +#define RTL8231_REG_GPIO_DIR0		0x05
+> +#define RTL8231_REG_GPIO_DIR1		0x06
+> +#define RTL8231_REG_GPIO_INVERT0	0x07
+> +#define RTL8231_REG_GPIO_INVERT1	0x08
+> +
+> +#define RTL8231_GPIO_DIR_IN		1
+> +#define RTL8231_GPIO_DIR_OUT		0
+> +
+> +/*
+> + * GPIO data registers
+> + * Only the output data can be written to these registers, and only the input
+> + * data can be read.
+> + */
+> +#define RTL8231_REG_GPIO_DATA0		0x1c
+> +#define RTL8231_REG_GPIO_DATA1		0x1d
+> +#define RTL8231_REG_GPIO_DATA2		0x1e
+> +#define RTL8231_PIN_HI_DATA_MASK	GENMASK(4, 0)
+> +
+> +/* LED control base registers */
+> +#define RTL8231_REG_LED0_BASE		0x09
+> +#define RTL8231_REG_LED1_BASE		0x10
+> +#define RTL8231_REG_LED2_BASE		0x17
+> +#define RTL8231_REG_LED_END		0x1b
+> +
+> +#define RTL8231_REG_COUNT		0x1f
+> +
+> +#endif /* __LINUX_MFD_RTL8231_H */
 > -- 
-> 2.43.0
+> 2.51.0
+> 
+> 
+
+-- 
+Lee Jones [李琼斯]
 
