@@ -1,93 +1,166 @@
-Return-Path: <linux-gpio+bounces-28190-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28191-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 998BBC3B8AE
-	for <lists+linux-gpio@lfdr.de>; Thu, 06 Nov 2025 15:03:39 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE08CC3BB73
+	for <lists+linux-gpio@lfdr.de>; Thu, 06 Nov 2025 15:26:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CE0661A400E0
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Nov 2025 14:02:39 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 209F84F688F
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Nov 2025 14:23:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C0DE339B4F;
-	Thu,  6 Nov 2025 14:01:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D84E33FE32;
+	Thu,  6 Nov 2025 14:18:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B7Y9qOI4"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ylPbjCkI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E89E303CB4
-	for <linux-gpio@vger.kernel.org>; Thu,  6 Nov 2025 14:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CED92E7F1C
+	for <linux-gpio@vger.kernel.org>; Thu,  6 Nov 2025 14:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762437713; cv=none; b=UcO9VJLwbbenTIDVbweqIvnB9GFW1+eYdmLcVgB6GlnBuFReJKtTADUs2aPtq9H99xFPIoU9/+EwGbrkI7QHlqJAxe8FLANqpLuDu8mOLsOy0IaAh07ClqroaHU56riDaRtswNQ2pVxU0En2Uv1m8H/QW8n5ctSSm1Xs8NqZdZ8=
+	t=1762438722; cv=none; b=QySH9wO/x97+BJokwjl/3S0yKnUEykDAEZ/fJTgV5Jcz89afFtnMB0qQzEUYlz9m5fVgUyj4P9jKtefq1CduWbQLhuHLrI+6HU9So03b9mwpbR9Gtn0TsTZW3VMjLDXAtB5GzNP/FfYGEeLWmeB0O4+43hNupiRhKy7bSl0Hxx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762437713; c=relaxed/simple;
-	bh=7exbD5V2wfJPkABtQdCoQUL9FjBVFOYiegq3gRa6D4U=;
+	s=arc-20240116; t=1762438722; c=relaxed/simple;
+	bh=nbU9VTJQs8QIjbledFSiiMZSbQur1NbRbjuGKQHQDy8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gM8UINPI1HG7dBCYlfnqVIOqMN2hzhpqjBSvDRlQe8hxRL9B1odBh55lNg4y1/1RlUd6T17PV77CaBFxIOaQWV09z3zZ0YuDcDxTPF8t1jqF59TmnrH5dPlF+8EBPQUB2R3Ljv3b996iVviXG01vyVs+papggB147PKB1Lhu6eE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B7Y9qOI4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B018C16AAE
-	for <linux-gpio@vger.kernel.org>; Thu,  6 Nov 2025 14:01:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762437712;
-	bh=7exbD5V2wfJPkABtQdCoQUL9FjBVFOYiegq3gRa6D4U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=B7Y9qOI4r3ekfTw4ug6uiMcuXv6FoRw/2kgeqK6XF0EW/axd5jeeHCI2jfaK3tuxO
-	 YkZ1OTOzbGMsmlY5vDXaAC2ikkDaYT5gAykByfUCYzdUYFVeniCuyQl8BSSn0lHIIX
-	 fmrYHdm1Ym5hcHrxpl7xrtGGNH/7vV6mPbow4j5ZUhPNdk6LyguDbItSY75XzxJgZ2
-	 hmYDtw+zOFZFumEAv6Q+maNXCimeZv3W3DFlTn2xloJWQkKS7OoGlh3mrL/7ikzwe9
-	 9j5vBdF8mCPp0yFPFIB1QQlVXWcJTFtPRypFc1/WswP9XtXbVBHuIXyiSaw8EOXc3O
-	 wAGzBDAcvfWeA==
-Received: by mail-yx1-f54.google.com with SMTP id 956f58d0204a3-63fd493ea10so1474395d50.0
-        for <linux-gpio@vger.kernel.org>; Thu, 06 Nov 2025 06:01:52 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVcZaQ3SIgVnXfDkAQwuLTvzMrbV+wPuit8yBgzcvEq26KjB2nZ4PV/FpCk3cHNyQqR2J8tirwsoRsO@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOThXKQSmzuMUhnYZDjhQd/yojIInigjPtqOzeXAH3gITgajII
-	Lgn+o8195gJfdWiaSuasYn58DbK2i7+5WZrmt5vvdHXzvJn6Jskeq9P0PO6KwgC/VrklFQtdwKq
-	+NLtbrPZ/68xv1JcOacvE91RK72sJIs8=
-X-Google-Smtp-Source: AGHT+IE+aZe4lQ2wYRHJVpoXUdEaqeyu6fphQw/8nRmisBw14jwkqPSx4lb54V8wj0kJJwXu8wPfymEdKa0ililC6Pg=
-X-Received: by 2002:a05:690e:1401:b0:63f:b5ea:935a with SMTP id
- 956f58d0204a3-640b54ac87bmr2453690d50.29.1762437711526; Thu, 06 Nov 2025
- 06:01:51 -0800 (PST)
+	 To:Cc:Content-Type; b=uyKqnT+VR329NEy4nDyN+xXy1hMDLqnzJFfGluVnw6jg5G+Tp9420qt3Qk8DguMbEGDOPUpaIR7AbtCKpr3j5/hLhq1Grxq++1BDsAuEegEn+KzFkkg5VdPUNsR4EW36tMfUlSXPjvJhVXtYJQoOPZ74Ye5Ixz54RkIgH43GZjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ylPbjCkI; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-59431f57bf6so1054760e87.3
+        for <linux-gpio@vger.kernel.org>; Thu, 06 Nov 2025 06:18:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1762438718; x=1763043518; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3UYCyFD4Bb6aFEIHyNbsrjvvwW06LJgyiNw5ci5l6Zw=;
+        b=ylPbjCkI66k6A0ncr7t2GiAUCQ1ie8tF/WRaSRAUevrkVrQ24Ri7Xcl4uOUtoiuNxi
+         IVgRLe592zxyH3sRldeCZa3Yi7HUGqXdQpM17/VDz+WUB5m7qLwt10DRKW0coCYubewU
+         j6n++SkNpwUZDfaUUy47xt43vdZQnQ2g45PTl/nRxo58Bpv7CDoi7XkYf4xjBs1McUlL
+         Y31DJ9kimin2sEHEl2u1QHsaCRfFhyasBnExqo3wW74oKnHrj2gSfaNU3gE6yZ48A/7f
+         kCMCMfBvjWUl2KSdLsFbaShNFRzOAsaOb4nesmJlR2xaLRJVMuME6Z+ziiieUn17EWUN
+         /RjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762438718; x=1763043518;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3UYCyFD4Bb6aFEIHyNbsrjvvwW06LJgyiNw5ci5l6Zw=;
+        b=N+QlfwRiZp87RfP9ZtqXDzSoMnU+QBiHwGVzM8SVYv+v2tpp0MsvvnthViN89u46FG
+         S4xtyp4oFsyZFR9uwXMHdzwO1wyceNJUgdcoLoafbsav7KeQcAM1gVTqtDS2XQnbrX13
+         kMi8Mxwm6sUndAqI+67vP0qzfnh6bN/fqOWRBLmCnUjsyel+GRE/en6FabzoqWYMJmiV
+         ueLhVuaK4H3CPQaG1472iDYLsgzM6Ys3TuRtxIbQ0GYuAklRn4RtXnOxAmsPg7gfgkdA
+         kIwpXKzmPJ90nw/WgcG0/YtmZ61BkmzK9SRhkgdIRRfZfGmIRV1Df3yz2KqqEawdVcXW
+         AK3w==
+X-Forwarded-Encrypted: i=1; AJvYcCXuqg7733f3n8OBCEBaI0KK+EtVTqCuwqFNCJDEAmkYKF7wg7I+JSc6s6kQKYSccd+awk7eZo+X2W+W@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1Rib29VF4OMVc9MNyY4//wE2qo+uh12UwxdmcHJuZyRoGE3Ao
+	2p5M44PIMNPJudoXKgCnOW/dkmV7OpRunA9z43eiOowxRfjBKQMZwtZ/0HC49Gv/GI7G6bxPCrc
+	33rt25/8+6SuQcQbVrKeBhclzdMAK495C5g/5PGh7EA==
+X-Gm-Gg: ASbGncsxYKmw0Q4Q6ALo3Sjxz6JjKJ41dizUmnAUVqB46matJfqqxxDKzhOVEJFzXWm
+	TH5s4gL87eb9dH1WfDJp84vSrCpu9BHqTW1OHqVgA9hgR3Vt9ao9uo7R877RwC3+HFnWoSeMrjm
+	NGSajRTT8ZHYgNMpR5NchV696wyfvi2eycrbptdudIPbpDtXGAbToDIVpWMIDs4qTds2+cZ5tN+
+	53TAyeXICm/fpw7GAD7aNxM227nxJ9oWafjDAtQM1rpWI9CnWnD5GYdaXXGBYcSm5Z8gYPKdok6
+	qW6QBuCJPvAD3f0=
+X-Google-Smtp-Source: AGHT+IHdQJZPunwUY3ZHIE+wSItRDRGbaVjfDZ3bclHs8LsxocMfrUMoNk7HzUzk835mq0tyKBc5gXkBG+W/siXqRXk=
+X-Received: by 2002:a05:6512:61b1:b0:594:34b9:a817 with SMTP id
+ 2adb3069b0e04-5943d7c01acmr2183793e87.33.1762438718011; Thu, 06 Nov 2025
+ 06:18:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251104-cix-dummies-v1-1-331fc0c71115@linaro.org>
-In-Reply-To: <20251104-cix-dummies-v1-1-331fc0c71115@linaro.org>
-From: Linus Walleij <linusw@kernel.org>
-Date: Thu, 6 Nov 2025 15:01:40 +0100
-X-Gmail-Original-Message-ID: <CAD++jLkxSR9r4a-u_mnTgMAnPi4fnGk8pfEFe149fNqCmPv5VQ@mail.gmail.com>
-X-Gm-Features: AWmQ_bmLVa6S1EkdnmzVN4OM7LmNfhRg3mW6XeaW9_Vp-sHealJYsRGOKxdsxgw
-Message-ID: <CAD++jLkxSR9r4a-u_mnTgMAnPi4fnGk8pfEFe149fNqCmPv5VQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: cix: sky1: Provide pin control dummy states
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Gary Yang <gary.yang@cixtech.com>, Peter Chen <peter.chen@cixtech.com>, 
-	Fugang Duan <fugang.duan@cixtech.com>, 
-	CIX Linux Kernel Upstream Group <cix-kernel-upstream@cixtech.com>, linux-gpio@vger.kernel.org
+References: <20251105-reset-gpios-swnodes-v5-0-1f67499a8287@linaro.org>
+ <20251105-reset-gpios-swnodes-v5-8-1f67499a8287@linaro.org> <aQta01b_PyeHirxu@smile.fi.intel.com>
+In-Reply-To: <aQta01b_PyeHirxu@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 6 Nov 2025 15:18:26 +0100
+X-Gm-Features: AWmQ_bm4y26DefF3te9d8PCRfESO6EycvWadxioNhhdZRQkv54SvcFlwZN3U2B4
+Message-ID: <CAMRc=MfgPsf78pPTD2zNYkjp6QYO2xFnzN-niEaVn7nkjnUB5A@mail.gmail.com>
+Subject: Re: [PATCH v5 8/8] reset: gpio: use software nodes to setup the GPIO lookup
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 4, 2025 at 2:01=E2=80=AFPM Linus Walleij <linus.walleij@linaro.=
-org> wrote:
-
-> This exports and calls the pinctrl_provide_dummies() function from
-> the CIX SKY1 driver.
+On Wed, Nov 5, 2025 at 3:10=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> The reasons are explained in a comment in the commit, in essence the
-> two pin controllers need to go through explicit state transitions
-> default->sleep->default despite they only handle one single state
-> each.
+> On Wed, Nov 05, 2025 at 09:47:39AM +0100, Bartosz Golaszewski wrote:
+> >
+> > GPIO machine lookup is a nice mechanism for associating GPIOs with
+> > consumers if we don't know what kind of device the GPIO provider is or
+> > when it will become available. However in the case of the reset-gpio, w=
+e
+> > are already holding a reference to the device and so can reference its
+> > firmware node. Let's setup a software node that references the relevant
+> > GPIO and attach it to the auxiliary device we're creating.
 >
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ...
+>
+> >  static int __reset_add_reset_gpio_device(const struct of_phandle_args =
+*args)
+> >  {
+> > +     struct property_entry properties[] =3D { {}, {} };
+>
+> It's an interesting way of saying this?
+>
 
-I've applied this patch, now looking forward to the
-GPIO patches :)
+I hope this is the final round of nit-picking...
 
-Yours,
-Linus Walleij
+>         struct property_entry properties[2] =3D { };
+>
+> >       struct reset_gpio_lookup *rgpio_dev;
+> > +     unsigned int offset, of_flags;
+> > +     struct device *parent;
+> > +     int id, ret, lflags;
+>
+> I assumed that lflags shouldn't be signed. And IIRC they are unsigned lon=
+g
+> elsewhere (yes, just confirmed).
+>
+
+It doesn't really matter that much here but whatever. I do plan on
+tackling the duplication of machine and OF flags at some point though.
+
+> ...
+>
+> > +     rgpio_dev->swnode =3D fwnode_create_software_node(properties, NUL=
+L);
+> > +     if (IS_ERR(rgpio_dev->swnode)) {
+> > +             ret =3D PTR_ERR(rgpio_dev->swnode);
+> > +             goto err_put_of_node;
+> > +     }
+>
+> Can save 1 LoC?
+>
+
+Oh come on...
+
+Bart
+
+>         rgpio_dev->swnode =3D fwnode_create_software_node(properties, NUL=
+L);
+>         ret =3D PTR_ERR_OR_ZERO(rgpio_dev->swnode);
+>         if (ret)
+>                 goto err_put_of_node;
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
