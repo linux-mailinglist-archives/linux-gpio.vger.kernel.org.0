@@ -1,485 +1,131 @@
-Return-Path: <linux-gpio+bounces-28227-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28228-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DD72C3DA60
-	for <lists+linux-gpio@lfdr.de>; Thu, 06 Nov 2025 23:43:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97D76C3DE9F
+	for <lists+linux-gpio@lfdr.de>; Fri, 07 Nov 2025 00:57:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1335A34F079
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Nov 2025 22:43:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 503713AB3B5
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Nov 2025 23:57:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2D1934887B;
-	Thu,  6 Nov 2025 22:43:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63F123563D5;
+	Thu,  6 Nov 2025 23:57:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CiwjBa7F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VeIZVAh5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C2833C51A;
-	Thu,  6 Nov 2025 22:43:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E71033C53E
+	for <linux-gpio@vger.kernel.org>; Thu,  6 Nov 2025 23:57:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762468984; cv=none; b=ZkG+9jPtk75SP+cojlTwq2jYv7x8vMfwR/prTMLGMdmWmC68HpFNalFtwP+VRC+JTZG9/HSDXH2QjU5khAZVBa8XlS5gSlqMdQkCoThA8J+n+tTHLdxcVjiHCUTs3VSsf+jyVuWvvnk/o+/g8hTlj+oA48FwqQH+Ymif+Pv91AI=
+	t=1762473444; cv=none; b=Q2eP03vqAc5NM+cBYkdPao9K5ltZ4pbGfEnwfm7zo/OxQ5oY62NoaWbfK50NZcvxzH5YKfDntPt/n970copuTRvC4+Cs9grPVqeQMehFPnHZgUA3e34UFUiOXg2fymmk2bNgIM37uS0D/WbvLhuAWleuCIBCgBQXozvxnmNJKNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762468984; c=relaxed/simple;
-	bh=Cyb/Wpl2VIvq9QnGtsyMGGiPiB5c1CYdt3l9h2o2hPw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D9aThN+hThsIhAJ+Mx114Fy6AMDp0OFunnQdewxCev0AicsFv/A/hkMyBbkfvWgyCiIP+zEed5jRKUwMYqkACbNJ3JHZdzUTMHY1+FYd8XIq41d6Ay3ILChzjXjuGIGSykZRgdeSA/EIZ4ORisJ9QnbNYb60fMl80dPO2tM8ZII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CiwjBa7F; arc=none smtp.client-ip=185.246.85.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id DA3394E4157B;
-	Thu,  6 Nov 2025 22:42:59 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 9223E606EE;
-	Thu,  6 Nov 2025 22:42:59 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 99DC3118517A8;
-	Thu,  6 Nov 2025 23:42:53 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1762468978; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=opBUZp1Hke891i+7bOcpvqv+rOF+PwTKZzF4gjBM21s=;
-	b=CiwjBa7FmHTYZDw7RAtDd7oLPZ9Eke07nw0njoggA2Ozz+5Tyu9j6piJEW13eq1PLpeA8f
-	1XbisMNqRDvzFpS1FqM/KVHsjY/bFlasC7ect+j8R6zKNH3HegCS1zMV4yoyjPfTbMw4x2
-	7eixkfFez+DsK7i91OqaxxpnzhqBlYPyW7EP68Pi+aUl2fp/9ydsie7WfpMGxN8EfkeQ8B
-	eIWO8AqRC9i20QtTD3qh+iHy5lrVcwiZdWuzZd3Ah+Mt2CDClkY25/OfrxIOMajtHP5H+5
-	L5m+YpvuOP/A/BfmFs0+0YOzIQo2p4s/3hr/cCSh74g+rKYwi1U7bHFKb2GQow==
-Date: Thu, 6 Nov 2025 23:42:52 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: dang.huynh@mainlining.org
-Cc: Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+	s=arc-20240116; t=1762473444; c=relaxed/simple;
+	bh=kxhtXm1Zg30ysGEEDhfA5TG/xjp0CNhZzJEgLe168qw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y+DX4oJYzfmMek7nNnCdkH4JOHnXO24YiafgOqGgBu0pq95Fh1cPy8HmIQ7tcQr54RpBq0nZWUU3CHuyy2uJ73AnsdYo1gM8IiUnIB66VKbX5hZPFaQkq03VZNPbICpZx/izuy0ZBGCXU4Bv8J+w+Kc03E+mq/en2CeqcUYqgX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VeIZVAh5; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-47758595eecso774605e9.0
+        for <linux-gpio@vger.kernel.org>; Thu, 06 Nov 2025 15:57:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762473439; x=1763078239; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tPLPPimuMG7kUU5D7ROePR6mzkYaE95eVKvbR5javJk=;
+        b=VeIZVAh5A7wAqLcDEmPTUqVBZnomrt1GDZfCPoZCNLjbiQLA1zuHb+D7OsxtUjl0w0
+         LqsaUe9xtnWxN/Pf+nViFATfL4Mpv1+0v6nDaAwS4QP+kujMu0RV8GlEJolQnGDDQdD8
+         yj4k+iBjA0Dmd/ukDhdlm55vzSlzEA47jWVSSvfxxZMZLVZ6qTfk2OdckKbGftEuoNMV
+         WcoA+Y0iq8L33TqGLtb9R5IcVSGS35wb/9i8QOvNXg1JAOaUu2UWE50ijovMBbd686Tc
+         r06qxdQPsPbZd2xpvTOTYfPdwQNpC5czw+mGyrveO8GYvyfJ2FKCIPqovLVeUHGZe3iY
+         upgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762473439; x=1763078239;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tPLPPimuMG7kUU5D7ROePR6mzkYaE95eVKvbR5javJk=;
+        b=ZDh8fxEddZ5wLgPnAsQw46RpD5zlrkgYUeMfEKxOKeL8YwBwNcUpflPVUghNIpmv8Q
+         EWr9B+nlb6wr4I6tgiaCcgeZl1RvymmgOdmOqOz+eiE5kqjg8q8ogJO2DeDrq34SYD9w
+         JrVpvkp5k7LjUmZL55B9S4bnvejIh1AMHv7V3HLbHYCdq12tA22WazMfw984xkq1sNn3
+         UiV17E+GhABtluewyy4UyhrjSq2jenpGCVvHVkgF1w7vAMWTISugN4D6Krufkn2IM96r
+         t41Xbq/9xcQYawI/ElKcrZGPe/QwSLIsy4EOW0OvvbH0vfnx3Lew640oQWDsIPh6tthA
+         RbMg==
+X-Forwarded-Encrypted: i=1; AJvYcCVPNpQsGKO1PvWsIVCRovLa1sRbcVcRYw1fyF7O1TkYmZtNuTPu/XlD7hrDPZyScveMLUyfYqw3gHZE@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxrfh3IwIwWk66YUFt62pHu3kB+6Wogk8jaF3UCXZRu1FDhSyCu
+	/t4yKlK2kg5AdHibglHQT9yE5xz65PAU54/LrJRb9CBwaezWOhvLzZOd
+X-Gm-Gg: ASbGncvvgXWQ+PHAMZ7K3L4VN2+riCZKUd39sVrtjROhTWQE5xL0Yl7topA1VJa7ITf
+	mrcqboUHpROXcyKWCq+gfvasiPPtb2DAxVx8JEs4CaYpm3ymmM2o3TRxYWAPJwqLZpBNUO2g+TX
+	UzN4s87B8bfz8vWqNv+8xwGNzWdxg4Uw41+wgRawZkOWe/FVAPwwhdTIGA1Xk/SEWncxxlN1onR
+	waz0erenNZrHxhcFuRTrionAaLQ3J2kR5gmGQIqHPOUBnnzUh6+S8hJB9pWGCtaLUrDgmY2b/sR
+	XJcovLkc8VCl43+it4fUvXvJsy/thFfzS78Xk6qZaybx1WRsrCG9H9v/4UxCjL3WkktyD3V1Mbr
+	2h84erVPq1yf0x5HXh4R+shc/NzBNqmZNTS2ubFreqELu+hHnz4Lxj4S4Oc9PwJaJh0PJjRMo19
+	djGCgMTbWVfVuwGuk7gUsQ7w86F8j8pg==
+X-Google-Smtp-Source: AGHT+IEkxef+2RXJnVv1MDtMP+PBPYplJlT6jEtLbLvDmINhz/OHYKIorQbjuGU7uu0HwrhH5KQd7w==
+X-Received: by 2002:a05:600c:1381:b0:475:dd9d:297b with SMTP id 5b1f17b1804b1-4776bcd2cd2mr7382915e9.33.1762473439445;
+        Thu, 06 Nov 2025 15:57:19 -0800 (PST)
+Received: from Ansuel-XPS24 (93-34-90-37.ip49.fastwebnet.it. [93.34.90.37])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4775cd45466sm129470525e9.0.2025.11.06.15.57.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Nov 2025 15:57:18 -0800 (PST)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Sebastian Reichel <sre@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-unisoc@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-rtc@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-pm@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-mmc@vger.kernel.org
-Subject: Re: [PATCH 06/25] rtc: Add driver for RDA Micro SoC
-Message-ID: <2025110622425227de2cac@mail.local>
-References: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
- <20250917-rda8810pl-drivers-v1-6-9ca9184ca977@mainlining.org>
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Christian Marangi <ansuelsmth@gmail.com>
+Subject: [PATCH v2 0/5] pinctrl: airoha: add Airoha AN7583 support
+Date: Fri,  7 Nov 2025 00:57:03 +0100
+Message-ID: <20251106235713.1794668-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250917-rda8810pl-drivers-v1-6-9ca9184ca977@mainlining.org>
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
 
-Hello,
+This small series introduce support for Airoha AN7583 pinctrl
+support.
 
-There are checkpatch --strict issues, please fix them.
+Most of the changes are generalization and cleanup of the Airoha
+pinctrl driver. These are needed as all the array in the inner
+function were hardcoded to EN7581 and didn't reference stuff
+from the priv groups.
 
+Everything is changed to match_data and priv struct so
+adding AN7583 is just a matter of adding the structs.
 
-On 17/09/2025 03:25:03+0700, Dang Huynh via B4 Relay wrote:
->  MAINTAINERS           |   6 +
->  drivers/rtc/Kconfig   |  11 ++
->  drivers/rtc/Makefile  |   1 +
->  drivers/rtc/rtc-rda.c | 356 ++++++++++++++++++++++++++++++++++++++++++++++++++
+Also the schema is generalized where needed to address
+for the small difference between AN7583 and EN7581.
 
-Unless you can guarantee this driver will support all the future RDA
-SoC RTCs, the filename needs to be SoC specific.
+Christian Marangi (5):
+  pinctrl: airoha: generalize pins/group/function/confs handling
+  pinctrl: airoha: convert PHY LED GPIO to macro
+  pinctrl: airoha: convert PWM GPIO to macro
+  dt-bindings: pinctrl: airoha: Document AN7583 Pin Controller
+  pinctrl: airoha: add support for Airoha AN7583 PINs
 
-> +config RTC_DRV_RDA
-> +	tristate "RDA Micro RTC"
-> +	depends on ARCH_RDA || COMPILE_TEST
-> +	select REGMAP_MMIO
-> +	help
-> +	  If you say yes here you get support for the built-in RTC on
-> +	  RDA Micro SoC.
-
-You probably also need to list which ones are supported.
-
-> +static int rda_rtc_settime(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct rda_rtc *rtc = dev_get_drvdata(dev);
-> +	u32 high, low;
-> +	int ret;
-> +
-> +	ret = rtc_valid_tm(tm);
-> +	if (ret < 0)
-> +		return ret;
-
-The RTC core will never pass an invalid rtc_tm, this check is useless.
-
-> +
-> +	/*
-> +	 * The number of years since 1900 in kernel,
-> +	 * but it is defined since 2000 by HW.
-> +	 * The number of mons' range is from 0 to 11 in kernel,
-> +	 * but it is defined from 1 to 12 by HW.
-
-This comment is not super useful as this is super common in the RTC
-drivers,. If you want to keep it, please fix it.
-
-> +	 */
-> +	low = FIELD_PREP(RDA_SEC_MASK, tm->tm_sec) |
-> +		FIELD_PREP(RDA_MIN_MASK, tm->tm_min) |
-> +		FIELD_PREP(RDA_HRS_MASK, tm->tm_hour);
-> +
-> +	high = FIELD_PREP(RDA_MDAY_MASK, tm->tm_mday) |
-> +		FIELD_PREP(RDA_MON_MASK, tm->tm_mon + 1) |
-> +		FIELD_PREP(RDA_YEAR_MASK, tm->tm_year - 100) |
-> +		FIELD_PREP(RDA_WDAY_MASK, tm->tm_wday);
-> +
-> +	ret = regmap_write(rtc->regmap, RDA_RTC_CAL_LOAD_LOW_REG, low);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to update RTC low register: %d\n", ret);
-
-This needs to be a dev_dbg or removed.
-
-> +		return ret;
-> +	}
-> +
-> +	ret = regmap_write(rtc->regmap, RDA_RTC_CAL_LOAD_HIGH_REG, high);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to update RTC low register: %d\n", ret);
-
-Ditto
-
-> +		return ret;
-> +	}
-> +
-> +	ret = regmap_update_bits(rtc->regmap, RDA_RTC_CMD_REG, RDA_RTC_CMD_CAL_LOAD, 1);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to update RTC cal load register: %d\n", ret);
-
-Ditto
-
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int rda_rtc_readtime(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct rda_rtc *rtc = dev_get_drvdata(dev);
-> +	unsigned int high, low;
-> +	int ret;
-> +
-> +	/*
-> +	 * Check if RTC data is valid.
-> +	 *
-> +	 * When this bit is set, it means the data in the RTC is invalid
-> +	 * or not configured.
-> +	 */
-> +	ret = regmap_test_bits(rtc->regmap, RDA_RTC_STA_REG, RDA_RTC_STA_NOT_PROG);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to read RTC status: %d\n", ret);
-
-dev_dbg
-
-> +		return ret;
-> +	} else if (ret > 0)
-> +		return -EINVAL;
-> +
-> +	ret = regmap_read(rtc->regmap, RDA_RTC_CUR_LOAD_HIGH_REG, &high);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to read RTC high reg: %d\n", ret);
-
-Ditto
-
-> +		return ret;
-> +	}
-> +
-> +	ret = regmap_read(rtc->regmap, RDA_RTC_CUR_LOAD_LOW_REG, &low);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to read RTC low reg: %d\n", ret);
-
-Ditto
-
-> +		return ret;
-> +	}
-> +
-> +	tm->tm_sec = FIELD_GET(RDA_SEC_MASK, low);
-> +	tm->tm_min = FIELD_GET(RDA_MIN_MASK, low);
-> +	tm->tm_hour = FIELD_GET(RDA_HRS_MASK, low);
-> +	tm->tm_mday = FIELD_GET(RDA_MDAY_MASK, high);
-> +	tm->tm_mon = FIELD_GET(RDA_MON_MASK, high);
-> +	tm->tm_year = FIELD_GET(RDA_YEAR_MASK, high);
-> +	tm->tm_wday = FIELD_GET(RDA_WDAY_MASK, high);
-> +
-> +	/*
-> +	 * The number of years since 1900 in kernel,
-> +	 * but it is defined since 2000 by HW.
-> +	 */
-> +	tm->tm_year += 100;
-> +	/*
-> +	 * The number of mons' range is from 0 to 11 in kernel,
-> +	 * but it is defined from 1 to 12 by HW.
-> +	 */
-
-You can probably drop both comments.
-
-> +	tm->tm_mon -= 1;
-> +
-> +	return 0;
-> +}
-> +
-> +static int rda_rtc_readalarm(struct device *dev, struct rtc_wkalrm *alrm)
-> +{
-> +	struct rda_rtc *rtc = dev_get_drvdata(dev);
-> +	struct rtc_time *tm = &alrm->time;
-> +	unsigned int high, low;
-> +	int ret;
-> +
-> +	ret = regmap_read(rtc->regmap, RDA_RTC_ALARM_HIGH_REG, &high);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to read alarm low reg: %d\n", ret);
-
-Just to be clear, the driver is super verbose with all those dev_err.
-Strings are bloating the kernel and those string will probably never be
-seen by any user and event if they are seen, the user doesn't have any
-other action to do other than retrying. Please remove them of move them
-to dev_dbg
-
-> +		return ret;
-> +	}
-> +
-> +	ret = regmap_read(rtc->regmap, RDA_RTC_ALARM_LOW_REG, &low);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to read alarm low reg: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	tm->tm_sec = FIELD_GET(RDA_SEC_MASK, low);
-> +	tm->tm_min = FIELD_GET(RDA_MIN_MASK, low);
-> +	tm->tm_hour = FIELD_GET(RDA_HRS_MASK, low);
-> +	tm->tm_mday = FIELD_GET(RDA_MDAY_MASK, high);
-> +	tm->tm_mon = FIELD_GET(RDA_MON_MASK, high);
-> +	tm->tm_year = FIELD_GET(RDA_YEAR_MASK, high);
-> +	tm->tm_wday = FIELD_GET(RDA_WDAY_MASK, high);
-> +
-> +	/*
-> +	 * The number of years since 1900 in kernel,
-> +	 * but it is defined since 2000 by HW.
-> +	 */
-> +	tm->tm_year += 100;
-> +	/*
-> +	 * The number of mons' range is from 0 to 11 in kernel,
-> +	 * but it is defined from 1 to 12 by HW.
-> +	 */
-> +	tm->tm_mon -= 1;
-> +
-> +	return 0;
-> +}
-> +
-> +static int rda_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
-> +{
-> +	struct rda_rtc *rtc = dev_get_drvdata(dev);
-> +
-> +	if (enabled)
-> +		return regmap_update_bits(rtc->regmap, RDA_RTC_CMD_REG,
-> +				RDA_RTC_CMD_ALARM_ENABLE, 1);
-> +
-> +	return regmap_update_bits(rtc->regmap, RDA_RTC_CMD_REG,
-> +			RDA_RTC_CMD_ALARM_DISABLE, 1);
-
-Wow, this is super weird, so you have one bit to enable and one to
-disable the alarm. Is RDA_RTC_CMD_REG write only?
-
-> +}
-> +
-> +static int rda_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alrm)
-> +{
-> +	struct rda_rtc *rtc = dev_get_drvdata(dev);
-> +	struct rtc_time *tm = &alrm->time;
-> +	u32 high, low;
-> +	int ret;
-> +
-> +	ret = rtc_valid_tm(tm);
-> +	if (ret < 0)
-> +		return ret;
-> +
-
-tm will never be invalid
-
-> +	/* TODO: Check if it's necessary to disable IRQ first */
-
-I'd say probably not ;)
-
-> +	rda_rtc_alarm_irq_enable(dev, 0);
-> +
-> +	/*
-> +	 * The number of years since 1900 in kernel,
-> +	 * but it is defined since 2000 by HW.
-> +	 * The number of mons' range is from 0 to 11 in kernel,
-> +	 * but it is defined from 1 to 12 by HW.
-> +	 */
-
-This is still the same comment...
-
-> +	low = FIELD_PREP(RDA_SEC_MASK, tm->tm_sec) |
-> +		FIELD_PREP(RDA_MIN_MASK, tm->tm_min) |
-> +		FIELD_PREP(RDA_HRS_MASK, tm->tm_hour);
-> +
-> +	high = FIELD_PREP(RDA_MDAY_MASK, tm->tm_mday) |
-> +		FIELD_PREP(RDA_MON_MASK, tm->tm_mon + 1) |
-> +		FIELD_PREP(RDA_YEAR_MASK, tm->tm_year - 100) |
-> +		FIELD_PREP(RDA_WDAY_MASK, tm->tm_wday);
-> +
-> +
-> +	ret = regmap_write(rtc->regmap, RDA_RTC_ALARM_LOW_REG, low);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to set low alarm register: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = regmap_write(rtc->regmap, RDA_RTC_ALARM_HIGH_REG, high);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to set low alarm register: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = regmap_update_bits(rtc->regmap, RDA_RTC_CMD_REG, RDA_RTC_CMD_ALARM_LOAD, 1);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to set alarm register: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	dev_dbg(dev, "Alarm set: %4d-%02d-%02d %02d:%02d:%02d\n",
-> +			2000 + (tm->tm_year - 100), tm->tm_mon + 1, tm->tm_mday,
-> +			tm->tm_hour, tm->tm_min, tm->tm_sec);
-
-You probably want to use %ptR or drop this as we have a tracepoint just
-after.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int rda_rtc_proc(struct device *dev, struct seq_file *seq)
-> +{
-> +	struct rda_rtc *rtc = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret = regmap_test_bits(rtc->regmap, RDA_RTC_STA_REG, RDA_RTC_STA_ALARM_ENABLE);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to read alarm status: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	seq_printf(seq, "alarm enable\t: %s\n", (ret > 0) ? "yes" : "no");
-> +
-> +	return 0;
-> +}
-
-Drop this function, this interface is obsolete
-
-> +
-> +static const struct rtc_class_ops rda_rtc_ops = {
-> +	.read_time = rda_rtc_readtime,
-> +	.set_time = rda_rtc_settime,
-> +	.read_alarm = rda_rtc_readalarm,
-> +	.set_alarm = rda_rtc_setalarm,
-> +	.proc = rda_rtc_proc,
-> +	.alarm_irq_enable = rda_rtc_alarm_irq_enable,
-> +};
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int rda_rtc_suspend(struct platform_device *pdev, pm_message_t state)
-> +{
-> +	/* TODO: Check if it's okay to turn on alarm IRQ when it's not set */
-> +	return rda_rtc_alarm_irq_enable(&pdev->dev, 1);
-> +}
-> +
-> +static int rda_rtc_resume(struct platform_device *pdev)
-> +{
-> +	/* If alarms were left, we turn them off. */
-> +	return rda_rtc_alarm_irq_enable(&pdev->dev, 0);
-> +}
-
-Let userspace enabling/disabling alarm, the kernel must not decide to
-enable or disable them which fixes your TODO
-
-> +#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(rda_rtc_pm_ops, rda_rtc_suspend, rda_rtc_resume);
-> +
-> +static const struct regmap_config regmap_config = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +};
-> +
-> +static int rda_rtc_probe(struct platform_device *pdev)
-> +{
-> +	struct rda_rtc *rda_rtc;
-> +	void __iomem *base;
-> +
-> +	rda_rtc = devm_kzalloc(&pdev->dev, sizeof(*rda_rtc), GFP_KERNEL);
-> +	if (!rda_rtc)
-> +		return -ENOMEM;
-> +
-> +	base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(base))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(base),
-> +				"failed to remap resource\n");
-> +
-> +	rda_rtc->regmap = devm_regmap_init_mmio(&pdev->dev, base, &regmap_config);
-> +	if (!rda_rtc->regmap)
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(rda_rtc->regmap),
-> +				"can't find regmap\n");
-> +
-> +	rda_rtc->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
-> +	if (IS_ERR(rda_rtc->rtc_dev))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(rda_rtc->rtc_dev),
-> +				"failed to allocate rtc device\n");
-> +
-> +	rda_rtc->rtc_dev->ops = &rda_rtc_ops;
-> +	rda_rtc->rtc_dev->range_min = RTC_TIMESTAMP_BEGIN_2000;
-> +	rda_rtc->rtc_dev->range_max = RTC_TIMESTAMP_END_2127;
-> +
-> +	platform_set_drvdata(pdev, rda_rtc);
-> +
-> +	return devm_rtc_register_device(rda_rtc->rtc_dev);
-> +}
-> +
-> +static const struct of_device_id rda_rtc_id_table[] = {
-> +	{ .compatible = "rda,8810pl-rtc", },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, rda_rtc_id_table);
-> +
-> +static struct platform_driver rda_rtc_driver = {
-> +	.probe = rda_rtc_probe,
-> +	.driver = {
-> +		.name = "rtc-rda",
-> +		.pm = &rda_rtc_pm_ops,
-> +		.of_match_table = rda_rtc_id_table,
-> +	},
-> +};
-> +module_platform_driver(rda_rtc_driver);
-> +
-> +MODULE_AUTHOR("Dang Huynh <dang.huynh@mainlining.org>");
-> +MODULE_DESCRIPTION("RDA Micro RTC driver");
-> +MODULE_LICENSE("GPL");
-> 
-> -- 
-> 2.51.0
-> 
-> 
+ .../pinctrl/airoha,an7583-pinctrl.yaml        |  402 +++
+ drivers/pinctrl/mediatek/pinctrl-airoha.c     | 2523 +++++++++--------
+ 2 files changed, 1706 insertions(+), 1219 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/airoha,an7583-pinctrl.yaml
 
 -- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.51.0
+
 
