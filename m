@@ -1,150 +1,153 @@
-Return-Path: <linux-gpio+bounces-28242-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28243-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF18BC3F7EE
-	for <lists+linux-gpio@lfdr.de>; Fri, 07 Nov 2025 11:36:28 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A17CDC3F9E7
+	for <lists+linux-gpio@lfdr.de>; Fri, 07 Nov 2025 12:02:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2EED34F2A0E
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Nov 2025 10:33:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A9D7A3A5D59
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Nov 2025 11:02:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E78132ABCD;
-	Fri,  7 Nov 2025 10:33:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F00FA310782;
+	Fri,  7 Nov 2025 11:02:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DrmxX8XC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rVv4kHIN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E378E32AADC
-	for <linux-gpio@vger.kernel.org>; Fri,  7 Nov 2025 10:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1529F2F6596
+	for <linux-gpio@vger.kernel.org>; Fri,  7 Nov 2025 11:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762511588; cv=none; b=Za9dnaYLE1ZmeR/fbKSFIBgCw+D7epxHlbyDbdvpB+fskgyY7j0E3LW/QEfPnL+b/BJIX6nQm8AR5KiNKQ/mdMO0J3ExD/LNr5zK/Uh6QV3e41zoiQ5Cbh8GCxh170up2r/2IUp7Y7smYQ5nOburU3QAboRLHVf5E3ewyWzmFtQ=
+	t=1762513322; cv=none; b=lSHUFgTaFO8D4tAfxWkJNQXfqjQ4VxvVjkAm2kBLe1xQHZmvbigWrm6A8uog0WIj8+VhM0IF2o3q6pg93tGja9m2PqGjD2a6FfNm3h2b8LCb2hB64O2xV2Gjsoc2Bf58ygXXu/6HswAdKnbsVkkXBcOqSlON9QPmurKJewnAprY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762511588; c=relaxed/simple;
-	bh=ekrma6VDIEDQdQowvD1YIFD7aFqh+2yqjc36N5YHdUI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CHB5K29uceRbfHRhV+9z/ARFYO7BQ/jT1VLFONQUefGB0lHDY51Id8YOa5SGDd4xF/cj3BYF8YnIE457Ecw1I+ecsLb5Rk9WuULpQpohlvy8a4ezbyuECMOsk6MzRbHZU2l/3CWYaRc9lHB9LrMwGh1e6wOCoWA5IuiH6UZmUrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DrmxX8XC; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5945510fd7aso433655e87.0
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Nov 2025 02:33:05 -0800 (PST)
+	s=arc-20240116; t=1762513322; c=relaxed/simple;
+	bh=oIe/oaHgQwNjBV5UTPEvhpn/AHX5Js+8Yh8l+CiK11M=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=YTyawNGetAemcd53vUpR8ce3C4ifnaioAjmbjRibvdSxtwLptWsp2sNp3u2iZ9octJR8T7ZX4iillHfrc/utYOKnehtAmjv86cNd4bE3D0/WpwcFyByNO4ZuCI99Is/0/xe2elyo24wN33iKTRohfHX9lMzWk92UKxUa4iw9Bx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rVv4kHIN; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-64034284521so1001238a12.1
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Nov 2025 03:02:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1762511584; x=1763116384; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u0SC5dtN/EI2PuuKztOZyox/MGIrIYy9hq7oU1yzaSE=;
-        b=DrmxX8XC5no3w8yxuAbJ3vfdTGFTbpvv3Hw2bWdB7q3smfVfi9Dwda5VGvxpKh9z1g
-         aNY94bE0+g3+G+3XCqUIWDgA6+FPR3+OpTYWE4tvse0KzxbzFnm8GqnAzJ//CA8ILDtu
-         /RFfhBGvnL9a44TZBnGT8V8K3PBYSWRvVrr8ibHC/EcFk0vECzqv6opgfQslr8EJGArA
-         RjgzPh0FZwChPCrVH6i4qr0WHrTjD2nWeAzt98batEjWNazGzkyd050Lh6VlYUuRjGw7
-         JClPRok+c5WvuGnlFifkroJBKtCzUJ9xfes5EpFRNjrP1O+l/TFbicbe1i1hL47mqiHU
-         C3iw==
+        d=linaro.org; s=google; t=1762513319; x=1763118119; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oIe/oaHgQwNjBV5UTPEvhpn/AHX5Js+8Yh8l+CiK11M=;
+        b=rVv4kHINydsSw5IBxFuk3qlNgHkvkBkaRPEzwdK24tH5a2QD1M34a+wWmKgUxem+al
+         6SwFEPxUslc+5/VIhjUll2mPf0VetI3ofBq+up8ZnNr0reeN8vr1OPgIhjRKDVS2u7dK
+         HDOE6yBjg9WdwELGArqjSgOHHIE5qsMLKDdmnZ+H/rrDsKQh6jcolioUP94DZ050CAzV
+         RF91F5TXTZrhulKybVlkP3YUn6L+4m4+f2rJjHwKUV/0tlDjiC0NJMWrK5XlSt5HPxva
+         NCho4CJj9t7Yaxnbx4rDgXtn1v+BPJtjd/1GksYbTbx7pjSktOrdh5ASMagsOSgKx0U7
+         tJGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762511584; x=1763116384;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=u0SC5dtN/EI2PuuKztOZyox/MGIrIYy9hq7oU1yzaSE=;
-        b=as1E0NVE6hpWhrv6TOGSdX8yo3SosH2qA01pJY7r6WBm2P6NrDVwygtZp2AIbOCwgo
-         67WTk39yNqIpP6w4qaWhWfL6qhY+v3OYv/aE6+6eX3hhOEGRMSd9DzXSzk2rr7w2Kejn
-         +yLImgRhykQNv0dL/NCl0Fq0VrvvPtLq8ALiaDVa3B7uZGvb3+g2g3aqc7bvNh7EOYrt
-         /My7yJ3h+IgoQODs82F5Byc1HX1zvoee7XD2+DwrzkvdP4i9J0IIRXaI9ySmb7pDiCC5
-         4q6XRU4fEeqIRpT1X5g3YwcZ08LllZPsi1tnG3dPTRLrzFARkAR63rdzVPGbQ6Fb28Xm
-         UEqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXvq9XqtHhboZg5u2S95Rhqb+UJcdvg2arkSRU/73cyNPwZ53OdLKu1oMJc+mBCnQvGB5klZZR/EFC+@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQaSS2aD59r2jFF+jENCBglRjyRmnFS8WnLkPO2eWq57Pewl8D
-	i1JMqsby916hvV/vkGkBk/kxa5j1NHzVGV0LW4tTKjoMFjPHsSamzolOAZSjoXWMPPRP83vfKXL
-	lW4k8LmpLbNEVXJs8XtQvwAn/m/ab2u/yNf6gtYn01A==
-X-Gm-Gg: ASbGncvhJCdCxnDvx0OUaseI9zETL7/I+3zPk13LhRJbf8reYlByyD6i2xoPl4q5K6w
-	b+F8X37//ydNIsJIPnN9QdwgcG1MlgW1mW/VGgywWZ7IgltqMoi/On2Y4FCweDMZR5RiQT6ywPw
-	HC4Aup7ICmf5T8cHeHdWUnTWDYr37htk5JpU+SqUyKpPyVC2ANnUA/lAdNb7RKaT8JQk+na679X
-	6uCKiaGbmiJD0qOw8c79rMT0m71IBj6iWlPOlugXrkmcrEtfEx43rqTEc8fcFi4CZ4sXV8FhtJq
-	OemxgfbIzRTvIdll6bIcAlf+7A==
-X-Google-Smtp-Source: AGHT+IH/NaO2IV2PuSuT+uIy0ell6f4pEVJBNYisr1Il5Fm4JRWfx8ML7AoeEUzy6VOMfbvkcuWVGadITNGQPdN4yQA=
-X-Received: by 2002:a05:6512:3a86:b0:591:eb00:9795 with SMTP id
- 2adb3069b0e04-59456b5b60bmr827315e87.13.1762511583894; Fri, 07 Nov 2025
- 02:33:03 -0800 (PST)
+        d=1e100.net; s=20230601; t=1762513319; x=1763118119;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oIe/oaHgQwNjBV5UTPEvhpn/AHX5Js+8Yh8l+CiK11M=;
+        b=t7eoHX1V8eK8VcoRf3TDbPPC8OwR9DehuC/O0/GmLD4EjLGgIS6QOKqHCnFh/IPeSV
+         CCYMAp/0llJhY6lSfIt6xsWEmAYonQUrUuKOwXH39S9/sF3URb86LF9bdU8oOFWfBpVS
+         MU3wXzLbnA1BSoXIL81V92VNFmCMtDODuNe1XXsHLyuH9uGL9QGGuSc0+UurQ1n0mmDt
+         J+22+HYbdOTo+T8z4PL9lA1RnnSLMw6CwXQIozDtygP3AKGvC5oJ0UBzgEAR7LMSb6Fo
+         4bV+HjXYok2de4TO3JbdbeYZwIj9tJxme6OOjba1EBkGWaY7hqGmkCq/iNq0nZZBYAKd
+         kVfw==
+X-Forwarded-Encrypted: i=1; AJvYcCWnJczesciTWKGoqW5hWdVLtP8J/+3yfiqRNOytN13wl1niQuqUAt1Y5IM7GTQAaJg+mbYtHOU+vplc@vger.kernel.org
+X-Gm-Message-State: AOJu0YxY23EtujiBEH84owIIxv67iSlp9IM0D5aOmfpzNm8itSuvNT0c
+	w9Byx8Yuxs3YTmHOXpaM4/p+CLCrKbmW4Y5HVBZBCWTs4245Vfnn3ER00SqVXqMPTmQ=
+X-Gm-Gg: ASbGncuZQF2+KA7s1gvrJ8htj5v8pLwEBsA4gXpomMyMogbFCBVuflpoysY2R3UGMuJ
+	XbXOamVvqaHEQKBEJmOCGzQaZ/czKIBIG/ziyPsUkwIPNyRHwbZC4pPT4ReP7PmCPLyeQ6C0FNa
+	bRSUvx7w8eUgV7yQrwl3gSpqvfNWj9amydJv6qTbS0d6NaioqYt+oQOS+nLepZj3RTBuYEHnLzf
+	u13ZGRVAqohbwUdYMXrdyL5gRhgPhcLaNmjQiW35iUaI2brU5opkQq6hEut3yF/BYZ0zaM9Dux3
+	Yf+0SuJS15W+j+9uD0tld0tWSwzwpJ4k6CMm2mTuFcx9cgQHeBoo5fsMGVfH/lACxu5kFSRXbdr
+	m0IgDJkKWGL6z9vE59cXk882R+jpSEyztdEqYFfMKT86bXmzjz+uA0bvY+ncw/8BBHp5ljyLPQe
+	LXWkP5J1hBn7QnOoM9CSPXMyI1hBxZXdyMzw==
+X-Google-Smtp-Source: AGHT+IFk0e/C96dMXnjyE1xo1+GSR/mT2N99AaE/c44DQdiQ046jLT2uBYcSUl46ZYSZfSsKq3vwBA==
+X-Received: by 2002:a05:6402:1d55:b0:640:980c:a952 with SMTP id 4fb4d7f45d1cf-6413eed163dmr2286341a12.11.1762513319349;
+        Fri, 07 Nov 2025 03:01:59 -0800 (PST)
+Received: from [172.20.148.133] ([87.213.113.147])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6411f713a7esm3841624a12.7.2025.11.07.03.01.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Nov 2025 03:01:59 -0800 (PST)
+Message-ID: <729dcf73a1c3d03ca2b22dd278cb0bc502b6b7d5.camel@linaro.org>
+Subject: Re: [PATCH v3 02/20] dt-bindings: mfd: samsung,s2mps11: split
+ s2mpg10 into separate file
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>,  Lee Jones <lee@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski	 <brgl@bgdev.pl>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Peter Griffin	 <peter.griffin@linaro.org>,
+ Will McVicker <willmcvicker@google.com>, 	kernel-team@android.com,
+ linux-kernel@vger.kernel.org, 	linux-samsung-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, 	linux-gpio@vger.kernel.org
+Date: Fri, 07 Nov 2025 11:01:58 +0000
+In-Reply-To: <20251104-armored-vehement-boar-55bde4@kuoka>
+References: <20251103-s2mpg1x-regulators-v3-0-b8b96b79e058@linaro.org>
+	 <20251103-s2mpg1x-regulators-v3-2-b8b96b79e058@linaro.org>
+	 <20251104-armored-vehement-boar-55bde4@kuoka>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-2+build3 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251106-gpio-of-match-v1-0-50c7115a045e@linaro.org>
- <20251106-gpio-of-match-v1-2-50c7115a045e@linaro.org> <CAMRc=Mchtho0yDsSp+wwBt=yBGg1+3i8ifkUrip1MJaq-uk+0g@mail.gmail.com>
- <cf23070f-8a3c-4c13-a46c-dc95f044c936@linaro.org>
-In-Reply-To: <cf23070f-8a3c-4c13-a46c-dc95f044c936@linaro.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 7 Nov 2025 11:32:52 +0100
-X-Gm-Features: AWmQ_bk09Ua_9bvIZ5lzbEUjBii8ELdurCEnXHjZ0WSd4oyNENmk6WbdUM8c1Lw
-Message-ID: <CAMRc=MeQk6BnKPGNxmFYP6Z=Qmo+PB0T8bBZGAbR3LP7xRzELA@mail.gmail.com>
-Subject: Re: [PATCH 2/4] gpio: aspeed: Simplify with of_device_get_match_data()
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>, 
-	Andrew Jeffery <andrew@codeconstruct.com.au>, 
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, 
-	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>, Srinivas Neeli <srinivas.neeli@amd.com>, 
-	Michal Simek <michal.simek@amd.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 6, 2025 at 8:13=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 06/11/2025 17:23, Bartosz Golaszewski wrote:
-> > On Thu, Nov 6, 2025 at 5:16=E2=80=AFPM Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> >>
-> >> Driver's probe function matches against driver's of_device_id table,
-> >> where each entry has non-NULL match data, so of_match_node() can be
-> >> simplified with of_device_get_match_data().
-> >>
-> >> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> >> ---
-> >>  drivers/gpio/gpio-aspeed.c | 7 ++-----
-> >>  1 file changed, 2 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
-> >> index 2e0ae953dd99..3d675b63936c 100644
-> >> --- a/drivers/gpio/gpio-aspeed.c
-> >> +++ b/drivers/gpio/gpio-aspeed.c
-> >> @@ -1305,7 +1305,6 @@ MODULE_DEVICE_TABLE(of, aspeed_gpio_of_table);
-> >>
-> >>  static int aspeed_gpio_probe(struct platform_device *pdev)
-> >>  {
-> >> -       const struct of_device_id *gpio_id;
-> >>         struct gpio_irq_chip *girq;
-> >>         struct aspeed_gpio *gpio;
-> >>         int rc, irq, i, banks, err;
-> >> @@ -1323,8 +1322,8 @@ static int aspeed_gpio_probe(struct platform_dev=
-ice *pdev)
-> >>
-> >>         raw_spin_lock_init(&gpio->lock);
-> >>
-> >> -       gpio_id =3D of_match_node(aspeed_gpio_of_table, pdev->dev.of_n=
-ode);
-> >> -       if (!gpio_id)
-> >> +       gpio->config =3D of_device_get_match_data(&pdev->dev);
-> >
-> > If you're already doing it, just use device_get_match_data() here and
-> > elsewhere in the series.
->
-> That's not exactly equivalent, but I guess it does not matter if driver
-> probes only via OF. Sure, I'll change it.
->
+Hi Krzysztof,
 
-In this case, it probably doesn't matter but in almost all cases it's
-better to go through the fwnode path, as it also checks potential
-secondary nodes when retrieving properties. Not to mention better
-portability of the driver if needed in the future.
+Thanks for your review.
 
-Bart
+On Tue, 2025-11-04 at 09:26 +0100, Krzysztof Kozlowski wrote:
+> On Mon, Nov 03, 2025 at 07:14:41PM +0000, Andr=C3=A9 Draszik wrote:
+> > +properties:
+> > +=C2=A0 compatible:
+> > +=C2=A0=C2=A0=C2=A0 const: samsung,s2mpg10-pmic
+> > +
+> > +=C2=A0 clocks:
+> > +=C2=A0=C2=A0=C2=A0 $ref: /schemas/clock/samsung,s2mps11.yaml
+> > +=C2=A0=C2=A0=C2=A0 description:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Child node describing clock provider.
+> > +
+> > +=C2=A0 interrupts:
+> > +=C2=A0=C2=A0=C2=A0 maxItems: 1
+> > +
+> > +=C2=A0 regulators:
+> > +=C2=A0=C2=A0=C2=A0 type: object
+> > +=C2=A0=C2=A0=C2=A0 description:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 List of child nodes that specify the re=
+gulators.
+> > +
+> > +=C2=A0 system-power-controller: true
+> > +
+> > +=C2=A0 wakeup-source: true
+> > +
+> > +required:
+> > +=C2=A0 - compatible
+> > +=C2=A0 - interrupts
+> > +=C2=A0 - regulators
+> > +
+> > +additionalProperties: false
+>=20
+> You need a complete example here.
+
+Patch 7 adds / updates the example for these to the ACPM binding. I can ext=
+end that
+example, but I'd prefer to keep it there to give it a bit more context. Add=
+ing an
+example here would duplicate things.
+
+Do you agree to that approach?
+
+Thanks,
+Andre
+
 
