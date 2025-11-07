@@ -1,110 +1,103 @@
-Return-Path: <linux-gpio+bounces-28250-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28251-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A7C9C41083
-	for <lists+linux-gpio@lfdr.de>; Fri, 07 Nov 2025 18:25:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB45EC410A1
+	for <lists+linux-gpio@lfdr.de>; Fri, 07 Nov 2025 18:27:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C1AFF4EF648
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Nov 2025 17:24:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CD0084211E3
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Nov 2025 17:27:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF178335085;
-	Fri,  7 Nov 2025 17:24:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52C04334C1B;
+	Fri,  7 Nov 2025 17:27:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q5JY+NCA"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="gjE3elCV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754D8335064;
-	Fri,  7 Nov 2025 17:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE011F03D2;
+	Fri,  7 Nov 2025 17:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762536267; cv=none; b=FiEfchROY902CiEXrtswZJ2Qa++NoO+p9Etyhweo5gdnfC23/eKwtuWl/CryDeqfw8sP/zfFmrIs5iZM+jCxK3tkZplu1ovTO82WnLrIZiwEWGxM5MlOTyHDYH7R6Pwun0HgzPwe3WcIdxqaMk8+3MBPS2YzvNKrwwZIrlUIZDM=
+	t=1762536467; cv=none; b=q6S91yRR3E006HauyKUOZY4whSCIC4bzfi4Osjqqh/Ewzu9hZnqGFxYU4JZ55VqCZhYvhnnb5WxnAwx4j8RynVMPTIQ5vi7/zeuGjohhzGIFf6kIcwJ9bJvpqvS4zqtCFD+Gi5CGDpMokvdcn0Ysnu9L596Rn8Lc8HVF5OGemM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762536267; c=relaxed/simple;
-	bh=iKWILkhz+c2dRe8cWkaxtQ3t5wgfEL4WzsX8PLBPxO8=;
+	s=arc-20240116; t=1762536467; c=relaxed/simple;
+	bh=E74RBG0cAvccvJgzcVT8lXWEYJpmGIAhsol1RsQ57ao=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F+oHOhPEJmgUjESiHrsvv7RotVmd2dmrQORKymuqM/SriXAIArOX6H38P06WhzBtfgB40L26cuVdnwU8XQuNAXtV59YHTxPU3CbgbNJfM8EXWFBgcscUefxQfsfoTxoFBQI67iHAera4yt+yAbWrp+9HzadILHWhaUGjjl+QS7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q5JY+NCA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5846AC4CEF5;
-	Fri,  7 Nov 2025 17:24:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762536267;
-	bh=iKWILkhz+c2dRe8cWkaxtQ3t5wgfEL4WzsX8PLBPxO8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q5JY+NCAkOPWxby286M3HkgsYu4G15KonQq63w23Atx6Nw78U9GUMYD2eNoJqd7pu
-	 nQbCevLnAE0tJQA1si0J9mUvJ/xVu+FO+XxUDGLcAbFI72ttFugwr44zVrF0WLYUni
-	 PEdps4THg6M0PbBcvuRNVo38UFaF0msM6fcA7lCG01TrsEiBZJS/PxUPNWqfXzkSEu
-	 UFo7M5gw6+4Rj1gR83bWFSzejpfnNYBQKKJdsN+8ajDFz/6Qo9Pnk/oTw7LfhTKKHY
-	 rnlopPPCGRVlE+L20J5X/B82jECdS177dLuMUH+vhOSA8rSq5O2chyC+B2KyNhHbWh
-	 XFTTAXnzHCPXw==
-Date: Fri, 7 Nov 2025 17:24:21 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=pnW5M2f1Ma+Swi94QxN4KsnEN7aDSTU/wfV9XeFtopFm8E8MePnZcUt3+6iEKABiRe925p7hbrM0Hh2qDQ3wt+p2ct32qpPiY2yJSCEm2lk53RJmEw1VEvB6qDjjNmtYl24drQA9AMhs9fMVW3yPUw9ELjkNeTsSauqGzMBDSag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=gjE3elCV; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=xK9cdU7Jd08ydspHZ/LYkJ6UQeomzAplwBThlP1vwpc=; b=gjE3elCVS4gAloZakaMWCavQF0
+	VVu0WRaiT/L3wbBnqluVfYLju8y6wohorJRj0IEcmb8E5DSUzE5LC0FFiLQqAz/pCdpm+tNEZ6ODD
+	oQ/M/uhYaW+ycEkvcICDP+IxH1BBnfOL2y1dxJBnHf+gFXwlgTxSiJ3HiXH3VxHRE2HY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1vHQFI-00DFmK-VG; Fri, 07 Nov 2025 18:27:32 +0100
+Date: Fri, 7 Nov 2025 18:27:32 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
+Cc: Shenwei Wang <shenwei.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 4/5] dt-bindings: pinctrl: airoha: Document AN7583 Pin
- Controller
-Message-ID: <20251107-washstand-motivator-c5e5e5d30dae@spud>
-References: <20251106235713.1794668-1-ansuelsmth@gmail.com>
- <20251106235713.1794668-5-ansuelsmth@gmail.com>
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	"linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	dl-linux-imx <linux-imx@nxp.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v5 0/5] Enable Remote GPIO over RPMSG on i.MX Platform
+Message-ID: <7db35257-de36-4eb5-9205-ca7fb8343401@lunn.ch>
+References: <20251104203315.85706-1-shenwei.wang@nxp.com>
+ <PAXPR04MB8459C54EAF106184E7A378D888C5A@PAXPR04MB8459.eurprd04.prod.outlook.com>
+ <05a0c630-3bd5-4307-8b94-1889ba191c33@foss.st.com>
+ <PAXPR04MB91858EA1057672295ECF793889C5A@PAXPR04MB9185.eurprd04.prod.outlook.com>
+ <aff734de-0d61-4239-9e67-78a4ab258c30@foss.st.com>
+ <PAXPR04MB918581030A9FC05E13874BDB89C2A@PAXPR04MB9185.eurprd04.prod.outlook.com>
+ <734f830c-947c-495b-ac9f-98d439e821f2@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="cXGsyKspLHvZR8fa"
-Content-Disposition: inline
-In-Reply-To: <20251106235713.1794668-5-ansuelsmth@gmail.com>
-
-
---cXGsyKspLHvZR8fa
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <734f830c-947c-495b-ac9f-98d439e821f2@foss.st.com>
 
-On Fri, Nov 07, 2025 at 12:57:07AM +0100, Christian Marangi wrote:
-> Document Airoha AN7583 Pin Controller based on Airoha EN7581 with some
-> minor difference on some function group (PCM and LED gpio).
->=20
-> To not bloat the EN7581 schema with massive if condition, use a
-> dedicated YAML schema for Airoha AN7583.
+> For your information, I'm facing a similar issue with my remoteproc_tee
+> series [1]. The advice I received was to look at the PCIe DT implementation
+> (I haven't had time to explore it yet). This advice also seems relevant to
+> your series.
+> 
+> Do you also have a look to rpmsg_virtio_bus ? it seems a good candidate to
+> match the device tree properties with the rpmsg device?
+> 
+> In the end, this is my point of view. Perhaps it is better to wait for
+> others before deciding on the direction...
 
-You went to more effort than I would have here with that conditional!
+There might also be some ideas which can be take from greybus. It also
+implements remote devices over a communication medium. 
 
-> +patternProperties:
-> +  '-pins$':
-> +    type: object
-> +
-> +    patternProperties:
-> +      '^mux(-|$)':
-> +        type: object
-
-What's up with this regex? Why does it allow either - or $?
-
---cXGsyKspLHvZR8fa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaQ4rRQAKCRB4tDGHoIJi
-0m+6AP944+gmALtZGR1CkfB4zaT3eHH3sYRIpgbLLZY+u6lbaQD/ZB/xRj4VWjq4
-esQCRuxRKBz7tiNcleNfRyxChdSjJA8=
-=YhQN
------END PGP SIGNATURE-----
-
---cXGsyKspLHvZR8fa--
+	Andrew
 
