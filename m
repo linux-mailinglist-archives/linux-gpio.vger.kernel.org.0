@@ -1,184 +1,150 @@
-Return-Path: <linux-gpio+bounces-28241-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28242-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E468C3F482
-	for <lists+linux-gpio@lfdr.de>; Fri, 07 Nov 2025 10:57:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AF18BC3F7EE
+	for <lists+linux-gpio@lfdr.de>; Fri, 07 Nov 2025 11:36:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id F0F714E4014
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Nov 2025 09:57:31 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2EED34F2A0E
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Nov 2025 10:33:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 748F02F5A3F;
-	Fri,  7 Nov 2025 09:57:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E78132ABCD;
+	Fri,  7 Nov 2025 10:33:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZxbcVn+Y"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DrmxX8XC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13EB184
-	for <linux-gpio@vger.kernel.org>; Fri,  7 Nov 2025 09:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E378E32AADC
+	for <linux-gpio@vger.kernel.org>; Fri,  7 Nov 2025 10:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762509448; cv=none; b=keahmn5yVeivEo77lTY16VApgd7AG9qC30nYETt8mqA8txEx+iVPcZ2hbUs2MinFZNg+xR/JGDdcbi4Zxp4wG2Y5Pbe+MnMjD9YD3xSwOxqFPg59OrAq1NzHvkIQ6SJWynSLg1zxwck1nye/Z6oq3pVHDB+jZpD9GKDnTErLliY=
+	t=1762511588; cv=none; b=Za9dnaYLE1ZmeR/fbKSFIBgCw+D7epxHlbyDbdvpB+fskgyY7j0E3LW/QEfPnL+b/BJIX6nQm8AR5KiNKQ/mdMO0J3ExD/LNr5zK/Uh6QV3e41zoiQ5Cbh8GCxh170up2r/2IUp7Y7smYQ5nOburU3QAboRLHVf5E3ewyWzmFtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762509448; c=relaxed/simple;
-	bh=gxrpcH1R19Y7uHAhvEJBlJMrA3PpZhZ1IAXInnOZyPU=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=uT5F/UDVnu3VvKaBVYM3bmR/LNUdkQy5vO/CfNaYxmkzG/hQlZOt9iiaO3nuIk7jXGdzvr07ykqR4cxCtVSIUC+JfEJMIbls/ihmnFhoJ4K4ePCGc9larv5MQf8A8J1pvcrGzOUQOaY2+a1K2pNMnInlp0Wh84DZ2fEtkMfWwG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZxbcVn+Y; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762509447; x=1794045447;
-  h=date:from:to:cc:subject:message-id;
-  bh=gxrpcH1R19Y7uHAhvEJBlJMrA3PpZhZ1IAXInnOZyPU=;
-  b=ZxbcVn+Y70tnY5TybnyUkJHw35JRYVQfgHfIMclmOdYKRuGF20MlVMvJ
-   HVGf0quMEYZzhgZOYZNgEFoT5ppSnvhAmW/A5vakItkPBMMozjd/I0Fy9
-   HLcW7510bfGv2L0fjrPKyct1SWBmxJ1sHoCm/X1yLLDiUzV71vtI4QzUW
-   x3ek0iDvsJwCc6YX7x52r9zGX0NDZbSfIHpEdVpqI71lH8NK2/zvM5IKI
-   KRV8ZkYXrS/t64LvlyikmevtFFPYwKq+nImIlSQEiOj07p70Ws5vc0sNC
-   rRLo0e0eZD9ABnzDVBehk4k6+qBHD8eRlhgdfHxYB7/TKwosxH9LslDc7
-   w==;
-X-CSE-ConnectionGUID: UJtHmWTmSEu2PnU5RavTvw==
-X-CSE-MsgGUID: 0Jo8fQnGTMWNqAMD5FdmQw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11605"; a="68497119"
-X-IronPort-AV: E=Sophos;i="6.19,286,1754982000"; 
-   d="scan'208";a="68497119"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2025 01:57:26 -0800
-X-CSE-ConnectionGUID: A7uWoxu0RvOjWVRdbzNTow==
-X-CSE-MsgGUID: RozgosvTQ+GLhuGXKKm+MQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,286,1754982000"; 
-   d="scan'208";a="187255930"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by orviesa006.jf.intel.com with ESMTP; 07 Nov 2025 01:57:26 -0800
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vHJDf-000Uy0-0k;
-	Fri, 07 Nov 2025 09:57:23 +0000
-Date: Fri, 07 Nov 2025 17:57:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:b4/cix-dummies] BUILD SUCCESS
- f755bb823852078331080ebe1d998831a524a59b
-Message-ID: <202511071700.WcePG072-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1762511588; c=relaxed/simple;
+	bh=ekrma6VDIEDQdQowvD1YIFD7aFqh+2yqjc36N5YHdUI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CHB5K29uceRbfHRhV+9z/ARFYO7BQ/jT1VLFONQUefGB0lHDY51Id8YOa5SGDd4xF/cj3BYF8YnIE457Ecw1I+ecsLb5Rk9WuULpQpohlvy8a4ezbyuECMOsk6MzRbHZU2l/3CWYaRc9lHB9LrMwGh1e6wOCoWA5IuiH6UZmUrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DrmxX8XC; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5945510fd7aso433655e87.0
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Nov 2025 02:33:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1762511584; x=1763116384; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u0SC5dtN/EI2PuuKztOZyox/MGIrIYy9hq7oU1yzaSE=;
+        b=DrmxX8XC5no3w8yxuAbJ3vfdTGFTbpvv3Hw2bWdB7q3smfVfi9Dwda5VGvxpKh9z1g
+         aNY94bE0+g3+G+3XCqUIWDgA6+FPR3+OpTYWE4tvse0KzxbzFnm8GqnAzJ//CA8ILDtu
+         /RFfhBGvnL9a44TZBnGT8V8K3PBYSWRvVrr8ibHC/EcFk0vECzqv6opgfQslr8EJGArA
+         RjgzPh0FZwChPCrVH6i4qr0WHrTjD2nWeAzt98batEjWNazGzkyd050Lh6VlYUuRjGw7
+         JClPRok+c5WvuGnlFifkroJBKtCzUJ9xfes5EpFRNjrP1O+l/TFbicbe1i1hL47mqiHU
+         C3iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762511584; x=1763116384;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=u0SC5dtN/EI2PuuKztOZyox/MGIrIYy9hq7oU1yzaSE=;
+        b=as1E0NVE6hpWhrv6TOGSdX8yo3SosH2qA01pJY7r6WBm2P6NrDVwygtZp2AIbOCwgo
+         67WTk39yNqIpP6w4qaWhWfL6qhY+v3OYv/aE6+6eX3hhOEGRMSd9DzXSzk2rr7w2Kejn
+         +yLImgRhykQNv0dL/NCl0Fq0VrvvPtLq8ALiaDVa3B7uZGvb3+g2g3aqc7bvNh7EOYrt
+         /My7yJ3h+IgoQODs82F5Byc1HX1zvoee7XD2+DwrzkvdP4i9J0IIRXaI9ySmb7pDiCC5
+         4q6XRU4fEeqIRpT1X5g3YwcZ08LllZPsi1tnG3dPTRLrzFARkAR63rdzVPGbQ6Fb28Xm
+         UEqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXvq9XqtHhboZg5u2S95Rhqb+UJcdvg2arkSRU/73cyNPwZ53OdLKu1oMJc+mBCnQvGB5klZZR/EFC+@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQaSS2aD59r2jFF+jENCBglRjyRmnFS8WnLkPO2eWq57Pewl8D
+	i1JMqsby916hvV/vkGkBk/kxa5j1NHzVGV0LW4tTKjoMFjPHsSamzolOAZSjoXWMPPRP83vfKXL
+	lW4k8LmpLbNEVXJs8XtQvwAn/m/ab2u/yNf6gtYn01A==
+X-Gm-Gg: ASbGncvhJCdCxnDvx0OUaseI9zETL7/I+3zPk13LhRJbf8reYlByyD6i2xoPl4q5K6w
+	b+F8X37//ydNIsJIPnN9QdwgcG1MlgW1mW/VGgywWZ7IgltqMoi/On2Y4FCweDMZR5RiQT6ywPw
+	HC4Aup7ICmf5T8cHeHdWUnTWDYr37htk5JpU+SqUyKpPyVC2ANnUA/lAdNb7RKaT8JQk+na679X
+	6uCKiaGbmiJD0qOw8c79rMT0m71IBj6iWlPOlugXrkmcrEtfEx43rqTEc8fcFi4CZ4sXV8FhtJq
+	OemxgfbIzRTvIdll6bIcAlf+7A==
+X-Google-Smtp-Source: AGHT+IH/NaO2IV2PuSuT+uIy0ell6f4pEVJBNYisr1Il5Fm4JRWfx8ML7AoeEUzy6VOMfbvkcuWVGadITNGQPdN4yQA=
+X-Received: by 2002:a05:6512:3a86:b0:591:eb00:9795 with SMTP id
+ 2adb3069b0e04-59456b5b60bmr827315e87.13.1762511583894; Fri, 07 Nov 2025
+ 02:33:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20251106-gpio-of-match-v1-0-50c7115a045e@linaro.org>
+ <20251106-gpio-of-match-v1-2-50c7115a045e@linaro.org> <CAMRc=Mchtho0yDsSp+wwBt=yBGg1+3i8ifkUrip1MJaq-uk+0g@mail.gmail.com>
+ <cf23070f-8a3c-4c13-a46c-dc95f044c936@linaro.org>
+In-Reply-To: <cf23070f-8a3c-4c13-a46c-dc95f044c936@linaro.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 7 Nov 2025 11:32:52 +0100
+X-Gm-Features: AWmQ_bk09Ua_9bvIZ5lzbEUjBii8ELdurCEnXHjZ0WSd4oyNENmk6WbdUM8c1Lw
+Message-ID: <CAMRc=MeQk6BnKPGNxmFYP6Z=Qmo+PB0T8bBZGAbR3LP7xRzELA@mail.gmail.com>
+Subject: Re: [PATCH 2/4] gpio: aspeed: Simplify with of_device_get_match_data()
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>, 
+	Andrew Jeffery <andrew@codeconstruct.com.au>, 
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, 
+	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>, Srinivas Neeli <srinivas.neeli@amd.com>, 
+	Michal Simek <michal.simek@amd.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-aspeed@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git b4/cix-dummies
-branch HEAD: f755bb823852078331080ebe1d998831a524a59b  pinctrl: cix: sky1: Provide pin control dummy states
+On Thu, Nov 6, 2025 at 8:13=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 06/11/2025 17:23, Bartosz Golaszewski wrote:
+> > On Thu, Nov 6, 2025 at 5:16=E2=80=AFPM Krzysztof Kozlowski
+> > <krzysztof.kozlowski@linaro.org> wrote:
+> >>
+> >> Driver's probe function matches against driver's of_device_id table,
+> >> where each entry has non-NULL match data, so of_match_node() can be
+> >> simplified with of_device_get_match_data().
+> >>
+> >> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> >> ---
+> >>  drivers/gpio/gpio-aspeed.c | 7 ++-----
+> >>  1 file changed, 2 insertions(+), 5 deletions(-)
+> >>
+> >> diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
+> >> index 2e0ae953dd99..3d675b63936c 100644
+> >> --- a/drivers/gpio/gpio-aspeed.c
+> >> +++ b/drivers/gpio/gpio-aspeed.c
+> >> @@ -1305,7 +1305,6 @@ MODULE_DEVICE_TABLE(of, aspeed_gpio_of_table);
+> >>
+> >>  static int aspeed_gpio_probe(struct platform_device *pdev)
+> >>  {
+> >> -       const struct of_device_id *gpio_id;
+> >>         struct gpio_irq_chip *girq;
+> >>         struct aspeed_gpio *gpio;
+> >>         int rc, irq, i, banks, err;
+> >> @@ -1323,8 +1322,8 @@ static int aspeed_gpio_probe(struct platform_dev=
+ice *pdev)
+> >>
+> >>         raw_spin_lock_init(&gpio->lock);
+> >>
+> >> -       gpio_id =3D of_match_node(aspeed_gpio_of_table, pdev->dev.of_n=
+ode);
+> >> -       if (!gpio_id)
+> >> +       gpio->config =3D of_device_get_match_data(&pdev->dev);
+> >
+> > If you're already doing it, just use device_get_match_data() here and
+> > elsewhere in the series.
+>
+> That's not exactly equivalent, but I guess it does not matter if driver
+> probes only via OF. Sure, I'll change it.
+>
 
-elapsed time: 2390m
+In this case, it probably doesn't matter but in almost all cases it's
+better to go through the fwnode path, as it also checks potential
+secondary nodes when retrieving properties. Not to mention better
+portability of the driver if needed in the future.
 
-configs tested: 91
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                   allnoconfig    gcc-15.1.0
-alpha                  allyesconfig    clang-19
-arc                    allmodconfig    clang-19
-arc                     allnoconfig    gcc-15.1.0
-arc                    allyesconfig    clang-19
-arm                    allmodconfig    clang-19
-arm                     allnoconfig    clang-22
-arm                    allyesconfig    clang-19
-arm64                  allmodconfig    clang-19
-arm64                   allnoconfig    gcc-15.1.0
-arm64                  allyesconfig    clang-22
-csky                   allmodconfig    gcc-15.1.0
-csky                    allnoconfig    gcc-15.1.0
-csky                   allyesconfig    gcc-15.1.0
-hexagon                allmodconfig    clang-19
-hexagon                 allnoconfig    clang-22
-hexagon                allyesconfig    clang-19
-hexagon     randconfig-001-20251106    clang-19
-hexagon     randconfig-002-20251106    clang-20
-i386                   allmodconfig    clang-20
-i386                    allnoconfig    gcc-14
-i386                   allyesconfig    clang-20
-loongarch              allmodconfig    clang-19
-loongarch               allnoconfig    clang-22
-loongarch              allyesconfig    clang-22
-loongarch   randconfig-001-20251106    gcc-15.1.0
-loongarch   randconfig-002-20251106    gcc-15.1.0
-m68k                   allmodconfig    clang-19
-m68k                    allnoconfig    gcc-15.1.0
-m68k                   allyesconfig    clang-19
-microblaze             allmodconfig    clang-19
-microblaze              allnoconfig    gcc-15.1.0
-microblaze             allyesconfig    clang-19
-mips                   allmodconfig    gcc-15.1.0
-mips                    allnoconfig    gcc-15.1.0
-mips                   allyesconfig    gcc-15.1.0
-nios2                  allmodconfig    clang-22
-nios2                   allnoconfig    gcc-11.5.0
-nios2                  allyesconfig    clang-22
-nios2       randconfig-001-20251106    gcc-9.5.0
-nios2       randconfig-002-20251106    gcc-8.5.0
-openrisc               allmodconfig    clang-22
-openrisc                allnoconfig    gcc-15.1.0
-openrisc               allyesconfig    gcc-15.1.0
-parisc                 allmodconfig    gcc-15.1.0
-parisc                  allnoconfig    gcc-15.1.0
-parisc                 allyesconfig    gcc-15.1.0
-parisc      randconfig-001-20251106    gcc-10.5.0
-parisc      randconfig-002-20251106    gcc-10.5.0
-powerpc                allmodconfig    gcc-15.1.0
-powerpc                 allnoconfig    gcc-15.1.0
-powerpc                allyesconfig    gcc-15.1.0
-powerpc     randconfig-001-20251106    gcc-14.3.0
-powerpc     randconfig-002-20251106    clang-22
-powerpc64   randconfig-002-20251106    gcc-8.5.0
-riscv                  allmodconfig    gcc-15.1.0
-riscv                   allnoconfig    gcc-15.1.0
-riscv                  allyesconfig    gcc-15.1.0
-riscv       randconfig-001-20251106    clang-22
-riscv       randconfig-002-20251106    gcc-12.5.0
-s390                   allmodconfig    gcc-15.1.0
-s390                    allnoconfig    clang-22
-s390                   allyesconfig    gcc-15.1.0
-s390        randconfig-001-20251106    gcc-8.5.0
-s390        randconfig-002-20251106    gcc-14.3.0
-sh                     allmodconfig    gcc-15.1.0
-sh                      allnoconfig    gcc-15.1.0
-sh                     allyesconfig    gcc-15.1.0
-sh          randconfig-001-20251106    gcc-11.5.0
-sh          randconfig-002-20251106    gcc-13.4.0
-sparc                  allmodconfig    gcc-15.1.0
-sparc                   allnoconfig    gcc-15.1.0
-sparc                  allyesconfig    clang-22
-sparc64                allmodconfig    clang-22
-sparc64                allyesconfig    clang-22
-um                     allmodconfig    clang-19
-um                      allnoconfig    clang-22
-um                     allyesconfig    clang-19
-x86_64                 allmodconfig    clang-20
-x86_64                  allnoconfig    clang-20
-x86_64                 allyesconfig    clang-20
-x86_64                        kexec    clang-20
-x86_64                     rhel-9.4    clang-20
-x86_64                 rhel-9.4-bpf    gcc-14
-x86_64                rhel-9.4-func    clang-20
-x86_64          rhel-9.4-kselftests    clang-20
-x86_64               rhel-9.4-kunit    gcc-14
-x86_64                 rhel-9.4-ltp    gcc-14
-x86_64                rhel-9.4-rust    clang-20
-xtensa                  allnoconfig    gcc-15.1.0
-xtensa                 allyesconfig    clang-22
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Bart
 
