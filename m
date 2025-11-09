@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-28270-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28271-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29D91C4454E
-	for <lists+linux-gpio@lfdr.de>; Sun, 09 Nov 2025 19:59:15 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3578C44562
+	for <lists+linux-gpio@lfdr.de>; Sun, 09 Nov 2025 20:00:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B7803188B588
-	for <lists+linux-gpio@lfdr.de>; Sun,  9 Nov 2025 18:59:39 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7CF6C4E3639
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 Nov 2025 19:00:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EF80233711;
-	Sun,  9 Nov 2025 18:59:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9143C221FBF;
+	Sun,  9 Nov 2025 19:00:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FFr2uV8J"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tGHJHWsk"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BF91E0083;
-	Sun,  9 Nov 2025 18:59:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42BDC14F70;
+	Sun,  9 Nov 2025 19:00:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762714749; cv=none; b=kt3jXDNcA+351ax628HAMRkbhAQLa/2kSfPSlgB10oI4yd8i03zN6Y0quzSitnBDGpgQZ/qaE3G10Oh2+4qjaWTTLs7OO60YJWpQ6LeEAs9J/lZ9c1FiZB/Tt3X67CIGr+yRR5z17jNVO2OJ+yPGYj6a6bf5cVvUyIa5k9zOc8E=
+	t=1762714819; cv=none; b=Gl9aSnE/aTwUk3Xt5XmCJJp0aa+pDTLR9WtonNA1LSGX9B26cHP+oO6rYIlPoOS8yzkTOi00XzPk1hDTepA7+V/hFlxPWz7JpudZY+aFf744RdzxNvhMrKNVs68huzkCiFqdNL6zwY7u841fraMaVpVzOPRwTokR++64Ju+hs7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762714749; c=relaxed/simple;
-	bh=IosejQ4KdLaNYPdCZaIK3oHn8vRfZAe210X8qrOuPwc=;
+	s=arc-20240116; t=1762714819; c=relaxed/simple;
+	bh=zxnjYajY7Zx4sladOk2KvbcmEAziX/wMv8mcornQ/B8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sFLm/fEaz0LIUkH1rsr4bHIfQK1R8me30XFcxTAps+Ls/IYTm6jQglC1ipCYFrI1zO70rtB5DRe6g/gnpMC7dAStU2ioxFNx/LT4LxwmCmn84okCp9nLVBurHY8Sx2++YMWkACczaYCoNd06DB9u4mDAd5GpPzzl4ER1ZN4mOmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FFr2uV8J; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB2C8C19422;
-	Sun,  9 Nov 2025 18:59:04 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=AgnWJYlDoyYM9+o0YD/P3wura5BI00+ybbgY8Au4Ev58SH72401W/hPJ+9xP73cIVGm0sHrViDgdBqDpG+w33qCJmYRoa9dBc1rUSV1/wabULY8wkyux4zoZcHux83gxk3Z3KUtslXaJbWRmta/KTumcV2YTDgG5inlL4odUKjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tGHJHWsk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2783CC16AAE;
+	Sun,  9 Nov 2025 19:00:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762714748;
-	bh=IosejQ4KdLaNYPdCZaIK3oHn8vRfZAe210X8qrOuPwc=;
+	s=k20201202; t=1762714817;
+	bh=zxnjYajY7Zx4sladOk2KvbcmEAziX/wMv8mcornQ/B8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FFr2uV8J077TZnEwKB3ZqYBjs8AEgl4MJxc5xDLh32c/WU80NPCxqg9sNPs1EE0BO
-	 mPyMUsi4jJljWrvDR8EGVHU1kzVfgwRA1+MeavGANjPkQzH8JsIiY37cmljMOHESp7
-	 vm0wDCavzRNQP8LtVR17oDGGslLU/mGzi5BTAQpUOwoQX0SpPUBeeP/mDrN61IdkwJ
-	 zn7yBzxHpUjWjRRNieGE/vUrSvDT3ZEEMmEh2BMmPve2L+OlK7DMqeLfAWzFElIqdx
-	 4VstaKbxE/7LlRSRecwTpjJ1MAJsqdxK4KVaYcSsyXmY4mHwE0Dx6AEwIaOO1ePh2M
-	 Czi/+dqI48Kqw==
-Message-ID: <11d75697-e9e8-4c76-bc92-692b0c9dc1fb@kernel.org>
-Date: Sun, 9 Nov 2025 19:59:02 +0100
+	b=tGHJHWskDuXMP5/YIP/jxzGLEOum0JSY/ZGJ/eBDmqPnXD5tzQVf+/uQTFQxyksfT
+	 6pnfPjq2nTV1LQVbWIc4aM/dl59ZiDCGz+/rSUqCC8SpBqMw5OCJzDD4WyUNogUBO2
+	 tj2zMnHl4XC6ip91BxWQ1z2EYQvOWzG9GjNDxW48veHhfvjUdfThTksxSL/flSu+C8
+	 JeVZ8Zkpsret860bhz2gqpkqIfU9UIXGOPCKDgXNgf/8zVpQXu32nYQm2v8gNFsj8N
+	 YtAgxpzpqMQ4+MgKnSL1amuK0JKKYOnX5eLVzvzhBWZDH+KCOJhLg/KhB6hGST4oyb
+	 XAtJ0gakSrvBA==
+Message-ID: <7d9fa7ab-8484-4d41-bc3b-be2eff3b6e95@kernel.org>
+Date: Sun, 9 Nov 2025 20:00:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/20] dt-bindings: mfd: samsung,s2mps11: split s2mpg10
- into separate file
+Subject: Re: [PATCH v3 04/20] regulator: dt-bindings: add s2mpg11-pmic
+ regulators
 To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
 Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
@@ -63,9 +63,9 @@ Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
  linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
  devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
 References: <20251103-s2mpg1x-regulators-v3-0-b8b96b79e058@linaro.org>
- <20251103-s2mpg1x-regulators-v3-2-b8b96b79e058@linaro.org>
- <20251104-armored-vehement-boar-55bde4@kuoka>
- <729dcf73a1c3d03ca2b22dd278cb0bc502b6b7d5.camel@linaro.org>
+ <20251103-s2mpg1x-regulators-v3-4-b8b96b79e058@linaro.org>
+ <20251104-zircon-lobster-of-agility-cbcbb0@kuoka>
+ <46b008c946e36ea0b317691356ff874c4a78882d.camel@linaro.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -111,57 +111,28 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <729dcf73a1c3d03ca2b22dd278cb0bc502b6b7d5.camel@linaro.org>
+In-Reply-To: <46b008c946e36ea0b317691356ff874c4a78882d.camel@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 07/11/2025 12:01, André Draszik wrote:
-> Hi Krzysztof,
-> 
-> Thanks for your review.
-> 
-> On Tue, 2025-11-04 at 09:26 +0100, Krzysztof Kozlowski wrote:
->> On Mon, Nov 03, 2025 at 07:14:41PM +0000, André Draszik wrote:
->>> +properties:
->>> +  compatible:
->>> +    const: samsung,s2mpg10-pmic
+On 07/11/2025 12:14, André Draszik wrote:
+> On Tue, 2025-11-04 at 10:39 +0100, Krzysztof Kozlowski wrote:
+>> On Mon, Nov 03, 2025 at 07:14:43PM +0000, André Draszik wrote:
+>>> +  The S2MPG11 PMIC provides 12 buck, 1 buck-boost, and 15 LDO regulators.
 >>> +
->>> +  clocks:
->>> +    $ref: /schemas/clock/samsung,s2mps11.yaml
->>> +    description:
->>> +      Child node describing clock provider.
+>>> +  See also Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml for
+>>> +  additional information and example.
 >>> +
->>> +  interrupts:
->>> +    maxItems: 1
->>> +
->>> +  regulators:
->>> +    type: object
->>> +    description:
->>> +      List of child nodes that specify the regulators.
->>> +
->>> +  system-power-controller: true
->>> +
->>> +  wakeup-source: true
->>> +
->>> +required:
->>> +  - compatible
->>> +  - interrupts
->>> +  - regulators
->>> +
->>> +additionalProperties: false
+>>> +definitions:
 >>
->> You need a complete example here.
+>> defs:
 > 
-> Patch 7 adds / updates the example for these to the ACPM binding. I can extend that
-> example, but I'd prefer to keep it there to give it a bit more context. Adding an
-> example here would duplicate things.
-> 
-> Do you agree to that approach?
+> All existing bindings are using definitions, not defs. Shouldn't this stay
+> consistent?
 
-You should have here example, because ACPM can come in the future, e.g.
-next Tensor SoCs with different devices under pmic and pmic-2. This is
-the binding for S2MPS11 device, so this should be complete - including
-the example. If it gets duplicated with ACPM, that's fine for now.
+Huh? git grep gives me 3 cases, so how is it "all existing"?
+
+But for defs it gives me ~98!	
 
 
 Best regards,
