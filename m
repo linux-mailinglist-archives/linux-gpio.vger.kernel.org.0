@@ -1,173 +1,160 @@
-Return-Path: <linux-gpio+bounces-28272-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28273-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C0EFC4456B
-	for <lists+linux-gpio@lfdr.de>; Sun, 09 Nov 2025 20:02:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BC9FC44577
+	for <lists+linux-gpio@lfdr.de>; Sun, 09 Nov 2025 20:05:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CCEAB4E1080
-	for <lists+linux-gpio@lfdr.de>; Sun,  9 Nov 2025 19:02:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CE4033A42EA
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 Nov 2025 19:05:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 802D322D4E9;
-	Sun,  9 Nov 2025 19:02:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C7E220C48A;
+	Sun,  9 Nov 2025 19:05:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m2gpJyA5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QGXI8pdS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B83220698;
-	Sun,  9 Nov 2025 19:02:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3EC21772A;
+	Sun,  9 Nov 2025 19:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762714934; cv=none; b=uvI194XoHb+YL6VCsSqNnsh4IA18T2zaonrikPVaGQm7Wk8X5X7SOfNfEPCcWvdsYZppJY914JLe5OfPef5vJuI+YBhqQIYGl6JXfy8yuBaAjYo8Z+3Ge0P+DOsxQIWtgM/IW1WYd27YO4pKtv4wu8s+Yv1ZC1X9xigIiYdGWOk=
+	t=1762715115; cv=none; b=UPVEkKk/CqiHVb81toCFD18Vcp1xNrJNSK8zLwnKmVHfS2fcCgyZ+xuuojQAc/InH7gyqCi67U4DzPM0Oi0CQ4Hph9Bz+Z3WanFxaLHXHl8VyVn/6L8EbODnrxQn45oyDJcWJwZrL2fbJBGvlYJiTALNvC8pA/K8qALrSNUXd5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762714934; c=relaxed/simple;
-	bh=QuJv+ky6ElOvQzuR3YLlBAsFoyVB2/pMwya6g5QXci0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VPN0jlCiuWbxxex3E/n6sFj/PRzKPicn72Kb5NghIZiF9FsZBZ3t9XEaiyzO/fGf9FQ2v5SRXrkT+jU5i3FXEgcgoALWOyuIkyzH/Awy3lTduFBJ7FgIncrsO8wiwTdhuNIafH6iwUGjE2yYZmZ1iNt4KtHkS1/Qf/r/M5W39gY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m2gpJyA5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A8AEC4CEFB;
-	Sun,  9 Nov 2025 19:02:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762714933;
-	bh=QuJv+ky6ElOvQzuR3YLlBAsFoyVB2/pMwya6g5QXci0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=m2gpJyA59nXN+WbphfcSyf4V2aUeDVz4YCGzRXhYkU/Wy4d73yFB9/IXV1pL/p3fd
-	 2vijHNLfZFn2/JOFX7TiFnDMB6QRIOR4sXXI93kFkP7sgvEotpW/noGbA3XTI9rEUW
-	 8ApcG5gBByPC6Ph4YB/nMeqFrxJdGRUNmZeySUo9HKmrFl4Mf2Yn0aE65HW+ohw8ME
-	 EzMaPLrDNg57NPv3eLCuSt6uA9GMrCNz7UkGfMJi+g+zSjy2USzRza/3QUMGflxsd5
-	 xeAJTgrrlQdhPy+mvJ0VGy8G1shJ/6u18JYhv1yEoYuGSOi6GM3IuXr2BgaIHLo5Ay
-	 CfpmB43WYumuQ==
-Message-ID: <c88d20d0-0b0a-42a1-98a6-d81609bcfda2@kernel.org>
-Date: Sun, 9 Nov 2025 20:02:08 +0100
+	s=arc-20240116; t=1762715115; c=relaxed/simple;
+	bh=SSA93aOe7oVtmJVAX896+3dxROaS9STay5IxLmasNCM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T6EGkGFmZ+Oaq7zRDsmbXd+ul++drPXD7QIsA7/82T4vN/reFm/E3Luueuw/iTK7dur1VBJ+LTleNT0x30TrsGsdjZc7ZENg0qrfF0z1qHlH6ixpoTy0jngBiJ/0NdPekFBcWO1d2swuC8dRFsmNTAUsC01xVBGEw9/As3ivCNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QGXI8pdS; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762715113; x=1794251113;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SSA93aOe7oVtmJVAX896+3dxROaS9STay5IxLmasNCM=;
+  b=QGXI8pdSnxwpqLNRyNih6akjZmIN3JKDdK/IJpFBPMh4f0ilia1ksMK1
+   BzYezc7tNj5XfYj0fkEVozylJsjPOTJUSygusd+c6/EaXfo4wtZRgfhHR
+   j4NV98QWXfqP2uPGwzaIG3P2UYPp9uoMsJXMkZVjJnYLqJe9x4QrHVKHy
+   BhLaWfxexnw4qRC0aMfzm7cO5pvGoaNAjrnWcfChFylIuFGj4hFbPV7tJ
+   WACdqLngCOm9EXBb99aeox6jn/rMacR6fuc8QjYunh59Rv1nz0RDMO4WT
+   hjF1E9sKHBL7a+khEKcE1APYYz6rH8xK8WVXYz/2klSbs9fQTfgqdnfKm
+   w==;
+X-CSE-ConnectionGUID: SYLJSP/dTf+JIuCt82vv7Q==
+X-CSE-MsgGUID: UFL8l6fiTV2btzku9iYwWQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="90249622"
+X-IronPort-AV: E=Sophos;i="6.19,292,1754982000"; 
+   d="scan'208";a="90249622"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 11:05:13 -0800
+X-CSE-ConnectionGUID: 0MBbrmbSSmybDafSEFPX5A==
+X-CSE-MsgGUID: 6KoH91/3SMyUXXsoLlu3lQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,292,1754982000"; 
+   d="scan'208";a="188341862"
+Received: from fpallare-mobl4.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.245.185])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 11:05:10 -0800
+Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1vIAip-000000076E8-0CrM;
+	Sun, 09 Nov 2025 21:05:07 +0200
+Date: Sun, 9 Nov 2025 21:05:06 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Askar Safin <safinaskar@gmail.com>
+Cc: Dell.Client.Kernel@dell.com, bartosz.golaszewski@linaro.org,
+	benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
+	linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org, regressions@lists.linux.dev,
+	rrangel@chromium.org, safinaskar@zohomail.com, superm1@kernel.org,
+	wse@tuxedocomputers.com
+Subject: Re: [REGRESSION][BISECTED] Dell Precision 7780 wakes up on its own
+ from suspend
+Message-ID: <aRDl4tOD4CfVeSC2@smile.fi.intel.com>
+References: <aKyDB7h7cUBOLbiJ@smile.fi.intel.com>
+ <20250918183336.5633-1-safinaskar@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 07/20] dt-bindings: firmware: google,gs101-acpm-ipc:
- update PMIC examples
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Lee Jones <lee@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Peter Griffin <peter.griffin@linaro.org>,
- Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
- linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20251103-s2mpg1x-regulators-v3-0-b8b96b79e058@linaro.org>
- <20251103-s2mpg1x-regulators-v3-7-b8b96b79e058@linaro.org>
- <20251104-awesome-tacky-magpie-bacd9f@kuoka>
- <fa2e704a2f295f2c9b2c7811e8ca89972554ff7e.camel@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <fa2e704a2f295f2c9b2c7811e8ca89972554ff7e.camel@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250918183336.5633-1-safinaskar@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On 08/11/2025 15:08, André Draszik wrote:
-> Hi Krzysztof,
+On Thu, Sep 18, 2025 at 09:33:36PM +0300, Askar Safin wrote:
+> Andy Shevchenko:
+> > In other words we need to enable debug of the pin control subsystem and see
+> > what it will print in dmesg.
 > 
-> Thanks for your review!
+> You mean I should enable CONFIG_DEBUG_PINCTRL? Okay, I did this.
 > 
-> On Tue, 2025-11-04 at 09:31 +0100, Krzysztof Kozlowski wrote:
->> On Mon, Nov 03, 2025 at 07:14:46PM +0000, André Draszik wrote:
->>> In a typical system using the Samsung S2MPG10 PMIC, an S2MPG11 is used
->>> as a sub-PMIC.
->>>
->>> The interface for both is the ACPM firmware protocol, so update the
->>> example here to describe the connection for both.
->>>
->>> Signed-off-by: André Draszik <andre.draszik@linaro.org>
->>> ---
->>>  .../bindings/firmware/google,gs101-acpm-ipc.yaml   | 40 ++++++++++++++++++++--
->>>  1 file changed, 37 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/firmware/google,gs101-acpm-ipc.yaml
->>> b/Documentation/devicetree/bindings/firmware/google,gs101-acpm-ipc.yaml
->>> index 4a1e3e3c0505aad6669cadf9b7b58aa4c7f284cb..c25e155926e5f44bd74f195cdbff3672c7499f8e 100644
->>> --- a/Documentation/devicetree/bindings/firmware/google,gs101-acpm-ipc.yaml
->>> +++ b/Documentation/devicetree/bindings/firmware/google,gs101-acpm-ipc.yaml
->>> @@ -45,6 +45,15 @@ properties:
->>>        compatible:
->>>          const: samsung,s2mpg10-pmic
->>>  
->>> +  pmic2:
->>
->> pmic-2
->>
->> Are there more pmics? Bindings are supposed to be complete (see writing
->> bindings) and if you did follow this approach earlier, you would nicely
->> call first "pmic-1" (instead of "pmic") and then "pmic-2".
+> So, today I tested everything on fresh kernel, 6.17.0-rc6, without any
+> patches.
 > 
-> There aren't any more PMICs on ACPM, no. At the time 'pmic' was added, it wasn't clear
-> unfortunately that two nodes would be needed in the end.
+> My config is: https://zerobin.net/?ebecc538f6caa22b#88c2k08G8+cZoMjgU9N/WYy28qQjyBW+/H78ygujZxY=
+> It was generated from Debian config using localmodconfig.
+> I added few tweaks, in particular I enabled CONFIG_DEBUG_PINCTRL.
 > 
-> See also https://lore.kernel.org/all/963bbf8db71efc0d729bb9141c133df2c56881fc.camel@linaro.org/
+> # cat /proc/cmdline 
+> BOOT_IMAGE=/@rootfs/boot/vmlinuz-6.17.0-rc6 root=UUID=015793d4-ad51-4da7-844b-fcc3bcb13a0b ro rootflags=subvol=@rootfs log_buf_len=4M ignore_loglevel
 > 
-> That said, I believe we can change the existing node name from pmic to pmic-1 without
-> any driver breaking. The sysfs path would change, but I don't think anybody cares about
-> it at this stage, so I think such a change would be fine. The ACPM driver doesn't care
-> about node names and instantiates all children regardless of name.
+> I run this script:
+> https://zerobin.net/?327f3aa3ef7ce845#Ycu017J9YbRga8uGaCKRzsH7J/lB8D4RudpwTll5lbo=
 > 
-> I propose to update the binding (and DTS subsequently) to add pmic-1, to allow 'pmic' as
-> a legacy fallback (i.e. to not issue errors during validation of existing DTSs until
-> they're updated) and to use pmic-2 for the 2nd pmic.
+> This script runs "rtcwake -s 6 -m mem" multiple times. Sometimes my laptop wakes on timer (because of rtcwake),
+> and sometimes it wakes up too early on its own (and this is a bug).
 > 
-> OK?
+> My script did suspend 7 times:
+> 
+> # dmesg | grep s2idle
+> [  117.934504] PM: suspend entry (s2idle)
+> [  127.141741] PM: suspend entry (s2idle)
+> [  131.299554] PM: suspend entry (s2idle)
+> [  140.034802] PM: suspend entry (s2idle)
+> [  144.592260] PM: suspend entry (s2idle)
+> [  154.038621] PM: suspend entry (s2idle)
+> [  163.034299] PM: suspend entry (s2idle)
+> 
+> Out of them my laptop woke up on timer 4 times and on its own (i. e. due to bug) 3 times:
+> 
+> # dmesg | grep 'woke up'
+> [  126.087936] will-wake: attempt 0: woke up in time
+> [  130.248820] will-wake: attempt 1: woke up early
+> [  138.988770] will-wake: attempt 2: woke up in time
+> [  143.545973] will-wake: attempt 3: woke up early
+> [  152.993654] will-wake: attempt 4: woke up in time
+> [  161.988956] will-wake: attempt 5: woke up in time
+> [  166.329080] will-wake: attempt 6: woke up early
+> 
+> Here is full output of "dmesg --level=debug+":
+> https://zerobin.net/?f704a2d56603f4ec#SRrzc2mt2FNNqcltx/ULmtLZRdRH9frdgoODU03AXwE=
+> 
+> /proc/interrupts:
+> https://zerobin.net/?b7ba5047ca84ab29#TjMUjkAdhpIuKbnvPpuYyNWa/ilA/ciGKwwSbx6KRFc=
 
-So deprecate 'pmic' and add new 'pmic-1'.
 
-Best regards,
-Krzysztof
+  14:          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0       4202          0          0          0          0          0          0          0          0          0          0          0 IR-IO-APIC   14-fasteoi   INTC1085:00
+
+
+ 204:          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0       4199          0          0          0          0          0          0          0          0          0          0          0 intel-gpio  355  VEN_0488:00
+
+
+Sounds like it comes via GPIO, but it's not handled as touchpad IRQ. You may
+try to add a quirk to prevent touchpad IRQ from waking the system. That should
+help I believe.
+Something like "ignore_wake=INTC1085:00@355" in the kernel command line.
+If it helps, update drivers/gpio/gpiolib-acpi-quirks.c accordingly.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
