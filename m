@@ -1,166 +1,111 @@
-Return-Path: <linux-gpio+bounces-28274-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28275-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C000C4459C
-	for <lists+linux-gpio@lfdr.de>; Sun, 09 Nov 2025 20:08:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9850C44981
+	for <lists+linux-gpio@lfdr.de>; Sun, 09 Nov 2025 23:56:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 83A754E2C03
-	for <lists+linux-gpio@lfdr.de>; Sun,  9 Nov 2025 19:08:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 95434188A710
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 Nov 2025 22:56:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BEF023184A;
-	Sun,  9 Nov 2025 19:08:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3422C26D4C4;
+	Sun,  9 Nov 2025 22:56:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CncBKdmz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RN7wdptD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD24219A8D;
-	Sun,  9 Nov 2025 19:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300F71D5141
+	for <linux-gpio@vger.kernel.org>; Sun,  9 Nov 2025 22:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762715296; cv=none; b=fQf212ltSp7sCymryd8rR73uhBTDrZWMM5f8C2ehLKpTd1pDrZfPg1mfO6OosS92LZipTcE2TCjH00XfK9VQ+59RQmrlWtO7hfwPyu1H9n1Kk7S/CY/jeHxLz4qbHVVH2qHOhyNx0yQIBvzOYzkxjSQ+XlfuzxCtPN0tDNj67PM=
+	t=1762728969; cv=none; b=gQUUwNfh3a7rSiYhWEGLg9UITDsw4/WOqzJ0DMxOxC1NaRslnYrb2XIMBDhB3/p1Oua67TOJWhdGJr7o8B976hIP7E62szXbuPNtQR5QOq9PYWsd4S4wzOBXdhznav+UAZmnohLsM3J0w6ktI1sbZs1WuUI7yUnxOoboaYUzAuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762715296; c=relaxed/simple;
-	bh=7cBe2s53pgaq8OwYOTsVaCJ0pzgL8FXTPGbrP6ryQAA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KF5d3aZFECGqkrR4tTKPA6nTgwhbBMGp9fzIX/aR//0RTH4IqN6GOeiX8empWfziJFL3p/+PaNT/QzHn+LfUNf9WVe1Klj3pXyvnZoGJtuODmkHYXDHje82wilNaDDmtoolD3Iaccf+3y++528nlt1VVlSwU85snJrzxyjy+83g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CncBKdmz; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762715295; x=1794251295;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7cBe2s53pgaq8OwYOTsVaCJ0pzgL8FXTPGbrP6ryQAA=;
-  b=CncBKdmzUN7QoMEX0RDCwPSd1lzxLoO5dS66A9PcRrAO5v0nbXMJ0mlY
-   JPIUaucoaEJdzsfyv45icHl4vLcuFa+x20Jz4DlJCaxXQp2WQHDRH45U4
-   v/0Vv+BAK+oqfkA8aPIpLVoo5D6hc1bohmkj47sFKRuwjhPMdf+6OsnhL
-   DEkKQtjS5zcO2PVbZZLGZ2LD9IGd6Xq4su/XhQZa09Ux8u5Y3OCdP5j7u
-   zipI2nDlEKBsU0q77xU0mfpj2o65Isey1yALPoQOQKQrpVN2k0rIg+J+a
-   jNOQFKKDfzzUvPnpoi5dWoUMDjNO2l6vXFV62y0v9Yb8dgfllhoO5qZia
-   w==;
-X-CSE-ConnectionGUID: aa88JqZ/Ry+yNXxCOmJfrg==
-X-CSE-MsgGUID: BsE/qMqtTySZQdYncKSZxg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="64479491"
-X-IronPort-AV: E=Sophos;i="6.19,292,1754982000"; 
-   d="scan'208";a="64479491"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 11:08:14 -0800
-X-CSE-ConnectionGUID: HCBAPvSQQTaUscXcD2iPyw==
-X-CSE-MsgGUID: riu3ZDGlQcuoChPZS5rPHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,292,1754982000"; 
-   d="scan'208";a="187753872"
-Received: from fpallare-mobl4.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.245.185])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 11:08:10 -0800
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1vIAlj-000000076HU-35mV;
-	Sun, 09 Nov 2025 21:08:07 +0200
-Date: Sun, 9 Nov 2025 21:08:07 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Askar Safin <safinaskar@gmail.com>
-Cc: Dell.Client.Kernel@dell.com, bartosz.golaszewski@linaro.org,
-	benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
-	linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org, regressions@lists.linux.dev,
-	rrangel@chromium.org, safinaskar@zohomail.com, superm1@kernel.org,
-	wse@tuxedocomputers.com
-Subject: Re: [REGRESSION][BISECTED] Dell Precision 7780 wakes up on its own
- from suspend
-Message-ID: <aRDml95nMPeknmUM@smile.fi.intel.com>
-References: <aKyDB7h7cUBOLbiJ@smile.fi.intel.com>
- <20250918183336.5633-1-safinaskar@gmail.com>
- <aRDl4tOD4CfVeSC2@smile.fi.intel.com>
+	s=arc-20240116; t=1762728969; c=relaxed/simple;
+	bh=PLFGWQAspdbCZRDef875kIYLM1p0E4rzqKQQiCIOPHU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PUTv13d5X5EXNllGcPartoMvk3QFpoZf78lWbza0GDDBS0vesnMYa2/D9dYzpKVtRtNEbiZBWrBlD9jXVov1Y3XWyX2zqpl3gQuE4MuIXPgYOmgDrUiTWqkGB3P9MtgInNEgEIH3sclQNaoycevECeRm3byGFGBTenxVcTLInLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RN7wdptD; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-37a49389deeso17295391fa.0
+        for <linux-gpio@vger.kernel.org>; Sun, 09 Nov 2025 14:56:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1762728963; x=1763333763; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vsVnuKc6cjflpQWcgE4gpq5jpcc5QldZ0S+6grxXq2Q=;
+        b=RN7wdptDmjEeTE/85vn8Q8Uonm2dZ13MD/I1PRDcV5tXjXm6n7aoTQV+DiU7Gl8C1G
+         LtNdVXHbHVAO6iXqo6ZblSuv2qhX3MmmhUuQkj7i71CqGK4V1Awoiv9WiaXaN09HopG1
+         +irTNiHo5lFl/Zjh2ww5k/Pn17YgKsKqcC01lCWUuEhk6azncZBx6dkzq3OgjlfGLFHG
+         dSuOTvCN0njp3r3iPXud39G7F6+DOxjZxPsk0CCbVk+qKKhBinBD2Jjd4yzIe7A3VriJ
+         YISUPoEdN69At2IRAbhU3RJk/ezl1nOgH9lotOJFqU6k+ABKA7DosoZ3tb7+PVn5bwNO
+         4hcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762728963; x=1763333763;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=vsVnuKc6cjflpQWcgE4gpq5jpcc5QldZ0S+6grxXq2Q=;
+        b=rszfipN5PRlH5BKsOtkBMhzJaDu5S+qLrQQ3MhbbB16bAEVjb/6RDEN5adUzgZGdn4
+         zbyvHy6JGHCIpTF+KQx9+UoIsxzAvXCgbNqQ0kfkrbCR3c+32brJJk3jeFNJSw/KgxbP
+         xSEPzlq2x0Ob2RTQDaM8xq4QPeeBm4ToAtLv5jD/8R/86ufiP8tjltaG8nTvCf1l1PeP
+         MNJUE094a/jsktGySf6Qgq/uweNzy/6HMMqPk9evRI0tdv1EF6q0vCWpjtrIz0Otk65c
+         BjrMKcoWUYXEHplyAjk2Q+sNoT/YMlsjikNs/5nlzJPN9L1bUpFfEKfz4/1iCHFx6lbN
+         nADQ==
+X-Gm-Message-State: AOJu0YyP2JAfulJc+TRoNOxWOcKJK5CInrdN6dE2ksUo7hCKW9EjmpIE
+	vkIH+ajj15nDonnWo9VfHatXJ3q6nxyEcYErgGftFUQ0WtC3jpzDNCjZK2AfKzFZizZbeyWhqbL
+	zrVKJDuzaAC3XB3SOcXQstIzcFR3UjKtTemID2CGb/QqZDaxdbRMP
+X-Gm-Gg: ASbGncsKaecUtT6qmo8GHyjT9M6KrzNj9C4o3VrSVwED10q/8aQy8iR/ToE7n7GgnEN
+	MfqZ9ZrTzv8p7fvpccuORQxvZpdZbjsKyvITZjLUoSwi9lp7PqgG0rYfJhrf4QKxOaAz0stw8A2
+	/AjG0FGqqmsdD0iYfRgTmSgBwkJ0A+i4GyQTjhiPKj5O48bd+5pss4ftqGZfyuqAKiOX9bZtopJ
+	Hb8f+nEXhjrPGTha6A4xclrAMt/JN2PiM5pLLLKmpBTZt1/E0ZVNy7O9U5Q2R5sQmNGZz4=
+X-Google-Smtp-Source: AGHT+IGxal11KMK0AVWrPPETyfd2Fbys/t+t+fib2c6sSU5/wtz3kucnMR8Cgt91zKKPda+AvoBQHik9p8Say+Amk8Y=
+X-Received: by 2002:a05:6512:3c8c:b0:58a:92cc:581d with SMTP id
+ 2adb3069b0e04-5945f1e0185mr2142297e87.50.1762728963144; Sun, 09 Nov 2025
+ 14:56:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aRDl4tOD4CfVeSC2@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <cover.1761906880.git.geert+renesas@glider.be>
+In-Reply-To: <cover.1761906880.git.geert+renesas@glider.be>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sun, 9 Nov 2025 23:55:51 +0100
+X-Gm-Features: AWmQ_bnqa0cEGYyZL8QXQZaZ7D5Q2RPrSMm_Zqk2iLrLMm8olzmGDV2oTbnQTJ0
+Message-ID: <CACRpkdYw63fNruavFCn6x83VqaGw2JJj_-6D+j17kin-7YNDwA@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: renesas: Updates for v6.19
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Nov 09, 2025 at 09:05:07PM +0200, Andy Shevchenko wrote:
-> On Thu, Sep 18, 2025 at 09:33:36PM +0300, Askar Safin wrote:
-> > Andy Shevchenko:
-> > > In other words we need to enable debug of the pin control subsystem and see
-> > > what it will print in dmesg.
-> > 
-> > You mean I should enable CONFIG_DEBUG_PINCTRL? Okay, I did this.
-> > 
-> > So, today I tested everything on fresh kernel, 6.17.0-rc6, without any
-> > patches.
-> > 
-> > My config is: https://zerobin.net/?ebecc538f6caa22b#88c2k08G8+cZoMjgU9N/WYy28qQjyBW+/H78ygujZxY=
-> > It was generated from Debian config using localmodconfig.
-> > I added few tweaks, in particular I enabled CONFIG_DEBUG_PINCTRL.
-> > 
-> > # cat /proc/cmdline 
-> > BOOT_IMAGE=/@rootfs/boot/vmlinuz-6.17.0-rc6 root=UUID=015793d4-ad51-4da7-844b-fcc3bcb13a0b ro rootflags=subvol=@rootfs log_buf_len=4M ignore_loglevel
-> > 
-> > I run this script:
-> > https://zerobin.net/?327f3aa3ef7ce845#Ycu017J9YbRga8uGaCKRzsH7J/lB8D4RudpwTll5lbo=
-> > 
-> > This script runs "rtcwake -s 6 -m mem" multiple times. Sometimes my laptop wakes on timer (because of rtcwake),
-> > and sometimes it wakes up too early on its own (and this is a bug).
-> > 
-> > My script did suspend 7 times:
-> > 
-> > # dmesg | grep s2idle
-> > [  117.934504] PM: suspend entry (s2idle)
-> > [  127.141741] PM: suspend entry (s2idle)
-> > [  131.299554] PM: suspend entry (s2idle)
-> > [  140.034802] PM: suspend entry (s2idle)
-> > [  144.592260] PM: suspend entry (s2idle)
-> > [  154.038621] PM: suspend entry (s2idle)
-> > [  163.034299] PM: suspend entry (s2idle)
-> > 
-> > Out of them my laptop woke up on timer 4 times and on its own (i. e. due to bug) 3 times:
-> > 
-> > # dmesg | grep 'woke up'
-> > [  126.087936] will-wake: attempt 0: woke up in time
-> > [  130.248820] will-wake: attempt 1: woke up early
-> > [  138.988770] will-wake: attempt 2: woke up in time
-> > [  143.545973] will-wake: attempt 3: woke up early
-> > [  152.993654] will-wake: attempt 4: woke up in time
-> > [  161.988956] will-wake: attempt 5: woke up in time
-> > [  166.329080] will-wake: attempt 6: woke up early
-> > 
-> > Here is full output of "dmesg --level=debug+":
-> > https://zerobin.net/?f704a2d56603f4ec#SRrzc2mt2FNNqcltx/ULmtLZRdRH9frdgoODU03AXwE=
-> > 
-> > /proc/interrupts:
-> > https://zerobin.net/?b7ba5047ca84ab29#TjMUjkAdhpIuKbnvPpuYyNWa/ilA/ciGKwwSbx6KRFc=
-> 
-> 
->   14:          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0       4202          0          0          0          0          0          0          0          0          0          0          0 IR-IO-APIC   14-fasteoi   INTC1085:00
-> 
-> 
->  204:          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0       4199          0          0          0          0          0          0          0          0          0          0          0 intel-gpio  355  VEN_0488:00
-> 
-> 
-> Sounds like it comes via GPIO, but it's not handled as touchpad IRQ. You may
-> try to add a quirk to prevent touchpad IRQ from waking the system. That should
-> help I believe.
-> Something like "ignore_wake=INTC1085:00@355" in the kernel command line.
-> If it helps, update drivers/gpio/gpiolib-acpi-quirks.c accordingly.
+On Fri, Oct 31, 2025 at 11:44=E2=80=AFAM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-It might be actually the touchpad controller name (as I see in the quirk table):
+> The following changes since commit 3a8660878839faadb4f1a6dd72c3179c1df567=
+87:
+>
+>   Linux 6.18-rc1 (2025-10-12 13:42:36 -0700)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git=
+ tags/renesas-pinctrl-for-v6.19-tag1
+>
+> for you to fetch changes up to a5fad3aeff41f89ac94230d66ee5f9c1526cb3ce:
+>
+>   pinctrl: renesas: rzg2l: Remove useless wrappers (2025-10-27 11:53:27 +=
+0100)
 
-	ignore_wake=VEN_0488:00@355
+Pulled in, sorry for the delay!
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yours,
+Linus Walleij
 
