@@ -1,171 +1,159 @@
-Return-Path: <linux-gpio+bounces-28264-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28265-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D6D1C432F5
-	for <lists+linux-gpio@lfdr.de>; Sat, 08 Nov 2025 19:11:39 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F535C43E53
+	for <lists+linux-gpio@lfdr.de>; Sun, 09 Nov 2025 14:01:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2B5D04E1CF8
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Nov 2025 18:11:38 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5BEF64E4953
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 Nov 2025 13:01:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED5D5258EF6;
-	Sat,  8 Nov 2025 18:11:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 465412F60DA;
+	Sun,  9 Nov 2025 13:01:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LCWXQdby"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EiUmTl27"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF998244687
-	for <linux-gpio@vger.kernel.org>; Sat,  8 Nov 2025 18:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D941E2EBBA1;
+	Sun,  9 Nov 2025 13:01:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762625493; cv=none; b=NWUQ/5hKAt3raA1T7IVXFZ7TxWBZvJpMf4FmAk6GsaJ7+mFmn9tRf7363elyU8BOVvdM55A42v/0ZPgISHhAdKEtmyZEMrrT03rqON1rT5Su5xLKOamn889v+PRxIGaowVAWqdcgTRixnOnypKNKWvp+J5Sdty8g3inXFGufPfw=
+	t=1762693286; cv=none; b=nvNqdFmtuUM4mQmr3oV8rHyH1/AV+UxWRXghRGrGZLa2Spv8lyPbw8gKabjsc5IKHCOSTpnOTIKYSiswlCWZYikn//BeU9ZALLT6i/IzyYk3vXa1yvtPxFt0EiBujcXGTt4+Ntg/0prlWbBWmZZgx1NBGwL6BOVlEjvc/CA9etc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762625493; c=relaxed/simple;
-	bh=JT4E4MEFU83/3mKrCnilbHwCAWUTtHFX55YzJLTObfc=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=edC3HlKjJN2DG1rwSb+62zE+kMHimn+FFJUHW2se75ZWq8o8y3AUPnRjJOjHc52/DASSpeNUXUfMOa4WpuNshY94jhZshRnFsfQZmUnVQ7hIIoBvRPhkUFyY0rJatzwE4iWoEDMMJpwiTcQcrfkad7rzqxuqT7PHobxZXynB5NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LCWXQdby; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762625492; x=1794161492;
-  h=date:from:to:cc:subject:message-id;
-  bh=JT4E4MEFU83/3mKrCnilbHwCAWUTtHFX55YzJLTObfc=;
-  b=LCWXQdbyWfFogBCueomIxL/hY5S0mFP1Th2W7onZtISbubgC3ozimfqg
-   vi6z/N0cqiUwgDhuNw7Fjy78jcRm2uMC70ThGHkRlYxsRm6zFvY0ccgWb
-   TADAg+FGrPYAzgvVAieh6LvtjxfXRAzeWuU9/oacHAKUnZFcZjyQiS+yZ
-   MzVpA8geOeZEoPS0Kung+eYkm/3VECR8WnZGD1D8WHJf2bt3eRwbMmA3q
-   8n9ppqSu6yZglRorKWeueCDTZ2hu+dNmi95nZwlbWo5XLn2Gwvmp3imkh
-   9svbJzWfRotofz0QCCAe+YPJqlzjXZJ/pkCeGj4BZB8RKK1Ki2lcK0QHP
-   g==;
-X-CSE-ConnectionGUID: rJdJYxHaRQyMdVA9jB5umw==
-X-CSE-MsgGUID: hE4zfMmoT56yVgOz7KezGg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11607"; a="76191163"
-X-IronPort-AV: E=Sophos;i="6.19,290,1754982000"; 
-   d="scan'208";a="76191163"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2025 10:11:32 -0800
-X-CSE-ConnectionGUID: W0fLC1TMRlyqI5gQzHG/Vg==
-X-CSE-MsgGUID: Tg0fttwFQtmIRRKPko08Ww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,290,1754982000"; 
-   d="scan'208";a="188752655"
-Received: from lkp-server01.sh.intel.com (HELO 6ef82f2de774) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 08 Nov 2025 10:11:30 -0800
-Received: from kbuild by 6ef82f2de774 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vHnPM-0001Jv-12;
-	Sat, 08 Nov 2025 18:11:28 +0000
-Date: Sun, 09 Nov 2025 02:11:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-current] BUILD SUCCESS
- 4436f484cb437ba28dc58b7f787a6f80a65aa5c3
-Message-ID: <202511090220.OCCBiIYl-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1762693286; c=relaxed/simple;
+	bh=zNi9nu3L6TvcyXChQiHADlE5BR7XOd1UsthZfvb4G1U=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Wj8zfwqS3bH9wFQQVkAwJ+fiul/J2EAI+3DWzK893jB/y+yllBK4B9G0G/BBpIY38/OaX5vrvKI/PuWlpcrRzJb4B2HCuJv1zqDCS3O8036GHVZ+Gf/jKulM4bRhp2oJ78X0fAyZp92u0LtrD3CmC0qfnb3z8FfRhT2bQ5jrcfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EiUmTl27; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6BF3C4CEF8;
+	Sun,  9 Nov 2025 13:00:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762693285;
+	bh=zNi9nu3L6TvcyXChQiHADlE5BR7XOd1UsthZfvb4G1U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=EiUmTl27nujv51T7if+PVcEwebMCbQCSCq+8xYpaEYI85RENWVNiRhQBbcZizkEcl
+	 BoNN96p+WxmZf8XdtZd2JsH89A3j92nUV/nviNZBdoUa+JlTXZfeI1MheP7j0cuQVS
+	 h92D51+L7hZ918wSo/TloZRFQb8IuVvMFsY/0olkMlPlIk7n0h9fCRAkSB/zrNZYUy
+	 o4R3RMn97X9Qp2F9/enYc19Uabz3of7vben/btpQkQj13pd57/4mn4NtxOfAoZl9rB
+	 nGuOIb3srFqktlT4NZZ/24ryLC2SYkCUPIwvyjQnO0esl0QpJC6RsjhO0psREWxDAE
+	 TbMdryqtL/QNQ==
+Date: Sun, 9 Nov 2025 12:59:56 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre
+ Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea
+ <claudiu.beznea@tuxon.dev>, Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, David Miller
+ <davem@davemloft.net>, Linus Walleij <linus.walleij@linaro.org>, Bartosz
+ Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery
+ <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>, Lars-Peter
+ Clausen <lars@metafoo.de>, Jacky Huang <ychuang3@nuvoton.com>, Shan-Chun
+ Hung <schung@nuvoton.com>, Yury Norov <yury.norov@gmail.com>, Rasmus
+ Villemoes <linux@rasmusvillemoes.dk>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Johannes Berg <johannes@sipsolutions.net>,
+ Jakub Kicinski <kuba@kernel.org>, Alex Elder <elder@ieee.org>, David Laight
+ <david.laight.linux@gmail.com>, Vincent Mailhol
+ <mailhol.vincent@wanadoo.fr>, Jason Baron <jbaron@akamai.com>, Borislav
+ Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Kim Seer Paller
+ <kimseer.paller@analog.com>, David Lechner <dlechner@baylibre.com>, Nuno
+ =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Richard Genoud <richard.genoud@bootlin.com>, Cosmin Tanislav
+ <demonsingur@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, Jianping
+ Shen <Jianping.Shen@de.bosch.com>, linux-clk@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linux-edac@vger.kernel.org,
+ qat-linux@intel.com, linux-gpio@vger.kernel.org,
+ linux-aspeed@lists.ozlabs.org, linux-iio@vger.kernel.org,
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next v5 10/23] iio: imu: smi330: #undef
+ field_{get,prep}() before definition
+Message-ID: <20251109125956.106c9a1a@jic23-huawei>
+In-Reply-To: <CAMuHMdUkm2hxSW1yeKn8kZkSrosr8V-QTrHKSMkY2CPJ8UH_BQ@mail.gmail.com>
+References: <cover.1761588465.git.geert+renesas@glider.be>
+	<97549838f28a1bb7861cfb42ee687f832942b13a.1761588465.git.geert+renesas@glider.be>
+	<20251102104326.0f1db96a@jic23-huawei>
+	<CAMuHMdUkm2hxSW1yeKn8kZkSrosr8V-QTrHKSMkY2CPJ8UH_BQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-branch HEAD: 4436f484cb437ba28dc58b7f787a6f80a65aa5c3  gpio: tb10x: Drop unused tb10x_set_bits() function
+On Mon, 3 Nov 2025 11:09:36 +0100
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-elapsed time: 2911m
+> Hi Jonathan,
+> 
+> On Sun, 2 Nov 2025 at 11:43, Jonathan Cameron <jic23@kernel.org> wrote:
+> > On Mon, 27 Oct 2025 19:41:44 +0100
+> > Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+> >  
+> > > Prepare for the advent of globally available common field_get() and
+> > > field_prep() macros by undefining the symbols before defining local
+> > > variants.  This prevents redefinition warnings from the C preprocessor
+> > > when introducing the common macros later.
+> > >
+> > > Suggested-by: Yury Norov <yury.norov@gmail.com>
+> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>  
+> >
+> > So this is going to make a mess of merging your series given this is
+> > queued up for next merge window.
+> >
+> > I can pick this one up perhaps and we loop back to the replacement of
+> > these in a future patch?  Or perhaps go instead with a rename
+> > of these two which is probably nicer in the intermediate state than
+> > undefs.  
+> 
+> Renaming would mean a lot of churn.
+> Just picking up the #undef patch should be simple and safe? The
+> removal of the underf and redef can be done in the next cycle.
+> Thanks!
 
-configs tested: 78
-configs skipped: 1
+Only 1 call of each of these in the driver, so churn is small either way.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+To avoid a bisection problem if your tree merges first I need to modify
+this stuff in the original patch or leave it for Linus to deal with as
+a merge conflict resolution which is mess I'd rather do without.
 
-tested configs:
-alpha                   allnoconfig    gcc-15.1.0
-alpha                  allyesconfig    gcc-15.1.0
-arc                    allmodconfig    gcc-15.1.0
-arc                     allnoconfig    gcc-15.1.0
-arc                    allyesconfig    gcc-15.1.0
-arm                    allmodconfig    gcc-15.1.0
-arm                     allnoconfig    clang-22
-arm                    allyesconfig    gcc-15.1.0
-arm64                  allmodconfig    clang-19
-arm64                   allnoconfig    gcc-15.1.0
-arm64                  allyesconfig    clang-22
-csky                   allmodconfig    gcc-15.1.0
-csky                    allnoconfig    gcc-15.1.0
-csky                   allyesconfig    gcc-15.1.0
-hexagon                allmodconfig    clang-17
-hexagon                 allnoconfig    clang-22
-hexagon                allyesconfig    clang-22
-hexagon     randconfig-001-20251107    clang-22
-hexagon     randconfig-002-20251107    clang-22
-i386                   allmodconfig    gcc-14
-i386                    allnoconfig    gcc-14
-i386                   allyesconfig    gcc-14
-loongarch              allmodconfig    clang-19
-loongarch               allnoconfig    clang-22
-loongarch              allyesconfig    clang-22
-loongarch   randconfig-001-20251107    gcc-15.1.0
-loongarch   randconfig-002-20251107    clang-19
-m68k                   allmodconfig    gcc-15.1.0
-m68k                    allnoconfig    gcc-15.1.0
-m68k                   allyesconfig    gcc-15.1.0
-microblaze             allmodconfig    gcc-15.1.0
-microblaze              allnoconfig    gcc-15.1.0
-microblaze             allyesconfig    gcc-15.1.0
-mips                   allmodconfig    gcc-15.1.0
-mips                    allnoconfig    gcc-15.1.0
-mips                   allyesconfig    gcc-15.1.0
-nios2                  allmodconfig    gcc-11.5.0
-nios2                   allnoconfig    gcc-11.5.0
-nios2                  allyesconfig    gcc-11.5.0
-nios2       randconfig-001-20251107    gcc-11.5.0
-nios2       randconfig-002-20251107    gcc-8.5.0
-openrisc               allmodconfig    gcc-15.1.0
-openrisc                allnoconfig    gcc-15.1.0
-openrisc               allyesconfig    gcc-15.1.0
-parisc                 allmodconfig    gcc-15.1.0
-parisc                  allnoconfig    gcc-15.1.0
-parisc                 allyesconfig    gcc-15.1.0
-powerpc                allmodconfig    gcc-15.1.0
-powerpc                 allnoconfig    gcc-15.1.0
-powerpc                allyesconfig    clang-22
-riscv                  allmodconfig    clang-22
-riscv                   allnoconfig    gcc-15.1.0
-riscv                  allyesconfig    clang-16
-riscv       randconfig-001-20251107    clang-22
-riscv       randconfig-002-20251107    gcc-13.4.0
-s390                   allmodconfig    clang-18
-s390                    allnoconfig    clang-22
-s390                   allyesconfig    gcc-15.1.0
-s390        randconfig-001-20251107    gcc-8.5.0
-s390        randconfig-002-20251107    gcc-15.1.0
-sh                     allmodconfig    gcc-15.1.0
-sh                      allnoconfig    gcc-15.1.0
-sh                     allyesconfig    gcc-15.1.0
-sh          randconfig-001-20251107    gcc-13.4.0
-sh          randconfig-002-20251107    gcc-11.5.0
-sparc                  allmodconfig    gcc-15.1.0
-sparc                   allnoconfig    gcc-15.1.0
-sparc                  allyesconfig    gcc-15.1.0
-sparc64                allmodconfig    clang-22
-sparc64                allyesconfig    gcc-15.1.0
-um                     allmodconfig    clang-19
-um                      allnoconfig    clang-22
-um                     allyesconfig    gcc-14
-x86_64                 allmodconfig    clang-20
-x86_64                  allnoconfig    clang-20
-x86_64                 allyesconfig    clang-20
-x86_64                rhel-9.4-rust    clang-20
-xtensa                  allnoconfig    gcc-15.1.0
+So I'll rebase now and rename these functions to have an smi330_ prefix.
+Better to potentially cause people problems when I have 23 patches
+on top of this (and hopefully no one is based on those yet) than when
+I have many more.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+So tweaked and pushed out a new version where this patch isn't needed.
+We can move to your new code next cycle.
+
+Jonathan
+
+
+
+> 
+> > > --- a/drivers/iio/imu/smi330/smi330_core.c
+> > > +++ b/drivers/iio/imu/smi330/smi330_core.c
+> > > @@ -68,7 +68,9 @@
+> > >  #define SMI330_SOFT_RESET_DELAY 2000
+> > >
+> > >  /* Non-constant mask variant of FIELD_GET() and FIELD_PREP() */
+> > > +#undef field_get
+> > >  #define field_get(_mask, _reg) (((_reg) & (_mask)) >> (ffs(_mask) - 1))
+> > > +#undef field_prep
+> > >  #define field_prep(_mask, _val) (((_val) << (ffs(_mask) - 1)) & (_mask))
+> > >
+> > >  #define SMI330_ACCEL_CHANNEL(_axis) {                                        \  
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+
 
