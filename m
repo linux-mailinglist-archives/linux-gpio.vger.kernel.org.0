@@ -1,116 +1,109 @@
-Return-Path: <linux-gpio+bounces-28276-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28277-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9BE33C44992
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 00:00:20 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBD23C4499E
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 00:02:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 59995188B4EF
-	for <lists+linux-gpio@lfdr.de>; Sun,  9 Nov 2025 23:00:45 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C1D224E4B9F
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 Nov 2025 23:02:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96C4026CE2B;
-	Sun,  9 Nov 2025 23:00:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7F4F26ED28;
+	Sun,  9 Nov 2025 23:02:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WphjKROj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="coGoAD+5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98CD71C861D
-	for <linux-gpio@vger.kernel.org>; Sun,  9 Nov 2025 23:00:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E133A221540
+	for <linux-gpio@vger.kernel.org>; Sun,  9 Nov 2025 23:02:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762729215; cv=none; b=eXelDdv5Z7RYRamGbHKDsCSvGQlMjIYqU+C3zdR3c0XVFOv1/awgoawDCJQtqN/4suEH6ycUSueUT3yzczvTrxoJgJrG5ZZ4QOQGgoZL6vuJBo7jfKlmjERJYmmGkJ0On/wq7gpmMKPWZ6gEfHV0qOYq6e/48wRo8kOZRNYW+/0=
+	t=1762729323; cv=none; b=BPaKw+eWbN1klgQ02pd47Cx2Ddq+BqbA7UOSlFCnrYdiuG5dV9/V6GzLOVLf9V2zHtAxbLvK52vzdHtxqH85R1kzQnOx6GmMOd5k80R0Sp7NB+5k1d/J5H5ohsFUNuUjlLUvS6clDBptx6psMCXF3n2rHOEWcJ26IIGFsdtX1H8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762729215; c=relaxed/simple;
-	bh=iKc25oQSbZRl7VlctllP5IsEdsg2xNByDusfO0Gzw60=;
+	s=arc-20240116; t=1762729323; c=relaxed/simple;
+	bh=3/L0T8rSm6gsiLWrh0ubcOyIYT6RaCJ1Xiq49GwI0nI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KOcM6FvTq1jjsjzpZWcECG/lg2S4l0u70XRMT1w7PjZ9q+tcP2lHJ7LH/GDsowO05YQwHGmkC0vRzD2ThUCSE4UuY1JLkOaRS19+O88E7FBckD+feWLD5EYW0ejiTA6XeQNr33Sz86mZf0RhtQ+0E/xHPEfScZE5MbPSo9EvdJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WphjKROj; arc=none smtp.client-ip=209.85.167.47
+	 To:Cc:Content-Type; b=p6kMf+2NlVd5bqOEQXw/EnkKBTG7PbV6u1mVvQUTADgNMk/6HnfqFmtqSxBz+NJJaU2Zjiate9ECQjTDaYnlyP/EtFCXyS6LQ+6II5ndXgpKkgWFYBidPGNr9iIWkSJQ2Z7u1/ZGn8yVD3FIox3vlVuq1/D6mYumuqJMxQM3nqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=coGoAD+5; arc=none smtp.client-ip=209.85.167.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-59445ee9738so1926330e87.3
-        for <linux-gpio@vger.kernel.org>; Sun, 09 Nov 2025 15:00:13 -0800 (PST)
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-592ff1d80feso2548203e87.2
+        for <linux-gpio@vger.kernel.org>; Sun, 09 Nov 2025 15:02:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1762729212; x=1763334012; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1762729320; x=1763334120; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iKc25oQSbZRl7VlctllP5IsEdsg2xNByDusfO0Gzw60=;
-        b=WphjKROjW0sjOXWleUeLfiRHTRkjfSJxEepHCq2MhCOv0cNvh2KFNW/O25Xgv1S7Kr
-         LEKhPHaCHOlNshdpvYhJCOf4GXhYS9wg1JW9rWwlQPWeVvkSz0Vsj/0P95T5IF7ho9ro
-         zGuxgn1krhhhDG1orrOPMip0uqijW1gYyEv1VX4sDRqRsC3d33o+f3tYOjJB81isWss/
-         Zof/sZzOsVyU130tAeS0z1yOQYVmfXGrfj/0vEXqt8dS4odWleY4pxO5kBlhZsAtYgYJ
-         PGr62g0XPg4AN/VvbF9IoL8K5+b0OTxgTZUdIrORCveQovdZ8RTinoIWrJvrrACPlEwd
-         DNCg==
+        bh=3/L0T8rSm6gsiLWrh0ubcOyIYT6RaCJ1Xiq49GwI0nI=;
+        b=coGoAD+5cxjVmuqTw06wNuC42yPJgph15O5XYIQAV4KHu04uIfEVw1/Oz36dpUBWac
+         pVYaX2Lk2P0Wr9bPUCojavFmJUPNiw2zk2N0iZRdNa2z5s4g9R9t+jnj2du1KLxJC+jN
+         21nO/zmz3Naf1B7y/8ILyhaVfYJNylzR1HZQcKBs9R5hG3f+O5U6Lnf0YKzL73pQEKA1
+         X6OUAIdUpgBmvUjWwHyIXWKaTb+ud7tdaRzzBolXmsBjHgiBjuj8JFWFlEWwyuWqETzQ
+         PfL1xVOwOMMKJay//Negz2oQQjeH5dIVoRHfVIWdcnrpGMNqHv13Z6vhwsmOpiceUKrb
+         7fCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762729212; x=1763334012;
+        d=1e100.net; s=20230601; t=1762729320; x=1763334120;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=iKc25oQSbZRl7VlctllP5IsEdsg2xNByDusfO0Gzw60=;
-        b=EXoL/HbG2U0GENVcG2ChHuY8mpf1tbp6S5Mal+4RxPbLxNoU1f79GAiBpbi8k5uW2y
-         hRRunRXROxNd9MA3I2oyuW5J/1kbp71xLqQar22riTI264O3ApHC32r5wwS6Lez1/aIo
-         /NwcVkDlzdPx+6DKaOQopL/UwbICOeq43aFdwElm6yDLRyi6PuQpl8bOEPm0Dm9UZpJU
-         zaaZLele9jLNsLVKmeGjyJmhjgp26tEbB0VNkaCFTm6KApdyuNoRXbGGJka3NwlaPv4F
-         kasofak4ANEZOrOo3QCa8JMB828ScjzWwmJY6Yq1l64S10Jsy/a+PzH+/C9KpF6u4kMJ
-         1JDA==
-X-Forwarded-Encrypted: i=1; AJvYcCU32nhpNMlOuWmkAdJWol1Y1QJLQZQl7v0lBzPG0Mu1waqYwIjXFngQYgKlX6N4g7EsAJZgzyoJCYOW@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHVPGNmtEwj7L8PR77yVQw5E8zuseAKefpuECNSKe1dVTJobNq
-	h3aBEWNosJh8OawJgaqeQSdouBW9zutwM+W9wsNxk2HiVwc2jrbcd4YLMzmf5g55l78D5XxJgvD
-	kA4M+lBPU91g4Lpf/f55dLv3rzwfmbY0tssuspykJXw==
-X-Gm-Gg: ASbGnctHTGDnqSOiN6xM7N4g9hMg83NsTVgiNr2h0LrOFQcNdJgLkBpRfi1cMulvUZ3
-	I+KGeGWSuepx5KLvZOziZPkBA4zdJvkCpWGEvPegZM20ijaM34tWN1M+r04SV4KuYQz2szIht7v
-	Acj1WI1txzkIkhxfyN1l6JCDbkNDPvSztHlJWS0tdXCNYsI58TpLi628rejskFIz1+aR9+h70oa
-	0qbYI5FuXo0Bf/68BvFP8JBxGglowG+/HHQjyvM8KRGwwS5amUCEA48OvdF
-X-Google-Smtp-Source: AGHT+IGJmOKTnUV+UniqvgrDA0c7KpeZCqg798RQ2zsDdVKtR6JZh2MyHXYjHqCd1zfIhK+2HuNAVW83h+gE7fAqk4w=
-X-Received: by 2002:a05:6512:3c96:b0:594:33fc:d52b with SMTP id
- 2adb3069b0e04-5945f1d9c97mr1634720e87.36.1762729211729; Sun, 09 Nov 2025
- 15:00:11 -0800 (PST)
+        bh=3/L0T8rSm6gsiLWrh0ubcOyIYT6RaCJ1Xiq49GwI0nI=;
+        b=LDFWWbdHLWAPw3R3JYlSnPquvY/xR55gpTnhDRfFY9a+lSF0o8ypRLcfLBXRA5dtq4
+         yzLnAu5RLcpk1sXVv6e0yGbvXQjUlwxL5ryypreERUxSPBncgpsMK7MzmcgsqkUS+EmM
+         BjzDvZ8vTfrXQ/Nlwn9cFmRzxxOsSOv73/5u+z3+Lf0ZsdoOeFNnO3A5j2c5uOAvVLJ4
+         1DiG9yhcuLyVaIyvCSdJhgVYhUYh7KNi8xvdqYALmGv07i1lcaYh2r8HAvaUlieSa5al
+         mcW8oRTScZZmcGl/H5KVH7QIJT4nX9Z6OV4RZQDQ1kLBIF1N6xlabauhshZmNqS9ODiV
+         W0FQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXj0mToJa7GNQcG6d4Hv/bIyrBwlYhs+sFvPnlwbE2kc/vydd7FdXud4hzLED1CX3FVtik5BoJljANG@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+TxgWSkBaA70aTod6KFyJRKcTLiG17RrJz6wzR48WFNQmvoru
+	FRDnIVr7vcYFD3m149vRlqI60+N5n+GWvG0H5ClldvCvhFFIUFCr+udv2j+rcNNAkzd7JVVqf27
+	hUtpFUxE/RnYUUg1hZLAdaoCB+181tphm1Ivgh8sF5Q==
+X-Gm-Gg: ASbGncsPboP4Gd4ztGSMkA+yZL8cNqDIuPQWRSugNUZuouWf1nBy7CbmV0RwV0Il6bF
+	Izu5p+ZQtuKhvpqWNxg68nG+AaulKyEaD4h8+AocQdDjnFdeekAai+LhKAa0UmxIEzcd8EaK4A2
+	CRIgJDwV3Qxq2bPgX85E3m7D2VAZmHVBQxa4T16LrRn+hXh9nkhNqK8cst2fHZNKoFmYiozK5Fh
+	7oS/GsRr8mT9m+t+JbyBARCqnGTvxgh8WK51j7NPkOiLBKBnR0aHB/JXZOOngi27XB5qOI=
+X-Google-Smtp-Source: AGHT+IEJqZS9dOiS0BTy1PWLU/LhcYPWlnuekntfeZstCDkN8jIWeEWUqE9o1x1da70TwTio8LtGZ7NuzutBZINWzRY=
+X-Received: by 2002:a05:6512:3d04:b0:594:2df2:84ab with SMTP id
+ 2adb3069b0e04-5945f186cb5mr1826403e87.8.1762729320057; Sun, 09 Nov 2025
+ 15:02:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251031111628.143924-1-marco.crivellari@suse.com> <20251031111628.143924-2-marco.crivellari@suse.com>
-In-Reply-To: <20251031111628.143924-2-marco.crivellari@suse.com>
+References: <20250929031031.2230-1-vulab@iscas.ac.cn> <20251028030509.835-1-vulab@iscas.ac.cn>
+In-Reply-To: <20251028030509.835-1-vulab@iscas.ac.cn>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sun, 9 Nov 2025 23:59:59 +0100
-X-Gm-Features: AWmQ_bkG8qfTXswmVWDlpz0qlKljyoxRJh0UQhZNWg_36sNiFhAbKQW9SolVsi0
-Message-ID: <CACRpkdYkdhp_eHLP688gAwnrJppqkQn=RT_Lg4A+kd0uBqBBcQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] gpio: cdev: replace use of system_wq with system_percpu_wq
-To: Marco Crivellari <marco.crivellari@suse.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	Frederic Weisbecker <frederic@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Michal Hocko <mhocko@suse.com>, Bartosz Golaszewski <brgl@bgdev.pl>, Kent Gibson <warthog618@gmail.com>
+Date: Mon, 10 Nov 2025 00:01:47 +0100
+X-Gm-Features: AWmQ_bmRbj12Hfpc6B_yMJuZyJtxM4kU8pIbrDCZ7L1PmiDyOKOscnGYzc0nt7M
+Message-ID: <CACRpkdbwzEG8fEO7mbgXTW3nn4rLUJUidHW7GJ+-OWYtch8PNA@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: cirrus: Fix fwnode leak in cs42l43_pin_probe()
+To: Haotian Zhang <vulab@iscas.ac.cn>
+Cc: David Rhodes <david.rhodes@cirrus.com>, Richard Fitzgerald <rf@opensource.cirrus.com>, 
+	Charles Keepax <ckeepax@opensource.cirrus.com>, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 31, 2025 at 12:16=E2=80=AFPM Marco Crivellari
-<marco.crivellari@suse.com> wrote:
+On Tue, Oct 28, 2025 at 4:06=E2=80=AFAM Haotian Zhang <vulab@iscas.ac.cn> w=
+rote:
 
-> Currently if a user enqueue a work item using schedule_delayed_work() the
-> used wq is "system_wq" (per-cpu wq) while queue_delayed_work() use
-> WORK_CPU_UNBOUND (used when a cpu is not specified). The same applies to
-> schedule_work() that is using system_wq and queue_work(), that makes use
-> again of WORK_CPU_UNBOUND.
+> The driver calls fwnode_get_named_child_node() which takes a reference
+> on the child node, but never releases it, which causes a reference leak.
 >
-> This lack of consistency cannot be addressed without refactoring the API.
+> Fix by using devm_add_action_or_reset() to automatically release the
+> reference when the device is removed.
 >
-> system_wq should be the per-cpu workqueue, yet in this name nothing makes
-> that clear, so replace system_wq with system_percpu_wq.
->
-> The old wq (system_wq) will be kept for a few release cycles.
->
-> Suggested-by: Tejun Heo <tj@kernel.org>
-> Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
+> Fixes: d5282a539297 ("pinctrl: cs42l43: Add support for the cs42l43")
+> Suggested-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> Signed-off-by: Haotian Zhang <vulab@iscas.ac.cn>
 
-Looked over the similar changes to FS core etc. It makes sense.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Patch applied.
 
 Yours,
 Linus Walleij
