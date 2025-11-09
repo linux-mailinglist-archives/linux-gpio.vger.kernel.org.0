@@ -1,110 +1,116 @@
-Return-Path: <linux-gpio+bounces-28275-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28276-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9850C44981
-	for <lists+linux-gpio@lfdr.de>; Sun, 09 Nov 2025 23:56:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BE33C44992
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 00:00:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 95434188A710
-	for <lists+linux-gpio@lfdr.de>; Sun,  9 Nov 2025 22:56:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 59995188B4EF
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 Nov 2025 23:00:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3422C26D4C4;
-	Sun,  9 Nov 2025 22:56:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96C4026CE2B;
+	Sun,  9 Nov 2025 23:00:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RN7wdptD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WphjKROj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300F71D5141
-	for <linux-gpio@vger.kernel.org>; Sun,  9 Nov 2025 22:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98CD71C861D
+	for <linux-gpio@vger.kernel.org>; Sun,  9 Nov 2025 23:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762728969; cv=none; b=gQUUwNfh3a7rSiYhWEGLg9UITDsw4/WOqzJ0DMxOxC1NaRslnYrb2XIMBDhB3/p1Oua67TOJWhdGJr7o8B976hIP7E62szXbuPNtQR5QOq9PYWsd4S4wzOBXdhznav+UAZmnohLsM3J0w6ktI1sbZs1WuUI7yUnxOoboaYUzAuM=
+	t=1762729215; cv=none; b=eXelDdv5Z7RYRamGbHKDsCSvGQlMjIYqU+C3zdR3c0XVFOv1/awgoawDCJQtqN/4suEH6ycUSueUT3yzczvTrxoJgJrG5ZZ4QOQGgoZL6vuJBo7jfKlmjERJYmmGkJ0On/wq7gpmMKPWZ6gEfHV0qOYq6e/48wRo8kOZRNYW+/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762728969; c=relaxed/simple;
-	bh=PLFGWQAspdbCZRDef875kIYLM1p0E4rzqKQQiCIOPHU=;
+	s=arc-20240116; t=1762729215; c=relaxed/simple;
+	bh=iKc25oQSbZRl7VlctllP5IsEdsg2xNByDusfO0Gzw60=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PUTv13d5X5EXNllGcPartoMvk3QFpoZf78lWbza0GDDBS0vesnMYa2/D9dYzpKVtRtNEbiZBWrBlD9jXVov1Y3XWyX2zqpl3gQuE4MuIXPgYOmgDrUiTWqkGB3P9MtgInNEgEIH3sclQNaoycevECeRm3byGFGBTenxVcTLInLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RN7wdptD; arc=none smtp.client-ip=209.85.208.178
+	 To:Cc:Content-Type; b=KOcM6FvTq1jjsjzpZWcECG/lg2S4l0u70XRMT1w7PjZ9q+tcP2lHJ7LH/GDsowO05YQwHGmkC0vRzD2ThUCSE4UuY1JLkOaRS19+O88E7FBckD+feWLD5EYW0ejiTA6XeQNr33Sz86mZf0RhtQ+0E/xHPEfScZE5MbPSo9EvdJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WphjKROj; arc=none smtp.client-ip=209.85.167.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-37a49389deeso17295391fa.0
-        for <linux-gpio@vger.kernel.org>; Sun, 09 Nov 2025 14:56:04 -0800 (PST)
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-59445ee9738so1926330e87.3
+        for <linux-gpio@vger.kernel.org>; Sun, 09 Nov 2025 15:00:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1762728963; x=1763333763; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1762729212; x=1763334012; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vsVnuKc6cjflpQWcgE4gpq5jpcc5QldZ0S+6grxXq2Q=;
-        b=RN7wdptDmjEeTE/85vn8Q8Uonm2dZ13MD/I1PRDcV5tXjXm6n7aoTQV+DiU7Gl8C1G
-         LtNdVXHbHVAO6iXqo6ZblSuv2qhX3MmmhUuQkj7i71CqGK4V1Awoiv9WiaXaN09HopG1
-         +irTNiHo5lFl/Zjh2ww5k/Pn17YgKsKqcC01lCWUuEhk6azncZBx6dkzq3OgjlfGLFHG
-         dSuOTvCN0njp3r3iPXud39G7F6+DOxjZxPsk0CCbVk+qKKhBinBD2Jjd4yzIe7A3VriJ
-         YISUPoEdN69At2IRAbhU3RJk/ezl1nOgH9lotOJFqU6k+ABKA7DosoZ3tb7+PVn5bwNO
-         4hcQ==
+        bh=iKc25oQSbZRl7VlctllP5IsEdsg2xNByDusfO0Gzw60=;
+        b=WphjKROjW0sjOXWleUeLfiRHTRkjfSJxEepHCq2MhCOv0cNvh2KFNW/O25Xgv1S7Kr
+         LEKhPHaCHOlNshdpvYhJCOf4GXhYS9wg1JW9rWwlQPWeVvkSz0Vsj/0P95T5IF7ho9ro
+         zGuxgn1krhhhDG1orrOPMip0uqijW1gYyEv1VX4sDRqRsC3d33o+f3tYOjJB81isWss/
+         Zof/sZzOsVyU130tAeS0z1yOQYVmfXGrfj/0vEXqt8dS4odWleY4pxO5kBlhZsAtYgYJ
+         PGr62g0XPg4AN/VvbF9IoL8K5+b0OTxgTZUdIrORCveQovdZ8RTinoIWrJvrrACPlEwd
+         DNCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762728963; x=1763333763;
+        d=1e100.net; s=20230601; t=1762729212; x=1763334012;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=vsVnuKc6cjflpQWcgE4gpq5jpcc5QldZ0S+6grxXq2Q=;
-        b=rszfipN5PRlH5BKsOtkBMhzJaDu5S+qLrQQ3MhbbB16bAEVjb/6RDEN5adUzgZGdn4
-         zbyvHy6JGHCIpTF+KQx9+UoIsxzAvXCgbNqQ0kfkrbCR3c+32brJJk3jeFNJSw/KgxbP
-         xSEPzlq2x0Ob2RTQDaM8xq4QPeeBm4ToAtLv5jD/8R/86ufiP8tjltaG8nTvCf1l1PeP
-         MNJUE094a/jsktGySf6Qgq/uweNzy/6HMMqPk9evRI0tdv1EF6q0vCWpjtrIz0Otk65c
-         BjrMKcoWUYXEHplyAjk2Q+sNoT/YMlsjikNs/5nlzJPN9L1bUpFfEKfz4/1iCHFx6lbN
-         nADQ==
-X-Gm-Message-State: AOJu0YyP2JAfulJc+TRoNOxWOcKJK5CInrdN6dE2ksUo7hCKW9EjmpIE
-	vkIH+ajj15nDonnWo9VfHatXJ3q6nxyEcYErgGftFUQ0WtC3jpzDNCjZK2AfKzFZizZbeyWhqbL
-	zrVKJDuzaAC3XB3SOcXQstIzcFR3UjKtTemID2CGb/QqZDaxdbRMP
-X-Gm-Gg: ASbGncsKaecUtT6qmo8GHyjT9M6KrzNj9C4o3VrSVwED10q/8aQy8iR/ToE7n7GgnEN
-	MfqZ9ZrTzv8p7fvpccuORQxvZpdZbjsKyvITZjLUoSwi9lp7PqgG0rYfJhrf4QKxOaAz0stw8A2
-	/AjG0FGqqmsdD0iYfRgTmSgBwkJ0A+i4GyQTjhiPKj5O48bd+5pss4ftqGZfyuqAKiOX9bZtopJ
-	Hb8f+nEXhjrPGTha6A4xclrAMt/JN2PiM5pLLLKmpBTZt1/E0ZVNy7O9U5Q2R5sQmNGZz4=
-X-Google-Smtp-Source: AGHT+IGxal11KMK0AVWrPPETyfd2Fbys/t+t+fib2c6sSU5/wtz3kucnMR8Cgt91zKKPda+AvoBQHik9p8Say+Amk8Y=
-X-Received: by 2002:a05:6512:3c8c:b0:58a:92cc:581d with SMTP id
- 2adb3069b0e04-5945f1e0185mr2142297e87.50.1762728963144; Sun, 09 Nov 2025
- 14:56:03 -0800 (PST)
+        bh=iKc25oQSbZRl7VlctllP5IsEdsg2xNByDusfO0Gzw60=;
+        b=EXoL/HbG2U0GENVcG2ChHuY8mpf1tbp6S5Mal+4RxPbLxNoU1f79GAiBpbi8k5uW2y
+         hRRunRXROxNd9MA3I2oyuW5J/1kbp71xLqQar22riTI264O3ApHC32r5wwS6Lez1/aIo
+         /NwcVkDlzdPx+6DKaOQopL/UwbICOeq43aFdwElm6yDLRyi6PuQpl8bOEPm0Dm9UZpJU
+         zaaZLele9jLNsLVKmeGjyJmhjgp26tEbB0VNkaCFTm6KApdyuNoRXbGGJka3NwlaPv4F
+         kasofak4ANEZOrOo3QCa8JMB828ScjzWwmJY6Yq1l64S10Jsy/a+PzH+/C9KpF6u4kMJ
+         1JDA==
+X-Forwarded-Encrypted: i=1; AJvYcCU32nhpNMlOuWmkAdJWol1Y1QJLQZQl7v0lBzPG0Mu1waqYwIjXFngQYgKlX6N4g7EsAJZgzyoJCYOW@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHVPGNmtEwj7L8PR77yVQw5E8zuseAKefpuECNSKe1dVTJobNq
+	h3aBEWNosJh8OawJgaqeQSdouBW9zutwM+W9wsNxk2HiVwc2jrbcd4YLMzmf5g55l78D5XxJgvD
+	kA4M+lBPU91g4Lpf/f55dLv3rzwfmbY0tssuspykJXw==
+X-Gm-Gg: ASbGnctHTGDnqSOiN6xM7N4g9hMg83NsTVgiNr2h0LrOFQcNdJgLkBpRfi1cMulvUZ3
+	I+KGeGWSuepx5KLvZOziZPkBA4zdJvkCpWGEvPegZM20ijaM34tWN1M+r04SV4KuYQz2szIht7v
+	Acj1WI1txzkIkhxfyN1l6JCDbkNDPvSztHlJWS0tdXCNYsI58TpLi628rejskFIz1+aR9+h70oa
+	0qbYI5FuXo0Bf/68BvFP8JBxGglowG+/HHQjyvM8KRGwwS5amUCEA48OvdF
+X-Google-Smtp-Source: AGHT+IGJmOKTnUV+UniqvgrDA0c7KpeZCqg798RQ2zsDdVKtR6JZh2MyHXYjHqCd1zfIhK+2HuNAVW83h+gE7fAqk4w=
+X-Received: by 2002:a05:6512:3c96:b0:594:33fc:d52b with SMTP id
+ 2adb3069b0e04-5945f1d9c97mr1634720e87.36.1762729211729; Sun, 09 Nov 2025
+ 15:00:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1761906880.git.geert+renesas@glider.be>
-In-Reply-To: <cover.1761906880.git.geert+renesas@glider.be>
+References: <20251031111628.143924-1-marco.crivellari@suse.com> <20251031111628.143924-2-marco.crivellari@suse.com>
+In-Reply-To: <20251031111628.143924-2-marco.crivellari@suse.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sun, 9 Nov 2025 23:55:51 +0100
-X-Gm-Features: AWmQ_bnqa0cEGYyZL8QXQZaZ7D5Q2RPrSMm_Zqk2iLrLMm8olzmGDV2oTbnQTJ0
-Message-ID: <CACRpkdYw63fNruavFCn6x83VqaGw2JJj_-6D+j17kin-7YNDwA@mail.gmail.com>
-Subject: Re: [GIT PULL] pinctrl: renesas: Updates for v6.19
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Date: Sun, 9 Nov 2025 23:59:59 +0100
+X-Gm-Features: AWmQ_bkG8qfTXswmVWDlpz0qlKljyoxRJh0UQhZNWg_36sNiFhAbKQW9SolVsi0
+Message-ID: <CACRpkdYkdhp_eHLP688gAwnrJppqkQn=RT_Lg4A+kd0uBqBBcQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] gpio: cdev: replace use of system_wq with system_percpu_wq
+To: Marco Crivellari <marco.crivellari@suse.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Michal Hocko <mhocko@suse.com>, Bartosz Golaszewski <brgl@bgdev.pl>, Kent Gibson <warthog618@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 31, 2025 at 11:44=E2=80=AFAM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On Fri, Oct 31, 2025 at 12:16=E2=80=AFPM Marco Crivellari
+<marco.crivellari@suse.com> wrote:
 
-> The following changes since commit 3a8660878839faadb4f1a6dd72c3179c1df567=
-87:
+> Currently if a user enqueue a work item using schedule_delayed_work() the
+> used wq is "system_wq" (per-cpu wq) while queue_delayed_work() use
+> WORK_CPU_UNBOUND (used when a cpu is not specified). The same applies to
+> schedule_work() that is using system_wq and queue_work(), that makes use
+> again of WORK_CPU_UNBOUND.
 >
->   Linux 6.18-rc1 (2025-10-12 13:42:36 -0700)
+> This lack of consistency cannot be addressed without refactoring the API.
 >
-> are available in the Git repository at:
+> system_wq should be the per-cpu workqueue, yet in this name nothing makes
+> that clear, so replace system_wq with system_percpu_wq.
 >
->   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git=
- tags/renesas-pinctrl-for-v6.19-tag1
+> The old wq (system_wq) will be kept for a few release cycles.
 >
-> for you to fetch changes up to a5fad3aeff41f89ac94230d66ee5f9c1526cb3ce:
->
->   pinctrl: renesas: rzg2l: Remove useless wrappers (2025-10-27 11:53:27 +=
-0100)
+> Suggested-by: Tejun Heo <tj@kernel.org>
+> Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
 
-Pulled in, sorry for the delay!
+Looked over the similar changes to FS core etc. It makes sense.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
