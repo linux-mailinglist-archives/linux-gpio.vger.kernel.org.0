@@ -1,227 +1,156 @@
-Return-Path: <linux-gpio+bounces-28286-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28287-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10E63C45B17
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 10:42:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBCD4C45B5C
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 10:47:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6FBAF3A8676
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 09:42:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3876D3B777D
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 09:46:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FE202FD675;
-	Mon, 10 Nov 2025 09:42:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8908B2FF17D;
+	Mon, 10 Nov 2025 09:46:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="p2CMFFxd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7812EB846
-	for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 09:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F8210F1
+	for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 09:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762767729; cv=none; b=SlqxbhW+6r/EgUQbxpZxU+Su/csE2H3Au0Qx0ZqTMoMpjrBrYl2n7VLXYvomVUabUP1tpxQx4+jf6gnJ0DAveOV0musgCOozzzvaJShNT5grVuVhJRxxJaZt6M2tnlIe8kZj1CZfKLNXZzs74YQofeF5f/F2Otoc36QAcMkN0KQ=
+	t=1762767969; cv=none; b=Uqmpw6PaoHgv8BXufJ3VGZ7RNjtHQ3RlNdzCX6ULUYwLsnZt9eyJT1dTRF2qWS0Vakm55D7HYtuT2mNcfvfF4AjoDWrHhBpqh1Fxeb5qdxbyxFK1HYBuorBZDMJ52c+UxWF0kK62buoc/Ym7rwh8yH93/qMwxZdnxgx0s4DQ/Ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762767729; c=relaxed/simple;
-	bh=SmCYeZZA+MZ4YAMzw1eRf/lethvMOqxmL8UnzEdKQB8=;
+	s=arc-20240116; t=1762767969; c=relaxed/simple;
+	bh=S1wGfyaVdsxk2Z9k/75oWbkAnuDI8szZ8sPaIPGsbg4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NH+580FitWsP5qn3ZFdPbO6lBCnwY2zUqnkNLSblNSHaTjQKyycwSW7GVj9dvhFT/ldsefVfLWxssxSjgOwkkr1NZwvcccBfR4E0LzGECYaaj38SqYP8apsxneof6OR1LCsmX5G+4LoJZ7RSi20VJNTdcN6mmfXHYxaLt77hMOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-5597a426807so1875583e0c.2
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 01:42:07 -0800 (PST)
+	 To:Cc:Content-Type; b=Bq4oZqLAbsZucApyh6K3G/R/fYRZV7Gal6+6jwMNyUaba94FKQkhVffP3Wj7tzkZa/KhikM5GzaX50rJkwq9KAMIiAQVQngS7W4t++HGarD1JvA1ZTZGuNYXR85T2Fmz6QwWTr56NfOkVWHVvzIdOIQYxakCFxBFyAvCGZczL70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=p2CMFFxd; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-3737d0920e6so33414371fa.1
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 01:46:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1762767964; x=1763372764; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S1wGfyaVdsxk2Z9k/75oWbkAnuDI8szZ8sPaIPGsbg4=;
+        b=p2CMFFxdz/LXcki8b/9cQ63b1+vPg6eVxWnP6h8Fjc08dAAs/BibvCUlORK3rO9SGk
+         CSbG4iXmZbM5+KC11hm2SEnV7BgdtMZrMONK36sbkrF69f+5rh4z0sn7Mmp6pHn/fvVw
+         nkEaB075udlFLU3IKgs7tEIFG4/PQzkf9sAA028wJG6pl0m2fM1zYA4SxOJsA4IYpJhy
+         2v1K8l20JvcJ56iLY690oB2e6BJJG8HFdInZrVobJB+4S6AGntT2Nu1O1dqcDXYuc94u
+         qY1sIi9BJndrjtIUG5d/T/SyH31lEBEh+NTt/qMqaJDKOQ5X9HEkqzpHDCSR1tsfieBp
+         eV6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762767726; x=1763372526;
+        d=1e100.net; s=20230601; t=1762767964; x=1763372764;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=lsrcVDrEohRhH3DeIYD/Jz8ulaHSwnUzTLywFA/cyng=;
-        b=k5V37u73+mrs9bUS81uHNrgcBdFK02jwO5hNWs1Vumt1yCr69rarwVLbG5LmEKw5AC
-         31Qf4LG2uzZeHjpAFAnrPnebUTR12G7Frp1awnZnl9nrqGe2gNUEdeTPhAb2q/nQeTxG
-         1wfjK6L5UhNiSs6zzM8yv+2fU7Z3Uf6cPPzdCCWnvvCfVtjZu+Vxh10ciFPcDLMBAm4p
-         Oets5W5h/SqvHKON1VtPjWuUD3I16c2EO4VE0wscc4e8aOv1Ff31aRivu44HOLFf/s8X
-         uvbg6B1N9K+OxlGSP4f5AizFsr1qAXV5agzZh+rGQ9IqKPoPiaITpWQ/6wvQ3INJY5UI
-         UFhw==
-X-Forwarded-Encrypted: i=1; AJvYcCVpJsBZbWjLyvXPGv8PwYP3RpqemNRMHyDlSnP8bdmv2kxCjOoRTbd3OoRF7w/T/yQaHxOZasob1Haq@vger.kernel.org
-X-Gm-Message-State: AOJu0YziS+6CCNsR024GOvhrHnVlpMe/YHx8wpi+aU1Djlcx5CGpRDK2
-	HUGY+TAFiD/PUmKmJ8MI5V4CXWsOLFst0pW6/e/ugQhhOUoZkn3MzCbwkJ3plD8/
-X-Gm-Gg: ASbGnctRYGRy61ZJuAhkmJ8s0AGNH8BmJxA/mUdnlmJNJhkXTfFP3jkm9QszG9aZ9r8
-	tFgieTEXjL7q9GZyhOhOixsT3kG8196SHZYMnICMhUHncrLa5UfkgQdSYDZKhmb6KqbXIe09eyP
-	4iDWgVXeQPt7cepEu0FAK9K/EzHNsLbrPv9K0M7jUsZDinr24HaRueI8NBLJ+47lzvP8XiNVkSW
-	7Pb7qs5Wetdam7FxHBAydYbBdWfDu4/irjUzjr3WGGEt3nzXBmWgVjlMSPU9AxQkzT/FWHvcCt6
-	/3/UNues2aym2VbCcHXOLx5i688ZZSB/ZBsU7eYKUMENhyAmZMaE+Z5+J6M+jcCUdyV3LIPPoCj
-	h/1sjEzZCf/tNWX08NCpJhtgfnGsd6ItWSJDYOD2I0l7BxqguYNj1TCtHj0IDU6mYWJ3Xa+8SBL
-	62TMe53xpumP69LIET1WeiR1Y+WVaaF4hesyVkxfbavbmIe5XnnnRnIwxi
-X-Google-Smtp-Source: AGHT+IEcSzssLPqz8IL1csyq+5UgH2A692jq+Cxz/m0oe9RyP2yNwSNqQrWHj+soDEXupJmJ9m0i/Q==
-X-Received: by 2002:a05:6122:4b18:b0:559:60b8:fa81 with SMTP id 71dfb90a1353d-559b321b450mr2798910e0c.4.1762767726028;
-        Mon, 10 Nov 2025 01:42:06 -0800 (PST)
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com. [209.85.221.180])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-559958286c8sm6933924e0c.17.2025.11.10.01.42.05
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Nov 2025 01:42:05 -0800 (PST)
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-54bc08ef45dso1656468e0c.1
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 01:42:05 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUDt6qSXOWJYNWZqyZ4NNn3/MbJu4fM9/xyor4ngKYQ4m1ud+X1OkK/Gt7vMHfaXM2YMy3CpXy3txHH@vger.kernel.org
-X-Received: by 2002:a05:6102:162a:b0:5dd:8a20:d6eb with SMTP id
- ada2fe7eead31-5ddc47517c6mr2576190137.25.1762767247552; Mon, 10 Nov 2025
- 01:34:07 -0800 (PST)
+        bh=S1wGfyaVdsxk2Z9k/75oWbkAnuDI8szZ8sPaIPGsbg4=;
+        b=TgmVc2Bb3ULq1KgcbpuSIXalYHCe69PV/rZuGRdlQ65O56w6TrcbTg5iGznxXr8vEj
+         BLHPibbiBr7U+10gUWmcWSEHODxIWNDczuG4QhakbmOWwQScVFGDWAxwCxmW0+1rEo4U
+         rA++aqd2LrVImeJZvcXwoVXq/sBAha/fO2kI388uSAmxlGI5yOcF8s1OV2iNruZjBRUr
+         N0xzfMHVMiYlKLVwvq/ab5c7uNN+CHbAv19pC6oEAVfVhA+kyTke5qD7j487oZ+ocSJ7
+         B55Of1ZZim23xv0T6SFN7x6PuQA1/HL5oXeY+ZsOp9zL0Bb999qnBhbG1CJplpt8gKnE
+         z6kA==
+X-Forwarded-Encrypted: i=1; AJvYcCUmqfe8jJG77Mij4ceRV/Vqap8Bfv7reZva38SuqmRAHF34NDQ5ZrFAdYEExKt4Lawp2roBBB6jWv7J@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlJKhfToL63Da5TSR1iIIXerPRyig09T1z/Z7MxP9u/tkuXq5F
+	FKxsiZAI/7h4CaTfUu+FaLzWpAnReX5KvgjbtKOYYXjGHXFLog79fNh3P8Qeiy0yoJzvRBe2g0X
+	+BNmW/GBMB9qIMalrqJGVr2m4yWA9e1/tTgBdSv9x8A==
+X-Gm-Gg: ASbGnctH4QNuZaOxSa0FTTghM3hYS1AEc6Z5c9h2Qlm6kVNkgisTNEM16vMrK1JHGMT
+	L/bkV+hsQEQwirE+PMyNR1xlNbmdpYPBX4cssHvWUyYV77mMNAg28qzCuQAtyRadY3L9HlERXJA
+	p2b5zIYruZDu1v6Tkm2xTsoWQvHTV7L51UUStIyXQlpxWi6pFhK418LWSyjNPU7gVBaZnCFodTv
+	VbTuvGUMFst0UkDBsusPLdJvPUsALNHDzD2yGGir2BvU/jlAgVN2WbueHSR/wBvwYUDyGB+OUFh
+	EZaL86FFBFSZ0PLzwd3bVWihaqQ=
+X-Google-Smtp-Source: AGHT+IEapDIVTd3K1bAU32YeDgJ+hfEUFZ75bdtJQQ2tm2wsLYYaIB9HdEFBH57etQ4VQO2ruXk7jNm7rMa1KIXieBs=
+X-Received: by 2002:a05:6512:108a:b0:594:4b3e:2815 with SMTP id
+ 2adb3069b0e04-5945f1867a2mr1922781e87.2.1762767964507; Mon, 10 Nov 2025
+ 01:46:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1762435376.git.geert+renesas@glider.be> <cfc32f8530d5c0d4a7fb33c482a4bf549f26ec24.1762435376.git.geert+renesas@glider.be>
- <aQy0T2vUINze_6_q@smile.fi.intel.com> <CAMuHMdXVUJq36GvNUQE8FnHsX+=1jG4GOJ_034r=fgr_Rw4Djg@mail.gmail.com>
- <aQzIIqNnTY41giH_@smile.fi.intel.com> <CAMuHMdW8ndAdGnSHopYFMWvw7wk7wKz_7+N91M1jRHoqK1KBrg@mail.gmail.com>
- <c62eb5a727f149fb9d8b4a4c8d77418a@realtek.com> <CAHp75VeMqvywS20603yDSo-C3KCu+i+8vvDNuz3h9e8Ma9BOCw@mail.gmail.com>
-In-Reply-To: <CAHp75VeMqvywS20603yDSo-C3KCu+i+8vvDNuz3h9e8Ma9BOCw@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 10 Nov 2025 10:33:56 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVUdey27RTX8mLsB5wsTfuW_mP_hF503AaF2QyS4awDcw@mail.gmail.com>
-X-Gm-Features: AWmQ_bkW2UuenDn6w7Wole8ay3msAtk8Ugj-awLiClF7uVATEqk1c30upT0lUKU
-Message-ID: <CAMuHMdVUdey27RTX8mLsB5wsTfuW_mP_hF503AaF2QyS4awDcw@mail.gmail.com>
-Subject: Re: [PATCH v6 12/26] bitfield: Add less-checking __FIELD_{GET,PREP}()
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Ping-Ke Shih <pkshih@realtek.com>, Andy Shevchenko <andriy.shevchenko@intel.com>, 
-	Yury Norov <yury.norov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	David Miller <davem@davemloft.net>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>, 
-	Andrew Jeffery <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Jacky Huang <ychuang3@nuvoton.com>, 
-	Shan-Chun Hung <schung@nuvoton.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+References: <20251029-gpio-shared-v3-0-71c568acf47c@linaro.org>
+In-Reply-To: <20251029-gpio-shared-v3-0-71c568acf47c@linaro.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 10 Nov 2025 10:45:53 +0100
+X-Gm-Features: AWmQ_bmNaGfRXrBGj05YeySBEfqaBzH8jnH775-U4Qey4HBlXtV5VLim7kMBPJg
+Message-ID: <CAMRc=Md4X-GWpeRgun6zv6dddKFqqrjUSveq3fNOe5AboLAcXg@mail.gmail.com>
+Subject: Re: [PATCH v3 00/10] gpio: improve support for shared GPIOs
+To: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
 	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, Jakub Kicinski <kuba@kernel.org>, Alex Elder <elder@ieee.org>, 
-	David Laight <david.laight.linux@gmail.com>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
-	Jason Baron <jbaron@akamai.com>, Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Kim Seer Paller <kimseer.paller@analog.com>, 
-	David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Richard Genoud <richard.genoud@bootlin.com>, 
-	Cosmin Tanislav <demonsingur@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Jianping Shen <Jianping.Shen@de.bosch.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
-	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
-	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, 
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "qat-linux@intel.com" <qat-linux@intel.com>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
-	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, 
-	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, 
-	"linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>, 
-	"linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	linux-wireless <linux-wireless@vger.kernel.org>
+	Alexey Klimov <alexey.klimov@linaro.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Ady,
-
-On Fri, 7 Nov 2025 at 09:00, Andy Shevchenko <andy.shevchenko@gmail.com> wr=
-ote:
-> On Fri, Nov 7, 2025 at 3:16=E2=80=AFAM Ping-Ke Shih <pkshih@realtek.com> =
-wrote:
-> > Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Thu, 6 Nov 2025 at 17:09, Andy Shevchenko
-> > > <andriy.shevchenko@intel.com> wrote:
-> > > > On Thu, Nov 06, 2025 at 03:49:03PM +0100, Geert Uytterhoeven wrote:
-> > > > > On Thu, 6 Nov 2025 at 15:44, Andy Shevchenko
-> > > > > <andriy.shevchenko@intel.com> wrote:
-> > > > > > On Thu, Nov 06, 2025 at 02:34:00PM +0100, Geert Uytterhoeven wr=
-ote:
-> > > > > > > The BUILD_BUG_ON_MSG() check against "~0ull" works only with =
-"unsigned
-> > > > > > > (long) long" _mask types.  For constant masks, that condition=
- is usually
-> > > > > > > met, as GENMASK() yields an UL value.  The few places where t=
-he
-> > > > > > > constant mask is stored in an intermediate variable were fixe=
-d by
-> > > > > > > changing the variable type to u64 (see e.g. [1] and [2]).
-> > > > > > >
-> > > > > > > However, for non-constant masks, smaller unsigned types shoul=
-d be valid,
-> > > > > > > too, but currently lead to "result of comparison of constant
-> > > > > > > 18446744073709551615 with expression of type ... is always
-> > > > > > > false"-warnings with clang and W=3D1.
-> > > > > > >
-> > > > > > > Hence refactor the __BF_FIELD_CHECK() helper, and factor out
-> > > > > > > __FIELD_{GET,PREP}().  The later lack the single problematic =
-check, but
-> > > > > > > are otherwise identical to FIELD_{GET,PREP}(), and are intend=
-ed to be
-> > > > > > > used in the fully non-const variants later.
-> > >
-> > > > > > > +     BUILD_BUG_ON_MSG(__bf_cast_unsigned(mask, mask) >      =
-         \
-> > > > > > > +                      __bf_cast_unsigned(reg, ~0ull),       =
-         \
-> > > > > > > +                      pfx "type of reg too small for mask")
-> > > > > >
-> > > > > > Perhaps we may convert this (and others?) to static_assert():s =
-at some point?
-> > > > >
-> > > > > Nick tried that before, without success:
-> > > > > https://lore.kernel.org/all/CAKwvOdm_prtk1UQNJQGidZm44Lk582S3p=3D=
-of0y46+rVjnSgXJg@mail.gmail.com
-> > > >
-> > > > Ah, this is unfortunate.
-> > >
-> > > Of course, it might be an actual bug in the i915 driver...
-> > >
-> > > The extra checking in field_prep() in case the compiler can
-> > > determine that the mask is a constant already found a possible bug
-> > > in drivers/net/wireless/realtek/rtw89/core.c:rtw89_roc_end():
-> > >
-> > >     rtw89_write32_mask(rtwdev, reg, B_AX_RX_FLTR_CFG_MASK, rtwdev->ha=
-l.rx_fltr);
-> > >
-> > > drivers/net/wireless/realtek/rtw89/reg.h:
-> > >
-> > >     #define B_AX_RX_MPDU_MAX_LEN_MASK GENMASK(21, 16)
-> > >     #define B_AX_RX_FLTR_CFG_MASK ((u32)~B_AX_RX_MPDU_MAX_LEN_MASK)
-> > >
-> > > so it looks like B_AX_RX_FLTR_CFG_MASK is not the proper mask for
-> > > this operation...
-> >
-> > The purpose of the statements is to update values excluding bits of
-> > B_AX_RX_MPDU_MAX_LEN_MASK. The use of B_AX_RX_FLTR_CFG_MASK is tricky, =
-but
-> > the operation is correct because bit 0 is set, so __ffs(mask) returns 0=
- in
-> > rtw89_write32_mask(). Then, operation looks like
-> >
-> >    orig =3D read(reg);
-> >    new =3D (orig & ~mask) | (data & mask);
-> >    write(new);
-> >
-> > Since we don't use FIELD_{GET,PREP} macros with B_AX_RX_FLTR_CFG_MASK, =
-how
-> > can you find the problem? Please guide us. Thanks.
+On Wed, Oct 29, 2025 at 12:20=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
 >
-> Isn't FIELD_MODIFY() what you want to use?
+> Problem statement: GPIOs are implemented as a strictly exclusive
+> resource in the kernel but there are lots of platforms on which single
+> pin is shared by multiple devices which don't communicate so need some
+> way of properly sharing access to a GPIO. What we have now is the
+> GPIOD_FLAGS_BIT_NONEXCLUSIVE flag which was introduced as a hack and
+> doesn't do any locking or arbitration of access - it literally just hand
+> the same GPIO descriptor to all interested users.
+>
+> The proposed solution is composed of three major parts: the high-level,
+> shared GPIO proxy driver that arbitrates access to the shared pin and
+> exposes a regular GPIO chip interface to consumers, a low-level shared
+> GPIOLIB module that scans firmware nodes and creates auxiliary devices
+> that attach to the proxy driver and finally a set of core GPIOLIB
+> changes that plug the former into the GPIO lookup path.
+>
+> The changes are implemented in a way that allows to seamlessly compile
+> out any code related to sharing GPIOs for systems that don't need it.
+>
+> The practical use-case for this are the powerdown GPIOs shared by
+> speakers on Qualcomm db845c platform, however I have also extensively
+> tested it using gpio-virtuser on arm64 qemu with various DT
+> configurations.
+>
+> I'm Cc'ing some people that may help with reviewing/be interested in
+> this: OF maintainers (because the main target are OF systems initially),
+> Mark Brown because most users of GPIOD_FLAGS_BIT_NONEXCLUSIVE live
+> in audio or regulator drivers and one of the goals of this series is
+> dropping the hand-crafted GPIO enable counting via struct
+> regulator_enable_gpio in regulator core), Andy and Mika because I'd like
+> to also cover ACPI (even though I don't know about any ACPI platform that
+> would need this at the moment, I think it makes sense to make the
+> solution complete), Dmitry (same thing but for software nodes), Mani
+> (because you have a somewhat related use-case for the PERST# signal and
+> I'd like to hear your input on whether this is something you can use or
+> maybe it needs a separate, implicit gpio-perst driver similar to what
+> Krzysztof did for reset-gpios) and Greg (because I mentioned this to you
+> last week in person and I also use the auxiliary bus for the proxy
+> devices).
+>
+> Merging strategy: patches 1-6 should go through the GPIO tree and then
+> ARM-SoC, ASoC and regulator trees can pull these changes from an
+> immutable branch and apply the remaining patches.
+>
 
-FIELD_MODIFY() is a rather recent addition.
-That is also the reason why I didn't add a non-const field_modify() yet
-(I didn't want to risk delaying this series even more ;-)
+Can I get some Reviewed-bys under the GPIO patches if there are no
+other open issues? I would like for this to start making its way
+upstream if there are no strong objections to the concept. After a
+release or two, I'd like to start enabling it on more platforms.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Bart
 
