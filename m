@@ -1,125 +1,144 @@
-Return-Path: <linux-gpio+bounces-28336-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28337-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D7B6C49CFB
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Nov 2025 00:47:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CE8F4C49D21
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Nov 2025 00:58:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 47A524E9081
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 23:47:08 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2B8574EF9DD
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 23:58:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C020B30498E;
-	Mon, 10 Nov 2025 23:47:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37CC03054DE;
+	Mon, 10 Nov 2025 23:58:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zvip/Va9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rMfnUB62"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D194B303A1B
-	for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 23:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4D6337BA6
+	for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 23:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762818423; cv=none; b=BZ88Nj4yKkvB16wfoxa1lRPnyf4yBro0+7/RNo6msKvIOj7Mwr/XSu0JykmzjApyoOWT9vdu5aPjS7ZJCGdsZtb2uZ2VOleYOJbAzLDqEPpKf6jRInVUF0+6AKxzNUdJo/jd2qsbL+sjStK8S94AEx0mhrSrpWoqA4NluqL90Co=
+	t=1762819086; cv=none; b=ppKeSUh24oNs6Ci+c/eUowc+kcWPTjNlBhSIAKEJccmcPmwwgywfeDM6P3f03cptiyKhh/BouDHX01w3H3irtMwljbEHxNb4LvMZQ1TSpRR0ItO22NglV+4S99Q9sh8UWMK2Clh3egaEYf9yRarxzzGV5QBxZ53p5dmCbC72SzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762818423; c=relaxed/simple;
-	bh=Gc4vjWJyen6pi7OfvcExBoeP+RP69p6S28dmjIeZ+L0=;
+	s=arc-20240116; t=1762819086; c=relaxed/simple;
+	bh=gR2t+MCFT0pENLeKE/c4frJpybxo9Ti1EMQAvfgDQGI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZLTBYUT0GfqUn40NNdKgM3URGRLfpcRUAlB7bXUUcy/Qv2zWhjj3sGrg/IulX2Q2NWJ8CHuhHNyg6qVa/+qRPmh3baUxESOkS7xhp0fOz44Y/6ewyQ16/np9iY7ixR6c3HY5JSZtAHl1/9+anEYy5mC0HEB1Vz3AqG5A1EHh53Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zvip/Va9; arc=none smtp.client-ip=209.85.167.43
+	 To:Cc:Content-Type; b=OABBh0Q/FXLejK0QRQhoKf03qv2Sj0hNDJc/kBZowHWnTwzz+vNR4fCq+jHRX4q0+L7r3I1k+1RWmL0XFwP0QwC+UYwPEnnosbdtwFoqmoRezwx4hl6DteoHZmpBUbqREbQJk/YIt6oHnY7VBnF9PxwAd5jGliYkN1ZRtOl6ATM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rMfnUB62; arc=none smtp.client-ip=209.85.208.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5943b62c47dso3216750e87.1
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 15:47:01 -0800 (PST)
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-37a34702a20so29580801fa.3
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 15:58:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1762818420; x=1763423220; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1762819082; x=1763423882; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EdSyniY2TEhD2jr7Knryt0myief09VrFFo+8PkG04XY=;
-        b=zvip/Va9Tf5Mzcx16SLrFEczDml/xLoOJF9tB8F4J9DB8F5vTG5LLSU+CfnvwM4Fey
-         HhF/Fkprp3aESsrVQW1jaMhkpWHveNg7QnsOUvFrMAaX0VWpkovkdvZONp19ypAkMH7C
-         QiB+Z7Ajp1/CgpkOnsAbNmptERySi5Wk4QcWp+lkrrFl9b9X74RNL4Vl2IChbvUOpMX+
-         NDLdVJRUptwuk/y9Ltvl4CNC1gO4ILPTok2Nxs92GslOBmmU4jT/Fu+nRTZIa3NFLljF
-         jdLK9xSmYv8DK4IACVUAUh3sC+3UO859goZ0I+Fy1d9Vxwa4HdhzYE8bsoB2Vy1quumN
-         k3aw==
+        bh=gR2t+MCFT0pENLeKE/c4frJpybxo9Ti1EMQAvfgDQGI=;
+        b=rMfnUB62IkZBgU4Z+MwGW9CfUGrmA19YQdXxMpBNsOeSJ0mEIRcXgpji9QXC0EYyJa
+         o+/Tku8BunlJT5rqpTHIDQcnC0gQ3F+JkdSrYjtxQfXoIsyhWp6/QS7GuituJLbu5Vwy
+         Y2z36yLhaznblXd+6FSzx3ztBGjYUzzA+q46QqvbjDXeQi0qTzWXA3AuPHvGZXRtu8Cq
+         RTZKrvyOiNDmIj/4kKFajk4V5MVhg+bkHb0LR2U8TtduyxRf1DorNvQFruPMZ/SbpwDG
+         13aG9D3U2O+aC7XKZ2XKF3l80D0Wm2qCGZQQeTFm/o11lzRynFNQt5R4bLoZZjz8H5GR
+         UBqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762818420; x=1763423220;
+        d=1e100.net; s=20230601; t=1762819082; x=1763423882;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=EdSyniY2TEhD2jr7Knryt0myief09VrFFo+8PkG04XY=;
-        b=Z2jjBswRFBkqvtXMHRZzrNoPCLIbka94SEe0pkrCs2zOOpKjHbFex3E1FwK7sD47im
-         FY/+V9udVL/nEVfIVtdaugX57pLHTM3VE88RcjlGsUid8aQ9dNv74JQ4UWCZw3QqECRO
-         SrrE19lBQ3lOo6WptdLDI4+3fdXzdjHEMannmDc5MpLkpcY8J4CcFnlPycP5A4aIL/vg
-         92qy1InWEw/zefZ2KrVuR2+WUZKL6YlS4KnAHd+76juGNSJ7JaTuO7pxsDKrLLi2N+NN
-         btSJFZqIaaqN9zJs1rd4rNVIgTnMWfvJkavS8SN+Cf14LcHTSjum0f35ii7ZipBvI6M3
-         dI9w==
-X-Forwarded-Encrypted: i=1; AJvYcCUxe56Y34cCTxVUTU8gvim7UQvDN2ioJyQS/CrV7r65ku98kPaP1ZVXLyH+WPFkn2x3J2Bwo+ADj0pk@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsdEavIiJTLzjG8p7+e8hVpWWPiAF8Wpg9WBf0AIcmF+uogDDR
-	Ytpqde0Uyvc0wM9pSPS5qviX/lNTu9xX7gmqStXEqaSI3T5vlwqdkem/RR2ZSykrI5JpC3IzpoT
-	cj7SG1MoI5U5d2D3u7k7J0tgaJZ4O2bYFDHDCcRBhFA==
-X-Gm-Gg: ASbGnctrYkBobVyVgv2KZqWtmYwAIEzEadw+hkVDcIX7tIA6Rtw4BSmpLNYOSeGpSQF
-	01IWynE+JgXe9VHxaBecshLcXb6JvGS6KEhpGeUOJWDZfi8kqP2uuJMMLmyRmsNBP6Hf3K1HW9w
-	roq0Sn2/6qcLyWGuSmZgmPyF1gGv9fsMkmJCelMVD0NMyksO7BzO0aI6yTUlNYh8C2veqls7ygr
-	lHkcB3RmWAdkNRlHrj17umAF9MBlaXD/IkY669AZhN0LUqiEdd7bNpEq82djUYi3JyT7yqjqDjp
-	8U6brA==
-X-Google-Smtp-Source: AGHT+IEYlHtlcaIbYzh4uIcS3eRGPuN1bn7uG7yYIbKkIFRYhenhwAQ61nxtn9INckW1qFWU7tGOevIpEsnyQ+lU0tE=
-X-Received: by 2002:a05:6512:b96:b0:594:5545:b743 with SMTP id
- 2adb3069b0e04-5945f1f4346mr2601951e87.27.1762818419930; Mon, 10 Nov 2025
- 15:46:59 -0800 (PST)
+        bh=gR2t+MCFT0pENLeKE/c4frJpybxo9Ti1EMQAvfgDQGI=;
+        b=abuhmLO34UOaxlCWthfRGHeELXr0t6RbdX3fppU7LtB2IUBKBraRf50qisfenG5t7m
+         jW/vFU6kNz//LB85EUZqYq/1I5qOVY6gDkQsJUxtWhuQ9gfGTgix1MG286OXw6L/GczU
+         SMs9b/hujSOM3QEY/yhkNHXJ+BblOAXLdokGOWatkLpAj8MemP9kXs2tRBB1U0R/XOa5
+         qisnqJ57Ltn6OZd2acHnQZtJyCDaqWwZFcb9etCb+94CmFN9sfq6IoMTnHsAH5ACdOCX
+         A2CL9cpYNZSnSlQ31BBMy8947teilaf+pOoco4/hf3QxSBzroYzBqf5k1E/fxEzxz5bT
+         P9mw==
+X-Forwarded-Encrypted: i=1; AJvYcCXsOlAg0/5cqrbCVL5WVjQrMFUJZUjinyB1Tvs8/nNCKjPac/vZhUHjjjoTH+dZWbhy0J6rX0q8ozm9@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVWT9qsk9ns4C5TLi7lMcFmGQ2YF118ZsZ0rpuSdmJsfEm6PI1
+	/CVL8LhbTtfSK6w29rVp77JuFzodiJYLlWvqxXskpl324Z59GcI7dAC9GfrTLv+N4QydGVYmu89
+	FH9JspP+AuN9CpIT7hiu2flQ3ssfCNRUEyCPTpckUEQ==
+X-Gm-Gg: ASbGncu0otTpcVDbMskI62bZXjAzTb4kjwaJAR1pmP/A5ZOsp7/2/2lSF071uKjiRwH
+	RquDTJtktDTV3gEvSUvY4bH6l8VglRY4WFc9z9jENX3ckIQ7HaSfvWKKiK96kEYCJ4NpXr6xiA8
+	ynwmk6JXqzkg4naRqnIQcecmYHNpYWIwLFcFMSpbm8Amm86PwlDlz3oNmHIkpJoqUWxFdk4KMto
+	yMJ7qFWngBD9o/WnnEdsuAvzLduPJERAz9hOgnA7xelUHgsbqYiER6NOfIb/u2mvwhHj7U=
+X-Google-Smtp-Source: AGHT+IGq8/YFN7hlWLIK9a4/CG12Y6T0bDy/N5/JTLofPKZElIMDZsi5lcAadM+CuswrNL2lnuY1YgL0/HzwYkg+O1w=
+X-Received: by 2002:a05:6512:b03:b0:594:4a5a:346 with SMTP id
+ 2adb3069b0e04-5945f15bf72mr2619011e87.17.1762819081904; Mon, 10 Nov 2025
+ 15:58:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251106235713.1794668-1-ansuelsmth@gmail.com>
-In-Reply-To: <20251106235713.1794668-1-ansuelsmth@gmail.com>
+References: <20251107-wakeirq_support-v5-0-464e17f2c20c@oss.qualcomm.com> <20251107-wakeirq_support-v5-2-464e17f2c20c@oss.qualcomm.com>
+In-Reply-To: <20251107-wakeirq_support-v5-2-464e17f2c20c@oss.qualcomm.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 11 Nov 2025 00:46:48 +0100
-X-Gm-Features: AWmQ_bmWEn6D47GtrYlRXbtf5iV6J32LnDgS7NEk87vjG42kQgZzdgtZdTywXVE
-Message-ID: <CACRpkdYOXSm5BaHgij_=L32kq+fkx_ggSJ7G5a=064FDvMR4EQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] pinctrl: airoha: add Airoha AN7583 support
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Lorenzo Bianconi <lorenzo@kernel.org>, 
-	Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Date: Tue, 11 Nov 2025 00:57:50 +0100
+X-Gm-Features: AWmQ_blAezbQ4rkb-Vrevk4Zgb5huFnQ0lcUTpotRRUAIJPGPB05jzXROpJ4ido
+Message-ID: <CACRpkdY9HsnG=xo=swnMcVha+unmvmxR6e6Ynsj09srM_tPmWA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] PCI: Add support for PCIe WAKE# interrupt
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, quic_vbadigan@quicinc.com, quic_mrana@quicinc.com, 
+	sherry.sun@nxp.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 7, 2025 at 12:57=E2=80=AFAM Christian Marangi <ansuelsmth@gmail=
-.com> wrote:
+On Fri, Nov 7, 2025 at 10:22=E2=80=AFAM Krishna Chaitanya Chundru
+<krishna.chundru@oss.qualcomm.com> wrote:
 
-> This small series introduce support for Airoha AN7583 pinctrl
-> support.
+> According to the PCIe specification 6, sec 5.3.3.2, there are two defined
+> wakeup mechanisms: Beacon and WAKE# for the Link wakeup mechanisms to
+> provide a means of signaling the platform to re-establish power and
+> reference clocks to the components within its domain. Beacon is a hardwar=
+e
+> mechanism invisible to software (PCIe r7.0, sec 4.2.7.8.1). Adding WAKE#
+> support in PCI framework.
 >
-> Most of the changes are generalization and cleanup of the Airoha
-> pinctrl driver. These are needed as all the array in the inner
-> function were hardcoded to EN7581 and didn't reference stuff
-> from the priv groups.
+> According to the PCIe specification, multiple WAKE# signals can exist in
+> a system. In configurations involving a PCIe switch, each downstream port
+> (DSP) of the switch may be connected to a separate WAKE# line, allowing
+> each endpoint to signal WAKE# independently. From figure 5.4, WAKE# can
+> also be terminated at the switch itself. To support this, the WAKE#
+> should be described in the device tree node of the endpint/bridge. If all
+> endpoints share a single WAKE# line, then WAKE# should be defined in the
+> each node.
 >
-> Everything is changed to match_data and priv struct so
-> adding AN7583 is just a matter of adding the structs.
+> To support legacy devicetree in direct attach case, driver will search
+> in root port node for WAKE# if the driver doesn't find in the endpoint
+> node.
 >
-> Also the schema is generalized where needed to address
-> for the small difference between AN7583 and EN7581.
+> In pci_device_add(), PCI framework will search for the WAKE# in its node,
+> If not found, it searches in its upstream port only if upstream port is
+> root port to support legacy bindings. Once found, register for the wake I=
+RQ
+> in shared mode, as the WAKE# may be shared among multiple endpoints.
+>
+> When the IRQ is asserted, the handle_threaded_wake_irq() handler triggers
+> a pm_runtime_resume(). The PM framework ensures that the parent device is
+> resumed before the child i.e controller driver which can bring back devic=
+e
+> state to D0.
+>
+> WAKE# is added in dts schema and merged based on below links.
+>
+> Link: https://lore.kernel.org/all/20250515090517.3506772-1-krishna.chundr=
+u@oss.qualcomm.com/
+> Link: https://github.com/devicetree-org/dt-schema/pull/170
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.co=
+m>
 
-All looks good and bindings ACK:ed so patches applied!
-
-Suggestion: since this driver has:
-
-1. Exactly one group per pin
-2. Use some accelerated GPIO operation, .gpio_set_direction
-   in struct pinmux_ops
-
-Have you considered implementing the new .function_is_gpio()
-callback in struct pinmux_ops to tighten up the GPIO strictness?
+The GPIO parts look all right to me, a bit complex since we can't use
+devm_* stuff here, but that happens.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
