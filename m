@@ -1,154 +1,161 @@
-Return-Path: <linux-gpio+bounces-28283-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28284-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54A0EC4533E
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 08:25:27 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2D97C457B2
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 09:59:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A087188EA52
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 07:25:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7855B3B45A5
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 08:59:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E73D2EBB81;
-	Mon, 10 Nov 2025 07:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZOwOJrBO"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF3F22FCBF7;
+	Mon, 10 Nov 2025 08:59:51 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047AB1F4CB3;
-	Mon, 10 Nov 2025 07:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1DD2FD1CB
+	for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 08:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762759518; cv=none; b=r+ceRTXpPzfgknrmPiTKsKGcaRfSJKVQeg0vOa42tNsVP+1cTPAAHXlveu19w9GYbE46/Pcucg+1xj8mc8UP8eKQ3tqaUUr6QGAo0feCM10xKbn/Aip0L/akIRKY64kn/8tvYioy2iHcU+FFpJQKstC7u8EYaNnz1z4kk23l6n0=
+	t=1762765191; cv=none; b=dpQBQNws/hWG8UJ7wxaXWetj0aLebxmSv1Bu3tIGw5etmqqYKeWkZXsDS5qKBF/RTRLuRU23O+snTFkSG9fpQlPqbH5Cckx2aS/DBdCbg7XUNUOoUgf0kGlOfaEblI7z2s1E0+Lfg2VqHsjy6c+9evvI5BzAyySHU9NYYTcJkbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762759518; c=relaxed/simple;
-	bh=c/bICPNIrKIsaGuPJ51BMM9KOXzYsygrAVCXDn392Z4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ikr3P9vdLkPfZclkLCaVlrp8kxu/rsPSpEW1kyontLG6uWIMIl0CHIZHWC/ZHTTtox+a6BNq7qzS2YtVzIv8Jv1+VXciAxJUEAO2NoaR1iw29jzfTRiFQexjo2auBkBs3cF7iNZw09/sZNbk3i92mmLpKFdT65P0ZRPgOPXZ3hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZOwOJrBO; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762759516; x=1794295516;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=c/bICPNIrKIsaGuPJ51BMM9KOXzYsygrAVCXDn392Z4=;
-  b=ZOwOJrBOUguOffWw8rs4HuPPS6naQj4R+o6NS+hfjzwTt5iJgMlKPD0x
-   7oELdRkrKVmZAgBIIOZo7psCSsrv+GJTHpbkOPg2PU3MTWjRGtTppoH81
-   Z12H531NWZAY4jOnMplu8i17ck2xxXnl1FzSBpwtyp6KTn3EUkzEicTZ4
-   ZhYOAJF3YBxPCGtK5AGfcF/ZbSc6WH4p5c+QcGXXLHjmj7ZHPDTKML6Ka
-   X7xe+dbKjHOYOownd8HsPAOQPgiEPLJiHwgD2TGRBnu0grnEoNvJIXIiE
-   4h/9PIq4bWS0lzKpzz7MjtHUhKrYoYQ1Z+egX4pMghh1z2duen7B08ZMG
-   g==;
-X-CSE-ConnectionGUID: FAmmRx7iQr6biIo1J1T56A==
-X-CSE-MsgGUID: lxIyMJghThm9MZ/XIXzhCg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="82203042"
-X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="82203042"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 23:25:15 -0800
-X-CSE-ConnectionGUID: fuKwWC63QiqVT31K8ZW59A==
-X-CSE-MsgGUID: ckUc5Ax7TbygHM3AOyKOlw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="193783537"
-Received: from fpallare-mobl4.ger.corp.intel.com (HELO ashevche-desk.local) ([10.245.245.185])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 23:25:13 -0800
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1vIMH0-00000007NGo-2IKU;
-	Mon, 10 Nov 2025 09:25:10 +0200
-Date: Mon, 10 Nov 2025 09:25:10 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl,
-	platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] platform/x86/intel: Introduce Intel Elkhart Lake
- PSE I/O
-Message-ID: <aRGTVguXqO2oNCCW@smile.fi.intel.com>
-References: <20251110052728.383339-1-raag.jadav@intel.com>
- <20251110052728.383339-2-raag.jadav@intel.com>
+	s=arc-20240116; t=1762765191; c=relaxed/simple;
+	bh=JRmjklDdMnXYPa/YzcCMj4xR0iBgS1Ed7pmHd076aaU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WZqo8u+g/eCHg7J6MWCq9MRRFepjNSA6F3SApem0hTRKct9DhLfKurYPu6l56Xo/sJZO648Omdz1YwIDxT+h9C4+1tV3QbrbnrKqLv6eGZdy7XOVyW/WczyROG/xlr1VgdGCSAiIlXw5GdxXRatwLJy1AcNi8SCo2xR/ELkosuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-557a56aa93fso487275e0c.3
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 00:59:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762765189; x=1763369989;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zuaR1c68u39/qbD5w07qCJ9IxeheIz5/8CL8hB/l6OE=;
+        b=fqhhAAD5rZYz+KQA+PCxI2nZj0kDYMZqHHB/zAwcyQVFVolmpK6QrgYn9NX/W94jIT
+         1g0dFbX1b2o1oAIRc9JHxHJLcktXN6svf+n32OrmoVsIM4If0nwcpxgqyieIhf3WF6Qk
+         lGSYGHFckMfaN9OSc2+pJABjsK6TPpfHVebT+N92k6z6l265gAH30u5Cs5Jpso4kDNnW
+         qasLnUli6bPx83qlPYLwS6AoTG1CdA1FLl0LY3hJoonRa36ok50imdZqxaHh4H70At8W
+         U/Ye/gjDX2cx9ELiTlwjyM/hjFevnHrbbhRa79Dm6IvI9KpeOqT7opnlIB6fRX8YZXIQ
+         kjrg==
+X-Forwarded-Encrypted: i=1; AJvYcCVmDsOQNpHSKSOHNsWzG7VoTI/dIV0qLy+BOWa9ifgLBLGNhParqiyzNajdM2MnJHeopE6KW8Y4gR5n@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzqb3lZ9/QpakQW5ZbICcFTIxgD7KIjPFoDZWqYmxp+dSbKodh8
+	dvn683PgrHbl/ZuDITuL/+k7ebEqiyjZ5oOEtrNw/+PW+RfdsOQGChI1TgASaYCZ
+X-Gm-Gg: ASbGnctn84t0p6V4GggDtWYk8e4Fn9XwJzeWV2Kfz64BTzqesL1+E9aMBdPzzFGApws
+	JRja0OqGJQDH4XsT30tAJUpBwD3Ebo6OXz3+3n/f3HX8Uo4VXmarf+Pxek9c84ot4blmWOAYWI7
+	KoknwKCymTKcb6kvDssa9UBYRyZKRJ3z3z0JO3iev8zx1Ao0lL6xuA8lJaPzk2qK8B+0GaNVryg
+	q+BlenE/lYFVq+nvp54pSsc5TALIEz6lWjCwSa4XyId/q5VnPxcodsH+usYuh8f7a12t/aJiggd
+	bR8Kn+7rfSt1QJSXN9YzbdjWyWtOB20avqijsphmxBUIrQuomWebBmyhJJlEfbUn+9sNaJ5ja7Q
+	5GEXRGNE21ZJE9o6eILOalOeeaahOr3WigQ/bcJhGUl5xcasrzsyzyWs56NaKTUlCQL57IEwBBT
+	qwikP06Z8RSmsVrN/mA5tpC3OCbWBJdkvS5ztjma3hSA==
+X-Google-Smtp-Source: AGHT+IEp1HbdJGHVmsmXlvm7GghKyeKNLk2HLtR8gBkV28s8nyg53Fh3Wgu94jqzlpiZXwblG+nP+g==
+X-Received: by 2002:a05:6122:251d:b0:559:3b8a:70ce with SMTP id 71dfb90a1353d-559b320b83emr1699844e0c.7.1762765188839;
+        Mon, 10 Nov 2025 00:59:48 -0800 (PST)
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-55995863f11sm7140675e0c.24.2025.11.10.00.59.45
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Nov 2025 00:59:46 -0800 (PST)
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-5dbddd71c46so1103819137.2
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 00:59:45 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXLgo/KPmlwbWyHWmzwGhoajmuTxspwILUpTSvOFoPdxA1y+9ly9p07rFS256UsDJnt1Rfysm1fJpck@vger.kernel.org
+X-Received: by 2002:a05:6102:950:b0:5db:fb4c:3a89 with SMTP id
+ ada2fe7eead31-5ddc471358fmr2304047137.19.1762765185596; Mon, 10 Nov 2025
+ 00:59:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251110052728.383339-2-raag.jadav@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <cover.1761588465.git.geert+renesas@glider.be> <97549838f28a1bb7861cfb42ee687f832942b13a.1761588465.git.geert+renesas@glider.be>
+ <20251102104326.0f1db96a@jic23-huawei> <CAMuHMdUkm2hxSW1yeKn8kZkSrosr8V-QTrHKSMkY2CPJ8UH_BQ@mail.gmail.com>
+ <20251109125956.106c9a1a@jic23-huawei>
+In-Reply-To: <20251109125956.106c9a1a@jic23-huawei>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 10 Nov 2025 09:59:34 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdX8c1VkBuPDpJ5mpCcRH+zEX4F1bQKFf_V8N9ZZtCYqxA@mail.gmail.com>
+X-Gm-Features: AWmQ_bmD7LCstBufqr7pTwqKUhf3WnheTdaFZy-l1C13xKAmQ3xomq2Nqy5MxZo
+Message-ID: <CAMuHMdX8c1VkBuPDpJ5mpCcRH+zEX4F1bQKFf_V8N9ZZtCYqxA@mail.gmail.com>
+Subject: Re: [PATCH -next v5 10/23] iio: imu: smi330: #undef
+ field_{get,prep}() before definition
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	David Miller <davem@davemloft.net>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>, 
+	Andrew Jeffery <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Jacky Huang <ychuang3@nuvoton.com>, 
+	Shan-Chun Hung <schung@nuvoton.com>, Yury Norov <yury.norov@gmail.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, Jakub Kicinski <kuba@kernel.org>, Alex Elder <elder@ieee.org>, 
+	David Laight <david.laight.linux@gmail.com>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
+	Jason Baron <jbaron@akamai.com>, Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Kim Seer Paller <kimseer.paller@analog.com>, 
+	David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Richard Genoud <richard.genoud@bootlin.com>, 
+	Cosmin Tanislav <demonsingur@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Jianping Shen <Jianping.Shen@de.bosch.com>, linux-clk@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-edac@vger.kernel.org, qat-linux@intel.com, 
+	linux-gpio@vger.kernel.org, linux-aspeed@lists.ozlabs.org, 
+	linux-iio@vger.kernel.org, linux-sound@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Nov 10, 2025 at 10:56:40AM +0530, Raag Jadav wrote:
-> Intel Elkhart Lake Programmable Service Engine (PSE) includes two PCI
-> devices that expose two different capabilities of GPIO and Timed I/O
-> as a single PCI function through shared MMIO with below layout.
-> 
-> GPIO: 0x0000 - 0x1000
-> TIO:  0x1000 - 0x2000
-> 
-> This driver enumerates the PCI parent device and creates auxiliary child
-> devices for these capabilities. The actual functionalities are provided
-> by their respective auxiliary drivers.
+Hi Jonathan,
 
-...
+On Sun, 9 Nov 2025 at 14:01, Jonathan Cameron <jic23@kernel.org> wrote:
+> On Mon, 3 Nov 2025 11:09:36 +0100
+> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Sun, 2 Nov 2025 at 11:43, Jonathan Cameron <jic23@kernel.org> wrote:
+> > > On Mon, 27 Oct 2025 19:41:44 +0100
+> > > Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+> > >
+> > > > Prepare for the advent of globally available common field_get() and
+> > > > field_prep() macros by undefining the symbols before defining local
+> > > > variants.  This prevents redefinition warnings from the C preprocessor
+> > > > when introducing the common macros later.
+> > > >
+> > > > Suggested-by: Yury Norov <yury.norov@gmail.com>
+> > > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > >
+> > > So this is going to make a mess of merging your series given this is
+> > > queued up for next merge window.
+> > >
+> > > I can pick this one up perhaps and we loop back to the replacement of
+> > > these in a future patch?  Or perhaps go instead with a rename
+> > > of these two which is probably nicer in the intermediate state than
+> > > undefs.
+> >
+> > Renaming would mean a lot of churn.
+> > Just picking up the #undef patch should be simple and safe? The
+> > removal of the underf and redef can be done in the next cycle.
+> > Thanks!
+>
+> Only 1 call of each of these in the driver, so churn is small either way.
+>
+> To avoid a bisection problem if your tree merges first I need to modify
+> this stuff in the original patch or leave it for Linus to deal with as
+> a merge conflict resolution which is mess I'd rather do without.
 
-> +static int ehl_pse_io_dev_add(struct pci_dev *pci, const char *name, int idx)
-> +{
-> +	struct auxiliary_device *aux_dev;
-> +	struct device *dev = &pci->dev;
-> +	struct ehl_pse_io_dev *io_dev;
-> +	resource_size_t start, offset;
-> +	int ret;
-> +
-> +	io_dev = devm_kzalloc(dev, sizeof(*io_dev), GFP_KERNEL);
-> +	if (!io_dev)
-> +		return -ENOMEM;
-> +
-> +	start = pci_resource_start(pci, 0);
-> +	offset = EHL_PSE_IO_DEV_SIZE * idx;
-> +
-> +	io_dev->irq = pci_irq_vector(pci, idx);
-> +	io_dev->mem = DEFINE_RES_MEM(start + offset, EHL_PSE_IO_DEV_SIZE);
-> +
-> +	aux_dev = &io_dev->aux_dev;
-> +	aux_dev->name = name;
-> +	aux_dev->id = (pci_domain_nr(pci->bus) << 16) | pci_dev_id(pci);
-> +	aux_dev->dev.parent = dev;
-> +	aux_dev->dev.release = ehl_pse_io_dev_release;
-> +
-> +	ret = auxiliary_device_init(aux_dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = auxiliary_device_add(aux_dev);
-> +	if (ret) {
-> +		auxiliary_device_uninit(aux_dev);
-> +		return ret;
-> +	}
+If you add the #undef, there won't be any bisection problem?
 
-Can it be now auxiliary_device_create() ?
+Gr{oetje,eeting}s,
 
-> +	return devm_add_action_or_reset(dev, ehl_pse_io_dev_destroy, aux_dev);
-> +}
-
-...
-
-> +#define auxiliary_dev_to_ehl_pse_io_dev(auxiliary_dev) \
-> +	container_of(auxiliary_dev, struct ehl_pse_io_dev, aux_dev)
-
-Wondering if we may use container_of_const()
+                        Geert
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
