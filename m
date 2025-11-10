@@ -1,87 +1,87 @@
-Return-Path: <linux-gpio+bounces-28330-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28331-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02348C49A6E
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 23:52:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D6D9C49A7A
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 23:53:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 990FE4E19B2
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 22:52:48 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0E6D94E36AE
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 22:53:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 569452FB094;
-	Mon, 10 Nov 2025 22:52:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4FBE2FD7D0;
+	Mon, 10 Nov 2025 22:53:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qBbJc/F3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AudvVO2c"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yx1-f51.google.com (mail-yx1-f51.google.com [74.125.224.51])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9B92D8DD0
-	for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 22:52:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76F9285042
+	for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 22:53:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762815165; cv=none; b=NHx99lLm7afvtkaJDJkRTcdYURo0zlLDiJVLlKmXqvctLmdiA3a16z0rraBi4J4qCym1Es8vUh70GzZ1BQS0UEtEWI+Hx+Y4Hl/OpoFzqQjfi7C6u5cNQ3wbdf1Rp34pBy/82KxPxkBMCIWfhbIolUCmxLVDs2L1JMQ42duHJ4w=
+	t=1762815213; cv=none; b=NlWHLBfoA9AQJCbOxXQosl13BMj6QYjLbTpx6v8uZmKaJTR6610Xs7yB/TK3jFQW2l2KtJv0C3mD9rHakZV4N6RAPo38z0q07x8tbCgISu/scsbA+2gD0Us3fWSTedIjuGyn4jgTmgaEueFP45w4OAhofLzuL4CeLvIcnCIOFmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762815165; c=relaxed/simple;
-	bh=e1py0u0utYWHo7/l1W7Je5JBWA2HdEgA99GWQqp1Jxo=;
+	s=arc-20240116; t=1762815213; c=relaxed/simple;
+	bh=wisYcRrfbRCUS5Nty2NE2uua4YAjjkpHuPSNAbv96NU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z8IfHhRTou2Tf3Jwn44LED9/ZTAuMCzi44Nny8Jtdd5POpqBbS3Orjxs3PJNgj92ptAZ5rxJhO6SeimWq4LDJhB4DbamMwTcOgLMA8nTPt6E06Azlhram4AFGTKoak2AhI60ypj8X7MEq0PeDcGY3SlXP5vITjcy176MV7OltTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qBbJc/F3; arc=none smtp.client-ip=74.125.224.51
+	 To:Cc:Content-Type; b=iCzLMzJyvZ/iMdffrVbZ/KRqwOzO1smpsZAXZYdkuBSo1IR6fO8mAjwIUfvVGyZ0pGJVMXhNDdqD8k7dBDOrbe/AAX1XppLypvHRL+qezp++Vhu8UzDSZOXoaCHxv0sKgzdfyO1tpIO0DXEIhzoJiHWqtj1YbQiAW1aU7Y4okg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AudvVO2c; arc=none smtp.client-ip=209.85.128.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yx1-f51.google.com with SMTP id 956f58d0204a3-63f74b43db8so3354053d50.3
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 14:52:43 -0800 (PST)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-78802ac2296so6106317b3.3
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 14:53:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1762815162; x=1763419962; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1762815211; x=1763420011; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=e69bzKGqU+9xaMHquTs0eaIXXjQzWHdQrkisPshqz9o=;
-        b=qBbJc/F3buGOF/kqHDhz3VQ3kX2VhTHpeyYs8sR3jEQX3JONZhYUIEf0pY10Iy7e2S
-         LP4fT7e8h6B3EHDJGAyaDFCpXwvPGYTGQu5X1s2Uvcl9SPQSVjGnOpF2FVK8XDCFP5Vi
-         7mkPoESH3a9XyUMJh5+XqaTTOfkdKfPIOsB+QowCeRA6wQXCBA5XeFcLk0k3RXyxOTnU
-         OwDBBNckErBocVZrCcO8i3fqyuuOchJWVCw/8Rj5rn7GmKi3xSJG9FTJM6e93FF4O1pD
-         3bLH6XaPJAt63vCIoFpVQNYelWrjSQFVgF/BeG2I/ZatxxWe8A39Rof1jPIbvr4Wq32p
-         gJmQ==
+        bh=wisYcRrfbRCUS5Nty2NE2uua4YAjjkpHuPSNAbv96NU=;
+        b=AudvVO2cMkyPBBwt2VKR/f0oHN0f0k6h118jW+/y565F5diSyp65yYptVRGZrhn55I
+         KsPpNbCg2Q1HLaO/Xz6IGyRYtCtHKiJm7xnfEU94r57rSGr3FK+syusG69becW1ZwiYo
+         6eUbAn1YGKK1sRnYF80Cl7sLxK5YPzsr2J0OYi19GxKh7UonFjagPCXlB9d60lOqH6q3
+         8EALVKAAcKl3odRqL5NJF5fvc74qARSfXqFkCo5BO26UkK/F9SQ4HhU+zG1B95HrhBva
+         c5VtiSOAheZ2LaAHL3fpfwdUPFlCoJt7Ij3aa9/615Y7tZ46vD1gTPo6DHyo9ZV1/87A
+         p03g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762815162; x=1763419962;
+        d=1e100.net; s=20230601; t=1762815211; x=1763420011;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=e69bzKGqU+9xaMHquTs0eaIXXjQzWHdQrkisPshqz9o=;
-        b=leqLutTHsqMHcdmQ/SzKC2tm3hKV90b2OnZAVxN7gO1hD1IwcdZmNiLn3Ga9tiH8Vl
-         J58w02QwHt2L2mBCr7n/aRbj4Eqvzz22cBUtDAdKL0NrPMx5kN1SAQjeaZ8MmGa4KUhA
-         e36mS/A6CkYmqhNXQaXhRHIJcd0iVZvGvDZZkO0803yjh6DhelurqsozzFIAjL2vrlvN
-         jenblY5ywAIXEx0V0X6ZXjNISY/5WgPGyxmn/M7hsffW79QwnRvyn/lpXLIJ2QjdvUHS
-         zdkhcxaZrLKIFr5hxobXuF4mL6lM2prwmHOPXt7Kmbz7XHG8kQnkidki0esxhe/0MvLv
-         rqZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWw3e1WnvadM/jofynpONed1VbfQDXJgoj8XVCbqJMoE1f6tALR9ZbSYp7yIji79IOUCmQqvr3Zhk6P@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5BIkykRLfRfmMv9jp0hZ6WIsTL9bYPuDeHp63PMZPhJoDli0O
-	BugSpzH1J540AN6tAWELlKZP/cORq/qnTuHyRFcvN5iWyisgjOe9vNaCdVxrg335yrN7bWZJiIY
-	IwuUx8kBipkODjQG0wKAXx2pR7lzNZvJjGtiqzzYA66XoioTfCFf+fmc=
-X-Gm-Gg: ASbGncsB3CASGF2Ljm4sA3v1rE9dl7+Nt0ak32K+tndMMZdZickgSGf/UxI1zReINzl
-	tVloRoZOoyM15neDosHzktun54JZRqx4xzxQ2nJH+ZPEfi28fPhXqoR4TuUrzEpYG43GnLCMjh0
-	Oj90kXOxtV4yIhr6EVBhTaK3L/Zm9EkIKIHinhh5t0Jc0+gDHbU33lFSVg286WVjzzRh/WHJ+70
-	8IfyIlQxgcYIIRg6atIN5JiVIz7WdNOm7/H/PtIVx6CD+je991dgs1OE11M
-X-Google-Smtp-Source: AGHT+IHBmRt3S1iPiXw2thNDNCdZasn+AuQ/RS/ehj83SprtweqPp18ZkHRLWpz/3jwXQRhojABpABGJjki8F1WXwFM=
-X-Received: by 2002:a05:690e:15d5:b0:63f:ad02:8d8 with SMTP id
- 956f58d0204a3-640d45b7539mr6601936d50.31.1762815162228; Mon, 10 Nov 2025
- 14:52:42 -0800 (PST)
+        bh=wisYcRrfbRCUS5Nty2NE2uua4YAjjkpHuPSNAbv96NU=;
+        b=n58jOUn9Y2rqqze+cWrk0Y0m2MT4AxSuutDvKFG6KTHYycY5wgL6CatjA6cUaJH6Kv
+         brgBgbgmguYWhjGdZom1DhpT2o2YTUD/Am+vz8PVxmvH7PJo7pchM2ExdlzH3pf4K3+o
+         ImOd4cCaCgpjB+dh/kr/pYIj8cpdHAvjN4pxFOaPoMG/MAIzEhkIAzUs/dGSMXf/8G5Y
+         klDGS60YsRLrCtg7Y22kGdvvPrhMlcA3dGaGpHMPO28VuWOWY3GzujcSLqzjkpSwn317
+         cTbGjs3kYyaDEaqxoZbaDjz0VwVlSoSS4HIX/E7BFwIL1MY/LtgWaFUPah+sdAgqUMyP
+         q8Vg==
+X-Forwarded-Encrypted: i=1; AJvYcCUSKufGFPcuuGM7w8l/8Pd924EtaBa0VYjgedFh+be612K4tk7mzhp4R0/6u4wBc9m8GdVpDmYTAtQN@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtYQNq8DiMAkQzST2KyjEQd5jNA8e6/ujTMsBXd6gZReVj+hss
+	64yXUOnuTXGTRsDGfSJYGHThfv+EPidPovRv9oSYCcCPo0v4NemKO9yvqBlos/KpJCOxVT2Ze0f
+	8T//bXEc5HUcuqs/r1amnGTXRXC+etJ3oJUv4R/CHHA==
+X-Gm-Gg: ASbGnctBpbBX3VoPMgODRn3qQ9do91V+p6LZ4nZxDZoV2dogQW99MySclTwgULtraSP
+	vMkXhB3szIerW9MI/2X2FW4HKR9BQ3HrRbqvJ4fXxH/KLARnLgCOIAQU/6C7jkSheQ92H91UdQq
+	nl6VnshmO3/fKcM42FXpFHPVheliYTfwQwAwT6dE4qgaECEmiWkUC9ds4Uq/qKsfW2h7hqKF9ue
+	UyXE/Ilg/mZBPg6hwwLgw/rBnbeIJkhvISrUgYBlvHw6+DCuG1lfV0Fe3DD
+X-Google-Smtp-Source: AGHT+IHNyQvNqmdYrM78QwHVRvJjiWbfKP8B2ocT8ZX+eLdaIL3JAgnLzsUw0lJqDlEMqAhgvtyOmYzmDcTqXg2ZMiA=
+X-Received: by 2002:a05:690c:b96:b0:786:a8bd:3511 with SMTP id
+ 00721157ae682-787d5344644mr101270777b3.4.1762815210861; Mon, 10 Nov 2025
+ 14:53:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251105163610.610793-1-jelonek.jonas@gmail.com> <20251105163610.610793-3-jelonek.jonas@gmail.com>
-In-Reply-To: <20251105163610.610793-3-jelonek.jonas@gmail.com>
+References: <20251105163610.610793-1-jelonek.jonas@gmail.com> <20251105163610.610793-2-jelonek.jonas@gmail.com>
+In-Reply-To: <20251105163610.610793-2-jelonek.jonas@gmail.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 10 Nov 2025 23:52:26 +0100
-X-Gm-Features: AWmQ_bmtS8b8Vht8lnhMRbctSoyy40cmfZtuyTPFxm5FtvZFqQQEfuMzy_HkNpM
-Message-ID: <CACRpkdabTaVsqXOhy_QOdi3WNM3TPfEodt1miQkdcSrYWyYGxQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] gpio: add gpio-line-mux driver
+Date: Mon, 10 Nov 2025 23:53:14 +0100
+X-Gm-Features: AWmQ_bkxttTo889YZn0qA_t2H-4zQ19FSfxreSfKwmw2tLV48lnj9lIQa9TIwuI
+Message-ID: <CACRpkdbo-mT18fws2J1eUsN=-KQQ36YLiWS-p6nTwRqHnmDq5A@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: gpio: add gpio-line-mux controller
 To: Jonas Jelonek <jelonek.jonas@gmail.com>
 Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Peter Rosin <peda@axentia.se>, 
@@ -91,61 +91,18 @@ Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Jonas,
-
-overall I'm really happy of how this has turned out!
-Sorry for not reviewing very intensely the last two weeks :(
-
-One review comment left:
-
 On Wed, Nov 5, 2025 at 5:36=E2=80=AFPM Jonas Jelonek <jelonek.jonas@gmail.c=
 om> wrote:
 
-> +struct gpio_lmux {
-> +       struct gpio_chip gc;
-> +       struct mux_control *mux;
-> +
-> +       struct gpio_desc *muxed_gpio;
-> +       /* dynamically sized, must be last */
-> +       unsigned int gpio_mux_states[];
-> +};
+> Add dt-schema for a gpio-line-mux controller which exposes virtual
+> GPIOs for a shared GPIO controlled by a multiplexer, e.g. a gpio-mux.
+>
+> The gpio-line-mux controller is a gpio-controller, thus has mostly the
+> same semantics. However, it requires a mux-control to be specified upon
+> which it will operate.
+>
+> Signed-off-by: Jonas Jelonek <jelonek.jonas@gmail.com>
 
-Dynamic arrays at the end of struct is a bit of a security pain
-and we probably want to avoid them if we can.
-
-The typical idiom should be:
-...
-    u32 num_gpio_mux_states;
-    unsigned int gpio_mux_states[] __counted_by(num_gpio_mux_states);
-};
-
-> +static int gpio_lmux_probe(struct platform_device *pdev)
-> +{
-(...)
-> +       ngpio =3D device_property_count_u32(dev, "gpio-line-mux-states");
-> +       if (!ngpio)
-> +               return -EINVAL;
-> +
-> +       size =3D struct_size(glm, gpio_mux_states, ngpio);
-> +       glm =3D devm_kzalloc(dev, size, GFP_KERNEL);
-> +       if (!glm)
-> +               return -ENOMEM;
-
-(...)
-
-glm->num_gpio_mux_states =3D ngpio;
-
-> +       ret =3D device_property_read_u32_array(dev, "gpio-line-mux-states=
-",
-> +                                            &glm->gpio_mux_states[0], ng=
-pio);
-> +       if (ret)
-> +               return dev_err_probe(dev, ret, "could not get mux states\=
-n");
-
-We use this pattern in the core gpiolib for example.
-
-With this addressed:
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
