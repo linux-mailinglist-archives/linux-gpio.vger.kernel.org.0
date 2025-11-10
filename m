@@ -1,88 +1,88 @@
-Return-Path: <linux-gpio+bounces-28294-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28295-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 159ECC45F04
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 11:31:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86659C45F14
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 11:32:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C9613189398F
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 10:30:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C407E3B6B5B
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 10:31:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D9652FE592;
-	Mon, 10 Nov 2025 10:27:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 497F430149E;
+	Mon, 10 Nov 2025 10:31:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kqguwfo/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wVT8DuZt"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yx1-f41.google.com (mail-yx1-f41.google.com [74.125.224.41])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA67218AB0
-	for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 10:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32006225762
+	for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 10:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762770460; cv=none; b=eqwbQhVxZUTd5KYqkgS7bva/OFWjohBRtjiwgs2TSEPSmoR6vpgw9Jxcb3PoTgqkBQ1PbSkf+dyIdunNA+0sD8swUtJYK73ZXbcIqAUo6uX++ueeV72MjJE8O9sFWW8D7k9LaqTQO/vBsADT/2JmPyfNPxteOpu2r5QHGAkzpBM=
+	t=1762770663; cv=none; b=bspSGUJa6qD+bWvAtJhQvnSeSP8WfjzhM0ZCNlB2Cv1lDhwOQXuUQipfzu5xK3Nm1QxmJjvhKff/+5mOE+EQ3jrnYoD6PmRsVIWePE9dTm+66Tu61rM731OZpQgeeQe6J2ODx1quds4XtSo3H+FU1Y1tZG7LICQwWzKHhN5AMwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762770460; c=relaxed/simple;
-	bh=vHmidB3JYdOUlrmaPoEMyBdxapyGxcVzPk7ayQBh8IA=;
+	s=arc-20240116; t=1762770663; c=relaxed/simple;
+	bh=GISx0LVyM2/QgivELlFUbtboVFx5/0Ttdw8BgePqXok=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BRr2BS7SMJYTMN7ooNaLlNxvx8QYESHLxO/ggLmkMhVQX3rRd/Ssq3F3vhB/7it8DwNQuDDMqmoU/aI7rtDU09FQo7GYd+xTLeZDy9laxZOKqcfJzHuQbfsuxEN+skAYb/BM1uT5FSqDROxs/APRODP5JT93kJ8wWndifnN3zlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Kqguwfo/; arc=none smtp.client-ip=74.125.224.41
+	 To:Cc:Content-Type; b=SosQ0dMroXTaalNKnI/PL1gC/9SxvOQpkuCgaYrgr/4H/FdmXeNCL6tKjN/JEM/WJhjJdVBTgH6osMmDsEpZw+LMT9WFaYlJ98WcEFBLP1VYcbAHB8KikeElV4hnCm+kqTqoKGyM46vnLuoqDCqLTbCyBqzCKlV4GlVOWkp83K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wVT8DuZt; arc=none smtp.client-ip=209.85.167.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yx1-f41.google.com with SMTP id 956f58d0204a3-640d8b78608so914735d50.1
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 02:27:38 -0800 (PST)
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-594285c6509so3085987e87.0
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 02:31:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1762770457; x=1763375257; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1762770659; x=1763375459; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nVCYh3cOicnQPAZADw6na14qsKJaeo3pCqBgTcCqyAQ=;
-        b=Kqguwfo/iTUdmji6/BL9/F0DC/A//OS3Ad8TfxmwUK6sFzQ2GJAzdWis78YesV0y6m
-         3oi3af4ALbNT5/FJdUuUiKw38vTSA1SbpkgDNcK8rXWa6GTgH/Ubon6jH4Nop8cKz2sr
-         QSPs8hvaQBB2xi7U9PrVMV55G5cC4tkiRcnvye+8faCn5ejlg2m6EdLb/eQOnCKNRp1N
-         h9QH1robr8nxXZRaJaXSfSGUUOIaP9y/6Pw/UlwuyktdEFqcvz7pKS46ASuQt+ZpXYTk
-         Cq9m4PveYN+npCgj9iOP7Rc1kEGWMSKwVu8osvlpYO1iUFB04yiZ99v7OlYvYWzjw+T6
-         jiUQ==
+        bh=QU08++yZFWV12YufiFjJiqJethik/+S6rZcQDhNnBws=;
+        b=wVT8DuZtYqJGoFHtBH+2Yw8BycLbNfKvuz7XIoCaZ2aYIEJABKzAS9INK3go7kiOXO
+         0x/EvkIXjfJxrIMvEmTROhOjkITQ136CY2l6r3qYLISernAVQeFJYpAF7bnJHI5wP4/A
+         zh1ayRfklvpvp7vxCd34uTLQoyg777PuNg6tRlcc5EynL2eQEmy1rFeXSK4zcxiYSLdL
+         BgMfSF0S/GS83DqGvO7YdqNkyLrMnYuJu4j8xteFM+Pseof4PvStY2PabnNFdtz5YHmK
+         4CNNILVl64/8gR6uTlGZk3B6oXytOaqv9ZuF259AqNf2yiy9x9P+hCPFm7IqpjpPH3xY
+         LYiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762770457; x=1763375257;
+        d=1e100.net; s=20230601; t=1762770659; x=1763375459;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=nVCYh3cOicnQPAZADw6na14qsKJaeo3pCqBgTcCqyAQ=;
-        b=FslfOBFecJmJmc2qqDCfVe8zPfXvfTxFzzjKT9AX54I6I4NnRTs/qciazaBKnwotxT
-         fyHpVz0O5fqG5RA6wj9YoHwD5raCmk7GUDTlxry2thDnT2KuTf2zwPAacjEh3uGvt0VD
-         icF6KRW6TQzPXxlu4KyYWh2V9MGtbXcDYFXYNBoJtaNEFc7U4xhbHwBqvX2N9EfvJLCM
-         oK7PF5o27UPf1zsjfLi1tXR6BvKArAbNua5CXO4LTwDK+El20jR9H5LE9syfBpgoS90/
-         +ungoikKP1g5Tj1qtV+0enNjIISFGQ1vz8X+FGGCyRsjppBmForjWOpyhnWpSHOx4Qq9
-         pK3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX7F+keXDlUt4ttJCDPF4hk+phYihAAfx3sD3LKNWiPsz+F94D8vaP9qyZihNHvXmiB/vHDuZ66dYXD@vger.kernel.org
-X-Gm-Message-State: AOJu0YwW5DQfTTvlKjrNBlynwVaPbZkFipiunoJWtZrM0248LxYn8b9p
-	t9q6jYPar6oPMD3A5UBvzTXoVfo3nDivCE/4DiSF9Fl0zSQOvfAwv5+qARuPtPlPq7ZbPddIYug
-	UzyajKP5emF0c11msAR1LIoVXFsu4ugEtXcH5JcShJFFiS8YFI9F87fM=
-X-Gm-Gg: ASbGncsNBRcL4BenlZzxk5gWVjnTr6jJsheWE3G1N+91MuCKi0mlf4+Ebw1UkFcSsOf
-	g1GUmlaRi8+7zRjUBfKRNOG549zqIMGXKOs57pj21ttmg8Gu5+RKBz9Ip/iry53Ze9rGdSIh2d4
-	kUHteU90FVJbpA3vr8gbbCME+N95FnqhAgd2SxUIsFSVrrITjIOcuIP6+ylssIyiNZqjcDhA7tZ
-	Cf8V5tqdM55WI6S6sTlkiwzMkspDIW6P5cX1qQ65dAKMg138Ag8sRb/Xlq6ocrH3+w7t94=
-X-Google-Smtp-Source: AGHT+IFy7NetjpMNmDFBssokdBlYgtJrB1CLHXUC0uao2NpzAB1FWHhlXBZS+ZbRtp56BCz83WPIRmCOAMhfYJD6TgE=
-X-Received: by 2002:a05:690e:4191:b0:63f:beb2:952b with SMTP id
- 956f58d0204a3-640d4522d5fmr6227377d50.9.1762770457466; Mon, 10 Nov 2025
- 02:27:37 -0800 (PST)
+        bh=QU08++yZFWV12YufiFjJiqJethik/+S6rZcQDhNnBws=;
+        b=I8LrCl09gfQM0J9Xop/LY+4SgphpoO/BH7zpLb8/T5jKdYRJ9nhC3f1blSOgXdGLNu
+         oY1+w2JyO3NzxmR67JQFLstOx6LI7VEJfNeT6FQyMD8Q9NPEEE0IoSgxjV4w9R0DmSgZ
+         15lUzOLCvndUg/ZjdikAbb0PsmFSs4fIYa7lt7fHy9RLSKBRNqzqlSAV29BRBU3IWinI
+         6hQHkuZg3N3WXigpaVz+BzETBiQpi6WpgrCKnJoE9iX1f/pqvc/QVJCsj6SMNswbAv/Q
+         v7GyXwetGuCL8kXNRT12czFtKx8nAWVgfXbFOOQ6dOcB8E+Ta3LIfuIMZS8kspx9RVot
+         KN2A==
+X-Forwarded-Encrypted: i=1; AJvYcCXq47UhdcrRH7LGezVYoAkefj6P7ShwtQfU+MMp9g9/AOlnKo7Mcgnah/lhqC/mZ09Z4RxvEN0ZGJvu@vger.kernel.org
+X-Gm-Message-State: AOJu0YyA4XiFAotTCR9qBaOU6HR1CT8Bhe2+YqyBieQJJwp/z1E2NAtm
+	GVRobHDjC0VZ7QDChEemvodV4zLoOdDjb2CvaIHeg6D6VoRELVOivO8d8ivCPACYV1XUnjBdCPP
+	eJMGfm+jpqk8AO79lhaHAT+uHSjL2GHPtTOthgMTZGA==
+X-Gm-Gg: ASbGncv4GDmsg1ZTLbQ/mMWkq9IVwTd2xPclBGlUVY+WYAi+97joeqYSXmnwZxVcjKE
+	87C8nE1gkJMUg011Vt3TNDOUjCkh+1SXORLtCrF9TWZ1Gb+I7Tbj0tPieQgYIum1XA/8z2xbpct
+	zpYWhfQItK2fGXLiqHncSiCpupcMPmxFjYqFIbYA8hBZrLulyCPkeS7xaC3ErldXMgDucJO/5l4
+	qD5OHIw4t2ui92VNmVR0gK7eyMD8Xbzm7rTnjkw3eAdTSpoqwdr7lLqa+YCVCVvHU9R1QI=
+X-Google-Smtp-Source: AGHT+IGIXbIku+5fYyzKohAAT6RG/P8U2C7G8e9kXvVMEvCfF8edHPq84Zw+IaV6jNgp67Ypm1mnZzGXPUSxOGgBk6I=
+X-Received: by 2002:a05:6512:3d05:b0:57e:c1e6:ba8 with SMTP id
+ 2adb3069b0e04-5945f146395mr2089860e87.12.1762770659287; Mon, 10 Nov 2025
+ 02:30:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251031160710.13343-1-antoniu.miclaus@analog.com> <20251031160710.13343-2-antoniu.miclaus@analog.com>
-In-Reply-To: <20251031160710.13343-2-antoniu.miclaus@analog.com>
+References: <20251031160710.13343-1-antoniu.miclaus@analog.com> <20251031160710.13343-3-antoniu.miclaus@analog.com>
+In-Reply-To: <20251031160710.13343-3-antoniu.miclaus@analog.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 10 Nov 2025 11:27:20 +0100
-X-Gm-Features: AWmQ_bnnEqKDQ_v4UfUWlBrt9G_CKxPBfs7G6bPAG1nsql-e1R9Rf9Z2Y73CBK4
-Message-ID: <CACRpkdaEq1cumg_z0A5LV=6nh5QqZ9x1_ZDuf8XTzgub4XVVqw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: gpio: adg1712: add adg1712 support
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>, Peter Rosin <peda@axentia.se>
+Date: Mon, 10 Nov 2025 11:30:33 +0100
+X-Gm-Features: AWmQ_bn6eI5FE_ScZi7BjkTK0y0_CSDlwCtPcUJZzvZroFx81ufpj8BGANUbJDU
+Message-ID: <CACRpkdYdtcnxyP4xVsqVK+geurEOEURqZO5eLC96YMqh1sE5Sw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: adg1712: add driver support
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>
 Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -93,84 +93,27 @@ Hi Antoniu,
 
 thanks for your patch!
 
-Add
-Datasheet: https://www.analog.com/media/en/technical-documentation/data-she=
-ets/adg1712.pdf
-
-Before signed-off-by, thanks.
-
 On Fri, Oct 31, 2025 at 5:08=E2=80=AFPM Antoniu Miclaus
 <antoniu.miclaus@analog.com> wrote:
 
-> +title: Analog Devices ADG1712 quad SPST switch GPIO controller
-> +
-> +maintainers:
-> +  - Antoniu Miclaus <antoniu.miclaus@analog.com>
-> +
-> +description: |
-> +  Bindings for Analog Devices ADG1712 quad single-pole, single-throw (SP=
-ST)
-> +  switch controlled by GPIOs. The device features four independent switc=
-hes,
-> +  each controlled by a dedicated GPIO input pin.
-> +
-> +  Each GPIO line exposed by this controller corresponds to one of the fo=
-ur
-> +  switches (SW1-SW4) on the ADG1712. Setting a GPIO line high enables th=
-e
-> +  corresponding switch, while setting it low disables the switch.
+> Add driver support for the ADG1712, which contains four independent
+> single-pole/single-throw (SPST) switches and operates with a
+> low-voltage single supply range from +1.08V to +5.5V or a low-voltage
+> dual supply range from =C2=B11.08V to =C2=B12.75V.
+>
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
 
-There are two unclarities here:
+So tying into the binding discussion:
 
-- I know what an SPST switch is, but how is that electrically controlled?
-  Is it actually a good old electro-magnetic relay? There are clearly
-  details missing here. When I look in the datasheet, a symbol for a
-  relay is present in the schematics. At least explain that they work
-  "as a relay replacement" (literal wording from the datasheet) so
-  we know what this is.
+GPIO means "general purpose input/output".
 
-- GPIO is general purpose input/output. This is a narrow fit with that
-  concept. This device is more of a general purpose mechanical
-  current switch. We need some motivation here, explaining why
-  GPIO is a good, operating system-neutral description of what this
-  device does.
+I am really confused as whether this is:
 
-Perhaps we need to create a new binding category
-dt-bindings/switch for this, even if in Linux specifically we chose
-to model this as a GPIO, it could just be something we do in
-Linux, Zephyr for example might want to have a dedicated driver
-for switches.
+- General purpose - seems to be for the purpose of switching
+  currents and nothing else.
 
-Also I would like Peter Rosin's eye on this, as we have
-dt-bindings/mux which is selecting one analog line out of many
-and it's close enough.
-
-> +  switch1-gpios:
-> +    description: GPIO connected to the IN1 control pin (controls SW1)
-> +    maxItems: 1
-> +
-> +  switch2-gpios:
-> +    description: GPIO connected to the IN2 control pin (controls SW2)
-> +    maxItems: 1
-> +
-> +  switch3-gpios:
-> +    description: GPIO connected to the IN3 control pin (controls SW3)
-> +    maxItems: 1
-> +
-> +  switch4-gpios:
-> +    description: GPIO connected to the IN4 control pin (controls SW4)
-> +    maxItems: 1
-
-Why not just use an array of GPIOs? The property has the suffix "gpios"
-(pluralis) after all.
-
-I'd just use switch-gpios =3D <1, 2, 3, 4>...
-
-> +  gpio-controller: true
-
-So this switching capacity expose four new GPIOs, are these really
-GPIOs, that's the question. I think we might need a new binding
-category. Either this is switch, GPIO or some type of amplifier.
+- Input/Output - It's switching something else and not inputting
+  or outputting anything and this makes the driver look strange.
 
 Yours,
 Linus Walleij
