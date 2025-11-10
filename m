@@ -1,219 +1,127 @@
-Return-Path: <linux-gpio+bounces-28278-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28279-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id D19CDC44CD5
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 03:50:11 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FB2DC4503B
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 06:28:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id DA62C345DBE
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 02:50:10 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7037A4E7B28
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 05:28:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0BC123C8D5;
-	Mon, 10 Nov 2025 02:50:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A77B2E8DE3;
+	Mon, 10 Nov 2025 05:28:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="NXeu6m4w"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TT0qTdxP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 397E220330;
-	Mon, 10 Nov 2025 02:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8902C11CAF;
+	Mon, 10 Nov 2025 05:28:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762743004; cv=none; b=fDJj3yv66ygPC+MRFUzaMyUuvi5F/W185SNHrKkDTgACucZrEfIpzyK241ao8KsTRTkF1STL4Rsz92QL8BkaJi1NjpHNlydha+EsN+elI4MDWnGWWFh7W8arHtxqKQrVoePs9tKaYjXhE6LylqFWUdi7SuEILLJZsyhyvL819CA=
+	t=1762752498; cv=none; b=bzpXx9wtFHj6OyKNDDf1IFDQEZVfQdYGifu2UVV47gRzXIOhdzy/yJMW2i5dsimzfkbPNa1eIv+zOv14ZTaubjDBeW3hrZSpUwTwlEaGlGCuQGvJOxkoLu2mDmACbF6wS3lq578Ymq+n39KWTsyORF0ssxlqQWhJCqTDFmqBEB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762743004; c=relaxed/simple;
-	bh=1cIL7/KPl3K5v0wQHaJ0tGfwMgE5xx/pMZWjRm2tfIk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:Content-Type:
-	 MIME-Version; b=hrkByD+UQ92iphiCNpB9AkVhN+x/5m7aLpvZdHKV0xGC6Ip8DYEAz/Yq2BkU82I00yCyUKCOyTaKqnfrp4JvrJH4/5FPPjkbTnrrBwUSvLHhuOockGBuCZ9bGdY1g1EwmRFHwqLKV2WEX44Tz7FSXXDzNYpmiJnWBIVTxM8cO+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=NXeu6m4w; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 5AA2hbGwB716235, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
-	t=1762742617; bh=1cIL7/KPl3K5v0wQHaJ0tGfwMgE5xx/pMZWjRm2tfIk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version;
-	b=NXeu6m4w8KSIT/e89NQIAhnT0TTUgnu/lICYnlmDLN6lG+JAS5BBSg4pfyHxOZ+3G
-	 MzKwilsYGhtBNzZkD7rUNJCT3VNQl98gZXpKjgSPPQiuTxDdeIuzegB6cC4M5XsTJS
-	 AV7e9bElud20xerYcARWvseFofGg25WQqasBBRr5eZAnHJU18VeEzJYtSPiNV8xEjE
-	 78GOeYXYKc+5Kjgu9vL26BGNE5uua7vNEW7kgceGHaDh/qy5GivYAfodqfyMvlq2ap
-	 9zwrtSw2nup/b6fBieuy1tiYv1l7lLfGHKxd1nnqQcgtG3k9Hw7RTQVM7B8bAUUUrb
-	 a5rLbIXf8JWcA==
-Received: from mail.realtek.com (rtkexhmbs04.realtek.com.tw[10.21.1.54])
-	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 5AA2hbGwB716235
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 10 Nov 2025 10:43:37 +0800
-Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
- RTKEXHMBS04.realtek.com.tw (10.21.1.54) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.27; Mon, 10 Nov 2025 10:43:37 +0800
-Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
- RTKEXHMBS06.realtek.com.tw (10.21.1.56) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.27; Mon, 10 Nov 2025 10:43:37 +0800
-Received: from RTKEXHMBS06.realtek.com.tw ([::1]) by
- RTKEXHMBS06.realtek.com.tw ([fe80::744:4bc9:832c:9b7e%10]) with mapi id
- 15.02.1544.027; Mon, 10 Nov 2025 10:43:37 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-CC: Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Yury Norov
-	<yury.norov@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "Stephen
- Boyd" <sboyd@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea
-	<claudiu.beznea@tuxon.dev>,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        David Miller <davem@davemloft.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski
-	<brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery
-	<andrew@codeconstruct.com.au>,
-        Crt Mori <cmo@melexis.com>, Jonathan Cameron
-	<jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Jacky Huang
-	<ychuang3@nuvoton.com>,
-        Shan-Chun Hung <schung@nuvoton.com>,
-        Rasmus Villemoes
-	<linux@rasmusvillemoes.dk>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
-	<tiwai@suse.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jakub Kicinski
-	<kuba@kernel.org>, Alex Elder <elder@ieee.org>,
-        David Laight
-	<david.laight.linux@gmail.com>,
-        Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-        Jason Baron <jbaron@akamai.com>, Borislav Petkov <bp@alien8.de>,
-        Tony Luck
-	<tony.luck@intel.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        "Kim
- Seer Paller" <kimseer.paller@analog.com>,
-        David Lechner
-	<dlechner@baylibre.com>,
-        =?utf-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>,
-        "Andy
- Shevchenko" <andy@kernel.org>,
-        Richard Genoud <richard.genoud@bootlin.com>,
-        Cosmin Tanislav <demonsingur@gmail.com>,
-        Biju Das
-	<biju.das.jz@bp.renesas.com>,
-        Jianping Shen <Jianping.Shen@de.bosch.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers
-	<nick.desaulniers+lkml@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>,
-        "linux-renesas-soc@vger.kernel.org"
-	<linux-renesas-soc@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org"
-	<linux-crypto@vger.kernel.org>,
-        "linux-edac@vger.kernel.org"
-	<linux-edac@vger.kernel.org>,
-        "qat-linux@intel.com" <qat-linux@intel.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-wireless
-	<linux-wireless@vger.kernel.org>
-Subject: RE: [PATCH v6 12/26] bitfield: Add less-checking __FIELD_{GET,PREP}()
-Thread-Topic: [PATCH v6 12/26] bitfield: Add less-checking
- __FIELD_{GET,PREP}()
-Thread-Index: AQHcTzpEEEZZM/7p4kSHE1AyVJF587TmYVZQ///87ICAAIzmQIAETHKg
-Date: Mon, 10 Nov 2025 02:43:37 +0000
-Message-ID: <5cc8a69c155948078bd14e5f031e4468@realtek.com>
-References: <cover.1762435376.git.geert+renesas@glider.be>
- <cfc32f8530d5c0d4a7fb33c482a4bf549f26ec24.1762435376.git.geert+renesas@glider.be>
- <aQy0T2vUINze_6_q@smile.fi.intel.com>
- <CAMuHMdXVUJq36GvNUQE8FnHsX+=1jG4GOJ_034r=fgr_Rw4Djg@mail.gmail.com>
- <aQzIIqNnTY41giH_@smile.fi.intel.com>
- <CAMuHMdW8ndAdGnSHopYFMWvw7wk7wKz_7+N91M1jRHoqK1KBrg@mail.gmail.com>
- <c62eb5a727f149fb9d8b4a4c8d77418a@realtek.com>
- <CAMuHMdU3hWDOWXxuOJcBA7tphBT7X-0H+g0-oq0tZdKw+O5W3A@mail.gmail.com> 
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1762752498; c=relaxed/simple;
+	bh=5GlQ2RD8Es6ybAmN+inqFqJieIz9so3nxskK/NZ1PLw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YTdZzFzvUYiETRbyb6Qe7Woq3mgN6aS20wxn+zkwWvMRPhOwJAmXdxeQWcWUd3F1s85t5POMjq63jpD1pvEoZbmtYzbAb7dD4bXy9xQRZ/w+YDKDvO9kIL0yJnDp/TSpHMaocU3r0AiRc+buZb83v4mh201RGlb3YLrzfZ/qRLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TT0qTdxP; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762752496; x=1794288496;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=5GlQ2RD8Es6ybAmN+inqFqJieIz9so3nxskK/NZ1PLw=;
+  b=TT0qTdxPNRPMSsEKFLa9Cfox+9qCzxymCmunx60LxCOK2HPdwi9VD+/I
+   xDQWy3NntmguJ022Y4kyR/MJmch/bkmZvd1oMUSJBiZPibz6tT7XeRNbw
+   wVCi84xE3+51dXGTVrWS6Oy5vC7CpRvz0IMsDmfeemsHb5iaUUUnp998q
+   g+GfShGpFILbqKqfBCGCwYtjGWEqn3tvW5ThyDihcH/xTIILY8dczv/s4
+   z2T/FBJ2Rez6XaGb3SmJ0lMuztVwlT1B5bWAATCAQd8Ei5OifWOlH4BlN
+   ExMWoCIhnKopE+Q9fY192wZbviNnQrPYuvuW6sLfIE6mSgvQb5VwieU/K
+   A==;
+X-CSE-ConnectionGUID: g828SGDXT2i4OkFoXXWdnw==
+X-CSE-MsgGUID: QgccLiSRScSsNqInba+ryQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="67405750"
+X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
+   d="scan'208";a="67405750"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 21:28:16 -0800
+X-CSE-ConnectionGUID: RxEuLfN5QwOKtP/ua+v7oA==
+X-CSE-MsgGUID: nXCTuBdnT5yWDrpbPLCEJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
+   d="scan'208";a="192691670"
+Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
+  by orviesa003.jf.intel.com with ESMTP; 09 Nov 2025 21:28:13 -0800
+From: Raag Jadav <raag.jadav@intel.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	andriy.shevchenko@linux.intel.com,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Raag Jadav <raag.jadav@intel.com>
+Subject: [PATCH v2 0/2] Introduce Intel Elkhart Lake PSE I/O
+Date: Mon, 10 Nov 2025 10:56:39 +0530
+Message-ID: <20251110052728.383339-1-raag.jadav@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-SGkgR2VlcnQsDQoNClBpbmctS2UgU2hpaCA8cGtzaGloQHJlYWx0ZWsuY29tPiB3cm90ZToNCj4g
-R2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydEBsaW51eC1tNjhrLm9yZz4gd3JvdGU6DQo+ID4gSGkg
-UGluZy1LZSwNCj4gPg0KPiA+IE9uIEZyaSwgNyBOb3YgMjAyNSBhdCAwMjoxNiwgUGluZy1LZSBT
-aGloIDxwa3NoaWhAcmVhbHRlay5jb20+IHdyb3RlOg0KPiA+ID4gR2VlcnQgVXl0dGVyaG9ldmVu
-IDxnZWVydEBsaW51eC1tNjhrLm9yZz4gd3JvdGU6DQo+ID4gPiA+IFRoZSBleHRyYSBjaGVja2lu
-ZyBpbiBmaWVsZF9wcmVwKCkgaW4gY2FzZSB0aGUgY29tcGlsZXIgY2FuDQo+ID4gPiA+IGRldGVy
-bWluZSB0aGF0IHRoZSBtYXNrIGlzIGEgY29uc3RhbnQgYWxyZWFkeSBmb3VuZCBhIHBvc3NpYmxl
-IGJ1Zw0KPiA+ID4gPiBpbiBkcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0dzg5L2NvcmUu
-YzpydHc4OV9yb2NfZW5kKCk6DQo+ID4gPiA+DQo+ID4gPiA+ICAgICBydHc4OV93cml0ZTMyX21h
-c2socnR3ZGV2LCByZWcsIEJfQVhfUlhfRkxUUl9DRkdfTUFTSywgcnR3ZGV2LT5oYWwucnhfZmx0
-cik7DQo+ID4gPiA+DQo+ID4gPiA+IGRyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3ODkv
-cmVnLmg6DQo+ID4gPiA+DQo+ID4gPiA+ICAgICAjZGVmaW5lIEJfQVhfUlhfTVBEVV9NQVhfTEVO
-X01BU0sgR0VOTUFTSygyMSwgMTYpDQo+ID4gPiA+ICAgICAjZGVmaW5lIEJfQVhfUlhfRkxUUl9D
-RkdfTUFTSyAoKHUzMil+Ql9BWF9SWF9NUERVX01BWF9MRU5fTUFTSykNCj4gPiA+ID4NCj4gPiA+
-ID4gc28gaXQgbG9va3MgbGlrZSBCX0FYX1JYX0ZMVFJfQ0ZHX01BU0sgaXMgbm90IHRoZSBwcm9w
-ZXIgbWFzayBmb3INCj4gPiA+ID4gdGhpcyBvcGVyYXRpb24uLi4NCj4gPiA+DQo+ID4gPiBUaGUg
-cHVycG9zZSBvZiB0aGUgc3RhdGVtZW50cyBpcyB0byB1cGRhdGUgdmFsdWVzIGV4Y2x1ZGluZyBi
-aXRzIG9mDQo+ID4gPiBCX0FYX1JYX01QRFVfTUFYX0xFTl9NQVNLLiBUaGUgdXNlIG9mIEJfQVhf
-UlhfRkxUUl9DRkdfTUFTSyBpcyB0cmlja3ksIGJ1dA0KPiA+ID4gdGhlIG9wZXJhdGlvbiBpcyBj
-b3JyZWN0IGJlY2F1c2UgYml0IDAgaXMgc2V0LCBzbyBfX2ZmcyhtYXNrKSByZXR1cm5zIDAgaW4N
-Cj4gPiA+IHJ0dzg5X3dyaXRlMzJfbWFzaygpLiBUaGVuLCBvcGVyYXRpb24gbG9va3MgbGlrZQ0K
-PiA+ID4NCj4gPiA+ICAgIG9yaWcgPSByZWFkKHJlZyk7DQo+ID4gPiAgICBuZXcgPSAob3JpZyAm
-IH5tYXNrKSB8IChkYXRhICYgbWFzayk7DQo+ID4gPiAgICB3cml0ZShuZXcpOw0KPiA+DQo+ID4g
-VGhhbmtzIGZvciB5b3VyIHF1aWNrIGNvbmZpcm1hdGlvbiENCj4gPiBTbyB0aGUgaW50ZW50aW9u
-IHJlYWxseSBpcyB0byBjbGVhciBiaXRzIDIyLTMxLCBhbmQgd3JpdGUgdGhlIHJ4X2ZsdHINCj4g
-PiB2YWx1ZSB0byBiaXRzIDAtMTU/DQo+ID4NCj4gPiBpZiB0aGUgY2xlYXJpbmcgaXMgbm90IG5l
-ZWRlZCwgaXQgd291bGQgYmUgYmV0dGVyIHRvIHVzZQ0KPiA+ICNkZWZpbmUgQl9BWF9SWF9GTFRS
-X0NGR19NQVNLIEdFTk1BU0soMTUsIDApDQo+IA0KPiBCdXQgaXQgc2hvdWxkIGJlDQo+ICNkZWZp
-bmUgQl9BWF9SWF9GTFRSX0NGR19NQVNLIChHRU5NQVNLKDMxLCAyMikgfCBHRU5NQVNLKDE1LCAw
-KSkNCj4gDQo+IE9yaWdpbmFsbHkgKHdpdGggYnVnKSB3ZSBqdXN0IGJhY2t1cCByeF9mbHRyIGFu
-ZCB3cml0ZSB3aG9sZSAzMi1iaXRzIGJhY2ssDQo+IGJ1dCBpdCdzIGluY29ycmVjdCB0byBtb2Rp
-ZnkgR0VOTUFTSygyMSwgMTYpIHdoaWNoIGlzIHdyaXR0ZW4gYnkgYW5vdGhlcg0KPiBjb2RlLg0K
-PiANCj4gT25lIHdheSBpcyB0byBpbXBsZW1lbnQgYSBzcGVjaWFsIGZ1bmN0aW9uIHRvIHJlcGxh
-Y2UNCj4gICBydHc4OV93cml0ZTMyX21hc2socnR3ZGV2LCByZWcsIEJfQVhfUlhfRkxUUl9DRkdf
-TUFTSywgcnR3ZGV2LT5oYWwucnhfZmx0cik7DQo+IFN1Y2ggYXMNCj4gICBydHc4OV93cml0ZV9y
-eF9mbHRlcihydHdkZXYsIHJ0d2Rldi0+aGFsLnJ4X2ZsdHIpDQo+ICAgew0KPiAgICAgb3JpZyA9
-IHJlYWQocmVnKTsNCj4gICAgIG5ldyA9IChvcmlnICYgfm1hc2spIHwgKGRhdGEgJiBtYXNrKTsN
-Cj4gICAgIHdyaXRlKG5ldyk7DQo+ICAgfQ0KPiANCj4gQW5vdGhlciB3YXkgaXMgdGhhdCBJIGFk
-ZCB2YWx1ZSBvZiBCX0FYX1JYX01QRFVfTUFYX0xFTl9NQVNLIGludG8NCj4gcnR3ZGV2LT5oYWwu
-cnhfZmx0ci4gVGhlbiwganVzdCB3cml0ZSB3aG9sZSAzMi1iaXQsIG5vIG5lZWQgbWFzay4NCj4g
-DQo+ID4NCj4gPiBJZiB0aGUgY2xlYXJpbmcgaXMgbmVlZGVkLCBJIHN0aWxsIHRoaW5rIGl0IHdv
-dWxkIGJlIGJldHRlciB0bw0KPiA+IGNoYW5nZSBCX0FYX1JYX0ZMVFJfQ0ZHX01BU0ssIGFuZCBz
-cGxpdCB0aGUgY2xlYXJpbmcgb2ZmIGluIGEgc2VwYXJhdGUNCj4gPiBvcGVyYXRpb24sIHRvIG1h
-a2UgaXQgbW9yZSBleHBsaWNpdCBhbmQgb2J2aW91cyBmb3IgdGhlIGNhc3VhbCByZWFkZXIuDQoN
-CkkgbWlzc2VkIHRoaXMgcGFyYWdyYXBoIGxhc3Qgd2VlaywgYnV0IHRoYXQgaXMgbGlrZSBteSB0
-aG91Z2h0Lg0KVGhlbiBJIHNwaW4gYSBSRlQgWzFdLiBQbGVhc2UgdHJ5IGlmIGl0IGNhbiB3b3Jr
-IHdpdGggeW91ciBjaGFuZ2VzLg0KDQpbMV0gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgt
-d2lyZWxlc3MvMjAyNTExMTAwMjM3MDcuNjI3Mi0xLXBrc2hpaEByZWFsdGVrLmNvbS9ULyN1DQoN
-Cj4gPg0KPiA+ID4gU2luY2Ugd2UgZG9uJ3QgdXNlIEZJRUxEX3tHRVQsUFJFUH0gbWFjcm9zIHdp
-dGggQl9BWF9SWF9GTFRSX0NGR19NQVNLLCBob3cNCj4gPiA+IGNhbiB5b3UgZmluZCB0aGUgcHJv
-YmxlbT8gUGxlYXNlIGd1aWRlIHVzLiBUaGFua3MuDQo+ID4NCj4gPiBJIHN0aWxsIGhhdmUgIltQ
-QVRDSC9SRkMgMTcvMTddIHJ0dzg5OiBVc2UgYml0ZmllbGQgaGVscGVycyINCj4gPg0KPiBodHRw
-czovL2xvcmUua2VybmVsLm9yZy9hbGwvZjdiODExMjJmNzU5NmZhMDA0MTg4YmZhZTY4ZjI1YTY4
-YzJkMjM5Mi4xNjM3NTkyMTMzLmdpdC5nZWVydCtyZW5lc2FzQGdsaWQNCj4gPiBlci5iZS8NCj4g
-PiBpbiBteSBsb2NhbCB0cmVlLCB3aGljaCBzdGFydGVkIGZsYWdnaW5nIHRoZSB1c2Ugb2YgYSBk
-aXNjb250aWd1b3VzDQo+ID4gbWFzayB3aXRoIHRoZSBpbXByb3ZlZCBjaGVja2luZyBpbiBmaWVs
-ZF9wcmVwKCkuDQo+IA0KPiBHb3QgaXQuIFlvdSBhcmUgZG9pbmcgIk5vbi1jb25zdCBiaXRmaWVs
-ZCBoZWxwZXIgY29udmVyc2lvbnMiLg0KPiANCj4gUGluZy1LZQ0KDQo=
+This series adds Intel Elkhart Lake PSE I/O driver which enumerates the
+PCI parent device and splits two child I/O devices (GPIO and Timed I/O
+which are available as a single PCI function through shared MMIO) to their
+respective I/O drivers.
+
+In spirit, it is a continuation of PSE TIO series[1] which received
+objection from Greg for abusing platform device and has now been reworked
+to use auxiliary device instead.
+
+Currently TIO driver[2] falls under PPS subsystem supporting generator
+functionality and will be coming up in a separate follow-up series for
+its independent design changes as per below roadmap.
+
+=> Extend TIO driver[2] to support PPS client functionality.
+=> Develop a PPS common driver which hooks to both generator and client
+   counterparts.
+=> Develop an auxiliary glue driver for PPS common driver.
+
+[1] https://lore.kernel.org/r/20250307052231.551737-1-raag.jadav@intel.com
+[2] https://lore.kernel.org/r/20250219040618.70962-1-subramanian.mohan@intel.com
+
+v2:
+- Consolidate OFFSET and SIZE macros (Andy)
+- Make child device objects parent managed (Andy)
+- Fix double free on error path (Andy)
+- Shorten child device names to fit id string length (Andy)
+
+Raag Jadav (2):
+  platform/x86/intel: Introduce Intel Elkhart Lake PSE I/O
+  gpio: elkhartlake: Convert to auxiliary driver
+
+ MAINTAINERS                             |   7 ++
+ drivers/gpio/Kconfig                    |   2 +-
+ drivers/gpio/gpio-elkhartlake.c         |  34 ++++----
+ drivers/platform/x86/intel/Kconfig      |  13 +++
+ drivers/platform/x86/intel/Makefile     |   1 +
+ drivers/platform/x86/intel/ehl_pse_io.c | 107 ++++++++++++++++++++++++
+ include/linux/ehl_pse_io_aux.h          |  30 +++++++
+ 7 files changed, 175 insertions(+), 19 deletions(-)
+ create mode 100644 drivers/platform/x86/intel/ehl_pse_io.c
+ create mode 100644 include/linux/ehl_pse_io_aux.h
+
+-- 
+2.43.0
+
 
