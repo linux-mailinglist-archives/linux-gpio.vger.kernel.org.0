@@ -1,94 +1,227 @@
-Return-Path: <linux-gpio+bounces-28285-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28286-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83B8BC457E1
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 10:02:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 10E63C45B17
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 10:42:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0CBF3AAC64
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 09:02:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6FBAF3A8676
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 09:42:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4F182236F7;
-	Mon, 10 Nov 2025 09:02:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FE202FD675;
+	Mon, 10 Nov 2025 09:42:09 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D84621D011
-	for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 09:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7812EB846
+	for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 09:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762765351; cv=none; b=R7F7/eKKpDFhTVOzgjH1GoxOHze6NCfqI41pMv1V2M5W5RI9HggMK+FV+ww2S6iG8UzC8IXjJS0YBCFRfrIBum5oEmGoZ8OhZvMFfluJ5ooJZu0z90t0vSxkdTZCJdaT1A18U0HEg4HugYXuhExZ/mC/gRQYvyFNZRCODHkr1JY=
+	t=1762767729; cv=none; b=SlqxbhW+6r/EgUQbxpZxU+Su/csE2H3Au0Qx0ZqTMoMpjrBrYl2n7VLXYvomVUabUP1tpxQx4+jf6gnJ0DAveOV0musgCOozzzvaJShNT5grVuVhJRxxJaZt6M2tnlIe8kZj1CZfKLNXZzs74YQofeF5f/F2Otoc36QAcMkN0KQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762765351; c=relaxed/simple;
-	bh=QrFufJ2w86tkFP9rhjXVQJ64Rz+v5CeknBLF0SvhWU4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=spB+1nncmr8Ajxu8Yy7NkjhxsKAAn1pPIM9fq0AOMfRyWijqGMVulf5N3pHtjM4ZNqr07CoMprVqTocsgwpX0L0GozGasjeaIdXdZncHPeEtZ7NoY2rNvPTa+yJv8qDA+KDze6SJZcXkBIVs6wLd2l6MhvV4ZPLjdY7SpfOgdeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1vINmu-0001r0-SM; Mon, 10 Nov 2025 10:02:12 +0100
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1vINmu-007zao-01;
-	Mon, 10 Nov 2025 10:02:12 +0100
-Received: from pza by lupine with local (Exim 4.98.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1vINmt-000000005Cz-3qn7;
-	Mon, 10 Nov 2025 10:02:11 +0100
-Message-ID: <e0e81310332cfdc075bf13f66d7be712b42964ed.camel@pengutronix.de>
-Subject: Re: [PATCH v6 0/8] reset: rework reset-gpios handling
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij	
- <linus.walleij@linaro.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>,  Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus	
- <sakari.ailus@linux.intel.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,  "Rafael J. Wysocki"	 <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Krzysztof Kozlowski	 <krzk@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>
-Date: Mon, 10 Nov 2025 10:02:11 +0100
-In-Reply-To: <20251106-reset-gpios-swnodes-v6-0-69aa852de9e4@linaro.org>
-References: <20251106-reset-gpios-swnodes-v6-0-69aa852de9e4@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1-1+deb13u1 
+	s=arc-20240116; t=1762767729; c=relaxed/simple;
+	bh=SmCYeZZA+MZ4YAMzw1eRf/lethvMOqxmL8UnzEdKQB8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NH+580FitWsP5qn3ZFdPbO6lBCnwY2zUqnkNLSblNSHaTjQKyycwSW7GVj9dvhFT/ldsefVfLWxssxSjgOwkkr1NZwvcccBfR4E0LzGECYaaj38SqYP8apsxneof6OR1LCsmX5G+4LoJZ7RSi20VJNTdcN6mmfXHYxaLt77hMOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-5597a426807so1875583e0c.2
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 01:42:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762767726; x=1763372526;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=lsrcVDrEohRhH3DeIYD/Jz8ulaHSwnUzTLywFA/cyng=;
+        b=k5V37u73+mrs9bUS81uHNrgcBdFK02jwO5hNWs1Vumt1yCr69rarwVLbG5LmEKw5AC
+         31Qf4LG2uzZeHjpAFAnrPnebUTR12G7Frp1awnZnl9nrqGe2gNUEdeTPhAb2q/nQeTxG
+         1wfjK6L5UhNiSs6zzM8yv+2fU7Z3Uf6cPPzdCCWnvvCfVtjZu+Vxh10ciFPcDLMBAm4p
+         Oets5W5h/SqvHKON1VtPjWuUD3I16c2EO4VE0wscc4e8aOv1Ff31aRivu44HOLFf/s8X
+         uvbg6B1N9K+OxlGSP4f5AizFsr1qAXV5agzZh+rGQ9IqKPoPiaITpWQ/6wvQ3INJY5UI
+         UFhw==
+X-Forwarded-Encrypted: i=1; AJvYcCVpJsBZbWjLyvXPGv8PwYP3RpqemNRMHyDlSnP8bdmv2kxCjOoRTbd3OoRF7w/T/yQaHxOZasob1Haq@vger.kernel.org
+X-Gm-Message-State: AOJu0YziS+6CCNsR024GOvhrHnVlpMe/YHx8wpi+aU1Djlcx5CGpRDK2
+	HUGY+TAFiD/PUmKmJ8MI5V4CXWsOLFst0pW6/e/ugQhhOUoZkn3MzCbwkJ3plD8/
+X-Gm-Gg: ASbGnctRYGRy61ZJuAhkmJ8s0AGNH8BmJxA/mUdnlmJNJhkXTfFP3jkm9QszG9aZ9r8
+	tFgieTEXjL7q9GZyhOhOixsT3kG8196SHZYMnICMhUHncrLa5UfkgQdSYDZKhmb6KqbXIe09eyP
+	4iDWgVXeQPt7cepEu0FAK9K/EzHNsLbrPv9K0M7jUsZDinr24HaRueI8NBLJ+47lzvP8XiNVkSW
+	7Pb7qs5Wetdam7FxHBAydYbBdWfDu4/irjUzjr3WGGEt3nzXBmWgVjlMSPU9AxQkzT/FWHvcCt6
+	/3/UNues2aym2VbCcHXOLx5i688ZZSB/ZBsU7eYKUMENhyAmZMaE+Z5+J6M+jcCUdyV3LIPPoCj
+	h/1sjEzZCf/tNWX08NCpJhtgfnGsd6ItWSJDYOD2I0l7BxqguYNj1TCtHj0IDU6mYWJ3Xa+8SBL
+	62TMe53xpumP69LIET1WeiR1Y+WVaaF4hesyVkxfbavbmIe5XnnnRnIwxi
+X-Google-Smtp-Source: AGHT+IEcSzssLPqz8IL1csyq+5UgH2A692jq+Cxz/m0oe9RyP2yNwSNqQrWHj+soDEXupJmJ9m0i/Q==
+X-Received: by 2002:a05:6122:4b18:b0:559:60b8:fa81 with SMTP id 71dfb90a1353d-559b321b450mr2798910e0c.4.1762767726028;
+        Mon, 10 Nov 2025 01:42:06 -0800 (PST)
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com. [209.85.221.180])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-559958286c8sm6933924e0c.17.2025.11.10.01.42.05
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Nov 2025 01:42:05 -0800 (PST)
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-54bc08ef45dso1656468e0c.1
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 01:42:05 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUDt6qSXOWJYNWZqyZ4NNn3/MbJu4fM9/xyor4ngKYQ4m1ud+X1OkK/Gt7vMHfaXM2YMy3CpXy3txHH@vger.kernel.org
+X-Received: by 2002:a05:6102:162a:b0:5dd:8a20:d6eb with SMTP id
+ ada2fe7eead31-5ddc47517c6mr2576190137.25.1762767247552; Mon, 10 Nov 2025
+ 01:34:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+References: <cover.1762435376.git.geert+renesas@glider.be> <cfc32f8530d5c0d4a7fb33c482a4bf549f26ec24.1762435376.git.geert+renesas@glider.be>
+ <aQy0T2vUINze_6_q@smile.fi.intel.com> <CAMuHMdXVUJq36GvNUQE8FnHsX+=1jG4GOJ_034r=fgr_Rw4Djg@mail.gmail.com>
+ <aQzIIqNnTY41giH_@smile.fi.intel.com> <CAMuHMdW8ndAdGnSHopYFMWvw7wk7wKz_7+N91M1jRHoqK1KBrg@mail.gmail.com>
+ <c62eb5a727f149fb9d8b4a4c8d77418a@realtek.com> <CAHp75VeMqvywS20603yDSo-C3KCu+i+8vvDNuz3h9e8Ma9BOCw@mail.gmail.com>
+In-Reply-To: <CAHp75VeMqvywS20603yDSo-C3KCu+i+8vvDNuz3h9e8Ma9BOCw@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 10 Nov 2025 10:33:56 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVUdey27RTX8mLsB5wsTfuW_mP_hF503AaF2QyS4awDcw@mail.gmail.com>
+X-Gm-Features: AWmQ_bkW2UuenDn6w7Wole8ay3msAtk8Ugj-awLiClF7uVATEqk1c30upT0lUKU
+Message-ID: <CAMuHMdVUdey27RTX8mLsB5wsTfuW_mP_hF503AaF2QyS4awDcw@mail.gmail.com>
+Subject: Re: [PATCH v6 12/26] bitfield: Add less-checking __FIELD_{GET,PREP}()
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Ping-Ke Shih <pkshih@realtek.com>, Andy Shevchenko <andriy.shevchenko@intel.com>, 
+	Yury Norov <yury.norov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	David Miller <davem@davemloft.net>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>, 
+	Andrew Jeffery <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>, 
+	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Jacky Huang <ychuang3@nuvoton.com>, 
+	Shan-Chun Hung <schung@nuvoton.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, Jakub Kicinski <kuba@kernel.org>, Alex Elder <elder@ieee.org>, 
+	David Laight <david.laight.linux@gmail.com>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
+	Jason Baron <jbaron@akamai.com>, Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Kim Seer Paller <kimseer.paller@analog.com>, 
+	David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Richard Genoud <richard.genoud@bootlin.com>, 
+	Cosmin Tanislav <demonsingur@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Jianping Shen <Jianping.Shen@de.bosch.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
+	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, 
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "qat-linux@intel.com" <qat-linux@intel.com>, 
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
+	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, 
+	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, 
+	"linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>, 
+	"linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	linux-wireless <linux-wireless@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Do, 2025-11-06 at 15:32 +0100, Bartosz Golaszewski wrote:
-> NOTE: I've picked up commit e5d527be7e69 ("gpio: swnode: don't use the
-> swnode's name as the key for GPIO lookup") into my fixes branch and will
-> send it upstream by the end of this week. It will be part of v6.18-rc5
-> which tag will need to be the base for the future immutable branch
-> created by Philipp.
->=20
-> Software node maintainers: if this versions is good to go, can you leave
-> your Acks under patches 1-3 and allow Philipp to take it through the
-> reset tree, provided he creates an immutable branch you can pull from
-> for v6.19?
+Hi Ady,
 
-Now that -rc5 is out, could I get an Ack to create an immutable branch
-with this series on top of v6.18-rc5 (and merge it into reset/next)?
+On Fri, 7 Nov 2025 at 09:00, Andy Shevchenko <andy.shevchenko@gmail.com> wr=
+ote:
+> On Fri, Nov 7, 2025 at 3:16=E2=80=AFAM Ping-Ke Shih <pkshih@realtek.com> =
+wrote:
+> > Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > On Thu, 6 Nov 2025 at 17:09, Andy Shevchenko
+> > > <andriy.shevchenko@intel.com> wrote:
+> > > > On Thu, Nov 06, 2025 at 03:49:03PM +0100, Geert Uytterhoeven wrote:
+> > > > > On Thu, 6 Nov 2025 at 15:44, Andy Shevchenko
+> > > > > <andriy.shevchenko@intel.com> wrote:
+> > > > > > On Thu, Nov 06, 2025 at 02:34:00PM +0100, Geert Uytterhoeven wr=
+ote:
+> > > > > > > The BUILD_BUG_ON_MSG() check against "~0ull" works only with =
+"unsigned
+> > > > > > > (long) long" _mask types.  For constant masks, that condition=
+ is usually
+> > > > > > > met, as GENMASK() yields an UL value.  The few places where t=
+he
+> > > > > > > constant mask is stored in an intermediate variable were fixe=
+d by
+> > > > > > > changing the variable type to u64 (see e.g. [1] and [2]).
+> > > > > > >
+> > > > > > > However, for non-constant masks, smaller unsigned types shoul=
+d be valid,
+> > > > > > > too, but currently lead to "result of comparison of constant
+> > > > > > > 18446744073709551615 with expression of type ... is always
+> > > > > > > false"-warnings with clang and W=3D1.
+> > > > > > >
+> > > > > > > Hence refactor the __BF_FIELD_CHECK() helper, and factor out
+> > > > > > > __FIELD_{GET,PREP}().  The later lack the single problematic =
+check, but
+> > > > > > > are otherwise identical to FIELD_{GET,PREP}(), and are intend=
+ed to be
+> > > > > > > used in the fully non-const variants later.
+> > >
+> > > > > > > +     BUILD_BUG_ON_MSG(__bf_cast_unsigned(mask, mask) >      =
+         \
+> > > > > > > +                      __bf_cast_unsigned(reg, ~0ull),       =
+         \
+> > > > > > > +                      pfx "type of reg too small for mask")
+> > > > > >
+> > > > > > Perhaps we may convert this (and others?) to static_assert():s =
+at some point?
+> > > > >
+> > > > > Nick tried that before, without success:
+> > > > > https://lore.kernel.org/all/CAKwvOdm_prtk1UQNJQGidZm44Lk582S3p=3D=
+of0y46+rVjnSgXJg@mail.gmail.com
+> > > >
+> > > > Ah, this is unfortunate.
+> > >
+> > > Of course, it might be an actual bug in the i915 driver...
+> > >
+> > > The extra checking in field_prep() in case the compiler can
+> > > determine that the mask is a constant already found a possible bug
+> > > in drivers/net/wireless/realtek/rtw89/core.c:rtw89_roc_end():
+> > >
+> > >     rtw89_write32_mask(rtwdev, reg, B_AX_RX_FLTR_CFG_MASK, rtwdev->ha=
+l.rx_fltr);
+> > >
+> > > drivers/net/wireless/realtek/rtw89/reg.h:
+> > >
+> > >     #define B_AX_RX_MPDU_MAX_LEN_MASK GENMASK(21, 16)
+> > >     #define B_AX_RX_FLTR_CFG_MASK ((u32)~B_AX_RX_MPDU_MAX_LEN_MASK)
+> > >
+> > > so it looks like B_AX_RX_FLTR_CFG_MASK is not the proper mask for
+> > > this operation...
+> >
+> > The purpose of the statements is to update values excluding bits of
+> > B_AX_RX_MPDU_MAX_LEN_MASK. The use of B_AX_RX_FLTR_CFG_MASK is tricky, =
+but
+> > the operation is correct because bit 0 is set, so __ffs(mask) returns 0=
+ in
+> > rtw89_write32_mask(). Then, operation looks like
+> >
+> >    orig =3D read(reg);
+> >    new =3D (orig & ~mask) | (data & mask);
+> >    write(new);
+> >
+> > Since we don't use FIELD_{GET,PREP} macros with B_AX_RX_FLTR_CFG_MASK, =
+how
+> > can you find the problem? Please guide us. Thanks.
+>
+> Isn't FIELD_MODIFY() what you want to use?
 
-regards
-Philipp
+FIELD_MODIFY() is a rather recent addition.
+That is also the reason why I didn't add a non-const field_modify() yet
+(I didn't want to risk delaying this series even more ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
