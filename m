@@ -1,204 +1,134 @@
-Return-Path: <linux-gpio+bounces-28281-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28282-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E13BC4505C
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 06:29:24 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E770C45153
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 07:31:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A3D53B2E28
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 05:28:56 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5CB584E4DCB
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Nov 2025 06:31:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 948FC2EAB72;
-	Mon, 10 Nov 2025 05:28:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E12C221DAC;
+	Mon, 10 Nov 2025 06:30:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mN3SdaEv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o5K2ISc6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903792EA47C;
-	Mon, 10 Nov 2025 05:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C5F217705
+	for <linux-gpio@vger.kernel.org>; Mon, 10 Nov 2025 06:30:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762752504; cv=none; b=RLGcyfqQqcKxX0c/oAy0M9Tb0UQFzPQCEErd+KBYLvuQsSh905PQSHZzH2Uo+SYcQS+EdYyuBHPcHdGZJ+C5WTN4t/WEGiJ/kB9UCrbVGf/66uEODLc0HlAY28OioBq80DuxuZC54rzkhLoXOWw9JokJhe4qvPG+vG7U7GISH+E=
+	t=1762756259; cv=none; b=MMraf6+/pyyy1IPfZrY0AlYhQudvv7WqOzO0VVdEGIiYNY2vXlhoAxSCo2R+4EXyRvegYzWWEBKWqEithR37bHWb+NGuPvmuaS1xJ/cVyB8qSZPtA+1ceUzSMTNEoKO+J1vIZDMCLJYMZ1kNJMRBsCFplRa67I/2uxmm1Ve5c9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762752504; c=relaxed/simple;
-	bh=JFVXTRN70n6U6zcNqFyPmW01tE9kHwKyej8zmUkWDIM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VdZIbmBMSWgU1IVn0Hoz11UEN5B3DKC2iOKJo+IXRw/J71XecQhkokvYYi9ZQdIeqDGvXvoVA/0n3Iex5odbjVR7vwpqwd3MJ3lS0my9L4jEuFmWKM1jzHZS2CO9spBmBquqHHpaCcY6GIkYtgH0eOC9y95WwUjfPgoDbB0W1o8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mN3SdaEv; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762752502; x=1794288502;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=JFVXTRN70n6U6zcNqFyPmW01tE9kHwKyej8zmUkWDIM=;
-  b=mN3SdaEvD3qhf8yUjHZLXVGJtazeC6aCLPXClnHssPAfr2c4LWWjkj7m
-   0f+FIT1IMRdAzdWIfMdpFjT+wPyemi5VAiY5JpqkLD/hyb1FWhAiTC73z
-   xEZ6C5YVnCqtvZ/h5E+rA3I/Ak6vT0I+DCpMHepyNFM6BM3SFaf1AN1XG
-   dKEA5MsYGYZY7tmCWYg9S83AJpeZL4VVU0RBGiBBfHe+uR1KVIEiyFadH
-   oJRx0vALY0vv8R+ZhlJwnorIP8XL7a48rnW5gGWld0DvoDfsvniwSP5hR
-   M8YlqXbuQU7JgN48FBXuZeejKUCHuDmy+dwwGW61ECc3k4yVRTFXvaavB
-   w==;
-X-CSE-ConnectionGUID: qtpWSxd3Q1SmUP7ZG91AdQ==
-X-CSE-MsgGUID: iL9sYBAWSOqiEHGEHiemRA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="67405761"
-X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="67405761"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 21:28:22 -0800
-X-CSE-ConnectionGUID: YIvLMsgAT1OHh2BjdlF9pg==
-X-CSE-MsgGUID: 2HEyzd6qSt6Xia/7nqAl/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="192691687"
-Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
-  by orviesa003.jf.intel.com with ESMTP; 09 Nov 2025 21:28:19 -0800
-From: Raag Jadav <raag.jadav@intel.com>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	andriy.shevchenko@linux.intel.com,
-	linus.walleij@linaro.org,
-	brgl@bgdev.pl
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v2 2/2] gpio: elkhartlake: Convert to auxiliary driver
-Date: Mon, 10 Nov 2025 10:56:41 +0530
-Message-ID: <20251110052728.383339-3-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251110052728.383339-1-raag.jadav@intel.com>
-References: <20251110052728.383339-1-raag.jadav@intel.com>
+	s=arc-20240116; t=1762756259; c=relaxed/simple;
+	bh=gz2Tc2+ZpOYG2OzBbxLbgilswkkGbcUQjbej9kT3ykY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=sxhubVL/rkP7C6hR455h3hQ8d41LRA80KGxsy9wUVZn1B0G6JLAtLh3R64M1NrkFjtBWqCpvX4h5Vv60wDFVNwBHtOYd4nccx4oFTrYywN4BkP8mxQ6mKF5tWKB6QwrDJzfmOh2iKdi2ptiG0bkL5730t3yThqQBidUoYDCLuDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o5K2ISc6; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-47778704516so3841405e9.3
+        for <linux-gpio@vger.kernel.org>; Sun, 09 Nov 2025 22:30:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1762756256; x=1763361056; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=gz2Tc2+ZpOYG2OzBbxLbgilswkkGbcUQjbej9kT3ykY=;
+        b=o5K2ISc6bhNVXY8bIHTQ4KKcAedMfYbNe98yDermdBMwnpULRRTdKPKZ3Zvut28qJR
+         cmwK2eUxwEOxqO5EkuHQD/7u7OnUAKrhopL2L3XSi6NEbUN1+C2dL4jn/gewrnZ9mXzE
+         2y+BsrEIQxSTyOcPON2cc5Uol1PsFSuDLAnBKm/NaipaFdHG6v6vjL+tO1cCnFb0/XAY
+         01NGw6434F0cvFxzmB3Y/2nbw392X8uIUo7aaelS0hPTc2ZTZV7JWHz6gDypHZxnii0z
+         S2jnPJ+/h7LdB5vdqWS6uj7/mU1ba1hNDmCGgANENjkgbhEu5PPW252M96TViTBBtiqi
+         bP3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762756256; x=1763361056;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gz2Tc2+ZpOYG2OzBbxLbgilswkkGbcUQjbej9kT3ykY=;
+        b=b8lYAFXrUBED4fbM8TckThMAZrDWnFGsP9yliNFhHGArWwGFqdAx53vxQY5nntddxu
+         Gx1bXySplAkC+de7UnBX6AfXUWEuerjfVBg2lV70lwKfoOOw5vEyCMNNNuJW7dcGvyPi
+         HR7pVmM9lKMnnyPXiZBddyKpM/q+YWFxvfvkYsVjE2ik3SMdEck5a6F1RZ6Wd02vhX8C
+         1C1ivzrDE6AHjBpfa1AgIuIZDteYkLOiAvQAsOGpIa2ncSdvLJDw/JVeTeRBiLD3hRwl
+         BqDVlnMgPlhMoWNQaoz00zESeYRJCwIXDEbGgt5Ikpb5t5MlgUcZz3VvkHZLCBWJ9baA
+         EcPg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQs0POSwccob3EkTVf7AOe7kYC4jXhw1TGizUTDTjMJiDbDgifag4sA0gh/xomW10X8gPFkYlh1ub6@vger.kernel.org
+X-Gm-Message-State: AOJu0YzN91ib/0EhBan3CfT7tqyEaMdqTtc7lkLPvklkdZGwZAXZu/b0
+	tK224juB0aIVKySrtm8ev/xLcw9Qx9a8qZdzprfIM7azc1ZHGBZqZ78GQgdCSxTJAN8=
+X-Gm-Gg: ASbGncuYQ1e5H1bO7rIayicmVB7F3zgNHJMEKCePo/2tJcvRyiF7Wb0tBLAadv5RjzP
+	l5UlAWq0GDoiYnSQvcqdTlDcESybfbMFauUUNsb8hmJ3vph5UnwogDgS2k2ljHPhopdfalH2gOd
+	3F4uJUCDpeN0kfiAGxcpYiyyfYxJ+Ptb30yy7XMcBXq5WEZPD/aIvwVCa2LcJRaS4rDa9BLlyKq
+	TWQJWRQJZxryP8OCzWPRY1RljG3+HmCebqXfFHwr0uik22pdnENF8o0sn8sGC2yRg3xLIqCc5GM
+	/iQEl8uDmBbi99hXkkbj6gYp2UlvSLo41038ik/6m+Tt0DEkGEqp+I1jk4a77XbZm+U7cQv091P
+	IYJ2zqXHMALeDqZ2qKNEBnJp+6huUDi1kdcb1L/lVtDC6vZe+mEostFzHjGS3TfjlYOYcZhKSPN
+	NGuCRj+I4=
+X-Google-Smtp-Source: AGHT+IEQw4YGmWYhhezCKKZpNUcmlZEpIju4sVG4oIvS3Njw1N4sMl3EeFVFvYxb/VKOCKvrHAj0Vg==
+X-Received: by 2002:a05:600c:c84:b0:477:598c:6e1d with SMTP id 5b1f17b1804b1-4777325ab5emr48703165e9.17.1762756255657;
+        Sun, 09 Nov 2025 22:30:55 -0800 (PST)
+Received: from draszik.lan ([212.129.86.247])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4776419d869sm106249085e9.3.2025.11.09.22.30.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Nov 2025 22:30:55 -0800 (PST)
+Message-ID: <776ac9f7ec2858a89c03b735653070f2749b986d.camel@linaro.org>
+Subject: Re: [PATCH v3 04/20] regulator: dt-bindings: add s2mpg11-pmic
+ regulators
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>,  Lee Jones <lee@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski	 <brgl@bgdev.pl>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Peter Griffin	 <peter.griffin@linaro.org>,
+ Will McVicker <willmcvicker@google.com>, 	kernel-team@android.com,
+ linux-kernel@vger.kernel.org, 	linux-samsung-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, 	linux-gpio@vger.kernel.org
+Date: Mon, 10 Nov 2025 06:30:47 +0000
+In-Reply-To: <7d9fa7ab-8484-4d41-bc3b-be2eff3b6e95@kernel.org>
+References: <20251103-s2mpg1x-regulators-v3-0-b8b96b79e058@linaro.org>
+	 <20251103-s2mpg1x-regulators-v3-4-b8b96b79e058@linaro.org>
+	 <20251104-zircon-lobster-of-agility-cbcbb0@kuoka>
+	 <46b008c946e36ea0b317691356ff874c4a78882d.camel@linaro.org>
+	 <7d9fa7ab-8484-4d41-bc3b-be2eff3b6e95@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-2+build3 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Since PCI device should not be abusing platform device, MFD parent to
-platform child path is no longer being pursued for this driver. Convert
-it to auxiliary driver, which will be used by EHL PSE auxiliary device.
+On Sun, 2025-11-09 at 20:00 +0100, Krzysztof Kozlowski wrote:
+> On 07/11/2025 12:14, Andr=C3=A9 Draszik wrote:
+> > On Tue, 2025-11-04 at 10:39 +0100, Krzysztof Kozlowski wrote:
+> > > On Mon, Nov 03, 2025 at 07:14:43PM +0000, Andr=C3=A9 Draszik wrote:
+> > > > +=C2=A0 The S2MPG11 PMIC provides 12 buck, 1 buck-boost, and 15 LDO=
+ regulators.
+> > > > +
+> > > > +=C2=A0 See also Documentation/devicetree/bindings/mfd/samsung,s2mp=
+s11.yaml for
+> > > > +=C2=A0 additional information and example.
+> > > > +
+> > > > +definitions:
+> > >=20
+> > > defs:
+> >=20
+> > All existing bindings are using definitions, not defs. Shouldn't this s=
+tay
+> > consistent?
+>=20
+> Huh? git grep gives me 3 cases, so how is it "all existing"?
+>=20
+> But for defs it gives me ~98!=09
 
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/Kconfig            |  2 +-
- drivers/gpio/gpio-elkhartlake.c | 34 ++++++++++++++++-----------------
- 2 files changed, 17 insertions(+), 19 deletions(-)
+Didn't know it's ^$defs:, not ^defs: - thanks Krzysztof.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 7ee3afbc2b05..d4b4451b4696 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1413,7 +1413,7 @@ config HTC_EGPIO
- 
- config GPIO_ELKHARTLAKE
- 	tristate "Intel Elkhart Lake PSE GPIO support"
--	depends on X86 || COMPILE_TEST
-+	depends on INTEL_EHL_PSE_IO
- 	select GPIO_TANGIER
- 	help
- 	  Select this option to enable GPIO support for Intel Elkhart Lake
-diff --git a/drivers/gpio/gpio-elkhartlake.c b/drivers/gpio/gpio-elkhartlake.c
-index 95de52d2cc63..08daf2fc59e6 100644
---- a/drivers/gpio/gpio-elkhartlake.c
-+++ b/drivers/gpio/gpio-elkhartlake.c
-@@ -2,43 +2,42 @@
- /*
-  * Intel Elkhart Lake PSE GPIO driver
-  *
-- * Copyright (c) 2023 Intel Corporation.
-+ * Copyright (c) 2023, 2025 Intel Corporation.
-  *
-  * Authors: Pandith N <pandith.n@intel.com>
-  *          Raag Jadav <raag.jadav@intel.com>
-  */
- 
-+#include <linux/auxiliary_bus.h>
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/module.h>
--#include <linux/platform_device.h>
- #include <linux/pm.h>
- 
-+#include <linux/ehl_pse_io_aux.h>
-+
- #include "gpio-tangier.h"
- 
- /* Each Intel EHL PSE GPIO Controller has 30 GPIO pins */
- #define EHL_PSE_NGPIO		30
- 
--static int ehl_gpio_probe(struct platform_device *pdev)
-+static int ehl_gpio_probe(struct auxiliary_device *aux_dev, const struct auxiliary_device_id *id)
- {
--	struct device *dev = &pdev->dev;
-+	struct ehl_pse_io_dev *io_dev = auxiliary_dev_to_ehl_pse_io_dev(aux_dev);
-+	struct device *dev = &aux_dev->dev;
- 	struct tng_gpio *priv;
--	int irq, ret;
--
--	irq = platform_get_irq(pdev, 0);
--	if (irq < 0)
--		return irq;
-+	int ret;
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
- 
--	priv->reg_base = devm_platform_ioremap_resource(pdev, 0);
-+	priv->reg_base = devm_ioremap_resource(dev, &io_dev->mem);
- 	if (IS_ERR(priv->reg_base))
- 		return PTR_ERR(priv->reg_base);
- 
- 	priv->dev = dev;
--	priv->irq = irq;
-+	priv->irq = io_dev->irq;
- 
- 	priv->info.base = -1;
- 	priv->info.ngpio = EHL_PSE_NGPIO;
-@@ -51,25 +50,24 @@ static int ehl_gpio_probe(struct platform_device *pdev)
- 	if (ret)
- 		return dev_err_probe(dev, ret, "tng_gpio_probe error\n");
- 
--	platform_set_drvdata(pdev, priv);
-+	auxiliary_set_drvdata(aux_dev, priv);
- 	return 0;
- }
- 
--static const struct platform_device_id ehl_gpio_ids[] = {
--	{ "gpio-elkhartlake" },
-+static const struct auxiliary_device_id ehl_gpio_ids[] = {
-+	{ EHL_PSE_IO_NAME "." EHL_PSE_GPIO_NAME },
- 	{ }
- };
--MODULE_DEVICE_TABLE(platform, ehl_gpio_ids);
-+MODULE_DEVICE_TABLE(auxiliary, ehl_gpio_ids);
- 
--static struct platform_driver ehl_gpio_driver = {
-+static struct auxiliary_driver ehl_gpio_driver = {
- 	.driver	= {
--		.name	= "gpio-elkhartlake",
- 		.pm	= pm_sleep_ptr(&tng_gpio_pm_ops),
- 	},
- 	.probe		= ehl_gpio_probe,
- 	.id_table	= ehl_gpio_ids,
- };
--module_platform_driver(ehl_gpio_driver);
-+module_auxiliary_driver(ehl_gpio_driver);
- 
- MODULE_AUTHOR("Pandith N <pandith.n@intel.com>");
- MODULE_AUTHOR("Raag Jadav <raag.jadav@intel.com>");
--- 
-2.43.0
-
+Cheers,
+Andre'
 
