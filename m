@@ -1,98 +1,101 @@
-Return-Path: <linux-gpio+bounces-28368-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28369-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 141B2C4FED5
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Nov 2025 22:55:18 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 444D8C4FEDB
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Nov 2025 22:55:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B8418189B53D
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Nov 2025 21:55:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DB21C189B78D
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Nov 2025 21:55:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 625052F1FDF;
-	Tue, 11 Nov 2025 21:55:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5F1E326955;
+	Tue, 11 Nov 2025 21:55:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DYVgh0nx";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="i/xICTU6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fW2ivY1o";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="lqUZjOML"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C202E62A6
-	for <linux-gpio@vger.kernel.org>; Tue, 11 Nov 2025 21:55:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BB62EBDF4
+	for <linux-gpio@vger.kernel.org>; Tue, 11 Nov 2025 21:55:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762898113; cv=none; b=l1JmacwkZi7LE5beOCLeTqHqx6MLlKL66duzmd5odweuCHlCGTlosniBLGuBJ8AMEHINNDnxo4MLEBqFTOW3awY+z2R1d0PL8/ZQB49nsOlxoNrlHH+NY2+S8aH3aI1yTd4SWjanb6UNwrgoak5m9g2gqQBwb5CmWfm+/4uirLI=
+	t=1762898114; cv=none; b=nzJWU7zEPKL2yr9SURGLYI9g4q/KZvVeGje47PScMvC2394KHXDh3wJM8jokIdKAMdqrcf/MVeCV+NRM4I4/hq5LJEdwCogAo/fwCooHHWL7a0HQl4Po29YGCnxvD+JC4PABI8NmgS/DQW03mLTNwivKNiXmLl0MIsWGCVSO6J4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762898113; c=relaxed/simple;
-	bh=MdOVB+m45rMEFDn+Bq+cwePT0GndRxWDbiIFqpt2YCc=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ihnVTEv5Qn5X6lVbCx+NuYYNeJojQKpWXkc1hZ4cAS4Y8u2XK7ZznhQlNunkRbh6yfYsuBEiL1sWj1P1KjPsqAU5uI+55HrnmKUJnU9IVqtMBs7TtCVGa5+oc2HgCeKkMbh4T5I+P8lLTAxs1aDAeIXPASebERa8NHxr9qLkPOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DYVgh0nx; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=i/xICTU6; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1762898114; c=relaxed/simple;
+	bh=r3R6gOHgJpsH0Ckzs+8Ovo1IxuCFFu4tCtcoUxTJujA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Bd8MzgyKdAAapgMWTYNTWHnqGUd0vHCWpQbhVWVae3Rbuc657pR/CBl2JRHhYcHX6MsI6t8BoJrlo+Jf45LUzSL4qauzuEvreuun7VkDJu1J7aMzZ1e68lpbhIUtRKfex0RrJM59chXs3nF6Yh8CjnuFgHGuyMuFK9S3CmoEJ4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fW2ivY1o; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=lqUZjOML; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1762898110;
+	s=mimecast20190719; t=1762898112;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=sekYXjOrhbrEeTR1KVQQRJq/2k2UhXo++7CMidIcSxc=;
-	b=DYVgh0nx7Wx8iAw/pxev1Z9Rfnxpdqedcte/3fPO5h4cYL9gtAoCVTgIyuJeDvW8GjCyfN
-	uiQ7v7QuQKQNFUyHEdCOYE9H6OQpG6OOUonWhFehgiVblsPPWkAYpl+argkrNGsdfpYBxM
-	nptBJwOAskctZ6SW4AcCcse5SUp8YMs=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FySy0LCStPtORY6VK+463tcchOxR2p6Krr0cw/eyN50=;
+	b=fW2ivY1o7ECWkZEaC38GMKhM1Hh408JaKcLfjiIrc0ifPnMvKXbPzzHFc8Xq09ODKa4cKT
+	yuopOOzJKi7YYZwQcb1G2TmP4+NJtSaVw58zp8pBcB6OH0IAa/URgfHQuzIu3WCD5Er//T
+	kwVP+nbEVRNVBvn5lvcYFEpanZhRd/E=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-171-RxqY3VJ7MXOPNe4E_w1bgw-1; Tue, 11 Nov 2025 16:55:09 -0500
-X-MC-Unique: RxqY3VJ7MXOPNe4E_w1bgw-1
-X-Mimecast-MFC-AGG-ID: RxqY3VJ7MXOPNe4E_w1bgw_1762898109
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8b2640347c5so61187285a.3
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Nov 2025 13:55:09 -0800 (PST)
+ us-mta-553-vvwvFV6QM5Snw_g1zb7pxA-1; Tue, 11 Nov 2025 16:55:11 -0500
+X-MC-Unique: vvwvFV6QM5Snw_g1zb7pxA-1
+X-Mimecast-MFC-AGG-ID: vvwvFV6QM5Snw_g1zb7pxA_1762898111
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-8b22d590227so27697985a.1
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Nov 2025 13:55:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1762898108; x=1763502908; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sekYXjOrhbrEeTR1KVQQRJq/2k2UhXo++7CMidIcSxc=;
-        b=i/xICTU6a9PFbTZ67fJO7jqs2qoiVXOdu4HOeWIrWrjtjMPX7EwLUxBkiL7pGwcg99
-         6dP2VdrRRgGJgpKedNGDkgZgrgfTJ+rCd3L/blWfeirY254x/tqwQM27ZLyf3r4gFvEA
-         0S7GZMp42JceWiGk1Xa+8kOvmPiJwcknRE2T2OPeoccPY9bddi6APktRpxmqpmldapAs
-         SIqHw9JyF27DNppQDvCbV+WH9x1bxvyJdFR2DLAxi7YQ67NeoN9Y/yZwglML+gwx4OFt
-         oc4GtdGCteMZqUkcHjMopny/5QR9TeG3Bgbg2glYE2Xx+bWtUaw2QnmQzeDgF1Y3cFL9
-         jf0g==
+        d=redhat.com; s=google; t=1762898111; x=1763502911; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FySy0LCStPtORY6VK+463tcchOxR2p6Krr0cw/eyN50=;
+        b=lqUZjOMLTrBjuYuHvg3x/2myWGYPSWGTBESNCnYcYzmSmVZ/SJ0vdYOAI5hKUtiUKP
+         2n3wnEpHhHtf4geprmrkRgt5aHrtyi2rwXb7xh4bxXspvP4iJDVSjKKJuobjkzkipmvY
+         sekEaOEGpwD2duGOSN1XgzUZ+X7UVayAhius8YdmpAk/lI1AOBj8JnxgTTrP72KgSljd
+         +inr0sHLeCXSREpYEU6s+7eKZazbjvVFJSQytJtMMPlNF/td5tu0p+vdB93hutj/wblM
+         XLN/PAWGLKRFxX6kP+B+KMbxR2t4asCgwh9ebSO0A/QT3UDA3+FmPdijVsxV4HyCm84/
+         YJEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762898108; x=1763502908;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sekYXjOrhbrEeTR1KVQQRJq/2k2UhXo++7CMidIcSxc=;
-        b=UpxlinS1DI4y0w3tXl+UlvaYQwIvMKVafJkra+s6Ot3jr/I2JD81I9gu1U2oxXsdFw
-         dajN8NDQoUSRPFOgSzUnVQyd5XI1YimmS4PsrlC4wfF8kjjRbBh2NtoZiye28uPeMhEH
-         bxEdI2oVML2yXdTTX6PaiBI9OZUgPzLwy5myZA4yOWn9I3tm+GRTX9gG/VI1U1ZMwd6E
-         Ht7oEYyRuvQH5ooKfeEjmqP8shVG73rkeuYOedGNK0M5uNIawsqjeAKTve70ru/7strb
-         bsc8iq6sW98ngUe4Fi9A0r1gGFlMLOPbhnhWR9mErbIo8VnIOvfSelLEzlKPL8DLwI69
-         lfbQ==
-X-Gm-Message-State: AOJu0Ywd2nZ5AuK0UACRL0ufI3lM87UKhDtI5YGvdd80wfd/4GhdRhWV
-	ZfNcLVQj2KE5lYR/xfqLiAdH91MiecidSGjrEQjWlyK/dghZ+r5VXxk0gAM5tbrS90GY+TAsg4S
-	YHCwxrUPvyE0eyLjcUUgyULPYYVAZDYk177cAij3MX+fAPImpP5zbr5zTRIoZqvaSVaEypqo=
-X-Gm-Gg: ASbGncu17ki7O08HPUdrsU1okckQrwuFFfPE+4DtmYGLPbtEScL9bS2fGJ11I38GZhl
-	9luB5KocwNX41Ozg2G5sYo1hSCNsoG4BIQgIetszxm6xoCpCmf+ASIseR30Tm8kFQQrwSZCHLm8
-	Vl1062btdzsbsu2kuQxtOJRgpieC+GHjBlUch0ZW0M7Cl8uyveU54eRAnObN9C81iGpHHFzQNjl
-	ZEt4DejGTt8laAzVuhPIT5SQcrqPuzl4cYbgq+Vupt5fMtNozFOzLoIRA6hjLje+xN57MVLTRMR
-	8JFsZX7SHe3i8w2LPDMizj4PlbP8MuJr1HoNk++CgqaRBdgBAcNn/rVZIC5/RhDlz1T9IDQCiui
-	WMXmjp1GyQarz883+4fqRTzgDZ/Q/Zjk=
-X-Received: by 2002:a05:620a:1997:b0:891:c122:4296 with SMTP id af79cd13be357-8b29b7daae7mr119516985a.41.1762898108656;
-        Tue, 11 Nov 2025 13:55:08 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG3q6RJGL4tXdFv0MBpLJ0zIlSCrqGboU4B0wfcb2rJgjVxJ9n2CSCtq7Mqu5LGBcREsoJ/Cw==
-X-Received: by 2002:a05:620a:1997:b0:891:c122:4296 with SMTP id af79cd13be357-8b29b7daae7mr119514385a.41.1762898108252;
-        Tue, 11 Nov 2025 13:55:08 -0800 (PST)
+        d=1e100.net; s=20230601; t=1762898111; x=1763502911;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=FySy0LCStPtORY6VK+463tcchOxR2p6Krr0cw/eyN50=;
+        b=Fd9giw2cVT9CyIc0OlTtkvPvBNlX2UiLSaKYi8bESjjh0y1Cqbr7v8iJadUjDUtMAg
+         ol8wib2i018X5JD5Ou1ugme0vz95KLywfQKLXgTnEj35Lmd9HdNxzcki/SkMWgkCGcRm
+         cttapJ5EBw89vtHfM8etu5jLU+HLN8fOpcuC/QdbFp9bV3w3MsxGRSAmKW+zePG7vKa6
+         33xpMmaG4wYtMOb+06KgccR3NtKehkJOdnwSCP0Eph2XqollQdxU96JIa3KPDBlXpyZ0
+         A+iZ8E+W69N9lI2irtS7VoK0Tpl4EjPSnjzotnPdJj0KAqbbS3+NJGSNGtK5l81WLN7P
+         vILg==
+X-Gm-Message-State: AOJu0YwuT5FsPyH/Rr+vE4WWymbTr8jeOG4EJtJtdkL1VgVFIKkt1kB/
+	LhqLoMeO/7KbKy3CZvdVsrbRcXvLin77GXIg3JAbHoqu24WIEUw+fRfYgm81B3VByVx2hGgp96q
+	cEpw/og7Yk/KzJs6Zf7QWo4spe/RcIc8YgAjpTsJnN8oU4xM24+qzk/EHhL3r4+w=
+X-Gm-Gg: ASbGncsMD7P+SqPg+/KYHPqOAEH1lrPQtyfUXQlgbCvEy3xfCutTfOOJq1E4XEVPX9j
+	WKBl7nKE0gAuYNOJCzj1e4fM0rMdifGbu2gltxriHBBS5LpD98qDhXJKhLsJgZTq1sptJBFCRa0
+	kCVlBMltQC/tTgPUXFfbVtioemXTtQXShFX2lUJM4bwsMKd/T/8GxrhUr5i8nqZVNGis0P/KhQb
+	qR4eWPSRymL+8yP/HfLT6SxI4OX6cXb919d16GNmOWD8YVh2Kj8af2MX2OD7D/FnR9xaUcEGPP5
+	IW33CP4RL7HO/OqNdUMQT6Zll92HUAmAwMjIVmbhxvxN8W8Vva2B3njwJzYGw5jJ/s7LQsZOw9x
+	4WQJowDj3eemVHvIKxQ411LvGYzeszRc=
+X-Received: by 2002:a05:620a:170c:b0:8b2:271e:a560 with SMTP id af79cd13be357-8b29b815efbmr102326185a.72.1762898110772;
+        Tue, 11 Nov 2025 13:55:10 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFVx5pK69Ag3154vIr3OiRkF4L8ppHUN7DwLvrxWK4PbbHtrMDcLkZR/pYDsWLScGfqh5YaAg==
+X-Received: by 2002:a05:620a:170c:b0:8b2:271e:a560 with SMTP id af79cd13be357-8b29b815efbmr102324085a.72.1762898110299;
+        Tue, 11 Nov 2025 13:55:10 -0800 (PST)
 Received: from jkangas-thinkpadp1gen3.rmtuswa.csb ([2601:1c2:4403:8750:d964:d6a9:f204:ed2b])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8b29aa032fcsm61335085a.49.2025.11.11.13.55.06
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8b29aa032fcsm61335085a.49.2025.11.11.13.55.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Nov 2025 13:55:07 -0800 (PST)
+        Tue, 11 Nov 2025 13:55:10 -0800 (PST)
 From: Jared Kangas <jkangas@redhat.com>
-Subject: [PATCH 0/2] pinctrl: s32cc: fix uninitialized memory issues
-Date: Tue, 11 Nov 2025 13:54:10 -0800
-Message-Id: <20251111-pinctrl-s32cc-alloc-init-v1-0-071b3485b776@redhat.com>
+Date: Tue, 11 Nov 2025 13:54:11 -0800
+Subject: [PATCH 1/2] pinctrl: s32cc: fix uninitialized memory in
+ s32_pinctrl_desc
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -101,10 +104,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAIKwE2kC/x3MSQqAMAxA0atI1gY6OIBXERc1phooVVoRQby7x
- eVb/P9A5iScYageSHxJlj0W6LoC2lxcGWUpBqNMq7Xq8JBIZwqYrSFCF8JOKFFOpFk1PBP1xls
- o+ZHYy/2vx+l9P8MHwpZqAAAA
-X-Change-ID: 20251106-pinctrl-s32cc-alloc-init-cb04ebcc72f3
+Message-Id: <20251111-pinctrl-s32cc-alloc-init-v1-1-071b3485b776@redhat.com>
+References: <20251111-pinctrl-s32cc-alloc-init-v1-0-071b3485b776@redhat.com>
+In-Reply-To: <20251111-pinctrl-s32cc-alloc-init-v1-0-071b3485b776@redhat.com>
 To: Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
  Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
  Pengutronix Kernel Team <kernel@pengutronix.de>, 
@@ -116,66 +118,82 @@ To: Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>,
 Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  linux-kernel@vger.kernel.org, Jared Kangas <jkangas@redhat.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1762898106; l=2516;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1762898106; l=3179;
  i=jkangas@redhat.com; s=20251111; h=from:subject:message-id;
- bh=MdOVB+m45rMEFDn+Bq+cwePT0GndRxWDbiIFqpt2YCc=;
- b=AdTasHXTJYSkS585uvDHRJ55IZFnrgZJSfaxnaDSGB/RTgB+JoI7jS7M+GDTllmpRwiXRd6KK
- tUaoDvX0B3UCOC4ZPo6dQSBEoeXz6M5/Hr0bB51+McJESjBxOOOBew7
+ bh=r3R6gOHgJpsH0Ckzs+8Ovo1IxuCFFu4tCtcoUxTJujA=;
+ b=/a2DmQFQikGB8tMbS1LUwfOT0vMnQIkNOhWStWMNd+63yndO7bdcP3v8AKVc3H81zPQRXNv07
+ e1klwEJpmB3DVdhiEREEVNIyvIhIsr774lihmh7uHYh8ICoCmIKxvsw
 X-Developer-Key: i=jkangas@redhat.com; a=ed25519;
  pk=eFM2Mqcfarb4qox390655bUATO0fG9gwgaw7kGmOEZQ=
 
-This is a small series that fixes some uninitialized memory issues in
-pinctrl-s32cc. As an example of how these can affect the kernel, when
-probing i2c-imx, a memory allocation may fail because of the
-uninitialized memory giving a junk allocation size, which prevents chips
-on one of the I2C buses from being detected:
+s32_pinctrl_desc is allocated with devm_kmalloc(), but not all of its
+fields are initialized. Notably, num_custom_params is used in
+pinconf_generic_parse_dt_config(), resulting in intermittent allocation
+errors, such as the following splat when probing i2c-imx:
 
-        # i2cdetect -l
-        i2c-1   i2c             401ec000.i2c                            I2C adapter
-        i2c-2   i2c             402dc000.i2c                            I2C adapter
-        i2c-0   i2c             401e4000.i2c                            I2C adapter
-        # i2cdetect -y 0
-             0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
-        00:          -- -- -- -- -- -- -- -- -- -- -- -- --
-        10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-        20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-        30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-        40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-        50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-        60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-        70: -- -- -- -- -- -- -- --
+        WARNING: CPU: 0 PID: 176 at mm/page_alloc.c:4795 __alloc_pages_noprof+0x290/0x300
+        [...]
+        Hardware name: NXP S32G3 Reference Design Board 3 (S32G-VNP-RDB3) (DT)
+        [...]
+        Call trace:
+         __alloc_pages_noprof+0x290/0x300 (P)
+         ___kmalloc_large_node+0x84/0x168
+         __kmalloc_large_node_noprof+0x34/0x120
+         __kmalloc_noprof+0x2ac/0x378
+         pinconf_generic_parse_dt_config+0x68/0x1a0
+         s32_dt_node_to_map+0x104/0x248
+         dt_to_map_one_config+0x154/0x1d8
+         pinctrl_dt_to_map+0x12c/0x280
+         create_pinctrl+0x6c/0x270
+         pinctrl_get+0xc0/0x170
+         devm_pinctrl_get+0x50/0xa0
+         pinctrl_bind_pins+0x60/0x2a0
+         really_probe+0x60/0x3a0
+        [...]
+         __platform_driver_register+0x2c/0x40
+         i2c_adap_imx_init+0x28/0xff8 [i2c_imx]
+        [...]
 
-Compared to when no failure occurs:
+This results in later parse failures that can cause issues in dependent
+drivers:
 
-        # i2cdetect -l
-        i2c-1   i2c             401ec000.i2c                            I2C adapter
-        i2c-2   i2c             402dc000.i2c                            I2C adapter
-        i2c-0   i2c             401e4000.i2c                            I2C adapter
-        # i2cdetect -y 0
-             0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
-        00:          -- -- -- -- -- -- -- -- -- -- -- -- --
-        10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-        20: -- -- UU -- -- -- -- -- -- -- -- -- -- -- -- --
-        30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-        40: -- -- -- -- -- -- -- -- 48 -- -- -- -- -- -- --
-        50: -- 51 -- -- -- -- -- -- -- -- -- -- -- -- -- --
-        60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-        70: -- -- -- -- -- -- -- --
+        s32g-siul2-pinctrl 4009c240.pinctrl: /soc@0/pinctrl@4009c240/i2c0-pins/i2c0-grp0: could not parse node property
+        s32g-siul2-pinctrl 4009c240.pinctrl: /soc@0/pinctrl@4009c240/i2c0-pins/i2c0-grp0: could not parse node property
+        [...]
+        pca953x 0-0022: failed writing register: -6
+        i2c i2c-0: IMX I2C adapter registered
+        s32g-siul2-pinctrl 4009c240.pinctrl: /soc@0/pinctrl@4009c240/i2c2-pins/i2c2-grp0: could not parse node property
+        s32g-siul2-pinctrl 4009c240.pinctrl: /soc@0/pinctrl@4009c240/i2c2-pins/i2c2-grp0: could not parse node property
+        i2c i2c-1: IMX I2C adapter registered
+        s32g-siul2-pinctrl 4009c240.pinctrl: /soc@0/pinctrl@4009c240/i2c4-pins/i2c4-grp0: could not parse node property
+        s32g-siul2-pinctrl 4009c240.pinctrl: /soc@0/pinctrl@4009c240/i2c4-pins/i2c4-grp0: could not parse node property
+        i2c i2c-2: IMX I2C adapter registered
 
+Fix this by initializing s32_pinctrl_desc with devm_kzalloc() instead of
+devm_kmalloc() in s32_pinctrl_probe(), which sets the previously
+uninitialized fields to zero.
+
+Fixes: fd84aaa8173d ("pinctrl: add NXP S32 SoC family support")
 Signed-off-by: Jared Kangas <jkangas@redhat.com>
 ---
-Jared Kangas (2):
-      pinctrl: s32cc: fix uninitialized memory in s32_pinctrl_desc
-      pinctrl: s32cc: initialize gpio_pin_config::list after kmalloc()
+ drivers/pinctrl/nxp/pinctrl-s32cc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/pinctrl/nxp/pinctrl-s32cc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
----
-base-commit: e9a6fb0bcdd7609be6969112f3fbfcce3b1d4a7c
-change-id: 20251106-pinctrl-s32cc-alloc-init-cb04ebcc72f3
+diff --git a/drivers/pinctrl/nxp/pinctrl-s32cc.c b/drivers/pinctrl/nxp/pinctrl-s32cc.c
+index 501eb296c76050aa05386c51ef6ae0f97d4c76c3..51ecb8d0fb7e8a203e10cbe965dfec308eaa5f30 100644
+--- a/drivers/pinctrl/nxp/pinctrl-s32cc.c
++++ b/drivers/pinctrl/nxp/pinctrl-s32cc.c
+@@ -951,7 +951,7 @@ int s32_pinctrl_probe(struct platform_device *pdev,
+ 	spin_lock_init(&ipctl->gpio_configs_lock);
+ 
+ 	s32_pinctrl_desc =
+-		devm_kmalloc(&pdev->dev, sizeof(*s32_pinctrl_desc), GFP_KERNEL);
++		devm_kzalloc(&pdev->dev, sizeof(*s32_pinctrl_desc), GFP_KERNEL);
+ 	if (!s32_pinctrl_desc)
+ 		return -ENOMEM;
+ 
 
-Best regards,
 -- 
-Jared Kangas <jkangas@redhat.com>
+2.51.1
 
 
