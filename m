@@ -1,156 +1,181 @@
-Return-Path: <linux-gpio+bounces-28367-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28368-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25320C4F91A
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Nov 2025 20:18:02 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 141B2C4FED5
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Nov 2025 22:55:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DCC28189E999
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Nov 2025 19:18:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B8418189B53D
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Nov 2025 21:55:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17CFB324B2B;
-	Tue, 11 Nov 2025 19:17:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 625052F1FDF;
+	Tue, 11 Nov 2025 21:55:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WAB3TiSt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DYVgh0nx";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="i/xICTU6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78742571BE;
-	Tue, 11 Nov 2025 19:17:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C202E62A6
+	for <linux-gpio@vger.kernel.org>; Tue, 11 Nov 2025 21:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762888668; cv=none; b=TBb/aWU0jTg8i0jrNz1WbVOW3lAeZPR7pCcbL2SO9eWbBAbFI+p5TLUiNcOnDjVktgn9W0YfppWECngOdTywYmQjWyoSJu6uPH1bVs7nXt4oXJ3+sCo3WrPnuAlntbUuEeGRWuy8nHCSlFm7j9UjmzfZjzZ/AGSSPdh3KFkWX3Q=
+	t=1762898113; cv=none; b=l1JmacwkZi7LE5beOCLeTqHqx6MLlKL66duzmd5odweuCHlCGTlosniBLGuBJ8AMEHINNDnxo4MLEBqFTOW3awY+z2R1d0PL8/ZQB49nsOlxoNrlHH+NY2+S8aH3aI1yTd4SWjanb6UNwrgoak5m9g2gqQBwb5CmWfm+/4uirLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762888668; c=relaxed/simple;
-	bh=41RLRtaKbXKVyhTCyKGvYapSSOb8728iYPhMLtH1kSQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=njk41oaX0JhW9Mt/26CCUL8MvphIpHTP/uT229bHmQbCVE0u/e6FsK8isfCKz77W0NicfbISBjWgpbhHRB+dVO2YlBLaGxAVFr8SdN4wroFJZ+k3XA4sOGHPzh7eLcmrDIAyc9jg0e4h8LDgBXo96EE927CYGEwbQXHjbXZT8IA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WAB3TiSt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D8EDC4CEFB;
-	Tue, 11 Nov 2025 19:17:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762888668;
-	bh=41RLRtaKbXKVyhTCyKGvYapSSOb8728iYPhMLtH1kSQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WAB3TiStxkM1FNwO8Op8NHHDZWFMtIxWcQcyMeysB/zEXMu7NC5jN7X7oCAZuO/uB
-	 kcb7FtT/bygYU7KdFv5BXUDnSmTnFkOZ8nnrMugK3rc8YAb9Myqj0+j/30pn8eY8Mi
-	 FkINs55JVB5sRHCnTlFQ5BMCeVelWSh/mOsZSAa3tc2o2UVRqLAHzjnGrk3XfMFmKE
-	 yUZtkwYIljsWxIjRlVV5OUJuG4eBUG7Ex4ojuJLvn0I0Ye5hWgfKtnWEOSOBCHSp4c
-	 JDb7nCKhP6NvnxojBfFa0FUjKp21Eg/jL89c2RHwG69wReDvu3Q1lYYDIxR5d/e8TK
-	 8F/IQbicLA9ig==
-Date: Tue, 11 Nov 2025 19:17:33 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre
- Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea
- <claudiu.beznea@tuxon.dev>, Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, David Miller
- <davem@davemloft.net>, Linus Walleij <linus.walleij@linaro.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery
- <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>, Lars-Peter
- Clausen <lars@metafoo.de>, Jacky Huang <ychuang3@nuvoton.com>, Shan-Chun
- Hung <schung@nuvoton.com>, Yury Norov <yury.norov@gmail.com>, Rasmus
- Villemoes <linux@rasmusvillemoes.dk>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Johannes Berg <johannes@sipsolutions.net>,
- Jakub Kicinski <kuba@kernel.org>, Alex Elder <elder@ieee.org>, David Laight
- <david.laight.linux@gmail.com>, Vincent Mailhol
- <mailhol.vincent@wanadoo.fr>, Jason Baron <jbaron@akamai.com>, Borislav
- Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Kim Seer Paller
- <kimseer.paller@analog.com>, David Lechner <dlechner@baylibre.com>, Nuno
- =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Richard Genoud <richard.genoud@bootlin.com>, Cosmin Tanislav
- <demonsingur@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, Jianping
- Shen <Jianping.Shen@de.bosch.com>, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
- linux-crypto@vger.kernel.org, linux-edac@vger.kernel.org,
- qat-linux@intel.com, linux-gpio@vger.kernel.org,
- linux-aspeed@lists.ozlabs.org, linux-iio@vger.kernel.org,
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next v5 10/23] iio: imu: smi330: #undef
- field_{get,prep}() before definition
-Message-ID: <20251111191351.06c0e660@jic23-huawei>
-In-Reply-To: <CAMuHMdX8c1VkBuPDpJ5mpCcRH+zEX4F1bQKFf_V8N9ZZtCYqxA@mail.gmail.com>
-References: <cover.1761588465.git.geert+renesas@glider.be>
-	<97549838f28a1bb7861cfb42ee687f832942b13a.1761588465.git.geert+renesas@glider.be>
-	<20251102104326.0f1db96a@jic23-huawei>
-	<CAMuHMdUkm2hxSW1yeKn8kZkSrosr8V-QTrHKSMkY2CPJ8UH_BQ@mail.gmail.com>
-	<20251109125956.106c9a1a@jic23-huawei>
-	<CAMuHMdX8c1VkBuPDpJ5mpCcRH+zEX4F1bQKFf_V8N9ZZtCYqxA@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1762898113; c=relaxed/simple;
+	bh=MdOVB+m45rMEFDn+Bq+cwePT0GndRxWDbiIFqpt2YCc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ihnVTEv5Qn5X6lVbCx+NuYYNeJojQKpWXkc1hZ4cAS4Y8u2XK7ZznhQlNunkRbh6yfYsuBEiL1sWj1P1KjPsqAU5uI+55HrnmKUJnU9IVqtMBs7TtCVGa5+oc2HgCeKkMbh4T5I+P8lLTAxs1aDAeIXPASebERa8NHxr9qLkPOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DYVgh0nx; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=i/xICTU6; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1762898110;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=sekYXjOrhbrEeTR1KVQQRJq/2k2UhXo++7CMidIcSxc=;
+	b=DYVgh0nx7Wx8iAw/pxev1Z9Rfnxpdqedcte/3fPO5h4cYL9gtAoCVTgIyuJeDvW8GjCyfN
+	uiQ7v7QuQKQNFUyHEdCOYE9H6OQpG6OOUonWhFehgiVblsPPWkAYpl+argkrNGsdfpYBxM
+	nptBJwOAskctZ6SW4AcCcse5SUp8YMs=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-171-RxqY3VJ7MXOPNe4E_w1bgw-1; Tue, 11 Nov 2025 16:55:09 -0500
+X-MC-Unique: RxqY3VJ7MXOPNe4E_w1bgw-1
+X-Mimecast-MFC-AGG-ID: RxqY3VJ7MXOPNe4E_w1bgw_1762898109
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8b2640347c5so61187285a.3
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Nov 2025 13:55:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1762898108; x=1763502908; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sekYXjOrhbrEeTR1KVQQRJq/2k2UhXo++7CMidIcSxc=;
+        b=i/xICTU6a9PFbTZ67fJO7jqs2qoiVXOdu4HOeWIrWrjtjMPX7EwLUxBkiL7pGwcg99
+         6dP2VdrRRgGJgpKedNGDkgZgrgfTJ+rCd3L/blWfeirY254x/tqwQM27ZLyf3r4gFvEA
+         0S7GZMp42JceWiGk1Xa+8kOvmPiJwcknRE2T2OPeoccPY9bddi6APktRpxmqpmldapAs
+         SIqHw9JyF27DNppQDvCbV+WH9x1bxvyJdFR2DLAxi7YQ67NeoN9Y/yZwglML+gwx4OFt
+         oc4GtdGCteMZqUkcHjMopny/5QR9TeG3Bgbg2glYE2Xx+bWtUaw2QnmQzeDgF1Y3cFL9
+         jf0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762898108; x=1763502908;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sekYXjOrhbrEeTR1KVQQRJq/2k2UhXo++7CMidIcSxc=;
+        b=UpxlinS1DI4y0w3tXl+UlvaYQwIvMKVafJkra+s6Ot3jr/I2JD81I9gu1U2oxXsdFw
+         dajN8NDQoUSRPFOgSzUnVQyd5XI1YimmS4PsrlC4wfF8kjjRbBh2NtoZiye28uPeMhEH
+         bxEdI2oVML2yXdTTX6PaiBI9OZUgPzLwy5myZA4yOWn9I3tm+GRTX9gG/VI1U1ZMwd6E
+         Ht7oEYyRuvQH5ooKfeEjmqP8shVG73rkeuYOedGNK0M5uNIawsqjeAKTve70ru/7strb
+         bsc8iq6sW98ngUe4Fi9A0r1gGFlMLOPbhnhWR9mErbIo8VnIOvfSelLEzlKPL8DLwI69
+         lfbQ==
+X-Gm-Message-State: AOJu0Ywd2nZ5AuK0UACRL0ufI3lM87UKhDtI5YGvdd80wfd/4GhdRhWV
+	ZfNcLVQj2KE5lYR/xfqLiAdH91MiecidSGjrEQjWlyK/dghZ+r5VXxk0gAM5tbrS90GY+TAsg4S
+	YHCwxrUPvyE0eyLjcUUgyULPYYVAZDYk177cAij3MX+fAPImpP5zbr5zTRIoZqvaSVaEypqo=
+X-Gm-Gg: ASbGncu17ki7O08HPUdrsU1okckQrwuFFfPE+4DtmYGLPbtEScL9bS2fGJ11I38GZhl
+	9luB5KocwNX41Ozg2G5sYo1hSCNsoG4BIQgIetszxm6xoCpCmf+ASIseR30Tm8kFQQrwSZCHLm8
+	Vl1062btdzsbsu2kuQxtOJRgpieC+GHjBlUch0ZW0M7Cl8uyveU54eRAnObN9C81iGpHHFzQNjl
+	ZEt4DejGTt8laAzVuhPIT5SQcrqPuzl4cYbgq+Vupt5fMtNozFOzLoIRA6hjLje+xN57MVLTRMR
+	8JFsZX7SHe3i8w2LPDMizj4PlbP8MuJr1HoNk++CgqaRBdgBAcNn/rVZIC5/RhDlz1T9IDQCiui
+	WMXmjp1GyQarz883+4fqRTzgDZ/Q/Zjk=
+X-Received: by 2002:a05:620a:1997:b0:891:c122:4296 with SMTP id af79cd13be357-8b29b7daae7mr119516985a.41.1762898108656;
+        Tue, 11 Nov 2025 13:55:08 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG3q6RJGL4tXdFv0MBpLJ0zIlSCrqGboU4B0wfcb2rJgjVxJ9n2CSCtq7Mqu5LGBcREsoJ/Cw==
+X-Received: by 2002:a05:620a:1997:b0:891:c122:4296 with SMTP id af79cd13be357-8b29b7daae7mr119514385a.41.1762898108252;
+        Tue, 11 Nov 2025 13:55:08 -0800 (PST)
+Received: from jkangas-thinkpadp1gen3.rmtuswa.csb ([2601:1c2:4403:8750:d964:d6a9:f204:ed2b])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8b29aa032fcsm61335085a.49.2025.11.11.13.55.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Nov 2025 13:55:07 -0800 (PST)
+From: Jared Kangas <jkangas@redhat.com>
+Subject: [PATCH 0/2] pinctrl: s32cc: fix uninitialized memory issues
+Date: Tue, 11 Nov 2025 13:54:10 -0800
+Message-Id: <20251111-pinctrl-s32cc-alloc-init-v1-0-071b3485b776@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIKwE2kC/x3MSQqAMAxA0atI1gY6OIBXERc1phooVVoRQby7x
+ eVb/P9A5iScYageSHxJlj0W6LoC2lxcGWUpBqNMq7Xq8JBIZwqYrSFCF8JOKFFOpFk1PBP1xls
+ o+ZHYy/2vx+l9P8MHwpZqAAAA
+X-Change-ID: 20251106-pinctrl-s32cc-alloc-init-cb04ebcc72f3
+To: Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+ Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ NXP S32 Linux Team <s32@nxp.com>, Chester Lin <chester62515@gmail.com>, 
+ Matthias Brugger <mbrugger@suse.com>, 
+ Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Jared Kangas <jkangas@redhat.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1762898106; l=2516;
+ i=jkangas@redhat.com; s=20251111; h=from:subject:message-id;
+ bh=MdOVB+m45rMEFDn+Bq+cwePT0GndRxWDbiIFqpt2YCc=;
+ b=AdTasHXTJYSkS585uvDHRJ55IZFnrgZJSfaxnaDSGB/RTgB+JoI7jS7M+GDTllmpRwiXRd6KK
+ tUaoDvX0B3UCOC4ZPo6dQSBEoeXz6M5/Hr0bB51+McJESjBxOOOBew7
+X-Developer-Key: i=jkangas@redhat.com; a=ed25519;
+ pk=eFM2Mqcfarb4qox390655bUATO0fG9gwgaw7kGmOEZQ=
 
-On Mon, 10 Nov 2025 09:59:34 +0100
-Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+This is a small series that fixes some uninitialized memory issues in
+pinctrl-s32cc. As an example of how these can affect the kernel, when
+probing i2c-imx, a memory allocation may fail because of the
+uninitialized memory giving a junk allocation size, which prevents chips
+on one of the I2C buses from being detected:
 
-> Hi Jonathan,
+        # i2cdetect -l
+        i2c-1   i2c             401ec000.i2c                            I2C adapter
+        i2c-2   i2c             402dc000.i2c                            I2C adapter
+        i2c-0   i2c             401e4000.i2c                            I2C adapter
+        # i2cdetect -y 0
+             0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+        00:          -- -- -- -- -- -- -- -- -- -- -- -- --
+        10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+        20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+        30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+        40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+        50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+        60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+        70: -- -- -- -- -- -- -- --
 
-Hi Geert,
+Compared to when no failure occurs:
 
-> 
-> On Sun, 9 Nov 2025 at 14:01, Jonathan Cameron <jic23@kernel.org> wrote:
-> > On Mon, 3 Nov 2025 11:09:36 +0100
-> > Geert Uytterhoeven <geert@linux-m68k.org> wrote:  
-> > > On Sun, 2 Nov 2025 at 11:43, Jonathan Cameron <jic23@kernel.org> wrote:  
-> > > > On Mon, 27 Oct 2025 19:41:44 +0100
-> > > > Geert Uytterhoeven <geert+renesas@glider.be> wrote:
-> > > >  
-> > > > > Prepare for the advent of globally available common field_get() and
-> > > > > field_prep() macros by undefining the symbols before defining local
-> > > > > variants.  This prevents redefinition warnings from the C preprocessor
-> > > > > when introducing the common macros later.
-> > > > >
-> > > > > Suggested-by: Yury Norov <yury.norov@gmail.com>
-> > > > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>  
-> > > >
-> > > > So this is going to make a mess of merging your series given this is
-> > > > queued up for next merge window.
-> > > >
-> > > > I can pick this one up perhaps and we loop back to the replacement of
-> > > > these in a future patch?  Or perhaps go instead with a rename
-> > > > of these two which is probably nicer in the intermediate state than
-> > > > undefs.  
-> > >
-> > > Renaming would mean a lot of churn.
-> > > Just picking up the #undef patch should be simple and safe? The
-> > > removal of the underf and redef can be done in the next cycle.
-> > > Thanks!  
-> >
-> > Only 1 call of each of these in the driver, so churn is small either way.
-> >
-> > To avoid a bisection problem if your tree merges first I need to modify
-> > this stuff in the original patch or leave it for Linus to deal with as
-> > a merge conflict resolution which is mess I'd rather do without.  
-> 
-> If you add the #undef, there won't be any bisection problem?
+        # i2cdetect -l
+        i2c-1   i2c             401ec000.i2c                            I2C adapter
+        i2c-2   i2c             402dc000.i2c                            I2C adapter
+        i2c-0   i2c             401e4000.i2c                            I2C adapter
+        # i2cdetect -y 0
+             0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+        00:          -- -- -- -- -- -- -- -- -- -- -- -- --
+        10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+        20: -- -- UU -- -- -- -- -- -- -- -- -- -- -- -- --
+        30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+        40: -- -- -- -- -- -- -- -- 48 -- -- -- -- -- -- --
+        50: -- 51 -- -- -- -- -- -- -- -- -- -- -- -- -- --
+        60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+        70: -- -- -- -- -- -- -- --
 
-Two different things.  The bisection comment was about squashing into the
-original driver patch - not what was squashed.  Your tree may well merge
-before mine does and a bisection could therefore land in between the 
-driver introduction and a patch I merge today.
+Signed-off-by: Jared Kangas <jkangas@redhat.com>
+---
+Jared Kangas (2):
+      pinctrl: s32cc: fix uninitialized memory in s32_pinctrl_desc
+      pinctrl: s32cc: initialize gpio_pin_config::list after kmalloc()
 
-The rename is a preference only because I don't want an undef that smells
-like a hack / bug work around kicking around in the tree for significant time
-(probably a whole kernel cycle). In this case the churn is very similar
-with that or a rename of the macros - so rename it is.
+ drivers/pinctrl/nxp/pinctrl-s32cc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+---
+base-commit: e9a6fb0bcdd7609be6969112f3fbfcce3b1d4a7c
+change-id: 20251106-pinctrl-s32cc-alloc-init-cb04ebcc72f3
 
-Jonathan
-
- 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
+Best regards,
+-- 
+Jared Kangas <jkangas@redhat.com>
 
 
