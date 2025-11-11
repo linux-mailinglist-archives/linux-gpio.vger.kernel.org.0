@@ -1,188 +1,220 @@
-Return-Path: <linux-gpio+bounces-28342-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28343-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3113C4BBCD
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Nov 2025 07:53:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02994C4CA7E
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Nov 2025 10:28:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 555CB1887EE3
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Nov 2025 06:52:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 72F003AA194
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Nov 2025 09:27:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42DA531A06C;
-	Tue, 11 Nov 2025 06:52:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40A892F12A4;
+	Tue, 11 Nov 2025 09:27:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="lnZ71E9S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iUbRgCnl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9042741AC;
-	Tue, 11 Nov 2025 06:52:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9264A01
+	for <linux-gpio@vger.kernel.org>; Tue, 11 Nov 2025 09:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762843944; cv=none; b=qUm4VRvVNREbkI1D9KHhHpcRn6RljlfZMpbnPe+Bf5fRqM4DZZphKnMOyoRnQ6OA4jIhLi+SwwPX/AJEpC9mPWkt5uEZlpKlw6wtdM/vD6I3DwUQX8vM6Ji/bsdslDFmFVuKaixOSdc5JOo9tzOS15xFw3/dJYD8tW64IduJJN8=
+	t=1762853233; cv=none; b=UyvTQojP5kuuuxHmV7wD6F4CDrqRXgeFFLhCFZDPRyJwntRPmc0kH7inbVQOEZzbMs9qL1kmxrCEheEpqOXb1grRyWyWTOCAEvJOVtb95ATK1h4wf/dg58rLHjNHRFsL8DFlCe5uzYaS2fwWz+zjAbFkoyJS1Ca5TcTafGdpXWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762843944; c=relaxed/simple;
-	bh=wh4Kz4Mtx4GbaG4qrRJBIRrF2W1tDBfuMg0z9ciBQgQ=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=uC4DlrxXTHMFJYCEkNrcaYQVZ7O4LL6I50NnVyH8TjzA9GARtHWY+SA7pRzHKsEtHn1TbaVaVA6t3SJXN/fRN+1GXkwjwdmED6lWpC+hMcobJkBP/jLbvorUGJJI1ztUQ2xoszltQ7fma8waN+m4ompEcLV83fRdUvWYsSC2RqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=lnZ71E9S; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
-	s=s31663417; t=1762843918; x=1763448718; i=frank-w@public-files.de;
-	bh=wh4Kz4Mtx4GbaG4qrRJBIRrF2W1tDBfuMg0z9ciBQgQ=;
-	h=X-UI-Sender-Class:Date:From:To:CC:Subject:Reply-to:In-Reply-To:
-	 References:Message-ID:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=lnZ71E9Shu1JaXwEJS/Rv390+MZc6LpExzCncCdlUOj5KNyA6gNMhQXr7jL0+1mU
-	 Pn3WxlS2Prr4gIxPPG3Iq6zb1WvPWoeP9om5PbTz6XbRJJe1iRLsIsWrmJZgUsKI5
-	 AnwS/+KTc1JEa5Za0QFusCuK++F7fl5TIoLOZ7Hpn0v6jx1oo6VrO9TpbKtK3HbYX
-	 lwxq2950uDSPhgxUfgFU639W5Bm1X/F/jGZCuS3B/GsEMsyrFVN2RKFRT5e0ZWVl0
-	 m/HqM3xIf3CzcfrWJ5OmtsZrYq8hYrbZ007mw3zCJs0ziWPVmyr3VdVH2goyIl+SP
-	 EXbxuhLRoZyCZDM8kQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from ehlo.thunderbird.net ([80.245.79.191]) by mail.gmx.net
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1M4b1y-1vJGCB28Oc-00BR7y; Tue, 11 Nov 2025 07:51:57 +0100
-Date: Tue, 11 Nov 2025 07:51:52 +0100
-From: Frank Wunderlich <frank-w@public-files.de>
-To: Linus Walleij <linus.walleij@linaro.org>, Frank Wunderlich <linux@fw-web.de>
-CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Sean Wang <sean.wang@mediatek.com>, Daniel Golle <daniel@makrotopia.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- AngeloGioacchino Del Regno <angelogiocchino.delregno@collabora.com>
-Subject: Re: [PATCH v2 1/5] dt-bindings: pinctrl: mt7988: allow gpio-hogs
-User-Agent: K-9 Mail for Android
-Reply-to: frank-w@public-files.de
-In-Reply-To: <CACRpkdZ6wJGRhobbTxvm2ZstHA=P4gaUsqvdm3_n1tKqWJ=50Q@mail.gmail.com>
-References: <20251105195007.199229-1-linux@fw-web.de> <20251105195007.199229-2-linux@fw-web.de> <CACRpkdZ6wJGRhobbTxvm2ZstHA=P4gaUsqvdm3_n1tKqWJ=50Q@mail.gmail.com>
-Message-ID: <19CECEAC-A282-4683-B955-8191AA5ED7A0@public-files.de>
+	s=arc-20240116; t=1762853233; c=relaxed/simple;
+	bh=x2mBDMux/AaiCh3l+GZWu7YKVPsV3u/nqmQpnSpU5YU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AhE1BOwxWUQXa4SsjJDRoAtOiAEkiM1CElz4l+72nWn710S2B0wWaf+rRt28ZtofVvbYTAIJ8cqwB9w1ukzpWuihS+0wtPDKD4LmIiW7PRbmgOJEFfYpr5wUdLYqn/l3l9xPQfvKUvPVLY/w/LQO1N7GUQR7LYBGmFiZoV21Ano=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iUbRgCnl; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-42b3c965ca9so868066f8f.1
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Nov 2025 01:27:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762853230; x=1763458030; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=965DQT/PyyVJ3v5YvU5/4R6vOQw0LY3sBFscMPBdOC0=;
+        b=iUbRgCnlObdqSEmMjiFBjaWh8qJRn98/yHfnCXWZYH68FaANVGeYigiR9jW09frII5
+         zlA7Rbs9WnO6WeGdMWdlnTNFh0wCei6mlCoPZGHY4lfChQyFRjpV+yn16H0J3aWAryTD
+         KgVAyTccb+4gaoIgbki82wBEm4VKnHTIFHStxMiLXdTksoWeiWOsYlLBC8RTnAO89qi2
+         XSTzlF5tGSVMpk4mgh4NsCmJqByS+Y5h+vfN3Nk2HIGTZGGmW8trTxS0eDeksFFeDGi6
+         d/C90z/EXFYGFP2huVLzvQl5/VdBOVTUZekxXJXUHtXxKGN+b2urDt9Hq72Y4cB6VgEX
+         MZ0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762853230; x=1763458030;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=965DQT/PyyVJ3v5YvU5/4R6vOQw0LY3sBFscMPBdOC0=;
+        b=dgetycmPzOpY59jfAHRgqxLZ66QJFW4S3HGEyX5zAqVjfVk0J7r8Ug+REQtVswxYkW
+         c+X4N5AJjJf8kketF9jSHdyQpFQXFkL0IKVKKlOqmo9m9qNvp7JBY71W8GMWrS+axGXQ
+         w/aV/Q7UQmW6ToW6esqtYh29hNiT0ok6bdp54ID+SD5y6zNsfAYQfpxRPMNtmb4DKa8p
+         kg/oyir9AozmrFAuu2cPWCUr6addOXjCxnxGQlR2ux59GcoaWH2j6+PvybXBnWNOXo1x
+         hcR+lEQl6C8/Idh1dIKdnJip6XA8RabTm8POAfX54LL+BY2uRclUK6mYBvNp+KnmExuz
+         bmLA==
+X-Gm-Message-State: AOJu0YzzlKIPCK1JWeqAGXGitKLIH0JajqJ4VUcw9atfXQGXCwvBvv2S
+	BbhHGgbJXwxdUb3bPFt/sqiNtV5O8PSXgXfSG6/eCUkr3pRAHXWwaj3H
+X-Gm-Gg: ASbGnctGldD9LW7OQoFEc5GGIXqF+WwmROudgkh9KVRuhjY5HDAhjkXRCrT+eqAZjtG
+	Ok1emeebrLZBeCGsMR0QKXhvGpy9aredwOEmqjRwS6BWPoDOPl5fXelVFZPC0Wy51SlpET7QSZI
+	kUCE36dX2TaLhh8GSP89Dg9AkDfh6lBc32auCOWqqxK1ulvE9bneks/7depv+b788tnmQau/rjy
+	cp9lOdL2GPKR44LZgYGjEhx9CVkBF0CFqXs7iAOQUB1eknTYju8eFi4ZUrYOM4g1b0j3vxi/XvG
+	3Sp97o4Jom6gReFG6SimNrHWbzRQ4HlaasoYpWvmSFd4/Xu6ErdTnrjDe1M/rWCNvLRoQVlIgrv
+	v6h3hrRZ5/myIYgGpwv2LoRR8P+xxSxlA+va8kkWLHQVqpa4rCtOyD5hEEaZOOksUtcYWDWnUEt
+	+6JmWDNhN7oKTULw==
+X-Google-Smtp-Source: AGHT+IEUA2IpN/WkwsSOLcf02ER97kCgSm0MwimC2t0vdkHKEwwI1OLBDVxrKPkk1jVUZMa6lcqsLw==
+X-Received: by 2002:a5d:5f86:0:b0:42b:3e20:f1b3 with SMTP id ffacd0b85a97d-42b3e20f52bmr3709589f8f.9.1762853229978;
+        Tue, 11 Nov 2025 01:27:09 -0800 (PST)
+Received: from builder.. ([2001:9e8:f12a:4216:be24:11ff:fe30:5d85])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42ac67921c3sm27464641f8f.40.2025.11.11.01.27.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Nov 2025 01:27:09 -0800 (PST)
+From: Jonas Jelonek <jelonek.jonas@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Peter Rosin <peda@axentia.se>,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thomas Richard <thomas.richard@bootlin.com>,
+	Jonas Jelonek <jelonek.jonas@gmail.com>
+Subject: [PATCH v6 0/2] add gpio-line-mux
+Date: Tue, 11 Nov 2025 09:27:02 +0000
+Message-ID: <20251111092705.196465-1-jelonek.jonas@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:uzYatEEE5B8hau/Pb+8bUuG8rdmhERgPUp2bgugRnBTKhzRubn9
- 4C+TgM1iq3VhDZKyEnPmlFIy6KqLil7yG+w7zodDzVE0vQVH0Dv7ciyRu3NYnc20SHpjjbZ
- /c5tWmjyUgQiix9SsX43pCU5/sccCo8hoYFjZUCzQiM02NyK1ygSP7nsOdBbqMHZ5i07mRO
- MM7HMsymKi7lIgCLvhEXQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:C9YoTb5Spqc=;rAp2YuHG9rU5+mAeQNkMk6mu62P
- 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
- DtRSY80IWlvVbof5W1hdwmcgSY=
+Content-Transfer-Encoding: 8bit
 
-Am 11=2E November 2025 00:34:44 MEZ schrieb Linus Walleij <linus=2Ewalleij@=
-linaro=2Eorg>:
->On Wed, Nov 5, 2025 at 8:50=E2=80=AFPM Frank Wunderlich <linux@fw-web=2Ed=
-e> wrote:
->
->> From: Frank Wunderlich <frank-w@public-files=2Ede>
->>
->> Allow gpio-hogs in pinctrl node for switching pcie on Bananapi R4 Pro=
-=2E
->>
->> Signed-off-by: Frank Wunderlich <frank-w@public-files=2Ede>
->> Reviewed-by: Krzysztof Kozlowski <krzysztof=2Ekozlowski@linaro=2Eorg>
->> Reviewed-by: AngeloGioacchino Del Regno <angelogiocchino=2Edelregno@col=
-labora=2Ecom>
->
->I already applied an earlier version but it seems identical=2E
->Tags were picked up=2E
+This proposes a new type of virtual GPIO controller and corresponding
+driver to provide a 1-to-many mapping between virtual GPIOs and a single
+real GPIO in combination with a multiplexer. Existing drivers apparently
+do not serve the purpose for what I need.
 
-Thank you
+I came across an issue with a switch device from Zyxel which has two
+SFP+ cages. Most similar switches either wire up the SFP signals
+(RX_LOS, MOD_ABS, TX_FAULT, TX_DISABLE) directly to the SoC (if it has
+enough GPIOs) or two a GPIO expander (for which a driver usually
+exists). However, Zyxel decided to do it differently in the following
+way:
+  The signals RX_LOS, MOD_ABS and TX_FAULT share a single GPIO line to
+  the SoC. Which one is actually connected to that GPIO line at a time
+  is controlled by a separate multiplexer, a GPIO multiplexer in this
+  case (which uses two other GPIOs). Only the TX_DISABLE is separate.
 
-Code/description is not changed,but angelos tag is wrong there (missing a =
-in email,above is also wrong)=2E Not sure if it has effects for get_maintai=
-ners=2Epl (non-maintainers part)=2E But would be better if you can still fi=
-x it=2E
+The SFP core/driver doesn't seem to support such a usecase for now, for
+each signal one needs to specify a separate GPIO like:
 
->Yours,
->Linus Walleij
+  los-gpio = <&gpio0 0 GPIO_ACTIVE_HIGH>;
+  mod-def0-gpio = <&gpio0 1 GPIO_ACTIVE_LOW>;
+  ...
+
+But for my device, I actually need to directly specify multiplexing
+behavior in the SFP node or provide a mux-controller with 'mux-controls'.
+
+To fill this gap, I created a dt-schema and a working driver which
+exactly does what is needed. It takes a phandle to a mux-controller and
+the 'shared' gpio, and provides several virtual GPIOs based on the
+gpio-line-mux-states property.
+
+This virtual gpio-controller can then be referenced in the '-gpio'
+properties of the SFP node (or other nodes depending on the usecase) as
+usual and do not require any modification to the SFP core/driver.
+
+---
+Changelog:
+
+v6: - added count member + __counted_by attribute for gpio_mux_states
+    - included Reviewed-by tags
+
+Link to v5:
+https://lore.kernel.org/linux-gpio/20251105163610.610793-1-jelonek.jonas@gmail.com/
+
+v5: - renamed "shared" to "muxed" to avoid confusion with Bartosz' work
+    - dropped Reviewed-by of Krzysztof due to binding change
+    - use GPIOD_IN in devm_gpiod_get instead of calling
+      gpiod_direction_input explicitly afterwards
+
+Link to v4:
+https://lore.kernel.org/linux-gpio/20251105103607.393353-1-jelonek.jonas@gmail.com/
+
+v4: - dropped useless cast (as suggested by Thomas)
+    - dropped unneeded locking (as suggested by Peter)
+    - fixed wording in commit message
+    - included Reviewed-by of Krzysztof
+
+Link to v3:
+https://lore.kernel.org/linux-gpio/20251104210021.247476-1-jelonek.jonas@gmail.com/
+
+v3: - fixed dt_binding_check errors in DT schema
+    - as requested by Rob (for DT schema):
+      - removed example from gpio-mux.yaml
+      - added '|' to preserve formatting
+      - 'shared-gpio' --> 'shared-gpios'
+    - general fixes to DT schema
+    - use mux_control_select_delay (as suggested by Peter) with
+      hopefully reasonable delay of 100us
+    - gpiochip ops implementation changes:
+      - drop '.set' implementation (as suggested by Peter)
+      - new '.set' implementation just returning -EOPNOTSUPP
+      - '.direction_output' and '.direction_input' dropped
+      - '.get_direction' returns fixed value for 'input'
+    - direction of shared gpio set to input during probe
+    - as suggested by Thomas
+      - usage of dev_err_probe
+      - further simplifications
+
+    Since the consensus was that this should be input-only,
+    '.direction_output' and '.direction_input' have been dropped
+    completely, as suggested in the docs of struct gpio_chip. '.set' is
+    kept but returns -ENOTSUPP.
+
+    The shared GPIO is set to input during probe, thus '.direction_input'
+    doesn't need to be implemented. '.get_direction' is kept (as
+    suggested in docs of struct gpio_chip) but always returns
+    GPIO_LINE_DIRECTION_IN.
+
+Link to v2:
+https://lore.kernel.org/linux-gpio/20251026231754.2368904-1-jelonek.jonas@gmail.com/
+
+v2: - as requested by Linus:
+      - renamed from 'gpio-split' to 'gpio-line-mux'
+      - added better description and examples to DT bindings
+    - simplified driver
+    - added missing parts to DT bindings
+    - dropped RFC tag
+    - renamed patchset
+
+Link to v1 (in case it isn't linked properly due to changed title):
+https://lore.kernel.org/linux-gpio/20251009223501.570949-1-jelonek.jonas@gmail.com/
+
+---
+Jonas Jelonek (2):
+  dt-bindings: gpio: add gpio-line-mux controller
+  gpio: add gpio-line-mux driver
+
+ .../bindings/gpio/gpio-line-mux.yaml          | 109 +++++++++++++++
+ MAINTAINERS                                   |   6 +
+ drivers/gpio/Kconfig                          |   9 ++
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-line-mux.c                  | 126 ++++++++++++++++++
+ 5 files changed, 251 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-line-mux.yaml
+ create mode 100644 drivers/gpio/gpio-line-mux.c
 
 
-regards Frank
+base-commit: b6d31cd41814a33c1a22b8c676131820440cc44e
+-- 
+2.48.1
+
 
