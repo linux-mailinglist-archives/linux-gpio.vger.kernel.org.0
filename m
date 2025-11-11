@@ -1,180 +1,139 @@
-Return-Path: <linux-gpio+bounces-28354-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28355-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45A03C4D55B
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Nov 2025 12:11:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D14FCC4D579
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Nov 2025 12:13:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2EBF51886C66
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Nov 2025 11:06:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 500C7189F8D4
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Nov 2025 11:07:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E632A350D42;
-	Tue, 11 Nov 2025 11:05:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D267A350D47;
+	Tue, 11 Nov 2025 11:06:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t2U03Uqd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZxwgTHmc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22532FE050
-	for <linux-gpio@vger.kernel.org>; Tue, 11 Nov 2025 11:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0896B2EAB61
+	for <linux-gpio@vger.kernel.org>; Tue, 11 Nov 2025 11:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762859136; cv=none; b=OhxBQQvjZ000yZyt2BgJuKA2aXllBxzP6VU3W7h92Y8tf5n34EXuD7JCeJgi0DL6kBq3eRguP24/+2vSA/3amEMFl4ocYYq19Cft6Dt95nwtUEFibVjIe5sY43VegRMLycvZO/xyxSmXEwK8jsOf9tQkFuOSObM77unehSyQhUc=
+	t=1762859201; cv=none; b=FZYf/FDHMrUzIgDpbbDHPI8g/i1OQrT3tgfPBaa7Hm27j4smU0FkfyACRJT/GHPKavklnmgy4eNTAMwFWxloNL5l9hmFQM7dUmPxq5gngLqFo542TcDzmUKcMUYzYlz5xUBUKygY0/xvba+kzG/zylu5cD+SXWh5lQ9Ni/jzCPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762859136; c=relaxed/simple;
-	bh=y66FBoc++SpxBI6FGW3rQvdUsLlCBgJvq0+SdEPQo6c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ox2J5rR6kQ1q4QemjGb/+n1al7wuT7XO1mf03sXD99YQK46Cur8TByp/Y1T8PHwXFwMH7AuPeUjEsdJEiSYz7FPgbwCibiZM+hHlMLX3Y93RDbVcKAJzrYrhkVlfjKR+822h2yH0zPDvtfSLqerL9x4Zv+/xb3rzG0GccDQumQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=t2U03Uqd; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-37b495ce059so409171fa.0
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Nov 2025 03:05:34 -0800 (PST)
+	s=arc-20240116; t=1762859201; c=relaxed/simple;
+	bh=wjKmAWI7i3OKj2wAozsu3qUnx7HDyiUxDn1DPfUHvzk=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZbL/Ra7uNDkwiDEjIPDMBqhucgc8q+SUY5KGw9IXmlXfzWuyJ+tHuvYgjvvC6Zj8gWxV/PwGZy3vpVvKIHIizCWqzODCsLB6bjbmFTPu5iO6P0Xcio7kb72RR0hj55RulEDU2rxcxG5j0SDEDXCh3kQqUunlif8vSqMvdM2nECI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZxwgTHmc; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-477632cc932so16299225e9.3
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Nov 2025 03:06:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1762859133; x=1763463933; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UoH9aK6siRf3TzdqpyJR1VLqiWASMeAZ3/LGdDhqFC8=;
-        b=t2U03Uqd0W5wrdgeVXLyZTIJSUjjteG7dhXJWun9YrX0wu0qAoiYI+4QhGxgwfRWjX
-         ww4hCZvw21l1WoZBlnjqbWuR6JnMkbQo1cBoTafKte/tCU2skdHAUH/qy0i/ELkJh87b
-         bsBgbHI7c444CG9XRIyLNGH1yYJpojLrTCK5MvNGq2IkDF0wvojxsaX594xLpNGtvOQd
-         c2kZD2fLjDjWdA47fFdqDpjHxdBKY5kBAlro/E/VCQhOxkWKUS3JtSrg0wBuhe28mvca
-         jarhx25cA/3iPm+J/RQMrqf/EMIaLcMQ3Df2EJv1twmuRi67nZa4jsaAVsPgrTSxXkCS
-         5g2A==
+        d=gmail.com; s=20230601; t=1762859198; x=1763463998; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=GqeaPnqItnFtRKGsXgxFGwXrKkh4CIZ1QtjFn5LjAOA=;
+        b=ZxwgTHmciUuwxls2DCH5W5AN9wmbMX7MGvOWyOX/c/n1+TSf1Cia+uBicCNxPtF4ju
+         lEbeZcOdExtSV21ae2RHQUpgEno6go1rm6j5DeYWZF8S1NLMKeN+5FUR8u0pXHX2va15
+         658RzEX14yA/ItojnlTIe74hxRJndrBtXzlT5hbQnceekn9vTR0WMLm803Rm+e2c2p/k
+         bE0vxJa87pFe81zn2s57NH6RZXfyyt38y4YN9IV9B7iSJszEeDFNDZlWjzrfXU4Sa3Ei
+         o6ZjvLbXkBOZKehIJNZ125yFOpgOvWhHJGCKfSriE1ElfsiHclElIlNrG425NAhDDO1P
+         RLiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762859133; x=1763463933;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=UoH9aK6siRf3TzdqpyJR1VLqiWASMeAZ3/LGdDhqFC8=;
-        b=IkVeuZMYik+zGUeA7xXXsdFzHn8sb4rDJU5FBq5JxTZvhqyN5y72vjwNnySGkAdRje
-         sxBcdQxba6B7CrVtr4RhJMXCOrfhCw3WxzZfD7Mg99i8cGrZWP2PoMndOWPioqWsfhCc
-         yeil/Y7FRphCs/81wGL3iC4nhDzuo7Nsl54Tkjzh5M2q1ao94y9Z1Y/29+hDLF3Dnpdv
-         WU/HZTpNMG42noNXEiir7xKWAkTQ0QDN6QwK9wC297ZX9DkKEQ709y/a3Y9jt53WgKq5
-         +fEzppmIL5wBVabID+yzA+gnb++Iiydpl951Tmu13+rTVVVxWoc+6SY4OS3X5tHOwtPe
-         w/1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVNtg6oOX/yAi/aMmJM61Fo02YFHB97XmuHRq7AJWy7B2LNRVM14kdBAD8dLJi1N8xbtmdq7RCI3FD8@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLtdyN2vOiGfHJ2Tq+dWH4tiyXJNU54l4hSATTZ66ERW1QHf/T
-	pvywedh1dfZaH8kWZHhMcHc92yUfMeQWmeW1PCwPGaebuVS7ZKdZGmCEZfcASOH3nhn8OcKt0nv
-	v8lqN8dJViYvFSlzpgxflXinddXy41WT1yn80F50kXA==
-X-Gm-Gg: ASbGncuRF1AVZSFZNpy9yZQlVOvB8LO7YGWGX6fDr7wfR7JDUI0H7xJ9APDS37m6C/o
-	VEOlyQRKY1uC5BQY49AocyZYhXeVisLc//VSu3NJz8598hRpxvy4lw/uklLYsbqgocC12MI2VCV
-	LDrstAsSXPw5uw2zx7qKyqvCQVViIRB3ya+zWO17yu8YELepfGiaM+/bjpq1JRr2pZm25Iz1rhr
-	7VrQdTOTj+4oRaHbOf5YeloZiMkUrXHQrSapP8atOYlhELE2flWs33PdNAV
-X-Google-Smtp-Source: AGHT+IFkZiLMnr50CeQ1O4yRkma5Tp7W/uLXb3QVZ0YS6vC4SBgPLtDI8Wk1eXrn9vUKVkhHURYlWyAkxblzklx1FOI=
-X-Received: by 2002:a05:6512:ad1:b0:594:2e42:d49a with SMTP id
- 2adb3069b0e04-5945f1671bbmr3110517e87.21.1762859132818; Tue, 11 Nov 2025
- 03:05:32 -0800 (PST)
+        d=1e100.net; s=20230601; t=1762859198; x=1763463998;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GqeaPnqItnFtRKGsXgxFGwXrKkh4CIZ1QtjFn5LjAOA=;
+        b=OpRoExG70ofRjjwg0ag+SGz6arOukiMHW6QoQ9cz64Ce231wevR47R6wQOecItwDPp
+         wKTtf5U3QwSht12tKCWHQFFNNVjVF6VIhF9rikee13Z6pXGVRA1cqQAhdhaWNtHzgsYp
+         dOO++hrwQ3Srp5zukX4HD3/PpcDzjizth41Qh6qkdruE75CaVdnxxscW4XdR/cxSC8C4
+         aoP3F1ZKidzkdgZSHkO5BiQIeULq65m9f7Bh7aNghobMs9ILBk3UA51HTaKynzonyz5i
+         zbmBIb6VATeUP7WOl9YSNHeo7QyS1/b67dfG8JWfBTlTOHjmLO3xs5YYCU2s/EGkdCdi
+         ePqg==
+X-Forwarded-Encrypted: i=1; AJvYcCVdOv/WoHMi/AhIdsMzWnb9mBgmf5Nry9lVMtig47uAo5awjecRe50f08Vqt0I5XQZ1dspy45UHRmlr@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5q3pkDkNJzR+Su7MApNHRNtC2fO4g6/VpTsPXOuYmz1O915Fj
+	IsD+mYK8Tub8YqOONp7i9moqq1UkDueYTKzMGBUwYpHUZsSmYFkBf3zw
+X-Gm-Gg: ASbGnctGiG/m4MuurdfHHCi4bB4nOME6eHdtuyTspydeX1AUyQ43GdtD59bRNBVx607
+	Asdjo9MlUDEAENhNPptzS6Ve4xT+Y9EVhhteJlo15i/+6/pV8S3+h0sv0Ck7K69rp3tbBstx+6t
+	cbel6Z0pbWZiGSa/+RTYpJr3mg2im0d1OiMAZQZipY0/nI4P5hRCxSnvB0Ti2PLmjTLvmhB4veL
+	NrbWT5IibkXr0U2nT3MZ1JXLj0xgz7LD5xYaABaeBApXyw7cWG3HEjGzQxMVa143gmc2NlDi9E1
+	/Xwdtk9sKNVEDBJgk3ZuqjCjIZyKFF/Rbn9kCiWImyEga+Gyj/Ere4nEPafNHmIZwBZiG++jgUp
+	W97xhlzb9W8dYsYIH1RTHwaapHpy7Vs6/eHigEk4pyZnwlRHEhmxDv4vU+RXvK1ij6kFbzYw2dL
+	t0UmUDtSLUb9SD6vy+wbMp5TcNZYDT
+X-Google-Smtp-Source: AGHT+IHo0/ZJIgGnENwBn854yp6ABmQngtssmchs4xiNiUy0O6fPJmQpRDhvemlWrdEyLklYh4J5vg==
+X-Received: by 2002:a05:600c:6a81:b0:477:429b:3b93 with SMTP id 5b1f17b1804b1-47773263384mr69643045e9.18.1762859198228;
+        Tue, 11 Nov 2025 03:06:38 -0800 (PST)
+Received: from Ansuel-XPS. (93-34-90-37.ip49.fastwebnet.it. [93.34.90.37])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4776bcfd021sm306780595e9.11.2025.11.11.03.06.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Nov 2025 03:06:37 -0800 (PST)
+Message-ID: <691318bd.050a0220.855f2.f45f@mx.google.com>
+X-Google-Original-Message-ID: <aRMYu6AcsZV1rSEw@Ansuel-XPS.>
+Date: Tue, 11 Nov 2025 12:06:35 +0100
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 0/5] pinctrl: airoha: add Airoha AN7583 support
+References: <20251106235713.1794668-1-ansuelsmth@gmail.com>
+ <CACRpkdYOXSm5BaHgij_=L32kq+fkx_ggSJ7G5a=064FDvMR4EQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251031160710.13343-1-antoniu.miclaus@analog.com>
- <20251031160710.13343-3-antoniu.miclaus@analog.com> <CACRpkdYdtcnxyP4xVsqVK+geurEOEURqZO5eLC96YMqh1sE5Sw@mail.gmail.com>
- <3ead5d7aa5e6be2b6df3bb91b35fec37e23353f3.camel@gmail.com>
-In-Reply-To: <3ead5d7aa5e6be2b6df3bb91b35fec37e23353f3.camel@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 11 Nov 2025 12:05:19 +0100
-X-Gm-Features: AWmQ_blU6j3_M21L61Yu-JWVhmaHhxtwDX6YhKqEeSy_5sEpbKXDc7z5UbWQeFg
-Message-ID: <CACRpkdZf9D2PH5AR46Pwi8UoyfwumKS4P3ncJ=RN4iu_cJzZ5w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: adg1712: add driver support
-To: =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>
-Cc: Antoniu Miclaus <antoniu.miclaus@analog.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdYOXSm5BaHgij_=L32kq+fkx_ggSJ7G5a=064FDvMR4EQ@mail.gmail.com>
 
-On Mon, Nov 10, 2025 at 1:32=E2=80=AFPM Nuno S=C3=A1 <noname.nuno@gmail.com=
-> wrote:
-> On Mon, 2025-11-10 at 11:30 +0100, Linus Walleij wrote:
-> > Hi Antoniu,
+On Tue, Nov 11, 2025 at 12:46:48AM +0100, Linus Walleij wrote:
+> On Fri, Nov 7, 2025 at 12:57 AM Christian Marangi <ansuelsmth@gmail.com> wrote:
+> 
+> > This small series introduce support for Airoha AN7583 pinctrl
+> > support.
 > >
-> > thanks for your patch!
+> > Most of the changes are generalization and cleanup of the Airoha
+> > pinctrl driver. These are needed as all the array in the inner
+> > function were hardcoded to EN7581 and didn't reference stuff
+> > from the priv groups.
 > >
-> > On Fri, Oct 31, 2025 at 5:08=E2=80=AFPM Antoniu Miclaus
-> > <antoniu.miclaus@analog.com> wrote:
+> > Everything is changed to match_data and priv struct so
+> > adding AN7583 is just a matter of adding the structs.
 > >
-> > > Add driver support for the ADG1712, which contains four independent
-> > > single-pole/single-throw (SPST) switches and operates with a
-> > > low-voltage single supply range from +1.08V to +5.5V or a low-voltage
-> > > dual supply range from =C2=B11.08V to =C2=B12.75V.
-> > >
-> > > Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> >
-> > So tying into the binding discussion:
-> >
-> > GPIO means "general purpose input/output".
-> >
-> > I am really confused as whether this is:
-> >
-> > - General purpose - seems to be for the purpose of switching
-> >   currents and nothing else.
-> >
-> > - Input/Output - It's switching something else and not inputting
-> >   or outputting anything and this makes the driver look strange.
-> >
-> >
->
-> Not the first time a part like this pops up [1]. At the time, the final
-> conclusion was to go with gpiolib. Naturally you can think otherwise now =
-:)
+> > Also the schema is generalized where needed to address
+> > for the small difference between AN7583 and EN7581.
+> 
+> All looks good and bindings ACK:ed so patches applied!
+> 
+> Suggestion: since this driver has:
+> 
+> 1. Exactly one group per pin
+> 2. Use some accelerated GPIO operation, .gpio_set_direction
+>    in struct pinmux_ops
+> 
+> Have you considered implementing the new .function_is_gpio()
+> callback in struct pinmux_ops to tighten up the GPIO strictness?
+> 
 
-I think we might wanna go with gpiolib for the Linux internals, maybe
-we want to add some kind of awareness or flag in gpiolib that this is
-a switch and not an output we can control the level of?
+Thanks for checking this. No, wasn't aware of the new OP, will check it
+and send followup hoping it's not too hard to implement.
 
-I could think of this:
-
-- Make .get() and .set() in struct gpio_chip return -ENOTIMP
-  no getting and setting these "lines" because we really cannot
-  control that, these lines will have the level of whatever is on
-  the line we are switching.
-
-- Implement .set_config() and implement the generic pin
-  control property PIN_CONFIG_OUTPUT_ENABLE as 1
-  to switch "on" and 0 for switch "off".
-  See include/linux/pinctrl/pinconf-generic.h
-
-This makes it possible to use the gpiolib in a way that is
-non-ambiguous.
-
-We might want to add consumer helpers in
-include/linux/gpio/consumer.h such as:
-
-#include <linux/pinctrl/pinconf-generic.h>
-
-int gpiod_switch_enable(struct gpio_desc *desc)
-{
-   unsigned long cfg =3D pinconf_to_config_packed(PIN_CONFIG_OUTPUT_ENABLE,=
- 1);
-
-   return gpiod_set_config(desc, cfg);
-}
-
-int gpiod_switch_disable(struct gpio_desc *desc)
-{
-   unsigned long cfg =3D pinconf_to_config_packed(PIN_CONFIG_OUTPUT_ENABLE,=
- 0);
-
-   return gpiod_set_config(desc, cfg);
-}
-
-See e.g. rtd_gpio_set_config() in drivers/gpio/gpio-rtd.c for
-an example of how the GPIO driver can unpack and handle
-generic .set_config() options like this.
-
-The binding however needs to be something separate like a proper switch bin=
-ding
-I think or we will confuse other operating systems.
-
-Yours,
-Linus Walleij
+-- 
+	Ansuel
 
