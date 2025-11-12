@@ -1,177 +1,158 @@
-Return-Path: <linux-gpio+bounces-28401-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28407-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E23BC52F3E
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Nov 2025 16:19:00 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DF08C52F7D
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Nov 2025 16:21:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E14415050B8
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Nov 2025 14:26:45 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A1A8B350353
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Nov 2025 15:07:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63E8B3101B0;
-	Wed, 12 Nov 2025 14:26:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DB1F34D92D;
+	Wed, 12 Nov 2025 15:00:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4iXCp4z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xXjr/BiL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24ED28A701;
-	Wed, 12 Nov 2025 14:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C46C339B41
+	for <linux-gpio@vger.kernel.org>; Wed, 12 Nov 2025 15:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762957595; cv=none; b=YyeFQAhQmhtzqfxbtxW7R4RobDeZ3/Lt3aVVoasmI0hxj7pZE1aNpuldL73QA73bUU8RvBw5fm1hHtQyc0OTzYr9xwIngyjqNMAThd29G2grah7kUkSDYQR2PSUXTxuEw7NFeRHma4a6M8vYkpvkFSkS8aUgAeGiIq6YHhJXkn8=
+	t=1762959644; cv=none; b=gSgmGJcmouA/f3RfZKwcjAJK+o3tw+IHRoZsnUQ/3XnG05L4gkgqy5mNCsa4CLzkAurRJB2i9jOwpTgDvMyc5VV5gofUIVbKxyXbyvmNOTrwv3qJpd7sHYUt22GF5u1Hy3XGCd2slpr7CBzNnSRpbqY6yWUHAl3MR941ow1SGpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762957595; c=relaxed/simple;
-	bh=bNLqGrg/bxt16UHYQqXWyzLbnJanuTnn/DSzlHMqam8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qtqkH8KDJQJjkvIg1VxhtdsslmxVSp+JzGZ1eDETk9gLV+3LtC3LZ3UfqxclgnpUPBMBb8ad4aCUNoASSQGa2qV+3aNDjYGnnGss44naSBPz6mMissH6LIF12GL1+ggN/qHjUppwErkbg/iMjZ2pObPxB6Uq57GyoG6Vy5fG0Gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m4iXCp4z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02366C19422;
-	Wed, 12 Nov 2025 14:26:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762957594;
-	bh=bNLqGrg/bxt16UHYQqXWyzLbnJanuTnn/DSzlHMqam8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m4iXCp4znKZvCzYkjhXZu1JL4COAdGb7yAm9UmEyz0xmhqXKj2K9504lPVGuTy2Jw
-	 oIs3gFjFC88Pg6vs33x0Y9J4Rt1LUAOWf+RlfjFyxs91gx9kSFDB51FMvZyE5chPXE
-	 aGtArRih0bDKoqGUZ1CFOq9Z1gR5u0u7H+Ia54U4ZgBoOw6F7RHwsyZbtTo73P+YtI
-	 MlFexT96E5ZxLwczc2sajdvyTdAl2dfa5pilRItuDN9x8WGEYbXAh10Kg5gBAGhHeA
-	 FzJ4mZv2YeFA2oWEIhZbh7ljpXAZyuUSAV7u6Cyu3iLC+0hy5axy54UvXp2gQgfYvb
-	 AydcA8t3H0Huw==
-Date: Wed, 12 Nov 2025 08:26:32 -0600
-From: Rob Herring <robh@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Len Brown <lenb@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
-	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 05/29] dt-bindings: bus: Add simple-platform-bus
-Message-ID: <20251112142632.GA1610836-robh@kernel.org>
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
- <20251015071420.1173068-6-herve.codina@bootlin.com>
- <20251030141448.GA3853761-robh@kernel.org>
- <20251031162004.180d5e3f@bootlin.com>
+	s=arc-20240116; t=1762959644; c=relaxed/simple;
+	bh=ftMi4rxMW7WjJXTDqOFjHRsNI+XGfNycEd6D7yRiwf8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Ft/nyUrRkRSaZ/7sYl98qtd0walLJgDqi8te1MZxV7UTO3fSdSqq9kX+TBkucqiw7gznUUQmnpsEpeyTGxaQ9UB5zUgsZYoSryrwmVqy66sq08x8kOZEe2EPdxzJMVZU0idjv77/gtGzcu/1DUGqH3mMJG433WM7kmCM1VqMZvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xXjr/BiL; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-42b312a089fso716244f8f.2
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Nov 2025 07:00:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1762959641; x=1763564441; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ftMi4rxMW7WjJXTDqOFjHRsNI+XGfNycEd6D7yRiwf8=;
+        b=xXjr/BiL1xgYHNNsXrXQ4khd/bi3J6djLyO/bHVn86qOUbVkUF3rK9MYM0seJ0Bwt1
+         YiO2SPPJ0PpUsBXbo8YUEkXFDUQQRhkYebv3ILk9Kl0M/H75pK4vPmaHkMS7Vg5oBNha
+         QXuL+wmq33tFbpSLp4lLkLfRKFhEFDcssKXknqAK9JUVQBHANBgXnDXJGIn1WDDlrLRH
+         h7YIv5qnhymqFyT7Mm5Xx4gRcExVv5sC4+XwGYwPv8aoeab++xUYbPOAmq/z73RQEdjY
+         mQOvViiLiJQRNwDZ1LcQxHVELUa2p3WRZqDAj4ZJtrUSNCm4YczECQKfHGYihFLWk/Og
+         OzBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762959641; x=1763564441;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ftMi4rxMW7WjJXTDqOFjHRsNI+XGfNycEd6D7yRiwf8=;
+        b=jkMhCCj8BbPWS/RkHhVttWm5+faz1TEFM5eR+F9aElXL+TFQAGE/OBOIkfp73XLLNY
+         Wig/i9Y4HMYcHRhVU1ZbEtulrYOyKnamALTOk6rQyuNmkJNZ6ee2D+ynXUSeCxE+C6al
+         YRJjhpDrF3l3eaKHQn8ZHYzVDCm263kwoZKcASKbyRyjblXPNpZufA6ZHIOhqioSuZlS
+         T/R4LJEtt39ThftU7TzuzRd2Z3im59D88HCY3XuMknkxQXkb5AG1BAq3ZzDhY0oZ7KDy
+         tt7qjCgLL9dNMKKHyq6iKz7FvQu2HYRUA2h57OL1NKSGw8wdYfH/tJYVcBtUYP+ORlas
+         ElQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVF8ZDbXSN4UyaoW6xgSPmE/+eydshbtAdLUjQPRR3tmqFpW8ZAE0+i5rPj0JBkTlKLkEr9FEu2g8zH@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywm4nsYgVGE3iIbxMWCB8zW/F0senwaPmGH+iPsa0Z1SYJqWFL7
+	ggUQ1auSDo7v01m4dQOg10VCFtZC6vTBBWC7kEyrR077XfzKVN5c/iKhI8rWYb3RZdE=
+X-Gm-Gg: ASbGncvDWdgRsXC0KxjkUnOv5lonC86QUsoOXdI7HkuahDcDLwpH5GzIfuC4l1gHxm/
+	6RD5PF6iPjQV12eOpg3KyKNMtALLJxok+JxUau/Nl76RTONqMiyV6pezvtsDAtYgyX0w2JwR9Y1
+	ZNXpWlExzZeIeMotJoUlLuZbMqRpLv07+y0sD4eOhln/dU7DlIToCigvgB9kmaMSzlIMx7ulB9w
+	3EFATGk+jm85JguPmLKNwnTPNz6J+9dxWhmOJJqimDn0/4i3gCL7dk/R6jxPwSY5yXPdScQpYhX
+	Eq6GFQKdZyI3YQjKffD28DPf9CN+3CM7t5Rx8oVi+CBainkkg0Y8r9TVH98xVXuVtoh3WJjY+c3
+	SxBjraWNTpIl7kHw0JsVZE8VWrZDypy5w7qtrXQxz1Il//LOktS0z1xL/CfrAz9Ny3NxqjMJVIS
+	5hRPHGgA==
+X-Google-Smtp-Source: AGHT+IEWtr1202SXBAEfNbT/oc0QWLUzOqznUI68ArPxhBNv/vhbmeoXarGP0UDkdCcwtG0Wq/w4+w==
+X-Received: by 2002:a05:6000:2dc8:b0:42b:3eb2:1b97 with SMTP id ffacd0b85a97d-42b4bb8b5e7mr2354687f8f.9.1762959640534;
+        Wed, 12 Nov 2025 07:00:40 -0800 (PST)
+Received: from draszik.lan ([212.129.80.49])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b4789896esm8854605f8f.38.2025.11.12.07.00.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Nov 2025 07:00:39 -0800 (PST)
+Message-ID: <0bc6fadc6ec9578873fc5413da4405c968bb402b.camel@linaro.org>
+Subject: Re: [PATCH v4 02/20] regulator: dt-bindings: add s2mpg10-pmic
+ regulators
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>,  Lee Jones <lee@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski	 <brgl@bgdev.pl>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Peter Griffin	 <peter.griffin@linaro.org>,
+ Will McVicker <willmcvicker@google.com>, 	kernel-team@android.com,
+ linux-kernel@vger.kernel.org, 	linux-samsung-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, 	linux-gpio@vger.kernel.org
+Date: Wed, 12 Nov 2025 15:00:39 +0000
+In-Reply-To: <20251112-gainful-flashy-seal-f2c5dc@kuoka>
+References: <20251110-s2mpg1x-regulators-v4-0-94c9e726d4ba@linaro.org>
+	 <20251110-s2mpg1x-regulators-v4-2-94c9e726d4ba@linaro.org>
+	 <20251112-gainful-flashy-seal-f2c5dc@kuoka>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-2+build3 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251031162004.180d5e3f@bootlin.com>
 
-On Fri, Oct 31, 2025 at 04:20:04PM +0100, Herve Codina wrote:
-> Hi Rob,
-> 
-> On Thu, 30 Oct 2025 09:14:48 -0500
-> Rob Herring <robh@kernel.org> wrote:
-> 
-> > On Wed, Oct 15, 2025 at 09:13:52AM +0200, Herve Codina wrote:
-> > > A Simple Platform Bus is a transparent bus that doesn't need a specific
-> > > driver to perform operations at bus level.
-> > > 
-> > > Similar to simple-bus, a Simple Platform Bus allows to automatically
-> > > instantiate devices connected to this bus.
-> > > 
-> > > Those devices are instantiated only by the Simple Platform Bus probe
-> > > function itself.  
-> > 
-> > Don't let Greg see this... :)
-> > 
-> > I can't say I'm a fan either. "Platform bus" is a kernel thing, and the 
-> > distinction here between the 2 compatibles is certainly a kernel thing.
-> > 
-> > I think this needs to be solved within the kernel.
-> 
-> I fully agree with that.
-> 
-> > 
-> > What I previously said is define a list of compatibles to not 
-> > instantiate the child devices. This would essentially be any case having 
-> > a specific compatible and having its own driver. So if someone has 
-> > 'compatible = "vendor,not-so-simple-bus", "simple-bus"', when and if 
-> > they add a driver for "vendor,not-so-simple-bus", then they have to add 
-> > the compatible to the list in the simple-pm-bus driver. I wouldn't 
-> > expect this to be a large list. There's only a handful of cases where 
-> > "simple-bus" has a more specific compatible. And only a few of those 
-> > have a driver. A more general and complicated solution would be making 
-> > linux handle 2 (or more) drivers matching a node and picking the driver 
-> > with most specific match. That gets complicated with built-in vs. 
-> > modules. I'm not sure we really need to solve that problem.
-> 
-> Right. Let discard the "more general and complicated solution" and focus
-> on the list of compatible to avoid child devices instantiation.
-> 
-> Do you mean that, for "simple-bus" compatible we should:
->  - Remove the recursive device instantiation from of_platform_populate().
+Hi Krzysztof,
 
-That may be a problem I hadn't considered. While we've solved most probe 
-ordering issues, I think some may remain. Even when of_platform_populate() 
-is called affects this. For example, I tried removing various arm32 
-of_platform_.*populate() calls which run earlier than the default call, 
-but that broke some platforms. (Looking at the list of remaining ones, I 
-fixed the at91 pinctrl/gpio drivers, but never tried to remove the 
-calls again.)
+On Wed, 2025-11-12 at 10:51 +0100, Krzysztof Kozlowski wrote:
+> On Mon, Nov 10, 2025 at 07:28:45PM +0000, Andr=C3=A9 Draszik wrote:
+> > The S2MPG10 PMIC is a Power Management IC for mobile applications with
+> > buck converters, various LDOs, power meters, RTC, clock outputs, and
+> > additional GPIO interfaces.
+> >=20
+> > It has 10 buck and 31 LDO rails. Several of these can either be
+> > controlled via software (register writes) or via external signals, in
+> > particular by:
+> > =C2=A0=C2=A0=C2=A0 * one out of several input pins connected to a main =
+processor's:
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *=C2=A0 GPIO pins
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * other pins that are e.g. f=
+irmware- or power-domain-controlled
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 without explicit=
+ driver intervention
+> > =C2=A0=C2=A0=C2=A0 * a combination of input pins and register writes.
+> >=20
+> > Control via input pins allows PMIC rails to be controlled by firmware,
+> > e.g. during standby/suspend, or as part of power domain handling where
+> > otherwise that would not be possible. Additionally toggling a pin is
+> > faster than register writes, and it also allows the PMIC to ensure that
+> > any necessary timing requirements between rails are respected
+> > automatically if multiple rails are to be enabled or disabled quasi
+> > simultaneously.
+> >=20
+> > While external control via input pins appears to exist on other
+> > versions of this PMIC, there is more flexibility in this version, in
+> > particular there is a selection of input pins to choose from for each
+> > rail (which must therefore be configured accordingly if in use),
+> > whereas other versions don't have this flexibility.
+> >=20
+> > Add documentation related to the regulator (buck & ldo) parts like
+> > devicetree definitions, regulator naming patterns, and additional
+> > properties.
+> >=20
+> > S2MPG10 is typically used as the main-PMIC together with an S2MPG11
+> > PMIC in a main/sub configuration, hence the datasheet and the binding
+> > both suffix the rails with an 'm'.
+> >=20
+> > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> >=20
+> > ---
+>=20
+> What is the base of this? base-commit from cover letter:
+> fatal: bad object ab40c92c74c6b0c611c89516794502b3a3173966
 
-Maybe this can be restricted to cases which are not recursively created 
-from the root node. Not sure how we detect that. Perhaps no OF_POPULATED 
-flag on the parent node? Or we could just enable this for OF_DYNAMIC 
-nodes? That should be sufficient for your usecase.
+v4 was sent on top of next-20251110 which is ab40c92c74c6
 
-I would like to solve this more generally though. So we could try it in 
-kernelci and/or linux-next and see what happens.
-
->  - In simple-bus probe(), check the device we probe against the
->    'no_instantiate_children' list
->       - If it matches, do not instantiate chidren
->       - If it doesn't match instantiate children
-
-Right.
-
-Rob
+Cheers,
+Andre'
 
