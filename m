@@ -1,145 +1,108 @@
-Return-Path: <linux-gpio+bounces-28381-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28382-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5BD96C51635
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Nov 2025 10:39:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 507B7C5187C
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Nov 2025 11:00:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AB731189AA88
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Nov 2025 09:37:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C15DC3ABA7B
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Nov 2025 09:43:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2D2C3019DF;
-	Wed, 12 Nov 2025 09:36:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A69CC2FD7D0;
+	Wed, 12 Nov 2025 09:43:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hsgiZB22"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UOW3nOvS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B0B2FD692;
-	Wed, 12 Nov 2025 09:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FCC2DE71A
+	for <linux-gpio@vger.kernel.org>; Wed, 12 Nov 2025 09:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762940175; cv=none; b=bK+E21sOLiYCVKXrMOSDQfvWl7SUkxIZNuJcWneEvKJ30Kt+7/FheimZB4vt+f0FXtx+rwbspVFgWPrlzgvyQLukJU59h8mUH6m1Xk0cvB19eSkOPncUmDL0MHzQtSMX21xItVXOesZGnAUxxjauwh9ByzbZsqrt6QTaiMPVKlc=
+	t=1762940603; cv=none; b=MUqEQhH9dMc2oYlyYAZSQDRwl3ubpqbkSasTKDj9EoFKrr3o1vRjazr//94lBAO45JLWACXdlCWfVNP4LCwXLlvaSlt9Mkszu0GTPzt8qfVn4jKcLOidkozyaebfSKTs8C3K9zbV2dfBnlbfajMMmb7daRH1uBMob/5vZQiV+CI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762940175; c=relaxed/simple;
-	bh=3aC01PxJT6hpXIP2xTp42MaqEjs7pHBi/ivGasZ7OVQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DbZQ6iYXm6bkUw//LGPOJ1+dn0nqDNt6bxLX/CpFpgQXkcds6IPz4qthgXiNpn5dWLne429CKrFhr2eMuyAfH4pnNAgRl2qx0c7vi2i9FmXO8HcJvYdcB5kOUwq0pN7gu9QpFnouI49DsUUE9bLwlJSowOGPwUZ97t5g2EnlZWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hsgiZB22; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1762940603; c=relaxed/simple;
+	bh=cpokuL7yh4RYc4EDpwrgG6O7/9ygVOYYRrfzNSF+FpU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tg1cnnrdYCREVy3BgDB7O2NZuOd9bHPAYCPOemsEjMbA2EtLDNZrSgsT2liBD90pmWh2vf6biGoGSQAML1WVi8aLqHFxZBtHpWmKt2dIRRSpz8A+CkbZ7kJfmjtjThsAHgOzpoH7NB0CiHA/Ejq77s/4EovII1NmGG9I1iU3SFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UOW3nOvS; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762940174; x=1794476174;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3aC01PxJT6hpXIP2xTp42MaqEjs7pHBi/ivGasZ7OVQ=;
-  b=hsgiZB22fXfTBcKJMa8ikniILPz/UpIQw7gl8tI0omZYJySbVcbbjw4i
-   dUQ8fv7aTKyRVkV1XBGxc88SAVvypfFrvt2t0yjXuJ2WkLEIJjaDxA3Ed
-   aFzjNzkjOc057OvkjvjN0OV3u199dA0CHcvrH+r0g7u6g15bUe/40AbXA
-   y1H8k7opumzMlMDJH6fxPfsoeY+c69K+zjr+JjrHTaH8RKiYvfTqr0buZ
-   F+O1ssFP1H+n2p6YOsh2e5LheZd862gQt05aX6uxCg/wG50J2JrXtlsnx
-   IMQt086kg/2kO/bv1JNjRI6Hf8XKtpjlz6pqof9XvqFHX2K2m1kPmvS24
-   Q==;
-X-CSE-ConnectionGUID: YgTitz7xSVq4am9T6tOl+A==
-X-CSE-MsgGUID: xNMWjZjBSTOUdKj9gM9ymQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11610"; a="64202978"
-X-IronPort-AV: E=Sophos;i="6.19,299,1754982000"; 
-   d="scan'208";a="64202978"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 01:36:11 -0800
-X-CSE-ConnectionGUID: 422QwXH6SKiyW95bX4XhtQ==
-X-CSE-MsgGUID: zMYP91TZSN6waAmAcoRJbg==
+  t=1762940603; x=1794476603;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=cpokuL7yh4RYc4EDpwrgG6O7/9ygVOYYRrfzNSF+FpU=;
+  b=UOW3nOvSgcKl6CmtDg4q5cXzANBbEFF/KdmF293pJ9G7j2psMPlMiiDg
+   ZC7gUufRyK73ZZuBJPjPnYczwhAsDNDoV4CNcQYfd+na9GPFikg9Vk/Zv
+   4861XQsn7uetsjZn7u+ruX/qC8W2QY+900oxQq9FWn/+vCE9YwIiKj7Mu
+   Mr7rr/ZAv2Oe5gLi6CPkAhkaz+DhdlBYnqKEguxRFQ/wKtVjEdYSlAl5/
+   EdI8Y27H1bjLCfvbVsR7Gd9qBKRBVUF5FmvNe2sTT8EseGDb0yPq66kif
+   AOzdyclEY6lxcoGdxcGogSJ7TzhmzaFw/Y8elgtxjL2X/koNdD0FH2tvf
+   A==;
+X-CSE-ConnectionGUID: SrnIt1C7R7KZAxj5/AbqVA==
+X-CSE-MsgGUID: etrlZHTzQtSVir5vbeRHTw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="64923783"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="64923783"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 01:43:22 -0800
+X-CSE-ConnectionGUID: aD8AJX9sTki4Ff409leuZw==
+X-CSE-MsgGUID: 8pR3Hw7cSySUlNH4N6wjBQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,299,1754982000"; 
-   d="scan'208";a="188811926"
+   d="scan'208";a="188472395"
 Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa007.fm.intel.com with ESMTP; 12 Nov 2025 01:36:10 -0800
+  by orviesa010.jf.intel.com with ESMTP; 12 Nov 2025 01:43:21 -0800
 Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id E060497; Wed, 12 Nov 2025 10:36:08 +0100 (CET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v1 2/2] gpiolib: legacy: Allow to kill devm_gpio_request_one() independently
-Date: Wed, 12 Nov 2025 10:32:02 +0100
-Message-ID: <20251112093608.1481030-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20251112093608.1481030-1-andriy.shevchenko@linux.intel.com>
-References: <20251112093608.1481030-1-andriy.shevchenko@linux.intel.com>
+	id 2800295; Wed, 12 Nov 2025 10:43:19 +0100 (CET)
+Date: Wed, 12 Nov 2025 10:43:19 +0100
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Dmitry Antipov <dmantipov@yandex.ru>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] gpio: virtuser: avoid strlen() in
+ gpio_virtuser_direction_do_read()
+Message-ID: <aRRWt6NNXkHCT0gH@black.igk.intel.com>
+References: <20251101074131.353640-1-dmantipov@yandex.ru>
+ <20251101074131.353640-2-dmantipov@yandex.ru>
+ <CACRpkdaLSM3jDPSL1oQiMhyoMJ4dkcvdL7hYsCimM6E9+=76Kg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdaLSM3jDPSL1oQiMhyoMJ4dkcvdL7hYsCimM6E9+=76Kg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Allow to kill devm_gpio_request_one() independently by converting it
-to use legacy APIs that will be alive a bit longer.
+On Mon, Nov 10, 2025 at 11:07:22PM +0100, Linus Walleij wrote:
+> On Sat, Nov 1, 2025 at 8:41 AM Dmitry Antipov <dmantipov@yandex.ru> wrote:
+> 
+> > Since 'snprintf()' returns the number of characters emitted and buffer
+> > size guarantees that there will be no overflow, an extra call to
+> > 'strlen()' in 'gpio_virtuser_direction_do_read()' may be dropped.
+> >
+> > Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+> 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib-legacy.c | 26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+Strictly speaking this is incorrect change due to use of snprintf().
+One should have converted that one to scnprintf().
 
-diff --git a/drivers/gpio/gpiolib-legacy.c b/drivers/gpio/gpiolib-legacy.c
-index 35cb7fca634e..ef3f2ef30cf2 100644
---- a/drivers/gpio/gpiolib-legacy.c
-+++ b/drivers/gpio/gpiolib-legacy.c
-@@ -68,11 +68,9 @@ int gpio_request(unsigned gpio, const char *label)
- }
- EXPORT_SYMBOL_GPL(gpio_request);
- 
--static void devm_gpio_release(struct device *dev, void *res)
-+static void devm_gpio_release(void *gpio)
- {
--	unsigned *gpio = res;
--
--	gpio_free(*gpio);
-+	gpio_free((unsigned)(unsigned long)gpio);
- }
- 
- /**
-@@ -90,22 +88,22 @@ static void devm_gpio_release(struct device *dev, void *res)
- int devm_gpio_request_one(struct device *dev, unsigned gpio,
- 			  unsigned long flags, const char *label)
- {
--	unsigned *dr;
- 	int rc;
- 
--	dr = devres_alloc(devm_gpio_release, sizeof(unsigned), GFP_KERNEL);
--	if (!dr)
--		return -ENOMEM;
-+	rc = gpio_request(gpio, label);
-+	if (rc)
-+		return rc;
-+
-+	if (flags & GPIOF_IN)
-+		rc = gpio_direction_input(gpio);
-+	else
-+		rc = gpio_direction_output(gpio, !!(flags & GPIOF_OUT_INIT_HIGH));
- 
--	rc = gpio_request_one(gpio, flags, label);
- 	if (rc) {
--		devres_free(dr);
-+		gpio_free(gpio);
- 		return rc;
- 	}
- 
--	*dr = gpio;
--	devres_add(dev, dr);
--
--	return 0;
-+	return devm_add_action_or_reset(dev, devm_gpio_release, (void *)(unsigned long)gpio);
- }
- EXPORT_SYMBOL_GPL(devm_gpio_request_one);
+While at it, we also have str_input_output() helper, but this is not
+exactly related to the change.
+
 -- 
-2.50.1
+With Best Regards,
+Andy Shevchenko
+
 
 
