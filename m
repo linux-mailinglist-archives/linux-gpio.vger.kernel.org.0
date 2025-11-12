@@ -1,114 +1,101 @@
-Return-Path: <linux-gpio+bounces-28378-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28379-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A7BCC514F5
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Nov 2025 10:20:01 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 582ADC5162D
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Nov 2025 10:38:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3DE6E4F5C20
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Nov 2025 09:15:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 992B1188BDC5
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Nov 2025 09:37:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7839C2FD7A0;
-	Wed, 12 Nov 2025 09:15:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 168952FD7D0;
+	Wed, 12 Nov 2025 09:36:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hyJxiRZt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lS45aW9p"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D982D0C9C;
-	Wed, 12 Nov 2025 09:15:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F6A2FDC20;
+	Wed, 12 Nov 2025 09:36:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762938950; cv=none; b=ZsUKvPeOud2BvJKdBAGBoCSDzs8O7BtoZ976QmIrfVRgMCiUHTlzKu4tsvZq+bDuIKJ8am0f2+6eDByWmPwQxFPDbKdqvIJ3tlg1Df3ZvYOFIaHA8kFBNoU6AFyYWMJo3gNSZTkLj/6Vo5EtOIOIVdmaZCPGZ4HvoNozoDyU/jY=
+	t=1762940173; cv=none; b=jBPRpzlWzaD+8TP6xq2llOXSNVSwnWm2J3unCoUUXPWFb9/0/L5w87sWGEDYlHAxNJiGazrfDvJmPpYcRNOfdOTwMGkaLEJ6zFTyZWqj8ulkObi9GZa84Vz3CyCMiFGoaK1/fV4l1HmcXrqqZTQ3wIQ16zKVCA2bXz1jMTGaMrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762938950; c=relaxed/simple;
-	bh=XbY1+QXZkG156kRPTP5Y/1sq95brW261QGUMPJl1zGc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rwxWB4GnCkwsRrfvGNwB1w6H4LcXQkJu2ij2pKPKF8p62xjqcHT6n1wbfwhLYsVvtL7BsUnGJFnv+S/Snl5OdbXrv0r5mbpTnkkxN375AHhDhvNKu8NsNuOgXn27/Zh/+KSaRxDrmYI/6CjGG6L/eovxo7o1fRW07QSedDmN39c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hyJxiRZt; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1762940173; c=relaxed/simple;
+	bh=Gom/YJxiDrLnN7NOpDCmQ225IxHKE6wTgvcIS07BeLI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fsu8kvqRZy8pWYjPcm0uWNEDiUhiOGvKpQumQK+1/qx1IMjzUbFhBBP+kYO6YByCrOXzIW/OVHetNZeO3bhURZOtdiPdhNuBGxsCkp+Q67H2JmtHUFf+QTfCMRbFWfkKGkjQ4TYfSEmUo+3AhWRktCI40ZsSGj3oFJeKDgYGfok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lS45aW9p; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762938949; x=1794474949;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XbY1+QXZkG156kRPTP5Y/1sq95brW261QGUMPJl1zGc=;
-  b=hyJxiRZto1rIiMPjXKcuTWeAQMZ+2zSmXu41mMHctR0pAZF/Vt9HvE67
-   IfC9+j1w9B4GJdyul9u3Kk4W9Wr9isCQ2rfec6RfHY6qwWjhcf1r6+8dF
-   9g1zYV3M+yB97TuvJrNbxLfKtt7lHa+5Ey6dhg5uNTvvIm54g6pyEVgUR
-   k+wbdMjy7rh9jdt9998ZCwLx0Afxi83T7TbjI7GHnlPpd94VnN2IhEFVc
-   fWMNGgT2wt4RRBezf2iT8FmML6+6FlrVlmmH1CnuFJOZHqsfBRtH92EyW
-   H3pKzG8KAh8AUD0qxorDL48XAy2/MJBo659MPNXGiOFGPRWdY8rVNf0qT
-   A==;
-X-CSE-ConnectionGUID: oCBg2JEFRBGHL0MI55YDCA==
-X-CSE-MsgGUID: FmHX4lPXRrWXSA4Ww9rdxg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11610"; a="68848075"
+  t=1762940172; x=1794476172;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Gom/YJxiDrLnN7NOpDCmQ225IxHKE6wTgvcIS07BeLI=;
+  b=lS45aW9p16VtkqBoWP0k5wl38h9IXygkn8Z8j0I641aor+oMCVAUBcwH
+   v3r59glIUNx5jyDEOM4IWPSpNopt6cpn++6HfPcDbZhEwJTXvFKCtfPmk
+   h0Bnb6IUxuhPXOWfMIMAwlZxlPRR2MqVKiZfMkpSZWj8Gr6mMNayPjwX2
+   3aXuBCShpS48GSgDwGor7Pg3yZyERWHOsvUrbKWpq2GWvErXxCgfbVvHJ
+   dofRaRituvtUFsSqOSKuqCw3U1m0jBDaXSif0pBmYlCKRqmpb+mUJnmeY
+   sdAEDNl1cBjeDn/chvjet/DKUrG33xEG6dFpFL7SsOU6nw93OdEKh3XJn
+   w==;
+X-CSE-ConnectionGUID: f77Xa2ooSvCpyGnzcB1oxA==
+X-CSE-MsgGUID: EMROw3GjS0616BUUvR9BOg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11610"; a="64202981"
 X-IronPort-AV: E=Sophos;i="6.19,299,1754982000"; 
-   d="scan'208";a="68848075"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 01:15:48 -0800
-X-CSE-ConnectionGUID: Oxk1tKr+SpKVERawQuJJwQ==
-X-CSE-MsgGUID: GueRUBMeQ0amt8bBvXYp8g==
+   d="scan'208";a="64202981"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 01:36:11 -0800
+X-CSE-ConnectionGUID: mIcXrUg+T7qjRmTjaoXqOA==
+X-CSE-MsgGUID: XAqW6kgmT0qeYg7gTPnRrg==
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,299,1754982000"; 
+   d="scan'208";a="188811927"
 Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa003.fm.intel.com with ESMTP; 12 Nov 2025 01:15:44 -0800
+  by fmviesa007.fm.intel.com with ESMTP; 12 Nov 2025 01:36:10 -0800
 Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 7A86F95; Wed, 12 Nov 2025 10:15:43 +0100 (CET)
-Date: Wed, 12 Nov 2025 10:15:43 +0100
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>,
-	Baojun Xu <baojun.xu@ti.com>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+	id D98B995; Wed, 12 Nov 2025 10:36:08 +0100 (CET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	linux-gpio@vger.kernel.org,
-	Markus Niebel <Markus.Niebel@ew.tq-group.com>
-Subject: Re: [PATCH v2 0/3] ASoC: codec: Convert to GPIO descriptors for
- tlv320aic32x4
-Message-ID: <aRRQPz6xZyHJDps-@black.igk.intel.com>
-References: <20250710-asoc-gpio-1-v2-0-2233b272a1a6@nxp.com>
+	linux-kernel@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v1 0/2] gpiolib: legacy: Allow *gpio_request_one() to die independently
+Date: Wed, 12 Nov 2025 10:32:00 +0100
+Message-ID: <20251112093608.1481030-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250710-asoc-gpio-1-v2-0-2233b272a1a6@nxp.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 10, 2025 at 08:40:00PM +0800, Peng Fan wrote:
-> This patchset is a pick up of patch 1,2 from [1]. And I also collect
-> Linus's R-b for patch 2. After this patchset, there is only one user of
-> of_gpio.h left in sound driver(pxa2xx-ac97).
-> 
-> of_gpio.h is deprecated, update the driver to use GPIO descriptors.
-> 
-> Patch 1 is to drop legacy platform data which in-tree no users are using it
-> Patch 2 is to convert to GPIO descriptors
-> 
-> Checking the DTS that use the device, all are using GPIOD_ACTIVE_LOW
-> polarity for reset-gpios, so all should work as expected with this patch.
-> 
-> [1] https://lore.kernel.org/all/20250408-asoc-gpio-v1-0-c0db9d3fd6e9@nxp.com/
+Allow *gpio_request_one() to die independently and make sure
+the gpio_request_one() gone first (before gpio_request() removal).
+Currently the devm_gpio_request_one() depends on gpio_request_one().
+Open code the latter in the former to break the dependency. Also
+convert the latter to use legacy APIs, so we can kill it first
+as it's not only the logical move, but an easier task due to less
+amount of the leftover users in the kernel.
 
-Peng, if you are still interested in continuing this task, you can focus on
-converting the drivers that use gpio_request_one() and devm_gpio_request_one().
-These are some like a couple of dozens only (in comparison to the gpio_request()
-and devm_gpio_request() users). Some of them are resided in the ASoC subsystem.
+Besides that, we gain a few LoCs with this small refactoring, which
+I consider a positive change alone.
+
+Andy Shevchenko (2):
+  gpiolib: legacy: Make sure we kill gpio_request_one() first
+  gpiolib: legacy: Allow to kill devm_gpio_request_one() independently
+
+ drivers/gpio/gpiolib-legacy.c | 44 +++++++++++++----------------------
+ 1 file changed, 16 insertions(+), 28 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.50.1
 
 
