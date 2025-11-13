@@ -1,140 +1,112 @@
-Return-Path: <linux-gpio+bounces-28436-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28437-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 579C0C5687B
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Nov 2025 10:15:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D3868C56DCF
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Nov 2025 11:32:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 101704F18F3
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Nov 2025 09:01:17 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id F25964E3A45
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Nov 2025 10:31:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C44C733ADAD;
-	Thu, 13 Nov 2025 08:56:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="i6HACEtl"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2BDD2E9ED4;
+	Thu, 13 Nov 2025 10:31:01 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB16337BB0
-	for <linux-gpio@vger.kernel.org>; Thu, 13 Nov 2025 08:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D3E21D3E8
+	for <linux-gpio@vger.kernel.org>; Thu, 13 Nov 2025 10:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763024184; cv=none; b=j6717rOW5lUahrPAlqyqGsfNcA2hI1+qKrlNJBO4zC0MuUCIV+U7VItxYX5Jlk500GHPxpPMwDwupuQs0xxcKQUoruIkKIxxgG1twf0xZ0XPcugvkAePnKAmAY1AwcG/0luP8hKBhZJ1a/PS2Bx2pPc9g0XyULcSosHZd0CRosc=
+	t=1763029861; cv=none; b=dKyIXhXkSBRCi5uBZM8Dz/Po6MY4FahUnO0e8XLcdAfCbJrLRIOZtPH32ilW/zQey0OhnyAen92jGnfLh+eDP6boAZ9foy8fLDoMmXCLwFahjlUrJUzYiG176d4U4abZ5FdqhCkvJEd7o7N/a5T0lBD3NDOR4Rg6LZAM3k8angQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763024184; c=relaxed/simple;
-	bh=zp6SlYcPA6p/E0ySGHx+QoEp05+2+wht8ejef48Qeh8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lEQMIF1yKg+8Un3p2HqPfsgsX2UgG35eM10BThDAWdcHofHl1YmCJDfkl2hdgDZtbd3nUDhWh2BHIG9qPBIUCh9zvbMBySGqJDGtEfVdM0J0zgxjHpljPMTzrrar9CbEQKf2x7bPGFl4KqIZ+QmUe5Ky+UsBpSPDWi04kIBoqcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=i6HACEtl; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Date: Thu, 13 Nov 2025 10:56:10 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1763024180; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:in-reply-to:in-reply-to:  references:references;
-	bh=nWP3To9chHe8h02n9M1ldMghujzaU64BefpJAj3Yhlc=;
-	b=i6HACEtlEZRTsOq0Aw420IWJzeqnYlQlHrCGC44aRMpphV+QM19Nkd3SWxR/8Rh+VPI1Wx
-	YGN+xA5JY7HUIRIu9XqP51yViYUBKG2vuOAvUwSFyWUYnIzCJwJ3Kut3n0/z4NiKcvFHsa
-	ajjEH3CAha+UqO/Fa252aB6HqDN6iyw=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Matti Vaittinen <matti.vaittinen@linux.dev>
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-rtc@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v4 16/16] MAINTAINERS: Add ROHM BD72720 PMIC
-Message-ID: <3aa7088ba93e0faac1010897e5da2f0541022d9f.1763022807.git.mazziesaccount@gmail.com>
-Reply-To: Matti Vaittinen <mazziesaccount@gmail.com>
-References: <cover.1763022807.git.mazziesaccount@gmail.com>
+	s=arc-20240116; t=1763029861; c=relaxed/simple;
+	bh=9LnyBIpJdksuLIeVZtDZ7QNoRgyfvq4I9oDD8N4QfjA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=aoxfZsG/4h3mxZPU9TYk6jcDJGB4KAHv6kxiIYPXVd+SN3XJWgVdpbWmFcwr8BqIEvbpFK7DOCNPZKxq/x380yzB6KlnxbY3pmZAc4FJjf42Gti5AZGClByM/UCDP7MYVxPoVv/MHady2Is+UYT4n8U5eDrcjOamRMlrZ2Z6Ag0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1vJUbA-0005Yo-N5; Thu, 13 Nov 2025 11:30:40 +0100
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1vJUb9-000EtK-2a;
+	Thu, 13 Nov 2025 11:30:39 +0100
+Received: from pza by lupine with local (Exim 4.98.2)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1vJUb9-000000005CK-31lN;
+	Thu, 13 Nov 2025 11:30:39 +0100
+Message-ID: <7aa5a0ce599f86cc29e5075aa4e35155dfcd013e.camel@pengutronix.de>
+Subject: Re: [PATCH v6 0/8] reset: rework reset-gpios handling
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko	
+ <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich	 <dakr@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
+ 	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, Bartosz Golaszewski
+ <bartosz.golaszewski@linaro.org>
+Date: Thu, 13 Nov 2025 11:30:39 +0100
+In-Reply-To: <CAMRc=Mfcir56ZizXgZZpt4nQY234PA9jx3CQ24YCVQJFBQ7msA@mail.gmail.com>
+References: <20251106-reset-gpios-swnodes-v6-0-69aa852de9e4@linaro.org>
+	 <e0e81310332cfdc075bf13f66d7be712b42964ed.camel@pengutronix.de>
+	 <CAMRc=Mfcir56ZizXgZZpt4nQY234PA9jx3CQ24YCVQJFBQ7msA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1-1+deb13u1 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="a9hT/oob02Yt7ImX"
-Content-Disposition: inline
-In-Reply-To: <cover.1763022807.git.mazziesaccount@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
+On Mo, 2025-11-10 at 17:57 +0100, Bartosz Golaszewski wrote:
+> On Mon, Nov 10, 2025 at 10:02=E2=80=AFAM Philipp Zabel <p.zabel@pengutron=
+ix.de> wrote:
+> >=20
+> > On Do, 2025-11-06 at 15:32 +0100, Bartosz Golaszewski wrote:
+> > > NOTE: I've picked up commit e5d527be7e69 ("gpio: swnode: don't use th=
+e
+> > > swnode's name as the key for GPIO lookup") into my fixes branch and w=
+ill
+> > > send it upstream by the end of this week. It will be part of v6.18-rc=
+5
+> > > which tag will need to be the base for the future immutable branch
+> > > created by Philipp.
+> > >=20
+> > > Software node maintainers: if this versions is good to go, can you le=
+ave
+> > > your Acks under patches 1-3 and allow Philipp to take it through the
+> > > reset tree, provided he creates an immutable branch you can pull from
+> > > for v6.19?
+> >=20
+> > Now that -rc5 is out, could I get an Ack to create an immutable branch
+> > with this series on top of v6.18-rc5 (and merge it into reset/next)?
+> >=20
+>=20
+> Hi Philipp,
+>=20
+> I assume the Reviewed-by tags by Andy and Sakari under patches 1-3
+> make them good enough to go in?
 
---a9hT/oob02Yt7ImX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I assumed I also need an Acked-by by Greg or Rafael.
 
-=46rom: Matti Vaittinen <mazziesaccount@gmail.com>
-
-Add the ROHM BD72720 PMIC driver files to be maintained by undersigned.
-
-Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-
----
-Revision history:
- RFCv1 =3D>:
- - No changes
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fe01aa31c58b..7e3c1eac7cda 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22353,6 +22353,7 @@ S:	Supported
- F:	drivers/clk/clk-bd718x7.c
- F:	drivers/gpio/gpio-bd71815.c
- F:	drivers/gpio/gpio-bd71828.c
-+F:	drivers/gpio/gpio-bd72720.c
- F:	drivers/mfd/rohm-bd71828.c
- F:	drivers/mfd/rohm-bd718x7.c
- F:	drivers/mfd/rohm-bd9576.c
-@@ -22369,6 +22370,7 @@ F:	drivers/watchdog/bd96801_wdt.c
- F:	include/linux/mfd/rohm-bd71815.h
- F:	include/linux/mfd/rohm-bd71828.h
- F:	include/linux/mfd/rohm-bd718x7.h
-+F:	include/linux/mfd/rohm-bd72720.h
- F:	include/linux/mfd/rohm-bd957x.h
- F:	include/linux/mfd/rohm-bd96801.h
- F:	include/linux/mfd/rohm-bd96802.h
---=20
-2.51.1
-
-
---a9hT/oob02Yt7ImX
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAEBCgAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmkVnSoACgkQeFA3/03a
-ocUZKQf3RnWEJD5XEsjYHiqpfGbSkxCyq2y+9UDyXdp8Wuq1kAvLxy1AgMgYRhSQ
-Kgsi/BaCI4HQt1RS6SxDioeYjAslQzVgcDRCRi3Uzw9wp8VUHx7F1QtZ7UY1oEur
-jE+IMZO4jPa0DF5EZAaxwaIPXmls2Lk/O3GYxMkeOdE7FR1vrFnY1EgiRv50W7QV
-Ai0RXIpR56RHaFZUPcdAse7o5xlRmNfttvhTEiKQ5jPjz1TmkOKJeoRNCSPwutS8
-t1i5GYgJ2MpQtdnmIEomcGfUA+Ul0xZCDGXuX2luQeTy1ncCy2Bsc2qVg7UL1iYN
-xGOLD658Bmn8KrOss590oC5IroDe
-=n6lR
------END PGP SIGNATURE-----
-
---a9hT/oob02Yt7ImX--
+regards
+Philipp
 
