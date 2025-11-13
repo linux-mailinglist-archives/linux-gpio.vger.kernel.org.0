@@ -1,161 +1,135 @@
-Return-Path: <linux-gpio+bounces-28439-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28440-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DBCBC570DE
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Nov 2025 11:59:45 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1194C5720B
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Nov 2025 12:16:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 05C093BF190
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Nov 2025 10:53:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 82A813AAE5F
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Nov 2025 11:13:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 161083376BC;
-	Thu, 13 Nov 2025 10:53:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63265338F26;
+	Thu, 13 Nov 2025 11:13:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K4uxktny"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F8reU62B"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A855133557B;
-	Thu, 13 Nov 2025 10:53:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B45C2D5C6C;
+	Thu, 13 Nov 2025 11:13:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763031200; cv=none; b=bUx/D5HbEnsni/ysqJXhnhAXhUnywPNzkfy2+EiWy6GCFWv9/RasSHVfZP4TAXchYoTb3RNf5o1urpvLRQ5HmHQElS+jV2qYsPo/bvdbC6RqeYNMbYO96hzKnGfFTIIpxZdotAB1C81WeTQd9YdHBI4pjcIDqgaVU/IbRBzbpGU=
+	t=1763032431; cv=none; b=iAFkZkIGxP5b01uTwxbW78k8og6V7+aCGkWFTvaZp0CsvSsgkYyugkSPQt8nU3zgKfSlEk3bIA5jmiHEjFC4sGI//rkL21yQAYoj6B6lkzdsRbQw4KTe1kTJqBfs/cfzZUWPRgXKgrmUu1DMlhGEHUGsrKCMonp2FTBwLnMDMbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763031200; c=relaxed/simple;
-	bh=WD1eHRZg/E1iJWZJQuMrmEB9JmiKlqDDuLkhtxtaeuw=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=FTOTsrVUAjKbNoRmcEDBZpP+Wwv8RYojyY8G7tr9y62kwI/zFcbrw2PIvhFxuUvqGSz6/pLJPrXpnvfvJlP4uQh6ymNHGLf4cuWIMafYU+fZZPSm7ZIKJRBVUOCtu1Fwjm0GnIc/LQUvS2jRUocWIhHb2rlDmCXtzeO5h1cf5LQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K4uxktny; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1729C4CEFB;
-	Thu, 13 Nov 2025 10:53:19 +0000 (UTC)
+	s=arc-20240116; t=1763032431; c=relaxed/simple;
+	bh=BoMIB6Cgo57Hjts4k6r7afy8LmhwKcqYc1FVVQP9p1k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gw8c4x2u9sqqzHYHGQ5Htge0oUOsN7D+F2JDO/i/2ZQU+RidZ4pLKeeqPIetMZqo7F8hkVEdvnJW1h4q4CInmVXEgdhxikqnSllYgKCLiULqaAqLgBrjkhM2Eo7jQAYv/ValVO02kUFFsyGwKhqiHC5GZ6yRiky0E9a31izhNVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F8reU62B; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E170FC4CEF5;
+	Thu, 13 Nov 2025 11:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763031200;
-	bh=WD1eHRZg/E1iJWZJQuMrmEB9JmiKlqDDuLkhtxtaeuw=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=K4uxktny044y2ZRoFpjOdAB6w7+q0Fr+beZ1F5hnO8pf0gmE1ty6LpOOPW8KScZ5w
-	 zcZVqGvEp+52b07jnKtmqfSP2wQhWL/a/BR19cE7A2AvOu4dPBlh1/nSNHYzlWuyYF
-	 XFOZOliXPWJbsln6oD/2grEEgG0cvSqv3tEULNntfgbRPnRFGpZJdFFKMQGdS1nECq
-	 srwaF232nN5blJmoz71ftmp2jmIJjOGgxFfCyrTn3NTEx+IrU7+zQQK3usm5qEgVYW
-	 XcDQlpCWN2e0EmsPhv9imzlIm09XU1WtCNJEEVBQdCf0FiNHsbtQ1ztgNTRVEyvtK/
-	 mMH93ZCtamiBw==
-Date: Thu, 13 Nov 2025 04:53:18 -0600
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+	s=k20201202; t=1763032430;
+	bh=BoMIB6Cgo57Hjts4k6r7afy8LmhwKcqYc1FVVQP9p1k=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=F8reU62BrOOOflqvWMIeTQmSfcVW0KPhbuLZuSLDliq0wNaMUxxFmBhwHbeVBzYUM
+	 uK9HfX9TGGofrW/y5Ip92+F87+xvW6T2MHvIZ5E6erIpoxr253b2GcYhnfzNb6FbSh
+	 2nJDqaxnaqfxKhy0he7wfqnysIh9Cu37yXeXkVwfmCknqcacj2NQhrcwVHICMDqxSm
+	 9TEqAtw1lwsTeTwFVrnEcXMoCtk5vFQRSISxmjLz2X3RXsYYBC7J0XKgKQShWkaYgV
+	 tk2XwRN72zLu4XkDrj96ELA3Nb6Dms5fh+2Ttbggk5Zewz5tVKBCX2sohoQxWtZKQM
+	 X264vq6FSz9EA==
+Message-ID: <7dc40cbf-3d00-4843-88f2-91990f7807ea@kernel.org>
+Date: Thu, 13 Nov 2025 12:13:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
- linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, 
- Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, 
- linux-leds@vger.kernel.org, Pavel Machek <pavel@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, linux-gpio@vger.kernel.org, 
- linux-pm@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>, 
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
- linux-rtc@vger.kernel.org, Lee Jones <lee@kernel.org>, 
- Stephen Boyd <sboyd@kernel.org>, Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <matti.vaittinen@linux.dev>
-In-Reply-To: <ac5a4e992e4fb9c7bffb1e641a7cd61f74af4cba.1763022807.git.mazziesaccount@gmail.com>
-References: <cover.1763022807.git.mazziesaccount@gmail.com>
- <ac5a4e992e4fb9c7bffb1e641a7cd61f74af4cba.1763022807.git.mazziesaccount@gmail.com>
-Message-Id: <176303119683.3716572.16868393928566655866.robh@kernel.org>
-Subject: Re: [PATCH v4 04/16] dt-bindings: power: supply: BD72720 managed
- battery
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 02/20] regulator: dt-bindings: add s2mpg10-pmic
+ regulators
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Lee Jones <lee@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: Peter Griffin <peter.griffin@linaro.org>,
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
+ linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20251110-s2mpg1x-regulators-v4-0-94c9e726d4ba@linaro.org>
+ <20251110-s2mpg1x-regulators-v4-2-94c9e726d4ba@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20251110-s2mpg1x-regulators-v4-2-94c9e726d4ba@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-
-On Thu, 13 Nov 2025 10:52:19 +0200, Matti Vaittinen wrote:
-> From: Matti Vaittinen <mazziesaccount@gmail.com>
+On 10/11/2025 20:28, André Draszik wrote:
+> The S2MPG10 PMIC is a Power Management IC for mobile applications with
+> buck converters, various LDOs, power meters, RTC, clock outputs, and
+> additional GPIO interfaces.
 > 
-> The BD72720 PMIC has a battery charger + coulomb counter block. These
-> can be used to manage charging of a lithium-ion battery and to do fuel
-> gauging.
-> 
-> ROHM has developed a so called "zero-correction" -algorithm to improve
-> the fuel-gauging accuracy close to the point where battery is depleted.
-> This relies on battery specific "VDR" tables, which are measured from
-> the battery, and which describe the voltage drop rate. More thorough
-> explanation about the "zero correction" and "VDR" parameters is here:
-> https://lore.kernel.org/all/676253b9-ff69-7891-1f26-a8b5bb5a421b@fi.rohmeurope.com/
-> 
-> Document the VDR zero-correction specific battery properties used by the
-> BD72720 and some other ROHM chargers.
-> 
-> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> ---
-> NOTE:
-> Linus' rb-tag holds only if there's no further comments from Rob.
-> 
-> Revision history:
->  v3 =>:
->  - No changes
-> 
->  v2 => v3:
->  - Constrain VDR threshold voltage to 48V
->  - Use standard '-bp' -suffix for the rohm,volt-drop-soc
-> 
->  RFCv1 => v2:
->  - Add units to rohm,volt-drop-soc (tenths of %)
->  - Give real temperatures matching the VDR tables, instead of vague
->    'high', 'normal', 'low', 'very low'. (Add table of temperatures and
->    use number matching the right temperature index in the VDR table name).
->  - Fix typoed 'algorithm' in commit message.
-> 
-> The parameters are describing the battery voltage drop rates - so they
-> are properties of the battery, not the charger. Thus they do not belong
-> in the charger node.
-> 
-> The right place for them is the battery node, which is described by the
-> generic "battery.yaml". I was not comfortable with adding these
-> properties to the generic battery.yaml because they are:
->   - Meaningful only for those charger drivers which have the VDR
->     algorithm implemented. (And even though the algorithm is not charger
->     specific, AFAICS, it is currently only used by some ROHM PMIC
->     drivers).
->   - Technique of measuring the VDR tables for a battery is not widely
->     known. AFAICS, only folks at ROHM are measuring those for some
->     customer products. We do have those tables available for some of the
->     products though (Kobo?).
-> ---
->  .../power/supply/rohm,vdr-battery.yaml        | 80 +++++++++++++++++++
->  1 file changed, 80 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/rohm,vdr-battery.yaml
-> 
+> It has 10 buck and 31 LDO rails. Several of these can either be
+> controlled via software (register writes) or via external signals, in
+> particular by:
+>     * one out of several input pins connected to a main processor's:
+>         *  GPIO pins
+>         * other pins that are e.g. firmware- or power-domain-controlled
+>           without explicit driver intervention
+>     * a combination of input pins and regist
 
-My bot found errors running 'make dt_binding_check' on your patch:
 
-yamllint warnings/errors:
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/power/supply/rohm,vdr-battery.example.dtb: battery (simple-battery): 'degrade-cycle-microamp-hours', 'rohm,volt-drop-0-microvolt', 'rohm,volt-drop-1-microvolt', 'rohm,volt-drop-2-microvolt', 'rohm,volt-drop-3-temp-microvolt', 'rohm,volt-drop-soc-bp', 'rohm,volt-drop-temperatures-millicelsius', 'rohm,voltage-vdr-thresh-microvolt' do not match any of the regexes: '^ocv-capacity-table-[0-9]+$', '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/power/supply/battery.yaml
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/ac5a4e992e4fb9c7bffb1e641a7cd61f74af4cba.1763022807.git.mazziesaccount@gmail.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Best regards,
+Krzysztof
 
