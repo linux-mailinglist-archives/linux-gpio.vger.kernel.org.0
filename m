@@ -1,112 +1,140 @@
-Return-Path: <linux-gpio+bounces-28437-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28438-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3868C56DCF
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Nov 2025 11:32:14 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4216C570C0
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Nov 2025 11:59:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id F25964E3A45
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Nov 2025 10:31:05 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 82E0F350B9F
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Nov 2025 10:53:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2BDD2E9ED4;
-	Thu, 13 Nov 2025 10:31:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B44C334394;
+	Thu, 13 Nov 2025 10:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vHVI44/b"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D3E21D3E8
-	for <linux-gpio@vger.kernel.org>; Thu, 13 Nov 2025 10:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53C02D0607;
+	Thu, 13 Nov 2025 10:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763029861; cv=none; b=dKyIXhXkSBRCi5uBZM8Dz/Po6MY4FahUnO0e8XLcdAfCbJrLRIOZtPH32ilW/zQey0OhnyAen92jGnfLh+eDP6boAZ9foy8fLDoMmXCLwFahjlUrJUzYiG176d4U4abZ5FdqhCkvJEd7o7N/a5T0lBD3NDOR4Rg6LZAM3k8angQ=
+	t=1763031198; cv=none; b=DsrZNXgCqQa7vTTQjr2Qibn+VlqZlzV7VCp0ddE23MpwY3V/lb+H5U3X6OXwchnta1AODMOxXM1Vjes+7vBy4E1UKkOys6Q2wmXznjuXB34IfOt8EuNJK7NxGYOc8OvDRBp89QqAbCJh/vhhPht/5duqTYSASTjomjQKl7XrD0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763029861; c=relaxed/simple;
-	bh=9LnyBIpJdksuLIeVZtDZ7QNoRgyfvq4I9oDD8N4QfjA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aoxfZsG/4h3mxZPU9TYk6jcDJGB4KAHv6kxiIYPXVd+SN3XJWgVdpbWmFcwr8BqIEvbpFK7DOCNPZKxq/x380yzB6KlnxbY3pmZAc4FJjf42Gti5AZGClByM/UCDP7MYVxPoVv/MHady2Is+UYT4n8U5eDrcjOamRMlrZ2Z6Ag0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1vJUbA-0005Yo-N5; Thu, 13 Nov 2025 11:30:40 +0100
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1vJUb9-000EtK-2a;
-	Thu, 13 Nov 2025 11:30:39 +0100
-Received: from pza by lupine with local (Exim 4.98.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1vJUb9-000000005CK-31lN;
-	Thu, 13 Nov 2025 11:30:39 +0100
-Message-ID: <7aa5a0ce599f86cc29e5075aa4e35155dfcd013e.camel@pengutronix.de>
-Subject: Re: [PATCH v6 0/8] reset: rework reset-gpios handling
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko	
- <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich	 <dakr@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
- 	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>
-Date: Thu, 13 Nov 2025 11:30:39 +0100
-In-Reply-To: <CAMRc=Mfcir56ZizXgZZpt4nQY234PA9jx3CQ24YCVQJFBQ7msA@mail.gmail.com>
-References: <20251106-reset-gpios-swnodes-v6-0-69aa852de9e4@linaro.org>
-	 <e0e81310332cfdc075bf13f66d7be712b42964ed.camel@pengutronix.de>
-	 <CAMRc=Mfcir56ZizXgZZpt4nQY234PA9jx3CQ24YCVQJFBQ7msA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1-1+deb13u1 
+	s=arc-20240116; t=1763031198; c=relaxed/simple;
+	bh=uZaV1bT4pX7S0mVXWQg2NY2WW48TO3+pI6FV4aqde3g=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=TVX53YnLpn33UhIl7JZ0+NdD0UFzlKJcDM470dNf/3aU9BTPk3kDorIOq5iTK88gF0YxdUiGB/2851s9vlwhJF1pFR6GZyvP4o6kEWAq4Gx5cXTiBNOJaj57sL1OudDCwPrKSUzro09d3swV88vhklCRWlppVVQFnVI7GrOePIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vHVI44/b; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DF2EC19421;
+	Thu, 13 Nov 2025 10:53:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763031198;
+	bh=uZaV1bT4pX7S0mVXWQg2NY2WW48TO3+pI6FV4aqde3g=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=vHVI44/bxvYiWMxRd2Jooqjkzq4L7OQSas3WhcHmG4a3qXW+tmKa1QeHirmFs+0MD
+	 odMs3KEsFKJNTSYeqeuxJ27KycIjF204xubaqLgDrLBf8z0WNSa7IVUvckDhNNcttC
+	 nhhlWT14KXJxCj/M3ibmI5m5ax+SiPIxI7c6X0ZfWBrDzKBG0UeKMXAHVb66wNpy+e
+	 NMDQfx0RElwZgSKKoUQ+XlDIdMpGgAvRX8rtMSzwkmFnhYNmzBDCaaKJxiJfSNnn+z
+	 NG6Lg/RTsEl71OI71OieC5ywrb/An+i3A3Xw9BLF86y5PJ3e7bp6XuvDCnfu5bkDq0
+	 p5IYQ1+TLlxdg==
+Date: Thu, 13 Nov 2025 04:53:16 -0600
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, 
+ linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
+ Pavel Machek <pavel@kernel.org>, devicetree@vger.kernel.org, 
+ Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, 
+ linux-clk@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>, 
+ Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org, 
+ Matti Vaittinen <mazziesaccount@gmail.com>, linux-leds@vger.kernel.org, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-rtc@vger.kernel.org, 
+ Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Matti Vaittinen <matti.vaittinen@linux.dev>
+In-Reply-To: <21e83fccf2d2422f4bea1c482dcd3cb1aeda4085.1763022807.git.mazziesaccount@gmail.com>
+References: <cover.1763022807.git.mazziesaccount@gmail.com>
+ <21e83fccf2d2422f4bea1c482dcd3cb1aeda4085.1763022807.git.mazziesaccount@gmail.com>
+Message-Id: <176303119577.3716534.8630343707123370979.robh@kernel.org>
+Subject: Re: [PATCH v4 01/16] dt-bindings: regulator: ROHM BD72720
 
-On Mo, 2025-11-10 at 17:57 +0100, Bartosz Golaszewski wrote:
-> On Mon, Nov 10, 2025 at 10:02=E2=80=AFAM Philipp Zabel <p.zabel@pengutron=
-ix.de> wrote:
-> >=20
-> > On Do, 2025-11-06 at 15:32 +0100, Bartosz Golaszewski wrote:
-> > > NOTE: I've picked up commit e5d527be7e69 ("gpio: swnode: don't use th=
-e
-> > > swnode's name as the key for GPIO lookup") into my fixes branch and w=
-ill
-> > > send it upstream by the end of this week. It will be part of v6.18-rc=
-5
-> > > which tag will need to be the base for the future immutable branch
-> > > created by Philipp.
-> > >=20
-> > > Software node maintainers: if this versions is good to go, can you le=
-ave
-> > > your Acks under patches 1-3 and allow Philipp to take it through the
-> > > reset tree, provided he creates an immutable branch you can pull from
-> > > for v6.19?
-> >=20
-> > Now that -rc5 is out, could I get an Ack to create an immutable branch
-> > with this series on top of v6.18-rc5 (and merge it into reset/next)?
-> >=20
->=20
-> Hi Philipp,
->=20
-> I assume the Reviewed-by tags by Andy and Sakari under patches 1-3
-> make them good enough to go in?
 
-I assumed I also need an Acked-by by Greg or Rafael.
+On Thu, 13 Nov 2025 10:51:32 +0200, Matti Vaittinen wrote:
+> From: Matti Vaittinen <mazziesaccount@gmail.com>
+> 
+> The ROHM BD72720 is a new PMIC with 10 BUCk and 11 LDO regulators.
+> 
+> The BD72720 is designed to support using the BUCK10 as a supply for
+> the LDOs 1 to 4. When the BUCK10 is used for this, it can be set to a
+> LDON_HEAD mode. In this mode, the BUCK10 voltage can't be controlled by
+> software, but the voltage is adjusted by PMIC to match the LDO1 .. LDO4
+> voltages with a given offset. Offset can be 50mV .. 300mV and is
+> changeable at 50mV steps.
+> 
+> Add 'ldon-head-microvolt' property to denote a board which is designed
+> to utilize the LDON_HEAD mode.
+> 
+> All other properties are already existing.
+> 
+> Add dt-binding doc for ROHM BD72720 regulators to make it usable.
+> 
+> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> 
+> ---
+> Revision history:
+>  v3 => v4:
+>  - Drop type from ldon-head
+>  - Fix the name patterns for regulator nodes and names
+> 
+>  v2 => v3:
+>  - drop unnecessary descriptions
+>  - use microvolts for the 'ldon-head' dt-property
+> 
+>  RFCv1 => v2:
+>  - No changes
+> ---
+>  .../regulator/rohm,bd72720-regulator.yaml     | 148 ++++++++++++++++++
+>  1 file changed, 148 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd72720-regulator.yaml
+> 
 
-regards
-Philipp
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+
+
+doc reference errors (make refcheckdocs):
+Warning: Documentation/devicetree/bindings/regulator/rohm,bd72720-regulator.yaml references a file that doesn't exist: Documentation/devicetree/bindings/mfd/rohm,bd72720-pmic.yaml
+Documentation/devicetree/bindings/regulator/rohm,bd72720-regulator.yaml: Documentation/devicetree/bindings/mfd/rohm,bd72720-pmic.yaml
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/21e83fccf2d2422f4bea1c482dcd3cb1aeda4085.1763022807.git.mazziesaccount@gmail.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
 
