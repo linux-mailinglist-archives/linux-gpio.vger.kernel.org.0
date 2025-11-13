@@ -1,64 +1,63 @@
-Return-Path: <linux-gpio+bounces-28446-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28447-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69058C58099
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Nov 2025 15:52:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8041C581BA
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Nov 2025 16:01:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0C42235845B
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Nov 2025 14:49:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F19FE3B15C6
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Nov 2025 14:53:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FA64283CB1;
-	Thu, 13 Nov 2025 14:49:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 557702D63EF;
+	Thu, 13 Nov 2025 14:53:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JkzPYgLG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eC59fplw"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D29227FB32;
-	Thu, 13 Nov 2025 14:49:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFEC72D3225;
+	Thu, 13 Nov 2025 14:53:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763045351; cv=none; b=dHbvDoxd5WseqpYCvOLIJjUf644WtDt3+G7IxFftnHL9UWJVagBwCVELaHakrN3Owm8ieCIFuhzrg4awlL83LBpSZPeEJEADytBYIdeTL9sXHWCvK+H8CkwedvYlevlkx7MzyRpKDkOuM8FFqg9WuMftFudwWR53+pTOrANeFQ8=
+	t=1763045611; cv=none; b=GmsDjbfc+glzi8vQEo1f3oEq8ulVBHcDlTlLPdOJma+LYREHYXzctH4Z1I72AVT4AD4pVVFMFihXclO5s4CbUn8SGDlNbuq28pTYaXF2tOvvrBHdgh0535irKphvIEFR/l4Vln+WJU9T2uy9f6qp5EWmsYNNqO85JlBBYYSGXAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763045351; c=relaxed/simple;
-	bh=FdVmpdDUbZwHGgLMT+/m8It7zc41QV2tQXjcxfON4kw=;
+	s=arc-20240116; t=1763045611; c=relaxed/simple;
+	bh=mFLndgM1qt072BTZXfki8cP92jTRq4RAu1L/VyEjfJI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=K2vAnbVnJK4pNX3Rctd8l6P9FXvXFnQp6SdhNck+mF/5rnKS0uKkA8N2GcHgA+yLsVORT0IXy5t8KhSENRyXei5/Z1aNCS6XDH4kJ0T3qkOk1+2Av0tvIyq2ft+9imN/zTR0229EjK1L8KI+U7a2MEdgmOP95nBM8DCDISYHUhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JkzPYgLG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C269AC113D0;
-	Thu, 13 Nov 2025 14:49:07 +0000 (UTC)
+	 MIME-Version:Content-Type; b=qgCRMg8J46iVw4VD5466vjjxP6xSCtI9bOyOuldCmuGa5brAw/RPId2Eqx9s9aJVRmuZLaU3lMAsHcbUXQ5OIt/r7JbjWIcQ9jFeWIKFXoPgXVdtwM/DG6iJZMKJuuyQISwXVpFaBy+MzmVbZ8zh0uzy6Rqvz7JgfMPLjc/ksNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eC59fplw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1986C4CEF1;
+	Thu, 13 Nov 2025 14:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763045350;
-	bh=FdVmpdDUbZwHGgLMT+/m8It7zc41QV2tQXjcxfON4kw=;
+	s=k20201202; t=1763045610;
+	bh=mFLndgM1qt072BTZXfki8cP92jTRq4RAu1L/VyEjfJI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=JkzPYgLGQFPYrbj3e+UPESTbLZHTqraYbHFRkB8J9uYPL8YTu9c8y6M3P2oexJgNJ
-	 gUALEjvT516oX7pZN+4GjNPwR/viIpxGzl7cTO8KJ42GoeGipgqm9ExNRg2VNvs3oq
-	 Vcnv02ecTcxhpU0ycj2iixb7jZm+7hM/Jet44of5u+gcGrT3I+xZVBd5u+z2bSqrOE
-	 54uf0lk7L9qJKw9FqzsQzaTQj7T8wiZDAbf43J3GwX8YfX223uIL1TdIITy5sdsEjP
-	 JQ9DeOc6Zm44kdguoN0hr9Y9ZqYWPxqpUv3VWBQ2I2hMJmn1WPvSOluWQVdn6M/24M
-	 VLQtSRqKj9Fng==
+	b=eC59fplw66cbKsUfuX1xQqYASKDrf8GSj1twlbfHyKvg9gylddWTNE+voCQkHP+lr
+	 +4RwnaZezA6q8Htdw2wP3nMimUflFmPBwk4tFxGLihQbdiwgPkUVeeEMar3NMzll8u
+	 jQCf0402yzZFzbxtxyEty9LuS+lsatCoLjCu/g2dHK9jeLEXEK1HHZ1btMsE7QW4vc
+	 HhgJ2+FowswNVNbC32lbsDtQTh+sUZT/m0B6tWzyLBgw3iTWveMxiKkObwKlqO3Tk5
+	 vBVTNp+Jr2LGQ4hiHOKR0RHnlVL851g26w4FCBkyU4Sjan7Lk1LVDRlTD45FZhTrDA
+	 D8eNQ6rWdtDnA==
 From: Lee Jones <lee@kernel.org>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
+To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Fenglin Wu <quic_fenglinw@quicinc.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konradybcio@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
  Luca Weiss <luca.weiss@fairphone.com>
 Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
- Krzysztof Kozlowski <krzk@kernel.org>
-In-Reply-To: <20251023-sm7635-pmiv0104-v3-1-27f1c417376d@fairphone.com>
-References: <20251023-sm7635-pmiv0104-v3-1-27f1c417376d@fairphone.com>
-Subject: Re: (subset) [PATCH v3 1/2] dt-bindings: mfd: qcom,spmi-pmic:
- Document PMIV0104
-Message-Id: <176304534750.1520777.7335912828661331707.b4-ty@kernel.org>
-Date: Thu, 13 Nov 2025 14:49:07 +0000
+ linux-arm-msm@vger.kernel.org, linux-leds@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20251023-sm7635-pmxr2230-v3-0-f70466c030fe@fairphone.com>
+References: <20251023-sm7635-pmxr2230-v3-0-f70466c030fe@fairphone.com>
+Subject: Re: (subset) [PATCH v3 0/3] Add support for PM7550 PMIC
+Message-Id: <176304560663.1523805.5705925702375197311.b4-ty@kernel.org>
+Date: Thu, 13 Nov 2025 14:53:26 +0000
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -69,15 +68,18 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.15-dev-52d38
 
-On Thu, 23 Oct 2025 13:29:01 +0200, Luca Weiss wrote:
-> Add the PMIV0104 PMIC which is found on e.g. boards with Milos SoCs.
+On Thu, 23 Oct 2025 13:32:24 +0200, Luca Weiss wrote:
+> The PM7550 PMIC is used in conjuction with the Milos SoC. Add binding
+> docs and the devicetree description for it.
 > 
 > 
 
 Applied, thanks!
 
-[1/2] dt-bindings: mfd: qcom,spmi-pmic: Document PMIV0104
-      commit: 02a3bf382418e517dfb3072d0567dfda6c7b280d
+[1/3] dt-bindings: leds: qcom,spmi-flash-led: Add PM7550
+      (no commit info)
+[2/3] dt-bindings: mfd: qcom-spmi-pmic: Document PM7550 PMIC
+      commit: c21a5a2d7add4677e595af935db9888c7e41871f
 
 --
 Lee Jones [李琼斯]
