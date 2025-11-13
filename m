@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-28441-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28442-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBE93C5726F
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Nov 2025 12:23:18 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id F27B7C57317
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Nov 2025 12:31:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 84381344C7E
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Nov 2025 11:23:15 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id C3D2F353649
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Nov 2025 11:28:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A162133B96C;
-	Thu, 13 Nov 2025 11:23:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 422C233EB1D;
+	Thu, 13 Nov 2025 11:27:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NvfS1BAQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EQrTL/4n"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5133321254B;
-	Thu, 13 Nov 2025 11:23:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF4F833E374;
+	Thu, 13 Nov 2025 11:27:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763032990; cv=none; b=J0oge2mHNLULFes5EizcL8ZDBaAl8OWMaKmDrt9r2Z7G7mOigFCEzZGSKfOsI9s5dw2YF75k+tf5iMeYxksTNcPFHug7/vNKmR38Li143BtCV06raqWgRA6gHZPNCyUxOUWOGWJ68PYhQ141Sy+skEkqKmcFSng9zF9jM98/v4U=
+	t=1763033262; cv=none; b=e4Vn1LoYBobRj0TDFEP2montMeDL6QIo+INqb5hlh24/YJZi+xvKtptJPu5AMMuZL7yjBiighTD8Sm18FryJHP0H/8bY9OXUjutAc1xpAkX7d28ds5DEA6HlxuV+eEm3NRaMXD5X/wzKnsvvEHEi0YcfZe87D8hQLEG8nqrsLjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763032990; c=relaxed/simple;
-	bh=07j0kRDgLb2cpwghhl85faRVIEr3GuN8BXsZKSyWsgo=;
+	s=arc-20240116; t=1763033262; c=relaxed/simple;
+	bh=Q0NeIgG3VlZti1xUNXdVNMBDu0WasdDSmoBVNwpQdH0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tD5UyXbKySlcTdhYcRqGBSBR1RyqTddk+zJ3NJ+bDSfDNEWFQO+n8N9zobzGx1x1+HCW58D37eTXTRM2WG2tBO7WoAWToZOS4Zs/vGNmPbk9pejFDP+bVDwLU+opQOoClqDzCRKk0+/t//btHFlkY500M4jCKnENnlRddp6WIj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NvfS1BAQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58B60C4CEF1;
-	Thu, 13 Nov 2025 11:23:05 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=ftpHbioLi3Hoa8ta/lgMYZ9bb5zUB6OgcPAmg25PBRc50ueTirkZqHxKs+OadAz9X0Ya7yYhrcgHXY2ZIeMlOgM2/QyBRQ5X9asv/uwqHoDWUlGF4nptmJOG+H1T73+kk4/x3woikeGoi9njUswLM85OuvexwS8hYmLfotPEi2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EQrTL/4n; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC81AC2BC9E;
+	Thu, 13 Nov 2025 11:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763032988;
-	bh=07j0kRDgLb2cpwghhl85faRVIEr3GuN8BXsZKSyWsgo=;
+	s=k20201202; t=1763033261;
+	bh=Q0NeIgG3VlZti1xUNXdVNMBDu0WasdDSmoBVNwpQdH0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NvfS1BAQ/pX8vHgr8ln0H7yMT+OCoogJ2GCAoA5782uMw8GAZDplD2eJo6Fu020kv
-	 WLcH50BcQV4KthAxdcDbUjpV10KJd9jnIQ6YtQukpq0LC55fM92oWqhG5EL4Zh8E0x
-	 b4ROZ3nml8e2gAO0f/Ao/zZkuR7VNVsbTOcvVc6gSVV8oC+BgU3RkmzpU3shYETWr+
-	 bsPmRFyJliAFu39g97o6Z3wg9QU9j8joP+T15KPrGhYwMlDbsz22zL2C7zD5dX+8aL
-	 koRVKmJNZjtLl0UrNu1GxBKwGAx+IEo91dmH9FTVY9WefHYOCgPx8L3NJkwSKW/nSh
-	 BB5W6Jf0/9TtQ==
-Message-ID: <80fdad22-ae53-43d1-bb4e-02469edd6464@kernel.org>
-Date: Thu, 13 Nov 2025 12:23:03 +0100
+	b=EQrTL/4njulQIVCkdz0BTSve+ycs9S63PTauoKMPPs3xsZl4Wq6w5+gq7eV2eb54T
+	 qq+aXRPgfca1dWebNgz1eow+pzKzJSTdqqUnBaiE2/iCB8Z869IzRbesM2a57sj0St
+	 Rlp0iKNN+Xx5/jPR7QqX7F1j0TGx8a3tlHae9zI2DZ2T8LQRTXb8mnlC51VFbjB+CG
+	 9xRUKAacXqDxJ4j0xqT8fhcnFOIQ/R37kjHJzQ1Og4LOLPMpU0Mc/s6SDZ4rfDcxFu
+	 nlG7HgeicyNlCeBS0hvBnxZOkoDf8xEPQKwDT86NDrzMLsJRT98pBcPkQp+K0OTqvN
+	 QgGeGdr6HV9yw==
+Message-ID: <984ae28a-c677-4da7-af9b-c8dc316406df@kernel.org>
+Date: Thu, 13 Nov 2025 12:27:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 03/20] regulator: dt-bindings: add s2mpg11-pmic
- regulators
+Subject: Re: [PATCH v4 04/20] dt-bindings: mfd: samsung,s2mps11: Split
+ s2mpg10-pmic into separate file
 To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
  Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
@@ -63,7 +63,7 @@ Cc: Peter Griffin <peter.griffin@linaro.org>,
  linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
  devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
 References: <20251110-s2mpg1x-regulators-v4-0-94c9e726d4ba@linaro.org>
- <20251110-s2mpg1x-regulators-v4-3-94c9e726d4ba@linaro.org>
+ <20251110-s2mpg1x-regulators-v4-4-94c9e726d4ba@linaro.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -109,25 +109,22 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20251110-s2mpg1x-regulators-v4-3-94c9e726d4ba@linaro.org>
+In-Reply-To: <20251110-s2mpg1x-regulators-v4-4-94c9e726d4ba@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 On 10/11/2025 20:28, André Draszik wrote:
-> The S2MPG11 PMIC is a Power Management IC for mobile applications with
-> buck converters, various LDOs, power meters, NTC thermistor inputs, and
-> additional GPIO interfaces. It typically complements an S2MPG10 PMIC in
-> a main/sub configuration as the sub-PMIC.
+> The samsung,s2mpg10-pmic binding is going to acquire various additional
+> properties. To avoid making the common samsung,s2mps11 binding file too
+> complicateddue to additional nesting, split s2mpg10 out into its own
+> file.
 > 
-> S2MPG11 has 12 buck, 1 buck-boost, and 15 LDO rails. Several of these
-> can either be controlled via software (register writes) or via external
-> signals, in particular by:
->     * one out of several input pins connected to a main processor's:
->         *  GPIO pins
->         * other pins that are e.g. firmware- or power-domain-controlled
->           without explicit driver intervention
->     * a combination of input pins and register writes.
+> As a side-effect, the oneOf for the interrupts is not required anymore,
+> as the required: node is at the top-level now.
 > 
+> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+> 
+
 
 
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
