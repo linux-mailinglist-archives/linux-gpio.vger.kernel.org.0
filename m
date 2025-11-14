@@ -1,52 +1,52 @@
-Return-Path: <linux-gpio+bounces-28515-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28516-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 451D4C5DD60
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 16:25:06 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4144CC5DCCA
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 16:17:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C58F34EC89E
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 14:54:47 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B95E44F1677
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 14:55:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CB5632D43B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EF0832E13D;
 	Fri, 14 Nov 2025 14:51:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G4qsKGXU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nYvwz6mv"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A058329E61;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3460B329E71;
 	Fri, 14 Nov 2025 14:51:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763131911; cv=none; b=AnJJPO2H68qSeqPiFNoI9hDp4XKH0Te2JAUOm+64gF8ROQRfiQjE/823d2asD2wvvw6DcCKtM8Jdl70eLhxNnuD/i+FFZ48eYUUg65H2BAHYOrh0iykpWb1jdIaUB9ujFEabbDukQ3imGnLU0qalu7pgfVPn7go9ccuBAiWm7Bw=
+	t=1763131911; cv=none; b=cSrrVNLgTPahMikvh8dQIbXqkg5pnN4nWjQPqFECj0wwtKdGIIz1wCw41iif33D6tol40o+EByaF7dJYW9XrG293nN+HCmpsBzL8odh80anDEgdrNySDsEGa+o3RNFlSiy7ATqLGLbysSVcfDfvjp6xfU/63VJloeSJ4nMeEOAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1763131911; c=relaxed/simple;
-	bh=UZu58m8XGcSJGkVg4fcmuSuWPz3gR74p7GjWOYOP+J4=;
+	bh=olyntn6uxADmnO50Fmr3qpszTjaZIxGk59owmLBONhE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sGN8b27Y/RdjTkKBZZMPiou/n4QFFK6URtzqWUEqh66/prfENzRB6ojus7wDuHPRVXu+7u1FZekecuhElM40qbqgi1fepRjwP32boz7bNaarIzqbovx5awVqbGQN+zbXWchilO7a/ZMrZSKIqdohBjjy6o0WmETQbf1Ln5z7lgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G4qsKGXU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F0736C19421;
-	Fri, 14 Nov 2025 14:51:50 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=rl5s3yywaKVGyuQlt/Nt2vVNIp0DkyoIfxHmb7cA2EJYNmjN5QLR+ndK6yt7gUjc+hmbS0q28hIzV5Ha8v5aRBZt/1p0MHLoMD5S4apOiHOPWF6GPJ0OoFwhaQqQIlYF/dP+0VOYGx2mtAxDlskj9gUDRXouMHJKDc7+bO2yquE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nYvwz6mv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0DE2DC2BC9E;
+	Fri, 14 Nov 2025 14:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1763131911;
-	bh=UZu58m8XGcSJGkVg4fcmuSuWPz3gR74p7GjWOYOP+J4=;
+	bh=olyntn6uxADmnO50Fmr3qpszTjaZIxGk59owmLBONhE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=G4qsKGXUjqYp45hivlumRK/PYMhYJhs0jjJZKT/vbheWBHzTTDdIp8oGoFYJDfbSH
-	 kjZhahnpIAWlNHYMWhY0rl6d496tJOgpG87k8hcB29dl/N15Rdq8JyNiRXtfwG/9LA
-	 34C6Yl4lfEpAXi182QxJ8Y+BdzzZOmwl4629vdbBc0DBZfTbyKffKos2levXWXwZaQ
-	 qe2HQEvZOedtNudOE/LmKXNrunEYh4s5oUfWYKyIIR47QPY9pcjm6YakXnP58OCJtD
-	 y/SQBbCYvoF5VdDgzLGqvgZTZ1OrXfummsBvIfb7+JQQBvaE5SZL1BDDftanHSQy+L
-	 1zuxjYDtr9zpg==
+	b=nYvwz6mv1wSp6uaQEW09Y0hyoR4kROrbroGoX8tJ4FfYBWmeVgzKfjhQ5p/t88xP5
+	 XzCyRmoIfiIfiDHKa3RpS/iNPbVfsCgjs8Z+ecjRvs6+iu1iriphIX9yFOSwxvavZL
+	 Cr27UlXgMcSjJKQu1XsqsghZopbJSPpKWsSytnGzDdqRdIsw8Qck2a3Elj+BZyEg3q
+	 pBMOo+4MVzXbVLr9S/AhlhLsCfPzEyXROQC0E2+5fe5BbRXBNgtzAeqxp2xUqHfI4g
+	 lIvsbH8QOkfiYl90fB8aZ20xKSWABLZFhFqLL5O2dAD0+h6KR8WHq9Dfx2EoaT2+rh
+	 ojrGOlB5WIxXg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF25CE7B1F;
-	Fri, 14 Nov 2025 14:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05974CE7B1B;
+	Fri, 14 Nov 2025 14:51:51 +0000 (UTC)
 From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
-Date: Fri, 14 Nov 2025 16:52:00 +0200
-Subject: [PATCH v8 20/21] media: i2c: remove MAX96717 driver
+Date: Fri, 14 Nov 2025 16:52:01 +0200
+Subject: [PATCH v8 21/21] media: i2c: remove MAX96714 driver
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251114-gmsl2-3_serdes-v8-20-47499d907990@analog.com>
+Message-Id: <20251114-gmsl2-3_serdes-v8-21-47499d907990@analog.com>
 References: <20251114-gmsl2-3_serdes-v8-0-47499d907990@analog.com>
 In-Reply-To: <20251114-gmsl2-3_serdes-v8-0-47499d907990@analog.com>
 To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
@@ -70,11 +70,11 @@ Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org, 
  Cosmin Tanislav <demonsingur@gmail.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1763131906; l=2278;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1763131906; l=2301;
  i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
- bh=Uby6G6BvwgKOObBXcLlxO1bh2+JafLSgY3oYvgugXOs=;
- b=iQRmH1li302QehwZadf9bX7Ag/nO+Lqh+ZfjHdvzbAPsy4fB+PaWysfTQS6Sk0jxdqKNKaMTB
- tAwscwEP+5jADBWIsqe+h/5zlKdwuZey6hIywccWVNmwooSlzCml1fG
+ bh=vkv6kAMtTD4MZZHDNfXqoAxjfwJqI/ktHZgnc2F++6M=;
+ b=PMhd6eoDAQGxvK5DeWiLB+DFnJCLn2SwHKRKCTLYNGlHpYzOfEgx63IdCG0UwUtPjg/uLjc2G
+ DLR+r5IW+pQCsoZGHVBdwdvPH/dzbHrWFW+zGQH3oL3QOx+zyAfmrPk
 X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
  pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
 X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
@@ -84,8 +84,8 @@ Reply-To: dumitru.ceclan@analog.com
 
 From: Cosmin Tanislav <demonsingur@gmail.com>
 
-The previous MAX96717 driver has been removed and its functionality has
-been moved to a MAX96717 driver which makes use of the Maxim GMSL2/3
+The previous MAX96714 driver has been removed and its functionality has
+been moved to the MAX9296A driver which makes use of the Maxim GMSL2/3
 serializer framework.
 
 Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
@@ -96,28 +96,28 @@ Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
  3 files changed, 18 deletions(-)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 6a6a04ce2787..ad7e28897062 100644
+index ad7e28897062..08ac1170baea 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -15235,7 +15235,6 @@ M:	Julien Massot <julien.massot@collabora.com>
+@@ -15228,7 +15228,6 @@ M:	Julien Massot <julien.massot@collabora.com>
  L:	linux-media@vger.kernel.org
  S:	Maintained
- F:	Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
--F:	drivers/media/i2c/max96717.c
+ F:	Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml
+-F:	drivers/media/i2c/max96714.c
  
- MAX9860 MONO AUDIO VOICE CODEC DRIVER
- M:	Peter Rosin <peda@axentia.se>
+ MAX96717 GMSL2 SERIALIZER DRIVER
+ M:	Julien Massot <julien.massot@collabora.com>
 diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-index 37f86e6de969..4d3a861ee2f0 100644
+index 4d3a861ee2f0..db827dcd735d 100644
 --- a/drivers/media/i2c/Kconfig
 +++ b/drivers/media/i2c/Kconfig
-@@ -1701,22 +1701,6 @@ config VIDEO_MAX96714
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called max96714.
+@@ -1684,22 +1684,6 @@ config VIDEO_DS90UB960
+ 	  Device driver for the Texas Instruments DS90UB960
+ 	  FPD-Link III Deserializer and DS90UB9702 FPD-Link IV Deserializer.
  
--config VIDEO_MAX96717
--	tristate "Maxim MAX96717 GMSL2 Serializer support"
--	depends on I2C && VIDEO_DEV && COMMON_CLK
+-config VIDEO_MAX96714
+-	tristate "Maxim MAX96714 GMSL2 deserializer"
+-	depends on OF && I2C && VIDEO_DEV
 -	select I2C_MUX
 -	select MEDIA_CONTROLLER
 -	select GPIOLIB
@@ -125,24 +125,24 @@ index 37f86e6de969..4d3a861ee2f0 100644
 -	select V4L2_FWNODE
 -	select VIDEO_V4L2_SUBDEV_API
 -	help
--	  Device driver for the Maxim MAX96717 GMSL2 Serializer.
--	  MAX96717 serializers convert video on a MIPI CSI-2
--	  input to a GMSL2 output.
+-	  Device driver for the Maxim MAX96714 GMSL2 Deserializer.
+-	  MAX96714 deserializers convert a GMSL2 input to MIPI CSI-2
+-	  output.
 -
 -	  To compile this driver as a module, choose M here: the
--	  module will be called max96717.
+-	  module will be called max96714.
+ 
  
  source "drivers/media/i2c/maxim-serdes/Kconfig"
- 
 diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-index be3200b23819..96bc49339341 100644
+index 96bc49339341..333e4243ea2f 100644
 --- a/drivers/media/i2c/Makefile
 +++ b/drivers/media/i2c/Makefile
-@@ -70,7 +70,6 @@ obj-$(CONFIG_VIDEO_M52790) += m52790.o
+@@ -69,7 +69,6 @@ obj-$(CONFIG_VIDEO_LT6911UXE) += lt6911uxe.o
+ obj-$(CONFIG_VIDEO_M52790) += m52790.o
  obj-$(CONFIG_VIDEO_MAX9271_LIB) += max9271.o
  obj-$(CONFIG_VIDEO_MAX9286) += max9286.o
- obj-$(CONFIG_VIDEO_MAX96714) += max96714.o
--obj-$(CONFIG_VIDEO_MAX96717) += max96717.o
+-obj-$(CONFIG_VIDEO_MAX96714) += max96714.o
  obj-$(CONFIG_VIDEO_MAXIM_SERDES) += maxim-serdes/
  obj-$(CONFIG_VIDEO_ML86V7667) += ml86v7667.o
  obj-$(CONFIG_VIDEO_MSP3400) += msp3400.o
