@@ -1,134 +1,90 @@
-Return-Path: <linux-gpio+bounces-28485-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28486-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50ADAC5CBFE
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 12:04:16 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 970B5C5CD8E
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 12:26:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2B5DE345949
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 11:03:44 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A88864ED992
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 11:19:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DBF73101C5;
-	Fri, 14 Nov 2025 11:03:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B117313E2B;
+	Fri, 14 Nov 2025 11:19:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F0En2mcr"
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="b8JITQcs"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC39D2ED151;
-	Fri, 14 Nov 2025 11:03:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419502FB0A0;
+	Fri, 14 Nov 2025 11:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763118217; cv=none; b=cg4Qzax+Tnnayv/5b0iMc0gZXIrI/iez0ZfCyLaRI12QG91g01QkopTspcBO52u+nWHxuSwfu++VoLa1zuxBZOi0RdLd5PNRWxpjQ7Lj47rSnhFYsxgUrwyxjUI6BlLIAvSJ2WaPkkZQEiywWAWopPAtBBpYurX42CVFyoMKTeI=
+	t=1763119142; cv=none; b=pnKZVFXx4wftVJyU7PMarGan3LqhU5z5l8ffqzjyV5TO1DVWRTgO1yIlqMWYw3+I7a18PiV8h2j8+oJ5MkrkpHYmQ00U5FaUJJm5Rre374mdYaEn1eRDcv3ZNR4AStGLXDLfduO5bHUi13WfvFQkyVC/DwKj1Nx+xPnCmHWSh2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763118217; c=relaxed/simple;
-	bh=z9rDUhMLuGiHedTdGsxliOHj3wd3fApDZWqUFbOCWC4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZuPaMqwV/0PjaaCfz+wJLT5xQYmlJoPLtzR4scazi4gN7dCtSfR0SFyUGM4xhikCalxLocAIXnvxlFUMyui55hyFfRCPu0/5w9R59PsjyXI7/9eIjIQEevSY4GgmDu719SQIGB/Qv5oW5sBNdE8ByhgvwJ4MDg7o3Yzp0t7uT14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F0En2mcr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C8CEC4CEFB;
-	Fri, 14 Nov 2025 11:03:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763118216;
-	bh=z9rDUhMLuGiHedTdGsxliOHj3wd3fApDZWqUFbOCWC4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F0En2mcrY3DNujOm05aP0V7JlNdBc3XYcJw8Wn12qZ9LZC3yGIaw0bAv6PG/ihgIg
-	 y0N0AwK9FHQq4zhpE8C6hw11JEX2QEpoVDo18X522R8sxK1A+Oeb36FeoUToCqLTjm
-	 8riTsncr4rreSf7FYGrRjwIn/Zt9AqlaNGQ/UH5xgskJ6SsAyEM5mnbY1Ydy6uoRGE
-	 N2JTG+5QTz1BbZn0LKRMFY7671SKuUH/I0wGj/+vZavN1JLo+h6ljBtqxHByqkV3Aa
-	 5VHqFA0tZZ6BGYEWxmGuEqyypqVbDubyn24spJUDVGb3RUy3ft+OP2RAxmkEjm3mCl
-	 BrNm3nmmFJ/kQ==
-Date: Fri, 14 Nov 2025 12:03:34 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
-Cc: ziniu.wang_1@nxp.com, laurent.pinchart@ideasonboard.com, 
-	nuno.sa@analog.com, lee@kernel.org, linux-gpio@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, imx@lists.linux.dev
-Subject: Re: [PATCH] pwm: adp5585: correct mismatched pwm chip info
-Message-ID: <umvpvqkbv2w7cqg533xpvira66qdxqa2bjpnzymeic72st42qb@6f7bgychfrzw>
-References: <20251114065308.2074893-1-ziniu.wang_1@nxp.com>
- <jqsmjigr65kqhlk3buybrcurllqxlad6zkkuwo3tea5uqopqzl@ldwbjsndltpk>
- <34af5576a5e779a279975dd9fb8be7c2b233f661.camel@gmail.com>
+	s=arc-20240116; t=1763119142; c=relaxed/simple;
+	bh=z6ucqdb/0st4NAumZ4Bw1GemAW/J5iVOQBoH6CJ5vm0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EHOtx9q6hvmf/0gYnsM3wuL3y7FXS71dy4DvuZcnFqGvzRHvQRzdnQfk1ofJttKaEAb5+ERIFB2byN0jpOOXQEFYQw5v8948zBuAJwjLhdPJyCZ4Y5nP3rNK3aKM+NggoXf0R+mf7NUMbZn9yhWKOKW+Kirhf1QTDcQbU6kTWEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=b8JITQcs; arc=none smtp.client-ip=178.238.236.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=References:In-Reply-To:Cc:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=z6ucqdb/0st4NAumZ4Bw1GemAW/J5iVOQBoH6CJ5vm0=; b=b8JITQcs5h8uu12DVMMbHGo5/2
+	iaSj7J2xvpXFExT2UxyuuCyNqm563s3uaM12qiASLQyhDt30y6aWAcOYQ9wfJVWcswZYUjLUyVX/w
+	0W8RzXSFGcnKUFamVrOeaRsWMi+B32eYK6HXddUU3LTM/IeVBu03q5mQvQvvLSts/57Z3/cTKiA7M
+	6VIwjWkCfFpvOeIH/T9briF4qGSQ41ZRtXAtMHVM50fDJ3UoieVRCXgCB3C0gHnQ/UyEx7jkIKEtM
+	bDkIbGKVaQH/imazPtm2/vT0FrwRLj7lNsy4Stc9uSpa7wfGKXpZwdrPt3OO1AAB1/kulFx7b3WCH
+	IIYRztcw==;
+Date: Fri, 14 Nov 2025 12:15:09 +0100
+From: Andreas Kemnade <andreas@kemnade.info>
+To: Matti Vaittinen <matti.vaittinen@linux.dev>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Matti Vaittinen
+ <matti.vaittinen@fi.rohmeurope.com>, Lee Jones <lee@kernel.org>, Pavel
+ Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Alexandre
+ Belloni <alexandre.belloni@bootlin.com>, linux-leds@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v4 14/16] power: supply: bd71828: Support wider register
+ addresses
+Message-ID: <20251114121509.629d171b@kemnade.info>
+In-Reply-To: <6248200397d3582fe926938736da66d6bbf9535d.1763022807.git.mazziesaccount@gmail.com>
+References: <cover.1763022807.git.mazziesaccount@gmail.com>
+	<6248200397d3582fe926938736da66d6bbf9535d.1763022807.git.mazziesaccount@gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; aarch64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="sczwbepgumef37do"
-Content-Disposition: inline
-In-Reply-To: <34af5576a5e779a279975dd9fb8be7c2b233f661.camel@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Thu, 13 Nov 2025 10:55:39 +0200
+Matti Vaittinen <matti.vaittinen@linux.dev> wrote:
 
---sczwbepgumef37do
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] pwm: adp5585: correct mismatched pwm chip info
-MIME-Version: 1.0
+> As a side note, we can reduce the "wasted space / member / instance" from
+> 3 bytes to 1 byte, by using u16 instead of the unsigned int if needed. I
+> rather use unsigned int to be initially prepared for devices with 32 bit
+> registers if there is no need to count bytes.
 
-Hello Nuno,
+Well, this is totally internal to the module, so no ABI/API changes, so
+there is no advantage of using 32bit now I think. We can switch any time.
+But we have 32bit stuff in the regmap cache anyways, so that is not above
+the general level of wasting space.
 
-On Fri, Nov 14, 2025 at 09:46:43AM +0000, Nuno S=E1 wrote:
-> On Fri, 2025-11-14 at 10:30 +0100, Uwe Kleine-K=F6nig wrote:
-> > On Fri, Nov 14, 2025 at 02:53:08PM +0800, ziniu.wang_1@nxp.com=A0wrote:
-> > > From: Luke Wang <ziniu.wang_1@nxp.com>
-> > >=20
-> > > The register addresses of ADP5585 and ADP5589 are reversed.
-> >=20
-> > My German feeling for the English language suggests:
-> > s/reversed/swapped/.
-
-I applied this substitution and dropped the empty line between Fixes:
-and the first Signed-off-by: line.
-
-> > I wonder how that didn't pop up during development of 75024f97e82e. I
-> > would expect that the driver doesn't work correctly in a very obvious
-> > way without this change?! I tend to want to send this to Linus before
-> > 6.18, but the question makes me wonder if I'm correct with that
-> > urgency. Any insights?
->=20
-> Yeah, this one I kind of asked for Liu to test it (as I was not testing t=
-he PWM bits)
-> and he did tested it [2]. But it was v2 and that series had some more ite=
-rations. So
-> I suspect that I messed up along the way and the last version of the seri=
-es was not
-> tested (for the PWM bits).
->=20
-> [2]: https://lore.kernel.org/linux-gpio/3efb68e2-7091-47e1-81a2-39930da5a=
-427@nxp.com/
-
-OK, so I guess it is sensible to get it into 6.18. I applied it for
-next (i.e.
-
-	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for=
--next
-
-) and will send it to Linus mid next week in the assumption that no
-issues pop up.
-
-Best regards
-Uwe
-
---sczwbepgumef37do
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmkXDIMACgkQj4D7WH0S
-/k4ZNQf/dfJFVv2RNUcTNcsIm9E3seeBAAPaOC+P0lX6m+x24pS3vq0mTrYMh8gl
-99hpNMcpbGQerLN+QnJ6Jh0D5ITbs11HsiThG2cS10WKzImFtf9OY6S11AM1VYqy
-WJ/rtrLvLVB1Oi6glWxzFQFDMka6DzzC4knrNiQM/xF4bkmpy48pOTr4S5T+0C5I
-9VNheXKxUsT1RcZfXQeXYgDokI05AC9UkmKRvg4BnSAtGPJqrQ8qfGYncXMgfUdY
-sMc8Fza+xrejy13uneSeq0eTKB9qa0nKdD1mBHbqtXmxsIeSH2p/CN7XdieHPHPS
-sDPumvDt3/qRzYBkjSO+tglEwXRIkQ==
-=lQTy
------END PGP SIGNATURE-----
-
---sczwbepgumef37do--
+Regards,
+Andreas
 
