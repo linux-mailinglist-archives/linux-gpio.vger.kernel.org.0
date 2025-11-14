@@ -1,258 +1,154 @@
-Return-Path: <linux-gpio+bounces-28490-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28491-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 365F6C5D41C
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 14:08:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E7C32C5D4A8
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 14:17:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 70EDD35B97E
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 13:06:30 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id DA13E35E979
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 13:11:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78F02316183;
-	Fri, 14 Nov 2025 13:05:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C68D52FC004;
+	Fri, 14 Nov 2025 13:11:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mFDW3r9m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wbec/zU3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013017.outbound.protection.outlook.com [40.93.196.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16692313555;
-	Fri, 14 Nov 2025 13:05:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763125530; cv=fail; b=rOZ2mWtzO1R5SaA+xsz0Uv5+BFkbN9Y7nD2u54bx1zOPx9ytM/pAfUC1tWYam73u1wtSOCCGo6gNaT7ORLxMK5by3wgYtQktyJ2yxka9bQngM+tAl57hjgg/CqD3EPgdJ7u4joyqEG3VxsMxB4qg0MgSkIM7s8BdEe67/EwZf9I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763125530; c=relaxed/simple;
-	bh=WovUPcvuwboQalfCXWf9Lja17L7gLj3ReXbBSA3t2kA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PgVyXQowu8Migw9rz18wic9jN9VfdaUlfiqlEd1+/1c1s0x62aa1RQBiVb/UconDz415kRVyWt6+lrUbV9tJvqzOu2MVzikUEL/PbRgDuZBlN28vyBAJoJlg2TbHaJlMBre0QX22EnLrbKM/tRzOhFjmtaQubARVcr8d5xZ7+jU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=mFDW3r9m; arc=fail smtp.client-ip=40.93.196.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jk/BWj2avlUbgZa9DzSlAKVlFQjxhb/PbqWD6roqBN9QETbMLjB2JKFDeYrFsYFAJQ1kKYm6zP1fu96DJ2xF05l4Z9iFwa9CrAkFC31FZQ/zsX45+E3fzuU706JJpUK0FPZ+JJGT8LgKu/F8H/AAvmsDfHxKzykaZfZpS0T3bA4loE8oMbKAqJLfy6Mr7w16UgMynbTsa4StI/LraWfHCecrFPPk/mi42XhqabIFueQVI/IEaSymSPezGMGo7ubds0uruk9jPr4QjrzcytfddP1Hgnnw2e6nQjvjpq/ATFLhMdMcPR1JghcEmwrtstYWTxZSmLfTWN++1olUjfG5Qg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Cc1rsuJ9EhwS4Z99ihcI1XwG1OmQT5JZRymAcJIVE9I=;
- b=Ai6DJPGpo/6laBGxGl5q7UaBnH2VlOmjv8cEcxDgYNLuTgarft9fIpBMvUvw8jdB8QTU5JgV15wdCjPGhbImRHhwLh0AHeT7Y9ixtszyyfLyJ/nzluMo9AwkxaRUnfDWMeEgmKn5hW5PkBSskr26MGX4aR1rSsm40rn3QQvVSS7p714SOh0b2lXNgpQL+uH3GXip4dTQeb4LovLxes4+/IJveG6wy9XKtDwy8md6KSMaiFyBQcjDwRsUZFaYPb9WzyyYnO7ScbJLBwjds9Am4vGtC0kpp8QbVa0zw8gaBdqWfAg5zdEhY3mlE4eIWH1veCX8tlqrXPsql75sJH/C0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.23.195) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=ti.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=ti.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Cc1rsuJ9EhwS4Z99ihcI1XwG1OmQT5JZRymAcJIVE9I=;
- b=mFDW3r9mNkp2eLwThZI2aDSXVKPDVlDZbJx40OUBsZB6lHHuVsEIgtgyQ6XR/LmDSo5Vslf4opuMlWuZK753HwmFwfGEYKAx+GsR11FlU3YBYG0LDh48vnAn/SgDCYUdn1kV7zK0Eezz9w7UM06yyzXBi2+QgStd7lr/QTM/wSg=
-Received: from SA9PR13CA0171.namprd13.prod.outlook.com (2603:10b6:806:28::26)
- by SJ0PR10MB5742.namprd10.prod.outlook.com (2603:10b6:a03:3ed::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.18; Fri, 14 Nov
- 2025 13:05:20 +0000
-Received: from SA2PEPF000015CB.namprd03.prod.outlook.com
- (2603:10b6:806:28:cafe::f2) by SA9PR13CA0171.outlook.office365.com
- (2603:10b6:806:28::26) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9343.6 via Frontend Transport; Fri,
- 14 Nov 2025 13:05:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.23.195)
- smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
- action=none header.from=ti.com;
-Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.23.195 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.23.195; helo=lewvzet201.ext.ti.com; pr=C
-Received: from lewvzet201.ext.ti.com (198.47.23.195) by
- SA2PEPF000015CB.mail.protection.outlook.com (10.167.241.201) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9320.13 via Frontend Transport; Fri, 14 Nov 2025 13:05:19 +0000
-Received: from DLEE212.ent.ti.com (157.170.170.114) by lewvzet201.ext.ti.com
- (10.4.14.104) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Fri, 14 Nov
- 2025 07:05:19 -0600
-Received: from DLEE205.ent.ti.com (157.170.170.85) by DLEE212.ent.ti.com
- (157.170.170.114) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Fri, 14 Nov
- 2025 07:05:18 -0600
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE205.ent.ti.com
- (157.170.170.85) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Fri, 14 Nov 2025 07:05:18 -0600
-Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5AED5Ibf2060955;
-	Fri, 14 Nov 2025 07:05:18 -0600
-Date: Fri, 14 Nov 2025 07:05:18 -0600
-From: Bryan Brattlof <bb@ti.com>
-To: Vignesh Raghavendra <vigneshr@ti.com>
-CC: Nishanth Menon <nm@ti.com>, Andrew Davis <afd@ti.com>, Tero Kristo
-	<kristo@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Linus Walleij
-	<linus.walleij@linaro.org>, Tony Lindgren <tony@atomide.com>,
-	<linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-	<linux-gpio@vger.kernel.org>, Dhruva Gole <d-gole@ti.com>
-Subject: Re: [PATCH v8 3/3] arm64: dts: ti: k3-am62l: add initial reference
- board file
-Message-ID: <20251114130518.2br6uo76edwi5a2d@bryanbrattlof.com>
-X-PGP-Fingerprint: D3D1 77E4 0A38 DF4D 1853 FEEF 41B9 0D5D 71D5 6CE0
-References: <20251105-am62lx-v8-0-496f353e8237@ti.com>
- <20251105-am62lx-v8-3-496f353e8237@ti.com>
- <882565f0-a903-4e6a-9bd5-a3839bfe18ec@ti.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7781241139
+	for <linux-gpio@vger.kernel.org>; Fri, 14 Nov 2025 13:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763125876; cv=none; b=Q3GqPOOpTViubGEv+QKSTg1RAvDpvKCEHgziOQYjZuQSnCrGwyuNFuATwWmVR2GTeWCo2GFMp4X0n5jOhbjg1uYejs+i6/IlWCJSfW0pnBKQrkuVQwrvRON/P7dwRysS+2p8s4AsM952nB6SD1kigdvgbYHqjER6zSGyhEBA/Tg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763125876; c=relaxed/simple;
+	bh=Mgrr0Jm8iMbgZAIH95lxgYjY0Nkl3G/qam925O9GaPY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=czafD61D66NVxOsheFNPjdE+aTYo1PSddnEdj8/ECK190c7hf8Fp/VWQdSkWZacFPXTxUKpReCdGUe1/pbcwLPK1n3cV2HWtXgJiAouZSbnhjUqBk1uPVdt7t8x/VD0HmoZPimcWcRtjJLmdwBsLIWzQQRwdubXAtyyUZYt6K7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wbec/zU3; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-42b2e9ac45aso1354894f8f.0
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Nov 2025 05:11:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763125873; x=1763730673; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=z3e+JYReYn587ewMbbn7pFvtSy6/gvR+LNONtT8jYLU=;
+        b=Wbec/zU3l7JIjZoYc32JfvrSoqM58SQTj4j9+Z1DYc4i2ojWUZSp+69huSb0K1xuRG
+         8uodeLSFe33PhRNI69QCJZLslqomeVn6jQl0bU6uWF1WuOz7aVPWGfCjsTOomrlfdVZ8
+         e5FNIltiaPmPoT5BCf0rTGj21Dy3/Do48uooxYibuPalQTIz+Y8OpcG3rtZAJUUhXR4D
+         hfInx/XnPqJ7vz3uFQOPMmkbjLodEaOI0K1ytUzoxa6dkCHvcQNWEomAL9MU8vTRbZbb
+         StU+cum6GwaHvJBU5Eo9C9xL4wxJ9SaHQ4YIgr562E+ZttwH+aLrNV4EG9j4pOcvouQ2
+         4JgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763125873; x=1763730673;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z3e+JYReYn587ewMbbn7pFvtSy6/gvR+LNONtT8jYLU=;
+        b=a3p3Uu6BYbzDYRLIiziN2D9kDs6dLwhgQg8ouJ8Hr6uCfCI4Iiadr6+TEfm83nopA7
+         zCtK1Z3vbCbsY8rg4LX54S9pZzKB54ku/Pq2poutj5YqgL2qtWPiX7r5HkJQykH0FRgG
+         aUhIA9RITlhbhJalyCJfr7ng7oBdYWt1wdQJ0cPFypYNWuOy50efbGE+rXsSJk5ttHaE
+         hr1gMo7uYppkrxvsBxgSoU58M7V4FIdcYcqXkPqpRkZ1XjWLf3cZtJYWc9hcf9boKih3
+         6GvSVefXBnzBIkXGIbmeFUi8Cs6RKibN+LPkmyLRg6zVEVarBNY34EHOb8LwU7UnzSox
+         V0Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCU+g0WjUPmcyxTl7/UEbehTh+/0uE8PivENl68u0/S7+3/RPm+z3ewT7iTvr0gzBCP7fc91n9veZn1m@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4ZDh00AHxre5fYthTutpn+xJIgKwP3NBrlHcM/lEOlXBQrSR8
+	vYvR6ktoqXgB9amH0aZ4YH9qqE3SlmjdUGLKasfXrTltoYXNU/Lo16Sl
+X-Gm-Gg: ASbGnct6h8ZxS+MBy/L+7hIkqLNyxHAXPH2tlXELvMLkfR25Gby8/jVTcym90oW5uLl
+	KPvlaSlvfm6mdRxYI2JpsjVxtHdGnb9wi7ZU3EdAS0GVHgfOs/sh8hMffUaMS4aqFTFciMEyf+1
+	bVbVv1SXKV77zkDHFUeAOd+e4V+Ni0noJasla8lO6nqQ5mavgE8srU0jc/+ZKYwwA4zwcovfOPr
+	+vDpso6/W/HFgPyVypW7fF1AADBrUgMNYyG3GSmb7/FVx5uqPi0b3ynj3H4Dej5p3rQte0qFJYx
+	+lJBXpFN98P1czBgm0WE7AR7m8+klNVXdcIURCbzNPnqoZUckD5toxnfdv13t2LFwU7q7MxCPj1
+	kTWXerJbzbzZyhuohCdj5dJzsWlB0btTuG4I8A8vJuLZQEwi3TwZnmO96+DyJASkJCT59EaGURd
+	L2H4ooeY++sKSZ2HN5SFUtUf2pU1Po/k43WYhRpvNlQBlB/2XdBbAhxfgP+XSa+s2e/53GwqgTo
+	Q==
+X-Google-Smtp-Source: AGHT+IHf2sdSAEb788fz+hKroyOVeG9tnateNfLOW/uekYOuHNDek9zraoBnP0muQ6tg5JlohTVfDw==
+X-Received: by 2002:a5d:584c:0:b0:42b:4194:48cf with SMTP id ffacd0b85a97d-42b593991f4mr2903780f8f.52.1763125872852;
+        Fri, 14 Nov 2025 05:11:12 -0800 (PST)
+Received: from orome (p200300e41f274600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f27:4600:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53e7ae47sm9497587f8f.4.2025.11.14.05.11.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Nov 2025 05:11:11 -0800 (PST)
+Date: Fri, 14 Nov 2025 14:11:09 +0100
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Kartik Rajput <kkartik@nvidia.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, jonathanh@nvidia.com, 
+	pshete@nvidia.com, nhartman@nvidia.com, linux-gpio@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: tegra186: Fix GPIO name collisions for Tegra410
+Message-ID: <aavab3z2i5hk4wombxcz2uexpcd2djdwgxx4ihf4gisnwbr6mk@npbuiiz7aio5>
+References: <20251113163112.885900-1-kkartik@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hdr3w3zgha3lxx5f"
 Content-Disposition: inline
-In-Reply-To: <882565f0-a903-4e6a-9bd5-a3839bfe18ec@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF000015CB:EE_|SJ0PR10MB5742:EE_
-X-MS-Office365-Filtering-Correlation-Id: 88565f05-f6b7-41fb-9074-08de237e76d5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|7416014|82310400026|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cVpTa2J1SXdaY0p2SVlUMXZuWDdTK0JHbWp5N3F2WEMzUmpzbHo0bGkyS1E5?=
- =?utf-8?B?cW1QU1dxd1JPRXdvY1hZV2pOeXdUaGJ0MFdyTkpOYzJGUFVIY3krMk9BTGhq?=
- =?utf-8?B?MjRrYVp3QktKR2k3aDNodkJIQk00d29VbmFmeFdMbkZnNmN1MXYyR05ZaUlQ?=
- =?utf-8?B?b3NkcC8vaGVjL3N2aEdlV25NYjBuWkNIaThieDJFaUNqZzVGaWY3RjBaOUFJ?=
- =?utf-8?B?Z0RxbmNiOWx3dm0za2RZYzg1MThrRS9QVjJ6eFdKTVUxdjlyVzhBNUN2Skxh?=
- =?utf-8?B?anlncnExbmRBdVlaZWNUOG8xcXpibnJGQ3R3TFJDTkpDMTdib0NvYTFQbnh1?=
- =?utf-8?B?cWUxTWZMYzJzaUxFcExQcmhIa0prU3F3MjF0ejhjcjZqTklEK2VadEZ5U2hI?=
- =?utf-8?B?b05jU290UmhDSTdUbGFxdE5RT2p1TGErTWVaOVI5TzIvTVE2K254TER0cy9T?=
- =?utf-8?B?UGNTcHNady93T1dsSWFLUTJ6T1QraGpMc3d4OWRwTzlyVkVxeWhSdjRDWXZH?=
- =?utf-8?B?dERheWc0NGovSE13VktlNlVtblRCR2w4RHA3YUx2QXpLS2FMSDlzUzFlN0Ra?=
- =?utf-8?B?YzhrREdSQU1MZ3RVbU1uL21lT29JemU2VG45bkowN1NUcEJYMGRUL3NTcjN5?=
- =?utf-8?B?emcwaWZIakdTQklMVElBSEJ4MkMzMjc2MUx3Y1VqOUVvUm5uaXp6V1hMRWRJ?=
- =?utf-8?B?NUwrSGhCdlg4UkdhTktzN2ZxQlNlRHVCV1lJMmU5YlFxM2VRc2JVWDArVG5W?=
- =?utf-8?B?cTI1NnUxVkR3ZWlqT0dnVzY0c3J2VWRZei9xbU5LMmVZWUVoY1A1TTRwSnNK?=
- =?utf-8?B?YXl6THFoMEhveDVyQUEySU84Y29mZzQrVVRPM1M3NVlrbk1pZjczeUVWR08x?=
- =?utf-8?B?REpDYkQ4ZFZqeENTYjRJSUVJWncwMmtOOXZTL2U5RDRWT2FKTnhTbFRUSUNo?=
- =?utf-8?B?UzBrUUh6MWNlQVZMSzRhRWFJL1dLaWNoYmRvMDE0b0E3K1JqOUxSYU5XM05j?=
- =?utf-8?B?a0RIVGErWlBsS1RaendVQ0s0WlBlZTk2Z2FzL1AxZVhXRzRmR0xQMys2UDJ0?=
- =?utf-8?B?OU5OWmczd05RT2RoaFlWV0V2K0VycktGeDBYUTNoWGcwYkFVbm1YWkw0Z3Ri?=
- =?utf-8?B?aTA0S1VJODFHakh0MmFWSVZYZ1dZQjEzVDJzM1Y4TnIxQWVlL2hVV0dSWU5o?=
- =?utf-8?B?S1lCMmhGZ01nOE9XYzZpUk5hU0Z3MHAwTGN4SEZzT2o0UkpxMkVzc2twNUQv?=
- =?utf-8?B?TXY1eEt6MWphcGdTeDlXVWRIYjhTT3dvMHprMmxidFdJQjF1QkVHVndvUCtR?=
- =?utf-8?B?MjhmdjJORmRzL3A1cDdQcUhjd1lJQkVlK1k3L2hVZ3BPK1ZNNmdnamFzZXY1?=
- =?utf-8?B?TDFwbGI3bTRTM0loU1ZNRU96NitMQjRJbSthU1RNcWVENC9qc0VZZjM2Y0FD?=
- =?utf-8?B?R2paVmhTUzZPWGNua3E3WW4xbmdTVURncUxQTXhHUHhnNWt4U3AzTFRYaWxt?=
- =?utf-8?B?NE84YjNwblk4UzFudzJJMjVUalJ2UTRyTG1qcVNIN3JnVVd3dmM5Rzk3QXJm?=
- =?utf-8?B?d29wdG1hd1M1WVBSU21iUnJmaXJmNjJpOENiWkx3NW5ycWVDMDVOSnl0Y2xn?=
- =?utf-8?B?Qm1nT210SjBRcEtOYUxCNUUwazJWRW45bUh0WEc3eVNrUkIyR2pMT1FWK0dV?=
- =?utf-8?B?bGJJNlB2dmZObmFzZXJuQ0xKZWN4QzlncEJDOFpLY0szcGZEaU9pS01uTkZ0?=
- =?utf-8?B?OWZiUXd3SVdUcFpHNTRha0xxbzlRUXE3WDlNcGEvR21FOEExRWU0NFlzMzFs?=
- =?utf-8?B?YlhUam9xbUJoU1k1bjVvZDl0dW80N094OVRMQ3lLbUNvS2s4d29SeVhOUDIv?=
- =?utf-8?B?ZEozbnhObVV3bWFFc1RLbWRHQjJFcituQVFiNlAyekZiSXdHd3M0VTZ2NjlU?=
- =?utf-8?B?ZzQvcXpCV1pPSnJZcExsNVdsdVFpV1F5cENNZmFzUmhjSEp1c2VZOUs2QWZM?=
- =?utf-8?B?ajFJWlJpR2FHTnA5WW11Ky9OL2tGZWs1Y2ZDMTNUdnhPZkV1L0E4ckZhcGxV?=
- =?utf-8?Q?shRIGe?=
-X-Forefront-Antispam-Report:
-	CIP:198.47.23.195;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:lewvzet201.ext.ti.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(7416014)(82310400026)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2025 13:05:19.9432
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88565f05-f6b7-41fb-9074-08de237e76d5
-X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.23.195];Helo=[lewvzet201.ext.ti.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF000015CB.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB5742
+In-Reply-To: <20251113163112.885900-1-kkartik@nvidia.com>
 
-On November 14, 2025 thus sayeth Vignesh Raghavendra:
-> 
-> 
-> On 05/11/25 21:16, Bryan Brattlof wrote:
-> > From: Vignesh Raghavendra <vigneshr@ti.com>
-> > 
-> > Add the initial board file for the AM62L3's Evaluation Module.
-> > 
-> > Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> > Reviewed-by: Dhruva Gole <d-gole@ti.com>
-> > Signed-off-by: Bryan Brattlof <bb@ti.com>
-> > ---
-> > Changes from v1:
-> >  - switched to non-direct links so TRM updates are automatic
-> >  - removed current-speed property from main_uart0
-> >  - removed empty reserved-memory{} node
-> >  - removed serial2 from aliases{} node
-> >  - corrected main_uart0 pinmux
-> > 
-> > Changes from v2:
-> >  - alphabetized phandles
-> >  - corrected macros and node names for main_uart0 pinmux node
-> > 
-> > Changes from v3:
-> >  - added and enabled more nodes that have been validated
-> >  - added link to data sheet which is now public
-> > 
-> > Changes from v4:
-> >  - Corrected Copyright year
-> > 
-> > Changes from v6:
-> >  - moved thermal-zones{} into the k3-am62l3-evm.dts to allow other
-> >    boards to selec whichever trip points they wish
-> > 
-> > Changes from v7:
-> >  - enabled &i2c0 to access the eeprom on the board
-> > ---
-> >  arch/arm64/boot/dts/ti/Makefile          |   3 +
-> >  arch/arm64/boot/dts/ti/k3-am62l3-evm.dts | 362 +++++++++++++++++++++++++++++++
-> >  2 files changed, 365 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-> > index 361248dcfff42a27f07cea6bca31461f8dc25b92..386ab1e91bcc3463e2d0618919da1ec3ce314bf2 100644
-> > --- a/arch/arm64/boot/dts/ti/Makefile
-> > +++ b/arch/arm64/boot/dts/ti/Makefile
-> > @@ -37,6 +37,9 @@ dtb-$(CONFIG_ARCH_K3) += k3-am62a7-phyboard-lyra-rdk.dtb
-> >  # Boards with AM62Dx SoC
-> >  dtb-$(CONFIG_ARCH_K3) += k3-am62d2-evm.dtb
-> >  
-> > +# Boards with AM62Lx SoCs
-> > +dtb-$(CONFIG_ARCH_K3) += k3-am62l3-evm.dtb
-> > +
-> >  # Boards with AM62Px SoC
-> >  dtb-$(CONFIG_ARCH_K3) += k3-am62p5-sk.dtb
-> >  dtb-$(CONFIG_ARCH_K3) += k3-am62p5-var-som-symphony.dtb
-> > diff --git a/arch/arm64/boot/dts/ti/k3-am62l3-evm.dts b/arch/arm64/boot/dts/ti/k3-am62l3-evm.dts
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..34c24b368d9e88cd94a7426cd1524f096e9c43c9
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/ti/k3-am62l3-evm.dts
-> > @@ -0,0 +1,362 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only or MIT
-> > +/*
-> > + * Device Tree file for the AM62L3 Evaluation Module
-> > + * Copyright (C) 2025 Texas Instruments Incorporated - https://www.ti.com/
-> > + *
-> > + * Technical Reference Manual: https://www.ti.com/lit/pdf/sprujb4
-> > + * Data Sheet: https://www.ti.com/lit/pdf/sprspa1
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include <dt-bindings/gpio/gpio.h>
-> > +#include <dt-bindings/input/input.h>
-> > +#include <dt-bindings/leds/common.h>
-> > +#include <dt-bindings/net/ti-dp83867.h>
-> > +#include <dt-bindings/thermal/thermal.h>
-> > +#include "k3-am62l3.dtsi"
-> > +#include "k3-pinctrl.h"
-> > +
-> > +
-> 
-> Extra blank line.. I can fix this locally before queuing.
-> 
 
-Oops. Thanks Vignesh
+--hdr3w3zgha3lxx5f
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] gpio: tegra186: Fix GPIO name collisions for Tegra410
+MIME-Version: 1.0
 
-~Bryan
+On Thu, Nov 13, 2025 at 10:01:12PM +0530, Kartik Rajput wrote:
+> On Tegra410, Compute and System GPIOs have same port names. This
+> results in the same GPIO names for both Compute and System GPIOs
+> during initialization in `tegra186_gpio_probe()`, which results in
+> following warnings:
+>=20
+>   kernel: gpio gpiochip1: Detected name collision for GPIO name 'PA.00'
+>   kernel: gpio gpiochip1: Detected name collision for GPIO name 'PA.01'
+>   kernel: gpio gpiochip1: Detected name collision for GPIO name 'PA.02'
+>   kernel: gpio gpiochip1: Detected name collision for GPIO name 'PB.00'
+>   kernel: gpio gpiochip1: Detected name collision for GPIO name 'PB.01'
+>   ...
+>=20
+> Add GPIO name prefix in the SoC data and use it to initialize the GPIO
+> name.
+>=20
+> Port names remain unchanged for previous SoCs. On Tegra410, Compute
+> GPIOs are named COMPUTE-P<PORT>.GPIO, and System GPIOs are named
+> SYSTEM-P<PORT>.GPIO.
+>=20
+> Fixes: 9631a10083d8 ("gpio: tegra186: Add support for Tegra410")
+> Signed-off-by: Kartik Rajput <kkartik@nvidia.com>
+> ---
+>  drivers/gpio/gpio-tegra186.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
 
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--hdr3w3zgha3lxx5f
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmkXKm0ACgkQ3SOs138+
+s6F1cg/+K7bfCAWunPug7sxl4E0L8eFOu7qUK/WQt/1jzlPBBMtoIMaS1wlCn6t4
+0xlnHLDpqOkazVRPHVGKvSyeaw4I1iICcagS0XFzoU0EQ4zMBCcOs+OjbGsRu/Wf
+9KAzELWBZOpSZZrVU9e35vID5QnrR+ECODoDNw1uvivz8AEYljmkiTAKAUkocoIk
+aedRAmUP117EZa571ontzztXEnETgkC9SarIKD3Y+RGx2+0nSSdzPJpPHNXy5mvf
+NEMQrQS1my2goVB46IOqc9j0YGayCtkhekOjcwx+X8DtADIHRkovpqibFID4UfZ1
+NfOhXrj/Gv+HNt0q6+UCrkgJIWP0Bug8zX/n7B3NYVzt2HyK++KZ4K636tXuUN5g
+UhqeJba0m33ADOAh2zHLsFltm3pnzXiaPF1FU28X8bw6Vzwlttsehc90TVVI7bSK
+U8sKAS3teAgmXwSMI2cQxMVtxo96LakPJRujq7wL4GVyeEc8y5ap/Op3mJJnwoPu
+6mPSb30jDwYe1lq1dukXSA7OvgrqSQ9ROIFxfJrSXdeQ80xXgubSdsEThQ8OMWtt
+LnVfedUDuk27Pb05ZApC/PdPlxd2D63WvY/0rPlZzNV6gsRDhf+/eVB9ZQTQZhAC
+k9vIEu4bRISggK8B1+bALQfWndedwXLR2GkD9RizfvSE03ebcts=
+=a/L/
+-----END PGP SIGNATURE-----
+
+--hdr3w3zgha3lxx5f--
 
