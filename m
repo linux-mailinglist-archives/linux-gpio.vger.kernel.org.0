@@ -1,154 +1,146 @@
-Return-Path: <linux-gpio+bounces-28491-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28492-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7C32C5D4A8
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 14:17:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C04BC5D511
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 14:22:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id DA13E35E979
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 13:11:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5D9573B08C2
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 13:22:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C68D52FC004;
-	Fri, 14 Nov 2025 13:11:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 102F922B5A5;
+	Fri, 14 Nov 2025 13:22:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wbec/zU3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JLxJBecV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7781241139
-	for <linux-gpio@vger.kernel.org>; Fri, 14 Nov 2025 13:11:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1CC1314A67
+	for <linux-gpio@vger.kernel.org>; Fri, 14 Nov 2025 13:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763125876; cv=none; b=Q3GqPOOpTViubGEv+QKSTg1RAvDpvKCEHgziOQYjZuQSnCrGwyuNFuATwWmVR2GTeWCo2GFMp4X0n5jOhbjg1uYejs+i6/IlWCJSfW0pnBKQrkuVQwrvRON/P7dwRysS+2p8s4AsM952nB6SD1kigdvgbYHqjER6zSGyhEBA/Tg=
+	t=1763126525; cv=none; b=Rgp/xGqgGj4u5TtOXE7w99i7pLyv1Z3ll7NgfKpJy+UgVN52H5tTu63LHSUbpsPP8z5VH5Xt1Dm8qjehrXJKYuLws83A/ctVvvKXbBXiyFS54ldHZHtIabQ2zyoLdZVdPv+hZz+25Fq0ntO2BEO5J7rJN3l3Q7tteDcZItUtmos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763125876; c=relaxed/simple;
-	bh=Mgrr0Jm8iMbgZAIH95lxgYjY0Nkl3G/qam925O9GaPY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=czafD61D66NVxOsheFNPjdE+aTYo1PSddnEdj8/ECK190c7hf8Fp/VWQdSkWZacFPXTxUKpReCdGUe1/pbcwLPK1n3cV2HWtXgJiAouZSbnhjUqBk1uPVdt7t8x/VD0HmoZPimcWcRtjJLmdwBsLIWzQQRwdubXAtyyUZYt6K7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wbec/zU3; arc=none smtp.client-ip=209.85.221.52
+	s=arc-20240116; t=1763126525; c=relaxed/simple;
+	bh=PIhVxornY+xeHydrfUvm8sKztzt4GgYtkzvZxgJ8W40=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mwW+FBZb0F5iEJOfq+uMlmS3+8gTaxylt3c+k3KI4t9Qux+q1vf+UbEDLWvMD7ESVc3n7ed+asp36yEz1K1xRoaBvbcehAWX0Bd4wtIkrk28Id0n42gjR0O72Izs/5coyijfD/7wG+YabLOqf4qPiGdwuxRzaGd8v8JPYjo1Tqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JLxJBecV; arc=none smtp.client-ip=209.85.208.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-42b2e9ac45aso1354894f8f.0
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Nov 2025 05:11:14 -0800 (PST)
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-37b95f87d4eso17035121fa.1
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Nov 2025 05:22:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763125873; x=1763730673; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=z3e+JYReYn587ewMbbn7pFvtSy6/gvR+LNONtT8jYLU=;
-        b=Wbec/zU3l7JIjZoYc32JfvrSoqM58SQTj4j9+Z1DYc4i2ojWUZSp+69huSb0K1xuRG
-         8uodeLSFe33PhRNI69QCJZLslqomeVn6jQl0bU6uWF1WuOz7aVPWGfCjsTOomrlfdVZ8
-         e5FNIltiaPmPoT5BCf0rTGj21Dy3/Do48uooxYibuPalQTIz+Y8OpcG3rtZAJUUhXR4D
-         hfInx/XnPqJ7vz3uFQOPMmkbjLodEaOI0K1ytUzoxa6dkCHvcQNWEomAL9MU8vTRbZbb
-         StU+cum6GwaHvJBU5Eo9C9xL4wxJ9SaHQ4YIgr562E+ZttwH+aLrNV4EG9j4pOcvouQ2
-         4JgQ==
+        d=gmail.com; s=20230601; t=1763126522; x=1763731322; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TrtX8x6xiGPlcF3REo6XTaulSDVNKE90sjqlhnGudPU=;
+        b=JLxJBecVTt7ci4MySHtaJCX2RuSWm+47+kgQXd3+q5iCTC6xRsKVeS4VMO2C6iKoUi
+         7wC7myl8516ZyD8NfP4qhC6InalfcMWDXVAnbtLDFNwJ6ARwpQfEZIrsLX12cgIT1uql
+         lrk6TGIK/1QEbP5uaOpQ8lOu/DJZfSzIb3aiGlYvsoBl6Z+b0tkjB3xpz6kbj1SreGpl
+         da9piGtvNIXkCcYmoDu2sNWR9609OQO1ta0KvjdQNYb4U1AiIS2D9tvNsn+Wv5udjE9n
+         tKW1+Vcx+V8JDmWgyb2Y2iuVQPq4hnOZ7a48Uw3v7Cx5fOHYIAEu4dBdezJxsOSPM0Es
+         tZGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763125873; x=1763730673;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z3e+JYReYn587ewMbbn7pFvtSy6/gvR+LNONtT8jYLU=;
-        b=a3p3Uu6BYbzDYRLIiziN2D9kDs6dLwhgQg8ouJ8Hr6uCfCI4Iiadr6+TEfm83nopA7
-         zCtK1Z3vbCbsY8rg4LX54S9pZzKB54ku/Pq2poutj5YqgL2qtWPiX7r5HkJQykH0FRgG
-         aUhIA9RITlhbhJalyCJfr7ng7oBdYWt1wdQJ0cPFypYNWuOy50efbGE+rXsSJk5ttHaE
-         hr1gMo7uYppkrxvsBxgSoU58M7V4FIdcYcqXkPqpRkZ1XjWLf3cZtJYWc9hcf9boKih3
-         6GvSVefXBnzBIkXGIbmeFUi8Cs6RKibN+LPkmyLRg6zVEVarBNY34EHOb8LwU7UnzSox
-         V0Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCU+g0WjUPmcyxTl7/UEbehTh+/0uE8PivENl68u0/S7+3/RPm+z3ewT7iTvr0gzBCP7fc91n9veZn1m@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4ZDh00AHxre5fYthTutpn+xJIgKwP3NBrlHcM/lEOlXBQrSR8
-	vYvR6ktoqXgB9amH0aZ4YH9qqE3SlmjdUGLKasfXrTltoYXNU/Lo16Sl
-X-Gm-Gg: ASbGnct6h8ZxS+MBy/L+7hIkqLNyxHAXPH2tlXELvMLkfR25Gby8/jVTcym90oW5uLl
-	KPvlaSlvfm6mdRxYI2JpsjVxtHdGnb9wi7ZU3EdAS0GVHgfOs/sh8hMffUaMS4aqFTFciMEyf+1
-	bVbVv1SXKV77zkDHFUeAOd+e4V+Ni0noJasla8lO6nqQ5mavgE8srU0jc/+ZKYwwA4zwcovfOPr
-	+vDpso6/W/HFgPyVypW7fF1AADBrUgMNYyG3GSmb7/FVx5uqPi0b3ynj3H4Dej5p3rQte0qFJYx
-	+lJBXpFN98P1czBgm0WE7AR7m8+klNVXdcIURCbzNPnqoZUckD5toxnfdv13t2LFwU7q7MxCPj1
-	kTWXerJbzbzZyhuohCdj5dJzsWlB0btTuG4I8A8vJuLZQEwi3TwZnmO96+DyJASkJCT59EaGURd
-	L2H4ooeY++sKSZ2HN5SFUtUf2pU1Po/k43WYhRpvNlQBlB/2XdBbAhxfgP+XSa+s2e/53GwqgTo
-	Q==
-X-Google-Smtp-Source: AGHT+IHf2sdSAEb788fz+hKroyOVeG9tnateNfLOW/uekYOuHNDek9zraoBnP0muQ6tg5JlohTVfDw==
-X-Received: by 2002:a5d:584c:0:b0:42b:4194:48cf with SMTP id ffacd0b85a97d-42b593991f4mr2903780f8f.52.1763125872852;
-        Fri, 14 Nov 2025 05:11:12 -0800 (PST)
-Received: from orome (p200300e41f274600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f27:4600:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53e7ae47sm9497587f8f.4.2025.11.14.05.11.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Nov 2025 05:11:11 -0800 (PST)
-Date: Fri, 14 Nov 2025 14:11:09 +0100
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Kartik Rajput <kkartik@nvidia.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, jonathanh@nvidia.com, 
-	pshete@nvidia.com, nhartman@nvidia.com, linux-gpio@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: tegra186: Fix GPIO name collisions for Tegra410
-Message-ID: <aavab3z2i5hk4wombxcz2uexpcd2djdwgxx4ihf4gisnwbr6mk@npbuiiz7aio5>
-References: <20251113163112.885900-1-kkartik@nvidia.com>
+        d=1e100.net; s=20230601; t=1763126522; x=1763731322;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TrtX8x6xiGPlcF3REo6XTaulSDVNKE90sjqlhnGudPU=;
+        b=aAzPKG0k+/VlimXVMbnrG3sZgdcR8oboGcSFt1+7LsMjW0gHv2wxD/468isEvHrMPV
+         8ZrbRy4ttMnp9fCt7LYuR/ToTWVveeRwuMTLzEPwGPEyjbetQKcZbddQxqv9NybjfHOV
+         CLeyT1CdXMK2utk9xE5Osef1yV6El1NpTOE13FdSUvj56pBuG/QsPWtTadyaJJJOKXjV
+         u/lPIOS9ZxKOJsDsy/wZiLRMFGRmkVHvd4c333vQ65aFTvE119NnhBnhnnyEqNhZjNTJ
+         XOrxCPxKAanmxk9iWDKI/txDwEEKAhjVTpyOR75Z+QtG5QC2htWJA4iEYWcwXxAxY4yq
+         KBYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXnnLj/7rIVDrD/+tMhjCgRySZlhOaCU1Kwca6cvD/WfpcGOQRVK5cGLK0zvpKCRdI4kW+eBHEjNfh9@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8S7qs4+JESfydk/Pt2O+o9rdg9JL59oTvljQ8ZRYB4L/F5B6T
+	ZaVyJ5gNPCWzb6nSb5vwJ2jrnhHGJyBhr6wEPkwFLuhSwhv9q0YtC9S4
+X-Gm-Gg: ASbGncvkMm1UKSW3JjgCod+jM1+70AWMZdXPZYLR52ONNwvBLU1in+Qg4PaKP6aVLW3
+	KmsSeApkmJptlrJYA1XL1w/IFtvfOmYnD5jEgMF/Es8ZZTuGR9r1dk5w3nUvDaD+bJ1cJFr9qtC
+	htApAzumSl+z0jlTWHOu/PY84JXSakH7xB/GjOIo7S4PVnoQ23Rf9xw/89RtB6Qc9Km2rBLTqbi
+	8CNWfuBerOdqD2urducIZd892VdPK3iDvU8YP8TdwWylF9E9mvNjAGu9P6aoymWlBX3d1lUFv/X
+	CvJ85b8A1o933+gTq+7VqeDsoVRCEhGp9IJPrHMek0ap1Xf5/ECXGdhhvUDv4taJJ0nCuk8Godg
+	w0RB1rhR2YdAOZ1a7qanMo6/MDPhRiu91e4ZQueerdMf0+S4Msd58ciUU8iYRtE4Ve7/Ps2l3Cp
+	hJe3LKuFmIbhDhgjuVMoMMJHPdApD440Yy+N/9bt0UBq7R5Hvwd3ozNzCxww==
+X-Google-Smtp-Source: AGHT+IFJvPwRc3iSb2WexT7/Nxb76MqMei5zXQUBPxVbaOVwZ0mTUJAzGoCKPRFSwFTVf5iDU0WZyw==
+X-Received: by 2002:a05:651c:418f:b0:378:e3f9:2d26 with SMTP id 38308e7fff4ca-37babd80ac1mr5793261fa.39.1763126521767;
+        Fri, 14 Nov 2025 05:22:01 -0800 (PST)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-37b9ce080a6sm10220141fa.4.2025.11.14.05.22.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Nov 2025 05:22:01 -0800 (PST)
+Message-ID: <2334e57c-a384-4a1e-9708-19d14b8f082c@gmail.com>
+Date: Fri, 14 Nov 2025 15:22:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hdr3w3zgha3lxx5f"
-Content-Disposition: inline
-In-Reply-To: <20251113163112.885900-1-kkartik@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 14/16] power: supply: bd71828: Support wider register
+ addresses
+To: Andreas Kemnade <andreas@kemnade.info>,
+ Matti Vaittinen <matti.vaittinen@linux.dev>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-rtc@vger.kernel.org
+References: <cover.1763022807.git.mazziesaccount@gmail.com>
+ <6248200397d3582fe926938736da66d6bbf9535d.1763022807.git.mazziesaccount@gmail.com>
+ <20251114121509.629d171b@kemnade.info>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20251114121509.629d171b@kemnade.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+Thanks Andreas,
 
---hdr3w3zgha3lxx5f
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] gpio: tegra186: Fix GPIO name collisions for Tegra410
-MIME-Version: 1.0
+On 14/11/2025 13:15, Andreas Kemnade wrote:
+> On Thu, 13 Nov 2025 10:55:39 +0200
+> Matti Vaittinen <matti.vaittinen@linux.dev> wrote:
+> 
+>> As a side note, we can reduce the "wasted space / member / instance" from
+>> 3 bytes to 1 byte, by using u16 instead of the unsigned int if needed. I
+>> rather use unsigned int to be initially prepared for devices with 32 bit
+>> registers if there is no need to count bytes.
+> 
+> Well, this is totally internal to the module, so no ABI/API changes, so
+> there is no advantage of using 32bit now I think. We can switch any time.
 
-On Thu, Nov 13, 2025 at 10:01:12PM +0530, Kartik Rajput wrote:
-> On Tegra410, Compute and System GPIOs have same port names. This
-> results in the same GPIO names for both Compute and System GPIOs
-> during initialization in `tegra186_gpio_probe()`, which results in
-> following warnings:
->=20
->   kernel: gpio gpiochip1: Detected name collision for GPIO name 'PA.00'
->   kernel: gpio gpiochip1: Detected name collision for GPIO name 'PA.01'
->   kernel: gpio gpiochip1: Detected name collision for GPIO name 'PA.02'
->   kernel: gpio gpiochip1: Detected name collision for GPIO name 'PB.00'
->   kernel: gpio gpiochip1: Detected name collision for GPIO name 'PB.01'
->   ...
->=20
-> Add GPIO name prefix in the SoC data and use it to initialize the GPIO
-> name.
->=20
-> Port names remain unchanged for previous SoCs. On Tegra410, Compute
-> GPIOs are named COMPUTE-P<PORT>.GPIO, and System GPIOs are named
-> SYSTEM-P<PORT>.GPIO.
->=20
-> Fixes: 9631a10083d8 ("gpio: tegra186: Add support for Tegra410")
-> Signed-off-by: Kartik Rajput <kkartik@nvidia.com>
-> ---
->  drivers/gpio/gpio-tegra186.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
+The only advantage is to avoid the churn if 32bit ICs are to be added.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+> But we have 32bit stuff in the regmap cache anyways, so that is not above
+> the general level of wasting space.
 
---hdr3w3zgha3lxx5f
-Content-Type: application/pgp-signature; name="signature.asc"
+Exactly. And, I am not sure if sparing ~hundred bytes is worth the 
+hassle - even if it is hassle internal to the driver. But yeah, we can 
+squeeze a few bytes if it is seen beneficial. That's why I mentioned it 
+here :)
 
------BEGIN PGP SIGNATURE-----
+Yours,
+	-- Matti
 
-iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmkXKm0ACgkQ3SOs138+
-s6F1cg/+K7bfCAWunPug7sxl4E0L8eFOu7qUK/WQt/1jzlPBBMtoIMaS1wlCn6t4
-0xlnHLDpqOkazVRPHVGKvSyeaw4I1iICcagS0XFzoU0EQ4zMBCcOs+OjbGsRu/Wf
-9KAzELWBZOpSZZrVU9e35vID5QnrR+ECODoDNw1uvivz8AEYljmkiTAKAUkocoIk
-aedRAmUP117EZa571ontzztXEnETgkC9SarIKD3Y+RGx2+0nSSdzPJpPHNXy5mvf
-NEMQrQS1my2goVB46IOqc9j0YGayCtkhekOjcwx+X8DtADIHRkovpqibFID4UfZ1
-NfOhXrj/Gv+HNt0q6+UCrkgJIWP0Bug8zX/n7B3NYVzt2HyK++KZ4K636tXuUN5g
-UhqeJba0m33ADOAh2zHLsFltm3pnzXiaPF1FU28X8bw6Vzwlttsehc90TVVI7bSK
-U8sKAS3teAgmXwSMI2cQxMVtxo96LakPJRujq7wL4GVyeEc8y5ap/Op3mJJnwoPu
-6mPSb30jDwYe1lq1dukXSA7OvgrqSQ9ROIFxfJrSXdeQ80xXgubSdsEThQ8OMWtt
-LnVfedUDuk27Pb05ZApC/PdPlxd2D63WvY/0rPlZzNV6gsRDhf+/eVB9ZQTQZhAC
-k9vIEu4bRISggK8B1+bALQfWndedwXLR2GkD9RizfvSE03ebcts=
-=a/L/
------END PGP SIGNATURE-----
+---
+Matti Vaittinen
+Linux kernel developer at ROHM Semiconductors
+Oulu Finland
 
---hdr3w3zgha3lxx5f--
+~~ When things go utterly wrong vim users can always type :help! ~~
 
