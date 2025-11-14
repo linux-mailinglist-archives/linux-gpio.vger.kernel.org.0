@@ -1,120 +1,214 @@
-Return-Path: <linux-gpio+bounces-28520-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28521-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A7F8C5E591
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 17:53:22 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0869DC5E7B7
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 18:14:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 826F33B5911
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 16:47:07 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DF9F64F726B
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 16:50:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 983922BDC2F;
-	Fri, 14 Nov 2025 16:47:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEEDD2C08A1;
+	Fri, 14 Nov 2025 16:50:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K30ipYDu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hERqqFGF"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1F929A30A;
-	Fri, 14 Nov 2025 16:47:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9E229D29A
+	for <linux-gpio@vger.kernel.org>; Fri, 14 Nov 2025 16:50:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763138821; cv=none; b=jycAZ5Ztcjwj7iExcHkhoAfHmCmrDmfG/4xA21/GRVTyeeYKziwNDo5rsqUTNJp6zXkIv51YE392e18LCGVNuDX4PrehAPWQ5gK5/h1XJdP36UUlCiHFwiECgoUL6QBV1EypVShRLgXV85DeGPFGO3kau5z6L2DXespyLq8eQvI=
+	t=1763139046; cv=none; b=LZRoB8bGgOok2nMzcLjCPjxEgmtreSxKCrJGsdbnK4bISXTZcwPyy15y6L5xkRFrX4Q+X1uGjKny/AAzvyl8PNLeW5H8ZtmgLdq5g1c0CyjqjmSqtXTgakQ12Lk2CWUWzdaL4ZR4+ZbYnYUgvyb+5yjtSTSeC+O6mc/wVRTsLg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763138821; c=relaxed/simple;
-	bh=4EpMRFeYHj1in4XKS+Dlo+4mLzX8SiIfcEMg1hebD0A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rYoxFhl2f91KOSJJM6msPQmF6JNWTAWaAyPKjW0R7fwNnbas0Ac/6asf8Y0URNZrvuZDALP3DPhYBdxBgMfO/1CJCfzsK3InR5+s5+NN6DvWAELnSBsUuFibIBNW1VPfk1NzlFa4FVTODSQfH3PYklyyUpzxH7dTFkMN08gzru0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K30ipYDu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52E88C4CEFB;
-	Fri, 14 Nov 2025 16:46:57 +0000 (UTC)
+	s=arc-20240116; t=1763139046; c=relaxed/simple;
+	bh=kRAIXpQL0rtpWzajaSCTkkyqSQYa+ftfCRXl8V2IxE0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qSXKDAmSjwjjDpPETPfzZItVQDzQEhXW+dUAM18AZv6iF7Cpyx1x5jJeL3h/W6puC7YxJbKAZLk9DGWLrX5PLxw+QntVHVYZiPh5Fi9W0N3LUn3hBfaAdKyqVs+XUNLIvLgk1QcKATOcl2uEQdOSeSS5tOUITcCs+6a60Mm5b/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hERqqFGF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B630C4AF0C
+	for <linux-gpio@vger.kernel.org>; Fri, 14 Nov 2025 16:50:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763138820;
-	bh=4EpMRFeYHj1in4XKS+Dlo+4mLzX8SiIfcEMg1hebD0A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K30ipYDuR/RUrNmkVc7gm/zBnjjveNhFDABC4izAmhLcDJUFonKiI0G5vLlL6u/LO
-	 TeJ0wYSOE73rEdYcMoA6nR3i496qxne3PZihBlID9tEPoXOaTyt4ie3uyyIq9BgLBw
-	 PZJSb75fArEiccCcnjRALq60MFwd8TEqtK++9S5GnJ9RD62wbNFzJCGXVewGTrOZZ6
-	 mFU4euj93FqTdJfqoyGkaIjeSl5gcbO46LE2c6jjvEi4BnfXDk3zaMeKxwPTQr7zEQ
-	 gERyKvSX5UerE+mDcfN45nfSgQ+bg4rUomyFKu5AHF775QwAbx8ZkDuCYTamt4cTbJ
-	 ea3KEVbFnM+jw==
-Date: Fri, 14 Nov 2025 16:46:54 +0000
-From: Mark Brown <broonie@kernel.org>
-To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-Cc: Lee Jones <lee@kernel.org>, Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
-	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 09/20] mfd: sec: Add support for S2MPG11 PMIC via ACPM
-Message-ID: <db7e95dd-2361-4579-b52c-b9556da4633a@sirena.org.uk>
-References: <20251103-s2mpg1x-regulators-v3-0-b8b96b79e058@linaro.org>
- <20251103-s2mpg1x-regulators-v3-9-b8b96b79e058@linaro.org>
- <20251113162534.GO1949330@google.com>
- <45ce203c03ec34631a0170baa7e4cf26c98b9cd3.camel@linaro.org>
+	s=k20201202; t=1763139046;
+	bh=kRAIXpQL0rtpWzajaSCTkkyqSQYa+ftfCRXl8V2IxE0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=hERqqFGFEWsgElkSKHoC3j1on9AuWyUT+X7M8qrqyZk/7B2v7cHEh9TG2rVvJ+HYs
+	 jIBGlJWpjFVbX1ydcmDu8dv3/C9es21yyfhfyU9pm0MA2lioBhf583hiVt6Z8y8F6i
+	 ZVjRol18PqFa6pc1htrm5XM4XO4goUKrjBtIlzRd/w1KahXUKEcHW6eQPKmJytK5u/
+	 6rJb+DgjrH4T25CH0IJ15rAGsi7LZ2cSIJlO/nJ9Dkn4nsGSvE04Ys43hYA1iAUr11
+	 Ww+hEwj40E5tufKCjB4k28M83umiVUO00LTP5BfetaPWVv6mYGHkI9e7owF5/xrTlZ
+	 GAaV7Vc71uQ1g==
+Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-7c28bf230feso3080550a34.0
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Nov 2025 08:50:46 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX9BBOeSW1oOdPYVqDj9uKiM0VWKBrMHUczuwIj5Suh+TpykTGVHgNseo/vmmciLv1UuEgy+TiDidoM@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsqENCU+25ql2lAm04nvheuXPS4NEaC9/HtMJ2EeLGYkK+mlas
+	gl1WtonpqabEhA/56Yero446XNXTaqyJDyiwdvqx4Qg4Nad+6E9AIgCezl/yIHjAXxTAhdLsC4D
+	ggHyXCIXNfN9uIjla08AzQZ7gdV+Sb3U=
+X-Google-Smtp-Source: AGHT+IEYoY5xYDQM2BBb9X6HkbmqaxbA6wbw9D2hrDeBHcEQWKaobtybIG/1lrjxhUBp4/SMuWImn4eAYFy9CIQanRY=
+X-Received: by 2002:a05:6808:13d5:b0:44f:ddf1:f238 with SMTP id
+ 5614622812f47-4508625eabemr3567353b6e.0.1763139045390; Fri, 14 Nov 2025
+ 08:50:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Qn5lIfBNzUCscegG"
-Content-Disposition: inline
-In-Reply-To: <45ce203c03ec34631a0170baa7e4cf26c98b9cd3.camel@linaro.org>
-X-Cookie: Causes moderate eye irritation.
-
-
---Qn5lIfBNzUCscegG
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+References: <20251107-wakeirq_support-v5-0-464e17f2c20c@oss.qualcomm.com> <20251107-wakeirq_support-v5-1-464e17f2c20c@oss.qualcomm.com>
+In-Reply-To: <20251107-wakeirq_support-v5-1-464e17f2c20c@oss.qualcomm.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 14 Nov 2025 17:50:34 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0jF2DG8Dki8+vVbOR20Z-=5=1XW2AjU05fzQPDJfzhLzA@mail.gmail.com>
+X-Gm-Features: AWmQ_bm376pzy83QmYYBd-oR2tNJ4Dlhl0hniQgkzHybVJ8j4IFmpm1XO_r7SUc
+Message-ID: <CAJZ5v0jF2DG8Dki8+vVbOR20Z-=5=1XW2AjU05fzQPDJfzhLzA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] PM: sleep: wakeirq: Add support for custom IRQ
+ flags in dedicated wake IRQ setup
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	quic_vbadigan@quicinc.com, quic_mrana@quicinc.com, sherry.sun@nxp.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 13, 2025 at 09:43:29PM +0000, Andr=E9 Draszik wrote:
-> On Thu, 2025-11-13 at 16:25 +0000, Lee Jones wrote:
+On Fri, Nov 7, 2025 at 10:22=E2=80=AFAM Krishna Chaitanya Chundru
+<krishna.chundru@oss.qualcomm.com> wrote:
+>
+> Some devices require more flexibility when configuring their dedicated
+> wake-up interrupts, such as support for IRQF_SHARED or other IRQ flags.
+> This is particularly useful in PCIe systems where multiple endpoints
+> (e.g., Wi-Fi and Bluetooth controllers) share a common WAKE# signal
+> line which requests platform to re-establish power and reference clocks
+> to the components. In such cases, drivers can use this API with IRQF_SHAR=
+ED
+> to register a shared wake IRQ handler.
+>
+> Update the internal helper __dev_pm_set_dedicated_wake_irq() to accept an
+> irq_flags argument. Modify the existing dev_pm_set_dedicated_wake_irq()
+> and dev_pm_set_dedicated_wake_irq_reverse() to preserve current behavior
+> by passing default flags (IRQF_ONESHOT | IRQF_NO_AUTOEN).
+>
+> Introduce a new API, dev_pm_set_dedicated_wake_irq_flags(), to allow
+> callers to specify custom IRQ flags. If IRQF_SHARED is used, remove
+> IRQF_NO_AUTOEN and disable the IRQ after setup to prevent spurious wakeup=
+s.
+>
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.co=
+m>
+> ---
+>  drivers/base/power/wakeirq.c | 43 ++++++++++++++++++++++++++++++++++++++=
+-----
+>  include/linux/pm_wakeirq.h   |  6 ++++++
+>  2 files changed, 44 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/base/power/wakeirq.c b/drivers/base/power/wakeirq.c
+> index 8aa28c08b2891f3af490175362cc1a759069bd50..655c28d5fc6850f50fc2ed74c=
+5fbc066a21ae7b3 100644
+> --- a/drivers/base/power/wakeirq.c
+> +++ b/drivers/base/power/wakeirq.c
+> @@ -168,7 +168,8 @@ static irqreturn_t handle_threaded_wake_irq(int irq, =
+void *_wirq)
+>         return IRQ_HANDLED;
+>  }
+>
+> -static int __dev_pm_set_dedicated_wake_irq(struct device *dev, int irq, =
+unsigned int flag)
+> +static int __dev_pm_set_dedicated_wake_irq(struct device *dev, int irq, =
+unsigned int flag,
+> +                                          unsigned int irq_flags)
+>  {
+>         struct wake_irq *wirq;
+>         int err;
+> @@ -197,8 +198,7 @@ static int __dev_pm_set_dedicated_wake_irq(struct dev=
+ice *dev, int irq, unsigned
+>          * so we use a threaded irq.
+>          */
+>         err =3D request_threaded_irq(irq, NULL, handle_threaded_wake_irq,
+> -                                  IRQF_ONESHOT | IRQF_NO_AUTOEN,
+> -                                  wirq->name, wirq);
+> +                                  irq_flags, wirq->name, wirq);
 
-> > > +static const struct mfd_cell s2mpg11_devs[] =3D {
-> > > +	MFD_CELL_NAME("s2mpg11-meter"),
-> > > +	MFD_CELL_BASIC("s2mpg11-regulator", NULL, NULL, 0, S2MPG11_BUCKBOOS=
-T),
+It looks like IRQF_ONESHOT will always be there in the flags, so maybe do
 
-> > This is highly irregular - in that, we've never done this before.
++                                  IRQF_ONESHOT | irq_flags, wirq->name, wi=
+rq);
 
-> > We're going to need to have Mark look at this.
+here?
 
-> I did see this in at least one other driver, ah yes at least
-> drivers/mfd/88pm860x-core.c is doing something similar, maybe others, too
-> (I stopped there).
+>         if (err)
+>                 goto err_free_name;
+>
+> @@ -234,7 +234,7 @@ static int __dev_pm_set_dedicated_wake_irq(struct dev=
+ice *dev, int irq, unsigned
+>   */
+>  int dev_pm_set_dedicated_wake_irq(struct device *dev, int irq)
+>  {
+> -       return __dev_pm_set_dedicated_wake_irq(dev, irq, 0);
+> +       return __dev_pm_set_dedicated_wake_irq(dev, irq, 0, IRQF_ONESHOT =
+| IRQF_NO_AUTOEN);
+>  }
+>  EXPORT_SYMBOL_GPL(dev_pm_set_dedicated_wake_irq);
+>
+> @@ -255,10 +255,43 @@ EXPORT_SYMBOL_GPL(dev_pm_set_dedicated_wake_irq);
+>   */
+>  int dev_pm_set_dedicated_wake_irq_reverse(struct device *dev, int irq)
+>  {
+> -       return __dev_pm_set_dedicated_wake_irq(dev, irq, WAKE_IRQ_DEDICAT=
+ED_REVERSE);
+> +       return __dev_pm_set_dedicated_wake_irq(dev, irq, WAKE_IRQ_DEDICAT=
+ED_REVERSE,
+> +                                              IRQF_ONESHOT | IRQF_NO_AUT=
+OEN);
+>  }
+>  EXPORT_SYMBOL_GPL(dev_pm_set_dedicated_wake_irq_reverse);
+>
+> +/**
+> + * dev_pm_set_dedicated_wake_irq_flags - Request a dedicated wake-up int=
+errupt
+> + *                                       with custom flags
+> + * @dev: Device entry
+> + * @irq: Device wake-up interrupt
+> + * @flags: IRQ flags (e.g., IRQF_SHARED)
+> + *
+> + * This API sets up a threaded interrupt handler for a device that has
+> + * a dedicated wake-up interrupt in addition to the device IO interrupt,
+> + * allowing the caller to specify custom IRQ flags such as IRQF_SHARED.
+> + *
+> + * Returns 0 on success or a negative error code on failure.
+> + */
+> +int dev_pm_set_dedicated_wake_irq_flags(struct device *dev, int irq, uns=
+igned long flags)
+> +{
+> +       struct wake_irq *wirq;
+> +       int ret;
+> +
+> +       flags |=3D IRQF_ONESHOT;
+> +       if (!(flags & IRQF_SHARED))
+> +               flags |=3D IRQF_NO_AUTOEN;
+> +
+> +       ret =3D  __dev_pm_set_dedicated_wake_irq(dev, irq, 0, flags);
+> +       if (!ret && (flags & IRQF_SHARED)) {
+> +               wirq =3D dev->power.wakeirq;
+> +               disable_irq_nosync(wirq->irq);
+> +       }
+> +
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(dev_pm_set_dedicated_wake_irq_flags);
 
-Other drivers doing something doesn't mean that they're following good
-practice.  We do also have drivers which have multiple identical IP
-blocks and are passing in resources with base address, interrupt and
-whatever for the IP blocks which is different to just passing a Linux
-internal ID number through.
+Instead of this, I'd introduce
 
---Qn5lIfBNzUCscegG
-Content-Type: application/pgp-signature; name="signature.asc"
+int dev_pm_set_dedicated_shared_wake_irq(struct device *dev, int irq,
+unsigned long additional_flags)
 
------BEGIN PGP SIGNATURE-----
+that would pass IRQF_SHARED combined with additional_flags to
+__dev_pm_set_dedicated_wake_irq() to avoid having two different helper
+functions that can be used for the same purpose.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmkXXP0ACgkQJNaLcl1U
-h9AEDQf/fuZp1M50wSKQchrgoKDudU423oxJuyVfXaRPVzOrj/euxCZ6NgE4HQbM
-88EwVcbDcWsGa/wH6JjZBKW5qr6T+16zJZYTNf1RlE1pTa2OY0hDI2wRxdlfhIJ7
-QmM4+GxY2iW/cTfL27Vc/ViELbaD9XDlNkHUQTTnB9EE52zHIHj87ZJsRolF8Uls
-HkAomvBJm6QxzNsqc3qqnwOxeybUwvOh+v/lKkChUYwCkX0YE3ubgJXdapAcqeEA
-3dNCryPywswLotFv8Az/W35UNEFyLAsoMrkpdgc7Ef0qIXNiLZfRXdrragi0m4xz
-jDcoIxDQkU5bP6Ql0JiUhFxi4XhBJg==
-=QkOk
------END PGP SIGNATURE-----
-
---Qn5lIfBNzUCscegG--
+I think that it would be sufficient for your use case.
 
