@@ -1,219 +1,480 @@
-Return-Path: <linux-gpio+bounces-28494-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28495-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 007EAC5D73A
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 14:57:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B144EC5DD6C
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 16:26:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E8D473490A2
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 13:50:59 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4AE3A360D4B
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 14:52:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F2AD31AF21;
-	Fri, 14 Nov 2025 13:50:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67B1A32824A;
+	Fri, 14 Nov 2025 14:51:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b="a9tv3l5h"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z3JxGwgA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010028.outbound.protection.outlook.com [52.101.69.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A89F31A7EA
-	for <linux-gpio@vger.kernel.org>; Fri, 14 Nov 2025 13:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.28
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763128251; cv=fail; b=U/+jkraC3Gpn8KfBZFEKhm0Gfh175SsyY2r7NXx1yImq7U8DvemZR4XeXhJ9Ac8lsUBMXKKKQFBxCU2gOfOj/2Psti/NVcSsr++TQy8ki0eFTuxJdRGlAjyGd5oUR//U60w5J0IBuQaftI8fBzf6Ms27CWYuO5ba6983TSjjCbg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763128251; c=relaxed/simple;
-	bh=FwsDU9n4uT3zuoZvfkF69jpCYfYOrR3C3Mn13q/c0/4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=t3wuxzAGbih5sdEWI1JZRSFGgInPMY8FNooGtUhprs14FiV43TIpn2pabovbBnFfLYBBbbWlozJomWZriLbUus25GY9Bz8dOmhc4qbLJFdfwOZj7KiLbQ8wcvtULyIqss4FYdZg+fA9YtLKEgIdv+njtKkXZ6TXzAcfGzeUCJIs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b=a9tv3l5h; arc=fail smtp.client-ip=52.101.69.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siemens.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=duYr+YFyLZzVlfGoZ1KkQDzjV0te9wVlwW5aJf1AdAPsqNcff6dgt2T2Xuk3Yi6ZICCGUX2FBmV2uxjero8HDUt4mv5EtMCZkXKUwi2PXzDuztgzN1XWlY8iLe5IwSJBGPteECIUq4d0qzHZKYUYu6T9/zmDPwz4LB9kNPpVZqt7lbHLnbnYMgOLXLgdaF0ZHa/DkiIIXWVHbP+KvkHXxBeaDA4WkudxmyIqMBi5UYaj/vb3MH30b3mQDJNEOCpOU+gp0OxEXFuytd35aCvBVJD7ilT15tkfc7AY6Lz1a5z5s6b539GqCO1n55ams2X006j/q4qLrTaRJA2RND+1+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FwsDU9n4uT3zuoZvfkF69jpCYfYOrR3C3Mn13q/c0/4=;
- b=pX1epWINmvA2zJGfIWyvAANuftMveNinKC1CbsfFACOO2IamFK6mI8nKvYZUPwGPON7mve2rBGqNp37jYsfUEVIwrUF5YwTkb/SbIDb5/VQalzUAgkgMqdcyiQLP1IwiDHT2aTbpeuhmPtRoKAfBvXFtJcMvGnjrwsch7FJ+S7EO0gNyQxwlUuNoAP/ICusLys6hwi4N3O6Z0Z3dI/tZZJSp73BdLZ3rxP8ozLsyAcey6TrfrNwEVXalo274SehFPNl0i7Hg6+jlcdhE5laNoLmBq90iI+TvUOnRcH01HZFIJKx3WW9u75R1vcybLNi0x4Qc1enrn5W70FFieTffVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
- dkim=pass header.d=siemens.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FwsDU9n4uT3zuoZvfkF69jpCYfYOrR3C3Mn13q/c0/4=;
- b=a9tv3l5hev/fUfbXHhs2d4AoUaYHnruCbjOMLwSDe00VT9Cq6958Hv9CPJM4NmkzK5i2ka+3aXGrbUwiSlJ35DW3LRuKQpUV7XxkUGZe3aalV2MKya5Trtxbj/P8RU5sBvcj8cwSf0J4hbAbT54HmL31jnb2umBO9yRNeSiCOEvQsRdSHrEhLyvw9M11zCDD7Hipa0+giAFq2YXtv8hcl1Vf8TNhNWTx8oWOGQWzfFRqdOTAIGOdFyAkPAzmjZQgwHHa0DjAjD+rRcqgAwfHvvSFuKa8zDMvaVbIDeXE5WTRv2fWNRICoiviQIPN2QymYXq3h4mPoPivSEpUIJ/57g==
-Received: from AS8PR10MB6867.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:5b6::22)
- by AS8PR10MB7875.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:629::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.17; Fri, 14 Nov
- 2025 13:50:46 +0000
-Received: from AS8PR10MB6867.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::9126:d21d:31c4:1b9f]) by AS8PR10MB6867.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::9126:d21d:31c4:1b9f%3]) with mapi id 15.20.9320.013; Fri, 14 Nov 2025
- 13:50:46 +0000
-From: "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>
-To: "brgl@bgdev.pl" <brgl@bgdev.pl>, "linus.walleij@linaro.org"
-	<linus.walleij@linaro.org>
-CC: "bartosz.golaszewski@linaro.org" <bartosz.golaszewski@linaro.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH libgpiod] dbus: manager: don't try to export the same chip
- twice
-Thread-Topic: [PATCH libgpiod] dbus: manager: don't try to export the same
- chip twice
-Thread-Index: AQHcVWrJiIxc8vuKkkSx3HGVJLRr8bTyMIIA
-Date: Fri, 14 Nov 2025 13:50:45 +0000
-Message-ID: <65bd94d8b78c6f9e387b4468ce600a5cfdfa7bfd.camel@siemens.com>
-References: <20251114132957.33750-1-brgl@bgdev.pl>
-In-Reply-To: <20251114132957.33750-1-brgl@bgdev.pl>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.54.3 (3.54.3-2.fc41) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siemens.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AS8PR10MB6867:EE_|AS8PR10MB7875:EE_
-x-ms-office365-filtering-correlation-id: 575fc137-0239-45ac-4f66-08de2384cfce
-x-ms-exchange-atpmessageproperties: SA
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700021;
-x-microsoft-antispam-message-info:
- =?utf-8?B?WVZVbEtWeDVPRjJzdFk3MWpaQ3hYTjl2aXBLZnZZeWFGYm9tRkRpVVI0ZjNP?=
- =?utf-8?B?ZzZiNGRMUUwrWi9zVk15RkNUdFlKaERJZDcvOE92cnRvSWhOdnR5QWtuUmhk?=
- =?utf-8?B?YnhhTG5hazBENzhXSWMramh2NUt2ZXJ3RjUxNzluZm1FUFFYVVBheWkzTHdm?=
- =?utf-8?B?LzBkK0Rvajk4YWJMVzVPSWk5dUZlUzJLdVdpZ0lLTzlmb1Zxci8vL0NGWER3?=
- =?utf-8?B?NlNzK25QVzZmOFFQQkFOM3BjSUxlQTdDUlRrWlNlL1ozU0wyZ0Z4cnRMWTJj?=
- =?utf-8?B?eXl6K1o4V1VkSXdRelM1TVV6YkxuSFR3bk5wNUp4aWo2YzAvOHhzQ2xYbDIz?=
- =?utf-8?B?RTV4V2JBbDJ2ZFh0NlRHMDZCdXU0ZEI1ZXd2K20waTF4cG5DRTVsaTV0SWpE?=
- =?utf-8?B?anZhSmJKOHJLa0dZODl3ZzBlVUg5S01NR2NhY2VrdXJidEdxSTVMa2pUdVZC?=
- =?utf-8?B?ZUk1UTdvTFYvNmpzdXFxMG9IdnlhWW9NMlhzOFNJa24zLzJ5b1h0L3AyMW83?=
- =?utf-8?B?MHZ0M21URHg1cHh5ek1xcSsyUHpRaDl2ZzFpRnVsQSt2dG9VNUswMlVFNmxZ?=
- =?utf-8?B?Z2l3QmtMT0ZXYUJ1Z3gweW5PaU0vQmlkTmdsd3J5aW1lYkVNdGhjcU5iLy9w?=
- =?utf-8?B?bUMyUGkvZmpDbGY4SUFDTjVQVTBzekNQblc3UmVoQ1B3b1JsT1M3dXlscGJu?=
- =?utf-8?B?SFJXK0hZNGlabFcwK2FPd1ZpY1JhcmF2a3pIYTZOdVUzQmJFMmhoMGlKNkx0?=
- =?utf-8?B?d3E4aEllQmZvUk9VcXZNSmV0L0IxODFseWg3ZDhZVnptOG5XYVNPc2VxWEI2?=
- =?utf-8?B?N2RwSDdhb2RkSHl6OUMyRkp3ckZQS25QVENMSzJFZVkzbkZwY25yLzBWYmdB?=
- =?utf-8?B?WCtXWU5EYmx3MEgrdDk0MWlneGpzWjZUck0rL3QwU0ltemxERlJiZmVnYTNJ?=
- =?utf-8?B?TlpjV09TUXpIeEJJUTYrenYzRnRXQkV2UHpBV01oUTJwa0lBOCtZYWw0QURJ?=
- =?utf-8?B?RkJMNjZSZm1mZCtpdVBOcDRBaUwyS1NuTldKTjdDS293c2UvUTBrZitLdGdE?=
- =?utf-8?B?ak9aYTJKQlBTSGxuL1dxWTNhb0N4L21JMFR4UnV0dlFORkZNSVAyZWh6bkVH?=
- =?utf-8?B?NHoyMmlvcG1ZaVVwVG02OXl0bVJnaXBUM2R3c0x5WVdPMWprTS9YRjNaVlFZ?=
- =?utf-8?B?bWRFeEZTMjArQWZGelArZG1VK2NGdjN4OU1rc0pXQkpQY0pTNGpzVG45Y3NS?=
- =?utf-8?B?WEpmY3p0dzB0RTJkcUNYSUNZN1ZUV2xGa09ITVRXUm1JSndKSnA0Qmh0Sjhv?=
- =?utf-8?B?Y1pZWEdiZm9tQVNMb0o3dTZMMGY1Tnl6QllJc09wKzZvTkNiUURabkJNejNv?=
- =?utf-8?B?OHdoejQ4R2t2R2N4N3g0QW9rdFBsdTY5YThYL1VvY29IcDQyZllyckJsVFRu?=
- =?utf-8?B?bU9pU1liNnVqcWF3c25KLzI3eGFxRFQzOHpBVzJZUEw3K0dzVTBaazZvL2tx?=
- =?utf-8?B?UnY5R1VISm1MenpUTkFyZlB4dElldmk0T2ZQN0Z5UzdYakhyRUhiZUMxd3dK?=
- =?utf-8?B?YzdyN1pwbWlDV2dWVXhicnl1SDhKRkozbVpkamdYK21WZTFmSGtPbEc3VUg3?=
- =?utf-8?B?V3M0andKUTNudWdsREFBWTVpMzAvUVRRMGE4dnpPKzQ1SG5McU5MaEpNRkVz?=
- =?utf-8?B?eWNpaUtQOWtENHBWUXFnNVo3T3NYREU4clhGNSt5Y3Y4U0xRcnNVaFh6TGF2?=
- =?utf-8?B?U2dOcURnOU15S0tKK2ovQ1JYNWxtQXAzMW5VTGVnbk9YaDBZVDFrdDhSSVpH?=
- =?utf-8?B?dEdJNHhSWGlUaTk1c0QwYktuanlmZ25MaWlHeTJlOER4VWZHS0tycVJIQkZp?=
- =?utf-8?B?RkNwZXp3elBZa0xzb29SYUpmclNtMkNKVDlGTmxtaHd2ZHB6N1VTcFF6dXBG?=
- =?utf-8?B?NmprWmE1d2JISGNDRFJjRXh2YTRrcmkzempGRVlVbEFDUHdMblA2aGlFY1pK?=
- =?utf-8?B?QXRJa3laNGdRPT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR10MB6867.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?VFJXUGJHV0F0S24wNWpqbTJaTjk0UjZlak5sN29GR0d5R3FoWVJSUHhxWE03?=
- =?utf-8?B?azZwczc0NVo0dzJpSTVkQmFJUHVrSXFibVJJMGwvMjNwMXZoQmFEcjk5RU54?=
- =?utf-8?B?WTFUZjR3Ty9wcXdISkx0ZFVtWkF5NCtGR25kT0JYSXByMU5saGRZVjBiQzdE?=
- =?utf-8?B?QmlSWUgyNjluQUdRV0YyU244L0hodVRRNnNZZkYvaVpaV3Npb0xQRFFjV1JQ?=
- =?utf-8?B?RVdrSXQ5SDkvNldxdCtRSk9HZUdiRk9idUgvWk91YmNJaUw3N1J4dHQ0Zk1L?=
- =?utf-8?B?U051UUZGL0NJSEdTK0l5N2hPVklPbklFVXhWWGM4QVFOTFRDWUVDVHZ3U0Zy?=
- =?utf-8?B?ek9KR3g5WC9aZXBiK054Y3VRd2JaZzBmMjVPNDAycFpQdGdUR2FKZHRIUjJk?=
- =?utf-8?B?Y1ZrcVpIZlNDQkxlNDFsNlNuMnhpZUxET09oeHdZSHR4MkoxWUJJN0tadm5V?=
- =?utf-8?B?NGw2NGRWdkZ1TU9Kc09TVFRzVlphcXVqWDN6YndZdVRINlNMWkFVQmJoZjJR?=
- =?utf-8?B?dlZ3R3Q3ajVOUkYvd0pVTjU4UjBhNXpuWTJpZEtJWlh2QkN0L2Ftb2NGVEgv?=
- =?utf-8?B?dDNLaXJXUThwNlhCd2lGNkFBMVJTcVIvNElWS3VsOWptN0F2cERHaFloS0Za?=
- =?utf-8?B?a0Jza0Ftd0FCa3p3YnNGTWlSeTRsUXNDOEFJNjREQ29kUGVoeFA4Z3U1UFRJ?=
- =?utf-8?B?WWJsckQ0dFVTdzNsYWd6K3Rjc1NhUEYxV1o4SmNpOWRxTktrOFdmU2VzY2lY?=
- =?utf-8?B?S2Zva3pFZndEZzlIVTZZRDlEcTFjRDIwcGtwM0U4QjlHdFgvNlBPaGpUc1Zx?=
- =?utf-8?B?cFhFdDFCcERPQ3FNdi9tUzBjaWxVenNyU01WVjBhSXNUWkVNNk1ZNXdEbGRR?=
- =?utf-8?B?S0NSZG9XUFJWb29aalpoSmxoVlZtdDFINEFrL2wyM1lVTHRrWlBlYTFLZlYx?=
- =?utf-8?B?MzVGK1J4SUZyN2FaMkxxSUlOS1hSTWFiV203SUMzUFAwaDZ1djYvZkxMbS9i?=
- =?utf-8?B?OG1VOGZhdUlCU1BZNGN1YnFLWmU2Z2hpWFk0UzR6TTd6Qm1pOTduYVFLbi9n?=
- =?utf-8?B?WHlrYVJzSmRVd0xwYmpyLzRweHV4WXNUd0RISzJPZzYxQmNOdTdoUFQ5ZlhZ?=
- =?utf-8?B?d2I0YUZWTU10NGJ4T08yYVV6QkVZMit1UnJodE1BWDFWbjM1eFh5Q0NNemFp?=
- =?utf-8?B?YkdYWHVLTnAzZUZZS0plUkwxZWlsYXoySDBPVkttQk1hR1VsQnJOQUNVb2cx?=
- =?utf-8?B?dDE3VHJxMTFFRlZJcGtZZTJ4RklmUnJUWnRkbUZtS1o5WDNqWmpOSzY0UndP?=
- =?utf-8?B?TGptVTdqQVN6MnNDUnFKK0FoY3JLVjRsaFNML3ozZGtYUVoxazZjTENNMS9U?=
- =?utf-8?B?eks1amdCNFVTakJqWm5CVmlKeGhZOStlMXdjQ2dDa3dVN3JZWHVUNW0rdUdB?=
- =?utf-8?B?cHlhQm13R1FkZmtMSG00eW5YeWx3SEFvZXE0NmhEVjl2SFplYmJIR21LK1ZT?=
- =?utf-8?B?WUs1SXlpZHdydnFwa0FCSitiSlRyMm5DNFNxZmRZcERVanNpc0ZjZzB0YVll?=
- =?utf-8?B?Z1d6NzZhZk93d1JTOEgzWXplblFpYWc1QjR3M3ltN3UzYmh0ZlY0VEJaREsz?=
- =?utf-8?B?MmIzQ253SXNQdGZWVEdXc0VOUlhrd1NtYmkxbWp1cENhbWNEOXB2R3NjN3BI?=
- =?utf-8?B?RE1jTTdidkMzNjAxVlZHM3NnL0RHU1UyVVhieURUKzFHeEdEVG1jaXl3OU8y?=
- =?utf-8?B?M2ZRUWpFWDIrNTNGMExxU1JtOHQ3VjB3WmJYOEU4R0xDV09FVDlPR2pydVNh?=
- =?utf-8?B?VTNxbEk0QVBHRDJmdUhUTWhhZVM1NWNWVDVzY3FGWkJKRG41a0NLL1lPc3FD?=
- =?utf-8?B?MUd3MGVZMXFqMmRhcXNPYUpmZ1JjbWhSRHd0cExkZGJka1U3bU93QkVPejdt?=
- =?utf-8?B?UlpqMFgvVStiY3V4a2RNNTRNdWdUUTFSaUpGNG1xU0M5SmdLQUJta3htKzRX?=
- =?utf-8?B?MUhXcEZNVzBQRXYzRFp3dDkvL3AwaWEzWStmbEc1RDE4SkdYaWFUc3BYK2ZY?=
- =?utf-8?B?c3pObjlVQkxqYnliQkIzSXVsZnkxdXN1bUx6Z0pDbS96WENEUGR3Tk5KRXYx?=
- =?utf-8?B?dm9nbjhvYTJJaW9qcVdsWEp4M0F5VVJTOEV3SzRwQWpzL1YxZ3VkdmxkdUVU?=
- =?utf-8?Q?E9XeVlMnzq/64wmLTjIAYTM=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <54C82CD536DCA542AB0A1AFED697790E@EURPRD10.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E489C324B34;
+	Fri, 14 Nov 2025 14:51:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763131910; cv=none; b=I/NfiXjBN17mOrniJDLmlNSbZ3hNkGM4PCWcdnY5XPX2sdnJWB/q6u/2Ll43PQ3e4uepsO+5o+ioJAByvAOpiIOLxcGKNApv3KPbQFlMjQ5zx/eDo5Nt/OyAxzkNHrbse1/WhJoqBWmRVzilTc5yfPt3qwOgYp4JVKS6MFRc9a4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763131910; c=relaxed/simple;
+	bh=PdSBFAYiL16sMEfWIHkyn/Hli8Xpav00d8Xh4C5X+hc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=oJMpqQIv2oAKM66MjIgxzgpT/Y+/Q9XI7WtucSPwHi2dAsur/gxbajmilKnipwcERlu9AdprT6wI5/244q5TwCW5gCgRc5kdh1LlHKuZStCoKykgquf64sVSF5SXsen801dksRkHwILnDfX1SzCObhunxnutTovyOBCP8wUW+5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z3JxGwgA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8A657C113D0;
+	Fri, 14 Nov 2025 14:51:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763131909;
+	bh=PdSBFAYiL16sMEfWIHkyn/Hli8Xpav00d8Xh4C5X+hc=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=Z3JxGwgA6aFU3Nl9FDjqX3R8vMY4CIiTMoqH63GhOvivc7ZgdIAmEGYLYRulLKk+Y
+	 x+fTg7TKS5NrbCdcwSOfRii1UwJg4X8yKVp23MkZen21eutoqnR5Uj7voFsGORNxNl
+	 zWEg5QBIaGo9PKyJIhTLd3aKCTz/nKbAEeHzt0+St7TG8Aa68FyMMukxAcFdYrEpkf
+	 opAmNzVlNk1IockyBu5ngTdy+YNlK3NW4YDGIOdrFPqReX7xWhUp1niqDSy/VFzeTd
+	 Z61tQSr4GVtgEY+0M7e46RWSz/nkuppqGuOXupqCYvHHSvJpMsZarmJxuRddFGmPfo
+	 d47iQwiXHOUGA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DA8CE7B16;
+	Fri, 14 Nov 2025 14:51:49 +0000 (UTC)
+From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
+Subject: [PATCH v8 00/21] media: i2c: add Maxim GMSL2/3 serializer and
+ deserializer drivers
+Date: Fri, 14 Nov 2025 16:51:40 +0200
+Message-Id: <20251114-gmsl2-3_serdes-v8-0-47499d907990@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR10MB6867.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 575fc137-0239-45ac-4f66-08de2384cfce
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Nov 2025 13:50:45.3074
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WV56o6wTveSIgu3pWMrqOEilHaJfTec9YuIUnvDHD2079SPC16IQHUMJ9WBT4Uzdm1JzbPI7KAh37JrPCaUQvqTimlfKkCS/UeZz7AUFsJA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR10MB7875
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPxBF2kC/x3MTQqEMAxA4atI1hZqili9ioiMGjXgH43IiPTuk
+ 3H5Ld57QCgwCVTJA4EuFt43hU8T6OfPNpHhQQ1oMc8yW5hplQWNa7UbSIwbsfM+R1v2DjQ6Ao3
+ 8fYd1o55Zzj3c/3+M8QdEDDvobwAAAA==
+X-Change-ID: 20251107-gmsl2-3_serdes-3f2b885209c3
+To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Julien Massot <julien.massot@collabora.com>, Rob Herring <robh@kernel.org>, 
+ =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+ Cosmin Tanislav <demonsingur@gmail.com>, 
+ =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1763131906; l=17161;
+ i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
+ bh=PdSBFAYiL16sMEfWIHkyn/Hli8Xpav00d8Xh4C5X+hc=;
+ b=lhdbdLRMd6BGxb4+sTbrJgCilJrfADnWifEpspmnB7zC/MlGjBXpgp4zNnyPupzVS2T9w/Bih
+ RWYjoalAw5KCsBFYlsIadzxk5m0CJY9HFdegOP1a8jUd+u2HFcKDOyj
+X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
+ pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
+X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
+ with auth_id=140
+X-Original-From: Dumitru Ceclan <dumitru.ceclan@analog.com>
+Reply-To: dumitru.ceclan@analog.com
 
-SGkgQmFydG9zeiwgdGhhbmtzIGZvciB0aGUgcGF0Y2ghDQoNCk9uIEZyaSwgMjAyNS0xMS0xNCBh
-dCAxNDoyOSArMDEwMCwgQmFydG9zeiBHb2xhc3pld3NraSB3cm90ZToNCj4gRnJvbTogQmFydG9z
-eiBHb2xhc3pld3NraSA8YmFydG9zei5nb2xhc3pld3NraUBsaW5hcm8ub3JnPg0KPiANCj4gSXQn
-cyBwb3NzaWJsZSB0byBnZXQgYSBzZWNvbmQgYmluZCBldmVudCBmcm9tIHVkZXZkIChmb3IgaW5z
-dGFuY2U6DQo+IG1hbnVhbGx5IHRyaWdnZXJlZCB3aXRoIGB1ZGV2YWRtIHRyaWdnZXIgLWMgYmlu
-ZGApIG9uIHRoZSBzYW1lIEdQSU8NCj4gY2hpcCBzbyBpdCBhbHJlYWR5IGV4aXN0aW5nIGluIHRo
-ZSBoYXNobWFwIG1heSBhY3R1YWxseSBoYXBwZW4gdW5saWtlDQo+IHdoYXQgdGhlIGNvbW1lbnQg
-aW4gZGFlbW9uLmMgc3RhdGVzLiBXZSBtdXN0IG5vdCB0cnkgdG8gZXhwb3J0IHRoZSBzYW1lDQo+
-IGNoaXAgdHdpY2UgYXMgaXQgd2lsbCBjcmFzaCB0aGUgZ3Bpby1tYW5hZ2VyIG9uIHRoZSBzdWJz
-ZXF1ZW50DQo+IGFzc2VydGlvbi4NCj4gDQo+IEZpeGVzOiBhNWFiNzZkYTFlMGEgKCJkYnVzOiBh
-ZGQgdGhlIEQtQnVzIGRhZW1vbiwgY29tbWFuZC1saW5lIGNsaWVudCBhbmQgdGVzdHMiKQ0KPiBS
-ZXBvcnRlZC1ieTogU3ZlcmRsaW4sIEFsZXhhbmRlciA8YWxleGFuZGVyLnN2ZXJkbGluQHNpZW1l
-bnMuY29tPg0KDQpUZXN0ZWQtYnk6IEFsZXhhbmRlciBTdmVyZGxpbiA8YWxleGFuZGVyLnN2ZXJk
-bGluQHNpZW1lbnMuY29tPg0KDQo+IENsb3NlczogaHR0cHM6Ly9naXRodWIuY29tL2JyZ2wvbGli
-Z3Bpb2QvaXNzdWVzLzE2MQ0KPiBTaWduZWQtb2ZmLWJ5OiBCYXJ0b3N6IEdvbGFzemV3c2tpIDxi
-YXJ0b3N6LmdvbGFzemV3c2tpQGxpbmFyby5vcmc+DQo+IC0tLQ0KPiDCoGRidXMvbWFuYWdlci9k
-YWVtb24uYyB8IDcgKysrKysrLQ0KPiDCoDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKyks
-IDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kYnVzL21hbmFnZXIvZGFlbW9uLmMg
-Yi9kYnVzL21hbmFnZXIvZGFlbW9uLmMNCj4gaW5kZXggOGUxZGU4YS4uNDYyN2U4YyAxMDA2NDQN
-Cj4gLS0tIGEvZGJ1cy9tYW5hZ2VyL2RhZW1vbi5jDQo+ICsrKyBiL2RidXMvbWFuYWdlci9kYWVt
-b24uYw0KPiBAQCAtNjg4LDYgKzY4OCwxMiBAQCBzdGF0aWMgdm9pZCBncGlvZGJ1c19kYWVtb25f
-ZXhwb3J0X2NoaXAoR3Bpb2RidXNEYWVtb24gKnNlbGYsIEdVZGV2RGV2aWNlICpkZXYpDQo+IMKg
-CWdib29sZWFuIHJldDsNCj4gwqANCj4gwqAJZGV2bmFtZSA9IGdfdWRldl9kZXZpY2VfZ2V0X25h
-bWUoZGV2KTsNCj4gKw0KPiArCWlmIChnX2hhc2hfdGFibGVfY29udGFpbnMoc2VsZi0+Y2hpcHMs
-IGRldm5hbWUpKSB7DQo+ICsJCWdfZGVidWcoImNoaXAgJXMgaXMgYWxyZWFkeSBleHBvcnRlZCIs
-IGRldm5hbWUpOw0KPiArCQlyZXR1cm47DQo+ICsJfQ0KPiArDQo+IMKgCWRldnBhdGggPSBnX3Vk
-ZXZfZGV2aWNlX2dldF9kZXZpY2VfZmlsZShkZXYpOw0KPiDCoAlvYmpfcHJlZml4ID0gZ19kYnVz
-X29iamVjdF9tYW5hZ2VyX2dldF9vYmplY3RfcGF0aCgNCj4gwqAJCQkJR19EQlVTX09CSkVDVF9N
-QU5BR0VSKHNlbGYtPmNoaXBfbWFuYWdlcikpOw0KPiBAQCAtNzQwLDcgKzc0Niw2IEBAIHN0YXRp
-YyB2b2lkIGdwaW9kYnVzX2RhZW1vbl9leHBvcnRfY2hpcChHcGlvZGJ1c0RhZW1vbiAqc2VsZiwg
-R1VkZXZEZXZpY2UgKmRldikNCj4gwqANCj4gwqAJcmV0ID0gZ19oYXNoX3RhYmxlX2luc2VydChz
-ZWxmLT5jaGlwcywgZ19zdHJkdXAoZGV2bmFtZSksDQo+IMKgCQkJCcKgIGdfc3RlYWxfcG9pbnRl
-cigmY2hpcF9kYXRhKSk7DQo+IC0JLyogSXQncyBhIHByb2dyYW1taW5nIGJ1ZyBpZiB0aGUgY2hp
-cCBpcyBhbHJlYWR5IGluIHRoZSBoYXNobWFwLiAqLw0KPiDCoAlnX2Fzc2VydChyZXQpOw0KPiDC
-oH0NCj4gwqANCg0KLS0gDQpBbGV4YW5kZXIgU3ZlcmRsaW4NClNpZW1lbnMgQUcNCnd3dy5zaWVt
-ZW5zLmNvbQ0K
+This series adds new drivers for multiple Maxim GMSL2 and GMSL3 devices,
+replacing the few GMSL2 drivers already in upstream, and introducing a
+common framework that can be used to implement such GMSL chips, which
+avoids code duplication while also adding support for previously
+unsupported features.
+
+While the normally acceptable and polite way would be to extend the
+current mainline drivers, the choice was made here to add a totally new
+set of drivers. The current drivers support only a small subset of the
+possible features, and only a few devices, so the end result after
+extending them would in any case be essentially fully rewritten, new
+drivers.
+
+This series depends on support for internal pads, for which a patch has
+been added.
+
+The previous version is at:
+https://lore.kernel.org/all/20250718152500.2656391-1-demonsingur@gmail.com/
+
+Since the previous series, Cosmin has left Analog Devices.
+Because included changes from previous version are trivial, his sign-off
+and tags were retained.
+
+The following deserializers are supported:
+* MAX96712 (already exists in staging)
+* MAX96714 (already exists)
+* MAX96714F (already exists)
+* MAX96714R (GMSL2)
+* MAX96716 (GMSL2)
+* MAX96724 (already exists as part of existing MAX96712 driver)
+* MAX96724F (GMSL2)
+* MAX96724R (GMSL2)
+* MAX9296A (GMSL2)
+* MAX96792A (GMSL3)
+
+The following serializers are supported:
+* MAX96717 (already exists)
+* MAX9295A (GMSL2)
+* MAX96793 (GMSL3)
+
+The following list enumerates new features that are supported by the
+common framework and their respective chip-specific drivers:
+* Full Streams API support. Most deserializers have support for more
+than one link, and more than one PHY. Streams support allows
+configuration of routing between these links and PHYs.
+
+* .get_frame_desc() support. Both the serializers and deserializers
+implement this to query and provide frame descriptor data. This is
+used in features explained in-depth below.
+
+* .get_mbus_config() support. The deserializers implement this to allow
+upstream devices to query the link frequency of its pads.
+
+* Address translation with I2C ATR for the serializers.
+
+* I2C ATR translation - some deserializers cannot do muxing since I2C
+communication channel masking is not available per-link, and the only
+other way to select links is to turn them off, causing link resets.
+For such cases, I2C ATR is used to change the address of the
+serializers at probe time.
+
+* Automatic GMSL link version negotiation between GMSL3, GMSL2 6Gbps, GMSL2
+3Gbps.
+
+* Automatic stream id selection for deserializers which need serializers to
+stream on unique stream ids.
+
+* Automatic VC remapping on the deserializers. VCs are picked so that
+if they were unique on the sink pad, they will end up as unique on
+the source pad they are routed to too, prioritizing using the same
+VC ID as the sink pad, to facilitate the possibility of using tunnel
+mode.
+
+* Automatic pixel mode / tunnel mode selection. Tunnel mode is used
+when VC IDs do not need to be changed and all hardware supports
+tunnel mode, otherwise, pixel mode is used. The serializers are
+automatically switched between the two by using a private API.
+
+* Automatic double mode selection. In pixel mode, double mode can be
+used to pack two pixels into a single data unit, optimizing bandwidth
+usage. The serializers are automatically set up to support the double
+modes determined by the deserializers using a private API.
+
+* Automatic data padding. In pixel mode, if the data being transferred
+uses two different BPPs, data needs to be padded. The serializers
+automatically set this up depending on the configured double mode
+settings and incoming data types.
+
+* Logging. Both the deserializers and serializers implement the V4L2
+.log_status() ops to allow debugging of the internal state and
+important chip status registers.
+
+* PHY modes. Deserializer chips commonly have more than a single PHY.
+The firmware ports are parsed to determine the modes in which to
+configure the PHYs (2x4, 4x2, 1x4+2x2, 2x2+1x4, and variations using
+fewer lanes).
+
+* Serializer pinctrl. Serializers implement pinctrl to allow setting
+configs which would otherwise be inaccessible through GPIO: TX/RX via
+GMSL link, pull-up & pull-down (with strength), open-drain &
+push-pull, slew rate, RCLK pin selection.
+
+* TPG with selectable formats, resolutions and framerates for both
+serializers and deserializers.
+
+The drivers have been tested on the following hardware combinations, but
+further testing is welcome to ensure no / minimal breakage:
+* Raspberry Pi 5 + MAX9296A + 2xMAX96717 + 2xIMX219
+* Raspberry Pi 5 + MAX96714 + 1xMAX96717 + 1xIMX219
+* Raspberry Pi 5 + MAX96716A + 2xMAX96717 + 2xIMX219
+* Raspberry Pi 5 + MAX96712 + 4xMAX96717 + 4xIMX219
+* Raspberry Pi 5 + MAX96724 + 4xMAX96717 + 4xIMX219
+* Raspberry Pi 5 + MAX96792A + 1xMAX96793 + 1xMAX96717 + 2xIMX219
+* Raspberry Pi 5 + MAX96792A + 2xMAX96717 + 2xIMX219
+* Renesas V4H + MAX96712 + 2xMAX96717 + 2xIMX219
+
+Analog Devices is taking responsibility for the maintenance of these
+drivers and common framework, and plans to add support for new
+broad-market chips on top of them.
+
+Special thanks go to Tomi Valkeinen <
+tomi.valkeinen+renesas@ideasonboard.com>
+for testing the drivers, helping debug and coming up with ideas /
+implementations for various features.
+
+The following v4l2-compliance test still fails:
+                fail: v4l2-test-subdevs.cpp(371): fmt.code == 0 || fmt.code == ~0U
+                fail: v4l2-test-subdevs.cpp(418): checkMBusFrameFmt(node, fmt.format)
+        test Active VIDIOC_SUBDEV_G/S_FMT: FAIL
+
+As the serializers and deserializers are format agnostic and the values
+set are not used to configure anything in the chips, this test does not
+make much sense in this context. If needed, a check for the specific ~0U
+value can be added.
+
+V8:
+* max96717: use the renamed PIN_CONFIG_OUTPUT to _LEVEL
+* max96717: use the renamed set_rv ops from struct gpio_chip
+* dt-bindings: set minItems lane-polarities to 2
+* dt-bindings: "add myself as maintainer" commits were removed
+* max_des & max_ser: use a default format for set_routing
+* max_des & max_ser: return ENNOTTY in *_frame_interval for non-TPG pads
+
+V7:
+* dt-bindings: max9296a: use full max96717 compatible
+* max9296a: make max96714_rlms_reg_sequence static
+* explicitly include linux/bitfield.h
+* explicitly depend on I2C and PINCTRL
+* sort media_entity_operations
+* add has_pad_interdep to media_entity_operations
+
+V6:
+* max9296a: put rlms sequence in max9296a_chip_info
+* max_des: reflow stream id a comment
+* max_ser: remove exported symbols not used in other modules
+* max_ser: init mode to a supported value
+* add default routing
+* MAX_SERDES_GMSL_3 -> MAX_SERDES_GMSL_3_12GBPS
+* guard reg_read/write with CONFIG_VIDEO_ADV_DEBUG
+* put exported symbols in MAXIM_SERDES namespace
+
+V5:
+* dt-bindings: max96717: restrict RCLKOUT to pins 2 & 4
+* dt-bindings: max96717: remove confusing rclksel pinconf property
+* dt-bindings: max96717: remove maxim,gmsl-tx/rx pinconf property
+* dt-bindings: max96717: remove gmsl prefix from maxim,gmsl-tx-id/rx-id
+* dt-bindings: max96717: remove minimum: 0
+* dt-bindings: max96717: better document slew-rate
+* dt-bindings: max96717: better document maxim,jitter-compensation
+* dt-bindings: max96717: better document maxim,tx-id/rx-id
+
+* max_serdes: add default TPG values
+* max_serdes: remove MAX_MIPI_FMT macro
+* max_serdes: EXPORT_SYMBOL -> EXPORT_SYMBOL_GPL
+* max_serdes: remove EXPORT_SYMBOL_GPL from symbols not used in other
+modules
+* max_serdes: rename symbols/macros/types to have max_serdes prefix
+* max_serdes: slim down TPG functions
+
+* max_des: fix may be used uninitialized errors
+* max_des: fix misplaced TPG validation
+* max_des: fix setting pipe PHY in tunnel mode for chips that support
+both set_pipe_phy() and set_pipe_tunnel_phy()
+* max_des: move doubled_bpp/sink_bpps variables to usage place
+* max_des: do not dynamically control PHY enable, letting lanes be in
+LP-11 when not streaming
+* max_des: refactor get/set_pipe_stream_id() logic
+* max_des: remove explicit ret = 0
+
+* max_ser: make VC remaps not pipe-specific, allocate dynamically
+
+* max9296a: add missing 1080p30 TPG entry
+* max9296a: move BIT() left shift into macro
+* max9296a: move BIT() ternary into macro
+* max9296a: reuse max_des_ops for chip-specific ops\
+* max9296a: document and compress RLMS register writes
+
+* max96717: restrict RCLKOUT to pins 2 & 4 because of hardware
+capabilities
+* max96717: add support for XTAL/1, XTAL/2, XTAL/4 clocks
+* max96717: set RX_EN/TX_EN automatically
+* max96717: reorder custom pinconf flags
+* max96717: drop OF dependency
+
+* drop of_match_ptr
+* re-do some indentation
+* implement TPG pattern control
+* remove pr_info() usage
+* inline lane polarity val = 0
+* inline returns
+* rewrite some Kconfig docs
+* split up patches for easier review
+
+V4:
+* max_des: fix infinite version loop
+* max_des: fix pipe link id when there are more pipes than links
+* max_des: implement setting pipe link
+* max_des: do not pass routing to phy update
+* max_des: move GMSL version strings to max_serdes
+* max_des: split finding existing VC remap from adding a new one
+* max_des: add tracking for in-use pipes
+* max_des: skip unused pipes when finding / setting pixel/tunnel mode
+* max_des: simplify remap code
+* max_des: split set_pipe_phy() into set_pipe_tunnel_phy()
+
+* max_ser: clean up i2c_xlates printing
+* max_ser: fix changing serializer address
+* max_ser: move non-continuous mode check into max96717 driver
+
+* max96724: use regmap_set_bits for STREAM_SEL_ALL
+* max96724: match surrounding indent for MAX96724_PHY1_ALT_CLOCK
+* max96724: fix setting invalid PHY to 1 when PHY 0 is in 4-lane mode
+* max96724: remove support for setting pipe phy from max96712
+* max96724: fix setting double mode on pipes 4-7
+* max96724: drop powerdown gpios
+
+* max96717: use gpio_chip's set_rv
+
+* max9296a: switch versions to unsigned int
+* max9296a: remove parantheses from MAX9296A_MIPI_PHY18/20
+* max9296a: fix printing of PHY packet counts
+* max9296a: fix phy_hw_ids size
+
+* remove usage of cammel case in defines
+* move field_get/prep to max_serdes.h
+* rework stream id setup
+* rework tunnel/pixel mode finding
+* rework bpps retrieval
+* pass whole subdev state around
+* add helper for retrieving a route's hw components / frame desc
+* update pipe enable based on active routes
+* add support for tunnel-only chips and VC remaps in tunnel mode
+* simplify max_get_streams_masks()
+* add support for TPG
+
+V3:
+* dt-bindings: drop reflow text patches
+
+* dt-bindings: max96717: move pinctrl configuration into main file
+* dt-bindings: max96717: allow a single level of pins configuration
+* dt-bindings: max96717: use regex for matching pins nodes
+* dt-bindings: max96717: drop extra allOf in pinctrl configuration
+* dt-bindings: max96717: fix i2c-atr channel name regex
+* dt-bindings: max96717: limit pinctrl functions to gpio / rclkout
+* dt-bindings: max96717: limit pins for gpio / rclkout
+* dt-bindings: max96717: add description for bias-pull-up/down
+* dt-bindings: max96717: require pins and function properties
+* dt-bindings: max96717: turn single compatible strings into an enum
+
+* dt-bindings: max9296a: include indices in port descriptions
+* dt-bindings: max9296a: remove property-less schema from input ports
+* dt-bindings: max9296a: use ATR for MAX96716A too, removing MUX entirely
+
+* dt-bindings: max96712: include indices in port descriptions
+* dt-bindings: max96712: deprecate enable-gpios in favor of powerdown-gpios
+* dt-bindings: max96712: switch from MUX to ATR
+
+* dt-bindings: max96714: add support for MAX96714R
+
+* max_des: fix POC NULL check
+* max_des: remove index var in POC enable
+* max_des: fix writing empty remaps
+* max_des: skip mode setting in tunnel mode
+* max_des: remove a duplicate source->sd NULL check
+* max_des: set pipe tunnel mode even for disabled links
+
+* max_ser: apply TX ID changes irrespective of serializer ID
+
+* max9296a: fix typo in BACKTOP22
+* max9296a: make register macros more consistent
+* max9296a: switch MAX96716 from MUX to ATR
+* max9296a: deduplicate max9296a_phy_id() logic
+* max9296a: use proper PHY id in remaps
+* max9296a: fix DPLL reset clear
+* max9296a: limit MAX96714F to GMSL2 3Gbps
+* max9296a: add support for MAX96714R
+* max9296a: do not write GMSL3 link select registers in GMSL2 devices
+* max9296a: use field_prep when setting RX_RATE
+* max9296a: simplify setting SEL_STREAM for MAX96714
+* max9296a: max96716_set_pipe_phy -> max96716a_set_pipe_phy
+* max9296a: fix off-by-one in lane polarity when using
+polarity_on_physical_lanes
+
+* max96724: fix typo in BACKTOP22
+* max96724: switch from MUX to ATR
+* max96724: add support for powerdown GPIO
+* max96724: remove support for tunneling from MAX96712
+* max96724: only set tunnel-related bits when in tunnel mode
+* max96724: add support for MAX96724F/R
+* max96724: oneshot reset links after link selection
+
+* remove GMSL2 version defaults, set all supported versions explicitly
+* reorder GMSL versions to start from 0
+* add support for GMSL2 3Gbps
+* support GMSL version finding for devices using MUX / GATE
+* add support for deserializers which don't have individual control
+of each link's GMSL version
+* add support for deserializers that need unique stream ids across all
+serializers
+* select_link_version -> set_link_version
+* select_resets_link -> use_atr
+
+V2:
+* add missing compatible for MAX96717F
+* fix embarrassing dt-bindings mistakes
+* move MAX9296A/MAX96716/MAX96792A to a separate file as they have two
+links / PHYs, and adding those conditionally seems impossible
+
+---
+Cosmin Tanislav (20):
+      dt-bindings: media: i2c: max96717: add support for I2C ATR
+      dt-bindings: media: i2c: max96717: add support for pinctrl/pinconf
+      dt-bindings: media: i2c: max96717: add support for MAX9295A
+      dt-bindings: media: i2c: max96717: add support for MAX96793
+      dt-bindings: media: i2c: max96712: use pattern properties for ports
+      dt-bindings: media: i2c: max96712: add support for I2C ATR
+      dt-bindings: media: i2c: max96712: add support for POC supplies
+      dt-bindings: media: i2c: max96712: add support for MAX96724F/R
+      dt-bindings: media: i2c: max96714: add support for MAX96714R
+      dt-bindings: media: i2c: add MAX9296A, MAX96716A, MAX96792A
+      media: i2c: add Maxim GMSL2/3 serializer and deserializer framework
+      media: i2c: add Maxim GMSL2/3 serializer framework
+      media: i2c: add Maxim GMSL2/3 deserializer framework
+      media: i2c: maxim-serdes: add MAX96717 driver
+      media: i2c: maxim-serdes: add MAX96724 driver
+      media: i2c: maxim-serdes: add MAX9296A driver
+      arm64: defconfig: disable deprecated MAX96712 driver
+      staging: media: remove MAX96712 driver
+      media: i2c: remove MAX96717 driver
+      media: i2c: remove MAX96714 driver
+
+Sakari Ailus (1):
+      media: mc: Add INTERNAL pad flag
+
+ .../bindings/media/i2c/maxim,max9296a.yaml         |  242 ++
+ .../bindings/media/i2c/maxim,max96712.yaml         |   65 +-
+ .../bindings/media/i2c/maxim,max96714.yaml         |    5 +-
+ .../bindings/media/i2c/maxim,max96717.yaml         |  154 +-
+ .../userspace-api/media/mediactl/media-types.rst   |    9 +
+ MAINTAINERS                                        |   10 +-
+ arch/arm64/configs/defconfig                       |    1 -
+ drivers/media/i2c/Kconfig                          |   32 +-
+ drivers/media/i2c/Makefile                         |    3 +-
+ drivers/media/i2c/maxim-serdes/Kconfig             |   60 +
+ drivers/media/i2c/maxim-serdes/Makefile            |    6 +
+ drivers/media/i2c/maxim-serdes/max9296a.c          | 1345 +++++++++
+ drivers/media/i2c/maxim-serdes/max96717.c          | 1689 +++++++++++
+ drivers/media/i2c/maxim-serdes/max96724.c          | 1184 ++++++++
+ drivers/media/i2c/maxim-serdes/max_des.c           | 3188 ++++++++++++++++++++
+ drivers/media/i2c/maxim-serdes/max_des.h           |  153 +
+ drivers/media/i2c/maxim-serdes/max_ser.c           | 2138 +++++++++++++
+ drivers/media/i2c/maxim-serdes/max_ser.h           |  147 +
+ drivers/media/i2c/maxim-serdes/max_serdes.c        |  413 +++
+ drivers/media/i2c/maxim-serdes/max_serdes.h        |  183 ++
+ drivers/media/mc/mc-entity.c                       |   15 +-
+ drivers/staging/media/Kconfig                      |    2 -
+ drivers/staging/media/Makefile                     |    1 -
+ drivers/staging/media/max96712/Kconfig             |   14 -
+ drivers/staging/media/max96712/Makefile            |    2 -
+ drivers/staging/media/max96712/max96712.c          |  487 ---
+ include/uapi/linux/media.h                         |    1 +
+ 27 files changed, 10984 insertions(+), 565 deletions(-)
+---
+base-commit: 4a639fe10b3cb244ccd03dabbbb8e5e7160a5c42
+change-id: 20251107-gmsl2-3_serdes-3f2b885209c3
+
+Best regards,
+-- 
+Dumitru Ceclan <dumitru.ceclan@analog.com>
+
+
 
