@@ -1,146 +1,136 @@
-Return-Path: <linux-gpio+bounces-28492-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28493-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C04BC5D511
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 14:22:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DD6EC5D5AB
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 14:30:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5D9573B08C2
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 13:22:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 069A23B7CD7
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Nov 2025 13:30:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 102F922B5A5;
-	Fri, 14 Nov 2025 13:22:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28A5E316182;
+	Fri, 14 Nov 2025 13:30:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JLxJBecV"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="YxNBG5/a"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1CC1314A67
-	for <linux-gpio@vger.kernel.org>; Fri, 14 Nov 2025 13:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E2E215F42
+	for <linux-gpio@vger.kernel.org>; Fri, 14 Nov 2025 13:30:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763126525; cv=none; b=Rgp/xGqgGj4u5TtOXE7w99i7pLyv1Z3ll7NgfKpJy+UgVN52H5tTu63LHSUbpsPP8z5VH5Xt1Dm8qjehrXJKYuLws83A/ctVvvKXbBXiyFS54ldHZHtIabQ2zyoLdZVdPv+hZz+25Fq0ntO2BEO5J7rJN3l3Q7tteDcZItUtmos=
+	t=1763127003; cv=none; b=aZ1sfLmnJtiCsBYYkdhIlKCULx8L9wFG7+wbNcEqQPKDHXcc6roea9uNRQjZBh7ECAvZRHQGMPvdhIfucARR7CmHTzitsbgnBJMaRHAIwe7f/eY3kPdsI3aD/3oA0fYm8C+ecKT8koZ0uGmcUASsSg2a2GoNST6Gc2eDvFZrz8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763126525; c=relaxed/simple;
-	bh=PIhVxornY+xeHydrfUvm8sKztzt4GgYtkzvZxgJ8W40=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mwW+FBZb0F5iEJOfq+uMlmS3+8gTaxylt3c+k3KI4t9Qux+q1vf+UbEDLWvMD7ESVc3n7ed+asp36yEz1K1xRoaBvbcehAWX0Bd4wtIkrk28Id0n42gjR0O72Izs/5coyijfD/7wG+YabLOqf4qPiGdwuxRzaGd8v8JPYjo1Tqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JLxJBecV; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-37b95f87d4eso17035121fa.1
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Nov 2025 05:22:03 -0800 (PST)
+	s=arc-20240116; t=1763127003; c=relaxed/simple;
+	bh=Y1IvkL6CGMMu4H6T5XudMk3Hk56gDwx/nP6+8ka4w/w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=epwwxBzE4DZ8c+1p33x24KE7YXa4wpS5YYNnV3OQ3hH3zU7xLCeChKVni+LF7VAuct5UlMSHmOjqeFfgiKzAJCsbaOzMfBFTXcufMO/KkB0IHm0IoXwNnd5XLlIDAODrecIppwK+4zK1ab0QDs7tTmpe+qXeYt1t0nzSB7torgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=YxNBG5/a; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-42b3669ca3dso1165918f8f.0
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Nov 2025 05:30:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763126522; x=1763731322; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TrtX8x6xiGPlcF3REo6XTaulSDVNKE90sjqlhnGudPU=;
-        b=JLxJBecVTt7ci4MySHtaJCX2RuSWm+47+kgQXd3+q5iCTC6xRsKVeS4VMO2C6iKoUi
-         7wC7myl8516ZyD8NfP4qhC6InalfcMWDXVAnbtLDFNwJ6ARwpQfEZIrsLX12cgIT1uql
-         lrk6TGIK/1QEbP5uaOpQ8lOu/DJZfSzIb3aiGlYvsoBl6Z+b0tkjB3xpz6kbj1SreGpl
-         da9piGtvNIXkCcYmoDu2sNWR9609OQO1ta0KvjdQNYb4U1AiIS2D9tvNsn+Wv5udjE9n
-         tKW1+Vcx+V8JDmWgyb2Y2iuVQPq4hnOZ7a48Uw3v7Cx5fOHYIAEu4dBdezJxsOSPM0Es
-         tZGA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763127000; x=1763731800; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KVZW+zsgpFYHvEazeWBX40ma7At/VrFq8uK2QoqE/ms=;
+        b=YxNBG5/aeysnvZX/ltrCTtAhDiu6XhQAZiR3x1QbG8Ex92wOIKkDzbjzvNG+chT1lX
+         3vxMnEzDplTW1zrzH5geTecbrpXZD910VAchmPcuNebMGYg4d3JOFa/LsN21aEWuV5Jb
+         8VgMPw05VCdFXb39ebK3+mRYoTjOPPnYE6Waui38xKjv3VGCdAvzOMYug75kTVt/s9gm
+         sL3LWz3sd9fHdHPMgK7pK7YdFnvEloGwkpGjjSXSjIQZe9nSatjksQnssDwBU/CCK/T0
+         i/hEQYgqWRlh/TiTcVCCswpDkLi15XF02LeKU3anCJjstNOY0ux8M/mwq56/36V9qWPh
+         tAIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763126522; x=1763731322;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TrtX8x6xiGPlcF3REo6XTaulSDVNKE90sjqlhnGudPU=;
-        b=aAzPKG0k+/VlimXVMbnrG3sZgdcR8oboGcSFt1+7LsMjW0gHv2wxD/468isEvHrMPV
-         8ZrbRy4ttMnp9fCt7LYuR/ToTWVveeRwuMTLzEPwGPEyjbetQKcZbddQxqv9NybjfHOV
-         CLeyT1CdXMK2utk9xE5Osef1yV6El1NpTOE13FdSUvj56pBuG/QsPWtTadyaJJJOKXjV
-         u/lPIOS9ZxKOJsDsy/wZiLRMFGRmkVHvd4c333vQ65aFTvE119NnhBnhnnyEqNhZjNTJ
-         XOrxCPxKAanmxk9iWDKI/txDwEEKAhjVTpyOR75Z+QtG5QC2htWJA4iEYWcwXxAxY4yq
-         KBYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXnnLj/7rIVDrD/+tMhjCgRySZlhOaCU1Kwca6cvD/WfpcGOQRVK5cGLK0zvpKCRdI4kW+eBHEjNfh9@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8S7qs4+JESfydk/Pt2O+o9rdg9JL59oTvljQ8ZRYB4L/F5B6T
-	ZaVyJ5gNPCWzb6nSb5vwJ2jrnhHGJyBhr6wEPkwFLuhSwhv9q0YtC9S4
-X-Gm-Gg: ASbGncvkMm1UKSW3JjgCod+jM1+70AWMZdXPZYLR52ONNwvBLU1in+Qg4PaKP6aVLW3
-	KmsSeApkmJptlrJYA1XL1w/IFtvfOmYnD5jEgMF/Es8ZZTuGR9r1dk5w3nUvDaD+bJ1cJFr9qtC
-	htApAzumSl+z0jlTWHOu/PY84JXSakH7xB/GjOIo7S4PVnoQ23Rf9xw/89RtB6Qc9Km2rBLTqbi
-	8CNWfuBerOdqD2urducIZd892VdPK3iDvU8YP8TdwWylF9E9mvNjAGu9P6aoymWlBX3d1lUFv/X
-	CvJ85b8A1o933+gTq+7VqeDsoVRCEhGp9IJPrHMek0ap1Xf5/ECXGdhhvUDv4taJJ0nCuk8Godg
-	w0RB1rhR2YdAOZ1a7qanMo6/MDPhRiu91e4ZQueerdMf0+S4Msd58ciUU8iYRtE4Ve7/Ps2l3Cp
-	hJe3LKuFmIbhDhgjuVMoMMJHPdApD440Yy+N/9bt0UBq7R5Hvwd3ozNzCxww==
-X-Google-Smtp-Source: AGHT+IFJvPwRc3iSb2WexT7/Nxb76MqMei5zXQUBPxVbaOVwZ0mTUJAzGoCKPRFSwFTVf5iDU0WZyw==
-X-Received: by 2002:a05:651c:418f:b0:378:e3f9:2d26 with SMTP id 38308e7fff4ca-37babd80ac1mr5793261fa.39.1763126521767;
-        Fri, 14 Nov 2025 05:22:01 -0800 (PST)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-37b9ce080a6sm10220141fa.4.2025.11.14.05.22.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Nov 2025 05:22:01 -0800 (PST)
-Message-ID: <2334e57c-a384-4a1e-9708-19d14b8f082c@gmail.com>
-Date: Fri, 14 Nov 2025 15:22:00 +0200
+        d=1e100.net; s=20230601; t=1763127000; x=1763731800;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KVZW+zsgpFYHvEazeWBX40ma7At/VrFq8uK2QoqE/ms=;
+        b=jKaVh2kwqXC/s/e21NuUwgoiQRh12e9kyOkyfn1wxE1XmkQOHR97KEGdDOrW5LVM7a
+         fWX5dpQRMjU78ffnklKxYM3m8lCZpY2JPGJkOjnD/cDsLVPFS3nAzYsS6Vlv5UAgDxml
+         S3+WtUAIrb6f2X3yU8z4VSElHPQ+4zCObeqAfCvot3nZyAIcgm2X7tsCl3xfLzPjl89X
+         R65dT+qCiXhGwCi52WhL+IPIUOW7/t2l3pgRDNIzRITvVllqWGFFWfXmDbgXNw1rQuTi
+         y9HEdgHqEkjApwUvbJq+v/f86hN0nmiK7/wZ12FZhH3eL/WdLov1tNHZ5w5EOGvzdTgc
+         dNvw==
+X-Gm-Message-State: AOJu0YzmeemOaOjR+eL+zz9Ax7kINmake96RoSjHPUiAfB82U3kqz5wL
+	w7gZ4e/4U6teLS68mqbbD45wIjKm4ZhKrp8ZemijhKxvf0MeObBq8jtYtLPk0GeoKNo=
+X-Gm-Gg: ASbGnctZFqrafEgtVVCLaWVaQPYkygv+4pHi84AdKAi1lLi+zJSbhZjInhUbu9ZsdjO
+	yB8QHT7+k5mf/qKG/KasPCE685kDVzvp0u/1MVNdx0TNZj3M7gyj5Ob0MeyLMHeEgCd4v9iFucE
+	2VEjPewE0gZjpoLS3Fh/OTTyXJ+PxQBuJPf6Sa4PFPUMN2hAO+F0fJGaQ9f9hLIfZ4jBTnc8X6e
+	R5lfZs2arIZ8mQUChiexho3E4Oie/GtN3n/AquMlVoE4YCXONs14SfLujL54lbnYcfp24pEG9sE
+	4uQGtMNBubVb5gdMRp4WkhGtN6uoY10pabCcN+PSl4kpYHxglekx8B/jkxg4nDnwoCGHubePtrK
+	hNKoUxn2p+lUrYLiwlvvUo0cUiNhQhGHx9ofm986kEH8yFTiDZMFhxOM7YXbv2LE+F2uSB9d/I4
+	/9AausXUabLjwD+JA=
+X-Google-Smtp-Source: AGHT+IHef9QY6Uc/HlhwSo5SzpG9TyTL1TGekaGGBeQUPHgm0HE4tinJLztkxK8GieVoyB9zyHjs/A==
+X-Received: by 2002:a05:6000:2210:b0:42b:394a:9de with SMTP id ffacd0b85a97d-42b595adf93mr2770098f8f.49.1763126999833;
+        Fri, 14 Nov 2025 05:29:59 -0800 (PST)
+Received: from brgl-uxlite ([2a01:cb1d:dc:7e00:326d:9344:48bd:e2fd])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53e845bdsm9592980f8f.12.2025.11.14.05.29.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Nov 2025 05:29:59 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH libgpiod] dbus: manager: don't try to export the same chip twice
+Date: Fri, 14 Nov 2025 14:29:57 +0100
+Message-ID: <20251114132957.33750-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 14/16] power: supply: bd71828: Support wider register
- addresses
-To: Andreas Kemnade <andreas@kemnade.info>,
- Matti Vaittinen <matti.vaittinen@linux.dev>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-rtc@vger.kernel.org
-References: <cover.1763022807.git.mazziesaccount@gmail.com>
- <6248200397d3582fe926938736da66d6bbf9535d.1763022807.git.mazziesaccount@gmail.com>
- <20251114121509.629d171b@kemnade.info>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20251114121509.629d171b@kemnade.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Thanks Andreas,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-On 14/11/2025 13:15, Andreas Kemnade wrote:
-> On Thu, 13 Nov 2025 10:55:39 +0200
-> Matti Vaittinen <matti.vaittinen@linux.dev> wrote:
-> 
->> As a side note, we can reduce the "wasted space / member / instance" from
->> 3 bytes to 1 byte, by using u16 instead of the unsigned int if needed. I
->> rather use unsigned int to be initially prepared for devices with 32 bit
->> registers if there is no need to count bytes.
-> 
-> Well, this is totally internal to the module, so no ABI/API changes, so
-> there is no advantage of using 32bit now I think. We can switch any time.
+It's possible to get a second bind event from udevd (for instance:
+manually triggered with `udevadm trigger -c bind`) on the same GPIO
+chip so it already existing in the hashmap may actually happen unlike
+what the comment in daemon.c states. We must not try to export the same
+chip twice as it will crash the gpio-manager on the subsequent
+assertion.
 
-The only advantage is to avoid the churn if 32bit ICs are to be added.
-
-> But we have 32bit stuff in the regmap cache anyways, so that is not above
-> the general level of wasting space.
-
-Exactly. And, I am not sure if sparing ~hundred bytes is worth the 
-hassle - even if it is hassle internal to the driver. But yeah, we can 
-squeeze a few bytes if it is seen beneficial. That's why I mentioned it 
-here :)
-
-Yours,
-	-- Matti
-
+Fixes: a5ab76da1e0a ("dbus: add the D-Bus daemon, command-line client and tests")
+Reported-by: Sverdlin, Alexander <alexander.sverdlin@siemens.com>
+Closes: https://github.com/brgl/libgpiod/issues/161
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
-Matti Vaittinen
-Linux kernel developer at ROHM Semiconductors
-Oulu Finland
+ dbus/manager/daemon.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-~~ When things go utterly wrong vim users can always type :help! ~~
+diff --git a/dbus/manager/daemon.c b/dbus/manager/daemon.c
+index 8e1de8a..4627e8c 100644
+--- a/dbus/manager/daemon.c
++++ b/dbus/manager/daemon.c
+@@ -688,6 +688,12 @@ static void gpiodbus_daemon_export_chip(GpiodbusDaemon *self, GUdevDevice *dev)
+ 	gboolean ret;
+ 
+ 	devname = g_udev_device_get_name(dev);
++
++	if (g_hash_table_contains(self->chips, devname)) {
++		g_debug("chip %s is already exported", devname);
++		return;
++	}
++
+ 	devpath = g_udev_device_get_device_file(dev);
+ 	obj_prefix = g_dbus_object_manager_get_object_path(
+ 				G_DBUS_OBJECT_MANAGER(self->chip_manager));
+@@ -740,7 +746,6 @@ static void gpiodbus_daemon_export_chip(GpiodbusDaemon *self, GUdevDevice *dev)
+ 
+ 	ret = g_hash_table_insert(self->chips, g_strdup(devname),
+ 				  g_steal_pointer(&chip_data));
+-	/* It's a programming bug if the chip is already in the hashmap. */
+ 	g_assert(ret);
+ }
+ 
+-- 
+2.51.0
+
 
