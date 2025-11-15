@@ -1,100 +1,89 @@
-Return-Path: <linux-gpio+bounces-28532-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28533-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D95DC602F2
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Nov 2025 11:00:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D247CC603FC
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Nov 2025 12:31:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DFE133BA389
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Nov 2025 10:00:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 888EC3BBF06
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Nov 2025 11:31:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55313285404;
-	Sat, 15 Nov 2025 10:00:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1314A29AB07;
+	Sat, 15 Nov 2025 11:31:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uge+fHj4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301282857EF;
-	Sat, 15 Nov 2025 10:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69ED1E9B22;
+	Sat, 15 Nov 2025 11:31:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763200819; cv=none; b=uQlvDUBkZDP3Ing2AofDxD6w+ohmOdH5yxmnHwkuoO9HBhexlX1f2Q6SSGbOD9weZwghcDoqNQyTWcetJxKTTsiEqLq3x1bdL+ygz0DkR2t85HFxNgT5ozu7fJxLGBvWBtsTKJd3AHozvGWPsvq3kE/AiDZxw2V2D24fQu8qCuA=
+	t=1763206312; cv=none; b=EP+MGAta9uu0v08l4s8iPK4ruE00NW32IwU8FQgiRhlJqkM/7VHMeof0ovLJ+AmSiLZlcGkDUuXhRptck2MyYD7auK2EdkGAlNILjvKruQHn+fMBwo434UTjtBq2shN/G6IpUZ+9+hA+/H/pl+GfhwK7XovdKrYMphQ46V8ppws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763200819; c=relaxed/simple;
-	bh=doZ2ibS99XlvaHKVXdjr9mWz+zpahIGC/JRyUdXFkMs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QgAL54fQRS6Td0/EvnhGlen1Y+soLqRBsZKyTseBedQZ6fCq4v8HLdFkTq9o8pKyB7uBvDexcHT1py2ZiytgBMK51YdJNfQRCKTFx+I6UCGW2v6I1omHg6s4FaViH0O4R8XsP754zkzcoODrI9rF64mvjAvHFLjcPomsp0WQzpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=101.71.155.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from localhost.localdomain (unknown [116.25.95.231])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 29af02016;
-	Sat, 15 Nov 2025 18:00:06 +0800 (GMT+08:00)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	angelogioacchino.delregno@collabora.com,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	Sean Wang <sean.wang@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Chukun Pan <amadeus@jmu.edu.cn>
-Subject: [PATCH 1/1] pinctrl: airoha: fix pinctrl function mismatch issue
-Date: Sat, 15 Nov 2025 18:00:00 +0800
-Message-Id: <20251115100000.177791-1-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1763206312; c=relaxed/simple;
+	bh=FPZ0kQZIwnebdbDeToX/YK8Bd3hA21dxcccPr3O5ccY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iFrXbFUKO7NfDGFxnZC2YFrpuQCQ7RTh9FG8Kl8EGW6bpwSPe4uJrhge0G7cR2YN0FIZ4h+yNUWAhJavuc13lFnn9ansQavZYwld5VHrZ7mHLi3wX0R/twVCAq0BvwnvJN+RRmNiTWOZ6iERBi0ED1d5N2VlO1UevdBYox5KSQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uge+fHj4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9200DC116B1;
+	Sat, 15 Nov 2025 11:31:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763206312;
+	bh=FPZ0kQZIwnebdbDeToX/YK8Bd3hA21dxcccPr3O5ccY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Uge+fHj4kRQhX5pc86U5iaOgiFqgdDil5CdrG2swUUk+N3TjlB62JemPjth32HKot
+	 l4WuxNKEZUq2a653BbiSjQ8UkzHm0pGUKXkKL5h8S8gyCwCdpGa+jZqUixOjYUZAcr
+	 YfnLBTOfBHgL7Lcl/B5L7qlvxYPwVoz4n5kEhNhXEi5xTpIFmAcKc341m2o91z9JqR
+	 pVj2PUJHMr8+SjXqBIHUHS2mnD+3M7fdYgJj3/kw/jLSCJcD5jNTeBb24ifdmFADB3
+	 hwB9tozgjFyOKqZ5x1eBXFBqRWVRv+rDiSn82Ep5Z8EA7Ns6+WUMF4OWIj8EHWn6L0
+	 NbFLU8nvdoNGQ==
+Date: Sat, 15 Nov 2025 12:31:49 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, 
+	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-rtc@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [PATCH v4 05/16] dt-bindings: mfd: ROHM BD72720
+Message-ID: <20251115-wolverine-of-interesting-authority-faecde@kuoka>
+References: <cover.1763022807.git.mazziesaccount@gmail.com>
+ <ec2cb44d9d00f5edaed2fbe17fd9ddbed914ff37.1763022807.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9a86f52ec703a2kunm89bce897230e75
-X-HM-MType: 10
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDS0tLVh5LQ0lKQx1IHkNCHlYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlKSk1VSU5VQk5VSUhKWVdZFhoPEhUdFFlBWU9LSFVKS0hKTkxOVUpLS1VKQk
-	tLWQY+
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ec2cb44d9d00f5edaed2fbe17fd9ddbed914ff37.1763022807.git.mazziesaccount@gmail.com>
 
-The blamed commit made the following changes:
+On Thu, Nov 13, 2025 at 10:52:35AM +0200, Matti Vaittinen wrote:
+> From: Matti Vaittinen <mazziesaccount@gmail.com>
+> 
+> The ROHM BD72720 is a power management IC integrating regulators, GPIOs,
+> charger, LEDs, RTC and a clock gate.
+> 
+> Add dt-binding doc for ROHM BD72720.
+> 
+> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> 
+> ---
+> Revision history:
 
--#define PINCTRL_FUNC_DESC(id)...
--		.desc = PINCTRL_PINFUNCTION(#id, ...
-+#define PINCTRL_FUNC_DESC(id, table)...
-+		.desc = PINCTRL_PINFUNCTION(#id, ...
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
--	PINCTRL_FUNC_DESC(pon)...
-+	PINCTRL_FUNC_DESC("pon", pon)...
-
-It's clear that the id of funcs doesn't match the definition.
-Remove redundant #string from the definition to fix this issue:
-pinctrl-airoha ...: invalid function mdio in map table
-
-Fixes: 4043b0c45f85 ("pinctrl: airoha: generalize pins/group/function/confs handling")
-Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
----
- drivers/pinctrl/mediatek/pinctrl-airoha.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/mediatek/pinctrl-airoha.c b/drivers/pinctrl/mediatek/pinctrl-airoha.c
-index bfcedc7f920b..18c952e44229 100644
---- a/drivers/pinctrl/mediatek/pinctrl-airoha.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-airoha.c
-@@ -35,7 +35,7 @@
- 
- #define PINCTRL_FUNC_DESC(id, table)					\
- 	{								\
--		.desc = PINCTRL_PINFUNCTION(#id, table##_groups,	\
-+		.desc = PINCTRL_PINFUNCTION(id, table##_groups,	\
- 					    ARRAY_SIZE(table##_groups)),\
- 		.groups = table##_func_group,				\
- 		.group_size = ARRAY_SIZE(table##_func_group),		\
--- 
-2.25.1
+Best regards,
+Krzysztof
 
 
