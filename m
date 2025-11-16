@@ -1,62 +1,63 @@
-Return-Path: <linux-gpio+bounces-28541-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28542-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EBF8C61595
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Nov 2025 14:24:47 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF474C615B7
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Nov 2025 14:32:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0F8513B3844
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Nov 2025 13:24:46 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9E5704E75BB
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Nov 2025 13:32:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D17C2F3601;
-	Sun, 16 Nov 2025 13:24:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F42043090DE;
+	Sun, 16 Nov 2025 13:32:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="kH6crrdA"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="wjduVJCQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out162-62-57-137.mail.qq.com (out162-62-57-137.mail.qq.com [162.62.57.137])
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF5F2EB862;
-	Sun, 16 Nov 2025 13:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2241524EAB1;
+	Sun, 16 Nov 2025 13:32:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763299478; cv=none; b=uN5Bapt2nvTxFOaQM8xy/QzUkKb1ZhIDovoKusgC1g+zmvKyLxjtmU5YZeKNU+MqERdUNStG2N6ENa0IBtHKvr8vXblzSe3oUwmdQgTmuQOdBs6zBanOHcHaQy42fr4pFmdc09u/TMW56qRzVM28Ha2VRrhtkUkPoPg/xFBPzr4=
+	t=1763299937; cv=none; b=XBbQBb7xFP/iLb1XYl0dX1c8Gccin+W+YIpylU4/2VY/QfdooBx2OjKEedTwf3dZAYOgeVsLjpLNjDC7ObN7FhMbejhtNMOZl/KhdrF1sTiEf9Px5oDPuac6Wtn/YKn82SbPyzt+fNhHtUPcuIKiD0ITgkVj3zSNf8qd4iAa4Hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763299478; c=relaxed/simple;
-	bh=36E+FDeFaxSXV1YrhGz0pbWAW+2qczskNwnifuRXPDI=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=Z12fZVi8IzpzyQAx+PWcYAIfqTmyNwtbTEMcnpmfsn/oAxs73a3wxVPCBYU1TfaVpZKzN2G/pH0IBjkRRMFFYWlSc0gZ1ISA7B1YVrd8dnaRzh4SD3rctHw65rxtYmuX16U3Ket7+yzlZS/X1Amd2nzmvBKlmzgoQK8pqtB70ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=kH6crrdA; arc=none smtp.client-ip=162.62.57.137
+	s=arc-20240116; t=1763299937; c=relaxed/simple;
+	bh=sTEWVnfpNu3UCbi30XFlqlmRnDudiqFka9q9LDRvQQ8=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=Byovz//45Za7YriQ3CZA6n1oyJ5Px+opEvMW8wKzQHnEUG5DXvVSMHZuduL2GYetKKSggQrTeaoZe/j8CnRH9jozMdWu+aMtSnlfN6151vwsy7AjlVSIpqRfKmoY6WasTE1do4VR9AawgiHqgbBBdfBomxvd9X6PXlaBy8ize9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=wjduVJCQ; arc=none smtp.client-ip=162.62.57.252
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1763299438; bh=UxOBOpMF+Dn9B29ncF5mAKxJPyHdKSBJ7eDCorMUbLE=;
+	t=1763299918; bh=hQhb2cS2iJSBCXHJyGVOlr51ZR4u4Fr/GSz/7kl0PaI=;
 	h=From:To:Cc:Subject:Date;
-	b=kH6crrdA+dLQ783juRdjh6GgoZjY1g+59Si8CN9KAndpQ878wUvst6Clh1hQTdVVt
-	 XzUr4nH5lsgClIVeutTtFhGLhAm5JDESP3kceUOWslgLmP3/SyvRYfjZz1nPrEBRhx
-	 6QGHJofw8SUHhTYDL5vjut6/MtmQ+Z7k5bFGkPv0=
+	b=wjduVJCQwejYnfgwgIDZuaYzvBk3gW6RR5fYW98rNbfUAvxkb+G5YwfljFNrSWMdZ
+	 HRykxL8u2DL7vRZ6BMGgwGDDWZz02nfXNZnvUJ4cjEXnI5gVWrC/doKW3fsrxI9r0q
+	 J9NdTAmrgKiBA408p5RnhlKE44h4o37BdbiIggXY=
 Received: from ubuntu.localdomain ([223.166.202.212])
-	by newxmesmtplogicsvrsza56-0.qq.com (NewEsmtp) with SMTP
-	id 5F7AF214; Sun, 16 Nov 2025 21:23:55 +0800
-X-QQ-mid: xmsmtpt1763299435t2ou3wey3
-Message-ID: <tencent_2251A040C443E7336446AFE0EEE081C75106@qq.com>
-X-QQ-XMAILINFO: MeukCuWaRbQl0RWGwSlHpjvfut/zJshklfrS2PRHd7nt/YmsLHvG0DCvP707iN
-	 llommUNz5AjeCOMTYapmxujIlafLkx91/fyGk3ODzawfnblxz1ldigVviaBresguLRbNgEmad5b9
-	 8EdFOXBCWh0qO8p5BwaYgnpIj8/trgzpa2wS9qPRAHvQ9fauoQ5HzdGn4JfI3+JwGU0nmFRhltw4
-	 Q0aZ/Nu5u/Y9h3vQ213Z/d0nZfMAvSR7PDMdmSagliQjMs9be34QNlNDCl9YjdabAD4vV4jlIfmD
-	 INCB8LDO70fWL1bU4AAPzUhDTosbeJgPSaZP4ws9IqfntQGjYMedU912tvL0O9E8wiTqX9uDhtXR
-	 xvoa5+HMELQIVGw56kBBel1v3NluIIAU3/j6EMPDyp2knYwj33kpcesthkAWtHM1KqUAuSn6Cn0Y
-	 cRUUmYxI79uz/5+fiGcYDr0FK/C37UuOrCTD87OAFNXDLHax+I0QqFBV5oYALff6w46d/TRQXGZj
-	 OB5yEJPtsAMhi2jhJwZSOjrSasiopI+3EcRy8NdzV/ir0b3gPBBJ0rJFObjtrzESU5liJnlGV3rx
-	 mhLegwnVMbkZbr0+kfB5IWLbt9pefSszou0m3weoUcT5MsClsuvh/QU8zR7DZcz1qf+xgy7GColJ
-	 R3+95On9GxEBu0citvQYJ2uzQ6ooOiasOrMBn0ioQmux3CJnaQvDM+QRcjov4Rwyme4ffY7XgPGX
-	 kY3axc6r1k1nzyc5GX5ygc5ZVHSdFpx1uZadwusjEGgAHafn09ETj+f7rp+nUzxQWPyBd8katQ7H
-	 0DLpwHE6S8lEaOUZym2mMXZPoeoroSXWBZ+wikm15Cta2ga0wwSNuB3unzmYWVE6ehF1U6oy9vOI
-	 1QzH0sSKzfTcXnZ8+k68S//5DyMlvPJy6udRGStEVqaYEZiezYUJlHfHnrGh2NFyBKUAl7QEuFE9
-	 FO2sBgdr7/+tUBj9zPdwvYGFUYW4Rz1D2gATwRwKp5fAPsBVxuHahu2mTZI1k6YGDLGEmcte6pp7
-	 aCZpop8Q==
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+	by newxmesmtplogicsvrszc43-0.qq.com (NewEsmtp) with SMTP
+	id 7AD03EBE; Sun, 16 Nov 2025 21:30:45 +0800
+X-QQ-mid: xmsmtpt1763299845tbbnjy8g0
+Message-ID: <tencent_12024322A63B8D20AD7AC5764F0EDE8E6609@qq.com>
+X-QQ-XMAILINFO: OFNTuNi1bRgMiyP8eWbtKTs1fG+OB7EhdRJimGZv3ok2x0b8/nySFHTZEXV7Er
+	 cwbMlbmlUup04KvMsWQcWcuJ4cpaJdUDeQdlgdG7AUN6/CwW8Q2Ug7xKVQ2G2Cq0HDVpQlIy/1l2
+	 yhglqMtRiAK2elODwujRCGaG/2d2XzGTO+hhDy6JNmVaICAeG6wWTp1fe2ajN+K0MegE6IpWvRTp
+	 upo/JoRuwuGSTOr52ItE/7YSnh/vVssf4alxbjUKf8ckus3m6WwYFlC/jKlSM1H43Ab1TXyXylNv
+	 UPEuQ6SaAc5mKh3Osq/IShz56chG3uYAFvn2ppuKia+wdLNCFAJL1vLPey7oUyCYNHqbdLkJDC1A
+	 DP/IxqL36rE4wq5RMVBy5ziBKF9vjAG+1glJc5R6yA2jYR3fg+Kyi13HFVwB9pEJJBTLR0ERi9iP
+	 QnMfPQpV1aoVwuum5Fm7EP1imOABJwmAXbwexEkGKoZGaaojErUxphX1fQn9bCLeQY7wD9VSJVPW
+	 hUrpf67OeSNylcfDhvZ/v4lKFmmUJuNSShGHa6n1LBvcee96KdCxaopAgwSUvVKWem4ILA1kBEHP
+	 Hu9SlkYHgHKmWDQqI1S4Ri0QkUtn5hijJv78LFJoWX8kFfGAMGb4nltmxqpMUs24qDmfOLq+ZcGg
+	 H/qjtrKu63lpx1c7wg9p7BQ1X5K0CcHDyJ0olWjfAMcUrymJ0ZnLtwq36wv1gm7YogI3vRDnaMIT
+	 uitU9wGJxOuStXRjUvuX982/PQ9Na0NEycHQej43KOrZ2WXZhuQ1fqVByWlk1mWT0Pn8wufQcWgj
+	 15q4iJ+imbJTkEH0m1Zk3NjxH9Jl8F2XeeEe9bFv4LKq6cFKqhmgZobcXAblB4DIK+m6M/xE3WfH
+	 5bjL8V1bZqs1cKRbkw7P7OUUz2RR8+JWyOep5m4lfrD63RDanPAHs1nl8VcGxb0vrYM4Nkf/ykhY
+	 +TFtws1m7B8kwonoAjwfP+3Cf3wCoFE9qHbdeZhmIG1r2LHb3dvJVw7vBEQDBYzi+r4YghuD6Hfn
+	 MtVIcMDMkJRxGjHNvcqpyJBRvJXq64uvVBY0G+dk6BHzbu4Y9oVVVrMv/4vIzqFj6TFcchWAAyJy
+	 6XBq7S
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
 From: 2724853925@qq.com
 To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 	Henrik Rydberg <rydberg@bitmath.org>
@@ -66,8 +67,8 @@ Cc: linux-input@vger.kernel.org,
 	2724853925@qq.com,
 	weisicheng <7855009+weisicheng@user.noreply.gitee.com>
 Subject: [PATCH] input: touchscreen: Add ilitek touchscreen driver support
-Date: Sun, 16 Nov 2025 21:23:32 +0800
-X-OQ-MSGID: <20251116132332.400637-1-2724853925@qq.com>
+Date: Sun, 16 Nov 2025 21:30:42 +0800
+X-OQ-MSGID: <20251116133042.401606-1-2724853925@qq.com>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -93,8 +94,6 @@ The driver is compatible with standard input subsystem and supports:
 - Dynamic power saving mode
 
 Signed-off-by: weisicheng <2724853925@qq.com>
-
-Signed-off-by: weisicheng <7855009+weisicheng@user.noreply.gitee.com>
 ---
  drivers/input/touchscreen/Kconfig             |   13 +
  drivers/input/touchscreen/Makefile            |    1 +
