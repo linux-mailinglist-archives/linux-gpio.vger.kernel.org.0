@@ -1,63 +1,63 @@
-Return-Path: <linux-gpio+bounces-28542-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28543-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF474C615B7
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Nov 2025 14:32:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2FD85C615C6
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Nov 2025 14:34:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9E5704E75BB
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Nov 2025 13:32:25 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2E8004E7092
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Nov 2025 13:34:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F42043090DE;
-	Sun, 16 Nov 2025 13:32:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BD5C3093D7;
+	Sun, 16 Nov 2025 13:34:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="wjduVJCQ"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="ZSkJqF5t"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
+Received: from xmbghk7.mail.qq.com (xmbghk7.mail.qq.com [43.163.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2241524EAB1;
-	Sun, 16 Nov 2025 13:32:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095E62DCF69;
+	Sun, 16 Nov 2025 13:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.163.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763299937; cv=none; b=XBbQBb7xFP/iLb1XYl0dX1c8Gccin+W+YIpylU4/2VY/QfdooBx2OjKEedTwf3dZAYOgeVsLjpLNjDC7ObN7FhMbejhtNMOZl/KhdrF1sTiEf9Px5oDPuac6Wtn/YKn82SbPyzt+fNhHtUPcuIKiD0ITgkVj3zSNf8qd4iAa4Hk=
+	t=1763300047; cv=none; b=QfmeGnZYIX9uJUo3xaRr7EoeiHP7xAos0Mo3mxdA1xYEs6Ezb/VoDm98fcW89NO4asw0IujfS6Z+Yf7f+hMD+qggELPmUUuUw1C3OvF8Va+Ml+/xnm/Hd8WPAAUeU9EcUfS7HXQNLPF9u01JjBSZY4v8XpCZ7asrWkHQk9NPYy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763299937; c=relaxed/simple;
+	s=arc-20240116; t=1763300047; c=relaxed/simple;
 	bh=sTEWVnfpNu3UCbi30XFlqlmRnDudiqFka9q9LDRvQQ8=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=Byovz//45Za7YriQ3CZA6n1oyJ5Px+opEvMW8wKzQHnEUG5DXvVSMHZuduL2GYetKKSggQrTeaoZe/j8CnRH9jozMdWu+aMtSnlfN6151vwsy7AjlVSIpqRfKmoY6WasTE1do4VR9AawgiHqgbBBdfBomxvd9X6PXlaBy8ize9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=wjduVJCQ; arc=none smtp.client-ip=162.62.57.252
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=O2fk0yhaVc6fo5sc0om9dFUpojnm5kkJTeDUxh0a+F9A8YfQGo7D+Uco1eqzkcvhbkqnn279dzlePlt4HyaeKdoS6IEJJWIemz051QRBlpNxDbTg6P6SwZxd+UJinPqmqk/djJqzC3kJoC1V+GM/bJyR2Q5zsKv+Zr5FQZ9cwW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=ZSkJqF5t; arc=none smtp.client-ip=43.163.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1763299918; bh=hQhb2cS2iJSBCXHJyGVOlr51ZR4u4Fr/GSz/7kl0PaI=;
+	t=1763300025; bh=hQhb2cS2iJSBCXHJyGVOlr51ZR4u4Fr/GSz/7kl0PaI=;
 	h=From:To:Cc:Subject:Date;
-	b=wjduVJCQwejYnfgwgIDZuaYzvBk3gW6RR5fYW98rNbfUAvxkb+G5YwfljFNrSWMdZ
-	 HRykxL8u2DL7vRZ6BMGgwGDDWZz02nfXNZnvUJ4cjEXnI5gVWrC/doKW3fsrxI9r0q
-	 J9NdTAmrgKiBA408p5RnhlKE44h4o37BdbiIggXY=
+	b=ZSkJqF5tCbBmEPk/oaJSeoPkrspmGaxQ/wt3AxRZ7ik80CjEWPq4sxCtlAqPHlB/j
+	 EZBI3rETSYfbYs08H1dgf5G1WQhvOXflUS8B1AN51CKN3s3lWvT4HpX3xY0iXo63A+
+	 EaPwBtS2/eA1txc32X4szIKIbY3nzBjeKc6vUJeg=
 Received: from ubuntu.localdomain ([223.166.202.212])
-	by newxmesmtplogicsvrszc43-0.qq.com (NewEsmtp) with SMTP
-	id 7AD03EBE; Sun, 16 Nov 2025 21:30:45 +0800
-X-QQ-mid: xmsmtpt1763299845tbbnjy8g0
-Message-ID: <tencent_12024322A63B8D20AD7AC5764F0EDE8E6609@qq.com>
-X-QQ-XMAILINFO: OFNTuNi1bRgMiyP8eWbtKTs1fG+OB7EhdRJimGZv3ok2x0b8/nySFHTZEXV7Er
-	 cwbMlbmlUup04KvMsWQcWcuJ4cpaJdUDeQdlgdG7AUN6/CwW8Q2Ug7xKVQ2G2Cq0HDVpQlIy/1l2
-	 yhglqMtRiAK2elODwujRCGaG/2d2XzGTO+hhDy6JNmVaICAeG6wWTp1fe2ajN+K0MegE6IpWvRTp
-	 upo/JoRuwuGSTOr52ItE/7YSnh/vVssf4alxbjUKf8ckus3m6WwYFlC/jKlSM1H43Ab1TXyXylNv
-	 UPEuQ6SaAc5mKh3Osq/IShz56chG3uYAFvn2ppuKia+wdLNCFAJL1vLPey7oUyCYNHqbdLkJDC1A
-	 DP/IxqL36rE4wq5RMVBy5ziBKF9vjAG+1glJc5R6yA2jYR3fg+Kyi13HFVwB9pEJJBTLR0ERi9iP
-	 QnMfPQpV1aoVwuum5Fm7EP1imOABJwmAXbwexEkGKoZGaaojErUxphX1fQn9bCLeQY7wD9VSJVPW
-	 hUrpf67OeSNylcfDhvZ/v4lKFmmUJuNSShGHa6n1LBvcee96KdCxaopAgwSUvVKWem4ILA1kBEHP
-	 Hu9SlkYHgHKmWDQqI1S4Ri0QkUtn5hijJv78LFJoWX8kFfGAMGb4nltmxqpMUs24qDmfOLq+ZcGg
-	 H/qjtrKu63lpx1c7wg9p7BQ1X5K0CcHDyJ0olWjfAMcUrymJ0ZnLtwq36wv1gm7YogI3vRDnaMIT
-	 uitU9wGJxOuStXRjUvuX982/PQ9Na0NEycHQej43KOrZ2WXZhuQ1fqVByWlk1mWT0Pn8wufQcWgj
-	 15q4iJ+imbJTkEH0m1Zk3NjxH9Jl8F2XeeEe9bFv4LKq6cFKqhmgZobcXAblB4DIK+m6M/xE3WfH
-	 5bjL8V1bZqs1cKRbkw7P7OUUz2RR8+JWyOep5m4lfrD63RDanPAHs1nl8VcGxb0vrYM4Nkf/ykhY
-	 +TFtws1m7B8kwonoAjwfP+3Cf3wCoFE9qHbdeZhmIG1r2LHb3dvJVw7vBEQDBYzi+r4YghuD6Hfn
-	 MtVIcMDMkJRxGjHNvcqpyJBRvJXq64uvVBY0G+dk6BHzbu4Y9oVVVrMv/4vIzqFj6TFcchWAAyJy
-	 6XBq7S
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+	by newxmesmtplogicsvrszc50-0.qq.com (NewEsmtp) with SMTP
+	id 86B28432; Sun, 16 Nov 2025 21:33:43 +0800
+X-QQ-mid: xmsmtpt1763300023t0xxk4e6x
+Message-ID: <tencent_CFC0E6A834B02AE2A31306D2A7B76597E905@qq.com>
+X-QQ-XMAILINFO: OGDllvpfz+egSUy3PBHinFwJz8esV9ALGuTf9tRfIJOWl/PtkzE5CLrB6hTsKa
+	 /hC2zqBxHUmY9K2NNCZFtl0Re7yZSHJou8AqNjwkIqnaFVZ4dX7DuLmPOTSwtLgbllpB8eRXyzxX
+	 rOkBeiItOtqfex4FyQEVuEiFt9v7jaFSiXF2QDinetVWBZ0OL+SFHH+Z+SXqLXueoKen6a68iUoj
+	 nZAbemTxk598zhH87xC50MsA38ryvwjbODZrYy7oLlJdETVrGywFQ7Rc/GXEZQMbv3Tq4C0Y6igi
+	 +vQFqNtknfZULXyZ23+cxQiuHLwNxkZdDtw3RWbk9b5TNBa2f1x5H7P/3d/sO8h/NTnxwZ0kzQIV
+	 sSrKO17ewvKtqgRH18oFeMx1XPMR3Ku6at8Jib2pBecouo0CVvbxZOt0pAdGa8X5cKU/b1ScOcwf
+	 sZCbfVLi3DULR+DgvWFnCoZ16hdnmQDVgYWPXnixFLPTNwCSntm6NLH7EbTXnMRVyaes6dDydMHf
+	 D7I08YaRmdMihflhHv8yRWm/gQmmvKu9JjWy8fA5OQOUki/LPAhPwpPlWfXBCOPfEqRNbVFdMjhf
+	 OyRLkINtGkJGJBAhNYSI9omqxhtdiy1MZYGf/QSi43pse47QcZqyDJjviGG/dfgNOwIOSiF4UmbZ
+	 +JYxRsiMljsqSEXLfitn7YGNJNvQcEEcZnk0c3WtmSYF2O6locWvRi3j6egExhsWAwYd1cCwVFKA
+	 4/wKVoUFn3PVTpzJpx7kVYUGJlkK7ATaAvn/y+c/qI0GkgY2NzJUGQoill7ty5mN8EdeuJ0CucyL
+	 nod3zXMYUum5o5y9nw5WVAo6fPSEyNTivyQr3ruso6BR5mvZifxd1DNkG4rm5KOl7QJMBvf7mbmL
+	 D2BqTrPYNOEuEVGnv69bQdCjVbPML+/S4H20oy+elOaHlUtot240wi9bNE35GpuVUsEO+ZOPe+WV
+	 I+nKBoACBAZQUwNYr7ryxvk80vy1idnINT1d8cu5RAVKNRzU3DlNNGPl8zpDQBUC7eTGc7LQOGGt
+	 2CajL+HPXSrPcDpBgyw6iJMHvyiell30IZLfCtn5DJqr5BbeIqiH4kCT6fVh9X2JPuYGKD9CG+bh
+	 3ZuIbGZ2tflxHC6E0=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
 From: 2724853925@qq.com
 To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 	Henrik Rydberg <rydberg@bitmath.org>
@@ -67,8 +67,8 @@ Cc: linux-input@vger.kernel.org,
 	2724853925@qq.com,
 	weisicheng <7855009+weisicheng@user.noreply.gitee.com>
 Subject: [PATCH] input: touchscreen: Add ilitek touchscreen driver support
-Date: Sun, 16 Nov 2025 21:30:42 +0800
-X-OQ-MSGID: <20251116133042.401606-1-2724853925@qq.com>
+Date: Sun, 16 Nov 2025 21:33:39 +0800
+X-OQ-MSGID: <20251116133339.402100-1-2724853925@qq.com>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
