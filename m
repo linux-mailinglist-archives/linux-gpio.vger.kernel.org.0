@@ -1,63 +1,63 @@
-Return-Path: <linux-gpio+bounces-28544-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28545-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18E41C615D5
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Nov 2025 14:39:09 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F5BAC61617
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Nov 2025 14:50:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1A3943600C5
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Nov 2025 13:39:08 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A686C4EC23A
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Nov 2025 13:50:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CD072EB843;
-	Sun, 16 Nov 2025 13:39:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5558F30B536;
+	Sun, 16 Nov 2025 13:50:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="l/F89bq1"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="IVPgEryX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
+Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22B82D1303;
-	Sun, 16 Nov 2025 13:38:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BB22F7AAF;
+	Sun, 16 Nov 2025 13:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763300339; cv=none; b=c9QHpOeSs4Yvk/E1S2DWumVGwULs/eIil40Del0DphV9LOhnjBrWhKCt4jOouDy8MAPqcYlJbqBKC+1CrevuluOLa8gRNDqb6aIDFlZ6qnpfQh+eLo1OY90lTOmu8srTV3ZzkTfXwsrkv0pZG9Cov69XZK5Dp7quK2Nzgsh2+Y0=
+	t=1763301013; cv=none; b=td3bNemEhpy/3/ZoYqB292QOSDHw+FMWV9/gbgAWWNz58xBFMCZZqwNx1jHMZQbi0kCq3sTKIUQFPMvxuXDunDVle99fiu9RsFk+H+/A1GYxWoj88aALaaG8Pq6CpQEXIXNE54krGVDup0wiPh0R2altpP9Lb1DTfwthg3nqakw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763300339; c=relaxed/simple;
-	bh=zE1i2cc1jfSQ2oUM446YDsvJMiCz3WAeM0i1OePWcsc=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=iDSUeiDgyd8GAgylORdGKUzsaK5iJrv/jxlmFgWfukDaVnW9zMMiZkyP57HcYop0sr71Laz7aGB7ae0b0RHSSAj8g9gUD2HDCt43EdhSCxOxbolI4L9WGA/530VmM0GdcVCUHOhJ59OW2JojADoFUbByAYwnFwpn7bO/YPBHqzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=l/F89bq1; arc=none smtp.client-ip=162.62.57.252
+	s=arc-20240116; t=1763301013; c=relaxed/simple;
+	bh=Z8NdLH/on83SRs6ddzs5pUDmVTkGKbcx9gQ5ZntZyJE=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=eXZhHHLm//iObgX4Px0lNRcaw1uPFDnC5l3djFhWkAk4Ks9vAEBUYPUcH1Jc1RX8sK4NadG5T1mPxCeotLYDQ9K2RG874+XNKdbow95TxAsboaNuCiEgC29nzPA7nrD1b3Hr5rGzWIRZbU2zbWa+A3JcdGsZ1S6R5WyUGp/0Di8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=IVPgEryX; arc=none smtp.client-ip=162.62.57.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1763300317; bh=7cA9Rv6PIi3Ti3M9H2PevC9WSJUaBZM36T0gFh5nNpk=;
+	t=1763300969; bh=V9KamUA25dismNhaalQDjQ6T2C/1+t8laxrNNCjHOjw=;
 	h=From:To:Cc:Subject:Date;
-	b=l/F89bq14ykodEjsW+COYVJ72lLc6aoFI3+7PbYhHLwrQUMaLdziqwOiPbVFw477G
-	 1TuOqdaQ7p8f8/gL4kQ0fu/M0+Ia1OugCtp5tBA3jjH/kJifhC8qTDimsjAVKx65mL
-	 Wu4zF/KFeFmhFQEmZxGajkdOhZDzjH2DfH+xvnnM=
+	b=IVPgEryXrV0PpgqEiK0Xoa06V97oMsggy/4WtxIwKt2OrIBRpMCE5ODvfllVkfChH
+	 qNkHIxMRLlfNsI/eQXdVS7vDFtinK3RUC3OC358wxz2rFecDgUu9sL5N5yNVL77Cvj
+	 6NL3Qs9K9A1lF22HoHw7ld2ebK02fDM2LRgAREMs=
 Received: from ubuntu.localdomain ([223.166.202.212])
-	by newxmesmtplogicsvrszb20-0.qq.com (NewEsmtp) with SMTP
-	id 9A3200EA; Sun, 16 Nov 2025 21:38:35 +0800
-X-QQ-mid: xmsmtpt1763300315t1umcioy7
-Message-ID: <tencent_87671B2466EFC9AEF481CDD1412057445506@qq.com>
-X-QQ-XMAILINFO: OSBE3o+w+OPFkH3exKsW6cNCmAuHDRq+aeVyJcXjHvmQopfcytQIeaKVreXC0l
-	 KqMhG0aBJlVu45d4VzAfWpNNEylP3QI42h2vw6zyQ+Ivw8VH0tYwjxiyR7q7TKmaeYnC3FMymrDD
-	 rOaHzg+/K5km81z5qqloF/GomtfUmWWv4I9W7iaKyKePlqYXhZhZ8ySpkPPi6rmoQ1GyG1v/nEUt
-	 z9tFKlnUqo15FWa39aKpvBwTeyKTdA/fp3bBVpX7mbrbiwvU0MCSSGtQcx+0DB125vU7D2zC5LkJ
-	 +LBb/X9c4ckjjFbEpl9Am1po2tn2SHfys28Jy5cfycHUhZXse8PrUJHmetuheH3KmBR2HRrpDwsp
-	 loRFlmPvRXisj/j9S1BGfgekyEB2BaW3KtzqK3qWxAA6tvFZmDTTxVzSCnB+EXrWoSQn4HxhZ2ws
-	 MszNwRwrSq7c2AJMHfUKxAbMw3CDYTLIM7ED9Y3SKa2+hYtZ/OxGvP0H6MxLOtzeAYOabh8DAd0r
-	 ijzX6jEBKdoyVrGNZ02kvKeBJ7TDt04emOBQtn7Bkdo9XmZ9yQoitZAuC7o8byHoDfuZhM0CoXO7
-	 E1IgyRKdwCBJ/o2rXZwiFmDANTS87zpq7dAt81S1m43QacUyHSNkpYMR4ookkYaA96eN15uoNHci
-	 gHNwtmw+NQvg5knM6Y39Sz+p5eFR2OvOENfkC8QKt3diyIHRZDNYEhgyAsj1V3OskNyeXxMUcZpi
-	 6Bcc8XPbr9gXIEV3slM6gS3JrHvN/c2phwMRK7JIqU7ymqPg9qhBQA+Pdxq3Qd27HfKNa2tQJdBP
-	 pa78SvSuljoPEiwf8hUQVG36dggT9WgHKxVOdNbrxWaibpbQjiFoafeBYpE0rFYCZpplAWpdumNk
-	 C7yZ6cowfdeth5G9hzBU2QLpLilpF4mtRCH3oOpOjQb4zH95QdZxlS3YhXgmzJL3wPybBnkthlLA
-	 zzoeOGaiiDRi6DF5+V+w6e6Dv7TZAHkXhq5vM8rWoD/d1DzVL9+FhLfZR0+dEGqBZ41ugGg0ffu9
-	 U9C7ikp6D+idGAeuIgYgFNFFUMssD10iSzwFf+NBye+z5fGqqFpV4hLFzavZa4F4UH0L/aJLEMrf
-	 GqO4esFGQWAK3hAOo=
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+	by newxmesmtplogicsvrsza63-0.qq.com (NewEsmtp) with SMTP
+	id C5BB7869; Sun, 16 Nov 2025 21:49:27 +0800
+X-QQ-mid: xmsmtpt1763300967tn09cdeqi
+Message-ID: <tencent_995E6FC62EDBC1EED14E6052847F270F6406@qq.com>
+X-QQ-XMAILINFO: OVFdYp27KdlJI0zjrUX7zgHp0MT4fJOzJms16Xbt7saJ7jGdQ0+sz5HPWYlMpq
+	 oKB+BcPErt3ACaFl8PDPldJ04C91MAe4keBUcQJ2aYsHRvmkFCyWD3voRtaGqfRmQKYkR8q1V4ow
+	 p4BXOCvqDTKRq0BXd1dNQSfukvTPA9gFetYoB1OAX+c7LrrnppHb4MmSzwwmU7lzbksRf++lCPvQ
+	 yShFmPugnHNwDhQecGJE/2dc5juqepqV1C4arnRbM0S9bbuDqAoD7NplD9dJyihu793+X1EByHGd
+	 xxvgFCAIgdxth6R/YnNi1QvsOj2uiTmBMkN03bRfFV9CS/0FSYcxxITXTDHNBXgWKc8lT54sip0o
+	 fPGUtQkLneBWcmrxKbVYg9kHLpHnCDkmSYNlBdamVZxBH+4zYpD0D4BEc/iJA1m9/eJrYCRZAvzJ
+	 B8Zw+VPIQMD2KhOJyMEERQ/E3PXF5pVMQmz3H8ANAceSv6PR047PgkWU2PNSHPYFQtf9YwZrBrez
+	 7zYeKwWl340AOl3A7gg7A01C8Xnqp9U+KfvLJdnozNmueQGwMPxck+cDOwiSQREBUHrxvUNuNNLb
+	 dIQ2/F7H+9o+uNa58e3U5hFBMKuYhi/tQcGJqJCDB5jkOO9dtGUn070SwManGvatzy/PASc8LgLb
+	 NWX6JsByFe8IzN39++ySep8XxSm8a7PY2ypPqNSk1P4W26GcPnoX+avmn+Lo+/FkH9nRs2vqfKGa
+	 ic79LDKaoBIUOBUUwPNQAIpOAAhW13SrrF/7lzuYeYwwzdQRTZiK68x+6DljD3hBaLXQIcpLTaJ1
+	 4dQZ5ie1QAD9ieb79xgqGFlrWn7NIF/jXsOdfFx9mIYYCYrpLi/Qdnl1v9eV/qhcwl134kD47jay
+	 Hu40EtQKxNtnT5QqYNpoY0ysDJayQ/mAnBjcr6cfA9SsRsZVr68XfCZZZpPclvZY9yCj/BGzB7k2
+	 jkMq1ZlhP+4/0NYviqvupqcQWFVHQrkfjoMuflywTEi9R8UNZZBbIHfmzXuVgaAiJR2i46ZO3KPr
+	 SNk6AhfkgE0nEsrJ3jigVo8UPswlaWMbX9R6Ff70pUyC+KWepzzK+8edt7drwD6/S3qsEcIPZPxL
+	 Nn137Imch7g8JhBNlhPDK0vKNZIQbdHSH5mv5fAqpzNJGuvOs=
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
 From: 2724853925@qq.com
 To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 	Henrik Rydberg <rydberg@bitmath.org>
@@ -66,8 +66,8 @@ Cc: linux-input@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	2724853925@qq.com
 Subject: [PATCH] input: touchscreen: Add ilitek touchscreen driver support
-Date: Sun, 16 Nov 2025 21:38:31 +0800
-X-OQ-MSGID: <20251116133831.403066-1-2724853925@qq.com>
+Date: Sun, 16 Nov 2025 21:49:24 +0800
+X-OQ-MSGID: <20251116134924.411907-1-2724853925@qq.com>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -480,11 +480,11 @@ index 000000000000..7f058c3e4914
 +#endif
 diff --git a/drivers/input/touchscreen/ilitek/ilitek_crypto.c b/drivers/input/touchscreen/ilitek/ilitek_crypto.c
 new file mode 100644
-index 000000000000..2ba6105266d2
+index 000000000000..ed33defb57ed
 --- /dev/null
 +++ b/drivers/input/touchscreen/ilitek/ilitek_crypto.c
 @@ -0,0 +1,465 @@
-+// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
 +/*
 + * This file is part of ILITEK CommonFlow
 + *
@@ -790,7 +790,7 @@ index 000000000000..2ba6105266d2
 +	}
 +}
 +
-+static void sha256_init(struct sha256_ctx *ctx)
++static void sha256_init(struct ilitek_sha256_ctx *ctx)
 +{
 +	ctx->datalen = 0;
 +	ctx->bitlen[0] = 0;
@@ -811,7 +811,7 @@ index 000000000000..2ba6105266d2
 +	ctx->state[7] = 0x5be0cd19;
 +}
 +
-+static void sha256_transform(struct sha256_ctx *ctx, u8 *data)
++static void sha256_transform(struct ilitek_sha256_ctx *ctx, u8 *data)
 +{
 +	static u32 key[64] = {
 +		0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
@@ -872,7 +872,7 @@ index 000000000000..2ba6105266d2
 +	ctx->state[7] += h;
 +}
 +
-+static void sha256_update(struct sha256_ctx *ctx, u8 byte)
++static void sha256_update(struct ilitek_sha256_ctx *ctx, u8 byte)
 +{
 +	ctx->data[ctx->datalen] = byte;
 +	ctx->datalen++;
@@ -883,7 +883,7 @@ index 000000000000..2ba6105266d2
 +	}
 +}
 +
-+static void sha256_final(struct sha256_ctx *ctx, u8 *hash)
++static void sha256_final(struct ilitek_sha256_ctx *ctx, u8 *hash)
 +{
 +	u32 i;
 +
@@ -932,7 +932,7 @@ index 000000000000..2ba6105266d2
 +
 +void get_sha256(u32 start, u32 end, u8 *buf, u32 buf_size, u8 sha256[32])
 +{
-+	struct sha256_ctx ctx;
++	struct ilitek_sha256_ctx ctx;
 +	u32 i;
 +
 +	sha256_init(&ctx);
@@ -951,7 +951,7 @@ index 000000000000..2ba6105266d2
 +}
 diff --git a/drivers/input/touchscreen/ilitek/ilitek_crypto.h b/drivers/input/touchscreen/ilitek/ilitek_crypto.h
 new file mode 100644
-index 000000000000..ef01ca434776
+index 000000000000..8085961df031
 --- /dev/null
 +++ b/drivers/input/touchscreen/ilitek/ilitek_crypto.h
 @@ -0,0 +1,61 @@
@@ -995,7 +995,7 @@ index 000000000000..ef01ca434776
 +#define SIG0(x) (ROTRIGHT(x, 7) ^ ROTRIGHT(x, 18) ^ ((x) >> 3))
 +#define SIG1(x) (ROTRIGHT(x, 17) ^ ROTRIGHT(x, 19) ^ ((x) >> 10))
 +
-+struct sha256_ctx {
++struct ilitek_sha256_ctx {
 +	u8 data[64];
 +	u32 datalen;
 +	u32 bitlen[2];
