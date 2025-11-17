@@ -1,74 +1,77 @@
-Return-Path: <linux-gpio+bounces-28606-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28607-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1C9FC65B0C
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 19:19:44 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF6BAC661D6
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 21:33:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sea.lore.kernel.org (Postfix) with ESMTPS id A80C028AB1
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 18:19:43 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id F336835FA96
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 20:33:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 814A42EC541;
-	Mon, 17 Nov 2025 18:19:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41DD634A797;
+	Mon, 17 Nov 2025 20:33:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SxQH5XL8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IwaSjFcC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC522FD1B2
-	for <linux-gpio@vger.kernel.org>; Mon, 17 Nov 2025 18:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79E334A3D6;
+	Mon, 17 Nov 2025 20:33:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763403580; cv=none; b=Uw0gaJll1c3Tl1T2pEYn8fGtO4Fd8FRysRvspkO21c4GTKvLE3iT8t4KtvtI+rRR0HGoTnOaqutG04rJdcWP9D6KHde297Ro+WJ1m8GRlJWhLK6AT9p52UjoGcz1jtlYzgNj5+TGyC3qtgzBDINWmgA2s/uNuWDxmvLa5dEI7E8=
+	t=1763411601; cv=none; b=MaO4NXfYkNx1kGetw0JZPaxB3ne5hlYQYTWRxGMPasyHcgNj892jYsfMQ5xHDbAdPVjhyPor0DKn6m3iatsxbn1ivc9GVb8phLJkKPWvYL0ot6XUDtHIZCsx/2P+xDInVHAoj07VZV2UvxggaNUygj6hL8Pl/dcQfog/aDpTAYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763403580; c=relaxed/simple;
-	bh=Rt0FcpkBwrKDPv+RAlnoaXSMHwdO4ZUMq9JaQBbMZSE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=hPtLpbjNuXVtPbtd+sPM15z/HZEOm3V0sbTrUvsPsEzwk9SvYphjuJX/0DX/9/pH/O0WXRkOmhiEKGlEe522vJ8x/v0fbbCbGqr//Hn6At5skv7nPEWtwyZk1Kubsyl/D12WczRhcGqwmd1QSNpYE2TvFkGB78A6OyBh/lWh7Qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SxQH5XL8; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763403578; x=1794939578;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=Rt0FcpkBwrKDPv+RAlnoaXSMHwdO4ZUMq9JaQBbMZSE=;
-  b=SxQH5XL8ZugTwcO7xCd7o4twaxDJIXv+Ok25PQjggdx47wM9vHf0srcc
-   Zhw8gJTJcSeOpPk5l2pHkK98b3AeGE/ODlzJBLoFRQM7SqFogWzG2dQfY
-   cj4TsaQZY9Kd4YX11MvBT9taPL5Sf0M+QAPV2ErGnP9e+0cwMUNvlbNac
-   LBGYrm4pJVl0aGQ6TW7YcMV4TeABLr82QGVl0JvluwNlHM9/ZCjWZZFBp
-   v+bFPzZ9L9YcIfvxSclG7AZTXC0f3u3VEV9DMS50jRixvRCRj3oFh4kdX
-   2c+Y8So6WNdjAM4/3eSoPEVNscFE0hIPkhiwQzBipZ16alXziwENI0Wnt
-   g==;
-X-CSE-ConnectionGUID: tQg0by2VSi6qw5qpYP3X9w==
-X-CSE-MsgGUID: sp3uK+7xTXGLaogT5CuSBg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="65451813"
-X-IronPort-AV: E=Sophos;i="6.19,312,1754982000"; 
-   d="scan'208";a="65451813"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 10:19:37 -0800
-X-CSE-ConnectionGUID: C5g/bgwjT9SJzucdTZHV9Q==
-X-CSE-MsgGUID: T0bdGmprRuW8P2kW+VlRPA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,312,1754982000"; 
-   d="scan'208";a="190545919"
-Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 17 Nov 2025 10:19:35 -0800
-Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vL3p6-0000vV-23;
-	Mon, 17 Nov 2025 18:19:32 +0000
-Date: Tue, 18 Nov 2025 02:18:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: [brgl:gpio/for-next 3/11] drivers/gpio/gpiolib-shared.c:62:1:
- warning: 'gpio_shared_find_entry' defined but not used
-Message-ID: <202511180232.EItKeYjY-lkp@intel.com>
+	s=arc-20240116; t=1763411601; c=relaxed/simple;
+	bh=BV6A7dBjO90aTngR1VxmTz0Cc3FxYyV4HxPja2tfCrs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FRnymgU4uFxkeFHtQgFOizADOIX5fXy92wQtO388geJVqm+631lm4CbnG0D3cJkKByOqxxyoIjsKsjFRITsPSnkrLt8qX4n+cP1Lmi/31hmWwl/Jbth/QgEMnQDDtnF7gc2On4Wnjf6KxXGMjwuSysB47fS12TznfyxNst/6Iao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IwaSjFcC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0045C2BC9E;
+	Mon, 17 Nov 2025 20:33:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763411600;
+	bh=BV6A7dBjO90aTngR1VxmTz0Cc3FxYyV4HxPja2tfCrs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IwaSjFcC+CJt1Xd6iGnljRiCT+H+mCtIJfZZ+jxJJZkfbreYXobKxC5EnfYfdCvyM
+	 VXOFD5hZkGsx1FD6wEeEA6JpLieId9iZyELXldUOu8v3HckxnMs5Ox4ER5yai0fOkh
+	 oMwU7JRSZWE8Z3yGFMxd75xXOObKyShqO11/EIefiYWQXwvovomp5j7IAGtAK7IhZj
+	 h5nE6uSqqKCABwskWvxtc9x0P+by27/qalo9BDIA+e6xLfGyxmSPaGv6oSACQZO4k+
+	 GjNCqszjwa04QVxS54Zza7rJbTRStyKG+kTv8tdtWSz07/MZJEPf7EaXbE5b6Eilir
+	 7tpoV4h+NIHnA==
+Date: Mon, 17 Nov 2025 12:33:18 -0800
+From: Kees Cook <kees@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Mika Westerberg <westeri@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Alexey Klimov <alexey.klimov@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v4 01/10] string: provide strends()
+Message-ID: <202511171230.F83EE85D0@keescook>
+References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
+ <20251112-gpio-shared-v4-1-b51f97b1abd8@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -77,45 +80,105 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20251112-gpio-shared-v4-1-b51f97b1abd8@linaro.org>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-head:   67f9b828d4e5e47caf3472a399c25c3c0ddc824a
-commit: a060b8c511abb0997381b397e52149a5e3e5259a [3/11] gpiolib: implement low-level, shared GPIO support
-config: s390-randconfig-r073-20251117 (https://download.01.org/0day-ci/archive/20251118/202511180232.EItKeYjY-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251118/202511180232.EItKeYjY-lkp@intel.com/reproduce)
+On Wed, Nov 12, 2025 at 02:55:30PM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> Implement a function for checking if a string ends with a different
+> string and add its kunit test cases.
+> 
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  include/linux/string.h   | 18 ++++++++++++++++++
+>  lib/tests/string_kunit.c | 13 +++++++++++++
+>  2 files changed, 31 insertions(+)
+> 
+> diff --git a/include/linux/string.h b/include/linux/string.h
+> index fdd3442c6bcbd786e177b6e87358e1065a0ffafc..929d05d1247c76eb9011fe34250b487834b2d3c9 100644
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -562,4 +562,22 @@ static inline bool strstarts(const char *str, const char *prefix)
+>  	return strncmp(str, prefix, strlen(prefix)) == 0;
+>  }
+>  
+> +/**
+> + * strends - Check if a string ends with another string.
+> + * @str - NULL-terminated string to check against @suffix
+> + * @suffix - NULL-terminated string defining the suffix to look for in @str
+> + *
+> + * Returns:
+> + * True if @str ends with @suffix. False in all other cases.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511180232.EItKeYjY-lkp@intel.com/
+Maybe added "empty strings never match"?
 
-All warnings (new ones prefixed by >>):
+> + */
+> +static inline bool strends(const char *str, const char *suffix)
 
->> drivers/gpio/gpiolib-shared.c:62:1: warning: 'gpio_shared_find_entry' defined but not used [-Wunused-function]
-    gpio_shared_find_entry(struct fwnode_handle *controller_node,
-    ^~~~~~~~~~~~~~~~~~~~~~
+These are required to be non-NULL, so we might want to consider marking
+them as such with the "nonnull" attribute. We don't use it much in Linux
+yet, but I do see a few places.
 
+e.g.:
 
-vim +/gpio_shared_find_entry +62 drivers/gpio/gpiolib-shared.c
+static inline bool __attribute__((nonnull(1,2)))
+strends(const char *str, const char *suffix)
 
-    60	
-    61	static struct gpio_shared_entry *
-  > 62	gpio_shared_find_entry(struct fwnode_handle *controller_node,
-    63			       unsigned int offset)
-    64	{
-    65		struct gpio_shared_entry *entry;
-    66	
-    67		list_for_each_entry(entry, &gpio_shared_list, list) {
-    68			if (entry->fwnode == controller_node && entry->offset == offset)
-    69				return entry;
-    70		}
-    71	
-    72		return NULL;
-    73	}
-    74	
+> +{
+> +	unsigned int str_len = strlen(str), suffix_len = strlen(suffix);
+> +
+> +	if (str_len < suffix_len)
+> +		return false;
+> +
+> +	return !(strcmp(str + str_len - suffix_len, suffix));
+> +}
+
+We should probably add it to strlen and strcmp as well. :)
+
+> +
+>  #endif /* _LINUX_STRING_H_ */
+> diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
+> index 0ed7448a26d3aa0fe9e2a6a894d4c49c2c0b86e0..f9a8e557ba7734c9848d58ff986407d8000f52ee 100644
+> --- a/lib/tests/string_kunit.c
+> +++ b/lib/tests/string_kunit.c
+> @@ -602,6 +602,18 @@ static void string_test_memtostr(struct kunit *test)
+>  	KUNIT_EXPECT_EQ(test, dest[7], '\0');
+>  }
+>  
+> +static void string_test_strends(struct kunit *test)
+> +{
+> +	KUNIT_EXPECT_TRUE(test, strends("foo-bar", "bar"));
+> +	KUNIT_EXPECT_TRUE(test, strends("foo-bar", "-bar"));
+> +	KUNIT_EXPECT_TRUE(test, strends("foobar", "foobar"));
+> +	KUNIT_EXPECT_TRUE(test, strends("foobar", ""));
+> +	KUNIT_EXPECT_FALSE(test, strends("bar", "foobar"));
+> +	KUNIT_EXPECT_FALSE(test, strends("", "foo"));
+> +	KUNIT_EXPECT_FALSE(test, strends("foobar", "ba"));
+> +	KUNIT_EXPECT_TRUE(test, strends("", ""));
+> +}
+
+Thanks for adding tests! :)
+
+> +
+>  static struct kunit_case string_test_cases[] = {
+>  	KUNIT_CASE(string_test_memset16),
+>  	KUNIT_CASE(string_test_memset32),
+> @@ -623,6 +635,7 @@ static struct kunit_case string_test_cases[] = {
+>  	KUNIT_CASE(string_test_strlcat),
+>  	KUNIT_CASE(string_test_strtomem),
+>  	KUNIT_CASE(string_test_memtostr),
+> +	KUNIT_CASE(string_test_strends),
+>  	{}
+>  };
+>  
+> 
+> -- 
+> 2.51.0
+> 
+
+Reviewed-by: Kees Cook <kees@kernel.org>
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Kees Cook
 
