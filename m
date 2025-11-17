@@ -1,114 +1,122 @@
-Return-Path: <linux-gpio+bounces-28603-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28604-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07029C65010
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 17:00:19 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06F5CC650A0
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 17:07:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id 1E0D229023
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 16:00:16 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id 0DFCE289F2
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 16:07:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 183E51FC0EF;
-	Mon, 17 Nov 2025 16:00:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B4E62C0F9A;
+	Mon, 17 Nov 2025 16:06:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kwCsuJ/4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jeQTizyy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C129B284669;
-	Mon, 17 Nov 2025 16:00:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 316652C08AC
+	for <linux-gpio@vger.kernel.org>; Mon, 17 Nov 2025 16:06:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763395203; cv=none; b=GYZbJ0EDAPcHbcHOGaF5doE5Uj0p63QCN/Spg4V24/KShFA9RSYGIWMnK9EqCmSwC7MBGhxm7drvJqWqnJTiXcSmVLAuTfJFUmLsk5SWtxH4/cTW3+FAn55IAisn90RzQQpTuyD87qvA0PrCReetas3ZjBL0IQMiTbDbb7L0E10=
+	t=1763395616; cv=none; b=r3GVKMkWDNpQRWH/N5e+L7t8+OjYBP5lTFjDLfogG33IBbekAVFTiwaD4uYpgGQeeJbbLLLnxL9Fs8k+kLapTnwTYhUqRqTcsu6pWxRAKIDoitndxpzk1X8FNihdyw5OQGK8sMgWw93iXdoJr8nfybLfFUVf86T3PPQH4EOxdQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763395203; c=relaxed/simple;
-	bh=4mldTrpNfDBUNb10bIu/HKmz1c+0kq9vpFRlKYSObhU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mFq04uMV6bL8p4pqBPVM7TWK+lf5+bVVgczbEH/B0Cl3qyYGiCylFfHzEWI2wlEHG3l6VaIfDz+kchwUXWDB2cWLsQW8jw+MMj+wnJ2MOEMoUrmPvpF+E+IP3zE5Okw0r8n1Tv04fQR0qgoFM0dSYz69/v6rg2K28OgRsMCS3KE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kwCsuJ/4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 927C7C19425;
-	Mon, 17 Nov 2025 15:59:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763395202;
-	bh=4mldTrpNfDBUNb10bIu/HKmz1c+0kq9vpFRlKYSObhU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=kwCsuJ/4E81FYWxB8nhIpUh98cGRHXdkaivmeqCeFwzimnMDyucuUDCBGwnjff6nc
-	 6aMpYp939HTLPDOiKMAgSoz4Kf9VBqOxHbC/YCVXexBa5ZHUEjc6KjNDtcmHolXquj
-	 snq5mYN0o8C62kQV+JSgEW3K+C6zUDnbi0ohFiTCL9sv53J13GO3nyKJY92nTamckl
-	 ESVl0CEcvv2G6BuIsRLGUxqeGzQIzX50FfoRVZqbgkGfWkM6O85q2NiayVJvbXvzcf
-	 JktQMrF9XM9nFGDBiakDEr2E+lUWwg2UzrJWzORpQ37Q2Ht5YyZbnQdQYOAvBxyXWn
-	 G0hOwtandKaww==
-From: Conor Dooley <conor@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: conor@kernel.org,
-	Pierre-Henry Moussay <pierre-henry.moussay@microchip.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-riscv@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH] dt-bindings: gpio: mpfs-gpio: Add pic64gx GPIO compatibility
-Date: Mon, 17 Nov 2025 15:59:18 +0000
-Message-ID: <20251117-grumbly-oversized-2215fe887181@spud>
-X-Mailer: git-send-email 2.51.0
+	s=arc-20240116; t=1763395616; c=relaxed/simple;
+	bh=izZsVy3Iawv6fyV0jxDR1JaVXJ8J+X05laDZK08GkSc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R4wO6tfidEiR8fCc0Zaruj33/u0GIpwIBAjJ9k0f7jnAxA0kqiY39NTvBrEgnugBJs2RbF3qeGmN4AMaRVactvi/iDwoI+9Mu9x0oIz0k5BvWToYBjpndoR4l6tlSD49f+VIAV2HhICPIRVxDaVa91TiGynQt1MyhnL5Nn47r9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jeQTizyy; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6419e6dab7fso6691075a12.2
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Nov 2025 08:06:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763395613; x=1764000413; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BiBK+vo0XuHL/4HEvmT/p4MV7vaYubfjeUSMDyqAwOY=;
+        b=jeQTizyydfeOW+JNuD3n/sb1SgY/gcC2xXz9w4tVyaod9VmrXyacZMjD+Bx6Oc7hXn
+         EddFQOPmknlK7ZN7bHLsZIWnKOMPiSphEX6NSRXjRKtvDIkwt6tqWHyGFt5VRGwofkV4
+         o9m+F7w0io1SX0G8t1EHHPaA62daKh2Bnxn6Ef6b5ck78CEvJS/OuQB/Um+56n0yn/I2
+         9JUnoLyIQ6H/wTFFniHqzNYguZ7vNVpaCSd9bhmv/0/C15AcPzDqZVOEpA1mcn7QS0Kp
+         +gc+dGtBkZmZ2quzXKPJSfYnA990ysAJ54RVr54LhbbOCzz0CthdszxF4EUxSpWgm0Dc
+         Z83g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763395613; x=1764000413;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=BiBK+vo0XuHL/4HEvmT/p4MV7vaYubfjeUSMDyqAwOY=;
+        b=WPwPATauMQ3eOrqpF4QFyODTUxsLUd2Dp/dtK/6l/Cr2rXtjhMxnBmCfY2BjCqXG13
+         Sf+IdUTLEM+9J3q43nN/v4IO5WAtG+i3tqLtRAq65pVdjQbqv3yZCa0Z4ltU3bjeHzo8
+         nxeDvhz1+JBRHD+PkHT523G7aeudwybnv8Djy0iW/igwS2I3I+tZXjZ72X0LeV7TkJFi
+         87mBXF254Z4pcBUTk1+FWgBnYba4IPwoWBn3wKcrYMf0WpkSI6BN7CcqJTnSZV8zro3P
+         5sWSb2yK8QKe04wJAMXzPr9rcvSS7kytv/iqc3Fop2WaM0pTIJ/94HIxAYWcbGEAlUJJ
+         HgCg==
+X-Forwarded-Encrypted: i=1; AJvYcCXX8iAe4afhkaeSQq0a4oIvp23+bQqeAe2T+OfypMIQ6U5BlSsGDkUmeV3VcqbaUuwrczJE0xo5MKo0@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVpzib4JoX7CT20kiBiO7kuxEgVVLj6JcDrH1rOv31aT+tQtzh
+	wP8IR23kPGfAgX3o0l2GeOP2mCOjgmGfYer47Fy9t39+2frFnW1bhYjVx5cgpXNIAt4FnuCnIVc
+	s5cqJO0mkfvotC+rQLgYkFT3IN3NgXsM=
+X-Gm-Gg: ASbGncvJTqx7KEGBafB5pxziTtoCxW71PjAUmAsQN3ngmC6ZObH4S7BBcl1Fj8zGKwh
+	aLOVaxJt3yiK2iVKyz78FkUgDTz6jeYWnmGSZg+coJOvutbcV5i9qqHOgaYmU4/K2HZhfrmDUE2
+	6GoV4grgIuYsJ90hFGsW6U62xq+HMyy+SedVQYEDR5vFJddt4p/vLraI3fMtRrTSWaqRA5qBDsS
+	eZBDH51WdoPxFR1biIYKiqitvavIMHikROwTEYvx8wNtlUp75JBivQwYqaxhMmDFb6SmaQjI1YW
+	HvurXIH96PxpZ2GAkfykeRgTavSOhtWyi/B4/Y9gTLZ3+eZDHFMW0b5SVYmn8y/Tre2aqR8=
+X-Google-Smtp-Source: AGHT+IHNPimzq90uSivto9HulX/4i1v+LvqVn0QyrqmiLHn1nM5ke+0vY3GqKUGCG+LBwOUBL41wcbCzl6y/TYJIhLQ=
+X-Received: by 2002:a17:907:7216:b0:b73:7b5d:e781 with SMTP id
+ a640c23a62f3a-b737b5de9d2mr1152731866b.48.1763395613180; Mon, 17 Nov 2025
+ 08:06:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1368; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=vBFHITy0tUgA8hiGFkPbCnmDy5W/03hkEl85M76mBwU=; b=owGbwMvMwCVWscWwfUFT0iXG02pJDJnSbiHV/7SuHgz+9H7m+iV3CnfFfHtx75zaA+Vts6c4T Miq3ZpT1VHKwiDGxSArpsiSeLuvRWr9H5cdzj1vYeawMoEMYeDiFICJvOZmZPjskn6NIYEn+8ni ZPP6xD7W/w7nTTbNspuXfU1F8bMl1yKG/wkSK6Z6JJ0QODEpWeG1gF1KrtTECb29a1Zc3W0ScWX DMWYA
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
+References: <20251117075826.3332299-1-andriy.shevchenko@linux.intel.com>
+ <20251117075826.3332299-2-andriy.shevchenko@linux.intel.com> <20251117112702.GZ2912318@black.igk.intel.com>
+In-Reply-To: <20251117112702.GZ2912318@black.igk.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 17 Nov 2025 18:06:16 +0200
+X-Gm-Features: AWmQ_bnrWSt11limSr3ikaZjoGLYcm1J78KeUAYbZH6qv7-FOpDBMVRI3NA3FxQ
+Message-ID: <CAHp75VcJD5RnVgcCiB3C=BjDGvui_ESBUPXZhDO3NUVcEKF+Lw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] pinctrl: intel: Refactor intel_gpio_add_pin_ranges()
+ to make it shorter
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Pierre-Henry Moussay <pierre-henry.moussay@microchip.com>
+On Mon, Nov 17, 2025 at 1:27=E2=80=AFPM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> On Mon, Nov 17, 2025 at 08:56:59AM +0100, Andy Shevchenko wrote:
 
-pic64gx GPIO is compatible with mpfs-gpio controller, add it with a
-fallback.
+...
 
-Signed-off-by: Pierre-Henry Moussay <pierre-henry.moussay@microchip.com>
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
+> >       struct intel_pinctrl *pctrl =3D gpiochip_get_data(gc);
+> > +     struct device *dev =3D pctrl->dev;
+>
+> I prefer this keeping the reverse christmas tree.
 
-The diff here is kinda scuffed, because for some reason this binding had
-an "items: - enum" construct to begin with.
+And I prefer the logical split, if possible. putting it in between the
+intel_community and intel_paggroup lines seems worse to me than the
+proposed case.
 
-CC: Conor Dooley <conor.dooley@microchip.com>
-CC: Daire McNamara <daire.mcnamara@microchip.com>
-CC: Linus Walleij <linus.walleij@linaro.org>
-CC: Bartosz Golaszewski <brgl@bgdev.pl>
-CC: Rob Herring <robh@kernel.org>
-CC: Krzysztof Kozlowski <krzk+dt@kernel.org>
-CC: linux-riscv@lists.infradead.org
-CC: linux-gpio@vger.kernel.org
-CC: devicetree@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
- .../devicetree/bindings/gpio/microchip,mpfs-gpio.yaml        | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+> Also it can be const.
 
-diff --git a/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml b/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
-index d78da7dd2a56..184432d24ea1 100644
---- a/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
-@@ -11,7 +11,10 @@ maintainers:
- 
- properties:
-   compatible:
--    items:
-+    oneOf:
-+      - items:
-+          - const: microchip,pic64gx-gpio
-+          - const: microchip,mpfs-gpio
-       - enum:
-           - microchip,mpfs-gpio
-           - microchip,coregpio-rtl-v3
--- 
-2.51.0
+True, and it makes things closer to what you want if I leave it on the
+same line. Do you agree with my reasoning?
 
+> >       const struct intel_community *community;
+> >       const struct intel_padgroup *grp;
+> >       int ret;
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
