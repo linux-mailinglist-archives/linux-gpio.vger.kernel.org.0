@@ -1,136 +1,251 @@
-Return-Path: <linux-gpio+bounces-28597-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28598-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79A5EC64AAE
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 15:38:00 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29241C64B1D
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 15:46:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0207B35ECF8
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 14:35:55 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTPS id E36862418E
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 14:46:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E31E832E72A;
-	Mon, 17 Nov 2025 14:35:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA1A43358AB;
+	Mon, 17 Nov 2025 14:46:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DNObI53F"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ikxHgt8S"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4201D31B9;
-	Mon, 17 Nov 2025 14:35:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EEB322A1D5
+	for <linux-gpio@vger.kernel.org>; Mon, 17 Nov 2025 14:46:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763390149; cv=none; b=fDVfoeS10aBg/C2tArN549YLu79v7qXpqcbu+8rcf1fHNWPPep9qJFoT9RWxx1NoHPc56PT26sX1dVPBmXuW7uNmDmO2GMQNwx7QKIvDuBgScIYNkfph3Xrsm7wa01/rDD+5g50fenmjoxCxKAGOlDXFn6pG9gej9dfabWz45q4=
+	t=1763390790; cv=none; b=gmKBnRjTsiU5l8+HIpFyzVZEl5c1AMmneoJ4LAo+xjDkJO0ssHocxR7OtiKhLbnNvVCry1oQmrtQwjvls0LI4vUFzrRcg50ItSMGSRbZda7MomAduOtjx/oJuLo8Z4f1wpuctQ5FSp/utyK2bus0+x+QH/Lc3pz0XXUsWUbo0EA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763390149; c=relaxed/simple;
-	bh=XR7t1HgtMcSE1z+w8uiyO2XJkDiCeuK2x0XvqnvTmSM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lyoqrvYGGSeGFK+ecFt2JgXFUqFZkn5SNuLP0fghcRQWQctN75PmtZ6IgxNuriYwoPlcllXt/CQzsJzryEBbqrfyliYJbUcVj56cicPPGlPIhiUKu27bmmozH2qk6XNVd1VJYZfN/oGfCyIAc+c3jPqnbDu80LHoDXwv7qd8xMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DNObI53F; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA642C19421;
-	Mon, 17 Nov 2025 14:35:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763390148;
-	bh=XR7t1HgtMcSE1z+w8uiyO2XJkDiCeuK2x0XvqnvTmSM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DNObI53Fdq/W8Fqdk92tdxlEsR2mruR10FN4ydOtoixKUjFFIRGVWqOXdf4o9s7DM
-	 BQ2YSpG7Y/M0yEOp4R1J3RPdNiESD4MsZeaPvSWjT3Og/jNPIzZHIX5CAywEBX+b6x
-	 7mtiJVPf4HA4wO5oGnGlMc6zLmdQrvFG5iGztjefEbuESxEu5dsTeod7nxrHA2Kn2m
-	 Q+FuimQ6l/K1ucuEYDvhClt4pJBWwTHSQuAT11SPKtR+4PVtXl+1sdonwWW+I6+b/w
-	 EVNXwAJ89SXKBUuy1ZmMCTCS5Vk1b8COW1TC5C8nqOr9QahpOL1ghC+TKGMDwgka+U
-	 c9ZiBylzHlNkw==
-Message-ID: <31b4661f-921a-4079-8c0e-da3e06d991ec@kernel.org>
-Date: Mon, 17 Nov 2025 15:35:44 +0100
+	s=arc-20240116; t=1763390790; c=relaxed/simple;
+	bh=dIEAZCn/f/uXKnc80ED+dgtffIeec60Xdvoqm0iDJE0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CYtiUGj9TDbxKlLyy1LHEPZLJ135GMS84Jc37JU+a37+3llob5eqjMLHh4TV7Od4Sz6yyvIz4hcR06je4PUhnMtpgbNzsBzBr7Xhc9a3nlqPvq6bd7WDmu9YWmhWxBr4u/bVFOPUAg0yRBm/iTNilm0Mz9HZOk6u1YKRaIzKfM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ikxHgt8S; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-59590eef553so1258519e87.3
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Nov 2025 06:46:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763390785; x=1763995585; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eCcSe7R+64nbva6E6LjL1vdtPtAEecqd0S9GP3XCvKM=;
+        b=ikxHgt8SgE/Zswyp7GAUO8C5kjWjFcI4AILqFIMnFK05cLw036RNmTToEk56DI7xx7
+         9ugNw52wxpN5w+VVUzVE6r6P0OlNKRMLtt3VjcYj+p/2IrtWXL6PiL8PtHbDFqZrYZjr
+         UE2abxXnFLBiadfWxU4BBFSSbjcQdaFa+wErH42af+wViX3K21FRXm2g9OblBzhe8bNf
+         GPZ8WaAY0GLa2YkuKt23HINjfIZMT1VLNOFSZ4jcAuJDGM1qwHjs/BWzPJJ+1ERN1zjO
+         zgts9DKkZlt3tOm/p287VKbQfOip1UkxZNTmLm4KuabOGIdrUwyX+eCs6VASGf7+HVui
+         pEFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763390785; x=1763995585;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=eCcSe7R+64nbva6E6LjL1vdtPtAEecqd0S9GP3XCvKM=;
+        b=DkiNBx+ZVMKKpdpcemkghO63PVBYzwP3yB4BBH83gt4zcpkcnwZHSy84LF/6Nv31o6
+         wsEPfpL2uXoNodCejrRwT/RkVuZVCdwK8fwTGxOumLY6gjEX/gPI+ftrZbNGPA7YSJKH
+         K6l4VMsu7YPk7BRYxMIflDN3pdjHpD4ay+Tzc+YUDypk3AqYok1hDbaJ8jODuQItyZt1
+         8fvVabIJMLMUkIkxf40m0y7mamEOIkxnC79QkcVX2oCAg2fkWQThKyRZ2MWE5qQr40ha
+         5dGWT6CBoRlBcZ+OHFZHIFwh9mMHaugvD8RZdyuIHo9iMGzpt6Z5ijqrSK+iA3LwtsWU
+         2kPg==
+X-Forwarded-Encrypted: i=1; AJvYcCWgmSxTKk/p+VS6GgudjpkUOgmuxQ9/uJqTbrsHmeh4paaQxAu6kimsc9oQkAdkJ6JsLdyLm3BDIUtH@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtjBofuRaRJgVGTrbuRGklSLjkDkYWS98QZ8IoSsEnxwQPyJXh
+	eM31SeWRInJRSosfyyoLREgx61B8erZwyUCaXIBjyUCAuBbbKKhVQGxi4DI+WWQcUJ8QgRGCQU0
+	yBnPawA8c/Jo2HfzeyFhbHtcjIlo0JBgymMimdDU4pQ==
+X-Gm-Gg: ASbGncujqGSkoYTYIEvM7asSxppb5f/hSWSLWEiV1Td6nYANBzPi0XhQxNflvNRWlbS
+	09SbBAVpiMfLk5k16yWWCYAIXH/wcKdNrdclBtXUc3xkNl0WKg6h//Ubi38VzKW8uo2H44BjAWC
+	Nj5vmo3KR9Wg29hCcQB/uyHs5qMmc3a4DYcC9a7p7Os5nEBhE1KnPdJnqhj+fkh2S9Rq0211z3L
+	I/YUB7NTkkVoIter7x9Bf1Aa0roBPfUTF244MKFyZ0Kirl2qOc9NS9aAEn0XgUlFXNUbNJvXBFA
+	jtSWtL3YUjbwLLNapl+KI2E3C+khTdUGPe0X+A==
+X-Google-Smtp-Source: AGHT+IG4Z8Ljfkw4Jp6KHwmST2wZE0056r4cCHRcfdCuGrfTDeJPgYapHY6n6hmODd7tfxLFQNi/vGZigUjBXe+3OSE=
+X-Received: by 2002:a05:6512:224f:b0:595:7e96:a709 with SMTP id
+ 2adb3069b0e04-595841df4d7mr4385918e87.10.1763390785347; Mon, 17 Nov 2025
+ 06:46:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] gpio: menz127: add support for 16Z034 and 16Z037 GPIO
- controllers
-To: Jose Javier Rodriguez Barbarin <dev-josejavier.rodriguez@duagon.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20251111161817.33310-1-dev-josejavier.rodriguez@duagon.com>
- <80a20b13-7c6a-4483-9741-568424f957ef@kernel.org> <aRslbKpI-aIUip2T@MNI-190>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <aRslbKpI-aIUip2T@MNI-190>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20251117091427.3624-1-antoniu.miclaus@analog.com> <20251117091427.3624-3-antoniu.miclaus@analog.com>
+In-Reply-To: <20251117091427.3624-3-antoniu.miclaus@analog.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 17 Nov 2025 15:46:12 +0100
+X-Gm-Features: AWmQ_blqVDqjvJieyjvOaBOEmnt4FQHFmqiiVNIdk24BThfcdnwbaxStvtdgdtE
+Message-ID: <CAMRc=McdS1b+kL6869-REF2+ddrZNsZ1kvnQuNkwUQx7YWOCgA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] gpio: adg1712: add driver support
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 17/11/2025 14:38, Jose Javier Rodriguez Barbarin wrote:
->>>  MODULE_DEVICE_TABLE(mcb, men_z127_ids);
->>> @@ -204,4 +224,6 @@ MODULE_AUTHOR("Andreas Werner <andreas.werner@men.de>");
->>>  MODULE_DESCRIPTION("MEN 16z127 GPIO Controller");
->>>  MODULE_LICENSE("GPL v2");
->>>  MODULE_ALIAS("mcb:16z127");
->>> +MODULE_ALIAS("mcb:16z034");
->>> +MODULE_ALIAS("mcb:16z037");
->>
->> Why do you need these? You have MODULE_DEVICE_TABLE() just few lines above.
->>
-> 
-> I added this new MODULE_ALIAS() because it is the mechanism that previous contributors
-> used to enable autoloading of mcb device drivers. After reading your comment,
-> I decided to investigate further how the MODULE_DEVICE_TABLE() macro is used and processed.
-> I discovered that MODULE_DEVICE_TABLE(mcb, ...) was being ignored by the kernel build
-> system. For this reason, I'm preparing a new patch to add support for MCB devices 
-> in file2alias.
-> 
-> Therefore, I will send a V3 patch that simply removes these new MODULE_ALIAS() entries,
-> and another patch to add support for automatically generating module aliases based on 
-> MODULE_DEVICE_TABLE() instead of MODULE_ALIAS().
+On Mon, Nov 17, 2025 at 10:15=E2=80=AFAM Antoniu Miclaus
+<antoniu.miclaus@analog.com> wrote:
+>
+> Add driver support for the ADG1712, which contains four independent
+> single-pole/single-throw (SPST) switches and operates with a
+> low-voltage single supply range from +1.08V to +5.5V or a low-voltage
+> dual supply range from =C2=B11.08V to =C2=B12.75V.
+>
+> The driver configures switches once at probe time based on device tree
+> properties and does not expose any userspace interface for runtime contro=
+l.
+>
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> ---
+> Changes in v3:
+> - Remove GPIO controller interface
+> - Configure switches from device tree at probe time only
+> - Add 'switch-states' property parsing
+> - Change from GPIOD_ASIS to GPIOD_OUT_LOW
+> ---
+>  drivers/gpio/Kconfig        |  9 ++++
+>  drivers/gpio/Makefile       |  1 +
+>  drivers/gpio/gpio-adg1712.c | 87 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 97 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-adg1712.c
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 7ee3afbc2b05..3fac05823eae 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -157,6 +157,15 @@ config GPIO_74XX_MMIO
+>             8 bits:     74244 (Input), 74273 (Output)
+>             16 bits:    741624 (Input), 7416374 (Output)
+>
+> +config GPIO_ADG1712
+> +       tristate "Analog Devices ADG1712 quad SPST switch GPIO driver"
+> +       depends on GPIOLIB
+> +       help
+> +         GPIO driver for Analog Devices ADG1712 quad single-pole,
+> +         single-throw (SPST) switch. The driver provides a GPIO controll=
+er
+> +         interface where each GPIO line controls one of the four indepen=
+dent
+> +         analog switches on the ADG1712.
+> +
 
-Thanks, looks like good approach.
+I'm finding it hard to understand how this is a GPIO driver. It's a
+GPIO consumer but does it really belong under drivers/gpio/?
 
-Best regards,
-Krzysztof
+>  config GPIO_ALTERA
+>         tristate "Altera GPIO"
+>         select GPIOLIB_IRQCHIP
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index ec296fa14bfd..9043d2d07a15 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -28,6 +28,7 @@ obj-$(CONFIG_GPIO_104_IDI_48)         +=3D gpio-104-idi=
+-48.o
+>  obj-$(CONFIG_GPIO_104_IDIO_16)         +=3D gpio-104-idio-16.o
+>  obj-$(CONFIG_GPIO_74X164)              +=3D gpio-74x164.o
+>  obj-$(CONFIG_GPIO_74XX_MMIO)           +=3D gpio-74xx-mmio.o
+> +obj-$(CONFIG_GPIO_ADG1712)             +=3D gpio-adg1712.o
+>  obj-$(CONFIG_GPIO_ADNP)                        +=3D gpio-adnp.o
+>  obj-$(CONFIG_GPIO_ADP5520)             +=3D gpio-adp5520.o
+>  obj-$(CONFIG_GPIO_ADP5585)             +=3D gpio-adp5585.o
+> diff --git a/drivers/gpio/gpio-adg1712.c b/drivers/gpio/gpio-adg1712.c
+> new file mode 100644
+> index 000000000000..86f8645cf2ad
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-adg1712.c
+> @@ -0,0 +1,87 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Analog Devices ADG1712 quad SPST switch driver
+> + *
+> + * Copyright 2025 Analog Devices Inc.
+> + *
+> + * Author: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +
+> +#define ADG1712_NUM_SWITCHES   4
+> +
+> +struct adg1712 {
+> +       struct gpio_descs *switch_gpios;
+> +};
+> +
+> +static int adg1712_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev =3D &pdev->dev;
+> +       struct adg1712 *adg1712;
+> +       u32 switch_states[ADG1712_NUM_SWITCHES] =3D {0}; /* Default all s=
+witches off */
+> +       int ret, i;
+> +
+> +       adg1712 =3D devm_kzalloc(dev, sizeof(*adg1712), GFP_KERNEL);
+> +       if (!adg1712)
+> +               return -ENOMEM;
+> +
+> +       adg1712->switch_gpios =3D devm_gpiod_get_array(dev, "switch", GPI=
+OD_OUT_LOW);
+> +       if (IS_ERR(adg1712->switch_gpios))
+> +               return dev_err_probe(dev, PTR_ERR(adg1712->switch_gpios),
+> +                                    "failed to get switch gpios\n");
+> +
+> +       if (adg1712->switch_gpios->ndescs !=3D ADG1712_NUM_SWITCHES)
+> +               return dev_err_probe(dev, -EINVAL,
+> +                                    "expected %d gpios, got %d\n",
+> +                                    ADG1712_NUM_SWITCHES,
+> +                                    adg1712->switch_gpios->ndescs);
+> +
+> +       ret =3D device_property_read_u32_array(dev, "switch-states", swit=
+ch_states,
+> +                                            ADG1712_NUM_SWITCHES);
+> +       if (ret && ret !=3D -EINVAL)
+> +               return dev_err_probe(dev, ret, "failed to read switch-sta=
+tes\n");
+> +
+> +       for (i =3D 0; i < ADG1712_NUM_SWITCHES; i++) {
+> +               if (switch_states[i] > 1) {
+> +                       dev_warn(dev, "invalid switch state %u for switch=
+ %d, using 0\n",
+> +                                switch_states[i], i);
+> +                       switch_states[i] =3D 0;
+> +               }
+> +
+> +               ret =3D gpiod_set_value_cansleep(adg1712->switch_gpios->d=
+esc[i],
+> +                                              switch_states[i]);
+
+I don't see anything here that cannot be achieved with gpio hogs in
+device-tree. Do we really need a separate driver for it? If we really
+really need it, you don't really need to implement a new driver, you
+could literally just extend gpio-virtuser with a real compatible and
+it would request the GPIOs for you.
+
+> +               if (ret)
+> +                       return dev_err_probe(dev, ret, "failed to set swi=
+tch %d\n", i);
+> +       }
+> +
+> +       platform_set_drvdata(pdev, adg1712);
+
+Where is the corresponding platform_get_drvdata()?
+
+> +
+> +       dev_info(dev, "ADG1712 switch controller configured\n");
+
+Please remove this, no need to be noisy.
+
+Bart
 
