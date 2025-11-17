@@ -1,133 +1,119 @@
-Return-Path: <linux-gpio+bounces-28567-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28569-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B9D4C62D21
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 08:59:46 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D379C62D9E
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 09:09:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2D1A236021A
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 07:58:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTPS id CF6792417F
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 08:09:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57C2031BCB7;
-	Mon, 17 Nov 2025 07:58:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6139330FC1C;
+	Mon, 17 Nov 2025 08:09:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hfl7nfpD"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="2aSiXgsY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C5F3191DE;
-	Mon, 17 Nov 2025 07:58:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D7C8462
+	for <linux-gpio@vger.kernel.org>; Mon, 17 Nov 2025 08:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763366314; cv=none; b=TZcd16nziqzkRqaJdIPhC4S+RaWCov/4WnRBnJD1JaCZjLIYhxQn0bba01uHF+m4n5/FzEGQGDlGq8YY1EiUwFTIr8dQZ/Q002Fcf5ctzH2/XoVUcisUL3nVO38LQfUkdAje7H4EzbhG8MvUuXcN13l8zls0i1r1e3ahOVs0zUQ=
+	t=1763366994; cv=none; b=Gur1TYDpiGOpT+teOTGEhztdPpO+7A4lFpzq6fgOx20v3nB0a84lknvWL6HIhuma7kMJZLATSSDag59OoiBM0j4XdPw1HIAp9/E6hTj9LPt8df00NI9hzGSDtIRYOlVs6Qi41NwkJv0rtJMgnw9xV5wNX1PKMcsAqWMHV/SeS70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763366314; c=relaxed/simple;
-	bh=rftrJ2X86gEUzI36HaO4SUpjCvgCe3dPfNpIAFurNo0=;
+	s=arc-20240116; t=1763366994; c=relaxed/simple;
+	bh=ninqvxmEiWCjjF1lMMzf20rBX/OIGRaQe0tlAt3D77s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=djHXT2FpzFqpQTX4BXmz7dS/0y/J4ErHpxD/+1eRysCmUT/Oq/c6iX5dmGMyi2RTlLFYNTZ5vZG0meR/qnbG0QTgBp3HKbA9ZFCqUB3XvXXuX8dyYh1qWGXDMyjRE8kaZbLH94hIu5UXT3JYZtfXfRsOoSpOV1BUKd5H206ejvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hfl7nfpD; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763366313; x=1794902313;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=rftrJ2X86gEUzI36HaO4SUpjCvgCe3dPfNpIAFurNo0=;
-  b=hfl7nfpDihuMFATc3uxf1IiWUadBjyxu1s91lNWiuXd+8pZtW0aFMUEh
-   7jB024yjffgtaebgCE2NdrWRxMDiRc6bzSYAacy2C2vmaw6LfhVftRqmm
-   CBBliguwLv1+mVPzJwW5PjqenUpOM6YKVaL422YgmhImFY8wS8xaEHDVi
-   WslWjJGkp51CwdcVttThc9WB54xFLRwf3OWKNu55UHM6+SVhDLqmik6gU
-   uWUcQ8Jss7Cfs/MUVkcQ2a4NTjfPdsVQtNO1cuL8eztUmqMmDOhjvz6xE
-   PHhDqcCwAbdriFwlOL3WvlooUJ//TVXbEOkOM+N6fDoiHpHEMtKLv2Lh9
-   Q==;
-X-CSE-ConnectionGUID: uRWufIVsTqKQbvQjptjWpw==
-X-CSE-MsgGUID: Jo49P1/8Tw6R2zlteIqyPA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11615"; a="65392689"
-X-IronPort-AV: E=Sophos;i="6.19,311,1754982000"; 
-   d="scan'208";a="65392689"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2025 23:58:30 -0800
-X-CSE-ConnectionGUID: XVHwo46cTgG51gOBdvSkkA==
-X-CSE-MsgGUID: igiB89QrQri9VyLEqnw+iw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,311,1754982000"; 
-   d="scan'208";a="190169887"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by orviesa009.jf.intel.com with ESMTP; 16 Nov 2025 23:58:28 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 08B509A; Mon, 17 Nov 2025 08:58:27 +0100 (CET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v1 3/3] pinctrl: cherryview: Convert to use intel_gpio_add_pin_ranges()
-Date: Mon, 17 Nov 2025 08:57:01 +0100
-Message-ID: <20251117075826.3332299-4-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20251117075826.3332299-1-andriy.shevchenko@linux.intel.com>
-References: <20251117075826.3332299-1-andriy.shevchenko@linux.intel.com>
+	 MIME-Version:Content-Type; b=D9szBLGzkoqPcVCzcPLGgLuzrnNPlKO/5WlaUsA1tMN17DFVfV7GEyMVvtrqQprGwZ5y7u0f5SVHgVl/p3D529+bl2ZIBO+rdTQ0kWTFS4o2ZwScoG9Fvre/JizJ4t351gWXdpVgBXf4La/BTzXakLmsnZf2Fn9BFMfbwItuOjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=2aSiXgsY; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-42b38de7940so2246700f8f.3
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Nov 2025 00:09:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763366989; x=1763971789; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vNxm1Zk4Zi5iMwgPXIHkY9mVE6bXlTiw5xwEVdHakhI=;
+        b=2aSiXgsYhm1tWXzTXKXHGBOb9q/NicPR7jH4k300Jtb/Oq3BE/aTmbwFVmbjoYdpIY
+         Wzq3vsDRCakzKBuJa/HvxQg8BlpoQjlQcF9P7/7K2cKakyjfemnzb48cKEBrL2iq1XcY
+         duMpf57WSMfwGjQdu/nPDg1bpou6k8BOQzy821rjrh5dmJsT1YU4MbUNx8fVWQmgTB2X
+         vMvOdjFe5UpwSNTLCkBXwFdaxeNp3gqGcvShnhNgDvkHDAG4vNVz9eOf/2nyRyfg8fb1
+         HFEu39NgMEmfjb8NSuFKNLU0dsNsZrGByuNTq/T/7qmoNEz9ibsnBwe35jkTNXRLsZ0v
+         n7rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763366989; x=1763971789;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=vNxm1Zk4Zi5iMwgPXIHkY9mVE6bXlTiw5xwEVdHakhI=;
+        b=GRTT62C7gnBjsBKzhhJXMtc/XwNNpTILsTryltMWLPXXoPUO+MDUlciO5aE5elPwPA
+         H8pDGwR4Lytk2xVuBbOE/xUBYdkQ8kRUtw0Inz6UiTSIF/aKcRbw6QvDAQ7Vxtjgj3Oo
+         RNYStQmraJ4IZ/hj6QQF/J6dg05xklvSa4MB87itYclVx9IMdL6B2cyuBr7+1LWAz+eh
+         Zqt67WZKVo+uJG9M6etiQk1u5YCIMrPNZD/aM9hiq8QvcDiSCdhRi/+Jnct1WECp+sli
+         STzTzzRRqQ1/DZwKbXI6GpXNrm9JBiY3qbxttE78kJBQVoEQvdYVA7p7YmW9jRAJI7Lc
+         lffA==
+X-Forwarded-Encrypted: i=1; AJvYcCVqY/xlvBUierJuc2+wrvPfDUBEl9RvjdzS+Xm81+6/dR06/vuD8Yd27oPlkg1xw3Nn0Zr/zSxNFKNh@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkiIV1aFxTrwNWWFV8PE84IrA4VOoQuZiq3I7RvD1iImkcPTwt
+	16dK0dv39N81Gg05Xfii9u0raRiphcosKnpVB8MjkZ6lGmyO7rGWBkqQu6X+eQzCBHQ=
+X-Gm-Gg: ASbGnct3lNYrwcAAh2oLxEHiHpvZs/Z9V3bYzUz0E1oq3NkDLDgjuvtAojymW07nuVF
+	Oa2sJCa5BGzl8tdo9AHc7IuOATsfwny+9zYkgdZBdaQFmaCSwOu0Jrq8iAAtVsnh6sjLgkmNzKq
+	6RxFdFwv4Y/NHZ9KJQKsBBHLuE2fVPPDRc4YwEHCgI9Iiaj8JKJHf7PPX2sGSujjZC6fFajglRO
+	nJgFDOF56WX0h0dj2dRYY2lS/GiAGRxF22UF3xdk+Km2I3ShvAUeJaU/qu5rszelGw7IKWk84GK
+	px+oz1qDFxBOEezlHE7riQL5HnDQT/Cxf4dx0bct8vpKdquDdR6VC1jvtAxCHGCenpky3V/20FC
+	6RJCnJfQEnonn4zfY/1+f/TkMChQT6vYuJCsZPMOSjYzTFajV7EY98NgOaF5n07qmZI7KzFbuun
+	csTFL3boqlmxqP7eqm
+X-Google-Smtp-Source: AGHT+IGxB3eOeXVcNz6toX4eGLbYLDjbtRbx13QMOeHyz7PYx+RatpHMrUUuguAaj3lbY/sFXy2fFw==
+X-Received: by 2002:a05:6000:1842:b0:42b:55f3:6196 with SMTP id ffacd0b85a97d-42b5932342emr9693498f8f.4.1763366989274;
+        Mon, 17 Nov 2025 00:09:49 -0800 (PST)
+Received: from brgl-uxlite ([2a01:cb1d:dc:7e00:36dc:12ef:ca32:1a1c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53e7b12asm25037608f8f.10.2025.11.17.00.09.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Nov 2025 00:09:48 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH libgpiod] dbus: manager: don't try to export the same chip twice
+Date: Mon, 17 Nov 2025 09:09:43 +0100
+Message-ID: <176336697449.19820.17623558208865688799.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251114132957.33750-1-brgl@bgdev.pl>
+References: <20251114132957.33750-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Driver is ready to use intel_gpio_add_pin_ranges() directly instead of
-custom approach. Convert it now.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/intel/pinctrl-cherryview.c | 20 +-------------------
- 1 file changed, 1 insertion(+), 19 deletions(-)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
-index 9c353e1ebe4a..d72e50486370 100644
---- a/drivers/pinctrl/intel/pinctrl-cherryview.c
-+++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
-@@ -1511,24 +1511,6 @@ static int chv_gpio_irq_init_hw(struct gpio_chip *chip)
- 	return 0;
- }
- 
--static int chv_gpio_add_pin_ranges(struct gpio_chip *chip)
--{
--	struct intel_pinctrl *pctrl = gpiochip_get_data(chip);
--	struct device *dev = pctrl->dev;
--	const struct intel_community *community = &pctrl->communities[0];
--	const struct intel_padgroup *gpp;
--	int ret, i;
--
--	for (i = 0; i < community->ngpps; i++) {
--		gpp = &community->gpps[i];
--		ret = gpiochip_add_pin_range(chip, dev_name(dev), gpp->base, gpp->base, gpp->size);
--		if (ret)
--			return dev_err_probe(dev, ret, "failed to add GPIO pin range\n");
--	}
--
--	return 0;
--}
--
- static int chv_gpio_probe(struct intel_pinctrl *pctrl, int irq)
- {
- 	const struct intel_community *community = &pctrl->communities[0];
-@@ -1542,7 +1524,7 @@ static int chv_gpio_probe(struct intel_pinctrl *pctrl, int irq)
- 
- 	chip->ngpio = pctrl->soc->pins[pctrl->soc->npins - 1].number + 1;
- 	chip->label = dev_name(dev);
--	chip->add_pin_ranges = chv_gpio_add_pin_ranges;
-+	chip->add_pin_ranges = intel_gpio_add_pin_ranges;
- 	chip->parent = dev;
- 	chip->base = -1;
- 
+On Fri, 14 Nov 2025 14:29:57 +0100, Bartosz Golaszewski wrote:
+> It's possible to get a second bind event from udevd (for instance:
+> manually triggered with `udevadm trigger -c bind`) on the same GPIO
+> chip so it already existing in the hashmap may actually happen unlike
+> what the comment in daemon.c states. We must not try to export the same
+> chip twice as it will crash the gpio-manager on the subsequent
+> assertion.
+> 
+> [...]
+
+Applied, thanks!
+
+[1/1] dbus: manager: don't try to export the same chip twice
+      https://git.kernel.org/brgl/libgpiod/c/859b3c7106589831458962cb0eb06a0c5e1b679d
+
+Best regards,
 -- 
-2.50.1
-
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
