@@ -1,71 +1,71 @@
-Return-Path: <linux-gpio+bounces-28572-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28573-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86F75C63253
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 10:23:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F1B6C631B2
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 10:16:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id ECB3E4F1226
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 09:16:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 631253A72BF
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 09:16:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3AC3324B3B;
-	Mon, 17 Nov 2025 09:15:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04711326956;
+	Mon, 17 Nov 2025 09:15:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="mKQef0tH"
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="DhJ0r+eo"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E172A3277AF;
-	Mon, 17 Nov 2025 09:15:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277B732693F;
+	Mon, 17 Nov 2025 09:15:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763370945; cv=none; b=pmSIdYd+oI/+aYhtbVpxyXiaUHW9/VnhxiykUmYPUJ9fjaqVO4R0Kmxm1x37SEqfylFrkTmRCIDt+ZEGPFXoUAsZ3fdtEEUzuZB5m6PW+lxT2QqsK7W9jKvdWfQttn0019KZE0ePywGfvPS+firvDUfrC/3FYyJNTxWQX6c+0yU=
+	t=1763370953; cv=none; b=F3zWDKVPQKbcVvqr+RSE87ZQUY88+a1l8YSENDILxaeIRILn13xfvTFKGoLWNFZiJ7FcFCYdT+e3uRaLt9L2Nd6nbkO1rwsRMYYKXI4yJjGdVfkHDNV6Atz0TBP2YucFdaUzpwJcUsD9L9udKY4y6AoYhJ4i0//G5My95xk7Lh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763370945; c=relaxed/simple;
-	bh=pRif8cJjJus99kraiYqY+3QBfCuNe+AO4hoAekj6QCM=;
+	s=arc-20240116; t=1763370953; c=relaxed/simple;
+	bh=D5+H7f4uBte+hiuEhbTEUv5x+AR2ARk/b2f644vJkss=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aqPY1Xi7v5aVY/PEdVgMT5wKCOPKRvlsdCa+N6UX0doE5Yo93LCdrCABWRmLKrxVFliPYc/Rz1fFKRN5fMDLE6kpbkzGDd8qV6K9z6Qjhy93YVxJkO/2GnWxEmF/ZJGfFBp5hhgq5hFfCZr/TxsAW++NxSnajQ5r/QASoKtiEQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=mKQef0tH; arc=none smtp.client-ip=148.163.135.77
+	 MIME-Version:Content-Type; b=ToW1oQqmJmyf+dhXPhUDvab6YQ39l7hNAVJEsgnf08MVk+UDnwhWmT2/nFCGpiyv421aibAGOrc6AEOGfpyct0je8ZxAqxND9CpTfNg/SQxEJNByYv8b3A+hPiRzu6Irw/blNIC1zpXfaM4C8O8D4Neg46vWuHYeQ2cjzpacmIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=DhJ0r+eo; arc=none smtp.client-ip=148.163.135.77
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AH87mdL2052307;
-	Mon, 17 Nov 2025 04:15:40 -0500
+	by mx0a-00128a01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AH87mdN2052307;
+	Mon, 17 Nov 2025 04:15:48 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
 	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=oJdIV
-	v7qZnoGY5A/6sq+oenFP9YK0TuC8xW2rktcVsg=; b=mKQef0tH1R4T9GXx7uFhe
-	FiZ1yD2CMJX19ECIU9QB/ezJqz8SoygWqBpA31KL4uuIjIkZvV9qHkRNR/6pIdIO
-	fJOw/ZSz6p+vX3x8mmZUhSQQPGA4WePP8oHfCSggl5M/SmCOxGRKEd96Y16SzteM
-	eqx0DNvJRZCbozPCDCB4ywLhOB/e9Kn0q48zTfHV/ZK2+tomxYHriF87DVWXvpvp
-	F+ITjaiXex+KgzBenaV74eUgXiKgpoA6y/P49yAoJb0xQJzFenSmzxnywsWla023
-	Gik+T+sKvM9pZeSv5ngjYWSRo45P5ANxZQVQKq+rJeczVtsefKbHH24yjiTBFnIA
-	A==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 4afehdkgra-1
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=IuYns
+	lDuYkzWlpe48q57o2TLUosAJYFqqBgwehB93Os=; b=DhJ0r+eopCIwz/p/Llr5G
+	yPrNHriECB5jRuKQGxIa6/1dQTOErHoRuEAJTXqXhrMqF6P37d38F6WjusqOofpa
+	yGWistKyIO91xm8V4k0hrXyTAKccxxPbP1eF/m9c9vM8zn6QWkicNDKSqSkI+HjQ
+	l66uvSSpDumBco/SQjkieZ8Xc7NE4swaOsrCQ16MePC9de8YnqHTuxG+kHjD7Gt1
+	fuji4RowPSXl9x6jH1K4p088crAwPPEV0SOc09WB4bOub8QYimQrdvY2tFqzTCRX
+	atXEihMvQBHn3IDMl7HEPHYZ7WBgVqvx3eCEb1AT/dHOqUq1FAvQUkd+ToVrcEzq
+	Q==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 4afehdkgrs-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Nov 2025 04:15:40 -0500 (EST)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 5AH9FcqR005384
+	Mon, 17 Nov 2025 04:15:48 -0500 (EST)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 5AH9Flut034273
 	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 17 Nov 2025 04:15:38 -0500
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+	Mon, 17 Nov 2025 04:15:47 -0500
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.37; Mon, 17 Nov 2025 04:15:38 -0500
+ 15.2.1748.37; Mon, 17 Nov 2025 04:15:47 -0500
 Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.37; Mon, 17 Nov 2025 04:15:38 -0500
+ 15.2.1748.37; Mon, 17 Nov 2025 04:15:46 -0500
 Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
  (10.64.17.10) with Microsoft SMTP Server id 15.2.1748.37 via Frontend
- Transport; Mon, 17 Nov 2025 04:15:38 -0500
+ Transport; Mon, 17 Nov 2025 04:15:46 -0500
 Received: from Ubuntu.ad.analog.com ([10.66.6.193])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 5AH9FE4E003532;
-	Mon, 17 Nov 2025 04:15:33 -0500
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 5AH9FE4F003532;
+	Mon, 17 Nov 2025 04:15:42 -0500
 From: Antoniu Miclaus <antoniu.miclaus@analog.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
         Conor Dooley <conor+dt@kernel.org>,
@@ -75,9 +75,9 @@ To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	<antoniu.miclaus@analog.com>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-gpio@vger.kernel.org>
-Subject: [PATCH v3 1/2] dt-bindings: switch: adg1712: add adg1712 support
-Date: Mon, 17 Nov 2025 09:13:22 +0000
-Message-ID: <20251117091427.3624-2-antoniu.miclaus@analog.com>
+Subject: [PATCH v3 2/2] gpio: adg1712: add driver support
+Date: Mon, 17 Nov 2025 09:13:23 +0000
+Message-ID: <20251117091427.3624-3-antoniu.miclaus@analog.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251117091427.3624-1-antoniu.miclaus@analog.com>
 References: <20251117091427.3624-1-antoniu.miclaus@analog.com>
@@ -87,22 +87,23 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-ORIG-GUID: E42OBifUm7DaBHa4idxuVrDeOTqh7Lam
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE3MDA3NyBTYWx0ZWRfX0heSzDKQeEP5
- QgWt+52sT9FfApQhBlhVdMF861pE15+NE4+Jfs1JcyG9jkVa8OowFO9OZQPTtvOp+w5na4Pkf0I
- m7c8pTnmcxF/+Eset9yMHG5FnSCyvTLEUbGrcqhZWEOAnncLeSVraDoiDjMS3EoBzOBNwxKTiNZ
- hozcwj6xDkRKdzyTsACYNazEAdFoE1o0j5KJft+ypAMTQQfYD7/MwnwuBLTIfTphXDV0DQTelYE
- 0HjRekkn1lbRAKC5+nSYi9xhKzL+EO5n4DHwpisdh+vRsC1LOK+WeRY8uaVJC1rlhIcv7mB/UtT
- wBxZHLk75V4Sf4xcFzubCuFczgi168MARMrsQpnhHwWue5F05alCjU8N9PSUNRhbPtEWVKjOWD6
- xQssnbxhoco/KMr4KpYtlrDZ4YpRaw==
-X-Authority-Analysis: v=2.4 cv=LJ9rgZW9 c=1 sm=1 tr=0 ts=691ae7bc cx=c_pps
- a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17
- a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=gEfo2CItAAAA:8 a=gAnH3GRIAAAA:8
- a=lKotbuvdLVjnqHEpyiAA:9 a=sptkURWiP4Gy88Gu7hUp:22 a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-GUID: E42OBifUm7DaBHa4idxuVrDeOTqh7Lam
+X-Proofpoint-ORIG-GUID: Ya8jVkzTGbejgvTWivOYcZx5maYVhh9N
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE3MDA3NyBTYWx0ZWRfX+jTaPdobFUyO
+ yhSv29la9/9U7YrwXXk4g/IjxkZ05Pp7DPCko/v8GjP9bB1HTkqPSkrWKZBAx/COW3+nOxFrFoC
+ 24t5tTKqQTJejr01KwZl5PE7Mi5FVWwt+JCXpgX1bQjeuXQ39OnyVcO69rBH+u3NODUbKlrbBpH
+ BJ8vd4wjBeTu0wA1LsrvnJGK+SdMUY/+uzUo726aMLFixpC6uzanb6hCh9D9GuDkbDt2LdJPzLT
+ 5cCO4L1JChXjWmVPZiwgoBjk8HOCDHb7HVE0n4Tcb5hNB/z8JAftXXozHu2UoqfYXYWOxTe+JQl
+ RPoP/6Rsxy4d/mnvIAebOiXN7hujqDwzSFadnTbLuSbC16gNPXIrNyF7Y3YtK6/JymxVFBGIKOn
+ H1XyFkpXozFwKi5NgdJtLXKnRkertQ==
+X-Authority-Analysis: v=2.4 cv=LJ9rgZW9 c=1 sm=1 tr=0 ts=691ae7c4 cx=c_pps
+ a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=gAnH3GRIAAAA:8 a=1zQR8qqtwd6sJicix08A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-GUID: Ya8jVkzTGbejgvTWivOYcZx5maYVhh9N
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2025-11-17_02,2025-11-13_02,2025-10-01_01
@@ -113,94 +114,153 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2510240001
  definitions=main-2511170077
 
-Add devicetree bindings for adg1712 SPST quad switch.
+Add driver support for the ADG1712, which contains four independent
+single-pole/single-throw (SPST) switches and operates with a
+low-voltage single supply range from +1.08V to +5.5V or a low-voltage
+dual supply range from ±1.08V to ±2.75V.
+
+The driver configures switches once at probe time based on device tree
+properties and does not expose any userspace interface for runtime control.
 
 Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
 ---
 Changes in v3:
-- Move bindings from gpio/ to switch/ subsystem
-- Remove gpio-controller interface
-- Add 'switch-states' property for initial configuration
-- Update description and example
+- Remove GPIO controller interface
+- Configure switches from device tree at probe time only
+- Add 'switch-states' property parsing
+- Change from GPIOD_ASIS to GPIOD_OUT_LOW
 ---
- .../bindings/switch/adi,adg1712.yaml          | 68 +++++++++++++++++++
- 1 file changed, 68 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/switch/adi,adg1712.yaml
+ drivers/gpio/Kconfig        |  9 ++++
+ drivers/gpio/Makefile       |  1 +
+ drivers/gpio/gpio-adg1712.c | 87 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 97 insertions(+)
+ create mode 100644 drivers/gpio/gpio-adg1712.c
 
-diff --git a/Documentation/devicetree/bindings/switch/adi,adg1712.yaml b/Documentation/devicetree/bindings/switch/adi,adg1712.yaml
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 7ee3afbc2b05..3fac05823eae 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -157,6 +157,15 @@ config GPIO_74XX_MMIO
+ 	    8 bits:	74244 (Input), 74273 (Output)
+ 	    16 bits:	741624 (Input), 7416374 (Output)
+ 
++config GPIO_ADG1712
++	tristate "Analog Devices ADG1712 quad SPST switch GPIO driver"
++	depends on GPIOLIB
++	help
++	  GPIO driver for Analog Devices ADG1712 quad single-pole,
++	  single-throw (SPST) switch. The driver provides a GPIO controller
++	  interface where each GPIO line controls one of the four independent
++	  analog switches on the ADG1712.
++
+ config GPIO_ALTERA
+ 	tristate "Altera GPIO"
+ 	select GPIOLIB_IRQCHIP
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index ec296fa14bfd..9043d2d07a15 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -28,6 +28,7 @@ obj-$(CONFIG_GPIO_104_IDI_48)		+= gpio-104-idi-48.o
+ obj-$(CONFIG_GPIO_104_IDIO_16)		+= gpio-104-idio-16.o
+ obj-$(CONFIG_GPIO_74X164)		+= gpio-74x164.o
+ obj-$(CONFIG_GPIO_74XX_MMIO)		+= gpio-74xx-mmio.o
++obj-$(CONFIG_GPIO_ADG1712)		+= gpio-adg1712.o
+ obj-$(CONFIG_GPIO_ADNP)			+= gpio-adnp.o
+ obj-$(CONFIG_GPIO_ADP5520)		+= gpio-adp5520.o
+ obj-$(CONFIG_GPIO_ADP5585)		+= gpio-adp5585.o
+diff --git a/drivers/gpio/gpio-adg1712.c b/drivers/gpio/gpio-adg1712.c
 new file mode 100644
-index 000000000000..eed142eb5b05
+index 000000000000..86f8645cf2ad
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/switch/adi,adg1712.yaml
-@@ -0,0 +1,68 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/switch/adi,adg1712.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/gpio/gpio-adg1712.c
+@@ -0,0 +1,87 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Analog Devices ADG1712 quad SPST switch driver
++ *
++ * Copyright 2025 Analog Devices Inc.
++ *
++ * Author: Antoniu Miclaus <antoniu.miclaus@analog.com>
++ */
 +
-+title: Analog Devices ADG1712 quad SPST switch controller
++#include <linux/err.h>
++#include <linux/gpio/consumer.h>
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/property.h>
 +
-+maintainers:
-+  - Antoniu Miclaus <antoniu.miclaus@analog.com>
++#define ADG1712_NUM_SWITCHES	4
 +
-+description: |
-+  Bindings for Analog Devices ADG1712 quad single-pole, single-throw (SPST)
-+  switch controlled by GPIOs. The device features four independent switches,
-+  each controlled by a dedicated GPIO input pin.
++struct adg1712 {
++	struct gpio_descs *switch_gpios;
++};
 +
-+  The switches are configured at probe time based on device tree properties
-+  and cannot be changed from userspace after initialization.
++static int adg1712_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct adg1712 *adg1712;
++	u32 switch_states[ADG1712_NUM_SWITCHES] = {0}; /* Default all switches off */
++	int ret, i;
 +
-+properties:
-+  compatible:
-+    const: adi,adg1712
++	adg1712 = devm_kzalloc(dev, sizeof(*adg1712), GFP_KERNEL);
++	if (!adg1712)
++		return -ENOMEM;
 +
-+  switch-gpios:
-+    description: |
-+      Array of GPIOs connected to the IN1-IN4 control pins.
-+      Index 0 corresponds to IN1 (controls SW1),
-+      Index 1 corresponds to IN2 (controls SW2),
-+      Index 2 corresponds to IN3 (controls SW3),
-+      Index 3 corresponds to IN4 (controls SW4).
-+    minItems: 4
-+    maxItems: 4
++	adg1712->switch_gpios = devm_gpiod_get_array(dev, "switch", GPIOD_OUT_LOW);
++	if (IS_ERR(adg1712->switch_gpios))
++		return dev_err_probe(dev, PTR_ERR(adg1712->switch_gpios),
++				     "failed to get switch gpios\n");
 +
-+  switch-states:
-+    description: |
-+      Initial states for the four switches (SW1-SW4).
-+      Each element corresponds to the desired state of the respective switch:
-+      0 = switch disabled (open), 1 = switch enabled (closed).
-+      If not specified, all switches default to disabled (0).
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    items:
-+      minimum: 0
-+      maximum: 1
-+    minItems: 4
-+    maxItems: 4
++	if (adg1712->switch_gpios->ndescs != ADG1712_NUM_SWITCHES)
++		return dev_err_probe(dev, -EINVAL,
++				     "expected %d gpios, got %d\n",
++				     ADG1712_NUM_SWITCHES,
++				     adg1712->switch_gpios->ndescs);
 +
-+required:
-+  - compatible
-+  - switch-gpios
++	ret = device_property_read_u32_array(dev, "switch-states", switch_states,
++					     ADG1712_NUM_SWITCHES);
++	if (ret && ret != -EINVAL)
++		return dev_err_probe(dev, ret, "failed to read switch-states\n");
 +
-+additionalProperties: false
++	for (i = 0; i < ADG1712_NUM_SWITCHES; i++) {
++		if (switch_states[i] > 1) {
++			dev_warn(dev, "invalid switch state %u for switch %d, using 0\n",
++				 switch_states[i], i);
++			switch_states[i] = 0;
++		}
 +
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
++		ret = gpiod_set_value_cansleep(adg1712->switch_gpios->desc[i],
++					       switch_states[i]);
++		if (ret)
++			return dev_err_probe(dev, ret, "failed to set switch %d\n", i);
++	}
 +
-+    adg1712: switch-controller {
-+        compatible = "adi,adg1712";
++	platform_set_drvdata(pdev, adg1712);
 +
-+        switch-gpios = <&gpio 10 GPIO_ACTIVE_HIGH>,
-+                       <&gpio 11 GPIO_ACTIVE_HIGH>,
-+                       <&gpio 12 GPIO_ACTIVE_HIGH>,
-+                       <&gpio 13 GPIO_ACTIVE_HIGH>;
++	dev_info(dev, "ADG1712 switch controller configured\n");
 +
-+        /* Enable SW1 and SW3, disable SW2 and SW4 */
-+        switch-states = <1 0 1 0>;
-+    };
-+...
++	return 0;
++}
++
++static const struct of_device_id adg1712_dt_ids[] = {
++	{ .compatible = "adi,adg1712", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, adg1712_dt_ids);
++
++static struct platform_driver adg1712_driver = {
++	.driver = {
++		.name = "adg1712",
++		.of_match_table = adg1712_dt_ids,
++	},
++	.probe = adg1712_probe,
++};
++module_platform_driver(adg1712_driver);
++
++MODULE_DESCRIPTION("Analog Devices ADG1712 quad SPST switch driver");
++MODULE_AUTHOR("Antoniu Miclaus <antoniu.miclaus@analog.com>");
++MODULE_LICENSE("GPL");
 -- 
 2.43.0
 
