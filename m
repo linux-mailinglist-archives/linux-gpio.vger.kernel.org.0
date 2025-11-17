@@ -1,183 +1,223 @@
-Return-Path: <linux-gpio+bounces-28600-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28601-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7358C64CDD
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 16:08:59 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8F83C64DB2
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 16:23:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 817AB4E2978
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 15:08:58 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 978E14E70CE
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 15:23:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19DA330ACEB;
-	Mon, 17 Nov 2025 15:08:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C251F33B6E2;
+	Mon, 17 Nov 2025 15:23:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Pd6vc/7w"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VVMyXElu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ABE6257459
-	for <linux-gpio@vger.kernel.org>; Mon, 17 Nov 2025 15:08:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 641CD337BBC;
+	Mon, 17 Nov 2025 15:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763392132; cv=none; b=ew8EJrAhMjOlTSYqF1lEsdBCXssWBfS2QYv37DUiAFusRsS+kvMHdkO2/v0XXE6S2l3V32Ovl5wOx74YbwLC/a47CL3UbfL8+ko9EBct6+ZldD727nI43K+POGzZI/lkFW7ivWoTV2zfCfqh2R4/ZwFLDgO2xcF/Pzq0b4wxTcc=
+	t=1763393024; cv=none; b=XI5/w0HExpgH2SIS77J3dl4JPNJ4UyiD0UZClnsVu+V3VtQX4k6aNNVwCnHUmrkunIksBX73k2Amw8mvEF1Wm7GXr5WodSb6oiEGXOMYyKQCicNaL2Gf6n7mY5iCnIBJO7Epk/kruBtK8n0PdbmJtUVlp5pM9l6+UGCivLEgiT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763392132; c=relaxed/simple;
-	bh=6Z3vvdDJi99/j2trtNiDk92hbCD1SPyVgC/q+3Yb98c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ZnOrmrky1dOodoLvddpsHwxRJDhbPBtamOw8ZRmNWPChXSFoeEMYEokqgnR2Up7dX8NtRHRk2aIBE4F1zsvAix18PJlH3aEkAladJf/QgC4T/9ENcg1VbjBItchHRMdoSepmZ5sMO+A4HpP97VzUSIkO9BV+LpoLp61MWJGpVvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Pd6vc/7w; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-42b427cda88so3140981f8f.0
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Nov 2025 07:08:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763392129; x=1763996929; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nldYao/zHqiLGI1RXag2w3nlJ/toi6AbF/bm2mPJ4+g=;
-        b=Pd6vc/7w3GiuJtqYvB0upS8x0/xKja3WL4MRxN6T1E3LanxBtzA75gmOifFWX4370i
-         7BaiPbIo05LcvXS+Zq69uSnJceId9o45ikbiLaOM+z0OjhVQ5MLWtRmfb0g0bb64lu6H
-         WJz94cOMHbF7TildXZ8k4raEgANX5tfmhMDpNnfAzwG15um0GaSl+4CCKUE+bRL7MWsc
-         zLsU3NsOHyzuu+oy8RvZpq2V4qSr8siHWjPftd5/LjeAm9DVanRiXOpdvgy1AolJ12AO
-         8vENPuI9jDrBdfWHqSo4PFUVkj/F+KfSIyEoWOMvnSQdR71G4nitmtbDnCP4GegLDyTa
-         oP5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763392129; x=1763996929;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nldYao/zHqiLGI1RXag2w3nlJ/toi6AbF/bm2mPJ4+g=;
-        b=NZHYsoSnNFVSzP05zwzjkm5vYRyaK7hLl4Ih/AdabhdZ0vC7R/dj7BpT9Thij0WX//
-         ZHK2eONrPczEQyta9oYLPuZHEDxXxF7Js6AkRuxnaVWyJ2ssXxyebskXBnjfuXOqMl2W
-         Dsm+HsQvbAhK801UCr32ekMFWRddYqcPQB0ylcvQyOfoN+WSSpUoKm/IfNw/08wOkSpo
-         8Jz6B+CLKNYyy5zDEiLifnsD2SuPg3+XfXJqt+iHnxcvmY+/TGa8u/MpbbuFYWEmlMun
-         eWbwKTGKPyLBwCxHvAcsd5LHpHkriBsGkVcA7QpoqrReZ7aF9/YepxF+8iXh9QkzhRDe
-         ZIeQ==
-X-Gm-Message-State: AOJu0YzxGZJfAxQZereHXzz4TNnwvZ9CLrcrEEGUa8FkoGvjXyGeoYr+
-	Hr0RKkLSv+0iX4xIZeBmDwU07dpfJHgCuOKdXRPxW407IGdXfDP0V2Dc+GXmFdtBxxI=
-X-Gm-Gg: ASbGncv3gKDCJ2Hf+rFaZpn3oQX6gwbX3Fr30qOAwE+8nKnhSSFYC5nSwCAqxH/AeDQ
-	Fpf+QwP0MOXGMl1C9zM+dEK2H3VsCbTSmJLmN9gRxpNoH84yffcuQCPrVDV8GINpmhTCc1O16R3
-	Woep6ZZD4GuX1Z0gU9ScAZ2XSjZTGGZKR3QuJVSNMxYMSvEk62p+ia+KcpUxDC50jAIonJi43sK
-	eaM40+UATWt6DlDinoCiQ/OjDZuZlZSxyG6NMGMvYwrEuimUvXFml/ecn+jibS+yUxsRS2G4beY
-	0nRWZrACW+su/rsgyupY4qqa1Hz9Ozc4YiYxXLXPfrgx8y6YXaPogAmziwx2+cRAjjjbLDJ/HMi
-	K1eLbpB/9urSr/usWXax3oxg8+KUiUs3FLJ1DbgttnOvQ6SkDJ4eoXPVsawjYHWdBT1Mwci7Xzq
-	mrJ0us
-X-Google-Smtp-Source: AGHT+IGaiaj/tb/Zs3JDmpJ8bAJiBUr+ULEguFxnC1stdrml/MsWAChhdPO2Iycs4JfzhjPmh440iA==
-X-Received: by 2002:a05:6000:2dc8:b0:429:d40e:fa40 with SMTP id ffacd0b85a97d-42b5937324cmr11698519f8f.45.1763392129375;
-        Mon, 17 Nov 2025 07:08:49 -0800 (PST)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:36dc:12ef:ca32:1a1c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53e97a87sm27366557f8f.20.2025.11.17.07.08.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Nov 2025 07:08:48 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 17 Nov 2025 16:08:42 +0100
-Subject: [PATCH] gpio: cdev: make sure the cdev fd is still active before
- emitting events
+	s=arc-20240116; t=1763393024; c=relaxed/simple;
+	bh=D0uHEF+8TZ+GciPjEn9il1CGydZ3mO5pAE9l/oJDips=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t6ad+2aIYk/yWXAAX5nS9xNgeclwj7YnENJgSwmC5kl1hMSVu/8j6w4ZYDl5sQ4t0BdhQvf8kU6U1OHYMEnijQtH+JVLYfJ1RLgnYvUp/D9QdPHz5eSPHmbAv6h4JcSckO2TYLJZfCR2Hhwe+dc/tK4Tb1ICNPyKCldQopiIM3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VVMyXElu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 869F8C19423;
+	Mon, 17 Nov 2025 15:23:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763393023;
+	bh=D0uHEF+8TZ+GciPjEn9il1CGydZ3mO5pAE9l/oJDips=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VVMyXEluUuY3fVAbZu5As/b3oLYYW1eM17pQU0tqvz8Dl91tztRJVHX2h56r73VGF
+	 6AFl7MqcTl7siDIzjU+QrZHbfmAPbqlsEj7e64oQeSyC5yWpjSllRHBuRIy79O/p3l
+	 fiAxH+8NOq2BQlHxISI6HA2oT+YvQpRfmfrpbdozZt2cRStk4Soe+aztUqUkGQj+bb
+	 Gvb4SclKUIISLGd/IB4mzbeX8xeP6WV7BRaUDCkQThQh5QceCpkzZMFOnprVW8GQNc
+	 IPFUo8Hwv9D6/HY8+3SP9d27jcrliTR63ZUtPe1DwIOq2pZu6bXwdAnKW0NfyHRnQr
+	 zt72M3bvIEcGg==
+Date: Mon, 17 Nov 2025 09:23:41 -0600
+From: Rob Herring <robh@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@linux.dev>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-clk@vger.kernel.org,
+	Michael Turquette <mturquette@baylibre.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	linux-leds@vger.kernel.org, Pavel Machek <pavel@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>, linux-gpio@vger.kernel.org,
+	linux-pm@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	linux-rtc@vger.kernel.org, Lee Jones <lee@kernel.org>,
+	Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v4 04/16] dt-bindings: power: supply: BD72720 managed
+ battery
+Message-ID: <20251117152341.GA1944698-robh@kernel.org>
+References: <cover.1763022807.git.mazziesaccount@gmail.com>
+ <ac5a4e992e4fb9c7bffb1e641a7cd61f74af4cba.1763022807.git.mazziesaccount@gmail.com>
+ <176303119683.3716572.16868393928566655866.robh@kernel.org>
+ <ee36d7d1-ef47-4a35-9aff-baa6ed32105a@gmail.com>
+ <20251114163954.GA3399895-robh@kernel.org>
+ <32303b95-3fd5-44c4-bb7d-e2957a6064fc@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251117-gpio-cdev-get-file-v1-1-28a16b5985b8@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAHk6G2kC/x3MSwqAMAxF0a1Ixgaa4g+3Ig6kvtaAqLQigrh3i
- 8MzuPehhKhI1BcPRVyadN8ypCzILdMWwDpnkzW2FpGWw6E7uxkXB5zsdQWjc1VlpsZY8ZTDI8L
- r/U+H8X0/QB1hyWQAAAA=
-X-Change-ID: 20251117-gpio-cdev-get-file-e8c440a6021f
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Kent Gibson <warthog618@gmail.com>, 
- Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
- Alexander Sverdlin <alexander.sverdlin@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2809;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=T/VxDXlzsT4igUw37K7lMLfTPECFMsCcg8T8/aC48Oc=;
- b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBpGzp8SSXsQ0lOMS/XTFKj7dnEMkmxqsKLY5+RM
- wnBD53LlW2JAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCaRs6fAAKCRAFnS7L/zaE
- wxElEACOUZC4/MlUygn9iOmlJgqVFdTPKXgJhP56o4k1t7vG/CL8wwtfjLvwy4OhkuhH5d5+u6G
- yLqADoXrDfsQ6r5n6ii7jJFqqFVn4+nqANNMweXmCR/l9eRdDRsgSCsSCUTH2IMmAU303cDCHnB
- VppK3r6N4JRsIKLPwEV2yc7fa8uapFsYxiebLfO/jCjtEADiN0WSn1stZWXe0BJLpFSRlR/YK1i
- Y5jYmIHQToF3xUFZTJJps+Z5RBqXUKup+b01bpx5h6ItiWbJz7IN7i/nVR2pMi6aPCMDcezeB/l
- N6ZMmgi4RhMmXkaGpZfsNi0t7XkFo3/pchrgj7H6w0tFQsBMseKSRB3RaE+nwBM1gT6sySgcRzr
- ffg9GD/vAgila1L3JLM+TspKwPueWQ6Hof9U8Q66r6dTKxcOGwb9ca2AKlzEIYz6SZb6Tt5+jHz
- dKAP4LHUmIMiCGfuVOQS7QOscGRTAKgJ0g7ZQhEE9iC5DU3h0ZwliAVrSj4v46Ly0x9eybPtmIl
- eZqDKTmg3g+pYVkUbAwZ/tbxjovXtNHMiiCEsqn1aSqXJ16BkVZiNTQzvb88okJ2cHlIwmnr55Q
- w9Ilhdvg3NQpGghl7RluEUifP71PRufT12DtMizjoM1IFQXL1dAFEQOGAh09w7Bt4oyGkGkJ5Ck
- KalaAgretMuskwg==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <32303b95-3fd5-44c4-bb7d-e2957a6064fc@gmail.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Nov 17, 2025 at 10:12:01AM +0200, Matti Vaittinen wrote:
+> On 14/11/2025 18:39, Rob Herring wrote:
+> > On Fri, Nov 14, 2025 at 11:04:27AM +0200, Matti Vaittinen wrote:
+> > > On 13/11/2025 12:53, Rob Herring (Arm) wrote:
+> > > > 
+> > > > On Thu, 13 Nov 2025 10:52:19 +0200, Matti Vaittinen wrote:
+> > > > > From: Matti Vaittinen <mazziesaccount@gmail.com>
+> 
+> //snip
+> 
+> > > 
+> > > So, as far as I understand, the only viable options are expanding the
+> > > existing battery.yaml with these properties (which I hoped to avoid, see
+> > > below)
+> > > 
+> > > > > The right place for them is the battery node, which is described by the
+> > > > > generic "battery.yaml". I was not comfortable with adding these
+> > > > > properties to the generic battery.yaml because they are:
+> > > > >     - Meaningful only for those charger drivers which have the VDR
+> > > > >       algorithm implemented. (And even though the algorithm is not charger
+> > > > >       specific, AFAICS, it is currently only used by some ROHM PMIC
+> > > > >       drivers).
+> > > > >     - Technique of measuring the VDR tables for a battery is not widely
+> > > > >       known. AFAICS, only folks at ROHM are measuring those for some
+> > > > >       customer products. We do have those tables available for some of the
+> > > > >       products though (Kobo?).
+> > > 
+> > > or, to add new compatible for the "vdr-battery".
+> > > AFAICS, adding new compatible would require us to wither duplicate the used
+> > > properties from battery.yaml here (as battery.yaml mandates the
+> > > "simple-battery" - compatible) - or to split the battery.yaml in two files,
+> > > one containing the generic properties, other containing the "simple-battery"
+> > > -compatible and referencing the generic one. Then the "vdr-battery" could
+> > > also reference the generic one.
+> > > 
+> > > Any suggestions for the next path to follow?
+> > 
+> > Probably the latter option. You could do the former and make the new
+> > properties conditional on the "vdr-battery" compatible. That's fine with
+> > small differences, but gets messy as there are more properties and
+> > variations.
+> > 
+> > But is "VDR" a type of battery though? Is there a certain type/chemistry
+> > of battery we should be describing where VDR is applicable?
+> 
+> No. Not that I know. My understanding is that the "VDR (voltage drop rate)"
+> refers to measured voltage drop-rates under certain conditions - which can
+> be used to (more accurately) estimate the remaining capacity when battery is
+> nearly depleted. As far as I know, this is only used with Lithium-ion
+> batteries (I am not at all sure of this) - but I _assume_ the technique
+> could be applied to other type of batteries as well.
+> 
+> > I don't
+> > think it scales well if we define battery compatibles for every
+> > variation of charger algorithm. Honestly I don't mind just adding 1
+> > property. I care more if we allow undocumented properties than
+> > allowing documented but invalid for the platform properties.
+> 
+> I see. The "VDR" stuff is really tightly bound to the fuel-gauging
+> algorithm. It is measured characteristics of the battery - but those values
+> are only usable by the "VDR" algorithm. I don't really have a good insight
+> in the amount of fuel-gauging algorithm related properties suggested to be
+> added during the years - but don't think there have been that many of them.
+> So, I am not that worried about adding the compatible. On the other hand,
+> there is no technical reason (other than adding properties which are unused
+> on many platforms) why not to add the vdr tables in the static-battey node
+> without adding own compatible. And, reading reply from Andreas (I'll copy it
+> here to answer it in same mail)
+> 
+> /// Below text is form Andreas:
+> > just keep in mind, that several kobo devices have one pmic in one board
+> > revision and another one in the other (e.g. Kobo Nia rev A vs rev C).
+> > But probably the same battery. So if the "vdr-battery" is a compatible
+> > just to allow a more properties,
+> > then "simple-battery" should be allowed as fallback.
+> 
+> I didn't know Kobos use multiple chargers. Thanks Andreas! So, in that
+> sense, adding the "vdr" tables in static-battery node, without new
+> compatible, would maybe be simplest solution. Then the charger(s)
+> (fuel-gauge(s)) which implement VDR algorithm, can pick the tables while
+> those chargers which don't implement the VDR will just ignore these tables.
+> 
+> > When it
+> > becomes 10, 20, 30 properties, then I might start to care.
+> 
+> For VDR there are only:
+> 
+> rohm,voltage-vdr-thresh-microvolt,
 
-With the final call to fput() on a file descriptor, the release action
-may be deferred and scheduled on a work queue. The reference count of
-that descriptor is still zero and it must not be used. It's possible
-that a GPIO change, we want to notify the user-space about, happens
-AFTER the reference count on the file descriptor associated with the
-character device went down to zero but BEFORE the .release() callback
-was called from the workqueue and so BEFORE we unregistered from the
-notifier.
+So "voltage voltage drop rate"? And '-microvolt' says this is voltage 
+too. :)
 
-Using the regular get_file() routine in this situation triggers the
-following warning:
+> rohm,volt-drop-soc-bp,
+> rohm,volt-drop-temperatures-millicelsius
+> 
+> and
+> 
+> patternProperties:
+>   '^rohm,volt-drop-[0-9]-microvolt':
+> 
+> So, from the binding point of view (.yaml), it's not _that_ lot. In the .dts
+> there will be quite some noise as the tables have several values.
+> 
+> 
+> > If that
+> > happens, either we are doing a poor job of generically describing
+> > battery parameters or chargers and batteries are tightly coupled and
+> > can't be described independently.
+> 
+> I am under impression that chargers tend to be pretty flexible, and they can
+> be configured to work with many different batteries by altering the charging
+> profiles. Most of the battery properties (like and charging phases [like
+> pre, CC, CV], their limits, currents and voltages etc) are very generally
+> usable. So, large subset of charging functionality can be handled with
+> standard properties. I believe it is only the fuel-gauging where things get
+> more hairy.
+> 
+> I did prepare a series which does the split and adds new compatible for the
+> 'rohm,vdr-battery'. (The power-supply class is not yet modified in the
+> series, but we would probably want to modify the battery-info getters to
+> also accept the 'rohm,vdr-battery' -compatible.)
 
-  struct file::f_count incremented from zero; use-after-free condition present!
+I don't think that's the right direction. It's not a Rohm battery.
 
-So use the get_file_active() variant that will return NULL on file
-descriptors that have been or are being released.
+> I wonder if I should actually prepare also a series where these properties
+> are just placed in the existing static battery node without adding new
+> compatible. That way it would be easier to see which way is better.
 
-Fixes: 40b7c49950bd ("gpio: cdev: put emitting the line state events on a workqueue")
-Reported-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
-Closes: https://lore.kernel.org/all/5d605f7fc99456804911403102a4fe999a14cc85.camel@siemens.com/
-Tested-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpiolib-cdev.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+That seems like the right thing to do here. 
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index c437f14132b8637d3322fa7e5c2f86ad9a2506b3..62baa48ec0993da6341bdcafed61305456618380 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -2548,10 +2548,17 @@ static int lineinfo_changed_notify(struct notifier_block *nb,
- 		container_of(nb, struct gpio_chardev_data, lineinfo_changed_nb);
- 	struct lineinfo_changed_ctx *ctx;
- 	struct gpio_desc *desc = data;
-+	struct file *fp;
- 
- 	if (!test_bit(gpiod_hwgpio(desc), cdev->watched_lines))
- 		return NOTIFY_DONE;
- 
-+	/* Keep the file descriptor alive for the duration of the notification. */
-+	fp = get_file_active(&cdev->fp);
-+	if (!fp)
-+		/* Chardev file descriptor was or is being released. */
-+		return NOTIFY_DONE;
-+
- 	/*
- 	 * If this is called from atomic context (for instance: with a spinlock
- 	 * taken by the atomic notifier chain), any sleeping calls must be done
-@@ -2575,8 +2582,6 @@ static int lineinfo_changed_notify(struct notifier_block *nb,
- 	/* Keep the GPIO device alive until we emit the event. */
- 	ctx->gdev = gpio_device_get(desc->gdev);
- 	ctx->cdev = cdev;
--	/* Keep the file descriptor alive too. */
--	get_file(ctx->cdev->fp);
- 
- 	INIT_WORK(&ctx->work, lineinfo_changed_func);
- 	queue_work(ctx->gdev->line_state_wq, &ctx->work);
+The main question for me is whether these should even be Rohm specific? 
+That would probably require a 2nd user to answer for sure. 
 
----
-base-commit: 0c1c7a6a83feaf2cf182c52983ffe330ffb50280
-change-id: 20251117-gpio-cdev-get-file-e8c440a6021f
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> If I do that, should I only spin these bindings as RFC to avoid the
+> unnecessary noise?
 
+Only if you think something is not complete and/or the patches should 
+not be applied.
+
+Rob
 
