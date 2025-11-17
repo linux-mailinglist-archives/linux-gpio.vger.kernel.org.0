@@ -1,251 +1,141 @@
-Return-Path: <linux-gpio+bounces-28570-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28571-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id B935CC62DE5
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 09:14:31 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7691FC63220
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 10:21:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C3B344ECBFC
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 08:12:34 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 43C3D353573
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 09:16:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6335131C59B;
-	Mon, 17 Nov 2025 08:12:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87BC9327797;
+	Mon, 17 Nov 2025 09:15:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mIM3ltO1"
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="B0OY+zrL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A337D31B10E
-	for <linux-gpio@vger.kernel.org>; Mon, 17 Nov 2025 08:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D6932692A;
+	Mon, 17 Nov 2025 09:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763367129; cv=none; b=IulkfdDBxZHyYfO51ZcdY5iN8TQzgVhp4EG11tiUPBNRBZaWN35hC5FBBWUg/wxRkigw/DzEUxV/y3UWh7+PiITynMGVqi9p/7mX/hjzoeeWu9v4EDVe13J1T61RtlBNk/Qc2uja9pPU5s34KC5zBd5G/8+iKBU/WeS6q0yw6tg=
+	t=1763370943; cv=none; b=Cbpjuh2fVsZUoz71mPwHlekbt6AU39Oj0c4/3v1It/8ND5xCU4T5qqThrFXBNqWtnAzDQWSn6gB4IqG6YAOG9umewlrpDft3YmtjdK0q0dn62Wt6lWFMQKP4z8LYqdKMrfC59K1k4EV2o5ruhwAzia+no2uegpGhFiO9W9rumqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763367129; c=relaxed/simple;
-	bh=XHwbf6AOIUXsOmRYZriTih9VqIVu3akhJh3HAnKtjAI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O15wceGFggAOlwXj9PqzQGidee5X3E9a0mUBQLynYAkpa0ibmElWuJLTS+t6p7kr0OaYptDRMWRednp/fiz6jLfrB+y6q5KrJTuuy2qRc6e2aBsz64dknthbtRwUrtkjzii5L+fIXfQgMDX4y/iO5DqT49H0FQcTPUayQFjwsGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mIM3ltO1; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5957ac0efc2so4375541e87.1
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Nov 2025 00:12:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763367125; x=1763971925; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yNezKY4OK1RUkmmO61fiaJ8SOz15t0AD4hDvMzPpJVU=;
-        b=mIM3ltO1JCXOTXPJfKEXWf2BSZG2mBHB68G8pBekQdqxWaXxcaf7dto27e8WEippb2
-         3wAfyQ8nOvqjsUPIbEglFnCA6DWI9UoQRbsKMqnHNR4QvG7Mp+UzZ0ZADADwx1XrS/t9
-         QD+h+UN7jm+heHmecqTGEKdoO1OnubPj7o6cBg7s7ghR1djfIJeZQrDVKxOkVeovEhyQ
-         HDVI/XC7kMQw2Ic00mu1TrAzhcCF2vsMVVET4usBPfv9gRuMyBQPdtbi40ScNtC9DTpq
-         J6Wjr16nWOf1E/Vm7JRy1m4TW78h5kTzA2HNsMo0Jv8hZwqUiDNuIjyhWQio0BA1o1Rq
-         69Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763367125; x=1763971925;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yNezKY4OK1RUkmmO61fiaJ8SOz15t0AD4hDvMzPpJVU=;
-        b=Tycf4XaknSzOCsmD4aDjJKjg2+Jm42panHLOLTIzqtcsn7pxavrzSWG0y8Mg1EFmDt
-         /r5oNsUyOR7Cl1rgqYaF4AdKXi+uPEk7ZZhUPUFYYpYAJTp+7owv1q2tea0zAuosDNjc
-         VMzQHyddfU2NdPC6hr3iqRhKip33QIqfguJg7jJdTZte7r7opBHlVVi6CXwnG4DW6C1P
-         Mb9JRr6Y+lNZjfFTmqXLou5AKw1/0jed+ou1HSxZHjmd0btMbWXqMiPL6YfGdV1bMJo/
-         cfmHUX++HyDvytD8cwDsTboG9+BtshiaO6DX9RgVaNaHcDdbLXQSQ6Zuz63dZtioBwL/
-         lNgg==
-X-Forwarded-Encrypted: i=1; AJvYcCVHoPFYvcV05AqPM21CCr4s+VDcJbiYmACSlpMs/RR/pcJAN/Xo61kWKzv2zFDh/HM/jf04wuh4qcHk@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjeSiL09pbOFDGCDOXRMaW9Ep/QTZ4B257v23P8VkSWLskAayg
-	U2kU0PXX/3Pjmk2cs37FVJEQ11NOQgGfV79Nf3OF2r/88QCwmJR24h5N
-X-Gm-Gg: ASbGncuAvl8hBdkyybrYC6d2LyiPAN7nLV+6PyvzGgpD8BadQ/poEtJneGyRczdDhE1
-	0xHxdguRg4cT5xF3+5xk9OxMbbRwvUX8xA1utVstm5bqmeZkbiN1dTpbmkTVqADNjvtTD/dUuze
-	IHTBfIBmI5bT1Cin0eXz4Jr9eSk6drtGUmSgSAUfmzTNUMZJagZwod4gOylsp2kSC4n4fiQBSHB
-	aGUmz330U5nTOkyp0gOmbmimc50rmvDdOoj0HhomQZc09MxgcdLJNtbWOMWL+Z7ZZS1+t9s3I91
-	VehYrBl/YABz9XwLEwMq3UdfKsTJoRL9p9sqkWyiciX36aa+9CsiMTLsmaSqiidzIEif5g1NTmg
-	8r67bbpn3N03OlWmgyxPkExEIraypzvRg8IysWd0D3MYnYaexdN7GzP+d8pc+UFe3KZVlQuRgL0
-	okTElSXc6pQS9xIlnzMCmI
-X-Google-Smtp-Source: AGHT+IEluVZi6T3T+marIDimIkV/AzoU/n4XMrn+z0vTNbD0dmB4jEXr6UBisTSPipCj2YPh+iwoQw==
-X-Received: by 2002:a05:6512:2342:b0:595:8200:9f8f with SMTP id 2adb3069b0e04-595841b7044mr3304921e87.18.1763367124335;
-        Mon, 17 Nov 2025 00:12:04 -0800 (PST)
-Received: from [10.38.18.54] ([213.255.186.37])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-595803ac88bsm3067407e87.12.2025.11.17.00.12.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Nov 2025 00:12:03 -0800 (PST)
-Message-ID: <32303b95-3fd5-44c4-bb7d-e2957a6064fc@gmail.com>
-Date: Mon, 17 Nov 2025 10:12:01 +0200
+	s=arc-20240116; t=1763370943; c=relaxed/simple;
+	bh=2U+MZnxqSl9SXuyhukdChN4MXzGHyjpe8HD9sP5OFYM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TCf8N3HFyglz8fz/noDTLbfT+hijQ6gqat+rzvP0vqxGjqHT+HiyCCSAw6lViLE+aa3++Fy3DKfxDd8mOmyRk9zA54JOREBcDkiLMgBbOEbYANiMFo+LamEhE1jdsTQTNl9W78auXM0FkXqnrtzMp5RuRgC3TWgzM7z85SDH63U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=B0OY+zrL; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AH91oFF836739;
+	Mon, 17 Nov 2025 04:15:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
+	content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=2fu14MlUZT6b3QMyj0mxiqUW4p7
+	QgfYDIDYixstSF5k=; b=B0OY+zrLUliAtzkRMyMCEF1jo+1c3pp3PbGH6afscrd
+	Ge7wEvtEHFZApNzpewL2cwXqrcVkLCypM6kGM1r8AsHwqQcrDUpx72F3FygbFyed
+	JHMH3o75u/yAl7PrR0QdfIKx/xLd49qp6oHEBPKt9/CqSYBhW1Ns30eOJHy6/DL/
+	EopybRs9iX2ZzL9nj8xO/rrwVr63cEJbnqbyjRIB7tgRfl/J35nh3MtHKN+PFVzQ
+	e/QzDfPswSkdNf8L4RH3ZxiJY5o3VRJwKGHSz59qM6tapcrZafsZZ3isBYlv8mc8
+	EKxfFKQMdTdhCRYbPZ4bzDX5n/i5lKbKoozTTy0QhRg==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 4af8qhvbjr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Nov 2025 04:15:31 -0500 (EST)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 5AH9FUF1005363
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 17 Nov 2025 04:15:30 -0500
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.37; Mon, 17 Nov 2025 04:15:30 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.37; Mon, 17 Nov 2025 04:15:30 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.1748.37 via Frontend
+ Transport; Mon, 17 Nov 2025 04:15:29 -0500
+Received: from Ubuntu.ad.analog.com ([10.66.6.193])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 5AH9FE4D003532;
+	Mon, 17 Nov 2025 04:15:17 -0500
+From: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Antoniu Miclaus
+	<antoniu.miclaus@analog.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>
+Subject: [PATCH v3 0/2] Add ADG1712 SPST switch controller support
+Date: Mon, 17 Nov 2025 09:13:21 +0000
+Message-ID: <20251117091427.3624-1-antoniu.miclaus@analog.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 04/16] dt-bindings: power: supply: BD72720 managed
- battery
-To: Rob Herring <robh@kernel.org>
-Cc: Matti Vaittinen <matti.vaittinen@linux.dev>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org,
- Sebastian Reichel <sre@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>,
- Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- linux-leds@vger.kernel.org, Pavel Machek <pavel@kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
- linux-rtc@vger.kernel.org, Lee Jones <lee@kernel.org>,
- Stephen Boyd <sboyd@kernel.org>
-References: <cover.1763022807.git.mazziesaccount@gmail.com>
- <ac5a4e992e4fb9c7bffb1e641a7cd61f74af4cba.1763022807.git.mazziesaccount@gmail.com>
- <176303119683.3716572.16868393928566655866.robh@kernel.org>
- <ee36d7d1-ef47-4a35-9aff-baa6ed32105a@gmail.com>
- <20251114163954.GA3399895-robh@kernel.org>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20251114163954.GA3399895-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: Vz88QlOf_FNoAnK1IOw87PvIuzb-ue-C
+X-Proofpoint-ORIG-GUID: Vz88QlOf_FNoAnK1IOw87PvIuzb-ue-C
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE3MDA3NyBTYWx0ZWRfXzD/tT3bI5V6F
+ KGX8USQMrVNrkAkeCac04jyN5LCR/AJAXE4BegWMTMVhqzCb0mtCqp5PQI1IpCBdY/lhUUYMRp/
+ dkLAMu+oLlCK/TBhZygVfdzEjOP8qMUl4NiBfYF3h12DQvPfUFwkxeebPXHqr9bzuoCoChQR2AD
+ nbtbxvZn4NmqRQ5Caur25cJVQm1WmW/TRJao7mC4AQNhgDRbGj9b229bQoMJOKHkwWH/4z+9fLd
+ xA/rqhYkwsqRSufW4xMHUUqUV36C8fMbYTzBrgS3PGXWFrdvAf7spTacZ4MEsFeou0UY24F67ql
+ TglYxDBBhF/qA89LTuOoJo0AHBZ3ukPOT7zQTc+LBIS6kNNEamo4Si3H76ucR9XUqV8qdlLB36u
+ abflaLtXBbcu7FLoMlwefeVBQdhysQ==
+X-Authority-Analysis: v=2.4 cv=B7+0EetM c=1 sm=1 tr=0 ts=691ae7b3 cx=c_pps
+ a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=hQFzqgNBGMN7-N6NMNUA:9 a=QEXdDO2ut3YA:10 a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-17_02,2025-11-13_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 impostorscore=0 clxscore=1015
+ phishscore=0 lowpriorityscore=0 spamscore=0 suspectscore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2511170077
 
-On 14/11/2025 18:39, Rob Herring wrote:
-> On Fri, Nov 14, 2025 at 11:04:27AM +0200, Matti Vaittinen wrote:
->> On 13/11/2025 12:53, Rob Herring (Arm) wrote:
->>>
->>> On Thu, 13 Nov 2025 10:52:19 +0200, Matti Vaittinen wrote:
->>>> From: Matti Vaittinen <mazziesaccount@gmail.com>
+This series adds support for the Analog Devices ADG1712 quad single-pole,
+single-throw (SPST) switch controller.
 
-//snip
+The ADG1712 contains four independent analog switches, each controlled by
+a dedicated GPIO input pin. This implementation configures the switches
+once at probe time based on device tree properties.
 
->>
->> So, as far as I understand, the only viable options are expanding the
->> existing battery.yaml with these properties (which I hoped to avoid, see
->> below)
->>
->>>> The right place for them is the battery node, which is described by the
->>>> generic "battery.yaml". I was not comfortable with adding these
->>>> properties to the generic battery.yaml because they are:
->>>>     - Meaningful only for those charger drivers which have the VDR
->>>>       algorithm implemented. (And even though the algorithm is not charger
->>>>       specific, AFAICS, it is currently only used by some ROHM PMIC
->>>>       drivers).
->>>>     - Technique of measuring the VDR tables for a battery is not widely
->>>>       known. AFAICS, only folks at ROHM are measuring those for some
->>>>       customer products. We do have those tables available for some of the
->>>>       products though (Kobo?).
->>
->> or, to add new compatible for the "vdr-battery".
->> AFAICS, adding new compatible would require us to wither duplicate the used
->> properties from battery.yaml here (as battery.yaml mandates the
->> "simple-battery" - compatible) - or to split the battery.yaml in two files,
->> one containing the generic properties, other containing the "simple-battery"
->> -compatible and referencing the generic one. Then the "vdr-battery" could
->> also reference the generic one.
->>
->> Any suggestions for the next path to follow?
-> 
-> Probably the latter option. You could do the former and make the new
-> properties conditional on the "vdr-battery" compatible. That's fine with
-> small differences, but gets messy as there are more properties and
-> variations.
-> 
-> But is "VDR" a type of battery though? Is there a certain type/chemistry
-> of battery we should be describing where VDR is applicable?
+Changes in v3:
+- Moved device tree bindings from gpio/ to switch/ subsystem
+- Completely redesigned driver architecture: removed GPIO controller interface
+- Added 'switch-states' device tree property for configuring initial switch states
+- Driver now sets switches once at probe time based on DT properties
+- Updated descriptions to clarify that switches cannot be changed from userspace
+- Simplified driver structure and removed all GPIO chip functionality
 
-No. Not that I know. My understanding is that the "VDR (voltage drop 
-rate)" refers to measured voltage drop-rates under certain conditions - 
-which can be used to (more accurately) estimate the remaining capacity 
-when battery is nearly depleted. As far as I know, this is only used 
-with Lithium-ion batteries (I am not at all sure of this) - but I 
-_assume_ the technique could be applied to other type of batteries as well.
+Antoniu Miclaus (2):
+  dt-bindings: switch: adg1712: add adg1712 support
+  gpio: adg1712: add driver support
 
-> I don't
-> think it scales well if we define battery compatibles for every
-> variation of charger algorithm. Honestly I don't mind just adding 1
-> property. I care more if we allow undocumented properties than
-> allowing documented but invalid for the platform properties.
+ .../bindings/switch/adi,adg1712.yaml          | 68 +++++++++++++++
+ drivers/gpio/Kconfig                          |  9 ++
+ drivers/gpio/Makefile                         |  1 +
+ drivers/gpio/gpio-adg1712.c                   | 87 +++++++++++++++++++
+ 4 files changed, 165 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/switch/adi,adg1712.yaml
+ create mode 100644 drivers/gpio/gpio-adg1712.c
 
-I see. The "VDR" stuff is really tightly bound to the fuel-gauging 
-algorithm. It is measured characteristics of the battery - but those 
-values are only usable by the "VDR" algorithm. I don't really have a 
-good insight in the amount of fuel-gauging algorithm related properties 
-suggested to be added during the years - but don't think there have been 
-that many of them. So, I am not that worried about adding the 
-compatible. On the other hand, there is no technical reason (other than 
-adding properties which are unused on many platforms) why not to add the 
-vdr tables in the static-battey node without adding own compatible. And, 
-reading reply from Andreas (I'll copy it here to answer it in same mail)
+-- 
+2.43.0
 
-/// Below text is form Andreas:
- > just keep in mind, that several kobo devices have one pmic in one board
- > revision and another one in the other (e.g. Kobo Nia rev A vs rev C).
- > But probably the same battery. So if the "vdr-battery" is a compatible
- > just to allow a more properties,
- > then "simple-battery" should be allowed as fallback.
-
-I didn't know Kobos use multiple chargers. Thanks Andreas! So, in that 
-sense, adding the "vdr" tables in static-battery node, without new 
-compatible, would maybe be simplest solution. Then the charger(s) 
-(fuel-gauge(s)) which implement VDR algorithm, can pick the tables while 
-those chargers which don't implement the VDR will just ignore these tables.
-
-> When it
-> becomes 10, 20, 30 properties, then I might start to care. 
-
-For VDR there are only:
-
-rohm,voltage-vdr-thresh-microvolt,
-rohm,volt-drop-soc-bp,
-rohm,volt-drop-temperatures-millicelsius
-
-and
-
-patternProperties:
-   '^rohm,volt-drop-[0-9]-microvolt':
-
-So, from the binding point of view (.yaml), it's not _that_ lot. In the 
-.dts there will be quite some noise as the tables have several values.
-
-
-> If that
-> happens, either we are doing a poor job of generically describing
-> battery parameters or chargers and batteries are tightly coupled and
-> can't be described independently.
-
-I am under impression that chargers tend to be pretty flexible, and they 
-can be configured to work with many different batteries by altering the 
-charging profiles. Most of the battery properties (like and charging 
-phases [like pre, CC, CV], their limits, currents and voltages etc) are 
-very generally usable. So, large subset of charging functionality can be 
-handled with standard properties. I believe it is only the fuel-gauging 
-where things get more hairy.
-
-I did prepare a series which does the split and adds new compatible for 
-the 'rohm,vdr-battery'. (The power-supply class is not yet modified in 
-the series, but we would probably want to modify the battery-info 
-getters to also accept the 'rohm,vdr-battery' -compatible.)
-
-I wonder if I should actually prepare also a series where these 
-properties are just placed in the existing static battery node without 
-adding new compatible. That way it would be easier to see which way is 
-better.
-
-If I do that, should I only spin these bindings as RFC to avoid the 
-unnecessary noise?
-
-Oh, and a big thanks to both of you Rob and Andreas!  I feel this gained 
-more clarity after your feedback :)
-
-Yours,
-	-- Matti
-
----
-Matti Vaittinen
-Linux kernel developer at ROHM Semiconductors
-Oulu Finland
-
-~~ When things go utterly wrong vim users can always type :help! ~~
 
