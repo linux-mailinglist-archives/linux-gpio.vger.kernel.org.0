@@ -1,156 +1,145 @@
-Return-Path: <linux-gpio+bounces-28557-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28558-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id C98AEC6279D
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 07:09:29 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47F33C6291C
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 07:46:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 75B1B35D8DE
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 06:09:29 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9C80D362A1C
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 06:44:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AFA530F95C;
-	Mon, 17 Nov 2025 06:09:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 225A131618C;
+	Mon, 17 Nov 2025 06:44:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oN1bWq2O"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZqY0bwSx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1200030DECA;
-	Mon, 17 Nov 2025 06:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17709315D21
+	for <linux-gpio@vger.kernel.org>; Mon, 17 Nov 2025 06:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763359764; cv=none; b=ILMaZPNCd8spjB0/9gHpi14jOn7yxK9kvAB2HMWH438zk6jjeep5Pqj0ayWRZkqsV77BTlnnBjpU9nWTm9YYW+eW4TQfXS6CqvN2OIovHvADA8hP+AxyVvvVDX6UuhrtwrQnkPF6v9SRGY9bZLpVRDM9/BAyhA8tTseOp9NYG3s=
+	t=1763361864; cv=none; b=oeJ+zO7TpJ4KZqhf18WPC+inwC+9ghnyVO+IJTrd0CnHeahooDxDEe/O3VY7Z/6iW8iUuvoieeQWjbHFn5Y152rfbSf9vpvTTOjvYXNJcr+0Sw5pJQ1hyW0BVbfJzfSsBzCEFDXMHFexroz4GYTwK7Vc4SuC5WwAd7Io37GDbso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763359764; c=relaxed/simple;
-	bh=kbhXEelpn9JtrWYuTVvOlE9CIZBJsIqcbgqurjWTrUU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Gbm598MPgmhMhofsNtI7BmDBob+4KGqxhiE23UEQnh/nnrEXkw+otQ3j//gkuhXJEfSdn06jXgMajO13BOzP+1w2fI3T4hItZnfpMPgmlKZIfV7OLOkSn7ZG0ZM4lXENM6Khouh3KFivX9GzaRd7QmcJ5vNxnxkAHP0OQnECZVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oN1bWq2O; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74EA2C19424;
-	Mon, 17 Nov 2025 06:09:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763359763;
-	bh=kbhXEelpn9JtrWYuTVvOlE9CIZBJsIqcbgqurjWTrUU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oN1bWq2OLP2VFRwMO/IOJnMutlVU7uZMzL7qvJGbr5W14bAbLP2fSu6rD4fjfrFKE
-	 VmbqiZzfyulrp/LAO8Ong1r0n0GTGkZzjQd8MH/UTBiIV7fIWqaD4Eu46pxIRO/PPR
-	 yRcU30wN6l9Wqj0WHkkkpwu6Mey0T0AejKP9p5iijdt4q9gZ6Q0iHV08kSW+r6LuBh
-	 6oxkShxEyt0WEfIcmO2s5GKHgwXwXgrg55v9z1Us2FqfB8I4drBt9KnQ1BOmLxlyvL
-	 UqxwD8AIvB8rPMUdEpmKg4rAbpU/Yl5Y2ibutZNKFFlapi4s8nCA9hw6gUCbUwJNhn
-	 l/zS4EZUg4/3w==
-Message-ID: <7fcf5917-6f22-4d2b-b846-6dbb3ee017c5@kernel.org>
-Date: Mon, 17 Nov 2025 07:09:18 +0100
+	s=arc-20240116; t=1763361864; c=relaxed/simple;
+	bh=BSHRaWHAGUB8v+6+TObTc9Igi8FYpiAVAk4Ip+k2cgc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QICoB6qEc6xZU9gwz+67wjqgV7/VdDtDC8PTl7hMHekmf0gZ5d3VZ4+1QTCsIIkiyJndhgYMxVcQwOo1vNYBJb2sBl/GBRnC8bB5oBtaS1405uNTku9sZHme9IJeKhkGJ6BTgF88ppMWd+a350NnrSSd72qU9Ye61PoJ6Hrb6q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZqY0bwSx; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-42b2e9ac45aso2444355f8f.0
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Nov 2025 22:44:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1763361861; x=1763966661; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=FrySMrt3UwGtQkvIQfdOgxfySxJPiiEl8hprUUf1lDg=;
+        b=ZqY0bwSxWfBdjipEyOpFspa27RkvvOb2c/u2C5lPF8Sr1MioW4eLq3+0Jt9jaHowdm
+         c9x6uqwaQqVNFEX8bis6YuAsTbsiXBjWl2/CF1T1n3WaOYDAcllVHztoUBtp9AfY8AWU
+         Ltd5AMq9+A6xQV9KScMK/1IxgyTsaxZ1UJmKX4QIlIuybA/flZKnjb11bd2RzDi8zutg
+         5lS2N0f0GavkJbkd6MNn/9QgGHSX/YRZIKxtRI3pirT/6e5bUp+1P510+tY+e1hDiR9U
+         JFUR+pnXGjIbhkHLztp6RKdnaxvve/OjgxeMhSJv0iS7lru3Vbfu2JCXz4DRBMD4Y6XQ
+         MvOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763361861; x=1763966661;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FrySMrt3UwGtQkvIQfdOgxfySxJPiiEl8hprUUf1lDg=;
+        b=MV/XsJt2fPfVl3y3lIVn2WDUL20dYYzmyBNI2SDDb8EBEBzUquD1IG59UiJmCJhwnl
+         D+Symu8G8SZGVdMhHOYUfZ5WvPjRyhbNo8jkxLRmE8CNbbEFsDJSWlWuvjk/bfiXxBtO
+         flfvUORrvDvv2qch/u5H7wlG1k3CVpsNBY8FCpctmOP8S1oWpLLc/p27dFhKfMeZhJY0
+         T+NqjGClxD4KlJfnWCdaaYtZ6Rnb3qHLAZLGX+xpbNV45qOwMiECI99wiVo7ufEqIt9F
+         Nkd8J3Bc/byClymyvya+fitDWOtoP/dqUhylBIzhNMUuu1i0GUvwgcSpufkD/00fZgZf
+         +OYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVAIzFdJux/U915weR6hxit2yX0Rvni1p70AgVAQ+OPTf6qRhNR2UvetGf+fdpslRnKGAaouM9FrCft@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZYkkE7WXgOh7dJxjXLvqAhUAPSPFPtRZCHUtC2GvERWyvLZlZ
+	+FYevdikyMDhqoABQdONKBOj+Wn6uF/DOtWAV+viqzZTaHc13Kts1TX5XaxCiIf+suw=
+X-Gm-Gg: ASbGncv7etYJfN2qkLo4Qjs1DeAywUgLMAg101KwUWTiI8OxRE8wJmb6viGWZ4XuSzw
+	rTeQ2adWHKI5xJLmJELMtPACU9bpux5gULjJNGsatd/DDEkf+ynmVFbA+YKyvx/5JCpXe5hgdz+
+	pT+nR7RCrMdmMkuK8+TB9zx68fkIZ/OPDwEvgfgiGIaOTAqO4f+V24CzZA0c5LuIkwNWVSBk4e2
+	wnnDtlJ+47Fw0pzpj5iB2oMK8OYsvhqewrwZyl+wNNECYI3sWXwmBkWL3MHz1HurM8qNFMu/Yhg
+	hblfTbOVWWsYlTqppS1GPb8XtTvbWC8mzDSig1QGTBNiMUEeZY9fy8H5p5NdqPkVLfqKPqHwkwj
+	c4iASq9/C92rZxGrfxAodV5266qFsSF23DqDQr4lpJij+FhVyc9nNICfrxQVA+AiQ83h5nV3C/l
+	DEy+W6TDbjcH+wiLTLVpLNqLJrvH3RMgnNXFdikQ8=
+X-Google-Smtp-Source: AGHT+IHGf7t7PNqLY6EKlBGDR801fpfVT+O04gNE2DbvAjsFlpnI7P8GiwkCXEw4Ef7oTb4QHY9CgQ==
+X-Received: by 2002:a05:6000:22c1:b0:42b:3ab7:b8a4 with SMTP id ffacd0b85a97d-42b5938b4b1mr10192510f8f.33.1763361861412;
+        Sun, 16 Nov 2025 22:44:21 -0800 (PST)
+Received: from draszik.lan ([212.129.83.193])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53f203afsm24850910f8f.39.2025.11.16.22.44.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Nov 2025 22:44:20 -0800 (PST)
+Message-ID: <efb6d4a68d70e0f24b981aa0dff69e3186827f75.camel@linaro.org>
+Subject: Re: [PATCH v3 09/20] mfd: sec: Add support for S2MPG11 PMIC via ACPM
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>,  Liam Girdwood
+ <lgirdwood@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz
+ Golaszewski	 <brgl@bgdev.pl>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Peter Griffin	 <peter.griffin@linaro.org>, Will McVicker
+ <willmcvicker@google.com>, 	kernel-team@android.com,
+ linux-kernel@vger.kernel.org, 	linux-samsung-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, 	linux-gpio@vger.kernel.org
+Date: Mon, 17 Nov 2025 06:44:18 +0000
+In-Reply-To: <aRn_-o-vie_QoDXD@sirena.co.uk>
+References: <20251103-s2mpg1x-regulators-v3-0-b8b96b79e058@linaro.org>
+	 <20251103-s2mpg1x-regulators-v3-9-b8b96b79e058@linaro.org>
+	 <20251113162534.GO1949330@google.com>
+	 <45ce203c03ec34631a0170baa7e4cf26c98b9cd3.camel@linaro.org>
+	 <db7e95dd-2361-4579-b52c-b9556da4633a@sirena.org.uk>
+	 <f1e9a9e35f7c16d8db0e39128eb184f3f42b7d02.camel@linaro.org>
+	 <aRklfJtOJ_Cy7tEE@sirena.co.uk>
+	 <845ca29cf8af53bd3093d1dcbea64cc3e04432f2.camel@linaro.org>
+	 <aRn_-o-vie_QoDXD@sirena.co.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-2+build3 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] dt-bindings: pinctrl:
- qcom,sa8775p-lpass-lpi-pinctrl: Add SA8775P LPASS pinctrl
-To: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>,
- Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel@oss.qualcomm.com, ajay.nandam@oss.qualcomm.com,
- ravi.hothi@oss.qualcomm.com
-References: <20251116171656.3105461-1-mohammad.rafi.shaik@oss.qualcomm.com>
- <20251116171656.3105461-2-mohammad.rafi.shaik@oss.qualcomm.com>
- <5e48ad7f-6de3-438f-8623-8f8a9c8dedbc@kernel.org>
- <ab5cec4e-a990-460e-a4cf-605028f9ea77@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <ab5cec4e-a990-460e-a4cf-605028f9ea77@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-On 16/11/2025 19:09, Mohammad Rafi Shaik wrote:
-> 
-> 
-> On 11/16/2025 10:59 PM, Krzysztof Kozlowski wrote:
->> On 16/11/2025 18:16, Mohammad Rafi Shaik wrote:
->>> Add bindings for the pin controller in Low Power Audio SubSystem (LPASS)
->>> of Qualcomm SA8775P SoC.
->>
->>
->> ...
->>
->>> +
->>> +unevaluatedProperties: false
->>> +
->>> +examples:
->>> +  - |
->>> +    #include <dt-bindings/sound/qcom,q6dsp-lpass-ports.h>
->>> +
->>> +    lpass_tlmm: pinctrl@3440000 {
->>> +        compatible = "qcom,sa8775p-lpass-lpi-pinctrl";
->>> +        reg = <0x0 0x03440000 0x0 0x20000>;
->>
->>
->> Are you sure you tested this file? I think this should nicely fail.
->>
-> 
-> ACK,
-> 
-> You’re right — DT binding check is failing.
-> 
-> My DT binding check didn’t catch it because the schema wasn’t updated.
+Hi Mark,
 
-It will fail on every DT schema. Old as well, so nothing to do with
-updating it.
+On Sun, 2025-11-16 at 16:46 +0000, Mark Brown wrote:
+> On Sun, Nov 16, 2025 at 12:49:55PM +0000, Andr=C3=A9 Draszik wrote:
+>=20
+> > The typical use of the S2MPG10 PMIC is in combination with an S2MPG11
+> > PMIC in a main/sub configuration. Bucks of one are usually used as
+> > supplies for LDOs of either itself or of the other: several S2MPG10
+> > LDOs are consumers of various S2MPG10 bucks & S2MPG11 bucks, and
+> > several S2MPG11 LDOs are supplied by various S2MPG10 bucks & S2MPG11
+> > bucks.
+>=20
+> If you're doing something to resolve such rats nesting of PMICs you
+> should do something that works as standard rather than just bodging this
+> one driver in a way that treats this specific device as a special
+> snowflake.=C2=A0 That might reasonably mean going and refactoring existin=
+g
+> drivers to look like this one,
 
+I have no insight into which other drivers / setups might have a similar
+problem.
 
-Best regards,
-Krzysztof
+>  it is a fairly obvious approach.=C2=A0 We
+> should really have a uniform approach that works well rather than random
+> variation between devices though.
+>=20
+> We could also do this at the regulator level by arranging for the
+> devices we make for the regulators to have deferrable drivers, that'd
+> be a core only change.
+
+That should work, yes, I'll investigate a little.
+
+Thanks
+A.
 
