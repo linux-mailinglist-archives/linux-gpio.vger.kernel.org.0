@@ -1,34 +1,34 @@
-Return-Path: <linux-gpio+bounces-28609-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28613-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BBD9C665A0
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 22:52:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EC15C665D3
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 22:55:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6662D342FF3
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 21:52:02 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2EB26347B83
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Nov 2025 21:52:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35ADD32ED5B;
-	Mon, 17 Nov 2025 21:51:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 888D5321F2A;
+	Mon, 17 Nov 2025 21:51:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b="qaOjfOur"
+	dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b="a6XvPQcg"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from polaris.svanheule.net (polaris.svanheule.net [84.16.241.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FDB2417D1
-	for <linux-gpio@vger.kernel.org>; Mon, 17 Nov 2025 21:51:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404AC3254A3
+	for <linux-gpio@vger.kernel.org>; Mon, 17 Nov 2025 21:51:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.241.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763416317; cv=none; b=mYLaAg0PlrP/iAdsJwiBvMfTwlCeXMrYRVjynHpCmTvb1jrtQJ4k7rvat158YZjv6vuKMgVjy59lsVqjkU20SAPD3+iYGGHVUusjxXFUSy3YqUI5owrnoAIm0yF/s379B3KucpJ2kQii45lvXRYc9/kQ0V22DIEdA+tsNf2oPeM=
+	t=1763416319; cv=none; b=LQy7MNz/nRXxNt9Zy1zC1gIT6pxe8oerKGS6ypSv4qzzhMOCI2DmleZbN7OYp7CCUTT9saF/7Z1x24hJ3esobyq9VD7M3RXOJSz4bpROMQLw5Nr3v8HGZ/5DEZqf8/H8OwADLajNQoCmUPhSFUKEf0V8twPiMAaJsKDSpmokMgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763416317; c=relaxed/simple;
-	bh=zdmtwhELRKjmlBCz0c0RMPi3+X265l7IC4n8BA51XxM=;
+	s=arc-20240116; t=1763416319; c=relaxed/simple;
+	bh=AIkpBYWcXaEi0OLIpf4waPsTGB2gymcCsLBRGZQZrhE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XvhX7lXZD1z2GiKBowk07Fme3ZNc4KgTjwVm9gqOXAtH6PAxH+6c82EjZaLNOOirjlaexPTo7tnoFokJhOEg/cqmjInZ1Kbe7/p5h1ByJp+dhpOZ9BrEaYoe+6PP6DO6pmgjVoL4CKBPJaRif/L/PEkY6IhYIssIBp159O68vx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net; spf=pass smtp.mailfrom=svanheule.net; dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b=qaOjfOur; arc=none smtp.client-ip=84.16.241.116
+	 MIME-Version; b=gjUG9Sk+k6FZ1gSFc+I9ETRxh59IfLe9dv/yOCxU0cSolc0O2pSNlbL09NvqKWtnEY/NlsAv+YsfKySEbIYzWTJgJ1oFu4kmN/CFYXsoSCnZnWQovFa8F6K1eMGMCDHS3brTMhB/ZUkGH7IrppcvG4My8Zdbxo8aXC1TYJLiDaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net; spf=pass smtp.mailfrom=svanheule.net; dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b=a6XvPQcg; arc=none smtp.client-ip=84.16.241.116
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svanheule.net
 Received: from terra.vega.svanheule.net (2a02-1812-162c-8f00-1e2d-b404-3319-eba8.ip6.access.telenet.be [IPv6:2a02:1812:162c:8f00:1e2d:b404:3319:eba8])
@@ -36,20 +36,20 @@ Received: from terra.vega.svanheule.net (2a02-1812-162c-8f00-1e2d-b404-3319-eba8
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: sander@svanheule.net)
-	by polaris.svanheule.net (Postfix) with ESMTPSA id E8A266A0B5D;
-	Mon, 17 Nov 2025 22:51:46 +0100 (CET)
+	by polaris.svanheule.net (Postfix) with ESMTPSA id 7A5976A0B5E;
+	Mon, 17 Nov 2025 22:51:47 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
 	s=mail1707; t=1763416307;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bqixPmI4NkVF4KtMAWaNvWPQbt6Vq5rRkO3NubLTZTU=;
-	b=qaOjfOurdbanM0ibPAAoKn+stt7KMi1505Xsj6EgOKybQqPr7f59IrhsbhfX/ub2PnNyaW
-	hUaMbK5XnCrq+w3Qh3m62FJhscrMW5RBCLnphpw29zukyUka5AuxxQAnxCdua3EjJJj4Tg
-	oEWIo+Q6xaSYthDu+Hdf76i9zqEAbj1JntYQvlboxfULoF2m2OZFlZmmgs1ZkRQV4MEBdH
-	aL6miXCANf16oG6cz91e/82GcxV2j81ObBaIK7wjy5dgrQK+NQOUJPExLEGHEtUWL/guUS
-	dS0cvkUifzwXVVlMAz6WrAxvJ4N+8bO8FtTv4u6JwrGIjxdJ5FTwoMlUOk0YDg==
+	bh=SeSGawNYxVyxkyDt5qcmR4QqcVeb//xCR+OkjctEfs4=;
+	b=a6XvPQcghr36RMjv7vXS0n5UuZvkB/UGYviJpbZ8wv0M0sa4rwtGSu/IrpcGMEABaVfdzF
+	CC89NHgKmY+WEhEHqia84MKypf1Ln02Xxtmm6X7N9DQ2Doq4vt4oJPT7B7NvedDm7SY51n
+	yTcmeqCM0sZrPyIZUn92r7edPQA/AQODoDNiGFEcY/Qaxi+dv0BLwJ7VrpvikT3MDXMfn9
+	uBZpLWoenK4zGCAayQQgp1k7oNOnHq/d4AwpZkRVlWSmknu7a38MmFYIlXJkFkkyxqtwup
+	FSHT3sxUXso+IBvcY1/JeQM3vdVSDcoO5bRYm3avqZdJ1URjqQy5zQmNAj34bA==
 From: Sander Vanheule <sander@svanheule.net>
 To: Lee Jones <lee@kernel.org>,
 	Pavel Machek <pavel@kernel.org>,
@@ -64,9 +64,9 @@ Cc: linux-leds@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	Sander Vanheule <sander@svanheule.net>
-Subject: [PATCH v7 2/6] dt-bindings: mfd: Binding for RTL8231
-Date: Mon, 17 Nov 2025 22:51:32 +0100
-Message-ID: <20251117215138.4353-3-sander@svanheule.net>
+Subject: [PATCH v7 3/6] mfd: Add RTL8231 core device
+Date: Mon, 17 Nov 2025 22:51:33 +0100
+Message-ID: <20251117215138.4353-4-sander@svanheule.net>
 X-Mailer: git-send-email 2.51.1
 In-Reply-To: <20251117215138.4353-1-sander@svanheule.net>
 References: <20251117215138.4353-1-sander@svanheule.net>
@@ -78,225 +78,351 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a binding description for the Realtek RTL8231, a GPIO and LED
-expander chip commonly used in ethernet switches based on a Realtek
-switch SoC. These chips can be addressed via an MDIO or SMI bus, or used
-as a plain 36-bit shift register.
+The RTL8231 is implemented as an MDIO device, and provides a regmap
+interface for register access by the core and child devices.
 
-This binding only describes the feature set provided by the MDIO/SMI
-configuration, and covers the GPIO, PWM, and pin control properties. The
-LED properties are defined in a separate binding.
+The chip can also be a device on an SMI bus, an I2C-like bus by Realtek.
+Since kernel support for SMI is limited, and no real-world SMI
+implementations have been encountered for this device, this is currently
+unimplemented. The use of the regmap interface should make any future
+support relatively straightforward.
+
+After a soft reset, all pins are muxed to GPIO inputs before the pin
+drivers are enabled. This is done to prevent accidental system resets,
+when a pin is connected to the main SoC's reset line.
 
 Signed-off-by: Sander Vanheule <sander@svanheule.net>
 ---
 Changes since v6:
-- Relax description formatting
-- Use absolute paths for schema references
-- Add pinctrl properties to led-controller node in example
+- Sort header includes
+- Drop comment on cache type (6.19 will support REGCACHE_FLAT_S)
+- Limit scope of LED_START field definition to init
+- Variable renames:
+   - map -> regmap
+   - val -> status (register value) and ready_code (field value)
+   - val -> cfg
+- Invert logic for !started, reducing code indentation
+- Place __maybe_unused after function return type
+- Use regmap_field_write() for LED_START field (volatile register)
+- Use regcache_drop_region() to invalidate cache, replacing
+  regcache_mark_dirty() which invalidates the device state
 ---
- .../bindings/mfd/realtek,rtl8231.yaml         | 193 ++++++++++++++++++
- 1 file changed, 193 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml
+ drivers/mfd/Kconfig         |   9 ++
+ drivers/mfd/Makefile        |   1 +
+ drivers/mfd/rtl8231.c       | 193 ++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/rtl8231.h |  71 +++++++++++++
+ 4 files changed, 274 insertions(+)
+ create mode 100644 drivers/mfd/rtl8231.c
+ create mode 100644 include/linux/mfd/rtl8231.h
 
-diff --git a/Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml b/Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 6cec1858947b..e13e2df63fee 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -1301,6 +1301,15 @@ config MFD_RDC321X
+ 	  southbridge which provides access to GPIOs and Watchdog using the
+ 	  southbridge PCI device configuration space.
+ 
++config MFD_RTL8231
++	tristate "Realtek RTL8231 GPIO and LED expander"
++	select MFD_CORE
++	select REGMAP_MDIO
++	help
++	  Support for the Realtek RTL8231 GPIO and LED expander.
++	  Provides up to 37 GPIOs, 88 LEDs, and one PWM output.
++	  When built as a module, this module will be named rtl8231.
++
+ config MFD_RT4831
+ 	tristate "Richtek RT4831 four channel WLED and Display Bias Voltage"
+ 	depends on I2C
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index 865e9f12faff..ba973382a20f 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -252,6 +252,7 @@ obj-$(CONFIG_MFD_HI6421_PMIC)	+= hi6421-pmic-core.o
+ obj-$(CONFIG_MFD_HI6421_SPMI)	+= hi6421-spmi-pmic.o
+ obj-$(CONFIG_MFD_HI655X_PMIC)   += hi655x-pmic.o
+ obj-$(CONFIG_MFD_DLN2)		+= dln2.o
++obj-$(CONFIG_MFD_RTL8231)	+= rtl8231.o
+ obj-$(CONFIG_MFD_RT4831)	+= rt4831.o
+ obj-$(CONFIG_MFD_RT5033)	+= rt5033.o
+ obj-$(CONFIG_MFD_RT5120)	+= rt5120.o
+diff --git a/drivers/mfd/rtl8231.c b/drivers/mfd/rtl8231.c
 new file mode 100644
-index 000000000000..5669dd58654e
+index 000000000000..8c74a3497045
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml
++++ b/drivers/mfd/rtl8231.c
 @@ -0,0 +1,193 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/realtek,rtl8231.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++// SPDX-License-Identifier: GPL-2.0-only
 +
-+title: Realtek RTL8231 GPIO and LED expander.
++#include <linux/bitfield.h>
++#include <linux/bits.h>
++#include <linux/delay.h>
++#include <linux/gpio/consumer.h>
++#include <linux/mdio.h>
++#include <linux/mfd/core.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/property.h>
++#include <linux/regmap.h>
 +
-+maintainers:
-+  - Sander Vanheule <sander@svanheule.net>
++#include <linux/mfd/rtl8231.h>
 +
-+description: |
-+  The RTL8231 is a GPIO and LED expander chip, providing up to 37 GPIOs, up to
-+  88 LEDs, and up to one PWM output. This device is frequently used alongside
-+  Realtek switch SoCs, to provide additional I/O capabilities.
++static bool rtl8231_volatile_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	/*
++	 * Registers with self-clearing bits, strapping pin values.
++	 * Don't mark the data registers as volatile, since we need
++	 * caching for the output values.
++	 */
++	case RTL8231_REG_FUNC0:
++	case RTL8231_REG_FUNC1:
++	case RTL8231_REG_PIN_HI_CFG:
++	case RTL8231_REG_LED_END:
++		return true;
++	default:
++		return false;
++	}
++}
 +
-+  To manage the RTL8231's features, its strapping pins can be used to configure
-+  it in one of three modes: shift register, MDIO device, or SMI device. The
-+  shift register mode does not need special support. In MDIO or SMI mode, most
-+  pins can be configured as a GPIO output or LED matrix scan line/column. One
-+  pin can be used as PWM output.
++static const struct mfd_cell rtl8231_cells[] = {
++	{
++		.name = "rtl8231-pinctrl",
++	},
++	{
++		.name = "rtl8231-leds",
++		.of_compatible = "realtek,rtl8231-leds",
++	},
++};
 +
-+  The GPIO, PWM, and pin control are part of the main node. LED support is
-+  configured as a sub-node.
++static int rtl8231_soft_reset(struct regmap *regmap)
++{
++	const unsigned int all_pins_mask = GENMASK(RTL8231_BITS_VAL - 1, 0);
++	unsigned int cfg;
++	int err;
 +
-+properties:
-+  compatible:
-+    const: realtek,rtl8231
++	/* SOFT_RESET bit self-clears when done */
++	regmap_write_bits(regmap, RTL8231_REG_PIN_HI_CFG,
++			  RTL8231_PIN_HI_CFG_SOFT_RESET, RTL8231_PIN_HI_CFG_SOFT_RESET);
 +
-+  reg:
-+    description: MDIO or SMI device address.
-+    maxItems: 1
++	err = regmap_read_poll_timeout(regmap, RTL8231_REG_PIN_HI_CFG, cfg,
++				       !(cfg & RTL8231_PIN_HI_CFG_SOFT_RESET), 50, 1000);
++	if (err)
++		return err;
 +
-+  # GPIO support
-+  gpio-controller: true
++	regcache_drop_region(regmap, 0, RTL8231_REG_COUNT - 1);
 +
-+  "#gpio-cells":
-+    const: 2
-+    description:
-+      The first cell is the pin number and the second cell is used to specify
-+      the GPIO active state.
++	/*
++	 * Chip reset results in a pin configuration that is a mix of LED and GPIO outputs.
++	 * Select GPI functionality for all pins before enabling pin outputs.
++	 */
++	regmap_write(regmap, RTL8231_REG_PIN_MODE0, all_pins_mask);
++	regmap_write(regmap, RTL8231_REG_GPIO_DIR0, all_pins_mask);
++	regmap_write(regmap, RTL8231_REG_PIN_MODE1, all_pins_mask);
++	regmap_write(regmap, RTL8231_REG_GPIO_DIR1, all_pins_mask);
++	regmap_write(regmap, RTL8231_REG_PIN_HI_CFG,
++		     RTL8231_PIN_HI_CFG_MODE_MASK | RTL8231_PIN_HI_CFG_DIR_MASK);
 +
-+  gpio-ranges:
-+    description:
-+      Must reference itself, and provide a zero-based mapping for 37 pins.
-+    maxItems: 1
++	return 0;
++}
 +
-+  # Pin muxing and configuration
-+  drive-strength:
-+    description:
-+      Common drive strength used for all GPIO output pins, must be 4mA or 8mA.
-+      On reset, this value will default to 8mA.
-+    enum: [4, 8]
++static int rtl8231_init(struct device *dev, struct regmap *regmap)
++{
++	struct regmap_field *led_start;
++	unsigned int ready_code;
++	unsigned int started;
++	unsigned int status;
++	int err;
 +
-+  # LED scanning matrix
-+  led-controller:
-+    $ref: /schemas/leds/realtek,rtl8231-leds.yaml#
++	err = regmap_read(regmap, RTL8231_REG_FUNC1, &status);
++	if (err) {
++		dev_err(dev, "failed to read READY_CODE\n");
++		return err;
++	}
 +
-+  # PWM output
-+  "#pwm-cells":
-+    description:
-+      Twos cells with PWM index (must be 0) and PWM frequency in Hz. To use
-+      the PWM output, gpio35 must be muxed to its "pwm" function. Valid
-+      frequency values for consumers are 1200, 1600, 2000, 2400, 2800, 3200,
-+      4000, and 4800.
-+    const: 2
++	ready_code = FIELD_GET(RTL8231_FUNC1_READY_CODE_MASK, status);
++	if (ready_code != RTL8231_FUNC1_READY_CODE_VALUE) {
++		dev_err(dev, "RTL8231 not present or ready 0x%x != 0x%x\n",
++			ready_code, RTL8231_FUNC1_READY_CODE_VALUE);
++		return -ENODEV;
++	}
 +
-+patternProperties:
-+  "-pins$":
-+    type: object
-+    $ref: /schemas/pinctrl/pinmux-node.yaml#
++	led_start = dev_get_drvdata(dev);
++	err = regmap_field_read(led_start, &started);
++	if (err)
++		return err;
 +
-+    properties:
-+      pins:
-+        items:
-+          enum: [gpio0, gpio1, gpio2, gpio3, gpio4, gpio5, gpio6, gpio7,
-+                 gpio8, gpio9, gpio10, gpio11, gpio12, gpio13, gpio14, gpio15,
-+                 gpio16, gpio17, gpio18, gpio19, gpio20, gpio21, gpio22, gpio23,
-+                 gpio24, gpio25, gpio26, gpio27, gpio28, gpio29, gpio30, gpio31,
-+                 gpio32, gpio33, gpio34, gpio35, gpio36]
-+        minItems: 1
-+        maxItems: 37
++	if (started)
++		return 0;
 +
-+      function:
-+        description:
-+          Select which function to use. "gpio" is supported for all pins, "led" is supported
-+          for pins 0-34, "pwm" is supported for pin 35.
-+        enum: [gpio, led, pwm]
++	err = rtl8231_soft_reset(regmap);
++	if (err)
++		return err;
 +
-+    required:
-+      - pins
-+      - function
++	/* LED_START enables power to output pins, and starts the LED engine */
++	return regmap_field_write(led_start, 1);
++}
 +
-+required:
-+  - compatible
-+  - reg
-+  - gpio-controller
-+  - "#gpio-cells"
-+  - gpio-ranges
++static const struct regmap_config rtl8231_mdio_regmap_config = {
++	.val_bits = RTL8231_BITS_VAL,
++	.reg_bits = RTL8231_BITS_REG,
++	.volatile_reg = rtl8231_volatile_reg,
++	.max_register = RTL8231_REG_COUNT - 1,
++	.use_single_read = true,
++	.use_single_write = true,
++	.reg_format_endian = REGMAP_ENDIAN_BIG,
++	.val_format_endian = REGMAP_ENDIAN_BIG,
++	.cache_type = REGCACHE_MAPLE,
++};
 +
-+additionalProperties: false
++static int rtl8231_mdio_probe(struct mdio_device *mdiodev)
++{
++	const struct reg_field field_led_start = REG_FIELD(RTL8231_REG_FUNC0, 1, 1);
++	struct device *dev = &mdiodev->dev;
++	struct regmap_field *led_start;
++	struct regmap *regmap;
++	int err;
 +
-+examples:
-+  - |
-+    // Minimal example
-+    mdio {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
++	regmap = devm_regmap_init_mdio(mdiodev, &rtl8231_mdio_regmap_config);
++	if (IS_ERR(regmap)) {
++		dev_err(dev, "failed to init regmap\n");
++		return PTR_ERR(regmap);
++	}
 +
-+        expander0: expander@0 {
-+            compatible = "realtek,rtl8231";
-+            reg = <0>;
++	led_start = devm_regmap_field_alloc(dev, regmap, field_led_start);
++	if (IS_ERR(led_start))
++		return PTR_ERR(led_start);
 +
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+            gpio-ranges = <&expander0 0 0 37>;
-+        };
-+    };
-+  - |
-+    // All bells and whistles included
-+    #include <dt-bindings/leds/common.h>
-+    mdio {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
++	dev_set_drvdata(dev, led_start);
 +
-+        expander1: expander@1 {
-+            compatible = "realtek,rtl8231";
-+            reg = <1>;
++	mdiodev->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
++	if (IS_ERR(mdiodev->reset_gpio))
++		return PTR_ERR(mdiodev->reset_gpio);
 +
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+            gpio-ranges = <&expander1 0 0 37>;
++	device_property_read_u32(dev, "reset-assert-delay", &mdiodev->reset_assert_delay);
++	device_property_read_u32(dev, "reset-deassert-delay", &mdiodev->reset_deassert_delay);
 +
-+            #pwm-cells = <2>;
++	err = rtl8231_init(dev, regmap);
++	if (err)
++		return err;
 +
-+            drive-strength = <4>;
++	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, rtl8231_cells,
++				    ARRAY_SIZE(rtl8231_cells), NULL, 0, NULL);
++}
 +
-+            button-pins {
-+                pins = "gpio36";
-+                function = "gpio";
-+                input-debounce = <100000>;
-+            };
++static int __maybe_unused rtl8231_suspend(struct device *dev)
++{
++	struct regmap_field *led_start = dev_get_drvdata(dev);
 +
-+            pwm-pins {
-+                pins = "gpio35";
-+                function = "pwm";
-+            };
++	return regmap_field_write(led_start, 0);
++}
 +
-+            led_matrix: led-pins {
-+                pins = "gpio0", "gpio1", "gpio3", "gpio4";
-+                function = "led";
-+            };
++static int __maybe_unused rtl8231_resume(struct device *dev)
++{
++	struct regmap_field *led_start = dev_get_drvdata(dev);
 +
-+            led-controller {
-+                compatible = "realtek,rtl8231-leds";
-+                #address-cells = <2>;
-+                #size-cells = <0>;
++	return regmap_field_write(led_start, 1);
++}
 +
-+                pinctrl-names = "default";
-+                pinctrl-0 = <&led_matrix>;
++static SIMPLE_DEV_PM_OPS(rtl8231_pm_ops, rtl8231_suspend, rtl8231_resume);
 +
-+                realtek,led-scan-mode = "single-color";
++static const struct of_device_id rtl8231_of_match[] = {
++	{ .compatible = "realtek,rtl8231" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, rtl8231_of_match);
 +
-+                led@0,0 {
-+                    reg = <0 0>;
-+                    color = <LED_COLOR_ID_GREEN>;
-+                    function = LED_FUNCTION_LAN;
-+                    function-enumerator = <0>;
-+                };
++static struct mdio_driver rtl8231_mdio_driver = {
++	.mdiodrv.driver = {
++		.name = "rtl8231-expander",
++		.of_match_table	= rtl8231_of_match,
++		.pm = pm_ptr(&rtl8231_pm_ops),
++	},
++	.probe = rtl8231_mdio_probe,
++};
++mdio_module_driver(rtl8231_mdio_driver);
 +
-+                led@0,1 {
-+                    reg = <0 1>;
-+                    color = <LED_COLOR_ID_AMBER>;
-+                    function = LED_FUNCTION_LAN;
-+                    function-enumerator = <0>;
-+                };
++MODULE_AUTHOR("Sander Vanheule <sander@svanheule.net>");
++MODULE_DESCRIPTION("Realtek RTL8231 GPIO and LED expander");
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/mfd/rtl8231.h b/include/linux/mfd/rtl8231.h
+new file mode 100644
+index 000000000000..003eda3797a3
+--- /dev/null
++++ b/include/linux/mfd/rtl8231.h
+@@ -0,0 +1,71 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Register definitions the RTL8231 GPIO and LED expander chip
++ */
 +
-+                led@1,0 {
-+                    reg = <1 0>;
-+                    color = <LED_COLOR_ID_GREEN>;
-+                    function = LED_FUNCTION_LAN;
-+                    function-enumerator = <1>;
-+                };
++#ifndef __LINUX_MFD_RTL8231_H
++#define __LINUX_MFD_RTL8231_H
 +
-+                led@1,1 {
-+                    reg = <1 1>;
-+                    color = <LED_COLOR_ID_AMBER>;
-+                    function = LED_FUNCTION_LAN;
-+                    function-enumerator = <1>;
-+                };
-+            };
-+        };
-+    };
++#include <linux/bits.h>
++
++/*
++ * Registers addresses are 5 bit, values are 16 bit
++ * Also define a duplicated range of virtual addresses, to enable
++ * different read/write behaviour on the GPIO data registers
++ */
++#define RTL8231_BITS_VAL		16
++#define RTL8231_BITS_REG		5
++
++/* Chip control */
++#define RTL8231_REG_FUNC0		0x00
++#define RTL8231_FUNC0_SCAN_MODE		BIT(0)
++#define RTL8231_FUNC0_SCAN_SINGLE	0
++#define RTL8231_FUNC0_SCAN_BICOLOR	BIT(0)
++
++#define RTL8231_REG_FUNC1		0x01
++#define RTL8231_FUNC1_READY_CODE_VALUE	0x37
++#define RTL8231_FUNC1_READY_CODE_MASK	GENMASK(9, 4)
++#define RTL8231_FUNC1_DEBOUNCE_MASK	GENMASK(15, 10)
++
++/* Pin control */
++#define RTL8231_REG_PIN_MODE0		0x02
++#define RTL8231_REG_PIN_MODE1		0x03
++
++#define RTL8231_PIN_MODE_LED		0
++#define RTL8231_PIN_MODE_GPIO		1
++
++/* Pin high config: pin and GPIO control for pins 32-26 */
++#define RTL8231_REG_PIN_HI_CFG		0x04
++#define RTL8231_PIN_HI_CFG_MODE_MASK	GENMASK(4, 0)
++#define RTL8231_PIN_HI_CFG_DIR_MASK	GENMASK(9, 5)
++#define RTL8231_PIN_HI_CFG_INV_MASK	GENMASK(14, 10)
++#define RTL8231_PIN_HI_CFG_SOFT_RESET	BIT(15)
++
++/* GPIO control registers */
++#define RTL8231_REG_GPIO_DIR0		0x05
++#define RTL8231_REG_GPIO_DIR1		0x06
++#define RTL8231_REG_GPIO_INVERT0	0x07
++#define RTL8231_REG_GPIO_INVERT1	0x08
++
++#define RTL8231_GPIO_DIR_IN		1
++#define RTL8231_GPIO_DIR_OUT		0
++
++/*
++ * GPIO data registers
++ * Only the output data can be written to these registers, and only the input
++ * data can be read.
++ */
++#define RTL8231_REG_GPIO_DATA0		0x1c
++#define RTL8231_REG_GPIO_DATA1		0x1d
++#define RTL8231_REG_GPIO_DATA2		0x1e
++#define RTL8231_PIN_HI_DATA_MASK	GENMASK(4, 0)
++
++/* LED control base registers */
++#define RTL8231_REG_LED0_BASE		0x09
++#define RTL8231_REG_LED1_BASE		0x10
++#define RTL8231_REG_LED2_BASE		0x17
++#define RTL8231_REG_LED_END		0x1b
++
++#define RTL8231_REG_COUNT		0x1f
++
++#endif /* __LINUX_MFD_RTL8231_H */
 -- 
 2.51.1
 
