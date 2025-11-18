@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-28625-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28626-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D35AC66B71
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 01:52:28 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C669FC66B7D
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 01:52:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6A819362646
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 00:52:07 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTPS id 308FC2955A
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 00:52:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D023B3002D0;
-	Tue, 18 Nov 2025 00:50:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78E5D305963;
+	Tue, 18 Nov 2025 00:51:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GtPdDfjX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LSDvLOqL"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8735C2F3636;
-	Tue, 18 Nov 2025 00:50:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27C6304BD8;
+	Tue, 18 Nov 2025 00:51:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763427057; cv=none; b=D4V3fQ1qpUEw5c1IwlG6BDM/7nw+xCx4xqrBTw1YWLxOrI0oGA+ZvWTaZRh2VsCUp47tteAJEdqN1Fe2/oEqQepyLoO/yjGersmi2MzPYHC4cTd6ksNJsyfhCR08/iGxz+QHacbvMOqpQWD5SFOczVsNyjuPOzZo8gI3A9fMpl0=
+	t=1763427063; cv=none; b=F0RpPSSwom8kOm7OTYScCYUzmiwGfAekJEB+yNfK21ThWx8Td3r+NNE2x6CpItyw57e7GxgaiQknzGrrCPuU6hOVOMe2jnRQGNqkomWgGWmpmI0j8RchxuUE64jL7ujIcSeLnXkQ2C63kEXiq/t9CQlBjnNl7/espLC4nfBrroM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763427057; c=relaxed/simple;
-	bh=eOHQgrB5skHPcM2HqeXjcVrG1cllA/I5abBZUOtgWzA=;
+	s=arc-20240116; t=1763427063; c=relaxed/simple;
+	bh=b0QGRj1zJhMlxhEi1e8gZ427wDLzbANpOOdNU7pTMXI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Cer4gFwhfUaoc6sUSLyDBEgM3e2LVgPz+s4jamXbzgMXLl5s+qDCtV4cgffMDBlGIDscUisCjjK8MOI4GoKZ++qFJljrTGQfxJHlOFRBF4HHVXaFkNGiB9HPY83t0gslYYkyuezN7SVBCCO8RwKWFKQXJNRiyVW2abh0SJ328lU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GtPdDfjX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE7C4C116B1;
-	Tue, 18 Nov 2025 00:50:51 +0000 (UTC)
+	 MIME-Version; b=qEAbKWRsT/cCR2qWge9cyIKuwNZ2ifDpKCpSPHcB+UOV+u4QpX6u+oMYHOw82mlBhws+/ciC0sXUlWKuRAZtXGV4W+LZ2NCPv4Q4gd/eZXA16FZ1YhsQY7KISRfO0DnhMa5MmV5F/UQ6s7ePE6wlycvW7bwRMW1xdez90pR51AI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LSDvLOqL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 649D3C2BC9E;
+	Tue, 18 Nov 2025 00:50:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763427056;
-	bh=eOHQgrB5skHPcM2HqeXjcVrG1cllA/I5abBZUOtgWzA=;
+	s=k20201202; t=1763427062;
+	bh=b0QGRj1zJhMlxhEi1e8gZ427wDLzbANpOOdNU7pTMXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GtPdDfjXvMf42P6ZmomvHghS1hTPvc9iNhLLk4uxXAhRU5LstSDuGdkaUzdJttu/N
-	 hJMKE3/cbZiuGJuRDAyZSIUPI7t9+FpQT/58pN2k9PgZDVZImhuUljWG2bV4yju0kb
-	 RYy/jG+rL18vQFh+Lu+RXvoCA/1ZkOTHf+kYLWdt/7a3AXEt3lcWQkx725aZ+EPGBk
-	 4RQT3n5mPXj0FUKK93SH1TM8MYbO/J8+E6U1uUlUaMk1fsvQ2/xhxSq7147hRNi01o
-	 K9i1nb0ir3xRZBwNGs3upwIL3taHL3w5EuD0qDEE9m4JvcYRlkQQlzHICsYijWGMdq
-	 tznJoVPsTuciw==
+	b=LSDvLOqLC6Su6v05duZuemZY4oFxhzfCkSUp18lFu+pkS3nzWACmUmuG61vVm46E+
+	 Oxj7dL4O7TY1TNB1HOAll1vshHZMlKEyGcuZ4zAdyFJsvpWVzztxrMGJEMA0Xro+8C
+	 amStortbZve34SZt3k8gOMWsh7B2VrqpEkr6MdW/nlmlfVMP9Ktp3lAM+lYYvCLD0a
+	 URhwg6Aeo0oeKaOEomqfNT+AUu8qWeocdfovofDVX1naySGvI6y0F6H6b2hHHcX/SA
+	 c7xKz4N0flAjDYyKPz6Zsip1ugXyBwx2ZcR6XwCxjISEnrnW7PwXSXSQJsisAGRQkS
+	 sKgCnk+NkFkAg==
 From: Jisheng Zhang <jszhang@kernel.org>
 To: Doug Berger <opendmb@gmail.com>,
 	Florian Fainelli <florian.fainelli@broadcom.com>,
@@ -64,9 +64,9 @@ Cc: linux-gpio@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-omap@vger.kernel.org
-Subject: [PATCH v2 06/15] gpio: ml-ioh: Use modern PM macros
-Date: Tue, 18 Nov 2025 08:32:20 +0800
-Message-ID: <20251118003229.26636-7-jszhang@kernel.org>
+Subject: [PATCH v2 07/15] gpio: mlxbf2: Use modern PM macros
+Date: Tue, 18 Nov 2025 08:32:21 +0800
+Message-ID: <20251118003229.26636-8-jszhang@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251118003229.26636-1-jszhang@kernel.org>
 References: <20251118003229.26636-1-jszhang@kernel.org>
@@ -83,69 +83,50 @@ automatically dropped by the compiler when CONFIG_PM or
 CONFIG_PM_SLEEP are disabled, without having to use __maybe_unused
 
 Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-Acked-by: Andy Shevchenko <andy@kernel.org>
 ---
- drivers/gpio/gpio-ml-ioh.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/gpio/gpio-mlxbf2.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpio/gpio-ml-ioh.c b/drivers/gpio/gpio-ml-ioh.c
-index f6af81bf2b13..6576e5dcb0ee 100644
---- a/drivers/gpio/gpio-ml-ioh.c
-+++ b/drivers/gpio/gpio-ml-ioh.c
-@@ -160,7 +160,7 @@ static int ioh_gpio_direction_input(struct gpio_chip *gpio, unsigned nr)
- /*
-  * Save register configuration and disable interrupts.
-  */
--static void __maybe_unused ioh_gpio_save_reg_conf(struct ioh_gpio *chip)
-+static void ioh_gpio_save_reg_conf(struct ioh_gpio *chip)
- {
- 	int i;
- 
-@@ -186,7 +186,7 @@ static void __maybe_unused ioh_gpio_save_reg_conf(struct ioh_gpio *chip)
- /*
-  * This function restores the register configuration of the GPIO device.
-  */
--static void __maybe_unused ioh_gpio_restore_reg_conf(struct ioh_gpio *chip)
-+static void ioh_gpio_restore_reg_conf(struct ioh_gpio *chip)
- {
- 	int i;
- 
-@@ -479,7 +479,7 @@ static int ioh_gpio_probe(struct pci_dev *pdev,
+diff --git a/drivers/gpio/gpio-mlxbf2.c b/drivers/gpio/gpio-mlxbf2.c
+index abffce3894fc..6668686a28ff 100644
+--- a/drivers/gpio/gpio-mlxbf2.c
++++ b/drivers/gpio/gpio-mlxbf2.c
+@@ -424,7 +424,7 @@ mlxbf2_gpio_probe(struct platform_device *pdev)
  	return 0;
  }
  
--static int __maybe_unused ioh_gpio_suspend(struct device *dev)
-+static int ioh_gpio_suspend(struct device *dev)
+-static int __maybe_unused mlxbf2_gpio_suspend(struct device *dev)
++static int mlxbf2_gpio_suspend(struct device *dev)
  {
- 	struct ioh_gpio *chip = dev_get_drvdata(dev);
- 	unsigned long flags;
-@@ -491,7 +491,7 @@ static int __maybe_unused ioh_gpio_suspend(struct device *dev)
+ 	struct mlxbf2_gpio_context *gs = dev_get_drvdata(dev);
+ 
+@@ -436,7 +436,7 @@ static int __maybe_unused mlxbf2_gpio_suspend(struct device *dev)
  	return 0;
  }
  
--static int __maybe_unused ioh_gpio_resume(struct device *dev)
-+static int ioh_gpio_resume(struct device *dev)
+-static int __maybe_unused mlxbf2_gpio_resume(struct device *dev)
++static int mlxbf2_gpio_resume(struct device *dev)
  {
- 	struct ioh_gpio *chip = dev_get_drvdata(dev);
- 	unsigned long flags;
-@@ -505,7 +505,7 @@ static int __maybe_unused ioh_gpio_resume(struct device *dev)
+ 	struct mlxbf2_gpio_context *gs = dev_get_drvdata(dev);
+ 
+@@ -447,7 +447,7 @@ static int __maybe_unused mlxbf2_gpio_resume(struct device *dev)
+ 
  	return 0;
  }
+-static SIMPLE_DEV_PM_OPS(mlxbf2_pm_ops, mlxbf2_gpio_suspend, mlxbf2_gpio_resume);
++static DEFINE_SIMPLE_DEV_PM_OPS(mlxbf2_pm_ops, mlxbf2_gpio_suspend, mlxbf2_gpio_resume);
  
--static SIMPLE_DEV_PM_OPS(ioh_gpio_pm_ops, ioh_gpio_suspend, ioh_gpio_resume);
-+static DEFINE_SIMPLE_DEV_PM_OPS(ioh_gpio_pm_ops, ioh_gpio_suspend, ioh_gpio_resume);
- 
- static const struct pci_device_id ioh_gpio_pcidev_id[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_ROHM, 0x802E) },
-@@ -518,7 +518,7 @@ static struct pci_driver ioh_gpio_driver = {
- 	.id_table = ioh_gpio_pcidev_id,
- 	.probe = ioh_gpio_probe,
+ static const struct acpi_device_id __maybe_unused mlxbf2_gpio_acpi_match[] = {
+ 	{ "MLNXBF22", 0 },
+@@ -459,7 +459,7 @@ static struct platform_driver mlxbf2_gpio_driver = {
  	.driver = {
--		.pm = &ioh_gpio_pm_ops,
-+		.pm = pm_sleep_ptr(&ioh_gpio_pm_ops),
+ 		.name = "mlxbf2_gpio",
+ 		.acpi_match_table = mlxbf2_gpio_acpi_match,
+-		.pm = &mlxbf2_pm_ops,
++		.pm = pm_sleep_ptr(&mlxbf2_pm_ops),
  	},
+ 	.probe    = mlxbf2_gpio_probe,
  };
- 
 -- 
 2.51.0
 
