@@ -1,151 +1,89 @@
-Return-Path: <linux-gpio+bounces-28663-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28664-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07996C69932
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 14:21:55 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B536C69C6C
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 15:01:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id 9E36D2B0EE
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 13:21:52 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTPS id 350782AE7F
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 14:01:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 719E5345CB9;
-	Tue, 18 Nov 2025 13:21:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B201359F9A;
+	Tue, 18 Nov 2025 13:58:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Ph27r6sT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jv73WMj8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C692FE06D
-	for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 13:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF139357A2B;
+	Tue, 18 Nov 2025 13:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763472107; cv=none; b=TB60pr9KtA7TvsquamfEXCUUJXOwmqvijljfU7sKdb/j/eo2LNAb2gtA2KLmWu+kUihEqrEgzTOGSX39qnF7pqQu5eBmBdL4qNA9GsS9/K3mvSzCGMSxk2kbQXQMdYxlKCEAHjCrZOeArmbrbnM/0Sm3T0XxWRdenOQ35OZjMkU=
+	t=1763474299; cv=none; b=MXTiMR6QCgyNKPV9iSe0jloU1BGSSZrb+zkSQ1faYn+MJrvrr9lTwX0Gp9LABA0TgzXjKKQLNBOYqIpJEuxyl6ypEQNvPHjP5szAJLb5YIAC/ty5Q+DXG51pEZ42uTt2avu6Qw9jJ1rCYD7gaVODkiKUKO+YtUQbynycxcoCmMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763472107; c=relaxed/simple;
-	bh=E5V/vfphfgkZe38UOECGMAO1aduhoV4x1WIT54usrgw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bidVbahWYsjaLdTTE6hyL3NDKhzpT9+QZWHgOZmdijf9cwckR6P/S4TadcKq1+J4TOY0mAhqI93qY+qyRP666eU2NCe4UTKiq1sqPe2/vj2kUPdr+g5S+IPVgKFWjvvmSMZFi5IlvNVs9T50faQjduMUVlfysZFm73WSqp7RZgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Ph27r6sT; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-595910c9178so1793402e87.1
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 05:21:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763472103; x=1764076903; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z7s5vmA5/2iLhUbg7qRyJfyqshig4Q/omIvZZt8dCY8=;
-        b=Ph27r6sTzqLPKi+GnwrFGLObYPA4jXb5/Ex1ykBIXTlJm9iUNCPBAZ/UTdcFMRNuha
-         W83jRYGNB+gQsGuJMJYB75JDj0WBx1Jiasts7mcT4lB5gjqpNQFIux7T6KrSzeUDm7Zn
-         ZRqnp/Fu2bY6iwh9dYwMAoWNovab6ZlliA0rh/jRxlwDRso6OFlggy5YcoWxQikLKwax
-         u77K7rPo8AiT9Regc3v4A3q8YHS7+SMdHYkCWGDvboNKRuGR1wcFcIAifAcPxHlzxME7
-         sRxIvTy7SamOMQ5ge1MCMaun7cE+bMFSa0t4vNcwvvVlmOKy0IEnuNojs98Nnm7gRSOV
-         kAzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763472103; x=1764076903;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=z7s5vmA5/2iLhUbg7qRyJfyqshig4Q/omIvZZt8dCY8=;
-        b=hGrpKmOmTsoqipCmnMNJHzrRYXi8Ryh+MQUB3JgrlZE4zuCPUfviRIRLuDAqsToOVO
-         H3QrN/dwvMwNbgQhWmkNPyhA9vwlvHKhIgHxvhhyGesQ7PIEZIgMzIkqShid3++9gUIt
-         F9FolhV8LnULDV1ecOz9yuA2FJNHPFt7x6Xafqpdu6xwHb8ocFFjjZjNJ7lGMDXFMDx2
-         k9SC5Q6YVNPfaGuSDGzDqCgQY7Hro/d4F0VocAVweSC5ECAWVKN5X3NUGXOAv3mmLCZa
-         tVYLBUay5zB9If1csCtnUa22P6tvwk+ZaBkNF2dN39hLjKfC3oxLn2V1pRMtvMwp68JL
-         ZBRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVSw3IXS71C4aeoSvqszCJcTiM5wDWxvkBRQW1xzzU1mfAOdAGvNikzGCNGTwUd5EPUcqUWJ92ohNma@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBr9ldyxa9uIWHe6VKsRIIuuD8T3uCfqHViIcwhXz4cNKTlXXn
-	tGqotPXztlGvIqJGubbNJNSNLL+6GDMtsaLFoWZHider8he7OKstOLeQIYPwOrdfNof0aD3hc8P
-	fVVVb7tuHkELnhSD1qsqivtmN57WgKZAQOsffqtOxvg==
-X-Gm-Gg: ASbGnctkehejRHQE+iTodkWNrOg6lij/rLujLIS9tBUPO61xpBA9iNnl67OAldUsLQ3
-	+ZhuMacuUou7Aw5Sng9UCdmu9mU3z0Wimo4d3K5dk2Pb2/Gc0qWG7OrhqkkS8c0HyA7FxFs1oAs
-	cXPQ6LHdsp9PntrGdR3f6xULv2o3D/gfCb5jm9D8w3DgAasp5d6hEm++PtpLIqGFLHQ4k2SG3sZ
-	SjPDlPVysU/X5IgaB7dg+R0y0kdDGDm8lp1Vp6okQIuswmoZSTC3MIT2ecRyjXuNgMp+HDlFJsT
-	svMEnscLlgQjoI+iP6XlXZh21w==
-X-Google-Smtp-Source: AGHT+IFLx4rEab/wbUDo4EkSCUHDw6GWYiJjtIbCHDB1xl+ZlXv5nLLQYI54hMzgwVsRu8daEpH3NSYMy9pTQDZmbZ8=
-X-Received: by 2002:a05:6512:3c9e:b0:55f:4633:7b2 with SMTP id
- 2adb3069b0e04-595841f842bmr5089204e87.46.1763472103404; Tue, 18 Nov 2025
- 05:21:43 -0800 (PST)
+	s=arc-20240116; t=1763474299; c=relaxed/simple;
+	bh=GE3MUS9RWPjKmtvK6ZEq4CiJP3arTB4naS4RHRGg3pw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aG83SOfTpYsZwEQ+Wxw3iHR1/WH06k5MDEVbPLrOoyGkTy5gI5yvj8g8rBeuNFYF6N29qZe1D+1YWinczlXyOPIy4qUuI6Ce4LFOMD125y6ISl+ZzD3Q9tnfOUdpFLf09yxjAqnzUVg0XY08xPifWQNmT1KvyclQJOCFAvAyfqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jv73WMj8; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763474298; x=1795010298;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GE3MUS9RWPjKmtvK6ZEq4CiJP3arTB4naS4RHRGg3pw=;
+  b=jv73WMj8DSkcf/o29ghVlS+40IrsSHxHk1XzoC+irjZ5uJNOKGEcpC1p
+   P1s7CloDoDlUsrIvYI9MNg54mf1SipfkTJpbnUKmoI2WofK//w+auT+0v
+   ar0pyuyFcRlagUZj0N9s4t/vvsQhV1Ug4xOTZP28Xz+s4jvN7jheQ+Vfj
+   6eI2hvGntFpJxNnNmTdFeGKMj/3zaCJJNYo/arYdlHn3+HXgRmJPPpU+z
+   EOiWfZO7VC/441yUIuXVd4/AEdTfgAQADRxWjxnPyvXdY3hgm57k85L+9
+   Uwuu/5HZP9k4MXJUtMhHzPnBHFMm0+nCFGtb/B6PWmZNdlJz6sOjNEz3G
+   g==;
+X-CSE-ConnectionGUID: TjJDSjEpSQajIZmkfHR7ew==
+X-CSE-MsgGUID: 7dKF6SkmTDmQQ2qyt0ELgA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11617"; a="83121810"
+X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
+   d="scan'208";a="83121810"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 05:58:15 -0800
+X-CSE-ConnectionGUID: mTXr6QEVSAyJ7nNQu2zqMQ==
+X-CSE-MsgGUID: Zs3fH7K4SYqSxQDm6R7J0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
+   d="scan'208";a="221666955"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa001.fm.intel.com with ESMTP; 18 Nov 2025 05:58:13 -0800
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id 0734698; Tue, 18 Nov 2025 14:58:13 +0100 (CET)
+Date: Tue, 18 Nov 2025 14:58:13 +0100
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/2] pinctrl: intel: Export intel_gpio_add_pin_ranges()
+Message-ID: <20251118135813.GI2912318@black.igk.intel.com>
+References: <20251118123444.1217863-1-andriy.shevchenko@linux.intel.com>
+ <20251118123444.1217863-2-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
- <CAMuHMdVR9Z70+M-SqHYrHiC6H_yw=VRuDOOg=YnXSNKjPnx3WQ@mail.gmail.com>
- <CAMRc=Mdo__Yzigqoy4xKt0LWSvES5Jse1HeXkePfhiWyiz6tBQ@mail.gmail.com> <CAMuHMdXpySSvjgju2LXr6puVXzHMR4ckpaKEWK_S4spTWz6B-A@mail.gmail.com>
-In-Reply-To: <CAMuHMdXpySSvjgju2LXr6puVXzHMR4ckpaKEWK_S4spTWz6B-A@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 18 Nov 2025 14:21:29 +0100
-X-Gm-Features: AWmQ_bmgN3bhvSn3FjfwQqs5x52sLWvM37dbNjtnEqn6scQIfee74Ky62f9fPdU
-Message-ID: <CAMRc=Mf_j8jNMrJrnGp_bVmYQPLheE55AN4gXCtRrCDkF5CXsw@mail.gmail.com>
-Subject: Re: [PATCH v4 00/10] gpio: improve support for shared GPIOs
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Alexey Klimov <alexey.klimov@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251118123444.1217863-2-andriy.shevchenko@linux.intel.com>
 
-On Tue, Nov 18, 2025 at 1:56=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> > >
-> > > Thanks for your series, part of which is now present linux-next.
-> > > IIUIC, this requires the direction of the GPIO to be fixed?
-> > >
-> > > We have a long-standing use-case on various Renesas R-Car Gen3 boards
-> > > (e.g. Salvator-X(S) and ULCB[1]), where GPIOs are shared by LEDs and
-> > > key switches.  Basically, the GPIO is connected to:
-> > >   1. A key switch connecting to GND when closed, with pull-up.
-> > >   2. The gate of an N-channel MOSFET, turning on an LED when driven
-> > >      high.
-> > >
-> > > Hence:
-> > >   - In output mode, the LED can be controlled freely,
-> > >   - In input mode, the LED is on, unless the key is pressed,
-> > >   - Hence the switch state can only be read when the LED is turned on=
-.
-> > > If you have any idea how to handle this, feel free to reply ;-)
-> >
-> > How is this done currently? Even without this series and using the
-> > GPIOD_FLAGS_BIT_NONEXCLUSIVE, the descriptor has a well-defined
-> > direction so it's not possible for two drivers to request it as input
-> > and output simultaneously. The second requester will override the
-> > previous settings.
->
-> We do not handle it yet:
->   - arch/arm64/boot/dts/renesas/salvator-common.dtsi describes only
->     the keys (key-[a-c]),
->   - arch/arm64/boot/dts/renesas/ulcb.dtsi describes the first key
->     (key-1), and the others as LEDs (led[56]).
->
+On Tue, Nov 18, 2025 at 01:34:01PM +0100, Andy Shevchenko wrote:
+> Export intel_gpio_add_pin_ranges() for reuse in other drivers.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-I see. This series cannot possibly address this. Off the top of my
-head: I would create an auxiliary device binding to a dedicated driver
-that would be a consumer of this pin and register a LED and an input
-key. By default it would set the direction to input and if the user
-decided to configure the LED, it would change direction to output.
-
-Obviously, there would be a DR quirk to handle as we already have this
-described in DT as gpio-keys on salvator.
-
-Bartosz
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
