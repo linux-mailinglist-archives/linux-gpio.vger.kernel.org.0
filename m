@@ -1,149 +1,181 @@
-Return-Path: <linux-gpio+bounces-28641-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28642-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CA5CC6867C
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 10:01:56 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47BFEC68A10
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 10:47:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 907BB4F090D
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 09:00:49 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id 4967A2AA04
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 09:47:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F47331B833;
-	Tue, 18 Nov 2025 08:58:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B28D831B114;
+	Tue, 18 Nov 2025 09:47:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a+U9/+sp"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="opnsJPdm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043243164AB;
-	Tue, 18 Nov 2025 08:58:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762142EAB64
+	for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 09:47:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763456288; cv=none; b=MgqETSskwZPvV7GeszMcapB8lICchH8H6DJw4Xbyx7hXxkcQfbsge+pyrDsIEB4QYIY5s01TX5fmxB84HAHxk/XGXwQq1+iULpvjri56NgtRApPyB8m0PiHo6UI0o+a8v3XMi5PULXDGRxVG1V5sacTk0IaeTrowLzqZuGi18x0=
+	t=1763459246; cv=none; b=nlcDgTcpLbrqlJMfn4bFBmz7d2rWOWGUvbcJjt8Y/GFtCvuwGXAKXu2nOyNC5hAEiFdEnq6QgwCx1274hoaQ2XJt6bBaD7fFw6qlRCJmLEMgbzhZqGEOJDPrynn/N90XU9DMlOwfHwiSbcbe8blUQPomlbyhC04Zvypcqm/kZq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763456288; c=relaxed/simple;
-	bh=2e3s67FJBQkKQctDjwsfZs3PlkxPX3KmBNoYaFFvDH0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Av4EATAmmEjzvUefloZC3y9jmDQ6Bfzai+tY9nFoLwLNuY9Q0IX272EVhAQ1WwwJK1WrXkhrGxLePGP77J6qIo+ZjKJIMyMrB7cY6yH/wsO0hLQ4bxNWNsgk9bHx3NPEUQoBxStVeTWQNXxZWMBWOUJtZIH9oSOalDTZh5fnBxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a+U9/+sp; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763456287; x=1794992287;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2e3s67FJBQkKQctDjwsfZs3PlkxPX3KmBNoYaFFvDH0=;
-  b=a+U9/+sprPjsINpsIjpv0OG0/8r6gY81WYITnxio1cZXUMfuJm7kCamF
-   cuJdpyhfBIk3SVRbiDvP64KUAq96vXyEKZOTI5rREBc7H0DqC8vYoYfeI
-   x5RUXWPSFRzgCvu+/2X9PIPFow6Kw1Q8xKMvF4bu/zoQrCqHYrsETjsc1
-   +IedVmcmm1X34rG/62iTmckQ5euEn7TF+4cMmx011u+GkBhsXjHK+yI1i
-   8112/RPonTQAEdF6bzE7RpNunuMN9Faoo5v6/Ux8HeJJNppVPjPRfUery
-   plfy28NIDjteENCftVaUPUZxKYU7ziaS+WxS9XBnxH1dHl4DMR+ugGDdQ
-   w==;
-X-CSE-ConnectionGUID: Ayj7VqZ7RxCsuEoF77vI3A==
-X-CSE-MsgGUID: qXGviupmTK6UTZNXA+r88A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="65353251"
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="65353251"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 00:58:05 -0800
-X-CSE-ConnectionGUID: ggqtB+rsTNi0urkZLt529Q==
-X-CSE-MsgGUID: /nnLGuh2SvudOePaDGdeDA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="189964566"
-Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 18 Nov 2025 00:58:03 -0800
-Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vLHXE-0001WN-16;
-	Tue, 18 Nov 2025 08:58:00 +0000
-Date: Tue, 18 Nov 2025 16:57:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: 429368636@qq.com, lee@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, pavel@kernel.org,
-	linus.walleij@linaro.org, brgl@bgdev.pl,
-	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-	linux-gpio@vger.kernel.org, zhangxinyu <gavin.zhang@faiot.com>
-Subject: Re: [PATCH] leds: add aw91xxx driver
-Message-ID: <202511181607.3hTCfucu-lkp@intel.com>
-References: <tencent_1B2BC712D34FBE7DEB01320E665BEB2D8908@qq.com>
+	s=arc-20240116; t=1763459246; c=relaxed/simple;
+	bh=NSDit/mHJlhkuZyhSitu2JvNgHl8gNj+Tf2PzvgTGRE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uhkow72RlDRwFO2BncQ0DdPRoxv5zdr9547AVdkoBuAR/6Y5A2/01opuLHuPzg5zu8QNUqlkpokZvOKDNtD7V3ExdB+FYMwfoqc+JnxntcioZOUssngLoUxVOb2ktvqFs5UpONb6uhDER5DPqS64G7hIie6TiWq8cqeggFp2oaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=opnsJPdm; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5957753e0efso5592535e87.1
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 01:47:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763459242; x=1764064042; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VMVWh4fXZBKxZ6isW9HD5sLU8SwmoT7bOn5vyBPfKmg=;
+        b=opnsJPdmzhM5tdnQJbfSjsg0bFk0p8LPV66XHrp6enVsUH8qX6ziRRQl7HuZ92SzsV
+         V/RUf32TQuAJbpZ5fhfkKphvbG2g3OT0c06HLydsLCwXxcd/8FC4NxesAVTAIYjHGe11
+         57p4nQ3sLfAWX6HBI0Vkq5KTlgAr0UbhEMyCNX1EQby8Hp4xGr0eNHRkiGMv9yaXUx9+
+         Z9Yl7FuxTHEcbFZcSIENmFvabrxplOyodborRcWFDhwD0urfYzmT5/crdFlR4nUSI9ik
+         aKdnDFv6fx59R0jWhxbE+a8a6JFT8efPEANJeSUgRuEYs81jZ4KfWpJVZyfXGj+fHB0X
+         kEAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763459243; x=1764064043;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=VMVWh4fXZBKxZ6isW9HD5sLU8SwmoT7bOn5vyBPfKmg=;
+        b=Ok4vUa/7Wl8WKPg08iXnUxZ84LULanlrraJ7WuA/l5eQOMgp9XDG2I6NNZyjRzoxDh
+         dunRXDxf4ilc3MlC4j/FPzvcB4aRgmi57HAwPdLmLk8pNknrAwePaToGpW5Z+FcY4g29
+         BpzuTZI41YBQZWs0VfXx/vJ7Tz8sP35WzGQ2Wik6NOUm3EeZnPId4JJXgClnUvhB1XS4
+         Z93c+CjuF3yPeShyLWQOHKziFvNXvKIgJq5WSh7PGUBGplcJptF3ZVOdp12lbYiq1HL0
+         1CNwdyrm+LwiAo9kc+kbRHdEEE51dIG7HR/gYsJs5xA5u1VIJrDHJKLc9Ub/Lbe3hBJi
+         xHcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUWWfCjxR2afTvFZTJkhZb9YsLqB6XavizhElDCTLTZ2noCP0YA39hs9ZxTIv/jtphLbbjx1kyLbqut@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPGrBIcjEPFAwL1wWkk5SoKu8BFGkjMS7txLFk41uhvVMHB9dp
+	LrGSy8Wby4fPMHBNPWkVdaTKCGhG0LIgPdddbyfbYg7hdibS6OZPi8kI2UwNQn48leTuSzpRct0
+	wCOtQ8L9zHyMFcPSA1Hmmbs8dCkDDmO1ymFpxwiAIYg==
+X-Gm-Gg: ASbGnctTDdpq5tyRAUMKkkK2HJnbvjaStZmha3iFWhCK6acIq5/2StAQXdPHjA9g48F
+	zTV/Eo7ImPLFUCNRXGdtWhrdTSQFLLc3hhu/VtyPEB6aHGJDCc9rZ/pOePR3l4QZNaGJGGGGTLt
+	0Iy6J6BtJs8TCAnoM8CYtvNf/D6EDqMKgOhxtRLZQzlfXn/wdRv52c8XoxEgjGgtDey/PVxus8F
+	cJgIMb9Z+RA0PJyCmUkOFkCNs6vMC7VCVwS3FhRARPtoeU57BwsJ5rtaXLLWUzxAelBNhje8d89
+	n74YSXHwQAjw8ndd0B05TPLj8lUa3ecR0Fjk
+X-Google-Smtp-Source: AGHT+IEKSj2qpQvKe0IfkTOGZF1jV6/WKVJLO2A/Txv4rPC3yDvwMdMydDTZhNC5mLXfB6q+qgnbPN4NmYCtJAA3Qgk=
+X-Received: by 2002:a05:6512:39cd:b0:594:4b55:d2dc with SMTP id
+ 2adb3069b0e04-59584217be0mr5314684e87.47.1763459241858; Tue, 18 Nov 2025
+ 01:47:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <tencent_1B2BC712D34FBE7DEB01320E665BEB2D8908@qq.com>
+References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
+ <20251112-gpio-shared-v4-1-b51f97b1abd8@linaro.org> <202511171230.F83EE85D0@keescook>
+In-Reply-To: <202511171230.F83EE85D0@keescook>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 18 Nov 2025 10:47:09 +0100
+X-Gm-Features: AWmQ_bkhi1H3-46xEmuP3pqCgeKjE8VDjqsBb0GhCZL7ntExaLQpYRSDFU-8VEY
+Message-ID: <CAMRc=Mekr=xcGbSBD583nUqR43aLYO9iGakbOSSFEWYdbXW73Q@mail.gmail.com>
+Subject: Re: [PATCH v4 01/10] string: provide strends()
+To: Kees Cook <kees@kernel.org>
+Cc: Mika Westerberg <westeri@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Alexey Klimov <alexey.klimov@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Mon, Nov 17, 2025 at 9:33=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> On Wed, Nov 12, 2025 at 02:55:30PM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Implement a function for checking if a string ends with a different
+> > string and add its kunit test cases.
+> >
+> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > ---
 
-kernel test robot noticed the following build warnings:
+Hi Kees!
 
-[auto build test WARNING on lee-leds/for-leds-next]
-[also build test WARNING on linus/master v6.18-rc6 next-20251118]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Thanks for the review. I already queued this for v6.19, so let me
+address the issues in a follow-up.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/429368636-qq-com/leds-add-aw91xxx-driver/20251117-175335
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/leds.git for-leds-next
-patch link:    https://lore.kernel.org/r/tencent_1B2BC712D34FBE7DEB01320E665BEB2D8908%40qq.com
-patch subject: [PATCH] leds: add aw91xxx driver
-config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20251118/202511181607.3hTCfucu-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251118/202511181607.3hTCfucu-lkp@intel.com/reproduce)
+> >  include/linux/string.h   | 18 ++++++++++++++++++
+> >  lib/tests/string_kunit.c | 13 +++++++++++++
+> >  2 files changed, 31 insertions(+)
+> >
+> > diff --git a/include/linux/string.h b/include/linux/string.h
+> > index fdd3442c6bcbd786e177b6e87358e1065a0ffafc..929d05d1247c76eb9011fe3=
+4250b487834b2d3c9 100644
+> > --- a/include/linux/string.h
+> > +++ b/include/linux/string.h
+> > @@ -562,4 +562,22 @@ static inline bool strstarts(const char *str, cons=
+t char *prefix)
+> >       return strncmp(str, prefix, strlen(prefix)) =3D=3D 0;
+> >  }
+> >
+> > +/**
+> > + * strends - Check if a string ends with another string.
+> > + * @str - NULL-terminated string to check against @suffix
+> > + * @suffix - NULL-terminated string defining the suffix to look for in=
+ @str
+> > + *
+> > + * Returns:
+> > + * True if @str ends with @suffix. False in all other cases.
+>
+> Maybe added "empty strings never match"?
+>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511181607.3hTCfucu-lkp@intel.com/
+But they do, please see the test.
 
-All warnings (new ones prefixed by >>):
+> > + */
+> > +static inline bool strends(const char *str, const char *suffix)
+>
+> These are required to be non-NULL, so we might want to consider marking
+> them as such with the "nonnull" attribute. We don't use it much in Linux
+> yet, but I do see a few places.
+>
+> e.g.:
+>
+> static inline bool __attribute__((nonnull(1,2)))
+> strends(const char *str, const char *suffix)
+>
 
-   drivers/leds/leds-aw91xxx.c: In function 'blink_store':
->> drivers/leds/leds-aw91xxx.c:653:30: warning: format '%x' expects a matching 'unsigned int *' argument [-Wformat=]
-     653 |         if (sscanf(buf, "%x %x", &databuf[0]) == 1)
-         |                             ~^
-         |                              |
-         |                              unsigned int *
-   drivers/leds/leds-aw91xxx.c: At top level:
->> drivers/leds/leds-aw91xxx.c:1309:13: warning: no previous prototype for 'aw91xxx_irq_func' [-Wmissing-prototypes]
-    1309 | irqreturn_t aw91xxx_irq_func(int irq, void *key_data)
-         |             ^~~~~~~~~~~~~~~~
->> drivers/leds/leds-aw91xxx.c:1395:6: warning: no previous prototype for 'aw91xxx_int_work' [-Wmissing-prototypes]
-    1395 | void aw91xxx_int_work(struct work_struct *work)
-         |      ^~~~~~~~~~~~~~~~
-   drivers/leds/leds-aw91xxx.c: In function 'aw91xxx_key_work':
->> drivers/leds/leds-aw91xxx.c:1425:13: warning: variable 'key_num' set but not used [-Wunused-but-set-variable]
-    1425 |         int key_num = 0;
-         |             ^~~~~~~
+Ok.
 
+> > +{
+> > +     unsigned int str_len =3D strlen(str), suffix_len =3D strlen(suffi=
+x);
+> > +
+> > +     if (str_len < suffix_len)
+> > +             return false;
+> > +
+> > +     return !(strcmp(str + str_len - suffix_len, suffix));
+> > +}
+>
+> We should probably add it to strlen and strcmp as well. :)
+>
 
-vim +653 drivers/leds/leds-aw91xxx.c
+Sure but that's outside of the scope of this.
 
-   645	
-   646	static ssize_t
-   647	blink_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t len)
-   648	{
-   649		unsigned int databuf[2];
-   650		struct led_classdev *led_cdev = dev_get_drvdata(dev);
-   651		struct aw91xxx *aw91xxx = container_of(led_cdev, struct aw91xxx, cdev);
-   652	
- > 653		if (sscanf(buf, "%x %x", &databuf[0]) == 1)
-   654			aw91xxx_led_blink(aw91xxx, databuf[0], 3);
-   655	
-   656		return len;
-   657	}
-   658	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Bart
 
