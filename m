@@ -1,130 +1,155 @@
-Return-Path: <linux-gpio+bounces-28707-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28708-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41D50C6BE82
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 23:55:22 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0088C6BE8E
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 23:57:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4B1AA34DD29
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 22:54:39 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id 874DF2A270
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 22:57:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D3B22F83DC;
-	Tue, 18 Nov 2025 22:54:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC00730F535;
+	Tue, 18 Nov 2025 22:57:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PisXwAbO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mh62jC+5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678DB2264C0
-	for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 22:54:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED5E2EC57C
+	for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 22:57:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763506473; cv=none; b=iW8wc9ZIAw7J2CgQc1W4tiEJLHruNgpJrtAuxJOIkHYfVm0aTF41RVJn7nCtMMMtYbhBN/z5dVQtk7hUrJwllctleTErkPQIdB66KD4z9JzcL5shmC2FCA0N7CQkeUb6lUjKIk4VmK7VfC49rq97/5+hGYRrM6DG5vkQnW0GA8M=
+	t=1763506633; cv=none; b=hrRmDxZZ19qtwPzp0683Q8jdPA/7hIeDoQGEhIULEpfIwfv7frIddOj3H8Eu93adaHcgGTDZylrpY/7p0t12jEw72jxlmM8Ozc/lut8n4A3LyeYARofA+9Xhp4jSFWCDmofYB3y+8GcCmGx4zZyRGcDCt/l7torBsVPuE28nZG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763506473; c=relaxed/simple;
-	bh=LLhZvi0meCVMeQgXAgRdSPpGwpb/EWiwKMWyk95NYMI=;
+	s=arc-20240116; t=1763506633; c=relaxed/simple;
+	bh=PEswP7/MKNvIoy73Ay/lXRuLoHFl3pV0t8k8v6H2HB4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yw83b1KDc+SAZCF4x9kBo4P+NjeZOJgfKxkXn6c0R2kTwwmcfNXVKfMqWbhaoJmSg7vfTWDNQP4ChoZBpW9UZ7o8ztkfZExBFUGbFQ8SWzNQ33S8jkOCtBkLuegDWDnUkDOJ7vsl6f7AdkbBFSZvUoAkpqSVeqxjOCZbkftbqEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PisXwAbO; arc=none smtp.client-ip=209.85.167.43
+	 To:Cc:Content-Type; b=MoLSrana+ff7Q5EWzHJPVW7cO8TfOHv33IR2wTGBhjj6kKbFb7gnV9mzn5bkOZsDgVibmgGst3hI7SG0x8rK29MPPJT+VYxaXDaiycZpvLtveZk5IcmL7UtBGHBsg2ErmBr8e1cUXHuW4YtjLnfU3nRrPPXdGx5/BQmwiu4aatM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mh62jC+5; arc=none smtp.client-ip=209.85.167.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5942a631c2dso7574160e87.2
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 14:54:31 -0800 (PST)
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-594285c6509so6355752e87.0
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 14:57:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1763506469; x=1764111269; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1763506630; x=1764111430; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mFEslnX5OR/tQTPRQKyOAUirMOoHygQmu7S/WruwlpE=;
-        b=PisXwAbOhg+H8X/crJgkyMEVl6oGFTJNJZDrOnYfG0S9XVT8iQNS8cjJnO+MfcWyj3
-         KhBbi7CrHMVLLwtPijCU26V/C4oo6cPPCxlFVe1pl9YTPvLAW/rDu8oZxFvOxMEjHYxK
-         fCgUCdTuCecfccKjrQQR8Q4zTszhdcWAvkM5JfUtP/L0+fMKeUl24NvNA+dd6DyyPpb/
-         59W4BLX/zFD8wVzAXygbb4w7JPBMiM0ksVa5YDfl8ZKLqguYzpqRLC6HL1/C7dyu17E1
-         eNhVEYgSlV0tw2EVM56wTwFldeKcqajkO+NcX379lgvjxWEOZXRDXQ38bPEiafXERlRi
-         dXGQ==
+        bh=LJz8nG5sN3FDh1IyOGPvk5xFa+/J/sOHL6LWJMvknes=;
+        b=mh62jC+5aCZ1hNUvoZ0taoS4hNxGj9+2+DVHCOUgKgzh2uJnwSqCZ5zhBg7TseVWHS
+         /BkpHfx0FiYGQtPDKaAFvQrt4++TorSk0X1TOLu0xwNIKFOTq4KDs+MepJkCFeBrQaJE
+         sUodA4SGJj9ZqvYSp41KkSekTwcUNVeMZUPffxn0DhwHHMHwu4ikr8JJuxVBDncK4L7j
+         15ZsjyEeeuuaa36tx7S2AftAtIaNZFah6OdmbwBgz9/V9j0+LlgE8Bhw0lmZtEKQ+Ozy
+         KMM7MwttL32pGYzUAaGxVbIjgwq6r3dD2MUwSIQWTpcYRlyFHso+LueIZVKXt5aH+Mez
+         Cz+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763506469; x=1764111269;
+        d=1e100.net; s=20230601; t=1763506630; x=1764111430;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=mFEslnX5OR/tQTPRQKyOAUirMOoHygQmu7S/WruwlpE=;
-        b=L8CGBxY8mLsbdPArqymsKKfI+8MTECi6Uw9D6ibrDcSlgD2Lw18gRsNDOTavcuY3Ak
-         WpGbQhwpnNSn+m7sBcKZxJGs/OeLfDIyfg/Fm+CQZRccgooO0pKUmr9GoVKVAmmW5hlo
-         5JyzjrYvq3f/qRQSojXC6ifK26Gb7tka31bRtV1rBvmCThExhpiHr41Fc882CJI8/D0M
-         994bOJy10y55qUEvLAB+pw/IsaB8y0AmeDEZ8NUggZOemfx4nrHdRC8+oAUBK+0Zk8el
-         zcrTElQdDH5eIErEyxGkSKKk6omlEHabJROvn5xiUqq734dLVqSSKuZVdkFrBxTViQxO
-         cz6A==
-X-Forwarded-Encrypted: i=1; AJvYcCUklAIeJdTbLg34FfxhmWy4M0ovnx2BdiQpPx+O0cJewVm7qfBFOCvrzecP+mtTeGi+MCRz5NMZH0iC@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9N7XeEZIcYLSvEi1H8Dk1Js7kygHnd0wbCZnk0Sn6aO0Pq+0/
-	ULLKKUTaLpYDQ0mTqt7hzc+2sZJofj9pLqApUeO079z1jzsX5v4sf696VQFsNtTFsnSDiz76RDF
-	Eq5RhvX0Mb1Xd8giwVmN01vt0u5/IJFiThzbtEN49djufTkGNv3PpKMY62Q==
-X-Gm-Gg: ASbGncsiV7pTsrxo/RAJwEPrc/C0Kdcfcz4iametb4FGVGrwpqXQRhIwd/1oGEfDBSZ
-	VbEC3NevvhwG5KXpVORZOIKBVVO8VB8s4/oYo91h49eXhS4fEV/l04otxSTRVDBh/7M4asnsJl6
-	oN54iSonM1ZyZRU/m5pOTD6D9BbRJW+K6YY38sZ1iHFkTjyiHEgzZHuP4ApUvxJHribiqC2je9k
-	GUPb/xogY7nB7rA3hdX9Zpqj3vx/g4La5sW7j148NsYuGEQQNNKuoZO8BND4k99d8Wz8k4=
-X-Google-Smtp-Source: AGHT+IE9ROGV9vhyVbxmTa2vMAt23JCQD7kyieRaGBhmqhaspo5Oa//PQBSMVno9CBAFwv1ioBpLtLzQtaaKar+Clxc=
-X-Received: by 2002:a05:6512:33c9:b0:595:8198:51ce with SMTP id
- 2adb3069b0e04-5958419e6ccmr5957940e87.15.1763506469496; Tue, 18 Nov 2025
- 14:54:29 -0800 (PST)
+        bh=LJz8nG5sN3FDh1IyOGPvk5xFa+/J/sOHL6LWJMvknes=;
+        b=WrML6r7+2fxD6Pz1WY1ayEWRd9M9Ch+O5C/8Fx2dL8Nb5FH3iuAZGEUQd+XfZZ5SK/
+         wT44Ef8non2Dm0Gk0+XiDq2Wmn8B9kuoZ2IMnc+9h2TKUrvGTrEHTrFM+Vtr+bS1mtp+
+         CxO4mVLAkNDfgO5/0NBLY91YvdKkfX1CtOAMD389GRxru7nDgXivCaBh3sCG0i8Oy6og
+         l6vdBVyiMZyY08OLmDgo28heIFvoszBOIIvu/XrR1LI0FsnGOmNl4c5vrsJznC9IHzgC
+         hQryEt2f5TGw1mnr0+1Qigsmevg5pQSP533CsvaHD/+Jbc19HKRMJrKAgzgOR7KQKTnG
+         Rl9w==
+X-Forwarded-Encrypted: i=1; AJvYcCUzuBxWtBbuDkyMUOwU1zTC/iK+OaV4rdR3+o0tEjpltG1V5Jt998Qgz1ulsXmfyS+NO+sCOJeE+u32@vger.kernel.org
+X-Gm-Message-State: AOJu0YwprJxsygqXcNJ/bAofqgg8mZ7ZmPzyVSmz2ZTBeOWuKqiQ11ME
+	yX6xW86y15r7lfVTLTAKifMoxDHN6BoBiH9AFQs4ggXiD/5QRgwXEfxNEGAggQSsixnkiTzjMXM
+	GC1t/ipZskxTqVZWWhi5hJ47VbvucR3beDphLmXOHYA==
+X-Gm-Gg: ASbGncvtkAiqnIM/dBWjYWauCWsCBJC73e92Z9KvwZMFfM00famQpsAnckEJgzvbjRj
+	7oO8c/bd8gcvMfDnKgSfSS7mh71jg0x7OElztVYqf6yK6qIh9WKT4IYQcVv7lC8dcUcsoU+NIVy
+	hDNB8TfQohs2E6bjIfYJoUIUOG686t35BnLQgrbTxA26NkclGAvGIcM+Bl671br/yY7AdLgXlgi
+	C2OYeal2CklOBAil1Rf3USwO2W8g0wl8ManQaRmfDwPXal3jMRpKkOMYeASiBWArHnyoUdSKZlS
+	tyjT4A==
+X-Google-Smtp-Source: AGHT+IHwZcAFMZS1bHsxU68eV9rOlrn8WFmX9PzE9NTh+PzIlvHiN2PvE8KkV7wfG/e63Wzo3GxckDVJu03pQm+3a6o=
+X-Received: by 2002:a05:6512:3a86:b0:594:74f9:3b3 with SMTP id
+ 2adb3069b0e04-595841f97abmr5327733e87.29.1763506629914; Tue, 18 Nov 2025
+ 14:57:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251031160710.13343-1-antoniu.miclaus@analog.com>
- <20251031160710.13343-3-antoniu.miclaus@analog.com> <CACRpkdYdtcnxyP4xVsqVK+geurEOEURqZO5eLC96YMqh1sE5Sw@mail.gmail.com>
- <3ead5d7aa5e6be2b6df3bb91b35fec37e23353f3.camel@gmail.com>
- <CACRpkdZf9D2PH5AR46Pwi8UoyfwumKS4P3ncJ=RN4iu_cJzZ5w@mail.gmail.com> <0cd7cf10d47683f22a4358635f243a2dfb6be564.camel@gmail.com>
-In-Reply-To: <0cd7cf10d47683f22a4358635f243a2dfb6be564.camel@gmail.com>
+References: <20251111-pinctrl-s32cc-alloc-init-v1-0-071b3485b776@redhat.com>
+In-Reply-To: <20251111-pinctrl-s32cc-alloc-init-v1-0-071b3485b776@redhat.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 18 Nov 2025 23:54:17 +0100
-X-Gm-Features: AWmQ_bkcaZItZJt2y-mj9N0PnO4kP_ftuxcc-DBEyiPgOFYDOGAP2KTLLB6hcp0
-Message-ID: <CACRpkdbZgxWaf7B7vwD3n-OSbt8h8vGKQ_CmB_SNjDG6aXHayA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: adg1712: add driver support
-To: =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>
-Cc: Antoniu Miclaus <antoniu.miclaus@analog.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+Date: Tue, 18 Nov 2025 23:56:58 +0100
+X-Gm-Features: AWmQ_bnwhWkIocYT7e_LII6hlp7UoALS4YCTtfLZFvQ5s57acnTyw4Y1jo6l42k
+Message-ID: <CACRpkdYfNyAGdFpq=92UKBkScHq6U58N6XtwjJOJ3HAbBvFaNg@mail.gmail.com>
+Subject: Re: [PATCH 0/2] pinctrl: s32cc: fix uninitialized memory issues
+To: Jared Kangas <jkangas@redhat.com>
+Cc: Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
+	Chester Lin <chester62515@gmail.com>, Matthias Brugger <mbrugger@suse.com>, 
+	Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 11, 2025 at 5:01=E2=80=AFPM Nuno S=C3=A1 <noname.nuno@gmail.com=
-> wrote:
+On Tue, Nov 11, 2025 at 10:55=E2=80=AFPM Jared Kangas <jkangas@redhat.com> =
+wrote:
 
-[Me]
->> - Implement .set_config() and implement the generic pin
->>   control property PIN_CONFIG_OUTPUT_ENABLE as 1
->>   to switch "on" and 0 for switch "off".
->>   See include/linux/pinctrl/pinconf-generic.h
+> This is a small series that fixes some uninitialized memory issues in
+> pinctrl-s32cc. As an example of how these can affect the kernel, when
+> probing i2c-imx, a memory allocation may fail because of the
+> uninitialized memory giving a junk allocation size, which prevents chips
+> on one of the I2C buses from being detected:
+>
+>         # i2cdetect -l
+>         i2c-1   i2c             401ec000.i2c                            I=
+2C adapter
+>         i2c-2   i2c             402dc000.i2c                            I=
+2C adapter
+>         i2c-0   i2c             401e4000.i2c                            I=
+2C adapter
+>         # i2cdetect -y 0
+>              0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+>         00:          -- -- -- -- -- -- -- -- -- -- -- -- --
+>         10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>         20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>         30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>         40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>         50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>         60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>         70: -- -- -- -- -- -- -- --
+>
+> Compared to when no failure occurs:
+>
+>         # i2cdetect -l
+>         i2c-1   i2c             401ec000.i2c                            I=
+2C adapter
+>         i2c-2   i2c             402dc000.i2c                            I=
+2C adapter
+>         i2c-0   i2c             401e4000.i2c                            I=
+2C adapter
+>         # i2cdetect -y 0
+>              0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+>         00:          -- -- -- -- -- -- -- -- -- -- -- -- --
+>         10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>         20: -- -- UU -- -- -- -- -- -- -- -- -- -- -- -- --
+>         30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>         40: -- -- -- -- -- -- -- -- 48 -- -- -- -- -- -- --
+>         50: -- 51 -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>         60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+>         70: -- -- -- -- -- -- -- --
+>
+> Signed-off-by: Jared Kangas <jkangas@redhat.com>
+> ---
+> Jared Kangas (2):
+>       pinctrl: s32cc: fix uninitialized memory in s32_pinctrl_desc
+>       pinctrl: s32cc: initialize gpio_pin_config::list after kmalloc()
 
-> The above makes sense to me. I'll let Antoniu take it from here and check=
- if
-> the above fits the usecases he is aware of. Not sure if it makes sense fo=
-r a piece
-> of HW like this but if the usecase is for userspace to control the on/off=
- states,
-> then I guess we would need .get() and .set(). Or some kind of "frontend" =
-driver
-> making use of the consumer helpers.
+Patches applied for fixes!
 
-There is already GPIO_V2_LINE_SET_CONFIG_IOCTL
-in <uapi/linux/gpio.h> so setting configs from userspace is no issue,
-just use the character device.
-
-You will need to add I think two new config flags for userspace:
-GPIO_V2_LINE_FLAG_OUTPUT_ENABLE
-GPIO_V2_LINE_FLAG_OUTPUT_DISABLE
-
-And update gpio_v2_line_config_flags_to_desc_flags() in
-drivers/gpio/gpiolib-cdev.c accordingly.
-
-Then you probably want some tests or examples in libgpiod to make
-sure userspace is fine. Bartosz knows all about how to do this.
+Nice attention to detail here.
 
 Yours,
 Linus Walleij
