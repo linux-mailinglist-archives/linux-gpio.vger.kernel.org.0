@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-28624-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28625-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D6DEC66B6E
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 01:52:12 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D35AC66B71
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 01:52:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id F1B6D360BBE
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 00:51:53 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6A819362646
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 00:52:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 091F32FFDCE;
-	Tue, 18 Nov 2025 00:50:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D023B3002D0;
+	Tue, 18 Nov 2025 00:50:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b1dKoioj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GtPdDfjX"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B228E2F60A6;
-	Tue, 18 Nov 2025 00:50:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8735C2F3636;
+	Tue, 18 Nov 2025 00:50:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763427051; cv=none; b=edIfB7B/Uyph2pT1/afJomc4Tfmd+fUWPg1SCDPTBxaSWBNo9jd0T8PCqojPiORiTYxeVw9qgZe84VS4847mPIbMalsljexlrnMkp+K7W5K9K4ikGNjs2Y0z56vipvl7HNzTS5KxdN7oqmPtHb0uZVaAaZEsPzH9MjEcFXQx5Dc=
+	t=1763427057; cv=none; b=D4V3fQ1qpUEw5c1IwlG6BDM/7nw+xCx4xqrBTw1YWLxOrI0oGA+ZvWTaZRh2VsCUp47tteAJEdqN1Fe2/oEqQepyLoO/yjGersmi2MzPYHC4cTd6ksNJsyfhCR08/iGxz+QHacbvMOqpQWD5SFOczVsNyjuPOzZo8gI3A9fMpl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763427051; c=relaxed/simple;
-	bh=4ox7C0QaWmV0Nnx5hdJFmtfNWffG0pNyqJvi1TSzbhA=;
+	s=arc-20240116; t=1763427057; c=relaxed/simple;
+	bh=eOHQgrB5skHPcM2HqeXjcVrG1cllA/I5abBZUOtgWzA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NRDVL5GvSPTZUiiM5jeH1zbR/5H1Sl1P5mvJqJkB49omvyTAU/k+6DjhsSdEgIaTar2kyA+me4ZSaZJ2GsQsOygekp3gixmfGpqK1+u4KEPqXGkey39v7Qo15+3cuJEDINPlDRT391BkLal01D16XTaIffNJDLve0xL3DHWeg+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b1dKoioj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94E05C2BCC6;
-	Tue, 18 Nov 2025 00:50:46 +0000 (UTC)
+	 MIME-Version; b=Cer4gFwhfUaoc6sUSLyDBEgM3e2LVgPz+s4jamXbzgMXLl5s+qDCtV4cgffMDBlGIDscUisCjjK8MOI4GoKZ++qFJljrTGQfxJHlOFRBF4HHVXaFkNGiB9HPY83t0gslYYkyuezN7SVBCCO8RwKWFKQXJNRiyVW2abh0SJ328lU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GtPdDfjX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE7C4C116B1;
+	Tue, 18 Nov 2025 00:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763427051;
-	bh=4ox7C0QaWmV0Nnx5hdJFmtfNWffG0pNyqJvi1TSzbhA=;
+	s=k20201202; t=1763427056;
+	bh=eOHQgrB5skHPcM2HqeXjcVrG1cllA/I5abBZUOtgWzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=b1dKoiojyJfciQVkiaj1s73st57y+w+AaivuSuqltXBsHVMKDXtfqZTATra9QNHEt
-	 HKHtTAG05Zt4L5+uK1D7pmvTHEwIWGhXWi3gI3tWCTXw10S3f6EvKk29DrDSZS4zCS
-	 oPCdrG96MH0JksMeMfAUHbCKvZ/t/UeJ4dj7IV2bOztJEM9yZO52932v8UHhoaUPMY
-	 W7PmJtHf5+vwIkpfGMwgOJHeJ64JL0a5yXJw9RV/YFOLWw5ovdviJP2PNKLUXp/yoM
-	 +K1bT5h2TYobS6hbePkQJGDwQEBikIz147AaIuL12fl5POwp9b+oluSgknUf15v0EX
-	 vje3ThTMJj7AA==
+	b=GtPdDfjXvMf42P6ZmomvHghS1hTPvc9iNhLLk4uxXAhRU5LstSDuGdkaUzdJttu/N
+	 hJMKE3/cbZiuGJuRDAyZSIUPI7t9+FpQT/58pN2k9PgZDVZImhuUljWG2bV4yju0kb
+	 RYy/jG+rL18vQFh+Lu+RXvoCA/1ZkOTHf+kYLWdt/7a3AXEt3lcWQkx725aZ+EPGBk
+	 4RQT3n5mPXj0FUKK93SH1TM8MYbO/J8+E6U1uUlUaMk1fsvQ2/xhxSq7147hRNi01o
+	 K9i1nb0ir3xRZBwNGs3upwIL3taHL3w5EuD0qDEE9m4JvcYRlkQQlzHICsYijWGMdq
+	 tznJoVPsTuciw==
 From: Jisheng Zhang <jszhang@kernel.org>
 To: Doug Berger <opendmb@gmail.com>,
 	Florian Fainelli <florian.fainelli@broadcom.com>,
@@ -64,9 +64,9 @@ Cc: linux-gpio@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-omap@vger.kernel.org
-Subject: [PATCH v2 05/15] gpio: pxa: Use modern PM macros
-Date: Tue, 18 Nov 2025 08:32:19 +0800
-Message-ID: <20251118003229.26636-6-jszhang@kernel.org>
+Subject: [PATCH v2 06/15] gpio: ml-ioh: Use modern PM macros
+Date: Tue, 18 Nov 2025 08:32:20 +0800
+Message-ID: <20251118003229.26636-7-jszhang@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251118003229.26636-1-jszhang@kernel.org>
 References: <20251118003229.26636-1-jszhang@kernel.org>
@@ -80,60 +80,72 @@ Content-Transfer-Encoding: 8bit
 
 Use the modern PM macros for the suspend and resume functions to be
 automatically dropped by the compiler when CONFIG_PM or
-CONFIG_PM_SLEEP are disabled, without having to use #ifdef guards.
-
-This has the advantage of always compiling these functions in,
-independently of any Kconfig option. Thanks to that, bugs and other
-regressions are subsequently easier to catch.
+CONFIG_PM_SLEEP are disabled, without having to use __maybe_unused
 
 Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+Acked-by: Andy Shevchenko <andy@kernel.org>
 ---
- drivers/gpio/gpio-pxa.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ drivers/gpio/gpio-ml-ioh.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
-index fa22f3faa163..288c72f9c015 100644
---- a/drivers/gpio/gpio-pxa.c
-+++ b/drivers/gpio/gpio-pxa.c
-@@ -66,13 +66,10 @@ struct pxa_gpio_bank {
- 	unsigned long	irq_mask;
- 	unsigned long	irq_edge_rise;
- 	unsigned long	irq_edge_fall;
--
--#ifdef CONFIG_PM
- 	unsigned long	saved_gplr;
- 	unsigned long	saved_gpdr;
- 	unsigned long	saved_grer;
- 	unsigned long	saved_gfer;
--#endif
- };
- 
- struct pxa_gpio_chip {
-@@ -746,7 +743,6 @@ static int __init pxa_gpio_dt_init(void)
- }
- device_initcall(pxa_gpio_dt_init);
- 
--#ifdef CONFIG_PM
- static int pxa_gpio_suspend(void)
+diff --git a/drivers/gpio/gpio-ml-ioh.c b/drivers/gpio/gpio-ml-ioh.c
+index f6af81bf2b13..6576e5dcb0ee 100644
+--- a/drivers/gpio/gpio-ml-ioh.c
++++ b/drivers/gpio/gpio-ml-ioh.c
+@@ -160,7 +160,7 @@ static int ioh_gpio_direction_input(struct gpio_chip *gpio, unsigned nr)
+ /*
+  * Save register configuration and disable interrupts.
+  */
+-static void __maybe_unused ioh_gpio_save_reg_conf(struct ioh_gpio *chip)
++static void ioh_gpio_save_reg_conf(struct ioh_gpio *chip)
  {
- 	struct pxa_gpio_chip *pchip = pxa_gpio_chip;
-@@ -787,14 +783,10 @@ static void pxa_gpio_resume(void)
- 		writel_relaxed(c->saved_gpdr, c->regbase + GPDR_OFFSET);
- 	}
- }
--#else
--#define pxa_gpio_suspend	NULL
--#define pxa_gpio_resume		NULL
--#endif
+ 	int i;
  
- static struct syscore_ops pxa_gpio_syscore_ops = {
--	.suspend	= pxa_gpio_suspend,
--	.resume		= pxa_gpio_resume,
-+	.suspend	= pm_ptr(pxa_gpio_suspend),
-+	.resume		= pm_ptr(pxa_gpio_resume),
+@@ -186,7 +186,7 @@ static void __maybe_unused ioh_gpio_save_reg_conf(struct ioh_gpio *chip)
+ /*
+  * This function restores the register configuration of the GPIO device.
+  */
+-static void __maybe_unused ioh_gpio_restore_reg_conf(struct ioh_gpio *chip)
++static void ioh_gpio_restore_reg_conf(struct ioh_gpio *chip)
+ {
+ 	int i;
+ 
+@@ -479,7 +479,7 @@ static int ioh_gpio_probe(struct pci_dev *pdev,
+ 	return 0;
+ }
+ 
+-static int __maybe_unused ioh_gpio_suspend(struct device *dev)
++static int ioh_gpio_suspend(struct device *dev)
+ {
+ 	struct ioh_gpio *chip = dev_get_drvdata(dev);
+ 	unsigned long flags;
+@@ -491,7 +491,7 @@ static int __maybe_unused ioh_gpio_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int __maybe_unused ioh_gpio_resume(struct device *dev)
++static int ioh_gpio_resume(struct device *dev)
+ {
+ 	struct ioh_gpio *chip = dev_get_drvdata(dev);
+ 	unsigned long flags;
+@@ -505,7 +505,7 @@ static int __maybe_unused ioh_gpio_resume(struct device *dev)
+ 	return 0;
+ }
+ 
+-static SIMPLE_DEV_PM_OPS(ioh_gpio_pm_ops, ioh_gpio_suspend, ioh_gpio_resume);
++static DEFINE_SIMPLE_DEV_PM_OPS(ioh_gpio_pm_ops, ioh_gpio_suspend, ioh_gpio_resume);
+ 
+ static const struct pci_device_id ioh_gpio_pcidev_id[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_ROHM, 0x802E) },
+@@ -518,7 +518,7 @@ static struct pci_driver ioh_gpio_driver = {
+ 	.id_table = ioh_gpio_pcidev_id,
+ 	.probe = ioh_gpio_probe,
+ 	.driver = {
+-		.pm = &ioh_gpio_pm_ops,
++		.pm = pm_sleep_ptr(&ioh_gpio_pm_ops),
+ 	},
  };
  
- static int __init pxa_gpio_sysinit(void)
 -- 
 2.51.0
 
