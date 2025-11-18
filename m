@@ -1,122 +1,126 @@
-Return-Path: <linux-gpio+bounces-28697-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28698-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39E6FC6B7CA
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 20:47:11 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15808C6B84E
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 21:05:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 607BD4E56D4
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 19:47:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTPS id 9EE1B29FE5
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 20:05:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF5292D7DEB;
-	Tue, 18 Nov 2025 19:47:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A9202F39A9;
+	Tue, 18 Nov 2025 20:05:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uN0Ch6dJ"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="cSZTt9Ci"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC2F1E3DE5;
-	Tue, 18 Nov 2025 19:46:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B91D27F00A
+	for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 20:05:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763495220; cv=none; b=N/3U5HfG4kTe7U4yqjujwxENl9OFsuwS3MNSP7s6mbQ+wqYiMmGJf68cD0xUbe1dfiY+sfVLa6+t5Iw/Ocs1pNkVl4b3aYQPa+4V/XokTMByX9oDkq//dpGgzbB7vwldSmLrMGjZkGQipkXlF81/FZVR7lDxEAI/Vyp4xtOeMrM=
+	t=1763496312; cv=none; b=YDl51EhGNsWYNPAKDv4Jj7DHs0OwdYQhHFOHEjfmfy+6U5AGeGu4oPb+emw/vDhhQdZrn1xB4SiZRAcjIzkJpWc1TemlTq5S4Zb5Y+yiAB/7IdOrQ2bz3fd+QpbOhCZ6udMKq0vq6YlHdlCfZ/R82QI5EDI/3CDQtP5alkZ0clc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763495220; c=relaxed/simple;
-	bh=LLV5ulLhdVg2ftls0Im8pJBkD7VEtlgCURwkLWF5u+k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UXW/6YHpwHH99wF1hurTzfLZpIi+AbBE7TJ1L51UmbjiavDALjuiLt06JPBhxPDeTmp8jumpjITYrS0a0UBXm4FFIAXtF2OTvMhZesMNTvbXEPA+7Q5VNHWCbhkQ8c9h756lRyEckuxETMtZNChLxjUhR/VkLwAk2FjdWbZdgws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uN0Ch6dJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18DEDC4CEFB;
-	Tue, 18 Nov 2025 19:46:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763495218;
-	bh=LLV5ulLhdVg2ftls0Im8pJBkD7VEtlgCURwkLWF5u+k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uN0Ch6dJWqu554qFfFd7advQobZNg1gWL0A+tf5iI8GT64lHAFsR4Rb7yZOLDwwIR
-	 Wyy067ong3ccLceG42iniJiAPmdfcJOuMdLNBreRnnqs2KbM1WmrZ27N7C5Y0fPukV
-	 B3RNrpTYlktLo4DEOIaEpBednhS/xZjoaArucvjlRo6clBrcah7SrvubrL+9kSmRxx
-	 PsVcBRIdEXK6N8y8Q8+UOUg6OgpEU3BJ1vRzZwtNsuG1lteFrtUrfdvlABA2ay9k72
-	 9WmYc+Mat9ZD/BPzjF8+6Ay2VtVA0kEtPTYyFhL4+yZy9FYspXxk01bRwDZyimM5VU
-	 DO3dXFJOFOkng==
-Date: Tue, 18 Nov 2025 19:46:47 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Alexey Klimov <alexey.klimov@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v4 07/10] arm64: select HAVE_SHARED_GPIOS for ARCH_QCOM
-Message-ID: <d567c3fa-2e50-4ef8-944a-da4222fb96af@sirena.org.uk>
-References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
- <20251112-gpio-shared-v4-7-b51f97b1abd8@linaro.org>
- <dbe20642-9662-40af-a593-c1263baea73b@sirena.org.uk>
- <CAMRc=MesD5HchG_hfvN3H5ayu8gX_OvSsZQ4UO4f27gx1rRzSA@mail.gmail.com>
- <ab0b2e6b-7d2a-43e6-b8e7-c97cb9763798@sirena.org.uk>
- <CAMRc=Mcafi6+kRX+9sVOLHCegdU33+omLg+aW4RqeiokymxPNQ@mail.gmail.com>
+	s=arc-20240116; t=1763496312; c=relaxed/simple;
+	bh=iFFcU9+DHvwBtFFjcKZUT85UCUn0fiuZ0lAn0OH3muc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YrtXJBgo48cxdd/BdnS2q7YffWhlBb0Drn87ZLJqVQWSt7jJNkplRWVWJNY2/XtGQ+SKOzkyDfxBA6zEaF6nV9pHee7G/yDXo/7DAVmndkIOt4ImVZbtMjB+avWVH6tk1ohqY6k0dhoy1RGwlf/N14qsCqKDBlesCKyd2gHa9ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=cSZTt9Ci; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-477619f8ae5so39897345e9.3
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 12:05:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763496308; x=1764101108; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kSqzpUv3cAlYnCheDFG7kKnLMRAczRNf4FYZr6gKY5Q=;
+        b=cSZTt9CiQ8qMQ5I7W4xXxY5iXuNWwb7ksNCQ9+bjHuATAsNf9OiOc3ccBTuR1slTWJ
+         V9Rj2AdT8Lc0JXitntoKg5ZKd+0xMi6Xe7oRlEPbvm8yDhrt01gftbnp9xOT4+gsVs0L
+         CBJopMbJrFp+6t+sz2OfWZPThkg5viY9kIBJAAWyRE7uhN+kj4CXWKG6mLHYUXdUGmsd
+         VNhXJpOaF6rVcmr8baXmTcPwopYPgrFLu/a2NoH0T1c3YFrPGMkzz1AhBdMXyKrhmgTA
+         cIH/GEE3FhaZtqEm8z/dqEnNe9WnZWZYLA/ILHwaCdkXvsXhGbI4USSaAIWDQD4J9gpm
+         FdgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763496308; x=1764101108;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kSqzpUv3cAlYnCheDFG7kKnLMRAczRNf4FYZr6gKY5Q=;
+        b=Xk5uU8SjGlb/BjeVNEIp9dY5FdtVVSOPQMmsChg309n2rppZTyNqRUPTanMdg5zrF+
+         SdlqSOZQt2G3d6LtOfT8tIQEHavCy417lMct6rJ1jkwEWYtAgKhCPnEZjiYeYWWzb6gv
+         6JBoLJWvoRATLN4RZMmjoLG2/WZxZiXVMTmJ/T3pmt4bstS9NZlkhCTx3nnrR8sGX8a2
+         FfasYC+7OHk8kvcooOPphrdCWfxdNIQ7JBhcU6IimrU6Vh0YLKGbyGVQHRQVl7V9YM3L
+         gprJcLVL3PTkf+358f+Y2BHuixrUUkWD2nm1EW5BQq/TuDbKbR/F1iiz91XuuvjFS67l
+         itFA==
+X-Forwarded-Encrypted: i=1; AJvYcCUDywCaDww8v4dSUyvBuaOL8t5Zpbc/ZdRu26mlkChhkbK4a3vf0akoiC+s0/xHE/6NIiKEJOlt0LHo@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhroYhsLOhNOSHb4L8b9X6vZ5zw66yhoI9AnJvMmF6e6WPdOs7
+	qd05kWKbg6tQLUADcKN5Voir30iCgtAZncy7rjjyvM9iFGhClh+bHUcKWKWtm3BluY4=
+X-Gm-Gg: ASbGnct9roCNMbSuQO0tm6moKaitw4s8V8e5i1RyBL5orJDm3FeUUTe9MesBuRYEKEJ
+	JZeQ08y+Xa4bEtiNRThGg6f6RdPmPWC46/fO7IvfUQ2/JJx1B4Q+VYmnxTzpyQNWYgkqNE/hYmd
+	qEX4nIN68WZC80JPugLkQ1xEaev/6s//Q6kt8xwI3WICICMKqil05upccT1Qb48ZbDa7Mpca//k
+	PvpYiViJLYYkyJS08A/AXlSxOdCEgsyQIBx/iJz3UScb7SWDfxj92qBXryxZrFy956D3CFv6JVI
+	8v4PeEb9luF3Fxi+OJYafHrqzaEzBUQG0ZzJqRSWtETSYTr/YzhGBZo54loCZvHEGcs0WKjLaj5
+	CxQOccnewwSlF0IhFtCWBKwImYV9m+APjc+kLDYYsj5psAzKXSqzT1R1O1SwHoB9//4CInlxJ6p
+	mqgokXxTZEZv2kezs=
+X-Google-Smtp-Source: AGHT+IGi03i9uaL7V/fCm3iTAE5PW9qFD67adl6STSr88JH8V2qKaSaGOHAJEmC5xlSlS/+NpXOIOA==
+X-Received: by 2002:a05:600c:a43:b0:46e:396b:f5ae with SMTP id 5b1f17b1804b1-4778fe6a415mr199738695e9.16.1763496308099;
+        Tue, 18 Nov 2025 12:05:08 -0800 (PST)
+Received: from brgl-uxlite ([2a01:cb1d:dc:7e00:3a27:ef52:14e2:c140])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477a9741cbfsm24854295e9.6.2025.11.18.12.05.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Nov 2025 12:05:07 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Mark Brown <broonie@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] gpio: shared: fix a NULL-pointer dereference
+Date: Tue, 18 Nov 2025 21:04:59 +0100
+Message-ID: <20251118200459.13969-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="aM9xPQKM74VxiVWS"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Mcafi6+kRX+9sVOLHCegdU33+omLg+aW4RqeiokymxPNQ@mail.gmail.com>
-X-Cookie: Protect from light.
+Content-Transfer-Encoding: 8bit
 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
---aM9xPQKM74VxiVWS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The fact that CONFIG_OF is enabled does not mean that the device tree is
+populated and that of_root points to a valid device node. Check if it's
+NULL before trying to traverse the tree.
 
-On Tue, Nov 18, 2025 at 06:27:23AM -0800, Bartosz Golaszewski wrote:
+Fixes: a060b8c511ab ("gpiolib: implement low-level, shared GPIO support")
+Reported-by: Mark Brown <broonie@kernel.org>
+Closes: https://lore.kernel.org/all/dbe20642-9662-40af-a593-c1263baea73b@sirena.org.uk/
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpiolib-shared.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-> Oh, of_root may be NULL...
->=20
-> Could you try the following change please?
+diff --git a/drivers/gpio/gpiolib-shared.c b/drivers/gpio/gpiolib-shared.c
+index c22eaf05eef23..4ce574a21850b 100644
+--- a/drivers/gpio/gpiolib-shared.c
++++ b/drivers/gpio/gpiolib-shared.c
+@@ -205,7 +205,10 @@ static int gpio_shared_of_traverse(struct device_node *curr)
+ 
+ static int gpio_shared_of_scan(void)
+ {
+-	return gpio_shared_of_traverse(of_root);
++	if (of_root)
++		return gpio_shared_of_traverse(of_root);
++
++	return 0;
+ }
+ #else
+ static int gpio_shared_of_scan(void)
+-- 
+2.51.0
 
-That seems to work on FVP, I've also seen the same failure on other
-platforms including Orion O6 and Graviton 3 but didn't test there.
-
---aM9xPQKM74VxiVWS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmkczSYACgkQJNaLcl1U
-h9BxCQf/TvcoYIbZXiH4sSxaTvyRmoYCCaWX0P5G0lauZn1wuaRwQwiWSl6G1ls2
-EO/JYc8hnMEWsVvnMEadMf3mce8so+hpfu3pNT1dE56mvdjtKi4hsgl1t4zdBGMh
-8KBUEU1T7p1w9yffhyhVEx6gMJSdqNptauuNhdGHTbjuvUf8mlEkLt6PibGiWIIc
-Apx0tuSDZ5Ukthzt1GKXXrgkeTDHCk3vN7ePQZcmiIkRkXN1keffSzVJDMyJWIT7
-WzLnN/33WACiMLJHKD60fg6oVljFVRdyul49K1exjVRY6smlU3Ia0X599uu5I+p+
-ACqJMb+YPN8x3OV0oSUTRByRCyO7wg==
-=jedi
------END PGP SIGNATURE-----
-
---aM9xPQKM74VxiVWS--
 
