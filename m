@@ -1,155 +1,136 @@
-Return-Path: <linux-gpio+bounces-28708-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28709-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0088C6BE8E
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 23:57:19 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id A49B8C6BEAF
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 23:58:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by tor.lore.kernel.org (Postfix) with ESMTPS id 874DF2A270
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 22:57:18 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6DEB93563A1
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 22:58:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC00730F535;
-	Tue, 18 Nov 2025 22:57:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 565D730FC27;
+	Tue, 18 Nov 2025 22:58:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mh62jC+5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I999fFip"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED5E2EC57C
-	for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 22:57:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58603309F0A
+	for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 22:58:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763506633; cv=none; b=hrRmDxZZ19qtwPzp0683Q8jdPA/7hIeDoQGEhIULEpfIwfv7frIddOj3H8Eu93adaHcgGTDZylrpY/7p0t12jEw72jxlmM8Ozc/lut8n4A3LyeYARofA+9Xhp4jSFWCDmofYB3y+8GcCmGx4zZyRGcDCt/l7torBsVPuE28nZG0=
+	t=1763506705; cv=none; b=Tql0NEMnD9+OQhLTEfO3Yl70eVH+t/nJ+TeSvlSjE8mvih2F8NM4rvUeusnBqKIawMji/nwgkzBa0EWw3PL9QfcFhhBQoTtNTDYEEq1EW2jq+VgLUwXLmmab/Yte8IWih0JSKa/uOUow9BMcMDfD0blC2rvaOsYO9x79XpSd1Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763506633; c=relaxed/simple;
-	bh=PEswP7/MKNvIoy73Ay/lXRuLoHFl3pV0t8k8v6H2HB4=;
+	s=arc-20240116; t=1763506705; c=relaxed/simple;
+	bh=w+61w5T6iw2L+z7yyBk2vWNFdM7DOlMNfukQs3rBBhU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MoLSrana+ff7Q5EWzHJPVW7cO8TfOHv33IR2wTGBhjj6kKbFb7gnV9mzn5bkOZsDgVibmgGst3hI7SG0x8rK29MPPJT+VYxaXDaiycZpvLtveZk5IcmL7UtBGHBsg2ErmBr8e1cUXHuW4YtjLnfU3nRrPPXdGx5/BQmwiu4aatM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mh62jC+5; arc=none smtp.client-ip=209.85.167.50
+	 To:Cc:Content-Type; b=svlPhPA2CfX1KpZ6Cm7rNbvXiKCPP92JPpRyVgdgSzpYo3ccs6JQuKG60RCZNlw+5oCwkKjCkxEkZau9vmkzoMB9IhA66wNlhXKZJUcxbEkD7xoms+mYuyHKnq4bTIJwiFL+oy8cGLB58pAaF1p5iG4ES3m4hIi6IXiraQaGWxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I999fFip; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-594285c6509so6355752e87.0
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 14:57:11 -0800 (PST)
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-594285c6509so6356849e87.0
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 14:58:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1763506630; x=1764111430; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1763506701; x=1764111501; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LJz8nG5sN3FDh1IyOGPvk5xFa+/J/sOHL6LWJMvknes=;
-        b=mh62jC+5aCZ1hNUvoZ0taoS4hNxGj9+2+DVHCOUgKgzh2uJnwSqCZ5zhBg7TseVWHS
-         /BkpHfx0FiYGQtPDKaAFvQrt4++TorSk0X1TOLu0xwNIKFOTq4KDs+MepJkCFeBrQaJE
-         sUodA4SGJj9ZqvYSp41KkSekTwcUNVeMZUPffxn0DhwHHMHwu4ikr8JJuxVBDncK4L7j
-         15ZsjyEeeuuaa36tx7S2AftAtIaNZFah6OdmbwBgz9/V9j0+LlgE8Bhw0lmZtEKQ+Ozy
-         KMM7MwttL32pGYzUAaGxVbIjgwq6r3dD2MUwSIQWTpcYRlyFHso+LueIZVKXt5aH+Mez
-         Cz+A==
+        bh=w+61w5T6iw2L+z7yyBk2vWNFdM7DOlMNfukQs3rBBhU=;
+        b=I999fFipZH0VMJs1NWl2Y2P+lyilTmSjlh8soGhqclYfpREVuHV9251IqgmuDrp931
+         vliDmAVxF46vufxmK3SYHtaHsWW4GseQB58lh5Enx7qEoXiHTyIlDlUmtz98L3NgP9QX
+         bEbDyhkTVeaFnZUdkTQcUwpIJtjCLAZHR1m8U7rmTJj1ANjMY+8DSXT6oCtzjYFIY0i2
+         9FCP0HsG96HWD4Mcc1dLvdrgMN6Ux2r9ZYnjjpFW3X+5VzYiMetGONFJcQn1OlAQFnZP
+         V25T6k/1OI881/GNv/ojfnDPDGK9lHVRZd3NRW6YgrNMDwyDTTbA8JioDFDdd9OgX2FV
+         6ETg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763506630; x=1764111430;
+        d=1e100.net; s=20230601; t=1763506701; x=1764111501;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=LJz8nG5sN3FDh1IyOGPvk5xFa+/J/sOHL6LWJMvknes=;
-        b=WrML6r7+2fxD6Pz1WY1ayEWRd9M9Ch+O5C/8Fx2dL8Nb5FH3iuAZGEUQd+XfZZ5SK/
-         wT44Ef8non2Dm0Gk0+XiDq2Wmn8B9kuoZ2IMnc+9h2TKUrvGTrEHTrFM+Vtr+bS1mtp+
-         CxO4mVLAkNDfgO5/0NBLY91YvdKkfX1CtOAMD389GRxru7nDgXivCaBh3sCG0i8Oy6og
-         l6vdBVyiMZyY08OLmDgo28heIFvoszBOIIvu/XrR1LI0FsnGOmNl4c5vrsJznC9IHzgC
-         hQryEt2f5TGw1mnr0+1Qigsmevg5pQSP533CsvaHD/+Jbc19HKRMJrKAgzgOR7KQKTnG
-         Rl9w==
-X-Forwarded-Encrypted: i=1; AJvYcCUzuBxWtBbuDkyMUOwU1zTC/iK+OaV4rdR3+o0tEjpltG1V5Jt998Qgz1ulsXmfyS+NO+sCOJeE+u32@vger.kernel.org
-X-Gm-Message-State: AOJu0YwprJxsygqXcNJ/bAofqgg8mZ7ZmPzyVSmz2ZTBeOWuKqiQ11ME
-	yX6xW86y15r7lfVTLTAKifMoxDHN6BoBiH9AFQs4ggXiD/5QRgwXEfxNEGAggQSsixnkiTzjMXM
-	GC1t/ipZskxTqVZWWhi5hJ47VbvucR3beDphLmXOHYA==
-X-Gm-Gg: ASbGncvtkAiqnIM/dBWjYWauCWsCBJC73e92Z9KvwZMFfM00famQpsAnckEJgzvbjRj
-	7oO8c/bd8gcvMfDnKgSfSS7mh71jg0x7OElztVYqf6yK6qIh9WKT4IYQcVv7lC8dcUcsoU+NIVy
-	hDNB8TfQohs2E6bjIfYJoUIUOG686t35BnLQgrbTxA26NkclGAvGIcM+Bl671br/yY7AdLgXlgi
-	C2OYeal2CklOBAil1Rf3USwO2W8g0wl8ManQaRmfDwPXal3jMRpKkOMYeASiBWArHnyoUdSKZlS
-	tyjT4A==
-X-Google-Smtp-Source: AGHT+IHwZcAFMZS1bHsxU68eV9rOlrn8WFmX9PzE9NTh+PzIlvHiN2PvE8KkV7wfG/e63Wzo3GxckDVJu03pQm+3a6o=
-X-Received: by 2002:a05:6512:3a86:b0:594:74f9:3b3 with SMTP id
- 2adb3069b0e04-595841f97abmr5327733e87.29.1763506629914; Tue, 18 Nov 2025
- 14:57:09 -0800 (PST)
+        bh=w+61w5T6iw2L+z7yyBk2vWNFdM7DOlMNfukQs3rBBhU=;
+        b=iG2f5EgAkrAWGyzCf8mNFbU39Y95Z8ZMrB2uTmHls9txyYxMu/5vUXPUyC5whrctJm
+         ERatKjC1TUg8DRaH4Vay5c8MqCtcpiyFmPLAdQLf1kBJBDDGw0zQmw+fpHf4E0jTsANW
+         4w7qZbfyceuE6FcStaLfZ1QPVz57YHy0Cc69s51DJFDk7EOBYKPFaibe0T6+qsY0frwO
+         KMFXxdrOX6V9NdRx2cOpj8dXqYZXDWgbNzvAuhMnThQM+IePjK8P6vCMP/esolr0VzZV
+         pSwTfR/LBHxc9fLHOw+m+BNcSQ65Fs19Jke+Hf+JaYgd4heB5T+A9KoYzBRqD4fkXqN2
+         qfow==
+X-Forwarded-Encrypted: i=1; AJvYcCU7Bf74GL6km4wKwCoo7PizUrcjeszTVma6+xz+rqO6k20oVN7hI8LyR7VjzFoM4VJxuFBDPsPL+jxR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3cSMLr6qevLqyGvNIRHBaabuu7q4HCq1DK73LjrBZcLvQw0tA
+	7gUSrZd5QH9KE5RNNgvyx4nEAieIPYtJAK+Fcf2FTko5LtxZ+rv2gPbbKEFR5SM4RuwW3e3zjhO
+	q3viA1bSlqBwEVEFGU6xe7Av9bFDRpeQboL5qk5DfqQ==
+X-Gm-Gg: ASbGncvZAT0zVqrc69UUGsTMxq+gUAkMQ1+mA4XFszLcF2wPmuWn7OVRZRdYma+oIHA
+	58k/VFq0CqsVGjn6DeJqL14p/vPFQ9EdiPkuWVVWv/bqrDJiVTnEajMWlE8Cnli+W9wkxNCgTTD
+	VXzXAOmYPRAJF27FZt18qC4NXvvEtjTsMRaP8KfgCqmZI7WN5iIqcg5KcrGAdV1/NqUHSUEHvgW
+	uhgn4CPZpAZdiyEahdB8tlHLMDfREE62dacsFtkFgXqMAfJtUFIKH2XjJTQpGw9DOpV0eA=
+X-Google-Smtp-Source: AGHT+IEgaegsgmXSR9c8Hx3M4QpdDNUJIc1KFnkqGODlEyosq51AmUd5jf6mWflPCoaxnA933h/YZYR/OFhWE8sa4io=
+X-Received: by 2002:a05:6512:33d0:b0:592:f48e:c725 with SMTP id
+ 2adb3069b0e04-595841f9725mr5921930e87.34.1763506700860; Tue, 18 Nov 2025
+ 14:58:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251111-pinctrl-s32cc-alloc-init-v1-0-071b3485b776@redhat.com>
-In-Reply-To: <20251111-pinctrl-s32cc-alloc-init-v1-0-071b3485b776@redhat.com>
+References: <20251022-gpio-shared-v2-0-d34aa1fbdf06@linaro.org>
+ <20251022-gpio-shared-v2-6-d34aa1fbdf06@linaro.org> <CACRpkdbqLyeaZx37yrKjDFWb=C5c=vK6aPgnW8cMQvwi_6Jiug@mail.gmail.com>
+ <CAMRc=McySdUtj4foEf5a2db8jUEa=CnPmVVms2nwHoO2UYChSg@mail.gmail.com>
+In-Reply-To: <CAMRc=McySdUtj4foEf5a2db8jUEa=CnPmVVms2nwHoO2UYChSg@mail.gmail.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 18 Nov 2025 23:56:58 +0100
-X-Gm-Features: AWmQ_bnwhWkIocYT7e_LII6hlp7UoALS4YCTtfLZFvQ5s57acnTyw4Y1jo6l42k
-Message-ID: <CACRpkdYfNyAGdFpq=92UKBkScHq6U58N6XtwjJOJ3HAbBvFaNg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] pinctrl: s32cc: fix uninitialized memory issues
-To: Jared Kangas <jkangas@redhat.com>
-Cc: Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
-	Chester Lin <chester62515@gmail.com>, Matthias Brugger <mbrugger@suse.com>, 
-	Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
+Date: Tue, 18 Nov 2025 23:58:08 +0100
+X-Gm-Features: AWmQ_bkpyyk7f39_4wc6746I8bnl6C3ILvHa9yZ2lrW5div8cVmrRRgtpGXas6k
+Message-ID: <CACRpkdYjL3u2UyD8A9uLWf1wU6jQXvAOhU5+Y6+8QXeTAe1ksg@mail.gmail.com>
+Subject: Re: [PATCH v2 06/10] gpio: provide gpiod_is_shared()
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 11, 2025 at 10:55=E2=80=AFPM Jared Kangas <jkangas@redhat.com> =
-wrote:
+On Wed, Nov 12, 2025 at 9:06=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+>
+> On Tue, Nov 11, 2025 at 11:44=E2=80=AFAM Linus Walleij <linus.walleij@lin=
+aro.org> wrote:
+> >
+> > On Wed, Oct 22, 2025 at 3:11=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev=
+.pl> wrote:
+> >
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > Provide an interface allowing consumers to check if a GPIO descriptor
+> > > represents a GPIO that can potentially be shared by multiple consumer=
+s
+> > > at the same time. This is exposed to allow subsystems that already
+> > > work around the limitations of the current non-exclusive GPIO handlin=
+g
+> > > in some ways, to gradually convert to relying on the new shared GPIO
+> > > feature of GPIOLIB.
+> > >
+> > > Extend the gpiolib-shared module to mark the GPIO shared proxy
+> > > descriptors with a flag checked by the new interface.
+> > >
+> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> >
+>
+> I think you wanted to leave this under v3?
 
-> This is a small series that fixes some uninitialized memory issues in
-> pinctrl-s32cc. As an example of how these can affect the kernel, when
-> probing i2c-imx, a memory allocation may fail because of the
-> uninitialized memory giving a junk allocation size, which prevents chips
-> on one of the I2C buses from being detected:
->
->         # i2cdetect -l
->         i2c-1   i2c             401ec000.i2c                            I=
-2C adapter
->         i2c-2   i2c             402dc000.i2c                            I=
-2C adapter
->         i2c-0   i2c             401e4000.i2c                            I=
-2C adapter
->         # i2cdetect -y 0
->              0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
->         00:          -- -- -- -- -- -- -- -- -- -- -- -- --
->         10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
->         20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
->         30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
->         40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
->         50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
->         60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
->         70: -- -- -- -- -- -- -- --
->
-> Compared to when no failure occurs:
->
->         # i2cdetect -l
->         i2c-1   i2c             401ec000.i2c                            I=
-2C adapter
->         i2c-2   i2c             402dc000.i2c                            I=
-2C adapter
->         i2c-0   i2c             401e4000.i2c                            I=
-2C adapter
->         # i2cdetect -y 0
->              0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
->         00:          -- -- -- -- -- -- -- -- -- -- -- -- --
->         10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
->         20: -- -- UU -- -- -- -- -- -- -- -- -- -- -- -- --
->         30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
->         40: -- -- -- -- -- -- -- -- 48 -- -- -- -- -- -- --
->         50: -- 51 -- -- -- -- -- -- -- -- -- -- -- -- -- --
->         60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
->         70: -- -- -- -- -- -- -- --
->
-> Signed-off-by: Jared Kangas <jkangas@redhat.com>
-> ---
-> Jared Kangas (2):
->       pinctrl: s32cc: fix uninitialized memory in s32_pinctrl_desc
->       pinctrl: s32cc: initialize gpio_pin_config::list after kmalloc()
-
-Patches applied for fixes!
-
-Nice attention to detail here.
+Yeah probably, a bit messy in my inbox!
 
 Yours,
 Linus Walleij
