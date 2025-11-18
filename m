@@ -1,228 +1,169 @@
-Return-Path: <linux-gpio+bounces-28652-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28653-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E865C6930D
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 12:50:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 72508C6937A
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 12:55:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sea.lore.kernel.org (Postfix) with ESMTPS id 44FE52A556
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 11:50:28 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTPS id 2C7612AA27
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 11:55:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C62730597B;
-	Tue, 18 Nov 2025 11:50:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3541B350D61;
+	Tue, 18 Nov 2025 11:55:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SYT6oGt5"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="UtYCYypw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339982877D7
-	for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 11:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B299B34FF7A
+	for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 11:55:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763466624; cv=none; b=L0iYY5UM0DySQA2kExJQhjAfjwy4ymwQ/XWD05w9c7AIjAOCU++J60PPPfmIgYoQ/TZcgEGjwm8oIpPSLFw19VIOJRcASh66OxXRT22cYmV+WhzYpfDuAdl0g2LK9h65H7zaPbi+WjTu53Myu8wCEY3UW8FL+k0G4N/Gzr5lN4I=
+	t=1763466930; cv=none; b=uPPY14FPeAWfkkDjGyTrC2sZXVlkUzCbjQtJpQ5XrZyMrGlvNVb6ztBL2ZksGy9yVj7s5EJaFBhVafcpFi6jjMEGWPFnb4+r7IJgZJG0C4zUv1kXETTUOq0qG0bgGFCufuMhNkMDQ78qL87ogxNxNUDlEMbeUSGdfKV2y/v4x80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763466624; c=relaxed/simple;
-	bh=mOerfsh2xpdAEcagTzUxJ/upPlLpsrk6k+ssqdLU358=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=aw6TT6J+UBYr5hwyIaSoA3Q4Inerubr51K6DO3QQMjsrUfQpA1ULd+DLrjfE6KnYmBM62CylI640M7wqOO93o35VoJa4B1oplg5DRovzH6kP1gvQPUrOpVDvXyqYLcKK2GkmK92PcXx1RQZvPIxAaw2t17QLpntEUPqlY5yOkNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SYT6oGt5; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763466623; x=1795002623;
-  h=date:from:to:cc:subject:message-id;
-  bh=mOerfsh2xpdAEcagTzUxJ/upPlLpsrk6k+ssqdLU358=;
-  b=SYT6oGt5qVWVuwuLx/Uvp5sbSyhv7O4fnsXeIa+f14qph4hQyCQ16lvj
-   kaSSZTi3syjrPlZG038W3UlE+DpeP9AP4WMf63kAOeaeCjpsLI7mJr2pY
-   TUCUmpyVycghpP94lq8uffrKiYPuadDhtYfsKiGc747XGhk/UH1oiCBDh
-   +Ixpi3IWQV4ZcexfMmCrvoLa5A+cDlfAB1fov2Vq/scajNaEemj7Gr9wT
-   nKQ0DMXMDluv09IN0Bu+NNIeMSiO3gAkrtPGVv3rPgZ9kv6KFUrd6ZZyw
-   TIuOkecvDdS7knMbz/Yt8X20RwKjyVwv6Kg2ifk3ocTac8Hps3b4IC593
-   w==;
-X-CSE-ConnectionGUID: dmCFU9b/SF6qGPtRiYyVzg==
-X-CSE-MsgGUID: T1S6t7VZQFi6VY554ZSKhw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="76838467"
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="76838467"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 03:50:22 -0800
-X-CSE-ConnectionGUID: NTjJl1w0T0qVLPOdzxSCGw==
-X-CSE-MsgGUID: zprqEUoWQCmjV/DosaPxnQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="190028201"
-Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 18 Nov 2025 03:50:22 -0800
-Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vLKDz-0001gS-0S;
-	Tue, 18 Nov 2025 11:50:19 +0000
-Date: Tue, 18 Nov 2025 19:49:47 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS WITH WARNING
- 67f9b828d4e5e47caf3472a399c25c3c0ddc824a
-Message-ID: <202511181939.4qShUQXo-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1763466930; c=relaxed/simple;
+	bh=7NvckXgOmhlaS1luLens2/AyeapQUcV0Gd0X3q3WZcg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ATmZA3jXKV+30nJY4mAFicfOZ/TuBeDOmkOqu5qGQUoxp5mnGgzND2wMdBrDjuVCNhxIgZhEawL/lg0fMDGdaAAww/w5oLQYW/H8zhgUAUFPGxR+ejWCBXCdEIt9W/HpYzOX9Zwzg7eA1Y2RG0oMXsKCxKS/XrjZSDibQHDMbX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=UtYCYypw; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-59583505988so6025367e87.1
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 03:55:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763466927; x=1764071727; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VAcO7q7zqxgeS0imixs883Z4+k4vz8bf0wnP3745THQ=;
+        b=UtYCYypwKX2vwCHE0aQLMgCKqnlbea2mYh2WQaXJX1iyr/KL1mPdzCvgDRlbhmnjU2
+         zuVmPhTJvW08YjM3PFqfRcqS8/z8DSsdBtvQK11FR+XFNYvxmLdyl+N+Ls63ipWW3VFb
+         zj2SmgsiIT7/gFD892SvB75Jlu50EbFpt7Tl3SOo5EGdpeJuWywqClc0jJWZv178ovKN
+         1hriMWUqmTY0ioe+wbc7rVAtGPE5wRer1T3ZFmxnGvdalOVNZSnuZBV++UV4uzzhyw4Y
+         4pgU5rlGgVnteDncijVNCslFluga9yNZPjzY3GQPwe5VwQMa9nRBKewzwp/2xyKLpb9R
+         5ACg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763466927; x=1764071727;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=VAcO7q7zqxgeS0imixs883Z4+k4vz8bf0wnP3745THQ=;
+        b=mLr56FqS9fEahSC0eP9gsFJh5TmOfQNVVaLn60alDKYtZOs9qZo8q+54UQpPiDYcP0
+         g1KGDk8ZlR2OmU+t1pS1DLrSgFqLMtpfJqYTX2Z5NIPNdb5DMxJSOmO711JfDOkjdWC9
+         chBcj1Ivy+jdZD8vBsgC4bmAdw3/I0hDvo1B2qFWFI56CdQwl1GgKLDvT5KYDSVB9Ez5
+         Q0sUl+NOer7k/aMGE5Nr64IIgrxbV6LuHcLFdpC8dB4yGWFG3rfrY+ie2kpej+h3yeAZ
+         s1fNWWJz+ktF4EdkbPkrkHBuWaCy7BuaStePTNwKvET0OBoSC2QBLsNnamRIi519U6d1
+         l0gg==
+X-Forwarded-Encrypted: i=1; AJvYcCVnxNx0f07hEXj/NXE0y/BSGYozebupZRR52LTfNzYdyrYOWxS+RQ1RC3wpQVx7MXWgY6oKNSg1mBUS@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkM3RpwRa6FnhL/GG5slkOaDCh0qRgAiBMCeksDPjvHDFq/107
+	Wc+bA+H5hEaJHITh/um5hMsYIS3ICoaCBy1z4x0AZnROEduOKZxz8ekxu8lSmC1f0Zq28/Q1loO
+	e142vdpo+dmFvxJa6AKJz5Cy/FH2tc8hz6d1642t/ng==
+X-Gm-Gg: ASbGncsP6E2yogZaVMvpLphlenqDdHh/0TLe0dPyo5LmfGhS9lm0MZZPnDS/Qm0YF52
+	F0d+eJ3L0zcluCuHcNEr9ms1StrT4bsaBbaIAK/xqBa6QpjWItzPYvYd0sHc37Kvn6mXjx+jF/u
+	NlmGi+C0nbEsfkFggW1kwAE9um3mFboDgaDUC8jF6vNqqAwL6E1/otXUTgC7Ckk9P7we7czDWae
+	dc7OpkFdqmOspBY1yEK+GvQBKf3aS+nP4XObFdHQBQISAi15QqJfdZcnglzPcTvaPyKFBTDJ0gz
+	jMAXDzhIWtPJPzALJjXMiQmwDgFR6coCfeZaGFnMT/576iI=
+X-Google-Smtp-Source: AGHT+IGDj1fu8TGEfRae1dCaea+bpUY0Apdk1ZxozSAuzubtr5iVRx8MiJ8vS3jXjFPu3bh5BDU2zV53DZhLtQaNGVE=
+X-Received: by 2002:a05:6512:b86:b0:594:2cf5:22be with SMTP id
+ 2adb3069b0e04-5959874bce8mr962524e87.8.1763466926615; Tue, 18 Nov 2025
+ 03:55:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org> <CAMuHMdVR9Z70+M-SqHYrHiC6H_yw=VRuDOOg=YnXSNKjPnx3WQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdVR9Z70+M-SqHYrHiC6H_yw=VRuDOOg=YnXSNKjPnx3WQ@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 18 Nov 2025 12:55:13 +0100
+X-Gm-Features: AWmQ_bl_VSi2dixCvr3uCiITk7ZJGEZEI2dpEDQt1kKit_562qgby4AFxFkY8D0
+Message-ID: <CAMRc=Mdo__Yzigqoy4xKt0LWSvES5Jse1HeXkePfhiWyiz6tBQ@mail.gmail.com>
+Subject: Re: [PATCH v4 00/10] gpio: improve support for shared GPIOs
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Alexey Klimov <alexey.klimov@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: 67f9b828d4e5e47caf3472a399c25c3c0ddc824a  gpio: tegra186: Fix GPIO name collisions for Tegra410
+On Tue, Nov 18, 2025 at 12:16=E2=80=AFPM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Bartosz,
+>
+> On Wed, 12 Nov 2025 at 15:05, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > Bjorn, Konrad: I should have Cc'ed you on v1 but I just went with what
+> > came out of b4 --auto-to-cc. It only gave me arm-msm. :( Patch 7 from
+> > this series however impacts Qualcomm platforms. It's a runtime dependen=
+cy
+> > of patches 8 and 9. Would you mind Acking it so that I can take it into
+> > an immutable branch that I'll make available to Mark Brown for him to
+> > take patches 8-10 through the ASoC and regulator trees for v6.19?
+> >
+> > Problem statement: GPIOs are implemented as a strictly exclusive
+> > resource in the kernel but there are lots of platforms on which single
+> > pin is shared by multiple devices which don't communicate so need some
+> > way of properly sharing access to a GPIO. What we have now is the
+> > GPIOD_FLAGS_BIT_NONEXCLUSIVE flag which was introduced as a hack and
+> > doesn't do any locking or arbitration of access - it literally just han=
+d
+> > the same GPIO descriptor to all interested users.
+> >
+> > The proposed solution is composed of three major parts: the high-level,
+> > shared GPIO proxy driver that arbitrates access to the shared pin and
+> > exposes a regular GPIO chip interface to consumers, a low-level shared
+> > GPIOLIB module that scans firmware nodes and creates auxiliary devices
+> > that attach to the proxy driver and finally a set of core GPIOLIB
+> > changes that plug the former into the GPIO lookup path.
+> >
+> > The changes are implemented in a way that allows to seamlessly compile
+> > out any code related to sharing GPIOs for systems that don't need it.
+> >
+> > The practical use-case for this are the powerdown GPIOs shared by
+> > speakers on Qualcomm db845c platform, however I have also extensively
+> > tested it using gpio-virtuser on arm64 qemu with various DT
+> > configurations.
+>
+> Thanks for your series, part of which is now present linux-next.
+> IIUIC, this requires the direction of the GPIO to be fixed?
+>
+> We have a long-standing use-case on various Renesas R-Car Gen3 boards
+> (e.g. Salvator-X(S) and ULCB[1]), where GPIOs are shared by LEDs and
+> key switches.  Basically, the GPIO is connected to:
+>   1. A key switch connecting to GND when closed, with pull-up.
+>   2. The gate of an N-channel MOSFET, turning on an LED when driven
+>      high.
+>
+> Hence:
+>   - In output mode, the LED can be controlled freely,
+>   - In input mode, the LED is on, unless the key is pressed,
+>   - Hence the switch state can only be read when the LED is turned on.
+> If you have any idea how to handle this, feel free to reply ;-)
+>
+> Thanks!
+>
 
-Warning (recently discovered and may have been fixed):
+How is this done currently? Even without this series and using the
+GPIOD_FLAGS_BIT_NONEXCLUSIVE, the descriptor has a well-defined
+direction so it's not possible for two drivers to request it as input
+and output simultaneously. The second requester will override the
+previous settings.
 
-    https://lore.kernel.org/oe-kbuild-all/202511180232.EItKeYjY-lkp@intel.com
-
-    drivers/gpio/gpiolib-shared.c:62:1: warning: 'gpio_shared_find_entry' defined but not used [-Wunused-function]
-
-Warning ids grouped by kconfigs:
-
-recent_errors
-|-- alpha-randconfig-r132-20251118
-|   `-- drivers-gpio-gpiolib-shared.c:warning:gpio_shared_find_entry-defined-but-not-used
-|-- i386-buildonly-randconfig-005-20251118
-|   `-- drivers-gpio-gpiolib-shared.c:warning:gpio_shared_find_entry-defined-but-not-used
-|-- m68k-randconfig-r061-20251118
-|   `-- drivers-gpio-gpiolib-shared.c:warning:gpio_shared_find_entry-defined-but-not-used
-|-- m68k-randconfig-r071-20251118
-|   `-- drivers-gpio-gpiolib-shared.c:warning:gpio_shared_find_entry-defined-but-not-used
-|-- parisc-randconfig-001-20251118
-|   `-- drivers-gpio-gpiolib-shared.c:warning:gpio_shared_find_entry-defined-but-not-used
-|-- parisc-randconfig-002-20251118
-|   `-- drivers-gpio-gpiolib-shared.c:warning:gpio_shared_find_entry-defined-but-not-used
-|-- s390-randconfig-r073-20251117
-|   `-- drivers-gpio-gpiolib-shared.c:warning:gpio_shared_find_entry-defined-but-not-used
-|-- sh-randconfig-001-20251118
-|   `-- drivers-gpio-gpiolib-shared.c:warning:gpio_shared_find_entry-defined-but-not-used
-|-- um-randconfig-r052-20251118
-|   `-- drivers-gpio-gpiolib-shared.c:warning:gpio_shared_find_entry-defined-but-not-used
-`-- x86_64-buildonly-randconfig-002-20251118
-    `-- drivers-gpio-gpiolib-shared.c:warning:gpio_shared_find_entry-defined-but-not-used
-
-elapsed time: 1491m
-
-configs tested: 108
-configs skipped: 2
-
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                   randconfig-001-20251117    gcc-14.3.0
-arc                   randconfig-002-20251117    gcc-9.5.0
-arm                               allnoconfig    clang-22
-arm                         lpc18xx_defconfig    clang-22
-arm                   randconfig-001-20251117    clang-22
-arm                   randconfig-002-20251117    gcc-14.3.0
-arm                   randconfig-003-20251117    gcc-12.5.0
-arm                   randconfig-004-20251117    gcc-10.5.0
-arm                        spear6xx_defconfig    clang-22
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20251117    clang-22
-arm64                 randconfig-002-20251117    gcc-15.1.0
-arm64                 randconfig-003-20251117    gcc-8.5.0
-arm64                 randconfig-004-20251117    gcc-9.5.0
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20251117    gcc-12.5.0
-csky                  randconfig-002-20251117    gcc-9.5.0
-hexagon                           allnoconfig    clang-22
-hexagon               randconfig-001-20251118    clang-16
-hexagon               randconfig-002-20251118    clang-22
-i386                              allnoconfig    gcc-14
-i386        buildonly-randconfig-001-20251118    clang-20
-i386        buildonly-randconfig-002-20251118    clang-20
-i386        buildonly-randconfig-003-20251118    clang-20
-i386        buildonly-randconfig-004-20251118    clang-20
-i386        buildonly-randconfig-005-20251118    gcc-13
-i386        buildonly-randconfig-006-20251118    clang-20
-i386                  randconfig-001-20251118    clang-20
-i386                  randconfig-002-20251118    clang-20
-i386                  randconfig-003-20251118    gcc-14
-i386                  randconfig-004-20251118    gcc-14
-i386                  randconfig-005-20251118    clang-20
-i386                  randconfig-006-20251118    gcc-14
-i386                  randconfig-007-20251118    gcc-14
-i386                  randconfig-011-20251118    gcc-14
-i386                  randconfig-012-20251118    gcc-12
-i386                  randconfig-013-20251118    clang-20
-i386                  randconfig-014-20251118    gcc-14
-i386                  randconfig-015-20251118    gcc-14
-i386                  randconfig-016-20251118    gcc-14
-i386                  randconfig-017-20251118    clang-20
-loongarch                         allnoconfig    clang-22
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20251118    gcc-15.1.0
-loongarch             randconfig-002-20251118    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                         db1xxx_defconfig    clang-22
-mips                          eyeq6_defconfig    clang-22
-mips                        maltaup_defconfig    clang-22
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20251118    gcc-11.5.0
-nios2                 randconfig-002-20251118    gcc-8.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20251118    gcc-14.3.0
-parisc                randconfig-002-20251118    gcc-12.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                      ppc44x_defconfig    clang-22
-powerpc               randconfig-001-20251118    clang-22
-powerpc               randconfig-002-20251118    clang-22
-powerpc64             randconfig-001-20251118    gcc-13.4.0
-powerpc64             randconfig-002-20251118    gcc-8.5.0
-riscv                             allnoconfig    gcc-15.1.0
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20251117    gcc-12.5.0
-riscv                 randconfig-002-20251117    gcc-15.1.0
-s390                              allnoconfig    clang-22
-s390                                defconfig    clang-22
-s390                  randconfig-001-20251117    gcc-14.3.0
-s390                  randconfig-002-20251117    clang-22
-sh                                allnoconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20251117    gcc-15.1.0
-sh                    randconfig-002-20251117    gcc-15.1.0
-sh                          rsk7269_defconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc64                             defconfig    clang-20
-um                                allnoconfig    clang-22
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                           x86_64_defconfig    clang-22
-x86_64                            allnoconfig    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                randconfig-011-20251118    clang-20
-x86_64                randconfig-012-20251118    clang-20
-x86_64                randconfig-013-20251118    gcc-14
-x86_64                randconfig-014-20251118    clang-20
-x86_64                randconfig-015-20251118    clang-20
-x86_64                randconfig-016-20251118    clang-20
-x86_64                randconfig-071-20251118    gcc-13
-x86_64                randconfig-072-20251118    clang-20
-x86_64                randconfig-073-20251118    gcc-14
-x86_64                randconfig-074-20251118    gcc-13
-x86_64                randconfig-075-20251118    gcc-14
-x86_64                randconfig-076-20251118    clang-20
-xtensa                           alldefconfig    gcc-15.1.0
-xtensa                            allnoconfig    gcc-15.1.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Bart
 
