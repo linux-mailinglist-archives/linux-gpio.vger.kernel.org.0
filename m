@@ -1,360 +1,324 @@
-Return-Path: <linux-gpio+bounces-28701-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28702-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55AA0C6BB61
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 22:21:35 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 550F5C6BB70
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 22:29:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A1A3334DD9B
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 21:20:31 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D269C4E4E42
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 21:29:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0A0530CDA8;
-	Tue, 18 Nov 2025 21:20:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C06E30E0E4;
+	Tue, 18 Nov 2025 21:29:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MYnxf1vq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GjCFYyZL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9294C2D321D;
-	Tue, 18 Nov 2025 21:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE21B2F6562
+	for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 21:29:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763500823; cv=none; b=t/5A18C+O96OiazkFgUcdPaOie6qlIvtzdCoErebnAJaQmVPwTX6RTaqgEa5OXsgxkUIuSifdDcKvEwn+1+tTgpWscYCpdDudbwMjroAPV9bUM5IfCxxz1d11Rq7S6XE0+L+ZojNwkeVLVaI1oKScUrWbB5QBc9lxFadlzPYULA=
+	t=1763501345; cv=none; b=LOTfiA5oaK2To7KiYeZRY+nkGuKfhAH037NWtoXgYgP/S7fIlAqONjJHR+/ZT5G5gsk5xWDi5y/VYprsWGhGfiJrY18Bbg9y/fRcyoDxabiIHwbEsOgJDibn1jggySdG8gVAOnJnVSO/ZE4t5wqAN30Te32XSAsehZg4Agw5BwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763500823; c=relaxed/simple;
-	bh=VqGn7LTh0bOTjUym75ZI1oQbaGNsn0SiTHUaNWoMB3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ENE6VbUUiI1fUWLF65zXG5ZaRB3QF0LD0bxDToVpKCXRKmGv2eKpUrrSpvmZxnMUHHffJLaLC329zju0mtDQNilYavwO4z37nplQDxB2LS5qLCIsIfAnl8JO4fRQDNHkHn/R5LnNeIlkTc4AKbygszutsHS5+BHllG6IA8k+qvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MYnxf1vq; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763500821; x=1795036821;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VqGn7LTh0bOTjUym75ZI1oQbaGNsn0SiTHUaNWoMB3Q=;
-  b=MYnxf1vqIlrHNfq1rzeTV+SpWx/QD3HJtB2TGWzNY0TynLDi8Ay/HkwV
-   Qc4CsU1ppRDErYREBSWQTf/9gkjQ49NYZo2N6IMTkrglM3q1IHj+0CNjj
-   VXSuuTFwxTwmtN7rgkyveCME9yR1b//uooYymdc5ShUfUNTeLOj9bTlt9
-   j2wfAhiDTuOtWlLtaeV0r6C47eF2biXCMtuqNbGp3r/KihsiylQTIRshb
-   32VVKR6WaQGs/DMgTAVJQp46rxst6ao1hGz8PwGlnvF99I4WcvDuC0xOr
-   jKfhpezp6KCCUnqpKuDh6o0saMTsfS+BfnDvilivXc9akPs5uUFZ9YfsV
-   w==;
-X-CSE-ConnectionGUID: sTmQ2gMGQMGGp/c5I2rUHg==
-X-CSE-MsgGUID: fC4NQAM4TBCTTDp2tosx/w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11617"; a="65571773"
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="65571773"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 13:20:20 -0800
-X-CSE-ConnectionGUID: c91w2+FdTC2ZfQyzIIVBBA==
-X-CSE-MsgGUID: tTI0efh4TbKfH/AKLAI6zw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="190668720"
-Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 18 Nov 2025 13:20:17 -0800
-Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vLT7W-0002BT-2H;
-	Tue, 18 Nov 2025 21:20:14 +0000
-Date: Wed, 19 Nov 2025 05:19:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sander Vanheule <sander@svanheule.net>, Lee Jones <lee@kernel.org>,
-	Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: oe-kbuild-all@lists.linux.dev, linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Sander Vanheule <sander@svanheule.net>
-Subject: Re: [PATCH v7 4/6] pinctrl: Add RTL8231 pin control and GPIO support
-Message-ID: <202511190436.9oQLbI8A-lkp@intel.com>
-References: <20251117215138.4353-5-sander@svanheule.net>
+	s=arc-20240116; t=1763501345; c=relaxed/simple;
+	bh=GNoKisffTpUEcCPwrPPD4dJrLny5D6Exi4zyYRBvzRA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WPP84ibJEEfbnNwSJPYNf64lKtNW5MCT8Fb8ueAlMxICSKbes0vTlhb68b8UJHM9r6EGFfTOqqo1DkdzJzD2CcGw4Qnpb7g5cGyABtNApw2KHRPrTDc9IAlN52Exzrc7yPtaJnW4BMrrkDWS3O0xLJ4nfv42mAEVgcE7hq5unrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GjCFYyZL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0039EC2BCB1
+	for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 21:29:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763501345;
+	bh=GNoKisffTpUEcCPwrPPD4dJrLny5D6Exi4zyYRBvzRA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=GjCFYyZLd78n/InWtJkCoj2EwLL1e7e0UyscKagUzP8Nkj7jYMHsQk6qnfoDsgjUQ
+	 BSUKFInyAaiGlnTw8SQafZNOenJhq5DpL+7V03x3G9oZrIn5GGeZTVD1+AZCHs++rW
+	 73Dp3ww+ED+5iq/CU4FijqBIXDixvGkq/IGeDDhEDUJq1L9aIv0O/ym19b5Y7bZOJC
+	 MypvCdKJpv9/fSIQEfvuRBwacBfUhgBwDrUa0bobz/w2SKjW+zz+gGX4U6IsBeGVk0
+	 brSXeq7PK6rh/cOsyQGF3HX1aNqePhiCGTFT8uW1oHoXpRHr/E0H5sAgUmA/OO1mad
+	 gw9a/jFrHmJKw==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-640a3317b89so9041260a12.0
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 13:29:04 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXv5bSpELxKwYaOoa0+DxQOVw3NQ1FDmliQN2VEM/OTVcF5GfY9GEAia3Rk9LcwKwej/y2vTSpvuCUS@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwM9MJagbg5hhutNOFZRC+0ppoAJa38q62P5PbWtplGUc+iJiM
+	baqQXhQEShKkfbIkfzTLmPGa3SkixLK2SzReKYVOlTdyq9R56oMZTDnrtlsAnRXl4sdQz3NBfQ5
+	hsZ8DjJKZmAxNErasICiu8lFYTdQdSQ==
+X-Google-Smtp-Source: AGHT+IHtRwgXROKBS+oF/+IGEgIxtcLKJqwbarAqUZ9rrZJTttBSgtKJapVOciXgYSV1BcHH9XU8T5txwdNNAlhp/mQ=
+X-Received: by 2002:a17:906:6a24:b0:b73:4006:1877 with SMTP id
+ a640c23a62f3a-b7367b6dfd1mr1799281366b.55.1763501342939; Tue, 18 Nov 2025
+ 13:29:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251117215138.4353-5-sander@svanheule.net>
+References: <20251117215138.4353-1-sander@svanheule.net> <20251117215138.4353-3-sander@svanheule.net>
+In-Reply-To: <20251117215138.4353-3-sander@svanheule.net>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 18 Nov 2025 15:28:51 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+Mzj+3d4q+xQLq_GEYzRJA6E+CEJ9M8FQH6kL9eBZhVg@mail.gmail.com>
+X-Gm-Features: AWmQ_bnBm7UsULiiueDdmMMcYwviPIb5dLON1efdQxh8_gI21BniIyuDRZhj7D8
+Message-ID: <CAL_Jsq+Mzj+3d4q+xQLq_GEYzRJA6E+CEJ9M8FQH6kL9eBZhVg@mail.gmail.com>
+Subject: Re: [PATCH v7 2/6] dt-bindings: mfd: Binding for RTL8231
+To: Sander Vanheule <sander@svanheule.net>
+Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Michael Walle <mwalle@kernel.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Sander,
+On Mon, Nov 17, 2025 at 3:52=E2=80=AFPM Sander Vanheule <sander@svanheule.n=
+et> wrote:
+>
+> Add a binding description for the Realtek RTL8231, a GPIO and LED
+> expander chip commonly used in ethernet switches based on a Realtek
+> switch SoC. These chips can be addressed via an MDIO or SMI bus, or used
+> as a plain 36-bit shift register.
+>
+> This binding only describes the feature set provided by the MDIO/SMI
+> configuration, and covers the GPIO, PWM, and pin control properties. The
+> LED properties are defined in a separate binding.
+>
+> Signed-off-by: Sander Vanheule <sander@svanheule.net>
+> ---
+> Changes since v6:
+> - Relax description formatting
+> - Use absolute paths for schema references
+> - Add pinctrl properties to led-controller node in example
+> ---
+>  .../bindings/mfd/realtek,rtl8231.yaml         | 193 ++++++++++++++++++
+>  1 file changed, 193 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/realtek,rtl8231=
+.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml b=
+/Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml
+> new file mode 100644
+> index 000000000000..5669dd58654e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml
+> @@ -0,0 +1,193 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/realtek,rtl8231.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Realtek RTL8231 GPIO and LED expander.
+> +
+> +maintainers:
+> +  - Sander Vanheule <sander@svanheule.net>
+> +
+> +description: |
+> +  The RTL8231 is a GPIO and LED expander chip, providing up to 37 GPIOs,=
+ up to
+> +  88 LEDs, and up to one PWM output. This device is frequently used alon=
+gside
+> +  Realtek switch SoCs, to provide additional I/O capabilities.
+> +
+> +  To manage the RTL8231's features, its strapping pins can be used to co=
+nfigure
+> +  it in one of three modes: shift register, MDIO device, or SMI device. =
+The
+> +  shift register mode does not need special support. In MDIO or SMI mode=
+, most
+> +  pins can be configured as a GPIO output or LED matrix scan line/column=
+. One
+> +  pin can be used as PWM output.
+> +
+> +  The GPIO, PWM, and pin control are part of the main node. LED support =
+is
+> +  configured as a sub-node.
+> +
+> +properties:
+> +  compatible:
+> +    const: realtek,rtl8231
+> +
+> +  reg:
+> +    description: MDIO or SMI device address.
+> +    maxItems: 1
+> +
+> +  # GPIO support
+> +  gpio-controller: true
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +    description:
+> +      The first cell is the pin number and the second cell is used to sp=
+ecify
+> +      the GPIO active state.
+> +
+> +  gpio-ranges:
+> +    description:
+> +      Must reference itself, and provide a zero-based mapping for 37 pin=
+s.
+> +    maxItems: 1
+> +
+> +  # Pin muxing and configuration
+> +  drive-strength:
+> +    description:
+> +      Common drive strength used for all GPIO output pins, must be 4mA o=
+r 8mA.
+> +      On reset, this value will default to 8mA.
+> +    enum: [4, 8]
+> +
+> +  # LED scanning matrix
+> +  led-controller:
+> +    $ref: /schemas/leds/realtek,rtl8231-leds.yaml#
+> +
+> +  # PWM output
+> +  "#pwm-cells":
+> +    description:
+> +      Twos cells with PWM index (must be 0) and PWM frequency in Hz. To =
+use
+> +      the PWM output, gpio35 must be muxed to its "pwm" function. Valid
+> +      frequency values for consumers are 1200, 1600, 2000, 2400, 2800, 3=
+200,
+> +      4000, and 4800.
+> +    const: 2
+> +
+> +patternProperties:
+> +  "-pins$":
+> +    type: object
+> +    $ref: /schemas/pinctrl/pinmux-node.yaml#
 
-kernel test robot noticed the following build errors:
+         additionalProperties: false
 
-[auto build test ERROR on lee-mfd/for-mfd-next]
-[also build test ERROR on lee-mfd/for-mfd-fixes lee-leds/for-leds-next linusw-pinctrl/devel linusw-pinctrl/for-next linus/master v6.18-rc6 next-20251118]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Sander-Vanheule/dt-bindings-leds-Binding-for-RTL8231-scan-matrix/20251118-055707
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
-patch link:    https://lore.kernel.org/r/20251117215138.4353-5-sander%40svanheule.net
-patch subject: [PATCH v7 4/6] pinctrl: Add RTL8231 pin control and GPIO support
-config: nios2-allmodconfig (https://download.01.org/0day-ci/archive/20251119/202511190436.9oQLbI8A-lkp@intel.com/config)
-compiler: nios2-linux-gcc (GCC) 11.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251119/202511190436.9oQLbI8A-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511190436.9oQLbI8A-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
->> drivers/pinctrl/pinctrl-rtl8231.c:28:27: error: expected identifier or '(' before ':' token
-      28 | enum rtl8231_pin_function : uintptr_t {
-         |                           ^
->> drivers/pinctrl/pinctrl-rtl8231.c:35:35: error: field 'flag' has incomplete type
-      35 |         enum rtl8231_pin_function flag;
-         |                                   ^~~~
->> drivers/pinctrl/pinctrl-rtl8231.c:46:34: error: 'RTL8231_PIN_FUNCTION_GPIO' undeclared here (not in a function); did you mean 'RTL8231_PIN_MODE_GPIO'?
-      46 |         RTL8231_FUNCTION("gpio", RTL8231_PIN_FUNCTION_GPIO),
-         |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pinctrl/pinctrl-rtl8231.c:41:26: note: in definition of macro 'RTL8231_FUNCTION'
-      41 |                 .flag = (_flag),        \
-         |                          ^~~~~
->> drivers/pinctrl/pinctrl-rtl8231.c:47:33: error: 'RTL8231_PIN_FUNCTION_LED' undeclared here (not in a function); did you mean 'RTL8231_FUNCTION'?
-      47 |         RTL8231_FUNCTION("led", RTL8231_PIN_FUNCTION_LED),
-         |                                 ^~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pinctrl/pinctrl-rtl8231.c:41:26: note: in definition of macro 'RTL8231_FUNCTION'
-      41 |                 .flag = (_flag),        \
-         |                          ^~~~~
->> drivers/pinctrl/pinctrl-rtl8231.c:48:33: error: 'RTL8231_PIN_FUNCTION_PWM' undeclared here (not in a function); did you mean 'RTL8231_FUNCTION'?
-      48 |         RTL8231_FUNCTION("pwm", RTL8231_PIN_FUNCTION_PWM),
-         |                                 ^~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pinctrl/pinctrl-rtl8231.c:41:26: note: in definition of macro 'RTL8231_FUNCTION'
-      41 |                 .flag = (_flag),        \
-         |                          ^~~~~
->> drivers/pinctrl/pinctrl-rtl8231.c:52:35: warning: 'functions' is narrower than values of its type
-      52 |         enum rtl8231_pin_function functions:8;
-         |                                   ^~~~~~~~~
->> drivers/pinctrl/pinctrl-rtl8231.c:52:35: error: field 'functions' has incomplete type
-   drivers/pinctrl/pinctrl-rtl8231.c: In function 'rtl8231_set_mux':
->> drivers/pinctrl/pinctrl-rtl8231.c:200:14: error: variable 'func_flag' has initializer but incomplete type
-     200 |         enum rtl8231_pin_function func_flag = (uintptr_t) func->data;
-         |              ^~~~~~~~~~~~~~~~~~~~
->> drivers/pinctrl/pinctrl-rtl8231.c:200:35: error: storage size of 'func_flag' isn't known
-     200 |         enum rtl8231_pin_function func_flag = (uintptr_t) func->data;
-         |                                   ^~~~~~~~~
->> drivers/pinctrl/pinctrl-rtl8231.c:200:35: warning: unused variable 'func_flag' [-Wunused-variable]
-   drivers/pinctrl/pinctrl-rtl8231.c: In function 'rtl8231_pinctrl_init_functions':
->> drivers/pinctrl/pinctrl-rtl8231.c:325:35: error: storage size of 'flag' isn't known
-     325 |         enum rtl8231_pin_function flag;
-         |                                   ^~~~
->> drivers/pinctrl/pinctrl-rtl8231.c:325:35: warning: unused variable 'flag' [-Wunused-variable]
-   drivers/pinctrl/pinctrl-rtl8231.c: In function 'rtl8231_set_mux':
->> drivers/pinctrl/pinctrl-rtl8231.c:214:1: warning: control reaches end of non-void function [-Wreturn-type]
-     214 | }
-         | ^
-
-
-vim +28 drivers/pinctrl/pinctrl-rtl8231.c
-
-    24	
-    25	/*
-    26	 * Pin controller functionality
-    27	 */
-  > 28	enum rtl8231_pin_function : uintptr_t {
-    29		RTL8231_PIN_FUNCTION_GPIO = BIT(0),
-    30		RTL8231_PIN_FUNCTION_LED = BIT(1),
-    31		RTL8231_PIN_FUNCTION_PWM = BIT(2),
-    32	};
-    33	
-    34	struct rtl8231_function_info {
-  > 35		enum rtl8231_pin_function flag;
-    36		const char *name;
-    37	};
-    38	
-    39	#define RTL8231_FUNCTION(_name, _flag)	\
-    40	((struct rtl8231_function_info) {	\
-    41			.flag = (_flag),	\
-    42			.name = (_name),	\
-    43		})
-    44	
-    45	static const struct rtl8231_function_info rtl8231_pin_functions[] = {
-  > 46		RTL8231_FUNCTION("gpio", RTL8231_PIN_FUNCTION_GPIO),
-  > 47		RTL8231_FUNCTION("led", RTL8231_PIN_FUNCTION_LED),
-  > 48		RTL8231_FUNCTION("pwm", RTL8231_PIN_FUNCTION_PWM),
-    49	};
-    50	
-    51	struct rtl8231_pin_desc {
-  > 52		enum rtl8231_pin_function functions:8;
-    53		u8 reg;
-    54		u8 offset;
-    55		u8 gpio_function_value;
-    56	};
-    57	
-    58	#define RTL8231_PIN_DESC(_num, _func, _reg, _fld, _val)			\
-    59		[(_num)] = ((struct rtl8231_pin_desc) {				\
-    60			.functions = RTL8231_PIN_FUNCTION_GPIO | (_func),	\
-    61			.reg = (_reg),						\
-    62			.offset = (_fld),					\
-    63			.gpio_function_value = (_val),				\
-    64		})
-    65	#define RTL8231_GPIO_PIN_DESC(_num, _reg, _fld)			\
-    66		RTL8231_PIN_DESC(_num, 0, _reg, _fld, RTL8231_PIN_MODE_GPIO)
-    67	#define RTL8231_LED_PIN_DESC(_num, _reg, _fld)			\
-    68		RTL8231_PIN_DESC(_num, RTL8231_PIN_FUNCTION_LED, _reg, _fld, RTL8231_PIN_MODE_GPIO)
-    69	#define RTL8231_PWM_PIN_DESC(_num, _reg, _fld)			\
-    70		RTL8231_PIN_DESC(_num, RTL8231_PIN_FUNCTION_PWM, _reg, _fld, 0)
-    71	
-    72	/*
-    73	 * All pins have a GPIO/LED mux bit, but the bits for pins 35/36 are read-only. Use this bit
-    74	 * for the GPIO-only pin instead of a placeholder, so the rest of the logic can stay generic.
-    75	 */
-    76	static const struct rtl8231_pin_desc rtl8231_pin_data[RTL8231_NUM_GPIOS] = {
-    77		RTL8231_LED_PIN_DESC(0, RTL8231_REG_PIN_MODE0, 0),
-    78		RTL8231_LED_PIN_DESC(1, RTL8231_REG_PIN_MODE0, 1),
-    79		RTL8231_LED_PIN_DESC(2, RTL8231_REG_PIN_MODE0, 2),
-    80		RTL8231_LED_PIN_DESC(3, RTL8231_REG_PIN_MODE0, 3),
-    81		RTL8231_LED_PIN_DESC(4, RTL8231_REG_PIN_MODE0, 4),
-    82		RTL8231_LED_PIN_DESC(5, RTL8231_REG_PIN_MODE0, 5),
-    83		RTL8231_LED_PIN_DESC(6, RTL8231_REG_PIN_MODE0, 6),
-    84		RTL8231_LED_PIN_DESC(7, RTL8231_REG_PIN_MODE0, 7),
-    85		RTL8231_LED_PIN_DESC(8, RTL8231_REG_PIN_MODE0, 8),
-    86		RTL8231_LED_PIN_DESC(9, RTL8231_REG_PIN_MODE0, 9),
-    87		RTL8231_LED_PIN_DESC(10, RTL8231_REG_PIN_MODE0, 10),
-    88		RTL8231_LED_PIN_DESC(11, RTL8231_REG_PIN_MODE0, 11),
-    89		RTL8231_LED_PIN_DESC(12, RTL8231_REG_PIN_MODE0, 12),
-    90		RTL8231_LED_PIN_DESC(13, RTL8231_REG_PIN_MODE0, 13),
-    91		RTL8231_LED_PIN_DESC(14, RTL8231_REG_PIN_MODE0, 14),
-    92		RTL8231_LED_PIN_DESC(15, RTL8231_REG_PIN_MODE0, 15),
-    93		RTL8231_LED_PIN_DESC(16, RTL8231_REG_PIN_MODE1, 0),
-    94		RTL8231_LED_PIN_DESC(17, RTL8231_REG_PIN_MODE1, 1),
-    95		RTL8231_LED_PIN_DESC(18, RTL8231_REG_PIN_MODE1, 2),
-    96		RTL8231_LED_PIN_DESC(19, RTL8231_REG_PIN_MODE1, 3),
-    97		RTL8231_LED_PIN_DESC(20, RTL8231_REG_PIN_MODE1, 4),
-    98		RTL8231_LED_PIN_DESC(21, RTL8231_REG_PIN_MODE1, 5),
-    99		RTL8231_LED_PIN_DESC(22, RTL8231_REG_PIN_MODE1, 6),
-   100		RTL8231_LED_PIN_DESC(23, RTL8231_REG_PIN_MODE1, 7),
-   101		RTL8231_LED_PIN_DESC(24, RTL8231_REG_PIN_MODE1, 8),
-   102		RTL8231_LED_PIN_DESC(25, RTL8231_REG_PIN_MODE1, 9),
-   103		RTL8231_LED_PIN_DESC(26, RTL8231_REG_PIN_MODE1, 10),
-   104		RTL8231_LED_PIN_DESC(27, RTL8231_REG_PIN_MODE1, 11),
-   105		RTL8231_LED_PIN_DESC(28, RTL8231_REG_PIN_MODE1, 12),
-   106		RTL8231_LED_PIN_DESC(29, RTL8231_REG_PIN_MODE1, 13),
-   107		RTL8231_LED_PIN_DESC(30, RTL8231_REG_PIN_MODE1, 14),
-   108		RTL8231_LED_PIN_DESC(31, RTL8231_REG_PIN_MODE1, 15),
-   109		RTL8231_LED_PIN_DESC(32, RTL8231_REG_PIN_HI_CFG, 0),
-   110		RTL8231_LED_PIN_DESC(33, RTL8231_REG_PIN_HI_CFG, 1),
-   111		RTL8231_LED_PIN_DESC(34, RTL8231_REG_PIN_HI_CFG, 2),
-   112		RTL8231_PWM_PIN_DESC(35, RTL8231_REG_FUNC1, 3),
-   113		RTL8231_GPIO_PIN_DESC(36, RTL8231_REG_PIN_HI_CFG, 4),
-   114	};
-   115	static const unsigned int PWM_PIN = 35;
-   116	
-   117	#define RTL8231_PIN(_num)					\
-   118		((struct pinctrl_pin_desc) {				\
-   119			.number = (_num),				\
-   120			.name = "gpio" #_num,				\
-   121			.drv_data = (void *) &rtl8231_pin_data[(_num)]	\
-   122		})
-   123	
-   124	static const struct pinctrl_pin_desc rtl8231_pins[RTL8231_NUM_GPIOS] = {
-   125		RTL8231_PIN(0),
-   126		RTL8231_PIN(1),
-   127		RTL8231_PIN(2),
-   128		RTL8231_PIN(3),
-   129		RTL8231_PIN(4),
-   130		RTL8231_PIN(5),
-   131		RTL8231_PIN(6),
-   132		RTL8231_PIN(7),
-   133		RTL8231_PIN(8),
-   134		RTL8231_PIN(9),
-   135		RTL8231_PIN(10),
-   136		RTL8231_PIN(11),
-   137		RTL8231_PIN(12),
-   138		RTL8231_PIN(13),
-   139		RTL8231_PIN(14),
-   140		RTL8231_PIN(15),
-   141		RTL8231_PIN(16),
-   142		RTL8231_PIN(17),
-   143		RTL8231_PIN(18),
-   144		RTL8231_PIN(19),
-   145		RTL8231_PIN(20),
-   146		RTL8231_PIN(21),
-   147		RTL8231_PIN(22),
-   148		RTL8231_PIN(23),
-   149		RTL8231_PIN(24),
-   150		RTL8231_PIN(25),
-   151		RTL8231_PIN(26),
-   152		RTL8231_PIN(27),
-   153		RTL8231_PIN(28),
-   154		RTL8231_PIN(29),
-   155		RTL8231_PIN(30),
-   156		RTL8231_PIN(31),
-   157		RTL8231_PIN(32),
-   158		RTL8231_PIN(33),
-   159		RTL8231_PIN(34),
-   160		RTL8231_PIN(35),
-   161		RTL8231_PIN(36),
-   162	};
-   163	
-   164	static int rtl8231_get_groups_count(struct pinctrl_dev *pctldev)
-   165	{
-   166		return ARRAY_SIZE(rtl8231_pins);
-   167	}
-   168	
-   169	static const char *rtl8231_get_group_name(struct pinctrl_dev *pctldev, unsigned int selector)
-   170	{
-   171		return rtl8231_pins[selector].name;
-   172	}
-   173	
-   174	static int rtl8231_get_group_pins(struct pinctrl_dev *pctldev, unsigned int selector,
-   175		const unsigned int **pins, unsigned int *num_pins)
-   176	{
-   177		if (selector >= ARRAY_SIZE(rtl8231_pins))
-   178			return -EINVAL;
-   179	
-   180		*pins = &rtl8231_pins[selector].number;
-   181		*num_pins = 1;
-   182	
-   183		return 0;
-   184	}
-   185	
-   186	static const struct pinctrl_ops rtl8231_pinctrl_ops = {
-   187		.get_groups_count = rtl8231_get_groups_count,
-   188		.get_group_name = rtl8231_get_group_name,
-   189		.get_group_pins = rtl8231_get_group_pins,
-   190		.dt_node_to_map = pinconf_generic_dt_node_to_map_all,
-   191		.dt_free_map = pinconf_generic_dt_free_map,
-   192	};
-   193	
-   194	static int rtl8231_set_mux(struct pinctrl_dev *pctldev, unsigned int func_selector,
-   195		unsigned int group_selector)
-   196	{
-   197		const struct function_desc *func = pinmux_generic_get_function(pctldev, func_selector);
-   198		const struct rtl8231_pin_desc *desc = rtl8231_pins[group_selector].drv_data;
-   199		const struct rtl8231_pin_ctrl *ctrl = pinctrl_dev_get_drvdata(pctldev);
- > 200		enum rtl8231_pin_function func_flag = (uintptr_t) func->data;
-   201		unsigned int function_mask;
-   202		unsigned int gpio_function;
-   203	
-   204		if (!(desc->functions & func_flag))
-   205			return -EINVAL;
-   206	
-   207		function_mask = BIT(desc->offset);
-   208		gpio_function = desc->gpio_function_value << desc->offset;
-   209	
-   210		if (func_flag == RTL8231_PIN_FUNCTION_GPIO)
-   211			return regmap_update_bits(ctrl->map, desc->reg, function_mask, gpio_function);
-   212		else
-   213			return regmap_update_bits(ctrl->map, desc->reg, function_mask, ~gpio_function);
- > 214	}
-   215	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +
+> +    properties:
+> +      pins:
+> +        items:
+> +          enum: [gpio0, gpio1, gpio2, gpio3, gpio4, gpio5, gpio6, gpio7,
+> +                 gpio8, gpio9, gpio10, gpio11, gpio12, gpio13, gpio14, g=
+pio15,
+> +                 gpio16, gpio17, gpio18, gpio19, gpio20, gpio21, gpio22,=
+ gpio23,
+> +                 gpio24, gpio25, gpio26, gpio27, gpio28, gpio29, gpio30,=
+ gpio31,
+> +                 gpio32, gpio33, gpio34, gpio35, gpio36]
+> +        minItems: 1
+> +        maxItems: 37
+> +
+> +      function:
+> +        description:
+> +          Select which function to use. "gpio" is supported for all pins=
+, "led" is supported
+> +          for pins 0-34, "pwm" is supported for pin 35.
+> +        enum: [gpio, led, pwm]
+> +
+> +    required:
+> +      - pins
+> +      - function
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - gpio-controller
+> +  - "#gpio-cells"
+> +  - gpio-ranges
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    // Minimal example
+> +    mdio {
+> +        #address-cells =3D <1>;
+> +        #size-cells =3D <0>;
+> +
+> +        expander0: expander@0 {
+> +            compatible =3D "realtek,rtl8231";
+> +            reg =3D <0>;
+> +
+> +            gpio-controller;
+> +            #gpio-cells =3D <2>;
+> +            gpio-ranges =3D <&expander0 0 0 37>;
+> +        };
+> +    };
+> +  - |
+> +    // All bells and whistles included
+> +    #include <dt-bindings/leds/common.h>
+> +    mdio {
+> +        #address-cells =3D <1>;
+> +        #size-cells =3D <0>;
+> +
+> +        expander1: expander@1 {
+> +            compatible =3D "realtek,rtl8231";
+> +            reg =3D <1>;
+> +
+> +            gpio-controller;
+> +            #gpio-cells =3D <2>;
+> +            gpio-ranges =3D <&expander1 0 0 37>;
+> +
+> +            #pwm-cells =3D <2>;
+> +
+> +            drive-strength =3D <4>;
+> +
+> +            button-pins {
+> +                pins =3D "gpio36";
+> +                function =3D "gpio";
+> +                input-debounce =3D <100000>;
+> +            };
+> +
+> +            pwm-pins {
+> +                pins =3D "gpio35";
+> +                function =3D "pwm";
+> +            };
+> +
+> +            led_matrix: led-pins {
+> +                pins =3D "gpio0", "gpio1", "gpio3", "gpio4";
+> +                function =3D "led";
+> +            };
+> +
+> +            led-controller {
+> +                compatible =3D "realtek,rtl8231-leds";
+> +                #address-cells =3D <2>;
+> +                #size-cells =3D <0>;
+> +
+> +                pinctrl-names =3D "default";
+> +                pinctrl-0 =3D <&led_matrix>;
+> +
+> +                realtek,led-scan-mode =3D "single-color";
+> +
+> +                led@0,0 {
+> +                    reg =3D <0 0>;
+> +                    color =3D <LED_COLOR_ID_GREEN>;
+> +                    function =3D LED_FUNCTION_LAN;
+> +                    function-enumerator =3D <0>;
+> +                };
+> +
+> +                led@0,1 {
+> +                    reg =3D <0 1>;
+> +                    color =3D <LED_COLOR_ID_AMBER>;
+> +                    function =3D LED_FUNCTION_LAN;
+> +                    function-enumerator =3D <0>;
+> +                };
+> +
+> +                led@1,0 {
+> +                    reg =3D <1 0>;
+> +                    color =3D <LED_COLOR_ID_GREEN>;
+> +                    function =3D LED_FUNCTION_LAN;
+> +                    function-enumerator =3D <1>;
+> +                };
+> +
+> +                led@1,1 {
+> +                    reg =3D <1 1>;
+> +                    color =3D <LED_COLOR_ID_AMBER>;
+> +                    function =3D LED_FUNCTION_LAN;
+> +                    function-enumerator =3D <1>;
+> +                };
+> +            };
+> +        };
+> +    };
+> --
+> 2.51.1
+>
+>
 
