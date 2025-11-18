@@ -1,116 +1,123 @@
-Return-Path: <linux-gpio+bounces-28711-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28712-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B37DC6BEDB
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 00:03:35 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0170CC6BEF6
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 00:04:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id 1D1002B2AB
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 23:03:33 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTPS id A35D62C328
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 23:04:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9D722FC02D;
-	Tue, 18 Nov 2025 23:03:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9790E31326A;
+	Tue, 18 Nov 2025 23:04:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JhHKSvsj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y32dU1QF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yx1-f50.google.com (mail-yx1-f50.google.com [74.125.224.50])
+Received: from mail-yx1-f51.google.com (mail-yx1-f51.google.com [74.125.224.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B135127E1D5
-	for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 23:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081A330E837
+	for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 23:04:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763506994; cv=none; b=H2mlNPzTAzAyvlNqoU07ZxITOsKtYsdGNNNnOATC6PWxneX5NPrv8kBWKNlNU+mHhC5bBuoq2MECxVy66zUYInYfL7aun0jGJcwcURNEKDgKMmM6SI+mB3UoEKwbHXpiIWwwC46foQfdnQyvML12ciuZx9E7Vgs7OzWSujAb2yo=
+	t=1763507057; cv=none; b=TbQRTZQFH6/hr/NRt+aZ3IX1Cv9YFUKlEEaOfOOlAzCtfLbief1KbL70p93NCSOxbtFgdsR1eddYkg77YfpQ7DHf9gIr0N30y5VrIHxi0zqxPbKp11I678p6Kv9lFY+63+gTrb6kWYpqWOzHAAu4OybVAvhFkN62QuH5vetfo+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763506994; c=relaxed/simple;
-	bh=vU6avN5XDare5pteFmcqg7EhwweyrU+3u4FYVB9JBP4=;
+	s=arc-20240116; t=1763507057; c=relaxed/simple;
+	bh=/ymX6MZbOGP8Rnnx2h10YmGwYTYivcCZihr8XRtlTxg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TTFf8Doww+GSh2sIhMdZ9DFRhJBK3JQQcxp+rzgWMiWtdY8o3NjgfAq9Ms87TGQnCwa41pkrPw2AysWOoH/lcUnhpllAKUvPfWCTXoj/T/sXpEyyWAwc3pBD04ZJG2C2LMg9oQurclLdq7plupH3tp8HScZZc1vp//EecblN044=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JhHKSvsj; arc=none smtp.client-ip=74.125.224.50
+	 To:Cc:Content-Type; b=mVHlb4RG04aEDrDXhsqQC2WeMwBdh0GgLiPAXcMyl4ZTOjMjY8L3wKtv/3hHnXqdqGUeB+kmq6MKg8JFZmBebM0HNnax4ZamsBD0kOaVuAQe4tbcxTuym/mTHcmp9SmCOhSpin5v5y/7qwzigMdWEZRJ4C6HECHKJlz2tk99Pfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y32dU1QF; arc=none smtp.client-ip=74.125.224.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yx1-f50.google.com with SMTP id 956f58d0204a3-640d0895d7cso500978d50.1
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 15:03:12 -0800 (PST)
+Received: by mail-yx1-f51.google.com with SMTP id 956f58d0204a3-640e065991dso5685183d50.3
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 15:04:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1763506992; x=1764111792; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1763507054; x=1764111854; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/CkKy4I7Nd+j6TrDrYR1KHm4hZaUOzQggilxM6L2z5U=;
-        b=JhHKSvsjh2lvxFrrXcU2NpTt80OFr9bi/ExRKBT0/D186JO7ysKvaPHhf/CrVeYK7K
-         eCrNTcibVwGI+x5mJGNwpAqVeZUARe/O7NxtBwj3pwIpaDJvcbp/kSQUnlFMZn25eKLY
-         JJFV/j/5fPlNEouPuZj2mBO4mLd9dO0rOnJ5y66DQXfcBLG18KS9oegIHBxIe3NaM3sG
-         zuywYU/8dlRi/pgiMkOn6jVG3oNVfsPcdlAqCi3gluSnnxh9/uV278WSenu7DSeoxx3o
-         fPD0KSRFxzuXY0wOMQS887QRpySlDgO4ZK8laj8xcU4hKbfIQttgCjpaCGdziicZWSPk
-         o/FA==
+        bh=DpyxSY5WvJi0HmvpcS1llhG6ee+xNYXsAMhYQ5ST4Es=;
+        b=y32dU1QFSkSTteY3CJTFNeJkXo03eIrk6uytwOzInzB0HZY5k4f9kpTDH2rOK2JrlJ
+         bsERqztf1x+IRmqt73BwfKjSHc3KvmeBMyh4/PqcUW0eGSz1oPZKYyoXB0lrsrUd0zgH
+         V7xOI5spBL0JX9oQM4K3ztLwhH4EjtixSNQDm6iWT6zL6SKF1/vVXK+m4jzMq3alTglZ
+         Bxk2+losQNjRB9YX9wG6lWsSrWwZLjZtsQl56XzM843/jFGyaRuB+bj6B23qFRdLSUyx
+         nIxGVFj+WNwl2fE//AC76FRGKcegvA0ZSSAp5mzvBlvo2l59asKVreB8xZcq0afpitLd
+         uo5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763506992; x=1764111792;
+        d=1e100.net; s=20230601; t=1763507054; x=1764111854;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=/CkKy4I7Nd+j6TrDrYR1KHm4hZaUOzQggilxM6L2z5U=;
-        b=tF4F/h65N1asZz0Z2JSxuMMM1IFCRisAN8zB/4JXKMs2AVf2TATIOImo5R9TIdOAGT
-         T9T4IAqnsF6xmFQtAngid1ZJi8cVIF0wJqqSLNKRLaNvvt0L89ld+3MyyWAqakhnJMTj
-         4KcL5o/qsWxZD5/kLLagn2ehwvwMDK3NYU/4G75OtZrpwXoQoYoZhU9Irbmcly0F7eev
-         9plsNbp1QGCPW8CMZeTYEC+CEX3gpKVygTpAnAMuZAXjAGtJ75KIS6QPY0af/j/seAH4
-         TjCLYRLmwcWRtJj+569VUQKEdX47PaB7NmxOtRLDAuN6vX52fge1f6iuuuzNoj8Pe52d
-         PJww==
-X-Forwarded-Encrypted: i=1; AJvYcCWPnlF+/Tn237gWNVCGvL1ctHUGgF0E4Gqx51LDgCNc8HR50BvUkJX43YUNWu4snZrNpQN87iU0t0eC@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPtpWvbBGlGWFzJ8ZOJ2Qmj+V75RVvXOZC8z/Gwt9l4pUZCaSX
-	u6dSwqB6lwi0FFnxE/t8Wz8yniTPBnjL90/bIWqvlfzcvFghHBFauMlTMQ5IwM9HxxbsVQ33V59
-	0RXX3qy3mK96kfzKW0esiwdBYubxguSl4gDrt32ajkg==
-X-Gm-Gg: ASbGnctRtcFL+9ari42z/niU9JuVP2/YUIJxuh6tPGlISnx0JLg07jnDaEWJFo51MUi
-	hCieYl2kdoEPGaJEW9tkMrRtYS+ujsBU5LHpn9f3JRY7al/jWatmZNf8IYJVtpId6qaa68eLhQ+
-	76qx8KzjlDJtDBS0k9tETymNgCvLNCWzWjaP0U2fHr1SSBweO7vX3WCXkc3oVzcy1QyQhOh8Q8F
-	ZJ25cT1+fFqJX92iHrXE8wZl8xXRGafyWYvT1zSv5UYr1s47LadqV1geOXXXyzT6s8qJXo=
-X-Google-Smtp-Source: AGHT+IEWG/T70U51QkboX+BFArhMW1GqtsSC5NyxbuNNMatQpKCwXgLG1q4spEcInbcCfufWgaMLYLHwYyBGvQc+TgU=
-X-Received: by 2002:a05:690e:4106:b0:63f:b985:66b5 with SMTP id
- 956f58d0204a3-642ed60ce63mr266853d50.6.1763506991657; Tue, 18 Nov 2025
- 15:03:11 -0800 (PST)
+        bh=DpyxSY5WvJi0HmvpcS1llhG6ee+xNYXsAMhYQ5ST4Es=;
+        b=Rf0aHqBfMShkASRCfHVDrZUmG6hFMXH35mwAqXRBDUZWYYPNRGYskPLQjSoUHzMiPG
+         vbHbwS+2q1P+RqYabpsvtn1fM0MiUTE5hFbY/LcLy4uyoyGf5nK3FQXfU7nP69+cWWBb
+         ChcXctzmkKKMVXBqycT1CxnVoKKGcgq9KpMgq6XayPytfw3zsGH0njIf0xsuW1+Md6MY
+         8k9g85zwMDmtMjJQmHt5kczFRkLtVIlDcKQqbXmFatA8QFNf04MjMZUsvamynH/DqXx9
+         84WltkqWQDSnSoTK1gJbv37g7XIV3pl/rxWYdrKfx2b7GtD+Szk1YC+9rNauiC4d6heq
+         aXxw==
+X-Forwarded-Encrypted: i=1; AJvYcCWnfBo5qVJwXvwcXXH8HmHTQ/76O0Rb4oYe6kOjFXzusu97D1km0yv61+0FXyHZyjz4Fl8I79TP//iI@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4e18ELvRiDC8C3RPLuZDR24q74GukVPM7b/hLVUEvHux76Cjv
+	gq3fMpXCwq+N01tJfdqc01RZmgaYqeA0c9tlZ5y91Al4mgV38jWjhRfma/+VyRW1PPJcAV2639a
+	MbP3bQZ4RJoH8DDJVUyyxP4AYfeHx0i9R7t23VGlIiTJmY3hMyWLodqw=
+X-Gm-Gg: ASbGncuXY4ZcHB7CSclUm1rW+2IHcme8PJprhk1zF9XQG/1yygeUdIo/yoj/nwujI/T
+	BEXH7DPR5Bb6ZsYBkQkbd1ee64U1lml2mMFG/Ht3+N4ErTcjf8+zG/hwvPpgKXOX0rp7uKZr1ym
+	gD/YGRmcEwDkF1fLZBbo5dV+3QITkfxk7cvVDJwKWikZiqwIeFAzduiNjXBY/WDXJt2u8V4I138
+	pEfzi4FIWx6Ns6nFyjwrv9YvkZmkRsyVGbco+8tZ43ZJA57XsYLOzxYwjzicEabi47a/9uOev5y
+	3M3xKg==
+X-Google-Smtp-Source: AGHT+IELB+09mf9khX/1UFEnPeAm1lrX0fgELMFuofsGX4R6IFFA6KPF6dwvDM7AxfFurD19MW+eZHnF90lveBd3oI4=
+X-Received: by 2002:a05:690e:155c:20b0:641:f5bc:6984 with SMTP id
+ 956f58d0204a3-641f5bc71d8mr9451804d50.80.1763507053863; Tue, 18 Nov 2025
+ 15:04:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251115100000.177791-1-amadeus@jmu.edu.cn>
-In-Reply-To: <20251115100000.177791-1-amadeus@jmu.edu.cn>
+References: <20251112-pinctrl-airoha-fix-an7583-drive-e2-confg-usage-v1-1-d2550d55e988@kernel.org>
+In-Reply-To: <20251112-pinctrl-airoha-fix-an7583-drive-e2-confg-usage-v1-1-d2550d55e988@kernel.org>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 19 Nov 2025 00:02:56 +0100
-X-Gm-Features: AWmQ_bnUW-BUpl8V9jWIRwhTERbiqNe1byNfSmfq0uZuXktxGoeLDqptYWTthh4
-Message-ID: <CACRpkdbMPGL=s7gmQsRTNpzdBanWHRX857bcg0Jiu0Zfp=hSyg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] pinctrl: airoha: fix pinctrl function mismatch issue
-To: Chukun Pan <amadeus@jmu.edu.cn>
-Cc: Lorenzo Bianconi <lorenzo@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	angelogioacchino.delregno@collabora.com, 
-	Christian Marangi <ansuelsmth@gmail.com>, Sean Wang <sean.wang@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Date: Wed, 19 Nov 2025 00:03:58 +0100
+X-Gm-Features: AWmQ_bmTrpDRkDleDNb2XMlOjcgLl6u_OW5kVkCUfJvH2chNj2IWVVvyVcdyP9M
+Message-ID: <CACRpkdaFq9PBxvxG2t6xDTN9M-7psvo=VDTCpu_qhvk30zFrMA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: airoha: Fix AIROHA_PINCTRL_CONFS_DRIVE_E2 in an7583_pinctrl_match_data
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Christian Marangi <ansuelsmth@gmail.com>, Lorenzo Bianconi <lorenzo@kernel.org>, 
+	Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev, 
+	patches@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Nov 15, 2025 at 11:00=E2=80=AFAM Chukun Pan <amadeus@jmu.edu.cn> wr=
-ote:
+On Wed, Nov 12, 2025 at 7:44=E2=80=AFPM Nathan Chancellor <nathan@kernel.or=
+g> wrote:
 
-> The blamed commit made the following changes:
+> Clang warns (or errors with CONFIG_WERROR=3Dy / W=3De):
 >
-> -#define PINCTRL_FUNC_DESC(id)...
-> -               .desc =3D PINCTRL_PINFUNCTION(#id, ...
-> +#define PINCTRL_FUNC_DESC(id, table)...
-> +               .desc =3D PINCTRL_PINFUNCTION(#id, ...
+>   pinctrl/mediatek/pinctrl-airoha.c:2064:41: error: variable 'an7583_pinc=
+trl_drive_e2_conf' is not needed and will not be emitted [-Werror,-Wunneede=
+d-internal-declaration]
+>    2064 | static const struct airoha_pinctrl_conf an7583_pinctrl_drive_e2=
+_conf[] =3D {
+>         |                                         ^~~~~~~~~~~~~~~~~~~~~~~=
+~~~~~
 >
-> -       PINCTRL_FUNC_DESC(pon)...
-> +       PINCTRL_FUNC_DESC("pon", pon)...
+> Due to a typo, an7583_pinctrl_drive_e2_conf is only used within
+> ARRAY_SIZE() (hence no instance of -Wunused-variable), which is
+> evaluated at compile time, so it will not be needed in the final object
+> file.
 >
-> It's clear that the id of funcs doesn't match the definition.
-> Remove redundant #string from the definition to fix this issue:
-> pinctrl-airoha ...: invalid function mdio in map table
+> Fix the .confs assignment for AIROHA_PINCTRL_CONFS_DRIVE_E2 in
+> an7583_pinctrl_match_data to clear up the warning.
 >
-> Fixes: 4043b0c45f85 ("pinctrl: airoha: generalize pins/group/function/con=
-fs handling")
-> Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+> Closes: https://github.com/ClangBuiltLinux/linux/issues/2142
+> Fixes: 3ffeb17a9a27 ("pinctrl: airoha: add support for Airoha AN7583 PINs=
+")
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 
 Patch applied!
 
