@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-28633-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28634-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1B32C66C04
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 01:57:42 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F504C66BBF
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 01:55:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0069F343848
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 00:54:47 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTPS id BF27429819
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 00:55:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C30F932938E;
-	Tue, 18 Nov 2025 00:51:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9319932A3DE;
+	Tue, 18 Nov 2025 00:51:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IsWzXRyC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a3/V9coc"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42AC31CEAC2;
-	Tue, 18 Nov 2025 00:51:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0E22FA0DD;
+	Tue, 18 Nov 2025 00:51:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763427100; cv=none; b=grxBKOOfG4TdC/s4XGA/LPTQqpzNln8Okw123sPbFKTHdMwVMCbTxs2JQg8vjvw9MWnxSNnXMgj3GZdgskbaRWZkquiIAW8f73bq0Leg7UJ0Y47AkjWuwKTQWVGB2+5iIL8a7nOgO4uPbzlL2dBSjCc9Ch6HTtCqQmh/OJ5mZ7I=
+	t=1763427105; cv=none; b=FpgIAEid7QebG0dX0eX3gheAVv/ucHE09GnhGRguDL701RgwihjofyO5DnygET0n6em5NqV1c68foHMQtmSn232ISgOjP2s8Sg3zBsFi+MN0KZ5ZkDUIzlj5MsNKkegE/H9IibThpg2Sm4BT4pwUmmVeTGGhxNb/TVEvmlpuQfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763427100; c=relaxed/simple;
-	bh=sgcrLnGm3+Bbp+1Awn9kwG362Rqp8d/CDhH6WRqtT+E=;
+	s=arc-20240116; t=1763427105; c=relaxed/simple;
+	bh=FEK010iEOZpE1vC5lN9I/F/j5Wfem9fU26SaGIIbC5U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HX3rn4wUjsNJG2kl7/ORrBOlpev7GeYSt1gpFbmKKAKFC82B5CzFAU7O85wT/Z6zoBlu31eHjYrRNBxS58UKkSp5qMfMNgMWlG56bkhTOGt4VbkT+R9GdC5dmtE0rHw5lPRxYW8yoRzhEvIPVf9Hn7KedLf6sT+xDpzgr7MbQ5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IsWzXRyC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC583C2BCC9;
-	Tue, 18 Nov 2025 00:51:34 +0000 (UTC)
+	 MIME-Version; b=ZiCItMovVUBGUM1RA4Kz6BSimcqoiOf/UVM7apQhJ6jwK05aZjTrKs2Qbe3DH61rWCOf64T65w396qMHOdLerA5ePa154MAi1k3oSNu4mc1NC58RB2L4lUIZ4ybw58mUAKTTbhNGsU2AXUhRcLRQfK6YU2GbxCglppedzmacDa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a3/V9coc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09303C116B1;
+	Tue, 18 Nov 2025 00:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763427099;
-	bh=sgcrLnGm3+Bbp+1Awn9kwG362Rqp8d/CDhH6WRqtT+E=;
+	s=k20201202; t=1763427104;
+	bh=FEK010iEOZpE1vC5lN9I/F/j5Wfem9fU26SaGIIbC5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IsWzXRyCK9isjIMpLbbmO/Hhm+emJSuG0Hxpvdr2a2shuyiUk4fuGzYDAmY3no8mL
-	 TF0A2V/cJTgHCyafPL25WX7NYstNN2xMxyF98tN9U7oUkTgqqCROSFsCvyxW1KxwlE
-	 14+MwomUh0aLK6/A6OtAZOcpM96yMt+Msa0HYrOaDjuV+jlvezjD6Ey7YzXp/UkvRM
-	 r7VTcA1EzYQaRSLvMB/EoUCm4Y7vLyVaxqvLjup6m10NzHWWGWx4b3n0GNX29Y2qZ9
-	 CYW8FTWzLTI4UpEKejX1hBcdDAH0bJ9aX6pnefslUTO6Z1/K3YQfyRe3zFuGgUYyKv
-	 GAi5IApyFLJEw==
+	b=a3/V9coc2bW6juf3h/XwPfkdiNfDKVgkLi8Gs2jaoUFWAdZzEd4gzUrMNhUwaZl5L
+	 z9rBmyrAGTI7TZl0sKobAaKKqDNqMtSf0uoLQSEVOay2YrTsIn6cPksc6rWm9CXtdZ
+	 QNaAs1gEzsuo/CSspc8/UqBpZVDQrevXIwtq26+RFr+J86q40KxbD54ZBMYpAFz9L1
+	 Ipq35KA2QMx6OlvmijDpnH5Oa8SDVS0ByCnskVeS62XPdJUg62Vn8dWrDpHWOCF2/J
+	 BjwwK2bJM7FeKxN5+4Fe9kktZZavXITLk9R2l78QUd5R2nPABw78MdZD3h+VX/u77d
+	 ROKdh49O9xGog==
 From: Jisheng Zhang <jszhang@kernel.org>
 To: Doug Berger <opendmb@gmail.com>,
 	Florian Fainelli <florian.fainelli@broadcom.com>,
@@ -64,9 +64,9 @@ Cc: linux-gpio@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-omap@vger.kernel.org
-Subject: [PATCH v2 14/15] gpio: xilinx: Use modern PM macros
-Date: Tue, 18 Nov 2025 08:32:28 +0800
-Message-ID: <20251118003229.26636-15-jszhang@kernel.org>
+Subject: [PATCH v2 15/15] gpio: zynq: Use modern PM macros
+Date: Tue, 18 Nov 2025 08:32:29 +0800
+Message-ID: <20251118003229.26636-16-jszhang@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251118003229.26636-1-jszhang@kernel.org>
 References: <20251118003229.26636-1-jszhang@kernel.org>
@@ -84,70 +84,70 @@ CONFIG_PM_SLEEP are disabled, without having to use __maybe_unused
 
 Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
 ---
- drivers/gpio/gpio-xilinx.c | 15 +++++++--------
+ drivers/gpio/gpio-zynq.c | 15 +++++++--------
  1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-index 83675ac81077..be4b4d730547 100644
---- a/drivers/gpio/gpio-xilinx.c
-+++ b/drivers/gpio/gpio-xilinx.c
-@@ -286,7 +286,7 @@ static void xgpio_free(struct gpio_chip *chip, unsigned int offset)
- 	pm_runtime_put(chip->parent);
+diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
+index 0ffd76e8951f..97780c57ab56 100644
+--- a/drivers/gpio/gpio-zynq.c
++++ b/drivers/gpio/gpio-zynq.c
+@@ -735,7 +735,7 @@ static void zynq_gpio_restore_context(struct zynq_gpio *gpio)
+ 	}
  }
  
--static int __maybe_unused xgpio_suspend(struct device *dev)
-+static int xgpio_suspend(struct device *dev)
+-static int __maybe_unused zynq_gpio_suspend(struct device *dev)
++static int zynq_gpio_suspend(struct device *dev)
  {
- 	struct xgpio_instance *gpio = dev_get_drvdata(dev);
+ 	struct zynq_gpio *gpio = dev_get_drvdata(dev);
  	struct irq_data *data = irq_get_irq_data(gpio->irq);
-@@ -327,7 +327,7 @@ static void xgpio_irq_ack(struct irq_data *irq_data)
- {
- }
- 
--static int __maybe_unused xgpio_resume(struct device *dev)
-+static int xgpio_resume(struct device *dev)
- {
- 	struct xgpio_instance *gpio = dev_get_drvdata(dev);
- 	struct irq_data *data = irq_get_irq_data(gpio->irq);
-@@ -343,7 +343,7 @@ static int __maybe_unused xgpio_resume(struct device *dev)
+@@ -756,7 +756,7 @@ static int __maybe_unused zynq_gpio_suspend(struct device *dev)
  	return 0;
  }
  
--static int __maybe_unused xgpio_runtime_suspend(struct device *dev)
-+static int xgpio_runtime_suspend(struct device *dev)
+-static int __maybe_unused zynq_gpio_resume(struct device *dev)
++static int zynq_gpio_resume(struct device *dev)
  {
- 	struct xgpio_instance *gpio = dev_get_drvdata(dev);
- 
-@@ -352,7 +352,7 @@ static int __maybe_unused xgpio_runtime_suspend(struct device *dev)
+ 	struct zynq_gpio *gpio = dev_get_drvdata(dev);
+ 	struct irq_data *data = irq_get_irq_data(gpio->irq);
+@@ -779,7 +779,7 @@ static int __maybe_unused zynq_gpio_resume(struct device *dev)
  	return 0;
  }
  
--static int __maybe_unused xgpio_runtime_resume(struct device *dev)
-+static int xgpio_runtime_resume(struct device *dev)
+-static int __maybe_unused zynq_gpio_runtime_suspend(struct device *dev)
++static int zynq_gpio_runtime_suspend(struct device *dev)
  {
- 	struct xgpio_instance *gpio = dev_get_drvdata(dev);
+ 	struct zynq_gpio *gpio = dev_get_drvdata(dev);
  
-@@ -360,9 +360,8 @@ static int __maybe_unused xgpio_runtime_resume(struct device *dev)
+@@ -788,7 +788,7 @@ static int __maybe_unused zynq_gpio_runtime_suspend(struct device *dev)
+ 	return 0;
  }
  
- static const struct dev_pm_ops xgpio_dev_pm_ops = {
--	SET_SYSTEM_SLEEP_PM_OPS(xgpio_suspend, xgpio_resume)
--	SET_RUNTIME_PM_OPS(xgpio_runtime_suspend,
--			   xgpio_runtime_resume, NULL)
-+	SYSTEM_SLEEP_PM_OPS(xgpio_suspend, xgpio_resume)
-+	RUNTIME_PM_OPS(xgpio_runtime_suspend, xgpio_runtime_resume, NULL)
+-static int __maybe_unused zynq_gpio_runtime_resume(struct device *dev)
++static int zynq_gpio_runtime_resume(struct device *dev)
+ {
+ 	struct zynq_gpio *gpio = dev_get_drvdata(dev);
+ 
+@@ -814,9 +814,8 @@ static void zynq_gpio_free(struct gpio_chip *chip, unsigned int offset)
+ }
+ 
+ static const struct dev_pm_ops zynq_gpio_dev_pm_ops = {
+-	SET_SYSTEM_SLEEP_PM_OPS(zynq_gpio_suspend, zynq_gpio_resume)
+-	SET_RUNTIME_PM_OPS(zynq_gpio_runtime_suspend,
+-			   zynq_gpio_runtime_resume, NULL)
++	SYSTEM_SLEEP_PM_OPS(zynq_gpio_suspend, zynq_gpio_resume)
++	RUNTIME_PM_OPS(zynq_gpio_runtime_suspend, zynq_gpio_runtime_resume, NULL)
  };
  
- /**
-@@ -682,7 +681,7 @@ static struct platform_driver xgpio_plat_driver = {
- 	.driver		= {
- 			.name = "gpio-xilinx",
- 			.of_match_table	= xgpio_of_match,
--			.pm = &xgpio_dev_pm_ops,
-+			.pm = pm_ptr(&xgpio_dev_pm_ops),
+ static const struct zynq_platform_data versal_gpio_def = {
+@@ -1022,7 +1021,7 @@ static void zynq_gpio_remove(struct platform_device *pdev)
+ static struct platform_driver zynq_gpio_driver = {
+ 	.driver	= {
+ 		.name = DRIVER_NAME,
+-		.pm = &zynq_gpio_dev_pm_ops,
++		.pm = pm_ptr(&zynq_gpio_dev_pm_ops),
+ 		.of_match_table = zynq_gpio_of_match,
  	},
- };
- 
+ 	.probe = zynq_gpio_probe,
 -- 
 2.51.0
 
