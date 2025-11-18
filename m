@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-28622-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28623-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id A430FC66B5F
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 01:51:33 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 565D7C66B65
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 01:51:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B801D35FE97
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 00:51:20 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTPS id 3CE3B2977D
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 00:51:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BED902FD7DE;
-	Tue, 18 Nov 2025 00:50:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F08032FDC55;
+	Tue, 18 Nov 2025 00:50:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CV+U92En"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IecAEEMt"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5133B1CEAC2;
-	Tue, 18 Nov 2025 00:50:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEDE944F;
+	Tue, 18 Nov 2025 00:50:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763427041; cv=none; b=kUVRswxTIM7tNpS5V5KCz0VawnuD9ZgHq/x3EhBTtYoAXxBVa6YyAbX9pS/2Dj/53yeaBOoB/oc4J+Pygmv2RaAvujNtkguCaIpu6OhoMNU+GvkbhBQqBSyAm3Qw+AiEUdA5iMU/KoTqcB0UvKy0SZq/687z5+prXB0PbN6cVMg=
+	t=1763427046; cv=none; b=mojbFX5OtR9rUVWS+LkhRbpVKL71dnoTn/st/ZUc22CCn1Pk3Q/SXJhE761Ekj08HJLn4+taRfE4bwpbiPpy2mIe2MvOfkUjVGDyRb8Y2uBbs8UMYre7G44iaARlIiuQUlCwttl/YRlcgYFH+K3jo46kRfB+NrvGPbYmsSq+twI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763427041; c=relaxed/simple;
-	bh=OVwscke6AS/yY6+mwMooEm5bzib2d1Ajnfy9ccf7uIk=;
+	s=arc-20240116; t=1763427046; c=relaxed/simple;
+	bh=iS5RSX5kssNbD8Tb7keOKotIOZ6qJnsVQ/Lih7t17O0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=I80HD/1GuBlQ44niynkfddf4UXCFdizu5c4m65+KdSDeA161pe68mV7K8WZh8zEXwXfJbVbhlL7xUyR7oxy8b31cAs2PYpanTWciRj/Hokt6jdW7T4uYZAgylT9VU9hja6oJ9r3nLNYyoRj0BxdBRybLne6r359r0Y6PqpOJ1ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CV+U92En; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C42EC2BCAF;
-	Tue, 18 Nov 2025 00:50:35 +0000 (UTC)
+	 MIME-Version; b=ZAWbIoK/TmJaGR3qEphZE0myV7vzJ4026VK/D1ERfc0rV+CKO+kxNhpPjW950/4SB+EqyxTiJWZo9QnXrDc/RInflhRdkDtnm1eZOX0gHdVrqS7/tXPOQAKbHSlD7sLO/Xsv5LXptWMr0BgaI9yLiBLdauhSNyaC7uhlSoxMdrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IecAEEMt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EBF9C2BC86;
+	Tue, 18 Nov 2025 00:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763427040;
-	bh=OVwscke6AS/yY6+mwMooEm5bzib2d1Ajnfy9ccf7uIk=;
+	s=k20201202; t=1763427046;
+	bh=iS5RSX5kssNbD8Tb7keOKotIOZ6qJnsVQ/Lih7t17O0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CV+U92EnywdL/a+b/oSqwJualpYLKvndgx1EtxX3GTHnGGJSe10i9EDiyOgc61dMq
-	 ++V7QG6LWLGHl4/8WIt1MnN2klMrF0obOGsYeIIrowFHTtoAc3BChQJ6OYgR3l82L/
-	 olrWwYoofOfDTb9EfVD55bBHnNtFZAPHIsYOrFjUBXSAQc+JaBeZXxY7r1vDFCKA+t
-	 sW+JbH83FMhCy9SekqDoUJRGI31htBjKld/OflC5SLkC1wkJXtHmx6CYaS+aKoguBF
-	 9hAypHa5x53Ex7v6qq1i4tN/yyhnBdIfNqgnir93kqZ1H+00otpolPhHTedOaA4vJL
-	 QdbTSIqRw3eeQ==
+	b=IecAEEMtC3ill6QNjdg4SprpRMemF0/93QHWEzqZyS5B4IWd77btuPZmqauhcnrz9
+	 PREFJjSzjBq/f5O7RTsnB1FC9zLUleTbgHetJMgT0E79iijQ+5hZl70gOfiW/1YNnm
+	 qAgxkFlbCRRLOrdqhz94BC3VqsLrdfxkWHJTEctnSdVizDFpnoqI6IS4NSiYHv+z5G
+	 BBsCHecYSHsvSE4Vq+t1436HHUdQHqouHYyEbijQL67PHx5HYg8FuNIGq7rPSOkZyx
+	 TJF1ybi89eEvUCfS9wD2VVkWLAgUYMUoCilzoi6yNMDIDtvwMopQzLn0pAysEjO6oZ
+	 e9/tXi0ZhSyLw==
 From: Jisheng Zhang <jszhang@kernel.org>
 To: Doug Berger <opendmb@gmail.com>,
 	Florian Fainelli <florian.fainelli@broadcom.com>,
@@ -64,9 +64,9 @@ Cc: linux-gpio@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-omap@vger.kernel.org
-Subject: [PATCH v2 03/15] gpio: htc-egpio: Use modern PM macros
-Date: Tue, 18 Nov 2025 08:32:17 +0800
-Message-ID: <20251118003229.26636-4-jszhang@kernel.org>
+Subject: [PATCH v2 04/15] gpio: pl061: Use modern PM macros
+Date: Tue, 18 Nov 2025 08:32:18 +0800
+Message-ID: <20251118003229.26636-5-jszhang@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251118003229.26636-1-jszhang@kernel.org>
 References: <20251118003229.26636-1-jszhang@kernel.org>
@@ -86,65 +86,80 @@ This has the advantage of always compiling these functions in,
 independently of any Kconfig option. Thanks to that, bugs and other
 regressions are subsequently easier to catch.
 
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
----
- drivers/gpio/gpio-htc-egpio.c | 21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+The pl061_context_save_regs structure is always embedded into struct
+pl061 to simplify code, so this brings a tiny 8 bytes memory overhead
+for !CONFIG_PM_SLEP.
 
-diff --git a/drivers/gpio/gpio-htc-egpio.c b/drivers/gpio/gpio-htc-egpio.c
-index 2eaed83214d8..72935d6dbebf 100644
---- a/drivers/gpio/gpio-htc-egpio.c
-+++ b/drivers/gpio/gpio-htc-egpio.c
-@@ -364,21 +364,20 @@ static int __init egpio_probe(struct platform_device *pdev)
+Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/gpio/gpio-pl061.c | 17 ++---------------
+ 1 file changed, 2 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/gpio/gpio-pl061.c b/drivers/gpio/gpio-pl061.c
+index 02e4ffcf5a6f..919cf86fd590 100644
+--- a/drivers/gpio/gpio-pl061.c
++++ b/drivers/gpio/gpio-pl061.c
+@@ -37,7 +37,6 @@
+ 
+ #define PL061_GPIO_NR	8
+ 
+-#ifdef CONFIG_PM
+ struct pl061_context_save_regs {
+ 	u8 gpio_data;
+ 	u8 gpio_dir;
+@@ -46,7 +45,6 @@ struct pl061_context_save_regs {
+ 	u8 gpio_iev;
+ 	u8 gpio_ie;
+ };
+-#endif
+ 
+ struct pl061 {
+ 	raw_spinlock_t		lock;
+@@ -55,9 +53,7 @@ struct pl061 {
+ 	struct gpio_chip	gc;
+ 	int			parent_irq;
+ 
+-#ifdef CONFIG_PM
+ 	struct pl061_context_save_regs csave_regs;
+-#endif
+ };
+ 
+ static int pl061_get_direction(struct gpio_chip *gc, unsigned offset)
+@@ -367,7 +363,6 @@ static int pl061_probe(struct amba_device *adev, const struct amba_id *id)
  	return 0;
  }
  
 -#ifdef CONFIG_PM
--static int egpio_suspend(struct platform_device *pdev, pm_message_t state)
-+static int egpio_suspend(struct device *dev)
+ static int pl061_suspend(struct device *dev)
  {
--	struct egpio_info *ei = platform_get_drvdata(pdev);
-+	struct egpio_info *ei = dev_get_drvdata(dev);
- 
--	if (ei->chained_irq && device_may_wakeup(&pdev->dev))
-+	if (ei->chained_irq && device_may_wakeup(dev))
- 		enable_irq_wake(ei->chained_irq);
+ 	struct pl061 *pl061 = dev_get_drvdata(dev);
+@@ -411,13 +406,7 @@ static int pl061_resume(struct device *dev)
  	return 0;
  }
  
--static int egpio_resume(struct platform_device *pdev)
-+static int egpio_resume(struct device *dev)
- {
--	struct egpio_info *ei = platform_get_drvdata(pdev);
-+	struct egpio_info *ei = dev_get_drvdata(dev);
- 
--	if (ei->chained_irq && device_may_wakeup(&pdev->dev))
-+	if (ei->chained_irq && device_may_wakeup(dev))
- 		disable_irq_wake(ei->chained_irq);
- 
- 	/* Update registers from the cache, in case
-@@ -386,19 +385,15 @@ static int egpio_resume(struct platform_device *pdev)
- 	egpio_write_cache(ei);
- 	return 0;
- }
--#else
--#define egpio_suspend NULL
--#define egpio_resume NULL
+-static const struct dev_pm_ops pl061_dev_pm_ops = {
+-	.suspend = pl061_suspend,
+-	.resume = pl061_resume,
+-	.freeze = pl061_suspend,
+-	.restore = pl061_resume,
+-};
 -#endif
++static DEFINE_SIMPLE_DEV_PM_OPS(pl061_dev_pm_ops, pl061_suspend, pl061_resume);
  
-+static DEFINE_SIMPLE_DEV_PM_OPS(egpio_pm_ops, egpio_suspend, egpio_resume);
- 
- static struct platform_driver egpio_driver = {
- 	.driver = {
- 		.name = "htc-egpio",
- 		.suppress_bind_attrs = true,
-+		.pm = pm_sleep_ptr(&egpio_pm_ops),
+ static const struct amba_id pl061_ids[] = {
+ 	{
+@@ -431,9 +420,7 @@ MODULE_DEVICE_TABLE(amba, pl061_ids);
+ static struct amba_driver pl061_gpio_driver = {
+ 	.drv = {
+ 		.name	= "pl061_gpio",
+-#ifdef CONFIG_PM
+-		.pm	= &pl061_dev_pm_ops,
+-#endif
++		.pm	= pm_sleep_ptr(&pl061_dev_pm_ops),
  	},
--	.suspend      = egpio_suspend,
--	.resume       = egpio_resume,
- };
- 
- static int __init egpio_init(void)
+ 	.id_table	= pl061_ids,
+ 	.probe		= pl061_probe,
 -- 
 2.51.0
 
