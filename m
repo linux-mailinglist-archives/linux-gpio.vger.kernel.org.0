@@ -1,164 +1,164 @@
-Return-Path: <linux-gpio+bounces-28643-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28644-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9BE9C68A77
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 10:54:49 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F4EEC68B8B
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 11:11:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C65A64F2525
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 09:51:22 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 058C9382A5A
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Nov 2025 10:08:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72C8A3164B7;
-	Tue, 18 Nov 2025 09:51:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F2B4330B14;
+	Tue, 18 Nov 2025 10:03:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JrCrcQwG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IS/wEZ2d"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B9F1DA55;
-	Tue, 18 Nov 2025 09:51:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C49B311C14
+	for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 10:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763459474; cv=none; b=FizVxbxmghIW6UzkjRMxt+gZAqY1ykB3e2Uo8UZQ8uaS6auITYMr7TybTZBKOiDAxtdsooq7Eq0hmpCz0C0TqMqlAczeYA49Rya/dG2RLV3LuCT7y5gK2smKsF4Yq3f6CNUwaRtSwFp0d/xLRmuFoy4X+NfXbTO0QHOtgpilHb8=
+	t=1763460194; cv=none; b=QnC1yxJtDRX0oZrAJWB8iHWIXvQanH36ZV4U9XpeaQc6EgnCiMcCO9pXvl0b/idXMEq8bUs60REJWwIlIUvZf8SD7rFRI7dttAiNK+8GBaZ87JE7wpCJ/s5g/Aep6s1pvhzg/FeaB8JclwvoycpiKhZDSih3MuFGNw+/JPcF0kU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763459474; c=relaxed/simple;
-	bh=ZXQSFl5BaTJGl6C9oFf6wVvGMEbo/moM4dPGMWJ0jUc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qj7JKD34Fo4fbPvV5lNGF7V410rEFfabiwUUZCBe5bamqBoqfiH4qxLoFCA23MILUeEz3DkdWK4f2k8t7WEGi1qboONb+5zd7JZ1xIi1/C4p5HW/DrGfwPKsdiZFWTEk73WsiSuVHG+Z8Ck0/h269TZSH+G8dun46couYn1w7Lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JrCrcQwG; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763459472; x=1794995472;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZXQSFl5BaTJGl6C9oFf6wVvGMEbo/moM4dPGMWJ0jUc=;
-  b=JrCrcQwGQl+lOPX04mHfEAxSh5JunxjaVa23pizlSigqN/eklHSleGER
-   JUDvVbVHIDvpoKSwMRSJmyW/55qB+6Ukj1YLVnFUMMCWD7q4meoAGVw4H
-   eIVb/7gjwTgWLb5H6o1ZKGXZWGMDgev+2nKa4xbc6E5RUpRvu34I9IiLY
-   hdTkNxKHWkyHs7lyEUeg1Js/V1WpKcH2+h40eGm57yGNPuM8Q+VD7yOOO
-   SZUbhgBlxcYXtAErpIMXOF5avJdxmDlmo5PEzEdxkEERGPC7IPLMn/K0J
-   iTq4PHIQrK221MhK7nys+8CvOpXzII64tZEk3hNfCZR9YMvQ482f7kZ1D
-   Q==;
-X-CSE-ConnectionGUID: bQ8f2mDGQs+WdTNn+4rA3Q==
-X-CSE-MsgGUID: +PfmwLiTTJGf6Y/KbjcLuQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="65415310"
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="65415310"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 01:51:11 -0800
-X-CSE-ConnectionGUID: DFaTJ9xsTyGER71f4H5OlA==
-X-CSE-MsgGUID: 0iLDqi2eQfWyutmyucYL4g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="190939502"
-Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 18 Nov 2025 01:51:09 -0800
-Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vLIMd-0001ZH-09;
-	Tue, 18 Nov 2025 09:51:07 +0000
-Date: Tue, 18 Nov 2025 17:50:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jisheng Zhang <jszhang@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] gpio: fxl6408: Add optional reset gpio control
-Message-ID: <202511181705.QWVZhvN1-lkp@intel.com>
-References: <20251117001502.12618-2-jszhang@kernel.org>
+	s=arc-20240116; t=1763460194; c=relaxed/simple;
+	bh=l/G3vsYSGBAYjuoPZkUX7z8obbKtc3jiqu7wpzfrIpo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F2JludnQmP0mxF1unRZGYMewJ/PgB+nJmfKQfds3ox0yAtWNZfJmDq7bJ3IMqLk/rBo9fPv/lJAG8hEvTU1TLBGKPbXzdCK6+yRIPdbrlA7GHyf/EMcUL0y+MFgywQliX/eGNYJjdoWJeBA0EVm6uI3gIXcmBZXLAYdJ+bKKQqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IS/wEZ2d; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-64165cd689eso9705475a12.0
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 02:03:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763460191; x=1764064991; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mB/sIhPW1gN3tcZpXRL5coOFmEA0TsaGSzvhPsvKtd8=;
+        b=IS/wEZ2ddcor6QlzrQ7ecYUrgtSA9TqJb7oR/2xI+8pzwEW/RLo4nZj7slHGzlmt87
+         YehVqkDCfL5uMAtOEevjFy5gtJrHae2PTLAuJVTgQNXMy8H4Nd59rQSFSAwShtd/NPSa
+         yKrpbvBUbJ4Qj0YYgsO2rpq2fi5wNq6m/ALKyDKBJBkUmtWzyYudo3iVN8O+oozTvQBG
+         ncVmgt3v1GcnqqbMQ70dKMo51489bfsypVb5yYW6XH7w5Nkx68tPJM+gd3f9pC5faCQI
+         d/tKZyXiaxEOPgUk3cyTBU+Xi2Q6dwFKe0EHi9Z2SjiaNQeJpSSjVlibq3DPRy3xADEA
+         9h6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763460191; x=1764064991;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=mB/sIhPW1gN3tcZpXRL5coOFmEA0TsaGSzvhPsvKtd8=;
+        b=IxgwJikNvKpC29r7/TmY74gXyidQhO0N8ad36B/E/3ZJNAG5O34RQA3XnYXgG999+D
+         e32jpASDkYD9ooXvzKd5VvY8DPnyeS3OcEI58mRiSczrJUoE+usMbsd25DV+hI/aYlYi
+         tFP8ivLuOQ9vB/dQZoNWKQi++zx+yfVp05ep7Ks1umNuVk0pLfpDjHQcqYK/pXFhnrNb
+         70fKgxKb3fwQKRYTm9y6JmKZ8Uzw/oe1IO5cfZgpV1jvoA6+VZ+Ppz4eaU9vDAHrmy6Y
+         NYYiAejzncKbS2USP1ORh+Zv48sg/z3a5fu7rBRnp4iEYAs/VO6XN8JIgzstjhhNHrxV
+         0nhg==
+X-Forwarded-Encrypted: i=1; AJvYcCVl12IadsG3KbhDmYLSZCm0fsSWvwHnDji/2151ewgKomuZAZOms7zYpMC/dBDNjQCm0X/j3yfZxO0j@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrixTru+0yOYl2S4062d7KnXU2kugE9/jcliEoCbUw2RHIB0EL
+	NnCWPAAX0evMWAY1ytJT+BSgjA+uefpCLFQV6Hyr4RAb5giRQWdeah8xXXqT1fVZvrsW5Z1WBMR
+	yezbmwJrGcDHN5/0GBqLJSYsc+yLAY0s=
+X-Gm-Gg: ASbGncvtj8Vget7K7qYr2+RpEqEc3SYFJ1Y+QsJy44bmBzVtMdAEer66TuYqu4FFYt5
+	bjULhPx/iz01pG+yNNkJKX5A0jqmydCnVeQZnxyMsRAyn0Dv7+Llron+rzyUf0tHXp0zYNKTLOe
+	7nCP1w4Ymk5n/3dVCsjJnPf3NjEpoz4XwECyshAzPI24WVHfMniP3dSalrLBpfxiG/Pb0Lxw84W
+	T67qf2KbS/7eWHkReu9fS0s8KRLl/5lfPikG0+0s1cA7odEeen0BQv9LuP1NRsrQPpEzO+IeM2L
+	s0h1UN0pTgYFDd4J7jyWwoYKnIFD4uJpMChk5kGeW5/TzemT4cFjAxAwrljEUX70NSpFtM4=
+X-Google-Smtp-Source: AGHT+IEwCP2A8UKJcJgm5Q3O6rX3dSW0qispZ7CqMA+4OdO9+vcJ62wolQ38IotKKwCYmqcBvIObLxH+o/iPac6JqWM=
+X-Received: by 2002:a17:907:d8d:b0:b72:7e7c:e848 with SMTP id
+ a640c23a62f3a-b75a0a03e96mr325380266b.17.1763460190419; Tue, 18 Nov 2025
+ 02:03:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251117001502.12618-2-jszhang@kernel.org>
+References: <20251117075826.3332299-1-andriy.shevchenko@linux.intel.com>
+ <20251117075826.3332299-2-andriy.shevchenko@linux.intel.com>
+ <20251117112702.GZ2912318@black.igk.intel.com> <CAHp75VcJD5RnVgcCiB3C=BjDGvui_ESBUPXZhDO3NUVcEKF+Lw@mail.gmail.com>
+ <20251118052731.GC2912318@black.igk.intel.com>
+In-Reply-To: <20251118052731.GC2912318@black.igk.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 18 Nov 2025 12:02:34 +0200
+X-Gm-Features: AWmQ_bkYk7VHivKmxsthU8EcP5JN9nwAeC0cQoriySYkuBKTglDychdeVFB_mgk
+Message-ID: <CAHp75VchSE38aw39eDmeZQi1RTQ-nESf-MsOKAhsFe0xOSsTWQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] pinctrl: intel: Refactor intel_gpio_add_pin_ranges()
+ to make it shorter
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jisheng,
+On Tue, Nov 18, 2025 at 7:27=E2=80=AFAM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> On Mon, Nov 17, 2025 at 06:06:16PM +0200, Andy Shevchenko wrote:
+> > On Mon, Nov 17, 2025 at 1:27=E2=80=AFPM Mika Westerberg
+> > <mika.westerberg@linux.intel.com> wrote:
+> > > On Mon, Nov 17, 2025 at 08:56:59AM +0100, Andy Shevchenko wrote:
 
-kernel test robot noticed the following build errors:
+...
 
-[auto build test ERROR on brgl/gpio/for-next]
-[also build test ERROR on linus/master v6.18-rc6 next-20251118]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > > >       struct intel_pinctrl *pctrl =3D gpiochip_get_data(gc);
+> > > > +     struct device *dev =3D pctrl->dev;
+> > >
+> > > I prefer this keeping the reverse christmas tree.
+> >
+> > And I prefer the logical split, if possible. putting it in between the
+> > intel_community and intel_paggroup lines seems worse to me than the
+> > proposed case.
+> >
+> > > Also it can be const.
+> >
+> > True, and it makes things closer to what you want if I leave it on the
+> > same line. Do you agree with my reasoning?
+>
+> As long as it keeps the reverse chrismas tree after you add const.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jisheng-Zhang/gpio-fxl6408-Add-optional-reset-gpio-control/20251117-083516
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-patch link:    https://lore.kernel.org/r/20251117001502.12618-2-jszhang%40kernel.org
-patch subject: [PATCH v2 1/2] gpio: fxl6408: Add optional reset gpio control
-config: riscv-randconfig-001-20251118 (https://download.01.org/0day-ci/archive/20251118/202511181705.QWVZhvN1-lkp@intel.com/config)
-compiler: riscv64-linux-gcc (GCC) 10.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251118/202511181705.QWVZhvN1-lkp@intel.com/reproduce)
+So, it means "no" then?
+Let me try again. The current looking is this:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511181705.QWVZhvN1-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/gpio/gpio-fxl6408.c: In function 'fxl6408_probe':
->> drivers/gpio/gpio-fxl6408.c:119:15: error: implicit declaration of function 'devm_gpiod_get_optional'; did you mean 'devm_regulator_get_optional'? [-Werror=implicit-function-declaration]
-     119 |  reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-         |               ^~~~~~~~~~~~~~~~~~~~~~~
-         |               devm_regulator_get_optional
->> drivers/gpio/gpio-fxl6408.c:119:53: error: 'GPIOD_OUT_LOW' undeclared (first use in this function)
-     119 |  reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-         |                                                     ^~~~~~~~~~~~~
-   drivers/gpio/gpio-fxl6408.c:119:53: note: each undeclared identifier is reported only once for each function it appears in
-   cc1: some warnings being treated as errors
+> > > >       const struct intel_community *community;
+> > > >       const struct intel_padgroup *grp;
+> > > >       int ret;
 
 
-vim +119 drivers/gpio/gpio-fxl6408.c
+After what you are so insisting it will be like
 
-   104	
-   105	static int fxl6408_probe(struct i2c_client *client)
-   106	{
-   107		struct device *dev = &client->dev;
-   108		struct gpio_desc *reset_gpio;
-   109		int ret;
-   110		struct gpio_regmap_config gpio_config = {
-   111			.parent = dev,
-   112			.ngpio = FXL6408_NGPIO,
-   113			.reg_dat_base = GPIO_REGMAP_ADDR(FXL6408_REG_INPUT_STATUS),
-   114			.reg_set_base = GPIO_REGMAP_ADDR(FXL6408_REG_OUTPUT),
-   115			.reg_dir_out_base = GPIO_REGMAP_ADDR(FXL6408_REG_IO_DIR),
-   116			.ngpio_per_reg = FXL6408_NGPIO,
-   117		};
-   118	
- > 119		reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-   120		if (IS_ERR(reset_gpio))
-   121			return dev_err_probe(dev, PTR_ERR(reset_gpio), "Failed to get reset gpio\n");
-   122	
-   123		gpio_config.regmap = devm_regmap_init_i2c(client, &regmap);
-   124		if (IS_ERR(gpio_config.regmap))
-   125			return dev_err_probe(dev, PTR_ERR(gpio_config.regmap),
-   126					     "failed to allocate register map\n");
-   127	
-   128		ret = fxl6408_identify(dev, gpio_config.regmap);
-   129		if (ret)
-   130			return ret;
-   131	
-   132		/* Disable High-Z of outputs, so that our OUTPUT updates actually take effect. */
-   133		ret = regmap_write(gpio_config.regmap, FXL6408_REG_OUTPUT_HIGH_Z, 0);
-   134		if (ret)
-   135			return dev_err_probe(dev, ret, "failed to write 'output high Z' register\n");
-   136	
-   137		return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &gpio_config));
-   138	}
-   139	
+       const struct intel_community *community;
+       const struct device *dev =3D pctrl->dev;
+       const struct intel_padgroup *grp;
+       int ret;
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+which disrupts the established grouping of the Intel pin control
+related definitions. And in all other functions where two definitions
+appear they are never interleaved with other definitions. And I would
+like to keep it that way. So, with my proposal it will be like
+
+       const struct device *dev =3D pctrl->dev;
+       const struct intel_community *community;
+       const struct intel_padgroup *grp;
+       int ret;
+
+or like
+
+       const struct intel_community *community;
+       const struct intel_padgroup *grp;
+       const struct device *dev =3D pctrl->dev;
+       int ret;
+
+which is not strictly reversed order (but the upper one is close
+enough, like a couple of characters shorter than "required").
+
+If you are still insisting on the strict xmas tree reversed order,
+assume I drop this change because I reasoned why I want the way I put
+it, can you review the rest of the series, please?
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
