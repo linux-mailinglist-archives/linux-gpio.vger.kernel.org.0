@@ -1,64 +1,64 @@
-Return-Path: <linux-gpio+bounces-28792-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28793-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EE71C6FC9A
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 16:50:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F219C6FFAC
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 17:13:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CDE0E4FBBD4
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 15:43:35 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 00DBA4ECD2A
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 15:53:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07B3C2E9737;
-	Wed, 19 Nov 2025 15:43:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1584B35F8B7;
+	Wed, 19 Nov 2025 15:47:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L2dYgX5E"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gnGDiBw8"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9300E2E8B64;
-	Wed, 19 Nov 2025 15:43:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 405F62EBB86;
+	Wed, 19 Nov 2025 15:47:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763566990; cv=none; b=ggjxPnpn7lnmdFRfczXkwBsmfql35jFv5kDvgDK8rGOSudJ8ASG5hLivOru4pRUVTQUtVE29MVXhKCA4/3ZeuG99l4UBflhyrxnoXuJ3Mx6+zDeI+1+gMSmlj7ySnvIUAQjME5HVlufZptZ9u74OQbE2g88iunWTY85GI4EaLSM=
+	t=1763567272; cv=none; b=Ek9IUY+CKttDROi1C/Iua4hy0qLNaiXEEezWBt7a1pQzpeDiorkBRzJ6DZIQ3VkEFKGpXR2LMs2CWS4tG/8i2PKbTKTTFgNA6juSnTItKiF2A+4eVSFhAdG1blvNX0sr/d5a7wb45YzLQbpZUwb9pL0jN+WRH2rfgtlzrkJtdJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763566990; c=relaxed/simple;
-	bh=0RZPFAONQ4eeFMXT+CMJvWTBqEYsuVS8uhy75HjL4yU=;
+	s=arc-20240116; t=1763567272; c=relaxed/simple;
+	bh=MjS6qANrG66ZEpC560m0ZY+4OoXsFOnALao2kMmuR28=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g61O9D9lo3hKSHM2hGEPwdFeJsOJsH12kQwH3nYhh+hBkRSgGRdj6lYoqjWy0m3pWKD7hhuQUguNzgOP2/bvxiYWyImSBbpV1xAaQ2mgKvEyeenzLVbjGK2EmMMiP9mkBZ6jnsbBCoh0qvgZK89Im7Q1Tt7ujGM6rfOEhf0Tk10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L2dYgX5E; arc=none smtp.client-ip=198.175.65.21
+	 Content-Type:Content-Disposition:In-Reply-To; b=NklSfqZjnGuibe6Z6YnltpTDGL9UX465n0LZoyYYn8qmssdEsWbYn4ygNYSJ9udHN46ldtW1bpSP9CJXDfjkyzgKWJQhJZoTpWDpzHvKv735xGiukT0QBPHese1UsNNIrEmO4IFF37WiFLU9uXcqqXOeKSzdz3wK5JvuC8OBuOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gnGDiBw8; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763566988; x=1795102988;
+  t=1763567270; x=1795103270;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=0RZPFAONQ4eeFMXT+CMJvWTBqEYsuVS8uhy75HjL4yU=;
-  b=L2dYgX5EMbwLWdnuSknVyqTwAZyN9IRnm+wZPa5heX/tdqQopQZRhJEH
-   0hCurfUlzAcBN4Ixx1M3cRRryQUSkcwrIQDjcx9ga11RFl5TkT0QWQamH
-   bWWtBGI0TtH4P1n19tnsDzUEX1Zkta09FfN8m9c7+cixRgd0taatlji/J
-   z2j6rwTg0fkgLlsn+54Yrw2CEn5bv3RFFfrc5Y67JeBpz0JhJ6lmYkty8
-   ZjcljGHEuDA76KPKb9KYQZEJWKFPVs+Um92IXG+i24StvRwTd2pdNSWXe
-   OUcMqhLCCDrcIVeQ0ugtnhA87JMkAAoKuS3DH5xk1orHUJoH57Y3hoP4M
-   A==;
-X-CSE-ConnectionGUID: Q9AG34fCTBu9cpxAV+Fe7Q==
-X-CSE-MsgGUID: BWp3ibKUSIOqTyUyVlj6Tg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="65546336"
+  bh=MjS6qANrG66ZEpC560m0ZY+4OoXsFOnALao2kMmuR28=;
+  b=gnGDiBw8b55Iaj1ndjM6G7sq/O9EuiInZBOD4nCS4Cj6Umf/Ok0sf39G
+   2kz0twvo2mttJlhXcW0O0CXkeXwDxWdcWZ/ZAB09HjshXVQQzy3FuQYxp
+   HatVoYdDZRLG6Idcft/Dk8/1jnFyxXS/u74SNqMm3qHEcBGd8Q3RlZOxF
+   8yso/4TJy4keEYmvrlfAezPKHoXro4rLx+vx3GbqrHN7B3nKLFATIvCE+
+   qn85vQpaKnadU2SBOU+h6TYg4AxrNpAJjsrbAtKQsjkLQOsmCzbfu4AaQ
+   VsssciqM32yDm8S6lcF+puzXYGr1CgtZMlXbUqkBt8G3zu+/f607mlAcd
+   g==;
+X-CSE-ConnectionGUID: 1caIjtkBTASmKY4X81eS7A==
+X-CSE-MsgGUID: duCufqd9QxmTsMqRFjp6YA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="65546810"
 X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
-   d="scan'208";a="65546336"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 07:43:06 -0800
-X-CSE-ConnectionGUID: r4NEVHUqRaW1JBPgUKX4DQ==
-X-CSE-MsgGUID: lkuTqTpcSSuluJvpOUgoPw==
+   d="scan'208";a="65546810"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 07:47:49 -0800
+X-CSE-ConnectionGUID: qARCDVdDSRq4Jvica6pVbw==
+X-CSE-MsgGUID: 9q3MyH01SZm07qrscShvYg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
-   d="scan'208";a="191126714"
+   d="scan'208";a="221740025"
 Received: from rvuia-mobl.ger.corp.intel.com (HELO localhost) ([10.245.245.245])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 07:43:01 -0800
-Date: Wed, 19 Nov 2025 17:42:59 +0200
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 07:47:44 -0800
+Date: Wed, 19 Nov 2025 17:47:41 +0200
 From: Andy Shevchenko <andriy.shevchenko@intel.com>
 To: Jisheng Zhang <jszhang@kernel.org>
 Cc: Doug Berger <opendmb@gmail.com>,
@@ -80,10 +80,10 @@ Cc: Doug Berger <opendmb@gmail.com>,
 	Michal Simek <michal.simek@amd.com>, linux-gpio@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
 	linux-omap@vger.kernel.org
-Subject: Re: [PATCH v3 01/15] gpio: dwapb: Use modern PM macros
-Message-ID: <aR3lg0aNaoT-_7SM@smile.fi.intel.com>
+Subject: Re: [PATCH v3 05/15] gpio: pxa: Use modern PM macros
+Message-ID: <aR3mnWQedt7SMRP0@smile.fi.intel.com>
 References: <20251119144327.13345-1-jszhang@kernel.org>
- <20251119144327.13345-2-jszhang@kernel.org>
+ <20251119144327.13345-6-jszhang@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -92,11 +92,11 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251119144327.13345-2-jszhang@kernel.org>
+In-Reply-To: <20251119144327.13345-6-jszhang@kernel.org>
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
  krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Wed, Nov 19, 2025 at 10:43:13PM +0800, Jisheng Zhang wrote:
+On Wed, Nov 19, 2025 at 10:43:17PM +0800, Jisheng Zhang wrote:
 > Use the modern PM macros for the suspend and resume functions to be
 > automatically dropped by the compiler when CONFIG_PM or
 > CONFIG_PM_SLEEP are disabled, without having to use #ifdef guards.
@@ -107,36 +107,43 @@ On Wed, Nov 19, 2025 at 10:43:13PM +0800, Jisheng Zhang wrote:
 
 ...
 
-> -#ifdef CONFIG_PM_SLEEP
->  /* Store GPIO context across system-wide suspend/resume transitions */
->  struct dwapb_context {
->  	u32 data;
-
->  	u32 int_deb;
->  	u32 wake_en;
->  };
-> -#endif
-
-This ifdeffery is to protect the type definition? It may be removed for sure.
+> struct pxa_gpio_bank {
 
 ...
 
->  struct dwapb_gpio_port_irqchip {
->  	unsigned int		nr_irqs;
+>  	unsigned long	irq_mask;
+>  	unsigned long	irq_edge_rise;
+>  	unsigned long	irq_edge_fall;
 
->  	struct gpio_generic_chip chip;
->  	struct dwapb_gpio_port_irqchip *pirq;
->  	struct dwapb_gpio	*gpio;
-> -#ifdef CONFIG_PM_SLEEP
->  	struct dwapb_context	*ctx;
+> -
+
+As I already pointed out this is stray change. Why you ignored my comment?
+
+> -#ifdef CONFIG_PM
+>  	unsigned long	saved_gplr;
+>  	unsigned long	saved_gpdr;
+>  	unsigned long	saved_grer;
+>  	unsigned long	saved_gfer;
 > -#endif
 
-But why this? For the PM_SLEEP=n cases it will give an unrequested overhead.
+Same Q as per dwapb driver. The CONFIG_PM=n doesn't need these.
 
->  	unsigned int		idx;
 >  };
 
-Otherwise LGTM.
+...
+
+>  static struct syscore_ops pxa_gpio_syscore_ops = {
+> -	.suspend	= pxa_gpio_suspend,
+> -	.resume		= pxa_gpio_resume,
+> +	.suspend	= pm_ptr(pxa_gpio_suspend),
+> +	.resume		= pm_ptr(pxa_gpio_resume),
+>  };
+
+This is not a device PM ops actually. Is there any guarantees on the
+relationship with CONFIG_PM and these callbacks? If so, I think we
+need to have special macros somewhere in include/linux/syscore_ops.h.
+
+Otherwise I'm not sure this will be a good patch at all.
 
 -- 
 With Best Regards,
