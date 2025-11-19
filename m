@@ -1,45 +1,46 @@
-Return-Path: <linux-gpio+bounces-28810-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28811-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F4B7C7048F
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 18:01:46 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06F84C7063E
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 18:17:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 02FAE3C289F
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 16:52:51 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5BF974FA2B4
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 16:53:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F412730149E;
-	Wed, 19 Nov 2025 16:51:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6188030277D;
+	Wed, 19 Nov 2025 16:51:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OD98aEJC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vCaA6Cbu"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84CD3009FE;
-	Wed, 19 Nov 2025 16:51:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D5D302758;
+	Wed, 19 Nov 2025 16:51:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763571081; cv=none; b=nYpO6I/QWFiN4nQ8lxXQ3eQPPJtgCr45RV2nZQVDyR8WWKAKcPVpsniYh/ClbFrLCfrA3CC4EVEurQ+YwBJn7g2aOa1ny7MQCjw7diZ449lDFZBvHhzazt3zR5OZ1VsWEu//wPG27QSkNGGNv8uLLW8OoZnxuQ2HNoHUYp3gxpQ=
+	t=1763571086; cv=none; b=u80ob2K03IdzxFBjiowVpk6Ov/N2mmTU4RLgHvDs0dHKEiC7UTatJt7k2l+5ieO8IRohQoAcmIq1/khbpsmmJi3Zd/2ecibyWpkE7niAp/Qrp+LziOt6iI6MFjys5x3HcqwHnCVwTB4OZFyBa7SgUm13PC+dJIoW4tmkhpWmwiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763571081; c=relaxed/simple;
-	bh=0z5blc1dd07XmocvlDywgo0sdBdKMV/nbSwKqdt7BFU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PPdZ2y1na9BfvGnJqejyHXaF3TIf0sZ8Fr0Wds6MdjnKSREyCynXPrAmYdpbSMgLguZ3BY7m9wnnQe+nJUKMRtCx+8yMb7/9yzGfy7yLJzlV1NGJnfmFU7I4iWUPyhPfkAbV5CO/P+nI/v5w58xzaiqn8T8+f+uIai8FgcgKIwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OD98aEJC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22644C4CEF5;
-	Wed, 19 Nov 2025 16:51:16 +0000 (UTC)
+	s=arc-20240116; t=1763571086; c=relaxed/simple;
+	bh=v9W8D36bTqpg+f65pHNpmPN8TfSCoWh/X0xcXoN9wTA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iHS4ydZGvLd2CwFoBnIUPr9F7SJhYP8+ykI8c9OeUvUgPktahru0dzR4gUJn938CMrS703vindtX8bit6G9r3n9lBhFGr+mg1aHNEPDRFRzD5W/Pv+dFH7kkPs0drUYZD32Zavguw7A7wqCFiAMeJap4E4lsib+hfhuI+U6QTXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vCaA6Cbu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61F90C113D0;
+	Wed, 19 Nov 2025 16:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763571081;
-	bh=0z5blc1dd07XmocvlDywgo0sdBdKMV/nbSwKqdt7BFU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=OD98aEJCUvHftzsI8L6yY4uAIJK8Qy1OHWLWyKTx7GuV41kvYavvN66UuX9ERLoUk
-	 1Lu/rTJAmrIdDoi7HghhXM061bC1CcWTnczfXXtDobj8BRZxFYz1eBuSqTFHGYHaN9
-	 4U4RUP+GW1urGvWetLrKkBEcy51233o7npzQOZNMBdLu2v3+ZMT9LlPUAvz/IRjenH
-	 dQL9THDAl/6fKQTjQCA781bHcTINNLHCNkAxF6FhGQseBIABm1zbYNLn6CJmXhurnR
-	 TxWwpk0Lw7OOEVLWlIIj0E145KDSpre4ThetaH04krPF0InncnOqRZs+SYaIfVx5DY
-	 7L2kDmoVXZtlg==
+	s=k20201202; t=1763571085;
+	bh=v9W8D36bTqpg+f65pHNpmPN8TfSCoWh/X0xcXoN9wTA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=vCaA6Cbu6O5VFQw6OV8BcwcM+AGuQWdxwus610ipNhwk8zV9BuDJra5OShfuRRukZ
+	 vpRHtrnWbdf+C3PzqmFlfb3q4Y/zI2NHACW4ie3s6RetsHZRh0FnhM2tQTIp8WuxgI
+	 6zt/kHP4Oee64A7OPFzZPrRmOa7aPxegjXbsWf4C9wvagjQDGqz5dxSz22AJmvS64Q
+	 tc8oNvRF7nTOUc1o4//Lz4FhofRvRyTxShMrSZkvk75lcpE4Y9ezz/JgbtgILFGrmR
+	 o0n+Pgi4OhZyMFIMM2SQa7bvVTGHWQJdgKLqxvr0p5N84qBRrojVWOuMFQkVVVhzTH
+	 m7IudkjPw9wMw==
 From: Jisheng Zhang <jszhang@kernel.org>
 To: Doug Berger <opendmb@gmail.com>,
 	Florian Fainelli <florian.fainelli@broadcom.com>,
@@ -63,10 +64,12 @@ Cc: linux-gpio@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-omap@vger.kernel.org
-Subject: [PATCH v4 00/15] gpio: Use modern PM macros
-Date: Thu, 20 Nov 2025 00:33:12 +0800
-Message-ID: <20251119163327.16306-1-jszhang@kernel.org>
+Subject: [PATCH v4 01/15] gpio: dwapb: Use modern PM macros
+Date: Thu, 20 Nov 2025 00:33:13 +0800
+Message-ID: <20251119163327.16306-2-jszhang@kernel.org>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251119163327.16306-1-jszhang@kernel.org>
+References: <20251119163327.16306-1-jszhang@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -77,72 +80,102 @@ Content-Transfer-Encoding: 8bit
 
 Use the modern PM macros for the suspend and resume functions to be
 automatically dropped by the compiler when CONFIG_PM or
-CONFIG_PM_SLEEP are disabled, without having to use #ifdef guards or
-__maybe_unused.
+CONFIG_PM_SLEEP are disabled, without having to use #ifdef guards.
 
 This has the advantage of always compiling these functions in,
 independently of any Kconfig option. Thanks to that, bugs and other
 regressions are subsequently easier to catch.
 
-Almost all drivers are converted, only gpio-tegra and gpio-mlxbf are
-left as is, because the memory for saving HW context is not trivial,
-if we convert them, then the two drivers' users may complain for
-!CONFIG_PM && !CONFIG_PM_SLEEP case. So I didn't touch them.
+Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/gpio/gpio-dwapb.c | 18 ++++--------------
+ 1 file changed, 4 insertions(+), 14 deletions(-)
 
-patch to gpio-dwapb.c is tested on real HW, others are compile-tested only.
-
-since v3:
-  - fix typos.
-  - fix the stray change in gpio-pxa driver.
-
-since v2:
-  - collect Acked-by, Reviewed-by tags.
-  - move the embeddng the structure for pm in gpio-dwapb out, will send
-    it as a separate patch.
-
-since v1:
-  - rebase on the latest gpio/for-next branch.
-  - collect Acked-by, Reviewed-by tags.
-  - clarify the trival memory wasted numbers with CONFIG_PM=n in the
-    dwapb's patch commit message as suggested by Andy.
-  - drop patch to bt8xxx since the clean up is acchieved when switching
-    to generic PCI pm framework.
-
-
-Jisheng Zhang (15):
-  gpio: dwapb: Use modern PM macros
-  gpio: brcmstb: Use modern PM macros
-  gpio: htc-egpio: Use modern PM macros
-  gpio: pl061: Use modern PM macros
-  gpio: pxa: Use modern PM macros
-  gpio: ml-ioh: Use modern PM macros
-  gpio: mlxbf2: Use modern PM macros
-  gpio: msc313: Use modern PM macros
-  gpio: omap: Use modern PM macros
-  gpio: pch: Use modern PM macros
-  gpio: tqmx86: Use modern PM macros
-  gpio: uniphier: Use modern PM macros
-  gpio: xgene: Use modern PM macros
-  gpio: xilinx: Use modern PM macros
-  gpio: zynq: Use modern PM macros
-
- drivers/gpio/gpio-brcmstb.c   | 12 +++---------
- drivers/gpio/gpio-dwapb.c     | 18 ++++--------------
- drivers/gpio/gpio-htc-egpio.c | 21 ++++++++-------------
- drivers/gpio/gpio-ml-ioh.c    | 12 ++++++------
- drivers/gpio/gpio-mlxbf2.c    |  8 ++++----
- drivers/gpio/gpio-msc313.c    |  8 ++++----
- drivers/gpio/gpio-omap.c      | 15 +++++++--------
- drivers/gpio/gpio-pch.c       | 12 ++++++------
- drivers/gpio/gpio-pl061.c     | 17 ++---------------
- drivers/gpio/gpio-pxa.c       | 11 ++---------
- drivers/gpio/gpio-tqmx86.c    |  9 ++++-----
- drivers/gpio/gpio-uniphier.c  |  9 ++++-----
- drivers/gpio/gpio-xgene.c     |  8 ++++----
- drivers/gpio/gpio-xilinx.c    | 15 +++++++--------
- drivers/gpio/gpio-zynq.c      | 15 +++++++--------
- 15 files changed, 72 insertions(+), 118 deletions(-)
-
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+index b42ff46d292b..4986c465c9a8 100644
+--- a/drivers/gpio/gpio-dwapb.c
++++ b/drivers/gpio/gpio-dwapb.c
+@@ -79,7 +79,6 @@ struct dwapb_platform_data {
+ 	unsigned int nports;
+ };
+ 
+-#ifdef CONFIG_PM_SLEEP
+ /* Store GPIO context across system-wide suspend/resume transitions */
+ struct dwapb_context {
+ 	u32 data;
+@@ -92,7 +91,6 @@ struct dwapb_context {
+ 	u32 int_deb;
+ 	u32 wake_en;
+ };
+-#endif
+ 
+ struct dwapb_gpio_port_irqchip {
+ 	unsigned int		nr_irqs;
+@@ -103,9 +101,7 @@ struct dwapb_gpio_port {
+ 	struct gpio_generic_chip chip;
+ 	struct dwapb_gpio_port_irqchip *pirq;
+ 	struct dwapb_gpio	*gpio;
+-#ifdef CONFIG_PM_SLEEP
+ 	struct dwapb_context	*ctx;
+-#endif
+ 	unsigned int		idx;
+ };
+ 
+@@ -363,7 +359,6 @@ static int dwapb_irq_set_type(struct irq_data *d, u32 type)
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_PM_SLEEP
+ static int dwapb_irq_set_wake(struct irq_data *d, unsigned int enable)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+@@ -378,9 +373,6 @@ static int dwapb_irq_set_wake(struct irq_data *d, unsigned int enable)
+ 
+ 	return 0;
+ }
+-#else
+-#define dwapb_irq_set_wake	NULL
+-#endif
+ 
+ static const struct irq_chip dwapb_irq_chip = {
+ 	.name		= DWAPB_DRIVER_NAME,
+@@ -390,7 +382,7 @@ static const struct irq_chip dwapb_irq_chip = {
+ 	.irq_set_type	= dwapb_irq_set_type,
+ 	.irq_enable	= dwapb_irq_enable,
+ 	.irq_disable	= dwapb_irq_disable,
+-	.irq_set_wake	= dwapb_irq_set_wake,
++	.irq_set_wake	= pm_sleep_ptr(dwapb_irq_set_wake),
+ 	.flags		= IRQCHIP_IMMUTABLE,
+ 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+ };
+@@ -759,7 +751,6 @@ static int dwapb_gpio_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_PM_SLEEP
+ static int dwapb_gpio_suspend(struct device *dev)
+ {
+ 	struct dwapb_gpio *gpio = dev_get_drvdata(dev);
+@@ -844,15 +835,14 @@ static int dwapb_gpio_resume(struct device *dev)
+ 
+ 	return 0;
+ }
+-#endif
+ 
+-static SIMPLE_DEV_PM_OPS(dwapb_gpio_pm_ops, dwapb_gpio_suspend,
+-			 dwapb_gpio_resume);
++static DEFINE_SIMPLE_DEV_PM_OPS(dwapb_gpio_pm_ops,
++				dwapb_gpio_suspend, dwapb_gpio_resume);
+ 
+ static struct platform_driver dwapb_gpio_driver = {
+ 	.driver		= {
+ 		.name	= DWAPB_DRIVER_NAME,
+-		.pm	= &dwapb_gpio_pm_ops,
++		.pm	= pm_sleep_ptr(&dwapb_gpio_pm_ops),
+ 		.of_match_table = dwapb_of_match,
+ 		.acpi_match_table = dwapb_acpi_match,
+ 	},
 -- 
 2.51.0
 
