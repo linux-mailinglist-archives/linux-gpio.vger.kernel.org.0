@@ -1,34 +1,34 @@
-Return-Path: <linux-gpio+bounces-28845-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28847-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A162C70F9F
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 21:09:11 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7801FC70FA2
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 21:09:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id 39C722F569
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 20:07:50 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTPS id 7293E2F7FB
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 20:08:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 132C1373779;
-	Wed, 19 Nov 2025 20:03:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F12AB327BEE;
+	Wed, 19 Nov 2025 20:03:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b="ZmAyeIPH"
+	dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b="KhQUC6cG"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from polaris.svanheule.net (polaris.svanheule.net [84.16.241.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C4F21257E
-	for <linux-gpio@vger.kernel.org>; Wed, 19 Nov 2025 20:03:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A4E326D75
+	for <linux-gpio@vger.kernel.org>; Wed, 19 Nov 2025 20:03:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.241.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763582609; cv=none; b=fK2kEKro66U2SC61lVQXZH0xHNOoq0SwHXE6yO/r0P5NgxMQdtRMaG6+k4MFBXYCmMNTk6UgNaBBAVYYWx6adLBE0tJraHvm23oC8xSItDDAZK1Tx8uniWy1TR/ujk3GaQzE1H3xsUWy2CLXAtwMn8ylpsef8r2UXevF0kUVOWE=
+	t=1763582613; cv=none; b=hZh8hE5SyxNICu643kO49diMv2QngzpeMXz8KjwTE1aeQkzQ2ypl8XaZYXPAV6qKzdMcXCRFTyxcsLB3x2uy4f9Icb/YZE29qLvtLs1fgqnC9w0L7I3HgwvRd5U8wzY6tWrWO5pGoYa30U1cMfuA3bVMhQKhrOhch/awQbQ4RfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763582609; c=relaxed/simple;
-	bh=Xx0Jn1xyCysLiJ3kVIuxRTsoI6Vpb/gOec4NC9bOJyQ=;
+	s=arc-20240116; t=1763582613; c=relaxed/simple;
+	bh=JQgUai2DkgabQESYZ2ttJyZodoO8IsV2NhpbYEgRfEk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZLU2D31dG9o8PKdKbD4Q1aJb/rLbK75o7IeDnwwsrnuDqHKfRvN7xyThyXVDWbb1Py2qtkbq3/ZeYPMzgplDgWF8w09YANSUsKgKXbc2KIAcbqX42wEUNj3gbggyB0L5kWAQDtKYnsuqk+5c5jHEw2TRnCnYUxyoPGnVcQdX0qI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net; spf=pass smtp.mailfrom=svanheule.net; dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b=ZmAyeIPH; arc=none smtp.client-ip=84.16.241.116
+	 MIME-Version; b=HVpiGXLTJ9SylSnVp8qsLbjHHyV6rRIfrW93xwZzm3Aco2AEwpIlCF21aEdOP5B/Xw1jF6AM1RmkcXiznsZmOlum3FjYqu1eJtHS3xaHbcmYf4MY6c3CuJj9/rXsCG/Ow/9FA8j+bym+6K41DeLMZaLHJJhMECaMg0RQy0aKZlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net; spf=pass smtp.mailfrom=svanheule.net; dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b=KhQUC6cG; arc=none smtp.client-ip=84.16.241.116
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svanheule.net
 Received: from terra.vega.svanheule.net (2a02-1812-162c-8f00-1e2d-b404-3319-eba8.ip6.access.telenet.be [IPv6:2a02:1812:162c:8f00:1e2d:b404:3319:eba8])
@@ -36,20 +36,20 @@ Received: from terra.vega.svanheule.net (2a02-1812-162c-8f00-1e2d-b404-3319-eba8
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: sander@svanheule.net)
-	by polaris.svanheule.net (Postfix) with ESMTPSA id 944F96A1E9A;
-	Wed, 19 Nov 2025 21:03:16 +0100 (CET)
+	by polaris.svanheule.net (Postfix) with ESMTPSA id 13A4D6A1E9B;
+	Wed, 19 Nov 2025 21:03:17 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
-	s=mail1707; t=1763582596;
+	s=mail1707; t=1763582597;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JMxcMAsL4PvqU2CDxJD2RIDHlzUPTLJ+OfiIY7x34ig=;
-	b=ZmAyeIPHVk7SbCL32dx7qVZxvHWooURhVU7zu92Ut18dxIZJJHgihDG4SvC2cBNQI4c31P
-	vqimHMmx0e/7YfsUReRWUNkU/sdGvDfp0gjcT7rFrS8taympEOXj90+z47S4efloAGHl3w
-	nqVFm6eU1VfaCB1IUO8Wo32nmahvC2YbY3894CYyJmzcGDbfQl9mP4GWMpTZp6FQq8gkCl
-	Ib66p7tjh2Vyg75t6ldNkAUXFWFPn8j2LNzCHwXOejRaRK05xFZ+Hk3ZZsDop70kjwyVMB
-	uGsWouYeEnwj3ySpd6B0HCllfO/7VnmYkY2eu1N7TtQ6tDX9VC1Bob9Z6xN8oQ==
+	bh=TdVuMZNNLW8naA8JdRrW43cXuDAQzZnoiIo8Ow/o2Pk=;
+	b=KhQUC6cG9tGOk1kwMKEk6wkBDbrKmKkCXtqqoZg17lmPK7j943g4oHnoHMMjg7fwqtOZpX
+	DRPnG8y+gBAyYYlHbO+6yxltsvNG9DYRsN5vHzIwi1tl1eRaxF++9FajcE60I7CuVq0CP/
+	BwaXTGNptUtgcH1UBW/g0sRgdqHAf2S5aqtWrAE9g7ZavtnWh5OWnuUS6sFDtxpEO/M1EV
+	gBePmR5PTK9FglkSykmvwY8kyuuGIlBWOlcK3qjdiB6D+axBWQ99po7zqm9o2f/Z5MeA4s
+	Ny/n4imRQuoADhJJaS93CjGgXs8LraLadzcYK32hd7J5L5ZfBIkU60xWZmlvNg==
 From: Sander Vanheule <sander@svanheule.net>
 To: Lee Jones <lee@kernel.org>,
 	Pavel Machek <pavel@kernel.org>,
@@ -64,9 +64,9 @@ Cc: linux-leds@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	Sander Vanheule <sander@svanheule.net>
-Subject: [PATCH v8 4/6] pinctrl: Add RTL8231 pin control and GPIO support
-Date: Wed, 19 Nov 2025 21:03:03 +0100
-Message-ID: <20251119200306.60569-5-sander@svanheule.net>
+Subject: [PATCH v8 5/6] leds: Add support for RTL8231 LED scan matrix
+Date: Wed, 19 Nov 2025 21:03:04 +0100
+Message-ID: <20251119200306.60569-6-sander@svanheule.net>
 X-Mailer: git-send-email 2.51.1
 In-Reply-To: <20251119200306.60569-1-sander@svanheule.net>
 References: <20251119200306.60569-1-sander@svanheule.net>
@@ -78,609 +78,348 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This driver implements the GPIO and pin muxing features provided by the
-RTL8231. The device should be instantiated as an MFD child, where the
-parent device has already configured the regmap used for register
-access.
+Both single and bi-color scanning modes are supported. The driver will
+verify that the addresses are valid for the current mode, before
+registering the LEDs. LEDs can be turned on, off, or toggled at one of
+six predefined rates from 40ms to 1280ms.
 
-Debouncing is only available for the six highest GPIOs, and must be
-emulated when other pins are used for (button) inputs. Although
-described in the bindings, drive strength selection is currently not
-implemented.
+Implements a platform device for use as a child device with RTL8231 MFD,
+and uses the parent regmap to access the required registers.
 
 Signed-off-by: Sander Vanheule <sander@svanheule.net>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
 Changes since v7:
-- Second attempt at fixing storage size of pinfunction flags
-- Add OF dependency for pinconf_generic_dt_node_to_map symbol
 - Allow building with COMPILE_TEST
-
-Changes since v6:
-- Use uintptr_t storage for enum rtl8231_pin_function
-- Simplify safe direction configuration
-- Add GPIOLIB dependency
-- Add Linus's review tag
 ---
- drivers/pinctrl/Kconfig           |  12 +
- drivers/pinctrl/Makefile          |   1 +
- drivers/pinctrl/pinctrl-rtl8231.c | 533 ++++++++++++++++++++++++++++++
- 3 files changed, 546 insertions(+)
- create mode 100644 drivers/pinctrl/pinctrl-rtl8231.c
+ drivers/leds/Kconfig        |  10 ++
+ drivers/leds/Makefile       |   1 +
+ drivers/leds/leds-rtl8231.c | 285 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 296 insertions(+)
+ create mode 100644 drivers/leds/leds-rtl8231.c
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 4f8507ebbdac..f1ad8edb98ff 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -520,6 +520,18 @@ config PINCTRL_ROCKCHIP
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index 06e6291be11b..d25be844cbb8 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -666,6 +666,16 @@ config LEDS_REGULATOR
  	help
-           This support pinctrl and GPIO driver for Rockchip SoCs.
+ 	  This option enables support for regulator driven LEDs.
  
-+config PINCTRL_RTL8231
-+	tristate "Realtek RTL8231 GPIO expander's pin controller"
-+	depends on OF && (MFD_RTL8231 || COMPILE_TEST)
++config LEDS_RTL8231
++	tristate "RTL8231 LED matrix support"
++	depends on LEDS_CLASS
++	depends on MFD_RTL8231 || COMPILE_TEST
 +	default MFD_RTL8231
-+	select GENERIC_PINCONF
-+	select GENERIC_PINMUX_FUNCTIONS
-+	select GPIOLIB
-+	select GPIO_REGMAP
 +	help
-+	  Support for RTL8231 expander's GPIOs and pin controller.
-+	  When built as a module, the module will be called pinctrl-rtl8231.
++	  This option enables support for using the LED scanning matrix output
++	  of the RTL8231 GPIO and LED expander chip.
++	  When built as a module, this module will be named leds-rtl8231.
 +
- config PINCTRL_SCMI
- 	tristate "Pinctrl driver using SCMI protocol interface"
- 	depends on ARM_SCMI_PROTOCOL || COMPILE_TEST
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index e0cfb9b7c99b..ded51723d452 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -52,6 +52,7 @@ obj-$(CONFIG_PINCTRL_PISTACHIO)	+= pinctrl-pistachio.o
- obj-$(CONFIG_PINCTRL_RK805)	+= pinctrl-rk805.o
- obj-$(CONFIG_PINCTRL_ROCKCHIP)	+= pinctrl-rockchip.o
- obj-$(CONFIG_PINCTRL_RP1)       += pinctrl-rp1.o
-+obj-$(CONFIG_PINCTRL_RTL8231)	+= pinctrl-rtl8231.o
- obj-$(CONFIG_PINCTRL_SCMI)	+= pinctrl-scmi.o
- obj-$(CONFIG_PINCTRL_SINGLE)	+= pinctrl-single.o
- obj-$(CONFIG_PINCTRL_ST) 	+= pinctrl-st.o
-diff --git a/drivers/pinctrl/pinctrl-rtl8231.c b/drivers/pinctrl/pinctrl-rtl8231.c
+ config LEDS_BD2606MVV
+ 	tristate "LED driver for BD2606MVV"
+ 	depends on LEDS_CLASS
+diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+index 9a0333ec1a86..27c32204aebc 100644
+--- a/drivers/leds/Makefile
++++ b/drivers/leds/Makefile
+@@ -84,6 +84,7 @@ obj-$(CONFIG_LEDS_POWERNV)		+= leds-powernv.o
+ obj-$(CONFIG_LEDS_PWM)			+= leds-pwm.o
+ obj-$(CONFIG_LEDS_QNAP_MCU)		+= leds-qnap-mcu.o
+ obj-$(CONFIG_LEDS_REGULATOR)		+= leds-regulator.o
++obj-$(CONFIG_LEDS_RTL8231)		+= leds-rtl8231.o
+ obj-$(CONFIG_LEDS_SC27XX_BLTC)		+= leds-sc27xx-bltc.o
+ obj-$(CONFIG_LEDS_ST1202)		+= leds-st1202.o
+ obj-$(CONFIG_LEDS_SUN50I_A100)		+= leds-sun50i-a100.o
+diff --git a/drivers/leds/leds-rtl8231.c b/drivers/leds/leds-rtl8231.c
 new file mode 100644
-index 000000000000..f38f0726546c
+index 000000000000..8ff20cc7ea98
 --- /dev/null
-+++ b/drivers/pinctrl/pinctrl-rtl8231.c
-@@ -0,0 +1,533 @@
++++ b/drivers/leds/leds-rtl8231.c
+@@ -0,0 +1,285 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +
-+#include <linux/bitfield.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/gpio/regmap.h>
++#include <linux/device.h>
++#include <linux/leds.h>
++#include <linux/mod_devicetable.h>
 +#include <linux/module.h>
-+#include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinmux.h>
 +#include <linux/platform_device.h>
++#include <linux/property.h>
 +#include <linux/regmap.h>
 +
-+#include "core.h"
-+#include "pinmux.h"
 +#include <linux/mfd/rtl8231.h>
 +
-+#define RTL8231_NUM_GPIOS		37
-+#define RTL8231_DEBOUNCE_USEC		100000
-+#define RTL8231_DEBOUNCE_MIN_OFFSET	31
-+
-+struct rtl8231_pin_ctrl {
-+	struct regmap *map;
-+};
-+
-+/*
-+ * Pin controller functionality
++/**
++ * struct led_toggle_rate - description of an LED blinking mode
++ * @interval_ms:	LED toggle rate in milliseconds
++ * @mode:		Register field value used to activate this mode
++ *
++ * For LED hardware accelerated blinking, with equal on and off delay.
++ * Both delays are given by @interval, so the interval at which the LED blinks
++ * (i.e. turn on and off once) is double this value.
 + */
-+enum rtl8231_pin_function {
-+	RTL8231_PIN_FUNCTION_GPIO = BIT(0),
-+	RTL8231_PIN_FUNCTION_LED = BIT(1),
-+	RTL8231_PIN_FUNCTION_PWM = BIT(2),
++struct led_toggle_rate {
++	u16 interval_ms;
++	u8 mode;
 +};
 +
-+struct rtl8231_function_info {
-+	enum rtl8231_pin_function flag;
-+	const char *name;
-+};
-+
-+#define RTL8231_FUNCTION(_name, _flag)	\
-+((struct rtl8231_function_info) {	\
-+		.flag = (_flag),	\
-+		.name = (_name),	\
-+	})
-+
-+static const struct rtl8231_function_info rtl8231_pin_functions[] = {
-+	RTL8231_FUNCTION("gpio", RTL8231_PIN_FUNCTION_GPIO),
-+	RTL8231_FUNCTION("led", RTL8231_PIN_FUNCTION_LED),
-+	RTL8231_FUNCTION("pwm", RTL8231_PIN_FUNCTION_PWM),
-+};
-+
-+struct rtl8231_pin_desc {
-+	enum rtl8231_pin_function functions:8;
-+	u8 reg;
-+	u8 offset;
-+	u8 gpio_function_value;
-+};
-+
-+#define RTL8231_PIN_DESC(_num, _func, _reg, _fld, _val)			\
-+	[(_num)] = ((struct rtl8231_pin_desc) {				\
-+		.functions = RTL8231_PIN_FUNCTION_GPIO | (_func),	\
-+		.reg = (_reg),						\
-+		.offset = (_fld),					\
-+		.gpio_function_value = (_val),				\
-+	})
-+#define RTL8231_GPIO_PIN_DESC(_num, _reg, _fld)			\
-+	RTL8231_PIN_DESC(_num, 0, _reg, _fld, RTL8231_PIN_MODE_GPIO)
-+#define RTL8231_LED_PIN_DESC(_num, _reg, _fld)			\
-+	RTL8231_PIN_DESC(_num, RTL8231_PIN_FUNCTION_LED, _reg, _fld, RTL8231_PIN_MODE_GPIO)
-+#define RTL8231_PWM_PIN_DESC(_num, _reg, _fld)			\
-+	RTL8231_PIN_DESC(_num, RTL8231_PIN_FUNCTION_PWM, _reg, _fld, 0)
-+
-+/*
-+ * All pins have a GPIO/LED mux bit, but the bits for pins 35/36 are read-only. Use this bit
-+ * for the GPIO-only pin instead of a placeholder, so the rest of the logic can stay generic.
++/**
++ * struct led_modes - description of all LED modes
++ * @toggle_rates:	Array of led_toggle_rate values, sorted by ascending interval
++ * @num_toggle_rates:	Number of elements in @led_toggle_rate
++ * @off:		Register field value to turn LED off
++ * @on:			Register field value to turn LED on
 + */
-+static const struct rtl8231_pin_desc rtl8231_pin_data[RTL8231_NUM_GPIOS] = {
-+	RTL8231_LED_PIN_DESC(0, RTL8231_REG_PIN_MODE0, 0),
-+	RTL8231_LED_PIN_DESC(1, RTL8231_REG_PIN_MODE0, 1),
-+	RTL8231_LED_PIN_DESC(2, RTL8231_REG_PIN_MODE0, 2),
-+	RTL8231_LED_PIN_DESC(3, RTL8231_REG_PIN_MODE0, 3),
-+	RTL8231_LED_PIN_DESC(4, RTL8231_REG_PIN_MODE0, 4),
-+	RTL8231_LED_PIN_DESC(5, RTL8231_REG_PIN_MODE0, 5),
-+	RTL8231_LED_PIN_DESC(6, RTL8231_REG_PIN_MODE0, 6),
-+	RTL8231_LED_PIN_DESC(7, RTL8231_REG_PIN_MODE0, 7),
-+	RTL8231_LED_PIN_DESC(8, RTL8231_REG_PIN_MODE0, 8),
-+	RTL8231_LED_PIN_DESC(9, RTL8231_REG_PIN_MODE0, 9),
-+	RTL8231_LED_PIN_DESC(10, RTL8231_REG_PIN_MODE0, 10),
-+	RTL8231_LED_PIN_DESC(11, RTL8231_REG_PIN_MODE0, 11),
-+	RTL8231_LED_PIN_DESC(12, RTL8231_REG_PIN_MODE0, 12),
-+	RTL8231_LED_PIN_DESC(13, RTL8231_REG_PIN_MODE0, 13),
-+	RTL8231_LED_PIN_DESC(14, RTL8231_REG_PIN_MODE0, 14),
-+	RTL8231_LED_PIN_DESC(15, RTL8231_REG_PIN_MODE0, 15),
-+	RTL8231_LED_PIN_DESC(16, RTL8231_REG_PIN_MODE1, 0),
-+	RTL8231_LED_PIN_DESC(17, RTL8231_REG_PIN_MODE1, 1),
-+	RTL8231_LED_PIN_DESC(18, RTL8231_REG_PIN_MODE1, 2),
-+	RTL8231_LED_PIN_DESC(19, RTL8231_REG_PIN_MODE1, 3),
-+	RTL8231_LED_PIN_DESC(20, RTL8231_REG_PIN_MODE1, 4),
-+	RTL8231_LED_PIN_DESC(21, RTL8231_REG_PIN_MODE1, 5),
-+	RTL8231_LED_PIN_DESC(22, RTL8231_REG_PIN_MODE1, 6),
-+	RTL8231_LED_PIN_DESC(23, RTL8231_REG_PIN_MODE1, 7),
-+	RTL8231_LED_PIN_DESC(24, RTL8231_REG_PIN_MODE1, 8),
-+	RTL8231_LED_PIN_DESC(25, RTL8231_REG_PIN_MODE1, 9),
-+	RTL8231_LED_PIN_DESC(26, RTL8231_REG_PIN_MODE1, 10),
-+	RTL8231_LED_PIN_DESC(27, RTL8231_REG_PIN_MODE1, 11),
-+	RTL8231_LED_PIN_DESC(28, RTL8231_REG_PIN_MODE1, 12),
-+	RTL8231_LED_PIN_DESC(29, RTL8231_REG_PIN_MODE1, 13),
-+	RTL8231_LED_PIN_DESC(30, RTL8231_REG_PIN_MODE1, 14),
-+	RTL8231_LED_PIN_DESC(31, RTL8231_REG_PIN_MODE1, 15),
-+	RTL8231_LED_PIN_DESC(32, RTL8231_REG_PIN_HI_CFG, 0),
-+	RTL8231_LED_PIN_DESC(33, RTL8231_REG_PIN_HI_CFG, 1),
-+	RTL8231_LED_PIN_DESC(34, RTL8231_REG_PIN_HI_CFG, 2),
-+	RTL8231_PWM_PIN_DESC(35, RTL8231_REG_FUNC1, 3),
-+	RTL8231_GPIO_PIN_DESC(36, RTL8231_REG_PIN_HI_CFG, 4),
-+};
-+static const unsigned int PWM_PIN = 35;
-+
-+#define RTL8231_PIN(_num)					\
-+	((struct pinctrl_pin_desc) {				\
-+		.number = (_num),				\
-+		.name = "gpio" #_num,				\
-+		.drv_data = (void *) &rtl8231_pin_data[(_num)]	\
-+	})
-+
-+static const struct pinctrl_pin_desc rtl8231_pins[RTL8231_NUM_GPIOS] = {
-+	RTL8231_PIN(0),
-+	RTL8231_PIN(1),
-+	RTL8231_PIN(2),
-+	RTL8231_PIN(3),
-+	RTL8231_PIN(4),
-+	RTL8231_PIN(5),
-+	RTL8231_PIN(6),
-+	RTL8231_PIN(7),
-+	RTL8231_PIN(8),
-+	RTL8231_PIN(9),
-+	RTL8231_PIN(10),
-+	RTL8231_PIN(11),
-+	RTL8231_PIN(12),
-+	RTL8231_PIN(13),
-+	RTL8231_PIN(14),
-+	RTL8231_PIN(15),
-+	RTL8231_PIN(16),
-+	RTL8231_PIN(17),
-+	RTL8231_PIN(18),
-+	RTL8231_PIN(19),
-+	RTL8231_PIN(20),
-+	RTL8231_PIN(21),
-+	RTL8231_PIN(22),
-+	RTL8231_PIN(23),
-+	RTL8231_PIN(24),
-+	RTL8231_PIN(25),
-+	RTL8231_PIN(26),
-+	RTL8231_PIN(27),
-+	RTL8231_PIN(28),
-+	RTL8231_PIN(29),
-+	RTL8231_PIN(30),
-+	RTL8231_PIN(31),
-+	RTL8231_PIN(32),
-+	RTL8231_PIN(33),
-+	RTL8231_PIN(34),
-+	RTL8231_PIN(35),
-+	RTL8231_PIN(36),
++struct led_modes {
++	const struct led_toggle_rate *toggle_rates;
++	unsigned int num_toggle_rates;
++	u8 off;
++	u8 on;
 +};
 +
-+static int rtl8231_get_groups_count(struct pinctrl_dev *pctldev)
-+{
-+	return ARRAY_SIZE(rtl8231_pins);
-+}
++struct rtl8231_led {
++	struct led_classdev led;
++	const struct led_modes *modes;
++	struct regmap_field *reg_field;
++};
++#define to_rtl8231_led(_cdev) container_of(_cdev, struct rtl8231_led, led)
 +
-+static const char *rtl8231_get_group_name(struct pinctrl_dev *pctldev, unsigned int selector)
-+{
-+	return rtl8231_pins[selector].name;
-+}
++#define RTL8231_NUM_LEDS	3
++#define RTL8231_LED_PER_REG	5
++#define RTL8231_BITS_PER_LED	3
 +
-+static int rtl8231_get_group_pins(struct pinctrl_dev *pctldev, unsigned int selector,
-+	const unsigned int **pins, unsigned int *num_pins)
-+{
-+	if (selector >= ARRAY_SIZE(rtl8231_pins))
-+		return -EINVAL;
++static const unsigned int rtl8231_led_port_counts_single[RTL8231_NUM_LEDS] = {32, 32, 24};
++static const unsigned int rtl8231_led_port_counts_bicolor[RTL8231_NUM_LEDS] = {24, 24, 24};
 +
-+	*pins = &rtl8231_pins[selector].number;
-+	*num_pins = 1;
-+
-+	return 0;
-+}
-+
-+static const struct pinctrl_ops rtl8231_pinctrl_ops = {
-+	.get_groups_count = rtl8231_get_groups_count,
-+	.get_group_name = rtl8231_get_group_name,
-+	.get_group_pins = rtl8231_get_group_pins,
-+	.dt_node_to_map = pinconf_generic_dt_node_to_map_all,
-+	.dt_free_map = pinconf_generic_dt_free_map,
++static const unsigned int rtl8231_led_base[RTL8231_NUM_LEDS] = {
++	RTL8231_REG_LED0_BASE,
++	RTL8231_REG_LED1_BASE,
++	RTL8231_REG_LED2_BASE,
 +};
 +
-+static int rtl8231_set_mux(struct pinctrl_dev *pctldev, unsigned int func_selector,
-+	unsigned int group_selector)
++#define RTL8231_DEFAULT_TOGGLE_INTERVAL_MS	500
++
++static const struct led_toggle_rate rtl8231_toggle_rates[] = {
++	{  40, 1},
++	{  80, 2},
++	{ 160, 3},
++	{ 320, 4},
++	{ 640, 5},
++	{1280, 6},
++};
++
++static const struct led_modes rtl8231_led_modes = {
++	.off = 0,
++	.on = 7,
++	.num_toggle_rates = ARRAY_SIZE(rtl8231_toggle_rates),
++	.toggle_rates = rtl8231_toggle_rates,
++};
++
++static void rtl8231_led_brightness_set(struct led_classdev *led_cdev,
++	enum led_brightness brightness)
 +{
-+	const struct function_desc *func = pinmux_generic_get_function(pctldev, func_selector);
-+	const struct rtl8231_pin_desc *desc = rtl8231_pins[group_selector].drv_data;
-+	const struct rtl8231_pin_ctrl *ctrl = pinctrl_dev_get_drvdata(pctldev);
-+	enum rtl8231_pin_function func_flag = (uintptr_t) func->data;
-+	unsigned int function_mask;
-+	unsigned int gpio_function;
++	struct rtl8231_led *pled = to_rtl8231_led(led_cdev);
 +
-+	if (!(desc->functions & func_flag))
-+		return -EINVAL;
-+
-+	function_mask = BIT(desc->offset);
-+	gpio_function = desc->gpio_function_value << desc->offset;
-+
-+	if (func_flag == RTL8231_PIN_FUNCTION_GPIO)
-+		return regmap_update_bits(ctrl->map, desc->reg, function_mask, gpio_function);
++	if (brightness)
++		regmap_field_write(pled->reg_field, pled->modes->on);
 +	else
-+		return regmap_update_bits(ctrl->map, desc->reg, function_mask, ~gpio_function);
++		regmap_field_write(pled->reg_field, pled->modes->off);
 +}
 +
-+static int rtl8231_gpio_request_enable(struct pinctrl_dev *pctldev,
-+	struct pinctrl_gpio_range *range, unsigned int offset)
++static enum led_brightness rtl8231_led_brightness_get(struct led_classdev *led_cdev)
 +{
-+	const struct rtl8231_pin_desc *desc = rtl8231_pins[offset].drv_data;
-+	const struct rtl8231_pin_ctrl *ctrl = pinctrl_dev_get_drvdata(pctldev);
-+	unsigned int function_mask;
-+	unsigned int gpio_function;
++	struct rtl8231_led *pled = to_rtl8231_led(led_cdev);
++	u32 current_mode = pled->modes->off;
 +
-+	function_mask = BIT(desc->offset);
-+	gpio_function = desc->gpio_function_value << desc->offset;
++	regmap_field_read(pled->reg_field, &current_mode);
 +
-+	return regmap_update_bits(ctrl->map, desc->reg, function_mask, gpio_function);
++	if (current_mode == pled->modes->off)
++		return LED_OFF;
++	else
++		return LED_ON;
 +}
 +
-+static const struct pinmux_ops rtl8231_pinmux_ops = {
-+	.get_functions_count = pinmux_generic_get_function_count,
-+	.get_function_name = pinmux_generic_get_function_name,
-+	.get_function_groups = pinmux_generic_get_function_groups,
-+	.function_is_gpio = pinmux_generic_function_is_gpio,
-+	.set_mux = rtl8231_set_mux,
-+	.gpio_request_enable = rtl8231_gpio_request_enable,
-+	.strict = true,
-+};
-+
-+static int rtl8231_pin_config_get(struct pinctrl_dev *pctldev, unsigned int offset,
-+	unsigned long *config)
++static unsigned int rtl8231_led_current_interval(struct rtl8231_led *pled)
 +{
-+	const struct rtl8231_pin_ctrl *ctrl = pinctrl_dev_get_drvdata(pctldev);
-+	unsigned int param = pinconf_to_config_param(*config);
-+	unsigned int arg;
-+	int err;
-+	int v;
++	unsigned int mode;
++	unsigned int i;
 +
-+	switch (param) {
-+	case PIN_CONFIG_INPUT_DEBOUNCE:
-+		if (offset < RTL8231_DEBOUNCE_MIN_OFFSET)
-+			return -EINVAL;
++	if (regmap_field_read(pled->reg_field, &mode))
++		return 0;
 +
-+		err = regmap_read(ctrl->map, RTL8231_REG_FUNC1, &v);
-+		if (err)
-+			return err;
-+
-+		v = FIELD_GET(RTL8231_FUNC1_DEBOUNCE_MASK, v);
-+		if (v & BIT(offset - RTL8231_DEBOUNCE_MIN_OFFSET))
-+			arg = RTL8231_DEBOUNCE_USEC;
-+		else
-+			arg = 0;
-+		break;
-+	default:
-+		return -ENOTSUPP;
-+	}
-+
-+	*config = pinconf_to_config_packed(param, arg);
++	for (i = 0; i < pled->modes->num_toggle_rates; i++)
++		if (mode == pled->modes->toggle_rates[i].mode)
++			return pled->modes->toggle_rates[i].interval_ms;
 +
 +	return 0;
 +}
 +
-+static int rtl8231_pin_config_set(struct pinctrl_dev *pctldev, unsigned int offset,
-+	unsigned long *configs, unsigned int num_configs)
++static int rtl8231_led_blink_set(struct led_classdev *led_cdev, unsigned long *delay_on,
++	unsigned long *delay_off)
 +{
-+	const struct rtl8231_pin_ctrl *ctrl = pinctrl_dev_get_drvdata(pctldev);
-+	unsigned int param, arg;
-+	unsigned int pin_mask;
-+	int err;
-+	int i;
-+
-+	for (i = 0; i < num_configs; i++) {
-+		param = pinconf_to_config_param(configs[i]);
-+		arg = pinconf_to_config_argument(configs[i]);
-+
-+		switch (param) {
-+		case PIN_CONFIG_INPUT_DEBOUNCE:
-+			if (offset < RTL8231_DEBOUNCE_MIN_OFFSET)
-+				return -EINVAL;
-+
-+			pin_mask = FIELD_PREP(RTL8231_FUNC1_DEBOUNCE_MASK,
-+				BIT(offset - RTL8231_DEBOUNCE_MIN_OFFSET));
-+
-+			switch (arg) {
-+			case 0:
-+				err = regmap_update_bits(ctrl->map, RTL8231_REG_FUNC1,
-+					pin_mask, 0);
-+				break;
-+			case RTL8231_DEBOUNCE_USEC:
-+				err = regmap_update_bits(ctrl->map, RTL8231_REG_FUNC1,
-+					pin_mask, pin_mask);
-+				break;
-+			default:
-+				return -EINVAL;
-+			}
-+
-+			break;
-+		default:
-+			return -ENOTSUPP;
-+		}
-+	}
-+
-+	return err;
-+}
-+
-+static const struct pinconf_ops rtl8231_pinconf_ops = {
-+	.is_generic = true,
-+	.pin_config_get = rtl8231_pin_config_get,
-+	.pin_config_set = rtl8231_pin_config_set,
-+};
-+
-+static int rtl8231_pinctrl_init_functions(struct pinctrl_dev *pctl,
-+	const struct pinctrl_desc *pctl_desc)
-+{
-+	enum rtl8231_pin_function flag;
-+	struct pinfunction func;
-+	const char **groups;
-+	unsigned int f_idx;
-+	const char *name;
-+	unsigned int pin;
-+	int num_groups;
++	struct rtl8231_led *pled = to_rtl8231_led(led_cdev);
++	const struct led_toggle_rate *rates = pled->modes->toggle_rates;
++	unsigned int num_rates = pled->modes->num_toggle_rates;
++	unsigned int interval_ms;
++	unsigned int i;
 +	int err;
 +
-+	for (f_idx = 0; f_idx < ARRAY_SIZE(rtl8231_pin_functions); f_idx++) {
-+		name = rtl8231_pin_functions[f_idx].name;
-+		flag = rtl8231_pin_functions[f_idx].flag;
-+
-+		for (pin = 0, num_groups = 0; pin < pctl_desc->npins; pin++)
-+			if (rtl8231_pin_data[pin].functions & flag)
-+				num_groups++;
-+
-+		groups = devm_kcalloc(pctl->dev, num_groups, sizeof(*groups), GFP_KERNEL);
-+		if (!groups)
-+			return -ENOMEM;
-+
-+		for (pin = 0, num_groups = 0; pin < pctl_desc->npins; pin++)
-+			if (rtl8231_pin_data[pin].functions & flag)
-+				groups[num_groups++] = rtl8231_pins[pin].name;
-+
-+		func = PINCTRL_PINFUNCTION(name, groups, num_groups);
-+		if (flag == RTL8231_PIN_FUNCTION_GPIO)
-+			func.flags |= PINFUNCTION_FLAG_GPIO;
-+
-+		err = pinmux_generic_add_pinfunction(pctl, &func, (void *) ((uintptr_t) flag));
-+		if (err < 0)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
-+struct pin_field_info {
-+	const struct reg_field gpio_dir;
-+	const struct reg_field mode;
-+};
-+
-+static const struct pin_field_info pin_fields[] = {
-+	{
-+		.gpio_dir = REG_FIELD(RTL8231_REG_GPIO_DIR0, 0, 15),
-+		.mode = REG_FIELD(RTL8231_REG_PIN_MODE0, 0, 15),
-+	},
-+	{
-+		.gpio_dir = REG_FIELD(RTL8231_REG_GPIO_DIR1, 0, 15),
-+		.mode = REG_FIELD(RTL8231_REG_PIN_MODE1, 0, 15),
-+	},
-+	{
-+		.gpio_dir = REG_FIELD(RTL8231_REG_PIN_HI_CFG, 5, 9),
-+		.mode = REG_FIELD(RTL8231_REG_PIN_HI_CFG, 0, 4),
-+	},
-+};
-+
-+static int rtl8231_configure_safe(struct device *dev, struct regmap *map)
-+{
-+	struct regmap_field *field_mode;
-+	struct regmap_field *field_dir;
-+	unsigned int is_input;
-+	unsigned int is_gpio;
-+	int err;
-+
-+	for (unsigned int i = 0; i < ARRAY_SIZE(pin_fields); i++) {
-+		field_dir = devm_regmap_field_alloc(dev, map, pin_fields[i].gpio_dir);
-+		if (IS_ERR(field_dir))
-+			return PTR_ERR(field_dir);
-+
-+		field_mode = devm_regmap_field_alloc(dev, map, pin_fields[i].mode);
-+		if (IS_ERR(field_mode))
-+			return PTR_ERR(field_mode);
-+
-+		err = regmap_field_read(field_dir, &is_input);
-+		if (err)
-+			return err;
-+
-+		err = regmap_field_read(field_mode, &is_gpio);
-+		if (err)
-+			return err;
-+
-+		/* Enable field for PWM (on GPIO35) is in another register */
-+		if (pin_fields[i].mode.reg == RTL8231_REG_PIN_HI_CFG) {
-+			err = regmap_test_bits(map, rtl8231_pin_data[PWM_PIN].reg,
-+					BIT(rtl8231_pin_data[PWM_PIN].offset));
-+			if (err < 0)
-+				return err;
-+
-+			if (err)
-+				is_gpio &= ~BIT(PWM_PIN % RTL8231_BITS_VAL);
-+		}
-+
-+		/*
-+		 * Set every pin that is not muxed as a GPIO to gpio-in. That
-+		 * way the pin will be high impedance when it is muxed to GPIO,
-+		 * preventing unwanted glitches.
-+		 * The pin muxes are left as-is, so there are no signal changes.
-+		 */
-+		regmap_field_write(field_dir, is_input | ~is_gpio);
-+
-+		devm_regmap_field_free(dev, field_dir);
-+		devm_regmap_field_free(dev, field_mode);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct pinctrl_desc rtl8231_pctl_desc = {
-+	.name = "rtl8231-pinctrl",
-+	.owner = THIS_MODULE,
-+	.confops = &rtl8231_pinconf_ops,
-+	.pctlops = &rtl8231_pinctrl_ops,
-+	.pmxops = &rtl8231_pinmux_ops,
-+	.npins = ARRAY_SIZE(rtl8231_pins),
-+	.pins = rtl8231_pins,
-+};
-+
-+static int rtl8231_pinctrl_init(struct device *dev, struct rtl8231_pin_ctrl *ctrl)
-+{
-+	struct pinctrl_dev *pctldev;
-+	int err;
-+
-+	err = devm_pinctrl_register_and_init(dev->parent, &rtl8231_pctl_desc, ctrl, &pctldev);
-+	if (err) {
-+		dev_err(dev, "failed to register pin controller\n");
-+		return err;
-+	}
-+
-+	err = rtl8231_pinctrl_init_functions(pctldev, &rtl8231_pctl_desc);
-+	if (err)
-+		return err;
-+
-+	err = pinctrl_enable(pctldev);
-+	if (err)
-+		dev_err(dev, "failed to enable pin controller\n");
-+
-+	return err;
-+}
-+
-+/*
-+ * GPIO controller functionality
-+ */
-+static int rtl8231_gpio_reg_mask_xlate(struct gpio_regmap *gpio, unsigned int base,
-+	unsigned int offset, unsigned int *reg, unsigned int *mask)
-+{
-+	unsigned int pin_mask = BIT(offset % RTL8231_BITS_VAL);
-+
-+	if (base == RTL8231_REG_GPIO_DATA0 || offset < 32) {
-+		*reg = base + offset / RTL8231_BITS_VAL;
-+		*mask = pin_mask;
-+	} else if (base == RTL8231_REG_GPIO_DIR0) {
-+		*reg = RTL8231_REG_PIN_HI_CFG;
-+		*mask = FIELD_PREP(RTL8231_PIN_HI_CFG_DIR_MASK, pin_mask);
++	if (*delay_on == 0 && *delay_off == 0) {
++		interval_ms = RTL8231_DEFAULT_TOGGLE_INTERVAL_MS;
 +	} else {
-+		return -EINVAL;
++		/*
++		 * If the current mode is blinking, choose the delay that (likely) changed.
++		 * Otherwise, choose the interval that would have the same total delay.
++		 */
++		interval_ms = rtl8231_led_current_interval(pled);
++		if (interval_ms > 0 && interval_ms == *delay_off)
++			interval_ms = *delay_on;
++		else if (interval_ms > 0 && interval_ms == *delay_on)
++			interval_ms = *delay_off;
++		else
++			interval_ms = (*delay_on + *delay_off) / 2;
 +	}
++
++	/* Find clamped toggle interval */
++	for (i = 0; i < (num_rates - 1); i++)
++		if (interval_ms > rates[i].interval_ms)
++			break;
++
++	interval_ms = rates[i].interval_ms;
++
++	err = regmap_field_write(pled->reg_field, rates[i].mode);
++	if (err)
++		return err;
++
++	*delay_on = interval_ms;
++	*delay_off = interval_ms;
 +
 +	return 0;
 +}
 +
-+static int rtl8231_pinctrl_probe(struct platform_device *pdev)
++static int rtl8231_led_read_address(struct fwnode_handle *fwnode, unsigned int *addr_port,
++	unsigned int *addr_led)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct rtl8231_pin_ctrl *ctrl;
-+	struct gpio_regmap_config gpio_cfg = {};
++	u32 addr[2];
 +	int err;
 +
-+	ctrl = devm_kzalloc(dev, sizeof(*ctrl), GFP_KERNEL);
-+	if (!ctrl)
++	err = fwnode_property_count_u32(fwnode, "reg");
++	if (err < 0)
++		return err;
++	if (err != ARRAY_SIZE(addr))
++		return -EINVAL;
++
++	err = fwnode_property_read_u32_array(fwnode, "reg", addr, ARRAY_SIZE(addr));
++	if (err)
++		return err;
++
++	*addr_port = addr[0];
++	*addr_led = addr[1];
++
++	return 0;
++}
++
++static struct regmap_field *rtl8231_led_get_field(struct device *dev, struct regmap *map,
++		unsigned int port_index, unsigned int led_index)
++{
++	unsigned int offset = port_index / RTL8231_LED_PER_REG;
++	unsigned int shift = (port_index % RTL8231_LED_PER_REG) * RTL8231_BITS_PER_LED;
++	const struct reg_field field = REG_FIELD(rtl8231_led_base[led_index] + offset, shift,
++			shift + RTL8231_BITS_PER_LED - 1);
++
++	return devm_regmap_field_alloc(dev, map, field);
++}
++
++static int rtl8231_led_probe_single(struct device *dev, struct regmap *map,
++	const unsigned int *port_counts, struct fwnode_handle *fwnode)
++{
++	struct led_init_data init_data = {};
++	struct rtl8231_led *pled;
++	unsigned int port_index;
++	unsigned int led_index;
++	int err;
++
++	pled = devm_kzalloc(dev, sizeof(*pled), GFP_KERNEL);
++	if (!pled)
 +		return -ENOMEM;
 +
-+	ctrl->map = dev_get_regmap(dev->parent, NULL);
-+	if (!ctrl->map)
-+		return -ENODEV;
-+
-+	err = rtl8231_configure_safe(dev, ctrl->map);
-+	if (err)
++	err = rtl8231_led_read_address(fwnode, &port_index, &led_index);
++	if (err) {
++		dev_err(dev, "LED address invalid");
 +		return err;
++	}
 +
-+	err = rtl8231_pinctrl_init(dev, ctrl);
-+	if (err)
-+		return err;
++	if (led_index >= RTL8231_NUM_LEDS || port_index >= port_counts[led_index]) {
++		dev_err(dev, "LED address (%d.%d) invalid", port_index, led_index);
++		return -EINVAL;
++	}
 +
-+	gpio_cfg.regmap = ctrl->map;
-+	gpio_cfg.parent = dev->parent;
-+	gpio_cfg.ngpio = RTL8231_NUM_GPIOS;
-+	gpio_cfg.ngpio_per_reg = RTL8231_BITS_VAL;
++	pled->reg_field = rtl8231_led_get_field(dev, map, port_index, led_index);
++	if (IS_ERR(pled->reg_field))
++		return PTR_ERR(pled->reg_field);
 +
-+	gpio_cfg.reg_dat_base = GPIO_REGMAP_ADDR(RTL8231_REG_GPIO_DATA0);
-+	gpio_cfg.reg_set_base = GPIO_REGMAP_ADDR(RTL8231_REG_GPIO_DATA0);
-+	gpio_cfg.reg_dir_in_base = GPIO_REGMAP_ADDR(RTL8231_REG_GPIO_DIR0);
++	pled->modes = &rtl8231_led_modes;
 +
-+	gpio_cfg.reg_mask_xlate = rtl8231_gpio_reg_mask_xlate;
++	pled->led.max_brightness = 1;
++	pled->led.brightness_get = rtl8231_led_brightness_get;
++	pled->led.brightness_set = rtl8231_led_brightness_set;
++	pled->led.blink_set = rtl8231_led_blink_set;
 +
-+	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &gpio_cfg));
++	init_data.fwnode = fwnode;
++
++	return devm_led_classdev_register_ext(dev, &pled->led, &init_data);
 +}
 +
-+static struct platform_driver rtl8231_pinctrl_driver = {
-+	.driver = {
-+		.name = "rtl8231-pinctrl",
-+	},
-+	.probe = rtl8231_pinctrl_probe,
++static int rtl8231_led_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	const unsigned int *port_counts;
++	struct fwnode_handle *child;
++	struct regmap *map;
++	int err;
++
++	map = dev_get_regmap(dev->parent, NULL);
++	if (!map)
++		return -ENODEV;
++
++	if (device_property_match_string(dev, "realtek,led-scan-mode", "single-color") >= 0) {
++		port_counts = rtl8231_led_port_counts_single;
++		regmap_update_bits(map, RTL8231_REG_FUNC0,
++			RTL8231_FUNC0_SCAN_MODE, RTL8231_FUNC0_SCAN_SINGLE);
++	} else if (device_property_match_string(dev, "realtek,led-scan-mode", "bi-color") >= 0) {
++		port_counts = rtl8231_led_port_counts_bicolor;
++		regmap_update_bits(map, RTL8231_REG_FUNC0,
++			RTL8231_FUNC0_SCAN_MODE, RTL8231_FUNC0_SCAN_BICOLOR);
++	} else {
++		dev_err(dev, "scan mode missing or invalid");
++		return -EINVAL;
++	}
++
++	fwnode_for_each_available_child_node(dev->fwnode, child) {
++		err = rtl8231_led_probe_single(dev, map, port_counts, child);
++		if (err)
++			dev_warn(dev, "failed to register LED %pfwP", child);
++	}
++
++	return 0;
++}
++
++static const struct of_device_id of_rtl8231_led_match[] = {
++	{ .compatible = "realtek,rtl8231-leds" },
++	{}
 +};
-+module_platform_driver(rtl8231_pinctrl_driver);
++MODULE_DEVICE_TABLE(of, of_rtl8231_led_match);
++
++static struct platform_driver rtl8231_led_driver = {
++	.driver = {
++		.name = "rtl8231-leds",
++		.of_match_table = of_rtl8231_led_match,
++	},
++	.probe = rtl8231_led_probe,
++};
++module_platform_driver(rtl8231_led_driver);
 +
 +MODULE_AUTHOR("Sander Vanheule <sander@svanheule.net>");
-+MODULE_DESCRIPTION("Realtek RTL8231 pin control and GPIO support");
++MODULE_DESCRIPTION("Realtek RTL8231 LED support");
 +MODULE_LICENSE("GPL");
 -- 
 2.51.1
