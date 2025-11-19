@@ -1,58 +1,58 @@
-Return-Path: <linux-gpio+bounces-28835-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28836-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id B29D0C708B4
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 18:57:03 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AC0CC70968
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 19:12:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id 7B2BD29120
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 17:57:01 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 48028353244
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 18:07:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 597F030E0E7;
-	Wed, 19 Nov 2025 17:56:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59814327BF5;
+	Wed, 19 Nov 2025 18:06:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W0HsXYfd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jasoe0T+"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB22D2E8B8A;
-	Wed, 19 Nov 2025 17:56:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A8E311977;
+	Wed, 19 Nov 2025 18:06:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763575010; cv=none; b=l4CukacA54u0u2D61dNV2zYRxYF90fO0AwAq596m0hnA+G0XpFw2UR9bLyqJLyJXaNTy7kYlXqcMrKHb8VLZTo7DFNNzY8PzOoJEHoY4DoJxfvZlNDuzZka6Ozd1uXiCqvRy2lfxJD933rKwSZH1+N+DBzRZeMN/+uhZAXU05qw=
+	t=1763575612; cv=none; b=BqbO66d8xRZvEu4yWSSQe1g2pxORpU2b0Fso9sJFA5aCqEjyt/qs6obgFIHhZLzmf7JUruWjKh1yvSVwqBDaWzjz9/GCRG9pxw57NhJZ1wptfLwY2U6p/rDlKSzQ+AicUeEqD6aYXBQ6xCOgVPGCczOa+Yl2e4kdgosoL6aWEIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763575010; c=relaxed/simple;
-	bh=v2r3BcboFk8zl12ZOYSzJXyMd+p1yn1XwnXeJ/43eh0=;
+	s=arc-20240116; t=1763575612; c=relaxed/simple;
+	bh=0XYBCK2oG6dqBdc8VsoGOLDcIEb3yM7OtqIWFtmwPfs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kq6ne+KFz9XBjag0zWO4AEs4pG+DyUONS86ghLVZf8KsgzoXDX/+b9ygldGl1CY+9kFLwNFywDoDEVsuD40j8bg86W24+l/+jKS3Y2HcADwGjDZ9opTrz9ycbCC4MAXIgD9Wze9qIjBceHq0nBmpGmNOo+8qNOGcFGpHD1ziyaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W0HsXYfd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB64CC116C6;
-	Wed, 19 Nov 2025 17:56:47 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=ICwiTzjgQnLmvXzQ/slg8sCypEfeYw9ioRX3vgiLRfL7pgu8RJCwVtQZzAmiC4IzipgMB8/los+ZUnQlzUuntl8ty8+KVfz0OsPFrJyRluxvbhDzBoaiSCMDIpM6jQ6VMbXlkQFhB3PW/FnLw9Ehd0mc5getsdfasywp/bycU1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jasoe0T+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF3DAC4CEF5;
+	Wed, 19 Nov 2025 18:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763575009;
-	bh=v2r3BcboFk8zl12ZOYSzJXyMd+p1yn1XwnXeJ/43eh0=;
+	s=k20201202; t=1763575610;
+	bh=0XYBCK2oG6dqBdc8VsoGOLDcIEb3yM7OtqIWFtmwPfs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W0HsXYfdHfV+4cITqhEiCYb+gulW/Psrb2HBz8/Quh9fmgdnsTS6Cke680OWYF3Vx
-	 D/MqFFU8/jBjQY9H59ulAneVTo9yUq+k7nMXfr6vb6iK+T63e6jG2dNPnJzkWhYB97
-	 OHHWtnZYVhKxQH3+ky7H4ztaKXNc4TwTkAW+oVOLyWjEUaZpaYQ6rKFD8aorXaPkgV
-	 l1Fctz9hXxeDOnbPOKSm/DxsEs5XF70B4bmWdxt9+3L2Qsv/+EuGQ+5q4lp4Qrmse9
-	 3qaORYGqX8G+yqOUoh3S/1aBxWTRWThf9nNY/0y/8CYwsT6KSvKlKTFa9zUR/UyfUX
-	 7wno4JxsWOUZA==
-Date: Wed, 19 Nov 2025 17:56:45 +0000
+	b=jasoe0T+XgqtreEQ4GMFKjwjEoRdE+lZhPq434RQN224A9XwLeg7sORYz/VMDYc9h
+	 srTLTGYSIuk4pcRpFAKqK8UafRMxBNAhJaIrFwn5OMJv/4L2FvHKIrvVC47RZ+zn7U
+	 8FmjZ65zStQ+h2rFoj3ETcFjcKfC9bnTxmBhdfOC7myglDv7Nx80aErydy8kkSBm+m
+	 65+QkuDBtjp6sHEHhoXw82tUdyFGrWnlVDFWCikrN2BJLxxX5B4Tv3hCemRzu+iA5l
+	 UHuib1geVHXfeJQDgkYZnrIWCVKb/hKHyYOTj56IuvwhYO8FLinxQV85WUu/K2m/Fd
+	 wZnkSybMqA3Bg==
+Date: Wed, 19 Nov 2025 18:06:46 +0000
 From: Conor Dooley <conor@kernel.org>
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: switch: adg1712: add adg1712 support
-Message-ID: <20251119-violation-enforcer-1362d3eecb69@spud>
-References: <20251117091427.3624-1-antoniu.miclaus@analog.com>
- <20251117091427.3624-2-antoniu.miclaus@analog.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, Valentina.FernandezAlanis@microchip.com
+Subject: Re: [RFC v1 0/4] Microchip mpfs/pic64gx pinctrl part 2
+Message-ID: <20251119-citadel-shrine-fabc3fb309ac@spud>
+References: <20251112-lantern-sappy-bea86ff2a7f4@spud>
+ <CACRpkdZuopbAyHaZQpeGh0+V7v6Cg5uJwscmVPCfjHghNbPymg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -60,139 +60,106 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="xi7GRuMShnwJZ/su"
+	protocol="application/pgp-signature"; boundary="c7cGKj/xRk4uz6Oy"
 Content-Disposition: inline
-In-Reply-To: <20251117091427.3624-2-antoniu.miclaus@analog.com>
+In-Reply-To: <CACRpkdZuopbAyHaZQpeGh0+V7v6Cg5uJwscmVPCfjHghNbPymg@mail.gmail.com>
 
 
---xi7GRuMShnwJZ/su
-Content-Type: text/plain; charset=us-ascii
+--c7cGKj/xRk4uz6Oy
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 17, 2025 at 09:13:22AM +0000, Antoniu Miclaus wrote:
-> Add devicetree bindings for adg1712 SPST quad switch.
+On Wed, Nov 19, 2025 at 01:16:16PM +0100, Linus Walleij wrote:
+> On Wed, Nov 12, 2025 at 3:33=E2=80=AFPM Conor Dooley <conor@kernel.org> w=
+rote:
 >=20
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> ---
-> Changes in v3:
-> - Move bindings from gpio/ to switch/ subsystem
-> - Remove gpio-controller interface
-> - Add 'switch-states' property for initial configuration
-> - Update description and example
-> ---
->  .../bindings/switch/adi,adg1712.yaml          | 68 +++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/switch/adi,adg1712.=
-yaml
+> > Got the other driver that I was talking about here for you...
+> > It's in RFC state because I'd like to get some feedback on the approach
+> > while I try to figure out a) what ibufmd is
 >=20
-> diff --git a/Documentation/devicetree/bindings/switch/adi,adg1712.yaml b/=
-Documentation/devicetree/bindings/switch/adi,adg1712.yaml
-> new file mode 100644
-> index 000000000000..eed142eb5b05
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/switch/adi,adg1712.yaml
-> @@ -0,0 +1,68 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/switch/adi,adg1712.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices ADG1712 quad SPST switch controller
-> +
-> +maintainers:
-> +  - Antoniu Miclaus <antoniu.miclaus@analog.com>
-> +
-> +description: |
-> +  Bindings for Analog Devices ADG1712 quad single-pole, single-throw (SP=
-ST)
-> +  switch controlled by GPIOs. The device features four independent switc=
-hes,
-> +  each controlled by a dedicated GPIO input pin.
-> +
-> +  The switches are configured at probe time based on device tree propert=
-ies
-> +  and cannot be changed from userspace after initialization.
-> +
-> +properties:
-> +  compatible:
-> +    const: adi,adg1712
-> +
-> +  switch-gpios:
-> +    description: |
-> +      Array of GPIOs connected to the IN1-IN4 control pins.
-> +      Index 0 corresponds to IN1 (controls SW1),
-> +      Index 1 corresponds to IN2 (controls SW2),
-> +      Index 2 corresponds to IN3 (controls SW3),
-> +      Index 3 corresponds to IN4 (controls SW4).
-
-Did I miss a reply about my comment on this switch-gpios? I was asking
-if a binding like this, which doesn't permit any of these not being
-provided is a good idea.
-
-> +    minItems: 4
-> +    maxItems: 4
-> +
-> +  switch-states:
-> +    description: |
-> +      Initial states for the four switches (SW1-SW4).
-
-Missing an adi prefix? Also, probably should say initial if it is
-initial states.
-
-Linus commented on the commit mesage, so you're gonna at least need to
-change that.
-pw-bot: changes-requested
-
-> +      Each element corresponds to the desired state of the respective sw=
-itch:
-> +      0 =3D switch disabled (open), 1 =3D switch enabled (closed).
-> +      If not specified, all switches default to disabled (0).
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    items:
-> +      minimum: 0
-> +      maximum: 1
-> +    minItems: 4
-> +    maxItems: 4
-> +
-> +required:
-> +  - compatible
-> +  - switch-gpios
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    adg1712: switch-controller {
-> +        compatible =3D "adi,adg1712";
-> +
-> +        switch-gpios =3D <&gpio 10 GPIO_ACTIVE_HIGH>,
-> +                       <&gpio 11 GPIO_ACTIVE_HIGH>,
-> +                       <&gpio 12 GPIO_ACTIVE_HIGH>,
-> +                       <&gpio 13 GPIO_ACTIVE_HIGH>;
-> +
-> +        /* Enable SW1 and SW3, disable SW2 and SW4 */
-> +        switch-states =3D <1 0 1 0>;
-> +    };
-> +...
-> --=20
-> 2.43.0
+> I was going to ask about that :D
 >=20
+> > and b) how the bank voltage
+> > interacts with the schmitt trigger setting.
 >=20
+> Please check if "bank voltage" is somewhat analogous to
+> this generic config:
+>=20
+> * @PIN_CONFIG_POWER_SOURCE: if the pin can select between different power
+>  *      supplies, the argument to this parameter (on a custom format) tel=
+ls
+>  *      the driver which alternative power source to use.
 
---xi7GRuMShnwJZ/su
+It's not pin based, the whole bank it is connected to has to be changed.
+I'm not entirely sure if I want the driver to be able to control this at
+all (at least not right now) because I don't know exactly what the
+ramifications of changing it away from what the configuration tool
+decided that it was are. Probably it could be done, but I don't know how
+safe it is to change, as I think most of these kinds of settings were
+never really seen as something "application" software would change
+(linux is an application from the perspective of the design folks),
+since it was all modifiable from the MSS configuration tool.
+
+> > There's some specific @Linus questions in the driver, mostly where I was
+> > unsure about how config bits should be handled and looking around at
+> > other drivers wasn't sufficient because they did different things.
+>=20
+> I tried to answer as best I could.
+
+Cool, thanks.
+
+> > Finally, on the dt side, this was using the pinmux property before the
+> > other drivers were submitted, but I didn't really like it to begin with
+> > (shoving two things into entries of the same property gives me the ick).
+> > I moved to using pins + function which at least looks prettier in the
+> > devicetree.
+>=20
+> I think this looks way better than any pinmux properties.
+>=20
+> > I had been hoping that I could move to some sort of generic
+> > dt_node_to_map function, but I couldn't figure out one that'd work
+> > without creating groups in the driver. If there is, I'd love to get rid
+> > of the custom dt_node_to_map stuff.
+>=20
+> It seems like something that could be added to the core
+> (drivers/pinctrl/devicetree.c), if you feel like and have time for going
+> the extra mile. Maybe it would be simple to move some drivers
+> over to using it if done right.
+
+Yeah I might, especially if it pushes people away from these pinmux
+properties! Might also just submit this as-is and do it on top, depends
+on what stuff I have going on.
+
+>=20
+> > I want to avoid doing having set groups, because of the number of
+> > possible configurations in the MSS Configurator FPGA tool is fairly
+> > large, and I believe that MSS Configurator actually undersells the
+> > number of possible combinations for ease of use.
+>=20
+> FPGA:s often have this "phone exchange" property.
+>=20
+> > I haven't tested that
+> > and the driver technically doesn't support it, but I feel like not tryi=
+ng
+> > to define groups statically and using pins instead would permit those
+> > combos in the future should that use case ever materialise.
+>=20
+> It makes sense for a driver for this type of very flexible hardware.
+
+
+Thanks for taking a look.
+
+--c7cGKj/xRk4uz6Oy
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaR4E3QAKCRB4tDGHoIJi
-0m6AAP9Yfs6jEGtF/w7jKSWKbNLo5Wy7sQ5vwu989GZsSGWUZAEAzMiLj2vha1E8
-wykCqw+VzGXSlTpXqo7lELVFHtuzcQI=
-=M+7e
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaR4HNgAKCRB4tDGHoIJi
+0gWkAQDhGI8MtFeVMIWnJpxiVN8LhHlfMg3bXVbXqF+JQmOR2AD7B4YxYC6ruaSO
+UkkmL6gYmDhnsLv8qnAzY04Wr3wpiws=
+=lbBs
 -----END PGP SIGNATURE-----
 
---xi7GRuMShnwJZ/su--
+--c7cGKj/xRk4uz6Oy--
 
