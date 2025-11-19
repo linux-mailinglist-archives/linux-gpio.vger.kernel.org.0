@@ -1,146 +1,144 @@
-Return-Path: <linux-gpio+bounces-28787-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28788-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC709C6F9DC
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 16:20:27 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0DA1C6FAA5
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 16:32:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id A033E2EB94
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 15:18:53 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 57CD04F6419
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 15:21:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24FDD3612E8;
-	Wed, 19 Nov 2025 15:18:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14002363C50;
+	Wed, 19 Nov 2025 15:21:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p5stpctk"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="cDseboje"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C312FF154;
-	Wed, 19 Nov 2025 15:18:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6CF29A32D
+	for <linux-gpio@vger.kernel.org>; Wed, 19 Nov 2025 15:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763565524; cv=none; b=sZsArymDR6FeILOFkThJot4hEf5hOxchosLlcsuwAi36ZKJF/2UxH61BLuHH/zfrNtC0fNx2nyei1gYpm+/5SA8bmT6NRGs8OCkWVVIPiprElYDyWZuTCZrrkpRLhz/cUyAFg731gmFw93+wgINdEt1QksIXVqoVhhMyVU8LVbw=
+	t=1763565714; cv=none; b=LRi96hzwKa1a9Up/o7fbgPOqk+4FEFmU51m1L5xDjy0kvPYPA8SFI+vZY0bs5yQ3MnEJD9mONgOopzJw7CIYstyo7QvycvUbnv4blqvZYRnwzS3ktulcGyev8ZVGU9/gICDGofCb94aX+Dfkon97H24w4zvE9utAiWFw5Un7Cf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763565524; c=relaxed/simple;
-	bh=BV0+oJp55OaG73vSKM3QbI89e9sCDc8t5TtKjk1GcPI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sPv/Kfc/LvgDwlVcyzS9slCPlyq9d02FD4rRHrRdabG/bUZH6hsIiTjcU2xn2irYI1yp/6j87h4bDuivcBUT01+fW0cFHtFy5S9ScZrIjJJeHgCfWOcoImgVy9Tca1/WAFh+dfkejslyAQSIzXxZSYoPUqjfxaKG98OjK9dz3+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p5stpctk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F39B3C16AAE;
-	Wed, 19 Nov 2025 15:18:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763565524;
-	bh=BV0+oJp55OaG73vSKM3QbI89e9sCDc8t5TtKjk1GcPI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=p5stpctk3TGwUVCqj/L3a9gC2sP1jL6cO4XkDOSZG35WGh9sTK746Hs/h8QdOzO1+
-	 g9m+xIyZBqv8Qz7zs1hgEd/2Joz1/5Cjrf5mBRZhrmUauMRgSrL84F2/ZI6L1YbAZc
-	 F9P+gll2FPh17XWn7i70yLTypV2pNGzlC04Ynrgg4xoopuwpL7VPFsi9Ph47TMV2L/
-	 57L1eero+Q9cM+zDREXRCTlEsXwPOHCxdFbz7DkbApqaALLh5KCmpetAjSRbV+g9ix
-	 QGlZ2BtnXyt+ypFzULbSr300eUZhMJ6BhQ+M574iHikH23EVM+8xOf3bWckzcaUlVW
-	 zK3Xabq3JGB+g==
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Hoan Tran <hoan@os.amperecomputing.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	=?UTF-8?q?Michael=20B=C3=BCsch?= <mb@bues.ch>
-Subject: [PATCH] gpio: dwapb: Fold dwapb_context into dwapb_gpio_port
-Date: Wed, 19 Nov 2025 23:00:49 +0800
-Message-ID: <20251119150049.13537-1-jszhang@kernel.org>
-X-Mailer: git-send-email 2.51.0
+	s=arc-20240116; t=1763565714; c=relaxed/simple;
+	bh=oDSK2ULHOlVmjBMh66/oyeBlMdWtYVadz43n1YwCd/8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Pj4W3bAiPPUcLG2tJXTgNNFG2RAS231ds18mXcmXXHpEqKpG4sMLRIoI/kza0pnkZCuOVrKgK1jiSi6tEtXvyEDJCLNJRZ3rmIVXcoBrjPod90Ief/VmM4rOvmIMI05e/UuVb7iBdci1NZLJS05a4jp8FfW8E3vKTKETsXw/Uyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=cDseboje; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4779aa4f928so49760835e9.1
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Nov 2025 07:21:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763565710; x=1764170510; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cjXruME0Ouu82XWrp1Tzzei1PpMyOyh+DAHkVu2G52U=;
+        b=cDsebojefxZYtKO/MlStg4YSbJ+SAyvazjyrDXaN8agSzMd/CnGOQfybE0JeT2dfp9
+         E2EQrYBtx78LlV41TaaRfGwu/7/JB4qjtmLnZ6lWJrFUtIuF5JC43ip0t3OobMpfBM2C
+         Jd0Yk44DMAvvmiP3MbDAQpsU5EPqS0q3ueWu7GhVR4Eu/b5m4BrwxiCSOXN2sPicJEx+
+         P0jE+TnPrM3s62fnfrzv0cqngX60U6Z1+xoonzEN4rzQ6aUGiJfG55H4t+iVdJBkyXv6
+         kElcotMkMeWvK38Faw43a++o0wNMckjRDOGLxaK1xbDgvGbZ404rrC+Oo6eJYxfWVszm
+         GIPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763565710; x=1764170510;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cjXruME0Ouu82XWrp1Tzzei1PpMyOyh+DAHkVu2G52U=;
+        b=QzrxZYcLx8ATjVGfJyLy/zbrZN6yDmdhLcsGCkn8/Gzpl3pYGNT85jJwbQsLiUAstH
+         AROZB+l5XAAI05Sas0ngCxP2WekxKFkGMtwL7PKkeGNQAmsyQf4DIq3E5q92DGK2LOBU
+         2SMoVQ4D7wZrShy3nCV4vgAk2JxO0sk6iUpDjc3AqdnX491VszVpGKuBJloMYfXrKeRx
+         1haDYH+3rgbLVMhwBeR6zJsFJxMIdhbwxzJ7fuVHKdTEfq0+4dBNnfzHptiYZ95xFyZx
+         WIKJCl36/r+wlCC4J9/YaKjn++/+w9zuCzP/rQG7dTqp7XtypLATW4HKm/KBiXqAokC8
+         rtkA==
+X-Gm-Message-State: AOJu0YwCS9/WXAiB2ZOjsLBzdmK+uB2XQn//RUO8s1PAS7xooimPc196
+	zfUZIF2mAwIkzpMhjfsX1dMWZCu6Q9NSQO7L8d6S1Xq11h/1jacZk+FaKvKMtQZ6Zp0=
+X-Gm-Gg: ASbGnct8MtyRSZqSl5Aj9Eafsr/Zqz6CnRiXw25pz6zylR5AfW//gXTXJORZmGhVIPa
+	k4iNVSDhr1DwCXPiCbyrvum/40/QL+1vPkp676GltqpHsfrTe0fRPm4JcY8TwUj/baIa/jwc2ta
+	oX/qVpykMEMhoKzSbgO63rA01F/tiIFbd7gtCq89CpcJiIuGjGKXsYkvxNUg95tc4GPO1SjAQsp
+	sTIKWr5lOfhy4OOz189L1j100Ira+ij3Gy4pPx28CtSAAgJQYEPvdKZkGqs31Kc1IYDrmXxLvP3
+	jAejH4jLEC8tzqr2yMCep6xy8OMMQt/poSeTjNrApLEhWw8PBAJ/2TaTwx8VyglbppoffOV97UD
+	yYypiFE/7HGtxzFf3ZLbAf8tCiAMA9rjSiSgNgpcFuRCM5qmneHcNpUmvHUHLqOMtfXHFy7jLSl
+	4dtQ4L
+X-Google-Smtp-Source: AGHT+IHDrTb9WmcmiSAl+5yblnjYWbZRzDWbcbz7wdw9OvkhjWzjaQgcBhRc2/vJCHDxJ83+5+VEfw==
+X-Received: by 2002:a05:600c:138b:b0:477:7a95:b971 with SMTP id 5b1f17b1804b1-4778fe882d9mr219494405e9.31.1763565710087;
+        Wed, 19 Nov 2025 07:21:50 -0800 (PST)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:c10a:203f:120a:d2f9])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477b1076865sm54429375e9.13.2025.11.19.07.21.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Nov 2025 07:21:49 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH RFT/RFC 0/2] mfd: cs42l43: fix GPIO lookup for chip selects
+Date: Wed, 19 Nov 2025 16:21:27 +0100
+Message-Id: <20251119-cs42l43-gpio-lookup-v1-0-029b1d9e1843@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHfgHWkC/x3MywpAQBSA4VfRWTuZCwu2ygPIThYuBycy00yk5
+ N1Nlt/i/x/w5Jg8FNEDji72bI4AGUcwrv2xEPIUDEqoTEqZ4+hTtacaF8sGd2O206ImnYl8oEk
+ MGkJpHc18/9cW6qpJ6qqE7n0/sHJ2A24AAAA=
+X-Change-ID: 20251119-cs42l43-gpio-lookup-3e3509bed0b3
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, David Rhodes <david.rhodes@cirrus.com>, 
+ Richard Fitzgerald <rf@opensource.cirrus.com>, Lee Jones <lee@kernel.org>, 
+ Mark Brown <broonie@kernel.org>, 
+ Maciej Strozek <mstrozek@opensource.cirrus.com>, 
+ Charles Keepax <ckeepax@opensource.cirrus.com>, 
+ Andy Shevchenko <andy@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-sound@vger.kernel.org, patches@opensource.cirrus.com, 
+ linux-spi@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=866;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=oDSK2ULHOlVmjBMh66/oyeBlMdWtYVadz43n1YwCd/8=;
+ b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBpHeCIxJHiYu69oAt21idI2uffsvUlJ+5INTLKr
+ o4x198QCGyJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCaR3giAAKCRAFnS7L/zaE
+ wxMXEACW5t53Uo9Ljb3mqUgjQMFgXk59bsWrzacvo/BsgexbvWG22uN53mHLlWQ/LH7OTiKzrBS
+ uX/9tW7T4/mGwf6jhk7rdXKdxZnRG6oAPvQkfPBYk53GdW3HiF9khTaQ5p8GO1hqKdLv9wwSkBF
+ p0NhtauwUm64dFdrEHegtuT9E1F5+0IQlhun154LrjTQmXsNr3QCyzAnMiLOEMuvDTOi3iKCHHY
+ sXSXOaN8o8uWTNXDWuV5l7olIK0dT2sgS+9iAH4SNh+ikFbewo125nn+076pR7fL+XoxHRI1Tn2
+ FepKp+T0Yi8dLwzs1NDa9Gc5I8gx4ycet7MrhGcoP8Du9XaGvU7euefD/n+HFUVgRNuYP5JXNYh
+ XxokJiQzpXxswfPOY73+HBN/5I0huqmdBb8ba00T9Hq45soqJGi0JULPdjxiE/zbcWXHLueCT+S
+ FItqYon7LTeq/cbE2wxQbQ0qpu7kCrIrr9bzORyE3RBcrfD6ATOQj2YUb8g/CHKLPBduvW8n7Hj
+ aMenyrSiPm/3c01sgHRgR0NoNIJBdmCFnMtSppo6gHRpB0a/IUISNhWaI4qUJOn2O01i4kOydUK
+ 3LOMCGr3CpiLWR2LAVq2BbBlbqzclREzbwusrNL7FpCEmuBuMP+VMaCfdWXpAS81tTC4rom1p2H
+ r1dSsJ65CNS4lQA==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-Fold dwapb_context into struct dwapb_gpio_port to further simplify
-the code. Sure this brings a tiny 36 bytes data overhead for
-!PM_SLEEP. After grepping the arm/arm64/riscv dts dir, the max dwapb
-gpio port number is 6(the berlin2q soc family), so this means we will
-waste 216 bytes memory in total which is trivial compared to the
-system memory.
+It wouldn't leave me alone, so here's a proposal to address the software
+node issue of this driver using GPIO lookups.
 
-From another side, as Michael mentioned:
-"The driver currently allocates the struct with kzalloc and stores a
-pointer to it in case of PM=y.
-So this probably has an overhead in the same order of magnitude
-(pointer + malloc overhead/alignment/fragmentation) in case of PM=y
-now."
+Link to the previous idea:
+  https://lore.kernel.org/all/20251119-cs42l43-gpio-swnodes-v1-1-25996afebd97@linaro.org/
 
-So let's Fold dwapb_context into struct dwapb_gpio_port.
-
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-CC: Michael Büsch <mb@bues.ch>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
-NOTE: this patch is applied against the following series:
-[PATCH v3 00/15] gpio: Use modern PM macros
+Bartosz Golaszewski (2):
+      gpiolib: support "undefined" GPIO machine lookup
+      mfd: cs42l43: use GPIO machine lookup for cs-gpios
 
- drivers/gpio/gpio-dwapb.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+ drivers/gpio/gpiolib.c    |  3 +++
+ drivers/mfd/cs42l43.c     | 23 +++++++++++++++++++++++
+ drivers/spi/spi-cs42l43.c | 35 -----------------------------------
+ 3 files changed, 26 insertions(+), 35 deletions(-)
+---
+base-commit: fe4d0dea039f2befb93f27569593ec209843b0f5
+change-id: 20251119-cs42l43-gpio-lookup-3e3509bed0b3
 
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index 4986c465c9a8..a431bea959ed 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -101,7 +101,7 @@ struct dwapb_gpio_port {
- 	struct gpio_generic_chip chip;
- 	struct dwapb_gpio_port_irqchip *pirq;
- 	struct dwapb_gpio	*gpio;
--	struct dwapb_context	*ctx;
-+	struct dwapb_context	ctx;
- 	unsigned int		idx;
- };
- 
-@@ -363,7 +363,7 @@ static int dwapb_irq_set_wake(struct irq_data *d, unsigned int enable)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct dwapb_gpio *gpio = to_dwapb_gpio(gc);
--	struct dwapb_context *ctx = gpio->ports[0].ctx;
-+	struct dwapb_context *ctx = &gpio->ports[0].ctx;
- 	irq_hw_number_t bit = irqd_to_hwirq(d);
- 
- 	if (enable)
-@@ -507,12 +507,6 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
- 	port->gpio = gpio;
- 	port->idx = pp->idx;
- 
--#ifdef CONFIG_PM_SLEEP
--	port->ctx = devm_kzalloc(gpio->dev, sizeof(*port->ctx), GFP_KERNEL);
--	if (!port->ctx)
--		return -ENOMEM;
--#endif
--
- 	dat = gpio->regs + GPIO_EXT_PORTA + pp->idx * GPIO_EXT_PORT_STRIDE;
- 	set = gpio->regs + GPIO_SWPORTA_DR + pp->idx * GPIO_SWPORT_DR_STRIDE;
- 	dirout = gpio->regs + GPIO_SWPORTA_DDR + pp->idx * GPIO_SWPORT_DDR_STRIDE;
-@@ -761,7 +755,7 @@ static int dwapb_gpio_suspend(struct device *dev)
- 		for (i = 0; i < gpio->nr_ports; i++) {
- 			unsigned int offset;
- 			unsigned int idx = gpio->ports[i].idx;
--			struct dwapb_context *ctx = gpio->ports[i].ctx;
-+			struct dwapb_context *ctx = &gpio->ports[i].ctx;
- 
- 			offset = GPIO_SWPORTA_DDR + idx * GPIO_SWPORT_DDR_STRIDE;
- 			ctx->dir = dwapb_read(gpio, offset);
-@@ -809,7 +803,7 @@ static int dwapb_gpio_resume(struct device *dev)
- 	for (i = 0; i < gpio->nr_ports; i++) {
- 		unsigned int offset;
- 		unsigned int idx = gpio->ports[i].idx;
--		struct dwapb_context *ctx = gpio->ports[i].ctx;
-+		struct dwapb_context *ctx = &gpio->ports[i].ctx;
- 
- 		offset = GPIO_SWPORTA_DR + idx * GPIO_SWPORT_DR_STRIDE;
- 		dwapb_write(gpio, offset, ctx->data);
+Best regards,
 -- 
-2.51.0
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
