@@ -1,203 +1,114 @@
-Return-Path: <linux-gpio+bounces-28757-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28758-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2AD4C6F1B8
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 15:02:24 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19455C6EFE0
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 14:46:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 641D14F451D
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 13:41:47 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id 2545D2EB44
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 13:46:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 779DE3563E0;
-	Wed, 19 Nov 2025 13:41:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC5D035FF6C;
+	Wed, 19 Nov 2025 13:45:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wr0WYZMb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iNqrXIg/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C9834F262
-	for <linux-gpio@vger.kernel.org>; Wed, 19 Nov 2025 13:41:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8852E35A13F
+	for <linux-gpio@vger.kernel.org>; Wed, 19 Nov 2025 13:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763559704; cv=none; b=lpNSIarNi1JFuY1zXtjLqihzqHHZAaueMz2Rqxuj0QIPg+T+kwhPGlrqjZdZiEdPcPjREQB6PKahvji43txR1vvsO4IZtUyp868Vyp7IFxEAWSNPmO0orCqw41OvKt/hL0eD8Q+7KSFWAoCL+a8Lb/+qhuhTpdhcOpm/kSNEPyY=
+	t=1763559958; cv=none; b=HAswIltnEiNGzIJ9//nukqs6cr4vFQmuXrl384MC4UxwBlC6b2yUb91mPpTk8DKH8MNQEPCkk+w3xZRM0WpS029YkgRdhMNOerpy5/4UALF//oHvH6dMVVdYtsI/cM+35DSr849m+UdEfb/lzOMmseE6bJismTLL0EZJKeomVF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763559704; c=relaxed/simple;
-	bh=zghv8sZhWsnolTo7480wNk1G/86bgD4G5e4W5Aw1gGE=;
+	s=arc-20240116; t=1763559958; c=relaxed/simple;
+	bh=Iw1IbTA9k7P7Eqb6cVyD4QyxkJcMEsmsz+D3jS9djWs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bNwU4GetOkQKgnJo6gsX29Crx0/tJbWWL4Nh1o1UkWgkdAJhQdhXUJlRkQqb8e7ka8wAFFjtJsTzltgWAy5ak+39J3g5ygkmmpMH9w6AC3FIE+rNVyN0gFh/Jbj6AeabfBXyat32rChOfI9cEaGMbOyNAxnXj9Z4oo5mL2o2wgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wr0WYZMb; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5958931c9c7so5436569e87.2
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Nov 2025 05:41:42 -0800 (PST)
+	 To:Cc:Content-Type; b=IhOe45LKyFbT0EMBQqpn1EqR57/C6rmIy9+DLLVPax8HMN545sUkMw5dXHWWiQ50Ga+8txQ0avzSZ2xNkF4OHalqquHRkg/sxXtVk36n5HybsNXcfDOMdesksckKohchJAeKsmn9c6c27f2oKSJEyI3OyCF4wF877dv69/dH4mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iNqrXIg/; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-59583505988so1383856e87.1
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Nov 2025 05:45:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763559700; x=1764164500; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1763559955; x=1764164755; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DE3M+R2tWfO+puL9+yor3rLgVKtJoMi0ExEhZeDNPlA=;
-        b=wr0WYZMbaHbZUhW00bn51W/WvAMtfAXKN/xFKiZSWB/Cd7+1X56x7HluP6l99oj+0p
-         xvwb/B78S8qvVKflKE0cN2HZ/Z/x6WprH9cwo7uxML2yDQnxevIuB5f0yUm+UHjXWMKB
-         7DZ1q6Al51Ai7q85JZqiYAx5vOF4HxghxKynJLJsr9ps3Waogh1XyCl1bCDGwGFHXMF3
-         A5s0edMrl4/OEu9/LOAVe0VzZuSKM1k5ZBzWIndOdQiVwusAQxt38hfCEQQof7kcW8dK
-         Y12OY4n9jD/NqJABSLNm1yIHhkAkCoaj9W7aYJfZaYYYWcMJs0SdRStIYqry9AsRg+zb
-         Zjbw==
+        bh=/1l2z/VREV/OGSRWFgMDmn4kGnAaKe77gm/9lQK3iBA=;
+        b=iNqrXIg/IFIeYcgUC4NVqrgdh1jtEexXjeHh+fyvVHuWhEvCdpe1asJ3vEVZuYBUbm
+         L3OnuZlmKWnYLDOkP3uVZQJ25KQv5jWj4nk2BFf6kNhmBs8P+xhmGlLftLCADjyh3vt1
+         KYstK0aqdE6iUUryEsw3VZeUcj9Tr8JJDmqpM/S53vmGLCU/ZbeDqbtm3vh/m7u0UGv9
+         lmybBJC9VH6R/iuubFKGAKCnfmGXYp7NmuHj0DgxGhrL5ARfIleawB/jCTQYFCmRvP5u
+         OXdj6oirUOayuCaINelZlcE1rf+VF+QfupjJigrC22sPTYr/K5/lYjrYjuWZbYPaYoGa
+         Z2sQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763559700; x=1764164500;
+        d=1e100.net; s=20230601; t=1763559955; x=1764164755;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=DE3M+R2tWfO+puL9+yor3rLgVKtJoMi0ExEhZeDNPlA=;
-        b=NX82kynVFtC9pR3kxgi/VYHk2l6afH5EbyaR6tIZOqsPjl0G4LPYOtKnYFM1d82R/4
-         LZp48IxJ1a+52AEJdQbPW1xeb2ahq2YRqFM3zmZgGgdWffthoYaTd7SxdmM4qbtjMrVz
-         3qlwbk7SMXO/NaBtry05BsJgVBc7RBNAV9xIs+haRgqGFxQEaoltF2BoT0qLbfoO/ORF
-         t3SrS4f3b9rt3J/AQluZackVRbLhH9LHA/g+kXPK3aO3NYa7uEWTyw0SuP/DJvmo0L1O
-         kRCoCuN1OAH3K/OE8GxhMTyisWqPG3NAFt96PHRwxIZh3hMVYNWQldudXG0qi5aBrjb9
-         U4xw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9LOVvjLs3U5CG4thM4lNT6UxCdnAJzyZwb7SsAy3ZM8GWBXhLfqTlVAaanbeRYf/Fo7p+psjKUqYO@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVha6tbjf+nu49J8chJTpP7OWwIR0UsGnpKode2/zZVhlqaSpS
-	5aNiv8aYUNISa6rzwnEKOZ6iLlR4K6+cUnZQ+Yk7GPCGSXL5hrBqZ2O5jkLD53O38kDI+ykS6wI
-	qYI4fzttxJK3+aqzKRDHujBQsE+kPrfB4AEY2NpjFAw==
-X-Gm-Gg: ASbGncuylpKXPI2bxEqPXvLIkKrmci0YALN8cIGs5CRsz1qAEuQFNdf2ifD64Wgr81r
-	sdDUXa/CZG5iPKEtnLjmZzyKLOTSTOoRYrV8zSJ8f5RBiPYhpg/RX8dbRqvB7SGeXbCrU4cGqIG
-	LZeGrRRrQwyfQ5jvQLg3rhGqf4Y3C/r8u2uu7dLA94XaV75AW1fl+rEhmgO24vjvjXFHp7UQ1kB
-	dSjkJkmKoE8UpjSo4TygxbUPrBtaWfzHaicpo2iWC9BRO+6kQdi8ldxzUlaNeS2c1xJebF2CXjA
-	9AQ1cr53aInxN5sJCTjHtJIHnHKOBOyIA0w+LQ==
-X-Google-Smtp-Source: AGHT+IFDvKi+fywboPfW1mg41wUDzIJJk2ii8/GksATXflJNxXalp3qxaeyONEJx9rALX0Uw/MHHiVkcBz7VcYUYTj4=
-X-Received: by 2002:a05:6512:114f:b0:595:81c1:c55 with SMTP id
- 2adb3069b0e04-5958419f6e1mr7724347e87.8.1763559700513; Wed, 19 Nov 2025
- 05:41:40 -0800 (PST)
+        bh=/1l2z/VREV/OGSRWFgMDmn4kGnAaKe77gm/9lQK3iBA=;
+        b=sTsqM4nr1BKvjKlDnOC88anVTuZvco++d8nq6sT8GRlqmXlKVbIdwik043ha7hmyBF
+         4CYeXwLVwqxY/AiVhPlHMnS9tD7WJCsRvBu9ByVhyyOOup8h+1jnn/otJxnvPyz8Oawy
+         Am3JAN9GF0L+I+fFXSPrMafefTasn17Slrn4C10gS0DDKkjlszgPzH/Emy31nCSRiFRZ
+         V4EsuLHQTWgm6AtFCSpQKaHzOJxYoZVtreLylw4OxLHnbRlUulypdhCiyJuqN/P+P7BZ
+         Szt2huj7z+cY2HLaL3bWw42T5wdHnGgWu8uPbDepgtg1Q7Az2/ewId0ZWn+bpo0KqzCh
+         73pg==
+X-Forwarded-Encrypted: i=1; AJvYcCW3OaQGo+z6HdRu7xBR3ib5Pl5VF1X5ioOlCkyU5RVMrSAzpA5tQ5+0vHKCfpHzlhbiiAqJzScxf9qv@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxXvsBT96nK15RI3SobB7Ozm65JB2aChqMHdxfos0a6Xa1ICTw
+	id6mHPloJVSyg/9nF7pZTCT8IEuMI5qI+QehTn7vtEnt5hviR+Rdof8eh+dzs122vchDl2FGu5J
+	ED0Kewzu4YMQif+TeO9KVWlLWh47fYJGUifhTDNG9pvjaK2VlC/PsAss=
+X-Gm-Gg: ASbGnctT2bcrRIvsyNi5NtpoghkskKljOE7Ms1IOpBVr+v9Ig/8AxPKEfjdIbATNKEw
+	CsYc27XTrrO85TecVlVd7c/OxTfvKBIkM/PKuG7M1Tuotcx3nmECzAjnagWMOyBdm4P7gp/VveT
+	Kmo/jd9Cew2jXTG693zpBAWTtbWzQR0pvA9Y+l/PWG5EyScbCGtoFHWFty7GcKhSucmfWyYnFn6
+	2zGHupXIPoId70qoO+Cet6ZeDZOSYy8hFDZrgW/52MnOhNjDGyu/BDwIIAEjqqFL5wEsato82Xo
+	YnhySg==
+X-Google-Smtp-Source: AGHT+IHi46MJUsWVgKG97zvzBmctPH37ez7biiVDWReMD3gtNWbTOlbOcaiB9PFyYiZpqYGbAnTU/qHFubT2adEieWs=
+X-Received: by 2002:a05:6512:1541:20b0:595:91c5:3de1 with SMTP id
+ 2adb3069b0e04-596432521bamr735676e87.0.1763559954606; Wed, 19 Nov 2025
+ 05:45:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251119130914.7431-1-jszhang@kernel.org>
-In-Reply-To: <20251119130914.7431-1-jszhang@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 19 Nov 2025 14:41:28 +0100
-X-Gm-Features: AWmQ_bmpNOQNSC8HIIBfHofH5dx_DvIm0PLBHKs-if2Em_Jh9HG1jrAm0vl2E04
-Message-ID: <CAMRc=McxjLYDWzKFm4FzNkDR_Com=8ODc7DuvXihtbOR8mEFag@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio: fxl6408: Add suspend/resume support
-To: Jisheng Zhang <jszhang@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20251117091427.3624-1-antoniu.miclaus@analog.com> <20251117091427.3624-2-antoniu.miclaus@analog.com>
+In-Reply-To: <20251117091427.3624-2-antoniu.miclaus@analog.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 19 Nov 2025 14:45:42 +0100
+X-Gm-Features: AWmQ_bkJ2p2IaEyURBIT9I33r_u7IzpUPkMo9HREbt3jJevxjDJx9Uz8HFl3ag0
+Message-ID: <CACRpkdbdsqLnqGeOVtNJ_N2Z+rfpON2-B=YV30xsN3iN2Wb-KQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: switch: adg1712: add adg1712 support
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 19, 2025 at 2:27=E2=80=AFPM Jisheng Zhang <jszhang@kernel.org> =
-wrote:
->
-> Currently, during suspend, do nothing; during resume, just sync the
-> regmap cache to hw regs.
->
-> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> ---
->
-> since v2:
->   - drop the reset pin support patch since no users now
->
-> since v1:
->   -fix W=3D1 build error on nios2 platform
->
->  drivers/gpio/gpio-fxl6408.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->
-> diff --git a/drivers/gpio/gpio-fxl6408.c b/drivers/gpio/gpio-fxl6408.c
-> index 86ebc66b1104..165c48e9cb9c 100644
-> --- a/drivers/gpio/gpio-fxl6408.c
-> +++ b/drivers/gpio/gpio-fxl6408.c
-> @@ -43,6 +43,10 @@
->
->  #define FXL6408_NGPIO                  8
->
-> +struct fxl6408_chip {
-> +       struct regmap *regmap;
-> +};
+Hi Antoniu,
 
-I would simplify the patch by roughly 50% by dropping this wrapper
-structure. I know it's less future-proof but it doesn't seem that
-we'll need more fields here anytime soon. We can cross that bridge
-when we get there.
+I like the looks of this!
 
-> +
->  static const struct regmap_range rd_range[] =3D {
->         { FXL6408_REG_DEVICE_ID, FXL6408_REG_DEVICE_ID },
->         { FXL6408_REG_IO_DIR, FXL6408_REG_OUTPUT },
-> @@ -104,6 +108,7 @@ static int fxl6408_identify(struct device *dev, struc=
-t regmap *regmap)
->  static int fxl6408_probe(struct i2c_client *client)
->  {
->         struct device *dev =3D &client->dev;
-> +       struct fxl6408_chip *chip;
->         int ret;
->         struct gpio_regmap_config gpio_config =3D {
->                 .parent =3D dev,
-> @@ -114,6 +119,10 @@ static int fxl6408_probe(struct i2c_client *client)
->                 .ngpio_per_reg =3D FXL6408_NGPIO,
->         };
->
-> +       chip =3D devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
-> +       if (!chip)
-> +               return -ENOMEM;
+On Mon, Nov 17, 2025 at 10:15=E2=80=AFAM Antoniu Miclaus
+<antoniu.miclaus@analog.com> wrote:
 
-That would go away.
+> +  The switches are configured at probe time based on device tree propert=
+ies
+> +  and cannot be changed from userspace after initialization.
 
-> +
->         gpio_config.regmap =3D devm_regmap_init_i2c(client, &regmap);
->         if (IS_ERR(gpio_config.regmap))
->                 return dev_err_probe(dev, PTR_ERR(gpio_config.regmap),
-> @@ -123,6 +132,9 @@ static int fxl6408_probe(struct i2c_client *client)
->         if (ret)
->                 return ret;
->
-> +       chip->regmap =3D gpio_config.regmap;
+Please drop this paragraph. The DT bindings are for several operating syste=
+ms
+and this seems to be Linux specifics and also not every operating system
+has a kernelspace/userspace separation.
 
-That too.
+With that change:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> +       i2c_set_clientdata(client, chip);
-
-You'd just do i2c_set_clientdata(client, gpio_config.regmap) here.
-
-> +
->         /* Disable High-Z of outputs, so that our OUTPUT updates actually=
- take effect. */
->         ret =3D regmap_write(gpio_config.regmap, FXL6408_REG_OUTPUT_HIGH_=
-Z, 0);
->         if (ret)
-> @@ -131,6 +143,16 @@ static int fxl6408_probe(struct i2c_client *client)
->         return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &gpio_confi=
-g));
->  }
->
-> +static int fxl6408_resume(struct device *dev)
-> +{
-> +       struct fxl6408_chip *chip =3D dev_get_drvdata(dev);
-> +
-> +       regcache_mark_dirty(chip->regmap);
-> +       return regcache_sync(chip->regmap);
-> +}
-> +
-> +static DEFINE_SIMPLE_DEV_PM_OPS(fxl6408_pm_ops, NULL, fxl6408_resume);
-> +
->  static const __maybe_unused struct of_device_id fxl6408_dt_ids[] =3D {
->         { .compatible =3D "fcs,fxl6408" },
->         { }
-> @@ -146,6 +168,7 @@ MODULE_DEVICE_TABLE(i2c, fxl6408_id);
->  static struct i2c_driver fxl6408_driver =3D {
->         .driver =3D {
->                 .name   =3D "fxl6408",
-> +               .pm     =3D pm_sleep_ptr(&fxl6408_pm_ops),
->                 .of_match_table =3D fxl6408_dt_ids,
->         },
->         .probe          =3D fxl6408_probe,
-> --
-> 2.51.0
->
-
-Bart
+Yours,
+Linus Walleij
 
