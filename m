@@ -1,123 +1,119 @@
-Return-Path: <linux-gpio+bounces-28742-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28743-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56D6FC6E1DE
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 12:04:32 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2CC0C6E2D7
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 12:16:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id 326C92DBFD
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 11:04:12 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D8A9D355233
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 11:08:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ABC7350A15;
-	Wed, 19 Nov 2025 11:04:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E057352FA3;
+	Wed, 19 Nov 2025 11:06:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="CRfhpZSK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AJ93164d"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E58734EEE6
-	for <linux-gpio@vger.kernel.org>; Wed, 19 Nov 2025 11:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5AE3321BC
+	for <linux-gpio@vger.kernel.org>; Wed, 19 Nov 2025 11:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763550240; cv=none; b=R7b93cf+zZpXkevDulcb47Wkw9MS0+uvEDyLCvVfg4Ne3SyX3PFFu8mf6C11Hh7ZafG3DdHbgXhDEtBnBcmG1FPeMIrNrRGiU9szDXqY/T0+n63ii8ou/C0z9JxXeqwdyqy4SJO/Mz9AIQz2YUTkBv403opeaY/e9inYVXFC3lA=
+	t=1763550387; cv=none; b=nXM16cL4x34Y+o11boNflKzajcB7wQ/GczCGN1yv1AviX8VPBtPpDjCm+GQVq1JCGe1tnN3Cv38UUpgfJbD8k9B9yhHcFSTOPOVuurFlO05AxOmlvVJkf8E+BPME4Wz1Zj6nfRjZ3htQV+OxCg0ngwYy4RvfB3LN0rlV/5JbEjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763550240; c=relaxed/simple;
-	bh=bSTV4nDkOFUkqQXzxTm6yhRfPyxCrC/lEoyW84+3r0A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nx2UD3XI/sJEg+h1we09AU+dfXCXcSIoAD8bs3uxf+fiDpPCHlIBGgYBxwO1mLX4JIpeRoHMOHhoRlbvdpu8/rFj6E67DtRgaWVUTx0JQ3o1NaCqApCouDt1ASWz1UW4bvCsPNwBCmUgOPZYFk8SuQaxVc95/EVn2Rk3bnJWr3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=CRfhpZSK; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4779aa4f928so46236935e9.1
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Nov 2025 03:03:57 -0800 (PST)
+	s=arc-20240116; t=1763550387; c=relaxed/simple;
+	bh=NxRHBvmhBNy0u0ARSVXMJmHRZdZL/TXaEXR831k4zAw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KD6ipWQBocgxc91ZmAskSgmjfmpOQrvrO89dSFhgCsFXMnzWdKs0hIzXxbAmLyQmASq+Ngk8DeRJcw0ABeDQTaQX0vRxEczbjfrRF0lR1lExrCBafeiQOV6y2CcNRvFwvaq+r+RUaJ3BUBcOEVnKgJYBT/ckeI5NA7SJBKe6QPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AJ93164d; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-297d4ac44fbso5696225ad.0
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Nov 2025 03:06:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763550235; x=1764155035; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PunctF/ONEjDBsROhwlLrHMeXYTwDaONJP6PiDvXimQ=;
-        b=CRfhpZSK5hPd0veCHxJ799eblbNVtz4UQGoujSsqSY9rbTEky7qouHVZr5lAc82HXS
-         Pi0USRyeO0FGohFQEQWDkVm2vGJT9f2jsP10UnXtwFJE0q75ctGZqLZxc6AuAb+BY/oO
-         l0rDsFEyp90ATnpyDv1k9A3JJk7PZdTtqCQlkSNvHUiOHJLDZ+h6sntc7FBKdw5hShYj
-         CMHOZ3LGNPNZkTLpaQXz1tPQghFty7rwI6onpX6hf/Pzj0b/Fy2fxWZcMKBfaA/AJf1M
-         r2YcjMVlb4aYRuBu51VTJVNg0kF7DybnxUsA6Q1WbMqYgoHo+PvDhtthVFCPdqnCXTNN
-         dJxA==
+        d=gmail.com; s=20230601; t=1763550385; x=1764155185; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8YuhWF3HD+vwBnfM+I0OX4Ic78IWql3v0gIt+QlEwX0=;
+        b=AJ93164dbJ1dfsmF5hTUr7rog89vhep7NK2g4u/uBgOYHDkdnQ8YxU+oVSe4Voj5Xw
+         BIicUOa2y5FutIs/5/ju+lBgQKMPc3qMnzowjpG0zzUzjSlI35VeSKKyHfo9vBcp1pt9
+         5BvglaOefb3/gqWFGbXRbi7pRXAxK/zgBQlcPWUDf7yB1CX1FbsSQ9Ynnv12aRBnGebL
+         2GDmlSVHZQ3QhGLoA2knpiAVkOtqmRcv9AGULnp+jM02kWQVy1pZQUJt0kaKeV65y4TI
+         lqrFHo2j/PP/0xLirCnhEwkMESfcVcoTcAAj04LEmxticrT8sBw34zMw0EafL2PDGDdR
+         XUaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763550235; x=1764155035;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=PunctF/ONEjDBsROhwlLrHMeXYTwDaONJP6PiDvXimQ=;
-        b=af8n443aPvtSpbUAPBcPvXcs6sjls5wuXXDxXkvWrStLyUz+nEODU+4q6f1IoWN1PG
-         WIpjZVqE7H2uK88/oW5h2PIhh5FUQEuQzgg4ptPcu4KSlrC2hhk8E2O4nB5zrbUc/aXJ
-         MYz4ja86ryrWVkOuZO9sbOjipsXbxfU8drW0jU5LNKU3xedBZ0LBu+loxF+0PFBtVk2f
-         NiQTSkbc75/6mUZeVUbLfI4yKRnOSQChDG1WJgTaGav0FiiRSqGQtl20QNUl7GFAH1+J
-         xvXoc3UjkIAPA1BlPFxSBJRtdkF4qkfN/irkg5RREFSRaaK9hcGChzmF2QaYOL8tTHpC
-         7NBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUw3JSAe31G53c2gpgbJdrC4zqNz06vWoI51WM8EU1OsIQTcTdAnX7piBI0xN16EsZ0qK0DpRzp2Dsf@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpNwQhwDdqxIP7c1RJrp/ova5k9VLbHAMlrgevvvucrQBf4Lbu
-	ijxjZ1pnL0OiuLoUEQPAAAoElCQnvhpnaq5LRw/lrSeNZE3b0s18ZE+Of4aTUAh0gDM=
-X-Gm-Gg: ASbGnctqEt32I9pwhla35O1GWPV5Xs7/GGjtTbaOi3Pf39IUTTTQUcnHKVYcQJ0huUD
-	KUg5mSEggU3sXvbAGammuLHYp+acjB4sZtfaYMgOVGw+1MUiNEYN0b2QVLYRH+NMRORmAhqmZDP
-	f/WBapTQ9qjWqv3fu2Ieds2O+FGfXyA2vH8472t1g7T6abYlRw6VVkK6PDzUAUZXl3hazqZd08X
-	D8K6cifKQ83PFusGZoVbIioPIJLLAXz+bjB3FBupZK2GTCAXMGD5qlUl0ogcO4fVJUd9zpPRmIF
-	3fCXEBGdERqtfgluIiET/SKTFV71Kfes3/rkBHxOnCvKUVmLssrj1AwxhXFQ4WyQLX61hVIudKc
-	GkakFKl16uT+ImylKYqPBRVA7o6Y3aN38XY5LBw2aImMJ17JHjat3L1OQVjFQloHgsiC/Vt2mNX
-	8EYuXg5D6HoYyXE/Cf
-X-Google-Smtp-Source: AGHT+IHaztPLlfkC+Xir2kD5lwp795aaQBs2kUfGLU9lWrHj6xry0/cJlId4pK5pw1I2kXU2VWBC+w==
-X-Received: by 2002:a05:600c:8b21:b0:471:13dd:bae7 with SMTP id 5b1f17b1804b1-4778fe883e3mr222981825e9.30.1763550234066;
-        Wed, 19 Nov 2025 03:03:54 -0800 (PST)
-Received: from brgl-uxlite ([2a01:cb1d:dc:7e00:c10a:203f:120a:d2f9])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53e85cc0sm38437449f8f.17.2025.11.19.03.03.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Nov 2025 03:03:53 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Kent Gibson <warthog618@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Subject: Re: [PATCH] gpio: cdev: make sure the cdev fd is still active before emitting events
-Date: Wed, 19 Nov 2025 12:03:50 +0100
-Message-ID: <176355022869.63990.7203538137756215633.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251117-gpio-cdev-get-file-v1-1-28a16b5985b8@linaro.org>
-References: <20251117-gpio-cdev-get-file-v1-1-28a16b5985b8@linaro.org>
+        d=1e100.net; s=20230601; t=1763550385; x=1764155185;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8YuhWF3HD+vwBnfM+I0OX4Ic78IWql3v0gIt+QlEwX0=;
+        b=o/nPQkbH10aIbG+6tb4sBzMH+UdH3T+DidErXz3lA2yibC2s609Q+TUwYDi9E1jJV+
+         ErpRjhGzZsdUdd2omu7anzKsR3r97DIfB6KEd4WGbExCrNbPy6Dz1Ux/+N6w9gA3xMfA
+         yKoOcB2LBiarELt63xNM2HZQJJlqMXsbTJFK+EkhfyuigMzf4fm2JVRu4hSIWRWEGRvK
+         0U10Bg6JNJAix4pcAnPmzS+Wnk97zJVuqCy81Pz58XUvpO0PBPRJib7P/PKdN9FvO+CX
+         Is2GD0hOE7eeoO+NipJE6FpBkJXgiefL3ZFbFqFseZo3hIDcEGqwp2mKcyQfxatlCaL5
+         svAg==
+X-Forwarded-Encrypted: i=1; AJvYcCVR+8hadKXUJOJZIVJNF9IUMd3al7L46baV9H+bB2d/J/H/bm/sGz1yeo0TzBADC4UX9M88ZTnRrxyu@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTMuEJfDQ1gWvxJoCh1ETt6wDrwO3xzbvDcCpCt9ZdgOMszthR
+	5VnJmAW4QxoeUTTQU/Wc24LAS/DVTQ9VfiUNAJ6pOF/jCbAHTAVOGo5t
+X-Gm-Gg: ASbGnct7NFVgVBzBOglE6AAxUhPufv4Ws/jhQF1EcbZ+7S2Nwmqjjj458TgzrG9vJjT
+	WiFBc/3O3DskZgyS7fToUWSpfPC+69/Q4DEtt4Kigrvio/k18c5YRRNBc617p/rkrCbAXM4U0dK
+	Dfn4RIUFOhhFs53CLmcLoSVcLfkMmeZgNF0JQzBqRqClUzZivv7QQlpWmY8St4DhOJ8DBD62cSW
+	XNOwYtAurljPYhZjm1jA8Hb+eJ8TkJWuTJgmYZhx+/+lbgJxTepgaFLH1Jhu20gVjF3m56EPCxS
+	Pll91gPM3ztn5EcZVwG6W4I9+YpzhATznAy5cRHXKL6A9cqQG0VjNuwHHrGmn0257rgpAcC2FUm
+	JilDBPg0vSvSH5VZsHV6AxC2DKZKs++3Nu3qzquYLKAoUQWNtC0aed+xnoi4xnVopDKAq8+C9ui
+	UqrNt2OqndfopxSUH5Ww==
+X-Google-Smtp-Source: AGHT+IH50all20trXpBdSJ7R7Sw4Uwv+WJ2AA2lxSbaPJ/o3j7wljJttlmySgXviAjfj8jKijFfhjA==
+X-Received: by 2002:a17:903:1a84:b0:25c:43f7:7e40 with SMTP id d9443c01a7336-29a061ffff1mr26440615ad.10.1763550384797;
+        Wed, 19 Nov 2025 03:06:24 -0800 (PST)
+Received: from [192.168.1.50] ([210.87.74.117])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2985c2b0c92sm204805405ad.69.2025.11.19.03.06.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Nov 2025 03:06:24 -0800 (PST)
+Message-ID: <1cb2ece2-9175-480b-acc0-bd1cd3bf2327@gmail.com>
+Date: Wed, 19 Nov 2025 18:06:17 +0700
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] Documentation: gpio: Add a compatibility and
+ feature list for PCA953x
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: =?UTF-8?Q?Levente_R=C3=A9v=C3=A9sz?= <levente.revesz@eilabs.com>,
+ linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+ Jonathan Corbet <corbet@lwn.net>
+References: <20251112224924.2091880-1-andriy.shevchenko@linux.intel.com>
+ <aRfWouKGA7q2ufCV@archie.me> <aRzBGhsLA_s1rJbM@smile.fi.intel.com>
+ <CAMRc=Mci_jEp-8TW9+hAyb=viMy69SXDSE99k0Rsss_0b7ZY1w@mail.gmail.com>
+ <aR2Jqrjb5dN9LeWq@smile.fi.intel.com>
+Content-Language: en-US
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <aR2Jqrjb5dN9LeWq@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-
-On Mon, 17 Nov 2025 16:08:42 +0100, Bartosz Golaszewski wrote:
-> With the final call to fput() on a file descriptor, the release action
-> may be deferred and scheduled on a work queue. The reference count of
-> that descriptor is still zero and it must not be used. It's possible
-> that a GPIO change, we want to notify the user-space about, happens
-> AFTER the reference count on the file descriptor associated with the
-> character device went down to zero but BEFORE the .release() callback
-> was called from the workqueue and so BEFORE we unregistered from the
-> notifier.
+On 11/19/25 16:11, Andy Shevchenko wrote:
+> On Wed, Nov 19, 2025 at 08:51:54AM +0100, Bartosz Golaszewski wrote:
+>> Is there anything else to address or is it good to go?
 > 
-> [...]
+> I believe it's good to go, as per last Bagas' email (as I read it). In any case
+> it's documentation and can be amended in-tree.
+> 
 
-Applied, thanks!
+Hence:
 
-[1/1] gpio: cdev: make sure the cdev fd is still active before emitting events
-      https://git.kernel.org/brgl/linux/c/d4cd0902c156b2ca60fdda8cd8b5bcb4b0e9ed64
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
-Best regards,
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+An old man doll... just what I always wanted! - Clara
 
