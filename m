@@ -1,162 +1,112 @@
-Return-Path: <linux-gpio+bounces-28737-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28738-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68FC6C6D7BE
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 09:42:42 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84B0CC6DAF2
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 10:23:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id 393B82D2E3
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 08:42:40 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 76DE04FC610
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 09:11:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E36A732D45E;
-	Wed, 19 Nov 2025 08:41:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02B403358DE;
+	Wed, 19 Nov 2025 09:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ENeBLE5s"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4215B32E6B9
-	for <linux-gpio@vger.kernel.org>; Wed, 19 Nov 2025 08:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 064B62E9ED6;
+	Wed, 19 Nov 2025 09:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763541716; cv=none; b=pg0pN3Pn6uyOK95DxpofDrM+ICckpa411YQyFfQDyKcIBSuMIQUG2iPEGpw72Mah5Cr8vV6UNVXEWWTQVwzjX2dSVq+wXrc2AE2Lyk79TqVuOgmi6qMR2831vOvP30txVkvMJ4CV0yGlNLhxNa71tjJKfw+FQIZz542/OABwVEY=
+	t=1763543472; cv=none; b=Qur2IQpsRK8pC93NPYhQCWPiZAOVhKCsdV4zGLxwz60Ipi5FjgF3hDLrpjPqZcSyVtWEv41UCQMsR+8hK8wR0x3F2A+aiWk3HnF4qSvz4zotqulbq9WX2JdEmzov5D/9Omrz7qjr7GKe9KxAlCI1cElp1mag0fYSyl+mSgztcOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763541716; c=relaxed/simple;
-	bh=eWFikmnhpKxmZjUEopAhykBWamuhA8gNbQHLFDY6lAE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DJz0dvIydqRiReGltFocRdgJwh9jpu7Wyd/8CED987pnMxVyAkuX/nRRxziAvr8w0p/2LZLwX7f8GEwluBY5E0igC9nEbIjxdKjPFJkxemafPgasKsdjKoKKQqdB7ZUgNsirMKfS5uytapEcVRp7oxRrKl0z3/9A0HmxjOL1GdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1vLdkg-0002XY-J9; Wed, 19 Nov 2025 09:41:22 +0100
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1vLdkg-001DYn-0L;
-	Wed, 19 Nov 2025 09:41:22 +0100
-Received: from pza by lupine with local (Exim 4.98.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1vLdkg-00000000283-06U3;
-	Wed, 19 Nov 2025 09:41:22 +0100
-Message-ID: <66f0428f889e9d8d35e3215936da9bcc53afe1c3.camel@pengutronix.de>
-Subject: Re: [PATCH v6 8/8] reset: gpio: use software nodes to setup the
- GPIO lookup
-From: Philipp Zabel <p.zabel@pengutronix.de>
+	s=arc-20240116; t=1763543472; c=relaxed/simple;
+	bh=Q/1kVKdXBer7CmaZG7HzHlZfLUuG+in1nDAl3ME36c4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ARBBd3+ZuyXZsziEoY3LFQuYJPIDwqiy6k6QeAu2m6c3GScvFKQGSLKAZ1b0b99lNzg1NkjTvQ3AADf/8ne7Ofl1I552M0MebXMnrqqCk2ZUXTwYXSYna3WEGXHFZchACfHdq7EHiiXN+ZRM2m31Ug/gSf5nSqTyJezOGyqQZi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ENeBLE5s; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763543471; x=1795079471;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Q/1kVKdXBer7CmaZG7HzHlZfLUuG+in1nDAl3ME36c4=;
+  b=ENeBLE5sXTTrowUTzJj6bdB4jOcF/ERln8cZOQi+if6md369Czm1qL5s
+   Urk1CjpRlzBoDlF93yIxUrtvqhLlDPhjgreq5doDjJWL1ZYpzaRIvUHsx
+   mnqTL8bY5DxAIfbAgoKKz+rz7Lp+xdTmB8mzvWy3t2TLNszlHeqyp6z6i
+   g5Id9yP5Wncbt5fleH2zzCJgZ/YB63zcgxiDjR+TmibXz2Utg2q4h3OS8
+   +AsTpXzrjijMkLHEVty8+aKmMU2hXuqTBgTU5rgxVdNoaj/QyclFkHUMp
+   eOpcQG7bBBOxRtg8hBFLfZhrjxVuj9jS1bjxazkc0QJVjVVt9NV0j4QgC
+   g==;
+X-CSE-ConnectionGUID: 0F8pNGOPTPqGQS+ocwkd1Q==
+X-CSE-MsgGUID: +4hxV5nmRNO7NEf6w6g73A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11617"; a="76934018"
+X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
+   d="scan'208";a="76934018"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 01:11:10 -0800
+X-CSE-ConnectionGUID: 5Ly7XDjhQa2aR/AZjQSkGA==
+X-CSE-MsgGUID: o/QQkq09SsiWzDwC+CjFqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
+   d="scan'208";a="190801433"
+Received: from rvuia-mobl.ger.corp.intel.com (HELO localhost) ([10.245.245.245])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 01:11:08 -0800
+Date: Wed, 19 Nov 2025 11:11:06 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko	
- <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich	 <dakr@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
- 	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>
-Date: Wed, 19 Nov 2025 09:41:21 +0100
-In-Reply-To: <CAMRc=MfsyZ3wqMSQ9jcTFHp2RUrZ=Ge1xdPY44VAGqJ9_XD7QA@mail.gmail.com>
-References: <20251106-reset-gpios-swnodes-v6-0-69aa852de9e4@linaro.org>
-		 <20251106-reset-gpios-swnodes-v6-8-69aa852de9e4@linaro.org>
-		 <0d251a35a438ebf3e14c6762df7ece079ee1d164.camel@pengutronix.de>
-		 <CAMRc=MfAw-HyofSL52PY0H57rBJZAo215gryxWyS8x-d+wcjRg@mail.gmail.com>
-	 <c8aea0bd3907957a6f40078e1198959cd8c0d613.camel@pengutronix.de>
-	 <CAMRc=MfsyZ3wqMSQ9jcTFHp2RUrZ=Ge1xdPY44VAGqJ9_XD7QA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-0+deb13u1 
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
+	Levente =?iso-8859-1?B?Uul26XN6?= <levente.revesz@eilabs.com>,
+	linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v1 1/1] Documentation: gpio: Add a compatibility and
+ feature list for PCA953x
+Message-ID: <aR2Jqrjb5dN9LeWq@smile.fi.intel.com>
+References: <20251112224924.2091880-1-andriy.shevchenko@linux.intel.com>
+ <aRfWouKGA7q2ufCV@archie.me>
+ <aRzBGhsLA_s1rJbM@smile.fi.intel.com>
+ <CAMRc=Mci_jEp-8TW9+hAyb=viMy69SXDSE99k0Rsss_0b7ZY1w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mci_jEp-8TW9+hAyb=viMy69SXDSE99k0Rsss_0b7ZY1w@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mi, 2025-11-19 at 00:28 -0800, Bartosz Golaszewski wrote:
-> On Wed, 19 Nov 2025 09:19:30 +0100, Philipp Zabel <p.zabel@pengutronix.de=
-> said:
-> > On Di, 2025-11-18 at 18:08 +0100, Bartosz Golaszewski wrote:
-> > > On Tue, Nov 18, 2025 at 5:44=E2=80=AFPM Philipp Zabel <p.zabel@pengut=
-ronix.de> wrote:
-> > > >=20
-> > > > On Do, 2025-11-06 at 15:32 +0100, Bartosz Golaszewski wrote:
-> > > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > > >=20
-> > > > > GPIO machine lookup is a nice mechanism for associating GPIOs wit=
-h
-> > > > > consumers if we don't know what kind of device the GPIO provider =
-is or
-> > > > > when it will become available. However in the case of the reset-g=
-pio, we
-> > > > > are already holding a reference to the device and so can referenc=
-e its
-> > > > > firmware node. Let's setup a software node that references the re=
-levant
-> > > > > GPIO and attach it to the auxiliary device we're creating.
-> > > > >=20
-> > > > > Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > > > > Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> > > > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.or=
-g>
-> > > > > ---
-> > > >=20
-> > > > I'll apply this with the following patch squashed in:
-> >=20
-> > Strike that, I'll have to wait for the SPI issue to be resolved.
-> >=20
-> > > > diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-> > > > index 3edf04ae8a95..8a7b112a9a77 100644
-> > > > --- a/drivers/reset/core.c
-> > > > +++ b/drivers/reset/core.c
-> > > > @@ -945,7 +945,7 @@ static int __reset_add_reset_gpio_device(const =
-struct of_phandle_args *args)
-> > > >         of_node_get(rgpio_dev->of_args.np);
-> > > >=20
-> > > >         rgpio_dev->swnode =3D fwnode_create_software_node(propertie=
-s, NULL);
-> > > > -       ret =3D PTR_ERR(rgpio_dev->swnode);
-> > > > +       ret =3D PTR_ERR_OR_ZERO(rgpio_dev->swnode);
-> > > >         if (ret)
-> > > >                 goto err_put_of_node;
-> > >=20
-> > > Huh? Why?
-> >=20
-> > PTR_ERR(ptr) is just (long)ptr, so a valid swnode pointer makes ret
-> > non-zero and takes us into the error path. PTR_ERR_OR_ZERO() includes
-> > the IS_ERR() check and returns 0 for non-error pointers.
-> >=20
-> > And there is a (false-positive) sparse warning:
-> >=20
-> >  drivers/reset/core.c:978 __reset_add_reset_gpio_device() warn: passing=
- zero to 'PTR_ERR'
-> >=20
-> > I think it would be better to return to the explicit IS_ERR() check
-> > from v5.
-> >=20
->=20
-> Yes, it was like this in my initial submission and seems like it's more
-> readable and doesn't cause this confusion. I will go back to it. Though
-> I'm not sure if the SPI issue will require a v5
+On Wed, Nov 19, 2025 at 08:51:54AM +0100, Bartosz Golaszewski wrote:
+> On Tue, Nov 18, 2025 at 7:55 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Sat, Nov 15, 2025 at 08:25:54AM +0700, Bagas Sanjaya wrote:
+> > > On Wed, Nov 12, 2025 at 11:48:20PM +0100, Andy Shevchenko wrote:
 
-v7 :)
+...
 
-If there are no other changes required, I can fix it up:
+> > > The rest LGTM.
+> >
+> > Thank your for looking into this.
+> 
+> Is there anything else to address or is it good to go?
 
-  https://git.pengutronix.de/cgit/pza/linux/commit/?id=3D8e72a48fc1df
+I believe it's good to go, as per last Bagas' email (as I read it). In any case
+it's documentation and can be amended in-tree.
 
->  - I'm looking into fixing it in the affected driver.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Great, can we make sure the fix is applied first, to avoid breaking git
-bisect?
 
-regards
-Philipp
 
