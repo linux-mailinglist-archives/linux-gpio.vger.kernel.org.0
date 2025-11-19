@@ -1,64 +1,62 @@
-Return-Path: <linux-gpio+bounces-28831-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28832-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61333C70867
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 18:50:14 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E86AC7088C
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 18:53:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B517C4E15AE
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 17:42:09 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6E5264E4307
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 17:45:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 751CC27F015;
-	Wed, 19 Nov 2025 17:42:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75EF23559EF;
+	Wed, 19 Nov 2025 17:45:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XpGtgugW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mbfsSKJl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445D330EF92;
-	Wed, 19 Nov 2025 17:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA30732E15D;
+	Wed, 19 Nov 2025 17:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763574124; cv=none; b=bxva7ard42zmGtZ7nNHDvRu40/IRsZ0dbUd1Tx8mRNSX2CKX/2b0ZBSxttFvoFafgzkgDA0KdLJYM5Cwu4bImEngTttb0nSPc19pqipw42a1tD9sGjBhZkoU7WUWc8bO+c/Z4QSfYm6mIxcWOX/IlljD20usFBF2taIdfUEi/og=
+	t=1763574329; cv=none; b=HDAZK+35WdxIOY7yYs2fjAawwGc7t6UV2mVY+8+6Oi3gwZ08tLFM4hOJ2wt2ZFyZkd1SwWJGLHaxlCcjLLTDoM/KwX76AtUDZXJgoFNDltx//sIDxp6oV6AuWTji5H74ZkYc6KVAdRPhYZjkJ57Ki/zY4vJqLrznkLFy0F3lxcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763574124; c=relaxed/simple;
-	bh=q4ogyePfvPPVC198borYC1IEQLnRNOOxPn543dof334=;
+	s=arc-20240116; t=1763574329; c=relaxed/simple;
+	bh=ZvJCsNM8gCRFeXG3xspjSuRDvUlSdVawzrxA3IrXDdU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tJ+et+PYfeX0YCO/p/6TYnNslRVBaCAaQiVfmW29i8mq3pjel0Fwy3d/+qEs9rcTUkVSq3PCNEVLIYR0VOSuTgSJwTACm/mfnpjGZH3hZufogpbNEUP7egBmVO3tked389ekzGPXfDza5ISUd5sxSDrWV8ZioCHGv7D/+rGaBng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XpGtgugW; arc=none smtp.client-ip=192.198.163.12
+	 Content-Type:Content-Disposition:In-Reply-To; b=DFyTt4du0P0OFz5QSpwJw1qWoBUPfLzLQkb8p1cmkEsqqOTUaxjvsJThDWEF79cp86umhF0q/SGZMgU4CKBAt9q9f5uXLogtboWU9zuuN2Tof8WYbC0IYi7Q4b8x0/sAqXAOv98sQjxG+4jnAJBbqjRvVJLqiRVmN6uet8nHGAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mbfsSKJl; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763574119; x=1795110119;
+  t=1763574326; x=1795110326;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=q4ogyePfvPPVC198borYC1IEQLnRNOOxPn543dof334=;
-  b=XpGtgugWiJbpnOn9yE8Bc4Ks5HYo1MzEfrqXxml0S3mQRgFceAe4YfL7
-   echARWs6ZnPpWfTuIwjDPmBKoNyj1z/MbpnUMQZ+5GM6AKZoplWfLWSZw
-   7mvNeDza9oZgz6mlmfssyjEzFWwYx83kPWXY4+6v88PUmfuCfEc5hOUO1
-   FwtgtOmKv05i2sks6gFxgqPPuPf4PNmhlL2v8FW/qjcDBOQ3ykqTYcjWv
-   ju/wENpfJcTlEXdwMjLXq3TGX10tb6qDWXpvOm2sbB0wZtxEo0IFF264A
-   0Gt7hYMvGRS5Pro2PQ0GAipklov1LB1ysGb8GD9mishqjUjqDzk0XUPrB
+  bh=ZvJCsNM8gCRFeXG3xspjSuRDvUlSdVawzrxA3IrXDdU=;
+  b=mbfsSKJlIRdZ0dI10YH3clTRSiSDIzeoyXRwf/rh5birL/7Ra9H9Fqj8
+   eAFYH071G21lBMOvLSoslrTxDT3iIVbEO7hPCmQrSWZQHUWz8cugYzUOf
+   P7b5DTNQoWAJhNlmCJaXvDvLnbCbI/2pJ8djVaBG8xVX7dvDzPOkS9acA
+   sAmTUS2bjvWrZuzcjwRHMu4I6CD9TqeEBb7bKKGTTDZkDFRrTt4glV//t
+   GUsgNrYn5Tq9CztJmgIXsslvt7bjUXnGoodB8OLJQbcM0Wf8GWkV56Cjd
+   /GaxZkmi8GNCnr5MxiQ3ztO+sNSyZol62jtal680fE3SkFFgLAWLUltyF
    g==;
-X-CSE-ConnectionGUID: jCEgmLDYSJ+rN4jvvOu0lQ==
-X-CSE-MsgGUID: ZHqJbs8DSe6QfZcXLKvpBQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="69492253"
+X-CSE-ConnectionGUID: GCIWkKdnSk+8E3qSuC7EGA==
+X-CSE-MsgGUID: qgh/7SVPQwq4AlXX4pm7Uw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="68231294"
 X-IronPort-AV: E=Sophos;i="6.19,316,1754982000"; 
-   d="scan'208";a="69492253"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 09:41:52 -0800
-X-CSE-ConnectionGUID: QA3EiLidSZC7kxroBm3LWw==
-X-CSE-MsgGUID: ZGup7eNSRe+q+/IkGlUXng==
+   d="scan'208";a="68231294"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 09:45:24 -0800
+X-CSE-ConnectionGUID: 2amsmZZfTxG9s2IGlSkIQQ==
+X-CSE-MsgGUID: A+3PCHlDS9WC7/jHTAEagw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,316,1754982000"; 
-   d="scan'208";a="191918464"
 Received: from rvuia-mobl.ger.corp.intel.com (HELO localhost) ([10.245.245.245])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 09:41:47 -0800
-Date: Wed, 19 Nov 2025 19:41:44 +0200
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 09:45:19 -0800
+Date: Wed, 19 Nov 2025 19:45:17 +0200
 From: Andy Shevchenko <andriy.shevchenko@intel.com>
 To: Jisheng Zhang <jszhang@kernel.org>
 Cc: Doug Berger <opendmb@gmail.com>,
@@ -80,10 +78,10 @@ Cc: Doug Berger <opendmb@gmail.com>,
 	Michal Simek <michal.simek@amd.com>, linux-gpio@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
 	linux-omap@vger.kernel.org
-Subject: Re: [PATCH v4 05/15] gpio: pxa: Use modern PM macros
-Message-ID: <aR4BWLo4BdyKhnlI@smile.fi.intel.com>
+Subject: Re: [PATCH v4 02/15] gpio: brcmstb: Use modern PM macros
+Message-ID: <aR4CLQ_2-kUM-e2F@smile.fi.intel.com>
 References: <20251119163327.16306-1-jszhang@kernel.org>
- <20251119163327.16306-6-jszhang@kernel.org>
+ <20251119163327.16306-3-jszhang@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -92,11 +90,11 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251119163327.16306-6-jszhang@kernel.org>
+In-Reply-To: <20251119163327.16306-3-jszhang@kernel.org>
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
  krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, Nov 20, 2025 at 12:33:17AM +0800, Jisheng Zhang wrote:
+On Thu, Nov 20, 2025 at 12:33:14AM +0800, Jisheng Zhang wrote:
 > Use the modern PM macros for the suspend and resume functions to be
 > automatically dropped by the compiler when CONFIG_PM or
 > CONFIG_PM_SLEEP are disabled, without having to use #ifdef guards.
@@ -107,15 +105,15 @@ On Thu, Nov 20, 2025 at 12:33:17AM +0800, Jisheng Zhang wrote:
 
 ...
 
->  static struct syscore_ops pxa_gpio_syscore_ops = {
-> -	.suspend	= pxa_gpio_suspend,
-> -	.resume		= pxa_gpio_resume,
-> +	.suspend	= pm_ptr(pxa_gpio_suspend),
-> +	.resume		= pm_ptr(pxa_gpio_resume),
->  };
+>  static const struct dev_pm_ops brcmstb_gpio_pm_ops = {
+> -	.suspend_noirq	= brcmstb_gpio_suspend,
+> -	.resume_noirq = brcmstb_gpio_resume,
+> +	.suspend_noirq = pm_sleep_ptr(brcmstb_gpio_suspend),
+> +	.resume_noirq = pm_sleep_ptr(brcmstb_gpio_resume),
 
-I believe this needs to be thoroughly checked and thought through as
-this is *not* a dev_pm_ops.
+Can it be DEFINE_NOIRQ_DEV_PM_OPS() / NOIRQ_SYSTEM_SLEEP_PM_OPS()?
+
+>  };
 
 -- 
 With Best Regards,
