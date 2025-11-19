@@ -1,356 +1,205 @@
-Return-Path: <linux-gpio+bounces-28719-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28720-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B55AC6C4AA
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 02:48:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C2DDCC6C5F9
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 03:27:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6D1774E8FD3
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 01:47:51 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 59AEB4E2BAE
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 02:27:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18B5620013A;
-	Wed, 19 Nov 2025 01:47:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFB742848A4;
+	Wed, 19 Nov 2025 02:27:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zsgy0Lqe"
+	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="BnPU31r7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023111.outbound.protection.outlook.com [52.101.127.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF271A9FB0;
-	Wed, 19 Nov 2025 01:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763516865; cv=none; b=OYbGTBP/jxrXT6AT5fmTXuQo10/d2s5iDhRq9k9XplsBEan19dyeXJ6bZWWqGnoJQ/1bxz8dytr2NLMRYTzmrSByfxupsxhw32dD7c23CJFXIzF6xBy5AoJXMky5nztZQkvho6ExR3S3bt16eetWOf39QPAGQ7V2d7O1OpwxmAc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763516865; c=relaxed/simple;
-	bh=WcaDjRtRAt/DK9JnOvyw0Lro6ZVU/ftzffYKlN1rZXM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MQDs4IURSA+DuV810+XljKp7ZOIHzSiw11gKpmPRUk/zXDu4VkqmRbSiOY82zFwyIvBTdcruDQEj0mb++tJ8/jQAvQ/exO17F/KDIrzEYczNMPw/4asPgonQVeUdIFHNIFlPS5h6EUjLskF/qJR07uEcwwlNmFl0WTkT4/9rGTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zsgy0Lqe; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763516864; x=1795052864;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WcaDjRtRAt/DK9JnOvyw0Lro6ZVU/ftzffYKlN1rZXM=;
-  b=Zsgy0Lqe8dn74wUeNEcNdzT+yW3g0zxPukddRPAfRGrN9AlLkCd79Zis
-   IRFRcadLsQ5Vj2Ua2WRlf22bChqIRaWK82qBJdeC3OBXnwZ92v1IgsTdM
-   wequjc9FyHyBPkUyPFGhfHxYGtgcAT0dmVxj1lbYagBer5jZyStzpqn6F
-   Ho/phYho+NKbeUhSl1pHa3aOkjO8XjFgo0dwRyU6VqXFUJMcZaN4F38W/
-   c5Kk93NetCJPuJPJ/oZrUJR9I053oK/rPz6krhsMVIXfpbwBYvLg95rxd
-   CM2YqL+5zbaVl4u2oCSYsWocDEnjIQp8/Un33IsZv179cWglRyTQb311L
-   Q==;
-X-CSE-ConnectionGUID: bma9gfepS4KoMmTdcwja9Q==
-X-CSE-MsgGUID: m6gtPvuDQcWUXyL5xPvpow==
-X-IronPort-AV: E=McAfee;i="6800,10657,11617"; a="75876608"
-X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
-   d="scan'208";a="75876608"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 17:47:44 -0800
-X-CSE-ConnectionGUID: YzR0Pp+cQ8mOtZaiblFtGw==
-X-CSE-MsgGUID: 5wonV8YxT7CnEE45U8PqDA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
-   d="scan'208";a="190190406"
-Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 18 Nov 2025 17:47:41 -0800
-Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vLXII-0002Kx-2Y;
-	Wed, 19 Nov 2025 01:47:38 +0000
-Date: Wed, 19 Nov 2025 09:47:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: 2724853925@qq.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Henrik Rydberg <rydberg@bitmath.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	2724853925@qq.com
-Subject: Re: [PATCH] input: touchscreen: Add ilitek touchscreen driver support
-Message-ID: <202511190932.OFk1oMBB-lkp@intel.com>
-References: <tencent_995E6FC62EDBC1EED14E6052847F270F6406@qq.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FBC81E8329;
+	Wed, 19 Nov 2025 02:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.111
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763519250; cv=fail; b=Hi9CqXzuTpIVg/Dqi/8ppghp0ifBVgk4HcOIJx2kKt+ZBkIy2iTk+JGuvf1CRT/0gPhp41LxUnTLYTU0jwtCCyr9jo5c2Y1AT6B//i2r1GtpOOXg8k8abGycNH5L92QdF1FPEYq86ruSp66I2WHzv23YuiBiINe/5cyxDFVaDZM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763519250; c=relaxed/simple;
+	bh=M9qWg364L09Q3J1of4DYNpWPtvtx69nicBOneuMpbtU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Sahj1oar+CWvek93x5abkz4JskcLqFf34roP8skzlwqE2EHoxowWr0hjr+CdPlEydfFZ8AFz1ORe/FsqYB2coaDGqoPqfSRh39DrXDmQICJGasSJNoyP/MrQSpa3SHsNmoaTr7w0siUtmbg30ob1LffbA33k73inWVBoEqHnRO8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=BnPU31r7; arc=fail smtp.client-ip=52.101.127.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ht55eN+MnhkD+qjvI9sOaS7vEcMY8exAF9l+mZ5W/G6yn23bDl8v5Cc17x0GHpPkRt6zUA+sLyZ63KVCKNthxqM4Y+306tU35tzn9doCgK+sDg8FXTJVsy7u3sA2KOc3qjPfFqJnkapgV1a9a+sBD2aI4dIBkVJXoeUVB3GR/7KNcHOiUAgOQ9eZYGB42FC1lFJDqhH8I2yJD3GubsLdMqEkE0De3hbS3gKTJqwz6z3oES9EjnKcfTtmdwWXvO5+ils2B21O6a1dM0oyIEEoNFrxkxpxSCZZWHXCHCauCa2yg2z7ijsudVNp3+c80NPm1sSrqB/wgOv6qHksUoczRw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=M9qWg364L09Q3J1of4DYNpWPtvtx69nicBOneuMpbtU=;
+ b=ngEn/+eX+DsE+rwJZ6gfKQH/LxrqJ7X424w+kOv3Iz1+oP2dLrUedO3yKGthNdQ5h9sfKak6r5J0vkdJSvAwPAMxTowuZHdf4KNAANJAPmtQXEVXz6OLVym5sMHmkSuWubOiFRZGS/sYq9OiAMlJRS9qyROFTNt/0bpb5XQeVjnCKFzWtO/LD7RmmX1xkJH8Ynxw8iPYAKnWxdvuYFvvZKYMWDgs79UVNAlCbn4VXx7RAJUErczhIfoL69m8gIO1yv7VgYT1jV3PK6HM2b3WSju5550DE8o7VqhHciArespDJclc2H4TFI4U40JhaeTuwvyvjKxQvsizP51MG8io4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
+ header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M9qWg364L09Q3J1of4DYNpWPtvtx69nicBOneuMpbtU=;
+ b=BnPU31r7za4anJ7S1lqiakHsvIYhHFqCn39uvMBV37Ip6xgaYTyyLINsKiRvgdGgxiHlhn4gwlSZR3bPA3h0rGfFmWCCb817S6JqENKzmrbFIvtGrD4LnOV9o4Ve0YiP7ce0fKjF1Q5Ef9JGWylHqJqxc52MQrw3ShrmSWq4CqLGyt+u+LXz5T4afrO4NsVPDET0AhnuipQL8bI6XRhaGZeJPTjVyENcDuEz/nnBy/P3UWha3Wl95y4+tq/W05Qz9DmJFAE1pD+MaHxHLq5/vLXxlQvkjQ1Gncktg+i3zrjcvJ4QCFwArHASjDguJPdMeLjK0cG/2yNr7yVY9OTKRg==
+Received: from SEYPR06MB5134.apcprd06.prod.outlook.com (2603:1096:101:5a::12)
+ by SEYPR06MB5181.apcprd06.prod.outlook.com (2603:1096:101:8c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.21; Wed, 19 Nov
+ 2025 02:27:22 +0000
+Received: from SEYPR06MB5134.apcprd06.prod.outlook.com
+ ([fe80::6b58:6014:be6e:2f28]) by SEYPR06MB5134.apcprd06.prod.outlook.com
+ ([fe80::6b58:6014:be6e:2f28%6]) with mapi id 15.20.9320.018; Wed, 19 Nov 2025
+ 02:27:22 +0000
+From: Jacky Chou <jacky_chou@aspeedtech.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Andrew
+ Jeffery <andrew@codeconstruct.com.au>, Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kwilczynski@kernel.org>, Manivannan
+ Sadhasivam <mani@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, "linux-aspeed@lists.ozlabs.org"
+	<linux-aspeed@lists.ozlabs.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-phy@lists.infradead.org"
+	<linux-phy@lists.infradead.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
+	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: [PATCH v5 6/8] PCI: Add FMT, TYPE and CPL status definition for TLP
+ header
+Thread-Topic: [PATCH v5 6/8] PCI: Add FMT, TYPE and CPL status definition for
+ TLP header
+Thread-Index: AQHcV78oxw3pQAYCo0+MHD1idq0RtbT3H9KAgAIoIzA=
+Date: Wed, 19 Nov 2025 02:27:20 +0000
+Message-ID:
+ <SEYPR06MB51340B04D9423EDEABFE9BA79DD7A@SEYPR06MB5134.apcprd06.prod.outlook.com>
+References: <20251117-upstream_pcie_rc-v5-6-b4a198576acf@aspeedtech.com>
+ <20251117172859.GA2466937@bhelgaas>
+In-Reply-To: <20251117172859.GA2466937@bhelgaas>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=aspeedtech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SEYPR06MB5134:EE_|SEYPR06MB5181:EE_
+x-ms-office365-filtering-correlation-id: e7a4cb08-81a0-4be2-3aa4-08de27132ae0
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700021;
+x-microsoft-antispam-message-info:
+ =?iso-8859-2?Q?S/PD1iHEg+ITnyVBPaua2SAZyE8HOi0gsc1if3DLqBdq3DtpIhYQrOcBEt?=
+ =?iso-8859-2?Q?YPCNTrMa6sQYAoKT8L3Ygo1ICTNjbgX+M15mEMxfCYgV1pGSon667eEviH?=
+ =?iso-8859-2?Q?CCYbjT2h4D8auEE7oaaPY7AVsjlKFfR/y/oM62iEfaKudG5zXPIbogU7Jm?=
+ =?iso-8859-2?Q?IOav5fE3yuRdUaeUXekLyCPC+np3zDqJzgrg1UHMrRTESgpTfJdlgTFa0n?=
+ =?iso-8859-2?Q?sOwvfDDZv2h/UcJPkI1kimMhYx9EsBpTDUy3wEiWtpn5ce66OqxS6Gk2wJ?=
+ =?iso-8859-2?Q?HlVTSQrApRF3TaSaDh4J1CoIuTU1WEsUcwUE/XXtkAmlBn45r+SMvAFatM?=
+ =?iso-8859-2?Q?AfHcJ/CA5u4fpGoGGGTuRZsJx5DyzD+B0p4OTGGbi6DPRpzPuNRLrrxQIK?=
+ =?iso-8859-2?Q?zjMQNd0SjkWNT9XQF/LsJEmWmivlkva3vfXO0q2mili+I0VtmdZYPfcJ6i?=
+ =?iso-8859-2?Q?Zv8cl1K0qQIKP1n0v1N818nUONw1E6OrtE2HbYgVn0r3Z1+tCj4xoc90Om?=
+ =?iso-8859-2?Q?BgVfngjPRv7aIsKifeGw+m27Hzk0d8ttiHH6DhOL/2+/p1nh8qDw4WQBF3?=
+ =?iso-8859-2?Q?LTn7PNF/oA/ziXJZVtUWJkHPL/hU+iBR05rnySc4nhATPI5qejUk1ZqtdL?=
+ =?iso-8859-2?Q?SXRcoXcoGD0z6G0d1BfmKh5jdSp5S6kUwH+MIngbukHJCZp3rtFyuG4F4+?=
+ =?iso-8859-2?Q?DijaMkosWid/uZUiRt81QfP4t78qwtGScr1DScyoFRtVT6Wfp9UQoT5L2s?=
+ =?iso-8859-2?Q?yv91/l83JxhtgXPOrZMAC4XFQBAlv2v19GpzejVmHRVpKkA2M3L3Yy4ANW?=
+ =?iso-8859-2?Q?O+m34XOmcfnJr0ZjEHLDUOYHgCIgVBska1untwIqywymQML/WqlEMXFP0K?=
+ =?iso-8859-2?Q?Z2QpA4+WVeVQVuWFj4TpajFW0wb9zvdcA2/j2ZaQfF9Pq58auNZjHJQ74d?=
+ =?iso-8859-2?Q?0t3+np5d7EQ/Sa5iWU9n+O7Gmdd3sR57/uLpK+zjnOmH62UO48UvNFDwt8?=
+ =?iso-8859-2?Q?tri1hjrP3hX5Uk2wKSqIx6bVTzdh8dT3c0J94aqdvTNxQgAOdVCesq71QE?=
+ =?iso-8859-2?Q?JQDIQorsOIAxK5HmFAT+t/qdiOVoIWYILvjGLEQgQNWRQTaLCbapXwc7xO?=
+ =?iso-8859-2?Q?DxLJUi6fRLLusauJj2EB0DvkvAPMQvkB40FjxJFLN6yFl2GE5EVWvDfFlV?=
+ =?iso-8859-2?Q?RVlahHfTBYcR2p2qFSpLc1yIIx/91l9b2e8aNFg3BfT7zKxcEoUm4HLQFf?=
+ =?iso-8859-2?Q?LeuoFue3SSIntk2SdoTENIBm3c5hJWgUr9d+Y3dWz91kPSN2Lcfre2W4su?=
+ =?iso-8859-2?Q?mdVq+Zl+N/T6Wx3jaju/e74/q50Egu4pfiWg5nM4tpGEXO5LrVuFkwH9Pg?=
+ =?iso-8859-2?Q?LLMbNYR9wIi35FBAi2FuJOt8unCgUI45ME7WU+6jLZQoGEwmQrtr3RmMTt?=
+ =?iso-8859-2?Q?WqlSb/c+6xghmifWMIm7hNzc4gwkVYQ4Y92t/owHcemezf5tUEY8v53Don?=
+ =?iso-8859-2?Q?uQIHj9T5sPNARlKHmy93OxgzqQ/z+Sn1ZqTExuew9o95Wx7jVg61SNm9HM?=
+ =?iso-8859-2?Q?/Vz7NRVJMeT4o30kcH9lEUUPauzY?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-tw;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB5134.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700021);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-2?Q?UZ3n9gSw7+dwJ02C/sM0Tw3myoMjpLY+elZ8XxZzfmqk96Xi9F+RXMRdFx?=
+ =?iso-8859-2?Q?B/QmL5I8sX1oYj58SQf3SLE+9BCPjXLJZUySF3zx/8PpouZh4Sy1Iehqua?=
+ =?iso-8859-2?Q?mByu/M1IobKk4+gXcwMtIDo/2CISsbXGN+5mVbR9peVFes5Rbpy15rPh1m?=
+ =?iso-8859-2?Q?ya7nv+ZjqwsK+I79DbF+75cM+EZ02aiSDMs9xP/GtejxOUxv60k6FUqhUu?=
+ =?iso-8859-2?Q?lqdB9PKoxqGJASmQPL0DfoEIsw6Qv/XIDcgcDAl1zIaJCW8Fazul7DUfq+?=
+ =?iso-8859-2?Q?XARNu6vFdZ+IKdVJ3bQh6PVYtNstjcPoV5Yhd2UiUbehdp1iFm+zRVHcfm?=
+ =?iso-8859-2?Q?673gYmuv7RCPqubGM5g8/I0g/HJHBHTZPx5imyDHblU+MxYh7joUNx3EV3?=
+ =?iso-8859-2?Q?KFEI+sjmuvFLWrZFVQBOYsaflPIHK14VtJ9+QrgspRTGh8h6M83OEimsoF?=
+ =?iso-8859-2?Q?k7nC6ZU8uKcBGoPkPIrPXZxh2ytHlqxscF7TqiFWlurC7xdwGL0F0NP48i?=
+ =?iso-8859-2?Q?jiAoLGiGbq+C+owBDVdys5eXRHFrBiz5rFRahuZsrb4LpmWlgdafUq/dWN?=
+ =?iso-8859-2?Q?UtD+35TmJ8EVxyLu+hnp+8CFj2ATcLYlB1u+amc7XBCCksBhl/NdmqXjy7?=
+ =?iso-8859-2?Q?Qnq6CMPd4ZYvcoXAkVMADezYseH387vxISBE07HhzZuLLZEsSz7cI12CJY?=
+ =?iso-8859-2?Q?zJlYBoKqKsMtNHTEpGHUZPkjIf0aQGqAlUljE/XQHCpobpH8QZPVUGfb0I?=
+ =?iso-8859-2?Q?5AiILUaVAf1etONlXJW9ytjb3G6ba14XZW7uQoAzvmXlH0Giz2paBpUKt5?=
+ =?iso-8859-2?Q?Xsb76lYjOQCOoFx/M0WTECbdxQ2aCqoGLfJ2hT8LN9td9+FqB021Ph9QMm?=
+ =?iso-8859-2?Q?RGBJL0OV1VxEub2trHaYuy3hmmzw7OcVQykl1dxbAKZKiuQ940v9I8Xikp?=
+ =?iso-8859-2?Q?vXmv2oUFERi2jjYFHI6B7NM1lUGs+q9KqBRKBKQKO70zrJS+RbOqzrFBlX?=
+ =?iso-8859-2?Q?+oQMHownXU3CJXsFztG+tV/3AODGIBIxgmUP4x8yhwUYR0rT4f8Wbr0p+J?=
+ =?iso-8859-2?Q?W4e2s9JHR1suaXe0IilzE1uNdPQnrRLCVSMSESxHXG3VBnaAlmyqmaawF5?=
+ =?iso-8859-2?Q?oyJfzQW4Y/DctFZ0Rjn0veBzZFFHKLHgZXVQw6EjnKFWBZhE9pxIu8tdWz?=
+ =?iso-8859-2?Q?mjx9i/fuNttwFjJ0kYkpNIVjx74q9xt5uuysn14h84q38BZBSHrlJ9+/+/?=
+ =?iso-8859-2?Q?TOVwMWjqKuG8GrM6IMnLxqin4L0ofebkJv9U8ovhsNWXcwuG2S5IuLxzJF?=
+ =?iso-8859-2?Q?0g4xkhfimsI7Hif5BvNpNdqf14NLjfOZYBtxYThKu1GWZ5BC45ScWSoCg2?=
+ =?iso-8859-2?Q?xM0U2HD3fK7oD9Yb+ZjPThHUdMzvKHabyPm177Ory8nUVhXDJ/y9DO5MlA?=
+ =?iso-8859-2?Q?qXdc00MGexWg2t7poDoDNkuCJ+95DTHgCgIc3xyVlHlylGXMWCrWA0tefQ?=
+ =?iso-8859-2?Q?ld+Y2a6+wDJQXkoLwg9M3DVgSXDS0dikDb/2LdQllJMcWwBSHYYpyRhsSn?=
+ =?iso-8859-2?Q?/19rETpIq9eON5/oODQ6pA4Sm9wV3pyTvJAuz9K02eQMSz14wVGI2qVBXm?=
+ =?iso-8859-2?Q?OhdW80RkZtKhq186Q01oYST59RIdRApvNS?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <tencent_995E6FC62EDBC1EED14E6052847F270F6406@qq.com>
+X-OriginatorOrg: aspeedtech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB5134.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7a4cb08-81a0-4be2-3aa4-08de27132ae0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2025 02:27:20.8850
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 35d/LTWw4Z0YT3d9LQ3NMm8TPjbd4F1khY+dtvxAcO2CrNdRrBUKN/+jMYPsOE5B2FhQc4ezS4ZEo2O7BMwMwxHGov2UkVjDBjMMotZNi28=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB5181
 
-Hi,
+Hi Bjorn,
 
-kernel test robot noticed the following build warnings:
+Thank you for your reply.
 
-[auto build test WARNING on dtor-input/next]
-[also build test WARNING on dtor-input/for-linus linus/master v6.18-rc6 next-20251118]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > According to PCIe specification, add FMT, TYPE and CPL status
+> > definition for TLP header.
+> >
+> > Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
+>=20
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>=20
+> OK by me, but it'd be nice to move up a few lines so this is with the oth=
+er
+> TLP-related items and the unrelated PCI_BUS_BRIDGE_*_WINDOW values
+> aren't in the middle.
+>=20
+> Might even consider moving these to be just above the Message Routing
+> constants so things are generally in the order they appear in the spec.
+>=20
 
-url:    https://github.com/intel-lab-lkp/linux/commits/2724853925-qq-com/input-touchscreen-Add-ilitek-touchscreen-driver-support/20251116-215220
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git next
-patch link:    https://lore.kernel.org/r/tencent_995E6FC62EDBC1EED14E6052847F270F6406%40qq.com
-patch subject: [PATCH] input: touchscreen: Add ilitek touchscreen driver support
-config: sh-randconfig-r112-20251119 (https://download.01.org/0day-ci/archive/20251119/202511190932.OFk1oMBB-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 11.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251119/202511190932.OFk1oMBB-lkp@intel.com/reproduce)
+I'll move these above the Message Routing constants in the next version.
+Thanks for the suggestion.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511190932.OFk1oMBB-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:93:38: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void const [noderef] __user *from @@     got char const *buf @@
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:93:38: sparse:     expected void const [noderef] __user *from
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:93:38: sparse:     got char const *buf
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:239:45: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void const [noderef] __user *from @@     got unsigned char [usertype] * @@
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:239:45: sparse:     expected void const [noderef] __user *from
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:239:45: sparse:     got unsigned char [usertype] *
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:268:35: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void [noderef] __user *to @@     got unsigned char [usertype] * @@
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:268:35: sparse:     expected void [noderef] __user *to
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:268:35: sparse:     got unsigned char [usertype] *
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:279:35: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void [noderef] __user *to @@     got unsigned char [usertype] * @@
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:279:35: sparse:     expected void [noderef] __user *to
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:279:35: sparse:     got unsigned char [usertype] *
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:286:35: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void [noderef] __user *to @@     got unsigned char [usertype] * @@
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:286:35: sparse:     expected void [noderef] __user *to
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:286:35: sparse:     got unsigned char [usertype] *
->> drivers/input/touchscreen/ilitek/ilitek_tool.c:307:21: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected signed int [noderef] __user *__pu_addr @@     got signed int [usertype] * @@
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:307:21: sparse:     expected signed int [noderef] __user *__pu_addr
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:307:21: sparse:     got signed int [usertype] *
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:312:45: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void const [noderef] __user *from @@     got unsigned char [usertype] * @@
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:312:45: sparse:     expected void const [noderef] __user *from
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:312:45: sparse:     got unsigned char [usertype] *
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:324:45: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void const [noderef] __user *from @@     got unsigned char [usertype] * @@
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:324:45: sparse:     expected void const [noderef] __user *from
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:324:45: sparse:     got unsigned char [usertype] *
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:340:45: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void const [noderef] __user *from @@     got unsigned char [usertype] * @@
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:340:45: sparse:     expected void const [noderef] __user *from
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:340:45: sparse:     got unsigned char [usertype] *
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:365:35: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void [noderef] __user *to @@     got unsigned char [usertype] * @@
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:365:35: sparse:     expected void [noderef] __user *to
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:365:35: sparse:     got unsigned char [usertype] *
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:416:26: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void [noderef] __user *to @@     got char *buf @@
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:416:26: sparse:     expected void [noderef] __user *to
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:416:26: sparse:     got char *buf
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:444:17: sparse: sparse: incorrect type in initializer (incompatible argument 2 (different address spaces)) @@     expected int ( *read )( ... ) @@     got int ( * )( ... ) @@
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:444:17: sparse:     expected int ( *read )( ... )
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:444:17: sparse:     got int ( * )( ... )
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:445:18: sparse: sparse: incorrect type in initializer (incompatible argument 2 (different address spaces)) @@     expected int ( *write )( ... ) @@     got int ( * )( ... ) @@
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:445:18: sparse:     expected int ( *write )( ... )
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:445:18: sparse:     got int ( * )( ... )
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:457:22: sparse: sparse: incorrect type in initializer (incompatible argument 2 (different address spaces)) @@     expected int ( *proc_read )( ... ) @@     got int ( * )( ... ) @@
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:457:22: sparse:     expected int ( *proc_read )( ... )
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:457:22: sparse:     got int ( * )( ... )
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:458:23: sparse: sparse: incorrect type in initializer (incompatible argument 2 (different address spaces)) @@     expected int ( *proc_write )( ... ) @@     got int ( * )( ... ) @@
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:458:23: sparse:     expected int ( *proc_write )( ... )
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:458:23: sparse:     got int ( * )( ... )
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:571:37: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void const [noderef] __user *from @@     got char const *buf @@
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:571:37: sparse:     expected void const [noderef] __user *from
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:571:37: sparse:     got char const *buf
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:610:23: sparse: sparse: incorrect type in initializer (incompatible argument 2 (different address spaces)) @@     expected int ( *proc_write )( ... ) @@     got int ( * )( ... ) @@
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:610:23: sparse:     expected int ( *proc_write )( ... )
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:610:23: sparse:     got int ( * )( ... )
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:622:33: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void const [noderef] __user *from @@     got char const *buf @@
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:622:33: sparse:     expected void const [noderef] __user *from
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:622:33: sparse:     got char const *buf
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:684:23: sparse: sparse: incorrect type in initializer (incompatible argument 2 (different address spaces)) @@     expected int ( *proc_write )( ... ) @@     got int ( * )( ... ) @@
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:684:23: sparse:     expected int ( *proc_write )( ... )
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:684:23: sparse:     got int ( * )( ... )
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:693:36: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void const [noderef] __user *from @@     got char const *buf @@
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:693:36: sparse:     expected void const [noderef] __user *from
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:693:36: sparse:     got char const *buf
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:731:23: sparse: sparse: incorrect type in initializer (incompatible argument 2 (different address spaces)) @@     expected int ( *proc_write )( ... ) @@     got int ( * )( ... ) @@
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:731:23: sparse:     expected int ( *proc_write )( ... )
-   drivers/input/touchscreen/ilitek/ilitek_tool.c:731:23: sparse:     got int ( * )( ... )
-
-vim +307 drivers/input/touchscreen/ilitek/ilitek_tool.c
-
-   218	
-   219	static FOPS_IOCTL_FUNC(ilitek_file_ioctl, uint32_t cmd, unsigned long arg)
-   220	{
-   221		static u8 *buffer;
-   222		static unsigned long len;
-   223		s32 ret = 0;
-   224		int tmp;
-   225	
-   226		buffer = kmalloc(ILITEK_IOCTL_MAX_TRANSFER, GFP_KERNEL);
-   227		memset(buffer, 0, ILITEK_IOCTL_MAX_TRANSFER);
-   228	
-   229		switch (cmd) {
-   230		case ILITEK_IOCTL_I2C_WRITE_DATA:
-   231		case ILITEK_IOCTL_I2C_WRITE_DATA_COMPAT:
-   232			if (len > ILITEK_IOCTL_MAX_TRANSFER) {
-   233				TP_ERR(NULL, "invalid write len: %lu > %lu too large\n",
-   234					len, ILITEK_IOCTL_MAX_TRANSFER);
-   235				ret = -EINVAL;
-   236				break;
-   237			}
-   238	
-   239			if (copy_from_user(buffer, (u8 *)arg, len)) {
-   240				TP_ERR(NULL, "copy data from user space, failed\n");
-   241				ret = -EFAULT;
-   242				break;
-   243			}
-   244	
-   245			mutex_lock(&ts->ilitek_mutex);
-   246			ret = ilitek_write_and_read(buffer, len, 0, NULL, 0);
-   247			mutex_unlock(&ts->ilitek_mutex);
-   248			if (ret < 0)
-   249				TP_ERR(NULL, "i2c write failed, cmd: %x\n", buffer[0]);
-   250			break;
-   251		case ILITEK_IOCTL_I2C_READ_DATA:
-   252		case ILITEK_IOCTL_I2C_READ_DATA_COMPAT:
-   253			if (len > ILITEK_IOCTL_MAX_TRANSFER) {
-   254				TP_ERR(NULL, "invalid read len: %lu > %lu too large\n",
-   255					len, ILITEK_IOCTL_MAX_TRANSFER);
-   256				ret = -EINVAL;
-   257				break;
-   258			}
-   259	
-   260			mutex_lock(&ts->ilitek_mutex);
-   261			ret = ilitek_write_and_read(NULL, 0, 0, buffer, len);
-   262			mutex_unlock(&ts->ilitek_mutex);
-   263			if (ret < 0) {
-   264				TP_ERR(NULL, "i2c read failed, buf: %x\n", buffer[0]);
-   265				break;
-   266			}
-   267	
-   268			if (copy_to_user((u8 *)arg, buffer, len)) {
-   269				ret = -EFAULT;
-   270				TP_ERR(NULL, "copy data to user space, failed\n");
-   271			}
-   272			break;
-   273		case ILITEK_IOCTL_I2C_WRITE_LENGTH:
-   274		case ILITEK_IOCTL_I2C_READ_LENGTH:
-   275			len = arg;
-   276			break;
-   277		case ILITEK_IOCTL_DRIVER_INFORMATION:
-   278			memcpy(buffer, driver_ver, 7);
-   279			if (copy_to_user((u8 *)arg, buffer, 7))
-   280				ret = -EFAULT;
-   281			break;
-   282		case ILITEK_IOCTL_I2C_UPDATE:
-   283			break;
-   284		case ILITEK_IOCTL_I2C_INT_FLAG:
-   285			buffer[0] = !(gpio_get_value(ts->irq_gpio));
-   286			if (copy_to_user((u8 *)arg, buffer, 1)) {
-   287				TP_ERR(NULL, "copy data to user space, failed\n");
-   288				ret = -EFAULT;
-   289				break;
-   290			}
-   291			TP_DBG(NULL, "ILITEK_IOCTL_I2C_INT_FLAG = %d.\n", buffer[0]);
-   292			break;
-   293		case ILITEK_IOCTL_START_READ_DATA:
-   294			ilitek_irq_enable();
-   295			ts->unhandle_irq = false;
-   296			TP_MSG(NULL, "enable_irq and ts->unhandle_irq = false.\n");
-   297			break;
-   298		case ILITEK_IOCTL_STOP_READ_DATA:
-   299			ilitek_irq_disable();
-   300			ts->unhandle_irq = true;
-   301			TP_MSG(NULL, "disable_irq and ts->unhandle_irq = true.\n");
-   302			break;
-   303		case ILITEK_IOCTL_RESET:
-   304			ilitek_reset(ts->dev->reset_time);
-   305			break;
-   306		case ILITEK_IOCTL_INT_STATUS:
- > 307			if (put_user(gpio_get_value(ts->irq_gpio), (s32 *)arg))
-   308				ret = -EFAULT;
-   309			break;
-   310	#ifdef ILITEK_TUNING_MESSAGE
-   311		case ILITEK_IOCTL_DEBUG_SWITCH:
-   312			if (copy_from_user(buffer, (u8 *)arg, 1)) {
-   313				ret = -EFAULT;
-   314				break;
-   315			}
-   316			TP_MSG(NULL, "ilitek The debug_flag = %d.\n", buffer[0]);
-   317			if (buffer[0] == 0)
-   318				ilitek_debug_flag = false;
-   319			else if (buffer[0] == 1)
-   320				ilitek_debug_flag = true;
-   321			break;
-   322	#endif
-   323		case ILITEK_IOCTL_I2C_SWITCH_IRQ:
-   324			if (copy_from_user(buffer, (u8 *)arg, 1)) {
-   325				ret = -EFAULT;
-   326				break;
-   327			}
-   328	
-   329			if (buffer[0] == 0)
-   330				ilitek_irq_disable();
-   331			else
-   332				ilitek_irq_enable();
-   333	
-   334			break;
-   335		case ILITEK_IOCTL_UPDATE_FLAG:
-   336			ts->operation_protection = arg;
-   337			TP_MSG(NULL, "operation_protection = %d\n", ts->operation_protection);
-   338			break;
-   339		case ILITEK_IOCTL_I2C_UPDATE_FW:
-   340			if (copy_from_user(buffer, (u8 *)arg, 35)) {
-   341				TP_ERR(NULL, "copy data from user space, failed\n");
-   342				ret = -EFAULT;
-   343				break;
-   344			}
-   345	
-   346			ilitek_irq_disable();
-   347			mutex_lock(&ts->ilitek_mutex);
-   348			ret = ilitek_write_and_read(buffer, buffer[34], 0, NULL, 0);
-   349			mutex_unlock(&ts->ilitek_mutex);
-   350			ilitek_irq_enable();
-   351	
-   352			if (ret < 0)
-   353				TP_ERR(NULL, "i2c write, failed\n");
-   354	
-   355			break;
-   356		case ILITEK_IOCTL_I2C_INT_CLR:
-   357			TP_DBG(NULL, "ILITEK_IOCTL_I2C_INT_CLR, set get_INT false\n");
-   358			atomic_set(&ts->get_INT, 0);
-   359			break;
-   360		case ILITEK_IOCTL_I2C_INT_POLL:
-   361		case ILITEK_IOCTL_I2C_INT_POLL_COMPAT:
-   362			tmp = atomic_read(&ts->get_INT);
-   363			TP_DBG(NULL, "ILITEK_IOCTL_I2C_INT_POLL, get_INT: %d\n", tmp);
-   364	
-   365			if (copy_to_user((u8 *)arg, &tmp, 1)) {
-   366				TP_ERR(NULL, "copy data to user space, failed\n");
-   367				ret = -EFAULT;
-   368			}
-   369			break;
-   370		case ILITEK_IOCTL_I2C_ISR_TYPE:
-   371			TP_MSG(NULL, "ILITEK_IOCTL_I2C_ISR_TYPE, set ISR type: %lu\n", arg);
-   372			ts->irq_handle_type = (arg >> 16);
-   373			ts->irq_read_len = arg & 0xFFFF;
-   374			break;
-   375		case ILITEK_IOCTL_I2C_NETLINK:
-   376			TP_MSG(NULL, "ILITEK_IOCTL_I2C_NETLINK, set netlink: %s with ETH: %hhu\n",
-   377				(arg >> 8) ? "ON" : "OFF", (u8)(arg & 0xFF));
-   378	
-   379			if (arg >> 8)
-   380				ret = ilitek_netlink_init(arg & 0xFF);
-   381			else
-   382				ilitek_netlink_exit();
-   383	
-   384			break;
-   385		default:
-   386			TP_ERR(NULL, "unrecognized ioctl cmd: 0x%04x\n", cmd);
-   387			ret = -EINVAL;
-   388			break;
-   389		}
-   390	
-   391		kfree(buffer);
-   392		return (ret < 0) ? ret : 0;
-   393	}
-   394	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Jacky
 
