@@ -1,167 +1,119 @@
-Return-Path: <linux-gpio+bounces-28717-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28718-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92DE4C6C347
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 02:01:04 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A337C6C457
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 02:38:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5117E4ECF25
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 00:56:30 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTPS id 1AD9A2C01B
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 01:38:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3091922C32D;
-	Wed, 19 Nov 2025 00:56:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5BF623EABC;
+	Wed, 19 Nov 2025 01:38:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QEJc2POE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DyrYJZc8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956332236EB
-	for <linux-gpio@vger.kernel.org>; Wed, 19 Nov 2025 00:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 951012236EB
+	for <linux-gpio@vger.kernel.org>; Wed, 19 Nov 2025 01:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763513764; cv=none; b=LxvxUuWOIylCbrmPw1YORJXNXW8OW1BZ3R79fi16Na1Yxnx2bL/zZGaxb1PcyBnubjYK2T8YDV0H8DlZHTn8+3gXzeQT9GKizXc8apJkGKaC9l4XuptMtH5BNVUjlfuQiKD2e6lv/OjqLT9q6D2EQDPG3rD41eXX7qbKCgninN4=
+	t=1763516289; cv=none; b=iuey7GVjyIuuA5lHPyWuwmuR8R23UXRn085d+owdIOdFwpkWKFa9Z/+4/FF3wUiqp1uoX9pX0uAGxGsaKBCr3dUwi6R+9lASBVUr73RUxSGQ19a8aOlt9rHxcv2/0l8nUyNtAPtyo8sbXEqNS/+dKRlkRJYol1nS1L9pvpnVuS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763513764; c=relaxed/simple;
-	bh=BKrNrP8BjGezbcXd8uDclY2ruF3VWM3i6lCtYxUZQK8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WF9+u9cmLJ8QPfAE5H7kHEzzL/MQdD5lgs8cfNkXhmtTQ1G8rcf8viyDTs1uxSgaLcFDlmDBoRci8Aj3JcgW5o9/VdCXhIJ7Q5d5Xkwxx8mw1ggRpJA9gaTXu9BmSCzUNsAfMaHIncg/w9r7JKt84jC8GHj0I84pJztM5cH9Dmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QEJc2POE; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7b8d99ad095so302971b3a.0
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 16:56:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763513760; x=1764118560; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qo4JEq+KOie/L0hcnmnLjawlkwhdvWZpyF7Tskgs2WA=;
-        b=QEJc2POEKdeXlpGAMhH/yh9wa04es9nE9uwVsto6r0yrmjKr5H/BzGo8LaFGlsQCHG
-         M9PiOSCklUYE65LHioTA8Q+GzCRT7vn5fElb7WrHQsPNEQxh4iZA44wODuZIuKZvsLfN
-         0x4jqubYGaIp63RHcYy7Rc+W858ZHyN58S5TGK+t3RZjQw14MDBsHUGm4YbJm7BLjLc3
-         DYUDZPBIHHRR3KMFa35gyQFk0ogN+ikqpIuqMqCTouGB59JnRdNGhcgJWjfOP/pXt05e
-         VIZIunOFV5428Ji4512XQigy6HjDUfadcBDD4DauYs4hdgRfWdnOoga4nvDNZcMSEuNR
-         F88w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763513760; x=1764118560;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Qo4JEq+KOie/L0hcnmnLjawlkwhdvWZpyF7Tskgs2WA=;
-        b=RtfJ63WjZl6gBs8YDFPfjRWnMIdZ2LBsPE1+EEECwuqJWZgbOq50VTSEzqL+QSdy4w
-         EbIbN+Qr2kHi2CkbSpvSAzWs6ktoY1QMtGJqhTOnVWai/EB54ZVSMbClc/d1GX4mUD+S
-         Pp5kAspkdgepkkoPvLVzMldTHZb0xKk6MqiMYXhz0nRSPRTVijpxQI1aS3HqNgLoyuT8
-         I55IxtG0ORmxC3o58XYcCygIY2LJg21PaE4sqEcHNrtHqCdjw4r1brOzH14zyjVDfQ2H
-         SpWisQdDZOABTnrB1oil0pr0aqPm4NMiAs4PPBspp2NzFoM1MvjZTFdQy7Oj1HtbIGgV
-         8TaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXyJohIaMfkm3eoYXSz+k62+FscQBBhfOeQJIkma4R3ikQ3Qtqnz7YhUSy9OebujIJVYH0Sw3fFgxMv@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBDABZGqfutU7S9gSh+Jgaad9bxVoxi1iq7CcCBFU/nEd9ylMO
-	/2OuGBTEqQpH/jcpAn4dKkkAeSfcm0szaSds4MitAyEItSdhY5OnBufGKCWEGDncJGQ=
-X-Gm-Gg: ASbGncvgF2z23OvgnMwLsVF+q+iwgf9OUY9XZIu40Il3+ohVAzA+Tgt3FXCpGh5o6cT
-	TIJm59PrXwiZ6sN6iZkyrr8rSFmnOpCLI4URc1aVKLGKa8hg5rMgI7oSQZaXT6gG4ol54qirI+Z
-	w9KnQP9UYUZeQ82TaHIRMIBa0iLcFZ4cCcHcz2ff5XiFxpsFpKXYQp5P//BtMPZ+1+5NyGj+9PD
-	ypcIkkeF5P9dLHI1R02/JJCLVX3dy3Kt+puwPI/0dE56fbCY5f+eG9/l5jucaN2ixm7KR3cIy5f
-	fMOmG5sxtWvb7CkSNWWLOqKxf6leNgdvUDiyoDesjl1BYu7YoDdnXSu0sqs74V+wYLhcsL9jO/W
-	f8uNpZfpnsW5xjkbYeZghruhBE8prgpxMaQqQ91LGBB3St9tUyElb7KU2tE2EeYUCU9FzBTKfh2
-	ggB34zhKNY+qQ=
-X-Google-Smtp-Source: AGHT+IE/M14afXvdq5MKXj+LWlmsFFeyMGuj4xCweOKwCSV1tbS4gqr5aW8zZmdh7h2vwGllY/FvLQ==
-X-Received: by 2002:a05:6a20:9190:b0:35f:5896:859b with SMTP id adf61e73a8af0-3612ed3d961mr677749637.4.1763513759747;
-        Tue, 18 Nov 2025 16:55:59 -0800 (PST)
-Received: from archie.me ([210.87.74.117])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7b927731e65sm17728848b3a.62.2025.11.18.16.55.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Nov 2025 16:55:58 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id 514404241834; Wed, 19 Nov 2025 07:55:49 +0700 (WIB)
-Date: Wed, 19 Nov 2025 07:55:48 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Levente =?utf-8?B?UsOpdsOpc3o=?= <levente.revesz@eilabs.com>,
-	linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH v1 1/1] Documentation: gpio: Add a compatibility and
- feature list for PCA953x
-Message-ID: <aR0VlNp-kR8kj9_2@archie.me>
-References: <20251112224924.2091880-1-andriy.shevchenko@linux.intel.com>
- <aRfWouKGA7q2ufCV@archie.me>
- <aRzBGhsLA_s1rJbM@smile.fi.intel.com>
+	s=arc-20240116; t=1763516289; c=relaxed/simple;
+	bh=1zFHC/D3qDhaCV+4B0RKeie8bN/hEL/zcC1isKO/Ij8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HBjBuk0yyOgwb6zlr71YMs+suAWRvZLHrUUfM9qWkg/2NArZhzIq5GW7Rjni5hX7HnIM2IdHG07LLujD0tZIMXoKfM4F8a8wkgoq2YLKTIohmHKCRwubEoYFsDDwBqT7QE98W9aUjcyyJK3RrmEB206G0o3ygMCgoAu9p+m/HYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DyrYJZc8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E37F3C2BCAF
+	for <linux-gpio@vger.kernel.org>; Wed, 19 Nov 2025 01:38:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763516288;
+	bh=1zFHC/D3qDhaCV+4B0RKeie8bN/hEL/zcC1isKO/Ij8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=DyrYJZc8PgBRbAWOD6ahSAjnzIZaAqEDmWlYJTBg0b3QY4dMYvGY0G2Tn5olZ4p2U
+	 QNnPAldLRTslZLnkMYnS5Z1+lq6Tq66u+4Yr+obMtLYF4pOmQItSd38GqYdktJE2sx
+	 MRD5Ju7sIBAeUc6ppPCrGjezJqskwzg+qe+7bU6c+tWJyfFlT6L+lPHw3+bKVj0+3A
+	 iuzhnfwQNKHTAJaVd5y345ThFOeP53Du8E0dYPpizfNat9k4HX9deSmtYDxf02eHXc
+	 4KqYP2Hq9PuTzQmxkf8QVXz2dvcCmjb6m89tssDv66CxklYSgoDttBfhpasEuPt4p9
+	 5LOFRx6xZqWlA==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-640aa1445c3so9613652a12.1
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Nov 2025 17:38:08 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWvTwAZlC1zAkYrJ5Tb0XOIPk/7pmhgQopIvuA0EJaLn63p1gw1nmaPg+RtPJPXkSmCX0ZXK2gG/xZS@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx71NtcoXkYQJkjeJ77ApzHBPNi8xpaVXyV6S5TEpr4p61mv8HE
+	BHmQcOCeWY7rhqqDSX6xiiD5NgsME0uhZJomvjtuHguMiuiFgrmjuBw/xv+jHVHrwkFgqHaFB75
+	qFfaiFA2s+YQkwN+Df+qQKVeJECECbQ==
+X-Google-Smtp-Source: AGHT+IEGIARixQQxL/Z1vr1zZwusANAarRAXKjnwQT9SgCWjwfycQbJPhMJgCUV5i3+Ije/OVDWoe3jsxHkuyDWz110=
+X-Received: by 2002:a05:6402:2396:b0:640:a836:eacf with SMTP id
+ 4fb4d7f45d1cf-64350ead477mr11536886a12.26.1763516286855; Tue, 18 Nov 2025
+ 17:38:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yOYvkH9L78ohLBAH"
-Content-Disposition: inline
-In-Reply-To: <aRzBGhsLA_s1rJbM@smile.fi.intel.com>
-
-
---yOYvkH9L78ohLBAH
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20251117215138.4353-1-sander@svanheule.net> <20251117215138.4353-3-sander@svanheule.net>
+ <CAL_Jsq+Mzj+3d4q+xQLq_GEYzRJA6E+CEJ9M8FQH6kL9eBZhVg@mail.gmail.com> <9fc358372ef267530b4304b4fa1cf5643c18cb42.camel@svanheule.net>
+In-Reply-To: <9fc358372ef267530b4304b4fa1cf5643c18cb42.camel@svanheule.net>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 18 Nov 2025 19:37:55 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKKpymk_i9c=29Zq0QSzHMU3x0RPWjBMmW84k_5jUe4Jg@mail.gmail.com>
+X-Gm-Features: AWmQ_bma3IwgMlrXQXQ04kE3R6adJH2pYZDDa4bWglo_Mov9dGx6o8xd45F7CwY
+Message-ID: <CAL_JsqKKpymk_i9c=29Zq0QSzHMU3x0RPWjBMmW84k_5jUe4Jg@mail.gmail.com>
+Subject: Re: [PATCH v7 2/6] dt-bindings: mfd: Binding for RTL8231
+To: Sander Vanheule <sander@svanheule.net>
+Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Michael Walle <mwalle@kernel.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 18, 2025 at 08:55:22PM +0200, Andy Shevchenko wrote:
-> On Sat, Nov 15, 2025 at 08:25:54AM +0700, Bagas Sanjaya wrote:
-> > On Wed, Nov 12, 2025 at 11:48:20PM +0100, Andy Shevchenko wrote:
->=20
-> When answering to the long email, please remove unrelated context.
-> Thanks.
+On Tue, Nov 18, 2025 at 3:57=E2=80=AFPM Sander Vanheule <sander@svanheule.n=
+et> wrote:
+>
+> Hi Rob,
+>
+> On Tue, 2025-11-18 at 15:28 -0600, Rob Herring wrote:
+> > On Mon, Nov 17, 2025 at 3:52=E2=80=AFPM Sander Vanheule <sander@svanheu=
+le.net> wrote:
+> > > +patternProperties:
+> > > +  "-pins$":
+> > > +    type: object
+> > > +    $ref: /schemas/pinctrl/pinmux-node.yaml#
+> >
+> >          additionalProperties: false
+>
+> In this case dt_binding_check doesn't recognize input-debounce. The follo=
+wing seems to
+> work for the provided example:
+>
+> -    $ref: /schemas/pinctrl/pinmux-node.yaml#
+> +    allOf:
+> +      - $ref: /schemas/pinctrl/pincfg-node.yaml#
+> +      - $ref: /schemas/pinctrl/pinmux-node.yaml#
+> +
+> +    additionalProperties: false
+>
+>
+> with this included in the led node properties:
+> +      input-debounce: true
+>
+> If I understand correctly, "unevaluatedProperties: false" (like for the l=
+eds binding)
+> would allow everything from the referenced pincfg-node and pinmux-node sc=
+hemas, which is
+> more than is actually supported by this device.
 
-Thanks for the tip!
+Yes, that works too. The first way lets you be explicit about which
+referenced properties are used, but either way is fine. If it is only
+1 property, then I'd probably go with the first way.
 
->=20
-> ...
->=20
-> > > +I went through all the datasheets and created this note listing
-> > > +chip functions and register layouts.
-> >=20
-> > Nit: above first-person intro can be instead edited to:
-> >=20
-> > This document lists chip functions and register layouts for all chips
-> > supported by PCA953x driver.
->=20
-> I believe it's fine to leave author's original text here. Also the propos=
-ed
-> version is not so clear how these document was assembled.
-
-Ack.
-
->=20
-> ...
->=20
-> > > +.. note::
-> > > +     This is followed by all supported chips, except by pcal6534.
-> >=20
-> > Do you mean aforementioned banks offset arrangement?
->=20
-> Yes. The chapters are per the stuff explained in them, so everything in o=
-ne
-> chapter or section is related to the entire chapter or section.
-
-Ack.
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---yOYvkH9L78ohLBAH
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaR0VjwAKCRD2uYlJVVFO
-o2ICAP9WHtChH9dyebnwypQSwklbupLbP3TG+lZ3z35QAY5QCgD9H1ZV6+A6Zr3O
-UmiAM3izQ1UNBvZ70YamMwreBzk0pQs=
-=zxU5
------END PGP SIGNATURE-----
-
---yOYvkH9L78ohLBAH--
+Rob
 
