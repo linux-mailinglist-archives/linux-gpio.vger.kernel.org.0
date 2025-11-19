@@ -1,215 +1,404 @@
-Return-Path: <linux-gpio+bounces-28721-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28722-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 558F9C6C876
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 04:11:49 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id D24D0C6CB3F
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 05:20:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id CC41A34F4A3
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 03:11:48 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E08E54EE7DD
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 04:20:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DF2B2DF6F5;
-	Wed, 19 Nov 2025 03:11:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9FC52F532F;
+	Wed, 19 Nov 2025 04:20:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="K3Vb+o7Q"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IBwQ2d2d"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023132.outbound.protection.outlook.com [40.107.44.132])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED872D7810;
-	Wed, 19 Nov 2025 03:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.132
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763521900; cv=fail; b=Q/dpeqGmMfKqkNVoamgML6nANIL1j236Bbe76pb9Imf+cKSMt/+qkIU4GAm5op3LgzENLwmTl1e9j5v8rcnk8Ddegz1N+lKoV/OjJSagaDNefB1K/VhmLMlpuvq9pRHVEL4IiTejg2afjlGZt4rfkL1MR6aDYSQMOBaTepA0Scs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763521900; c=relaxed/simple;
-	bh=NwhPe5loO62ZfuWWD0Z3xpOfPl/iqORFJIU9qO1D3Ao=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=pLR8WXvV8Y2aiGzWXWiDbAd++tuSf8oGHPsO3wl51iFu7pXatPCkkmUySG8vCXxZcHrutqU8Gl5J1IF6QGU6BSkq4tG8TLrsCc+c5JbMGJERyjdnqgGbILBNaLt386l8eFI1cTSJbm3g1U/p6Ix6vN7LuPoD0AAuQUitBMw+VTE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=K3Vb+o7Q; arc=fail smtp.client-ip=40.107.44.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=suE6Gnz92cuSKee1dUQjpWKCBPgd8iJWEUXFOEY6PPjcJcVuMTm96VCzhfF2Lk3LhT7KrXQK19JyYyLp5Jl4pj9beeF+T+spd1AM79OC+iti4rBOoEzyJMz79QjCfQxvZFSoUhdnSF6jz6KpElGlNs/jFxQUGApAO4/BtC6ddvv9qpF5tnufzbB0iaQaT+DcwOQqVVEZx0fpqbbWXqHy26QZGzJbNNEdj7p5xHpLB+Ubs/Y4iGaCwI1wusPIxIjqrgYwxGtbnjbyMD3ECGeGYRKQ679I7hn5aiXozKsoL/mDZxfs6nL+6zjTZFd23Dp1oDr2nAArTTl+cQOdXhTzTA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NwhPe5loO62ZfuWWD0Z3xpOfPl/iqORFJIU9qO1D3Ao=;
- b=ATcHPIHRxEC0qx12nQodDsN9qzrRekBOGjQYhXBqs0zGew1mHAZoRpMMNQqpe3C2RbITEh2PBtMWvzd1RonCy21qEYJ/Xo5SVc5MbqAmPdjS0Z8+IosKf/4RVS+NiHXaozgN0bYvE9BnAZO+RM1+SNPrWTtwFCa4Ae83h5fkRnGcUqp7HrvzOyAsQ7d2uOdLloSZVFCADiQE0SIRwAkKcooGFt4XLSAbcdNceaM945/teE7Fn0kY8JmfD3jY1jC9FeKuJtXYpa2PEczhlKJ+V3IjTa8ie4kP6fACoJBQPU9r8/D3E+HM1cPdEfB22IZLb4BxVm+SASiA9sN+Kpg1/Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NwhPe5loO62ZfuWWD0Z3xpOfPl/iqORFJIU9qO1D3Ao=;
- b=K3Vb+o7QwA9lCQwBjVx2KQrQor9UJmfDe+Z1DUWxp8asS6i68pzNZ2IQQisNkvaY+KC6gPFJhPbsFF6HSBA5mishnWCsd2l46i9vFIlVhLRxYeTvzgyWS1mxdHZtDKvS+QT9MmEEAmf/6GtxKNF8i8EvTo7MTFn/ezoYX5btxb4cIFfa66o0xNSWgyGnRQcsE1Z1D+857SvXBKRcUB/wBw99QsHcvr+aMzNfQrTy5P4WRteDtQ8NeFLRggaYBEelRaW2tjoIZ9uryL9AQs5JS3zUuhra3zHB5dTwDuHMOTVGjRsZy6/ZL0liwCevgkMW31CzQODsAzgnGjzqHC2XoA==
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com (2603:1096:101:5a::12)
- by TYZPR06MB5027.apcprd06.prod.outlook.com (2603:1096:400:1c9::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.10; Wed, 19 Nov
- 2025 03:11:33 +0000
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28]) by SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28%6]) with mapi id 15.20.9320.018; Wed, 19 Nov 2025
- 03:11:33 +0000
-From: Jacky Chou <jacky_chou@aspeedtech.com>
-To: Rob Herring <robh@kernel.org>
-CC: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, =?utf-8?B?S3J6eXN6dG9mIFdpbGN6ecWEc2tp?=
-	<kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Linus
- Walleij <linus.walleij@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>,
-	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
-	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: [PATCH v5 2/8] dt-bindings: PCI: Add ASPEED PCIe RC support
-Thread-Topic: [PATCH v5 2/8] dt-bindings: PCI: Add ASPEED PCIe RC support
-Thread-Index: AQHcV78m/FQAr+3pg0ChA2uxl1TDqbT3b3GAgAHkIeA=
-Date: Wed, 19 Nov 2025 03:11:33 +0000
-Message-ID:
- <SEYPR06MB51347EB7A223723DF021EFAE9DD7A@SEYPR06MB5134.apcprd06.prod.outlook.com>
-References: <20251117-upstream_pcie_rc-v5-0-b4a198576acf@aspeedtech.com>
- <20251117-upstream_pcie_rc-v5-2-b4a198576acf@aspeedtech.com>
- <20251117221357.GA806266-robh@kernel.org>
-In-Reply-To: <20251117221357.GA806266-robh@kernel.org>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=aspeedtech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SEYPR06MB5134:EE_|TYZPR06MB5027:EE_
-x-ms-office365-filtering-correlation-id: aa73e166-e3d3-4d52-9050-08de271957b6
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700021;
-x-microsoft-antispam-message-info:
- =?utf-8?B?ZXQ4ejFHNXlRKzJTUFhnakZCUG9mUjliMGdHYjhoUnhXU3ZOcFVLTlViS1FI?=
- =?utf-8?B?QjlXN1lhMWFydE1zOWlpLzU2cE9tbXNIbXUvL3NISk41aGkwU3g4a3o0S1I0?=
- =?utf-8?B?TDNsZ3MzUUNSUTVUL254YkVoemFEVDQ0blBQWDNvaUhpeldZYnRkVUxmTVVl?=
- =?utf-8?B?Rm01cWxEY3BLSER0azNrVXhBZzZvK05GWHI4SFlIcW5sVDBhb3Z3dlREUXVy?=
- =?utf-8?B?S29zU1FLbXRwN0t0NFpPVFpia3k1U3RiM1NpN2w0WUdBSXlJVGd6a1h2RmJL?=
- =?utf-8?B?SWpIL0ErNXpJS0RPNGRjRzNnSzRFc1FlVXNjTUQ3Z0dKZkFYY2RVdUkxS0Rw?=
- =?utf-8?B?bHllYnBENEJmUllHelY5Wjg4eGNva2htNXg2dUxCcnQ1Y0NJa1hGM3dWN2Zk?=
- =?utf-8?B?MlM1ZEdRZEwyR0RuTVF5N2xaTXMvcnlFUTA5Ukd4R01kSDUzUW44bCsyOFJk?=
- =?utf-8?B?bnQva3FmSFgrQjVIeGFEYWlWQmt3OE1TWS9qTzZ5WDdGczAzcWx3MC9QNUZm?=
- =?utf-8?B?SHZFL2lNQm9QeERzTkF5TmdoVEtDODFRWVVER290eGVjM2ZlTTRJQ2tLYTRJ?=
- =?utf-8?B?OHl5WkRyMWlzNWMrc28vTU5IbEpPUTUyR3d0RE1DekJhMFJOMG1pWVRiN25i?=
- =?utf-8?B?eWtqQmo2M1ZXeCtDczl4eUJlS2hQQTBFOEthOVZrZUkvaTgwQXcvL3JzOUxO?=
- =?utf-8?B?aStxeTEvUldMQ09YaStFb25qM1lSOVI4UXdxV3dpcWI1UzBpQzI0dlRjYjZY?=
- =?utf-8?B?WWxINmRZLzZTNFNOY2dEOTJqVW9rS1ZzWUp5enBHV2didndVRjZaUEdFYXNC?=
- =?utf-8?B?WUNlaWw0azFFelM0clBiNTRRSUo2S0IwdFl2MWN6RDVZYks4QVJadXowSVZC?=
- =?utf-8?B?ZTRJSTBHSWFQbGVFTE56eFMzQWt0WnBWUUtUR1FEVURiUWlTL3A2Qm9xemZt?=
- =?utf-8?B?Q0xOWVR2TTRjclcwVzRDdTVVMi84ODZlRTRUZXllZWhSZjJYTVNFWFpMRHBP?=
- =?utf-8?B?bUkwNmxPY2ZBT3V6QlRPN3hnOVhhR0RCWUJPS0ZCcHpxakFBOUJMTUZZZzRj?=
- =?utf-8?B?dWJuNlFuY3UwbzZ1OGhpRmxwbjlmVzNHT2txVlpicW9OWnJtQ1B0aGZCMzNE?=
- =?utf-8?B?VjVCaTAvcU9NRFRJNksrMzRIVzJJZ3pCcmsxeUYzRFNONkJTc0ZjVi9kdU8r?=
- =?utf-8?B?TitkNXdlc3BsdVFBb2hqaVdiSGlsR0xCdHBDNUIrcEkyN0RhNURLdGR4WFhZ?=
- =?utf-8?B?d1lKRTcybnFrNVQzMXlFK2hPVG54RjlOWFREcm8zd09YU0t2NWVFc2NDMDNF?=
- =?utf-8?B?enJMN0NPeHhheldZT0pDNWQydVYvdktyeVJlSkFLbVd2WlRwdXZIMUJjZWtL?=
- =?utf-8?B?QzBGdmQwa0pHdWdKVStiMXAwRDNuaFlGVVFrbUMwYUNCMllIY2tKT1UvOEZl?=
- =?utf-8?B?a1k2YUlaWG81K2RxajQ5ZDc3Q2VCUGVLN3czTEFjakVEQnZ1YkRjLzIzZmRE?=
- =?utf-8?B?R2gzL2FObmlhc2tWSDZmU3JlZE4xbkVuNlJIUzJkVENOVElkYkdkcEY2NFln?=
- =?utf-8?B?c3RXNVA1Nk5GdWgrSFB3dE5uQnVjSGhFYnEyWTk2Q1BYaTdxNVpicDhoVjZv?=
- =?utf-8?B?QTRDRDU4WDJudUJBRU9aalVjZGFTYVhOeit3NWM3Z3VOam9NdlZBejBsRGZk?=
- =?utf-8?B?NHFtdjlFL3ZOYmVXTzVVOFBucXRyS3NCazJEZDI0c2NnOVFIUEtEZGZLLzFD?=
- =?utf-8?B?dUllLzlxYk1rR1JRTzAreGhNZW1mUm5hRzJibzJ4OGdsLytJUjBjOFhpMWMx?=
- =?utf-8?B?bmprNnZKeWdWZmZ0YUdZMzFLcE0zKzZ0R2dUbXU5eHMwMFBGZy9MVmlJVHdz?=
- =?utf-8?B?Q3Nqemtob2hsNlFMOTE5bi9BeFliL2ZNL2hienFGTS9hdUVMZERuSUQxcUlt?=
- =?utf-8?B?RVR2ZkZ2bys0c3pZNnpTS3BzZGxnSk1BeXRsQTlJR1dtaVQ3TVYxeU01SUtO?=
- =?utf-8?B?eDZLamZpMWpPcXNhUFMrdHpWWCtoZzhMUnljM0xqc1lFSUw4Z3B0cGRqRzZH?=
- =?utf-8?Q?PqXYC8?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:zh-tw;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB5134.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700021);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?dHJvLzNObEkyWTU2NnNKc2lkbEhtN0pWbzE1b3EveGdQUWthampFTUN4dmMw?=
- =?utf-8?B?dFBzVWlLUmV0cmY2ejFSQ25mY0Y4eTBVRTZaK1UyL2IvRFlraHh6WTlYV3dF?=
- =?utf-8?B?UjRDZEVrU1p3S1FkSGlhMERwdFdKTzFpVnVIZ3dxRVpMTEdzZ1U5bmRlbHhC?=
- =?utf-8?B?dzRSSWpBU3ZzMnIrcnVET3lRTENnOUdFUTJ6Rkk5N0t5YXkvZjZjL1c3aVBs?=
- =?utf-8?B?ZFV1TlB4Smt4VzBYeWxKMkdEN1JvNU9ubUQ4QVBiY0lEaG5kekNjMzdFc1lC?=
- =?utf-8?B?Kzc1WFJXZWFBMzR3MGVnRFFGaHBCV28wNTJCY3R2ekttODZWdlRLR1krdVA5?=
- =?utf-8?B?VWdhWjF2S2lHUjNURWNCTHZGUXlwek9sb1dockdFY2NvbWVicG9tdVlXaDdF?=
- =?utf-8?B?SlEwQkVPbXJaNUMvVDhxRjhTSVF3cE1xcVFyMENjajlYQ2g0M1M2SGd0dUJD?=
- =?utf-8?B?dWdvZVMvM2NTZWtzL0h0eUFERVlva2NmeWhoeWZkRy96bmxiY3BLNU53eDhQ?=
- =?utf-8?B?UVdqYkpmRDhzWllVd0NQSUNkSzRKTDdteGtSbUovZWUrSERpa2hMczhKM2lK?=
- =?utf-8?B?eUZ4a2tLeWdLNFk1Y3RpeXQyNmhBUklOR0pwZkRNdEFwU05PTTZ0L3RRVUFO?=
- =?utf-8?B?ZEh3UExyVDdKYW55MUs3WDRZZTIwT2xZSTNHVnA5SVFPVXZ6eEx4OGZOQjUr?=
- =?utf-8?B?WjVWOE1pTks0QWVlV241Q29ZUWppR2lBSnBiK3BTR054QlQ4MzU2SzB1alk2?=
- =?utf-8?B?bUd2Nkt3a3RGN0o1bWRnZk40OHRacnpZUkxqanZGZ2x2ZHpteDFrd1B1MHZF?=
- =?utf-8?B?VTdqTFBoMVNjaHNrWW5CNjZPWVF6QUpTdnFlUjdyV1RraGZvQ0h0bUlJMmFx?=
- =?utf-8?B?RlNQY3RrOWE2RHBOOWR2akhFQjZmWHV6Y0JTNzRvdzhqTzRqbHZUTmtLcHh1?=
- =?utf-8?B?N2ZtYUVJTkVIWlloWmlHaENBeXpDOTdtemkzK082eWtRd3JLMjI2THE1SDF5?=
- =?utf-8?B?U3RUYndod095MFZicEtlS1AwWjlCaEpVK2lZL1JmTjZjMXFsRTVkbjZ4Z0Z0?=
- =?utf-8?B?aXRPVlJBYllaczMxRFN1SER6Nml6UDBNaU9pOEVNcEJTUHZhSVV1SWwrR3Jn?=
- =?utf-8?B?VkF6TWFoQy95L3d4M3VJUngvZzZxV1Z5ZDRhdXZJbWNhZmI4KzlOamlzSmFS?=
- =?utf-8?B?WmdaWVdmWDh2TGd3MUUvVytHWmx5b2xNcEIyQUptMGM5L2VqQWR6VlhIeXQ0?=
- =?utf-8?B?UktTWFpMYXFnZUh4ekFmbEZtbTFQWGoxMGduV2dVU3pvY0UxNGM5YThjUlpN?=
- =?utf-8?B?YWVKcGRGZm5UZW5OQWU0N1JuaHFGdUpUUTZIME8ra3ozNWZ0SW5KMlFOZDVm?=
- =?utf-8?B?MnpUbVF1eXUyalJMRTF0K3RBVkVvMGxBRHRTRTVzV21ScXdrQlVuNitwd2s3?=
- =?utf-8?B?d2pCRFpxT0ZwcEdFeit4Um1ObnowemtjYWJWallyK0V1K2ZEYkZqdzFIUHI2?=
- =?utf-8?B?V1pkazZUVlVuZlRFTGtxOVRiN2xWMVQ3VGVQdy9JWGIxYnBoQUhyMWVxTU1N?=
- =?utf-8?B?cThQTGdvUGxmNC80UGFWN003MEp1SFFjZkpoMFRzM1NKeEY0YTZZVWduQUds?=
- =?utf-8?B?S2JMeWJFRk1HejRYUnoyZlkzenJqTmQ2cktydnhMQ2l1UzNjR2RPR0N6elN5?=
- =?utf-8?B?OGY4NkREUTlmTWtQU3lGWHVUOStVMWtMYTZncTBpbFVvSFZoRllubEhyeHA3?=
- =?utf-8?B?Q2oyaThFQXMwc3VneThTR0ZzUm9sRmR4OEw4OVkvL1lWMzQ0aExRelhSR0k5?=
- =?utf-8?B?L3Nmdyt3SGNDY2hsQ1dUNVVZY2ZDa3FkTzk5UkVYUllxbGZnbUdKRW9obFd0?=
- =?utf-8?B?S1czMVFnVE5MZi9xcXdxY2tDZ1RNcWJEZUEwUFJ5cWJIVFZzZy95ZGpHcXFQ?=
- =?utf-8?B?eWJyMjNHdmE4ZlZOb3FsTU1DdWpvQ0dJdGM2WFd5ejRGRUEyclduQVV6V1Ir?=
- =?utf-8?B?cm1nS29Ra0pPVk83UlRkS1VQS25RMXBkOG5FalZ2cU1VbTFmNmlLSlA0Wko4?=
- =?utf-8?B?dHRoelY1Nk83cFJWVVBDNzFLMFRLd3BCMFZydUVSNGZhVXBUdTZSRUIxWlFF?=
- =?utf-8?Q?3gET9c+g5PTSzo3m6LfZLImtJ?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75D61F5437;
+	Wed, 19 Nov 2025 04:19:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763526002; cv=none; b=RpFRF5A0eVcFxbkqH/3Ir6kV9IBlpr1pPEmyvsd8ch4xXL8Kn+2I/LqHYxBnuBmJujwYktY8fh/6K3MmYAyApFTnSH8p+MU5pQOd/tFNZNv1XzRfiU9h+rAuZrXW2T6yl093DACXnS8q5eC8ivNwiljlPCsfUsDcb1Cp/VmXGq8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763526002; c=relaxed/simple;
+	bh=QPlpJezva1DjLD+z12sxscD3jz8U3HsGEFiTlU4O0kM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l4sCcumrcskbh0/rJmBiwkELu5iO7EcFJM87ICqhBq0yrvwEb6MRSs5w3ZQBDRIuDFjhk0sZCRJoVyVBKWARBEANlJHvvGgIFsFGUnqZIBlcL1kgvrDcB9xRRa4zAKTm0bkV7LvHuUY8+KC6+cG7vB+vpbBTQxtq9UzoHKNqFzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IBwQ2d2d; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763526000; x=1795062000;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=QPlpJezva1DjLD+z12sxscD3jz8U3HsGEFiTlU4O0kM=;
+  b=IBwQ2d2drjp2Oaex9RAMt+qnx4Zb445jYUyow2LveVOJ+BpbnvR29F6O
+   2KLBnYvWTpt3xEs3Kfi9TLhlycakcMSiOF1cO6a+MSRcpAc7s7ofqcdsr
+   2fQ9r2yXKgLWWkkJCS7cOHp/b1Uu01Zyhm1bKF0Vq1QjANZV+599Tbdc/
+   wOa+SXuxaJeCZeYpLnwiShR0vm4jM8f/xuzgJywwa5FodznK4Y/dhkeNu
+   stinMyUYjDRFi12FRdUI4LkMYM+JaTIJzhSVljjLI9Ip7wDmLUgEulU4b
+   CNaU+up2AJz36pD6uCEHysdsrDWl6qpiuzhgHN9f4VVfaVm0GaRoUaB4G
+   Q==;
+X-CSE-ConnectionGUID: bvka5bweRjysvXjMff3Sfg==
+X-CSE-MsgGUID: 81Kio38CQyix28jScIow9A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11617"; a="75885017"
+X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
+   d="scan'208";a="75885017"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 20:19:59 -0800
+X-CSE-ConnectionGUID: SDP+mGTGTNmYxMSomAoDJg==
+X-CSE-MsgGUID: 6xrds3+0QhKkawtHpSI/nw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
+   d="scan'208";a="190196117"
+Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 18 Nov 2025 20:19:56 -0800
+Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vLZfd-0002Rj-0T;
+	Wed, 19 Nov 2025 04:19:53 +0000
+Date: Wed, 19 Nov 2025 12:19:17 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sander Vanheule <sander@svanheule.net>, Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: oe-kbuild-all@lists.linux.dev, linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, Sander Vanheule <sander@svanheule.net>
+Subject: Re: [PATCH v7 4/6] pinctrl: Add RTL8231 pin control and GPIO support
+Message-ID: <202511191158.bVKUDrKa-lkp@intel.com>
+References: <20251117215138.4353-5-sander@svanheule.net>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB5134.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: aa73e166-e3d3-4d52-9050-08de271957b6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2025 03:11:33.2278
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8Phfh2v4GoNiqqiR7dOdS1Do0JT2PiitqOwc22VdVnkpvP0Fp3u6hrI8Dp4h+Yi205ugxEYftsDYhe0nosavBSlil2Pr6Z+LYR2uDSmvcoU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB5027
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251117215138.4353-5-sander@svanheule.net>
 
-SGkgUm9iLA0KDQo+ID4gKw0KPiA+ICsgICAgICBwY2llQDgsMCB7DQo+IA0KPiBUaGlzIG5vZGUg
-YW5kIHRoZSBwcm9wZXJ0aWVzIG5lZWQgdG8gYmUgaW4gdGhlIHNjaGVtYSBhbG9uZyB3aXRoIGEg
-cmVmIHRvDQo+IHBjaS1wY2ktYnJpZGdlLnlhbWwuDQo+IA0KDQpUaGFuayB5b3UgZm9yIHlvdXIg
-aW5mb3JtYXRpb24NCg0KPiA+ICsgICAgICAgIHJlZyA9IDwweDgwNDAwMCAwIDAgMCAwPjsNCj4g
-DQo+IFRoZSBhZGRyZXNzIHNob3VsZCBub3QgaGF2ZSB0aGUgYnVzIG51bWJlciBhcyBpdCBpcyBk
-eW5hbWljLg0KPiANCg0KQWdyZWVkLg0KVGhlIGJ1cyByYW5nZSBpcyAweDAwIHRvIDB4RkYuIEkg
-d2lsbCBtb2RpZnkgaXQgaW4gbmV4dCB2ZXJzaW9uLg0KDQo+ID4gKyAgICAgICAgI2FkZHJlc3Mt
-Y2VsbHMgPSA8Mz47DQo+ID4gKyAgICAgICAgI3NpemUtY2VsbHMgPSA8Mj47DQo+ID4gKyAgICAg
-ICAgZGV2aWNlX3R5cGUgPSAicGNpIjsNCj4gPiArICAgICAgICByZXNldHMgPSA8JnN5c2NvbiBB
-U1BFRURfUkVTRVRfUENJRV9SQ19PPjsNCj4gPiArICAgICAgICByZXNldC1uYW1lcyA9ICJwZXJz
-dCI7DQo+IA0KPiBOb3Qgc3VyZSB0aGlzIG5hbWUgaXMgY29ycmVjdC4gUEVSU1QgaXMgYSBzaWdu
-YWwgb24gdGhlIGNvbm5lY3RvciBnb2luZw0KPiBkb3duc3RyZWFtIHRvIHRoZSBlbmRwb2ludC4N
-Cj4NCg0KVGhlIHJlc2V0IHByb3BlcnR5IGFjdHVhbGx5IGNvbnRyb2xzIHRoZSBQRVJTVCBwaW4g
-b24gdGhpcyBwb3J0Lg0KQXQgdGhlIHNhbWUgdGltZSwgaXQgYWxzbyByZXNldCB0aGlzIHBvcnQu
-DQoNClRoZXJlZm9yZSwgaGVyZSB1c2VzIHRoZSAicGVyc3QiIG5hbWUuDQoNCj4gPiArICAgICAg
-ICBjbG9ja3MgPSA8JnN5c2NvbiBBU1BFRURfQ0xLX0dBVEVfQkNMSz47DQo+ID4gKyAgICAgICAg
-cGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiArICAgICAgICBwaW5jdHJsLTAgPSA8JnBp
-bmN0cmxfcGNpZXJjMV9kZWZhdWx0PjsNCj4gPiArICAgICAgICBwaHlzID0gPCZwY2llX3BoeTE+
-Ow0KPiA+ICsgICAgICAgIHJhbmdlczsNCj4gPiArICAgICAgfTsNCj4gPiArICAgIH07DQoNClRo
-YW5rcywNCkphY2t5DQo=
+Hi Sander,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on lee-mfd/for-mfd-next]
+[also build test WARNING on lee-mfd/for-mfd-fixes lee-leds/for-leds-next linusw-pinctrl/devel linusw-pinctrl/for-next linus/master v6.18-rc6 next-20251118]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Sander-Vanheule/dt-bindings-leds-Binding-for-RTL8231-scan-matrix/20251118-055707
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
+patch link:    https://lore.kernel.org/r/20251117215138.4353-5-sander%40svanheule.net
+patch subject: [PATCH v7 4/6] pinctrl: Add RTL8231 pin control and GPIO support
+config: i386-randconfig-063-20251119 (https://download.01.org/0day-ci/archive/20251119/202511191158.bVKUDrKa-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251119/202511191158.bVKUDrKa-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202511191158.bVKUDrKa-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/pinctrl/pinctrl-rtl8231.c:28:27: sparse: sparse: missing identifier in declaration
+   drivers/pinctrl/pinctrl-rtl8231.c:28:27: sparse: sparse: Expected ; at the end of type declaration
+   drivers/pinctrl/pinctrl-rtl8231.c:28:27: sparse: sparse: got :
+>> drivers/pinctrl/pinctrl-rtl8231.c:52:44: sparse: sparse: invalid bitfield specifier for type incomplete type enum rtl8231_pin_function.
+   drivers/pinctrl/pinctrl-rtl8231.c:46:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:47:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:48:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_PWM'
+   drivers/pinctrl/pinctrl-rtl8231.c:77:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:77:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:78:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:78:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:79:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:79:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:80:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:80:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:81:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:81:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:82:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:82:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:83:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:83:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:84:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:84:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:85:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:85:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:86:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:86:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:87:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:87:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:88:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:88:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:89:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:89:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:90:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:90:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:91:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:91:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:92:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:92:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:93:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:93:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:94:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:94:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:95:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:95:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:96:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:96:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:97:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:97:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:98:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:98:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:99:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:99:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:100:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:100:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:101:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:101:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:102:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:102:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:103:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:103:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:104:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:104:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:105:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:105:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:106:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:106:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:107:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:107:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:108:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:108:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:109:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:109:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:110:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:110:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:111:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:111:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_LED'
+   drivers/pinctrl/pinctrl-rtl8231.c:112:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:112:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_PWM'
+   drivers/pinctrl/pinctrl-rtl8231.c:113:9: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+>> drivers/pinctrl/pinctrl-rtl8231.c:204:31: sparse: sparse: incompatible types for operation (&):
+   drivers/pinctrl/pinctrl-rtl8231.c:204:31: sparse:    incomplete type enum rtl8231_pin_function const functions
+   drivers/pinctrl/pinctrl-rtl8231.c:204:31: sparse:    incomplete type enum rtl8231_pin_function func_flag
+   drivers/pinctrl/pinctrl-rtl8231.c:210:26: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+   drivers/pinctrl/pinctrl-rtl8231.c:339:61: sparse: sparse: incompatible types for operation (&):
+   drivers/pinctrl/pinctrl-rtl8231.c:339:61: sparse:    incomplete type enum rtl8231_pin_function const functions
+   drivers/pinctrl/pinctrl-rtl8231.c:339:61: sparse:    incomplete type enum rtl8231_pin_function flag
+   drivers/pinctrl/pinctrl-rtl8231.c:347:61: sparse: sparse: incompatible types for operation (&):
+   drivers/pinctrl/pinctrl-rtl8231.c:347:61: sparse:    incomplete type enum rtl8231_pin_function const functions
+   drivers/pinctrl/pinctrl-rtl8231.c:347:61: sparse:    incomplete type enum rtl8231_pin_function flag
+   drivers/pinctrl/pinctrl-rtl8231.c:351:29: sparse: sparse: undefined identifier 'RTL8231_PIN_FUNCTION_GPIO'
+
+vim +28 drivers/pinctrl/pinctrl-rtl8231.c
+
+    24	
+    25	/*
+    26	 * Pin controller functionality
+    27	 */
+  > 28	enum rtl8231_pin_function : uintptr_t {
+    29		RTL8231_PIN_FUNCTION_GPIO = BIT(0),
+    30		RTL8231_PIN_FUNCTION_LED = BIT(1),
+    31		RTL8231_PIN_FUNCTION_PWM = BIT(2),
+    32	};
+    33	
+    34	struct rtl8231_function_info {
+    35		enum rtl8231_pin_function flag;
+    36		const char *name;
+    37	};
+    38	
+    39	#define RTL8231_FUNCTION(_name, _flag)	\
+    40	((struct rtl8231_function_info) {	\
+    41			.flag = (_flag),	\
+    42			.name = (_name),	\
+    43		})
+    44	
+    45	static const struct rtl8231_function_info rtl8231_pin_functions[] = {
+    46		RTL8231_FUNCTION("gpio", RTL8231_PIN_FUNCTION_GPIO),
+    47		RTL8231_FUNCTION("led", RTL8231_PIN_FUNCTION_LED),
+    48		RTL8231_FUNCTION("pwm", RTL8231_PIN_FUNCTION_PWM),
+    49	};
+    50	
+    51	struct rtl8231_pin_desc {
+  > 52		enum rtl8231_pin_function functions:8;
+    53		u8 reg;
+    54		u8 offset;
+    55		u8 gpio_function_value;
+    56	};
+    57	
+    58	#define RTL8231_PIN_DESC(_num, _func, _reg, _fld, _val)			\
+    59		[(_num)] = ((struct rtl8231_pin_desc) {				\
+    60			.functions = RTL8231_PIN_FUNCTION_GPIO | (_func),	\
+    61			.reg = (_reg),						\
+    62			.offset = (_fld),					\
+    63			.gpio_function_value = (_val),				\
+    64		})
+    65	#define RTL8231_GPIO_PIN_DESC(_num, _reg, _fld)			\
+    66		RTL8231_PIN_DESC(_num, 0, _reg, _fld, RTL8231_PIN_MODE_GPIO)
+    67	#define RTL8231_LED_PIN_DESC(_num, _reg, _fld)			\
+    68		RTL8231_PIN_DESC(_num, RTL8231_PIN_FUNCTION_LED, _reg, _fld, RTL8231_PIN_MODE_GPIO)
+    69	#define RTL8231_PWM_PIN_DESC(_num, _reg, _fld)			\
+    70		RTL8231_PIN_DESC(_num, RTL8231_PIN_FUNCTION_PWM, _reg, _fld, 0)
+    71	
+    72	/*
+    73	 * All pins have a GPIO/LED mux bit, but the bits for pins 35/36 are read-only. Use this bit
+    74	 * for the GPIO-only pin instead of a placeholder, so the rest of the logic can stay generic.
+    75	 */
+    76	static const struct rtl8231_pin_desc rtl8231_pin_data[RTL8231_NUM_GPIOS] = {
+    77		RTL8231_LED_PIN_DESC(0, RTL8231_REG_PIN_MODE0, 0),
+    78		RTL8231_LED_PIN_DESC(1, RTL8231_REG_PIN_MODE0, 1),
+    79		RTL8231_LED_PIN_DESC(2, RTL8231_REG_PIN_MODE0, 2),
+    80		RTL8231_LED_PIN_DESC(3, RTL8231_REG_PIN_MODE0, 3),
+    81		RTL8231_LED_PIN_DESC(4, RTL8231_REG_PIN_MODE0, 4),
+    82		RTL8231_LED_PIN_DESC(5, RTL8231_REG_PIN_MODE0, 5),
+    83		RTL8231_LED_PIN_DESC(6, RTL8231_REG_PIN_MODE0, 6),
+    84		RTL8231_LED_PIN_DESC(7, RTL8231_REG_PIN_MODE0, 7),
+    85		RTL8231_LED_PIN_DESC(8, RTL8231_REG_PIN_MODE0, 8),
+    86		RTL8231_LED_PIN_DESC(9, RTL8231_REG_PIN_MODE0, 9),
+    87		RTL8231_LED_PIN_DESC(10, RTL8231_REG_PIN_MODE0, 10),
+    88		RTL8231_LED_PIN_DESC(11, RTL8231_REG_PIN_MODE0, 11),
+    89		RTL8231_LED_PIN_DESC(12, RTL8231_REG_PIN_MODE0, 12),
+    90		RTL8231_LED_PIN_DESC(13, RTL8231_REG_PIN_MODE0, 13),
+    91		RTL8231_LED_PIN_DESC(14, RTL8231_REG_PIN_MODE0, 14),
+    92		RTL8231_LED_PIN_DESC(15, RTL8231_REG_PIN_MODE0, 15),
+    93		RTL8231_LED_PIN_DESC(16, RTL8231_REG_PIN_MODE1, 0),
+    94		RTL8231_LED_PIN_DESC(17, RTL8231_REG_PIN_MODE1, 1),
+    95		RTL8231_LED_PIN_DESC(18, RTL8231_REG_PIN_MODE1, 2),
+    96		RTL8231_LED_PIN_DESC(19, RTL8231_REG_PIN_MODE1, 3),
+    97		RTL8231_LED_PIN_DESC(20, RTL8231_REG_PIN_MODE1, 4),
+    98		RTL8231_LED_PIN_DESC(21, RTL8231_REG_PIN_MODE1, 5),
+    99		RTL8231_LED_PIN_DESC(22, RTL8231_REG_PIN_MODE1, 6),
+   100		RTL8231_LED_PIN_DESC(23, RTL8231_REG_PIN_MODE1, 7),
+   101		RTL8231_LED_PIN_DESC(24, RTL8231_REG_PIN_MODE1, 8),
+   102		RTL8231_LED_PIN_DESC(25, RTL8231_REG_PIN_MODE1, 9),
+   103		RTL8231_LED_PIN_DESC(26, RTL8231_REG_PIN_MODE1, 10),
+   104		RTL8231_LED_PIN_DESC(27, RTL8231_REG_PIN_MODE1, 11),
+   105		RTL8231_LED_PIN_DESC(28, RTL8231_REG_PIN_MODE1, 12),
+   106		RTL8231_LED_PIN_DESC(29, RTL8231_REG_PIN_MODE1, 13),
+   107		RTL8231_LED_PIN_DESC(30, RTL8231_REG_PIN_MODE1, 14),
+   108		RTL8231_LED_PIN_DESC(31, RTL8231_REG_PIN_MODE1, 15),
+   109		RTL8231_LED_PIN_DESC(32, RTL8231_REG_PIN_HI_CFG, 0),
+   110		RTL8231_LED_PIN_DESC(33, RTL8231_REG_PIN_HI_CFG, 1),
+   111		RTL8231_LED_PIN_DESC(34, RTL8231_REG_PIN_HI_CFG, 2),
+   112		RTL8231_PWM_PIN_DESC(35, RTL8231_REG_FUNC1, 3),
+   113		RTL8231_GPIO_PIN_DESC(36, RTL8231_REG_PIN_HI_CFG, 4),
+   114	};
+   115	static const unsigned int PWM_PIN = 35;
+   116	
+   117	#define RTL8231_PIN(_num)					\
+   118		((struct pinctrl_pin_desc) {				\
+   119			.number = (_num),				\
+   120			.name = "gpio" #_num,				\
+   121			.drv_data = (void *) &rtl8231_pin_data[(_num)]	\
+   122		})
+   123	
+   124	static const struct pinctrl_pin_desc rtl8231_pins[RTL8231_NUM_GPIOS] = {
+   125		RTL8231_PIN(0),
+   126		RTL8231_PIN(1),
+   127		RTL8231_PIN(2),
+   128		RTL8231_PIN(3),
+   129		RTL8231_PIN(4),
+   130		RTL8231_PIN(5),
+   131		RTL8231_PIN(6),
+   132		RTL8231_PIN(7),
+   133		RTL8231_PIN(8),
+   134		RTL8231_PIN(9),
+   135		RTL8231_PIN(10),
+   136		RTL8231_PIN(11),
+   137		RTL8231_PIN(12),
+   138		RTL8231_PIN(13),
+   139		RTL8231_PIN(14),
+   140		RTL8231_PIN(15),
+   141		RTL8231_PIN(16),
+   142		RTL8231_PIN(17),
+   143		RTL8231_PIN(18),
+   144		RTL8231_PIN(19),
+   145		RTL8231_PIN(20),
+   146		RTL8231_PIN(21),
+   147		RTL8231_PIN(22),
+   148		RTL8231_PIN(23),
+   149		RTL8231_PIN(24),
+   150		RTL8231_PIN(25),
+   151		RTL8231_PIN(26),
+   152		RTL8231_PIN(27),
+   153		RTL8231_PIN(28),
+   154		RTL8231_PIN(29),
+   155		RTL8231_PIN(30),
+   156		RTL8231_PIN(31),
+   157		RTL8231_PIN(32),
+   158		RTL8231_PIN(33),
+   159		RTL8231_PIN(34),
+   160		RTL8231_PIN(35),
+   161		RTL8231_PIN(36),
+   162	};
+   163	
+   164	static int rtl8231_get_groups_count(struct pinctrl_dev *pctldev)
+   165	{
+   166		return ARRAY_SIZE(rtl8231_pins);
+   167	}
+   168	
+   169	static const char *rtl8231_get_group_name(struct pinctrl_dev *pctldev, unsigned int selector)
+   170	{
+   171		return rtl8231_pins[selector].name;
+   172	}
+   173	
+   174	static int rtl8231_get_group_pins(struct pinctrl_dev *pctldev, unsigned int selector,
+   175		const unsigned int **pins, unsigned int *num_pins)
+   176	{
+   177		if (selector >= ARRAY_SIZE(rtl8231_pins))
+   178			return -EINVAL;
+   179	
+   180		*pins = &rtl8231_pins[selector].number;
+   181		*num_pins = 1;
+   182	
+   183		return 0;
+   184	}
+   185	
+   186	static const struct pinctrl_ops rtl8231_pinctrl_ops = {
+   187		.get_groups_count = rtl8231_get_groups_count,
+   188		.get_group_name = rtl8231_get_group_name,
+   189		.get_group_pins = rtl8231_get_group_pins,
+   190		.dt_node_to_map = pinconf_generic_dt_node_to_map_all,
+   191		.dt_free_map = pinconf_generic_dt_free_map,
+   192	};
+   193	
+   194	static int rtl8231_set_mux(struct pinctrl_dev *pctldev, unsigned int func_selector,
+   195		unsigned int group_selector)
+   196	{
+   197		const struct function_desc *func = pinmux_generic_get_function(pctldev, func_selector);
+   198		const struct rtl8231_pin_desc *desc = rtl8231_pins[group_selector].drv_data;
+   199		const struct rtl8231_pin_ctrl *ctrl = pinctrl_dev_get_drvdata(pctldev);
+   200		enum rtl8231_pin_function func_flag = (uintptr_t) func->data;
+   201		unsigned int function_mask;
+   202		unsigned int gpio_function;
+   203	
+ > 204		if (!(desc->functions & func_flag))
+   205			return -EINVAL;
+   206	
+   207		function_mask = BIT(desc->offset);
+   208		gpio_function = desc->gpio_function_value << desc->offset;
+   209	
+   210		if (func_flag == RTL8231_PIN_FUNCTION_GPIO)
+   211			return regmap_update_bits(ctrl->map, desc->reg, function_mask, gpio_function);
+   212		else
+   213			return regmap_update_bits(ctrl->map, desc->reg, function_mask, ~gpio_function);
+   214	}
+   215	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
