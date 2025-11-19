@@ -1,135 +1,198 @@
-Return-Path: <linux-gpio+bounces-28834-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28835-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBD48C708E4
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 18:59:06 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id B29D0C708B4
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 18:57:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 010FF34EB10
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 17:53:49 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTPS id 7B2BD29120
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 17:57:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFA9133C535;
-	Wed, 19 Nov 2025 17:53:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 597F030E0E7;
+	Wed, 19 Nov 2025 17:56:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iIlOq8fW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W0HsXYfd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2352D8DC8;
-	Wed, 19 Nov 2025 17:53:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB22D2E8B8A;
+	Wed, 19 Nov 2025 17:56:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763574816; cv=none; b=aMAmM77mrNYDjkOM8tK/AcbT3xQr5Qd5CVHexjgegWmiIWLyCzy9oEMP1tLBIz15kikF3GCBcDeaZiJMPQTP9gjql7AJQpoTye5i0NeG4mggLye/CY5cylXMAV8MCxN3JwnBjceDxbEpD9UUMF5OwfBCyjiOscSpyw1YrJNCEfk=
+	t=1763575010; cv=none; b=l4CukacA54u0u2D61dNV2zYRxYF90fO0AwAq596m0hnA+G0XpFw2UR9bLyqJLyJXaNTy7kYlXqcMrKHb8VLZTo7DFNNzY8PzOoJEHoY4DoJxfvZlNDuzZka6Ozd1uXiCqvRy2lfxJD933rKwSZH1+N+DBzRZeMN/+uhZAXU05qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763574816; c=relaxed/simple;
-	bh=9BicpL4nXo+3esO5FwqKJLNBLzof4vRm5DTLtVgfbUw=;
+	s=arc-20240116; t=1763575010; c=relaxed/simple;
+	bh=v2r3BcboFk8zl12ZOYSzJXyMd+p1yn1XwnXeJ/43eh0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y2VzrROpkk8dCSc+QQVpnDZVk7RxzCaagtS9EaZgWX1jBg8MvWoooilLqOlQh+Z9MyZZbbSId7OOQdr3k+KVIXYX1BggSBgZ5uP6w7UWDuhHZqQ/74sCwLzN7bJBtiE3kyCe/rEih4Hd0MD+SeOKeuCtlt5HVfNRHDBa1IJaE+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iIlOq8fW; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763574812; x=1795110812;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=9BicpL4nXo+3esO5FwqKJLNBLzof4vRm5DTLtVgfbUw=;
-  b=iIlOq8fW8RcRTV488k3PrgZ6fkik/jGbwxTpIr32A+hLKK+23yQKGKDC
-   MMDqmdgzRy/6s7vHZl2yN5cTkLikgQJ4W78MC1m7sNFN+N9ZqE4PtPr78
-   a18CHbH/Zkqo5DXU41IqxsSlW9hnLyque9Fo+x2AfwvWps++5jRxdND9K
-   /Wev02Y1xEtYyFIqyNygA50CB4TWAQ3Y2Egv/bckP6j0HBcwdRjt4GtIA
-   7UEWEmjc/eX9h91OKwOgVlt6EHXBGEHWFbICopaj3xPtVX05A7RpYgJLu
-   t/orlnwM7Y1/y9AZ0fYX2C8U4DV8T84oooR57dCv2oeahD9ZMo2gnFN8g
-   Q==;
-X-CSE-ConnectionGUID: fhFnjR+ZSuat/+z/wwQzyg==
-X-CSE-MsgGUID: +hZiDwpOSlSn/YufmsPI8A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="68232125"
-X-IronPort-AV: E=Sophos;i="6.19,316,1754982000"; 
-   d="scan'208";a="68232125"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 09:53:25 -0800
-X-CSE-ConnectionGUID: mcNnxbK0R4CG7P7v7goMgg==
-X-CSE-MsgGUID: nVSgWJECT2GFUhpgch5Jww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,316,1754982000"; 
-   d="scan'208";a="195432915"
-Received: from rvuia-mobl.ger.corp.intel.com (HELO localhost) ([10.245.245.245])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 09:53:22 -0800
-Date: Wed, 19 Nov 2025 19:53:20 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Jisheng Zhang <jszhang@kernel.org>
-Cc: Hoan Tran <hoan@os.amperecomputing.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kq6ne+KFz9XBjag0zWO4AEs4pG+DyUONS86ghLVZf8KsgzoXDX/+b9ygldGl1CY+9kFLwNFywDoDEVsuD40j8bg86W24+l/+jKS3Y2HcADwGjDZ9opTrz9ycbCC4MAXIgD9Wze9qIjBceHq0nBmpGmNOo+8qNOGcFGpHD1ziyaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W0HsXYfd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB64CC116C6;
+	Wed, 19 Nov 2025 17:56:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763575009;
+	bh=v2r3BcboFk8zl12ZOYSzJXyMd+p1yn1XwnXeJ/43eh0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W0HsXYfdHfV+4cITqhEiCYb+gulW/Psrb2HBz8/Quh9fmgdnsTS6Cke680OWYF3Vx
+	 D/MqFFU8/jBjQY9H59ulAneVTo9yUq+k7nMXfr6vb6iK+T63e6jG2dNPnJzkWhYB97
+	 OHHWtnZYVhKxQH3+ky7H4ztaKXNc4TwTkAW+oVOLyWjEUaZpaYQ6rKFD8aorXaPkgV
+	 l1Fctz9hXxeDOnbPOKSm/DxsEs5XF70B4bmWdxt9+3L2Qsv/+EuGQ+5q4lp4Qrmse9
+	 3qaORYGqX8G+yqOUoh3S/1aBxWTRWThf9nNY/0y/8CYwsT6KSvKlKTFa9zUR/UyfUX
+	 7wno4JxsWOUZA==
+Date: Wed, 19 Nov 2025 17:56:45 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	Michael =?iso-8859-1?Q?B=FCsch?= <mb@bues.ch>
-Subject: Re: [PATCH] gpio: dwapb: Fold dwapb_context into dwapb_gpio_port
-Message-ID: <aR4EEJO_PeXMKF_h@smile.fi.intel.com>
-References: <20251119150049.13537-1-jszhang@kernel.org>
+	Bartosz Golaszewski <brgl@bgdev.pl>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: switch: adg1712: add adg1712 support
+Message-ID: <20251119-violation-enforcer-1362d3eecb69@spud>
+References: <20251117091427.3624-1-antoniu.miclaus@analog.com>
+ <20251117091427.3624-2-antoniu.miclaus@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xi7GRuMShnwJZ/su"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251119150049.13537-1-jszhang@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20251117091427.3624-2-antoniu.miclaus@analog.com>
 
-On Wed, Nov 19, 2025 at 11:00:49PM +0800, Jisheng Zhang wrote:
-> Fold dwapb_context into struct dwapb_gpio_port to further simplify
-> the code. Sure this brings a tiny 36 bytes data overhead for
-> !PM_SLEEP. After grepping the arm/arm64/riscv dts dir, the max dwapb
-> gpio port number is 6(the berlin2q soc family), so this means we will
 
-GPIO
+--xi7GRuMShnwJZ/su
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-*and I believe this is limitation by Synopsys in HW, but I'm not going to check
-the datasheet right now.
-
-> waste 216 bytes memory in total which is trivial compared to the
-> system memory.
-> 
-> From another side, as Michael mentioned:
-> "The driver currently allocates the struct with kzalloc and stores a
-> pointer to it in case of PM=y.
-> So this probably has an overhead in the same order of magnitude
-> (pointer + malloc overhead/alignment/fragmentation) in case of PM=y
-> now."
-> 
-> So let's Fold dwapb_context into struct dwapb_gpio_port.
-> 
-> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-
-> CC: Michael Büsch <mb@bues.ch>
-
-Please, use --cc or move Cc list below...
-
+On Mon, Nov 17, 2025 at 09:13:22AM +0000, Antoniu Miclaus wrote:
+> Add devicetree bindings for adg1712 SPST quad switch.
+>=20
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
 > ---
+> Changes in v3:
+> - Move bindings from gpio/ to switch/ subsystem
+> - Remove gpio-controller interface
+> - Add 'switch-states' property for initial configuration
+> - Update description and example
+> ---
+>  .../bindings/switch/adi,adg1712.yaml          | 68 +++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/switch/adi,adg1712.=
+yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/switch/adi,adg1712.yaml b/=
+Documentation/devicetree/bindings/switch/adi,adg1712.yaml
+> new file mode 100644
+> index 000000000000..eed142eb5b05
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/switch/adi,adg1712.yaml
+> @@ -0,0 +1,68 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/switch/adi,adg1712.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices ADG1712 quad SPST switch controller
+> +
+> +maintainers:
+> +  - Antoniu Miclaus <antoniu.miclaus@analog.com>
+> +
+> +description: |
+> +  Bindings for Analog Devices ADG1712 quad single-pole, single-throw (SP=
+ST)
+> +  switch controlled by GPIOs. The device features four independent switc=
+hes,
+> +  each controlled by a dedicated GPIO input pin.
+> +
+> +  The switches are configured at probe time based on device tree propert=
+ies
+> +  and cannot be changed from userspace after initialization.
+> +
+> +properties:
+> +  compatible:
+> +    const: adi,adg1712
+> +
+> +  switch-gpios:
+> +    description: |
+> +      Array of GPIOs connected to the IN1-IN4 control pins.
+> +      Index 0 corresponds to IN1 (controls SW1),
+> +      Index 1 corresponds to IN2 (controls SW2),
+> +      Index 2 corresponds to IN3 (controls SW3),
+> +      Index 3 corresponds to IN4 (controls SW4).
 
-...this cutter line. It will have the same effect on the emails, but it will
-reduce the noise in the commit message.
+Did I miss a reply about my comment on this switch-gpios? I was asking
+if a binding like this, which doesn't permit any of these not being
+provided is a good idea.
 
-> NOTE: this patch is applied against the following series:
-> [PATCH v3 00/15] gpio: Use modern PM macros
+> +    minItems: 4
+> +    maxItems: 4
+> +
+> +  switch-states:
+> +    description: |
+> +      Initial states for the four switches (SW1-SW4).
 
-It's better to just put a link to lore.kernel.org or at least message-id.
+Missing an adi prefix? Also, probably should say initial if it is
+initial states.
 
-...
+Linus commented on the commit mesage, so you're gonna at least need to
+change that.
+pw-bot: changes-requested
 
-I have a mixed feelings about this, but if maintainers go with it,
-let it be then.
+> +      Each element corresponds to the desired state of the respective sw=
+itch:
+> +      0 =3D switch disabled (open), 1 =3D switch enabled (closed).
+> +      If not specified, all switches default to disabled (0).
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    items:
+> +      minimum: 0
+> +      maximum: 1
+> +    minItems: 4
+> +    maxItems: 4
+> +
+> +required:
+> +  - compatible
+> +  - switch-gpios
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    adg1712: switch-controller {
+> +        compatible =3D "adi,adg1712";
+> +
+> +        switch-gpios =3D <&gpio 10 GPIO_ACTIVE_HIGH>,
+> +                       <&gpio 11 GPIO_ACTIVE_HIGH>,
+> +                       <&gpio 12 GPIO_ACTIVE_HIGH>,
+> +                       <&gpio 13 GPIO_ACTIVE_HIGH>;
+> +
+> +        /* Enable SW1 and SW3, disable SW2 and SW4 */
+> +        switch-states =3D <1 0 1 0>;
+> +    };
+> +...
+> --=20
+> 2.43.0
+>=20
+>=20
 
--- 
-With Best Regards,
-Andy Shevchenko
+--xi7GRuMShnwJZ/su
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaR4E3QAKCRB4tDGHoIJi
+0m6AAP9Yfs6jEGtF/w7jKSWKbNLo5Wy7sQ5vwu989GZsSGWUZAEAzMiLj2vha1E8
+wykCqw+VzGXSlTpXqo7lELVFHtuzcQI=
+=M+7e
+-----END PGP SIGNATURE-----
+
+--xi7GRuMShnwJZ/su--
 
