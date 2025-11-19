@@ -1,109 +1,121 @@
-Return-Path: <linux-gpio+bounces-28853-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28855-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E8E9C714FE
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 23:42:56 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id EFC4BC71875
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 01:17:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E274434EE15
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Nov 2025 22:42:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTPS id AA2A529CC9
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 00:17:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DA843191B2;
-	Wed, 19 Nov 2025 22:42:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 246F41B4224;
+	Thu, 20 Nov 2025 00:17:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="EeHoapDu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="osBQ/xhI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 190E82F5B;
-	Wed, 19 Nov 2025 22:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D029118FDAF;
+	Thu, 20 Nov 2025 00:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763592159; cv=none; b=gte9o7jZaHXrSU1jSOFajSXcke2UbYOJ2/TRfNytujHx8E36yh9g310MwXGg3OTwLVzjzf+E8CZeaaRFxEsV0FUP85fdU5w5VrPbd8pL9EeFiHVUqNt44NQ5bUB++qSQsgK9RDEP3pGfD7ZetLs8+fAKck3UD35bAqYdSUHPdA0=
+	t=1763597857; cv=none; b=ENMa+YnakFF9Jo3atcovNhG9bAolqXLNJxUyS9tShTK/PQISeJpEctca5LgWNDpD6HHGBlqp6DIhqrVga6XhjjY/wtnxQ1Bp/fqvwDxgNN34c4DqjhEILaELb+8XTsfUfYwKabtzngNvhRtKP68u+/Mp5PBzB6+4uaCDlxPgHbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763592159; c=relaxed/simple;
-	bh=tt/IMPwEpLQecANGcddj+ukYcGqvpvlJ/TqDtm477Es=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tddBeuw9O173FsD6mWAJ6xPhc9hCljfl647hskyPFBLVDqv59OAHm5r2Uhs5vO5Q5+CoLYOWmS41sNDR5U2qmEQcd9MVBy1J0ZUDkmcFmycKkDwTec0qCEx9/wgVLj+MbFrL0xd0gy/GRJDxhb1rEKkI3uaPkj39KUU6RKTnljs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=EeHoapDu; arc=none smtp.client-ip=185.226.149.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1vLqsm-006ksN-1P; Wed, 19 Nov 2025 23:42:36 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
-	 s=selector1; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To
-	:Message-Id:Date:Subject:Cc:To:From;
-	bh=FJlg4ul1sq6ZIhYuGCfri+UArhKIFxhGhDxLLUHAweI=; b=EeHoapDuKaTV8lNNWBHRSinGgN
-	oGrN6E8WJGCGmQ/UZ8Jwwc0T7nrGHIqcSMnb8z/cZxhehiegTm/tshgB/kN4QR4hVhN9eSZwduGls
-	2PFLLd1+qwVa7We6HZ1csXYxMfEmciCyRSkMBIcruVyXpLS4RGdBf4LtH3eqk7bBBLCzERwb2FSI7
-	o9AlR4YV0O87T+tBljrwFgRuuzcQHRkgp8bftdjF1VkA2yXvs/KBIROiR6KWWjhC32bk7bf+h6q1Y
-	Ub+//bZuqPHi3FznD0eTSB+kOmeKwg/2l9abP2d5lW5Xu4ncplHgmJSiFao5JzXAw62EDEkir/tYT
-	fSWzAu0w==;
-Received: from [10.9.9.74] (helo=submission03.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1vLqsl-00080B-EF; Wed, 19 Nov 2025 23:42:35 +0100
-Received: by submission03.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1vLqsd-00Fos6-6X; Wed, 19 Nov 2025 23:42:27 +0100
-From: david.laight.linux@gmail.com
-To: linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
+	s=arc-20240116; t=1763597857; c=relaxed/simple;
+	bh=1cc3DbrfxnW4bVEHX06DIBepzUwipjfMU4MlGRZWJG0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MaWqCa8Z8cZ+TM/T5EpPvumHU/Cy/R2TSht+c8GMaOYifLwFh3bMfLqGfcNqU06xWDBRKZuu9QQEk4mLeY8vCPGizByqLFPHuLCE/XRPHwh6d8Bplmox6ZhyXOKgdR4dKKQW6s5QTcSmpP0qpYqm7CutOQP3tDQTJcm7h8qWQOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=osBQ/xhI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C04C6C4CEF5;
+	Thu, 20 Nov 2025 00:17:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763597857;
+	bh=1cc3DbrfxnW4bVEHX06DIBepzUwipjfMU4MlGRZWJG0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=osBQ/xhIbE0YvXOjxBfvLIcWf55uqJknH/xyCufQoAD5HqGHsoYR7xTkfpzM3WS93
+	 AnbE4xsplw+aIjfxBnScQIqBoD5tMYR20opCYNNwgDP9arPFLB5ny3OxoinXDGZWtj
+	 HrRRpuOliNNGJUrXvqZPyul92tpdl3PW1TjH8QpsuaeMRMNwHHh0SP3cS7jGWwK+Xl
+	 rbpXPmpDJzsc7/L+aoVc7dow4FhYhgaGq6z4FWKW5nXvuGSgP1ufjLbSLrI+AhxaLi
+	 wVxA6GspZDmXWq2SF+p7zB+DORkv8U8TA2THROjvL3goBeNfP1izbudphVHjek0A86
+	 +OGbWOAJueRHw==
+Date: Thu, 20 Nov 2025 07:59:47 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Hoan Tran <hoan@os.amperecomputing.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Mika Westerberg <westeri@kernel.org>,
-	David Laight <david.laight.linux@gmail.com>
-Subject: [PATCH 18/44] drivers/gpio: use min() instead of min_t()
-Date: Wed, 19 Nov 2025 22:41:14 +0000
-Message-Id: <20251119224140.8616-19-david.laight.linux@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20251119224140.8616-1-david.laight.linux@gmail.com>
-References: <20251119224140.8616-1-david.laight.linux@gmail.com>
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	Michael =?utf-8?B?QsO8c2No?= <mb@bues.ch>
+Subject: Re: [PATCH] gpio: dwapb: Fold dwapb_context into dwapb_gpio_port
+Message-ID: <aR5Z8-haM4NwhdPg@xhacker>
+References: <20251119150049.13537-1-jszhang@kernel.org>
+ <aR4EEJO_PeXMKF_h@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <aR4EEJO_PeXMKF_h@smile.fi.intel.com>
 
-From: David Laight <david.laight.linux@gmail.com>
+On Wed, Nov 19, 2025 at 07:53:20PM +0200, Andy Shevchenko wrote:
+> On Wed, Nov 19, 2025 at 11:00:49PM +0800, Jisheng Zhang wrote:
+> > Fold dwapb_context into struct dwapb_gpio_port to further simplify
+> > the code. Sure this brings a tiny 36 bytes data overhead for
+> > !PM_SLEEP. After grepping the arm/arm64/riscv dts dir, the max dwapb
+> > gpio port number is 6(the berlin2q soc family), so this means we will
+> 
+> GPIO
+> 
+> *and I believe this is limitation by Synopsys in HW, but I'm not going to check
+> the datasheet right now.
 
-min_t(u16, a, b) casts an 'unsigned long' to 'u16'.
-Use min(a, b) instead as it promotes the both values to int
-and so cannot discard significant bits.
-
-In this case the values should be ok.
-
-Detected by an extra check added to min_t().
-
-Signed-off-by: David Laight <david.laight.linux@gmail.com>
----
- drivers/gpio/gpiolib-acpi-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpiolib-acpi-core.c b/drivers/gpio/gpiolib-acpi-core.c
-index d441c1236d8c..83dd227dbbec 100644
---- a/drivers/gpio/gpiolib-acpi-core.c
-+++ b/drivers/gpio/gpiolib-acpi-core.c
-@@ -1099,7 +1099,7 @@ acpi_gpio_adr_space_handler(u32 function, acpi_physical_address address,
- 		return AE_BAD_PARAMETER;
- 	}
- 
--	length = min_t(u16, agpio->pin_table_length, pin_index + bits);
-+	length = min(agpio->pin_table_length, pin_index + bits);
- 	for (i = pin_index; i < length; ++i) {
- 		unsigned int pin = agpio->pin_table[i];
- 		struct acpi_gpio_connection *conn;
--- 
-2.39.5
-
+snps doesn't limit this. The max dwapb gpio controller number is 6 as
+is grepped the arm/arm64/riscv etc. dts dir.
+> 
+> > waste 216 bytes memory in total which is trivial compared to the
+> > system memory.
+> > 
+> > From another side, as Michael mentioned:
+> > "The driver currently allocates the struct with kzalloc and stores a
+> > pointer to it in case of PM=y.
+> > So this probably has an overhead in the same order of magnitude
+> > (pointer + malloc overhead/alignment/fragmentation) in case of PM=y
+> > now."
+> > 
+> > So let's Fold dwapb_context into struct dwapb_gpio_port.
+> > 
+> > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> 
+> > CC: Michael Büsch <mb@bues.ch>
+> 
+> Please, use --cc or move Cc list below...
+> 
+> > ---
+> 
+> ...this cutter line. It will have the same effect on the emails, but it will
+> reduce the noise in the commit message.
+> 
+> > NOTE: this patch is applied against the following series:
+> > [PATCH v3 00/15] gpio: Use modern PM macros
+> 
+> It's better to just put a link to lore.kernel.org or at least message-id.
+> 
+> ...
+> 
+> I have a mixed feelings about this, but if maintainers go with it,
+> let it be then.
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
 
