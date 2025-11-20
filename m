@@ -1,119 +1,149 @@
-Return-Path: <linux-gpio+bounces-28895-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28896-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0306BC73D22
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 12:51:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D72EC73F72
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 13:31:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E51FA4E1D09
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 11:51:02 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 107264E76D3
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 12:28:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8435830504B;
-	Thu, 20 Nov 2025 11:50:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AF343346B4;
+	Thu, 20 Nov 2025 12:28:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EtdVFeCY"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="PHji6EP2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD5F21018A;
-	Thu, 20 Nov 2025 11:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A68932C33A
+	for <linux-gpio@vger.kernel.org>; Thu, 20 Nov 2025 12:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763639458; cv=none; b=h+3t47IvR25o8tKPYoEFGdycqGDq4WEFEeHEIQhbiiPOS3iD2o9U3wYU25DY1xACGOOEL+SgBp4uWNavwgKytOECFfrFo6zACpwlux9f58+SRchwo/RZuz8IrUfX6Rxd/pyN36m/7wON9j6AjAgQhGGgUe7mIGTx9+fpES7vxmQ=
+	t=1763641692; cv=none; b=sVshaqCrcVnWpx5j4A351sQSSm90nKkx8RGo4+LsGAYHWlXXj95PA5/d7Jtk+zwo9p1QlYDUX71qJb27cNJpcxebwycc+rJDmV39rCva4qCMa1+U99+X/ikacldOJT6Q1DPZVYlnWnNXv3OTjbWvnCiOM0eMNq4b74M2X5hDM4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763639458; c=relaxed/simple;
-	bh=hHuzHnlBqW4WDgV6+GUJEfNxJXUti1RJz1gP54YPtKg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qmj9e2U212Ydjc16Bj4PJ1DZwIk8no37nlamsgp9rsH8TTphKbWsa8BhRSeXuQmYvd5x8VxYsNGLN+6RW/KJBpedluxa4GSS0PjdV1Q9zUKbrmwWc6VhY9ZHSfaoiKA+CC0bHi9640j1fgvA8qC+Twv53gNE/W55H7n2uUe3yFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EtdVFeCY; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763639456; x=1795175456;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hHuzHnlBqW4WDgV6+GUJEfNxJXUti1RJz1gP54YPtKg=;
-  b=EtdVFeCYUZs/IgpS4UYzCdv0Ed+JcjLXYRa3YEQ+wDbXUNY6RvgaunZT
-   75+4jH7Gk+o/VsRWOUZzJSasPEQFAa2gP56Z2VldSUu98LNyDl/dVjGl9
-   M9+jSYpGUSgYZggZ5o2W1V6eNIdVnny92s30LcoKSDeOPGTkDcohxaBP2
-   5yQjSFAb2M4rJEIkkFQazZR4NsvziXTKtQDORsZAQJVbV6ot/lVCvXMf1
-   VynTJmnukPwZlp551uQ3JbfF7Ux+kVes8f54ajYf27JVFeBIA8xl1mZsv
-   QU6npWT3RxRIxBEkqarPj7Nqud5UACUmGe3y5FVKEfcXKn2giwe5043xP
-   w==;
-X-CSE-ConnectionGUID: CWd1kIhzQAKWVufqw6EkOg==
-X-CSE-MsgGUID: hQ8cUDYOQ/+fRaTtKHuijQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="91189714"
-X-IronPort-AV: E=Sophos;i="6.20,213,1758610800"; 
-   d="scan'208";a="91189714"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 03:50:55 -0800
-X-CSE-ConnectionGUID: /OUwqpHdRZOp+oyMqNDyoA==
-X-CSE-MsgGUID: LlR79JmkS1qGQbx/fm4ZMw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,213,1758610800"; 
-   d="scan'208";a="222275428"
-Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.244.97])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 03:50:53 -0800
-Date: Thu, 20 Nov 2025 13:50:50 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: broonie@kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org,
-	andy@kernel.org, p.zabel@pengutronix.de, linux-gpio@vger.kernel.org,
-	linux-spi@vger.kernel.org, bartosz.golaszewski@linaro.org,
-	linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
-Subject: Re: [PATCH v2] spi: cs42l43: Use actual ACPI firmware node for chip
- selects
-Message-ID: <aR8AmhcY_y93O3GM@smile.fi.intel.com>
-References: <20251120105907.1373797-1-ckeepax@opensource.cirrus.com>
+	s=arc-20240116; t=1763641692; c=relaxed/simple;
+	bh=P9H2efPbk/0jv8cNM4Qf1i7HtYICf5C2snOcL0Djqe4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OCzHXS2+z4oHge0Vk2yWkCNXpqgaHiv+Epn38b6LiOYyWb51/q2XqtLDMYN8I0fnXe7ibUTnDMObJ9iz07v1omfdXRbKPigX6v8VGJaKhiv3EZDURkKYb9JizB5S17sqcG+kFHaOKuzul40hWDhh2paY6DseTfHyUl7nLZe92Is=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=PHji6EP2; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5958931c9c7so867374e87.2
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Nov 2025 04:28:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763641688; x=1764246488; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5bL2FhXRLpT1HcsZuSiUDRIw4ZCNtNP1rJvajASfpfw=;
+        b=PHji6EP2eSKiSJrDzL1V6ikL+YK5mDLAjrdl6LdKN0yflJj+sgHOo4G74/dQAcQhZS
+         4htzhqv86DTBJu0jTCSAexGNOVQ4UYcZtNde4TAUGvHY9TUCXApd4TNKwgRTa7HhXD4s
+         04c3ewxGaVUgEr3vU/8xe1qyUK0ApkpFcCamxWqfu/OXBvnH3ASn8c7DTk+bEFmRfDjD
+         OdKuI4kKqbQFdJKfpWk2IyIv6JijiWuu+wXpkehsGjTDFNiFweEVqjzRBJc7nDDdYJWQ
+         uEmXyU1BK82UZ38Q4czGOeiRww4YvssB4/3wKqlZ1WkhJV7isPuz7+0IWWv1WCLTX2Re
+         hmHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763641688; x=1764246488;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=5bL2FhXRLpT1HcsZuSiUDRIw4ZCNtNP1rJvajASfpfw=;
+        b=mhvOfug7xt8RAaROVIHIgYLYehfvfJex3ebAiOd50DOexYmz6u8sngEit29CPoGtL2
+         hhIYmig2Uep081+MozQusainLiXCHlfldyA+ZIv/8RcZA3+kTAZ24KIdOcEDNCKlvJMy
+         Xh5WNQhBeGKHEKwxpw/+YBF/yu+rlN3sF+Pymm/Yn5FwZkJb3P4TFMVcNk/LDrtYbaD8
+         KnZpVOlpKDlAbLY258pLRzazo1LEjGU56F3nJzfOvK7nHyF1zn9umsxsZu9w3nH00cKc
+         owoLuVTKSpG6ddXEANpddXXVo5nsnc/2KYu+kP5rn9zBQMjJlAd9y9x+gJ3kvLndsm9j
+         XRhA==
+X-Forwarded-Encrypted: i=1; AJvYcCWLZuDmWV4m5W/zg+FvdmOi1XgLR08kCcsLvetj5K3/RPbTH0MyNCTMC8Tqlf3WCeDJTukhqLxlTUsv@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLScf/LExCCmIifKF3gmJt/AfXWZ1gwulA3C032RxBXyXIf+tU
+	ksOfqZ3IyagFmW9TFUbhURWh9vFNFXLG7Hrmr6eWoVZpu4qvA7ZK77xcJpJ/b8P0tN+2AggjrsH
+	4UkPafI2hwHDivopJXW3z2hglwW36gnXjnrD7YLslXs64ZdCcjw09CZzsdRKO
+X-Gm-Gg: ASbGncu8uiAtTkLqmFmPBINSURlApmJSfXpnaEYNSIAmtKvVbe8k9fmHMx95u4qM/qi
+	6ChpSZV+qfPd7drvc+Vw2YdTMpJAW3hHgwqYlF2Vj6OAvSpiJopkAeq8R3pQAjlRW9wvoUGGdu4
+	8fwU6S6ycjs6sxoH4QXV0wld5O0s9fXpetL51vh1G16intb0oT2BxCL12wLzQHYQssVoNe/roS+
+	N+86pQtEcKz70vBO249gxHA0k8R1oOlCig6khdfPfZCBRg1maB3S/ehOZQ8ENwwl01t1L9Gz75O
+	huEcNeyS8e1uUC7Eg8soIOcTkQ==
+X-Google-Smtp-Source: AGHT+IHFiFeZ/wg9cdVAeRgWCSZ2ZNOQSff6PDeSQvaK6oPJEJIrZO4Vdj8XkbntIz0Y4rPDws3qGLiEr0Yvxl+9NZY=
+X-Received: by 2002:a05:6512:a8c:b0:592:f40a:25f3 with SMTP id
+ 2adb3069b0e04-5969e2f430amr1099865e87.27.1763641687051; Thu, 20 Nov 2025
+ 04:28:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251120105907.1373797-1-ckeepax@opensource.cirrus.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <20251120105907.1373797-1-ckeepax@opensource.cirrus.com> <3beb841e99f62767547054c4344f2c60eae4ed9b.camel@pengutronix.de>
+In-Reply-To: <3beb841e99f62767547054c4344f2c60eae4ed9b.camel@pengutronix.de>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 20 Nov 2025 13:27:55 +0100
+X-Gm-Features: AWmQ_bllvrDTigtL4OXlTYgl2RQDEQpq52mz6b94Dl7uiW46iGJLK_UCbVTevPg
+Message-ID: <CAMRc=MdJp8T2gZ=ExWCOKSaVqZqo4Dc2qAX0hXkx98ShUx3mjw@mail.gmail.com>
+Subject: Re: [PATCH v2] spi: cs42l43: Use actual ACPI firmware node for chip selects
+To: Philipp Zabel <p.zabel@pengutronix.de>, broonie@kernel.org
+Cc: Charles Keepax <ckeepax@opensource.cirrus.com>, linus.walleij@linaro.org, 
+	andy@kernel.org, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
+	bartosz.golaszewski@linaro.org, linux-kernel@vger.kernel.org, 
+	patches@opensource.cirrus.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 20, 2025 at 10:59:07AM +0000, Charles Keepax wrote:
-> On some systems the cs42l43 has amplifiers attached to its SPI
-> controller that are not properly defined in ACPI. Currently
-> software nodes are added to support this case, however, the chip
-> selects for these devices are specified using a hack. A software
-> node is added with the same name as the pinctrl driver, as the
-> look up was name based, this allowed the GPIO look up to return
-> the pinctrl driver even though the swnode was not owned by it.
-> This was necessary as the swnodes did not support directly
-> linking to real firmware nodes.
-> 
-> Since commit e5d527be7e69 ("gpio: swnode: don't use the swnode's
-> name as the key for GPIO lookup") changed the lookup to be
-> fwnode based this hack will no longer find the pinctrl driver,
-> resulting in the driver not probing. There is no pinctrl driver
-> attached to the swnode itself. But other patches did add support
-> for linking a swnode to a real fwnode node [1]. As such the hack
-> is no longer needed, so switch over to just passing the real
-> fwnode for the pinctrl property to avoid any issues.
+On Thu, Nov 20, 2025 at 12:21=E2=80=AFPM Philipp Zabel <p.zabel@pengutronix=
+.de> wrote:
+>
+> On Do, 2025-11-20 at 10:59 +0000, Charles Keepax wrote:
+> > On some systems the cs42l43 has amplifiers attached to its SPI
+> > controller that are not properly defined in ACPI. Currently
+> > software nodes are added to support this case, however, the chip
+> > selects for these devices are specified using a hack. A software
+> > node is added with the same name as the pinctrl driver, as the
+> > look up was name based, this allowed the GPIO look up to return
+> > the pinctrl driver even though the swnode was not owned by it.
+> > This was necessary as the swnodes did not support directly
+> > linking to real firmware nodes.
+> >
+> > Since commit e5d527be7e69 ("gpio: swnode: don't use the swnode's
+> > name as the key for GPIO lookup") changed the lookup to be
+> > fwnode based this hack will no longer find the pinctrl driver,
+> > resulting in the driver not probing. There is no pinctrl driver
+> > attached to the swnode itself. But other patches did add support
+> > for linking a swnode to a real fwnode node [1]. As such the hack
+> > is no longer needed, so switch over to just passing the real
+> > fwnode for the pinctrl property to avoid any issues.
+> >
+> > Link: https://lore.kernel.org/linux-gpio/20251106-reset-gpios-swnodes-v=
+6-0-69aa852de9e4@linaro.org/ [1]
+> > Fixes: 439fbc97502a ("spi: cs42l43: Add bridged cs35l56 amplifiers")
+> > Fixes: e5d527be7e69 ("gpio: swnode: don't use the swnode's name as the =
+key for GPIO lookup")
+> > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> > ---
+> >
+> > IMPORTANT NOTE: This depends both functionally and build wise on the
+> > linked series from Bart, it probably makes sense for him to pull the
+> > patch into his series.
+>
+> When included in the reset-gpios-swnodes series, will this need either
+> a noautosel or prerequisite marker to avoid it being picked up into
+> stable without the reset of the series?
+>
 
-...
+Good point. Also: the  Fixes: e5d527be7e69 ("gpio: swnode: don't use
+the swnode's name as the key for GPIO lookup") tag needs to be removed
+as this will go before this patch.
 
-> +		struct property_entry props[] = {
-> +			PROPERTY_ENTRY_REF_ARRAY_LEN("cs-gpios", args, ARRAY_SIZE(args)),
+In any case, looks good to me now:
 
-No need to open code PROPERTY_ENTRY_REF_ARRAY().
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> +			{ }
-> +		};
+Mark: can you Ack it and Philipp will include it in the immutable
+branch with the swnode series[1] I will resend?
 
--- 
-With Best Regards,
-Andy Shevchenko
+Bart
 
-
+[1] https://lore.kernel.org/all/20251106-reset-gpios-swnodes-v6-0-69aa852de=
+9e4@linaro.org/
 
