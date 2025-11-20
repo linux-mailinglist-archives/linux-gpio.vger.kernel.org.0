@@ -1,149 +1,193 @@
-Return-Path: <linux-gpio+bounces-28896-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28897-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D72EC73F72
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 13:31:04 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 048CDC74048
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 13:43:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 107264E76D3
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 12:28:22 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A7CD9353753
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 12:43:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AF343346B4;
-	Thu, 20 Nov 2025 12:28:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26F2F334374;
+	Thu, 20 Nov 2025 12:43:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="PHji6EP2"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="EcCw9i0b";
+	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="jYFelnJm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A68932C33A
-	for <linux-gpio@vger.kernel.org>; Thu, 20 Nov 2025 12:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763641692; cv=none; b=sVshaqCrcVnWpx5j4A351sQSSm90nKkx8RGo4+LsGAYHWlXXj95PA5/d7Jtk+zwo9p1QlYDUX71qJb27cNJpcxebwycc+rJDmV39rCva4qCMa1+U99+X/ikacldOJT6Q1DPZVYlnWnNXv3OTjbWvnCiOM0eMNq4b74M2X5hDM4g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763641692; c=relaxed/simple;
-	bh=P9H2efPbk/0jv8cNM4Qf1i7HtYICf5C2snOcL0Djqe4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OCzHXS2+z4oHge0Vk2yWkCNXpqgaHiv+Epn38b6LiOYyWb51/q2XqtLDMYN8I0fnXe7ibUTnDMObJ9iz07v1omfdXRbKPigX6v8VGJaKhiv3EZDURkKYb9JizB5S17sqcG+kFHaOKuzul40hWDhh2paY6DseTfHyUl7nLZe92Is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=PHji6EP2; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5958931c9c7so867374e87.2
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Nov 2025 04:28:09 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308032ECEAE;
+	Thu, 20 Nov 2025 12:43:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.152.168
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763642587; cv=fail; b=QcLlQYaoA6RYSmsxQys0dlz97sx6Tu6FL01RSfsC5AQ+UHmzs5a1JWBUa+AhwzYq8SsTpGcucxmAMsVucRaxQOV38QCpJ8g33/mleOfhl/K0HaZJtrDhNqV5fuvQGUouAuYSSm3YIqgNwMETk+hVewBBfOvrfrptCTdn3Q9lnMQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763642587; c=relaxed/simple;
+	bh=KXMxV1dgaYUSU3/So133ZvH1IM0K07lB4J19C5JIMzE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n7/nnSyeMdQb1MYQHsZeyLsU9wAqWbaBbyr8YTzl0mCfSCEL1VGAUvpOfu1YnFfqjjjpPHrEDdTHd6O2gGtkOlUDzIc5MXiZ+QCoCxvSeLaoVc4VfzErmTn/4VrTy3ueH/DCdG1v/RRP1Jdv/w2NntqFaJyRdlLiG7a2UFmxfeY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=EcCw9i0b; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=jYFelnJm; arc=fail smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AK4fZYE247388;
+	Thu, 20 Nov 2025 06:42:56 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=PODMain02222019; bh=9QEikkCpL9Mxmq12OM
+	aGo1ISfVlW5H7gBg89M1mwqys=; b=EcCw9i0bFMAjxTXkDbf9Po9BkP/wfR3ILL
+	dWX/7fjy4XRsLNJyRiO8zNxAXyb/z/nt6uEstQ81kJGbi2e4VzbNIQW1pmndMbtq
+	nRMKVFwrWkBYflm+iCdPL1cFgoptG5f9ReBoZtLuLUpCjBEjR5otnNQv3VyU011p
+	ypsTtTExwlWtOgrEM8vERb86heRwlLPNdiZlms3cISWJBAQM4svKBItA4xVCHqCR
+	qXxiFIhy3t4TI/8FClp4bm5iD5Xqkc2FCgCpE7xPMCMJW24mjfNKTAMivYVEuIXJ
+	W39pR32GBVcaTWqXdK6kmGZ8rhMeSdBITu6fvs6rYTffJZv2pgHQ==
+Received: from sn4pr0501cu005.outbound.protection.outlook.com (mail-southcentralusazon11021079.outbound.protection.outlook.com [40.93.194.79])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 4ah1bmacf0-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Thu, 20 Nov 2025 06:42:55 -0600 (CST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wa5yDRtIhB9dMkO/tULFQu7GtVLavhb8IGaqHhUvNpkpDa6DhsaoDCuOXZyy5tJwPrfTNy2w9FHzIryZOD3CfkeAjobNzkCrdxW4p5cbDtWD3fbzXcwneTSzwOs10WiPxl165zewqsP9P2wPvmLUB+HmbR6bNYhGzGrpkfxPEbJ6r+vevK6l5WfMwxHEklyjq3SjmnbdITUwGdmqNtyHdfDM8OO2ZTeZdjwLRFP3XUBYEVaqwuJQpgtrc+S5D4VQShpMfrwHZQdC6sIYjJ6OrzJgEPURd8VHwU2Dwl5Pd4wQ/io38t7dCy8vnLglIbiz1gCz4mqryVbUNSlF5Zu9Lg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9QEikkCpL9Mxmq12OMaGo1ISfVlW5H7gBg89M1mwqys=;
+ b=oEggRsTVGhCtG1VQywuh00SqgEqR4dewK599OyUHI3EtkSmytNht+rOxXSqT1GYwMl5EoZ3Ebz/3klL2ye8lrtGFHaGlR6+XmoXRtYh+D52prQQb6+IKqYwtclpwq6cFc9t5/29Wl0wl54GGeWuknY8wqu7X4rT8bUA9PT2y48OhJEhNTlxTKXjFm5tee97KWWKlO9hz5zo2qCMUAHKJCoNLIenjMcJyA25y9PkM/syviZV6YeNpJZt+/+goH/E5zz7VMGIdY7xp7vYX3VPM1M5FXbXzKOWCuW4ZESGG9rluaAl2XJi5boWL4F+R1sLTibCWhUMdoR9gqxpshxxNfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 84.19.233.75) smtp.rcpttodomain=bgdev.pl smtp.mailfrom=opensource.cirrus.com;
+ dmarc=fail (p=reject sp=reject pct=100) action=oreject
+ header.from=opensource.cirrus.com; dkim=none (message not signed); arc=none
+ (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763641688; x=1764246488; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5bL2FhXRLpT1HcsZuSiUDRIw4ZCNtNP1rJvajASfpfw=;
-        b=PHji6EP2eSKiSJrDzL1V6ikL+YK5mDLAjrdl6LdKN0yflJj+sgHOo4G74/dQAcQhZS
-         4htzhqv86DTBJu0jTCSAexGNOVQ4UYcZtNde4TAUGvHY9TUCXApd4TNKwgRTa7HhXD4s
-         04c3ewxGaVUgEr3vU/8xe1qyUK0ApkpFcCamxWqfu/OXBvnH3ASn8c7DTk+bEFmRfDjD
-         OdKuI4kKqbQFdJKfpWk2IyIv6JijiWuu+wXpkehsGjTDFNiFweEVqjzRBJc7nDDdYJWQ
-         uEmXyU1BK82UZ38Q4czGOeiRww4YvssB4/3wKqlZ1WkhJV7isPuz7+0IWWv1WCLTX2Re
-         hmHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763641688; x=1764246488;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=5bL2FhXRLpT1HcsZuSiUDRIw4ZCNtNP1rJvajASfpfw=;
-        b=mhvOfug7xt8RAaROVIHIgYLYehfvfJex3ebAiOd50DOexYmz6u8sngEit29CPoGtL2
-         hhIYmig2Uep081+MozQusainLiXCHlfldyA+ZIv/8RcZA3+kTAZ24KIdOcEDNCKlvJMy
-         Xh5WNQhBeGKHEKwxpw/+YBF/yu+rlN3sF+Pymm/Yn5FwZkJb3P4TFMVcNk/LDrtYbaD8
-         KnZpVOlpKDlAbLY258pLRzazo1LEjGU56F3nJzfOvK7nHyF1zn9umsxsZu9w3nH00cKc
-         owoLuVTKSpG6ddXEANpddXXVo5nsnc/2KYu+kP5rn9zBQMjJlAd9y9x+gJ3kvLndsm9j
-         XRhA==
-X-Forwarded-Encrypted: i=1; AJvYcCWLZuDmWV4m5W/zg+FvdmOi1XgLR08kCcsLvetj5K3/RPbTH0MyNCTMC8Tqlf3WCeDJTukhqLxlTUsv@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLScf/LExCCmIifKF3gmJt/AfXWZ1gwulA3C032RxBXyXIf+tU
-	ksOfqZ3IyagFmW9TFUbhURWh9vFNFXLG7Hrmr6eWoVZpu4qvA7ZK77xcJpJ/b8P0tN+2AggjrsH
-	4UkPafI2hwHDivopJXW3z2hglwW36gnXjnrD7YLslXs64ZdCcjw09CZzsdRKO
-X-Gm-Gg: ASbGncu8uiAtTkLqmFmPBINSURlApmJSfXpnaEYNSIAmtKvVbe8k9fmHMx95u4qM/qi
-	6ChpSZV+qfPd7drvc+Vw2YdTMpJAW3hHgwqYlF2Vj6OAvSpiJopkAeq8R3pQAjlRW9wvoUGGdu4
-	8fwU6S6ycjs6sxoH4QXV0wld5O0s9fXpetL51vh1G16intb0oT2BxCL12wLzQHYQssVoNe/roS+
-	N+86pQtEcKz70vBO249gxHA0k8R1oOlCig6khdfPfZCBRg1maB3S/ehOZQ8ENwwl01t1L9Gz75O
-	huEcNeyS8e1uUC7Eg8soIOcTkQ==
-X-Google-Smtp-Source: AGHT+IHFiFeZ/wg9cdVAeRgWCSZ2ZNOQSff6PDeSQvaK6oPJEJIrZO4Vdj8XkbntIz0Y4rPDws3qGLiEr0Yvxl+9NZY=
-X-Received: by 2002:a05:6512:a8c:b0:592:f40a:25f3 with SMTP id
- 2adb3069b0e04-5969e2f430amr1099865e87.27.1763641687051; Thu, 20 Nov 2025
- 04:28:07 -0800 (PST)
+ d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9QEikkCpL9Mxmq12OMaGo1ISfVlW5H7gBg89M1mwqys=;
+ b=jYFelnJmhVVKywLWY/09DAWoAMjnzZ8674kS4s5c+pV4HeFtKua+9+97aNfP3LWai1GU9pcHd1IlMZZOnse68F0jPKStjvvJFVZYFRBcwDRR4r11S2TKD7S5h9RbkAQXzP7nPs7R4f+55cK4C/ABmO5Xq+mofut2Daz/7nmZGic=
+Received: from SJ0PR03CA0377.namprd03.prod.outlook.com (2603:10b6:a03:3a1::22)
+ by MN0PR19MB6238.namprd19.prod.outlook.com (2603:10b6:208:3c6::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.11; Thu, 20 Nov
+ 2025 12:42:50 +0000
+Received: from SJ1PEPF00001CEA.namprd03.prod.outlook.com
+ (2603:10b6:a03:3a1:cafe::cd) by SJ0PR03CA0377.outlook.office365.com
+ (2603:10b6:a03:3a1::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9343.11 via Frontend Transport; Thu,
+ 20 Nov 2025 12:42:49 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
+ smtp.mailfrom=opensource.cirrus.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
+Received-SPF: Fail (protection.outlook.com: domain of opensource.cirrus.com
+ does not designate 84.19.233.75 as permitted sender)
+ receiver=protection.outlook.com; client-ip=84.19.233.75;
+ helo=edirelay1.ad.cirrus.com;
+Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
+ SJ1PEPF00001CEA.mail.protection.outlook.com (10.167.242.26) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9343.9
+ via Frontend Transport; Thu, 20 Nov 2025 12:42:48 +0000
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id EBE7A406547;
+	Thu, 20 Nov 2025 12:42:46 +0000 (UTC)
+Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPSA id CACF7820247;
+	Thu, 20 Nov 2025 12:42:46 +0000 (UTC)
+Date: Thu, 20 Nov 2025 12:42:45 +0000
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: broonie@kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org,
+        andy@kernel.org, p.zabel@pengutronix.de, linux-gpio@vger.kernel.org,
+        linux-spi@vger.kernel.org, bartosz.golaszewski@linaro.org,
+        linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+Subject: Re: [PATCH v2] spi: cs42l43: Use actual ACPI firmware node for chip
+ selects
+Message-ID: <aR8MxX1g38dq62rI@opensource.cirrus.com>
+References: <20251120105907.1373797-1-ckeepax@opensource.cirrus.com>
+ <aR8AmhcY_y93O3GM@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251120105907.1373797-1-ckeepax@opensource.cirrus.com> <3beb841e99f62767547054c4344f2c60eae4ed9b.camel@pengutronix.de>
-In-Reply-To: <3beb841e99f62767547054c4344f2c60eae4ed9b.camel@pengutronix.de>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 20 Nov 2025 13:27:55 +0100
-X-Gm-Features: AWmQ_bllvrDTigtL4OXlTYgl2RQDEQpq52mz6b94Dl7uiW46iGJLK_UCbVTevPg
-Message-ID: <CAMRc=MdJp8T2gZ=ExWCOKSaVqZqo4Dc2qAX0hXkx98ShUx3mjw@mail.gmail.com>
-Subject: Re: [PATCH v2] spi: cs42l43: Use actual ACPI firmware node for chip selects
-To: Philipp Zabel <p.zabel@pengutronix.de>, broonie@kernel.org
-Cc: Charles Keepax <ckeepax@opensource.cirrus.com>, linus.walleij@linaro.org, 
-	andy@kernel.org, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
-	bartosz.golaszewski@linaro.org, linux-kernel@vger.kernel.org, 
-	patches@opensource.cirrus.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aR8AmhcY_y93O3GM@smile.fi.intel.com>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CEA:EE_|MN0PR19MB6238:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8b4ead32-b944-4bf2-03a4-08de2832502f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|7416014|376014|36860700013|61400799027;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Tr+x6I7/re9mZvfOmdvXkAphJXGE7JSGQvhvXCzULc5nCgTCuPdydW/upxph?=
+ =?us-ascii?Q?vVwbr+yEbRjk2o/ZM40OZi/1ttMxeshMQAmJeWfxvCrU3Wi3NnhmiIXAkkoM?=
+ =?us-ascii?Q?IcwgHlD0uu03RrGru2ycaFOZJkmKKk3nyE+xbff4vtLcasaLu/9GXQcx7ied?=
+ =?us-ascii?Q?xOP2Rd9PKlI++BE3x4zEryrFDMNPey6lzgkew7B2dcEODwiBGWMpunRBL7bF?=
+ =?us-ascii?Q?evES4ilcUL0ObdaagVzV+KRyOfa66KaAtyZ1/TP0llg9/U70soWbEmQEe1gI?=
+ =?us-ascii?Q?XWeJvrKZdxV63pGpNm3ewQ8kRVQqveCeNbi6y4AMEX58LwBdus31qrowHjNN?=
+ =?us-ascii?Q?VXRdzrI5MESHJi1b2qDEhHDWn8bYxQ9uQ0/CUlimekemT4KqorZsa4jiGjvp?=
+ =?us-ascii?Q?FaDXLHZyFSu/iyhIhZO65L/v+nbYG77uRNGGlz1TMTEr3z198MU7B8yrdZzQ?=
+ =?us-ascii?Q?MOYFiFVLDRFdnELzjoEn2QeDNS7/L254+c6N0O1h7BXVwvlelVkDDus99tSD?=
+ =?us-ascii?Q?PY85qrkpieQEm6e3HlZBKwsOVTvolMrK1yO8YICUu4+97G5z57QYJEgizV8d?=
+ =?us-ascii?Q?gkLDaUNQ+KXxyD8Jjz91eQgk/wjkfNUy8onbuXOn/PEVoZrMbI0ZWTZuVgQR?=
+ =?us-ascii?Q?imKLBCox05HpUERuQL5sJA0oddcSHX5qivO8MEjdCSbhr5V9nvlfOuI/eoia?=
+ =?us-ascii?Q?YC6K6A3IfxgfeuDwazn/65615wpW3xROMwus74ePNfn75j0zqWR3s0p7hkpD?=
+ =?us-ascii?Q?LHmtFeALq89XkXdeWy7rzOO/vFJahPyaUW8Mkk9z016QflL/cjCfS9NucaxC?=
+ =?us-ascii?Q?ekU2RyLbt3fEEGS/WbAdDQzDgsWfUQSKbWhdC8GH7i7AXaNWEaJco4zIB16+?=
+ =?us-ascii?Q?74UyKgmGdKUbZie6R/9O8Do7zD/OlLA3Vv1cPTyMmR021k4P7glwQ0Qh/mAs?=
+ =?us-ascii?Q?444kR0g9zVusMsCmWBhQYKFElO3yMjYzRTD7mm/vQltNYCMhhLsxYVaR/bHl?=
+ =?us-ascii?Q?4UvYKXveIKu61tgjtkRQjnrE9MGpNpFqiA03DZgrJKRMBsvuVRBxTTv8aiwj?=
+ =?us-ascii?Q?JSDa3Bkic7dZwEfa7SR7cspbZYttXH0KfdjELjdKXzIzkh3GxRQb7RR3s1OV?=
+ =?us-ascii?Q?FZuYG6FOymXlsY4I3bWz31492KwCqzENE2LyR9NjAqljJgay1kIDiaT88pu+?=
+ =?us-ascii?Q?j8fUdFrWALBvyxd/xni3jghWD49Td/oRYv+zNfyBcyc1XQkgW5Jk6kOxxR2C?=
+ =?us-ascii?Q?J+es2/5x5VD/EbOPMbnAM9MWZxWbbx2m6Ai4VK2GPcgQjqWUTdFXEkm3Z/2L?=
+ =?us-ascii?Q?pbCznuA8YMOXjrzzYx+tCc88eoGp44lAGNW3ptAwchn1dSWqQTt8aS0z2pv3?=
+ =?us-ascii?Q?5Up9pUxWGDWY9icHYJeLqDlWw70PeeDTOPwtHdkkBJ+iT1bAf7Nb8/lTGNvm?=
+ =?us-ascii?Q?Im25Z1Kyr4DHwJx3AeuKEqtJPSqoF1JwPIABsB0UGdmKiSAJsSBoYhL9cFI9?=
+ =?us-ascii?Q?8wxYl2xuLwV9TdUBzeeZy27tkZCeWEVWCSZJ9gTqW6AxJP0sEfbcux2rxzUX?=
+ =?us-ascii?Q?oGBYFX4BEyI5K789JLk=3D?=
+X-Forefront-Antispam-Report:
+	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(36860700013)(61400799027);DIR:OUT;SFP:1102;
+X-OriginatorOrg: opensource.cirrus.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2025 12:42:48.8518
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8b4ead32-b944-4bf2-03a4-08de2832502f
+X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-SJ1PEPF00001CEA.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR19MB6238
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTIwMDA4MCBTYWx0ZWRfX9xOQRLtCS4BJ
+ xvaYeWa39rlxuapaqQF6mB9ZKNGGcWrAMEDtMUzroygVj9WsF+5xk7eUhKAeyUanEbDV3m30k0c
+ AnUXcQJyOWcR+b34tooGUaYt8WIKo1zgttIqk9GakdtFGujvcMda/Ll9k7PmMd59dbDAqg5EMTN
+ sntCZmZRpJgRrTnXyN5qVRyh2J7k5CC0IvCS/ZhyQWcE4RTfbgsHmCUqmVfLZqr8JxSw+9wkcEO
+ jkVdEZPKGrxnCfWri1WZhnhq3UhBYtFPJnU9SAfM/i889RVZh0WuIEtPbxF0beVLa3ju2ZheGgr
+ BQvrS531jFI+JLjj3D/mAKe3B1crCikwtAsQNhbhmguofkLh6kjcpzKhPL8Y2k53cAMBbl0JOWj
+ b3EmYxj9zvEF1aowuyNA/DV2s+5usg==
+X-Authority-Analysis: v=2.4 cv=XcmEDY55 c=1 sm=1 tr=0 ts=691f0ccf cx=c_pps
+ a=ic/V0UXtXsqqvJ1es2EIKg==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=kj9zAlcOel0A:10 a=6UeiqGixMTsA:10 a=RWc_ulEos4gA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=EM5_C3LBK5Y1hFyRYFsA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: EPg2OPgsrksOFkaNHUf_nD4CY1HLCefC
+X-Proofpoint-ORIG-GUID: EPg2OPgsrksOFkaNHUf_nD4CY1HLCefC
+X-Proofpoint-Spam-Reason: safe
 
-On Thu, Nov 20, 2025 at 12:21=E2=80=AFPM Philipp Zabel <p.zabel@pengutronix=
-.de> wrote:
->
-> On Do, 2025-11-20 at 10:59 +0000, Charles Keepax wrote:
-> > On some systems the cs42l43 has amplifiers attached to its SPI
-> > controller that are not properly defined in ACPI. Currently
-> > software nodes are added to support this case, however, the chip
-> > selects for these devices are specified using a hack. A software
-> > node is added with the same name as the pinctrl driver, as the
-> > look up was name based, this allowed the GPIO look up to return
-> > the pinctrl driver even though the swnode was not owned by it.
-> > This was necessary as the swnodes did not support directly
-> > linking to real firmware nodes.
-> >
-> > Since commit e5d527be7e69 ("gpio: swnode: don't use the swnode's
-> > name as the key for GPIO lookup") changed the lookup to be
-> > fwnode based this hack will no longer find the pinctrl driver,
-> > resulting in the driver not probing. There is no pinctrl driver
-> > attached to the swnode itself. But other patches did add support
-> > for linking a swnode to a real fwnode node [1]. As such the hack
-> > is no longer needed, so switch over to just passing the real
-> > fwnode for the pinctrl property to avoid any issues.
-> >
-> > Link: https://lore.kernel.org/linux-gpio/20251106-reset-gpios-swnodes-v=
-6-0-69aa852de9e4@linaro.org/ [1]
-> > Fixes: 439fbc97502a ("spi: cs42l43: Add bridged cs35l56 amplifiers")
-> > Fixes: e5d527be7e69 ("gpio: swnode: don't use the swnode's name as the =
-key for GPIO lookup")
-> > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> > ---
-> >
-> > IMPORTANT NOTE: This depends both functionally and build wise on the
-> > linked series from Bart, it probably makes sense for him to pull the
-> > patch into his series.
->
-> When included in the reset-gpios-swnodes series, will this need either
-> a noautosel or prerequisite marker to avoid it being picked up into
-> stable without the reset of the series?
->
+On Thu, Nov 20, 2025 at 01:50:50PM +0200, Andy Shevchenko wrote:
+> On Thu, Nov 20, 2025 at 10:59:07AM +0000, Charles Keepax wrote:
+> > +		struct property_entry props[] = {
+> > +			PROPERTY_ENTRY_REF_ARRAY_LEN("cs-gpios", args, ARRAY_SIZE(args)),
+> 
+> No need to open code PROPERTY_ENTRY_REF_ARRAY().
 
-Good point. Also: the  Fixes: e5d527be7e69 ("gpio: swnode: don't use
-the swnode's name as the key for GPIO lookup") tag needs to be removed
-as this will go before this patch.
+Sorry yes forgot to put that back when I switched back from the
+dynamic allocated ones. Bart let me know if you want a v3, or
+happy to let you fix this up when you pull it into your chain?
 
-In any case, looks good to me now:
-
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-Mark: can you Ack it and Philipp will include it in the immutable
-branch with the swnode series[1] I will resend?
-
-Bart
-
-[1] https://lore.kernel.org/all/20251106-reset-gpios-swnodes-v6-0-69aa852de=
-9e4@linaro.org/
+Thanks,
+Charles
 
