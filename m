@@ -1,128 +1,130 @@
-Return-Path: <linux-gpio+bounces-28866-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28867-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE3A0C72845
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 08:10:31 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8523C72B24
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 09:01:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 777F834FA99
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 07:04:03 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9A4724E41F0
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 08:01:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E52A730146A;
-	Thu, 20 Nov 2025 07:03:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE14B2848A8;
+	Thu, 20 Nov 2025 08:01:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BC1dRrpy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WiCQh3tu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FDA3009E1
-	for <linux-gpio@vger.kernel.org>; Thu, 20 Nov 2025 07:03:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171A4221271;
+	Thu, 20 Nov 2025 08:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763622209; cv=none; b=ILNlk927dS8wX5ZcLl1/CrsmmC4HP76nrGYASvPK//ZhjfdwojfgDHZt1QmqD0rObiShnYORuFwlWs9RzBt62jyqMYv45aJ1vcSrcJfNflnE5bJdWG1Khvy+G4h+ESCg41xBdf028YxOIWWbvbYYsaddGBeV7WSKKFFPJ+5MjY0=
+	t=1763625696; cv=none; b=ODGM0K3pKg+Qe5DabEThy2Y9ATVsODiybmxUr4OUqzqVt8AZvDmhbkn83p/4jFphmE+x7u43x23xhvPMAYhG8pc3JlImIb0exAf3U82ebsjSBRp2clxYk139dCFH1cSj7i57jCuG8+uL10ymRC/XZ7p0ZN/USXr+YXf5NAppqcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763622209; c=relaxed/simple;
-	bh=yWaDyoeVkfBsdzNbNQDJMpjz5f/8LqjkZB0jvU1mrao=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M7XLTa4IEZMN39iJxJDZS1UH7aetPMuSZyW5BEBHv+PzAOvw2VXRKsDsURTfZMwik0NEyd5YYjG3HKjwvMoQGMV8+63DlT+5rCLSzQpsjvRZC66yApl8QYTFPp7lDY0H+AU6vQGvouF6BvgyieYiBv2s/EoZ4Swy46BR5e04ksg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BC1dRrpy; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-64165cd689eso134754a12.0
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Nov 2025 23:03:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763622206; x=1764227006; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tJJgvs/ZqyDxpPWXe/GBTfmOfPXUTk9veRBGRsYfnYM=;
-        b=BC1dRrpy0cBJzBvNYV7CDMWO20o4v8qJh4M0occ2QWhx6g3imByjktwxgrA8NoT3qy
-         Qx2Tuu7os7p6InukXZLgwxR/zQV8XsgXA+YNtH6THdnlomVW7zh5moLJBq47U73Hjpxu
-         gtmiklWkJamdkMajGGK9Z6Z/5WmJCVLJ9cMnY09kJS3UJQjnSVbbngP/KohigyroCVU+
-         sTvfTmcdTbk0rMMps0PeaZwNadpetxuOhIFq16EB1DQqMgulQYyfxZnHt00WkyzlLQvZ
-         Y9SJox4gUODiQ4PFZJE0nyyieKuSwXdzQvPKI/RSJn4aLsV4QZpFHmgN22H64vEZmRwP
-         pcCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763622206; x=1764227006;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=tJJgvs/ZqyDxpPWXe/GBTfmOfPXUTk9veRBGRsYfnYM=;
-        b=iT9vq1fVhOLKmK0+zOZznYYspRCMq6ZegUWEb/G69Ll0UIodPySMUJ+TXMHCO/gMyq
-         cqDKcH/UigziLf1f2lpi7dYPoE0pB6DjuXub70BRWkkZvArffeNdYT5C5qZhT34Xi9WF
-         0LCdlIIrcJ/NwVAn6FH9uqW+/Ne/h0abuQOLm8uIB4AFDmkU6bslzwUXz2/cZq034oSF
-         GaiAow288DwNMmvYF6zBH/45FHzHR8Ic7bydFiDgH2xykZwBuggLzq/7kerGgJq8BapS
-         8FDnlU1GIBDOUzy7z05q3RkwkKEqr3EhWJRa6hri43QkjyoIJU0i0UGtdwjIN46F+jat
-         DrEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWW3KWVhHvFh9PH7tSu0pCQP4evFtSYUqTdhFDFLFXXrT9PiO/GqC2x1F4PulOtw3OWGc7CZo/cu94f@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRfI1febiwcDBl/W5VR1ihcDK7CPUd7Q/PqjPs3bkdv0GGtcLC
-	SA9W+B/X5nvb4s2P9c40nxAalU5TeFwHJO0cS/SjCoJBfJdzm/Y2o5Z+9iqYpkyl2fz7WE996AF
-	6W036p4y4bof6Zzak0bUbLwiDLXnn8o4=
-X-Gm-Gg: ASbGnctg7J5Mu14jI+EmACQjr2q2rLlUQfAhQ11uFcTJ3T9sVeQCq5NT1h/MFH/m8Ge
-	b0dLn/YeDneB2hzYip4yC0W1wB3L53RlBOHrHEM5SZwQwuDCnJGIFoGZeuHF68qBT1HIHN0Z0Bx
-	mHCbnpFohoNH3XRegIAHaHZNV5hwiG3QyMLFq2mZ3Oy+0BWaxpkljMPKS1rhAE+ME4htBKTPEat
-	6rO0vqcNYM746I9R+Er40G8/1WowjYFrfMputofv67SxuD+x+DA88Psb8CgxImOSwYpnOgwYn9o
-	IUX9dXcbkmzgFqdAJrR7BnAUVWI+ZJYzcEQsPTlhVp9GrlvX51np+9oIlmSOiRh4oRec/EA=
-X-Google-Smtp-Source: AGHT+IEA8GU353sKcnteGmKTMEBzbiCaPQJCce5ujMTjOBQ1mFHaCHAzcFHXEgsI1VWuM6dNVzZd0ZtPLCtRbzcDf70=
-X-Received: by 2002:a17:907:7f1c:b0:b73:37aa:87c0 with SMTP id
- a640c23a62f3a-b76572b27ccmr132695866b.23.1763622206151; Wed, 19 Nov 2025
- 23:03:26 -0800 (PST)
+	s=arc-20240116; t=1763625696; c=relaxed/simple;
+	bh=SSZA69vSnHTsTGmpz+7Z4/vliAw53CA2Oum9gWN3dxM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fgOnVwnSmH4WFsiz6V6c4RAUQXuwfpiBxrxV1gw0memVsmDy4ucLRb2IW+TPFbgAEw7MbCeg34hDS5pKDWRBM6Fx6ORklJKUqa2xeEsgRAmvcRAzG+wkyfDp3RFkg0j3YO94xl2T7XccCn+X6fiLUaGAG486h1Zb96UDjkUHYYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WiCQh3tu; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763625694; x=1795161694;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SSZA69vSnHTsTGmpz+7Z4/vliAw53CA2Oum9gWN3dxM=;
+  b=WiCQh3tu6uzYRW0AAt5U4olf0nB3/shsahPy4iEYZxul1kcIX1mH21NP
+   la+oGbM4Z2lgu9u91C76rJDurWVl3Ta6gHJJjK63nC902pIViAqvqDniN
+   f+0hjjWhjRRwLiUijKJ9hi3hBJlCIwqU6UNhmjdrxR9xs+NJCsRL7cqo3
+   Iz/j3VtJ5tC9zgVOiKOY0PJQtAYzXvGWJVstlUAGAwbcMzCAorkJ9nAUQ
+   tJDRQbrSMmKoodbgHXW6K+BF/Rql7rqifbOu7qqiApjXKEu5LDyOmwd5h
+   30KFqZwovh+1ZMRdDs8o8BELTb+SdK5KE3TnmMt3uNn5L27xIyWc63Qa+
+   w==;
+X-CSE-ConnectionGUID: 5Mb4scYSTuCcUGzLQlUkQg==
+X-CSE-MsgGUID: 9ay5Wd10SWasvha5yqsQdg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="65846193"
+X-IronPort-AV: E=Sophos;i="6.19,317,1754982000"; 
+   d="scan'208";a="65846193"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 00:01:33 -0800
+X-CSE-ConnectionGUID: cvvDmAEWTwe8GdGy2Ex7cQ==
+X-CSE-MsgGUID: 4WOVAidyTqKpFXp70t3A1g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,317,1754982000"; 
+   d="scan'208";a="195426582"
+Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.244.97])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 00:01:31 -0800
+Date: Thu, 20 Nov 2025 10:01:29 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: david.laight.linux@gmail.com
+Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Mika Westerberg <westeri@kernel.org>
+Subject: Re: [PATCH 18/44] drivers/gpio: use min() instead of min_t()
+Message-ID: <aR7K2bWKiaXrwWIr@smile.fi.intel.com>
+References: <20251119224140.8616-1-david.laight.linux@gmail.com>
+ <20251119224140.8616-19-david.laight.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251119163327.16306-1-jszhang@kernel.org> <20251119163327.16306-3-jszhang@kernel.org>
- <aR4CLQ_2-kUM-e2F@smile.fi.intel.com> <aR5gpsbw_r-y4JdS@xhacker>
-In-Reply-To: <aR5gpsbw_r-y4JdS@xhacker>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 20 Nov 2025 09:02:50 +0200
-X-Gm-Features: AWmQ_bmQiILHNoGbrxHaQiqyqVXCGmcrQ_qH6-ZV56DmIu-i9MkYErmA4p9ogqA
-Message-ID: <CAHp75VdxDz4hG8TH2yGbQ1CmFTSd8m+6sBfuvD-aybuXY9SoQg@mail.gmail.com>
-Subject: Re: [PATCH v4 02/15] gpio: brcmstb: Use modern PM macros
-To: Jisheng Zhang <jszhang@kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Doug Berger <opendmb@gmail.com>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Hoan Tran <hoan@os.amperecomputing.com>, Andy Shevchenko <andy@kernel.org>, 
-	Daniel Palmer <daniel@thingy.jp>, Romain Perier <romain.perier@gmail.com>, 
-	Grygorii Strashko <grygorii.strashko@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, 
-	Kevin Hilman <khilman@kernel.org>, Robert Jarzmik <robert.jarzmik@free.fr>, 
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>, Srinivas Neeli <srinivas.neeli@amd.com>, 
-	Michal Simek <michal.simek@amd.com>, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-omap@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251119224140.8616-19-david.laight.linux@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, Nov 20, 2025 at 2:46=E2=80=AFAM Jisheng Zhang <jszhang@kernel.org> =
-wrote:
-> On Wed, Nov 19, 2025 at 07:45:17PM +0200, Andy Shevchenko wrote:
-> > On Thu, Nov 20, 2025 at 12:33:14AM +0800, Jisheng Zhang wrote:
+On Wed, Nov 19, 2025 at 10:41:14PM +0000, david.laight.linux@gmail.com wrote:
+> 
+> min_t(u16, a, b) casts an 'unsigned long' to 'u16'.
+> Use min(a, b) instead as it promotes the both values to int
+> and so cannot discard significant bits.
+> 
+> In this case the values should be ok.
+> 
+> Detected by an extra check added to min_t().
+
+In most of the patches you need to follow the commonly used Subject prefix.
+This can be done by doing
+
+	git log --oneline --no-merges -- $FILE(S)_OF_INTEREST
+
+For example,
+
+$ git log --no-decorate --oneline --no-merges -- drivers/gpio/gpiolib-acpi*
+b1055678a016 gpiolib: acpi: Use %pe when passing an error pointer to dev_err()
+e4a77f9c85a5 gpiolib: acpi: Make set debounce errors non fatal
+19c839a98c73 gpiolib: acpi: initialize acpi_gpio_info struct
+3712ce9fa501 gpiolib: acpi: Ignore touchpad wakeup on GPD G1619-05
+16c07342b542 gpiolib: acpi: Program debounce when finding GPIO
+23800ad1265f gpiolib: acpi: Add quirk for ASUS ProArt PX13
+...
+
+
+> acpi_gpio_adr_space_handler(u32 function, acpi_physical_address address,
+
+> -	length = min_t(u16, agpio->pin_table_length, pin_index + bits);
+> +	length = min(agpio->pin_table_length, pin_index + bits);
+
+Now, if you look closer at the code, the pin_index alone has the problem you
+are targeting here. On top of that the iterator and 'length' are signed, while
+the result of min_t(u16) is unsigned (however it has no difference in this case).
 
 ...
 
-> > >  static const struct dev_pm_ops brcmstb_gpio_pm_ops =3D {
-> > > -   .suspend_noirq  =3D brcmstb_gpio_suspend,
-> > > -   .resume_noirq =3D brcmstb_gpio_resume,
-> > > +   .suspend_noirq =3D pm_sleep_ptr(brcmstb_gpio_suspend),
-> > > +   .resume_noirq =3D pm_sleep_ptr(brcmstb_gpio_resume),
-> >
-> > Can it be DEFINE_NOIRQ_DEV_PM_OPS() / NOIRQ_SYSTEM_SLEEP_PM_OPS()?
->
-> Yep I agree with you. But IMHO, it's better to make the
-> DEFINE_NOIRQ_DEV_PM_OPS() switching as a seperate patch and merge this
-> series which wants to clean up various #ifdef #endif usages
+TL;DR: I apply this patch with subject changed, but I think more work needs to
+be done if you want to fix it fully.
 
-OK.
-
-
---=20
+-- 
 With Best Regards,
 Andy Shevchenko
+
+
 
