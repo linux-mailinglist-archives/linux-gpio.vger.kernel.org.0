@@ -1,130 +1,200 @@
-Return-Path: <linux-gpio+bounces-28867-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28868-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8523C72B24
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 09:01:48 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73D4AC72C42
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 09:21:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9A4724E41F0
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 08:01:42 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9FA9B3534CE
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 08:19:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE14B2848A8;
-	Thu, 20 Nov 2025 08:01:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 242522EDD7E;
+	Thu, 20 Nov 2025 08:19:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WiCQh3tu"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OcEUBQBB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171A4221271;
-	Thu, 20 Nov 2025 08:01:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C2521FF28;
+	Thu, 20 Nov 2025 08:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763625696; cv=none; b=ODGM0K3pKg+Qe5DabEThy2Y9ATVsODiybmxUr4OUqzqVt8AZvDmhbkn83p/4jFphmE+x7u43x23xhvPMAYhG8pc3JlImIb0exAf3U82ebsjSBRp2clxYk139dCFH1cSj7i57jCuG8+uL10ymRC/XZ7p0ZN/USXr+YXf5NAppqcA=
+	t=1763626778; cv=none; b=Ur3A7holDeuwftBcPGI6dQSaF72vzgqlM82fI+7cd5YXcUFriRoZUz5+fJSogK3Mh29d+OmJ27/XyvPWbIN03ND3T8tCLe5aSfWg2k4QpICRHuAUz7TVzNvOeGdCokPy6QoZYc/Rz2UUHjxUGv6TtlkYreTYaTTJvS+b/z+wjEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763625696; c=relaxed/simple;
-	bh=SSZA69vSnHTsTGmpz+7Z4/vliAw53CA2Oum9gWN3dxM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fgOnVwnSmH4WFsiz6V6c4RAUQXuwfpiBxrxV1gw0memVsmDy4ucLRb2IW+TPFbgAEw7MbCeg34hDS5pKDWRBM6Fx6ORklJKUqa2xeEsgRAmvcRAzG+wkyfDp3RFkg0j3YO94xl2T7XccCn+X6fiLUaGAG486h1Zb96UDjkUHYYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WiCQh3tu; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763625694; x=1795161694;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SSZA69vSnHTsTGmpz+7Z4/vliAw53CA2Oum9gWN3dxM=;
-  b=WiCQh3tu6uzYRW0AAt5U4olf0nB3/shsahPy4iEYZxul1kcIX1mH21NP
-   la+oGbM4Z2lgu9u91C76rJDurWVl3Ta6gHJJjK63nC902pIViAqvqDniN
-   f+0hjjWhjRRwLiUijKJ9hi3hBJlCIwqU6UNhmjdrxR9xs+NJCsRL7cqo3
-   Iz/j3VtJ5tC9zgVOiKOY0PJQtAYzXvGWJVstlUAGAwbcMzCAorkJ9nAUQ
-   tJDRQbrSMmKoodbgHXW6K+BF/Rql7rqifbOu7qqiApjXKEu5LDyOmwd5h
-   30KFqZwovh+1ZMRdDs8o8BELTb+SdK5KE3TnmMt3uNn5L27xIyWc63Qa+
-   w==;
-X-CSE-ConnectionGUID: 5Mb4scYSTuCcUGzLQlUkQg==
-X-CSE-MsgGUID: 9ay5Wd10SWasvha5yqsQdg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="65846193"
-X-IronPort-AV: E=Sophos;i="6.19,317,1754982000"; 
-   d="scan'208";a="65846193"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 00:01:33 -0800
-X-CSE-ConnectionGUID: cvvDmAEWTwe8GdGy2Ex7cQ==
-X-CSE-MsgGUID: 4WOVAidyTqKpFXp70t3A1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,317,1754982000"; 
-   d="scan'208";a="195426582"
-Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.244.97])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 00:01:31 -0800
-Date: Thu, 20 Nov 2025 10:01:29 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: david.laight.linux@gmail.com
-Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+	s=arc-20240116; t=1763626778; c=relaxed/simple;
+	bh=gPS6lCGIRGcxxQSZNthifmSBFCXs3B3kMXmWi4bEZ7w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=JfUTjrj9L20VPF9rf4x4OuEUO8GmJKpFLY3/DXXaroeJkc5hCUat3fLany++pl6tVCaVZAsAtVJbaGffGlyeUepYZPDVxydoewHm315vCrwXSh3A5EMC8NphQho8F7iYvt/S1pNldS3Vs3t7r2NxBxR+CVG59BuLU0HDM6ZLrGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OcEUBQBB; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Date: Thu, 20 Nov 2025 10:19:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1763626771; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type; bh=lqP09SI4iTaIvX15z16i9CR8/quVrC8ublsHH/F3wTE=;
+	b=OcEUBQBBrl8TzgVKxhqvy/WbAbsSuYduJgSrQuemdiF1E4B/kfTNZ2PFPZy50Ro9DPE1Yr
+	JfwDNLZAn2+X3wDWuOqk0P13dxdBSwc9pxjhFHtSuGDfF1/pXSJ6ZfZ2bPpXj0hkPuuhZ7
+	8v4p8kbm8WyRaLtpYqTeycSiXI89Tts=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Matti Vaittinen <matti.vaittinen@linux.dev>
+To: Matti Vaittinen <mazziesaccount@gmail.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Mika Westerberg <westeri@kernel.org>
-Subject: Re: [PATCH 18/44] drivers/gpio: use min() instead of min_t()
-Message-ID: <aR7K2bWKiaXrwWIr@smile.fi.intel.com>
-References: <20251119224140.8616-1-david.laight.linux@gmail.com>
- <20251119224140.8616-19-david.laight.linux@gmail.com>
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-rtc@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH v5 00/16] Support ROHM BD72720 PMIC
+Message-ID: <cover.1763625920.git.mazziesaccount@gmail.com>
+Reply-To: Matti Vaittinen <mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="txQLuSbT+MkGzS45"
+Content-Disposition: inline
+X-Migadu-Flow: FLOW_OUT
+
+
+--txQLuSbT+MkGzS45
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251119224140.8616-19-david.laight.linux@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 19, 2025 at 10:41:14PM +0000, david.laight.linux@gmail.com wrote:
-> 
-> min_t(u16, a, b) casts an 'unsigned long' to 'u16'.
-> Use min(a, b) instead as it promotes the both values to int
-> and so cannot discard significant bits.
-> 
-> In this case the values should be ok.
-> 
-> Detected by an extra check added to min_t().
+The ROHM BD72720 is a new power management IC for portable, battery
+powered devices. It integrates 10 BUCKs and 11 LDOs, RTC, charger, LEDs,
+GPIOs and a clock gate. To me the BD72720 seems like a successor to the
+BD71828 and BD71815 PMICs.
 
-In most of the patches you need to follow the commonly used Subject prefix.
-This can be done by doing
+This series depends on
+5bff79dad20a ("power: supply: Add bd718(15/28/78) charger driver")
+which is in power-supply tree, for-next. Thus, the series is based on
+it.
 
-	git log --oneline --no-merges -- $FILE(S)_OF_INTEREST
+The testing of v4 suffered some hardware-issues after I accidentally
+enabled charging while the PMIC's battery pin was connected to the I/O
+domain. Some heat was generated, not terribly lot smoke though...
 
-For example,
+After the incident I've had occasional I2C failures. I, however, suspect
+the root cause is HW damage in I/O lines since changes in this revision
+have been made to dt-bindings. It's still fair to note that though, as
+my testing was impacted.
 
-$ git log --no-decorate --oneline --no-merges -- drivers/gpio/gpiolib-acpi*
-b1055678a016 gpiolib: acpi: Use %pe when passing an error pointer to dev_err()
-e4a77f9c85a5 gpiolib: acpi: Make set debounce errors non fatal
-19c839a98c73 gpiolib: acpi: initialize acpi_gpio_info struct
-3712ce9fa501 gpiolib: acpi: Ignore touchpad wakeup on GPD G1619-05
-16c07342b542 gpiolib: acpi: Program debounce when finding GPIO
-23800ad1265f gpiolib: acpi: Add quirk for ASUS ProArt PX13
-...
+Revision history:
+  v4 =3D> v5:
+  - dt-binding fixes as discussed in v4 reviews.
+    - Drop rohm,vdr-battery.yaml and add vdr properties to battery.yaml
+    - Drop 'rohm,' -vendor-prefix from vdr properties
+  - Link to v4:
+    https://lore.kernel.org/all/cover.1763022807.git.mazziesaccount@gmail.c=
+om/
+  More accurate changelog in individual patches
+
+  v3 =3D> v4:
+  - dt-binding fixes to the BD72720 MFD example and regulator bindings
+  More accurate changelog in individual patches
+
+  v2 =3D> v3:
+  - rebased to power-supply/for-next as dependencies are merged to there
+  - plenty of dt-binding changes as suggested by reviewers
+  - add new patch to better document existing 'trickle-charging' property
+  More accurate changelog in individual patches
+
+  RFCv1 =3D> v2:
+  - Drop RFC status
+  - Use stacked regmaps to hide secondary map from the sub-drivers
+  - Quite a few styling fixes and improvements as suggested by
+    reviewers. More accurate changelog in individual patches.
+  - Link to v1:
+    https://lore.kernel.org/all/cover.1759824376.git.mazziesaccount@gmail.c=
+om/
+
+---
+
+Matti Vaittinen (16):
+  dt-bindings: regulator: ROHM BD72720
+  dt-bindings: battery: Clarify trickle-charge
+  dt-bindings: battery: Add trickle-charge upper limit
+  dt-bindings: battery: Voltage drop properties
+  dt-bindings: mfd: ROHM BD72720
+  dt-bindings: leds: bd72720: Add BD72720
+  mfd: rohm-bd71828: Use regmap_reg_range()
+  mfd: bd71828: Support ROHM BD72720
+  regulator: bd71828: rename IC specific entities
+  regulator: bd71828: Support ROHM BD72720
+  gpio: Support ROHM BD72720 gpios
+  clk: clk-bd718x7: Support BD72720 clk gate
+  rtc: bd70528: Support BD72720 rtc
+  power: supply: bd71828: Support wider register addresses
+  power: supply: bd71828-power: Support ROHM BD72720
+  MAINTAINERS: Add ROHM BD72720 PMIC
+
+ .../bindings/leds/rohm,bd71828-leds.yaml      |    7 +-
+ .../bindings/mfd/rohm,bd72720-pmic.yaml       |  339 ++++++
+ .../bindings/power/supply/battery.yaml        |   33 +-
+ .../regulator/rohm,bd72720-regulator.yaml     |  148 +++
+ MAINTAINERS                                   |    2 +
+ drivers/clk/Kconfig                           |    4 +-
+ drivers/clk/clk-bd718x7.c                     |   10 +-
+ drivers/gpio/Kconfig                          |    9 +
+ drivers/gpio/Makefile                         |    1 +
+ drivers/gpio/gpio-bd72720.c                   |  281 +++++
+ drivers/mfd/Kconfig                           |   18 +-
+ drivers/mfd/rohm-bd71828.c                    |  546 ++++++++-
+ drivers/power/supply/bd71828-power.c          |  160 ++-
+ drivers/regulator/Kconfig                     |    8 +-
+ drivers/regulator/bd71828-regulator.c         | 1025 ++++++++++++++++-
+ drivers/rtc/Kconfig                           |    3 +-
+ drivers/rtc/rtc-bd70528.c                     |   21 +-
+ include/linux/mfd/rohm-bd72720.h              |  634 ++++++++++
+ include/linux/mfd/rohm-generic.h              |    1 +
+ 19 files changed, 3120 insertions(+), 130 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd72720-pmic=
+=2Eyaml
+ create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd7272=
+0-regulator.yaml
+ create mode 100644 drivers/gpio/gpio-bd72720.c
+ create mode 100644 include/linux/mfd/rohm-bd72720.h
 
 
-> acpi_gpio_adr_space_handler(u32 function, acpi_physical_address address,
-
-> -	length = min_t(u16, agpio->pin_table_length, pin_index + bits);
-> +	length = min(agpio->pin_table_length, pin_index + bits);
-
-Now, if you look closer at the code, the pin_index alone has the problem you
-are targeting here. On top of that the iterator and 'length' are signed, while
-the result of min_t(u16) is unsigned (however it has no difference in this case).
-
-...
-
-TL;DR: I apply this patch with subject changed, but I think more work needs to
-be done if you want to fix it fully.
-
--- 
-With Best Regards,
-Andy Shevchenko
+base-commit: 8e8856396b54bea5c00a7ae88d87c6254aef2d94
+--=20
+2.51.1
 
 
+--txQLuSbT+MkGzS45
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmkezwYACgkQeFA3/03a
+ocV+vgf/a1KAYMhU5YxlbMf2zyzVkzG9a0t6DZvk8PFqDx5TcU0QKkeEjONsuhre
+i98P+Ou5A0MdX3vFWPDyPpsUFcniGkAvoDqKwEgiZS0tdQLrN6fTVxq1YpArcXtZ
+fCNrYVoaNn7/DU/RGjx9vL36e+nSawnCZMKOhWxJboFU40XnSnX3+GpHYcxBtrxI
+igcXO97YI0efNWcfLpGUy2DWW4FIZ5YCTe4l3TztcAsYMpg1oW7QOkBS0AH3T3Zf
+jDZ9rH4LBhQ9zuyGOUCMySA6n5pLyE+alzIlesAq7t/GLXJwMFoMeELXZkkDVSdj
+nYZCl4mpUPRHG+ApdEPUfQSNp5nVvQ==
+=MOad
+-----END PGP SIGNATURE-----
+
+--txQLuSbT+MkGzS45--
 
