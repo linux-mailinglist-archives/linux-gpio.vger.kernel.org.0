@@ -1,138 +1,113 @@
-Return-Path: <linux-gpio+bounces-28923-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28924-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6B87C74D5A
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 16:17:42 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38E00C75027
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 16:36:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 5027D362EA1
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 15:09:06 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id 39F7C2BA15
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 15:36:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C0F434886A;
-	Thu, 20 Nov 2025 15:06:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C72FA36996A;
+	Thu, 20 Nov 2025 15:29:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eC5s1zJH"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="t8RNyaMr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B301C34CFDD;
-	Thu, 20 Nov 2025 15:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9775F260583
+	for <linux-gpio@vger.kernel.org>; Thu, 20 Nov 2025 15:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763651203; cv=none; b=ASONwcocfE9KzylFzN2fYs9SaL8NtGmtOeGhxD/P0iGHj/1dZnrOEzc9gpWdVjptKGMxEvOOi+oARvYP72hGvupE7crlqxnmZcCjwMtVCdjvq4hImgicYcdTkM2D17czHmDTymZGgQBIU/7YuAgIwNy0JUrAEJIhIRRfb9VZsR4=
+	t=1763652558; cv=none; b=cMWl9ZtQFLzZMVPMxZMR8bwk2lT7yjCovDvARnsLQDaXCIpNxD8tSX20FP2L1crM1+wyWqAF4GlGJJWnj0Zf7fBpP07OqNKDjZFQJwCJKLbuIykDPgjgJzyjoqnkq1OwsxIkINBW9BoLLJ3f7TWPi+Ut/f9nuCzDlMGr2Cn+7A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763651203; c=relaxed/simple;
-	bh=MvYzU5CYUx+NkTDResHrhZoeTT+LBYxva1yQm7eALJs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kOqz+uL1+m8rCp8nlvMfhgzYZkTpUVKmV/IDOeWVAUIULNdRRkLKIHZZfk8ZloOY2YTKly1CLf3wCSr/Jlm3Rp2Oluo0dw/TTYkIzYbsvUTQ5Yi4zhcs2H7eapkj1EJHIdHjc4XGcyGuft+3G4KSCDoAjCVFnCovBY7/MN5no7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eC5s1zJH; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763651199; x=1795187199;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MvYzU5CYUx+NkTDResHrhZoeTT+LBYxva1yQm7eALJs=;
-  b=eC5s1zJHcmYnogfyFkJE2EHzGQJCKgNUfVdVLZZ6igUAyrCugeHlsqIW
-   CnK2QYxCCLmSOWw8grhaN+yDG2ZmxqQmBJgNbglg6Gn42B6jhONvdwNEk
-   q2Dj/d5I154mVcAvJmmqaaUTTUnggIs0F5Dr8ORpsLXMqkp/RlUziBosD
-   PLec9GR3ibfij/U5CUZedTrmSJiyjAf7tbmjj9x3GnptNf54u05chhvcd
-   WD1g2+vdO73jPrSsjXS4t8jCb1spgeWMVcW1MWjo5hcv2lVONWozVv6kZ
-   Tj3PyAWEo15E48c2Us1+oFFg7Y/hWZyGAX/m6UnayBT2HQHicaUcdMY5g
-   A==;
-X-CSE-ConnectionGUID: tIvs5SgERv2fYtMdSQdFMw==
-X-CSE-MsgGUID: J+S3BxPlR4uAfSNk84Iwlg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11619"; a="68328925"
-X-IronPort-AV: E=Sophos;i="6.20,213,1758610800"; 
-   d="scan'208";a="68328925"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 07:06:33 -0800
-X-CSE-ConnectionGUID: s/zaIC1FQbe9TkjeIDSdow==
-X-CSE-MsgGUID: dMKOj6TeS3O9fQyCnHOl7Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,213,1758610800"; 
-   d="scan'208";a="195530098"
-Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.244.97])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 07:06:24 -0800
-Date: Thu, 20 Nov 2025 17:06:21 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Mark Brown <broonie@kernel.org>,
-	Maciej Strozek <mstrozek@opensource.cirrus.com>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
-	linux-spi@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	stable+noautosel@kernel.org
-Subject: Re: [PATCH v7 0/9] reset: rework reset-gpios handling
-Message-ID: <aR8ubexLrTgmxtpv@smile.fi.intel.com>
-References: <20251120-reset-gpios-swnodes-v7-0-a100493a0f4b@linaro.org>
+	s=arc-20240116; t=1763652558; c=relaxed/simple;
+	bh=um+CI5cBHeGChwX7KjitHJqTVTZIuNNoC5BfrLnZ0wQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ERaCgQL3eCKeDcRani9BPhW486RN0+zMKN5ZP/+UkR+Y7WDwLb9/6uPKXoUsZxO+qXqpmKMulbv7DaDooqvay6yz9R6ir2PPYqEOmG1ZR4YfzaC6zYeX+Arvwjl9XxAbzFJJDD9Y1GqEZR1RQ3cNipGPjFgoZP1LL6Qv557wNMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=t8RNyaMr; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-37ba5af5951so10903581fa.1
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Nov 2025 07:29:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763652555; x=1764257355; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=um+CI5cBHeGChwX7KjitHJqTVTZIuNNoC5BfrLnZ0wQ=;
+        b=t8RNyaMrYAlJeYQXkFJFNJgumPX3XvrgMNW3J+pZ5ECpX1/5FiEAMv2+qrZzI8r5h6
+         CV0bVVV2PfVlPVN7X/kWCLvg4921BuUJAyeYFPOic2aiiN6qX/AcgIm/if17zrx3Bo6A
+         2KmMYEE79okn5fD9qMhhALHam+Sd9CxpXDF+VYuIWYGHDoe7H3hh9a56qv0C+hVKLpY+
+         JrmFopxxqKCGIst5EO09GkBXZ/MSdBJvq3jg4Z9fJKAY/XRE1r9XvPsXFJdVGyb1+rkB
+         +bPI807K12PNgYOCAnbpEyLKml2tdu3HZx2DZ83cfJCtqN/Cvfr5WeuEdKczcc1Jb6Cu
+         NnOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763652555; x=1764257355;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=um+CI5cBHeGChwX7KjitHJqTVTZIuNNoC5BfrLnZ0wQ=;
+        b=bgcKB9b8JQKAJVsOi8HQbiuw/J6c8J1bc/E1F8cWWrdQSYXs9V8EOuw25vkw/MZAmC
+         3OLGbnvlvo+xVl3DMh084l97dur7JJU5vgcYlVtzPqSo8EnLle+B0FRc7JBJf0B47wDq
+         5qBxBBxvJnTfk4SHb6YcHLVg+VeVcBlXaR1fxOJnNc2Bc26M7jbSYo7KlRvFUboK/HN6
+         meNCpewhsuRBduy6HjDmNBodxx4upP24dCxGsSsz/ywLhykBTdc1yQbDBmsyHP+zQjfM
+         i4bMP98es9ePU4KZ+K35+tc5plIA8f8Pa2i6VogmBHt+mxZ1fNouhO3pH9kXBtUeRmcy
+         LweA==
+X-Forwarded-Encrypted: i=1; AJvYcCWf5GjCDDZ+z6PXBIWILCVAauTlzAVhgJTT+kxA9LhTmzphxOrp6HrwfX29cc6CtaUW6Wri0ThKhxkP@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmCSzRXgxeSQoFl7Snf5xXKJGTtwi+1Zbbc4z5IDhF7AWDCWoG
+	qt0SL+XAp2mqEUauybNARUTpiqpNfL5Tl4c3IKngdMoDhFiz9hf8jTDhJedRjp8nMg644/7IaSI
+	QRfXcA/Y7TyB+zxOOVMIeZFbxE/LDATSyrJ/hcESRPg==
+X-Gm-Gg: ASbGncvNkNzKldLEpZ1pjDcHUnBFAV3fio2dwedo+Sm5cobjaAlBFa1c7sRH7HW89CK
+	E0jpAbfXXM/WpnA6FRyhyvirZZGNmYkHBoVY2dthwEQdtJuOfL2d0q0hsnPZdkBA3pq68Kg5ogt
+	MTvYtI4VTjeMhaihkF9NUvWWYIe5D/cufcdVKhklQ2R52lhbsrKRzqRlwJaNYT8Y+xfQUy75eBw
+	piRwigN9NfMeyKKzTfal9NyAZKYb1XIoRgo+mRXO2Bi8IhrQX4PINstLnE84DT3wf+qQBIgjcDI
+	2N/Jy6M7FRrGA36uPBBJLV4/yw==
+X-Google-Smtp-Source: AGHT+IEwidjnrwli0on3X1tYNsofRsV5iuRR2IvcQDVcZgif5EMNUWatPeED9AltuvQHRMHzZ8zIwLVcLIsqUGVZxNw=
+X-Received: by 2002:a05:651c:f1c:b0:368:c52f:fb64 with SMTP id
+ 38308e7fff4ca-37cc67a22ebmr9554811fa.34.1763652554706; Thu, 20 Nov 2025
+ 07:29:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251120-reset-gpios-swnodes-v7-0-a100493a0f4b@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <20251120-reset-gpios-swnodes-v7-0-a100493a0f4b@linaro.org> <aR8ubexLrTgmxtpv@smile.fi.intel.com>
+In-Reply-To: <aR8ubexLrTgmxtpv@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 20 Nov 2025 16:29:02 +0100
+X-Gm-Features: AWmQ_bmTkA8uTlF3NGcgGx57EX7_URhlcWrn-F13z5Yf1pKxFzyi3Y_bNfqlVVs
+Message-ID: <CAMRc=McrnapFwpgRHOckgX4k7UkpaJwWXnRp9Z+WfWw7m8cqpA@mail.gmail.com>
+Subject: Re: [PATCH v7 0/9] reset: rework reset-gpios handling
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, David Rhodes <david.rhodes@cirrus.com>, 
+	Richard Fitzgerald <rf@opensource.cirrus.com>, Mark Brown <broonie@kernel.org>, 
+	Maciej Strozek <mstrozek@opensource.cirrus.com>, 
+	Charles Keepax <ckeepax@opensource.cirrus.com>, Andy Shevchenko <andy@kernel.org>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-spi@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, stable+noautosel@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 20, 2025 at 02:23:55PM +0100, Bartosz Golaszewski wrote:
-> Machine GPIO lookup is a nice, if a bit clunky, mechanism when we have
-> absolutely no idea what the GPIO provider is or when it will be created.
-> However in the case of reset-gpios, we not only know if the chip is
-> there - we also already hold a reference to its firmware node.
-> 
-> In this case using fwnode lookup makes more sense. However, since the
-> reset provider is created dynamically, it doesn't have a corresponding
-> firmware node (in this case: an OF-node). That leaves us with software
-> nodes which currently cannot reference other implementations of the
-> fwnode API, only other struct software_node objects. This is a needless
-> limitation as it's imaginable that a dynamic auxiliary device (with a
-> software node attached) would want to reference a real device with an OF
-> node.
-> 
-> This series does three things: extends the software node implementation,
-> allowing its properties to reference not only static software nodes but
-> also existing firmware nodes, updates the GPIO property interface to use
-> the reworked swnode macros and finally makes the reset-gpio code the
-> first user by converting the GPIO lookup from machine to swnode.
-> 
-> Another user of the software node changes in the future could become the
-> shared GPIO modules that's in the works in parallel[1].
-> 
-> Merging strategy: the series is logically split into four parts: driver
-> core, SPI, GPIO and reset respectively. However there are build-time
-> dependencies between all three parts so I suggest the reset tree as the
-> right one to take it upstream with an immutable branch provided to
-> driver core, SPI and GPIO.
+On Thu, Nov 20, 2025 at 4:06=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> Solution seems still OF-centric (some of_* is in reset-gpio are left),
+> but the series in the right direction, thanks for doing this!
+>
 
-Solution seems still OF-centric (some of_* is in reset-gpio are left),
-but the series in the right direction, thanks for doing this!
+That's coming up, don't worry. Though I don't think it'll make v6.19.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
 
