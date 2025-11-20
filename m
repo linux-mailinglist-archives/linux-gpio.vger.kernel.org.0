@@ -1,92 +1,60 @@
-Return-Path: <linux-gpio+bounces-28921-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28922-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A721C74B5D
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 16:00:43 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67979C74BE1
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 16:08:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7089F35AE2F
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 14:54:50 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A181B4EA4DC
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 14:59:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36CDE34AAF3;
-	Thu, 20 Nov 2025 14:53:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90E7233EB11;
+	Thu, 20 Nov 2025 14:57:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HPvYjfpH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PldiHqj7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9726132C933;
-	Thu, 20 Nov 2025 14:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 231DB34845C;
+	Thu, 20 Nov 2025 14:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763650395; cv=none; b=a3909lD7/FIRDYVrqUef80yQe0dRW2LJLxJoHA/gfHlrZ4Rfm65kw45CQfi4AU0Nv5cJkBWjvGXpd/H/ZBHqOKVD0jm6iVZ9GrY5gXyT1sm0kuUZ06p3vo26en4VZQJhtu5a/L6fzuqrqRsIMzRq7nXPM0DuAye8Vdy6USMew34=
+	t=1763650673; cv=none; b=s6LXNV+7ufebRm7dp8bbOgU7dKZB93SyHjzyd208LxS9APw2tY7mWAGnIfFTdXMuNdxgJTWPLustQPKro0xlCNUFm5RawrX39++YeVvR6ISV6l/HkqF6+3i2K1yklfoRLRKaWQPTKht9mWSjFu0Kw6viwL956fYBKXSjAN5krII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763650395; c=relaxed/simple;
-	bh=FOiGqkM13wCQMhUWojZNwiMjhBlfxERbLsSU4OXdTRU=;
+	s=arc-20240116; t=1763650673; c=relaxed/simple;
+	bh=FllQqtE4orPMdrZNm1F58mK954c2tYj0EmfaCYY+KjQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IFvLhh9kN73vSdcqJVF6MV2ZKitlfWNkD/CnJtqfViSbh3gbj4P4C18gNzyYIftdZPVCOAP1O6VLsDOEuTBfm/eM/JNXszt/Im+gl0Md/N7Y2ls5YY1bgZ6E7rQaGd3091dH7KM3g/7WKzuSnufeStVLoYz/7sfCXF2bAY3p2wM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HPvYjfpH; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763650394; x=1795186394;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FOiGqkM13wCQMhUWojZNwiMjhBlfxERbLsSU4OXdTRU=;
-  b=HPvYjfpHAHFGw37IH48frOSqPqf53TOcQGFw29Q+d/pHvrs6BOZ60YK9
-   UBgcD15erRwZxsvEFpWX/oZ2xCbVSM7sOqZ56pOV6uiq+bak0t/UFZLmC
-   UPaqkVa+NdyNqyjbkTh4lN7jwtugT2IRTG+P4ZN/ZOro0vYTnAWuAWo+V
-   26hPMKoBcs41ibF8WN/1hKso3eEYGxMXwdHXb/0hFywry3pdmC8dSb0mm
-   P7wd0sPNZd9+wSNzaMkTHEsjUKpKQyjpjCRNzOjUzacM72V2b5M1jN8CP
-   NOU7A/QZKWIJi5CzWUqoiIySei0shLly+FE27JW6HLYLnNO6pt8TnBhgm
-   A==;
-X-CSE-ConnectionGUID: 0BegWDndRt6QWaVZxDwKbw==
-X-CSE-MsgGUID: n7tnmA3QQ7GY/GGQRLFLfw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11619"; a="83343384"
-X-IronPort-AV: E=Sophos;i="6.20,213,1758610800"; 
-   d="scan'208";a="83343384"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 06:53:13 -0800
-X-CSE-ConnectionGUID: l30GPsCbRQaLLmArLdMxeg==
-X-CSE-MsgGUID: EeWyz0ePQxqBTJBGWgI6tw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,213,1758610800"; 
-   d="scan'208";a="192187607"
-Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.244.97])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 06:53:07 -0800
-Date: Thu, 20 Nov 2025 16:53:05 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Mark Brown <broonie@kernel.org>,
-	Maciej Strozek <mstrozek@opensource.cirrus.com>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
-	linux-spi@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	stable+noautosel@kernel.org
-Subject: Re: [PATCH v7 4/9] spi: cs42l43: Use actual ACPI firmware node for
- chip selects
-Message-ID: <aR8rUVyeAJzIFtAp@smile.fi.intel.com>
-References: <20251120-reset-gpios-swnodes-v7-0-a100493a0f4b@linaro.org>
- <20251120-reset-gpios-swnodes-v7-4-a100493a0f4b@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=SG7EM/rGT7bzXLp5dsiWlemRpo0kCJyNOxfu6d1RelHaBT3I5A6/eKK67ErITivTEXw/14hJlm3eG2h281EysioeAwgze1gw+aw+TQPW7TSL6o1FseGWRJJi6vggmX/KP60A8fy1WBEl1R5dBgMMVE8SsqKClnqLMjS31w9+ofI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PldiHqj7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 506B2C4CEF1;
+	Thu, 20 Nov 2025 14:57:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763650672;
+	bh=FllQqtE4orPMdrZNm1F58mK954c2tYj0EmfaCYY+KjQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PldiHqj7a88UuC99KV/6r9CI3Hbw/AE97hYFf63llFIxk0BXWlw50O9GsyqT3j18/
+	 7IJUWaDkTWFGidJVsmT4YVmFcfoov9soi2ADP6KgWr7DVz296JBbBkovSQWUxn5hLr
+	 RYrKNBHS8U3dcr2eOuhABSTO1bCR1LeieEoMoFm9LTxLRnLCGh1XSZKA/G8uwHxcfh
+	 dXIS24jLPsxu7T3Bg7ggmVvhL+qgLPzqEDIzqEixBshgKjZvnJ/UYKtKg9TZntV3mZ
+	 j5PvPX96TeBtgAsnOUDTDn0pdwqsWstH9WLStZ/rJTc/220Ef3fZvy5alre/dWRChY
+	 cerOLhAPjOK4A==
+Date: Thu, 20 Nov 2025 08:57:50 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Sander Vanheule <sander@svanheule.net>
+Cc: linux-leds@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Pavel Machek <pavel@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org,
+	Michael Walle <mwalle@kernel.org>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>
+Subject: Re: [PATCH v8 1/6] dt-bindings: leds: Binding for RTL8231 scan matrix
+Message-ID: <176365067018.1256117.16826379130126022423.robh@kernel.org>
+References: <20251119200306.60569-1-sander@svanheule.net>
+ <20251119200306.60569-2-sander@svanheule.net>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -95,38 +63,29 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251120-reset-gpios-swnodes-v7-4-a100493a0f4b@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20251119200306.60569-2-sander@svanheule.net>
 
-On Thu, Nov 20, 2025 at 02:23:59PM +0100, Bartosz Golaszewski wrote:
 
-> On some systems the cs42l43 has amplifiers attached to its SPI
-> controller that are not properly defined in ACPI. Currently
-> software nodes are added to support this case, however, the chip
-> selects for these devices are specified using a hack. A software
-> node is added with the same name as the pinctrl driver, as the
-> look up was name based, this allowed the GPIO look up to return
-> the pinctrl driver even though the swnode was not owned by it.
-> This was necessary as the swnodes did not support directly
-> linking to real firmware nodes.
+On Wed, 19 Nov 2025 21:03:00 +0100, Sander Vanheule wrote:
+> Add a binding description for the Realtek RTL8231's LED support, which
+> consists of up to 88 LEDs arranged in a number of scanning matrices.
 > 
-> Since commit e5d527be7e69 ("gpio: swnode: don't use the swnode's
-> name as the key for GPIO lookup") changed the lookup to be
-> fwnode based this hack will no longer find the pinctrl driver,
-> resulting in the driver not probing. There is no pinctrl driver
-> attached to the swnode itself. But other patches did add support
-> for linking a swnode to a real fwnode node [1]. As such the hack
-> is no longer needed, so switch over to just passing the real
-> fwnode for the pinctrl property to avoid any issues.
+> Signed-off-by: Sander Vanheule <sander@svanheule.net>
+> ---
+> Changes since v7:
+> - Move $ref and add unevaluatedProperties for led nodes
+> - Drop example redundant with MFD binding
+> 
+> Changes since v6:
+> - Relax description formatting
+> - Enforce address format for led node names
+> - Use absolute paths for schema references
+> ---
+>  .../bindings/leds/realtek,rtl8231-leds.yaml   | 136 ++++++++++++++++++
+>  1 file changed, 136 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/realtek,rtl8231-leds.yaml
+> 
 
-I very much like this solution.
-
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
 
