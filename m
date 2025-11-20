@@ -1,145 +1,140 @@
-Return-Path: <linux-gpio+bounces-28864-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28865-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D08FC722E6
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 05:26:31 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id E82CDC7283F
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 08:10:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sea.lore.kernel.org (Postfix) with ESMTPS id 3D6BB2DB17
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 04:26:30 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C87DA4EA4AE
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 07:02:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F1D42D94A8;
-	Thu, 20 Nov 2025 04:26:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8FBB287258;
+	Thu, 20 Nov 2025 07:02:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JYwqZrIH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RuBBWntj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517FD1F4CB3;
-	Thu, 20 Nov 2025 04:26:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2330619992C
+	for <linux-gpio@vger.kernel.org>; Thu, 20 Nov 2025 07:02:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763612786; cv=none; b=e9zkrpBW4J8m8FzMnBLd48y9KjtEfjySIfGIl6MzZbqO4TIVIBuIT1iKMBCvgVqmw6O48K/QzRB2Ub+ryFBH6dCkczTwEe6nLdSSvOD7ud1+GuUAoRJldL65D0KoOi23nXt/DNHRnHqrW4r7AsPbsNyzBougNGvcoFb2gw/pKgI=
+	t=1763622147; cv=none; b=Ej46eqHa5b9li9VA5261x4rKD0z5Sw+5+PasiQ0EPf26jobN0xWMVNSHXp3relJGbpUTtgwCS2i9lepAUFbkOSqc32Qwi9O/VQbNEXdcfxdNez/H9fSuuZ9vOoDfGGTAv+69JIGl4QycpOsCsUMyB6k5CSaEgIAbHAVIBBaE1Oo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763612786; c=relaxed/simple;
-	bh=AoBCatCcUTo8pQY7B3M+B7FHb9s+7p9nuNzOnOSP1Pg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o0ytE9Q9SWFOggj+aqHVQBj20wHqBbI7xbSa7PJLo+cLDMfupbhHyqFuGLm/hVAJtTTf/chVozXVmi3B30ncdKv62paIFyE3fVE4zZCTJ/vTAHuMwUHXKUNetiCDSsPYWTetvfa75wn/iv/JgIBEWhySqf+93qQSJ93TDK66vJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JYwqZrIH; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763612783; x=1795148783;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=AoBCatCcUTo8pQY7B3M+B7FHb9s+7p9nuNzOnOSP1Pg=;
-  b=JYwqZrIHpNULMeu1GNAwZ5GFYNFHVUL7NkNY1Obx/PuSFOJqtWea/BeN
-   motlVUpFGMz7zA4w6e0ZaUWMkw6Nrjk4OFFxRz5cRRuoRhOtPkvOmwA3x
-   gW9wQwn3Ig0GEK1nFSehXL7N9X/O+2JBgWIncCYVyq5hFXqdHjvZMxLQb
-   hBc+UbJ54TW/ut5uA5DQdM6z9IZjEp09ttqL3oN/JPqbesQ4t904hkcb6
-   HjJ3ScgFJBjAycZ6bhjQetqHn7DkebRIYoRBcMDRiyYf+I2/MpZgjiKZE
-   r6pfcnH+w2nX13RKAvj31//msGLHZebPY9Yat7EtztrHM3OGjGNgkXAXO
-   w==;
-X-CSE-ConnectionGUID: DYF4084vRv2VuYKiHLLwQQ==
-X-CSE-MsgGUID: R0CS3EsSTiqdtFf7EVBgxg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="65758470"
-X-IronPort-AV: E=Sophos;i="6.19,317,1754982000"; 
-   d="scan'208";a="65758470"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 20:26:22 -0800
-X-CSE-ConnectionGUID: Af/weTQ1RIqEzViG3Qz70w==
-X-CSE-MsgGUID: 0Jb0A23gS9Gn7dgzvYydzw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,317,1754982000"; 
-   d="scan'208";a="191511784"
-Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 19 Nov 2025 20:26:19 -0800
-Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vLwFN-0003bL-0O;
-	Thu, 20 Nov 2025 04:26:17 +0000
-Date: Thu, 20 Nov 2025 12:25:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Antonio Borneo <antonio.borneo@foss.st.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Antonio Borneo <antonio.borneo@foss.st.com>,
-	=?iso-8859-1?Q?Cl=E9ment?= Le Goffic <legoffic.clement@gmail.com>,
-	Amelie Delaunay <amelie.delaunay@foss.st.com>,
-	Pascal Paillet <p.paillet@foss.st.com>
-Subject: Re: [PATCH v2 05/15] pinctrl: stm32: add new package to stm32mp257
- pinctrl support
-Message-ID: <202511200853.efuVxuoM-lkp@intel.com>
-References: <20251118161936.1085477-6-antonio.borneo@foss.st.com>
+	s=arc-20240116; t=1763622147; c=relaxed/simple;
+	bh=FeRA2kTQ08WgIcIeI0fy+LW6nUxIdYMKBFF0bCrOYKE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZOxNzQGL0u083R/URxfVLzE/sTE5BuU60bJDjqqd0Pzw7cK7cmeEpBfTTYlf/mAqRBCf/8Q8ENQbsyZpEbM1CexEzJqOzS69OY3gXLZ8iW10v0mJ+LCko2QKj/jLdxCQTM2ydUrLKI426MhVjFgeSb+ISxbRyqT66U9xG/KV10Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RuBBWntj; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b73b24f1784so94735766b.0
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Nov 2025 23:02:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763622144; x=1764226944; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h66YPwiuusOoOHGuoiDE/UsCsZR1/DmojPL2kq1y5BU=;
+        b=RuBBWntjrg8DioXZvOKEYAQfltSAB+H2V/pJEjEV8/Dwvy9nmj9+l/JtCxq1PJuVgc
+         EwdDhkTLqPvPLJFlRpG0m4c4V9+xvWKvuPd4Gc3Ck+6k+t0MnJoakdYRKrHAXOAksTB4
+         PQmOAups1G4IQ+xXbgxtGU05vyt3m0Z4U/zM71Z2bemXKxs3a/Tw2rEkJ/CWIRqo/HY6
+         QmOXRIoUHIbz00fpYbasSV2mBDKxd3pyjK4GfZmMdg2Ob+XXbFBbE5pvdFeDbBKB6xZY
+         htAOxk1fU4VR5XoR9YPTqwHXL2A21IWPWvGyZ7NGwU24SlaYFVHMaBL2t9NdLVPsHbSr
+         NH7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763622144; x=1764226944;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=h66YPwiuusOoOHGuoiDE/UsCsZR1/DmojPL2kq1y5BU=;
+        b=Rw4gh+QM2mHLd9aA8b2HXTGBo0Qnu5JbV0UvSx3nte7f26MuP8PR5gd6D1L8dwtbtw
+         8g+VY9PN6i9bFdjiZ000wtKk/Or0EOlXztRwJGg2mQ8D8thOcCvjvscJi/+muwYLxnma
+         bCXMUHtyxQ/Pfh0eHiStBsxsVGT2B23qo8IaNgukwKl0gD3JMdW0EUOcbg3wbked8lHO
+         4sc/+KbBLV6O9wSltYSbAeZ2CIAjnf9vELqBvsBbiovWrurOdRBMC59vM97iGpr+NLPM
+         QYnW5IYgl1GjGCELpg/9eIkiXmEs2qdmRi5z2Fm2D1POvzsC/EbLis9IkTA4plbUPg/B
+         xIgA==
+X-Forwarded-Encrypted: i=1; AJvYcCVODdk6taug52cZKqfKagwH+oTLMr7xl/eSzHE4WrTlnSKtuEdSG+HZ2JnWUvv/Z59TY+z+IQuFuCpY@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrQAyGpMnEqo8cQuMooPyEJAeSTX0hSoDT7BjLBElYjnBh+3VD
+	YCJvYGB6RlsBR5pSJ5WuhsFoC8Ld4bnSK9NIRu/vewJNqnMpgi77cCfuO2u5oPUiQTpsgNQ8UKS
+	FBxIUj7grWNntO5yQvhgfYeabpOu6nQg=
+X-Gm-Gg: ASbGncsBZqXboH2R4LGle2E42sWf5wY8cQwPvbx6z27bLhVaUzkQdYlgqZf23flKEtZ
+	1SI1wzzSlOtmeLv/JzFx3Qre3sgyzrNWtbW1DaTu1SNWSEqxjnwGK5d0tqanIAdf4Cf/XfK55sN
+	0mIPxlwzvHea3fVX5T5im7bcTFtglAaN422zDZLB2KeBqxq7dYD/lj0EGgdle2ganvcnW1dYLMX
+	W/AC8Zfzip3Yox5+mGLMnB/8IyVq/Py8zWJnGK9ksxEsGT1YyWONCAHcJsgu0VzesgpB6++0vSS
+	BvAw3fcGvSSmAR8YDF5XJRKAxPN9kpbxYq85yn3hKzUyu35RX4xepsw0rZr5Szk/djtYem4=
+X-Google-Smtp-Source: AGHT+IEk3RIdmZAd32vyrP20JestktT+itI+PPN3KJuXUupqYUfp4iURjkSs5UCODIk4JVUsGFSxVopuxLJmiq4qA3E=
+X-Received: by 2002:a17:906:ee8d:b0:b70:d1ea:2748 with SMTP id
+ a640c23a62f3a-b7657172ed1mr165753666b.11.1763622144146; Wed, 19 Nov 2025
+ 23:02:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251118161936.1085477-6-antonio.borneo@foss.st.com>
+References: <20251119163327.16306-1-jszhang@kernel.org> <20251119163327.16306-6-jszhang@kernel.org>
+ <aR4BWLo4BdyKhnlI@smile.fi.intel.com> <aR5fwvGYqf1MAbq7@xhacker>
+In-Reply-To: <aR5fwvGYqf1MAbq7@xhacker>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 20 Nov 2025 09:01:48 +0200
+X-Gm-Features: AWmQ_blKOKHefxeqx726AC27OYdlPCxDej14EKybN8SCdR_1tmXYwtbtFauUs6U
+Message-ID: <CAHp75VdW1JDPmFm2Vt=j20BKf7V+yOdoaQG=sBYKdL0OGj-Bzg@mail.gmail.com>
+Subject: Re: [PATCH v4 05/15] gpio: pxa: Use modern PM macros
+To: Jisheng Zhang <jszhang@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Doug Berger <opendmb@gmail.com>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Hoan Tran <hoan@os.amperecomputing.com>, Andy Shevchenko <andy@kernel.org>, 
+	Daniel Palmer <daniel@thingy.jp>, Romain Perier <romain.perier@gmail.com>, 
+	Grygorii Strashko <grygorii.strashko@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, 
+	Kevin Hilman <khilman@kernel.org>, Robert Jarzmik <robert.jarzmik@free.fr>, 
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>, Srinivas Neeli <srinivas.neeli@amd.com>, 
+	Michal Simek <michal.simek@amd.com>, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Antonio,
+On Thu, Nov 20, 2025 at 2:42=E2=80=AFAM Jisheng Zhang <jszhang@kernel.org> =
+wrote:
+> On Wed, Nov 19, 2025 at 07:41:44PM +0200, Andy Shevchenko wrote:
+> > On Thu, Nov 20, 2025 at 12:33:17AM +0800, Jisheng Zhang wrote:
+> > > Use the modern PM macros for the suspend and resume functions to be
+> > > automatically dropped by the compiler when CONFIG_PM or
+> > > CONFIG_PM_SLEEP are disabled, without having to use #ifdef guards.
+> > >
+> > > This has the advantage of always compiling these functions in,
+> > > independently of any Kconfig option. Thanks to that, bugs and other
+> > > regressions are subsequently easier to catch.
 
-kernel test robot noticed the following build warnings:
+...
 
-[auto build test WARNING on 61cbe48d9d1ff277bc54051fbab8b733b2e64ccb]
+> > >  static struct syscore_ops pxa_gpio_syscore_ops =3D {
+> > > -   .suspend        =3D pxa_gpio_suspend,
+> > > -   .resume         =3D pxa_gpio_resume,
+> > > +   .suspend        =3D pm_ptr(pxa_gpio_suspend),
+> > > +   .resume         =3D pm_ptr(pxa_gpio_resume),
+> > >  };
+> >
+> > I believe this needs to be thoroughly checked and thought through as
+> > this is *not* a dev_pm_ops.
+>
+> pm_ptr()/pm_sleep_ptr() is defined in pm.h, so I think we can make use
+> of it for syscore_ops as well.
+> E.g This patch makes use of pm_ptr() to optimize out .suspend/.resume whe=
+n !PM
+> while get in them when PM. Thus the same result can be acchieved between
+> before and after this patch.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Antonio-Borneo/pinctrl-stm32-accept-string-value-for-property-st-package/20251119-011734
-base:   61cbe48d9d1ff277bc54051fbab8b733b2e64ccb
-patch link:    https://lore.kernel.org/r/20251118161936.1085477-6-antonio.borneo%40foss.st.com
-patch subject: [PATCH v2 05/15] pinctrl: stm32: add new package to stm32mp257 pinctrl support
-config: microblaze-randconfig-r111-20251120 (https://download.01.org/0day-ci/archive/20251120/202511200853.efuVxuoM-lkp@intel.com/config)
-compiler: microblaze-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251120/202511200853.efuVxuoM-lkp@intel.com/reproduce)
+At bare minimum this should be mentioned in the commit message that
+you were/are aware of the data type differences.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511200853.efuVxuoM-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/pinctrl/stm32/pinctrl-stm32.c:143:10: sparse: sparse: Initializer entry defined twice
-   drivers/pinctrl/stm32/pinctrl-stm32.c:144:10: sparse:   also defined here
-
-vim +143 drivers/pinctrl/stm32/pinctrl-stm32.c
-
-f263343bb793fa Antonio Borneo    2025-11-18  130  
-f263343bb793fa Antonio Borneo    2025-11-18  131  static const char * const stm32_pkgs[] = {
-f263343bb793fa Antonio Borneo    2025-11-18  132  	/*
-f263343bb793fa Antonio Borneo    2025-11-18  133  	 * Default dummy value, as match_string() doesn't accepts NULL.
-f263343bb793fa Antonio Borneo    2025-11-18  134  	 * Also not an empty string because it will match the old numeric
-f263343bb793fa Antonio Borneo    2025-11-18  135  	 * values <= 0x00ffffff.
-f263343bb793fa Antonio Borneo    2025-11-18  136  	 */
-f263343bb793fa Antonio Borneo    2025-11-18  137  	[0 ... (STM32_PKG_MAX - 1)] = "x",
-f263343bb793fa Antonio Borneo    2025-11-18  138  
-f263343bb793fa Antonio Borneo    2025-11-18  139  	[STM32_PKG_AA] = "AA",
-f263343bb793fa Antonio Borneo    2025-11-18  140  	[STM32_PKG_AB] = "AB",
-f263343bb793fa Antonio Borneo    2025-11-18  141  	[STM32_PKG_AC] = "AC",
-f263343bb793fa Antonio Borneo    2025-11-18  142  	[STM32_PKG_AD] = "AD",
-f263343bb793fa Antonio Borneo    2025-11-18 @143  	[STM32_PKG_AI] = "AI",
-66cbedfcc7caae Clément Le Goffic 2025-11-18  144  	[STM32_PKG_AI] = "AJ",
-f263343bb793fa Antonio Borneo    2025-11-18  145  	[STM32_PKG_AK] = "AK",
-f263343bb793fa Antonio Borneo    2025-11-18  146  	[STM32_PKG_AL] = "AL",
-f263343bb793fa Antonio Borneo    2025-11-18  147  };
-f263343bb793fa Antonio Borneo    2025-11-18  148  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--=20
+With Best Regards,
+Andy Shevchenko
 
