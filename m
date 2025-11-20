@@ -1,153 +1,130 @@
-Return-Path: <linux-gpio+bounces-28931-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28932-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id CEA99C76958
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Nov 2025 00:14:01 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74A52C76971
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Nov 2025 00:20:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 21990359A75
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 23:14:01 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id EC6504E281D
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Nov 2025 23:20:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C2A8303A1B;
-	Thu, 20 Nov 2025 23:13:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C415B2F6180;
+	Thu, 20 Nov 2025 23:19:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HSC8z5vP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cX6PRUJ5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yx1-f43.google.com (mail-yx1-f43.google.com [74.125.224.43])
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A075A2D6E55
-	for <linux-gpio@vger.kernel.org>; Thu, 20 Nov 2025 23:13:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A9A1E9905
+	for <linux-gpio@vger.kernel.org>; Thu, 20 Nov 2025 23:19:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763680434; cv=none; b=gLrrCTDB/Mz+NLl+iYrnqsQKGRl/5rMIQQVkoWjgf3T6+JpzPTZbGVwrT2p7elIH3SBHsTj462pQfU9TJXWcTajCttbc3w3psdzg70JpqTe/QEvwJ91m24K3hpsCxChhfGm5j1ppfh0jh9eQxyqKZ5DZEsw16eixWMXn2A61w6g=
+	t=1763680799; cv=none; b=UaH7t2Ui3vZrypFEFc1Jz+TG/rgYNXnqy8jzzGDnmGFpXW58oRjC3IrqSVlntVGBHSsIq+sjXX/5YarkQ4SdKs1ecTW21Vh5axX0M0sFsDIo9DqkpfgLAgmqI/qbkIDHJNVX6diEbbdM9a+QECemDXJlZUxoCmS0GXhjoYJ60HM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763680434; c=relaxed/simple;
-	bh=MtLo7QDEeZfj4ZwkzltdqC14HkyT8HuOzsPtI7hgfTQ=;
+	s=arc-20240116; t=1763680799; c=relaxed/simple;
+	bh=paW2rB+N/0S41beg0PnQCaYZ9pvCNYHWjXX/8qJOlxo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NL0/iKAeunstenOUc1y5ALDUFhKVbzaKeseFlZn0Vzq4FXnwIg3TfxlRGSAeZ9RwMqBPwaipPIYL75pxizFkSky8WlwX+Kw+IEolw1ZuI41pWWy29pPpfE6J1BjI8hR1pUBLdV8XEJHg18GFhRi+sGL/ZZg8v+dzCihQOTWxq5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HSC8z5vP; arc=none smtp.client-ip=74.125.224.43
+	 To:Cc:Content-Type; b=ukyR+ygj2OMoOWlolWeaxexEhqgvmsfHUeqa5Hseac0dMJ378Dig4ciNZHMIp2q4CFSLMgPdd4a/MAfA4g1l0YaOXi7T4V7oYX+ofW2vV6I9zrQj9ts4/u2BtyCg0FqBJAl3gbCdsDzJ5fDwoHp3r6cUPJJgegcEXJEVoncpyNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cX6PRUJ5; arc=none smtp.client-ip=209.85.128.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yx1-f43.google.com with SMTP id 956f58d0204a3-640c857ce02so1382145d50.0
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Nov 2025 15:13:52 -0800 (PST)
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-787eb2d8663so23251967b3.0
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Nov 2025 15:19:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1763680431; x=1764285231; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1763680797; x=1764285597; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RrDJ+LttxTAxc9ByfcijSY2Gnuni2A6lpzxeapunJfg=;
-        b=HSC8z5vPpFkIs9wiwza13sPgItBK5CCrKVS4amKd95CaIw77qV3bwrWvlLuwdV5Q9c
-         /zKRIVqUmtCte5OCDtALUxNl2WrESiVkoEzbfUiTzLAjKWVdVYWQNpKyzabk2xjLSmvi
-         QzQVa9YxHK3UudOyl0WkXagrZFSKTXWD7U94/b2DS73wRw/Z5Xn+EE1rvncAW/X2EC7K
-         f1IPp1HZfsjXoCmZ4GyBL81kCNDR04XzTKeb7/9ia/BUxN/QHyIuewNI6gkqpU9RfwLz
-         daVeQyY3Bjjo+vq0CkQ+RCmLR8AsC42runipWHXwq+vTbnPH+hTpWtbDqnN/9nH8lfpN
-         Z4lg==
+        bh=paW2rB+N/0S41beg0PnQCaYZ9pvCNYHWjXX/8qJOlxo=;
+        b=cX6PRUJ5kolANHkSqtamhq4DOHHhEGS6Yu1TAeL2Fusfdr0DJlru1od+7ZINMQ2Aad
+         Z0Z+TZ/D464gfGjHFuQmOv239/PPlwkTm7IpctCtEIn1xosqo++1V9XeXp6tT5GRc39m
+         OdH+IpdUt/kHQ8EK1FdoVzPLdkmEdhhr3nMTIHuwVfbJgIYOJncX1vllp0Rivt10wwIP
+         V+82Loy/tnoBO2WID/z4JeIwEg96GUKBY4FTix4Fn4vOHaWH3XGu2b4foEH3owMxLFlH
+         h+r2zLgHWs/lhRLwKqZvJ4LzFBv3nGpD50bumQgR9GDXo9qhpFMNbbh7fA4ai2W3UkpU
+         9BBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763680431; x=1764285231;
+        d=1e100.net; s=20230601; t=1763680797; x=1764285597;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=RrDJ+LttxTAxc9ByfcijSY2Gnuni2A6lpzxeapunJfg=;
-        b=graTS9UyFK21YokPnm6rIOtvk63iVbl85AN2Ryj8n3mujLARa0gFEim6aO0JmCDx7b
-         VVBHR2cNd5YetBUVk0H1MX6PZl0NimhVgvRSLWzOwDs5gl0dSr255/GXzdyctkiHlfBx
-         wJQgl9E4oBC1Fu1sZDDwm9zLLRzPBe1R+zJ/OZHR2i+5n7ziL3CF2KEk0BPo+v2ZY1Gm
-         rIu0Hzu1Y+ICHBgJwCoMGUAO+EwAigjGeTUSGVt0uvIFOWdMnfsK/LJUCnCpdKX/X508
-         rtSQPi8bo06q2zKPXA6Iytp/MEooO9e9+P0ZekKyOcv6QqcU4HdjvT9o5f5w3ASqNL5i
-         GpOw==
-X-Forwarded-Encrypted: i=1; AJvYcCWwD1GvX8MdFecLU1gaDmUePDaqsFQYVXPCIaeBCFiuDHSmiUh1F9OvIP+f/aAKUD1NpI2Y19zie+FD@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5MgjK3Zfunl7gKtNLrxaJvyKzKz1zBkX5YDhls0esoX6hfTLH
-	tVokue00BCJRBiQm6qm13DSlmy5IuCd3o2NIc0lT54mgLLEM9kqgdt7/VMuFxedLdss8MhKghR0
-	b6mhzEhxr9xxSDXWtjV/4ObHhVzvR+BtTr6fB7LRRdg==
-X-Gm-Gg: ASbGnctjQSyR7/e9aIEsDoGLzBc1Z5ttuupEYpk/0tlx8WIzTf3u5XdKIzjG8sU0Bi9
-	fZ3rbP/Y75kU2K9yvNbqJ6f8e+8WCvsPqMhTH9EgLkUI3jEh0OJdjwR9+t7Iu9rU+uJwGWayoE9
-	FHy6cT2WuV0zo2Nt0kgvpBRUKOWXMLeffu3WgaQMo4SjceOY6NiIWikDI94CkpHa0gQQTcpyTjd
-	6xVWCjDhyUuFolQLA2UrjJRNRkR7rWjxqH4KpjZ1x9YT3Uy7Qhhq7uGcVI/aqvi6u6xmWQ=
-X-Google-Smtp-Source: AGHT+IFk3lW6WYz8IUscpPRT7wsLzXi2rhD8fnUhTOuPCLLQxjXWMBiQYRuQKKWLQJgqGRYdRi8ZCYqCwzD8Nkf3Uvg=
-X-Received: by 2002:a05:690c:630e:b0:789:62c5:db2f with SMTP id
- 00721157ae682-78a8b545b8fmr892637b3.62.1763680431552; Thu, 20 Nov 2025
- 15:13:51 -0800 (PST)
+        bh=paW2rB+N/0S41beg0PnQCaYZ9pvCNYHWjXX/8qJOlxo=;
+        b=YsMFROzU17X7Lx0EWQOry7olEo/U9hXovwt3iLW7RuDRd31gHRTEGZ8ZGgbPNzCE68
+         jET0U/supDZa0eG720PPaCo8aPxs1Hr/wi1mLDM8KiQAFVLh1Eqk4+cs4/Jh44AO2Men
+         uyaesM18HNUUdKMS16YZtiBG/OXWWZGsfNr37On0yWAmnOL5SNQfs1EpUskk1wuO23xz
+         Sxy9/OCTllYim2cDauAsJW/P1oWFvJGX4f0KJwekV7SwcJfKUozDF65ZdIdZDK2oDoPc
+         S3BxUlrIbPaufLbd18wM8O2BX5ik3XH3ebGrAWt8Jnwt0lyd6ygDax58Y8JIqkt27huc
+         AeSg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6kQN+2o2FBeMeNC7Lp2cFa3VWVxazCtfSKXeLMzgz3PxzkHzogfxQ8MXH2Y+PQHjoD4ObyNo9ibrp@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8XMtJRD7rW6EXNrAxOaEWUjfS3NHpTjyi+jg+6GOhLhGWqu9J
+	WQMRlDkbRtgjxv2uTzGdvq5Iyi04tF7JuUxL80M2wL0Kz/zkX0lxSIbG7lfO+qfWSSGt1Ck2UTU
+	JkuqjCa1Xaji5NIyL2EaeAG2oncQOhhj3TZnppTHlZg==
+X-Gm-Gg: ASbGncugdRQjVZvxiPWJmLeY2zXggsliZ1smGQYOZZWNqUGhx45m/xrV9abtjVFmu6u
+	Db+onChF1HDiMF3APOvCTWRl84IEfOFK4uy3/996wp3Vo783CgYK4FbuuRWujCk7FhqgMstHnxN
+	fImCbC82CcYuFy1c3WVgCBtbd7c3tcK0jbn17QKQjWtkQiw85O3xnGhGQgxXRUAqS6mMiEfBSMC
+	eud/xHmRhQIMrZ/c6OkrdJZoi3CXZWRu8dnydv+2DmTz3+0+u/GtHcyP5EnmGJT82fYrUI=
+X-Google-Smtp-Source: AGHT+IHCVrGJekuMYQD+foCBDGiyyGeo3byZNUFlppuWWBOZfFuUcrUBzjAa6sG8725ai0frWERcCuNbokRB5yzJtiU=
+X-Received: by 2002:a05:690c:f83:b0:788:1521:4991 with SMTP id
+ 00721157ae682-78a7bb59eb4mr34707827b3.22.1763680797008; Thu, 20 Nov 2025
+ 15:19:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251112-lantern-sappy-bea86ff2a7f4@spud> <20251112-improving-tassel-06c6301b3e23@spud>
- <CACRpkdYQ2PO0iysd4L7Qzu6UR1ysHhsUWK6HWeL8rJ_SRqkHYA@mail.gmail.com>
- <20251119-bacterium-banana-abcdf5c9fbc5@spud> <CACRpkda3Oz+K1t38QKgWipEseJxxneBSC11sFvzpB7ycnqsjBA@mail.gmail.com>
- <20251120-silicon-oyster-5d973ff822d9@spud>
-In-Reply-To: <20251120-silicon-oyster-5d973ff822d9@spud>
+References: <20251117091427.3624-1-antoniu.miclaus@analog.com>
+ <20251117091427.3624-2-antoniu.miclaus@analog.com> <20251119-violation-enforcer-1362d3eecb69@spud>
+ <CACRpkdayt+upQxxT-GdQOENWjdF2zz3DLEjcvD7sdg9-oaLwoA@mail.gmail.com> <20251120-evacuee-opulently-8e98840c4ba2@spud>
+In-Reply-To: <20251120-evacuee-opulently-8e98840c4ba2@spud>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 21 Nov 2025 00:13:21 +0100
-X-Gm-Features: AWmQ_bkCMWvfrPl6_87QudEHaDYJmg3nQjd2AYmg5zDD6x1lswVcldNmtxZQ4TU
-Message-ID: <CACRpkdaM3Hkbxx99uXx6OVdSbdhNNc3voS1FoUsz2oAUEc1-qA@mail.gmail.com>
-Subject: Re: [RFC v1 2/4] pinctrl: add polarfire soc mssio pinctrl driver
+Date: Fri, 21 Nov 2025 00:19:25 +0100
+X-Gm-Features: AWmQ_bm3L-eNDzf3GitUsY8GpZUIM7tmeq8XIvce7Opl9ftYB0PquTliqyKLts4
+Message-ID: <CACRpkdZHAFhvHBup+Kc87OmgviRkjLf0dN1EVLz0YoD3NwzSUA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: switch: adg1712: add adg1712 support
 To: Conor Dooley <conor@kernel.org>
-Cc: Conor Dooley <conor.dooley@microchip.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	Valentina.FernandezAlanis@microchip.com, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Antoniu Miclaus <antoniu.miclaus@analog.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 20, 2025 at 1:26=E2=80=AFAM Conor Dooley <conor@kernel.org> wro=
+On Thu, Nov 20, 2025 at 1:31=E2=80=AFAM Conor Dooley <conor@kernel.org> wro=
 te:
-> On Wed, Nov 19, 2025 at 10:48:07PM +0100, Linus Walleij wrote:
-> > On Wed, Nov 19, 2025 at 7:23=E2=80=AFPM Conor Dooley <conor@kernel.org>=
- wrote:
 
-> > I looked at the bindings that look like this and are not 1:1 to the
-> > in-kernel configs:
-> >
-> >   input-schmitt-enable:
-> >     type: boolean
-> >     description: enable schmitt-trigger mode
-> >
-> >   input-schmitt-disable:
-> >     type: boolean
-> >     description: disable schmitt-trigger mode
-> >
-> >   input-schmitt-microvolt:
-> >     description: threshold strength for schmitt-trigger
-> >
-> > 1. input-schmitt is missing! But it is right there in
-> > drivers/pinctrl/pinconf-generic.c ... All DTS files appear to be
-> > using input-schmitt-enable/disable and -microvolt.
-> >
-> > 2. input-schmitt-microvolt should probably be used separately
-> > to set the voltage threshold and can be used in conjunction
-> > with input-schmitt-enable in the same node. In your case
-> > you probably don't want to use it at all and disallow it.
-> >
-> > They are all treated individually in the parser.
-> >
-> > Maybe we could patch the docs in pinconf-generic.h to make it clear tha=
-t
-> > they are all mutually exclusive.
-> >
-> > The DT parser is a bit primitive for these.
-> > For example right now it is fine with the schema
-> > to set input-schmitt-enable and input-schmitt-disable at the same time,=
- and
-> > the result will be enabled because of parse order :/
+> > Maybe we should make them named GPIOs after all, as the switch
+> > has exactly 4 possible GPIOs. It was my request to have an
+> > array I think, and now I feel a bit stupid about that :(
 >
-> > The real trick would be to also make the
-> > schema in Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-> > make them at least mutually exclusive and deprecate the
-> > input-schmitt that noone is using, maybe that is simpler than I think?
+> It might cause havoc dt-schema wise, but is having a switch-gpio-names
+> a silly suggestion? Seems more usable than having 16 or 32 individual
+> -gpios properties on a larger device.
+
+I think in DT the "name" if a GPIO is kind of the string before
+-gpios so "foo" is the name in foo-gpios.
+
+We already have gpio-line-names to set up names for GPIO
+lines but it has never been used like this (to find a GPIO for
+a certain line name) before.
+
+> > It should probably be initial-switch-states.
+> >
+> > I vote for a generic binding as it is a new "subsystem" in DT,
+> > and this can be exepected for any new switch.
 >
-> I think that this is probably what to do. Mutual exclusion isn't
-> difficult to set up there and if there's no property for "input-schmitt"
-> then deprecating it sounds pretty reasonable?
+> Cool, prefix-less is fine in the case - although Rob's usual requirement
+> is two users for some common thing to make sure that it is actually
+> suitable for being common.
 
-Yeah I agree.
+It's a reasonable stance, but if we zoom out and look at the
+usecase, who wants to leave all of the switches in their
+house in "undefined" state after installing them?
 
-Do you want to look into it?
-
-Otherwise it becomes my problem now that I've noticed it :D
+Everyone is going to want an initial state. Lamps switched
+off and heating switched on or something like this.
 
 Yours,
 Linus Walleij
