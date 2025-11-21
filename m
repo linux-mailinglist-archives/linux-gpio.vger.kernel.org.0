@@ -1,151 +1,121 @@
-Return-Path: <linux-gpio+bounces-28970-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28971-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C837C7B512
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Nov 2025 19:25:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD860C7B62F
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Nov 2025 19:53:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1DAFC35D134
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Nov 2025 18:25:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 964553A15BB
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Nov 2025 18:53:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCFF126E71E;
-	Fri, 21 Nov 2025 18:25:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D98B822D793;
+	Fri, 21 Nov 2025 18:53:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qMeglU2Q"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="YPzCCk4W"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A7936D516;
-	Fri, 21 Nov 2025 18:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E86824BD
+	for <linux-gpio@vger.kernel.org>; Fri, 21 Nov 2025 18:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763749534; cv=none; b=bhDoILuX+ikfn8NRvX23UueFiybLxp0vVjUGnl45iH325kOOgLZYovCBwPDmZP0Q4PHXX/XTJMUPkUi4HNA+QSquKO6DXHN/o+V1mEw4Eeb2dXhQcUDiKvW3ZKpZ0mexOquYbhKv2jCEyQVs+oCLaZx3raAsR2BaGV6c+Kqzr5w=
+	t=1763751184; cv=none; b=X5yqcYLylxzaAVILVw8yTKOf/lHPUk9Bj9K2B3QiAHsnvVjGyYNmS7edNyxewlmjxUEMICJb1BoIxdsY7rXpcw0hzf+cFUrX1YH2ztGBkfP2+sMqqaHE6FQ60DoKSM3rVfPniDjGwdQ42T1EMol8R3pzG5tl5DYXNYC7SiqEoGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763749534; c=relaxed/simple;
-	bh=4Tz+I4eYoSnmr24RD9BfJdu+nSlJVfrXpk3I72LkrCw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bYi5+0cY8Kc6Z79U2/2Rt1M3+rZmAHXvV68HssQqgzzmZ1EVwJ78KJC3bJ+I18pwdCfP2CyGVfVOV+t3h2N4GeVVHR124/esncuJzCFo0m7QcQNFgh3FbH6qRgtFDnMOqbybI3oDmu3AZgQ7Lw/E1Ceb5Wd1WlxwAA2Ckmy4b5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qMeglU2Q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8500FC4CEF1;
-	Fri, 21 Nov 2025 18:25:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763749533;
-	bh=4Tz+I4eYoSnmr24RD9BfJdu+nSlJVfrXpk3I72LkrCw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qMeglU2Q4mI1NDu27ammerTxEkNwr0vG6ssFUpkGrOfWg/Uroc/8vUsCkvHTVB4og
-	 qhiwcMHqDSQdcrboQbRR+nv4Z/WXtqzAuXiIesMmUYCy48igtRDCSGHSwuEaJG+Rpi
-	 PGADfShS52unnTY3OB0bATyKxGmiO60c7MjdXKo8l+sM15F+OsFQWHiN7WQNzfqXqF
-	 YRCiaF0gOOYDBNbNkGQJqSldP4y4VHfCWlgDO6Al0nauw5n/4p41ta2CQNKP1Eq16r
-	 VjRK229b470jW5Ar4dL9gc5aEMh6m8ev6wMjTJAAwqPjfMn40E7XaYse9lwkx/uHX7
-	 ZqKAui/ozGjGA==
-Date: Fri, 21 Nov 2025 18:25:28 +0000
-From: Conor Dooley <conor@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Antoniu Miclaus <antoniu.miclaus@analog.com>,
-	Peter Rosin <peda@axentia.se>, Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Srinivas Kandagatla <srini@kernel.org>, devicetree@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org,
-	David Lechner <dlechner@baylibre.com>
-Subject: Re: [PATCH 1/2] dt-bindings: mux: gpio-mux: add support for ADG1712
-Message-ID: <20251121-privatize-decibel-72a37d50d269@spud>
-References: <20251121115750.20119-1-antoniu.miclaus@analog.com>
- <20251121115750.20119-2-antoniu.miclaus@analog.com>
- <176373269741.263545.10849918874919174841.robh@kernel.org>
+	s=arc-20240116; t=1763751184; c=relaxed/simple;
+	bh=aNk26ZsyzggXOlrkRkv8z/AQV3GCyRrEQwRqp78vCnc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K5fL3Uvzo7HtTymNclv8PxzV5XRlWn6Thhs4vZeNOpcR6KEVDcuY1STtzcihZv/uXd2eduTihAqybvY/c/8j4aBzhemPW4aAMeEQxtT2r3Tw1iDTuTGWPFjBx/Vi0Ay6knQHwciT0u10YcknmDGFhjQaT1h2owtLQF5m7oIp5ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=YPzCCk4W; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b737c6c13e1so433411766b.3
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Nov 2025 10:53:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1763751179; x=1764355979; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=dj2JreDzzIBzW9XQP1M5pFsgec74hU7D1bbxKqw8/NU=;
+        b=YPzCCk4WJPlYKBpDunzNQ+srJodh/c3SJ+LTbQXgM1dvIR6aFczlHI7Umfun1yfPlS
+         IDYt8c2k4YBoeFQlNqsMaZsvpzwY0ulYfzvGtYL4wN4fYI1HHD46IFS2fWltcRQh/4nx
+         Crf6uYDd4VOoVHSKRp/PVibPaG3oQvJHiLwDI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763751179; x=1764355979;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dj2JreDzzIBzW9XQP1M5pFsgec74hU7D1bbxKqw8/NU=;
+        b=v9kWkFFksEEtwUsBdUEV+yD2XLudO0t+/vaK8vW9GynF2z1MomaDXqC3qYbHa26955
+         Kifzx9jUNnBW/ebbEeQ/DpBB5Y2CdYkAQ428YNneflTnSwWT1Vmkb3b6Uq44RTAlaTyR
+         caQ5mZbDoLG75DNhJGl5yV3CNiOEKVoecHJYLeetI6DNs+9AZryG9/4XBWvOtvBBGrOK
+         3b8BjFynlI8E9vXJd3L6AmAodjOb6g+DsZuBZu2Xhgsv9HSDwX1KWAnPYaRStzS/BZW4
+         slKLyPRT8vOYLnBDexSkAv8FMntpeva2KSQoBqTO1pQDnNOYO/Ns6kcWujf0Ai+13VMH
+         /fTA==
+X-Gm-Message-State: AOJu0YxvzZTGJFH2ia3Ww/PoHMMC7k6tzaDzZEkPQiyu35/Dv6sxXPDX
+	DzJgeHoCJ/keghoTP0lUQ4eGpVnYsZ4c4zVxSPo1QDofcuDnKX0nMTT0Yd+CfmVvIo6C7g6l0+z
+	8XbVFYj0=
+X-Gm-Gg: ASbGncsX+RPMbbU4FjZbwuiqbciiElxIy08cVv75I5K6GXJ0LIU6Q1sDp6GcyBeKYV0
+	ioUNvxE7vvZz7viHQX0xqANJFGRjZ8dA9NCUMSayYGUULPaSbhxagmpAQegbIiKmTbECljQ0LSa
+	pKjsutnoc4LTdC9jtYMVBqjB5NLCqw8QIQhHTl1xSNwFUo2AY4IbfE3spRpyHpHLM+g4booe5NF
+	SVB0P1rXZNKq2kj25Dhok0jVMrKobH0zgsLCdRDhYQki9i/R+T76G6KAftGAw/fb/7NYJMrAo3G
+	sHchZZ6bb05AUL+ZryBqjSLN9FT/RT8S06L/x0PwsD+nJsO1R1jc8ftwsEAyJNQn8lqGOeJqLlh
+	AViqwF88X3sxR7XKBRaPE2wB7h+yyOqtLHW2MFq1D9qhwbabp2Q//96TSU+HgzT+YFhvtppzryK
+	aRe7yeE1VJHQvRzcttt/+7gLZsEvh6c65e9biKWbormw8yBZL89o+xqVBrcf4S
+X-Google-Smtp-Source: AGHT+IHpP8yajY4m0EtErcr6eAzsI8aZOWyh7eUAzTrC9NZ7hrMS6SQYlpgutaHa7vWr8yxVapJIJQ==
+X-Received: by 2002:a17:906:fe46:b0:b72:a899:169f with SMTP id a640c23a62f3a-b7671520dd3mr386304866b.4.1763751179533;
+        Fri, 21 Nov 2025 10:52:59 -0800 (PST)
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com. [209.85.218.50])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b7654ff4096sm529216466b.49.2025.11.21.10.52.57
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Nov 2025 10:52:58 -0800 (PST)
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b735e278fa1so472720066b.0
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Nov 2025 10:52:57 -0800 (PST)
+X-Received: by 2002:a17:907:7e89:b0:b73:5db4:4ffc with SMTP id
+ a640c23a62f3a-b767189c970mr377769566b.54.1763751177297; Fri, 21 Nov 2025
+ 10:52:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="nIJQUNuZx7UupWmJ"
-Content-Disposition: inline
-In-Reply-To: <176373269741.263545.10849918874919174841.robh@kernel.org>
+References: <CAD++jLkMzdYPdMpGMx-U5EMm_9EWtg_kext8QHXY1dNsdSSFVw@mail.gmail.com>
+In-Reply-To: <CAD++jLkMzdYPdMpGMx-U5EMm_9EWtg_kext8QHXY1dNsdSSFVw@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 21 Nov 2025 10:52:40 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whp53JSL2koBkHanTr=6cB91PjodthW-0krexvwe2fHTw@mail.gmail.com>
+X-Gm-Features: AWmQ_bnDox4L0nKeeK_m4rj52KwN89ULJFseaoDbWKuSrAXLlagb1kkVx8HkSyU
+Message-ID: <CAHk-=whp53JSL2koBkHanTr=6cB91PjodthW-0krexvwe2fHTw@mail.gmail.com>
+Subject: Re: [GIT PULL] pin control fixes for v6.18
+To: Linus Walleij <linusw@kernel.org>
+Cc: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Fri, 21 Nov 2025 at 08:29, Linus Walleij <linusw@kernel.org> wrote:
+>
+> I'm starting to use this kernel.org mail adress because reasons.
+> I think I managed to add it to my PGP/GPG key. The signature
+> on the tags should be the same.
 
---nIJQUNuZx7UupWmJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Side note: I don't really care what email address things come from,
+the same way I don't care what company you work from. I trust *you* as
+a person, not you as the email address, or you as the company
+employee.
 
-On Fri, Nov 21, 2025 at 07:44:57AM -0600, Rob Herring (Arm) wrote:
->=20
-> On Fri, 21 Nov 2025 11:57:31 +0000, Antoniu Miclaus wrote:
-> > Add support for the Analog Devices ADG1712 quad SPST switch to the
-> > existing GPIO multiplexer bindings. The ADG1712 contains four
-> > independent single-pole/single-throw (SPST) switches, each controlled
-> > by a dedicated GPIO pin.
-> >=20
-> > Unlike traditional multiplexers that use GPIOs as binary-encoded
-> > selectors, the ADG1712 treats each GPIO as a direct switch controller.
-> > The mux state represents the combination of all four switches, with
-> > values from 0-15 corresponding to different switch combinations.
-> >=20
-> > For example, state 5 (binary 0101) represents:
-> > - SW1: ON (GPIO0 =3D 1)
-> > - SW2: OFF (GPIO1 =3D 0)
-> > - SW3: ON (GPIO2 =3D 1)
-> > - SW4: OFF (GPIO3 =3D 0)
-> >=20
-> > Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> > ---
-> >  .../devicetree/bindings/mux/gpio-mux.yaml     | 24 ++++++++++++++++++-
-> >  1 file changed, 23 insertions(+), 1 deletion(-)
-> >=20
->=20
-> My bot found errors running 'make dt_binding_check' on your patch:
->=20
-> yamllint warnings/errors:
->=20
-> dtschema/dtc warnings/errors:
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/m=
-ux/gpio-mux.example.dtb: switch-controller (adi,adg1712): $nodename:0: 'swi=
-tch-controller' does not match '^mux-controller(@.*|-([0-9]|[1-9][0-9]+))?$'
-> 	from schema $id: http://devicetree.org/schemas/mux/mux-controller.yaml
+So I end up caring about the signature matching a key that I know is
+yours, but whether the email address is then added to said key is
+pretty much immaterial to me.
 
-There's a patch relaxing this restriction here:
-https://lore.kernel.org/all/cb7c28ccf3a1b136e793b48720f816de7d5f75b2.176373=
-7324.git.tommaso.merciai.xr@bp.renesas.com/
+> PS: I saw you're playing highlander games with Linus Sebastian,
+> there are still many of us left! ;)
 
->=20
-> doc reference errors (make refcheckdocs):
->=20
-> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/202511=
-21115750.20119-2-antoniu.miclaus@analog.com
->=20
-> The base for the series is generally the latest rc1. A different dependen=
-cy
-> should be noted in *this* patch.
->=20
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> date:
->=20
-> pip3 install dtschema --upgrade
->=20
-> Please check and re-submit after running the above command yourself. Note
-> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-> your schema. However, it must be unset to test all examples with your sch=
-ema.
->=20
+You need to sleep with one eye open... Because you may or may not be
+next on my list.
 
---nIJQUNuZx7UupWmJ
-Content-Type: application/pgp-signature; name="signature.asc"
+Just sayin'
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaSCumAAKCRB4tDGHoIJi
-0hHUAP9yXQOncgawwu1dy8HRWrkjDNt+nbdUNblTcKOV5u31AQEAvDhhhMdgj2aG
-C6EJH5EKseWikteR/A1z9RqAlc62+QI=
-=wum8
------END PGP SIGNATURE-----
-
---nIJQUNuZx7UupWmJ--
+                Linus "there *will* be only one" Torvalds
 
