@@ -1,121 +1,124 @@
-Return-Path: <linux-gpio+bounces-28971-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28975-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD860C7B62F
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Nov 2025 19:53:08 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5868FC7B95D
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Nov 2025 20:47:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 964553A15BB
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Nov 2025 18:53:07 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 5FFDB35A524
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Nov 2025 19:47:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D98B822D793;
-	Fri, 21 Nov 2025 18:53:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 283FE304964;
+	Fri, 21 Nov 2025 19:47:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="YPzCCk4W"
+	dkim=pass (4096-bit key) header.d=urlichs.de header.i=@urlichs.de header.b="x53Yz4jr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.m-u.xyz (mail.m-u.xyz [213.95.149.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E86824BD
-	for <linux-gpio@vger.kernel.org>; Fri, 21 Nov 2025 18:53:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4123043CF
+	for <linux-gpio@vger.kernel.org>; Fri, 21 Nov 2025 19:47:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.149.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763751184; cv=none; b=X5yqcYLylxzaAVILVw8yTKOf/lHPUk9Bj9K2B3QiAHsnvVjGyYNmS7edNyxewlmjxUEMICJb1BoIxdsY7rXpcw0hzf+cFUrX1YH2ztGBkfP2+sMqqaHE6FQ60DoKSM3rVfPniDjGwdQ42T1EMol8R3pzG5tl5DYXNYC7SiqEoGI=
+	t=1763754438; cv=none; b=rUMHLYFMg+pyZIjc37hFcJotvksXjXBRrA6q5V30tKk9uPQVsVH8EBIdqFRDj6Lgy9dT9kjqMp6IO4uD2oB44w1eYwHjDZQf6rR36d8BQlIAj5KV2EUIzLc+fpFvgMH/xPh8PczeqrkFDGXqjYQc5e/tF7vIgvwAe/UaVvTb9l0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763751184; c=relaxed/simple;
-	bh=aNk26ZsyzggXOlrkRkv8z/AQV3GCyRrEQwRqp78vCnc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K5fL3Uvzo7HtTymNclv8PxzV5XRlWn6Thhs4vZeNOpcR6KEVDcuY1STtzcihZv/uXd2eduTihAqybvY/c/8j4aBzhemPW4aAMeEQxtT2r3Tw1iDTuTGWPFjBx/Vi0Ay6knQHwciT0u10YcknmDGFhjQaT1h2owtLQF5m7oIp5ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=YPzCCk4W; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b737c6c13e1so433411766b.3
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Nov 2025 10:53:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1763751179; x=1764355979; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=dj2JreDzzIBzW9XQP1M5pFsgec74hU7D1bbxKqw8/NU=;
-        b=YPzCCk4WJPlYKBpDunzNQ+srJodh/c3SJ+LTbQXgM1dvIR6aFczlHI7Umfun1yfPlS
-         IDYt8c2k4YBoeFQlNqsMaZsvpzwY0ulYfzvGtYL4wN4fYI1HHD46IFS2fWltcRQh/4nx
-         Crf6uYDd4VOoVHSKRp/PVibPaG3oQvJHiLwDI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763751179; x=1764355979;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dj2JreDzzIBzW9XQP1M5pFsgec74hU7D1bbxKqw8/NU=;
-        b=v9kWkFFksEEtwUsBdUEV+yD2XLudO0t+/vaK8vW9GynF2z1MomaDXqC3qYbHa26955
-         Kifzx9jUNnBW/ebbEeQ/DpBB5Y2CdYkAQ428YNneflTnSwWT1Vmkb3b6Uq44RTAlaTyR
-         caQ5mZbDoLG75DNhJGl5yV3CNiOEKVoecHJYLeetI6DNs+9AZryG9/4XBWvOtvBBGrOK
-         3b8BjFynlI8E9vXJd3L6AmAodjOb6g+DsZuBZu2Xhgsv9HSDwX1KWAnPYaRStzS/BZW4
-         slKLyPRT8vOYLnBDexSkAv8FMntpeva2KSQoBqTO1pQDnNOYO/Ns6kcWujf0Ai+13VMH
-         /fTA==
-X-Gm-Message-State: AOJu0YxvzZTGJFH2ia3Ww/PoHMMC7k6tzaDzZEkPQiyu35/Dv6sxXPDX
-	DzJgeHoCJ/keghoTP0lUQ4eGpVnYsZ4c4zVxSPo1QDofcuDnKX0nMTT0Yd+CfmVvIo6C7g6l0+z
-	8XbVFYj0=
-X-Gm-Gg: ASbGncsX+RPMbbU4FjZbwuiqbciiElxIy08cVv75I5K6GXJ0LIU6Q1sDp6GcyBeKYV0
-	ioUNvxE7vvZz7viHQX0xqANJFGRjZ8dA9NCUMSayYGUULPaSbhxagmpAQegbIiKmTbECljQ0LSa
-	pKjsutnoc4LTdC9jtYMVBqjB5NLCqw8QIQhHTl1xSNwFUo2AY4IbfE3spRpyHpHLM+g4booe5NF
-	SVB0P1rXZNKq2kj25Dhok0jVMrKobH0zgsLCdRDhYQki9i/R+T76G6KAftGAw/fb/7NYJMrAo3G
-	sHchZZ6bb05AUL+ZryBqjSLN9FT/RT8S06L/x0PwsD+nJsO1R1jc8ftwsEAyJNQn8lqGOeJqLlh
-	AViqwF88X3sxR7XKBRaPE2wB7h+yyOqtLHW2MFq1D9qhwbabp2Q//96TSU+HgzT+YFhvtppzryK
-	aRe7yeE1VJHQvRzcttt/+7gLZsEvh6c65e9biKWbormw8yBZL89o+xqVBrcf4S
-X-Google-Smtp-Source: AGHT+IHpP8yajY4m0EtErcr6eAzsI8aZOWyh7eUAzTrC9NZ7hrMS6SQYlpgutaHa7vWr8yxVapJIJQ==
-X-Received: by 2002:a17:906:fe46:b0:b72:a899:169f with SMTP id a640c23a62f3a-b7671520dd3mr386304866b.4.1763751179533;
-        Fri, 21 Nov 2025 10:52:59 -0800 (PST)
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com. [209.85.218.50])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b7654ff4096sm529216466b.49.2025.11.21.10.52.57
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Nov 2025 10:52:58 -0800 (PST)
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b735e278fa1so472720066b.0
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Nov 2025 10:52:57 -0800 (PST)
-X-Received: by 2002:a17:907:7e89:b0:b73:5db4:4ffc with SMTP id
- a640c23a62f3a-b767189c970mr377769566b.54.1763751177297; Fri, 21 Nov 2025
- 10:52:57 -0800 (PST)
+	s=arc-20240116; t=1763754438; c=relaxed/simple;
+	bh=sRpudvXxUF2dVDxhJTtIFHH45v/ini91Pv5akVqeYls=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=p8ZVLG3yHvg3IF3OJh8g7zt+jIj7WVFm6ee/97IRoW7WAanL221EPYU419LueitooVNDIraD4X2s3zTNVVPuCsTpjME+97fo7aSNM0Rx1HgnJ0v4EzYBuM8NhdbINKIGb0f2aNQY91gTde2P7WQmdjMmqRS//Q1awmr1L71IcdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=urlichs.de; spf=pass smtp.mailfrom=urlichs.de; dkim=pass (4096-bit key) header.d=urlichs.de header.i=@urlichs.de header.b=x53Yz4jr; arc=none smtp.client-ip=213.95.149.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=urlichs.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=urlichs.de
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=urlichs.de;
+	s=20160512; h=From:Date:Message-ID;
+	bh=sRpudvXxUF2dVDxhJTtIFHH45v/ini91Pv5akVqeYls=; b=x53Yz4jr37J9RgrechGhvktNgf
+	3p0feQ+o2+/ILYY3q132fAnIESronpHzbvNtv/psk15GxmxYEvQ6Ss9EKdkLMgF/KvuArurlxpH0L
+	qTnnHKpAgyWiaH4KLrYmUSmsdXxbKcAQTy7frxvHFSoN5wpr1/LQV6CTZ8sLgcsS/9KsJojppNwxf
+	owSeFfZgu1uZrltPloNt+ZZ1gM8LF97ullzVsUSuAoV12Yp0UlQzm4gYGiHjNfs5IvCNkpfkDHDCc
+	zxL5jwbjP8RdwI5Foso13X21LVQroqGhgFszW23BjyDW5SZXNSHNIctVyOWAQVpbdPgH45UnpUZv9
+	Cbe3F8VVGW+tq69PGeozD2BoSyzeQlUN7GVKzOrvD0eYeST32UI7017Q/HSEm8ujPGJ9tsRmSKCVy
+	NutsLLyPeL+QSMjZ2iYtMnGDRkVR47E3poBsqbA8TiyBqbIWOqsH1BxLCAvlFCQDYrTxofw6JVA4P
+	DiYcojuYq9eS6Xk3yiBQfL8pfgTxK34ucQJodw3IHignYby4Ulrg36LU+T395D+GVjPHqgE5NjB2f
+	YL/ag7Ae12nXT5W1kWaAiBsb6a5TpFq98DpoXyM8C4y9rmyRGg5ZBqtXCzQD66noahjoiuVwLRhSC
+	04x22SSpM4mmrzu1+QmzKWWl60VUl3puDI/BV5/1Y=;
+Received: from asi.s.smurf.noris.de ([2001:780:107:200::a])
+	by vm-mail with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.2)
+	(envelope-from <matthias@urlichs.de>)
+	id 1vMWMd-00000000AuU-3Md1
+	for linux-gpio@vger.kernel.org;
+	Fri, 21 Nov 2025 20:00:12 +0100
+Message-ID: <fa30998c-db6e-4ff3-b327-d8b6270979fa@urlichs.de>
+Date: Fri, 21 Nov 2025 19:59:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAD++jLkMzdYPdMpGMx-U5EMm_9EWtg_kext8QHXY1dNsdSSFVw@mail.gmail.com>
-In-Reply-To: <CAD++jLkMzdYPdMpGMx-U5EMm_9EWtg_kext8QHXY1dNsdSSFVw@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 21 Nov 2025 10:52:40 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whp53JSL2koBkHanTr=6cB91PjodthW-0krexvwe2fHTw@mail.gmail.com>
-X-Gm-Features: AWmQ_bnDox4L0nKeeK_m4rj52KwN89ULJFseaoDbWKuSrAXLlagb1kkVx8HkSyU
-Message-ID: <CAHk-=whp53JSL2koBkHanTr=6cB91PjodthW-0krexvwe2fHTw@mail.gmail.com>
-Subject: Re: [GIT PULL] pin control fixes for v6.18
-To: Linus Walleij <linusw@kernel.org>
-Cc: linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: linux-gpio@vger.kernel.org
+From: Matthias Urlichs <matthias@urlichs.de>
+Subject: Open-collector GPIO usage question
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------Ikk1urOM5SNRDLQ8D0ZJa4JR"
+X-Smurf-Spam-Score: -1.0 (-)
+X-Smurf-Whitelist: +relay_from_hosts
 
-On Fri, 21 Nov 2025 at 08:29, Linus Walleij <linusw@kernel.org> wrote:
->
-> I'm starting to use this kernel.org mail adress because reasons.
-> I think I managed to add it to my PGP/GPG key. The signature
-> on the tags should be the same.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------Ikk1urOM5SNRDLQ8D0ZJa4JR
+Content-Type: multipart/mixed; boundary="------------d0k7Uchio9mhXjFcdJhG0wzw";
+ protected-headers="v1"
+From: Matthias Urlichs <matthias@urlichs.de>
+To: linux-gpio@vger.kernel.org
+Message-ID: <fa30998c-db6e-4ff3-b327-d8b6270979fa@urlichs.de>
+Subject: Open-collector GPIO usage question
 
-Side note: I don't really care what email address things come from,
-the same way I don't care what company you work from. I trust *you* as
-a person, not you as the email address, or you as the company
-employee.
+--------------d0k7Uchio9mhXjFcdJhG0wzw
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-So I end up caring about the signature matching a key that I know is
-yours, but whether the email address is then added to said key is
-pretty much immaterial to me.
+SGksDQoNCnNvIEkgd2FudCB0byBlZmZpY2llbnRseSBpbXBsZW1lbnQgYSBiaXQtYmFuZy1p
+c2ggcHJvdG9jb2wsIG1lYW5pbmcgSSdkIA0KbGlrZSB0byB1c2UgZXZlbnRzIGluc3RlYWQg
+b2YgYnVzeS1sb29waW5nLg0KDQpUaGUgaGFyZHdhcmUgdXNlcyBvcGVuLWNvbGxlY3RvciB3
+aXJpbmcuDQoNClRoaXMgZG9lc24ndCBzZWVtIHBvc3NpYmxlIHdpdGggTGludXggR1BJTy4N
+Cg0KSSBjYW5ub3Qgc2V0IGlucHV0IGFuZCBvdXRwdXQgZmxhZ3MgYXQgdGhlIHNhbWUgdGlt
+ZS4gR2V0dGluZyBldmVudHMgDQpyZXF1aXJlcyB0aGUgaW5wdXQgZmxhZyB3aGlsZSB0aGUg
+b3Blbi1kcmFpbiBvdXRwdXQgZmxhZyByZXF1aXJlcywgd2VsbCwgDQpvdXRwdXQuIE93Y2gu
+DQoNCkFGQUlDUyBhbGwgb2YgdGhpcyBpcyBlbmZvcmNlZCBieSANCmRyaXZlcnMvZ3Bpby9n
+cGlvbGliLWNkZXYuYzo6Z3Bpb192Ml9saW5lX2ZsYWdzX3ZhbGlkYXRlKCksIHNvIG5vdCBn
+cGlvIA0KZHJpdmVyIHNwZWNpZmljLg0KDQpBcyBzb21lIGhhcmR3YXJlIHNlZW1zIGNhcGFi
+bGUgZW5vdWdoIHRvIHRyaWdnZXIgYW4gaW50ZXJydXB0IG9uIHJhdyANCnBvcnQgbGV2ZWxz
+IGV2ZW4gaWYgY29uZmlndXJlZCBmb3IgIm91dHB1dCIsIHRoaXMgc2VlbXMgb3Zlcmx5IA0K
+cmVzdHJpY3RpdmUg4oCmIGFsc28sIEkgaGFwcGVuIHRvIG5vdCBoYXZlIGVub3VnaCBHUElP
+IHBvcnRzIHRvIHVzZSB0d28gDQpwZXIgd2lyZS4NCg0KVGhvdWdodHM/DQoNCi0tIA0KLS0g
+cmVnYXJkcw0KLS0gDQotLSBNYXR0aGlhcyBVcmxpY2hzDQoNCg==
 
-> PS: I saw you're playing highlander games with Linus Sebastian,
-> there are still many of us left! ;)
+--------------d0k7Uchio9mhXjFcdJhG0wzw--
 
-You need to sleep with one eye open... Because you may or may not be
-next on my list.
+--------------Ikk1urOM5SNRDLQ8D0ZJa4JR
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
-Just sayin'
+-----BEGIN PGP SIGNATURE-----
 
-                Linus "there *will* be only one" Torvalds
+wsF5BAABCAAjFiEEr9eXgvO67AILKKGfcs+OXiW0wpMFAmkgtqMFAwAAAAAACgkQcs+OXiW0wpOb
+3A//UPhUhPcXDQacbNfhqld+Ph4l2K8dYpz7YKyHuOKKIfT7zWm+3nmkguq5TTwQFt+6sCAlNJRo
+rx9rZ/LWlJYMvfIzpfBtg8YHGf91c40vK/9v3pPlzNmwo/rYx+AxFpy/7VDc8wqqKHDwGz3crA24
+ya+ANYm75pb9JOpkr0NtZLkAACp/vVHCooz1L244CW3a6kJKkCsd8xcnxWlG/3VKH6ECGpLr1ig5
+/lrw5dVV4HIib0vyFlu0XzJSL1HRPi9Z9qUyWt2vbNJ5Gz1IUoPUnaFYK2xzXneuoxnc7vGWD2L1
+YJxIhurxtfYot4/xGf3fU24eFas10h0jSt0uBcucuK41TEW/YSmuqE1QQHbjCF3iQ8jxrI2IG1F9
+hOH0a0nos6lSHuqtMLjkS6y9T0sWVzOo9ABtNTXBDajhXYTgMIKf5eyS4qmGX7lObVZZ7a63vFEq
+ARhEY5ii5PHxtDdkvjmqBK0Ka+yAMNAE981mHrJ5w582v7Ot+zOXf1a8BXvjI6d0a41zOmcKQV2F
+D9NbPWEon+XqbuFlVCS/Qi3usGslfevuU430LEi+M/4aZQRdl8ZVllXFN1R+15VjTUPRFAxIw3ZM
+BWjanmAY0GYH2/YGPU6h5o3x9594dUmJNsPWWJ+kZT+EMyB+uLAWtJUXZJTKjyJ+Tbl0oCyRGRZz
+BvE=
+=1DAt
+-----END PGP SIGNATURE-----
+
+--------------Ikk1urOM5SNRDLQ8D0ZJa4JR--
 
