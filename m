@@ -1,232 +1,96 @@
-Return-Path: <linux-gpio+bounces-28940-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28941-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA5FAC78C33
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Nov 2025 12:22:13 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id E503DC78CD2
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Nov 2025 12:30:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 8A1E93461D8
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Nov 2025 11:21:53 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4C4C04EEF97
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Nov 2025 11:27:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E86EC348466;
-	Fri, 21 Nov 2025 11:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JYiHjYCX"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AF6134AAF0;
+	Fri, 21 Nov 2025 11:27:18 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813022BE658;
-	Fri, 21 Nov 2025 11:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22AC3345756;
+	Fri, 21 Nov 2025 11:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763724103; cv=none; b=Ofg/mLbZrp47EothWR4Kp46KJwuqTsEFNcFCQJ5L9cE7qRH2bF7pHJ9qprLqseJABiUd1aeys49bOnK0vOxDSkg4mMmcvUcRIpRQb1CDFu9HV+O5xF12C2uMegEUyBG+XTKyBdb54NvzEIhyLtv6fGPUorY7EDqUV9mQpTXXJP8=
+	t=1763724436; cv=none; b=k5goxP/OzdQIywcMXMy7CbsHmyWEmvlP0fcn+nphQj6ZIVzVA9Lho1oJZomf3tMq3gDpyQx52wV/8JqRffD7eTU0upIw+VZqS1ssSPmBPpm6QKjgrA6QKhQOSwshRknovls+iFG27Xzp6c2we0Wbq8uiRV4m+s+NSZ5njvjYZZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763724103; c=relaxed/simple;
-	bh=7KmeJvwXilI1DNvqnsGeVTWwmhzGeDmosqBJdCvMSks=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=phfLo+bjPAYoxAIZBVkE4P2XmNjn5vY3bNRXHiZ9HLYErIiQScD1al0cK0FsO9jT9tQWZSafXIRJi0wkpWO7mboBBBMWTk7g5afy/VADBU7PT/ntQpwdc9gS5HyRoDyFeDidhYDQDWy0qEOUBqzVpQne0FntMdKqTBz/GB64rfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JYiHjYCX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45EC2C4CEF1;
-	Fri, 21 Nov 2025 11:21:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763724103;
-	bh=7KmeJvwXilI1DNvqnsGeVTWwmhzGeDmosqBJdCvMSks=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JYiHjYCXW2GRmtqtHazS9GJ+IUjbkdFaGOtvKf2nBgmSH7eTonLcQv8UpkqtUVymd
-	 yaVYOqAn7QtHBmFGO3CpggC4NXr2WtRjwpNCDtIM4n+xaJDYrxaVXzI0oOf9LR+fbW
-	 MOMRv4k67kDngZRAItGoxyDjvmKsG0VHtwAcfal7GH1+O4HuBlslmJ5n01ukX9VABk
-	 sWf2C2jZ0btsL1tgFBO1WgAMdaSbcEHQxiGEsDpKZk3AOwHVYPIq7QL1TASkXCxVNu
-	 xY77Y6W/vlZrH8s0bEbAFVfjJ7SUhSTIAeiI7Yf9MgxFqaInULc6iWZiYqshzP260f
-	 vuM1ux5eETwPw==
-Date: Fri, 21 Nov 2025 11:21:38 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Conor Dooley <conor.dooley@microchip.com>,
+	s=arc-20240116; t=1763724436; c=relaxed/simple;
+	bh=k+cblkPsvI3zrPdHJzEoe/60V/WB43tmivEz3AqUgR8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qW6Tv7xZbYxPZWVLkLZl2nJkInGmwf/1T4nfy3ZAOB7QWfWfv5xtaAQOeQsIHXPjBjD7yUTmhJT8RW1RYbJgJZqDOb+wnDEnVjsxoZDPiN3XrAqig4g+Tpkxj1Q+2m/aoANOoyZqKP35/rs7fkeroOcNtlWYpAjv2sK9hV3yqN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+X-CSE-ConnectionGUID: UjQs0x8XTTOR6TdnkLEpdQ==
+X-CSE-MsgGUID: tcctl0klRlO2h064+ixElA==
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 21 Nov 2025 20:27:11 +0900
+Received: from demon-pc.localdomain (unknown [10.226.92.224])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 90DD5437C1A2;
+	Fri, 21 Nov 2025 20:27:07 +0900 (JST)
+From: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, Valentina.FernandezAlanis@microchip.com,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [RFC v1 2/4] pinctrl: add polarfire soc mssio pinctrl driver
-Message-ID: <20251121-skimpily-flagstone-8b96711443df@spud>
-References: <20251112-lantern-sappy-bea86ff2a7f4@spud>
- <20251112-improving-tassel-06c6301b3e23@spud>
- <CACRpkdYQ2PO0iysd4L7Qzu6UR1ysHhsUWK6HWeL8rJ_SRqkHYA@mail.gmail.com>
- <20251119-bacterium-banana-abcdf5c9fbc5@spud>
- <CACRpkda3Oz+K1t38QKgWipEseJxxneBSC11sFvzpB7ycnqsjBA@mail.gmail.com>
- <20251120-silicon-oyster-5d973ff822d9@spud>
- <CACRpkdaM3Hkbxx99uXx6OVdSbdhNNc3voS1FoUsz2oAUEc1-qA@mail.gmail.com>
- <20251121-epidermis-overdue-1ebb1bb85e36@spud>
+	Conor Dooley <conor+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
+Subject: [PATCH 0/8] Add support for GPIO IRQs for RZ/T2H and RZ/N2H
+Date: Fri, 21 Nov 2025 13:26:18 +0200
+Message-ID: <20251121112626.1395565-1-cosmin-gabriel.tanislav.xa@renesas.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="r6avqi2nAMlQdzEL"
-Content-Disposition: inline
-In-Reply-To: <20251121-epidermis-overdue-1ebb1bb85e36@spud>
+Content-Transfer-Encoding: 8bit
 
+The Renesas RZ/T2H and RZ/N2H SoCs have IRQ-capable pins handled by the
+ICU, which forwards them to the GIC.
 
---r6avqi2nAMlQdzEL
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The ICU supports 16 IRQ lines, the pins map to these lines arbitrarily,
+and the mapping is not configurable.
 
-On Fri, Nov 21, 2025 at 10:46:54AM +0000, Conor Dooley wrote:
-> On Fri, Nov 21, 2025 at 12:13:21AM +0100, Linus Walleij wrote:
-> > On Thu, Nov 20, 2025 at 1:26=E2=80=AFAM Conor Dooley <conor@kernel.org>=
- wrote:
-> > > On Wed, Nov 19, 2025 at 10:48:07PM +0100, Linus Walleij wrote:
-> > > > On Wed, Nov 19, 2025 at 7:23=E2=80=AFPM Conor Dooley <conor@kernel.=
-org> wrote:
-> >=20
-> > > > I looked at the bindings that look like this and are not 1:1 to the
-> > > > in-kernel configs:
-> > > >
-> > > >   input-schmitt-enable:
-> > > >     type: boolean
-> > > >     description: enable schmitt-trigger mode
-> > > >
-> > > >   input-schmitt-disable:
-> > > >     type: boolean
-> > > >     description: disable schmitt-trigger mode
-> > > >
-> > > >   input-schmitt-microvolt:
-> > > >     description: threshold strength for schmitt-trigger
-> > > >
-> > > > 1. input-schmitt is missing! But it is right there in
-> > > > drivers/pinctrl/pinconf-generic.c ... All DTS files appear to be
-> > > > using input-schmitt-enable/disable and -microvolt.
-> > > >
-> > > > 2. input-schmitt-microvolt should probably be used separately
-> > > > to set the voltage threshold and can be used in conjunction
-> > > > with input-schmitt-enable in the same node. In your case
-> > > > you probably don't want to use it at all and disallow it.
-> > > >
-> > > > They are all treated individually in the parser.
-> > > >
-> > > > Maybe we could patch the docs in pinconf-generic.h to make it clear=
- that
-> > > > they are all mutually exclusive.
-> > > >
-> > > > The DT parser is a bit primitive for these.
-> > > > For example right now it is fine with the schema
-> > > > to set input-schmitt-enable and input-schmitt-disable at the same t=
-ime, and
-> > > > the result will be enabled because of parse order :/
-> > >
-> > > > The real trick would be to also make the
-> > > > schema in Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-> > > > make them at least mutually exclusive and deprecate the
-> > > > input-schmitt that noone is using, maybe that is simpler than I thi=
-nk?
-> > >
-> > > I think that this is probably what to do. Mutual exclusion isn't
-> > > difficult to set up there and if there's no property for "input-schmi=
-tt"
-> > > then deprecating it sounds pretty reasonable?
-> >=20
-> > Yeah I agree.
-> >=20
-> > Do you want to look into it?
-> >=20
-> > Otherwise it becomes my problem now that I've noticed it :D
->=20
-> Yeah, it's just a binding patch here I think, so yeah I'll do it.
+Add a GPIO IRQ chip that can be used to configure these pins as IRQ
+lines, and add the user switches present on the board.
 
-ngl, I forget if there's a shorthand for the bias part, so I just want
-to know if is this an accurate summary of what's exclusive?
+The ICU driver has been submitted as part of a separate series [1].
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml b/D=
-ocumentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-index cbfcf215e571..6865472ac124 100644
---- a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-@@ -153,4 +153,66 @@ properties:
-       pin. Typically indicates how many double-inverters are
-       used to delay the signal.
-=20
-+allOf:
-+  - if:
-+      required:
-+        - output-disable
-+    then:
-+      properties:
-+        output-enable: false
-+        output-impedance-ohms: false
-+  - if:
-+      required:
-+        - output-low
-+    then:
-+      properties:
-+        output-high: false
-+  - if:
-+      required:
-+        - low-power-enable
-+    then:
-+      properties:
-+        low-power-disable: false
-+  - if:
-+      required:
-+        - input-schmitt-disable
-+    then:
-+      properties:
-+        input-schmitt-enable: false
-+        input-schmitt-microvolt: false
-+  - if:
-+      required:
-+        - drive-open-source
-+    then:
-+      properties:
-+        drive-open-drain: false
-+  - if:
-+      anyOf:
-+        - required:
-+            - bias-disable
-+        - required:
-+            - bias-high-impedance
-+        - required:
-+            - bias-hold
-+        - required:
-+            - bias-up
-+        - required:
-+            - bias-down
-+        - required:
-+            - bias-pull-pin-default
-+    then:
-+      oneOf:
-+        - required:
-+            - bias-disable
-+        - required:
-+            - bias-high-impedance
-+        - required:
-+            - bias-hold
-+        - required:
-+            - bias-up
-+        - required:
-+            - bias-down
-+        - required:
-+            - bias-pull-pin-default
-+
- additionalProperties: true
+[1]: https://lore.kernel.org/lkml/20251121111423.1379395-1-cosmin-gabriel.tanislav.xa@renesas.com/
 
+Cosmin Tanislav (8):
+  pinctrl: renesas: rzt2h: move GPIO enable/disable into separate
+    function
+  pinctrl: renesas: rzt2h: allow .get_direction() for IRQ function GPIOs
+  dt-bindings: pinctrl: renesas,r9a09g077-pinctrl: Document GPIO IRQ
+  pinctrl: renesas: rzt2h: add GPIO IRQ chip to handle interrupts
+  arm64: dts: renesas: r9a09g077: add GPIO IRQ support
+  arm64: dts: renesas: r9a09g087: add GPIO IRQ support
+  arm64: dts: renesas: r9a09g077m44-rzt2h-evk: add GPIO keys
+  arm64: dts: renesas: r9a09g087m44-rzn2h-evk: add GPIO keys
 
+ .../pinctrl/renesas,r9a09g077-pinctrl.yaml    |  15 ++
+ arch/arm64/boot/dts/renesas/r9a09g077.dtsi    |   3 +
+ .../dts/renesas/r9a09g077m44-rzt2h-evk.dts    |  33 +++
+ arch/arm64/boot/dts/renesas/r9a09g087.dtsi    |   3 +
+ .../dts/renesas/r9a09g087m44-rzn2h-evk.dts    |  30 +++
+ drivers/pinctrl/renesas/pinctrl-rzt2h.c       | 241 +++++++++++++++++-
+ 6 files changed, 316 insertions(+), 9 deletions(-)
 
---r6avqi2nAMlQdzEL
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.52.0
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaSBLQgAKCRB4tDGHoIJi
-0uCUAQCsDnusC4XnS1EgnJW8hU0Zp+g9t7EcxPUbQUCLK/pBUwEAuqZ1bmtJnoFC
-jTQLg1HLTTtuGST6zX4Ucpfc6JoqJwI=
-=LV3W
------END PGP SIGNATURE-----
-
---r6avqi2nAMlQdzEL--
 
