@@ -1,143 +1,158 @@
-Return-Path: <linux-gpio+bounces-28977-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28978-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21057C7C586
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Nov 2025 05:03:24 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82B80C7D6AB
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Nov 2025 20:39:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7F344353234
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Nov 2025 04:03:23 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 3175035513F
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Nov 2025 19:38:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 563271A3166;
-	Sat, 22 Nov 2025 04:03:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC7FC246781;
+	Sat, 22 Nov 2025 19:37:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gsQBhgDJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KYs9rJMh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B957C165F1A
-	for <linux-gpio@vger.kernel.org>; Sat, 22 Nov 2025 04:03:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EABC81DDC37
+	for <linux-gpio@vger.kernel.org>; Sat, 22 Nov 2025 19:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763784200; cv=none; b=Up5Qa3TBivMh4/s2atdY6DqzzbBmueHoKIdDlK9yVSDfz0z8HBRSfTFZaL3pdg1yUKw8C8zAz0EdObx8hMZpkG69m9F2Y+0ia2F46cbaeRE3fNn/t3OYZRSXCujY/RC2k1g3OWZlSvMb01co10EKDIbZEI9zC/Mtt9b5VIY4LYo=
+	t=1763840241; cv=none; b=oJQkAntHFJrLis/Ywapa8jY67ZKlbz5ExiOFcUPe3zcwqmYpWLeLY4Cqaxgmpqc+1IfWM9c9IWBpCcp+jzFzx/qScfwunoLd4rg26yjT5Ize5//DKVZPj7iquMBG4ql+eUxgc1rdrwIPZI5fBWOp0Dqnae06qLRFn1QjYnhmAOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763784200; c=relaxed/simple;
-	bh=qyMzdzHYDMYqFQzW2ArNvJJeLkLm3tCCW/4nC3IuBAg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pG5fs89I2nidoKyvfX1g5jNUXJ3LTHyW2ASh2XSxoBmDpn1KeWYY1M9lbtw5r+EZ45ISkBGi7w77dqBE8s1qDk2E9l/yZ9h+/6UVQy4+2VYJKdfVYGjZeswMK7ZwS8jf0haO1WiOnE0Eh3c+Y1Q9mIubQCSjOQTaA9eKN4CaIcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gsQBhgDJ; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7b9387df58cso4229253b3a.3
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Nov 2025 20:03:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763784198; x=1764388998; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=iycavRWRgKLLyhh6xJLlNPBSnn2IV9PunT9+kNEJQN8=;
-        b=gsQBhgDJkQBE8FhyCa/li9K6vVv4OJGf4b8vCRfthyKsl0tSKGRcOuEnJCliMiswd+
-         W0i9mU4sOc7U/WPnLyPA4wegQGGRkMguX85VcipSI5T0a0LmNTqus+lMPiS3jw0ZP9Zb
-         2CWr9N/eEOyqTKO+BbiaOtpvCPJjl15BIDR3gBM0U/I4icqIfcy3x6l2wPG46KX9Zy6Q
-         XLROwuKDCdOM0CEK086sU8jlytrCwjviNyEGip3GVNrEG2nobz3t1Qsyrmb1duetQWbQ
-         rKlNeATEmoGbUBJE5KcdgSCrz3lgYDvcYtzi4ql/VgjsKaXGMN0h8bvkhWRBRtSzUIiM
-         qojQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763784198; x=1764388998;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iycavRWRgKLLyhh6xJLlNPBSnn2IV9PunT9+kNEJQN8=;
-        b=Xt7jgL9lnUKXmPxGKNLaGw1O1wrU/3Wc6DfUUot5y0Opc2N2O1Ojojpyru9gr6jqSS
-         hJ1b9L4tkni2QCdD2EENcrRP941/Qn1bE+8DtCu+jl53oYHCj2QWg9lqnhFPmopqpv8z
-         OvXV1KWKgfi71rDGyVR0BnQrC0Eb4oxXNA22yHUZ0m8tPON39hDLFwEyQWqLQRH8hps0
-         4stYZStX28qYg4VjGBW6ZrCw3WGAkbTvxgYUK8NPaY/UYbAeGovzK4OekgijkcKCJVVn
-         vrkPBELOOXnXfhwQks4OttXtL7pxo6dztrJ9c07ViXQO8y3jt1WOwbNd2O7s0fta7hHe
-         J2AQ==
-X-Gm-Message-State: AOJu0YxT9n7SQrAEVAKZCNoSKPYdyBUdLG6ckF+RIXtUjLfSFZ+b/EmX
-	S+9eUMmteCmUecBZob25U6kf4+nOmT6ekLPNSeaCyNHdzmuTDn8hOrByEliP2Q==
-X-Gm-Gg: ASbGnctgQydKUNzkLaWs1z8p7Z3w3xBV7TXvBWvtyivs3WI6KeOLlUwwRLjiKVZokAj
-	Yl89uUyFyKLeejWcdpr9nodZPpiLOihqQ70Ce2maek86uw9TNxn6jJ3V/KkvgU+Sqc6YX0UJkMF
-	Y4YOlofunLSdlb6QbSjyz7rfjALyoP1p1TdfR2eYnqIi9k0tj2j1wxZPbrjUIU7kdNs1wkn7zLc
-	m7FyRB6QKqWrlU5gvzTzlymnEHa0eOceBsXBD3Jpy0FMDogZZmxPxmfO4oO9T8O9c/V9i2IREqE
-	jmoBFXelwos8uyy4zWsj7PYxmVIZlXVuDoV1kgGV0MBGVfdUo/vW9RaOIn9y9EUPRPhnKbOkQlq
-	0og3zB+FwDtVpECYKw1bIk3j5e5UxJ9584dK5LsfXw8poXWcfrtA3aAeW7XusjJZUsW53hRMr6i
-	EiIGoDUP0/wrAeIA==
-X-Google-Smtp-Source: AGHT+IE3jKPOaur5eps4MWPr4XEYKybV30Y8+rLr+6clRzTzijxS8UqOjDCJsoY6kylVS9TEg57eaw==
-X-Received: by 2002:a05:6a00:22d5:b0:7ad:386e:3b6d with SMTP id d2e1a72fcca58-7c58e113265mr5277184b3a.21.1763784197870;
-        Fri, 21 Nov 2025 20:03:17 -0800 (PST)
-Received: from rigel ([203.220.65.85])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7c3f1264210sm7534223b3a.60.2025.11.21.20.03.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Nov 2025 20:03:17 -0800 (PST)
-Date: Sat, 22 Nov 2025 12:03:00 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Matthias Urlichs <matthias@urlichs.de>
+	s=arc-20240116; t=1763840241; c=relaxed/simple;
+	bh=UMw5M7YP40CHJrYF+E2n6FKbms2kcLkGdbf8HbvOSGc=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=W1Q236JFgPhh0YJ0KSzW3Uwl+6G2NEFWNWPEWq3SbIjTfqNayOKcK53ytiWOM76obBnN92Ychdw9dKPcNsau4kGdCumGigMuAlUFAUC3vTjZBxTRbJO32+FtlikLfeqZSftK9DGym5dARG9hT6LoTEI0dFi8r4zEZ67lB8DaVQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KYs9rJMh; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763840240; x=1795376240;
+  h=date:from:to:cc:subject:message-id;
+  bh=UMw5M7YP40CHJrYF+E2n6FKbms2kcLkGdbf8HbvOSGc=;
+  b=KYs9rJMhsGLAUzsvGjLECjaBkpM9yNZwrC+hiSUXbMBMSibUtqrq7S+4
+   b0SUj9WMYaQluqgpeZjMGVfzbKdAWx3C4CeBkUOUoFHWZXtANgXjSGVGV
+   XL4URyWaIQD0P6W6+1z+RuwkmZu+g6CgYjZMWh/XO3YDAO0RtsPVEO9qI
+   27U4e/g1XfkMuPl8/Ss2ad0syr8W1cQ03zlx7nr0YsXKNCvoLm9Rrz8wX
+   ErYRKPdcskBhNPwSoWd3jTH+OOJ+xaQnJ9sh+YKs5KEiCq41XWaZbyCSm
+   AKGTofMjWKzuoh98wR212kBYYuAbu5Z4EBaKxu6ZNAgoOJF9zDesxd7Gk
+   w==;
+X-CSE-ConnectionGUID: FpaeOw5wROKJl6y8RGuViw==
+X-CSE-MsgGUID: YdFTR8KoRQ2SALrTSAnaQg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11621"; a="91383430"
+X-IronPort-AV: E=Sophos;i="6.20,219,1758610800"; 
+   d="scan'208";a="91383430"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2025 11:37:19 -0800
+X-CSE-ConnectionGUID: Fvw+IKVSTuO3rVluBHnCEA==
+X-CSE-MsgGUID: 9QVGU7vRSzOph4fsXJQBXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,219,1758610800"; 
+   d="scan'208";a="192439663"
+Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 22 Nov 2025 11:37:18 -0800
+Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vMtQ4-0007n1-0v;
+	Sat, 22 Nov 2025 19:37:16 +0000
+Date: Sun, 23 Nov 2025 03:36:58 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
 Cc: linux-gpio@vger.kernel.org
-Subject: Re: Open-collector GPIO usage question
-Message-ID: <20251122040300.GA9997@rigel>
-References: <fa30998c-db6e-4ff3-b327-d8b6270979fa@urlichs.de>
+Subject: [linusw-pinctrl:devel] BUILD REGRESSION
+ da53dcd54cc35efa7a8236846bb39d40deeee034
+Message-ID: <202511230352.zZGPjqki-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fa30998c-db6e-4ff3-b327-d8b6270979fa@urlichs.de>
 
-On Fri, Nov 21, 2025 at 07:59:47PM +0100, Matthias Urlichs wrote:
-> Hi,
-> 
-> so I want to efficiently implement a bit-bang-ish protocol, meaning I'd like
-> to use events instead of busy-looping.
-> 
-> The hardware uses open-collector wiring.
-> 
-> This doesn't seem possible with Linux GPIO.
-> 
-> I cannot set input and output flags at the same time. Getting events
-> requires the input flag while the open-drain output flag requires, well,
-> output. Owch.
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: da53dcd54cc35efa7a8236846bb39d40deeee034  dt-bindings: pinctrl: cix,sky1-pinctrl: Drop duplicate newline
 
-The uAPI supports either a receiver role (input) or transmitter role
-(output).  You are not locked into either role - the requested line can be
-switched between the two as necessary [1].  So half-duplex.
-But, as you say, it doesn't support both simultaneously, so no full-duplex
-transceiver.
+Error/Warning (recently discovered and may have been fixed):
 
-Should you require that you have two options, either a use a second
-pin, an option you reject, or write an in-kernel driver for your
-protocol.
+    include/linux/pinctrl/pinconf-generic.h:235:(.ltext+0x299): undefined reference to `pinconf_generic_dt_node_to_map'
 
-> AFAICS all of this is enforced by
-> drivers/gpio/gpiolib-cdev.c::gpio_v2_line_flags_validate(), so not gpio
-> driver specific.
+Error/Warning ids grouped by kconfigs:
 
-cdev is user facing and is validating user input.
-It does not follow that it is the source of the restriction.
+recent_errors
+`-- um-randconfig-r121-20251121
+    `-- include-linux-pinctrl-pinconf-generic.h:(.ltext):undefined-reference-to-pinconf_generic_dt_node_to_map
 
-> 
-> As some hardware seems capable enough to trigger an interrupt on raw port
-> levels even if configured for "output", this seems overly restrictive …
-> also, I happen to not have enough GPIO ports to use two per wire.
+elapsed time: 1571m
 
-Some.  Not most.
-This is functionality that the vast majority of users do not require, but
-if you think it would be benificial then you can always submit a patch.
-But, to be clear, this will require more than removing that check in cdev.
+configs tested: 58
+configs skipped: 0
 
-Cheers,
-Kent.
+tested configs:
+alpha                   allnoconfig    gcc-15.1.0
+arc                     allnoconfig    gcc-15.1.0
+arc         randconfig-001-20251122    gcc-14.3.0
+arc         randconfig-002-20251122    gcc-9.5.0
+arm                     allnoconfig    clang-22
+arm         randconfig-001-20251122    clang-22
+arm         randconfig-002-20251122    clang-22
+arm         randconfig-003-20251122    clang-22
+arm         randconfig-004-20251122    gcc-12.5.0
+arm64                   allnoconfig    gcc-15.1.0
+arm64       randconfig-001-20251122    gcc-8.5.0
+arm64       randconfig-002-20251122    gcc-9.5.0
+arm64       randconfig-003-20251122    gcc-10.5.0
+arm64       randconfig-004-20251122    clang-22
+csky                    allnoconfig    gcc-15.1.0
+csky        randconfig-001-20251122    gcc-15.1.0
+csky        randconfig-002-20251122    gcc-14.3.0
+hexagon                 allnoconfig    clang-22
+hexagon     randconfig-001-20251122    clang-22
+hexagon     randconfig-002-20251122    clang-17
+i386                    allnoconfig    gcc-14
+loongarch               allnoconfig    clang-22
+loongarch   randconfig-001-20251122    gcc-12.5.0
+loongarch   randconfig-002-20251122    gcc-14.3.0
+m68k                    allnoconfig    gcc-15.1.0
+microblaze              allnoconfig    gcc-15.1.0
+mips                    allnoconfig    gcc-15.1.0
+nios2                   allnoconfig    gcc-11.5.0
+nios2       randconfig-001-20251122    gcc-11.5.0
+nios2       randconfig-002-20251122    gcc-8.5.0
+openrisc                allnoconfig    gcc-15.1.0
+parisc                  allnoconfig    gcc-15.1.0
+parisc      randconfig-001-20251123    gcc-14.3.0
+parisc      randconfig-002-20251123    gcc-14.3.0
+powerpc                 allnoconfig    gcc-15.1.0
+powerpc     randconfig-001-20251123    clang-22
+powerpc     randconfig-002-20251123    gcc-8.5.0
+riscv                   allnoconfig    gcc-15.1.0
+riscv       randconfig-001-20251122    clang-22
+riscv       randconfig-002-20251122    clang-22
+s390                    allnoconfig    clang-22
+s390        randconfig-001-20251122    clang-16
+s390        randconfig-002-20251122    gcc-13.4.0
+sh                      allnoconfig    gcc-15.1.0
+sh          randconfig-001-20251122    gcc-15.1.0
+sh          randconfig-002-20251122    gcc-10.5.0
+sparc                   allnoconfig    gcc-15.1.0
+sparc       randconfig-001-20251122    gcc-13.4.0
+sparc       randconfig-002-20251122    gcc-11.5.0
+sparc64     randconfig-001-20251122    gcc-13.4.0
+sparc64     randconfig-002-20251122    clang-22
+um                      allnoconfig    clang-22
+um          randconfig-001-20251122    clang-22
+um          randconfig-002-20251122    clang-22
+x86_64                  allnoconfig    clang-20
+xtensa                  allnoconfig    gcc-15.1.0
+xtensa      randconfig-001-20251122    gcc-12.5.0
+xtensa      randconfig-002-20251122    gcc-8.5.0
 
-[1] https://www.kernel.org/doc/html/latest/userspace-api/gpio/gpio-v2-line-set-config-ioctl.html
-
-
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
