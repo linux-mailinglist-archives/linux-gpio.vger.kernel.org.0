@@ -1,240 +1,169 @@
-Return-Path: <linux-gpio+bounces-29028-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29030-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A2BDC812A9
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 15:54:11 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99E12C813A0
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 16:05:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 25915347C6B
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 14:53:52 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 817344E150C
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 15:05:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31FDB31326F;
-	Mon, 24 Nov 2025 14:53:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04201296159;
+	Mon, 24 Nov 2025 15:05:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nMb6m25O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="by9I3/9R"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f43.google.com (mail-yx1-f43.google.com [74.125.224.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7F2303A1B
-	for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 14:53:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F078296BA8
+	for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 15:05:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763996018; cv=none; b=FLJkCHrnfeyxG/HNkDBkTYzz+QJcqGGRrRUea9YkzavVpZg89o+j5Uo9mPEsplOaYAE4GzPAHXy0gCyow0F3AZqd/w7L6oYLmA1kmRn3G49hf5CiI67lzD/jMbzGVbwfvDof5izuUr9xAicVSGYukYu+fd9SBPJRfnyXWNxKwJ8=
+	t=1763996743; cv=none; b=sX1gdrd87YliGBnQzqwmSBG26MgnGYAbe861wPWtTqCYxxiCD/vzYywjfRebsYXHnnLlhAvO8DsshgBgdtVK6/vo/atNLeex97sKnNnFbNUAXR46EjteFzDHdvJ1oC1r5RmBiZx/xugj5knCXKjWQUcSzDC0uhQzefaxxtNoBj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763996018; c=relaxed/simple;
-	bh=pqB+fORk4m1HommlyJq2ylzh3yrOPYjttsDy21RyYgU=;
+	s=arc-20240116; t=1763996743; c=relaxed/simple;
+	bh=PoLSXyv2cpCoYbZIQThrylYB7NYUdBsOThYAfuP3GX4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RWPfQ/BVaL7KJ7SM55uY3NFTIkWoOUqoZTOb6PDNMZVHr33sb0dZgBtBL0ptFqmN/nYMWakzGkJR31bQjtQmviRkWPHgxigXJXI1ZbZAFmHVZ6f0/mRg9EsHjrbWNtG8OBphiCelZkgonDemal0CY9QaVYo8eZdCi2kDLBpzBa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nMb6m25O; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0DA0C2BC86
-	for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 14:53:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763996018;
-	bh=pqB+fORk4m1HommlyJq2ylzh3yrOPYjttsDy21RyYgU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=nMb6m25OZAmG9HoIT2tbcmIEu13l7KCo7qOUGpyGEKCNQcoXyatztdhBRNLniFe9H
-	 iUdVditSVkqyQiMezr7SYacU6Fuh69mx8tZ6HDosgigcJ7TNS8ewvckx1mRHr6NlZt
-	 RWM8icBK1O8jQhaM4gp0YkOJQgjXWAyI8xiPVEYlJ3DkjIoq77cbsLvgsZRPjeajw5
-	 8sEh+NULl+wAlgsYj5XrTH8jDP5jIfl3lXYc/9MC+OwkZ77Z0TrZEH9HA6zGsIGsV0
-	 bCBliNvETdNSesdMuPYmG5wowk+JVHFxuQ5LpJR277mGaalzkxvAyPK9bCT6wAmjCe
-	 fm54dLY0Qsw/w==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6431b0a1948so7160180a12.3
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 06:53:38 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUuehswneS1jpYhaWxe3fe8WkA1XqTMlI40kHeXZL9f879fsB1nD9wde0M0ZH2L0urvHFEUdBaLuUw+@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoH6POF2rutSeGw8ixJnYtfY8wgoBwqFoOZqDoVsHBGkt29VvX
-	pbc8rIBi9usNrnLnVfgKn1e/3Qp2LkS/IrGF5b4R+zOpQur0Clyt6Bj+MOGn++rKAovcSlNF5sD
-	GlyR4xH/hFD/OvMGmXroLys4IxJEIdQ==
-X-Google-Smtp-Source: AGHT+IFMnKpbOKpALlRbon6njvQlHioDFBZ6ps4Ha77/hkzyeDp8YHGtY6SBZLINsmH8f54C5ek7l5d85xk5VAIwd4A=
-X-Received: by 2002:a05:6402:26c3:b0:639:f7b5:9c2d with SMTP id
- 4fb4d7f45d1cf-6455444987cmr9474492a12.9.1763996016204; Mon, 24 Nov 2025
- 06:53:36 -0800 (PST)
+	 To:Cc:Content-Type; b=p002k/kk5G2IAFqF10Fc/zBN9xLNdA5/atfmaB1sgEg0MSvBaFGgB/TFPOS/83XJYFTh88AuYLdEStAto/tPLFGDs+sjdpQlQYaEiynTsJe0EhizUnrgX5T9AZQldCM8sCOrG0SFDWQA5KReDcrCx0HYNqz2P3riVAKbGatBXrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=by9I3/9R; arc=none smtp.client-ip=74.125.224.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yx1-f43.google.com with SMTP id 956f58d0204a3-63f996d4e1aso4532623d50.0
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 07:05:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763996741; x=1764601541; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aP3c9SMShxEOwyq3nLN0BBLkAiPxhUwRn01NB/RvErU=;
+        b=by9I3/9RfPD3+2nqYts0uqjeNTDqcIxm+CMg+kSb5+qPyFOuOmnZ75ISWpjv/ISZ1Q
+         B2hliRUNPp0o/QEk/1J6udXd+ob1SEZk8Yq+/ryydOsUqQN5EbvyVZyAh/Mg5W1C5KgP
+         Vu2dfVZfKS1gtPNTSdczp24PiuK7Ju0wyK4JaW94N7izxKyH6qdi0kO5NXG3My+m5bKR
+         y1T/wjAiXHgJ8T4++Z+6csigOE6G35NVLjUyv35uoeQgEbPgigEEk7tfXJX3Me38ZTPo
+         qG+qjF0I/JUthopmpjDHxIUw9jWK+LQfbOF6M/NgGiLbMXwT/1rDrVMibwMjfCrZ/7ql
+         ZGsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763996741; x=1764601541;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=aP3c9SMShxEOwyq3nLN0BBLkAiPxhUwRn01NB/RvErU=;
+        b=Xz7c5fWoFlCDmHdO2tueo9FyYVOuhtk/cBosiCF8BYTRMCFk5lfNmjEcteD8AGA8al
+         QulJHMMZpdZ2EvaCxYG8EP5gZm9XjUc4R+qbN99bal9muGmrmIMwsOZ89RtLI80MsqwG
+         7Sbqp+rFSTTxWvPNG6/ZsZVMk6kDeGm98g5A+Bm2NWRCiTwqdr09NMqAzpU8eDpfq7r2
+         ER+vlNxPrAN3RM4p4rnd9XUre1oraGl8KC99J9ehltgJH/jI/8/gcix9wZkI9TbZYM2F
+         ClA0tay+6dnT0FrP1sePOIQIaUmplf1Ta5nWUXtNTxnOTeUU7HbukN50Rlp9MUfyVbSY
+         pSPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSee0xamJENgUAvU2O6HF5NVzx/xlzk8OhbMMqAA6uwD+X7Ha0cB+bVjWlqvuW/EvzmaNoHkGSZisf@vger.kernel.org
+X-Gm-Message-State: AOJu0YysiiXxRNZb0OEIy85QbRTS817nAaTdz0fO7wU/n5AbJC5STUtB
+	xblrjUKlV4uWCogy0cfVCCShefLUU3rqUwhc/+frPl7UJl64fua2FRZVJWTNtICRDB9OmyQ8uam
+	iv9k8HjQK9Cmo/iu3GHlvM+S+Rt4Xxw4=
+X-Gm-Gg: ASbGncvZWPDclL8zjRLcjYyHZzD0Ek6cgA23lmarJnj6c1gU9xh7rU0sWvTHmsy4NQb
+	IQORdqGys6HB9Z/f7uFv+ztp/jk01aE4E7mFBIGYSmjQ13UTke7fhuBIlciejkX84LJAbU/dHzx
+	CaZFmdz9TpCIiB84c+bueoM0v9Cg35Wg2T504bBX/GI6m3I1RKYAqFqNdSKJ9VOj01ldF5zhXzw
+	ZkC1k1BN/baVJIQ5ZEn/kAck8W1d3cBOv+ZR733YqgiFnILGjrSCjuOqjwo9RXvOnXGCf2m82O5
+	XOz9
+X-Google-Smtp-Source: AGHT+IFcExc3fv4iwEnjwdVElQfQ9ZjwdK/2sF8WqvaZYhh0951LGPDi6Qt6Ua7iwje0oVX+jz1IhOPYeDB7if/Vs7I=
+X-Received: by 2002:a53:8547:0:b0:63e:17d8:d985 with SMTP id
+ 956f58d0204a3-64302ac3230mr6411404d50.53.1763996741097; Mon, 24 Nov 2025
+ 07:05:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
- <20251015071420.1173068-2-herve.codina@bootlin.com> <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
-In-Reply-To: <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 24 Nov 2025 08:53:25 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
-X-Gm-Features: AWmQ_bmYzp1pjz08UuT7I12fxIYXbO1yVvjH9IMl7-quEF7iTRxZTROtz2B7mnw
-Message-ID: <CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
-Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT overlays"
-To: Kalle Niemi <kaleposti@gmail.com>
-Cc: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
-	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Mark Brown <broonie@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
-	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20251124002105.25429-1-jszhang@kernel.org> <20251124002105.25429-3-jszhang@kernel.org>
+ <CAOiHx==ttP2T=VLsSE9nLr5Cai_D+Khr6ePJVdOEim8ThWSdmA@mail.gmail.com>
+ <CAHp75VcRWODpL2DjAiPm0=bhTJfjs6RdNgtroRbvEW7ong3ALg@mail.gmail.com>
+ <CAOiHx==5TkW_-3yoqN_MzhdLKbMFvXRj-pWpuS5ahTM_ccVekw@mail.gmail.com> <aSRwXCfG1RimQZxX@smile.fi.intel.com>
+In-Reply-To: <aSRwXCfG1RimQZxX@smile.fi.intel.com>
+From: Jonas Gorski <jonas.gorski@gmail.com>
+Date: Mon, 24 Nov 2025 16:05:29 +0100
+X-Gm-Features: AWmQ_blzotQnnPxsn4ZXGglW8dyTnG1bAcKi8OqUcRNMcebAISg0ref3oiKykrg
+Message-ID: <CAOiHx==4NSMNVdW163nE-vYf_FtDjS5aHfj5chPr3n6D2Mt9Nw@mail.gmail.com>
+Subject: Re: [PATCH v5 02/14] gpio: brcmstb: Use modern PM macros
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Jisheng Zhang <jszhang@kernel.org>, 
+	Doug Berger <opendmb@gmail.com>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	bcm-kernel-feedback-list@broadcom.com, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Hoan Tran <hoan@os.amperecomputing.com>, Andy Shevchenko <andy@kernel.org>, 
+	Daniel Palmer <daniel@thingy.jp>, Romain Perier <romain.perier@gmail.com>, 
+	Grygorii Strashko <grygorii.strashko@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, 
+	Kevin Hilman <khilman@kernel.org>, Robert Jarzmik <robert.jarzmik@free.fr>, 
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>, Srinivas Neeli <srinivas.neeli@amd.com>, 
+	Michal Simek <michal.simek@amd.com>, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-omap@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 24, 2025 at 8:48=E2=80=AFAM Kalle Niemi <kaleposti@gmail.com> w=
-rote:
+On Mon, Nov 24, 2025 at 3:49=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
 >
-> On 10/15/25 10:13, Herve Codina wrote:
-> > From: Saravana Kannan <saravanak@google.com>
-> >
-> > This reverts commit 1a50d9403fb90cbe4dea0ec9fd0351d2ecbd8924.
-> >
-> > While the commit fixed fw_devlink overlay handling for one case, it
-> > broke it for another case. So revert it and redo the fix in a separate
-> > patch.
-> >
-> > Fixes: 1a50d9403fb9 ("treewide: Fix probing of devices in DT overlays")
-> > Reported-by: Herve Codina <herve.codina@bootlin.com>
-> > Closes: https://lore.kernel.org/lkml/CAMuHMdXEnSD4rRJ-o90x4OprUacN_rJgy=
-o8x6=3D9F9rZ+-KzjOg@mail.gmail.com/
-> > Closes: https://lore.kernel.org/all/20240221095137.616d2aaa@bootlin.com=
-/
-> > Closes: https://lore.kernel.org/lkml/20240312151835.29ef62a0@bootlin.co=
-m/
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > Link: https://lore.kernel.org/lkml/20240411235623.1260061-2-saravanak@g=
-oogle.com/
-> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> > Acked-by: Mark Brown <broonie@kernel.org>
-> > ---
-> >   drivers/bus/imx-weim.c    | 6 ------
-> >   drivers/i2c/i2c-core-of.c | 5 -----
-> >   drivers/of/dynamic.c      | 1 -
-> >   drivers/of/platform.c     | 5 -----
-> >   drivers/spi/spi.c         | 5 -----
-> >   5 files changed, 22 deletions(-)
-> >
-> > diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
-> > index 83d623d97f5f..87070155b057 100644
-> > --- a/drivers/bus/imx-weim.c
-> > +++ b/drivers/bus/imx-weim.c
-> > @@ -327,12 +327,6 @@ static int of_weim_notify(struct notifier_block *n=
-b, unsigned long action,
-> >                                "Failed to setup timing for '%pOF'\n", r=
-d->dn);
-> >
-> >               if (!of_node_check_flag(rd->dn, OF_POPULATED)) {
-> > -                     /*
-> > -                      * Clear the flag before adding the device so tha=
-t
-> > -                      * fw_devlink doesn't skip adding consumers to th=
-is
-> > -                      * device.
-> > -                      */
-> > -                     rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DEVICE=
-;
-> >                       if (!of_platform_device_create(rd->dn, NULL, &pde=
-v->dev)) {
-> >                               dev_err(&pdev->dev,
-> >                                       "Failed to create child device '%=
-pOF'\n",
-> > diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
-> > index eb7fb202355f..30b48a428c0b 100644
-> > --- a/drivers/i2c/i2c-core-of.c
-> > +++ b/drivers/i2c/i2c-core-of.c
-> > @@ -176,11 +176,6 @@ static int of_i2c_notify(struct notifier_block *nb=
-, unsigned long action,
-> >                       return NOTIFY_OK;
-> >               }
-> >
-> > -             /*
-> > -              * Clear the flag before adding the device so that fw_dev=
-link
-> > -              * doesn't skip adding consumers to this device.
-> > -              */
-> > -             rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DEVICE;
-> >               client =3D of_i2c_register_device(adap, rd->dn);
-> >               if (IS_ERR(client)) {
-> >                       dev_err(&adap->dev, "failed to create client for =
-'%pOF'\n",
-> > diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> > index 2eaaddcb0ec4..b5be7484fb36 100644
-> > --- a/drivers/of/dynamic.c
-> > +++ b/drivers/of/dynamic.c
-> > @@ -225,7 +225,6 @@ static void __of_attach_node(struct device_node *np=
-)
-> >       np->sibling =3D np->parent->child;
-> >       np->parent->child =3D np;
-> >       of_node_clear_flag(np, OF_DETACHED);
-> > -     np->fwnode.flags |=3D FWNODE_FLAG_NOT_DEVICE;
-> >
-> >       raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> >
-> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> > index f77cb19973a5..ef9445ba168b 100644
-> > --- a/drivers/of/platform.c
-> > +++ b/drivers/of/platform.c
-> > @@ -739,11 +739,6 @@ static int of_platform_notify(struct notifier_bloc=
-k *nb,
-> >               if (of_node_check_flag(rd->dn, OF_POPULATED))
-> >                       return NOTIFY_OK;
-> >
-> > -             /*
-> > -              * Clear the flag before adding the device so that fw_dev=
-link
-> > -              * doesn't skip adding consumers to this device.
-> > -              */
-> > -             rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DEVICE;
-> >               /* pdev_parent may be NULL when no bus platform device */
-> >               pdev_parent =3D of_find_device_by_node(parent);
-> >               pdev =3D of_platform_device_create(rd->dn, NULL,
-> > diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> > index 2e0647a06890..b22944a207c9 100644
-> > --- a/drivers/spi/spi.c
-> > +++ b/drivers/spi/spi.c
-> > @@ -4791,11 +4791,6 @@ static int of_spi_notify(struct notifier_block *=
-nb, unsigned long action,
-> >                       return NOTIFY_OK;
-> >               }
-> >
-> > -             /*
-> > -              * Clear the flag before adding the device so that fw_dev=
-link
-> > -              * doesn't skip adding consumers to this device.
-> > -              */
-> > -             rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DEVICE;
-> >               spi =3D of_register_spi_device(ctlr, rd->dn);
-> >               put_device(&ctlr->dev);
-> >
-> Sorry, some of you will receive this message now for second time. First
-> message was sent to older series of patches.
-> -
+> On Mon, Nov 24, 2025 at 03:20:00PM +0100, Jonas Gorski wrote:
+> > On Mon, Nov 24, 2025 at 2:52=E2=80=AFPM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Mon, Nov 24, 2025 at 2:40=E2=80=AFPM Jonas Gorski <jonas.gorski@gm=
+ail.com> wrote:
+> > > > On Mon, Nov 24, 2025 at 1:39=E2=80=AFAM Jisheng Zhang <jszhang@kern=
+el.org> wrote:
 >
-> Hello,
+> ...
 >
-> Test system testing drivers for ROHM ICs bisected this commit to cause
-> BD71847 drivers probe to not be called.
+> > > > >  static const struct dev_pm_ops brcmstb_gpio_pm_ops =3D {
+> > > > > -       .suspend_noirq  =3D brcmstb_gpio_suspend,
+> > > > > -       .resume_noirq =3D brcmstb_gpio_resume,
+> > > > > +       .suspend_noirq =3D pm_sleep_ptr(brcmstb_gpio_suspend),
+> > > > > +       .resume_noirq =3D pm_sleep_ptr(brcmstb_gpio_resume),
+> > > > >  };
+>
+> ...
+>
+> > > > > -               .pm =3D &brcmstb_gpio_pm_ops,
+> > > > > +               .pm =3D pm_sleep_ptr(&brcmstb_gpio_pm_ops),
+> > > >
+> > > > won't this cause a "brcmstb_gpio_pm_ops is unused" compile warning =
+for
+> > > > !CONFIG_PM_SLEEP?
+> > > >
+> > > > You probably need to add a __maybe_unused to brcmstb_gpio_pm_ops
+> > > > (which incidentally DEFINE_NOIRQ_DEV_PM_OPS() also doesn't set, but
+> > > > all other *_DEV_PM_OPS() macros do).
+>
+> Do they? I mean the modern ones and not that are deprecated.
+>
+> > > Shouldn't it be covered by the same trick as pm_sleep_ptr() does for =
+functions?
+> >
+> > pm_sleep_ptr() becomes NULL for !CONFIG_PM_SLEEP, so there is no
+> > reference then anymore to brcmstb_gpio_pm_ops. You would need a
+> > wrapper for brcmstb_gpio_pm_ops itself to conditionally define it to
+> > avoid the warning, or add __maybe_unused to it to silence it.
+>
+> PTR_IF() magic is exactly to make sure compiler will have a visibility wh=
+ile
+> dropping a dead code. Did I miss anything?
 
-This driver (and overlay support) is in linux-next or something out of
-tree on top of linux-next?
+No, I just was working with old assumptions, so my bad. I faintly
+remember that they used to work that way, but maybe I also
+misremember. TIL. So disregard my comment.
 
-Rob
+> > Note how SIMPLE_DEV_PM_OPS() and UNIVERSAL_DEV_PM_OPS() tag the struct
+> > with it (for that reason I assume).
+>
+> Both are deprecated. Not a good orienteer.
+> None of the new approach uses __maybe_unused. (See DEFINE_*() macros in p=
+m.h.)
+
+Maybe that some were using it was confusing me into thinking it is required=
+.
+
+Best regards,
+Jonas
 
