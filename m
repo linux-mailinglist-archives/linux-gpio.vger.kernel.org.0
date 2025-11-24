@@ -1,166 +1,167 @@
-Return-Path: <linux-gpio+bounces-29031-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29032-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id C50B3C8144E
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 16:14:28 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0AF1C8146F
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 16:17:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 201114E04F5
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 15:14:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4FDFE3A63E5
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 15:17:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5129F313267;
-	Mon, 24 Nov 2025 15:14:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFD8D31328E;
+	Mon, 24 Nov 2025 15:17:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Whl2gLr7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ui+1Jsry"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2F32749FE
-	for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 15:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D657527FB1E;
+	Mon, 24 Nov 2025 15:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763997255; cv=none; b=IxzdNXOerXBjFQankabCT0Cb/5m5tjfBN/yPi3+Ih1JeifprlXrC/P0copFcvCe2b3HHUXcO7LxZA3gYKtmCt7LMJ929PMsHRSOF4Zm/vy/195qU95dWog45FjvZC99qK4EMmb2uf/9xp/qVPT3NDtvFI96J91ZOYw76ipceoPk=
+	t=1763997453; cv=none; b=SMPzKEhaa0RY1waZwuUuoYMKXpUyQrC160kxR6r9MdDmk2rnLxBg4TbIzJ+hBoLHIm39io9VTUtfNWjMhOXo5uaZH3iXKeQ7eH49js2QuDmg0woMZsQphbAdubMtunnVeZtDAJiMrF60fXI7D3Gjpk2/asNhYvawuKVnqxKCdcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763997255; c=relaxed/simple;
-	bh=SD0fxEZaReCl69EXDf9rUSFR7lMwBcOjOcnnNwxh4JU=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=s7avAh6Cb4RFWIkj9hfN8FtPsVET28WTgWra6geI/4ZUe08Ln2NYjTpeeSgbx5FGgm+OvlloSjPu4TH4EYgDf5u38PZyBapQAx+H44vThnTszowq9woNnE3LXx1Y3kMEjJ1UPG9NnG+Ap/uECTCkOcNp7jfwzgx5HbZo7KrHZVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Whl2gLr7; arc=none smtp.client-ip=198.175.65.18
+	s=arc-20240116; t=1763997453; c=relaxed/simple;
+	bh=x0uOwhcgX62MgVEbKMaR1GMOYL/hXhDCZZRQClzW0lo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RsXgL8qjvrVd6F+riupxfJ557czq+TZCmBcACb/DmKoY+sWLMIrJHpbLqGgoYC6+keAG0kb1l1DVVgfTRaJRy53x7tdQ0OX6GRza6se7bBbKQkH3ymNEi4wgauw5KkuBQ95Z9NkU+Qm0JVqt3YKbbqChJx9VucagjLKNPLBbMHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ui+1Jsry; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763997254; x=1795533254;
-  h=date:from:to:cc:subject:message-id;
-  bh=SD0fxEZaReCl69EXDf9rUSFR7lMwBcOjOcnnNwxh4JU=;
-  b=Whl2gLr7xXo/LU+eMCgimBZHgiZM1CxNBxag4UnZ9AxKuKX6P0vWuxoA
-   3K2TuYW9KEOJFZ7t7hi33prgXWA5LobbmxBfy3lHA+/XoQepMDHXArlrj
-   D5XfDpb5oGFrcuTAZlt+CcpfrLljmBPehzpXrsK3x+vL9tabUlFzlfoEt
-   2qlJ2vbkCgD66cP6leGXzM4jqk7axBq4FyGO/nZx0koAyBk+A06Ng9n7u
-   3ZlolyzHYFdtMzEPV9mADdL8zhbHUv4KjIYH+5SCNZkdPlaS/i0JE4qRG
-   l1h+UHcbzZY/hfqs6/F3nh7dLV69ukzEbQ2Nmj46ctEAZWE3IbXVGflB5
-   Q==;
-X-CSE-ConnectionGUID: 5MiLY6A5Q0+FguftGVlpvw==
-X-CSE-MsgGUID: 5/FNjnbgRiithDRbQol+cA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11623"; a="66027596"
+  t=1763997452; x=1795533452;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=x0uOwhcgX62MgVEbKMaR1GMOYL/hXhDCZZRQClzW0lo=;
+  b=Ui+1JsryRAhhSP7AdEtiaprPKk9Ko+IIYHEJs6zO+/T/34aUEX2vKQ2X
+   xrRII4UYZcv1/3QmY0qxM5GZN2gGD3PuPOUaIYC73ULOE8KjKv6bEw4Mc
+   xSguHm4suSOELiy0flskWL6DsE01Jugr51wZ0tOsb7aamCiIZqvoMJ092
+   KvZpuZI+FUfV/uEtSZ09I7UOprn8xXP1FLiilv38F45HmJ+GkVDvLEsQ5
+   Dw0ceAQCYzFQCCye62ohdvsAcjBsqtSAJ4uSgNY/tZQ0iP8k5mmjvJui4
+   FpSLdc/KvEqle93G0dZPTTUjuE43Swh9FLVk6lB9rPuHsEaGV++ymKMvt
+   A==;
+X-CSE-ConnectionGUID: Po9YqpBuQ2OFZpHihVwokw==
+X-CSE-MsgGUID: W0XIf1Y/RQ2pJiy8PuEV4g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11623"; a="65948986"
 X-IronPort-AV: E=Sophos;i="6.20,223,1758610800"; 
-   d="scan'208";a="66027596"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2025 07:14:14 -0800
-X-CSE-ConnectionGUID: c+Bs0LSzSiOYnUqvDyqHlw==
-X-CSE-MsgGUID: Lcfo/wo+TvCGG/GUaPKE7A==
+   d="scan'208";a="65948986"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2025 07:17:32 -0800
+X-CSE-ConnectionGUID: QCjIeMmcS0C86okVtibT9w==
+X-CSE-MsgGUID: G19QPtMhR6GW1RhWgN4a/g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.20,223,1758610800"; 
-   d="scan'208";a="223334857"
-Received: from lkp-server01.sh.intel.com (HELO 4664bbef4914) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 24 Nov 2025 07:14:12 -0800
-Received: from kbuild by 4664bbef4914 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vNYGX-000000000qR-44ao;
-	Mon, 24 Nov 2025 15:14:09 +0000
-Date: Mon, 24 Nov 2025 23:13:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-current] BUILD SUCCESS
- 2b6d546ba83e8332870741eca469aed662d819ff
-Message-ID: <202511242321.dXO5d5Tn-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+   d="scan'208";a="193147709"
+Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.244.5])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2025 07:17:25 -0800
+Date: Mon, 24 Nov 2025 17:17:23 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Jonas Gorski <jonas.gorski@gmail.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Jisheng Zhang <jszhang@kernel.org>, Doug Berger <opendmb@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	bcm-kernel-feedback-list@broadcom.com,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Hoan Tran <hoan@os.amperecomputing.com>,
+	Andy Shevchenko <andy@kernel.org>, Daniel Palmer <daniel@thingy.jp>,
+	Romain Perier <romain.perier@gmail.com>,
+	Grygorii Strashko <grygorii.strashko@ti.com>,
+	Santosh Shilimkar <ssantosh@kernel.org>,
+	Kevin Hilman <khilman@kernel.org>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+	Srinivas Neeli <srinivas.neeli@amd.com>,
+	Michal Simek <michal.simek@amd.com>, linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-omap@vger.kernel.org
+Subject: Re: [PATCH v5 02/14] gpio: brcmstb: Use modern PM macros
+Message-ID: <aSR3AwjQnB6EH7Nv@smile.fi.intel.com>
+References: <20251124002105.25429-1-jszhang@kernel.org>
+ <20251124002105.25429-3-jszhang@kernel.org>
+ <CAOiHx==ttP2T=VLsSE9nLr5Cai_D+Khr6ePJVdOEim8ThWSdmA@mail.gmail.com>
+ <CAHp75VcRWODpL2DjAiPm0=bhTJfjs6RdNgtroRbvEW7ong3ALg@mail.gmail.com>
+ <CAOiHx==5TkW_-3yoqN_MzhdLKbMFvXRj-pWpuS5ahTM_ccVekw@mail.gmail.com>
+ <aSRwXCfG1RimQZxX@smile.fi.intel.com>
+ <CAOiHx==4NSMNVdW163nE-vYf_FtDjS5aHfj5chPr3n6D2Mt9Nw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOiHx==4NSMNVdW163nE-vYf_FtDjS5aHfj5chPr3n6D2Mt9Nw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-branch HEAD: 2b6d546ba83e8332870741eca469aed662d819ff  MAINTAINERS: update my email address
+On Mon, Nov 24, 2025 at 04:05:29PM +0100, Jonas Gorski wrote:
+> On Mon, Nov 24, 2025 at 3:49 PM Andy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
+> > On Mon, Nov 24, 2025 at 03:20:00PM +0100, Jonas Gorski wrote:
+> > > On Mon, Nov 24, 2025 at 2:52 PM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
+> > > > On Mon, Nov 24, 2025 at 2:40 PM Jonas Gorski <jonas.gorski@gmail.com> wrote:
+> > > > > On Mon, Nov 24, 2025 at 1:39 AM Jisheng Zhang <jszhang@kernel.org> wrote:
 
-elapsed time: 7448m
+...
 
-configs tested: 73
-configs skipped: 0
+> > > > > >  static const struct dev_pm_ops brcmstb_gpio_pm_ops = {
+> > > > > > -       .suspend_noirq  = brcmstb_gpio_suspend,
+> > > > > > -       .resume_noirq = brcmstb_gpio_resume,
+> > > > > > +       .suspend_noirq = pm_sleep_ptr(brcmstb_gpio_suspend),
+> > > > > > +       .resume_noirq = pm_sleep_ptr(brcmstb_gpio_resume),
+> > > > > >  };
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+...
 
-tested configs:
-alpha                   allnoconfig    gcc-15.1.0
-alpha                  allyesconfig    gcc-15.1.0
-arc                    allmodconfig    gcc-15.1.0
-arc                     allnoconfig    gcc-15.1.0
-arc                    allyesconfig    gcc-15.1.0
-arc         randconfig-001-20251119    gcc-10.5.0
-arc         randconfig-002-20251119    gcc-8.5.0
-arm                     allnoconfig    clang-22
-arm         randconfig-001-20251119    gcc-8.5.0
-arm         randconfig-002-20251119    clang-16
-arm         randconfig-003-20251119    clang-22
-arm64                   allnoconfig    gcc-15.1.0
-csky                   allmodconfig    gcc-15.1.0
-csky                    allnoconfig    gcc-15.1.0
-hexagon                allmodconfig    clang-17
-hexagon                 allnoconfig    clang-22
-i386                   allmodconfig    gcc-14
-i386                    allnoconfig    gcc-14
-i386                   allyesconfig    gcc-14
-loongarch              allmodconfig    clang-19
-loongarch               allnoconfig    clang-22
-m68k                   allmodconfig    gcc-15.1.0
-m68k                    allnoconfig    gcc-15.1.0
-m68k                   allyesconfig    gcc-15.1.0
-microblaze              allnoconfig    gcc-15.1.0
-microblaze             allyesconfig    gcc-15.1.0
-mips                    allnoconfig    gcc-15.1.0
-mips                   allyesconfig    gcc-15.1.0
-nios2                  allmodconfig    gcc-11.5.0
-nios2                   allnoconfig    gcc-11.5.0
-openrisc               allmodconfig    gcc-15.1.0
-openrisc                allnoconfig    gcc-15.1.0
-parisc                 allmodconfig    gcc-15.1.0
-parisc                  allnoconfig    gcc-15.1.0
-parisc                 allyesconfig    gcc-15.1.0
-parisc      randconfig-001-20251120    gcc-11.5.0
-parisc      randconfig-002-20251120    gcc-12.5.0
-powerpc                allmodconfig    gcc-15.1.0
-powerpc                 allnoconfig    gcc-15.1.0
-powerpc     randconfig-001-20251120    clang-22
-powerpc     randconfig-002-20251120    clang-22
-powerpc64   randconfig-001-20251120    clang-22
-powerpc64   randconfig-002-20251120    gcc-13.4.0
-riscv                  allmodconfig    clang-22
-riscv                   allnoconfig    gcc-15.1.0
-riscv                  allyesconfig    clang-16
-riscv       randconfig-001-20251119    gcc-15.1.0
-riscv       randconfig-002-20251119    gcc-10.5.0
-s390                   allmodconfig    clang-18
-s390                    allnoconfig    clang-22
-s390                   allyesconfig    gcc-15.1.0
-s390        randconfig-001-20251119    gcc-8.5.0
-s390        randconfig-002-20251119    clang-22
-sh                     allmodconfig    gcc-15.1.0
-sh                      allnoconfig    gcc-15.1.0
-sh                     allyesconfig    gcc-15.1.0
-sh          randconfig-001-20251119    gcc-11.5.0
-sh          randconfig-002-20251119    gcc-9.5.0
-sparc                   allnoconfig    gcc-15.1.0
-sparc64                allmodconfig    clang-22
-um                     allmodconfig    clang-19
-um                      allnoconfig    clang-22
-um                     allyesconfig    gcc-14
-x86_64                  allnoconfig    clang-20
-x86_64                        kexec    clang-20
-x86_64                     rhel-9.4    clang-20
-x86_64                 rhel-9.4-bpf    gcc-14
-x86_64                rhel-9.4-func    clang-20
-x86_64          rhel-9.4-kselftests    clang-20
-x86_64               rhel-9.4-kunit    gcc-14
-x86_64                 rhel-9.4-ltp    gcc-14
-x86_64                rhel-9.4-rust    clang-20
-xtensa                  allnoconfig    gcc-15.1.0
+> > > > > > -               .pm = &brcmstb_gpio_pm_ops,
+> > > > > > +               .pm = pm_sleep_ptr(&brcmstb_gpio_pm_ops),
+> > > > >
+> > > > > won't this cause a "brcmstb_gpio_pm_ops is unused" compile warning for
+> > > > > !CONFIG_PM_SLEEP?
+> > > > >
+> > > > > You probably need to add a __maybe_unused to brcmstb_gpio_pm_ops
+> > > > > (which incidentally DEFINE_NOIRQ_DEV_PM_OPS() also doesn't set, but
+> > > > > all other *_DEV_PM_OPS() macros do).
+> >
+> > Do they? I mean the modern ones and not that are deprecated.
+> >
+> > > > Shouldn't it be covered by the same trick as pm_sleep_ptr() does for functions?
+> > >
+> > > pm_sleep_ptr() becomes NULL for !CONFIG_PM_SLEEP, so there is no
+> > > reference then anymore to brcmstb_gpio_pm_ops. You would need a
+> > > wrapper for brcmstb_gpio_pm_ops itself to conditionally define it to
+> > > avoid the warning, or add __maybe_unused to it to silence it.
+> >
+> > PTR_IF() magic is exactly to make sure compiler will have a visibility while
+> > dropping a dead code. Did I miss anything?
+> 
+> No, I just was working with old assumptions, so my bad. I faintly
+> remember that they used to work that way, but maybe I also
+> misremember. TIL. So disregard my comment.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+NP. I'm glad everything is clear now about them.
+
+> > > Note how SIMPLE_DEV_PM_OPS() and UNIVERSAL_DEV_PM_OPS() tag the struct
+> > > with it (for that reason I assume).
+> >
+> > Both are deprecated. Not a good orienteer.
+> > None of the new approach uses __maybe_unused. (See DEFINE_*() macros in pm.h.)
+> 
+> Maybe that some were using it was confusing me into thinking it is required.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
