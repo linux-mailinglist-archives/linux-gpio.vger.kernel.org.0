@@ -1,254 +1,178 @@
-Return-Path: <linux-gpio+bounces-29036-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29037-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34909C81C6A
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 18:04:01 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27F56C81CFA
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 18:08:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B8FE64E7F7D
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 17:02:11 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D37C44E624C
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 17:06:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0D6731771E;
-	Mon, 24 Nov 2025 17:01:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEF092BEC2D;
+	Mon, 24 Nov 2025 17:06:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ho+Plmxn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MwUJyBAz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C4C63176E3
-	for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 17:01:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD10D2C1581
+	for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 17:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764003718; cv=none; b=Hamc6DgCoIAHBROCNNd0cLb/i01mJG5BKuWqILChw1oeBx13zseJ7d++vTQJvhCWfo3FpoPDub2doab5A4bAlR/F9Guny8XJJ3DBfFcyYgR/Jm6Bk1iLMcjm/2VpbBy9KB4XU2tjiwWcD/Iy9TFLU+XtxpFtAdxxNyZEK687R2E=
+	t=1764003977; cv=none; b=T3kwaZjUd0azE8AcgqQUnVHl0Lunrzd9OfrA6Trai3u8CnGUybDUhtWHZLhjgiMHqxX2zay8b0MPPO/yHxdUbft3mTtPe7ba5/p55M07ONhUwtjGFTM6EL/X7GqfgCZR8tXACQnBvYM/QcZtq1Kql6dcWnz3DFMzJNLevaKatzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764003718; c=relaxed/simple;
-	bh=94qwcdvISJhCCZRqsIa3gf9UsdjE7+PgQuqqXXX1d/I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dttssPxuGpwgjjVE4XX1axH08VaVCsuXVsP0OMVlX8B+Kv12+Z8C2lIFO00mdIDy2/Z5rtRWUReJc/opA46tf5xD3KBAXg51Lpp/DKKU1Js/JvAmtbx37kAAbxiD9Aqvt3nVMOPQw1T2VIXpYaOMSzzu/iziQ0/zZVHEkkymHOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ho+Plmxn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73D67C19423
-	for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 17:01:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764003718;
-	bh=94qwcdvISJhCCZRqsIa3gf9UsdjE7+PgQuqqXXX1d/I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ho+Plmxnn3P+pnMYlBxGhObFUIhIv1nmt5vGVNYOaOiMqlI6qvZReFpUwxPflv6fi
-	 9k+17jWbDsPhDsj09KouEkcKH6FdB2ThMFrqbQiy0jAx2I/qC4CF+aRsgaA11NQv7Y
-	 owa480v3GZJC7Cok+f6Hrxa4aEfcUDUf/OOE5wacbstQIT23mkf5hBaEKNr9ojEv6H
-	 k3sBSq5GG6+M69O2fNeW5hznx1mdKZjt8CUPaCW6RlsFw0tJkF4Kphw7I+c5HpXbYP
-	 jU9zvwtwJjoh6ioZEg/r6Xhstgz5x2OKy8jwFb/TdT3sDPCGS8ixIfvGpQJGNnJ/aX
-	 0vQ3kzmXveFeA==
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b73161849e1so820898966b.2
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 09:01:58 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVIpgU+coeWYOVCCG0U2+tIFMix4A2m2hl0yy4cjTFOrRayX4FkTsFkgv2baSJ8Lp3XXixXFwpYoiug@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyt9yvHyuDqWotWC/1mvSi79L1dj93oO1tDzi2W/osFWZdQHhXy
-	uo4zdWMI8+pB2INPaS2Ivh6fMaIDtxFpps0+2KhbbK9EYJdObvzJg7ZbYv7G0GEoPrYh3Gs27LJ
-	Cb7KlGi2iMBu0Vvlyq0UtbuGRQ4Vk0Q==
-X-Google-Smtp-Source: AGHT+IFXf67K5MLIAp6akzlHdfYGJk0vOgsjBiRm9AVrjqIUmIUGdpSyKqEED/1RG1dv63/7cyPADsAtAzCIEsIc398=
-X-Received: by 2002:a17:907:724c:b0:b71:cec2:d54 with SMTP id
- a640c23a62f3a-b767183f903mr1306003666b.57.1764003716998; Mon, 24 Nov 2025
- 09:01:56 -0800 (PST)
+	s=arc-20240116; t=1764003977; c=relaxed/simple;
+	bh=JYk0DlsmrYkHa9pnunJP5MMBiIh8+pvQoxXtIvOuszA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JUBTHXFRwYtCnnUXTGBgXQNGcUwGvOOf6X666/12qavmARk9x79raS7v/4ZbZWuStU53EmR7HBBwsZwcpzIARi8wHg55mKzBLVPjpN7wb8hZp9uA4lWQY/XOW6HA18OWm0aKd0VzWrhiRaZdawWgA/OUHGyF73fiVnv8uROx3ZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MwUJyBAz; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-297ef378069so41445855ad.3
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 09:06:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1764003975; x=1764608775; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gnHv7SSUkVZXm9MlHQF7vnbKRHnkGY//zn2BWH6fbi8=;
+        b=MwUJyBAzQ9279jRUYy/gey3eDSFddfZgnMDp1XBvmQn2JmUMyA94hFPzfFhvrTxi3A
+         cJj8Wlz3fXhfF1diLtyLd0BBm+X4O57exrGlyqWjKStfYkF7WEGCcg7+hvEeF7ZWP9Z9
+         Li6zEH1tyiNYBB7rSf9Lp/eIIJ9Rnk8JbKeesmrEd/DDc7RDx6LkqhTvo/oQIMGA1MeV
+         4wOoUWi7jhf9NoEjlpkwIZTFhV+Gm8wEOlvFIX2DqJda7DpKTjvHv+8QoRT3UMLxK7XW
+         X9D0JAadElptu76pPK0UGsiRf7D090GanoeURyTrQfBWkJdLWnsO/n8/VEkk5yH5JeaJ
+         7ekQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764003975; x=1764608775;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gnHv7SSUkVZXm9MlHQF7vnbKRHnkGY//zn2BWH6fbi8=;
+        b=XXlslBDhHst2H7dijEO/hDvZuQW2JU6rUdrC1rcijQq6ZfoVs1Nd6um+GG4fwyfuvD
+         icap9nkFTmlMXtIRTxf1yGoMlF7u8vzFHIT1ZEVN3bRhQgIKngftRttrtwqkknAP/p0K
+         ZirpM7n6tYJlfz7K3UEFro3JEI8owQtRY81z4QE1eYTlgJXOCWhitsglNrz2glPHWlNN
+         3jjn8UOBUHc37Ag5W86RaIdJtsgUSbqjqEKNmUM9wluwgJBaVe5McDBOPRUTYj8IH0kc
+         mY9FBmNM+LE+YNWzCDY21zq8vDIY2gT11ihDLz2ap8oQH1KR3cEzZpmpfGwZbRSNRyVj
+         Pmfw==
+X-Forwarded-Encrypted: i=1; AJvYcCURGLbTMEObMXNfy6dSerzqXD0t6gfi9Cnrwq4ZVuhd4IVakKbPrOeUM4kLekB0eKAjLt0yaJ8cziQi@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVmY7iE52Nx2y70xVoZww3Vv9cqwsWibdpDmP17Jl0uh1Gd/Z/
+	ZwimkPVXQ41u/zIFqlDgFlXRV/oQdcXs/f8gpk6VFpuhNAk3nHi7+gupDuBSdsKHKhM=
+X-Gm-Gg: ASbGnctwGOsTdHdhGjiN2PvKU6A8o2V56/vqvVsOE/X4Iio4HSk6wYi4YCTQt0Voq+D
+	MEfazFk9yA59jXmdUN1vPmqE0i6FYy8SCSvzHwhIUh8cOMAckkiaKWyLldDn8EMWoS8iX4GPqT0
+	EGRXsoXjmEMQsaJEy1n/jvPXceqTfrxCqMrnt+EgY0gPqb/cxgsiq2RF9722FR2DBjDiyQc7zAi
+	n5vpzhuHwAuPkRAGYJHB93bHZTD1EHmL7NrETPMXMETSMovz35v97Hw7HYLjtir42YuZup4ipHM
+	0mPW/EzmsjvdsxwU3RPx3IYrqurq76NU7LOznAfEJcW+lQpiPnWfgWxLcYOH9cBjjTMgN+ffTxA
+	eiEkvpWXjAoZFHa/CljW3rMlymNSZLUKBMUkjD9S3MC4LZx5C9TNDgBeLFWDo8y8hg3KyAPK9XX
+	Tr1bTkKE7jNA2YAuw4Jq6OvkVt
+X-Google-Smtp-Source: AGHT+IFFll1ZBv/7+NTNtf66eRKGB3OEh6EXFU3EYSb6koOyW950nZNuI/PfU8U/2nZsnDgImLDneQ==
+X-Received: by 2002:a17:903:384c:b0:27c:56af:88ea with SMTP id d9443c01a7336-29b6bfa1f66mr134598965ad.60.1764003974768;
+        Mon, 24 Nov 2025 09:06:14 -0800 (PST)
+Received: from p14s ([2604:3d09:148c:c800:aebb:f23e:8a7c:d95d])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29b5b13965csm142296595ad.30.2025.11.24.09.06.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Nov 2025 09:06:14 -0800 (PST)
+Date: Mon, 24 Nov 2025 10:06:11 -0700
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Shenwei Wang <shenwei.wang@nxp.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>,
+	linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-imx@nxp.com, Randy Dunlap <rdunlap@infradead.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v5 0/5] Enable Remote GPIO over RPMSG on i.MX Platform
+Message-ID: <aSSQg22Kt-565T8S@p14s>
+References: <20251104203315.85706-1-shenwei.wang@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
- <20251015071420.1173068-2-herve.codina@bootlin.com> <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
- <CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com> <5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com>
-In-Reply-To: <5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 24 Nov 2025 11:01:45 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
-X-Gm-Features: AWmQ_bmkdBVVKkq4S-uwQ2SqCH_pnOkbmYTHFkvDFxh_4sc4_x1p8K7UCt8Q0zg
-Message-ID: <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
-Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT overlays"
-To: Kalle Niemi <kaleposti@gmail.com>
-Cc: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
-	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Mark Brown <broonie@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
-	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, mazziesaccount@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251104203315.85706-1-shenwei.wang@nxp.com>
 
-On Mon, Nov 24, 2025 at 10:44=E2=80=AFAM Kalle Niemi <kaleposti@gmail.com> =
-wrote:
->
->
-> On 11/24/25 16:53, Rob Herring wrote:
-> > On Mon, Nov 24, 2025 at 8:48=E2=80=AFAM Kalle Niemi <kaleposti@gmail.co=
-m> wrote:
-> >> On 10/15/25 10:13, Herve Codina wrote:
-> >>> From: Saravana Kannan <saravanak@google.com>
-> >>>
-> >>> This reverts commit 1a50d9403fb90cbe4dea0ec9fd0351d2ecbd8924.
-> >>>
-> >>> While the commit fixed fw_devlink overlay handling for one case, it
-> >>> broke it for another case. So revert it and redo the fix in a separat=
-e
-> >>> patch.
-> >>>
-> >>> Fixes: 1a50d9403fb9 ("treewide: Fix probing of devices in DT overlays=
-")
-> >>> Reported-by: Herve Codina <herve.codina@bootlin.com>
-> >>> Closes: https://lore.kernel.org/lkml/CAMuHMdXEnSD4rRJ-o90x4OprUacN_rJ=
-gyo8x6=3D9F9rZ+-KzjOg@mail.gmail.com/
-> >>> Closes: https://lore.kernel.org/all/20240221095137.616d2aaa@bootlin.c=
-om/
-> >>> Closes: https://lore.kernel.org/lkml/20240312151835.29ef62a0@bootlin.=
-com/
-> >>> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> >>> Link: https://lore.kernel.org/lkml/20240411235623.1260061-2-saravanak=
-@google.com/
-> >>> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> >>> Acked-by: Mark Brown <broonie@kernel.org>
-> >>> ---
-> >>>    drivers/bus/imx-weim.c    | 6 ------
-> >>>    drivers/i2c/i2c-core-of.c | 5 -----
-> >>>    drivers/of/dynamic.c      | 1 -
-> >>>    drivers/of/platform.c     | 5 -----
-> >>>    drivers/spi/spi.c         | 5 -----
-> >>>    5 files changed, 22 deletions(-)
-> >>>
-> >>> diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
-> >>> index 83d623d97f5f..87070155b057 100644
-> >>> --- a/drivers/bus/imx-weim.c
-> >>> +++ b/drivers/bus/imx-weim.c
-> >>> @@ -327,12 +327,6 @@ static int of_weim_notify(struct notifier_block =
-*nb, unsigned long action,
-> >>>                                 "Failed to setup timing for '%pOF'\n"=
-, rd->dn);
-> >>>
-> >>>                if (!of_node_check_flag(rd->dn, OF_POPULATED)) {
-> >>> -                     /*
-> >>> -                      * Clear the flag before adding the device so t=
-hat
-> >>> -                      * fw_devlink doesn't skip adding consumers to =
-this
-> >>> -                      * device.
-> >>> -                      */
-> >>> -                     rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DEVI=
-CE;
-> >>>                        if (!of_platform_device_create(rd->dn, NULL, &=
-pdev->dev)) {
-> >>>                                dev_err(&pdev->dev,
-> >>>                                        "Failed to create child device=
- '%pOF'\n",
-> >>> diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
-> >>> index eb7fb202355f..30b48a428c0b 100644
-> >>> --- a/drivers/i2c/i2c-core-of.c
-> >>> +++ b/drivers/i2c/i2c-core-of.c
-> >>> @@ -176,11 +176,6 @@ static int of_i2c_notify(struct notifier_block *=
-nb, unsigned long action,
-> >>>                        return NOTIFY_OK;
-> >>>                }
-> >>>
-> >>> -             /*
-> >>> -              * Clear the flag before adding the device so that fw_d=
-evlink
-> >>> -              * doesn't skip adding consumers to this device.
-> >>> -              */
-> >>> -             rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DEVICE;
-> >>>                client =3D of_i2c_register_device(adap, rd->dn);
-> >>>                if (IS_ERR(client)) {
-> >>>                        dev_err(&adap->dev, "failed to create client f=
-or '%pOF'\n",
-> >>> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> >>> index 2eaaddcb0ec4..b5be7484fb36 100644
-> >>> --- a/drivers/of/dynamic.c
-> >>> +++ b/drivers/of/dynamic.c
-> >>> @@ -225,7 +225,6 @@ static void __of_attach_node(struct device_node *=
-np)
-> >>>        np->sibling =3D np->parent->child;
-> >>>        np->parent->child =3D np;
-> >>>        of_node_clear_flag(np, OF_DETACHED);
-> >>> -     np->fwnode.flags |=3D FWNODE_FLAG_NOT_DEVICE;
-> >>>
-> >>>        raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> >>>
-> >>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> >>> index f77cb19973a5..ef9445ba168b 100644
-> >>> --- a/drivers/of/platform.c
-> >>> +++ b/drivers/of/platform.c
-> >>> @@ -739,11 +739,6 @@ static int of_platform_notify(struct notifier_bl=
-ock *nb,
-> >>>                if (of_node_check_flag(rd->dn, OF_POPULATED))
-> >>>                        return NOTIFY_OK;
-> >>>
-> >>> -             /*
-> >>> -              * Clear the flag before adding the device so that fw_d=
-evlink
-> >>> -              * doesn't skip adding consumers to this device.
-> >>> -              */
-> >>> -             rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DEVICE;
-> >>>                /* pdev_parent may be NULL when no bus platform device=
- */
-> >>>                pdev_parent =3D of_find_device_by_node(parent);
-> >>>                pdev =3D of_platform_device_create(rd->dn, NULL,
-> >>> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> >>> index 2e0647a06890..b22944a207c9 100644
-> >>> --- a/drivers/spi/spi.c
-> >>> +++ b/drivers/spi/spi.c
-> >>> @@ -4791,11 +4791,6 @@ static int of_spi_notify(struct notifier_block=
- *nb, unsigned long action,
-> >>>                        return NOTIFY_OK;
-> >>>                }
-> >>>
-> >>> -             /*
-> >>> -              * Clear the flag before adding the device so that fw_d=
-evlink
-> >>> -              * doesn't skip adding consumers to this device.
-> >>> -              */
-> >>> -             rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DEVICE;
-> >>>                spi =3D of_register_spi_device(ctlr, rd->dn);
-> >>>                put_device(&ctlr->dev);
-> >>>
-> >> Sorry, some of you will receive this message now for second time. Firs=
-t
-> >> message was sent to older series of patches.
-> >> -
-> >>
-> >> Hello,
-> >>
-> >> Test system testing drivers for ROHM ICs bisected this commit to cause
-> >> BD71847 drivers probe to not be called.
-> > This driver (and overlay support) is in linux-next or something out of
-> > tree on top of linux-next?
-> >
-> > Rob
->
-> Yes the driver is in mainline linux: /drivers/mfd/rohm-bd718x7.c
+On Tue, Nov 04, 2025 at 02:33:10PM -0600, Shenwei Wang wrote:
+> Support the remote devices on the remote processor via the RPMSG bus on
+> i.MX platform.
+> 
+> Changes in v5:
+>  - move the gpio-rpmsg.rst from admin-guide to staging directory after
+>    discussion with Randy Dunlap.
+>  - add include files with some code improvements per Bartosz's comments.
+> 
+> Changes in v4:
+>  - add a documentation to describe the transport protocol per Andrew's
+>    comments.
+>  - add a new handler to get the gpio direction.
+> 
+> Changes in v3:
+>  - fix various format issue and return value check per Peng 's review
+>    comments.
+>  - add the logic to also populate the subnodes which are not in the
+>    device map per Arnaud's request. (in imx_rproc.c)
+>  - update the yaml per Frank's review comments.
+> 
+> Changes in v2:
+>  - re-implemented the gpio driver per Linus Walleij's feedback by using
+>    GPIOLIB_IRQCHIP helper library.
+>  - fix various format issue per Mathieu/Peng 's review comments.
+>  - update the yaml doc per Rob's feedback
+> 
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: linux-gpio@vger.kernel.org
+> 
+> Shenwei Wang (5):
+>   dt-bindings: remoteproc: imx_rproc: Add "rpmsg" subnode support
+>   remoteproc: imx_rproc: Populate devices under "rpmsg" subnode
+>   docs: staging: gpio-rpmsg: gpio over rpmsg bus
+>   gpio: imx-rpmsg: add imx-rpmsg GPIO driver
+>   arm64: dts: imx8ulp: Add rpmsg node under imx_rproc
+> 
+>  .../bindings/remoteproc/fsl,imx-rproc.yaml    | 123 +++++
+>  Documentation/staging/gpio-rpmsg.rst          | 202 ++++++++
+>  Documentation/staging/index.rst               |   1 +
+>  arch/arm64/boot/dts/freescale/imx8ulp.dtsi    |  27 +
+>  drivers/gpio/Kconfig                          |  17 +
+>  drivers/gpio/Makefile                         |   1 +
+>  drivers/gpio/gpio-imx-rpmsg.c                 | 475 ++++++++++++++++++
+>  drivers/remoteproc/imx_rproc.c                | 146 ++++++
+>  include/linux/rpmsg/imx_rpmsg.h               |  48 ++
+>  9 files changed, 1040 insertions(+)
 
-I don't see any support to apply overlays in that driver.
+I started reviewing this set.  Given the size and amount of comments to go
+through, it will likely take me several days.  I will tell you when I am done.
 
-Rob
+Even at this early stage of review on my side, I can already confirm the only
+way to move forward with this set is by reaching a consensus that includes
+Andrew, Arneaud and Linus W.
+
+Thanks,
+Mathieu
+
+>  create mode 100644 Documentation/staging/gpio-rpmsg.rst
+>  create mode 100644 drivers/gpio/gpio-imx-rpmsg.c
+>  create mode 100644 include/linux/rpmsg/imx_rpmsg.h
+> 
+> --
+> 2.43.0
+> 
 
