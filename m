@@ -1,88 +1,87 @@
-Return-Path: <linux-gpio+bounces-29039-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29040-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5415EC81DF7
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 18:22:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BFC3DC81E0C
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 18:24:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 012433485B7
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 17:22:21 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 069B8348570
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 17:24:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B7B1239E7D;
-	Mon, 24 Nov 2025 17:22:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12CBE2343C0;
+	Mon, 24 Nov 2025 17:24:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KZfMNV86"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P1kYCZWU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8429E22424C
-	for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 17:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3E8339A8
+	for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 17:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764004937; cv=none; b=PlrGA5QvSbBuFST5ToTDeglkqWiNryCyFPSmRUzJoRQK0gHmW+ARp4s48p+kxthIw8CtJ4ZDtQ58NnTr3w4MQX4ihEdF2ZIRT4bEugeLfn5ZuUeblInyy+vLs5KSzipnneDvL6YDxh/qRIfECE653GzPC+MQ7bdBYSMVWDpQlFc=
+	t=1764005058; cv=none; b=Pz3+HdvUu2N2bOJoz5USoUEYXqZjfYYiT9aZBOT8sUeGb6EAYzHLfyxTCfJLcSWp7XKaWjyELZE84v/HA3jmPfZfq5pKxDgu3ZiwjM+dWKy5ePFV33tAO4KJnxjPgvsRHgyIteWTgvEhsoHrxSY2ob6zDAiqUTbzSV91cYTAChM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764004937; c=relaxed/simple;
-	bh=bZpxwxVUi3Yu9Xp5tgpTDN3djeM5sWGLN5I4BpYPP84=;
+	s=arc-20240116; t=1764005058; c=relaxed/simple;
+	bh=RYQLGxxiC287sxK1jBPaeJUKtK0g7/ftRatFNFZN57s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ch17dxxbHRRRqPLMKrO3Winm+bNSdjDguiI9uSeaeQiqkeKhLkp9JYMF4M1kM4OkwJY8r2QV0MD8QIRGvynIwrsu7m2GXB7VyBqT9b+B7ezxiadRL575c9jYonaR4bheZnjC45sBbGY+Fsf8RFozTs2CSI8FCvZ8X54qcPL1LkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KZfMNV86; arc=none smtp.client-ip=209.85.219.52
+	 To:Cc:Content-Type; b=FWL8lBq5QUDSyLZbpJ8L15njYbLjt0NJomtSvdQ1DlDZlSUrJU5i0vgwB0BKCdQq02i0k2Nt8+SYMNwNir/+jTb1ZAAZotDbyZawJoZlWK6y2SCZ5LzNj2ZNyxyVggZQ3Tn6y3aGGyQ7j33ra5r0LGdeNtn/5loFyzbBogYfeBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P1kYCZWU; arc=none smtp.client-ip=209.85.219.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-8824a756771so53382916d6.0
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 09:22:15 -0800 (PST)
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-8823dfa84c5so52463776d6.3
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 09:24:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1764004934; x=1764609734; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1764005056; x=1764609856; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=H+dXzu+OtwVQATYT2SD8WXaq/eak4pH3LzFk0SdSmXo=;
-        b=KZfMNV86lGrroT3A2k4PSTjO4MI3foYAYqP/ONRtUw3Ri7UjfcL7HYU3kUD8IkC3ae
-         AFoCO+s0LvidM8P6kO1jrxmJXWXlRr3CoTYkF/Iip42AvfmNMT3cnnbHx8509cprmxkv
-         mAJs6EGSO+DptVDd0vJKAw+o19fb2sv3DPjykKaM8FQa+ydK6qD3zhFZPjMMEnBfY8JI
-         xMKuitfHntivzif/gQ7DHJj3FZghYf2ffT3wxuXULWEi2OjAydf9npO+0wuYjuQKGBcQ
-         kILlT4ysXUphVm7khYl+99pKnmuozccqMcDLYJ2Ie/Aeix5wLSpQ/ggV0zHk0ZENypLV
-         I1+Q==
+        bh=BwPH+P89qWOfRnemNosIIZCTQ+b7gKnqulQnrIBXs9U=;
+        b=P1kYCZWUGmqNX3MXHrgiQbTEja7zK12xtqAQM2Rx46gjOX8qY3f2BIkgb4zjVRY/eo
+         AT1cxFvjCA7JEfZ60T8k9748faU6qwhISAUuwzDqUltwE6bHbgJYGqLyz/8Q0x2B2CDK
+         QzfW011Lkal8vwV1myI/sHZSHkpb7mp1vfz+2l3cRdCKovtbI+FoSD0E5Jt3Mc8nPWd2
+         r2Z6rX1QMw/MdC3KNHU8wOWiwAHT1W71/TjJn1N4qquk96s/m/OMDQbZr4f1mLCoXlqt
+         OLuQCx7iespNMinBlpCrLb688JBQiyvfpLzmtxl8Lf69oVggPbS1IXfirqPsMVbuwSpc
+         KY1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764004934; x=1764609734;
+        d=1e100.net; s=20230601; t=1764005056; x=1764609856;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=H+dXzu+OtwVQATYT2SD8WXaq/eak4pH3LzFk0SdSmXo=;
-        b=VgmVm/72CPKofAdZaRde9zoT18yfX/sxd4hWXYapcaXpzm/hhVO3hL4SqRpklu13vg
-         fZ4bJLcQ0WJfFhSWmn30Y45HJwLXKLp/pJKPc0rcRjlfJo6JmqpZO4CfZhAGJ0g6Aggs
-         yz28qLgoxweKy6qcvfC/nln6D/Z2vWlYm6bBAv9Jkks9m6ads1tIRh+BuJSlNbdj812z
-         GN6VbKuyP9xWg9pyB8Bw6zl0BveqCB/peCtiqf2S6LtCIo7AcqogWl81UBb9wTrpCTlF
-         yuXkIFAFiYrNk4jGnX91h3tfqIlHwZLq/mdFJ20105WF6E2yIhnPyNlM5evHYbj74AoP
-         COIw==
-X-Forwarded-Encrypted: i=1; AJvYcCUtGIbz72npW6HusfxHGu3A8DIlD7yJakAoUXyE6aFiFUipvkNzR8FgrGx5Pcr6Zb7JQerEIjO94CSp@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzZZlDtLxW9/2nPBqbrgkCbEqBVstbR9Cqc/Ur0R89wljGuNI2
-	QSMTcaVN+4EsDHR+2VuSPuwpOiGyvcidknrdyxEV3M3gd7bWZ7JOZ0gfi2laeMS7QCyKIWvQYoO
-	J6PD7gun5x56wzj5m4KDZvI7FYkivnSiCv0wNgA6t2g==
-X-Gm-Gg: ASbGncuATS2DJYi24lPaaZasvu/VNFIDq46XUqnzHZr9MzUJ0NKw5uwPeu84bMXt5k+
-	UA8V4rqwEJ5ZzvDYkXp77KhctgHxiqbJ7+/5cT92MhuENTOpJf4jJdEwootzORuUuutLm1IJZal
-	yOQnGDF465U4QxKeFqwz72KFYB5sx0dcQTg/j8Ya2kjJJ0DkBtLbIIXyQaUA6UDQaEeMiLz/6vy
-	TnixG44Yp77qRWykbtX2jlfA3HcluKRGaorvJu9dtTutIlG4ndcjNG4qkYLl1Ha8R5jPWk=
-X-Google-Smtp-Source: AGHT+IGur7qIOhwydiDE1YdricdgFBJKpzAzcrVA0e8HEfbCvBR/llLvZ/uw2OutwktsYwyQUs0eBjA/3PkYC9zPCKk=
-X-Received: by 2002:ad4:5e8e:0:b0:884:6f86:e09a with SMTP id
- 6a1803df08f44-8847c440274mr206409366d6.6.1764004934295; Mon, 24 Nov 2025
- 09:22:14 -0800 (PST)
+        bh=BwPH+P89qWOfRnemNosIIZCTQ+b7gKnqulQnrIBXs9U=;
+        b=R7WnuxRXVoKmPeYurxPHlmrnVd9yqKPD1MTiB+2ls7NECpksiRLtt5GoU3jaPR+SE0
+         5fDd3sclTL6attdeSBrn3sdB2Zqo5CatX2KlKUek5WBYAnDctaIxaMKPzhkW0bqe5jhF
+         LBHjzx9vcpi4aXm1idO/jU8xubtdveaag791OLt0obA1NNYIganGuXvUHnTH5+cYyZyT
+         gRyMAphEE2kkY9+VU8qeD8CorPKVR3kxyv+CwNRXijYtyt5emNgBhNRFszDAELRb1//j
+         DUX3PWjvjLq0g5QKEsbIJBtxQM9kCt4oNhLz120ZEMCFo9nzgjKmKXVoTRNRGvW/h63J
+         x2dg==
+X-Forwarded-Encrypted: i=1; AJvYcCVrvNTiY08X/Q/NGeALEL1HO7C5EtyYfFVnvgYekxctTR9GJC/VdYsBV21mHDiTBTzrgy/AhYoSCNKX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yysgm7/5WLDx5uUWl0YT5P7SzA5W0G+mSvfIZuGh5JqEyXlarLM
+	UeYgPIAbkzVflHTlLREkdm9b5KXr0FN9nPUGpCxUyjyPwByqHz/fuKiKk4PZ0bpe6urMqjXR0MJ
+	M2LUr2XIIn/XXT+sG6b95/zbUmLJx7gvZ/U0sfAlKiA==
+X-Gm-Gg: ASbGncs+KmxGzSdJu6KV6kdAdZNshR7f7Tnv54B5SCXZw5stmyzs8rZLmK9ntWuEx34
+	AoYQyvwG5ARttJSxncF3xCe4JC6q9+NNarreDifAcaEnmofvhab5se2N5rnzZ6KqAf0SmYoekgK
+	dBxP9ckHalMslQw+VHcQHafF2KdBQlmyznIdRJQ2mccHS1kLHivi1rs9XWP9H/MTo9KukST0xFR
+	Qm5aGobHlYKmIt/q+Ug4PJBQXzpH1u5P59vF2CkmrZlU/Lf8eRU23mtBCxVkghTVeu5tkQ=
+X-Google-Smtp-Source: AGHT+IFnvdWmjJCRzYLrbPvZGNPiEJ5Q839vHfC1gV/jBx6hNY1xoYFkx0yUuNsyMUDPM1RLCsF8HVzcVzBbZ0/NXV8=
+X-Received: by 2002:a05:6214:3286:b0:880:48c6:acfb with SMTP id
+ 6a1803df08f44-8847c52771emr181588346d6.49.1764005056039; Mon, 24 Nov 2025
+ 09:24:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20251117073604epcas2p3f35b42617fb26aa087409eb84c19724c@epcas2p3.samsung.com>
- <20251117074140.4090939-1-youngmin.nam@samsung.com> <20251117074140.4090939-5-youngmin.nam@samsung.com>
-In-Reply-To: <20251117074140.4090939-5-youngmin.nam@samsung.com>
+References: <CGME20251117073605epcas2p19eac6ba9cf1d4fd2e866e5de6a843802@epcas2p1.samsung.com>
+ <20251117074140.4090939-1-youngmin.nam@samsung.com> <20251117074140.4090939-6-youngmin.nam@samsung.com>
+In-Reply-To: <20251117074140.4090939-6-youngmin.nam@samsung.com>
 From: Peter Griffin <peter.griffin@linaro.org>
-Date: Mon, 24 Nov 2025 17:22:03 +0000
-X-Gm-Features: AWmQ_bk4g88xYV4Wotp3KJG1hjaYXqURmaKu-TssPY9mMy-anug4aQBTum0eDz4
-Message-ID: <CADrjBPoG_omRShNhwUJZ0yeRLAzQxmGHvO6OzsR2NOfLczoptg@mail.gmail.com>
-Subject: Re: [RFT PATCH v2 4/5] pinctrl: samsung: fold GS101 pin-bank macros
- into EXYNOS9_*
+Date: Mon, 24 Nov 2025 17:24:04 +0000
+X-Gm-Features: AWmQ_bkGzF2wniRoBjZTDbuGXNp0h_ztTCTVOwPYyYiq_8xUg5WYRfFqZfMc01Y
+Message-ID: <CADrjBPo79HCUVsX_pv6EZ2_C5qB=pFMS=KMkMz8xkageuFvmAA@mail.gmail.com>
+Subject: Re: [RFT PATCH v2 5/5] pinctrl: samsung: rename gs101_pinctrl_* to exynos9_pinctrl_*
 To: Youngmin Nam <youngmin.nam@samsung.com>
 Cc: krzk@kernel.org, s.nawrocki@samsung.com, alim.akhtar@samsung.com, 
 	linus.walleij@linaro.org, semen.protsenko@linaro.org, ryu.real@samsung.com, 
@@ -93,31 +92,27 @@ Content-Type: text/plain; charset="UTF-8"
 
 Hi Youngmin,
 
-Thanks for taking the time to do this cleanup!
-
 On Mon, 17 Nov 2025 at 07:36, Youngmin Nam <youngmin.nam@samsung.com> wrote:
 >
-> GS101 had dedicated GS101_PIN_BANK_EINT{G,W} helpers, but they are
-> redundant with EXYNOS9_PIN_BANK_EINT{G,W} (same semantics, including
-> the per-bank .eint_fltcon_offset).
-> This change removes the GS101_* macros and switches the GS101 pin-bank
-> tables to the EXYNOS9_* helpers with exynos9_bank_type_{alive,off}.
-> While here, update the struct comment to note FLTCON is Exynos9-specific
-> (not 'GS101-specific').
+> The suspend/resume helpers named gs101_pinctrl_{suspend,resume} are not
+> GS101-specific. They implement the generic save/restore sequence used by
+> Exynos9-style controllers that have EINT filter configuration
+> (eint_fltcon) to preserve.
 >
-> One macro family for all Exynos9-era SoCs (incl. GS101) reduces
-> copy-paste drift and keeps the FLTCON handling consistent.
-> There is no functional change.
+> Rename them to exynos9_pinctrl_{suspend,resume} and update all users:
+>   - exynos2200, exynos9810, exynos8895, exynos7885, exynos7870,
+>     exynosautov9, fsd, and gs101 controller tables
+>   - prototypes in pinctrl-exynos.h
+>   - definitions in pinctrl-exynos.c
+>
+> This aligns naming with the earlier macro/doc cleanups (e.g. using
+> EXYNOS9_PIN_BANK_* and describing eint_fltcon as Exynos9-specific) and
+> makes the helpers clearly reusable by other Exynos9-like SoCs.
 >
 > Signed-off-by: Youngmin Nam <youngmin.nam@samsung.com>
 > Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
-> Tested-by: Sam Protsenko <semen.protsenko@linaro.org>
 > ---
 
 Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
 Tested-by:  Peter Griffin <peter.griffin@linaro.org> (tested on Pixel 6 / gs101)
-
-regards,
-
-Peter
 
