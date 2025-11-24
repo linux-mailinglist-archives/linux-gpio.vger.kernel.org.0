@@ -1,76 +1,57 @@
-Return-Path: <linux-gpio+bounces-28998-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-28999-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 528A2C7EB71
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 01:42:20 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF4D0C7EB92
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 01:50:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 497D3345330
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 00:42:03 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A80EA4E11EF
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 00:50:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7CFA221F20;
-	Mon, 24 Nov 2025 00:39:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFE8435898;
+	Mon, 24 Nov 2025 00:49:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eUur5oNj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kmLdC8ad"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91DBC14A60F;
-	Mon, 24 Nov 2025 00:39:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79096DDAB;
+	Mon, 24 Nov 2025 00:49:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763944799; cv=none; b=hRSxER8sbvg0DYNWtH2u7vJT+hA0rdimaDv5emtoCpRTEyyh7xpQ0/4Kw041zTJQo0XDOLqglyABNU/ASn+cLyZGqp8eLdMiE9mTpowE6Gvzgk55/d+KQ8p76YJzXCL4S1Zucl5aC9TFIObjUz3P5mBUI/gn9Lx7ueDtxODf1Y8=
+	t=1763945398; cv=none; b=SKweXxWOXFM/DBlCOSdil7yuh7/8p0C9j9xOq+aZekS/h3nrlsfjBSIP0G1PAkd4PrccHx1oJZuv//pjweHQILqGd4jO9lxjOi/UuBn8RfKQ1bSmVQLTZUa16xPdf/zsXXgoakuiDaeUw7tvDa3e2VfWKDHASf+xOiku7pkKHyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763944799; c=relaxed/simple;
-	bh=59dk9hx3CmiQzssyFO/uVMRkm/znXuNpXQsoz9Ju1v4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m+yXyCR07K0m/SUmTIQFWw9LXUJ7Rgl3gkQfdCCKQ/1AnKeZDBfBfskWNNzjcIcx965iDMufbFd+KqVdtlHtwHwA7nopGx3wfdvx7oHOZMW1dzoF57NOlx99qqSU5+GoYb/gUa2WFqX2/EXViSaI5ocKqjl/y/qTO/kB3C2AgZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eUur5oNj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33965C16AAE;
-	Mon, 24 Nov 2025 00:39:55 +0000 (UTC)
+	s=arc-20240116; t=1763945398; c=relaxed/simple;
+	bh=bUo6ak1zTCbJEyjFXZF8zQG8L5QXu94ygdsiABIZMis=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q5yzXL65AFqIYu+BlxErthPmenW6gmNxCayZMRTTniPRwAZwZu5+V8TFR23EbfPSBMB3L1c6cISpKJB87n+4hedL0h+Agc+BwlhgINaKCr+Y+2l7c/oCV2PgHbGUr2c1YfEqFjzEtDE1B6PziROP7/013E4qRO53Ns9fmGJ7FXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kmLdC8ad; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70071C113D0;
+	Mon, 24 Nov 2025 00:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763944799;
-	bh=59dk9hx3CmiQzssyFO/uVMRkm/znXuNpXQsoz9Ju1v4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eUur5oNjmxtcf4hxClFd72vx7xSlcJlWZv3a2cGpXd9ZweM8caP4vuTHt26Dkk1ST
-	 l03zsuZWGwyVEnWhfgao0jFv9kQb9FUFsWQ6xOFctSu8wQN09fXB2fCaPVlQ4dD6es
-	 OEQCeIVpDF4ZlpQTb3GLdF7oI0Jjbea/HX36T5B8KqVeLkJw2DoT6NVZ9IymvrUIAF
-	 vpFAvQOiawC81th0Qybi0jXxL0Y4B+acgJw+8fY0twpctgmgJ0Yen1t/7rtpSyoxv4
-	 KgI260pZ0BC7R0mizvQODUG2XaIM207DFKEhkISDdTvWVFxqLywTTx8MLXANZX/5rw
-	 6F7tIhuOWPzhA==
+	s=k20201202; t=1763945398;
+	bh=bUo6ak1zTCbJEyjFXZF8zQG8L5QXu94ygdsiABIZMis=;
+	h=From:To:Cc:Subject:Date:From;
+	b=kmLdC8adeRS9sgUr3rfggh04Rj+4FZS96P5oNR/eYzKD7hJ9kQiZYEOPRfjSufRqJ
+	 qoJh+eQEOSIooOE+RgUq6gZagAq1ZaMTZyzK/kx9UmQZHhWLinWb0Qm6Ov1rRaSrg9
+	 sKIk3JCl+IoQolxMIPo4quMDZnR34PH45kUgaLyIeWAdZMJsPnSWkRJElw6hZfy2nL
+	 hLh1xDuTt8RAX2PKjkjWwiF+Ziiz8fNLUkxV23HC3yWb3MZURj4sGuFOwxqR7scpmM
+	 mJx6eL88v2gx2Xyc5+cKzCsQ9be6lJGc4lxX/ExL5e7ediSEu//b3mWsP1nJDcnuIS
+	 AgOykpGC6Splg==
 From: Jisheng Zhang <jszhang@kernel.org>
-To: Doug Berger <opendmb@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	bcm-kernel-feedback-list@broadcom.com,
+To: Hoan Tran <hoan@os.amperecomputing.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Hoan Tran <hoan@os.amperecomputing.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Daniel Palmer <daniel@thingy.jp>,
-	Romain Perier <romain.perier@gmail.com>,
-	Grygorii Strashko <grygorii.strashko@ti.com>,
-	Santosh Shilimkar <ssantosh@kernel.org>,
-	Kevin Hilman <khilman@kernel.org>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-	Srinivas Neeli <srinivas.neeli@amd.com>,
-	Michal Simek <michal.simek@amd.com>
+	Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-omap@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@intel.com>
-Subject: [PATCH v5 14/14] gpio: zynq: Use modern PM macros
-Date: Mon, 24 Nov 2025 08:21:05 +0800
-Message-ID: <20251124002105.25429-15-jszhang@kernel.org>
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	=?UTF-8?q?Michael=20B=C3=BCsch?= <mb@bues.ch>
+Subject: [PATCH v2] gpio: dwapb: Fold dwapb_context into dwapb_gpio_port
+Date: Mon, 24 Nov 2025 08:32:06 +0800
+Message-ID: <20251124003206.25618-1-jszhang@kernel.org>
 X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251124002105.25429-1-jszhang@kernel.org>
-References: <20251124002105.25429-1-jszhang@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -79,78 +60,91 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use the modern PM macros for the suspend and resume functions to be
-automatically dropped by the compiler when CONFIG_PM or
-CONFIG_PM_SLEEP are disabled, without having to use __maybe_unused
+Fold dwapb_context into struct dwapb_gpio_port to further simplify
+the code. Sure this brings a tiny 36 bytes data overhead for
+!PM_SLEEP. After grepping the arm/arm64/riscv dts dir, the max dwapb
+GPIO port number is 6(the berlin2q soc family), so this means we will
+waste 216 bytes memory in total which is trivial compared to the
+system memory.
+
+From another side, as Michael mentioned:
+"The driver currently allocates the struct with kzalloc and stores a
+pointer to it in case of PM=y.
+So this probably has an overhead in the same order of magnitude
+(pointer + malloc overhead/alignment/fragmentation) in case of PM=y
+now."
+
+So let's Fold dwapb_context into struct dwapb_gpio_port.
 
 Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/gpio/gpio-zynq.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
-index 0ffd76e8951f..97780c57ab56 100644
---- a/drivers/gpio/gpio-zynq.c
-+++ b/drivers/gpio/gpio-zynq.c
-@@ -735,7 +735,7 @@ static void zynq_gpio_restore_context(struct zynq_gpio *gpio)
- 	}
- }
- 
--static int __maybe_unused zynq_gpio_suspend(struct device *dev)
-+static int zynq_gpio_suspend(struct device *dev)
- {
- 	struct zynq_gpio *gpio = dev_get_drvdata(dev);
- 	struct irq_data *data = irq_get_irq_data(gpio->irq);
-@@ -756,7 +756,7 @@ static int __maybe_unused zynq_gpio_suspend(struct device *dev)
- 	return 0;
- }
- 
--static int __maybe_unused zynq_gpio_resume(struct device *dev)
-+static int zynq_gpio_resume(struct device *dev)
- {
- 	struct zynq_gpio *gpio = dev_get_drvdata(dev);
- 	struct irq_data *data = irq_get_irq_data(gpio->irq);
-@@ -779,7 +779,7 @@ static int __maybe_unused zynq_gpio_resume(struct device *dev)
- 	return 0;
- }
- 
--static int __maybe_unused zynq_gpio_runtime_suspend(struct device *dev)
-+static int zynq_gpio_runtime_suspend(struct device *dev)
- {
- 	struct zynq_gpio *gpio = dev_get_drvdata(dev);
- 
-@@ -788,7 +788,7 @@ static int __maybe_unused zynq_gpio_runtime_suspend(struct device *dev)
- 	return 0;
- }
- 
--static int __maybe_unused zynq_gpio_runtime_resume(struct device *dev)
-+static int zynq_gpio_runtime_resume(struct device *dev)
- {
- 	struct zynq_gpio *gpio = dev_get_drvdata(dev);
- 
-@@ -814,9 +814,8 @@ static void zynq_gpio_free(struct gpio_chip *chip, unsigned int offset)
- }
- 
- static const struct dev_pm_ops zynq_gpio_dev_pm_ops = {
--	SET_SYSTEM_SLEEP_PM_OPS(zynq_gpio_suspend, zynq_gpio_resume)
--	SET_RUNTIME_PM_OPS(zynq_gpio_runtime_suspend,
--			   zynq_gpio_runtime_resume, NULL)
-+	SYSTEM_SLEEP_PM_OPS(zynq_gpio_suspend, zynq_gpio_resume)
-+	RUNTIME_PM_OPS(zynq_gpio_runtime_suspend, zynq_gpio_runtime_resume, NULL)
+since v1:
+ - collect Reviewed-by tag
+ - fix commmit msg
+ - add a link to lore.kernel.org for the series which this patch is
+   against.
+
+NOTE: this patch is applied against the following series:
+https://lore.kernel.org/linux-gpio/20251124002105.25429-1-jszhang@kernel.org/T/#t
+
+ drivers/gpio/gpio-dwapb.c | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+index 4986c465c9a8..a431bea959ed 100644
+--- a/drivers/gpio/gpio-dwapb.c
++++ b/drivers/gpio/gpio-dwapb.c
+@@ -101,7 +101,7 @@ struct dwapb_gpio_port {
+ 	struct gpio_generic_chip chip;
+ 	struct dwapb_gpio_port_irqchip *pirq;
+ 	struct dwapb_gpio	*gpio;
+-	struct dwapb_context	*ctx;
++	struct dwapb_context	ctx;
+ 	unsigned int		idx;
  };
  
- static const struct zynq_platform_data versal_gpio_def = {
-@@ -1022,7 +1021,7 @@ static void zynq_gpio_remove(struct platform_device *pdev)
- static struct platform_driver zynq_gpio_driver = {
- 	.driver	= {
- 		.name = DRIVER_NAME,
--		.pm = &zynq_gpio_dev_pm_ops,
-+		.pm = pm_ptr(&zynq_gpio_dev_pm_ops),
- 		.of_match_table = zynq_gpio_of_match,
- 	},
- 	.probe = zynq_gpio_probe,
+@@ -363,7 +363,7 @@ static int dwapb_irq_set_wake(struct irq_data *d, unsigned int enable)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct dwapb_gpio *gpio = to_dwapb_gpio(gc);
+-	struct dwapb_context *ctx = gpio->ports[0].ctx;
++	struct dwapb_context *ctx = &gpio->ports[0].ctx;
+ 	irq_hw_number_t bit = irqd_to_hwirq(d);
+ 
+ 	if (enable)
+@@ -507,12 +507,6 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
+ 	port->gpio = gpio;
+ 	port->idx = pp->idx;
+ 
+-#ifdef CONFIG_PM_SLEEP
+-	port->ctx = devm_kzalloc(gpio->dev, sizeof(*port->ctx), GFP_KERNEL);
+-	if (!port->ctx)
+-		return -ENOMEM;
+-#endif
+-
+ 	dat = gpio->regs + GPIO_EXT_PORTA + pp->idx * GPIO_EXT_PORT_STRIDE;
+ 	set = gpio->regs + GPIO_SWPORTA_DR + pp->idx * GPIO_SWPORT_DR_STRIDE;
+ 	dirout = gpio->regs + GPIO_SWPORTA_DDR + pp->idx * GPIO_SWPORT_DDR_STRIDE;
+@@ -761,7 +755,7 @@ static int dwapb_gpio_suspend(struct device *dev)
+ 		for (i = 0; i < gpio->nr_ports; i++) {
+ 			unsigned int offset;
+ 			unsigned int idx = gpio->ports[i].idx;
+-			struct dwapb_context *ctx = gpio->ports[i].ctx;
++			struct dwapb_context *ctx = &gpio->ports[i].ctx;
+ 
+ 			offset = GPIO_SWPORTA_DDR + idx * GPIO_SWPORT_DDR_STRIDE;
+ 			ctx->dir = dwapb_read(gpio, offset);
+@@ -809,7 +803,7 @@ static int dwapb_gpio_resume(struct device *dev)
+ 	for (i = 0; i < gpio->nr_ports; i++) {
+ 		unsigned int offset;
+ 		unsigned int idx = gpio->ports[i].idx;
+-		struct dwapb_context *ctx = gpio->ports[i].ctx;
++		struct dwapb_context *ctx = &gpio->ports[i].ctx;
+ 
+ 		offset = GPIO_SWPORTA_DR + idx * GPIO_SWPORT_DR_STRIDE;
+ 		dwapb_write(gpio, offset, ctx->data);
 -- 
 2.51.0
 
