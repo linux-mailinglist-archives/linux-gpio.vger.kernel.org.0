@@ -1,129 +1,154 @@
-Return-Path: <linux-gpio+bounces-29026-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29027-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id B24A8C81115
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 15:38:37 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45503C8126D
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 15:51:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E9D8E4E75EA
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 14:35:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0E3563AE3A6
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 14:49:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29F8727B34F;
-	Mon, 24 Nov 2025 14:35:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5F28290D81;
+	Mon, 24 Nov 2025 14:49:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PzW2eGbX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M2U0TgBO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19861271456
-	for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 14:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02E328C862;
+	Mon, 24 Nov 2025 14:49:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763994921; cv=none; b=gzbluh8mSzfle2lq0jEEiuFTE48PqJICBaTREV2l6PmovlVQRNM/SAcjRH0Qj8ZMie1IV+9CxX7EzaP41u+3W/7PmvATabnmAeuDi1XFN+iVBZ0/3KjlJTOMMk6AC0xsfQMLx5TOCKQpEuFQnQ2Dm0VPgKr6d/TzWZOm17s1IPM=
+	t=1763995750; cv=none; b=tl7RHI8HdfU82//x3dCnl530t5CuBd+aGc+1QtOjA71AQ99sBfdk11oh104KnNlbA1ltTDwcAvIQ+le+t72Uz/VePZxNsYi/3nRARq91C8LbfvKCPSF70GewBDrlFbEs7ueHRriXmyCGXF+3T7b+rT4Ce3lTvr3UAnHH5YK2kf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763994921; c=relaxed/simple;
-	bh=FAs5hoIeYauhlce+TwEGGMlQzr0nfFfkWSFFTazeXzQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Szh/X8WTGKodHIqxm0bAR54LLBLWyONuEmridMBnNAx8sTFajahSIZAdkEHpeMmO7kDEzqrHHQx0BM9NqOh5WgjhGts1Pi7AQmgXUGq+oA2DzNYoZhjfkjpLWrdcL2fzmTiWSs66dUP1FfifFavY5AKMpb9Vp59QWSPCufd6/M8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PzW2eGbX; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-37a48fc491aso37666491fa.1
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 06:35:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1763994918; x=1764599718; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=q9e8orAXiAFlWcxmub8EpzK+aYUs95qkopN7xCRgvlE=;
-        b=PzW2eGbXEGm0pUSVZTukVXNhV+OZ1jcRV0ElxSoA3GJPznVbupLgnr4O3xupLKddto
-         tw0Emmfjd3MeIMpTG6KpkavEakvA1XHGhL96loHtUCCEVtD1CG7+uuORsbr1ecxx4vee
-         vX4T98qgxGLSuCEDpWM5T5ZVGcHDBzZKIoTpcEpNuQS/U0g8JHZXH0rLgWisvX0dsGDo
-         cVOQb8BmRhFSyuNcWKEjqkgC120v3Wo8zxEAu992Gi6BLSitGbVId/GdmD3NNTURljll
-         uolEXeqrTeDFL7uQHpQ37g2HxzHsCiJq6A3G/Q4Qek16OTBd26k4oi1oTNaPAt291UY9
-         7Fog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763994918; x=1764599718;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q9e8orAXiAFlWcxmub8EpzK+aYUs95qkopN7xCRgvlE=;
-        b=pqZGYJ/B/hHzQCQduBzrI4ZkEFtwzikLlZjcD3+AX8Z/06bbftNhV+NGCYL1wXZ/+a
-         kJZ8HhcBvjKAlJSiF4E+UDKcYsGmUWYJ6AP0yWAlGCfOFGDpR1vVwXyGQqA4ALMe35IR
-         TyXy3x+yKBdkLOvBwVTI/yry2suxLoTDNLzjPx1h8huqCYTci9dwXb7TsTQ25qBsKPde
-         tBVlQAbM06uru+MsLE758sbh9/+5LKThOdvBTomK9OYyX6+ZMzaJ87tjmEjLNriD0vzL
-         rHxGR/An1xbiyXnNO2W7HLUxW6J73kqdNyQ9KjR/UuBa/td0I9e085Zczjxtg8SQQF5p
-         eM9Q==
-X-Gm-Message-State: AOJu0YxbTvO60IjjaIQVpaOiEGPLW/0iHUESQRxmgXElKRwViHXkidV/
-	aBDYJf/Nk9Ng9ACPKcnJlhyJ9SHhoit8RQEhGe/3/HKAZR8bvKkXG9GgGP3AKPyx+I8=
-X-Gm-Gg: ASbGncudJ9zKMdUXQFCFCMc4pRgGN9XyNYE+s+0Dl/VK9uiHyBhBiCx/Y3b692blpra
-	VUvG8/0pTCQpEM6XGWGHaKV9kE9SJ0IWmCPC15yHzVQ9OwEhOMFm8JKQenkEg8AmYIuf2SZX1ea
-	7qesQpv/Cx7BxsPzCKk2A54pcXk/6ii3TTtSK7YJLSX8oSIAxvGgywX+xsFM52cc4s8exbUAbdd
-	V1oicJSY+1UEvNJv7/LCBm0mEBCc3kkjkiFh53zQnyPjs48oyjJE+/DOp/LM2dF+1Jy4vajYlk1
-	RTEh58v8xKYE3//6OUlsIwfJmEvKHXGIwcX8UhNlFUL6/ASacBc9vP/w8tk/kfVc+cQkYBIRdTY
-	FCzzWEj8NBKW7MbqNtBkMODe9XCc1qC1aC5Af90KZEcyLSjw32qHsda9BZUtHNTeJFsfkv1Xsba
-	edzg4GP9hKuJNPK/VGRWDe2w==
-X-Google-Smtp-Source: AGHT+IEY8S0N4musyt8cjPznk+p5lg16fKM4FotNsTysgVZnMZweuZWQfdYdnaSXgFdtVWzE5B03zA==
-X-Received: by 2002:a2e:be05:0:b0:378:eeab:bfa7 with SMTP id 38308e7fff4ca-37cd923d6b8mr32723101fa.25.1763994918083;
-        Mon, 24 Nov 2025 06:35:18 -0800 (PST)
-Received: from [192.168.1.140] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-37cc6bafc06sm27379831fa.23.2025.11.24.06.35.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Nov 2025 06:35:17 -0800 (PST)
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 24 Nov 2025 15:35:16 +0100
-Subject: [PATCH] pinctrl: cix: Fix obscure dependency
+	s=arc-20240116; t=1763995750; c=relaxed/simple;
+	bh=LNf4WNIHIFdssBgMpM3fnvo7unwtTh5Go5hNJc/SF7k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eX+DaXvmq765zaTptw5SXyZC7YdyFTqcGhgJkA5883+cL5B56NFcPKgYDRCCrHgYOTH8TQke7ZVLlJYqTgwpuQD2WF51b/kD61lAg1xdd8TQSNTOj+gjQ+3EHUn4UNLUT25m/5DCrbJM8RbDtPXAA1XcN5HoyBPJXedLDMd13HQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M2U0TgBO; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763995749; x=1795531749;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=LNf4WNIHIFdssBgMpM3fnvo7unwtTh5Go5hNJc/SF7k=;
+  b=M2U0TgBOImJCIdtBZwS9GzdLS2cdsVsfgo8gZsnnPIG03AK9QiPfOWTl
+   oT3DvRfnsw5I36/IuvSZmk8+CvSMZC0G13j7ZsZfpy1vNWd4CzB2Q/sb6
+   BHDiwhW9nqargLeJCvo8lT7UMgB+0nWx3CAFJN2/WDvPQ5fnUBGSKd818
+   ywlnSi/MszuDqMuBeE7nTfV5501/qj8/Ua4FxspfT1sqZk7OHLS041t/J
+   eBxQY8OemqqNiATvJhHywObu5Cxjwlh7VaCKk5Sy28dqxDJqulq4UDs1F
+   QiKnqPpyZL4U7pA3748JG3VCUWyU8sjMx/eTZ/SOmJD78+I3dMpDxUE/+
+   w==;
+X-CSE-ConnectionGUID: 3Nab82xmSvCoAaUFrLZ1pw==
+X-CSE-MsgGUID: kRS3B4RlQjSOrdT7NmMJGg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11623"; a="64996483"
+X-IronPort-AV: E=Sophos;i="6.20,223,1758610800"; 
+   d="scan'208";a="64996483"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2025 06:49:08 -0800
+X-CSE-ConnectionGUID: GBdErrPpTACXKcxnLzLfgw==
+X-CSE-MsgGUID: Mi0Pd/9wRjyTH3ysTkVOhw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,223,1758610800"; 
+   d="scan'208";a="192815282"
+Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.244.5])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2025 06:49:03 -0800
+Date: Mon, 24 Nov 2025 16:49:00 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Jonas Gorski <jonas.gorski@gmail.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Jisheng Zhang <jszhang@kernel.org>, Doug Berger <opendmb@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	bcm-kernel-feedback-list@broadcom.com,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Hoan Tran <hoan@os.amperecomputing.com>,
+	Andy Shevchenko <andy@kernel.org>, Daniel Palmer <daniel@thingy.jp>,
+	Romain Perier <romain.perier@gmail.com>,
+	Grygorii Strashko <grygorii.strashko@ti.com>,
+	Santosh Shilimkar <ssantosh@kernel.org>,
+	Kevin Hilman <khilman@kernel.org>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+	Srinivas Neeli <srinivas.neeli@amd.com>,
+	Michal Simek <michal.simek@amd.com>, linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-omap@vger.kernel.org
+Subject: Re: [PATCH v5 02/14] gpio: brcmstb: Use modern PM macros
+Message-ID: <aSRwXCfG1RimQZxX@smile.fi.intel.com>
+References: <20251124002105.25429-1-jszhang@kernel.org>
+ <20251124002105.25429-3-jszhang@kernel.org>
+ <CAOiHx==ttP2T=VLsSE9nLr5Cai_D+Khr6ePJVdOEim8ThWSdmA@mail.gmail.com>
+ <CAHp75VcRWODpL2DjAiPm0=bhTJfjs6RdNgtroRbvEW7ong3ALg@mail.gmail.com>
+ <CAOiHx==5TkW_-3yoqN_MzhdLKbMFvXRj-pWpuS5ahTM_ccVekw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251124-cix-deps-v1-1-fe603dfe86ef@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1NDQyMT3eTMCt2U1IJiXbM0SxOj5OQUQ7NUYyWg8oKi1LTMCrBR0bG1tQC
- /vbG8WgAAAA==
-X-Change-ID: 20251124-cix-deps-6f942ccd16e3
-To: Peter Chen <peter.chen@cixtech.com>, 
- Fugang Duan <fugang.duan@cixtech.com>, 
- CIX Linux Kernel Upstream Group <cix-kernel-upstream@cixtech.com>, 
- Gary Yang <gary.yang@cixtech.com>
-Cc: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
-X-Mailer: b4 0.14.3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOiHx==5TkW_-3yoqN_MzhdLKbMFvXRj-pWpuS5ahTM_ccVekw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-When compile-testing for UM-Linux the build fails because
-we don't have IOMEM.
+On Mon, Nov 24, 2025 at 03:20:00PM +0100, Jonas Gorski wrote:
+> On Mon, Nov 24, 2025 at 2:52 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Mon, Nov 24, 2025 at 2:40 PM Jonas Gorski <jonas.gorski@gmail.com> wrote:
+> > > On Mon, Nov 24, 2025 at 1:39 AM Jisheng Zhang <jszhang@kernel.org> wrote:
 
-Add an explicit dependency.
+...
 
-Fixes: 920500c5fe66 ("pinctrl: cix: Add pin-controller support for sky1")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/cix/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+> > > >  static const struct dev_pm_ops brcmstb_gpio_pm_ops = {
+> > > > -       .suspend_noirq  = brcmstb_gpio_suspend,
+> > > > -       .resume_noirq = brcmstb_gpio_resume,
+> > > > +       .suspend_noirq = pm_sleep_ptr(brcmstb_gpio_suspend),
+> > > > +       .resume_noirq = pm_sleep_ptr(brcmstb_gpio_resume),
+> > > >  };
 
-diff --git a/drivers/pinctrl/cix/Kconfig b/drivers/pinctrl/cix/Kconfig
-index 455120dd7318..1529b1af6388 100644
---- a/drivers/pinctrl/cix/Kconfig
-+++ b/drivers/pinctrl/cix/Kconfig
-@@ -9,6 +9,7 @@ config PINCTRL_SKY1_BASE
- config PINCTRL_SKY1
- 	tristate "Cix Sky1 pinctrl driver"
- 	depends on ARCH_CIX || COMPILE_TEST
-+	depends on HAS_IOMEM
- 	select PINCTRL_SKY1_BASE
- 	help
- 	  Say Y here to enable the sky1 pinctrl driver
+...
 
----
-base-commit: da53dcd54cc35efa7a8236846bb39d40deeee034
-change-id: 20251124-cix-deps-6f942ccd16e3
+> > > > -               .pm = &brcmstb_gpio_pm_ops,
+> > > > +               .pm = pm_sleep_ptr(&brcmstb_gpio_pm_ops),
+> > >
+> > > won't this cause a "brcmstb_gpio_pm_ops is unused" compile warning for
+> > > !CONFIG_PM_SLEEP?
+> > >
+> > > You probably need to add a __maybe_unused to brcmstb_gpio_pm_ops
+> > > (which incidentally DEFINE_NOIRQ_DEV_PM_OPS() also doesn't set, but
+> > > all other *_DEV_PM_OPS() macros do).
 
-Best regards,
+Do they? I mean the modern ones and not that are deprecated.
+
+> > Shouldn't it be covered by the same trick as pm_sleep_ptr() does for functions?
+> 
+> pm_sleep_ptr() becomes NULL for !CONFIG_PM_SLEEP, so there is no
+> reference then anymore to brcmstb_gpio_pm_ops. You would need a
+> wrapper for brcmstb_gpio_pm_ops itself to conditionally define it to
+> avoid the warning, or add __maybe_unused to it to silence it.
+
+PTR_IF() magic is exactly to make sure compiler will have a visibility while
+dropping a dead code. Did I miss anything?
+
+> Note how SIMPLE_DEV_PM_OPS() and UNIVERSAL_DEV_PM_OPS() tag the struct
+> with it (for that reason I assume).
+
+Both are deprecated. Not a good orienteer.
+None of the new approach uses __maybe_unused. (See DEFINE_*() macros in pm.h.)
+
 -- 
-Linus Walleij <linus.walleij@linaro.org>
+With Best Regards,
+Andy Shevchenko
+
 
 
