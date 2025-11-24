@@ -1,200 +1,159 @@
-Return-Path: <linux-gpio+bounces-29041-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29042-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 342C3C81F2C
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 18:42:46 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 370EFC81F9B
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 18:49:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 119D53AA17C
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 17:42:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DC5E23A419B
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 17:48:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 291FE2C08D4;
-	Mon, 24 Nov 2025 17:42:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB76D2C21EB;
+	Mon, 24 Nov 2025 17:48:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wb1SiZ4c"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="fEYlIdOQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 296762BEFE8
-	for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 17:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA532C1581
+	for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 17:48:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764006158; cv=none; b=oNuX9c8t6wFRXQNEE/4VB7+lVIcEAY8kXeMamAEr8TH6hbmUWydRlqIdXvI8XewfBzanY5RtCLgt0ZsIzfeDnNfnF9yL3wt3yY9klrVx9hIu2VShuaMMQoeoqPeR2e+wOB4f6btyXLWdwxFljyo++AXRFu0L93iD6GvAcirbpGE=
+	t=1764006503; cv=none; b=dACpcNlA2+m2qU55C8ARySmkRGAaau+wMTAwOd26nwuDTU6B5IkyS/5so2wKnQLAJlLk1a6T3sUmrIaNYQ4gQsZWnVEUrFWi2//cjFtqLuxh2BmbXl52hbV7vxkOb00BF0xQtItcNxYu/ajVoP0yIn8ZCajgnLrLDjd3PQn1Hxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764006158; c=relaxed/simple;
-	bh=f3RguNWyNPblPkEEAtjriyDmmiD8h8nq2mR8oBqONQc=;
+	s=arc-20240116; t=1764006503; c=relaxed/simple;
+	bh=4r6uq+XJ6hrSbkNoNXPhbiKHyGHCKt75UkrHPmh0NFQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t17dYUbYk2OmugvQHAHSmgwPTCtwvTTIH8GBenUloNrOsZrTXR9PlnO0JCRsHD1kEiGOcICqYtJcDbf1VkX2SkltqHWbXiIrtArr4YKtMbI8+03wYD8wt0UypeIC78/XWcVOSgOWFxhhmnCLZhPI+1tP6ocQo5n/yLxniwHt2Xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Wb1SiZ4c; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4eda057f3c0so40269091cf.2
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 09:42:36 -0800 (PST)
+	 To:Cc:Content-Type; b=ZRil83meUSZrO8CGy1AfX0sC+csn11BCyHmwCOnoBUGQjtkeVmB+drrL1yTx8lpCYesSmdeggQZi0laUf8zHrpbj5nI4hFU2GMVq8AhiwUAxG5k0Wz2oA1qZTQP/4wHiXft5H44rP+sW/fQQXatCUkGmu/g8yeb7wc1iQoNshBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=fEYlIdOQ; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-594516d941cso5228778e87.0
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 09:48:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1764006155; x=1764610955; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wJlK4WkEfRbWEw3zV/b5T4Bu/Nyg8DEPoH+DiAjRgFs=;
-        b=Wb1SiZ4c2nIJGy/B9gOjHrGH6uPHmfHYtVr5B3KW57BeudBQ0nY6hzwi5Hqt+D1h7d
-         KONMMD5EET4h600XwC522X1gOzkaWTqkKZ3RqxlKJR2rM9HgCbJKXZi0UsEJhhEFadSP
-         MNYOReePYX4FVwx5ob5cGkWX+mLsYyy8i/NO133VnPDueb89MUDu5hMyjiSDpU6ytK6e
-         kevg/X0wP4hgSQ1vBVo6zdMgZ0LVtkSBCYZOx8wXo39+Qm+U08dgpWcE0Dc1ENs62WZf
-         nqHh0CxK7sInPOQLDv++CuXW98TK6E9vTAUiQW3vGYsOZVH0fE6sMmvw7m/nBnmSZBWN
-         Rq8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764006155; x=1764610955;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1764006500; x=1764611300; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wJlK4WkEfRbWEw3zV/b5T4Bu/Nyg8DEPoH+DiAjRgFs=;
-        b=HlaoSxkTnM57JFGy2z4b5uQxm4zj1eJx6wru/afeJvwwqAyKzXDZ3Hf0RGfFwgV8Ia
-         ZpY/GGZXcM6MYK3MjzyxCYoT0guK170tzZJXTW9/6Dsn6U7ao0NYzlK1ZEVfmo5Ab2AY
-         8/iEQ4u0VqRypdmcA2HfnZ3TiXpISYTEQKrZJU1Aah/dzNhWXSfzutEW7LWGTGcBwECa
-         ZmQkDnmiV0Edhkib8G953xczX7m6uwkJckuxHUYu7hvyydQ/JatTV8gg+maRjvgWzJN9
-         aqWgG9MtIQOvFdFqeajD0r5s4j8/mQduWKSDp9JbQIZ9mB7/NRvD/2QeqtCgdBJDCOsI
-         e4Og==
-X-Forwarded-Encrypted: i=1; AJvYcCVbuyhRpXNdloXr5TpMC98+wz00URYJH+QDHc1n1+mGn0XZmq1yn4dq4yNgt/+L4u87REXq7t8wVgTd@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCPE0L0pYYDV0+i0paTUD+MfRH9wbDYV3FIUsfPfwy71lIGyNs
-	dqtFD7TdTVYlpC4QinAGYghvhIqp+vefnDTyYltfVKBOrLWSAtTu5h5T/HvrLqtazvyLlQATYS5
-	YKIrEnMUUbKLmfxMavI17DHegVcKNCZxT6VCOq++1rQ==
-X-Gm-Gg: ASbGncsnNrzmOL0ejJRFNM8LtX59lfIFtFFWx0jGiXLw+R1soswLFek/6v299VCYCXi
-	7k8bXV/T27mUDgvxOL5Om3VRlDavjBNHWaGxv3t+WNat2y9oxWlgZILzZWRKyi2USrWt/CLqa19
-	fIyCTLkQAfpexgC8T8qDkPXjBXh+GDGsL/OuQLv8Zn94tfJv+20qBHr9o5Xsxw8gQD+cSVJNv5q
-	9TtGFXuNo76z/wqlkEp8GmzdLkXaiUxb1pPwWTwhjSaFOz6yvQ91NNcyu3bT3nfeDaHrr8=
-X-Google-Smtp-Source: AGHT+IH68eFLCxGAwB70YXKDcrzscx1x/5nopbEjXq3rg0i05BtoHBXKwXgwKJ1Je/SGb0RGBvXAIWmKGfE/9kaXr84=
-X-Received: by 2002:ac8:59c5:0:b0:4ee:24e8:c9a1 with SMTP id
- d75a77b69052e-4ee588908eamr163978631cf.44.1764006154636; Mon, 24 Nov 2025
- 09:42:34 -0800 (PST)
+        bh=4r6uq+XJ6hrSbkNoNXPhbiKHyGHCKt75UkrHPmh0NFQ=;
+        b=fEYlIdOQ3Nx0FvthAY/5aEUw5UUb3MtRrsBm/5nbXJ6RShy2OIOJrnBvaYqux8QtsN
+         6E+DodmUX2Io+IMCmxdf25iypV0EtHUMbOG+3howrJVjk9XVF3HnNl2cUDZyzMGektvw
+         xj4VjUPWw3dfOIX36p+OcSsbbbdnHI9slG0YOIcDYiscmrsSPdxk1hPJrDNE4ogmL5XY
+         pMLDmFqIMQfiRMK3mIEzExfbo7UhLuvjEeNTwOCU4gjpw6x6FPW9hYyOwSQ/chzZiG2T
+         g2PxPWTCJJJLxTUDzQk/GCU/WZhi9XvvvJYnQJvt/fQj2k6vVVQH7lwQWx8mNuTS7i/g
+         ilqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764006500; x=1764611300;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=4r6uq+XJ6hrSbkNoNXPhbiKHyGHCKt75UkrHPmh0NFQ=;
+        b=DGfg5V5JiUes54zYPE7Qa6Og0arHM1Yggt0EC9ZCyPWwYKAezfaYWguIRf7VmqLXqz
+         QJEkjEbOF0981R5O/b10RAKuQEHpnp9vS24VFD985BrBFvV1s1SSfbsRjm4mlXfSMVRU
+         pMtmcvbMcV05SZ5M1DMQMHCdYRHbF8lQs0cveDK/K0SvEKUe6OLMUPf7Yh8XrA5qQlOY
+         ckdM7A7OGLB5sIREKeOGWLDPuSI6XNdKY6T5sITvX8ZWHNPs4XRhHl0H5z2bEzZGgez6
+         lMN9nG9kGD94dU424wImownRfOEdlWvdkDFs0tu+j3x0AnKWniUbt1i0FzOQTvk1kRp9
+         gKNA==
+X-Forwarded-Encrypted: i=1; AJvYcCVrOEMbmL1KjjmKgz78WQ1tsXO6IBwiR4wIjGLKpi91f0woIPGqzBLGl9pHVuwPmOAo6kvyQbg9rxHV@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSAGfXj6usuibgFnc2Jm9hau9d/EDFJz8GeVkIODJHo7GMlRbz
+	Ea1LrtUfT6UBEtTUcQOKS8L0E8DnvmJgxHk55Yzn2GYXCNCpD+YsKC3VpKNGIWiONMZDz3pPQkG
+	S8RfZMWU3DKojzRiWSYrxYU2J9q1XNx0AHsOB09X8NQ==
+X-Gm-Gg: ASbGncvTueZ/OP0ar/pDg7izJc2nbdelhyCPftVu4cctg2JMBOpIcr/bKkkrgZRiyUk
+	4G9uEFrUh/YGR1zF99eOP0EUVOPN6IMWPyd9plzafsxMtyWRhm4vhx6SvBiF1RhCWIxS/W8Es/P
+	/dRl/obDr67XGUc4pmuK+M6p1HdzYFI0Tu5ars6tMGzoMGCsLz5l7jZ21M6cUO8VLIQQ+lWcO/Y
+	zD3wLQ7Vqem4YemGljxUKL/VAORhvCaPosa6D4Wsd2RIpdKurBBtlMN96KNisDZUW/O4ny7cRnA
+	HtTHhEmeEHOXctIKkCWf5bcEOtPkCf+3Zl++eQ==
+X-Google-Smtp-Source: AGHT+IF993DoHSMlB60mWDtCOrB1XMOt2yUP8xFOoEjON0prsCxIqX3jeiL/LWt48eiHKiIUUX/0Hv99+yLDo3p5YEc=
+X-Received: by 2002:a05:6512:3b27:b0:592:fa8a:810d with SMTP id
+ 2adb3069b0e04-596a3ea7847mr4433290e87.16.1764006499554; Mon, 24 Nov 2025
+ 09:48:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20251117073601epcas2p2c72bdd8689a69b35b988894653300c75@epcas2p2.samsung.com>
- <20251117074140.4090939-1-youngmin.nam@samsung.com>
-In-Reply-To: <20251117074140.4090939-1-youngmin.nam@samsung.com>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Mon, 24 Nov 2025 17:42:22 +0000
-X-Gm-Features: AWmQ_bkIQmeVVQ1__i6Ji95mfG_JBQNHpbx1ya0fFzrMqWuIcxJaF_YHxRYrtX0
-Message-ID: <CADrjBPrPpgy93At1bBanBoka14eyRbAArep5zuvbGWcOEnOuRQ@mail.gmail.com>
-Subject: Re: [RFT PATCH v2 0/5] pinctrl: samsung: exynos9 cleanups and fixes
-To: Youngmin Nam <youngmin.nam@samsung.com>
-Cc: krzk@kernel.org, s.nawrocki@samsung.com, alim.akhtar@samsung.com, 
-	linus.walleij@linaro.org, semen.protsenko@linaro.org, ryu.real@samsung.com, 
-	d7271.choe@samsung.com, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20251120-reset-gpios-swnodes-v7-0-a100493a0f4b@linaro.org>
+ <20251120-reset-gpios-swnodes-v7-4-a100493a0f4b@linaro.org> <aSSOo4q0sLDHqe1h@opensource.cirrus.com>
+In-Reply-To: <aSSOo4q0sLDHqe1h@opensource.cirrus.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 24 Nov 2025 18:48:05 +0100
+X-Gm-Features: AWmQ_bnvq_Ux1-kkcgnqJRAH0qfvPMdf4XOXl8mrvC21GsBAI5YmjWFZH8pho_M
+Message-ID: <CAMRc=MfiR4AMYXc5YA0GOt=+-kx0yO0qFdYd2mZqwguW5v+U5g@mail.gmail.com>
+Subject: Re: [PATCH v7 4/9] spi: cs42l43: Use actual ACPI firmware node for
+ chip selects
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, David Rhodes <david.rhodes@cirrus.com>, 
+	Richard Fitzgerald <rf@opensource.cirrus.com>, Mark Brown <broonie@kernel.org>, 
+	Maciej Strozek <mstrozek@opensource.cirrus.com>, Andy Shevchenko <andy@kernel.org>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-spi@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, stable+noautosel@kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Youngmin,
+On Mon, Nov 24, 2025 at 5:58=E2=80=AFPM Charles Keepax
+<ckeepax@opensource.cirrus.com> wrote:
+>
+> On Thu, Nov 20, 2025 at 02:23:59PM +0100, Bartosz Golaszewski wrote:
+> > From: Charles Keepax <ckeepax@opensource.cirrus.com>
+> >
+> > On some systems the cs42l43 has amplifiers attached to its SPI
+> > controller that are not properly defined in ACPI. Currently
+> > software nodes are added to support this case, however, the chip
+> > selects for these devices are specified using a hack. A software
+> > node is added with the same name as the pinctrl driver, as the
+> > look up was name based, this allowed the GPIO look up to return
+> > the pinctrl driver even though the swnode was not owned by it.
+> > This was necessary as the swnodes did not support directly
+> > linking to real firmware nodes.
+> >
+> > Since commit e5d527be7e69 ("gpio: swnode: don't use the swnode's
+> > name as the key for GPIO lookup") changed the lookup to be
+> > fwnode based this hack will no longer find the pinctrl driver,
+> > resulting in the driver not probing. There is no pinctrl driver
+> > attached to the swnode itself. But other patches did add support
+> > for linking a swnode to a real fwnode node [1]. As such the hack
+> > is no longer needed, so switch over to just passing the real
+> > fwnode for the pinctrl property to avoid any issues.
+> >
+> > Link: https://lore.kernel.org/linux-gpio/20251106-reset-gpios-swnodes-v=
+6-0-69aa852de9e4@linaro.org/ [1]
+> > Fixes: 439fbc97502a ("spi: cs42l43: Add bridged cs35l56 amplifiers")
+> > Cc: stable+noautosel@kernel.org # Don't backport, previous approach wor=
+ks, fix relies on swnode changes
+>
+> Just wanted to check what the thinking is on backports here. I
+> see we have marked this as do not backport. Which I think is
+> sensible the changes in the preceeding patches are a bit much for
+> a backport. However, the patch has caused the regression has gone
+> to a few stable branches (v6.17, v6.12):
+>
 
-On Mon, 17 Nov 2025 at 07:36, Youngmin Nam <youngmin.nam@samsung.com> wrote:
->
-> Several SoCs carried near-duplicate pin bank macro families, making
-> tables verbose and hard to share when only the bank type (alive/off)
-> differs.
->
-> GS101 had its own helpers even though the newer EXYNOS9_* helpers cover
-> the same semantics, including per-bank filter control (FLTCON) offsets.
->
-> Some pin-bank tables didn't match the SoC TRMs (bank type, EINT class,
-> or bank names), and FLTCON wasn't always at a contiguous offset from
-> EINT.
->
-> This series does
-> - Consolidate on EXYNOS9_* pin-bank macros. Pass bank_type explicitly.
-> - Fix table errors on Exynos2200/7885/8890/8895 per TRM.
-> - Add explicit per-bank FLTCON offsets and update affected tables.
-> - Drop GS101-specific macros in favor of EXYNOS9_*.
-> - Rename gs101_pinctrl_{suspend,resume} ->
->   exynos9_pinctrl_{suspend,resume}.
->
-> This series was based on the pinctrl/samsung tree [1].
->
-> I tested on Exynos850 through boot and verified the pin values as
-> follows:
+I totally forgot about this having gone into stable.
 
-One thing I just noticed is exynos850_pin_ctrl isn't actually setting
-the .suspend and .resume callbacks so some of this code won't be
-executed there (specifically saving/restoring the fltcon register). If
-you're using e850 platform to test this series, you likely want to set
-
-.suspend = exynos9_pinctrl_suspend,
-.resume = exynos9_pinctrl_resume,
-
-in exynos850_pin_ctrl for the alive bank
-
-You can then #define DEBUG in drivers/pinctrl/samsung/pinctrl-exynos.c
-
-Recompile, and do
-
-echo platform > /sys/power/pm_test
-echo mem > /sys/power/state
-
-and you should see all the debug from the newly enabled exynos9
-suspend/resume callbacks
-
-[  871.104840][  T741] gph2: save     con 0x00000000
-[  871.104932][  T741] gph2: save fltcon0 0x00000000
-[  871.105022][  T741] gph2: save fltcon1 0x00000000
-[  871.105109][  T741] gph2: save    mask 0x0000003f
-<snip>
-
-Prior to adding fltcon_offset and the gs101 (now exynos9) specific
-suspend/resume callbacks this would generate a SError on gs101
-
-Thanks,
-
-Peter
-
+> commit e5d527be7e69 ("gpio: swnode: don't use the swnode's name as the ke=
+y for GPIO lookup")
 >
-> $:/sys/kernel/debug/pinctrl/139b0000.pinctrl-samsung-pinctrl# cat pins
-> registered pins: 42
-> pin 0 (gpg0-0) 0:gpg0 CON(0x0) DAT(0x0) PUD(0x1) DRV(0x2) CON_PDN(0x2) PUD_PDN(0x1)
-> pin 1 (gpg0-1) 1:gpg0 CON(0x0) DAT(0x0) PUD(0x1) DRV(0x2) CON_PDN(0x2) PUD_PDN(0x1)
-> ...
+> Are you guys ok if I send a revert for that patch to the stable
+> branches it has gone to? It doesn't actually fix any bugs on
+> those kernels, and we are starting to see issues coming in that I
+> think are related to this:
 >
-> Additional testing on the affected Exynos9-era platforms would be
-> appreciated.
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung.git
->
-> Changes in v2:
->   - Added base tree for this series (pinctrl/samsung).
->   - Renamed the macro parameter from 'types' to 'bank_type' for clarity
->     (struct member remains 'type').
->   - Reflowed commit messages (wrap at ~72 cols).
->   - Replaced non-ASCII characters with ASCII equivalents.
->   - Collected tags:
->       Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
->       Tested-by: Sam Protsenko <semen.protsenko@linaro.org>
->   - Normalized hex literals to lowercase and removed double spaces.
->   - Aligned backslashes in macro definitions to form a vertical column
->     for readability.
->   - Added missing mailing lists (including linux-kernel) to Cc per
->     scripts/get_maintainer.pl.
->
-> Youngmin Nam (5):
->   pinctrl: samsung: Consolidate pin-bank macros under EXYNOS9_* and pass
->     bank_type explicitly
->   pinctrl: samsung: fix incorrect pin-bank entries on
->     Exynos2200/7885/8890/8895
->   pinctrl: samsung: add per-bank FLTCON offset to EXYNOS9_PIN_BANK_* and
->     fix tables
->   pinctrl: samsung: fold GS101 pin-bank macros into EXYNOS9_*
->   pinctrl: samsung: rename gs101_pinctrl_* to exynos9_pinctrl_*
->
->  .../pinctrl/samsung/pinctrl-exynos-arm64.c    | 1069 ++++++++---------
->  drivers/pinctrl/samsung/pinctrl-exynos.c      |    4 +-
->  drivers/pinctrl/samsung/pinctrl-exynos.h      |   97 +-
->  drivers/pinctrl/samsung/pinctrl-samsung.h     |    4 +-
->  4 files changed, 562 insertions(+), 612 deletions(-)
->
-> --
-> 2.39.2
->
+
+Yes, definitely, please do. You can add:
+
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+Bart
 
