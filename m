@@ -1,104 +1,148 @@
-Return-Path: <linux-gpio+bounces-29000-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29001-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B62CC7EC6F
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 02:51:50 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id D54D1C7EE0A
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 04:11:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1593A4E19BD
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 01:51:49 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7D2F2344C9A
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 03:11:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9408B239E9A;
-	Mon, 24 Nov 2025 01:51:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CA84259C80;
+	Mon, 24 Nov 2025 03:11:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WPA0Co2K"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2206476026;
-	Mon, 24 Nov 2025 01:51:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B54A2AE99
+	for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 03:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763949104; cv=none; b=ZMre4emuAG8BKZ66NudoTyRA2Z4NySySG7ABaEg8c7I3mFLaJD0HafSwFj+cfmMm8ahRhrIzJ7SgaHVFxjSBZWrF7fSsBsBNx5JqJWkY6Y1zVuXbbwrB+C+ppvSNpQcFAEds2aRUeXjoO0nYyI6LFbxd9GwoyI3PhDHTffmWC54=
+	t=1763953902; cv=none; b=rvlu56L9GC76VOpD9PhAZjKfq/sEKu+gbncy0H86JEAv0xgC76h7fD22S7K2xkjuEUzlNMZVH0wDrqGK5C/1ogIjzeUc7UVkEzV45uvDKEHX5J18HZ69+k/UXHspTnCHidlqQRuF4sPRZQnEJOvdWkhanf2NXeYSYy2+8q1qzhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763949104; c=relaxed/simple;
-	bh=ozX+o5Y/xXEXDQewU0louCfRuETGOQ7exgclSKsqL5c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IyamXs6ENH7tvgvxjnn3GzGLoN1oEIJurVXfHoF8pw9pZlpSayUKlaJqS49++jDGxTPTLIQrC4bK8wK9iS4qm5i5rI016/fumZLheM48MHrCegQE1LIso5zj2X6faxmcP2GNCY26+RfUr4rvZ/WsEMB5tYgax3qPoHF/NEnOlN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from DESKTOP-L0HPE2S (unknown [124.16.141.245])
-	by APP-05 (Coremail) with SMTP id zQCowACnb3AbuiNpnqXRAQ--.18350S2;
-	Mon, 24 Nov 2025 09:51:24 +0800 (CST)
-From: Haotian Zhang <vulab@iscas.ac.cn>
-To: ckeepax@opensource.cirrus.com,
-	rf@opensource.cirrus.com,
-	david.rhodes@cirrus.com,
-	linus.walleij@linaro.org
-Cc: linux-sound@vger.kernel.org,
-	patches@opensource.cirrus.com,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Haotian Zhang <vulab@iscas.ac.cn>
-Subject: [PATCH] pinctrl: cirrus: cs42l43: Handle devm_pm_runtime_enable() errors
-Date: Mon, 24 Nov 2025 09:49:33 +0800
-Message-ID: <20251124014933.898-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.50.1.windows.1
+	s=arc-20240116; t=1763953902; c=relaxed/simple;
+	bh=IDBhwjiIBOdgE1OY1/405gj43DKOT85MGqvHTVjd1qs=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=HuBPLszbme2xj5RU8yN5xxwNsFsCWUjZdtYhe0bYHusC/OYIVNiLBxeEhzDse0IUV1MYLgaaCyHgyw83AVEdkYEYnnReBIRQaE22YbPNx4SZ8Jata1W81byXtIaXGSgVPydRELX8uW+cinY6VO6Y6CM2MDUqAqbu8XNfRlz93vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WPA0Co2K; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763953901; x=1795489901;
+  h=date:from:to:cc:subject:message-id;
+  bh=IDBhwjiIBOdgE1OY1/405gj43DKOT85MGqvHTVjd1qs=;
+  b=WPA0Co2K8WsGcJ8Oy5xi1t94hzxLFA72f8WG6YqRhNwNyKWFblYsBPwE
+   yyoA/W0zx2IwnXR3nVh2B+Tsz8KQNIeD9hChQvKh8Qd8mwmugxlavo2fp
+   dZKHNBBpXzW9+Q0dnVRZNNRdEa2zlT6BdS8vkeobKH9szF7ddnJHLfkvG
+   hLM3SxWT6onQ5DaV/jBZ5xBnVawXSQyKHj9ZQA/xj6Sk2vB9scCCQPWur
+   uO73tm0lVzIgW+Bs2OOnQTxaLxjD2lU+DH6YF55klUlWZyWKLgqpMI5gX
+   +2mbo+IwFGiVnQW7t0vgnZ8xEkab9BCbRr3jbldsjO2iWoiH7DH+wjylk
+   g==;
+X-CSE-ConnectionGUID: 2H9/VVAuSmiE5NJBlV2znA==
+X-CSE-MsgGUID: 2pEfQQDJREayQOdF+PoVAw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11622"; a="83567982"
+X-IronPort-AV: E=Sophos;i="6.20,222,1758610800"; 
+   d="scan'208";a="83567982"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2025 19:11:41 -0800
+X-CSE-ConnectionGUID: Y5mmPtNQRx++cSz7DKaZ9w==
+X-CSE-MsgGUID: Oo9wGtYQQqCX53P81DENOw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,222,1758610800"; 
+   d="scan'208";a="191383498"
+Received: from lkp-server01.sh.intel.com (HELO 4664bbef4914) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 23 Nov 2025 19:11:39 -0800
+Received: from kbuild by 4664bbef4914 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vNMzJ-000000000KR-25eh;
+	Mon, 24 Nov 2025 03:11:37 +0000
+Date: Mon, 24 Nov 2025 11:11:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ 130eff6df1e497c445181b8910cb01ffd618ea2a
+Message-ID: <202511241114.dNsLPLaO-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowACnb3AbuiNpnqXRAQ--.18350S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7GF45Cr4fKw4kCFWkAF1UZFb_yoWkAwb_CF
-	WrurW7XryYgr18Cw1qqry3ZryIkFs5Xr4Fqrnag3W3CFW7uw1qvrWqva98uws7W3s7Aryv
-	yr13Z3WFyryUAjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb4kFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
-	Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUonmRUU
-	UUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgwQA2kjIhL8xAAAsb
 
-devm_pm_runtime_enable() can fail due to memory allocation. The current
-code ignores its return value, potentially causing pm_runtime_idle() to
-operate on uninitialized runtime PM state.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 130eff6df1e497c445181b8910cb01ffd618ea2a  Merge branch 'devel' into for-next
 
-Check the return value of devm_pm_runtime_enable() and return on failure.
+elapsed time: 7381m
 
-Fixes: d5282a539297 ("pinctrl: cs42l43: Add support for the cs42l43")
-Signed-off-by: Haotian Zhang <vulab@iscas.ac.cn>
----
- drivers/pinctrl/cirrus/pinctrl-cs42l43.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+configs tested: 55
+configs skipped: 3
 
-diff --git a/drivers/pinctrl/cirrus/pinctrl-cs42l43.c b/drivers/pinctrl/cirrus/pinctrl-cs42l43.c
-index 68abb6d6cecd..fdf7e95b17ea 100644
---- a/drivers/pinctrl/cirrus/pinctrl-cs42l43.c
-+++ b/drivers/pinctrl/cirrus/pinctrl-cs42l43.c
-@@ -573,7 +573,9 @@ static int cs42l43_pin_probe(struct platform_device *pdev)
- 
- 	device_set_node(priv->dev, fwnode);
- 
--	devm_pm_runtime_enable(priv->dev);
-+	ret = devm_pm_runtime_enable(priv->dev);
-+	if (ret)
-+		return ret;
- 	pm_runtime_idle(priv->dev);
- 
- 	pctldev = devm_pinctrl_register(priv->dev, &cs42l43_pin_desc, priv);
--- 
-2.50.1.windows.1
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+tested configs:
+alpha         allnoconfig    gcc-15.1.0
+alpha        allyesconfig    gcc-15.1.0
+arc          allmodconfig    gcc-15.1.0
+arc           allnoconfig    gcc-15.1.0
+arc          allyesconfig    gcc-15.1.0
+arm           allnoconfig    clang-22
+arm          allyesconfig    gcc-15.1.0
+arm64        allmodconfig    clang-19
+arm64         allnoconfig    gcc-15.1.0
+csky         allmodconfig    gcc-15.1.0
+csky          allnoconfig    gcc-15.1.0
+hexagon      allmodconfig    clang-17
+hexagon       allnoconfig    clang-22
+i386         allmodconfig    gcc-14
+i386          allnoconfig    gcc-14
+i386         allyesconfig    gcc-14
+loongarch    allmodconfig    clang-19
+loongarch     allnoconfig    clang-22
+m68k         allmodconfig    gcc-15.1.0
+m68k          allnoconfig    gcc-15.1.0
+m68k         allyesconfig    gcc-15.1.0
+microblaze    allnoconfig    gcc-15.1.0
+microblaze   allyesconfig    gcc-15.1.0
+mips         allmodconfig    gcc-15.1.0
+mips          allnoconfig    gcc-15.1.0
+mips         allyesconfig    gcc-15.1.0
+nios2        allmodconfig    gcc-11.5.0
+nios2         allnoconfig    gcc-11.5.0
+openrisc     allmodconfig    gcc-15.1.0
+openrisc      allnoconfig    gcc-15.1.0
+parisc       allmodconfig    gcc-15.1.0
+parisc        allnoconfig    gcc-15.1.0
+parisc       allyesconfig    gcc-15.1.0
+powerpc      allmodconfig    gcc-15.1.0
+powerpc       allnoconfig    gcc-15.1.0
+riscv        allmodconfig    clang-22
+riscv         allnoconfig    gcc-15.1.0
+riscv        allyesconfig    clang-16
+s390         allmodconfig    clang-18
+s390          allnoconfig    clang-22
+s390         allyesconfig    gcc-15.1.0
+sh           allmodconfig    gcc-15.1.0
+sh            allnoconfig    gcc-15.1.0
+sh           allyesconfig    gcc-15.1.0
+sparc         allnoconfig    gcc-15.1.0
+sparc64      allmodconfig    clang-22
+um           allmodconfig    clang-19
+um            allnoconfig    clang-22
+um           allyesconfig    gcc-14
+x86_64       allmodconfig    clang-20
+x86_64        allnoconfig    clang-20
+x86_64       allyesconfig    clang-20
+x86_64      rhel-9.4-rust    clang-20
+xtensa        allnoconfig    gcc-15.1.0
+xtensa       allyesconfig    gcc-15.1.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
