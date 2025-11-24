@@ -1,97 +1,64 @@
-Return-Path: <linux-gpio+bounces-29045-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29046-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70A77C82750
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 21:57:10 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3DA3C827E4
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 22:14:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6BD004E19F5
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 20:57:09 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 93E324E186A
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 21:14:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70E102E613A;
-	Mon, 24 Nov 2025 20:57:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83BB532E146;
+	Mon, 24 Nov 2025 21:14:52 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
+Received: from sv218.xbiz.ne.jp (sv218.xbiz.ne.jp [183.90.231.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D57258ECC;
-	Mon, 24 Nov 2025 20:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 886E1296BA2
+	for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 21:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.90.231.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764017826; cv=none; b=Z1vActLKt4kETrc52JZmmGzEarLRLATc+uIwIiq4/ATVpBTPgCGmxVt2qpJi9nP3pP+wmjasbucjacHIIQDjpGkksCvk8ifF2aq2TNKI+lAjLrrxY0KPCTRTC5RzFQ+AhEX8sOC7hpA56nySfvDMWdUjXHWn5VZyPAbp2XaAr6U=
+	t=1764018892; cv=none; b=RU+PUbpznwHWLSmD2hNIMUdhHlXU/povyTcyfxnUwC07F/mXHy9WmoV8oXycQvtNU1E+Lmvp6mrNxCnvDJeNwLwTb6OO8z84Xhr49UzC0GWBegi8aNSssqj0udjf4Et/veZOv9x6r+z9vju/Gd6WDOUOLivc/6pfVVqWU68PlnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764017826; c=relaxed/simple;
-	bh=Pc8UN9YVeoEwyVurkGglaWNeVYL23hjnDmUy/nwLgX8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pjtfcJhW3Ba7TUNg9kqekPaXaP6/Y1pwOC6NvulrruNBYIioupHorqTBbvtk2UAtXNhF/slFSYFUTo2JICgUYIkd21LQCaX56Sg9SV7p4rBxnmxVLyPOn8ALvLCQHy42eneOv+9tjr64nry0vq3gkqMHRC9oOVj7KHm+Zei5E7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 3679A2ABFA1;
-	Mon, 24 Nov 2025 21:56:55 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id B53CdOYX8L0m; Mon, 24 Nov 2025 21:56:54 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 3DACA2ABFDC;
-	Mon, 24 Nov 2025 21:56:54 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id RfuquAeH4ek5; Mon, 24 Nov 2025 21:56:54 +0100 (CET)
-Received: from nailgun.corp.sigma-star.at (85-127-105-34.dsl.dynamic.surfer.at [85.127.105.34])
-	by lithops.sigma-star.at (Postfix) with ESMTPSA id E1FDC2ABFA1;
-	Mon, 24 Nov 2025 21:56:53 +0100 (CET)
-From: Richard Weinberger <richard@nod.at>
+	s=arc-20240116; t=1764018892; c=relaxed/simple;
+	bh=cnLX0bmnbAdoIML3Eph58ZiOuz5bQMI1NKI+IUSEe8Y=;
+	h=To:Subject:Date:From:Message-ID:MIME-Version:Content-Type; b=tMUMG02/t3E5yqSpMvHF3foxQhCqgwOoYq9WoOJUJfhy+89FpBQiCwRYAMZCbZ7KISv01aXSGfwskLPzypgzR2IGRoBjU2eE2RHuS5Ri8IB6lHevXT8/4nTv7aXus30cOTJ0kVX7KkOLDsvaxYfzhWpotb8O2c8XWtW7YgJpt9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=u-u.jp; spf=pass smtp.mailfrom=sv218.xbiz.ne.jp; arc=none smtp.client-ip=183.90.231.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=u-u.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sv218.xbiz.ne.jp
+X-Virus-Status: scanned (With Secure/Atlant/virusgw211.xbiz.ne.jp/)
+Received: by sv218.xbiz.ne.jp (Postfix, from userid 20033)
+	id 4A1C13E1377CCE; Tue, 25 Nov 2025 06:05:22 +0900 (JST)
 To: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	brgl@kernel.org,
-	linus.walleij@linaro.org,
-	Richard Weinberger <richard@nod.at>
-Subject: [PATCH] gpiolib: Warn if a single GPIO is expected but a list is found
-Date: Mon, 24 Nov 2025 21:56:49 +0100
-Message-ID: <20251124205649.3560456-1-richard@nod.at>
-X-Mailer: git-send-email 2.51.0
+Subject: =?UTF-8?B?56uc546L44Op44OJ44Oz5rip5rOJ44Ob44OG44Or44CA5rmv44Cc44Go44G0?=  =?UTF-8?B?44GC?=
+Date: Mon, 24 Nov 2025 21:05:22 +0000
+From: =?UTF-8?B?56uc546L44Op44OJ44Oz5rip5rOJ44Ob44OG44Or44CA5rmv44Cc44Go44G0?=
+ =?UTF-8?B?44GC?= <info@u-u.jp>
+Reply-To: info@u-u.jp
+Message-ID: <Gw55I8bwNtASWluJCC2rk60PiWZLtnr1zvf18bxeFmw@u-u.jp>
+X-Mailer: PHPMailer 6.9.3 (https://github.com/PHPMailer/PHPMailer)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Device tree properties such as reset-gpios can contain one or more
-GPIOs but the vast majority of device drivers query only for a single
-GPIO desc.
-Add some aid to detect the case when someone defines multiple GPIOs
-but a driver expected only one.
-This would have saved me an hour today.
+この度はお問い合せ頂き誠にありがとうございます。
+改めて担当者よりご連絡をさせていただきます。
 
-Signed-off-by: Richard Weinberger <richard@nod.at>
----
- drivers/gpio/gpiolib.c | 4 ++++
- 1 file changed, 4 insertions(+)
+=====================================
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index cd8800ba5825f..d57d83cc4074e 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4601,6 +4601,10 @@ static struct gpio_desc *gpiod_find_by_fwnode(stru=
-ct fwnode_handle *fwnode,
- 	const char *name =3D function_name_or_default(con_id);
- 	struct gpio_desc *desc =3D ERR_PTR(-ENOENT);
-=20
-+	if (gpiod_count(consumer, con_id) > 1)
-+		dev_warn(consumer, "gpio property \"%s\" in %pfw has more than one ele=
-ments, expected only one!\n",
-+			 con_id, fwnode);
-+
- 	if (is_of_node(fwnode)) {
- 		dev_dbg(consumer, "using DT '%pfw' for '%s' GPIO lookup\n", fwnode, na=
-me);
- 		desc =3D of_find_gpio(to_of_node(fwnode), con_id, idx, lookupflags);
---=20
-2.51.0
+メッセージ本文:
+Hi, this is Jeniffer. I am sending you my intimate photos as I promised. https://tinyurl.com/49nrts9p#9pDch5
+
+=====================================
+
+--
+このメールは 竜王ラドン温泉ホテル　湯〜とぴあ (https://u-u.jp) のお問い合わせフォームから送信されました
 
 
