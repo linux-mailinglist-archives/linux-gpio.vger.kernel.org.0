@@ -1,159 +1,134 @@
-Return-Path: <linux-gpio+bounces-29042-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29043-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 370EFC81F9B
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 18:49:04 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4DEAC822ED
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 19:55:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DC5E23A419B
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 17:48:27 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 416F5349BB0
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 18:54:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB76D2C21EB;
-	Mon, 24 Nov 2025 17:48:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6158F3168EE;
+	Mon, 24 Nov 2025 18:54:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="fEYlIdOQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AmpYBxDa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA532C1581
-	for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 17:48:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DDBA2D24BF
+	for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 18:54:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764006503; cv=none; b=dACpcNlA2+m2qU55C8ARySmkRGAaau+wMTAwOd26nwuDTU6B5IkyS/5so2wKnQLAJlLk1a6T3sUmrIaNYQ4gQsZWnVEUrFWi2//cjFtqLuxh2BmbXl52hbV7vxkOb00BF0xQtItcNxYu/ajVoP0yIn8ZCajgnLrLDjd3PQn1Hxg=
+	t=1764010458; cv=none; b=ONaLK0rR4CO942ZeaXm9zW6rRaxHjHxRbehrk8KEHhCkRL6mVYHJ8HLoEVL7kvmO8Ic7sIsSy1Z6oX0CSdp9MTcMbpnMhPyo2ivgmmdnQ4qO0U03HnX06RYqtWFZY8P9U2VKSRH/HqsiJrTAUspKtFFtNG430FvQ5WVRCdzuOqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764006503; c=relaxed/simple;
-	bh=4r6uq+XJ6hrSbkNoNXPhbiKHyGHCKt75UkrHPmh0NFQ=;
+	s=arc-20240116; t=1764010458; c=relaxed/simple;
+	bh=TEK7y+I345Za9ATxX+knyA/Uh489WPY9Dd1JCZP1I5g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZRil83meUSZrO8CGy1AfX0sC+csn11BCyHmwCOnoBUGQjtkeVmB+drrL1yTx8lpCYesSmdeggQZi0laUf8zHrpbj5nI4hFU2GMVq8AhiwUAxG5k0Wz2oA1qZTQP/4wHiXft5H44rP+sW/fQQXatCUkGmu/g8yeb7wc1iQoNshBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=fEYlIdOQ; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-594516d941cso5228778e87.0
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 09:48:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1764006500; x=1764611300; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4r6uq+XJ6hrSbkNoNXPhbiKHyGHCKt75UkrHPmh0NFQ=;
-        b=fEYlIdOQ3Nx0FvthAY/5aEUw5UUb3MtRrsBm/5nbXJ6RShy2OIOJrnBvaYqux8QtsN
-         6E+DodmUX2Io+IMCmxdf25iypV0EtHUMbOG+3howrJVjk9XVF3HnNl2cUDZyzMGektvw
-         xj4VjUPWw3dfOIX36p+OcSsbbbdnHI9slG0YOIcDYiscmrsSPdxk1hPJrDNE4ogmL5XY
-         pMLDmFqIMQfiRMK3mIEzExfbo7UhLuvjEeNTwOCU4gjpw6x6FPW9hYyOwSQ/chzZiG2T
-         g2PxPWTCJJJLxTUDzQk/GCU/WZhi9XvvvJYnQJvt/fQj2k6vVVQH7lwQWx8mNuTS7i/g
-         ilqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764006500; x=1764611300;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=4r6uq+XJ6hrSbkNoNXPhbiKHyGHCKt75UkrHPmh0NFQ=;
-        b=DGfg5V5JiUes54zYPE7Qa6Og0arHM1Yggt0EC9ZCyPWwYKAezfaYWguIRf7VmqLXqz
-         QJEkjEbOF0981R5O/b10RAKuQEHpnp9vS24VFD985BrBFvV1s1SSfbsRjm4mlXfSMVRU
-         pMtmcvbMcV05SZ5M1DMQMHCdYRHbF8lQs0cveDK/K0SvEKUe6OLMUPf7Yh8XrA5qQlOY
-         ckdM7A7OGLB5sIREKeOGWLDPuSI6XNdKY6T5sITvX8ZWHNPs4XRhHl0H5z2bEzZGgez6
-         lMN9nG9kGD94dU424wImownRfOEdlWvdkDFs0tu+j3x0AnKWniUbt1i0FzOQTvk1kRp9
-         gKNA==
-X-Forwarded-Encrypted: i=1; AJvYcCVrOEMbmL1KjjmKgz78WQ1tsXO6IBwiR4wIjGLKpi91f0woIPGqzBLGl9pHVuwPmOAo6kvyQbg9rxHV@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSAGfXj6usuibgFnc2Jm9hau9d/EDFJz8GeVkIODJHo7GMlRbz
-	Ea1LrtUfT6UBEtTUcQOKS8L0E8DnvmJgxHk55Yzn2GYXCNCpD+YsKC3VpKNGIWiONMZDz3pPQkG
-	S8RfZMWU3DKojzRiWSYrxYU2J9q1XNx0AHsOB09X8NQ==
-X-Gm-Gg: ASbGncvTueZ/OP0ar/pDg7izJc2nbdelhyCPftVu4cctg2JMBOpIcr/bKkkrgZRiyUk
-	4G9uEFrUh/YGR1zF99eOP0EUVOPN6IMWPyd9plzafsxMtyWRhm4vhx6SvBiF1RhCWIxS/W8Es/P
-	/dRl/obDr67XGUc4pmuK+M6p1HdzYFI0Tu5ars6tMGzoMGCsLz5l7jZ21M6cUO8VLIQQ+lWcO/Y
-	zD3wLQ7Vqem4YemGljxUKL/VAORhvCaPosa6D4Wsd2RIpdKurBBtlMN96KNisDZUW/O4ny7cRnA
-	HtTHhEmeEHOXctIKkCWf5bcEOtPkCf+3Zl++eQ==
-X-Google-Smtp-Source: AGHT+IF993DoHSMlB60mWDtCOrB1XMOt2yUP8xFOoEjON0prsCxIqX3jeiL/LWt48eiHKiIUUX/0Hv99+yLDo3p5YEc=
-X-Received: by 2002:a05:6512:3b27:b0:592:fa8a:810d with SMTP id
- 2adb3069b0e04-596a3ea7847mr4433290e87.16.1764006499554; Mon, 24 Nov 2025
- 09:48:19 -0800 (PST)
+	 To:Cc:Content-Type; b=VzP7O8AODyRf6feRRhZ4aUSa02Mo0uZ13mO1Y1lFkYKCYlJBfHMoCVUF2TgnK4btY1cNRLdsTgLbEXrnXinzQWB7PNXNuOKjDPJaT6hFtmN4nHVssmDbWp7ugdYJ73OTHuEmcvKveDngvhiqUNbLAzVYbWPXwymxSo2ny/+YR6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AmpYBxDa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3146C4AF09
+	for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 18:54:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764010457;
+	bh=TEK7y+I345Za9ATxX+knyA/Uh489WPY9Dd1JCZP1I5g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=AmpYBxDaPN5ZX9P0uxZqWlwOpLxvn2PrmdmQy+Ucj2PSpzD1kjzVJQNspQ3O+zzAE
+	 SoyfcVuxENoe6qN/jwgovr+Map/yE1k+ds7flRVlx2SmXzlUGVnFRek18ncwAZHd7S
+	 CmZZxqAIg/l3VjDKxFy7NVIj3yVu8kSd1iexr44ZzLxCtAc/tf/uV7g0Evv7eqHjnm
+	 1YCo41nZXFteqNZB42Xy6mkJWgTsrY3vio3yZSuwLAF9h+4WTNJsjuMD9VktUXg+iG
+	 xqY1spckPyd0iU/VIM2tMeSOPeqRpUk3qI2vXgOXeQZFFERXoX3JYZp2Be25cXhs5B
+	 9ERA2nzw21Whg==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-64198771a9bso8323535a12.2
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 10:54:17 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXLZihSOltGKezEgJ/0FKjdpzPJCBm71u2AjAjuUa7g9h6Hg4G6qbGj4Vf+TldUEphPxADK84o2+ouS@vger.kernel.org
+X-Gm-Message-State: AOJu0YxckF8RgAS4FAEIP0aDY90nQfnf/DabSFeYDW1K1hOi6n+ou/j3
+	sST0bR1V6ftqoqrwMYWnteCGmCsT25eSXkqQYpkWYuve6cE8RHuJ5a9c6EUvOFPigYber07OK9p
+	vOMvLYEZogK0sPKbn0XP9w/7JEpFA4Q==
+X-Google-Smtp-Source: AGHT+IFReAtDFuSFDhp918Ohx2vHaiN5KlMAX/uodATZY6O/YB75rQVqkELqtwQbH271c/8FxbJ2Dkum3f0Uu3OWMzM=
+X-Received: by 2002:a05:6402:5252:b0:643:4e9c:d166 with SMTP id
+ 4fb4d7f45d1cf-6455443ed4cmr10891528a12.8.1764010456224; Mon, 24 Nov 2025
+ 10:54:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251120-reset-gpios-swnodes-v7-0-a100493a0f4b@linaro.org>
- <20251120-reset-gpios-swnodes-v7-4-a100493a0f4b@linaro.org> <aSSOo4q0sLDHqe1h@opensource.cirrus.com>
-In-Reply-To: <aSSOo4q0sLDHqe1h@opensource.cirrus.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 24 Nov 2025 18:48:05 +0100
-X-Gm-Features: AWmQ_bnvq_Ux1-kkcgnqJRAH0qfvPMdf4XOXl8mrvC21GsBAI5YmjWFZH8pho_M
-Message-ID: <CAMRc=MfiR4AMYXc5YA0GOt=+-kx0yO0qFdYd2mZqwguW5v+U5g@mail.gmail.com>
-Subject: Re: [PATCH v7 4/9] spi: cs42l43: Use actual ACPI firmware node for
- chip selects
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, David Rhodes <david.rhodes@cirrus.com>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, Mark Brown <broonie@kernel.org>, 
-	Maciej Strozek <mstrozek@opensource.cirrus.com>, Andy Shevchenko <andy@kernel.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-sound@vger.kernel.org, 
-	patches@opensource.cirrus.com, linux-spi@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, stable+noautosel@kernel.org
+References: <20250911151001.108744-1-ariel.dalessandro@collabora.com>
+ <20250911151001.108744-4-ariel.dalessandro@collabora.com> <20250912140619.GA1293647-robh@kernel.org>
+ <fb20e4fe-df0a-4089-a7cf-e82bfe1f8e00@collabora.com>
+In-Reply-To: <fb20e4fe-df0a-4089-a7cf-e82bfe1f8e00@collabora.com>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 24 Nov 2025 12:54:04 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+eeiw9oaqQPWt2=rZSX98Pak_oB=tfQFvEehwLZ=S52g@mail.gmail.com>
+X-Gm-Features: AWmQ_blUF-g1qhHGkKsa6U6HY_V7mtf4Q-WkpVuhZVm09t2HSWt6-IOrweXVTPs
+Message-ID: <CAL_Jsq+eeiw9oaqQPWt2=rZSX98Pak_oB=tfQFvEehwLZ=S52g@mail.gmail.com>
+Subject: Re: [PATCH v2 03/12] dt-bindings: net: Convert Marvell 8897/8997
+ bindings to DT schema
+To: "Ariel D'Alessandro" <ariel.dalessandro@collabora.com>
+Cc: airlied@gmail.com, amergnat@baylibre.com, andrew+netdev@lunn.ch, 
+	andrew-ct.chen@mediatek.com, angelogioacchino.delregno@collabora.com, 
+	broonie@kernel.org, chunkuang.hu@kernel.org, conor+dt@kernel.org, 
+	davem@davemloft.net, dmitry.torokhov@gmail.com, edumazet@google.com, 
+	flora.fu@mediatek.com, heiko@sntech.de, houlong.wei@mediatek.com, 
+	jeesw@melfas.com, kernel@collabora.com, krzk+dt@kernel.org, kuba@kernel.org, 
+	lgirdwood@gmail.com, linus.walleij@linaro.org, 
+	louisalexis.eyraud@collabora.com, luiz.dentz@gmail.com, 
+	maarten.lankhorst@linux.intel.com, marcel@holtmann.org, 
+	matthias.bgg@gmail.com, mchehab@kernel.org, minghsiu.tsai@mediatek.com, 
+	mripard@kernel.org, p.zabel@pengutronix.de, pabeni@redhat.com, 
+	sean.wang@kernel.org, simona@ffwll.ch, support.opensource@diasemi.com, 
+	tiffany.lin@mediatek.com, tzimmermann@suse.de, yunfei.dong@mediatek.com, 
+	devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-arm-kernel@lists.infradead.org, linux-bluetooth@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	linux-sound@vger.kernel.org, netdev@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 24, 2025 at 5:58=E2=80=AFPM Charles Keepax
-<ckeepax@opensource.cirrus.com> wrote:
+On Wed, Oct 1, 2025 at 12:28=E2=80=AFPM Ariel D'Alessandro
+<ariel.dalessandro@collabora.com> wrote:
 >
-> On Thu, Nov 20, 2025 at 02:23:59PM +0100, Bartosz Golaszewski wrote:
-> > From: Charles Keepax <ckeepax@opensource.cirrus.com>
+> Rob,
+>
+> On 9/12/25 11:06 AM, Rob Herring wrote:
+> > On Thu, Sep 11, 2025 at 12:09:52PM -0300, Ariel D'Alessandro wrote:
+> >> Convert the existing text-based DT bindings for Marvell 8897/8997
+> >> (sd8897/sd8997) bluetooth devices controller to a DT schema.
+> >>
+> >> While here:
+> >>
+> >> * bindings for "usb1286,204e" (USB interface) are dropped from the DT
+> >>    schema definition as these are currently documented in file [0].
+> >> * DT binding users are updated to use bluetooth generic name
+> >>    recommendation.
+> >>
+> >> [0] Documentation/devicetree/bindings/net/btusb.txt
+> >>
+> >> Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+> >> ---
+> >>   .../net/bluetooth/marvell,sd8897-bt.yaml      | 79 +++++++++++++++++=
++
+> >>   .../devicetree/bindings/net/btusb.txt         |  2 +-
+> >>   .../bindings/net/marvell-bt-8xxx.txt          | 83 -----------------=
+--
 > >
-> > On some systems the cs42l43 has amplifiers attached to its SPI
-> > controller that are not properly defined in ACPI. Currently
-> > software nodes are added to support this case, however, the chip
-> > selects for these devices are specified using a hack. A software
-> > node is added with the same name as the pinctrl driver, as the
-> > look up was name based, this allowed the GPIO look up to return
-> > the pinctrl driver even though the swnode was not owned by it.
-> > This was necessary as the swnodes did not support directly
-> > linking to real firmware nodes.
+> >>   .../dts/rockchip/rk3288-veyron-fievel.dts     |  2 +-
+> >>   .../boot/dts/rockchip/rk3288-veyron-jaq.dts   |  2 +-
+> >>   arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi  |  2 +-
 > >
-> > Since commit e5d527be7e69 ("gpio: swnode: don't use the swnode's
-> > name as the key for GPIO lookup") changed the lookup to be
-> > fwnode based this hack will no longer find the pinctrl driver,
-> > resulting in the driver not probing. There is no pinctrl driver
-> > attached to the swnode itself. But other patches did add support
-> > for linking a swnode to a real fwnode node [1]. As such the hack
-> > is no longer needed, so switch over to just passing the real
-> > fwnode for the pinctrl property to avoid any issues.
-> >
-> > Link: https://lore.kernel.org/linux-gpio/20251106-reset-gpios-swnodes-v=
-6-0-69aa852de9e4@linaro.org/ [1]
-> > Fixes: 439fbc97502a ("spi: cs42l43: Add bridged cs35l56 amplifiers")
-> > Cc: stable+noautosel@kernel.org # Don't backport, previous approach wor=
-ks, fix relies on swnode changes
+> > .dts files should be separate patches. Please send the bindings patches
+> > separately per subsystem so subsystem maintainers can apply them. All
+> > the Mediatek dts changes can be 1 series.
 >
-> Just wanted to check what the thinking is on backports here. I
-> see we have marked this as do not backport. Which I think is
-> sensible the changes in the preceeding patches are a bit much for
-> a backport. However, the patch has caused the regression has gone
-> to a few stable branches (v6.17, v6.12):
->
+> Ack, will fix in v3.
 
-I totally forgot about this having gone into stable.
+Are you going to send v3 still?
 
-> commit e5d527be7e69 ("gpio: swnode: don't use the swnode's name as the ke=
-y for GPIO lookup")
->
-> Are you guys ok if I send a revert for that patch to the stable
-> branches it has gone to? It doesn't actually fix any bugs on
-> those kernels, and we are starting to see issues coming in that I
-> think are related to this:
->
-
-Yes, definitely, please do. You can add:
-
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-Bart
+Rob
 
