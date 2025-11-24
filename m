@@ -1,122 +1,123 @@
-Return-Path: <linux-gpio+bounces-29004-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29005-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68A65C7F4D4
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 08:58:28 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44AB1C7F67C
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 09:38:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E618C4E3E5D
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 07:58:12 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 14EFD4E39CB
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Nov 2025 08:38:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 371992EA723;
-	Mon, 24 Nov 2025 07:58:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E80502ECD14;
+	Mon, 24 Nov 2025 08:38:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X5Wz8yl1"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="e/gOvjmc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810702E6CA0;
-	Mon, 24 Nov 2025 07:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D44F2EAD1C
+	for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 08:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763971086; cv=none; b=SCpaGizWOOptOrISIYveKeqj4AFw5v4qBOTkErZf879k3D92U6oUN1DMGloylEdmgvrYsbGznTAVky4ZfGhy1I6I9UZZEPrY6OLp3vkdbRPU6aOf8GQQfWol3td86RKLy2ZgoeTGWAl7JjpJFbNOwu9eZtIQJWO0a0b/G+IRpSg=
+	t=1763973508; cv=none; b=Cv9oqXU4ZMhOW04M0XbQGsXUYLshddECSxSmVfLVHo9wur6DDThlxSFLCf0gv1ORtmVacA7g5kaAFUsDNYkX0kjJK6Mrq8JS5NgeJROsg/QAS3Kde4/OGAWmcTAR7bvQk7cNul6qL2Ee5srQs1zXXqhatuuqLQAdSi74snwgC2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763971086; c=relaxed/simple;
-	bh=EmHKU2xxJbu/DLF8gf4ZAIzPPmfTU9pQIr7ysaaEXI4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f7N09/MGvcJsT8RCeFEkqOjaPoist1YZ7NygM5Z25DYNCjqgXT39+4ZL6uLujtjtwU5TZCC/PtDnJ9oxUehZ+8k6kzFuTyrvwSG953GtbgtK/d03sFmKus1msdvfeDr5JCwKYebxUkyjoXl/VA5O0ZVvG1BV2ZOIVfyRnRj4cRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X5Wz8yl1; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763971085; x=1795507085;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=EmHKU2xxJbu/DLF8gf4ZAIzPPmfTU9pQIr7ysaaEXI4=;
-  b=X5Wz8yl1e1tKqYqdziGH6IoMvE0GBqs2rUFCBZbGbH+KC3AJYfU6AZgC
-   AWaT3FAuaRfMInngNjOC968zBTd97P6vlMUvK4YqoYNT5RSr8RxSbHMLQ
-   zVIvAVSDvgWb6FN7dZT/z1PIUUUumbG/d4mjOWTCOBvzUo6f3uqNjOVKt
-   yRAqV4quROshvf8KSynynfoMrUii39NGDWDreF8rcZKo/jUA0cmNkAYBu
-   5s8As5xa0XbdDlq8Sdn2QFv0nOcunAf9AEDCc2kT9qc2avU3VVxdWpGbC
-   ZQXcPZ3/IdAG5nyhzgMSj4ka7YJj6v4Z2xWTg50JnuJyk0MwqQLkxncDK
-   w==;
-X-CSE-ConnectionGUID: 2Uu519V7QmqUuCDOHqWlJg==
-X-CSE-MsgGUID: GNMlthPqQii+cqxuTzPFTA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11622"; a="76290071"
-X-IronPort-AV: E=Sophos;i="6.20,222,1758610800"; 
-   d="scan'208";a="76290071"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2025 23:58:01 -0800
-X-CSE-ConnectionGUID: 4DrC24XPQASVE85LhLaYSA==
-X-CSE-MsgGUID: Q5rBk3MoQKma6GTN3gswXw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,222,1758610800"; 
-   d="scan'208";a="196549379"
-Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.244.5])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2025 23:57:58 -0800
-Date: Mon, 24 Nov 2025 09:57:55 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Jisheng Zhang <jszhang@kernel.org>
-Cc: Hoan Tran <hoan@os.amperecomputing.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Michael =?iso-8859-1?Q?B=FCsch?= <mb@bues.ch>
-Subject: Re: [PATCH v2] gpio: dwapb: Fold dwapb_context into dwapb_gpio_port
-Message-ID: <aSQQA1pCyFN2rppy@smile.fi.intel.com>
-References: <20251124003206.25618-1-jszhang@kernel.org>
- <aSQPwEJhsUxuDAmH@smile.fi.intel.com>
+	s=arc-20240116; t=1763973508; c=relaxed/simple;
+	bh=A4ko1llTfnMpZKhwN6XAGIF19i93xfliAblBu+9SIoA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kEd5IyawbKIUAt3tu5x0Yqg2q+9YTweu24NIfNtuveiRFJJHBqORxFcsz54goIHv+/ao1bWbjfGISyA2yVn2//FfWs95ZhS8oHtask6ugJopFdHc31U4UZb5DEiqX1VRB5b96sgI2OjJKmXWWWVUzsX0yM1vesxhUrP29XLEKbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=e/gOvjmc; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-595910c9178so2633889e87.1
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 00:38:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763973504; x=1764578304; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0Ya6oXSuW5HKGVZ0GUoG6QlLfgFpzkuWfKoJsDP0RZ0=;
+        b=e/gOvjmcirMdLpSd1+COw4etcwgdEoeXYLos3MvMPScXWOFLRmsdXgUx7gI0ZsCf91
+         rAhmaRSMI5jE8cZtZOHgTeu3GMacAM4KK6q74Cjg0sNQWDA7iXgFpSq6+fEaH3i7KxOT
+         k2bN9h/QdEjzJo6rUjX0OBNxVz8WiO8iVM2XK+kDO5wIUSqz87Y2t5Wd1/wJ4bUXq43M
+         SKVMZEWZ4ZRZB1kWHs9GAqg5XxtYcJmGGBKzxNTtpvJpkeY9P5r1OIUP0IWA2Eul4m19
+         /9ceC/0UklkJkf3jfd22VVh+OKHpz0PYc5GMY+nTRzaYgImtWEnOh9YZU59WBtQgkuvx
+         h4wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763973504; x=1764578304;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=0Ya6oXSuW5HKGVZ0GUoG6QlLfgFpzkuWfKoJsDP0RZ0=;
+        b=uuG6re1UZIOXPTnuVpXGKNG/NzfiPfN4E3jEwUCP8jA5WYsXqQGhuIi5z/kdNhk6rX
+         DxJ5f/Cv77NCwKSr3ogKx9xU/PiAxTm0+PYqTWeToojHGE7WmLglUGGci2o9Do9VqTFL
+         xXrPXrOzUEgkchOZAoPHpRIDYNsiEn1sOuFbWpJqFvKQmTJ6d3J+2PFhdqdmWvIH7oRU
+         QUNKpVw99UkHH8XJiiOkJIZgSJZVBhxAvK9lF933IvPelPwVg795dLZb3harfaHmX2WE
+         4cMHsBDJKKUKx1fBxqByLEtqhOV3nQ5Qh2IijbAEMqinJORHMzZ8VGxTk60IBOX8l3OV
+         rK4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXczcX47pqslPo5B280JxBRgzvNARKBhlARnQ+76cLdkaEksgWV+8hHDrrWhZ9HwQPky4hznUAg+2di@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyeVCQKLolWTHSzgTMKzcqsGS5btpJYhe99dFfhbPOs8QAfpfa
+	46bIwB5IJ3szit8TijnBGvYTOn5SHkikYYQlu8Bqx/FLxX8CvZ516Zp3KT5IlwhTHg4ajUCMyvu
+	5zjHt2R1m+pqfOIn5RxBP0Ti5Dw8YLcuMxpg2g9DeGQ==
+X-Gm-Gg: ASbGncuuxBS4UksYWKP8NK2zLIeuCEXPjGTExYz8wjHpxTiaV3s+u4WRsODVqvB1ZjI
+	7KsjfzL4+wq0sGPvDTw6yF9thmDTCdrgxWkC48VrsusmPS2uChdDlOqlLdF+4QFh7R+u4cs2ih9
+	ohSYShiwS8rSe/eCZe/eWqb57zAI8i61UeTTglbyivbHQRy5aRyPqfg18XqPKtYpT4FpVihixT1
+	qQmHROm79ILy6Z7fQXNsBdz1bQ3ywohfKpIGq7f2hp0tCMN7Hn5gfqOI8xTYRCTsoLFqHBhtV5A
+	DOwdt+hjBehZ003VIx69jKj3vbY=
+X-Google-Smtp-Source: AGHT+IHddP45Iw1u4x5gRhDKYJif/xDaoPtzoUcfY5zo1vTJhPnOEF4e60BFJI6rchMqF8oMYnvc4vWnv0O61qtodtg=
+X-Received: by 2002:a05:6512:110a:b0:594:253c:209f with SMTP id
+ 2adb3069b0e04-596a3edc91fmr3270301e87.39.1763973503967; Mon, 24 Nov 2025
+ 00:38:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aSQPwEJhsUxuDAmH@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <20251121-gpiolib-shared-reset-gpio-fix-v1-1-cf0128fe4b47@linaro.org>
+ <be7fd390-e81d-4e93-880a-1b6404398408@packett.cool>
+In-Reply-To: <be7fd390-e81d-4e93-880a-1b6404398408@packett.cool>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 24 Nov 2025 09:38:12 +0100
+X-Gm-Features: AWmQ_bnn18M7d0OcQOnbJTJz4lGmLFoHp7b-dn-7mGA9R5vcmt5vBbCxue_57oU
+Message-ID: <CAMRc=MdW3AkkivE=sA4STZAmmee7bCBkD5oEsXiRcKA80Ggd4A@mail.gmail.com>
+Subject: Re: [PATCH] gpio: shared: handle the reset-gpios corner case
+To: Val Packett <val@packett.cool>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 24, 2025 at 09:56:53AM +0200, Andy Shevchenko wrote:
-> On Mon, Nov 24, 2025 at 08:32:06AM +0800, Jisheng Zhang wrote:
-> > Fold dwapb_context into struct dwapb_gpio_port to further simplify
-> > the code. Sure this brings a tiny 36 bytes data overhead for
-> > !PM_SLEEP. After grepping the arm/arm64/riscv dts dir, the max dwapb
-> > GPIO port number is 6(the berlin2q soc family), so this means we will
-> > waste 216 bytes memory in total which is trivial compared to the
-> > system memory.
-> > 
-> > From another side, as Michael mentioned:
-> > "The driver currently allocates the struct with kzalloc and stores a
-> > pointer to it in case of PM=y.
-> > So this probably has an overhead in the same order of magnitude
-> > (pointer + malloc overhead/alignment/fragmentation) in case of PM=y
-> > now."
-> > 
-> > So let's Fold dwapb_context into struct dwapb_gpio_port.
-> 
-> Fold --> fold
-> 
-> Given more thinking on this, I believe the approach with kmalloc() is
-> preferable, but what should be done is
+On Sun, Nov 23, 2025 at 2:03=E2=80=AFAM Val Packett <val@packett.cool> wrot=
+e:
+>
+> > ---
+> > This is targetting linux-next where the reset-gpio driver is now using
+> > the auxiliary bus and software nodes rather than the platform bus and
+> > GPIO machine lookup. The bug is the same in both cases but the fix woul=
+d
+> > be completely different.
+> > ---
+> > [..]
+>
+> Tried applying only this, as well as this +
+> https://lore.kernel.org/all/20251120-reset-gpios-swnodes-v7-0-a100493a0f4=
+b@linaro.org/
+> + https://lore.kernel.org/all/20251121135739.66528-1-brgl@bgdev.pl/ (on
+> top of next-20251120) and the issue is still present.. am I missing
+> something?
+>
 
-> - making context a global variable
+Can you try this branch?
 
-I mean global _per device_, so moving it to the DWAPB device level structure.
+  https://github.com/brgl/linux test/gpiolib-shared-reset-gpio-fix
 
-> - considering allocation for all ports at once
-> 
-> If this is done, the embedded approach will look less efficient.
-> So, please try that one instead.
+I confirmed it works on my setup and fixes the problem with multiple
+users of reset-gpio AND shared GPIOs enabled.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
 
