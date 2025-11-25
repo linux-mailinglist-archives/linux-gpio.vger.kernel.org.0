@@ -1,266 +1,182 @@
-Return-Path: <linux-gpio+bounces-29061-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29062-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B18D3C846B8
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Nov 2025 11:19:25 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B1B8C8473B
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Nov 2025 11:24:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 46BC53B020D
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Nov 2025 10:19:24 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2E6154EAA32
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Nov 2025 10:23:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2091E29B22F;
-	Tue, 25 Nov 2025 10:19:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2316C2F25E0;
+	Tue, 25 Nov 2025 10:20:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ah3Z+H5K"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="s5LLKywi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AA0231836
-	for <linux-gpio@vger.kernel.org>; Tue, 25 Nov 2025 10:19:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C99B2F12B7
+	for <linux-gpio@vger.kernel.org>; Tue, 25 Nov 2025 10:20:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764065960; cv=none; b=bp0LK7gmfrdjo9lm1iHzTqdt296qBzPlWwhPbZOw4G87TFjjMogpXYBySN9+lXze9doVETxVMtSpoB3EbnAhpJZHYRkUtuT+iimw7UTa9yPxusO3LbZG8XeEBXlOvGd5X1HSWg+u2URZ8Uls/p1ReJ0yGBuYCOJKuSl/ABJiEns=
+	t=1764066046; cv=none; b=ZgfHWTJJIM1FOqQKl4/Wvd3Voq3RdtjI/cwZ5gppe3OneM2UX0dj1o8M3Xe3L/nLMe9ypDSWTEk+LAAWhAWb8fZDxxMKjInaeaSkMnMRoMkCx+9MUVkAIxzdQI3bS+pPLDMtCSSo9y6RrbHcTQsPRWkGcuw5IIhaoxQ90yjLPBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764065960; c=relaxed/simple;
-	bh=4TjQoesRtOi9VvDdWCFJB2g5O3xdH21QKzdf450490I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=KTLf+kKn4niOu9zIbyJ+eY40EMPdbERaDt+QSJg4zwyPLPod/rZDdBSWheQh1z1+k/RUGxSfE6wOHPOgmTz7oUEDvCG5Yyf7abxQ+0RBTA73UrylTtvR98Z3nz5ikhy8SbA31Tr9xV7igK1bHayM4E9SXicCmqTfq9q9NL+LR2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ah3Z+H5K; arc=none smtp.client-ip=209.85.221.54
+	s=arc-20240116; t=1764066046; c=relaxed/simple;
+	bh=V/R7VJHOEwxuzyxEWxS+mNNGTxF4LFP8HGB5hVPK20g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hvfE7/7uMHCwuIKL+tF1NV/ZeETpou7NdrMa0M3kL26MwgCEWecwXELoAxV7dZ+2yCuthdcbBkhcPG8Pb3jYLATKY5gGPlyTwiqya04QDRPNlnBGpqy8p21S5onntlu2CS5Op3q/wfE7Tss/qId2noXCicFSMEj3WruBvFdeNXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=s5LLKywi; arc=none smtp.client-ip=209.85.208.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-42b3720e58eso4035952f8f.3
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Nov 2025 02:19:18 -0800 (PST)
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-37a56a475e8so47596571fa.3
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Nov 2025 02:20:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1764065957; x=1764670757; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mHsazSRjBBdLw/5wTjNE+V06skEMqfKGBJCeXidVHP8=;
-        b=ah3Z+H5KCFIwNFETk3M6EMhMJ5eG7tk5xaTsszAnRGNliWPgFlWyL153zr6GRBKdjN
-         PpZ/EJeEo/IIlP+SEm02NxXI53UEb7S568TxvRJfhq8nRirF4IXnLTTSZCOCtjyArktD
-         a2nYDnWZRJ8y18hK23MMLJr8S2fz3Am9dYtwK3qssyP15C9n5fGM8/8a7R0PaKInk+Vq
-         /WtYUO7tvw+ueTXRWhPzCIW83Q+f9rUaLEzXypcOrRPK5tCt7Q0hb3WU9YtduE/wpile
-         Z8kcSKvae4urDrmAsFxyexdqN74FE1dSDAB+i+rtSPg8nivuHWfs8+t9akXCqUsZS//v
-         gEDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764065957; x=1764670757;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1764066043; x=1764670843; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mHsazSRjBBdLw/5wTjNE+V06skEMqfKGBJCeXidVHP8=;
-        b=DrUPpP3YC4MlGh69Zo/fYXIIJ58J39RAiLCxcIoxh7IbwnlPU+D83HDPVCabNlr2sj
-         kcF1wPEpCRctDIi4hlCZThfX/6TY1zpE4iy5+kUNvF4UEuoQut+3hM2opV+xgMhd0tki
-         +iFa95XcR/wUGePBdbklKcRIlwqH3Wd5ymw6kOkgROFHcdgHOxqASQnVKf2GGMQtdp/U
-         7aOZQWELrlI4FC7r/OeQy2x+IwbPquZd78R0nVwr7dCJpOHzvezdUb1noOTiR8G/9Kif
-         F23fojL4OYPnQoQIY7Tga1HX3uy09f0+KKN4Dw7i5+6WqQ4ApiWAdbAXrCD9j9V4Y4yI
-         djjQ==
-X-Gm-Message-State: AOJu0Yx3iZ6nQtv36mfduoB7+Y+02WEtbd6dttGc0fBWM5cns9dwDQ+D
-	cnglOQ/eZRCT3wr8qlzX9Oh3/IUuTF1s11JtLd8Tnf5JinoheagmXGAeuIM8ZlpygGk=
-X-Gm-Gg: ASbGncvkah7yrpfRZexOAs59OxsZDhuUZi19zluD9kbdggD3NwA9jFW3Jf8OM3HqlL9
-	J1QSQJs7+PAwyh0InB+rv5B4MHhw8KG7VuE5m8s+uayA1s07PLNvdF9ZPv6j5lUsCk3Rc4udOhK
-	mzQSHhZEBK3cOF5wTSAC6veQSpLeNVuy9QC9ycBxOahhGYudcKVhtxEvUD1qOTe4x7CS/eLJpph
-	XXluZmXj7IDTH+NT/SZLKoJqCraev0iCijDQV36nmsvlZCoP9tF3ruzx5sSjbUOHDS/525bdl85
-	UkiSjRJmbjsrW9nHnQMZoucE+QvUjvxP0Gb+uctv+YPa9wbWySnTPQQBCclgYBZJnEo7qumMpJN
-	VfDMXrsBwHiljltJ3fWknMr8FU3Ps5OWzIcOcxOXrHZg0RnME0Bv2ZHmz8rbI0KV7t3aD67fybt
-	sMSwpDVQ==
-X-Google-Smtp-Source: AGHT+IElDzPPFo4R1Ku7VyEdXDsLFVn8Cz67qhPRUicZhyExrx80sPETRT42LzKc2vysci1RyB+4NA==
-X-Received: by 2002:a05:6000:1789:b0:42b:3ccc:91ec with SMTP id ffacd0b85a97d-42e0f2047b3mr2147500f8f.22.1764065956581;
-        Tue, 25 Nov 2025 02:19:16 -0800 (PST)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:df0c:79ae:5345:c3b0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7fb8a29sm34001497f8f.30.2025.11.25.02.19.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Nov 2025 02:19:16 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 25 Nov 2025 11:19:09 +0100
-Subject: [PATCH v2] gpio: shared: handle the reset-gpios corner case
+        bh=oVmat20iPYBoSP48oBFjSyQKAuYOJgrApfa2YxpJ1Hc=;
+        b=s5LLKywikv++tu0+kooHsaZeM0ryDQFnSOpwOZfhHFzZW67rNc4NpLD9T36Uv+HYLT
+         HBDcR3zJ5iu5FO/HK4NuhyMR7tWZQ5hlEv4vfK/koiA4zMwkl5dEqqFa7kcM/OVgUpRf
+         DTvxK7M8xSR1SF8ZzvcGfLBwV3XdmUk2g/1G5vwM/xw40aX+gQ598L01PMvtGHFuc4aO
+         mhHaMSqg+uESaOAV7Eowxx/4OM8PzFMT5DLIbjYTMkHbRxiNnmyK0nRKJwXqeMeOC2OO
+         /S6TjnXVuX7luXasS2Rp7F3O06jtBVlXnk04eJTHF2aJ7HJMB4UPcvrTn2DeXfaFUWAU
+         Gu7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764066043; x=1764670843;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=oVmat20iPYBoSP48oBFjSyQKAuYOJgrApfa2YxpJ1Hc=;
+        b=EYcHLviJigM5dxlqxjKSztuN/A1IpbPFq1d1j+RnmplZVvSJgOluT230RiWkO5YC9n
+         /Z+xfYFwtqDo6Plub8NRp6IXygoMOnlOyQ6WMJxyWKLcGxVm/kN5IhJMXVrrbQydDfcJ
+         wDC9OrPGCAK4c6V5ftAvr6zUIa76vaGOWCRGZ11sjfFBZ6CFVtQdZqFoveFzVrxlfqPh
+         PgH+NZhp1nxLsLuoRqVD4P+6Oz1+ufepYtTlmDEZyenRVxSe1Q/gJ2I7BoWw6rAero/L
+         JSMiGpw3MSspR7/ad2x0GHywBXIETs7Bbh0bmYh8XC88BEAj2Xa9YxTfweDo36Rz/hzI
+         nQYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUXoiItim0pIyjVjI3WVOT9FFB8D+1Qs8tgyhqB1WFEche23W2/lSuun9pGiMfqXCyDNJIjY8idv3Vz@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMRX0iCUxWCBgKZ2OzINytfcReMgzAbTonwFy8u4EOEDw3fX26
+	2ulIB5itg/sIInzYZd6d8NTlo+IdPt3BcWPhhpXO0pCEbiv8EkTU7k0iK3WkZe1HgAqcIDj6EMg
+	vCNN0jhF0qeLEE1D/RhfKT+w7GkrefJZf+xp3+CX0sHyH13RWbnXaRxY=
+X-Gm-Gg: ASbGnct5IXpGWOM5rCU97UKiC9vaHzmIplvJ3hKVvKHASUc6xyHBxCF3ggDdW44eNiD
+	o4Ck46rERHqVjlT/3rSibP9mM7YYemijVBby7i3TQh/eC2ujtuamP+7Nzh+bu4nVPGRDUt44pJv
+	P9G8DjsInKqXWLFZWMXuY/cukUvhMUytIrLmueEpMVFKXa5/aKm2+ts79IF+mF0COCee8Iyv8eO
+	UPkYdvn9xEruhFs6nsWqSn+pU/5lQ66bC64jlBJL1FpKSy8oWmjKngG30H0hCSMz4tmSNHTTtMK
+	nWnYseO4AIgCftvTffiKC3E+t1w=
+X-Google-Smtp-Source: AGHT+IE05r40niW9QB8z+PreLPxu/l4ph46emS9hFUI8J5FZ33ADlUwToZG3LKYVmJWN3yx17C8YoY/BhTlJnjyR6h4=
+X-Received: by 2002:a05:6512:3188:b0:595:7e9c:cdfa with SMTP id
+ 2adb3069b0e04-596a3eb5e25mr5935758e87.6.1764066043028; Tue, 25 Nov 2025
+ 02:20:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251125-gpiolib-shared-reset-gpio-fix-v2-1-4eb6fa41f1dd@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAJyCJWkC/42NQQqDMBAAvyJ77hY3WGt78h/Fg4kbXRAjGwkt4
- t+b+oIeZw4zO0RW4QjPYgflJFHCksFcCnBTv4yMMmQGU5obkSEcVwmzWIxTrzygcuTtlOjlja5
- hqsk+fO0s5MaqnPXZf3WZJ4lb0M+5S/Sz/5YTIaHzJZnGc2WrezvL0mu4Bh2hO47jC2VFOoHLA
- AAA
-X-Change-ID: 20251121-gpiolib-shared-reset-gpio-fix-c8e161b9f6cb
-To: Val Packett <val@packett.cool>, Krzysztof Kozlowski <krzk@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5799;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=Bh4WSLi6y/CnVH3wsSIW37S1oJbk0T+/9wnfMDOpxrY=;
- b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBpJYKgXlWqwGiMyybTu1eEQuKBS/GGqWEztq0G1
- Stt4o0MRM2JAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCaSWCoAAKCRAFnS7L/zaE
- w8RpD/4iTjKDMaSQseHyBVPfP6DcSIFr6FMR1aaoASkR7Ung6+kb13y3dxPvAfLSqQn5+qFvzGL
- ZErUbONFVgA7xx+dtSlnSDkJNwvl8XXKuYiWtRexZUisSarB0oZa0S+1GqPTE7t8J4zcV2IK6Rn
- tX5EXLaWv5zo2ncE9y3r0f7rjRNUW5Y7OZ+DgeAEhUg75o7blDvWHKBHiZ0XPX9E0OBoJljR9fN
- Ikxys1kJLn2FsUYom/cXsl+c2JpqQwEafBxaPzbl/kblWTzkH5pNbjLAKIaF5P2fdireW1KnD31
- vjXGsUATf4NPeCwFrFVXIRpnB0pOyae56jzoB2SQK7Sn9IR+A9dDUXIZXFO8ZzF/kTyoNasTZk+
- nuuJovWnOswBJlT2OiW4Q40Iwv/bmyqZeNqWQmV2kFBzbhF/RgZimMJxspoG/pWUuBwu4FG54Xm
- xO5bRt0iMg23UQd3hCIPck2Z0g3IRBH8ysVLcX88rOEivVtEqDRnqWsKfwUcFXsdU3Pq5oEDZmj
- Oyav87GhqHJorCgb6bi9OJ0VgDaQuUvGzjVWU/m/up6Yv8fU8y05sT8E74Tv5JzduNbKzf9efdg
- SqiR7XMUjBhn6ChCyKPaAmFtNUOFZscotSprdrfcw5Delickr82uZ4XBinId1gcFB3bfVA+09ER
- 8w/HRWgDZR/Cfkw==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+References: <20251121-gpiolib-shared-reset-gpio-fix-v1-1-cf0128fe4b47@linaro.org>
+ <be7fd390-e81d-4e93-880a-1b6404398408@packett.cool> <CAMRc=MdW3AkkivE=sA4STZAmmee7bCBkD5oEsXiRcKA80Ggd4A@mail.gmail.com>
+ <CAMRc=MfQhu9GY2+3G+Ba71JnXUnU4akAfNbsMDnwkCRNzAXQCw@mail.gmail.com> <98c0f185-b0e0-49ea-896c-f3972dd011ca@packett.cool>
+In-Reply-To: <98c0f185-b0e0-49ea-896c-f3972dd011ca@packett.cool>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 25 Nov 2025 11:20:30 +0100
+X-Gm-Features: AWmQ_bn4tKvX0CTDPxZFQN9E-LQf6ALLGHofuB4nUXoGf_WEn5sdcB5h6VF4OeA
+Message-ID: <CAMRc=Mcu_BhUo8zRJd+fXN0tWM5v6DY-_vLc68k7VVSquYyScQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: shared: handle the reset-gpios corner case
+To: Val Packett <val@packett.cool>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Nov 25, 2025 at 12:05=E2=80=AFAM Val Packett <val@packett.cool> wro=
+te:
+>
+>
+> On 11/24/25 12:36 PM, Bartosz Golaszewski wrote:
+> > On Mon, Nov 24, 2025 at 9:38=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev=
+.pl> wrote:
+> >> On Sun, Nov 23, 2025 at 2:03=E2=80=AFAM Val Packett <val@packett.cool>=
+ wrote:
+> >>>> ---
+> >>>> This is targetting linux-next where the reset-gpio driver is now usi=
+ng
+> >>>> the auxiliary bus and software nodes rather than the platform bus an=
+d
+> >>>> GPIO machine lookup. The bug is the same in both cases but the fix w=
+ould
+> >>>> be completely different.
+> >>>> ---
+> >>>> [..]
+> >>> Tried applying only this, as well as this +
+> >>> https://lore.kernel.org/all/20251120-reset-gpios-swnodes-v7-0-a100493=
+a0f4b@linaro.org/
+> >>> + https://lore.kernel.org/all/20251121135739.66528-1-brgl@bgdev.pl/ (=
+on
+> >>> top of next-20251120) and the issue is still present.. am I missing
+> >>> something?
+> >> Can you try this branch?
+> >>
+> >>    https://github.com/brgl/linux test/gpiolib-shared-reset-gpio-fix
+> >>
+> >> I confirmed it works on my setup and fixes the problem with multiple
+> >> users of reset-gpio AND shared GPIOs enabled.
+> > Actually linux-next got updated with all the prerequisites so you can
+> > try this patch on top of next-20251124. I tested it and it works for
+> > me. If it still doesn't for you, can you enable GPIO debug messages
+> > and send me the entire kernel log?
+> >
+> > Bartosz
+>
+> Rebased to next-20251124, still the same..
+>
+> Here's a full dmesg: https://owo.packett.cool/lin/sound.gpio.dmesg
+>
+> I even added a custom print to confirm the reason of the EBUSY:
+>
+> [    9.233613] gpiolib: swnode: swnode_find_gpio: parsed 'reset-gpios'
+> property of node 'node4[0]' - status (0)
+> [    9.233624] gpiolib_shared: Adding machine lookup entry for a shared
+> GPIO for consumer reset.gpio.0, with key 'gpiolib_shared.proxy.8' and
+> con_id 'reset'
+> [    9.233630] reset_gpio reset.gpio.0: using lookup tables for GPIO look=
+up
+> [    9.233640] gpio_shared_proxy gpiolib_shared.proxy.8: Shared GPIO
+> requested, number of users: 1
+> [    9.233652] gpio_shared_proxy gpiolib_shared.proxy.8: Only one user
+> of this shared GPIO, allowing to set direction to output with value 'low'
+> [    9.332317] reset_gpio reset.gpio.1: using swnode 'node5' for 'reset'
+> GPIO lookup
+> [    9.332337] gpiolib: swnode: swnode_find_gpio: parsed 'reset-gpios'
+> property of node 'node5[0]' - status (0)
+> [    9.332343] gpiolib_shared: Adding machine lookup entry for a shared
+> GPIO for consumer reset.gpio.1, with key 'gpiolib_shared.proxy.8' and
+> con_id 'reset'
+> [    9.332347] reset_gpio reset.gpio.1: using lookup tables for GPIO look=
+up
+> [    9.332353] gpio-856 (reset): gpiod_request_commit: flags 200043
+> test_and_set_bit GPIOD_FLAG_REQUESTED -> EBUSY
+> [    9.332356] gpio-856 (reset): gpiod_request: status -16
+> [    9.332358] reset_gpio reset.gpio.1: error -EBUSY: Could not get
+> reset gpios
+> [    9.332362] reset_gpio reset.gpio.1: probe with driver reset_gpio
+> failed with error -16
+> [    9.441612] wcd938x_codec audio-codec: bound sdw:2:0:0217:010d:00:4
+> (ops wcd_sdw_component_ops [snd_soc_wcd_common])
+> [    9.441644] wcd938x_codec audio-codec: bound sdw:3:0:0217:010d:00:3
+> (ops wcd_sdw_component_ops [snd_soc_wcd_common])
+> [    9.445771] gpio_shared_proxy gpiolib_shared.proxy.8: Voted for value
+> 'high', effective value is 'high', number of votes for 'high': 1
+>
 
-There's an unexpected interaction between the reset-gpio driver and the
-shared GPIO support. The reset-gpio device is an auxiliary device that's
-created dynamically and fulfills a similar role to the gpio-shared-proxy
-driver but is limited in scope to just supporting the "reset-gpios"
-property.
+Ok, so the checking in v1 was no strict enough to cover the use-case
+of two reset-gpio devices consuming different pins from the same
+controller. Please see v2 that I just sent. I reproduced the issue you
+reported here and it fixed it.
 
-The shared GPIO core code does not take into account that the machine
-lookup entry we create when scanning the device-tree must connect the
-reset-gpio device - that is the actual consumer of the GPIO and not the
-consumer defined on the device tree, which in turn consumes the shared
-reset control exposed by the reset-gpio device - to the GPIO controller.
-
-We also must not skip the gpio-shared-proxy driver as it's possible that
-a shared GPIO may be used by one consumer as a reset-gpios going through
-the reset-gpio device and another that uses GPIOLIB.
-
-We need to make it a special case handled in gpiolib-shared.c. Add a new
-function - gpio_shared_dev_is_reset_gpio() - whose role it is to verify
-if a non-matching consumer of a shared pin is a reset-gpio device and
-make sure it's the right one for this pin. To that end make sure that
-its parent is the GPIO controller in question and that the fwnode we
-identified as sharing the pin references that controller via the
-"reset-gpios" property.
-
-Only include that code if the reset-gpio driver is enabled.
-
-Fixes: a060b8c511ab ("gpiolib: implement low-level, shared GPIO support")
-Reported-by: Val Packett <val@packett.cool>
-Closes: https://lore.kernel.org/all/3b5d9df5-934d-4591-8827-6c9573a6f7ba@packett.cool/
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-Changes in v2:
-- Make the reset-gpio checks stricter to cover use-cases with multiple
-  reset-gpio devices using pins from the same controller
-- Link to v1: https://lore.kernel.org/r/20251121-gpiolib-shared-reset-gpio-fix-v1-1-cf0128fe4b47@linaro.org
----
- drivers/gpio/gpiolib-shared.c | 81 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 80 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpiolib-shared.c b/drivers/gpio/gpiolib-shared.c
-index 3803b5c938f9933dab01c6d777c349ed3b42ce9b..cc8646f563d2fa7b1972c94c734b19c4cb01244c 100644
---- a/drivers/gpio/gpiolib-shared.c
-+++ b/drivers/gpio/gpiolib-shared.c
-@@ -253,6 +253,84 @@ static int gpio_shared_make_adev(struct gpio_device *gdev,
- 	return 0;
- }
- 
-+#if IS_ENABLED(CONFIG_RESET_GPIO)
-+/*
-+ * Special case: reset-gpio is an auxiliary device that's created dynamically
-+ * and put in between the GPIO controller and consumers of shared GPIOs
-+ * referred to by the "reset-gpios" property.
-+ *
-+ * If the supposed consumer of a shared GPIO didn't match any of the mappings
-+ * we created when scanning the firmware nodes, it's still possible that it's
-+ * the reset-gpio device which didn't exist at the time of the scan.
-+ *
-+ * This function verifies it an return true if it's the case.
-+ */
-+static bool gpio_shared_dev_is_reset_gpio(struct device *consumer,
-+					  struct gpio_shared_entry *entry,
-+					  struct gpio_shared_ref *ref)
-+{
-+	struct fwnode_handle *reset_fwnode = dev_fwnode(consumer);
-+	struct fwnode_reference_args ref_args, aux_args;
-+	struct device *parent = consumer->parent;
-+	bool match;
-+	int ret;
-+
-+	/* The reset-gpio device must have a parent AND a firmware node. */
-+	if (!parent || !reset_fwnode)
-+		return false;
-+
-+	/*
-+	 * FIXME: use device_is_compatible() once the reset-gpio drivers gains
-+	 * a compatible string which it currently does not have.
-+	 */
-+	if (!strstarts(dev_name(consumer), "reset.gpio."))
-+		return false;
-+
-+	/*
-+	 * Parent of the reset-gpio auxiliary device is the GPIO chip whose
-+	 * fwnode we stored in the entry structure.
-+	 */
-+	if (!device_match_fwnode(parent, entry->fwnode))
-+		return false;
-+
-+	/*
-+	 * The device associated with the shared reference's firmware node is
-+	 * the consumer of the reset control exposed by the reset-gpio device.
-+	 * It must have a "reset-gpios" property that's referencing the entry's
-+	 * firmware node.
-+	 *
-+	 * The reference args must agree between the real consumer and the
-+	 * auxiliary reset-gpio device.
-+	 */
-+	ret = fwnode_property_get_reference_args(ref->fwnode, "reset-gpios",
-+						 NULL, 2, 0, &ref_args);
-+	if (ret)
-+		return false;
-+
-+	ret = fwnode_property_get_reference_args(reset_fwnode, "reset-gpios",
-+						 NULL, 2, 0, &aux_args);
-+	if (ret) {
-+		fwnode_handle_put(ref_args.fwnode);
-+		return false;
-+	}
-+
-+	match = ((ref_args.fwnode == entry->fwnode) &&
-+		 (aux_args.fwnode == entry->fwnode) &&
-+		 (ref_args.args[0] == aux_args.args[0]));
-+
-+	fwnode_handle_put(ref_args.fwnode);
-+	fwnode_handle_put(aux_args.fwnode);
-+	return match;
-+}
-+#else
-+static bool gpio_shared_dev_is_reset_gpio(struct device *consumer,
-+					  struct gpio_shared_entry *entry,
-+					  struct gpio_shared_ref *ref)
-+{
-+	return false;
-+}
-+#endif /* CONFIG_RESET_GPIO */
-+
- int gpio_shared_add_proxy_lookup(struct device *consumer, unsigned long lflags)
- {
- 	const char *dev_id = dev_name(consumer);
-@@ -268,7 +346,8 @@ int gpio_shared_add_proxy_lookup(struct device *consumer, unsigned long lflags)
- 
- 	list_for_each_entry(entry, &gpio_shared_list, list) {
- 		list_for_each_entry(ref, &entry->refs, list) {
--			if (!device_match_fwnode(consumer, ref->fwnode))
-+			if (!device_match_fwnode(consumer, ref->fwnode) &&
-+			    !gpio_shared_dev_is_reset_gpio(consumer, entry, ref))
- 				continue;
- 
- 			/* We've already done that on a previous request. */
-
----
-base-commit: 71dfa12e37df94917955574484b122abaf0e7bf5
-change-id: 20251121-gpiolib-shared-reset-gpio-fix-c8e161b9f6cb
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
+Bart
 
