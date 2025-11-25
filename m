@@ -1,298 +1,168 @@
-Return-Path: <linux-gpio+bounces-29057-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29058-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCD2FC83842
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Nov 2025 07:43:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C60E5C844DF
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Nov 2025 10:51:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C22104E2AD9
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Nov 2025 06:43:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 83D393B1120
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Nov 2025 09:51:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C66132BCF5D;
-	Tue, 25 Nov 2025 06:42:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7566E2ECEBC;
+	Tue, 25 Nov 2025 09:51:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PXM4Oi51"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IPnnOJhQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA0D329A322
-	for <linux-gpio@vger.kernel.org>; Tue, 25 Nov 2025 06:42:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233182EBBB3;
+	Tue, 25 Nov 2025 09:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764052979; cv=none; b=ex/m8Ud9YVrABDMTfAc4FHKN84fuSEfczqm30d8s0CX/V1840waHANEBBBqhDJuD52m0IuUC2ED3pvcUGVJh098WrzgpTw5R9HHd1dK8aBQsSgqZx6hEvqOKIsU3hBxKCeOpUzZtH2LhCC89wGFgycgbYnwH/Z//bffaHLAE79o=
+	t=1764064262; cv=none; b=agbzTj/kI4gdj+pjTnfDgnynLdYib/ncbPZ8kEMDJhKRGc1H5q0hrvWczUCNoyEMb72Es7yGXMUwdiVwu1jvGjFKQ6mQUm/+hXjeByU+H7Vlbara78RWOcs0GI5H0ICB3xoNVeCU8Lx7viiO/ZeQMt3oVoLGzTGzrmUDqLgDI/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764052979; c=relaxed/simple;
-	bh=bMVM6nwiRnBB3ygequtCXeKaSYZ8JKMr74Alu8bdTfM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t/2zg+mKFIKszBo3EOBmZnU0T9573NQKBfXeHInT/AIXOygtyMGJf6GHpKtgT4K3YeA58exDAl6tR+zj1o6MmNbqfcMIjNGYKsE+cUfANk+R4buXjtq4+SlF/hoJ55EEhIhqHCsFIscfYzmySX/BGvpcrmrTfFQVi2wyZQGZIns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PXM4Oi51; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-37a415a22ecso42865821fa.0
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Nov 2025 22:42:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764052975; x=1764657775; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oDwgPrbqR3WPQpKO2RN5Ep6D/2LO+UnqChlfZRK6eKg=;
-        b=PXM4Oi51/FPSyFM+6n3W1MkZ8lRcQmQDf5xTo4W0x/8klPd2i17BG+PpU/k99qVrEd
-         8FhrIhgvL/oMBEixwIderB1Ww0ZYJApyL96SU76Usb+75ViTYcgBbNIJmkdB2sqglt39
-         EHyCtOP7rzTY2LMk/dKOF1maizgzB3exwy6gBuLAE/kfnFoF1jwJzDmiGDfDXLV4J1hr
-         fHJIyFU4x2tpUq0fiJRIhox+RXrqjVWTwCFxxGlJtK13wa3x8sCRrXjhS17HwHoQn1a3
-         abGsydVqkqA5KRHnBiiW/E6itTeHdADHv/d7USbpF/FQoDWy/pxy9oSZYL14nXXU1RoR
-         xnBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764052975; x=1764657775;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oDwgPrbqR3WPQpKO2RN5Ep6D/2LO+UnqChlfZRK6eKg=;
-        b=dNJ7e2i2McJDywNYA5xJiUIDrmEoSCo5f+1NCvArBHRivM3Ct6dEYrNkC2lgDztsrq
-         2EuCvM6KBVX5y10OBtnJ1BfTfQ/vWXxRJhr8kNUDgBHGzSXV6pu48Nh54lZaWYEbVbNX
-         p1QGN0vNpya4FsO1VPC4AMYNdAUAwjE63AJOJ4oNAHZ7/ywPAmRgqLeUZPXzGaafPKnn
-         ZrCzPbfsmCk/zicNEvkbpl/+B1UNJA9LWAyMAK+11u8s4nkH6/jycPQZwBDjyhKZiZY2
-         rySKeTLM6QPzDwK5SSwk3WI/XawO05jA5J4H9Q1+OQsuNWDDzHKrOHvHoF2bEkg2sRpC
-         S/dA==
-X-Forwarded-Encrypted: i=1; AJvYcCV32zMVDrBndNlOucmnfIRaWiru5ruxh6nYZ8nMkc8HhIbfVvhYDp+BY/dyVsPSUIVYeyp0ducmjjRz@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWopsRrmhZfoLGY8lGSkFj2bcVYvQGg0WgTGa/+D5j371e1PyW
-	jBNpUls1wpKHdnidWuhjzvYmegYRCmaZ//i5l9BH+0DMbxe85oG7EUUf
-X-Gm-Gg: ASbGncsIu9CmY595vXAKp8xjXwKXGbNLpdUm7NLasVfqsPkFCBUrXlhDU0KgzJcTl2F
-	+JhILqvdf1/lNarSng2FJ6ah93IHsmXQrrfDL9D2y5zrR5fdL2teyvkH3Og3CO/5JVVpAA+q3Fi
-	mNxfaKiAkxF5/CSMmTmgsdmPttZgJitD1tuCvFsnAba1W+i2znOSU8U4x8WUcQXiuChpAbbUqI6
-	A0oY5Of9Fm9JuCK5ht28tBOkK7naotyvlHUrW2AIVd523SNQSt4zub+qBN/fakNUV4TBSRVVhRH
-	il9Nx3oBE6tcGzuvpL9uaGA/yivBjhwFMjglIU3BRdWL0bza7XeK3WvFZLBIFdHuDnTBfeREz+U
-	dw8MJU5W0sAYh0dhWMiXxcbaBb6LyAu/dkwt1vWZ+1Xa7E9javHBoojEWJB+6bd6IhpsegxBaWi
-	UyAfJRppZjaQuvTY1VrNvecybbOnEEQ3+dJ2NPLCYrbhahieiw2STu/BDQy2tuYjyFPcFa
-X-Google-Smtp-Source: AGHT+IGn4O/LdPwrRfIUFu/wkzsPRHVD6YOLdNx92wJy+rnsWi85zUpEuMS1eU2wO8cl4kItz2sVag==
-X-Received: by 2002:a2e:a805:0:b0:37a:3910:6c77 with SMTP id 38308e7fff4ca-37cc82af4a6mr55071391fa.5.1764052974535;
-        Mon, 24 Nov 2025 22:42:54 -0800 (PST)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-37cc6b59ff5sm31356131fa.15.2025.11.24.22.42.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Nov 2025 22:42:53 -0800 (PST)
-Message-ID: <072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
-Date: Tue, 25 Nov 2025 08:42:50 +0200
+	s=arc-20240116; t=1764064262; c=relaxed/simple;
+	bh=DUYCCbWHsiD2RMZpZykM5t7g4XZ2yTPNXDlMZFrTIA8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QrdAuZMVl9k0nr/mNisL1SjrwaHSJnfr/PE+uzknKbJ1GGo/vYaWXlMP8OElAVyFfAu8py05OdpKc9EGZEZk14a/h3IvLGGepRjmmc9NWjeLd3j7QU4aGXlJvBxJVIF15rzPcUM0CA/dxQfdNiR+gwgwOx7XJBX9nYEwMl0WvPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IPnnOJhQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34627C4CEF1;
+	Tue, 25 Nov 2025 09:51:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764064261;
+	bh=DUYCCbWHsiD2RMZpZykM5t7g4XZ2yTPNXDlMZFrTIA8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IPnnOJhQUA7OCoH7YfhA7+VGQ24L+WgnHeCdv26m6Bx/1zjXxIp0ca16FnQqsRgUs
+	 e+JJgln5gm1qAgb+vRi6k/MrlfuobCUl5m9VOjlpJOlDGzNunndD49KGr4Gn9xwH6S
+	 VNGZtQE3QNcy/BZrCM5H8GtG/K/i6SkLQwT8EDjTcE+Qm8/zXmfeMptdl30daWUF/a
+	 Im8S54CLgqDJActCSitxn7JB0VnMDWl34S5SMaR97pFm9tfV3HgBZDKvw5c8s2izs1
+	 Ec12iV0qtSwQ4CbENbsgmOxxsdBKYnm1vnLGGeUfIQ5BQ6WxKrzytL2KREc0FZf9qZ
+	 zJaxvMAeUnTpA==
+Date: Tue, 25 Nov 2025 10:50:59 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Jorge Marques <jorge.marques@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 1/9] dt-bindings: iio: adc: Add adi,ad4062
+Message-ID: <20251125-marvellous-camel-of-kindness-d274ee@kuoka>
+References: <20251124-staging-ad4062-v2-0-a375609afbb7@analog.com>
+ <20251124-staging-ad4062-v2-1-a375609afbb7@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT
- overlays"
-To: Rob Herring <robh@kernel.org>, Kalle Niemi <kaleposti@gmail.com>
-Cc: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>,
- Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Charles Keepax <ckeepax@opensource.cirrus.com>,
- Richard Fitzgerald <rf@opensource.cirrus.com>,
- David Rhodes <david.rhodes@cirrus.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
- patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
- Allan Nielsen <allan.nielsen@microchip.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>,
- Steen Hegelund <steen.hegelund@microchip.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
- <20251015071420.1173068-2-herve.codina@bootlin.com>
- <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
- <CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
- <5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com>
- <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251124-staging-ad4062-v2-1-a375609afbb7@analog.com>
 
-On 24/11/2025 19:01, Rob Herring wrote:
-> On Mon, Nov 24, 2025 at 10:44 AM Kalle Niemi <kaleposti@gmail.com> wrote:
->>
->>
->> On 11/24/25 16:53, Rob Herring wrote:
->>> On Mon, Nov 24, 2025 at 8:48 AM Kalle Niemi <kaleposti@gmail.com> wrote:
->>>> On 10/15/25 10:13, Herve Codina wrote:
->>>>> From: Saravana Kannan <saravanak@google.com>
->>>>>
->>>>> This reverts commit 1a50d9403fb90cbe4dea0ec9fd0351d2ecbd8924.
->>>>>
->>>>> While the commit fixed fw_devlink overlay handling for one case, it
->>>>> broke it for another case. So revert it and redo the fix in a separate
->>>>> patch.
->>>>>
->>>>> Fixes: 1a50d9403fb9 ("treewide: Fix probing of devices in DT overlays")
->>>>> Reported-by: Herve Codina <herve.codina@bootlin.com>
->>>>> Closes: https://lore.kernel.org/lkml/CAMuHMdXEnSD4rRJ-o90x4OprUacN_rJgyo8x6=9F9rZ+-KzjOg@mail.gmail.com/
->>>>> Closes: https://lore.kernel.org/all/20240221095137.616d2aaa@bootlin.com/
->>>>> Closes: https://lore.kernel.org/lkml/20240312151835.29ef62a0@bootlin.com/
->>>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
->>>>> Link: https://lore.kernel.org/lkml/20240411235623.1260061-2-saravanak@google.com/
->>>>> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
->>>>> Acked-by: Mark Brown <broonie@kernel.org>
->>>>> ---
->>>>>     drivers/bus/imx-weim.c    | 6 ------
->>>>>     drivers/i2c/i2c-core-of.c | 5 -----
->>>>>     drivers/of/dynamic.c      | 1 -
->>>>>     drivers/of/platform.c     | 5 -----
->>>>>     drivers/spi/spi.c         | 5 -----
->>>>>     5 files changed, 22 deletions(-)
->>>>>
->>>>> diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
->>>>> index 83d623d97f5f..87070155b057 100644
->>>>> --- a/drivers/bus/imx-weim.c
->>>>> +++ b/drivers/bus/imx-weim.c
->>>>> @@ -327,12 +327,6 @@ static int of_weim_notify(struct notifier_block *nb, unsigned long action,
->>>>>                                  "Failed to setup timing for '%pOF'\n", rd->dn);
->>>>>
->>>>>                 if (!of_node_check_flag(rd->dn, OF_POPULATED)) {
->>>>> -                     /*
->>>>> -                      * Clear the flag before adding the device so that
->>>>> -                      * fw_devlink doesn't skip adding consumers to this
->>>>> -                      * device.
->>>>> -                      */
->>>>> -                     rd->dn->fwnode.flags &= ~FWNODE_FLAG_NOT_DEVICE;
->>>>>                         if (!of_platform_device_create(rd->dn, NULL, &pdev->dev)) {
->>>>>                                 dev_err(&pdev->dev,
->>>>>                                         "Failed to create child device '%pOF'\n",
->>>>> diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
->>>>> index eb7fb202355f..30b48a428c0b 100644
->>>>> --- a/drivers/i2c/i2c-core-of.c
->>>>> +++ b/drivers/i2c/i2c-core-of.c
->>>>> @@ -176,11 +176,6 @@ static int of_i2c_notify(struct notifier_block *nb, unsigned long action,
->>>>>                         return NOTIFY_OK;
->>>>>                 }
->>>>>
->>>>> -             /*
->>>>> -              * Clear the flag before adding the device so that fw_devlink
->>>>> -              * doesn't skip adding consumers to this device.
->>>>> -              */
->>>>> -             rd->dn->fwnode.flags &= ~FWNODE_FLAG_NOT_DEVICE;
->>>>>                 client = of_i2c_register_device(adap, rd->dn);
->>>>>                 if (IS_ERR(client)) {
->>>>>                         dev_err(&adap->dev, "failed to create client for '%pOF'\n",
->>>>> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
->>>>> index 2eaaddcb0ec4..b5be7484fb36 100644
->>>>> --- a/drivers/of/dynamic.c
->>>>> +++ b/drivers/of/dynamic.c
->>>>> @@ -225,7 +225,6 @@ static void __of_attach_node(struct device_node *np)
->>>>>         np->sibling = np->parent->child;
->>>>>         np->parent->child = np;
->>>>>         of_node_clear_flag(np, OF_DETACHED);
->>>>> -     np->fwnode.flags |= FWNODE_FLAG_NOT_DEVICE;
->>>>>
->>>>>         raw_spin_unlock_irqrestore(&devtree_lock, flags);
->>>>>
->>>>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
->>>>> index f77cb19973a5..ef9445ba168b 100644
->>>>> --- a/drivers/of/platform.c
->>>>> +++ b/drivers/of/platform.c
->>>>> @@ -739,11 +739,6 @@ static int of_platform_notify(struct notifier_block *nb,
->>>>>                 if (of_node_check_flag(rd->dn, OF_POPULATED))
->>>>>                         return NOTIFY_OK;
->>>>>
->>>>> -             /*
->>>>> -              * Clear the flag before adding the device so that fw_devlink
->>>>> -              * doesn't skip adding consumers to this device.
->>>>> -              */
->>>>> -             rd->dn->fwnode.flags &= ~FWNODE_FLAG_NOT_DEVICE;
->>>>>                 /* pdev_parent may be NULL when no bus platform device */
->>>>>                 pdev_parent = of_find_device_by_node(parent);
->>>>>                 pdev = of_platform_device_create(rd->dn, NULL,
->>>>> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
->>>>> index 2e0647a06890..b22944a207c9 100644
->>>>> --- a/drivers/spi/spi.c
->>>>> +++ b/drivers/spi/spi.c
->>>>> @@ -4791,11 +4791,6 @@ static int of_spi_notify(struct notifier_block *nb, unsigned long action,
->>>>>                         return NOTIFY_OK;
->>>>>                 }
->>>>>
->>>>> -             /*
->>>>> -              * Clear the flag before adding the device so that fw_devlink
->>>>> -              * doesn't skip adding consumers to this device.
->>>>> -              */
->>>>> -             rd->dn->fwnode.flags &= ~FWNODE_FLAG_NOT_DEVICE;
->>>>>                 spi = of_register_spi_device(ctlr, rd->dn);
->>>>>                 put_device(&ctlr->dev);
->>>>>
->>>> Sorry, some of you will receive this message now for second time. First
->>>> message was sent to older series of patches.
->>>> -
->>>>
->>>> Hello,
->>>>
->>>> Test system testing drivers for ROHM ICs bisected this commit to cause
->>>> BD71847 drivers probe to not be called.
->>> This driver (and overlay support) is in linux-next or something out of
->>> tree on top of linux-next?
->>>
->>> Rob
->>
->> Yes the driver is in mainline linux: /drivers/mfd/rohm-bd718x7.c
+On Mon, Nov 24, 2025 at 10:18:00AM +0100, Jorge Marques wrote:
+> Add dt-bindings for AD4062 family, devices AD4060/AD4062, low-power with
+> monitor capabilities SAR ADCs. Each variant of the family differs in
+> resolution. The device contains two outputs (gp0, gp1). The outputs can
+> be configured for range of options, such as threshold and data ready.
+> The device uses a 2-wire I3C interface.
 > 
-> I don't see any support to apply overlays in that driver.
+> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+> ---
+>  .../devicetree/bindings/iio/adc/adi,ad4062.yaml    | 123 +++++++++++++++++++++
+>  MAINTAINERS                                        |   6 +
+>  2 files changed, 129 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4062.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4062.yaml
+> new file mode 100644
+> index 0000000000000..a25af66dd64d2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4062.yaml
+> @@ -0,0 +1,123 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright 2024 Analog Devices Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad4062.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD4062 ADC family device driver
+> +
+> +maintainers:
+> +  - Jorge Marques <jorge.marques@analog.com>
+> +
+> +description: |
+> +  Analog Devices AD4062 Single Channel Precision SAR ADC family
+> +
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad4060.pdf
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad4062.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad4060
+> +      - adi,ad4062
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description:
+> +      The interrupt pins are digital outputs that can be configured at runtime
+> +      as multiple interrupt signals. Each can be configured as GP_INTR, RDY,
+> +      DEV_EN, logic low, logic high and DEV_RDY (GP1 only). RDY is the
+> +      active-low data ready signal, indicates when new ADC data are ready to
+> +      read. DEV_EN synchronizes the enable and power-down states of signal
+> +      chain devices with the ADC sampling instant. DEV_RDY is an active-high
+> +      signal that indicates when the device is ready to accept serial interface
+> +      communications. In GP_INTR mode, the interrupt outputs one of the
+> +      threshold detection interrupt signals (MIN_INTR, MAX_INTR or either).
+> +    minItems: 1
 
-Ah. Sorry for the confusion peeps. I asked Kalle to report this without 
-proper consideration. 100% my bad.
+So the wire/pin can be physically disconnected?
 
-While the bd718x7 drive indeed is mainline (and tested), the actual 
-'glue-code' doing the overlay is part of the downstream test 
-infrastructure. So yes, this is not a bug in upstream kernel - this 
-falls in the category of an upstream change causing downstream things to 
-break. So, feel free to say: "Go fix your code" :)
+> +    items:
+> +      - description:
+> +          gp0, interrupt line for GP0 pin, cannot be configured as DEV_RDY.
 
-Now that this is sorted, if someone is still interested in helping us to 
-get our upstream drivers tested - the downstream piece is just taking 
-the compiled device-tree overlay at runtime (via bin-attribute file), 
-and applying it using the of_overlay_fdt_apply(). The approach is 
-working for our testing purposes when the device is added to I2C/SPI 
-node which is already enabled. However, in case where we have the I2C 
-disabled, and enable it in the same overlay where we add the new device 
-- then the new device does not get probed.
+Write concise statements - duplicating gp0 is not helping. "GP0 pin,
+cannot be configured as DEV_RDY."
 
-I would be really grateful if someone had a pointer for us.
+"GP1 pin, can be configured to any setting."
 
-Yours,
-	-- Matti
 
--- 
----
-Matti Vaittinen
-Linux kernel developer at ROHM Semiconductors
-Oulu Finland
+> +      - description:
+> +          gp1, interrupt line for GP1 pin, can be configured to any setting.
+> +
+> +  interrupt-names:
 
-~~ When things go utterly wrong vim users can always type :help! ~~
+Why this is not matching interrupts in number of items?
+
+> +    items:
+> +      - const: gp0
+> +      - const: gp1
+> +
+> +  gpio-controller:
+> +    description:
+> +      Marks the device node as a GPIO controller. GPs not listed in
+> +      interrupt-names are exposed as a GPO.
+
+"not listed as interrupts are..."
+
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +    description:
+> +      The first cell is the GPIO number and the second cell specifies
+> +      GPIO flags, as defined in <dt-bindings/gpio/gpio.h>.
+
+Best regards,
+Krzysztof
+
 
