@@ -1,136 +1,248 @@
-Return-Path: <linux-gpio+bounces-29059-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29060-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F3F9C84512
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Nov 2025 10:56:16 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CAABC84518
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Nov 2025 10:56:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5AF913B1332
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Nov 2025 09:56:08 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 42A8F4E7A29
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Nov 2025 09:56:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEE062EDD41;
-	Tue, 25 Nov 2025 09:55:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFC532ECE8F;
+	Tue, 25 Nov 2025 09:56:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LR19ivzD"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="XswQqcNN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F5C2EDD64;
-	Tue, 25 Nov 2025 09:55:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF382ECD37;
+	Tue, 25 Nov 2025 09:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764064557; cv=none; b=tDoJI+Y7pu4jTrzAhareK48hhoZR78C9sbQZfvJb4U6O69u19NPdByEkQEdFpZXlN/emy4WYRmAFkpH13gE7gNZ72ufpwoXN2IOTY4imfZj3D0ePcmoD8TLYZLk+FLQrvQDJpg+JacS5Y+8uaJIXUpd5+5CtI291CqkV/MFplo4=
+	t=1764064587; cv=none; b=QUrU9MAqUGrftc1KP6HRh3n31vAL8WrTjC3pbSK9z0h0DS2/IEhvX9DTo0mDD9/i/N7FP1G8MA3bF6wbyxdtqwDjttnLoVY+kb6B/quFgEIvZk+G9RkbuIWAPuZyW2zkgsR5sskt8ACbYdV/NkWo0LsaMpGPLr5jNUR/QTKTWwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764064557; c=relaxed/simple;
-	bh=ft7ew2qfT7nP6Gbr86qhmeR9WG9LHorsMZfdwQHWsgg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UIe0x9Zc/DMUDAW328WOeUHK3UOTf458LPq9Zdd5Xj3aofTDwhL70Fhf7FRe5gnVhq79KITC1aGnY6i+HuD+dJzkkDGTbOYB4RcaCgjMW4kIgUc+4C73FxQBl1jwS80XA87ha7fKA/owebRjGGH+eXQGTNPDiCfUxRT0IaMdXbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LR19ivzD; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764064556; x=1795600556;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ft7ew2qfT7nP6Gbr86qhmeR9WG9LHorsMZfdwQHWsgg=;
-  b=LR19ivzDVTdTtaZcM08btU42T0UoyfdggF92Ih48U8KLsXbBu8nAbJnp
-   VhRdjz3Dd2JidynL/WKsM4TPfrC19ATyZZfLFz3WDh7LejNy0hCpTKv4w
-   JBL6IQbIFC8yBanrZhhyr32S8c4ZQNqcjECxLTEihfZHcld4REgqGGQh0
-   FfkVUIKIHvhSG2WMVA2WoV16N8fDW65mqfpZP8O16Uhh88K08waFrIi85
-   gC7W+wCyoRhC6urxEjPN76cFk6LznCIg4mctsxe6mWdU7wy7JDnxGa91C
-   2nQj4QZ05aY1JqjPDGWKULvFWiDDM6y2gvll/CtXdlZgIws8DWBedDvrU
-   Q==;
-X-CSE-ConnectionGUID: xCoYQwtJRN+Jj6/m42TtZw==
-X-CSE-MsgGUID: CCIePTtzS+ebUc5tCdRGxQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11623"; a="53645455"
-X-IronPort-AV: E=Sophos;i="6.20,225,1758610800"; 
-   d="scan'208";a="53645455"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 01:55:55 -0800
-X-CSE-ConnectionGUID: I18gb42OTXyeGIVWQPk54g==
-X-CSE-MsgGUID: DK4TSHc7Twim3IO4GIMRJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,225,1758610800"; 
-   d="scan'208";a="192833855"
-Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.244.152])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 01:55:53 -0800
-Date: Tue, 25 Nov 2025 11:55:51 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Mika Westerberg <westeri@kernel.org>
-Subject: Re: [PATCH 18/44] drivers/gpio: use min() instead of min_t()
-Message-ID: <aSV9JxrZdJZNhSL4@smile.fi.intel.com>
-References: <20251119224140.8616-1-david.laight.linux@gmail.com>
- <20251119224140.8616-19-david.laight.linux@gmail.com>
- <aR7K2bWKiaXrwWIr@smile.fi.intel.com>
- <20251120093743.1cf9bb8f@pumpkin>
+	s=arc-20240116; t=1764064587; c=relaxed/simple;
+	bh=9jl5v4+JdDvgBkvLISMlWWBdoST2HqCbEtgiUfTgVFE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p6bfTNZJAZ0VdED/tLOZlPSgVV2juAc241+7R0g4YrHC4qx8xBjzUu+PEM4CCW5vAhjkShwXHliaJdQ+S6OjYihdLwPLpeoc9wJab9OeZPvoc/aonssj6XMOiODnbLR+Zqi/QC1vONZD/PqQLWKVzX0pdJ1TwxZwo2AAytkIoD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=XswQqcNN; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1764064583;
+	bh=9jl5v4+JdDvgBkvLISMlWWBdoST2HqCbEtgiUfTgVFE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XswQqcNNil2GnAhC8yZSG6Y5ri5h3BzvZMZUGcCflNbZsoi8zhnsw+CQfXm0gubiM
+	 iWy7M6CL3WPR4oX0z7JlMfncdSL2cpnx+fmfHIq6bIv37jzl5aU4aca/26A0wZuNgf
+	 bG5Db8M3EqlFNyzsMBRbsGpeNh+lYud6YtC8milranEqopv5vsCM38QApottFSW+oH
+	 cuYmS4a1/XWIQCHQY57yLHg8OgDGTbhzgo1TSJsfwrYztKFrNLiDUMf3SALDhPgLN8
+	 SSV5OtYeWgtkhp366Mq5sH8vumBGxsdYoMeRVpfQTkpZR7hYatYvWnG+56JXd3eWVh
+	 JWQrbk//v1w3Q==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id C5D0917E0610;
+	Tue, 25 Nov 2025 10:56:22 +0100 (CET)
+Message-ID: <df11bbf1-09d1-40fc-be56-6a98d90abcb6@collabora.com>
+Date: Tue, 25 Nov 2025 10:56:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251120093743.1cf9bb8f@pumpkin>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] pinctrl: mediatek: mt8901: Add pinctrl driver for
+ MT8901
+To: Lei Xue <lei.xue@mediatek.com>, Sean Wang <sean.wang@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+ linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ yong.mao@mediatek.com, qingliang.li@mediatek.com, Fred-WY.Chen@mediatek.com,
+ ot_cathy.xu@mediatek.com, ot_shunxi.zhang@mediatek.com,
+ ot_yaoy.wang@mediatek.com, ot_ye.wang@mediatek.com
+References: <20251125023639.2416546-1-lei.xue@mediatek.com>
+ <20251125023639.2416546-4-lei.xue@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20251125023639.2416546-4-lei.xue@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Nov 20, 2025 at 09:37:43AM +0000, David Laight wrote:
-> On Thu, 20 Nov 2025 10:01:29 +0200
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> > On Wed, Nov 19, 2025 at 10:41:14PM +0000, david.laight.linux@gmail.com wrote:
-> > > 
-> > > min_t(u16, a, b) casts an 'unsigned long' to 'u16'.
-> > > Use min(a, b) instead as it promotes the both values to int
-> > > and so cannot discard significant bits.
-> > > 
-> > > In this case the values should be ok.
-> > > 
-> > > Detected by an extra check added to min_t().  
-
-...
-
-> > > acpi_gpio_adr_space_handler(u32 function, acpi_physical_address address,  
-> > 
-> > > -	length = min_t(u16, agpio->pin_table_length, pin_index + bits);
-> > > +	length = min(agpio->pin_table_length, pin_index + bits);  
-> > 
-> > Now, if you look closer at the code, the pin_index alone has the problem you
-> > are targeting here.
+Il 25/11/25 03:36, Lei Xue ha scritto:
+> Add mt8901 pinctrl, gpio and eint driver implementation.
 > 
-> The compiler warning happens because 'pin_index + bits' is 'int' and the compiler
-> doesn't know the value fits in 16 bits.
-> It should fit, but only if the caller passes in valid data.
-
-I meant that assignment to pin_index already cuts the higher bits
-from the input.
-
-> > On top of that the iterator and 'length' are signed, while
-> > the result of min_t(u16) is unsigned (however it has no difference in this case).
+> Signed-off-by: Lei Xue <lei.xue@mediatek.com>
+> ---
+>   drivers/pinctrl/mediatek/Kconfig              |   12 +
+>   drivers/pinctrl/mediatek/Makefile             |    1 +
+>   drivers/pinctrl/mediatek/mtk-eint.c           |    4 +
+>   drivers/pinctrl/mediatek/mtk-eint.h           |    1 +
+>   drivers/pinctrl/mediatek/pinctrl-mt8901.c     | 1460 +++++++++++
+>   drivers/pinctrl/mediatek/pinctrl-mtk-mt8901.h | 2130 +++++++++++++++++
+>   6 files changed, 3608 insertions(+)
+>   create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt8901.c
+>   create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt8901.h
 > 
-> Actually the result type of min_t(u16) is 'int' (:? promotes char/short to int).
-> So the u16 cast does '(pin_index + bits) & 0xffff', everything is then promoted
-> to 'int' for all the comparisons (etc).
+> diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
+> index 4819617d9368..4820ae5197a0 100644
+> --- a/drivers/pinctrl/mediatek/Kconfig
+> +++ b/drivers/pinctrl/mediatek/Kconfig
+> @@ -321,6 +321,18 @@ config PINCTRL_MT8516
+>   	default ARM64 && ARCH_MEDIATEK
+>   	select PINCTRL_MTK
+>   
+> +config PINCTRL_MT8901
+> +	bool "MediaTek MT8901 pin control"
+> +	depends on ACPI
+> +	depends on ARM64 || COMPILE_TEST
+> +	default ARM64 && ARCH_MEDIATEK
+> +	select PINCTRL_MTK_PARIS
+> +	help
+> +	  Say yes here to support pin controller and gpio driver
+> +	  on MediaTek MT8901 SoC.
+> +	  In MTK platform, we support virtual gpio and use it to
+> +	  map specific eint which doesn't have real gpio pin.
+> +
+>   # For PMIC
+>   config PINCTRL_MT6397
+>   	bool "MediaTek MT6397 pin control"
+> diff --git a/drivers/pinctrl/mediatek/Makefile b/drivers/pinctrl/mediatek/Makefile
+> index ae765bd99965..57c69b1e5c2d 100644
+> --- a/drivers/pinctrl/mediatek/Makefile
+> +++ b/drivers/pinctrl/mediatek/Makefile
+> @@ -43,3 +43,4 @@ obj-$(CONFIG_PINCTRL_MT8196)		+= pinctrl-mt8196.o
+>   obj-$(CONFIG_PINCTRL_MT8365)		+= pinctrl-mt8365.o
+>   obj-$(CONFIG_PINCTRL_MT8516)		+= pinctrl-mt8516.o
+>   obj-$(CONFIG_PINCTRL_MT6397)		+= pinctrl-mt6397.o
+> +obj-$(CONFIG_PINCTRL_MT8901)		+= pinctrl-mt8901.o
+> diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
+> index c8c5097c11c4..b5a5beebf9cd 100644
+> --- a/drivers/pinctrl/mediatek/mtk-eint.c
+> +++ b/drivers/pinctrl/mediatek/mtk-eint.c
+> @@ -71,6 +71,10 @@ const unsigned int debounce_time_mt6878[] = {
+>   };
+>   EXPORT_SYMBOL_GPL(debounce_time_mt6878);
+>   
+> +const unsigned int debounce_time_mt8901[] = {
+> +	156, 313, 625, 1250, 20000, 40000, 80000, 160000, 320000, 640000, 0};
+> +EXPORT_SYMBOL_GPL(debounce_time_mt8901);
+> +
+>   static void __iomem *mtk_eint_get_offset(struct mtk_eint *eint,
+>   					 unsigned int eint_num,
+>   					 unsigned int offset)
+> diff --git a/drivers/pinctrl/mediatek/mtk-eint.h b/drivers/pinctrl/mediatek/mtk-eint.h
+> index 3cdd6f6310cd..1b185f660aff 100644
+> --- a/drivers/pinctrl/mediatek/mtk-eint.h
+> +++ b/drivers/pinctrl/mediatek/mtk-eint.h
+> @@ -53,6 +53,7 @@ extern const unsigned int debounce_time_mt2701[];
+>   extern const unsigned int debounce_time_mt6765[];
+>   extern const unsigned int debounce_time_mt6795[];
+>   extern const unsigned int debounce_time_mt6878[];
+> +extern const unsigned int debounce_time_mt8901[];
+>   
+>   struct mtk_eint;
+>   
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8901.c b/drivers/pinctrl/mediatek/pinctrl-mt8901.c
+> new file mode 100644
+> index 000000000000..77dec85fe29b
+> --- /dev/null
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mt8901.c
+> @@ -0,0 +1,1460 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2025 MediaTek Inc.
+> + *
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/module.h>
+> +#include "pinctrl-mtk-mt8901.h"
+> +#include "pinctrl-paris.h"
+> +
 
-Sure, but the value is positive even if int is signed. That's why I put
-a remark in the parentheses that it has no difference in this case.
+..snip..
 
-...
+> +static const char * const mt8901_pinctrl_register_base_name[] = {
+> +	"iocfg0", "iocfg_lt2", "iocfg_lt3", "iocfg_rt1", "iocfg_rt2", "iocfg_rt3",
+> +	"iocfg_tr", "iocfg_rt0", "iocfg_lt1", "iocfg_lb", "iocfg_rb",
+> +};
+> +
+> +static const struct mtk_eint_hw mt8901_eint_hw = {
+> +	.port_mask = 0xf,
+> +	.ports     = 7,
+> +	.ap_num    = 209,
+> +	.db_cnt    = 32,
+> +	.db_time   = debounce_time_mt8901,
+> +};
+> +
+> +static const struct mtk_pin_soc mt8901_data = {
+> +	.reg_cal = mt8901_reg_cals,
+> +	.pins = mtk_pins_mt8901,
+> +	.npins = ARRAY_SIZE(mtk_pins_mt8901),
+> +	.ngrps = ARRAY_SIZE(mtk_pins_mt8901),
+> +	.eint_hw = &mt8901_eint_hw,
+> +	.eint_pin = eint_pins_mt8901,
+> +	.nfuncs = 8,
+> +	.gpio_m = 0,
+> +	.base_names = mt8901_pinctrl_register_base_name,
+> +	.nbase_names = ARRAY_SIZE(mt8901_pinctrl_register_base_name),
+> +	.pull_type = mt8901_pull_type,
+> +	.pin_rsel = mt8901_pin_rsel_val_range,
+> +	.npin_rsel = ARRAY_SIZE(mt8901_pin_rsel_val_range), /*numsel*/
+> +	.bias_set_combo = mtk_pinconf_bias_set_combo,
+> +	.bias_get_combo = mtk_pinconf_bias_get_combo,
+> +	.drive_set = mtk_pinconf_drive_set_rev1,
+> +	.drive_get = mtk_pinconf_drive_get_rev1,
+> +	.adv_drive_set = mtk_pinconf_adv_drive_set_raw,
+> +	.adv_drive_get = mtk_pinconf_adv_drive_get_raw,
+> +};
+> +
+> +static const struct acpi_device_id mt8901_pinctrl_acpi_match[] = {
+> +	{"NVDA9221", (kernel_ulong_t)&mt8901_data },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(acpi, mt8901_pinctrl_acpi_match);
+> +
+> +static struct platform_driver mt8901_pinctrl_driver = {
+> +	.driver = {
+> +		.name = "mt8901-pinctrl",
+> +		.acpi_match_table = ACPI_PTR(mt8901_pinctrl_acpi_match),
 
-> > TL;DR: I apply this patch with subject changed, but I think more work needs to
-> > be done if you want to fix it fully.
+Please also add support for devicetree - I have a hunch (and I'm sure that I am
+not the only one) that ACPI may give some issues at the end of the day, on ARM64.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Of course, I'd hope that ACPI is all good on this platform, but still.... :-)
 
+static const struct of_device_id mt8901_pinctrl_of_match[] = {
+	{ .compatible = "mediatek,mt8901-pinctrl", .data = &mt8901_data },
+	{ /* sentinel */ }
+};
 
+	.of_match_table = mt8901_pinctrl_of_match,
+
+> +		.pm = pm_sleep_ptr(&mtk_paris_pinctrl_pm_ops)
+> +	},
+> +	.probe = mtk_paris_pinctrl_probe,
+> +};
+
+Cheers,
+Angelo
+
+> +
+> +static int __init mt8901_pinctrl_init(void)
+> +{
+> +	return platform_driver_register(&mt8901_pinctrl_driver);
+> +}
+> +
+> +arch_initcall(mt8901_pinctrl_init);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("MediaTek MT8901 Pinctrl Driver");
 
