@@ -1,178 +1,150 @@
-Return-Path: <linux-gpio+bounces-29077-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29078-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22B87C89BD1
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 13:22:44 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53B22C89E4B
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 14:01:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E4AAA34A10A
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 12:22:42 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 456AC4E24CE
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 13:01:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 181783271E7;
-	Wed, 26 Nov 2025 12:22:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 370501DE4E0;
+	Wed, 26 Nov 2025 13:01:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="bRgcFxH9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DMS8Qaqv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C391431AF2A
-	for <linux-gpio@vger.kernel.org>; Wed, 26 Nov 2025 12:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 566D22629D;
+	Wed, 26 Nov 2025 13:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764159754; cv=none; b=r0CUKdN7wU2x4wzyGJRFsabDHTWeu5prNDOzuv9OLrk7MHn7v0g5f6sd8XfdNuGxrrBIXbTfiFdTz8LFqporAWI12AiWcPnikgbaPupm9UEIvH+WOq29CPsAUz6wDTL6Du7BGAALfqjvhFNc3juG6FIuqf9Q0lcr5upMQdfOQUU=
+	t=1764162108; cv=none; b=aPUPTdgaZk6y1hdPMIXFSZ7WlpcO4Xo0Dz44qcARPJZEu4MLrwte+pqmb5hOLteLYiJvsQj5obAvNh7o9vvLNHw06gPfZNyXAKtos7Mv6lKGrpXifuhW2ikDS36coPGcNQgbNQw4l0EB7elN67gpFvPax5+vqREv3DVXsAF9x70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764159754; c=relaxed/simple;
-	bh=2+VAOmWz9et0UUjpPkVqfC+IdwUvWdpOacB97kIfSEI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FHwTdWwpK1V6WSwehzPNw/GBUhcVEAiVLD7jgq9BJ5QojnoaGtChOCOQs0pnKXtlJtYUiqhV0l0AvJEWgD7QlGxThciw8KdLWEgrj7cspoVOsGFkZiddoJHydyFXWU4w941eudjZPaVEVHtS9qcSJUoc9lj92j9CGlU2YWtk31M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=bRgcFxH9; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-477770019e4so55233465e9.3
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Nov 2025 04:22:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1764159750; x=1764764550; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nb8J59nTRhuMgqiDZt7LhAGF4nSCUqiI5XGaUGNyCZM=;
-        b=bRgcFxH9pH2aZ6nqwlEv1/86nNS0Z5Zmd4Np1ZDbRlXuLyCEJQLMYCyHKGB3yJMxj/
-         0U3fpAHaXEuxKbQEnOc/iukEY5u12KuJMGazVi0yxdiHKVr94CaFJfM08XoXQnLfYyaG
-         Hkr0ve7VTx1Cyvv17e2uiktlsWIE9blhe+l/guky2DeIjUM9M/xu8C/2uCrYXzc0V+WB
-         YzMsYNmuRHyKs2DHbQw8Nnd1CcIrR8//P4p+mZCmSl7UGwFF83LU2blYvBYeAtM6zc3p
-         yntE/zOOTK1HOVyoxWn7mcmyBfRfpzcJhLGMAO8kRlNiUjRt0p1JCaLse5Ak3tHZBnSz
-         1MxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764159750; x=1764764550;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nb8J59nTRhuMgqiDZt7LhAGF4nSCUqiI5XGaUGNyCZM=;
-        b=kfZHaU8lNCNWlzO+9kJBeWcC9SMeo9c9uYtEVvWjMAyZRomCS0yBTifRpBQisOFsZg
-         dVSQ1BPzw7YACUERbEAHMxTee6eOYw6jX5MsSn9rPWCSKzspgiMAhJ9cdFgqnTav224e
-         awH/iBMBGXOpY0dtE+VhW8mP4B55MoCkjH1GAgFj4wH0pOzAutvHviLj7CqjteQd/uxp
-         9jNRNShiBzIpi3nNAaG1CO5EB4PYevH3b9AG2YLuz1FZOMrqvzfnGZKHF4QSohNuedek
-         kxdNJjcGLRVYGwJL0Q4Eb75mAXJ2jvolC2+zl7daGWWzEo2rXHzHi13nWomfel1mfbYK
-         rhZg==
-X-Forwarded-Encrypted: i=1; AJvYcCW5J+IBCM1VwmkhEnXA26IEtiPwTRlP4wUQ3kx749Uv0NL+4YViWunQogfRX/Nsg0jsFBjdnm8ZvO7c@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2UNoluFrepD2cVISODutAVwz7NJQjNneCguX09EqRoF0mRRHF
-	gcA0ENI23Uz0gOIK7zFkVGC/iCH8kbzC2qeZzLuXcPQ5/NmBDmPKGpQVMElwOEj8t/I=
-X-Gm-Gg: ASbGnct3w67FnEh5gR/Hhor72mfygA/6VHUpsHR6DrCVO5+53MSuosOEf8gziMj1UhU
-	0ehM8jX9pmygTK488Btay1Mi09jDYbPTGk6VoSgJrRl0fzluGAwi3eInXyACUM0jpInHpL8nvFa
-	CJayBBZCgvCNMiCH7/ENdzc/jWT4mGGo5hl/3mwpc4XpWreL0nAyvpLGdh5FMJE38roEmltGCpu
-	M6CPeYt2MBhREWWJsWbIlp/OPqqZkI2dISdFpr0cEIZ1s/v+CeLddUa9zcC/Swym6GyDMQv6dCO
-	3Bi3AhlSe1XVgG5fOlBUg4un53KUUwOmIUqCGyD2gU/wu02M6RXgaYptNo+PBtdjMXRWnUUrwzO
-	JI8ArgYWRrcnW5uCQt7HTePWiyKjoznAJ4zBzvRC1fKQWAezkE6XTvL9O7dflYmmOjS1aidt+jG
-	EDiaLI
-X-Google-Smtp-Source: AGHT+IHSWyiPvjo6pfwtzQLGPlt73Ie+wpC27JU1nwVttO0MEHGbEomKIPCG3/Aoh1JNOO8u4xSerw==
-X-Received: by 2002:a05:600c:46d2:b0:477:54cd:2030 with SMTP id 5b1f17b1804b1-47904b1afcemr63214885e9.21.1764159749845;
-        Wed, 26 Nov 2025 04:22:29 -0800 (PST)
-Received: from brgl-uxlite ([2a01:cb1d:dc:7e00:544e:b6f5:116d:4a8c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7f2e454sm40179244f8f.2.2025.11.26.04.22.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Nov 2025 04:22:29 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Bjorn Andersson <andersson@kernel.org>,
+	s=arc-20240116; t=1764162108; c=relaxed/simple;
+	bh=An3uYWCi2Xvr+ZbPILQiXOQydrNPvCqpTTR5CFjldNI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZOTobA8F2mgEjcePQjWMSt5HJtM6sC9YzV9f5GHU6v0jC4E9VQ1aObG0ZG7zX5m/wAU9pq6giaYfUyC/lvPFj7u/tCuQuoTTp8/weSxrKxoCY6VLuhiWrxPUhY1hvIUORgJkDc084FAS8ntasGB7BZFnAN4SbwABbc1XAzF9SKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DMS8Qaqv; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764162106; x=1795698106;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=An3uYWCi2Xvr+ZbPILQiXOQydrNPvCqpTTR5CFjldNI=;
+  b=DMS8QaqvoV57L4z/qP4WLAQy0+HJiEZGB8v9igbTMi1MlEU7OhXY8qEw
+   OjpTA7fopWeFLtnNZGQYPfc0AASA5rtU7QFVMACv3kJXN7DEHjuVXHF05
+   tI0ON2N9uUu2nNnIxbodnMFrnnvSAy1s0AlG6HBhVJ0V3GoZH+XYJANEO
+   Apqtp3+3XBWNOubapYYfFKa0KbBBkcvlIXVWdOngC27NLyUe/Nw+TBtQB
+   4KbTii8fWkPDb8P3YZcGAaqzgErZQmlj92o0W1LfXYphcAZ/KR2rafvhF
+   XjYEvp5hPQ/PcdwBdFQ3xqDu1HmJC2ralJZQQhTIKxj2Oj+HOPO7Ts9K5
+   g==;
+X-CSE-ConnectionGUID: cesHNq2oTKOXT3Qu4jHdig==
+X-CSE-MsgGUID: zu1YXCNjQ4msNXf/lEU0QA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11624"; a="66145589"
+X-IronPort-AV: E=Sophos;i="6.20,228,1758610800"; 
+   d="scan'208";a="66145589"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2025 05:01:46 -0800
+X-CSE-ConnectionGUID: RF+qD0YuTD+GlxyzJsSkzA==
+X-CSE-MsgGUID: VXMMLDE0RvmnowPHfzEjBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,228,1758610800"; 
+   d="scan'208";a="197099215"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa003.jf.intel.com with ESMTP; 26 Nov 2025 05:01:38 -0800
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id 607CCA0; Wed, 26 Nov 2025 14:01:37 +0100 (CET)
+Date: Wed, 26 Nov 2025 14:01:37 +0100
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Praveen Talari <praveen.talari@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Srinivas Kandagatla <srini@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	stable@vger.kernel.org,
-	Val Packett <val@packett.cool>
-Subject: [PATCH] pinctrl: qcom: lpass-lpi: mark the GPIO controller as sleeping
-Date: Wed, 26 Nov 2025 13:22:19 +0100
-Message-ID: <20251126122219.25729-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.51.0
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Dmitry Baryshkov <lumag@kernel.org>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
+	alexey.klimov@linaro.org, krzk@kernel.org,
+	bryan.odonoghue@linaro.org, jorge.ramirez@oss.qualcomm.com,
+	dmitry.baryshkov@oss.qualcomm.com,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	psodagud@quicinc.com, djaggi@quicinc.com, quic_msavaliy@quicinc.com,
+	quic_vtanuku@quicinc.com, quic_arandive@quicinc.com,
+	quic_shazhuss@quicinc.com, quic_cchiluve@quicinc.com
+Subject: Re: [PATCH v1 3/4] serial: qcom-geni: Enable PM runtime for serial
+ driver
+Message-ID: <aSb6MSAoG68EmnLq@black.igk.intel.com>
+References: <20251110101043.2108414-1-praveen.talari@oss.qualcomm.com>
+ <20251110101043.2108414-4-praveen.talari@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251110101043.2108414-4-praveen.talari@oss.qualcomm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Nov 10, 2025 at 03:40:42PM +0530, Praveen Talari wrote:
+> The GENI serial driver currently handles power resource management
+> through calls to the statically defined geni_serial_resources_on() and
+> geni_serial_resources_off() functions. This approach reduces modularity
+> and limits support for platforms with diverse power management
+> mechanisms, including resource managed by firmware.
+> 
+> Improve modularity and enable better integration with platform-specific
+> power management, introduce support for runtime PM. Use
+> pm_runtime_resume_and_get() and pm_runtime_put_sync() within the
+> qcom_geni_serial_pm() callback to control resource power state
+> transitions based on UART power state changes.
 
-The gpio_chip settings in this driver say the controller can't sleep
-but it actually uses a mutex for synchronization. This triggers the
-following BUG():
+...
 
-[    9.233659] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:281
-[    9.233665] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 554, name: (udev-worker)
-[    9.233669] preempt_count: 1, expected: 0
-[    9.233673] RCU nest depth: 0, expected: 0
-[    9.233688] Tainted: [W]=WARN
-[    9.233690] Hardware name: Dell Inc. Latitude 7455/0FK7MX, BIOS 2.10.1 05/20/2025
-[    9.233694] Call trace:
-[    9.233696]  show_stack+0x24/0x38 (C)
-[    9.233709]  dump_stack_lvl+0x40/0x88
-[    9.233716]  dump_stack+0x18/0x24
-[    9.233722]  __might_resched+0x148/0x160
-[    9.233731]  __might_sleep+0x38/0x98
-[    9.233736]  mutex_lock+0x30/0xd8
-[    9.233749]  lpi_config_set+0x2e8/0x3c8 [pinctrl_lpass_lpi]
-[    9.233757]  lpi_gpio_direction_output+0x58/0x90 [pinctrl_lpass_lpi]
-[    9.233761]  gpiod_direction_output_raw_commit+0x110/0x428
-[    9.233772]  gpiod_direction_output_nonotify+0x234/0x358
-[    9.233779]  gpiod_direction_output+0x38/0xd0
-[    9.233786]  gpio_shared_proxy_direction_output+0xb8/0x2a8 [gpio_shared_proxy]
-[    9.233792]  gpiod_direction_output_raw_commit+0x110/0x428
-[    9.233799]  gpiod_direction_output_nonotify+0x234/0x358
-[    9.233806]  gpiod_configure_flags+0x2c0/0x580
-[    9.233812]  gpiod_find_and_request+0x358/0x4f8
-[    9.233819]  gpiod_get_index+0x7c/0x98
-[    9.233826]  devm_gpiod_get+0x34/0xb0
-[    9.233829]  reset_gpio_probe+0x58/0x128 [reset_gpio]
-[    9.233836]  auxiliary_bus_probe+0xb0/0xf0
-[    9.233845]  really_probe+0x14c/0x450
-[    9.233853]  __driver_probe_device+0xb0/0x188
-[    9.233858]  driver_probe_device+0x4c/0x250
-[    9.233863]  __driver_attach+0xf8/0x2a0
-[    9.233868]  bus_for_each_dev+0xf8/0x158
-[    9.233872]  driver_attach+0x30/0x48
-[    9.233876]  bus_add_driver+0x158/0x2b8
-[    9.233880]  driver_register+0x74/0x118
-[    9.233886]  __auxiliary_driver_register+0x94/0xe8
-[    9.233893]  init_module+0x34/0xfd0 [reset_gpio]
-[    9.233898]  do_one_initcall+0xec/0x300
-[    9.233903]  do_init_module+0x64/0x260
-[    9.233910]  load_module+0x16c4/0x1900
-[    9.233915]  __arm64_sys_finit_module+0x24c/0x378
-[    9.233919]  invoke_syscall+0x4c/0xe8
-[    9.233925]  el0_svc_common+0x8c/0xf0
-[    9.233929]  do_el0_svc+0x28/0x40
-[    9.233934]  el0_svc+0x38/0x100
-[    9.233938]  el0t_64_sync_handler+0x84/0x130
-[    9.233943]  el0t_64_sync+0x17c/0x180
+> +	devm_pm_runtime_enable(port->se.dev);
 
-Mark the controller as sleeping.
+First of all, this misses the error check.
 
-Fixes: 6e261d1090d6 ("pinctrl: qcom: Add sm8250 lpass lpi pinctrl driver")
-Cc: stable@vger.kernel.org
-Reported-by: Val Packett <val@packett.cool>
-Closes: https://lore.kernel.org/all/98c0f185-b0e0-49ea-896c-f3972dd011ca@packett.cool/
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/pinctrl/qcom/pinctrl-lpass-lpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +static int __maybe_unused qcom_geni_serial_runtime_suspend(struct device *dev)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-index 1c97ec44aa5ff..78212f9928430 100644
---- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-+++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-@@ -498,7 +498,7 @@ int lpi_pinctrl_probe(struct platform_device *pdev)
- 	pctrl->chip.base = -1;
- 	pctrl->chip.ngpio = data->npins;
- 	pctrl->chip.label = dev_name(dev);
--	pctrl->chip.can_sleep = false;
-+	pctrl->chip.can_sleep = true;
- 
- 	mutex_init(&pctrl->lock);
- 
+Second, we have a new (already like 2+ years) approach, so, drop __maybe_unused
+and try not to add more in a new code.
+
+...
+
+> +static int __maybe_unused qcom_geni_serial_runtime_resume(struct device *dev)
+
+Ditto.
+
+...
+
+>  static const struct dev_pm_ops qcom_geni_serial_pm_ops = {
+> +	SET_RUNTIME_PM_OPS(qcom_geni_serial_runtime_suspend,
+> +			   qcom_geni_serial_runtime_resume, NULL)
+>  	SYSTEM_SLEEP_PM_OPS(qcom_geni_serial_suspend, qcom_geni_serial_resume)
+>  };
+
+Please, do not use deprecated macros, switch to new ones in conjunction with
+pm_ptr() at the PM ops assignment below.
+
+...
+
+Since it's going to be applied, I think, send a followup to fix this.
+
 -- 
-2.51.0
+With Best Regards,
+Andy Shevchenko
+
 
 
