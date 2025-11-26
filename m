@@ -1,110 +1,56 @@
-Return-Path: <linux-gpio+bounces-29088-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29086-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA95EC8A61F
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 15:40:45 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C2B9C8A5C8
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 15:35:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 24365357B9E
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 14:40:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CBD9F3A4576
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 14:35:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1000F303A2B;
-	Wed, 26 Nov 2025 14:40:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C656302CB4;
+	Wed, 26 Nov 2025 14:35:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="omo5ZC73";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="YdG86tzf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OgLDZ5Mk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46ECB302CD8
-	for <linux-gpio@vger.kernel.org>; Wed, 26 Nov 2025 14:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA2C2FDC43;
+	Wed, 26 Nov 2025 14:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764168036; cv=none; b=kdAY9mdBNMhbTdgGmgyEVte9TRYcVx93+5DomPj6hSuVEuYXrIuMQrzJpcKfevOMNsggE2tzHVqLV+ckGmpSW0tbyE/8sYNitRtAg84MprDVLWRbViFoV4sLggM/GDB3/UEBW6ZfRJW3CtTAd3L/ECXmmInSWj6CvGUJgYmg+QE=
+	t=1764167704; cv=none; b=bNpeCsIt7mWPMyIMoo7esS8IAvrzkt49zbXpqmWZNF2iUVIYXP83s05IJs5N4KsLo9bsRau4lC1dJ62hIB2LmhltpYDveCbZeVwxj/9SJ97eqnMZKQVGwMfgWIoNV4aS6a2QdUuxcx6qGnR23HYjT4zZHk1UBMl283UYJ6w7K2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764168036; c=relaxed/simple;
-	bh=Eon8982swap461jNuY7SXuzLgQoe187zDdqMW1UQvKo=;
+	s=arc-20240116; t=1764167704; c=relaxed/simple;
+	bh=RJcquqx5TPhtK36n5JrIEPjAh0q7mdDtf12rAVAa08s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tXhYwnB0NdQDAfXKNkQvSZ3Wo+vcSeU64f1IL7YcaaDpDCFXuzBKUYzFHYdY7L+Onwz574XWeXgMA3rhcAb9xIQ4DdLss7xndJmPyhi89tPsn5xyKmNILFf8gnaVvu5VzJFz4D/Bpn2HwuNaiJphAbtEgLPcAbPkxkCPtOtbkX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=omo5ZC73; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=YdG86tzf; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AQB2hO82122166
-	for <linux-gpio@vger.kernel.org>; Wed, 26 Nov 2025 14:40:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=/ZUEjnUCCK0JIG3JUS5Ii/sy
-	vWTzLObg8cbEzR2hy9M=; b=omo5ZC73IrCxVqeETim7CtOztKHwKmkgAOEE5eBU
-	gM+h4Q8TAt5+VpNlRbPNnFa4qCt+gP4uW3cm0yvolYKPHjlJkhboBOkI/BWc4Bbw
-	HENl4DmMLNxYbEeEtUyzeJbuu8wIEu+vIeRH1RzkGZXg/WdukgXa319NpKDLjTNw
-	qjme/s1+InySS0HJr3yhW/TWj68FEvXFyb8NEw3EWmrhCapRUAA3ruQt4xrY3K5e
-	7e8u/dO9kMyr0GLPRe1YK61QW3smY3Ci7dbnftbzkxB4URF9MOpmgmVKcFIuIjWm
-	SRgt4m9by+8qT87S/QHNH5a++UbxgH6cDNZybxgtz/lVcA==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4ap0b30hrr-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Wed, 26 Nov 2025 14:40:33 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-8b51db8ebd9so27219485a.2
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Nov 2025 06:40:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1764168033; x=1764772833; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/ZUEjnUCCK0JIG3JUS5Ii/syvWTzLObg8cbEzR2hy9M=;
-        b=YdG86tzfOnjYKq6zVtveyz98RzzgO1m9mVzZHHGnTpXyhvVbcUUZPOn8mSTaAG1lqP
-         Qfcdfmb2unt/BRHbcT8DEZd9QmXYZ4ptD3q3S2CjKZkaK0whiPRPZ2TGZIFSIuG2PXTK
-         8EY/Lsv/y0HFrgD3Q8M2u7NzXf2UFtJuPRh07eW+hk4usGhlghdoRIPHxhH28lCZlqzx
-         qAJV25vqeh0wpx8ZV6mDPSCwlgnmW8dzB9j87Uq0R1fQci5fjRJh7QLKWVm7XPhUh+u5
-         LqfHL5J6LUBvHstV5wzRomcnnM+saklDUcZVqqmgOPrZwmSNG5Khk6+JLDVEYWuhEshg
-         336g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764168033; x=1764772833;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/ZUEjnUCCK0JIG3JUS5Ii/syvWTzLObg8cbEzR2hy9M=;
-        b=FAN4ZQi0B1pLpFYrch0LwwpCBe8RwcYVt8uQakx+ZZ+d4P6cdQ0aZkXC9X2rCmKjW5
-         F5Q9Cm7cXm3ASLspZo14Nifu2ViWASXWyLuB/JZ4qw44cim3EtpQhmrR0yY3Mftqz0rH
-         YYptntpYmqzXqSf4igH1q+QZQ63VZK+D5Ve+MxD7jK4UCq2aqgALeFwJATtudlbfsKXs
-         Aij6yAHqUE8/X3SLUR0i03HvYt6GDyBcoz0WPx4+DC3p2eCUwoBGxlZ1Nd7M0Y3c3NNZ
-         r58AQImxZc/6fhDtrUM1GWCdVgNudOYBehvoM0a7VmZeyL5rWGMxEj9qN/3nyg1xN5D4
-         pTJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUOhS8iMvC/qcm8fbI+e2DVAWHt9XuPpiTcn8Tj7p5r1x2X8nHFQBCtL6i9CZNKWPDegk/ms95are0F@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxof0PM1I9l5PbO5hUDq7L5FPJlh+j98Z9zvwXQZAp4IWKqX+Df
-	Tr8UA3q+VxTbOH8IE7K9tuaDhMPlm0kHi0pQkjXV/sD6bmbvBva+6Vga3r41vV3Mht5+krpUzat
-	L/BcdxY43aXdGqowzBBIBWqNucln/qocSq0hP4NRFJqfYWD04drS6f0oDZiYvsIPz
-X-Gm-Gg: ASbGncsrkyrBpTJM80sGn2DLz22ccem7cYMmqxKJxdxF+kz3Y7UjEErI6LBZwNpqDcT
-	c/fAMfgxYvStLRj3yY/nBxo55rhKHOViNYfEmx/YTQjmtDIiNgRnWZVApLAr1cyuFDRyNLEyQ4d
-	cHeQOLyZKnpLDKM74HVZfeFqLri34wFs/U2ou+RUiGSyL8pS2/eY/4VOZaInTt2EGPBKDRHYmIm
-	dz5E06ciLjKBCmr8XySYmldDetmdZkns11Y78w59OTbvah/bVNQo1qGVbMCWMvSnLt86a4VICph
-	Aao9yCyMJPAXKr9RALsnje4KN3/Qa0PLQ60Tt7W6FO5zNr/CtVHKbyCuDPlCCcbDnKeCbcHK0hC
-	UrAFyz00HJTqqf4vKy+1C5xjOhwdcTD1pSgEFfINvThudAcT+/cfF1QSMRsMOJaXt5g4QpiO6IJ
-	XMfRIDr9WrVQb2tHnlkj334Ao=
-X-Received: by 2002:a05:620a:2945:b0:8b2:61d6:e25e with SMTP id af79cd13be357-8b33d5f591emr2485356085a.90.1764168032708;
-        Wed, 26 Nov 2025 06:40:32 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGp3wUSeWxCbqnY4bLYKUrg2wuf3aNS2sdexjo3KjQDa70tqm6BPX+WmzJtlJW5uK+qMO3d0w==
-X-Received: by 2002:a05:620a:2945:b0:8b2:61d6:e25e with SMTP id af79cd13be357-8b33d5f591emr2485351085a.90.1764168032205;
-        Wed, 26 Nov 2025 06:40:32 -0800 (PST)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5969db87153sm6085150e87.31.2025.11.26.06.40.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Nov 2025 06:40:31 -0800 (PST)
-Date: Wed, 26 Nov 2025 16:40:29 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=cBDpDKJXiRUhPzLMLCS8r24h4pRm9g8OTukZrChSEju7CPsvBhYofBuxdgkEzZ+CC8jr4ZayeonkjGFzQNQ7Px1NW0m9jtsh7OSDveeK8Nk+VP4HIzhZO1W8qkPa5CwcbdUaV//0cc/5GmOsQB+P9pM19L5sJypQgs4BDt8r8DI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OgLDZ5Mk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70599C4CEF7;
+	Wed, 26 Nov 2025 14:35:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764167704;
+	bh=RJcquqx5TPhtK36n5JrIEPjAh0q7mdDtf12rAVAa08s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OgLDZ5MkDXLJOUofojAvxH6u1vKqfS60KgDL3p9sdko1BT1jxi+Ydoph3mdXtH8q1
+	 mSYRijK/A+4KZKugzD5aDygmEsGNubWUSkYZePsEHTlLrtm/GJuAmDYsBRd+wv0VS1
+	 k1XMiSSnRwShwjuVkA2I8y3h8SS4Hp70o40ON5M12xfU4DzmVw4D+9au+0Pqi1vSMg
+	 LxPEW5xpSR5tXO3NrIxm/MUagHSl2jpUtC+sYYVVJxat+RqRGoqeX9P82XEWA6Oni9
+	 SjI7yrTnyAVS8V5O/rVpZo3+Rv3pSY25gapDQ02Va7pix89G1QlRUMPqycIXJzU1Mv
+	 435PGlC7tuy6Q==
+Date: Wed, 26 Nov 2025 08:40:33 -0600
+From: Bjorn Andersson <andersson@kernel.org>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Srinivas Kandagatla <srini@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        stable@vger.kernel.org, Val Packett <val@packett.cool>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	stable@vger.kernel.org, Val Packett <val@packett.cool>
 Subject: Re: [PATCH] pinctrl: qcom: lpass-lpi: mark the GPIO controller as
  sleeping
-Message-ID: <m7kk4bcmaft6at7isv7p5whvcqrfpydx2ajhp5hzi47m46rzds@gjomcts7c74v>
+Message-ID: <gy6ycgcld2moccjjl7x7h72riwfm4ymhnkhlgau53fl4eu3e6q@qp5lrwx57jin>
 References: <20251126122219.25729-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -115,29 +61,6 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20251126122219.25729-1-brgl@bgdev.pl>
-X-Authority-Analysis: v=2.4 cv=E+XAZKdl c=1 sm=1 tr=0 ts=69271162 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6UeiqGixMTsA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=tJZk5_2C3ecUZBiXCX8A:9 a=CjuIK1q_8ugA:10
- a=NFOGd7dJGGMPyQGDc5-O:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI2MDEyMSBTYWx0ZWRfX3sjA3uMP8zEu
- HrYADhHhC3xdwXAOP2pwW4bC6gXqZgrk+VaXIX/fFL3D0/GbqS1BTBTonLziSk9TTk9B+WfhPBR
- a11nhzEL+CmYrq+F/nbJN0fW9GYLGoFZ0qmGr6Cg5uA0AATGqD9Qtxg8wSPLwkyJJr4E9W+ykze
- BPyf6iz8puh/9/HlEVRjiHWeuyF60JJm3XqP9CzWo9msrqHnFxAArsZb3TUEnl8JgHhPjhItryX
- P51uUdnZLVF5xJ6GjYZOVTXEeMiOyALFJYnh8zOOhdKj4Io0UoGBAfd7fXzFlc4t3LbJ/WzBkAv
- EKF0idJulXswXyxpwTa9jRDL7GVl7vlzTqIE4hhJ+N28CuqIMBF6WBQNnMEFuYhTOGWbL7SODLd
- YApIySwIZ3cDH0Jls4FNnqTge4Y9UQ==
-X-Proofpoint-ORIG-GUID: YpTNjVGGNetCewtDSjX65vq01r2m5nNX
-X-Proofpoint-GUID: YpTNjVGGNetCewtDSjX65vq01r2m5nNX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-25_02,2025-11-26_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 lowpriorityscore=0 priorityscore=1501 impostorscore=0
- spamscore=0 clxscore=1015 phishscore=0 bulkscore=0 adultscore=0
- suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2510240001
- definitions=main-2511260121
 
 On Wed, Nov 26, 2025 at 01:22:19PM +0100, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
@@ -147,17 +70,92 @@ On Wed, Nov 26, 2025 at 01:22:19PM +0100, Bartosz Golaszewski wrote:
 > following BUG():
 > 
 > [    9.233659] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:281
-
-Nit: usually you can strip timestamps from the kernel dump.
-
-Other than that:
-
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-
-
 > [    9.233665] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 554, name: (udev-worker)
+> [    9.233669] preempt_count: 1, expected: 0
+> [    9.233673] RCU nest depth: 0, expected: 0
+> [    9.233688] Tainted: [W]=WARN
+> [    9.233690] Hardware name: Dell Inc. Latitude 7455/0FK7MX, BIOS 2.10.1 05/20/2025
+> [    9.233694] Call trace:
+> [    9.233696]  show_stack+0x24/0x38 (C)
+> [    9.233709]  dump_stack_lvl+0x40/0x88
+> [    9.233716]  dump_stack+0x18/0x24
+> [    9.233722]  __might_resched+0x148/0x160
+> [    9.233731]  __might_sleep+0x38/0x98
+> [    9.233736]  mutex_lock+0x30/0xd8
 
--- 
-With best wishes
-Dmitry
+As far as I can see, this mutex only protects mmio accesses.
+
+Is it preferable to mark the gpio chip can_sleep over replacing the
+mutex with a non-sleep lock?
+
+> [    9.233749]  lpi_config_set+0x2e8/0x3c8 [pinctrl_lpass_lpi]
+> [    9.233757]  lpi_gpio_direction_output+0x58/0x90 [pinctrl_lpass_lpi]
+> [    9.233761]  gpiod_direction_output_raw_commit+0x110/0x428
+> [    9.233772]  gpiod_direction_output_nonotify+0x234/0x358
+> [    9.233779]  gpiod_direction_output+0x38/0xd0
+> [    9.233786]  gpio_shared_proxy_direction_output+0xb8/0x2a8 [gpio_shared_proxy]
+> [    9.233792]  gpiod_direction_output_raw_commit+0x110/0x428
+> [    9.233799]  gpiod_direction_output_nonotify+0x234/0x358
+> [    9.233806]  gpiod_configure_flags+0x2c0/0x580
+> [    9.233812]  gpiod_find_and_request+0x358/0x4f8
+> [    9.233819]  gpiod_get_index+0x7c/0x98
+> [    9.233826]  devm_gpiod_get+0x34/0xb0
+> [    9.233829]  reset_gpio_probe+0x58/0x128 [reset_gpio]
+> [    9.233836]  auxiliary_bus_probe+0xb0/0xf0
+> [    9.233845]  really_probe+0x14c/0x450
+> [    9.233853]  __driver_probe_device+0xb0/0x188
+> [    9.233858]  driver_probe_device+0x4c/0x250
+> [    9.233863]  __driver_attach+0xf8/0x2a0
+> [    9.233868]  bus_for_each_dev+0xf8/0x158
+> [    9.233872]  driver_attach+0x30/0x48
+> [    9.233876]  bus_add_driver+0x158/0x2b8
+> [    9.233880]  driver_register+0x74/0x118
+> [    9.233886]  __auxiliary_driver_register+0x94/0xe8
+> [    9.233893]  init_module+0x34/0xfd0 [reset_gpio]
+> [    9.233898]  do_one_initcall+0xec/0x300
+> [    9.233903]  do_init_module+0x64/0x260
+> [    9.233910]  load_module+0x16c4/0x1900
+> [    9.233915]  __arm64_sys_finit_module+0x24c/0x378
+> [    9.233919]  invoke_syscall+0x4c/0xe8
+> [    9.233925]  el0_svc_common+0x8c/0xf0
+> [    9.233929]  do_el0_svc+0x28/0x40
+> [    9.233934]  el0_svc+0x38/0x100
+> [    9.233938]  el0t_64_sync_handler+0x84/0x130
+> [    9.233943]  el0t_64_sync+0x17c/0x180
+> 
+> Mark the controller as sleeping.
+> 
+> Fixes: 6e261d1090d6 ("pinctrl: qcom: Add sm8250 lpass lpi pinctrl driver")
+> Cc: stable@vger.kernel.org
+> Reported-by: Val Packett <val@packett.cool>
+> Closes: https://lore.kernel.org/all/98c0f185-b0e0-49ea-896c-f3972dd011ca@packett.cool/
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+If we stick to the mutex, the patch LGTM 
+
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+
+Regards,
+Bjorn
+
+> ---
+>  drivers/pinctrl/qcom/pinctrl-lpass-lpi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+> index 1c97ec44aa5ff..78212f9928430 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+> @@ -498,7 +498,7 @@ int lpi_pinctrl_probe(struct platform_device *pdev)
+>  	pctrl->chip.base = -1;
+>  	pctrl->chip.ngpio = data->npins;
+>  	pctrl->chip.label = dev_name(dev);
+> -	pctrl->chip.can_sleep = false;
+> +	pctrl->chip.can_sleep = true;
+>  
+>  	mutex_init(&pctrl->lock);
+>  
+> -- 
+> 2.51.0
+> 
 
