@@ -1,54 +1,69 @@
-Return-Path: <linux-gpio+bounces-29109-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29110-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E497C8B12A
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 17:54:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 02851C8B60E
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 19:07:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4AD1C3A82F5
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 16:53:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E2C993A8420
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 18:07:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80D4C33DED6;
-	Wed, 26 Nov 2025 16:53:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E09C30C37E;
+	Wed, 26 Nov 2025 18:06:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IoJFaLMO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fdnrno60"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374992FD667;
-	Wed, 26 Nov 2025 16:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7252777FC;
+	Wed, 26 Nov 2025 18:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764175990; cv=none; b=LEfjuVZhUF46U/0uWjYA3FzDwAkFro9WKThH4ymsa8qXNmt0pIpRpeg9r2qlObidfcysa7GpXt5DAKnm2Nj3znvTCYAEC3umwSGn43nwYU+kQX1Q98JGCWvt0ciOh0kq1ugTcMRY8wlVu6R72vi2aSlvzcP2VF2f2XPXMrbVqKk=
+	t=1764180415; cv=none; b=HzqL/HGghL+T58j/xZsuCXRhx2Km0c6lVbb5kw60FIRG16jfUgw13Ha6xERIknAscsrMtIOjWVvjYob97E3f4wewXLA/y/u1X09nalO6hWyDsiUJQGz2rQtU1x9WLKjsni/2TiV+D+92QvRI5xkumd/5mtuw3C4PQv1kIGAOSdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764175990; c=relaxed/simple;
-	bh=mmQKTxXmZkxtfNlrMvRnw3FG4sKObXtL7r6tazNlwdQ=;
+	s=arc-20240116; t=1764180415; c=relaxed/simple;
+	bh=Jj8WUTEqL7QvdCd8iQY3mdeC7Yp4r4T7oSOKPInFmKM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ihRBuSw51TKNRxto/AgQHTh/vRKinCs9LRKbiiQhz/D0rgAKlsNY4nrBnllhSzwVTs2aP4wzFrL5ZL5VKJeSBfCqga1JTRcjvJc41Wvu1Y8JzvSiJl/p8jSL3WqHltj42xYjMDB0P8/VGb7Bn5HIoit0mLOIyGN007ZXCRs2cUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IoJFaLMO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1527C4CEF7;
-	Wed, 26 Nov 2025 16:53:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764175989;
-	bh=mmQKTxXmZkxtfNlrMvRnw3FG4sKObXtL7r6tazNlwdQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IoJFaLMOjR9wr3+xuMS2vx75RuQ/Q1NPSn6yj4FJI+kL75FFDHiIZXK8+pyJbAdgM
-	 3QlknRBsMdS7KCd4bttC8IYAoBz6Q/WetOM59LMpaAPju/qaAaqQ1fnFVYVC9Vx0bZ
-	 k8h4KAaST2iyOldpemJLrgSLY+KAXM+/QsBqqnVRK4A1xCJnbtbxByPsnLbwwbS3ge
-	 hal9/R7jNFaQJw9xC+30n8oTXjQuW11QwvmAXY3TgKEjsh7ydOgwGvy5hauc9Ccj3X
-	 tlDg2+ZCt2uEVo81/XbjRjJ60ZcspbkKljDqUvDIbcL3+mFI4YgN38GWFIWV4QANIk
-	 m0FqKs+V/tOlA==
-Date: Wed, 26 Nov 2025 17:52:59 +0100
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Linus Walleij <linusw@kernel.org>
-Cc: Lei Xue <lei.xue@mediatek.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Sean Wang <sean.wang@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=GfpisBH+WtfES03f0VlhAuVFR6KTbRJfRqJgXUxOiPG6cwmeuNxAFc36w6mqsJm9PyzG1S2Jc94vFS7yfHZR8pdlqG3BQvmsg7z/P28HlMvgR0HLAyhbY3xT+C10s2Iq++9vtL4zSOzvYC4ZS8jCedur/7VuvxpaQt7cwC68AmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fdnrno60; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764180413; x=1795716413;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Jj8WUTEqL7QvdCd8iQY3mdeC7Yp4r4T7oSOKPInFmKM=;
+  b=Fdnrno60hLKaYtAhf3BlTzMfECzSXmj3jpIkCoNEw/d8NJguH7AdWDBt
+   RrqBLm4u51dlmGDRQcigE+groDM1I2oJ6ZBDQJ78NhRXSn9/LyUmFpCuc
+   SnxDeBqV0HLqtY06vGya4kRbx9SLPNgozi6HOCy14k5kJhb+3qnS0DXpz
+   EWPP5lo6nusw8oaz8KNjw0xAg+gG0LlTakDCMmb7pOd4SFN/GDyK8tffu
+   xdG6W9gPDz2mH8etCAkJTbEths+tgRnxZZ/kM75eRS+rat1mTvtpRi974
+   BuYWKuphJPkQ0Ow+l+LkVS4m9FZ7Ft7mdg0HHMa7vO+LieebqZVsNrXza
+   w==;
+X-CSE-ConnectionGUID: VH9yggR0SOC1YnquhLZvTQ==
+X-CSE-MsgGUID: sPgm37SFSniDj/f8vFj/5w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11625"; a="76550451"
+X-IronPort-AV: E=Sophos;i="6.20,229,1758610800"; 
+   d="scan'208";a="76550451"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2025 10:06:52 -0800
+X-CSE-ConnectionGUID: u6MYmWlrQDOKXyHhNm56hw==
+X-CSE-MsgGUID: bArNWwrLSt685F6MVj/PFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,229,1758610800"; 
+   d="scan'208";a="193094093"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa008.jf.intel.com with ESMTP; 26 Nov 2025 10:06:49 -0800
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id A0C9EA0; Wed, 26 Nov 2025 19:06:47 +0100 (CET)
+Date: Wed, 26 Nov 2025 19:06:47 +0100
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Lei Xue <lei.xue@mediatek.com>
+Cc: Sean Wang <sean.wang@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Matthias Brugger <matthias.bgg@gmail.com>,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
@@ -57,68 +72,55 @@ Cc: Lei Xue <lei.xue@mediatek.com>,
 	yong.mao@mediatek.com, qingliang.li@mediatek.com,
 	Fred-WY.Chen@mediatek.com, ot_cathy.xu@mediatek.com,
 	ot_shunxi.zhang@mediatek.com, ot_yaoy.wang@mediatek.com,
-	ot_ye.wang@mediatek.com, linux-acpi@vger.kernel.org,
-	robh@kernel.org
-Subject: Re: [PATCH 2/3] pinctrl: mediatek: Add acpi support
-Message-ID: <aScwaxBG53dnZ4a4@lpieralisi>
+	ot_ye.wang@mediatek.com
+Subject: Re: [PATCH 1/3] pinctrl: mediatek: Add gpio-range record in pinctrl
+ driver
+Message-ID: <aSdBt937C6Cjj_8s@black.igk.intel.com>
 References: <20251125023639.2416546-1-lei.xue@mediatek.com>
- <20251125023639.2416546-3-lei.xue@mediatek.com>
- <CAD++jL=h4ZEgrjgGOfgFyAXBM7EL91ZD-La82UQ7GPOXv8h9WQ@mail.gmail.com>
+ <20251125023639.2416546-2-lei.xue@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD++jL=h4ZEgrjgGOfgFyAXBM7EL91ZD-La82UQ7GPOXv8h9WQ@mail.gmail.com>
+In-Reply-To: <20251125023639.2416546-2-lei.xue@mediatek.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-[+cc: RobH for his information]
+On Tue, Nov 25, 2025 at 10:36:34AM +0800, Lei Xue wrote:
+> Kernel GPIO subsystem mapping hardware pin number to a different
+> range of gpio number. Add gpio-range structure to hold
+> the mapped gpio range in pinctrl driver. That enables the kernel
+> to search a range of mapped gpio range against a pinctrl device.
 
-On Wed, Nov 26, 2025 at 10:10:15AM +0100, Linus Walleij wrote:
-> On Tue, Nov 25, 2025 at 3:36 AM Lei Xue <lei.xue@mediatek.com> wrote:
-> 
-> > Add acpi support in the common part of pinctrl driver. Parsing
-> > hardware base addresses and irq number to initialize eint
-> > accroding to the acpi table data.
-> >
-> > Signed-off-by: Lei Xue <lei.xue@mediatek.com>
-> 
-> I'd ideally like Andy and the ARM64 ACPI maintainers look on
-> this. (Added to To:) and CC linux-acpi@vger.kernel.org.
-> 
-> I'm not aware of the best way to deal with ACPI in combined drivers
-> but things like this:
-> 
-> > -               hw->base[i] = devm_platform_ioremap_resource_byname(pdev,
-> > -                                       hw->soc->base_names[i]);
-> > +               hw->base[i] = is_of_node(fwnode)
-> > +                       ? devm_platform_ioremap_resource_byname(pdev, hw->soc->base_names[i])
-> > +                       : devm_platform_get_and_ioremap_resource(pdev, i, NULL);
-> 
-> Just look really quirky, I think there are better ways to go about
-> this and sometimes the ACPI maintainers give some good
-> pushback about the firmware as well.
+...
 
-How are pdev->resource initialized ? For OF I suppose the names come from
-"reg-names" (that don't exist in ACPI, yet), for ACPI I assume they come
-from a _CRS (and you can't tag them by name for the reason above) ?
+>  static int mtk_build_gpiochip(struct mtk_pinctrl *hw)
+>  {
+>  	struct gpio_chip *chip = &hw->chip;
 
-I assume that in ACPI the _CRS resource order is foolproof against the
-variaty of SOCs this code has to deal with.
+>  	if (ret < 0)
+>  		return ret;
+>  
+> +	mtk_pinctrl_gpio_range_init(hw, chip);
+> +
+>  	return 0;
 
-I also assume/hope that we don't want to add a "reg-names" _DSD property either
-in ACPI to deal with this seamlessly in DT/ACPI (that was done for
-"interrupt-names"):
+We have a callback for that in struct gpio_chip. Any reason not to use it?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/firmware-guide/acpi/enumeration.rst?h=v6.18-rc7#n188
+>  }
 
-I am sorry I have got more questions than answers here - it would be good
-to understand where the line is drawn when it comes to OF/ACPI and fwnode
-heuristics compatibility.
+...
 
-Thanks,
-Lorenzo
+> +	pinctrl_add_gpio_range(hw->pctrl, &hw->range);
+
+Not sure if this is needed.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
