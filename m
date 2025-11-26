@@ -1,163 +1,249 @@
-Return-Path: <linux-gpio+bounces-29099-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29100-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCB26C8ABE5
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 16:48:44 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A736C8AC24
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 16:55:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 50DB44EB5CE
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 15:48:29 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 93B8A4E4689
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 15:55:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6E5C33A016;
-	Wed, 26 Nov 2025 15:48:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFE1E33B971;
+	Wed, 26 Nov 2025 15:55:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="PEhmnWRO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UWmV9y/N"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F299533B6DB
-	for <linux-gpio@vger.kernel.org>; Wed, 26 Nov 2025 15:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC18330D29
+	for <linux-gpio@vger.kernel.org>; Wed, 26 Nov 2025 15:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764172089; cv=none; b=fUUVRejbP+RmZImI4sK2u/CIPaaJLaQA00gYDKxp7qGJFkBJTj06G6Jk10zsTIsgYYkq8p3NkgslXYbEL4jxjshAcjPmntZNwbV3C0Xh07saLEBBJAWnEeXpcQfNGaQUeofQVTZ0ZiLi/sanXVloUK1W169VM3QmoInrhlD7dvI=
+	t=1764172547; cv=none; b=P1mjIhfoB2ozFBN2vrPvkX0uSNOfMgE5ecAwqp47qFrNbolslJ4vbGpEBMqSvp5PBA6g0gQqIAeCWCyYi59h8Rqk7ckaKUfOEMnrai5hGdbktu/TuKyLITKO2HpA6nzRfD92Q8ErMcZkbbU2RaPCU1ff8RwPMFE7kM/ye8zxNVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764172089; c=relaxed/simple;
-	bh=S8LmYUH9KEaLTuJ7OFfoJvQ2MvHXl9U2/WgqG1bny/E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NjKoTK64w4zHc0BqBlqte1QrVLAbGadkm/H/Xoy02nIiHNb+TzC8/AQ+TxAG6fir3BGwopjWG64h7JZUWE29BT4URdQzsd5D/ePVc9DwonMDVQC5xVBsV/pjZzLm+LoCGobU3LA9F9SiRV9ULnL3S7RutOWNl76yzppIlb0fyQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=PEhmnWRO; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5958187fa55so5378738e87.3
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Nov 2025 07:48:07 -0800 (PST)
+	s=arc-20240116; t=1764172547; c=relaxed/simple;
+	bh=lASm2siB5AU0w5u55FAD+C2Ou4paYQEnU69Wbb4v2Yo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ROg737eduXrkYfDjXWf2ISExDcGmEwLkYhds6GM7mojKaJZc7b9MEvb3Vc0pjafaXkEe2hW1a+Jk9YtdxUTLenhH0boSZ9lwgDy74Ua0GBmUiJjXK+BDprfPtuI1CysnvnHxJwfBU05IA+NruhzTPATQIpnsg4EYNBJW7P1UC38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UWmV9y/N; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-64320b9bb4bso2111801a12.0
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Nov 2025 07:55:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1764172086; x=1764776886; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dFuVp5mjywP+NMccfEdA1smMO0SeI/6ihvGyik/4sgc=;
-        b=PEhmnWROe/ZKxaaEu3ZS342A7CTYpt5wk8eBtVxZtVDgNsFqeCLlDRD/EhT4eJQnhN
-         tvtbJ1pmmK0amjF67PFKanVkAHKcqbZOBoy2j/tc3sJISGsK6wW4nTqbYL5ye2ZM4/MB
-         i+vTot0lX+9AclQNQS74zk9hG4tV5X4Zy3MJRjwLcM0nAajoIfSP8GeLVupcxu3Wu+Ne
-         Cd78IBbDubDFM5CbVJzkbuMAlu4pIBQLYT6Hzp1LEVOHJUptjRWdXRhSRsTvIFKldsbm
-         WMs9vxd9NGTDZHo5NuSR4gNZAC8lUuxtDzckT15lpWeeimr1CbYglA7gVllI2UkcaCPg
-         dnOg==
+        d=gmail.com; s=20230601; t=1764172544; x=1764777344; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rG1nOVu8gVLE+V2Sxzp2pYjIM+pZyr/YOIj56xPih2c=;
+        b=UWmV9y/NodWXuqhJY1TrxxsW5M1ncI40fhICgsktkYPkqohzrKM5KW8gECsBOkUMmc
+         GomMVh5SAwe28JGNT4WeVfyWdctx/9vWYlroKPha9wg8kMPsREvY5d//lXoxsnW1UkFi
+         pGFo7cozZkoNz4/xCnDXm2Aclxz3llxgBJitrL5N9yEG4avTKJKfoG8YwiWv77A9JTTD
+         2zHAuhkmOLH9hE2MlyVtRYbSM5uricdM0rHaz+yHpHE5RIoF8TD0rASiGuNpbWZIqiZc
+         GcR0VeCKBmUrnvceelH7wMbrwnxTuR+mK/r7337QBmHOFLSRwY/TGl7N6YAI1JzZtzps
+         e7zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764172086; x=1764776886;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=dFuVp5mjywP+NMccfEdA1smMO0SeI/6ihvGyik/4sgc=;
-        b=GriwUqPiA6w3cQ+hWSzbemcpdT8RpsSPaCJ5dmzTkSXhnqnhFPt5FSy1lVxxmmYVIT
-         TZjb3DGc5qava1qWxfyJ1XswIQTJAClWo3cby7heLOHJ51U967jhXaYZlPTVhrMDa8vE
-         s8o9h5LR8P7p2VfitVxniaG37km733po6JZQLpe7zD1WbrJWrwKMo7PcLHfTFIYX+dWY
-         /gv3aFmW1N+PV+5i0rCLnJyUvAljGhRgphB+AdHO7RqAfz/p+BFH+3dRQDMaBEMj1RlQ
-         Hk9paiYMT8o6qCJRGDqn4F7WzV6v72s8SkSiLEI7VDcInTDLYxaWAatetgxbM0F5waNX
-         zdRg==
-X-Forwarded-Encrypted: i=1; AJvYcCVLMCXbTA2fMJVdBr2K/LOgClDorprGss31BddHh53pADoMTaPoMrAgodjrr+mpkA6utzqW9pGGIPNY@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZ1UkedRCIjmP9lrHGi6SK03R81HUDILci9nVc9x0uMUCgApSp
-	zDUjLPFj7WIDFl4pt/IxspqHwp5rGxOGuAaZYRXvENdbwxp36G/bqXab/hxMIwn0FOiKRwSXUXd
-	6b1TEl8Pxah/NonT1ekU8vOKQCAMvVoeF3JGY4FIL9A==
-X-Gm-Gg: ASbGncv5/wlbxEADm3LwL7z1s5CMQev0Qx2oahyUuRW/X3t2JwRxdbOI4EmXFUgWmct
-	QaB0C29J/HjM1YEq/mk1/cOJkWcrPFvNWcBarGaPsXsujsTPLEbWZOrfqRion9G2dl9Rghm4g0p
-	LP94nq90QrqRM5D4e8JRASKus2MV+qY3iwAwBn65eGq5Lm+jj3XTd2yP7/flSGrPFfqlkRyEXYI
-	BlvvPSrVltyWrEqRN9DZU8LSBIsUR/jzKxB3/zdjpTm0HF56911nBs/MUkZogGo9WXbVYGPaj32
-	N7bA5S4bwMvbR/JzTlp90guF8gA=
-X-Google-Smtp-Source: AGHT+IEhUl1jNda9/yp2GCLrKXBikNNwXFAiy8yPxeZdtimGdt9zzATr5ITlVaihFGQ0IjBdRUtALikJOU6Bmen20go=
-X-Received: by 2002:a05:6512:10c2:b0:594:51ac:148 with SMTP id
- 2adb3069b0e04-596b4e5618fmr2340043e87.15.1764172085977; Wed, 26 Nov 2025
- 07:48:05 -0800 (PST)
+        d=1e100.net; s=20230601; t=1764172544; x=1764777344;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rG1nOVu8gVLE+V2Sxzp2pYjIM+pZyr/YOIj56xPih2c=;
+        b=oJC92HW3anF0nKQfedRlz9xAK0naiKR1hzekJUqkT/arpd2OGQeCufdTtfu+6VxAaA
+         3n1zaDG3O46/XYkOGvOAdCctmpxdCo6vtT9bfxErf/dEYLQbRPvZO0QeZKM78Su8hcxE
+         8u+FTtiujp9Hes27gAYhjF4xYVod5b7Q0uJnDr0X/ksInY+QBPqNSS7jcDofk/pb7ETt
+         RAtlkSh1CQ26QV5ZOMeRbpANDOq4KRfiHgNgd5iyvROvaDGt/yrrPUHYvWCe+X3vgF1s
+         hqA+8gEYH/3Qo+meub+TWua6u/gpzjB/Xzl1gtcxx2sUJjPXJVJTz5nlm9v4CCMM4KIR
+         TBqA==
+X-Forwarded-Encrypted: i=1; AJvYcCURTvmW5ytmQ/DcrabAolDmIi+i2JxrXVsSgmG0oaQCc7BiaSuElx/zsT6OD7ikVlpzkrxc96sJvrHx@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/Sv7RFBaIA2yc/tvlaZlETmvHrl9fhpnBoKwIygeM/mbCor8X
+	7l1UiITPWZxkyeJueh5ZaygqZB+yJNVYf5RrNya31bvB1bJgSo0YtUbhIWSsuBn0
+X-Gm-Gg: ASbGncvWLL8hS7+4LiCUcv3VumffeJopYm3gDYSfyaYiq8VPVlsYXT81PMUxDZnYKCq
+	HQEXah/1advz9RYQqkZLcppPj48B0bFPOQg4NHCg43w0jcx6dCV17RFkMe7eEMe3b5j4MlqAVzl
+	0DlVd1l4ounMV/8RdE9SOvg7tjHF1yco7OzzIij904mfsFT614v4LKzU4nTu6Re7g40Ml5V/gOc
+	NVqTkSktwu3Dua5knTwa/P3A5vlSvOLRxF+7yrXmg9YYhOTNoYvvWWs2pjFUsdhcUtINsWJIPsZ
+	pSLQTv0gQUdznrHRFxxWLazjoUawRgBW62oTsoIxv9nJCaBhVWhTOh6BAR/HrtnryiSaKDk3vVi
+	zetKpjBQDFHjS7EcZhoz8NhBEqNJ/7EaD7aNUro2Ay6NXa3X0AhzMc46lV3nK6nvNEUIFESUHQi
+	aSH49+5BbYJgXD+qllNNhzNG9iGaCsgG/W7pBzOh9sjT8J89czni8sW99g1LxOh2UZyCg=
+X-Google-Smtp-Source: AGHT+IFOk4Dc71dAU1PFak6lwxd8NQT+2eJebIKCLnu747O0fz8ysrn20pLcynZiSjtb/k5bFDX7Ag==
+X-Received: by 2002:aa7:d4ce:0:b0:640:931e:ccac with SMTP id 4fb4d7f45d1cf-64539658323mr16418976a12.7.1764172544022;
+        Wed, 26 Nov 2025 07:55:44 -0800 (PST)
+Received: from HYB-DlYm71t3hSl.ad.analog.com ([2001:a61:123e:4501:1025:ba00:55dc:4ccc])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6453633fe28sm18380759a12.0.2025.11.26.07.55.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Nov 2025 07:55:43 -0800 (PST)
+Date: Wed, 26 Nov 2025 16:55:41 +0100
+From: Jorge Marques <gastmaier@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Jorge Marques <jorge.marques@analog.com>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 9/9] iio: adc: ad4062: Add GPIO Controller support
+Message-ID: <rk4hmupbrb5ugxft6upj7ru43x3z7ybrobax45rorpwbcwleh6@vzxrr3m7r6ep>
+References: <20251124-staging-ad4062-v2-0-a375609afbb7@analog.com>
+ <20251124-staging-ad4062-v2-9-a375609afbb7@analog.com>
+ <aSQ2JUN05vmMQC1I@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
- <20251112-gpio-shared-v4-3-b51f97b1abd8@linaro.org> <2d96e464-e17c-4ff5-9a08-b215b77da04f@gmail.com>
-In-Reply-To: <2d96e464-e17c-4ff5-9a08-b215b77da04f@gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 26 Nov 2025 16:47:54 +0100
-X-Gm-Features: AWmQ_bnK-S4TlEVeOIf3ITE7TZsWB2TJ1MXZpLcLB_4C4obVKenyvukRrMrvtB4
-Message-ID: <CAMRc=Mexa9eSe+qy9dm_q=+gBKtc-EZ7M0RXsgSe6fhWj1FV4A@mail.gmail.com>
-Subject: Re: [PATCH v4 03/10] gpiolib: implement low-level, shared GPIO support
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Alexey Klimov <alexey.klimov@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aSQ2JUN05vmMQC1I@smile.fi.intel.com>
 
-On Wed, Nov 26, 2025 at 4:34=E2=80=AFPM Cosmin Tanislav <demonsingur@gmail.=
-com> wrote:
->
+On Mon, Nov 24, 2025 at 12:40:37PM +0200, Andy Shevchenko wrote:
+> On Mon, Nov 24, 2025 at 10:18:08AM +0100, Jorge Marques wrote:
+> > When gp0 or gp1 is not taken as an interrupt, expose them as gpo if
+Hi Andy,
+> 
+> GPO
+Ack.
+> 
+> > gpio-contoller is set in the devicetree.
+> 
+> Why can't gpio-regmap be used?
+> 
+Because the device register values (0x5, 0x6) does not fit the gpio-regmap.
+It writes the mask for high and 0 for low.
+But low is 01[01] and
+    high   01[10]
+
+A different series would need to extend the gpio-regmap ops, but if you
+implement your custom reg read/write, then you save at most ~5 lines...
+I will add that to the commit message.
+> ...
+> 
+> > +static int ad4062_gpio_get(struct gpio_chip *gc, unsigned int offset)
+> > +{
+> > +	struct ad4062_state *st = gpiochip_get_data(gc);
+> > +	unsigned int reg_val;
+> > +	int ret;
 > > +
-> > +             count =3D of_count_phandle_with_args(curr, prop->name,
-> > +                                                "#gpio-cells");
+> > +	ret = regmap_read(st->regmap, AD4062_REG_GP_CONF, &reg_val);
+> > +	if (ret)
+> > +		return 0;
+Should have been
+  		return ret;
+> 
+> > +	if (st->gpo_irq[offset])
+> > +		return -ENODEV;
+> 
+> Consider using valid_mask instead (.init_valid_mask() callback).
+> Hmm... And it seems it's in place. I didn't get what is here then and
+> why we need to do it after accessing the HW? If there are side-effects
+> they must be described.
+> 
+True, this is not necessary the valid mask does the same.
+> > +	if (offset)
+> > +		reg_val = FIELD_GET(AD4062_REG_GP_CONF_MODE_MSK_1, reg_val);
+> > +	else
+> > +		reg_val = FIELD_GET(AD4062_REG_GP_CONF_MODE_MSK_0, reg_val);
+> > +
+> > +	return reg_val == AD4062_GP_STATIC_HIGH ? 1 : 0;
+> 
+> 	return !!(reg_val == AD4062_GP_STATIC_HIGH);
+> 
+> also will work.
 >
-> This call causes error messages to be printed for gpio-hog entries, like
-> this one from arch/arm64/boot/dts/renesas/rzt2h-n2h-evk-common.dtsi:
->
+ 	return reg_val == AD4062_GP_STATIC_HIGH;
+> > +}
+> 
+> > +static int ad4062_gpio_init_valid_mask(struct gpio_chip *gc,
+> > +				       unsigned long *valid_mask,
+> > +				       unsigned int ngpios)
+> > +{
+> > +	struct ad4062_state *st = gpiochip_get_data(gc);
+> > +
+> > +	bitmap_zero(valid_mask, ngpios);
+> > +
+> > +	if (!st->gpo_irq[0])
+> > +		set_bit(0, valid_mask);
+> > +	if (!st->gpo_irq[1])
+> > +		set_bit(1, valid_mask);
+> 
+> Why atomic bit set:s?
+> 
+Not needed, will use
 
-Thanks for the report.
+	if (!st->gpo_irq[0])
+		*valid_mask |= BIT(0);
+	if (!st->gpo_irq[1])
+		*valid_mask |= BIT(1);
 
-Please trim your responses to just the relevant context though, you
-included the entire huge patch.
+> 
+> > +	return 0;
+> > +}
+> > +
+> > +static int ad4062_gpio_init(struct ad4062_state *st)
+> > +{
+> > +	struct device *dev = &st->i3cdev->dev;
+> > +	struct gpio_chip *gc;
+> > +	u8 val, mask;
+> > +	int ret;
+> 
+> > +	if ((st->gpo_irq[0] && st->gpo_irq[1]) ||
+> > +	    !device_property_read_bool(dev, "gpio-controller"))
+> > +		return 0;
+> 
+> Do you need this? valid_mask should take care of this.
+> 
+True, this is not necessary.
+> > +	gc = devm_kzalloc(dev, sizeof(*gc), GFP_KERNEL);
+> > +	if (!gc)
+> > +		return -ENOMEM;
+> > +
+> > +	val = 0;
+> > +	mask = 0;
+> > +	if (!st->gpo_irq[0]) {
+> > +		mask |= AD4062_REG_GP_CONF_MODE_MSK_0;
+> > +		val |= FIELD_PREP(AD4062_REG_GP_CONF_MODE_MSK_0, AD4062_GP_STATIC_LOW);
+> > +	}
+> > +	if (!st->gpo_irq[1]) {
+> > +		mask |= AD4062_REG_GP_CONF_MODE_MSK_1;
+> > +		val |= FIELD_PREP(AD4062_REG_GP_CONF_MODE_MSK_1, AD4062_GP_STATIC_LOW);
+> > +	}
+> > +
+> > +	ret = regmap_update_bits(st->regmap, AD4062_REG_GP_CONF,
+> > +				 mask, val);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = devm_add_action_or_reset(dev, ad4062_gpio_disable, st);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	gc->parent = dev;
+> > +	gc->label = st->chip->name;
+> > +	gc->owner = THIS_MODULE;
+> > +	gc->base = -1;
+> > +	gc->ngpio = 2;
+> > +	gc->init_valid_mask = ad4062_gpio_init_valid_mask;
+> > +	gc->get_direction = ad4062_gpio_get_direction;
+> > +	gc->set = ad4062_gpio_set;
+> > +	gc->get = ad4062_gpio_get;
+> > +	gc->can_sleep = true;
+> > +
+> > +	ret = devm_gpiochip_add_data(dev, gc, st);
+> > +	if (ret)
+> > +		return dev_err_probe(dev, ret, "Unable to register GPIO chip\n");
+> > +
+> > +	return 0;
+> > +}
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
 
->         sdhi0-emmc-iovs-hog {
->                 gpio-hog;
->                 gpios =3D <RZT2H_GPIO(2, 6) GPIO_ACTIVE_HIGH>;
->                 output-high;
->                 line-name =3D "SD0_IOVS";
->         };
->
-> For gpio-hog entries, the first element is not a phandle (gpio-hog is
-> already under its parent).
->
-> of_count_phandle_with_args() will however try to interpret it as a
-> parent either way, causing the following error to be printed.
->
-> OF: /soc/pinctrl@802c0000/sdhi0-emmc-iovs-hog: could not get #gpio-cells
-> for /soc/ethernet@92010000/mdio/ethernet-phy@2
->
-> RZT2H_GPIO(2, 6) expands to 22, or 0x16.
->
-> Coincidentally, in the decompiled dts file we have:
->
-> ethernet-phy@2 {
->         ...
->         phandle =3D <0x16>;
-> };
->
-
-Yes, because behind the scenes, a phandle really is nothing more than
-an integer.
-
-> Maybe a check for gpio-hogs should be added?
->
-> Something like the following before the call to
-> of_count_phandle_with_args().
->
-> if (strcmp(prop->name, "gpios") =3D=3D 0 &&
->      of_property_present(curr, "gpio-hog"))
->         continue;
->
-
-Yes, that's a good idea, thanks. Let me cook up a patch.
-
-Bart
+Best regards,
+Jorge
 
