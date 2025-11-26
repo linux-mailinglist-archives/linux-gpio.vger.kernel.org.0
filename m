@@ -1,351 +1,140 @@
-Return-Path: <linux-gpio+bounces-29093-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29094-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2018CC8A82A
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 16:02:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 98F1EC8A84B
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 16:05:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 70E39347245
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 15:00:51 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 5869D348091
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 15:05:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 092D9306482;
-	Wed, 26 Nov 2025 15:00:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D19EA30276A;
+	Wed, 26 Nov 2025 15:05:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eSXCaNWK"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="3Wtgqi98"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FC03043D2
-	for <linux-gpio@vger.kernel.org>; Wed, 26 Nov 2025 15:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98F8303A04
+	for <linux-gpio@vger.kernel.org>; Wed, 26 Nov 2025 15:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764169245; cv=none; b=RaPfGgsrm+IAI/4eZFwr6NTsuEr/G1WP9C4BRr5XiQ9IKs3uaOHrgURnVgr5vWvNObgrnUNVBV9fU9yoll+SWRlLlz4DwKzABy8VYPDIMPp/YpZO2nHuCA2AppuDi1tDb8MuVsWc8vCJC9pjofC0dbxxLpcoS6/3jKXdmR+dhK0=
+	t=1764169533; cv=none; b=Opdzgw9bJEpPpWvkCdpefLIwlMMr9kjVFlXSa1qiLoduAUfEIs89rcjhKHKj00aatb9Udw0q5Wk8XXpYooGk8vVjaVEwWeOYRDOLUkQbvOGQP6PdTAjOJPqodTBEhWipN3x4hJ5XYe80W8/M7qDdZrVrCaSioLH1ey64+8bMOU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764169245; c=relaxed/simple;
-	bh=5QJjkgD4Lg0uyQLZFQujwXLTzVMdno/htIphWOU29XU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GvStHdrB6yXPXL6jvP0kvbQCRtXDwdSip1xzZf2K98ox6fwmNXlQ1qe+yUvbWMGyUambJshQfUNTnKHuC5Dtk989QkkwEZWCBfZ9xsnF8WD7LAcmASsnKxwkTHwLAwcmc74zSjzEA09XY1BwSIF35SV3EOSWPU/+LlJGPUv48cE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eSXCaNWK; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-64198771a9bso12173930a12.2
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Nov 2025 07:00:43 -0800 (PST)
+	s=arc-20240116; t=1764169533; c=relaxed/simple;
+	bh=J+oyg1mBBqSSQQkvSrNBpiZ7W6zMitALsCYhR3FXK+s=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u22ZSWn+jCKnWO9tmp4CW+pHKKz3V+K0Uk9YM/ZjswFIcIcLr/wyT+YUPGGYA+DgfjFc+PMZvyDdpG+2ZytmLkcJQubuiwsJJBr14VYYNycotOG/BhsfV8prWXdaqMkcLUMWsrXaVuEQz5SshfOQIgUt1pq+f6ddCacOfLmpS2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=3Wtgqi98; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-37a34702a20so56072201fa.3
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Nov 2025 07:05:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764169242; x=1764774042; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yz5EmXohUxVRWC4ev9hUhbYDa/f2qaZaDtF0BMtQeAs=;
-        b=eSXCaNWKVXBLdRoGqRRTeoNawi6aez0fAFM0ZMWOu5P5EKfVFQ/AIRrO0TEt66SF0g
-         Z6sHSuzCuKN0wHb7pDvC6tRgELzwHwzW0VYeEj0WrwnsvBZL1SGysImALIa6DoNQ/GCN
-         cIN7vO/DpOVIGk3+oNC6aQOFKcc7rJNcZgc1dPN6fVYIFhguNuxvSCoiMYElx1AkiXxz
-         gX20di/K/Qr6ZzOEiECB49KChioqmOJzdHy9GPcy1+WT40zNJcOnU9b6VGzk7J1r/guF
-         CEu6j29s9SOVS8qP+dshWPG7juBxGxwCcgAu8tJBmgKLqinoG7AYojTlnldB66c/p/83
-         eOCQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1764169530; x=1764774330; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZdozIWg11HXn8YrxuTHyeRPHWCFIep7IAFKsHH2Slm4=;
+        b=3Wtgqi98DePCWX3LVQHFO8RvE/Uoctt4R6OLMyobJSdTCkfut6H3uSSejsiM2Wh0+t
+         N8Sq1CISf/NnD1674k0f+jXFK4Q5/ueq/UQgrCAgSyakuDlQ06o3tNPqp1fjd7Bhodn5
+         yIwb3CREJ8EQ9gkb9xkTKxLISO6byCyKAgSQY0IzMmVWuyTLYSECzlMS3c357eudzVN4
+         0H/WU2X9T+ANnPruXCjmu9vSWit+hukqceg4wPIeKiZJDlyFOe+xdWtmF5jV9Uhb/0uj
+         XFlBonSqH0dbr45jKeCPMN9rLBVJwvFjVLeXYFT5BdLzEYpAaIumMZBbTkA48bregwBH
+         oObA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764169242; x=1764774042;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Yz5EmXohUxVRWC4ev9hUhbYDa/f2qaZaDtF0BMtQeAs=;
-        b=cWPbKbmROkYtut/BLXG1Pq58hz9LS/O/oYyH9XfWW29HdPJftMVNiWix4M757khiTD
-         1ahzdu3Dkyv7nUlv0PFLP8nUp3q0+i2nxgINR9dZsjMfXtlUcaoiQ0ES+YD2uwvepKpK
-         ck+M4fnGUxl4s35Kd+ZLu4Jbx7YKHn32HNEjDPVSILLQ7tDNKvNRtUkUQE6I2Aj7FBMm
-         isdEt5fExQuH+4vh4f9bFE6Gq6f0Ue2EE6GcW0ebirba3FetMe+cti6E2KUTEdgPJ/py
-         ZSVne274zua7ypLmx199ojSEoxL5u0lXlJX4DWnCUa3K8N/5p0iMNh+ob77Zshj53sug
-         omIg==
-X-Forwarded-Encrypted: i=1; AJvYcCUnlWG02sOQvlYxg619VL+EZJI6NIabRh06syrWo1mqYoJePhDfc8D8kOYu6IlTuJdBkg3V+rz4OoAF@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRx59OvTHNjL2utK4QD8hqpugUM84YHq+ViGAiaMQhcLO57V+g
-	u2i6yMLHV9INOm3eIwtV5KvNtV5MSnxiB6ys1HFI7E5Y2/bPhdVpvBqQ
-X-Gm-Gg: ASbGncvZ5/KHromWC74k7oupCIEJB+XbZdW1S+I7aXhVBo0o6DCArp4FvGTt66vgqWj
-	Eq62W3hyaz8+LhOjgQrcU5kbLpDW7iXYvui+Rz6HD/yPvrtm0vWcRR0Hto3vq1Mqf6QwN6Ebdy+
-	88rLjx3QOxDw8xxK39R0LscNAp/34OrKlPVp2IIwGi1lWi7UsjG0Y1Hr7rJf56T7wl/COb7jzm8
-	qkli0Xfv2FjOHfuka4Ax5vWCm52rKolp2RnuR2sQ3pRRV0ZAJnP0Q0YqvTIvm1v80aGB2JKAKC3
-	sOkPbIphGb1ZW6mxsMyDr26gsNHT+hsRbq63qoqNvfqQvN5iVO1NhCRXT5aXJxvG834Ulapl1xw
-	OmfLb+AmxkGqx5HhmdEZ8YGT82yh6BkV+rnt4kNu4hJRX2xspDG0yQBxh8ilADvxwKxRVnIOJWq
-	UlqU9IUjZn7ttg+ZeAeO6SAccD36mJdjStObNIo5keRwBHIH0pKFHKiP7NZLsYrr8cCCA=
-X-Google-Smtp-Source: AGHT+IGMLKBPp/nalJhT5vdwB6WP7zzO2EVVFWVnhy2g0Kthf4gY+u8ks4h7NDw/yjwO6Ns9fkv+5w==
-X-Received: by 2002:a05:6402:1ed6:b0:640:9aed:6ab6 with SMTP id 4fb4d7f45d1cf-6455468d38amr15839431a12.24.1764169242005;
-        Wed, 26 Nov 2025 07:00:42 -0800 (PST)
-Received: from HYB-DlYm71t3hSl.ad.analog.com ([2001:a61:123e:4501:1025:ba00:55dc:4ccc])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-64536460ea9sm20379307a12.35.2025.11.26.07.00.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Nov 2025 07:00:39 -0800 (PST)
-Date: Wed, 26 Nov 2025 16:00:36 +0100
-From: Jorge Marques <gastmaier@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Jorge Marques <jorge.marques@analog.com>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 7/9] iio: adc: ad4062: Add IIO Events support
-Message-ID: <zzrtxpcxzqcjxhxmp5miov4f3kx5i3fpzmrt55azvktkgowejm@n6ofgzoaxoxb>
-References: <20251124-staging-ad4062-v2-0-a375609afbb7@analog.com>
- <20251124-staging-ad4062-v2-7-a375609afbb7@analog.com>
- <aSQ0aM2u49qzIZDm@smile.fi.intel.com>
+        d=1e100.net; s=20230601; t=1764169530; x=1764774330;
+        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZdozIWg11HXn8YrxuTHyeRPHWCFIep7IAFKsHH2Slm4=;
+        b=k11TiggvQVq/16N8EmutF1jfOc0762cyOg+L0m303ZddM55SsWhGyFrlEN3+UxYIgP
+         WCwqWZluNlV7iuvCgFIR72b3ru7tySBR1VNS+W6XcazU16k8KqIalEcDLMhd7PIYXAGi
+         gqWNFu5AQKNQjWY/IJEqYHL7AvMEP4S8osUekv7Vzk+WQDHOlv68grE/zAhDZOBiD9g6
+         3b1JSXT+zUwcccbeOISxNQw7kpfbniKJs4yPqD+aeRUI41Ooseqy0Yy2g85QNMoFzHzN
+         B7+0fPe5tE7kIsHWB64i7i8NePoG4m5xXHe8yN5Kv4d9nlfKaslYhZ2umzMwXIcjH6VD
+         j7Mw==
+X-Forwarded-Encrypted: i=1; AJvYcCU4O9US19b6CNO9ZU7flpiF92PYmcTvif5pc+YoUtRbTDk6ozY4AZRbeXDAzXwhlslfDKu4YTC3TK3w@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6ie8pcbnSGENeHBpxrC0n4bpm3sqXkGuiq018RzAu7Vfbx0s4
+	Mpve1C6HdkUXRLI4klx1hfjrPpK5pJdxu/i1pGcCg/UYQvyaAS+s360wu1MduApZOpgBY57EKtL
+	J+3ufZjJMLW1VEPH6w1FXPOKSgvUB+Pj8y2xk/kwmsQ==
+X-Gm-Gg: ASbGncv6oOkEUGZpalNQ0ZXc5sEc52Hy+Tdxs4SrMFkorOcd6h6vOwv4Dg2EPWskphc
+	/Z3a7svXef/CUjw9dgj+TnliI0x+9XDptBBZfxsyMWiEBMKDQSOHyRoEvToHuExo3M8XwBeAWcJ
+	x78XVxvTqkdJbYOxuIbMtksk+c00VkqfXw0gP1pg3e5HmfkLdFTzmidvi9FL5NXBLEqwXVCr2ta
+	gq2UmdwCyb/R/ZLLY3OtZ/ZrYpTeC6U2GvM//fSST8+gKcjkCMWN+xR/IoFv7F6j/W/N5L0yXi4
+	XFzW/xYFGXQuTBaTYSRmHU/rA6I=
+X-Google-Smtp-Source: AGHT+IFW4CVHKhpnJ+JDeABCBeOEaqoUOa+vDI4F3g0UIFLPs7i4zmAKKWQz/RrJb85q7OyTg13Elak/IxVETnc6Fz0=
+X-Received: by 2002:a2e:9f4b:0:b0:36a:925e:cf3c with SMTP id
+ 38308e7fff4ca-37d07952b19mr17246381fa.31.1764169529898; Wed, 26 Nov 2025
+ 07:05:29 -0800 (PST)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 26 Nov 2025 07:05:27 -0800
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 26 Nov 2025 07:05:27 -0800
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+In-Reply-To: <d56ac97f-24bb-4ea5-a46c-a07dfd0c9e62@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aSQ0aM2u49qzIZDm@smile.fi.intel.com>
+References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
+ <20251112-gpio-shared-v4-7-b51f97b1abd8@linaro.org> <0829a21c-f97d-41b6-90bc-2acaec42caab@nvidia.com>
+ <CAMRc=MdPvF+okfnRuwvAFG9UfyZ-araDsaaKMxKASEbc3rhyjQ@mail.gmail.com>
+ <705186a9-a9db-46f0-bf2b-b499def050dd@nvidia.com> <CAMRc=MdQ8QgbdAd2sudZLgcDZu9DxBRJh5sfLeXwcTDEE0F7Uw@mail.gmail.com>
+ <d56ac97f-24bb-4ea5-a46c-a07dfd0c9e62@nvidia.com>
+Date: Wed, 26 Nov 2025 07:05:27 -0800
+X-Gm-Features: AWmQ_blhTm345iaYZ4rHG9m3t_z_cQOEDjbyggM_ksomZgdEfdTrTBoPz53r_Yc
+Message-ID: <CAMRc=MerzKQTSj6PXeiWDA4qfNou8ApKYLgJhUGLP0QBatqtVQ@mail.gmail.com>
+Subject: Re: [PATCH v4 07/10] arm64: select HAVE_SHARED_GPIOS for ARCH_QCOM
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Kees Cook <kees@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Alexey Klimov <alexey.klimov@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Nov 24, 2025 at 12:33:12PM +0200, Andy Shevchenko wrote:
-> On Mon, Nov 24, 2025 at 10:18:06AM +0100, Jorge Marques wrote:
-> > Adds support for IIO Events. Optionally, gp0 is assigned as Threshold
-> > Either signal, if not present, fallback to an I3C IBI with the same
-> > role.
-> 
-> ...
-> 
-Hi Andy,
-> > +static ssize_t ad4062_events_frequency_store(struct device *dev,
-> > +					     struct device_attribute *attr,
-> > +					     const char *buf, size_t len)
-> > +{
-> > +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-> > +	struct ad4062_state *st = iio_priv(indio_dev);
-> > +	int val, ret;
-> > +
-> > +	if (!iio_device_claim_direct(indio_dev))
-> > +		return -EBUSY;
-> > +	if (st->wait_event) {
-> > +		ret = -EBUSY;
-> > +		goto out_release;
-> > +	}
-> > +
-> > +	ret = kstrtoint(buf, 10, &val);
-> > +	if (ret < 0)
-> > +		goto out_release;
-> > +
-> > +	st->events_frequency = find_closest_descending(val, ad4062_conversion_freqs,
-> > +						       ARRAY_SIZE(ad4062_conversion_freqs));
-> > +	ret = 0;
-> > +
-> > +out_release:
-> > +	iio_device_release_direct(indio_dev);
-> > +	return ret ? ret : len;
-> 
-> 	return ret ?: len;
-> 
-Ack
-> > +}
-> 
-> ...
-> 
-> > +static IIO_DEVICE_ATTR(sampling_frequency, 0644, ad4062_events_frequency_show,
-> > +		       ad4062_events_frequency_store, 0);
-> 
-> IIO_DEVICE_ATTR_RW()
-> 
-Sure
-> ...
-> 
-> >  {
-> >  	struct ad4062_state *st = i3cdev_get_drvdata(i3cdev);
-> >  
-> > -	if (iio_buffer_enabled(st->indio_dev))
-> > -		iio_trigger_poll_nested(st->trigger);
-> > -	else
-> > -		complete(&st->completion);
-> > +	if (st->wait_event) {
-> > +		iio_push_event(st->indio_dev,
-> > +			       IIO_UNMOD_EVENT_CODE(IIO_VOLTAGE, 0,
-> > +						    IIO_EV_TYPE_THRESH,
-> > +						    IIO_EV_DIR_EITHER),
-> > +			       iio_get_time_ns(st->indio_dev));
-> > +	} else {
-> > +		if (iio_buffer_enabled(st->indio_dev))
-> > +			iio_trigger_poll_nested(st->trigger);
-> > +		else
-> > +			complete(&st->completion);
-> > +	}
-> 
-> Less ping-pong:ish if you simply add a new code.
-> 
-> 	if (st->wait_event) {
-> 		iio_push_event(st->indio_dev,
-> 			       IIO_UNMOD_EVENT_CODE(IIO_VOLTAGE, 0,
-> 						    IIO_EV_TYPE_THRESH,
-> 						    IIO_EV_DIR_EITHER),
-> 			       iio_get_time_ns(st->indio_dev));
-> 
-> 		return;
-> 	}
-> 
-> >  }
-> 
-Sure.
-> ...
-> 
-> > +static int ad4062_monitor_mode_enable(struct ad4062_state *st, bool enable)
-> > +{
-> > +	int ret = 0;
-> 
-> Unneeded assignment.
-Ack.
-> > +	if (!enable) {
-> > +		pm_runtime_put_autosuspend(&st->i3cdev->dev);
-> > +		return 0;
-> > +	}
-> 
-> Just split to two functions and drop parameter 'enable',
+On Wed, 26 Nov 2025 15:55:54 +0100, Jon Hunter <jonathanh@nvidia.com> said:
 >
-Sure.
-> > +	ACQUIRE(pm_runtime_active_try_enabled, pm)(&st->i3cdev->dev);
-> > +	ret = ACQUIRE_ERR(pm_runtime_active_try_enabled, &pm);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = ad4062_conversion_frequency_set(st, st->events_frequency);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = ad4062_set_operation_mode(st, AD4062_MONITOR_MODE);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	pm_runtime_get_noresume(&st->i3cdev->dev);
-> > +	return 0;
-> > +}
-> 
-> ...
-> 
-> > +static int ad4062_write_event_config(struct iio_dev *indio_dev,
-> > +				     const struct iio_chan_spec *chan,
-> > +				     enum iio_event_type type,
-> > +				     enum iio_event_direction dir,
-> > +				     bool state)
-> > +{
-> > +	struct ad4062_state *st = iio_priv(indio_dev);
-> > +	int ret;
-> > +
-> > +	if (!iio_device_claim_direct(indio_dev))
-> > +		return -EBUSY;
-> > +	if (st->wait_event == state) {
-> > +		ret = 0;
-> > +		goto out_release;
-> > +	}
-> > +
-> > +	ret = ad4062_monitor_mode_enable(st, state);
-> > +	if (!ret)
-> > +		st->wait_event = state;
-> 
-> Please use regular patter to check for errors first.
-> 
-> 	if (st->wait_event == state)
-> 		ret = 0;
-> 	else
-> 		ret = ad4062_monitor_mode_enable(st, state);
-> 	if (ret)
-> 		goto out_release;
-> 
-> 	st->wait_event = state;
-> 
-> Always think about readability first and then about size of the source code.
-> 
-Sure.
-> > +out_release:
-> > +	iio_device_release_direct(indio_dev);
-> > +	return ret;
-> > +}
-> 
-> ...
-> 
-> > +static int ad4062_read_event_value(struct iio_dev *indio_dev,
-> > +				   const struct iio_chan_spec *chan,
-> > +				   enum iio_event_type type,
-> > +				   enum iio_event_direction dir,
-> > +				   enum iio_event_info info, int *val,
-> > +				   int *val2)
-> > +{
-> > +	struct ad4062_state *st = iio_priv(indio_dev);
-> > +	int ret;
-> > +
-> > +	if (!iio_device_claim_direct(indio_dev))
-> > +		return -EBUSY;
-> > +	if (st->wait_event) {
-> > +		ret = -EBUSY;
-> > +		goto out_release;
-> > +	}
-> > +
-> > +	switch (info) {
-> > +	case IIO_EV_INFO_VALUE:
-> > +		ret = __ad4062_read_event_info_value(st, dir, val);
-> > +		break;
-> > +	case IIO_EV_INFO_HYSTERESIS:
-> > +		ret = __ad4062_read_event_info_hysteresis(st, dir, val);
-> > +		break;
-> > +	default:
-> > +		ret = -EINVAL;
-> > +		break;
-> > +	}
-> > +
-> > +out_release:
-> > +	iio_device_release_direct(indio_dev);
-> > +	return ret ? ret : IIO_VAL_INT;
-> 
-> 	return ret ?: IIO_VAL_INT;
-> 
-> > +}
-Ack.
-> 
-> ...
-> 
-> > +static int __ad4062_write_event_info_value(struct ad4062_state *st,
-> > +					   enum iio_event_direction dir, int val)
-> > +{
-> > +	u8 reg;
-> > +
-> > +	if (val > 2047 || val < -2048)
-> > +		return -EINVAL;
-> 
-> There was already magic '11', perhaps define it and use there and here?
-> 
-> #define x11	11 // needs a good name
-> 
-> 	if (val > BIT(x11) || val < -BIT(x11))
-> 	
-Not magic number, but max and min signed 12-bit, maybe
+>> Is the device-tree used here upstream? Can you enable DEBUG_GPIO in
+>> Kconfig and post the entire kernel log on pastebin?
+>
+> Yes this is the upstream device-tree in
+> arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts. OK I will get the
+> entire log for review.
+>
 
-	if (val != sign_extend32(val, 11))
-		return -EINVAL;
-to not look like magic numbers, or 
-  	if (val < (-BIT(11)) || val > BIT(11) - 1)
-  		return -EINVAL;
+If you could also add the following:
 
-For Hysteresis I will change from
+diff --git a/drivers/gpio/gpiolib-shared.c b/drivers/gpio/gpiolib-shared.c
+index 3803b5c938f99..51af7886d9f2d 100644
+--- a/drivers/gpio/gpiolib-shared.c
++++ b/drivers/gpio/gpiolib-shared.c
+@@ -101,6 +101,8 @@ static int gpio_shared_of_traverse(struct device_node *curr)
+ 		    strcmp(prop->name, "gpio") != 0)
+ 			continue;
 
-	if (val >= BIT(7))
-to 
-	if (val & ~GENMASK(6,0))
++		printk("%s: %pOF %s\n", __func__, curr, prop->name);
++
+ 		count = of_count_phandle_with_args(curr, prop->name,
+ 						   "#gpio-cells");
+ 		if (count <= 0)
 
-I believe iio only passes positive to the hysteresis, but is a little clearer.
+That would help me.
 
-> > +	if (dir == IIO_EV_DIR_RISING)
-> > +		reg = AD4062_REG_MAX_LIMIT;
-> > +	else
-> > +		reg = AD4062_REG_MIN_LIMIT;
-> > +	put_unaligned_be16(val, st->buf.bytes);
-> > +
-> > +	return regmap_bulk_write(st->regmap, reg, &st->buf.be16,
-> > +				 sizeof(st->buf.be16));
-> > +}
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
-Best regards,
-Jorge
+Bart
 
