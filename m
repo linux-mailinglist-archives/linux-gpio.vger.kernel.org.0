@@ -1,80 +1,83 @@
-Return-Path: <linux-gpio+bounces-29105-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29106-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA535C8B0DC
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 17:49:46 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 640D2C8B0F4
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 17:50:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A78E735196F
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 16:49:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 26C7E3B3D59
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 16:49:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CD1D33EAF5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACDB533EB18;
 	Wed, 26 Nov 2025 16:49:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="3ZkHD+NU"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="sZcwwicp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A7D33A024
-	for <linux-gpio@vger.kernel.org>; Wed, 26 Nov 2025 16:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884E533D6D1
+	for <linux-gpio@vger.kernel.org>; Wed, 26 Nov 2025 16:49:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764175760; cv=none; b=laM6rfTjri1U8CWAcLhIXn3k3q8snIeQQM+FBbDh/a2K0XJwGpGwEob88EthvX+fsxCKaVfyQCN4wYC7aP+hC1flsNkCMIgfIoE3SlCnJXDC9vinQw4wW170KCS3mC1b/IUbeBa9jOCTnfhpjOw82GyoYXqHoColNBgr3QRcyo0=
+	t=1764175760; cv=none; b=lWgoiq8OFT2TdVjmIquO2SWnMX0zVB4owhjF7jAtc/0rxsmqxCevU8KS+m3fItzDMmK702mZGMHROrzv/dvrQfzbLs2oEyxD6ZLWhLaDreZsq4vIQoIKcucVXbDboK72B2/2n0NSFIsyZHnT9jwOyKXlVYQFEJa+o9s4Z0ezuFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1764175760; c=relaxed/simple;
-	bh=0qXyibuX4g5zQ/P/1+2rlC4fT1wR+Wbz6OJo6uSU9CE=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UsdMpt7MQvwbbRwp7TC0zy1ebF0UkEL7r09Jf6xi9vqE65KwsxJtS4osV5YjzNfOH26X/Wf5eSwioQ7EHuqw5lLiyz/1jwoWq7kHLlNfJLKSXaJHgKhCrTY3bIzMipe4wEQHxYm6gdNIX3t7L+Z/ORq0Za4bcTCdojJmrtm+X+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=3ZkHD+NU; arc=none smtp.client-ip=209.85.128.47
+	bh=LwyAttsRrPvwlvN1DtW/T9ppxPs5e9oNnRBoiJYtY50=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=hg6cXUghft3Hy1wC/n0gHfBTiFiO4dXXNMv5qKTlmKlVcaFe6ZXfl6ZafDjpGKw8DGM5sdhr/GH9tjjx6ucOUU3+4p8I4QSnv3+TO641FLfbNmrFVMmarNF+ZTe9Ned8uiFKegHWg+O3RRhe7wVZSYMiid0y/GgF5SnU/igikPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=sZcwwicp; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4775ae77516so65810995e9.1
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Nov 2025 08:49:16 -0800 (PST)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-477a2ab455fso74203085e9.3
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Nov 2025 08:49:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1764175755; x=1764780555; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Psrx8x2MfjHTSjS7fhz2D+ea7dotY4a9qq75+AqeWwY=;
-        b=3ZkHD+NU+J562Wv2wO4USxefmjmJ243FDyieRlfZPUA0E7UpdIxYYB2t7kA+WUbqEZ
-         ml/6hgxpp8ORHh2mt1M0H4HyAh2NqvCsMkOEHKG2o00j7AGhe7h8hR4YwnZ6n6YcFDfG
-         JDHE3DhE3aapWJzxXNlAxDM+G3wJyXSLZ73jlL8Wrv99wS5pnPxhAY/o6pTSA4J13ns5
-         Q54CMdU8JLjYz5CqT264Umf45TyhtUfaQQYrIn2tnP7bMEvyCyrrv1stIfr/gZy3NE9L
-         4szKCnEiCP+bSaClQUC/rHOgiq0/WR20Ogv7cT3KL3H5LkgBIpsRIW/DXyfzMB2/h9AY
-         /GHA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1764175756; x=1764780556; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NdkvspqtfKX+nykL87RGvhWxW7ZpFYy9hRwmU8O0OVc=;
+        b=sZcwwicpX6sQ38Xak+u+E+PER05CM/agnTBSWSllEmPYgpqNaQSyQ2tepuLwhM3Y35
+         s3bUk8g01dm327ultOFwW5AtNXMNEsSDOSc4ra+mMWKio9bMqm9GQvS34sDaIomftIY9
+         I10bybcIq9VcauFUZTvHIbr3/wyYstE5bj4m0CuHAN2yA7q9ncx4oFSZx74EKxvORCCA
+         y+USQQFStus7RhocoNx1FfqOh5Wylrb6GfMJgcP3tN6oadkcIdXt90TxGvoN9faYD9s7
+         ii7z1NufsV3ZT+gyHXuk/ABUDFh1dwKTE4fEfS0vIEwKiEP1x+0RuthbVQg3XmBSVhQy
+         O/pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764175755; x=1764780555;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Psrx8x2MfjHTSjS7fhz2D+ea7dotY4a9qq75+AqeWwY=;
-        b=DIHZLuVSMi8+a+lQL+WwYZfJlxGfDh43mlXS45NZ1EsgIDkucP5rW+ulskocwv+CHE
-         e9kw2bok/bpWzYbMBgAsLtcbBb4L5f7Xni/TjU3MDygAvNJTOxVoIoDF/UKHJQGG1lzJ
-         NC3Fbyno/ydyr/5RPyF8XgNuaAXC9bzVZ99If6GmihiZkLuZDy7Q4beQWsTNVriKcqHl
-         6VNVKurVs9KypB3Xfr1u0mn3OS1WSkK5otx+NQb5klTn/QzmNVVaS09I214Y94GEINkJ
-         rFSi/dQAc7TwyL4gvTalFidV/u+IWFp8BAqNxyWFJtZk1HsLO4mrCdF3B4fXGIGjYCAu
-         HonA==
-X-Gm-Message-State: AOJu0YxR9X2jA73xG2eLF2BxTCb46BKilkN6cZh4Lb6da7ep9tmRPXmK
-	Mtr47gf9s91ILuiJn35xhUekRkgVq59xJMSr+zkUliDON37lEhcrIviYnwHrcdWYw20=
-X-Gm-Gg: ASbGncv9Ofy74Si0nGnnpTXc8c7G4z/XBc+dok6svZFAVMSUZCKhw2BthwW5ueMcWEb
-	DVf8/LHeD3iBD93UcAU7v3EbbNEmTmQBtXumz/zC6xbEOhJuwazB7l4t+CwEj/XJNbxy5Z71bnD
-	El70eC0twF4V+Y//mWgaVxoLN/UdV2llrXIsd2HW7oKrBrUOD1LERSoJXjTrnzl1cQ4Z+zpjR7s
-	A6GkHrhqhvzE4IpyTPwNPYT9IsncKJEiddpY0PnX6FBvN4Rz5iOs5VuXJT8Slz0FotSPUm2IlWT
-	pqMqOw66hPm5YtqakAVZk5bGAWnO1HJFjMok3cBHpA/qYfeZYtoxVgoHo35MCCy8Ie6IE7Op3mQ
-	QdfqdBcoJLCqio/6KXZndh61RT0YU24MXtknt1ruEJhWe6mKE1ka8ziR+bVis06KfTrCXEsRWCH
-	oqcTVZGA==
-X-Google-Smtp-Source: AGHT+IFf2WujO/iLI4gzacOKOfkUEpT+swfazLU2qy609cfe1FKFet2BSwBjqZmr17oHamowmco1BQ==
-X-Received: by 2002:a05:600c:3ba1:b0:475:dd89:acb with SMTP id 5b1f17b1804b1-477c11160cdmr208580595e9.22.1764175754645;
-        Wed, 26 Nov 2025 08:49:14 -0800 (PST)
+        d=1e100.net; s=20230601; t=1764175756; x=1764780556;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=NdkvspqtfKX+nykL87RGvhWxW7ZpFYy9hRwmU8O0OVc=;
+        b=HBB5r0FaKaHsHml/VCIJzgCr3NuyU8Gt1iSUzkd8QcjA/JcQ8pAeThFimey/sL9xRC
+         u1q5aKhP00S4nDNskOJYky6HUXDbFim/7gSOF3ToaYaRhnTEXwgvlylz7e9x6bvHVyGD
+         73cU+iBaV0OKPNxTssCr/NViq9tfNavNBZbVkdfSbzpIKXVUqeE3NcaoD3+I0uRnXHl3
+         P+Wu3TCIgGYMLsuuCjALuPoz7jDqJKX4UmBeZRV0GDO68Vv0vVSjGl7WVIR3KkBI5clp
+         JDexs048FQbA+2Y3U8OIFmJhp/C0fvxwWaAT5L52kMDXeA3qb7bTQgRXeaVWmoFgCeG/
+         VpPQ==
+X-Gm-Message-State: AOJu0Yw6i15hQcJ3k/dwESfBvGWyynciTlqyUKJHN/dSlpn8bh7hAAWb
+	tGG3VhFRUTfFqoun+jAHlQqbMK7cniQh57GkVHhGZ1kGNGuBSxn9k3Dz/RLswpIvrC901luAZYa
+	g5uDKf6k=
+X-Gm-Gg: ASbGncsicsUQN1JFpnjYZKm0RKG7/m+Wz8woPqWDc1A7fZsdD9zJmASlbPQ+OSTBHBK
+	eqU4YaSyuBuX2BU5ew4lkJ687CZIyxqCDzteLKhxHdiJCYbzdqfjZj9ejtItmt0DaANKVWL9pyg
+	d6gxu5Hm8z/R/TPNhGIUb0E+uCxZSMgbF9LRw3iMC42QxyXexawHovP8Cy670h+74c7p8Zh+Ggy
+	+BaNosF9nExlXCQQwa1+pQYuquYrWW7HSW7IR0N28JI7glhXO/xQAobXHIlu5pkKLrWIOthMFkl
+	I3u0vNLt+oEiE0Y8Iw0j55b2THrF85qLAfGqUavmdPCnPyzIqGlB3Z+QLMb83u+AjotPLuRiV3Y
+	DzuwYqkYi5wC1bSS9Ded5gVzOtnv/Od+wWtj7RMlbot1gLIk/NWJ9nUoHofjS/nhXx3Dhmqb03z
+	+kjlalJg==
+X-Google-Smtp-Source: AGHT+IFYzXkK5QvrzjDfB1W/U+T4/YV+th2oRtm+cZl3nxDVcU7NXjTNa0xyMdvS/EmAqSoBDKPi1g==
+X-Received: by 2002:a05:600c:19cd:b0:477:63b5:6f39 with SMTP id 5b1f17b1804b1-477c1116192mr195661475e9.19.1764175755889;
+        Wed, 26 Nov 2025 08:49:15 -0800 (PST)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:544e:b6f5:116d:4a8c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4790add5b80sm55848625e9.6.2025.11.26.08.49.13
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4790add5b80sm55848625e9.6.2025.11.26.08.49.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Nov 2025 08:49:13 -0800 (PST)
+        Wed, 26 Nov 2025 08:49:15 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH 0/2] gpio: shared: fix some corner cases
-Date: Wed, 26 Nov 2025 17:49:04 +0100
-Message-Id: <20251126-gpio-shared-fixes-v1-0-18309c0e87b5@linaro.org>
+Date: Wed, 26 Nov 2025 17:49:05 +0100
+Subject: [PATCH 1/2] gpio: shared: ignore special __symbols__ node when
+ traversing device tree
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,50 +86,82 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAIAvJ2kC/x3LTQqAIBBA4avIrBtQ+8G6SrSwGnU2JQ5EEN09a
- fnxeA8IFSaBST1Q6GLh86gwjYIt+SMS8l4NVtveGDtgzHyiJF9ox8A3CWqn/dqOtnNtgPrlQn+
- o27y87we+wSQwYwAAAA==
-X-Change-ID: 20251126-gpio-shared-fixes-080ab392483f
+Message-Id: <20251126-gpio-shared-fixes-v1-1-18309c0e87b5@linaro.org>
+References: <20251126-gpio-shared-fixes-v1-0-18309c0e87b5@linaro.org>
+In-Reply-To: <20251126-gpio-shared-fixes-v1-0-18309c0e87b5@linaro.org>
 To: Linus Walleij <linus.walleij@linaro.org>, 
  Bartosz Golaszewski <brgl@kernel.org>
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
- Jon Hunter <jonathanh@nvidia.com>, Cosmin Tanislav <demonsingur@gmail.com>
+ Jon Hunter <jonathanh@nvidia.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=597;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1625;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=0qXyibuX4g5zQ/P/1+2rlC4fT1wR+Wbz6OJo6uSU9CE=;
- b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBpJy+EPLFRNZ1lcg/jCI2T58+w9Gz2nGGQ7Cj+d
- MiwlprdIsWJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCaScvhAAKCRAFnS7L/zaE
- w+omD/4s+LEfxdwmBhTySp/WsqjZxOluWBFGU2VuI58DdPErYPjuFaOryP2QGdwVnDSsthAcldc
- alLor19DOloL/vQVOJ/m8eBw6fmX2nUXfmV802+zuHl3qkuRTl0R2HnawbdQoS16+uu6WvQQJhK
- T3XxzpirL5Mt86MydqCz0d4uro4wfX59zPBpyLlQf1Lme6CQBuSqZDo+2+bOHmmw5qCa9UcGTkg
- hPeOq+ihQN0b0sRAnrvp67tUjzH7p6FiAuIKnhE8sIkc3AkRd2aqaMyzg6WZ/IDUv+PxS4F3QUi
- blSRV2FgIwx3ZvA9sWwpEJ3tnNV+Y+1EgT9Lm/38RZpricGxthK7bah2S4yGP0Mjonu9+aeOcIM
- y/3we61J0QwGJlYvFwtGNrKFkig5i9l+Oq7BiwF11ZCztJuexgydVhkhRimdrAVNxjWg0wHMLVX
- 8DcSJv1/Y/X7ook996ONep/jZlrsiYLJAQgF10Q5YKXc4WHYpNlT4YF4fqKQFcdTjxIhmJpl/e3
- L2ca4dxUfc29MlBkcbSIWE+LiC3o0u+63AQZfSB3I0HM/sdnsuEUbHnQdduDHkFeQ9F87645wJ8
- uwxTMcF+eWPIJELZ5Bxg7rIeduFZP2cC3P7YCbG4jumSV1dI51x3pBAxuZPbAxwgNNOlNQUGzkV
- 7kmFzFb0AgN+qgQ==
+ bh=Z2jfm01OR77kYVvO3RX51/gCbeNUmM3Rn8L3o2x8rfA=;
+ b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBpJy+IiX1ejPioi0BedoF1Up+jFZlDw1jf8sz8X
+ yjuvUwswXmJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCaScviAAKCRAFnS7L/zaE
+ wzDQEACQxtSH5/xDF7deUl2/B6b+mAMyUl6p9otrmARzmY1FQSBhvckj2eSN9c5n7QN0oK4s/5x
+ kn3tAwn7z/5qwkhHvhbhqGVxmYRsv0BcDhNPUAmNaHROqCyw0g2F7xctLTKobo8mc1N+xW1qqHQ
+ Ns/rdVVK52vIIwtqaRxSTQL96J/nbDMNs9HoqwmA3JW/l0wDx7xSyWgOhqzkI4eKW+tU15Jo8mg
+ bF7FCtQaDgVhazmcnxze00bAC3EbKejEWoPaDYVNn7tJacfgEmpHzq1NxksrdXypo7oFlVlcA5f
+ ouMOZXpbgK3cVNIftEIwZl5bTcGWspezGVt+ZBX/He1C9eiJpywX326QaY34Cflov3GME2aeT7V
+ GQR2gRU4sL7okSi9pj7oRKPHrYF9xyQ4z7Onb6bRH4ZofkR+M+DHOV5Ay41Fzsv5XxkWXwWBuuZ
+ aPdUw1gWDlbx0Zt6aa28Pb2rU+SjgpGsNSp0o1/0ymaJaiPciWXfZcgPDJIXu89i3SkzBD4+1TM
+ g6r1zxr4CBUSScIbcuTUSH6Xx1wWOAv91EOpjvo2IW1fca9T3eGL6WpSWM0BgOvmnRSfc0kaIUD
+ QvzI0YO27XUiDR1sjgoUo+r4DJqTCz50x4j+0Zz345woEx9qk821PxPVL9yoUMWVS0SBa0s6RSA
+ kOYH4aChSVRwjCw==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-Here are fixes for two more bugs reported in linux-next.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
+The __symbols__ node is a special, internal node and its properties must
+not be considered when scanning the device-tree for shared GPIOs.
+
+Fixes: a060b8c511ab ("gpiolib: implement low-level, shared GPIO support")
+Reported-by: Jon Hunter <jonathanh@nvidia.com>
+Closes: https://lore.kernel.org/all/0829a21c-f97d-41b6-90bc-2acaec42caab@nvidia.com/
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
-Bartosz Golaszewski (2):
-      gpio: shared: ignore special __symbols__ node when traversing device tree
-      gpio: shared: ignore GPIO hogs when traversing the device tree
+ drivers/gpio/gpiolib-shared.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
- drivers/gpio/gpiolib-shared.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
----
-base-commit: 3fc91e5912eb3761d7b19e6ee8eb92749e856316
-change-id: 20251126-gpio-shared-fixes-080ab392483f
+diff --git a/drivers/gpio/gpiolib-shared.c b/drivers/gpio/gpiolib-shared.c
+index 3803b5c938f9933dab01c6d777c349ed3b42ce9b..62f32489a8a6f70c567ed93645f1e36a81612def 100644
+--- a/drivers/gpio/gpiolib-shared.c
++++ b/drivers/gpio/gpiolib-shared.c
+@@ -73,6 +73,19 @@ gpio_shared_find_entry(struct fwnode_handle *controller_node,
+ 	return NULL;
+ }
+ 
++/* Handle all special nodes that we should ignore. */
++static bool gpio_shared_of_node_ignore(struct device_node *node)
++{
++	/*
++	 * __symbols__ is a special, internal node and should not be considered
++	 * when scanning for shared GPIOs.
++	 */
++	if (of_node_name_eq(node, "__symbols__"))
++		return true;
++
++	return false;
++}
++
+ static int gpio_shared_of_traverse(struct device_node *curr)
+ {
+ 	struct gpio_shared_entry *entry;
+@@ -84,6 +97,9 @@ static int gpio_shared_of_traverse(struct device_node *curr)
+ 	const char *suffix;
+ 	int ret, count, i;
+ 
++	if (gpio_shared_of_node_ignore(curr))
++		return 0;
++
+ 	for_each_property_of_node(curr, prop) {
+ 		/*
+ 		 * The standard name for a GPIO property is "foo-gpios"
 
-Best regards,
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.51.0
 
 
