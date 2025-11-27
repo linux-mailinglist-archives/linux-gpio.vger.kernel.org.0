@@ -1,386 +1,197 @@
-Return-Path: <linux-gpio+bounces-29133-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29134-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE352C8DDFA
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Nov 2025 11:59:21 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87ADAC8DE40
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Nov 2025 12:06:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 851FA34B257
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Nov 2025 10:59:06 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6A85B4E05B4
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Nov 2025 11:06:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D368732E123;
-	Thu, 27 Nov 2025 10:58:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA54532AAC8;
+	Thu, 27 Nov 2025 11:06:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hncqov6U"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VVlBR9/l";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="hUoL3Uqg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6C332D7E6;
-	Thu, 27 Nov 2025 10:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D090328B6E
+	for <linux-gpio@vger.kernel.org>; Thu, 27 Nov 2025 11:06:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764241099; cv=none; b=R12NFqwhLhbsKSyiOQ2z91R/MqVETWhKInWu1sprNNVl3FQXPZdsr56tGtXCoZypMmrYDTW+WTL9pSBR19DVNWjm6UNrYWyN/ZmZPzP/di7Jz/1Hnj15hqRJcKhc32pyNbkLQN0r2GYUngduFlAVMVYqXPTsV0wFh6YRwm8u7wY=
+	t=1764241567; cv=none; b=P+wafUXa7KCWpOQxk6Awespts9hE7481tc3dEi9vEVRnRbwTBYkMCWMBW1mGO31VqZF+fZDzXkDDeXlKnbPENeWPHindz3mFi4PlFGcOkro8iTB+zz3y1A/Tz6QCfDjWgOJfR1mbZaResn2Z6sp8GmUMns2WN3tYMatlZn9M5EI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764241099; c=relaxed/simple;
-	bh=YR7vu6MInlRxAcpypcC/uk/X4dEZkrQCvafABg7qOlY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uo91hzMjhD2allGuOr0rSVByfeZBvu8jaSsxknTFDmDZ1XVNJAUIJ1LFXRV+XhsbzQPHiAgosJoU2ZE+XAHTsMC9ZIvMx2VXfYtxkMPYjYKu+ELjtCBLc6vqmJbN4i4mc2QZThZ6Ga+X1bv5VDjOp4Js499us7bBWC5tt98QDeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hncqov6U; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B9A3C113D0;
-	Thu, 27 Nov 2025 10:58:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764241099;
-	bh=YR7vu6MInlRxAcpypcC/uk/X4dEZkrQCvafABg7qOlY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hncqov6UhB+KxkqggBT1PyDQXIBg5ChhW4Ee5IDIf808QjnbIcVFnl+LTwoXRk8q+
-	 P4xnxTOQX+tX1n1Taj2MTDYRotVbwaAjSUXsAFbIKTZzOgTpRUQ3UM0AmYZYiW+cuG
-	 YKQoPa17DjYdm81TMBLCBHAcgPmjePrSGn4YZf8yr9sJvXr0BnpJtZGGuvpXLL5TSB
-	 h0eG7BWz4xfpsJgfXUV652oG//T6o+Ge5lARULgnhOAwg9jq7Mveq4oVMW04Jm1+cZ
-	 +G9VuE1Wss/xqqGbJ9ae/B+szkE9nvYABe0yut7vHSiTqQxkV0WFU8PtfmoPoXduOf
-	 RyZk7dxzTaIgg==
-From: Conor Dooley <conor@kernel.org>
-To: linus.walleij@linaro.org
-Cc: conor@kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Valentina.FernandezAlanis@microchip.com
-Subject: [RFC v2 5/5] riscv: dts: microchip: add pinctrl nodes for mpfs/icicle kit
-Date: Thu, 27 Nov 2025 10:58:01 +0000
-Message-ID: <20251127-buggy-unframed-18a13efb00dd@spud>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251127-bogged-gauze-74aed9fdac0e@spud>
-References: <20251127-bogged-gauze-74aed9fdac0e@spud>
+	s=arc-20240116; t=1764241567; c=relaxed/simple;
+	bh=gErO8r2/jH1JEM6Wb/SziNZeqekYoVk2qJj9NHu1Dbc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TdBHGRH7IswIwLXBHh16L2TRmQPNvPy3n9MSkP4ev1QrroiWQO08AmOT6LViMErRoRgDJA9ugq3lllClta3/xBkiZv3RhPSeNHtAtMvrFPWN2sNFpOe46/4DdBqgI7gAZYhfd1Ra3hASHUorTgh2X1ZXW4QdjZ1khNwOTQYhWtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VVlBR9/l; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=hUoL3Uqg; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5ARAVvm6913868
+	for <linux-gpio@vger.kernel.org>; Thu, 27 Nov 2025 11:06:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	dsM5B0ACxhRDHWXvfakmXYc8i5gMH4SHAT6VoxxH/Fc=; b=VVlBR9/l5YNDs+N6
+	1CGh2ohRqvDYEB537Y58T3oCOGA3g6gMddpeZw0a4Pm1rNld/NSblhMJkFaG/PLs
+	vQ9xjlVdtooR0qI9gV+E4/1lksGm9fNAiDd7DZF9uUoHSZX7urm847rZVzRKqg/t
+	BVc7iUJ2piZs1dw3w8DzsIWs5GR/TctO2X+oXyZPEYvC9dWiQ2MAeG9UUo65jVhU
+	EzePBW/q7/pgFvh9whrRNTpGkbunVeWWHTrO+SYqyRCV7zQU8KMmKWaSneLqmPPg
+	GAk6ZVqmep3HrVglgBFmh77qvee0mC9jO2UV7eS7y7hxw+FdfTjz0DyTVddoFVlE
+	v8rX2Q==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4apmynr2ua-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Thu, 27 Nov 2025 11:06:05 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4ee07f794fcso1323071cf.2
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Nov 2025 03:06:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1764241564; x=1764846364; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dsM5B0ACxhRDHWXvfakmXYc8i5gMH4SHAT6VoxxH/Fc=;
+        b=hUoL3UqgfBckrGzjgMuYHRalahYGD0h9d2plK5h8UTiltdY1QJpcVpD7TwjbMMv5R0
+         zZaGC5tmmLLpMNDjzJPGsHB0XN6wKu+YFhgxnu4uQPNceUAiC3wK7wTQPGrgxq9halgp
+         mbZVzB0mm4U/hSyp0YFWU/hitqNuw6roV945IL/i7DFheDPGzA1st40NnqsAYzQi/SoR
+         dntKxhe8f4ZuaCCkyx7Xg3ebEWnZAb0YVvUGfoX3B5FJ+Gjxk8CkhlltjUe8LETj0z0I
+         bRLJj1Iog8aDPW7bbt11XwccBy68N7+Zd+QCMHalrISzqybAQQhfOnSznjOjK6wbjV4H
+         7/Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764241564; x=1764846364;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dsM5B0ACxhRDHWXvfakmXYc8i5gMH4SHAT6VoxxH/Fc=;
+        b=GA14biQJ3YR+Jl6Tpg9NQyH6mLHJjaI/M4M7r7aSCRySlb4aIYgc0dpWfKs5Qz00Rm
+         Q9QoETshrxIGSxi2umLGc3pC1cGWJRGNt0hE4QBRZVFOuhuE5MuLUcjCyCbIVBSUGtAx
+         ij824r9kMZRgdupBO8x4o7FHk2AWoRk8ookKnc1g/wlGQ4+JknShF1GxE8si5SlT9BlR
+         ECaT6bkF9HJ341HQrLx5gf/VqLn6qdupOMFlPQRIafLvWoQugqJujqlT2vtJPGkesnpY
+         daSS+Lsg6sAv9mheDpLJegt6vXk7tw/4dQY8uQ2pe7/TksphxUNPbTcuoHsIWME0xAB8
+         crsA==
+X-Forwarded-Encrypted: i=1; AJvYcCW50L/FJilDMXM7eZDmgHR3AHrxrUQDAqL2cHX/Sz3FuLRXldCqzi09QHqqnepH6vdNa3Uu9RZ0NftX@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbeKFXWM/osq37qYzTyzpwQgW8WBWeo6zgcParihSg5X/DOsVo
+	k9PsTETojzh7/vDlQfEUxLqUymQLddgfxK8KHtWqc0EOjuiKOE0/miawmew5AsKtyi9Me/0s/Hy
+	E883vtHdusnoQTplC0+uMWXH8D/gvSPvlSksdjYdzN/1Q+0qmJGCm0gx79F7YLguO
+X-Gm-Gg: ASbGncs8gimUpuCCKCH2dmVuq7XgRpoNssB5L+/5V1seBuA1CrOLxtC5d3b0FYe0OeD
+	BvFzdZMqonyv0Ao2CmZimh3Js0+dbZFca+9VdEjgzfDwqhj9hjqzdJFjzGDKjCHnzGPjzeW5xVG
+	OkCX0qB4XaIH6VdGiXykftiK+5nCj2lpiBEVGeqx8uaZXcdN1ywz6nvRwtHUJiL0RiN0mLGugb1
+	qlZmCsKdUVo/8EwA02n4yqVmF4nGc+qB8u5qUrbJE8EBX5xM25C7aGavmcZaofkD9XQcJGHCSl0
+	oVWO8aXS0j5ZznXegcA4ymUZ72ktCO8x/QxIsh47Pz8YOkluaU3CFb/1diOSt/FmHcZQpnRVcqU
+	Lsucq2Zz4ggPkiYdIfP3NciufyCov7Ftou87QGfOUxLZLtX3L2m6Gap+ccoyvduQY5jc=
+X-Received: by 2002:ac8:7c48:0:b0:4ee:1e95:af63 with SMTP id d75a77b69052e-4ee5894e4camr234809401cf.10.1764241564335;
+        Thu, 27 Nov 2025 03:06:04 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGQ2C4T/zkTEcfcKbF3Z1M8/NcZ0UR/ptn/bgi8R2SS+xmUzOkuSJbfZlY91sr/2UxXeGziwg==
+X-Received: by 2002:ac8:7c48:0:b0:4ee:1e95:af63 with SMTP id d75a77b69052e-4ee5894e4camr234809031cf.10.1764241563904;
+        Thu, 27 Nov 2025 03:06:03 -0800 (PST)
+Received: from [192.168.119.202] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-64750a90d14sm1277518a12.10.2025.11.27.03.06.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Nov 2025 03:06:02 -0800 (PST)
+Message-ID: <78307922-3922-40b7-be89-5c2bacbdffdf@oss.qualcomm.com>
+Date: Thu, 27 Nov 2025 12:06:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7329; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=rgFJ1gCRfUwgnWHcMuT4f/ZEQMOBDym1H9god49isg0=; b=owGbwMvMwCVWscWwfUFT0iXG02pJDJkaelu7Z+5a2tGzen1Istf8Fy9fGrzcauek2bC8c2tMy cMd2z/rdZSyMIhxMciKKbIk3u5rkVr/x2WHc89bmDmsTCBDGLg4BWAiK/kZ/udaL/24UDJP4OsX 3qdiZzvPnPswh2OJTM83AfMOn/uLz0xi+Kf19+GtHRN6XGdPfqpiYvB8WuGUg966nq8u6b25bLj U2YEDAA==
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/2] pinctrl: qcom: sa8775p-lpass-lpi: Add SA8775P
+ LPASS pinctrl
+To: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@oss.qualcomm.com, ajay.nandam@oss.qualcomm.com,
+        ravi.hothi@oss.qualcomm.com
+References: <20251116171656.3105461-1-mohammad.rafi.shaik@oss.qualcomm.com>
+ <20251116171656.3105461-3-mohammad.rafi.shaik@oss.qualcomm.com>
+ <3c0e994c-7484-432f-b3b1-bc7523d27242@oss.qualcomm.com>
+ <0b7dccfe-ac31-4d75-840e-96d8ddd66fdc@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <0b7dccfe-ac31-4d75-840e-96d8ddd66fdc@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: eZrAJZGMDz9EcYJGyM4a1pB5uTlsTYKt
+X-Authority-Analysis: v=2.4 cv=QOplhwLL c=1 sm=1 tr=0 ts=6928309d cx=c_pps
+ a=WeENfcodrlLV9YRTxbY/uA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=PbRpZkKeZxfV5sauP3EA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=kacYvNCVWA4VmyqE58fU:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI3MDA4MSBTYWx0ZWRfXzCOXgOPRxibz
+ KDo394EtUx6x8Ftd7nbLtEDkDhmP0x2nnrsB3LyIdnNakyKVsQtpPN1Ijn+/LyFMWsNwaFwasvH
+ ZPhOOarVMj9VrN5IBTru54veOiCVgBqykCKR6g1bU7vKmcWdeIDYp9oEfncKITIpPEC4A+MhzRz
+ YuCiK7u73GWckVg5VvVh04Fl2TngbKmJdDbCZX6aPxWCdaL4AGMFCBWzfnZfuZ4zQVRA4Fbzm9y
+ ht9nl4lBoj90icHTlScXTaWNA3mlRLx6zIrWYgqaccBwiUi4ACm9Zwg1x4DYYYeUVKY2Z3BWxET
+ 0RIqoYp92JcZNIzb7eUGbS3m9k67umet78/ft1sLE5o6249a0u9PIw1uHxNwFoM9OYr5LxBnAZ8
+ MbaKCEHiGHG6QjEx5kwbYi3jA0DxyQ==
+X-Proofpoint-GUID: eZrAJZGMDz9EcYJGyM4a1pB5uTlsTYKt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-25_02,2025-11-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 malwarescore=0 spamscore=0 lowpriorityscore=0 bulkscore=0
+ clxscore=1015 priorityscore=1501 suspectscore=0 phishscore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2511270081
 
-From: Conor Dooley <conor.dooley@microchip.com>
+On 11/26/25 6:31 AM, Mohammad Rafi Shaik wrote:
+> 
+> 
+> On 11/17/2025 6:47 PM, Konrad Dybcio wrote:
+>> On 11/16/25 6:16 PM, Mohammad Rafi Shaik wrote:
+>>> Add pin control support for Low Power Audio SubSystem (LPASS)
+>>> of Qualcomm SA8775P SoC.
+>>>
+>>> Signed-off-by: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
+>>> ---
+>>
+>> [...]
+>>
+>>
+>>> +static const struct lpi_pingroup sa8775p_groups[] = {
+>>> +    LPI_PINGROUP(0, 0, swr_tx_clk, qua_mi2s_sclk, _, _),
+>>> +    LPI_PINGROUP(1, 2, swr_tx_data, qua_mi2s_ws, _, _),
+>>> +    LPI_PINGROUP(2, 4, swr_tx_data, qua_mi2s_data, _, _),
+>>> +    LPI_PINGROUP(3, 8, swr_rx_clk, qua_mi2s_data, _, _),
+>>> +    LPI_PINGROUP(4, 10, swr_rx_data, qua_mi2s_data, _, _),
+>>> +    LPI_PINGROUP(5, 12, swr_rx_data, ext_mclk1_c, qua_mi2s_data, _),
+>>> +    LPI_PINGROUP(6, LPI_NO_SLEW, dmic1_clk, i2s1_clk, _, _),
+>>> +    LPI_PINGROUP(7, LPI_NO_SLEW, dmic1_data, i2s1_ws, _, _),
+>>> +    LPI_PINGROUP(8, LPI_NO_SLEW, dmic2_clk, i2s1_data, _, _),
+>>> +    LPI_PINGROUP(9, LPI_NO_SLEW, dmic2_data, i2s1_data, ext_mclk1_b, _),
+>>> +    LPI_PINGROUP(10, 16, i2s2_clk, wsa_swr_clk, _, _),
+>>> +    LPI_PINGROUP(11, 18, i2s2_ws, wsa_swr_data, _, _),
+>>> +    LPI_PINGROUP(12, LPI_NO_SLEW, dmic3_clk, i2s4_clk, _, _),
+>>> +    LPI_PINGROUP(13, LPI_NO_SLEW, dmic3_data, i2s4_ws, ext_mclk1_a, _),
+>>> +    LPI_PINGROUP(14, 6, swr_tx_data, ext_mclk1_d, _, _),
+>>> +    LPI_PINGROUP(15, 20, i2s2_data, wsa2_swr_clk, _, _),
+>>> +    LPI_PINGROUP(16, 21, i2s2_data, wsa2_swr_data, _, _),
+>>
+>> The max slew rate value (shift) here defined in the register map is 18 for
+>> this platform
+>>
+> 
+> ACK, will update proper rates.
 
-Add pinctrl nodes to PolarFire to demonstrate their use, matching the
-default configuration set by the HSS firmware for the Icicle kit's
-reference design, as a demonstration of use.
+It (although generally very unlikely) may be that the register map is missing
+something. You probably know the hardware better, or know who to ask. Please
+check that.
 
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
- .../dts/microchip/mpfs-icicle-kit-common.dtsi |   1 -
- .../dts/microchip/mpfs-icicle-kit-fabric.dtsi |  63 +++++++
- .../boot/dts/microchip/mpfs-pinctrl.dtsi      | 167 ++++++++++++++++++
- arch/riscv/boot/dts/microchip/mpfs.dtsi       |  16 ++
- 4 files changed, 246 insertions(+), 1 deletion(-)
- create mode 100644 arch/riscv/boot/dts/microchip/mpfs-pinctrl.dtsi
-
-diff --git a/arch/riscv/boot/dts/microchip/mpfs-icicle-kit-common.dtsi b/arch/riscv/boot/dts/microchip/mpfs-icicle-kit-common.dtsi
-index b3f61c58e57c..5667805b4b14 100644
---- a/arch/riscv/boot/dts/microchip/mpfs-icicle-kit-common.dtsi
-+++ b/arch/riscv/boot/dts/microchip/mpfs-icicle-kit-common.dtsi
-@@ -3,7 +3,6 @@
- 
- /dts-v1/;
- 
--#include "mpfs.dtsi"
- #include "mpfs-icicle-kit-fabric.dtsi"
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/leds/common.h>
-diff --git a/arch/riscv/boot/dts/microchip/mpfs-icicle-kit-fabric.dtsi b/arch/riscv/boot/dts/microchip/mpfs-icicle-kit-fabric.dtsi
-index 71f724325578..785176dabcf1 100644
---- a/arch/riscv/boot/dts/microchip/mpfs-icicle-kit-fabric.dtsi
-+++ b/arch/riscv/boot/dts/microchip/mpfs-icicle-kit-fabric.dtsi
-@@ -1,6 +1,9 @@
- // SPDX-License-Identifier: (GPL-2.0 OR MIT)
- /* Copyright (c) 2020-2021 Microchip Technology Inc */
- 
-+#include "mpfs.dtsi"
-+#include "mpfs-pinctrl.dtsi"
-+
- / {
- 	core_pwm0: pwm@40000000 {
- 		compatible = "microchip,corepwm-rtl-v4";
-@@ -80,6 +83,16 @@ refclk_ccc: clock-cccref {
- 	};
- };
- 
-+&can0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&can0_fabric>;
-+};
-+
-+&can1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ikrd_can1_cfg>;
-+};
-+
- &ccc_nw {
- 	clocks = <&refclk_ccc>, <&refclk_ccc>, <&refclk_ccc>, <&refclk_ccc>,
- 		 <&refclk_ccc>, <&refclk_ccc>;
-@@ -87,3 +100,53 @@ &ccc_nw {
- 		      "dll0_ref", "dll1_ref";
- 	status = "okay";
- };
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_fabric>;
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_fabric>;
-+};
-+
-+&mmuart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_fabric>;
-+};
-+
-+&mmuart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_fabric>;
-+};
-+
-+&mmuart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart3_fabric>;
-+};
-+
-+&mmuart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart4_fabric>;
-+};
-+
-+&mssio {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi1_mssio>, <&can1_mssio>, <&mdio0_mssio>, <&mdio1_mssio>;
-+};
-+
-+&qspi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&qspi_fabric>;
-+};
-+
-+&spi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi0_fabric>;
-+};
-+
-+&spi1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ikrd_spi1_cfg>;
-+};
-diff --git a/arch/riscv/boot/dts/microchip/mpfs-pinctrl.dtsi b/arch/riscv/boot/dts/microchip/mpfs-pinctrl.dtsi
-new file mode 100644
-index 000000000000..9bd29458cc38
---- /dev/null
-+++ b/arch/riscv/boot/dts/microchip/mpfs-pinctrl.dtsi
-@@ -0,0 +1,167 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+
-+&iomux0 {
-+	spi0_fabric: mux-spi0-fabric {
-+		function = "spi0";
-+		groups = "spi0_fabric";
-+	};
-+
-+	spi0_mssio: mux-spi0-mssio {
-+		function = "spi0";
-+		groups = "spi0_mssio";
-+	};
-+
-+	spi1_fabric: mux-spi1-fabric {
-+		function = "spi1";
-+		groups = "spi1_fabric";
-+	};
-+
-+	spi1_mssio: mux-spi1-mssio {
-+		function = "spi1";
-+		groups = "spi1_mssio";
-+	};
-+
-+	i2c0_fabric: mux-i2c0-fabric {
-+		function = "i2c0";
-+		groups = "i2c0_fabric";
-+	};
-+
-+	i2c0_mssio: mux-i2c0-mssio {
-+		function = "i2c0";
-+		groups = "i2c0_mssio";
-+	};
-+
-+	i2c1_fabric: mux-i2c1-fabric {
-+		function = "i2c1";
-+		groups = "i2c1_fabric";
-+	};
-+
-+	i2c1_mssio: mux-i2c1-mssio {
-+		function = "i2c1";
-+		groups = "i2c1_mssio";
-+	};
-+
-+	can0_fabric: mux-can0-fabric {
-+		function = "can0";
-+		groups = "can0_fabric";
-+	};
-+
-+	can0_mssio: mux-can0-mssio {
-+		function = "can0";
-+		groups = "can0_mssio";
-+	};
-+
-+	can1_fabric: mux-can1-fabric {
-+		function = "can1";
-+		groups = "can1_fabric";
-+	};
-+
-+	can1_mssio: mux-can1-mssio {
-+		function = "can1";
-+		groups = "can1_mssio";
-+	};
-+
-+	qspi_fabric: mux-qspi-fabric {
-+		function = "qspi";
-+		groups = "qspi_fabric";
-+	};
-+
-+	qspi_mssio: mux-qspi-mssio {
-+		function = "qspi";
-+		groups = "qspi_mssio";
-+	};
-+
-+	uart0_fabric: mux-uart0-fabric {
-+		function = "uart0";
-+		groups = "uart0_fabric";
-+	};
-+
-+	uart0_mssio: mux-uart0-mssio {
-+		function = "uart0";
-+		groups = "uart0_mssio";
-+	};
-+
-+	uart1_fabric: mux-uart1-fabric {
-+		function = "uart1";
-+		groups = "uart1_fabric";
-+	};
-+
-+	uart1_mssio: mux-uart1-mssio {
-+		function = "uart1";
-+		groups = "uart1_mssio";
-+	};
-+
-+	uart2_fabric: mux-uart2-fabric {
-+		function = "uart2";
-+		groups = "uart2_fabric";
-+	};
-+
-+	uart2_mssio: mux-uart2-mssio {
-+		function = "uart2";
-+		groups = "uart2_mssio";
-+	};
-+
-+	uart3_fabric: mux-uart3-fabric {
-+		function = "uart3";
-+		groups = "uart3_fabric";
-+	};
-+
-+	uart3_mssio: mux-uart3-mssio {
-+		function = "uart3";
-+		groups = "uart3_mssio";
-+	};
-+
-+	uart4_fabric: mux-uart4-fabric {
-+		function = "uart4";
-+		groups = "uart4_fabric";
-+	};
-+
-+	uart4_mssio: mux-uart4-mssio {
-+		function = "uart4";
-+		groups = "uart4_mssio";
-+	};
-+
-+	mdio0_fabric: mux-mdio0-fabric {
-+		function = "mdio0";
-+		groups = "mdio0_fabric";
-+	};
-+
-+	mdio0_mssio: mux-mdio0-mssio {
-+		function = "mdio0";
-+		groups = "mdio0_mssio";
-+	};
-+
-+	mdio1_fabric: mux-mdio1-fabric {
-+		function = "mdio1";
-+		groups = "mdio1_fabric";
-+	};
-+
-+	mdio1_mssio: mux-mdio1-mssio {
-+		function = "mdio1";
-+		groups = "mdio1_mssio";
-+	};
-+};
-+
-+&mssio {
-+	ikrd_can1_cfg: ikrd-can1-cfg {
-+		can1-pins {
-+			pins = <34>, <35>, <36>;
-+			function = "spi";
-+			bias-pull-up;
-+			drive-strength = <8>;
-+			microchip,bank-voltage-microvolt = <3300000>;
-+			microchip,ibufmd = <0x1>;
-+		};
-+	};
-+
-+	ikrd_spi1_cfg: ikrd-spi1-cfg {
-+		spi1-pins {
-+			pins = <30>, <31>, <32>, <33>;
-+			function = "spi";
-+			bias-pull-up;
-+			drive-strength = <8>;
-+			microchip,bank-voltage-microvolt = <3300000>;
-+			microchip,ibufmd = <0x1>;
-+		};
-+	};
-+};
-diff --git a/arch/riscv/boot/dts/microchip/mpfs.dtsi b/arch/riscv/boot/dts/microchip/mpfs.dtsi
-index 5c2963e269b8..0fb94581b6cb 100644
---- a/arch/riscv/boot/dts/microchip/mpfs.dtsi
-+++ b/arch/riscv/boot/dts/microchip/mpfs.dtsi
-@@ -254,7 +254,23 @@ pdma: dma-controller@3000000 {
- 		mss_top_sysreg: syscon@20002000 {
- 			compatible = "microchip,mpfs-mss-top-sysreg", "syscon", "simple-mfd";
- 			reg = <0x0 0x20002000 0x0 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
- 			#reset-cells = <1>;
-+
-+			iomux0: pinctrl@200 {
-+				compatible = "microchip,mpfs-pinctrl-iomux0";
-+				reg = <0x200 0x4>;
-+				pinctrl-use-default;
-+
-+			};
-+
-+			mssio: pinctrl@204 {
-+				compatible = "microchip,mpfs-pinctrl-mssio";
-+				reg = <0x204 0x7c>;
-+				/* on icicle ref design at least */
-+				pinctrl-use-default;
-+			};
- 		};
- 
- 		sysreg_scb: syscon@20003000 {
--- 
-2.51.0
-
+Konrad
 
