@@ -1,239 +1,172 @@
-Return-Path: <linux-gpio+bounces-29123-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29124-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEFE2C8D7C6
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Nov 2025 10:16:33 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F948C8D7EF
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Nov 2025 10:21:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 04CCB4E8A52
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Nov 2025 09:15:20 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 759F734ABA4
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Nov 2025 09:21:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82579327201;
-	Thu, 27 Nov 2025 09:15:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A3B43271F2;
+	Thu, 27 Nov 2025 09:21:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YBOnd4Pe"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L55cH3Ew"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8475F3271E7
-	for <linux-gpio@vger.kernel.org>; Thu, 27 Nov 2025 09:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 432271CEAA3;
+	Thu, 27 Nov 2025 09:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764234911; cv=none; b=q6758Hou15szPWoQYgXYxPhYtD7NjH8igGxPhHU+CthWZ8pK/iqgwJoARAdBEg3n2edOP4nexxacy9HdbgYEXtysFkpkiUrBSXayR4NeSMp7CtozpqrjG20YW8fs4AZjOWoyGRqxbyWV0ncvVZDxM4TjJcXwMdz17yEGo2Y8IBI=
+	t=1764235262; cv=none; b=Iyyk4jrNUFiROqCeQ1nug9oxETZfjI0m0v4xHDbGS/GZtetDtR+c6TaWY5ZeoLqp6jIiyQ8bvmsAzyuLHfwfAek0SJyI5mebVx2TyrseKmo8eU0m8aaub81y6nEjFxbIUPId4NoFrjAiT5Rjtx41x442w6tnRtsUq2M6hr1tR7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764234911; c=relaxed/simple;
-	bh=4yNt2ceN8kG4MDy7THXXoF+Y35zxxHauOsawAyTJdUI=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=XFEV0DVgscngXT2O9KaZP3KWpFOn7D8vC86mBexQVkiNnTXdhDXUqOULKHFn897GIVXArRz1ydOtnLDC3BGdbwpJ4TVkOxePyQg/DfG1+39uJf8k/jfo7Tosippx6M3fDHMPMRWmxFoSARdJ2tyDrv32Ar4HJxvRsIfyF6TxCYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YBOnd4Pe; arc=none smtp.client-ip=192.198.163.10
+	s=arc-20240116; t=1764235262; c=relaxed/simple;
+	bh=sQVDTm7V9eoCg2eR6hxPIlog0wcTppn1isSj+AvHDYU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oTJw8To/QcYl8M51BTb2SpucJroxcMKBwSghZaTKZkBxJgxGZgd3keho3Wqd2y9FtRiL4VdJM+FIHYBxIq8CRCwNBVN2zlphqDbltx5ICHXltAoLefKVmZmn1HIjuhr54YQZM0ZfJKqn5bhHiX/xIQrLG0CsW+zsYKocWrAhGgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L55cH3Ew; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764234908; x=1795770908;
-  h=date:from:to:cc:subject:message-id;
-  bh=4yNt2ceN8kG4MDy7THXXoF+Y35zxxHauOsawAyTJdUI=;
-  b=YBOnd4PewackvH3yV/xBhTfhv0TGBw4pEV8cQzSkV8iOJqtjCcR8KnaW
-   gehbyI6Gy65FQpYVpuUgZmTzL62Lytt4rOp+TC7EjyT4TTK1NbjIOroZf
-   6TNgxkqx+Bw+PV8BLBqjG8ecfWNHpwLHjBbQIaQ2y9IhLB3LyQwlXw8RV
-   mNT0v4DKaGOgCaX2B/cL3Xu2sNXxLXusF83dasoreSE3P9/D1iHp+IhjT
-   x689N2uKxj7rZNs32XLEuMY0J3TtzGy2HthyRvuqI/HzM/+m2YvKYSL6O
-   YqoTIZwxeOgWFfagEUb+1VxE8PbOqzJfQX65eScJg7yPacPCpPo/mmbeU
+  t=1764235262; x=1795771262;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=sQVDTm7V9eoCg2eR6hxPIlog0wcTppn1isSj+AvHDYU=;
+  b=L55cH3Ew6mmTw82NuPk8z8ZPPj5A7qDfMdORcILaJHdan6MpGa3pAgDZ
+   ymyQUbHW4hEngWXwSXuhUUEOgFvY0Qhcllucq16eKl9W5LZQekya/zYOv
+   g6A3cmGEg3ZauzmyCGnHelUatHWKEr1pROl7gkKf8WheydAd1t49dr06g
+   d04STfhZoCiwC8W6K4dkrWJ1k8G/JCPF/jz9eDIXLX4+e78lIsZJYPNyZ
+   lORY/CppXK+YPwoBizze/Ige0aPhrqa1Cx1Yz7qYfwijPf7C1QkcneROw
+   N+aNdmsBF/4QbymKbbcpCufguOq9VOtpw/Qfitw+Nw/CWPbj/GEh4GfKj
    Q==;
-X-CSE-ConnectionGUID: 3r8QKk3TR1K65eqtU+5Mvg==
-X-CSE-MsgGUID: naG1arAXS1K2ecD2AoJE7g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11625"; a="77642285"
+X-CSE-ConnectionGUID: OJOQcjtET0+I90xQsYRhSA==
+X-CSE-MsgGUID: Hw4OFjjUTcGdMDakm30Pbw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11625"; a="66441046"
 X-IronPort-AV: E=Sophos;i="6.20,230,1758610800"; 
-   d="scan'208";a="77642285"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2025 01:15:08 -0800
-X-CSE-ConnectionGUID: e5Q+ClVLTaut6GaRu3kFQA==
-X-CSE-MsgGUID: HejMeubhSW6CAW2MRTbrSw==
+   d="scan'208";a="66441046"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2025 01:21:01 -0800
+X-CSE-ConnectionGUID: d2/cnP5tQfihZkSkbK4qXA==
+X-CSE-MsgGUID: fPDm1rD4RMqoJx7Mj2TmzQ==
 X-ExtLoop1: 1
-Received: from lkp-server01.sh.intel.com (HELO 4664bbef4914) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 27 Nov 2025 01:15:08 -0800
-Received: from kbuild by 4664bbef4914 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vOY5h-0000000049T-2qxV;
-	Thu, 27 Nov 2025 09:15:05 +0000
-Date: Thu, 27 Nov 2025 17:14:44 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- 2d432ce3a98d189f949b7bc5be8258ee5c71f2f3
-Message-ID: <202511271739.BAePwmDQ-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+X-IronPort-AV: E=Sophos;i="6.20,230,1758610800"; 
+   d="scan'208";a="216538289"
+Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.245.225])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2025 01:20:56 -0800
+Date: Thu, 27 Nov 2025 11:20:54 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Jorge Marques <gastmaier@gmail.com>
+Cc: Jorge Marques <jorge.marques@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 9/9] iio: adc: ad4062: Add GPIO Controller support
+Message-ID: <aSgX9nMBwBtAlSyj@smile.fi.intel.com>
+References: <20251124-staging-ad4062-v2-0-a375609afbb7@analog.com>
+ <20251124-staging-ad4062-v2-9-a375609afbb7@analog.com>
+ <aSQ2JUN05vmMQC1I@smile.fi.intel.com>
+ <rk4hmupbrb5ugxft6upj7ru43x3z7ybrobax45rorpwbcwleh6@vzxrr3m7r6ep>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <rk4hmupbrb5ugxft6upj7ru43x3z7ybrobax45rorpwbcwleh6@vzxrr3m7r6ep>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 2d432ce3a98d189f949b7bc5be8258ee5c71f2f3  Merge branch 'devel' into for-next
+On Wed, Nov 26, 2025 at 04:55:41PM +0100, Jorge Marques wrote:
+> On Mon, Nov 24, 2025 at 12:40:37PM +0200, Andy Shevchenko wrote:
+> > On Mon, Nov 24, 2025 at 10:18:08AM +0100, Jorge Marques wrote:
 
-elapsed time: 2169m
+...
 
-configs tested: 148
-configs skipped: 0
+> > Why can't gpio-regmap be used?
+> > 
+> Because the device register values (0x5, 0x6) does not fit the gpio-regmap.
+> It writes the mask for high and 0 for low.
+> But low is 01[01] and
+>     high   01[10]
+> 
+> A different series would need to extend the gpio-regmap ops, but if you
+> implement your custom reg read/write, then you save at most ~5 lines...
+> I will add that to the commit message.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+OK.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                   randconfig-001-20251126    gcc-13.4.0
-arc                   randconfig-001-20251127    clang-22
-arc                   randconfig-002-20251126    gcc-11.5.0
-arc                   randconfig-002-20251127    clang-22
-arm                               allnoconfig    clang-22
-arm                               allnoconfig    gcc-15.1.0
-arm                         axm55xx_defconfig    clang-19
-arm                                 defconfig    gcc-15.1.0
-arm                            mmp2_defconfig    clang-19
-arm                         mv78xx0_defconfig    clang-19
-arm                   randconfig-001-20251126    clang-22
-arm                   randconfig-001-20251127    clang-22
-arm                   randconfig-002-20251126    clang-22
-arm                   randconfig-002-20251127    clang-22
-arm                   randconfig-003-20251126    clang-19
-arm                   randconfig-003-20251127    clang-22
-arm                   randconfig-004-20251126    clang-22
-arm                   randconfig-004-20251127    clang-22
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20251127    gcc-15.1.0
-arm64                 randconfig-002-20251127    gcc-15.1.0
-arm64                 randconfig-003-20251127    gcc-15.1.0
-arm64                 randconfig-004-20251127    gcc-15.1.0
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20251127    gcc-15.1.0
-csky                  randconfig-002-20251127    gcc-15.1.0
-hexagon                           allnoconfig    clang-22
-hexagon                           allnoconfig    gcc-15.1.0
-hexagon                             defconfig    gcc-15.1.0
-hexagon               randconfig-001-20251126    clang-22
-hexagon               randconfig-001-20251127    gcc-15.1.0
-hexagon               randconfig-002-20251126    clang-22
-hexagon               randconfig-002-20251127    gcc-15.1.0
-i386                              allnoconfig    gcc-14
-i386                              allnoconfig    gcc-15.1.0
-i386        buildonly-randconfig-001-20251127    clang-20
-i386        buildonly-randconfig-002-20251127    clang-20
-i386        buildonly-randconfig-003-20251127    clang-20
-i386        buildonly-randconfig-004-20251127    clang-20
-i386        buildonly-randconfig-005-20251127    clang-20
-i386        buildonly-randconfig-006-20251127    clang-20
-i386                                defconfig    gcc-15.1.0
-i386                  randconfig-001-20251127    clang-20
-i386                  randconfig-002-20251127    clang-20
-i386                  randconfig-003-20251127    clang-20
-i386                  randconfig-004-20251127    clang-20
-i386                  randconfig-005-20251127    clang-20
-i386                  randconfig-006-20251127    clang-20
-i386                  randconfig-007-20251127    clang-20
-loongarch                         allnoconfig    clang-22
-loongarch                         allnoconfig    gcc-15.1.0
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20251126    gcc-15.1.0
-loongarch             randconfig-001-20251127    gcc-15.1.0
-loongarch             randconfig-002-20251126    clang-22
-loongarch             randconfig-002-20251127    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                                defconfig    clang-19
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                          defconfig    clang-19
-mips                              allnoconfig    gcc-15.1.0
-mips                          ath79_defconfig    clang-19
-nios2                             allnoconfig    clang-22
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    clang-19
-nios2                 randconfig-001-20251126    gcc-11.5.0
-nios2                 randconfig-001-20251127    gcc-15.1.0
-nios2                 randconfig-002-20251126    gcc-9.5.0
-nios2                 randconfig-002-20251127    gcc-15.1.0
-openrisc                          allnoconfig    clang-22
-openrisc                          allnoconfig    gcc-15.1.0
-parisc                            allnoconfig    clang-22
-parisc                            allnoconfig    gcc-15.1.0
-parisc                randconfig-001-20251126    gcc-8.5.0
-parisc                randconfig-001-20251127    gcc-13.4.0
-parisc                randconfig-002-20251126    gcc-15.1.0
-parisc                randconfig-002-20251127    gcc-13.4.0
-parisc64                            defconfig    clang-19
-powerpc                           allnoconfig    clang-22
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc               randconfig-001-20251126    gcc-10.5.0
-powerpc               randconfig-001-20251127    gcc-13.4.0
-powerpc               randconfig-002-20251126    gcc-8.5.0
-powerpc               randconfig-002-20251127    gcc-13.4.0
-powerpc                      tqm8xx_defconfig    clang-19
-powerpc                        warp_defconfig    clang-19
-powerpc64             randconfig-001-20251126    clang-19
-powerpc64             randconfig-001-20251127    gcc-13.4.0
-powerpc64             randconfig-002-20251126    clang-22
-powerpc64             randconfig-002-20251127    gcc-13.4.0
-riscv                             allnoconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                 randconfig-001-20251126    gcc-10.5.0
-riscv                 randconfig-001-20251127    gcc-12.5.0
-riscv                 randconfig-002-20251127    gcc-12.5.0
-s390                              allnoconfig    clang-22
-s390                  randconfig-001-20251126    gcc-8.5.0
-s390                  randconfig-001-20251127    gcc-12.5.0
-s390                  randconfig-002-20251126    gcc-8.5.0
-s390                  randconfig-002-20251127    gcc-12.5.0
-sh                                allnoconfig    clang-22
-sh                                allnoconfig    gcc-15.1.0
-sh                                  defconfig    gcc-14
-sh                    randconfig-001-20251127    gcc-12.5.0
-sh                    randconfig-002-20251127    gcc-12.5.0
-sh                   secureedge5410_defconfig    clang-19
-sparc                             allnoconfig    clang-22
-sparc                             allnoconfig    gcc-15.1.0
-sparc                 randconfig-001-20251127    clang-22
-sparc                 randconfig-002-20251127    clang-22
-sparc64                             defconfig    gcc-14
-sparc64               randconfig-001-20251127    clang-22
-sparc64               randconfig-002-20251127    clang-22
-um                                allnoconfig    clang-22
-um                                  defconfig    gcc-14
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20251127    clang-22
-um                    randconfig-002-20251127    clang-22
-um                           x86_64_defconfig    gcc-14
-x86_64                            allnoconfig    clang-20
-x86_64                            allnoconfig    clang-22
-x86_64      buildonly-randconfig-001-20251127    clang-20
-x86_64      buildonly-randconfig-002-20251127    clang-20
-x86_64      buildonly-randconfig-003-20251127    clang-20
-x86_64      buildonly-randconfig-004-20251127    clang-20
-x86_64      buildonly-randconfig-005-20251127    clang-20
-x86_64      buildonly-randconfig-006-20251127    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20251127    gcc-14
-x86_64                randconfig-002-20251127    gcc-14
-x86_64                randconfig-003-20251127    gcc-14
-x86_64                randconfig-004-20251127    gcc-14
-x86_64                randconfig-005-20251127    gcc-14
-x86_64                randconfig-006-20251127    gcc-14
-x86_64                               rhel-9.4    clang-20
-x86_64                          rhel-9.4-func    clang-20
-x86_64                    rhel-9.4-kselftests    clang-20
-xtensa                            allnoconfig    clang-22
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20251127    clang-22
-xtensa                randconfig-002-20251127    clang-22
+...
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> > > +	return reg_val == AD4062_GP_STATIC_HIGH ? 1 : 0;
+> > 
+> > 	return !!(reg_val == AD4062_GP_STATIC_HIGH);
+> > 
+> > also will work.
+> >
+>  	return reg_val == AD4062_GP_STATIC_HIGH;
+
+Hmm... This will include implicit bool->int. The !! guarantees values 0 or 1,
+but I don't remember about implicit bool->int case.
+
+...
+
+> > > +static int ad4062_gpio_init_valid_mask(struct gpio_chip *gc,
+> > > +				       unsigned long *valid_mask,
+> > > +				       unsigned int ngpios)
+> > > +{
+> > > +	struct ad4062_state *st = gpiochip_get_data(gc);
+> > > +
+> > > +	bitmap_zero(valid_mask, ngpios);
+> > > +
+> > > +	if (!st->gpo_irq[0])
+> > > +		set_bit(0, valid_mask);
+> > > +	if (!st->gpo_irq[1])
+> > > +		set_bit(1, valid_mask);
+> > 
+> > Why atomic bit set:s?
+> > 
+> Not needed, will use
+
+Note, bitops are xxx_bit() -- atomic, __xxx_bit() -- non-atomic,
+that's what I had in mind.
+
+> 	if (!st->gpo_irq[0])
+> 		*valid_mask |= BIT(0);
+> 	if (!st->gpo_irq[1])
+> 		*valid_mask |= BIT(1);
+
+Can't it be rather something like
+
+	for (unsigned int i = 0; i < ...; i++)
+		__assign_bit(i, valid_mask, st->gpo_irq[i]);
+
+?
+This shorter and does the same independently on the length of the bitmask
+(and effectively the array size of gpo_irq)
+
+> > > +	return 0;
+> > > +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
