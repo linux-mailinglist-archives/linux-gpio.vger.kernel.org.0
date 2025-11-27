@@ -1,154 +1,290 @@
-Return-Path: <linux-gpio+bounces-29115-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29116-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 013FFC8C1E5
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 22:55:32 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5685AC8C9A8
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Nov 2025 02:54:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B4AC63A828B
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Nov 2025 21:55:30 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B1EC7349F6D
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Nov 2025 01:54:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7362031A072;
-	Wed, 26 Nov 2025 21:55:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87C3623C4F4;
+	Thu, 27 Nov 2025 01:54:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WqX5NLKC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nj3THp1r"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70464201278
-	for <linux-gpio@vger.kernel.org>; Wed, 26 Nov 2025 21:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466AB21FF46
+	for <linux-gpio@vger.kernel.org>; Thu, 27 Nov 2025 01:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764194127; cv=none; b=JV6Nobi3iNpha1Q+BFQRb1vrAkLImPX6LSuo3Mf+Bmym/OQPrm+3TWvt+FV4TyZsQawsq4Ho0AwOG20zORn8hsnEhT41B6hblBkzoKP9WSM1aH37Xj+UnyClQBWo2Dd9FFKkTsVO5tkw8CBWa3dpT9J9YIMd1T4DGWCRQ8kU7VA=
+	t=1764208487; cv=none; b=k4YYWTYCSiv6vs3s9Ai6ZH1tA4pC4J1l1GbvWoTrxdhG36wn2RXtGx+x0DrOz9fVsuMIM/v/1H8F4HYveSu059yJBrbcspb2S1toKq7a3p0WzC1P+hFzGarSPaR4xsb29mJKhOZyHQoffetKpCW8czX0al9JKh38glcoGUlle7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764194127; c=relaxed/simple;
-	bh=k+FM/aEKcDFaxPHlSMLXisLRyVO4WMaX6rRxLLwWwBo=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=pcNYjxm8ErEu0hDD7P0eqlEqVZ+vJFgzmQtmZ2fKSPchj55fqaVJOwVMp0B1TzI9QgqEUWB0vGcz1qfgbfFaCH90XeqtdxviKNseANsTBxguVH8mGYkN3tJjXSVbq7urvv6yH6aa5wWxYa//6XJFKpgZ/+zBgnA4K5zvgnEbaag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WqX5NLKC; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764194126; x=1795730126;
-  h=date:from:to:cc:subject:message-id;
-  bh=k+FM/aEKcDFaxPHlSMLXisLRyVO4WMaX6rRxLLwWwBo=;
-  b=WqX5NLKCD+IRcCCEjlJb5fsGfnSpyhtu47nnYnND+cMKIkUoIVCKAIu+
-   D+2w+Yj5PzHXlLrj2T5tdrex3t96tzjAsdSezvtFTdLo1/Z4B3E97IzVN
-   HZ3vE2Ir6GGMfET68nVADiVVGup1L81nTa/SAfs+NAROQRKnL/8G0j37a
-   8HB2Lzarn6/iHhXXuu+XRrryzBgOYr8u43kMwjo9YlSET8tT6c2gEdgbZ
-   qhxhtXRiwK4FolNiCw3bkQI8LAKRsoWyTh1Ryg547ax09kYQuzrXmB5wj
-   VRaxgFNhGwwarBst+lkxa519cnK5o59M+N6A/LVEwDFyOEwqnjzoGzpZ0
-   A==;
-X-CSE-ConnectionGUID: MErSmjzZSCutBdNllahqtw==
-X-CSE-MsgGUID: 5NpmMnMnSS2nhHzcujRyYg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11625"; a="65245008"
-X-IronPort-AV: E=Sophos;i="6.20,229,1758610800"; 
-   d="scan'208";a="65245008"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2025 13:55:25 -0800
-X-CSE-ConnectionGUID: a4csJjtdTsSOuHcHvaiQcw==
-X-CSE-MsgGUID: SV79DMSwQXSr9bWqeW4olw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,229,1758610800"; 
-   d="scan'208";a="216409378"
-Received: from lkp-server01.sh.intel.com (HELO 4664bbef4914) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 26 Nov 2025 13:55:23 -0800
-Received: from kbuild by 4664bbef4914 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vONTt-000000003Or-3MGd;
-	Wed, 26 Nov 2025 21:55:21 +0000
-Date: Thu, 27 Nov 2025 05:54:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD REGRESSION
- 6156424a7d001cceeafe59b52209d6f36719b51d
-Message-ID: <202511270529.a8fZlQyb-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1764208487; c=relaxed/simple;
+	bh=f0EdgUznNZO54LZecInfA4y5+ELOv8o96l9SDsv2F0k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uocZ5L3VRbbeiYTgxpgL4nP3FfArnDnMT7+EvYGbCh6sJROul3ns2OEmAoSjw+TSyVXAkq1gzQEiosfn/Ruhdp0d8DadGWD0Lq/aGwsEej57Wh0LUuHxJeVf2SYRcy3jqjzkotPvVK+5aWKeHTR2AaSuwBJH2qSosP6GiIvr18g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nj3THp1r; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2975EC19424
+	for <linux-gpio@vger.kernel.org>; Thu, 27 Nov 2025 01:54:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764208487;
+	bh=f0EdgUznNZO54LZecInfA4y5+ELOv8o96l9SDsv2F0k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=nj3THp1rcpdtkT3yeXdFSYqGpgv4f9R30RUyhSfbiRBL5j4fSFBJGV9VaWkwF3qsG
+	 zjwZicy5NFkSmZ+nh5sUNhme+2Du/zWh08fMSK9ccFupeg1GTOvgOKD8KZFDah6CUJ
+	 6HALQe+7g7tX2MuM8bLQMVGhbivIOnMTmyMqFWkDrQ0K9xX85qs+Bk0VT0YJLuIl0n
+	 B1HnKUGG/X1C0TBEVeSMLOB5qS2VjlhqolPOeEU3DGPUvW5cxrrsVID7XRsdVMMHfv
+	 h7dSQtqgellJgUSuYj5mjpBSeqjWtGSXBa6sTkOGztkNJu25mxLtzN7zIXmdh+tHvw
+	 N2CFz124qpgKg==
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-640860f97b5so655657a12.2
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Nov 2025 17:54:47 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWN4TBYiZZQ6fpo0xjuxTd2JeQY9GCZmeRGw8DaoFzI6asgqyRYcE2Tp6uWusuMW+GVTj1MNu2BVTew@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyvk0QDQ0PGrN7Pa8gDmrwXsvJ2zNgOVxDrTQ2SbrliBF9P1yHO
+	37Tme/mktOlfEu7wNSxWXuhHjZX4daau5GHr+iNGmI+L9CjvJivosumMkE2y14DHM9Gzdx3K88V
+	mvh2vkTAJ9PP+l5ARSqudE84oED9kVg==
+X-Google-Smtp-Source: AGHT+IEKWFjQTeH/gw4l8j+96xvyDrFErJSXFFFwjwYJm2zw06q8mwVDlJH1+0djMgauaqAXyS9qMnoqGjEF33qExow=
+X-Received: by 2002:a05:6402:2803:b0:634:ce70:7c5 with SMTP id
+ 4fb4d7f45d1cf-645eb2b8003mr8895933a12.17.1764208485058; Wed, 26 Nov 2025
+ 17:54:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+ <20251015071420.1173068-2-herve.codina@bootlin.com> <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
+ <CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
+ <5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com> <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
+ <072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
+In-Reply-To: <072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Date: Wed, 26 Nov 2025 19:54:33 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
+X-Gm-Features: AWmQ_bmOuLhKUl5W5zrcj5AQOjs5kC_X5Om5_otgYtq0JTdMygrEymDVT57WU48
+Message-ID: <CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
+Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT overlays"
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Kalle Niemi <kaleposti@gmail.com>, Herve Codina <herve.codina@bootlin.com>, 
+	Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
+	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
+	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Mark Brown <broonie@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 6156424a7d001cceeafe59b52209d6f36719b51d  Merge tag 'intel-pinctrl-v6.19-1' of git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel into devel
+On Tue, Nov 25, 2025 at 12:43=E2=80=AFAM Matti Vaittinen
+<mazziesaccount@gmail.com> wrote:
+>
+> On 24/11/2025 19:01, Rob Herring wrote:
+> > On Mon, Nov 24, 2025 at 10:44=E2=80=AFAM Kalle Niemi <kaleposti@gmail.c=
+om> wrote:
+> >>
+> >>
+> >> On 11/24/25 16:53, Rob Herring wrote:
+> >>> On Mon, Nov 24, 2025 at 8:48=E2=80=AFAM Kalle Niemi <kaleposti@gmail.=
+com> wrote:
+> >>>> On 10/15/25 10:13, Herve Codina wrote:
+> >>>>> From: Saravana Kannan <saravanak@google.com>
+> >>>>>
+> >>>>> This reverts commit 1a50d9403fb90cbe4dea0ec9fd0351d2ecbd8924.
+> >>>>>
+> >>>>> While the commit fixed fw_devlink overlay handling for one case, it
+> >>>>> broke it for another case. So revert it and redo the fix in a separ=
+ate
+> >>>>> patch.
+> >>>>>
+> >>>>> Fixes: 1a50d9403fb9 ("treewide: Fix probing of devices in DT overla=
+ys")
+> >>>>> Reported-by: Herve Codina <herve.codina@bootlin.com>
+> >>>>> Closes: https://lore.kernel.org/lkml/CAMuHMdXEnSD4rRJ-o90x4OprUacN_=
+rJgyo8x6=3D9F9rZ+-KzjOg@mail.gmail.com/
+> >>>>> Closes: https://lore.kernel.org/all/20240221095137.616d2aaa@bootlin=
+.com/
+> >>>>> Closes: https://lore.kernel.org/lkml/20240312151835.29ef62a0@bootli=
+n.com/
+> >>>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> >>>>> Link: https://lore.kernel.org/lkml/20240411235623.1260061-2-saravan=
+ak@google.com/
+> >>>>> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> >>>>> Acked-by: Mark Brown <broonie@kernel.org>
+> >>>>> ---
+> >>>>>     drivers/bus/imx-weim.c    | 6 ------
+> >>>>>     drivers/i2c/i2c-core-of.c | 5 -----
+> >>>>>     drivers/of/dynamic.c      | 1 -
+> >>>>>     drivers/of/platform.c     | 5 -----
+> >>>>>     drivers/spi/spi.c         | 5 -----
+> >>>>>     5 files changed, 22 deletions(-)
+> >>>>>
+> >>>>> diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
+> >>>>> index 83d623d97f5f..87070155b057 100644
+> >>>>> --- a/drivers/bus/imx-weim.c
+> >>>>> +++ b/drivers/bus/imx-weim.c
+> >>>>> @@ -327,12 +327,6 @@ static int of_weim_notify(struct notifier_bloc=
+k *nb, unsigned long action,
+> >>>>>                                  "Failed to setup timing for '%pOF'=
+\n", rd->dn);
+> >>>>>
+> >>>>>                 if (!of_node_check_flag(rd->dn, OF_POPULATED)) {
+> >>>>> -                     /*
+> >>>>> -                      * Clear the flag before adding the device so=
+ that
+> >>>>> -                      * fw_devlink doesn't skip adding consumers t=
+o this
+> >>>>> -                      * device.
+> >>>>> -                      */
+> >>>>> -                     rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DE=
+VICE;
+> >>>>>                         if (!of_platform_device_create(rd->dn, NULL=
+, &pdev->dev)) {
+> >>>>>                                 dev_err(&pdev->dev,
+> >>>>>                                         "Failed to create child dev=
+ice '%pOF'\n",
+> >>>>> diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
+> >>>>> index eb7fb202355f..30b48a428c0b 100644
+> >>>>> --- a/drivers/i2c/i2c-core-of.c
+> >>>>> +++ b/drivers/i2c/i2c-core-of.c
+> >>>>> @@ -176,11 +176,6 @@ static int of_i2c_notify(struct notifier_block=
+ *nb, unsigned long action,
+> >>>>>                         return NOTIFY_OK;
+> >>>>>                 }
+> >>>>>
+> >>>>> -             /*
+> >>>>> -              * Clear the flag before adding the device so that fw=
+_devlink
+> >>>>> -              * doesn't skip adding consumers to this device.
+> >>>>> -              */
+> >>>>> -             rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DEVICE;
+> >>>>>                 client =3D of_i2c_register_device(adap, rd->dn);
+> >>>>>                 if (IS_ERR(client)) {
+> >>>>>                         dev_err(&adap->dev, "failed to create clien=
+t for '%pOF'\n",
+> >>>>> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+> >>>>> index 2eaaddcb0ec4..b5be7484fb36 100644
+> >>>>> --- a/drivers/of/dynamic.c
+> >>>>> +++ b/drivers/of/dynamic.c
+> >>>>> @@ -225,7 +225,6 @@ static void __of_attach_node(struct device_node=
+ *np)
+> >>>>>         np->sibling =3D np->parent->child;
+> >>>>>         np->parent->child =3D np;
+> >>>>>         of_node_clear_flag(np, OF_DETACHED);
+> >>>>> -     np->fwnode.flags |=3D FWNODE_FLAG_NOT_DEVICE;
+> >>>>>
+> >>>>>         raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> >>>>>
+> >>>>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> >>>>> index f77cb19973a5..ef9445ba168b 100644
+> >>>>> --- a/drivers/of/platform.c
+> >>>>> +++ b/drivers/of/platform.c
+> >>>>> @@ -739,11 +739,6 @@ static int of_platform_notify(struct notifier_=
+block *nb,
+> >>>>>                 if (of_node_check_flag(rd->dn, OF_POPULATED))
+> >>>>>                         return NOTIFY_OK;
+> >>>>>
+> >>>>> -             /*
+> >>>>> -              * Clear the flag before adding the device so that fw=
+_devlink
+> >>>>> -              * doesn't skip adding consumers to this device.
+> >>>>> -              */
+> >>>>> -             rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DEVICE;
+> >>>>>                 /* pdev_parent may be NULL when no bus platform dev=
+ice */
+> >>>>>                 pdev_parent =3D of_find_device_by_node(parent);
+> >>>>>                 pdev =3D of_platform_device_create(rd->dn, NULL,
+> >>>>> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> >>>>> index 2e0647a06890..b22944a207c9 100644
+> >>>>> --- a/drivers/spi/spi.c
+> >>>>> +++ b/drivers/spi/spi.c
+> >>>>> @@ -4791,11 +4791,6 @@ static int of_spi_notify(struct notifier_blo=
+ck *nb, unsigned long action,
+> >>>>>                         return NOTIFY_OK;
+> >>>>>                 }
+> >>>>>
+> >>>>> -             /*
+> >>>>> -              * Clear the flag before adding the device so that fw=
+_devlink
+> >>>>> -              * doesn't skip adding consumers to this device.
+> >>>>> -              */
+> >>>>> -             rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DEVICE;
+> >>>>>                 spi =3D of_register_spi_device(ctlr, rd->dn);
+> >>>>>                 put_device(&ctlr->dev);
+> >>>>>
+> >>>> Sorry, some of you will receive this message now for second time. Fi=
+rst
+> >>>> message was sent to older series of patches.
+> >>>> -
+> >>>>
+> >>>> Hello,
+> >>>>
+> >>>> Test system testing drivers for ROHM ICs bisected this commit to cau=
+se
+> >>>> BD71847 drivers probe to not be called.
+> >>> This driver (and overlay support) is in linux-next or something out o=
+f
+> >>> tree on top of linux-next?
+> >>>
+> >>> Rob
+> >>
+> >> Yes the driver is in mainline linux: /drivers/mfd/rohm-bd718x7.c
+> >
+> > I don't see any support to apply overlays in that driver.
+>
+> Ah. Sorry for the confusion peeps. I asked Kalle to report this without
+> proper consideration. 100% my bad.
+>
+> While the bd718x7 drive indeed is mainline (and tested), the actual
+> 'glue-code' doing the overlay is part of the downstream test
+> infrastructure. So yes, this is not a bug in upstream kernel - this
+> falls in the category of an upstream change causing downstream things to
+> break. So, feel free to say: "Go fix your code" :)
+>
+> Now that this is sorted, if someone is still interested in helping us to
+> get our upstream drivers tested - the downstream piece is just taking
+> the compiled device-tree overlay at runtime (via bin-attribute file),
+> and applying it using the of_overlay_fdt_apply(). The approach is
+> working for our testing purposes when the device is added to I2C/SPI
+> node which is already enabled. However, in case where we have the I2C
+> disabled, and enable it in the same overlay where we add the new device
+> - then the new device does not get probed.
+>
+> I would be really grateful if someone had a pointer for us.
 
-Error/Warning (recently discovered and may have been fixed):
+Seems to be fw_devlink related. I suppose if you turn it off it works?
+There's info about the dependencies in sysfs or maybe debugfs. I don't
+remember the details, but that should help to tell you why things
+aren't probing.
 
-    pinctrl-pic64gx-gpio2.c:(.text+0xd0): undefined reference to `pinconf_generic_dt_node_to_map'
+I've dropped the changes for 6.18 for now. No one really seems to be
+in need of them yet AFAICT.
 
-Error/Warning ids grouped by kconfigs:
-
-recent_errors
-`-- xtensa-randconfig-001-20251126
-    `-- pinctrl-pic64gx-gpio2.c:(.text):undefined-reference-to-pinconf_generic_dt_node_to_map
-
-elapsed time: 1489m
-
-configs tested: 54
-configs skipped: 0
-
-tested configs:
-alpha                   allnoconfig    gcc-15.1.0
-arc                     allnoconfig    gcc-15.1.0
-arc         randconfig-001-20251126    gcc-13.4.0
-arc         randconfig-002-20251126    gcc-11.5.0
-arm                     allnoconfig    clang-22
-arm         randconfig-001-20251126    clang-22
-arm         randconfig-002-20251126    clang-22
-arm         randconfig-003-20251126    clang-19
-arm         randconfig-004-20251126    clang-22
-arm64                   allnoconfig    gcc-15.1.0
-csky                    allnoconfig    gcc-15.1.0
-hexagon                 allnoconfig    clang-22
-hexagon     randconfig-001-20251126    clang-22
-hexagon     randconfig-002-20251126    clang-22
-i386                    allnoconfig    gcc-14
-loongarch               allnoconfig    clang-22
-loongarch   randconfig-001-20251126    gcc-15.1.0
-loongarch   randconfig-002-20251126    clang-22
-m68k                    allnoconfig    gcc-15.1.0
-microblaze              allnoconfig    gcc-15.1.0
-mips                    allnoconfig    gcc-15.1.0
-nios2                   allnoconfig    gcc-11.5.0
-nios2       randconfig-001-20251126    gcc-11.5.0
-nios2       randconfig-002-20251126    gcc-9.5.0
-openrisc                allnoconfig    gcc-15.1.0
-parisc                  allnoconfig    gcc-15.1.0
-parisc      randconfig-001-20251126    gcc-8.5.0
-parisc      randconfig-002-20251126    gcc-15.1.0
-powerpc                 allnoconfig    gcc-15.1.0
-powerpc     randconfig-001-20251126    gcc-10.5.0
-powerpc     randconfig-002-20251126    gcc-8.5.0
-powerpc64   randconfig-001-20251126    clang-19
-powerpc64   randconfig-002-20251126    clang-22
-riscv                   allnoconfig    gcc-15.1.0
-riscv       randconfig-001-20251126    gcc-10.5.0
-riscv       randconfig-002-20251126    clang-22
-s390                    allnoconfig    clang-22
-s390        randconfig-001-20251126    gcc-8.5.0
-s390        randconfig-002-20251126    gcc-8.5.0
-sh                      allnoconfig    gcc-15.1.0
-sh          randconfig-001-20251126    gcc-14.3.0
-sh          randconfig-002-20251126    gcc-11.5.0
-sparc                   allnoconfig    gcc-15.1.0
-sparc       randconfig-001-20251126    gcc-8.5.0
-sparc       randconfig-002-20251126    gcc-14.3.0
-sparc64     randconfig-001-20251126    gcc-8.5.0
-sparc64     randconfig-002-20251126    clang-22
-um                      allnoconfig    clang-22
-um          randconfig-001-20251126    clang-19
-um          randconfig-002-20251126    clang-22
-x86_64                  allnoconfig    clang-20
-xtensa                  allnoconfig    gcc-15.1.0
-xtensa      randconfig-001-20251126    gcc-14.3.0
-xtensa      randconfig-002-20251126    gcc-10.5.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Rob
 
