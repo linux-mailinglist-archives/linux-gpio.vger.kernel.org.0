@@ -1,474 +1,277 @@
-Return-Path: <linux-gpio+bounces-29186-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29187-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE9B1C92EFB
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Nov 2025 19:50:16 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BE8FC93035
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Nov 2025 20:26:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9599A3A6C4B
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Nov 2025 18:50:15 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id F1DB14E20F5
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Nov 2025 19:26:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 302B02D028A;
-	Fri, 28 Nov 2025 18:50:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74141330D50;
+	Fri, 28 Nov 2025 19:25:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZLUQgNlF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NNEe8VWr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BB726E17F
-	for <linux-gpio@vger.kernel.org>; Fri, 28 Nov 2025 18:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8813B2080C8;
+	Fri, 28 Nov 2025 19:25:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764355810; cv=none; b=h9mDHRf6/aF2Je8U+Uaz6mo1fg/egdsNcNR/e5Crbhgc6Tc1YLFTddb6p4dijqcgqqlPukeDMCHmEMlM3Oz0dFudzWEbK6Sxia54oq25jt2IEHB/1tKSpiXJHLnxeQwdB3MP5E1Mn20sNIpKj3RVBKbcnfiwM7kvtCKs7YIuURM=
+	t=1764357959; cv=none; b=UgkEbjMDgDLm0nfxhe7QRv+5xWs9TWiGqaoegIbapEJRC4qQaEkXsm50bYq6/GVNU/82dsE2h/BZB9bC0uUrfVqeZDN8uviE2VllG2k0RKOrMtK5qmv1HaqpDMql18sEPj1I//W6rIiPVlOIPafMqXI+CRdWpaIvJvPLsK/SJFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764355810; c=relaxed/simple;
-	bh=/h8yBxablWPek+7hHxFXlQhCloZaZBbzt6CtKnqg49U=;
+	s=arc-20240116; t=1764357959; c=relaxed/simple;
+	bh=ZgJg19JgVapqtEPwhxxKRypueCcS657c0JxAgQtWkMk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QbHzY1ruhMNszD4hcfIgE+0XKysWXRsHEZCrhoZuzknHQLJp1gVKa9j5z0r5RkZSMa0LRjy+EfMcFMFl6GjnZWzgHG7a91y3YFZ06XIP/OLDPM21PXoDIIZUut332HNvl9pJoGsIgGWizeGv3ZsoxgzLRHJ0G9h5Gp2fZmATSPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZLUQgNlF; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b736ffc531fso349233066b.1
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Nov 2025 10:50:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764355805; x=1764960605; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=WX7GZ7QIiC0YJ3z3A28BFLchPllyieUl7kC9JuxEexI=;
-        b=ZLUQgNlFXiLH6Rlo7oZ0ws+ftdsP+cuH7kkzkn38g6xObqeiZBQ3c/QhiKOxpeDi+O
-         2u5lUiIXOY/6mEIhrheLGBi6VDXNmm/WIXDaAjgifdVLyB63XaBRRPbtJP6u8fBIijNr
-         p3l6OoImDwHrdXRU4yk7z2XtyuKDFaI/xgwUD8cooasj3FeIPC7SYxB9PqMVgrh5SXNV
-         gYYuStITzxHWBNnLc1bjUYHwGFpAN+diIu4Lu9IOOHwQl/4BauLfGSmdBX6Ul2Hy5u7A
-         WuYm2XDglEsERBAMetrm9k58jCfqgk3OalK0ZOQeWijqlcTZyFf7wGWk7Rv6s/FvFlYs
-         4ZHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764355805; x=1764960605;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WX7GZ7QIiC0YJ3z3A28BFLchPllyieUl7kC9JuxEexI=;
-        b=O9lJH/QrNjVFdVxhzmozahabP66gJhsV4bRWyyYn9zHbPgKu7D6p2MVkyWZNT0wPzS
-         /PN9qkUhfkk/8Xi5gNin09T0CDG9DKYj3SaUnt7a75Ys8WjjTkcsWWyzAXFl+zD9kYPn
-         zM8FHHJGLW107IWBP0vfb89KFJ6DSTTTnqE/e8XfjvDjyvyTCnDXJ9mNUo4FQVme6aKV
-         wndQgl2+TM1FDAYzuBhhdmjJF49L9oYNsK/p2dtmHcgLyJCEiZ+B5mQxu0eee8wHsg4D
-         IazP1yI5Y59nGm2NrkFCCo06wrhS5NY3/Qje0Pg5ndr+OfwtLvCvP6P0eZfbp2lrOIcV
-         3OiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW2botZfFlhhzmC65ZOfyTI5sQHnL7wEYtvzss80Rqw1AUCyCzN/kVWx622KwIzkChQRcKLpOOPmynQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx43mhuf3+7qfHGQ9penlDd/O8vyZiIVp/BncunPUaUuZMu25Cu
-	vYSMoCROkwYzgzdUKVNLI5qucJ/W8z001lyeiiLcgb+QjadqPTo3bvwT
-X-Gm-Gg: ASbGncuzul7kWobx15KPIao1J2aoveWOMjgZKRNab+XuMhcjyOMb676dc25erpQSJSS
-	00VtBUid+AWHyNMcqJunx62attG6sV4RsVlh7ieyTcEe5o2xJtUY+rHWSKVfX78DusMjipdpHsx
-	7Mcd90jrVsr1LV5yEvwshPQt0iNIYBMc+APqAC/Ms2ILPB+XoG44hL1jkNZBvscAzwAKlFRhfUs
-	qXiR5Bu7Xle8zIIaOvW6B8pJAIlk4k6d4KkgbpwH7pDXNgayOleZlDkjvR/9jts2fBEJHZwSQ5P
-	okRa7Jv0Ywkf8gaXb3wm0OEbix24KMJt3FR4c86MUQP8RhoZKHy7U0K4stXzgM4mlQHaWWrHfHb
-	y2ceY1mV7UDdLULjYVDIQOPt4KsgS3zOihogIJUgJXaLWdMKLdM9wpIJGRJJmfsN3ZSPulLVL1X
-	fM2rDafgvor5+3sbDwOVkLmAFEJdAEl5TxrlXXMgGSIKEG1NJJSw0rj8D6jEhpXRZPGF0=
-X-Google-Smtp-Source: AGHT+IEfDY4uJ23hVVMVaAzxQghRjOMG1yRqhMDfjHc9KdSb/oNvxNcfvVZLVHw5LrgA3lbTv/qKSQ==
-X-Received: by 2002:a17:907:d93:b0:b73:3028:93a1 with SMTP id a640c23a62f3a-b767150b284mr2641160466b.9.1764355804992;
-        Fri, 28 Nov 2025 10:50:04 -0800 (PST)
-Received: from HYB-DlYm71t3hSl.ad.analog.com ([2001:a61:123e:4501:6960:7067:c8e2:c770])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b76f516416esm518395066b.4.2025.11.28.10.50.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Nov 2025 10:50:04 -0800 (PST)
-Date: Fri, 28 Nov 2025 19:50:02 +0100
-From: Jorge Marques <gastmaier@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Jorge Marques <jorge.marques@analog.com>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=ud8W+QLTnEEPhNEUcjylXtKL/nOZZBC5sdcsOxrXzNaV/38Di9dl3V4qRtUwcNgiB0LaHdBPFwm6NxveBjjJJgyh6ZcUH+ir9lYmeePVwb6wiMAj+ImrnmmGo1Rp+Kbri2YDigm0evysANlQ2vSSR7xxB5AYoQcVUO1uUBrgimQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NNEe8VWr; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764357958; x=1795893958;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZgJg19JgVapqtEPwhxxKRypueCcS657c0JxAgQtWkMk=;
+  b=NNEe8VWrVO7M40Ry48W+bzgwdwoJneBDaOXmp18kTfWNk/Z1GreQDtCO
+   7qFATVcNHlwxBNuwkQawtefOoJW9h9Axr6Ds5f6vhohaBLnnIm8HAu8DB
+   r05QD0Vxec/dgViut2ABgdcnElV/xDt9CfX7bd4hWYZXVOhTzELF1CO08
+   1PKUnyxS6bgFoY+bJhp9MqvkglCwhK/POnQlSEqzsHD/0AG4ZCJQ8atY/
+   4kPI3A98k2snFJySOdlZ/wCh6cS8+7RR/Q8TH3MtFlyMms855n5AUp6lF
+   Sc43+ho51yHQ2V63aSI7QQ2zd8Bda3RbDPgTMIK0Apqlmf5DCZtylPt/e
+   g==;
+X-CSE-ConnectionGUID: D7jH7Jp1QIylLMOiDbt1fg==
+X-CSE-MsgGUID: D7eRvhlHRQqnP1jkEOlTIA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11627"; a="66339621"
+X-IronPort-AV: E=Sophos;i="6.20,234,1758610800"; 
+   d="scan'208";a="66339621"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2025 11:25:57 -0800
+X-CSE-ConnectionGUID: Vn3gvOaiSiazneVBYPV21w==
+X-CSE-MsgGUID: xgpQSso1RDSsHXKA92I+Cw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,234,1758610800"; 
+   d="scan'208";a="193419743"
+Received: from dalessan-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.17])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2025 11:25:53 -0800
+Date: Fri, 28 Nov 2025 21:25:50 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Jorge Marques <gastmaier@gmail.com>
+Cc: Jorge Marques <jorge.marques@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org
 Subject: Re: [PATCH v2 3/9] iio: adc: Add support for ad4062
-Message-ID: <zryqws2h2i4duejczo2rptwhlzhile7fa7brriqh2hmtarwjxn@cr2cyzymwpav>
+Message-ID: <aSn3PthKIvFAhDS6@smile.fi.intel.com>
 References: <20251124-staging-ad4062-v2-0-a375609afbb7@analog.com>
  <20251124-staging-ad4062-v2-3-a375609afbb7@analog.com>
  <aSQxiSoZcI_ol3S5@smile.fi.intel.com>
  <aslj3klmv6heyyhgltzewkdze5p4c3hlkzfbxbfnzwwgd375gv@m6iqpst5sv6b>
  <aSgSsGSUuBtMOuro@smile.fi.intel.com>
+ <zryqws2h2i4duejczo2rptwhlzhile7fa7brriqh2hmtarwjxn@cr2cyzymwpav>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aSgSsGSUuBtMOuro@smile.fi.intel.com>
+In-Reply-To: <zryqws2h2i4duejczo2rptwhlzhile7fa7brriqh2hmtarwjxn@cr2cyzymwpav>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, Nov 27, 2025 at 10:58:24AM +0200, Andy Shevchenko wrote:
-> On Wed, Nov 26, 2025 at 12:40:00PM +0100, Jorge Marques wrote:
-> > On Mon, Nov 24, 2025 at 12:20:57PM +0200, Andy Shevchenko wrote:
-> > > On Mon, Nov 24, 2025 at 10:18:02AM +0100, Jorge Marques wrote:
-> 
-> ...
-> 
-> > > > +#define AD4062_MON_VAL_MAX_GAIN		1999970
-> > > 
-> > > This is decimal...
-> > > 
-> > > > +#define AD4062_MON_VAL_MIDDLE_POINT	0x8000
-> > > 
-> > > ...and this is hexadecimal. Can you make these consistent?
-> > > Also, is there any explanation of the number above? To me
-> > > it looks like 2000000 - 30. Is it so? Or is this a fraction
-> > > number multiplied by 1000000 or so? In any case some elaboration
-> > > would be good to have.
-> > > 
-> > Since this is not a magic number, I will use directly below.
-> > It MAX_MON_VAL/MON_VAL_MIDDLE_POINT = 0xFFFF/0x8000
-> 
-> Okay, at least it will explain the value.
-> 
-> ...
-> 
-> > > > +	if (val < 1 || val > BIT(st->chip->max_avg + 1))
-> > > 
-> > > in_range() ?
-> > > 
-> > > 	in_range(val, 1, GENMASK(st->chip->max_avg, 0))
-> > > 
-> > > if I am not mistaken. Also note, the GENMASK() approach makes possible
-> > > to have all 32 bits set, however it's most unlikely to happen here anyway.
-> > > 
-> > Sure, but requires locals to not trigger suspicious usage of sizeof.
-> >   	// ...
-> >   	const u32 _max = GENMASK(st->chip->max_avg, 0);
-> >   	const u32 _min = 1;
-> >   	int ret;
-> >   
-> >   	if (in_range(val, _min, _max))
-> > > > +		return -EINVAL;
-> 
-> It's fine.
-> 
-> ...
-> 
-> > > > +static int ad4062_calc_sampling_frequency(int fosc, unsigned int n_avg)
-> > > > +{
-> > > > +	/* See datasheet page 31 */
-> > > > +	u64 duration = div_u64((u64)(n_avg - 1) * NSEC_PER_SEC, fosc) + AD4062_TCONV_NS;
-> > > > +
-> > > > +	return DIV_ROUND_UP_ULL(NSEC_PER_SEC, duration);
-> > > 
-> > > Why u64?
-> > > 
-> > > The DIV_ROUND_UP_ULL() seems an overkill here. Or do you expect duration be
-> > > more than 4 billions?
-> > > 
-> > This is necessary since at fosc 111 Hz and avg 4096 it does take longer
-> > than 4 seconds, even though I do timeout after 1 seconds in the raw
-> > acquisition.
-> 
-> Values above NSEC_PER_SEC+1 do not make sense (it will return 0),
-> and that fits u32. Can you refactor to avoid 64-bit arithmetics?
->
+On Fri, Nov 28, 2025 at 07:50:02PM +0100, Jorge Marques wrote:
+> On Thu, Nov 27, 2025 at 10:58:24AM +0200, Andy Shevchenko wrote:
+> > On Wed, Nov 26, 2025 at 12:40:00PM +0100, Jorge Marques wrote:
+> > > On Mon, Nov 24, 2025 at 12:20:57PM +0200, Andy Shevchenko wrote:
+> > > > On Mon, Nov 24, 2025 at 10:18:02AM +0100, Jorge Marques wrote:
 
-Ok, any frequency lower than 1 Hz does not make sense.
+Please, remove the context you are agree with or which has no need
+to be answered, it helps to parse and reply.
 
-  static int ad4062_calc_sampling_frequency(int fosc, unsigned int oversamp_ratio)
-  {
-  	/* See datasheet page 31 */
-  	u32 period = NSEC_PER_SEC / fosc;
-  	u32 n_avg = BIT(oversamp_ratio) - 1;
-  
-  	/* Result is less than 1 Hz */
-  	if (n_avg >= fosc)
-  		return 1;
-  	return NSEC_PER_SEC / (n_avg * period + AD4062_TCONV_NS);
-  }
+...
 
-> > > > +}
-> 
-> ...
-> 
-> > > > +static int ad4062_soft_reset(struct ad4062_state *st)
-> > > > +{
-> > > > +	u8 val = AD4062_SOFT_RESET;
-> > > > +	int ret;
-> > > > +
-> > > > +	ret = regmap_write(st->regmap, AD4062_REG_INTERFACE_CONFIG_A, val);
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > > +	/* Wait AD4062 treset time */
-> > > > +	fsleep(5000);
-> > > 
-> > > 5 * USEC_PER_MSEC
-> > > 
-> > > This gives a hint on the units without even a need to comment or look somewhere
-> > > else.
-> > >
-> > // TODO
-> > Since the device functional blocks are powered when voltage is supplied,
-> > here we can stick with the treset datasheet value 60ns (ndelay(60)).
-> 
-> Add a comment and it will work for me, thanks!
-> 
-> > > > +	return 0;
-> > > > +}
-> 
-> ...
-> 
-> > > > +static const int ad4062_oversampling_avail[] = {
-> > > > +	1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096,
-> > > 
-> > > It's not easy to count them at glance, please add a comment with indices.
-> > > 
-> > Ack, will use
-> >   static const int ad4062_oversampling_avail[] = {
-> >           BIT(0), BIT(1), BIT(2), BIT(3), BIT(4), BIT(5), BIT(6), BIT(7), BIT(8),
-> >   	BIT(9), BIT(10), BIT(11), BIT(12),
-> >   };
-> 
-> Of course you can use bit notations, but what I meant is to have
-> 
-> 	1, 2, 4, 8, 16, 32, 64, 128,		/*  0 -  7 */
-> 	256, 512, 1024, 2048, 4096,		/*  8 - 12 */
-> 
-> (or something alike).
-> 
-Ack
-> > > > +};
-> 
-> ...
-> 
-> > > > +static int ad4062_get_chan_calibscale(struct ad4062_state *st, int *val, int *val2)
-> > > > +{
-> > > > +	u16 gain;
-> > > > +	int ret;
-> > > > +
-> > > > +	ret = regmap_bulk_read(st->regmap, AD4062_REG_MON_VAL,
-> > > > +			       &st->buf.be16, sizeof(st->buf.be16));
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > > +	gain = get_unaligned_be16(st->buf.bytes);
-> > > > +
-> > > > +	/* From datasheet: code out = code in × mon_val/0x8000 */
-> > > > +	*val = gain / AD4062_MON_VAL_MIDDLE_POINT;
-> > > 
-> > > > +	*val2 = mul_u64_u32_div(gain % AD4062_MON_VAL_MIDDLE_POINT, NANO,
-> > > > +				AD4062_MON_VAL_MIDDLE_POINT);
-> > > 
-> > > I don't see the need for 64-bit division. Can you elaborate what I miss here?
-> > > 
-> > > > +	return IIO_VAL_INT_PLUS_NANO;
-> > > > +}
-> > > 
-> > Can be improved to
+> > > > > +static int ad4062_calc_sampling_frequency(int fosc, unsigned int n_avg)
+> > > > > +{
+> > > > > +	/* See datasheet page 31 */
+> > > > > +	u64 duration = div_u64((u64)(n_avg - 1) * NSEC_PER_SEC, fosc) + AD4062_TCONV_NS;
+> > > > > +
+> > > > > +	return DIV_ROUND_UP_ULL(NSEC_PER_SEC, duration);
+> > > > 
+> > > > Why u64?
+> > > > 
+> > > > The DIV_ROUND_UP_ULL() seems an overkill here. Or do you expect duration be
+> > > > more than 4 billions?
+> > > > 
+> > > This is necessary since at fosc 111 Hz and avg 4096 it does take longer
+> > > than 4 seconds, even though I do timeout after 1 seconds in the raw
+> > > acquisition.
 > > 
-> >   static int ad4062_get_chan_calibscale(struct ad4062_state *st, int *val, int *val2)
-> >   {
-> >   	int ret;
-> >   
-> >   	ret = regmap_bulk_read(st->regmap, AD4062_REG_MON_VAL,
-> >   			       &st->buf.be16, sizeof(st->buf.be16));
-> >   	if (ret)
-> >   		return ret;
-> >   
-> >   	/* From datasheet: code out = code in × mon_val/0x8000 */
-> >   	*val = get_unaligned_be16(st->buf.bytes) * 2;
-> >   	*val2 = 16;
-> >   
-> >   	return IIO_VAL_FRACTIONAL_LOG2;
-> >   }
+> > Values above NSEC_PER_SEC+1 do not make sense (it will return 0),
+> > and that fits u32. Can you refactor to avoid 64-bit arithmetics?
 > 
-> Much better, thanks!
-> 
-> ...
-> 
-> > > > +static int ad4062_set_chan_calibscale(struct ad4062_state *st, int gain_int, int gain_frac)
-> > > 
-> > > Forgot to wrap this line.
-> > > 
-> > ack
-> > > > +{
-> > > > +	u64 gain;
-> > > > +	int ret;
-> > > > +
-> > > > +	if (gain_int < 0 || gain_frac < 0)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	gain = mul_u32_u32(gain_int, MICRO) + gain_frac;
-> > > 
-> > > > +
-> > > 
-> > > Redundant blank line.
-> > > 
-> > Ack.
-> > > > +	if (gain > AD4062_MON_VAL_MAX_GAIN)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	put_unaligned_be16(DIV_ROUND_CLOSEST_ULL(gain * AD4062_MON_VAL_MIDDLE_POINT,
-> > > > +						 MICRO),
-> > > > +			   st->buf.bytes);
-> > > 
-> > > Also in doubt here about 64-bit division.
-> > > 
-> > This can be slightly improved to
+> Ok, any frequency lower than 1 Hz does not make sense.
+
+Depends on the cases, we have sub-Hz sensors or some other stuff.
+So, "...does not make sense in _this_ case." That's what I implied.
+
+>   static int ad4062_calc_sampling_frequency(int fosc, unsigned int oversamp_ratio)
+
+Shouldn't fosc be unsigned?
+
+>   {
+>   	/* See datasheet page 31 */
+
+It's fine, but better to add a formula here or more information about
+the calculations done in the function.
+
+>   	u32 period = NSEC_PER_SEC / fosc;
+
+period_ns ?
+
+(We usually add units to this kind of variables for better understanding
+ of the calculations)
+
+>   	u32 n_avg = BIT(oversamp_ratio) - 1;
+>   
+>   	/* Result is less than 1 Hz */
+>   	if (n_avg >= fosc)
+>   		return 1;
+
++ blank line.
+
+>   	return NSEC_PER_SEC / (n_avg * period + AD4062_TCONV_NS);
+>   }
+
+LGTM, thanks!
+
+> > > > > +}
+
+...
+
+> > >   static int ad4062_set_chan_calibscale(struct ad4062_state *st, int gain_int,
+> > >   				      int gain_frac)
+> > >   {
+> > >   	u32 gain;
+> > >   	int ret;
+> > >   
+> > >   	if (gain_int < 0 || gain_frac < 0)
+> > >   		return -EINVAL;
+> > >   
+> > >   	gain = gain_int * MICRO + gain_frac;
+> > >   	if (gain > 1999970)
 > > 
-> >   static int ad4062_set_chan_calibscale(struct ad4062_state *st, int gain_int,
-> >   				      int gain_frac)
-> >   {
-> >   	u32 gain;
-> >   	int ret;
-> >   
-> >   	if (gain_int < 0 || gain_frac < 0)
-> >   		return -EINVAL;
-> >   
-> >   	gain = gain_int * MICRO + gain_frac;
-> >   	if (gain > 1999970)
-> 
-> But this magic should be changed to what you explained to me
-> (as in 0xffff/0x8000 with the proper precision, and this
->  can be done in 32-bit space).
-> 
-> Or even better
-> 
-> 	if (gain_int < 0 || gain_int > 1)
-> 		return -EINVAL;
-> 
-> 	if (gain_int == 1 && gain_frac > 0x7fff) // did I get this right?
-> 		return -EINVAL;
-> 
-gain_frac would be 999999 max, or 999970 for the limit that fits in the
-register after the math. I think > 1.999.970 is self explanatory.
-> >   		return -EINVAL;
-> >   
-> >   	put_unaligned_be16(DIV_ROUND_CLOSEST_ULL((u64)gain * AD4062_MON_VAL_MIDDLE_POINT,
-> >   						 MICRO),
-> 
-> ...with temporary variable at minimum.
-> 
-> But again, I still don't see the need for 64-bit space.
-> 
-
-Well, by dividing mon_val and micro values by a common divisor the
-operation fit in 32-bits:
-
-  static int ad4062_set_chan_calibscale(struct ad4062_state *st, int gain_int,
-                                        int gain_frac)
-  {
-          const u32 mon_val = AD4062_MON_VAL_MIDDLE_POINT / 64;
-          const u32 micro = MICRO / 64;
-          const u32 gain = gain_int * MICRO + gain_frac;
-          int ret;
-
-          if (gain_int < 0 || gain_frac < 0)
-                  return -EINVAL;
-
-          if (gain > 1999970)
-                  return -EINVAL;
-
-          put_unaligned_be16(DIV_ROUND_CLOSEST(gain * mon_val, micro), st->buf.bytes);
-
-          ret = regmap_bulk_write(st->regmap, AD4062_REG_MON_VAL,
-                                  &st->buf.be16, sizeof(st->buf.be16));
-          if (ret)
-                  return ret;
-
-          /* Enable scale if gain is not equal to one */
-          return regmap_update_bits(st->regmap, AD4062_REG_ADC_CONFIG,
-                                    AD4062_REG_ADC_CONFIG_SCALE_EN_MSK,
-                                    FIELD_PREP(AD4062_REG_ADC_CONFIG_SCALE_EN_MSK,
-                                               !(gain_int == 1 && gain_frac == 0)));
-  }
-
-
-> >   			   st->buf.bytes);
-> >   
-> >   	ret = regmap_bulk_write(st->regmap, AD4062_REG_MON_VAL,
-> >   				&st->buf.be16, sizeof(st->buf.be16));
-> >   	if (ret)
-> >   		return ret;
-> >   
-> >   	/* Enable scale if gain is not equal to one */
-> >   	return regmap_update_bits(st->regmap, AD4062_REG_ADC_CONFIG,
-> >   				  AD4062_REG_ADC_CONFIG_SCALE_EN_MSK,
-> >   				  FIELD_PREP(AD4062_REG_ADC_CONFIG_SCALE_EN_MSK,
-> >   					     !(gain_int == 1 && gain_frac == 0)));
-> >   }
+> > But this magic should be changed to what you explained to me
+> > (as in 0xffff/0x8000 with the proper precision, and this
+> >  can be done in 32-bit space).
 > > 
-> > To provide the enough resolution to compute every step (e.g., 0xFFFF and
-> > 0xFFFE) with the arbitrary user input.
-> 
-> ...
-> 
-> > > > +static int __ad4062_read_chan_raw(struct ad4062_state *st, int *val)
-> > > 
-> > > Can be named without leading double underscore? Preference is to use
-> > > the suffix, like _no_pm (but you can find better one).
-> > > 
-> > Since there is one usage of this method, can be merged into ad4062_read_chan_raw.
-> 
-> Good choice!
-> 
-> ...
-> 
-> > > > +	struct i3c_priv_xfer t[2] = {
-> > > > +		{
-> > > > +			.data.out = &st->reg_addr_conv,
-> > > > +			.len = sizeof(st->reg_addr_conv),
-> > > > +			.rnw = false,
-> > > > +		},
-> > > > +		{
-> > > > +			.data.in = &st->buf.be32,
-> > > > +			.len = sizeof(st->buf.be32),
-> > > > +			.rnw = true,
-> > > > +		}
-> > > > +	};
-> 
-> > > > +	/* Change address pointer to trigger conversion */
-> > > > +	ret = i3c_device_do_priv_xfers(i3cdev, &t[0], 1);
-> > > 
-> > > Why array? Just split them on per transfer and use separately. This gives a bit
-> > > odd feeling that the two goes together, but no. They are semi-related as we
-> > > have a special condition after the first one.
-> > > 
-> > For this commit sure, but in the next a fallback method is introduced
-> > for when the gp1 gpio line is not connected.
-> > There are two register to trigger and read samples:
+> > Or even better
 > > 
-> > * write CONV_READ -> read dummy value - [conversion] -> read value -> [conv ...
-> > * write CONV_TRIGGER - [conversion] -> read value -> write ...
+> > 	if (gain_int < 0 || gain_int > 1)
+> > 		return -EINVAL;
 > > 
-> > The first allows almost twice the sampling frequency, but does not work
-> > with the fallback because In-Band-Interrupt for CONV_READ are not
-> > yielded.
+> > 	if (gain_int == 1 && gain_frac > 0x7fff) // did I get this right?
+> > 		return -EINVAL;
+
+> gain_frac would be 999999 max, or 999970 for the limit that fits in the
+> register after the math. I think > 1.999.970 is self explanatory.
+
+On the place of unprepared reader this is a complete magic number without
+scale, without understanding where it came from, etc.
+
+So, can you define it as a derivative from the other constants and with
+a comment perhaps?
+
+> > >   		return -EINVAL;
+> > >   
+> > >   	put_unaligned_be16(DIV_ROUND_CLOSEST_ULL((u64)gain * AD4062_MON_VAL_MIDDLE_POINT,
+> > >   						 MICRO),
+> > 
+> > ...with temporary variable at minimum.
+> > 
+> > But again, I still don't see the need for 64-bit space.
 > 
-> Do you mean that the same array is reused differently? If so, then okay.
+> Well, by dividing mon_val and micro values by a common divisor the
+> operation fit in 32-bits:
 > 
-Yes
-> > > > +	if (ret)
-> > > > +		return ret;
+>   static int ad4062_set_chan_calibscale(struct ad4062_state *st, int gain_int,
+>                                         int gain_frac)
+>   {
+
+	/* Divide numerator and denumerator by known great common divider */
+
+>           const u32 mon_val = AD4062_MON_VAL_MIDDLE_POINT / 64;
+>           const u32 micro = MICRO / 64;
+
+Yep, I suggested the same in another patch under review (not yours) for
+the similar cases where we definitely may easily avoid overflow.
+
+Alternatively you can use gcd().
+
+>           const u32 gain = gain_int * MICRO + gain_frac;
+>           int ret;
 > 
-> ...
+>           if (gain_int < 0 || gain_frac < 0)
+>                   return -EINVAL;
 > 
-> > > > +	fsleep(4000);
+>           if (gain > 1999970)
+>                   return -EINVAL;
+> 
+>           put_unaligned_be16(DIV_ROUND_CLOSEST(gain * mon_val, micro), st->buf.bytes);
+> 
+>           ret = regmap_bulk_write(st->regmap, AD4062_REG_MON_VAL,
+>                                   &st->buf.be16, sizeof(st->buf.be16));
+>           if (ret)
+>                   return ret;
+> 
+>           /* Enable scale if gain is not equal to one */
+>           return regmap_update_bits(st->regmap, AD4062_REG_ADC_CONFIG,
+>                                     AD4062_REG_ADC_CONFIG_SCALE_EN_MSK,
+>                                     FIELD_PREP(AD4062_REG_ADC_CONFIG_SCALE_EN_MSK,
+>                                                !(gain_int == 1 && gain_frac == 0)));
+
+Btw, I think you can move this check up and save in a temporary variable which
+might affect the binary size of the compiled object as accesses to the gain_int
+and gain_frac will be grouped in the same place with potential of the reusing
+the CPU register(s)..
+
+>   }
+
+> > >   			   st->buf.bytes);
+> > >   
+> > >   	ret = regmap_bulk_write(st->regmap, AD4062_REG_MON_VAL,
+> > >   				&st->buf.be16, sizeof(st->buf.be16));
+> > >   	if (ret)
+> > >   		return ret;
+> > >   
+> > >   	/* Enable scale if gain is not equal to one */
+> > >   	return regmap_update_bits(st->regmap, AD4062_REG_ADC_CONFIG,
+> > >   				  AD4062_REG_ADC_CONFIG_SCALE_EN_MSK,
+> > >   				  FIELD_PREP(AD4062_REG_ADC_CONFIG_SCALE_EN_MSK,
+> > >   					     !(gain_int == 1 && gain_frac == 0)));
+> > >   }
 > > > 
-> > > 4 * USEC_PER_MSEC, also would be good to add a comment for this long delay.
-> > > 
-> > Will add
-> > 	/* Wait device functional blocks to power up */
-> > Based on hardware tests, I can drop to 2 * USEC_PER_MSEC, lower than
-> > that the device is not ready to switch to acquisition mode for
-> > conversions.
-> 
-> Good!
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
-Best regards,
-Jorge
+> > > To provide the enough resolution to compute every step (e.g., 0xFFFF and
+> > > 0xFFFE) with the arbitrary user input.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
