@@ -1,131 +1,119 @@
-Return-Path: <linux-gpio+bounces-29173-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29174-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id A11A8C91134
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Nov 2025 08:54:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C7E6C9126B
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Nov 2025 09:31:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2D64334A7DA
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Nov 2025 07:54:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 345403ACC62
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Nov 2025 08:30:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B068C2DC33D;
-	Fri, 28 Nov 2025 07:54:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 736602DF14B;
+	Fri, 28 Nov 2025 08:30:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="isVkdmf5"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="CAyJb1jD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54BEBC2EA;
-	Fri, 28 Nov 2025 07:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24162D8365
+	for <linux-gpio@vger.kernel.org>; Fri, 28 Nov 2025 08:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764316465; cv=none; b=AANtgSbsGN65b3HR1B0+TQv7rPQ9BnNh9ryD3iFCNjCuIQZMIBuevZuGC60GnVfqHAll5x/S8gJ4Y5NgXKlW9l7mfTI2IgQn0shSgr4dBFrYBD5OU7PRq0ZarJBk9/GhjwZ+lr47CzV1kq0KlZVa8T6TmrKeDN1pLZVpkIpN83Y=
+	t=1764318651; cv=none; b=unbbjFLGbCXzP7J8jWAtxmwSDCuJe1zC8odXGExmhC6pZQ1j2oIGkSlF5CR1jyE41CGXAH5RJmTJj+VRsnki5+VL+p8gyvhZmc6xxVGY+mF6kAVcisJ/njJzabIHzARx3Q2NjxPFQyLfI1fM1LGaxeBZ+TtiLa+oZoA7htgVOf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764316465; c=relaxed/simple;
-	bh=pzM/UFQ4rAPUbnfeQ3KKSzYXL0ONVwdYXU3p3ni+ExM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mxzjgmSeJD9gA2ldCuhq/mHqkeRGIyGFnWT66XqaBusHQF6fiObUZ23JNEvPWGpHZD/JdJR6X5ova9DWCXAMkUTYHxtDObtp2+vy+kdY48B3NeHFPx4GbsbR6OtKDj86Q5BfXcUM3cjZAfhSLAEfuK7QH7Rj2WvutlI6ry+HxP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=isVkdmf5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74EBFC4CEF1;
-	Fri, 28 Nov 2025 07:54:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764316464;
-	bh=pzM/UFQ4rAPUbnfeQ3KKSzYXL0ONVwdYXU3p3ni+ExM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=isVkdmf5YSDI+n9xv6QfyTplWqOOp9SD0slPBuiCPaPZQDi8Q37Z00qbtnDjpcXzA
-	 OBlakAObQ2HR/+RLeoQtkoeJSFknlOCG8THuqjrof9Hr4jK5nEYTtxZNRDUM4mVrFc
-	 a5Fb6k00QoURkZk2mjrZRHgUzGxqlXNtbjtwBKZ3dvxq44ce1nXSxo+CJ620zGnldn
-	 1CCzlWSJ6qPV6T4lcjzNAT2kdChWtZppXKxywWVYsctbF93tmP/DaccMss7m1hucmG
-	 CTEHl0iSXoyMQxbt4ir+gMPdEHPjPWnv7ZnlRyGTBae9OUllInFtMRwWMhxlj9NuGR
-	 i/7LuX8guOgeQ==
-Message-ID: <e40e877a-130c-45f5-ad73-560704592815@kernel.org>
-Date: Fri, 28 Nov 2025 08:54:18 +0100
+	s=arc-20240116; t=1764318651; c=relaxed/simple;
+	bh=n2nkl1uiMi8WryiOUahKpUm1XuAqtybGtqVTGjKJh2g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JPIC9q+lOp1nUJA1G/KiLIP4MLT3ENc8Vv0c2+zYmhus5DotL8Lg1P70zzTdsq5C10W/t1Fz7HgsjH7CEWvwz0zFHsI9RtY+b+cRdLH7K7gzzmWJI7sciEyIV1gUVGMo1BTT6xmqGfc0ePrz5XUVfhViTvjUGIp3O6rZAZO89Vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=CAyJb1jD; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-477a1c28778so17345995e9.3
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Nov 2025 00:30:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1764318647; x=1764923447; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lRXMfEy75y/NxZDGA8xlo16Pf4zHuQdg9p+UpXCn/UM=;
+        b=CAyJb1jDF8F/erHFdeTMBWEe2CZupZ++sz3rLBWP6qiU8T2mXmcE2laYi7Lh2qRliQ
+         38HW1RjZDONMdx1X0TBl0isygznRk+Kdxb6kJpMolKRnk9kKtBl1BCclNVpRVFzsKAPP
+         zwkCXEQ3uGnlkWhb4j8UK24nMhWXgwsVNEAjsjlQ3dXYUNWvDk4qQSEoJxjftFwf/ytO
+         opj6LI/qYSPgg9ZM5wichv8Go7NReHTGoaQK9+uh4c1hHQka501d/TlLoJJ4maN3HqYD
+         uRPVewSQXWV3qucOXEaSXqeLOy8MYUuFfszt5BCGgiNgSxlUvXNQVt8/g2d9C9V6Q2+z
+         kSTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764318647; x=1764923447;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=lRXMfEy75y/NxZDGA8xlo16Pf4zHuQdg9p+UpXCn/UM=;
+        b=Yh4VfRnhNtOGA6X/y3Lk85TtohOJaGFRFHfVQKRuTLuDHNUzo6CHqdWhjQ0oBC4bO+
+         Zz5t+L8Uc9JEMccTH85GK77ACojMtNwiaJWJZqlCzILiceEQ8kE0IWFBkdPurSQxsFyw
+         KYEl1wqEHLO7VlbAsPieN04Qj9houBRTP63oj30evEjSToA3F1Omcfh6ykgoXr9P7G5w
+         j4bjoZlQXUh3RJGsppsBq24cIjfGsjcsdvlZWV98zmA8ew1498ML/A8GpteNB/8fdGX4
+         zof4N6vOvbs1NPEADlOt414atJQ97jbijGI0ujyddkjmrMk8beIkDDcDr9BTMWh2emQx
+         NnCA==
+X-Forwarded-Encrypted: i=1; AJvYcCWC/X8LdA4Hiks5MAfMkMWQbLvCTTv8Hq3ZP9j2ZpdebrBIIfcFVXNCWLvuaAP/RNUObYtRot8IS5Ms@vger.kernel.org
+X-Gm-Message-State: AOJu0YypdHWvgVv6J1GWn2YK+kSPZHKbNBQRfxhNcSOlZaYlaDWXVMbS
+	YD8MCGCKXfnA4wnzt1WaJ8HAgqvAR8UqydJF9I2zRX4dbxMEigoeR0Kk7EfrkQFa07E=
+X-Gm-Gg: ASbGncvDsyiEeOb/g9avpfscSbrTEaMnf71VuP92RyqeNc/WW9avXu0uRQLqXKo66WH
+	jjZRS2C10VS5OzjDGdw3tyAn2VKvsU/witKnFFAIkWCsBFSwa3MovpHJGtTq/QzliVgE1tQwItr
+	AuxrdiGpLN/GGqwEGlnmsiieG3/VywpwBkGJZR+eAU78iZv3IV/D5r/VnmmqhMqUyU4fHwgAvB3
+	W1MRMK8E81J/+RknKSPlj0xq9Q0Qugv5qkph26xDr7KpI9Sc3FTono7tyhi2nFcgS/OOqjs6ppI
+	le4jx5XyiNnvHWvAxVz5/QB5dlkO9TMVb39HVicf7Y6fIKaZ4EcNlX7SGKTnn/Dv4UkOioRq0tf
+	fk/3H1EYIR66Zt52Md5/jItO0ySxkd1fnWp6d6y3OBtPZQfBZAjpmfXOQg5xpXwdC5YMRjKVR65
+	gtVMJL8g==
+X-Google-Smtp-Source: AGHT+IEoaQCVNZw5KbNKZLUOeq9BuPWnM5aIJgZWaTb1cgmIfIfXGKoF0aQ35sFU6bDZbLzlWWR69A==
+X-Received: by 2002:a05:600c:c8f:b0:471:989:9d7b with SMTP id 5b1f17b1804b1-47904b160e3mr129248755e9.21.1764318647066;
+        Fri, 28 Nov 2025 00:30:47 -0800 (PST)
+Received: from brgl-uxlite ([2a01:cb1d:dc:7e00:f3c6:aa54:79d2:8979])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4790adc8bc7sm149216315e9.1.2025.11.28.00.30.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Nov 2025 00:30:46 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Cosmin Tanislav <demonsingur@gmail.com>
+Subject: Re: [PATCH 0/2] gpio: shared: fix some corner cases
+Date: Fri, 28 Nov 2025 09:30:42 +0100
+Message-ID: <176431863833.9553.12908193715947360584.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251126-gpio-shared-fixes-v1-0-18309c0e87b5@linaro.org>
+References: <20251126-gpio-shared-fixes-v1-0-18309c0e87b5@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] mcb: Add missing modpost build support
-To: Andy Shevchenko <andy.shevchenko@gmail.com>,
- Jose Javier Rodriguez Barbarin <dev-josejavier.rodriguez@duagon.com>
-Cc: linus.walleij@linaro.org, brgl@kernel.org, jic23@kernel.org,
- dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
- gregkh@linuxfoundation.org, morbidrsa@gmail.com, jth@kernel.org,
- wim@linux-watchdog.org, linux@roeck-us.net, nathan@kernel.org,
- nsc@kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-serial@vger.kernel.org,
- linux-watchdog@vger.kernel.org, linux-kbuild@vger.kernel.org,
- Jorge Sanjuan Garcia <dev-jorge.sanjuangarcia@duagon.com>
-References: <20251127155452.42660-1-dev-josejavier.rodriguez@duagon.com>
- <20251127155452.42660-2-dev-josejavier.rodriguez@duagon.com>
- <CAHp75VeNtYJPmXtDfWEN3a184YXTKNems657UDeBKp4xpOGovQ@mail.gmail.com>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <CAHp75VeNtYJPmXtDfWEN3a184YXTKNems657UDeBKp4xpOGovQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 27. 11. 25, 17:10, Andy Shevchenko wrote:
->>   static const struct devtable devtable[] = {
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+
+On Wed, 26 Nov 2025 17:49:04 +0100, Bartosz Golaszewski wrote:
+> Here are fixes for two more bugs reported in linux-next.
 > 
->>          {"cpu", SIZE_cpu_feature, do_cpu_entry},
->>          {"mei", SIZE_mei_cl_device_id, do_mei_entry},
->>          {"rapidio", SIZE_rio_device_id, do_rio_entry},
->> +       {"mcb", SIZE_mcb_device_id, do_mcb_entry},
 > 
-> Perhaps squeeze it to be more ordered (yes, I know that the table is
-> not so ordered, but given context suggests to put it after "mei").
 
-s/after/before/ :)
+Applied, thanks!
 
+[1/2] gpio: shared: ignore special __symbols__ node when traversing device tree
+      https://git.kernel.org/brgl/linux/c/cfab6dc0700c3b9120dab726fc184c3b4500cc5b
+[2/2] gpio: shared: ignore GPIO hogs when traversing the device tree
+      https://git.kernel.org/brgl/linux/c/114e594e6cb791ce7c839ccfbe153ecfa3e7abce
+
+Best regards,
 -- 
-js
-suse labs
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
