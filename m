@@ -1,277 +1,124 @@
-Return-Path: <linux-gpio+bounces-29187-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29188-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BE8FC93035
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Nov 2025 20:26:07 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7BDCC93DB9
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Nov 2025 13:45:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id F1DB14E20F5
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Nov 2025 19:26:05 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0E397341D76
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Nov 2025 12:45:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74141330D50;
-	Fri, 28 Nov 2025 19:25:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10D7D30E837;
+	Sat, 29 Nov 2025 12:45:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NNEe8VWr"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KpLK2to1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8813B2080C8;
-	Fri, 28 Nov 2025 19:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBEA15B0EC
+	for <linux-gpio@vger.kernel.org>; Sat, 29 Nov 2025 12:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764357959; cv=none; b=UgkEbjMDgDLm0nfxhe7QRv+5xWs9TWiGqaoegIbapEJRC4qQaEkXsm50bYq6/GVNU/82dsE2h/BZB9bC0uUrfVqeZDN8uviE2VllG2k0RKOrMtK5qmv1HaqpDMql18sEPj1I//W6rIiPVlOIPafMqXI+CRdWpaIvJvPLsK/SJFY=
+	t=1764420331; cv=none; b=dMK5b9LihVglBkn3DgeYQuLV47SdDXr8gipV3UZd8y7WkrSmkluHs/h5RRxjkKC2jfzUyGExOFNB/PkhC4ACw5YOPeJ5cD3f76GC7vR9fr7aUIIRbZIHk8rKXHla56KM0zYDWrpt2C0FWBADtPV6SRrxXsbGHWzufCv9sm2jfmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764357959; c=relaxed/simple;
-	bh=ZgJg19JgVapqtEPwhxxKRypueCcS657c0JxAgQtWkMk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ud8W+QLTnEEPhNEUcjylXtKL/nOZZBC5sdcsOxrXzNaV/38Di9dl3V4qRtUwcNgiB0LaHdBPFwm6NxveBjjJJgyh6ZcUH+ir9lYmeePVwb6wiMAj+ImrnmmGo1Rp+Kbri2YDigm0evysANlQ2vSSR7xxB5AYoQcVUO1uUBrgimQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NNEe8VWr; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764357958; x=1795893958;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZgJg19JgVapqtEPwhxxKRypueCcS657c0JxAgQtWkMk=;
-  b=NNEe8VWrVO7M40Ry48W+bzgwdwoJneBDaOXmp18kTfWNk/Z1GreQDtCO
-   7qFATVcNHlwxBNuwkQawtefOoJW9h9Axr6Ds5f6vhohaBLnnIm8HAu8DB
-   r05QD0Vxec/dgViut2ABgdcnElV/xDt9CfX7bd4hWYZXVOhTzELF1CO08
-   1PKUnyxS6bgFoY+bJhp9MqvkglCwhK/POnQlSEqzsHD/0AG4ZCJQ8atY/
-   4kPI3A98k2snFJySOdlZ/wCh6cS8+7RR/Q8TH3MtFlyMms855n5AUp6lF
-   Sc43+ho51yHQ2V63aSI7QQ2zd8Bda3RbDPgTMIK0Apqlmf5DCZtylPt/e
-   g==;
-X-CSE-ConnectionGUID: D7jH7Jp1QIylLMOiDbt1fg==
-X-CSE-MsgGUID: D7eRvhlHRQqnP1jkEOlTIA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11627"; a="66339621"
-X-IronPort-AV: E=Sophos;i="6.20,234,1758610800"; 
-   d="scan'208";a="66339621"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2025 11:25:57 -0800
-X-CSE-ConnectionGUID: Vn3gvOaiSiazneVBYPV21w==
-X-CSE-MsgGUID: xgpQSso1RDSsHXKA92I+Cw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,234,1758610800"; 
-   d="scan'208";a="193419743"
-Received: from dalessan-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.17])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2025 11:25:53 -0800
-Date: Fri, 28 Nov 2025 21:25:50 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Jorge Marques <gastmaier@gmail.com>
-Cc: Jorge Marques <jorge.marques@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 3/9] iio: adc: Add support for ad4062
-Message-ID: <aSn3PthKIvFAhDS6@smile.fi.intel.com>
-References: <20251124-staging-ad4062-v2-0-a375609afbb7@analog.com>
- <20251124-staging-ad4062-v2-3-a375609afbb7@analog.com>
- <aSQxiSoZcI_ol3S5@smile.fi.intel.com>
- <aslj3klmv6heyyhgltzewkdze5p4c3hlkzfbxbfnzwwgd375gv@m6iqpst5sv6b>
- <aSgSsGSUuBtMOuro@smile.fi.intel.com>
- <zryqws2h2i4duejczo2rptwhlzhile7fa7brriqh2hmtarwjxn@cr2cyzymwpav>
+	s=arc-20240116; t=1764420331; c=relaxed/simple;
+	bh=oIQOa0YkbZJTLqBcRYp6XmCfelUPKTbYCF49ctlrf5U=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NJfBApv8XaIJ7IhYurSVjc3Y1q07t2KkUnKJY4sttQH0lt5sVpz5w00QH8BDsMJOcJScjv1tuB/Z1DwLwmxNpx67F0j0hdSzW4oQk3km38CoFD93gX+KlYptDY/pTl20J9Mox5MnRewHlPEh6Sz6jFJA2ul75UPFRPBWxWS1ZaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KpLK2to1; arc=none smtp.client-ip=185.246.84.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 03C321A1DE4;
+	Sat, 29 Nov 2025 12:45:28 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id BBCF760706;
+	Sat, 29 Nov 2025 12:45:27 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 109BA11910699;
+	Sat, 29 Nov 2025 13:45:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1764420325; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=TImXxPp3fH8t3WgGQuC2IHIt10tqIWX7TcyUqtyR31I=;
+	b=KpLK2to1cF7NAB3dxoOLV/QWk7f3DOgDWnlCCQ/eWjBGe2OiLoz4MRPaxtNjJ5LhgTdO2x
+	liQWrTjoV8SzbJ0IRNAWzjSTpxuBdKdZK+nMBBo+lz6eN4ScfF10Zi8hpoNB3oNhnhPAkB
+	EBcOP1L5+m8y1BhDyM8QV2Sd1zOhoSjtmlz4x+NWF5bSJDvmY6HuADwinRYPvMGebmhy3r
+	ecHZmVrqRYz0ygRRnstaU1i/ARfGhaUjItbgMb+f1cIphEqym8E4UMuA0rRIXKXq4K6uEQ
+	20vrn9fsYJ9NCOmjJv1jyigd96ejKGwakw15qyOFOaK5wOwWkE03lUfTBtfXBQ==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Yury Norov <yury.norov@gmail.com>,  Michael Turquette
+ <mturquette@baylibre.com>,  Stephen Boyd <sboyd@kernel.org>,  Nicolas
+ Ferre <nicolas.ferre@microchip.com>,  Alexandre Belloni
+ <alexandre.belloni@bootlin.com>,  Claudiu Beznea
+ <claudiu.beznea@tuxon.dev>,  Giovanni Cabiddu
+ <giovanni.cabiddu@intel.com>,  Herbert Xu <herbert@gondor.apana.org.au>,
+  David Miller <davem@davemloft.net>,  Linus Walleij
+ <linus.walleij@linaro.org>,  Bartosz Golaszewski <brgl@bgdev.pl>,  Joel
+ Stanley <joel@jms.id.au>,  Andrew Jeffery <andrew@codeconstruct.com.au>,
+  Crt Mori <cmo@melexis.com>,  Jonathan Cameron <jic23@kernel.org>,
+  Lars-Peter Clausen <lars@metafoo.de>,  Jacky Huang
+ <ychuang3@nuvoton.com>,  Shan-Chun Hung <schung@nuvoton.com>,  Rasmus
+ Villemoes <linux@rasmusvillemoes.dk>,  Jaroslav Kysela <perex@perex.cz>,
+  Takashi Iwai <tiwai@suse.com>,  Johannes Berg
+ <johannes@sipsolutions.net>,  Jakub Kicinski <kuba@kernel.org>,  Alex
+ Elder <elder@ieee.org>,  David Laight <david.laight.linux@gmail.com>,
+  Vincent Mailhol <mailhol.vincent@wanadoo.fr>,  Jason Baron
+ <jbaron@akamai.com>,  Borislav Petkov <bp@alien8.de>,  Tony Luck
+ <tony.luck@intel.com>,  Michael Hennerich <Michael.Hennerich@analog.com>,
+  Kim Seer Paller <kimseer.paller@analog.com>,  David Lechner
+ <dlechner@baylibre.com>,  Nuno =?utf-8?Q?S=C3=A1?= <nuno.sa@analog.com>,
+  Andy Shevchenko
+ <andy@kernel.org>,  Richard Genoud <richard.genoud@bootlin.com>,  Cosmin
+ Tanislav <demonsingur@gmail.com>,  Biju Das <biju.das.jz@bp.renesas.com>,
+  Jianping Shen <Jianping.Shen@de.bosch.com>,  Nathan Chancellor
+ <nathan@kernel.org>,  Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+  Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
+ <vigneshr@ti.com>,  linux-clk@vger.kernel.org,
+  linux-arm-kernel@lists.infradead.org,  linux-renesas-soc@vger.kernel.org,
+  linux-crypto@vger.kernel.org,  linux-edac@vger.kernel.org,
+  qat-linux@intel.com,  linux-gpio@vger.kernel.org,
+  linux-aspeed@lists.ozlabs.org,  linux-iio@vger.kernel.org,
+  linux-sound@vger.kernel.org,  linux-mtd@lists.infradead.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next v6 11/26] mtd: rawnand: sunxi: #undef
+ field_{get,prep}() before local definition
+In-Reply-To: <703d7eec56074148daed4ea45b637f8a83f15305.1762435376.git.geert+renesas@glider.be>
+	(Geert Uytterhoeven's message of "Thu, 6 Nov 2025 14:33:59 +0100")
+References: <cover.1762435376.git.geert+renesas@glider.be>
+	<703d7eec56074148daed4ea45b637f8a83f15305.1762435376.git.geert+renesas@glider.be>
+User-Agent: mu4e 1.12.7; emacs 30.2
+Date: Sat, 29 Nov 2025 13:45:09 +0100
+Message-ID: <87h5udm2i2.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <zryqws2h2i4duejczo2rptwhlzhile7fa7brriqh2hmtarwjxn@cr2cyzymwpav>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Fri, Nov 28, 2025 at 07:50:02PM +0100, Jorge Marques wrote:
-> On Thu, Nov 27, 2025 at 10:58:24AM +0200, Andy Shevchenko wrote:
-> > On Wed, Nov 26, 2025 at 12:40:00PM +0100, Jorge Marques wrote:
-> > > On Mon, Nov 24, 2025 at 12:20:57PM +0200, Andy Shevchenko wrote:
-> > > > On Mon, Nov 24, 2025 at 10:18:02AM +0100, Jorge Marques wrote:
+Hello,
 
-Please, remove the context you are agree with or which has no need
-to be answered, it helps to parse and reply.
+On 06/11/2025 at 14:33:59 +01, Geert Uytterhoeven <geert+renesas@glider.be>=
+ wrote:
 
-...
+> Prepare for the advent of globally available common field_get() and
+> field_prep() macros by undefining the symbols before defining local
+> variants.  This prevents redefinition warnings from the C preprocessor
+> when introducing the common macros later.
+>
+> Suggested-by: Yury Norov <yury.norov@gmail.com>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
 
-> > > > > +static int ad4062_calc_sampling_frequency(int fosc, unsigned int n_avg)
-> > > > > +{
-> > > > > +	/* See datasheet page 31 */
-> > > > > +	u64 duration = div_u64((u64)(n_avg - 1) * NSEC_PER_SEC, fosc) + AD4062_TCONV_NS;
-> > > > > +
-> > > > > +	return DIV_ROUND_UP_ULL(NSEC_PER_SEC, duration);
-> > > > 
-> > > > Why u64?
-> > > > 
-> > > > The DIV_ROUND_UP_ULL() seems an overkill here. Or do you expect duration be
-> > > > more than 4 billions?
-> > > > 
-> > > This is necessary since at fosc 111 Hz and avg 4096 it does take longer
-> > > than 4 seconds, even though I do timeout after 1 seconds in the raw
-> > > acquisition.
-> > 
-> > Values above NSEC_PER_SEC+1 do not make sense (it will return 0),
-> > and that fits u32. Can you refactor to avoid 64-bit arithmetics?
-> 
-> Ok, any frequency lower than 1 Hz does not make sense.
+Finally applied to nand/next, will be part of the next merge window.
 
-Depends on the cases, we have sub-Hz sensors or some other stuff.
-So, "...does not make sense in _this_ case." That's what I implied.
-
->   static int ad4062_calc_sampling_frequency(int fosc, unsigned int oversamp_ratio)
-
-Shouldn't fosc be unsigned?
-
->   {
->   	/* See datasheet page 31 */
-
-It's fine, but better to add a formula here or more information about
-the calculations done in the function.
-
->   	u32 period = NSEC_PER_SEC / fosc;
-
-period_ns ?
-
-(We usually add units to this kind of variables for better understanding
- of the calculations)
-
->   	u32 n_avg = BIT(oversamp_ratio) - 1;
->   
->   	/* Result is less than 1 Hz */
->   	if (n_avg >= fosc)
->   		return 1;
-
-+ blank line.
-
->   	return NSEC_PER_SEC / (n_avg * period + AD4062_TCONV_NS);
->   }
-
-LGTM, thanks!
-
-> > > > > +}
-
-...
-
-> > >   static int ad4062_set_chan_calibscale(struct ad4062_state *st, int gain_int,
-> > >   				      int gain_frac)
-> > >   {
-> > >   	u32 gain;
-> > >   	int ret;
-> > >   
-> > >   	if (gain_int < 0 || gain_frac < 0)
-> > >   		return -EINVAL;
-> > >   
-> > >   	gain = gain_int * MICRO + gain_frac;
-> > >   	if (gain > 1999970)
-> > 
-> > But this magic should be changed to what you explained to me
-> > (as in 0xffff/0x8000 with the proper precision, and this
-> >  can be done in 32-bit space).
-> > 
-> > Or even better
-> > 
-> > 	if (gain_int < 0 || gain_int > 1)
-> > 		return -EINVAL;
-> > 
-> > 	if (gain_int == 1 && gain_frac > 0x7fff) // did I get this right?
-> > 		return -EINVAL;
-
-> gain_frac would be 999999 max, or 999970 for the limit that fits in the
-> register after the math. I think > 1.999.970 is self explanatory.
-
-On the place of unprepared reader this is a complete magic number without
-scale, without understanding where it came from, etc.
-
-So, can you define it as a derivative from the other constants and with
-a comment perhaps?
-
-> > >   		return -EINVAL;
-> > >   
-> > >   	put_unaligned_be16(DIV_ROUND_CLOSEST_ULL((u64)gain * AD4062_MON_VAL_MIDDLE_POINT,
-> > >   						 MICRO),
-> > 
-> > ...with temporary variable at minimum.
-> > 
-> > But again, I still don't see the need for 64-bit space.
-> 
-> Well, by dividing mon_val and micro values by a common divisor the
-> operation fit in 32-bits:
-> 
->   static int ad4062_set_chan_calibscale(struct ad4062_state *st, int gain_int,
->                                         int gain_frac)
->   {
-
-	/* Divide numerator and denumerator by known great common divider */
-
->           const u32 mon_val = AD4062_MON_VAL_MIDDLE_POINT / 64;
->           const u32 micro = MICRO / 64;
-
-Yep, I suggested the same in another patch under review (not yours) for
-the similar cases where we definitely may easily avoid overflow.
-
-Alternatively you can use gcd().
-
->           const u32 gain = gain_int * MICRO + gain_frac;
->           int ret;
-> 
->           if (gain_int < 0 || gain_frac < 0)
->                   return -EINVAL;
-> 
->           if (gain > 1999970)
->                   return -EINVAL;
-> 
->           put_unaligned_be16(DIV_ROUND_CLOSEST(gain * mon_val, micro), st->buf.bytes);
-> 
->           ret = regmap_bulk_write(st->regmap, AD4062_REG_MON_VAL,
->                                   &st->buf.be16, sizeof(st->buf.be16));
->           if (ret)
->                   return ret;
-> 
->           /* Enable scale if gain is not equal to one */
->           return regmap_update_bits(st->regmap, AD4062_REG_ADC_CONFIG,
->                                     AD4062_REG_ADC_CONFIG_SCALE_EN_MSK,
->                                     FIELD_PREP(AD4062_REG_ADC_CONFIG_SCALE_EN_MSK,
->                                                !(gain_int == 1 && gain_frac == 0)));
-
-Btw, I think you can move this check up and save in a temporary variable which
-might affect the binary size of the compiled object as accesses to the gain_int
-and gain_frac will be grouped in the same place with potential of the reusing
-the CPU register(s)..
-
->   }
-
-> > >   			   st->buf.bytes);
-> > >   
-> > >   	ret = regmap_bulk_write(st->regmap, AD4062_REG_MON_VAL,
-> > >   				&st->buf.be16, sizeof(st->buf.be16));
-> > >   	if (ret)
-> > >   		return ret;
-> > >   
-> > >   	/* Enable scale if gain is not equal to one */
-> > >   	return regmap_update_bits(st->regmap, AD4062_REG_ADC_CONFIG,
-> > >   				  AD4062_REG_ADC_CONFIG_SCALE_EN_MSK,
-> > >   				  FIELD_PREP(AD4062_REG_ADC_CONFIG_SCALE_EN_MSK,
-> > >   					     !(gain_int == 1 && gain_frac == 0)));
-> > >   }
-> > > 
-> > > To provide the enough resolution to compute every step (e.g., 0xFFFF and
-> > > 0xFFFE) with the arbitrary user input.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks,
+Miqu=C3=A8l
 
