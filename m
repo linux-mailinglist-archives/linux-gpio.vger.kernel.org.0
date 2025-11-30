@@ -1,158 +1,346 @@
-Return-Path: <linux-gpio+bounces-29189-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29190-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E901CC94F88
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 Nov 2025 13:39:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C5B2C9522D
+	for <lists+linux-gpio@lfdr.de>; Sun, 30 Nov 2025 17:15:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A6A563A1E5F
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 Nov 2025 12:39:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D5243A2D3E
+	for <lists+linux-gpio@lfdr.de>; Sun, 30 Nov 2025 16:14:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DFC9229B2A;
-	Sun, 30 Nov 2025 12:38:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56F032BE7D9;
+	Sun, 30 Nov 2025 16:14:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jHqRZglS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e1JJWp4Q"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C364FAD5A
-	for <linux-gpio@vger.kernel.org>; Sun, 30 Nov 2025 12:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F663B2A0;
+	Sun, 30 Nov 2025 16:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764506337; cv=none; b=qDpdk0u7CkUdmKjdIw7xqHZMTts1MKIwUkv6lW/BMBodbEO4Y87rqcWANHiDqynjBnDDKeFXLpO0wIV9DADLl92Yvp2Ijaf+9EHnv8PgW10ocpi/xiN8WUrV827LYKOntdKkdf20ESb1CyHA1TinTmV1edoAQ1xaJwTxd1sQA6s=
+	t=1764519294; cv=none; b=kXRCe3ghUoN8ACSCKnOwDbyNvkLC/lhGIk3B5kAzRu6NTtPV+6aI7BXNcrbWv6n5F7UiOk5N5rSFvlYTphqgtoYN3Ubzgz5ZQxOeu8j6HJt/E6A8X5rEvGCgdzXoCF1iZftUFAC4zBEbB2JjcyF2cdnACMEQZo1mbbzjdIFT7vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764506337; c=relaxed/simple;
-	bh=a7ycd8UzP4cWukTXcqyaBlT1pH5VDCc+mhBatCEomS4=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=e+OVp+Rsw2HiurSpFncr/suahz1P5NbtTAkuAVgV+RtdD5zs7mtgpH13rLI3+JVLtai/bwVj5r65PUCzWuMoW99/W3N5Gqz3c4YKmTkUFTNbnhCzcnrM5zmlfltoilOLRa220exH+OIdnNfe9tXYX/TJ9SEEaGvF/cpfOQAaxa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jHqRZglS; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764506336; x=1796042336;
-  h=date:from:to:cc:subject:message-id;
-  bh=a7ycd8UzP4cWukTXcqyaBlT1pH5VDCc+mhBatCEomS4=;
-  b=jHqRZglSt4/tA8CLLe0hJ5/Jw3KedWewENk6d2mb0hrQy6NKtUVkOVUM
-   Wk4l6N7BIQgyNGbkgRhCHH1k0Nw/iU1qWmGOgkLmCt4P7yaPyzohbioBR
-   nrf0PhVb9PoiFVLDXTEYxmsQMb3ziEJWrZGQ33+tvkv48hjA9IXoXltTW
-   9nqV3mqydCdz9SIf3Sk9AdtU6H8H5RDxPzjkZfmRZun9OeEoob0jTXBIu
-   LDz/IZ8Oeqo5jtG+kr6LOAHjEMbBfAioz/IMIsWrBl+MNV0Mm+mJSw5WC
-   sK+YNRSUlMGIuOTV0rh8G+XME4st9cbA543UmAI3vWyvHBGTGToyF5R9E
-   w==;
-X-CSE-ConnectionGUID: 1Lm77dJkTqSXkhLHNaCwtQ==
-X-CSE-MsgGUID: DJqgpJdDTSyXo4HrIKYL+Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11628"; a="66486536"
-X-IronPort-AV: E=Sophos;i="6.20,238,1758610800"; 
-   d="scan'208";a="66486536"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2025 04:38:55 -0800
-X-CSE-ConnectionGUID: ZciCjRoBQhOuY+Z1EqK2uw==
-X-CSE-MsgGUID: 7P90B7NMSnOOify1/TJJfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,238,1758610800"; 
-   d="scan'208";a="224539428"
-Received: from lkp-server01.sh.intel.com (HELO 4664bbef4914) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 30 Nov 2025 04:38:54 -0800
-Received: from kbuild by 4664bbef4914 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vPghX-000000007xR-2pxV;
-	Sun, 30 Nov 2025 12:38:51 +0000
-Date: Sun, 30 Nov 2025 20:38:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- dae9750105cf93ac1e156ef91f4beeb53bd64777
-Message-ID: <202511302021.xbAhpPot-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1764519294; c=relaxed/simple;
+	bh=Mx8Q61Ut2NMjVGiek8L2Ppr/wcjqwTTDVTB8wQMifek=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=MfIdxjpCqrDXMAbiK4/fHea1cZyir7Us07upTIfywfMLpZdB1yEICUTnR0l2Gkuc7tYccYM5/HYfeSbkmoUil7NDeVVpJAyF7uijkGxxiq5rDUdOIt+lH5J83I93NVRgMy/4UHGwHd6EwDO/64fBu1lvoMOmgdqXJ7hTCdrZtLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e1JJWp4Q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA5FDC4CEF8;
+	Sun, 30 Nov 2025 16:14:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764519293;
+	bh=Mx8Q61Ut2NMjVGiek8L2Ppr/wcjqwTTDVTB8wQMifek=;
+	h=From:Date:Subject:To:Cc:From;
+	b=e1JJWp4QrGccrc9V/8CPx9kIxOE0eDSW0VikgrfBKALo45Hv5bKaQcFBYo80BvyyF
+	 RcIipYkVBQmp1oqMdF5JrurJyavBM0o8ddQ1Fk1044zO+uXpzsdq52KkLhUXTDYY69
+	 sBNQCXaiuaSa9RVYxWRJx2ixMCqYV1pfs6tpzL5ByXx146nxaPuadlQqr516VMEukJ
+	 4N8TjcGEU8jbkRPlyuKzUUJyOkImVGaCPh0v5gV+Bfvp5tkfVvUUA+2BgqloISqqNN
+	 ibusWVDC+dhr++ThRfbFHW37ZhBR7kMc5qXA9xqIBWpKkYUYgnXuUHJEsRfa407ywq
+	 PGC7PO0xcVTcA==
+From: Linus Walleij <linusw@kernel.org>
+Date: Sun, 30 Nov 2025 17:14:45 +0100
+Subject: [PATCH] MAINTAINERS: Change Linus Walleij mail address
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20251130-linusw-kernelorg-email-v1-1-bcdbff7b896c@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x3MwQqDMAyA4VeRnA0kdUXmqwwPorELq3WkqAPx3
+ S07fof/PyGLqWToqhNMds26pgKuKxjfQwqCOhWDI+eZG8KoacsHfsSSxNUCyjJoRGqfzM5TS/M
+ DSvw1mfX3H7/667oBGLNjXGgAAAA=
+X-Change-ID: 20251130-linusw-kernelorg-email-0791125070f4
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ linux-iio@vger.kernel.org, linux-input@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+ Linus Walleij <linusw@kernel.org>
+X-Mailer: b4 0.14.3
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: dae9750105cf93ac1e156ef91f4beeb53bd64777  gpio: loongson: Switch 2K2000/3000 GPIO to BYTE_CTRL_MODE
+I will be using my kernel.org mail address going forward.
 
-elapsed time: 2884m
+There is no point in splitting this MAINTAINERS patch up
+per subsystem, I will just include it with the rest of my
+patches to pin control in the next merge window.
 
-configs tested: 65
-configs skipped: 1
+Signed-off-by: Linus Walleij <linusw@kernel.org>
+---
+ MAINTAINERS | 58 +++++++++++++++++++++++++++++-----------------------------
+ 1 file changed, 29 insertions(+), 29 deletions(-)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 181a58ec4a8d..13f61acdc8f7 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -195,7 +195,7 @@ F:	drivers/pinctrl/pinctrl-upboard.c
+ F:	include/linux/mfd/upboard-fpga.h
+ 
+ AB8500 BATTERY AND CHARGER DRIVERS
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ F:	Documentation/devicetree/bindings/power/supply/*ab8500*
+ F:	drivers/power/supply/*ab8500*
+ 
+@@ -2045,7 +2045,7 @@ F:	Documentation/devicetree/bindings/display/arm,hdlcd.yaml
+ F:	drivers/gpu/drm/arm/hdlcd_*
+ 
+ ARM INTEGRATOR, VERSATILE AND REALVIEW SUPPORT
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/arm/arm,integrator.yaml
+@@ -2203,7 +2203,7 @@ F:	Documentation/devicetree/bindings/memory-controllers/arm,pl35x-smc.yaml
+ F:	drivers/memory/pl353-smc.c
+ 
+ ARM PRIMECELL SSP PL022 SPI DRIVER
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/spi/spi-pl022.yaml
+@@ -2216,7 +2216,7 @@ F:	drivers/tty/serial/amba-pl01*.c
+ F:	include/linux/amba/serial.h
+ 
+ ARM PRIMECELL VIC PL190/PL192 DRIVER
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/interrupt-controller/arm,vic.yaml
+@@ -2633,7 +2633,7 @@ F:	tools/perf/util/cs-etm.*
+ 
+ ARM/CORTINA SYSTEMS GEMINI ARM ARCHITECTURE
+ M:	Hans Ulli Kroll <ulli.kroll@googlemail.com>
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+ T:	git https://github.com/ulli-kroll/linux.git
+@@ -3035,7 +3035,7 @@ F:	include/dt-bindings/clock/mstar-*
+ F:	include/dt-bindings/gpio/msc313-gpio.h
+ 
+ ARM/NOMADIK/Ux500 ARCHITECTURES
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git
+@@ -3732,7 +3732,7 @@ F:	Documentation/devicetree/bindings/media/i2c/asahi-kasei,ak7375.yaml
+ F:	drivers/media/i2c/ak7375.c
+ 
+ ASAHI KASEI AK8974 DRIVER
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ L:	linux-iio@vger.kernel.org
+ S:	Supported
+ W:	http://www.akm.com/
+@@ -6758,7 +6758,7 @@ S:	Maintained
+ F:	drivers/pinctrl/pinctrl-cy8c95x0.c
+ 
+ CYPRESS CY8CTMA140 TOUCHSCREEN DRIVER
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ L:	linux-input@vger.kernel.org
+ S:	Maintained
+ F:	drivers/input/touchscreen/cy8ctma140.c
+@@ -6778,13 +6778,13 @@ Q:	http://patchwork.linuxtv.org/project/linux-media/list/
+ F:	drivers/media/common/cypress_firmware*
+ 
+ CYTTSP TOUCHSCREEN DRIVER
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ L:	linux-input@vger.kernel.org
+ S:	Maintained
+ F:	drivers/input/touchscreen/cyttsp*
+ 
+ D-LINK DIR-685 TOUCHKEYS DRIVER
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ L:	linux-input@vger.kernel.org
+ S:	Supported
+ F:	drivers/input/keyboard/dlink-dir685-touchkeys.c
+@@ -7653,13 +7653,13 @@ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+ F:	drivers/gpu/drm/tiny/appletbdrm.c
+ 
+ DRM DRIVER FOR ARM PL111 CLCD
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ S:	Maintained
+ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+ F:	drivers/gpu/drm/pl111/
+ 
+ DRM DRIVER FOR ARM VERSATILE TFT PANELS
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ S:	Maintained
+ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+ F:	Documentation/devicetree/bindings/display/panel/arm,versatile-tft-panel.yaml
+@@ -7709,7 +7709,7 @@ F:	Documentation/devicetree/bindings/display/panel/ebbg,ft8719.yaml
+ F:	drivers/gpu/drm/panel/panel-ebbg-ft8719.c
+ 
+ DRM DRIVER FOR FARADAY TVE200 TV ENCODER
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ S:	Maintained
+ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+ F:	drivers/gpu/drm/tve200/
+@@ -7903,14 +7903,14 @@ F:	include/dt-bindings/clock/qcom,dsi-phy-28nm.h
+ F:	include/uapi/drm/msm_drm.h
+ 
+ DRM DRIVER FOR NOVATEK NT35510 PANELS
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ S:	Maintained
+ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+ F:	Documentation/devicetree/bindings/display/panel/novatek,nt35510.yaml
+ F:	drivers/gpu/drm/panel/panel-novatek-nt35510.c
+ 
+ DRM DRIVER FOR NOVATEK NT35560 PANELS
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ S:	Maintained
+ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+ F:	Documentation/devicetree/bindings/display/panel/sony,acx424akp.yaml
+@@ -8028,7 +8028,7 @@ F:	Documentation/devicetree/bindings/display/panel/raydium,rm67191.yaml
+ F:	drivers/gpu/drm/panel/panel-raydium-rm67191.c
+ 
+ DRM DRIVER FOR SAMSUNG DB7430 PANELS
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ S:	Maintained
+ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+ F:	Documentation/devicetree/bindings/display/panel/samsung,lms397kf04.yaml
+@@ -8112,7 +8112,7 @@ F:	Documentation/devicetree/bindings/display/solomon,ssd13*.yaml
+ F:	drivers/gpu/drm/solomon/ssd130x*
+ 
+ DRM DRIVER FOR ST-ERICSSON MCDE
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ S:	Maintained
+ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+ F:	Documentation/devicetree/bindings/display/ste,mcde.yaml
+@@ -8144,7 +8144,7 @@ F:	Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+ F:	drivers/gpu/drm/bridge/ti-sn65dsi86.c
+ 
+ DRM DRIVER FOR TPO TPG110 PANELS
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ S:	Maintained
+ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+ F:	Documentation/devicetree/bindings/display/panel/tpo,tpg110.yaml
+@@ -8188,7 +8188,7 @@ F:	drivers/gpu/drm/vmwgfx/
+ F:	include/uapi/drm/vmwgfx_drm.h
+ 
+ DRM DRIVER FOR WIDECHIPS WS2401 PANELS
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ S:	Maintained
+ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+ F:	Documentation/devicetree/bindings/display/panel/samsung,lms380kf01.yaml
+@@ -9482,7 +9482,7 @@ F:	include/linux/fanotify.h
+ F:	include/uapi/linux/fanotify.h
+ 
+ FARADAY FOTG210 USB2 DUAL-ROLE CONTROLLER
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ L:	linux-usb@vger.kernel.org
+ S:	Maintained
+ F:	drivers/usb/fotg210/
+@@ -10669,7 +10669,7 @@ F:	drivers/gpio/gpio-sloppy-logic-analyzer.c
+ F:	tools/gpio/gpio-sloppy-logic-analyzer.sh
+ 
+ GPIO SUBSYSTEM
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ M:	Bartosz Golaszewski <brgl@bgdev.pl>
+ L:	linux-gpio@vger.kernel.org
+ S:	Maintained
+@@ -13033,7 +13033,7 @@ F:	Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
+ F:	drivers/iio/imu/inv_icm42600/
+ 
+ INVENSENSE MPU-3050 GYROSCOPE DRIVER
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ L:	linux-iio@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.yaml
+@@ -13948,7 +13948,7 @@ F:	drivers/auxdisplay/ks0108.c
+ F:	include/linux/ks0108.h
+ 
+ KTD253 BACKLIGHT DRIVER
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/leds/backlight/kinetic,ktd253.yaml
+ F:	drivers/video/backlight/ktd253-backlight.c
+@@ -14159,7 +14159,7 @@ F:	drivers/ata/pata_arasan_cf.c
+ F:	include/linux/pata_arasan_cf_data.h
+ 
+ LIBATA PATA FARADAY FTIDE010 AND GEMINI SATA BRIDGE DRIVERS
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ L:	linux-ide@vger.kernel.org
+ S:	Maintained
+ F:	drivers/ata/pata_ftide010.c
+@@ -19663,7 +19663,7 @@ F:	Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+ F:	drivers/pci/controller/dwc/*imx6*
+ 
+ PCI DRIVER FOR INTEL IXP4XX
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/pci/intel,ixp4xx-pci.yaml
+ F:	drivers/pci/controller/pci-ixp4xx.c
+@@ -19774,7 +19774,7 @@ F:	drivers/pci/controller/cadence/pci-j721e.c
+ F:	drivers/pci/controller/dwc/pci-dra7xx.c
+ 
+ PCI DRIVER FOR V3 SEMICONDUCTOR V360EPC
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ L:	linux-pci@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/pci/v3,v360epc-pci.yaml
+@@ -20219,7 +20219,7 @@ K:	(?i)clone3
+ K:	\b(clone_args|kernel_clone_args)\b
+ 
+ PIN CONTROL SUBSYSTEM
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ L:	linux-gpio@vger.kernel.org
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+@@ -21631,7 +21631,7 @@ F:	Documentation/devicetree/bindings/watchdog/realtek,otto-wdt.yaml
+ F:	drivers/watchdog/realtek_otto_wdt.c
+ 
+ REALTEK RTL83xx SMI DSA ROUTER CHIPS
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ M:	Alvin Šipraga <alsi@bang-olufsen.dk>
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/net/dsa/realtek.yaml
+@@ -23384,7 +23384,7 @@ S:	Supported
+ F:	net/smc/
+ 
+ SHARP GP2AP002A00F/GP2AP002S00F SENSOR DRIVER
+-M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Linus Walleij <linusw@kernel.org>
+ L:	linux-iio@vger.kernel.org
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
 
-tested configs:
-alpha                   allnoconfig    gcc-15.1.0
-alpha                     defconfig    gcc-15.1.0
-arc                     allnoconfig    gcc-15.1.0
-arc                       defconfig    gcc-15.1.0
-arc         randconfig-001-20251129    gcc-8.5.0
-arc         randconfig-002-20251129    gcc-8.5.0
-arm                     allnoconfig    clang-22
-arm                       defconfig    clang-22
-arm         randconfig-001-20251129    clang-20
-arm         randconfig-002-20251129    gcc-10.5.0
-arm         randconfig-003-20251129    gcc-13.4.0
-arm         randconfig-004-20251129    gcc-8.5.0
-arm64                   allnoconfig    gcc-15.1.0
-arm64                     defconfig    gcc-15.1.0
-csky                   allmodconfig    gcc-15.1.0
-csky                    allnoconfig    gcc-15.1.0
-csky                      defconfig    gcc-15.1.0
-hexagon                 allnoconfig    clang-22
-hexagon                   defconfig    clang-22
-i386                    allnoconfig    gcc-14
-i386                      defconfig    clang-20
-i386        randconfig-011-20251129    clang-20
-i386        randconfig-012-20251129    gcc-13
-i386        randconfig-013-20251129    clang-20
-i386        randconfig-014-20251129    clang-20
-i386        randconfig-015-20251129    gcc-14
-i386        randconfig-016-20251129    clang-20
-i386        randconfig-017-20251129    gcc-14
-loongarch               allnoconfig    clang-22
-m68k                    allnoconfig    gcc-15.1.0
-m68k              stmark2_defconfig    gcc-15.1.0
-microblaze              allnoconfig    gcc-15.1.0
-microblaze                defconfig    gcc-15.1.0
-mips                   allmodconfig    gcc-15.1.0
-mips                    allnoconfig    gcc-15.1.0
-mips                   allyesconfig    gcc-15.1.0
-nios2                   allnoconfig    gcc-11.5.0
-nios2                     defconfig    gcc-11.5.0
-openrisc               alldefconfig    gcc-15.1.0
-openrisc                allnoconfig    gcc-15.1.0
-openrisc                  defconfig    gcc-15.1.0
-parisc                  allnoconfig    gcc-15.1.0
-parisc                    defconfig    gcc-15.1.0
-parisc      randconfig-001-20251129    gcc-10.5.0
-parisc      randconfig-002-20251129    gcc-13.4.0
-powerpc                 allnoconfig    gcc-15.1.0
-powerpc            ep88xc_defconfig    gcc-15.1.0
-powerpc              icon_defconfig    gcc-15.1.0
-powerpc       mpc8315_rdb_defconfig    clang-22
-powerpc       mpc837x_rdb_defconfig    gcc-15.1.0
-powerpc           ppa8548_defconfig    gcc-15.1.0
-powerpc     randconfig-001-20251129    gcc-8.5.0
-powerpc     randconfig-002-20251129    clang-22
-powerpc64   randconfig-001-20251129    gcc-8.5.0
-powerpc64   randconfig-002-20251129    gcc-13.4.0
-riscv                   allnoconfig    gcc-15.1.0
-s390                    allnoconfig    clang-22
-sh                      allnoconfig    gcc-15.1.0
-sh                        defconfig    gcc-15.1.0
-sh                  hp6xx_defconfig    gcc-15.1.0
-sparc                   allnoconfig    gcc-15.1.0
-um                      allnoconfig    clang-22
-um                        defconfig    clang-22
-x86_64                  allnoconfig    clang-20
-xtensa                  allnoconfig    gcc-15.1.0
+---
+base-commit: 6156424a7d001cceeafe59b52209d6f36719b51d
+change-id: 20251130-linusw-kernelorg-email-0791125070f4
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards,
+-- 
+Linus Walleij <linusw@kernel.org>
+
 
