@@ -1,48 +1,44 @@
-Return-Path: <linux-gpio+bounces-29190-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29191-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C5B2C9522D
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 Nov 2025 17:15:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C636CC95CD6
+	for <lists+linux-gpio@lfdr.de>; Mon, 01 Dec 2025 07:29:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D5243A2D3E
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 Nov 2025 16:14:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 70A283A1B1A
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Dec 2025 06:29:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56F032BE7D9;
-	Sun, 30 Nov 2025 16:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e1JJWp4Q"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C55627A469;
+	Mon,  1 Dec 2025 06:29:27 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F663B2A0;
-	Sun, 30 Nov 2025 16:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDAC4278753;
+	Mon,  1 Dec 2025 06:29:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764519294; cv=none; b=kXRCe3ghUoN8ACSCKnOwDbyNvkLC/lhGIk3B5kAzRu6NTtPV+6aI7BXNcrbWv6n5F7UiOk5N5rSFvlYTphqgtoYN3Ubzgz5ZQxOeu8j6HJt/E6A8X5rEvGCgdzXoCF1iZftUFAC4zBEbB2JjcyF2cdnACMEQZo1mbbzjdIFT7vg=
+	t=1764570567; cv=none; b=Pv9ypTcLF5PvEyAmncG2yLitpR29aXfk8LMb0uaNfgzyW3gJvibM2E66IoTy4oax4yoLpN/cRX6NtVs8WpqUZ4tI7xdB/G+L0nnTY9RaGw+ZIG13AkkSwkVZ7AJdi/Uww6lYK4cBIHlvUeT6qf1NF+z7GYV1e+QJIfBCemIK9LU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764519294; c=relaxed/simple;
-	bh=Mx8Q61Ut2NMjVGiek8L2Ppr/wcjqwTTDVTB8wQMifek=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=MfIdxjpCqrDXMAbiK4/fHea1cZyir7Us07upTIfywfMLpZdB1yEICUTnR0l2Gkuc7tYccYM5/HYfeSbkmoUil7NDeVVpJAyF7uijkGxxiq5rDUdOIt+lH5J83I93NVRgMy/4UHGwHd6EwDO/64fBu1lvoMOmgdqXJ7hTCdrZtLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e1JJWp4Q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA5FDC4CEF8;
-	Sun, 30 Nov 2025 16:14:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764519293;
-	bh=Mx8Q61Ut2NMjVGiek8L2Ppr/wcjqwTTDVTB8wQMifek=;
-	h=From:Date:Subject:To:Cc:From;
-	b=e1JJWp4QrGccrc9V/8CPx9kIxOE0eDSW0VikgrfBKALo45Hv5bKaQcFBYo80BvyyF
-	 RcIipYkVBQmp1oqMdF5JrurJyavBM0o8ddQ1Fk1044zO+uXpzsdq52KkLhUXTDYY69
-	 sBNQCXaiuaSa9RVYxWRJx2ixMCqYV1pfs6tpzL5ByXx146nxaPuadlQqr516VMEukJ
-	 4N8TjcGEU8jbkRPlyuKzUUJyOkImVGaCPh0v5gV+Bfvp5tkfVvUUA+2BgqloISqqNN
-	 ibusWVDC+dhr++ThRfbFHW37ZhBR7kMc5qXA9xqIBWpKkYUYgnXuUHJEsRfa407ywq
-	 PGC7PO0xcVTcA==
-From: Linus Walleij <linusw@kernel.org>
-Date: Sun, 30 Nov 2025 17:14:45 +0100
-Subject: [PATCH] MAINTAINERS: Change Linus Walleij mail address
+	s=arc-20240116; t=1764570567; c=relaxed/simple;
+	bh=PYc7RKtTrKYB/n8rcchUdu0GnArVjz+/Dm3h2uX0+i4=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=iN5v8bIADbmI83A/hqqqifHfTxr4ynh7aClFgyO52PxMCXr7dJ+acx4arwN5Pp7TNLk2fN2kaXj02boHUSIRh0i8ks6wWJPHoU/Gz+Msn5h1qnbVni9DprJhGknAXmbjo7+0Uh2mNzt2neWfMg4eL51vXZh+InstkgOcP+LGgfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Mon, 1 Dec
+ 2025 14:29:16 +0800
+Received: from [127.0.1.1] (192.168.10.13) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Mon, 1 Dec 2025 14:29:16 +0800
+From: Jacky Chou <jacky_chou@aspeedtech.com>
+Subject: [PATCH v6 0/7] Add ASPEED PCIe Root Complex support
+Date: Mon, 1 Dec 2025 14:29:10 +0800
+Message-ID: <20251201-upstream_pcie_rc-v6-0-8c8800c56b16@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,297 +46,140 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20251130-linusw-kernelorg-email-v1-1-bcdbff7b896c@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x3MwQqDMAyA4VeRnA0kdUXmqwwPorELq3WkqAPx3
- S07fof/PyGLqWToqhNMds26pgKuKxjfQwqCOhWDI+eZG8KoacsHfsSSxNUCyjJoRGqfzM5TS/M
- DSvw1mfX3H7/667oBGLNjXGgAAAA=
-X-Change-ID: 20251130-linusw-kernelorg-email-0791125070f4
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
- linux-iio@vger.kernel.org, linux-input@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
- Linus Walleij <linusw@kernel.org>
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALY1LWkC/43QQW7DIBCF4atErIs1wzAGd9V7VJVFMKlpldgCx
+ 0oU+e4hXtSLLNLlQ/r+kbiJHFIMWbzvbiKFOeY4nMqo33bC9+70HWTsyhYKFCMCyfOYpxTcsR1
+ 9DG3y0mrNhptub5FEYWMKh3hZk59fZfcxT0O6rhdmfLyuMaiRgAgAK0KmmoxE+eP877X1/XD+c
+ HkMoZuC7ys/HMWjNKtNG2QgTQoqxUz2P5o23QACc6NUhUUzw2ut/zSCMtCwVVyhRazxNeYNI5r
+ nP5xZgtxrh41lUzt/eKosy3IHIntzS6wBAAA=
+X-Change-ID: 20251103-upstream_pcie_rc-8445759db813
+To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, "Andrew
+ Jeffery" <andrew@codeconstruct.com.au>, Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Manivannan
+ Sadhasivam" <mani@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+CC: <linux-aspeed@lists.ozlabs.org>, <linux-pci@vger.kernel.org>,
+	<linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	Andrew Jeffery <andrew@aj.id.au>, <openbmc@lists.ozlabs.org>,
+	<linux-gpio@vger.kernel.org>, Jacky Chou <jacky_chou@aspeedtech.com>
 X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1764570556; l=5149;
+ i=jacky_chou@aspeedtech.com; s=20251031; h=from:subject:message-id;
+ bh=PYc7RKtTrKYB/n8rcchUdu0GnArVjz+/Dm3h2uX0+i4=;
+ b=uRcfSGhjD7whqD1XeVr1g7UGZxa8lZrhPpg7xE+9FtUCo3zPezpdK44JKgXLgYdm4src5LK7n
+ 7jPU9tj2zLeA2+GBEcaLc98QK4VQHAHgoWLG2rNUGxVqMuryWvziy7y
+X-Developer-Key: i=jacky_chou@aspeedtech.com; a=ed25519;
+ pk=8XBx7KFM1drEsfCXTH9QC2lbMlGU4XwJTA6Jt9Mabdo=
 
-I will be using my kernel.org mail address going forward.
+This patch series adds support for the ASPEED PCIe Root Complex,
+including device tree bindings, pinctrl support, and the PCIe host controller
+driver. The patches introduce the necessary device tree nodes, pinmux groups,
+and driver implementation to enable PCIe functionality on ASPEED platforms.
+Currently, the ASPEED PCIe Root Complex only supports a single port.
 
-There is no point in splitting this MAINTAINERS patch up
-per subsystem, I will just include it with the rest of my
-patches to pin control in the next merge window.
+Summary of changes:
+- Add device tree binding documents for ASPEED PCIe PHY, PCIe Config, and PCIe RC
+- Update MAINTAINERS for new bindings and driver
+- Add PCIe RC node and PERST control pin to aspeed-g6 device tree
+- Implement ASPEED PCIe PHY driver
+- Implement ASPEED PCIe Root Complex host controller driver
 
-Signed-off-by: Linus Walleij <linusw@kernel.org>
+This series has been tested on AST2600/AST2700 platforms and enables PCIe device
+enumeration and operation.
+
+Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
 ---
- MAINTAINERS | 58 +++++++++++++++++++++++++++++-----------------------------
- 1 file changed, 29 insertions(+), 29 deletions(-)
+Changes in v6:
+- Refer to pci-cpi-bridge.yaml to update aspeed,ast2600-pcie.yaml and
+  the pcie node of aspeed-g6.dtsi.
+- 'dt-bindings: pinctrl: aspeed,ast2600-pinctrl: Add PCIe RC PERST#
+  group' have applied, remove it from this version.
+- Adjust the defnitions in pci.h. 
+- Link to v5: https://lore.kernel.org/r/20251117-upstream_pcie_rc-v5-0-b4a198576acf@aspeedtech.com
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 181a58ec4a8d..13f61acdc8f7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -195,7 +195,7 @@ F:	drivers/pinctrl/pinctrl-upboard.c
- F:	include/linux/mfd/upboard-fpga.h
- 
- AB8500 BATTERY AND CHARGER DRIVERS
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- F:	Documentation/devicetree/bindings/power/supply/*ab8500*
- F:	drivers/power/supply/*ab8500*
- 
-@@ -2045,7 +2045,7 @@ F:	Documentation/devicetree/bindings/display/arm,hdlcd.yaml
- F:	drivers/gpu/drm/arm/hdlcd_*
- 
- ARM INTEGRATOR, VERSATILE AND REALVIEW SUPPORT
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	Documentation/devicetree/bindings/arm/arm,integrator.yaml
-@@ -2203,7 +2203,7 @@ F:	Documentation/devicetree/bindings/memory-controllers/arm,pl35x-smc.yaml
- F:	drivers/memory/pl353-smc.c
- 
- ARM PRIMECELL SSP PL022 SPI DRIVER
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	Documentation/devicetree/bindings/spi/spi-pl022.yaml
-@@ -2216,7 +2216,7 @@ F:	drivers/tty/serial/amba-pl01*.c
- F:	include/linux/amba/serial.h
- 
- ARM PRIMECELL VIC PL190/PL192 DRIVER
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	Documentation/devicetree/bindings/interrupt-controller/arm,vic.yaml
-@@ -2633,7 +2633,7 @@ F:	tools/perf/util/cs-etm.*
- 
- ARM/CORTINA SYSTEMS GEMINI ARM ARCHITECTURE
- M:	Hans Ulli Kroll <ulli.kroll@googlemail.com>
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- T:	git https://github.com/ulli-kroll/linux.git
-@@ -3035,7 +3035,7 @@ F:	include/dt-bindings/clock/mstar-*
- F:	include/dt-bindings/gpio/msc313-gpio.h
- 
- ARM/NOMADIK/Ux500 ARCHITECTURES
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git
-@@ -3732,7 +3732,7 @@ F:	Documentation/devicetree/bindings/media/i2c/asahi-kasei,ak7375.yaml
- F:	drivers/media/i2c/ak7375.c
- 
- ASAHI KASEI AK8974 DRIVER
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- L:	linux-iio@vger.kernel.org
- S:	Supported
- W:	http://www.akm.com/
-@@ -6758,7 +6758,7 @@ S:	Maintained
- F:	drivers/pinctrl/pinctrl-cy8c95x0.c
- 
- CYPRESS CY8CTMA140 TOUCHSCREEN DRIVER
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- L:	linux-input@vger.kernel.org
- S:	Maintained
- F:	drivers/input/touchscreen/cy8ctma140.c
-@@ -6778,13 +6778,13 @@ Q:	http://patchwork.linuxtv.org/project/linux-media/list/
- F:	drivers/media/common/cypress_firmware*
- 
- CYTTSP TOUCHSCREEN DRIVER
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- L:	linux-input@vger.kernel.org
- S:	Maintained
- F:	drivers/input/touchscreen/cyttsp*
- 
- D-LINK DIR-685 TOUCHKEYS DRIVER
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- L:	linux-input@vger.kernel.org
- S:	Supported
- F:	drivers/input/keyboard/dlink-dir685-touchkeys.c
-@@ -7653,13 +7653,13 @@ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
- F:	drivers/gpu/drm/tiny/appletbdrm.c
- 
- DRM DRIVER FOR ARM PL111 CLCD
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- S:	Maintained
- T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
- F:	drivers/gpu/drm/pl111/
- 
- DRM DRIVER FOR ARM VERSATILE TFT PANELS
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- S:	Maintained
- T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
- F:	Documentation/devicetree/bindings/display/panel/arm,versatile-tft-panel.yaml
-@@ -7709,7 +7709,7 @@ F:	Documentation/devicetree/bindings/display/panel/ebbg,ft8719.yaml
- F:	drivers/gpu/drm/panel/panel-ebbg-ft8719.c
- 
- DRM DRIVER FOR FARADAY TVE200 TV ENCODER
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- S:	Maintained
- T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
- F:	drivers/gpu/drm/tve200/
-@@ -7903,14 +7903,14 @@ F:	include/dt-bindings/clock/qcom,dsi-phy-28nm.h
- F:	include/uapi/drm/msm_drm.h
- 
- DRM DRIVER FOR NOVATEK NT35510 PANELS
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- S:	Maintained
- T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
- F:	Documentation/devicetree/bindings/display/panel/novatek,nt35510.yaml
- F:	drivers/gpu/drm/panel/panel-novatek-nt35510.c
- 
- DRM DRIVER FOR NOVATEK NT35560 PANELS
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- S:	Maintained
- T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
- F:	Documentation/devicetree/bindings/display/panel/sony,acx424akp.yaml
-@@ -8028,7 +8028,7 @@ F:	Documentation/devicetree/bindings/display/panel/raydium,rm67191.yaml
- F:	drivers/gpu/drm/panel/panel-raydium-rm67191.c
- 
- DRM DRIVER FOR SAMSUNG DB7430 PANELS
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- S:	Maintained
- T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
- F:	Documentation/devicetree/bindings/display/panel/samsung,lms397kf04.yaml
-@@ -8112,7 +8112,7 @@ F:	Documentation/devicetree/bindings/display/solomon,ssd13*.yaml
- F:	drivers/gpu/drm/solomon/ssd130x*
- 
- DRM DRIVER FOR ST-ERICSSON MCDE
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- S:	Maintained
- T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
- F:	Documentation/devicetree/bindings/display/ste,mcde.yaml
-@@ -8144,7 +8144,7 @@ F:	Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
- F:	drivers/gpu/drm/bridge/ti-sn65dsi86.c
- 
- DRM DRIVER FOR TPO TPG110 PANELS
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- S:	Maintained
- T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
- F:	Documentation/devicetree/bindings/display/panel/tpo,tpg110.yaml
-@@ -8188,7 +8188,7 @@ F:	drivers/gpu/drm/vmwgfx/
- F:	include/uapi/drm/vmwgfx_drm.h
- 
- DRM DRIVER FOR WIDECHIPS WS2401 PANELS
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- S:	Maintained
- T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
- F:	Documentation/devicetree/bindings/display/panel/samsung,lms380kf01.yaml
-@@ -9482,7 +9482,7 @@ F:	include/linux/fanotify.h
- F:	include/uapi/linux/fanotify.h
- 
- FARADAY FOTG210 USB2 DUAL-ROLE CONTROLLER
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- L:	linux-usb@vger.kernel.org
- S:	Maintained
- F:	drivers/usb/fotg210/
-@@ -10669,7 +10669,7 @@ F:	drivers/gpio/gpio-sloppy-logic-analyzer.c
- F:	tools/gpio/gpio-sloppy-logic-analyzer.sh
- 
- GPIO SUBSYSTEM
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- M:	Bartosz Golaszewski <brgl@bgdev.pl>
- L:	linux-gpio@vger.kernel.org
- S:	Maintained
-@@ -13033,7 +13033,7 @@ F:	Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
- F:	drivers/iio/imu/inv_icm42600/
- 
- INVENSENSE MPU-3050 GYROSCOPE DRIVER
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- L:	linux-iio@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.yaml
-@@ -13948,7 +13948,7 @@ F:	drivers/auxdisplay/ks0108.c
- F:	include/linux/ks0108.h
- 
- KTD253 BACKLIGHT DRIVER
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- S:	Maintained
- F:	Documentation/devicetree/bindings/leds/backlight/kinetic,ktd253.yaml
- F:	drivers/video/backlight/ktd253-backlight.c
-@@ -14159,7 +14159,7 @@ F:	drivers/ata/pata_arasan_cf.c
- F:	include/linux/pata_arasan_cf_data.h
- 
- LIBATA PATA FARADAY FTIDE010 AND GEMINI SATA BRIDGE DRIVERS
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- L:	linux-ide@vger.kernel.org
- S:	Maintained
- F:	drivers/ata/pata_ftide010.c
-@@ -19663,7 +19663,7 @@ F:	Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
- F:	drivers/pci/controller/dwc/*imx6*
- 
- PCI DRIVER FOR INTEL IXP4XX
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- S:	Maintained
- F:	Documentation/devicetree/bindings/pci/intel,ixp4xx-pci.yaml
- F:	drivers/pci/controller/pci-ixp4xx.c
-@@ -19774,7 +19774,7 @@ F:	drivers/pci/controller/cadence/pci-j721e.c
- F:	drivers/pci/controller/dwc/pci-dra7xx.c
- 
- PCI DRIVER FOR V3 SEMICONDUCTOR V360EPC
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- L:	linux-pci@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/pci/v3,v360epc-pci.yaml
-@@ -20219,7 +20219,7 @@ K:	(?i)clone3
- K:	\b(clone_args|kernel_clone_args)\b
- 
- PIN CONTROL SUBSYSTEM
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- L:	linux-gpio@vger.kernel.org
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-@@ -21631,7 +21631,7 @@ F:	Documentation/devicetree/bindings/watchdog/realtek,otto-wdt.yaml
- F:	drivers/watchdog/realtek_otto_wdt.c
- 
- REALTEK RTL83xx SMI DSA ROUTER CHIPS
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- M:	Alvin Šipraga <alsi@bang-olufsen.dk>
- S:	Maintained
- F:	Documentation/devicetree/bindings/net/dsa/realtek.yaml
-@@ -23384,7 +23384,7 @@ S:	Supported
- F:	net/smc/
- 
- SHARP GP2AP002A00F/GP2AP002S00F SENSOR DRIVER
--M:	Linus Walleij <linus.walleij@linaro.org>
-+M:	Linus Walleij <linusw@kernel.org>
- L:	linux-iio@vger.kernel.org
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
+Changes in v5:
+- Remove legacy-interrupt-controller and the INTx points to pcie node itself.
+- Correct bar mapping description and implementation to PCIe address
+  configuration in pcie-aspeed.c driver.
+- Link to v4: https://lore.kernel.org/r/20251027095825.181161-1-jacky_chou@aspeedtech.com/
+
+Changes in v4:
+- Remove aspeed,ast2700-pcie-cfg.yaml
+- Add more descriptions for AST2600 PCIe RC in aspeed,ast2600-pcie.yaml
+- Change interrupt-controller to legacy-interrupt-controller in yaml
+  and dtsi
+- Remove msi-parent property in yaml and dtsi
+- Modify the bus range to starting from 0x00 in aspeed-g6.dtsi
+- Fixed the typo on MODULE_DEVICE_TABLE() in phy-aspeed-pcie.c
+- Add PCIE_CPL_STS_SUCCESS definition in pci/pci.h
+- Add prefix ASPEED_ for register definition in RC driver
+- Add a flag to indicate clear msi status twice for AST2700 workaround
+- Remove getting domain number
+- Remove scanning AST2600 HOST bridge on device number 0
+- Remove all codes about CONFIG_PCI_MSI
+- Get root but number from resouce list by IORESOURCE_BUS
+- Change module_platform_driver to builtin_platform_driver
+- Link to v3: https://lore.kernel.org/r/20250901055922.1553550-1-jacky_chou@aspeedtech.com/
+
+Changes in v3:
+- Add ASPEED PCIe PHY driver
+- Remove the aspeed,pciecfg property from AST2600 RC node, merged into RC node
+- Update the binding doc for aspeed,ast2700-pcie-cfg to reflect the changes
+- Update the binding doc for aspeed,ast2600-pcie to reflect the changes
+- Update the binding doc for aspeed,ast2600-pinctrl to reflect the changes
+- Update the device tree source to reflect the changes
+- Adjusted the use of mutex in RC drivers to use GRAND
+- Updated from reviewer comments
+- Link to v2: https://lore.kernel.org/r/20250715034320.2553837-1-jacky_chou@aspeedtech.com/
+
+Changes in v2:
+- Moved ASPEED PCIe PHY yaml binding to `soc/aspeed` directory and
+  changed it as syscon
+- Added `MAINTAINERS` entry for the new PCIe RC driver
+- Updated device tree bindings to reflect the new structure
+- Refactored configuration read and write functions to main bus and
+  child bus ops
+- Refactored initialization to implement multiple ports support
+- Added PCIe FMT and TYPE definitions for TLP header in
+  `include/uapi/linux/pci_regs.h`
+- Updated from reviewer comments
+- Link to v1: https://lore.kernel.org/r/20250613033001.3153637-1-jacky_chou@aspeedtech.com/
 
 ---
-base-commit: 6156424a7d001cceeafe59b52209d6f36719b51d
-change-id: 20251130-linusw-kernelorg-email-0791125070f4
+Jacky Chou (7):
+      dt-bindings: phy: aspeed: Add ASPEED PCIe PHY
+      dt-bindings: PCI: Add ASPEED PCIe RC support
+      ARM: dts: aspeed-g6: Add PCIe RC and PCIe PHY node
+      PHY: aspeed: Add ASPEED PCIe PHY driver
+      PCI: Add FMT, TYPE and CPL status definition for TLP header
+      PCI: aspeed: Add ASPEED PCIe RC driver
+      MAINTAINERS: Add ASPEED PCIe RC driver
+
+ .../bindings/pci/aspeed,ast2600-pcie.yaml          |  150 +++
+ .../bindings/phy/aspeed,ast2600-pcie-phy.yaml      |   42 +
+ MAINTAINERS                                        |   12 +
+ arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi    |    5 +
+ arch/arm/boot/dts/aspeed/aspeed-g6.dtsi            |   51 +
+ drivers/pci/controller/Kconfig                     |   16 +
+ drivers/pci/controller/Makefile                    |    1 +
+ drivers/pci/controller/pcie-aspeed.c               | 1117 ++++++++++++++++++++
+ drivers/pci/pci.h                                  |   15 +
+ drivers/phy/Kconfig                                |    1 +
+ drivers/phy/Makefile                               |    1 +
+ drivers/phy/aspeed/Kconfig                         |   15 +
+ drivers/phy/aspeed/Makefile                        |    2 +
+ drivers/phy/aspeed/phy-aspeed-pcie.c               |  209 ++++
+ 14 files changed, 1637 insertions(+)
+---
+base-commit: e1afacb68573c3cd0a3785c6b0508876cd3423bc
+change-id: 20251103-upstream_pcie_rc-8445759db813
 
 Best regards,
 -- 
-Linus Walleij <linusw@kernel.org>
+Jacky Chou <jacky_chou@aspeedtech.com>
 
 
