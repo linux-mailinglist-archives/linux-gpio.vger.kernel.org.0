@@ -1,164 +1,163 @@
-Return-Path: <linux-gpio+bounces-29206-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29207-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C28BC9AD84
-	for <lists+linux-gpio@lfdr.de>; Tue, 02 Dec 2025 10:26:57 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91070C9ADB4
+	for <lists+linux-gpio@lfdr.de>; Tue, 02 Dec 2025 10:30:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4C876346A22
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Dec 2025 09:26:56 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 81A454E01C2
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Dec 2025 09:30:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5619830C63B;
-	Tue,  2 Dec 2025 09:26:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3243309EF0;
+	Tue,  2 Dec 2025 09:30:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MfTUlGhn"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LockMcLK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094852FFDC0;
-	Tue,  2 Dec 2025 09:26:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100ED25B31B
+	for <linux-gpio@vger.kernel.org>; Tue,  2 Dec 2025 09:30:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764667606; cv=none; b=k7h2PemchUSjP2VPl1mcX8DmPW7jpPDJW6/8Ci6tNPCjQZqgC9Mg1Jhubamw5OqUAN7DrHgtHjR0iuNVWJ/Suc+sK3ceyQM7xGGd5cVsdPpLQeJTxm8VrrpDVMmmfzWwYb1PCwzYC89rs/Uv7KBJuNOZeaiImGVra5BqXDTGfDo=
+	t=1764667830; cv=none; b=paQPodWMLtgV/yk0Qz5puYS05RFVPKrYjRwDAL52kQGd4xjLokTvC9apzWQ5eoSM1MG2inQUZdCcvwwIhTVLPkURwyo25gAHP4DIrCKeDejffPqdnsw5tzYkZVvRE11aGumBeRwLxccqVU5cZpsnPDFOmJ1n0dyM1H3SEsGaPMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764667606; c=relaxed/simple;
-	bh=e4ADKf5KnBtmyNx7K3nhN5sMxYdX8FSZtoZA9jdJSmQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UzFHiQ/CwZkXF2p48PaaBjrA2LV/tsAigklVlFpoNkuEk3tBCxZPTyyK9J0bXiE2sZAaSRFTkcJKk0QuJ3l/XvbWaDGnIR0pATFylKDqr2q1A9pqOcGQI9YrRMRjMPkzmSQJG2nIYpEt+lIbSf3ebW1wgT58JPV/cnbAE8Vc+AE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MfTUlGhn; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 243561A1EC1;
-	Tue,  2 Dec 2025 09:26:41 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id E6457606E3;
-	Tue,  2 Dec 2025 09:26:40 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3DD6211918D13;
-	Tue,  2 Dec 2025 10:26:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1764667597; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=0QhNzQsm8Oj1GGB/bH80Qc9yOMbCIo84NGjawpRGa0U=;
-	b=MfTUlGhnnw/aVreeaATbhw0gwkpem3K9EKovmRrLAuPocP4mtIEFaUBJAllgvpXiOFVYVs
-	/+wYe6BWiOjXN0TQXfqEbI4kTBiForiN43QgIRFG1Tif71C+pWFPguQb30OO5GR384TVLH
-	FZYaHMZgblFJnDTIPRv3nxFL2X7+IteBlMRlRxUIW82bL9nD/zWvqmrNnYX95WKYHUolBR
-	aWzmo2dED90Ls+6evrTylVevWGCfFb+t5/b4hRTOr5NOspn3gp8X2yP/8vpWUgnmn8SNQp
-	t2T7sfHrwl492i35smJdL2e7LttoyWu75OyA4aNg7/ydqIjfu3dWfVR//psj2w==
-Date: Tue, 2 Dec 2025 10:26:19 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Kalle Niemi <kaleposti@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Matti Vaittinen
- <mazziesaccount@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Arnd
- Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, Bjorn
- Helgaas <bhelgaas@google.com>, Charles Keepax
- <ckeepax@opensource.cirrus.com>, Richard Fitzgerald
- <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, Linus
- Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>,
- Mark Brown <broonie@kernel.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, Davidlohr
- Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, Alison Schofield
- <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
- Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, Geert
- Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
- patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT
- overlays"
-Message-ID: <20251202102619.5cd971cc@bootlin.com>
-In-Reply-To: <55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com>
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
-	<20251015071420.1173068-2-herve.codina@bootlin.com>
-	<f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
-	<CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
-	<5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com>
-	<CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
-	<072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
-	<CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
-	<55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1764667830; c=relaxed/simple;
+	bh=523W9k3a1vFky2+bY7jK0eqnyoZyuuNWrBcmQbPl4iY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
+	 References; b=nUVcQ1ItmaTyi1pIsbMN5bwCZiMjeDcifATP1kBV/2VEl6TxdlE8K1hzBITQN022n3h+RqWsUDti+WGWe5eqB/XSWfKPARyrl7p2pPjMgSmvEcbsGb7+kZGpVwVZ9kzkd3CiqU51WrfkExpecqAF+KicbmwD0UrYEcN8SzIM9ZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=LockMcLK; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20251202093025epoutp03d4090de115b4094464a9caa609636865~9XAnCXpGv1963019630epoutp03H
+	for <linux-gpio@vger.kernel.org>; Tue,  2 Dec 2025 09:30:25 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20251202093025epoutp03d4090de115b4094464a9caa609636865~9XAnCXpGv1963019630epoutp03H
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1764667826;
+	bh=ddem7pRfXjH2CsY6jhzQQzzqAVw4nJRV9oahcR7IXNA=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=LockMcLKH7V15WqJ2iRMUoPkRCoPWY1oj6CMYOjFkzKzLDUlUBwVHuLpbN0VL/3Ul
+	 zxoTJWn8xaoCm81Ijq9stnr22vXoBLdsBwNRKDBXNix3mVO1enYbcyFEEb1gKt9dB7
+	 8qsw4JIDKbi9js2EkCw8yTKysADeexTA/V0Jf+lg=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas2p1.samsung.com (KnoxPortal) with ESMTPS id
+	20251202093025epcas2p135ab56fb84d8bad6f905880addcb2e57~9XAmehDkm0391603916epcas2p1K;
+	Tue,  2 Dec 2025 09:30:25 +0000 (GMT)
+Received: from epcas2p4.samsung.com (unknown [182.195.38.203]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4dLFqj0V6Nz6B9m8; Tue,  2 Dec
+	2025 09:30:25 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
+	20251202093024epcas2p1567dddf09e3599867e9dc14a9a234d38~9XAlhC1440393603936epcas2p1h;
+	Tue,  2 Dec 2025 09:30:24 +0000 (GMT)
+Received: from perf.dsn.sec.samsung.com (unknown [10.229.95.91]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20251202093024epsmtip1f37c0608a18fb17f998cf72feb2edadc~9XAlbrQhs1253612536epsmtip1V;
+	Tue,  2 Dec 2025 09:30:24 +0000 (GMT)
+From: Youngmin Nam <youngmin.nam@samsung.com>
+To: krzk@kernel.org, s.nawrocki@samsung.com, alim.akhtar@samsung.com,
+	linus.walleij@linaro.org, peter.griffin@linaro.org,
+	semen.protsenko@linaro.org, ivo.ivanov.ivanov1@gmail.com
+Cc: ryu.real@samsung.com, d7271.choe@samsung.com, shin.son@samsung.com,
+	jaewon02.kim@samsung.com, linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Youngmin Nam <youngmin.nam@samsung.com>
+Subject: [PATCH v3 0/5] pinctrl: samsung: exynos9 cleanups and fixes
+Date: Tue,  2 Dec 2025 18:36:07 +0900
+Message-ID: <20251202093613.852109-1-youngmin.nam@samsung.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+X-CMS-MailID: 20251202093024epcas2p1567dddf09e3599867e9dc14a9a234d38
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+cpgsPolicy: CPGSC10-234,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20251202093024epcas2p1567dddf09e3599867e9dc14a9a234d38
+References: <CGME20251202093024epcas2p1567dddf09e3599867e9dc14a9a234d38@epcas2p1.samsung.com>
 
-Hi Kalle,
+Several SoCs carried near-duplicate pin bank macro families, making
+tables verbose and hard to share when only the bank type (alive/off)
+differs.
 
-On Fri, 28 Nov 2025 10:34:57 +0200
-Kalle Niemi <kaleposti@gmail.com> wrote:
+GS101 had its own helpers even though the newer EXYNOS9_* helpers cover
+the same semantics, including per-bank filter control (FLTCON) offsets.
 
+Some pin-bank tables didn't match the SoC TRMs (bank type, EINT class,
+or bank names), and FLTCON wasn't always at a contiguous offset from
+EINT.
+
+This series does
+- Consolidate on EXYNOS9_* pin-bank macros. Pass bank_type explicitly.
+- Fix table errors on Exynos2200/7885/8890/8895 per TRM.
+- Add explicit per-bank FLTCON offsets and update affected tables.
+- Drop GS101-specific macros in favor of EXYNOS9_*.
+- Rename gs101_pinctrl_{suspend,resume} ->
+  exynos9_pinctrl_{suspend,resume}.
+
+This series was based on the pinctrl/samsung tree [1].
+
+I tested on Exynos850 through boot and verified the pin values as
+follows:
+
+$:/sys/kernel/debug/pinctrl/139b0000.pinctrl-samsung-pinctrl# cat pins
+registered pins: 42
+pin 0 (gpg0-0) 0:gpg0 CON(0x0) DAT(0x0) PUD(0x1) DRV(0x2) CON_PDN(0x2) PUD_PDN(0x1)
+pin 1 (gpg0-1) 1:gpg0 CON(0x0) DAT(0x0) PUD(0x1) DRV(0x2) CON_PDN(0x2) PUD_PDN(0x1)
 ...
-> >>>>>>
-> >>>>>> Hello,
-> >>>>>>
-> >>>>>> Test system testing drivers for ROHM ICs bisected this commit to cause
-> >>>>>> BD71847 drivers probe to not be called.  
-> >>>>> This driver (and overlay support) is in linux-next or something out of
-> >>>>> tree on top of linux-next?
-> >>>>>
-> >>>>> Rob  
-> >>>> Yes the driver is in mainline linux: /drivers/mfd/rohm-bd718x7.c  
-> >>> I don't see any support to apply overlays in that driver.  
-> >> Ah. Sorry for the confusion peeps. I asked Kalle to report this without
-> >> proper consideration. 100% my bad.
-> >>
-> >> While the bd718x7 drive indeed is mainline (and tested), the actual
-> >> 'glue-code' doing the overlay is part of the downstream test
-> >> infrastructure. So yes, this is not a bug in upstream kernel - this
-> >> falls in the category of an upstream change causing downstream things to
-> >> break. So, feel free to say: "Go fix your code" :)
-> >>
-> >> Now that this is sorted, if someone is still interested in helping us to
-> >> get our upstream drivers tested - the downstream piece is just taking
-> >> the compiled device-tree overlay at runtime (via bin-attribute file),
-> >> and applying it using the of_overlay_fdt_apply(). The approach is
-> >> working for our testing purposes when the device is added to I2C/SPI
-> >> node which is already enabled. However, in case where we have the I2C
-> >> disabled, and enable it in the same overlay where we add the new device
-> >> - then the new device does not get probed.
-> >>
-> >> I would be really grateful if someone had a pointer for us.  
-> > Seems to be fw_devlink related. I suppose if you turn it off it works?
-> > There's info about the dependencies in sysfs or maybe debugfs. I don't
-> > remember the details, but that should help to tell you why things
-> > aren't probing.
 
-Rob reverted patches but I plan to continue my work on it.
-On my side, I need the reverted patches but I fully understand that, on
-your side, you need a working system.
+Additional testing on the affected Exynos9-era platforms would be
+appreciated.
 
-In order to move forward and find a solution for my next iteration, can you
-send your overlay (dtso) used in your working and non working cases?
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung.git
 
-Best regards,
-Hervé
+Changes in v2:
+  - Added base tree for this series (pinctrl/samsung).
+  - Renamed the macro parameter from 'types' to 'bank_type' for clarity
+    (struct member remains 'type').
+  - Reflowed commit messages (wrap at ~72 cols).
+  - Replaced non-ASCII characters with ASCII equivalents.
+  - Collected tags:
+      Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+      Tested-by: Sam Protsenko <semen.protsenko@linaro.org>
+  - Normalized hex literals to lowercase and removed double spaces.
+  - Aligned backslashes in macro definitions to form a vertical column
+    for readability.
+  - Added missing mailing lists (including linux-kernel) to Cc per
+    scripts/get_maintainer.pl.
+
+Changes in v3:
+  - Collected tags:
+      Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
+      Tested-by: Peter Griffin <peter.griffin@linaro.org> (tested on Pixel6/gs101)
+
+Youngmin Nam (5):
+  pinctrl: samsung: Consolidate pin-bank macros under EXYNOS9_* and pass
+    bank_type explicitly
+  pinctrl: samsung: fix incorrect pin-bank entries on
+    Exynos2200/7885/8890/8895
+  pinctrl: samsung: add per-bank FLTCON offset to EXYNOS9_PIN_BANK_* and
+    fix tables
+  pinctrl: samsung: fold GS101 pin-bank macros into EXYNOS9_*
+  pinctrl: samsung: rename gs101_pinctrl_* to exynos9_pinctrl_*
+
+ .../pinctrl/samsung/pinctrl-exynos-arm64.c    | 1069 ++++++++---------
+ drivers/pinctrl/samsung/pinctrl-exynos.c      |    4 +-
+ drivers/pinctrl/samsung/pinctrl-exynos.h      |   97 +-
+ drivers/pinctrl/samsung/pinctrl-samsung.h     |    4 +-
+ 4 files changed, 562 insertions(+), 612 deletions(-)
+
+-- 
+2.52.0
+
 
