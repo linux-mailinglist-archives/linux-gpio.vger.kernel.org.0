@@ -1,129 +1,132 @@
-Return-Path: <linux-gpio+bounces-29225-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29226-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC811C9EC59
-	for <lists+linux-gpio@lfdr.de>; Wed, 03 Dec 2025 11:52:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 36EB5C9ED96
+	for <lists+linux-gpio@lfdr.de>; Wed, 03 Dec 2025 12:33:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BDB874E3C2E
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Dec 2025 10:52:56 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E4B8C4E1680
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Dec 2025 11:33:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF2EB2EFD9C;
-	Wed,  3 Dec 2025 10:52:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9C732F5480;
+	Wed,  3 Dec 2025 11:33:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nPkvBHzJ"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Kh+JcnuO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998A32DF13B;
-	Wed,  3 Dec 2025 10:52:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E95424E4A1;
+	Wed,  3 Dec 2025 11:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764759175; cv=none; b=Itd68G91Me1yiJfR7jhAPqjzkFQ5oRgzRPxYLeoGSKZ6oV9TSKdofcBVRVNLKw9QV1f82/FECdhIYEvEFSp2B0wEQMadLeZ7ao6BRw5HQEnBR1Ft+AYi5gNpuv+hhBzdjKkuK/1kCfRlEH84j8C7z6kXL3WKKgZ0cJP+G6grFVg=
+	t=1764761623; cv=none; b=WY76PZ+tuI41sM9tR+/NzwXb5ICd5yAUmVisJQE0qB9OuYEZI7ukTe9ZXc+UhVRzCw/oJ9NYmhOBqvJuJbV1T3z7TewTfotKyqtytATma+JSGfQGqNjVkn6i1eOp0QqyMu05kIxZpscmN5GRkoiE4gmlA4pKwTRx8vDTsCovv84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764759175; c=relaxed/simple;
-	bh=CC24x473r5tbD4XJuoWW8uoCGG2+IjO8X1ZjjBAcOCg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a1K28+RnSsNuSH6+5WKileHI/wYe3BqR4os9GGRvZpK//Zp5t/BEKKVmASqom+7EqN0MS+cLkxJxPHBC9zKJ4kMhN+HwORWnMqxsyYAbm+0NB5aGlGkBD2qFjkdQHCfKYZT7vSd7NNTkh1qHh7pHt8Y+sbuUVkIoNnPkom9yg38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nPkvBHzJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00EEBC4CEFB;
-	Wed,  3 Dec 2025 10:52:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764759175;
-	bh=CC24x473r5tbD4XJuoWW8uoCGG2+IjO8X1ZjjBAcOCg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=nPkvBHzJ9ZtAeEtNd82ehrBt3p4pLbBlF3dpRwTQGdKkoKfq2K1Tx8905Oe7JQ82S
-	 NwOQGRswqWn+au6BgtMRg8eSCIL/RvjrdWgF4StQaMMO2yf1qRIO8utPdMbq91vZC5
-	 8NTJ4TRcVPLrm5mBxNwSnAY9sZn5wzD2i17qCfLH5m0IOM+wwNMTlBXPD/pUz36asx
-	 FiTs1yk1L1GVKSGExN8rDNoSFACZ6POKooonelWb5Zz5QLwnOyvXbqJACdT7IirQlz
-	 +6XrQR9YfdpZgY5OCxbgc6uCXruBesf69eTyaotSHGxu+X0ZHZsfe1BBaG2RsqvHnn
-	 UcuaJU5ZUbkhA==
-Received: from johan by xi.lan with local (Exim 4.98.2)
-	(envelope-from <johan@kernel.org>)
-	id 1vQkTm-000000006OD-0VYp;
-	Wed, 03 Dec 2025 11:53:02 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan@kernel.org>
-Subject: [PATCH] gpio: mmio: fix bad guard conversion
-Date: Wed,  3 Dec 2025 11:52:06 +0100
-Message-ID: <20251203105206.24453-1-johan@kernel.org>
-X-Mailer: git-send-email 2.51.2
+	s=arc-20240116; t=1764761623; c=relaxed/simple;
+	bh=9H0Lj32oVEU9hMfCGeT2VAyMxxGLg8HVaCtVRvgGbrY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=dPL4AJ14jgyy6p4GyA2UsJBSDTdJi9kPM50RvKebKzOeVSloiwPru6aF/yCoDz+SB07/PylMWKkPsdvenYMuooVZBN3TCMiFbKikY3HVsEEUrQvFg8lbEeaS/WoHVnvf422uoLt9+5I2RWwupqx7HyQIi+rYVKhBzisID7hOkA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Kh+JcnuO; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1764761619;
+	bh=9H0Lj32oVEU9hMfCGeT2VAyMxxGLg8HVaCtVRvgGbrY=;
+	h=From:Date:Subject:To:Cc:From;
+	b=Kh+JcnuOVdXsSmFt8aDzBmFIvBAwKBSeqK4k8hki9mozRpAps4Qbl5POsXIihqzAb
+	 dWfkAtNE6lJEMTi4P9es7jg7qNJ+AMpXBNEN4qrtwW58GIxopcCwLb1Zb8pCSfenUF
+	 xGfrEFMj4FtOT3z0B7Ji0vufrLc6gUdAx4P5ThSgBwbOMUKtfogFR3HnXwjYd0n9xs
+	 HZRAeMGFa3Bvb9pWTZCaJa//Vk2omBOcZgFLOWlHmIfl9MO8G0zxf3LbohMAZBvMUL
+	 bCBUiO14gimDmn3kTmSPG79XXYrl3a8YStLwWcL6fTSqFsPDYY3UqoHQSv/AwMvIX5
+	 gZMM8iW3mjxDg==
+Received: from yukiji.home (amontpellier-657-1-116-247.w83-113.abo.wanadoo.fr [83.113.51.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: laeyraud)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0545A17E110C;
+	Wed,  3 Dec 2025 12:33:38 +0100 (CET)
+From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+Date: Wed, 03 Dec 2025 12:32:42 +0100
+Subject: [PATCH] pinctrl: mediatek: mt8189: restore previous register base
+ name array order
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20251203-mt8189-pinctrl-fix-regname-order-v1-1-16c8ff5490a7@collabora.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/zWN0QrCMBAEf6XcswdNVKj9FelDTNZ6YNJ6iVIo/
+ XeDxcdZlpmVMlSQqW9WUnwky5QqmEND/uHSCJZQmWxrz8a2R46lM92FZ0m+6JPvsrBiTC6CJw1
+ Q7uA9THAnax1Vzayop1/iOuyseL1rqewj3VwG+ylGKX2TsBT+12jYti+LgxWnowAAAA==
+X-Change-ID: 20251203-mt8189-pinctrl-fix-regname-order-8ecce1da422a
+To: Sean Wang <sean.wang@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: kernel@collabora.com, linux-mediatek@lists.infradead.org, 
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1764761618; l=2265;
+ i=louisalexis.eyraud@collabora.com; s=20250113; h=from:subject:message-id;
+ bh=9H0Lj32oVEU9hMfCGeT2VAyMxxGLg8HVaCtVRvgGbrY=;
+ b=oDdZtMbH8bHkD0JzMY8waTUEWya8OYrMVWHwRFtHs9F3HBu+n3XgDAr0pyySPY8l+PnPQnV0A
+ glEhL+EwLcQAEsDxCpf1F0WtncftcEZltprCBeAnPszEvuzbJfV981S
+X-Developer-Key: i=louisalexis.eyraud@collabora.com; a=ed25519;
+ pk=CHFBDB2Kqh4EHc6JIqFn69GhxJJAzc0Zr4e8QxtumuM=
 
-A recent spinlock guard conversion consistently used the wrong guard so
-that interrupts are no longer disabled while holding the chip lock
-(which can cause deadlocks).
+In mt8189-pinctrl driver, a previous commit changed the register base
+name array (mt8189_pinctrl_register_base_names) entry name and order to
+align it with the same name and order as the "mediatek,mt8189-pinctrl"
+devicetree bindings. The new order (by ascending register address) now
+causes an issue with MT8189 pinctrl configuration.
 
-Fixes: 7e061b462b3d ("gpio: mmio: use lock guards")
-Cc: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Linus Walleij <linusw@kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+MT8189 SoC has multiple base addresses for the pin configuration
+registers. Several constant data structures, declaring each pin
+configuration, are using PIN_FIELD_BASE() macro which i_base parameter
+indicates for a given pin the lookup index in the base register address
+array of the driver internal data for the configuration register
+read/write accesses. But in practice, this parameter is given a
+hardcoded numerical value that corresponds to the expected base
+register entry index in mt8189_pinctrl_register_base_names array.
+Since this array reordering, the i_base index matching is no more
+correct.
+
+So, in order to avoid modifying over a thousand of PIN_FIELD_BASE()
+calls, restore previous mt8189_pinctrl_register_base_names entry order.
+
+Fixes: 518919276c41 ("pinctrl: mediatek: mt8189: align register base names to dt-bindings ones")
+Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
 ---
- drivers/gpio/gpio-mmio.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/pinctrl/mediatek/pinctrl-mt8189.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
-index b3a26a06260b..5daf962b0323 100644
---- a/drivers/gpio/gpio-mmio.c
-+++ b/drivers/gpio/gpio-mmio.c
-@@ -231,7 +231,7 @@ static int gpio_mmio_set(struct gpio_chip *gc, unsigned int gpio, int val)
- 	struct gpio_generic_chip *chip = to_gpio_generic_chip(gc);
- 	unsigned long mask = gpio_mmio_line2mask(gc, gpio);
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8189.c b/drivers/pinctrl/mediatek/pinctrl-mt8189.c
+index f6a3e584588b0e8a1aafa9dca74c559974a57af5..cd4cdff309a12b6987362b111e0613bf29b60d84 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mt8189.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mt8189.c
+@@ -1642,7 +1642,7 @@ static const struct mtk_pin_reg_calc mt8189_reg_cals[PINCTRL_PIN_REG_MAX] = {
+ };
  
--	guard(raw_spinlock)(&chip->lock);
-+	guard(raw_spinlock_irqsave)(&chip->lock);
+ static const char * const mt8189_pinctrl_register_base_names[] = {
+-	"base", "lm", "rb0", "rb1", "bm0", "bm1", "bm2", "lt0", "lt1", "rt",
++	"base", "bm0", "bm1", "bm2", "lm",  "lt0", "lt1", "rb0", "rb1", "rt",
+ };
  
- 	if (val)
- 		chip->sdata |= mask;
-@@ -262,7 +262,7 @@ static int gpio_mmio_set_set(struct gpio_chip *gc, unsigned int gpio, int val)
- 	struct gpio_generic_chip *chip = to_gpio_generic_chip(gc);
- 	unsigned long mask = gpio_mmio_line2mask(gc, gpio);
- 
--	guard(raw_spinlock)(&chip->lock);
-+	guard(raw_spinlock_irqsave)(&chip->lock);
- 
- 	if (val)
- 		chip->sdata |= mask;
-@@ -302,7 +302,7 @@ static void gpio_mmio_set_multiple_single_reg(struct gpio_chip *gc,
- 	struct gpio_generic_chip *chip = to_gpio_generic_chip(gc);
- 	unsigned long set_mask, clear_mask;
- 
--	guard(raw_spinlock)(&chip->lock);
-+	guard(raw_spinlock_irqsave)(&chip->lock);
- 
- 	gpio_mmio_multiple_get_masks(gc, mask, bits, &set_mask, &clear_mask);
- 
-@@ -391,7 +391,7 @@ static int gpio_mmio_dir_in(struct gpio_chip *gc, unsigned int gpio)
- {
- 	struct gpio_generic_chip *chip = to_gpio_generic_chip(gc);
- 
--	scoped_guard(raw_spinlock, &chip->lock) {
-+	scoped_guard(raw_spinlock_irqsave, &chip->lock) {
- 		chip->sdir &= ~gpio_mmio_line2mask(gc, gpio);
- 
- 		if (chip->reg_dir_in)
-@@ -431,7 +431,7 @@ static void gpio_mmio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
- {
- 	struct gpio_generic_chip *chip = to_gpio_generic_chip(gc);
- 
--	guard(raw_spinlock)(&chip->lock);
-+	guard(raw_spinlock_irqsave)(&chip->lock);
- 
- 	chip->sdir |= gpio_mmio_line2mask(gc, gpio);
- 
+ static const struct mtk_eint_hw mt8189_eint_hw = {
+
+---
+base-commit: e47d97576181b31291cf58e77d737d21def0e160
+change-id: 20251203-mt8189-pinctrl-fix-regname-order-8ecce1da422a
+
+Best regards,
 -- 
-2.51.2
+Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
 
 
