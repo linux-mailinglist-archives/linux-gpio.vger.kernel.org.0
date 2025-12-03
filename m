@@ -1,124 +1,299 @@
-Return-Path: <linux-gpio+bounces-29222-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29224-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9536C9EA26
-	for <lists+linux-gpio@lfdr.de>; Wed, 03 Dec 2025 11:04:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E483FC9EA8D
+	for <lists+linux-gpio@lfdr.de>; Wed, 03 Dec 2025 11:13:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D45324E1009
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Dec 2025 10:04:32 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CCFCA4E074A
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Dec 2025 10:13:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00C612E6CD4;
-	Wed,  3 Dec 2025 10:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KhJlfalS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ACF02E7F0A;
+	Wed,  3 Dec 2025 10:13:08 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3887A2877CF;
-	Wed,  3 Dec 2025 10:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE882E7650
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Dec 2025 10:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764756268; cv=none; b=HvAWqVLPv9omR30DLNXcqAufzowTggDqBg6KCvj2R6V/kpZpAEwPMbJqGHYSIriE2Bi8zfaYK4ciPVQaPEnGBuNiZZ9iIY5520dV1XQMsFXPrc503fqosO7/AEBJnKuXxe3hl9idbVSW6Vd0z0RdoqYjyVW7qdFCoT4iXDCJ4Wk=
+	t=1764756788; cv=none; b=bDphsbLdNr/6hIabdbospIhF78gcCp8XKh3vSRax5eUk0AjXAJLuy1gq1Bf8yH+LBM0VglO2Usx/Me6ycxv9K0b+y/FUxrPnl58msySO/OPgOY/G3esPpO4nxjv2uqn30i+2VyqO5UPLshbvzPK9S4Rb9+KUyd/JlhuQsSGANV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764756268; c=relaxed/simple;
-	bh=VF8qTvPp9T7RO7Z6FV+KSoKOalmk/O5v48iAD3Ll2g4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qP2b4JOAaGiljoe5Vg4YztI0IQIEssNQItjgr72abRbsh0yLe5O77Fl0niftVvyrpWxph/sg8PCjSx2CJq0PuWQSG+u2R3g/wCCgLArlO3KdtPJ9CJNGSURRer26Ihs1paNHhrbJrSCHYxsaf+6Tu7MhcdiRBt8JyH9Mb7KZYjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KhJlfalS; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764756268; x=1796292268;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VF8qTvPp9T7RO7Z6FV+KSoKOalmk/O5v48iAD3Ll2g4=;
-  b=KhJlfalSEERZmcRsYoRjdfvgCULgbESllEsVFMM8ONA4ow5rs4Y7y43m
-   vSwvjvOUCtFUWtCuWLnFnCC6ArNBdpwBBzngk+/9CWqyjpefGd0ZaSf2x
-   tFVxkEh2YaAi67ctPOvIpS625S4RU3OScbkBBa/sqnyYnu1WO3lyUrZ3l
-   qJo6pm9bgqWUYyJ3oQu5DOMhc/7r/A9yvPmSt5Y1y89jdMQa4qn4vmimL
-   +CfmCDh+gzWDVkl3j/Wsn+efYB4cG5V+vStC4I47pZjFvHdxha2Y1IorK
-   7KvvJV1ErkHefreyjJ8Kd0XcEwpRCBibtOtz2jTWMUyLFjbMALuJPlYQQ
-   A==;
-X-CSE-ConnectionGUID: i9c4kTqnR/mvhb6oIYj2Hw==
-X-CSE-MsgGUID: 57yY1DrWQLW0YHcRSeiFzA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11631"; a="78091841"
-X-IronPort-AV: E=Sophos;i="6.20,245,1758610800"; 
-   d="scan'208";a="78091841"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2025 02:04:26 -0800
-X-CSE-ConnectionGUID: X6jZggesQyuCA+GoJYcHCg==
-X-CSE-MsgGUID: kM+5QMqyQNuoSzVbHT4Ucw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,245,1758610800"; 
-   d="scan'208";a="199764083"
-Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.217])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2025 02:04:23 -0800
-Date: Wed, 3 Dec 2025 12:04:21 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Wentao Guan <guanwentao@uniontech.com>,
-	Ioana Ciornei <ioana.ciornei@nxp.com>
-Cc: andy@kernel.org, mathieu.dubois-briand@bootlin.com,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	zhanjun@uniontech.com, niecheng1@uniontech.com,
-	stable@vger.kernel.org, WangYuli <wangyl5933@chinaunicom.cn>
-Subject: Re: [PATCH] gpio: regmap: Fix gpio_remap_register
-Message-ID: <aTALJckmUxkyeMBG@smile.fi.intel.com>
-References: <20251203020342.2564767-1-guanwentao@uniontech.com>
+	s=arc-20240116; t=1764756788; c=relaxed/simple;
+	bh=7ykrGGwCG5UVuu6S46Y+mkYJETdoJx86HhNwtYYoBJs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FA4f5U40OwtYl5T0t0gRa2eMP/xaGEdZJLh8hd41gA6GcRNRQo9HP+eE+bZJjMKfwgDAwludkmd43qACy5I1GMULMQ7rmxaxB5raZ05AKKCzoWnmhye7WX1Pzzo2IoKRqwePhnTZU4LiC2VVcIxtjySFIVizMR9SguAWFremIwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-5dfccb35b10so4155969137.3
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Dec 2025 02:13:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764756785; x=1765361585;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=08y1I8cftAKXa2ZRDPk1QAbO3eRq2UKMz/WOuMZJTrE=;
+        b=lYmBtAvxK7kZb1z2pPdfVeLp55NLzeaGIn0Gxy78hCiN9sjKgqSQF+zngPB/B6Orsw
+         x7xUPbxhw3BVTxfP7yC3X03/7+Hvb5pWUQin90Hh/xe22joY78CIKwkCgp3MA8nm6El8
+         v6shrcjJbv6qCL0/oxozj8Sk9WmtMxU91oDDlMWy3tby5Bqb3/qKLYcWF14Yys7WxVbQ
+         3ju3cSK1dOnlEIAynyKrg59atlE/V05CZmOT+57svAdKqMJz4qV3i8O3VfcOr0XnM1M3
+         hiXasI/iOFT0v5VmmGx0Le1nkPb8wfBeMeVJ99lz5032gUcSNg9hp4dWjbBrTZ4TnyQ0
+         W/xg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0prlk3jRMstD6waiKyB0QGQ3gLY/4V2WdSUKrCOFG8JIUkD+DDOfKhRwBDyglDTInYPgLE1CMB1i8@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQvlarQbI95Y6Y5/zKoStSgSfm5Z7kC1W9jvN2AfYy79J/+nxy
+	tNPsAom/4nYEcUbAtRHQfHRtCo9PPz5RdmUZDUUIvMwoXGUnDFxUlO/6uZHVhDev
+X-Gm-Gg: ASbGncstvAnMYXx7sozAL4cBbIYPTaVcBNYrr8Wacb48vZgm2ewkgf3DoosYMlpirmM
+	lcVHdbCuZciG3uOrZYO7OiQCxheOrMXCGdTJzBJ2aJCcKEgf6jc811CIcrcWh8Ver9d0BbeN0vN
+	UIe2u5dyEHLMI8Qp/OOTigqpkCWGtJkSG35gMO02tzuM5HcE+6wypcE4Nt4dqxOURUKzkI1d1kh
+	/RJTXrDPybhatR95V0dRdQfAJHctqPe2qH/uH69KeBLKYXOOFBA2l9gRZH8g7qUUNA1SZs9+qqp
+	aWRXJf30+7Kq6zXecRb6NgYHbBI272Dk40EMnWyKVqv2reT1k/Md8Vvk2NweEcPTQcTcMw/Px1N
+	ZAjRXMoA0nIdvS2/gxe+Pn6R/Q7la+pHUl8HojcS65Czm3a/uKZvYNsZEbf7wKjQhFObAuLrCnq
+	GoJZOqeVeJ02urSe2Z3XawU44YqaLGgBY2e/gx4xgW9k/jA7fH
+X-Google-Smtp-Source: AGHT+IEWNTAJTXEqAMBWi/lszvaA5cFAN7r0ej6x0Dwdp7HEV+pYarokjOEUCx+nU/RgWyUF2NFAiA==
+X-Received: by 2002:a05:6102:4a89:b0:5de:738:7299 with SMTP id ada2fe7eead31-5e48e3abbd2mr495032137.32.1764756785173;
+        Wed, 03 Dec 2025 02:13:05 -0800 (PST)
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com. [209.85.222.53])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-93cd7661ae8sm7583292241.12.2025.12.03.02.13.04
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Dec 2025 02:13:04 -0800 (PST)
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-9374ecdccb4so3505404241.3
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Dec 2025 02:13:04 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWQqVSVLEbOcjhvHRfQDw+jBZi0y1WP8d5w7WC3m/0EEza5TVEPVZRjk1XyH0XKo2v0nI0P0WxclVUj@vger.kernel.org
+X-Received: by 2002:a05:6102:579a:b0:5df:c1ac:8ad4 with SMTP id
+ ada2fe7eead31-5e48e01012fmr426535137.0.1764756375911; Wed, 03 Dec 2025
+ 02:06:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251203020342.2564767-1-guanwentao@uniontech.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+ <20251015071420.1173068-2-herve.codina@bootlin.com> <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
+ <CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
+ <5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com> <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
+ <072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com> <CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
+ <55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com> <20251202102619.5cd971cc@bootlin.com>
+ <CAMuHMdXogrkTAm=4pC0B+Sybr=PR3XovnBgmiEyTvUMmJHvBRA@mail.gmail.com> <20251202182834.65d7f0a1@bootlin.com>
+In-Reply-To: <20251202182834.65d7f0a1@bootlin.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 3 Dec 2025 11:06:04 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdU4y3Faz1nJo5CeYdPY9dgetWrLE9bMdba_QeWwXX41CQ@mail.gmail.com>
+X-Gm-Features: AWmQ_bm_vwtlSlkiVojLd-rzxo_k4pikXV0aLj6bs5bAdLDXgMj28SXkaqQFKI0
+Message-ID: <CAMuHMdU4y3Faz1nJo5CeYdPY9dgetWrLE9bMdba_QeWwXX41CQ@mail.gmail.com>
+Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT overlays"
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Kalle Niemi <kaleposti@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Matti Vaittinen <mazziesaccount@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
+	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
+	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Mark Brown <broonie@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-+Cc: Ioana
+Hi Herv=C3=A9,
 
-On Wed, Dec 03, 2025 at 10:03:42AM +0800, Wentao Guan wrote:
-> Because gpiochip_add_data successfully done, use
+On Tue, 2 Dec 2025 at 18:29, Herve Codina <herve.codina@bootlin.com> wrote:
+> On Tue, 2 Dec 2025 17:35:35 +0100
+> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Tue, 2 Dec 2025 at 10:26, Herve Codina <herve.codina@bootlin.com> wr=
+ote:
+> > > On Fri, 28 Nov 2025 10:34:57 +0200
+> > > Kalle Niemi <kaleposti@gmail.com> wrote:
+> > > > >>>>>> Test system testing drivers for ROHM ICs bisected this commi=
+t to cause
+> > > > >>>>>> BD71847 drivers probe to not be called.
+> > > > >>>>> This driver (and overlay support) is in linux-next or somethi=
+ng out of
+> > > > >>>>> tree on top of linux-next?
+> > > > >>>>>
+> > > > >>>>> Rob
+> > > > >>>> Yes the driver is in mainline linux: /drivers/mfd/rohm-bd718x7=
+.c
+> > > > >>> I don't see any support to apply overlays in that driver.
+> > > > >> Ah. Sorry for the confusion peeps. I asked Kalle to report this =
+without
+> > > > >> proper consideration. 100% my bad.
+> > > > >>
+> > > > >> While the bd718x7 drive indeed is mainline (and tested), the act=
+ual
+> > > > >> 'glue-code' doing the overlay is part of the downstream test
+> > > > >> infrastructure. So yes, this is not a bug in upstream kernel - t=
+his
+> > > > >> falls in the category of an upstream change causing downstream t=
+hings to
+> > > > >> break. So, feel free to say: "Go fix your code" :)
+> > > > >>
+> > > > >> Now that this is sorted, if someone is still interested in helpi=
+ng us to
+> > > > >> get our upstream drivers tested - the downstream piece is just t=
+aking
+> > > > >> the compiled device-tree overlay at runtime (via bin-attribute f=
+ile),
+> > > > >> and applying it using the of_overlay_fdt_apply(). The approach i=
+s
+> > > > >> working for our testing purposes when the device is added to I2C=
+/SPI
+> > > > >> node which is already enabled. However, in case where we have th=
+e I2C
+> > > > >> disabled, and enable it in the same overlay where we add the new=
+ device
+> > > > >> - then the new device does not get probed.
+> > > > >>
+> > > > >> I would be really grateful if someone had a pointer for us.
+> > > > > Seems to be fw_devlink related. I suppose if you turn it off it w=
+orks?
+> > > > > There's info about the dependencies in sysfs or maybe debugfs. I =
+don't
+> > > > > remember the details, but that should help to tell you why things
+> > > > > aren't probing.
+> > >
+> > > Rob reverted patches but I plan to continue my work on it.
+> > > On my side, I need the reverted patches but I fully understand that, =
+on
+> > > your side, you need a working system.
+> > >
+> > > In order to move forward and find a solution for my next iteration, c=
+an you
+> > > send your overlay (dtso) used in your working and non working cases?
+> >
+> > Hmm, I must have missed when Rob applied (part of) this series, as I
+> > do an overlay test (using the out-of-tree configfs) on top of every
+> > (bi-weekly) renesas-drivers release, and saw no issues during the last
+> > few months.
+> >
+> > So I applied this series and tested loading my SPI EEPROM overlay.
+> > And it indeed breaks, with the culprit being this particular patch.
+> >
+> > Interestingly, quoting from this patch:
+> >
+> >    "While the commit fixed fw_devlink overlay handling for one case, it
+> >     broke it for another case. So revert it and redo the fix in a separ=
+ate
+> >     patch."
+> >
+> > Where is the separate patch that redid the fix? I assume it is "[PATCH
+> > v4 03/29] of: dynamic: Fix overlayed devices not probing because
+> > of fw_devlink"?  Unfortunately that doesn't fix the issue for me.
+> >
+> > Quoting more from this patch:
+> >
+> >    "Closes: https://lore.kernel.org/lkml/CAMuHMdXEnSD4rRJ-o90x4OprUacN_=
+rJgyo8x6=3D9F9rZ+-KzjOg@mail.gmail.com/"
+> >
+> > Strange that it claims to fix the issue reported there, as the failure
+> > mode I am seeing is exactly the same as documented in that report?
+> >
+> > Do you know what is wrong? The overlay I am using is referenced in
+> > the bug report linked above.
+>
+> The first patch "Fix probing of devices in DT overlays" didn't fix all ca=
+ses
+> and so Saravana reverted this patch and proposed "of: dynamic: Fix overla=
+yed
+> devices not probing because of fw_devlink".
+>
+> This second patch was needed to fix my use case even if more modification=
+ were
+> needed to have my use case fully fixed (other patches in my series).
+>
+> Rob applied those first patches from my series and some systems were brok=
+en.
+> The breakage has been reported my Kalle and Matti and led to a revert of =
+culprit
+> patches.
+>
+> I tried to understand what was wrong. I am pretty convinced that modifica=
+tion
+> done in "of: dynamic: Fix overlayed devices not probing because of fw_dev=
+link"
+> are really better than modification available in "treewide: Fix probing o=
+f
+> devices in DT overlays".
+>
+> I proposed an update [0] and I will be glad if you can also test this upd=
+ate
+> on your side and give me your feedback.
+>
+> [0] https://lore.kernel.org/lkml/20251202175836.747593c0@bootlin.com/
 
-gpiochip_add_data()
+Thank you!
 
-> err_remove_gpiochip instead of err_free_bitmap to free
-> such as gdev,descs..
+Unfortunately this does not fix the problem: I still need to do an extra
+overlay rm/add cycle to make the SPI EEPROM work.
 
-What does 'gdev,desc.' stand for (also notice dot at the end)?
+In addition, it triggers a bunch of new scary error messages:
 
-> Fixes: 553b75d4bfe9 ("gpio: regmap: Allow to allocate regmap-irq device")
+rcar_sound ec500000.sound: Failed to create device link (0x180) with
+supplier soc for /soc/sound@ec500000/rcar_sound,src/src-0
+rcar_sound ec500000.sound: Failed to create device link (0x180) with
+supplier soc for /soc/sound@ec500000/rcar_sound,src/src-1
+[...]
+rcar_sound ec500000.sound: Failed to create device link (0x180) with
+supplier soc for /soc/sound@ec500000/rcar_sound,src/src-9
+rcar_sound ec500000.sound: Failed to create device link (0x180) with
+supplier soc for /soc/sound@ec500000/rcar_sound,ssi/ssi-0
+rcar_sound ec500000.sound: Failed to create device link (0x180) with
+supplier soc for /soc/sound@ec500000/rcar_sound,ssi/ssi-1
+[...]
+rcar_sound ec500000.sound: Failed to create device link (0x180) with
+supplier soc for /soc/sound@ec500000/rcar_sound,ssi/ssi-9
+rcar_sound ec500000.sound: Failed to create device link (0x180) with
+supplier soc for /soc/sound@ec500000/rcar_sound,src/src-0
+rcar_sound ec500000.sound: Failed to create device link (0x180) with
+supplier soc for /soc/sound@ec500000/rcar_sound,src/src-1
+[...]
+rcar_sound ec500000.sound: Failed to create device link (0x180) with
+supplier soc for /soc/sound@ec500000/rcar_sound,src/src-9
+rcar_sound ec500000.sound: Failed to create device link (0x180) with
+supplier soc for /soc/sound@ec500000/rcar_sound,ssi/ssi-0
+rcar_sound ec500000.sound: Failed to create device link (0x180) with
+supplier soc for /soc/sound@ec500000/rcar_sound,ssi/ssi-1
+[...]
+rcar_sound ec500000.sound: Failed to create device link (0x180) with
+supplier soc for /soc/sound@ec500000/rcar_sound,ssi/ssi-9
 
-Perhaps you also want to add this
-ae495810cffe ("gpio: regmap: add the .fixed_direction_output configuration parameter")
+Gr{oetje,eeting}s,
 
-As the patch changed the logic from the original commit.
+                        Geert
 
-Interestingly the 3bd44edd6c55 ("gpio: regmap: fix memory leak of gpio_regmap
-structure") fixed one leak and missed this one.
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-...
-
-> struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
-
->  						 config->regmap_irq_line, config->regmap_irq_flags,
->  						 0, config->regmap_irq_chip, &gpio->irq_chip_data);
->  		if (ret)
-> -			goto err_free_bitmap;
-> +			goto err_remove_gpiochip;
->  
->  		irq_domain = regmap_irq_get_domain(gpio->irq_chip_data);
->  	} else
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
