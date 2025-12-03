@@ -1,121 +1,107 @@
-Return-Path: <linux-gpio+bounces-29219-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29220-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5ECC7C9E1F1
-	for <lists+linux-gpio@lfdr.de>; Wed, 03 Dec 2025 09:03:59 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB74DC9E269
+	for <lists+linux-gpio@lfdr.de>; Wed, 03 Dec 2025 09:10:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0ABDE348E27
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Dec 2025 08:03:59 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D690D4E0507
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Dec 2025 08:10:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C72629C35A;
-	Wed,  3 Dec 2025 08:03:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 071582BE05E;
+	Wed,  3 Dec 2025 08:10:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b4quYip7"
+	dkim=pass (1024-bit key) header.d=thingy.jp header.i=@thingy.jp header.b="JhJoX1pV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46971221555;
-	Wed,  3 Dec 2025 08:03:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B6B29C343
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Dec 2025 08:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764749033; cv=none; b=ER6RYqFa28+u7EWSSNF3dk0oIqC+UldTC0GTYsxNK3WuX6ZgUL08G+ICTMK7iecRABmUxU7bMJ6getXryJ1PQklvF3oeMeipVhe/AP8K50Irm0B+GR/OLO3pgN7gsyDTyjfbT6ms8AhLvNsjgupU8ZlsNwKthBJxJeqHTyvqaYw=
+	t=1764749426; cv=none; b=QKPVbfr5q96SeTfbh0GvhDfAIqjM96qYj56A1KGlrdAzENEtjstj9UeCrwU1iy+rz9iiK6zeV3ZHIT1d1VdoP37f1TOgb36CQdJkeeH8uvlp0iJ+Urx+SXcGqmhhVQg/wbWA/UZkis9qOR2juPnscoPZUcmxBYmnniuEtlJl+so=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764749033; c=relaxed/simple;
-	bh=S/bIgXbztD6yIqM/o6ZEvMgPPfTEua622q9ir/yW0yQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A5KWxsD6dl3jkkSm1venu0UY5/PxWodGLY/ykXBzVNYvv7Bsaw2iTu8O6Bg8YkA/NwyjzaOrlHWVe87q+TGfQ9SWlUBroXvphmxwPybkf6M/Zo/qaZd90M7Nhdqxgg4UjYHzNyBQCO5EHp0F59/rXYOIqf1mmdqYSZt8iI66gYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b4quYip7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F70AC19422;
-	Wed,  3 Dec 2025 08:03:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764749031;
-	bh=S/bIgXbztD6yIqM/o6ZEvMgPPfTEua622q9ir/yW0yQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b4quYip7av0fIaZtuWpIYDEOtdJN+jeXK2LpAvOU5X2FzU9uSbd+zZYCebDMCdTwe
-	 tYZMaW67jOsvR0WUoqWSypvMsbAwP3HBvsXlx0xi/VPLIRzd0VdVID4nUwLHEzJmPM
-	 6sTyaRpdsVeYEEVKAFfhT4851oxYFPThGeDghV9fUFGjhuVUOD3xYV8CM07fUSTp3R
-	 qcJgG13JTOVqj57SWeYWnEnxfW1AqHaMBAj5N5e6s3s2ISPE9nh5vtTFP1BL5jcUGg
-	 b7V9o4jlJxCUUnFu9ELcGeL6t5Sc05fPEZCyXPZuGmUKY6MvKup+vCM3ZcClhw9k9O
-	 laPaoOXaOCW+g==
-Date: Wed, 3 Dec 2025 09:03:49 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/8] dt-bindings: pinctrl: renesas,r9a09g077-pinctrl:
- Document GPIO IRQ
-Message-ID: <20251203-furry-amigurumi-ocelot-dda208@quoll>
-References: <20251121112626.1395565-1-cosmin-gabriel.tanislav.xa@renesas.com>
- <20251121112626.1395565-4-cosmin-gabriel.tanislav.xa@renesas.com>
+	s=arc-20240116; t=1764749426; c=relaxed/simple;
+	bh=Z5QyQLMURNcrCc99cho9V8h9KI4BXTcX0f/zycekJzk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KUP6eG6xp2RwGrV1XCG0uGa03V9hBxlXcXNdM+tmeVNh3sHrzIGILlbfWAizN42RoAYBVONsYcK4p+RxjNzKg3w0Qj4on12NC/HMSibYEFuYcpQW8C8AYWd2vHz1Q1mVAzy8IF50+4CA1vTo+s72bFWy+STANuzRXEqYPCbT9M4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thingy.jp; spf=pass smtp.mailfrom=0x0f.com; dkim=pass (1024-bit key) header.d=thingy.jp header.i=@thingy.jp header.b=JhJoX1pV; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thingy.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0x0f.com
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3436d6bdce8so6104957a91.3
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Dec 2025 00:10:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=thingy.jp; s=google; t=1764749424; x=1765354224; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z5QyQLMURNcrCc99cho9V8h9KI4BXTcX0f/zycekJzk=;
+        b=JhJoX1pVQxbugDb6MhZ63EuMMZr4WjoqIomlGylXmzpn/QX2/n8zu6DEH8r43sOySu
+         8lSHfdj1yxcSENvuhvokZ8ej1ulyP4vjjmPggGAnpwbrB2VmwkFg6TqkwHh6PCHRUvBY
+         iaAJy6o4WUdyzjpWQ7sFFO7QOlxjESD7BFjoM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764749424; x=1765354224;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z5QyQLMURNcrCc99cho9V8h9KI4BXTcX0f/zycekJzk=;
+        b=fMEPVwsd4DSpZllNyqR/rNZyt2XiD3bLdpvLGMG2u9BeVAii1dcd04P95O4Vgg4KWP
+         GEnDpv6A/hqv7i3SAPCsvQBMdkdKVVHyX9i6PG6iWC0ZtExDMONk4tXhvumN/pAe3igv
+         QwSWT2P2f0qxcC7SGNkfsiBpHdLVuap1QRbwGVLKuDlPchmF7Hs7zRmhJwpzzNAmGZvV
+         V05qgsz4AaOakt95ei5O+Rkv6Lz1JL51iLRiXHoKNd38mQp0Fl7NmRwmzf/R6DV2wOt2
+         7VxYQowmkLlqUgOjMhip1C4pwwPt8a8NZsJUNZPa25jTZ9NAe0a7fojGvWXXJfo6NJ1j
+         KayQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVd3fWqCdPZQJ7iK7hKdvOuYmYJcAbGh+0tOn7mOvSzpTcR272M0RqdPxzmlbshVMC+CrxF055yWswA@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwlPfu/UQTKKiaKPn+pcTQRuUPlX+xZJR+W28pAvzpL2+AbICv
+	X8yfBMIOv0N5J4TM8Cg6OPfm40Yt32GILJC4svvr7i1bfjT1cFy6NPQjud44RXJ/ijvkfjFaO2J
+	OWrnxctVqlPB/f80IRtrhWVfgIMxy6bYlcjF6CShaHQ==
+X-Gm-Gg: ASbGncu9U2FDfQc3T1Ck9LBOb7rb+Y24PlL4qj01R5esGfVv1YT7P9FEAp13bIKoXnB
+	RgF2Oj21xQO9zbymnN3w0Mj0I0aqbA2TRGDS18Wxxz1uMbAPnTS9v8vvwlYLIC1pXV3uuYqa97R
+	0oiMY/isXcMP9frW+DB1Ag7cQ/ZRA8E8bQ+nYE5lUiOw7eCysSyr6Bl4Scv5IVStdJ8TuXQH+eM
+	YomtP5l9vYnHEqTnTJ5NtDPec9f4J9Rs17FW3xjdZH71djMFIhW7VsTJBl17Ui4hnH/L8XP
+X-Google-Smtp-Source: AGHT+IEq5y63hfjT8YHjilACNJqyKvg5j+0plLqT3wpsKD5Q7MH1znsyxIQRdeefXp8WZbUY/IfgJtcujn/JnV7uScQ=
+X-Received: by 2002:a17:90b:17cc:b0:335:2eef:4ca8 with SMTP id
+ 98e67ed59e1d1-3491284b4d8mr1814924a91.33.1764749424655; Wed, 03 Dec 2025
+ 00:10:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20251121112626.1395565-4-cosmin-gabriel.tanislav.xa@renesas.com>
+References: <20251124002105.25429-1-jszhang@kernel.org> <20251124002105.25429-8-jszhang@kernel.org>
+In-Reply-To: <20251124002105.25429-8-jszhang@kernel.org>
+From: Daniel Palmer <daniel@thingy.jp>
+Date: Wed, 3 Dec 2025 17:10:12 +0900
+X-Gm-Features: AWmQ_blMivOz7cN3cWbzITo5XCmwfcKVIQTdEzDBywa8v8-CY7hjUyWixRG6J94
+Message-ID: <CAFr9PX=zXuaOBoEUGkYjrROK75e_xt6XZQu=mt0zQQNYWn_TYA@mail.gmail.com>
+Subject: Re: [PATCH v5 07/14] gpio: msc313: Use modern PM macros
+To: Jisheng Zhang <jszhang@kernel.org>
+Cc: Doug Berger <opendmb@gmail.com>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	bcm-kernel-feedback-list@broadcom.com, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Hoan Tran <hoan@os.amperecomputing.com>, Andy Shevchenko <andy@kernel.org>, 
+	Romain Perier <romain.perier@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, 
+	Santosh Shilimkar <ssantosh@kernel.org>, Kevin Hilman <khilman@kernel.org>, 
+	Robert Jarzmik <robert.jarzmik@free.fr>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>, 
+	Srinivas Neeli <srinivas.neeli@amd.com>, Michal Simek <michal.simek@amd.com>, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, 
+	Andy Shevchenko <andriy.shevchenko@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Nov 21, 2025 at 01:26:21PM +0200, Cosmin Tanislav wrote:
-> The Renesas RZ/T2H (R9A09G077) and Renesas RZ/N2H (R9A09G087) SoCs have
-> IRQ-capable pins handled by the ICU, which forwards them to the GIC.
-> 
-> The ICU supports 16 IRQ lines, the pins map to these lines arbitrarily,
-> and the mapping is not configurable.
-> 
-> Document the required properties to handle GPIO IRQ.
-> 
-> Signed-off-by: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
-> ---
->  .../pinctrl/renesas,r9a09g077-pinctrl.yaml        | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g077-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g077-pinctrl.yaml
-> index 36d665971484..1e171b443da1 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g077-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g077-pinctrl.yaml
-> @@ -49,6 +49,17 @@ properties:
->    gpio-ranges:
->      maxItems: 1
->  
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 2
-> +    description:
-> +      The first cell contains the global GPIO port index, constructed using the
-> +      RZT2H_GPIO() helper macro from <dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h>
-> +      and the second cell is used to specify the flag.
-> +      E.g. "interrupts = <RZT2H_GPIO(8, 6) IRQ_TYPE_EDGE_FALLING>;" if P08_6 is
-> +      being used as an interrupt.
-> +
->    clocks:
->      maxItems: 1
->  
-> @@ -119,6 +130,8 @@ required:
->    - gpio-controller
->    - '#gpio-cells'
->    - gpio-ranges
-> +  - interrupt-controller
-> +  - '#interrupt-cells'
+Hi Jisheng,
 
-This is technically an ABI break thus commit msg must explain WHY
-breaking ABI is necessary and what is the impact on users.
+Sorry I missed this. This looks fine to me.
 
-If your driver keeps things backwards compatible, then briefly mention
-it in the commit msg that you require it only for complete hardware
-picture. Or for whatever other reason.
+On Mon, 24 Nov 2025 at 09:39, Jisheng Zhang <jszhang@kernel.org> wrote:
+>
+> Use the modern PM macros for the suspend and resume functions to be
+> automatically dropped by the compiler when CONFIG_PM or
+> CONFIG_PM_SLEEP are disabled, without having to use __maybe_unused
 
-Best regards,
-Krzysztof
-
+Reviewed-by: Daniel Palmer <daniel@thingy.jp>
 
