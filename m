@@ -1,132 +1,219 @@
-Return-Path: <linux-gpio+bounces-29226-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29227-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36EB5C9ED96
-	for <lists+linux-gpio@lfdr.de>; Wed, 03 Dec 2025 12:33:48 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EC1DC9EE8C
+	for <lists+linux-gpio@lfdr.de>; Wed, 03 Dec 2025 12:55:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E4B8C4E1680
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Dec 2025 11:33:46 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 119344E1190
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Dec 2025 11:55:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9C732F5480;
-	Wed,  3 Dec 2025 11:33:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C0822F5A11;
+	Wed,  3 Dec 2025 11:55:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Kh+JcnuO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OK4W5xAx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E95424E4A1;
-	Wed,  3 Dec 2025 11:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D984A2F5339
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Dec 2025 11:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764761623; cv=none; b=WY76PZ+tuI41sM9tR+/NzwXb5ICd5yAUmVisJQE0qB9OuYEZI7ukTe9ZXc+UhVRzCw/oJ9NYmhOBqvJuJbV1T3z7TewTfotKyqtytATma+JSGfQGqNjVkn6i1eOp0QqyMu05kIxZpscmN5GRkoiE4gmlA4pKwTRx8vDTsCovv84=
+	t=1764762935; cv=none; b=CKCUldtdbHXtCc7T68/j5Sm0lUG99hnllwSWnLsLEJOf4oRoJsClLNN14VwdWeqr1Fxu8cXIGvuyhizaRN8B/S+8iCZ1L/9DtKgirYyrbIlxOXFDQaEfEfRjvQ0rVq1XZ/XoYvhlvOcCXD1potmd22BS445wN5CV0hsYYsh9tA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764761623; c=relaxed/simple;
-	bh=9H0Lj32oVEU9hMfCGeT2VAyMxxGLg8HVaCtVRvgGbrY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=dPL4AJ14jgyy6p4GyA2UsJBSDTdJi9kPM50RvKebKzOeVSloiwPru6aF/yCoDz+SB07/PylMWKkPsdvenYMuooVZBN3TCMiFbKikY3HVsEEUrQvFg8lbEeaS/WoHVnvf422uoLt9+5I2RWwupqx7HyQIi+rYVKhBzisID7hOkA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Kh+JcnuO; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1764761619;
-	bh=9H0Lj32oVEU9hMfCGeT2VAyMxxGLg8HVaCtVRvgGbrY=;
-	h=From:Date:Subject:To:Cc:From;
-	b=Kh+JcnuOVdXsSmFt8aDzBmFIvBAwKBSeqK4k8hki9mozRpAps4Qbl5POsXIihqzAb
-	 dWfkAtNE6lJEMTi4P9es7jg7qNJ+AMpXBNEN4qrtwW58GIxopcCwLb1Zb8pCSfenUF
-	 xGfrEFMj4FtOT3z0B7Ji0vufrLc6gUdAx4P5ThSgBwbOMUKtfogFR3HnXwjYd0n9xs
-	 HZRAeMGFa3Bvb9pWTZCaJa//Vk2omBOcZgFLOWlHmIfl9MO8G0zxf3LbohMAZBvMUL
-	 bCBUiO14gimDmn3kTmSPG79XXYrl3a8YStLwWcL6fTSqFsPDYY3UqoHQSv/AwMvIX5
-	 gZMM8iW3mjxDg==
-Received: from yukiji.home (amontpellier-657-1-116-247.w83-113.abo.wanadoo.fr [83.113.51.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: laeyraud)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0545A17E110C;
-	Wed,  3 Dec 2025 12:33:38 +0100 (CET)
-From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-Date: Wed, 03 Dec 2025 12:32:42 +0100
-Subject: [PATCH] pinctrl: mediatek: mt8189: restore previous register base
- name array order
+	s=arc-20240116; t=1764762935; c=relaxed/simple;
+	bh=fo/8CieHydQlqUvzLD8OEdPvGiBp3p5+hEpoFmCo8dU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q+gLs/6uCT3SNqQgsfraFc0yuP/7DS1l12XWukZIxXjqPrZQnr/DYXu5JAp29JvYPQIeikvk5ToSzaq+StcAT+qEQULG3E9qF6R5hU4sBH3a+f0n03H9GNai6tAPpk3Zj21VvIt0qfwQZKfpQ/VBrBX8iK/rrRzimXt5NWn0Q1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OK4W5xAx; arc=none smtp.client-ip=209.85.216.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f66.google.com with SMTP id 98e67ed59e1d1-343d73d08faso512097a91.0
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Dec 2025 03:55:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764762933; x=1765367733; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+J4weCANCaak38nhzr07WM8nW/AOnlIpZsvTwCxRldo=;
+        b=OK4W5xAxUDosheN5GFLJeitdAaOJRCDSN+S6uf6/9i0LGaENUDzxTHon+Oiad725/T
+         hbzEvzePjkA/Jmp6mylSUudJEcSIvtTE9a3oCwLrjNOgzwC6k4rBPvI3eWENmDZAOyuu
+         hLsChRsAZTjjzwIwiRwEWmqxHka3EKIIS7DTAbSZqBdnKHYWos9/OIZa/8luenlC04H/
+         8Sq7PUp8/wWDuxK0c3yfpwBADvi9v/yLETeOoS1UWXrqRhAzC+Rs43RIAXpw4EYbBf6G
+         GEFgj184N149bKzIpdIM3tNeCYy9r+2GwCjRSq/eztgSvLUMst19gDsOYKY4EP6p0PgO
+         dg5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764762933; x=1765367733;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+J4weCANCaak38nhzr07WM8nW/AOnlIpZsvTwCxRldo=;
+        b=Je5ktJU8YMV0Q0/uwO92SlbuGQObW1NQ5tqQWedTp56yjkRNQdjiru/5OIkVW9bFwn
+         Rp+xSoKU8PCBSwWS0+FxueQTDzSXJ430R+bj8VXi9V73mDA7NYykBAM/NTQJ63piTig9
+         s6hyM1rDhT7DvojklDquukdhoFwuK57Uch5Y96omQs0AjKFaSgrslcQSNfpfBAz+J6ry
+         yi2TAm3kTK3IwnAQuWmjpZkVTWgzSITyiYvF7UeQ3VGh4XB8OJ3aBupq4VMSmst/MpYD
+         TfjeZp5vq51pgdNSV8Qa8eR9e8b0VP84LKNmprmbjGhyI8Gq/sYJZtH5Kceg6LeFB67R
+         scXg==
+X-Gm-Message-State: AOJu0YzR5YWAYnQ1pFS2R3irEhdqRWbyB/jPv0EG8GbAoxz3kY+WCa+d
+	AZe2Rss6bFswAeNsj1fus9844MYD0PhK7CtypwAQywZbFwIV47GR7mV2Z2y9LbPY
+X-Gm-Gg: ASbGncsG41vzHdOs31sUYgudwJHkqfFrhm8zgue7912JDpbMY/Ff2au0tUJoIYIRbMy
+	NHXLJv+gDAxUt1JpWgvlZFqO8WtYwiPx4lVHUHqeBYIcii1wrYfGhCTPMAKA4sPtiQN6ZWez53l
+	IJ3PUxJycSvltVP9pdQods6RzGf2RTD6xtrgOy5Y2fPgXBlaLgrktSj84SbEUa3nMNJFrWIORXr
+	RuZc/2Hwh0YuktxwQlEAE1OJhQ5KUeQZYUwmOauh3An36U9qpIt3rPilSILOfYkcfdgzK/BK6Dr
+	Z0eyHY6NXPHWWuF7KYq8hsPwSuV4ftkuUvyQfNf9bhJk5pBeIAs8Gj1UBqKdZQ9WvfpLC+CCNJR
+	DHea2WtVjs6PpGA0ogozNA8msZK7rClAnaeRk2ykQcFjbr1kTnYFkjDIzbe4daWjPiIABdhmRRY
+	OPDJsltL7urbuUAaAXi5jHdEPI8R0=
+X-Google-Smtp-Source: AGHT+IE/xUiq5O8kqcmrzBXlAvajDBehM/epkZLxDmJTdrUUeUnnYcjRz/Vk/uzgLZHt+iNdgt0DXQ==
+X-Received: by 2002:a17:90b:56c7:b0:343:72d5:2c18 with SMTP id 98e67ed59e1d1-34907fd8c71mr6766752a91.12.1764762933087;
+        Wed, 03 Dec 2025 03:55:33 -0800 (PST)
+Received: from [192.168.100.198] ([182.180.105.19])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34910e7af86sm2540786a91.9.2025.12.03.03.55.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Dec 2025 03:55:32 -0800 (PST)
+Message-ID: <7b7145a9-cf3a-4feb-b3ea-862b9e98ff3c@gmail.com>
+Date: Wed, 3 Dec 2025 16:55:24 +0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251203-mt8189-pinctrl-fix-regname-order-v1-1-16c8ff5490a7@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/zWN0QrCMBAEf6XcswdNVKj9FelDTNZ6YNJ6iVIo/
- XeDxcdZlpmVMlSQqW9WUnwky5QqmEND/uHSCJZQmWxrz8a2R46lM92FZ0m+6JPvsrBiTC6CJw1
- Q7uA9THAnax1Vzayop1/iOuyseL1rqewj3VwG+ylGKX2TsBT+12jYti+LgxWnowAAAA==
-X-Change-ID: 20251203-mt8189-pinctrl-fix-regname-order-8ecce1da422a
-To: Sean Wang <sean.wang@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: kernel@collabora.com, linux-mediatek@lists.infradead.org, 
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1764761618; l=2265;
- i=louisalexis.eyraud@collabora.com; s=20250113; h=from:subject:message-id;
- bh=9H0Lj32oVEU9hMfCGeT2VAyMxxGLg8HVaCtVRvgGbrY=;
- b=oDdZtMbH8bHkD0JzMY8waTUEWya8OYrMVWHwRFtHs9F3HBu+n3XgDAr0pyySPY8l+PnPQnV0A
- glEhL+EwLcQAEsDxCpf1F0WtncftcEZltprCBeAnPszEvuzbJfV981S
-X-Developer-Key: i=louisalexis.eyraud@collabora.com; a=ed25519;
- pk=CHFBDB2Kqh4EHc6JIqFn69GhxJJAzc0Zr4e8QxtumuM=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] pinctrl: starfive: use dynamic GPIO base allocation
+To: kernel@esmil.dk, hal.feng@starfivetech.com, linus.walleij@linaro.org
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Emil Renner Berthing <emil.renner.berthing@canonical.com>
+References: <20251026114241.53248-1-alitariq45892@gmail.com>
+Content-Language: en-US
+From: Ali Tariq <alitariq45892@gmail.com>
+In-Reply-To: <20251026114241.53248-1-alitariq45892@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-In mt8189-pinctrl driver, a previous commit changed the register base
-name array (mt8189_pinctrl_register_base_names) entry name and order to
-align it with the same name and order as the "mediatek,mt8189-pinctrl"
-devicetree bindings. The new order (by ascending register address) now
-causes an issue with MT8189 pinctrl configuration.
+Hi,
 
-MT8189 SoC has multiple base addresses for the pin configuration
-registers. Several constant data structures, declaring each pin
-configuration, are using PIN_FIELD_BASE() macro which i_base parameter
-indicates for a given pin the lookup index in the base register address
-array of the driver internal data for the configuration register
-read/write accesses. But in practice, this parameter is given a
-hardcoded numerical value that corresponds to the expected base
-register entry index in mt8189_pinctrl_register_base_names array.
-Since this array reordering, the i_base index matching is no more
-correct.
+Just checking on the status of this v3 patch:
+“pinctrl: starfive: use dynamic GPIO base allocation”.
 
-So, in order to avoid modifying over a thousand of PIN_FIELD_BASE()
-calls, restore previous mt8189_pinctrl_register_base_names entry order.
+It removes the deprecated static GPIO base and aligns the driver with 
+current GPIO core guidelines.
 
-Fixes: 518919276c41 ("pinctrl: mediatek: mt8189: align register base names to dt-bindings ones")
-Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
----
- drivers/pinctrl/mediatek/pinctrl-mt8189.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I didn’t see it in the tree yet, so I wanted to ask if anything else is 
+needed from my side.
+I’m happy to send a v4 if any adjustments are required.
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8189.c b/drivers/pinctrl/mediatek/pinctrl-mt8189.c
-index f6a3e584588b0e8a1aafa9dca74c559974a57af5..cd4cdff309a12b6987362b111e0613bf29b60d84 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt8189.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt8189.c
-@@ -1642,7 +1642,7 @@ static const struct mtk_pin_reg_calc mt8189_reg_cals[PINCTRL_PIN_REG_MAX] = {
- };
- 
- static const char * const mt8189_pinctrl_register_base_names[] = {
--	"base", "lm", "rb0", "rb1", "bm0", "bm1", "bm2", "lt0", "lt1", "rt",
-+	"base", "bm0", "bm1", "bm2", "lm",  "lt0", "lt1", "rb0", "rb1", "rt",
- };
- 
- static const struct mtk_eint_hw mt8189_eint_hw = {
+Thanks for your time,
+Ali
 
----
-base-commit: e47d97576181b31291cf58e77d737d21def0e160
-change-id: 20251203-mt8189-pinctrl-fix-regname-order-8ecce1da422a
-
-Best regards,
--- 
-Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+On 10/26/25 4:42 PM, Ali Tariq wrote:
+> The JH7110 pinctrl driver currently sets a static GPIO base number from
+> platform data:
+> 
+>    sfp->gc.base = info->gc_base;
+> 
+> Static base assignment is deprecated and results in the following warning:
+> 
+>    gpio gpiochip0: Static allocation of GPIO base is deprecated,
+>    use dynamic allocation.
+> 
+> Set `sfp->gc.base = -1` to let the GPIO core dynamically allocate
+> the base number. This removes the warning and aligns the driver
+> with current GPIO guidelines.
+> 
+> Since the GPIO base is now allocated dynamically, remove `gc_base` field in
+> `struct jh7110_pinctrl_soc_info` and the associated `JH7110_SYS_GC_BASE`
+> and `JH7110_AON_GC_BASE` constants as they are no longer used anywhere
+> in the driver.
+> 
+> Tested on VisionFive 2 (JH7110 SoC).
+> 
+> Signed-off-by: Ali Tariq <alitariq45892@gmail.com>
+> Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+> ---
+> Changes in v3:
+> - Add Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+> - Clarify commit message wording for readability
+> 
+> Changes in v2:
+> - Remove unused gc_base field from struct jh7110_pinctrl_soc_info
+> - Drop unused JH7110_SYS_GC_BASE and JH7110_AON_GC_BASE defines
+> - Remove .gc_base assignments from jh7110_sys_pinctrl_info and jh7110_aon_pinctrl_info
+> - No functional change otherwise
+> ---
+>   drivers/pinctrl/starfive/pinctrl-starfive-jh7110-aon.c | 2 --
+>   drivers/pinctrl/starfive/pinctrl-starfive-jh7110-sys.c | 2 --
+>   drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c     | 2 +-
+>   drivers/pinctrl/starfive/pinctrl-starfive-jh7110.h     | 1 -
+>   4 files changed, 1 insertion(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110-aon.c b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110-aon.c
+> index cf42e204cbf0..3433b3c91692 100644
+> --- a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110-aon.c
+> +++ b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110-aon.c
+> @@ -29,7 +29,6 @@
+>   #include "pinctrl-starfive-jh7110.h"
+>   
+>   #define JH7110_AON_NGPIO		4
+> -#define JH7110_AON_GC_BASE		64
+>   
+>   #define JH7110_AON_REGS_NUM		37
+>   
+> @@ -138,7 +137,6 @@ static const struct jh7110_pinctrl_soc_info jh7110_aon_pinctrl_info = {
+>   	.pins		= jh7110_aon_pins,
+>   	.npins		= ARRAY_SIZE(jh7110_aon_pins),
+>   	.ngpios		= JH7110_AON_NGPIO,
+> -	.gc_base	= JH7110_AON_GC_BASE,
+>   	.dout_reg_base	= JH7110_AON_DOUT,
+>   	.dout_mask	= GENMASK(3, 0),
+>   	.doen_reg_base	= JH7110_AON_DOEN,
+> diff --git a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110-sys.c b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110-sys.c
+> index 03c2ad808d61..9b67063a0b0b 100644
+> --- a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110-sys.c
+> +++ b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110-sys.c
+> @@ -29,7 +29,6 @@
+>   #include "pinctrl-starfive-jh7110.h"
+>   
+>   #define JH7110_SYS_NGPIO		64
+> -#define JH7110_SYS_GC_BASE		0
+>   
+>   #define JH7110_SYS_REGS_NUM		174
+>   
+> @@ -410,7 +409,6 @@ static const struct jh7110_pinctrl_soc_info jh7110_sys_pinctrl_info = {
+>   	.pins		= jh7110_sys_pins,
+>   	.npins		= ARRAY_SIZE(jh7110_sys_pins),
+>   	.ngpios		= JH7110_SYS_NGPIO,
+> -	.gc_base	= JH7110_SYS_GC_BASE,
+>   	.dout_reg_base	= JH7110_SYS_DOUT,
+>   	.dout_mask	= GENMASK(6, 0),
+>   	.doen_reg_base	= JH7110_SYS_DOEN,
+> diff --git a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
+> index 05e3af75b09f..eb5cf8c067d1 100644
+> --- a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
+> +++ b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
+> @@ -938,7 +938,7 @@ int jh7110_pinctrl_probe(struct platform_device *pdev)
+>   	sfp->gc.set = jh7110_gpio_set;
+>   	sfp->gc.set_config = jh7110_gpio_set_config;
+>   	sfp->gc.add_pin_ranges = jh7110_gpio_add_pin_ranges;
+> -	sfp->gc.base = info->gc_base;
+> +	sfp->gc.base = -1;
+>   	sfp->gc.ngpio = info->ngpios;
+>   
+>   	jh7110_irq_chip.name = sfp->gc.label;
+> diff --git a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.h b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.h
+> index a33d0d4e1382..2da2d6858008 100644
+> --- a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.h
+> +++ b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.h
+> @@ -38,7 +38,6 @@ struct jh7110_pinctrl_soc_info {
+>   	const struct pinctrl_pin_desc *pins;
+>   	unsigned int npins;
+>   	unsigned int ngpios;
+> -	unsigned int gc_base;
+>   
+>   	/* gpio dout/doen/din/gpioinput register */
+>   	unsigned int dout_reg_base;
 
 
