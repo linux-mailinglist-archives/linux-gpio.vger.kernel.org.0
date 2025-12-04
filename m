@@ -1,51 +1,51 @@
-Return-Path: <linux-gpio+bounces-29259-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29258-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18BFACA4765
-	for <lists+linux-gpio@lfdr.de>; Thu, 04 Dec 2025 17:24:26 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EFFACA4762
+	for <lists+linux-gpio@lfdr.de>; Thu, 04 Dec 2025 17:24:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 908D3308BA39
+	by sea.lore.kernel.org (Postfix) with ESMTP id 25FF1308900A
 	for <lists+linux-gpio@lfdr.de>; Thu,  4 Dec 2025 16:21:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8E352F261C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3A022F2619;
 	Thu,  4 Dec 2025 16:14:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MjrTWd7I"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KssXzRpe"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CA92EDD64;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C252EC0AE;
 	Thu,  4 Dec 2025 16:14:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764864888; cv=none; b=cz6y1Z/gjK9LfPVrkEqVx7Q3Y0ya2tn6BtuU0Z11YaZ5W/a8mFtFGPMeVn+4Dbw1wP9GRFPmGqVfPyjrtgk8PupIFJ8lPUsIlpWWejtygik8CUvrE13kh9KIPfDH0oYCIn+twSL6O38jMzk950yM4RUwPNGIrtPx+D5Usuf1cYI=
+	t=1764864888; cv=none; b=lgzaL6qcrnGRGKuyxkCo/G+f100m6GEb/MTk47SX4fX7Ihtc76zkxauV92pXS4KrI5lfjjckWFHwcfoAiA7Bpgz82FeN6Dke2tV5lShBmE0YtDbRydFYsGk4yuQJ3FootnV5i6mGjMcLfFMUKsgZhKFwI3RQ/WX7X10nwK7IJgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1764864888; c=relaxed/simple;
-	bh=pAQTPCvFXYrGAotRnk0JwW3gTHvZ0ixKDshwUPXxrK8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NBQ8OogupZP7Uen4zIp/VixQ3tbN/DBNXFV3yIG8f1VaHUoGHODLBI08rNkR1YmZU7QsBwTEPivnQJIEKBOcQMXtjK0sgEnSajRG8gm+a2QeZHKY3J09J2hwzcM51zsvKQfpXQdYQ31vY8G8dxZWjF4qVpgusiWkYGt8X+93zOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MjrTWd7I; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E2B36C4CEFB;
+	bh=VgsfvBl+36oyq4I8zzKcVwNlJhTPSgafISNffI+cmak=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=uT3E5btAT78aJfCESijpXm75SFej0gf0xsFYvmAjvuIedPQyM86+jHvClx2TZqTx1TUnLJnStiaX4Pf/UovNH9VyVFj4Ck1LkOpKtD6X57oGnHz8RA7lJZEgtPJQfJMozR2aYEcWy22jehXsm5tXF1q+szSAPu+YcRO5dnR/7xU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KssXzRpe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F3965C116C6;
 	Thu,  4 Dec 2025 16:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1764864888;
-	bh=pAQTPCvFXYrGAotRnk0JwW3gTHvZ0ixKDshwUPXxrK8=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=MjrTWd7IESQq2OaB5iubUwsUjuDu7SzTTl+xi5NHzYGk96AQlLJ0egKjKgELyx6bp
-	 OQnWHPiQXiBr6iIw8IXYevzw7lAC4Bfv68IFaGzXR7665HE7uz9jPMX3keQOMhtzty
-	 QRGw+AxSQ4Rfp501MKgCGIWFQED3tSJJmpoqOMLbd77xNd78lRF6DY+GuoJd8uiPlk
-	 kpilDTgFD0KC209iWiizP7AjznIrjWNFIJH8kiwf7z0A2zM6QjNSGuK4O3B4ud+JYO
-	 RbQ75N2ctTev3T2k53wdQkBOKuBOIq9c3cEICP+CStdBz80xu0jFzh8NlwFArqTaGd
-	 fmAj7E0ND53tQ==
+	bh=VgsfvBl+36oyq4I8zzKcVwNlJhTPSgafISNffI+cmak=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=KssXzRpeFdyGA9QTk3vJdzdFswGspB74AVEGFH4yFdhS31PnhzJZ2IxUlKLwAiLVS
+	 MYIvcpx7rjbxSP+z9HkFLIjEfCwvbPikaTSj54H+gszwx1ueWN48wn8W8TD3RevQMe
+	 V61Qniij4ckzZKt4FyZbQayKqNHC4YcTJFTR7b85nTMbnvdSn3utwu++po6JjxXOyc
+	 cYDByWuqA4Uj6ql28GNGOkrUWQly0BONPhIYPETN5V6GiDSGbrGCDPMpvZoN5RZBvN
+	 uPVUVvsBC6JvINL/elCsd6M/CT3VAQV0AUyTt++Fi8X30E8Ml2IkuXXUyGo/MTyQNS
+	 qE2z/+k0uHyTA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC346D21693;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E259CD216A7;
 	Thu,  4 Dec 2025 16:14:47 +0000 (UTC)
 From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
-Subject: [PATCH v4 0/3] hwmon: Add support for the LTC4283 Hot Swap
+Date: Thu, 04 Dec 2025 16:15:26 +0000
+Subject: [PATCH v4 1/3] dt-bindings: hwmon: Document the LTC4283 Swap
  Controller
-Date: Thu, 04 Dec 2025 16:15:25 +0000
-Message-Id: <20251204-ltc4283-support-v4-0-db0197fd7984@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -54,25 +54,22 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAJ6zMWkC/23OwQ7CIAyA4VdZOIuBwjbw5HsYD4MVJZljgblol
- r27aKLGzOPfpF87k4TRYyK7YiYRJ5986HPITUHsuelPSH2bmwCDkikOtButBCVoug5DiCOF2io
- rsdK2MiRvDRGdv73EwzH32acxxPvrwMSf07clV9bEKaNKGbDo6lo42Dd904XT1oYLeWITfAHNx
- BqADFTGItO85My4FSA+AOfszwciA9JgI3Xlas3bH2BZlgd8uPueMQEAAA==
-X-Change-ID: 20250812-ltc4283-support-27c8c4e69c6b
+Message-Id: <20251204-ltc4283-support-v4-1-db0197fd7984@analog.com>
+References: <20251204-ltc4283-support-v4-0-db0197fd7984@analog.com>
+In-Reply-To: <20251204-ltc4283-support-v4-0-db0197fd7984@analog.com>
 To: linux-hwmon@vger.kernel.org, linux-gpio@vger.kernel.org, 
  devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, 
  Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
  Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, "Rob Herring (Arm)" <robh@kernel.org>, 
- Bartosz Golaszewski <brgl@kernel.org>
+ Bartosz Golaszewski <brgl@bgdev.pl>, "Rob Herring (Arm)" <robh@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1764864927; l=2380;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1764864927; l=9699;
  i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=pAQTPCvFXYrGAotRnk0JwW3gTHvZ0ixKDshwUPXxrK8=;
- b=rnRdWJg2gZbjIbep6IktGTICmCL3KUTRjQh1fqixdCvEtA/d80rvVPRF8MbAvxApjC4N6vMlk
- w8DGYDag4aLD5+OHcQbdhqN/xoI6qGCeA7VvxO2foozbWObJB1KZwLG
+ bh=y543qyEG7czi8Nz+vS76Gn8DS4xGRpuuzhrEJqqY2MM=;
+ b=ORh9NRAXpSyRpJ4o6NGoygjlM0eQ6M/djEiK76gZHEoCyFQwiEXB4cBrcfWW+rmYG18GzCMxv
+ G9hOumoY8BPBFPFslix6sXjfl/L6eCGh/G62WJV/BvGLUCXMOMWB3vM
 X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
  pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
 X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
@@ -80,63 +77,323 @@ X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
 X-Original-From: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
 Reply-To: nuno.sa@analog.com
 
-This is v3 for the LTC4283 how swap controller. Main change is that I'm
-now using the auxiliary bus for adding the GPIO device (done depending
-on FW properties).
+From: Nuno Sá <nuno.sa@analog.com>
 
-Similar to the LTC4282 device, we're clearing some fault logs in the
-reset_history attributes.
+The LTC4283 is a negative voltage hot swap controller that drives an
+external N-channel MOSFET to allow a board to be safely inserted and
+removed from a live backplane.
 
-Guenter, in [1] you can find some replies for some questions you had in
-v2 that likely you don't remember anymore.
+Special note for the "adi,vpower-drns-enable" property. It allows to choose
+between the attenuated MOSFET drain voltage or the attenuated input
+voltage at the RTNS pin (effectively choosing between input or output
+power). This is a system level decision not really intended to change at
+runtime and hence is being added as a Firmware property.
 
-v4 is based in last linux-next (next-20251204) so that we get
-field_prep()/get() for masks that are not compile time constants.
-
-[1]: https://lore.kernel.org/linux-hwmon/0765a0b89779331c62a3f136ef030f7f2f40ea47.camel@gmail.com/
-[2]: https://lore.kernel.org/linux-iio/cover.1761588465.git.geert+renesas@glider.be/
-
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Nuno Sá <nuno.sa@analog.com>
 ---
-Changes in v4:
-- Patch 2
-  * Drop driver's own mutex (now handled by the core).
-- Patch 3
-  * Refrased kconfig menu to "Auxiliary Bus GPIO drivers" as suggested;
-  * Add blank line before including the headers;
-  * Fix includes not in alphabetical order;
-  * Dropped custom fied_prep()/get().
-- Link to v3: https://lore.kernel.org/r/20251104-ltc4283-support-v3-0-4bea496f791d@analog.com
+ .../devicetree/bindings/hwmon/adi,ltc4283.yaml     | 272 +++++++++++++++++++++
+ MAINTAINERS                                        |   6 +
+ 2 files changed, 278 insertions(+)
 
-Changes in v3:
-- Link to v2: https://lore.kernel.org/r/20250903-ltc4283-support-v2-0-6bce091510bf@analog.com
+diff --git a/Documentation/devicetree/bindings/hwmon/adi,ltc4283.yaml b/Documentation/devicetree/bindings/hwmon/adi,ltc4283.yaml
+new file mode 100644
+index 000000000000..f82fff1ec7e4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/adi,ltc4283.yaml
+@@ -0,0 +1,272 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/hwmon/adi,ltc4283.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: LTC4283 Negative Voltage Hot Swap Controller
++
++maintainers:
++  - Nuno Sá <nuno.sa@analog.com>
++
++description: |
++  The LTC4283 negative voltage hot swap controller drives an external N-channel
++  MOSFET to allow a board to be safely inserted and removed from a live
++  backplane.
++
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ltc4283.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,ltc4283
++
++  reg:
++    maxItems: 1
++
++  adi,rsense-nano-ohms:
++    description: Value of the sense resistor.
++
++  adi,current-limit-sense-microvolt:
++    description:
++      The current limit sense voltage of the chip is adjustable between
++      15mV and 30mV in 1mV steps. This effectively limits the current
++      on the load.
++    minimum: 15000
++    maximum: 30000
++    default: 15000
++
++  adi,current-limit-foldback-factor:
++    description:
++      Specifies the foldback factor for the current limit. The current limit
++      can be reduced (folded back) to one of four preset levels. The value
++      represents the percentage of the current limit sense voltage to use
++      during foldback. A value of 100 means no foldback.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [10, 20, 50, 100]
++    default: 100
++
++  adi,cooling-delay-ms:
++    description:
++      Cooling time to apply after an overcurrent fault, FET bad or
++      external fault.
++    enum: [512, 1002, 2005, 4100, 8190, 16400, 32800, 65600]
++    default: 512
++
++  adi,fet-bad-timer-delay-ms:
++    description:
++      FET bad timer delay. After a FET bad status condition is detected,
++      this timer is started. If the condition persists for the
++      specified time, the FET is turned off and a fault is logged.
++    enum: [256, 512, 1002, 2005]
++    default: 256
++
++  adi,power-good-reset-on-fet:
++    description:
++      If set, resets the power good status when the MOSFET is turned off.
++      Otherwise, it resets when a low output voltage is detected.
++    type: boolean
++
++  adi,fet-turn-off-disable:
++    description:
++      If set, the MOSFET is turned off immediately when a FET fault is detected.
++    type: boolean
++
++  adi,tmr-pull-down-disable:
++    description: Disables 2uA pull-down current on the TMR pin.
++    type: boolean
++
++  adi,dvdt-inrush-control-disable:
++    description:
++      Enables dV/dt inrush control during startup. In dV/dt mode, the inrush
++      current is limited by controlling a constant output voltage ramp rate.
++      If not set, the inrush control mechanism is active current limiting.
++    type: boolean
++
++  adi,fault-log-enable:
++    description:
++      If set, enables logging fault registers and ADC data into EEPROM upon a
++      fault.
++    type: boolean
++
++  adi,vpower-drns-enable:
++    description:
++      If set, enables the attenuated MOSFET drain voltage to be monitored. This
++      effectively means that the MOSFET power is monitored. If not set, the
++      attenuated input voltage (and hence input power) is monitored.
++    type: boolean
++
++  adi,external-fault-fet-off-enable:
++    description: Turns MOSFET off following an external fault.
++    type: boolean
++
++  adi,undervoltage-retry-disable:
++    description: Do not retry to turn on the MOSFET after an undervoltage fault.
++    type: boolean
++
++  adi,overvoltage-retry-disable:
++    description: Do not retry to turn on the MOSFET after an overvoltage fault.
++    type: boolean
++
++  adi,external-fault-retry-enable:
++    description: Retry to turn on the MOSFET retry after an external fault.
++    type: boolean
++
++  adi,overcurrent-retries:
++    description: Configures auto-retry following an Overcurrent fault.
++    $ref: /schemas/types.yaml#/definitions/string
++    enum: [latch-off, "1", "7", unlimited]
++    default: latch-off
++
++  adi,fet-bad-retries:
++    description:
++      Configures auto-retry following a FET bad fault and a consequent MOSFET
++      turn off.
++    $ref: /schemas/types.yaml#/definitions/string
++    enum: [latch-off, "1", "7", unlimited]
++    default: latch-off
++
++  adi,pgio1-func:
++    description: Configures the function of the PGIO1 pin.
++    $ref: /schemas/types.yaml#/definitions/string
++    enum: [inverted_power_good, power_good, gpio]
++    default: inverted_power_good
++
++  adi,pgio2-func:
++    description: Configures the function of the PGIO2 pin.
++    $ref: /schemas/types.yaml#/definitions/string
++    enum: [inverted_power_good, power_good, gpio, active_current_limiting]
++    default: inverted_power_good
++
++  adi,pgio3-func:
++    description: Configures the function of the PGIO3 pin.
++    $ref: /schemas/types.yaml#/definitions/string
++    enum: [inverted_power_good_input, power_good_input, gpio]
++    default: inverted_power_good_input
++
++  adi,pgio4-func:
++    description: Configures the function of the PGIO4 pin.
++    $ref: /schemas/types.yaml#/definitions/string
++    enum: [inverted_external_fault, external_fault, gpio]
++    default: inverted_external_fault
++
++  adi,gpio-on-adio1:
++    description: If set, the ADIO1 pin is used as a GPIO.
++    type: boolean
++
++  adi,gpio-on-adio2:
++    description: If set, the ADIO2 pin is used as a GPIO.
++    type: boolean
++
++  adi,gpio-on-adio3:
++    description: If set, the ADIO3 pin is used as a GPIO.
++    type: boolean
++
++  adi,gpio-on-adio4:
++    description: If set, the ADIO4 pin is used as a GPIO.
++    type: boolean
++
++  gpio-controller: true
++
++  '#gpio-cells':
++    const: 2
++
++dependencies:
++  adi,gpio-on-adio1:
++    - gpio-controller
++    - '#gpio-cells'
++  adi,gpio-on-adio2:
++    - gpio-controller
++    - '#gpio-cells'
++  adi,gpio-on-adio3:
++    - gpio-controller
++    - '#gpio-cells'
++  adi,gpio-on-adio4:
++    - gpio-controller
++    - '#gpio-cells'
++  adi,external-fault-retry-enable:
++    - adi,pgio4-func
++  adi,external-fault-fet-off-enable:
++    - adi,pgio4-func
++
++required:
++  - compatible
++  - reg
++  - adi,rsense-nano-ohms
++
++allOf:
++  - if:
++      properties:
++        adi,pgio1-func:
++          const: gpio
++      required:
++        - adi,pgio1-func
++    then:
++      required:
++        - gpio-controller
++        - '#gpio-cells'
++
++  - if:
++      properties:
++        adi,pgio2-func:
++          const: gpio
++      required:
++        - adi,pgio2-func
++    then:
++      required:
++        - gpio-controller
++        - '#gpio-cells'
++
++  - if:
++      properties:
++        adi,pgio3-func:
++          const: gpio
++      required:
++        - adi,pgio3-func
++    then:
++      required:
++        - gpio-controller
++        - '#gpio-cells'
++
++  - if:
++      properties:
++        adi,pgio4-func:
++          const: gpio
++      required:
++        - adi,pgio4-func
++    then:
++      properties:
++        adi,external-fault-retry-enable: false
++        adi,external-fault-fet-off-enable: false
++      required:
++        - gpio-controller
++        - '#gpio-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        swap-controller@15 {
++            compatible = "adi,ltc4283";
++            reg = <0x15>;
++
++            adi,rsense-nano-ohms = <500>;
++            adi,current-limit-sense-microvolt = <25000>;
++            adi,current-limit-foldback-factor = <10>;
++            adi,cooling-delay-ms = <8190>;
++            adi,fet-bad-timer-delay-ms = <512>;
++
++            adi,external-fault-fet-off-enable;
++            adi,pgio4-func = "external_fault";
++
++            adi,gpio-on-adio1;
++            adi,pgio1-func = "gpio";
++            gpio-controller;
++            #gpio-cells = <2>;
++        };
++    };
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ea364af99ba5..b52fc2c777dc 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14955,6 +14955,12 @@ F:	Documentation/devicetree/bindings/hwmon/adi,ltc4282.yaml
+ F:	Documentation/hwmon/ltc4282.rst
+ F:	drivers/hwmon/ltc4282.c
+ 
++LTC4283 HARDWARE MONITOR AND GPIO DRIVER
++M:	Nuno Sá <nuno.sa@analog.com>
++L:	linux-hwmon@vger.kernel.org
++S:	Supported
++F:	Documentation/devicetree/bindings/hwmon/adi,ltc4283.yaml
++
+ LTC4286 HARDWARE MONITOR DRIVER
+ M:	Delphine CC Chiu <Delphine_CC_Chiu@Wiwynn.com>
+ L:	linux-hwmon@vger.kernel.org
 
-Changes in v2:
-- Link to v1: https://lore.kernel.org/r/20250814-ltc4283-support-v1-0-88b2cef773f2@analog.com
-
----
-Nuno Sá (3):
-      dt-bindings: hwmon: Document the LTC4283 Swap Controller
-      hwmon: ltc4283: Add support for the LTC4283 Swap Controller
-      gpio: gpio-ltc4283: Add support for the LTC4283 Swap Controller
-
- .../devicetree/bindings/hwmon/adi,ltc4283.yaml     |  272 ++++
- Documentation/hwmon/index.rst                      |    1 +
- Documentation/hwmon/ltc4283.rst                    |  266 +++
- MAINTAINERS                                        |    9 +
- drivers/gpio/Kconfig                               |   15 +
- drivers/gpio/Makefile                              |    1 +
- drivers/gpio/gpio-ltc4283.c                        |  215 +++
- drivers/hwmon/Kconfig                              |   12 +
- drivers/hwmon/Makefile                             |    1 +
- drivers/hwmon/ltc4283.c                            | 1719 ++++++++++++++++++++
- 10 files changed, 2511 insertions(+)
----
-base-commit: bc04acf4aeca588496124a6cf54bfce3db327039
-change-id: 20250812-ltc4283-support-27c8c4e69c6b
---
-
-Thanks!
-- Nuno Sá
+-- 
+2.52.0
 
 
 
