@@ -1,56 +1,55 @@
-Return-Path: <linux-gpio+bounces-29244-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29245-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBA17CA3157
-	for <lists+linux-gpio@lfdr.de>; Thu, 04 Dec 2025 10:50:28 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC264CA3211
+	for <lists+linux-gpio@lfdr.de>; Thu, 04 Dec 2025 11:01:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 773A03004509
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Dec 2025 09:50:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 72D01312FE09
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Dec 2025 09:56:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67D313358C6;
-	Thu,  4 Dec 2025 09:50:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5920933859E;
+	Thu,  4 Dec 2025 09:50:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UQuSmASX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BUyvxZ8h"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEE73358A7;
-	Thu,  4 Dec 2025 09:50:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B889338593;
+	Thu,  4 Dec 2025 09:50:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764841806; cv=none; b=fFId6gTedVZnImPBb24FBQ0bPvMrpc0MNrWO6rwaI6DzUwip5UnAaUlPyeCLJ54ToenP9evNdlvgRXzMSREfxCnr+uO6iA7Fkz7BiK9ijjE5R+3WIYC7teVxKCA7lqoSHSGc0F8BmStoIILZYIqMCk1MBahukXSzlHA/FOZXEWk=
+	t=1764841829; cv=none; b=MTIBGTiWqSovSs8/3f3pXoMDzp1BrGbopVx0r/8BBdjAEsOIm2iNzxQEJhP2Ppn3/0sWODyKbK7NePCxSPXH/+PlH08a6567d6dk0iFfiMD8UlGSZypsDVY2BDUk6KZV3vMX1Xx3PVtVyqOy+vS/6k0ZPtvNRP4v487FELGb4fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764841806; c=relaxed/simple;
-	bh=lwjULcWlHssyXmM+S8MGi7sA11IRLk+JJGhHPFBMevY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RU+SHG15ozy+jeJkYCxaVQLikumHJPb2OJbag5dcy/juaOVVesE0a9YzKJAXtzlChCGBVz/Ta9VDdAgtyHEPzJSFI47PeeqZPxSsgKrCmwBGvZ9DxeNUFdrglzWEAppQvwRsNyg+aGn2RAVzvp8wQ9DPL80UqUa1gm5maRm2qPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UQuSmASX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAB1BC4CEFB;
-	Thu,  4 Dec 2025 09:50:03 +0000 (UTC)
+	s=arc-20240116; t=1764841829; c=relaxed/simple;
+	bh=3EE42L4o5KjaNZs+9o77LoS427HjjHYNaVkOdSwCJ2w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SOgDSltPZCEmTGNDuFviWENWFg1zXne5sC+p7UaMms+HqywRPA681xZXCKiapmIHbUZi/jO/JGXfmJCLUyFOBcSpbBKGsnH3bJzaCtYkWnUkRx0tPizlFb3yJdcRpK5pI72S1CswAWjYMzpPzgLY4GxReZ6raLqCEZ5z7azrkAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BUyvxZ8h; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA0CEC19422;
+	Thu,  4 Dec 2025 09:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764841805;
-	bh=lwjULcWlHssyXmM+S8MGi7sA11IRLk+JJGhHPFBMevY=;
+	s=k20201202; t=1764841828;
+	bh=3EE42L4o5KjaNZs+9o77LoS427HjjHYNaVkOdSwCJ2w=;
 	h=From:To:Cc:Subject:Date:From;
-	b=UQuSmASXPI80sTRwqV12H79DD4YMKpn1K6asnpoaVzXC1W2GNtLRhVHrouw6ZSAjv
-	 OEIe+eBDoSi0QlUqhQDJzM+1rmSo0E9AngUAmXsyoKT3lKSsYaaFS+2mcDDACEXDZs
-	 le073FdX+lWoOD6ctg4E10vqwjERZX6n41xcn8pSpqzPFaMuzKCYbQijCctN1H5m6q
-	 dtWP7ZbvHp0dxwOK3E5Obh7PI9v6f42kkFBp5fRwLX6Sul3SzGxvm1OWn+V5tJeVnt
-	 SZY6yJWPYPYzTfmkf09rw2oVmxT/GpbBC7Wxjio0i/innnI/tEHBaLW1iaLmdQUa+D
-	 69ojIkgcoS8vA==
+	b=BUyvxZ8hf7EfcpTAjNFN5MBM7qeeF5SUj0H+S4A89nsJyz5GF1YYVnNZH4O0UC5Hj
+	 Jya8sDeZMX7MdWuWYwTbU3jHhRP0vGrakJFnE0nuwKT4TNyFwoAjeqAnxJ6kHkpbp8
+	 ay5yY8G6DEAb8GQaZONDsCs3ogk0M7xv2qjw+TPk3uoaaYl619IvCSouoggbdMnFJG
+	 8yaObYdUy24lwtPwRZqLOH8q971a+Bul5JCyCkrDpTUngIjo69NyVDJ0kCh/ZbP2bP
+	 AzgIiBRVD/lEbSbWaNVQGmixHcIhmVAQRth3K6ovjEOO+pcEMG32/xHzAstVoEc59D
+	 kD3yKGQXHIQHQ==
 From: Arnd Bergmann <arnd@kernel.org>
 To: Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>
+	Conor Dooley <conor.dooley@microchip.com>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	Peng Fan <peng.fan@nxp.com>,
-	Lee Jones <lee@kernel.org>,
-	Koichiro Den <koichiro.den@canonical.com>,
-	Christophe Leroy <chleroy@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Yulin Lu <luyulin@eswincomputing.com>,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: tb10x: fix OF_GPIO dependency
-Date: Thu,  4 Dec 2025 10:49:47 +0100
-Message-Id: <20251204095001.1031736-1-arnd@kernel.org>
+Subject: [PATCH] pinctrl: add CONFIG_OF dependencies for microchip drivers
+Date: Thu,  4 Dec 2025 10:50:14 +0100
+Message-Id: <20251204095024.1031947-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -62,40 +61,43 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-Selecting OF_GPIO is generally not allowed, it always gets enabled
-when both GPIOLIB and OF are turned on.
+The two newly added drivers fail to link on builds without
+CONFIG_OF:
 
-The tb10x driver now warns about this after it was enabled for
-compile-testing:
+x86_64-linux-ld: drivers/pinctrl/pinctrl-pic64gx-gpio2.o: in function `pinconf_generic_dt_node_to_map_all':
+pinctrl-pic64gx-gpio2.c:(.text+0xc9): undefined reference to `pinconf_generic_dt_node_to_map'
+x86_64-linux-ld: drivers/pinctrl/pinctrl-mpfs-iomux0.o: in function `pinconf_generic_dt_node_to_map_all':
+pinctrl-mpfs-iomux0.c:(.text+0xc9): undefined reference to `pinconf_generic_dt_node_to_map'
 
-WARNING: unmet direct dependencies detected for OF_GPIO
-  Depends on [n]: GPIOLIB [=y] && OF [=n] && HAS_IOMEM [=y]
-  Selected by [y]:
-  - GPIO_TB10X [=y] && GPIOLIB [=y] && HAS_IOMEM [=y] && (ARC_PLAT_TB10X || COMPILE_TEST [=y])
+Add a Kconfig dependencies.
 
-Use the usual 'depends on' here.
-
-Fixes: 682fbb18e14c ("gpio: tb10x: allow building the module with COMPILE_TEST=y")
+Fixes: 38cf9d641314 ("pinctrl: add pic64gx "gpio2" pinmux driver")
+Fixes: 46397274da22 ("pinctrl: add polarfire soc iomux0 pinmux driver")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/gpio/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 0fed90ef587a..a1fd130a2408 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -735,9 +735,9 @@ config GPIO_TANGIER
- config GPIO_TB10X
- 	bool "Abilis Systems TB10x GPIO controller"
- 	depends on ARC_PLAT_TB10X || COMPILE_TEST
-+	depends on OF_GPIO
- 	select GPIO_GENERIC
- 	select GENERIC_IRQ_CHIP
--	select OF_GPIO
- 
- config GPIO_TEGRA
- 	tristate "NVIDIA Tegra GPIO support"
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index 2e590913fa44..bc7f37afc48b 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -489,6 +489,7 @@ config PINCTRL_PIC32MZDA
+ config PINCTRL_PIC64GX
+ 	bool "pic64gx gpio2 pinctrl driver"
+ 	depends on ARCH_MICROCHIP || COMPILE_TEST
++	depends on OF
+ 	select GENERIC_PINCONF
+ 	default y
+ 	help
+@@ -508,6 +509,7 @@ config PINCTRL_PISTACHIO
+ config PINCTRL_POLARFIRE_SOC
+ 	bool "Polarfire SoC pinctrl driver"
+ 	depends on ARCH_MICROCHIP || COMPILE_TEST
++	depends on OF
+ 	select GENERIC_PINCONF
+ 	default y
+ 	help
 -- 
 2.39.5
 
