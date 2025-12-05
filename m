@@ -1,121 +1,104 @@
-Return-Path: <linux-gpio+bounces-29286-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29287-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADBA9CA8097
-	for <lists+linux-gpio@lfdr.de>; Fri, 05 Dec 2025 15:57:58 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59D64CA820F
+	for <lists+linux-gpio@lfdr.de>; Fri, 05 Dec 2025 16:14:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4680C311FCEF
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Dec 2025 13:56:12 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 3652C304A1FD
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Dec 2025 15:14:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4271C3321C0;
-	Fri,  5 Dec 2025 13:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EvxNrcAj"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB2E133DEC4;
+	Fri,  5 Dec 2025 15:03:35 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70D330E836;
-	Fri,  5 Dec 2025 13:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F121E33D6CC;
+	Fri,  5 Dec 2025 15:03:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764942970; cv=none; b=hmjHlbgvMq0njf4MgopJxtRr62TA4GTQ7+HInTOuzmw09n279/yZeWCyDiJs37iVYbivwXHG5Oj/0mjstegigVhewz+x5CLmkbHFkjnJ0aWBrXBeK4vsO2PLMiXHT+5l5z6c0mN2/T6eMiX2+TqOMvHsW9aRYKrKhhcNamfzibY=
+	t=1764947014; cv=none; b=AoND2wrtKZABrcarC2j41ih8SCUdYBaOcaj6lpjqvrJQNPRPhjTc2YCeon1935i/wO8H8kP7TTum2a9KF4TTkLnJIli6PQezstQUTCB+kgs8xjFOb5EKCRF70f10FPoKVMbhsPoJv86JhL0i3HR2RYOkRlrbnsqfeBcUy/MPvdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764942970; c=relaxed/simple;
-	bh=n/BIBT2TQ6QLo2HPDq8SQzsjDi1TV37C1BbUNQ906YI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F6R35cCHIR96Cgzm/6HYqB8+KGXnewfYF5EnUWCIOHPMCHOPHbVyZ6zhpdgJjka/cYUkjJuU3ljKMT1isHqbyjsKD2YjF9PwPoWdteiDqRTXWdjLFyA+m+XvNVzp3NjCE2S0tawDAZApLyZSja23FkWh5YVTnJGRqtfVLbaf8qA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EvxNrcAj; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764942968; x=1796478968;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=n/BIBT2TQ6QLo2HPDq8SQzsjDi1TV37C1BbUNQ906YI=;
-  b=EvxNrcAjSo0fOWGo/5VIOJrdTLgepeakTTRApX6grcCC7VAUL18aKmeN
-   zyFVRIa3mWOMUhFNBWxcp0V58JIGH6uaqC5X3hujkRkZCwXsbtrvDdGDe
-   w+xhzLb6ppjGkP5tvzFiODy6fx+zaypSujq5ZGlWW1Gj9OpujS3J3Nkgg
-   9DRbqP6zBpIYqF9BysjE3BDZ7AaLH0HZAmkI9ETjxAAGSbcd8FeXu2wJO
-   1iph7r5n+kudXuflZR6kM2Uf/uSY9pZ1iD18CRJz+EWy5kuGxXLhzdNCA
-   KaaTqzbYlGdJQukUfz/e4fw4ho2zTAUXE75I27xQowWRRRolNRBnQ5VUv
-   w==;
-X-CSE-ConnectionGUID: z68rOVO8SYuGV0HTBhAHlw==
-X-CSE-MsgGUID: X4n+kWfMRBOWpGBoV5/MXw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11632"; a="78326739"
-X-IronPort-AV: E=Sophos;i="6.20,252,1758610800"; 
-   d="scan'208";a="78326739"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2025 05:56:03 -0800
-X-CSE-ConnectionGUID: lQVfrKF8SEGtxxPxGSHIpw==
-X-CSE-MsgGUID: bi/wNcI6RlWASQ7eoOqxCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,252,1758610800"; 
-   d="scan'208";a="195326665"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.83])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2025 05:56:00 -0800
-Date: Fri, 5 Dec 2025 15:55:58 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Askar Safin <safinaskar@gmail.com>
-Cc: Dell.Client.Kernel@dell.com, bartosz.golaszewski@linaro.org,
-	benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
-	linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org, regressions@lists.linux.dev,
-	rrangel@chromium.org, superm1@kernel.org, wse@tuxedocomputers.com
-Subject: Re: [REGRESSION][BISECTED] Dell Precision 7780 wakes up on its own
- from suspend
-Message-ID: <aTLkbgwNFOJT_X1H@smile.fi.intel.com>
-References: <aRDml95nMPeknmUM@smile.fi.intel.com>
- <20251205021616.1570442-1-safinaskar@gmail.com>
+	s=arc-20240116; t=1764947014; c=relaxed/simple;
+	bh=Y/M3N5HNOifqeDWbZssv82d6uTXWJAUjySxUzQeErjc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lI8SYsRtab5rBQLP9mqLrDmYvnL+YgZzc56CplCix+4wOzamclOdEe/ZT6A+8sXi9usBIdh9vZilNXwq1zpNeOGi/SZzZmlpNgNO0Fb9B90nhxjJa8nkMlkJfLctBC8p9BS4NDPd/jwtrwwLrXl2jq1cwt3P9xpMIVnhv+uYiMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+X-CSE-ConnectionGUID: FrUPShMmRrWpQ+SyJqIfHg==
+X-CSE-MsgGUID: BcvE0ed5RJiR+YvLjkDsmQ==
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 06 Dec 2025 00:03:25 +0900
+Received: from demon-pc.localdomain (unknown [10.226.93.202])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id C9CF3427BFEE;
+	Sat,  6 Dec 2025 00:03:21 +0900 (JST)
+From: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linusw@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
+Subject: [PATCH v2 0/8] Add support for GPIO IRQs for RZ/T2H and RZ/N2H
+Date: Fri,  5 Dec 2025 17:02:26 +0200
+Message-ID: <20251205150234.2958140-1-cosmin-gabriel.tanislav.xa@renesas.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251205021616.1570442-1-safinaskar@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Fri, Dec 05, 2025 at 05:16:16AM +0300, Askar Safin wrote:
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
-> > > Sounds like it comes via GPIO, but it's not handled as touchpad IRQ. You may
-> > > try to add a quirk to prevent touchpad IRQ from waking the system. That should
-> > > help I believe.
-> > > Something like "ignore_wake=INTC1085:00@355" in the kernel command line.
-> > > If it helps, update drivers/gpio/gpiolib-acpi-quirks.c accordingly.
-> > 
-> > It might be actually the touchpad controller name (as I see in the quirk table):
-> > 
-> > 	ignore_wake=VEN_0488:00@355
-> 
-> It worked!
+The Renesas RZ/T2H and RZ/N2H SoCs have IRQ-capable pins handled by the
+ICU, which forwards them to the GIC.
 
-Glad to hear this!
+The ICU supports 16 IRQ lines, the pins map to these lines arbitrarily,
+and the mapping is not configurable.
 
-> First, there is no option "ignore_wake". Correct option name is "gpiolib_acpi.ignore_wake".
+Add a GPIO IRQ chip that can be used to configure these pins as IRQ
+lines, and add the user switches present on the board.
 
-Sure, sorry for mistake on my part, I never remember the whole names of the
-kernel command line parameters.
+The ICU driver has been submitted as part of a separate series [1].
 
-> I tried "gpiolib_acpi.ignore_wake=INTC1085:00@355", and it didn't help.
-> 
-> I tried "gpiolib_acpi.ignore_wake=VEN_0488:00@355", and it did help!
-> 
-> Please, somebody (maybe Mario?) author a patch.
+[1]: https://lore.kernel.org/lkml/20251201112933.488801-1-cosmin-gabriel.tanislav.xa@renesas.com/
 
-You can do it yourself, we may help and I dare to say for Mario and myself
-that we even will be glad to help you to produce and submit patch on your own.
-The expertise in contribution to Linux kernel is valuable thing, and I truly
-believe it will help you in the future.
+V2:
+ * drop interrupt-controller and #interrupt-cells from required to keep
+   compatibility
+ * select GPIOLIB_IRQCHIP
+ * select IRQ_DOMAIN_HIERARCHY
+ * add comment to clarify wakeup_path atomic usage
+ * add more details to the commit message, including usage of the
+   hierarchical IRQ domain and wakeup capability implementation
+
+Cosmin Tanislav (8):
+  pinctrl: renesas: rzt2h: move GPIO enable/disable into separate
+    function
+  pinctrl: renesas: rzt2h: allow .get_direction() for IRQ function GPIOs
+  dt-bindings: pinctrl: renesas,r9a09g077-pinctrl: Document GPIO IRQ
+  pinctrl: renesas: rzt2h: add GPIO IRQ chip to handle interrupts
+  arm64: dts: renesas: r9a09g077: add GPIO IRQ support
+  arm64: dts: renesas: r9a09g087: add GPIO IRQ support
+  arm64: dts: renesas: r9a09g077m44-rzt2h-evk: add GPIO keys
+  arm64: dts: renesas: r9a09g087m44-rzn2h-evk: add GPIO keys
+
+ .../pinctrl/renesas,r9a09g077-pinctrl.yaml    |  13 +
+ arch/arm64/boot/dts/renesas/r9a09g077.dtsi    |   3 +
+ .../dts/renesas/r9a09g077m44-rzt2h-evk.dts    |  33 +++
+ arch/arm64/boot/dts/renesas/r9a09g087.dtsi    |   3 +
+ .../dts/renesas/r9a09g087m44-rzn2h-evk.dts    |  30 +++
+ drivers/pinctrl/renesas/Kconfig               |   2 +
+ drivers/pinctrl/renesas/pinctrl-rzt2h.c       | 245 +++++++++++++++++-
+ 7 files changed, 320 insertions(+), 9 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.52.0
 
 
