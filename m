@@ -1,32 +1,32 @@
-Return-Path: <linux-gpio+bounces-29306-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29307-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38B38CA93D0
-	for <lists+linux-gpio@lfdr.de>; Fri, 05 Dec 2025 21:17:49 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 917A9CA93D3
+	for <lists+linux-gpio@lfdr.de>; Fri, 05 Dec 2025 21:17:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6D09B30F5ACC
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Dec 2025 20:16:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5628B30F7966
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Dec 2025 20:17:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47B7726CE2C;
-	Fri,  5 Dec 2025 20:16:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6267026CE2C;
+	Fri,  5 Dec 2025 20:17:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mail.tikatika.nl header.i=@mail.tikatika.nl header.b="cfXty5bP"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mail.tikatika.nl header.i=@mail.tikatika.nl header.b="NL+W52IF"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from tika.stderr.nl (tika.stderr.nl [94.142.244.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531A625A2A2;
-	Fri,  5 Dec 2025 20:16:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E6C25A2A2
+	for <linux-gpio@vger.kernel.org>; Fri,  5 Dec 2025 20:17:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.142.244.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764965814; cv=none; b=YSHjRzKMFN3bTTwqwuBkK+i375qPDAQu4BG0T2+SKhBSSYWiWX1sLkAI/WL9a88LBfxCm6KWrRHbQV/yUA1SQ1fqFVdy4pA4bh53949RCTEyyzm7Ecd24Oy8doPDNxGgqp/ZgTgpTVmpz0FICVQ/fYH/1KMaxDMGWcIWpbw4wN4=
+	t=1764965825; cv=none; b=cZxLbW/lecbuj3erATtESqeThnW51oUQQDQoDEmYVe1+mQKttuR3S4PDMtH1V58j3HxcoK1+ttTXbI2JaQTFJZDmnFKnWZmEAse4+YHx6Q6qDjpiOidUQ3XHaP+SxLkt7WYcl2Bh3CxCOvKdv53ENXIpuIoF0GKAqLddw6rCNPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764965814; c=relaxed/simple;
-	bh=H1pkqbtnAmubRqF3JPbkkpaISz3BW4qCIPShfd2Y2tM=;
+	s=arc-20240116; t=1764965825; c=relaxed/simple;
+	bh=c6lOALAg8Z8lVxKLXwRMLDhzCV9m6rH/N0CHYY1xybg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Pf0j0L2CIA8iboQ2aTOlIF19MDgGvBZaGsuqYPPBPxyiVkuyjz7j4L5z7YJq2GjhIxqBjLIN2/1xK/3IMJxlQxTFT1YeSXa1sDa0iHx1QWv6PyiUP4JPxiKYGQBCc0XAK/fIz+I3bpMy1Lp7Gonfe0aJWARXvu7/g5MSjFKV2yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stdin.nl; spf=none smtp.mailfrom=tika.stderr.nl; dkim=pass (1024-bit key) header.d=mail.tikatika.nl header.i=@mail.tikatika.nl header.b=cfXty5bP; arc=none smtp.client-ip=94.142.244.14
+	 MIME-Version; b=Y9EXR36rvrvDgqaU5XZEyxUlZ39da8eSzb/IJVL3bFEsMMMVmRltcyPSkEcfYDe4TVruSwAz7G2WojsW3t5DYnwjrPUC6lBBJ+9m+FJnHDjGeyIf/pmEwK1oEnUxP4eGsAcYDSaGsWIGrT5qALlJ9jO2gU7u+mKtEUbiK7inlf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stdin.nl; spf=none smtp.mailfrom=tika.stderr.nl; dkim=pass (1024-bit key) header.d=mail.tikatika.nl header.i=@mail.tikatika.nl header.b=NL+W52IF; arc=none smtp.client-ip=94.142.244.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stdin.nl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=tika.stderr.nl
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -35,24 +35,24 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=XIoqhX0typcqboX+DkDTWXgWFYzdfO7UAmIx4Qh4ho8=; b=cfXty5bPbjRvDtG0+5c2vXuNPt
-	azWCtZeHSTE0EyUhRsoQZjiHOn53/wtNPZvdTbdgbsT4ep9e6Ywkrsm63TbOpH7rc5hZmkD/5loaB
-	29sq5MqsDKcaZfa0BpRU4JxpnyGAGRdf3xJmnjaNgp3IY1WxfdT310U3IWTM6OzwZtTY=;
+	bh=pn/ekbTIZqC3VuEnsI273ukLxN04lGciAMmt5wrgHOY=; b=NL+W52IFlmNuXro/qvyh6AlREY
+	us+g7Y8e5U72qis/gZq0auakjgcasXr3p4AITtRvMHeo0W0dREe1n/potg0I+vJyNHTKY55JfnYZY
+	AusMf1u+ruPh1bpj+97ycA9qtCLIcbnyHOySNUOlH3wCbFmHBedM5lEwjS11CeUO//Q0=;
 X-Preliminary-Spam-Score: -4.3 (----)
 Received: from [45.142.19.84] (helo=zozo)
 	by tika.stderr.nl with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <matthijs@tika.stderr.nl>)
-	id 1vRcEN-00DDbS-2H;
-	Fri, 05 Dec 2025 21:16:46 +0100
-Received: (nullmailer pid 2868408 invoked by uid 1000);
-	Fri, 05 Dec 2025 20:16:43 -0000
+	id 1vRcEX-00DDbl-1b;
+	Fri, 05 Dec 2025 21:16:56 +0100
+Received: (nullmailer pid 2868416 invoked by uid 1000);
+	Fri, 05 Dec 2025 20:16:53 -0000
 From: Matthijs Kooijman <matthijs@stdin.nl>
 To: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org, linux-gpio@vger.kernel.org, Matthijs Kooijman <matthijs@stdin.nl>, stable@vger.kernel.org
-Subject: [PATCH 1/2] gpio: rockchip: Call pinctrl for gpio config
-Date: Fri,  5 Dec 2025 21:06:52 +0100
-Message-ID: <20251205201254.2865179-4-matthijs@stdin.nl>
+Cc: linux-rockchip@lists.infradead.org, linux-gpio@vger.kernel.org, Matthijs Kooijman <matthijs@stdin.nl>
+Subject: [PATCH 2/2] arm64: dts: rockchip: rk3308: Add gpio-ranges properties
+Date: Fri,  5 Dec 2025 21:06:53 +0100
+Message-ID: <20251205201254.2865179-5-matthijs@stdin.nl>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20251205201254.2865179-2-matthijs@stdin.nl>
 References: <20251205201254.2865179-2-matthijs@stdin.nl>
@@ -64,35 +64,63 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Pinctrl is responsible for bias settings and possibly other pin config,
-so call gpiochip_generic_config to apply such config values. This might
-also include settings that pinctrl does not support, but then it can
-return ENOTSUPP as appropriate.
+This makes the mapping between gpio and pinctrl explicit.
 
-This makes sure any bias and other pin config set by userspace (via
-gpiod) actually takes effect.
+This does not immediately change functionality, because the
+gpio-rockchip.c driver has a workaround that defines ranges when they
+are not present in DT, but that relies on global gpio numbering (so
+AFAICS only works when the rockchip gpio banks are initialized first and
+in-order). This prevents the fragility of the workaround for rk3308.
 
-
-Cc: stable@vger.kernel.org
 Signed-off-by: Matthijs Kooijman <matthijs@stdin.nl>
-
 ---
- drivers/gpio/gpio-rockchip.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/rockchip/rk3308.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-index 47174eb3ba76f..106f7f734b4ff 100644
---- a/drivers/gpio/gpio-rockchip.c
-+++ b/drivers/gpio/gpio-rockchip.c
-@@ -303,7 +303,7 @@ static int rockchip_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
- 		 */
- 		return -ENOTSUPP;
- 	default:
--		return -ENOTSUPP;
-+		return gpiochip_generic_config(gc, offset, config);
- 	}
- }
- 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+index 31c25de2d689c..681d2429d541d 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+@@ -889,6 +889,7 @@ gpio0: gpio@ff220000 {
+ 			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cru PCLK_GPIO0>;
+ 			gpio-controller;
++			gpio-ranges = <&pinctrl 0 0 32>;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+@@ -900,6 +901,7 @@ gpio1: gpio@ff230000 {
+ 			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cru PCLK_GPIO1>;
+ 			gpio-controller;
++			gpio-ranges = <&pinctrl 0 32 32>;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+@@ -911,6 +913,7 @@ gpio2: gpio@ff240000 {
+ 			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cru PCLK_GPIO2>;
+ 			gpio-controller;
++			gpio-ranges = <&pinctrl 0 64 32>;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+@@ -922,6 +925,7 @@ gpio3: gpio@ff250000 {
+ 			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cru PCLK_GPIO3>;
+ 			gpio-controller;
++			gpio-ranges = <&pinctrl 0 96 32>;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+@@ -933,6 +937,7 @@ gpio4: gpio@ff260000 {
+ 			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cru PCLK_GPIO4>;
+ 			gpio-controller;
++			gpio-ranges = <&pinctrl 0 128 32>;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
 -- 
 2.48.1
 
