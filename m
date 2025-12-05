@@ -1,238 +1,202 @@
-Return-Path: <linux-gpio+bounces-29269-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29270-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7FE4ECA59F2
-	for <lists+linux-gpio@lfdr.de>; Thu, 04 Dec 2025 23:24:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 26050CA5BAD
+	for <lists+linux-gpio@lfdr.de>; Fri, 05 Dec 2025 01:12:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 315CC3060F0B
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Dec 2025 22:24:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A9C503077E75
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Dec 2025 00:12:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44AD7307AC5;
-	Thu,  4 Dec 2025 22:23:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17E0618C2C;
+	Fri,  5 Dec 2025 00:12:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g0PVssdr"
+	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="RgXzUmo4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023079.outbound.protection.outlook.com [40.107.44.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF4826CE17
-	for <linux-gpio@vger.kernel.org>; Thu,  4 Dec 2025 22:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764887039; cv=none; b=dgogSr9eAd1SQ+hkxE5WxCsnPftWSoyQXaQAF6QR5QjkmKYV95lXn1hagDx7hkEOFi9duRachdTkJuL/7LdWo5sL1I6XbyZLRcDf4c9x+1JUZTrcyvzHwpX7UNHoSYdytf/ajPzv0dCcQiiynzMxQQXWqwHC49cF07UkffYo2EE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764887039; c=relaxed/simple;
-	bh=DdLkBWTvWR6t/4yis1/qibr2sKqSxf7KdZn7c3P0mDQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RHaZRy6mYHjbCiwj3cJQ5s9M5CTSM4L/YS5MoJ+6bqV8hFbGVeQSUCIRCkIeJGP7rqDbN3GVlUqS0ayQH+clIJZRA5jRl/FR1lr8ffsCU6nCxyGnQE1OabmT+S2wwDNWZJghS5vmdzQ9oH/OfdfJyoxQGPo6oKrqt+B2fXTO0FA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g0PVssdr; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b79f98adea4so117326766b.0
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Dec 2025 14:23:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764887036; x=1765491836; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X7kJF25Q3ylLh9rrMMVKXnH1HNYjhOKvkB7STg7bm9A=;
-        b=g0PVssdrfLNLo9cWFaquciAAxDApOIWeMnHjWgaZlpQC7bBDFiYYLYI6WPKrp42xGG
-         nogUpkAB8gtbMMW/G++qv+HGnCRAKgcpEXHMtWwDtcJK6Tddcqvo4Y9Y5pXU3qx0Q4dJ
-         6HPujmQuWHF7b1jAHtHpXDDTYivoJ2GL9dAcejMuPMNbH+puk8y5H13dvxNbgMT8jHHW
-         xqWO47bVCGTgK9A4VJO+c6xhd5SJ7wtW3cjXJ/VCrGKt5wEg8YBkeXH2UuFUjfxm9+Z1
-         eg04WUB0V6XGVg7VljB8HXnyxJofeSwTmJtxr/Tb2VCVsvdwAGftmvV13sqgmFMPizSJ
-         AwbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764887036; x=1765491836;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=X7kJF25Q3ylLh9rrMMVKXnH1HNYjhOKvkB7STg7bm9A=;
-        b=DBNJZ7pAhN92+vOv9IK7XJ3I5TaMxhuwi8QApgOrQcMIJBWVBNbU9+K+k1lOC5Tk36
-         m5+oCgV87xsaqAcC6HKKssnuX6P3MI1mByiX94ruC1p2aJFmIH4JFROdc9U3DGI8LT3y
-         cwgoCtFhHrVoTZc81dGnoDcalHS+WK6wwSSNXtUESb5DMhKkaH0BoLKnevD+A4owa3fb
-         /YrWYGSk71s5J0LMXsAlpp148xwq0Ik4o+Ifgpic/4Tx0VRabLoAtYalAoLTQU0Q9ba1
-         loTPI0ajo2VBhmBetyR3efnbJFA+XdogQ230/oG66FaxvAuezWlOAfd7CKVo9NBiDb3x
-         8D6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXcw4kFbl23Yo6MU/Z2gegZYVCeOrBIc7jIoQ8Ro5vnBQgWrAM61g4lH17I+hr9UPFpXNlofkPOnWeY@vger.kernel.org
-X-Gm-Message-State: AOJu0YzziQuundeYCnpClw5VBW4qZ+LooF6nfIuCEvWDzMw1duUG01jp
-	/mrFzTl5pul+IE3Tdu3obgwCBe2vxW+85SyvpfyCVJzZWCNYVWQIvocikvVpOqHYI1fM8SMUa2p
-	Gl9WIMPaQZZgiWv/eylAjHlfzEPW9J1o=
-X-Gm-Gg: ASbGncu3ScKI00QCig2VonsfMhWuiajXakzSIDhOU0CR380aZeGvAmZIxwihbPhxoJv
-	WzBVN/lne7SptWSCzLCawPNKj09KGwjf3mn1jEBhM6n2Mg8M769v4ZsnzN/87cW76jitMsqEG33
-	20oA1AcYH1LGo+5mcrFSEvNPPW8H7+XnsUTq6Vq7t73qEeIRG0CdaEe6XCl1PUHCGAfEpKUpzFr
-	42Utfie7cO6hyV4lq07Nn+QYglTstURqRqymeElLklvq0dHLU9nf+9TyVVndgtCUpT9gP+Ylu5x
-	hM9C7piZ1aMaom7EY3IRtVadhCZcIr3iNIJOjEVZDIfxgb08twxcLjlVr8RbIBnGwEscPazxsRw
-	L/NAm/A==
-X-Google-Smtp-Source: AGHT+IGu+d4vyuMsd3dEhDQpsPPgCaoD5bBiEvI0kE1yXpu5bAk3jN94E00EwA3/8wViZNAKmIE4q44Wn6De4ECf+mM=
-X-Received: by 2002:a17:907:96ac:b0:b76:f090:768c with SMTP id
- a640c23a62f3a-b79dc73cd2dmr807148366b.30.1764887035570; Thu, 04 Dec 2025
- 14:23:55 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F87D28E00;
+	Fri,  5 Dec 2025 00:12:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764893562; cv=fail; b=PeDZY3GmgCmYHJek+aGywQzFszqk+FPljtS4tDHTidIhyl5+95l8MdeBT742fN3js7BSR7xjZwhqHR7k/EPrsqOFd1PRmgzXye1IvX5dAgh+/SiumYRdsWHDjnWtIeCDLfGmOx951s0ebAwVdGL2pUHxDgqDNhJ0ElU0BnCp9gE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764893562; c=relaxed/simple;
+	bh=RfCg0vqnUp28D9MKQwUhyYiNY5Pyt205agGey28oADs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=G1x2rjXQoipm93Gb/OBWCpS8VyAvbzG6UCk/Bwj1s/u8+Bept78Bz5mLs+rcUTkgZVfjTShNDyy2Ok9NSTDtIf48quqXB9J0qFtnXZt0u3VF/cY/6OpSbpJuM49M7fQ3cXwRxISmzuR194rFKEV4McE6f1Q5KL12xc1PhvnULQ4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=RgXzUmo4; arc=fail smtp.client-ip=40.107.44.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=a0F7LsBIAPEikw9/8Tl8A8xaYh/wInc46N/4hVnMiR38ZOtykIYcjsvZnw2zgYXcM5s4kVlBmpjSblEQnvru8TLPc2yxyia7cguRJERUye1L+s8Y/z23KYwaUldfGi4IqfAPM/fkctBzpFRqjtt5IslGNIka48hI6KARAIJk2XD671iOcXyh8mXQjxhn+aOGFLhegV+yOOb7vbKM+MrXylkn2kC3eBXklERCWPkPewZH0JFukHOGTdEhr8BzFAlKFjrc/LbJPa/AKCFJhhDeTOuC+KC033vxw8yKzCQt8l7VVc+1PL10H6SPgs4bNuRvQnSTHVN2wujSEDzkP4A3Aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zizRArxNHuhXsiCmnuVrqQhzUgg4lLWLxGfw2foAeh0=;
+ b=vtkdgVqoMUN9N4GGIqbMyl8iSbZqLnwXb+7AhK2rKf653XL4OuTfSRmEE+9E9bWl4sbaWaHnOR+IsyeAkDKP2m6JVhImGzc+ATgByBbVjy6WTGDWCkYV2L/wRav89dZf7DoOnMxHmQvedXjV8FiRNFuNx7NcsXBtsHjy7vdaTwVRmDUEPw6G6U1B0OyY0NwT7cx6jLXiGsc32L2EAchgBHbRpbAfXn9yAs5SBw6ubpZvOQIPfnj0JUNdxWtXilspQUbPU9EfE4lhf1hs139pYZBXfLMn8nKromwwRGdyhpOeVA4GDNeZbncjue0O3uvUefzdRrTYrK+FzKycHWTSxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
+ header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zizRArxNHuhXsiCmnuVrqQhzUgg4lLWLxGfw2foAeh0=;
+ b=RgXzUmo4PZZhfMPFjiswHD+42J8N9Ys4FyVusdPxUIdJZCe0iD6T9m9e7wEufJ9tzlV+BS+XcPSFR/4cDjB1tMm6bWe5Mj/K9JANzCRWqsV3VdkZGJSjQmP5MrzSkH4XI5fxF6wC6a52i1Xlr35NhvaG6EwgdPhYBfvTWBslFG10w7EfXRBwhwmWXfnWT5C9Va7D8vBjpzQl3XhYjXR+PYKy8m5I/B2bFAAqXtIUrPidTVYbtlhPupnMe9F8F75b79S/IJpLleBn3HWVwrK3nVox5ux8AgEZkBGwXnqjl3QgK8UbQ2dCsubXmLDtytWm1NzJTg2xVgnHhChXzq1QoA==
+Received: from SEYPR06MB5134.apcprd06.prod.outlook.com (2603:1096:101:5a::12)
+ by SG2PR06MB5059.apcprd06.prod.outlook.com (2603:1096:4:1c7::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.9; Fri, 5 Dec
+ 2025 00:12:35 +0000
+Received: from SEYPR06MB5134.apcprd06.prod.outlook.com
+ ([fe80::6b58:6014:be6e:2f28]) by SEYPR06MB5134.apcprd06.prod.outlook.com
+ ([fe80::6b58:6014:be6e:2f28%6]) with mapi id 15.20.9388.009; Fri, 5 Dec 2025
+ 00:12:35 +0000
+From: Jacky Chou <jacky_chou@aspeedtech.com>
+To: Rob Herring <robh@kernel.org>
+CC: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi
+	<lpieralisi@kernel.org>, =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?=
+	<kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Linus
+ Walleij <linus.walleij@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
+	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: [PATCH v6 0/7] Add ASPEED PCIe Root Complex support
+Thread-Topic: [PATCH v6 0/7] Add ASPEED PCIe Root Complex support
+Thread-Index: AQHcYovTiOKpFL2Yzky+VI550x/5ybUR6lmAgABEAbA=
+Date: Fri, 5 Dec 2025 00:12:35 +0000
+Message-ID:
+ <SEYPR06MB5134D0D5911E3C86D869151E9DA7A@SEYPR06MB5134.apcprd06.prod.outlook.com>
+References: <20251201-upstream_pcie_rc-v6-0-8c8800c56b16@aspeedtech.com>
+ <20251204195355.GA1975043-robh@kernel.org>
+In-Reply-To: <20251204195355.GA1975043-robh@kernel.org>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=aspeedtech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SEYPR06MB5134:EE_|SG2PR06MB5059:EE_
+x-ms-office365-filtering-correlation-id: 45071fd4-0970-4801-eb29-08de3392fe0d
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700021;
+x-microsoft-antispam-message-info:
+ =?iso-8859-2?Q?Qb2V7InUnu+A4M+t9+pWdnyY7QCSteapPW5zcM07HEPzx610KnA364bwZx?=
+ =?iso-8859-2?Q?Mnk9f/YLop1RZnjAA7NcRcMs9pc4dYyIKKkvRQ2ye/UcZ4kcF8yaJNE9Na?=
+ =?iso-8859-2?Q?ZYQmUb5wlb0bsb3mu+Icu/am5sKRHDrUfxbGBl4UjiQGyPAtFu/UGrIo4u?=
+ =?iso-8859-2?Q?2xm1C9U0xmLIwxQO5RFXVXZ8SQgnd/e01U5x0XJUWqOtKsD//URxolWNA0?=
+ =?iso-8859-2?Q?zfvrQZbBmz48n/OE2+TPFs5edwbpGtDLCY/MPUrKFMotgERslEYrZ3wI2E?=
+ =?iso-8859-2?Q?Nv9rl4Ub3q1XxPnPTIsrB7gHQc5XOtA5l6vhKacLQW0A4UZpxcr+RwVodO?=
+ =?iso-8859-2?Q?wEWm+3CrsXZzPnIcaLTKvYWPwLLTMi9pfS2zVyjT5JO/trafnfwQhQwf9k?=
+ =?iso-8859-2?Q?N6UmGLCXOxoU1TYaVBAbJ8vEEVeQdfXkguxw/PeMkQrC+JUeFA/BLmwfXT?=
+ =?iso-8859-2?Q?XdrVllmm9iv60p2L3yPWnc6+jIbq6oVv9En/3LC9Ti1grAarQ6ngP+7Y2q?=
+ =?iso-8859-2?Q?gDIVIgfu2LHHxT6puYrjIqn0fQNa4nm0TWA9lZy2qkaxCsWYIfJhhSb0X+?=
+ =?iso-8859-2?Q?YDkUbMq0OGq/Q9tLvIJXWQf8djtjFVLEecDW4GJXLqRuiBXUUSdUbqHw4u?=
+ =?iso-8859-2?Q?6EtzOO5+Af/UbWysF1acJ75rbmpcSAxZgV1Z9nV9BUa5VGTBvbCHirsqY8?=
+ =?iso-8859-2?Q?jv4wjpoyL7J4UEyZ2m0lFyg7XZIKWfpMDU4Zx/vvfI+WdODq934Pb3Zm1P?=
+ =?iso-8859-2?Q?pUsD7WrfZDNXmy2tSSFtf2f57rjb16tOfmRGYYzbgwqKEw2WDEV8UxJSZK?=
+ =?iso-8859-2?Q?ZmBFNxzMh2xiWODWg9GwdBYAzTt0J3TUWmieUER7laHgb9dnW6wM7Lc5BL?=
+ =?iso-8859-2?Q?g9tZLn0m6ZIePQMZWxQ770HLgFFjwPPRGpEXZ62etO3Xk6qx/3uMCZFyM/?=
+ =?iso-8859-2?Q?G1yDtUx7cylXIpZJ2tslslN+L26mTvF/Q6QnQye+NqIeCfDhi7dWUeMwxA?=
+ =?iso-8859-2?Q?3MM36NyESV6AT49/wLz2i5l3YBdtX++Q35ZYp2JN47dPIAHwQ1bAnr8+e0?=
+ =?iso-8859-2?Q?W8WpBxuhBt3mG5mxlrOi5okIfdo1vFIVsCfo6Ej3+26XnG0lW6Uf2KFUIy?=
+ =?iso-8859-2?Q?6c/D2/ewgtezcBQ4uzd+X6CjCOTKg7T/UZwXL2YWFyFQzlUWNZjxSL7CSR?=
+ =?iso-8859-2?Q?pgJTusZi5K5oxFYLFDunqzDJfN0A+B6l4utGrHzZ8OjKUzrX/QnqMPxMmL?=
+ =?iso-8859-2?Q?SayohC9QWtakA5WRbshsEEmJyYar0DGG5OHDYx6DQS/sEVVBmoNzPALHgq?=
+ =?iso-8859-2?Q?ONATb3S0XbeRWNTiCI/fBGvlO6QqF/UQLu0UsSdustSI+DJFDS84K46yNo?=
+ =?iso-8859-2?Q?HfNPqKIvhyYiEaEXri+S1leIQGwT4y8w/bEz0oSYas43AQa9DzYTHMvwno?=
+ =?iso-8859-2?Q?TtQ6WhHIYu31pCu8PhQVhO8LSdYfVehOEjhyJJ3Feu/SeMFbqMvfQcJiOw?=
+ =?iso-8859-2?Q?R6lZ01zpqQfb82SSBwSRG+iJP5T18XNLCpklrwTruXKKSn6r0IzfeIcXcs?=
+ =?iso-8859-2?Q?tWDK+xKVUw+jGK0XcRqjk69iUDcy?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-tw;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB5134.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700021);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-2?Q?a/Urz+T/gWsBSTG3HzfoyxrDEfQP6Y/OYxPi/9aDv0A2msfHO5LkTNdW1o?=
+ =?iso-8859-2?Q?XvmjUff08YMB0bTAcfEGzyrmnv7nndtLC+FHRxzW8AZQ01HDQkHeFWlS9R?=
+ =?iso-8859-2?Q?mKNuIiSiv5Q1LmFtccCa8HetuGbM9X/7RS7Drp65iZ0M3aUoRW1U9qPErj?=
+ =?iso-8859-2?Q?CijgWW3fk2C9tHwOQEBldIqSm35PJ2cJ04cZn+hlbqPmE495pAvjsS6K36?=
+ =?iso-8859-2?Q?6f95PVZIElMscwKl/vK5aXiadsmkifgd+M7ASYhpi5QFL9rQLNjqUrexGa?=
+ =?iso-8859-2?Q?tKrG4US5OjeTy7TZTUBpAlELlOpTJBGO0mW4ev3v7DRmALW4Hhz6fbpP/r?=
+ =?iso-8859-2?Q?Nk3b4B8smN+EQvIsRawuqPgeIRjTCeQrOO7Y5BWEuKLyf/m1lZymIL+fVN?=
+ =?iso-8859-2?Q?K7JoMROQhDnQl017J5dc8epoZ9tlFdTuLpqEF0m02pxkapkFoKOq+7wIL+?=
+ =?iso-8859-2?Q?FeeANGYkEej4Okox7E/Hs5kx6PJdSZF+AD2q78b35KY35Q9Ied2pg2Pv0/?=
+ =?iso-8859-2?Q?L7KcwMFQt4Wh4kWsiVmqfLPYNBsg/0MCz+sBclz3+mE93rTcAY3cpRnXqD?=
+ =?iso-8859-2?Q?aa8SOeZ/TdvdOR9mlDu+e+b+XrHBoIKOmLDKuKaYM+IYScc3tuqQQFuT1r?=
+ =?iso-8859-2?Q?lRBlXoujLKMLnH0sJXlxoS2AvVC7IirBlcWRKASC3PIuKWDD7QD491shxl?=
+ =?iso-8859-2?Q?H79Z6bpk/ibp4zjnMx613PONsC/kei8L9aVWm2kaeXWBrOcALWyka2pdta?=
+ =?iso-8859-2?Q?8J8ZJTTwCpbUalGDGXmxKKxvb3ItxzVWIo6ke87ocYYPF0jrGyoge7jidP?=
+ =?iso-8859-2?Q?DknmvbA5oaIfL0mzszZP/SexZB2I2PB/02q4fR7Ulba2qMdPCjlU2HZL7V?=
+ =?iso-8859-2?Q?w3i4TKIrCEnjf9obYdrbdIl/DQlvVlWSSqShj9iFfNivWIrot3jqhtU/kd?=
+ =?iso-8859-2?Q?0iwE+pgI8m7grzVkSl0shpPTbZ2MRphHMYR+k1LUuSWQFMlHfWgr4TUnb7?=
+ =?iso-8859-2?Q?5q5qpQXpWt7Cmyl5Dg0MS5n/UFieHz5G3zuSG5V6z6Hac6Lpfues2t5LwX?=
+ =?iso-8859-2?Q?QxP1k7qadWfkGZ0/fyx5WwqWCDF4bokX+Prf7lRBHbKQRcniSVK5rk7GqL?=
+ =?iso-8859-2?Q?+ojtguYPPWEegw5ZM52L/4NeyzIhASVc/dp5+UmJAgYY0kXlzYVqvsRfiF?=
+ =?iso-8859-2?Q?JXAIrf9Drf4CZtRME4V61sd3FvlLXcNZkcgUH+o1WD87BRE47/jLuoVN2E?=
+ =?iso-8859-2?Q?h9i38v+Uwe/BEzsSOy67mLMf10qfnOo5t6BKfYJfx942T/lr9XKGc4GaTs?=
+ =?iso-8859-2?Q?CrYWWN7WLDQA22a+II4mh1S5MjQ6C8EclvEGhMe3+khnaTzriXrddGKRX0?=
+ =?iso-8859-2?Q?dEdxEDG1chl9yA1tYiAGsFn5SsoJnEbPWld0ZNeyUiqNhr3wTVoJuuZUES?=
+ =?iso-8859-2?Q?pUJO9t0VNiAIvVI6CzVnykLNcmhAvZO1Xo0oTvetgh64AtZrR76ExTPnx0?=
+ =?iso-8859-2?Q?t2S2pO0Wkymkhe93O4oCKPcow4GEgIaeFJOVGYHsO0uf6SaQ6RJi+5u9/M?=
+ =?iso-8859-2?Q?6c1OT24qSP0amu2u3paM///tgjWr5BlOv/58hfl3l3YKilef8xFt1whcio?=
+ =?iso-8859-2?Q?AznPKGAj/9VZXztxeFesPdCwHIJ1QCHYD8?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251124-staging-ad4062-v2-0-a375609afbb7@analog.com>
- <20251124-staging-ad4062-v2-3-a375609afbb7@analog.com> <aSQxiSoZcI_ol3S5@smile.fi.intel.com>
- <aslj3klmv6heyyhgltzewkdze5p4c3hlkzfbxbfnzwwgd375gv@m6iqpst5sv6b>
- <aSgSsGSUuBtMOuro@smile.fi.intel.com> <zryqws2h2i4duejczo2rptwhlzhile7fa7brriqh2hmtarwjxn@cr2cyzymwpav>
- <aSn3PthKIvFAhDS6@smile.fi.intel.com> <fue274bpfgsytm5z25rdsawbfa2s4vu4ypoqrrmrx5dfe2jgdq@ocjqribzo5mn>
-In-Reply-To: <fue274bpfgsytm5z25rdsawbfa2s4vu4ypoqrrmrx5dfe2jgdq@ocjqribzo5mn>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 5 Dec 2025 00:23:19 +0200
-X-Gm-Features: AWmQ_bmRm4Q2kvw7yFW6pHsmzR-B857kT0dxLwv4TjE_3ffvQEr7-TA_4SKthPY
-Message-ID: <CAHp75VfD=BXmN96HXw9deGDqBjmhqW8Jve8d-tH0BvsZ+nfFpA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/9] iio: adc: Add support for ad4062
-To: Jorge Marques <gastmaier@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Jorge Marques <jorge.marques@analog.com>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: aspeedtech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB5134.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45071fd4-0970-4801-eb29-08de3392fe0d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2025 00:12:35.3697
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: s7HufH05LsG1BU8BQwUzU3y/a2Hxe4iNW0lgIhITpWGCbPDH1uTsRz5dX2vhfQGT4Cd6hPO3mA/5pQVhh5EGSQwvC+Yx7/B+WsD5X5DOmsE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR06MB5059
 
-On Thu, Dec 4, 2025 at 11:37=E2=80=AFPM Jorge Marques <gastmaier@gmail.com>=
- wrote:
-> On Fri, Nov 28, 2025 at 09:25:50PM +0200, Andy Shevchenko wrote:
-> > On Fri, Nov 28, 2025 at 07:50:02PM +0100, Jorge Marques wrote:
-> > > On Thu, Nov 27, 2025 at 10:58:24AM +0200, Andy Shevchenko wrote:
-> > > > On Wed, Nov 26, 2025 at 12:40:00PM +0100, Jorge Marques wrote:
-> > > > > On Mon, Nov 24, 2025 at 12:20:57PM +0200, Andy Shevchenko wrote:
-> > > > > > On Mon, Nov 24, 2025 at 10:18:02AM +0100, Jorge Marques wrote:
+Hi Rob,
 
-...
+Thanks for your comments.
 
-> > > > >   static int ad4062_set_chan_calibscale(struct ad4062_state *st, =
-int gain_int,
-> > > > >                                       int gain_frac)
-> > > > >   {
-> > > > >   ...
-> > > > >
-> > > > >         if (gain > 1999970)
-> > > >
-> > > > But this magic should be changed to what you explained to me
-> > > > (as in 0xffff/0x8000 with the proper precision, and this
-> > > >  can be done in 32-bit space).
-> > > >
-> > > > Or even better
-> > > >
-> > > >   if (gain_int < 0 || gain_int > 1)
-> > > >           return -EINVAL;
-> > > >
-> > > >   if (gain_int =3D=3D 1 && gain_frac > 0x7fff) // did I get this ri=
-ght?
-> > > >           return -EINVAL;
-> >
-> > > gain_frac would be 999999 max, or 999970 for the limit that fits in t=
-he
-> > > register after the math. I think > 1.999.970 is self explanatory.
-> >
-> > On the place of unprepared reader this is a complete magic number witho=
-ut
-> > scale, without understanding where it came from, etc.
-> >
-> > So, can you define it as a derivative from the other constants and with
-> > a comment perhaps?
-> >
-> (my proposal is after all your comments below)
-> > > > >                 return -EINVAL;
-> > > > >
-> > > > >         put_unaligned_be16(DIV_ROUND_CLOSEST_ULL((u64)gain * AD40=
-62_MON_VAL_MIDDLE_POINT,
-> > > > >                                                  MICRO),
-> > > >
-> > > > ...with temporary variable at minimum.
-> > > >
-> > > > But again, I still don't see the need for 64-bit space.
-> > >
-> > > Well, by dividing mon_val and micro values by a common divisor the
-> > > operation fit in 32-bits:
-> > >
-> > >   static int ad4062_set_chan_calibscale(struct ad4062_state *st, int =
-gain_int,
-> > >                                         int gain_frac)
-> > >   {
-> >
-> >       /* Divide numerator and denumerator by known great common divider=
- */
-> >
-> > >           const u32 mon_val =3D AD4062_MON_VAL_MIDDLE_POINT / 64;
-> > >           const u32 micro =3D MICRO / 64;
-> >
-> > Yep, I suggested the same in another patch under review (not yours) for
-> > the similar cases where we definitely may easily avoid overflow.
-> >
-> > Alternatively you can use gcd().
-> >
-> > >           put_unaligned_be16(DIV_ROUND_CLOSEST(gain * mon_val, micro)=
-, st->buf.bytes);
-> >
-> > Btw, I think you can move this check up and save in a temporary variabl=
-e which
-> > might affect the binary size of the compiled object as accesses to the =
-gain_int
-> > and gain_frac will be grouped in the same place with potential of the r=
-eusing
-> > the CPU register(s)..
-> >
-> > >   }
-> >
-> I believe this is clear and fits all points:
->
->         /* Divide numerator and denumerator by known great common divider=
- */
->         const u32 mon_val =3D AD4062_MON_VAL_MIDDLE_POINT / 64;
->         const u32 micro =3D MICRO / 64;
->         const u32 gain_fp =3D gain_int * MICRO + gain_frac;
->         const u32 reg_val =3D DIV_ROUND_CLOSEST(gain_fp * mon_val, micro)=
-;
->         int ret;
->
->         /* Checks if the gain is in range and the value fits the field */
->         if (gain_int < 0 || gain_int > 1 || reg_val > BIT(16) - 1)
->                 return -EINVAL;
->
->         put_unaligned_be16(reg_val, st->buf.bytes);
->
-> Explains 64 value. Checks if is in range [0, 2), then if fits the
-> register field for corner case of range (1.999970, 2) (0x10000). Full
-> formula is in the previous method ad4062_get_chan_calibscale.
+> > Changes in v6:
+> > - Refer to pci-cpi-bridge.yaml to update aspeed,ast2600-pcie.yaml and
+> >   the pcie node of aspeed-g6.dtsi.
+>=20
+> Where is this? You don't describe the root port and its properties at all=
+ now.
+>=20
 
-Yes, LGTM now, thanks.
+May I confirm whether the pcie@8,0 in aspeed-g6.dtsi is not considered the=
+=20
+root port? From my understanding, that node represents the root port, so I=
+=20
+want to make sure I'm aligning with your expectation before updating the bi=
+nding.
 
-> > > > >                            st->buf.bytes);
-> > > > >
-> > > > >         ret =3D regmap_bulk_write(st->regmap, AD4062_REG_MON_VAL,
-> > > > >                                 &st->buf.be16, sizeof(st->buf.be1=
-6));
-> > > > >         if (ret)
-> > > > >                 return ret;
-> > > > >
-> > > > >         /* Enable scale if gain is not equal to one */
-> > > > >         return regmap_update_bits(st->regmap, AD4062_REG_ADC_CONF=
-IG,
-> > > > >                                   AD4062_REG_ADC_CONFIG_SCALE_EN_=
-MSK,
-> > > > >                                   FIELD_PREP(AD4062_REG_ADC_CONFI=
-G_SCALE_EN_MSK,
-> > > > >                                              !(gain_int =3D=3D 1 =
-&& gain_frac =3D=3D 0)));
-> > > > >   }
-> > > > >
-> > > > > To provide the enough resolution to compute every step (e.g., 0xF=
-FFF and
-> > > > > 0xFFFE) with the arbitrary user input.
+Could you help clarify how you would like the root port and its properties =
+to=20
+be described in the schema?
 
---=20
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Jacky
+
 
