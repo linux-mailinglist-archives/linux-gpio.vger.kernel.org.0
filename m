@@ -1,97 +1,178 @@
-Return-Path: <linux-gpio+bounces-29282-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29283-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16723CA70BF
-	for <lists+linux-gpio@lfdr.de>; Fri, 05 Dec 2025 11:01:59 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D6ADCA7EB7
+	for <lists+linux-gpio@lfdr.de>; Fri, 05 Dec 2025 15:21:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D20F7328BA76
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Dec 2025 09:56:13 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id B7E23329C266
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Dec 2025 11:54:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FD9F32F75D;
-	Fri,  5 Dec 2025 09:54:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73E7A32ED36;
+	Fri,  5 Dec 2025 11:53:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ixLgXaUP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q6DPTGCS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE7F288525;
-	Fri,  5 Dec 2025 09:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32F132D0DE
+	for <linux-gpio@vger.kernel.org>; Fri,  5 Dec 2025 11:53:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764928477; cv=none; b=juyHLRtHfRxt2adebR8IZJ4JuEhb8uR6nafxh8AURHHku9wIG7RqgD99icdnIEDKjcznDOoNxRNThvIxFTThftY1jL4eqULTsB6/yYE9Sebqya0U/aY0mYSS8YVsG0Yz5czEbMF1l+xyna7XlB2PgMqpVrq6/+LezJIWTECBjE4=
+	t=1764935611; cv=none; b=oXCWdy8gtTId+1q7J4AgVcmoRBoab0g28qgqOKBYR6DqMWBAqqSU7uwCE2f9K+KwnEF/USZgIBd0xQHBMlQpozrHWNWHy/BZxUrof2c8sFdTTV/Nb+sHJ55uB/Dq0s7Kg3S3+MHPf916JEVz+MQOVYhrVlIKHGk6tTGSyOxxdR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764928477; c=relaxed/simple;
-	bh=Xy5WM2ds05fRQ9SEHNUMSApbyaxp2zBHCy8jRKTl1vI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mEdoSxWZAZqYH02uKLLx6fIG0eWFGhU+57XQNVzatkAzJGIkhQ14Xy8BN9JURjSSciXFklAav83oPgI8UTwa7Y2olZ+czGo/u+HFSoCPEvSeegWmJUa33XlLJb44mmtBmz6nXz8mAlgXPpT6TzrErKiV2+jaXo3z8lvGJqVSQQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ixLgXaUP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCBF0C4CEF1;
-	Fri,  5 Dec 2025 09:54:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764928474;
-	bh=Xy5WM2ds05fRQ9SEHNUMSApbyaxp2zBHCy8jRKTl1vI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ixLgXaUPKe9kcVv4j011s9O4MBKpyQFB2oPv7Dnq43Lbe72Gf+HiVGKr3au2EL//B
-	 NEo0DZU+iiDikYGNGd4JgS//Q+P/emNAw8Nif3KPzEaVZ0qywRf7GQW9OSRp4ETpEe
-	 eV/++R7F1Dp3U47Hag5tjIvQUwOdAg3e9ncR/pMvWbK3ybe/4RrmvTwiFThqdgXbuC
-	 IhiuXPaAc4XRIy8etpgxaqpca0WJt5F3BtOGZlva0vbcqtqyLqdykn3WSd2xjkdDbq
-	 JxGHIXP1C+DW7q7EH//cS5h02CUhmo80Z2IJn+YnhqMpG+ajhu21zoD+V+XHgKJOOL
-	 xPQb3CTk41xpA==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Akhilesh Patil <akhilesh@ee.iitb.ac.in>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] gpio: tb10x: fix OF_GPIO dependency
-Date: Fri,  5 Dec 2025 10:54:09 +0100
-Message-Id: <20251205095429.1291866-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1764935611; c=relaxed/simple;
+	bh=YJCejSSlp5BLiFi26SWpMkczGtydRQ5mSdIigPCD7qc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FWuwBzkWsqDJieFoX/bowy1zWOlnTlVHdo63zXQRMiXTFaCfD+DOdWyRbjX8khN7xfu/JByvFNOs1NO+aR2Vc/Gxj3bMUlurb6NRYVG4P8qsH2QQYVWz5JwHXZASqxIR+HU4HKWHZ8ZoGcCcMKfxhY8sRoy+ZnE5xrApBBlSiuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q6DPTGCS; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-42b32ff5d10so2006336f8f.1
+        for <linux-gpio@vger.kernel.org>; Fri, 05 Dec 2025 03:53:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764935606; x=1765540406; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=4oMXK/FjVegirY5SREBrXWKVrn6jX7f3cdMgqorSo9w=;
+        b=Q6DPTGCS4Zi/CzaXKQrAHwKxVk0602h0hfMKHe/1NSlNq6gytywKufe/H/uXoSrIfh
+         aZvKm84E94W6dBli9z2ZWSbBrH0sg/vKK0YVK2GwxIujtUjYRoJtZ+5p9gBmoVgAvEaT
+         Nac5bZee27h+nuzQaRnhytc2sRDnKp4b/gCgA4pFatogtDtQDqaX9wDBXuSHczxc3wyx
+         VoEStj3d2RehfqpLtMQdjXcPj+XhY0LQpJFOKLb6C6vbtaZaY+s3dVCcwkhpWJT8qixf
+         Po3CgZt2VnYEHBLGpzmISzC38yZwxwYhXF03bN6fT3h0lZr4i8VuTdAIrqL8RnnT0cx8
+         Iobw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764935606; x=1765540406;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4oMXK/FjVegirY5SREBrXWKVrn6jX7f3cdMgqorSo9w=;
+        b=cMVqX0xKWzoVIEKWGS65eZkbWxomC+XX/1wk1SSGVFGqUh8kBXwDqO8eBMVYAal2/n
+         pOXD2zzB93lE9g6v1hav3hXOm3cwbzRtfV/yyZqoPDwPGivq3JPR3blr3PLN6uyIqow/
+         YiE3GghLKzsVbIWSN8G8s65u0aD+MZ6b1wEMjR0QUGmhoUiudP8wWieiq7nznHuWCt7u
+         SaLT960jzKYHwtiuHQbTuSPIxr/BIc3EeEAgVK24WsLDk8ged3zn217GNwVf/Yjb4mFN
+         aGxBl3iGBuFGFcjJxrwR8zSobbtzzy+tENHdtuBseGXWUMyh93x04GvGyT8zngvbA/8n
+         nZQg==
+X-Forwarded-Encrypted: i=1; AJvYcCVDR4vAz1SdzodmthBXsvmxlWqsH4Jm7Bnw/ifL1ZsCc8/bahKIrDCBqU9yLOiE7hO72JK2X96g0IZ+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8gvoLjJI+5ydG4+nWvT8FJ182molNaW7l9jpi5Tfyq+SlN+H6
+	jtqPPQrqHOFGVZehamE5aSvodLtFik2a/OMz1lV0+81Q4GLAgTIoWI4j
+X-Gm-Gg: ASbGnctZEAQxtB2pSMusJcTj38H63jRjc7+Kzl51X6wZ/ezAEbyKH3vywB+phYT0ySw
+	WdhUpO/st3ky/KeT4iITXBSP9tTDdVsqOceSX9Y8Xeg5w2Mke/OwiXEnvLcsZKP0bN0DAsZMK0o
+	TT418VWdXshx9uIvjR59mlkKhm7+qjkKfmYwwkZw25bsZyDqSYDIPAPDETUKIjBf3SEM6lZwW2A
+	s7DHysyNKpJmgfzEXVi7cZ/Zl32Hcw/bhXflpusHY94N8QlAGDuVJhaS++HwtOJnljP/IkWILIM
+	j3Ox+8LiuUHp/Su37MDNp4ysoXu066JsguBCKCy5PknSWfoUpIB0rG2R9pTy7yOWUcLXVVnj9v5
+	1Mdc1GS0klI9ND+7Iv2RUp57Jj1woWhQIv/QbekOb5edehJ93koEGV5okAocs0s3zNxLTm02QPK
+	+4mKnsQZeRdecuWK9nlu/m7MAB2l3rdPMCmpkJkM4bTKvIf6YWe2QObv1Rqe+gSKiXuGk=
+X-Google-Smtp-Source: AGHT+IHyVq1TxDr3VEMt1d+mdj1M0HSV8r65o6SHKi+8hiPBA1XHe+HyzivannicYdrPR2vI4N8sHQ==
+X-Received: by 2002:adf:cf0f:0:b0:42f:84ed:ce5d with SMTP id ffacd0b85a97d-42f84ede0b9mr1636999f8f.28.1764935605767;
+        Fri, 05 Dec 2025 03:53:25 -0800 (PST)
+Received: from HYB-DlYm71t3hSl.ad.analog.com ([2001:a61:123e:4501:9c51:c3b7:65d6:48d3])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42f7cbfeadesm8509514f8f.10.2025.12.05.03.53.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Dec 2025 03:53:25 -0800 (PST)
+Date: Fri, 5 Dec 2025 12:53:23 +0100
+From: Jorge Marques <gastmaier@gmail.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, 
+	Jorge Marques <jorge.marques@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 9/9] iio: adc: ad4062: Add GPIO Controller support
+Message-ID: <egl65ctlz2umzcdzf7ke5c2hnd33ghudklmf4pdgnp64vnzjg3@rpqrludyv4p2>
+References: <20251124-staging-ad4062-v2-0-a375609afbb7@analog.com>
+ <20251124-staging-ad4062-v2-9-a375609afbb7@analog.com>
+ <aSQ2JUN05vmMQC1I@smile.fi.intel.com>
+ <rk4hmupbrb5ugxft6upj7ru43x3z7ybrobax45rorpwbcwleh6@vzxrr3m7r6ep>
+ <aSgX9nMBwBtAlSyj@smile.fi.intel.com>
+ <3izg5lyxjye24pvzoibk4tmnxbdfokr53abkpbjo5epqjoz55j@6wc7i4wsgwkt>
+ <CAHp75VfLd46xt_2W35gjoTCoh+PqExL-faZ8snhzfOx=65qXWw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VfLd46xt_2W35gjoTCoh+PqExL-faZ8snhzfOx=65qXWw@mail.gmail.com>
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Fri, Dec 05, 2025 at 12:21:31AM +0200, Andy Shevchenko wrote:
+> On Thu, Dec 4, 2025 at 11:38 PM Jorge Marques <gastmaier@gmail.com> wrote:
+> > On Thu, Nov 27, 2025 at 11:20:54AM +0200, Andy Shevchenko wrote:
+> > > On Wed, Nov 26, 2025 at 04:55:41PM +0100, Jorge Marques wrote:
+> > > > On Mon, Nov 24, 2025 at 12:40:37PM +0200, Andy Shevchenko wrote:
+> > > > > On Mon, Nov 24, 2025 at 10:18:08AM +0100, Jorge Marques wrote:
+> 
+> ...
+> 
+> > > > > > +       return reg_val == AD4062_GP_STATIC_HIGH ? 1 : 0;
+> > > > >
+> > > > >   return !!(reg_val == AD4062_GP_STATIC_HIGH);
+> > > > >
+> > > > > also will work.
+> > > > >
+> > > >     return reg_val == AD4062_GP_STATIC_HIGH;
+> > >
+> > > Hmm... This will include implicit bool->int. The !! guarantees values 0 or 1,
+> > > but I don't remember about implicit bool->int case.
+> 
+> > I don't think the implicit bool->int is an issue, grepping `return .* == .*;`
+> > matches a few methods that return int.
+> 
+> Yes, the Q here is the value of true _always_ be promoted to 1?
+> 
+Hi Andy,
 
-Selecting OF_GPIO is generally not allowed, it always gets enabled
-when both GPIOLIB and OF are turned on.
+The relational operator result has type int (c99 6.5.9 Equality
+operators); and when any scalar value is converted to _Bool, the result
+is 0 if the value compares equal to 0; otherwise, the result is 1 (c99
+6.3.1.2).
+https://www.dii.uchile.cl/~daespino/files/Iso_C_1999_definition.pdf
 
-The tb10x driver now warns about this after it was enabled for
-compile-testing:
+No conversion warnings even when forcing _Bool type.
+There are many usages like this, for example:
 
-WARNING: unmet direct dependencies detected for OF_GPIO
-  Depends on [n]: GPIOLIB [=y] && OF [=n] && HAS_IOMEM [=y]
-  Selected by [y]:
-  - GPIO_TB10X [=y] && GPIOLIB [=y] && HAS_IOMEM [=y] && (ARC_PLAT_TB10X || COMPILE_TEST [=y])
+drivers/iio/accel/adxl313_core.c @ int adxl313_is_act_inact_ac()
+drivers/iio/light/opt4060.c @ int opt4060_read_event_config()
+drivers/iio/light/tsl2772.c @ int tsl2772_device_id_verify()
+lib/zstd/compress/zstd_fast.c @ int ZSTD_match4Found_branch()
 
-OF_GPIO is not required for compile-testing and is already enabled
-when the driver is usable, so just drop the 'select' line.
+I cannot find many legitimate usage of relational operator with the
+double negation.
+  git ls-files | xargs grep -s 'return !!' | grep '=='
 
-Fixes: 682fbb18e14c ("gpio: tb10x: allow building the module with COMPILE_TEST=y")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/gpio/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 02099ef48f22..e9dc19ce3545 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -737,7 +737,6 @@ config GPIO_TB10X
- 	depends on ARC_PLAT_TB10X || COMPILE_TEST
- 	select GPIO_GENERIC
- 	select GENERIC_IRQ_CHIP
--	select OF_GPIO
- 
- config GPIO_TEGRA
- 	tristate "NVIDIA Tegra GPIO support"
--- 
-2.39.5
-
+> > Experimenting with the _Bool type (gcc 15, clang 19, any std version),
+> >
+> >         int main()
+> >         {
+> >             int a = 1;
+> >             int b = 2;
+> >
+> >             return (_Bool)(a == b);
+> >         }
+> >
+> > with
+> > gcc -Wall -W -pedantic -std=c23 -c test.c
+> > clang -Wall -Wextra -Wbool-conversion -std=c11 -O2 test.c
+> >
+> > also doesn't raise warnings.
+> 
+> Of course, because before even looking into warnings the entire code
+> degrades to return 0. I.o.w., the test case is not correct. But don't
+> hurry up to fix it, you won't get warnings anyway, it's all about C
+> standard and not about (in)correctness of the code. See above.
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+Best Regards,
+Jorge
 
