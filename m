@@ -1,156 +1,122 @@
-Return-Path: <linux-gpio+bounces-29284-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29285-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A56ECA77FB
-	for <lists+linux-gpio@lfdr.de>; Fri, 05 Dec 2025 13:02:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 82979CA7D7C
+	for <lists+linux-gpio@lfdr.de>; Fri, 05 Dec 2025 14:54:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B4969307CA08
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Dec 2025 12:02:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B23343112724
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Dec 2025 13:52:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EF63308F36;
-	Fri,  5 Dec 2025 12:02:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E1CF3314CD;
+	Fri,  5 Dec 2025 13:52:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WMt2ahl3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z5WgnEWa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E24E32D42A
-	for <linux-gpio@vger.kernel.org>; Fri,  5 Dec 2025 12:02:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428E632ABC3;
+	Fri,  5 Dec 2025 13:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764936163; cv=none; b=InEk40MKhU4h7OgVMTo8JPduf8LSfzIaDqf/4wrBUhzD4JZwejieBp9N7ndBrIRC74UHsdTKafEzXq5Gls23SZXNDDj4GJ0eC6/NDnBPuB6JF4TpSwY1ufcfy7XCAeQ+BCkqBPNRcA8lXYsc8Lo9JJOvzJqWbF/L8p95mtoWUYk=
+	t=1764942730; cv=none; b=X3zeH7BRq1LvfJkwYMWv0YQ4CeXW8HFLoMKYrUBtkSltR5k8Gmd+J9uMIB2wGz//LgAC3vPwMNiG/vOYl9jMC5kAXT7BnRaavfN5i7wKiRlmcXKdVvIn/1uj0s1uHms20P9axhRaxyKQLuheV1Jx713MUxhHFm9ArYv9ZIjMK+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764936163; c=relaxed/simple;
-	bh=bgYeGMAzm6Y6sfhlpNRYEBYM+0aMUuWk/NuSWaFkkTs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P/liMFMPKEWSlx3xe4TVVuRtVvZ0AHIC6gwhQfjGCLE3UGkJVxW19mmvuaEcuPc5/OwU735siRckByAUYcSB0AypRnWthToTkHrakZEaCtLcMkN7M1j3jZkXdqe+AkTrOPbSh1GfI5bKw/nbI2+k2QqEr6fbY7dtF1LhnJDZ9d0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WMt2ahl3; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b735b89501fso232471966b.0
-        for <linux-gpio@vger.kernel.org>; Fri, 05 Dec 2025 04:02:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764936158; x=1765540958; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VgyaUQ07yV5AbaD6jWa5R2iO6mlnxudcEFZdveJPHlE=;
-        b=WMt2ahl3Go75Px38hXZd/4f7k5fSV4uIJHmp5qLW61Gdy06MSZIRfVgVrkeTdQXdyg
-         V9xct/0yL7Yn/Y3Eh/vn1MTOXHc7N2Vdzg2dtMxwQJpISsFDLdeQdtRF3BGp7neiLsTI
-         kWmnazS6cmIQ2pJxX1ytEfm7yPHMCfJ+GxX7Gh32ttxO847xtad/+PxmepZf9FbIEnVv
-         k7NH8FPU+1pfZxjG3+crlTzmj19EllgpR+iYzZgbt74Qia0It84Dvpi4gSXiT1uE2ljW
-         nXarr9fnXxBEErW0fw8X5UowjJD7OMcx1P9pX2Yr0kOIp+qfUDYE6LVJsEA2lKy0sMiY
-         BcSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764936158; x=1765540958;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=VgyaUQ07yV5AbaD6jWa5R2iO6mlnxudcEFZdveJPHlE=;
-        b=ua064jDLBxVt1x/3yGOkXC9rNaVnbErkdH+0hbvuMxjyLskfJJM/UcrzsbZdNoIElY
-         JwDgwbRu/FmYhAT27xjRWHjh2DnBxBgC8l4+92FmyZvdmUIVxbMZaBwAE9WnNJUodfN7
-         UAUp4ogXaPidcJ6SGGRNaAONpSL2vLWYTULEFcvqssrnCcbWIIVtkJQk01FJ0hKW/mIZ
-         GFaXSd0QOf63dtePJWraHJezNEvHfCN51D++eNk1Wpj72VYeaaO2K5BD83IYa4LnPJif
-         rgxMIG5olis+0VmPeQre4pFdBoBakYySbMSWWt0Ep64orzQyb112+tISVfR1Ou4oNw8A
-         2KJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUIVZhKcFr77nbMPIDukCC/K6ZsWOjemDtUHGUMe9vc7sTglk3EJko2E/j5/wq2m/Z/FI5IMPaBFQ8h@vger.kernel.org
-X-Gm-Message-State: AOJu0YwY6uYcXZcTr90J1eRIXOlOplr9o1eaV6GTALe/oOgKd75fS/0+
-	77jYyoyfabYWMN357uG194NZLiV+KgsUwu5W/WfLHnS1SOzxUHHuVAOZh32wj7bi9AgHPZnnwcw
-	tzMeJ6Y/0OQjXDDGHOwHt6trn731P4ug=
-X-Gm-Gg: ASbGncvp+krVG5RKoraVQ2jczPM861TfTkOqSLZm2dNRw1OPSQw03aBs8CtFptNdIuW
-	m7GQheJjkOuFINxQtFMpupW1PaRz0dykL++8WFrj536TwezAoWUwCEU6vdMQgHtEeAWXJZOpPT6
-	mLMRwuSClWYxvk5JFZKhZMYwMp5dBSylOjDHCT+TOPyQw+8ERfaNRg8lCJYfLaf59i1P2ZAK5ad
-	0M0hiNopKEx84zOMW+G8f4RCnfm2MNLdN9DjfG74AklR7G2Noivk31NEt7WYHbqHgQSzlPV/uvt
-	JUfrKTPJ+tu2nDOIxv2+pZ8SimGfeMP0kXwJjqxBbibB5+6v/cAZu7poBA/WeMQh3XtS1P4=
-X-Google-Smtp-Source: AGHT+IGBQ0GhvwVKLqSDdmB+0hEDhHnoYfYYmLqHuYVoO1l7rAv2wXtwBjAHttKeBb0IocJiCANgCIPU3cmgESB5dxQ=
-X-Received: by 2002:a17:907:7ea3:b0:b79:cec4:f1ad with SMTP id
- a640c23a62f3a-b79ec6b93c7mr675997966b.40.1764936157439; Fri, 05 Dec 2025
- 04:02:37 -0800 (PST)
+	s=arc-20240116; t=1764942730; c=relaxed/simple;
+	bh=k4hgjBGInSxYLHZeFSLPGQ6QSZkjySInF8Q+8uAlTcU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ebo2mNz0veMpGYMSJBfrvhqeDA2NSFsRh9rNVYNINgOZ3YQpOFDMlir6TZ61bR3X843Jz0iQZG7c8kNZ4NRrK55SHqw7dPXvj3Q4gJSASlnHyXprQSaz5c6DHMh1WJDz55LAVu+PY3N9LTxZ4v8fhP/lAaZ+YiCI2AOmDXioCOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z5WgnEWa; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764942728; x=1796478728;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=k4hgjBGInSxYLHZeFSLPGQ6QSZkjySInF8Q+8uAlTcU=;
+  b=Z5WgnEWatNgGQbhJkrjrLeeiooLWVa5mXfQ6rEk/CjpgwCnpLHvoOaUg
+   STNtWhoa7QQZhjC+RjkcYnWbviL+FIRnxsswXfd1g/Nit8iXy2KSy18YJ
+   pAgPhV0pAmuRx48PNNZMpwgb98+MGkCyVPS868U9Kmki2lMmhu1lJMoir
+   ubiNdYqdMGaslaDKy7necUoAheYprTw4Ci6DU1UAJA9z+fb90D2IUWCQP
+   PxVqeS7sr8Mf1A+viM3O5U17+xTACcPLXIBSmwiI/WwdRPFvTEJXvjLZ4
+   K7gXI1xlxFgoTxhi48JyMYb627BISNhZGuh7uotd6xWkauHG9mnggPZZI
+   Q==;
+X-CSE-ConnectionGUID: AAWUQD2hToyMR6Fp2qK06Q==
+X-CSE-MsgGUID: WAP5re4VTLm4ut1wS5jXrg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11632"; a="66870278"
+X-IronPort-AV: E=Sophos;i="6.20,252,1758610800"; 
+   d="scan'208";a="66870278"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2025 05:52:05 -0800
+X-CSE-ConnectionGUID: mnN5Jk7XTxeZlQ4Xt7iDJg==
+X-CSE-MsgGUID: KyMJQb+eTrWTnIlE4vAyFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,252,1758610800"; 
+   d="scan'208";a="194952297"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.83])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2025 05:52:02 -0800
+Date: Fri, 5 Dec 2025 15:52:00 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>
+Cc: Askar Safin <safinaskar@gmail.com>, Dell.Client.Kernel@dell.com,
+	bartosz.golaszewski@linaro.org, benjamin.tissoires@redhat.com,
+	dmitry.torokhov@gmail.com, linux-acpi@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+	regressions@lists.linux.dev, rrangel@chromium.org,
+	wse@tuxedocomputers.com
+Subject: Re: [REGRESSION][BISECTED] Dell Precision 7780 wakes up on its own
+ from suspend
+Message-ID: <aTLjgEVfLCot0cSm@smile.fi.intel.com>
+References: <f983382a-821c-40f0-a41e-ba9f47ae73c5@kernel.org>
+ <20251205040141.1735580-1-safinaskar@gmail.com>
+ <8e3ae563-a058-40c5-a721-834d7bda141d@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251124-staging-ad4062-v2-0-a375609afbb7@analog.com>
- <20251124-staging-ad4062-v2-9-a375609afbb7@analog.com> <aSQ2JUN05vmMQC1I@smile.fi.intel.com>
- <rk4hmupbrb5ugxft6upj7ru43x3z7ybrobax45rorpwbcwleh6@vzxrr3m7r6ep>
- <aSgX9nMBwBtAlSyj@smile.fi.intel.com> <3izg5lyxjye24pvzoibk4tmnxbdfokr53abkpbjo5epqjoz55j@6wc7i4wsgwkt>
- <CAHp75VfLd46xt_2W35gjoTCoh+PqExL-faZ8snhzfOx=65qXWw@mail.gmail.com> <egl65ctlz2umzcdzf7ke5c2hnd33ghudklmf4pdgnp64vnzjg3@rpqrludyv4p2>
-In-Reply-To: <egl65ctlz2umzcdzf7ke5c2hnd33ghudklmf4pdgnp64vnzjg3@rpqrludyv4p2>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 5 Dec 2025 14:02:00 +0200
-X-Gm-Features: AWmQ_bnpd4_oFl4c5azPbk7HXaspqhnY9oSEmM6KqrHSmwBU-kDUBFomCH8ufok
-Message-ID: <CAHp75VcJZavRo7TKXAZagDc8Vt4-y-zm+EySyugRtSxSLMGX-Q@mail.gmail.com>
-Subject: Re: [PATCH v2 9/9] iio: adc: ad4062: Add GPIO Controller support
-To: Jorge Marques <gastmaier@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Jorge Marques <jorge.marques@analog.com>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8e3ae563-a058-40c5-a721-834d7bda141d@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Fri, Dec 5, 2025 at 1:53=E2=80=AFPM Jorge Marques <gastmaier@gmail.com> =
-wrote:
-> On Fri, Dec 05, 2025 at 12:21:31AM +0200, Andy Shevchenko wrote:
-> > On Thu, Dec 4, 2025 at 11:38=E2=80=AFPM Jorge Marques <gastmaier@gmail.=
-com> wrote:
-> > > On Thu, Nov 27, 2025 at 11:20:54AM +0200, Andy Shevchenko wrote:
-> > > > On Wed, Nov 26, 2025 at 04:55:41PM +0100, Jorge Marques wrote:
-> > > > > On Mon, Nov 24, 2025 at 12:40:37PM +0200, Andy Shevchenko wrote:
-> > > > > > On Mon, Nov 24, 2025 at 10:18:08AM +0100, Jorge Marques wrote:
+On Thu, Dec 04, 2025 at 11:21:32PM -0600, Mario Limonciello (AMD) (kernel.org) wrote:
+> On 12/4/2025 10:01 PM, Askar Safin wrote:
+> > "Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>:
 
 ...
 
-> > > > > > > +       return reg_val =3D=3D AD4062_GP_STATIC_HIGH ? 1 : 0;
-> > > > > >
-> > > > > >   return !!(reg_val =3D=3D AD4062_GP_STATIC_HIGH);
-> > > > > >
-> > > > > > also will work.
-> > > > > >
-> > > > >     return reg_val =3D=3D AD4062_GP_STATIC_HIGH;
-> > > >
-> > > > Hmm... This will include implicit bool->int. The !! guarantees valu=
-es 0 or 1,
-> > > > but I don't remember about implicit bool->int case.
-> >
-> > > I don't think the implicit bool->int is an issue, grepping `return .*=
- =3D=3D .*;`
-> > > matches a few methods that return int.
-> >
-> > Yes, the Q here is the value of true _always_ be promoted to 1?
->
-> The relational operator result has type int (c99 6.5.9 Equality
-> operators); and when any scalar value is converted to _Bool, the result
-> is 0 if the value compares equal to 0; otherwise, the result is 1 (c99
-> 6.3.1.2).
-> https://www.dii.uchile.cl/~daespino/files/Iso_C_1999_definition.pdf
+> > > But yes; failing all that it's viable to make a quirk.  You can follow
+> > > any of the ones I've submitted for modeling how to do it.  Here's the
+> > > most recent one I've done.
+> > > 
+> > > https://github.com/torvalds/linux/commit/23800ad1265f10c2bc6f42154ce4d20e59f2900e
+> > 
+> > Thank you! I will write something like this:
+> > 
+> > +		.matches = {
+> > +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> > +			DMI_MATCH(DMI_PRODUCT_FAMILY, "Precision"),
+> > +		},
+> > +		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
+> > +			.ignore_wake = "VEN_0488:00@355",
+> > +		},
+> > 
+> > I will test it and then properly send (hopefully today or tomorrow).
+> 
+> This match it too liberal.  We don't have any evidence it applies to
+> anything more than your single system.  I'd pick some different strings.
+> For example Product SKU is probably a good string to use because that's very
+> unique.
 
-Okay, thanks for checking this!
-So, let's go with a simplified variant then.
++1. If we ever see another one, we can then think of a more generic quirk.
 
-> No conversion warnings even when forcing _Bool type.
-> There are many usages like this, for example:
->
-> drivers/iio/accel/adxl313_core.c @ int adxl313_is_act_inact_ac()
-> drivers/iio/light/opt4060.c @ int opt4060_read_event_config()
-> drivers/iio/light/tsl2772.c @ int tsl2772_device_id_verify()
-> lib/zstd/compress/zstd_fast.c @ int ZSTD_match4Found_branch()
->
-> I cannot find many legitimate usage of relational operator with the
-> double negation.
->   git ls-files | xargs grep -s 'return !!' | grep '=3D=3D'
-
---=20
+-- 
 With Best Regards,
 Andy Shevchenko
+
+
 
