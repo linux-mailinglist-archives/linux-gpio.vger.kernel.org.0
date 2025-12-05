@@ -1,61 +1,93 @@
-Return-Path: <linux-gpio+bounces-29307-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29309-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 917A9CA93D3
-	for <lists+linux-gpio@lfdr.de>; Fri, 05 Dec 2025 21:17:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B8F02CA9974
+	for <lists+linux-gpio@lfdr.de>; Sat, 06 Dec 2025 00:13:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5628B30F7966
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Dec 2025 20:17:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 52AD73019BAB
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Dec 2025 23:13:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6267026CE2C;
-	Fri,  5 Dec 2025 20:17:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64F293D3B3;
+	Fri,  5 Dec 2025 23:13:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mail.tikatika.nl header.i=@mail.tikatika.nl header.b="NL+W52IF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="By68nouB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from tika.stderr.nl (tika.stderr.nl [94.142.244.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E6C25A2A2
-	for <linux-gpio@vger.kernel.org>; Fri,  5 Dec 2025 20:17:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.142.244.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7EB82C234A
+	for <linux-gpio@vger.kernel.org>; Fri,  5 Dec 2025 23:13:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764965825; cv=none; b=cZxLbW/lecbuj3erATtESqeThnW51oUQQDQoDEmYVe1+mQKttuR3S4PDMtH1V58j3HxcoK1+ttTXbI2JaQTFJZDmnFKnWZmEAse4+YHx6Q6qDjpiOidUQ3XHaP+SxLkt7WYcl2Bh3CxCOvKdv53ENXIpuIoF0GKAqLddw6rCNPQ=
+	t=1764976402; cv=none; b=Y3/ngR+XqDheisHULdhL0rM3CG5fWtNEP5jHtj9lIF/ytdjLCfGbpu8EhYKuwQnEzTnbVOq9N4xcgSqN39EXB3BZxAxGkhSmej/b3ctjce8gYPJrx6UKQamw/yjaTUVwmPkEWt+ctXHYxieeXR9rM8D5CLMVEf/ScRVkbE+WFng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764965825; c=relaxed/simple;
-	bh=c6lOALAg8Z8lVxKLXwRMLDhzCV9m6rH/N0CHYY1xybg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Y9EXR36rvrvDgqaU5XZEyxUlZ39da8eSzb/IJVL3bFEsMMMVmRltcyPSkEcfYDe4TVruSwAz7G2WojsW3t5DYnwjrPUC6lBBJ+9m+FJnHDjGeyIf/pmEwK1oEnUxP4eGsAcYDSaGsWIGrT5qALlJ9jO2gU7u+mKtEUbiK7inlf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stdin.nl; spf=none smtp.mailfrom=tika.stderr.nl; dkim=pass (1024-bit key) header.d=mail.tikatika.nl header.i=@mail.tikatika.nl header.b=NL+W52IF; arc=none smtp.client-ip=94.142.244.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stdin.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=tika.stderr.nl
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=mail.tikatika.nl; s=201709.tika; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=pn/ekbTIZqC3VuEnsI273ukLxN04lGciAMmt5wrgHOY=; b=NL+W52IFlmNuXro/qvyh6AlREY
-	us+g7Y8e5U72qis/gZq0auakjgcasXr3p4AITtRvMHeo0W0dREe1n/potg0I+vJyNHTKY55JfnYZY
-	AusMf1u+ruPh1bpj+97ycA9qtCLIcbnyHOySNUOlH3wCbFmHBedM5lEwjS11CeUO//Q0=;
-X-Preliminary-Spam-Score: -4.3 (----)
-Received: from [45.142.19.84] (helo=zozo)
-	by tika.stderr.nl with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <matthijs@tika.stderr.nl>)
-	id 1vRcEX-00DDbl-1b;
-	Fri, 05 Dec 2025 21:16:56 +0100
-Received: (nullmailer pid 2868416 invoked by uid 1000);
-	Fri, 05 Dec 2025 20:16:53 -0000
-From: Matthijs Kooijman <matthijs@stdin.nl>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org, linux-gpio@vger.kernel.org, Matthijs Kooijman <matthijs@stdin.nl>
-Subject: [PATCH 2/2] arm64: dts: rockchip: rk3308: Add gpio-ranges properties
-Date: Fri,  5 Dec 2025 21:06:53 +0100
-Message-ID: <20251205201254.2865179-5-matthijs@stdin.nl>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20251205201254.2865179-2-matthijs@stdin.nl>
-References: <20251205201254.2865179-2-matthijs@stdin.nl>
+	s=arc-20240116; t=1764976402; c=relaxed/simple;
+	bh=Z2TnggYnSPNTQQA0qeFMaIKiMc/QIExFwLuHda2smVU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kbyOHWgPcWnIcSHmHtiYQ0ZlPzbOnXcNKxCO4Fg0cQafj++rObw1pnbdMgV3IsiDmZvAAJkJEl3jvafI5EjDz9TEbQo4fV0tXxqQBkSmFqhaAn51t2KuOKmRcZYJPGTomaciYPUnXpac9zFyIG2xvR5o9rwARb+8MoZHiwhUNYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=By68nouB; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-595825c8eb3so2671048e87.0
+        for <linux-gpio@vger.kernel.org>; Fri, 05 Dec 2025 15:13:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764976398; x=1765581198; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ok3XVC2kEB7d6LX2W7MFJKuf7Db93yAzAqWhVXvqPiI=;
+        b=By68nouBGABZzZpDHHPfiQKoWSJIfkh9HRFeKVufKIhFcf/6Nfi7+gl50e75zXgh9J
+         up9YTfO5T6MeQSqtFwTgm+PjOUVIj8AuX/tuMgoSjBBPY89tDxsFFGJgC6sDFlGSISXl
+         teZQYe5X1vaFL52WoTZqrDs2tHmLS8btykVC8U0Scz7LAGA/kXFXshUt7b4XPk2G8ybs
+         /tdb6xEuF09fB7POS9v+IWuWb/puLOVWKU/1zffiTdNnaqK+wq/waqirFHn4A8F7rIx6
+         1qIXQpN4E8X2iE1uVy3KFgWKxVhMfOYxE0qXuXFOgnuyOXJF620Jlda5Q5eMCZAfLrIf
+         0ZZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764976398; x=1765581198;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ok3XVC2kEB7d6LX2W7MFJKuf7Db93yAzAqWhVXvqPiI=;
+        b=n+tojYw7h3qJ/XO73+2ws4aHXfnf2c8wFHSRBfsF0VdTwSrXmjaoanD4WWvV23BttV
+         d1g6+hA0JpZ6V4PQQ8446G3zq+jSfDGzYDGcLqYNvBb9/ZO5sS5r1FeMsTwLmx2U4cLL
+         2qPUfBcbfNbyI4s6X7fppJtkPL89F3KrJzClklYoG/OYqtv94QFNAKBN9RIykq7ITBr7
+         y5f+v4pj6eX4JGZRxJgtnCO0jVb0sPqyOauJ4IS4iplw3jUjAsK2c3Y50Dmel2moIDxm
+         /MgkkMXeuHDr2QEu8AYqQ1wtlfqi+gGQTIZk/L07nMo82fcHK37w7aov1oi6OHfaxIVu
+         ih1g==
+X-Forwarded-Encrypted: i=1; AJvYcCWb4oBGaVohQ10IcwnTua8Mgow1+5BzjzwdMGC1X0Xe2I7sYTncOlPaZqJ1bgAV2Mne5sQWoIa3G+Yh@vger.kernel.org
+X-Gm-Message-State: AOJu0YxT7sVEbiimddeDwfZ9lHGO4TuM5jmQDkdjdNe+npQc3NiCdhG6
+	eCqDnqI9CXLvVgXhtchW966boFjjAW8rXZ6sQ1O1MLR2A9pLjP7zKy2a
+X-Gm-Gg: ASbGncsT/Kj4y1r4egd9WjoaQzy73EcQVXpP+ljeIJesXYn1gwVsK4PGoFTjlcm1qGA
+	aBVZE8339/yDCinJLExOd6VlSi/FUap5LAnAARRB/6bRuJ0Bkxzt1ei/ZY7nRS10MQoI9JAcKJ7
+	xpyJEQ+PJojhBPhtkczbAtLBz/ww35nDwZhuc6Njhns2NGXbIFwV6agC4lX+W/oQTfcEOJmeDJ3
+	6QCpu4mBN6/KEVcJxNmoRrimG5jGEK8BrEJYdUOCmM3GRwgYPB+YVKlWE29msVK3Fc7Kdotf50a
+	3fFeVOAjwnXcFR6PC4qmwokbZyz6tVp+7I6JBex0qqZIkwCZM4rki402AGx6zYH2gYJHHpgV0cU
+	3MYyQlt/7ol6FLHrrqK3jD7f3hngIGQOfrdhPRo4nfM0mZ0KFNJ/gjqTdAGVmv6UK8e5014XBcY
+	WPArJOnM1/wCR7cQOkfZ8=
+X-Google-Smtp-Source: AGHT+IHw+siol0Y/HCUauT594fFSjA/LYfEXRKCDELP7T7smqU9LZ6s7uqmUidrRDZEZmBY4flxMEA==
+X-Received: by 2002:a05:6512:2353:b0:595:8200:9f7e with SMTP id 2adb3069b0e04-5987e8af414mr145380e87.20.1764976397518;
+        Fri, 05 Dec 2025 15:13:17 -0800 (PST)
+Received: from localhost ([194.190.17.114])
+        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-597d7c1e2efsm1918614e87.56.2025.12.05.15.13.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Dec 2025 15:13:17 -0800 (PST)
+From: Askar Safin <safinaskar@gmail.com>
+To: Mika Westerberg <westeri@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: regressions@lists.linux.dev,
+	Dell.Client.Kernel@dell.com,
+	Mario Limonciello <superm1@kernel.org>,
+	patches@lists.linux.dev,
+	Askar Safin <safinaskar@zohomail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] gpiolib: acpi: Add quirk for Dell Precision 7780
+Date: Fri,  5 Dec 2025 22:32:42 +0000
+Message-ID: <20251205230724.2374682-1-safinaskar@gmail.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -64,64 +96,55 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This makes the mapping between gpio and pinctrl explicit.
+Dell Precision 7780 often wakes up on its own from suspend. Sometimes
+wake up happens immediately (i. e. within 7 seconds), sometimes it happens
+after, say, 30 minutes.
 
-This does not immediately change functionality, because the
-gpio-rockchip.c driver has a workaround that defines ranges when they
-are not present in DT, but that relies on global gpio numbering (so
-AFAICS only works when the rockchip gpio banks are initialized first and
-in-order). This prevents the fragility of the workaround for rk3308.
-
-Signed-off-by: Matthijs Kooijman <matthijs@stdin.nl>
+Fixes: 1796f808e4bb ("HID: i2c-hid: acpi: Stop setting wakeup_capable")
+Reported-by: Askar Safin <safinaskar@zohomail.com>
+Link: https://lore.kernel.org/linux-i2c/197ae95ffd8.dc819e60457077.7692120488609091556@zohomail.com/
+Cc: <stable@vger.kernel.org>
+Tested-by: Askar Safin <safinaskar@gmail.com>
+Signed-off-by: Askar Safin <safinaskar@gmail.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3308.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/gpio/gpiolib-acpi-quirks.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-index 31c25de2d689c..681d2429d541d 100644
---- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-@@ -889,6 +889,7 @@ gpio0: gpio@ff220000 {
- 			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cru PCLK_GPIO0>;
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 0 32>;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-@@ -900,6 +901,7 @@ gpio1: gpio@ff230000 {
- 			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cru PCLK_GPIO1>;
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 32 32>;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-@@ -911,6 +913,7 @@ gpio2: gpio@ff240000 {
- 			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cru PCLK_GPIO2>;
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 64 32>;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-@@ -922,6 +925,7 @@ gpio3: gpio@ff250000 {
- 			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cru PCLK_GPIO3>;
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 96 32>;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-@@ -933,6 +937,7 @@ gpio4: gpio@ff260000 {
- 			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cru PCLK_GPIO4>;
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 128 32>;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
+diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-acpi-quirks.c
+index 7b95d1b03361..a0116f004975 100644
+--- a/drivers/gpio/gpiolib-acpi-quirks.c
++++ b/drivers/gpio/gpiolib-acpi-quirks.c
+@@ -370,6 +370,28 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
+ 			.ignore_wake = "ASCP1A00:00@8",
+ 		},
+ 	},
++	{
++		/*
++		 * Spurious wakeups, likely from touchpad controller
++		 * Dell Precision 7780
++		 * Found in BIOS 1.24.1
++		 *
++		 * Found in touchpad firmware, installed by Dell Touchpad Firmware Update Utility version 1160.4196.9, A01
++		 * ( Dell-Touchpad-Firmware-Update-Utility_VYGNN_WIN64_1160.4196.9_A00.EXE ),
++		 * released on 11 Jul 2024
++		 *
++		 * https://lore.kernel.org/linux-i2c/197ae95ffd8.dc819e60457077.7692120488609091556@zohomail.com/
++		 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_FAMILY, "Precision"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Precision 7780"),
++			DMI_MATCH(DMI_BOARD_NAME, "0C6JVW"),
++		},
++		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
++			.ignore_wake = "VEN_0488:00@355",
++		},
++	},
+ 	{} /* Terminating entry */
+ };
+ 
+base-commit: 7d0a66e4bb9081d75c82ec4957c50034cb0ea449 (v6.18)
 -- 
-2.48.1
+2.47.3
 
 
