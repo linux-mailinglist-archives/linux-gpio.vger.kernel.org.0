@@ -1,151 +1,139 @@
-Return-Path: <linux-gpio+bounces-29341-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29339-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B919ACAAC3E
-	for <lists+linux-gpio@lfdr.de>; Sat, 06 Dec 2025 19:35:12 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52A35CAAC01
+	for <lists+linux-gpio@lfdr.de>; Sat, 06 Dec 2025 19:13:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B848D30080E0
-	for <lists+linux-gpio@lfdr.de>; Sat,  6 Dec 2025 18:35:11 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F26FA3059AC3
+	for <lists+linux-gpio@lfdr.de>; Sat,  6 Dec 2025 18:13:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E0A42F0C6A;
-	Sat,  6 Dec 2025 18:35:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73EBF2C3260;
+	Sat,  6 Dec 2025 18:13:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I/Hn6TT8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HCZmI1Xg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C6D2C3260
-	for <linux-gpio@vger.kernel.org>; Sat,  6 Dec 2025 18:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF662C0277;
+	Sat,  6 Dec 2025 18:12:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765046110; cv=none; b=A5Y4Wv87pNDgTf4TAOuRuvn2/zhG8p7DxnW6cTlMNaV1fqiz7rz7l0eCka0UoZ0lrDx55KcRa5oYINZK6QW4cEAD6v6R9K7eZvJzHNKZlvolTqFh3XfOmGFpUeqTl5OPXkgHgAa9hRJowK3Dd1wvkLo+b7F99qIzuh60kBdVpN4=
+	t=1765044782; cv=none; b=aF3989fBM6HEeieNIVVpEFQ2KZLkVeRKDWIvnsXy8j0v/g6j1y5jRhyIc4vdODexDH357PX3TePL0bMhlNRed+4cvjV6XA9HbXNDPuVRpxhZZVMXQ1dd2cHdJLW2q2tCAQ4QcH0s035Qt4XR5CpSQRLLj8DC2rJhP/bXjOG4D/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765046110; c=relaxed/simple;
-	bh=2Xj9BvX5DJCNWMWbbzPbSZXRdRtJu6wOg59n92iAbNY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pge5hu6+dtGlvVsdDQzMg8OIV7jyQdwOStqyvH2ki5Tdd6YEHrakwyXH3YJedulINsu7FzRO5UM9cOH41a5B9qgwo1L8k9Z1tc+jL/iSnkciw/rLuKPhoXHmugb+OXdg/FyGSaIdL/z6/0JjMG384CHVGWbDIzYhUO1RzQCxIiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I/Hn6TT8; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-597de27b241so1827486e87.2
-        for <linux-gpio@vger.kernel.org>; Sat, 06 Dec 2025 10:35:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765046105; x=1765650905; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yBbB448ht3hgqVqiqj9wAU25sZQEfiyetfXCLvEq3so=;
-        b=I/Hn6TT8iLH4JVy9MgQdBbonERZmmt6dv3kMvFnvwEmcPegq4M3EyZuAM93KgRYKeg
-         Au2WWmCwvJ5sLJI2dVdRocT+9MYZIqUjOaqL870wu350DpWHKujPJJxd5FhiCHZkU9Uy
-         ueCStBtDHPhN85XWZ8SPCEkqbMF/U8Y9rrtGANJ/tUH9/5+P6zMaIWJsZQThKRTy4UKh
-         krzI8iPj6xYcEo7gnNawrr46QdPR6cJet4d7kvCxySUof6nC2QLIG1c8TQpErBsx70xF
-         sDk1m1xBNMbyawGYD2+rMFsbeMCUgHAwbFcYn+Zz6HZHjHXhGAXHSgKwxm9UKJnHaO6U
-         f1rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765046105; x=1765650905;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=yBbB448ht3hgqVqiqj9wAU25sZQEfiyetfXCLvEq3so=;
-        b=ieTKM+tbZeKkmOpKlrualo1hIG2UDBAtIKO9mj1SDG7iByPgY0d0cvVUjKwqt65wLA
-         AxOsUObGt7/rqpR8Ra/uOwHqyRBSx9lpW87PUOM1yBvx/Qdey0+BfIbd/y9GmRilWGbj
-         R6zA2Ou1aV5wAE6Rh6KW/acZAiJpHVm08x1GQLzigaiM/OvsH6+M85eXKzjVh5kB8geP
-         oz+w7FJKbTZNBOet0TYe5XIBZbDDRGqM0hQ3bpnImHoLIh0bk/TU4qOTnVjGuOqJkGpd
-         /4sMDOnjXflgK0H+0NtO/inSprxM1ZXh9yrVv6imVHfduve4QsHu5u/bmPSKH3tPhXGh
-         MzCg==
-X-Forwarded-Encrypted: i=1; AJvYcCW17qu270l7Zoqb2RqLRKW5DH5DFkcw9+07szqqGB1aNSwztFVBjXS/LA2//QZUMSPa2GuTMqR5a+F7@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoQbxobOUiLI+SgT4mo37WmW3sa/qldEk+a8Gq+r6jaOWIepij
-	meXzTLQ5ekKOj5W0eRGo775EHPYyAfdRtzKK1aj1VvJPMAK3jPLkIj1l
-X-Gm-Gg: ASbGncumlp8NI1pVD9HO6PXu7AgkeQgMLX4PN+P8Vj0iw1eZudyPz/tkqBh27CLuTU1
-	GYR2TWqD+58LG2OcDQp7iS7qN8t/uep+/LkJywxkNkJtlZqZsKS2mUxHV1dSRRIaIamCZUR+tEc
-	hMD7dUrQ0SHZz2YGBSNuvjRQVsolVhvyRa1XFwfh46XVHCD+0qq5CRuIBy2YMsqWkwRBWwJlz8x
-	9LWPureknoCVYBEHzhLJxH7B2kn0lb+V3IfBWrSdH0p8/XOxJNhom26+glcXA7eN9g23tPP0wJz
-	mj1jXFl5/ytLuaR+XrU+jxI+5lPGaO67P9iAhg8daS2TI8jygQl01fP2E84WFmB3H/kCidUZUF4
-	lyTxJN+MeFhEl9fisYpXZLpk3KYIh8A3wtEpyIi0qRcYH+zrM0a0hpwtiUHGxbaKn/utCpI4Ma5
-	i4Cl/yhK+Q
-X-Google-Smtp-Source: AGHT+IHnxnTE4IQRpHLhybpHqVatvtv9+syN2SM1jyy7DP6ZE+rzLXHDgj4+p7nmI+TmaroB84yRhg==
-X-Received: by 2002:a05:6512:1113:b0:595:81ba:fb4 with SMTP id 2adb3069b0e04-598853c54e7mr893651e87.47.1765046104377;
-        Sat, 06 Dec 2025 10:35:04 -0800 (PST)
-Received: from localhost ([194.190.17.114])
-        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-597d7c31520sm2588902e87.101.2025.12.06.10.35.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 06 Dec 2025 10:35:03 -0800 (PST)
-From: Askar Safin <safinaskar@gmail.com>
-To: Mika Westerberg <westeri@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	s=arc-20240116; t=1765044782; c=relaxed/simple;
+	bh=kCo7TwIyMLY2ilQAhmmpV3lTsDPNLDcGia+hEOeSTPo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pb+8JuTJgM/ZHJcF7EFp5dNpV0KbbQBgiYfkv1Wnz0uvuy2MqPB4KhIymkgqMB5p9506Z7eb0ISe2GNIxnHkd0bmoVjtkjnxWVVgnxlXfqsR/uInUpaT/Fa95QLkA7vzq+7PE8msOKA1vrJlX5NcdZO8X6K4/GnxxKRRSBBmkzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HCZmI1Xg; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1765044780; x=1796580780;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kCo7TwIyMLY2ilQAhmmpV3lTsDPNLDcGia+hEOeSTPo=;
+  b=HCZmI1Xg2aWgz82kAfoRnwTDkM5b5yPzf73vgXKYf2I7bC8NiSEWH80N
+   qbYUzq60SdZdpS7IC2XW14i1dvfSUioGwXjnIu9dXzequBNVPlkPoUmCy
+   HO2iksN9x1pQF5oH40Lqi1wfB1HFtCuDDQhZo7FHtcceAnI8z52vffLCk
+   h1ipaF3rKFaeOxySjCqG5OXlbRYJ060HyTTlrTjRD9AtgapojxfTbEBW4
+   0hQ3D0YlZKQV0obU07xXSiUv1l0D7b/1s+qiAd1BPR3/ubLhod8/XHF/I
+   QZrWB0JrOORIvP42zDyb6osu2nx3Mr5ZOJB7dX8g227UHQ0vdIAmTgNnA
+   Q==;
+X-CSE-ConnectionGUID: +uPWy7b2RWGrqvleFgIPVg==
+X-CSE-MsgGUID: 3sAkXfKrRYi4mQygs735Ag==
+X-IronPort-AV: E=McAfee;i="6800,10657,11634"; a="89705080"
+X-IronPort-AV: E=Sophos;i="6.20,255,1758610800"; 
+   d="scan'208";a="89705080"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2025 10:12:59 -0800
+X-CSE-ConnectionGUID: siryojLKTiibF0Z05mjuMA==
+X-CSE-MsgGUID: YozxOX6RQjei05+UdbIPBA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,255,1758610800"; 
+   d="scan'208";a="200013896"
+Received: from lkp-server01.sh.intel.com (HELO 4664bbef4914) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 06 Dec 2025 10:12:55 -0800
+Received: from kbuild by 4664bbef4914 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vRwm4-00000000Iev-1bop;
+	Sat, 06 Dec 2025 18:12:52 +0000
+Date: Sun, 7 Dec 2025 02:12:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jorge Marques <jorge.marques@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: regressions@lists.linux.dev,
-	Dell.Client.Kernel@dell.com,
-	Mario Limonciello <superm1@kernel.org>,
-	patches@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: [PATCH v2 1/1] gpiolib: acpi: Add quirk for Dell Precision 7780
-Date: Sat,  6 Dec 2025 18:04:13 +0000
-Message-ID: <20251206180414.3183334-2-safinaskar@gmail.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251206180414.3183334-1-safinaskar@gmail.com>
-References: <20251206180414.3183334-1-safinaskar@gmail.com>
+	Jorge Marques <jorge.marques@analog.com>
+Subject: Re: [PATCH v3 3/9] iio: adc: Add support for ad4062
+Message-ID: <202512070145.nkD9ROxx-lkp@intel.com>
+References: <20251205-staging-ad4062-v3-3-8761355f9c66@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251205-staging-ad4062-v3-3-8761355f9c66@analog.com>
 
-Dell Precision 7780 often wakes up on its own from suspend. Sometimes
-wake up happens immediately (i. e. within 7 seconds), sometimes it happens
-after, say, 30 minutes.
+Hi Jorge,
 
-Fixes: 1796f808e4bb ("HID: i2c-hid: acpi: Stop setting wakeup_capable")
-Link: https://lore.kernel.org/linux-i2c/197ae95ffd8.dc819e60457077.7692120488609091556@zohomail.com/
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Askar Safin <safinaskar@gmail.com>
----
- drivers/gpio/gpiolib-acpi-quirks.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+kernel test robot noticed the following build errors:
 
-diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-acpi-quirks.c
-index 7b95d1b03361..a0116f004975 100644
---- a/drivers/gpio/gpiolib-acpi-quirks.c
-+++ b/drivers/gpio/gpiolib-acpi-quirks.c
-@@ -370,6 +370,28 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
- 			.ignore_wake = "ASCP1A00:00@8",
- 		},
- 	},
-+	{
-+		/*
-+		 * Spurious wakeups, likely from touchpad controller
-+		 * Dell Precision 7780
-+		 * Found in BIOS 1.24.1
-+		 *
-+		 * Found in touchpad firmware, installed by Dell Touchpad Firmware Update Utility version 1160.4196.9, A01
-+		 * ( Dell-Touchpad-Firmware-Update-Utility_VYGNN_WIN64_1160.4196.9_A00.EXE ),
-+		 * released on 11 Jul 2024
-+		 *
-+		 * https://lore.kernel.org/linux-i2c/197ae95ffd8.dc819e60457077.7692120488609091556@zohomail.com/
-+		 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_FAMILY, "Precision"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Precision 7780"),
-+			DMI_MATCH(DMI_BOARD_NAME, "0C6JVW"),
-+		},
-+		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
-+			.ignore_wake = "VEN_0488:00@355",
-+		},
-+	},
- 	{} /* Terminating entry */
- };
- 
+[auto build test ERROR on f9e05791642810a0cf6237d39fafd6fec5e0b4bb]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Jorge-Marques/dt-bindings-iio-adc-Add-adi-ad4062/20251206-033708
+base:   f9e05791642810a0cf6237d39fafd6fec5e0b4bb
+patch link:    https://lore.kernel.org/r/20251205-staging-ad4062-v3-3-8761355f9c66%40analog.com
+patch subject: [PATCH v3 3/9] iio: adc: Add support for ad4062
+config: riscv-allyesconfig (https://download.01.org/0day-ci/archive/20251207/202512070145.nkD9ROxx-lkp@intel.com/config)
+compiler: clang version 16.0.6 (https://github.com/llvm/llvm-project 7cbf1a2591520c2491aa35339f227775f4d3adf6)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251207/202512070145.nkD9ROxx-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202512070145.nkD9ROxx-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/iio/adc/ad4062.c:762:49: error: initializer element is not a compile-time constant
+           I3C_DEVICE(AD4062_I3C_VENDOR, ad4060_chip_info.prod_id, &ad4060_chip_info),
+                                         ~~~~~~~~~~~~~~~~~^~~~~~~
+   include/linux/i3c/device.h:151:14: note: expanded from macro 'I3C_DEVICE'
+                   .part_id = _partid,                                     \
+                              ^~~~~~~
+   1 error generated.
+
+
+vim +762 drivers/iio/adc/ad4062.c
+
+   760	
+   761	static const struct i3c_device_id ad4062_id_table[] = {
+ > 762		I3C_DEVICE(AD4062_I3C_VENDOR, ad4060_chip_info.prod_id, &ad4060_chip_info),
+   763		I3C_DEVICE(AD4062_I3C_VENDOR, ad4062_chip_info.prod_id, &ad4062_chip_info),
+   764		{ }
+   765	};
+   766	MODULE_DEVICE_TABLE(i3c, ad4062_id_table);
+   767	
+
 -- 
-2.47.3
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
