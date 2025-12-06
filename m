@@ -1,269 +1,112 @@
-Return-Path: <linux-gpio+bounces-29338-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29340-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EF6BCAAB92
-	for <lists+linux-gpio@lfdr.de>; Sat, 06 Dec 2025 18:53:55 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9962CAAC32
+	for <lists+linux-gpio@lfdr.de>; Sat, 06 Dec 2025 19:34:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 21B12306293C
-	for <lists+linux-gpio@lfdr.de>; Sat,  6 Dec 2025 17:52:45 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1B9CC306562D
+	for <lists+linux-gpio@lfdr.de>; Sat,  6 Dec 2025 18:34:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63ECA28726E;
-	Sat,  6 Dec 2025 17:52:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A04192D0C9C;
+	Sat,  6 Dec 2025 18:34:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O6GHQNnl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MOOKOjGf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E1939FD9;
-	Sat,  6 Dec 2025 17:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D521626B955
+	for <linux-gpio@vger.kernel.org>; Sat,  6 Dec 2025 18:34:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765043563; cv=none; b=jafQMbDdvUeeEl3mmQuL3nHjGBVb/2FY8lwT7RB6hGayMYw7IslM9BitRm3juCTwHy0KC+ZrjNv88qbaflddzHW1ryqOwPwAubYN6970YT/FPg3n+Y8CDxqQEweouCmcnm1UL1wwEld6jhhSAccJnf/OcmU4x73ay+qRwQmCXfg=
+	t=1765046083; cv=none; b=Q0aE2gRpLv2lRym+n0IKN6shhbkboParM2evAej5NXfedTAqEGJnEIMTpa2DdIFXSCc0jdIEO6XLalOyTPkkSF/QINmxDOrQvQe11Q3OBpEI7LctYu1qhf11ixx7Adjs7ibKVLRDnUqGfxgQK4Pe+/DZd1O1J10EgE7nY0n42Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765043563; c=relaxed/simple;
-	bh=LmO6Rt3Z4h6MBy0Vo63R9mVy7WXJNGMDkNamlXBNVoM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gt3foWhLqzFBPq8uP4fQYnFpon10d6TCg4kLZ4zl6lkqoqaIBMZ4woiYQdOoNZcEiReIJkDXq6vI3SwwL2ots80tn4vZVqhIjrXKB6OZ3Zs/LvUc1Zumq64+ne9UCeZr4MNNpC+d5PRaMNr9JBRdQ+159dZlz0ZPCYMh2I50g40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O6GHQNnl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B189DC4CEF5;
-	Sat,  6 Dec 2025 17:52:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765043562;
-	bh=LmO6Rt3Z4h6MBy0Vo63R9mVy7WXJNGMDkNamlXBNVoM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=O6GHQNnl5MbLHjd61zNWpZzx620KFy/41Sd6UZ5pB8NUe5FL719nd5UnTyTM2sq2d
-	 3G4/O3dM06du3C4oqYvZDIPwcj3H8U0Sp07g6yVUGKTaZ9ZdorkvsFsQYX5qAIvcyq
-	 YT2gLf/Yutbm1qoehtg21dqqWEq4SnjDgWf4OuccLyHqBPGQbjr1DYZNupV0nT9mkM
-	 9cJDJhah/nhAO+129b5uRI5aXTi49x+NV76Pgtejld/j5jt1ZKlC+8K9cjTlRWSiVP
-	 4eMEngx3196bmjZC32rvBtr0764rs/EZi382mT7NJLN78OtmzweJZtE1cNocrKxuiq
-	 Iws5Gi85trPgg==
-Date: Sat, 6 Dec 2025 17:52:31 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jorge Marques <jorge.marques@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, "David Lechner" <dlechner@baylibre.com>,
- Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
- <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet
- <corbet@lwn.net>, Linus Walleij <linus.walleij@linaro.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>, <linux-iio@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v3 7/9] iio: adc: ad4062: Add IIO Events support
-Message-ID: <20251206175231.3522233f@jic23-huawei>
-In-Reply-To: <20251205-staging-ad4062-v3-7-8761355f9c66@analog.com>
-References: <20251205-staging-ad4062-v3-0-8761355f9c66@analog.com>
-	<20251205-staging-ad4062-v3-7-8761355f9c66@analog.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1765046083; c=relaxed/simple;
+	bh=kA4hAN1sHiKFKheGE16X/PUth/xQ10ETqni3kNgL7bE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j81mwwZYaVWz5Q0ePkvyYXi6rKQMNIFaLlsdz3wt/FhYLO83Z+An+jL5oiXyG31K4r8EI/sm5NLQ2Vh8Btu2YJViOf2Y1zWNqZk0bRfHDsqSfc12mpJG4ePN8J68jYFCuuAfeuV1ATfmDrw5GR6kgIWjVsZWFR2KwKFYrttlUy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MOOKOjGf; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-37a3a4d3d53so29013081fa.3
+        for <linux-gpio@vger.kernel.org>; Sat, 06 Dec 2025 10:34:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765046080; x=1765650880; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YvEboDLvR2gzipynR26Tv9n7iFvwIWdMUwKccQoCWtg=;
+        b=MOOKOjGfNr3345ovEuZTT604fL2AdLF5TigrThXrgl3KCwX7nC8Rw/ALDiJylQXD4U
+         Zw3o/fV206a55eCK8FkJG3TtUjWG3Uyr99bQLX+5Q5lB7lXIGXcrtO18OFzguVN9aX+p
+         nHlwzbpFh18XnBKcDvai+jOjLSfPocGuHwypPrdBwI57c1cNkza+BzNpco3Z2ZKeWSEZ
+         4ZqsN8S1EXiOw1jzjXWo+GhLQYw2t+OoKZghsShvgQusonGco1g3A3iA8TicAUtMo60F
+         GP4PYXq3ovhi6A76uwhJO5B+C/xiXD6FQJYatuToKOZoKuJz4rx/SritkBl8czWB1KFb
+         xeUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765046080; x=1765650880;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YvEboDLvR2gzipynR26Tv9n7iFvwIWdMUwKccQoCWtg=;
+        b=oyZBX5YkhmvONoTolnt0tH+rPhQVcbmYa/M2qRgl5/2giC5t7ocI4/OtutoXgIQkzT
+         GnbphpDVAeHvf1o5vF7IPpjjUehJ8G0c/ZQt3UctuQWESUMBQh4cjGv4JBGuGhO9Q/uT
+         tA+PwDl2hNTy+M1/VRkBAUr2MtU0hP/HtZb6KTfBE3eYX9xANG2isT+fUlW1pLnM9gYn
+         LN+Hdn40B72qmksq6aX0CtXnqE7lbv5Nh+ML8L2MskL5vIXY9QJUy875t+YeSvj4RdBD
+         In6v18ewwhoqJvKsrF/lLdUyukpFDYNEi+Z/af04qBWCrDAwD0kw1NJFUBLJ6xvfvsYV
+         DOMg==
+X-Forwarded-Encrypted: i=1; AJvYcCVCGFAZ6gnOX+VC/AcnjtGOX0WmTD1YTT0jjSTv7w+AuzjkpD+Q/wwTuVrwh1XpVXKijPviTUQazxct@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMMdYfRXalpwQXr2w0eNIb2702CvY0qwuVUfYJaJY6y0lFBVqj
+	u8sOwBT9oV89+U40gLdE/7GNixcuCdXqV+t3WYKDFRKWyHE+QwNVGf72nbXuiH0L
+X-Gm-Gg: ASbGncuBSFMKLTVufTCTl/BNJBfgLytgtdZTgCe6giD9ZpqArcIGUz6fY4KMSM6kG4+
+	8RqhoAEqdRlr8RCPey/00psSKtJgVKNQwt2KyEHKhpSZ+GqDdBVdS95wa6mLM223P3bR4YvKgJy
+	9Chhf6tEwQficIuJHmfmaMFq5cVfK6mJGwHM2fZt5TFQEN2Q/GqR+t7gR4oCbNkqUC8e9v+ImqZ
+	ckknV7BcieqgwfJbXlyG+3pRoYCjvTXwHva1bupaqyVAE6UQELOwKTYsAxKQysi91CFAOed5Zb7
+	gknO1GE0R9lydPwAI1bjQBnGFEoVzgNFLs+K2NVsmrndfxYo8nZ9/CIci3RSalF+vqy1izwXNPD
+	ezFWVjTH1GqUTb50nGb4b5aynV20jYBZpF818pU7JJXQUT4U5NCxrK/W2aVUZ4XBgmgI072hTFE
+	R++FZ7lces
+X-Google-Smtp-Source: AGHT+IG33E69bsxDqP4nGkx72DrGfYjPjJ2GkqS3YfyfrVavZ4K3jW7roYUUcqQB8woGw6GG0Vqd+A==
+X-Received: by 2002:a05:651c:1546:b0:378:d5dc:17c2 with SMTP id 38308e7fff4ca-37ed1fb8099mr9884041fa.11.1765046079701;
+        Sat, 06 Dec 2025 10:34:39 -0800 (PST)
+Received: from localhost ([194.190.17.114])
+        by smtp.gmail.com with UTF8SMTPSA id 38308e7fff4ca-37e7060f2d4sm25155801fa.40.2025.12.06.10.34.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 06 Dec 2025 10:34:39 -0800 (PST)
+From: Askar Safin <safinaskar@gmail.com>
+To: Mika Westerberg <westeri@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: regressions@lists.linux.dev,
+	Dell.Client.Kernel@dell.com,
+	Mario Limonciello <superm1@kernel.org>,
+	patches@lists.linux.dev
+Subject: [PATCH v2 0/1] gpiolib: acpi: Add quirk for Dell Precision 7780
+Date: Sat,  6 Dec 2025 18:04:12 +0000
+Message-ID: <20251206180414.3183334-1-safinaskar@gmail.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Fri, 5 Dec 2025 16:12:08 +0100
-Jorge Marques <jorge.marques@analog.com> wrote:
+v1: https://lore.kernel.org/linux-patches/20251205230724.2374682-1-safinaskar@gmail.com/
 
-> Adds support for IIO Events. Optionally, gp0 is assigned as Threshold
-> Either signal, if not present, fallback to an I3C IBI with the same
-> role.
-> 
-> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
-> ---
-Various comments inline.
+v1 -> v2 changes: changed tags
 
-Thanks,
+Askar Safin (1):
+  gpiolib: acpi: Add quirk for Dell Precision 7780
 
-Jonathan
+ drivers/gpio/gpiolib-acpi-quirks.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-> +static ssize_t sampling_frequency_store(struct device *dev,
-> +					struct device_attribute *attr,
-> +					const char *buf, size_t len)
-> +{
-> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-> +	struct ad4062_state *st = iio_priv(indio_dev);
-> +	int val, ret;
-> +
-> +	if (!iio_device_claim_direct(indio_dev))
-> +		return -EBUSY;
-> +	if (st->wait_event) {
-> +		ret = -EBUSY;
-> +		goto out_release;
-> +	}
-> +
-> +	ret = kstrtoint(buf, 10, &val);
-> +	if (ret < 0)
 
-if (ret)
- would make the following bit about ret == 0 if this isn't true
-more obvious.
+base-commit: 7d0a66e4bb9081d75c82ec4957c50034cb0ea449 (v6.18)
+-- 
+2.47.3
 
-> +		goto out_release;
-> +
-> +	st->events_frequency = find_closest_descending(val, ad4062_conversion_freqs,
-> +						       ARRAY_SIZE(ad4062_conversion_freqs));
-> +	ret = 0;
-If you get here it's zero anyway.
-> +
-> +out_release:
-> +	iio_device_release_direct(indio_dev);
-> +	return ret ?: len;
-> +}
-
->  static irqreturn_t ad4062_irq_handler_drdy(int irq, void *private)
->  {
->  	struct iio_dev *indio_dev = private;
-> @@ -432,6 +549,14 @@ static void ad4062_ibi_handler(struct i3c_device *i3cdev,
->  {
->  	struct ad4062_state *st = i3cdev_get_drvdata(i3cdev);
->  
-> +	if (st->wait_event) {
-> +		iio_push_event(st->indio_dev,
-> +			       IIO_UNMOD_EVENT_CODE(IIO_VOLTAGE, 0,
-> +						    IIO_EV_TYPE_THRESH,
-> +						    IIO_EV_DIR_EITHER),
-> +			       iio_get_time_ns(st->indio_dev));
-> +		return;
-> +	}
->  	if (iio_buffer_enabled(st->indio_dev))
->  		iio_trigger_poll_nested(st->trigger);
->  	else
-> @@ -523,6 +648,24 @@ static int ad4062_request_irq(struct iio_dev *indio_dev)
->  	struct device *dev = &st->i3cdev->dev;
->  	int ret;
->  
-> +	ret = fwnode_irq_get_byname(dev_fwnode(&st->i3cdev->dev), "gp0");
-> +	if (ret == -EPROBE_DEFER) {
-> +		return ret;
-> +	} else if (ret < 0) {
-
-no need for else.
-
-> +		ret = regmap_update_bits(st->regmap, AD4062_REG_ADC_IBI_EN,
-> +					 AD4062_REG_ADC_IBI_EN_MAX | AD4062_REG_ADC_IBI_EN_MIN,
-> +					 AD4062_REG_ADC_IBI_EN_MAX | AD4062_REG_ADC_IBI_EN_MIN);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		ret = devm_request_threaded_irq(dev, ret, NULL,
-> +						ad4062_irq_handler_thresh,
-> +						IRQF_ONESHOT, indio_dev->name,
-> +						indio_dev);
-> +		if (ret)
-> +			return ret;
-> +	}
-
-> +static int ad4062_read_event_value(struct iio_dev *indio_dev,
-> +				   const struct iio_chan_spec *chan,
-> +				   enum iio_event_type type,
-> +				   enum iio_event_direction dir,
-> +				   enum iio_event_info info, int *val,
-> +				   int *val2)
-> +{
-> +	struct ad4062_state *st = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	if (!iio_device_claim_direct(indio_dev))
-> +		return -EBUSY;
-
-Similar to below. Consider factoring out this stuff or I guess wait
-for an ACQUIRE() based standard solution.
-
-> +	if (st->wait_event) {
-> +		ret = -EBUSY;
-> +		goto out_release;
-> +	}
-> +
-> +	switch (info) {
-> +	case IIO_EV_INFO_VALUE:
-> +		ret = __ad4062_read_event_info_value(st, dir, val);
-> +		break;
-> +	case IIO_EV_INFO_HYSTERESIS:
-> +		ret = __ad4062_read_event_info_hysteresis(st, dir, val);
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +		break;
-> +	}
-> +
-> +out_release:
-> +	iio_device_release_direct(indio_dev);
-> +	return ret ?: IIO_VAL_INT;
-> +}
-> +
-> +static int __ad4062_write_event_info_value(struct ad4062_state *st,
-> +					   enum iio_event_direction dir, int val)
-> +{
-> +	u8 reg;
-> +
-> +	if (val != sign_extend32(val, AD4062_LIMIT_BITS - 1))
-> +		return -EINVAL;
-> +	if (dir == IIO_EV_DIR_RISING)
-> +		reg = AD4062_REG_MAX_LIMIT;
-> +	else
-> +		reg = AD4062_REG_MIN_LIMIT;
-> +	put_unaligned_be16(val, st->buf.bytes);
-
-I'll stop comment on this now an assume you'll find all these places
-where we know it is aligned and so don't need to use these less efficient
-functions.
-
-> +
-> +	return regmap_bulk_write(st->regmap, reg, &st->buf.be16,
-> +				 sizeof(st->buf.be16));
-> +}
-
-> +
-> +static int ad4062_write_event_value(struct iio_dev *indio_dev,
-> +				    const struct iio_chan_spec *chan,
-> +				    enum iio_event_type type,
-> +				    enum iio_event_direction dir,
-> +				    enum iio_event_info info, int val,
-> +				    int val2)
-> +{
-> +	struct ad4062_state *st = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	if (!iio_device_claim_direct(indio_dev))
-> +		return -EBUSY;
-
-Whilst I do plan to take a look at whether we can do an ACQUIRE pattern
-like the runtime pm ones, for now (unless you fancy taking that on)
-I'd be tempted to factor out this stuff under the direct mode claim into
-a helper that can then do direct returns. That should end up easier to ready
-that this.
-
-> +	if (st->wait_event) {
-> +		ret = -EBUSY;
-> +		goto out_release;
-> +	}
-> +
-> +	switch (type) {
-> +	case IIO_EV_TYPE_THRESH:
-> +		switch (info) {
-> +		case IIO_EV_INFO_VALUE:
-> +			ret = __ad4062_write_event_info_value(st, dir, val);
-> +			break;
-> +		case IIO_EV_INFO_HYSTERESIS:
-> +			ret = __ad4062_write_event_info_hysteresis(st, dir, val);
-> +			break;
-> +		default:
-> +			ret = -EINVAL;
-> +			break;
-> +		}
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +		break;
-> +	}
-> +
-> +out_release:
->  	iio_device_release_direct(indio_dev);
->  	return ret;
->  }
 
