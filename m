@@ -1,229 +1,145 @@
-Return-Path: <linux-gpio+bounces-29332-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29333-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A11FCAAA3E
-	for <lists+linux-gpio@lfdr.de>; Sat, 06 Dec 2025 17:31:05 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DE16CAAA74
+	for <lists+linux-gpio@lfdr.de>; Sat, 06 Dec 2025 17:40:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2BE7F30319A1
-	for <lists+linux-gpio@lfdr.de>; Sat,  6 Dec 2025 16:31:00 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 0145330110CC
+	for <lists+linux-gpio@lfdr.de>; Sat,  6 Dec 2025 16:40:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50C8D28DB76;
-	Sat,  6 Dec 2025 16:30:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F7DE2FDC47;
+	Sat,  6 Dec 2025 16:40:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZrwUrSTs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kneAz/sm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12361DF254
-	for <linux-gpio@vger.kernel.org>; Sat,  6 Dec 2025 16:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E6E79DA;
+	Sat,  6 Dec 2025 16:40:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765038659; cv=none; b=tGR6ZjLDk7BYTPxJMgn6xGwgC9vZsFSUUxrv6PnMGiskouowOsVJdsrQH1YHnmQxPRHouFaNDC9hjcZpz+o8UQSJJWd/or5ZvaGfZf7dkg3FNsnkrMCAvDI1pK5kzVnKMTxK4i05FlvtR5R/JB1lZVV97RzIwSf3R9Omxz73coE=
+	t=1765039203; cv=none; b=BYpw1niKbkcWHpzeOAIUg+PSEXcJRbPS2ciWxxehZuxSJTdk+kt2w+cvcaWs7wcoGEzO9GGXTLXd7JcxDXbfhbbG9lYpAcJxNonh636SJQ/5gsE2T4WwjvLkF4zteTZJoJiroyKOTz5/sFbIrHBKJCXtL5oEdIxnwuGTt/Px/rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765038659; c=relaxed/simple;
-	bh=Pjqq3IhQZEU0T+kr+l+SJxkmnGc2LedDezow2IDI6B4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=b9PL8y0u0eBkAWOHvvaiC0wsUOMU+Vp3ZC5n399o0jG7WH0tNas2ozb3aNQJ7wEPX6QaYNJ8zPs/6ZdyXEMrnJSzvq/rriOippU0N+/HYjFBXoHxpJiaACzjwdF2oYXKRwgAN1x1siKR5NByfzwP9ne8jIzzFiLY+LqbDLF8l5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZrwUrSTs; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-297e264528aso30802745ad.2
-        for <linux-gpio@vger.kernel.org>; Sat, 06 Dec 2025 08:30:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765038657; x=1765643457; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TDSd8Vdq8giSc188TspRF54MXu3sfJ1VJvqYKX7oxLI=;
-        b=ZrwUrSTs8wsy6Ou6QubTXVrSqRDcqZJ45vmJ5ClP1cyqaaeOEyyrlGQfryqOWhVLiT
-         moMrUBRx/Ds2PjNhbafuQc+mEweOIr7ps5ZSrvWSoop73K9FlefZUh8jqiuvbhAESj6g
-         ijzZqTi0v9kR8lmOaInXnDO/w0l+mlL2Np4OtgIslwE8Xkl1v/xJRRFmrau+80xy+R/n
-         1NpzMojOwv1rT9SHfNjRHh27U+Igl76qj4v6JnsVHisST17EdhxVIroVo+ElDKcJX/xK
-         tXncZTxKqZIWl9HBIbOfhNMY69KOF8RnB+VP+rkxNN0MG8p8QELT81vMLVHGvgY6hB4D
-         ZtkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765038657; x=1765643457;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TDSd8Vdq8giSc188TspRF54MXu3sfJ1VJvqYKX7oxLI=;
-        b=DNeMNOVLth11K0n5fzOAfe7ntgfaNMz84NA/reK0KuSnGo5EII5wUd4ocyASSmwytl
-         YEge/VTrHIp9A9a1rsvvVWtgL5mx+wwC0cVt45Rob0V2bJfEUGlvzOp+NNQHi+HDX5Kz
-         QchBMI9Wb+OF+pOsu/RiDAJrMCEwmm4y2n7CeWTBkgZgqkSUqrD98YsAJ2h90k5pqgQQ
-         F5ff5lRYT3A1Z0Tr+/cF4D/rTamSXIarzsGGnJggZk8Oxs3cEXOq6lhMZL54XrBu5BeG
-         gF5Ip51g58v1gMb2cGkx4ng9YVWVT6O3fV2aiRQFHpZK4hog3hkYoeFXXd2MSKk7itcZ
-         3AIw==
-X-Forwarded-Encrypted: i=1; AJvYcCWYfF4PhuxJdUwir/7tCwr1s3GMTuG0oK54dA6Ad0bvtWDLCYDkNvYJw2l+oUPp7/vzCwN2LLvhwVsY@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnEC6rQsV26I5cB/11M+x+KnBrWovP0ffkiwNhadIUsOkyGeFk
-	GpZQikz+tBynzauGDKIl3EqbaOywc1GP9PXriJjDNe35w2FbjGeTTpfb
-X-Gm-Gg: ASbGncvmGbZY+MndLEIB5F1IU2Zsy95pfczgXKnOUBxC87Z8oR6Cw9Fmm4WXZfRowrd
-	hIRfkjK7ODF5dTT4I+YEbmSBKo+EJUocItBFFn7qhMmI+7OF7yLuNNwIGNzpK0rUHdKV2m+dCyN
-	d3opXkqpJEgwUYJMY+blKpyw1P6yPOlPUaaeg6HH9xoi8jWEmn3l/efoUpMjWdKPxT/+OaXr8pi
-	YLqWbXhrX/a21fB+dHE3QaSVz0KBSOXFIMOzQAGKMJskeQAOLGXPySAIxU5yEf2P9KnLQ2kuSeP
-	b68yGswKfldfSDY8Ow+FNAgAQNm2Zs8x8RUpdfiKtRSk7EAXB/osfJO3mMUDrf3Y5fR7BaWtBk1
-	m6ijwdMKbdod+H4s55v7/nLT/7Ca1wilhYeQsj4+884TKfA33np/8ohRWvzR0N86B8hbTEdvhmK
-	M8uJmKwn7JEHBzJrys63Qm4YeuNWy0HdWJZQ==
-X-Google-Smtp-Source: AGHT+IGjvoE4fTOveWBDEffY1step8XtJFOeFdFKl3HR5Zhlm5TuQ08EkqpDdpzaQhfZMWQaABB/pw==
-X-Received: by 2002:a17:902:d2c8:b0:298:42ba:c422 with SMTP id d9443c01a7336-29df5e1dfe6mr24842845ad.31.1765038656777;
-        Sat, 06 Dec 2025 08:30:56 -0800 (PST)
-Received: from DESKTOP-IM4PCEA.localdomain ([49.207.52.239])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-29daeaabbb1sm78468455ad.82.2025.12.06.08.30.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Dec 2025 08:30:55 -0800 (PST)
-From: Mintu Patel <mintupatel89@gmail.com>
-To: 
-Cc: Mintu Patel <mintupatel89@gmail.com>,
-	Saurabh Kumar <saurabhsingh14june@gmail.com>,
-	Shahid Kagadgar <shahidkagadgar3821@gmail.com>,
-	Dilshad Alam <Dil.alam@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <len.brown@intel.com>,
-	Pavel Machek <pavel@ucw.cz>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH] Dumping GPIOs state during suspend state
-Date: Sat,  6 Dec 2025 22:00:51 +0530
-Message-Id: <20251206163101.828-1-mintupatel89@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1765039203; c=relaxed/simple;
+	bh=nDyiQgWzVr5xrxezFIqVJ+LMCfjhgCRDxxrrb2v8FM4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MiOX4M0kV5aDEyr6/b7WHhbH2BacU100FRUIy8RBEjI0pbkPPT3M1iFSWDvPZpWsszGQH5BjiahQmqci0y0bDcSIQV7r+vxFOPHIe4efShFx8E7m7+AzNZBbb+GYU0Z+aLf8+weEZobuZgUWVfBsbkfNFs5xUYj22pXhLYer5u0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kneAz/sm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBA96C116B1;
+	Sat,  6 Dec 2025 16:39:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765039202;
+	bh=nDyiQgWzVr5xrxezFIqVJ+LMCfjhgCRDxxrrb2v8FM4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kneAz/smE0fNqN9flFMEfL6pxRk+9ecl8m3G15aIrv8hn065sN/+G9AN4N4e4q4qD
+	 t5zmrdFdkfR2FmzJwvPdGbvkYJ4CGWkJR/p22eCS6PUZfqZgkesI58RpRCV21uLau5
+	 5LBppxIaDjTnXd4uO0RtFSDiy0xgb9J3VMw05o8WYr+PSKnXvZm6hePSWMe0eau0of
+	 AzxyS/SP0+OO5HhuC8pbgKASCjSiTqqlV37q8dltDBEX6BxiVyOK7/B5o2L7nWmb6o
+	 hNvXKFMEbibTymgqDWqN9A7gSdOnjS4iNwSMsJVEXe8ah70E9xZQMyluxPOTszhjXm
+	 O6EMFhr4rTmfw==
+Date: Sat, 6 Dec 2025 16:39:50 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jorge Marques <gastmaier@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Jorge Marques
+ <jorge.marques@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, David Lechner
+ <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy
+ Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 3/9] iio: adc: Add support for ad4062
+Message-ID: <20251206163950.545da8cc@jic23-huawei>
+In-Reply-To: <aslj3klmv6heyyhgltzewkdze5p4c3hlkzfbxbfnzwwgd375gv@m6iqpst5sv6b>
+References: <20251124-staging-ad4062-v2-0-a375609afbb7@analog.com>
+	<20251124-staging-ad4062-v2-3-a375609afbb7@analog.com>
+	<aSQxiSoZcI_ol3S5@smile.fi.intel.com>
+	<aslj3klmv6heyyhgltzewkdze5p4c3hlkzfbxbfnzwwgd375gv@m6iqpst5sv6b>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-It is difficult to find out which GPIOs are going high during suspend
-without manual probing with multimeters or oscilloscopes.
-In order to save the power especifically for battery operated devices,
-It becomes must to pull GPIOs low during suspend.
+On Wed, 26 Nov 2025 12:40:00 +0100
+Jorge Marques <gastmaier@gmail.com> wrote:
 
-As of now there is no way to trace which GPIOs are high during suspend
-without manual probing with multimeters or oscilloscopes.
-This patch would help the developer to find the GPIOs are high during
-suspend state without struggling with hardware devices.
+> On Mon, Nov 24, 2025 at 12:20:57PM +0200, Andy Shevchenko wrote:
+> > On Mon, Nov 24, 2025 at 10:18:02AM +0100, Jorge Marques wrote:  
+> > > The AD4060/AD4062 are versatile, 16-bit/12-bit, successive approximation
+> > > register (SAR) analog-to-digital converter (ADC) with low-power and
+> > > threshold monitoring modes.  
+> > 
+> > ...
+> >   
+> Hi Andy,
+> > > +#define AD4062_SOFT_RESET	0x81  
+> > 
+> > The grouping seems a bit strange. Haven't you forgotten a blank line here?
+> > Ditto for other similar cases.
+> >   
+> Ack.
 
-The patch would print the below logs:
+Side note. For efficiency, if you agree with something just delete that
+block of the thread and don't say so.  Reviewers should be safe to assume
+that anything the author agrees with will just be fixed in the next version.
 
-[  244.029392] GPIO Chip : 3000000.pinctrl
-[  244.029394] GPIO   Suspend state
-[  244.029404] 3      1
-[  244.029418] 17      1
-[  244.029424] 21      1
-[  244.029431] 30      1
-[  244.029436] 32      1
-[  244.029440] 33      1
-[  244.029444] 34      1
-[  244.029447] 35      1
-[  244.029453] 41      1
-[  244.029462] 51      1
-[  244.029470] 57      1
-[  244.029492] 90      1
-[  244.029496] 91      1
-[  244.029515] 114      1
-[  244.029519] 115      1
-[  244.029523] 117      1
+That lets us focus in very fast on the key discussions.
 
-Based on the above logs, GPIOs 3, 17, etc are high during suspend state.
-Thus particular driver/submodule can be modified for configuring
-the GPIOs accordingly for suspend and resume states.
+> >   
+> > > +struct ad4062_state {
+> > > +	const struct ad4062_chip_info *chip;
+> > > +	const struct ad4062_bus_ops *ops;
+> > > +	enum ad4062_operation_mode mode;
+> > > +	struct completion completion;
+> > > +	struct iio_trigger *trigger;
+> > > +	struct iio_dev *indio_dev;
+> > > +	struct i3c_device *i3cdev;
+> > > +	struct regmap *regmap;
+> > > +	u16 sampling_frequency;
+> > > +	int vref_uv;
+> > > +	int samp_freqs[ARRAY_SIZE(ad4062_conversion_freqs)];
+> > > +	u8 oversamp_ratio;
+> > > +	union {
+> > > +		__be32 be32;
+> > > +		__be16 be16;
+> > > +		u8 bytes[4];
+> > > +	} buf __aligned(IIO_DMA_MINALIGN);
+> > > +	u8 reg_addr_conv;  
+> > 
+> > Can't we group u8:s to save a few bytes of memory?
+> >   
+> Sure
+> 
+>   struct ad4062_state {
+>   	// ...
+>   	union {
+>   		__be32 be32;
+>   		__be16 be16;
+>   		u8 bytes[4];
+>   	} buf __aligned(IIO_DMA_MINALIGN);
+>   	u16 sampling_frequency;
+>   	u8 oversamp_ratio;
+>   	u8 reg_addr_conv;
 
-Co-developed-by: Saurabh Kumar <saurabhsingh14june@gmail.com>
-Signed-off-by: Saurabh Kumar <saurabhsingh14june@gmail.com>
-Co-developed-by: Shahid Kagadgar <shahidkagadgar3821@gmail.com>
-Signed-off-by: Shahid Kagadgar <shahidkagadgar3821@gmail.com>
-Co-developed-by: Dilshad Alam <Dil.alam@gmail.com>
-Signed-off-by: Dilshad Alam <Dil.alam@gmail.com>
-Signed-off-by: Mintu Patel <mintupatel89@gmail.com>
----
- drivers/gpio/gpiolib.c | 36 ++++++++++++++++++++++++++++++++++++
- kernel/power/suspend.c |  8 ++++++++
- 2 files changed, 44 insertions(+)
+Unless my assumption is wrong and those 3 values are passed
+as buffers for DMA (or otherwise very carefully protected
+against access racing with the DMA buffers) then this is very wrong.
+Refresh your memory on why we do the __aligned(IIO_DMA_MINALIGN) and
+exactly how that works.
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 94903fc1c145..65a8d2150d90 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -51,6 +51,10 @@
- /* Device and char device-related information */
- static DEFINE_IDA(gpio_ida);
- static dev_t gpio_devt;
-+#ifdef CONFIG_DEBUG_FS
-+void gpio_state_fetch_at_suspend(void);
-+DEFINE_SPINLOCK(gpio_lock);
-+#endif
- #define GPIO_DEV_MAX 256 /* 256 GPIO chip devices supported */
- 
- static int gpio_bus_match(struct device *dev, struct device_driver *drv)
-@@ -4702,6 +4706,38 @@ void gpiod_put_array(struct gpio_descs *descs)
- }
- EXPORT_SYMBOL_GPL(gpiod_put_array);
- 
-+#ifdef CONFIG_DEBUG_FS
-+static void fetching_gpios_state_suspend(struct gpio_chip *chip) {
-+
-+	int gpio_num, value = 0;
-+
-+	pr_info("GPIO Chip : %s\n",chip->label);
-+	pr_info("GPIO   Suspend state\n");
-+	for (gpio_num = 0; gpio_num <chip->ngpio; gpio_num++ ) {
-+		value = chip->get(chip, gpio_num);
-+			if(value != 0) {
-+			pr_info("%d      %d\n",gpio_num, value);
-+			}
-+	}
-+	}
-+
-+void gpio_state_fetch_at_suspend() {
-+
-+	struct gpio_device *gdev;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&gpio_lock, flags);
-+	list_for_each_entry(gdev, &gpio_devices, list)
-+		if (gdev->chip != NULL) {
-+			fetching_gpios_state_suspend( gdev->chip);
-+		}
-+
-+	spin_unlock_irqrestore(&gpio_lock, flags);
-+}
-+
-+EXPORT_SYMBOL_GPL(gpio_state_fetch_at_suspend);
-+#endif
-+
- static int gpio_stub_drv_probe(struct device *dev)
- {
- 	/*
-diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
-index 09f8397bae15..e8d28206b053 100644
---- a/kernel/power/suspend.c
-+++ b/kernel/power/suspend.c
-@@ -33,6 +33,10 @@
- 
- #include "power.h"
- 
-+#ifdef CONFIG_DEBUG_FS
-+extern void gpio_state_fetch_at_suspend(void);
-+#endif
-+
- const char * const pm_labels[] = {
- 	[PM_SUSPEND_TO_IDLE] = "freeze",
- 	[PM_SUSPEND_STANDBY] = "standby",
-@@ -429,6 +433,10 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
- 	if (suspend_test(TEST_PLATFORM))
- 		goto Platform_wake;
- 
-+#ifdef CONFIG_DEBUG_FS
-+	gpio_state_fetch_at_suspend();
-+#endif
-+
- 	if (state == PM_SUSPEND_TO_IDLE) {
- 		s2idle_loop();
- 		goto Platform_wake;
--- 
-2.25.1
+Short answer, nothing must come after it in the structure as it
+only forces the start of the buffer, not it's end and hence the
+following data ends up in the same cacheline and fun data corruption
+is the result.
 
+>   };
 
