@@ -1,104 +1,94 @@
-Return-Path: <linux-gpio+bounces-29345-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29346-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1837FCAB185
-	for <lists+linux-gpio@lfdr.de>; Sun, 07 Dec 2025 05:55:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 07E44CAB256
+	for <lists+linux-gpio@lfdr.de>; Sun, 07 Dec 2025 08:12:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 2DB3F3004D04
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Dec 2025 04:55:52 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id D0B56300310F
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Dec 2025 07:12:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5B23286408;
-	Sun,  7 Dec 2025 04:55:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4EA025783A;
+	Sun,  7 Dec 2025 07:12:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b="SJYEXw6R"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ex4NWSYE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70A429ACFC;
-	Sun,  7 Dec 2025 04:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81BC11A9F86
+	for <linux-gpio@vger.kernel.org>; Sun,  7 Dec 2025 07:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765083351; cv=none; b=S73R59Mbu23pl26jm0eq+eFb/1X3B0FR7AFhQ3+8Ag0ozLzvmY1T7RWfxerF9h//hZPBCHINl6gMpJrw/W/2mqZizIb/r5JfHKYeDEUwJf6eh6pnRJp9lvgj5gXrzEwCKIUHcLwXQPc1i4+I7dOvul2R/gACEjnflnhKPlBPQqg=
+	t=1765091546; cv=none; b=RIhoi/cMTj7bdNcxcZrfBfA4Ac4D3vvxSHGns7Y7zIj5SvuGsyYOegzpn79Bku36lVFz2M3eKQ1s73nba2nR/WQmiYC5CDysSUel9W1RtrTXQbgKKasXjpxghznbbzfAE3FujSf3sNxGqa1Q8j+c5IIGscpF5D0ZrOiv8poC+GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765083351; c=relaxed/simple;
-	bh=eIbZpW0h4gmswp/sgYs1uWHS5jNlsy5y89CVJ7h3Rrc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G5JR89ni0u+9gWB/WeYsdY31QpbgLL7AEK5Cdkj9kYECbvR6W5i+qXLtgbrVwvCV2fe7e+yp+dk5Ho/TELAWd9llJjEPhPDXlmbPpXDM12zRQVtJBUaxoy7/flKLtIdCNqkFjVMFrNQOiMKPiN5p2jgZUdJpt3g71ve8YWMuTDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh; spf=pass smtp.mailfrom=gibson.sh; dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b=SJYEXw6R; arc=none smtp.client-ip=185.226.149.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gibson.sh
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <daniel@gibson.sh>)
-	id 1vS6nt-0099mk-84; Sun, 07 Dec 2025 05:55:25 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gibson.sh;
-	 s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
-	bh=Mz8gl+LQ+pQXR9Vk/AIbLOn/Re0FlMVXlpYXdJtawpw=; b=SJYEXw6RUAfGmey+ZE0ON69ptG
-	ApnwIKXCuuRKS5epUGcCa3lJ8QodjtAQqioS7UiZaBOgf6yeb2env2p8Q/ckG5aT2gRQfMGAJ4Iru
-	0Ym7i9aP5iywvQblFr3kSZp0MT0w88J9RuLRP1Ode0LTR7ynbPT55gaKgpI4f1ixNkKuQ7n3tOQeS
-	F8sCAJYRQL74hkt36DuINcIp7+ynG023ctqdbDEqC7oBQePeoWWD+oO6TZyEIU1fZY2DDKixHuRBW
-	Ujqa4OTIQvzSUJlGWix5YSVxxWKEF24sMXWlonq7hMIFWqPWKIUOIp+vea5fgff4Yft5Ehwc6N2jH
-	/EjrXyYw==;
-Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <daniel@gibson.sh>)
-	id 1vS6nr-0003yn-Id; Sun, 07 Dec 2025 05:55:23 +0100
-Received: by submission01.runbox with esmtpsa  [Authenticated ID (1104311)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1vS6nk-006ssX-8F; Sun, 07 Dec 2025 05:55:16 +0100
-Message-ID: <bd0a00e3-9b8c-43e8-8772-e67b91f4c71e@gibson.sh>
-Date: Sun, 7 Dec 2025 05:55:15 +0100
+	s=arc-20240116; t=1765091546; c=relaxed/simple;
+	bh=K6FeuAm/mO+v9ibQ+qp/z1st3bgFBU83eGp0V676s0Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TiQ3h9G0BXfKetHzRsISrlbt8sOINE62JG55qNq/AfNhAQtw0ntauQzbQp21yB8iJp/qpVVa52LYzhxDhmbTWZcU22TgguEOv35aR5E1e8Ph4FYNfev7P3yH3+vvH+38rORxsNSTB+Iy+pl8X1Y3fIhopCiRo+v1uOg7zZQ7GXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ex4NWSYE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31B34C4AF0B
+	for <linux-gpio@vger.kernel.org>; Sun,  7 Dec 2025 07:12:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765091546;
+	bh=K6FeuAm/mO+v9ibQ+qp/z1st3bgFBU83eGp0V676s0Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ex4NWSYEnHhMsq6r8TidPeVwAPE0XKrkaYSrJGtp/tZZJDKgcEPzghYkczDR3BR/x
+	 KnqXa7f1mAHiGZocfq7YQAGhzkjYTWi8wxh7O0Rq+jTaVhqSvdKNoHy6+UFa209OAs
+	 7PKMhIYCF7uEw8Zh6gpbpmp6qFbvBIm7USXBpFWhH5ipMJjGisTKasLWZRyC3VAETJ
+	 pBIzeMzVP2+62Kseo6/LICseqcAuuGUvs16QglOY++zqSjgWkPOGqgj/bWIm90duSP
+	 gD5kys07tqIy9qNoCXLiZe/2ajE2kGx22RFH463FxwpCCAwPrpr2bMPXMvlapshjaI
+	 ZHUSGNtpmScSA==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5942bac322dso3507147e87.0
+        for <linux-gpio@vger.kernel.org>; Sat, 06 Dec 2025 23:12:26 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWMxyNt/JLpVmEVgblWp5uG9PNSvShAWNDVOq7Z0Z7aigsgfl7Ys5V+OaXGaPpHa4a1++doU25oBE9f@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyf5PZHJZU28Snl8cPsPiQkkGqpDlLe1KLnssoDU/LUA+Zb23Eo
+	htCbV56f+BpYIJ3QyeDhiu0Voo8C30aD1zja0F4ZiWH1TFO1zE3SMvVQG3/lhYdI8vXEOesgV57
+	QzqAOFOM6FotYh9YnHqsx3Ucq2c1WxxmekyOiOHT9Vg==
+X-Google-Smtp-Source: AGHT+IHUttufN04TX+XB2v0nOmX+t22Dxwuaj+k3gvEz9+koC25RuVv5nOSo4819NIVrwVOSN2atPSMlelCVlQoOaAY=
+X-Received: by 2002:a05:6512:3e0a:b0:595:9152:b90e with SMTP id
+ 2adb3069b0e04-598853ddf93mr1339182e87.44.1765091544827; Sat, 06 Dec 2025
+ 23:12:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/12] gpio: it87: use new line value setter callbacks
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
- Linus Walleij <linus.walleij@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Lixu Zhang <lixu.zhang@intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc: linux-gpio@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20250423-gpiochip-set-rv-gpio-part2-v1-0-b22245cde81a@linaro.org>
- <20250423-gpiochip-set-rv-gpio-part2-v1-5-b22245cde81a@linaro.org>
-Content-Language: de-DE, en-US
-From: Daniel Gibson <daniel@gibson.sh>
-In-Reply-To: <20250423-gpiochip-set-rv-gpio-part2-v1-5-b22245cde81a@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20251206180414.3183334-1-safinaskar@gmail.com>
+ <20251206180414.3183334-2-safinaskar@gmail.com> <aTSlgoK0PcE937l1@smile.fi.intel.com>
+In-Reply-To: <aTSlgoK0PcE937l1@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Sun, 7 Dec 2025 08:12:13 +0100
+X-Gmail-Original-Message-ID: <CAMRc=Mca8oi7JpEiNajP+CbHhBhSb9fS4NqFz-aojcX1qmEzcA@mail.gmail.com>
+X-Gm-Features: AQt7F2qf48qgC5abnj9AO2dJG-JdHRcmEsnizopJoLSVxgbYQ23fiVmZ1lHXbrI
+Message-ID: <CAMRc=Mca8oi7JpEiNajP+CbHhBhSb9fS4NqFz-aojcX1qmEzcA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] gpiolib: acpi: Add quirk for Dell Precision 7780
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Askar Safin <safinaskar@gmail.com>, Mika Westerberg <westeri@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev, Dell.Client.Kernel@dell.com, 
+	Mario Limonciello <superm1@kernel.org>, patches@lists.linux.dev, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
-I got one nitpick/question about this, see below
+On Sat, Dec 6, 2025 at 10:52=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Sat, Dec 06, 2025 at 06:04:13PM +0000, Askar Safin wrote:
+> > Dell Precision 7780 often wakes up on its own from suspend. Sometimes
+> > wake up happens immediately (i. e. within 7 seconds), sometimes it happ=
+ens
+> > after, say, 30 minutes.
+>
+> Bart, up to you, if you want to take this. But I can do with a usual rout=
+e via
+> my tree.
+>
 
-On 4/23/25 09:15, Bartosz Golaszewski wrote:
-> @@ -249,7 +250,9 @@ static int it87_gpio_direction_out(struct gpio_chip *chip,
->  	/* set the output enable bit */
->  	superio_set_mask(mask, group + it87_gpio->output_base);
->  
-> -	it87_gpio_set(chip, gpio_num, val);
-> +	rc = it87_gpio_set(chip, gpio_num, val);
-> +	if (rc)
-> +		goto exit;
->  >  	superio_exit();
+I already have a bunch of fixes queued for next week so I guess it'll
+be less hassle and the fastest option if I take it.
 
-Are you sure that superio_exit() should be skipped (with goto exit) in
-case it87_gpio_set() fails?
-After all, superio_enter() above (not visible here) succeeded,
-only the it87_gpio_set() call failed.
-
-Of course this is kinda academic because currently it87_gpio_set()
-always returns 0, but if it ever doesn't, this might become a bug?
-
-Cheers,
-Daniel
+Bartosz
 
