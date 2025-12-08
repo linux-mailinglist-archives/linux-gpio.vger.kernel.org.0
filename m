@@ -1,241 +1,214 @@
-Return-Path: <linux-gpio+bounces-29365-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29366-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CF0ECACBDA
-	for <lists+linux-gpio@lfdr.de>; Mon, 08 Dec 2025 10:49:18 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BED02CACE4E
+	for <lists+linux-gpio@lfdr.de>; Mon, 08 Dec 2025 11:36:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 87CD8301AD2A
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Dec 2025 09:49:16 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AB731303C9F8
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Dec 2025 10:36:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE07B2E2DDD;
-	Mon,  8 Dec 2025 09:49:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2B2322D7A9;
+	Mon,  8 Dec 2025 10:36:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="NSSf2vIt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nmw5wWPL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715CA2D3EDE;
-	Mon,  8 Dec 2025 09:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=185.132.182.106
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765187353; cv=fail; b=TxdocsRdPggDzLfWzgNmYmNcYMi7lM94hkbz5VoVvj5fE2IQiU+n6tpjpqNkKyO9C6LwHtOTvAx56v4x5Ramny0vxJ1xobWPD8PXJRm85VkYw+ydIM3kUsP7fjqsbwNBrKhGsfzgy9SHYxyzgxqGr1gUS9IvZtt9hVYfaDPfgYA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765187353; c=relaxed/simple;
-	bh=mat8OVY5218Vd1FS4lIFAtiDvJ2/KSQh65s78qMo+tI=;
-	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Kx/hjqiPHd4y9FSqMNzLtt4hpY3PnSl30zV0A10RGXzzeqtubAJKk3CSe+5UD1fHWfSnzOGx9GNfzlQ7mHb3elq7VmEkNQpNqOG+VlBQlsvSREWOpRndhGcZBUkAQgI9xcNBc2BHG+l0tfuVlARXStwtGL3RRGC14lKLSblDJzA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=NSSf2vIt; arc=fail smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5B89hpqb1564254;
-	Mon, 8 Dec 2025 10:48:11 +0100
-Received: from db3pr0202cu003.outbound.protection.outlook.com (mail-northeuropeazon11010026.outbound.protection.outlook.com [52.101.84.26])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4avasnnvxf-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Mon, 08 Dec 2025 10:48:11 +0100 (CET)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=crzdYd4b+1vGv8wpdNSuwLWmD904/+zH1+9T3uXVKjK6JCR2wt7N/kFo2vf/idWmplSVwWPxrInsWFZrgibHnI+sXF4aatJ+4JcYeMu0OutmxxgluHUIkyAXSODjbWjMHW3g3YzXXZTJN7ZvNp5agmp8kMBYoKPNeKtuG19gs9dVjJflwatijzcDnGLbnVSgKRJpq50FZsvBRMYPBB3uHJRHUVX5ioFSjYhPBATXnF2sQQRO54HZv/FJXiiLnxDgBZ0/h0wLdhYzQ7bGxLnWAeurtqCSmp8QRmsgErCgkTNwwFKayl6kCHoWXT+kpqHHRxEXkZbc0T4akjGA9yeIzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mat8OVY5218Vd1FS4lIFAtiDvJ2/KSQh65s78qMo+tI=;
- b=alkAMyQHb9AtPXfTZ7ZVzpPZnFztmeAUbQPepIiHZnmZ0gGqcMpHVtjC+nCZHgvtwGr0O6jW9Xx+0rfGso5qObgXegfb/kCvW0wc6C11tIorkAtN4XJYmoo8Fk3g1bbzb2KQpa7///sPyi83PXCdO2/rysH4VF6+XNh0bNc3rs3uacUmBem1VHjcgCEdIUOe2FeowWAgsBDcxLkkkAp6+EGHxi+ObkTi546FAGMMJLU5PEZkoBW0w3tRlzsfYLkHLd7lq5Aj03tqqk281wKLEOtbzD7PTGWGNv5kgf2bsw7ZaxcbPb+7J7Gy1AtlwCtoelZJvFNvlqtMnVL3qbnJbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 164.130.1.59) smtp.rcpttodomain=arndb.de smtp.mailfrom=foss.st.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=foss.st.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mat8OVY5218Vd1FS4lIFAtiDvJ2/KSQh65s78qMo+tI=;
- b=NSSf2vItHErnh1Lgh5fakOxvOqefofteT4KJVsk04ndiS7qVPwQbHUpxOpqhhlk8QJx+ub8Am/7beMHoXXztfoDdlAFqfJUT1FEw6/H9aoqhZUoKoTRsIrHuhIBDHrQS+PgycOfZM9FOMDq8Lu02bjMioByX59dHK46v1kaF32scNKuo4F2QzqY0TDTPhg+dEokGOyTlPQS/dq34b7Nq0RAwdn6IkhkgKjdrz1mNwJp95teG4yaek10in/qxRbMSbL73YGj0T281oxRG7bV2k3RN/lGsIRgPOaBSC42v+MhyCx1E64UQg4a2AagOuUFcnNIyqh32JbRJwTwcgBfP+Q==
-Received: from DU2PR04CA0191.eurprd04.prod.outlook.com (2603:10a6:10:28d::16)
- by DB5PR10MB7722.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:4a8::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.14; Mon, 8 Dec
- 2025 09:48:08 +0000
-Received: from DU6PEPF00009524.eurprd02.prod.outlook.com
- (2603:10a6:10:28d:cafe::b7) by DU2PR04CA0191.outlook.office365.com
- (2603:10a6:10:28d::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9388.14 via Frontend Transport; Mon,
- 8 Dec 2025 09:48:00 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 164.130.1.59)
- smtp.mailfrom=foss.st.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=foss.st.com;
-Received-SPF: Fail (protection.outlook.com: domain of foss.st.com does not
- designate 164.130.1.59 as permitted sender) receiver=protection.outlook.com;
- client-ip=164.130.1.59; helo=smtpO365.st.com;
-Received: from smtpO365.st.com (164.130.1.59) by
- DU6PEPF00009524.mail.protection.outlook.com (10.167.8.5) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9388.8 via Frontend Transport; Mon, 8 Dec 2025 09:48:08 +0000
-Received: from STKDAG1NODE2.st.com (10.75.128.133) by smtpo365.st.com
- (10.250.44.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 8 Dec
- 2025 10:48:49 +0100
-Received: from [192.168.8.15] (10.48.86.11) by STKDAG1NODE2.st.com
- (10.75.128.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 8 Dec
- 2025 10:48:06 +0100
-Message-ID: <0220ec0592b6ef8936c25cffbc6cbfa0539fb71a.camel@foss.st.com>
-Subject: Re: [Linux-stm32] Kconfig dangling references (BZ 216748)
-From: Antonio Borneo <antonio.borneo@foss.st.com>
-To: Arnd Bergmann <arnd@arndb.de>, Randy Dunlap <rdunlap@infradead.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-CC: <linux-sh@vger.kernel.org>,
-        Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>,
-        Vaibhav Hiremath
-	<hvaibhav.linux@gmail.com>,
-        "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>,
-        <andrew.jones@linux.dev>, Paul Cercueil
-	<paul@crapouillou.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <chrome-platform@lists.linux.dev>, <openbmc@lists.ozlabs.org>,
-        <x86@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Matti
- Vaittinen" <mazziesaccount@gmail.com>,
-        Philipp Zabel
-	<p.zabel@pengutronix.de>,
-        Paul Kocialkowski <paulk@sys-base.io>, <linux-sound@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM"
-	<linux-gpio@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux
- ARM <linux-arm-kernel@lists.infradead.org>,
-        <linux-mips@vger.kernel.org>, <asahi@lists.linux.dev>,
-        Srinivas Kandagatla <srini@kernel.org>,
-        "Jonathan
- Cameron" <jic23@kernel.org>
-Date: Mon, 8 Dec 2025 10:48:04 +0100
-In-Reply-To: <5e335232-89b4-4c35-93bd-efad7e4d8995@app.fastmail.com>
-References: <22b92ddf-6321-41b5-8073-f9c7064d3432@infradead.org>
-	 <5e335232-89b4-4c35-93bd-efad7e4d8995@app.fastmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2272D46B3
+	for <linux-gpio@vger.kernel.org>; Mon,  8 Dec 2025 10:36:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765190195; cv=none; b=A21GIRcSsV1AIDgJU8n/deshl67vAxsRsQkLKlYr46BYE86cu5NL278EksPf18cN+KeAWa0GLt+Q9fcMon21WyH1LJiY71/VDwA4RM5t+BWR3MzwsqU8Xqtn4Ddp8SAhj24/pfuwP+v6F0nfV+2MwZyofErjqfhicTh75auYP/s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765190195; c=relaxed/simple;
+	bh=ktExAwk09xXlS+b1Q6PaBZbizZnuNuKiVITrVB744Hc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U6TPH8gY7yVm+e70nlTUlCVweqNXj+67R5ts4huF8+U228SGbURtDQESM96ncA6Yc2OUi1bjNunqcNkBWkaogYx4OlbRq621UodHNzjReNiaJummOAcx1CXh5HY+FPTLc21EV4lDxHR0puyGLmEwxiOq0XMX3+Q6oOhIRqHnK+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nmw5wWPL; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4779d47be12so38989075e9.2
+        for <linux-gpio@vger.kernel.org>; Mon, 08 Dec 2025 02:36:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765190192; x=1765794992; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kMlT3GrUWX2NNEK+o6vRkkPf74QOSHsBsy8eHZ6qmn4=;
+        b=Nmw5wWPLPR11vKDE9dSx2qKmlmRMWHx9BtoG4KO+odcD5BqTMNyLIUyRvNSQa1u7a1
+         uupxS1pzAnN1V/I07L3s7gWWZWnMzAHwCPo2rbS28WODuu5avVe73TbH2R60fxkhfOfq
+         sUlfxYemn5Iz4+LrR3kKdBKfm501d0jMVaasMFpEou4NtpzBCMePfCxwP3Ltvk3nyL3j
+         Jv+Mp5Va1KZNIFbTkIM8TK53NomiT/3MJo9s8kGUDrjyz23f7dlxTlWtzMzuKo67iOzN
+         CzPTJfVfpq9QiTlje2rRWHsNr06TrBGm4rBbH1dcW4nNvT8S4FkhiXlCPr8H+RqP8Zik
+         UKTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765190192; x=1765794992;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=kMlT3GrUWX2NNEK+o6vRkkPf74QOSHsBsy8eHZ6qmn4=;
+        b=GUCKcXF7OPDkMrfVWYxoZY7xID34p1rgViJWZovMg6NHKzBp4TvRf+0oESHoAUXQAV
+         XLEsa94rTjGmIa659XM7qKVEOCbhSsOVfpD2PTp5SN+sLgMipInfwLeaUikCmhagWR22
+         +9TG7NLf+GkYc9ACAwvyxrfMAuz657VcdxX+Rd8HBg5FMsdtIYYLOtnQu9GOK1KskRNG
+         ZqOKNqk4HJUs80FZlFRUEZpDDrAUVTLlnKiEu+Fvpaku30iud0xlayLHUw4MO10U48Nc
+         jIHTQISdRnc8ukb0oAA8OzCn5FHNshMVd1U3j4DYhwvRxUGJ9+xk7+mRGXelxMmPRCOF
+         ESqg==
+X-Forwarded-Encrypted: i=1; AJvYcCWHAnLnsHDL2pMuWv/FExLRnem7kLZnfMZ9vyvGyUwvbGq4aSSPmCSgcG2eYxTtNfWQ3BXSyYRWZ3WZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjmXp7qFC5DmWn4zvxTeYLX7pNF2MkG3iGPIrW7MO/FAd6hQQL
+	PtKYzI+BJTsTudPwc5e5qMSkLMZ+gxiwTHeXN0tQKAU2Kj+R4tdc979Rt8zPx5ds9mnyyvCIBkF
+	60+2rcYwuJEb7EdH06h+MuIqrvWs5DqE=
+X-Gm-Gg: ASbGnctHSbSsG4druHVIvG0ImgwVvUvrwxnJ8vJ2Jylt3b+9lrmdF67hrpuvlu6iUVs
+	nZrSug89VY1teO+ufJj9gEu86zQvu751FS6NhFFZBz4+DuX1qz7CVWKPXkFzcgNbZwTUEddj+hZ
+	smzThZ9coXaWk+gU3paY2ZMLSHojqljz/n5SKJXGiYS1uPBzJzx6DisgeggB8b1FgEPaJic5pi5
+	3SElcdXv3GZiWAQrQBVpMuf+AFiuIwUkwUq8iNGFa3UGykgQKUO/rIcouPobbC3p/jpkh0roQ==
+X-Google-Smtp-Source: AGHT+IGCPhJ/SFS/JU2cqZS2CM1G6xYyKv1ZKO+4vcZP8Ek3HWdppieKGOORRMOx70Zwiyr8q/MmFBVUATITCzUzmdg=
+X-Received: by 2002:a05:6000:2c0d:b0:400:7e60:7ee0 with SMTP id
+ ffacd0b85a97d-42f89ed7b85mr6530004f8f.0.1765190192029; Mon, 08 Dec 2025
+ 02:36:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ClientProxiedBy: STKCAS1NODE1.st.com (10.75.128.134) To STKDAG1NODE2.st.com
- (10.75.128.133)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU6PEPF00009524:EE_|DB5PR10MB7722:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5fd57370-59d4-46e8-5842-08de363ee48e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|1800799024|7416014|36860700013|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TTg0WHRIL0JYNFZEMjBBUU1Ka0grdUxoczZDL3BpWmJjK0JDaEdEUDFQRk5T?=
- =?utf-8?B?eGY3SnRYSWhWQmlSd1N6Y0ZzcXBGMUlrNkdPQmh3NTIvMzJGNlNkWWlKVFp5?=
- =?utf-8?B?bEcweGxTYzZKOU4zWG9lUTV1QUlnK3N2WnRGMS9YL0gzQkM3WWh1b2MwUnJI?=
- =?utf-8?B?N1hNRnRBQWV0ZHNEcng4VTJJbWh0Y2hnYk5rR2ZVSVNEL1dSK05tZjBVM2l3?=
- =?utf-8?B?aFRCcFp1K1FFQXFDbVd2ZW91Z29TV1pWRjIxS2lhTXpCTVhoblhJbDY2Mk84?=
- =?utf-8?B?ZmYzTFdkMWtpa1hscEYyZEhQVTQrREsrNkhxMFNyL05BSFlFVVR4cjNudXZN?=
- =?utf-8?B?WmViNXlrSzQ3TjA1OWcwek5WL1ZOdVR1emhRM0lJeHhEU2w3bG5GRVZ3K3BX?=
- =?utf-8?B?VjZtL3dZcXgxOUVldzRtMHRhcnpLUEFKMEpDVDdFMEVJNUdkYmtrMTlnNjNl?=
- =?utf-8?B?eFdqV3VxdXpxMGVrVDZPOWhGNC9hdWFnOElCSktDeE5xWWRZeFBzTExBQXk5?=
- =?utf-8?B?WWhrTG9adWs0ZlJqaFczZTlCbTFXbVA1U2pVaVZaUGZFL0YrSlhxQWZnSklp?=
- =?utf-8?B?M0d1dkI4bGRUazN5TmprOVRoNEFiTVVDMU1lUXExZ3BOOG5rRUJvb1RjZVkv?=
- =?utf-8?B?a3FOM2dvNG5aUFo3QlFUVzlsVUtTR0dDVzFlNXZqWUVaRmFQMUtTSEE0SjV0?=
- =?utf-8?B?RmVSbW5DWmR6MitXYjZrdmdwa05va1R0SHF2WUtGRzdZNUd1OVZEL1J5VThM?=
- =?utf-8?B?bVdzVjQvZlVXVXUxOGcvSVBwblIyM0dHT2NOYjA0TjZwMDJzYzJEVWxMSEhL?=
- =?utf-8?B?ZHZKL0tRUGtDNjZFYzVFRHlMaExsWG9nU0VVVXlHRDFsRmZRT01zZUJBdFNN?=
- =?utf-8?B?c0RUWGZQTXpUY3pjNDZ1eWgwL2ViNlFEWWx5WnZaNjZhYjV6eEtIZ01sb0FL?=
- =?utf-8?B?RWg3OElyaVQzNEJySmxyemZUdENBMWVjc1k4ckxRdEl3TWIxa3FZQ21xazN3?=
- =?utf-8?B?T1Ezd3dYV3o3cWlKTU52S2wramdZbEx0R2dkNC85Y3c1amgvR3RUMjZJUElh?=
- =?utf-8?B?WDNSMWtGL05nUk1yS1lZN1V3SzhsR2s5SC9wQnFkeG4yQTNMYkw0bFI1NkpB?=
- =?utf-8?B?SzlTYk5oM3orMzZBdnJUdjVIUm1VZlJXNjdTSzRjUnpvWXc2c3BzZHpuM05V?=
- =?utf-8?B?cDlXQk0xUDlNY3hUYXpNTG1hNmFpZjRhSDI0YWE0Z2ZSUFAxMWpNVjd5WXNq?=
- =?utf-8?B?cEhsQ0hvZDBmL1hreXZaUWlVbmh2ZTNmMUVqYndyeE9SQi9NbFpVcXNyeGJv?=
- =?utf-8?B?QVVMbTdrWVdVZTdqVk5Ddk9wcEp6N3ZzUnA5dkxoNTBOcHRIczF6eU9reERo?=
- =?utf-8?B?VEFpTUlCbU12MzJIeHc0RjBQakR2aWZBTWhBTEt0Z1BhRCsrb1lUWU1aS0tv?=
- =?utf-8?B?MXNtZEJTeVpYdGRHS3lUNVhjNmpVRGRXR2hTNGFuZ3pkVlQ0T1EzSG13VVpi?=
- =?utf-8?B?Wm1YWmVmNEp0eS9pMGM4bk1TZGFGM3Bpd21oa3FsMDI0bU9BTjYxdnhHRDFS?=
- =?utf-8?B?V3IvN25xY0FHT2l4bFlhNmZ1Zk5RVkhnZzJEbUpQSzQvZFdPYVFEU0JhMWZW?=
- =?utf-8?B?QzdFbFVUWTk4WFFpZlRyLzM4NGhpQWhuc2NNR1lUb05KaWdzU0R4YXltZnZh?=
- =?utf-8?B?SW1ucFNCejN1bzg1UUtKUTlJT0lhNk5FVjdJeVRVcU1lUFFmTWJOS3VSUXIy?=
- =?utf-8?B?bzk3bklXT3I2K3BjV2R3Vit6N0ovZFZJQ21WVVdvQ1ArRGlEcFhSNWVpY2lh?=
- =?utf-8?B?YVgxMkhjNCtMbVBnSFJvRFVaMzdNTFF5TDUzUU90MFBMRWZzMjVJWUtGY1Er?=
- =?utf-8?B?dy9DaXV4SUR6RXAzNDZVOHlFNUV4WDFoK2pLVFJ0TWVyeXd4L29JWWVlS1c3?=
- =?utf-8?B?Nmg2NTVURk51UEN3R2VjV2p2SWNGekN4aTNodE1TNDVLcFE3NjZvNnVKS1hJ?=
- =?utf-8?B?STRKaDBqellDeHh3Z1gxblhsQ2Rrcm5jZVNYMi9MZjVGVk82YlZyR1ZCTml3?=
- =?utf-8?B?OEg5WGVaY280WE4wL2lCanFiMVNBd0ltNXczUlR2TXdFb0hGWjBBMTRvWGZE?=
- =?utf-8?Q?TK5U=3D?=
-X-Forefront-Antispam-Report:
-	CIP:164.130.1.59;CTRY:IT;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:smtpO365.st.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(7416014)(36860700013)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: foss.st.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2025 09:48:08.2448
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5fd57370-59d4-46e8-5842-08de363ee48e
-X-MS-Exchange-CrossTenant-Id: 75e027c9-20d5-47d5-b82f-77d7cd041e8f
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=75e027c9-20d5-47d5-b82f-77d7cd041e8f;Ip=[164.130.1.59];Helo=[smtpO365.st.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DU6PEPF00009524.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB5PR10MB7722
-X-Proofpoint-GUID: IDDwaqm75msPnFWovAsNuP1ADWZ3kEMM
-X-Authority-Analysis: v=2.4 cv=J/anLQnS c=1 sm=1 tr=0 ts=69369edb cx=c_pps
- a=/z/ujZMLhdj11oxtLm6Teg==:117 a=d6reE3nDawwanmLcZTMRXA==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=y9YUpebZf6kA:10 a=IkcTkHD0fZMA:10
- a=wP3pNCr1ah4A:10 a=s63m1ICgrNkA:10 a=KrXZwBdWH7kA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=InKxkLVgudg0ERFLr0cA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: IDDwaqm75msPnFWovAsNuP1ADWZ3kEMM
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA4MDA4MiBTYWx0ZWRfX2Bd67npMN73F
- /P1IV/XjkkjLznRhzBPVUkiNK6yZrr1PKsdRKix0i+7v0OGHzQb4ewnSDGxWkjLVjp5mXgZggle
- y30tR33BkMSJpAWS639xLjVqvVdNewUyTC4UBjoN8rwyHADRBKcd/+vgCVL00cJ+sIsBxmFKtED
- pcsrfpVFtv/uvl1XjoWxyd4qPIEYGjY8TByA6KuVPGXekxJ7oPgz6EfoBKtd4hAZSUBoCsmh4cw
- MOnyQ/Gwz1BIxjPpY2AsweP48QtxdPqthHTnCAKxLuU6up7sFF8zc5iBH7sd5axAP6E0qlMGgoS
- C0dJ7Qv6iHNOtcOfKcKMSHHBj0KArKDLQ2psUJZp8jGnHc8TVeeMkIi/0nGpY87L0NR8yakFF4Y
- dw9J8vDeNYPdFXNImo/31WYGPVH0GA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-06_02,2025-12-04_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011
- suspectscore=0 impostorscore=0 malwarescore=0 phishscore=0 priorityscore=1501
- bulkscore=0 adultscore=0 lowpriorityscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2512080082
+References: <20251014191121.368475-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20251014191121.368475-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20251016-dimmed-affidavit-90bae7e162aa@spud> <CA+V-a8un1cF=acNjG=79_v7oaR8gzBQ+3z1As8AqrJnOnk-OUw@mail.gmail.com>
+In-Reply-To: <CA+V-a8un1cF=acNjG=79_v7oaR8gzBQ+3z1As8AqrJnOnk-OUw@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Mon, 8 Dec 2025 10:36:04 +0000
+X-Gm-Features: AQt7F2odR5Nl_KDNgNLH6au-HtXpAd4NKsoyKAYIPpcPwSz66o0q23_b9VYuPr8
+Message-ID: <CA+V-a8vq2EvTb_hXxRzW_Rbp+BPLSaLsEVkvaTjc1zRin-RV=Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: renesas,r9a09g077: Document pin
+ configuration properties
+To: Conor Dooley <conor@kernel.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2025-12-08 at 09:55 +0100, Arnd Bergmann wrote:
-> On Mon, Dec 8, 2025, at 03:04, Randy Dunlap wrote:
-> > from=C2=A0 https://bugzilla.kernel.org/show_bug.cgi?id=3D216748
-> >=20
-> > The bugzilla entry includes a Perl script and a shell script.
-> > This is the edited result of running them (I removed some entries that=
-=20
-> > were noise).
-> >=20
-> > I'll try to Cc: all of the relevant mailing lists or individuals.
-> >=20
-> > ...
-> >=20
-> > MACH_STM32MP25 ---
-> > drivers/pinctrl/stm32/Kconfig:58:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0default MACH_STM32MP25 || (ARCH_STM32=20
-> > && ARM64)
->=20
-> This was likely intended for 32-bit kernels on 64-bit STM32MP25
-> chips, which we don't support. I think this can go.
+Hi Conor,
 
-Yes, I fully agree!
+Sorry for the delayed response. Ive got feedback from the HW team.
 
-I have a series pinctrl stm32 to be rebased on v6.19-rc1 and I can include =
-the
-drop of MACH_STM32MP25 inside it.
+On Fri, Oct 17, 2025 at 4:33=E2=80=AFPM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+>
+> Hi Conor,
+>
+> Thank you for the review.
+>
+> On Thu, Oct 16, 2025 at 5:41=E2=80=AFPM Conor Dooley <conor@kernel.org> w=
+rote:
+> >
+> > On Tue, Oct 14, 2025 at 08:11:20PM +0100, Prabhakar wrote:
+> > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > >
+> > > Document the pin configuration properties supported by the RZ/T2H pin=
+ctrl
+> > > driver. The RZ/T2H SoC supports configuring various electrical proper=
+ties
+> > > through the DRCTLm (I/O Buffer Function Switching) registers.
+> > >
+> > > Add documentation for the following standard properties:
+> > > - bias-disable, bias-pull-up, bias-pull-down: Control internal
+> > >   pull-up/pull-down resistors (3 options: no pull, pull-up, pull-down=
+)
+> > > - input-schmitt-enable, input-schmitt-disable: Control Schmitt trigge=
+r
+> > >   input
+> > > - slew-rate: Control output slew rate (2 options: slow/fast)
+> > >
+> > > Add documentation for the custom property:
+> > > - renesas,drive-strength: Control output drive strength using discret=
+e
+> > >   levels (0-3) representing low, medium, high, and ultra high strengt=
+h.
+> > >   This custom property is needed because the hardware uses fixed disc=
+rete
+> > >   levels rather than configurable milliamp values.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com=
+>
+> > > ---
+> > >  .../bindings/pinctrl/renesas,r9a09g077-pinctrl.yaml | 13 +++++++++++=
+++
+> > >  1 file changed, 13 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g=
+077-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g=
+077-pinctrl.yaml
+> > > index 36d665971484..9085d5cfb1c8 100644
+> > > --- a/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g077-pin=
+ctrl.yaml
+> > > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g077-pin=
+ctrl.yaml
+> > > @@ -72,6 +72,19 @@ definitions:
+> > >        input: true
+> > >        input-enable: true
+> > >        output-enable: true
+> > > +      bias-disable: true
+> > > +      bias-pull-down: true
+> > > +      bias-pull-up: true
+> > > +      input-schmitt-enable: true
+> > > +      input-schmitt-disable: true
+> > > +      slew-rate:
+> > > +        enum: [0, 1]
+> >
+> > What are the meanings of "0" and "1" for slew rate? Why isn't this give=
+n
+> I'll add a description for it (0 =3D slow, 1 =3D fast) and the same value=
+s
+> are programmed in the register to configure the slew rate.
+>
+> > as the actual rates? The docs surely give more detail than just "slow"
+> > and "fast".
+> You mean to represent slew-rate in some sort of a unit?
+>
+Based on the comments from the HW team, there is no numerical
+definition to represent slow/fast It only defines a relative
+relationship.
+> >
+> > > +      renesas,drive-strength:
+> > > +        description:
+> > > +          Drive strength configuration value. Valid values are 0 to =
+3, representing
+> > > +          increasing drive strength from low, medium, high and ultra=
+ high.
+> >
+> > I see what you wrote in the commit message, but I don't really get why
+> > you need a custom property. I would imagine most devices only have some
+> > some small set of "fixed discrete levels", yet manage with milli- or
+> > micro-amps fine. Converting from mA to register values in a driver is
+> > not difficult, and I figure the documentation for the device probably
+> > doesn't just give vague strengths like "medium" or "ultra high", but
+> > probably provides currents?
+> >
+> > I dunno, I am just confused by the need to shove register values into
+> > these properties, rather than using the actual units.
+> >
+> I'm checking this with the HW team. I'll get back on this once I have
+> some feedback.
+>
+The current value is determined by the load on the external circuit
+and is not affected by the choice of drive strength. For example, if a
+3.3V signal line (H =3D 3.3V, L =3D 0V) has a 3.3k=CE=A9 load, the resultin=
+g
+current will be 1mA, regardless of whether you select Low, Mid, High,
+or Ultra High drive strength. What changes with Low/Mid/High/Ultra
+High is the =E2=80=9Cslew rate=E2=80=9D of the transitions (H --> L and L -=
+-> H), not
+the current itself.
 
-Thanks,
-Antonio
+Please share your thoughts on how to implement these properties.
+
+Cheers,
+Prabhakar
 
