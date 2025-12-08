@@ -1,78 +1,77 @@
-Return-Path: <linux-gpio+bounces-29397-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29398-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F38BCAE362
-	for <lists+linux-gpio@lfdr.de>; Mon, 08 Dec 2025 22:18:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id ED6A8CAE36B
+	for <lists+linux-gpio@lfdr.de>; Mon, 08 Dec 2025 22:19:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6C764304FBAA
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Dec 2025 21:17:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D32F03095E72
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Dec 2025 21:18:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F7552D592F;
-	Mon,  8 Dec 2025 21:17:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F4562D7DE2;
+	Mon,  8 Dec 2025 21:18:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aVpPqNLb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OqTD+MRu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2612C0F6F
-	for <linux-gpio@vger.kernel.org>; Mon,  8 Dec 2025 21:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB17227E82
+	for <linux-gpio@vger.kernel.org>; Mon,  8 Dec 2025 21:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765228661; cv=none; b=R9DMRh6+o9kAL0ei6Hdzy1xW3Gq2yOxkszIxr6LqOOEoGSdWMlmGHGjGeEO3kLy+VZ8CvP3vqQALN9dUJM3G92/pdQrZh0KNgRnR458ypGWYwSrwZj2+9tfurFSbRU/rMxl6wnTxTwN8IJQkfxoYXcuPIlxzNBbcEAAKRo5yeb8=
+	t=1765228682; cv=none; b=gvqad2RPwb7qHZOsjVNaQK88CpQ2inXvSwWna+OZ0/bh0B6Ethj2dDnMNB+ysS1yWuWwoOPkk7ruRGNXHug1lBFBaFPJ9WZ457kx9EmlsADdlICWGZ91yBz8SDq+PkK86dTIkryFvuxYEcPOsIV1wq/bGiO36ovpoA7hyL57BKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765228661; c=relaxed/simple;
-	bh=NNqIvuGpLjQMPEj4QC/nBJ+WPSIvMTF2BhAIRM29pSU=;
+	s=arc-20240116; t=1765228682; c=relaxed/simple;
+	bh=7lZ7yFiwE4BfabfizLUm86ygg5oezWglQcFnqPk03BQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HLnnFcLcsIPa4LdCNHUR1lpOYorZeGY2BBQJU+sfpma/fI+ub76SU0fGi983dYQkBIuu6xrMJ7LaSKP73pg1VlypoFr9peSvVJ7zRO7mVd5FWP0mP6543MIbGak7LguFtwjcuIOjNyeKxaQ1lzEKm/JPes2dz/t202e9YEwNFMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aVpPqNLb; arc=none smtp.client-ip=209.85.128.47
+	 Content-Type:Content-Disposition:In-Reply-To; b=NQPLMWVUTQlBeXx0O4nb4bjsvHimSoje0r+OHoJ6m3ci1cfZZbnz7QDnl70imGdQLt5xyxo0Xy+5wqdfvPw1kTYluInRPgOGWmJv4GZkykhKph8sEQAltFpPZeXsPs/gPcmOEsCCjcT/fqUb3bQb1atENbflLP2auVzMigruzzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OqTD+MRu; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4779a4fc95aso37258345e9.1
-        for <linux-gpio@vger.kernel.org>; Mon, 08 Dec 2025 13:17:39 -0800 (PST)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-477619f8ae5so38579095e9.3
+        for <linux-gpio@vger.kernel.org>; Mon, 08 Dec 2025 13:18:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765228657; x=1765833457; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1765228679; x=1765833479; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TjAa+tL8foDO4YKK+oOCQIucxN94BgeKXz19r3glztc=;
-        b=aVpPqNLbwgtAWViJfxpEtUeN2oplDsYSe//8dM9eJK0JtVUJ1Fay0s1isIDIeffrb8
-         jjWnnz42rgp0Y2mZ+iQF2ZLEl5VS2JLiP6Bve0PtBxEFUFMY8HvyLOR+fJQG5sf/83b7
-         YAYMEbPJTdwNb+hwqLDBeRXadX2f7mY0SzweEc+zfcPef3Rhmp4VIr+2BpYklFeWIhiz
-         aYMykyZmHfULkQ6d0iMQk0rg/REl26hciJdoQYgnZgC+GEYsb+2P9J/tRiDYDMXROG6E
-         kWhQxt01xDE2DrUdn+J6lwgYACcAKAJLUzclALPIpqHZu/EMkZJN1i4M4VdhqQ5jergr
-         eZ8Q==
+        bh=FevBVXsdxMvnzZIFlQ7ZnJU5t6FuMkK60eiavRkgSq0=;
+        b=OqTD+MRuf+ggNDx1WnpmEg4cE/RoBU+ipt1XZtUMbaz+BW+355TEGCSuaKiJazxc2N
+         A5HB0OOuhZwMTV3JR4jhJyYe4jUREnY31z2O5E+xjH9R7P+DyStlpHM6xN05XZ9tqtaq
+         L/xxwrVrMSLtCaOz+NpH2mKEfc8ozzS4zQDd4xlxzx2/2R/WuutaPzkqHGFjTW52+osn
+         R4FtViK4LPl4pxIaRtIyuG8xFXr8+/Ci895DefvmkbUlRBBBTiDjE9tOn4Kl62gC5bbx
+         4aV+//PYq61ImeFC0qMif4nR2OHpjs1kkxesuzp/DjJqSlgt/9r0YQxr811IgDg+Vm8G
+         u3nQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765228657; x=1765833457;
+        d=1e100.net; s=20230601; t=1765228679; x=1765833479;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TjAa+tL8foDO4YKK+oOCQIucxN94BgeKXz19r3glztc=;
-        b=ovdNlfBX4f0cqKSuNkSfEqroI5Dd0HesHb0STpZwxyKxkVgH6B0GNuGOV3WeojCJMH
-         53geXlcPZYrEs3LqRccgIl8oEYItEIj6+o19GMHOfIc+DduvFnNjSZ6bxmjT+ydEyeZW
-         gQ4+laGB+ap3idCz3tAQKEnt6e6BpZw1GDObjyxXzPE6Xcuzs4Z/jEPvlzHT1m8cpRkP
-         /UP3bJjDS7Ol9WtC9Sl281AUA+JjwrKEfrf5RWtkBi44kecYr61KFTlQkr0aLlelc9ro
-         0/JPp0uMVCnItPqp9O06cmea8be1R1maczinsM5gofw+E0CpY23Uv84PqMJ6Ppr5Wht9
-         H5Mw==
-X-Forwarded-Encrypted: i=1; AJvYcCXhaZ+n0x15GZxRNIxiuYTiIxevtiYYCUazYxA1mp9zf0E8z+EXFYXd7x4iccl8ya+k+nUi2OoYYYg1@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7/odSbJTAd+9q/Spz65hHwbl8iWbCvcdUgVsCf+n5i2/0KJcU
-	jXVJnUY6L0cxqJeOb6AIBmjPH3cLs9dDCmD2L9y+PpSwEdzi+c1sHq1vpXRywEk/
-X-Gm-Gg: ASbGncugqutz4SmqH4AheATJFVPy22fHjOGu/PWYoEQIw6RyUT6vpFRnXFnpKPux41c
-	tzU2/YCkwQ18sKoIS/AXuie+/k259SGKb2DaGLvnWee2ESk6Ig3nuIyeKH+Zmr3n8tbP2fR8eTK
-	8OpoLlgamz5QiqLtIjxDxySjgQmpAovXwQD70AhdIIjRzh09FmJQcBWMoRNgmzzk+HKZM6QGBap
-	NE90+Py4sn6x6j9vEFCye9GZe3VyKnOgqZq+Mb69Uz6gA1Cnf7/5B8GWCh4yhHK/lH7yyOtH+EF
-	sUr9TmFJ2Ez1VPpHgbGuhU+R8oyljfIOAr2P3TndfoXlUWpws5UbAGbzOj3qXuZ2weeJTmcuhMV
-	x31IP5vALvPGVa9/dhqODDjj885PjSJCjlwR9wKDYu55/OHt+R8e5jlB7yLQ78h6soj+vgtcbzT
-	EEjkQ07s52UH0KmhR27Grx4lSa8GKoz7g0DbN1WXd+I0RtVYz3NJN5yHQ8goOq28XTm6CsFUYLe
-	OZeCg==
-X-Google-Smtp-Source: AGHT+IGNd59VvLmychchreSMZoeBMpONDnnmpIEaET4vlM4skg+riGq4zi2jQMnjOwK9B+g2Ewuf+A==
-X-Received: by 2002:a05:6000:178d:b0:42f:8817:7ed with SMTP id ffacd0b85a97d-42f9df56428mr882799f8f.30.1765228657426;
-        Mon, 08 Dec 2025 13:17:37 -0800 (PST)
+        bh=FevBVXsdxMvnzZIFlQ7ZnJU5t6FuMkK60eiavRkgSq0=;
+        b=lYy1Wd3tBnhpgp6aw7QvRT4XG6dwSyMFM+Yvdf3Gjd30Vwi4xPwwN0EsjSWWHDDcVH
+         jkD3bLbvfsvX5/M6pI7oTJ7FBEvRYJFPgwrCtJS1HYznhvEE/ZLs5fkiKpXbx8CjR3xu
+         Qna4+dEpr48OUIWIoeUln86405Yqh1AcdBRvA6wT/8lARtvCCwti6WJjPfzUv1TG74DL
+         qm5+1QS+47eUXFoVWMyZl8i17/X/7cz+B4LbkXHXLvsB/Hvj+zkJ2FfB2B6g3Q9FLaG/
+         mpb1c6rRjdeOZ9QLSYuXDQFeCILHnKKUd+6TmuUTb+mKh/pJjSozeaEykzpJuZwciPVA
+         lw9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWDNexmNDfHqBQcryD8FE29mBeJ9TKefSpDl8o3AI9GA6RsRoBuU8DQJHsbOhToed5LeL1RjGL2Fy+U@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCbIYexL971z7U5jbfrvStXHr5yLKO9k0RKmHH+FlzcKjVE/ZJ
+	rOh6LkdFzDXSQuxNC/ZpM2QwtHmFxcPLlL8/KxLFed4WneoITRIGArKF
+X-Gm-Gg: ASbGncvkYmbElE9oUEqGYK8t4DFQM4ebZhY0PZusy2EsjEmFsPlXnbqqUeUc8TLL3gY
+	gKg0QjRTNy4CaCDreOAqlf7j5SE/5vmUpzY5xlAsMBoocH1bEEx3DBUdKNl6rJT34Pbn+SEHJFh
+	nb51OW0/2YmjReL1Tacg9zkux9noqyWsYB6wqaVQ5BqbZl7gQd/Hibg+u/+bwFv7r9UND43dZE0
+	6wUeXgBwcFbUVIPcHX4E5zsVQ/qcua6RYRF+ho6CGoqIBPQy6Kmd/fco13kjHEuExG4SLJTsoBS
+	VXDnG9wbzZDM67FZX7hYP8YPFusUgw1DZOVrthGKFlX+5+KipUfkZdWXYOP3nVm/Vw4S/mXLzXs
+	dQqESA9G2XAgIzVdnnxdEWjq5/MRlp3y1aQfHgLC344lteq6bMTZniMd5wBns/bUuWDVJup1lzi
+	sZMu2wL3z0xP56jwk1XhEXlM6YS2ONxm2TkkGm+hAroWnEhYbo4DeB9mWDmKqFE9uj+a4=
+X-Google-Smtp-Source: AGHT+IE4yIfqhzMNdQUtI3A3IPxOwF1ZjFVLCMqKqyD/wHiW98WHchIOle5of1otFBu+XeUJTcxuQw==
+X-Received: by 2002:a05:600c:4f82:b0:477:aed0:f3fd with SMTP id 5b1f17b1804b1-47a6f9b153amr68618885e9.8.1765228678559;
+        Mon, 08 Dec 2025 13:17:58 -0800 (PST)
 Received: from HYB-DlYm71t3hSl.ad.analog.com ([2001:a61:1226:7701:cdbc:9893:8abf:1309])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42f7d2226e7sm28774409f8f.27.2025.12.08.13.17.21
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47a7d810c49sm3855035e9.15.2025.12.08.13.17.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Dec 2025 13:17:37 -0800 (PST)
-Date: Mon, 8 Dec 2025 22:17:20 +0100
+        Mon, 08 Dec 2025 13:17:58 -0800 (PST)
+Date: Mon, 8 Dec 2025 22:17:56 +0100
 From: Jorge Marques <gastmaier@gmail.com>
 To: Jonathan Cameron <jic23@kernel.org>
 Cc: Jorge Marques <jorge.marques@analog.com>, 
@@ -82,13 +81,12 @@ Cc: Jorge Marques <jorge.marques@analog.com>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
 	Jonathan Corbet <corbet@lwn.net>, Linus Walleij <linus.walleij@linaro.org>, 
 	Bartosz Golaszewski <brgl@bgdev.pl>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v3 5/9] iio: adc: ad4062: Add IIO Trigger support
-Message-ID: <h6d6bjuhb4ovnz5jghj4h3vkcqzypzbdgi5ufdmbv24x34a3px@nawt5lt7dsux>
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 1/9] dt-bindings: iio: adc: Add adi,ad4062
+Message-ID: <urniyc27qw5ex6jrwqilqykkcbswxbxlsdshnxqcts5gizdaly@a2ncsddzuyh2>
 References: <20251205-staging-ad4062-v3-0-8761355f9c66@analog.com>
- <20251205-staging-ad4062-v3-5-8761355f9c66@analog.com>
- <20251206174503.3c008cea@jic23-huawei>
+ <20251205-staging-ad4062-v3-1-8761355f9c66@analog.com>
+ <20251206165822.778606e1@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -97,168 +95,54 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251206174503.3c008cea@jic23-huawei>
+In-Reply-To: <20251206165822.778606e1@jic23-huawei>
 
-On Sat, Dec 06, 2025 at 05:45:03PM +0000, Jonathan Cameron wrote:
-> On Fri, 5 Dec 2025 16:12:06 +0100
+On Sat, Dec 06, 2025 at 04:58:22PM +0000, Jonathan Cameron wrote:
+> On Fri, 5 Dec 2025 16:12:02 +0100
 > Jorge Marques <jorge.marques@analog.com> wrote:
 > 
-Hi Jonathan,
-> > Adds support for IIO Trigger. Optionally, gp1 is assigned as Data Ready
-> > signal, if not present, fallback to an I3C IBI with the same role.
-> > The software trigger is allocated by the device, but must be attached by
-> > the user before enabling the buffer. The purpose is to not impede
-> > removing the driver due to the increased reference count when
-> > iio_trigger_set_immutable() or iio_trigger_get() is used.
+> > Add dt-bindings for AD4062 family, devices AD4060/AD4062, low-power with
+> > monitor capabilities SAR ADCs. Each variant of the family differs in
+> > resolution. The device contains two outputs (gp0, gp1). The outputs can
+> > be configured for range of options, such as threshold and data ready.
+> > The device uses a 2-wire I3C interface.
 > > 
 > > Signed-off-by: Jorge Marques <jorge.marques@analog.com>
-> 
-> +CC Rafael; I'd like input on the ACQUIRE + take extra reference pattern
-> and whether Rafael thinks it is a good idea!
-> 
 > > ---
-> >  drivers/iio/adc/Kconfig  |   2 +
-> >  drivers/iio/adc/ad4062.c | 188 +++++++++++++++++++++++++++++++++++++++++++----
-> >  2 files changed, 175 insertions(+), 15 deletions(-)
+> >  .../devicetree/bindings/iio/adc/adi,ad4062.yaml    | 124 +++++++++++++++++++++
+> >  MAINTAINERS                                        |   6 +
+> >  2 files changed, 130 insertions(+)
 > > 
-> > diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> > index e506dbe83f488..ddb7820f0bdcc 100644
-> > --- a/drivers/iio/adc/Kconfig
-> > +++ b/drivers/iio/adc/Kconfig
-> > @@ -74,6 +74,8 @@ config AD4062
-> >  	tristate "Analog Devices AD4062 Driver"
-> >  	depends on I3C
-> >  	select REGMAP_I3C
-> > +	select IIO_BUFFER
-> > +	select IIO_TRIGGERED_BUFFER
-> >  	help
-> >  	  Say yes here to build support for Analog Devices AD4062 I3C analog
-> >  	  to digital converters (ADC).
-> > diff --git a/drivers/iio/adc/ad4062.c b/drivers/iio/adc/ad4062.c
-> > index 54f7f69e40879..080dc80fd1621 100644
-> > --- a/drivers/iio/adc/ad4062.c
-> > +++ b/drivers/iio/adc/ad4062.c
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4062.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4062.yaml
+> > new file mode 100644
+> > index 0000000000000..a7a2ad761d1f0
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4062.yaml
+> > +  interrupts:
+> > +    description:
+> > +      The interrupt pins are digital outputs that can be configured at runtime
+> > +      as multiple interrupt signals. Each can be configured as GP_INTR, RDY,
+> > +      DEV_EN, logic low, logic high and DEV_RDY (GP1 only).
+> This is a bit confused.  logic low / logic high aren't interrupt signals so I'd
+> not mention them here.  Maybe something less detailed such as
 > 
-> > +static void ad4062_trigger_work(struct work_struct *work)
-> > +{
-> > +	struct ad4062_state *st =
-> > +		container_of(work, struct ad4062_state, trig_conv);
-> > +	int ret;
-> > +
-> > +	/*
-> > +	 * Read current conversion, if at reg CONV_READ, stop bit triggers
-> > +	 * next sample and does not need writing the address.
-> > +	 */
-> > +	struct i3c_priv_xfer t[2] = {
-> > +		{
-> > +			.data.in = &st->buf.be32,
-> > +			.len = sizeof(st->buf.be32),
-> > +			.rnw = true,
-> > +		},
-> > +		{
-> > +			.data.out = &st->reg_addr_conv,
-> > +			.len = sizeof(st->reg_addr_conv),
-> > +			.rnw = false,
-> > +		},
-> > +	};
-> > +
-> > +	ret = i3c_device_do_priv_xfers(st->i3cdev, &t[0], 1);
-> > +	if (ret)
-> > +		return;
-> > +
-> > +	iio_push_to_buffers_with_timestamp(st->indio_dev, &st->buf.be32,
-> > +					   iio_get_time_ns(st->indio_dev));
+>     Two pins are available that can be configured as either a general purpose
+>     digital output, device enable signal (used to synchronise other parts of
+>     the signal chain with ADC sampling), device ready (GP1 only) or various
+>     interrupt signals. If intended for use as a GPIO or device enable, will not
+>     present here.
 > 
-> Use push_to_buffers_with_ts() (this function is deprecated)
-> which would have had the helpful result here of pointing out the buffer
-> isn't big enough for the timestamp.  So this will write the timestamp
-> over later fields in the st structure.
-> 
-> Given that this sometimes fits in a be16 I wonder if it is worth
-> storing those in a be16 element of the kfifo. That will halve it's size
-> if the timestamp isn't enabled which would be a nice thing to have.
-> Storing in a be32 isn't an ABI issue, it's just a bit unusual
-> so if I'm missing some reason it makes more sense then fair enough.
-> 
-Per last e-mail, due to ad4062 burst avg, it will be kept as 32-bits.
-	const bool is_32b = st->chip->prod_id == 0x7C;
-	const size_t _sizeof = is_32b ? sizeof(st->buf.be32) : sizeof(st->buf.be16);
-	//...
-	iio_push_to_buffers_with_ts(st->indio_dev, &st->buf.be32, _sizeof,
-				    iio_get_time_ns(st->indio_dev));
-> > +	if (st->gpo_irq[1])
-> > +		return;
-> > +
-> > +	i3c_device_do_priv_xfers(st->i3cdev, &t[1], 1);
-> > +}
-> 
-> ...
-> 
-> > +		{
-> > +			.data.out = &st->reg_addr_conv,
-> > +			.len = sizeof(st->reg_addr_conv),
-> > +			.rnw = false,
-> > +		},
-> > +		{
-> > +			.data.in = &st->buf.be32,
-> > +			.len = sizeof(st->buf.be32),
-> > +			.rnw = true,
-> > +		}
-> >  	};
-> 
-> > @@ -687,6 +782,55 @@ static int ad4062_write_raw(struct iio_dev *indio_dev,
-> >  	return ret;
-> >  }
-> >  
-> > +static int ad4062_triggered_buffer_postenable(struct iio_dev *indio_dev)
-> > +{
-> > +	struct ad4062_state *st = iio_priv(indio_dev);
-> > +	int ret;
-> > +
-> > +	ACQUIRE(pm_runtime_active_try_enabled, pm)(&st->i3cdev->dev);
-> > +	ret = ACQUIRE_ERR(pm_runtime_active_try_enabled, &pm);
-> 
-> This may also be affected by Rafael's patch set to provide some helpers
-> to make this more readable.
-> 
-> 
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = ad4062_set_operation_mode(st, st->mode);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	/* CONV_READ requires read to trigger first sample. */
-> > +	struct i3c_priv_xfer t[2] = {
-> > +		{
-> > +			.data.out = &st->reg_addr_conv,
-> > +			.len = sizeof(st->reg_addr_conv),
-> > +			.rnw = false,
-> > +		},
-> > +		{
-> > +			.data.in = &st->buf.be32,
-> > +			.len = sizeof(st->buf.be32),
-> > +			.rnw = true,
-> > +		}
-> > +	};
-> > +
-> > +	ret = i3c_device_do_priv_xfers(st->i3cdev, t, st->gpo_irq[1] ? 2 : 1);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	pm_runtime_get_noresume(&st->i3cdev->dev);
-> As per my late reply I'm not keen on the double increment as a complex way
-> to steal the ACQUIRED() reference. Might be better to just factor the stuff
-> where you currently have acquired a reference out into a helper and use
-> the traditional runtime pm calls in this outer function.
->  
-I will use a helper pm_ad4062_monitor_mode_enable() and
-pm_ad4062_triggered_buffer_postenable().
+> For the binding I'm not sure we care about which interrupts are possible.
+> I guess even for device ready we might treat it as a onetime interrupt. Probably poll
+> it though - which requires a GPIO not an interrupt binding.  If we don't need
+> to use that mode (and can poll a register or something like that) then no need
+> to mention that bit.
+Hi Jonathan,
 
-> > +	return 0;
-> 
-> 
+Device enabled (DEV_EN) and device ready (DEV_RDY) are not implemented
+at this time at the driver. I believe it is fair to briefly mention in
+the dt-binding. I will use your suggested description.
+
 Best regards,
 Jorge
 
