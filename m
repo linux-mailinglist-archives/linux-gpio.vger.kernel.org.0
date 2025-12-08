@@ -1,98 +1,164 @@
-Return-Path: <linux-gpio+bounces-29394-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29395-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78E59CAE2CA
-	for <lists+linux-gpio@lfdr.de>; Mon, 08 Dec 2025 21:49:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C68FCAE331
+	for <lists+linux-gpio@lfdr.de>; Mon, 08 Dec 2025 22:13:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 90E13304C286
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Dec 2025 20:49:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 44FDE30607EF
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Dec 2025 21:12:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 756B72E8B94;
-	Mon,  8 Dec 2025 20:49:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 832702E0910;
+	Mon,  8 Dec 2025 21:12:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b="HyWhzDTt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cN1qyvL3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4A0231A55;
-	Mon,  8 Dec 2025 20:49:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD712DEA80
+	for <linux-gpio@vger.kernel.org>; Mon,  8 Dec 2025 21:12:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765226962; cv=none; b=uLDQXA79tnFUixnMCKxBA9VgBoPqZfgvESl15IpsoLj7suZVCPqYkZMN932ZqP8mgRUXF/TGBwGQo6A5srgbNtRP43m6fP0x51JlD/1PP7hh2Zukc/vO8zH1YblqpXL5/GLcqAU5lBStgQHKQUXOdSFw/gSDkj2YESUS22Z2VFM=
+	t=1765228370; cv=none; b=Uz967W1XT9TGskSkGJk/no7AuP1APGd1GchF/hIwgYGNYiDzjejspPkc5NSv1Tll/vOkG96gf6NGpQEyYDr14hCd/eerM37D1/Gaw33dLFdYwPCYOBrtyHKipkDrgGHIM1+AdONHDp9mam3xBpCMcGBGIx+BQUlVSU4+YFMl4rI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765226962; c=relaxed/simple;
-	bh=e+fFu2MdeHsUlyFQOUVeOgFYYMMaZGZ18DAtl6FoP0I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LqnDbzmRPM4zjfgx5X9X8JpA7f1zyr6UKKzwOTh/rBC5W4oz07GyFkMlaUfphdY1800dsX5AqduhWkaOZkv91zaUp69rPJuWNgFaA2MGOFIRiehbLgWdAJyIIDDmhsVBhBHO8I1P0GMP8SFac8SF2AZIuszO7vq4yM58ewtWE3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh; spf=pass smtp.mailfrom=gibson.sh; dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b=HyWhzDTt; arc=none smtp.client-ip=185.226.149.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gibson.sh
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <daniel@gibson.sh>)
-	id 1vSiAO-00Eku1-29; Mon, 08 Dec 2025 21:49:08 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gibson.sh;
-	 s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
-	bh=U7ZnXGxKhhwonAbIYoP4Tqgk8CKODIyRTD+Tp0bmyzc=; b=HyWhzDTtmrAA78y5i3OdbtChpH
-	CgHlgZCFe4oZh1E34H+h5l5lbkNz4oldEis4vsKojWCKNKK8xSQ973/MNeUB6/jDG4ZPwOJGJHEBG
-	0CPOKMBuHhEcB3NVAg6gCEdcGdLDlScpvaa5eABzkNGoS7gK4Ap2Y3zTObalYCksJqi8seoZ5tbo2
-	cB9qAV4N54BKTFJ9BXKVdBWfs5lMabo5Z9sjEzjL6RN6Wmj4XYa2yAWV2ReTs4/MN13J8hNWuVWTX
-	F0B1QAUmmZs8xwrpFLLc2ZLhSbaUdVyrT0v9AkNOBCWpf4mJqPrgYbt2DTYydW1nSC99p3/vgruEu
-	m2djTlpw==;
-Received: from [10.9.9.74] (helo=submission03.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <daniel@gibson.sh>)
-	id 1vSiAM-0000cK-4Z; Mon, 08 Dec 2025 21:49:06 +0100
-Received: by submission03.runbox with esmtpsa  [Authenticated ID (1104311)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1vSiAC-00An5I-7t; Mon, 08 Dec 2025 21:48:56 +0100
-Message-ID: <22ae55db-261d-4bb7-a83c-12fd00fa5527@gibson.sh>
-Date: Mon, 8 Dec 2025 21:48:54 +0100
+	s=arc-20240116; t=1765228370; c=relaxed/simple;
+	bh=/eT67ox63Y2ukyMLEkJ7o4b1T9x/HDKX33n+Cz5ZXX0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mSXJdt+HupjQPlTt+Nub6cEUJEqTFbJQ1aPbmtOfFJwKCBCz7Ke0bQCQed6XIUYL9iCDDZmgIjs0ngUGMmFQckeBXc1u3p02WbSAOJVtlYfeTPql8uiX69JnjSf3JY4PvWKuIaSpCcFLAJzuPgoGUlIi4vEb1vFOyw6/ND3r9As=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cN1qyvL3; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-42b47f662a0so2981535f8f.0
+        for <linux-gpio@vger.kernel.org>; Mon, 08 Dec 2025 13:12:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765228366; x=1765833166; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rv7pv8F5RO+cWw9DM2GqkbgxyRJgD6vx59IxXgSv8+A=;
+        b=cN1qyvL3CuoYUrWP6lMSGlsWS+dW7HAOaUGuL4MorolNH1Be3bero3WQi4OYnUiCi6
+         5ejAcNsAtpfY3LL1Ce1a8zGNtfJP5k9ojjYZj7NMsT1iLwsvU3BMuq100YSHiPKTAmZ0
+         93aNu+gDtOluYvSNpr+lbIdvLQvweQsyiLOAKcOZCBCD1YXb4MrOS9juZ7c5VSoRwHex
+         8rb2bAXPj6xfEd9MPCyhqVvH8tWV3C0gXvffzoIKf7c9tR2ulcwWzwWDYkKelakMUeeH
+         8Wwxti7Wxxby0wHoXHclTCmFRVrcjX0ygnO74ErBxUbbBlbJbnel6J9lHzXUASrNtP3r
+         TaTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765228366; x=1765833166;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rv7pv8F5RO+cWw9DM2GqkbgxyRJgD6vx59IxXgSv8+A=;
+        b=CVf+frAUCy68XLDSaedj0RMiq/nc+EQiXNmwhEfmfNEj/xOMenRIv4YbfqIJfaxnKO
+         tzF849esp9nm3yEjMd4LVkvsGKAzBV05ohfSNm5+Q+FikiCjKpMs//+gUPz0LAuxKncK
+         7LS2IbxGpx2zUovN+DaC5oXk8jRYk3q7H6H/HE6peXaCYVyoGCq9+GExSozqEgffJyxh
+         ro0J7z39ga5GC8QWkv1BTq+A4punupOtwahtmkSJXOT7yXpbPJPD8E0jPIQnqVGWewqy
+         U++F5ca1Q2ugleYOqRZy3ZRLzO3HzLmxu1u7cwv0ZWiKG2Kes/wiCegAITYh2H8S1TvL
+         FIJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVNBmm5ip0TNmVPP9/j3npFypG6KbCHGCp00wvNuYgXxchZZKzts1ZcpSzgqxg3Fs8a61IbZU2RBXSn@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzcj63HGWGajrGGeihGS/2pShs12OhvIs5LNxgftS5i5auNFcUj
+	pibItddLS9FcYxUqOmC476xnFRQy3+iAzkiVuc3GPZM3W8f8+wqVzWDm
+X-Gm-Gg: ASbGnctg/E3KnqaJAtT1KKkDkLwEX88v7k7cJRN4o969zgO6khBMJ+e0bfG75XCR9nD
+	Ut/5VtTJKqCrEEHZhtBn1ujcxJV83jsb3sUKE23I8DlB/p4q/1JYAvXkLqyV2L0MnrUYwKD5VQW
+	+rGnk0rSgAN16cwbfHSXOmOhH+T/2DVO8zqjp697cvZ6M6LyyMhKdhuVYsYVp0+fo08TYEJvVij
+	ofPJbEnl8+JpWIJ783qMiJ2d/YAbG8KD7cZB7oV22G8MFadUOtvHXzSIEjFzsJpIzHYEVeeSCRP
+	5vUdX6VLyZTcymo78PIMbKm5Ag8ZWKDe2Tem307YVrOrLjbAhg9KFK1fZCedUZ8tph+fkE/B8uM
+	NuufsV5lJdqyn/mjeP+fTFgT1nc/VT5mGbSw2hKiu5v1UuTSAbQMzgi+pnT3PZ90SnQ6Vd35RkO
+	6PIfw85NInMqjDkdwtwe6MGnxZubE0INeaCwYFmbmqEEI+sjOSINyPSXlpYkxM8u4PmoY=
+X-Google-Smtp-Source: AGHT+IGziC8WJUD4dISbRmg+IA/4zSrbcv8g/8vcOpn2B+LAP5qj3Xlp2TJThfuKL3AT7cfP8cG91w==
+X-Received: by 2002:a5d:4741:0:b0:429:cacf:1065 with SMTP id ffacd0b85a97d-42f9def752dmr564283f8f.17.1765228366006;
+        Mon, 08 Dec 2025 13:12:46 -0800 (PST)
+Received: from HYB-DlYm71t3hSl.ad.analog.com ([2001:a61:1226:7701:cdbc:9893:8abf:1309])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42f7cbfee66sm27548839f8f.11.2025.12.08.13.12.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Dec 2025 13:12:45 -0800 (PST)
+Date: Mon, 8 Dec 2025 22:12:43 +0100
+From: Jorge Marques <gastmaier@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Jorge Marques <jorge.marques@analog.com>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 7/9] iio: adc: ad4062: Add IIO Events support
+Message-ID: <trpmhlupu3vwzrulnctewwnfxwtlbr6iovtw6whyzfpjbwnpdh@rcdykddqwoal>
+References: <20251205-staging-ad4062-v3-0-8761355f9c66@analog.com>
+ <20251205-staging-ad4062-v3-7-8761355f9c66@analog.com>
+ <20251206175231.3522233f@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/12] gpio: it87: use new line value setter callbacks
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-gpio@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij
- <linus.walleij@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Lixu Zhang <lixu.zhang@intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Yinbo Zhu <zhuyinbo@loongson.cn>
-References: <20250423-gpiochip-set-rv-gpio-part2-v1-0-b22245cde81a@linaro.org>
- <20250423-gpiochip-set-rv-gpio-part2-v1-5-b22245cde81a@linaro.org>
- <bd0a00e3-9b8c-43e8-8772-e67b91f4c71e@gibson.sh>
- <CAMRc=Mc8ViSPyTn9Brr-us2V+D7Jv3u+B8Ek2nuzF36yH70RAw@mail.gmail.com>
-From: Daniel Gibson <daniel@gibson.sh>
-Content-Language: de-DE
-In-Reply-To: <CAMRc=Mc8ViSPyTn9Brr-us2V+D7Jv3u+B8Ek2nuzF36yH70RAw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251206175231.3522233f@jic23-huawei>
 
-On 12/8/25 05:48, Bartosz Golaszewski wrote:
+On Sat, Dec 06, 2025 at 05:52:31PM +0000, Jonathan Cameron wrote:
+> On Fri, 5 Dec 2025 16:12:08 +0100
+> Jorge Marques <jorge.marques@analog.com> wrote:
 > 
-> Thanks for bringing it to my attention, you're probably right and thats's
-> just an unintentional omission on my part. Do you want to send a patch that
-> will fix it or do you prefer me to do it?
+> > Adds support for IIO Events. Optionally, gp0 is assigned as Threshold
+> > Either signal, if not present, fallback to an I3C IBI with the same
+> > role.
+> > 
+> > Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+> > ---
+Hi Jonathan,
+
+> > +	if (!iio_device_claim_direct(indio_dev))
+> > +		return -EBUSY;
 > 
-> Bart
+> Similar to below. Consider factoring out this stuff or I guess wait
+> for an ACQUIRE() based standard solution.
+> 
+> > +
+> > +	if (!iio_device_claim_direct(indio_dev))
+> > +		return -EBUSY;
+> 
+> Whilst I do plan to take a look at whether we can do an ACQUIRE pattern
+> like the runtime pm ones, for now (unless you fancy taking that on)
+> I'd be tempt	ed to factor out this stuff under the direct mode claim into
+> a helper that can then do direct returns. That should end up easier to ready
+> that this.
+I will factor out, adding _dispatch() methods to return directly, so
 
-Thanks for the quick reply!
+	if (st->wait_event)
+		return -EBUSY;
 
-I'd prefer if you do it, I'm not too familiar with the kernel workflow.
+	switch (type) {
+	case IIO_EV_TYPE_THRESH:
+		switch (info) {
+		case IIO_EV_INFO_VALUE:
+			return __ad4062_write_event_info_value(st, dir, val);
+	// ...
 
-Cheers,
-Daniel
-
-
+> > +	if (st->wait_event) {
+> > +		ret = -EBUSY;
+> > +		goto out_release;
+> > +	}
+> > +
+> > +	switch (type) {
+> > +	case IIO_EV_TYPE_THRESH:
+> > +		switch (info) {
+> > +		case IIO_EV_INFO_VALUE:
+> > +			ret = __ad4062_write_event_info_value(st, dir, val);
+> > +			break;
+> > +		case IIO_EV_INFO_HYSTERESIS:
+> > +			ret = __ad4062_write_event_info_hysteresis(st, dir, val);
+> > +			break;
+> > +		default:
+> > +			ret = -EINVAL;
+> > +			break;
+> > +		}
+> > +		break;
+> > +	default:
+> > +		ret = -EINVAL;
+> > +		break;
+> > +	}
+Best regards,
+Jorge
 
