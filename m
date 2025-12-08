@@ -1,136 +1,216 @@
-Return-Path: <linux-gpio+bounces-29362-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29363-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C28B9CAC74C
-	for <lists+linux-gpio@lfdr.de>; Mon, 08 Dec 2025 09:04:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4160BCAC90D
+	for <lists+linux-gpio@lfdr.de>; Mon, 08 Dec 2025 09:56:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9E4B2303093D
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Dec 2025 08:04:11 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2FF5D303462C
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Dec 2025 08:56:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C66CF2D3A75;
-	Mon,  8 Dec 2025 08:04:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 576622E427C;
+	Mon,  8 Dec 2025 08:56:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RSTEl7vD"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="KEQx/DoF";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eSeqyEsj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-b3-smtp.messagingengine.com (flow-b3-smtp.messagingengine.com [202.12.124.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657A8289E06
-	for <linux-gpio@vger.kernel.org>; Mon,  8 Dec 2025 08:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC5B2DECC5;
+	Mon,  8 Dec 2025 08:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765181049; cv=none; b=cVe2ZFWHjEuaMV+3z2GKGZwThgEOZC+oFwnummJ6/gZ8PhmBuy8H4HbZ5yj4miaHeAnnXsUHcwvEBQr/a62oawlx5zHeTBluzYVIPJO6892p325gaH9j7qZucu4iM3FYJnFC3/aV+3g7VOd7oEr83TACz5QoHy+ZYJ1FQfDsLFY=
+	t=1765184166; cv=none; b=YM7YV93OeRH2OLQBLIEwEwPag+C55kQ6ic2Sik00zkNwjkCio2FqZguGT+C87l3pKA0L+WFXifoyTHoAaTAeL0RCyCCllDkyWKst8Id8DHNsQYBeKcGwwwWyn8DSej5WaD0hMTWc0AT+/JGnwJ0/etjLv4ySYW/ZrqaWa/oeH/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765181049; c=relaxed/simple;
-	bh=LcIjzS/QX9OdfzWd7S5fStct/j5BiQOmeNhDz/vl8LE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bIAYadlyyE6+2TUfjOp8sjNuhSPmIe0kNop9txT7xxCWiuO9KuGto5pkEc7my2HAOih947k6ATteR1cMt6PSI1sWHh0D6wYstJx6R+8X0HTK7DDa4cPxy1HTSzLXwZOA0zBLePaa5Xz1m6JIG8+P6Ma6ww5yz1twOR8FC6kXdOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RSTEl7vD; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5959b2f3fc9so4300340e87.2
-        for <linux-gpio@vger.kernel.org>; Mon, 08 Dec 2025 00:04:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765181045; x=1765785845; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0+tebP17XJiSVpHNLRMqnpjIXpj4TNVdcjDVZw4M8+c=;
-        b=RSTEl7vDc1dcrV43f4lJp71x71nXdxonolSC+FgFuW2YrEJPE+ZMyPV0P1/UvbeGg7
-         3rIAzVfJ1h0EgIoQYtz2j49lWTVnmXZgCkbqWODl5IF8edwdTqlPYrNnRJGjJ9zC9JJh
-         jg26EOgV7P0Vm9/2A8Ovijk839KiGACsWcyvRNyBTYzLEo9LOdlFT5Hmcx8vEXK1tV1P
-         OQIras0Rhqw/3cV1AH8p6GpM/2+6Cr1ogNpf2swjA4i7kItSWxFyxyy2T3nBWQHOIzPo
-         Qd4p/0Tg5LLNMbWm37CZG8gcG4QXRYLWvsCywPbO6ahrgrZi4l19j8AXaL1xAa6vmOoO
-         x3ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765181045; x=1765785845;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0+tebP17XJiSVpHNLRMqnpjIXpj4TNVdcjDVZw4M8+c=;
-        b=ZPdK1liW7T3yrxN21LzK7iyvHPISFGFvYj8fNBM5wKtyGtPlPqv3cnxBgAmFLlw+qt
-         9S/OTfJOiue8fJK2fUPDM2SNEKgVz9NRgFrKlpiQEAT0Rtw4p6T9anCzu86ieldVMBr4
-         SMNt7v+lt3kQLHiDELEw1zOOq+KsCVZ4leoPCTDsp2B8ARK3JWPoLtDp/cx9GZgLG6Ck
-         zFxkjcHG2O+Uf2C84SdOBzdN8XeIJrM6JVQJ3OBNm4N4gaZj8cZ5V/LSqtWnfVmq2i/5
-         WFz+lahJ6rKj5i88J9blYzYj9WcvIkoECcdQ9oGODXQp9HEGjGAT985lnWke9SLHnlsJ
-         +cGw==
-X-Forwarded-Encrypted: i=1; AJvYcCUPqRlOMu7bS3jXFUU+LAUEwMc7uM/mBTn1LXR0VFfk7GssfbCrxFCWWSeR/GfOeBqdThFelRgy+s5M@vger.kernel.org
-X-Gm-Message-State: AOJu0YzC/1d4f3FRrxh2OcCIVNh73ixxyfkckxMV3e5NiI/61Ix1RKvC
-	V4CcqT+3AM8FIE3F9w8gxuj9xV2H6YSsL/5bl9zVl/j4VblSZsu0cBdL
-X-Gm-Gg: ASbGncs4nC2CesD7XnzSm4CKIbK4O4sXm0NpiymmrSNk++RpdxR5j4i5HQogaQhmPQE
-	JHTmHzi+3f8Tc8XO1TMqA2QcW1lp55USHCdZb3+XxhuKHINBYOoQ5I/y4/oq2bcHuUs4/4ZIK2Q
-	3ei6rlvA/ruG8ZSzopORfFwxFjltFTPwgNeZlIsWXY/UIApFI7ESL+3ZIY6bAPt9gXLclQGdHlp
-	XxUjX60FVq+iCAK0NxGbZptWUy/+jJmQibFlHSmn/lFBtzotF4zemNkLuFZyl7Iq3/O9JIU4rlF
-	BqDLb6Un5EdTf/KhPrSjGqi/96ejaZme/dPjAjkF2Gx4RqFs3psWTdAEQ8Bu1+J4X+Ewcm1x9wi
-	cEmu+cXS+ypnK4kYJHiOD5JmC7I3y2flaYGurN9GicFA5+L0A3qG3S/Efw/M9NU2nqHPzNsw7tA
-	+3+sk8qRZCBT2Ejled7cz4rfU2qfcoyIk2SFus3SmfIPgQ96E0gMtv9ibCfl0GCfIBGaNim1Ypg
-	QUdwrM=
-X-Google-Smtp-Source: AGHT+IEtsjzvo2jB+dbI9VQ7yZrjbx6yvK3VRttDJmqZME09yWJ/CiejjRuxkvbF6yvGpf9tC/V6mQ==
-X-Received: by 2002:a05:6512:104f:b0:592:fb5d:6300 with SMTP id 2adb3069b0e04-5987e88bb77mr1971804e87.10.1765181045203;
-        Mon, 08 Dec 2025 00:04:05 -0800 (PST)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-597d7c1e2b7sm3942418e87.51.2025.12.08.00.04.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Dec 2025 00:04:04 -0800 (PST)
-Message-ID: <bcbe66b0-23bc-4ba1-93ab-f2c09262e07b@gmail.com>
-Date: Mon, 8 Dec 2025 10:04:03 +0200
+	s=arc-20240116; t=1765184166; c=relaxed/simple;
+	bh=QCNVWUBgJNXNO8cAMe5fU6sinxzKBUpYHUhu+QReUzU=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=bNxrDFT7cbTGoR5VIoT+obdYJnBSekmqQA9bg5v+DYqzRBJ4aq/UfRSOehn+ACdWS/okqezWBjkxZ8EDNanV2jZETXnbIa3pgeBbDlehhusYiKhM5Ok+4+tzYPT0ciUoLdH25O1VLsP2RgtVlnsG+9S8qk5y8g91aKebqOQnGRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=KEQx/DoF; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eSeqyEsj; arc=none smtp.client-ip=202.12.124.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailflow.stl.internal (Postfix) with ESMTP id 0B6321300A3E;
+	Mon,  8 Dec 2025 03:56:01 -0500 (EST)
+Received: from phl-imap-17 ([10.202.2.105])
+  by phl-compute-04.internal (MEProxy); Mon, 08 Dec 2025 03:56:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1765184160;
+	 x=1765191360; bh=rI4kmm8q4SBgeZUfyMe9K0dGX4rw95g6gNmAZHmnGI4=; b=
+	KEQx/DoFTWe87vjgaF/lltZ4ROhdyVzifWOmm0ric0cJB5GIwIlXMBPdzfFUSjmu
+	jc8YJftIpHI0P6Hr/mFAa7Hg0gne2WsNbxeDvrib6J4TNASjXySZhHqZg6aW1sfs
+	OcTjac9718xt+KlzbSF/x7Yc9DD6c7iuDogGUJbnrxtnsPxKfEbVYIe4bsPD1GQh
+	xU7hrvJclwTD95ij8Z0L5AweK2etlv2je4ICAc96VfsG5WQ5G831y//6BAb/4kDv
+	jANl68EQ7NWvE4dgjg2Jgzh/W/muSag5AEZRtBprPYq0bBJ5Yw0DNKKikbfnd1I2
+	A3K/NjEFytYRCq7veJpJ0g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1765184160; x=
+	1765191360; bh=rI4kmm8q4SBgeZUfyMe9K0dGX4rw95g6gNmAZHmnGI4=; b=e
+	SeqyEsjjH4KIDKVWZWQnPpkIj8V27aOGXCIUv3KqWLbPoVXVTB8CpxBHqQClHYsa
+	kpDnrfmZ/Do4gHJ70tOwX4QJqMfbE5dFqjHzFX5vl7lRcUGD3fa2+Oson6+bqWdA
+	KfzoD9RacrpnvX/Z6F2rgdN+g7HK2CzrdqwucakBqpI2TmtpwG4Ncr7GJEPKMweI
+	8a1TxyyhWdGACgEMZG9PPKVuuNc16ylnzjv4VzhinhfMUrJT8vnXgJdM1VPNWLd9
+	hIQHjQRFhZw/c3sbeLXLthF/QQ96cHNotcBAahBH0Mn51vxw6uB4yelZg3ZjMdcw
+	lfPxGjJz0KwUhMjvMR/Ow==
+X-ME-Sender: <xms:n5I2af3AOJhJM8AZu7vJj2vLP6N-g43FMHtVswkk4IQEA4JJTbnQfg>
+    <xme:n5I2aY5NWPgdu6u-31Ph43b_F-Lsq264_Q7FV33-fn75S6mkFJ7D7W_wnOqIVfBmU
+    DiIF2zko78sdD9QREmze-J_kJdp85MvKLQYBC5HqPr-YjYj4he15g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduiedviecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
+    hnpeejkeetleelgeeukeekhefhtedtkeduuefhffehueejgeeihfeulefhgeejhfegleen
+    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdhinhhfrhgruggvrggurdhorhhgpdhgih
+    hthhhusgdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopedvhedpmhhoug
+    gvpehsmhhtphhouhhtpdhrtghpthhtohepphgruhhlsegtrhgrphhouhhilhhlohhurdhn
+    vghtpdhrtghpthhtoheprghnugihrdhshhgvvhgthhgvnhhkohesghhmrghilhdrtghomh
+    dprhgtphhtthhopehhvhgrihgshhgrvhdrlhhinhhugiesghhmrghilhdrtghomhdprhgt
+    phhtthhopehjtghmvhgskhgstgesghhmrghilhdrtghomhdprhgtphhtthhopehmrgiiii
+    hivghsrggttghouhhnthesghhmrghilhdrtghomhdprhgtphhtthhopehrughunhhlrghp
+    sehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepjhhitgdvfeeskhgvrhhnvghlrd
+    horhhgpdhrtghpthhtohepshhrihhniheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    giekieeskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:n5I2aWwfV8uojphryA4LMwvhxBD1lSSLxiL6gnkJPQjtfRjYR-x8vA>
+    <xmx:n5I2abdylMnetpIIFpQZmx8ZEpFo6JUFVPuRC__c1vvm4enk8iT1mA>
+    <xmx:n5I2aScjp6Ox44YOHm51rgR0Mr9Ks_Z-hseL7SDUtrPSG-OFb-WnTQ>
+    <xmx:n5I2adZU1k7BYPSdKrT6-sy_WehWFCXQ_6Ovy7ofNuSa_TuuU6O_wA>
+    <xmx:oJI2aeOU8RNJqW6MFLWxWiLR6QwmLwTtSNYK68Yfe2XTmH0U_4KugIRA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id EC25DC40054; Mon,  8 Dec 2025 03:55:58 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Kconfig dangling references (BZ 216748)
-To: Randy Dunlap <rdunlap@infradead.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann
- <arnd@arndb.de>, andrew.jones@linux.dev, linux-omap@vger.kernel.org,
- openbmc@lists.ozlabs.org, linux-sound@vger.kernel.org,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+X-ThreadId: AdXK0EwxrYhs
+Date: Mon, 08 Dec 2025 09:55:38 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Randy Dunlap" <rdunlap@infradead.org>,
+ "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Cc: "Andy Shevchenko" <andy.shevchenko@gmail.com>, andrew.jones@linux.dev,
+ Linux-OMAP <linux-omap@vger.kernel.org>, openbmc@lists.ozlabs.org,
+ linux-sound@vger.kernel.org,
+ "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
  linux-mips@vger.kernel.org, asahi@lists.linux.dev,
  "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- Paul Kocialkowski <paulk@sys-base.io>, chrome-platform@lists.linux.dev,
- Paul Cercueil <paul@crapouillou.net>,
+ "Paul Kocialkowski" <paulk@sys-base.io>, chrome-platform@lists.linux.dev,
+ "Paul Cercueil" <paul@crapouillou.net>,
  linux-stm32@st-md-mailman.stormreply.com,
- Linux ARM <linux-arm-kernel@lists.infradead.org>,
- linux-gpio@vger.kernel.org, Srinivas Kandagatla <srini@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Cameron <jic23@kernel.org>,
- Vaibhav Hiremath <hvaibhav.linux@gmail.com>, linux-sh@vger.kernel.org,
- x86@kernel.org, Max Filippov <jcmvbkbc@gmail.com>
-References: <22b92ddf-6321-41b5-8073-f9c7064d3432@infradead.org>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
+ "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ "Srinivas Kandagatla" <srini@kernel.org>,
+ "Philipp Zabel" <p.zabel@pengutronix.de>,
+ "Matti Vaittinen" <mazziesaccount@gmail.com>,
+ "Jonathan Cameron" <jic23@kernel.org>,
+ "Vaibhav Hiremath" <hvaibhav.linux@gmail.com>, linux-sh@vger.kernel.org,
+ x86@kernel.org, "Max Filippov" <jcmvbkbc@gmail.com>
+Message-Id: <5e335232-89b4-4c35-93bd-efad7e4d8995@app.fastmail.com>
 In-Reply-To: <22b92ddf-6321-41b5-8073-f9c7064d3432@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <22b92ddf-6321-41b5-8073-f9c7064d3432@infradead.org>
+Subject: Re: Kconfig dangling references (BZ 216748)
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-On 08/12/2025 04:04, Randy Dunlap wrote:
+On Mon, Dec 8, 2025, at 03:04, Randy Dunlap wrote:
 > from  https://bugzilla.kernel.org/show_bug.cgi?id=216748
-> 
+>
 > The bugzilla entry includes a Perl script and a shell script.
-> This is the edited result of running them (I removed some entries that were noise).
-> 
+> This is the edited result of running them (I removed some entries that 
+> were noise).
+>
 > I'll try to Cc: all of the relevant mailing lists or individuals.
-> 
+>
+>
+> ARCH_HAS_HOLES_MEMORYMODEL ---
+> arch/arm/mach-omap1/Kconfig:7:	select ARCH_HAS_HOLES_MEMORYMODEL
 
-Thanks Randy! This is good.
+My mistake, this was a botched rebase.
 
-> TEST_KUNIT_DEVICE_HELPERS ---
-> drivers/iio/test/Kconfig:11:	select TEST_KUNIT_DEVICE_HELPERS
-This is a config for stuff that never went upstream. It was replaced by 
-more sophisticated kunit_device, which I believe is behind the 
-'CONFIG_KUNIT'. So, this should be dropped, thanks!
+> ARM_ERRATA_794072 ---
+> arch/arm/mach-npcm/Kconfig:33:	select ARM_ERRATA_794072
 
-Yours,
-	-- Matti
+This apparently never made it upstream because it was unreliable
+https://lists.infradead.org/pipermail/linux-arm-kernel/2014-April/244343.html
 
----
-Matti Vaittinen
-Linux kernel developer at ROHM Semiconductors
-Oulu Finland
+> MACH_JZ4755 ---
+> drivers/clk/ingenic/Kconfig:20:	default MACH_JZ4755
+> drivers/pinctrl/pinctrl-ingenic.c:158:	IS_ENABLED(CONFIG_MACH_JZ4755) 
+> << ID_JZ4755 |
+> drivers/pinctrl/pinctrl-ingenic.c:4616:		.data = 
+> IF_ENABLED(CONFIG_MACH_JZ4755, &jz4755_chip_info)
+>
+> MACH_JZ4760 ---
+> drivers/clk/ingenic/Kconfig:40:	default MACH_JZ4760
+> drivers/pinctrl/pinctrl-ingenic.c:159:	IS_ENABLED(CONFIG_MACH_JZ4760) 
+> << ID_JZ4760 |
+> drivers/pinctrl/pinctrl-ingenic.c:4620:		.data = 
+> IF_ENABLED(CONFIG_MACH_JZ4760, &jz4760_chip_info)
+> drivers/pinctrl/pinctrl-ingenic.c:4624:		.data = 
+> IF_ENABLED(CONFIG_MACH_JZ4760, &jz4760_chip_info)
+>
+> MACH_STM32MP25 ---
+> drivers/pinctrl/stm32/Kconfig:58:	default MACH_STM32MP25 || (ARCH_STM32 
+> && ARM64)
 
-~~ When things go utterly wrong vim users can always type :help! ~~
+This was likely intended for 32-bit kernels on 64-bit STM32MP25
+chips, which we don't support. I think this can go.
+
+> MIPS_BAIKAL_T1 ---
+> drivers/ata/Kconfig:197:	select MFD_SYSCON if (MIPS_BAIKAL_T1 || 
+> COMPILE_TEST)
+> drivers/bus/Kconfig:43:	depends on MIPS_BAIKAL_T1 || COMPILE_TEST
+> drivers/bus/Kconfig:58:	depends on MIPS_BAIKAL_T1 || COMPILE_TEST
+> drivers/clk/baikal-t1/Kconfig:4:	depends on (MIPS_BAIKAL_T1 && OF) || 
+
+I don't think we'll merge the rest of Baikal, we should probably
+remove the entire platform.
+
+> PINCTRL_MILBEAUT ---
+> arch/arm/mach-milbeaut/Kconfig:16:	select PINCTRL_MILBEAUT
+
+Same for Milbeaut
+
+> USB_OHCI_SH ---
+> arch/sh/Kconfig:334:	select USB_OHCI_SH if USB_OHCI_HCD
+> arch/sh/Kconfig:344:	select USB_OHCI_SH if USB_OHCI_HCD
+> arch/sh/Kconfig:429:	select USB_OHCI_SH if USB_OHCI_HCD
+> arch/sh/Kconfig:455:	select USB_OHCI_SH if USB_OHCI_HCD
+> arch/sh/configs/sh7757lcr_defconfig:61:CONFIG_USB_OHCI_SH=y
+
+Should have been removed as part of 7518f0763ecd ("sh: convert
+boards to use the OHCI platform driver")
+
+> X86_P6_NOP ---
+> arch/x86/Kconfig.cpufeatures:41:	depends on X86_64 || X86_P6_NOP
+> arch/x86/Makefile_32.cpu:48:ifneq ($(CONFIG_X86_P6_NOP),y)
+
+I missed this in f388f60ca904 ("x86/cpu: Drop configuration options
+for early 64-bit CPUs"). Both references can be removed, because
+p6-nop was already disallowed for 32-bit CPUs at the time.
+
+I don't know if any supported binutils still require -mtune=generic32
+
+> XTENSA_PLATFORM_ESP32 ---
+> drivers/tty/serial/Kconfig:1598:	depends on XTENSA_PLATFORM_ESP32 || 
+> (COMPILE_TEST && OF)
+> drivers/tty/serial/Kconfig:1611:	depends on XTENSA_PLATFORM_ESP32 || 
+> (COMPILE_TEST && OF)
+
+Max is still working on esp32 support as far as I know, it's just
+slow progress, see
+https://github.com/jcmvbkbc/linux-xtensa/commits/xtensa-6.16-esp32
+
+       Arnd
 
