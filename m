@@ -1,163 +1,98 @@
-Return-Path: <linux-gpio+bounces-29393-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29394-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65452CAE227
-	for <lists+linux-gpio@lfdr.de>; Mon, 08 Dec 2025 21:06:10 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78E59CAE2CA
+	for <lists+linux-gpio@lfdr.de>; Mon, 08 Dec 2025 21:49:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5FA363021452
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Dec 2025 20:06:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 90E13304C286
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Dec 2025 20:49:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7CDF2FD67B;
-	Mon,  8 Dec 2025 20:06:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 756B72E8B94;
+	Mon,  8 Dec 2025 20:49:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="RCw4MYw+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="voCV257E"
+	dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b="HyWhzDTt"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from flow-a6-smtp.messagingengine.com (flow-a6-smtp.messagingengine.com [103.168.172.141])
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D461A9FA8;
-	Mon,  8 Dec 2025 20:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4A0231A55;
+	Mon,  8 Dec 2025 20:49:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765224366; cv=none; b=eQmLTNVd//YxF6eO4bOE3Nu7foDN8UVZPDdRgkpPiAnbuCmmgO59tksH3TslcovX7f0snJiyWVmIYsQda8/BSCy4GPNkVJOiiK+Q1cw302Eqe4Qme4EIJXdFxGMX8l0stQgL6Zp7VkmIzzZqTM9fBkuheMYwkI9UVMdMGKK4nfY=
+	t=1765226962; cv=none; b=uLDQXA79tnFUixnMCKxBA9VgBoPqZfgvESl15IpsoLj7suZVCPqYkZMN932ZqP8mgRUXF/TGBwGQo6A5srgbNtRP43m6fP0x51JlD/1PP7hh2Zukc/vO8zH1YblqpXL5/GLcqAU5lBStgQHKQUXOdSFw/gSDkj2YESUS22Z2VFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765224366; c=relaxed/simple;
-	bh=jr5/ZXHHETObVyfq2xnDJTDvOshfBwx+krGl3v0gYC4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O3rj2taSf8oYlgAYyzL4Dd64gsp7B2PYtGzSz1SDmlUnRbTIgqYCYeDMp7+9YBLK4A6iz+hMxmoJq7HFgRz29c9wCujHcz9etE7EaDN3m7rLDJugm3sf7068piHEHzC0MhpSqM7XM7874XJGiKj7/OJB7fxuU4e0mkLF7ArEktQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=RCw4MYw+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=voCV257E; arc=none smtp.client-ip=103.168.172.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailflow.phl.internal (Postfix) with ESMTP id 15BE51380418;
-	Mon,  8 Dec 2025 15:06:00 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Mon, 08 Dec 2025 15:06:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1765224360; x=1765231560; bh=geGVe3G5SB
-	gEZ59+oVuK/Iwq85pb8lTkLlayLey8xSA=; b=RCw4MYw+7ZLDHkj305wxxjCRSX
-	rMrdbrBgi9f25g/3it320zvhMNV1ZQKoK4HMoVtdSMCSQxa3T1NtQGZK2ji7FaB+
-	4EAMXj2Z/18fg18HLzgIp1Xd2gaRaVf6aOd9tq+17uy6+b25gxNy3mnV9680Kb9/
-	5tqHVF1j8ty4YqRtlzJwDQD/AFabZMuWlqsu+ivO0qERdUZBTsbfvToLgDReiU2c
-	Lh/Eba71Uo99rQNJKXg+dWVZlsvVZ4EEWaxpUn0pfDgHeJqy1Ci7jT91cm3WjvPy
-	sTJxo0O0i2VTRszFsHu9XlHbQZYuMm/iGITipFRODxC1B8IcWm5/KrQbrMbg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1765224360; x=1765231560; bh=geGVe3G5SBgEZ59+oVuK/Iwq85pb8lTkLla
-	yLey8xSA=; b=voCV257E8ExI8LRf6UdVA7F02TYLxADA60npChdBR6Y21xs0tRA
-	C1uw+AV9CLSaNfK6RAUV6AE1RZBKQaSh2/pgZThaQt1P282do/o12nWenujxz3Pg
-	/tdhnCFD0X7RQQSdVppzFajbBlqF0NSSuk+kHONsZxH3CEBuJYx+4gBEMsH+gyIP
-	razXamAr0cLJLucn4Z8U6ZvWzmg4VLNRkI8fW7bkvNN/o41lmXQ/g0VAlsbl0p+c
-	9kOr6shetIpWgA2fAxvQUSRm6uEgMj9wjThm4m3EyfuK4xRaW/GPDonriBPihui9
-	NKID6dEU3zuG8C0j+xnEP0PQag6LUCS0h3A==
-X-ME-Sender: <xms:pi83aTQUBBxxcwI8Ju7BapuF7LwulYjYQpKe7sWAR0r_uWtzDdDwRg>
-    <xme:pi83aebVHsxrKMEuQywvzdXSDZHpM9MK2UiluZkdXAVmh0J0nNZu6U6gfkZg9j0Ga
-    Ut53OsW7mEjA55oME3b-thugVKSe0_5Tbewl2mI88XfPPTSUxekmw>
-X-ME-Received: <xmr:pi83acQeu23D1kI1rLhQ4wr0x5rXNlW92yKuzfJ9DXbmbyD1PnQo3LIx3zAyL52iJBsHs4oNCdPXZZnY0nx-sHu7J1Hs6kJCHtU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddujeehlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtuggjsehttdertddttdejnecuhfhrohhmpeflrghnnhgvucfi
-    rhhunhgruhcuoehjsehjrghnnhgruhdrnhgvtheqnecuggftrfgrthhtvghrnhepgfduue
-    ffleefkeegueektdehkeejtedtffdtudejhfdvheetgfeigfeltdeufeejnecuffhomhgr
-    ihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehjsehjrghnnhgruhdrnhgvthdpnhgspghrtghpthhtohepvdei
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehprghulhhksehshihsqdgsrghsvg
-    drihhopdhrtghpthhtoheprhguuhhnlhgrphesihhnfhhrrgguvggrugdrohhrghdprhgt
-    phhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
-    gtphhtthhopegrnhguhidrshhhvghvtghhvghnkhhosehgmhgrihhlrdgtohhmpdhrtghp
-    thhtoheprghrnhgusegrrhhnuggsrdguvgdprhgtphhtthhopegrnhgurhgvfidrjhhonh
-    gvsheslhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdhomhgrphesvhhgvghr
-    rdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehophgvnhgsmhgtsehlihhsthhsrdhoii
-    hlrggsshdrohhrghdprhgtphhtthhopehlihhnuhigqdhsohhunhgusehvghgvrhdrkhgv
-    rhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:pi83aZ4RCJmeDa-VR1cQPG2ul73JR-gGDUFjKdpu-22mFdL9oWUOfw>
-    <xmx:pi83aXrSwaSszaHmCrk55lMdmsGtmyEQHQ1s-QpJy4Rt1_cXfEHipg>
-    <xmx:pi83aUR5DbLatVwQOF8-uRLn9TImi_QeLc8Ti5pE_VqfQwUHqh1VcA>
-    <xmx:pi83aTtoeQfXbJumEOlxloGR9zkRk3a07od05eZIJLIDpzutEw-WGg>
-    <xmx:qC83aQtVE-oT3QFyD3EhDToVHKkkvo2HfKm_z0WZaMfBkC3mxyGDZ6m_>
-Feedback-ID: i47b949f6:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 8 Dec 2025 15:05:57 -0500 (EST)
-Date: Mon, 8 Dec 2025 21:05:55 +0100
-From: Janne Grunau <j@jannau.net>
-To: Paul Kocialkowski <paulk@sys-base.io>
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>, andrew.jones@linux.dev,
-	linux-omap@vger.kernel.org, openbmc@lists.ozlabs.org,
-	linux-sound@vger.kernel.org,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	linux-mips@vger.kernel.org, asahi@lists.linux.dev,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	chrome-platform@lists.linux.dev,
-	Paul Cercueil <paul@crapouillou.net>,
-	linux-stm32@st-md-mailman.stormreply.com,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	linux-gpio@vger.kernel.org, Srinivas Kandagatla <srini@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Vaibhav Hiremath <hvaibhav.linux@gmail.com>,
-	linux-sh@vger.kernel.org, x86@kernel.org,
-	Max Filippov <jcmvbkbc@gmail.com>
-Subject: Re: Kconfig dangling references (BZ 216748)
-Message-ID: <20251208200555.GA333481@robin.jannau.net>
-References: <22b92ddf-6321-41b5-8073-f9c7064d3432@infradead.org>
- <aTcVXrUXVsyjaT22@shepard>
+	s=arc-20240116; t=1765226962; c=relaxed/simple;
+	bh=e+fFu2MdeHsUlyFQOUVeOgFYYMMaZGZ18DAtl6FoP0I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LqnDbzmRPM4zjfgx5X9X8JpA7f1zyr6UKKzwOTh/rBC5W4oz07GyFkMlaUfphdY1800dsX5AqduhWkaOZkv91zaUp69rPJuWNgFaA2MGOFIRiehbLgWdAJyIIDDmhsVBhBHO8I1P0GMP8SFac8SF2AZIuszO7vq4yM58ewtWE3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh; spf=pass smtp.mailfrom=gibson.sh; dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b=HyWhzDTt; arc=none smtp.client-ip=185.226.149.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gibson.sh
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <daniel@gibson.sh>)
+	id 1vSiAO-00Eku1-29; Mon, 08 Dec 2025 21:49:08 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gibson.sh;
+	 s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
+	bh=U7ZnXGxKhhwonAbIYoP4Tqgk8CKODIyRTD+Tp0bmyzc=; b=HyWhzDTtmrAA78y5i3OdbtChpH
+	CgHlgZCFe4oZh1E34H+h5l5lbkNz4oldEis4vsKojWCKNKK8xSQ973/MNeUB6/jDG4ZPwOJGJHEBG
+	0CPOKMBuHhEcB3NVAg6gCEdcGdLDlScpvaa5eABzkNGoS7gK4Ap2Y3zTObalYCksJqi8seoZ5tbo2
+	cB9qAV4N54BKTFJ9BXKVdBWfs5lMabo5Z9sjEzjL6RN6Wmj4XYa2yAWV2ReTs4/MN13J8hNWuVWTX
+	F0B1QAUmmZs8xwrpFLLc2ZLhSbaUdVyrT0v9AkNOBCWpf4mJqPrgYbt2DTYydW1nSC99p3/vgruEu
+	m2djTlpw==;
+Received: from [10.9.9.74] (helo=submission03.runbox)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <daniel@gibson.sh>)
+	id 1vSiAM-0000cK-4Z; Mon, 08 Dec 2025 21:49:06 +0100
+Received: by submission03.runbox with esmtpsa  [Authenticated ID (1104311)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1vSiAC-00An5I-7t; Mon, 08 Dec 2025 21:48:56 +0100
+Message-ID: <22ae55db-261d-4bb7-a83c-12fd00fa5527@gibson.sh>
+Date: Mon, 8 Dec 2025 21:48:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aTcVXrUXVsyjaT22@shepard>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/12] gpio: it87: use new line value setter callbacks
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-gpio@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij
+ <linus.walleij@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Lixu Zhang <lixu.zhang@intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Yinbo Zhu <zhuyinbo@loongson.cn>
+References: <20250423-gpiochip-set-rv-gpio-part2-v1-0-b22245cde81a@linaro.org>
+ <20250423-gpiochip-set-rv-gpio-part2-v1-5-b22245cde81a@linaro.org>
+ <bd0a00e3-9b8c-43e8-8772-e67b91f4c71e@gibson.sh>
+ <CAMRc=Mc8ViSPyTn9Brr-us2V+D7Jv3u+B8Ek2nuzF36yH70RAw@mail.gmail.com>
+From: Daniel Gibson <daniel@gibson.sh>
+Content-Language: de-DE
+In-Reply-To: <CAMRc=Mc8ViSPyTn9Brr-us2V+D7Jv3u+B8Ek2nuzF36yH70RAw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Dec 08, 2025 at 07:13:50PM +0100, Paul Kocialkowski wrote:
-> Hi Randy,
+On 12/8/25 05:48, Bartosz Golaszewski wrote:
 > 
-> On Sun 07 Dec 25, 18:04, Randy Dunlap wrote:
-> > from  https://bugzilla.kernel.org/show_bug.cgi?id=216748
-> > 
-> > The bugzilla entry includes a Perl script and a shell script.
-> > This is the edited result of running them (I removed some entries that were noise).
+> Thanks for bringing it to my attention, you're probably right and thats's
+> just an unintentional omission on my part. Do you want to send a patch that
+> will fix it or do you prefer me to do it?
 > 
-> [...]
-> 
-> > DRM_KMS_DMA_HELPER ---
-> > drivers/gpu/drm/adp/Kconfig:9:	select DRM_KMS_DMA_HELPER
-> > drivers/gpu/drm/logicvc/Kconfig:7:	select DRM_KMS_DMA_HELPER
-> 
-> For these two, the symbol was removed in commit
-> 09717af7d13d63df141ae6e71686289989d17efd
+> Bart
 
-That commit removed DRM_KMS_CMA_HELPER. Later commit 6bcfe8eaeef0
-("drm/fb: rename FB CMA helpers to FB DMA helpers") renamed
-DRM_KMS_CMA_HELPER erroneously to DRM_KMS_DMA_HELPER.
+Thanks for the quick reply!
 
-> but these two drivers either were
-> missed by the batch rename or were introduced a bit later.
+I'd prefer if you do it, I'm not too familiar with the kernel workflow.
 
-In the case of drivers/gpu/drm/adp/Kconfig it was missed much later
-during review (but iirc went through the same rename out of tree).
+Cheers,
+Daniel
 
-> Since the symbol selected DRM_GEM_CMA_HELPER (which is still needed by the
-> drivers), it should be replaced with DRM_GEM_CMA_HELPER.
 
-That symbol doesn't exist anymore either. It's now DRM_GEM_DMA_HELPER
-which is already present in both files.
-
-So the "select DRM_KMS_DMA_HELPER" lines can be removed from both files.
-
-Janne
 
