@@ -1,153 +1,224 @@
-Return-Path: <linux-gpio+bounces-29406-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29407-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1CBFCAF032
-	for <lists+linux-gpio@lfdr.de>; Tue, 09 Dec 2025 07:20:11 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 169F7CAF78C
+	for <lists+linux-gpio@lfdr.de>; Tue, 09 Dec 2025 10:38:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id AB1753014116
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Dec 2025 06:20:05 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E4FB5300D328
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Dec 2025 09:38:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B3782C08D0;
-	Tue,  9 Dec 2025 06:20:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D31F42F6924;
+	Tue,  9 Dec 2025 09:38:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="OqvubtGD";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="DT9hxmGt"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="nJMsVbkk";
+	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="rQqSpYe+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8E331ED97
-	for <linux-gpio@vger.kernel.org>; Tue,  9 Dec 2025 06:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765261205; cv=none; b=A0Ua7m1haZymxtcTmaCCeDBKAAQsXKNy1mhIEIWZ4Vdp/1FZp6du0jxazIqBd2Yw70tcOn1JHPkujDyqP2l7qP6hIOpsSXArmkknIfl7/1Q8xCzQNBVzkFHw/mIxOJufOBhOkXxmMe6MH0b5C0bZaRiHcdfcLhnkvQP8eJ0bqBg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765261205; c=relaxed/simple;
-	bh=pkRlKhhntrzRvigFQgk9MxSpezoRRouQVohpugHS2H4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kERR4WnbWQn/2sfBG9v0sxxs7MZ2H+Cn0WrnDGGuzVbGQRfzpMXrZJRRSOIJpXwH1T+0i7jCzfGXILn1lRlvdM2zHgNsS/IkbvOJJLYXMGnJehH+TVMb8A1mE41e6SikZRAecSSCKUUyCCkvSXA9HFY6587Fa42tt4Ljb9OO+GY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=OqvubtGD; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=DT9hxmGt; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5B8NXCNl1853437
-	for <linux-gpio@vger.kernel.org>; Tue, 9 Dec 2025 06:20:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	L+Qc+3J5HjYIAtVhPr5AGG41cvp/NNguDcbn/9Z+2PU=; b=OqvubtGDx3X9Tr0v
-	FqQ1l4uTTKmc6HB2RS/4EcKT0HnGzng75VxgH+s1NDcEc9Ax4S+7HIYYxJ9c7p9s
-	/U9pfEXTidUWvgis9vrZVJt10F2yHJl7QWk/Wwet1g862hBd6712YKJNK5XRBIrg
-	6louorhexR6GW/L3kkxPcIsgSzylNIAm/KX0nNZrxQgqep6pA9Vcz5Sq+o88b/Ie
-	rQ1oEHy94YqMcBXr8zYuOJdJeBnEg+qhMWLGh9kwfgyS7dmoAWMzI4DxbiQcrFKI
-	/C6uz0l6R3EkSZF9OWRAlNe/ulEQgb/aCg40sAlMxZuhejh0vL9MiHcWRDSmru2e
-	fjv+lw==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4ax63v99pk-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Tue, 09 Dec 2025 06:20:02 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2958c80fcabso114456375ad.0
-        for <linux-gpio@vger.kernel.org>; Mon, 08 Dec 2025 22:20:02 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88BE21FF55;
+	Tue,  9 Dec 2025 09:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.152.168
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765273080; cv=fail; b=G5rpyDI/3K710nemRRYBZEIv/Pwm1RdZn2qqJQFlTu1u0596jhXBMzdVMy+AaPfm1rQYNzd0X2XPwr/d6NFBFEUY93WIFWw8b95PFknWvKWgQG5WcuH1eDCFw73N1WfdBCSgdKB43K06/1LT1OnPGJ3EX85V4V85VxILfKrMI8Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765273080; c=relaxed/simple;
+	bh=/8frytfZT8C4vyh0B90Yhphu+Mp3j37X2ZdoHM9/d2A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qcbMPLLWh9qh7CUzIphrzc3eoa6VdMfASitb8+2lsLAa6AMhi819Qi/nMdlu8yypjZhRx1suhGlYYsBHqOagX3ReY0uc9XBZQ/N2FWV1siu+ZCD6nH91YqSPhmO3pNUgGDaXavqPDzEUA23+zEz+88raePUsbop1bEh1S+h6lzE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=nJMsVbkk; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=rQqSpYe+; arc=fail smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5B94uIYT179684;
+	Tue, 9 Dec 2025 03:36:39 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	PODMain02222019; bh=PKHXBFeexF1OLAnNorin/u5kfN3/rLU+xeTkWta0by4=; b=
+	nJMsVbkk/0REfe2/pWPRS82FuNujSbNQPo1LBhVcs61yKmFSeTF6bSMUpRcXRxX3
+	z0I5ZH3ifEWfPTBUhu8BM49Y7ERFF57al/Tsu+Pyvye/a4M2OOE444VSoMohKB2s
+	UWNHqcHeOWDIFiom8rfWm7XL9V6rMg3inKg8EvppFi9v6BHg3d5vvMZtO5kakP9E
+	Rbui9lEqJxfY4p7/2UoS25vYCT48dlS8qwHZeDN0dmzfuKcvDsKEgmU0BWRqspaa
+	afcNJZ2o7CLGamtn4o+gWGTHLvAsbYytt6jvOf6wD9E3K8OvS7x1q5/6TJz5WHf0
+	m6wY4CKTeI7uCeVErbnzAQ==
+Received: from ch1pr05cu001.outbound.protection.outlook.com (mail-northcentralusazon11020138.outbound.protection.outlook.com [52.101.193.138])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 4avhskk8kr-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Tue, 09 Dec 2025 03:36:39 -0600 (CST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RucF7YSWv+eVINCnJJz5Q4p7cK7P+xezEF3ZpKz2ripy9635PtU07jdzd7jlH33FCgnQ6awntnCFM76xH1BWfV9yo68ohSXF9RADhUShLbiR1LE1T+j7u1nVDlRFpcdAvhNSgrS9hu2l1xpTUmCDHj6rBz55N2fxzZup0S18G5yQb3BnayyUh3VSfKUkrUzeknxsUEI0Flq0E921EyKgxv9lzN0fLPlWvyyy1awX7hFU6lNQRsz1EHz9zh7BZ+dCaNVq1D6w2vWbjjBV608ojL9UecO4w+Ywo9mGsPdTR30FcP17sn7OkoayeuVH6h/O6cyIGggvFgZQ3ql1Vt7Hqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PKHXBFeexF1OLAnNorin/u5kfN3/rLU+xeTkWta0by4=;
+ b=ZTo6YWe1S4PjpS9yGxzWHkbTbbx9+oukgTRzY96RYHGY+baBGL7rciiDqFWuCR+zYbu1rhYRv33lOA5fylVrh88ulBwOLJ2b6NVTh4SyDfAG4rBRvrj2IX/i5a7a1gvw5T+K209loVrZPrHByZf6t+6MMIrajpPcV2GgX5dCVhxroUva2LlojsBkAsHMqZPRqAqri2yQHRIPSINBzxIWiMUgdxR5C6ymRjR1t53+Ep/dlmuwTUjEpJIEPklBxVoDV8f0QCss1dCQ8E87sm6oj2FC4xh+ZneSFRef/EpHdw7iI42skgSgzQA/RhMe/4AbdaZQuWXC7aFk5n4poR1qtA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 84.19.233.75) smtp.rcpttodomain=arndb.de smtp.mailfrom=opensource.cirrus.com;
+ dmarc=fail (p=reject sp=reject pct=100) action=oreject
+ header.from=opensource.cirrus.com; dkim=none (message not signed); arc=none
+ (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1765261202; x=1765866002; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L+Qc+3J5HjYIAtVhPr5AGG41cvp/NNguDcbn/9Z+2PU=;
-        b=DT9hxmGtSDI5LvjsQZekQ2nSI+qIPw9S6MC4t53LgKu9PbirH1+gDLCoPyoBW+JP1/
-         ENCLjM24mbQ/3xSNKlTlOO1Upcw4YVWSLS9GDK/+dWCW89tf8U1sfDrks90MCUvDNid4
-         8QJwgWkMuPTvb82J5J6FKUghTU68wr1Uwp9v69mcsF3ktS+Xl7BK+7ztF7vjuEYXGZKU
-         8XcaqBXyYT3Kmg7JH9hP0qJVIfk0J9izhBh6MOYDnknVha5nX2tFKqY8Jg16L0/oZaMQ
-         LBGr9cEr1V4Cy16bOJWvs71ZhFt3UkotI6t26nCjtOykq1qN7mhhNH1pkiURwUUcEFo2
-         /2IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765261202; x=1765866002;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=L+Qc+3J5HjYIAtVhPr5AGG41cvp/NNguDcbn/9Z+2PU=;
-        b=B8nThbuJtSa2tlgE9kQ1zr22ODMMYVPlniC2OCeVebsWYynCdJ4axNmtqcFLRavlr6
-         zHLIQDrbkGv9eHxU13JyacpmqKw5p4WdRtmf7LZsRic87mdJQeMj55iC3vcNuoBWVd/h
-         lvP1I+aiIFTn65EXMKnuL4w0rwjPhm8nLC5Yb3dEwRaKps4DP9vHj8TEO/Qth7NZBbFI
-         nQzEFdCWHPb73c8GZDHpBdAl3aVhZzR3z/GdTa1vbRgPTjuTUui9d9xzbyC6flL95N1Y
-         HRRRRXeFHPtLX5mZN35J3b6B442WBZu44OIOrtEdgDO7cVjZdpX2p8mrB1CW8DdPnCat
-         B/MQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW95bb/VjbVm2o/BW2v6URkzkMOqMb2S/LJdFg1YYaqfdhXhFLIzHuZyZKVtsegMqvugMgj1uxRsG5w@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpaNHI4TXAJAAX1CP3AqiJwPU4AfD3qjsBGbJlJRQO9wvHOfRZ
-	VEAAGWNWZ9HAfgs91SGYPz7I63qvT43WyE5FwV3SiLBcEH2fmsFamXUlFDA7bWl1wLchuofE6Fw
-	d6mbjv7iH6JSs0E480DGY0F4HHPq3J4x0Fpr4hJrmqpNiUTVtU2ZtGt7TL6/3X9HC
-X-Gm-Gg: ASbGncusAaXzGeFR7UYNAO8xPBbOGbSbsXezoaAc6oJ3WxjeFizBaJXJGWvl9FsFayw
-	AIr2jLI5qR0AUlFBSBa5BCuyO1jyCjrjNHVv/1eSWssHh7mWwug4jvuQIckEbBLOa4rmqPUatKr
-	z7HFLjE33XSK2FMHq7/wRUdIdSy/WY35RsmYDazjrTEVnXu7+J6GoKNwo628wmAHZ3k3GHU2sVf
-	MlJKJiwvG7aGVroYOXCcBTw6nnjK6bFwa8szsBxYAuaBWc0a7eciXmq7mUDvv69nBm5OHAHm9/f
-	vbVi0nBEvz9eCPk+rUbKlsa/kPTX/MuBQiai4TG6ugKiLBdP/lX+OHrokkI730SgvUTSFNltfTN
-	36mlZHL2bHjlDQat/Mt0T+bD8YkpEmPy03HxCrhkWkLcJPghezv6gPG1nUocY3MI=
-X-Received: by 2002:a17:903:2ace:b0:290:ac36:2ed6 with SMTP id d9443c01a7336-29df5791a0emr81358695ad.14.1765261202175;
-        Mon, 08 Dec 2025 22:20:02 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFW8pT2+DDm3Pi+LJrAqi91fWgp442wpx4U7cdIUQVX5uCJK1sE0YEQmLcNLvxy0v1Mpg0B7Q==
-X-Received: by 2002:a17:903:2ace:b0:290:ac36:2ed6 with SMTP id d9443c01a7336-29df5791a0emr81358385ad.14.1765261201708;
-        Mon, 08 Dec 2025 22:20:01 -0800 (PST)
-Received: from brgl-uxlite (fs96f9c361.tkyc007.ap.nuro.jp. [150.249.195.97])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29dae49b196sm145682835ad.17.2025.12.08.22.20.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Dec 2025 22:20:01 -0800 (PST)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@kernel.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] gpio: shared: ignore disabled nodes when traversing the device-tree
-Date: Tue,  9 Dec 2025 07:19:47 +0100
-Message-ID: <176526118165.8958.7579761422922682645.b4-ty@oss.qualcomm.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251203092309.34737-1-bartosz.golaszewski@oss.qualcomm.com>
-References: <20251203092309.34737-1-bartosz.golaszewski@oss.qualcomm.com>
+ d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PKHXBFeexF1OLAnNorin/u5kfN3/rLU+xeTkWta0by4=;
+ b=rQqSpYe++dHKD8budRum+Pa/h/84bQEYkcJ8NsxvflHiSsdWjJirIQnFztPGqBm2G2XijzizPBOaxCv9Gm5ufnvkqH6gybqoWhVPPeaBzVznebkSoT1WRIPgsPS4DDs/l7EwnLwBLsubeiLWSmfsvcYBPbxhTfYJJQONr8YImys=
+Received: from BLAPR03CA0120.namprd03.prod.outlook.com (2603:10b6:208:32a::35)
+ by PH0PR19MB5396.namprd19.prod.outlook.com (2603:10b6:510:fa::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.6; Tue, 9 Dec
+ 2025 09:36:36 +0000
+Received: from BL6PEPF00022575.namprd02.prod.outlook.com
+ (2603:10b6:208:32a:cafe::fd) by BLAPR03CA0120.outlook.office365.com
+ (2603:10b6:208:32a::35) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9388.14 via Frontend Transport; Tue,
+ 9 Dec 2025 09:35:56 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
+ smtp.mailfrom=opensource.cirrus.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
+Received-SPF: Fail (protection.outlook.com: domain of opensource.cirrus.com
+ does not designate 84.19.233.75 as permitted sender)
+ receiver=protection.outlook.com; client-ip=84.19.233.75;
+ helo=edirelay1.ad.cirrus.com;
+Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
+ BL6PEPF00022575.mail.protection.outlook.com (10.167.249.43) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9412.4
+ via Frontend Transport; Tue, 9 Dec 2025 09:36:35 +0000
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 6ED37406541;
+	Tue,  9 Dec 2025 09:36:34 +0000 (UTC)
+Received: from [198.90.208.24] (ediswws06.ad.cirrus.com [198.90.208.24])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPSA id 5F14F820247;
+	Tue,  9 Dec 2025 09:36:34 +0000 (UTC)
+Message-ID: <3b72f01e-698c-48da-a40e-431d08c7b847@opensource.cirrus.com>
+Date: Tue, 9 Dec 2025 09:36:33 +0000
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=dKarWeZb c=1 sm=1 tr=0 ts=6937bf92 cx=c_pps
- a=IZJwPbhc+fLeJZngyXXI0A==:117 a=kS9sT8ua8GhuIhCqqd6Lkg==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
- a=mXegWyoylx907IroglQA:9 a=QEXdDO2ut3YA:10 a=uG9DUKGECoFWVXl0Dc02:22
-X-Proofpoint-ORIG-GUID: NxuBezpeHI3qKRi56V3msiJLOLhi5TZJ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA5MDA0NSBTYWx0ZWRfX4lPwhmbF4gPe
- 5NpayVBn0zpMjjDamCPnpN96QgU1a+xLnQ5Kr7J+sDXFcGq6zUB42xsYDL/Y82VmulJVAjL79A6
- 4UHJqH93A81M/df3TCGufx3zW23HIJ50/Mfn9Pk/ay6pKhl+9WZIOkgBMsh9AQbqyzeqrxNDUmc
- rgyi8AgyKXdr4e6ovHQcZ9qMtUf/OSHLcY48r4ZsJpHSWnBN5p8Wy//LV5EiVr2d6rGnY4x2KSp
- lip1MMWt9KavpeegffTd6ACHiyiuy+dkqpGFd/dwnm1Y7IHLlwG2bJHRIqv5MlmrjVEx3JwlVXY
- 2HUtA+mk0+vjIjAD3XkjQ1rxw9u7oJa6apzE3f/AZUPhiozkLPwonhU5nMxzNv2TSLxUUFyHLva
- I5ah48ZT0JQ0G06BLfCnGR4suC+nOQ==
-X-Proofpoint-GUID: NxuBezpeHI3qKRi56V3msiJLOLhi5TZJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-09_01,2025-12-04_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 lowpriorityscore=0 bulkscore=0 adultscore=0 malwarescore=0
- phishscore=0 priorityscore=1501 suspectscore=0 spamscore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2512090045
+User-Agent: Mozilla Thunderbird
+Subject: Re: Kconfig dangling references (BZ 216748)
+To: Takashi Iwai <tiwai@suse.de>, Randy Dunlap <rdunlap@infradead.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, andrew.jones@linux.dev,
+        linux-omap@vger.kernel.org, openbmc@lists.ozlabs.org,
+        linux-sound@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-mips@vger.kernel.org, asahi@lists.linux.dev,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Paul Kocialkowski <paulk@sys-base.io>, chrome-platform@lists.linux.dev,
+        Paul Cercueil <paul@crapouillou.net>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-gpio@vger.kernel.org, Srinivas Kandagatla <srini@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matti Vaittinen <mazziesaccount@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Vaibhav Hiremath <hvaibhav.linux@gmail.com>, linux-sh@vger.kernel.org,
+        x86@kernel.org, Max Filippov <jcmvbkbc@gmail.com>
+References: <22b92ddf-6321-41b5-8073-f9c7064d3432@infradead.org>
+ <87fr9luyu7.wl-tiwai@suse.de>
+Content-Language: en-GB
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+In-Reply-To: <87fr9luyu7.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF00022575:EE_|PH0PR19MB5396:EE_
+X-MS-Office365-Filtering-Correlation-Id: 08c42c0c-2e81-44e5-7bbe-08de370671fc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|61400799027|36860700013|7416014|376014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RHIrRDJGd3cvK1dZN2c3cHlhSldLOW5aNnZtT0JNQmpoR1FwempvU1I3alpZ?=
+ =?utf-8?B?MFk4aVJDTlMwLzMxN1h3SWtQWmxMNnVJQkY3OWdBVkpWOWRVWEphMmVXd0hv?=
+ =?utf-8?B?SlJUbXBYbFhmajVQajZDa0xOUlhkTmg0VmpHOFhUcDJNVFlWUU1WcEZmMGVG?=
+ =?utf-8?B?MDBhU1RScTVVdC9xQ1oxeG44bWE5SDhRdWtHWmRld3NGTFlsTW5hZkxySVNY?=
+ =?utf-8?B?ZmM3Z3FwU3ZDOFpnczlJQXRONmNLU2FaMXlTRWE1eHBGY0Q3bzZQMXJIaDgx?=
+ =?utf-8?B?bk56QXZBclBXSkNFOGFrRjl0SmY0K2lSTk1hOWI1NlRKeXYyTkRDZGdwZzZm?=
+ =?utf-8?B?bllSTSsrbWdwRDN0bVl0aVNhUUQ5RTVHWnBqM3JBU1ZrNEJjR3BVRERHWDJP?=
+ =?utf-8?B?TmdXWExBM2gvanRkRUtISVk2RUxSM1VKQ1l2NkhxZFdUV21ha1NrVVczTk1U?=
+ =?utf-8?B?aHNkYkFMZlZIcEZuc3dtUmgvQnI5ekVrM2NJN3dOZWllWllaTzZOZHNXaHlz?=
+ =?utf-8?B?WDdGNmhnSXFMbFoxVDU4YTdKNTRXdFVRK05zY1IzcWJ6YmtDRDZKQ0tjbVJh?=
+ =?utf-8?B?V1dkMVliTVA3cWFYMzhicmNGYVhnYnU5NHJOL2RSdlRCem1RRHN4Y2pjZ0hN?=
+ =?utf-8?B?Q3NrSVExYkk1VUZTNW1WdkpxTG1BQWFKQnpqK0ZYZkVWQmM2UDFpVVI5Zkp1?=
+ =?utf-8?B?cHBpNVV0TVNQRjlua0M3V3c3OENwaUdpMGQvS01zMFdXMElvVk9mak1XWVNy?=
+ =?utf-8?B?S2hiMFFqMUJoTWprTEt3S1RsNFBVWS8zTitMbmNJSW9sRWRIMlBPL2NMbnRP?=
+ =?utf-8?B?M05Fc29xNWFuUXlhN002RWR2V0NhS1R5dC84cWRUMkdnbjV2NW1FTHJ1Z0M0?=
+ =?utf-8?B?VXZkc0VHa2pjSnhvVzI5QS85SjkxNWhUM3B6bTVPQXRKT2dpZC9jYldFaW41?=
+ =?utf-8?B?eFJJTWYvUGp6NVJ6NjdNM1cyaXlIUm0zZndGdTI0MlRCSHlJMjdtWStYRTVV?=
+ =?utf-8?B?TndIRXM3Nnl5dUlNS2ZlUk42WnZ3eTlOZGJUbFVETGU2bWJxNnFrNmlnSTBv?=
+ =?utf-8?B?WG1ub0UwM0Q5d2lqNjVKdUlpeTlXY2d6M1N6RTYxMTZNajRYejE3ZFdJekRn?=
+ =?utf-8?B?VTdBUCtpWWI3RFlxY2FKRVZsR3hwTzVKR1lGYkNWZll2WFFuTzY3eGlLSFd1?=
+ =?utf-8?B?NlJkQk1XTmVsem42cGg4TjRhUTlDcWlrOXZjTWpBbVo2bUdtNHgzTlJRcFdS?=
+ =?utf-8?B?VDVvWE9hWGtoZ1JnbEd2bWVvYXFob3NSczNFVk5VZjA1dnN3RkU1aXlnaHhG?=
+ =?utf-8?B?cnRwVGJLaGpuOW9ZZS9NRGdFUFNyM0UwUEJMT3lXSTRVdDdsZCt5RlF3d3Zu?=
+ =?utf-8?B?em1BYmNGL3RKaFc3UmpXUjVYUHl4MitGK3FzVTlKTXhBTjdyanF3RmczY0Va?=
+ =?utf-8?B?SHJqSGp5ZklqUy9SZ09sZ2I2VkVVQkc1QzV1bWZjcGJMZVNkVkhEdThScUM5?=
+ =?utf-8?B?RnFuYUk2Y3NZZDZDb1cxS0tWYjdUK2YwUmpQN1NGOGE5MUtUM1dvck1PNUlj?=
+ =?utf-8?B?Wncwa2lFd09NVWlnQWY4b2xzR3MxRjlzQjVpazJQOWxwQUowODRkK05tRGhj?=
+ =?utf-8?B?eXVVZkdpcjZ0ZTFaSjdBd25DMG1SZVIrbVNLQjQwNVBBMmVxcVRoUUplak9O?=
+ =?utf-8?B?UXd2RXI0TElBSVZJUHZvZHBjOW9waFpGWlhOZ3BjZVgwcmQwajJ1N0xnWVBs?=
+ =?utf-8?B?WUNaSmxMY1BLeS8yekVSZ0JOZDVyOUcvNjBxR2hrVWIveGIrUTc1ai8zd0tv?=
+ =?utf-8?B?KzNoZm9SREFJaEpYSjREaStpM1prSUNoVWxZbEgxNEMydmJJc2FXa1ZZMkx4?=
+ =?utf-8?B?MXFEVkhJQTlJeGhHUWdCZU1zRDE0eTZHTkJFTnQ0dCt0ZXRPSTVwdTBqTEdt?=
+ =?utf-8?B?SUJqTGlYWENpYSs0QnVML0NkOFdtZjRqMVFTUHNsOEI4NXAyZGFsVTNid3Fz?=
+ =?utf-8?B?M3ZHK0pKUjFld3FrTms1TXIzcFVKME53V1lBQk9WaGJzZlJhYkxBaWhzN3VO?=
+ =?utf-8?B?YytIYnRMeGNSYWF2YVZPNXFDcEh3WFlLRGNrQT09?=
+X-Forefront-Antispam-Report:
+	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(61400799027)(36860700013)(7416014)(376014)(82310400026);DIR:OUT;SFP:1102;
+X-OriginatorOrg: opensource.cirrus.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2025 09:36:35.2774
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 08c42c0c-2e81-44e5-7bbe-08de370671fc
+X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-BL6PEPF00022575.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR19MB5396
+X-Proofpoint-ORIG-GUID: HmELDZTK9mzkvQe1JymO9Z9NL6DpSihZ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA5MDA2NyBTYWx0ZWRfX2rz8c69/HykU
+ amDi/ybpGW57WMK6dc8arxp314n78gNQL74C8fKc88pW//+dtIFUEH3C9HGcP1rxLceLzz8KRxC
+ uz3g6rG2/b9tj2r4ObAweTO7B/nAS+F/P0kyPiavpUBWeqsrcYM7vXan+fagpB02xzqMeLqcAXZ
+ GpvcWKiNNd9j4kdKZu1ikQJKs6XkojQD/OfF693xcQNDyepRUc0Qru8LLrHxJV9hb/mqfWBJZJW
+ GNmDvNtdFj3g/zpLDt/IQVyJ8mXOiJeLflQZquZiHsRANq5hw1oA+RQ8z3RlkNbs/lpgUQywV5C
+ WPVgsYLvut7rvvl1bG18/ADFTRGdZo/4XolOX6Lwg7lOv3js4+JveFBWhFsK5dUPJunby6TzVxO
+ P9CtUWZ+nV6VnkkbgLjiXdMrSdX+Bw==
+X-Authority-Analysis: v=2.4 cv=DJ6CIiNb c=1 sm=1 tr=0 ts=6937eda7 cx=c_pps
+ a=wpg3e3TFAlO0qOiIlNsFBg==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=s63m1ICgrNkA:10 a=RWc_ulEos4gA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=eQQaxFmmQVRwuAb-A3wA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: HmELDZTK9mzkvQe1JymO9Z9NL6DpSihZ
+X-Proofpoint-Spam-Reason: safe
 
-
-On Wed, 03 Dec 2025 10:23:09 +0100, Bartosz Golaszewski wrote:
-> Don't consider disabled devices when traversing the device-tree looking
-> for shared GPIOs. Even if they do share a phandle to a pin, they can
-> never be instantiated and request it.
+On 08/12/2025 9:06 am, Takashi Iwai wrote:
+> On Mon, 08 Dec 2025 03:04:09 +0100,
+> Randy Dunlap wrote:
+>>
+>> SND_SOC_AC97_BUS_NEW ---
+>> sound/soc/pxa/Kconfig:21:	select SND_SOC_AC97_BUS_NEW
+> 
+> This must be a bogus entry added in commit 1c8bc7b3de5e ("ASoC: pxa:
+> switch to new ac97 bus support"), which can be dropped.
+> 
+>> SND_SOC_CS35L56_CAL_SYSFS_COMMON ---
+>> sound/soc/codecs/Kconfig:920:	select SND_SOC_CS35L56_CAL_SYSFS_COMMON
+> 
+> The buggy commit was 32172cf3cb54 ("ASoC: cs35l56: Allow restoring
+> factory calibration through ALSA control").
+> This looks like a fallout at changing from sysfs to debugfs, so this
+> should be SND_SOC_CS35L56_CAL_DEBUGFS_COMMON instead.
 > 
 > 
 
-Applied, thanks!
-
-[1/1] gpio: shared: ignore disabled nodes when traversing the device-tree
-      https://git.kernel.org/brgl/linux/c/9e7a40a2841483d7bf51b8d9a5e1f0633a5c7a26
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Oh! I checked multiple times that I'd changed all the sysfs to debugfs
+and this STILL got through. I'll send a fix.
 
