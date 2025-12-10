@@ -1,99 +1,135 @@
-Return-Path: <linux-gpio+bounces-29415-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29416-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F7D7CB1CEA
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Dec 2025 04:40:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1243ECB1FAC
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Dec 2025 06:28:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 25330302DB4E
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Dec 2025 03:39:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B16273015ECA
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Dec 2025 05:28:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A731330E85C;
-	Wed, 10 Dec 2025 03:39:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A2F62FFF95;
+	Wed, 10 Dec 2025 05:28:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DC+dMPkF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fsAICZog"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA33E1EBFF7;
-	Wed, 10 Dec 2025 03:39:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCEC82FC874
+	for <linux-gpio@vger.kernel.org>; Wed, 10 Dec 2025 05:28:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765337992; cv=none; b=CARe50+vxO1iUYzQPSq2Kzr22K83Dp+4xdsG+G7VVL8+NClAB6F4gJFgCV1L1ZxtM1lgmC9LZz4d1pJxq4m+zB3H8uif7QCkbqikU9cAhwqHKYmubwd9JRWz5pr+tY4oGbEruKW6qTwLJdqgF4LxDQj/yMP+0j0rwB/pfXNeXXU=
+	t=1765344523; cv=none; b=VJPt6ToM9taIh29oe2/e8GOwF9xWW2HxUBgyuP/y7H8tWSNIfHNCNl3g6p1i1eaIQSvXPDrQVqV/+0AwNjqzk0KOVVBqewY/Gs5LzbadZxNwI6tSgXlR/2dnDYXYukHVjDbOMI2SM+Fbt+QHt4RB0uFV7ToLDMVj5a79OKUFhfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765337992; c=relaxed/simple;
-	bh=X9sGjU9pNICzH6YHLZuFi9ipV1RlwTweZZ1thkNeZsQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hI/Nvp0Y1FraOw1ubHGRBkoDUJlfjHut3NxkzK2YpE/aPHVSQtT0wGTKe4f30fglArkRl4WmZL0CoObguxY88pTS+UBRo8e2YOjsCLf9BUANnkNTVbbNKWK+4U8hLOfR0/MtSuN38OViJ5UQzF4Bd9AIcDL3PxYMRdMThJvumKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DC+dMPkF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CD49C4CEF1;
-	Wed, 10 Dec 2025 03:39:51 +0000 (UTC)
+	s=arc-20240116; t=1765344523; c=relaxed/simple;
+	bh=G3z+a5GrUQ8xgAH/oJ+eKqK9CwroDEkPM+gjEIgFG3g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mGmlqihajFW01Dklwu4eVEPg3Sk3DIhzx2fIwX1x7RUs/6gxiFj0bbj61mgoW6j5VFQRbJyvDCP3Vhdk5CdcwQSS2KXn/QsxHrrNZZqRFix+++yHKfGnCNJlR5yi0lf4LfmrGh8uPBLPe9E+BLxbJerEdk29fZMakWl4WWCFCJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fsAICZog; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77547C19424
+	for <linux-gpio@vger.kernel.org>; Wed, 10 Dec 2025 05:28:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765337991;
-	bh=X9sGjU9pNICzH6YHLZuFi9ipV1RlwTweZZ1thkNeZsQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=DC+dMPkF9cnQEb9CfukkXFJo2GZPuoYLMFoKekdY9Om/lT416JTy6WpmVpvJgOq5E
-	 GRNjMFDdR79mgE9zJDwKPdyA/LabmURj/WO10Zirz37uc5JkOfdDyKo4YtQb0IVHI+
-	 MH7nu2iT4PeJzV+sI+LIyYs+jTstd1UMKlxsTLQTYVj9pDR/i3bHfMPJfRyrH1usgJ
-	 1Nv4RJI+Kfbr992B/SukgzyVm8YquMlpaO/0kbsTp+yZt56AF4GmbL6I4UXGSmrSYN
-	 KBzK4tBH/QG6hA5UUUeETgHt12M/i20jInB/1TNPmeEx5S5ubtv4FK9Nu58DzbPCVO
-	 diuAEur1PZzKw==
-Received: from johan by theta with local (Exim 4.99)
-	(envelope-from <johan@kernel.org>)
-	id 1vTB5m-000000008yQ-3W4M;
-	Wed, 10 Dec 2025 12:42:18 +0900
-From: Johan Hovold <johan@kernel.org>
-To: Linus Walleij <linusw@kernel.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan@kernel.org>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH] pinctrl: fix compile test defaults
-Date: Wed, 10 Dec 2025 12:41:48 +0900
-Message-ID: <20251210034148.34447-1-johan@kernel.org>
-X-Mailer: git-send-email 2.52.0
+	s=k20201202; t=1765344523;
+	bh=G3z+a5GrUQ8xgAH/oJ+eKqK9CwroDEkPM+gjEIgFG3g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fsAICZogPAoSsIAfrT5jtczd4ieEZQQnzxrhJ8YXnPKqSgde1HJunZRB217uQMldc
+	 8sRNsLrmOt+gHSsLflVfzbQZE0UoBrpd56sJKXOgI+MeytB6wB0uLZ8gZTZhnY9ez8
+	 NPGbowh7seRrbh12F3A0e3s1ld2idNPl4i6cbCrYq1hr2UgMcXctBfBPTzdDcbYZD2
+	 vhUU6Hd3lvrFOR0kgvwgHoJLXWDDjjhma/dn4Z6/IiZzZau+Lv/WBKenfhAYdaAi4J
+	 Guynow9lDRq+JmmrDgSOo+CDOAM+ZyL9u3L90dAyw0scZg6d4K6F3FTxvjUqPy140I
+	 zYOmRxceABtNQ==
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5957db5bdedso7814153e87.2
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Dec 2025 21:28:43 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXwx77RhKGWcM0eDAqlP1J30SqMinrqd3mfhLYWEZLSPwZuhQUHuyJNCQnKMt2kCm1BCMQlJlPdnpUG@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2FQ87nNZUHp7pYb2IQxcK8hyEfRhZKGLl7nZWZKlPTLZyXsOX
+	EE99zl4hrW0NwQwBFglZXYvo7U2iJAs8Rbn/kGhWyAJ0GeQ7FE/vnb38JRA1iqQS+4JQ2ZEqHOG
+	dQMLSkiCZYysu1XE2bDJVkkj5i+mgS4rjpZQJFSQDfA==
+X-Google-Smtp-Source: AGHT+IG9Y+wV3PLttX6sFGIm/tmfU5Bo1tvdoOezWmUq6lQ5/OL/90/vBQK/OeM5NzyVckfCh2arozldTmpENH6MtpY=
+X-Received: by 2002:a05:6512:15a8:b0:598:e4ca:8176 with SMTP id
+ 2adb3069b0e04-598ee49cdecmr448950e87.13.1765344522120; Tue, 09 Dec 2025
+ 21:28:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251209061237.7949-1-bartosz.golaszewski@oss.qualcomm.com> <89a59ff8-b016-4bff-96da-92868aeee401@gibson.sh>
+In-Reply-To: <89a59ff8-b016-4bff-96da-92868aeee401@gibson.sh>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Wed, 10 Dec 2025 06:28:30 +0100
+X-Gmail-Original-Message-ID: <CAMRc=MeJc6+vdvHh7DxXCi5kC_dx555qyqNegOxXJ401S73_uw@mail.gmail.com>
+X-Gm-Features: AQt7F2rsLFrn2-ACRMxY0QnIrRhZ36JaQ-XfXA7MwzVh2rdMbf_yg4P_uqWLS9k
+Message-ID: <CAMRc=MeJc6+vdvHh7DxXCi5kC_dx555qyqNegOxXJ401S73_uw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: it87: balance superio enter/exit calls in error path
+To: Daniel Gibson <daniel@gibson.sh>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Linus Walleij <linusw@kernel.org>, 
+	Peng Fan <peng.fan@nxp.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Enabling compile testing should not enable every individual driver (we
-have "allyesconfig" for that) but two new drivers got this wrong.
+On Tue, Dec 9, 2025 at 3:42=E2=80=AFPM Daniel Gibson <daniel@gibson.sh> wro=
+te:
+>
+> On 12/9/25 07:12, Bartosz Golaszewski wrote:
+> > We always call superio_enter() in it87_gpio_direction_out() but only
+> > call superio_exit() if the call to it87_gpio_set() succeeds. Move the
+> > label to balance the calls in error path as well.
+> >
+> > Fixes: ef877a159072 ("gpio: it87: use new line value setter callbacks")
+> > Reported-by: Daniel Gibson <daniel@gibson.sh>
+> > Closes: https://lore.kernel.org/all/bd0a00e3-9b8c-43e8-8772-e67b91f4c71=
+e@gibson.sh/
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.co=
+m>
+> > ---
+> >  drivers/gpio/gpio-it87.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-it87.c b/drivers/gpio/gpio-it87.c
+> > index 5d677bcfccf2..528ac1890613 100644
+> > --- a/drivers/gpio/gpio-it87.c
+> > +++ b/drivers/gpio/gpio-it87.c
+> > @@ -254,9 +254,8 @@ static int it87_gpio_direction_out(struct gpio_chip=
+ *chip,
+> >       if (rc)
+> >               goto exit;
+> >
+> > -     superio_exit();
+> > -
+> >  exit:
+> > +     superio_exit();
+> >       spin_unlock(&it87_gpio->lock);
+> >       return rc;
+> >  }
+>
+> Moving this after exit: means that superio_exit() is also called if
+> superio_enter() failed, a few lines above this patch:
+>
+>         rc =3D superio_enter();
+>         if (rc)
+>                 goto exit;
+>
+> I don't know if this is really wrong, but it looks fishy and this code
+> behaved differently for years - in contrast to the change to skip
+> superio_exit() if it87_gpio_set() failed, which is very recent,
+> introduced when the return type of it87_gpio_set() was changed from void
+> to int.
+>
+> Probably (again, I don't know if this is actually wrong, I'm not that
+> familiar with how this chip works) superio_exit() should remain above
+> `exit:` and `if(rc) goto exit;` after `rc =3D it87_gpio_set(chip,
+> gpio_num, val);` should be removed, so:
+> - if superio_enter() fails, its error code is returned,
+>   but superio_exit() is *not* called
+> - the it87_gpio_set(chip, gpio_num, val); return code is returned by
+>   it87_gpio_direction_out() no matter if it succeeds or fails,
+>   but in either case superio_exit() is called
+>
 
-Fixes: 38cf9d641314 ("pinctrl: add pic64gx "gpio2" pinmux driver")
-Fixes: 46397274da22 ("pinctrl: add polarfire soc iomux0 pinmux driver")
-Cc: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- drivers/pinctrl/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+You're probably right, I don't really know this chip either. I will
+send a better version.
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index bc7f37afc48b..ce5685215b92 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -491,7 +491,7 @@ config PINCTRL_PIC64GX
- 	depends on ARCH_MICROCHIP || COMPILE_TEST
- 	depends on OF
- 	select GENERIC_PINCONF
--	default y
-+	default ARCH_MICROCHIP
- 	help
- 	  This selects the pinctrl driver for gpio2 on pic64gx.
- 
-@@ -511,7 +511,7 @@ config PINCTRL_POLARFIRE_SOC
- 	depends on ARCH_MICROCHIP || COMPILE_TEST
- 	depends on OF
- 	select GENERIC_PINCONF
--	default y
-+	default ARCH_MICROCHIP
- 	help
- 	  This selects the pinctrl driver for Microchip Polarfire SoC.
- 
--- 
-2.52.0
-
+Bart
 
