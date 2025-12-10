@@ -1,92 +1,88 @@
-Return-Path: <linux-gpio+bounces-29426-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29427-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF4F3CB44F8
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Dec 2025 00:50:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DA7DCB44FB
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Dec 2025 00:50:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 84AFE30DC7E3
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Dec 2025 23:47:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3FDAA302EA0B
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Dec 2025 23:47:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C932223B62C;
-	Wed, 10 Dec 2025 23:46:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62AD22EA151;
+	Wed, 10 Dec 2025 23:47:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l5SKOzhn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZcGRTMWH"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9AED2D3750
-	for <linux-gpio@vger.kernel.org>; Wed, 10 Dec 2025 23:46:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CFFF2DCF70
+	for <linux-gpio@vger.kernel.org>; Wed, 10 Dec 2025 23:47:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765410411; cv=none; b=GCopvup0ndbS2ijGt7hz37ydzvHVWqXFuU0ncB+DsTo17wwDWqwHIjUuT+oeNvXTQhqWjy2rEcwmMj4QHOzsKeqTkQSd7fWcEXotSOh0qIlQ2q49AQKKK6eOPUgQbn3U90lbo9WqQHXa2X9E2pTy4LRL4DgforHtENo2ISvLFQE=
+	t=1765410471; cv=none; b=fpsCQQy9I3Gx1PC9vnCridH2uVxh6FZ+MghpEiRuslRRFrauvlLQASHWkMDDFyC35FtjG0jbZwfkUl4VJ3Mi29lZyBNDKk7mBDF9U8ZbT2A+WlMV76cUgMu5zo3eNGk86xSQ6h6GEdJET+/Lm5V0j25uKm6HuWDhHhtNKCTwiC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765410411; c=relaxed/simple;
-	bh=omLt6+8G6tr0mAJbf93D0mClPuEzsdO4MIROF0xDArs=;
+	s=arc-20240116; t=1765410471; c=relaxed/simple;
+	bh=D5582JugPBlp66RQDPggsMGp1cGTXo8WtJFYKnRINcc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ko91q2ZyFt+SsitsbreT2S3MDS4QoH57F/0hlsQCdEHtfhml+prlHe0gt8u00TYUwwBE+zBA8n9mkvmEaFyvrjli0wWNPxYD/NxYFF8DZENZ0CXzSTDkz17KjyzOJhZUXX2JyfC2dERGYyD9Dwp3wjHo0+tl0UksU0ZmCVcv2RY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l5SKOzhn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77C43C4CEF1
-	for <linux-gpio@vger.kernel.org>; Wed, 10 Dec 2025 23:46:50 +0000 (UTC)
+	 To:Cc:Content-Type; b=ZVgCc6MPA7wfKw8bMP9B0BlvmJuCUQyFkDKziajYQDlqRnDAzqP2bQkiF+UrqYB2JJwik2+E0fXeU8MzjOsLNOoPYG8hoRSO8bH8CJpdhtQEa7vns53+TQ2n5R7nxfhrOyE0LikCWBYbWUEGscp3l0GTNi7Z+RdUOQpKP6Bnczg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZcGRTMWH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02E3EC4AF0E
+	for <linux-gpio@vger.kernel.org>; Wed, 10 Dec 2025 23:47:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765410410;
-	bh=omLt6+8G6tr0mAJbf93D0mClPuEzsdO4MIROF0xDArs=;
+	s=k20201202; t=1765410471;
+	bh=D5582JugPBlp66RQDPggsMGp1cGTXo8WtJFYKnRINcc=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=l5SKOzhn7FPufpCvTEh7bnHSxuWWUXLa0L1cXkn1z/bqnSllxUatm2NZgFoMBOhpX
-	 /kWVJcsvhndP+P+/TpodGzZqOuLl4HSvJNiGjr3GhcuH/0/vMghloLN6KLnaUn+HRI
-	 9+LGtihsrY8FG1T7r5j5fW4151seAx7a11I53sx1BnVthHZjyvJR7RbB2jxe3rZRPJ
-	 GWNlj7Uf/nl90WKfOsxfGAqUUslWhQIWXuyvHQf0njaYhDwamrWg51kfbf96a1rmtY
-	 b4zVtR7Pj5l54l+ez930P20uPB6eX8wsp1e10Q2PdgsPRNGsxwvd+3ffNiuhSMNCEb
-	 mRcRxtk9QOfwQ==
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-78a712cfbc0so4604197b3.1
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Dec 2025 15:46:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVC/o1VtEjqB3xDZpAjphBNPwBxV7lMFVpMHo1j+M7HW5DpVEvzPQm3dREtA1iKLVjNkK6K9vyfS0yQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9MXzKzjHGfLB57TXcW4t3f4j8BpLMi+Lp7wNifpmZwZx4D6TY
-	IRJlZ0d/BAqLu7yNfP4l7v+Sc0AW/n7m4dPuACER1+EYHJDSQMm1rb+P6WfxT+v9FVLTE8onQ2y
-	epMjL+g9+VyXda7nnLOpfJtnfAuqB/sA=
-X-Google-Smtp-Source: AGHT+IFzTtXvwm11fubh6opQRAYyQCuEtEDhPLIIsr7IqAHtJHKITmK0gOJ3Z6ec3f8WnOvP1jd+8n0TMfcUQl5akoo=
-X-Received: by 2002:a05:690c:7449:b0:787:f0b2:8dbf with SMTP id
- 00721157ae682-78ca645ff63mr37547197b3.66.1765410409801; Wed, 10 Dec 2025
- 15:46:49 -0800 (PST)
+	b=ZcGRTMWHDa7L/ngSsYmY1iA/BIfYf75JilwsNEk7wFEv/Ns7XpQcyaJhrkEXIyKJH
+	 SMCAq0fVaQ+YviEuBXHJjPAs2i8AbDOxo+QVQJ7vhGXJIP3fnikO+dEylRBrfCN4CM
+	 TkT32zpt08EATMRErFbHkLGgtvr4dNqsH1631Bq0pJMDd5YM7CpBEP2elk1+Uxsp+G
+	 SQ1oUCTyFgrezE1/Mq8D2i6i6dgmctJvc7jya0e6jzi/c/mB7osJgTgt/BXoTDU8sh
+	 fRMatPykIaE9JipOkdnUw8odTtmGDEBN6g/Z6r4ILmtpAVcty8Ps4zOH8fK8gD8psf
+	 L5vcki88AP+lQ==
+Received: by mail-yx1-f50.google.com with SMTP id 956f58d0204a3-64472c71fc0so406509d50.0
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Dec 2025 15:47:50 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW+tiGB7Qq3l1JvxM3UBoy0hptDDc+7UzL+OyX2AxdBTx3IZGggfj3LtsI8q+GuKQij9BMnfIuMa/hn@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaFDvWe8IDEZnOuBvWW3d6YwuHn2eq/7L0Mykif2+pBtxaedA0
+	QI+u8z01iTgpYUf5HglReqMbYE1UaW6qFjvOzdpgDomcsQPhqT7Wtu16/bDDhC8wqXDDSPKkMU5
+	6sys5l6bLz9zvZOzNPnWlxAM+CODSTbY=
+X-Google-Smtp-Source: AGHT+IF1KvpwvnBSAbEXcJqDsBPJ2yLyLlyJKjNbLzECbn6Yq8+hvb4/xY/PIiY9ykS4N5gVxpwBM5gRmKIx0+1lOvE=
+X-Received: by 2002:a05:690e:4007:b0:641:f5bc:6947 with SMTP id
+ 956f58d0204a3-6446eb26deamr3184861d50.75.1765410470388; Wed, 10 Dec 2025
+ 15:47:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251204-ltc4283-support-v4-0-db0197fd7984@analog.com> <20251204-ltc4283-support-v4-3-db0197fd7984@analog.com>
-In-Reply-To: <20251204-ltc4283-support-v4-3-db0197fd7984@analog.com>
+References: <20251205-staging-ad4062-v3-0-8761355f9c66@analog.com> <20251205-staging-ad4062-v3-8-8761355f9c66@analog.com>
+In-Reply-To: <20251205-staging-ad4062-v3-8-8761355f9c66@analog.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Thu, 11 Dec 2025 00:46:38 +0100
-X-Gmail-Original-Message-ID: <CAD++jLnE4apeEn_rJrmPWSPzRgCYGaDsbBfys5c2aEhGFMKMuQ@mail.gmail.com>
-X-Gm-Features: AQt7F2pe1woED57sitXThFq2yIEohqX4fsaZuYJ61m2slCnm2Fr7MBKXKNVJsQA
-Message-ID: <CAD++jLnE4apeEn_rJrmPWSPzRgCYGaDsbBfys5c2aEhGFMKMuQ@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] gpio: gpio-ltc4283: Add support for the LTC4283
- Swap Controller
-To: nuno.sa@analog.com
-Cc: linux-hwmon@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-doc@vger.kernel.org, 
+Date: Thu, 11 Dec 2025 00:47:39 +0100
+X-Gmail-Original-Message-ID: <CAD++jLmVNw2BuntXZG8SpS6E+0GPMWBnYZpeP8U79KFZ97tKFw@mail.gmail.com>
+X-Gm-Features: AQt7F2qitnJW8osyPLPsKhS1K2bb8B9PYqpW93XkEg-Z_P3jrHd756WouuN5k7M
+Message-ID: <CAD++jLmVNw2BuntXZG8SpS6E+0GPMWBnYZpeP8U79KFZ97tKFw@mail.gmail.com>
+Subject: Re: [PATCH v3 8/9] docs: iio: ad4062: Add GPIO Controller support
+To: Jorge Marques <jorge.marques@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Bartosz Golaszewski <brgl@kernel.org>
+	Jonathan Corbet <corbet@lwn.net>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 4, 2025 at 5:14=E2=80=AFPM Nuno S=C3=A1 via B4 Relay
-<devnull+nuno.sa.analog.com@kernel.org> wrote:
+On Fri, Dec 5, 2025 at 4:13=E2=80=AFPM Jorge Marques <jorge.marques@analog.=
+com> wrote:
 
-> From: Nuno S=C3=A1 <nuno.sa@analog.com>
+> Explains the GPIO controller support with emphasis on the mask
+> depending on which GPs are exposed.
 >
-> The LTC4283 device has up to 8 pins that can be configured as GPIOs.
->
-> Note that PGIO pins are not set as GPIOs by default so if they are
-> configured to be used as GPIOs we need to make sure to initialize them
-> to a sane default. They are set as inputs by default.
->
-> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
 
 Reviewed-by: Linus Walleij <linusw@kernel.org>
 
