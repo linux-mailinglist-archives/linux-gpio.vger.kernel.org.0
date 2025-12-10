@@ -1,229 +1,122 @@
-Return-Path: <linux-gpio+bounces-29421-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29422-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25FCECB2FD5
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Dec 2025 14:17:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A3324CB320D
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Dec 2025 15:22:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 85E543065ACD
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Dec 2025 13:17:28 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 687C1304D9F6
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Dec 2025 14:22:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FC4A31AA9C;
-	Wed, 10 Dec 2025 13:17:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CFFA21423C;
+	Wed, 10 Dec 2025 14:22:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="RnCMPHJ8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J+YNsYTC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from aposti.net (aposti.net [185.119.170.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061626FC5;
-	Wed, 10 Dec 2025 13:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.119.170.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06FA6770FE;
+	Wed, 10 Dec 2025 14:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765372646; cv=none; b=aUlcRiEWkcvXz4dg+n624o5EcevZ1qGwI6HsyzCST5ITksB4pCeFQKLFSnIHNwK702n4h5N2ou/bv3DL60270rWDDng9WHLrqnB6Eso+aJc+L+YkDNkUtvucOILhXtNOZoOsjYaKtSj/5xn2e6A2G6PMbTnzhRCBb/dk7NFGVyI=
+	t=1765376526; cv=none; b=eyU1A8HYO/8Edfegcxr8/vkTxkXqBZq681OuJMY5XlfAApu/r0+vE0gvfLw7/C3yDLrNnogHfG33N6ZDa4jm2c0ZdfJzQyR/5FbFh8gpXoRnlVTDq/R0GQX8WW+Tn18riga9LcVqmALRPq1eRhWPjW4ay0kf99/Wa0srBAy4QgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765372646; c=relaxed/simple;
-	bh=jcPu3SNVQJaXw9PqEo38M18ABhD7SAoOI2W2LvihJ68=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KRdleWvJ3m97Pnh889nzPVtHX26xI8yG7D/D2P1hg3v8/1do1X4rAIt4o0OcHzIRJCN/VwKPBDoWZqDvToGGGEMzYTIXoB9+5QrphkzHYBRtpNo+K0Cws/cmqANC6nndRnUp7ml8HR6lHl0TuNaijhsY1vLRjvxUo2UoS9cEKjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=RnCMPHJ8; arc=none smtp.client-ip=185.119.170.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1765372011;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=cDRFy6vcE6IK0n780GaRWgRqUqt6rq2uXI/t4/Gr+Mo=;
-	b=RnCMPHJ8+5bLooq6YXu3nxjc4rHzf3q6p7Xq5Db7RIOUc6t+Xd3ujkkPR0UB3ezQtrVOcb
-	eEW6BLRdJMR0FiH+oIzNU8lDYzI29mfeAEpWk0l8VPS1wWY4/shf0rvBVsaV0G+NMHf00k
-	+Cudz+YjfUoQ/V5j0AoCmAvEmoGw5dk=
-Message-ID: <4b6db1eb455fff8e3c7372943faa5ef179c1d19f.camel@crapouillou.net>
-Subject: Re: Kconfig dangling references (BZ 216748)
-From: Paul Cercueil <paul@crapouillou.net>
-To: Randy Dunlap <rdunlap@infradead.org>, Linux Kernel Mailing List
-	 <linux-kernel@vger.kernel.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann
- <arnd@arndb.de>, 	andrew.jones@linux.dev, linux-omap@vger.kernel.org,
- openbmc@lists.ozlabs.org, 	linux-sound@vger.kernel.org, Alexander Shishkin	
- <alexander.shishkin@linux.intel.com>, linux-mips@vger.kernel.org, 
-	asahi@lists.linux.dev, "dri-devel@lists.freedesktop.org"	
- <dri-devel@lists.freedesktop.org>, Paul Kocialkowski <paulk@sys-base.io>, 
-	chrome-platform@lists.linux.dev, linux-stm32@st-md-mailman.stormreply.com, 
- Linux ARM <linux-arm-kernel@lists.infradead.org>,
- linux-gpio@vger.kernel.org, Srinivas Kandagatla	 <srini@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, Matti Vaittinen	
- <mazziesaccount@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Vaibhav
- Hiremath <hvaibhav.linux@gmail.com>, linux-sh@vger.kernel.org,
- x86@kernel.org, Max Filippov	 <jcmvbkbc@gmail.com>
-Date: Wed, 10 Dec 2025 14:06:41 +0100
-In-Reply-To: <22b92ddf-6321-41b5-8073-f9c7064d3432@infradead.org>
-References: <22b92ddf-6321-41b5-8073-f9c7064d3432@infradead.org>
-Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
- keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZM
- LQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5Uz
- FZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtN
- z8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe
- +rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY
- 3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr
- 1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f
- 33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIP
- dlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET
- 4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7U
- rf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KF
- lBwgAhlGy6nqP7O3u7q23hRU=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1765376526; c=relaxed/simple;
+	bh=bBr7KcBbuoQDAneXGSb6gOD25yKQkRm86VgMyLp7SLk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VKpndLA+2O1fentCcX1gsw9FcmUWrjCVE4fKVOoi4JWz0UfZf3LLZSCKpUfEkjkGilbZAKOmc3R0jih9VMxydtM7VySuGtCsebJbnFIO6xI5mMqRAh75lrYXYBC0mjx5M5QvwSjQX+BFqfuljNtOVDbxqHdGArnOiAC67Cc2qhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J+YNsYTC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E257C4CEF1;
+	Wed, 10 Dec 2025 14:22:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765376525;
+	bh=bBr7KcBbuoQDAneXGSb6gOD25yKQkRm86VgMyLp7SLk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J+YNsYTCf23lo0sNPYycdOB4QfzU5NmqdYVc+Ob6I0gha7Y97fPtmfarlftFO0LUr
+	 O61XSxaJOBMnoGr5obL9TbQ0CX/QHVCMGAR1MdAi2bWSjgyjCkKI5WWC2l1Qg+55JU
+	 DMPis0BokqVVTEOKaZkTOokgqVq/ZZn0PMKqfVl9M+7dHInNN1XQWQNhkX2V7ZsGFH
+	 XDTGK9el5neJbdYebe9m76SSFLbDmOpq0TNVKMGSkgKs4HmwLZp3IZqgVcBH6cSUTi
+	 xLxxKLmPNPAnnEBM/wBNH1HFyMW5xiNBNFl4hS5DyfKD6L4J0lbYS8WLoeHRtV3Hmt
+	 3gFXxI1N02KNw==
+Date: Wed, 10 Dec 2025 14:22:02 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Linus Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH] pinctrl: fix compile test defaults
+Message-ID: <20251210-judiciary-borough-1c28d14b9a3f@spud>
+References: <20251210034148.34447-1-johan@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="s2hysrZfZNo1cFt2"
+Content-Disposition: inline
+In-Reply-To: <20251210034148.34447-1-johan@kernel.org>
 
-Hi Randy,
 
-Le dimanche 07 d=C3=A9cembre 2025 =C3=A0 18:04 -0800, Randy Dunlap a =C3=A9=
-crit=C2=A0:
-> from=C2=A0 https://bugzilla.kernel.org/show_bug.cgi?id=3D216748
->=20
-> The bugzilla entry includes a Perl script and a shell script.
-> This is the edited result of running them (I removed some entries
-> that were noise).
->=20
-> I'll try to Cc: all of the relevant mailing lists or individuals.
->=20
->=20
-> ARCH_HAS_HOLES_MEMORYMODEL ---
-> arch/arm/mach-omap1/Kconfig:7:	select ARCH_HAS_HOLES_MEMORYMODEL
->=20
-> ARM_ERRATA_794072 ---
-> arch/arm/mach-npcm/Kconfig:33:	select ARM_ERRATA_794072
->=20
-> ARM_SMC_MBOX ---
-> arch/arm64/Kconfig.platforms:375:	select ARM_SMC_MBOX
->=20
-> CLK_FIXED_FCH ---
-> sound/soc/amd/Kconfig:11:	select CLK_FIXED_FCH
-> sound/soc/amd/Kconfig:48:	select CLK_FIXED_FCH
-> sound/soc/amd/acp/Kconfig:107:	select CLK_FIXED_FCH
->=20
-> CONFIG_STM ---
-> drivers/hwtracing/stm/Kconfig:16:	default CONFIG_STM=C2=A0 # should
-> be STM
-> drivers/hwtracing/stm/Kconfig:31:	default CONFIG_STM
->=20
-> CPU_HAS_LOAD_STORE_LR ---
-> arch/mips/Kconfig:1411:	select CPU_HAS_LOAD_STORE_LR
->=20
-> DRM_KMS_DMA_HELPER ---
-> drivers/gpu/drm/adp/Kconfig:9:	select DRM_KMS_DMA_HELPER
-> drivers/gpu/drm/logicvc/Kconfig:7:	select DRM_KMS_DMA_HELPER
->=20
-> EXTCON_TCSS_CROS_EC ---
-> drivers/usb/typec/ucsi/Kconfig:76:	depends on
-> !EXTCON_TCSS_CROS_EC
->=20
-> MACH_JZ4755 ---
-> drivers/clk/ingenic/Kconfig:20:	default MACH_JZ4755
-> drivers/pinctrl/pinctrl-
-> ingenic.c:158:	IS_ENABLED(CONFIG_MACH_JZ4755) << ID_JZ4755 |
-> drivers/pinctrl/pinctrl-ingenic.c:4616:		.data =3D
-> IF_ENABLED(CONFIG_MACH_JZ4755, &jz4755_chip_info)
->=20
-> MACH_JZ4760 ---
-> drivers/clk/ingenic/Kconfig:40:	default MACH_JZ4760
-> drivers/pinctrl/pinctrl-
-> ingenic.c:159:	IS_ENABLED(CONFIG_MACH_JZ4760) << ID_JZ4760 |
-> drivers/pinctrl/pinctrl-ingenic.c:4620:		.data =3D
-> IF_ENABLED(CONFIG_MACH_JZ4760, &jz4760_chip_info)
-> drivers/pinctrl/pinctrl-ingenic.c:4624:		.data =3D
-> IF_ENABLED(CONFIG_MACH_JZ4760, &jz4760_chip_info)
+--s2hysrZfZNo1cFt2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Those were added when upstreaming support for the JZ4755/JZ4760, but
-the DTS files and actual support in arch/mips/ was never sent.
+On Wed, Dec 10, 2025 at 12:41:48PM +0900, Johan Hovold wrote:
+> Enabling compile testing should not enable every individual driver (we
+> have "allyesconfig" for that) but two new drivers got this wrong.
+>=20
+> Fixes: 38cf9d641314 ("pinctrl: add pic64gx "gpio2" pinmux driver")
+> Fixes: 46397274da22 ("pinctrl: add polarfire soc iomux0 pinmux driver")
+> Cc: Conor Dooley <conor.dooley@microchip.com>
+> Signed-off-by: Johan Hovold <johan@kernel.org>
+> ---
+>  drivers/pinctrl/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+> index bc7f37afc48b..ce5685215b92 100644
+> --- a/drivers/pinctrl/Kconfig
+> +++ b/drivers/pinctrl/Kconfig
+> @@ -491,7 +491,7 @@ config PINCTRL_PIC64GX
+>  	depends on ARCH_MICROCHIP || COMPILE_TEST
+>  	depends on OF
+>  	select GENERIC_PINCONF
+> -	default y
+> +	default ARCH_MICROCHIP
 
-Instead of dropping those, I'll try to upstream the basic support for
-those SoCs in the coming days.
+Nah, not a fan of this kind of thing, please just make it default n if
+this compile test behaviour bothers you.
 
-Cheers,
--Paul
+>  	help
+>  	  This selects the pinctrl driver for gpio2 on pic64gx.
+> =20
+> @@ -511,7 +511,7 @@ config PINCTRL_POLARFIRE_SOC
+>  	depends on ARCH_MICROCHIP || COMPILE_TEST
+>  	depends on OF
+>  	select GENERIC_PINCONF
+> -	default y
+> +	default ARCH_MICROCHIP
+>  	help
+>  	  This selects the pinctrl driver for Microchip Polarfire SoC.
+> =20
+> --=20
+> 2.52.0
+>=20
 
->=20
-> MACH_STM32MP25 ---
-> drivers/pinctrl/stm32/Kconfig:58:	default MACH_STM32MP25 ||
-> (ARCH_STM32 && ARM64)
->=20
-> MFD_AIROHA_AN8855 ---
-> drivers/nvmem/Kconfig:33:	depends on MFD_AIROHA_AN8855 ||
-> COMPILE_TEST
->=20
-> MFD_TN48M_CPLD ---
-> drivers/gpio/Kconfig:1624:	depends on MFD_TN48M_CPLD ||
-> COMPILE_TEST
-> drivers/reset/Kconfig:365:	depends on MFD_TN48M_CPLD ||
-> COMPILE_TEST
-> drivers/reset/Kconfig:366:	default MFD_TN48M_CPLD
->=20
-> MIPS_BAIKAL_T1 ---
-> drivers/ata/Kconfig:197:	select MFD_SYSCON if (MIPS_BAIKAL_T1
-> || COMPILE_TEST)
-> drivers/bus/Kconfig:43:	depends on MIPS_BAIKAL_T1 || COMPILE_TEST
-> drivers/bus/Kconfig:58:	depends on MIPS_BAIKAL_T1 || COMPILE_TEST
-> drivers/clk/baikal-t1/Kconfig:4:	depends on (MIPS_BAIKAL_T1
-> && OF) || COMPILE_TEST
-> drivers/clk/baikal-t1/Kconfig:5:	default MIPS_BAIKAL_T1
-> drivers/clk/baikal-t1/Kconfig:20:	default MIPS_BAIKAL_T1
-> drivers/clk/baikal-t1/Kconfig:33:	default MIPS_BAIKAL_T1
-> drivers/clk/baikal-t1/Kconfig:45:	default MIPS_BAIKAL_T1
-> drivers/hwmon/Kconfig:462:	depends on MIPS_BAIKAL_T1 ||
-> COMPILE_TEST
-> drivers/i2c/busses/Kconfig:589:	select MFD_SYSCON if MIPS_BAIKAL_T1
-> drivers/memory/Kconfig:69:	depends on MIPS_BAIKAL_T1 ||
-> COMPILE_TEST
-> drivers/mtd/maps/Kconfig:81:	depends on MIPS_BAIKAL_T1 ||
-> COMPILE_TEST
-> drivers/pci/controller/dwc/Kconfig:89:	depends on MIPS_BAIKAL_T1 ||
-> COMPILE_TEST
-> drivers/spi/Kconfig:370:	depends on MIPS_BAIKAL_T1 ||
-> COMPILE_TEST
->=20
-> PINCTRL_MILBEAUT ---
-> arch/arm/mach-milbeaut/Kconfig:16:	select PINCTRL_MILBEAUT
->=20
-> SND_SOC_AC97_BUS_NEW ---
-> sound/soc/pxa/Kconfig:21:	select SND_SOC_AC97_BUS_NEW
->=20
-> SND_SOC_CS35L56_CAL_SYSFS_COMMON ---
-> sound/soc/codecs/Kconfig:920:	select
-> SND_SOC_CS35L56_CAL_SYSFS_COMMON
->=20
-> TEST_KUNIT_DEVICE_HELPERS ---
-> drivers/iio/test/Kconfig:11:	select TEST_KUNIT_DEVICE_HELPERS
->=20
-> USB_HSIC_USB3613 ---
-> drivers/staging/greybus/Kconfig:209:	depends on USB_HSIC_USB3613
-> || COMPILE_TEST
-> drivers/staging/greybus/arche-platform.c:26:#if
-> IS_ENABLED(CONFIG_USB_HSIC_USB3613)
->=20
-> USB_OHCI_SH ---
-> arch/sh/Kconfig:334:	select USB_OHCI_SH if USB_OHCI_HCD
-> arch/sh/Kconfig:344:	select USB_OHCI_SH if USB_OHCI_HCD
-> arch/sh/Kconfig:429:	select USB_OHCI_SH if USB_OHCI_HCD
-> arch/sh/Kconfig:455:	select USB_OHCI_SH if USB_OHCI_HCD
-> arch/sh/configs/sh7757lcr_defconfig:61:CONFIG_USB_OHCI_SH=3Dy
->=20
-> X86_P6_NOP ---
-> arch/x86/Kconfig.cpufeatures:41:	depends on X86_64 ||
-> X86_P6_NOP
-> arch/x86/Makefile_32.cpu:48:ifneq ($(CONFIG_X86_P6_NOP),y)
->=20
-> XTENSA_PLATFORM_ESP32 ---
-> drivers/tty/serial/Kconfig:1598:	depends on
-> XTENSA_PLATFORM_ESP32 || (COMPILE_TEST && OF)
-> drivers/tty/serial/Kconfig:1611:	depends on
-> XTENSA_PLATFORM_ESP32 || (COMPILE_TEST && OF)
->=20
+--s2hysrZfZNo1cFt2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaTmCBQAKCRB4tDGHoIJi
+0sY8AP40UGW5QvAO4lgcrnPYI6YaKkZriKLkdzN9W7P/OOcBcwD/WA7/7mkx2/D4
+vPxPNz+y8yZjLTHGPO/ZbAJw7LN5TwA=
+=FiVi
+-----END PGP SIGNATURE-----
+
+--s2hysrZfZNo1cFt2--
 
