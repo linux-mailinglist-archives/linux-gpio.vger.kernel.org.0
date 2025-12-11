@@ -1,141 +1,271 @@
-Return-Path: <linux-gpio+bounces-29452-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29453-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8659DCB5A45
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Dec 2025 12:32:36 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id E26FDCB5DC4
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Dec 2025 13:30:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id EC5A53011A9B
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Dec 2025 11:32:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4B22A3061A42
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Dec 2025 12:26:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 510EB27CCEE;
-	Thu, 11 Dec 2025 11:32:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC76D313522;
+	Thu, 11 Dec 2025 12:21:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NtJnTaGk"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IjInWeKl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373131E5B71
-	for <linux-gpio@vger.kernel.org>; Thu, 11 Dec 2025 11:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F061313278;
+	Thu, 11 Dec 2025 12:21:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765452750; cv=none; b=eMGmv+R+lP5rQGcaj50Zv91ss/elGGUOPqN6XzBnlBsB85iaPzzJh9P1HG++ZcQwQv0/v3oOHMWAu54Ou5tddyl4hsazhSkucMpygYWj5HkOqLDltyBySWElzBy4aXlifvZzqbdM/viXW76Iu7mBdYH+BA4nCMw36SKS5eh3Bew=
+	t=1765455670; cv=none; b=d7CZalEgFlqpXzzAJ4DnlhpIdjMxFoKtecioHxjY2F4Pi6g5weOUuFBtrn+Q0RI/XEBuiFrsxueZY/zK4h3HDQeYY19PiIjfS39Bm9qUqya+oIGF+Llq42ENUug1fm+8NqoIC5Y684yk6sSCKgOJ0023OmvPApJbfzBFAS6zDE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765452750; c=relaxed/simple;
-	bh=POzzpg6IYRZPIIqbdlvOsPFON8CAFCtqiOP8BsCzG6o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=loeX84VemPHqHhc3llRKFY9pHqwExskifqGLUDFSm9eE1/5Q1uL3cEaFdarSdnN7HYCDrBvGRwn4zYlVDwoco+nF3Suv6RTCM351x6HzO1W1wQzJryixxisN57cBzY1Y74h4HrUJznwSmpSaCKjZ+E4lMC+MVPv3B0ObM7zGl6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NtJnTaGk; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-78a712cfbc0so9670097b3.1
-        for <linux-gpio@vger.kernel.org>; Thu, 11 Dec 2025 03:32:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1765452747; x=1766057547; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tsAQFyywzgQt8hTuOma0wGcWOIPVIjI9LIgrRTCikK4=;
-        b=NtJnTaGkvuf9r5BFmo4AYj1CaI/INFVazyoJJPcv6K82v1KZBH+lOmxmhfMbLhLfcr
-         uVe7oFkhwFobKOHzwGE63T2H9L27wdtFG+lP/ffLqN/Mwa1j979U38NfyOSHMXS4xV3U
-         OrdQcgWaJj8CfZdVsKjpGx41q+OVZcHd3SbAOyBbBmsyNmFmA0CWANT/ZLsn+l6reRO1
-         iDromQMSouYwyd7ZM/RM76HLP6f9e1+BLAwv/74l3krLepSOQYcYDlUObFz9s5MOBoxu
-         N2kKHOYjrMvzXu+SXOX2XqGew8KU/TGDHnk00b1SzSh5f5/FiQLTSjZ2VPcdWiI9COTz
-         Jxlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765452747; x=1766057547;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tsAQFyywzgQt8hTuOma0wGcWOIPVIjI9LIgrRTCikK4=;
-        b=BRwYkBtDMX+Y/zYliCLru4CUP/3rSiJiuqjMFOXuZyUwy7r95om/XpSx8U+BUrLfjS
-         ESYkVfKEKKfFiO5wAFt9uvbFDTQibFi33KSc0IB7oYSBTFeIgQPtJ1LVqfuOTL6gzMkD
-         R9kjPOfRgS2BdLj5rdBoNpfZsgva+mOzgc+qQXUbrQz9HeqBbIzeSg+RpE3jwJY0dm/r
-         Q48s7P+t4ByWs4YrAdA93YLYaa3jGnx7BZcxuNif+J7B7kW1heGPjQJaorShW65WW9nk
-         nnHq4TZsg37vJFwiQUIuGgzXkrBOU/svxIzJZnieqNSXsdOgPWfmakPx9wxW47sbZTYe
-         8qIg==
-X-Forwarded-Encrypted: i=1; AJvYcCV8V68cBjiCEB/J2KlLjWmp4gyjZoVJA6EKz5LWznt6ggxRltydlL6ETHL2X2/sdt22Ie/XQVeWv50G@vger.kernel.org
-X-Gm-Message-State: AOJu0YyENoMYyF1SkMTpcZQFtcFFkXfEcequyKalCYzzoAur66QNNHel
-	rqApKEoKJ4igKNNXgK7WuXxrSIiFCql0PKaC6HYIq2/dBYlxf4Mb+QffEm+WCPXVWQtkDvKn7nc
-	9qyAT8+xm6pZgquNhalNziNH1uCbmYNBL04v+a7fF0w==
-X-Gm-Gg: AY/fxX5UT7dZnga4TSNBeWpOpxhKoUIgWdd90tglqtRFAsjvZG74SktjpfJrWlEzr4Z
-	2jR+RqQl2KlMnjnNKhKw8Y4b/iIjAnNc6acZmq+GV6Sm4+ZAe7rT5zX6MJj3DAyMMbicf14kd79
-	kLSBpo6T/RsWe2P7g+lSYcJnpsl6HaOxG4GrSRvjhcJ4iAMEXWu3KXdtLnQ4s+Q+CUJKsFjF3f+
-	c8gRodY0o53D3EEYc9K4Nbd0DeQVOETqyZGR0BX6sFHt9lio2U+z/95AS3WA1W9c2U7qrGv8c2m
-	nurExc4=
-X-Google-Smtp-Source: AGHT+IGi8FI7tue2F1muYiYdXCcwa1VCSq2fLFaLgh7A0p4DE+EvhP5UsxEj9lkt3uuk+LvjC2KVDNW0gmzNrvJK74w=
-X-Received: by 2002:a05:690c:45c5:b0:787:bf16:d489 with SMTP id
- 00721157ae682-78ca64495eamr51688117b3.62.1765452747098; Thu, 11 Dec 2025
- 03:32:27 -0800 (PST)
+	s=arc-20240116; t=1765455670; c=relaxed/simple;
+	bh=/vgpPVra5oX60x9VjkwZBWSoe+NZGWdku0olx5e7T7w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mZmqaxaHTF5STog+yxIDEiQ+8rzfd9nMW9aa+qTFVyeaGJXhhtCfyX39kWFbIxP2/ikcahdwNQ82kdTnCwzf5sIpPPWRB/qdpjQPAP56NOTX0bXmAyX0mgR1FnmT+nZqOC5A51w/n/YoasMP5YyTv0v2WUVO/wshGATg0iPye28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IjInWeKl; arc=none smtp.client-ip=185.171.202.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 10415C1934A;
+	Thu, 11 Dec 2025 12:20:42 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id EC92660738;
+	Thu, 11 Dec 2025 12:21:05 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0008B103C8C7B;
+	Thu, 11 Dec 2025 13:20:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1765455663; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=y60RLBstvqr0/tZgH22eIXq0hipLzZ65ZyEuPfHKBSU=;
+	b=IjInWeKlYOFPOumcxa8beepe8z3enCkm9QJK7R7eqYYjwSwLdRD40bWQDLG8p48lOccH44
+	9YU/TzCVlvVpLBH+VisZeK+QOHu4XWz8XDCzY9/UldUTvpBnpLQrY6MsRgZTW0DUcUTBe4
+	hibWIU0HY6qCZJdJqbZJP4zCLvsjmBPv4RMN/0DSBbBZnIkJWur8sOjI5FpOp2WjXFssDo
+	n6FNS6Cg4jv8sDVHEVqN/NeB1i/T29a9TQ+V4fVEVUsILjTkiBTIkC0m/ee7SA5YBVSF2y
+	zhhNHhmGfVvaoZgGD3mkjX0rl8yUEpSeXJno276hVApN2fvcwOEqe/6Na5xCoQ==
+Date: Thu, 11 Dec 2025 13:20:44 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Kalle Niemi
+ <kaleposti@gmail.com>, Rob Herring <robh@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, Andrew Lunn <andrew@lunn.ch>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich
+ <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi Shyti
+ <andi.shyti@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas
+ <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>,
+ Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes
+ <david.rhodes@cirrus.com>, Linus Walleij <linus.walleij@linaro.org>, Ulf
+ Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>, Andy
+ Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally
+ <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>,
+ Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
+ <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Alison
+ Schofield <alison.schofield@intel.com>, Vishal Verma
+ <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+ <dan.j.williams@intel.com>, Wolfram Sang <wsa@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
+ patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT
+ overlays"
+Message-ID: <20251211132044.10f5b1ea@bootlin.com>
+In-Reply-To: <c50c40cc-69f6-436c-a94e-94a3a10f6727@gmail.com>
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+	<20251015071420.1173068-2-herve.codina@bootlin.com>
+	<f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
+	<CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
+	<5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com>
+	<CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
+	<072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
+	<CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
+	<55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com>
+	<20251202102619.5cd971cc@bootlin.com>
+	<088af3ff-bd04-4bc9-b304-85f6ed555f2a@gmail.com>
+	<20251202175836.747593c0@bootlin.com>
+	<dc813fc2-28d2-4f2c-a2a3-08e33eec8ec7@gmail.com>
+	<20251204083839.4fb8a4b1@bootlin.com>
+	<CAMuHMdXdwf7La1EYBWTJadsTAJG3nKQVW6wtBn-bUqshA=XHRw@mail.gmail.com>
+	<20251210132140.32dbc3d7@bootlin.com>
+	<c50c40cc-69f6-436c-a94e-94a3a10f6727@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251211-dev-dt-warnings-all-v1-0-21b18b9ada77@codeconstruct.com.au>
- <20251211-dev-dt-warnings-all-v1-8-21b18b9ada77@codeconstruct.com.au>
-In-Reply-To: <20251211-dev-dt-warnings-all-v1-8-21b18b9ada77@codeconstruct.com.au>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Thu, 11 Dec 2025 12:31:50 +0100
-X-Gm-Features: AQt7F2pk6E2fyrBRST0HoIuBOhvmNQUfLJiP182o7R-P0Ig55Fk3IUyQwfYuHbU
-Message-ID: <CAPDyKFpQXYFFrZ-unVxa9m2+tKLEyFZyo7Tv7JD_7vTbqqfmDQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 08/16] ARM: dts: aspeed: Use specified wp-inverted
- property for AST2600 EVB
-To: Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linusw@kernel.org>, Joel Stanley <joel@jms.id.au>, 
-	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, 
-	linux-gpio@vger.kernel.org, linux-mmc@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, linux-iio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Thu, 11 Dec 2025 at 09:47, Andrew Jeffery
-<andrew@codeconstruct.com.au> wrote:
->
-> While sdhci-pltfm supports sdhci,wp-inverted, it also supports
-> the un-prefixed and specified wp-inverted property. Switch the EVB
-> devicetree to use the specified property to remove warnings when
-> checking the DTB.
->
-> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+Hi Matti,
 
-FWIW:
+On Thu, 11 Dec 2025 10:34:46 +0200
+Matti Vaittinen <mazziesaccount@gmail.com> wrote:
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Hi Dee Ho peeps,
+> 
+> I tried to create a minimal piece of code/dts to demonstrate the issue 
+> seem in the ROHM automated testing.
+> 
+> On 10/12/2025 14:21, Herve Codina wrote:
+> > Hi Geert, Kalle, Rob,
+> > 
+> > On Thu, 4 Dec 2025 11:49:13 +0100
+> > Geert Uytterhoeven <geert@linux-m68k.org> wrote:  
+> 
+> //snip
+> 
+> > When a new node is added, a new device is created. Indeed, because the
+> > driver is an MFD driver, it is a bus driver and handled by of_platform bus.  
+> 
+> We do also have an MFD device - but it is not a platform device but an 
+> I2C device - thus it should be probed by the I2C bus (if I'm not 
+> mistaken). So, I guess this is not bus-specific problem.
+> https://elixir.bootlin.com/linux/v6.18/source/drivers/mfd/rohm-bd718x7.c#L206
+> 
+> 
+> > My new node is considered by devlink as a node that will have a device ready
+> > to work (driver attached and device probed). A link is created between this
+> > node and the consumers of this node (i.e. the SPI controller). devlink is
+> > waiting for this provider to be ready before allowing the its consumer to probe.
+> > This node (simple pinmux description) will never lead to a device and devlink
+> > will never see this "provider" ready.  
+> 
+> I believe Kalle did see the same "probe-not-called" -problem, even when 
+> disabling the fw_devlink from the kernel commandline. (It's worth 
+> mentioning that I am not sure if Kalle tried if probe was called with 
+> "previously working" kernels when fw_devlink is disabled).
+> 
+> > Did a test with a Renesas RZ/N1D (r9a06g032) based board and built a similar
+> > overlay involving I2C controller pinmux, I2C controller and an EEPROM.
+> > 
+> > Here, also the overlay didn't work but the issue is different.
+> > 
+> > The pinmux definition for pinctrl (i.e. pinctrl subnodes) are looked when
+> > the pinctrl driver probes. Adding a new node later is not handled by the
+> > pinctrl driver.
+> > Applying the overlay leads to a simple:
+> >    [   16.934168] rzn1-pinctrl 40067000.pinctrl: unable to find group for node /soc/pinctrl@40067000/pins_i2c2
+> > 
+> > Indeed, the 'pins_i2c2' has been added by the overlay and was not present
+> > when the pinctrl probed.
+> > 
+> > Tried without adding a new pinmux node (pinctrl subnode) from the overlay
+> > and used nodes already existing in the base DT.
+> > 
+> > On my Marvell Armada 3720 board, it works with or without my patches.
+> > No regression detected due to my patches.
+> > 
+> > On my RZ/N1D board, it works also with or without my patches.
+> > Here also, no regression detected.
+> > 
+> > Also, on my Marvell Armada 3720 board, I can plug my LAN966x PCI board.
+> > The LAN966x PCI driver used an overlay to describe the LAN966x PCI board.
+> > 
+> > With the upstream patch not reverted, i.e. 1a50d9403fb9 ("treewide: Fix
+> > probing of devices in DT overlays")" applied, devlinks created for the
+> > LAN966x PCI board internal devices are incorrect and lead to crashes when
+> > the LAN966x PCI driver is removed due to wrong provider/consumer dependencies.
+> > 
+> > When this patch is reverted and replaced by "of: dynamic: Fix overlayed
+> > devices not probing because of fw_devlink", devlinks created for the LAN966x
+> > PCI board internal devices are corrects and crashes are no more present on
+> > removal.
+> > 
+> > Kalle, Geert, can you perform a test on your hardware with my patches
+> > applied and moving your pinmux definition from the overlay to the base
+> > device-tree?  
+> 
+> I got a bit lost regarding which patches to test :)
+
+The next-20251127 tag has every patches needed for the test.
+Tests you did with this kernel are perfectly valid. Many Thanks for that!
+
+> 
+> > The kernel you can use is for instance the kernel at the next-20251127 tag.
+> > Needed patches for test are present in this kernel:
+> >      - 76841259ac092 ("of: dynamic: Fix overlayed devices not probing because of fw_devlink")
+> >      - 7d67ddc5f0148 ("Revert "treewide: Fix probing of devices in DT overlays"")
+> >   
+> 
+> I did a minimal overlay test which can be ran on beaglebone black. I 
+> assume the same can be done on any board where you have 
+> (i2c/spi/xxx)-controller node with status="disabled". Doing this on BBB 
+> requires recompiling the beaglebone black (base)device-tree with -@ 
+> though, so that the overlay target nodes are found. I'll attach the 
+> files for interested.
+> 
+> overlay-test.c:
+> Is a 'device-driver' for device added in overlay. (simply a probe() with 
+> print, extracted from the bd71847 driver).
+> 
+> overlay-test.dts:
+> Is a minimal device-tree overlay describing the 'test device' matching 
+> above overlay-test driver. When this is overlaid using next-20251121 
+> (contains the 7d67ddc5f0148b3a03594a45bba5547e92640c89), probe in 
+> overlay-test.c is not called. When 
+> 7d67ddc5f0148b3a03594a45bba5547e92640c89 is reverted, the probe is called.
+> 
+> mva_overlay.c:
+> Is simplified 'glue-code' for adding an overlay to running kernel by 
+> feeding the compiled overlay to the bin_attribute - for example using:
+> 
+> dd if=/overlay-test.dtbo of=/sys/kernel/mva_overlay/overlay_add bs=4M
+> 
+> am335x-boneblack.dtb.dts.tmp and tps65217.dtsi:
+> are (intermediate) beaglebone-black device-trees which can be recompiled 
+> to a 'base device-tree' using:
+> 
+> dtc -O dtb -o am335x-boneblack.dtb -b 0 -@ am335x-boneblack.dtb.dts.tmp
+>   - but I suggest you to use the dts from your kernel build. I provided 
+> this just for the sake of the completeness.
+> 
+> Makefile:
+> Off-tree build targets to build the above DTSes and modules. Requires 
+> KERNEL_DIR and CC to be correctly set.
+> 
+> 
+> My findings:
+> The pinctrl node indeed plays a role. When the "pinctrl-0 = 
+> <&i2c1_pins>;" (and fragment0) was removed from the dts, the 
+> 'overlay-test' was probed with the "next-20251121".
+> 
+> With the pinctrl node, I see:
+> [  104.098958] probe of 4802a000.i2c returned -517 (EPROBE_DEFER I 
+> suppose) after 50 usecs
+> - and the 'overlay-test' probe is not called.
+
+Do you see the same trace with:
+- "pinctrl-0 = <&i2c1_pins>;" in your overlay
+- fragment0 removed from the overlay (i2c1_pins definition removed from
+  the overlay.
+- i2c1_pins node defined in your base DT.
+
+In other word, is the issues related to adding a pinctrl sub-node (pinctrl
+pins definition) in the overlay or is it something else?
+
+Best regards,
+Hervé
 
 
-> ---
->  arch/arm/boot/dts/aspeed/aspeed-ast2600-evb.dts | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/aspeed/aspeed-ast2600-evb.dts b/arch/arm/boot/dts/aspeed/aspeed-ast2600-evb.dts
-> index 3eba676e57f1..c51977dcb56b 100644
-> --- a/arch/arm/boot/dts/aspeed/aspeed-ast2600-evb.dts
-> +++ b/arch/arm/boot/dts/aspeed/aspeed-ast2600-evb.dts
-> @@ -315,7 +315,7 @@ &sdhci0 {
->         bus-width = <4>;
->         max-frequency = <100000000>;
->         sdhci-caps-mask = <0x7 0x0>;
-> -       sdhci,wp-inverted;
-> +       wp-inverted;
->         vmmc-supply = <&vcc_sdhci0>;
->         vqmmc-supply = <&vccq_sdhci0>;
->         clk-phase-sd-hs = <7>, <200>;
-> @@ -326,7 +326,7 @@ &sdhci1 {
->         bus-width = <4>;
->         max-frequency = <100000000>;
->         sdhci-caps-mask = <0x7 0x0>;
-> -       sdhci,wp-inverted;
-> +       wp-inverted;
->         vmmc-supply = <&vcc_sdhci1>;
->         vqmmc-supply = <&vccq_sdhci1>;
->         clk-phase-sd-hs = <7>, <200>;
->
-> --
-> 2.47.3
->
->
+
 
