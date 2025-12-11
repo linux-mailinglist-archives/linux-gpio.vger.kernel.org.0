@@ -1,185 +1,219 @@
-Return-Path: <linux-gpio+bounces-29454-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29455-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30885CB6196
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Dec 2025 14:53:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B8FACB628A
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Dec 2025 15:13:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 602BC30577E4
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Dec 2025 13:52:38 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D2D013079281
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Dec 2025 14:07:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C10F2C0F78;
-	Thu, 11 Dec 2025 13:52:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 153E52D29A9;
+	Thu, 11 Dec 2025 14:07:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O5qVzYVn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F4nRF+jI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C37238C08
-	for <linux-gpio@vger.kernel.org>; Thu, 11 Dec 2025 13:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C29A2D1932;
+	Thu, 11 Dec 2025 14:07:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765461156; cv=none; b=LD1ndLinUss+cEwWjPw/w3N/vX1cPS/C76+8iuwKkA6YACI/7yOKub+J10U8ubeIF56OfXC9tQHiaiFSUaKhhVAowjKXN6M2o8F8x1rU9BpNPKRPoHntrMd04s/GmNkiT2a3vb8laWeCZzNN/Rf52SW0fm6do/gNkhf5jTshl9I=
+	t=1765462068; cv=none; b=lg/xrlU8HawVWsarZItkOxzgv0Rw4CVV778th24E5KuVIxt7d2SIWe9bQPSKrmrnc4clt0wqjyhf7rbTbeFh6VNfMKA3bIH5+SfyuZ5lVud0pQxbJ47EGH3H7RUN0e693VkJzMHklNZJJjVX42VEYfVGkNnOu6MfPmD6nvQh23Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765461156; c=relaxed/simple;
-	bh=G75QtHwaXyoGaF97/dwbuAjoqGb0m37v7wfeVaP4ZQU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bTW1DgIRGTNN2lKbBPDGdADcVm4Gcqut3sXAivRVtqNkrvjfI6qJ3s8vNpqohFJdyHKqfinmgVV+LYL2UuUy27kYzUnixzkjlq0h3xNKbGkix+PAwd902pj3YjwxqxO8Kbt7odejSZL0A79s4MeaJmWwOva4wf3cFVn1Q82d9+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O5qVzYVn; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-598f81d090cso104213e87.2
-        for <linux-gpio@vger.kernel.org>; Thu, 11 Dec 2025 05:52:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765461152; x=1766065952; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OyF8Llfg/KLa+0XknFO643JOUJVOQHSA+WqT/UvRncg=;
-        b=O5qVzYVnkNAcBM0yU6/ECghA5DRIx/1vVPyJlHnBpRP0GapnWkpi6WRp2s3WP3FJdS
-         kQTdbNBmDRPs5RP2zVC05U2ryvX5+DMju0KLFgWs8XDo4xpjFH5p6dlS/iF283SUjROq
-         /jlL+BzBFrzCYPsre33fFUM3wq+N1G3gnplPBg7ZjgE5ESofxOJzGqZnmbXkjF8nmRAv
-         lmHtzHR4/t+AHezqADCg2QD8t2s+e8FCRCTMVhbXWuXzPpyevNM+lyuYTEtvGrBptNpN
-         vQGQtBx4c5yYcARkXeK/lMvMRShdukWmJi9T4IiYhSkFOK5joxJvnxZQUy+qfKxTewrN
-         sptw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765461152; x=1766065952;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OyF8Llfg/KLa+0XknFO643JOUJVOQHSA+WqT/UvRncg=;
-        b=rpm/8Pqcn+47cY4ZtVzWpYKxidkClJAa2v2LWXh6cV9xNKD1XdrOGiNl0LOAEROlLi
-         X83pm/DVu8vwrbJY87iRDl2IZTVEAx5o+5Quz/f0m8BklmoRz5hUroT7xsr1Ey7/4TfK
-         iVshj+tBRkL8KtZA4ZaWtMFUnjg0y9XOQWtxDOyqatulqor/bzXEdb3/UFb0hmUqFUtl
-         UXU7FddlAaGz1rI9nFJ/ZwcFyxBMOqvW7L/lY9hioelAGGdBv/wAJPFZ9OkLnzMhFZKr
-         XK0eipj23u+vQiWAnFir/lQSvzFjrWBzyrwbox0a87JoULmGhVPtYwWEeiNNMSiOgEXo
-         9urg==
-X-Forwarded-Encrypted: i=1; AJvYcCUCM6zlW+fSnHF7gKeiohukCKLcLHr09WSwzSGvfwEvSoFcsFzmGpucnZqQXbUNOKI1gKmlH8v0POr4@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhHa3p9x8q97Dng8XfIQxwLOgg5sxjWcSvyZOxV9Zj+I0CDuj1
-	bIqWjod9YHwMLW+s7XMLCNADk+Wxh7dLcMRMxkUVunQsKnykPPDjUwxC
-X-Gm-Gg: AY/fxX5zoc4oiv4Fdlfb69hVhrmawCDCHVKjsYTuypwrzx/x9cz0nlStvOGNlm2jUcM
-	04v7rRiXxDsBf1Gki91CnHsZZnKz5BeTAQTXLcrk5hQc6DhJbPlXBsxEvz29a1xuKtgkN1NLHZ0
-	9o9OP/T1b2Wzs+kkavYV9UsdHFTB8uyiu6+1yDS1wfUlyfat7IXUQQoHdzHpxe2/VAIT6pwTzJo
-	10hAFCYDqXWpwhaTkdJwoksKHfR/tGJHElq/IYtGZ9TR9ioOmLlidGS45TMc5HrDTlQBMSfsuda
-	CFOUHYvGSxIIOUUTD4N0Rk4WoqRrxfE+8UmnsTfpliWAWRcYPO5cx5xImjyfYPQ0CZWlQNYMl7K
-	poaFWMveAeaC2CySsVftR3aFZr8P4J5RZBIXkAGc8RhyR1WIfct4YTfcRr5jDrV8S4K4FVHZzbN
-	YeW8rsM98ecDlFc3rH6Un/CMayWplef6qrgJ1nZcCl4ljJK9LvlQLbhiUBAyMK7uIT74jK
-X-Google-Smtp-Source: AGHT+IFWJFGGAGC5oB/hILZqbH9Fl+tM9Ekock+BvVcvC2+WO2RAGZK2t4qHgeuRfvNMm8ED4+amVw==
-X-Received: by 2002:a05:6512:1390:b0:594:28f6:b065 with SMTP id 2adb3069b0e04-598ee47cf27mr2467104e87.17.1765461151758;
-        Thu, 11 Dec 2025 05:52:31 -0800 (PST)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-598f2f37951sm877935e87.4.2025.12.11.05.52.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Dec 2025 05:52:30 -0800 (PST)
-Message-ID: <1b9fa77b-d74a-4fa7-b2e7-8b389d59a5a0@gmail.com>
-Date: Thu, 11 Dec 2025 15:52:28 +0200
+	s=arc-20240116; t=1765462068; c=relaxed/simple;
+	bh=hx7b5hrK/t1h1EGBuhSZdXxMqefCkNpMbXzh1Pxl/GQ=;
+	h=From:Date:Content-Type:MIME-Version:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=pBW092m8Hgc0bvEob76sg54fdwNwrTWTyAUwpLh13w2cN8oMUJPBbcTpPF2r/GzcWipM3HDnBWjYrCHFAxa9i2S+xZsleRXqMxI/GakXcPni/tuZZ1d15XkqdbLdBk9XzO8CU/2Ra3Y0g79Tmk6bD3KpIP/kXxvMpjTCIo/6qtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F4nRF+jI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0558FC113D0;
+	Thu, 11 Dec 2025 14:07:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765462068;
+	bh=hx7b5hrK/t1h1EGBuhSZdXxMqefCkNpMbXzh1Pxl/GQ=;
+	h=From:Date:Cc:To:In-Reply-To:References:Subject:From;
+	b=F4nRF+jILoOBJXDsreY4/ec1oenpKVgurmtPrhus5kXNUIYF/WfF+26aLVpRCEnQk
+	 J4bn4I+pf4emRNZ0naH44bYtNweuoB/BPCoO29fYQZW4zgjopbjuhSfMPxX8r5C9Sd
+	 HwiRVfqG44YlO4jVout14vF5bi56Uq4IBV1g4d1e8jNEULYuOm9QaZbHrg4GJYPUpk
+	 Ce+TKRcAdNShbHb98RYKQRWl5VNC4J8FTWcRlsMdsY0irxv1iN+gSAv0F5xjGF1tDo
+	 8pyIosatEszKp+OVkMh46qLMQx878RXXrVhSFpV2S8RGMxXc1tSS1ag6GbVr2JfXPM
+	 l7Gbv0noZ03iA==
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 11 Dec 2025 08:07:47 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT
- overlays"
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
- Kalle Niemi <kaleposti@gmail.com>, Rob Herring <robh@kernel.org>,
- linux-arm-kernel@lists.infradead.org, Andrew Lunn <andrew@lunn.ch>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Charles Keepax <ckeepax@opensource.cirrus.com>,
- Richard Fitzgerald <rf@opensource.cirrus.com>,
- David Rhodes <david.rhodes@cirrus.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Wolfram Sang <wsa@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
- patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
- Allan Nielsen <allan.nielsen@microchip.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>,
- Steen Hegelund <steen.hegelund@microchip.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
- <20251015071420.1173068-2-herve.codina@bootlin.com>
- <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
- <CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
- <5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com>
- <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
- <072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
- <CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
- <55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com>
- <20251202102619.5cd971cc@bootlin.com>
- <088af3ff-bd04-4bc9-b304-85f6ed555f2a@gmail.com>
- <20251202175836.747593c0@bootlin.com>
- <dc813fc2-28d2-4f2c-a2a3-08e33eec8ec7@gmail.com>
- <20251204083839.4fb8a4b1@bootlin.com>
- <CAMuHMdXdwf7La1EYBWTJadsTAJG3nKQVW6wtBn-bUqshA=XHRw@mail.gmail.com>
- <20251210132140.32dbc3d7@bootlin.com>
- <c50c40cc-69f6-436c-a94e-94a3a10f6727@gmail.com>
- <20251211132044.10f5b1ea@bootlin.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20251211132044.10f5b1ea@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-crypto@vger.kernel.org, 
+ linux-iio@vger.kernel.org, linux-aspeed@lists.ozlabs.org, 
+ linux-hwmon@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Joel Stanley <joel@jms.id.au>, Linus Walleij <linusw@kernel.org>, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mmc@vger.kernel.org, openbmc@lists.ozlabs.org, 
+ linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>
+To: Andrew Jeffery <andrew@codeconstruct.com.au>
+In-Reply-To: <20251211-dev-dt-warnings-all-v1-0-21b18b9ada77@codeconstruct.com.au>
+References: <20251211-dev-dt-warnings-all-v1-0-21b18b9ada77@codeconstruct.com.au>
+Message-Id: <176546188070.971010.10583431722134708925.robh@kernel.org>
+Subject: Re: [PATCH RFC 00/16] Eliminate warnings for AST2500 and AST2600
+ EVB devicetrees
 
-On 11/12/2025 14:20, Herve Codina wrote:
-> Hi Matti,
+
+On Thu, 11 Dec 2025 17:45:42 +0900, Andrew Jeffery wrote:
+> Hi all,
 > 
-> On Thu, 11 Dec 2025 10:34:46 +0200
-> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+> This series removes the remaining warnings produced by `make
+> CHECK_DTBS=y ...` for the AST2500 and AST2600 EVBs and their related
+> DTSIs. The tidy-up has the usual benefit of making it clear to
+> contributors that any warnings are likely their own to fix before their
+> patches will be considered for merging.
 > 
-/snip
-
+> I've framed it as an RFC with all patches contained in the one series
+> so the goal is clear, we can see what's needed to reach it, and we can
+> decide whether and how it should be split or merged going forward.
 > 
-> Do you see the same trace with:
-> - "pinctrl-0 = <&i2c1_pins>;" in your overlay
-> - fragment0 removed from the overlay (i2c1_pins definition removed from
->    the overlay.
-> - i2c1_pins node defined in your base DT.
+> As it stands there's little in the way of code change, except to
+> pinctrl (though also not much there). As such I've included the
+> binding maintainers and subsystem lists as recipients but not yet Cc'ed
+> subsystem maintainers directly because there are quite a few and I hope
+> to avoid mostly uninteresting patches being a source of irritation.
+> 
+> The patches fall into several groups:
+> 
+> Patch 1:
+>   Rob's conversion of the PWM/tach binding to DT schema with fixes
+>   applied for the license and typos identified by Krzysztof.
+> 
+> Patches 2-5:
+>   Fixes for the warnings related to the LPC and pinctrl nodes, touching
+>   relevant drivers and the devicetrees.
+> 
+>   I expect that if this approach is acceptable that we'll need to split
+>   application of the patches across successive release cycles, with the
+>   driver changes going in first.
+> 
+> Patches 6-8:
+>   Fix MMC/SDHCI warnings, touching the relevant binding and devicetrees
+> 
+> Patches 9-10:
+>   Clarify the relationships between the ACRY and AHB controller
+> 
+> Patches 11-16:
+>   The remaining pieces that eliminate the warnings
+> 
+> I'm at plumbers so don't have hardware on hand to test with, but some
+> brief smoke tests under qemu look okay. Given that it's all RFC that
+> should be enough for the moment. I'll do more testing after discussions
+> and when I have boards at hand.
+> 
+> Please review!
+> 
+> Andrew
+> 
+> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+> ---
+> Andrew Jeffery (15):
+>       pinctrl: aspeed: g5: Constrain LPC binding revision workaround to AST2500
+>       pinctrl: aspeed: g5: Allow use of LPC node instead of LPC host controller
+>       ARM: dts: aspeed: g5: Use LPC phandle for pinctrl aspeed,external-nodes
+>       ARM: dts: aspeed: Remove unspecified LPC host controller node
+>       dt-bindings: mmc: Switch ref to sdhci-common.yaml
+>       ARM: dts: aspeed: Remove sdhci-drive-type property from AST2600 EVB
+>       ARM: dts: aspeed: Use specified wp-inverted property for AST2600 EVB
+>       dt-bindings: bus: aspeed: Require syscon for AST2600 AHB controller
+>       dt-bindings: crypto: Document aspeed,ahbc property for Aspeed ACRY
+>       ARM: dts: aspeed: Drop syscon compatible from EDAC in g6 dtsi
+>       ARM: dts: aspeed: g6: Drop unspecified aspeed,ast2600-udma node
+>       ARM: dts: aspeed: ast2600-evb: Tidy up A0 work-around for UART5
+>       dt-bindings: iio: adc: Allow interrupts property for AST2600
+>       ARM: dts: aspeed: g6: Drop clocks property from arm,armv7-timer
+>       dt-bindings: mfd: Document smp-memram node for AST2600 SCU
+> 
+> Rob Herring (Arm) (1):
+>       dt-bindings: hwmon: Convert aspeed,ast2400-pwm-tacho to DT schema
+> 
+>  .../bindings/bus/aspeed,ast2600-ahbc.yaml          |   8 +-
+>  .../bindings/crypto/aspeed,ast2600-acry.yaml       |   7 ++
+>  .../bindings/hwmon/aspeed,ast2400-pwm-tacho.yaml   | 106 +++++++++++++++++++++
+>  .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt |  73 --------------
+>  .../bindings/iio/adc/aspeed,ast2600-adc.yaml       |   3 +
+>  .../bindings/mfd/aspeed,ast2x00-scu.yaml           |  18 ++++
+>  .../devicetree/bindings/mmc/aspeed,sdhci.yaml      |   2 +-
+>  arch/arm/boot/dts/aspeed/aspeed-ast2600-evb.dts    |   7 +-
+>  .../dts/aspeed/aspeed-bmc-facebook-clemente.dts    |   4 -
+>  arch/arm/boot/dts/aspeed/aspeed-g4.dtsi            |   5 -
+>  arch/arm/boot/dts/aspeed/aspeed-g5.dtsi            |   8 +-
+>  arch/arm/boot/dts/aspeed/aspeed-g6.dtsi            |  17 +---
+>  drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c         |  32 ++++---
+>  13 files changed, 165 insertions(+), 125 deletions(-)
+> ---
+> base-commit: 5ce74bc1b7cb2732b22f9c93082545bc655d6547
+> change-id: 20251211-dev-dt-warnings-all-bd5854b04d60
+> 
+> Best regards,
+> --
+> Andrew Jeffery <andrew@codeconstruct.com.au>
+> 
+> 
+> 
 
-Just tested. The i2c1 appears and the test-overlay probe gets called, 
-when the i2c1_pins is in the base-dt and not in the overlay.
 
-> In other word, is the issues related to adding a pinctrl sub-node (pinctrl
-> pins definition) in the overlay or is it something else?
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-Seems to be related to the pinctrl.
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
 
 
-Yours,
-	-- Matti
+This patch series was applied (using b4) to base:
+ Base: 5ce74bc1b7cb2732b22f9c93082545bc655d6547 (use --merge-base to override)
 
----
-Matti Vaittinen
-Linux kernel developer at ROHM Semiconductors
-Oulu Finland
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
 
-~~ When things go utterly wrong vim users can always type :help! ~~
+New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/aspeed/' for 20251211-dev-dt-warnings-all-v1-0-21b18b9ada77@codeconstruct.com.au:
+
+arch/arm/boot/dts/aspeed/aspeed-bmc-quanta-s6q.dtb: adc@1e6e9000 (aspeed,ast2600-adc0): 'vref' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml
+arch/arm/boot/dts/aspeed/aspeed-bmc-quanta-s6q.dtb: adc@1e6e9100 (aspeed,ast2600-adc1): 'vref' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml
+arch/arm/boot/dts/aspeed/aspeed-bmc-opp-mowgli.dtb: pwm-tacho-controller@1e786000 (aspeed,ast2500-pwm-tacho): 'fan@8', 'fan@9' do not match any of the regexes: '^fan@[0-7]$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/hwmon/aspeed,ast2400-pwm-tacho.yaml
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-bletchley.dtb: adc@1e6e9000 (aspeed,ast2600-adc0): 'vref' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-bletchley.dtb: adc@1e6e9100 (aspeed,ast2600-adc1): 'vref' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml
+arch/arm/boot/dts/aspeed/aspeed-bmc-ampere-mtjade.dtb: pwm-tacho-controller@1e786000 (aspeed,ast2500-pwm-tacho): 'fan@10', 'fan@11', 'fan@8', 'fan@9' do not match any of the regexes: '^fan@[0-7]$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/hwmon/aspeed,ast2400-pwm-tacho.yaml
+arch/arm/boot/dts/aspeed/aspeed-bmc-asus-x4tf.dtb: adc@1e6e9000 (aspeed,ast2600-adc0): 'vref' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml
+arch/arm/boot/dts/aspeed/aspeed-bmc-asus-x4tf.dtb: adc@1e6e9100 (aspeed,ast2600-adc1): 'vref' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml
+arch/arm/boot/dts/aspeed/aspeed-bmc-lenovo-hr855xg2.dtb: pwm-tacho-controller@1e786000 (aspeed,ast2500-pwm-tacho): 'fan@10', 'fan@11', 'fan@12', 'fan@13', 'fan@14', 'fan@15', 'fan@16', 'fan@8', 'fan@9' do not match any of the regexes: '^fan@[0-7]$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/hwmon/aspeed,ast2400-pwm-tacho.yaml
+arch/arm/boot/dts/aspeed/aspeed-bmc-amd-daytonax.dtb: pwm-tacho-controller@1e786000 (aspeed,ast2500-pwm-tacho): 'fan@10', 'fan@11', 'fan@12', 'fan@13', 'fan@14', 'fan@15', 'fan@8', 'fan@9' do not match any of the regexes: '^fan@[0-7]$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/hwmon/aspeed,ast2400-pwm-tacho.yaml
+arch/arm/boot/dts/aspeed/aspeed-bmc-lenovo-hr630.dtb: pwm-tacho-controller@1e786000 (aspeed,ast2500-pwm-tacho): 'fan@10', 'fan@11', 'fan@12', 'fan@13', 'fan@8', 'fan@9' do not match any of the regexes: '^fan@[0-7]$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/hwmon/aspeed,ast2400-pwm-tacho.yaml
+arch/arm/boot/dts/aspeed/aspeed-bmc-ufispace-ncplite.dtb: adc@1e6e9000 (aspeed,ast2600-adc0): 'vref' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml
+arch/arm/boot/dts/aspeed/aspeed-bmc-ufispace-ncplite.dtb: adc@1e6e9100 (aspeed,ast2600-adc1): 'vref' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml
+
+
+
+
+
 
