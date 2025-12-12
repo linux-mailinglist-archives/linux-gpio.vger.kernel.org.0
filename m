@@ -1,54 +1,55 @@
-Return-Path: <linux-gpio+bounces-29476-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29477-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF24ACB8266
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Dec 2025 08:43:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C6931CB826C
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Dec 2025 08:43:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 031423082788
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Dec 2025 07:41:52 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BCA50308944F
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Dec 2025 07:41:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 459A030F55F;
-	Fri, 12 Dec 2025 07:41:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61BD930F7F1;
+	Fri, 12 Dec 2025 07:41:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DVEEAQR1"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="qzX9Dgpx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A1D27702E;
-	Fri, 12 Dec 2025 07:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA9128FFF6;
+	Fri, 12 Dec 2025 07:41:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765525306; cv=none; b=nt0q38vXTUHSCFDwiS05XGH9g1Ood14ch+y/HEAHOzwEjFGwnZss8SdcFG0SitUXEVaDJz3WrhwyeLZNM2J7pYDofbOGzrbSmnXwMIDui0C1EAdGDwEkG+yZILX7Dl/8aHME1rjRfzChrwkHQkWX9a4aY73o21MAQgnk21K9448=
+	t=1765525310; cv=none; b=XgqTNRbFtIfWzozjykUa/N13Y3GXh8NdNg/e0XPlIsapLptBga7lpiIpJ3Q1TtS/A5AGvYtWr1ZX+6XXRozPFObttjdfu7MUNEkxR15b5ZXRDeYHDTPpHCt/iQojwZTAQunX1rzyL/IVViBxlNgene9xRYvWiAcdXcm0YChr69c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765525306; c=relaxed/simple;
-	bh=i3zTcCzEU6Vzk86JnNO3jHITPGIesEvuD/kTcsFtm1A=;
+	s=arc-20240116; t=1765525310; c=relaxed/simple;
+	bh=1FO0vDmfLJqQKiHmGAgOSN9nU4jTazUFB/kRKdWuYYk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=atuIJTqMYtpwSfA3V7zj79AC7lYJbn/SrXOufPS2MzrpFSQALpO+Nd2OvwcsoBsmfpvD7m5IMrYeNWryn6BryrIgu9OlP6LW2aEarzsFmejO0axfdPXoevYkKHmizI81McOWaGWrnxFpm6+4G/bFyVJwsXCO4SNawei+KEFI8UI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DVEEAQR1; arc=none smtp.client-ip=185.246.84.56
+	 In-Reply-To:To:Cc; b=Ya1OERI2aC3wai+VyX+6uQtNXrV4QUdRVO80W+gFLZ2N2Q8/Sm3PUdxh3Nt/qBOqfb/YNeG9bCpRTk+GJ/hGOqiMwFV8zvpfps9H1dAkdgRUA0urDv+6ZyEFJIOZuWQL+VRWHoyY413pQFiWQ/w07q6/PQM87D9lKVaHwGDQkCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=qzX9Dgpx; arc=none smtp.client-ip=185.171.202.116
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 58D631A211B;
-	Fri, 12 Dec 2025 07:41:42 +0000 (UTC)
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 7F3F0C1935D;
+	Fri, 12 Dec 2025 07:41:21 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 234D7606DF;
-	Fri, 12 Dec 2025 07:41:42 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 51A3D103C8E03;
-	Fri, 12 Dec 2025 08:41:39 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 93B6D606DF;
+	Fri, 12 Dec 2025 07:41:45 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id CECE7103C8E00;
+	Fri, 12 Dec 2025 08:41:41 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1765525301; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	t=1765525304; h=from:subject:date:message-id:to:cc:mime-version:content-type:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=/t/Lqv4AoGZ5V51nn2T+1fBK6i6gggmvBiRF4umYo00=;
-	b=DVEEAQR1oHaaVBR+IHsfJSALEfbcFTpE9FwMZfE3NqM0ndNM/wYoVfcqtwQtoyLzf7ycwM
-	//mN87k26/qTTnZJ3GpVqkZ5Vwigp8wng2URY+a1R1suPhbqIZXyTuFFwdjoKxyzf4pOmq
-	NPWsxwI7NxKaAU8DlMInLUm7DHRAs72jfDIAAM+x+JI8h8IrIQFpRCD46zaKPXYGt6ja9R
-	V2R6LUUm+719+kjX97ar7DfuRnc5fmdzA/WD+U+0C8Q9IkDZgBX2cwf3w2ePEZqEmUAg/G
-	J062vQaUgHpYZmdghCs69ytufcfDNKcJ5jzNSuh+9s3GISwqpfVQ3Ekp1OrDuQ==
+	bh=+9Em5K0Ir5txl5u3tp5x5rRGq90NhxyTh074LTwA5hs=;
+	b=qzX9Dgpx22AICPdAxi7xRAGfWx3RGKwfQRw9DxzdCqwVzm7sM1EmOHBCvR/kMVPuYLIFLL
+	Ad7cbIPeV3sDJ0HCxrFvs3ksnTqu3SDSVw/sVWNodTkKvj6gVwxT4zpBYDZlngyVkbxBL7
+	oBrI5nCI8+hChxa6UjfNDQQuuWMifmQdGWlTz1XhbY9ML0j0RV1/RM2RANCXaDi+05z1Ul
+	nZaL43wsDFEqYvJ4/ToZ2S3Jd0oiSxrVpIUCK55QAKRqu3diCrHD298TDqxF894BmIR629
+	A9bEu3pghkoPewK48qpRuwPeSwRkuZyYFDK+JnwGhZzXH5bOsFzeAghTZ+6eEA==
 From: "Thomas Perrot (Schneider Electric)" <thomas.perrot@bootlin.com>
-Date: Fri, 12 Dec 2025 08:41:09 +0100
-Subject: [PATCH 6/8] gpio: aaeon: Add GPIO driver for SRG-IMX8PL MCU
+Date: Fri, 12 Dec 2025 08:41:10 +0100
+Subject: [PATCH 7/8] watchdog: aaeon: Add watchdog driver for SRG-IMX8PL
+ MCU
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -57,7 +58,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20251212-dev-b4-aaeon-mcu-driver-v1-6-6bd65bc8ef12@bootlin.com>
+Message-Id: <20251212-dev-b4-aaeon-mcu-driver-v1-7-6bd65bc8ef12@bootlin.com>
 References: <20251212-dev-b4-aaeon-mcu-driver-v1-0-6bd65bc8ef12@bootlin.com>
 In-Reply-To: <20251212-dev-b4-aaeon-mcu-driver-v1-0-6bd65bc8ef12@bootlin.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -77,311 +78,202 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
 X-Mailer: b4 0.14.2
 X-Last-TLS-Session-Version: TLSv1.3
 
-Add GPIO driver for the Aaeon SRG-IMX8PL embedded controller. This
-driver supports 7 GPO (General Purpose Output) pins and 12 GPIO pins
-that can be configured as inputs or outputs.
+Add watchdog driver for the Aaeon SRG-IMX8PL embedded controller.
+This driver provides system monitoring and recovery capabilities
+through the MCU's watchdog timer.
 
-The driver implements proper state management for GPO pins (which are
-output-only) and full direction control for GPIO pins. During probe,
-all pins are reset to a known state (GPOs low, GPIOs as inputs) to
-prevent undefined behavior across system reboots, as the MCU does not
-reset GPIO states on soft reboot.
+The watchdog supports start, stop, and ping operations with a maximum
+hardware heartbeat of 25 seconds and a default timeout of 240 seconds.
+The driver assumes the watchdog is already running at probe time, as
+the MCU typically enables it by default.
 
 Co-developed-by: Jérémie Dautheribes (Schneider Electric) <jeremie.dautheribes@bootlin.com>
 Signed-off-by: Jérémie Dautheribes (Schneider Electric) <jeremie.dautheribes@bootlin.com>
 Signed-off-by: Thomas Perrot (Schneider Electric) <thomas.perrot@bootlin.com>
 ---
- drivers/gpio/Kconfig          |  10 ++
- drivers/gpio/Makefile         |   1 +
- drivers/gpio/gpio-aaeon-mcu.c | 248 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 259 insertions(+)
+ drivers/watchdog/Kconfig         |  10 +++
+ drivers/watchdog/Makefile        |   1 +
+ drivers/watchdog/aaeon_mcu_wdt.c | 140 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 151 insertions(+)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index c74da29253e810b51540684b1186e8f274066b69..7e0f675b664fa25243fc2802edc3380572c94c41 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -157,6 +157,16 @@ config GPIO_74XX_MMIO
- 	    8 bits:	74244 (Input), 74273 (Output)
- 	    16 bits:	741624 (Input), 7416374 (Output)
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index d3b9df7d466b0b7215ee87b3040811d44ee53d2a..1bd4a7bee303e5e2508f540dc2c16e9e19ed18b0 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -168,6 +168,16 @@ config SOFT_WATCHDOG_PRETIMEOUT
+ 	  watchdog. Be aware that governors might affect the watchdog because it
+ 	  is purely software, e.g. the panic governor will stall it!
  
-+config GPIO_AAEON_MCU
-+	tristate "Aaeon MCU GPIO support"
-+	depends on MFD_AAEON_MCU && OF_GPIO
-+	select GPIO_GENERIC
++config AAEON_MCU_WATCHDOG
++	tristate "Aaeon MCU Watchdog"
++	depends on MFD_AAEON_MCU
++	select WATCHDOG_CORE
 +	help
-+	  Select this option to enable GPIO support for the Aaeon SRG-IMX8PL
-+	  onboard MCU. This driver provides access to GPIO pins and GPO
-+	  (General Purpose Output) pins controlled by the microcontroller.
-+	  The driver handles both input and output configuration.
++	  Select this option to enable watchdog timer support for the Aaeon
++	  SRG-IMX8PL onboard microcontroller (MCU). This driver provides
++	  watchdog functionality through the MCU, allowing system monitoring
++	  and automatic recovery from system hangs.
 +
- config GPIO_ALTERA
- 	tristate "Altera GPIO"
- 	select GPIOLIB_IRQCHIP
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 2421a8fd3733e0b06c2581262aaa9cd629f66c7d..1ba6318bc558743fbe5910966c2c8fc3f792efe9 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -29,6 +29,7 @@ obj-$(CONFIG_GPIO_104_IDI_48)		+= gpio-104-idi-48.o
- obj-$(CONFIG_GPIO_104_IDIO_16)		+= gpio-104-idio-16.o
- obj-$(CONFIG_GPIO_74X164)		+= gpio-74x164.o
- obj-$(CONFIG_GPIO_74XX_MMIO)		+= gpio-74xx-mmio.o
-+obj-$(CONFIG_GPIO_AAEON_MCU)		+= gpio-aaeon-mcu.o
- obj-$(CONFIG_GPIO_ADNP)			+= gpio-adnp.o
- obj-$(CONFIG_GPIO_ADP5520)		+= gpio-adp5520.o
- obj-$(CONFIG_GPIO_ADP5585)		+= gpio-adp5585.o
-diff --git a/drivers/gpio/gpio-aaeon-mcu.c b/drivers/gpio/gpio-aaeon-mcu.c
+ config BD957XMUF_WATCHDOG
+ 	tristate "ROHM BD9576MUF and BD9573MUF PMIC Watchdog"
+ 	depends on MFD_ROHM_BD957XMUF
+diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+index ba52099b125398a32f80dad23317e223cc4af028..2deec425d3eafb6b208e061fda9f216f4baa8ecc 100644
+--- a/drivers/watchdog/Makefile
++++ b/drivers/watchdog/Makefile
+@@ -37,6 +37,7 @@ obj-$(CONFIG_USBPCWATCHDOG) += pcwd_usb.o
+ # ALPHA Architecture
+ 
+ # ARM Architecture
++obj-$(CONFIG_AAEON_MCU_WATCHDOG) += aaeon_mcu_wdt.o
+ obj-$(CONFIG_ARM_SP805_WATCHDOG) += sp805_wdt.o
+ obj-$(CONFIG_ARM_SBSA_WATCHDOG) += sbsa_gwdt.o
+ obj-$(CONFIG_ARMADA_37XX_WATCHDOG) += armada_37xx_wdt.o
+diff --git a/drivers/watchdog/aaeon_mcu_wdt.c b/drivers/watchdog/aaeon_mcu_wdt.c
 new file mode 100644
-index 0000000000000000000000000000000000000000..cebd17d1877147b987ea673b081334c8062f5fc0
+index 0000000000000000000000000000000000000000..8413ea3bce99585d989cf13e4494e8daff2d9e4c
 --- /dev/null
-+++ b/drivers/gpio/gpio-aaeon-mcu.c
-@@ -0,0 +1,248 @@
++++ b/drivers/watchdog/aaeon_mcu_wdt.c
+@@ -0,0 +1,140 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ * Aaeon MCU GPIO driver
++ * Aaeon MCU Watchdog driver
 + *
 + * Copyright (C) 2025 Bootlin
 + * Author: Jérémie Dautheribes <jeremie.dautheribes@bootlin.com>
 + * Author: Thomas Perrot <thomas.perrot@bootlin.com>
 + */
 +
-+#include <linux/bitmap.h>
-+#include <linux/gpio/driver.h>
++#include <linux/i2c.h>
 +#include <linux/mfd/aaeon-mcu.h>
 +#include <linux/module.h>
 +#include <linux/platform_device.h>
++#include <linux/watchdog.h>
 +
-+#define AAEON_MCU_CONFIG_GPIO_INPUT 0x69
-+#define AAEON_MCU_CONFIG_GPIO_OUTPUT 0x6F
-+#define AAEON_MCU_READ_GPIO 0x72
-+#define AAEON_MCU_WRITE_GPIO 0x77
++#define AAEON_MCU_CONTROL_WDT 0x63
++#define AAEON_MCU_PING_WDT 0x73
 +
-+#define AAEON_MCU_CONTROL_GPO 0x6C
++#define AAEON_MCU_WDT_TIMEOUT         240
++#define AAEON_MCU_WDT_HEARTBEAT_MS    25000
 +
-+#define MAX_GPIOS 12
-+#define MAX_GPOS 7
-+
-+struct aaeon_mcu_gpio {
-+	struct gpio_chip gc;
++struct aaeon_mcu_wdt {
++	struct watchdog_device wdt;
 +	struct aaeon_mcu_dev *mfd;
-+	DECLARE_BITMAP(dir_in, MAX_GPOS + MAX_GPIOS);
-+	DECLARE_BITMAP(gpo_state, MAX_GPOS);
 +};
 +
-+static int aaeon_mcu_gpio_config_input_cmd(struct aaeon_mcu_gpio *data,
-+					    unsigned int offset)
++static int aaeon_mcu_wdt_start_cmd(struct aaeon_mcu_wdt *data)
 +{
 +	u8 cmd[3], rsp;
 +
-+	cmd[0] = AAEON_MCU_CONFIG_GPIO_INPUT;
-+	cmd[1] = offset - 7;
++	cmd[0] = AAEON_MCU_CONTROL_WDT;
++	cmd[1] = 0x01;
 +	cmd[2] = 0x00;
 +
 +	return aaeon_mcu_i2c_xfer(data->mfd->i2c_client, cmd, 3, &rsp, 1);
 +}
 +
-+static int aaeon_mcu_gpio_direction_input(struct gpio_chip *gc, unsigned int offset)
++static int aaeon_mcu_wdt_start(struct watchdog_device *wdt)
 +{
-+	struct aaeon_mcu_gpio *data = gpiochip_get_data(gc);
-+	int ret;
++	struct aaeon_mcu_wdt *data = watchdog_get_drvdata(wdt);
 +
-+	if (offset < MAX_GPOS) {
-+		dev_err(gc->parent, "GPIO offset (%d) must be an output GPO\n", offset);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	ret = aaeon_mcu_gpio_config_input_cmd(data, offset);
-+	if (ret < 0)
-+		return ret;
-+
-+	set_bit(offset, data->dir_in);
-+
-+	return 0;
++	return aaeon_mcu_wdt_start_cmd(data);
 +}
 +
-+static int aaeon_mcu_gpio_config_output_cmd(struct aaeon_mcu_gpio *data,
-+					     unsigned int offset,
-+					     int value)
++static int aaeon_mcu_wdt_stop_cmd(struct aaeon_mcu_wdt *data)
 +{
 +	u8 cmd[3], rsp;
-+	int ret;
 +
-+	cmd[0] = AAEON_MCU_CONFIG_GPIO_OUTPUT;
-+	cmd[1] = offset - 7;
++	cmd[0] = AAEON_MCU_CONTROL_WDT;
++	cmd[1] = 0x00;
 +	cmd[2] = 0x00;
 +
-+	ret = aaeon_mcu_i2c_xfer(data->mfd->i2c_client, cmd, 3, &rsp, 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	cmd[0] = AAEON_MCU_WRITE_GPIO;
-+	/* cmd[1] = offset - 7; */
-+	cmd[2] = !!value;
-+
 +	return aaeon_mcu_i2c_xfer(data->mfd->i2c_client, cmd, 3, &rsp, 1);
 +}
 +
-+static int aaeon_mcu_gpio_direction_output(struct gpio_chip *gc, unsigned int offset, int value)
++static int aaeon_mcu_wdt_stop(struct watchdog_device *wdt)
 +{
-+	struct aaeon_mcu_gpio *data = gpiochip_get_data(gc);
-+	int ret;
++	struct aaeon_mcu_wdt *data = watchdog_get_drvdata(wdt);
 +
-+	if (offset < MAX_GPOS)
-+		return 0;
-+
-+	ret = aaeon_mcu_gpio_config_output_cmd(data, offset, value);
-+	if (ret < 0)
-+		return ret;
-+
-+	clear_bit(offset, data->dir_in);
-+
-+	return 0;
++	return aaeon_mcu_wdt_stop_cmd(data);
 +}
 +
-+static int aaeon_mcu_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
++static int aaeon_mcu_wdt_ping_cmd(struct aaeon_mcu_wdt *data)
 +{
-+	struct aaeon_mcu_gpio *data = gpiochip_get_data(gc);
-+
-+	return test_bit(offset, data->dir_in) ?
-+		GPIO_LINE_DIRECTION_IN : GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+static int aaeon_mcu_gpio_get(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct aaeon_mcu_gpio *data = gpiochip_get_data(gc);
 +	u8 cmd[3], rsp;
-+	int ret;
 +
-+	if (offset < MAX_GPOS)
-+		return test_bit(offset, data->gpo_state);
-+
-+	cmd[0] = AAEON_MCU_READ_GPIO;
-+	cmd[1] = offset - 7;
++	cmd[0] = AAEON_MCU_PING_WDT;
++	cmd[1] = 0x00;
 +	cmd[2] = 0x00;
 +
-+	ret = aaeon_mcu_i2c_xfer(data->mfd->i2c_client, cmd, 3, &rsp, 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	return rsp;
-+}
-+
-+static int aaeon_mcu_gpo_set_cmd(struct aaeon_mcu_gpio *data, unsigned int offset, int value)
-+{
-+	u8 cmd[3], rsp;
-+
-+	cmd[0] = AAEON_MCU_CONTROL_GPO;
-+	cmd[1] = offset + 1;
-+	cmd[2] = !!value;
-+
 +	return aaeon_mcu_i2c_xfer(data->mfd->i2c_client, cmd, 3, &rsp, 1);
 +}
 +
-+static int aaeon_mcu_gpio_set_cmd(struct aaeon_mcu_gpio *data, unsigned int offset, int value)
++static int aaeon_mcu_wdt_ping(struct watchdog_device *wdt)
 +{
-+	u8 cmd[3], rsp;
++	struct aaeon_mcu_wdt *data = watchdog_get_drvdata(wdt);
 +
-+	cmd[0] = AAEON_MCU_WRITE_GPIO;
-+	cmd[1] = offset - 7;
-+	cmd[2] = !!value;
-+
-+	return aaeon_mcu_i2c_xfer(data->mfd->i2c_client, cmd, 3, &rsp, 1);
++	return aaeon_mcu_wdt_ping_cmd(data);
 +}
 +
-+static int aaeon_mcu_gpio_set(struct gpio_chip *gc, unsigned int offset,
-+			      int value)
-+{
-+	struct aaeon_mcu_gpio *data = gpiochip_get_data(gc);
-+
-+	if (offset < MAX_GPOS) {
-+		if (aaeon_mcu_gpo_set_cmd(data, offset, value) == 0)
-+			assign_bit(offset, data->gpo_state, value);
-+	} else {
-+		return aaeon_mcu_gpio_set_cmd(data, offset, value);
-+	}
-+	return 0;
-+}
-+
-+static const struct gpio_chip aaeon_mcu_chip = {
-+	.label			= "gpio-aaeon-mcu",
-+	.owner			= THIS_MODULE,
-+	.get_direction		= aaeon_mcu_gpio_get_direction,
-+	.direction_input	= aaeon_mcu_gpio_direction_input,
-+	.direction_output	= aaeon_mcu_gpio_direction_output,
-+	.get			= aaeon_mcu_gpio_get,
-+	.set			= aaeon_mcu_gpio_set,
-+	.base			= -1,
-+	.ngpio			= MAX_GPOS + MAX_GPIOS,
-+	.can_sleep		= true,
++static const struct watchdog_info aaeon_mcu_wdt_info = {
++	.identity	= "Aaeon MCU Watchdog",
++	.options	= WDIOF_KEEPALIVEPING
 +};
 +
-+static void aaeon_mcu_gpio_reset(struct aaeon_mcu_gpio *data, struct device *dev)
++static const struct watchdog_ops aaeon_mcu_wdt_ops = {
++	.owner		= THIS_MODULE,
++	.start		= aaeon_mcu_wdt_start,
++	.stop		= aaeon_mcu_wdt_stop,
++	.ping		= aaeon_mcu_wdt_ping,
++};
++
++static int aaeon_mcu_wdt_probe(struct platform_device *pdev)
 +{
-+	unsigned int i;
-+	int ret;
++	struct device *dev = &pdev->dev;
++	struct aaeon_mcu_dev *mcu = dev_get_drvdata(dev->parent);
++	struct watchdog_device *wdt;
++	struct aaeon_mcu_wdt *data;
 +
-+	/* Reset all GPOs */
-+	for (i = 0; i < MAX_GPOS; i++) {
-+		ret = aaeon_mcu_gpo_set_cmd(data, i, 0);
-+		if (ret < 0)
-+			dev_warn(dev, "Failed to reset GPO %u state: %d\n", i, ret);
-+		clear_bit(i, data->dir_in);
-+	}
-+
-+	/* Reset all GPIOs */
-+	for (i = MAX_GPOS; i < MAX_GPOS + MAX_GPIOS; i++) {
-+		ret = aaeon_mcu_gpio_config_input_cmd(data, i);
-+		if (ret < 0)
-+			dev_warn(dev, "Failed to reset GPIO %u state: %d\n", i, ret);
-+		set_bit(i, data->dir_in);
-+	}
-+}
-+
-+static int aaeon_mcu_gpio_probe(struct platform_device *pdev)
-+{
-+	struct aaeon_mcu_dev *mfd = dev_get_drvdata(pdev->dev.parent);
-+	struct aaeon_mcu_gpio *data;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
 +	if (!data)
 +		return -ENOMEM;
 +
-+	data->mfd = mfd;
-+	data->gc = aaeon_mcu_chip;
-+	data->gc.parent = &pdev->dev;
++	data->mfd = mcu;
 +
-+	/*
-+	 * Reset all GPIO states to a known configuration. The MCU does not
-+	 * reset GPIO state on soft reboot, only on power cycle (hard reboot).
-+	 * Without this reset, GPIOs would retain their previous state across
-+	 * reboots, which could lead to unexpected behavior.
-+	 */
-+	aaeon_mcu_gpio_reset(data, &pdev->dev);
++	wdt = &data->wdt;
++	wdt->parent = dev;
 +
++	wdt->info = &aaeon_mcu_wdt_info;
++	wdt->ops = &aaeon_mcu_wdt_ops;
++	wdt->max_hw_heartbeat_ms = AAEON_MCU_WDT_HEARTBEAT_MS;
++	watchdog_init_timeout(wdt, AAEON_MCU_WDT_TIMEOUT, dev);
++
++	watchdog_set_drvdata(wdt, data);
 +	platform_set_drvdata(pdev, data);
++	set_bit(WDOG_HW_RUNNING, &wdt->status);
 +
-+	return devm_gpiochip_add_data(&pdev->dev, &data->gc,
-+				      data);
++	return devm_watchdog_register_device(dev, wdt);
 +}
 +
-+static const struct of_device_id aaeon_mcu_gpio_of_match[] = {
-+	{ .compatible = "aaeon,srg-imx8pl-gpio" },
++static const struct of_device_id aaeon_mcu_wdt_of_match[] = {
++	{ .compatible = "aaeon,srg-imx8pl-wdt" },
 +	{},
 +};
 +
-+MODULE_DEVICE_TABLE(of, aaeon_mcu_gpio_of_match);
++MODULE_DEVICE_TABLE(of, aaeon_mcu_wdt_of_match);
 +
-+static struct platform_driver aaeon_mcu_gpio_driver = {
-+	.driver = {
-+		.name = "aaeon-mcu-gpio",
-+		.of_match_table = aaeon_mcu_gpio_of_match,
++static struct platform_driver aaeon_mcu_wdt_driver = {
++	.driver		= {
++		.name	= "aaeon-mcu-wdt",
++		.of_match_table = aaeon_mcu_wdt_of_match,
 +	},
-+	.probe = aaeon_mcu_gpio_probe,
++	.probe		= aaeon_mcu_wdt_probe,
 +};
 +
-+module_platform_driver(aaeon_mcu_gpio_driver);
++module_platform_driver(aaeon_mcu_wdt_driver);
 +
-+MODULE_DESCRIPTION("GPIO interface for Aaeon MCU");
-+MODULE_AUTHOR("Jérémie Dautherbes <jeremie.dautheribes@bootlin.com>");
++MODULE_DESCRIPTION("Aaeon MCU Watchdog Driver");
++MODULE_AUTHOR("Jérémie Dautheribes");
 +MODULE_LICENSE("GPL");
 
 -- 
