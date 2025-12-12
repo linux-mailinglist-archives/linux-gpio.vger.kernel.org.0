@@ -1,40 +1,41 @@
-Return-Path: <linux-gpio+bounces-29487-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29489-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3649DCB8DBA
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Dec 2025 14:03:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D5D33CB8DC3
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Dec 2025 14:04:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 368CC3041CD5
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Dec 2025 13:03:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 99FD73091CED
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Dec 2025 13:03:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40C02320CAB;
-	Fri, 12 Dec 2025 13:03:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09961322C65;
+	Fri, 12 Dec 2025 13:03:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b="o/sg3a79"
+	dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b="F5+nefdD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11020076.outbound.protection.outlook.com [52.101.84.76])
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11023094.outbound.protection.outlook.com [40.107.162.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3F1225779;
-	Fri, 12 Dec 2025 13:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92029285418;
+	Fri, 12 Dec 2025 13:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765544623; cv=fail; b=KdTXeTRTF23lNta10J1sd0znnCIQfogTncgMV+vBdGPOYy9hYvY2pJTW1Z91K0K2ny62KAxfxXwh5R7Hdlk8Uq0IXULrqf1VN1785seorOhewV62Vi6U6RWZciu84lRtoxEd4+VfGoiBEf66MFZ65edZAv7GhbNvB30zVfoyKjs=
+	t=1765544623; cv=fail; b=UNc1/SsB95y7FI09db39OKydU5sd4XCLZQinzeQHZv7it4hz6NH/CFOzjto+c2haV9kyxu+oJwUbpc1v19F0nwq8TH32SPUCnYs2e+0jAQbioIIT+z/dA0rXIzUXt77J0jKjZ+WyKfueQnul5dTHll5IluqmNMZUw3c0W3iKxT0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1765544623; c=relaxed/simple;
-	bh=ggRv/RKqM7pQMDPmVor5G8V7NTDYqyeSFgQz0yYK4XM=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=oszP4wwlvQQykzzl7arm7b2X/vZM92Mkn3rTyAx0+EoPVvsLTkoCKCDvICxToEFjfPVSA+BkfagyqVsenAdo9kGGr/J0LA9Z9D2IZp5QFkOscF0lJGFripJ0CE+9zLF0AAaYTyz2zw7dJolWWe06T7XnJuDUR4dKhnngfuq8En8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b=o/sg3a79; arc=fail smtp.client-ip=52.101.84.76
+	bh=ULo077wprbCM2UTLeZI/zuSb0NBX2hNNDHyOmMC2sJA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=E7ZqDpiNVH4IDQ+e61VmxOd+NkgTqOLaZ8tC2rSs06BNC/5kX2fFvfphx9FGSPGeKVHcgHizS3BlqLIBMZ9O0gI6rC2POJc3Z6C3gk6VbQDLHImJi4aitmhjZf/lPWJyTEl31zB/JpFBusknC+mpGNhPkMIdYx9VXQ2dUNPn5hs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b=F5+nefdD; arc=fail smtp.client-ip=40.107.162.94
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VA4eqvIMPIWytWJA6gE/XtXcQZdMljZVdKxXkBaYUW/gQIJ8eOEOQNY8tRL7ehPdlEyzsfs8CQVpLmCL7RLxaCk3R7mKhXSA9bunf3hXHw2CxWZBwZH5i4tJNWNpYG9atLOOrUoSUgl9JqGZ3l+XZmwaVKPTcJUmXdzTZlgx+UPwekx1MR0epvU5wgb1VMB6c6ZDb3RHUoKdGRrZtk5Nx9g8MAmczJkSUomgvWOs6e9Bm4zJ6BUFYowCcq3HX1P/qHkxS2rc+zicyQnHawI5XdvqA5K/0Ckwaq6iEIUUWWBFxCXMtsm64KsdW6POceHYdqoIBFMobiMA27LPp+KZgA==
+ b=Ww0TD060OG49dAX53UqXtnhlxesBpGSTKHAbYyPnpDGLgPLCNi0hE4jtxROoYU/a/RSDv+rZxtnXb58eGX9KhOlaWQz6jjUlEUI5iWPBwxuoEXw/HC/L2KD8AC/Rd7yvRQOAG/BPpvfNBlf6QbH2rnbVm2yEbOJSEtTbYN4UXrSmSrb2cHr4avhE+7sGWzrFp+A3VhI6AhJTTpGieYuUjWjWN5+44z547WqG+p0MqtXeNj7o+ct5E8lq223JbZQDbt9Q1mgpEi5kzMysoP50wdibp2NRqzbGTKhNwgpDdIt2h401ScykClw2Cng3ldPlg7ZLAYg5jvwm+5iYsFJKfg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lBmewPyyqowbBaImbguZvb7gZHH3PlKVNSV0DBcgTd4=;
- b=YmPPRUznV6JZ2fmoleUARC57XlHRww5WLk8u6u/F7lrH7c99wxpq0pm3Y+qaPxKAmz0iVWa61XS4CLHQFeqRFOfNLrn1Y4MSfrBoqeukqj9DPRT7CdJHJNfl1nJ5x7bZHJXkRG5DQlCyroQdTGkebcvfS25jttUNvAi37r3fq3nCrFjYTxTkGus2aBDhc4I9GmFmUHSBi5YqhPSKLaF4e0nuphGvPXAJm/jz1hFP+VBxgCGwNLTWdq6mxp50cZkoYMp0GijbtYskzPGSFDm2t1ZtOu7U8HJRwlQg0z9GyCojMvX3uk5XntFsSJpzzL6I9Smft0oPZO8N4P5NOUqHWw==
+ bh=QWS1MKF3PdUJezX0uUC4Bh0UF4iiPjXcPgvxMY8A+CA=;
+ b=BWam9Hf9frhf1D2HlrpSLeWMil3fTGY9H+SXfcw3anCF76/D2724IkLXZQpvIAfH+jwSMA2Psph1ylBdZ2EKIlyfT1Zn62MjioPMyL8TwqfsuRg4C1TVWPIsjG1t+CnZOsiN4UDed0zFd6oduX5MxSRQLm1CH8B1CSzoaTayqYNj8HVgH6n5Y2+xUz4WiNpTMBACYPRyQ/f65RpJpLt6RnK1G8NajWaFKX1DSZC7cBSjmFS5DTZU5z41v32bIsUyOrwSyIJOlvFfnXgxFBGBdpoZkpK/RZz5YKsMZ1GmcFJlRv0kT9PgmmejqK2//77Zsw+7CQDKVddB6Aijl6Ge7w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
  is 91.26.50.189) smtp.rcpttodomain=kernel.org smtp.mailfrom=phytec.de;
  dmarc=fail (p=quarantine sp=quarantine pct=100) action=quarantine
@@ -42,18 +43,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phytec.de;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lBmewPyyqowbBaImbguZvb7gZHH3PlKVNSV0DBcgTd4=;
- b=o/sg3a79WOTXTh9zi0RH8lZ43V4zAzwlzMrMktukAvfoIVlOj3ulAPf4M1qC6lhr6IkZ3D2wYkx0x/AeTX2FKhl/ABp92c/Kds7E9X67OBzFPh0aR7nIvPA9CYotXIEOS9S7pFdg84ZdgB9Q53AwIBs8/iccHok7ix6Km5V13KsaCdp6yWmVkBTQux46nvMaBliywPVf+IWp7AZHsR21OQgvgDGprafKn37m3n43f3f1M+Jd5IbH+/3Eg7lYyb1bYkHzlMHzmxI6zpVYJ6nBsaP9/HFrBIQU1LWK+UIMdJyUInRJhYt505mF6IA0a8wN9aoco6h3UkYLD7j2xRkOpQ==
-Received: from DU2PR04CA0211.eurprd04.prod.outlook.com (2603:10a6:10:2b1::6)
- by VI0P195MB3080.EURP195.PROD.OUTLOOK.COM (2603:10a6:800:2d5::5) with
+ bh=QWS1MKF3PdUJezX0uUC4Bh0UF4iiPjXcPgvxMY8A+CA=;
+ b=F5+nefdDT1t8T7oKv3re5YeuJnxB3PBrLHw3Qp23xCRMM/x21DOWrXv2BiQ8LnXT7JnQ5DIrnlZkO4L8YF8dZfE9boFHcw1uPUHzSlbry5BAYl2fa5qBoDI8W4mjONSThDbaDSha659YXeQ2/0a9O77vH16ieeK2E3IDWYKma02Gwve+IxOLer9ZgewBn+SQN465h/8hlsI2QYuNP4KcMzcAZUV7PbWAZSNaMR8viYuqexcdeFW1J3M3WhP2IyP+WYL7Cn7bjGm0M95jYddyl132zCN6sL+xnz26zjEwX4N3yzaZvC/G0qnH5F9avHRcy+boaH3qFoc18VaOddpC+w==
+Received: from DU2PR04CA0237.eurprd04.prod.outlook.com (2603:10a6:10:2b1::32)
+ by GVXP195MB1736.EURP195.PROD.OUTLOOK.COM (2603:10a6:150:2::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.9; Fri, 12 Dec
- 2025 13:03:33 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.13; Fri, 12 Dec
+ 2025 13:03:34 +0000
 Received: from DB5PEPF00014B96.eurprd02.prod.outlook.com
- (2603:10a6:10:2b1:cafe::84) by DU2PR04CA0211.outlook.office365.com
- (2603:10a6:10:2b1::6) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10a6:10:2b1:cafe::ea) by DU2PR04CA0237.outlook.office365.com
+ (2603:10a6:10:2b1::32) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.9412.9 via Frontend Transport; Fri,
- 12 Dec 2025 13:03:29 +0000
+ 12 Dec 2025 13:03:12 +0000
 X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is 91.26.50.189)
  smtp.mailfrom=phytec.de; dkim=none (message not signed)
  header.d=none;dmarc=fail action=quarantine header.from=phytec.de;
@@ -62,15 +63,14 @@ Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
 Received: from Postix.phytec.de (91.26.50.189) by
  DB5PEPF00014B96.mail.protection.outlook.com (10.167.8.234) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9412.4 via Frontend Transport; Fri, 12 Dec 2025 13:03:33 +0000
+ 15.20.9412.4 via Frontend Transport; Fri, 12 Dec 2025 13:03:34 +0000
 Received: from llp-jremmet.phytec.de (172.25.39.81) by Postix.phytec.de
  (172.25.0.11) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.29; Fri, 12 Dec
  2025 14:03:32 +0100
 From: Jan Remmet <j.remmet@phytec.de>
-Subject: [PATCH 0/3] gpio: pca953x: Add support for TCAL6408 TCAL6416
-Date: Fri, 12 Dec 2025 14:03:15 +0100
-Message-ID: <20251212-wip-jremmet-tcal6416rtw-v1-0-e5db1b66d4cc@phytec.de>
+Date: Fri, 12 Dec 2025 14:03:16 +0100
+Subject: [PATCH 1/3] gpio: pca953x: Add support for TCAL6408 TCAL6416
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -79,10 +79,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJMSPGkC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1NDI0ND3fLMAt2sotTc3NQS3ZLkxBwzE0OzopJy3eQUw5Qkc+MkC7NUSyW
- g7oKi1LTMCrDJ0bG1tQA3U57NaQAAAA==
-X-Change-ID: 20251211-wip-jremmet-tcal6416rtw-cd1db73b86e9
+Message-ID: <20251212-wip-jremmet-tcal6416rtw-v1-1-e5db1b66d4cc@phytec.de>
+References: <20251212-wip-jremmet-tcal6416rtw-v1-0-e5db1b66d4cc@phytec.de>
+In-Reply-To: <20251212-wip-jremmet-tcal6416rtw-v1-0-e5db1b66d4cc@phytec.de>
 To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>, "Krzysztof
  Kozlowski" <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
@@ -95,84 +94,119 @@ X-ClientProxiedBy: Postix.phytec.de (172.25.0.11) To Postix.phytec.de
  (172.25.0.11)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB5PEPF00014B96:EE_|VI0P195MB3080:EE_
-X-MS-Office365-Filtering-Correlation-Id: 05d85eb0-7322-40cd-3b9e-08de397edab3
+X-MS-TrafficTypeDiagnostic: DB5PEPF00014B96:EE_|GVXP195MB1736:EE_
+X-MS-Office365-Filtering-Correlation-Id: da4aba32-6f5c-4bcd-8e05-08de397edb58
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014|7416014;
+	BCL:0;ARA:13230040|82310400026|7416014|36860700013|376014|1800799024|13003099007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZU91SnR3cmxTZEh0eHBEckdmUFgvVXNBRzR4eHVqR0hZRHErWHJSdXpXRk9q?=
- =?utf-8?B?RDBhTVhKTm4rTnpITUFkU0hSekRBTkx3K0dpVWp5cSttREcrLzBVdVZtUjJR?=
- =?utf-8?B?dFFNVU5ITW16WThOZ0NiRWs1OG1Vc3RzUVE1MkxzWm1mS3hqMlpuQjdlTGZK?=
- =?utf-8?B?WnVJN3FGTDNIRVNuVDVldFI2WlJES2t2T1pqK0V6WlVicUs3MG1aQkRxa0lu?=
- =?utf-8?B?ODFXMHlKOHZ6RXcxT0xlSkNZMmt6RlE2aG1ya1IvdzdoSm1lU2dhSzZPUlVX?=
- =?utf-8?B?TXBvOTdQdEYvNGJJcFJrR043LzFGbjcxMkxIa0JnWE1vUWt6cWhWaGUvcnhS?=
- =?utf-8?B?SUpuT1Q2dFdUR3owcW84Z2RVOVZURE5FZUpTL0NmUGxpM3ZVa24wajVjYkto?=
- =?utf-8?B?UlZuMXJ4SVB2Rjk5aXNURTZvYS9yYkQ1aGUwc256djgva1BmTjRmWG5GUW5O?=
- =?utf-8?B?c2hzandPZ3F6QU11c3JkM25CbDQwZm0zbHkwT3hNcHMzSDdCOUMrdnhKbDla?=
- =?utf-8?B?NXp0UHhkUUpiQmduVXFqdGpJNkVDQmc0bHdkRGZNemdPT0xCRzBVaDZzRkwy?=
- =?utf-8?B?UkNXUWtOd1lMRm9KYlorUTh3Mm5FVnVtd3F2WCs1VndBbUh3a0xadlBQUllu?=
- =?utf-8?B?bEQwbE92cTR5Skp1VlBranIxNVNzYVlLbk9iWjJZOHpLb2pHUEVTcEo4Um1t?=
- =?utf-8?B?U2pyeUZWQmMrTjVRMWRIR1MraUpwRVdsYTF1VXMrTXo1cVVlYk9iMnpQbHJu?=
- =?utf-8?B?Nm9yakhpRGt6bVpGeVRYcVh0OWFyMFBUZ2ZxbGIrZ0ZWZGFlVTJWRGNhcHdw?=
- =?utf-8?B?Z0ljcnNUOTFVNmJqT3hNNTY5aFdFbTlwNXpZcTMxZ1dVZ2VBcHo0NTdZYjRS?=
- =?utf-8?B?MVdKKy9Na1phaW1yMHk1RkY1L1E5WDhDVHFEY0gyWnpSczhnMGZkV2dmVTZz?=
- =?utf-8?B?MnNXMG91QWRPcFM1YWpYcnRkcllISnVjV1MycGhpTWs3K1NzSWxhWE1mT251?=
- =?utf-8?B?WGZSMFNDRnR1YjFlQTNxVW0yQTZCcDFlRDRZdzNxZm03VHpqM1N1clA2cWt3?=
- =?utf-8?B?STRiTjlRNUxVMVZxek9HbFN4RFIrY1RqZ2R0bGJiZk5KdTUzdHA2b0dvWFlj?=
- =?utf-8?B?cXZ5WHQzaUtBVXZHd25zYzllY1FWUG5lSkhXenVlZExnVSszZGQ0RXNwVThJ?=
- =?utf-8?B?RUVsMnFoQUl1M0NIclNFczJUdU1OMm1hUlpGNUZYajBlOVd3K0hVc0JjK0R6?=
- =?utf-8?B?MGdkVVhoUWpXalhPYkFaYVR1Zk5FanZGZ0lLYzh5YjFuU20vdVRDM0RaZDZR?=
- =?utf-8?B?MS9oTDl0bDdycVdkbXh5MkJ2N1RqVXZ5a0ROQWdhUGZ2dVhtTkI3WjJaZnpE?=
- =?utf-8?B?QU1vSnFlYTN0VGtBbENKSEYwTlc5cVFvYVQ5RlcvMGc2ZGdlamdKek1mY0Z6?=
- =?utf-8?B?WHJjN3QwaTFFWG8rWFUwdURwZlo1dkx2eXQxaHRHRk4xVVQyV0NMUXNXTHpQ?=
- =?utf-8?B?Wm0rRW1JUzAvSyt0ZWpjV1NsNGpJb0FXaHN1Yy9Kd2h4RE9PWnFWTzRPS25P?=
- =?utf-8?B?ZHRNeldDRW9Wb2dIT212T0VxRFoxUzVlWU84WkVoRGhHZWFlNzErQzRJUHZM?=
- =?utf-8?B?R2pZSS8yYjN1eU42R3czL1g1S0VORXg5eE9CbDBZOXl4aUwvUG1ndWEzNGxw?=
- =?utf-8?B?dFlHeGx4NkQzV0hENzg0QXlpWXBVZ1ZWT3RZUEpMZkpYanJNbmhPeXNybXdu?=
- =?utf-8?B?Zm53OXl6dnBuaXhDcmNlSE5SenJDV2hVZExHSFIwMHZVSFM5QWROckQwVTM0?=
- =?utf-8?B?a25yUXRLaFFrN0I1L1kybzdUM0RJVFFvdkZPYWhvQzIvUUxPNXhNRXVrVGwr?=
- =?utf-8?B?RmZuYm1RWERxMCswYXlrOFNkNXA3QnBpOFpUTDZsTWJta25zUTdWVzZ1azlP?=
- =?utf-8?B?Y253VHhjcDc4U3locW0xZ1ZHekhGV012Z3A4TjRLbnVOeWZoNDh3Wk5rZWcy?=
- =?utf-8?B?ZTU5Q0FNbFpoRjVYenp2Yk04eGMzOXVITHhOS0s0eE94eGJxelBqRVMwTjRL?=
- =?utf-8?B?Y01mRG9EZmFTTW02K1FKN2FWSmlWNi9OU2RSNHcvOWxkSkVRVjVwTi9WN0xS?=
- =?utf-8?Q?l4Ws=3D?=
+	=?utf-8?B?algzVGNyZVJMcDBlRGlJZXBVcmIyV2ZCQlIxdlc0Q3dxVklKTktNSWlXTnZ4?=
+ =?utf-8?B?OXp1MmxIeHVxVzJacDVmU1JiYXlwVVptNldXU09vYjgvZmdUL0RiWGczV2Qr?=
+ =?utf-8?B?RVZrVWkybnpZSHJQU0dmaWZ2R0laTGh1cTNEaitIZnJwYzdsamZtWVFNTUNv?=
+ =?utf-8?B?VW03N2dybi91WWs3bThVb041T0ZrSzJEc2dGcEd5dEo4djg5MkNPWnVSTm1R?=
+ =?utf-8?B?L3NBamN0NHR4TDZBdk5FNkZDb1RvdEpPZzFQMGlpOXFIY3Rkd2NNZlg3cUY1?=
+ =?utf-8?B?V3hHUWhUV1NwSUNPclpBSXdaeXlkMStROUhITHFuSEp6cm95V0tyUXZmNWlV?=
+ =?utf-8?B?NjBrVHZXYk9RWjZpaTNRbFdFNE93R0w5bEtFdGNNTGxSTFYzZHlQdEppUXBS?=
+ =?utf-8?B?UWs5TXgzWUJTSS9meXFCVExYaG5WbzZ2WUJKT2JtdmpGd1Y3am9MV0IwQTdZ?=
+ =?utf-8?B?NFlyZmhId1U0bC9jYWpLTVZGc3M3eDhtamlpOU5xbmdYclVyNlExeFlZSk02?=
+ =?utf-8?B?ZE9LeTRJVjNUbXVCTE44cFBJdy9vRTBSaFRkTFFkaUpOQUlzeldyeW04OFhS?=
+ =?utf-8?B?V3I4NDRSNG9IRHR6Tk8zSElkM3VlVUdjZldRNnEwVGJTNEFVWXc1YW1ORlIx?=
+ =?utf-8?B?cmJDamlFK1ZlMkRsaFBiZmZSdUp3elZTVFQ3bjVuSVdlUXhYN2hURXBadHlO?=
+ =?utf-8?B?eisvV0lHeTVBYmEwWE1IUUYyWTVmTG8vcGNxL3RxeUkvbjR1RXY3ekRyb0lJ?=
+ =?utf-8?B?L2NpODd0K21lNG1yQVVUWHVKWk5TV09nbVorUHNYOFY4Z2VXYjIrdEJVclBm?=
+ =?utf-8?B?ZDlKRHlDb2xHREFQMzRXaXZTMHBSaTk5MDhVbk9vRXBVY2lBZXNIUWJudlN2?=
+ =?utf-8?B?d010c0UyRlREcmFHUEtteVRyd1ZZN1FkNGw1Vno4YU5FMDJ6L01FSWIyQ1Q3?=
+ =?utf-8?B?OXZVU0IyOTQ0MGRUajZyZVN5c0p0YUJjVkxJV3kxRTRublBjRzFubDFXaVJu?=
+ =?utf-8?B?Z3A4TDRpVVBKb1F4RVByQXMyK0NYZnUxamFqUC93c3E3L1ZGMmZhRk9ldWxO?=
+ =?utf-8?B?VWZGSGtvMFB4ei9kRm9CZDlCUG8wRklEV1FiTEFYM0tMRGUwc3JuK2xMZUNu?=
+ =?utf-8?B?SjVzc3ZGUlZ3aTZHTHVhVHZXTXZQMzUwbU9nSGRQYTg3dmRObG1DbktidFdy?=
+ =?utf-8?B?ekw1S0RoVEY2MnZrOTkxQXlYZGRxWGdlMSt1cVhLV09hcldSendRYkhJbkFy?=
+ =?utf-8?B?dDRDSHFJZk04aG1JSUo4eldBa0x4TTljUm52M0NCalExNXcrcWg4elh1UlJE?=
+ =?utf-8?B?ckN2ODU4UjByaG5hYUtaVHVrTU5xa0lBbk04c2VtTnVhdFdBbHFSR2JlUzY1?=
+ =?utf-8?B?YnhsaHhMcVZKeDdvZnhjQnh1S21sblJab1ZHSlZMWDZmNkJFRlQ5WktjWFg0?=
+ =?utf-8?B?OGhkdkYwOHZLZXBUQzM2YWRaWTNzVHlnaWp6NTcvbjlHaWZla2M2ZEVKNXdt?=
+ =?utf-8?B?b0ttWnRZTEl6Y3VZYTlQMmsrNWNMRGh5ekZKOUxDQWhqYXNBTTNXQjF6RXV1?=
+ =?utf-8?B?MFVBT2txQktTQWh4SWZTZWxJSHFJblFpWENVVHFDQk5CTW9WUG4ydXl2QWJm?=
+ =?utf-8?B?OHJtTE5BLzlqWERpdU5qYm1EbEtlQjRXVGJLZityT0dQcWZOTWRvNnR0MDRT?=
+ =?utf-8?B?anlnb000WUhlL1NGRjA2dnRubzJBMmFFb3dQUnNXS1NiMk5jSThnZlhEUkJS?=
+ =?utf-8?B?WlVzRm9YNldnaGYreXZlUWQ5NGJmeXlPbS83SktpTEJuaEw3TWRTMTU2c1dh?=
+ =?utf-8?B?SnBSRnpNajF0a1Nmam5aN0NZNTNzdG5VeXl1S2R4MW5mbHplejVGOUNyUFM3?=
+ =?utf-8?B?REwzSms2aS82dWRHUkV0azRrTEV0dmhvSTJyWi8zalQxaGFoWUNrZS8rVDJW?=
+ =?utf-8?B?RmRpK0RwRW04bXhRcWQ1d1RCL2NSWUIvVFV4cVJIL2g1NjgyNGpQR0Z2dERG?=
+ =?utf-8?B?SERDTmdrVnlDWmdNbENrZlF1QkF4R2hiZ1E3VkRzNWxORXJGakZjVm9QdnNG?=
+ =?utf-8?B?NUd2S2QrL25PeGpERkhnRllVeVBQdm9FSVFyYWRZejROTHA3dzlJek5kNHJy?=
+ =?utf-8?Q?xQrH2gasVP0ocWjFeW2O2IOkx?=
 X-Forefront-Antispam-Report:
-	CIP:91.26.50.189;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:Postix.phytec.de;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014)(7416014);DIR:OUT;SFP:1102;
+	CIP:91.26.50.189;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:Postix.phytec.de;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(36860700013)(376014)(1800799024)(13003099007);DIR:OUT;SFP:1102;
 X-OriginatorOrg: phytec.de
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2025 13:03:33.0310
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2025 13:03:34.1140
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05d85eb0-7322-40cd-3b9e-08de397edab3
+X-MS-Exchange-CrossTenant-Network-Message-Id: da4aba32-6f5c-4bcd-8e05-08de397edb58
 X-MS-Exchange-CrossTenant-Id: e609157c-80e2-446d-9be3-9c99c2399d29
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e609157c-80e2-446d-9be3-9c99c2399d29;Ip=[91.26.50.189];Helo=[Postix.phytec.de]
 X-MS-Exchange-CrossTenant-AuthSource:
 	DB5PEPF00014B96.eurprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0P195MB3080
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXP195MB1736
 
-Add two compatible. They share register layout with nxp pcal6408 and
-pcal6416
+TCAL6408 and TCAL6416 supports latchable inputs and maskable interrupt.
+Tested on a TCAL6416, checked datasheets for the TCAL6408.
+
+Datasheet: https://www.ti.com/lit/ds/symlink/tcal6408.pdf
+Datasheet: https://www.ti.com/lit/ds/symlink/tcal6416.pdf
 
 Signed-off-by: Jan Remmet <j.remmet@phytec.de>
 ---
-Jan Remmet (3):
-      gpio: pca953x: Add support for TCAL6408 TCAL6416
-      Documentation: gpio: add TCAL6408 and TCAL6416
-      dt-bindings: gpio: gpio-pca95xx: Add tcal6408 and tcal6416
+ drivers/gpio/Kconfig        | 4 ++--
+ drivers/gpio/gpio-pca953x.c | 6 ++++++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
- Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml |  2 ++
- Documentation/driver-api/gpio/pca953x.rst                | 12 ++++++++++++
- drivers/gpio/Kconfig                                     |  4 ++--
- drivers/gpio/gpio-pca953x.c                              |  6 ++++++
- 4 files changed, 22 insertions(+), 2 deletions(-)
----
-base-commit: d358e5254674b70f34c847715ca509e46eb81e6f
-change-id: 20251211-wip-jremmet-tcal6416rtw-cd1db73b86e9
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index c74da29253e810b51540684b1186e8f274066b69..2a0e8d007e8814d8c31b8b35c8ecc401056dcf90 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1194,11 +1194,11 @@ config GPIO_PCA953X
+ 
+ 	  8 bits:       max7310, max7315, pca6107, pca9534, pca9538, pca9554,
+ 	                pca9556, pca9557, pca9574, tca6408, tca9554, xra1202,
+-			pcal6408, pcal9554b, tca9538
++			pcal6408, pcal9554b, tca9538, tcal6408
+ 
+ 	  16 bits:      max7312, max7313, pca9535, pca9539, pca9555, pca9575,
+ 	                tca6416, pca6416, pcal6416, pcal9535, pcal9555a, max7318,
+-			tca9539
++			tca9539, tcal6416
+ 
+ 	  18 bits:	tca6418
+ 
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index 0a3916cc2772a19de90c7683cb7dc7010524f71e..dd0e09961bc9dacfbd4d5d0a146b59edb218962a 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -126,6 +126,9 @@ static const struct i2c_device_id pca953x_id[] = {
+ 	{ "tca9539", 16 | PCA953X_TYPE | PCA_INT, },
+ 	{ "tca9554", 8  | PCA953X_TYPE | PCA_INT, },
+ 	{ "xra1202", 8  | PCA953X_TYPE },
++
++	{ "tcal6408", 8  | PCA953X_TYPE | PCA_LATCH_INT, },
++	{ "tcal6416", 16 | PCA953X_TYPE | PCA_LATCH_INT, },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, pca953x_id);
+@@ -1444,6 +1447,9 @@ static const struct of_device_id pca953x_dt_ids[] = {
+ 	{ .compatible = "ti,tca9538", .data = OF_953X( 8, PCA_INT), },
+ 	{ .compatible = "ti,tca9539", .data = OF_953X(16, PCA_INT), },
+ 
++	{ .compatible = "ti,tcal6408", .data = OF_953X( 8, PCA_LATCH_INT), },
++	{ .compatible = "ti,tcal6416", .data = OF_953X(16, PCA_LATCH_INT), },
++
+ 	{ .compatible = "onnn,cat9554", .data = OF_953X( 8, PCA_INT), },
+ 	{ .compatible = "onnn,pca9654", .data = OF_953X( 8, PCA_INT), },
+ 	{ .compatible = "onnn,pca9655", .data = OF_953X(16, PCA_INT), },
 
-Best regards,
 -- 
-Jan Remmet <j.remmet@phytec.de>
+2.43.0
 
 
